@@ -61,6 +61,8 @@ OPT_LEVEL ?= -1
 DEBUG_INFO_LEVEL ?= 2
 # Enable profiling
 PROFILE ?= 0
+# Enable address sanitizer
+ASAN ?= 0
 # Compile headless
 HEADLESS ?= 0
 # Enable Game ICON
@@ -947,6 +949,12 @@ ifeq ($(WINDOWS_BUILD),999)
       Resp := $(shell $(call Command))
     endif
   endif
+endif
+
+ifeq ($(ASAN),1)
+  EXTRA_CFLAGS += -fsanitize=address -fsanitize=bounds-strict -fsanitize=undefined -ggdb
+  EXTRA_CPP_FLAGS += -fsanitize=address -fsanitize=bounds-strict -fsanitize=undefined -ggdb
+  LDFLAGS += -fsanitize=address -fsanitize=bounds-strict -fsanitize=undefined -static-libasan
 endif
 
 # Coop specific libraries

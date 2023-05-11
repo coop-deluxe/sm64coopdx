@@ -215,7 +215,7 @@ Gfx *geo_switch_area(s32 callContext, struct GraphNode *node) {
                 struct MarioState* m = &gMarioStates[i];
                 if (!is_player_active(m)) { continue; }
 
-                struct Object* door = m->interactObj;
+                struct Object* door = m ? m->interactObj : NULL;
                 if (door == NULL) { continue; }
                 if (door->oInteractType != INTERACT_DOOR) { continue; }
                 if (door->oAction == 0) { continue; }
@@ -360,6 +360,7 @@ f32 dist_between_object_and_point(struct Object *obj, f32 pointX, f32 pointY, f3
 }
 
 void cur_obj_forward_vel_approach_upward(f32 target, f32 increment) {
+    if (!o) { return; }
     if (o->oForwardVel >= target) {
         o->oForwardVel = target;
     } else {
@@ -429,6 +430,7 @@ s16 approach_s16_symmetric(s16 value, s16 target, s16 increment) {
 }
 
 s32 cur_obj_rotate_yaw_toward(s16 target, s16 increment) {
+    if (!o) { return 0; }
     s16 startYaw;
 
     startYaw = (s16) o->oMoveAngleYaw;
@@ -456,6 +458,7 @@ s16 obj_angle_to_object(struct Object *obj1, struct Object *obj2) {
 
 s16 obj_pitch_to_object(struct Object* obj, struct Object* target) {
     if (obj == NULL) { return 0; }
+    if (!target) { return 0; }
     f32 a, b, c, d;
     a = target->oPosX - obj->oPosX;
     c = target->oPosZ - obj->oPosZ;
@@ -480,7 +483,7 @@ s16 obj_angle_to_point(struct Object *obj, f32 pointX, f32 pointZ) {
 }
 
 s16 obj_turn_toward_object(struct Object *obj, struct Object *target, s16 angleIndex, s16 turnAmount) {
-    if (obj == NULL || target == NULL) { return 0; }
+    if (obj == NULL || target == NULL || !o) { return 0; }
     f32 a, b, c, d;
     UNUSED s32 unused;
     s16 targetAngle = 0;
@@ -751,6 +754,7 @@ struct Object *spawn_object_relative_with_scale(s16 behaviorParam, s16 relativeP
 }
 
 void cur_obj_move_using_vel(void) {
+    if (!o) { return; }
     o->oPosX += o->oVelX;
     o->oPosY += o->oVelY;
     o->oPosZ += o->oVelZ;
@@ -792,6 +796,7 @@ void obj_set_gfx_pos_from_pos(struct Object *obj) {
 }
 
 void obj_init_animation(struct Object *obj, s32 animIndex) {
+    if (!o || !obj) { return; }
     struct AnimationTable *animations = o->oAnimations;
     if (animations && (u32)animIndex < animations->count) {
         geo_obj_init_animation(&obj->header.gfx, animations->anims[animIndex]);
@@ -869,12 +874,14 @@ void obj_scale(struct Object *obj, f32 scale) {
 }
 
 void cur_obj_scale(f32 scale) {
+    if (!o) { return; }
     o->header.gfx.scale[0] = scale;
     o->header.gfx.scale[1] = scale;
     o->header.gfx.scale[2] = scale;
 }
 
 void cur_obj_init_animation(s32 animIndex) {
+    if (!o) { return; }
     struct AnimationTable *animations = o->oAnimations;
     if (animations && (u32)animIndex < animations->count) {
         geo_obj_init_animation(&o->header.gfx, animations->anims[animIndex]);
@@ -882,6 +889,7 @@ void cur_obj_init_animation(s32 animIndex) {
 }
 
 void cur_obj_init_animation_with_sound(s32 animIndex) {
+    if (!o) { return; }
     struct AnimationTable *animations = o->oAnimations;
     if (animations && (u32)animIndex < animations->count) {
         geo_obj_init_animation(&o->header.gfx, animations->anims[animIndex]);
@@ -890,6 +898,7 @@ void cur_obj_init_animation_with_sound(s32 animIndex) {
 }
 
 void obj_init_animation_with_accel_and_sound(struct Object *obj, s32 animIndex, f32 accel) {
+    if (!o) { return; }
     if (obj != NULL) {
         struct AnimationTable *animations = o->oAnimations;
         if (animations && (u32)animIndex < animations->count) {
@@ -901,6 +910,7 @@ void obj_init_animation_with_accel_and_sound(struct Object *obj, s32 animIndex, 
 }
 
 void cur_obj_init_animation_with_accel_and_sound(s32 animIndex, f32 accel) {
+    if (!o) { return; }
     struct AnimationTable *animations = o->oAnimations;
     if (animations && (u32)animIndex < animations->count) {
         s32 animAccel = (s32)(accel * 65536.0f);
@@ -924,6 +934,7 @@ void cur_obj_enable_rendering_and_become_tangible(struct Object *obj) {
 }
 
 void cur_obj_enable_rendering(void) {
+    if (!o) { return; }
     o->header.gfx.node.flags |= GRAPH_RENDER_ACTIVE;
 }
 
@@ -934,18 +945,22 @@ void cur_obj_disable_rendering_and_become_intangible(struct Object *obj) {
 }
 
 void cur_obj_disable_rendering(void) {
+    if (!o) { return; }
     o->header.gfx.node.flags &= ~GRAPH_RENDER_ACTIVE;
 }
 
 void cur_obj_unhide(void) {
+    if (!o) { return; }
     o->header.gfx.node.flags &= ~GRAPH_RENDER_INVISIBLE;
 }
 
 void cur_obj_hide(void) {
+    if (!o) { return; }
     o->header.gfx.node.flags |= GRAPH_RENDER_INVISIBLE;
 }
 
 void cur_obj_set_pos_relative(struct Object *other, f32 dleft, f32 dy, f32 dforward) {
+    if (!o) { return; }
     if (other == NULL) { return; }
     f32 facingZ = coss(other->oMoveAngleYaw);
     f32 facingX = sins(other->oMoveAngleYaw);
@@ -961,6 +976,7 @@ void cur_obj_set_pos_relative(struct Object *other, f32 dleft, f32 dy, f32 dforw
 }
 
 void cur_obj_set_pos_relative_to_parent(f32 dleft, f32 dy, f32 dforward) {
+    if (!o) { return; }
     cur_obj_set_pos_relative(o->parentObj, dleft, dy, dforward);
 }
 
@@ -969,6 +985,7 @@ void cur_obj_enable_rendering_2(void) {
 }
 
 void cur_obj_unused_init_on_floor(void) {
+    if (!o) { return; }
     cur_obj_enable_rendering();
 
     o->oPosY = find_floor_height(o->oPosX, o->oPosY, o->oPosZ);
@@ -1207,17 +1224,21 @@ struct Object *cur_obj_find_nearby_held_actor(const BehaviorScript *behavior, f3
 }
 
 void cur_obj_reset_timer_and_subaction(void) {
+    if (!o) { return; }
     o->oTimer = 0;
     o->oSubAction = 0;
 }
 
 void cur_obj_change_action(s32 action) {
+    if (!o) { return; }
     o->oAction = action;
     o->oPrevAction = action;
     cur_obj_reset_timer_and_subaction();
 }
 
 void cur_obj_set_vel_from_mario_vel(struct MarioState* m, f32 f12, f32 f14) {
+    if (!o) { return; }
+    if (!m) { return; }
     f32 sp4 = m->forwardVel;
     f32 sp0 = f12 * f14;
 
@@ -1229,12 +1250,14 @@ void cur_obj_set_vel_from_mario_vel(struct MarioState* m, f32 f12, f32 f14) {
 }
 
 BAD_RETURN(s16) cur_obj_reverse_animation(void) {
+    if (!o) { return; }
     if (o->header.gfx.animInfo.animFrame >= 0) {
         o->header.gfx.animInfo.animFrame--;
     }
 }
 
 BAD_RETURN(s32) cur_obj_extend_animation_if_at_end(void) {
+    if (!o) { return; }
     s32 sp4 = o->header.gfx.animInfo.animFrame;
     s32 sp0 = o->header.gfx.animInfo.curAnim ? o->header.gfx.animInfo.curAnim->loopEnd - 2 : 0;
 
@@ -1242,6 +1265,7 @@ BAD_RETURN(s32) cur_obj_extend_animation_if_at_end(void) {
 }
 
 s32 cur_obj_check_if_near_animation_end(void) {
+    if (!o) { return 0; }
     u32 animFlags = o->header.gfx.animInfo.curAnim ? (s32) o->header.gfx.animInfo.curAnim->flags : 0;
     s32 animFrame = o->header.gfx.animInfo.animFrame;
     s32 nearLoopEnd = o->header.gfx.animInfo.curAnim ? o->header.gfx.animInfo.curAnim->loopEnd - 2 : 0;
@@ -1259,6 +1283,7 @@ s32 cur_obj_check_if_near_animation_end(void) {
 }
 
 s32 cur_obj_check_if_at_animation_end(void) {
+    if (!o) { return 0; }
     s32 animFrame = o->header.gfx.animInfo.animFrame;
     s32 lastFrame = o->header.gfx.animInfo.curAnim ? o->header.gfx.animInfo.curAnim->loopEnd - 1 : 0;
 
@@ -1270,6 +1295,7 @@ s32 cur_obj_check_if_at_animation_end(void) {
 }
 
 s32 cur_obj_check_anim_frame(s32 frame) {
+    if (!o) { return 0; }
     s32 animFrame = o->header.gfx.animInfo.animFrame;
 
     if (animFrame == frame) {
@@ -1280,6 +1306,7 @@ s32 cur_obj_check_anim_frame(s32 frame) {
 }
 
 s32 cur_obj_check_anim_frame_in_range(s32 startFrame, s32 rangeLength) {
+    if (!o) { return 0; }
     s32 animFrame = o->header.gfx.animInfo.animFrame;
 
     if (animFrame >= startFrame && animFrame < startFrame + rangeLength) {
@@ -1290,6 +1317,7 @@ s32 cur_obj_check_anim_frame_in_range(s32 startFrame, s32 rangeLength) {
 }
 
 s32 cur_obj_check_frame_prior_current_frame(s16 *a0) {
+    if (!o) { return 0; }
     s16 sp6 = o->header.gfx.animInfo.animFrame;
 
     while (*a0 != -1) {
@@ -1304,6 +1332,7 @@ s32 cur_obj_check_frame_prior_current_frame(s16 *a0) {
 }
 
 s32 mario_is_in_air_action(struct MarioState* m) {
+    if (!m) { return 0; }
     if (m->action & ACT_FLAG_AIR) {
         return TRUE;
     } else {
@@ -1312,6 +1341,7 @@ s32 mario_is_in_air_action(struct MarioState* m) {
 }
 
 s32 mario_is_dive_sliding(struct MarioState* m) {
+    if (!m) { return 0; }
     if (m->action == ACT_DIVE_SLIDE) {
         return TRUE;
     } else {
@@ -1320,11 +1350,13 @@ s32 mario_is_dive_sliding(struct MarioState* m) {
 }
 
 void cur_obj_set_y_vel_and_animation(f32 sp18, s32 sp1C) {
+    if (!o) { return; }
     o->oVelY = sp18;
     cur_obj_init_animation_with_sound(sp1C);
 }
 
 void cur_obj_unrender_and_reset_state(s32 sp18, s32 sp1C) {
+    if (!o) { return; }
     cur_obj_become_intangible();
     cur_obj_disable_rendering();
 
@@ -1336,6 +1368,7 @@ void cur_obj_unrender_and_reset_state(s32 sp18, s32 sp1C) {
 }
 
 void cur_obj_move_after_thrown_or_dropped(f32 forwardVel, f32 velY) {
+    if (!o) { return; }
     o->oMoveFlags = 0;
     o->oFloorHeight = find_floor_height(o->oPosX, o->oPosY + 160.0f, o->oPosZ);
 
@@ -1356,6 +1389,7 @@ void cur_obj_move_after_thrown_or_dropped(f32 forwardVel, f32 velY) {
 }
 
 void cur_obj_get_thrown_or_placed(f32 forwardVel, f32 velY, s32 thrownAction) {
+    if (!o) { return; }
     if (o->behavior == segmented_to_virtual(smlua_override_behavior(bhvBowser))) {
         // Interestingly, when bowser is thrown, he is offset slightly to
         // Mario's right
@@ -1382,6 +1416,7 @@ void cur_obj_get_thrown_or_placed(f32 forwardVel, f32 velY, s32 thrownAction) {
 }
 
 void cur_obj_get_dropped(void) {
+    if (!o) { return; }
     cur_obj_become_tangible();
     cur_obj_enable_rendering();
 
@@ -1410,6 +1445,7 @@ void mario_set_flag(s32 flag) {
 }
 
 s32 cur_obj_clear_interact_status_flag(s32 flag) {
+    if (!o) { return 0; }
     if (o->oInteractStatus & flag) {
         o->oInteractStatus &= flag ^ ~(0);
         return TRUE;
@@ -1437,25 +1473,30 @@ void cur_obj_disable(void) {
 }
 
 void cur_obj_become_intangible(void) {
+    if (!o) { return; }
     // When the timer is negative, the object is intangible and the timer
     // doesn't count down
     o->oIntangibleTimer = -1;
 }
 
 void cur_obj_become_tangible(void) {
+    if (!o) { return; }
     o->oIntangibleTimer = 0;
 }
 
 void obj_become_tangible(struct Object *obj) {
+    if (!obj) { return; }
     obj->oIntangibleTimer = 0;
 }
 
 void cur_obj_update_floor_height(void) {
+    if (!o) { return; }
     struct Surface *floor;
     o->oFloorHeight = find_floor(o->oPosX, o->oPosY, o->oPosZ, &floor);
 }
 
 struct Surface *cur_obj_update_floor_height_and_get_floor(void) {
+    if (!o) { return NULL; }
     struct Surface *floor;
     o->oFloorHeight = find_floor(o->oPosX, o->oPosY, o->oPosZ, &floor);
     return floor;
@@ -1483,11 +1524,13 @@ void apply_drag_to_value(f32 *value, f32 dragStrength) {
 }
 
 void cur_obj_apply_drag_xz(f32 dragStrength) {
+    if (!o) { return; }
     apply_drag_to_value(&o->oVelX, dragStrength);
     apply_drag_to_value(&o->oVelZ, dragStrength);
 }
 
 s32 cur_obj_move_xz(f32 steepSlopeNormalY, s32 careAboutEdgesAndSteepSlopes) {
+    if (!o) { return 0; }
     struct Surface *intendedFloor = NULL;
 
     f32 intendedX = o->oPosX + o->oVelX;
@@ -1547,6 +1590,7 @@ s32 cur_obj_move_xz(f32 steepSlopeNormalY, s32 careAboutEdgesAndSteepSlopes) {
 }
 
 void cur_obj_move_update_underwater_flags(void) {
+    if (!o) { return; }
     f32 decelY = (f32)(sqrtf(o->oVelY * o->oVelY) * (o->oDragStrength * 7.0f)) / 100.0L;
 
     if (o->oVelY > 0) {
@@ -1564,6 +1608,7 @@ void cur_obj_move_update_underwater_flags(void) {
 }
 
 void cur_obj_move_update_ground_air_flags(UNUSED f32 gravity, f32 bounciness) {
+    if (!o) { return; }
     o->oMoveFlags &= ~OBJ_MOVE_BOUNCE;
 
     if (o->oPosY < o->oFloorHeight) {
@@ -1599,6 +1644,7 @@ void cur_obj_move_update_ground_air_flags(UNUSED f32 gravity, f32 bounciness) {
 }
 
 f32 cur_obj_move_y_and_get_water_level(f32 gravity, f32 buoyancy) {
+    if (!o) { return 0; }
     f32 waterLevel;
 
     o->oVelY += gravity + buoyancy;
@@ -1617,6 +1663,7 @@ f32 cur_obj_move_y_and_get_water_level(f32 gravity, f32 buoyancy) {
 }
 
 void cur_obj_move_y(f32 gravity, f32 bounciness, f32 buoyancy) {
+    if (!o) { return; }
     f32 waterLevel;
 
     o->oMoveFlags &= ~OBJ_MOVE_LEFT_GROUND;
@@ -1670,6 +1717,7 @@ static void stub_obj_helpers_1(void) {
 }
 
 void cur_obj_unused_resolve_wall_collisions(f32 offsetY, f32 radius) {
+    if (!o) { return; }
     if (radius > 0.1L) {
         f32_find_wall_collision(&o->oPosX, &o->oPosY, &o->oPosZ, offsetY, radius);
     }
@@ -1690,6 +1738,7 @@ s16 abs_angle_diff(s16 x0, s16 x1) {
 }
 
 void cur_obj_move_xz_using_fvel_and_yaw(void) {
+    if (!o) { return; }
     o->oVelX = o->oForwardVel * sins(o->oMoveAngleYaw);
     o->oVelZ = o->oForwardVel * coss(o->oMoveAngleYaw);
 
@@ -1698,6 +1747,7 @@ void cur_obj_move_xz_using_fvel_and_yaw(void) {
 }
 
 void cur_obj_move_y_with_terminal_vel(void) {
+    if (!o) { return; }
     if (o->oVelY < -70.0f) {
         o->oVelY = -70.0f;
     }
@@ -1706,6 +1756,7 @@ void cur_obj_move_y_with_terminal_vel(void) {
 }
 
 void cur_obj_compute_vel_xz(void) {
+    if (!o) { return; }
     o->oVelX = o->oForwardVel * sins(o->oMoveAngleYaw);
     o->oVelZ = o->oForwardVel * coss(o->oMoveAngleYaw);
 }
@@ -1740,14 +1791,17 @@ s32 obj_check_if_collided_with_object(struct Object *obj1, struct Object *obj2) 
 }
 
 void cur_obj_set_behavior(const BehaviorScript *behavior) {
+    if (!o) { return; }
     o->behavior = segmented_to_virtual(behavior);
 }
 
 void obj_set_behavior(struct Object *obj, const BehaviorScript *behavior) {
+    if (!obj) { return; }
     obj->behavior = segmented_to_virtual(behavior);
 }
 
 s32 cur_obj_has_behavior(const BehaviorScript *behavior) {
+    if (!o) { return 0; }
     behavior = smlua_override_behavior(behavior);
     if (o->behavior == segmented_to_virtual(behavior)) {
         return TRUE;
@@ -1767,6 +1821,7 @@ s32 obj_has_behavior(struct Object *obj, const BehaviorScript *behavior) {
 }
 
 f32 cur_obj_lateral_dist_from_obj_to_home(struct Object *obj) {
+    if (!o) { return 0; }
     f32 dist;
     f32 dx = o->oHomeX - obj->oPosX;
     f32 dz = o->oHomeZ - obj->oPosZ;
@@ -1776,6 +1831,7 @@ f32 cur_obj_lateral_dist_from_obj_to_home(struct Object *obj) {
 }
 
 f32 cur_obj_lateral_dist_from_mario_to_home(void) {
+    if (!o) { return 0; }
     struct Object* player = nearest_player_to_object(o);
     if (!player) { return 10000; }
     f32 dist;
@@ -1787,6 +1843,7 @@ f32 cur_obj_lateral_dist_from_mario_to_home(void) {
 }
 
 f32 cur_obj_lateral_dist_to_home(void) {
+    if (!o) { return 0; }
     f32 dist;
     f32 dx = o->oHomeX - o->oPosX;
     f32 dz = o->oHomeZ - o->oPosZ;
@@ -1796,6 +1853,7 @@ f32 cur_obj_lateral_dist_to_home(void) {
 }
 
 s32 cur_obj_outside_home_square(f32 halfLength) {
+    if (!o) { return 0; }
     if (o->oHomeX - halfLength > o->oPosX) {
         return TRUE;
     }
@@ -1816,6 +1874,7 @@ s32 cur_obj_outside_home_square(f32 halfLength) {
 }
 
 s32 cur_obj_outside_home_rectangle(f32 minX, f32 maxX, f32 minZ, f32 maxZ) {
+    if (!o) { return 0; }
     if (o->oHomeX + minX > o->oPosX) {
         return TRUE;
     }
@@ -1836,6 +1895,7 @@ s32 cur_obj_outside_home_rectangle(f32 minX, f32 maxX, f32 minZ, f32 maxZ) {
 }
 
 void cur_obj_set_pos_to_home(void) {
+    if (!o) { return; }
     o->oPosX = o->oHomeX;
     o->oPosY = o->oHomeY;
     o->oPosZ = o->oHomeZ;
@@ -1843,6 +1903,7 @@ void cur_obj_set_pos_to_home(void) {
 }
 
 void cur_obj_set_pos_to_home_and_stop(void) {
+    if (!o) { return; }
     cur_obj_set_pos_to_home();
 
     o->oForwardVel = 0;
@@ -1850,6 +1911,7 @@ void cur_obj_set_pos_to_home_and_stop(void) {
 }
 
 void cur_obj_shake_y(f32 amount) {
+    if (!o) { return; }
     //! Technically could cause a bit of drift, but not much
     if (o->oTimer % 2 == 0) {
         o->oPosY += amount;
@@ -1864,6 +1926,7 @@ void cur_obj_start_cam_event(UNUSED struct Object *obj, s32 cameraEvent) {
 }
 
 void set_mario_interact_hoot_if_in_range(UNUSED s32 sp0, UNUSED s32 sp4, f32 sp8) {
+    if (!o) { return; }
     if (o->oDistanceToMario < sp8) {
         gMarioObject->oInteractStatus = INT_STATUS_HOOT_GRABBED_BY_MARIO;
     }
@@ -1880,6 +1943,7 @@ void obj_set_cylboard(struct Object *obj) {
 }
 
 void cur_obj_set_billboard_if_vanilla_cam(void) {
+    if (!o) { return; }
     if (configEnableCamera) {
         o->header.gfx.node.flags &= ~GRAPH_RENDER_BILLBOARD;
         o->header.gfx.node.flags |= GRAPH_RENDER_CYLBOARD;
@@ -1904,11 +1968,13 @@ void obj_set_hurtbox_radius_and_height(struct Object *o, f32 radius, f32 height)
 }
 
 void cur_obj_set_hitbox_radius_and_height(f32 radius, f32 height) {
+    if (!o) { return; }
     o->hitboxRadius = radius;
     o->hitboxHeight = height;
 }
 
 void cur_obj_set_hurtbox_radius_and_height(f32 radius, f32 height) {
+    if (!o) { return; }
     o->hurtboxRadius = radius;
     o->hurtboxHeight = height;
 }
@@ -1952,11 +2018,14 @@ void obj_spawn_loot_yellow_coins(struct Object *obj, s32 numCoins, f32 sp28) {
 
 void cur_obj_spawn_loot_coin_at_mario_pos(struct MarioState* m) {
     struct Object *coin;
-    if (o->oNumLootCoins <= 0) {
+    if (!m) { return; }
+    if (o && o->oNumLootCoins <= 0) {
         return;
     }
 
-    o->oNumLootCoins--;
+    if (o) {
+        o->oNumLootCoins--;
+    }
 
     coin = spawn_object(o, MODEL_YELLOW_COIN, bhvSingleCoinGetsSpawned);
     if (coin == NULL) { return; }
@@ -1966,6 +2035,7 @@ void cur_obj_spawn_loot_coin_at_mario_pos(struct MarioState* m) {
 }
 
 f32 cur_obj_abs_y_dist_to_home(void) {
+    if (!o) { return 0; }
     f32 dist = o->oHomeY - o->oPosY;
 
     if (dist < 0) {
@@ -1976,6 +2046,7 @@ f32 cur_obj_abs_y_dist_to_home(void) {
 }
 
 s32 cur_obj_advance_looping_anim(void) {
+    if (!o) { return 0; }
     s32 animFrame = o->header.gfx.animInfo.animFrame;
     s32 loopEnd = o->header.gfx.animInfo.curAnim->loopEnd;
     s32 result;
@@ -1994,6 +2065,7 @@ s32 cur_obj_advance_looping_anim(void) {
 }
 
 s32 cur_obj_detect_steep_floor(s16 steepAngleDegrees) {
+    if (!o) { return 0; }
     struct Surface *intendedFloor;
     f32 intendedX, intendedFloorHeight, intendedZ;
     f32 deltaFloorHeight;
@@ -2021,6 +2093,7 @@ s32 cur_obj_detect_steep_floor(s16 steepAngleDegrees) {
 }
 
 s32 cur_obj_resolve_wall_collisions(void) {
+    if (!o) { return 0; }
     s32 numCollisions;
     struct Surface *wall;
     struct WallCollisionData collisionData;
@@ -2055,6 +2128,7 @@ s32 cur_obj_resolve_wall_collisions(void) {
 }
 
 void cur_obj_update_floor(void) {
+    if (!o) { return; }
     struct Surface *floor = cur_obj_update_floor_height_and_get_floor();
     o->oFloor = floor;
 
@@ -2078,6 +2152,7 @@ void cur_obj_update_floor(void) {
 }
 
 void cur_obj_update_floor_and_resolve_wall_collisions(s16 steepSlopeDegrees) {
+    if (!o) { return; }
 #ifdef VERSION_JP
     o->oMoveFlags &= ~OBJ_MOVE_ABOVE_LAVA;
 #else
@@ -2114,6 +2189,7 @@ void cur_obj_update_floor_and_walls(void) {
 }
 
 void cur_obj_move_standard(s16 steepSlopeAngleDegrees) {
+    if (!o) { return; }
     f32 gravity = o->oGravity;
     f32 bounciness = o->oBounciness;
     f32 buoyancy = o->oBuoyancy;
@@ -2154,6 +2230,7 @@ void cur_obj_move_standard(s16 steepSlopeAngleDegrees) {
 }
 
 s32 cur_obj_within_12k_bounds(void) {
+    if (!o) { return 0; }
     if (o->oPosX < -12000.0f || 12000.0f < o->oPosX) {
         return FALSE;
     }
@@ -2170,6 +2247,7 @@ s32 cur_obj_within_12k_bounds(void) {
 }
 
 void cur_obj_move_using_vel_and_gravity(void) {
+    if (!o) { return; }
     //if (cur_obj_within_12k_bounds()) {
         o->oPosX += o->oVelX;
         o->oPosZ += o->oVelZ;
@@ -2185,6 +2263,7 @@ void cur_obj_move_using_fvel_and_gravity(void) {
 
 void obj_set_pos_relative(struct Object *obj, struct Object *other, f32 dleft, f32 dy,
                              f32 dforward) {
+    if (!obj || !other) { return; }
     f32 facingZ = coss(other->oMoveAngleYaw);
     f32 facingX = sins(other->oMoveAngleYaw);
 
@@ -2199,6 +2278,7 @@ void obj_set_pos_relative(struct Object *obj, struct Object *other, f32 dleft, f
 }
 
 s16 cur_obj_angle_to_home(void) {
+    if (!o) { return 0; }
     s16 angle;
     f32 dx = o->oHomeX - o->oPosX;
     f32 dz = o->oHomeZ - o->oPosZ;
@@ -2208,6 +2288,7 @@ s16 cur_obj_angle_to_home(void) {
 }
 
 void obj_set_gfx_pos_at_obj_pos(struct Object *obj1, struct Object *obj2) {
+    if (!obj1 || !obj2) { return; }
     obj1->header.gfx.pos[0] = obj2->oPosX;
     obj1->header.gfx.pos[1] = obj2->oPosY + obj2->oGraphYOffset;
     obj1->header.gfx.pos[2] = obj2->oPosZ;
@@ -2296,24 +2377,28 @@ void obj_create_transform_from_self(struct Object *obj) {
 }
 
 void cur_obj_rotate_move_angle_using_vel(void) {
+    if (!o) { return; }
     o->oMoveAnglePitch += o->oAngleVelPitch;
     o->oMoveAngleYaw += o->oAngleVelYaw;
     o->oMoveAngleRoll += o->oAngleVelRoll;
 }
 
 void cur_obj_rotate_face_angle_using_vel(void) {
+    if (!o) { return; }
     o->oFaceAnglePitch += o->oAngleVelPitch;
     o->oFaceAngleYaw += o->oAngleVelYaw;
     o->oFaceAngleRoll += o->oAngleVelRoll;
 }
 
 void cur_obj_set_face_angle_to_move_angle(void) {
+    if (!o) { return; }
     o->oFaceAnglePitch = o->oMoveAnglePitch;
     o->oFaceAngleYaw = o->oMoveAngleYaw;
     o->oFaceAngleRoll = o->oMoveAngleRoll;
 }
 
 s32 cur_obj_follow_path(UNUSED s32 unusedArg) {
+    if (!o) { return 0; }
     struct Waypoint *startWaypoint;
     struct Waypoint *lastWaypoint;
     struct Waypoint *targetWaypoint;
@@ -2378,6 +2463,7 @@ s32 cur_obj_follow_path(UNUSED s32 unusedArg) {
 }
 
 void chain_segment_init(struct ChainSegment *segment) {
+    if (!o) { return; }
     if (segment == NULL) { return; }
     segment->posX = 0.0f;
     segment->posY = 0.0f;
@@ -2422,6 +2508,7 @@ void obj_build_vel_from_transform(struct Object *a0) {
 }
 
 void cur_obj_set_pos_via_transform(void) {
+    if (!o) { return; }
     obj_build_transform_from_pos_and_angle(o, O_PARENT_RELATIVE_POS_INDEX, O_MOVE_ANGLE_INDEX);
     obj_build_vel_from_transform(o);
     o->oPosX += o->oVelX;
@@ -2430,6 +2517,7 @@ void cur_obj_set_pos_via_transform(void) {
 }
 
 s16 cur_obj_reflect_move_angle_off_wall(void) {
+    if (!o) { return 0; }
     s16 angle = o->oWallAngle - ((s16) o->oMoveAngleYaw - (s16) o->oWallAngle) + 0x8000;
     return angle;
 }
@@ -2517,6 +2605,7 @@ s32 absi(s32 x) {
 }
 
 s32 cur_obj_wait_then_blink(s32 timeUntilBlinking, s32 numBlinks) {
+    if (!o) { return 0; }
     s32 done = FALSE;
     s32 timeBlinking;
 
@@ -2558,6 +2647,7 @@ void spawn_mist_particles_with_sound(u32 sp18) {
 }
 
 void cur_obj_push_mario_away(f32 radius) {
+    if (!o) { return; }
     for (s32 i = 0; i < MAX_PLAYERS; i++) {
         struct Object* player = gMarioStates[i].marioObj;
         if (!player) { continue; }
@@ -2575,6 +2665,7 @@ void cur_obj_push_mario_away(f32 radius) {
 }
 
 void cur_obj_push_mario_away_from_cylinder(f32 radius, f32 extentY) {
+    if (!o) { return; }
     for (s32 i = 0; i < MAX_PLAYERS; i++) {
         struct Object* player = gMarioStates[i].marioObj;
         if (!player) { continue; }
@@ -2600,6 +2691,7 @@ void cur_obj_push_mario_away_from_cylinder(f32 radius, f32 extentY) {
 }
 
 void bhv_dust_smoke_loop(void) {
+    if (!o) { return; }
     o->oPosX += o->oVelX;
     o->oPosY += o->oVelY;
     o->oPosZ += o->oVelZ;
@@ -2615,6 +2707,7 @@ static void stub_obj_helpers_2(void) {
 }
 
 s32 cur_obj_set_direction_table(s8 *a0) {
+    if (!o) { return 0; }
     o->oToxBoxMovementPattern = a0;
     o->oToxBoxMovementStep = 0;
 
@@ -2622,6 +2715,7 @@ s32 cur_obj_set_direction_table(s8 *a0) {
 }
 
 s32 cur_obj_progress_direction_table(void) {
+    if (!o) { return 0; }
     s8 spF;
     s8 *sp8 = o->oToxBoxMovementPattern;
     s32 sp4 = o->oToxBoxMovementStep + 1;
@@ -2642,6 +2736,7 @@ void stub_obj_helpers_3(UNUSED s32 sp0, UNUSED s32 sp4) {
 }
 
 void cur_obj_scale_over_time(s32 a0, s32 a1, f32 sp10, f32 sp14) {
+    if (!o) { return; }
     f32 sp4 = sp14 - sp10;
     f32 sp0 = (f32) o->oTimer / a1;
 
@@ -2659,6 +2754,7 @@ void cur_obj_scale_over_time(s32 a0, s32 a1, f32 sp10, f32 sp14) {
 }
 
 void cur_obj_set_pos_to_home_with_debug(void) {
+    if (!o) { return; }
     o->oPosX = o->oHomeX + gDebugInfo[5][0];
     o->oPosY = o->oHomeY + gDebugInfo[5][1];
     o->oPosZ = o->oHomeZ + gDebugInfo[5][2];
@@ -2687,6 +2783,7 @@ s32 cur_obj_is_any_player_on_platform(void) {
 }
 
 s32 cur_obj_shake_y_until(s32 cycles, s32 amount) {
+    if (!o) { return 0; }
     if (o->oTimer % 2 != 0) {
         o->oPosY -= amount;
     } else {
@@ -2701,6 +2798,7 @@ s32 cur_obj_shake_y_until(s32 cycles, s32 amount) {
 }
 
 s32 cur_obj_move_up_and_down(s32 a0) {
+    if (!o) { return 0; }
     if (a0 >= 4 || a0 < 0) {
         return TRUE;
     }
@@ -2710,6 +2808,7 @@ s32 cur_obj_move_up_and_down(s32 a0) {
 }
 
 void cur_obj_call_action_function(void (*actionFunctions[])(void), uint32_t actionFunctionsLength) {
+    if (!o) { return; }
     if (!actionFunctions) { return; }
     if ((uint32_t)o->oAction >= actionFunctionsLength) { return; }
     void (*actionFunction)(void) = actionFunctions[o->oAction];
@@ -2718,6 +2817,7 @@ void cur_obj_call_action_function(void (*actionFunctions[])(void), uint32_t acti
 }
 
 struct Object *spawn_star_with_no_lvl_exit(s32 sp20, s32 sp24) {
+    if (!o) { return NULL; }
     struct Object *sp1C = spawn_object(o, MODEL_STAR, bhvSpawnedStarNoLevelExit);
     if (sp1C == NULL) { return NULL; }
     sp1C->oSparkleSpawnUnk1B0 = sp24;
@@ -2738,6 +2838,7 @@ s32 bit_shift_left(s32 a0) {
 }
 
 s32 cur_obj_mario_far_away(void) {
+    if (!o) { return 0; }
     for (s32 i = 0; i < MAX_PLAYERS; i++) {
         if (!is_player_active(&gMarioStates[i])) { continue; }
         struct Object* player = gMarioStates[i].marioObj;
@@ -2784,6 +2885,7 @@ static void stub_obj_helpers_5(void) {
 }
 
 void bhv_init_room(void) {
+    if (!o) { return; }
     struct Surface *floor;
     f32 floorHeight;
 
@@ -2809,6 +2911,7 @@ void bhv_init_room(void) {
 }
 
 void cur_obj_enable_rendering_if_mario_in_room(void) {
+    if (!o) { return; }
     if (o->oRoom == -1) { return; }
     if (gMarioCurrentRoom == 0) { return; }
 
@@ -2842,6 +2945,7 @@ void cur_obj_enable_rendering_if_mario_in_room(void) {
 }
 
 s32 cur_obj_set_hitbox_and_die_if_attacked(struct ObjectHitbox *hitbox, s32 deathSound, s32 noLootCoins) {
+    if (!o) { return 0; }
     s32 interacted = FALSE;
 
     obj_set_hitbox(o, hitbox);
@@ -2867,6 +2971,7 @@ s32 cur_obj_set_hitbox_and_die_if_attacked(struct ObjectHitbox *hitbox, s32 deat
 
 
 void obj_explode_and_spawn_coins(f32 sp18, s32 sp1C) {
+    if (!o) { return; }
     spawn_mist_particles_variable(0, 0, sp18);
     spawn_triangle_break_particles(30, 138, 3.0f, 4);
     obj_mark_for_deletion(o);
@@ -2883,12 +2988,14 @@ void obj_set_collision_data(struct Object *obj, const void *segAddr) {
 }
 
 void cur_obj_if_hit_wall_bounce_away(void) {
+    if (!o) { return; }
     if (o->oMoveFlags & OBJ_MOVE_HIT_WALL) {
         o->oMoveAngleYaw = o->oWallAngle;
     }
 }
 
 s32 cur_obj_hide_if_mario_far_away_y(f32 distY) {
+    if (!o) { return 0; }
     if (!gMarioStates[0].marioObj) { return FALSE; }
     if (absf(o->oPosY - gMarioStates[0].marioObj->oPosY) < distY * draw_distance_scalar()) {
         cur_obj_unhide();
@@ -2922,6 +3029,7 @@ s32 geo_offset_klepto_debug(s32 callContext, struct GraphNode *a1, UNUSED s32 sp
 }
 
 s32 obj_is_hidden(struct Object *obj) {
+    if (!obj) { return 0; }
     if (obj->header.gfx.node.flags & GRAPH_RENDER_INVISIBLE) {
         return TRUE;
     } else {
@@ -2960,6 +3068,7 @@ void clear_time_stop_flags(s32 flags) {
 }
 
 s32 cur_obj_can_mario_activate_textbox(struct MarioState* m, f32 radius, f32 height, UNUSED s32 unused) {
+    if (!o) { return 0; }
     if (!m->visibleToEnemies) { return FALSE; }
     if (o->oDistanceToMario < 1500.0f) {
         f32 latDistToMario = lateral_dist_between_objects(o, m->marioObj);
@@ -2981,6 +3090,7 @@ s32 cur_obj_can_mario_activate_textbox_2(struct MarioState* m, f32 radius, f32 h
 }
 
 void cur_obj_end_dialog(struct MarioState* m, s32 dialogFlags, s32 dialogResult) {
+    if (!o) { return; }
     if (m->playerIndex != 0) { return; }
 
     o->oDialogResponse = dialogResult;
@@ -2992,6 +3102,7 @@ void cur_obj_end_dialog(struct MarioState* m, s32 dialogFlags, s32 dialogResult)
 }
 
 s32 cur_obj_update_dialog(struct MarioState* m, s32 actionArg, s32 dialogFlags, s32 dialogID, UNUSED s32 unused, u8 (*inContinueDialogFunction)(void)) {
+    if (!o) { return 0; }
     s32 dialogResponse = 0;
     UNUSED s32 doneTurning = TRUE;
 
@@ -3071,6 +3182,7 @@ s32 cur_obj_update_dialog(struct MarioState* m, s32 actionArg, s32 dialogFlags, 
 }
 
 s32 cur_obj_update_dialog_with_cutscene(struct MarioState* m, s32 actionArg, s32 dialogFlags, s32 cutsceneTable, s32 dialogID, u8 (*inContinueDialogFunction)(void)) {
+    if (!o) { return 0; }
     s32 dialogResponse = 0;
     s32 doneTurning = TRUE;
 
@@ -3152,6 +3264,7 @@ s32 cur_obj_update_dialog_with_cutscene(struct MarioState* m, s32 actionArg, s32
 }
 
 s32 cur_obj_has_model(u16 modelID) {
+    if (!o) { return 0; }
     if (modelID >= MAX_LOADED_GRAPH_NODES) { return FALSE; }
     if (o->header.gfx.sharedChild == gLoadedGraphNodes[modelID]) {
         return TRUE;
@@ -3163,6 +3276,7 @@ s32 cur_obj_has_model(u16 modelID) {
 }
 
 void cur_obj_align_gfx_with_floor(void) {
+    if (!o) { return; }
     struct Surface *floor;
     Vec3f floorNormal;
     Vec3f position;
@@ -3195,6 +3309,7 @@ s32 mario_is_within_rectangle(s16 minX, s16 maxX, s16 minZ, s16 maxZ) {
 }
 
 void cur_obj_shake_screen(s32 shake) {
+    if (!o) { return; }
     set_camera_shake_from_point(shake, o->oPosX, o->oPosY, o->oPosZ);
 }
 
@@ -3219,6 +3334,7 @@ s32 obj_attack_collided_from_other_object(struct Object *obj) {
 }
 
 s32 cur_obj_was_attacked_or_ground_pounded(void) {
+    if (!o) { return 0; }
     s32 attacked = FALSE;
 
     if ((o->oInteractStatus & INT_STATUS_INTERACTED)
@@ -3241,6 +3357,7 @@ void obj_copy_behavior_params(struct Object *dst, struct Object *src) {
 }
 
 void cur_obj_init_animation_and_anim_frame(s32 animIndex, s32 animFrame) {
+    if (!o) { return; }
     cur_obj_init_animation_with_sound(animIndex);
     o->header.gfx.animInfo.animFrame = animFrame;
 }
@@ -3256,6 +3373,7 @@ void cur_obj_init_animation_and_extend_if_at_end(s32 animIndex) {
 }
 
 s32 cur_obj_check_grabbed_mario(void) {
+    if (!o) { return 0; }
     if (o->oInteractStatus & INT_STATUS_GRABBED_MARIO) {
         o->oKingBobombUnk88 = 1;
         cur_obj_become_intangible();
@@ -3293,15 +3411,20 @@ void cur_obj_unused_play_footstep_sound(s32 animFrame1, s32 animFrame2, s32 soun
 
 void enable_time_stop_including_mario(void) {
     gTimeStopState |= TIME_STOP_ENABLED | TIME_STOP_MARIO_AND_DOORS;
-    o->activeFlags |= ACTIVE_FLAG_INITIATED_TIME_STOP;
+    if (o) {
+        o->activeFlags |= ACTIVE_FLAG_INITIATED_TIME_STOP;
+    }
 }
 
 void disable_time_stop_including_mario(void) {
     gTimeStopState &= ~(TIME_STOP_ENABLED | TIME_STOP_MARIO_AND_DOORS);
-    o->activeFlags &= ~ACTIVE_FLAG_INITIATED_TIME_STOP;
+    if (o) {
+        o->activeFlags &= ~ACTIVE_FLAG_INITIATED_TIME_STOP;
+    }
 }
 
 s32 cur_obj_check_interacted(void) {
+    if (!o) { return 0; }
     if (o->oInteractStatus & INT_STATUS_INTERACTED) {
         o->oInteractStatus = 0;
         return TRUE;
@@ -3311,7 +3434,7 @@ s32 cur_obj_check_interacted(void) {
 }
 
 void cur_obj_spawn_loot_blue_coin(void) {
-    if (o->oNumLootCoins >= 5) {
+    if (o && o->oNumLootCoins >= 5) {
         spawn_object(o, MODEL_BLUE_COIN, bhvMrIBlueCoin);
         o->oNumLootCoins -= 5;
     }
@@ -3319,6 +3442,7 @@ void cur_obj_spawn_loot_blue_coin(void) {
 
 #ifndef VERSION_JP
 void cur_obj_spawn_star_at_y_offset(f32 targetX, f32 targetY, f32 targetZ, f32 offsetY) {
+    if (!o) { return; }
     f32 objectPosY = o->oPosY;
     o->oPosY += offsetY + gDebugInfo[5][0];
     spawn_default_star(targetX, targetY, targetZ);
@@ -3327,6 +3451,7 @@ void cur_obj_spawn_star_at_y_offset(f32 targetX, f32 targetY, f32 targetZ, f32 o
 #endif
 
 void cur_obj_set_home_once(void) {
+    if (!o) { return; }
     if (o->setHome) { return; }
     o->setHome = TRUE;
     o->oHomeX = o->oPosX;

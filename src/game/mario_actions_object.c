@@ -31,6 +31,7 @@ void animated_stationary_ground_step(struct MarioState *m, s32 animation, u32 en
 }
 
 s32 mario_update_punch_sequence(struct MarioState *m) {
+    if (!m) { return 0; }
     u32 endAction, crouchEndAction;
     s32 animFrame;
 
@@ -151,6 +152,7 @@ s32 mario_update_punch_sequence(struct MarioState *m) {
 }
 
 s32 act_punching(struct MarioState *m) {
+    if (!m) { return 0; }
     if (m->input & INPUT_UNKNOWN_10) {
         return drop_and_set_mario_action(m, ACT_SHOCKWAVE_BOUNCE, 0);
     }
@@ -179,6 +181,7 @@ s32 act_punching(struct MarioState *m) {
 }
 
 s32 act_picking_up(struct MarioState *m) {
+    if (!m) { return 0; }
     if (m->input & INPUT_UNKNOWN_10) {
         return drop_and_set_mario_action(m, ACT_SHOCKWAVE_BOUNCE, 0);
     }
@@ -222,6 +225,7 @@ s32 act_picking_up(struct MarioState *m) {
 }
 
 s32 act_dive_picking_up(struct MarioState *m) {
+    if (!m) { return 0; }
     if (m->input & INPUT_UNKNOWN_10) {
         return drop_and_set_mario_action(m, ACT_SHOCKWAVE_BOUNCE, 0);
     }
@@ -242,6 +246,7 @@ s32 act_dive_picking_up(struct MarioState *m) {
 }
 
 s32 act_placing_down(struct MarioState *m) {
+    if (!m) { return 0; }
     if (m->input & INPUT_UNKNOWN_10) {
         return drop_and_set_mario_action(m, ACT_SHOCKWAVE_BOUNCE, 0);
     }
@@ -259,6 +264,7 @@ s32 act_placing_down(struct MarioState *m) {
 }
 
 s32 act_throwing(struct MarioState *m) {
+    if (!m) { return 0; }
     if (m->heldObj && (m->heldObj->oInteractionSubtype & INT_SUBTYPE_HOLDABLE_NPC)) {
         return set_mario_action(m, ACT_PLACING_DOWN, 0);
     }
@@ -283,6 +289,7 @@ s32 act_throwing(struct MarioState *m) {
 }
 
 s32 act_heavy_throw(struct MarioState *m) {
+    if (!m) { return 0; }
     if (m->input & INPUT_UNKNOWN_10) {
         return drop_and_set_mario_action(m, ACT_SHOCKWAVE_BOUNCE, 0);
     }
@@ -303,6 +310,7 @@ s32 act_heavy_throw(struct MarioState *m) {
 }
 
 s32 act_stomach_slide_stop(struct MarioState *m) {
+    if (!m) { return 0; }
     if (m->input & INPUT_UNKNOWN_10) {
         return set_mario_action(m, ACT_SHOCKWAVE_BOUNCE, 0);
     }
@@ -320,6 +328,7 @@ s32 act_stomach_slide_stop(struct MarioState *m) {
 }
 
 s32 act_picking_up_bowser(struct MarioState *m) {
+    if (!m) { return 0; }
     if (m->playerIndex != 0) {
         m->usedObj = cur_obj_nearest_object_with_behavior(bhvBowser);
     }
@@ -350,6 +359,7 @@ s32 act_picking_up_bowser(struct MarioState *m) {
 }
 
 s32 act_holding_bowser(struct MarioState *m) {
+    if (!m) { return 0; }
     if (m->playerIndex != 0) {
         if (m->marioBodyState->grabPos != GRAB_POS_BOWSER) {
             m->usedObj = cur_obj_nearest_object_with_behavior(bhvBowser);
@@ -448,6 +458,7 @@ s32 act_holding_bowser(struct MarioState *m) {
 }
 
 s32 act_releasing_bowser(struct MarioState *m) {
+    if (!m) { return 0; }
     if (++m->actionTimer == 1 && m->playerIndex == 0) {
         if (m->actionArg == 0) {
             queue_rumble_data_mario(m, 5, 50);
@@ -464,6 +475,7 @@ s32 act_releasing_bowser(struct MarioState *m) {
 }
 
 s32 check_common_object_cancels(struct MarioState *m) {
+    if (!m) { return 0; }
     if (m->playerIndex != 0) { return FALSE; }
 
     f32 waterSurface = m->waterLevel - 100;

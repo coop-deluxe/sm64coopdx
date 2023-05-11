@@ -16,6 +16,7 @@
  * objects. (King Bobomb, Bowser, King Whomp)
  */
 void exec_anim_sound_state(struct SoundState *soundStates, u16 maxSoundStates) {
+    if (!gCurrentObject) { return; }
     s32 stateIdx = gCurrentObject->oSoundStateID;
     if (stateIdx >= maxSoundStates) { return; }
 
@@ -62,12 +63,14 @@ void create_sound_spawner(s32 soundMagic) {
  * separate left/right leg functions that went unused.
  */
 void cur_obj_play_sound_1(s32 soundMagic) {
+    if (!gCurrentObject) { return; }
     if (gCurrentObject->header.gfx.node.flags & GRAPH_RENDER_ACTIVE) {
         play_sound(soundMagic, gCurrentObject->header.gfx.cameraToObject);
     }
 }
 
 void cur_obj_play_sound_2(s32 soundMagic) {
+    if (!gCurrentObject) { return; }
     if (gCurrentObject->header.gfx.node.flags & GRAPH_RENDER_ACTIVE) {
         play_sound(soundMagic, gCurrentObject->header.gfx.cameraToObject);
 

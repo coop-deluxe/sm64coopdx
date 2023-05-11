@@ -915,6 +915,7 @@ f32 atan2f(f32 y, f32 x) {
  * TODO: verify the classification of the spline / figure out how polynomials were computed
  */
 void spline_get_weights(struct MarioState* m, Vec4f result, f32 t, UNUSED s32 c) {
+    if (!m) { return; }
     f32 tinv = 1 - t;
     f32 tinv2 = tinv * tinv;
     f32 tinv3 = tinv2 * tinv;
@@ -964,6 +965,7 @@ void spline_get_weights(struct MarioState* m, Vec4f result, f32 t, UNUSED s32 c)
  * That's because the spline has a 3rd degree polynomial, so it looks 3 points ahead.
  */
 void anim_spline_init(struct MarioState* m, Vec4s *keyFrames) {
+    if (!m) { return; }
     m->splineKeyframe = keyFrames;
     m->splineKeyframeFraction = 0;
     m->splineState = 1;
@@ -975,6 +977,7 @@ void anim_spline_init(struct MarioState* m, Vec4s *keyFrames) {
  * Returns TRUE when the last point is reached, FALSE otherwise.
  */
 s32 anim_spline_poll(struct MarioState* m, Vec3f result) {
+    if (!m) { return 0; }
     Vec4f weights = { 0 };
     s32 i;
     s32 hasEnded = FALSE;

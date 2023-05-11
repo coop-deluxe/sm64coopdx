@@ -241,7 +241,7 @@ void draw_skybox_tile_grid(Gfx **dlist, s8 background, s8 player, s8 colorIndex)
             if (tileIndex < 0)  { tileIndex = 0;  }
             if (tileIndex > 79) { tileIndex = 79; }
             Texture* texture = NULL;
-            if (background >= 10) {
+            if (background < 0 || background >= 10) {
                 texture = gCustomSkyboxPtrList[tileIndex];
             } else {
                 texture = (Texture*)(*(SkyboxTexture *) segmented_to_virtual(sSkyboxTextures[background]))[tileIndex];

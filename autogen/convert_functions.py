@@ -806,7 +806,7 @@ def output_fuzz_function(fname, function):
     comment = ' -- '
     fid = function['identifier']
 
-    line = '    ' + fid + '('
+    line = '        function() return ' + fid + '('
 
     for param in function['params']:
         if first:
@@ -822,18 +822,13 @@ def output_fuzz_function(fname, function):
             ptype = 'integer'
         line += 'rnd_' + ptype.strip().replace('`', '').replace(' ', '').split('<')[-1].split('>')[0].split('(')[0] + '()'
 
-
-        #if ptype == '`integer`' or ptype == '`number`' or 'enum' in ptype:
-        #    print('0', end='')
-        #else:
-        #    print('nil', end='')
         comment += ptype
 
-    line += ')'
-    if len(line) >= 80:
-        line = line + '\n        ' + comment + '\n'
-    else:
-        line = line.ljust(80) + comment + '\n'
+    line += ') end,\n'
+    #if len(line) >= 80:
+    #    line = line + '\n        ' + comment + '\n'
+    #else:
+    #    line = line.ljust(80) + comment + '\n'
 
     global fuzz_functions
     fuzz_functions += line

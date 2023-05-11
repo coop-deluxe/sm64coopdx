@@ -238,7 +238,9 @@ const s32 *DynOS_Level_GetList() {
 }
 
 s32 DynOS_Level_GetCourse(s32 aLevel) {
-    return (s32) gLevelToCourseNumTable[aLevel - 1];
+    u32 index = aLevel - 1;
+    if (index >= LEVEL_COUNT) { return COURSE_NONE; }
+    return (s32) gLevelToCourseNumTable[index];
 }
 
 void DynOS_Level_Override(void* originalScript, void* newScript, s32 modIndex) {
@@ -908,7 +910,7 @@ s16 *DynOS_Level_GetWarp(s32 aLevel, s32 aArea, u8 aWarpId) {
     }
 
     DynOS_Level_Init();
-    if (aLevel < LEVEL_COUNT) {
+    if (aLevel >= 0 && aLevel < LEVEL_COUNT) {
         for (const auto &_Warp : sDynosLevelWarps[aLevel]) {
             if (_Warp.mArea == aArea) {
                 if (_Warp.mId == aWarpId) {
@@ -925,7 +927,7 @@ s16 *DynOS_Level_GetWarpEntry(s32 aLevel, s32 aArea) {
     if (aLevel == LEVEL_TTM && aArea > 2) return NULL;
 
     // override vanilla castle warps
-    if (DynOS_Level_GetCourse(aLevel) == COURSE_NONE) {
+    if (DynOS_Level_GetCourse(aLevel) == COURSE_NONE && aLevel >= 0 && aLevel < LEVEL_COUNT) {
         extern const LevelScript level_castle_grounds_entry[];
         extern const LevelScript level_castle_inside_entry[];
         extern const LevelScript level_castle_courtyard_entry[];

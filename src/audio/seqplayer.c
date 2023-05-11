@@ -2303,7 +2303,9 @@ void sequence_channel_process_script(struct SequenceChannel *seqChannel) {
 #ifdef VERSION_EU
                             if (1) {}
 #endif
-                            seqChannel->layers[loBits]->scriptState.pc = seqPlayer->seqData + sp5A;
+                            if (loBits < LAYERS_MAX) {
+                                seqChannel->layers[loBits]->scriptState.pc = seqPlayer->seqData + sp5A;
+                            }
                         }
                         break;
 
@@ -2315,7 +2317,9 @@ void sequence_channel_process_script(struct SequenceChannel *seqChannel) {
                         if (value != -1 && seq_channel_set_layer(seqChannel, loBits) != -1) {
                             seqData = (*seqChannel->dynTable)[value];
                             sp5A = ((seqData[0] << 8) + seqData[1]);
-                            seqChannel->layers[loBits]->scriptState.pc = seqPlayer->seqData + sp5A;
+                            if (loBits < LAYERS_MAX) {
+                                seqChannel->layers[loBits]->scriptState.pc = seqPlayer->seqData + sp5A;
+                            }
                         }
                         break;
 

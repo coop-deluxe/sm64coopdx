@@ -83,6 +83,7 @@ void wiggler_jumped_on_attack_handler(void);
 void huge_goomba_weakly_attacked(void);
 
 s32 obj_is_rendering_enabled(void) {
+    if (!o) { return 0; }
     if (o->header.gfx.node.flags & GRAPH_RENDER_ACTIVE) {
         return TRUE;
     } else {
@@ -91,6 +92,7 @@ s32 obj_is_rendering_enabled(void) {
 }
 
 s16 obj_get_pitch_from_vel(void) {
+    if (!o) { return 0; }
     return -atan2s(o->oForwardVel, o->oVelY);
 }
 
@@ -113,11 +115,13 @@ static s32 obj_update_race_proposition_dialog(struct MarioState* m, s16 dialogID
 }
 
 void obj_set_dist_from_home(f32 distFromHome) {
+    if (!o) { return; }
     o->oPosX = o->oHomeX + distFromHome * coss(o->oMoveAngleYaw);
     o->oPosZ = o->oHomeZ + distFromHome * sins(o->oMoveAngleYaw);
 }
 
 s32 obj_is_near_to_and_facing_mario(struct MarioState* m, f32 maxDist, s16 maxAngleDiff) {
+    if (!o) { return 0; }
     struct Object* player = m->marioObj;
     s32 distanceToPlayer = dist_between_objects(o, player);
     s32 angleToPlayer = obj_angle_to_object(o, player);
@@ -131,6 +135,7 @@ s32 obj_is_near_to_and_facing_mario(struct MarioState* m, f32 maxDist, s16 maxAn
 //! Although having no return value, this function
 //! must be u32 to match other functions on -O2.
 static BAD_RETURN(u32) obj_perform_position_op(s32 op) {
+    if (!o) { return; }
     switch (op) {
         case POS_OP_SAVE_POSITION:
             sObjSavedPosX = o->oPosX;
@@ -153,6 +158,7 @@ static BAD_RETURN(u32) obj_perform_position_op(s32 op) {
 }
 
 void platform_on_track_update_pos_or_spawn_ball(s32 ballIndex, f32 x, f32 y, f32 z) {
+    if (!o) { return; }
     struct Object *trackBall;
     struct Waypoint *initialPrevWaypoint;
     struct Waypoint *nextWaypoint;
@@ -250,6 +256,7 @@ void platform_on_track_update_pos_or_spawn_ball(s32 ballIndex, f32 x, f32 y, f32
 }
 
 void cur_obj_spin_all_dimensions(f32 arg0, f32 arg1) {
+    if (!o) { return; }
     f32 val24;
     f32 val20;
     f32 val1C;
@@ -305,6 +312,7 @@ void cur_obj_spin_all_dimensions(f32 arg0, f32 arg1) {
 }
 
 void obj_rotate_yaw_and_bounce_off_walls(s16 targetYaw, s16 turnAmount) {
+    if (!o) { return; }
     if (o->oMoveFlags & OBJ_MOVE_HIT_WALL) {
         targetYaw = cur_obj_reflect_move_angle_off_wall();
     }
@@ -312,10 +320,12 @@ void obj_rotate_yaw_and_bounce_off_walls(s16 targetYaw, s16 turnAmount) {
 }
 
 s16 obj_get_pitch_to_home(f32 latDistToHome) {
+    if (!o) { return 0; }
     return atan2s(latDistToHome, o->oPosY - o->oHomeY);
 }
 
 void obj_compute_vel_from_move_pitch(f32 speed) {
+    if (!o) { return; }
     o->oForwardVel = speed * coss(o->oMoveAnglePitch);
     o->oVelY = speed * -sins(o->oMoveAnglePitch);
 }
@@ -368,6 +378,7 @@ s32 cur_obj_set_anim_if_at_end(s32 arg0) {
 }
 
 s32 cur_obj_play_sound_at_anim_range(s8 arg0, s8 arg1, u32 sound) {
+    if (!o) { return 0; }
     s32 val04;
 
     if ((val04 = o->header.gfx.animInfo.animAccel / 0x10000) <= 0) {
@@ -383,6 +394,7 @@ s32 cur_obj_play_sound_at_anim_range(s8 arg0, s8 arg1, u32 sound) {
 }
 
 s16 obj_turn_pitch_toward_mario(struct MarioState* m, f32 targetOffsetY, s16 turnAmount) {
+    if (!o) { return 0; }
     if (!m) { return 0; }
     s16 targetPitch;
 
@@ -394,6 +406,7 @@ s16 obj_turn_pitch_toward_mario(struct MarioState* m, f32 targetOffsetY, s16 tur
 }
 
 s32 approach_f32_ptr(f32 *px, f32 target, f32 delta) {
+    if (!px) { return FALSE; }
     if (*px > target) {
         delta = -delta;
     }
@@ -408,14 +421,17 @@ s32 approach_f32_ptr(f32 *px, f32 target, f32 delta) {
 }
 
 s32 obj_forward_vel_approach(f32 target, f32 delta) {
+    if (!o) { return 0; }
     return approach_f32_ptr(&o->oForwardVel, target, delta);
 }
 
 s32 obj_y_vel_approach(f32 target, f32 delta) {
+    if (!o) { return 0; }
     return approach_f32_ptr(&o->oVelY, target, delta);
 }
 
 s32 obj_move_pitch_approach(s16 target, s16 delta) {
+    if (!o) { return 0; }
     o->oMoveAnglePitch = approach_s16_symmetric(o->oMoveAnglePitch, target, delta);
 
     if ((s16) o->oMoveAnglePitch == target) {
@@ -426,6 +442,7 @@ s32 obj_move_pitch_approach(s16 target, s16 delta) {
 }
 
 s32 obj_face_pitch_approach(s16 targetPitch, s16 deltaPitch) {
+    if (!o) { return 0; }
     o->oFaceAnglePitch = approach_s16_symmetric(o->oFaceAnglePitch, targetPitch, deltaPitch);
 
     if ((s16) o->oFaceAnglePitch == targetPitch) {
@@ -436,6 +453,7 @@ s32 obj_face_pitch_approach(s16 targetPitch, s16 deltaPitch) {
 }
 
 s32 obj_face_yaw_approach(s16 targetYaw, s16 deltaYaw) {
+    if (!o) { return 0; }
     o->oFaceAngleYaw = approach_s16_symmetric(o->oFaceAngleYaw, targetYaw, deltaYaw);
 
     if ((s16) o->oFaceAngleYaw == targetYaw) {
@@ -446,6 +464,7 @@ s32 obj_face_yaw_approach(s16 targetYaw, s16 deltaYaw) {
 }
 
 s32 obj_face_roll_approach(s16 targetRoll, s16 deltaRoll) {
+    if (!o) { return 0; }
     o->oFaceAngleRoll = approach_s16_symmetric(o->oFaceAngleRoll, targetRoll, deltaRoll);
 
     if ((s16) o->oFaceAngleRoll == targetRoll) {
@@ -471,6 +490,7 @@ s32 obj_smooth_turn(s16 *angleVel, s32 *angle, s16 targetAngle, f32 targetSpeedP
 }
 
 void obj_roll_to_match_yaw_turn(s16 targetYaw, s16 maxRoll, s16 rollSpeed) {
+    if (!o) { return; }
     s16 targetRoll = o->oMoveAngleYaw - targetYaw;
     clamp_s16(&targetRoll, -maxRoll, maxRoll);
     obj_face_roll_approach(targetRoll, rollSpeed);
@@ -481,10 +501,12 @@ s16 random_linear_offset(s16 base, s16 range) {
 }
 
 s16 random_mod_offset(s16 base, s16 step, s16 mod) {
+    if (!mod) { return 0; }
     return base + step * (random_u16() % mod);
 }
 
 s16 obj_random_fixed_turn(s16 delta) {
+    if (!o) { return 0; }
     return o->oMoveAngleYaw + (s16) random_sign() * delta;
 }
 
@@ -496,6 +518,7 @@ s16 obj_random_fixed_turn(s16 delta) {
  * Return -1 once it's reached endScale.
  */
 s32 obj_grow_then_shrink(f32 *scaleVel, f32 shootFireScale, f32 endScale) {
+    if (!o) { return 0; }
     if (o->oTimer < 2) {
         o->header.gfx.scale[0] += *scaleVel;
 
@@ -542,6 +565,7 @@ s32 oscillate_toward(s32 *value, f32 *vel, s32 target, f32 velCloseToZero, f32 a
 
 void obj_update_blinking(s32 *blinkTimer, s16 baseCycleLength, s16 cycleLengthRange,
                                 s16 blinkLength) {
+    if (!o) { return; }
     if (*blinkTimer != 0) {
         *blinkTimer -= 1;
     } else {
@@ -556,6 +580,7 @@ void obj_update_blinking(s32 *blinkTimer, s16 baseCycleLength, s16 cycleLengthRa
 }
 
 s32 obj_resolve_object_collisions(s32 *targetYaw) {
+    if (!o) { return 0; }
     struct Object *otherObject;
     f32 dx;
     f32 dz;
@@ -602,6 +627,7 @@ s32 obj_resolve_object_collisions(s32 *targetYaw) {
 }
 
 s32 obj_bounce_off_walls_edges_objects(s32 *targetYaw) {
+    if (!o) { return 0; }
     if (o->oMoveFlags & OBJ_MOVE_HIT_WALL) {
         *targetYaw = cur_obj_reflect_move_angle_off_wall();
     } else if (o->oMoveFlags & OBJ_MOVE_HIT_EDGE) {
@@ -624,6 +650,7 @@ s32 obj_resolve_collisions_and_turn(s16 targetYaw, s16 turnSpeed) {
 }
 
 void obj_die_if_health_non_positive(void) {
+    if (!o) { return; }
     if (o->oHealth <= 0) {
         if (o->oDeathSound == 0) {
             spawn_mist_particles_with_sound(SOUND_OBJ_DEFAULT_DEATH);
@@ -651,11 +678,13 @@ void obj_die_if_health_non_positive(void) {
 }
 
 void obj_unused_die(void) {
+    if (!o) { return; }
     o->oHealth = 0;
     obj_die_if_health_non_positive();
 }
 
 void obj_set_knockback_action(s32 attackType) {
+    if (!o) { return; }
     switch (attackType) {
         case ATTACK_KICK_OR_TRIP:
         case ATTACK_FAST_ATTACK:
@@ -680,11 +709,13 @@ void obj_set_knockback_action(s32 attackType) {
 }
 
 void obj_set_squished_action(void) {
+    if (!o) { return; }
     cur_obj_play_sound_2(SOUND_OBJ_STOMPED);
     o->oAction = OBJ_ACT_SQUISHED;
 }
 
 s32 obj_die_if_above_lava_and_health_non_positive(void) {
+    if (!o) { return 0; }
     if (o->oMoveFlags & OBJ_MOVE_UNDERWATER_ON_GROUND) {
         if (o->oGravity + o->oBuoyancy > 0.0f
             || find_water_level(o->oPosX, o->oPosZ) - o->oPosY < 150.0f) {
@@ -707,6 +738,7 @@ s32 obj_die_if_above_lava_and_health_non_positive(void) {
 
 s32 obj_handle_attacks(struct ObjectHitbox *hitbox, s32 attackedMarioAction,
                               u8 *attackHandlers) {
+    if (!o) { return 0; }
     s32 attackType;
 
     obj_set_hitbox(o, hitbox);
@@ -771,6 +803,7 @@ s32 obj_handle_attacks(struct ObjectHitbox *hitbox, s32 attackedMarioAction,
 }
 
 void obj_act_knockback(UNUSED f32 baseScale) {
+    if (!o) { return; }
     cur_obj_update_floor_and_walls();
 
     if (o->header.gfx.animInfo.curAnim != NULL) {
@@ -788,6 +821,7 @@ void obj_act_knockback(UNUSED f32 baseScale) {
 }
 
 void obj_act_squished(f32 baseScale) {
+    if (!o) { return; }
     f32 targetScaleY = baseScale * 0.3f;
 
     cur_obj_update_floor_and_walls();
@@ -809,6 +843,7 @@ void obj_act_squished(f32 baseScale) {
 }
 
 s32 obj_update_standard_actions(f32 scale) {
+    if (!o) { return 0; }
     if (o->oAction < 100) {
         return TRUE;
     } else {
@@ -830,6 +865,7 @@ s32 obj_update_standard_actions(f32 scale) {
 }
 
 s32 obj_check_attacks(struct ObjectHitbox *hitbox, s32 attackedMarioAction) {
+    if (!o) { return 0; }
     s32 attackType;
 
     obj_set_hitbox(o, hitbox);
@@ -856,6 +892,7 @@ s32 obj_check_attacks(struct ObjectHitbox *hitbox, s32 attackedMarioAction) {
 }
 
 s32 obj_move_for_one_second(s32 endAction) {
+    if (!o) { return 0; }
     cur_obj_update_floor_and_walls();
     cur_obj_extend_animation_if_at_end();
 
@@ -887,6 +924,7 @@ s32 obj_move_for_one_second(s32 endAction) {
  * with partial updates.
  */
 void treat_far_home_as_mario(f32 threshold, s32* distanceToPlayer, s32* angleToPlayer) {
+    if (!o) { return; }
     f32 dx = o->oHomeX - o->oPosX;
     f32 dy = o->oHomeY - o->oPosY;
     f32 dz = o->oHomeZ - o->oPosZ;

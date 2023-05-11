@@ -453,7 +453,8 @@ OSPiHandle DriveRomHandle; // used in osDriveRomInit.c. Why here?
 s8 D_SH_80343E48_pad[0x8];
 #endif
 
-struct Sound sSoundRequests[0x100] = { 0 };
+#define MAX_SOUND_REQUESTS 0x100
+struct Sound sSoundRequests[MAX_SOUND_REQUESTS] = { 0 };
 struct ChannelVolumeScaleFade sVolumeScaleFades[SEQUENCE_PLAYERS][CHANNELS_MAX] = { 0 };
 u8 sUsedChannelsForSoundBank[SOUND_BANK_COUNT] = { 0 };
 u8 sCurrentSound[SOUND_BANK_COUNT][MAX_CHANNELS_PER_SOUND_BANK] = { 0 }; // index into sSoundBanks
@@ -669,6 +670,7 @@ void audio_reset_session_eu(s32 presetId) {
  * Called from threads: thread3_main, thread5_game_loop
  */
 static void seq_player_fade_to_zero_volume(s32 player, FadeT fadeDuration) {
+    if (player >= SEQUENCE_PLAYERS) { return; }
     struct SequencePlayer *seqPlayer = &gSequencePlayers[player];
 
 #ifndef VERSION_JP
@@ -687,6 +689,7 @@ static void seq_player_fade_to_zero_volume(s32 player, FadeT fadeDuration) {
  * Called from threads: thread4_sound, thread5_game_loop
  */
 static void seq_player_fade_from_zero_volume(s32 player, FadeT fadeInTime) {
+    if (player >= SEQUENCE_PLAYERS) { return; }
     struct SequencePlayer *seqPlayer = &gSequencePlayers[player];
 
     if (fadeInTime == 0 || seqPlayer->state == SEQUENCE_PLAYER_STATE_FADE_OUT) {
@@ -704,6 +707,7 @@ static void seq_player_fade_from_zero_volume(s32 player, FadeT fadeInTime) {
  * Called from threads: thread5_game_loop
  */
 static void seq_player_fade_to_percentage_of_volume(s32 player, FadeT fadeDuration, u8 percentage) {
+    if (player >= SEQUENCE_PLAYERS) { return; }
     struct SequencePlayer *seqPlayer = &gSequencePlayers[player];
     f32 targetVolume;
 
@@ -739,6 +743,7 @@ static void seq_player_fade_to_percentage_of_volume(s32 player, FadeT fadeDurati
  * Called from threads: thread3_main, thread4_sound, thread5_game_loop
  */
 static void seq_player_fade_to_normal_volume(s32 player, FadeT fadeDuration) {
+    if (player >= SEQUENCE_PLAYERS) { return; }
     struct SequencePlayer *seqPlayer = &gSequencePlayers[player];
 
 #if defined(VERSION_EU) || defined(VERSION_SH)
@@ -770,6 +775,7 @@ static void seq_player_fade_to_normal_volume(s32 player, FadeT fadeDuration) {
  * Called from threads: thread3_main, thread4_sound, thread5_game_loop
  */
 static void seq_player_fade_to_target_volume(s32 player, FadeT fadeDuration, u8 targetVolume) {
+    if (player >= SEQUENCE_PLAYERS) { return; }
     struct SequencePlayer *seqPlayer = &gSequencePlayers[player];
 
 #if defined(VERSION_JP) || defined(VERSION_US)
@@ -871,6 +877,7 @@ void play_sound_with_freq_scale(s32 soundBits, f32* pos, f32 freqScale) {
  * Called from threads: thread4_sound, thread5_game_loop (EU only)
  */
 static void process_sound_request(u32 bits, f32 *pos, f32 freqScale) {
+    if (!pos) { return; }
     u8 bank;
     u8 soundIndex;
     u8 counter = 0;
@@ -880,6 +887,8 @@ static void process_sound_request(u32 bits, f32 *pos, f32 freqScale) {
 
     bank = (bits & SOUNDARGS_MASK_BANK) >> SOUNDARGS_SHIFT_BANK;
     soundId = (bits & SOUNDARGS_MASK_SOUNDID) >> SOUNDARGS_SHIFT_SOUNDID;
+
+    if (bank >= SOUND_BANK_COUNT) { return; }
 
     if (soundId >= sNumSoundsPerBank[bank] || sSoundBankDisabled[bank]) {
         return;
@@ -975,6 +984,7 @@ static void process_all_sound_requests(void) {
  * Called from threads: thread4_sound, thread5_game_loop (EU only)
  */
 static void delete_sound_from_bank(u8 bank, u8 soundIndex) {
+    if (bank >= SOUND_BANK_COUNT || soundIndex >= SOUND_INDEX_COUNT) { return; }
     if (sSoundBankUsedListBack[bank] == soundIndex) {
         // Remove from end of used list
         sSoundBankUsedListBack[bank] = sSoundBanks[bank][soundIndex].prev;
@@ -997,6 +1007,7 @@ static void delete_sound_from_bank(u8 bank, u8 soundIndex) {
  * Called from threads: thread3_main, thread4_sound, thread5_game_loop
  */
 static void update_background_music_after_sound(u8 bank, u8 soundIndex) {
+    if (bank >= SOUND_BANK_COUNT || soundIndex >= SOUND_INDEX_COUNT) { return; }
     if (sSoundBanks[bank][soundIndex].soundBits & SOUND_LOWER_BACKGROUND_MUSIC) {
         sSoundBanksThatLowerBackgroundMusic &= (1 << bank) ^ 0xffff;
         begin_background_music_fade(50);
@@ -1007,6 +1018,7 @@ static void update_background_music_after_sound(u8 bank, u8 soundIndex) {
  * Called from threads: thread4_sound, thread5_game_loop (EU only)
  */
 static void select_current_sounds(u8 bank) {
+    if (bank >= SOUND_BANK_COUNT) { return; }
     u32 isDiscreteAndStatus;
     u8 latestSoundIndex;
     u8 i;
@@ -1252,6 +1264,7 @@ f32 get_sound_pan(f32 x, f32 z) {
  * Called from threads: thread4_sound, thread5_game_loop (EU only)
  */
 static f32 get_sound_volume(u8 bank, u8 soundIndex, f32 volumeRange) {
+    if (bank >= SOUND_BANK_COUNT || soundIndex >= SOUND_INDEX_COUNT) { return 0; }
     f32 maxSoundDistance;
     f32 intensity;
 #ifndef VERSION_JP
@@ -1307,6 +1320,7 @@ static f32 get_sound_volume(u8 bank, u8 soundIndex, f32 volumeRange) {
  * Called from threads: thread4_sound, thread5_game_loop (EU only)
  */
 static f32 get_sound_freq_scale(u8 bank, u8 item) {
+    if (bank >= SOUND_BANK_COUNT || item >= SOUND_INDEX_COUNT) { return 0; }
     f32 amount;
 
     if (!(sSoundBanks[bank][item].soundBits & SOUND_CONSTANT_FREQUENCY)) {
@@ -1327,6 +1341,7 @@ static f32 get_sound_freq_scale(u8 bank, u8 item) {
  * Called from threads: thread4_sound, thread5_game_loop (EU only)
  */
 static u8 get_sound_reverb(UNUSED u8 bank, UNUSED u8 soundIndex, u8 channelIndex) {
+    if (bank >= SOUND_BANK_COUNT || soundIndex >= SOUND_INDEX_COUNT || channelIndex >= CHANNELS_MAX) { return 0; }
     u8 area;
     u8 level;
     u8 reverb;
@@ -1808,6 +1823,7 @@ static void seq_player_play_sequence(u8 player, u8 seqId, u16 arg2) {
  * Called from threads: thread5_game_loop
  */
 void seq_player_fade_out(u8 player, u16 fadeDuration) {
+    if (player >= SEQUENCE_PLAYERS) { return; }
 #if defined(VERSION_EU) || defined(VERSION_SH)
 #ifdef VERSION_EU
     u32 fd = fadeDuration;
@@ -2059,6 +2075,7 @@ void unused_8031FED0(u8 player, u32 bits, s8 arg2) {
  * Called from threads: thread5_game_loop
  */
 void seq_player_lower_volume(u8 player, u16 fadeDuration, u8 percentage) {
+    if (player >= SEQUENCE_PLAYERS) { return; }
     if (player == SEQ_PLAYER_LEVEL) {
         sLowerBackgroundMusicVolume = TRUE;
         begin_background_music_fade(fadeDuration);
@@ -2076,6 +2093,7 @@ void seq_player_lower_volume(u8 player, u16 fadeDuration, u8 percentage) {
  * Called from threads: thread5_game_loop
  */
 void seq_player_unlower_volume(u8 player, u16 fadeDuration) {
+    if (player >= SEQUENCE_PLAYERS) { return; }
     sLowerBackgroundMusicVolume = FALSE;
     if (player == SEQ_PLAYER_LEVEL) {
         if (gSequencePlayers[player].state != SEQUENCE_PLAYER_STATE_FADE_OUT) {
@@ -2170,7 +2188,7 @@ void sound_init(void) {
 
     for (i = 0; i < SOUND_BANK_COUNT; i++) {
         // Set each sound in the bank to STOPPED
-        for (j = 0; j < 40; j++) {
+        for (j = 0; j < SOUND_INDEX_COUNT; j++) {
             sSoundBanks[i][j].soundStatus = SOUND_STATUS_STOPPED;
         }
 
@@ -2198,7 +2216,7 @@ void sound_init(void) {
         sSoundBanks[i][j].next = 0xff;
     }
 
-    for (j = 0; j < 3; j++) {
+    for (j = 0; j < SEQUENCE_PLAYERS; j++) {
         for (i = 0; i < CHANNELS_MAX; i++) {
             sVolumeScaleFades[j][i].remainingFrames = 0;
         }
@@ -2227,6 +2245,7 @@ void sound_init(void) {
 
 // (unused)
 void get_currently_playing_sound(u8 bank, u8 *numPlayingSounds, u8 *numSoundsInBank, u8 *soundId) {
+    if (bank >= SOUND_BANK_COUNT || !numPlayingSounds || !numSoundsInBank || !soundId) { return; }
     u8 i;
     u8 count = 0;
 
@@ -2251,6 +2270,7 @@ void get_currently_playing_sound(u8 bank, u8 *numPlayingSounds, u8 *numSoundsInB
  */
 void stop_sound(u32 soundBits, f32 *pos) {
     u8 bank = (soundBits & SOUNDARGS_MASK_BANK) >> SOUNDARGS_SHIFT_BANK;
+    if (bank >= SOUND_BANK_COUNT) { return; }
     u8 soundIndex = sSoundBanks[bank][0].next;
 
     while (soundIndex != 0xff) {
@@ -2295,6 +2315,7 @@ void stop_sounds_from_source(f32 *pos) {
  * Called from threads: thread3_main, thread5_game_loop
  */
 static void stop_sounds_in_bank(u8 bank) {
+    if (bank >= SOUND_BANK_COUNT) { return; }
     u8 soundIndex = sSoundBanks[bank][0].next;
 
     while (soundIndex != 0xff) {
@@ -2357,6 +2378,7 @@ void sound_banks_enable(UNUSED u8 player, u16 bankMask) {
 }
 
 u8 unused_803209D8(u8 player, u8 channelIndex, u8 arg2) {
+    if (player >= SEQUENCE_PLAYERS || channelIndex >= CHANNELS_MAX) { return 0; }
     u8 ret = 0;
     if (gSequencePlayers[player].channels[channelIndex] != &gSequenceChannelNone) {
         gSequencePlayers[player].channels[channelIndex]->stopSomething2 = arg2;
@@ -2372,6 +2394,7 @@ u8 unused_803209D8(u8 player, u8 channelIndex, u8 arg2) {
  * Called from threads: thread5_game_loop
  */
 void set_sound_moving_speed(u8 bank, u8 speed) {
+    if (bank >= SOUND_BANK_COUNT) { return; }
     sSoundMovingSpeed[bank] = speed;
 }
 
@@ -2427,6 +2450,7 @@ void set_sequence_player_volume(s32 player, f32 volume) {
  * Called from threads: thread5_game_loop
  */
 void play_music(u8 player, u16 seqArgs, u16 fadeTimer) {
+    if (player >= SEQUENCE_PLAYERS) { return; }
     u8 seqId = seqArgs & 0xff;
     u8 priority = seqArgs >> 8;
     u8 i;
@@ -2842,6 +2866,7 @@ void unused_80321474(UNUSED s32 arg0) {
 }
 
 void sound_reset_background_music_default_volume(u8 seqId) {
+    if (seqId >= sizeof(sBackgroundMusicDefaultVolume) / sizeof(sBackgroundMusicDefaultVolume[0])) { return; }
     if (seqId >= SEQ_EVENT_CUTSCENE_LAKITU) {
         sBackgroundMusicDefaultVolume[seqId] = 75;
         return;

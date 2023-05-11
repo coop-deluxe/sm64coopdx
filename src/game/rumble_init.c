@@ -160,7 +160,7 @@ void queue_rumble_data_object(struct Object* object, s16 a0, s16 a1) {
 }
 
 void queue_rumble_data_mario(struct MarioState* m, s16 a0, s16 a1) {
-    if (m->playerIndex != 0) { return; }
+    if (!m || m->playerIndex != 0) { return; }
     queue_rumble_data(a0, a1);
 }
 
@@ -189,7 +189,7 @@ u8 is_rumble_finished_and_queue_empty(void) {
 }
 
 void reset_rumble_timers(struct MarioState* m) {
-    if (m->playerIndex != 0) { return; }
+    if (!m || m->playerIndex != 0) { return; }
 
     if (gCurrDemoInput != NULL) {
         return;
@@ -207,7 +207,7 @@ void reset_rumble_timers(struct MarioState* m) {
 }
 
 void reset_rumble_timers_2(struct MarioState* m, s32 a0) {
-    if (m->playerIndex != 0) { return; }
+    if (!m || m->playerIndex != 0) { return; }
 
     if (gCurrDemoInput != NULL) {
         return;

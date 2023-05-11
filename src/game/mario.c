@@ -706,6 +706,7 @@ s32 mario_facing_downhill(struct MarioState *m, s32 turnYaw) {
  */
 u32 mario_floor_is_slippery(struct MarioState *m) {
     if (!m) { return FALSE; }
+    if (!m->floor) { return FALSE; }
 
     f32 normY;
 
@@ -741,6 +742,7 @@ u32 mario_floor_is_slippery(struct MarioState *m) {
  */
 s32 mario_floor_is_slope(struct MarioState *m) {
     if (!m) { return FALSE; }
+    if (!m->floor) { return FALSE; }
     f32 normY;
 
     if ((m->area->terrainType & TERRAIN_MASK) == TERRAIN_SLIDE
@@ -774,6 +776,7 @@ s32 mario_floor_is_slope(struct MarioState *m) {
  */
 s32 mario_floor_is_steep(struct MarioState *m) {
     if (!m) { return FALSE; }
+    if (!m->floor) { return FALSE; }
     f32 normY;
     s32 result = FALSE;
 

@@ -33,7 +33,7 @@ SpatialPartitionCell gDynamicSurfacePartition[NUM_CELLS][NUM_CELLS];
 /**
  * Pools of data to contain either surface nodes or surfaces.
  */
-struct SurfaceNode *sSurfaceNodePool;
+struct SurfaceNode *sSurfaceNodePool = NULL;
 struct Surface *sSurfacePool;
 
 /**
@@ -688,6 +688,7 @@ static void unused_80383604(void) {
  * Applies an object's transformation to the object's vertices.
  */
 void transform_object_vertices(s16 **data, s16 *vertexData) {
+    if (!gCurrentObject) { return; }
     register s16 *vertices;
     register f32 vx, vy, vz;
     register s32 numVertices;
@@ -728,6 +729,7 @@ void transform_object_vertices(s16 **data, s16 *vertexData) {
  * Load in the surfaces for the gCurrentObject. This includes setting the flags, exertion, and room.
  */
 void load_object_surfaces(s16** data, s16* vertexData) {
+    if (!gCurrentObject) { return; }
     s32 surfaceType;
     s32 i;
     s32 numSurfaces;
@@ -784,6 +786,7 @@ void load_object_surfaces(s16** data, s16* vertexData) {
  * Transform an object's vertices, reload them, and render the object.
  */
 void load_object_collision_model(void) {
+    if (!gCurrentObject) { return; }
     if (gCurrentObject->collisionData == NULL) { return; }
 
     UNUSED s32 unused;

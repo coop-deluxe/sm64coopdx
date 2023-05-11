@@ -157,6 +157,7 @@ void turn_obj_away_from_surface(f32 velX, f32 velZ, f32 nX, UNUSED f32 nY, f32 n
  * Finds any wall collisions, applies them, and turns away from the surface.
  */
 s8 obj_find_wall(f32 objNewX, f32 objY, f32 objNewZ, f32 objVelX, f32 objVelZ) {
+    if (!o) { return 0; }
     struct WallCollisionData hitbox;
     f32 wall_nX, wall_nY, wall_nZ, objVelXCopy, objVelZCopy, objYawX, objYawZ;
 
@@ -198,6 +199,7 @@ s8 obj_find_wall(f32 objNewX, f32 objY, f32 objNewZ, f32 objVelX, f32 objVelZ) {
  * Turns an object away from steep floors, similarly to walls.
  */
 s8 turn_obj_away_from_steep_floor(struct Surface *objFloor, f32 floorY, f32 objVelX, f32 objVelZ) {
+    if (!o) { return 0; }
     f32 floor_nX, floor_nY, floor_nZ, objVelXCopy, objVelZCopy, objYawX, objYawZ;
 
     if (objFloor == NULL) {
@@ -264,6 +266,7 @@ void obj_orient_graph(struct Object *obj, f32 normalX, f32 normalY, f32 normalZ)
  * Determines an object's forward speed multiplier.
  */
 void calc_obj_friction(f32 *objFriction, f32 floor_nY) {
+    if (!o) { return; }
     if (!objFriction) { return; }
     if (floor_nY < 0.2 && o->oFriction < 0.9999) {
         *objFriction = 0;
@@ -276,6 +279,7 @@ void calc_obj_friction(f32 *objFriction, f32 floor_nY) {
  * Updates an objects speed for gravity and updates Y position.
  */
 void calc_new_obj_vel_and_pos_y(struct Surface *objFloor, f32 objFloorY, f32 objVelX, f32 objVelZ) {
+    if (!o) { return; }
     if (!objFloor) { return; }
     f32 floor_nX = objFloor->normal.x;
     f32 floor_nY = objFloor->normal.y;
@@ -335,6 +339,7 @@ void calc_new_obj_vel_and_pos_y(struct Surface *objFloor, f32 objFloorY, f32 obj
 
 void calc_new_obj_vel_and_pos_y_underwater(struct Surface *objFloor, f32 floorY, f32 objVelX, f32 objVelZ,
                                     f32 waterY) {
+    if (!o) { return; }
     if (!objFloor) { return; }
     f32 floor_nX = objFloor->normal.x;
     f32 floor_nY = objFloor->normal.y;
@@ -405,6 +410,7 @@ void calc_new_obj_vel_and_pos_y_underwater(struct Surface *objFloor, f32 floorY,
  * Updates an objects position from oForwardVel and oMoveAngleYaw.
  */
 void obj_update_pos_vel_xz(void) {
+    if (!o) { return; }
     f32 xVel = o->oForwardVel * sins(o->oMoveAngleYaw);
     f32 zVel = o->oForwardVel * coss(o->oMoveAngleYaw);
 
@@ -417,6 +423,7 @@ void obj_update_pos_vel_xz(void) {
  * if underwater.
  */
 void obj_splash(s32 waterY, s32 objY) {
+    if (!o) { return; }
     u32 globalTimer = gGlobalTimer;
 
     // Spawns waves if near surface of water and plays a noise if entering.
@@ -439,6 +446,7 @@ void obj_splash(s32 waterY, s32 objY) {
  * Returns flags for certain interactions.
  */
 s16 object_step(void) {
+    if (!o) { return 0; }
     f32 objX = o->oPosX;
     f32 objY = o->oPosY;
     f32 objZ = o->oPosZ;
@@ -506,7 +514,7 @@ s16 object_step_without_floor_orient(void) {
  * position.
  */
 void obj_move_xyz_using_fvel_and_yaw(struct Object *obj) {
-    if (!obj) { return; }
+    if (!o || !obj) { return; }
     o->oVelX = obj->oForwardVel * sins(obj->oMoveAngleYaw);
     o->oVelZ = obj->oForwardVel * coss(obj->oMoveAngleYaw);
 
@@ -705,6 +713,7 @@ u8 is_nearest_mario_state_to_object(struct MarioState *m, struct Object *obj) {
 u8 is_nearest_player_to_object(struct Object *m, struct Object *obj) {
     if (m == NULL || obj == NULL) { return FALSE; }
     struct MarioState *nearest = nearest_mario_state_to_object(obj);
+    if (!nearest) { return FALSE; }
     return m == nearest->marioObj;
 }
 
@@ -818,6 +827,7 @@ s8 obj_find_wall_displacement(Vec3f dist, f32 x, f32 y, f32 z, f32 radius) {
  * with a random forward velocity, y velocity, and direction.
  */
 void obj_spawn_yellow_coins(struct Object *obj, s8 nCoins) {
+    if (!o) { return; }
     if (!obj) { return; }
     struct Object *coin;
     s8 count;
@@ -888,6 +898,7 @@ s8 current_mario_room_check(s16 room) {
  * Triggers dialog when Mario is facing an object and controls it while in the dialog.
  */
 s16 trigger_obj_dialog_when_facing(struct MarioState* m, s32 *inDialog, s16 dialogID, f32 dist, s32 actionArg, u8 (*inContinueDialogFunction)(void)) {
+    if (!o) { return 0; }
     if (!m || !inDialog) { return 0; }
     s16 dialogueResponse;
 
@@ -917,9 +928,8 @@ s16 trigger_obj_dialog_when_facing(struct MarioState* m, s32 *inDialog, s16 dial
  *Checks if a floor is one that should cause an object to "die".
  */
 void obj_check_floor_death(s16 collisionFlags, struct Surface *floor) {
-    if (floor == NULL) {
-        return;
-    }
+    if (!o) { return; }
+    if (floor == NULL) { return; }
 
     if ((collisionFlags & OBJ_COL_FLAG_GROUNDED) == OBJ_COL_FLAG_GROUNDED) {
         switch (floor->type) {
@@ -941,6 +951,7 @@ void obj_check_floor_death(s16 collisionFlags, struct Surface *floor) {
  * audio, and eventually despawning it. Returns TRUE when the obj is dead.
  */
 s8 obj_lava_death(void) {
+    if (!o) { return 0; }
     struct Object *deathSmoke;
 
     if (o->oTimer >= 31) {
