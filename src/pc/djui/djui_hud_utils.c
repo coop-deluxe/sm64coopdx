@@ -560,3 +560,7 @@ void djui_hud_set_render_behind_hud(bool enable) {
 bool djui_hud_is_pause_menu_created(void) {
     return gDjuiPanelPauseCreated;
 }
+
+void djui_open_pause_menu(void) {
+    djui_panel_pause_create(NULL);
+}

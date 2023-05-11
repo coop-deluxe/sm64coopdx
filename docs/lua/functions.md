@@ -735,6 +735,7 @@
    - [djui_hud_set_resolution](functions-3.md#djui_hud_set_resolution)
    - [djui_hud_set_rotation](functions-3.md#djui_hud_set_rotation)
    - [djui_hud_world_pos_to_screen_pos](functions-3.md#djui_hud_world_pos_to_screen_pos)
+   - [djui_open_pause_menu](functions-3.md#djui_open_pause_menu)
 
 <br />
 

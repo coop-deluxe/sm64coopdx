@@ -111,7 +111,8 @@ void mario_bonk_reflection(struct MarioState *m, u32 negateSpeed) {
 u32 mario_update_quicksand(struct MarioState *m, f32 sinkingSpeed) {
     bool allow = true;
     smlua_call_event_hooks_mario_param_and_int_ret_bool(HOOK_ALLOW_HAZARD_SURFACE, m, HAZARD_TYPE_QUICKSAND, &allow);
-    if (m->action & ACT_FLAG_RIDING_SHELL || (gServerSettings.enableCheats && gCheats.godMode && m->playerIndex == 0) || (!allow)) {
+    extern bool gDjuiInMainMenu;
+    if (m->action & ACT_FLAG_RIDING_SHELL || (gServerSettings.enableCheats && gCheats.godMode && m->playerIndex == 0) || (!allow) || gDjuiInMainMenu) {
         m->quicksandDepth = 0.0f;
     } else {
         if (m->quicksandDepth < 1.1f) {
