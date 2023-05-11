@@ -5410,6 +5410,7 @@ void warp_camera(f32 displacementX, f32 displacementY, f32 displacementZ) {
  * unless smooth movement is off, in which case the y coordinate is simply set to `goal`
  */
 void approach_camera_height(struct Camera *c, f32 goal, f32 inc) {
+    if (!c) { return; }
     if (sStatusFlags & CAM_FLAG_SMOOTH_MOVEMENT) {
         if (c->pos[1] < goal) {
             if ((c->pos[1] += inc) > goal) {

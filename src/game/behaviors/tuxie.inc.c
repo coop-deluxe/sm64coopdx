@@ -2,7 +2,7 @@
 
 void play_penguin_walking_sound(s32 walk) {
     s32 sound;
-    if (o->oSoundStateID == 0) {
+    if (o && o->oSoundStateID == 0) {
         if (walk == PENGUIN_WALK_BABY)
             sound = SOUND_OBJ_BABY_PENGUIN_WALK;
         else // PENGUIN_WALK_BIG

@@ -1,4 +1,4 @@
 #!/usr/bin/bash
-python3 ./autogen/convert_structs.py
-python3 ./autogen/convert_functions.py
-python3 ./autogen/convert_constants.py
+python3 ./autogen/convert_structs.py $1
+python3 ./autogen/convert_functions.py $1
+python3 ./autogen/convert_constants.py $1

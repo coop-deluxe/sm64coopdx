@@ -242,6 +242,27 @@ def parse_structs(extracted):
 
 ############################################################################
 
+def output_fuzz_struct(struct):
+    sid = struct['identifier']
+    print('function Nuke' + sid + "(struct)")
+    for field in struct['fields']:
+        fid, ftype, fimmutable, lvt, lot = get_struct_field_info(struct, field)
+        if fimmutable == 'true':
+            continue
+        if sid in override_field_invisible:
+            if fid in override_field_invisible[sid]:
+                continue
+        if lvt == 'LVT_COBJECT':
+            print('    Fuzz' + ftype.replace('struct ', '') + '(struct.' + fid + ')')
+        elif lvt == 'LVT_COBJECT_P':
+            print('    struct.' + fid + ' = nil')
+        else:
+            print('    struct.' + fid + ' = 0')
+    print('end')
+    print('')
+
+############################################################################
+
 sLuaObjectTable = []
 sLotAutoGenList = []
 
@@ -272,28 +293,10 @@ def get_struct_field_info(struct, field):
 
     return fid, ftype, fimmutable, lvt, lot
 
-def output_nuke_struct(struct):
-    sid = struct['identifier']
-    print('function Nuke' + sid + "(struct)")
-    for field in struct['fields']:
-        fid, ftype, fimmutable, lvt, lot = get_struct_field_info(struct, field)
-        if fimmutable == 'true':
-            continue
-        if sid in override_field_invisible:
-            if fid in override_field_invisible[sid]:
-                continue
-        if lvt == 'LVT_COBJECT':
-            print('    Nuke' + ftype.replace('struct ', '') + '(struct.' + fid + ')')
-        elif lvt == 'LVT_COBJECT_P':
-            print('    struct.' + fid + ' = nil')
-        else:
-            print('    struct.' + fid + ' = 0')
-    print('end')
-    print('')
-
 def build_struct(struct):
-    # debug print out lua nuke functions
-    # output_nuke_struct(struct)
+    # debug print out lua fuzz functions
+    if len(sys.argv) >= 2 and sys.argv[1] == 'fuzz':
+        output_fuzz_struct(struct)
 
     sid = struct['identifier']
 

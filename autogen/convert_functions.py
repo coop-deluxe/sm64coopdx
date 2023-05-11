@@ -576,7 +576,7 @@ def build_call(function):
 
     if ftype == 'void':
         return '    %s;\n' % ccall
-    # We can't possibly know the type of a void pointer, 
+    # We can't possibly know the type of a void pointer,
     # So we just don't return anything from it
     elif ftype == 'void *':
         return '    %s;\n' % ccall
@@ -605,7 +605,7 @@ def build_call(function):
 def build_function(function, do_extern):
     s = ''
     fid = function['identifier']
-    
+
     if fid in override_function_version_excludes:
         s += '#ifndef ' + override_function_version_excludes[fid] + '\n'
 
@@ -613,6 +613,12 @@ def build_function(function, do_extern):
         s += 'int smlua_func_%s(UNUSED lua_State* L) {\n' % function['identifier']
     else:
         s += 'int smlua_func_%s(lua_State* L) {\n' % function['identifier']
+
+    # make sure the bhv functions have a current object
+    fname = function['filename']
+    if fname == 'behavior_actions.h' or fname == 'obj_behaviors_2.h' or fname == 'obj_behaviors.h':
+        if 'bhv_' in fid:
+            s += '    if (!gCurrentObject) { return 0; }\n'
 
     s += """    if (L == NULL) { return 0; }\n
     int top = lua_gettop(L);
@@ -640,7 +646,7 @@ def build_function(function, do_extern):
     s += '\n'
 
     s += '    return 1;\n}\n'
-    
+
     if fid in override_function_version_excludes:
         s += '#endif\n'
 
@@ -659,6 +665,7 @@ def build_functions(processed_files):
         s += gen_comment_header(processed_file['filename'])
 
         for function in processed_file['functions']:
+            function['filename'] = processed_file['filename']
             s += build_function(function, processed_file['extern'])
     return s
 
@@ -792,28 +799,51 @@ def process_files():
 
 ############################################################################
 
-def output_nuke_function(fname, function):
+fuzz_functions = ""
+
+def output_fuzz_function(fname, function):
     first = True
-    comment = ''
+    comment = ' -- '
     fid = function['identifier']
-    print(fid + '(', end='')
+
+    line = '    ' + fid + '('
+
     for param in function['params']:
         if first:
             first = False
         else:
-            print(', ', end='')
+            line += ', '
             comment += ', '
         pid = param['identifier']
         ptype = param['type']
         ptype, plink = translate_type_to_lua(ptype)
 
-        if ptype == '`integer`' or ptype == '`number`' or 'enum' in ptype:
-            print('0', end='')
-        else:
-            print('nil', end='')
+        if 'enum ' in ptype:
+            ptype = 'integer'
+        line += 'rnd_' + ptype.strip().replace('`', '').replace(' ', '').split('<')[-1].split('>')[0].split('(')[0] + '()'
+
+
+        #if ptype == '`integer`' or ptype == '`number`' or 'enum' in ptype:
+        #    print('0', end='')
+        #else:
+        #    print('nil', end='')
         comment += ptype
 
-    print(') -- ' + comment)
+    line += ')'
+    if len(line) >= 80:
+        line = line + '\n        ' + comment + '\n'
+    else:
+        line = line.ljust(80) + comment + '\n'
+
+    global fuzz_functions
+    fuzz_functions += line
+
+def output_fuzz_file():
+    global fuzz_functions
+    with open('./autogen/fuzz_template.lua') as f:
+        file_str = f.read()
+    with open('/home/djoslin/.local/share/sm64ex-coop/mods/test-fuzz.lua', 'w') as f:
+        f.write(file_str.replace('-- $[FUNCS]', fuzz_functions))
 
 ############################################################################
 
@@ -877,7 +907,8 @@ def doc_function(fname, function):
         return ''
 
     # debug print out lua nuke functions
-    # output_nuke_function(fname, function)
+    if len(sys.argv) >= 2 and sys.argv[1] == 'fuzz':
+        output_fuzz_function(fname, function)
 
     if not doc_should_document(fname, function['identifier']):
         return ''
@@ -1072,6 +1103,9 @@ def main():
 
     global total_functions
     print('Total functions: ' + str(total_functions))
+
+    if len(sys.argv) >= 2 and sys.argv[1] == 'fuzz':
+        output_fuzz_file()
 
 if __name__ == '__main__':
    main()

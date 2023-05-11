@@ -216,9 +216,11 @@ void network_receive_level_macro(struct Packet* p) {
                     u8 mask = ((o2->oBehParams2ndByte & GOOMBA_BP_TRIPLET_FLAG_MASK) >> 2);
                     if (info & mask) {
                         extern void mark_goomba_as_dead(void);
+                        struct Object* prevObject = gCurrentObject;
                         gCurrentObject = o2;
                         mark_goomba_as_dead();
                         obj_mark_for_deletion(o2);
+                        gCurrentObject = prevObject;
                     }
                 }
                 LOG_INFO("rx macro special: goomba triplet");

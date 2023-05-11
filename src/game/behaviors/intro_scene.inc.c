@@ -4,6 +4,7 @@ void spawn_child_obj_relative(struct Object *parent, s16 xOffset, s16 yOffset, s
                    s16 yawOffset, s16 rollOffset, s16 forwardVel,
                    s32 model, const BehaviorScript *behavior) {
     struct Object *sp1C = spawn_object(parent, model, behavior);
+    if (!sp1C) { return; }
 
     sp1C->header.gfx.animInfo.animFrame = random_float() * 6.f;
     sp1C->oEndBirdUnk104 = sCutsceneVars[9].point[0];

@@ -68,6 +68,7 @@ void network_receive_spawn_star(struct Packet* p) {
 }
 
 void network_send_spawn_star_nle(struct Object* o, u32 params) {
+    if (!o) { return; }
     u8 globalIndex = UNKNOWN_GLOBAL_INDEX;
     if (o->behavior == smlua_override_behavior(bhvMario)) {
         u8 localIndex = o->oBehParams - 1;

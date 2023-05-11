@@ -9,12 +9,13 @@ s8 D_8032F948[] = { 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 2, 5, 1, 5, 1, 5, 1, 5,
 s8 *D_8032F96C[] = { D_8032F8F0, D_8032F924, D_8032F948 };
 
 void tox_box_shake_screen(void) {
-    if (o->oDistanceToMario < 3000.0f)
+    if (o && o->oDistanceToMario < 3000.0f)
         cur_obj_shake_screen(SHAKE_POS_SMALL);
 }
 
 void tox_box_move(f32 forwardVel, f32 a1, s16 deltaPitch, s16 deltaRoll)
 {
+    if (!o) { return; }
     o->oPosY = 99.41124 * sins((f32)(o->oTimer + 1) / 8 * 0x8000) + o->oHomeY + 3.0f;
     o->oForwardVel = forwardVel;
     o->oUnkC0 = a1;
@@ -47,6 +48,7 @@ void tox_box_act_7(void) {
 }
 
 void tox_box_act_1(void) {
+    if (!o) { return; }
     o->oForwardVel = 0.0f;
     if (o->oTimer == 0)
         tox_box_shake_screen();
@@ -56,16 +58,19 @@ void tox_box_act_1(void) {
 }
 
 void tox_box_act_2(void) {
+    if (!o) { return; }
     if (o->oTimer == 20)
         o->oAction = cur_obj_progress_direction_table();
 }
 
 void tox_box_act_3(void) {
+    if (!o) { return; }
     if (o->oTimer == 20)
         o->oAction = cur_obj_progress_direction_table();
 }
 
 void tox_box_act_0(void) {
+    if (!o) { return; }
     if (!BHV_ARR_CHECK(D_8032F96C, o->oBehParams2ndByte, s8*)) { return; }
     s8 *sp1C = D_8032F96C[o->oBehParams2ndByte];
     o->oAction = cur_obj_set_direction_table(sp1C);

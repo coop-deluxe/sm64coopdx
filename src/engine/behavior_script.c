@@ -52,7 +52,7 @@ u16 random_u16(void) {
     if (gOverrideRngPosition != NULL) {
         // override this function for rng positions
         gRandomSeed16 = gOverrideRngPosition->seed;
-    } else if (gCurrentObject->oSyncID != 0) {
+    } else if (gCurrentObject && gCurrentObject->oSyncID != 0) {
         // override this function for synchronized entities
         so = sync_object_get(gCurrentObject->oSyncID);
         if (so != NULL && so->o == gCurrentObject) {

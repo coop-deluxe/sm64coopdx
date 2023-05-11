@@ -106,7 +106,7 @@ struct Object *gMarioObjects[MAX_PLAYERS];
  * This object is used frequently in object behavior code, and so is often
  * aliased as "o".
  */
-struct Object *gCurrentObject;
+struct Object *gCurrentObject = NULL;
 
 /**
  * The next object behavior command to be executed.
@@ -350,6 +350,7 @@ s32 update_objects_starting_at(struct ObjectNode *objList, struct ObjectNode *fi
     if (!firstObj) { return 0; }
 
     s32 count = 0;
+    struct Object* prevObject = gCurrentObject;
 
     while (objList != firstObj) {
         gCurrentObject = (struct Object *) firstObj;
@@ -361,6 +362,8 @@ s32 update_objects_starting_at(struct ObjectNode *objList, struct ObjectNode *fi
         firstObj = firstObj->next;
         count += 1;
     }
+
+    gCurrentObject = prevObject;
 
     return count;
 }
@@ -378,6 +381,7 @@ s32 update_objects_during_time_stop(struct ObjectNode *objList, struct ObjectNod
     if (!firstObj) { return 0; }
     s32 count = 0;
     s32 unfrozen;
+    struct Object* prevObject = gCurrentObject;
 
     while (objList != firstObj) {
         gCurrentObject = (struct Object *) firstObj;
@@ -414,6 +418,8 @@ s32 update_objects_during_time_stop(struct ObjectNode *objList, struct ObjectNod
         count++;
     }
 
+    gCurrentObject = prevObject;
+
     return count;
 }
 
@@ -440,6 +446,7 @@ s32 update_objects_in_list(struct ObjectNode *objList) {
 s32 unload_deactivated_objects_in_list(struct ObjectNode *objList) {
     if (!objList) { return 0; }
     struct ObjectNode *obj = objList->next;
+    struct Object* prevObject = gCurrentObject;
 
     while (objList != obj) {
         gCurrentObject = (struct Object *) obj;
@@ -457,6 +464,8 @@ s32 unload_deactivated_objects_in_list(struct ObjectNode *objList) {
             unload_object(gCurrentObject);
         }
     }
+
+    gCurrentObject = prevObject;
 
     return 0;
 }

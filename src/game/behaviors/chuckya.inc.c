@@ -1,6 +1,7 @@
 // chuckya.c.inc
 
 void common_anchor_mario_behavior(f32 sp28, f32 sp2C, s32 sp30) {
+    if (!o) { return; }
     for (s32 i = 0; i < MAX_PLAYERS; i++) {
         if (!is_player_active(&gMarioStates[i])) { continue; }
         struct MarioState* marioState = &gMarioStates[i];
@@ -38,6 +39,7 @@ void bhv_chuckya_anchor_mario_loop(void) {
 }
 
 s32 unknown_chuckya_function(s32 sp20, f32 sp24, f32 sp28, s32 sp2C) {
+    if (!o) { return 0; }
     struct Object* player = nearest_player_to_object(o);
     s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
     s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
@@ -82,6 +84,7 @@ s32 approach_forward_vel(f32 *arr, f32 spC, f32 sp10) {
 }
 
 void chuckya_act_0(void) {
+    if (!o) { return; }
     struct Object* player = nearest_player_to_object(o);
     s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
     s32 sp3C = 0;
@@ -137,6 +140,7 @@ void chuckya_act_0(void) {
 }
 
 void chuckya_act_1(void) {
+    if (!o) { return; }
     if (o->oSubAction == 0) {
         if (cur_obj_init_animation_and_check_if_near_end(0))
             o->oSubAction++;
@@ -174,6 +178,7 @@ void chuckya_act_1(void) {
 }
 
 void chuckya_act_3(void) {
+    if (!o) { return; }
     o->oForwardVel = 0;
     o->oVelY = 0;
     cur_obj_init_animation_with_sound(4);
@@ -182,6 +187,7 @@ void chuckya_act_3(void) {
 }
 
 void chuckya_act_2(void) {
+    if (!o) { return; }
     if (o->oMoveFlags & (OBJ_MOVE_HIT_WALL | OBJ_MOVE_MASK_IN_WATER | OBJ_MOVE_LANDED)) {
         obj_mark_for_deletion(o);
         obj_spawn_loot_yellow_coins(o, 5, 20.0f);
@@ -192,6 +198,7 @@ void chuckya_act_2(void) {
 void (*sChuckyaActions[])(void) = { chuckya_act_0, chuckya_act_1, chuckya_act_2, chuckya_act_3 };
 
 void chuckya_move(void) {
+    if (!o) { return; }
     cur_obj_update_floor_and_walls();
     CUR_OBJ_CALL_ACTION_FUNCTION(sChuckyaActions);
     cur_obj_move_standard(-30);

@@ -123,10 +123,12 @@ struct Object *obj_get_first(enum ObjectList objList) {
 
 struct Object *obj_get_first_with_behavior_id(enum BehaviorId behaviorId) {
     const BehaviorScript* behavior = get_behavior_from_id(behaviorId);
+    u32 sanityDepth = 0;
     behavior = smlua_override_behavior(behavior);
     if (behavior) {
         enum ObjectList objList = get_object_list_from_behavior(behavior);
         for (struct Object *obj = obj_get_first(objList); obj != NULL; obj = obj_get_next(obj)) {
+            if (++sanityDepth > 10000) { break; }
             if (obj->behavior == behavior && obj->activeFlags != ACTIVE_FLAG_DEACTIVATED) {
                 return obj;
             }
@@ -137,10 +139,12 @@ struct Object *obj_get_first_with_behavior_id(enum BehaviorId behaviorId) {
 
 struct Object *obj_get_first_with_behavior_id_and_field_s32(enum BehaviorId behaviorId, s32 fieldIndex, s32 value) {
     const BehaviorScript* behavior = get_behavior_from_id(behaviorId);
+    u32 sanityDepth = 0;
     behavior = smlua_override_behavior(behavior);
     if (behavior) {
         enum ObjectList objList = get_object_list_from_behavior(behavior);
         for (struct Object *obj = obj_get_first(objList); obj != NULL; obj = obj_get_next(obj)) {
+            if (++sanityDepth > 10000) { break; }
             if (obj->behavior == behavior && obj->activeFlags != ACTIVE_FLAG_DEACTIVATED && obj->OBJECT_FIELD_S32(fieldIndex) == value) {
                 return obj;
             }

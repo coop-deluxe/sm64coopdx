@@ -1,6 +1,7 @@
 // grand_star.c.inc
 
 s32 arc_to_goal_pos(Vec3f empty, Vec3f pos, f32 yVel, f32 gravity) {
+    if (!o) { return 0; }
     f32 dx = empty[0] - pos[0];
     f32 dz = empty[2] - pos[2];
     f32 planarDist = sqrtf(dx * dx + dz * dz);
@@ -13,6 +14,7 @@ s32 arc_to_goal_pos(Vec3f empty, Vec3f pos, f32 yVel, f32 gravity) {
 }
 
 void grand_star_zero_velocity(void) {
+    if (!o) { return; }
     o->oGravity = 0.0f;
     o->oVelY = 0.0f;
     o->oForwardVel = 0.0f;
