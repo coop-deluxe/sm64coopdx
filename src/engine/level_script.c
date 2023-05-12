@@ -107,8 +107,7 @@ static s32 eval_script_op(s8 op, s32 arg) {
 
 struct ObjectWarpNode *area_create_warp_node(u8 id, u8 destLevel, u8 destArea, u8 destNode, u8 checkpoint, struct Object *o) {
     if (sCurrAreaIndex != -1) {
-        struct ObjectWarpNode *warpNode =
-            alloc_only_pool_alloc(sLevelPool, sizeof(struct ObjectWarpNode));
+        struct ObjectWarpNode *warpNode = alloc_only_pool_alloc(sLevelPool, sizeof(struct ObjectWarpNode));
 
         warpNode->node.id = id;
         warpNode->node.destLevel = destLevel + checkpoint;
@@ -395,9 +394,15 @@ static void level_cmd_alloc_level_pool(void) {
         }
     }
 
+    // free previous level pool
+    if (sLevelPool != NULL) {
+        alloc_only_pool_free(sLevelPool);
+        sLevelPool = NULL;
+    }
+
+    // allocate new level pool
     if (sLevelPool == NULL) {
-        sLevelPool = alloc_only_pool_init(main_pool_available() - sizeof(struct AllocOnlyPool),
-                                          MEMORY_POOL_LEFT);
+        sLevelPool = alloc_only_pool_init();
     }
 
     sCurrentCmd = CMD_NEXT;
@@ -406,8 +411,11 @@ static void level_cmd_alloc_level_pool(void) {
 static void level_cmd_free_level_pool(void) {
     s32 i;
 
-    alloc_only_pool_resize(sLevelPool, sLevelPool->usedSpace);
-    sLevelPool = NULL;
+    if (!sFinishedLoadingPerm) {
+        sFinishedLoadingPerm = true;
+        // make sure we don't free the pool with the permanent models
+        sLevelPool = NULL;
+    }
 
     for (i = 0; i < 8; i++) {
         if (gAreaData[i].terrainData != NULL) {
@@ -472,9 +480,6 @@ static void level_cmd_load_model_from_geo(void) {
         gLoadedGraphNodes[arg0] = process_geo_layout(sLevelPool, arg1);
         if (sFinishedLoadingPerm) { sLevelOwnedGraphNodes[arg0] = true; }
         smlua_model_util_remember(arg0, LAYER_OPAQUE, arg1, 0);
-        if (arg0 == MODEL_ERROR_MODEL) {
-            sFinishedLoadingPerm = true;
-        }
     }
 
     sCurrentCmd = CMD_NEXT;

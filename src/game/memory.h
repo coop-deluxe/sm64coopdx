@@ -13,10 +13,14 @@
 
 struct AllocOnlyPool
 {
-    s32 totalSpace;
-    s32 usedSpace;
-    u8 *startPtr;
-    u8 *freePtr;
+    u32 usedSpace;
+    struct AllocOnlyNode* tail;
+};
+
+struct AllocOnlyNode
+{
+    void* ptr;
+    struct AllocOnlyNode* prev;
 };
 
 struct MemoryPool;
@@ -50,9 +54,10 @@ u32 main_pool_pop_state(void);
 #define load_segment_decompress_heap(...)
 #define load_engine_code_segment(...)
 
-struct AllocOnlyPool *alloc_only_pool_init(u32 size, u32 side);
-void *alloc_only_pool_alloc(struct AllocOnlyPool *pool, s32 size);
-struct AllocOnlyPool *alloc_only_pool_resize(struct AllocOnlyPool *pool, u32 size);
+struct AllocOnlyPool* alloc_only_pool_init(void);
+void* alloc_only_pool_alloc(struct AllocOnlyPool *pool, u32 size);
+struct AllocOnlyPool* alloc_only_pool_resize(struct AllocOnlyPool *pool, u32 size);
+void alloc_only_pool_free(struct AllocOnlyPool *pool);
 
 struct MemoryPool *mem_pool_init(u32 size, u32 side);
 void *mem_pool_alloc(struct MemoryPool *pool, u32 size);

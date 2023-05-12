@@ -548,6 +548,11 @@ void smlua_model_util_clear(void) {
     //LOG_INFO("Cleared runtime model cache.");
 }
 
+// DO NOT COMMIT
+// smlua_model_util_load_with_pool_and_cache_id() needs to be reworked to use dynamic pools correctly
+// DO NOT COMMIT
+
+
 u16 smlua_model_util_load_with_pool_and_cache_id(enum ModelExtendedId extId, struct AllocOnlyPool* pool, u16 loadedId) {
     if (extId == E_MODEL_NONE) { return MODEL_NONE; }
     if (extId >= (u16)(E_MODEL_MAX + sCustomModelsCount)) {
@@ -593,7 +598,7 @@ u16 smlua_model_util_load_with_pool_and_cache_id(enum ModelExtendedId extId, str
     // load
     bool resizePool = false;
     if (pool == NULL) {
-        pool = alloc_only_pool_init(main_pool_available() - sizeof(struct AllocOnlyPool), MEMORY_POOL_LEFT);
+        pool = alloc_only_pool_init();
         resizePool = true;
     }
     info->shouldFreeAsset = false;

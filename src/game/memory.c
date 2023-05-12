@@ -218,6 +218,7 @@ u32 main_pool_push_state(void) {
  * amount of free space left in the pool.
  */
 u32 main_pool_pop_state(void) {
+    if (!gMainPoolState) { return sPoolFreeSpace; }
     sPoolFreeSpace = gMainPoolState->freeSpace;
     sPoolListHeadL = gMainPoolState->listHeadL;
     sPoolListHeadR = gMainPoolState->listHeadR;
@@ -246,71 +247,6 @@ static void *dynamic_dma_read(u8 *srcStart, u8 *srcEnd, u32 side) {
         dma_read(dest, srcStart, srcEnd);
     }
     return dest;
-}
-
-/**
- * Allocate an allocation-only pool from the main pool. This pool doesn't
- * support freeing allocated memory.
- * Return NULL if there is not enough space in the main pool.
- */
-struct AllocOnlyPool *alloc_only_pool_init(u32 size, u32 side) {
-    void *addr;
-    struct AllocOnlyPool *subPool = NULL;
-
-    size = ALIGN4(size);
-    addr = main_pool_alloc(size + sizeof(struct AllocOnlyPool), side);
-    if (addr != NULL) {
-        subPool = (struct AllocOnlyPool *) addr;
-        subPool->totalSpace = size;
-        subPool->usedSpace = 0;
-        subPool->startPtr = (u8 *) addr + sizeof(struct AllocOnlyPool);
-        subPool->freePtr = (u8 *) addr + sizeof(struct AllocOnlyPool);
-    }
-    if (addr == NULL) {
-        LOG_ERROR("Allocate only pool failed to initalize memory of size 0x%X on side %d.", size, side);
-    }
-    return subPool;
-}
-
-/**
- * Allocate from an allocation-only pool.
- * Return NULL if there is not enough space.
- */
-void *alloc_only_pool_alloc(struct AllocOnlyPool *pool, s32 size) {
-    void *addr = NULL;
-
-    size = ALIGN4(size);
-    if (size > 0 && pool->usedSpace + size <= pool->totalSpace) {
-        addr = pool->freePtr;
-        pool->freePtr += size;
-        pool->usedSpace += size;
-    }
-    if (addr == NULL) {
-        LOG_ERROR("Allocate only pool failed to allocate memory of size 0x%X on at pool %p.", size, pool);
-    } else {
-        memset(addr, 0, size);
-    }
-    return addr;
-}
-
-/**
- * Resize an allocation-only pool.
- * If the pool is increasing in size, the pool must be the last thing allocated
- * from the left end of the main pool.
- * The pool does not move.
- */
-struct AllocOnlyPool *alloc_only_pool_resize(struct AllocOnlyPool *pool, u32 size) {
-    struct AllocOnlyPool *newPool;
-
-    size = ALIGN4(size);
-    newPool = main_pool_realloc(pool, size + sizeof(struct AllocOnlyPool));
-    if (newPool != NULL) {
-        pool->totalSpace = size;
-    }
-    if (newPool == NULL) {
-        LOG_ERROR("Allocate only pool failed to reallocate memory of size 0x%X on at pool %p.", size, pool);
-    }
-    return newPool;
 }
 
 /**
