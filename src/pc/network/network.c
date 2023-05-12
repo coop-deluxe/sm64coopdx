@@ -613,6 +613,8 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
         gNetworkType = NT_NONE;
     }
 
+    dynos_model_clear_pool(MODEL_POOL_SESSION);
+
     if (exiting) { return; }
 
     // reset other stuff

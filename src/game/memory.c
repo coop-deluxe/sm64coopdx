@@ -351,20 +351,6 @@ void mem_pool_free(struct MemoryPool *pool, void *addr) {
     }
 }
 
-void *alloc_display_list(u32 size) {
-    void *ptr = NULL;
-
-    size = ALIGN8(size);
-    if (gGfxPoolEnd - size >= (u8 *) gDisplayListHead) {
-        gGfxPoolEnd -= size;
-        ptr = gGfxPoolEnd;
-        memset(ptr, 0, size);
-    } else {
-        LOG_ERROR("Failed to allocate display list of size 0x%X!", size);
-    }
-    return ptr;
-}
-
 static struct MarioAnimDmaRelatedThing *func_802789F0(u8 *srcAddr) {
     struct MarioAnimDmaRelatedThing *sp1C = dynamic_dma_read(srcAddr, srcAddr + sizeof(u32),
                                                              MEMORY_POOL_LEFT);

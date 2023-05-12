@@ -48,8 +48,8 @@ GeoLayoutCommandProc GeoLayoutJumpTable[] = {
 };
 
 struct GraphNode gObjParentGraphNode;
-struct AllocOnlyPool *gGraphNodePool;
-struct GraphNode *gCurRootGraphNode;
+struct AllocOnlyPool *gGraphNodePool = NULL;
+struct GraphNode *gCurRootGraphNode = NULL;
 
 UNUSED s32 D_8038BCA8;
 

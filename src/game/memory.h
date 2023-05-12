@@ -56,7 +56,6 @@ u32 main_pool_pop_state(void);
 
 struct AllocOnlyPool* alloc_only_pool_init(void);
 void* alloc_only_pool_alloc(struct AllocOnlyPool *pool, u32 size);
-struct AllocOnlyPool* alloc_only_pool_resize(struct AllocOnlyPool *pool, u32 size);
 void alloc_only_pool_free(struct AllocOnlyPool *pool);
 
 struct MemoryPool *mem_pool_init(u32 size, u32 side);

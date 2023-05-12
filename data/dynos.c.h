@@ -71,6 +71,11 @@ s32 dynos_behavior_get_active_mod_index(BehaviorScript *bhvScript);
 const char *dynos_behavior_get_token(BehaviorScript *bhvScript, u32 index);
 void dynos_behavior_hook_all_custom_behaviors(void);
 
+// -- models -- //
+struct GraphNode* dynos_model_load_geo(enum ModelPool aModelPool, void* aAsset);
+struct GraphNode* dynos_model_load_dl(enum ModelPool aModelPool, u8 aLayer, void* aAsset);
+void dynos_model_clear_pool(enum ModelPool aModelPool);
+
 // -- other -- //
 void dynos_mod_shutdown(void);
 void dynos_add_scroll_target(u32 index, const char *name, u32 offset, u32 size);

@@ -1620,10 +1620,11 @@ void geo_process_root(struct GraphNodeRoot *node, Vp *b, Vp *c, s32 clearColor) 
     geo_clear_interp_variables();
 
     if (node->node.flags & GRAPH_RENDER_ACTIVE) {
+        if (gDisplayListHeap) { alloc_only_pool_free(gDisplayListHeap); }
+        gDisplayListHeap = alloc_only_pool_init();
+
         Vp *viewport = alloc_display_list(sizeof(*viewport));
         if (viewport == NULL) { return; }
-
-        gDisplayListHeap = alloc_only_pool_init();
 
         Mtx *initialMatrix = alloc_display_list(sizeof(*initialMatrix));
         if (initialMatrix == NULL) { return; }
@@ -1668,6 +1669,5 @@ void geo_process_root(struct GraphNodeRoot *node, Vp *b, Vp *c, s32 clearColor) 
         //if (gShowDebugText) {
         //    print_text_fmt_int(180, 36, "MEM %d", gDisplayListHeap->totalSpace - gDisplayListHeap->usedSpace);
         //}
-        alloc_only_pool_free(gDisplayListHeap);
     }
 }

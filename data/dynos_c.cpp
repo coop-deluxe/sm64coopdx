@@ -121,10 +121,6 @@ const void* dynos_geolayout_get(const char *name) {
     return DynOS_Actor_GetLayoutFromName(name);
 }
 
-void *dynos_geolayout_to_graphnode(const void *geoLayout, bool keepInMemory) {
-    return DynOS_Geo_GetGraphNode(geoLayout, keepInMemory);
-}
-
 // -- collisions -- //
 
 void dynos_add_collision(const char *filePath, const char* collisionName) {
@@ -226,7 +222,22 @@ void dynos_behavior_hook_all_custom_behaviors(void) {
     DynOS_Bhv_HookAllCustomBehaviors();
 }
 
+// -- models -- //
+
+struct GraphNode* dynos_model_load_geo(enum ModelPool aModelPool, void* aAsset) {
+    return DynOS_Model_LoadGeo(aModelPool, aAsset);
+}
+
+struct GraphNode* dynos_model_load_dl(enum ModelPool aModelPool, u8 aLayer, void* aAsset) {
+    return DynOS_Model_LoadDl(aModelPool, aLayer, aAsset);
+}
+
+void dynos_model_clear_pool(enum ModelPool aModelPool) {
+    DynOS_Model_ClearPool(aModelPool);
+}
+
 // -- other -- //
+
 void dynos_mod_shutdown(void) {
     DynOS_Mod_Shutdown();
 }

@@ -37,4 +37,11 @@ extern "C" {
 #define DYNOS_AT_STARTUP		__attribute__((constructor))
 #define DYNOS_AT_EXIT			__attribute__((destructor))
 
+enum ModelPool {
+    MODEL_POOL_PERMANENT,
+    MODEL_POOL_SESSION,
+    MODEL_POOL_LEVEL,
+    MODEL_POOL_MAX,
+};
+
 #endif

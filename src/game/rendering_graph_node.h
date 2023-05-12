@@ -9,6 +9,7 @@ extern f32 gProjectionMaxNearValue;
 extern s16 gProjectionVanillaNearValue;
 extern s16 gProjectionVanillaFarValue;
 
+extern struct AllocOnlyPool *gDisplayListHeap;
 extern struct GraphNodeRoot *gCurGraphNodeRoot;
 extern struct GraphNodeMasterList *gCurGraphNodeMasterList;
 extern struct GraphNodePerspective *gCurGraphNodeCamFrustum;

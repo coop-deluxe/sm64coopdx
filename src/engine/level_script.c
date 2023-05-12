@@ -399,6 +399,7 @@ static void level_cmd_alloc_level_pool(void) {
         alloc_only_pool_free(sLevelPool);
         sLevelPool = NULL;
     }
+    dynos_model_clear_pool(MODEL_POOL_LEVEL);
 
     // allocate new level pool
     if (sLevelPool == NULL) {
@@ -432,8 +433,7 @@ static void level_cmd_begin_area(void) {
     void *geoLayoutAddr = CMD_GET(void *, 4);
 
     if (areaIndex < 8) {
-        struct GraphNodeRoot *screenArea =
-            (struct GraphNodeRoot *) process_geo_layout(sLevelPool, geoLayoutAddr);
+        struct GraphNodeRoot *screenArea = (struct GraphNodeRoot *) dynos_model_load_geo(MODEL_POOL_LEVEL, geoLayoutAddr);
         struct GraphNodeCamera *node = (struct GraphNodeCamera *) screenArea->views[0];
 
         sCurrAreaIndex = areaIndex;
@@ -464,7 +464,7 @@ static void level_cmd_load_model_from_dl(void) {
     void *val3 = CMD_GET(void *, 4);
 
     if (val1 < MAX_LOADED_GRAPH_NODES) {
-        gLoadedGraphNodes[val1] = (struct GraphNode *) init_graph_node_display_list(sLevelPool, 0, val2, val3);
+        gLoadedGraphNodes[val1] = dynos_model_load_dl(sFinishedLoadingPerm ? MODEL_POOL_LEVEL : MODEL_POOL_PERMANENT, val2, val3);
         if (sFinishedLoadingPerm) { sLevelOwnedGraphNodes[val1] = true; }
         smlua_model_util_remember(val1, val2, val3, 1);
     }
@@ -477,7 +477,7 @@ static void level_cmd_load_model_from_geo(void) {
     void *arg1 = CMD_GET(void *, 4);
 
     if (arg0 < MAX_LOADED_GRAPH_NODES) {
-        gLoadedGraphNodes[arg0] = process_geo_layout(sLevelPool, arg1);
+        gLoadedGraphNodes[arg0] = dynos_model_load_geo(sFinishedLoadingPerm ? MODEL_POOL_LEVEL : MODEL_POOL_PERMANENT, arg1);
         if (sFinishedLoadingPerm) { sLevelOwnedGraphNodes[arg0] = true; }
         smlua_model_util_remember(arg0, LAYER_OPAQUE, arg1, 0);
     }
@@ -1032,7 +1032,7 @@ static void level_cmd_place_object_ext2(void) {
         spawnInfo->behaviorArg = CMD_GET(u32, 16);
 
         spawnInfo->behaviorScript = (BehaviorScript*)get_behavior_from_id(behId);
-        u16 slot = smlua_model_util_load_with_pool(modelId, sLevelPool);
+        u16 slot = smlua_model_util_load_with_pool(modelId, MODEL_POOL_LEVEL);
         if (slot >= MAX_LOADED_GRAPH_NODES) { slot = MODEL_NONE; }
         spawnInfo->unk18 = gLoadedGraphNodes[slot];
         spawnInfo->next = gAreas[sCurrAreaIndex].objectSpawnInfos;
@@ -1055,7 +1055,7 @@ static void level_cmd_load_model_from_geo_ext(void) {
     u32 modelId = smlua_model_util_get_id(geoName);
 
     if (modelSlot < MAX_LOADED_GRAPH_NODES) {
-        smlua_model_util_load_with_pool_and_cache_id(modelId, sLevelPool, modelSlot);
+        smlua_model_util_load_with_pool_and_cache_id(modelId, MODEL_POOL_LEVEL, modelSlot);
     }
 
     sCurrentCmd = CMD_NEXT;

@@ -548,12 +548,7 @@ void smlua_model_util_clear(void) {
     //LOG_INFO("Cleared runtime model cache.");
 }
 
-// DO NOT COMMIT
-// smlua_model_util_load_with_pool_and_cache_id() needs to be reworked to use dynamic pools correctly
-// DO NOT COMMIT
-
-
-u16 smlua_model_util_load_with_pool_and_cache_id(enum ModelExtendedId extId, struct AllocOnlyPool* pool, u16 loadedId) {
+u16 smlua_model_util_load_with_pool_and_cache_id(enum ModelExtendedId extId, enum ModelPool pool, u16 loadedId) {
     if (extId == E_MODEL_NONE) { return MODEL_NONE; }
     if (extId >= (u16)(E_MODEL_MAX + sCustomModelsCount)) {
         LOG_ERROR("Tried to load invalid extId: %u >= %u (%u)", extId, (E_MODEL_MAX + sCustomModelsCount), sCustomModelsCount);
@@ -596,52 +591,27 @@ u16 smlua_model_util_load_with_pool_and_cache_id(enum ModelExtendedId extId, str
     }
 
     // load
-    bool resizePool = false;
-    if (pool == NULL) {
-        pool = alloc_only_pool_init();
-        resizePool = true;
-    }
-    info->shouldFreeAsset = false;
-
-    if (pool != NULL) {
-        if (info->isDisplayList) {
-            gLoadedGraphNodes[pickLoadedId] = (struct GraphNode *) init_graph_node_display_list(pool, NULL, info->layer, (void*)info->asset);
-        } else {
-            gLoadedGraphNodes[pickLoadedId] = process_geo_layout(pool, (void*)info->asset);
-        }
-
-        if (resizePool) {
-            alloc_only_pool_resize(pool, pool->usedSpace);
-        }
-    }
-
-    // If no pool is available, use DynOS to generate the graph node
-    else {
-
-        // Turn the display list into a geo layout
-        if (info->isDisplayList) {
-            const GeoLayout displayListToGeoLayout[] = { GEO_NODE_START(), GEO_DISPLAY_LIST(info->layer, info->asset), GEO_END() };
-            info->asset = memcpy(calloc(1, sizeof(displayListToGeoLayout)), displayListToGeoLayout, sizeof(displayListToGeoLayout));
-            info->shouldFreeAsset = true;
-            info->isDisplayList = false;
-        }
-        gLoadedGraphNodes[pickLoadedId] = dynos_geolayout_to_graphnode(info->asset, true);
-        LOG_ERROR("Out of memory in the main pool - using dynos");
-    }
+    struct GraphNode* node = NULL;
+    node = (info->isDisplayList)
+         ? dynos_model_load_dl(pool, info->layer, (void*)info->asset)
+         : dynos_model_load_geo(pool, (void*) info->asset);
+    gLoadedGraphNodes[pickLoadedId] = node;
 
     // remember
-    smlua_model_util_remember(pickLoadedId, info->layer, info->asset, info->isDisplayList);
+    if (node) {
+        smlua_model_util_remember(pickLoadedId, info->layer, info->asset, info->isDisplayList);
+    }
     //LOG_INFO("Loaded custom model - %u -> %u", extId, pickLoadedId);
 
     return pickLoadedId;
 }
 
-u16 smlua_model_util_load_with_pool(enum ModelExtendedId extId, struct AllocOnlyPool* pool) {
+u16 smlua_model_util_load_with_pool(enum ModelExtendedId extId, enum ModelPool pool) {
     return smlua_model_util_load_with_pool_and_cache_id(extId, pool, UNLOADED_ID);
 }
 
 u16 smlua_model_util_load(enum ModelExtendedId extId) {
-    return smlua_model_util_load_with_pool(extId, NULL);
+    return smlua_model_util_load_with_pool(extId, MODEL_POOL_SESSION);
 }
 
 u32 smlua_model_util_get_id(const char* name) {

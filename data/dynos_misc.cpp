@@ -137,44 +137,6 @@ static void _RelocateGraphNodePointers(struct GraphNode *aHead, u64 aOffset) {
     } while (_Node != aHead);
 }
 
-static Array<Pair<void *, void *>> sLoadedGraphNodes = {};
-
-// DO NOT COMMIT:
-// need to separate pools into one that will be free'd and one that wont be and when
-void *DynOS_Geo_GetGraphNode(const void *aGeoLayout, bool aKeepInMemory) {
-    if (aKeepInMemory) {
-        s32 _LoadedGraphNodeIndex = sLoadedGraphNodes.FindIf([&aGeoLayout](const Pair<void *, void *> &aLoadedGraphNode) { return aLoadedGraphNode.first == aGeoLayout; });
-        if (_LoadedGraphNodeIndex != -1) {
-            return sLoadedGraphNodes[_LoadedGraphNodeIndex].second;
-        }
-    }
-
-    // Process the geo layout on a large pool of memory (16 MB)
-    struct AllocOnlyPool *_Pool = alloc_only_pool_init();
-    void *_Processed  = process_geo_layout(_Pool, (void *) aGeoLayout);
-
-    // Copy the graph node data to the minimum amount of memory needed
-    if (_Processed && _Pool->usedSpace != 0) {
-        /*struct GraphNode *_Node = (struct GraphNode *) calloc(1, _Pool->usedSpace);
-        memcpy(_Node, _Pool->startPtr, _Pool->usedSpace);
-
-        // Relocate all graph pointers
-        u64 _Offset = (u64) _Node - (u64) _Pool->startPtr;
-        _RelocateGraphNodePointers(_Node, _Offset);*/
-
-        // Add it to loaded graph nodes
-        if (aKeepInMemory || true) { // DO NOT COMMIT
-            //sLoadedGraphNodes.Add({ (void *) aGeoLayout, (void *) _Node });
-            sLoadedGraphNodes.Add({ (void *) aGeoLayout, (void *) _Processed });
-        }
-
-        return _Processed;
-    } else {
-        alloc_only_pool_free(_Pool);
-    }
-    return NULL;
-}
-
 //
 // Scroll Targets
 //

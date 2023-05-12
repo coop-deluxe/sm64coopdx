@@ -805,8 +805,6 @@ s32 DynOS_String_Width(const u8 *aStr64);
 // Geo
 //
 
-void *DynOS_Geo_GetGraphNode(const void *aGeoLayout, bool aKeepInMemory);
-
 //
 // Levels
 //
@@ -960,6 +958,14 @@ void DynOS_MovtexQC_Register(const char* name, s16 level, s16 area, s16 type);
 DataNode<MovtexQC>* DynOS_MovtexQC_GetFromId(u32 id);
 DataNode<MovtexQC>* DynOS_MovtexQC_GetFromIndex(s32 index);
 void DynOS_MovtexQC_ModShutdown();
+
+//
+// Model Manager
+//
+
+struct GraphNode* DynOS_Model_LoadGeo(enum ModelPool aModelPool, void* aAsset);
+struct GraphNode* DynOS_Model_LoadDl(enum ModelPool aModelPool, u8 aLayer, void* aAsset);
+void DynOS_Model_ClearPool(enum ModelPool aModelPool);
 
 //
 // Bin
