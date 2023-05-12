@@ -120,7 +120,9 @@ u32 mario_update_quicksand(struct MarioState *m, f32 sinkingSpeed) {
             m->quicksandDepth = 1.1f;
         }
 
-        switch (m->floor->type) {
+        u32 floorType = m->floor ? m->floor->type : SURFACE_DEFAULT;
+
+        switch (floorType) {
             case SURFACE_SHALLOW_QUICKSAND:
                 if ((m->quicksandDepth += sinkingSpeed) >= 10.0f) {
                     m->quicksandDepth = 10.0f;
@@ -355,11 +357,11 @@ s32 perform_ground_step(struct MarioState *m) {
     }
 
     for (i = 0; i < 4; i++) {
-        Vec3f step = {
-            m->floor->normal.y * (m->vel[0] / 4.0f),
-            0,
-            m->floor->normal.y * (m->vel[2] / 4.0f),
-        };
+        Vec3f step = { 0 };
+        if (m->floor) {
+            step[0] = m->floor->normal.y * (m->vel[0] / 4.0f);
+            step[2] = m->floor->normal.y * (m->vel[2] / 4.0f);
+        }
 
         intendedPos[0] = m->pos[0] + step[0];
         intendedPos[1] = m->pos[1];
@@ -678,7 +680,7 @@ void apply_vertical_wind(struct MarioState *m) {
     if (m->action != ACT_GROUND_POUND) {
         offsetY = m->pos[1] - -1500.0f;
 
-        if (m->floor->type == SURFACE_VERTICAL_WIND && -3000.0f < offsetY && offsetY < 2000.0f) {
+        if (m->floor && m->floor->type == SURFACE_VERTICAL_WIND && -3000.0f < offsetY && offsetY < 2000.0f) {
             if (offsetY >= 0.0f) {
                 maxVelY = 10000.0f / (offsetY + 200.0f);
             } else {

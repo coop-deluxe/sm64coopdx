@@ -106,7 +106,7 @@ static void update_rumble_pak(void) {
 
         if (gCurrRumbleSettings.unk0A >= 5) {
             start_rumble();
-        } else if ((gCurrRumbleSettings.unk0A >= 2) && (gNumVblanks % gCurrRumbleSettings.unk0C == 0)) {
+        } else if ((gCurrRumbleSettings.unk0A >= 2) && gCurrRumbleSettings.unk0C && (gNumVblanks % gCurrRumbleSettings.unk0C == 0)) {
             start_rumble();
         } else {
             stop_rumble();
