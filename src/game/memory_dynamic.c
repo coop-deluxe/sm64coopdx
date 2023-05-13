@@ -122,3 +122,17 @@ void growing_pool_free_pool(struct GrowingPool *pool) {
     }
     free(pool);
 }
+
+  ///////////////////
+ // display lists //
+///////////////////
+
+static struct GrowingPool* sDisplayListPool = NULL;
+
+void alloc_display_list_reset(void) {
+    sDisplayListPool = growing_pool_init(sDisplayListPool, 100000);
+}
+
+void *alloc_display_list(u32 size) {
+    return growing_pool_alloc(sDisplayListPool, size);
+}

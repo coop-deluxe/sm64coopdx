@@ -279,6 +279,7 @@ void rendering_init(void) {
     gGfxSPTask = &gGfxPool->spTask;
     gDisplayListHead = gGfxPool->buffer;
     gGfxPoolEnd = (u8 *) (gGfxPool->buffer + GFX_POOL_SIZE);
+    alloc_display_list_reset();
     init_render_image();
     clear_frame_buffer(0);
     end_master_display_list();
@@ -294,6 +295,7 @@ void config_gfx_pool(void) {
     gGfxSPTask = &gGfxPool->spTask;
     gDisplayListHead = gGfxPool->buffer;
     gGfxPoolEnd = (u8 *) (gGfxPool->buffer + GFX_POOL_SIZE);
+    alloc_display_list_reset();
 }
 
 /** Handles vsync. */

@@ -80,6 +80,7 @@ struct MemoryPool *mem_pool_init(u32 size, u32 side);
 void *mem_pool_alloc(struct MemoryPool *pool, u32 size);
 void mem_pool_free(struct MemoryPool *pool, void *addr);
 
+void alloc_display_list_reset(void);
 void *alloc_display_list(u32 size);
 
 void func_80278A78(struct MarioAnimation *a, void *b, struct Animation *target);

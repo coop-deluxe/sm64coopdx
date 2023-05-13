@@ -391,17 +391,3 @@ s32 load_patchable_table(struct MarioAnimation *a, u32 index) {
     }
     return ret;
 }
-
-
-void *alloc_display_list(u32 size) {
-    void *ptr = NULL;
-
-    size = ALIGN8(size);
-    if (gGfxPoolEnd - size >= (u8 *) gDisplayListHead) {
-        gGfxPoolEnd -= size;
-        ptr = gGfxPoolEnd;
-    } else {
-        LOG_ERROR("Failed to alloc display list!");
-    }
-    return ptr;
-}
