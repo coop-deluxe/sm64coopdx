@@ -37,17 +37,14 @@ struct GrowingPoolNode
     struct GrowingPoolNode* prev;
 };
 
-struct MemoryPool;
 struct MarioAnimation;
 struct Animation;
 
 extern struct DynamicPool *gLevelPool;
 
 uintptr_t set_segment_base_addr(s32 segment, void *addr);
-void *get_segment_base_addr(s32 segment);
 void *segmented_to_virtual(const void *addr);
 void *virtual_to_segmented(u32 segment, const void *addr);
-void move_segment_table_to_dmem(void);
 
 #define load_segment(...)
 #define load_to_fixed_pool_addr(...)

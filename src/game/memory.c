@@ -1,70 +1,179 @@
 #include <PR/ultratypes.h>
 #include <string.h>
 
-#include "sm64.h"
-
-#define INCLUDED_FROM_MEMORY_C
-
-#include "buffers/buffers.h"
-#include "decompress.h"
-#include "game_init.h"
-#include "main.h"
 #include "memory.h"
-#include "segment_symbols.h"
-#include "segments.h"
 #include "pc/debuglog.h"
 
-// round up to the next multiple
-#define ALIGN4(val) (((val) + 0x3) & ~0x3)
-#define ALIGN8(val) (((val) + 0x7) & ~0x7)
 #define ALIGN16(val) (((val) + 0xF) & ~0xF)
 
-struct MainPoolState {
-    u32 freeSpace;
-    struct MainPoolBlock *listHeadL;
-    struct MainPoolBlock *listHeadR;
-    struct MainPoolState *prev;
-};
+  //////////////////
+ // dynamic pool //
+//////////////////
 
-struct MainPoolBlock {
-    struct MainPoolBlock *prev;
-    struct MainPoolBlock *next;
-};
+struct DynamicPool *gLevelPool = NULL;
 
-struct MemoryBlock {
-    struct MemoryBlock *next;
-    u32 size;
-};
+struct DynamicPool* dynamic_pool_init(void) {
+    struct DynamicPool* pool = calloc(1, sizeof(struct DynamicPool));
+    pool->usedSpace = 0;
+    pool->tail = NULL;
+    return pool;
+}
 
-struct MemoryPool {
-    u32 totalSpace;
-    struct MemoryBlock *firstBlock;
-    struct MemoryBlock freeList;
-};
+void* dynamic_pool_alloc(struct DynamicPool *pool, u32 size) {
+    if (!pool) { return NULL; }
 
-extern uintptr_t sSegmentTable[32];
-extern u32 sPoolFreeSpace;
-extern u8 *sPoolStart;
-extern u8 *sPoolEnd;
-extern struct MainPoolBlock *sPoolListHeadL;
-extern struct MainPoolBlock *sPoolListHeadR;
+    struct DynamicPoolNode* node = calloc(1, sizeof(struct DynamicPoolNode));
+    node->ptr = calloc(1, size);
+    node->prev = pool->tail;
 
-uintptr_t sSegmentTable[32];
-u32 sPoolFreeSpace;
-u8 *sPoolStart;
-u8 *sPoolEnd;
-struct MainPoolBlock *sPoolListHeadL;
-struct MainPoolBlock *sPoolListHeadR;
+    pool->tail = node;
+    pool->usedSpace += size;
 
-static struct MainPoolState *gMainPoolState = NULL;
+    return node->ptr;
+}
+
+void dynamic_pool_free(struct DynamicPool *pool, void* ptr) {
+    if (!pool || !ptr) { return; }
+
+    struct DynamicPoolNode* node = pool->tail;
+    struct DynamicPoolNode* next = node;
+
+    while (node) {
+        struct DynamicPoolNode* prev = node->prev;
+        if (node->ptr == ptr) {
+            if (pool->tail == node) {
+                pool->tail = prev;
+            } else {
+                next->prev = prev;
+            }
+            free(node->ptr);
+            free(node);
+            return;
+        }
+        next = node;
+        node = prev;
+    }
+    LOG_ERROR("Failed to find memory to free in dynamic pool: %p", ptr);
+}
+
+void dynamic_pool_free_pool(struct DynamicPool *pool) {
+    if (!pool) { return; }
+    struct DynamicPoolNode* node = pool->tail;
+    while (node) {
+        struct DynamicPoolNode* prev = node->prev;
+        free(node->ptr);
+        free(node);
+        node = prev;
+    }
+    free(pool);
+}
+
+  //////////////////
+ // growing pool //
+//////////////////
+
+struct GrowingPool* growing_pool_init(struct GrowingPool* pool, u32 nodeSize) {
+    if (pool) {
+        // clear existing pool
+        struct GrowingPoolNode* node = pool->tail;
+        while (node) {
+            node->usedSpace = 0;
+            node = node->prev;
+        }
+        pool->usedSpace = 0;
+    } else {
+        // allocate a new pool
+        pool = calloc(1, sizeof(struct GrowingPool));
+        pool->usedSpace = 0;
+        pool->nodeSize = nodeSize;
+        pool->tail = NULL;
+    }
+    return pool;
+}
+
+void* growing_pool_alloc(struct GrowingPool *pool, u32 size) {
+    if (!pool) { return NULL; }
+
+    // maintain alignment
+    size = ALIGN16(size);
+
+    // check if it's too big for a node
+    if (size >= pool->nodeSize) {
+        // create a node just for this
+        struct GrowingPoolNode* node = calloc(1, sizeof(struct GrowingPoolNode));
+        node->ptr = calloc(1, size);
+        node->prev = pool->tail;
+        node->usedSpace = size;
+
+        pool->tail = node;
+        pool->usedSpace += size;
+
+        return node->ptr;
+    }
+
+    // search for space in nodes
+    struct GrowingPoolNode* node = pool->tail;
+    u32 depth = 0;
+    while (node) {
+        depth++;
+        s64 freeSpace = (s64)pool->nodeSize - (s64)node->usedSpace;
+        if (freeSpace > size) { break; }
+        node = node->prev;
+    }
+
+    // allocate new node
+    if (!node) {
+        node = calloc(1, sizeof(struct GrowingPoolNode));
+        node->usedSpace = 0;
+        node->ptr = calloc(1, pool->nodeSize);
+        node->prev = pool->tail;
+        pool->tail = node;
+    }
+
+    // retrieve pointer
+    void* ptr = ((u8*)node->ptr + node->usedSpace);
+    memset(ptr, 0, size);
+    node->usedSpace += size;
+    pool->usedSpace += size;
+
+    return ptr;
+}
+
+void growing_pool_free_pool(struct GrowingPool *pool) {
+    if (!pool) { return; }
+    struct GrowingPoolNode* node = pool->tail;
+    while (node) {
+        struct GrowingPoolNode* prev = node->prev;
+        free(node->ptr);
+        free(node);
+        node = prev;
+    }
+    free(pool);
+}
+
+  ///////////////////
+ // display lists //
+///////////////////
+
+static struct GrowingPool* sDisplayListPool = NULL;
+
+void alloc_display_list_reset(void) {
+    sDisplayListPool = growing_pool_init(sDisplayListPool, 100000);
+}
+
+void *alloc_display_list(u32 size) {
+    return growing_pool_alloc(sDisplayListPool, size);
+}
+
+  //////////////
+ // segments //
+//////////////
+
+uintptr_t sSegmentTable[32] = { 0 };
 
 uintptr_t set_segment_base_addr(s32 segment, void *addr) {
     sSegmentTable[segment] = (uintptr_t) addr & 0x1FFFFFFF;
     return sSegmentTable[segment];
-}
-
-void *get_segment_base_addr(s32 segment) {
-    return (void *) (sSegmentTable[segment] | 0x80000000);
 }
 
 void *segmented_to_virtual(const void *addr) {
@@ -75,8 +184,9 @@ void *virtual_to_segmented(UNUSED u32 segment, const void *addr) {
     return (void *) addr;
 }
 
-void move_segment_table_to_dmem(void) {
-}
+  /////////////////////
+ // anim dma tables //
+/////////////////////
 
 static struct MarioAnimDmaRelatedThing* func_802789F0(u8* srcAddr) {
     u32 count = 0;
@@ -101,23 +211,19 @@ void alloc_anim_dma_table(struct MarioAnimation* marioAnim, void* srcAddr, struc
     marioAnim->targetAnim = targetAnim;
 }
 
-// TODO: (Scrub C)
 s32 load_patchable_table(struct MarioAnimation *a, u32 index) {
-    s32 ret = FALSE;
     struct MarioAnimDmaRelatedThing *sp20 = a->animDmaTable;
-    u8 *addr;
-    u32 size;
 
     if (index < sp20->count) {
-        do {
-            addr = sp20->srcAddr + sp20->anim[index].offset;
-            size = sp20->anim[index].size;
-        } while (0);
+        u8* addr = sp20->srcAddr + sp20->anim[index].offset;
+        u32 size = sp20->anim[index].size;
+
         if (a->currentAnimAddr != addr) {
             memcpy(a->targetAnim, addr, size);
             a->currentAnimAddr = addr;
-            ret = TRUE;
+            return TRUE;
         }
+
     }
-    return ret;
+    return FALSE;
 }

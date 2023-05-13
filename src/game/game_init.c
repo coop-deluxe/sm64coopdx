@@ -244,7 +244,6 @@ void create_task_structure(void) {
 
 /** Starts rendering the scene. */
 void init_render_image(void) {
-    move_segment_table_to_dmem();
     my_rdp_init();
     my_rsp_init();
     clear_z_buffer();
