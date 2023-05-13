@@ -32,29 +32,27 @@
 // FIXME: I'm not sure all of these variables belong in this file, but I don't
 // know of a good way to split them
 
-struct Controller gControllers[MAX_PLAYERS];
-struct SPTask *gGfxSPTask;
-Gfx *gDisplayListHead;
-u8 *gGfxPoolEnd;
-struct GfxPool *gGfxPool;
-OSContStatus gControllerStatuses[4];
-OSContPad gControllerPads[4];
-u8 gControllerBits;
-s8 gEepromProbe;
-OSMesgQueue gGameVblankQueue;
-OSMesgQueue D_80339CB8;
-OSMesg D_80339CD0;
-OSMesg D_80339CD4;
-struct VblankHandler gGameVblankHandler;
-uintptr_t gPhysicalFrameBuffers[3];
-uintptr_t gPhysicalZBuffer;
-void *D_80339CF0[MAX_PLAYERS];
-void *D_80339CF4;
-struct MarioAnimation D_80339D10[MAX_PLAYERS];
-struct MarioAnimation gDemo;
-UNUSED u8 filler80339D30[0x90];
+struct Controller gControllers[MAX_PLAYERS] = { 0 };
+struct SPTask *gGfxSPTask = NULL;
+Gfx *gDisplayListHead = NULL;
+u8 *gGfxPoolEnd = NULL;
+struct GfxPool *gGfxPool = NULL;
+OSContStatus gControllerStatuses[4] = { 0 };
+OSContPad gControllerPads[4] = { 0 };
+u8 gControllerBits = 0;
+s8 gEepromProbe = 0;
+OSMesgQueue gGameVblankQueue = { 0 };
+OSMesgQueue D_80339CB8 = { 0 };
+OSMesg D_80339CD0 = NULL;
+OSMesg D_80339CD4 = NULL;
+struct VblankHandler gGameVblankHandler = { 0 };
+uintptr_t gPhysicalFrameBuffers[3] = { 0 };
+uintptr_t gPhysicalZBuffer = 0;
+void *D_80339CF0[MAX_PLAYERS] = { 0 };
+void *gDemoTargetAnim = NULL;
+struct MarioAnimation D_80339D10[MAX_PLAYERS] = { 0 };
+struct MarioAnimation gDemo = { 0 };
 
-s32 unused8032C690 = 0;
 u32 gGlobalTimer = 0;
 
 static u16 sCurrFBNum = 0;
@@ -556,8 +554,6 @@ void init_controllers(void) {
 }
 
 void setup_game_memory(void) {
-    UNUSED u8 pad[8];
-
     set_segment_base_addr(0, (void *) 0x80000000);
     osCreateMesgQueue(&D_80339CB8, &D_80339CD4, 1);
     osCreateMesgQueue(&gGameVblankQueue, &D_80339CD0, 1);
@@ -566,13 +562,13 @@ void setup_game_memory(void) {
     gPhysicalFrameBuffers[1] = VIRTUAL_TO_PHYSICAL(gFrameBuffer1);
     gPhysicalFrameBuffers[2] = VIRTUAL_TO_PHYSICAL(gFrameBuffer2);
     for (s32 i = 0; i < MAX_PLAYERS; i++) {
-        D_80339CF0[i] = main_pool_alloc(0x4000, MEMORY_POOL_LEFT);
+        D_80339CF0[i] = calloc(1, 0x4000);
         set_segment_base_addr(17, (void *)D_80339CF0[i]);
-        func_80278A78(&D_80339D10[i], gMarioAnims, D_80339CF0[i]);
+        alloc_anim_dma_table(&D_80339D10[i], gMarioAnims, D_80339CF0[i]);
     }
-    D_80339CF4 = main_pool_alloc(2048, MEMORY_POOL_LEFT);
-    set_segment_base_addr(24, (void *) D_80339CF4);
-    func_80278A78(&gDemo, gDemoInputs, D_80339CF4);
+    gDemoTargetAnim = calloc(1, 2048);
+    set_segment_base_addr(24, (void *) gDemoTargetAnim);
+    alloc_anim_dma_table(&gDemo, gDemoInputs, gDemoTargetAnim);
     load_segment(0x10, _entrySegmentRomStart, _entrySegmentRomEnd, MEMORY_POOL_LEFT);
     load_segment_decompress(2, _segment2_mio0SegmentRomStart, _segment2_mio0SegmentRomEnd);
 }

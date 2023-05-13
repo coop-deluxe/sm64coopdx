@@ -67,10 +67,10 @@ s16 gChangeLevelTransition = -1;
 s16 gChangeActNum = -1;
 
 static bool sFirstCastleGroundsMenu = true;
-bool isDemoActive = false;
+static bool sIsDemoActive = false;
 bool gInPlayerMenu = false;
 static u16 gDemoCountdown = 0;
-int demoNumber = -1;
+static int sDemoNumber = -1;
 
 // TODO: Make these ifdefs better
 const char *credits01[] = { "1GAME DIRECTOR", "SHIGERU MIYAMOTO" };
@@ -1125,56 +1125,56 @@ void basic_update(UNUSED s16 *arg) {
 bool find_demo_number(void) {
     switch (gCurrLevelNum) {
         case LEVEL_BOWSER_1:
-            demoNumber = 0;
+            sDemoNumber = 0;
             return true;
         case LEVEL_WF:
-            demoNumber = 1;
+            sDemoNumber = 1;
             return true;
         case LEVEL_CCM:
-            demoNumber = 2;
+            sDemoNumber = 2;
             return true;
         case LEVEL_BBH:
-            demoNumber = 3;
+            sDemoNumber = 3;
             return true;
         case LEVEL_JRB:
-            demoNumber = 4;
+            sDemoNumber = 4;
             return true;
         case LEVEL_HMC:
-            demoNumber = 5;
+            sDemoNumber = 5;
             return true;
         case LEVEL_PSS:
-            demoNumber = 6;
+            sDemoNumber = 6;
             return true;
         default:
-            demoNumber = -1;
+            sDemoNumber = -1;
     }
     return false;
 }
 
 static void start_demo(void) {
-    if (isDemoActive) {
-        isDemoActive = false;
+    if (sIsDemoActive) {
+        sIsDemoActive = false;
     } else {
-        isDemoActive = true;
+        sIsDemoActive = true;
 
         if (find_demo_number()) {
             gChangeLevel = gCurrLevelNum;
         }
 
-        if (demoNumber <= 6 || demoNumber > -1) {
+        if (sDemoNumber <= 6 || sDemoNumber > -1) {
             gCurrDemoInput = NULL;
-            func_80278A78(&gDemo, gDemoInputs, D_80339CF4);
-            load_patchable_table(&gDemo, demoNumber);
+            alloc_anim_dma_table(&gDemo, gDemoInputs, gDemoTargetAnim);
+            load_patchable_table(&gDemo, sDemoNumber);
             gCurrDemoInput = ((struct DemoInput *) gDemo.targetAnim);
         } else {
-            isDemoActive = false;
+            sIsDemoActive = false;
         }
     }
 }
 
 void stop_demo(UNUSED struct DjuiBase* caller) {
-    if (isDemoActive) {
-        isDemoActive = false;
+    if (sIsDemoActive) {
+        sIsDemoActive = false;
         gCurrDemoInput = NULL;
         gChangeLevel = gCurrLevelNum;
         gDemoCountdown = 0;
@@ -1201,12 +1201,12 @@ s32 play_mode_normal(void) {
         }
     } else {
         if (gDjuiInMainMenu && gCurrDemoInput == NULL && configMenuDemos && !gInPlayerMenu) {
-            if ((++gDemoCountdown) == PRESS_START_DEMO_TIMER && (find_demo_number() && (demoNumber <= 6 || demoNumber > -1))) {
+            if ((++gDemoCountdown) == PRESS_START_DEMO_TIMER && (find_demo_number() && (sDemoNumber <= 6 || sDemoNumber > -1))) {
                 start_demo();
             }
         }
 
-        if (((gCurrDemoInput != NULL) && (gPlayer1Controller->buttonPressed & END_DEMO || !isDemoActive || !gDjuiInMainMenu || gNetworkType != NT_NONE || gInPlayerMenu)) || (gCurrDemoInput == NULL && isDemoActive)) {
+        if (((gCurrDemoInput != NULL) && (gPlayer1Controller->buttonPressed & END_DEMO || !sIsDemoActive || !gDjuiInMainMenu || gNetworkType != NT_NONE || gInPlayerMenu)) || (gCurrDemoInput == NULL && sIsDemoActive)) {
             gPlayer1Controller->buttonPressed &= ~END_DEMO;
             stop_demo(NULL);
         }
@@ -1436,7 +1436,7 @@ void update_menu_level(void) {
 
     // warp to level, this feels buggy
     if (gCurrLevelNum != curLevel) {
-        if (isDemoActive) {
+        if (sIsDemoActive) {
             stop_demo(NULL);
         }
         if (curLevel == LEVEL_JRB) {
@@ -1450,7 +1450,7 @@ void update_menu_level(void) {
         }
         gDemoCountdown = 0;
     }
-    if (isDemoActive) {
+    if (sIsDemoActive) {
         return;
     }
 

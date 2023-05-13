@@ -75,7 +75,7 @@ void growing_pool_free_pool(struct GrowingPool *pool);
 void alloc_display_list_reset(void);
 void *alloc_display_list(u32 size);
 
-void func_80278A78(struct MarioAnimation *a, void *b, struct Animation *target);
+void alloc_anim_dma_table(struct MarioAnimation* marioAnim, void *b, struct Animation *targetAnim);
 s32 load_patchable_table(struct MarioAnimation *a, u32 b);
 
 #endif // MEMORY_H

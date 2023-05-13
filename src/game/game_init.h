@@ -33,7 +33,7 @@ extern struct VblankHandler gGameVblankHandler;
 extern uintptr_t gPhysicalFrameBuffers[3];
 extern uintptr_t gPhysicalZBuffer;
 extern void *D_80339CF0[MAX_PLAYERS];
-extern void *D_80339CF4;
+extern void *gDemoTargetAnim;
 extern struct SPTask *gGfxSPTask;
 extern Gfx *gDisplayListHead;
 extern u8 *gGfxPoolEnd;

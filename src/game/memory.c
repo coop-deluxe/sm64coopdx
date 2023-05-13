@@ -56,7 +56,6 @@ u8 *sPoolEnd;
 struct MainPoolBlock *sPoolListHeadL;
 struct MainPoolBlock *sPoolListHeadR;
 
-
 static struct MainPoolState *gMainPoolState = NULL;
 
 uintptr_t set_segment_base_addr(s32 segment, void *addr) {
@@ -78,7 +77,6 @@ void *virtual_to_segmented(UNUSED u32 segment, const void *addr) {
 
 void move_segment_table_to_dmem(void) {
 }
-
 
 /**
  * Initialize the main memory pool. This pool is conceptually a pair of stacks
@@ -219,47 +217,27 @@ u32 main_pool_pop_state(void) {
     return sPoolFreeSpace;
 }
 
-/**
- * Perform a DMA read from ROM. The transfer is split into 4KB blocks, and this
- * function blocks until completion.
- */
-static void dma_read(u8 *dest, u8 *srcStart, u8 *srcEnd) {
-    memcpy(dest, srcStart, srcEnd - srcStart);
-}
+static struct MarioAnimDmaRelatedThing* func_802789F0(u8* srcAddr) {
+    u32 count = 0;
+    memcpy(&count, srcAddr, sizeof(u32));
+    u32 size = sizeof(u32) + (sizeof(u8 *) - sizeof(u32)) + sizeof(u8 *) + count * sizeof(struct OffsetSizePair);
 
-/**
- * Perform a DMA read from ROM, allocating space in the memory pool to write to.
- * Return the destination address.
- */
-static void *dynamic_dma_read(u8 *srcStart, u8 *srcEnd, u32 side) {
-    void *dest;
-    u32 size = ALIGN16(srcEnd - srcStart);
-
-    dest = main_pool_alloc(size, side);
-    if (dest != NULL) {
-        dma_read(dest, srcStart, srcEnd);
-    }
-    return dest;
-}
-
-static struct MarioAnimDmaRelatedThing *func_802789F0(u8 *srcAddr) {
-    struct MarioAnimDmaRelatedThing *sp1C = dynamic_dma_read(srcAddr, srcAddr + sizeof(u32),
-                                                             MEMORY_POOL_LEFT);
-    u32 size = sizeof(u32) + (sizeof(u8 *) - sizeof(u32)) + sizeof(u8 *) +
-               sp1C->count * sizeof(struct OffsetSizePair);
-    main_pool_free(sp1C);
-
-    sp1C = dynamic_dma_read(srcAddr, srcAddr + size, MEMORY_POOL_LEFT);
+    struct MarioAnimDmaRelatedThing *sp1C = malloc(size);
+    memcpy(sp1C, srcAddr, size);
     sp1C->srcAddr = srcAddr;
     return sp1C;
 }
 
-void func_80278A78(struct MarioAnimation *a, void *b, struct Animation *target) {
-    if (b != NULL) {
-        a->animDmaTable = func_802789F0(b);
+void alloc_anim_dma_table(struct MarioAnimation* marioAnim, void* srcAddr, struct Animation* targetAnim) {
+    if (srcAddr) {
+        if (marioAnim->animDmaTable) {
+            free(marioAnim->animDmaTable);
+            marioAnim->animDmaTable = NULL;
+        }
+        marioAnim->animDmaTable = func_802789F0(srcAddr);
     }
-    a->currentAnimAddr = NULL;
-    a->targetAnim = target;
+    marioAnim->currentAnimAddr = NULL;
+    marioAnim->targetAnim = targetAnim;
 }
 
 // TODO: (Scrub C)
@@ -275,7 +253,7 @@ s32 load_patchable_table(struct MarioAnimation *a, u32 index) {
             size = sp20->anim[index].size;
         } while (0);
         if (a->currentAnimAddr != addr) {
-            dma_read((u8 *) a->targetAnim, addr, addr + size);
+            memcpy(a->targetAnim, addr, size);
             a->currentAnimAddr = addr;
             ret = TRUE;
         }
