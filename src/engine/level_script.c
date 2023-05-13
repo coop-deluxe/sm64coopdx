@@ -141,7 +141,6 @@ static void area_check_red_coin_or_secret(void *arg, bool isMacroObject) {
 }
 
 static void level_cmd_load_and_execute(void) {
-    main_pool_push_state();
     load_segment(CMD_GET(s16, 2), CMD_GET(void *, 4), CMD_GET(void *, 8), MEMORY_POOL_LEFT);
 
     *sStackTop++ = (uintptr_t) NEXT_CMD;
@@ -154,9 +153,6 @@ static void level_cmd_load_and_execute(void) {
 static void level_cmd_exit_and_execute(void) {
     void *targetAddr = CMD_GET(void *, 12);
 
-    main_pool_pop_state();
-    main_pool_push_state();
-
     load_segment(CMD_GET(s16, 2), CMD_GET(void *, 4), CMD_GET(void *, 8),
             MEMORY_POOL_LEFT);
 
@@ -165,8 +161,6 @@ static void level_cmd_exit_and_execute(void) {
 }
 
 static void level_cmd_exit(void) {
-    main_pool_pop_state();
-
     sStackTop = sStackBase;
     sStackBase = (uintptr_t *) *(--sStackTop);
     sCurrentCmd = (struct LevelCommand *) *(--sStackTop);
@@ -307,12 +301,10 @@ static void level_cmd_set_register(void) {
 }
 
 static void level_cmd_push_pool_state(void) {
-    main_pool_push_state();
     sCurrentCmd = CMD_NEXT;
 }
 
 static void level_cmd_pop_pool_state(void) {
-    main_pool_pop_state();
     sCurrentCmd = CMD_NEXT;
 }
 
@@ -358,7 +350,6 @@ static void level_cmd_init_level(void) {
     init_graph_node_start(NULL, (struct GraphNodeStart *) &gObjParentGraphNode);
     clear_objects();
     clear_areas();
-    main_pool_push_state();
     smlua_model_util_clear();
     gSkipInterpolationTitleScreen = false;
 
@@ -377,8 +368,6 @@ static void level_cmd_clear_level(void) {
             sLevelOwnedGraphNodes[i] = false;
         }
     }
-    main_pool_pop_state();
-
 
     sCurrentCmd = CMD_NEXT;
 }

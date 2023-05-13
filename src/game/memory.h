@@ -49,14 +49,6 @@ void *segmented_to_virtual(const void *addr);
 void *virtual_to_segmented(u32 segment, const void *addr);
 void move_segment_table_to_dmem(void);
 
-void main_pool_init(void *start, void *end);
-void *main_pool_alloc(u32 size, u32 side);
-u32 main_pool_free(void *addr);
-void *main_pool_realloc(void *addr, u32 size);
-u32 main_pool_available(void);
-u32 main_pool_push_state(void);
-u32 main_pool_pop_state(void);
-
 #define load_segment(...)
 #define load_to_fixed_pool_addr(...)
 #define load_segment_decompress(...)

@@ -246,7 +246,6 @@ static void *DynOS_Warp_UpdateWarp(void *aCmd, bool aIsLevelInitDone) {
         clear_objects();
         clear_area_graph_nodes();
         clear_areas();
-        main_pool_pop_state();
 
         // Reset Mario's state
         gMarioState->healCounter = 0;
@@ -414,7 +413,6 @@ static void *DynOS_Warp_UpdateExit(void *aCmd, bool aIsLevelInitDone) {
         clear_objects();
         clear_area_graph_nodes();
         clear_areas();
-        main_pool_pop_state();
 
         // Reset Mario's state
         gMarioState->healCounter = 0;

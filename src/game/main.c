@@ -142,13 +142,6 @@ void setup_mesg_queues(void) {
     osSetEventMesg(OS_EVENT_PRENMI, &gIntrMesgQueue, (OSMesg) MESG_NMI_REQUEST);
 }
 
-void alloc_pool(void) {
-    void *start = (void *) SEG_POOL_START;
-    void *end = (void *) (SEG_POOL_START + POOL_SIZE);
-
-    main_pool_init(start, end);
-}
-
 void create_thread(OSThread *thread, OSId id, void (*entry)(void *), void *arg, void *sp, OSPri pri) {
     thread->next = NULL;
     thread->queue = NULL;
@@ -343,7 +336,6 @@ void handle_dp_complete(void) {
 
 void thread3_main(UNUSED void *arg) {
     setup_mesg_queues();
-    alloc_pool();
     load_engine_code_segment();
 
     create_thread(&gSoundThread, 4, thread4_sound, NULL, gThread4Stack + 0x2000, 20);
