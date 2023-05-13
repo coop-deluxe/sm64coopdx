@@ -51,7 +51,7 @@ LevelScript* gLevelScriptActive = NULL;
 
 static uintptr_t sStack[32];
 
-static struct AllocOnlyPool *sLevelPool = NULL;
+static struct DynamicPool *sLevelPool = NULL;
 
 static u16 sDelayFrames = 0;
 static u16 sDelayFrames2 = 0;
@@ -107,7 +107,7 @@ static s32 eval_script_op(s8 op, s32 arg) {
 
 struct ObjectWarpNode *area_create_warp_node(u8 id, u8 destLevel, u8 destArea, u8 destNode, u8 checkpoint, struct Object *o) {
     if (sCurrAreaIndex != -1) {
-        struct ObjectWarpNode *warpNode = alloc_only_pool_alloc(sLevelPool, sizeof(struct ObjectWarpNode));
+        struct ObjectWarpNode *warpNode = dynamic_pool_alloc(sLevelPool, sizeof(struct ObjectWarpNode));
 
         warpNode->node.id = id;
         warpNode->node.destLevel = destLevel + checkpoint;
@@ -396,14 +396,14 @@ static void level_cmd_alloc_level_pool(void) {
 
     // free previous level pool
     if (sLevelPool != NULL) {
-        alloc_only_pool_free(sLevelPool);
+        dynamic_pool_free_pool(sLevelPool);
         sLevelPool = NULL;
     }
     dynos_model_clear_pool(MODEL_POOL_LEVEL);
 
     // allocate new level pool
     if (sLevelPool == NULL) {
-        sLevelPool = alloc_only_pool_init();
+        sLevelPool = dynamic_pool_init();
     }
 
     sCurrentCmd = CMD_NEXT;
@@ -547,7 +547,7 @@ static void level_cmd_place_object(void) {
     if (sCurrAreaIndex != -1 && (gLevelValues.disableActs || (CMD_GET(u8, 2) & val7) || CMD_GET(u8, 2) == 0x1F)) {
         model = CMD_GET(u8, 3);
         if (model >= MAX_LOADED_GRAPH_NODES) { model = MODEL_NONE; }
-        spawnInfo = alloc_only_pool_alloc(sLevelPool, sizeof(struct SpawnInfo));
+        spawnInfo = dynamic_pool_alloc(sLevelPool, sizeof(struct SpawnInfo));
 
         spawnInfo->startPos[0] = CMD_GET(s16, 4);
         spawnInfo->startPos[1] = CMD_GET(s16, 6);
@@ -578,7 +578,7 @@ static void level_cmd_place_object(void) {
 static void level_cmd_create_warp_node(void) {
     if (sCurrAreaIndex != -1) {
         struct ObjectWarpNode *warpNode =
-            alloc_only_pool_alloc(sLevelPool, sizeof(struct ObjectWarpNode));
+            dynamic_pool_alloc(sLevelPool, sizeof(struct ObjectWarpNode));
 
         warpNode->node.id = CMD_GET(u8, 2);
         warpNode->node.destLevel = CMD_GET(u8, 3) + CMD_GET(u8, 6);
@@ -601,7 +601,7 @@ static void level_cmd_create_instant_warp(void) {
     if (sCurrAreaIndex != -1) {
         if (gAreas[sCurrAreaIndex].instantWarps == NULL) {
             gAreas[sCurrAreaIndex].instantWarps =
-                alloc_only_pool_alloc(sLevelPool, 4 * sizeof(struct InstantWarp));
+                dynamic_pool_alloc(sLevelPool, 4 * sizeof(struct InstantWarp));
 
             for (i = INSTANT_WARP_INDEX_START; i < INSTANT_WARP_INDEX_STOP; i++) {
                 gAreas[sCurrAreaIndex].instantWarps[i].id = 0;
@@ -636,7 +636,7 @@ static void level_cmd_create_painting_warp_node(void) {
     if (sCurrAreaIndex != -1) {
         if (gAreas[sCurrAreaIndex].paintingWarpNodes == NULL) {
             gAreas[sCurrAreaIndex].paintingWarpNodes =
-                alloc_only_pool_alloc(sLevelPool, MAX_PAINTING_WARP_NODES * sizeof(struct WarpNode));
+                dynamic_pool_alloc(sLevelPool, MAX_PAINTING_WARP_NODES * sizeof(struct WarpNode));
 
             for (i = 0; i < MAX_PAINTING_WARP_NODES; i++) {
                 gAreas[sCurrAreaIndex].paintingWarpNodes[i].id = 0;
@@ -660,7 +660,7 @@ static void level_cmd_3A(void) {
     if (sCurrAreaIndex != -1) {
         if ((val4 = gAreas[sCurrAreaIndex].unused28) == NULL) {
             val4 = gAreas[sCurrAreaIndex].unused28 =
-                alloc_only_pool_alloc(sLevelPool, sizeof(struct UnusedArea28));
+                dynamic_pool_alloc(sLevelPool, sizeof(struct UnusedArea28));
         }
 
         val4->unk00 = CMD_GET(s16, 2);
@@ -683,7 +683,7 @@ static void level_cmd_create_whirlpool(void) {
         || (CMD_GET(u8, 3) == 2 && beatBowser2) || (CMD_GET(u8, 3) == 3 && gCurrActNum >= 2)) {
         if (sCurrAreaIndex != -1 && index < 2) {
             if ((whirlpool = gAreas[sCurrAreaIndex].whirlpools[index]) == NULL) {
-                whirlpool = alloc_only_pool_alloc(sLevelPool, sizeof(struct Whirlpool));
+                whirlpool = dynamic_pool_alloc(sLevelPool, sizeof(struct Whirlpool));
                 gAreas[sCurrAreaIndex].whirlpools[index] = whirlpool;
             }
 
@@ -713,7 +713,7 @@ static void level_cmd_set_terrain_data(void) {
         // The game modifies the terrain data and must be reset upon level reload.
         data = segmented_to_virtual(CMD_GET(void *, 4));
         size = get_area_terrain_size(data) * sizeof(Collision);
-        gAreas[sCurrAreaIndex].terrainData = alloc_only_pool_alloc(sLevelPool, size);
+        gAreas[sCurrAreaIndex].terrainData = dynamic_pool_alloc(sLevelPool, size);
         memcpy(gAreas[sCurrAreaIndex].terrainData, data, size);
     }
     sCurrentCmd = CMD_NEXT;
@@ -736,10 +736,10 @@ static void level_cmd_set_macro_objects(void) {
             area_check_red_coin_or_secret(&data[len - 1], true);
             len += 4;
         }
-        gAreas[sCurrAreaIndex].macroObjects = alloc_only_pool_alloc(sLevelPool, len * sizeof(MacroObject));
+        gAreas[sCurrAreaIndex].macroObjects = dynamic_pool_alloc(sLevelPool, len * sizeof(MacroObject));
         memcpy(gAreas[sCurrAreaIndex].macroObjects, data, len * sizeof(MacroObject));
 
-        gAreas[sCurrAreaIndex].macroObjectsAltered = alloc_only_pool_alloc(sLevelPool, len * sizeof(u8));
+        gAreas[sCurrAreaIndex].macroObjectsAltered = dynamic_pool_alloc(sLevelPool, len * sizeof(u8));
         memset(gAreas[sCurrAreaIndex].macroObjectsAltered, 0, len);
     }
     sCurrentCmd = CMD_NEXT;
@@ -946,7 +946,7 @@ static void level_cmd_place_object_ext(void) {
     if (sCurrAreaIndex != -1 && (gLevelValues.disableActs || (CMD_GET(u8, 2) & val7) || CMD_GET(u8, 2) == 0x1F)) {
         u16 model = CMD_GET(u8, 3);
         if (model >= MAX_LOADED_GRAPH_NODES) { model = MODEL_NONE; }
-        spawnInfo = alloc_only_pool_alloc(sLevelPool, sizeof(struct SpawnInfo));
+        spawnInfo = dynamic_pool_alloc(sLevelPool, sizeof(struct SpawnInfo));
 
         spawnInfo->startPos[0] = CMD_GET(s16, 4);
         spawnInfo->startPos[1] = CMD_GET(s16, 6);
@@ -1016,7 +1016,7 @@ static void level_cmd_place_object_ext2(void) {
     }
 
     if (sCurrAreaIndex != -1 && (gLevelValues.disableActs || (CMD_GET(u8, 2) & val7) || CMD_GET(u8, 2) == 0x1F)) {
-        spawnInfo = alloc_only_pool_alloc(sLevelPool, sizeof(struct SpawnInfo));
+        spawnInfo = dynamic_pool_alloc(sLevelPool, sizeof(struct SpawnInfo));
 
         spawnInfo->startPos[0] = CMD_GET(s16, 4);
         spawnInfo->startPos[1] = CMD_GET(s16, 6);

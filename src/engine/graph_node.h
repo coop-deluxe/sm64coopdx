@@ -66,7 +66,7 @@
 
 // The signature for a function stored in a geo node
 // The context argument depends on the callContext:
-// - for GEO_CONTEXT_CREATE it is the AllocOnlyPool from which the node was allocated
+// - for GEO_CONTEXT_CREATE it is the DynamicPool from which the node was allocated
 // - for GEO_CONTEXT_RENDER or GEO_CONTEXT_HELD_OBJ it is the top of the float matrix stack with type Mat4
 // - for GEO_CONTEXT_AREA_* it is the root geo node
 typedef Gfx *(*GraphNodeFunc)(s32 callContext, struct GraphNode *node, void *context);
@@ -386,45 +386,45 @@ extern Vec3s gVec3sOne;
 
 void init_scene_graph_node_links(struct GraphNode *graphNode, s32 type);
 
-struct GraphNodeRoot *init_graph_node_root(struct AllocOnlyPool *pool, struct GraphNodeRoot *graphNode,
+struct GraphNodeRoot *init_graph_node_root(struct DynamicPool *pool, struct GraphNodeRoot *graphNode,
                                            s16 areaIndex, s16 x, s16 y, s16 width, s16 height);
-struct GraphNodeOrthoProjection *init_graph_node_ortho_projection(struct AllocOnlyPool *pool, struct GraphNodeOrthoProjection *graphNode, f32 scale);
-struct GraphNodePerspective *init_graph_node_perspective(struct AllocOnlyPool *pool, struct GraphNodePerspective *graphNode,
+struct GraphNodeOrthoProjection *init_graph_node_ortho_projection(struct DynamicPool *pool, struct GraphNodeOrthoProjection *graphNode, f32 scale);
+struct GraphNodePerspective *init_graph_node_perspective(struct DynamicPool *pool, struct GraphNodePerspective *graphNode,
                                                          f32 fov, s16 near, s16 far, GraphNodeFunc nodeFunc, s32 unused);
-struct GraphNodeStart *init_graph_node_start(struct AllocOnlyPool *pool, struct GraphNodeStart *graphNode);
-struct GraphNodeMasterList *init_graph_node_master_list(struct AllocOnlyPool *pool, struct GraphNodeMasterList *graphNode, s16 on);
-struct GraphNodeLevelOfDetail *init_graph_node_render_range(struct AllocOnlyPool *pool, struct GraphNodeLevelOfDetail *graphNode,
+struct GraphNodeStart *init_graph_node_start(struct DynamicPool *pool, struct GraphNodeStart *graphNode);
+struct GraphNodeMasterList *init_graph_node_master_list(struct DynamicPool *pool, struct GraphNodeMasterList *graphNode, s16 on);
+struct GraphNodeLevelOfDetail *init_graph_node_render_range(struct DynamicPool *pool, struct GraphNodeLevelOfDetail *graphNode,
                                                             s16 minDistance, s16 maxDistance);
-struct GraphNodeSwitchCase *init_graph_node_switch_case(struct AllocOnlyPool *pool, struct GraphNodeSwitchCase *graphNode,
+struct GraphNodeSwitchCase *init_graph_node_switch_case(struct DynamicPool *pool, struct GraphNodeSwitchCase *graphNode,
                                                         s16 numCases, s16 selectedCase, GraphNodeFunc nodeFunc, s32 unused);
-struct GraphNodeCamera *init_graph_node_camera(struct AllocOnlyPool *pool, struct GraphNodeCamera *graphNode,
+struct GraphNodeCamera *init_graph_node_camera(struct DynamicPool *pool, struct GraphNodeCamera *graphNode,
                                                f32 *pos, f32 *focus, GraphNodeFunc func, s32 mode);
-struct GraphNodeTranslationRotation *init_graph_node_translation_rotation(struct AllocOnlyPool *pool, struct GraphNodeTranslationRotation *graphNode,
+struct GraphNodeTranslationRotation *init_graph_node_translation_rotation(struct DynamicPool *pool, struct GraphNodeTranslationRotation *graphNode,
                                                                           s32 drawingLayer, void *displayList, Vec3s translation, Vec3s rotation);
-struct GraphNodeTranslation *init_graph_node_translation(struct AllocOnlyPool *pool, struct GraphNodeTranslation *graphNode,
+struct GraphNodeTranslation *init_graph_node_translation(struct DynamicPool *pool, struct GraphNodeTranslation *graphNode,
                                                          s32 drawingLayer, void *displayList, Vec3s translation);
-struct GraphNodeRotation *init_graph_node_rotation(struct AllocOnlyPool *pool, struct GraphNodeRotation *graphNode,
+struct GraphNodeRotation *init_graph_node_rotation(struct DynamicPool *pool, struct GraphNodeRotation *graphNode,
                                                    s32 drawingLayer, void *displayList, Vec3s rotation);
-struct GraphNodeScale *init_graph_node_scale(struct AllocOnlyPool *pool, struct GraphNodeScale *graphNode,
+struct GraphNodeScale *init_graph_node_scale(struct DynamicPool *pool, struct GraphNodeScale *graphNode,
                                              s32 drawingLayer, void *displayList, f32 scale);
-struct GraphNodeObject *init_graph_node_object(struct AllocOnlyPool *pool, struct GraphNodeObject *graphNode,
+struct GraphNodeObject *init_graph_node_object(struct DynamicPool *pool, struct GraphNodeObject *graphNode,
                                                struct GraphNode *sharedChild, Vec3f pos, Vec3s angle, Vec3f scale);
-struct GraphNodeCullingRadius *init_graph_node_culling_radius(struct AllocOnlyPool *pool, struct GraphNodeCullingRadius *graphNode, s16 radius);
-struct GraphNodeAnimatedPart *init_graph_node_animated_part(struct AllocOnlyPool *pool, struct GraphNodeAnimatedPart *graphNode,
+struct GraphNodeCullingRadius *init_graph_node_culling_radius(struct DynamicPool *pool, struct GraphNodeCullingRadius *graphNode, s16 radius);
+struct GraphNodeAnimatedPart *init_graph_node_animated_part(struct DynamicPool *pool, struct GraphNodeAnimatedPart *graphNode,
                                                             s32 drawingLayer, void *displayList, Vec3s translation);
-struct GraphNodeBillboard *init_graph_node_billboard(struct AllocOnlyPool *pool, struct GraphNodeBillboard *graphNode,
+struct GraphNodeBillboard *init_graph_node_billboard(struct DynamicPool *pool, struct GraphNodeBillboard *graphNode,
                                                      s32 drawingLayer, void *displayList, Vec3s translation);
-struct GraphNodeDisplayList *init_graph_node_display_list(struct AllocOnlyPool *pool, struct GraphNodeDisplayList *graphNode,
+struct GraphNodeDisplayList *init_graph_node_display_list(struct DynamicPool *pool, struct GraphNodeDisplayList *graphNode,
                                                           s32 drawingLayer, void *displayList);
-struct GraphNodeShadow *init_graph_node_shadow(struct AllocOnlyPool *pool, struct GraphNodeShadow *graphNode,
+struct GraphNodeShadow *init_graph_node_shadow(struct DynamicPool *pool, struct GraphNodeShadow *graphNode,
                                                s16 shadowScale, u8 shadowSolidity, u8 shadowType);
-struct GraphNodeObjectParent *init_graph_node_object_parent(struct AllocOnlyPool *pool, struct GraphNodeObjectParent *sp1c,
+struct GraphNodeObjectParent *init_graph_node_object_parent(struct DynamicPool *pool, struct GraphNodeObjectParent *sp1c,
                                                             struct GraphNode *sharedChild);
-struct GraphNodeGenerated *init_graph_node_generated(struct AllocOnlyPool *pool, struct GraphNodeGenerated *sp1c,
+struct GraphNodeGenerated *init_graph_node_generated(struct DynamicPool *pool, struct GraphNodeGenerated *sp1c,
                                                      GraphNodeFunc gfxFunc, s32 parameter);
-struct GraphNodeBackground *init_graph_node_background(struct AllocOnlyPool *pool, struct GraphNodeBackground *sp1c,
+struct GraphNodeBackground *init_graph_node_background(struct DynamicPool *pool, struct GraphNodeBackground *sp1c,
                                                        u16 background, GraphNodeFunc backgroundFunc, s32 zero);
-struct GraphNodeHeldObject *init_graph_node_held_object(struct AllocOnlyPool *pool, struct GraphNodeHeldObject *sp1c,
+struct GraphNodeHeldObject *init_graph_node_held_object(struct DynamicPool *pool, struct GraphNodeHeldObject *sp1c,
                                                         struct Object *objNode, Vec3s translation,
                                                         GraphNodeFunc nodeFunc, s32 playerIndex);
 struct GraphNode *geo_add_child(struct GraphNode *parent, struct GraphNode *childNode);

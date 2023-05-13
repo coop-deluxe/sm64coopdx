@@ -6,7 +6,7 @@ extern "C" {
 #include "engine/graph_node.h"
 }
 
-static struct AllocOnlyPool* sModelPools[MODEL_POOL_MAX] = { 0 };
+static struct DynamicPool* sModelPools[MODEL_POOL_MAX] = { 0 };
 static std::map<void*, struct GraphNode*> sModelMap[MODEL_POOL_MAX];
 
 struct GraphNode* DynOS_Model_LoadGeo(enum ModelPool aModelPool, void* aAsset) {
@@ -15,7 +15,7 @@ struct GraphNode* DynOS_Model_LoadGeo(enum ModelPool aModelPool, void* aAsset) {
 
     // allocate pool
     if (!sModelPools[aModelPool]) {
-        sModelPools[aModelPool] = alloc_only_pool_init();
+        sModelPools[aModelPool] = dynamic_pool_init();
     }
 
     // check map
@@ -38,7 +38,7 @@ struct GraphNode* DynOS_Model_LoadDl(enum ModelPool aModelPool, u8 aLayer, void*
 
     // allocate pool
     if (!sModelPools[aModelPool]) {
-        sModelPools[aModelPool] = alloc_only_pool_init();
+        sModelPools[aModelPool] = dynamic_pool_init();
     }
 
     // check map
@@ -59,7 +59,7 @@ void DynOS_Model_ClearPool(enum ModelPool aModelPool) {
     if (!sModelPools[aModelPool]) { return; }
 
     // free and realloc pool
-    alloc_only_pool_free(sModelPools[aModelPool]);
+    dynamic_pool_free_pool(sModelPools[aModelPool]);
     sModelPools[aModelPool] = NULL;
 
     // clear map

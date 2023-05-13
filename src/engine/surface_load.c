@@ -31,13 +31,13 @@ SpatialPartitionCell gDynamicSurfacePartition[NUM_CELLS][NUM_CELLS];
 /**
  * Pools of data to contain either surface nodes or surfaces.
  */
-struct AllocOnlyPool* sSurfacePool = NULL;
+struct DynamicPool* sSurfacePool = NULL;
 
 /**
  * Allocate the part of the surface node pool to contain a surface node.
  */
 static struct SurfaceNode *alloc_surface_node(void) {
-    struct SurfaceNode *node = alloc_only_pool_alloc(sSurfacePool, sizeof(struct SurfaceNode));
+    struct SurfaceNode *node = dynamic_pool_alloc(sSurfacePool, sizeof(struct SurfaceNode));
     gSurfaceNodesAllocated++;
 
     node->next = NULL;
@@ -50,7 +50,7 @@ static struct SurfaceNode *alloc_surface_node(void) {
  * initialize the surface.
  */
 static struct Surface *alloc_surface(void) {
-    struct Surface *surface = alloc_only_pool_alloc(sSurfacePool, sizeof(struct Surface));
+    struct Surface *surface = dynamic_pool_alloc(sSurfacePool, sizeof(struct Surface));
     gSurfacesAllocated++;
 
     surface->type = 0;
@@ -523,8 +523,8 @@ static void load_environmental_regions(s16 **data) {
  * Allocate some of the main pool for surfaces (2300 surf) and for surface nodes (7000 nodes).
  */
 void alloc_surface_pools(void) {
-    if (sSurfacePool) { alloc_only_pool_free(sSurfacePool); }
-    sSurfacePool = alloc_only_pool_init();
+    if (sSurfacePool) { dynamic_pool_free_pool(sSurfacePool); }
+    sSurfacePool = dynamic_pool_init();
 
     gSurfaceNodesAllocated = 0;
     gSurfacesAllocated = 0;
@@ -591,7 +591,6 @@ void load_area_terrain(s16 index, s16 *data, s8 *surfaceRooms, s16 *macroObjects
 
     // Initialize the data for this.
     gEnvironmentRegions = NULL;
-    unused8038BE90 = 0;
 
     clear_static_surfaces();
 

@@ -48,7 +48,7 @@ GeoLayoutCommandProc GeoLayoutJumpTable[] = {
 };
 
 struct GraphNode gObjParentGraphNode;
-struct AllocOnlyPool *gGraphNodePool = NULL;
+struct DynamicPool *gGraphNodePool = NULL;
 struct GraphNode *gCurRootGraphNode = NULL;
 
 UNUSED s32 D_8038BCA8;
@@ -219,7 +219,7 @@ void geo_layout_cmd_node_root(void) {
     graphNode = init_graph_node_root(gGraphNodePool, NULL, 0, x, y, width, height);
 
     // TODO: check type
-    gGeoViews = alloc_only_pool_alloc(gGraphNodePool, gGeoNumViews * sizeof(struct GraphNode *));
+    gGeoViews = dynamic_pool_alloc(gGraphNodePool, gGeoNumViews * sizeof(struct GraphNode *));
 
     graphNode->views = gGeoViews;
     graphNode->numViews = gGeoNumViews;
@@ -790,7 +790,7 @@ void geo_layout_cmd_node_background_ext(void) {
     gGeoLayoutCommand += 0x0C << CMD_SIZE_SHIFT;
 }
 
-struct GraphNode *process_geo_layout(struct AllocOnlyPool *pool, void *segptr) {
+struct GraphNode *process_geo_layout(struct DynamicPool *pool, void *segptr) {
     // set by register_scene_graph_node when gCurGraphNodeIndex is 0
     // and gCurRootGraphNode is NULL
     gCurRootGraphNode = NULL;

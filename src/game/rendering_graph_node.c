@@ -43,6 +43,7 @@
  */
 
 #define MATRIX_STACK_SIZE 64
+#define DISPLAY_LIST_HEAP_SIZE 32000
 
 f32 gProjectionMaxNearValue = 5;
 s16 gProjectionVanillaNearValue = 100;
@@ -91,7 +92,7 @@ f32 gCurAnimTranslationMultiplier;
 u16 *gCurrAnimAttribute = NULL;
 s16 *gCurAnimData = NULL;
 
-struct AllocOnlyPool* gDisplayListHeap = NULL;
+struct GrowingPool* gDisplayListHeap = NULL;
 
 struct RenderModeContainer {
     u32 modes[8];
@@ -404,8 +405,7 @@ static void geo_append_display_list(void *displayList, s16 layer) {
     gSPLookAt(gDisplayListHead++, &lookAt);
 #endif
     if (gCurGraphNodeMasterList != 0) {
-        struct DisplayListNode *listNode =
-            alloc_only_pool_alloc(gDisplayListHeap, sizeof(struct DisplayListNode));
+        struct DisplayListNode *listNode = growing_pool_alloc(gDisplayListHeap, sizeof(struct DisplayListNode));
 
         listNode->transform = gMatStackFixed[gMatStackIndex];
         listNode->transformPrev = gMatStackPrevFixed[gMatStackIndex];
@@ -782,7 +782,7 @@ static void geo_process_display_list(struct GraphNodeDisplayList *node) {
 static void geo_process_generated_list(struct GraphNodeGenerated *node) {
     if (node->fnNode.func != NULL) {
         Gfx *list = node->fnNode.func(GEO_CONTEXT_RENDER, &node->fnNode.node,
-                                     (struct AllocOnlyPool *) gMatStack[gMatStackIndex]);
+                                     (struct DynamicPool *) gMatStack[gMatStackIndex]);
 
         if (list != NULL) {
             geo_append_display_list((void *) VIRTUAL_TO_PHYSICAL(list), node->fnNode.node.flags >> 8);
@@ -1431,7 +1431,7 @@ void geo_process_held_object(struct GraphNodeHeldObject *node) {
                          scalePrev);
 
         if (node->fnNode.func != NULL) {
-            node->fnNode.func(GEO_CONTEXT_HELD_OBJ, &node->fnNode.node, (struct AllocOnlyPool *) gMatStack[gMatStackIndex + 1]);
+            node->fnNode.func(GEO_CONTEXT_HELD_OBJ, &node->fnNode.node, (struct DynamicPool *) gMatStack[gMatStackIndex + 1]);
         }
 
         // Increment the matrix stack, If we fail to do so. Just return.
@@ -1620,8 +1620,7 @@ void geo_process_root(struct GraphNodeRoot *node, Vp *b, Vp *c, s32 clearColor) 
     geo_clear_interp_variables();
 
     if (node->node.flags & GRAPH_RENDER_ACTIVE) {
-        if (gDisplayListHeap) { alloc_only_pool_free(gDisplayListHeap); }
-        gDisplayListHeap = alloc_only_pool_init();
+        gDisplayListHeap = growing_pool_init(gDisplayListHeap, DISPLAY_LIST_HEAP_SIZE);
 
         Vp *viewport = alloc_display_list(sizeof(*viewport));
         if (viewport == NULL) { return; }
@@ -1665,9 +1664,7 @@ void geo_process_root(struct GraphNodeRoot *node, Vp *b, Vp *c, s32 clearColor) 
         if (node->node.children != NULL) {
             geo_process_node_and_siblings(node->node.children);
         }
+
         gCurGraphNodeRoot = NULL;
-        //if (gShowDebugText) {
-        //    print_text_fmt_int(180, 36, "MEM %d", gDisplayListHeap->totalSpace - gDisplayListHeap->usedSpace);
-        //}
     }
 }

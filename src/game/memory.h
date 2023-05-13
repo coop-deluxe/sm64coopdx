@@ -11,16 +11,30 @@
 #define GFX_POOL_SIZE      0x400000 //  4MB (Vanilla: 512kB)
 #define DEFAULT_POOL_SIZE 0x2000000 // 32MB (Vanilla: ~11MB)
 
-struct AllocOnlyPool
+struct DynamicPool
 {
     u32 usedSpace;
-    struct AllocOnlyNode* tail;
+    struct DynamicPoolNode* tail;
 };
 
-struct AllocOnlyNode
+struct DynamicPoolNode
 {
     void* ptr;
-    struct AllocOnlyNode* prev;
+    struct DynamicPoolNode* prev;
+};
+
+struct GrowingPool
+{
+    u32 usedSpace;
+    u32 nodeSize;
+    struct GrowingPoolNode* tail;
+};
+
+struct GrowingPoolNode
+{
+    u32 usedSpace;
+    void* ptr;
+    struct GrowingPoolNode* prev;
 };
 
 struct MemoryPool;
@@ -54,9 +68,13 @@ u32 main_pool_pop_state(void);
 #define load_segment_decompress_heap(...)
 #define load_engine_code_segment(...)
 
-struct AllocOnlyPool* alloc_only_pool_init(void);
-void* alloc_only_pool_alloc(struct AllocOnlyPool *pool, u32 size);
-void alloc_only_pool_free(struct AllocOnlyPool *pool);
+struct DynamicPool* dynamic_pool_init(void);
+void* dynamic_pool_alloc(struct DynamicPool *pool, u32 size);
+void dynamic_pool_free_pool(struct DynamicPool *pool);
+
+struct GrowingPool* growing_pool_init(struct GrowingPool* pool, u32 nodeSize);
+void* growing_pool_alloc(struct GrowingPool *pool, u32 size);
+void growing_pool_free_pool(struct GrowingPool *pool);
 
 struct MemoryPool *mem_pool_init(u32 size, u32 side);
 void *mem_pool_alloc(struct MemoryPool *pool, u32 size);
