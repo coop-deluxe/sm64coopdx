@@ -21,8 +21,6 @@
 #include "pc/network/network.h"
 #include "pc/lua/smlua_hooks.h"
 
-s32 unused8038BE90;
-
 /**
  * Partitions for course and object surfaces. The arrays represent
  * the 16x16 cells that each level is split into.
@@ -33,36 +31,16 @@ SpatialPartitionCell gDynamicSurfacePartition[NUM_CELLS][NUM_CELLS];
 /**
  * Pools of data to contain either surface nodes or surfaces.
  */
-struct SurfaceNode *sSurfaceNodePool = NULL;
-struct Surface *sSurfacePool;
-
-/**
- * The size of the surface pool (2300).
- */
-s16 sSurfacePoolSize;
-
-u8 unused8038EEA8[0x30];
-
-u8 gSurfacePoolError = 0;
+struct AllocOnlyPool* sSurfacePool = NULL;
 
 /**
  * Allocate the part of the surface node pool to contain a surface node.
  */
 static struct SurfaceNode *alloc_surface_node(void) {
-    struct SurfaceNode *node = &sSurfaceNodePool[gSurfaceNodesAllocated];
+    struct SurfaceNode *node = alloc_only_pool_alloc(sSurfacePool, sizeof(struct SurfaceNode));
     gSurfaceNodesAllocated++;
 
     node->next = NULL;
-
-    //! A bounds check! If there's more surface nodes than 7000 allowed,
-    //  we, um...
-    // Perhaps originally just debug feedback?
-    if (gSurfaceNodesAllocated >= SURFACE_NODE_POOL_SIZE) {
-        gSurfacePoolError |= NOT_ENOUGH_ROOM_FOR_NODES;
-        return NULL;
-    } else {
-        gSurfacePoolError &= ~NOT_ENOUGH_ROOM_FOR_NODES;
-    }
 
     return node;
 }
@@ -72,19 +50,8 @@ static struct SurfaceNode *alloc_surface_node(void) {
  * initialize the surface.
  */
 static struct Surface *alloc_surface(void) {
-
-    struct Surface *surface = &sSurfacePool[gSurfacesAllocated];
+    struct Surface *surface = alloc_only_pool_alloc(sSurfacePool, sizeof(struct Surface));
     gSurfacesAllocated++;
-
-    //! A bounds check! If there's more surfaces than the 2300 allowed,
-    //  we, um...
-    // Perhaps originally just debug feedback?
-    if (gSurfacesAllocated >= sSurfacePoolSize) {
-        gSurfacePoolError |= NOT_ENOUGH_ROOM_FOR_SURFACES;
-        return NULL;
-    } else {
-        gSurfacePoolError &= ~NOT_ENOUGH_ROOM_FOR_SURFACES;
-    }
 
     surface->type = 0;
     surface->force = 0;
@@ -556,9 +523,11 @@ static void load_environmental_regions(s16 **data) {
  * Allocate some of the main pool for surfaces (2300 surf) and for surface nodes (7000 nodes).
  */
 void alloc_surface_pools(void) {
-    sSurfacePoolSize = SURFACE_POOL_SIZE;
-    sSurfaceNodePool = main_pool_alloc(SURFACE_NODE_POOL_SIZE * sizeof(struct SurfaceNode), MEMORY_POOL_LEFT);
-    sSurfacePool = main_pool_alloc(sSurfacePoolSize * sizeof(struct Surface), MEMORY_POOL_LEFT);
+    if (sSurfacePool) { alloc_only_pool_free(sSurfacePool); }
+    sSurfacePool = alloc_only_pool_init();
+
+    gSurfaceNodesAllocated = 0;
+    gSurfacesAllocated = 0;
 
     gCCMEnteredSlide = 0;
     reset_red_coins_collected();
@@ -623,8 +592,6 @@ void load_area_terrain(s16 index, s16 *data, s8 *surfaceRooms, s16 *macroObjects
     // Initialize the data for this.
     gEnvironmentRegions = NULL;
     unused8038BE90 = 0;
-    gSurfaceNodesAllocated = 0;
-    gSurfacesAllocated = 0;
 
     clear_static_surfaces();
 

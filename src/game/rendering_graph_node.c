@@ -91,7 +91,7 @@ f32 gCurAnimTranslationMultiplier;
 u16 *gCurrAnimAttribute = NULL;
 s16 *gCurAnimData = NULL;
 
-struct AllocOnlyPool *gDisplayListHeap = NULL;
+struct AllocOnlyPool* gDisplayListHeap = NULL;
 
 struct RenderModeContainer {
     u32 modes[8];
