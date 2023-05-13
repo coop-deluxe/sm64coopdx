@@ -25,7 +25,8 @@
 #define INVALID_FILE_INDEX(_fi) ((u32)_fi >= NUM_SAVE_FILES)
 #define INVALID_SRC_SLOT(_ss) ((u32)_ss >= 2)
 #define INVALID_LEVEL_NUM(_ln) ((u32)_ln >= LEVEL_COUNT)
-#define INVALID_COURSE_INDEX(_ci) ((u32)_ci >= COURSE_STAGES_COUNT)
+#define INVALID_COURSE_STAR_INDEX(_ci) ((u32)_ci >= COURSE_COUNT)
+#define INVALID_COURSE_COIN_INDEX(_ci) ((u32)_ci >= COURSE_COUNT)
 
 STATIC_ASSERT(sizeof(struct SaveBuffer) == EEPROM_SIZE, "eeprom buffer size must match");
 
@@ -516,7 +517,7 @@ void save_file_collect_star_or_key(s16 coinScore, s16 starIndex, u8 fromNetwork)
         gGotFileCoinHiScore = FALSE;
     }
 
-    if (!INVALID_COURSE_INDEX(courseIndex) && !fromNetwork) {
+    if (!INVALID_COURSE_COIN_INDEX(courseIndex) && !fromNetwork) {
         //! Compares the coin score as a 16 bit value, but only writes the 8 bit
         // truncation. This can allow a high score to decrease.
 
@@ -608,7 +609,7 @@ s32 save_file_get_total_star_count(s32 fileIndex, s32 minCourse, s32 maxCourse) 
     s32 count = 0;
 
     if (minCourse < -1) { minCourse = -1; }
-    if (maxCourse >= COURSE_STAGES_COUNT) { maxCourse = COURSE_STAGES_COUNT; }
+    if (maxCourse >= COURSE_COUNT) { maxCourse = COURSE_COUNT-1; }
 
     // Get standard course star count.
     for (; minCourse <= maxCourse; minCourse++) {
@@ -659,7 +660,7 @@ u32 save_file_get_star_flags(s32 fileIndex, s32 courseIndex) {
 
     if (courseIndex == -1) {
         starFlags = SAVE_FLAG_TO_STAR_FLAG(gSaveBuffer.files[fileIndex][gSaveFileUsingBackupSlot].flags);
-    } else if (!INVALID_COURSE_INDEX(courseIndex)) {
+    } else if (!INVALID_COURSE_STAR_INDEX(courseIndex)) {
         starFlags = gSaveBuffer.files[fileIndex][gSaveFileUsingBackupSlot].courseStars[courseIndex] & 0x7F;
     }
 
@@ -676,7 +677,7 @@ void save_file_set_star_flags(s32 fileIndex, s32 courseIndex, u32 starFlags) {
     if (courseIndex == -1) {
         gSaveBuffer.files[fileIndex][gSaveFileUsingBackupSlot].flags |= STAR_FLAG_TO_SAVE_FLAG(starFlags);
         network_send_save_set_flag(fileIndex, courseIndex, 0, (STAR_FLAG_TO_SAVE_FLAG(starFlags) | SAVE_FLAG_FILE_EXISTS));
-    } else if (!INVALID_COURSE_INDEX(courseIndex)) {
+    } else if (!INVALID_COURSE_STAR_INDEX(courseIndex)) {
         gSaveBuffer.files[fileIndex][gSaveFileUsingBackupSlot].courseStars[courseIndex] |= starFlags;
         network_send_save_set_flag(fileIndex, courseIndex, starFlags, SAVE_FLAG_FILE_EXISTS);
     }
@@ -688,7 +689,7 @@ void save_file_set_star_flags(s32 fileIndex, s32 courseIndex, u32 starFlags) {
 s32 save_file_get_course_coin_score(s32 fileIndex, s32 courseIndex) {
     if (INVALID_FILE_INDEX(fileIndex)) { return 0; }
     if (INVALID_SRC_SLOT(gSaveFileUsingBackupSlot)) { return 0; }
-    if (INVALID_COURSE_INDEX(courseIndex)) { return 0; }
+    if (INVALID_COURSE_COIN_INDEX(courseIndex)) { return 0; }
     return gSaveBuffer.files[fileIndex][gSaveFileUsingBackupSlot].courseCoinScores[courseIndex];
 }
 
@@ -698,7 +699,7 @@ s32 save_file_get_course_coin_score(s32 fileIndex, s32 courseIndex) {
 s32 save_file_is_cannon_unlocked(void) {
     if (INVALID_FILE_INDEX(gCurrSaveFileNum - 1)) { return 0; }
     if (INVALID_SRC_SLOT(gSaveFileUsingBackupSlot)) { return 0; }
-    if (INVALID_COURSE_INDEX(gCurrCourseNum)) { return 0; }
+    if (INVALID_COURSE_STAR_INDEX(gCurrCourseNum)) { return 0; }
     return (gSaveBuffer.files[gCurrSaveFileNum - 1][gSaveFileUsingBackupSlot].courseStars[gCurrCourseNum] & 0x80) != 0;
 }
 
@@ -708,7 +709,7 @@ s32 save_file_is_cannon_unlocked(void) {
 void save_file_set_cannon_unlocked(void) {
     if (INVALID_FILE_INDEX(gCurrSaveFileNum - 1)) { return; }
     if (INVALID_SRC_SLOT(gSaveFileUsingBackupSlot)) { return; }
-    if (INVALID_COURSE_INDEX(gCurrCourseNum)) { return; }
+    if (INVALID_COURSE_STAR_INDEX(gCurrCourseNum)) { return; }
     gSaveBuffer.files[gCurrSaveFileNum - 1][gSaveFileUsingBackupSlot].courseStars[gCurrCourseNum] |= 0x80;
     gSaveBuffer.files[gCurrSaveFileNum - 1][gSaveFileUsingBackupSlot].flags |= SAVE_FLAG_FILE_EXISTS;
     gSaveFileModified = TRUE;
