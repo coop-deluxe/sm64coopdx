@@ -187,7 +187,6 @@ void DynOS_Actor_ModShutdown() {
     for (auto it = _ValidActors.cbegin(); it != _ValidActors.cend();) {
         auto& actorGfx = it->second;
         if (actorGfx.mPackIndex == MOD_PACK_INDEX) {
-            free(actorGfx.mGraphNode);
             DynOS_Gfx_Free(actorGfx.mGfxData);
             _ValidActors.erase(it++);
         } else {

@@ -55,9 +55,9 @@ void *DynOS_SwapCmd(void *aCmd) {
 
 void *DynOS_UpdateCmd(void *aCmd) {
     if (!aCmd) { return NULL; }
+
     static const uintptr_t sCmdLevelEntry[] = { CALL(0, lvl_init_or_update) };
-    if (!sCmdLevelEntry) { return NULL; }
-    sDynosIsLevelEntry |= (memcmp(aCmd, sCmdLevelEntry, sizeof(sCmdLevelEntry)) == 0);
+    sDynosIsLevelEntry |= (((uintptr_t*)aCmd)[0] == sCmdLevelEntry[0] && ((uintptr_t*)aCmd)[1] == sCmdLevelEntry[1]);
     return DynOS_Warp_Update(aCmd, sDynosIsLevelEntry);
 }
 

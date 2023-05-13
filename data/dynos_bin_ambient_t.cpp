@@ -55,7 +55,8 @@ void DynOS_AmbientT_Load(BinFile *aFile, GfxData *aGfxData) {
     _Node->mName.Read(aFile);
 
     // Data
-    _Node->mData = New<Ambient_t>();
+    // HACK: allocate for Light_t size due to PC port rendering all ambients as lights
+    _Node->mData = (Ambient_t*)New<Light_t>();
     *_Node->mData = aFile->Read<Ambient_t>();
 
     // Append
