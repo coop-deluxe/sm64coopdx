@@ -25,6 +25,7 @@ void* dynamic_pool_alloc(struct DynamicPool *pool, u32 size) {
     struct DynamicPoolNode* node = calloc(1, sizeof(struct DynamicPoolNode));
     node->ptr = calloc(1, size);
     node->prev = pool->tail;
+    node->size = size;
 
     pool->tail = node;
     pool->usedSpace += size;
@@ -46,6 +47,7 @@ void dynamic_pool_free(struct DynamicPool *pool, void* ptr) {
             } else {
                 next->prev = prev;
             }
+            pool->usedSpace -= node->size;
             free(node->ptr);
             free(node);
             return;

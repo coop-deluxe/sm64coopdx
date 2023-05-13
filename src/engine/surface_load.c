@@ -529,6 +529,9 @@ void alloc_surface_pools(void) {
     gSurfaceNodesAllocated = 0;
     gSurfacesAllocated = 0;
 
+    clear_static_surfaces();
+    clear_dynamic_surfaces();
+
     gCCMEnteredSlide = 0;
     reset_red_coins_collected();
 }

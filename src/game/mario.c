@@ -2002,11 +2002,6 @@ static u8 prevent_hang(u32 hangPreventionActions[], u8* hangPreventionIndex) {
 
     logfile_close(LFT_HANG);
 
-    // force the crash in debug mode
-#ifdef DEBUG
-    SOFT_ASSERT_RETURN(hangPreventionIndex == 0, TRUE);
-#endif
-
     return TRUE;
 }
 

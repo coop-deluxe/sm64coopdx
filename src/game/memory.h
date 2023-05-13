@@ -20,6 +20,7 @@ struct DynamicPool
 struct DynamicPoolNode
 {
     void* ptr;
+    u32 size;
     struct DynamicPoolNode* prev;
 };
 

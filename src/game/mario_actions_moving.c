@@ -628,6 +628,9 @@ void anim_and_audio_for_walk(struct MarioState *m) {
                         val0C = FALSE;
                     }
                     break;
+                default:
+                    val0C = false;
+                    break;
             }
         }
     }
