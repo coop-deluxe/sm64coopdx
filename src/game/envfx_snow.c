@@ -9,7 +9,6 @@
 #include "engine/surface_collision.h"
 #include "engine/math_util.h"
 #include "engine/behavior_script.h"
-#include "engine/level_script.h"
 #include "audio/external.h"
 #include "obj_behaviors.h"
 #include "pc/utils/misc.h"

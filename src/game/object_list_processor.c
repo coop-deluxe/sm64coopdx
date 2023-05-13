@@ -142,11 +142,6 @@ s32 gNumStaticSurfaceNodes;
  */
 s32 gNumStaticSurfaces;
 
-/**
- * A pool used by chain chomp and wiggler to allocate their body parts.
- */
-struct MemoryPool *gObjectMemoryPool;
-
 struct Object* gCheckingSurfaceCollisionsForObject = NULL;
 s16 gCheckingSurfaceCollisionsForCamera;
 s16 gFindFloorIncludeSurfaceIntangible;
@@ -658,7 +653,6 @@ void clear_objects(void) {
         geo_reset_object_node(&gObjectPool[i].header.gfx);
     }
 
-    gObjectMemoryPool = mem_pool_init(0x800, MEMORY_POOL_LEFT);
     gObjectLists = gObjectListArray;
 
     clear_dynamic_surfaces();

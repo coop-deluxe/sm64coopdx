@@ -126,7 +126,7 @@ void bhv_wiggler_body_part_update(void) {
  * Initialize the segment data and spawn the body part objects.
  */
 void wiggler_init_segments(void) {
-    struct ChainSegment *segments = mem_pool_alloc(gObjectMemoryPool, 4 * sizeof(struct ChainSegment));
+    struct ChainSegment *segments = dynamic_pool_alloc(gLevelPool, 4 * sizeof(struct ChainSegment));
 
     // Each segment represents the global position and orientation of each
     // object. Segment 0 represents the wiggler's head, and segment i>0

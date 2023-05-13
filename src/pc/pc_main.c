@@ -322,7 +322,6 @@ void main_func(void) {
     u64 *pool = calloc(poolsize, 1);
     if (!pool) sys_fatal("Could not alloc %u bytes for main pool.\n", poolsize);
     main_pool_init(pool, pool + poolsize / sizeof(pool[0]));
-    gEffectsMemoryPool = mem_pool_init(0x4000, MEMORY_POOL_LEFT);
 
     #if defined(WAPI_SDL1) || defined(WAPI_SDL2)
     wm_api = &gfx_sdl;

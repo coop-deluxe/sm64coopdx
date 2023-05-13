@@ -1133,7 +1133,7 @@ s16 ripple_if_movable(struct Painting *painting, s16 movable, s16 posX, s16 posY
 void painting_generate_mesh(struct Painting *painting, s16 *mesh, s16 numTris) {
     s16 i;
 
-    gPaintingMesh = mem_pool_alloc(gEffectsMemoryPool, numTris * sizeof(struct PaintingMeshVertex));
+    gPaintingMesh = dynamic_pool_alloc(gLevelPool, numTris * sizeof(struct PaintingMeshVertex));
     painting->ripples.paintingMesh = gPaintingMesh;
     if (painting->ripples.paintingMesh == NULL) {
         return;
@@ -1168,7 +1168,7 @@ void painting_generate_mesh(struct Painting *painting, s16 *mesh, s16 numTris) {
 void painting_calculate_triangle_normals(struct Painting *painting, s16 *mesh, s16 numVtx, s16 numTris) {
     s16 i;
 
-    gPaintingTriNorms = mem_pool_alloc(gEffectsMemoryPool, numTris * sizeof(Vec3f));
+    gPaintingTriNorms = dynamic_pool_alloc(gLevelPool, numTris * sizeof(Vec3f));
     painting->ripples.paintingTriNorms = gPaintingTriNorms;
     if (painting->ripples.paintingTriNorms == NULL) {
         return;
@@ -1526,8 +1526,8 @@ Gfx *display_painting_rippling(struct Painting *painting) {
     }
 
     // The mesh data is freed every frame.
-    mem_pool_free(gEffectsMemoryPool, painting->ripples.paintingMesh);
-    mem_pool_free(gEffectsMemoryPool, painting->ripples.paintingTriNorms);
+    dynamic_pool_free(gLevelPool, painting->ripples.paintingMesh);
+    dynamic_pool_free(gLevelPool, painting->ripples.paintingTriNorms);
     return dlist;
 }
 

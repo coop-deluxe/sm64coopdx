@@ -96,8 +96,6 @@ extern s32 gSurfacesAllocated;
 extern s32 gNumStaticSurfaceNodes;
 extern s32 gNumStaticSurfaces;
 
-extern struct MemoryPool *gObjectMemoryPool;
-
 extern struct Object* gCheckingSurfaceCollisionsForObject;
 extern s16 gCheckingSurfaceCollisionsForCamera;
 extern s16 gFindFloorIncludeSurfaceIntangible;

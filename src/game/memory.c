@@ -49,13 +49,6 @@ extern u8 *sPoolEnd;
 extern struct MainPoolBlock *sPoolListHeadL;
 extern struct MainPoolBlock *sPoolListHeadR;
 
-
-/**
- * Memory pool for small graphical effects that aren't connected to Objects.
- * Used for colored text, paintings, and environmental snow and bubbles.
- */
-struct MemoryPool *gEffectsMemoryPool = NULL;
-
 uintptr_t sSegmentTable[32];
 u32 sPoolFreeSpace;
 u8 *sPoolStart;
@@ -247,108 +240,6 @@ static void *dynamic_dma_read(u8 *srcStart, u8 *srcEnd, u32 side) {
         dma_read(dest, srcStart, srcEnd);
     }
     return dest;
-}
-
-/**
- * Allocate a memory pool from the main pool. This pool supports arbitrary
- * order for allocation/freeing.
- * Return NULL if there is not enough space in the main pool.
- */
-struct MemoryPool *mem_pool_init(u32 size, u32 side) {
-    void *addr;
-    struct MemoryBlock *block;
-    struct MemoryPool *pool = NULL;
-
-    size = ALIGN4(size);
-    addr = main_pool_alloc(size + sizeof(struct MemoryPool), side);
-    if (addr != NULL) {
-        pool = (struct MemoryPool *) addr;
-
-        pool->totalSpace = size;
-        pool->firstBlock = (struct MemoryBlock *) ((u8 *) addr + sizeof(struct MemoryPool));
-        pool->freeList.next = (struct MemoryBlock *) ((u8 *) addr + sizeof(struct MemoryPool));
-
-        block = pool->firstBlock;
-        block->next = NULL;
-        block->size = pool->totalSpace;
-    }
-    if (addr == NULL) {
-        LOG_ERROR("Memory pool failed to initalize memory of size 0x%X on side %d.", size, side);
-    }
-    return pool;
-}
-
-/**
- * Allocate from a memory pool. Return NULL if there is not enough space.
- */
-void *mem_pool_alloc(struct MemoryPool *pool, u32 size) {
-    struct MemoryBlock *freeBlock = &pool->freeList;
-    void *addr = NULL;
-
-    size = ALIGN4(size) + sizeof(struct MemoryBlock);
-    while (freeBlock->next != NULL) {
-        if (freeBlock->next->size >= size) {
-            addr = (u8 *) freeBlock->next + sizeof(struct MemoryBlock);
-            if (freeBlock->next->size - size <= sizeof(struct MemoryBlock)) {
-                freeBlock->next = freeBlock->next->next;
-            } else {
-                struct MemoryBlock *newBlock = (struct MemoryBlock *) ((u8 *) freeBlock->next + size);
-                newBlock->size = freeBlock->next->size - size;
-                newBlock->next = freeBlock->next->next;
-                freeBlock->next->size = size;
-                freeBlock->next = newBlock;
-            }
-            break;
-        }
-        freeBlock = freeBlock->next;
-    }
-    if (addr == NULL) {
-        LOG_ERROR("Memory pool failed to allocate memory of size 0x%X on at pool %p.", size, pool);
-    }
-    return addr;
-}
-
-/**
- * Free a block that was allocated using mem_pool_alloc.
- */
-void mem_pool_free(struct MemoryPool *pool, void *addr) {
-    if (!addr) { return; }
-    struct MemoryBlock *block = (struct MemoryBlock *) ((u8 *) addr - sizeof(struct MemoryBlock));
-    struct MemoryBlock *freeList = pool->freeList.next;
-
-    if (pool->freeList.next == NULL) {
-        pool->freeList.next = block;
-        block->next = NULL;
-    } else {
-        if (block < pool->freeList.next) {
-            if ((u8 *) pool->freeList.next == (u8 *) block + block->size) {
-                block->size += freeList->size;
-                block->next = freeList->next;
-                pool->freeList.next = block;
-            } else {
-                block->next = pool->freeList.next;
-                pool->freeList.next = block;
-            }
-        } else {
-            while (freeList->next != NULL) {
-                if (freeList < block && block < freeList->next) {
-                    break;
-                }
-                freeList = freeList->next;
-            }
-            if ((u8 *) freeList + freeList->size == (u8 *) block) {
-                freeList->size += block->size;
-                block = freeList;
-            } else {
-                block->next = freeList->next;
-                freeList->next = block;
-            }
-            if (block->next != NULL && (u8 *) block->next == (u8 *) block + block->size) {
-                block->size = block->size + block->next->size;
-                block->next = block->next->next;
-            }
-        }
-    }
 }
 
 static struct MarioAnimDmaRelatedThing *func_802789F0(u8 *srcAddr) {

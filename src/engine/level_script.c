@@ -52,8 +52,6 @@ LevelScript* gLevelScriptActive = NULL;
 
 static uintptr_t sStack[32];
 
-struct DynamicPool *gLevelPool = NULL;
-
 static u16 sDelayFrames = 0;
 static u16 sDelayFrames2 = 0;
 

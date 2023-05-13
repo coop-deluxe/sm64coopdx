@@ -60,7 +60,7 @@ void bhv_chain_chomp_chain_part_update(void) {
  * When mario gets close enough, allocate chain segments and spawn their objects.
  */
 static void chain_chomp_act_uninitialized(void) {
-    struct ChainSegment *segments = mem_pool_alloc(gObjectMemoryPool, 5 * sizeof(struct ChainSegment));
+    struct ChainSegment *segments = dynamic_pool_alloc(gLevelPool, 5 * sizeof(struct ChainSegment));
     if (segments != NULL) {
         // Each segment represents the offset of a chain part to the pivot.
         // Segment 0 connects the pivot to the chain chomp itself. Segment
@@ -450,7 +450,7 @@ static void chain_chomp_act_move(void) {
  */
 static void chain_chomp_act_unload_chain(void) {
     cur_obj_hide();
-    mem_pool_free(gObjectMemoryPool, o->oChainChompSegments);
+    dynamic_pool_free(gLevelPool, o->oChainChompSegments);
 
     o->oAction = CHAIN_CHOMP_ACT_UNINITIALIZED;
 

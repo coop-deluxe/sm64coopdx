@@ -6,6 +6,7 @@
 #include "memory.h"
 #include "print.h"
 #include "segment2.h"
+#include "game/rendering_graph_node.h"
 
 /**
  * This file handles printing and formatting the colorful text that
@@ -177,8 +178,7 @@ void print_text_fmt_int(s32 x, s32 y, const char *str, s32 n) {
     s32 srcIndex = 0;
 
     // Don't continue if there is no memory to do so.
-    if ((sTextLabels[sTextLabelsCount] = mem_pool_alloc(gEffectsMemoryPool,
-                                                        sizeof(struct TextLabel))) == NULL) {
+    if ((sTextLabels[sTextLabelsCount] = growing_pool_alloc(gDisplayListHeap, sizeof(struct TextLabel))) == NULL) {
         return;
     }
 
@@ -228,8 +228,7 @@ void print_text(s32 x, s32 y, const char *str) {
     s32 srcIndex = 0;
 
     // Don't continue if there is no memory to do so.
-    if ((sTextLabels[sTextLabelsCount] = mem_pool_alloc(gEffectsMemoryPool,
-                                                        sizeof(struct TextLabel))) == NULL) {
+    if ((sTextLabels[sTextLabelsCount] = growing_pool_alloc(gDisplayListHeap, sizeof(struct TextLabel))) == NULL) {
         return;
     }
 
@@ -261,8 +260,7 @@ void print_text_centered(s32 x, s32 y, const char *str) {
     s32 srcIndex = 0;
 
     // Don't continue if there is no memory to do so.
-    if ((sTextLabels[sTextLabelsCount] = mem_pool_alloc(gEffectsMemoryPool,
-                                                        sizeof(struct TextLabel))) == NULL) {
+    if ((sTextLabels[sTextLabelsCount] = growing_pool_alloc(gDisplayListHeap, sizeof(struct TextLabel))) == NULL) {
         return;
     }
 
@@ -425,8 +423,6 @@ void render_text_labels(void) {
 #endif
             }
         }
-
-        mem_pool_free(gEffectsMemoryPool, sTextLabels[i]);
     }
 
     gSPDisplayList(gDisplayListHead++, dl_hud_img_end);

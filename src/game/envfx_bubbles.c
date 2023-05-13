@@ -13,7 +13,6 @@
 #include "game/rendering_graph_node.h"
 #include "pc/utils/misc.h"
 #include "game/hardcoded.h"
-#include "engine/level_script.h"
 
 /**
  * This file implements environment effects that are not snow:

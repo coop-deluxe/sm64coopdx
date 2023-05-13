@@ -41,12 +41,7 @@ struct MemoryPool;
 struct MarioAnimation;
 struct Animation;
 
-#ifndef INCLUDED_FROM_MEMORY_C
-// Declaring this variable extern puts it in the wrong place in the bss order
-// when this file is included from memory.c (first instead of last). Hence,
-// ifdef hack. It was very likely subject to bss reordering originally.
-extern struct MemoryPool *gEffectsMemoryPool;
-#endif
+extern struct DynamicPool *gLevelPool;
 
 uintptr_t set_segment_base_addr(s32 segment, void *addr);
 void *get_segment_base_addr(s32 segment);
@@ -76,10 +71,6 @@ void dynamic_pool_free_pool(struct DynamicPool *pool);
 struct GrowingPool* growing_pool_init(struct GrowingPool* pool, u32 nodeSize);
 void* growing_pool_alloc(struct GrowingPool *pool, u32 size);
 void growing_pool_free_pool(struct GrowingPool *pool);
-
-struct MemoryPool *mem_pool_init(u32 size, u32 side);
-void *mem_pool_alloc(struct MemoryPool *pool, u32 size);
-void mem_pool_free(struct MemoryPool *pool, void *addr);
 
 void alloc_display_list_reset(void);
 void *alloc_display_list(u32 size);

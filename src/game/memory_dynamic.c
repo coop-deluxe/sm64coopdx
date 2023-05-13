@@ -1,8 +1,11 @@
 #include <PR/ultratypes.h>
 #include "memory.h"
 #include "rendering_graph_node.h"
+#include "pc/debuglog.h"
 
 #define ALIGN16(val) (((val) + 0xF) & ~0xF)
+
+struct DynamicPool *gLevelPool = NULL;
 
   //////////////////
  // dynamic pool //
@@ -44,10 +47,12 @@ void dynamic_pool_free(struct DynamicPool *pool, void* ptr) {
             }
             free(node->ptr);
             free(node);
+            return;
         }
         next = node;
         node = prev;
     }
+    LOG_ERROR("Failed to find memory to free in dynamic pool: %p", ptr);
 }
 
 void dynamic_pool_free_pool(struct DynamicPool *pool) {
