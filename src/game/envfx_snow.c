@@ -9,6 +9,7 @@
 #include "engine/surface_collision.h"
 #include "engine/math_util.h"
 #include "engine/behavior_script.h"
+#include "engine/level_script.h"
 #include "audio/external.h"
 #include "obj_behaviors.h"
 #include "pc/utils/misc.h"
@@ -104,10 +105,8 @@ s32 envfx_init_snow(s32 mode) {
             break;
     }
 
-    gEnvFxBuffer = mem_pool_alloc(gEffectsMemoryPool, gSnowParticleMaxCount * sizeof(struct EnvFxParticle));
-    if (!gEnvFxBuffer) {
-        return 0;
-    }
+    gEnvFxBuffer = dynamic_pool_alloc(gLevelPool, gSnowParticleMaxCount * sizeof(struct EnvFxParticle));
+    if (!gEnvFxBuffer) { return 0; }
 
     bzero(gEnvFxBuffer, gSnowParticleMaxCount * sizeof(struct EnvFxParticle));
 
@@ -161,7 +160,7 @@ void envfx_update_snowflake_count(s32 mode, Vec3s marioPos) {
 void envfx_cleanup_snow(void *snowParticleArray) {
     if (gEnvFxMode) {
         if (snowParticleArray) {
-            mem_pool_free(gEffectsMemoryPool, snowParticleArray);
+            dynamic_pool_free(gLevelPool, snowParticleArray);
         }
         gEnvFxMode = ENVFX_MODE_NONE;
     }

@@ -70,6 +70,7 @@ u32 main_pool_pop_state(void);
 
 struct DynamicPool* dynamic_pool_init(void);
 void* dynamic_pool_alloc(struct DynamicPool *pool, u32 size);
+void dynamic_pool_free(struct DynamicPool *pool, void* ptr);
 void dynamic_pool_free_pool(struct DynamicPool *pool);
 
 struct GrowingPool* growing_pool_init(struct GrowingPool* pool, u32 nodeSize);

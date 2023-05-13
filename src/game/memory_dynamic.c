@@ -28,6 +28,28 @@ void* dynamic_pool_alloc(struct DynamicPool *pool, u32 size) {
     return node->ptr;
 }
 
+void dynamic_pool_free(struct DynamicPool *pool, void* ptr) {
+    if (!pool || !ptr) { return; }
+
+    struct DynamicPoolNode* node = pool->tail;
+    struct DynamicPoolNode* next = node;
+
+    while (node) {
+        struct DynamicPoolNode* prev = node->prev;
+        if (node->ptr == ptr) {
+            if (pool->tail == node) {
+                pool->tail = prev;
+            } else {
+                next->prev = prev;
+            }
+            free(node->ptr);
+            free(node);
+        }
+        next = node;
+        node = prev;
+    }
+}
+
 void dynamic_pool_free_pool(struct DynamicPool *pool) {
     if (!pool) { return; }
     struct DynamicPoolNode* node = pool->tail;

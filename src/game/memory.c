@@ -54,7 +54,7 @@ extern struct MainPoolBlock *sPoolListHeadR;
  * Memory pool for small graphical effects that aren't connected to Objects.
  * Used for colored text, paintings, and environmental snow and bubbles.
  */
-struct MemoryPool *gEffectsMemoryPool;
+struct MemoryPool *gEffectsMemoryPool = NULL;
 
 uintptr_t sSegmentTable[32];
 u32 sPoolFreeSpace;

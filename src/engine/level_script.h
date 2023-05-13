@@ -7,6 +7,8 @@
 
 struct LevelCommand;
 
+extern struct DynamicPool *gLevelPool;
+
 extern s32 gLevelScriptModIndex;
 extern LevelScript* gLevelScriptActive;
 
