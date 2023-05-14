@@ -1376,7 +1376,9 @@ void cur_obj_move_after_thrown_or_dropped(f32 forwardVel, f32 velY) {
         o->oPosY = o->oFloorHeight;
     } else if (o->oFloorHeight < gLevelValues.floorLowerLimitMisc) {
         //! OoB failsafe
-        obj_copy_pos(o, gMarioObject);
+        if (gMarioObject) {
+            obj_copy_pos(o, gMarioObject);
+        }
         o->oFloorHeight = find_floor_height(o->oPosX, o->oPosY, o->oPosZ);
     }
 
@@ -1926,7 +1928,7 @@ void cur_obj_start_cam_event(UNUSED struct Object *obj, s32 cameraEvent) {
 }
 
 void set_mario_interact_hoot_if_in_range(UNUSED s32 sp0, UNUSED s32 sp4, f32 sp8) {
-    if (!o) { return; }
+    if (!o || !gMarioObject) { return; }
     if (o->oDistanceToMario < sp8) {
         gMarioObject->oInteractStatus = INT_STATUS_HOOT_GRABBED_BY_MARIO;
     }
@@ -2765,7 +2767,7 @@ void stub_obj_helpers_4(void) {
 }
 
 s32 cur_obj_is_mario_on_platform(void) {
-    if (gMarioObject->platform == o) {
+    if (gMarioObject && gMarioObject->platform == o) {
         return TRUE;
     }
     return FALSE;
@@ -3297,6 +3299,7 @@ void cur_obj_align_gfx_with_floor(void) {
 }
 
 s32 mario_is_within_rectangle(s16 minX, s16 maxX, s16 minZ, s16 maxZ) {
+    if (!gMarioObject) { return FALSE; }
     if (gMarioObject->oPosX < minX || maxX < gMarioObject->oPosX) {
         return FALSE;
     }
