@@ -813,6 +813,7 @@ void geo_obj_init_animation_accel(struct GraphNodeObject *graphNode, const struc
  * with actual animation values.
  */
 s32 retrieve_animation_index(s32 frame, u16 **attributes) {
+    if (!attributes || !(*attributes)) { return 0; }
     s32 result;
 
     if (frame < (*attributes)[0]) {
