@@ -3750,6 +3750,11 @@ function djui_hud_world_pos_to_screen_pos(pos, out)
     -- ...
 end
 
+--- @return nil
+function djui_open_pause_menu()
+    -- ...
+end
+
 --- @param message string
 --- @param lines integer
 --- @return nil

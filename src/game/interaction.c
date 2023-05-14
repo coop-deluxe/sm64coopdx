@@ -2426,7 +2426,7 @@ void pss_end_slide(struct MarioState *m) {
 
 void mario_handle_special_floors(struct MarioState *m) {
     if (!m) { return; }
-    if ((m->action & ACT_GROUP_MASK) == ACT_GROUP_CUTSCENE) {
+    if ((m->action & ACT_GROUP_MASK) == ACT_GROUP_CUTSCENE || gDjuiInMainMenu) {
         return;
     }
 

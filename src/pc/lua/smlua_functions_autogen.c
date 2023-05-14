@@ -12422,6 +12422,21 @@ int smlua_func_djui_hud_world_pos_to_screen_pos(lua_State* L) {
     return 1;
 }
 
+int smlua_func_djui_open_pause_menu(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "djui_open_pause_menu", 0, top);
+        return 0;
+    }
+
+
+    djui_open_pause_menu();
+
+    return 1;
+}
+
   //////////////////
  // djui_popup.h //
 //////////////////
@@ -30727,6 +30742,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "djui_hud_set_resolution", smlua_func_djui_hud_set_resolution);
     smlua_bind_function(L, "djui_hud_set_rotation", smlua_func_djui_hud_set_rotation);
     smlua_bind_function(L, "djui_hud_world_pos_to_screen_pos", smlua_func_djui_hud_world_pos_to_screen_pos);
+    smlua_bind_function(L, "djui_open_pause_menu", smlua_func_djui_open_pause_menu);
 
     // djui_popup.h
     smlua_bind_function(L, "djui_popup_create", smlua_func_djui_popup_create);
