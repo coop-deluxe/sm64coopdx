@@ -2010,6 +2010,9 @@ static u8 prevent_hang(u32 hangPreventionActions[], u8* hangPreventionIndex) {
  */
 s32 execute_mario_action(UNUSED struct Object *o) {
     s32 inLoop = TRUE;
+    if (!gMarioState) { return 0; }
+    if (!gMarioState->marioObj) { return 0; }
+    if (gMarioState->playerIndex >= MAX_PLAYERS) { return 0; }
 
     if (gMarioState->knockbackTimer > 0) {
         gMarioState->knockbackTimer--;
