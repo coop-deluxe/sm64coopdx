@@ -1,4 +1,5 @@
 #include <map>
+#include <vector>
 #include "dynos.cpp.h"
 
 extern "C" {
@@ -6,8 +7,14 @@ extern "C" {
 #include "engine/graph_node.h"
 }
 
+struct ScheduledFreePool {
+    struct DynamicPool* pool;
+    u32 timeout;
+};
+
 static struct DynamicPool* sModelPools[MODEL_POOL_MAX] = { 0 };
 static std::map<void*, struct GraphNode*> sModelMap[MODEL_POOL_MAX];
+static std::vector<struct ScheduledFreePool> sPoolsToFree;
 
 struct GraphNode* DynOS_Model_LoadGeo(enum ModelPool aModelPool, void* aAsset) {
     // sanity check pool
@@ -58,11 +65,27 @@ struct GraphNode* DynOS_Model_LoadDl(enum ModelPool aModelPool, u8 aLayer, void*
 void DynOS_Model_ClearPool(enum ModelPool aModelPool) {
     if (!sModelPools[aModelPool]) { return; }
 
-    // free and realloc pool
-    dynamic_pool_free_pool(sModelPools[aModelPool]);
+    // schedule pool to be freed
+    sPoolsToFree.push_back({
+        .pool = sModelPools[aModelPool],
+        .timeout = 30
+    });
+
+    // clear pointer
     sModelPools[aModelPool] = NULL;
 
     // clear map
     auto& map = sModelMap[aModelPool];
     map.clear();
+}
+
+void DynOS_Model_Update() {
+    for (auto it = sPoolsToFree.begin(); it != sPoolsToFree.end(); ) {
+        if (--it->timeout <= 0) {
+            dynamic_pool_free_pool(it->pool);
+            it = sPoolsToFree.erase(it);
+        } else {
+            it++;
+        }
+    }
 }

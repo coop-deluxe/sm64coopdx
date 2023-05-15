@@ -14,6 +14,7 @@ void *dynos_update_cmd(void *cmd) {
 }
 
 void dynos_update_gfx() {
+    DynOS_Model_Update();
     return DynOS_UpdateGfx();
 }
 

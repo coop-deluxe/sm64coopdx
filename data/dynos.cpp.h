@@ -966,6 +966,7 @@ void DynOS_MovtexQC_ModShutdown();
 struct GraphNode* DynOS_Model_LoadGeo(enum ModelPool aModelPool, void* aAsset);
 struct GraphNode* DynOS_Model_LoadDl(enum ModelPool aModelPool, u8 aLayer, void* aAsset);
 void DynOS_Model_ClearPool(enum ModelPool aModelPool);
+void DynOS_Model_Update();
 
 //
 // Bin

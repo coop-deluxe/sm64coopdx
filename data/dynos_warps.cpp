@@ -185,7 +185,7 @@ void DynOS_Warp_SetParam(s32 aLevel, s32 aIndex) {
         break;
 
     case LEVEL_WDW:
-        if (gEnvironmentRegions) {
+        if (gEnvironmentRegions && gEnvironmentRegionsLength > 6) {
         switch (aIndex) {
             case 1: gEnvironmentRegions[6] = *gEnvironmentLevels =   31; gWdwWaterLevelSet = 1; break;
             case 2: gEnvironmentRegions[6] = *gEnvironmentLevels = 1024; gWdwWaterLevelSet = 1; break;
