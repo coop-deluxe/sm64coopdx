@@ -810,13 +810,13 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
-| children | [GraphNode](structs.md#GraphNode) |  |
-| extraFlags | `integer` |  |
-| flags | `integer` |  |
+| children | [GraphNode](structs.md#GraphNode) | read-only |
+| extraFlags | `integer` | read-only |
+| flags | `integer` | read-only |
 | next | [GraphNode](structs.md#GraphNode) | read-only |
 | parent | [GraphNode](structs.md#GraphNode) | read-only |
 | prev | [GraphNode](structs.md#GraphNode) | read-only |
-| type | `integer` |  |
+| type | `integer` | read-only |
 
 [:arrow_up_small:](#)
 
@@ -826,32 +826,32 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
-| activeAreaIndex | `integer` |  |
+| activeAreaIndex | `integer` | read-only |
 | angle | [Vec3s](structs.md#Vec3s) | read-only |
 | animInfo | [AnimInfo](structs.md#AnimInfo) | read-only |
-| areaIndex | `integer` |  |
+| areaIndex | `integer` | read-only |
 | cameraToObject | [Vec3f](structs.md#Vec3f) | read-only |
-| disableAutomaticShadowPos | `boolean` |  |
+| disableAutomaticShadowPos | `boolean` | read-only |
 | node | [GraphNode](structs.md#GraphNode) | read-only |
 | pos | [Vec3f](structs.md#Vec3f) | read-only |
 | prevAngle | [Vec3s](structs.md#Vec3s) | read-only |
 | prevPos | [Vec3f](structs.md#Vec3f) | read-only |
 | prevScale | [Vec3f](structs.md#Vec3f) | read-only |
-| prevScaleTimestamp | `integer` |  |
+| prevScaleTimestamp | `integer` | read-only |
 | prevShadowPos | [Vec3f](structs.md#Vec3f) | read-only |
-| prevShadowPosTimestamp | `integer` |  |
+| prevShadowPosTimestamp | `integer` | read-only |
 | prevThrowMatrix | `Mat4` | read-only |
-| prevThrowMatrixTimestamp | `integer` |  |
-| prevTimestamp | `integer` |  |
+| prevThrowMatrixTimestamp | `integer` | read-only |
+| prevTimestamp | `integer` | read-only |
 | scale | [Vec3f](structs.md#Vec3f) | read-only |
-| shadowInvisible | `boolean` |  |
+| shadowInvisible | `boolean` | read-only |
 | shadowPos | [Vec3f](structs.md#Vec3f) | read-only |
-| sharedChild | [GraphNode](structs.md#GraphNode) |  |
-| skipInViewCheck | `boolean` |  |
-| skipInterpolationTimestamp | `integer` |  |
-| throwMatrix | `Pointer` <`Mat4`> |  |
-| throwMatrixPrev | `Pointer` <`Mat4`> |  |
-| unk4C | [SpawnInfo](structs.md#SpawnInfo) |  |
+| sharedChild | [GraphNode](structs.md#GraphNode) | read-only |
+| skipInViewCheck | `boolean` | read-only |
+| skipInterpolationTimestamp | `integer` | read-only |
+| throwMatrix | `Pointer` <`Mat4`> | read-only |
+| throwMatrixPrev | `Pointer` <`Mat4`> | read-only |
+| unk4C | [SpawnInfo](structs.md#SpawnInfo) | read-only |
 
 [:arrow_up_small:](#)
 
@@ -1046,7 +1046,7 @@
 | actionTimer | `integer` |  |
 | angleVel | [Vec3s](structs.md#Vec3s) | read-only |
 | animation | [MarioAnimation](structs.md#MarioAnimation) |  |
-| area | [Area](structs.md#Area) |  |
+| area | [Area](structs.md#Area) | read-only |
 | bounceSquishTimer | `integer` |  |
 | bubbleObj | [Object](structs.md#Object) |  |
 | cap | `integer` |  |
@@ -1220,7 +1220,7 @@
 | areaTimerType | [enum AreaTimerType](constants.md#enum-AreaTimerType) |  |
 | behavior | `Pointer` <`BehaviorScript`> | read-only |
 | bhvDelayTimer | `integer` |  |
-| bhvStackIndex | `integer` |  |
+| bhvStackIndex | `integer` | read-only |
 | collidedObjInteractTypes | `integer` |  |
 | collisionData | `Pointer` <`Collision`> |  |
 | coopFlags | `integer` | read-only |
@@ -1239,7 +1239,7 @@
 | parentObj | [Object](structs.md#Object) |  |
 | platform | [Object](structs.md#Object) |  |
 | prevObj | [Object](structs.md#Object) |  |
-| respawnInfoType | `integer` |  |
+| respawnInfoType | `integer` | read-only |
 | setHome | `integer` |  |
 | transform | `Mat4` | read-only |
 | unused1 | `integer` |  |
@@ -1467,7 +1467,7 @@
 | oCannonPlayerIndex | `integer` |  |
 | oCapUnkF4 | `integer` |  |
 | oCapUnkF8 | `integer` |  |
-| oChainChompSegments | [ChainSegment](structs.md#ChainSegment) |  |
+| oChainChompSegments | [ChainSegment](structs.md#ChainSegment) | read-only |
 | oChainChompMaxDistFromPivotPerChainPart | `number` |  |
 | oChainChompMaxDistBetweenChainParts | `number` |  |
 | oChainChompDistToPivot | `number` |  |
@@ -1961,7 +1961,7 @@
 | oStrongWindParticlePenguinObj | [Object](structs.md#Object) |  |
 | oWhompShakeVal | `integer` |  |
 | oWigglerFallThroughFloorsHeight | `number` |  |
-| oWigglerSegments | [ChainSegment](structs.md#ChainSegment) |  |
+| oWigglerSegments | [ChainSegment](structs.md#ChainSegment) | read-only |
 | oWigglerWalkAnimSpeed | `number` |  |
 | oWigglerSquishSpeed | `number` |  |
 | oWigglerTimeUntilRandomTurn | `integer` |  |
@@ -2228,8 +2228,8 @@
 | next | [SpawnInfo](structs.md#SpawnInfo) | read-only |
 | startAngle | [Vec3s](structs.md#Vec3s) | read-only |
 | startPos | [Vec3s](structs.md#Vec3s) | read-only |
-| syncID | `integer` |  |
-| unk18 | [GraphNode](structs.md#GraphNode) |  |
+| syncID | `integer` | read-only |
+| unk18 | [GraphNode](structs.md#GraphNode) | read-only |
 
 [:arrow_up_small:](#)
 
@@ -2407,6 +2407,9 @@
 | offsetY | `number` |  |
 | radius | `number` |  |
 | unused | `integer` |  |
+| x | `number` |  |
+| y | `number` |  |
+| z | `number` |  |
 
 [:arrow_up_small:](#)
 

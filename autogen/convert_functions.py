@@ -80,7 +80,7 @@ override_allowed_functions = {
 override_disallowed_functions = {
     "src/audio/external.h":                [ " func_" ],
     "src/engine/math_util.h":              [ "atan2s", "atan2f", "vec3s_sub" ],
-    "src/engine/surface_load.h",           [ "alloc_surface_poools" ],
+    "src/engine/surface_load.h":           [ "alloc_surface_poools" ],
     "src/engine/surface_collision.h":      [ " debug_", "f32_find_wall_collision" ],
     "src/game/mario_actions_airborne.c":   [ "^[us]32 act_.*" ],
     "src/game/mario_actions_automatic.c":  [ "^[us]32 act_.*" ],
@@ -800,6 +800,8 @@ def process_files():
 
 ############################################################################
 
+fuzz_from = '/home/djoslin/.local/share/sm64ex-coop/mods/test-fuzz.lua'
+fuzz_to = '/home/djoslin/.local/share/sm64ex-coop/mods/test-fuzz.lua'
 fuzz_functions = ""
 
 def output_fuzz_function(fname, function):
@@ -819,9 +821,10 @@ def output_fuzz_function(fname, function):
         ptype = param['type']
         ptype, plink = translate_type_to_lua(ptype)
 
-        if 'enum ' in ptype:
-            ptype = 'integer'
-        line += 'rnd_' + ptype.strip().replace('`', '').replace(' ', '').split('<')[-1].split('>')[0].split('(')[0] + '()'
+        if '(' in pid or '[' in pid or ']' in pid:
+            continue
+
+        line += translate_type_to_rnd(ptype)
 
         comment += ptype
 
@@ -836,9 +839,9 @@ def output_fuzz_function(fname, function):
 
 def output_fuzz_file():
     global fuzz_functions
-    with open('./autogen/fuzz_template.lua') as f:
+    with open(fuzz_from) as f:
         file_str = f.read()
-    with open('/home/djoslin/.local/share/sm64ex-coop/mods/test-fuzz.lua', 'w') as f:
+    with open(fuzz_to, 'w') as f:
         f.write(file_str.replace('-- $[FUNCS]', fuzz_functions))
 
 ############################################################################

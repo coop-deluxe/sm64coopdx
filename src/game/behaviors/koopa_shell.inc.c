@@ -16,11 +16,13 @@ void koopa_shell_spawn_water_drop(void) {
     UNUSED s32 unused;
     struct Object *drop;
     spawn_object(o, MODEL_WAVE_TRAIL, bhvObjectWaveTrail);
-    if (gMarioStates[o->heldByPlayerIndex].forwardVel > 10.0f) {
-        drop = spawn_object_with_scale(o, MODEL_WHITE_PARTICLE_SMALL, bhvWaterDroplet, 1.5f);
-        if (drop != NULL) {
-            drop->oVelY = random_float() * 30.0f;
-            obj_translate_xz_random(drop, 110.0f);
+    if (o->heldByPlayerIndex < MAX_PLAYERS) {
+        if (gMarioStates[o->heldByPlayerIndex].forwardVel > 10.0f) {
+            drop = spawn_object_with_scale(o, MODEL_WHITE_PARTICLE_SMALL, bhvWaterDroplet, 1.5f);
+            if (drop != NULL) {
+                drop->oVelY = random_float() * 30.0f;
+                obj_translate_xz_random(drop, 110.0f);
+            }
         }
     }
 }
@@ -79,28 +81,30 @@ void bhv_koopa_shell_loop(void) {
             koopa_shell_spawn_sparkles(10.0f);
             break;
         case 1:
-            player = gMarioStates[o->heldByPlayerIndex].marioObj;
-            if (player) {
-                obj_copy_pos(o, player);
-            }
-            sp34 = cur_obj_update_floor_height_and_get_floor();
-            if (absf(find_water_level(o->oPosX, o->oPosZ) - o->oPosY) < 10.0f)
-                koopa_shell_spawn_water_drop();
-            else if (5.0f > absf(o->oPosY - o->oFloorHeight)) {
-                if (sp34 != NULL && sp34->type == 1)
-                    bhv_koopa_shell_flame_spawn();
-                else
+            if (o->heldByPlayerIndex < MAX_PLAYERS) {
+                player = gMarioStates[o->heldByPlayerIndex].marioObj;
+                if (player) {
+                    obj_copy_pos(o, player);
+                }
+                sp34 = cur_obj_update_floor_height_and_get_floor();
+                if (absf(find_water_level(o->oPosX, o->oPosZ) - o->oPosY) < 10.0f)
+                    koopa_shell_spawn_water_drop();
+                else if (5.0f > absf(o->oPosY - o->oFloorHeight)) {
+                    if (sp34 != NULL && sp34->type == 1)
+                        bhv_koopa_shell_flame_spawn();
+                    else
+                        koopa_shell_spawn_sparkles(10.0f);
+                } else
                     koopa_shell_spawn_sparkles(10.0f);
-            } else
-                koopa_shell_spawn_sparkles(10.0f);
-            if (player) {
-                o->oFaceAngleYaw = player->oMoveAngleYaw;
-            }
-            if (o->oInteractStatus & INT_STATUS_STOP_RIDING) {
-                o->heldByPlayerIndex = 0;
-                obj_mark_for_deletion(o);
-                spawn_mist_particles();
-                o->oAction = 0;
+                if (player) {
+                    o->oFaceAngleYaw = player->oMoveAngleYaw;
+                }
+                if (o->oInteractStatus & INT_STATUS_STOP_RIDING) {
+                    o->heldByPlayerIndex = 0;
+                    obj_mark_for_deletion(o);
+                    spawn_mist_particles();
+                    o->oAction = 0;
+                }
             }
             break;
     }

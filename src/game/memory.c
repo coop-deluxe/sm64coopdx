@@ -220,7 +220,7 @@ s32 load_patchable_table(struct MarioAnimation *a, u32 index) {
         u8* addr = sp20->srcAddr + sp20->anim[index].offset;
         u32 size = sp20->anim[index].size;
 
-        if (a->currentAnimAddr != addr) {
+        if (a->targetAnim && a->currentAnimAddr != addr) {
             memcpy(a->targetAnim, addr, size);
             a->currentAnimAddr = addr;
             return TRUE;

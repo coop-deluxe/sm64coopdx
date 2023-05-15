@@ -92,6 +92,7 @@ void hoot_free_step(s16 fastOscY, s32 speed) {
 }
 
 void hoot_player_set_yaw(void) {
+    if (o->heldByPlayerIndex >= MAX_PLAYERS) { return; }
     struct MarioState* marioState = &gMarioStates[o->heldByPlayerIndex];
     s16 stickX = marioState->controller->rawStickX;
     s16 stickY = marioState->controller->rawStickY;
@@ -147,7 +148,9 @@ void hoot_surface_collision(f32 xPrev, UNUSED f32 yPrev, f32 zPrev) {
         o->oPosY = hitbox.y;
         o->oPosZ = hitbox.z;
 
-        gMarioStates[o->heldByPlayerIndex].marioObj->oInteractStatus |= INT_STATUS_MARIO_UNK7; /* bit 7 */
+        if (o->heldByPlayerIndex < MAX_PLAYERS) {
+            gMarioStates[o->heldByPlayerIndex].marioObj->oInteractStatus |= INT_STATUS_MARIO_UNK7; /* bit 7 */
+        }
     }
 
     floorY = find_floor_height_and_data(o->oPosX, o->oPosY, o->oPosZ, &sp44);
@@ -223,8 +226,11 @@ void hoot_action_loop(void) {
 
             hoot_carry_step(20, xPrev, zPrev);
 
-            if (o->oTimer >= 61)
-                gMarioStates[o->heldByPlayerIndex].marioObj->oInteractStatus |= INT_STATUS_MARIO_UNK7; /* bit 7 */
+            if (o->oTimer >= 61) {
+                if (o->heldByPlayerIndex < MAX_PLAYERS) {
+                    gMarioStates[o->heldByPlayerIndex].marioObj->oInteractStatus |= INT_STATUS_MARIO_UNK7; /* bit 7 */
+                }
+            }
             break;
     }
 

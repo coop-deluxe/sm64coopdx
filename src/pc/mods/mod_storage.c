@@ -64,7 +64,7 @@ u32 key_count(char* filename) {
     return lines - 4;
 }
 
-char *mod_storage_get_filename(char* dest) {
+void mod_storage_get_filename(char* dest) {
     const char *path = sys_user_path(); // get base sm64ex-coop appdata dir
     snprintf(dest, SYS_MAX_PATH - 1, "%s/sav/%s", path, gLuaActiveMod->relativePath); // append sav folder
     strdelete(dest, ".lua"); // delete ".lua" from sav name

@@ -121,7 +121,7 @@ void obj_set_dist_from_home(f32 distFromHome) {
 }
 
 s32 obj_is_near_to_and_facing_mario(struct MarioState* m, f32 maxDist, s16 maxAngleDiff) {
-    if (!o) { return 0; }
+    if (!o || !m) { return 0; }
     struct Object* player = m->marioObj;
     s32 distanceToPlayer = dist_between_objects(o, player);
     s32 angleToPlayer = obj_angle_to_object(o, player);
@@ -159,15 +159,14 @@ static BAD_RETURN(u32) obj_perform_position_op(s32 op) {
 
 void platform_on_track_update_pos_or_spawn_ball(s32 ballIndex, f32 x, f32 y, f32 z) {
     if (!o) { return; }
-    struct Object *trackBall;
-    struct Waypoint *initialPrevWaypoint;
-    struct Waypoint *nextWaypoint;
-    struct Waypoint *prevWaypoint;
-    UNUSED s32 unused;
-    f32 amountToMove;
-    f32 dx;
-    f32 dy;
-    f32 dz;
+    struct Object *trackBall = NULL;
+    struct Waypoint *initialPrevWaypoint = NULL;
+    struct Waypoint *nextWaypoint = NULL;
+    struct Waypoint *prevWaypoint = NULL;
+    f32 amountToMove = 0;
+    f32 dx = 0;
+    f32 dy = 0;
+    f32 dz = 0;
     f32 distToNextWaypoint = 100;
 
     if (ballIndex == 0 || ((u16)(o->oBehParams >> 16) & 0x0080)) {

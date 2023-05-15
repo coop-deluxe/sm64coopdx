@@ -59,12 +59,13 @@ void DynOS_Actor_AddCustom(const SysPath &aFilename, const char *aActorName) {
 
     // Add to custom actors
     if (georef == NULL) {
-        DynosCustomActors().Add({ actorName, geoLayout });
+        DynosCustomActors().Add({ strdup(actorName), geoLayout });
         georef = geoLayout;
     }
 
     // Add to list
     DynOS_Actor_Valid(georef, actorGfx);
+    free(actorName);
 }
 
 const void *DynOS_Actor_GetLayoutFromName(const char *aActorName) {

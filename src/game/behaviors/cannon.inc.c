@@ -53,7 +53,7 @@ void opened_cannon_act_4(void) {
         o->oPosZ += (f32)((o->oTimer / 2 & 1) - 0.5) * 4;
         o->oAction = 6;
     }
-    if (o->oCannonPlayerIndex != 0 && o->oCannonPlayerIndex < MAX_PLAYERS) {
+    if (o->oCannonPlayerIndex > 0 && o->oCannonPlayerIndex < MAX_PLAYERS) {
         struct MarioState* controlledBy = &gMarioStates[o->oCannonPlayerIndex];
         if (controlledBy && controlledBy->marioObj != NULL) {
             controlledBy->marioObj->oMarioCannonObjectYaw = o->oMoveAngleYaw;

@@ -270,7 +270,7 @@ void bhv_mario_update(void) {
 
     // set mario state to the current player
     s32 stateIndex = (gCurrentObject->oBehParams - 1);
-    if (stateIndex > MAX_PLAYERS) { return; }
+    if (stateIndex >= MAX_PLAYERS || stateIndex < 0) { return; }
     gMarioState = &gMarioStates[stateIndex];
 
     // sanity check torsoPos, it isn't updated off-screen otherwise
@@ -477,7 +477,7 @@ void set_object_respawn_info_bits(struct Object *obj, u8 bits) {
     u16 *info16;
     u8 oldRespawnInfoBits = 0;
     u8 newRespawnInfoBits = 0;
-    if (!obj) { return; }
+    if (!obj || !obj->respawnInfo) { return; }
 
     switch (obj->respawnInfoType) {
         case RESPAWN_INFO_TYPE_32:

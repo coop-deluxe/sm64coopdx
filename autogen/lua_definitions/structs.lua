@@ -1845,6 +1845,9 @@
 --- @field public offsetY number
 --- @field public radius number
 --- @field public unused integer
+--- @field public x number
+--- @field public y number
+--- @field public z number
 
 --- @class WarpNode
 --- @field public destArea integer

@@ -129,17 +129,21 @@ void smlua_anim_util_reset() {
     sCustomAnimationHead = NULL;
 }
 
-void smlua_anim_util_register_animation(const char *name, s16 flags, s16 animYTransDivisor, s16 startFrame, s16 loopStart, s16 loopEnd, const s16 *values, const u16 *index) {
+void smlua_anim_util_register_animation(const char *name, s16 flags, s16 animYTransDivisor, s16 startFrame, s16 loopStart, s16 loopEnd, s16 *values, u16 *index) {
 
     // NULL-checks
     if (!name) {
         LOG_LUA_LINE("smlua_anim_util_register_animation: Parameter 'name' is NULL");
+        free(values);
+        free(index);
         return;
     }
 
     // Check if the name is not already taken
     if (get_custom_animation_node(name)) {
         LOG_LUA_LINE("smlua_anim_util_register_animation: An animation named '%s' already exists", name);
+        free(values);
+        free(index);
         return;
     }
 

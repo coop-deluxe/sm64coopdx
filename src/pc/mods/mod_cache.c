@@ -125,14 +125,18 @@ struct ModCacheEntry* mod_cache_get_from_path(const char* path, bool validate) {
     return NULL;
 }
 
-void mod_cache_add_internal(u8* dataHash, u64 lastLoaded, const char* path) {
+void mod_cache_add_internal(u8* dataHash, u64 lastLoaded, char* inPath) {
+    char* path = strdup(inPath);
+
     // sanity check
     if (path == NULL || strlen(path) == 0) {
         LOG_ERROR("Invalid path");
+        free(path);
         return;
     }
     if (!fs_sys_file_exists(path)) {
         LOG_ERROR("File does not exist: %s", path);
+        free(path);
         return;
     }
     normalize_path((char*)path);
@@ -146,6 +150,7 @@ void mod_cache_add_internal(u8* dataHash, u64 lastLoaded, const char* path) {
     }
     if (!foundNonZero) {
         LOG_ERROR("Hash was all zeros for path '%s'", path);
+        free(path);
         return;
     }
 
@@ -215,13 +220,13 @@ void mod_cache_add(struct Mod* mod, struct ModFile* file, bool useFilePath) {
     struct ModCacheEntry* entry = mod_cache_get_from_path(file->cachedPath, false);
     if (useFilePath && entry) {
         memcpy(file->dataHash, entry->dataHash, 16);
-        mod_cache_add_internal(file->dataHash, 0, strdup(file->cachedPath));
+        mod_cache_add_internal(file->dataHash, 0, (char*)file->cachedPath);
         return;
     }
 
     // hash and cache
     mod_cache_md5(file->cachedPath, file->dataHash);
-    mod_cache_add_internal(file->dataHash, 0, strdup(file->cachedPath));
+    mod_cache_add_internal(file->dataHash, 0, (char*)file->cachedPath);
 }
 
 void mod_cache_update(struct Mod* mod, struct ModFile* file) {
@@ -244,7 +249,7 @@ void mod_cache_update(struct Mod* mod, struct ModFile* file) {
 
     // hash and cache
     mod_cache_md5(file->cachedPath, file->dataHash);
-    mod_cache_add_internal(file->dataHash, 0, strdup(file->cachedPath));
+    mod_cache_add_internal(file->dataHash, 0, (char*)file->cachedPath);
 }
 
 void mod_cache_load(void) {
@@ -280,10 +285,12 @@ void mod_cache_load(void) {
         fread(&lastLoaded, sizeof(u64), 1, fp);
         fread(&pathLen, sizeof(u16), 1, fp);
 
-        const char* path = calloc(pathLen + 1, sizeof(char*));
-        fread((char*)path, sizeof(char*), pathLen + 1, fp);
+        char* path = calloc(pathLen + 1, sizeof(char));
+        fread((char*)path, sizeof(char), pathLen + 1, fp);
 
-        mod_cache_add_internal(dataHash, lastLoaded, path);
+        mod_cache_add_internal(dataHash, lastLoaded, (char*)path);
+
+        free((void*)path);
         count++;
     }
     LOG_INFO("Loading mod cache complete");

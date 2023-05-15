@@ -614,6 +614,7 @@ void warp_credits(void) {
 }
 
 void check_instant_warp(void) {
+    if (!gCurrentArea) { return; }
     s16 cameraAngle;
     struct Surface *floor;
 
@@ -628,8 +629,7 @@ void check_instant_warp(void) {
 
     if ((floor = gMarioStates[0].floor) != NULL) {
         s32 index = floor->type - SURFACE_INSTANT_WARP_1B;
-        if (index >= INSTANT_WARP_INDEX_START && index < INSTANT_WARP_INDEX_STOP
-            && gCurrentArea->instantWarps != NULL) {
+        if (index >= INSTANT_WARP_INDEX_START && index < INSTANT_WARP_INDEX_STOP && gCurrentArea->instantWarps != NULL) {
             struct InstantWarp *warp = &gCurrentArea->instantWarps[index];
             if (warp->id != 0) {
                 if (gRejectInstantWarp > 0) {
@@ -1161,7 +1161,7 @@ static void start_demo(void) {
             gChangeLevel = gCurrLevelNum;
         }
 
-        if (sDemoNumber <= 6 || sDemoNumber > -1) {
+        if (sDemoNumber <= 6 && sDemoNumber > -1) {
             gCurrDemoInput = NULL;
             alloc_anim_dma_table(&gDemo, gDemoInputs, gDemoTargetAnim);
             load_patchable_table(&gDemo, sDemoNumber);
@@ -1201,7 +1201,7 @@ s32 play_mode_normal(void) {
         }
     } else {
         if (gDjuiInMainMenu && gCurrDemoInput == NULL && configMenuDemos && !gInPlayerMenu) {
-            if ((++gDemoCountdown) == PRESS_START_DEMO_TIMER && (find_demo_number() && (sDemoNumber <= 6 || sDemoNumber > -1))) {
+            if ((++gDemoCountdown) == PRESS_START_DEMO_TIMER && (find_demo_number() && (sDemoNumber <= 6 && sDemoNumber > -1))) {
                 start_demo();
             }
         }

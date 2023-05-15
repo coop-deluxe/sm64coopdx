@@ -152,7 +152,7 @@ void bhv_mips_act_follow_path(void) {
     // Retrieve current waypoint.
     pathBase = segmented_to_virtual(sMipsPaths[0]);
     s32 length = get_trajectory_length((Trajectory*)pathBase);
-    if (o->oMipsStartWaypointIndex >= length) { return; }
+    if (o->oMipsStartWaypointIndex >= length || o->oMipsStartWaypointIndex < 0) { return; }
     waypoint = segmented_to_virtual(pathBase[o->oMipsStartWaypointIndex]);
 
     // Set start waypoint and follow the path from there.
@@ -267,6 +267,7 @@ static u8 bhv_mips_held_continue_dialog(void) {
 void bhv_mips_held(void) {
     s16 dialogID;
 
+    if (o->heldByPlayerIndex >= MAX_PLAYERS) { return; }
     struct Object* player = gMarioStates[o->heldByPlayerIndex].marioObj;
 
     o->header.gfx.node.flags |= GRAPH_RENDER_INVISIBLE;

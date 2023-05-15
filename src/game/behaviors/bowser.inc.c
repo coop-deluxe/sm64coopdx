@@ -1223,6 +1223,7 @@ void bowser_free_update(void) {
 }
 
 void bowser_held_update(void) {
+    if (o->heldByPlayerIndex >= MAX_PLAYERS) { return; }
     struct MarioState* marioState = &gMarioStates[o->heldByPlayerIndex];
     struct Object* player = marioState->marioObj;
 

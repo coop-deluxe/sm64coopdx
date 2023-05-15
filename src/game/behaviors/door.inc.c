@@ -30,7 +30,7 @@ u8 door_allow_walk_through(void) {
     }
 
     s32 cur = o->header.gfx.animInfo.animFrame;
-    s32 max = o->header.gfx.animInfo.curAnim->loopEnd - 2;
+    s32 max = o->header.gfx.animInfo.curAnim ? (o->header.gfx.animInfo.curAnim->loopEnd - 2) : 1;
     s32 min = max / 4;
 
     // make non-solid immediately for local actions so the camera doesn't glitch out

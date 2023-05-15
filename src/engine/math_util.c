@@ -196,7 +196,7 @@ void *vec3f_rotate_zxy(Vec3f dest, Vec3s rotate) {
     dest[1] = v[0] * (cx * sz) + v[1] * (cx * cz) + v[2] * -sx;
     dest[2] = v[0] * ((cysz * sx) - sycz) + v[1] * ((cycz * sx) + sysz) + v[2] * (cx * cy);
     
-    return &dest;
+    return dest;
 }
 
 #pragma GCC diagnostic pop

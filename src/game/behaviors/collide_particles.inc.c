@@ -11,7 +11,7 @@ void bhv_punch_tiny_triangle_loop(void) {
     if (o->oTimer == 0) {
         sp1E = o->oMoveAngleYaw;
         o->oCollisionParticleUnkF4 = 1.28f;
-        cur_obj_set_pos_relative(o->parentObj, 0.0f, 60.0f, 100.0f);
+        if (o->parentObj) { cur_obj_set_pos_relative(o->parentObj, 0.0f, 60.0f, 100.0f); }
         o->oMoveAngleYaw = sp1E;
     }
     cur_obj_move_using_fvel_and_gravity();
@@ -29,7 +29,7 @@ void bhv_punch_tiny_triangle_init(void) {
     for (i = 0; i < 6; i++) {
         triangle = spawn_object(o, MODEL_DIRT_ANIMATION, bhvPunchTinyTriangle);
         if (triangle == NULL) { continue; }
-        triangle->oMoveAngleYaw = o->parentObj->oMoveAngleYaw + D_8032F2CC[2 * i] + 0x8000;
+        if (o->parentObj) { triangle->oMoveAngleYaw = o->parentObj->oMoveAngleYaw + D_8032F2CC[2 * i] + 0x8000; }
         triangle->oVelY = sins(D_8032F2CC[2 * i + 1]) * 25.0f;
         triangle->oForwardVel = coss(D_8032F2CC[2 * i + 1]) * 25.0f;
     }
@@ -40,7 +40,7 @@ void bhv_wall_tiny_star_particle_loop(void) {
     if (o->oTimer == 0) {
         sp1E = o->oMoveAngleYaw;
         o->oCollisionParticleUnkF4 = 0.28f;
-        cur_obj_set_pos_relative(o->parentObj, 0.0f, 30.0f, 110.0f);
+        if (o->parentObj) { cur_obj_set_pos_relative(o->parentObj, 0.0f, 30.0f, 110.0f); }
         o->oMoveAngleYaw = sp1E;
     }
     cur_obj_move_using_fvel_and_gravity();

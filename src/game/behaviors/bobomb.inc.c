@@ -187,6 +187,7 @@ void bobomb_free_loop(void) {
 }
 
 void bobomb_held_loop(void) {
+    if (o->heldByPlayerIndex >= MAX_PLAYERS) { return; }
     o->header.gfx.node.flags |= GRAPH_RENDER_INVISIBLE;
     cur_obj_init_animation(1);
     struct Object* player = gMarioStates[o->heldByPlayerIndex].marioObj;

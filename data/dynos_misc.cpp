@@ -114,30 +114,6 @@ s32 DynOS_String_Width(const u8 *aStr64) {
 }
 
 //
-// Geo
-//
-
-static void _RelocateGraphNodePointers(struct GraphNode *aHead, u64 aOffset) {
-    struct GraphNode *_Node = aHead;
-    do {
-        if (_Node->prev) {
-            _Node->prev = (struct GraphNode *) ((u64) _Node->prev + aOffset);
-        }
-        if (_Node->next) {
-            _Node->next = (struct GraphNode *) ((u64) _Node->next + aOffset);
-        }
-        if (_Node->parent) {
-            _Node->parent = (struct GraphNode *) ((u64) _Node->parent + aOffset);
-        }
-        if (_Node->children) {
-            _Node->children = (struct GraphNode *) ((u64) _Node->children + aOffset);
-            _RelocateGraphNodePointers(_Node->children, aOffset);
-        }
-        _Node = _Node->next;
-    } while (_Node != aHead);
-}
-
-//
 // Scroll Targets
 //
 

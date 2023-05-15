@@ -1097,7 +1097,8 @@ ConfigRet ConfigRead(FILE *fp, Config **cfg)
 		else {
 			if ((ret = GetKeyVal(_cfg, p, &key, &val)) != CONFIG_OK)
 				goto error;
-
+			if (!sect) 
+				goto error;
 			if ((ret = ConfigAddString(_cfg, sect->name, key, val)) != CONFIG_OK)
 				goto error;
 		}

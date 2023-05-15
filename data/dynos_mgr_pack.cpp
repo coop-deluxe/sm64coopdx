@@ -25,7 +25,7 @@ static void ScanPackBins(struct PackData* aPack) {
         if (length > 4 && !strncmp(&_PackEnt->d_name[length - 4], ".bin", 4)) {
             String _ActorName = _PackEnt->d_name;
             _ActorName[length - 4] = '\0';
-            DynOS_Actor_LoadFromBinary(aPack->mPath, strdup(_ActorName.begin()), _FileName, true);
+            DynOS_Actor_LoadFromBinary(aPack->mPath, _ActorName.begin(), _FileName, true);
         }
 
         // check for textures
@@ -209,7 +209,7 @@ void DynOS_Pack_AddActor(PackData* aPackData, const char* aActorName, GfxData* a
     }
 
     s32 index = aPackData->mGfxData.Count();
-    aPackData->mGfxData.Add({ aActorName, aGfxData });
+    aPackData->mGfxData.Add({ strdup(aActorName), aGfxData });
 
     if (aPackData->mEnabled) {
         DynOS_Pack_ActivateActor(aPackData->mIndex, aPackData->mGfxData[index]);

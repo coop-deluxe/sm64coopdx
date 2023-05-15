@@ -89,6 +89,7 @@ s16 set_mario_animation(struct MarioState *m, s32 targetAnimID) {
     struct Object *o = m->marioObj;
     if (!o || !m->animation) { return 0; }
     struct Animation *targetAnim = m->animation->targetAnim;
+    if (!targetAnim) { return 0; }
 
     if (load_patchable_table(m->animation, targetAnimID)) {
         targetAnim->values = (void *) VIRTUAL_TO_PHYSICAL((u8 *) targetAnim + (uintptr_t) targetAnim->values);
@@ -124,6 +125,7 @@ s16 set_mario_anim_with_accel(struct MarioState *m, s32 targetAnimID, s32 accel)
     struct Object *o = m->marioObj;
     if (!o || !m->animation) { return 0; }
     struct Animation *targetAnim = m->animation->targetAnim;
+    if (!targetAnim) { return 0; }
 
     if (load_patchable_table(m->animation, targetAnimID)) {
         targetAnim->values = (void *) VIRTUAL_TO_PHYSICAL((u8 *) targetAnim + (uintptr_t) targetAnim->values);

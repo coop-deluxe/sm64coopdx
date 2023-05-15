@@ -128,18 +128,20 @@ void obj_update_gfx_pos_and_angle(struct Object *obj) {
 
 // Push the address of a behavior command to the object's behavior stack.
 static void cur_obj_bhv_stack_push(uintptr_t bhvAddr) {
-    gCurrentObject->bhvStack[gCurrentObject->bhvStackIndex] = bhvAddr;
+    if (gCurrentObject->bhvStackIndex < OBJECT_MAX_BHV_STACK) {
+        gCurrentObject->bhvStack[gCurrentObject->bhvStackIndex] = bhvAddr;
+    }
     gCurrentObject->bhvStackIndex++;
-    if (gCurrentObject->bhvStackIndex >= 8) { gCurrentObject->bhvStackIndex = 8 - 1; }
 }
 
 // Retrieve the last behavior command address from the object's behavior stack.
 static uintptr_t cur_obj_bhv_stack_pop(void) {
-    uintptr_t bhvAddr;
+    uintptr_t bhvAddr = 0;
 
     gCurrentObject->bhvStackIndex--;
-    if (gCurrentObject->bhvStackIndex >= 8) { gCurrentObject->bhvStackIndex = 0; }
-    bhvAddr = gCurrentObject->bhvStack[gCurrentObject->bhvStackIndex];
+    if (gCurrentObject->bhvStackIndex < OBJECT_MAX_BHV_STACK) {
+        bhvAddr = gCurrentObject->bhvStack[gCurrentObject->bhvStackIndex];
+    }
 
     return bhvAddr;
 }
@@ -1287,7 +1289,7 @@ void cur_obj_update(void) {
         // catch up the timer in total loop increments
         if (gCurrentObject->areaTimerType == AREA_TIMER_TYPE_LOOP) {
             u32 difference = (gNetworkAreaTimer - gCurrentObject->areaTimer);
-            if (difference >= gCurrentObject->areaTimerDuration) {
+            if (difference >= gCurrentObject->areaTimerDuration && gCurrentObject->areaTimerDuration) {
                 u32 catchup = difference / gCurrentObject->areaTimerDuration;
                 catchup *= gCurrentObject->areaTimerDuration;
                 gCurrentObject->areaTimer += catchup;

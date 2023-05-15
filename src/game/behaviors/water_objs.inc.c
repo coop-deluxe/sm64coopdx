@@ -71,7 +71,9 @@ void bhv_small_water_wave_loop(void) {
 }
 
 void bhv_bubble_player_loop(void) {
+    if (o->heldByPlayerIndex >= MAX_PLAYERS) { return; }
     struct MarioState* marioState = &gMarioStates[o->heldByPlayerIndex];
+    if (!marioState) { return; }
 
     // set position
     o->oPosX = marioState->pos[0];

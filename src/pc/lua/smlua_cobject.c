@@ -80,6 +80,7 @@ struct LuaObjectField* smlua_get_object_field_from_ot(struct LuaObjectTable* ot,
     s32 max = ot->fieldCount - 1;
     s32 i = (min + max) / 2;
     while (true) {
+        if (!ot->fields[i].key) { return NULL; }
         s32 rc = strcmp(key, ot->fields[i].key);
         if (rc == 0) {
             return &ot->fields[i];

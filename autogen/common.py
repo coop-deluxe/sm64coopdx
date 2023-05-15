@@ -218,6 +218,20 @@ def translate_type_to_lua(ptype):
 
     return ptype, None
 
+def translate_type_to_rnd(ltype):
+    if 'enum ' in ltype:
+        ltype = 'integer'
+    elif '[' in ltype:
+        ltype = 'null'
+    elif '{' in ltype:
+        ltype = 'null'
+    elif '}' in ltype:
+        ltype = 'null'
+    elif 'void*' in ltype:
+        ltype = 'null'
+
+    return 'rnd_' + ltype.strip().replace('`', '').replace(' ', '').split('<')[-1].split('>')[0].split('(')[0].split('[')[0].split('*')[0] + '()'
+
 def gen_comment_header(f):
     comment_h = "// " + f + " //"
     comment_l = "/" * len(comment_h)

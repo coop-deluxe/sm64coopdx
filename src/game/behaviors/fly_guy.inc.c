@@ -50,7 +50,7 @@ static void fly_guy_act_idle(void) {
                 o->oFlyGuyIdleTimer = 0;
                 o->oAction = FLY_GUY_ACT_APPROACH_MARIO;
             } else {
-                o->oFlyGuyUnusedJitter = o->oMoveAngleYaw + sFlyGuyJitterAmounts[o->oFlyGuyIdleTimer];
+                o->oFlyGuyUnusedJitter = o->oMoveAngleYaw + BHV_ARR(sFlyGuyJitterAmounts, o->oFlyGuyIdleTimer, s16);
                 o->oFlyGuyIdleTimer += 1;
             }
         }

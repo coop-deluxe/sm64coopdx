@@ -18,7 +18,7 @@
 void exec_anim_sound_state(struct SoundState *soundStates, u16 maxSoundStates) {
     if (!gCurrentObject) { return; }
     s32 stateIdx = gCurrentObject->oSoundStateID;
-    if (stateIdx >= maxSoundStates) { return; }
+    if (stateIdx < 0 || stateIdx >= maxSoundStates) { return; }
 
     switch (soundStates[stateIdx].playSound) {
         // since we have an array of sound states corresponding to

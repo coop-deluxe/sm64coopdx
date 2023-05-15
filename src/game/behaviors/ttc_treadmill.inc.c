@@ -70,5 +70,7 @@ void bhv_ttc_treadmill_update(void) {
         }
     }
 
-    o->oForwardVel = 0.084f * *o->oTTCTreadmillBigSurface;
+    if (o->oTTCTreadmillBigSurface) {
+        o->oForwardVel = 0.084f * *o->oTTCTreadmillBigSurface;
+    }
 }

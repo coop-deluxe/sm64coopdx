@@ -270,7 +270,6 @@ struct BehaviorValues gBehaviorValues = { 0 };
 
 struct PaintingValues gDefaultPaintingValues = {
     .cotmc_painting =     &cotmc_painting,
-
     .bob_painting =       &bob_painting,
     .ccm_painting =       &ccm_painting,
     .wf_painting =        &wf_painting,
@@ -285,7 +284,6 @@ struct PaintingValues gDefaultPaintingValues = {
     .ttc_painting =       &ttc_painting,
     .sl_painting =        &sl_painting,
     .thi_huge_painting =  &thi_huge_painting,
-
     .ttm_slide_painting = &ttm_slide_painting,
 };
 

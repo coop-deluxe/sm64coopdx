@@ -542,6 +542,7 @@ static u8 cage_ukiki_held_default_continue_dialog(void) {
  * Called by the main behavior function for the cage ukiki whenever it is held.
  */
 void cage_ukiki_held_loop(void) {
+    if (o->heldByPlayerIndex >= MAX_PLAYERS) { return; }
     struct MarioState* heldByMario = &gMarioStates[o->heldByPlayerIndex];
     if (heldByMario->playerIndex != 0) { return; }
 
@@ -593,6 +594,7 @@ u8 hat_ukiki_held_loop_2(void) { return o->oHeldState == HELD_HELD && o->oUkikiT
  * Called by the main behavior function for the cap ukiki whenever it is held.
  */
 void cap_ukiki_held_loop(void) {
+    if (o->heldByPlayerIndex >= MAX_PLAYERS) { return; }
     struct MarioState* heldByMario = &gMarioStates[o->heldByPlayerIndex];
     if (heldByMario->playerIndex != 0) { return; }
 
@@ -664,7 +666,6 @@ void bhv_ukiki_init(void) {
  * dependent on the held state and whick ukiki it is (cage or cap).
  */
 void bhv_ukiki_loop(void) {
-    struct Object* heldByPlayer = gMarioStates[o->heldByPlayerIndex].marioObj;
 
     switch(o->oHeldState) {
         case HELD_FREE:
@@ -675,7 +676,10 @@ void bhv_ukiki_loop(void) {
 
         case HELD_HELD:
             cur_obj_unrender_and_reset_state(UKIKI_ANIM_HELD, 0);
-            obj_copy_pos(o, heldByPlayer);
+            if (o->heldByPlayerIndex < MAX_PLAYERS) {
+                struct Object* heldByPlayer = gMarioStates[o->heldByPlayerIndex].marioObj;
+                obj_copy_pos(o, heldByPlayer);
+            }
 
             if (o->oBehParams2ndByte == UKIKI_CAP) {
                 cap_ukiki_held_loop();

@@ -55,7 +55,9 @@ void bhv_jumping_box_loop(void) {
             jumping_box_free_update();
             break;
         case HELD_HELD:
-            obj_copy_pos(o, gMarioStates[o->heldByPlayerIndex].marioObj);
+            if (o->heldByPlayerIndex < MAX_PLAYERS) {
+                obj_copy_pos(o, gMarioStates[o->heldByPlayerIndex].marioObj);
+            }
             cur_obj_set_model(smlua_model_util_load(E_MODEL_BREAKABLE_BOX_SMALL));
             cur_obj_unrender_and_reset_state(-1, 0);
             break;

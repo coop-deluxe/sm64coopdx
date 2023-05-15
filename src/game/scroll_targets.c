@@ -81,6 +81,7 @@ struct ScrollTarget* find_or_create_scroll_targets(u32 id) {
  */
 void add_vtx_scroll_target(u32 id, Vtx *vtx, u32 size) {
     struct ScrollTarget *scroll = find_or_create_scroll_targets(id);
+    if (!scroll || !scroll->vertices) { return; }
     Vtx* *newArray;
     u32 oldSize = sizeof(void*) * scroll->size;
     u32 newSize = oldSize + (sizeof(void*) * size);

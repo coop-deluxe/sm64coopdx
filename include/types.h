@@ -19,6 +19,8 @@
     #define BAD_RETURN(cmd) cmd
 #endif
 
+#define OBJECT_MAX_BHV_STACK 16
+
 struct Controller
 {
   /*0x00*/ s16 rawStickX;       //
@@ -211,7 +213,7 @@ struct Object
     /*0x1C8*/ u32 unused1;
     /*0x1CC*/ const BehaviorScript *curBhvCommand;
     /*0x1D0*/ u32 bhvStackIndex;
-    /*0x1D4*/ uintptr_t bhvStack[8];
+    /*0x1D4*/ uintptr_t bhvStack[OBJECT_MAX_BHV_STACK];
     /*0x1F4*/ s16 bhvDelayTimer;
     /*0x1F6*/ s16 respawnInfoType;
     /*0x1F8*/ f32 hitboxRadius;

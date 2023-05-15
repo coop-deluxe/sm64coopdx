@@ -2050,7 +2050,7 @@ f32 cur_obj_abs_y_dist_to_home(void) {
 s32 cur_obj_advance_looping_anim(void) {
     if (!o) { return 0; }
     s32 animFrame = o->header.gfx.animInfo.animFrame;
-    s32 loopEnd = o->header.gfx.animInfo.curAnim->loopEnd;
+    s32 loopEnd = o->header.gfx.animInfo.curAnim ? o->header.gfx.animInfo.curAnim->loopEnd : 1;
     s32 result;
 
     if (animFrame < 0) {
@@ -2060,7 +2060,7 @@ s32 cur_obj_advance_looping_anim(void) {
     } else {
         animFrame++;
     }
-
+    if (loopEnd == 0) { loopEnd = 1; }
     result = (animFrame << 16) / loopEnd;
 
     return result;
@@ -3070,7 +3070,7 @@ void clear_time_stop_flags(s32 flags) {
 }
 
 s32 cur_obj_can_mario_activate_textbox(struct MarioState* m, f32 radius, f32 height, UNUSED s32 unused) {
-    if (!o) { return 0; }
+    if (!o || !m) { return 0; }
     if (!m->visibleToEnemies) { return FALSE; }
     if (o->oDistanceToMario < 1500.0f) {
         f32 latDistToMario = lateral_dist_between_objects(o, m->marioObj);
@@ -3092,7 +3092,7 @@ s32 cur_obj_can_mario_activate_textbox_2(struct MarioState* m, f32 radius, f32 h
 }
 
 void cur_obj_end_dialog(struct MarioState* m, s32 dialogFlags, s32 dialogResult) {
-    if (!o) { return; }
+    if (!o || !m) { return; }
     if (m->playerIndex != 0) { return; }
 
     o->oDialogResponse = dialogResult;
@@ -3104,7 +3104,7 @@ void cur_obj_end_dialog(struct MarioState* m, s32 dialogFlags, s32 dialogResult)
 }
 
 s32 cur_obj_update_dialog(struct MarioState* m, s32 actionArg, s32 dialogFlags, s32 dialogID, UNUSED s32 unused, u8 (*inContinueDialogFunction)(void)) {
-    if (!o) { return 0; }
+    if (!o || !m) { return 0; }
     s32 dialogResponse = 0;
     UNUSED s32 doneTurning = TRUE;
 
@@ -3184,7 +3184,7 @@ s32 cur_obj_update_dialog(struct MarioState* m, s32 actionArg, s32 dialogFlags, 
 }
 
 s32 cur_obj_update_dialog_with_cutscene(struct MarioState* m, s32 actionArg, s32 dialogFlags, s32 cutsceneTable, s32 dialogID, u8 (*inContinueDialogFunction)(void)) {
-    if (!o) { return 0; }
+    if (!o || !m) { return 0; }
     s32 dialogResponse = 0;
     s32 doneTurning = TRUE;
 

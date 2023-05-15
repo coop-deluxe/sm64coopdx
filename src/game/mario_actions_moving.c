@@ -368,7 +368,7 @@ s32 apply_landing_accel(struct MarioState *m, f32 frictionFactor) {
 }
 
 void update_shell_speed(struct MarioState *m) {
-    if (!m) { return; }
+    if (!m || !m->floor) { return; }
     f32 maxTargetSpeed;
     f32 targetSpeed;
 
@@ -538,7 +538,7 @@ s32 begin_braking_action(struct MarioState *m) {
         return set_mario_action(m, ACT_STANDING_AGAINST_WALL, 0);
     }
 
-    if (m->forwardVel >= 16.0f && m->floor->normal.y >= 0.17364818f) {
+    if (m->forwardVel >= 16.0f && m->floor && m->floor->normal.y >= 0.17364818f) {
         return set_mario_action(m, ACT_BRAKING, 0);
     }
 
@@ -693,6 +693,9 @@ void anim_and_audio_for_hold_walk(struct MarioState *m) {
 
                     val08 = FALSE;
                 }
+                break;
+
+            default:
                 break;
         }
     }
@@ -1281,7 +1284,7 @@ s32 act_riding_shell_ground(struct MarioState *m) {
     }
 
     tilt_body_ground_shell(m, startYaw);
-    if (m->floor->type == SURFACE_BURNING) {
+    if (m->floor && m->floor->type == SURFACE_BURNING) {
         play_sound(SOUND_MOVING_RIDING_SHELL_LAVA, m->marioObj->header.gfx.cameraToObject);
     } else {
         play_sound(SOUND_MOVING_TERRAIN_RIDING_SHELL + m->terrainSoundAddend,
@@ -1827,7 +1830,7 @@ u32 common_landing_action(struct MarioState *m, s16 animation, u32 airAction) {
     set_mario_animation(m, animation);
     play_mario_landing_sound_once(m, SOUND_ACTION_TERRAIN_LANDING);
 
-    if (m->floor->type >= SURFACE_SHALLOW_QUICKSAND && m->floor->type <= SURFACE_MOVING_QUICKSAND) {
+    if (m->floor && m->floor->type >= SURFACE_SHALLOW_QUICKSAND && m->floor->type <= SURFACE_MOVING_QUICKSAND) {
         m->quicksandDepth += (4 - m->actionTimer) * 3.5f - 0.5f;
     }
 
@@ -1840,7 +1843,7 @@ s32 common_landing_cancels(struct MarioState *m, struct LandingAction *landingAc
     //! Everything here, including floor steepness, is checked before checking
     // if Mario is actually on the floor. This leads to e.g. remote sliding.
 
-    if (m->floor->normal.y < 0.2923717f) {
+    if (m->floor && m->floor->normal.y < 0.2923717f) {
         return mario_push_off_steep_floor(m, landingAction->verySteepAction, 0);
     }
 

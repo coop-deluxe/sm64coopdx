@@ -83,27 +83,29 @@ override_field_invisible = {
 }
 
 override_field_immutable = {
-    "MarioState": [ "playerIndex", "controller", "marioObj", "marioBodyState", "statusForCamera" ],
+    "MarioState": [ "playerIndex", "controller", "marioObj", "marioBodyState", "statusForCamera", "area" ],
+    "MarioAnimation": [ "animDmaTable" ],
     "ObjectNode": [ "next", "prev" ],
     "Character": [ "*" ],
     "NetworkPlayer": [ "*" ],
     "TextureInfo": [ "*" ],
-    "Object": ["oSyncID", "coopFlags"],
+    "Object": ["oSyncID", "coopFlags", "oChainChompSegments", "oWigglerSegments", "oHauntedChairUnk100", "oTTCTreadmillBigSurface", "oTTCTreadmillSmallSurface", "bhvStackIndex", "respawnInfoType" ],
     "GlobalObjectAnimations": [ "*"],
     "SpawnParticlesInfo": [ "model" ],
     "MarioBodyState": [ "updateTorsoTime" ],
-    "Area": [ "localAreaTimer", "nextSyncID" ],
+    "Area": [ "localAreaTimer", "nextSyncID", "unk04" ],
     "Mod": [ "*" ],
     "ModFile": [ "*" ],
     "BassAudio": [ "*" ],
     "Painting": [ "id", "imageCount", "textureType", "textureWidth", "textureHeight" ],
-    "SpawnInfo": [ "syncID" ],
+    "SpawnInfo": [ "syncID", "next", "unk18" ],
     "CustomLevelInfo": [ "next" ],
-    "GraphNode": [ "next", "prev", "parent" ],
+    "GraphNode": [ "*" ],
+    "GraphNodeObject": [  "*" ],
     "ObjectWarpNode": [ "next "],
-    "SpawnInfo": [ "next" ],
     "Animation": [ "length" ],
     "AnimationTable": [ "count" ],
+    "Controller": [ "controllerData", "statusData" ],
 }
 
 override_field_version_excludes = {
@@ -242,9 +244,34 @@ def parse_structs(extracted):
 
 ############################################################################
 
-def output_fuzz_struct(struct):
+fuzz_from = './autogen/fuzz_template.lua'
+fuzz_to = '/home/djoslin/.local/share/sm64ex-coop/mods/test-fuzz.lua'
+fuzz_structs = ""
+fuzz_structs_calls = ""
+fuzz_template_str = None
+
+def output_fuzz_struct_calls(struct):
     sid = struct['identifier']
-    print('function Nuke' + sid + "(struct)")
+    global fuzz_template_str
+    if fuzz_template_str == None:
+        with open(fuzz_from) as f:
+            fuzz_template_str = f.read()
+
+    global fuzz_structs_calls
+
+    rnd_call = 'rnd_' + sid + '()'
+    if rnd_call in fuzz_template_str:
+        fuzz_structs_calls += '        function() Fuzz' + sid + '(rnd_' + sid + '()) end,\n'
+    else:
+        fuzz_structs_calls += '        -- function() Fuzz' + sid + '(rnd_' + sid + '()) end,\n'
+
+def output_fuzz_struct(struct):
+    output_fuzz_struct_calls(struct)
+    sid = struct['identifier']
+
+    s_out = 'function Fuzz' + sid + "(struct)\n"
+
+    s_out += '    local funcs = {\n'
     for field in struct['fields']:
         fid, ftype, fimmutable, lvt, lot = get_struct_field_info(struct, field)
         if fimmutable == 'true':
@@ -252,14 +279,48 @@ def output_fuzz_struct(struct):
         if sid in override_field_invisible:
             if fid in override_field_invisible[sid]:
                 continue
+
+        if '(' in fid or '[' in fid or ']' in fid:
+            continue
+
+        ptype, plink = translate_type_to_lua(ftype)
+        rnd_line = translate_type_to_rnd(ptype)
+
+        s_out += '        function() '
+
         if lvt == 'LVT_COBJECT':
-            print('    Fuzz' + ftype.replace('struct ', '') + '(struct.' + fid + ')')
+            s_out += 'Fuzz' + ftype.replace('struct ', '') + '(struct.' + fid + ')'
         elif lvt == 'LVT_COBJECT_P':
-            print('    struct.' + fid + ' = nil')
+            s_out += 'struct.' + fid + ' = ' + rnd_line + ''
         else:
-            print('    struct.' + fid + ' = 0')
-    print('end')
-    print('')
+            s_out += 'struct.' + fid + ' = ' + rnd_line + ''
+
+        s_out += ' end,\n'
+    s_out += '    }\n'
+
+    s_out += """
+    for i = #funcs, 2, -1 do
+      local j = math.random(i)
+      funcs[i], funcs[j] = funcs[j], funcs[i]
+    end
+
+    for k,v in pairs(funcs) do
+        v()
+    end
+"""
+
+    s_out += 'end\n\n'
+
+    global fuzz_structs
+    fuzz_structs += s_out
+
+def output_fuzz_file():
+    global fuzz_structs
+    global fuzz_structs_calls
+    with open(fuzz_from) as f:
+        file_str = f.read()
+    with open(fuzz_to, 'w') as f:
+        f.write(file_str.replace('-- $[STRUCTS]', fuzz_structs).replace('-- $[FUZZ-STRUCTS]', fuzz_structs_calls))
 
 ############################################################################
 
@@ -560,6 +621,9 @@ def build_files():
 
     doc_structs(parsed)
     def_structs(parsed)
+
+    if len(sys.argv) >= 2 and sys.argv[1] == 'fuzz':
+        output_fuzz_file()
 
     global total_structs
     global total_fields
