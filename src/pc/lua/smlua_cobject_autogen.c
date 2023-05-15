@@ -632,14 +632,14 @@ static struct LuaObjectField sGlobalTexturesFields[LUA_GLOBAL_TEXTURES_FIELD_COU
 
 #define LUA_GRAPH_NODE_FIELD_COUNT 7
 static struct LuaObjectField sGraphNodeFields[LUA_GRAPH_NODE_FIELD_COUNT] = {
-    { "children",   LVT_COBJECT_P, offsetof(struct GraphNode, children),   true, LOT_GRAPHNODE },
-    { "extraFlags", LVT_U8,        offsetof(struct GraphNode, extraFlags), true, LOT_NONE      },
-    { "flags",      LVT_S16,       offsetof(struct GraphNode, flags),      true, LOT_NONE      },
-//  { "georef",     LVT_???,       offsetof(struct GraphNode, georef),     true, LOT_???       }, <--- UNIMPLEMENTED
-    { "next",       LVT_COBJECT_P, offsetof(struct GraphNode, next),       true, LOT_GRAPHNODE },
-    { "parent",     LVT_COBJECT_P, offsetof(struct GraphNode, parent),     true, LOT_GRAPHNODE },
-    { "prev",       LVT_COBJECT_P, offsetof(struct GraphNode, prev),       true, LOT_GRAPHNODE },
-    { "type",       LVT_S16,       offsetof(struct GraphNode, type),       true, LOT_NONE      },
+    { "children",   LVT_COBJECT_P, offsetof(struct GraphNode, children),   true,  LOT_GRAPHNODE },
+    { "extraFlags", LVT_U8,        offsetof(struct GraphNode, extraFlags), false, LOT_NONE      },
+    { "flags",      LVT_S16,       offsetof(struct GraphNode, flags),      false, LOT_NONE      },
+//  { "georef",     LVT_???,       offsetof(struct GraphNode, georef),     true,  LOT_???       }, <--- UNIMPLEMENTED
+    { "next",       LVT_COBJECT_P, offsetof(struct GraphNode, next),       true,  LOT_GRAPHNODE },
+    { "parent",     LVT_COBJECT_P, offsetof(struct GraphNode, parent),     true,  LOT_GRAPHNODE },
+    { "prev",       LVT_COBJECT_P, offsetof(struct GraphNode, prev),       true,  LOT_GRAPHNODE },
+    { "type",       LVT_S16,       offsetof(struct GraphNode, type),       true,  LOT_NONE      },
 };
 
 #define LUA_GRAPH_NODE_OBJECT_FIELD_COUNT 26

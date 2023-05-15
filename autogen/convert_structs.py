@@ -100,7 +100,7 @@ override_field_immutable = {
     "Painting": [ "id", "imageCount", "textureType", "textureWidth", "textureHeight" ],
     "SpawnInfo": [ "syncID", "next", "unk18" ],
     "CustomLevelInfo": [ "next" ],
-    "GraphNode": [ "*" ],
+    "GraphNode": [ "children", "next", "parent", "prev", "type" ],
     "GraphNodeObject": [  "*" ],
     "ObjectWarpNode": [ "next "],
     "Animation": [ "length" ],
