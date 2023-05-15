@@ -145,12 +145,12 @@
 | nextSyncID | `integer` | read-only |
 | numRedCoins | `integer` |  |
 | numSecrets | `integer` |  |
-| objectSpawnInfos | [SpawnInfo](structs.md#SpawnInfo) |  |
-| paintingWarpNodes | [WarpNode](structs.md#WarpNode) |  |
+| objectSpawnInfos | [SpawnInfo](structs.md#SpawnInfo) | read-only |
+| paintingWarpNodes | [WarpNode](structs.md#WarpNode) | read-only |
 | surfaceRooms | `Pointer` <`integer`> | read-only |
 | terrainData | `Pointer` <`integer`> | read-only |
 | terrainType | `integer` |  |
-| warpNodes | [ObjectWarpNode](structs.md#ObjectWarpNode) |  |
+| warpNodes | [ObjectWarpNode](structs.md#ObjectWarpNode) | read-only |
 
 [:arrow_up_small:](#)
 

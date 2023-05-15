@@ -952,9 +952,17 @@ ifeq ($(WINDOWS_BUILD),999)
 endif
 
 ifeq ($(ASAN),1)
-  EXTRA_CFLAGS += -fsanitize=address -fsanitize=bounds-strict -fsanitize=undefined -ggdb
-  EXTRA_CPP_FLAGS += -fsanitize=address -fsanitize=bounds-strict -fsanitize=undefined -ggdb
-  LDFLAGS += -fsanitize=address -fsanitize=bounds-strict -fsanitize=undefined -static-libasan
+
+  ifeq ($(COMPILER),gcc)
+    EXTRA_CFLAGS += -fsanitize=address -fsanitize=bounds-strict -fsanitize=undefined -ggdb
+    EXTRA_CPP_FLAGS += -fsanitize=address -fsanitize=bounds-strict -fsanitize=undefined -ggdb
+    LDFLAGS += -fsanitize=address -fsanitize=bounds-strict -fsanitize=undefined -static-libasan
+  else ifeq ($(COMPILER),clang)
+    EXTRA_CFLAGS += -fsanitize=address -fsanitize=undefined -ggdb
+    EXTRA_CPP_FLAGS += -fsanitize=address -fsanitize=undefined -ggdb
+    LDFLAGS += -fsanitize=address -fsanitize=undefined
+  endif
+
 endif
 
 # Coop specific libraries

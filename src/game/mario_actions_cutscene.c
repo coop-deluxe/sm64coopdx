@@ -3049,8 +3049,7 @@ static s32 check_for_instant_quicksand(struct MarioState *m) {
     }
     if (m->action == ACT_BUBBLED) { return FALSE; }
 
-    if (m->floor->type == SURFACE_INSTANT_QUICKSAND && m->action & ACT_FLAG_INVULNERABLE
-        && m->action != ACT_QUICKSAND_DEATH && m->action != ACT_SHOCKED) {
+    if (m->floor && m->floor->type == SURFACE_INSTANT_QUICKSAND && m->action & ACT_FLAG_INVULNERABLE && m->action != ACT_QUICKSAND_DEATH && m->action != ACT_SHOCKED) {
         update_mario_sound_and_camera(m);
         return drop_and_set_mario_action(m, ACT_QUICKSAND_DEATH, 0);
     }

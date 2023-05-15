@@ -450,7 +450,6 @@ static void chain_chomp_act_move(void) {
  */
 static void chain_chomp_act_unload_chain(void) {
     cur_obj_hide();
-    dynamic_pool_free(gLevelPool, o->oChainChompSegments);
 
     o->oAction = CHAIN_CHOMP_ACT_UNINITIALIZED;
 

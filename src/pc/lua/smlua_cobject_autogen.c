@@ -72,14 +72,14 @@ static struct LuaObjectField sAreaFields[LUA_AREA_FIELD_COUNT] = {
     { "nextSyncID",          LVT_U32,       offsetof(struct Area, nextSyncID),          true,  LOT_NONE           },
     { "numRedCoins",         LVT_U8,        offsetof(struct Area, numRedCoins),         false, LOT_NONE           },
     { "numSecrets",          LVT_U8,        offsetof(struct Area, numSecrets),          false, LOT_NONE           },
-    { "objectSpawnInfos",    LVT_COBJECT_P, offsetof(struct Area, objectSpawnInfos),    false, LOT_SPAWNINFO      },
-    { "paintingWarpNodes",   LVT_COBJECT_P, offsetof(struct Area, paintingWarpNodes),   false, LOT_WARPNODE       },
+    { "objectSpawnInfos",    LVT_COBJECT_P, offsetof(struct Area, objectSpawnInfos),    true,  LOT_SPAWNINFO      },
+    { "paintingWarpNodes",   LVT_COBJECT_P, offsetof(struct Area, paintingWarpNodes),   true,  LOT_WARPNODE       },
     { "surfaceRooms",        LVT_S8_P,      offsetof(struct Area, surfaceRooms),        true,  LOT_POINTER        },
     { "terrainData",         LVT_S16_P,     offsetof(struct Area, terrainData),         true,  LOT_POINTER        },
     { "terrainType",         LVT_U16,       offsetof(struct Area, terrainType),         false, LOT_NONE           },
 //  { "unk04",               LVT_COBJECT_P, offsetof(struct Area, unk04),               true,  LOT_???            }, <--- UNIMPLEMENTED
 //  { "unused28",            LVT_COBJECT_P, offsetof(struct Area, unused28),            false, LOT_???            }, <--- UNIMPLEMENTED
-    { "warpNodes",           LVT_COBJECT_P, offsetof(struct Area, warpNodes),           false, LOT_OBJECTWARPNODE },
+    { "warpNodes",           LVT_COBJECT_P, offsetof(struct Area, warpNodes),           true,  LOT_OBJECTWARPNODE },
 //  { "whirlpools",          LOT_???,       offsetof(struct Area, whirlpools),          false, LOT_???            }, <--- UNIMPLEMENTED
 };
 

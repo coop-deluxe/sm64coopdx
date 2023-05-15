@@ -75,7 +75,7 @@ void bhv_beta_trampoline_top_loop(void) {
     // Since the trampoline never moves, this doesn't do anything.
     // Maybe they intended to decrease the trampoline's position
     // when Mario's on it in this if statement?
-    if (gMarioObject->platform == o) {
+    if (gMarioObject && gMarioObject->platform == o) {
         o->oBetaTrampolineMarioOnTrampoline = TRUE;
     } else {
         o->oBetaTrampolineMarioOnTrampoline = FALSE;

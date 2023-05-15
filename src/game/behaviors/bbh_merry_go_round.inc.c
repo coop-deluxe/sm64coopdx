@@ -25,7 +25,9 @@ static void handle_merry_go_round_music(void) {
         struct Object *marioObject = gMarioObjects[0];
         u16 marioFloorType = 0;
 
-        find_floor(marioObject->oPosX, marioObject->oPosY, marioObject->oPosZ, &marioFloor);
+        if (marioObject) {
+            find_floor(marioObject->oPosX, marioObject->oPosY, marioObject->oPosZ, &marioFloor);
+        }
 
         if (marioFloor != NULL) {
             marioFloorType = marioFloor->type;

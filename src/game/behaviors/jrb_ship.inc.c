@@ -39,8 +39,9 @@ void bhv_ship_part_3_loop(void) {
     o->oFaceAngleRoll = sins(o->oShipPart3UnkF8) * 1024.0f;
     o->oAngleVelPitch = o->oFaceAnglePitch - sp1E;
     o->oAngleVelRoll = o->oFaceAngleRoll - sp1C;
-    if (gMarioObject->oPosY > 1000.0f)
+    if (gMarioObject && gMarioObject->oPosY > 1000.0f) {
         cur_obj_play_sound_1(SOUND_ENV_BOAT_ROCKING1);
+    }
 }
 
 void bhv_jrb_sliding_box_loop(void) {
@@ -103,13 +104,18 @@ void bhv_jrb_sliding_box_loop(void) {
     o->oJrbSlidingBoxUnkFC = sins(o->oJrbSlidingBoxUnkF8) * 20.0f;
     o->oJrbSlidingBoxUnkF8 += 0x100;
     o->oParentRelativePosZ += o->oJrbSlidingBoxUnkFC;
-    if (gMarioObject->oPosY > 1000.0f)
-        if (absf(o->oJrbSlidingBoxUnkFC) > 3.0f)
+    if (gMarioObject && gMarioObject->oPosY > 1000.0f) {
+        if (absf(o->oJrbSlidingBoxUnkFC) > 3.0f) {
             cur_obj_play_sound_1(SOUND_AIR_ROUGH_SLIDE);
+        }
+    }
+
     obj_set_hitbox(o, &sSkullSlidingBoxHitbox);
-    if (!(o->oJrbSlidingBoxUnkF8 & 0x7FFF))
+    if (!(o->oJrbSlidingBoxUnkF8 & 0x7FFF)) {
         cur_obj_become_tangible();
-    if (obj_check_if_collided_with_object(o, gMarioObject)) {
+    }
+
+    if (gMarioObject && obj_check_if_collided_with_object(o, gMarioObject)) {
         o->oInteractStatus = 0;
         cur_obj_become_intangible();
     }

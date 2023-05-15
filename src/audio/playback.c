@@ -1064,6 +1064,7 @@ void audio_list_push_front(struct AudioListItem *list, struct AudioListItem *ite
 }
 
 void audio_list_remove(struct AudioListItem *item) {
+    if (!item) { return; }
     // remove 'item' from the list it's in, if any
     if (item->prev == NULL) {
         eu_stubbed_printf_0("Already Cut\n");

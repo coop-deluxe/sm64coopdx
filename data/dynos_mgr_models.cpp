@@ -13,7 +13,8 @@ struct ScheduledFreePool {
 };
 
 static struct DynamicPool* sModelPools[MODEL_POOL_MAX] = { 0 };
-static std::map<void*, struct GraphNode*> sModelMap[MODEL_POOL_MAX];
+static std::map<void*, struct GraphNode*> sGraphNodeMap[MODEL_POOL_MAX];
+static std::map<u32, struct GraphNode*> sModelIdMap;
 static std::vector<struct ScheduledFreePool> sPoolsToFree;
 
 struct GraphNode* DynOS_Model_LoadGeo(enum ModelPool aModelPool, void* aAsset) {
@@ -26,7 +27,7 @@ struct GraphNode* DynOS_Model_LoadGeo(enum ModelPool aModelPool, void* aAsset) {
     }
 
     // check map
-    auto& map = sModelMap[aModelPool];
+    auto& map = sGraphNodeMap[aModelPool];
     if (map.count(aAsset)) {
         return map[aAsset];
     }
@@ -49,7 +50,7 @@ struct GraphNode* DynOS_Model_LoadDl(enum ModelPool aModelPool, u8 aLayer, void*
     }
 
     // check map
-    auto& map = sModelMap[aModelPool];
+    auto& map = sGraphNodeMap[aModelPool];
     if (map.count(aAsset)) {
         return map[aAsset];
     }
@@ -75,7 +76,7 @@ void DynOS_Model_ClearPool(enum ModelPool aModelPool) {
     sModelPools[aModelPool] = NULL;
 
     // clear map
-    auto& map = sModelMap[aModelPool];
+    auto& map = sGraphNodeMap[aModelPool];
     map.clear();
 }
 

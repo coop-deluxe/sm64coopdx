@@ -21,7 +21,7 @@ void bhv_wf_elevator_tower_platform_loop(void) {
 
     switch (o->oAction) {
         case 0:
-            if (gMarioObject->platform == o) {
+            if (gMarioObject && gMarioObject->platform == o) {
                 o->oAction++;
                 network_send_object(o);
             }

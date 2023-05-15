@@ -865,6 +865,7 @@ void update_mario_sound_and_camera(struct MarioState *m) {
 
     // only update for local player
     if (m != &gMarioStates[0]) { return; }
+    if (!m->area || !m->area->camera) { return; }
 
     u32 action = m->action;
     s32 camPreset = m->area->camera->mode;
@@ -1332,7 +1333,7 @@ s32 check_common_hold_action_exits(struct MarioState *m) {
  */
 s32 transition_submerged_to_walking(struct MarioState *m) {
     if (!m) { return FALSE; }
-    if (m->playerIndex == 0) {
+    if (m->playerIndex == 0 && m->area && m->area->camera) {
         set_camera_mode(m->area->camera, m->area->camera->defMode, 1);
     }
 

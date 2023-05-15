@@ -5429,7 +5429,7 @@ void warp_camera(f32 displacementX, f32 displacementY, f32 displacementZ) {
     struct LinearTransitionPoint *start = &sModeInfo.transitionStart;
     struct LinearTransitionPoint *end = &sModeInfo.transitionEnd;
 
-    gCurrLevelArea = gCurrLevelNum * 16 + gCurrentArea->index;
+    gCurrLevelArea = gCurrLevelNum * 16 + (gCurrentArea ? gCurrentArea->index : 0);
     displacement[0] = displacementX;
     displacement[1] = displacementY;
     displacement[2] = displacementZ;

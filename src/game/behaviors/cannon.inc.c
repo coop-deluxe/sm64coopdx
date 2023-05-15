@@ -75,7 +75,7 @@ void opened_cannon_act_6(void) {
                 o->oMoveAngleYaw = sins(o->oCannonUnkF4) * 0x4000 + ((s16)(o->oBehParams2ndByte << 8));
                 o->oCannonUnkF4 += 0x400;
             } else if (o->oTimer < 26) {
-            } else if (o->oCannonPlayerIndex < MAX_PLAYERS) {
+            } else if (o->oCannonPlayerIndex >= 0 && o->oCannonPlayerIndex < MAX_PLAYERS) {
                 struct MarioState* controlledBy = &gMarioStates[o->oCannonPlayerIndex];
                 if (controlledBy && controlledBy->marioObj != NULL) {
                     controlledBy->marioObj->oMarioCannonObjectYaw = o->oMoveAngleYaw;
@@ -110,7 +110,7 @@ void opened_cannon_act_1(void) {
     if (o->oCannonPlayerIndex == 0) {
         cur_obj_become_intangible();
         cur_obj_disable_rendering();
-    } else if (o->oCannonPlayerIndex < MAX_PLAYERS) {
+    } else if (o->oCannonPlayerIndex >= 0 && o->oCannonPlayerIndex < MAX_PLAYERS) {
         struct MarioState* controlledBy = &gMarioStates[o->oCannonPlayerIndex];
         o->oMoveAnglePitch = 14563 + controlledBy->faceAngle[0] * -0.5f;
         if (controlledBy->marioObj != NULL) {

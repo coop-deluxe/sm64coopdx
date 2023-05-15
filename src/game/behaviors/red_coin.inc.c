@@ -50,7 +50,9 @@ void bhv_red_coin_loop(void) {
         // ...and there is a red coin star in the level...
         if (o->parentObj != NULL) {
             s16 redCoins = count_objects_with_behavior(bhvRedCoin) - 1;
-            o->parentObj->oHiddenStarTriggerCounter = gCurrentArea->numRedCoins - redCoins;
+            if (gCurrentArea) {
+                o->parentObj->oHiddenStarTriggerCounter = gCurrentArea->numRedCoins - redCoins;
+            }
             
             // Set the last person who interacted with a red coin to the 
             // parent so only they get the star cutscene.

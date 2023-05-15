@@ -84,6 +84,9 @@ void DynOS_Anim_Swap(void *aPtr) {
         if (_AnimIndex == -1) {
             return;
         }
+        if (_AnimIndex >= _GfxData->mAnimationTable.Count()) {
+            return;
+        }
 
         // Animation data
         const AnimData *_AnimData = (const AnimData *) _GfxData->mAnimationTable[_AnimIndex].second;

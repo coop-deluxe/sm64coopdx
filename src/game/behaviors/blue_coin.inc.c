@@ -135,7 +135,7 @@ void bhv_blue_coin_switch_loop(void) {
         case BLUE_COIN_SWITCH_ACT_IDLE:
             // If Mario is on the switch and has ground-pounded,
             // recede and get ready to start ticking.
-            if (gMarioObject->platform == o) {
+            if (gMarioObject && gMarioObject->platform == o) {
                 if (determine_interaction(&gMarioStates[0], o) & INT_GROUND_POUND) {
                     // Set to BLUE_COIN_SWITCH_ACT_RECEDING
                     o->oAction++;
@@ -164,7 +164,9 @@ void bhv_blue_coin_switch_loop(void) {
                 // Set to BLUE_COIN_SWITCH_ACT_TICKING
                 o->oAction++;
                 // ???
-                o->oPosY = gMarioObject->oPosY - 40.0f;
+                if (gMarioObject) {
+                    o->oPosY = gMarioObject->oPosY - 40.0f;
+                }
 
                 // Spawn particles. There's a function that calls this same function
                 // with the same arguments, spawn_mist_particles, why didn't they just call that?

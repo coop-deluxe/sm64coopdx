@@ -93,7 +93,7 @@ override_field_immutable = {
     "GlobalObjectAnimations": [ "*"],
     "SpawnParticlesInfo": [ "model" ],
     "MarioBodyState": [ "updateTorsoTime" ],
-    "Area": [ "localAreaTimer", "nextSyncID", "unk04" ],
+    "Area": [ "localAreaTimer", "nextSyncID", "unk04", "objectSpawnInfos", "paintingWarpNodes", "warpNodes" ],
     "Mod": [ "*" ],
     "ModFile": [ "*" ],
     "BassAudio": [ "*" ],

@@ -66,7 +66,13 @@ void bhv_ttc_treadmill_update(void) {
                 approach_f32_ptr(&o->oTTCTreadmillSpeed, o->oTTCTreadmillTargetSpeed, 10.0f);
             }
 
-            *o->oTTCTreadmillBigSurface = *o->oTTCTreadmillSmallSurface = o->oTTCTreadmillSpeed;
+            if (o->oTTCTreadmillSmallSurface) {
+                *o->oTTCTreadmillSmallSurface = o->oTTCTreadmillSpeed;
+            }
+
+            if (o->oTTCTreadmillBigSurface) {
+                *o->oTTCTreadmillBigSurface = o->oTTCTreadmillSpeed;
+            }
         }
     }
 

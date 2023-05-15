@@ -696,6 +696,7 @@ void anim_and_audio_for_hold_walk(struct MarioState *m) {
                 break;
 
             default:
+                val08 = FALSE;
                 break;
         }
     }
