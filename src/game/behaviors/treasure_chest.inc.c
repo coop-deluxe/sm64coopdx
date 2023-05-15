@@ -186,7 +186,7 @@ void bhv_treasure_chest_ship_loop(void) {
             break;
 
         case 1:
-            if (gEnvironmentRegions != NULL) {
+            if (gEnvironmentRegions != NULL && gEnvironmentRegionsLength > 6) {
                 gEnvironmentRegions[6] += -5;
                 play_sound(SOUND_ENV_WATER_DRAIN, gGlobalSoundSource);
                 set_environmental_camera_shake(SHAKE_ENV_JRB_SHIP_DRAIN);

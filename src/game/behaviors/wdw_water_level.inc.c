@@ -26,10 +26,14 @@ void bhv_init_changing_water_level_loop(void) {
 
     if (gCurrentObject->oAction == 0) {
         gCurrentObject->oAction++;
-    } else if (gCurrentObject->oTimer < 10)
-        *gEnvironmentLevels = gEnvironmentRegions[6];
-    else {
-        gEnvironmentRegions[6] = *gEnvironmentLevels + sins(o->oWaterLevelTriggerUnkF4) * 20.0f;
+    } else if (gCurrentObject->oTimer < 10) {
+        if (gEnvironmentRegions && gEnvironmentRegionsLength > 6) {
+            *gEnvironmentLevels = gEnvironmentRegions[6];
+        }
+    } else {
+        if (gEnvironmentRegions && gEnvironmentRegionsLength > 6) {
+            gEnvironmentRegions[6] = *gEnvironmentLevels + sins(o->oWaterLevelTriggerUnkF4) * 20.0f;
+        }
         gCurrentObject->oWaterLevelTriggerUnkF4 += 0x200;
     }
 }

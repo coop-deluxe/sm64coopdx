@@ -47,8 +47,6 @@ static struct SurfaceNode *alloc_surface_node(void) {
     struct SurfaceNode *node = &sSurfaceNodePool[gSurfaceNodesAllocated];
     gSurfaceNodesAllocated++;
 
-    node->next = NULL;
-
     //! A bounds check! If there's more surface nodes than 7000 allowed,
     //  we, um...
     // Perhaps originally just debug feedback?
@@ -58,6 +56,8 @@ static struct SurfaceNode *alloc_surface_node(void) {
     } else {
         gSurfacePoolError &= ~NOT_ENOUGH_ROOM_FOR_NODES;
     }
+
+    node->next = NULL;
 
     return node;
 }
@@ -515,8 +515,10 @@ static void load_environmental_regions(s16 **data) {
     s32 numRegions;
     s32 i;
 
+    gEnvironmentRegionsLength = 0;
     gEnvironmentRegions = *data;
     numRegions = *(*data)++;
+    gEnvironmentRegionsLength++;
 
     if (numRegions > 20) {
         numRegions = 20;
@@ -535,6 +537,7 @@ static void load_environmental_regions(s16 **data) {
 
         height = *(*data)++;
 
+        gEnvironmentRegionsLength += 6;
         gEnvironmentLevels[i] = height;
     }
 }
@@ -550,6 +553,7 @@ void alloc_surface_pools(void) {
     if (!sSurfaceNodePool) { sSurfaceNodePool = calloc(1, SURFACE_NODE_POOL_SIZE * sizeof(struct SurfaceNode)); }
     if (!sSurfacePool) { sSurfacePool = calloc(1, sSurfacePoolSize * sizeof(struct Surface)); }
 
+    gEnvironmentRegions = NULL;
     gSurfaceNodesAllocated = 0;
     gSurfacesAllocated = 0;
     gNumStaticSurfaceNodes = 0;

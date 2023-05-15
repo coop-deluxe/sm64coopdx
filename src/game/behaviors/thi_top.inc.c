@@ -8,8 +8,9 @@ UNUSED u8 unused8032F134[] = { 10, 11, 12 };
 
 void bhv_thi_huge_island_top_loop(void) {
     if (gTHIWaterDrained & 1) {
-        if (o->oTimer == 0)
+        if (o->oTimer == 0 && gEnvironmentRegionsLength > 18) {
             gEnvironmentRegions[18] = 3000;
+        }
         cur_obj_hide();
     } else
         load_object_collision_model();
@@ -41,7 +42,7 @@ void bhv_thi_tiny_island_top_loop(void) {
                 }
         } else {
             if (o->oTimer < 50) {
-                if (gEnvironmentRegions) { gEnvironmentRegions[18]--; }
+                if (gEnvironmentRegions && gEnvironmentRegionsLength > 18) { gEnvironmentRegions[18]--; }
                 cur_obj_play_sound_1(SOUND_ENV_WATER_DRAIN);
             } else {
                 gTHIWaterDrained |= 1;
@@ -51,7 +52,7 @@ void bhv_thi_tiny_island_top_loop(void) {
         }
     } else {
         if (o->oTimer == 0) {
-            if (gEnvironmentRegions) { gEnvironmentRegions[18] = 700; }
+            if (gEnvironmentRegions && gEnvironmentRegionsLength > 18) { gEnvironmentRegions[18] = 700; }
         }
         cur_obj_hide();
     }

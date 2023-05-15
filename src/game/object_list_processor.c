@@ -146,6 +146,7 @@ struct Object* gCheckingSurfaceCollisionsForObject = NULL;
 s16 gCheckingSurfaceCollisionsForCamera;
 s16 gFindFloorIncludeSurfaceIntangible;
 s16 *gEnvironmentRegions;
+s32 gEnvironmentRegionsLength = 0;
 s32 gEnvironmentLevels[20];
 s8 gDoorAdjacentRooms[60][2];
 s16 gMarioCurrentRoom;

@@ -158,7 +158,7 @@ void turn_obj_away_from_surface(f32 velX, f32 velZ, f32 nX, UNUSED f32 nY, f32 n
  */
 s8 obj_find_wall(f32 objNewX, f32 objY, f32 objNewZ, f32 objVelX, f32 objVelZ) {
     if (!o) { return 0; }
-    struct WallCollisionData hitbox;
+    struct WallCollisionData hitbox = { 0 };
     f32 wall_nX, wall_nY, wall_nZ, objVelXCopy, objVelZCopy, objYawX, objYawZ;
 
     hitbox.x = objNewX;

@@ -159,7 +159,7 @@ void network_receive_area(struct Packet* p) {
     packet_read(p, &gNetworkAreaTimer, sizeof(u32));
     gNetworkAreaTimerClock = clock_elapsed_ticks() - gNetworkAreaTimer;
     packet_read(p, gEnvironmentLevels, sizeof(s32));
-    if (gCurrLevelNum == LEVEL_WDW && gEnvironmentRegions != NULL) {
+    if (gCurrLevelNum == LEVEL_WDW && gEnvironmentRegions != NULL && gEnvironmentRegionsLength > 6) {
         gEnvironmentRegions[6] = *gEnvironmentLevels;
     }
 

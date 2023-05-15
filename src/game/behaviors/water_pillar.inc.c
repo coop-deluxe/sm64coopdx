@@ -81,7 +81,7 @@ void bhv_water_level_pillar_loop(void) {
         water_level_pillar_drained();
     else
         water_level_pillar_undrained();
-    if (gEnvironmentRegions) {
+    if (gEnvironmentRegions && gEnvironmentRegionsLength > 18) {
         gEnvironmentRegions[18] = gEnvironmentLevels[2];
         gEnvironmentRegions[6] = gEnvironmentLevels[0];
     }
