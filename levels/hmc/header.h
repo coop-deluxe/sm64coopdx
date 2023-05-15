@@ -76,6 +76,7 @@ extern const Gfx hmc_seg7_dl_07024268[];
 extern const Gfx hmc_seg7_dl_070242A0[];
 extern const u8 *const hmc_seg7_painting_textures_07025518[];
 extern struct Painting cotmc_painting;
+extern struct Painting default_cotmc_painting;
 extern const Collision hmc_seg7_collision_level[];
 extern const MacroObject hmc_seg7_macro_objs[];
 extern const u8 hmc_seg7_rooms[];

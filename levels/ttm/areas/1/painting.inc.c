@@ -576,3 +576,30 @@ struct Painting ttm_slide_painting = {
     /* Size */  460.8f,
     /* Ripples */ { 0 },
 };
+
+struct Painting default_ttm_slide_painting = {
+    /* id */ 0x0000,
+    /* Image Count */ 0x02,
+    /* Texture Type */ PAINTING_IMAGE,
+    /* Floor Status */ 0x00, 0x00, 0x00 /* which of the painting's nearby special floors Mario's on */,
+    /* Ripple Status */ 0x00,
+    /* Rotation */    0.0f,   90.0f,
+    /* Position */ 3072.0f, 921.6f, -819.2f,
+    /*                         curr   passive     entry */
+    /* Ripple Magnitude */     0.0f,    20.0f,    80.0f,
+    /* Ripple Decay */         1.0f,  0.9608f,  0.9524f,
+    /* Ripple Rate */          0.0f,    0.24f,    0.14f,
+    /* Ripple Dispersion */    0.0f,    40.0f,    30.0f,
+    /* Curr Ripple Timer */    0.0f,
+    /* Curr Ripple x, y */     0.0f,    0.0f,
+    /* Normal DList */ ttm_seg7_painting_dl_07012E98,
+    /* Texture Maps */ ttm_seg7_painting_texture_maps_07012E88,
+    /* Textures */     ttm_seg7_painting_textures_07012EF8,
+    /* Texture w, h */ 64, 32,
+    /* Ripple DList */ ttm_seg7_painting_dl_07012430,
+    /* Ripple Trigger */ RIPPLE_TRIGGER_PROXIMITY,
+    /* Alpha */ 0xFF,
+    /* Mario Below */  0x00, 0x00, 0x00, /* Whether or not Mario is below the painting */
+    /* Size */  460.8f,
+    /* Ripples */ { 0 },
+};

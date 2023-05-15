@@ -547,3 +547,30 @@ struct Painting cotmc_painting = {
     /* Size */  723.968018f,
     /* Ripples */ { 0 },
 };
+
+struct Painting default_cotmc_painting = {
+    /* id */ 0x000E,
+    /* Image Count */ 0x01,
+    /* Texture Type */ PAINTING_ENV_MAP,
+    /* Floor Status */ 0x00, 0x00 , 0x00 /* which of the painting's nearby special floors Mario's on */,
+    /* Ripple Status */ 0x00,
+    /* Rotation */ 270.0f,  0.0f,
+    /* Position */ 2989.055908f, -4485.120117f, 5135.359863f,
+    /*                         curr   passive     entry */
+    /* Ripple Magnitude */     0.0f,    10.0f,    30.0f,
+    /* Ripple Decay */         1.0f,     1.0f,    0.98f,
+    /* Ripple Rate */          0.0f,    0.05f,    0.05f,
+    /* Ripple Dispersion */    0.0f,    15.0f,    15.0f,
+    /* Curr Ripple Timer */    0.0f,
+    /* Curr Ripple x, y */     0.0f,  0.0f,
+    /* Normal DList */ hmc_seg7_painting_dl_070254E0,
+    /* Texture Maps */ hmc_seg7_painting_texture_maps_07024CD4,
+    /* Textures */     hmc_seg7_painting_textures_07025518,
+    /* Texture w, h */ 32, 32,
+    /* Ripple DList */ hmc_seg7_painting_dl_070242D0,
+    /* Ripple Trigger */ RIPPLE_TRIGGER_CONTINUOUS,
+    /* Alpha */ 0xFF,
+    /* Mario Below */  0x00, 0x00, 0x00, /* Whether or not Mario is below the painting */
+    /* Size */  723.968018f,
+    /* Ripples */ { 0 },
+};

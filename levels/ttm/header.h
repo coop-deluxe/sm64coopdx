@@ -72,6 +72,7 @@ extern const Gfx ttm_seg7_dl_070123A0[];
 extern const Gfx ttm_seg7_dl_070123B8[];
 extern const Gfx ttm_seg7_dl_07012410[];
 extern struct Painting ttm_slide_painting;
+extern struct Painting default_ttm_slide_painting;
 extern const Gfx ttm_seg7_dl_07013430[];
 extern const Gfx ttm_seg7_dl_07013608[];
 extern const Collision ttm_seg7_collision_pitoune_2[];

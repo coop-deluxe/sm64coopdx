@@ -299,5 +299,25 @@ __attribute__((constructor))
 void hardcoded_reset_default_values(void) {
     gLevelValues = gDefaultLevelValues;
     gBehaviorValues = gDefaultBehaviorValues;
+
+    memcpy(&cotmc_painting, &default_cotmc_painting, sizeof(struct Painting));
+
+    memcpy(&bob_painting, &default_bob_painting, sizeof(struct Painting));
+    memcpy(&ccm_painting, &default_ccm_painting, sizeof(struct Painting));
+    memcpy(&wf_painting, &default_wf_painting, sizeof(struct Painting));
+    memcpy(&jrb_painting, &default_jrb_painting, sizeof(struct Painting));
+    memcpy(&lll_painting, &default_lll_painting, sizeof(struct Painting));
+    memcpy(&ssl_painting, &default_ssl_painting, sizeof(struct Painting));
+    memcpy(&hmc_painting, &default_hmc_painting, sizeof(struct Painting));
+    memcpy(&ddd_painting, &default_ddd_painting, sizeof(struct Painting));
+    memcpy(&wdw_painting, &default_wdw_painting, sizeof(struct Painting));
+    memcpy(&thi_tiny_painting, &default_thi_tiny_painting, sizeof(struct Painting));
+    memcpy(&ttm_painting, &default_ttm_painting, sizeof(struct Painting));
+    memcpy(&ttc_painting, &default_ttc_painting, sizeof(struct Painting));
+    memcpy(&sl_painting, &default_sl_painting, sizeof(struct Painting));
+    memcpy(&thi_huge_painting, &default_thi_huge_painting, sizeof(struct Painting));
+
+    memcpy(&ttm_slide_painting, &default_ttm_slide_painting, sizeof(struct Painting));
+
     gPaintingValues = gDefaultPaintingValues;
 }
