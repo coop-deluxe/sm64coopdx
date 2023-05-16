@@ -2627,7 +2627,7 @@ s32 cur_obj_is_mario_ground_pounding_platform(void) {
         if (!is_player_active(&gMarioStates[i])) { continue; }
         if (!gMarioStates[i].marioObj) { continue; }
         if (gMarioStates[i].marioObj->platform == o) {
-            if (determine_interaction(&gMarioStates[i], o) & INT_GROUND_POUND) {
+            if ((determine_interaction(&gMarioStates[i], o) & INT_GROUND_POUND) || (gMarioStates[i].action == ACT_GROUND_POUND_LAND)) {
                 return TRUE;
             }
         }

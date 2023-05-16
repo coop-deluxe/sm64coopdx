@@ -373,6 +373,11 @@ static void level_reset_globals(void) {
     gEnvFxBuffer = NULL;
     gEnvFxMode = ENVFX_MODE_NONE;
 
+    // clear area's level pool pointers
+    for (int i = 0; i < 8; i++) {
+        gAreas[i].unk04 = NULL;
+    }
+
     // free models stored in dynos
     dynos_model_clear_pool(MODEL_POOL_LEVEL);
 }
