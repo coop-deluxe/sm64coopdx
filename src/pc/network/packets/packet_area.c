@@ -102,13 +102,7 @@ void network_send_area(struct NetworkPlayer* toNp) {
 
             // TODO: move find model to a utility file/function
             // find model
-            u32 model = 0;
-            for (s32 j = 0; j < MAX_LOADED_GRAPH_NODES; j++) {
-                if (so->o->header.gfx.sharedChild == gLoadedGraphNodes[j]) {
-                    model = j;
-                    break;
-                }
-            }
+            u32 model = dynos_model_get_id_from_asset(so->o->header.gfx.sharedChild);
 
             u32 models[] = { model };
             network_send_spawn_objects_to(toNp->localIndex, spawn_objects, models, 1);

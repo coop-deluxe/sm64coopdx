@@ -680,9 +680,7 @@ struct Object *spawn_object_at_origin(struct Object *parent, UNUSED s32 unusedAr
     }
     obj->globalPlayerIndex = 0;
 
-    if (model >= MAX_LOADED_GRAPH_NODES) { model = MODEL_ERROR_MODEL; }
-    geo_obj_init((struct GraphNodeObject *) &obj->header.gfx, gLoadedGraphNodes[model], gVec3fZero,
-                 gVec3sZero);
+    geo_obj_init((struct GraphNodeObject *) &obj->header.gfx, dynos_model_get_geo(model), gVec3fZero, gVec3sZero);
     smlua_call_event_hooks_object_model_param(HOOK_OBJECT_SET_MODEL, obj, model);
 
     return obj;
@@ -1436,8 +1434,7 @@ void cur_obj_set_model(s32 modelID) {
 }
 
 void obj_set_model(struct Object* obj, s32 modelID) {
-    if (modelID >= MAX_LOADED_GRAPH_NODES) { modelID = MODEL_ERROR_MODEL; }
-    obj->header.gfx.sharedChild = gLoadedGraphNodes[modelID];
+    obj->header.gfx.sharedChild = dynos_model_get_geo(modelID);
     dynos_actor_override((void*)&obj->header.gfx.sharedChild);
     smlua_call_event_hooks_object_model_param(HOOK_OBJECT_SET_MODEL, obj, modelID);
 }
@@ -3267,10 +3264,10 @@ s32 cur_obj_update_dialog_with_cutscene(struct MarioState* m, s32 actionArg, s32
 
 s32 cur_obj_has_model(u16 modelID) {
     if (!o) { return 0; }
-    if (modelID >= MAX_LOADED_GRAPH_NODES) { return FALSE; }
-    if (o->header.gfx.sharedChild == gLoadedGraphNodes[modelID]) {
+    struct GraphNode* node = dynos_model_get_geo(modelID);
+    if (o->header.gfx.sharedChild == node) {
         return TRUE;
-    } else if (o->header.gfx.sharedChild && gLoadedGraphNodes[modelID] && o->header.gfx.sharedChild->georef == gLoadedGraphNodes[modelID]->georef) {
+    } else if (o->header.gfx.sharedChild && node && o->header.gfx.sharedChild->georef == node->georef) {
         return TRUE;
     } else {
         return FALSE;

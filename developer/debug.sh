@@ -2,9 +2,9 @@
 
 set -e
 if [ $# -eq 0 ]; then
-    make DEBUG=1 DEVELOPMENT=1 STRICT=1 ASAN=1 -j
+    make DEBUG=1 DEVELOPMENT=1 STRICT=1 ASAN=1 COMPILER=clang -j
 else
-    make DEBUG=1 DEVELOPMENT=1 ASAN=1 -j
+    make DEBUG=1 DEVELOPMENT=1 ASAN=1 COMPILER=clang -j
 fi
 
 # find file

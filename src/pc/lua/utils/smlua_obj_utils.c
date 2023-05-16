@@ -23,11 +23,6 @@ static struct Object* spawn_object_internal(enum BehaviorId behaviorId, enum Mod
     }
 
     u16 loadedModelId = smlua_model_util_load(modelId);
-    if (loadedModelId >= MAX_LOADED_GRAPH_NODES) {
-        LOG_ERROR("failed to load model  %u", modelId);
-        return NULL;
-    }
-
     struct Object* obj = spawn_object(gMarioStates[0].marioObj, loadedModelId, behavior);
 
     if (obj == NULL) {
@@ -95,8 +90,7 @@ s32 obj_has_behavior_id(struct Object *o, enum BehaviorId behaviorId) {
 s32 obj_has_model_extended(struct Object *o, enum ModelExtendedId modelId) {
     if (!o) { return 0; }
     u16 slot = smlua_model_util_load(modelId);
-    if (slot >= MAX_LOADED_GRAPH_NODES) { return false; }
-    struct GraphNode *model = gLoadedGraphNodes[slot];
+    struct GraphNode *model = dynos_model_get_geo(slot);
     return o->header.gfx.sharedChild == model;
 }
 
@@ -267,10 +261,6 @@ struct SpawnParticlesInfo* obj_get_temp_spawn_particles_info(enum ModelExtendedI
     memset(&sTmpSpi, 0, sizeof(struct SpawnParticlesInfo));
 
     u16 loadedModelId = smlua_model_util_load(modelId);
-    if (loadedModelId >= MAX_LOADED_GRAPH_NODES) {
-        LOG_ERROR("failed to load model  %u", modelId);
-        return NULL;
-    }
     sTmpSpi.model = loadedModelId;
 
     return &sTmpSpi;

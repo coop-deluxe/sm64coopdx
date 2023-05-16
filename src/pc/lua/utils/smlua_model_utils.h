@@ -395,11 +395,8 @@ enum ModelExtendedId {
     E_MODEL_MAX
 };
 
-void smlua_model_util_remember(u16 loadedId, u8 layer, const void* asset, u8 isDisplayList);
-void smlua_model_util_reset(void);
 void smlua_model_util_clear(void);
-u16 smlua_model_util_load_with_pool_and_cache_id(enum ModelExtendedId extId, enum ModelPool pool, u16 loadedId);
-u16 smlua_model_util_load_with_pool(enum ModelExtendedId extId, enum ModelPool pool);
+void smlua_model_util_store_in_slot(u32 slot, const char* name);
 u16 smlua_model_util_load(enum ModelExtendedId extId);
 u32 smlua_model_util_get_id(const char* name);
 

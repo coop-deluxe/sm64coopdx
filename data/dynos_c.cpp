@@ -225,16 +225,32 @@ void dynos_behavior_hook_all_custom_behaviors(void) {
 
 // -- models -- //
 
-struct GraphNode* dynos_model_load_geo(enum ModelPool aModelPool, void* aAsset) {
-    return DynOS_Model_LoadGeo(aModelPool, aAsset);
+struct GraphNode* dynos_model_load_geo(u32* aId, enum ModelPool aModelPool, void* aAsset) {
+    return DynOS_Model_LoadGeo(aId, aModelPool, aAsset);
 }
 
-struct GraphNode* dynos_model_load_dl(enum ModelPool aModelPool, u8 aLayer, void* aAsset) {
-    return DynOS_Model_LoadDl(aModelPool, aLayer, aAsset);
+struct GraphNode* dynos_model_load_dl(u32* aId, enum ModelPool aModelPool, u8 aLayer, void* aAsset) {
+    return DynOS_Model_LoadDl(aId, aModelPool, aLayer, aAsset);
+}
+
+struct GraphNode* dynos_model_store_geo(u32* aId, enum ModelPool aModelPool, void* aAsset, struct GraphNode* aGraphNode) {
+    return DynOS_Model_StoreGeo(aId, aModelPool, aAsset, aGraphNode);
+}
+
+u32 dynos_model_get_id_from_asset(void* asset) {
+    return DynOS_Model_GetIdFromAsset(asset);
 }
 
 void dynos_model_clear_pool(enum ModelPool aModelPool) {
     DynOS_Model_ClearPool(aModelPool);
+}
+
+struct GraphNode* dynos_model_get_geo(u32 aId) {
+    return DynOS_Model_GetGeo(aId);
+}
+
+void dynos_model_overwrite_slot(u32 srcSlot, u32 dstSlot) {
+    DynOS_Model_OverwriteSlot(srcSlot, dstSlot);
 }
 
 // -- other -- //

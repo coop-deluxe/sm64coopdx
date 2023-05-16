@@ -59,21 +59,19 @@ struct ModelUtilsInfo {
     enum ModelExtendedId extId;
     u8 layer;
     u16 loadedId;
-    bool permanent;
     bool isDisplayList;
     const void* asset;
-    u8 shouldFreeAsset;
 };
 
-#define UNLOADED_ID 0xFFFF
+#define UNLOADED_ID 0
 
-#define MODEL_UTIL_GEO(x, y)           [x] = { .extId = x, .asset = y, .layer = LAYER_OPAQUE, .isDisplayList = false, .loadedId = UNLOADED_ID, .permanent = false }
-#define MODEL_UTIL_DL(x, y, z)         [x] = { .extId = x, .asset = y, .layer = z,            .isDisplayList = true,  .loadedId = UNLOADED_ID, .permanent = false }
-#define MODEL_UTIL_GEO_PERM(x, y, w)   [x] = { .extId = x, .asset = y, .layer = LAYER_OPAQUE, .isDisplayList = false, .loadedId = w,           .permanent = true  }
-#define MODEL_UTIL_DL_PERM(x, y, z, w) [x] = { .extId = x, .asset = y, .layer = z,            .isDisplayList = true,  .loadedId = w,           .permanent = true  }
+#define MODEL_UTIL_GEO(x, y)           [x] = { .extId = x, .asset = y, .layer = LAYER_OPAQUE, .isDisplayList = false, .loadedId = UNLOADED_ID, }
+#define MODEL_UTIL_DL(x, y, z)         [x] = { .extId = x, .asset = y, .layer = z,            .isDisplayList = true,  .loadedId = UNLOADED_ID, }
+#define MODEL_UTIL_GEO_PERM(x, y, w)   [x] = { .extId = x, .asset = y, .layer = LAYER_OPAQUE, .isDisplayList = false, .loadedId = w,           }
+#define MODEL_UTIL_DL_PERM(x, y, z, w) [x] = { .extId = x, .asset = y, .layer = z,            .isDisplayList = true,  .loadedId = w,           }
 
 struct ModelUtilsInfo sModels[E_MODEL_MAX] = {
-    MODEL_UTIL_GEO(E_MODEL_NONE,                    NULL),
+    MODEL_UTIL_GEO(E_MODEL_NONE, NULL),
 
     // actors
     MODEL_UTIL_GEO_PERM(E_MODEL_MARIO,                   mario_geo,                            MODEL_MARIO),
@@ -468,172 +466,53 @@ struct ModelUtilsInfo sModels[E_MODEL_MAX] = {
 struct ModelUtilsInfo sCustomModels[MAX_CUSTOM_MODELS] = { 0 };
 static u16 sCustomModelsCount = 0;
 
-struct ModelUtilsInfo* sCachedAssets[MAX_LOADED_GRAPH_NODES] = { 0 };
-bool sCachedAssetTaken[MAX_LOADED_GRAPH_NODES] = { 0 };
-
-void smlua_model_util_remember(u16 loadedId, UNUSED u8 layer, const void* asset, UNUSED u8 isDisplayList) {
-    struct ModelUtilsInfo* found = NULL;
-
-    // find in sModels
-    for (s32 i = 0; i < E_MODEL_MAX; i++) {
-        struct ModelUtilsInfo* m = &sModels[i];
-        if (m->asset != asset) { continue; }
-        found = m;
-        break;
-    }
-
-    // find in sCustomModels
-    if (!found) {
-        for (s32 i = 0; i < sCustomModelsCount; i++) {
-            struct ModelUtilsInfo* m = &sCustomModels[i];
-            if (m->asset != asset) { continue; }
-            found = m;
-            break;
-        }
-    }
-
-    // sanity check
-    if (found == NULL) {
-        LOG_ERROR("Could not find asset to remember!");
-        return;
-    }
-
-    // remember
-    if (sCachedAssetTaken[loadedId] && sCachedAssets[loadedId] != found) {
-        if (sCachedAssets[loadedId]->permanent) {
-            LOG_ERROR("Tried to override permanent model: %u -> %u", sCachedAssets[loadedId]->loadedId, loadedId);
-            return;
-        } else {
-            //LOG_INFO("Overriding model: loadedId %u was extId %u, now extId %u", loadedId, sCachedAssets[loadedId]->extId, found->extId);
-        }
-        sCachedAssets[loadedId]->loadedId = UNLOADED_ID;
-    }
-    found->loadedId = loadedId;
-    sCachedAssets[loadedId] = found;
-    sCachedAssetTaken[loadedId] = true;
-    //LOG_INFO("Remember model: %u -> %u", found->extId, loadedId);
-}
-
-void smlua_model_util_reset(void) {
-    smlua_model_util_clear();
-    for (u32 i = 0; i < sCustomModelsCount; i++) {
-        struct ModelUtilsInfo* m = &sCustomModels[i];
-        m->loadedId = UNLOADED_ID;
-        if (m->asset && m->shouldFreeAsset) {
-            free((void*)m->asset);
-            m->asset = NULL;
-        }
-        m->shouldFreeAsset = false;
-    }
+void smlua_model_util_clear(void) {
     sCustomModelsCount = 0;
 }
 
-void smlua_model_util_clear(void) {
-    for (int i = 0; i < MAX_LOADED_GRAPH_NODES; i++) {
-        struct ModelUtilsInfo* m = sCachedAssets[i];
-        if (m == NULL) { continue; }
-        //LOG_INFO("Forget: %u -> %u", m->extId, m->loadedId);
-        if (!m->permanent) {
-            m->loadedId = UNLOADED_ID;
-            if (m->asset && m->shouldFreeAsset) {
-                free((void*)m->asset);
-                m->asset = NULL;
-            }
-        }
-        m->shouldFreeAsset = false;
-        sCachedAssets[i] = NULL;
-        sCachedAssetTaken[i] = false;
-    }
-
-    //LOG_INFO("Cleared runtime model cache.");
-}
-
-u16 smlua_model_util_load_with_pool_and_cache_id(enum ModelExtendedId extId, enum ModelPool pool, u16 loadedId) {
-    if (extId == E_MODEL_NONE) { return MODEL_NONE; }
-    if (extId >= (u16)(E_MODEL_MAX + sCustomModelsCount)) {
-        LOG_ERROR("Tried to load invalid extId: %u >= %u (%u)", extId, (E_MODEL_MAX + sCustomModelsCount), sCustomModelsCount);
-        extId = E_MODEL_ERROR_MODEL;
-    }
-
-    struct ModelUtilsInfo* info = (extId >= E_MODEL_MAX)
-                                ? &sCustomModels[extId - E_MODEL_MAX]
-                                : &sModels[extId];
-
-    // check cache
-    if (info->loadedId != UNLOADED_ID) {
-        //LOG_INFO("Found in cache - %u -> %u", extId, info->loadedId);
-        return info->loadedId;
-    }
-
-    // find cached asset
-    u16 pickLoadedId = loadedId;
-    if (loadedId == UNLOADED_ID) {
-        for (s32 i = 0; i < (MAX_LOADED_GRAPH_NODES-1); i++) {
-            struct ModelUtilsInfo* m = sCachedAssets[i];
-            if (m == info) {
-                //LOG_INFO("Found in cache (but late, confused?) - %u -> %u", extId, i);
-                info->loadedId = m->loadedId;
-                return info->loadedId;
-            } else if (i >= LOADED_GRAPH_NODES_VANILLA && !sCachedAssetTaken[i]) {
-                pickLoadedId = i;
-            }
-        }
-
-        if (pickLoadedId == UNLOADED_ID) {
-            LOG_ERROR("Could not find slot for extId - %u", extId);
-            return UNLOADED_ID;
-        }
-    }
-
-    if (pickLoadedId >= MAX_LOADED_GRAPH_NODES) {
-        LOG_ERROR("Could not find slot for extId - %u", extId);
-        return UNLOADED_ID;
-    }
-
-    // load
-    struct GraphNode* node = NULL;
-    node = (info->isDisplayList)
-         ? dynos_model_load_dl(pool, info->layer, (void*)info->asset)
-         : dynos_model_load_geo(pool, (void*) info->asset);
-    gLoadedGraphNodes[pickLoadedId] = node;
-
-    // remember
-    if (node) {
-        smlua_model_util_remember(pickLoadedId, info->layer, info->asset, info->isDisplayList);
-    }
-    //LOG_INFO("Loaded custom model - %u -> %u", extId, pickLoadedId);
-
-    return pickLoadedId;
-}
-
-u16 smlua_model_util_load_with_pool(enum ModelExtendedId extId, enum ModelPool pool) {
-    return smlua_model_util_load_with_pool_and_cache_id(extId, pool, UNLOADED_ID);
+void smlua_model_util_store_in_slot(u32 slot, const char* name) {
+    u32 extId = smlua_model_util_get_id(name);
+    if (extId == E_MODEL_ERROR_MODEL) { return; }
+    u32 loadedId = smlua_model_util_load(extId);
+    dynos_model_overwrite_slot(slot, loadedId);
 }
 
 u16 smlua_model_util_load(enum ModelExtendedId extId) {
-    return smlua_model_util_load_with_pool(extId, MODEL_POOL_SESSION);
+    if (extId >= E_MODEL_MAX + sCustomModelsCount) { extId = E_MODEL_ERROR_MODEL; }
+
+    struct ModelUtilsInfo* info = (extId < E_MODEL_MAX)
+        ? &sModels[extId]
+        : &sCustomModels[extId - E_MODEL_MAX];
+
+    u32 id = info->loadedId;
+    if (info->isDisplayList) {
+        dynos_model_load_dl(&id, MODEL_POOL_SESSION, info->layer, (void*)info->asset);
+    } else {
+        dynos_model_load_geo(&id, MODEL_POOL_SESSION, (void*)info->asset);
+    }
+    return (u16)id;
 }
 
 u32 smlua_model_util_get_id(const char* name) {
     // find geolayout
-    const void* layout = dynos_geolayout_get(name);
-    if (layout == NULL) {
+    const void* asset = dynos_geolayout_get(name);
+    if (asset == NULL) {
         LOG_ERROR("Failed to find model: %s - %u", name, E_MODEL_ERROR_MODEL);
         return E_MODEL_ERROR_MODEL;
     }
 
-    // find existing model
+    // find existing built-in model
     for (u32 i = 0; i < E_MODEL_MAX; i++) {
         struct ModelUtilsInfo* m = &sModels[i];
-        if (m->asset == layout) {
-            //LOG_INFO("Found existing model: %s :: %u -> %u", name, m->extId, m->loadedId);
+        if (m->asset == asset) {
             return m->extId;
         }
     }
+
+    // find existing custom model
     for (u32 i = 0; i < sCustomModelsCount; i++) {
         struct ModelUtilsInfo* m = &sCustomModels[i];
-        if (m->asset == layout) {
-            //LOG_INFO("Found existing custom model: %s :: %u -> %u", name, m->extId, m->loadedId);
+        if (m->asset == asset) {
             return m->extId;
         }
     }
@@ -641,15 +520,11 @@ u32 smlua_model_util_get_id(const char* name) {
     // allocate custom model
     u16 customIndex = sCustomModelsCount++;
     struct ModelUtilsInfo* info = &sCustomModels[customIndex];
-    info->asset = layout;
-    info->shouldFreeAsset = false;
+    info->asset = asset;
     info->loadedId = UNLOADED_ID;
     info->extId = E_MODEL_MAX + customIndex;
     info->isDisplayList = false;
     info->layer = LAYER_OPAQUE;
-    //LOG_INFO("Allocated model: %s :: %u -> %u", name, info->extId, info->loadedId);
 
     return info->extId;
 }
-
-

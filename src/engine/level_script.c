@@ -64,7 +64,6 @@ static s16 sScriptStatus;
 static s32 sRegister;
 static struct LevelCommand *sCurrentCmd;
 
-static u8 sLevelOwnedGraphNodes[MAX_LOADED_GRAPH_NODES] = { 0 };
 static u8 sFinishedLoadingPerm = false;
 
 static s32 eval_script_area(s32 arg) {
@@ -350,7 +349,6 @@ static void level_cmd_init_level(void) {
     init_graph_node_start(NULL, (struct GraphNodeStart *) &gObjParentGraphNode);
     clear_objects();
     clear_areas();
-    smlua_model_util_clear();
     gSkipInterpolationTitleScreen = false;
 
     sCurrentCmd = CMD_NEXT;
@@ -360,14 +358,6 @@ static void level_cmd_clear_level(void) {
     clear_objects();
     clear_area_graph_nodes();
     clear_areas();
-
-    // reset the level's graph nodes to NULL
-    for (s32 i = 0; i < MAX_LOADED_GRAPH_NODES; i++) {
-        if (sLevelOwnedGraphNodes[i]) {
-            gLoadedGraphNodes[i] = NULL;
-            sLevelOwnedGraphNodes[i] = false;
-        }
-    }
 
     sCurrentCmd = CMD_NEXT;
 }
@@ -388,15 +378,6 @@ static void level_reset_globals(void) {
 }
 
 static void level_cmd_alloc_level_pool(void) {
-
-    // reset level graph node ownership
-    for (s32 i = 0; i < MAX_LOADED_GRAPH_NODES; i++) {
-        if (sLevelOwnedGraphNodes[i]) {
-            gLoadedGraphNodes[i] = NULL;
-            sLevelOwnedGraphNodes[i] = false;
-        }
-    }
-
     // reset all globals
     level_reset_globals();
 
@@ -432,7 +413,8 @@ static void level_cmd_begin_area(void) {
     void *geoLayoutAddr = CMD_GET(void *, 4);
 
     if (areaIndex < 8) {
-        struct GraphNodeRoot *screenArea = (struct GraphNodeRoot *) dynos_model_load_geo(MODEL_POOL_LEVEL, geoLayoutAddr);
+        u32 id = 0;
+        struct GraphNodeRoot *screenArea = (struct GraphNodeRoot *) dynos_model_load_geo(&id, MODEL_POOL_LEVEL, geoLayoutAddr);
         struct GraphNodeCamera *node = (struct GraphNodeCamera *) screenArea->views[0];
 
         sCurrAreaIndex = areaIndex;
@@ -462,11 +444,8 @@ static void level_cmd_load_model_from_dl(void) {
     s16 val2 = ((u16)CMD_GET(s16, 2)) >> 12;
     void *val3 = CMD_GET(void *, 4);
 
-    if (val1 < MAX_LOADED_GRAPH_NODES) {
-        gLoadedGraphNodes[val1] = dynos_model_load_dl(sFinishedLoadingPerm ? MODEL_POOL_LEVEL : MODEL_POOL_PERMANENT, val2, val3);
-        if (sFinishedLoadingPerm) { sLevelOwnedGraphNodes[val1] = true; }
-        smlua_model_util_remember(val1, val2, val3, 1);
-    }
+    u32 id = val1;
+    dynos_model_load_dl(&id, sFinishedLoadingPerm ? MODEL_POOL_LEVEL : MODEL_POOL_PERMANENT, val2, val3);
 
     sCurrentCmd = CMD_NEXT;
 }
@@ -475,11 +454,8 @@ static void level_cmd_load_model_from_geo(void) {
     s16 arg0 = CMD_GET(s16, 2);
     void *arg1 = CMD_GET(void *, 4);
 
-    if (arg0 < MAX_LOADED_GRAPH_NODES) {
-        gLoadedGraphNodes[arg0] = dynos_model_load_geo(sFinishedLoadingPerm ? MODEL_POOL_LEVEL : MODEL_POOL_PERMANENT, arg1);
-        if (sFinishedLoadingPerm) { sLevelOwnedGraphNodes[arg0] = true; }
-        smlua_model_util_remember(arg0, LAYER_OPAQUE, arg1, 0);
-    }
+    u32 id = arg0;
+    dynos_model_load_geo(&id, sFinishedLoadingPerm ? MODEL_POOL_LEVEL : MODEL_POOL_PERMANENT, arg1);
 
     sCurrentCmd = CMD_NEXT;
 }
@@ -496,13 +472,10 @@ static void level_cmd_23(void) {
     // load an f32, but using an integer load instruction for some reason (hence the union)
     arg2.i = CMD_GET(s32, 8);
 
-    if (model < MAX_LOADED_GRAPH_NODES) {
-        // GraphNodeScale has a GraphNode at the top. This
-        // is being stored to the array, so cast the pointer.
-        gLoadedGraphNodes[model] = (struct GraphNode *) init_graph_node_scale(gLevelPool, 0, arg0H, arg1, arg2.f);
-        if (sFinishedLoadingPerm) { sLevelOwnedGraphNodes[model] = true; }
-        smlua_model_util_remember(model, arg0H, arg1, 1);
-    }
+    // GraphNodeScale has a GraphNode at the top. This
+    // is being stored to the array, so cast the pointer.
+    u32 id = model;
+    dynos_model_store_geo(&id, MODEL_POOL_LEVEL, arg1, (struct GraphNode*)init_graph_node_scale(gLevelPool, 0, arg0H, arg1, arg2.f));
 
     sCurrentCmd = CMD_NEXT;
 }
@@ -512,8 +485,7 @@ static void level_cmd_init_mario(void) {
     behaviorArg = behaviorArg;
     void* behaviorScript = CMD_GET(void*, 8);
     u16 slot = CMD_GET(u8, 3);
-    if (slot >= MAX_LOADED_GRAPH_NODES) { slot = MODEL_NONE; }
-    struct GraphNode* unk18 = gLoadedGraphNodes[slot];
+    struct GraphNode* unk18 = dynos_model_get_geo(slot);
 
     struct SpawnInfo* lastSpawnInfo = NULL;
     for (s32 i = 0; i < MAX_PLAYERS; i++) {
@@ -545,7 +517,6 @@ static void level_cmd_place_object(void) {
 
     if (sCurrAreaIndex != -1 && (gLevelValues.disableActs || (CMD_GET(u8, 2) & val7) || CMD_GET(u8, 2) == 0x1F)) {
         model = CMD_GET(u8, 3);
-        if (model >= MAX_LOADED_GRAPH_NODES) { model = MODEL_NONE; }
         spawnInfo = dynamic_pool_alloc(gLevelPool, sizeof(struct SpawnInfo));
 
         spawnInfo->startPos[0] = CMD_GET(s16, 4);
@@ -561,7 +532,7 @@ static void level_cmd_place_object(void) {
 
         spawnInfo->behaviorArg = CMD_GET(u32, 16);
         spawnInfo->behaviorScript = CMD_GET(void *, 20);
-        spawnInfo->unk18 = gLoadedGraphNodes[model];
+        spawnInfo->unk18 = dynos_model_get_geo(model);
         spawnInfo->next = gAreas[sCurrAreaIndex].objectSpawnInfos;
 
         spawnInfo->syncID = gAreas[sCurrAreaIndex].nextSyncID;
@@ -944,7 +915,6 @@ static void level_cmd_place_object_ext(void) {
 
     if (sCurrAreaIndex != -1 && (gLevelValues.disableActs || (CMD_GET(u8, 2) & val7) || CMD_GET(u8, 2) == 0x1F)) {
         u16 model = CMD_GET(u8, 3);
-        if (model >= MAX_LOADED_GRAPH_NODES) { model = MODEL_NONE; }
         spawnInfo = dynamic_pool_alloc(gLevelPool, sizeof(struct SpawnInfo));
 
         spawnInfo->startPos[0] = CMD_GET(s16, 4);
@@ -961,7 +931,7 @@ static void level_cmd_place_object_ext(void) {
         spawnInfo->behaviorArg = CMD_GET(u32, 16);
 
         spawnInfo->behaviorScript = (BehaviorScript*)get_behavior_from_id(behId);
-        spawnInfo->unk18 = gLoadedGraphNodes[model];
+        spawnInfo->unk18 = dynos_model_get_geo(model);
         spawnInfo->next = gAreas[sCurrAreaIndex].objectSpawnInfos;
 
         spawnInfo->syncID = spawnInfo->next
@@ -1031,9 +1001,8 @@ static void level_cmd_place_object_ext2(void) {
         spawnInfo->behaviorArg = CMD_GET(u32, 16);
 
         spawnInfo->behaviorScript = (BehaviorScript*)get_behavior_from_id(behId);
-        u16 slot = smlua_model_util_load_with_pool(modelId, MODEL_POOL_LEVEL);
-        if (slot >= MAX_LOADED_GRAPH_NODES) { slot = MODEL_NONE; }
-        spawnInfo->unk18 = gLoadedGraphNodes[slot];
+        u16 slot = smlua_model_util_load(modelId);
+        spawnInfo->unk18 = dynos_model_get_geo(slot);
         spawnInfo->next = gAreas[sCurrAreaIndex].objectSpawnInfos;
 
         spawnInfo->syncID = spawnInfo->next
@@ -1049,13 +1018,11 @@ static void level_cmd_place_object_ext2(void) {
 
 static void level_cmd_load_model_from_geo_ext(void) {
     s16 modelSlot = CMD_GET(s16, 2);
-
     const char* geoName = dynos_level_get_token(CMD_GET(u32, 4));
-    u32 modelId = smlua_model_util_get_id(geoName);
+    smlua_model_util_store_in_slot(modelSlot, geoName);
 
-    if (modelSlot < MAX_LOADED_GRAPH_NODES) {
-        smlua_model_util_load_with_pool_and_cache_id(modelId, MODEL_POOL_LEVEL, modelSlot);
-    }
+    // DO NOT COMMIT, this is broken
+    // it's supposed to load our custom model into a vanilla slot (ugh why)
 
     sCurrentCmd = CMD_NEXT;
 }

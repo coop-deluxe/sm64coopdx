@@ -379,7 +379,7 @@ void shelled_koopa_attack_handler(s32 attackType) {
  * Update function for both regular and tiny shelled koopa.
  */
 static void koopa_shelled_update(void) {
-    u8 modelId = smlua_model_util_load(E_MODEL_KOOPA_WITH_SHELL);
+    u16 modelId = smlua_model_util_load(E_MODEL_KOOPA_WITH_SHELL);
     if (!cur_obj_has_model(modelId)) {
         cur_obj_set_model(modelId);
     }
@@ -548,7 +548,7 @@ static void koopa_unshelled_act_unused3(void) {
  * Update function for koopa after losing his shell.
  */
 static void koopa_unshelled_update(void) {
-    u8 modelId = smlua_model_util_load(E_MODEL_KOOPA_WITHOUT_SHELL);
+    u16 modelId = smlua_model_util_load(E_MODEL_KOOPA_WITHOUT_SHELL);
     if (!cur_obj_has_model(modelId)) {
         cur_obj_set_model(modelId);
     }

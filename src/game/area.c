@@ -29,7 +29,6 @@
 #include "pc/djui/djui_panel_pause.h"
 
 struct SpawnInfo gPlayerSpawnInfos[MAX_PLAYERS];
-struct GraphNode *D_8033A160[MAX_LOADED_GRAPH_NODES];
 struct Area gAreaData[8];
 
 struct WarpTransition gWarpTransition;
@@ -43,7 +42,6 @@ s16 gPauseScreenMode;
 s16 gSaveOptSelectIndex;
 
 struct SpawnInfo *gMarioSpawnInfo = &gPlayerSpawnInfos[0];
-struct GraphNode **gLoadedGraphNodes = D_8033A160;
 struct Area *gAreas = gAreaData;
 struct Area *gCurrentArea = NULL;
 struct CreditsEntry *gCurrCreditsEntry = NULL;

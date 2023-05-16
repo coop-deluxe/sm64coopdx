@@ -963,8 +963,12 @@ void DynOS_MovtexQC_ModShutdown();
 // Model Manager
 //
 
-struct GraphNode* DynOS_Model_LoadGeo(enum ModelPool aModelPool, void* aAsset);
-struct GraphNode* DynOS_Model_LoadDl(enum ModelPool aModelPool, u8 aLayer, void* aAsset);
+struct GraphNode* DynOS_Model_LoadGeo(u32* aId, enum ModelPool aModelPool, void* aAsset);
+struct GraphNode* DynOS_Model_LoadDl(u32* aId, enum ModelPool aModelPool, u8 aLayer, void* aAsset);
+struct GraphNode* DynOS_Model_StoreGeo(u32* aId, enum ModelPool aModelPool, void* aAsset, struct GraphNode* aGraphNode);
+struct GraphNode* DynOS_Model_GetGeo(u32 aId);
+u32 DynOS_Model_GetIdFromAsset(void* asset);
+void DynOS_Model_OverwriteSlot(u32 srcSlot, u32 dstSlot);
 void DynOS_Model_ClearPool(enum ModelPool aModelPool);
 void DynOS_Model_Update();
 

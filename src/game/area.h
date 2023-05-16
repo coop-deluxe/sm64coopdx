@@ -7,10 +7,6 @@
 #include "camera.h"
 #include "engine/graph_node.h"
 
-#define LOADED_GRAPH_NODES_VANILLA 256
-#define LOADED_GRAPH_NODES_EXTENDED 512
-#define MAX_LOADED_GRAPH_NODES (LOADED_GRAPH_NODES_VANILLA + LOADED_GRAPH_NODES_EXTENDED)
-
 struct WarpNode
 {
     /*00*/ u8 id;
@@ -128,7 +124,6 @@ struct WarpTransition
     /*0x04*/ struct WarpTransitionData data;
 };
 
-extern struct GraphNode **gLoadedGraphNodes;
 extern struct SpawnInfo gPlayerSpawnInfos[];
 extern struct GraphNode *D_8033A160[];
 extern struct Area gAreaData[];

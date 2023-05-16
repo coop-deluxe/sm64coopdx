@@ -197,7 +197,7 @@ void smlua_shutdown(void) {
     smlua_cobject_allowlist_shutdown();
     smlua_cpointer_allowlist_shutdown();
     smlua_clear_hooks();
-    smlua_model_util_reset();
+    smlua_model_util_clear();
     smlua_level_util_reset();
     smlua_anim_util_reset();
     lua_State* L = gLuaState;
