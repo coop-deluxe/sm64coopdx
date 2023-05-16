@@ -101,7 +101,7 @@ override_field_immutable = {
     "SpawnInfo": [ "syncID", "next", "unk18" ],
     "CustomLevelInfo": [ "next" ],
     "GraphNode": [ "children", "next", "parent", "prev", "type" ],
-    "GraphNodeObject": [  "*" ],
+    "GraphNodeObject": [  "activeAreaIndex", "angle", "animInfo", "areaIndex", "cameraToObject", "node", "pos", "prevAngle", "prevPos", "prevScale", "prevScaleTimestamp", "prevShadowPos", "prevShadowPosTimestamp", "prevThrowMatrix", "prevThrowMatrixTimestamp", "prevTimestamp", "scale", "shadowPos", "sharedChild", "skipInterpolationTimestamp", "throwMatrix", "throwMatrixPrev", "unk4C", ],
     "ObjectWarpNode": [ "next "],
     "Animation": [ "length" ],
     "AnimationTable": [ "count" ],

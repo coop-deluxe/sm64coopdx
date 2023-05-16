@@ -831,7 +831,7 @@
 | animInfo | [AnimInfo](structs.md#AnimInfo) | read-only |
 | areaIndex | `integer` | read-only |
 | cameraToObject | [Vec3f](structs.md#Vec3f) | read-only |
-| disableAutomaticShadowPos | `boolean` | read-only |
+| disableAutomaticShadowPos | `boolean` |  |
 | node | [GraphNode](structs.md#GraphNode) | read-only |
 | pos | [Vec3f](structs.md#Vec3f) | read-only |
 | prevAngle | [Vec3s](structs.md#Vec3s) | read-only |
@@ -844,10 +844,10 @@
 | prevThrowMatrixTimestamp | `integer` | read-only |
 | prevTimestamp | `integer` | read-only |
 | scale | [Vec3f](structs.md#Vec3f) | read-only |
-| shadowInvisible | `boolean` | read-only |
+| shadowInvisible | `boolean` |  |
 | shadowPos | [Vec3f](structs.md#Vec3f) | read-only |
 | sharedChild | [GraphNode](structs.md#GraphNode) | read-only |
-| skipInViewCheck | `boolean` | read-only |
+| skipInViewCheck | `boolean` |  |
 | skipInterpolationTimestamp | `integer` | read-only |
 | throwMatrix | `Pointer` <`Mat4`> | read-only |
 | throwMatrixPrev | `Pointer` <`Mat4`> | read-only |
