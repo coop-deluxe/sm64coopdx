@@ -40,6 +40,7 @@ void hud_set_value(enum HudDisplayValue type, s32 value);
 void hud_render_power_meter(s32 health, f32 x, f32 y, f32 width, f32 height);
 void hud_render_power_meter_interpolated(s32 health, f32 prevX, f32 prevY, f32 prevWidth, f32 prevHeight, f32 x, f32 y, f32 width, f32 height);
 
+void camera_reset_overrides(void);
 void camera_freeze(void);
 void camera_unfreeze(void);
 bool camera_is_frozen(void);

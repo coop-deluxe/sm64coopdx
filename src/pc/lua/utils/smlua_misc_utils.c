@@ -167,6 +167,35 @@ void hud_render_power_meter_interpolated(s32 health, f32 prevX, f32 prevY, f32 p
 
 ///
 
+struct CameraOverride {
+    unsigned int value;
+    bool override;
+};
+
+struct CameraOverride sOverrideCameraXSens   = { 0 };
+struct CameraOverride sOverrideCameraYSens   = { 0 };
+struct CameraOverride sOverrideCameraAggr    = { 0 };
+struct CameraOverride sOverrideCameraPan     = { 0 };
+struct CameraOverride sOverrideCameraDegrade = { 0 };
+struct CameraOverride sOverrideCameraInvertX = { 0 };
+struct CameraOverride sOverrideCameraInvertY = { 0 };
+struct CameraOverride sOverrideEnableCamera  = { 0 };
+struct CameraOverride sOverrideCameraAnalog  = { 0 };
+struct CameraOverride sOverrideCameraMouse   = { 0 };
+
+void camera_reset_overrides(void) {
+    sOverrideCameraXSens.override = false;
+    sOverrideCameraYSens.override = false;
+    sOverrideCameraAggr.override = false;
+    sOverrideCameraPan.override = false;
+    sOverrideCameraDegrade.override = false;
+    sOverrideCameraInvertX.override = false;
+    sOverrideCameraInvertY.override = false;
+    sOverrideEnableCamera.override = false;
+    sOverrideCameraAnalog.override = false;
+    sOverrideCameraMouse.override = false;
+}
+
 void camera_freeze(void) {
     gOverrideFreezeCamera = TRUE;
 }
@@ -181,7 +210,7 @@ bool camera_is_frozen(void) {
 
 bool camera_config_is_free_cam_enabled(void) {
 #ifdef BETTERCAMERA
-    return configEnableCamera;
+    return sOverrideEnableCamera.override ? sOverrideEnableCamera.value : configEnableCamera;
 #else
     return false;
 #endif
@@ -189,7 +218,7 @@ bool camera_config_is_free_cam_enabled(void) {
 
 bool camera_config_is_analog_cam_enabled(void) {
 #ifdef BETTERCAMERA
-    return configCameraAnalog;
+    return sOverrideCameraAnalog.override ? sOverrideCameraAnalog.value : configCameraAnalog;
 #else
     return false;
 #endif
@@ -197,7 +226,7 @@ bool camera_config_is_analog_cam_enabled(void) {
 
 bool camera_config_is_mouse_look_enabled(void) {
 #ifdef BETTERCAMERA
-    return configCameraMouse;
+    return sOverrideCameraMouse.override ? sOverrideCameraMouse.value : configCameraMouse;
 #else
     return false;
 #endif
@@ -205,7 +234,7 @@ bool camera_config_is_mouse_look_enabled(void) {
 
 bool camera_config_is_x_inverted(void) {
 #ifdef BETTERCAMERA
-    return configCameraInvertX;
+    return sOverrideCameraInvertX.override ? sOverrideCameraInvertX.value : configCameraInvertX;
 #else
     return false;
 #endif
@@ -213,7 +242,7 @@ bool camera_config_is_x_inverted(void) {
 
 bool camera_config_is_y_inverted(void) {
 #ifdef BETTERCAMERA
-    return configCameraInvertY;
+    return sOverrideCameraInvertY.override ? sOverrideCameraInvertY.value : configCameraInvertY;
 #else
     return false;
 #endif
@@ -221,7 +250,7 @@ bool camera_config_is_y_inverted(void) {
 
 u32 camera_config_get_x_sensitivity(void) {
 #ifdef BETTERCAMERA
-    return configCameraXSens;
+    return sOverrideCameraXSens.override ? sOverrideCameraXSens.value : configCameraXSens;
 #else
     return 0;
 #endif
@@ -229,7 +258,7 @@ u32 camera_config_get_x_sensitivity(void) {
 
 u32 camera_config_get_y_sensitivity(void) {
 #ifdef BETTERCAMERA
-    return configCameraYSens;
+    return sOverrideCameraYSens.override ? sOverrideCameraYSens.value : configCameraYSens;
 #else
     return 0;
 #endif
@@ -237,7 +266,7 @@ u32 camera_config_get_y_sensitivity(void) {
 
 u32 camera_config_get_aggression(void) {
 #ifdef BETTERCAMERA
-    return configCameraAggr;
+    return sOverrideCameraAggr.override ? sOverrideCameraAggr.value : configCameraAggr;
 #else
     return 0;
 #endif
@@ -245,7 +274,7 @@ u32 camera_config_get_aggression(void) {
 
 u32 camera_config_get_pan_level(void) {
 #ifdef BETTERCAMERA
-    return configCameraPan;
+    return sOverrideCameraPan.override ? sOverrideCameraPan.value : configCameraPan;
 #else
     return 0;
 #endif
@@ -253,7 +282,7 @@ u32 camera_config_get_pan_level(void) {
 
 u32 camera_config_get_deceleration(void) {
 #ifdef BETTERCAMERA
-    return configCameraDegrade;
+    return sOverrideCameraDegrade.override ? sOverrideCameraDegrade.value : configCameraDegrade;
 #else
     return 0;
 #endif
@@ -261,70 +290,80 @@ u32 camera_config_get_deceleration(void) {
 
 void camera_config_enable_free_cam(bool enable) {
 #ifdef BETTERCAMERA
-    configEnableCamera = enable;
+    sOverrideEnableCamera.value = enable;
+    sOverrideEnableCamera.override = true;
     newcam_init_settings();
 #endif
 }
 
 void camera_config_enable_analog_cam(bool enable) {
 #ifdef BETTERCAMERA
-    configCameraAnalog = enable;
+    sOverrideCameraAnalog.value = enable;
+    sOverrideCameraAnalog.override = true;
     newcam_init_settings();
 #endif
 }
 
 void camera_config_enable_mouse_look(bool enable) {
 #ifdef BETTERCAMERA
-    configCameraMouse = enable;
+    sOverrideCameraMouse.value = enable;
+    sOverrideCameraMouse.override = true;
     newcam_init_settings();
 #endif
 }
 
 void camera_config_invert_x(bool invert) {
 #ifdef BETTERCAMERA
-    configCameraInvertX = invert;
+    sOverrideCameraInvertX.value = invert;
+    sOverrideCameraInvertX.override = true;
     newcam_init_settings();
 #endif
 }
 
 void camera_config_invert_y(bool invert) {
 #ifdef BETTERCAMERA
-    configCameraInvertY = invert;
+    sOverrideCameraInvertY.value = invert;
+    sOverrideCameraInvertY.override = true;
     newcam_init_settings();
 #endif
 }
 
 void camera_config_set_x_sensitivity(u32 value) {
 #ifdef BETTERCAMERA
-    configCameraXSens = MIN(MAX(value, 1), 100);
+    sOverrideCameraXSens.value = MIN(MAX(value, 1), 100);
+    sOverrideCameraXSens.override = true;
     newcam_init_settings();
 #endif
 }
 
 void camera_config_set_y_sensitivity(u32 value) {
 #ifdef BETTERCAMERA
-    configCameraYSens = MIN(MAX(value, 1), 100);
+    sOverrideCameraYSens.value = MIN(MAX(value, 1), 100);
+    sOverrideCameraYSens.override = true;
     newcam_init_settings();
 #endif
 }
 
 void camera_config_set_aggression(u32 value) {
 #ifdef BETTERCAMERA
-    configCameraAggr = MIN(MAX(value, 0), 100);
+    sOverrideCameraAggr.value = MIN(MAX(value, 0), 100);
+    sOverrideCameraAggr.override = true;
     newcam_init_settings();
 #endif
 }
 
 void camera_config_set_pan_level(u32 value) {
 #ifdef BETTERCAMERA
-    configCameraPan = MIN(MAX(value, 0), 100);
+    sOverrideCameraPan.value = MIN(MAX(value, 0), 100);
+    sOverrideCameraPan.override = true;
     newcam_init_settings();
 #endif
 }
 
 void camera_config_set_deceleration(u32 value) {
 #ifdef BETTERCAMERA
-    configCameraDegrade = MIN(MAX(value, 0), 100);
+    sOverrideCameraDegrade.value = MIN(MAX(value, 0), 100);
+    sOverrideCameraDegrade.override = true;
     newcam_init_settings();
 #endif
 }

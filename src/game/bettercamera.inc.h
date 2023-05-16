@@ -10,6 +10,7 @@
 #include "engine/surface_collision.h"
 #include "pc/configfile.h"
 #include "pc/controller/controller_mouse.h"
+#include "pc/lua/utils/smlua_misc_utils.h"
 
 #if defined(__MINGW32__) && !defined(__MINGW64_VERSION_MAJOR) 
 //quick and dirty fix for some older MinGW.org mingwrt
@@ -184,20 +185,20 @@ void newcam_toggle(bool enabled) {
 
 ///These are the default settings for Puppycam. You may change them to change how they'll be set for first timers.
 void newcam_init_settings(void) {
-    newcam_sensitivityX = newcam_clamp(configCameraXSens, 1, 100) * 5;
-    newcam_sensitivityY = newcam_clamp(configCameraYSens, 1, 100) * 5;
-    newcam_aggression   = newcam_clamp(configCameraAggr, 0, 100);
-    newcam_panlevel     = newcam_clamp(configCameraPan, 0, 100);
-    newcam_invertX      = (s16)configCameraInvertX;
-    newcam_invertY      = (s16)configCameraInvertY;
-    newcam_mouse        = (u8)configCameraMouse;
-    newcam_analogue     = (s16)configCameraAnalog;
-    newcam_degrade      = (f32)configCameraDegrade;
+    newcam_sensitivityX = newcam_clamp(camera_config_get_x_sensitivity(), 1, 100) * 5;
+    newcam_sensitivityY = newcam_clamp(camera_config_get_y_sensitivity(), 1, 100) * 5;
+    newcam_aggression   = newcam_clamp(camera_config_get_aggression(), 0, 100);
+    newcam_panlevel     = newcam_clamp(camera_config_get_pan_level(), 0, 100);
+    newcam_invertX      = (s16)camera_config_is_x_inverted();
+    newcam_invertY      = (s16)camera_config_is_y_inverted();
+    newcam_mouse        = (u8)camera_config_is_mouse_look_enabled();
+    newcam_analogue     = (s16)camera_config_is_analog_cam_enabled();
+    newcam_degrade      = (f32)camera_config_get_deceleration();
 
     // setup main menu camera
     if (gDjuiInMainMenu) { newcam_tilt = 5; }
 
-    newcam_toggle(configEnableCamera || gDjuiInMainMenu);
+    newcam_toggle(camera_config_is_free_cam_enabled() || gDjuiInMainMenu);
 }
 
 /** Mathematic calculations. This stuffs so basic even *I* understand it lol

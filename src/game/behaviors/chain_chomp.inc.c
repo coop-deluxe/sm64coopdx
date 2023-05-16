@@ -456,7 +456,9 @@ static void chain_chomp_act_unload_chain(void) {
     if (o->oChainChompReleaseStatus != CHAIN_CHOMP_NOT_RELEASED) {
         if (o->oChainChompSegments) {
             for (u8 i = 0; i < 5; i++) {
-                obj_mark_for_deletion((struct Object*)&o->oChainChompSegments[i]);
+                struct Object* segment = (struct Object*)&o->oChainChompSegments[i];
+                if (!segment) { continue; }
+                obj_mark_for_deletion(segment);
             }
         }
         obj_mark_for_deletion(o);

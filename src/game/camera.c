@@ -12145,7 +12145,6 @@ void center_rom_hack_camera(void) {
  */
 void mode_rom_hack_camera(struct Camera *c) {
     if (!c) { return; }
-    extern bool configCameraInvertX;
     s16 oldAreaYaw = sAreaYaw;
 
     Vec3f oldPos = {
@@ -12156,13 +12155,13 @@ void mode_rom_hack_camera(struct Camera *c) {
 
     // look left
     if (gMarioStates[0].controller->buttonPressed & L_CBUTTONS) {
-        sRomHackYaw += DEGREES(45) * (configCameraInvertX ? -1 : 1);
+        sRomHackYaw += DEGREES(45) * (camera_config_is_x_inverted() ? -1 : 1);
         play_sound_cbutton_side();
     }
 
     // look right
     if (gMarioStates[0].controller->buttonPressed & R_CBUTTONS) {
-        sRomHackYaw -= DEGREES(45) * (configCameraInvertX ? -1 : 1);
+        sRomHackYaw -= DEGREES(45) * (camera_config_is_x_inverted() ? -1 : 1);
         play_sound_cbutton_side();
     }
 

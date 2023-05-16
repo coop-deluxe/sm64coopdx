@@ -29,6 +29,7 @@
 #include "spawn_sound.h"
 #include "pc/network/network.h"
 #include "pc/lua/smlua_hooks.h"
+#include "pc/lua/utils/smlua_misc_utils.h"
 
 u8 (*gContinueDialogFunction)(void) = NULL;
 struct Object* gContinueDialogFunctionObject = NULL;
@@ -1943,7 +1944,7 @@ void obj_set_cylboard(struct Object *obj) {
 
 void cur_obj_set_billboard_if_vanilla_cam(void) {
     if (!o) { return; }
-    if (configEnableCamera) {
+    if (camera_config_is_free_cam_enabled()) {
         o->header.gfx.node.flags &= ~GRAPH_RENDER_BILLBOARD;
         o->header.gfx.node.flags |= GRAPH_RENDER_CYLBOARD;
     } else {
