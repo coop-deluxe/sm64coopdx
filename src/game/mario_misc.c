@@ -694,9 +694,11 @@ Gfx* geo_render_mirror_mario(s32 callContext, struct GraphNode* node, UNUSED Mat
                     vec3s_copy(gMirrorMario[i].angle, mario->header.gfx.angle);
                     vec3f_copy(gMirrorMario[i].pos, mario->header.gfx.pos);
                     vec3f_copy(gMirrorMario[i].scale, mario->header.gfx.scale);
-                    // FIXME: why does this set unk38, an inline struct, to a ptr to another one? wrong
-                    // GraphNode types again?
-                    gMirrorMario[i].animInfo = *(struct AnimInfo*) & mario->header.gfx.animInfo.animID;
+
+                    dynos_gfx_swap_animations(mario);
+                    gMirrorMario[i].animInfo = mario->header.gfx.animInfo;
+                    dynos_gfx_swap_animations(mario);
+
                     mirroredX = MIRROR_X - gMirrorMario[i].pos[0];
                     gMirrorMario[i].pos[0] = mirroredX + MIRROR_X;
                     gMirrorMario[i].angle[1] = -gMirrorMario[i].angle[1];
