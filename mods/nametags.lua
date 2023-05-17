@@ -222,4 +222,4 @@ end
 
 hook_event(HOOK_ON_HUD_RENDER, on_hud_render)
 
-hook_chat_command("nametags", "[show-tag|show-health|distance]", on_nametags_command)
+hook_chat_command("nametags", "\\#00ffff\\[show-tag|show-health|distance]", on_nametags_command)
