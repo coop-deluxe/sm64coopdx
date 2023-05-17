@@ -69,7 +69,7 @@ static bool djui_chat_box_input_on_key_down(struct DjuiBase* base, int scancode)
     f32* yValue = &gDjuiChatBox->chatFlow->base.y.value;
     bool canScrollUp   = (*yValue > yMax);
     bool canScrollDown = (*yValue < 0);
-    f32 pageAmount = gDjuiChatBox->chatFlow->base.elem.height / 3.0f;
+    f32 pageAmount = gDjuiChatBox->chatContainer->base.elem.height * 3.0f / 4.0f;
 
     switch (scancode) {
         case SCANCODE_UP:
