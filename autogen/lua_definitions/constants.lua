@@ -11491,6 +11491,9 @@ COOP_OBJ_FLAG_NETWORK = (1 << 0)
 COOP_OBJ_FLAG_NON_SYNC = (1 << 2)
 
 --- @type integer
+GRAPH_NODE_GUARD = 0xAA
+
+--- @type integer
 MAX_PLAYERS = 16
 
 --- @type integer

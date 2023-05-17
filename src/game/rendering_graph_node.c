@@ -1503,6 +1503,11 @@ void geo_process_node_and_siblings(struct GraphNode *firstNode) {
             break;
         }
 
+        if (curGraphNode->_guard1 != GRAPH_NODE_GUARD || curGraphNode->_guard2 != GRAPH_NODE_GUARD) {
+            LOG_ERROR("Graph Node corrupted!");
+            break;
+        }
+
         // Sanity check our stack index, If we above or equal to our stack size. Return to prevent OOB\.
         if ((gMatStackIndex + 1) >= MATRIX_STACK_SIZE) { break; }
 

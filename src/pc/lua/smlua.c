@@ -39,7 +39,9 @@ int smlua_pcall(lua_State* L, int nargs, int nresults, UNUSED int errfunc) {
     lua_pushcfunction(L, smlua_error_handler);
     int errorHandlerIndex = 1;
     lua_insert(L, errorHandlerIndex);
+
     int rc = lua_pcall(L, nargs, nresults, errorHandlerIndex);
+
     lua_remove(L, errorHandlerIndex);
     return rc;
 }
@@ -113,6 +115,7 @@ static void smlua_load_script(struct Mod* mod, struct ModFile* file, u16 remoteI
     }
 
     // run chunks
+    LOG_INFO("Executing '%s'", file->relativePath);
     if (smlua_pcall(L, 0, LUA_MULTRET, 0) != LUA_OK) {
         LOG_LUA("Failed to execute lua script '%s'.", file->cachedPath);
         LOG_LUA("%s", smlua_to_string(L, lua_gettop(L)));
@@ -187,6 +190,7 @@ void smlua_update(void) {
     // Collect our garbage after calling our hooks.
     // If we don't, Lag can quickly build up from our mods.
     lua_gc(L, LUA_GCCOLLECT, 0);
+    lua_gc(L, LUA_GCSTOP, 0);
 }
 
 void smlua_shutdown(void) {

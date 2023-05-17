@@ -80,6 +80,7 @@ override_field_invisible = {
     "Mod": [ "files" ],
     "MarioState": [ "visibleToEnemies" ],
     "NetworkPlayer": [ "gag"],
+    "GraphNode": [ "_guard1", "_guard2" ],
 }
 
 override_field_immutable = {

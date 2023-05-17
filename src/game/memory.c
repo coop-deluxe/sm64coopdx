@@ -58,6 +58,23 @@ void dynamic_pool_free(struct DynamicPool *pool, void* ptr) {
     LOG_ERROR("Failed to find memory to free in dynamic pool: %p", ptr);
 }
 
+bool dynamic_pool_contains(struct DynamicPool *pool, void* ptr) {
+    if (!pool || !ptr) { return false; }
+
+    struct DynamicPoolNode* node = pool->tail;
+    struct DynamicPoolNode* next = node;
+
+    while (node) {
+        struct DynamicPoolNode* prev = node->prev;
+        if (node->ptr == ptr) {
+            return true;
+        }
+        next = node;
+        node = prev;
+    }
+    return false;
+}
+
 void dynamic_pool_free_pool(struct DynamicPool *pool) {
     if (!pool) { return; }
     struct DynamicPoolNode* node = pool->tail;

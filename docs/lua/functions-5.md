@@ -470,6 +470,24 @@
 
 <br />
 
+## [camera_reset_overrides](#camera_reset_overrides)
+
+### Lua Example
+`camera_reset_overrides()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void camera_reset_overrides(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [camera_unfreeze](#camera_unfreeze)
 
 ### Lua Example

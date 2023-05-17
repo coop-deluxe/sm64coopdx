@@ -8372,6 +8372,11 @@ function camera_is_frozen()
 end
 
 --- @return nil
+function camera_reset_overrides()
+    -- ...
+end
+
+--- @return nil
 function camera_unfreeze()
     -- ...
 end

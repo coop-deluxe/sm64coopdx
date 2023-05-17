@@ -1677,6 +1677,7 @@ s32 update_level(void) {
 }
 
 s32 init_level(void) {
+    sync_objects_clear();
     reset_dialog_render_state();
 
     s32 val4 = 0;

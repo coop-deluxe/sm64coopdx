@@ -114,16 +114,20 @@ struct AnimationTable {
 
 #define ANIMINDEX_NUMPARTS(animindex) (sizeof(animindex) / sizeof(u16) / 6 - 1)
 
+#define GRAPH_NODE_GUARD 0xAA
+
 struct GraphNode
 {
-    /*0x00*/ s16 type; // structure type
-    /*0x02*/ s16 flags; // hi = drawing layer, lo = rendering modes
-    /*0x04*/ struct GraphNode *prev;
-    /*0x08*/ struct GraphNode *next;
-    /*0x0C*/ struct GraphNode *parent;
-    /*0x10*/ struct GraphNode *children;
-    /*0x14*/ const void *georef;
-    /*????*/ u8 extraFlags;
+    s16 type; // structure type
+    s16 flags; // hi = drawing layer, lo = rendering modes
+    struct GraphNode *prev;
+    u8 _guard1;
+    struct GraphNode *next;
+    u8 _guard2;
+    struct GraphNode *parent;
+    struct GraphNode *children;
+    const void *georef;
+    u8 extraFlags;
 };
 
 struct AnimInfo
