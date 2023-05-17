@@ -478,7 +478,7 @@ void smlua_model_util_store_in_slot(u32 slot, const char* name) {
 }
 
 u16 smlua_model_util_load(enum ModelExtendedId extId) {
-    if (extId >= E_MODEL_MAX + sCustomModelsCount) { extId = E_MODEL_ERROR_MODEL; }
+    if ((u32)extId >= (u32)E_MODEL_MAX + (u32)sCustomModelsCount) { extId = E_MODEL_ERROR_MODEL; }
 
     struct ModelUtilsInfo* info = (extId < E_MODEL_MAX)
         ? &sModels[extId]
