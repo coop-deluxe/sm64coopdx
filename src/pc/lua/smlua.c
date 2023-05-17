@@ -72,11 +72,7 @@ static void smlua_load_script(struct Mod* mod, struct ModFile* file, u16 remoteI
     gSmLuaConvertSuccess = true;
     gLuaInitializingScript = 1;
     LOG_INFO("Loading lua script '%s'", file->cachedPath);
-    if (luaL_loadfile(L, file->cachedPath) != LUA_OK) {
-        LOG_LUA("Failed to load lua script '%s'.", file->cachedPath);
-        LOG_LUA("%s", smlua_to_string(L, lua_gettop(L)));
-        return;
-    }
+    bool failed = (luaL_loadfile(L, file->cachedPath) != LUA_OK);
 
     // check if this is the first time this mod has been loaded
     lua_getfield(L, LUA_REGISTRYINDEX, mod->relativePath);
@@ -112,6 +108,14 @@ static void smlua_load_script(struct Mod* mod, struct ModFile* file, u16 remoteI
     if (firstInit) {
         smlua_sync_table_init_globals(mod->relativePath, remoteIndex);
         smlua_cobject_init_per_file_globals(mod->relativePath);
+    }
+
+    // only run on success
+    if (failed) {
+        LOG_LUA("Failed to load lua script '%s'.", file->cachedPath);
+        LOG_LUA("%s", smlua_to_string(L, lua_gettop(L)));
+        gLuaInitializingScript = 0;
+        return;
     }
 
     // run chunks

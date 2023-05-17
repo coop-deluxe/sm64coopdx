@@ -525,6 +525,11 @@ static void smlua_sync_table_send_all_file(u8 toLocalIndex, const char* path) {
     LOG_INFO("sending sync table for file %s to %u", path, toLocalIndex);
 
     lua_getfield(L, LUA_REGISTRYINDEX, path); // get the file's "global" table
+    if (lua_type(L, -1) == LUA_TNIL) {
+        LOG_ERROR("Could not find table for '%s'", path);
+        lua_pop(L, 1);
+        return;
+    }
 
     {
         lua_getfield(L, -1, "gGlobalSyncTable");

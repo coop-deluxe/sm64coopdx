@@ -1025,10 +1025,6 @@ static void level_cmd_load_model_from_geo_ext(void) {
     s16 modelSlot = CMD_GET(s16, 2);
     const char* geoName = dynos_level_get_token(CMD_GET(u32, 4));
     smlua_model_util_store_in_slot(modelSlot, geoName);
-
-    // DO NOT COMMIT, this is broken
-    // it's supposed to load our custom model into a vanilla slot (ugh why)
-
     sCurrentCmd = CMD_NEXT;
 }
 
