@@ -998,7 +998,9 @@ static void OPTIMIZE_O3 gfx_sp_tri1(uint8_t vtx1_idx, uint8_t vtx2_idx, uint8_t 
                 break;
             case G_CULL_BOTH:
                 // Why is this even an option?
-                return;
+                // HACK: Instead of culling both sides and displaying nothing, cull nothing and display everything
+                // this is needed because of the mirror room... some custom models will set/clear cull values resulting in cull both
+                break;
         }
     }
 

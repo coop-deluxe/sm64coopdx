@@ -1500,6 +1500,7 @@ void geo_process_node_and_siblings(struct GraphNode *firstNode) {
 
     do {
         if (curGraphNode == NULL) {
+            LOG_ERROR("Graph Node null!");
             break;
         }
 
@@ -1509,10 +1510,16 @@ void geo_process_node_and_siblings(struct GraphNode *firstNode) {
         }
 
         // Sanity check our stack index, If we above or equal to our stack size. Return to prevent OOB\.
-        if ((gMatStackIndex + 1) >= MATRIX_STACK_SIZE) { break; }
+        if ((gMatStackIndex + 1) >= MATRIX_STACK_SIZE) {
+            LOG_ERROR("Graph Node matrix stack overflow!");
+            break;
+        }
 
         // Break out of endless loops
-        if (++depthSanity > 5000) { break; }
+        if (++depthSanity > 5000) {
+            LOG_ERROR("Graph Node too deep!");
+            break;
+        }
 
         if (curGraphNode->flags & GRAPH_RENDER_ACTIVE) {
             if (curGraphNode->flags & GRAPH_RENDER_CHILDREN_FIRST) {
