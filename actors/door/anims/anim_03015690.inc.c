@@ -52,4 +52,6 @@ static const struct Animation door_seg3_anim_03015690 = {
     door_seg3_animvalue_03015470,
     door_seg3_animindex_03015654,
     0,
+    ANIM_FIELD_LENGTH(door_seg3_animvalue_03015470),
+    ANIM_FIELD_LENGTH(door_seg3_animindex_03015654),
 };

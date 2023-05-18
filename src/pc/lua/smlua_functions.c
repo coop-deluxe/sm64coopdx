@@ -653,12 +653,12 @@ void smlua_func_level_script_parse(lua_State* L) {
  // custom animations //
 ///////////////////////
 
-static u16 *smlua_to_u16_list(lua_State* L, int index) {
+static u16 *smlua_to_u16_list(lua_State* L, int index, u32* length) {
 
     // Get number of values
-    s32 length = lua_rawlen(L, index);
-    if (!length) { LOG_LUA("smlua_to_u16_list: Table must not be empty"); return NULL; }
-    u16 *values = calloc(length, sizeof(u16));
+    *length = lua_rawlen(L, index);
+    if (!*length) { LOG_LUA("smlua_to_u16_list: Table must not be empty"); return NULL; }
+    u16 *values = calloc(*length, sizeof(u16));
 
     // Retrieve values
     lua_pushnil(L);
@@ -709,13 +709,15 @@ int smlua_func_smlua_anim_util_register_animation(lua_State* L) {
     s16 loopEnd = smlua_to_integer(L, 6);
     if (!gSmLuaConvertSuccess) { LOG_LUA("%s: Failed to convert parameter '%s'", "smlua_anim_util_register_animation", "loopEnd"); return 0; }
 
-    s16 *values = (s16 *) smlua_to_u16_list(L, 7);
+    u32 valuesLength = 0;
+    s16 *values = (s16 *) smlua_to_u16_list(L, 7, &valuesLength);
     if (!values) { LOG_LUA("%s: Failed to convert parameter '%s'", "smlua_anim_util_register_animation", "values"); return 0; }
-    
-    u16 *index = (u16 *) smlua_to_u16_list(L, 8);
+
+    u32 indexLength = 0;
+    u16 *index = (u16 *) smlua_to_u16_list(L, 8, &indexLength);
     if (!index) { LOG_LUA("%s: Failed to convert parameter '%s'", "smlua_anim_util_register_animation", "index"); free(values); return 0; }
 
-    smlua_anim_util_register_animation(name, flags, animYTransDivisor, startFrame, loopStart, loopEnd, values, index);
+    smlua_anim_util_register_animation(name, flags, animYTransDivisor, startFrame, loopStart, loopEnd, values, valuesLength, index, indexLength);
 
     return 1;
 }

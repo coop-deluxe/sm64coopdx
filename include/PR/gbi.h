@@ -3354,6 +3354,7 @@ typedef union {
 #ifndef MIN
 #define MIN(a, b)				((a) < (b) ? (a) : (b))
 #endif
+
 /*
  *  Dxt is the inverse of the number of 64-bit words in a line of
  *  the texture being loaded using the load_block command.  If

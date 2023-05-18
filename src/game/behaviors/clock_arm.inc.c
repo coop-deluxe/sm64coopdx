@@ -2,7 +2,7 @@
  * Main loop of the hour and minute hands of the Tick Tock Clock painting.
  */
 void bhv_rotating_clock_arm_loop(void) {
-    struct Surface *marioSurface;
+    struct Surface *marioSurface = NULL;
     u16 rollAngle = o->oFaceAngleRoll;
     if (gMarioObject != NULL) {
         o->oFloorHeight = find_floor(gMarioObject->oPosX, gMarioObject->oPosY, gMarioObject->oPosZ, &marioSurface);

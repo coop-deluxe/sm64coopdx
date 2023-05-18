@@ -75,4 +75,6 @@ static const struct Animation klepto_seg5_anim_05008A18 = {
     klepto_seg5_animvalue_050086D8,
     klepto_seg5_animindex_050088D4,
     0,
+    ANIM_FIELD_LENGTH(klepto_seg5_animvalue_050086D8),
+    ANIM_FIELD_LENGTH(klepto_seg5_animindex_050088D4),
 };

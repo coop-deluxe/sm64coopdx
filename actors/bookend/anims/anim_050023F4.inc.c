@@ -29,4 +29,6 @@ static const struct Animation bookend_seg5_anim_050023F4 = {
     bookend_seg5_animvalue_05002350,
     bookend_seg5_animindex_05002370,
     0,
+    ANIM_FIELD_LENGTH(bookend_seg5_animvalue_05002350),
+    ANIM_FIELD_LENGTH(bookend_seg5_animindex_05002370),
 };

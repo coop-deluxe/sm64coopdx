@@ -70,4 +70,6 @@ static const struct Animation bub_seg6_anim_0601233C = {
     bub_seg6_animvalue_06012000,
     bub_seg6_animindex_060122DC,
     0,
+    ANIM_FIELD_LENGTH(bub_seg6_animvalue_06012000),
+    ANIM_FIELD_LENGTH(bub_seg6_animindex_060122DC),
 };

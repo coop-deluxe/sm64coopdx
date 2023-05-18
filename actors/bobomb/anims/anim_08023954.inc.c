@@ -40,4 +40,6 @@ static const struct Animation bobomb_seg8_anim_08023954 = {
     bobomb_seg8_animvalue_08023814,
     bobomb_seg8_animindex_080238AC,
     0,
+    ANIM_FIELD_LENGTH(bobomb_seg8_animvalue_08023814),
+    ANIM_FIELD_LENGTH(bobomb_seg8_animindex_080238AC),
 };

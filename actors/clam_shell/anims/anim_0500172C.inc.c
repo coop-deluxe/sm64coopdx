@@ -30,4 +30,6 @@ static const struct Animation clam_shell_seg5_anim_0500172C = {
     clam_shell_seg5_animvalue_0500166C,
     clam_shell_seg5_animindex_050016F0,
     0,
+    ANIM_FIELD_LENGTH(clam_shell_seg5_animvalue_0500166C),
+    ANIM_FIELD_LENGTH(clam_shell_seg5_animindex_050016F0),
 };

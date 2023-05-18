@@ -32,4 +32,6 @@ static const struct Animation swoop_seg6_anim_06006E88 = {
     swoop_seg6_animvalue_06006DB8,
     swoop_seg6_animindex_06006E1C,
     0,
+    ANIM_FIELD_LENGTH(swoop_seg6_animvalue_06006DB8),
+    ANIM_FIELD_LENGTH(swoop_seg6_animindex_06006E1C),
 };

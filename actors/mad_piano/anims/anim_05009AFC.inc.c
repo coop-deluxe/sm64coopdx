@@ -32,4 +32,6 @@ static const struct Animation mad_piano_seg5_anim_05009AFC = {
     mad_piano_seg5_animvalue_05009A1C,
     mad_piano_seg5_animindex_05009AC0,
     0,
+    ANIM_FIELD_LENGTH(mad_piano_seg5_animvalue_05009A1C),
+    ANIM_FIELD_LENGTH(mad_piano_seg5_animindex_05009AC0),
 };

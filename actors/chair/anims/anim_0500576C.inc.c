@@ -26,4 +26,6 @@ static const struct Animation chair_seg5_anim_0500576C = {
     chair_seg5_animvalue_050056F0,
     chair_seg5_animindex_05005700,
     0,
+    ANIM_FIELD_LENGTH(chair_seg5_animvalue_050056F0),
+    ANIM_FIELD_LENGTH(chair_seg5_animindex_05005700),
 };

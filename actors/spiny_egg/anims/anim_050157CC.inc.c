@@ -27,4 +27,6 @@ static const struct Animation spiny_egg_seg5_anim_050157CC = {
     spiny_egg_seg5_animvalue_05015750,
     spiny_egg_seg5_animindex_05015754,
     0,
+    ANIM_FIELD_LENGTH(spiny_egg_seg5_animvalue_05015750),
+    ANIM_FIELD_LENGTH(spiny_egg_seg5_animindex_05015754),
 };

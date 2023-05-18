@@ -125,4 +125,6 @@ static const struct Animation bowser_key_seg3_anim_course_exit = {
     bowser_key_seg3_animvalue_course_exit,
     bowser_key_seg3_animindex_course_exit,
     0,
+    ANIM_FIELD_LENGTH(bowser_key_seg3_animvalue_course_exit),
+    ANIM_FIELD_LENGTH(bowser_key_seg3_animindex_course_exit),
 };

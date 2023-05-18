@@ -42,4 +42,6 @@ static const struct Animation heave_ho_seg5_anim_05014F28 = {
     heave_ho_seg5_animvalue_05014DD0,
     heave_ho_seg5_animindex_05014E5C,
     0,
+    ANIM_FIELD_LENGTH(heave_ho_seg5_animvalue_05014DD0),
+    ANIM_FIELD_LENGTH(heave_ho_seg5_animindex_05014E5C),
 };

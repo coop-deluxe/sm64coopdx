@@ -8,6 +8,8 @@ static const struct Animation anim_3C[] = {
     anim_3C_3D_values,
     anim_3C_3D_indices,
     0,
+    ANIM_FIELD_LENGTH(anim_3C_3D_values),
+    ANIM_FIELD_LENGTH(anim_3C_3D_indices),
 };
 
 static const struct Animation anim_3D[] = {
@@ -20,6 +22,8 @@ static const struct Animation anim_3D[] = {
     anim_3C_3D_values,
     anim_3C_3D_indices,
     0,
+    ANIM_FIELD_LENGTH(anim_3C_3D_values),
+    ANIM_FIELD_LENGTH(anim_3C_3D_indices),
 };
 
 

@@ -47,4 +47,6 @@ static const struct Animation bully_seg5_anim_05004598 = {
     bully_seg5_animvalue_050043F0,
     bully_seg5_animindex_050044F0,
     0,
+    ANIM_FIELD_LENGTH(bully_seg5_animvalue_050043F0),
+    ANIM_FIELD_LENGTH(bully_seg5_animindex_050044F0),
 };

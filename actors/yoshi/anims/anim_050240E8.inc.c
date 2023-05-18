@@ -63,4 +63,6 @@ static const struct Animation yoshi_seg5_anim_050240E8 = {
     yoshi_seg5_animvalue_05023E64,
     yoshi_seg5_animindex_5023FBC,
     0,
+    ANIM_FIELD_LENGTH(yoshi_seg5_animvalue_05023E64),
+    ANIM_FIELD_LENGTH(yoshi_seg5_animindex_5023FBC),
 };

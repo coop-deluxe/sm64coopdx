@@ -83,4 +83,6 @@ static const struct Animation ukiki_seg5_anim_0501006C = {
     ukiki_seg5_animvalue_0500FC9C,
     ukiki_seg5_animindex_0500FF4C,
     0,
+    ANIM_FIELD_LENGTH(ukiki_seg5_animvalue_0500FC9C),
+    ANIM_FIELD_LENGTH(ukiki_seg5_animindex_0500FF4C),
 };

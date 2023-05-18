@@ -419,4 +419,6 @@ static const struct Animation unagi_seg5_anim_0500FBF4 = {
     unagi_seg5_animvalue_0500E310,
     unagi_seg5_animindex_0500FB34,
     0,
+    ANIM_FIELD_LENGTH(unagi_seg5_animvalue_0500E310),
+    ANIM_FIELD_LENGTH(unagi_seg5_animindex_0500FB34),
 };

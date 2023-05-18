@@ -188,4 +188,6 @@ static const struct Animation mips_seg6_anim_0601561C = {
     mips_seg6_animvalue_06014BAC,
     mips_seg6_animindex_06015544,
     0,
+    ANIM_FIELD_LENGTH(mips_seg6_animvalue_06014BAC),
+    ANIM_FIELD_LENGTH(mips_seg6_animindex_06015544),
 };

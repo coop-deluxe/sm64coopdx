@@ -31,4 +31,6 @@ static const struct Animation blargg_seg5_anim_05006154 = {
     blargg_seg5_animvalue_05006088,
     blargg_seg5_animindex_0500610C,
     0,
+    ANIM_FIELD_LENGTH(blargg_seg5_animvalue_05006088),
+    ANIM_FIELD_LENGTH(blargg_seg5_animindex_0500610C),
 };

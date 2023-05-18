@@ -105,6 +105,8 @@ struct Animation {
     /*0x0C*/ const s16 *values;
     /*0x10*/ const u16 *index;
     /*0x14*/ u32 length; // only used with Mario animations to determine how much to load. 0 otherwise.
+    /*????*/ u32 valuesLength;
+    /*????*/ u32 indexLength;
 };
 
 struct AnimationTable {
@@ -113,6 +115,7 @@ struct AnimationTable {
 };
 
 #define ANIMINDEX_NUMPARTS(animindex) (sizeof(animindex) / sizeof(u16) / 6 - 1)
+#define ANIM_FIELD_LENGTH(animindex) (sizeof(animindex) / sizeof(u16))
 
 #define GRAPH_NODE_GUARD 0xAA
 

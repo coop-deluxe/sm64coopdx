@@ -38,4 +38,6 @@ static const struct Animation chilly_chief_seg6_anim_06003420 = {
     chilly_chief_seg6_animvalue_06003304,
     chilly_chief_seg6_animindex_06003378,
     0,
+    ANIM_FIELD_LENGTH(chilly_chief_seg6_animvalue_06003304),
+    ANIM_FIELD_LENGTH(chilly_chief_seg6_animindex_06003378),
 };

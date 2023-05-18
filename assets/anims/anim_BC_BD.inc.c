@@ -8,6 +8,8 @@ static const struct Animation anim_BC[] = {
     anim_BC_BD_values,
     anim_BC_BD_indices,
     0,
+    ANIM_FIELD_LENGTH(anim_BC_BD_values),
+    ANIM_FIELD_LENGTH(anim_BC_BD_indices),
 };
 
 static const struct Animation anim_BD[] = {
@@ -20,6 +22,8 @@ static const struct Animation anim_BD[] = {
     anim_BC_BD_values,
     anim_BC_BD_indices,
     0,
+    ANIM_FIELD_LENGTH(anim_BC_BD_values),
+    ANIM_FIELD_LENGTH(anim_BC_BD_indices),
 };
 
 

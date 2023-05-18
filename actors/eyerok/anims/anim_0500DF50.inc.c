@@ -232,4 +232,6 @@ static const struct Animation eyerok_seg5_anim_0500DF50 = {
     eyerok_seg5_animvalue_0500D288,
     eyerok_seg5_animindex_0500DD4C,
     0,
+    ANIM_FIELD_LENGTH(eyerok_seg5_animvalue_0500D288),
+    ANIM_FIELD_LENGTH(eyerok_seg5_animindex_0500DD4C),
 };

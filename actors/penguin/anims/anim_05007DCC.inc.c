@@ -80,4 +80,6 @@ static const struct Animation penguin_seg5_anim_05007DCC = {
     penguin_seg5_animvalue_050079FC,
     penguin_seg5_animindex_05007D3C,
     0,
+    ANIM_FIELD_LENGTH(penguin_seg5_animvalue_050079FC),
+    ANIM_FIELD_LENGTH(penguin_seg5_animindex_05007D3C),
 };

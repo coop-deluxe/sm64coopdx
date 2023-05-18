@@ -60,4 +60,6 @@ static const struct Animation monty_mole_seg5_anim_0500527C = {
     monty_mole_seg5_animvalue_05005004,
     monty_mole_seg5_animindex_050051C8,
     0,
+    ANIM_FIELD_LENGTH(monty_mole_seg5_animvalue_05005004),
+    ANIM_FIELD_LENGTH(monty_mole_seg5_animindex_050051C8),
 };

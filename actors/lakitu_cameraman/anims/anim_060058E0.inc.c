@@ -62,4 +62,6 @@ static const struct Animation lakitu_seg6_anim_060058E0 = {
     lakitu_seg6_animvalue_06005638,
     lakitu_seg6_animindex_06005844,
     0,
+    ANIM_FIELD_LENGTH(lakitu_seg6_animvalue_06005638),
+    ANIM_FIELD_LENGTH(lakitu_seg6_animindex_06005844),
 };

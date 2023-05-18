@@ -89,4 +89,6 @@ static const struct Animation spiny_seg5_anim_05016E94 = {
     spiny_seg5_animvalue_05016A58,
     spiny_seg5_animindex_05016DA4,
     0,
+    ANIM_FIELD_LENGTH(spiny_seg5_animvalue_05016A58),
+    ANIM_FIELD_LENGTH(spiny_seg5_animindex_05016DA4),
 };

@@ -8,6 +8,8 @@ static const struct Animation anim_99[] = {
     anim_99_values,
     anim_99_indices,
     0,
+    ANIM_FIELD_LENGTH(anim_99_values),
+    ANIM_FIELD_LENGTH(anim_99_indices),
 };
 
 

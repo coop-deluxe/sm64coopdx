@@ -131,4 +131,6 @@ static const struct Animation whomp_seg6_anim_060209EC = {
     whomp_seg6_animvalue_060202F4,
     whomp_seg6_animindex_06020950,
     0,
+    ANIM_FIELD_LENGTH(whomp_seg6_animvalue_060202F4),
+    ANIM_FIELD_LENGTH(whomp_seg6_animindex_06020950),
 };

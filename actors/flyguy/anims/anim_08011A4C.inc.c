@@ -62,4 +62,6 @@ static const struct Animation flyguy_seg8_anim_08011A4C = {
     flyguy_seg8_animvalue_08011798,
     flyguy_seg8_animindex_080119D4,
     0,
+    ANIM_FIELD_LENGTH(flyguy_seg8_animvalue_08011798),
+    ANIM_FIELD_LENGTH(flyguy_seg8_animindex_080119D4),
 };

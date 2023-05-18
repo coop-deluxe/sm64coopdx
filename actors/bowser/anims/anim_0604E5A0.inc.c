@@ -348,4 +348,6 @@ static const struct Animation bowser_seg6_anim_0604E5A0 = {
     bowser_seg6_animvalue_0604D19C,
     bowser_seg6_animindex_0604E384,
     0,
+    ANIM_FIELD_LENGTH(bowser_seg6_animvalue_0604D19C),
+    ANIM_FIELD_LENGTH(bowser_seg6_animindex_0604E384),
 };

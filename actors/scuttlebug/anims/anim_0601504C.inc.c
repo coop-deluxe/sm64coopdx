@@ -231,4 +231,6 @@ static const struct Animation scuttlebug_seg6_anim_0601504C = {
     scuttlebug_seg6_animvalue_06014398,
     scuttlebug_seg6_animindex_06014E48,
     0,
+    ANIM_FIELD_LENGTH(scuttlebug_seg6_animvalue_06014398),
+    ANIM_FIELD_LENGTH(scuttlebug_seg6_animindex_06014E48),
 };

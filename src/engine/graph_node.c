@@ -829,6 +829,42 @@ s32 retrieve_animation_index(s32 frame, u16 **attributes) {
     return result;
 }
 
+s16 retrieve_animation_value(struct Animation *animation, s32 frame, u16 **attributes) {
+    // validate attributes
+    if (!attributes) { return 0; }
+
+    u16* attr = *attributes;
+    if (!attr) { return 0; }
+
+    size_t offset = attr - animation->index;
+    if ((offset + 1) >= animation->indexLength) { return 0; }
+
+    // validate frame
+    if (frame < 0) { return 0; }
+
+    // retrieve animation index
+    s32 index = 0;
+    if (frame < attr[0]) {
+        index = attr[1] + frame;
+    } else {
+        index = attr[1] + attr[0] - 1;
+    }
+
+    // clamp index
+    if (index < 0) { index = 0; }
+    if (index > (s32)animation->valuesLength) { index = animation->valuesLength - 1; }
+
+    *attributes += 2;
+
+    // keep attributes in bounds
+    offset = *attributes - animation->index;
+    if (offset >= animation->indexLength) {
+        *attributes = (u16*)&animation->index[animation->indexLength - 1];
+    }
+
+    return animation->values[index];
+}
+
 /**
  * Update the animation frame of an object. The animation flags determine
  * whether it plays forwards or backwards, and whether it stops or loops at
@@ -899,17 +935,10 @@ void geo_retreive_animation_translation(struct GraphNodeObject *obj, Vec3f posit
 
     if (animation != NULL) {
         u16 *attribute = segmented_to_virtual((void *) animation->index);
-        s16 *values = segmented_to_virtual((void *) animation->values);
-
         s16 frame = obj->animInfo.animFrame;
-
-        if (frame < 0) {
-            frame = 0;
-        }
-
-        position[0] = (f32) values[retrieve_animation_index(frame, &attribute)];
-        position[1] = (f32) values[retrieve_animation_index(frame, &attribute)];
-        position[2] = (f32) values[retrieve_animation_index(frame, &attribute)];
+        position[0] = (f32) retrieve_animation_value(animation, frame, &attribute);
+        position[1] = (f32) retrieve_animation_value(animation, frame, &attribute);
+        position[2] = (f32) retrieve_animation_value(animation, frame, &attribute);
     } else {
         vec3f_set(position, 0, 0, 0);
     }

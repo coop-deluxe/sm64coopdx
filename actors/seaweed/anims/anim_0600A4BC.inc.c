@@ -63,4 +63,6 @@ static const struct Animation seaweed_seg6_anim_0600A4BC = {
     seaweed_seg6_animvalue_0600A1F0,
     seaweed_seg6_animindex_0600A474,
     0,
+    ANIM_FIELD_LENGTH(seaweed_seg6_animvalue_0600A1F0),
+    ANIM_FIELD_LENGTH(seaweed_seg6_animindex_0600A474),
 };

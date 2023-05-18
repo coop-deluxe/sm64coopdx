@@ -1,3 +1,4 @@
+#include "include/types.h"
 // 0x0700C7C8 - 0x0700C8F0
 static const s16 castle_grounds_seg7_animvalue_flags[] = {
         0,   480, 16383,  4835,  3907,  2463,   721, -1101, -2789, -4125, -4928, -5481, -5883, -6121, -6182, -6054,
@@ -33,6 +34,8 @@ static const struct Animation castle_grounds_seg7_anim_flags = {
     castle_grounds_seg7_animvalue_flags,
     castle_grounds_seg7_animindex_flags,
     0,
+    ANIM_FIELD_LENGTH(castle_grounds_seg7_animvalue_flags),
+    ANIM_FIELD_LENGTH(castle_grounds_seg7_animindex_flags),
 };
 
 // 0x0700C95C - 0x0700C960

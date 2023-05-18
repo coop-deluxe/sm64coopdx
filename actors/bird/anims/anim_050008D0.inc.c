@@ -33,4 +33,6 @@ static const struct Animation birds_seg5_anim_050008D0 = {
     birds_seg5_animvalue_050007E0,
     birds_seg5_animindex_5000870,
     0,
+    ANIM_FIELD_LENGTH(birds_seg5_animvalue_050007E0),
+    ANIM_FIELD_LENGTH(birds_seg5_animindex_5000870),
 };

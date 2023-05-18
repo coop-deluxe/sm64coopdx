@@ -67,7 +67,7 @@ struct GlobalObjectAnimations {
 extern struct GlobalObjectAnimations gGlobalObjectAnimations;
 
 void smlua_anim_util_reset();
-void smlua_anim_util_register_animation(const char *name, s16 flags, s16 animYTransDivisor, s16 startFrame, s16 loopStart, s16 loopEnd, s16 *values, u16 *index);
+void smlua_anim_util_register_animation(const char *name, s16 flags, s16 animYTransDivisor, s16 startFrame, s16 loopStart, s16 loopEnd, s16 *values, u32 valuesLength, u16 *index, u32 indexLength);
 void smlua_anim_util_set_animation(struct Object *obj, const char *name);
 const char *smlua_anim_util_get_current_animation_name(struct Object *obj);
 

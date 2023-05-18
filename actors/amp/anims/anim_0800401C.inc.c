@@ -51,4 +51,6 @@ static const struct Animation amp_seg8_anim_0800401C = {
     amp_seg8_animvalue_08003E30,
     amp_seg8_animindex_08003F74,
     0,
+    ANIM_FIELD_LENGTH(amp_seg8_animvalue_08003E30),
+    ANIM_FIELD_LENGTH(amp_seg8_animindex_08003F74),
 };

@@ -86,4 +86,6 @@ static const struct Animation sushi_seg5_anim_0500AE3C = {
     sushi_seg5_animvalue_0500AA00,
     sushi_seg5_animindex_0500ADDC,
     0,
+    ANIM_FIELD_LENGTH(sushi_seg5_animvalue_0500AA00),
+    ANIM_FIELD_LENGTH(sushi_seg5_animindex_0500ADDC),
 };

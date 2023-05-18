@@ -54,4 +54,6 @@ static const struct Animation chuckya_seg8_anim_0800BBEC = {
     chuckya_seg8_animvalue_0800BA10,
     chuckya_seg8_animindex_0800BA78,
     0,
+    ANIM_FIELD_LENGTH(chuckya_seg8_animvalue_0800BA10),
+    ANIM_FIELD_LENGTH(chuckya_seg8_animindex_0800BA78),
 };

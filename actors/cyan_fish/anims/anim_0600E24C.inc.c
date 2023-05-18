@@ -45,4 +45,6 @@ static const struct Animation cyan_fish_seg6_anim_0600E24C = {
     cyan_fish_seg6_animvalue_0600E098,
     cyan_fish_seg6_animindex_0600E204,
     0,
+    ANIM_FIELD_LENGTH(cyan_fish_seg6_animvalue_0600E098),
+    ANIM_FIELD_LENGTH(cyan_fish_seg6_animindex_0600E204),
 };

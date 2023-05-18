@@ -142,4 +142,6 @@ static const struct Animation piranha_plant_seg6_anim_0601A014 = {
     piranha_plant_seg6_animvalue_0601986C,
     piranha_plant_seg6_animindex_06019F6C,
     0,
+    ANIM_FIELD_LENGTH(piranha_plant_seg6_animvalue_0601986C),
+    ANIM_FIELD_LENGTH(piranha_plant_seg6_animindex_06019F6C),
 };

@@ -151,4 +151,6 @@ static const struct Animation dorrie_seg6_anim_0600E9BC = {
     dorrie_seg6_animvalue_0600E1A4,
     dorrie_seg6_animindex_0600E8D8,
     0,
+    ANIM_FIELD_LENGTH(dorrie_seg6_animvalue_0600E1A4),
+    ANIM_FIELD_LENGTH(dorrie_seg6_animindex_0600E8D8),
 };

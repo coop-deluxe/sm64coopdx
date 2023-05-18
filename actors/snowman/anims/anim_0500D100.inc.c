@@ -52,4 +52,6 @@ static const struct Animation snowman_seg5_anim_0500D100 = {
     snowman_seg5_animvalue_0500CEF0,
     snowman_seg5_animindex_0500D088,
     0,
+    ANIM_FIELD_LENGTH(snowman_seg5_animvalue_0500CEF0),
+    ANIM_FIELD_LENGTH(snowman_seg5_animindex_0500D088),
 };

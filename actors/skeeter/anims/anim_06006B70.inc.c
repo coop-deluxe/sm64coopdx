@@ -249,4 +249,6 @@ static const struct Animation skeeter_seg6_anim_06006B70 = {
     skeeter_seg6_animvalue_06005D5C,
     skeeter_seg6_animindex_06006A14,
     0,
+    ANIM_FIELD_LENGTH(skeeter_seg6_animvalue_06005D5C),
+    ANIM_FIELD_LENGTH(skeeter_seg6_animindex_06006A14),
 };

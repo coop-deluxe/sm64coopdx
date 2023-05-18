@@ -391,4 +391,6 @@ static const struct Animation toad_seg6_anim_0600FB40 = {
     toad_seg6_animvalue_0600E42C,
     toad_seg6_animindex_0600FA44,
     0,
+    ANIM_FIELD_LENGTH(toad_seg6_animvalue_0600E42C),
+    ANIM_FIELD_LENGTH(toad_seg6_animindex_0600FA44),
 };

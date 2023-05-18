@@ -109,4 +109,6 @@ static const struct Animation koopa_seg6_anim_0600CC24 = {
     koopa_seg6_animvalue_0600C6A0,
     koopa_seg6_animindex_0600CB64,
     0,
+    ANIM_FIELD_LENGTH(koopa_seg6_animvalue_0600C6A0),
+    ANIM_FIELD_LENGTH(koopa_seg6_animindex_0600CB64),
 };

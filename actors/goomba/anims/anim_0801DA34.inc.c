@@ -63,4 +63,6 @@ static const struct Animation goomba_seg8_anim_0801DA34 = {
     goomba_seg8_animvalue_0801D770,
     goomba_seg8_animindex_0801D9D4,
     0,
+    ANIM_FIELD_LENGTH(goomba_seg8_animvalue_0801D770),
+    ANIM_FIELD_LENGTH(goomba_seg8_animindex_0801D9D4),
 };

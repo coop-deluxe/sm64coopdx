@@ -129,7 +129,7 @@ void smlua_anim_util_reset() {
     sCustomAnimationHead = NULL;
 }
 
-void smlua_anim_util_register_animation(const char *name, s16 flags, s16 animYTransDivisor, s16 startFrame, s16 loopStart, s16 loopEnd, s16 *values, u16 *index) {
+void smlua_anim_util_register_animation(const char *name, s16 flags, s16 animYTransDivisor, s16 startFrame, s16 loopStart, s16 loopEnd, s16 *values, u32 valuesLength, u16 *index, u32 indexLength) {
 
     // NULL-checks
     if (!name) {
@@ -159,6 +159,8 @@ void smlua_anim_util_register_animation(const char *name, s16 flags, s16 animYTr
     node->anim->unusedBoneCount = 0;
     node->anim->values = values;
     node->anim->index = index;
+    node->anim->valuesLength = valuesLength;
+    node->anim->indexLength = indexLength;
     node->anim->length = 0;
     node->next = sCustomAnimationHead;
     sCustomAnimationHead = node;

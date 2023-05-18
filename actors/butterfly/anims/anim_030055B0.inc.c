@@ -26,4 +26,6 @@ static const struct Animation butterfly_seg3_anim_030055B0 = {
     butterfly_seg3_animvalue_03005538,
     butterfly_seg3_animindex_0300555C,
     0,
+    ANIM_FIELD_LENGTH(butterfly_seg3_animvalue_03005538),
+    ANIM_FIELD_LENGTH(butterfly_seg3_animindex_0300555C),
 };

@@ -25,11 +25,13 @@ def parse_struct(filename, lines, lineindex, name):
     v5 = int(lines[lineindex + 4].rstrip(","), 0)
     values = lines[lineindex + 6].rstrip(",")
     indices = lines[lineindex + 7].rstrip(",")
-    items.append(("header", name, (v1, v2, v3, v4, v5, values, indices)))
-    if lines[lineindex + 9] != "};":
+    valuesLength = lines[lineindex + 9].rstrip(",")
+    indicesLength = lines[lineindex + 10].rstrip(",")
+    items.append(("header", name, (v1, v2, v3, v4, v5, values, indices, valuesLength, indicesLength)))
+    if lines[lineindex + 11] != "};":
         raise_error(filename, lineindex + 9, "Expected \"};\" but got " + lines[lineindex + 9])
     order_mapping[name] = len(items)
-    lineindex += 10
+    lineindex += 12
     return lineindex
 
 def parse_array(filename, lines, lineindex, name, is_indices):
@@ -99,7 +101,7 @@ try:
     for item in items:
         type, name, obj = item
         if type == "header":
-            v1, v2, v3, v4, v5, values, indices = obj
+            v1, v2, v3, v4, v5, values, indices, valuesLength, indicesLength = obj
             if order_mapping[indices] < order_mapping[name]:
                 raise SyntaxError("Error: Animation struct must be written before indices array for " + name)
             if order_mapping[values] < order_mapping[indices]:
@@ -113,7 +115,7 @@ try:
     for item in items:
         type, name, obj = item
         if type == "header":
-            v1, v2, v3, v4, v5, values, indices = obj
+            v1, v2, v3, v4, v5, values, indices, valuesLength, indicesLength = obj
             indices_len = len_mapping[indices] // 6 - 1
             values_num_values = len_mapping[values]
             offset_to_struct = "offsetof(struct MarioAnimsObj, " + name + ")"
@@ -128,7 +130,9 @@ try:
                 str(indices_len),
                 "(const s16 *)(offsetof(struct MarioAnimsObj, " + values + ") - " + offset_to_struct + ")",
                 "(const u16 *)(offsetof(struct MarioAnimsObj, " + indices + ") - " + offset_to_struct + ")",
-                offset_to_end + " - " + offset_to_struct
+                offset_to_end + " - " + offset_to_struct,
+                str(len_mapping[values]),
+                str(len_mapping[indices]),
             ]) + "},")
         else:
             is_indices, arr = obj

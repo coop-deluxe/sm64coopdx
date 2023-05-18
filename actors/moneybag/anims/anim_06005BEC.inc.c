@@ -34,4 +34,6 @@ static const struct Animation moneybag_seg6_anim_06005BEC = {
     moneybag_seg6_animvalue_06005AF0,
     moneybag_seg6_animindex_06005B8C,
     0,
+    ANIM_FIELD_LENGTH(moneybag_seg6_animvalue_06005AF0),
+    ANIM_FIELD_LENGTH(moneybag_seg6_animindex_06005B8C),
 };

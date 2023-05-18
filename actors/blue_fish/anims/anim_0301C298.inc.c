@@ -32,4 +32,6 @@ static const struct Animation blue_fish_seg3_anim_0301C298 = {
     blue_fish_seg3_animvalue_0301C1B0,
     blue_fish_seg3_animindex_0301C268,
     0,
+    ANIM_FIELD_LENGTH(blue_fish_seg3_animvalue_0301C1B0),
+    ANIM_FIELD_LENGTH(blue_fish_seg3_animindex_0301C268),
 };

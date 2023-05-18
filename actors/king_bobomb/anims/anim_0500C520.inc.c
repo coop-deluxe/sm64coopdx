@@ -62,4 +62,6 @@ static const struct Animation king_bobomb_seg5_anim_0500C520 = {
     king_bobomb_seg5_animvalue_0500C2C4,
     king_bobomb_seg5_animindex_0500C3AC,
     0,
+    ANIM_FIELD_LENGTH(king_bobomb_seg5_animvalue_0500C2C4),
+    ANIM_FIELD_LENGTH(king_bobomb_seg5_animindex_0500C3AC),
 };

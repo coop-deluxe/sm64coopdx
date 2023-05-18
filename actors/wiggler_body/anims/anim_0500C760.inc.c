@@ -90,4 +90,6 @@ static const struct Animation wiggler_seg5_anim_0500C760 = {
     wiggler_seg5_animvalue_0500C2F0,
     wiggler_seg5_animindex_0500C6DC,
     0,
+    ANIM_FIELD_LENGTH(wiggler_seg5_animvalue_0500C2F0),
+    ANIM_FIELD_LENGTH(wiggler_seg5_animindex_0500C6DC),
 };

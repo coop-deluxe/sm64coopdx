@@ -42,4 +42,6 @@ static const struct Animation water_ring_seg6_anim_06013F64 = {
     water_ring_seg6_animvalue_06013DD8,
     water_ring_seg6_animindex_06013F40,
     0,
+    ANIM_FIELD_LENGTH(water_ring_seg6_animvalue_06013DD8),
+    ANIM_FIELD_LENGTH(water_ring_seg6_animindex_06013F40),
 };

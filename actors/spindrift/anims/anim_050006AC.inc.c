@@ -65,6 +65,8 @@ static const struct Animation spindrift_seg5_anim_050006AC = {
     spindrift_seg5_animvalue_050003D8,
     spindrift_seg5_animindex_050005F8,
     0,
+    ANIM_FIELD_LENGTH(spindrift_seg5_animvalue_050003D8),
+    ANIM_FIELD_LENGTH(spindrift_seg5_animindex_050005F8),
 };
 
 

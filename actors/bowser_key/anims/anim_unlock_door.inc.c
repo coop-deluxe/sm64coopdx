@@ -125,4 +125,6 @@ static const struct Animation bowser_key_seg3_anim_unlock_door = {
     bowser_key_seg3_animvalue_unlock_door,
     bowser_key_seg3_animindex_unlock_door,
     0,
+    ANIM_FIELD_LENGTH(bowser_key_seg3_animvalue_unlock_door),
+    ANIM_FIELD_LENGTH(bowser_key_seg3_animindex_unlock_door),
 };

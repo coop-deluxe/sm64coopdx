@@ -515,4 +515,6 @@ static const struct Animation peach_seg5_anim_05012F40 = {
     peach_seg5_animvalue_05011068,
     peach_seg5_animindex_5012E38,
     0,
+    ANIM_FIELD_LENGTH(peach_seg5_animvalue_05011068),
+    ANIM_FIELD_LENGTH(peach_seg5_animindex_5012E38),
 };

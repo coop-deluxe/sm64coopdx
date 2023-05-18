@@ -442,6 +442,7 @@ void geo_obj_init_animation(struct GraphNodeObject *graphNode, const struct Anim
 void geo_obj_init_animation_accel(struct GraphNodeObject *graphNode, const struct Animation * const anim, u32 animAccel);
 
 s32 retrieve_animation_index(s32 frame, u16 **attributes);
+s16 retrieve_animation_value(struct Animation *animation, s32 frame, u16 **attributes);
 
 s16 geo_update_animation_frame(struct AnimInfo *obj, s32 *accelAssist);
 void geo_retreive_animation_translation(struct GraphNodeObject *obj, Vec3f position);

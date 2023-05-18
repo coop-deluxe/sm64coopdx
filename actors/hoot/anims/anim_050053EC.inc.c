@@ -106,4 +106,6 @@ static const struct Animation hoot_seg5_anim_050053EC = {
     hoot_seg5_animvalue_05004EC0,
     hoot_seg5_animindex_0500529C,
     0,
+    ANIM_FIELD_LENGTH(hoot_seg5_animvalue_05004EC0),
+    ANIM_FIELD_LENGTH(hoot_seg5_animindex_0500529C),
 };
