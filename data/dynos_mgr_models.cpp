@@ -23,7 +23,6 @@ struct ModelInfo {
 
 struct ScheduledFreePool {
     struct DynamicPool* pool;
-    u32 timeout;
 };
 
 static struct DynamicPool* sModelPools[MODEL_POOL_MAX] = { 0 };
@@ -171,7 +170,6 @@ void DynOS_Model_ClearPool(enum ModelPool aModelPool) {
     // schedule pool to be freed
     sPoolsToFree.push_back({
         .pool = sModelPools[aModelPool],
-        .timeout = 30
     });
 
     // clear pointer
@@ -203,12 +201,13 @@ void DynOS_Model_ClearPool(enum ModelPool aModelPool) {
 }
 
 void DynOS_Model_Update() {
-    for (auto it = sPoolsToFree.begin(); it != sPoolsToFree.end(); ) {
-        if (--it->timeout <= 0) {
-            dynamic_pool_free_pool(it->pool);
-            it = sPoolsToFree.erase(it);
-        } else {
-            it++;
-        }
-    }
+
+    // only free a pool when we've scheduled at least 3
+    // this is required because the way that sm64 loads areas is actually insane
+    // if we free immediately, the camera graph node is incorrect on the star selection screen
+    if (sPoolsToFree.size() <= 2) { return; }
+
+    auto& it = sPoolsToFree[0];
+    dynamic_pool_free_pool(it.pool);
+    sPoolsToFree.erase(sPoolsToFree.begin());
 }
