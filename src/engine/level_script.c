@@ -366,7 +366,6 @@ static void level_reset_globals(void) {
     // free previous level pool
     if (gLevelPool != NULL) {
         dynamic_pool_free_pool(gLevelPool);
-        gLevelPool = NULL;
     }
 
     // reset envfx

@@ -16,6 +16,7 @@ struct DynamicPool* dynamic_pool_init(void) {
     struct DynamicPool* pool = calloc(1, sizeof(struct DynamicPool));
     pool->usedSpace = 0;
     pool->tail = NULL;
+    pool->nextFree = NULL;
     return pool;
 }
 
@@ -75,14 +76,19 @@ bool dynamic_pool_contains(struct DynamicPool *pool, void* ptr) {
 
 void dynamic_pool_free_pool(struct DynamicPool *pool) {
     if (!pool) { return; }
-    struct DynamicPoolNode* node = pool->tail;
+
+    struct DynamicPoolNode* node = pool->nextFree;
     while (node) {
         struct DynamicPoolNode* prev = node->prev;
         free(node->ptr);
         free(node);
         node = prev;
     }
-    free(pool);
+
+    // schedule current pool to be free'd on the next call
+    pool->nextFree = pool->tail;
+    pool->tail = NULL;
+    pool->usedSpace = 0;
 }
 
   //////////////////

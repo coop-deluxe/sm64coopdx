@@ -156,11 +156,8 @@ void envfx_update_snowflake_count(s32 mode, Vec3s marioPos) {
  * Deallocate the buffer storing snow particles and set the environment effect
  * to none.
  */
-void envfx_cleanup_snow(void *snowParticleArray) {
+void envfx_cleanup_snow(UNUSED void *snowParticleArray) {
     if (gEnvFxMode) {
-        if (snowParticleArray) {
-            dynamic_pool_free(gLevelPool, snowParticleArray);
-        }
         gEnvFxMode = ENVFX_MODE_NONE;
     }
 }

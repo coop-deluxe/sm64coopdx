@@ -21,17 +21,11 @@ struct ModelInfo {
     enum ModelPool modelPool;
 };
 
-struct ScheduledFreePool {
-    struct DynamicPool* pool;
-};
-
 static struct DynamicPool* sModelPools[MODEL_POOL_MAX] = { 0 };
 
 static std::map<void*, struct ModelInfo> sAssetMap[MODEL_POOL_MAX];
 static std::map<u32, std::vector<struct ModelInfo>> sIdMap;
 static std::map<u32, u32> sOverwriteMap;
-
-static std::vector<struct ScheduledFreePool> sPoolsToFree;
 
 static u32 find_empty_id() {
     u32 id = 256;
@@ -168,12 +162,7 @@ void DynOS_Model_ClearPool(enum ModelPool aModelPool) {
     if (!sModelPools[aModelPool]) { return; }
 
     // schedule pool to be freed
-    sPoolsToFree.push_back({
-        .pool = sModelPools[aModelPool],
-    });
-
-    // clear pointer
-    sModelPools[aModelPool] = NULL;
+    dynamic_pool_free_pool(sModelPools[aModelPool]);
 
     // clear overwrite
     if (aModelPool == MODEL_POOL_LEVEL) {
@@ -202,12 +191,4 @@ void DynOS_Model_ClearPool(enum ModelPool aModelPool) {
 
 void DynOS_Model_Update() {
 
-    // only free a pool when we've scheduled at least 3
-    // this is required because the way that sm64 loads areas is actually insane
-    // if we free immediately, the camera graph node is incorrect on the star selection screen
-    if (sPoolsToFree.size() <= 2) { return; }
-
-    auto& it = sPoolsToFree[0];
-    dynamic_pool_free_pool(it.pool);
-    sPoolsToFree.erase(sPoolsToFree.begin());
 }

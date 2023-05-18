@@ -1526,8 +1526,14 @@ Gfx *display_painting_rippling(struct Painting *painting) {
     }
 
     // The mesh data is freed every frame.
-    dynamic_pool_free(gLevelPool, painting->ripples.paintingMesh);
-    dynamic_pool_free(gLevelPool, painting->ripples.paintingTriNorms);
+    if (painting->ripples.paintingMesh) {
+        dynamic_pool_free(gLevelPool, painting->ripples.paintingMesh);
+        painting->ripples.paintingMesh = NULL;
+    }
+    if (painting->ripples.paintingTriNorms) {
+        dynamic_pool_free(gLevelPool, painting->ripples.paintingTriNorms);
+        painting->ripples.paintingTriNorms = NULL;
+    }
     return dlist;
 }
 

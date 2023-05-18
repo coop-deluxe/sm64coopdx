@@ -14,6 +14,7 @@
 struct DynamicPool
 {
     u32 usedSpace;
+    struct DynamicPoolNode* nextFree;
     struct DynamicPoolNode* tail;
 };
 
