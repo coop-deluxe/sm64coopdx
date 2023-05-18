@@ -37,16 +37,21 @@ void network_receive_spawn_star(struct Packet* p) {
     packet_read(p, &behParams, sizeof(u32));
     packet_read(p, &networkPlayerIndex, sizeof(u8));
 
-    u32 oldBehParams = gCurrentObject->oBehParams;
-    gCurrentObject->oBehParams = behParams;
+    struct Object* oldObject = gCurrentObject;
     struct Object* o = NULL;
-    switch (starType) {
-        case 0: o = spawn_default_star(x, y, z); break;
-        case 1: o = spawn_red_coin_cutscene_star(x, y, z); break;
-        case 2: o = spawn_no_exit_star(x, y, z); break;
-        default: LOG_ERROR("UNKNOWN SPAWN STAR %d", starType);
+    gCurrentObject = gMarioStates[0].marioObj;
+    if (gCurrentObject) {
+        u32 oldBehParams = gCurrentObject->oBehParams;
+        gCurrentObject->oBehParams = behParams;
+        switch (starType) {
+            case 0: o = spawn_default_star(x, y, z); break;
+            case 1: o = spawn_red_coin_cutscene_star(x, y, z); break;
+            case 2: o = spawn_no_exit_star(x, y, z); break;
+            default: LOG_ERROR("UNKNOWN SPAWN STAR %d", starType);
+        }
+        gCurrentObject->oBehParams = oldBehParams;
     }
-    gCurrentObject->oBehParams = oldBehParams;
+    gCurrentObject = oldObject;
 
     if (o != NULL) {
         packet_read(p, &o->oPosX, sizeof(u32) * 3);
