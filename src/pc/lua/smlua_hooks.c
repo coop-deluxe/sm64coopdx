@@ -1135,10 +1135,11 @@ int smlua_hook_behavior(lua_State* L) {
 
     struct LuaHookedBehavior* hooked = &sHookedBehaviors[sHookedBehaviorsCount];
     u16 customBehaviorId = (sHookedBehaviorsCount & 0xFFFF) | LUA_BEHAVIOR_FLAG;
-    hooked->behavior = calloc(3, sizeof(BehaviorScript));
+    hooked->behavior = calloc(4, sizeof(BehaviorScript));
     hooked->behavior[0] = (BehaviorScript)BC_BB(0x00, objectList); // This is BEGIN(objectList)
     hooked->behavior[1] = (BehaviorScript)BC_B0H(0x39, customBehaviorId); // This is ID(customBehaviorId)
-    hooked->behavior[2] = 0;
+    hooked->behavior[2] = (BehaviorScript)BC_B(0x0A); // This is BREAK()
+    hooked->behavior[3] = (BehaviorScript)BC_B(0x0A); // This is BREAK()
     hooked->behaviorId = customBehaviorId;
     hooked->overrideId = noOverrideId ? customBehaviorId : overrideBehaviorId;
     hooked->originalId = customBehaviorId; // For LUA behaviors. The only behavior id they have IS their custom one.

@@ -38,7 +38,7 @@ void bhv_chain_chomp_chain_part_update(void) {
         obj_mark_for_deletion(o);
         network_send_object(o);
     } else if (o->oBehParams2ndByte != CHAIN_CHOMP_CHAIN_PART_BP_PIVOT) {
-        struct ChainSegment *segment = (o->oBehParams2ndByte <= 4 && o->parentObj)
+        struct ChainSegment *segment = (o->oBehParams2ndByte >= 0 && o->oBehParams2ndByte <= 4 && o->parentObj)
             ? &o->parentObj->oChainChompSegments[o->oBehParams2ndByte]
             : NULL;
 
@@ -454,13 +454,6 @@ static void chain_chomp_act_unload_chain(void) {
     o->oAction = CHAIN_CHOMP_ACT_UNINITIALIZED;
 
     if (o->oChainChompReleaseStatus != CHAIN_CHOMP_NOT_RELEASED) {
-        if (o->oChainChompSegments) {
-            for (u8 i = 0; i < 5; i++) {
-                struct Object* segment = (struct Object*)&o->oChainChompSegments[i];
-                if (!segment) { continue; }
-                obj_mark_for_deletion(segment);
-            }
-        }
         obj_mark_for_deletion(o);
         obj_mark_for_deletion(o->parentObj);
     }
