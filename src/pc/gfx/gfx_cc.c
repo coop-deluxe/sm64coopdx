@@ -109,6 +109,7 @@ void gfx_cc_precomp(void) {
     gfx_pc_precomp_shader(0x04060401, 0x04000000, 0x04060402, 0x04000b0b, 0x00000000);    // 84c6842100596a45
     gfx_pc_precomp_shader(0x04060401, 0x05000000, 0x04060402, 0x05000b0b, 0x00000001);    // 1d970841b086b2e6
     gfx_pc_precomp_shader(0x01000000, 0x04000000, 0x02000000, 0x04000b0b, 0x00000001);    // 410000008f86b2e6
+    gfx_pc_precomp_shader(0x04060401, 0x05000000, 0x04060402, 0x05000b0b, 0x00000009);    // 1d970841b086b2ee
 
     sAllowCCPrint = 1;
 }

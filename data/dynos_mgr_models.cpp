@@ -130,7 +130,9 @@ struct GraphNode* DynOS_Model_GetErrorGeo() {
 struct GraphNode* DynOS_Model_GetGeo(u32 aId) {
     if (!aId) { return NULL; }
 
-    if (sOverwriteMap.count(aId)) { aId = sOverwriteMap[aId]; }
+    if (sOverwriteMap.count(aId)) {
+        aId = sOverwriteMap[aId];
+    }
 
     if (sIdMap.count(aId) == 0) {
         return DynOS_Model_GetErrorGeo();
@@ -144,13 +146,33 @@ struct GraphNode* DynOS_Model_GetGeo(u32 aId) {
     return vec.back().graphNode;
 }
 
-u32 DynOS_Model_GetIdFromAsset(void* asset) {
-    if (!asset) { return MODEL_NONE; }
-    for (int i = 0; i < MODEL_POOL_MAX; i++) {
-        if (sAssetMap[i].count(asset)) {
-            return sAssetMap[i][asset].id;
+u32 DynOS_Model_GetIdFromGraphNode(struct GraphNode* aNode) {
+    u32 lowest = 9999;
+    for (auto& it : sIdMap) {
+        if (it.first > lowest) { continue; }
+        if (!it.second.size() || it.second.empty()) { continue; }
+        auto& node = it.second.back();
+        if (aNode == node.graphNode) {
+            lowest = it.first;
         }
     }
+    if (lowest < 9999) { return lowest; }
+    return MODEL_ERROR_MODEL;
+}
+
+u32 DynOS_Model_GetIdFromAsset(void* asset) {
+    if (!asset) { return MODEL_NONE; }
+    u32 lowest = 9999;
+    for (int i = 0; i < MODEL_POOL_MAX; i++) {
+        if (!sAssetMap[i].count(asset)) { continue; }
+        u32 id = sAssetMap[i][asset].id;
+        if (id < lowest) { lowest = id; }
+        if (sOverwriteMap.count(id)) {
+            id = sOverwriteMap[id];
+            if (id < lowest) { lowest = id; }
+        }
+    }
+    if (lowest < 9999) { return lowest; }
     return MODEL_ERROR_MODEL;
 }
 

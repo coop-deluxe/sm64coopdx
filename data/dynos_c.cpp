@@ -237,8 +237,12 @@ struct GraphNode* dynos_model_store_geo(u32* aId, enum ModelPool aModelPool, voi
     return DynOS_Model_StoreGeo(aId, aModelPool, aAsset, aGraphNode);
 }
 
-u32 dynos_model_get_id_from_asset(void* asset) {
-    return DynOS_Model_GetIdFromAsset(asset);
+u32 dynos_model_get_id_from_asset(void* aAsset) {
+    return DynOS_Model_GetIdFromAsset(aAsset);
+}
+
+u32 dynos_model_get_id_from_graph_node(struct GraphNode* aGraphNode) {
+    return DynOS_Model_GetIdFromGraphNode(aGraphNode);
 }
 
 void dynos_model_clear_pool(enum ModelPool aModelPool) {
