@@ -9,7 +9,7 @@ DataNode<Ambient_t>* DynOS_AmbientT_Parse(GfxData* aGfxData, DataNode<Ambient_t>
 
     // Check tokens count
     if (aNode->mTokens.Count() < 8) {
-        PrintError("  ERROR: %s: not enough data", aNode->mName.begin());
+        PrintDataError("  ERROR: %s: not enough data", aNode->mName.begin());
         return aNode;
     }
 

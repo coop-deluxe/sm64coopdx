@@ -40,6 +40,7 @@ extern bool gDjuiDisabled;
 extern bool gDjuiRenderBehindHud;
 
 void djui_init(void);
+void djui_init_late(void);
 void djui_connect_menu_open(void);
 void djui_lua_error(char* text);
 void djui_render(void);

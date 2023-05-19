@@ -28,11 +28,8 @@ struct DjuiRoot* djui_root_create(void) {
 
     djui_base_init(NULL, base, djui_root_render, djui_root_destroy);
 
-    u32 windowWidth, windowHeight;
-    wm_api->get_dimensions(&windowWidth, &windowHeight);
-
     djui_base_set_location(base, 0, 0);
-    djui_base_set_size(base, windowWidth, windowHeight);
+    djui_base_set_size(base, 1280, 720);
     djui_base_set_color(base, 0, 0, 0, 0);
 
     return root;

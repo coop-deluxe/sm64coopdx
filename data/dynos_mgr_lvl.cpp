@@ -86,7 +86,7 @@ void DynOS_Lvl_Activate(s32 modIndex, const SysPath &aFilename, const char *aLev
     auto& newScriptNode = newScripts[newScripts.Count() - 1];
     const void* originalScript = DynOS_Builtin_ScriptPtr_GetFromName(newScriptNode->mName.begin());
     if (originalScript == NULL) {
-        Print("Could not find level to override: '%s'", newScriptNode->mName.begin());
+        PrintError("Could not find level to override: '%s'", newScriptNode->mName.begin());
         return;
     }
 
@@ -155,7 +155,7 @@ void DynOS_Lvl_LoadBackground(void *aPtr) {
 double_break:
 
     if (foundList == NULL) {
-        Print("Could not find custom background");
+        PrintError("Could not find custom background");
         return;
     }
 

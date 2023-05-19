@@ -29,7 +29,7 @@ static inline void DynOS_Bin_Compress_Free() {
 
 static inline bool DynOS_Bin_Compress_Check(bool condition, const char *function, const char *filename, const char *message) {
     if (!condition) {
-        Print("ERROR: %s: File \"%s\": %s", function, filename, message);
+        PrintError("ERROR: %s: File \"%s\": %s", function, filename, message);
         DynOS_Bin_Compress_Free();
         return false;
     }
@@ -223,7 +223,7 @@ BinFile *DynOS_Bin_Decompress(const SysPath &aFilename) {
         uncompressRc == Z_OK,
         __FUNCTION__, aFilename.c_str(), "Cannot uncompress data"
     )) {
-        Print("ERROR: uncompress rc: %d, length uncompressed: %lu, length compressed: %lu, length header: %lu", uncompressRc, sLengthUncompressed, sLengthCompressed, _LengthHeader);
+        PrintError("ERROR: uncompress rc: %d, length uncompressed: %lu, length compressed: %lu, length header: %lu", uncompressRc, sLengthUncompressed, sLengthCompressed, _LengthHeader);
         return NULL;
     }
     Print("uncompress rc: %d, length uncompressed: %lu, length compressed: %lu, length header: %lu", uncompressRc, sLengthUncompressed, sLengthCompressed, _LengthHeader);

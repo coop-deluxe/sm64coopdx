@@ -1973,7 +1973,7 @@ static BehaviorScript ParseBehaviorScriptSymbolArg(GfxData *aGfxData, DataNode<B
     BehaviorScript value = ParseBehaviorScriptSymbolArgInternal(aGfxData, aNode, aTokenIndex, &found);
     if (!found) {
         const String &_Arg = aNode->mTokens[aTokenIndex - 1];
-        PrintError("  ERROR: Unknown bhv arg: %s", _Arg.begin());
+        PrintDataError("  ERROR: Unknown bhv arg: %s", _Arg.begin());
     }
     return value;
 }
@@ -2262,7 +2262,7 @@ static void ParseBehaviorScriptSymbol(GfxData *aGfxData, DataNode<BehaviorScript
             //BehaviorScript _Bs[] = { LOAD_ANIMATIONS_EXT(field, animIndex) };
             //memcpy(aHead, _Bs, sizeof(_Bs));
             //aHead += (sizeof(_Bs) / sizeof(_Bs[0]));
-            PrintError("  ERROR: : Custom external animations are currently not supported. Skipping LOAD_ANIMATIONS_EXT.");
+            PrintDataError("  ERROR: : Custom external animations are currently not supported. Skipping LOAD_ANIMATIONS_EXT.");
         }
         return;
     }
@@ -2403,7 +2403,7 @@ static void ParseBehaviorScriptSymbol(GfxData *aGfxData, DataNode<BehaviorScript
     }
 
     // Unknown
-    PrintError("  ERROR: Unknown behavior symbol: %s", _Symbol.begin());
+    PrintDataError("  ERROR: Unknown behavior symbol: %s", _Symbol.begin());
 }
 
 DataNode<BehaviorScript> *DynOS_Bhv_Parse(GfxData *aGfxData, DataNode<BehaviorScript> *aNode, bool aDisplayPercent) {
@@ -2466,7 +2466,7 @@ static void DynOS_Bhv_Write(BinFile* aFile, GfxData* aGfxData, DataNode<Behavior
 static bool DynOS_Bhv_WriteBinary(const SysPath &aOutputFilename, GfxData *aGfxData) {
     BinFile *_File = BinFile::OpenW(aOutputFilename.c_str());
     if (!_File) {
-        PrintError("  ERROR: Unable to create file \"%s\"", aOutputFilename.c_str());
+        PrintDataError("  ERROR: Unable to create file \"%s\"", aOutputFilename.c_str());
         return false;
     }
 
@@ -2490,7 +2490,7 @@ static DataNode<BehaviorScript> *DynOS_Bhv_Load(BinFile *aFile, GfxData *aGfxDat
     // Sanity check the files size. The minimum valid size is 9 bytes.
     // 1 byte for the type, 1 bytes for the name length, 3 bytes for the version, And 4 bytes for the behaviors size.
     if (aFile->Size() < 9) {
-        PrintError("  ERROR: Behavior file is smaller then it should be, Rejecting '%s'.", aFile->GetFilename());
+        PrintDataError("  ERROR: Behavior file is smaller then it should be, Rejecting '%s'.", aFile->GetFilename());
         // We have nothing to return, So return NULL.
         return NULL;
     }
@@ -2512,7 +2512,7 @@ static DataNode<BehaviorScript> *DynOS_Bhv_Load(BinFile *aFile, GfxData *aGfxDat
     // we can't read it no matter what. If it's just minor or patch. We might have
     // code to support it.
     if (majorVersion != BEHAVIOR_MIN_MAJOR_VER || (minorVersion < BEHAVIOR_MIN_MINOR_VER || patchVersion < BEHAVIOR_MIN_PATCH_VER)) {
-        PrintError("  ERROR: Behavior file is version %u.%u.%u, which is not supported! Rejecting '%s'.", majorVersion, minorVersion, patchVersion, aFile->GetFilename());
+        PrintDataError("  ERROR: Behavior file is version %u.%u.%u, which is not supported! Rejecting '%s'.", majorVersion, minorVersion, patchVersion, aFile->GetFilename());
         // We don't return this since we failed to read the behavior.
         Delete(_Node);
         // We have nothing to return, So return NULL.
@@ -2523,7 +2523,7 @@ static DataNode<BehaviorScript> *DynOS_Bhv_Load(BinFile *aFile, GfxData *aGfxDat
     // We also check if the specified behavior size is valid for the file.
     u32 dataSize = aFile->Read<u32>();
     if (dataSize == 0 || (dataSize > (aFile->Size() - aFile->Offset()))) {
-        PrintError("  ERROR: Behavior file has a invalid behavior in it! Rejecting '%s'.", aFile->GetFilename());
+        PrintDataError("  ERROR: Behavior file has a invalid behavior in it! Rejecting '%s'.", aFile->GetFilename());
         // We don't return this since we failed to read the behavior.
         Delete(_Node);
         // We have nothing to return, So return NULL.
@@ -2537,7 +2537,7 @@ static DataNode<BehaviorScript> *DynOS_Bhv_Load(BinFile *aFile, GfxData *aGfxDat
     // Read it
     for (u32 i = 0; i != _Node->mSize; ++i) {
         if (aFile->EoF()) {
-            PrintError("  ERROR: Reached EOF when reading file! Expected %llx bytes!", _Node->mSize * sizeof(u32));
+            PrintDataError("  ERROR: Reached EOF when reading file! Expected %llx bytes!", _Node->mSize * sizeof(u32));
             break;
         }
         u32 _Value = aFile->Read<u32>();
@@ -2626,13 +2626,14 @@ static void DynOS_Bhv_Generate(const SysPath &aPackFolder, Array<Pair<u64, Strin
 
         // Parse data
         PrintNoNewLine("%s.bhv: Model identifier: %X - Processing... ", _BhvRootName.begin(), _GfxData->mModelIdentifier);
+        PrintConsole("%s.bhv: Model identifier: %X - Processing... ", _BhvRootName.begin(), _GfxData->mModelIdentifier);
         DynOS_Bhv_Parse(_GfxData, _BhvNode, true);
 
         // Write if no error
         if (_GfxData->mErrorCount == 0) {
             DynOS_Bhv_WriteBinary(_BinFilename, _GfxData);
         } else {
-            Print("  %u error(s): Unable to parse data", _GfxData->mErrorCount);
+            PrintError("  %u error(s): Unable to parse data", _GfxData->mErrorCount);
         }
 
         // Clear data pointers

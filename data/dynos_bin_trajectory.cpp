@@ -28,7 +28,7 @@ static s64 ParseTrajectorySymbolArg(GfxData* aGfxData, DataNode<Trajectory>* aNo
     trajectory_constant(NULL);
 
     // Unknown
-    PrintError("  ERROR: Unknown trajectory arg: %s", _Arg.begin());
+    PrintDataError("  ERROR: Unknown trajectory arg: %s", _Arg.begin());
     return 0;
 }
 
@@ -59,7 +59,7 @@ static void ParseTrajectorySymbol(GfxData* aGfxData, DataNode<Trajectory>* aNode
     trajectory_symbol_0(TRAJECTORY_END);
 
     // Unknown
-    PrintError("  ERROR: Unknown trajectory symbol: %s", _Symbol.begin());
+    PrintDataError("  ERROR: Unknown trajectory symbol: %s", _Symbol.begin());
 }
 
 DataNode<Trajectory>* DynOS_Trajectory_Parse(GfxData* aGfxData, DataNode<Trajectory>* aNode, bool aDisplayPercent) {

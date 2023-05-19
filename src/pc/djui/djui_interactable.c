@@ -4,6 +4,7 @@
 #include "djui_panel_pause.h"
 #include "djui_panel_modlist.h"
 #include "djui_panel_playerlist.h"
+#include "djui_console.h"
 
 #include "src/pc/controller/controller_sdl.h"
 #include "src/pc/controller/controller_mouse.h"
@@ -16,6 +17,8 @@
 
 #define CALL_CALLBACK(x) if (base->interactable->x != NULL) { base->interactable->x(base); }
 #define CALL_CALLBACK_PARAM(x, y) if (base->interactable->x != NULL) { base->interactable->x(base, y); }
+
+#define SCANCODE_F1 59
 
 enum PadHoldDirection { PAD_HOLD_DIR_NONE, PAD_HOLD_DIR_UP, PAD_HOLD_DIR_DOWN, PAD_HOLD_DIR_LEFT, PAD_HOLD_DIR_RIGHT };
 static enum PadHoldDirection sKeyboardHoldDirection = PAD_HOLD_DIR_NONE;
@@ -32,6 +35,7 @@ bool gInteractableOverridePad         = false;
 OSContPad gInteractablePad            = { 0 };
 static OSContPad sLastInteractablePad = { 0 };
 static int sLastMouseButtons          = 0;
+static bool sControlDown = false;
 
 static void djui_interactable_update_style(struct DjuiBase* base) {
     if (base               == NULL) { return; }
@@ -180,6 +184,10 @@ void djui_interactable_set_binding(struct DjuiBase* base) {
 }
 
 void djui_interactable_set_input_focus(struct DjuiBase* base) {
+    if (gDjuiConsoleFocus && base != &gDjuiConsole->base) {
+        return;
+    }
+
     djui_interactable_on_focus_end(gInteractableFocus);
     gInteractableFocus = base;
     djui_interactable_on_focus_begin(base);
@@ -193,6 +201,12 @@ bool djui_interactable_is_input_focus(struct DjuiBase* base) {
 bool djui_interactable_on_key_down(int scancode) {
     if (gInteractableBinding != NULL) {
         return true;
+    }
+
+    if (scancode == SCANCODE_CONTROL_LEFT) {
+        sControlDown = true;
+    } else if (sControlDown && scancode == SCANCODE_F1) {
+        djui_console_toggle();
     }
 
     bool keyFocused = (gInteractableFocus != NULL)
@@ -220,7 +234,7 @@ bool djui_interactable_on_key_down(int scancode) {
             if (scancode == (int)configKeyChat[i]) { pressChat = true; }
         }
 
-        if (pressChat) {
+        if (pressChat && !gDjuiConsoleFocus) {
             djui_chat_box_toggle();
             return true;
         }
@@ -271,6 +285,10 @@ void djui_interactable_on_key_up(int scancode) {
                 break;
             }
         }
+    }
+
+    if (scancode == SCANCODE_CONTROL_LEFT) {
+        sControlDown = false;
     }
 
     if (keyFocused) {

@@ -8,6 +8,7 @@ extern "C" {
 #include "engine/behavior_script.h"
 #include "engine/math_util.h"
 #include "src/game/moving_texture.h"
+#include "src/pc/djui/djui_console.h"
 }
 
 #define FUNCTION_CODE   (u32) 0x434E5546
@@ -725,9 +726,23 @@ void Print(const char *aFmt, Args... aArgs) {
     fflush(stdout);
 }
 
-#define PrintError(...) { \
+template <typename... Args>
+void PrintConsole(const char *aFmt, Args... aArgs) {
+    snprintf(gDjuiConsoleTmpBuffer, CONSOLE_MAX_TMP_BUFFER, aFmt, aArgs...);
+    djui_console_message_create(gDjuiConsoleTmpBuffer);
+}
+
+template <typename... Args>
+void PrintError(const char *aFmt, Args... aArgs) {
+    printf(aFmt, aArgs...);
+    printf("\r\n");
+    fflush(stdout);
+    PrintConsole(aFmt, aArgs...);
+}
+#define PrintDataError(...) { \
     if (aGfxData->mErrorCount == 0) Print("  ERROR!"); \
     Print(__VA_ARGS__); \
+    PrintConsole(__VA_ARGS__); \
     aGfxData->mErrorCount++; \
 }
 

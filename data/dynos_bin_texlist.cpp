@@ -13,7 +13,7 @@ static TexData* ParseTexListSymbol(GfxData* aGfxData, DataNode<TexData*>* aNode,
     }
 
     // Unknown
-    PrintError("  ERROR: Unknown texlist arg: %s", aToken.begin());
+    PrintDataError("  ERROR: Unknown texlist arg: %s", aToken.begin());
     return NULL;
 }
 
@@ -56,7 +56,7 @@ void DynOS_TexList_Write(BinFile* aFile, GfxData* aGfxData, DataNode<TexData*> *
             }
         }
         if (!found) {
-            PrintError("Could not write texture in texlist");
+            PrintDataError("Could not write texture in texlist");
         }
     }
 }
@@ -78,7 +78,7 @@ DataNode<TexData*>* DynOS_TexList_Load(BinFile *aFile, GfxData *aGfxData) {
         u32 _Value = aFile->Read<u32>();
         void *_Ptr = DynOS_Pointer_Load(aFile, aGfxData, _Value, &_Node->mFlags);
         if (_Ptr == NULL) {
-            PrintError("Could not read texture in texlist");
+            PrintDataError("Could not read texture in texlist");
         } else {
             _Node->mData[i] = ((DataNode<TexData>*)_Ptr)->mData;
         }

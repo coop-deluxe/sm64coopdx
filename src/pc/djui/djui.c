@@ -5,6 +5,7 @@
 #include "djui_panel_pause.h"
 #include "djui_panel_join.h"
 #include "djui_panel_join_message.h"
+#include "djui_console.h"
 #include "../debuglog.h"
 #include "pc/cliopts.h"
 #include "game/level_update.h"
@@ -66,6 +67,10 @@ void djui_init(void) {
 
     djui_panel_playerlist_create(NULL);
 
+    djui_console_create();
+}
+
+void djui_init_late(void) {
     if (gCLIOpts.Network != NT_SERVER) {
         djui_panel_main_create(NULL);
         if (configLanguage[0] == '\0') {
@@ -130,6 +135,7 @@ void djui_render(void) {
     }
 
     djui_cursor_update();
+    djui_base_render(&gDjuiConsole->base);
     djui_interactable_update();
     djui_gfx_displaylist_end();
 }

@@ -404,7 +404,7 @@ static s64 ParseMacroObjectSymbolArg(GfxData* aGfxData, DataNode<MacroObject>* a
     }
 
     // Unknown
-    PrintError("  ERROR: Unknown macro object arg: %s", _Arg.begin());
+    PrintDataError("  ERROR: Unknown macro object arg: %s", _Arg.begin());
     return 0;
 }
 
@@ -451,7 +451,7 @@ static void ParseMacroObjectSymbol(GfxData* aGfxData, DataNode<MacroObject>* aNo
     macro_object_symbol_0(MACRO_OBJECT_END);
 
     // Unknown
-    PrintError("  ERROR: Unknown macro object symbol: %s", _Symbol.begin());
+    PrintDataError("  ERROR: Unknown macro object symbol: %s", _Symbol.begin());
 }
 
 DataNode<MacroObject>* DynOS_MacroObject_Parse(GfxData* aGfxData, DataNode<MacroObject>* aNode, bool aDisplayPercent) {

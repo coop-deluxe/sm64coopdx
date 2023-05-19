@@ -27,7 +27,7 @@ static Movtex* ParseMovtexQCSymbolArg(GfxData* aGfxData, DataNode<MovtexQC>* aNo
     }
 
     // Unknown
-    PrintError("  ERROR: Unknown movtexqc arg: %s", _Arg.begin());
+    PrintDataError("  ERROR: Unknown movtexqc arg: %s", _Arg.begin());
     return NULL;
 }
 

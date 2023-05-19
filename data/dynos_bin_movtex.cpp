@@ -40,7 +40,7 @@ static s64 ParseMovtexSymbolArg(GfxData* aGfxData, DataNode<Movtex>* aNode, u64&
     movtex_constant(NULL);
 
     // Unknown
-    PrintError("  ERROR: Unknown movtex arg: %s", _Arg.begin());
+    PrintDataError("  ERROR: Unknown movtex arg: %s", _Arg.begin());
     return 0;
 }
 
@@ -143,7 +143,7 @@ static void ParseMovtexSymbol(GfxData* aGfxData, DataNode<Movtex>* aNode, Movtex
     }
 
     // Unknown
-    PrintError("  ERROR: Unknown movtex symbol: %s", _Symbol.begin());
+    PrintDataError("  ERROR: Unknown movtex symbol: %s", _Symbol.begin());
 }
 
 DataNode<Movtex>* DynOS_Movtex_Parse(GfxData* aGfxData, DataNode<Movtex>* aNode, bool aDisplayPercent) {

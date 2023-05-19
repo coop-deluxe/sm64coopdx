@@ -148,7 +148,7 @@ static s64 ParseGeoSymbolArg(GfxData* aGfxData, DataNode<GeoLayout>* aNode, u64&
     }
 
     // Unknown
-    PrintError("  ERROR: Unknown geo arg: %s", _Arg.begin());
+    PrintDataError("  ERROR: Unknown geo arg: %s", _Arg.begin());
     return 0;
 }
 
@@ -405,7 +405,7 @@ static void ParseGeoSymbol(GfxData* aGfxData, DataNode<GeoLayout>* aNode, GeoLay
     }
 
     // Unknown
-    PrintError("  ERROR: Unknown geo symbol: %s", _Symbol.begin());
+    PrintDataError("  ERROR: Unknown geo symbol: %s", _Symbol.begin());
 }
 
 DataNode<GeoLayout>* DynOS_Geo_Parse(GfxData* aGfxData, DataNode<GeoLayout>* aNode, bool aDisplayPercent) {

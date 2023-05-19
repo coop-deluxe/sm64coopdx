@@ -23,10 +23,12 @@ void djui_cursor_set_visible(bool visible) {
         djui_base_set_visible(&sMouseCursor->base, visible);
     }
 
-    if (configWindow.fullscreen) {
-        wm_api->set_cursor_visible(false);
-    } else {
-        wm_api->set_cursor_visible(!visible);
+    if (wm_api) {
+        if (configWindow.fullscreen) {
+            wm_api->set_cursor_visible(false);
+        } else {
+            wm_api->set_cursor_visible(!visible);
+        }
     }
     sSavedMouseX = mouse_window_x;
     sSavedMouseY = mouse_window_y;

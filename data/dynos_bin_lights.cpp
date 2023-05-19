@@ -9,13 +9,13 @@ DataNode<Lights1>* DynOS_Lights_Parse(GfxData* aGfxData, DataNode<Lights1>* aNod
 
     // Check tokens count
     if (aNode->mTokens.Count() < 10) {
-        PrintError("  ERROR: %s: not enough data", aNode->mName.begin());
+        PrintDataError("  ERROR: %s: not enough data", aNode->mName.begin());
         return aNode;
     }
 
     // Parse def token
     if (aNode->mTokens[0] != "gdSPDefLights1") {
-        PrintError("  ERROR: Invalid def token: should be gdSPDefLights1, is %s", aNode->mTokens[0].begin());
+        PrintDataError("  ERROR: Invalid def token: should be gdSPDefLights1, is %s", aNode->mTokens[0].begin());
         return aNode;
     }
 

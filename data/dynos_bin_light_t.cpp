@@ -9,7 +9,7 @@ DataNode<Light_t>* DynOS_LightT_Parse(GfxData* aGfxData, DataNode<Light_t>* aNod
 
     // Check tokens count
     if (aNode->mTokens.Count() < 12) {
-        PrintError("  ERROR: %s: not enough data", aNode->mName.begin());
+        PrintDataError("  ERROR: %s: not enough data", aNode->mName.begin());
         return aNode;
     }
 

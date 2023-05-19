@@ -33,14 +33,14 @@ void DynOS_Actor_AddCustom(const SysPath &aFilename, const char *aActorName) {
 
     GfxData *_GfxData = DynOS_Actor_LoadFromBinary(aFilename, actorName, aFilename, false);
     if (!_GfxData) {
-        Print("  ERROR: Couldn't load Actor Binary \"%s\" from \"%s\"", actorName, aFilename.c_str());
+        PrintError("  ERROR: Couldn't load Actor Binary \"%s\" from \"%s\"", actorName, aFilename.c_str());
         free(actorName);
         return;
     }
 
     void* geoLayout = (*(_GfxData->mGeoLayouts.end() - 1))->mData;
     if (!geoLayout) {
-        Print("  ERROR: Couldn't load geo layout for \"%s\"", actorName);
+        PrintError("  ERROR: Couldn't load geo layout for \"%s\"", actorName);
         free(actorName);
         return;
     }
@@ -52,7 +52,7 @@ void DynOS_Actor_AddCustom(const SysPath &aFilename, const char *aActorName) {
     actorGfx.mPackIndex = MOD_PACK_INDEX;
     actorGfx.mGraphNode = (GraphNode *) DynOS_Model_LoadGeo(&id, MODEL_POOL_SESSION, geoLayout, true);
     if (!actorGfx.mGraphNode) {
-        Print("  ERROR: Couldn't load graph node for \"%s\"", actorName);
+        PrintError("  ERROR: Couldn't load graph node for \"%s\"", actorName);
         free(actorName);
         return;
     }

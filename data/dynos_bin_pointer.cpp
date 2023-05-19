@@ -183,7 +183,7 @@ static PointerData GetDataFromPointer(const void* aPtr, GfxData* aGfxData) {
         }
     }
 
-    PrintError("Unable to find pointer %x!", aPtr);
+    PrintDataError("Unable to find pointer %x!", aPtr);
     return { "", 0 };
 }
 

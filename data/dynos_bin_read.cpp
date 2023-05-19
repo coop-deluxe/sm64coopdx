@@ -217,7 +217,7 @@ void DynOS_Read_Source(GfxData *aGfxData, const SysPath &aFilename) {
                 } else if (_Buffer == "BehaviorScript") {
                     _DataType = DATA_TYPE_BEHAVIOR_SCRIPT;
                 } else {
-                    PrintError("  ERROR: Unknown type name: %s", _Buffer.begin());
+                    PrintDataError("  ERROR: Unknown type name: %s", _Buffer.begin());
                 }
                 _Buffer.Clear();
             }
@@ -266,7 +266,7 @@ void DynOS_Read_Source(GfxData *aGfxData, const SysPath &aFilename) {
             if (*c == '=') {
                 pDataStart = c + 1;
             } else if (*c == ';') {
-                PrintError("  ERROR: %s: Unexpected end of data", pDataName->begin());
+                PrintDataError("  ERROR: %s: Unexpected end of data", pDataName->begin());
             }
         }
 

@@ -290,6 +290,7 @@ void main_func(void) {
 
     sync_objects_init_system();
     djui_unicode_init();
+    djui_init();
     mods_init();
 
     // load config
@@ -367,7 +368,7 @@ void main_func(void) {
         audio_api = &audio_null;
     }
 
-    djui_init();
+    djui_init_late();
 
     if (gCLIOpts.Network == NT_CLIENT) {
         network_set_system(NS_SOCKET);
