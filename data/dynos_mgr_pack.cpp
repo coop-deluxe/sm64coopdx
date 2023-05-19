@@ -43,7 +43,7 @@ static void DynOS_Pack_ActivateActor(s32 aPackIndex, Pair<const char *, GfxData 
 
     auto& geoNode = *(aGfxData->mGeoLayouts.end() - 1);
     u32 id = 0;
-    GraphNode* graphNode = DynOS_Model_LoadGeo(&id, MODEL_POOL_PERMANENT, geoNode->mData);
+    GraphNode* graphNode = DynOS_Model_LoadGeo(&id, MODEL_POOL_PERMANENT, geoNode->mData, true);
     if (graphNode == NULL) { return; }
 
     const void* georef = DynOS_Builtin_Actor_GetFromName(aActorName);

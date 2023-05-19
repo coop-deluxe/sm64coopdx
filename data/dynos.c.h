@@ -72,7 +72,7 @@ const char *dynos_behavior_get_token(BehaviorScript *bhvScript, u32 index);
 void dynos_behavior_hook_all_custom_behaviors(void);
 
 // -- models -- //
-struct GraphNode* dynos_model_load_geo(u32* aId, enum ModelPool aModelPool, void* aAsset);
+struct GraphNode* dynos_model_load_geo(u32* aId, enum ModelPool aModelPool, void* aAsset, bool aDeDuplicate);
 struct GraphNode* dynos_model_load_dl(u32* aId, enum ModelPool aModelPool, u8 aLayer, void* aAsset);
 struct GraphNode* dynos_model_store_geo(u32* aId, enum ModelPool aModelPool, void* aAsset, struct GraphNode* aGraphNode);
 struct GraphNode* dynos_model_get_geo(u32 aId);

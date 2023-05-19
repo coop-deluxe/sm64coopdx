@@ -53,7 +53,7 @@ void DynOS_Model_Dump() {
     }
 }
 
-struct GraphNode* DynOS_Model_LoadCommon(u32* aId, enum ModelPool aModelPool, void* aAsset, u8 aLayer, struct GraphNode* aGraphNode, enum ModelLoadType mlt) {
+struct GraphNode* DynOS_Model_LoadCommon(u32* aId, enum ModelPool aModelPool, void* aAsset, u8 aLayer, struct GraphNode* aGraphNode, bool aDeDuplicate, enum ModelLoadType mlt) {
     // sanity check pool
     if (aModelPool >= MODEL_POOL_MAX) { return NULL; }
 
@@ -64,7 +64,7 @@ struct GraphNode* DynOS_Model_LoadCommon(u32* aId, enum ModelPool aModelPool, vo
 
     // check map
     auto& map = sAssetMap[aModelPool];
-    if (map.count(aAsset)) {
+    if (aDeDuplicate && map.count(aAsset)) {
         auto& found = map[aAsset];
         if (*aId && *aId != found.id) {
             sOverwriteMap[*aId] = found.id;
@@ -106,16 +106,16 @@ struct GraphNode* DynOS_Model_LoadCommon(u32* aId, enum ModelPool aModelPool, vo
     return node;
 }
 
-struct GraphNode* DynOS_Model_LoadGeo(u32* aId, enum ModelPool aModelPool, void* aAsset) {
-    return DynOS_Model_LoadCommon(aId, aModelPool, aAsset, 0, NULL, MLT_GEO);
+struct GraphNode* DynOS_Model_LoadGeo(u32* aId, enum ModelPool aModelPool, void* aAsset, bool aDeDuplicate) {
+    return DynOS_Model_LoadCommon(aId, aModelPool, aAsset, 0, NULL, aDeDuplicate, MLT_GEO);
 }
 
 struct GraphNode* DynOS_Model_LoadDl(u32* aId, enum ModelPool aModelPool, u8 aLayer, void* aAsset) {
-    return DynOS_Model_LoadCommon(aId, aModelPool, aAsset, aLayer, NULL, MLT_DL);
+    return DynOS_Model_LoadCommon(aId, aModelPool, aAsset, aLayer, NULL, true, MLT_DL);
 }
 
 struct GraphNode* DynOS_Model_StoreGeo(u32* aId, enum ModelPool aModelPool, void* aAsset, struct GraphNode* aGraphNode) {
-    return DynOS_Model_LoadCommon(aId, aModelPool, aAsset, 0, aGraphNode, MLT_STORE);
+    return DynOS_Model_LoadCommon(aId, aModelPool, aAsset, 0, aGraphNode, true, MLT_STORE);
 }
 
 struct GraphNode* DynOS_Model_GetErrorGeo() {

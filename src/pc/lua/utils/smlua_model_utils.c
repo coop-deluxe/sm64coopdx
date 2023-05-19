@@ -488,7 +488,7 @@ u16 smlua_model_util_load(enum ModelExtendedId extId) {
     if (info->isDisplayList) {
         dynos_model_load_dl(&id, MODEL_POOL_SESSION, info->layer, (void*)info->asset);
     } else {
-        dynos_model_load_geo(&id, MODEL_POOL_SESSION, (void*)info->asset);
+        dynos_model_load_geo(&id, MODEL_POOL_SESSION, (void*)info->asset, true);
     }
     return (u16)id;
 }

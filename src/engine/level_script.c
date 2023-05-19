@@ -423,7 +423,7 @@ static void level_cmd_begin_area(void) {
 
     if (areaIndex < 8) {
         u32 id = 0;
-        struct GraphNodeRoot *screenArea = (struct GraphNodeRoot *) dynos_model_load_geo(&id, MODEL_POOL_LEVEL, geoLayoutAddr);
+        struct GraphNodeRoot *screenArea = (struct GraphNodeRoot *) dynos_model_load_geo(&id, MODEL_POOL_LEVEL, geoLayoutAddr, false);
         struct GraphNodeCamera *node = (struct GraphNodeCamera *) screenArea->views[0];
 
         sCurrAreaIndex = areaIndex;
@@ -464,7 +464,7 @@ static void level_cmd_load_model_from_geo(void) {
     void *arg1 = CMD_GET(void *, 4);
 
     u32 id = arg0;
-    dynos_model_load_geo(&id, sFinishedLoadingPerm ? MODEL_POOL_LEVEL : MODEL_POOL_PERMANENT, arg1);
+    dynos_model_load_geo(&id, sFinishedLoadingPerm ? MODEL_POOL_LEVEL : MODEL_POOL_PERMANENT, arg1, true);
 
     sCurrentCmd = CMD_NEXT;
 }

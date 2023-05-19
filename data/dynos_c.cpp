@@ -225,8 +225,8 @@ void dynos_behavior_hook_all_custom_behaviors(void) {
 
 // -- models -- //
 
-struct GraphNode* dynos_model_load_geo(u32* aId, enum ModelPool aModelPool, void* aAsset) {
-    return DynOS_Model_LoadGeo(aId, aModelPool, aAsset);
+struct GraphNode* dynos_model_load_geo(u32* aId, enum ModelPool aModelPool, void* aAsset, bool aDeDuplicate) {
+    return DynOS_Model_LoadGeo(aId, aModelPool, aAsset, aDeDuplicate);
 }
 
 struct GraphNode* dynos_model_load_dl(u32* aId, enum ModelPool aModelPool, u8 aLayer, void* aAsset) {

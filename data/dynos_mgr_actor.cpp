@@ -50,7 +50,7 @@ void DynOS_Actor_AddCustom(const SysPath &aFilename, const char *aActorName) {
     ActorGfx actorGfx   = {  };
     actorGfx.mGfxData   = _GfxData;
     actorGfx.mPackIndex = MOD_PACK_INDEX;
-    actorGfx.mGraphNode = (GraphNode *) DynOS_Model_LoadGeo(&id, MODEL_POOL_SESSION, geoLayout);
+    actorGfx.mGraphNode = (GraphNode *) DynOS_Model_LoadGeo(&id, MODEL_POOL_SESSION, geoLayout, true);
     if (!actorGfx.mGraphNode) {
         Print("  ERROR: Couldn't load graph node for \"%s\"", actorName);
         free(actorName);
@@ -170,7 +170,7 @@ void DynOS_Actor_Override_All(void) {
             if (_Object->header.gfx.sharedChild != NULL && _Object->header.gfx.sharedChild->georef != NULL) {
                 GraphNode* georef = (GraphNode*)_Object->header.gfx.sharedChild->georef;
                 u32 id = 0;
-                _Object->header.gfx.sharedChild = DynOS_Model_LoadGeo(&id, MODEL_POOL_PERMANENT, georef);
+                _Object->header.gfx.sharedChild = DynOS_Model_LoadGeo(&id, MODEL_POOL_PERMANENT, georef, true);
             }
             DynOS_Actor_Override((void**)&_Object->header.gfx.sharedChild);
         }
