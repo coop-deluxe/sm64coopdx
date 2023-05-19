@@ -108,12 +108,14 @@
 | animYTransDivisor | `integer` |  |
 | flags | `integer` |  |
 | index | `Pointer` <`integer`> |  |
+| indexLength | `integer` |  |
 | length | `integer` | read-only |
 | loopEnd | `integer` |  |
 | loopStart | `integer` |  |
 | startFrame | `integer` |  |
 | unusedBoneCount | `integer` |  |
 | values | `Pointer` <`integer`> |  |
+| valuesLength | `integer` |  |
 
 [:arrow_up_small:](#)
 
@@ -826,10 +828,10 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
-| activeAreaIndex | `integer` | read-only |
+| activeAreaIndex | `integer` |  |
 | angle | [Vec3s](structs.md#Vec3s) | read-only |
 | animInfo | [AnimInfo](structs.md#AnimInfo) | read-only |
-| areaIndex | `integer` | read-only |
+| areaIndex | `integer` |  |
 | cameraToObject | [Vec3f](structs.md#Vec3f) | read-only |
 | disableAutomaticShadowPos | `boolean` |  |
 | node | [GraphNode](structs.md#GraphNode) | read-only |

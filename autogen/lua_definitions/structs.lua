@@ -17,12 +17,14 @@
 --- @field public animYTransDivisor integer
 --- @field public flags integer
 --- @field public index Pointer_integer
+--- @field public indexLength integer
 --- @field public length integer
 --- @field public loopEnd integer
 --- @field public loopStart integer
 --- @field public startFrame integer
 --- @field public unusedBoneCount integer
 --- @field public values Pointer_integer
+--- @field public valuesLength integer
 
 --- @class AnimationTable
 --- @field public count integer

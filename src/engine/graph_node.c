@@ -840,7 +840,7 @@ s16 retrieve_animation_value(struct Animation *animation, s32 frame, u16 **attri
     if ((offset + 1) >= animation->indexLength) { return 0; }
 
     // validate frame
-    if (frame < 0) { return 0; }
+    if (frame < 0) { frame = 0; }
 
     // retrieve animation index
     s32 index = 0;

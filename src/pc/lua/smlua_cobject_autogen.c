@@ -38,17 +38,19 @@ static struct LuaObjectField sAnimInfoFields[LUA_ANIM_INFO_FIELD_COUNT] = {
     { "prevAnimPtr",            LVT_COBJECT_P, offsetof(struct AnimInfo, prevAnimPtr),            false, LOT_ANIMATION },
 };
 
-#define LUA_ANIMATION_FIELD_COUNT 9
+#define LUA_ANIMATION_FIELD_COUNT 11
 static struct LuaObjectField sAnimationFields[LUA_ANIMATION_FIELD_COUNT] = {
     { "animYTransDivisor", LVT_S16,   offsetof(struct Animation, animYTransDivisor), false, LOT_NONE    },
     { "flags",             LVT_S16,   offsetof(struct Animation, flags),             false, LOT_NONE    },
     { "index",             LVT_U16_P, offsetof(struct Animation, index),             false, LOT_POINTER },
+    { "indexLength",       LVT_U32,   offsetof(struct Animation, indexLength),       false, LOT_NONE    },
     { "length",            LVT_U32,   offsetof(struct Animation, length),            true,  LOT_NONE    },
     { "loopEnd",           LVT_S16,   offsetof(struct Animation, loopEnd),           false, LOT_NONE    },
     { "loopStart",         LVT_S16,   offsetof(struct Animation, loopStart),         false, LOT_NONE    },
     { "startFrame",        LVT_S16,   offsetof(struct Animation, startFrame),        false, LOT_NONE    },
     { "unusedBoneCount",   LVT_S16,   offsetof(struct Animation, unusedBoneCount),   false, LOT_NONE    },
     { "values",            LVT_S16_P, offsetof(struct Animation, values),            false, LOT_POINTER },
+    { "valuesLength",      LVT_U32,   offsetof(struct Animation, valuesLength),      false, LOT_NONE    },
 };
 
 #define LUA_ANIMATION_TABLE_FIELD_COUNT 1
@@ -644,10 +646,10 @@ static struct LuaObjectField sGraphNodeFields[LUA_GRAPH_NODE_FIELD_COUNT] = {
 
 #define LUA_GRAPH_NODE_OBJECT_FIELD_COUNT 26
 static struct LuaObjectField sGraphNodeObjectFields[LUA_GRAPH_NODE_OBJECT_FIELD_COUNT] = {
-    { "activeAreaIndex",            LVT_S8,        offsetof(struct GraphNodeObject, activeAreaIndex),            true,  LOT_NONE      },
+    { "activeAreaIndex",            LVT_S8,        offsetof(struct GraphNodeObject, activeAreaIndex),            false, LOT_NONE      },
     { "angle",                      LVT_COBJECT,   offsetof(struct GraphNodeObject, angle),                      true,  LOT_VEC3S     },
     { "animInfo",                   LVT_COBJECT,   offsetof(struct GraphNodeObject, animInfo),                   true,  LOT_ANIMINFO  },
-    { "areaIndex",                  LVT_S8,        offsetof(struct GraphNodeObject, areaIndex),                  true,  LOT_NONE      },
+    { "areaIndex",                  LVT_S8,        offsetof(struct GraphNodeObject, areaIndex),                  false, LOT_NONE      },
     { "cameraToObject",             LVT_COBJECT,   offsetof(struct GraphNodeObject, cameraToObject),             true,  LOT_VEC3F     },
     { "disableAutomaticShadowPos",  LVT_BOOL,      offsetof(struct GraphNodeObject, disableAutomaticShadowPos),  false, LOT_NONE      },
     { "node",                       LVT_COBJECT,   offsetof(struct GraphNodeObject, node),                       true,  LOT_GRAPHNODE },

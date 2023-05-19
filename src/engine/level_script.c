@@ -377,9 +377,9 @@ static void level_reset_globals(void) {
         gAreas[i].unk04 = NULL;
     }
 
-    // clear mariostate spawninfo pointers
+    // reset mariostate spawninfo pointers
     for (int i = 0; i < MAX_PLAYERS; i++) {
-        gMarioStates[i].spawnInfo = NULL;
+        gMarioStates[i].spawnInfo = &gPlayerSpawnInfos[i];
     }
 
     // free models stored in dynos
