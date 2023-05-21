@@ -26466,6 +26466,25 @@ int smlua_func_save_file_get_total_star_count(lua_State* L) {
     return 1;
 }
 
+int smlua_func_save_file_is_cannon_unlocked(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "save_file_is_cannon_unlocked", 2, top);
+        return 0;
+    }
+
+    s32 fileIndex = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "save_file_is_cannon_unlocked"); return 0; }
+    s32 courseIndex = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "save_file_is_cannon_unlocked"); return 0; }
+
+    lua_pushinteger(L, save_file_is_cannon_unlocked(fileIndex, courseIndex));
+
+    return 1;
+}
+
 int smlua_func_save_file_reload(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -31442,6 +31461,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "save_file_get_sound_mode", smlua_func_save_file_get_sound_mode);
     smlua_bind_function(L, "save_file_get_star_flags", smlua_func_save_file_get_star_flags);
     smlua_bind_function(L, "save_file_get_total_star_count", smlua_func_save_file_get_total_star_count);
+    smlua_bind_function(L, "save_file_is_cannon_unlocked", smlua_func_save_file_is_cannon_unlocked);
     smlua_bind_function(L, "save_file_reload", smlua_func_save_file_reload);
     smlua_bind_function(L, "save_file_set_flags", smlua_func_save_file_set_flags);
     smlua_bind_function(L, "save_file_set_star_flags", smlua_func_save_file_set_star_flags);

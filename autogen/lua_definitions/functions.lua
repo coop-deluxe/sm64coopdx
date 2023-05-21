@@ -7897,6 +7897,13 @@ function save_file_get_total_star_count(fileIndex, minCourse, maxCourse)
     -- ...
 end
 
+--- @param fileIndex integer
+--- @param courseIndex integer
+--- @return integer
+function save_file_is_cannon_unlocked(fileIndex, courseIndex)
+    -- ...
+end
+
 --- @param load_all integer
 --- @return nil
 function save_file_reload(load_all)

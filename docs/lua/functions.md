@@ -1461,6 +1461,7 @@
    - [save_file_get_sound_mode](functions-4.md#save_file_get_sound_mode)
    - [save_file_get_star_flags](functions-4.md#save_file_get_star_flags)
    - [save_file_get_total_star_count](functions-4.md#save_file_get_total_star_count)
+   - [save_file_is_cannon_unlocked](functions-4.md#save_file_is_cannon_unlocked)
    - [save_file_reload](functions-4.md#save_file_reload)
    - [save_file_set_flags](functions-4.md#save_file_set_flags)
    - [save_file_set_star_flags](functions-4.md#save_file_set_star_flags)
