@@ -1,6 +1,6 @@
 // cannon.c.inc
 static void bhv_cannon_closed_init_non_spawn(void) {
-    if (save_file_is_cannon_unlocked() == 1) {
+    if (save_file_is_cannon_unlocked(gCurrSaveFileNum - 1, gCurrCourseNum) == 1) {
         o->oAction = CANNON_TRAP_DOOR_ACT_OPEN;
         o->activeFlags = ACTIVE_FLAG_DEACTIVATED;
     }
@@ -45,7 +45,7 @@ void bhv_cannon_closed_loop(void) {
             o->oVelY = 0;
             o->oDrawingDistance = 4000.0f;
 
-            if (save_file_is_cannon_unlocked() == 1)
+            if (save_file_is_cannon_unlocked(gCurrSaveFileNum - 1, gCurrCourseNum) == 1)
                 o->oAction = CANNON_TRAP_DOOR_ACT_CAM_ZOOM;
             break;
 
