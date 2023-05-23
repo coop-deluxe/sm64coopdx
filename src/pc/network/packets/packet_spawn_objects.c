@@ -6,9 +6,10 @@
 #include "src/game/area.h"
 #include "behavior_data.h"
 #include "behavior_table.h"
-#include "src/pc/lua/smlua.h"
-#include "src/pc/lua/utils/smlua_model_utils.h"
-#include "src/pc/lua/utils/smlua_obj_utils.h"
+#include "pc/lua/smlua.h"
+#include "pc/lua/utils/smlua_model_utils.h"
+#include "pc/lua/utils/smlua_obj_utils.h"
+#include "pc/crash_handler.h"
 //#define DISABLE_MODULE_LOG 1
 #include "pc/debuglog.h"
 
@@ -154,6 +155,7 @@ void network_receive_spawn_objects(struct Packet* p) {
             name = gNetworkPlayers[p->localIndex].name;
         }
         LOG_INFO("rx spawn object %s from %s (%s)", get_behavior_name_from_id(data.behaviorId), name, id);
+        snprintf(gLastRemoteBhv, 256, "%s %s (%s)", get_behavior_name_from_id(data.behaviorId), name, id);
 
         struct Object* parentObj = NULL;
         if (data.parentId == (u32)-1) {

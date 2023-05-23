@@ -129,6 +129,7 @@ static void coopnet_on_error(enum MPacketErrorNumber error, uint64_t tag) {
             break;
     }
 }
+
 static bool ns_coopnet_initialize(enum NetworkType networkType, bool reconnecting) {
     sNetworkType = networkType;
     sReconnecting = reconnecting;

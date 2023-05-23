@@ -26,12 +26,14 @@
 #include "pc/mods/mods.h"
 #include "pc/debuglog.h"
 
+char gLastRemoteBhv[256] = "";
+
 typedef struct {
     s32 x, y;
     u8 r, g, b;
     char s[128];
 } CrashHandlerText;
-static CrashHandlerText sCrashHandlerText[128 + 256];
+static CrashHandlerText sCrashHandlerText[128 + 256 + 4];
 
 #define PTR long long unsigned int)(uintptr_t
 
@@ -636,6 +638,7 @@ static void crash_handler(const int signalNum, siginfo_t *info, ucontext_t *cont
     }
 
     crash_handler_add_info_str(&pText, 335, 208, "Version", get_version_local());
+    crash_handler_add_info_str(&pText, 8, 208, "RemoteBhv", gLastRemoteBhv);
 
     // sounds
 #ifdef HAVE_SDL2

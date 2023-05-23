@@ -107,6 +107,7 @@ void apply_platform_displacement(u32 playerIndex, struct Object *platform) {
     UNUSED s16 unused2;
     UNUSED s16 unused3;
     f32 displaceMatrix[4][4];
+    if (!platform) { return; }
 
     rotation[0] = platform->oAngleVelPitch;
     rotation[1] = platform->oAngleVelYaw;

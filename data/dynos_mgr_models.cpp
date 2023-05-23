@@ -30,8 +30,10 @@ static std::map<u32, u32> sOverwriteMap;
 static u32 find_empty_id() {
     u32 id = 256;
     while (true) {
-        if (sIdMap.count(id) == 0)  { return id; }
-        if (sIdMap[id].size() == 0) { return id; }
+        if (id != 0) {
+            if (sIdMap.count(id) == 0)  { return id; }
+            if (sIdMap[id].size() == 0) { return id; }
+        }
         id++;
     }
 }
