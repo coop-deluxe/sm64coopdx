@@ -933,24 +933,6 @@ ifeq ($(WINDOWS_BUILD),1)
   endif
 endif
 
-# precomp custom sounds
-# hacky stupid thing for windows builds (non-auto-builder)
-# this way it won't fail to compile custom sounds anymore
-ifeq ($(WINDOWS_BUILD),999)
-  ifeq ($(WINDOWS_AUTO_BUILDER),1)
-  else
-    ifeq ($(filter clean distclean,$(MAKECMDGOALS)),)
-      $(info Copying precomp samples...)
-      Command := mkdir -p "$(BUILD_DIR)/sound"
-      Resp := $(shell $(call Command))
-      Command := mkdir -p "$(BUILD_DIR)/sound/samples"
-      Resp := $(shell $(call Command))
-      Command := unzip -o "sound/precomp/samples.zip" -d "$(BUILD_DIR)/sound/"
-      Resp := $(shell $(call Command))
-    endif
-  endif
-endif
-
 ifeq ($(ASAN),1)
 
   ifeq ($(COMPILER),gcc)
@@ -1163,7 +1145,6 @@ N64CKSUM              := $(TOOLS_DIR)/n64cksum
 N64GRAPHICS           := $(TOOLS_DIR)/n64graphics
 N64GRAPHICS_CI        := $(TOOLS_DIR)/n64graphics_ci
 TEXTCONV              := $(TOOLS_DIR)/textconv
-AIFF_EXTRACT_FAILSAFE := $(TOOLS_DIR)/aiff_extract_codebook_failsafe.py
 AIFF_EXTRACT_CODEBOOK := $(TOOLS_DIR)/aiff_extract_codebook
 VADPCM_ENC            := $(TOOLS_DIR)/vadpcm_enc
 EXTRACT_DATA_FOR_MIO  := $(TOOLS_DIR)/extract_data_for_mio
