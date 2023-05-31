@@ -74,6 +74,12 @@ function hook_chat_command(command, description, func)
     -- ...
 end
 
+--- @param command string
+--- @param description string
+function update_chat_command_description(command, description)
+    -- ...
+end
+
 --- @param hookEventType LuaHookedEventType
 --- @param func function
 function hook_event(hookEventType, func)

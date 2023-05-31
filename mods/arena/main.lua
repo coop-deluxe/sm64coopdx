@@ -23,19 +23,27 @@ gGameModes = {
     [GAME_MODE_TKOTH] = { shortName = 'TKOTH', name = 'Team King of the Hill', teams = true,  teamSpawns = false, useScore = true,  scoreCap = 90,  minPlayers = 4, maxPlayers = 99 },
 }
 
-gGameLevels = {
-    { level = LEVEL_BOB, name = 'Origin'    },
-    { level = LEVEL_CCM, name = 'Sky Beach' },
-    { level = LEVEL_WF,  name = 'Pillars' },
-    { level = LEVEL_JRB, name = 'Forts' },
-    { level = LEVEL_DDD, name = 'Platforms' },
+LEVEL_ARENA_ORIGIN    = level_register('level_arena_origin_entry',    COURSE_NONE, 'Origin',    'origin',    28000, 0x28, 0x28, 0x28)
+LEVEL_ARENA_SKY_BEACH = level_register('level_arena_sky_beach_entry', COURSE_NONE, 'Sky Beach', 'beach',     28000, 0x28, 0x28, 0x28)
+LEVEL_ARENA_PILLARS   = level_register('level_arena_pillars_entry',   COURSE_NONE, 'Pillars',   'pillars',   28000, 0x28, 0x28, 0x28)
+LEVEL_ARENA_FORTS     = level_register('level_arena_forts_entry',     COURSE_NONE, 'Forts',     'forts',     28000, 0x28, 0x28, 0x28)
+LEVEL_ARENA_PLATFORMS = level_register('level_arena_platforms_entry', COURSE_NONE, 'Platforms', 'platforms', 28000, 0x28, 0x28, 0x28)
+
+local gGameLevels = {
+    { level = LEVEL_ARENA_ORIGIN,    name = 'Origin'    },
+    { level = LEVEL_ARENA_SKY_BEACH, name = 'Sky Beach' },
+    { level = LEVEL_ARENA_PILLARS,   name = 'Pillars'   },
+    { level = LEVEL_ARENA_FORTS,     name = 'Forts'     },
+    { level = LEVEL_ARENA_PLATFORMS, name = 'Platforms' },
 }
 
-smlua_text_utils_course_acts_replace(COURSE_BOB, " 1 Origin", "?", "?", "?", "?", "?", "?")
-smlua_text_utils_course_acts_replace(COURSE_CCM, " 4 Sky Beach", "?", "?", "?", "?", "?", "?")
-smlua_text_utils_course_acts_replace(COURSE_WF, " 2 Pillars", "?", "?", "?", "?", "?", "?")
-smlua_text_utils_course_acts_replace(COURSE_JRB, " 3 Forts", "?", "?", "?", "?", "?", "?")
-smlua_text_utils_course_acts_replace(COURSE_DDD, " 4 Platforms", "?", "?", "?", "?", "?", "?")
+-- expose certain functions to other mods
+_G.Arena = {
+    add_level = function (levelNum, levelName)
+        table.insert(gGameLevels, { level = levelNum, name = levelName })
+        update_chat_command_description('arena-level', string.format('[%s] sets level', get_level_choices()))
+    end
+}
 
 -- setup global sync table
 gGlobalSyncTable.gameState = GAME_STATE_ACTIVE
@@ -466,7 +474,6 @@ function on_gamemode_command(msg)
 end
 
 function on_level_command(msg)
-
     local setLevel = nil
 
     for i, gl in ipairs(gGameLevels) do
@@ -498,15 +505,18 @@ for i, gm in ipairs(gGameModes) do
     sGameModeShortTimes = sGameModeShortTimes .. gm.shortName
 end
 
-sLevelChoices = ''
-for i, gl in ipairs(gGameLevels) do
-    if string.len(sLevelChoices) > 0 then
-        sLevelChoices = sLevelChoices .. '|'
+function get_level_choices()
+    local levelChoices = ''
+    for i, gl in ipairs(gGameLevels) do
+        if string.len(levelChoices) > 0 then
+            levelChoices = levelChoices .. '|'
+        end
+        levelChoices = levelChoices .. gl.name
     end
-    sLevelChoices = sLevelChoices .. gl.name
+    return levelChoices
 end
 
 if network_is_server() then
     hook_chat_command('arena-gamemode', string.format("[%s|random] sets gamemode", sGameModeShortTimes), on_gamemode_command)
-    hook_chat_command('arena-level', string.format('[%s] sets level', sLevelChoices), on_level_command)
+    hook_chat_command('arena-level', string.format('[%s] sets level', get_level_choices()), on_level_command)
 end

@@ -1277,6 +1277,37 @@ int smlua_hook_chat_command(lua_State* L) {
     return 1;
 }
 
+int smlua_update_chat_command_description(lua_State* L) {
+    if (L == NULL) { return 0; }
+    if (!smlua_functions_valid_param_count(L, 2)) { return 0; }
+
+    const char* command = smlua_to_string(L, 1);
+    if (command == NULL || strlen(command) == 0 || !gSmLuaConvertSuccess) {
+        LOG_LUA_LINE("Update chat command: tried to update invalid command");
+        return 0;
+    }
+
+    const char* description = smlua_to_string(L, 2);
+    if (description == NULL || strlen(description) == 0 || !gSmLuaConvertSuccess) {
+        LOG_LUA_LINE("Update chat command: tried to update invalid description");
+        return 0;
+    }
+
+    for (int i = 0; i < sHookedChatCommandsCount; i++) {
+        struct LuaHookedChatCommand* hook = &sHookedChatCommands[i];
+        if (!strcmp(hook->command, command)) {
+            if (hook->description) {
+                free(hook->description);
+            }
+            hook->description = strdup(description);
+            return 1;
+        }
+    }
+
+    LOG_LUA_LINE("Update chat command: could not find command to update");
+    return 0;
+}
+
 bool smlua_call_chat_command_hook(char* command) {
     lua_State* L = gLuaState;
     if (L == NULL) { return false; }
@@ -1470,4 +1501,5 @@ void smlua_bind_hooks(void) {
     smlua_bind_function(L, "hook_chat_command", smlua_hook_chat_command);
     smlua_bind_function(L, "hook_on_sync_table_change", smlua_hook_on_sync_table_change);
     smlua_bind_function(L, "hook_behavior", smlua_hook_behavior);
+    smlua_bind_function(L, "update_chat_command_description", smlua_update_chat_command_description);
 }

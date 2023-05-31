@@ -181,6 +181,15 @@ void *DynOS_Lvl_Override(void *aCmd) {
             gLevelScriptActive = (LevelScript*)aCmd;
         }
     }
+
+    auto& _CustomLevelScripts = DynOS_Lvl_GetArray();
+    for (auto& script : _CustomLevelScripts) {
+        if (aCmd == script.second->mLevelScripts[0]->mData) {
+            gLevelScriptModIndex = script.second->mModIndex;
+            gLevelScriptActive = (LevelScript*)aCmd;
+        }
+    }
+
     return aCmd;
 }
 
