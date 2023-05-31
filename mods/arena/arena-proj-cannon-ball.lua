@@ -43,7 +43,7 @@ function bhv_arena_cannon_ball_loop(obj)
     end
 
     local m = gMarioStates[0]
-    if global_index_hurts_mario_state(obj.oArenaCannonBallGlobalOwner, m) and not is_invuln_or_intang(m) then
+    if global_index_hurts_mario_state(obj.oArenaCannonBallGlobalOwner, m) then
         local b = { x = a.x + dir.x / 2, y = a.y + dir.y / 2, z = a.z + dir.z / 2 }
         if bhv_arena_cannon_ball_intersects_local(obj, a) or bhv_arena_cannon_ball_intersects_local(obj, b) then
             if obj.oArenaCannonBallDamages ~= 0 then
@@ -56,6 +56,9 @@ function bhv_arena_cannon_ball_loop(obj)
         local e = gMarioStateExtras[0]
         e.lastDamagedByGlobal = obj.oArenaCannonBallGlobalOwner
     end
+
+    -- I'd like there to be a smoke trail... but sm64 doesn't use a zbuffer for transparent objects :(
+    --spawn_mist_advanced(obj, 1 + obj.oArenaCannonBallSize * 5, 2, 1, 0)
 
     info = collision_find_surface_on_ray(
             a.x, a.y, a.z,

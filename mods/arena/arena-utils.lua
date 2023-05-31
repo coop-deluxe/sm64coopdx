@@ -120,6 +120,27 @@ function spawn_mist(obj, scale)
     cur_obj_spawn_particles(spi)
 end
 
+function spawn_mist_advanced(obj, scale, type, count, offsetY)
+    local spi = obj_get_temp_spawn_particles_info(E_MODEL_MIST)
+    if spi == nil then
+        return nil
+    end
+
+    spi.behParam = type
+    spi.count = count
+    spi.offsetY = offsetY
+    spi.forwardVelBase = 3 * scale
+    spi.forwardVelRange = -6 * scale
+    spi.velYBase = 3 * scale
+    spi.velYRange = -6 * scale
+    spi.gravity = 0
+    spi.dragStrength = 5
+    spi.sizeBase = 5 * scale
+    spi.sizeRange = 7 * scale
+
+    cur_obj_spawn_particles(spi)
+end
+
 function spawn_balls(obj, scale)
     local spi = obj_get_temp_spawn_particles_info(E_MODEL_BOWLING_BALL)
     if spi == nil then

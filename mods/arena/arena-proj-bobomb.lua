@@ -89,19 +89,21 @@ function bhv_arena_bobomb_thrown_loop(obj)
     for i = 0, MAX_PLAYERS - 1 do
         local m = gMarioStates[i]
         if active_player(m) and global_index_hurts_mario_state(obj.oArenaBobombGlobalOwner, m) and not is_invuln_or_intang(m) then
-            if bhv_arena_bobomb_intersects_player(obj, m, a, 200) then
+            if bhv_arena_bobomb_intersects_player(obj, m, a, 100) then
                 bhv_arena_bobomb_expode(obj)
                 return
             end
         end
     end
 
+    spawn_mist_advanced(obj, 2, 3, 1, 70)
+
     local info = collision_find_surface_on_ray(
             a.x, a.y, a.z,
             dir.x, dir.y, dir.z)
 
     local floorHeight = find_floor_height(obj.oPosX, obj.oPosY + 100, obj.oPosZ)
-            
+
     if obj.oTimer > 30 * 1 or info.surface ~= nil or obj.oPosY < floorHeight then
         bhv_arena_bobomb_expode(obj)
         return

@@ -1454,7 +1454,7 @@ u32 interact_player_pvp(struct MarioState* attacker, struct MarioState* victim) 
     if (!is_player_active(victim)) { return FALSE; }
     if (gServerSettings.playerInteractions == PLAYER_INTERACTIONS_NONE) { return FALSE; }
     if (attacker->action == ACT_JUMBO_STAR_CUTSCENE) { return FALSE; }
-    if (attacker->action == ACT_JUMBO_STAR_CUTSCENE) { return FALSE; }
+    if (victim->action   == ACT_JUMBO_STAR_CUTSCENE) { return FALSE; }
 
     // vanish cap players can't interact
     u32 vanishFlags = (MARIO_VANISH_CAP | MARIO_CAP_ON_HEAD);

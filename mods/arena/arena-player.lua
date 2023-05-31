@@ -186,6 +186,8 @@ function mario_fire_flower_use(m)
 
     if (m.action & ACT_FLAG_INVULNERABLE) ~= 0 or (m.action & ACT_FLAG_INTANGIBLE) ~= 0 then
         -- nothing
+    elseif (m.action == ACT_SHOT_FROM_CANNON) then
+        -- nothing
     elseif (m.action & ACT_FLAG_SWIMMING) ~= 0 then
         set_mario_action(m, ACT_WATER_PUNCH, 0)
     elseif (m.action & ACT_FLAG_MOVING) ~= 0 then
@@ -196,7 +198,7 @@ function mario_fire_flower_use(m)
         set_mario_action(m, ACT_PUNCHING, 0)
     end
 
-    e.attackCooldown = 15
+    e.attackCooldown = 20
     s.ammo = s.ammo - 1
 end
 
@@ -218,6 +220,8 @@ function mario_bobomb_use(m)
 
     if (m.action & ACT_FLAG_INVULNERABLE) ~= 0 or (m.action & ACT_FLAG_INTANGIBLE) ~= 0 then
         -- nothing
+    elseif (m.action == ACT_SHOT_FROM_CANNON) then
+        -- nothing
     elseif (m.action & ACT_FLAG_SWIMMING) ~= 0 then
         set_mario_action(m, ACT_WATER_PUNCH, 0)
     elseif (m.action & ACT_FLAG_MOVING) ~= 0 then
@@ -228,7 +232,7 @@ function mario_bobomb_use(m)
         set_mario_action(m, ACT_PUNCHING, 0)
     end
 
-    e.attackCooldown = 15
+    e.attackCooldown = 20
     s.ammo = s.ammo - 1
 end
 
@@ -343,6 +347,15 @@ function mario_local_update(m)
     -- use the bobomb
     if e.attackCooldown <= 0 and s.item == ITEM_BOBOMB and (m.controller.buttonPressed & Y_BUTTON) ~= 0 then
         mario_bobomb_use(m)
+    end
+
+    -- break out of shot from cannon
+    if (m.action == ACT_SHOT_FROM_CANNON) then
+        if (m.input & INPUT_B_PRESSED) ~= 0 then
+            return set_mario_action(m, ACT_DIVE, 0)
+        elseif (m.input & INPUT_Z_PRESSED) ~= 0 then
+            return set_mario_action(m, ACT_GROUND_POUND, 0)
+        end
     end
 
     -- set metal

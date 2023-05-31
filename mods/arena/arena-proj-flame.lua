@@ -13,11 +13,11 @@ function bhv_arena_child_flame_init(obj)
     end
     obj.oGraphYOffset = 30
 
-    obj.hitboxRadius = 35
+    obj.hitboxRadius = 30
     obj.hitboxHeight = 10
     obj.hitboxDownOffset = 0
 
-    obj.hurtboxRadius = 35
+    obj.hurtboxRadius = 30
     obj.hurtboxHeight = 10
 
     obj.oWallHitboxRadius = 50
@@ -78,11 +78,11 @@ function bhv_arena_flame_init(obj)
     obj.oGraphYOffset = 30
 
     obj.hitboxRadius = 75
-    obj.hitboxHeight = 25
+    obj.hitboxHeight = 30
     obj.hitboxDownOffset = 25
 
-    obj.hurtboxRadius = 100
-    obj.hurtboxHeight = 50
+    obj.hurtboxRadius = 75
+    obj.hurtboxHeight = 30
 
     obj.oWallHitboxRadius = 100
     obj.oGravity = -400 / 100
