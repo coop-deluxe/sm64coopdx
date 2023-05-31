@@ -55,6 +55,9 @@ Mat4 gMatStackPrev[MATRIX_STACK_SIZE] = {};
 Mtx *gMatStackFixed[MATRIX_STACK_SIZE] = { 0 };
 Mtx *gMatStackPrevFixed[MATRIX_STACK_SIZE] = { 0 };
 
+s32 gCamSkipInterp = 0;
+Vec3f gCamSkipInterpDisplacement = { 0 };
+
 u8 sUsingCamSpace = FALSE;
 Mtx sPrevCamTranf, sCurrCamTranf = {
     .m = {
@@ -227,6 +230,9 @@ void patch_mtx_interpolated(f32 delta) {
     Mtx camTranfInv, prevCamTranfInv;
 
     if (sPerspectiveNode != NULL) {
+        if (gCamSkipInterp) {
+            sPerspectiveNode->prevFov = sPerspectiveNode->fov;
+        }
         u16 perspNorm;
         f32 fovInterpolated = delta_interpolate_f32(sPerspectiveNode->prevFov, sPerspectiveNode->fov, delta);
         f32 near = MIN(sPerspectiveNode->near, gProjectionMaxNearValue);
@@ -320,6 +326,7 @@ void patch_mtx_interpolated(f32 delta) {
                   G_MTX_MODELVIEW | G_MTX_LOAD | G_MTX_NOPUSH);
     }
 
+    gCamSkipInterp = 0;
 }
 
 /**
@@ -555,6 +562,18 @@ static void geo_process_camera(struct GraphNodeCamera *node) {
 
     mtxf_lookat(cameraTransform, node->pos, node->focus, node->roll);
     mtxf_mul(gMatStack[gMatStackIndex + 1], cameraTransform, gMatStack[gMatStackIndex]);
+
+    if (gCamSkipInterp) {
+        // apply prevpos camera offset
+        vec3f_copy(node->prevPos, node->pos);
+        vec3f_add(node->prevPos, gCamSkipInterpDisplacement);
+        vec3f_copy(node->prevFocus, node->focus);
+        vec3f_add(node->prevFocus, gCamSkipInterpDisplacement);
+    }
+
+    // save prevpos camera offset
+    vec3f_copy(gCamSkipInterpDisplacement, node->prevPos);
+    vec3f_sub(gCamSkipInterpDisplacement, node->pos);
 
     if (gGlobalTimer == node->prevTimestamp + 1 && gGlobalTimer != gLakituState.skipCameraInterpolationTimestamp) {
         mtxf_lookat(cameraTransform, node->prevPos, node->prevFocus, node->roll);

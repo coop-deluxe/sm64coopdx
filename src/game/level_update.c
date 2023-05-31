@@ -637,6 +637,7 @@ void check_instant_warp(void) {
                     //vec3f_mul(gMarioStates[0].vel, -0.8f);
                     return;
                 }
+
                 mario_drop_held_object(&gMarioStates[0]);
                 u8 changeOfArea = (gCurrAreaIndex != warp->area);
                 gMarioStates[0].pos[0] += warp->displacement[0];

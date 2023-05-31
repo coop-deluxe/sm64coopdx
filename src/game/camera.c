@@ -497,6 +497,9 @@ extern u8 sZoomOutAreaMasks[];
 
 static void skip_camera_interpolation(void) {
     gLakituState.skipCameraInterpolationTimestamp = gGlobalTimer;
+    extern s32 gCamSkipInterp;
+    gCamSkipInterp = 1;
+
 }
 
 /**
