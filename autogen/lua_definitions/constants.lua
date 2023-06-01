@@ -8127,6 +8127,18 @@ PARTICLE_WATER_SPLASH = (1 << 6)
 PARTICLE_WAVE_TRAIL = (1 << 10)
 
 --- @type integer
+STEP_TYPE_AIR = 2
+
+--- @type integer
+STEP_TYPE_GROUND = 1
+
+--- @type integer
+STEP_TYPE_HANG = 4
+
+--- @type integer
+STEP_TYPE_WATER = 3
+
+--- @type integer
 VALID_BUTTONS = (A_BUTTON | B_BUTTON | Z_TRIG | START_BUTTON | U_JPAD | D_JPAD | L_JPAD | R_JPAD | L_TRIG | R_TRIG | X_BUTTON | Y_BUTTON | U_CBUTTONS | D_CBUTTONS | L_CBUTTONS | R_CBUTTONS )
 
 --- @type integer

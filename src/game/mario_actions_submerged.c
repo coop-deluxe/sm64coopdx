@@ -26,9 +26,9 @@
 #define MIN_SWIM_STRENGTH 160
 #define MIN_SWIM_SPEED 16.0f
 
-static s16 sWasAtSurface[MAX_PLAYERS] = { FALSE, FALSE, FALSE, FALSE, 
-                                          FALSE, FALSE, FALSE, FALSE, 
-                                          FALSE, FALSE, FALSE, FALSE, 
+static s16 sWasAtSurface[MAX_PLAYERS] = { FALSE, FALSE, FALSE, FALSE,
+                                          FALSE, FALSE, FALSE, FALSE,
+                                          FALSE, FALSE, FALSE, FALSE,
                                           FALSE, FALSE, FALSE, FALSE };
 static s16 sSwimStrength[MAX_PLAYERS] = { MIN_SWIM_STRENGTH, MIN_SWIM_STRENGTH, MIN_SWIM_STRENGTH, MIN_SWIM_STRENGTH,
                                           MIN_SWIM_STRENGTH, MIN_SWIM_STRENGTH, MIN_SWIM_STRENGTH, MIN_SWIM_STRENGTH,
@@ -192,7 +192,8 @@ u32 perform_water_step(struct MarioState *m) {
     Vec3f step;
     struct Object *marioObj = m->marioObj;
 
-    smlua_call_event_hooks_mario_param(HOOK_BEFORE_PHYS_STEP, m);
+    s32 returnValue = 0;
+    if (smlua_call_event_hooks_mario_param_and_int_ret_int(HOOK_BEFORE_PHYS_STEP, m, STEP_TYPE_WATER, &returnValue)) return (u32) returnValue;
 
     if (gServerSettings.enableCheats && gCheats.superSpeed && m->playerIndex == 0) {
         m->vel[0] *= SUPER_SPEED_MULTIPLIER;
@@ -552,7 +553,7 @@ static s32 check_water_jump(struct MarioState *m) {
 static s32 act_breaststroke(struct MarioState *m) {
     if (!m) { return 0; }
     u16 pIndex = m->playerIndex;
-    
+
     if (m->actionArg == 0) {
         sSwimStrength[pIndex] = MIN_SWIM_STRENGTH;
     }
@@ -613,7 +614,7 @@ static s32 act_breaststroke(struct MarioState *m) {
 static s32 act_swimming_end(struct MarioState *m) {
     if (!m) { return 0; }
     u16 pIndex = m->playerIndex;
-    
+
     if (m->flags & MARIO_METAL_CAP) {
         return set_mario_action(m, ACT_METAL_WATER_FALLING, 1);
     }
@@ -653,7 +654,7 @@ static s32 act_swimming_end(struct MarioState *m) {
 static s32 act_flutter_kick(struct MarioState *m) {
     if (!m) { return 0; }
     u16 pIndex = m->playerIndex;
-    
+
     if (m->flags & MARIO_METAL_CAP) {
         return set_mario_action(m, ACT_METAL_WATER_FALLING, 1);
     }

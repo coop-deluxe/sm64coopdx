@@ -91,7 +91,7 @@ The lua functions sent to `hook_event()` will be automatically called by SM64 wh
 | HOOK_MARIO_UPDATE | Called once per player per frame at the end of a mario update | [MarioState](structs.md#MarioState) mario |
 | HOOK_BEFORE_MARIO_UPDATE | Called once per player per frame at the beginning of a mario update | [MarioState](structs.md#MarioState) mario |
 | HOOK_ON_SET_MARIO_ACTION | Called every time a player's current action is changed | [MarioState](structs.md#MarioState) mario |
-| HOOK_BEFORE_PHYS_STEP | Called once per player per frame before physics code is run | [MarioState](structs.md#MarioState) mario |
+| HOOK_BEFORE_PHYS_STEP | Called once per player per frame before physics code is run, return an integer to cancel it with your own step result | [MarioState](structs.md#MarioState) mario, `integer` stepType |
 | HOOK_ALLOW_PVP_ATTACK | Called when one player attacks another, return `true` to allow the attack | [MarioState](structs.md#MarioState) attacker, [MarioState](structs.md#MarioState) victim |
 | HOOK_ON_PVP_ATTACK | Called when one player attacks another | [MarioState](structs.md#MarioState) attacker, [MarioState](structs.md#MarioState) victim |
 | HOOK_ON_PLAYER_CONNECTED | Called when a player connects | [MarioState](structs.md#MarioState) connector |

@@ -88,6 +88,11 @@
 #define WATER_STEP_CANCELLED   3
 #define WATER_STEP_HIT_WALL    4
 
+#define STEP_TYPE_GROUND 1
+#define STEP_TYPE_AIR    2
+#define STEP_TYPE_WATER  3
+#define STEP_TYPE_HANG   4
+
 #define PARTICLE_DUST                 /* 0x00000001 */ (1 <<  0)
 #define PARTICLE_VERTICAL_STAR        /* 0x00000002 */ (1 <<  1)
 #define PARTICLE_2                    /* 0x00000004 */ (1 <<  2)
