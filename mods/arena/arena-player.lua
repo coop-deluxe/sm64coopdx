@@ -15,6 +15,7 @@ for i = 0, (MAX_PLAYERS - 1) do
     e.prevHurtCounter     = 0
     e.levelTimer          = 0
     e.levelTimerLevel     = 0
+    e.ladder              = nil
 
     local s = gPlayerSyncTable[i]
     s.item     = ITEM_NONE
@@ -386,7 +387,7 @@ function mario_local_update(m)
 
     -- prevent water heal
     if m.health >= 0x100 then
-        if m.healthCounter == 0 and m.hurtCounter == 0 then
+        if m.healCounter == 0 and m.hurtCounter == 0 then
             if ((m.action & ACT_FLAG_SWIMMING ~= 0) and (m.action & ACT_FLAG_INTANGIBLE == 0)) then
                 if ((m.pos.y >= (m.waterLevel - 140)) and not (m.area.terrainType & TERRAIN_SNOW ~= 0)) then
                     m.health = m.health - 0x1A
