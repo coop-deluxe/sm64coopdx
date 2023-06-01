@@ -384,6 +384,9 @@ function mario_local_update(m)
         play_sound(SOUND_GENERAL_BREAK_BOX, m.marioObj.header.gfx.cameraToObject)
     end
 
+    -- check for ladder
+    mario_check_for_ladder(m)
+
     e.prevHurtCounter = m.hurtCounter
 end
 
