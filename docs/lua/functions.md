@@ -1567,6 +1567,7 @@
    - [camera_unfreeze](functions-5.md#camera_unfreeze)
    - [course_is_main_course](functions-5.md#course_is_main_course)
    - [deref_s32_pointer](functions-5.md#deref_s32_pointer)
+   - [djui_popup_create_global](functions-5.md#djui_popup_create_global)
    - [get_current_save_file_num](functions-5.md#get_current_save_file_num)
    - [get_dialog_box_state](functions-5.md#get_dialog_box_state)
    - [get_dialog_id](functions-5.md#get_dialog_id)

@@ -546,6 +546,27 @@
 
 <br />
 
+## [djui_popup_create_global](#djui_popup_create_global)
+
+### Lua Example
+`djui_popup_create_global(message, lines)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| message | `string` |
+| lines | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void djui_popup_create_global(const char* message, int lines);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [get_current_save_file_num](#get_current_save_file_num)
 
 ### Lua Example

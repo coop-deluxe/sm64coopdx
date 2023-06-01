@@ -85,7 +85,7 @@ void packet_process(struct Packet* p) {
         case PACKET_COLLECT_STAR:            network_receive_collect_star(p);            break;
         case PACKET_COLLECT_COIN:            network_receive_collect_coin(p);            break;
         case PACKET_COLLECT_ITEM:            network_receive_collect_item(p);            break;
-        case PACKET_UNUSED1:                                                             break;
+        case PACKET_GLOBAL_POPUP:            network_receive_global_popup(p);            break;
         case PACKET_DEBUG_SYNC:              network_receive_debug_sync(p);              break;
         case PACKET_JOIN_REQUEST:            network_receive_join_request(p);            break;
         case PACKET_JOIN:                    network_receive_join(p);                    break;

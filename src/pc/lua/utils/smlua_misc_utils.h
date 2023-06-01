@@ -32,6 +32,7 @@ enum HudDisplayFlags {
     HUD_DISPLAY_FLAGS_EMPHASIZE_POWER = 0x8000,
 };
 
+void djui_popup_create_global(const char* message, int lines);
 void hud_hide(void);
 void hud_show(void);
 bool hud_is_hidden(void);

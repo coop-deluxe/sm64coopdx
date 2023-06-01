@@ -27903,6 +27903,25 @@ int smlua_func_deref_s32_pointer(lua_State* L) {
     return 1;
 }
 
+int smlua_func_djui_popup_create_global(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "djui_popup_create_global", 2, top);
+        return 0;
+    }
+
+    const char* message = smlua_to_string(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "djui_popup_create_global"); return 0; }
+    int lines = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "djui_popup_create_global"); return 0; }
+
+    djui_popup_create_global(message, lines);
+
+    return 1;
+}
+
 int smlua_func_get_current_save_file_num(UNUSED lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -31554,6 +31573,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "camera_unfreeze", smlua_func_camera_unfreeze);
     smlua_bind_function(L, "course_is_main_course", smlua_func_course_is_main_course);
     smlua_bind_function(L, "deref_s32_pointer", smlua_func_deref_s32_pointer);
+    smlua_bind_function(L, "djui_popup_create_global", smlua_func_djui_popup_create_global);
     smlua_bind_function(L, "get_current_save_file_num", smlua_func_get_current_save_file_num);
     smlua_bind_function(L, "get_dialog_box_state", smlua_func_get_dialog_box_state);
     smlua_bind_function(L, "get_dialog_id", smlua_func_get_dialog_id);

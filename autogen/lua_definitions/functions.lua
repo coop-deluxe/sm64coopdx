@@ -8400,6 +8400,13 @@ function deref_s32_pointer(pointer)
     -- ...
 end
 
+--- @param message string
+--- @param lines integer
+--- @return nil
+function djui_popup_create_global(message, lines)
+    -- ...
+end
+
 --- @return integer
 function get_current_save_file_num()
     -- ...
