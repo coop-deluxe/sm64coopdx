@@ -384,6 +384,17 @@ function mario_local_update(m)
         play_sound(SOUND_GENERAL_BREAK_BOX, m.marioObj.header.gfx.cameraToObject)
     end
 
+    -- prevent water heal
+    if m.health >= 0x100 then
+        if ((m.healCounter or m.hurtCounter) == 0) then
+            if ((m.action & ACT_FLAG_SWIMMING ~= 0) and (m.action & ACT_FLAG_INTANGIBLE == 0)) then
+                if ((m.pos.y >= (m.waterLevel - 140)) and not (m.area.terrainType & TERRAIN_SNOW ~= 0)) then
+                    m.health = m.health - 0x1A
+                end
+            end
+        end
+    end
+
     -- check for ladder
     mario_check_for_ladder(m)
 
