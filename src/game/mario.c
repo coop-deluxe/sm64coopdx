@@ -631,7 +631,7 @@ struct Surface *resolve_and_return_wall_collisions(Vec3f pos, f32 offset, f32 ra
     if (find_wall_collisions(&collisionData)) {
         wall = collisionData.walls[collisionData.numWalls - 1];
     }
-    
+
     // I'm not sure if this code is actually ever used or not.
     pos[0] = collisionData.x;
     pos[1] = collisionData.y;
@@ -1143,7 +1143,7 @@ u32 set_mario_action(struct MarioState *m, u32 action, u32 actionArg) {
     u32 returnValue = 0;
     smlua_call_event_hooks_mario_action_params_ret_int(HOOK_BEFORE_SET_MARIO_ACTION, m, action, &returnValue);
     if (returnValue == 1) { return TRUE; } else if (returnValue) { action = returnValue; }
-    
+
     switch (action & ACT_GROUP_MASK) {
         case ACT_GROUP_MOVING:
             action = set_mario_action_moving(m, action, actionArg);
@@ -2187,14 +2187,14 @@ s32 execute_mario_action(UNUSED struct Object *o) {
         // Both of the wind handling portions play wind audio only in
         // non-Japanese releases.
         extern bool gDjuiInMainMenu;
-        if (gMarioState->floor->type == SURFACE_HORIZONTAL_WIND && !gDjuiInMainMenu) {
+        if (gMarioState->floor && gMarioState->floor->type == SURFACE_HORIZONTAL_WIND && !gDjuiInMainMenu) {
             spawn_wind_particles(0, (gMarioState->floor->force << 8));
 #ifndef VERSION_JP
             play_sound(SOUND_ENV_WIND2, gMarioState->marioObj->header.gfx.cameraToObject);
 #endif
         }
 
-        if (gMarioState->floor->type == SURFACE_VERTICAL_WIND) {
+        if (gMarioState->floor && gMarioState->floor->type == SURFACE_VERTICAL_WIND) {
             spawn_wind_particles(1, 0);
 #ifndef VERSION_JP
             play_sound(SOUND_ENV_WIND2, gMarioState->marioObj->header.gfx.cameraToObject);
@@ -2240,7 +2240,7 @@ void init_single_mario(struct MarioState* m) {
 
     m->invincTimer = 0;
     m->visibleToEnemies = TRUE;
-    
+
     if (m->cap & (SAVE_FLAG_CAP_ON_GROUND | SAVE_FLAG_CAP_ON_KLEPTO | SAVE_FLAG_CAP_ON_UKIKI | SAVE_FLAG_CAP_ON_MR_BLIZZARD)) {
         m->flags = 0;
     } else {

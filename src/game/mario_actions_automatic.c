@@ -69,7 +69,7 @@ void play_climbing_sounds(struct MarioState *m, s32 b) {
 s32 set_pole_position(struct MarioState *m, f32 offsetY) {
     if (!m) { return 0; }
     if (m->usedObj == NULL) { m->usedObj = cur_obj_find_nearest_pole(); }
-    
+
     // This is here so if somehow a pole despawns while you are on it.
     // You will just drop from it.
     if (m->usedObj == NULL) {
@@ -340,7 +340,8 @@ s32 perform_hanging_step(struct MarioState *m, Vec3f nextPos) {
     f32 floorHeight;
     f32 ceilOffset;
 
-    smlua_call_event_hooks_mario_param(HOOK_BEFORE_PHYS_STEP, m);
+    s32 returnValue = 0;
+    if (smlua_call_event_hooks_mario_param_and_int_ret_int(HOOK_BEFORE_PHYS_STEP, m, STEP_TYPE_HANG, &returnValue)) return returnValue;
 
     if (gServerSettings.enableCheats && gCheats.superSpeed && m->playerIndex == 0) {
         m->vel[0] *= SUPER_SPEED_MULTIPLIER;
