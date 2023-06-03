@@ -29,6 +29,7 @@
 #include "engine/graph_node.h"
 #include "level_table.h"
 #include "game/hardcoded.h"
+#include "game/sound_init.h"
 #include "pc/configfile.h"
 #include "pc/network/network.h"
 #include "pc/lua/smlua_hooks.h"
@@ -2776,6 +2777,11 @@ void move_into_c_up(struct Camera *c) {
 s32 mode_c_up_camera(struct Camera *c) {
     if (!c) { return 0; }
     UNUSED u8 unused[12];
+
+    if (gMarioStates[0].action != ACT_FIRST_PERSON) {
+        raise_background_noise(2);
+        set_camera_mode(c, -1, 1);
+    }
 
     // Play a sound when entering C-Up mode
     if (!(sCameraSoundFlags & CAM_SOUND_C_UP_PLAYED)) {

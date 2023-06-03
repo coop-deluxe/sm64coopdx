@@ -1646,7 +1646,7 @@ void update_mario_inputs(struct MarioState *m) {
     }
 
     if (m->playerIndex == 0) {
-        if (!localIsPaused && gCameraMovementFlags & CAM_MOVE_C_UP_MODE) {
+        if (!localIsPaused && (gCameraMovementFlags & CAM_MOVE_C_UP_MODE)) {
             if (m->action & ACT_FLAG_ALLOW_FIRST_PERSON) {
                 m->input |= INPUT_FIRST_PERSON;
             } else {
