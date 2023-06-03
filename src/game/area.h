@@ -157,6 +157,7 @@ void override_viewport_and_clip(Vp *a, Vp *b, u8 c, u8 d, u8 e);
 void print_intro_text(void);
 u32 get_mario_spawn_type(struct Object *o);
 struct ObjectWarpNode *area_get_warp_node(u8 id);
+struct ObjectWarpNode *area_get_any_warp_node(void);
 struct ObjectWarpNode *area_get_warp_node_from_params(struct Object *o);
 void clear_areas(void);
 void clear_area_graph_nodes(void);

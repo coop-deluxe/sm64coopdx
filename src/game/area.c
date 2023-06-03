@@ -172,6 +172,21 @@ struct ObjectWarpNode *area_get_warp_node(u8 id) {
     return node;
 }
 
+struct ObjectWarpNode *area_get_any_warp_node(void) {
+    if (!gCurrentArea || !gCurrentArea->warpNodes) { return NULL; }
+
+    struct ObjectWarpNode *node = NULL;
+    struct ObjectWarpNode *pick = NULL;
+
+    for (node = gCurrentArea->warpNodes; node != NULL; node = node->next) {
+        if (node->node.destLevel != gCurrLevelNum) { continue; }
+        if (!pick) { pick = node; continue; }
+        if (node->node.destArea < pick->node.destArea) { pick = node; }
+    }
+
+    return pick;
+}
+
 struct ObjectWarpNode *area_get_warp_node_from_params(struct Object *o) {
     if (o == NULL) { return NULL; }
 

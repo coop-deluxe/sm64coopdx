@@ -405,7 +405,9 @@ void init_mario_after_warp(void) {
     struct ObjectWarpNode *spawnNode = area_get_warp_node(sWarpDest.nodeId);
     if (spawnNode == NULL || spawnNode->object == NULL) { spawnNode = area_get_warp_node(0xFA); }
     if (spawnNode == NULL || spawnNode->object == NULL) { spawnNode = area_get_warp_node(0x00); }
+    if (spawnNode == NULL || spawnNode->object == NULL) { spawnNode = area_get_any_warp_node(); }
     if (spawnNode == NULL || spawnNode->object == NULL) { return; }
+
     u32 marioSpawnType = get_mario_spawn_type(spawnNode->object);
 
     if (gMarioState && gMarioState->action != ACT_UNINITIALIZED) {
