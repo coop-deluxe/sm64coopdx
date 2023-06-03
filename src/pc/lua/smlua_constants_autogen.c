@@ -1,4 +1,5 @@
 char gSmluaConstants[] = ""
+"math.randomseed(get_time())"
 "_CObject = {\n"
 "    __index = function (t,k)\n"
 "        return _get_field(t['_lot'], t['_pointer'], k, t)\n"
