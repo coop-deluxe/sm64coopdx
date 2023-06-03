@@ -27,14 +27,14 @@ LEVEL_ARENA_ORIGIN    = level_register('level_arena_origin_entry',    COURSE_NON
 LEVEL_ARENA_SKY_BEACH = level_register('level_arena_sky_beach_entry', COURSE_NONE, 'Sky Beach', 'beach',     28000, 0x28, 0x28, 0x28)
 LEVEL_ARENA_PILLARS   = level_register('level_arena_pillars_entry',   COURSE_NONE, 'Pillars',   'pillars',   28000, 0x28, 0x28, 0x28)
 LEVEL_ARENA_FORTS     = level_register('level_arena_forts_entry',     COURSE_NONE, 'Forts',     'forts',     28000, 0x28, 0x28, 0x28)
-LEVEL_ARENA_PLATFORMS = level_register('level_arena_platforms_entry', COURSE_NONE, 'Platforms', 'platforms', 28000, 0x28, 0x28, 0x28)
+LEVEL_ARENA_CITADEL   = level_register('level_arena_citadel_entry',   COURSE_NONE, 'Citadel',   'citadel',   28000, 0x28, 0x28, 0x28)
 
 local gGameLevels = {
     { level = LEVEL_ARENA_ORIGIN,    name = 'Origin'    },
     { level = LEVEL_ARENA_SKY_BEACH, name = 'Sky Beach' },
     { level = LEVEL_ARENA_PILLARS,   name = 'Pillars'   },
     { level = LEVEL_ARENA_FORTS,     name = 'Forts'     },
-    { level = LEVEL_ARENA_PLATFORMS, name = 'Platforms' },
+    { level = LEVEL_ARENA_CITADEL,   name = 'Citadel' },
 }
 
 -- expose certain functions to other mods
