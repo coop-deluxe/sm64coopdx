@@ -98,7 +98,7 @@ end
 function bhv_arena_spring_loop(obj)
     local player = gMarioStates[0].marioObj
     local dist = math.sqrt((obj.oPosX - player.oPosX) ^ 2 + (obj.oPosY - player.oPosY) ^ 2 + (obj.oPosZ - player.oPosZ) ^ 2)
-    if dist < 160 then
+    if dist < 160 and mario_health_float(gMarioStates[0]) > 0 then
         bhv_arena_spring_launch(obj)
     end
     if obj.oArenaSpringSprung > 0 then
