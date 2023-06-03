@@ -127,7 +127,7 @@ function mario_local_hammer_check(m)
         if sattacker.item == ITEM_HAMMER and mario_hammer_is_attack(mattacker.action) and passes_pvp_interaction_checks(mattacker, cmvictim) ~= 0 and passes_pvp_interaction_checks(mattacker, m) ~= 0 and global_index_hurts_mario_state(npattacker.globalIndex, m) then
             local pos = mario_hammer_position(mattacker)
             local dist = vec3f_dist(pos, cmvictim.pos)
-            if dist <= 165 then
+            if dist <= 200 then
                 local yOffset = 0.6
                 if mattacker.action == ACT_JUMP_KICK then
                     yOffset = 1.0
@@ -155,9 +155,9 @@ function mario_local_hammer_check(m)
                 e.lastDamagedByGlobal = npattacker.globalIndex
 
                 if mattacker.action == ACT_JUMP_KICK or mattacker.action == ACT_DIVE then
-                    m.hurtCounter = 9
+                    m.hurtCounter = 10
                 else
-                    m.hurtCounter = 14
+                    m.hurtCounter = 15
                 end
             end
         end

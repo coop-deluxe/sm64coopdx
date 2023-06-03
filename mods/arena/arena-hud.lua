@@ -198,6 +198,9 @@ function render_health()
     width = width - 4 * scale
     height = height - 4 * scale
     health = mario_health_float(gMarioStates[0])
+    if health > 0 and health < 0.02 then
+        health = 0.02
+    end
     width = math.floor(width * health)
     rscale = clamp(((1 - health) ^ 2) * 3, 0, 1)
     gscale = clamp((health ^ 2) * 2, 0, 1)
