@@ -29,7 +29,7 @@ function bhv_arena_bobomb_intersects_player(obj, m, pos, radius)
     return ret
 end
 
-function bhv_arena_bobomb_expode(obj)
+function bhv_arena_bobomb_expode(obj, directHitLocal)
     obj.oAction = 1
     obj.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
     obj_set_billboard(obj)
@@ -48,7 +48,10 @@ function bhv_arena_bobomb_expode(obj)
     local radius = 500
     if np.globalIndex == obj.oArenaBobombGlobalOwner then radius = 300 end
     if validAttack and bhv_arena_bobomb_intersects_player(obj, m, a, radius) and mario_health_float(m) > 0 then
-        obj.oDamageOrCoinValue = 3
+        obj.oDamageOrCoinValue = 2
+        if directHitLocal then
+            obj.oDamageOrCoinValue = 3
+        end
         interact_damage(m, INTERACT_DAMAGE, obj)
         e.lastDamagedByGlobal = obj.oArenaBobombGlobalOwner
 
@@ -90,7 +93,7 @@ function bhv_arena_bobomb_thrown_loop(obj)
         local m = gMarioStates[i]
         if active_player(m) and global_index_hurts_mario_state(obj.oArenaBobombGlobalOwner, m) and not is_invuln_or_intang(m) then
             if bhv_arena_bobomb_intersects_player(obj, m, a, 100) then
-                bhv_arena_bobomb_expode(obj)
+                bhv_arena_bobomb_expode(obj, (i == 0))
                 return
             end
         end
@@ -105,7 +108,7 @@ function bhv_arena_bobomb_thrown_loop(obj)
     local floorHeight = find_floor_height(obj.oPosX, obj.oPosY + 100, obj.oPosZ)
 
     if obj.oTimer > 30 * 1 or info.surface ~= nil or obj.oPosY < floorHeight then
-        bhv_arena_bobomb_expode(obj)
+        bhv_arena_bobomb_expode(obj, false)
         return
     else
         obj.oPosX = obj.oPosX + dir.x
