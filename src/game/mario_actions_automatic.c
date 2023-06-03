@@ -1021,9 +1021,9 @@ s32 act_bubbled(struct MarioState* m) {
     f32 oldYaw   = m->faceAngle[1];
     m->faceAngle[0] = 0;
     m->faceAngle[1] = m->intendedYaw;
-    m->forwardVel = m->intendedMag;
-    if (m->input & INPUT_A_DOWN) { m->vel[1] += 3.0f; }
-    if (m->input & INPUT_Z_DOWN) { m->vel[1] -= 3.0f; }
+    m->forwardVel = m->intendedMag * 1.5f;
+    if (m->input & INPUT_A_DOWN) { m->vel[1] += 5.0f; }
+    if (m->input & INPUT_Z_DOWN) { m->vel[1] -= 5.0f; }
 
     // set and smooth velocity
     Vec3f oldVel = { m->vel[0], m->vel[1], m->vel[2] };
