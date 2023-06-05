@@ -60,7 +60,7 @@ static bool djui_console_on_key_down(UNUSED struct DjuiBase* base, int scancode)
         case SCANCODE_ESCAPE: djui_console_toggle(); break;
         default: break;
     }
-    gDjuiConsole->scrolling = (*yValue != yMax);
+    gDjuiConsole->scrolling = (*yValue != 0);
     return true;
 }
 

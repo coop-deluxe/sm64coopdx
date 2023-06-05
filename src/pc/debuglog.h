@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <time.h>
 #include "pc/network/network.h"
+#include "pc/djui/djui_console.h"
 
 static void _debuglog_print_timestamp(void) {
     time_t ltime = time(NULL);
@@ -51,5 +52,6 @@ static void _debuglog_print_log(char* logType, char* filename) {
 #define LOG_INFO(...)  (configDebugInfo  ? ( _debuglog_print_log("INFO",  __FILE__), printf(__VA_ARGS__), printf("\n") ) : 0)
 #define LOG_ERROR(...) (configDebugError ? ( _debuglog_print_log("ERROR", __FILE__), printf(__VA_ARGS__), printf("\n") ) : 0)
 #endif
+#define LOG_CONSOLE(...)  { snprintf(gDjuiConsoleTmpBuffer, CONSOLE_MAX_TMP_BUFFER, __VA_ARGS__), djui_console_message_create(gDjuiConsoleTmpBuffer); }
 
 #endif
