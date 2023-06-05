@@ -74,6 +74,7 @@ void djui_panel_join_lobby(struct DjuiBase* caller) {
 
 void djui_panel_join_query(uint64_t aLobbyId, UNUSED uint64_t aOwnerId, uint16_t aConnections, uint16_t aMaxConnections, UNUSED const char* aGame, const char* aVersion, const char* aHostName, const char* aMode, const char* aDescription) {
     if (!sLobbyLayout) { return; }
+    if (!sLobbyPaginated) { return; }
     if (aMaxConnections > MAX_PLAYERS) { return; }
 
     char playerText[64] = "";
@@ -96,6 +97,8 @@ void djui_panel_join_query(uint64_t aLobbyId, UNUSED uint64_t aOwnerId, uint16_t
 }
 
 void djui_panel_join_query_finish(void) {
+    if (!sLobbyLayout) { return; }
+    if (!sLobbyPaginated) { return; }
     if (!sRefreshButton) { return; }
     djui_text_set_text(sRefreshButton->text, DLANG(LOBBIES, REFRESH));
     djui_base_set_enabled(&sRefreshButton->base, true);
@@ -141,7 +144,7 @@ void djui_panel_join_lobbies_create(struct DjuiBase* caller, const char* passwor
     struct DjuiThreePanel* panel = djui_panel_menu_create(private ? DLANG(LOBBIES, PRIVATE_LOBBIES) : DLANG(LOBBIES, PUBLIC_LOBBIES));
     struct DjuiBase* body = djui_three_panel_get_body(panel);
     {
-        sLobbyPaginated = djui_paginated_create(body, 8);
+        sLobbyPaginated = djui_paginated_create(body, 10);
         sLobbyLayout = sLobbyPaginated->layout;
         djui_flow_layout_set_margin(sLobbyLayout, 4);
 
