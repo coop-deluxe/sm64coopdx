@@ -53,7 +53,9 @@ function bhv_arena_bobomb_expode(obj, directHitLocal)
             obj.oDamageOrCoinValue = 3
         end
         interact_damage(m, INTERACT_DAMAGE, obj)
-        e.lastDamagedByGlobal = obj.oArenaBobombGlobalOwner
+        if np.globalIndex ~= obj.oArenaBobombGlobalOwner then
+            e.lastDamagedByGlobal = obj.oArenaBobombGlobalOwner
+        end
 
         -- knockback
         local ownerNp = network_player_from_global_index(obj.oArenaBobombGlobalOwner)
