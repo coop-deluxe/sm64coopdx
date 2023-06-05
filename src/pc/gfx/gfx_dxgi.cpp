@@ -33,6 +33,10 @@ extern "C" {
 #include "gfx_screen_config.h"
 #include "gfx_pc.h"
 
+#ifdef DISCORD_SDK
+#include "pc/discord/discord.h"
+#endif
+
 #define WINCLASS_NAME L"N64GAME"
 
 #define DECLARE_GFX_DXGI_FUNCTIONS
@@ -410,6 +414,9 @@ static void gfx_dxgi_main_loop(void (*run_one_game_iter)(void)) {
     while (GetMessage(&msg, nullptr, 0, 0)) {
         TranslateMessage(&msg);
         DispatchMessage(&msg);
+#ifdef DISCORD_SDK
+        discord_update();
+#endif
     }
 }
 
