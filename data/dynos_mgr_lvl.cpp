@@ -96,12 +96,13 @@ void DynOS_Lvl_Activate(s32 modIndex, const SysPath &aFilename, const char *aLev
 
 GfxData* DynOS_Lvl_GetActiveGfx(void) {
     auto& _CustomLevelScripts = DynOS_Lvl_GetArray();
-
     for (s32 i = 0; i < _CustomLevelScripts.Count(); ++i) {
         auto& gfxData = _CustomLevelScripts[i].second;
         auto& scripts = gfxData->mLevelScripts;
-        if (gLevelScriptActive == scripts[scripts.Count() - 1]->mData) {
-            return gfxData;
+        for (auto& s : scripts) {
+            if (gLevelScriptActive == s->mData) {
+                return gfxData;
+            }
         }
     }
     return NULL;
@@ -173,7 +174,6 @@ double_break:
 
 void *DynOS_Lvl_Override(void *aCmd) {
     auto& _OverrideLevelScripts = DynosOverrideLevelScripts();
-
     for (auto& overrideStruct : _OverrideLevelScripts) {
         if (aCmd == overrideStruct.originalScript || aCmd == overrideStruct.newScript) {
             aCmd = (void*)overrideStruct.newScript;
@@ -184,9 +184,12 @@ void *DynOS_Lvl_Override(void *aCmd) {
 
     auto& _CustomLevelScripts = DynOS_Lvl_GetArray();
     for (auto& script : _CustomLevelScripts) {
-        if (aCmd == script.second->mLevelScripts[0]->mData) {
-            gLevelScriptModIndex = script.second->mModIndex;
-            gLevelScriptActive = (LevelScript*)aCmd;
+        auto& scripts = script.second->mLevelScripts;
+        for (auto& s : scripts) {
+            if (aCmd == s->mData) {
+                gLevelScriptModIndex = script.second->mModIndex;
+                gLevelScriptActive = (LevelScript*)aCmd;
+            }
         }
     }
 
