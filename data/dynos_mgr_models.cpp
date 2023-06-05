@@ -8,6 +8,8 @@ extern "C" {
 #include "model_ids.h"
 }
 
+#define VANILLA_ID_END 255
+
 enum ModelLoadType {
     MLT_GEO,
     MLT_DL,
@@ -28,7 +30,7 @@ static std::map<u32, std::vector<struct ModelInfo>> sIdMap;
 static std::map<u32, u32> sOverwriteMap;
 
 static u32 find_empty_id() {
-    u32 id = 256;
+    u32 id = VANILLA_ID_END + 1;
     while (true) {
         if (id != 0) {
             if (sIdMap.count(id) == 0)  { return id; }
@@ -198,6 +200,9 @@ void DynOS_Model_ClearPool(enum ModelPool aModelPool) {
     for (auto& asset : assetMap) {
         auto& info = asset.second;
         if (sIdMap.count(info.id) == 0) { continue; }
+
+        // preventing clearing permanent vanilla model slot
+        if (info.id <= VANILLA_ID_END && sIdMap.count(info.id) <= 1) { continue; }
 
         // erase from id map
         auto& idMap = sIdMap[info.id];
