@@ -94,7 +94,7 @@ function bhv_arena_bobomb_thrown_loop(obj)
     for i = 0, MAX_PLAYERS - 1 do
         local m = gMarioStates[i]
         if active_player(m) and global_index_hurts_mario_state(obj.oArenaBobombGlobalOwner, m) and not is_invuln_or_intang(m) then
-            if bhv_arena_bobomb_intersects_player(obj, m, a, 100) then
+            if bhv_arena_bobomb_intersects_player(obj, m, a, 130) then
                 bhv_arena_bobomb_expode(obj, (i == 0))
                 return
             end

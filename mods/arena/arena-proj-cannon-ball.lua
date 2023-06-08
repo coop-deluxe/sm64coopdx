@@ -43,7 +43,7 @@ function bhv_arena_cannon_ball_loop(obj)
     end
 
     local m = gMarioStates[0]
-    if global_index_hurts_mario_state(obj.oArenaCannonBallGlobalOwner, m) then
+    if global_index_hurts_mario_state(obj.oArenaCannonBallGlobalOwner, m) and not is_invuln_or_intang(m) then
         local b = { x = a.x + dir.x / 2, y = a.y + dir.y / 2, z = a.z + dir.z / 2 }
         if bhv_arena_cannon_ball_intersects_local(obj, a) or bhv_arena_cannon_ball_intersects_local(obj, b) then
             if obj.oArenaCannonBallDamages ~= 0 then
