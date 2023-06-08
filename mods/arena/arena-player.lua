@@ -15,7 +15,6 @@ for i = 0, (MAX_PLAYERS - 1) do
     e.prevHurtCounter     = 0
     e.levelTimer          = 0
     e.levelTimerLevel     = 0
-    e.ladder              = nil
 
     local s = gPlayerSyncTable[i]
     s.item     = ITEM_NONE
