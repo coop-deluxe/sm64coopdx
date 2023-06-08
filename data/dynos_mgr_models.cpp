@@ -202,7 +202,11 @@ void DynOS_Model_ClearPool(enum ModelPool aModelPool) {
         if (sIdMap.count(info.id) == 0) { continue; }
 
         // preventing clearing permanent vanilla model slot
-        if (info.id <= VANILLA_ID_END && sIdMap.count(info.id) <= 1) { continue; }
+        if (info.id <= VANILLA_ID_END && sIdMap.count(info.id) <= 1) {
+            if (sAssetMap[MODEL_POOL_PERMANENT].count(info.asset) > 0) {
+                continue;
+            }
+        }
 
         // erase from id map
         auto& idMap = sIdMap[info.id];
