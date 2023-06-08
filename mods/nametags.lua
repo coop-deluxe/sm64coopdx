@@ -6,7 +6,7 @@ local MAX_SCALE = 0.32
 
 gGlobalSyncTable.dist = 7000
 
-local showHealth = true
+local showHealth = false
 local showSelfTag = false
 
 local gStateExtras = {}
