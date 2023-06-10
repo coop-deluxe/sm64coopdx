@@ -66,6 +66,9 @@ sRandomizeMode = true
 gServerSettings.playerInteractions = PLAYER_INTERACTIONS_PVP
 gServerSettings.playerKnockbackStrength = 20
 
+-- use fixed collisions
+gLevelValues.fixCollisionBugs = 1
+
 function calculate_rankings()
     local rankings = {}
     for i = 0, (MAX_PLAYERS - 1) do
