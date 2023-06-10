@@ -378,31 +378,28 @@ static struct ShaderProgram *gfx_opengl_create_and_load_new_shader(struct ColorC
     if (ccf.used_textures[1]) {
         if (cc->cm.light_map) {
             append_line(fs_buf, &fs_len, "vec4 texVal1 = sampleTex(uTex1, vLightMap, uTex1Size, uTex1Filter);");
+            append_line(fs_buf, &fs_len, "texVal1.rgb = texVal1.rgb * texVal1.rgb  + texVal1.rgb;");
         } else {
             append_line(fs_buf, &fs_len, "vec4 texVal1 = sampleTex(uTex1, vTexCoord, uTex1Size, uTex1Filter);");
         }
     }
 
-    if (opt_light_map) {
-        append_str(fs_buf, &fs_len, "vec3 texel = texVal0.rgb * (texVal1.rgb * texVal1.rgb + texVal1.rgb);\n");
-    } else {
-        append_str(fs_buf, &fs_len, (opt_alpha) ? "vec4 texel = " : "vec3 texel = ");
-        for (int i = 0; i < (opt_2cycle + 1); i++) {
-            u8* cmd = &cc->shader_commands[i * 8];
-            if (!ccf.color_alpha_same[i] && opt_alpha) {
-                append_str(fs_buf, &fs_len, "vec4(");
-                append_formula(fs_buf, &fs_len, cmd, ccf.do_single[i*2+0], ccf.do_multiply[i*2+0], ccf.do_mix[i*2+0], false, false, true);
-                append_str(fs_buf, &fs_len, ", ");
-                append_formula(fs_buf, &fs_len, cmd, ccf.do_single[i*2+1], ccf.do_multiply[i*2+1], ccf.do_mix[i*2+1], true, true, true);
-                append_str(fs_buf, &fs_len, ")");
-            } else {
-                append_formula(fs_buf, &fs_len, cmd, ccf.do_single[i*2+0], ccf.do_multiply[i*2+0], ccf.do_mix[i*2+0], opt_alpha, false, opt_alpha);
-            }
-            append_line(fs_buf, &fs_len, ";");
+    append_str(fs_buf, &fs_len, (opt_alpha) ? "vec4 texel = " : "vec3 texel = ");
+    for (int i = 0; i < (opt_2cycle + 1); i++) {
+        u8* cmd = &cc->shader_commands[i * 8];
+        if (!ccf.color_alpha_same[i] && opt_alpha) {
+            append_str(fs_buf, &fs_len, "vec4(");
+            append_formula(fs_buf, &fs_len, cmd, ccf.do_single[i*2+0], ccf.do_multiply[i*2+0], ccf.do_mix[i*2+0], false, false, true);
+            append_str(fs_buf, &fs_len, ", ");
+            append_formula(fs_buf, &fs_len, cmd, ccf.do_single[i*2+1], ccf.do_multiply[i*2+1], ccf.do_mix[i*2+1], true, true, true);
+            append_str(fs_buf, &fs_len, ")");
+        } else {
+            append_formula(fs_buf, &fs_len, cmd, ccf.do_single[i*2+0], ccf.do_multiply[i*2+0], ccf.do_mix[i*2+0], opt_alpha, false, opt_alpha);
+        }
+        append_line(fs_buf, &fs_len, ";");
 
-            if (i == 0 && opt_2cycle) {
-                append_str(fs_buf, &fs_len, "texel = ");
-            }
+        if (i == 0 && opt_2cycle) {
+            append_str(fs_buf, &fs_len, "texel = ");
         }
     }
 
