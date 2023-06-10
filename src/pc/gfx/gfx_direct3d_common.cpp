@@ -274,6 +274,7 @@ void gfx_direct3d_common_build_shader(char buf[4096], size_t& len, size_t& num_f
             } else {
                 append_line(buf, &len, "    float4 texVal1 = g_texture1.Sample(g_sampler1, input.lightmap);");
             }
+            append_line(buf, &len, "    texVal1.rgb = texVal1.rgb * texVal1.rgb + texVal1.rgb;");
         } else {
             if (three_point_filtering) {
                 append_line(buf, &len, "    float4 texVal1;");
