@@ -25,6 +25,9 @@
 
 extern "C" {
 #include "src/pc/mods/mod_import.h"
+#ifdef DISCORD_SDK
+#include "pc/discord/discord.h"
+#endif
 }
 
 #include "gfx_window_manager_api.h"
@@ -32,10 +35,6 @@ extern "C" {
 #include "gfx_direct3d_common.h"
 #include "gfx_screen_config.h"
 #include "gfx_pc.h"
-
-#ifdef DISCORD_SDK
-#include "pc/discord/discord.h"
-#endif
 
 #define WINCLASS_NAME L"N64GAME"
 
