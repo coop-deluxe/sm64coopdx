@@ -181,6 +181,7 @@
 --- @field public BowlingBallThiSmallSpeed number
 --- @field public BowlingBallTtmSpeed number
 --- @field public GrateStarRequirement integer
+--- @field public InfiniteRenderDistance integer
 --- @field public KingBobombFVel number
 --- @field public KingBobombHealth integer
 --- @field public KingBobombYawVel integer
@@ -190,6 +191,7 @@
 --- @field public KoopaThiAgility number
 --- @field public MipsStar1Requirement integer
 --- @field public MipsStar2Requirement integer
+--- @field public MultipleCapCollection integer
 --- @field public RacingPenguinBigHeight number
 --- @field public RacingPenguinBigRadius number
 --- @field public RacingPenguinHeight number

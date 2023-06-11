@@ -243,6 +243,8 @@ struct BehaviorValues {
     u16 GrateStarRequirement;
     u8  ShowStarMilestones;
     u8  RespawnShellBoxes;
+    u8  MultipleCapCollection;
+    u8  InfiniteRenderDistance;
     struct StarsNeededForDialog starsNeededForDialog;
     struct BehaviorDialogs dialogs;
     struct BehaviorTrajectories trajectories;

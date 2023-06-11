@@ -1942,6 +1942,7 @@ u32 interact_koopa_shell(struct MarioState *m, UNUSED u32 interactType, struct O
 
     for (s32 i = 0; i < MAX_PLAYERS; i++) {
         if (!is_player_active(&gMarioStates[i])) { continue; }
+        if (i == 0) { continue; }
         if (gMarioStates[i].riddenObj == o) { return FALSE; }
     }
 
@@ -2078,7 +2079,7 @@ u32 interact_cap(struct MarioState *m, UNUSED u32 interactType, struct Object *o
     u16 capMusic = 0;
     u16 capTime = 0;
 
-    if (capFlag == MARIO_NORMAL_CAP) {
+    if ((capFlag == MARIO_NORMAL_CAP) && (!(gBehaviorValues.MultipleCapCollection)) ) {
         // refuse normal cap when already on head
         if (m->flags & (MARIO_NORMAL_CAP | MARIO_CAP_ON_HEAD)) { return FALSE; }
     }

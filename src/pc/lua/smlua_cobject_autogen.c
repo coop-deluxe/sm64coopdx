@@ -216,7 +216,7 @@ static struct LuaObjectField sBehaviorTrajectoriesFields[LUA_BEHAVIOR_TRAJECTORI
     { "UnagiTrajectory",               LVT_TRAJECTORY_P, offsetof(struct BehaviorTrajectories, UnagiTrajectory),               false, LOT_POINTER },
 };
 
-#define LUA_BEHAVIOR_VALUES_FIELD_COUNT 27
+#define LUA_BEHAVIOR_VALUES_FIELD_COUNT 29
 static struct LuaObjectField sBehaviorValuesFields[LUA_BEHAVIOR_VALUES_FIELD_COUNT] = {
     { "BowlingBallBob2Speed",     LVT_F32,     offsetof(struct BehaviorValues, BowlingBallBob2Speed),     false, LOT_NONE                 },
     { "BowlingBallBobSpeed",      LVT_F32,     offsetof(struct BehaviorValues, BowlingBallBobSpeed),      false, LOT_NONE                 },
@@ -224,6 +224,7 @@ static struct LuaObjectField sBehaviorValuesFields[LUA_BEHAVIOR_VALUES_FIELD_COU
     { "BowlingBallThiSmallSpeed", LVT_F32,     offsetof(struct BehaviorValues, BowlingBallThiSmallSpeed), false, LOT_NONE                 },
     { "BowlingBallTtmSpeed",      LVT_F32,     offsetof(struct BehaviorValues, BowlingBallTtmSpeed),      false, LOT_NONE                 },
     { "GrateStarRequirement",     LVT_U16,     offsetof(struct BehaviorValues, GrateStarRequirement),     false, LOT_NONE                 },
+    { "InfiniteRenderDistance",   LVT_U8,      offsetof(struct BehaviorValues, InfiniteRenderDistance),   false, LOT_NONE                 },
     { "KingBobombFVel",           LVT_F32,     offsetof(struct BehaviorValues, KingBobombFVel),           false, LOT_NONE                 },
     { "KingBobombHealth",         LVT_S16,     offsetof(struct BehaviorValues, KingBobombHealth),         false, LOT_NONE                 },
     { "KingBobombYawVel",         LVT_S16,     offsetof(struct BehaviorValues, KingBobombYawVel),         false, LOT_NONE                 },
@@ -233,6 +234,7 @@ static struct LuaObjectField sBehaviorValuesFields[LUA_BEHAVIOR_VALUES_FIELD_COU
     { "KoopaThiAgility",          LVT_F32,     offsetof(struct BehaviorValues, KoopaThiAgility),          false, LOT_NONE                 },
     { "MipsStar1Requirement",     LVT_S16,     offsetof(struct BehaviorValues, MipsStar1Requirement),     false, LOT_NONE                 },
     { "MipsStar2Requirement",     LVT_S16,     offsetof(struct BehaviorValues, MipsStar2Requirement),     false, LOT_NONE                 },
+    { "MultipleCapCollection",    LVT_U8,      offsetof(struct BehaviorValues, MultipleCapCollection),    false, LOT_NONE                 },
     { "RacingPenguinBigHeight",   LVT_F32,     offsetof(struct BehaviorValues, RacingPenguinBigHeight),   false, LOT_NONE                 },
     { "RacingPenguinBigRadius",   LVT_F32,     offsetof(struct BehaviorValues, RacingPenguinBigRadius),   false, LOT_NONE                 },
     { "RacingPenguinHeight",      LVT_F32,     offsetof(struct BehaviorValues, RacingPenguinHeight),      false, LOT_NONE                 },

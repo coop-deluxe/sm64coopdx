@@ -314,6 +314,7 @@
 | BowlingBallThiSmallSpeed | `number` |  |
 | BowlingBallTtmSpeed | `number` |  |
 | GrateStarRequirement | `integer` |  |
+| InfiniteRenderDistance | `integer` |  |
 | KingBobombFVel | `number` |  |
 | KingBobombHealth | `integer` |  |
 | KingBobombYawVel | `integer` |  |
@@ -323,6 +324,7 @@
 | KoopaThiAgility | `number` |  |
 | MipsStar1Requirement | `integer` |  |
 | MipsStar2Requirement | `integer` |  |
+| MultipleCapCollection | `integer` |  |
 | RacingPenguinBigHeight | `number` |  |
 | RacingPenguinBigRadius | `number` |  |
 | RacingPenguinHeight | `number` |  |

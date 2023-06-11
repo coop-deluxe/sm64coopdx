@@ -21,6 +21,7 @@
 #include "pc/lua/smlua_utils.h"
 #include "game/rng_position.h"
 #include "game/interaction.h"
+#include "game/hardcoded.h"
 
 // Macros for retrieving arguments from behavior scripts.
 #define BHV_CMD_GET_1ST_U8(index)  (u8)((gCurBhvCommand[index] >> 24) & 0xFF) // unused
@@ -1414,10 +1415,15 @@ cur_obj_update_begin:;
                 // Out of render distance, hide the object.
                 gCurrentObject->header.gfx.node.flags &= ~GRAPH_RENDER_ACTIVE;
 
-                // the following flag would deactivate behavior code
-                //gCurrentObject->activeFlags |= ACTIVE_FLAG_FAR_AWAY;
-                gCurrentObject->activeFlags &= ~ACTIVE_FLAG_FAR_AWAY;
-
+                if (gBehaviorValues.InfiniteRenderDistance)
+                {
+                    gCurrentObject->activeFlags &= ~ACTIVE_FLAG_FAR_AWAY;
+                }
+                else
+                {
+                    // the following flag would deactivate behavior code // sorry but I need this
+                    gCurrentObject->activeFlags |= ACTIVE_FLAG_FAR_AWAY;
+                }
             } else if (gCurrentObject->oHeldState == HELD_FREE) {
                 // In render distance (and not being held), show the object.
                 gCurrentObject->header.gfx.node.flags |= GRAPH_RENDER_ACTIVE;
@@ -1460,6 +1466,8 @@ u8 cur_obj_is_last_nat_update_per_frame(void) {
 }
 
 f32 draw_distance_scalar(void) {
+    if (!gBehaviorValues.InfiniteRenderDistance) { return 1.0f; }
+    
     switch (configDrawDistance) {
         case 0: return 0.5f;
         case 1: return 1.0f;
