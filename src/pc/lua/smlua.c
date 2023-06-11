@@ -132,27 +132,27 @@ static bool smlua_check_binary_header(struct ModFile *file) {
         u8 sizeOfLuaInteger = header[10];
         u8 sizeOfLuaNumber = header[11];
         if (sizeOfCInteger != sizeof(int)) {
-            LOG_ERROR("Failed to load lua script '%s': sizes of C Integer don't match (%d, expected %llu).", file->cachedPath, sizeOfCInteger, sizeof(int));
+            LOG_ERROR("Failed to load lua script '%s': sizes of C Integer don't match (%d, expected %llu).", file->cachedPath, sizeOfCInteger, (long long unsigned)sizeof(int));
             fclose(f);
             return false;
         }
         if (sizeOfCPointer != sizeof(void *)) { // 4 for 32-bit architectures, 8 for 64-bit
-            LOG_ERROR("Failed to load lua script '%s': sizes of C Pointer don't match (%d, expected %llu).", file->cachedPath, sizeOfCPointer, sizeof(void *));
+            LOG_ERROR("Failed to load lua script '%s': sizes of C Pointer don't match (%d, expected %llu).", file->cachedPath, sizeOfCPointer, (long long unsigned)sizeof(void *));
             fclose(f);
             return false;
         }
         if (sizeOfCFloat != sizeof(float)) {
-            LOG_ERROR("Failed to load lua script '%s': sizes of C Float don't match (%d, expected %llu).", file->cachedPath, sizeOfCFloat, sizeof(float));
+            LOG_ERROR("Failed to load lua script '%s': sizes of C Float don't match (%d, expected %llu).", file->cachedPath, sizeOfCFloat, (long long unsigned)sizeof(float));
             fclose(f);
             return false;
         }
         if (sizeOfLuaInteger != sizeof(LUA_INTEGER)) {
-            LOG_ERROR("Failed to load lua script '%s': sizes of Lua Integer don't match (%d, expected %llu).", file->cachedPath, sizeOfLuaInteger, sizeof(LUA_INTEGER));
+            LOG_ERROR("Failed to load lua script '%s': sizes of Lua Integer don't match (%d, expected %llu).", file->cachedPath, sizeOfLuaInteger, (long long unsigned)sizeof(LUA_INTEGER));
             fclose(f);
             return false;
         }
         if (sizeOfLuaNumber != sizeof(LUA_NUMBER)) {
-            LOG_ERROR("Failed to load lua script '%s': sizes of Lua Number don't match (%d, expected %llu).", file->cachedPath, sizeOfLuaNumber, sizeof(LUA_NUMBER));
+            LOG_ERROR("Failed to load lua script '%s': sizes of Lua Number don't match (%d, expected %llu).", file->cachedPath, sizeOfLuaNumber, (long long unsigned)sizeof(LUA_NUMBER));
             fclose(f);
             return false;
         }
