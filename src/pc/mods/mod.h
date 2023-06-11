@@ -5,7 +5,7 @@
 #include <types.h>
 #include "src/pc/platform.h"
 
-#define MOD_NAME_MAX_LENGTH 32
+#define MOD_NAME_MAX_LENGTH 64
 #define MOD_INCOMPATIBLE_MAX_LENGTH 256
 #define MOD_DESCRIPTION_MAX_LENGTH 512
 
