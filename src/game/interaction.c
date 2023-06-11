@@ -1940,9 +1940,8 @@ u32 interact_koopa_shell(struct MarioState *m, UNUSED u32 interactType, struct O
         return FALSE;
     }
 
-    for (s32 i = 0; i < MAX_PLAYERS; i++) {
+    for (s32 i = 1; i < MAX_PLAYERS; i++) {
         if (!is_player_active(&gMarioStates[i])) { continue; }
-        if (i == 0) { continue; }
         if (gMarioStates[i].riddenObj == o) { return FALSE; }
     }
 

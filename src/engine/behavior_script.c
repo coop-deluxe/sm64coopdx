@@ -1415,15 +1415,13 @@ cur_obj_update_begin:;
                 // Out of render distance, hide the object.
                 gCurrentObject->header.gfx.node.flags &= ~GRAPH_RENDER_ACTIVE;
 
-                if (gBehaviorValues.InfiniteRenderDistance)
-                {
+                if (gBehaviorValues.InfiniteRenderDistance) {
                     gCurrentObject->activeFlags &= ~ACTIVE_FLAG_FAR_AWAY;
-                }
-                else
-                {
+                } else {
                     // the following flag would deactivate behavior code // sorry but I need this
                     gCurrentObject->activeFlags |= ACTIVE_FLAG_FAR_AWAY;
                 }
+
             } else if (gCurrentObject->oHeldState == HELD_FREE) {
                 // In render distance (and not being held), show the object.
                 gCurrentObject->header.gfx.node.flags |= GRAPH_RENDER_ACTIVE;
