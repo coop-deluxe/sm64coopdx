@@ -26,7 +26,7 @@ void network_send_lua_custom(bool broadcast) {
     // get local index
     s32 toLocalIndex = 0;
     if (!broadcast) {
-        s32 toLocalIndex = smlua_to_integer(L, paramIndex++);
+        toLocalIndex = smlua_to_integer(L, paramIndex++);
         if (toLocalIndex <= 0 || toLocalIndex >= MAX_PLAYERS) {
             LOG_LUA_LINE("Tried to send packet to invalid local index: %d", toLocalIndex)
             return;
