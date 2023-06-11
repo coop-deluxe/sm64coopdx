@@ -1,3 +1,5 @@
+math.randomseed(get_time())
+
 _CObject = {
     __index = function (t,k)
         return _get_field(t['_lot'], t['_pointer'], k, t)

@@ -44,6 +44,7 @@ extern Trajectory sThiTinyMetalBallTraj[];
 struct LevelValues gDefaultLevelValues = {
     .fixCollisionBugs               = 0,
     .fixCollisionBugsRoundedCorners = 1,
+    .fixCollisionBugsFalseLedgeGrab = 1,
     .fixVanishFloors                = 0,
     .hudCapTimer                    = 0,
     .hudRedCoinsRadar               = 0,

@@ -955,6 +955,7 @@
 | exitCastleWarpNode | `integer` |  |
 | extendedPauseDisplay | `integer` |  |
 | fixCollisionBugs | `integer` |  |
+| fixCollisionBugsFalseLedgeGrab | `integer` |  |
 | fixCollisionBugsRoundedCorners | `integer` |  |
 | fixVanishFloors | `integer` |  |
 | floatingStarDance | `integer` |  |
