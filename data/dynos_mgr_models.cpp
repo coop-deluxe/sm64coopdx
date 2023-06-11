@@ -66,6 +66,19 @@ struct GraphNode* DynOS_Model_LoadCommon(u32* aId, enum ModelPool aModelPool, vo
         sModelPools[aModelPool] = dynamic_pool_init();
     }
 
+    // check perm map
+    auto& permMap = sAssetMap[MODEL_POOL_PERMANENT];
+    if (aDeDuplicate && permMap.count(aAsset)) {
+        auto& found = permMap[aAsset];
+        if (*aId && *aId == found.id) {
+            return found.graphNode;
+        }
+        if (*aId == 0) {
+            *aId = found.id;
+            return found.graphNode;
+        }
+    }
+
     // check map
     auto& map = sAssetMap[aModelPool];
     if (aDeDuplicate && map.count(aAsset)) {
