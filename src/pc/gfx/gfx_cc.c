@@ -55,6 +55,8 @@ void gfx_cc_get_features(struct ColorCombiner* cc, struct CCFeatures* ccf) {
 
 void gfx_cc_print(struct ColorCombiner *cc) {
     if (!sAllowCCPrint) { return; }
+    // disabled for now
+    return;
 #ifdef DEVELOPMENT
     printf("\n>> gfx_pc_precomp_shader(");
 
