@@ -1264,11 +1264,15 @@ f32 get_sound_pan(f32 x, f32 z) {
  * Called from threads: thread4_sound, thread5_game_loop (EU only)
  */
 static f32 get_sound_volume(u8 bank, u8 soundIndex, f32 volumeRange) {
+    if (configFadeoutDistantSounds) {
+        volumeRange = 1;
+    }
+
     if (bank >= SOUND_BANK_COUNT || soundIndex >= SOUND_INDEX_COUNT) { return 0; }
-    f32 maxSoundDistance;
-    f32 intensity;
+    f32 maxSoundDistance = AUDIO_MAX_DISTANCE;
+    f32 intensity = 0;
 #ifndef VERSION_JP
-    s32 div = bank < 3 ? 2 : 3;
+    f32 div = (bank < 3) ? 2.0f : 3.0f;
 #endif
 
     if (!(sSoundBanks[bank][soundIndex].soundBits & SOUND_NO_VOLUME_LOSS)) {

@@ -115,6 +115,7 @@ extern bool         configForce4By3;
 extern char         configCoopNetIp[];
 extern unsigned int configCoopNetPort;
 extern char         configPassword[];
+extern bool         configFadeoutDistantSounds;
 
 void configfile_load(void);
 void configfile_save(const char *filename);
