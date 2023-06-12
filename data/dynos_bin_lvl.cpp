@@ -894,6 +894,11 @@ static bool DynOS_Lvl_WriteBinary(const SysPath &aOutputFilename, GfxData *aGfxD
                 DynOS_Lights_Write(_File, aGfxData, _Node);
             }
         }
+        for (auto &_Node : aGfxData->mLight0s) {
+            if (_Node->mLoadIndex == i) {
+                DynOS_Light0_Write(_File, aGfxData, _Node);
+            }
+        }
         for (auto &_Node : aGfxData->mLightTs) {
             if (_Node->mLoadIndex == i) {
                 DynOS_LightT_Write(_File, aGfxData, _Node);
@@ -1014,6 +1019,7 @@ GfxData *DynOS_Lvl_LoadFromBinary(const SysPath &aFilename, const char *aLevelNa
         for (bool _Done = false; !_Done;) {
             switch (_File->Read<u8>()) {
                 case DATA_TYPE_LIGHT:           DynOS_Lights_Load     (_File, _GfxData); break;
+                case DATA_TYPE_LIGHT_0:         DynOS_Light0_Load     (_File, _GfxData); break;
                 case DATA_TYPE_LIGHT_T:         DynOS_LightT_Load     (_File, _GfxData); break;
                 case DATA_TYPE_AMBIENT_T:       DynOS_AmbientT_Load   (_File, _GfxData); break;
                 case DATA_TYPE_TEXTURE:         DynOS_Tex_Load        (_File, _GfxData); break;
@@ -1108,6 +1114,7 @@ static bool DynOS_Lvl_GeneratePack_Internal(const SysPath &aPackFolder, Array<Pa
 
         // Clear data pointers
         ClearLvlDataNodes(_GfxData->mLights);
+        ClearLvlDataNodes(_GfxData->mLight0s);
         ClearLvlDataNodes(_GfxData->mLightTs);
         ClearLvlDataNodes(_GfxData->mAmbientTs);
         ClearLvlDataNodes(_GfxData->mTextures);

@@ -422,6 +422,13 @@ static s64 ParseGfxSymbolArg(GfxData* aGfxData, DataNode<Gfx>* aNode, u64* pToke
         }
     }
 
+    for (auto& _Node : aGfxData->mLight0s) {
+        // Light pointer
+        if (_Arg == _Node->mName) {
+            return (s64) DynOS_Light0_Parse(aGfxData, _Node)->mData;
+        }
+    }
+
     for (auto& _Node : aGfxData->mLightTs) {
         // Light pointer
         if (_Arg == _Node->mName) {
@@ -811,6 +818,15 @@ static void ParseGfxSymbol(GfxData* aGfxData, DataNode<Gfx>* aNode, Gfx*& aHead,
     }
 
     // Complex symbols
+    if (_Symbol == "gsSPSetLights0") {
+        Lights0 *_Light = (Lights0 *) ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
+        gSPNumLights(aHead++, NUMLIGHTS_0);
+        aGfxData->mPointerList.Add(aHead);
+        gSPLight(aHead++, &_Light->l[0], 1);
+        aGfxData->mPointerList.Add(aHead);
+        gSPLight(aHead++, &_Light->a, 2);
+        return;
+    }
     if (_Symbol == "gsSPSetLights1") {
         Lights1 *_Light = (Lights1 *) ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
         gSPNumLights(aHead++, NUMLIGHTS_1);

@@ -106,7 +106,14 @@ DataNode<TexData>* DynOS_Tex_Parse(GfxData* aGfxData, DataNode<TexData>* aNode) 
     if (i0 != -1) {
         s32 i1 = aNode->mTokens[0].Find(".inc.c");
         if (i1 == -1) {
-            PrintDataError("  ERROR: %s: missing .inc.c in String %s", aNode->mName.begin(), aNode->mTokens[0].begin());
+            if (strstr(aNode->mName.begin(), "_pal_") == NULL) {
+                PrintDataError("  ERROR: %s: missing .inc.c in String %s", aNode->mName.begin(), aNode->mTokens[0].begin());
+            } else {
+                // hack for pal textures to be "found"
+                TexData* _Texture = New<TexData>();
+                aNode->mData = _Texture;
+                aNode->mLoadIndex = aGfxData->mLoadIndex++;
+            }
             return aNode;
         }
 

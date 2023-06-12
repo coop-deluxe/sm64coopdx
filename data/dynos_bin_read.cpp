@@ -179,6 +179,8 @@ void DynOS_Read_Source(GfxData *aGfxData, const SysPath &aFilename) {
                     // Ignore struct keyword
                 } else if (_Buffer == "u64") {
                     _DataType = DATA_TYPE_UNUSED;
+                } else if (_Buffer == "Lights0") {
+                    _DataType = DATA_TYPE_LIGHT_0;
                 } else if (_Buffer == "Lights1") {
                     _DataType = DATA_TYPE_LIGHT;
                 } else if (_Buffer == "Light_t") {
@@ -240,6 +242,7 @@ void DynOS_Read_Source(GfxData *aGfxData, const SysPath &aFilename) {
             else if (_Buffer.Length() != 0) {
                 switch (_DataType) {
                     case DATA_TYPE_LIGHT:           AppendNewNode(aGfxData, aGfxData->mLights,       _Buffer, pDataName, pDataTokens);    break;
+                    case DATA_TYPE_LIGHT_0:         AppendNewNode(aGfxData, aGfxData->mLight0s,      _Buffer, pDataName, pDataTokens);    break;
                     case DATA_TYPE_LIGHT_T:         AppendNewNode(aGfxData, aGfxData->mLightTs,      _Buffer, pDataName, pDataTokens);    break;
                     case DATA_TYPE_AMBIENT_T:       AppendNewNode(aGfxData, aGfxData->mAmbientTs,    _Buffer, pDataName, pDataTokens);    break;
                     case DATA_TYPE_TEXTURE:         AppendNewNode(aGfxData, aGfxData->mTextures,     _Buffer, pDataName, pDataTokens);    break;

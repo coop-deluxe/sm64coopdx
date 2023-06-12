@@ -47,6 +47,7 @@ enum {
     DATA_TYPE_TEXTURE_RAW,
     DATA_TYPE_BEHAVIOR_SCRIPT,
     DATA_TYPE_UNUSED,
+    DATA_TYPE_LIGHT_0,
 };
 
 enum {
@@ -538,6 +539,7 @@ struct GfxData : NoCopy {
 
     // Model data
     DataNodes<Lights1> mLights;
+    DataNodes<Lights0> mLight0s;
     DataNodes<Light_t> mLightTs;
     DataNodes<Ambient_t> mAmbientTs;
     DataNodes<TexData> mTextures;
@@ -1027,6 +1029,10 @@ s64 DynOS_Gfx_ParseGfxConstants(const String& _Arg, bool* found);
 DataNode<Lights1>* DynOS_Lights_Parse(GfxData* aGfxData, DataNode<Lights1>* aNode);
 void DynOS_Lights_Write(BinFile* aFile, GfxData* aGfxData, DataNode<Lights1> *aNode);
 void DynOS_Lights_Load(BinFile *aFile, GfxData *aGfxData);
+
+DataNode<Lights0>* DynOS_Light0_Parse(GfxData* aGfxData, DataNode<Lights0>* aNode);
+void DynOS_Light0_Write(BinFile* aFile, GfxData* aGfxData, DataNode<Lights0> *aNode);
+void DynOS_Light0_Load(BinFile *aFile, GfxData *aGfxData);
 
 DataNode<Light_t>* DynOS_LightT_Parse(GfxData* aGfxData, DataNode<Light_t>* aNode);
 void DynOS_LightT_Write(BinFile* aFile, GfxData* aGfxData, DataNode<Light_t> *aNode);
