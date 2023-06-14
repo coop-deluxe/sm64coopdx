@@ -68,7 +68,7 @@ void gfx_cc_print(struct ColorCombiner *cc) {
     printf("0x%08x",   cm->flags);
 
     printf(");");
-    printf("    // %016lx", cm->hash);
+    printf("    // %016" PRIx64, cm->hash);
     printf("\n");
 #endif
 }
