@@ -56,6 +56,7 @@ struct ShaderProgramD3D12 {
     bool used_textures[2];
     uint8_t num_floats;
     uint8_t num_attribs;
+    bool do_noise;
 
     ComPtr<ID3DBlob> vertex_shader;
     ComPtr<ID3DBlob> pixel_shader;
@@ -260,6 +261,7 @@ static struct ShaderProgram *gfx_direct3d12_create_and_load_new_shader(struct Co
     prg->used_textures[0] = cc_features.used_textures[0];
     prg->used_textures[1] = cc_features.used_textures[1];
     prg->num_floats = num_floats;
+    prg->do_noise = cc_features.do_noise;
 
     d3d.must_reload_pipeline = true;
     return (struct ShaderProgram *)(d3d.shader_program = prg);
@@ -449,7 +451,6 @@ static void gfx_direct3d12_set_use_alpha(bool use_alpha) {
 
 static void gfx_direct3d12_draw_triangles(float buf_vbo[], size_t buf_vbo_len, size_t buf_vbo_num_tris) {
     struct ShaderProgramD3D12 *prg = d3d.shader_program;
-
     if (d3d.must_reload_pipeline) {
         ComPtr<ID3D12PipelineState>& pipeline_state = d3d.pipeline_states[PipelineDesc{
             prg->hash,
@@ -528,7 +529,7 @@ static void gfx_direct3d12_draw_triangles(float buf_vbo[], size_t buf_vbo_len, s
 
     int root_param_index = 0;
 
-    if (prg->cc.cm.use_alpha && prg->cc.cm.use_dither) {
+    if ((prg->cc.cm.use_alpha && prg->cc.cm.use_dither) || prg->do_noise) {
         d3d.command_list->SetGraphicsRootConstantBufferView(root_param_index++, d3d.noise_cb->GetGPUVirtualAddress());
     }
 
