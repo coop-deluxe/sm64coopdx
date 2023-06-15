@@ -75,6 +75,7 @@ struct LoadedVertex {
     float x, y, z, w;
     float u, v;
     struct RGBA color;
+    uint8_t fog_z;
     uint8_t clip_rej;
 };
 
@@ -961,10 +962,10 @@ static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, cons
 
             if (fog_z < 0) fog_z = 0;
             if (fog_z > 255) fog_z = 255;
-            d->color.a = fog_z; // Use alpha variable to store fog factor
-        } else {
-            d->color.a = v->cn[3];
+            d->fog_z = fog_z; // Use alpha variable to store fog factor
         }
+
+        d->color.a = v->cn[3];
     }
 }
 
@@ -1134,7 +1135,7 @@ static void OPTIMIZE_O3 gfx_sp_tri1(uint8_t vtx1_idx, uint8_t vtx2_idx, uint8_t 
             buf_vbo[buf_vbo_len++] = rdp.fog_color.r / 255.0f;
             buf_vbo[buf_vbo_len++] = rdp.fog_color.g / 255.0f;
             buf_vbo[buf_vbo_len++] = rdp.fog_color.b / 255.0f;
-            buf_vbo[buf_vbo_len++] = v_arr[i]->color.a / 255.0f; // fog factor (not alpha)
+            buf_vbo[buf_vbo_len++] = v_arr[i]->fog_z / 255.0f; // fog factor (not alpha)
         }
 
         if (cm->light_map) {
@@ -1190,7 +1191,7 @@ static void OPTIMIZE_O3 gfx_sp_tri1(uint8_t vtx1_idx, uint8_t vtx2_idx, uint8_t 
                     buf_vbo[buf_vbo_len++] = color->g / 255.0f;
                     buf_vbo[buf_vbo_len++] = color->b / 255.0f;
                 } else {
-                    if (cm->use_fog && color == &v_arr[i]->color) {
+                    if (cm->use_fog && (color == &v_arr[i]->color || cm->light_map)) {
                         // Shade alpha is 100% for fog
                         buf_vbo[buf_vbo_len++] = 1.0f;
                     } else {
