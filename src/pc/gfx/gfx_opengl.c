@@ -170,6 +170,8 @@ static const char *shader_item_to_str(uint32_t item, bool with_alpha, bool only_
             case SHADER_COMBINEDA:
                 return hint_single_element ? "texel.a" :
                     (with_alpha ? "vec4(texel.a, texel.a, texel.a, texel.a)" : "vec3(texel.a, texel.a, texel.a)");
+            case SHADER_NOISE:
+                return with_alpha ? "vec4(noise)" : "vec3(noise)";
         }
     } else {
         switch (item) {
@@ -205,6 +207,8 @@ static const char *shader_item_to_str(uint32_t item, bool with_alpha, bool only_
                 return "texel.a";
             case SHADER_COMBINEDA:
                 return "texel.a";
+            case SHADER_NOISE:
+                return "noise.a";
         }
     }
     return "unknown";
@@ -248,9 +252,9 @@ static struct ShaderProgram *gfx_opengl_create_and_load_new_shader(struct ColorC
     bool opt_light_map = cc->cm.light_map;
 
 #ifdef USE_GLES
-    bool opt_noise = false;
+    bool opt_dither = false;
 #else
-    bool opt_noise = cc->cm.use_noise;
+    bool opt_dither = cc->cm.use_dither;
 #endif
 
     char vs_buf[1024];
@@ -361,7 +365,7 @@ static struct ShaderProgram *gfx_opengl_create_and_load_new_shader(struct ColorC
         }
     }
 
-    if (opt_alpha && opt_noise) {
+    if ((opt_alpha && opt_dither) || ccf.do_noise) {
         append_line(fs_buf, &fs_len, "uniform float frame_count;");
 
         append_line(fs_buf, &fs_len, "float random(in vec3 value) {");
@@ -371,6 +375,10 @@ static struct ShaderProgram *gfx_opengl_create_and_load_new_shader(struct ColorC
     }
 
     append_line(fs_buf, &fs_len, "void main() {");
+
+    if ((opt_alpha && opt_dither) || ccf.do_noise) {
+        append_line(fs_buf, &fs_len, "float noise = floor(random(floor(vec3(gl_FragCoord.xy, frame_count))) + 0.5);");
+    }
 
     if (ccf.used_textures[0]) {
         append_line(fs_buf, &fs_len, "vec4 texVal0 = sampleTex(uTex0, vTexCoord, uTex0Size, uTex0Filter);");
@@ -417,8 +425,9 @@ static struct ShaderProgram *gfx_opengl_create_and_load_new_shader(struct ColorC
         }
     }
 
-    if (opt_alpha && opt_noise) 
-        append_line(fs_buf, &fs_len, "texel.a *= floor(random(floor(vec3(gl_FragCoord.xy, frame_count))) + 0.5);");
+    if (opt_alpha && opt_dither) {
+        append_line(fs_buf, &fs_len, "texel.a *= noise;");
+    }
 
     if (opt_alpha) {
         append_line(fs_buf, &fs_len, "gl_FragColor = texel;");
@@ -532,7 +541,7 @@ static struct ShaderProgram *gfx_opengl_create_and_load_new_shader(struct ColorC
         glUniform1i(sampler_location, 1);
     }
 
-    if (opt_alpha && opt_noise) {
+    if ((opt_alpha && opt_dither) || ccf.do_noise) {
         prg->uniform_locations[4] = glGetUniformLocation(shader_program, "frame_count");
         prg->used_noise = true;
     } else {

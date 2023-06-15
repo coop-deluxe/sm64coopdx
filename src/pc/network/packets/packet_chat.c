@@ -100,7 +100,7 @@ void network_receive_chat(struct Packet* p) {
     // add the message
     djui_chat_message_create_from(globalIndex, remoteMessage);
 
-    if (gNetworkSystem && gNetworkSystem->get_id_str && np && np->name) {
+    if (gNetworkSystem && gNetworkSystem->get_id_str && np) {
         LOG_CONSOLE("[%s] %s: %s", gNetworkSystem->get_id_str(np->localIndex), np->name, remoteMessage);
         LOG_INFO("[%s] %s: %s", gNetworkSystem->get_id_str(np->localIndex), np->name, remoteMessage);
     } else {

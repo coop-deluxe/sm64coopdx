@@ -20,6 +20,7 @@ enum {
     CC_PRIMA,
     CC_SHADEA,
     CC_ENVA,
+    CC_NOISE,
     CC_ENUM_MAX,
 };
 
@@ -40,6 +41,7 @@ enum {
     SHADER_1,
     SHADER_COMBINED,
     SHADER_COMBINEDA,
+    SHADER_NOISE,
 };
 
 #define SHADER_OPT_ALPHA (1 << 24)
@@ -54,6 +56,7 @@ struct CCFeatures {
     bool do_multiply[4];
     bool do_mix[4];
     bool color_alpha_same[2];
+    bool do_noise;
 };
 
 #pragma pack(1)
@@ -72,7 +75,7 @@ struct CombineMode {
             uint8_t use_alpha    : 1;
             uint8_t use_fog      : 1;
             uint8_t texture_edge : 1;
-            uint8_t use_noise    : 1;
+            uint8_t use_dither   : 1;
             uint8_t use_2cycle   : 1;
             uint8_t light_map    : 1;
         };

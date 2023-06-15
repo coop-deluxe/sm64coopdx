@@ -51,6 +51,8 @@ static const char *shader_item_to_str(int32_t item, bool with_alpha, bool only_a
                 return with_alpha ? "texel" : "texel.rgb";
             case SHADER_COMBINEDA:
                 return hint_single_element ? "texel.a" : (with_alpha ? "float4(texel.a, texel.a, texel.a, texel.a)" : "float3(texel.a, texel.a, texel.a)");
+            case SHADER_NOISE:
+                return with_alpha ? "float4(noise, noise, noise, noise)" : "float3(noise, noise, noise)";
         }
     } else {
         switch (item) {
@@ -87,6 +89,8 @@ static const char *shader_item_to_str(int32_t item, bool with_alpha, bool only_a
                 return "texel.a";
             case SHADER_COMBINEDA:
                 return "texel.a";
+            case SHADER_NOISE:
+                return "noise";
         }
     }
 }
@@ -126,7 +130,7 @@ void gfx_direct3d_common_build_shader(char buf[4096], size_t& len, size_t& num_f
 
     if (include_root_signature) {
         append_str(buf, &len, "#define RS \"RootFlags(ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT | DENY_VERTEX_SHADER_ROOT_ACCESS)");
-        if (cc.cm.use_alpha && cc.cm.use_noise) {
+        if ((cc.cm.use_alpha && cc.cm.use_dither) || ccf.do_noise) {
             append_str(buf, &len, ",CBV(b0, visibility = SHADER_VISIBILITY_PIXEL)");
         }
         if (ccf.used_textures[0]) {
@@ -146,7 +150,7 @@ void gfx_direct3d_common_build_shader(char buf[4096], size_t& len, size_t& num_f
         append_line(buf, &len, "    float2 uv : TEXCOORD;");
         num_floats += 2;
     }
-    if (cc.cm.use_alpha && cc.cm.use_noise) {
+    if ((cc.cm.use_alpha && cc.cm.use_dither) || ccf.do_noise) {
         append_line(buf, &len, "    float4 screenPos : TEXCOORD1;");
     }
     if (cc.cm.use_fog) {
@@ -176,7 +180,7 @@ void gfx_direct3d_common_build_shader(char buf[4096], size_t& len, size_t& num_f
 
     // Constant buffer and random function
 
-    if (cc.cm.use_alpha && cc.cm.use_noise) {
+    if ((cc.cm.use_alpha && cc.cm.use_dither) || ccf.do_noise) {
         append_line(buf, &len, "cbuffer PerFrameCB : register(b0) {");
         append_line(buf, &len, "    uint noise_frame;");
         append_line(buf, &len, "    float2 noise_scale;");
@@ -229,7 +233,7 @@ void gfx_direct3d_common_build_shader(char buf[4096], size_t& len, size_t& num_f
     append_line(buf, &len, ") {");
     append_line(buf, &len, "    PSInput result;");
     append_line(buf, &len, "    result.position = position;");
-    if (cc.cm.use_alpha && cc.cm.use_noise) {
+    if ((cc.cm.use_alpha && cc.cm.use_dither) || ccf.do_noise) {
         append_line(buf, &len, "    result.screenPos = position;");
     }
     if (ccf.used_textures[0] || ccf.used_textures[1]) {
@@ -252,6 +256,12 @@ void gfx_direct3d_common_build_shader(char buf[4096], size_t& len, size_t& num_f
         append_line(buf, &len, "[RootSignature(RS)]");
     }
     append_line(buf, &len, "float4 PSMain(PSInput input) : SV_TARGET {");
+
+    if ((cc.cm.use_alpha && cc.cm.use_dither) || ccf.do_noise) {
+        append_line(buf, &len, "    float2 coords = (input.screenPos.xy / input.screenPos.w) * noise_scale;");
+        append_line(buf, &len, "    float noise = round(random(float3(floor(coords), noise_frame)));");
+    }
+
     if (ccf.used_textures[0]) {
         if (three_point_filtering) {
             append_line(buf, &len, "    float4 texVal0;");
@@ -319,9 +329,8 @@ void gfx_direct3d_common_build_shader(char buf[4096], size_t& len, size_t& num_f
         }
     }
 
-    if (cc.cm.use_alpha && cc.cm.use_noise) {
-        append_line(buf, &len, "    float2 coords = (input.screenPos.xy / input.screenPos.w) * noise_scale;");
-        append_line(buf, &len, "    texel.a *= round(random(float3(floor(coords), noise_frame)));");
+    if (cc.cm.use_alpha && cc.cm.use_dither) {
+        append_line(buf, &len, "    texel.a *= noise;");
     }
 
     if (cc.cm.use_alpha) {

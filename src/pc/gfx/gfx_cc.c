@@ -29,6 +29,7 @@ void gfx_cc_get_features(struct ColorCombiner* cc, struct CCFeatures* ccf) {
         }
         ccf->used_textures[0] = ccf->used_textures[0] || c == SHADER_TEXEL0 || c == SHADER_TEXEL0A;
         ccf->used_textures[1] = ccf->used_textures[1] || c == SHADER_TEXEL1 || c == SHADER_TEXEL1A;
+        ccf->do_noise = ccf->do_noise || c == SHADER_NOISE;
     }
 
     // figure out optimizations
@@ -68,7 +69,7 @@ void gfx_cc_print(struct ColorCombiner *cc) {
     printf("0x%08x",   cm->flags);
 
     printf(");");
-    printf("    // %016lx", cm->hash);
+    printf("    // %016" PRIx64, cm->hash);
     printf("\n");
 #endif
 }
@@ -112,6 +113,7 @@ void gfx_cc_precomp(void) {
     gfx_pc_precomp_shader(0x04060401, 0x05000000, 0x04060402, 0x05000b0b, 0x00000001);    // 1d970841b086b2e6
     gfx_pc_precomp_shader(0x01000000, 0x04000000, 0x02000000, 0x04000b0b, 0x00000001);    // 410000008f86b2e6
     gfx_pc_precomp_shader(0x04060401, 0x05000000, 0x04060402, 0x05000b0b, 0x00000009);    // 1d970841b086b2ee
+    gfx_pc_precomp_shader(0x00040001, 0x00040001, 0x00040002, 0x0b040b02, 0x00000009);    // 110404410c0ab30f
 
     sAllowCCPrint = 1;
 }
@@ -126,10 +128,9 @@ static uint8_t color_comb_component_a(uint32_t v, uint8_t cycle) {
         case G_CCMUX_SHADE:           return CC_SHADE;
         case G_CCMUX_ENVIRONMENT:     return CC_ENV;
         case G_CCMUX_1:               return CC_1;
-        //case G_CCMUX_NOISE:         return CC_NOISE;
         case G_CCMUX_0:               return CC_0;
 
-        case G_CCMUX_COMBINED_ALPHA:  return cycle ? CC_COMBINEDA : CC_0;
+        case G_CCMUX_COMBINED_ALPHA:  return cycle ? CC_COMBINEDA : CC_NOISE;
         case G_CCMUX_TEXEL0_ALPHA:    return cycle ? CC_TEXEL1A : CC_TEXEL0A;
         case G_CCMUX_TEXEL1_ALPHA:    return cycle ? CC_TEXEL0A : CC_TEXEL1A;
         case G_CCMUX_PRIMITIVE_ALPHA: return CC_PRIMA;
