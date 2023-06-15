@@ -304,6 +304,9 @@ static void gfx_generate_cc(struct ColorCombiner *cc) {
             case CC_COMBINEDA:
                 shader_cmd = cc->cm.use_2cycle ? SHADER_COMBINEDA : SHADER_0;
                 break;
+            case CC_NOISE:
+                shader_cmd = SHADER_NOISE;
+                break;
             case CC_PRIM:
             case CC_PRIMA:
             case CC_SHADE:
@@ -1043,7 +1046,7 @@ static void OPTIMIZE_O3 gfx_sp_tri1(uint8_t vtx1_idx, uint8_t vtx2_idx, uint8_t 
 
     cm->use_alpha    = (rdp.other_mode_l & (G_BL_A_MEM << 18))        == 0;
     cm->texture_edge = (rdp.other_mode_l & CVG_X_ALPHA)               == CVG_X_ALPHA;
-    cm->use_noise    = (rdp.other_mode_l & G_AC_DITHER)               == G_AC_DITHER;
+    cm->use_dither   = (rdp.other_mode_l & G_AC_DITHER)               == G_AC_DITHER;
     cm->use_2cycle   = (rdp.other_mode_h & (3U << G_MDSFT_CYCLETYPE)) == G_CYC_2CYCLE;
     cm->use_fog      = (rdp.other_mode_l >> 30)                       == G_BL_CLR_FOG;
     cm->light_map    = (rsp.geometry_mode & G_LIGHT_MAP_EXT)          == G_LIGHT_MAP_EXT;

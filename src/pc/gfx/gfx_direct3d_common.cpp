@@ -126,7 +126,7 @@ void gfx_direct3d_common_build_shader(char buf[4096], size_t& len, size_t& num_f
 
     if (include_root_signature) {
         append_str(buf, &len, "#define RS \"RootFlags(ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT | DENY_VERTEX_SHADER_ROOT_ACCESS)");
-        if (cc.cm.use_alpha && cc.cm.use_noise) {
+        if (cc.cm.use_alpha && cc.cm.use_dither) {
             append_str(buf, &len, ",CBV(b0, visibility = SHADER_VISIBILITY_PIXEL)");
         }
         if (ccf.used_textures[0]) {
@@ -146,7 +146,7 @@ void gfx_direct3d_common_build_shader(char buf[4096], size_t& len, size_t& num_f
         append_line(buf, &len, "    float2 uv : TEXCOORD;");
         num_floats += 2;
     }
-    if (cc.cm.use_alpha && cc.cm.use_noise) {
+    if (cc.cm.use_alpha && cc.cm.use_dither) {
         append_line(buf, &len, "    float4 screenPos : TEXCOORD1;");
     }
     if (cc.cm.use_fog) {
@@ -176,7 +176,7 @@ void gfx_direct3d_common_build_shader(char buf[4096], size_t& len, size_t& num_f
 
     // Constant buffer and random function
 
-    if (cc.cm.use_alpha && cc.cm.use_noise) {
+    if (cc.cm.use_alpha && cc.cm.use_dither) {
         append_line(buf, &len, "cbuffer PerFrameCB : register(b0) {");
         append_line(buf, &len, "    uint noise_frame;");
         append_line(buf, &len, "    float2 noise_scale;");
@@ -229,7 +229,7 @@ void gfx_direct3d_common_build_shader(char buf[4096], size_t& len, size_t& num_f
     append_line(buf, &len, ") {");
     append_line(buf, &len, "    PSInput result;");
     append_line(buf, &len, "    result.position = position;");
-    if (cc.cm.use_alpha && cc.cm.use_noise) {
+    if (cc.cm.use_alpha && cc.cm.use_dither) {
         append_line(buf, &len, "    result.screenPos = position;");
     }
     if (ccf.used_textures[0] || ccf.used_textures[1]) {
@@ -319,7 +319,7 @@ void gfx_direct3d_common_build_shader(char buf[4096], size_t& len, size_t& num_f
         }
     }
 
-    if (cc.cm.use_alpha && cc.cm.use_noise) {
+    if (cc.cm.use_alpha && cc.cm.use_dither) {
         append_line(buf, &len, "    float2 coords = (input.screenPos.xy / input.screenPos.w) * noise_scale;");
         append_line(buf, &len, "    texel.a *= round(random(float3(floor(coords), noise_frame)));");
     }

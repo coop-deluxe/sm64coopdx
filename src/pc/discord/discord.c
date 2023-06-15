@@ -36,7 +36,7 @@ void discord_fatal(int rc) {
     }
 
     if (rc != DiscordResult_Ok) {
-        static sDiscordReported = false;
+        static bool sDiscordReported = false;
         if (!sDiscordReported) {
             sDiscordReported = true;
             LOG_ERROR("Discord threw an error. RC: %d", rc);

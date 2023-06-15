@@ -528,7 +528,7 @@ static void gfx_direct3d12_draw_triangles(float buf_vbo[], size_t buf_vbo_len, s
 
     int root_param_index = 0;
 
-    if (prg->cc.cm.use_alpha && prg->cc.cm.use_noise) {
+    if (prg->cc.cm.use_alpha && prg->cc.cm.use_dither) {
         d3d.command_list->SetGraphicsRootConstantBufferView(root_param_index++, d3d.noise_cb->GetGPUVirtualAddress());
     }
 
