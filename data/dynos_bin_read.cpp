@@ -129,6 +129,8 @@ void DynOS_Read_Source(GfxData *aGfxData, const SysPath &aFilename) {
     fclose(_File);
 
     // Scanning the loaded data
+    u32 _LineNumber = 1;
+    u32 pDataLineNumber = 1;
     s32 _DataType = DATA_TYPE_NONE;
     String* pDataName = NULL;
     Array<String> *pDataTokens = NULL;
@@ -266,6 +268,7 @@ void DynOS_Read_Source(GfxData *aGfxData, const SysPath &aFilename) {
 
         // Looking for data
         else if (pDataStart == 0) {
+            pDataLineNumber = _LineNumber;
             if (*c == '=') {
                 pDataStart = c + 1;
             } else if (*c == ';') {
@@ -280,10 +283,12 @@ void DynOS_Read_Source(GfxData *aGfxData, const SysPath &aFilename) {
                 String _Token = "";
                 for (u8 _Bracket = 0; pDataStart <= pDataEnd; pDataStart++) {
                     if (*pDataStart == '(') _Bracket++;
+                    if (*pDataStart == '\n') pDataLineNumber++;
                     if (*pDataStart == ' ' || *pDataStart == '\t' || *pDataStart == '\r' || *pDataStart == '\n') continue;
                     if (_Bracket <= 1 && (*pDataStart == '(' || *pDataStart == ')' || *pDataStart == ',' || *pDataStart == '{' || *pDataStart == '}' || *pDataStart == ';')) {
                         if (_Token.Length() != 0) {
                             pDataTokens->Add(_Token);
+                            // TODO: store pDataLineNumber in the node or something
                             _Token.Clear();
                         }
                     } else {
@@ -298,6 +303,11 @@ void DynOS_Read_Source(GfxData *aGfxData, const SysPath &aFilename) {
             pDataStart  = NULL;
             _DataIgnore = false;
             _Buffer     = "";
+        }
+
+        // increase line number
+        if (c && *c == '\n') {
+            _LineNumber++;
         }
     }
 
