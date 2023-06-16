@@ -31,34 +31,17 @@ SpatialPartitionCell gDynamicSurfacePartition[NUM_CELLS][NUM_CELLS];
 /**
  * Pools of data to contain either surface nodes or surfaces.
  */
-struct SurfaceNode *sSurfaceNodePool = NULL;
-struct Surface *sSurfacePool = NULL;
-
-/**
- * The size of the surface pool (2300).
- */
-s16 sSurfacePoolSize = 0;
-u8 gSurfacePoolError = 0;
+struct GrowingPool* sSurfaceNodePool = NULL;
+struct GrowingPool* sSurfacePool = NULL;
 
 /**
  * Allocate the part of the surface node pool to contain a surface node.
  */
-static struct SurfaceNode *alloc_surface_node(void) {
-    struct SurfaceNode *node = &sSurfaceNodePool[gSurfaceNodesAllocated];
-    gSurfaceNodesAllocated++;
-
-    //! A bounds check! If there's more surface nodes than 7000 allowed,
-    //  we, um...
-    // Perhaps originally just debug feedback?
-    if (gSurfaceNodesAllocated >= SURFACE_NODE_POOL_SIZE) {
-        gSurfacePoolError |= NOT_ENOUGH_ROOM_FOR_NODES;
-        return NULL;
-    } else {
-        gSurfacePoolError &= ~NOT_ENOUGH_ROOM_FOR_NODES;
-    }
-
+static struct SurfaceNode* alloc_surface_node(void) {
+    struct SurfaceNode* node = (struct SurfaceNode*)growing_pool_alloc(sSurfaceNodePool, sizeof(struct SurfaceNode));
     node->next = NULL;
 
+    gSurfaceNodesAllocated++;
     return node;
 }
 
@@ -66,26 +49,16 @@ static struct SurfaceNode *alloc_surface_node(void) {
  * Allocate the part of the surface pool to contain a surface and
  * initialize the surface.
  */
-static struct Surface *alloc_surface(void) {
-
-    struct Surface *surface = &sSurfacePool[gSurfacesAllocated];
-    gSurfacesAllocated++;
-
-    //! A bounds check! If there's more surfaces than the 2300 allowed,
-    //  we, um...
-    // Perhaps originally just debug feedback?
-    if (gSurfacesAllocated >= sSurfacePoolSize) {
-        gSurfacePoolError |= NOT_ENOUGH_ROOM_FOR_SURFACES;
-        return NULL;
-    } else {
-        gSurfacePoolError &= ~NOT_ENOUGH_ROOM_FOR_SURFACES;
-    }
+static struct Surface* alloc_surface(void) {
+    struct Surface* surface = (struct Surface*)growing_pool_alloc(sSurfacePool, sizeof(struct Surface));
 
     surface->type = 0;
     surface->force = 0;
     surface->flags = 0;
     surface->room = 0;
     surface->object = NULL;
+
+    gSurfacesAllocated++;
 
     return surface;
 }
@@ -549,9 +522,8 @@ void alloc_surface_pools(void) {
     clear_static_surfaces();
     clear_dynamic_surfaces();
 
-    sSurfacePoolSize = SURFACE_POOL_SIZE;
-    if (!sSurfaceNodePool) { sSurfaceNodePool = calloc(1, SURFACE_NODE_POOL_SIZE * sizeof(struct SurfaceNode)); }
-    if (!sSurfacePool) { sSurfacePool = calloc(1, sSurfacePoolSize * sizeof(struct Surface)); }
+    sSurfaceNodePool = growing_pool_init(sSurfaceNodePool, sizeof(struct SurfaceNode) * 1000);
+    sSurfacePool = growing_pool_init(sSurfacePool, sizeof(struct Surface) * 1000);
 
     gEnvironmentRegions = NULL;
     gSurfaceNodesAllocated = 0;
