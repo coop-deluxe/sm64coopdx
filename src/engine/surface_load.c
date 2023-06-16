@@ -756,7 +756,21 @@ void load_object_collision_model(void) {
     if (!gCurrentObject) { return; }
     if (gCurrentObject->collisionData == NULL) { return; }
 
-    s16 vertexData[600];
+    s32 numVertices = *gCurrentObject->collisionData;
+    if (numVertices <= 0) {
+        LOG_ERROR("Object collisions had invalid vertex count");
+        return;
+    }
+
+    static s32 sVertexDataCount = 0;
+    static s16* sVertexData = NULL;
+
+    // allocate vertex data
+    if (numVertices > sVertexDataCount || sVertexData == NULL) {
+        if (sVertexData) { free(sVertexData); }
+        sVertexDataCount = numVertices;
+        sVertexData = malloc(sizeof(s16) * sVertexDataCount);
+    }
 
     s16* collisionData = gCurrentObject->collisionData;
     f32 tangibleDist = gCurrentObject->oCollisionDistance;
@@ -778,11 +792,11 @@ void load_object_collision_model(void) {
         && (anyPlayerInTangibleRange)
         && !(gCurrentObject->activeFlags & ACTIVE_FLAG_IN_DIFFERENT_ROOM)) {
         collisionData++;
-        transform_object_vertices(&collisionData, vertexData);
+        transform_object_vertices(&collisionData, sVertexData);
 
         // TERRAIN_LOAD_CONTINUE acts as an "end" to the terrain data.
         while (*collisionData != TERRAIN_LOAD_CONTINUE) {
-            load_object_surfaces(&collisionData, vertexData);
+            load_object_surfaces(&collisionData, sVertexData);
         }
     }
 

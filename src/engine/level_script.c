@@ -574,27 +574,40 @@ static void level_cmd_create_warp_node(void) {
 }
 
 static void level_cmd_create_instant_warp(void) {
-    s32 i;
-    struct InstantWarp *warp;
+    struct InstantWarp *warp = NULL;
 
     if (sCurrAreaIndex != -1) {
         if (gAreas[sCurrAreaIndex].instantWarps == NULL) {
             gAreas[sCurrAreaIndex].instantWarps =
                 dynamic_pool_alloc(gLevelPool, 4 * sizeof(struct InstantWarp));
 
-            for (i = INSTANT_WARP_INDEX_START; i < INSTANT_WARP_INDEX_STOP; i++) {
+            for (s32 i = INSTANT_WARP_INDEX_START; i < INSTANT_WARP_INDEX_STOP; i++) {
                 gAreas[sCurrAreaIndex].instantWarps[i].id = 0;
             }
         }
 
-        warp = gAreas[sCurrAreaIndex].instantWarps + CMD_GET(u8, 2);
+        u8 warpIndex = CMD_GET(u8, 2);
+        if (warpIndex >= INSTANT_WARP_INDEX_STOP) {
+            LOG_ERROR("Instant warp index out of bounds: %u", warpIndex);
+            sCurrentCmd = CMD_NEXT;
+            return;
+        }
 
-        warp[0].id = 1;
-        warp[0].area = CMD_GET(u8, 3);
+        u8 areaIndex = CMD_GET(u8, 3);
+        if (areaIndex >= MAX_AREAS) {
+            LOG_ERROR("Instant warp area index out of bounds: %u", areaIndex);
+            sCurrentCmd = CMD_NEXT;
+            return;
+        }
 
-        warp[0].displacement[0] = CMD_GET(s16, 4);
-        warp[0].displacement[1] = CMD_GET(s16, 6);
-        warp[0].displacement[2] = CMD_GET(s16, 8);
+        warp = &gAreas[sCurrAreaIndex].instantWarps[warpIndex];
+
+        warp->id = 1;
+        warp->area = areaIndex;
+
+        warp->displacement[0] = CMD_GET(s16, 4);
+        warp->displacement[1] = CMD_GET(s16, 6);
+        warp->displacement[2] = CMD_GET(s16, 8);
     }
 
     sCurrentCmd = CMD_NEXT;
