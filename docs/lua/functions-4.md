@@ -7345,6 +7345,24 @@
 
 <br />
 
+## [collision_get_temp_wall_collision_data](#collision_get_temp_wall_collision_data)
+
+### Lua Example
+`local WallCollisionDataValue = collision_get_temp_wall_collision_data()`
+
+### Parameters
+- None
+
+### Returns
+[WallCollisionData](structs.md#WallCollisionData)
+
+### C Prototype
+`struct WallCollisionData* collision_get_temp_wall_collision_data(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [get_water_surface_pseudo_floor](#get_water_surface_pseudo_floor)
 
 ### Lua Example

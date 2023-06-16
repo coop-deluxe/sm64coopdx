@@ -171,3 +171,9 @@ struct Surface* get_water_surface_pseudo_floor(void) {
 Collision* smlua_collision_util_get(const char* name) {
     return dynos_collision_get(name);
 }
+
+struct WallCollisionData* collision_get_temp_wall_collision_data(void) {
+    static struct WallCollisionData sTmpWcd = { 0 };
+    memset(&sTmpWcd, 0, sizeof(struct WallCollisionData));
+    return &sTmpWcd;
+}

@@ -8100,6 +8100,11 @@ function collision_find_surface_on_ray(startX, startY, startZ, dirX, dirY, dirZ)
     -- ...
 end
 
+--- @return WallCollisionData
+function collision_get_temp_wall_collision_data()
+    -- ...
+end
+
 --- @return Surface
 function get_water_surface_pseudo_floor()
     -- ...

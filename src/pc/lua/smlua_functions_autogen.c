@@ -27042,6 +27042,21 @@ int smlua_func_collision_find_surface_on_ray(lua_State* L) {
     return 1;
 }
 
+int smlua_func_collision_get_temp_wall_collision_data(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "collision_get_temp_wall_collision_data", 0, top);
+        return 0;
+    }
+
+
+    smlua_push_object(L, LOT_WALLCOLLISIONDATA, collision_get_temp_wall_collision_data());
+
+    return 1;
+}
+
 int smlua_func_get_water_surface_pseudo_floor(UNUSED lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -31516,6 +31531,7 @@ void smlua_bind_functions_autogen(void) {
 
     // smlua_collision_utils.h
     smlua_bind_function(L, "collision_find_surface_on_ray", smlua_func_collision_find_surface_on_ray);
+    smlua_bind_function(L, "collision_get_temp_wall_collision_data", smlua_func_collision_get_temp_wall_collision_data);
     smlua_bind_function(L, "get_water_surface_pseudo_floor", smlua_func_get_water_surface_pseudo_floor);
     smlua_bind_function(L, "smlua_collision_util_get", smlua_func_smlua_collision_util_get);
 
