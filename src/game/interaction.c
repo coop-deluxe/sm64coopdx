@@ -1414,7 +1414,7 @@ u32 interact_player(struct MarioState* m, UNUSED u32 interactType, struct Object
     if (!m || !o) { return FALSE; }
     if (!is_player_active(m)) { return FALSE; }
     if (gServerSettings.playerInteractions == PLAYER_INTERACTIONS_NONE) { return FALSE; }
-    if (m->action == ACT_JUMBO_STAR_CUTSCENE) { return FALSE; }
+    if (m->action & ACT_FLAG_INTANGIBLE) { return FALSE; }
 
     struct MarioState* m2 = NULL;
     for (s32 i = 0; i < MAX_PLAYERS; i++) {
@@ -1425,7 +1425,7 @@ u32 interact_player(struct MarioState* m, UNUSED u32 interactType, struct Object
         }
     }
     if (m2 == NULL) { return FALSE; }
-    if (m2->action == ACT_JUMBO_STAR_CUTSCENE) { return FALSE; }
+    if (m2->action & ACT_FLAG_INTANGIBLE) { return FALSE; }
 
     // vanish cap players can't interact
     u32 vanishFlags = (MARIO_VANISH_CAP | MARIO_CAP_ON_HEAD);
