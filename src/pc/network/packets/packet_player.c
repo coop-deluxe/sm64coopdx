@@ -416,6 +416,7 @@ void network_update_player(void) {
     // figure out if we should send it or not
     static u8 sTicksSinceSend = 0;
     static u32 sLastPlayerAction = 0;
+    static u32 sLastPlayerParticles = 0;
     static f32 sLastStickX = 0;
     static f32 sLastStickY = 0;
     static u32 sLastButtonDown = 0;
@@ -423,18 +424,20 @@ void network_update_player(void) {
 
     f32 stickDist = sqrtf(powf(sLastStickX - m->controller->stickX, 2) + powf(sLastStickY - m->controller->stickY, 2));
     bool shouldSend = (sTicksSinceSend > 2)
-        || (sLastPlayerAction  != m->action)
-        || (sLastButtonDown    != m->controller->buttonDown)
-        || (sLastButtonPressed != m->controller->buttonPressed)
+        || (sLastPlayerAction    != m->action)
+        || (sLastButtonDown      != m->controller->buttonDown)
+        || (sLastButtonPressed   != m->controller->buttonPressed)
+        || (sLastPlayerParticles != m->particleFlags)
         || (stickDist          > 5.0f);
 
     if (!shouldSend) { sTicksSinceSend++; return; }
     network_send_player(0);
     sTicksSinceSend = 0;
 
-    sLastPlayerAction  = m->action;
-    sLastStickX        = m->controller->stickX;
-    sLastStickY        = m->controller->stickY;
-    sLastButtonDown    = m->controller->buttonDown;
-    sLastButtonPressed = m->controller->buttonPressed;
+    sLastPlayerAction    = m->action;
+    sLastStickX          = m->controller->stickX;
+    sLastStickY          = m->controller->stickY;
+    sLastButtonDown      = m->controller->buttonDown;
+    sLastButtonPressed   = m->controller->buttonPressed;
+    sLastPlayerParticles = m->particleFlags;
 }
