@@ -1222,7 +1222,7 @@ static void geo_process_object(struct Object *node) {
             }
         }
         if (gCurGraphNodeMarioState != NULL) {
-            gCurGraphNodeMarioState->minimumBoneY = 999;
+            gCurGraphNodeMarioState->minimumBoneY = 9999;
         }
     }
 
