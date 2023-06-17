@@ -756,7 +756,10 @@ void load_object_collision_model(void) {
     if (!gCurrentObject) { return; }
     if (gCurrentObject->collisionData == NULL) { return; }
 
-    s32 numVertices = *gCurrentObject->collisionData;
+    s32 numVertices = 64;
+    if (gCurrentObject->collisionData[0] == COL_INIT()) {
+        numVertices = gCurrentObject->collisionData[1];
+    }
     if (numVertices <= 0) {
         LOG_ERROR("Object collisions had invalid vertex count");
         return;
@@ -769,7 +772,9 @@ void load_object_collision_model(void) {
     if (numVertices > sVertexDataCount || sVertexData == NULL) {
         if (sVertexData) { free(sVertexData); }
         sVertexDataCount = numVertices;
-        sVertexData = malloc(sizeof(s16) * sVertexDataCount);
+        if (sVertexDataCount < 64) { sVertexDataCount = 64; }
+        sVertexData = malloc((3 * sVertexDataCount + 1) * sizeof(s16));
+        LOG_INFO("Reallocating object vertex data: %u", sVertexDataCount);
     }
 
     s16* collisionData = gCurrentObject->collisionData;
