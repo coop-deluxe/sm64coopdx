@@ -31,34 +31,17 @@ SpatialPartitionCell gDynamicSurfacePartition[NUM_CELLS][NUM_CELLS];
 /**
  * Pools of data to contain either surface nodes or surfaces.
  */
-struct SurfaceNode *sSurfaceNodePool = NULL;
-struct Surface *sSurfacePool = NULL;
-
-/**
- * The size of the surface pool (2300).
- */
-s16 sSurfacePoolSize = 0;
-u8 gSurfacePoolError = 0;
+struct GrowingPool* sSurfaceNodePool = NULL;
+struct GrowingPool* sSurfacePool = NULL;
 
 /**
  * Allocate the part of the surface node pool to contain a surface node.
  */
-static struct SurfaceNode *alloc_surface_node(void) {
-    struct SurfaceNode *node = &sSurfaceNodePool[gSurfaceNodesAllocated];
-    gSurfaceNodesAllocated++;
-
-    //! A bounds check! If there's more surface nodes than 7000 allowed,
-    //  we, um...
-    // Perhaps originally just debug feedback?
-    if (gSurfaceNodesAllocated >= SURFACE_NODE_POOL_SIZE) {
-        gSurfacePoolError |= NOT_ENOUGH_ROOM_FOR_NODES;
-        return NULL;
-    } else {
-        gSurfacePoolError &= ~NOT_ENOUGH_ROOM_FOR_NODES;
-    }
-
+static struct SurfaceNode* alloc_surface_node(void) {
+    struct SurfaceNode* node = (struct SurfaceNode*)growing_pool_alloc(sSurfaceNodePool, sizeof(struct SurfaceNode));
     node->next = NULL;
 
+    gSurfaceNodesAllocated++;
     return node;
 }
 
@@ -66,26 +49,16 @@ static struct SurfaceNode *alloc_surface_node(void) {
  * Allocate the part of the surface pool to contain a surface and
  * initialize the surface.
  */
-static struct Surface *alloc_surface(void) {
-
-    struct Surface *surface = &sSurfacePool[gSurfacesAllocated];
-    gSurfacesAllocated++;
-
-    //! A bounds check! If there's more surfaces than the 2300 allowed,
-    //  we, um...
-    // Perhaps originally just debug feedback?
-    if (gSurfacesAllocated >= sSurfacePoolSize) {
-        gSurfacePoolError |= NOT_ENOUGH_ROOM_FOR_SURFACES;
-        return NULL;
-    } else {
-        gSurfacePoolError &= ~NOT_ENOUGH_ROOM_FOR_SURFACES;
-    }
+static struct Surface* alloc_surface(void) {
+    struct Surface* surface = (struct Surface*)growing_pool_alloc(sSurfacePool, sizeof(struct Surface));
 
     surface->type = 0;
     surface->force = 0;
     surface->flags = 0;
     surface->room = 0;
     surface->object = NULL;
+
+    gSurfacesAllocated++;
 
     return surface;
 }
@@ -549,9 +522,8 @@ void alloc_surface_pools(void) {
     clear_static_surfaces();
     clear_dynamic_surfaces();
 
-    sSurfacePoolSize = SURFACE_POOL_SIZE;
-    if (!sSurfaceNodePool) { sSurfaceNodePool = calloc(1, SURFACE_NODE_POOL_SIZE * sizeof(struct SurfaceNode)); }
-    if (!sSurfacePool) { sSurfacePool = calloc(1, sSurfacePoolSize * sizeof(struct Surface)); }
+    sSurfaceNodePool = growing_pool_init(sSurfaceNodePool, sizeof(struct SurfaceNode) * 1000);
+    sSurfacePool = growing_pool_init(sSurfacePool, sizeof(struct Surface) * 1000);
 
     gEnvironmentRegions = NULL;
     gSurfaceNodesAllocated = 0;
@@ -784,7 +756,26 @@ void load_object_collision_model(void) {
     if (!gCurrentObject) { return; }
     if (gCurrentObject->collisionData == NULL) { return; }
 
-    s16 vertexData[600];
+    s32 numVertices = 64;
+    if (gCurrentObject->collisionData[0] == COL_INIT()) {
+        numVertices = gCurrentObject->collisionData[1];
+    }
+    if (numVertices <= 0) {
+        LOG_ERROR("Object collisions had invalid vertex count");
+        return;
+    }
+
+    static s32 sVertexDataCount = 0;
+    static s16* sVertexData = NULL;
+
+    // allocate vertex data
+    if (numVertices > sVertexDataCount || sVertexData == NULL) {
+        if (sVertexData) { free(sVertexData); }
+        sVertexDataCount = numVertices;
+        if (sVertexDataCount < 64) { sVertexDataCount = 64; }
+        sVertexData = malloc((3 * sVertexDataCount + 1) * sizeof(s16));
+        LOG_INFO("Reallocating object vertex data: %u", sVertexDataCount);
+    }
 
     s16* collisionData = gCurrentObject->collisionData;
     f32 tangibleDist = gCurrentObject->oCollisionDistance;
@@ -806,11 +797,11 @@ void load_object_collision_model(void) {
         && (anyPlayerInTangibleRange)
         && !(gCurrentObject->activeFlags & ACTIVE_FLAG_IN_DIFFERENT_ROOM)) {
         collisionData++;
-        transform_object_vertices(&collisionData, vertexData);
+        transform_object_vertices(&collisionData, sVertexData);
 
         // TERRAIN_LOAD_CONTINUE acts as an "end" to the terrain data.
         while (*collisionData != TERRAIN_LOAD_CONTINUE) {
-            load_object_surfaces(&collisionData, vertexData);
+            load_object_surfaces(&collisionData, sVertexData);
         }
     }
 

@@ -29,7 +29,7 @@
 #include "pc/djui/djui_panel_pause.h"
 
 struct SpawnInfo gPlayerSpawnInfos[MAX_PLAYERS];
-struct Area gAreaData[8];
+struct Area gAreaData[MAX_AREAS];
 
 struct WarpTransition gWarpTransition;
 

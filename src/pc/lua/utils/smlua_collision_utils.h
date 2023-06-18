@@ -1,6 +1,8 @@
 #ifndef SMLUA_COLLISION_UTILS_H
 #define SMLUA_COLLISION_UTILS_H
 
+#include "engine/surface_collision.h"
+
 struct RayIntersectionInfo {
     struct Surface* surface;
     Vec3f hitPos;
@@ -117,5 +119,7 @@ struct RayIntersectionInfo* collision_find_surface_on_ray(f32 startX, f32 startY
 struct Surface* get_water_surface_pseudo_floor(void);
 
 Collision* smlua_collision_util_get(const char* name);
+
+struct WallCollisionData* collision_get_temp_wall_collision_data(void);
 
 #endif

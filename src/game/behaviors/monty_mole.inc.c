@@ -410,6 +410,14 @@ void bhv_monty_mole_update(void) {
     o->oDeathSound = SOUND_OBJ_DYING_ENEMY1;
     cur_obj_update_floor_and_walls();
 
+    // if we can't find our floor, set it to the hole's floor
+    if (!o->oFloor && o->oMontyMoleCurrentHole) {
+        struct Object* hole = o->oMontyMoleCurrentHole;
+        struct Surface* floor = NULL;
+        o->oFloorHeight = find_floor(hole->oPosX, hole->oPosY, hole->oPosZ, &floor);
+        o->oFloor = floor;
+    }
+
     o->oMontyMoleHeightRelativeToFloor = o->oPosY - o->oFloorHeight;
 
     switch (o->oAction) {

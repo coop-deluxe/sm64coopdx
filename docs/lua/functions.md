@@ -1503,6 +1503,7 @@
 
 - smlua_collision_utils.h
    - [collision_find_surface_on_ray](functions-4.md#collision_find_surface_on_ray)
+   - [collision_get_temp_wall_collision_data](functions-4.md#collision_get_temp_wall_collision_data)
    - [get_water_surface_pseudo_floor](functions-4.md#get_water_surface_pseudo_floor)
    - [smlua_collision_util_get](functions-4.md#smlua_collision_util_get)
 
