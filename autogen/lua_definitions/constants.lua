@@ -345,6 +345,9 @@ INSTANT_WARP_INDEX_START = 0x00
 INSTANT_WARP_INDEX_STOP = 0x04
 
 --- @type integer
+MAX_AREAS = 8
+
+--- @type integer
 WARP_TRANSITION_FADE_FROM_BOWSER = 0x12
 
 --- @type integer
