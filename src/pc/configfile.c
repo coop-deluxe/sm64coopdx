@@ -158,6 +158,7 @@ bool         configForce4By3                     = false;
 char         configCoopNetIp[MAX_CONFIG_STRING]  = DEFAULT_COOPNET_IP;
 unsigned int configCoopNetPort                   = DEFAULT_COOPNET_PORT;
 char         configPassword[MAX_CONFIG_STRING]   = "";
+char         configDestId[MAX_CONFIG_STRING]     = "0";
 bool         configFadeoutDistantSounds          = true;
 
 static const struct ConfigOption options[] = {
@@ -269,6 +270,7 @@ static const struct ConfigOption options[] = {
     {.name = "coopnet_ip",                     .type = CONFIG_TYPE_STRING, .stringValue = (char*)&configCoopNetIp, .maxStringLength = MAX_CONFIG_STRING},
     {.name = "coopnet_port",                   .type = CONFIG_TYPE_UINT  , .uintValue   = &configCoopNetPort},
     {.name = "coopnet_password",               .type = CONFIG_TYPE_STRING, .stringValue = (char*)&configPassword, .maxStringLength = MAX_CONFIG_STRING},
+    {.name = "coopnet_dest",                   .type = CONFIG_TYPE_STRING, .stringValue = (char*)&configDestId, .maxStringLength = MAX_CONFIG_STRING},
     {.name = "fade_distant_sounds",            .type = CONFIG_TYPE_BOOL  , .boolValue = &configFadeoutDistantSounds},
 };
 

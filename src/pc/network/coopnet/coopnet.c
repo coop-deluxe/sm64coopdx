@@ -54,6 +54,14 @@ static void coopnet_on_peer_disconnected(uint64_t peerId) {
     }
 }
 
+static void coopnet_on_load_balance(const char* host, uint32_t port) {
+    if (host && strlen(host) > 0) {
+        snprintf(configCoopNetIp, MAX_CONFIG_STRING, "%s", host);
+    }
+    configCoopNetPort = port;
+    configfile_save(configfile_name());
+}
+
 static void coopnet_on_receive(uint64_t userId, const uint8_t* data, uint64_t dataLength) {
     coopnet_set_user_id(0, userId);
     u8 localIndex = coopnet_user_id_to_local_index(userId);
@@ -68,6 +76,7 @@ static void coopnet_on_lobby_joined(uint64_t lobbyId, uint64_t userId, uint64_t 
 
     if (userId == coopnet_get_local_user_id()) {
         coopnet_clear_dest_ids();
+        snprintf(configDestId, MAX_CONFIG_STRING, "%" PRIu64 "", destId);
     }
 
     coopnet_save_dest_id(userId, destId);
@@ -262,10 +271,14 @@ static CoopNetRc coopnet_initialize(void) {
     gCoopNetCallbacks.OnLobbyLeft = coopnet_on_lobby_left;
     gCoopNetCallbacks.OnError = coopnet_on_error;
     gCoopNetCallbacks.OnPeerDisconnected = coopnet_on_peer_disconnected;
+    gCoopNetCallbacks.OnLoadBalance = coopnet_on_load_balance;
 
     if (coopnet_is_connected()) { return COOPNET_OK; }
 
-    CoopNetRc rc = coopnet_begin(configCoopNetIp, configCoopNetPort);
+    char* endptr = NULL;
+    uint64_t destId = strtoull(configDestId, &endptr, 10);
+
+    CoopNetRc rc = coopnet_begin(configCoopNetIp, configCoopNetPort, configPlayerName, destId);
     if (rc == COOPNET_FAILED) {
         djui_popup_create(DLANG(NOTIF, COOPNET_CONNECTION_FAILED), 2);
     }

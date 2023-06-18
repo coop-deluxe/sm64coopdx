@@ -1,9 +1,10 @@
 #ifndef LIBCOOPNET_H
 #define LIBCOOPNET_H
 
-#if defined(__cplusplus) 
+#if defined(__cplusplus)
 #include <cstdint>
 extern "C" {
+class Connection;
 #endif
 
 #include <stdbool.h>
@@ -38,6 +39,12 @@ typedef struct {
     void (*OnError)(enum MPacketErrorNumber aErrorNumber, uint64_t tag);
     void (*OnPeerConnected)(uint64_t aPeerId);
     void (*OnPeerDisconnected)(uint64_t aPeerId);
+    void (*OnLoadBalance)(const char* aHost, uint32_t port);
+    uint64_t (*DestIdFunction)(uint64_t aInput);
+#if defined(__cplusplus)
+    bool (*ConnectionIsAllowed)(Connection*, bool);
+    void (*OnReceiveInfoBits)(Connection* aConnection, uint64_t aDestId, uint64_t aInfoBits, const char* aName);
+#endif
 } CoopNetCallbacks;
 
 typedef struct {
@@ -48,7 +55,7 @@ extern CoopNetCallbacks gCoopNetCallbacks;
 extern CoopNetSettings gCoopNetSettings;
 
 bool coopnet_is_connected(void);
-CoopNetRc coopnet_begin(const char* aHost, uint32_t aPort);
+CoopNetRc coopnet_begin(const char* aHost, uint32_t aPort, const char* aName, uint64_t aDestId);
 CoopNetRc coopnet_shutdown(void);
 CoopNetRc coopnet_update(void);
 CoopNetRc coopnet_lobby_create(const char* aGame, const char* aVersion, const char* aHostName, const char* aMode, uint16_t aMaxConnections, const char* aPassword, const char* aDescription);
@@ -60,7 +67,7 @@ CoopNetRc coopnet_send(const uint8_t* aData, uint64_t aDataLength);
 CoopNetRc coopnet_send_to(uint64_t aPeerId, const uint8_t* aData, uint64_t aDataLength);
 CoopNetRc coopnet_unpeer(uint64_t aPeerId);
 
-#if defined(__cplusplus) 
+#if defined(__cplusplus)
 }
 #endif
 #endif
