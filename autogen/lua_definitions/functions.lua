@@ -3953,6 +3953,42 @@ function stop_sounds_in_continuous_banks()
     -- ...
 end
 
+--- @return nil
+function reset_dialog_override_color()
+    -- ...
+end
+
+--- @return nil
+function reset_dialog_override_pos()
+    -- ...
+end
+
+--- @param bgR integer
+--- @param bgG integer
+--- @param bgB integer
+--- @param bgA integer
+--- @param textR integer
+--- @param textG integer
+--- @param textB integer
+--- @param textA integer
+--- @return nil
+function set_dialog_override_color(bgR, bgG, bgB, bgA, textR, textG, textB, textA)
+    -- ...
+end
+
+--- @param x integer
+--- @param y integer
+--- @return nil
+function set_dialog_override_pos(x, y)
+    -- ...
+end
+
+--- @param width integer
+--- @return nil
+function set_min_dialog_width(width)
+    -- ...
+end
+
 --- @param m MarioState
 --- @param o Object
 --- @return integer

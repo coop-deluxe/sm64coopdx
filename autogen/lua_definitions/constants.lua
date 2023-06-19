@@ -8274,7 +8274,10 @@ HOOK_JOINED_GAME = 31
 HOOK_ON_OBJECT_ANIM_UPDATE = 32
 
 --- @type LuaHookedEventType
-HOOK_MAX = 33
+HOOK_ON_DIALOG = 33
+
+--- @type LuaHookedEventType
+HOOK_MAX = 34
 
 --- @class HudDisplayFlags
 

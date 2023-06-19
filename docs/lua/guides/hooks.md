@@ -120,6 +120,7 @@ The lua functions sent to `hook_event()` will be automatically called by SM64 wh
 | HOOK_JOINED_GAME | Called when the local player finishes the join process (if the player isn't the host) | None |
 | HOOK_BEFORE_SET_MARIO_ACTION | Called before Mario's action changes. Return an action to change the incoming action or `1` to cancel the action change. | [MarioState](structs.md#MarioState) mario, `integer` incomingAction |
 | HOOK_ON_OBJECT_ANIM_UPDATE | Called when an object's animation is updated. | [Object](structs.md#Object) objNode |
+| HOOK_ON_DIALOG | Called when a dialog appears. Return `false` to prevent it from appearing. | `integer` dialogId |
 
 ### Parameters
 

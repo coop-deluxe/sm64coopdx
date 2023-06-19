@@ -115,6 +115,20 @@ extern s32 gDialogVariable;
 extern u16 gDialogTextAlpha;
 extern s16 gCutsceneMsgXOffset;
 extern s16 gCutsceneMsgYOffset;
+extern s16 gDialogMinWidth;
+extern s16 gDialogMinHeight;
+extern s16 gDialogOverrideX;
+extern s16 gDialogOverrideY;
+extern u8 gOverrideDialogPos;
+extern u8 gOverrideDialogColor;
+extern u8 gDialogBgColorR;
+extern u8 gDialogBgColorG;
+extern u8 gDialogBgColorB;
+extern u8 gDialogBgColorA;
+extern u8 gDialogTextColorR;
+extern u8 gDialogTextColorG;
+extern u8 gDialogTextColorB;
+extern u8 gDialogTextColorA;
 
 void create_dl_identity_matrix(void);
 void create_dl_translation_matrix(s8 pushOp, f32 x, f32 y, f32 z);
@@ -160,5 +174,10 @@ void render_hud_cannon_reticle(void);
 void reset_red_coins_collected(void);
 s16 render_menus_and_dialogs(void);
 void create_dl_scale_matrix(s8 pushOp, f32 x, f32 y, f32 z);
+void set_min_dialog_width(s16 width);
+void set_dialog_override_pos(s16 x, s16 y);
+void reset_dialog_override_pos();
+void set_dialog_override_color(u8 bgR, u8 bgG, u8 bgB, u8 bgA, u8 textR, u8 textG, u8 textB, u8 textA);
+void reset_dialog_override_color();
 
 #endif // INGAME_MENU_H

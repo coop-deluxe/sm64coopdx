@@ -779,6 +779,15 @@
 
 <br />
 
+- ingame_menu.h
+   - [reset_dialog_override_color](functions-3.md#reset_dialog_override_color)
+   - [reset_dialog_override_pos](functions-3.md#reset_dialog_override_pos)
+   - [set_dialog_override_color](functions-3.md#set_dialog_override_color)
+   - [set_dialog_override_pos](functions-3.md#set_dialog_override_pos)
+   - [set_min_dialog_width](functions-3.md#set_min_dialog_width)
+
+<br />
+
 - interaction.h
    - [determine_interaction](functions-3.md#determine_interaction)
    - [does_mario_have_normal_cap_on_head](functions-3.md#does_mario_have_normal_cap_on_head)

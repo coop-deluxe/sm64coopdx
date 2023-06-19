@@ -3108,6 +3108,116 @@
 <br />
 
 ---
+# functions from ingame_menu.h
+
+<br />
+
+
+## [reset_dialog_override_color](#reset_dialog_override_color)
+
+### Lua Example
+`reset_dialog_override_color()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void reset_dialog_override_color();`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [reset_dialog_override_pos](#reset_dialog_override_pos)
+
+### Lua Example
+`reset_dialog_override_pos()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void reset_dialog_override_pos();`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_dialog_override_color](#set_dialog_override_color)
+
+### Lua Example
+`set_dialog_override_color(bgR, bgG, bgB, bgA, textR, textG, textB, textA)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| bgR | `integer` |
+| bgG | `integer` |
+| bgB | `integer` |
+| bgA | `integer` |
+| textR | `integer` |
+| textG | `integer` |
+| textB | `integer` |
+| textA | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_dialog_override_color(u8 bgR, u8 bgG, u8 bgB, u8 bgA, u8 textR, u8 textG, u8 textB, u8 textA);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_dialog_override_pos](#set_dialog_override_pos)
+
+### Lua Example
+`set_dialog_override_pos(x, y)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| x | `integer` |
+| y | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_dialog_override_pos(s16 x, s16 y);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_min_dialog_width](#set_min_dialog_width)
+
+### Lua Example
+`set_min_dialog_width(width)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| width | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_min_dialog_width(s16 width);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
 # functions from interaction.h
 
 <br />

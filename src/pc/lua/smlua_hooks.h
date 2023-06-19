@@ -44,6 +44,7 @@ enum LuaHookedEventType {
     HOOK_BEFORE_SET_MARIO_ACTION,
     HOOK_JOINED_GAME,
     HOOK_ON_OBJECT_ANIM_UPDATE,
+    HOOK_ON_DIALOG,
     HOOK_MAX,
 };
 
@@ -81,6 +82,7 @@ static const char* LuaHookedEventTypeName[] = {
     "HOOK_BEFORE_SET_MARIO_ACTION",
     "HOOK_JOINED_GAME",
     "HOOK_ON_OBJECT_ANIM_UPDATE",
+    "HOOK_ON_DIALOG",
     "HOOK_MAX"
 };
 

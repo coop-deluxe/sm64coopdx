@@ -40,6 +40,7 @@
 #include "src/game/level_update.h"
 #include "src/game/area.h"
 #include "src/engine/level_script.h"
+#include "src/game/ingame_menu.h"
 
 
   ////////////
@@ -13029,6 +13030,107 @@ int smlua_func_stop_sounds_in_continuous_banks(UNUSED lua_State* L) {
 
 
     stop_sounds_in_continuous_banks();
+
+    return 1;
+}
+
+  ///////////////////
+ // ingame_menu.h //
+///////////////////
+
+int smlua_func_reset_dialog_override_color(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "reset_dialog_override_color", 0, top);
+        return 0;
+    }
+
+
+    reset_dialog_override_color();
+
+    return 1;
+}
+
+int smlua_func_reset_dialog_override_pos(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "reset_dialog_override_pos", 0, top);
+        return 0;
+    }
+
+
+    reset_dialog_override_pos();
+
+    return 1;
+}
+
+int smlua_func_set_dialog_override_color(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 8) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "set_dialog_override_color", 8, top);
+        return 0;
+    }
+
+    u8 bgR = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "set_dialog_override_color"); return 0; }
+    u8 bgG = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "set_dialog_override_color"); return 0; }
+    u8 bgB = smlua_to_integer(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "set_dialog_override_color"); return 0; }
+    u8 bgA = smlua_to_integer(L, 4);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "set_dialog_override_color"); return 0; }
+    u8 textR = smlua_to_integer(L, 5);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 5, "set_dialog_override_color"); return 0; }
+    u8 textG = smlua_to_integer(L, 6);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 6, "set_dialog_override_color"); return 0; }
+    u8 textB = smlua_to_integer(L, 7);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 7, "set_dialog_override_color"); return 0; }
+    u8 textA = smlua_to_integer(L, 8);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 8, "set_dialog_override_color"); return 0; }
+
+    set_dialog_override_color(bgR, bgG, bgB, bgA, textR, textG, textB, textA);
+
+    return 1;
+}
+
+int smlua_func_set_dialog_override_pos(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "set_dialog_override_pos", 2, top);
+        return 0;
+    }
+
+    s16 x = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "set_dialog_override_pos"); return 0; }
+    s16 y = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "set_dialog_override_pos"); return 0; }
+
+    set_dialog_override_pos(x, y);
+
+    return 1;
+}
+
+int smlua_func_set_min_dialog_width(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "set_min_dialog_width", 1, top);
+        return 0;
+    }
+
+    s16 width = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "set_min_dialog_width"); return 0; }
+
+    set_min_dialog_width(width);
 
     return 1;
 }
@@ -31064,6 +31166,13 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "stop_sound", smlua_func_stop_sound);
     smlua_bind_function(L, "stop_sounds_from_source", smlua_func_stop_sounds_from_source);
     smlua_bind_function(L, "stop_sounds_in_continuous_banks", smlua_func_stop_sounds_in_continuous_banks);
+
+    // ingame_menu.h
+    smlua_bind_function(L, "reset_dialog_override_color", smlua_func_reset_dialog_override_color);
+    smlua_bind_function(L, "reset_dialog_override_pos", smlua_func_reset_dialog_override_pos);
+    smlua_bind_function(L, "set_dialog_override_color", smlua_func_set_dialog_override_color);
+    smlua_bind_function(L, "set_dialog_override_pos", smlua_func_set_dialog_override_pos);
+    smlua_bind_function(L, "set_min_dialog_width", smlua_func_set_min_dialog_width);
 
     // interaction.h
     smlua_bind_function(L, "determine_interaction", smlua_func_determine_interaction);

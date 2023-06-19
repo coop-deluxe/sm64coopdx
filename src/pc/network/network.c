@@ -28,6 +28,7 @@
 #include "game/object_helpers.h"
 #include "game/level_geo.h"
 #include "menu/intro_geo.h"
+#include "game/ingame_menu.h"
 
 #ifdef DISCORD_SDK
 #include "pc/discord/discord.h"
@@ -652,6 +653,9 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
     gMarioStates[0].cap = 0;
     extern s16 gTTCSpeedSetting;
     gTTCSpeedSetting = 0;
+    gOverrideDialogPos = 0;
+    gOverrideDialogColor = 0;
+    gDialogMinWidth = 0;
 
     struct Controller* cnt = gMarioStates[0].controller;
     cnt->rawStickX = 0;

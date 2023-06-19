@@ -60,7 +60,8 @@ in_files = [
     "src/pc/utils/misc.h",
     "src/game/level_update.h",
     "src/game/area.h",
-    "src/engine/level_script.h"
+    "src/engine/level_script.h",
+    "src/game/ingame_menu.h"
 ]
 
 override_allowed_functions = {
@@ -74,7 +75,8 @@ override_allowed_functions = {
     "src/pc/utils/misc.h":                  [ "update_all_mario_stars" ],
     "src/game/level_update.h":              [ "level_trigger_warp", "get_painting_warp_node", "initiate_painting_warp" ],
     "src/game/area.h":                      [ "area_get_warp_node" ],
-    "src/engine/level_script.h":            [ "area_create_warp_node" ]
+    "src/engine/level_script.h":            [ "area_create_warp_node" ],
+    "src/game/ingame_menu.h":               [ "set_min_dialog_width", "set_dialog_override_pos", "reset_dialog_override_pos", "set_dialog_override_color", "reset_dialog_override_color" ]
 }
 
 override_disallowed_functions = {
@@ -107,7 +109,7 @@ override_disallowed_functions = {
     "src/pc/djui/djui_hud_utils.h":         [ "djui_hud_render_texture", "djui_hud_render_texture_raw", "djui_hud_render_texture_tile", "djui_hud_render_texture_tile_raw" ],
     "src/pc/lua/utils/smlua_level_utils.h": [ "smlua_level_util_reset" ],
     "src/pc/lua/utils/smlua_anim_utils.h":  [ "smlua_anim_util_reset", "smlua_anim_util_register_animation" ],
-    "src/pc/network/lag_compensation.h":    [ "lag_compensation_clear", "lag_compensation_store" ],
+    "src/pc/network/lag_compensation.h":    [ "lag_compensation_clear", "lag_compensation_store" ]
 }
 
 override_hide_functions = {
