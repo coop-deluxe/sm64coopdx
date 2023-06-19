@@ -129,6 +129,7 @@ extern s8 gMainMenuDataModified;
 extern s8 gSaveFileModified;
 
 s8 get_level_course_num(s16 levelNum);
+void touch_coin_score_age(s32 fileIndex, s32 courseIndex);
 void save_file_do_save(s32 fileIndex, s8 forceSave);
 void save_file_erase(s32 fileIndex);
 void save_file_erase_current_backup_save(void);
@@ -146,6 +147,7 @@ u32 save_file_get_flags(void);
 u32 save_file_get_star_flags(s32 fileIndex, s32 courseIndex);
 void save_file_set_star_flags(s32 fileIndex, s32 courseIndex, u32 starFlags);
 s32 save_file_get_course_coin_score(s32 fileIndex, s32 courseIndex);
+void save_file_set_course_coin_score(s32 fileIndex, s32 courseIndex, u8 coinScore);
 s32 save_file_is_cannon_unlocked(s32 fileIndex, s32 courseIndex);
 void save_file_set_cannon_unlocked(void);
 void save_file_set_cap_pos(s16 x, s16 y, s16 z);

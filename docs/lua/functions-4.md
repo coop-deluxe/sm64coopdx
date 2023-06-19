@@ -6526,6 +6526,27 @@
 
 <br />
 
+## [save_file_do_save](#save_file_do_save)
+
+### Lua Example
+`save_file_do_save(fileIndex, forceSave)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| fileIndex | `integer` |
+| forceSave | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void save_file_do_save(s32 fileIndex, s8 forceSave);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [save_file_erase_current_backup_save](#save_file_erase_current_backup_save)
 
 ### Lua Example
@@ -6746,6 +6767,28 @@
 
 <br />
 
+## [save_file_set_course_coin_score](#save_file_set_course_coin_score)
+
+### Lua Example
+`save_file_set_course_coin_score(fileIndex, courseIndex, coinScore)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| fileIndex | `integer` |
+| courseIndex | `integer` |
+| coinScore | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void save_file_set_course_coin_score(s32 fileIndex, s32 courseIndex, u8 coinScore);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [save_file_set_flags](#save_file_set_flags)
 
 ### Lua Example
@@ -6783,6 +6826,27 @@
 
 ### C Prototype
 `void save_file_set_star_flags(s32 fileIndex, s32 courseIndex, u32 starFlags);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [touch_coin_score_age](#touch_coin_score_age)
+
+### Lua Example
+`touch_coin_score_age(fileIndex, courseIndex)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| fileIndex | `integer` |
+| courseIndex | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void touch_coin_score_age(s32 fileIndex, s32 courseIndex);`
 
 [:arrow_up_small:](#)
 

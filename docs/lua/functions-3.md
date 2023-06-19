@@ -2495,6 +2495,24 @@
 <br />
 
 
+## [drop_queued_background_music](#drop_queued_background_music)
+
+### Lua Example
+`drop_queued_background_music()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void drop_queued_background_music(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [fade_volume_scale](#fade_volume_scale)
 
 ### Lua Example

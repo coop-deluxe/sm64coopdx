@@ -3762,6 +3762,11 @@ function djui_popup_create(message, lines)
     -- ...
 end
 
+--- @return nil
+function drop_queued_background_music()
+    -- ...
+end
+
 --- @param player integer
 --- @param targetScale integer
 --- @param fadeDuration integer
@@ -7841,6 +7846,13 @@ function save_file_clear_flags(flags)
     -- ...
 end
 
+--- @param fileIndex integer
+--- @param forceSave integer
+--- @return nil
+function save_file_do_save(fileIndex, forceSave)
+    -- ...
+end
+
 --- @return nil
 function save_file_erase_current_backup_save()
     -- ...
@@ -7910,6 +7922,14 @@ function save_file_reload(load_all)
     -- ...
 end
 
+--- @param fileIndex integer
+--- @param courseIndex integer
+--- @param coinScore integer
+--- @return nil
+function save_file_set_course_coin_score(fileIndex, courseIndex, coinScore)
+    -- ...
+end
+
 --- @param flags integer
 --- @return nil
 function save_file_set_flags(flags)
@@ -7921,6 +7941,13 @@ end
 --- @param starFlags integer
 --- @return nil
 function save_file_set_star_flags(fileIndex, courseIndex, starFlags)
+    -- ...
+end
+
+--- @param fileIndex integer
+--- @param courseIndex integer
+--- @return nil
+function touch_coin_score_age(fileIndex, courseIndex)
     -- ...
 end
 
@@ -8438,6 +8465,11 @@ function get_environment_region(index)
     -- ...
 end
 
+--- @return boolean
+function get_got_file_coin_hi_score()
+    -- ...
+end
+
 --- @param m MarioState
 --- @param index integer
 --- @return number
@@ -8460,6 +8492,16 @@ function get_hand_foot_pos_z(m, index)
 end
 
 --- @return integer
+function get_last_completed_course_num()
+    -- ...
+end
+
+--- @return integer
+function get_last_completed_star_num()
+    -- ...
+end
+
+--- @return integer
 function get_last_star_or_key()
     -- ...
 end
@@ -8477,6 +8519,11 @@ end
 
 --- @return string
 function get_os_name()
+    -- ...
+end
+
+--- @return boolean
+function get_save_file_modified()
     -- ...
 end
 
@@ -8582,6 +8629,11 @@ function play_transition(transType, time, red, green, blue)
     -- ...
 end
 
+--- @return boolean
+function save_file_get_using_backup_slot()
+    -- ...
+end
+
 --- @param usingBackupSlot boolean
 --- @return nil
 function save_file_set_using_backup_slot(usingBackupSlot)
@@ -8592,6 +8644,24 @@ end
 --- @param value integer
 --- @return nil
 function set_environment_region(index, value)
+    -- ...
+end
+
+--- @param value boolean
+--- @return nil
+function set_got_file_coin_hi_score(value)
+    -- ...
+end
+
+--- @param courseNum integer
+--- @return nil
+function set_last_completed_course_num(courseNum)
+    -- ...
+end
+
+--- @param starNum integer
+--- @return nil
+function set_last_completed_star_num(starNum)
     -- ...
 end
 
@@ -8635,6 +8705,12 @@ end
 --- @param background integer
 --- @return nil
 function set_override_skybox(background)
+    -- ...
+end
+
+--- @param value boolean
+--- @return nil
+function set_save_file_modified(value)
     -- ...
 end
 

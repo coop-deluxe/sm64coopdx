@@ -70,6 +70,42 @@ void set_last_star_or_key(u8 value) {
     gLastCollectedStarOrKey = value;
 }
 
+extern u8 gLastCompletedCourseNum;
+u8 get_last_completed_course_num(void) {
+    return gLastCompletedCourseNum;
+}
+
+void set_last_completed_course_num(u8 courseNum) {
+    gLastCompletedCourseNum = courseNum;
+}
+
+extern u8 gLastCompletedStarNum;
+u8 get_last_completed_star_num(void) {
+    return gLastCompletedStarNum;
+}
+
+void set_last_completed_star_num(u8 starNum) {
+    gLastCompletedStarNum = starNum;
+}
+
+extern u8 gGotFileCoinHiScore;
+bool get_got_file_coin_hi_score(void) {
+    return gGotFileCoinHiScore;
+}
+
+void set_got_file_coin_hi_score(bool value) {
+    gGotFileCoinHiScore = value ? TRUE : FALSE;
+}
+
+extern s8 gSaveFileModified;
+bool get_save_file_modified(void) {
+    return gSaveFileModified;
+}
+
+void set_save_file_modified(bool value) {
+    gSaveFileModified = value ? TRUE : FALSE;
+}
+
 extern s8 gDialogBoxState;
 s8 get_dialog_box_state() {
     return gDialogBoxState;
@@ -420,9 +456,13 @@ s16 get_current_save_file_num(void) {
     return gCurrSaveFileNum;
 }
 
+extern u8 gSaveFileUsingBackupSlot;
+bool save_file_get_using_backup_slot(void) {
+    return gSaveFileUsingBackupSlot;
+}
+
 void save_file_set_using_backup_slot(bool usingBackupSlot) {
-    extern u8 gSaveFileUsingBackupSlot;
-    gSaveFileUsingBackupSlot = usingBackupSlot ? 1 : 0;
+    gSaveFileUsingBackupSlot = usingBackupSlot ? TRUE : FALSE;
 }
 
 ///

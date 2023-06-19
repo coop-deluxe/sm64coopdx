@@ -12464,6 +12464,21 @@ int smlua_func_djui_popup_create(lua_State* L) {
  // external.h //
 ////////////////
 
+int smlua_func_drop_queued_background_music(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "drop_queued_background_music", 0, top);
+        return 0;
+    }
+
+
+    drop_queued_background_music();
+
+    return 1;
+}
+
 int smlua_func_fade_volume_scale(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -26301,6 +26316,25 @@ int smlua_func_save_file_clear_flags(lua_State* L) {
     return 1;
 }
 
+int smlua_func_save_file_do_save(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "save_file_do_save", 2, top);
+        return 0;
+    }
+
+    s32 fileIndex = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "save_file_do_save"); return 0; }
+    s8 forceSave = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "save_file_do_save"); return 0; }
+
+    save_file_do_save(fileIndex, forceSave);
+
+    return 1;
+}
+
 int smlua_func_save_file_erase_current_backup_save(UNUSED lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -26502,6 +26536,27 @@ int smlua_func_save_file_reload(lua_State* L) {
     return 1;
 }
 
+int smlua_func_save_file_set_course_coin_score(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 3) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "save_file_set_course_coin_score", 3, top);
+        return 0;
+    }
+
+    s32 fileIndex = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "save_file_set_course_coin_score"); return 0; }
+    s32 courseIndex = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "save_file_set_course_coin_score"); return 0; }
+    u8 coinScore = smlua_to_integer(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "save_file_set_course_coin_score"); return 0; }
+
+    save_file_set_course_coin_score(fileIndex, courseIndex, coinScore);
+
+    return 1;
+}
+
 int smlua_func_save_file_set_flags(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -26536,6 +26591,25 @@ int smlua_func_save_file_set_star_flags(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "save_file_set_star_flags"); return 0; }
 
     save_file_set_star_flags(fileIndex, courseIndex, starFlags);
+
+    return 1;
+}
+
+int smlua_func_touch_coin_score_age(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "touch_coin_score_age", 2, top);
+        return 0;
+    }
+
+    s32 fileIndex = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "touch_coin_score_age"); return 0; }
+    s32 courseIndex = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "touch_coin_score_age"); return 0; }
+
+    touch_coin_score_age(fileIndex, courseIndex);
 
     return 1;
 }
@@ -28014,6 +28088,21 @@ int smlua_func_get_environment_region(lua_State* L) {
     return 1;
 }
 
+int smlua_func_get_got_file_coin_hi_score(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "get_got_file_coin_hi_score", 0, top);
+        return 0;
+    }
+
+
+    lua_pushboolean(L, get_got_file_coin_hi_score());
+
+    return 1;
+}
+
 int smlua_func_get_hand_foot_pos_x(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -28067,6 +28156,36 @@ int smlua_func_get_hand_foot_pos_z(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "get_hand_foot_pos_z"); return 0; }
 
     lua_pushnumber(L, get_hand_foot_pos_z(m, index));
+
+    return 1;
+}
+
+int smlua_func_get_last_completed_course_num(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "get_last_completed_course_num", 0, top);
+        return 0;
+    }
+
+
+    lua_pushinteger(L, get_last_completed_course_num());
+
+    return 1;
+}
+
+int smlua_func_get_last_completed_star_num(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "get_last_completed_star_num", 0, top);
+        return 0;
+    }
+
+
+    lua_pushinteger(L, get_last_completed_star_num());
 
     return 1;
 }
@@ -28129,6 +28248,21 @@ int smlua_func_get_os_name(UNUSED lua_State* L) {
 
 
     lua_pushstring(L, get_os_name());
+
+    return 1;
+}
+
+int smlua_func_get_save_file_modified(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "get_save_file_modified", 0, top);
+        return 0;
+    }
+
+
+    lua_pushboolean(L, get_save_file_modified());
 
     return 1;
 }
@@ -28412,6 +28546,21 @@ int smlua_func_play_transition(lua_State* L) {
     return 1;
 }
 
+int smlua_func_save_file_get_using_backup_slot(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "save_file_get_using_backup_slot", 0, top);
+        return 0;
+    }
+
+
+    lua_pushboolean(L, save_file_get_using_backup_slot());
+
+    return 1;
+}
+
 int smlua_func_save_file_set_using_backup_slot(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -28444,6 +28593,57 @@ int smlua_func_set_environment_region(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "set_environment_region"); return 0; }
 
     set_environment_region(index, value);
+
+    return 1;
+}
+
+int smlua_func_set_got_file_coin_hi_score(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "set_got_file_coin_hi_score", 1, top);
+        return 0;
+    }
+
+    bool value = smlua_to_boolean(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "set_got_file_coin_hi_score"); return 0; }
+
+    set_got_file_coin_hi_score(value);
+
+    return 1;
+}
+
+int smlua_func_set_last_completed_course_num(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "set_last_completed_course_num", 1, top);
+        return 0;
+    }
+
+    u8 courseNum = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "set_last_completed_course_num"); return 0; }
+
+    set_last_completed_course_num(courseNum);
+
+    return 1;
+}
+
+int smlua_func_set_last_completed_star_num(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "set_last_completed_star_num", 1, top);
+        return 0;
+    }
+
+    u8 starNum = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "set_last_completed_star_num"); return 0; }
+
+    set_last_completed_star_num(starNum);
 
     return 1;
 }
@@ -28565,6 +28765,23 @@ int smlua_func_set_override_skybox(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "set_override_skybox"); return 0; }
 
     set_override_skybox(background);
+
+    return 1;
+}
+
+int smlua_func_set_save_file_modified(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "set_save_file_modified", 1, top);
+        return 0;
+    }
+
+    bool value = smlua_to_boolean(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "set_save_file_modified"); return 0; }
+
+    set_save_file_modified(value);
 
     return 1;
 }
@@ -30816,6 +31033,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "djui_popup_create", smlua_func_djui_popup_create);
 
     // external.h
+    smlua_bind_function(L, "drop_queued_background_music", smlua_func_drop_queued_background_music);
     smlua_bind_function(L, "fade_volume_scale", smlua_func_fade_volume_scale);
     smlua_bind_function(L, "fadeout_background_music", smlua_func_fadeout_background_music);
     smlua_bind_function(L, "get_current_background_music", smlua_func_get_current_background_music);
@@ -31486,6 +31704,7 @@ void smlua_bind_functions_autogen(void) {
 
     // save_file.h
     smlua_bind_function(L, "save_file_clear_flags", smlua_func_save_file_clear_flags);
+    smlua_bind_function(L, "save_file_do_save", smlua_func_save_file_do_save);
     smlua_bind_function(L, "save_file_erase_current_backup_save", smlua_func_save_file_erase_current_backup_save);
     smlua_bind_function(L, "save_file_get_cap_pos", smlua_func_save_file_get_cap_pos);
     smlua_bind_function(L, "save_file_get_course_coin_score", smlua_func_save_file_get_course_coin_score);
@@ -31497,8 +31716,10 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "save_file_get_total_star_count", smlua_func_save_file_get_total_star_count);
     smlua_bind_function(L, "save_file_is_cannon_unlocked", smlua_func_save_file_is_cannon_unlocked);
     smlua_bind_function(L, "save_file_reload", smlua_func_save_file_reload);
+    smlua_bind_function(L, "save_file_set_course_coin_score", smlua_func_save_file_set_course_coin_score);
     smlua_bind_function(L, "save_file_set_flags", smlua_func_save_file_set_flags);
     smlua_bind_function(L, "save_file_set_star_flags", smlua_func_save_file_set_star_flags);
+    smlua_bind_function(L, "touch_coin_score_age", smlua_func_touch_coin_score_age);
 
     // smlua_anim_utils.h
     smlua_bind_function(L, "smlua_anim_util_get_current_animation_name", smlua_func_smlua_anim_util_get_current_animation_name);
@@ -31595,13 +31816,17 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "get_dialog_id", smlua_func_get_dialog_id);
     smlua_bind_function(L, "get_envfx", smlua_func_get_envfx);
     smlua_bind_function(L, "get_environment_region", smlua_func_get_environment_region);
+    smlua_bind_function(L, "get_got_file_coin_hi_score", smlua_func_get_got_file_coin_hi_score);
     smlua_bind_function(L, "get_hand_foot_pos_x", smlua_func_get_hand_foot_pos_x);
     smlua_bind_function(L, "get_hand_foot_pos_y", smlua_func_get_hand_foot_pos_y);
     smlua_bind_function(L, "get_hand_foot_pos_z", smlua_func_get_hand_foot_pos_z);
+    smlua_bind_function(L, "get_last_completed_course_num", smlua_func_get_last_completed_course_num);
+    smlua_bind_function(L, "get_last_completed_star_num", smlua_func_get_last_completed_star_num);
     smlua_bind_function(L, "get_last_star_or_key", smlua_func_get_last_star_or_key);
     smlua_bind_function(L, "get_lighting_dir", smlua_func_get_lighting_dir);
     smlua_bind_function(L, "get_network_area_timer", smlua_func_get_network_area_timer);
     smlua_bind_function(L, "get_os_name", smlua_func_get_os_name);
+    smlua_bind_function(L, "get_save_file_modified", smlua_func_get_save_file_modified);
     smlua_bind_function(L, "get_skybox", smlua_func_get_skybox);
     smlua_bind_function(L, "get_temp_s32_pointer", smlua_func_get_temp_s32_pointer);
     smlua_bind_function(L, "get_time", smlua_func_get_time);
@@ -31617,8 +31842,12 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "is_transition_playing", smlua_func_is_transition_playing);
     smlua_bind_function(L, "movtexqc_register", smlua_func_movtexqc_register);
     smlua_bind_function(L, "play_transition", smlua_func_play_transition);
+    smlua_bind_function(L, "save_file_get_using_backup_slot", smlua_func_save_file_get_using_backup_slot);
     smlua_bind_function(L, "save_file_set_using_backup_slot", smlua_func_save_file_set_using_backup_slot);
     smlua_bind_function(L, "set_environment_region", smlua_func_set_environment_region);
+    smlua_bind_function(L, "set_got_file_coin_hi_score", smlua_func_set_got_file_coin_hi_score);
+    smlua_bind_function(L, "set_last_completed_course_num", smlua_func_set_last_completed_course_num);
+    smlua_bind_function(L, "set_last_completed_star_num", smlua_func_set_last_completed_star_num);
     smlua_bind_function(L, "set_last_star_or_key", smlua_func_set_last_star_or_key);
     smlua_bind_function(L, "set_lighting_dir", smlua_func_set_lighting_dir);
     smlua_bind_function(L, "set_override_envfx", smlua_func_set_override_envfx);
@@ -31626,6 +31855,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "set_override_fov", smlua_func_set_override_fov);
     smlua_bind_function(L, "set_override_near", smlua_func_set_override_near);
     smlua_bind_function(L, "set_override_skybox", smlua_func_set_override_skybox);
+    smlua_bind_function(L, "set_save_file_modified", smlua_func_set_save_file_modified);
     smlua_bind_function(L, "set_ttc_speed_setting", smlua_func_set_ttc_speed_setting);
 
     // smlua_model_utils.h

@@ -75,6 +75,14 @@ s8 get_dialog_box_state();
 s16 get_dialog_id(void);
 s32 get_last_star_or_key(void);
 void set_last_star_or_key(u8 value);
+u8 get_last_completed_course_num(void);
+void set_last_completed_course_num(u8 courseNum);
+u8 get_last_completed_star_num(void);
+void set_last_completed_star_num(u8 starNum);
+bool get_got_file_coin_hi_score(void);
+void set_got_file_coin_hi_score(bool value);
+bool get_save_file_modified(void);
+void set_save_file_modified(bool value);
 
 u32 allocate_mario_action(u32 actFlags);
 
@@ -83,6 +91,7 @@ f32 get_hand_foot_pos_y(struct MarioState* m, u8 index);
 f32 get_hand_foot_pos_z(struct MarioState* m, u8 index);
 
 s16 get_current_save_file_num(void);
+bool save_file_get_using_backup_slot(void);
 void save_file_set_using_backup_slot(bool usingBackupSlot);
 
 void movtexqc_register(const char* name, s16 level, s16 area, s16 type);

@@ -745,6 +745,7 @@
 <br />
 
 - external.h
+   - [drop_queued_background_music](functions-3.md#drop_queued_background_music)
    - [fade_volume_scale](functions-3.md#fade_volume_scale)
    - [fadeout_background_music](functions-3.md#fadeout_background_music)
    - [get_current_background_music](functions-3.md#get_current_background_music)
@@ -1452,6 +1453,7 @@
 
 - save_file.h
    - [save_file_clear_flags](functions-4.md#save_file_clear_flags)
+   - [save_file_do_save](functions-4.md#save_file_do_save)
    - [save_file_erase_current_backup_save](functions-4.md#save_file_erase_current_backup_save)
    - [save_file_get_cap_pos](functions-4.md#save_file_get_cap_pos)
    - [save_file_get_course_coin_score](functions-4.md#save_file_get_course_coin_score)
@@ -1463,8 +1465,10 @@
    - [save_file_get_total_star_count](functions-4.md#save_file_get_total_star_count)
    - [save_file_is_cannon_unlocked](functions-4.md#save_file_is_cannon_unlocked)
    - [save_file_reload](functions-4.md#save_file_reload)
+   - [save_file_set_course_coin_score](functions-4.md#save_file_set_course_coin_score)
    - [save_file_set_flags](functions-4.md#save_file_set_flags)
    - [save_file_set_star_flags](functions-4.md#save_file_set_star_flags)
+   - [touch_coin_score_age](functions-4.md#touch_coin_score_age)
 
 <br />
 
@@ -1574,13 +1578,17 @@
    - [get_dialog_id](functions-5.md#get_dialog_id)
    - [get_envfx](functions-5.md#get_envfx)
    - [get_environment_region](functions-5.md#get_environment_region)
+   - [get_got_file_coin_hi_score](functions-5.md#get_got_file_coin_hi_score)
    - [get_hand_foot_pos_x](functions-5.md#get_hand_foot_pos_x)
    - [get_hand_foot_pos_y](functions-5.md#get_hand_foot_pos_y)
    - [get_hand_foot_pos_z](functions-5.md#get_hand_foot_pos_z)
+   - [get_last_completed_course_num](functions-5.md#get_last_completed_course_num)
+   - [get_last_completed_star_num](functions-5.md#get_last_completed_star_num)
    - [get_last_star_or_key](functions-5.md#get_last_star_or_key)
    - [get_lighting_dir](functions-5.md#get_lighting_dir)
    - [get_network_area_timer](functions-5.md#get_network_area_timer)
    - [get_os_name](functions-5.md#get_os_name)
+   - [get_save_file_modified](functions-5.md#get_save_file_modified)
    - [get_skybox](functions-5.md#get_skybox)
    - [get_temp_s32_pointer](functions-5.md#get_temp_s32_pointer)
    - [get_time](functions-5.md#get_time)
@@ -1596,8 +1604,12 @@
    - [is_transition_playing](functions-5.md#is_transition_playing)
    - [movtexqc_register](functions-5.md#movtexqc_register)
    - [play_transition](functions-5.md#play_transition)
+   - [save_file_get_using_backup_slot](functions-5.md#save_file_get_using_backup_slot)
    - [save_file_set_using_backup_slot](functions-5.md#save_file_set_using_backup_slot)
    - [set_environment_region](functions-5.md#set_environment_region)
+   - [set_got_file_coin_hi_score](functions-5.md#set_got_file_coin_hi_score)
+   - [set_last_completed_course_num](functions-5.md#set_last_completed_course_num)
+   - [set_last_completed_star_num](functions-5.md#set_last_completed_star_num)
    - [set_last_star_or_key](functions-5.md#set_last_star_or_key)
    - [set_lighting_dir](functions-5.md#set_lighting_dir)
    - [set_override_envfx](functions-5.md#set_override_envfx)
@@ -1605,6 +1617,7 @@
    - [set_override_fov](functions-5.md#set_override_fov)
    - [set_override_near](functions-5.md#set_override_near)
    - [set_override_skybox](functions-5.md#set_override_skybox)
+   - [set_save_file_modified](functions-5.md#set_save_file_modified)
    - [set_ttc_speed_setting](functions-5.md#set_ttc_speed_setting)
 
 <br />

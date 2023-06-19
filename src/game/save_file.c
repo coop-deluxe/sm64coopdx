@@ -291,7 +291,7 @@ static void set_coin_score_age(s32 fileIndex, s32 courseIndex, s32 age) {
 /**
  * Mark a coin score for a save file as the newest out of all save files.
  */
-static void touch_coin_score_age(s32 fileIndex, s32 courseIndex) {
+void touch_coin_score_age(s32 fileIndex, s32 courseIndex) {
     if (INVALID_FILE_INDEX(fileIndex)) { return; }
     s32 i;
     u32 age;
@@ -691,6 +691,10 @@ s32 save_file_get_course_coin_score(s32 fileIndex, s32 courseIndex) {
     if (INVALID_SRC_SLOT(gSaveFileUsingBackupSlot)) { return 0; }
     if (INVALID_COURSE_COIN_INDEX(courseIndex)) { return 0; }
     return gSaveBuffer.files[fileIndex][gSaveFileUsingBackupSlot].courseCoinScores[courseIndex];
+}
+
+void save_file_set_course_coin_score(s32 fileIndex, s32 courseIndex, u8 coinScore) {
+    gSaveBuffer.files[fileIndex][gSaveFileUsingBackupSlot].courseCoinScores[courseIndex] = coinScore;
 }
 
 /**

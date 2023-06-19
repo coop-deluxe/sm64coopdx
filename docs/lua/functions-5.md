@@ -659,6 +659,24 @@
 
 <br />
 
+## [get_got_file_coin_hi_score](#get_got_file_coin_hi_score)
+
+### Lua Example
+`local booleanValue = get_got_file_coin_hi_score()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool get_got_file_coin_hi_score(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [get_hand_foot_pos_x](#get_hand_foot_pos_x)
 
 ### Lua Example
@@ -717,6 +735,42 @@
 
 ### C Prototype
 `f32 get_hand_foot_pos_z(struct MarioState* m, u8 index);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_last_completed_course_num](#get_last_completed_course_num)
+
+### Lua Example
+`local integerValue = get_last_completed_course_num()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u8 get_last_completed_course_num(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_last_completed_star_num](#get_last_completed_star_num)
+
+### Lua Example
+`local integerValue = get_last_completed_star_num()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u8 get_last_completed_star_num(void);`
 
 [:arrow_up_small:](#)
 
@@ -791,6 +845,24 @@
 
 ### C Prototype
 `char* get_os_name(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_save_file_modified](#get_save_file_modified)
+
+### Lua Example
+`local booleanValue = get_save_file_modified()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool get_save_file_modified(void);`
 
 [:arrow_up_small:](#)
 
@@ -1100,6 +1172,24 @@
 
 <br />
 
+## [save_file_get_using_backup_slot](#save_file_get_using_backup_slot)
+
+### Lua Example
+`local booleanValue = save_file_get_using_backup_slot()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool save_file_get_using_backup_slot(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [save_file_set_using_backup_slot](#save_file_set_using_backup_slot)
 
 ### Lua Example
@@ -1136,6 +1226,66 @@
 
 ### C Prototype
 `void set_environment_region(u8 index, s32 value);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_got_file_coin_hi_score](#set_got_file_coin_hi_score)
+
+### Lua Example
+`set_got_file_coin_hi_score(value)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| value | `boolean` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_got_file_coin_hi_score(bool value);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_last_completed_course_num](#set_last_completed_course_num)
+
+### Lua Example
+`set_last_completed_course_num(courseNum)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| courseNum | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_last_completed_course_num(u8 courseNum);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_last_completed_star_num](#set_last_completed_star_num)
+
+### Lua Example
+`set_last_completed_star_num(starNum)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| starNum | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_last_completed_star_num(u8 starNum);`
 
 [:arrow_up_small:](#)
 
@@ -1277,6 +1427,26 @@
 
 ### C Prototype
 `void set_override_skybox(s8 background);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_save_file_modified](#set_save_file_modified)
+
+### Lua Example
+`set_save_file_modified(value)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| value | `boolean` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_save_file_modified(bool value);`
 
 [:arrow_up_small:](#)
 
