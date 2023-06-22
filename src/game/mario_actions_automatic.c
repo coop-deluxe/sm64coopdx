@@ -968,12 +968,42 @@ static void bubbled_offset_visual(struct MarioState* m) {
     m->marioObj->header.gfx.pos[1] -= upOffset;
 }
 
+static struct MarioState* nearest_antibubble_mario_state_to_object(struct Object *obj) {
+    if (!obj) { return NULL; }
+    struct MarioState* nearest = NULL;
+    f32 nearestDist = 0;
+    for (s32 i = 0; i < MAX_PLAYERS; i++) {
+        struct MarioState* m = &gMarioStates[i];
+        if (!m->marioObj) { continue; }
+        if (m->marioObj == obj) { continue; }
+        if (!m->visibleToEnemies) { continue; }
+        if (!is_player_active(m)) { continue; }
+
+        switch (m->action) {
+            case ACT_WATER_DEATH:
+            case ACT_STANDING_DEATH:
+            case ACT_QUICKSAND_DEATH:
+            case ACT_DEATH_ON_STOMACH:
+            case ACT_DEATH_ON_BACK:
+                continue;
+        }
+
+        float dist = dist_between_objects(obj, m->marioObj);
+        if (nearest == NULL || dist < nearestDist) {
+            nearest = m;
+            nearestDist = dist;
+        }
+    }
+
+    return nearest;
+}
+
 s32 act_bubbled(struct MarioState* m) {
     if (!m) { return 0; }
     if (m->playerIndex == 0 && m->area->camera->mode == CAMERA_MODE_WATER_SURFACE) {
         set_camera_mode(m->area->camera, CAMERA_MODE_FREE_ROAM, 1);
     }
-    struct MarioState* targetMarioState = nearest_mario_state_to_object(m->marioObj);
+    struct MarioState* targetMarioState = nearest_antibubble_mario_state_to_object(m->marioObj);
     if (targetMarioState == NULL) {
         targetMarioState = &gMarioStates[0];
     }
@@ -1021,9 +1051,9 @@ s32 act_bubbled(struct MarioState* m) {
     f32 oldYaw   = m->faceAngle[1];
     m->faceAngle[0] = 0;
     m->faceAngle[1] = m->intendedYaw;
-    m->forwardVel = m->intendedMag * 1.5f;
-    if (m->input & INPUT_A_DOWN) { m->vel[1] += 5.0f; }
-    if (m->input & INPUT_Z_DOWN) { m->vel[1] -= 5.0f; }
+    m->forwardVel = m->intendedMag * 1.6f;
+    if (m->input & INPUT_A_DOWN) { m->vel[1] += 5.5f; }
+    if (m->input & INPUT_Z_DOWN) { m->vel[1] -= 5.5f; }
 
     // set and smooth velocity
     Vec3f oldVel = { m->vel[0], m->vel[1], m->vel[2] };
@@ -1087,6 +1117,7 @@ s32 act_bubbled(struct MarioState* m) {
         mario_set_forward_vel(m, 0.0f);
         m->vel[1] = 0.0f;
         m->marioObj->header.gfx.node.flags &= ~GRAPH_RENDER_INVISIBLE;
+        m->invincTimer = 30 * 3;
         if (m->playerIndex == 0) {
             soft_reset_camera(m->area->camera);
         }

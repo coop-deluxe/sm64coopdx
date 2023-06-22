@@ -1306,6 +1306,10 @@ u32 interact_cannon_base(struct MarioState *m, UNUSED u32 interactType, struct O
 
 static u8 resolve_player_collision(struct MarioState* m, struct MarioState* m2) {
     if (!m || !m2) { return FALSE; }
+    if (!m->marioObj || !m2->marioObj) { return FALSE; }
+    if (m->invincTimer > 0 || m2->invincTimer > 0) { return FALSE; }
+    if (m->action == ACT_DEATH_EXIT_LAND || m2->action == ACT_DEATH_EXIT_LAND) { return FALSE; }
+
     // move player outside of other player
     f32 extentY = m->marioObj->hitboxHeight;
     f32 radius = m->marioObj->hitboxRadius * 2.0f;
