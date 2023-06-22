@@ -101,19 +101,10 @@ smlua_audio_utils_replace_sequence(0x32, 0x25, 80, "32_Seq_smsrdeluxe_custom")
 ------------
 -- camera --
 ------------
+camera_set_romhack_override(RCO_ALL_EXCEPT_BOWSER)
 camera_set_use_course_specific_settings(false)
 
 ----------------------------------
-
-function mario_update_local(m)
-    override_camera()
-end
-
-function mario_update(m)
-    if m.playerIndex == 0 then
-        mario_update_local(m)
-    end
-end
 
 function on_death()
     local m = gMarioStates[0]
@@ -130,7 +121,6 @@ function on_warp_and_init() -- 130 stars castle grounds music
     end
 end
 
-hook_event(HOOK_MARIO_UPDATE, mario_update)
 hook_event(HOOK_ON_DEATH, on_death)
 hook_event(HOOK_ON_LEVEL_INIT, on_warp_and_init)
 hook_event(HOOK_ON_WARP, on_warp_and_init)

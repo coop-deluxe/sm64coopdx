@@ -86,19 +86,10 @@ smlua_audio_utils_replace_sequence(0x31, 0x11, 80, "31_Seq_sm74EE_custom")
 ------------
 -- camera --
 ------------
+camera_set_romhack_override(RCO_ALL_EXCEPT_BOWSER)
 camera_set_use_course_specific_settings(false)
 
 ----------------------------------
-
-function mario_update_local(m)
-    override_camera()
-end
-
-function mario_update(m)
-    if m.playerIndex == 0 then
-        mario_update_local(m)
-    end
-end
 
 function on_level_init()
     local m = gMarioStates[0]
@@ -129,7 +120,6 @@ function on_swap_command(msg)
     return true
 end
 
-hook_event(HOOK_MARIO_UPDATE, mario_update)
 hook_event(HOOK_ON_LEVEL_INIT, on_level_init)
 hook_event(HOOK_GET_STAR_COLLECTION_DIALOG, get_star_collection_dialog)
 hook_chat_command('swap', "swap between Extreme Edition and normal", on_swap_command)

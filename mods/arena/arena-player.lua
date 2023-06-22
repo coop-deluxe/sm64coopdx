@@ -329,8 +329,6 @@ function mario_local_update(m)
     local s = gPlayerSyncTable[m.playerIndex]
     local e = gMarioStateExtras[m.playerIndex]
 
-    override_camera()
-
     -- decrease cooldown
     if e.attackCooldown > 0 then
         e.attackCooldown = e.attackCooldown - 1
