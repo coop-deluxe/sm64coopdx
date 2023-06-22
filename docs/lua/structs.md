@@ -958,6 +958,7 @@
 | extendedPauseDisplay | `integer` |  |
 | fixCollisionBugs | `integer` |  |
 | fixCollisionBugsFalseLedgeGrab | `integer` |  |
+| fixCollisionBugsGroundPoundBonks | `integer` |  |
 | fixCollisionBugsRoundedCorners | `integer` |  |
 | fixVanishFloors | `integer` |  |
 | floatingStarDance | `integer` |  |

@@ -1009,14 +1009,18 @@ s32 act_ground_pound(struct MarioState *m) {
                 }
             }
             if (m->playerIndex == 0) { set_camera_shake_from_hit(SHAKE_GROUND_POUND); }
-        } else if (stepResult == AIR_STEP_HIT_WALL && !gLevelValues.fixCollisionBugs) {
-            mario_set_forward_vel(m, -16.0f);
-            if (m->vel[1] > 0.0f) {
-                m->vel[1] = 0.0f;
-            }
+        } else if (stepResult == AIR_STEP_HIT_WALL) {
+            if (gLevelValues.fixCollisionBugs && gLevelValues.fixCollisionBugsGroundPoundBonks) {
+                // do nothing
+            } else {
+                mario_set_forward_vel(m, -16.0f);
+                if (m->vel[1] > 0.0f) {
+                    m->vel[1] = 0.0f;
+                }
 
-            set_mario_particle_flags(m, PARTICLE_VERTICAL_STAR, FALSE);
-            set_mario_action(m, ACT_BACKWARD_AIR_KB, 0);
+                set_mario_particle_flags(m, PARTICLE_VERTICAL_STAR, FALSE);
+                set_mario_action(m, ACT_BACKWARD_AIR_KB, 0);
+            }
         }
     }
 

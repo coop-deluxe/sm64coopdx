@@ -652,6 +652,7 @@
 --- @field public extendedPauseDisplay integer
 --- @field public fixCollisionBugs integer
 --- @field public fixCollisionBugsFalseLedgeGrab integer
+--- @field public fixCollisionBugsGroundPoundBonks integer
 --- @field public fixCollisionBugsRoundedCorners integer
 --- @field public fixVanishFloors integer
 --- @field public floatingStarDance integer
