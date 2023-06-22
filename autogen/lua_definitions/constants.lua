@@ -2536,6 +2536,17 @@ SHAKE_SHOCK = 10
 --- @type integer
 SHAKE_SMALL_DAMAGE = 3
 
+--- @class RomhackCameraOverride
+
+--- @type RomhackCameraOverride
+RCO_ALL = 0
+
+--- @type RomhackCameraOverride
+RCO_ALL_EXCEPT_BOWSER = 1
+
+--- @type RomhackCameraOverride
+RCO_NONE = 2
+
 --- @type integer
 PALETTE_PRESET_MAX = 33
 

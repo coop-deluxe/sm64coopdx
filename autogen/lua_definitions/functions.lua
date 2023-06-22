@@ -8451,6 +8451,12 @@ function camera_reset_overrides()
     -- ...
 end
 
+--- @param rco RomhackCameraOverride
+--- @return nil
+function camera_set_romhack_override(rco)
+    -- ...
+end
+
 --- @return nil
 function camera_unfreeze()
     -- ...

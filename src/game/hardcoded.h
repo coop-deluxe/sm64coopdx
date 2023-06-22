@@ -252,6 +252,10 @@ struct BehaviorValues {
 
 extern struct BehaviorValues gBehaviorValues;
 
+  //////////////
+ // Painting //
+//////////////
+
 struct PaintingValues {
     struct Painting* cotmc_painting;
 
@@ -274,6 +278,10 @@ struct PaintingValues {
 };
 
 extern struct PaintingValues gPaintingValues;
+
+  ///////////////
+ // Functions //
+///////////////
 
 void hardcoded_reset_default_values(void);
 

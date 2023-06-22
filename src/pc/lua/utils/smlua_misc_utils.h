@@ -2,6 +2,7 @@
 #define SMLUA_MISC_UTILS_H
 
 #include "dialog_ids.h"
+#include "game/camera.h"
 
 u32 get_network_area_timer(void);
 
@@ -45,6 +46,7 @@ void camera_reset_overrides(void);
 void camera_freeze(void);
 void camera_unfreeze(void);
 bool camera_is_frozen(void);
+void camera_set_romhack_override(enum RomhackCameraOverride rco);
 
 bool camera_config_is_free_cam_enabled(void);
 bool camera_config_is_analog_cam_enabled(void);

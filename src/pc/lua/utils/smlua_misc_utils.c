@@ -249,6 +249,10 @@ bool camera_is_frozen(void) {
     return gOverrideFreezeCamera;
 }
 
+void camera_set_romhack_override(enum RomhackCameraOverride rco) {
+    gOverrideRomhackCamera = rco;
+}
+
 bool camera_config_is_free_cam_enabled(void) {
 #ifdef BETTERCAMERA
     return sOverrideEnableCamera.override ? sOverrideEnableCamera.value : configEnableCamera;

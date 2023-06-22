@@ -488,6 +488,26 @@
 
 <br />
 
+## [camera_set_romhack_override](#camera_set_romhack_override)
+
+### Lua Example
+`camera_set_romhack_override(rco)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| rco | [enum RomhackCameraOverride](constants.md#enum-RomhackCameraOverride) |
+
+### Returns
+- None
+
+### C Prototype
+`void camera_set_romhack_override(enum RomhackCameraOverride rco);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [camera_unfreeze](#camera_unfreeze)
 
 ### Lua Example

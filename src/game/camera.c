@@ -39,7 +39,8 @@
 
 static u8 sSoftResettingCamera = FALSE;
 u8 gCameraUseCourseSpecificSettings = TRUE;
-u8 gOverrideFreezeCamera;
+u8 gOverrideFreezeCamera = FALSE;
+enum RomhackCameraOverride gOverrideRomhackCamera = RCO_ALL;
 
 /**
  * @file camera.c
@@ -964,7 +965,7 @@ s32 update_8_directions_camera(struct Camera *c, Vec3f focus, Vec3f pos) {
     calc_y_to_curr_floor(&posY, 1.f, 200.f, &focusY, 0.9f, 200.f);
     focus_on_mario(focus, pos, posY + yOff, focusY + yOff, sLakituDist + baseDist, pitch, camYaw);
     pan_ahead_of_player(c);
-    if (gCameraUseCourseSpecificSettings && gCurrLevelArea == AREA_DDD_SUB) {
+    if (gCameraUseCourseSpecificSettings && c->mode != CAMERA_MODE_ROM_HACK && gCurrLevelArea == AREA_DDD_SUB) {
         camYaw = clamp_positions_and_find_yaw(pos, focus, 6839.f, 995.f, 5994.f, -3945.f);
     }
 
@@ -2899,6 +2900,22 @@ void transition_to_camera_mode(struct Camera *c, s16 newMode, s16 numFrames) {
     }
 }
 
+static bool allow_romhack_camera_override_mode(u8 mode) {
+    switch (mode) {
+        case CAMERA_MODE_NONE:
+        case CAMERA_MODE_BEHIND_MARIO:
+        case CAMERA_MODE_C_UP:
+        case CAMERA_MODE_WATER_SURFACE:
+        case CAMERA_MODE_INSIDE_CANNON:
+        case CAMERA_MODE_BOSS_FIGHT:
+        case CAMERA_MODE_NEWCAM:
+        case CAMERA_MODE_ROM_HACK:
+            return false;
+        default:
+            return true;
+    }
+}
+
 /**
  * Used to change the camera mode between its default/previous and certain Mario-oriented modes,
  *      namely: C_UP, WATER_SURFACE, CLOSE, and BEHIND_MARIO
@@ -2914,6 +2931,8 @@ void set_camera_mode(struct Camera *c, s16 mode, s16 frames) {
     if (!c) { return; }
     struct LinearTransitionPoint *start = &sModeInfo.transitionStart;
     struct LinearTransitionPoint *end = &sModeInfo.transitionEnd;
+
+    if (c->mode == CAMERA_MODE_ROM_HACK && !allow_romhack_camera_override_mode(mode)) { return; }
 
     bool returnValue = true;
     smlua_call_event_hooks_set_camera_mode_params(HOOK_ON_SET_CAMERA_MODE, c, mode, frames, &returnValue);
@@ -3089,6 +3108,21 @@ void update_lakitu(struct Camera *c) {
     gLakituState.defMode = c->defMode;
 }
 
+static void update_romhack_camera_override(struct Camera *c) {
+    if (gOverrideRomhackCamera == RCO_NONE) { return; }
+    if (c->mode == CAMERA_MODE_ROM_HACK) { return; }
+    if (dynos_level_is_vanilla_level(gCurrLevelNum)) { return; }
+
+    if (gOverrideRomhackCamera == RCO_ALL_EXCEPT_BOWSER) {
+        if (gCurrLevelNum == LEVEL_BOWSER_1 || gCurrLevelNum == LEVEL_BOWSER_2 || gCurrLevelNum == LEVEL_BOWSER_3) {
+            return;
+        }
+    }
+
+    if (!allow_romhack_camera_override_mode(c->mode)) { return; }
+
+    set_camera_mode(c, CAMERA_MODE_ROM_HACK, 0);
+}
 
 /**
  * The main camera update function.
@@ -3104,6 +3138,8 @@ void update_camera(struct Camera *c) {
     if (gOverrideFreezeCamera && !gDjuiInMainMenu) {
         return;
     }
+
+    update_romhack_camera_override(c);
 
     if (c->cutscene == 0) {
         // Only process R_TRIG if 'fixed' is not selected in the menu
@@ -6783,6 +6819,8 @@ static struct CameraTrigger* get_camera_trigger(s16 levelNum) {
 s16 camera_course_processing(struct Camera *c) {
     if (!c) { return 0; }
     if (!gCameraUseCourseSpecificSettings) { return 0; }
+    if (c->mode == CAMERA_MODE_ROM_HACK) { return 0; }
+
     s16 level = gCurrLevelNum;
     s16 mode;
     s8 area = gCurrentArea->index;
@@ -12214,6 +12252,11 @@ void mode_rom_hack_camera(struct Camera *c) {
         sRomHackZoom = 0;
     }
 
+    // center
+    if (gMarioStates[0].controller->buttonPressed & L_TRIG) {
+        center_rom_hack_camera();
+    }
+
     // clamp yaw
     sRomHackYaw = (sRomHackYaw / DEGREES(45)) * DEGREES(45);
 
@@ -12298,7 +12341,7 @@ s32 update_rom_hack_camera(struct Camera *c, Vec3f focus, Vec3f pos) {
     calc_y_to_curr_floor(&posY, 1.f, 200.f, &focusY, 0.9f, 200.f);
     focus_on_mario(focus, pos, posY + yOff, focusY + yOff, sLakituDist + baseDist, pitch, sAreaYaw);
     pan_ahead_of_player(c);
-    if (gCameraUseCourseSpecificSettings && gCurrLevelArea == AREA_DDD_SUB) {
+    if (gCameraUseCourseSpecificSettings && c->mode != CAMERA_MODE_ROM_HACK && gCurrLevelArea == AREA_DDD_SUB) {
         camYaw = clamp_positions_and_find_yaw(pos, focus, 6839.f, 995.f, 5994.f, -3945.f);
     }
 

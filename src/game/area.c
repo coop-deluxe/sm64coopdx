@@ -505,6 +505,7 @@ void render_game(void) {
 
 void get_area_minimum_y(u8* hasMinY, f32* minY) {
     if (!gCameraUseCourseSpecificSettings) { return; }
+    if (gCamera && gCamera->mode == CAMERA_MODE_ROM_HACK) { return; }
     switch (gCurrCourseNum) {
         case COURSE_WF:    *hasMinY = TRUE; *minY = 8; break;
         case COURSE_CCM:   *hasMinY = TRUE; *minY = (gCurrAreaIndex == 2) ? -5856 : -5068; break;
