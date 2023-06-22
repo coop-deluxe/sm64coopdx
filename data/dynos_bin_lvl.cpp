@@ -993,14 +993,27 @@ static DataNode<LevelScript>* DynOS_Lvl_Load(BinFile *aFile, GfxData *aGfxData) 
         aGfxData->mLevelScripts.Add(_Node);
     }
 
+    DynOS_Lvl_Validate_Begin();
+
     // Read it
     for (u32 i = 0; i != _Node->mSize; ++i) {
         u32 _Value = aFile->Read<u32>();
+
+        bool requirePointer = DynOS_Lvl_Validate_RequirePointer(_Value);
+
         void *_Ptr = DynOS_Pointer_Load(aFile, aGfxData, _Value, &_Node->mFlags);
         if (_Ptr) {
+            if (!requirePointer) {
+                PrintError("Didn't expect a pointer while reading level script: %s, %u", _Node->mName, _Value);
+            }
             _Node->mData[i] = (uintptr_t) _Ptr;
         } else {
-            _Node->mData[i] = (uintptr_t) _Value;
+            if (requirePointer) {
+                PrintError("Expected a pointer while reading level script: %s, %u", _Node->mName, _Value);
+                _Node->mData[i] = 0;
+            } else {
+                _Node->mData[i] = (uintptr_t) _Value;
+            }
         }
     }
 

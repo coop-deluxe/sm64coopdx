@@ -1091,6 +1091,9 @@ GfxData *DynOS_Lvl_LoadFromBinary(const SysPath &aFilename, const char *aLevelNa
 void DynOS_Lvl_GeneratePack(const SysPath &aPackFolder);
 s64 DynOS_Lvl_ParseLevelScriptConstants(const String& _Arg, bool* found);
 
+void DynOS_Lvl_Validate_Begin();
+bool DynOS_Lvl_Validate_RequirePointer(u32 value);
+
 DataNode<BehaviorScript> *DynOS_Bhv_Parse(GfxData *aGfxData, DataNode<BehaviorScript> *aNode, bool aDisplayPercent);
 GfxData *DynOS_Bhv_LoadFromBinary(const SysPath &aFilename, const char *aBehaviorName);
 void DynOS_Bhv_GeneratePack(const SysPath &aPackFolder);

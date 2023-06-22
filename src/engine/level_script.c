@@ -1133,7 +1133,11 @@ struct LevelCommand *level_script_execute(struct LevelCommand *cmd) {
     while (sScriptStatus == SCRIPT_RUNNING) {
         sCurrentCmd = dynos_swap_cmd(sCurrentCmd);
         void *dynosCurrCmd = (void *) sCurrentCmd;
-        LevelScriptJumpTable[sCurrentCmd->type]();
+
+        if (sCurrentCmd->type < ARRAY_COUNT(LevelScriptJumpTable)) {
+            LevelScriptJumpTable[sCurrentCmd->type]();
+        }
+
         void *dynosNextCmd = dynos_update_cmd(dynosCurrCmd);
         if (dynosNextCmd) sCurrentCmd = dynosNextCmd;
     }
