@@ -28324,6 +28324,23 @@ int smlua_func_get_last_star_or_key(UNUSED lua_State* L) {
     return 1;
 }
 
+int smlua_func_get_lighting_color(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "get_lighting_color", 1, top);
+        return 0;
+    }
+
+    u8 index = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "get_lighting_color"); return 0; }
+
+    lua_pushinteger(L, get_lighting_color(index));
+
+    return 1;
+}
+
 int smlua_func_get_lighting_dir(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -28780,6 +28797,25 @@ int smlua_func_set_last_star_or_key(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "set_last_star_or_key"); return 0; }
 
     set_last_star_or_key(value);
+
+    return 1;
+}
+
+int smlua_func_set_lighting_color(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "set_lighting_color", 2, top);
+        return 0;
+    }
+
+    u8 index = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "set_lighting_color"); return 0; }
+    u8 value = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "set_lighting_color"); return 0; }
+
+    set_lighting_color(index, value);
 
     return 1;
 }
@@ -31950,6 +31986,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "get_last_completed_course_num", smlua_func_get_last_completed_course_num);
     smlua_bind_function(L, "get_last_completed_star_num", smlua_func_get_last_completed_star_num);
     smlua_bind_function(L, "get_last_star_or_key", smlua_func_get_last_star_or_key);
+    smlua_bind_function(L, "get_lighting_color", smlua_func_get_lighting_color);
     smlua_bind_function(L, "get_lighting_dir", smlua_func_get_lighting_dir);
     smlua_bind_function(L, "get_network_area_timer", smlua_func_get_network_area_timer);
     smlua_bind_function(L, "get_os_name", smlua_func_get_os_name);
@@ -31976,6 +32013,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "set_last_completed_course_num", smlua_func_set_last_completed_course_num);
     smlua_bind_function(L, "set_last_completed_star_num", smlua_func_set_last_completed_star_num);
     smlua_bind_function(L, "set_last_star_or_key", smlua_func_set_last_star_or_key);
+    smlua_bind_function(L, "set_lighting_color", smlua_func_set_lighting_color);
     smlua_bind_function(L, "set_lighting_dir", smlua_func_set_lighting_dir);
     smlua_bind_function(L, "set_override_envfx", smlua_func_set_override_envfx);
     smlua_bind_function(L, "set_override_far", smlua_func_set_override_far);

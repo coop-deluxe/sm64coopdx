@@ -814,6 +814,26 @@
 
 <br />
 
+## [get_lighting_color](#get_lighting_color)
+
+### Lua Example
+`local integerValue = get_lighting_color(index)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| index | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u8 get_lighting_color(u8 index);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [get_lighting_dir](#get_lighting_dir)
 
 ### Lua Example
@@ -1326,6 +1346,27 @@
 
 ### C Prototype
 `void set_last_star_or_key(u8 value);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_lighting_color](#set_lighting_color)
+
+### Lua Example
+`set_lighting_color(index, value)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| index | `integer` |
+| value | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_lighting_color(u8 index, u8 value);`
 
 [:arrow_up_small:](#)
 

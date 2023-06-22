@@ -179,6 +179,7 @@ static f32 sDepthZMult = 1;
 static f32 sDepthZSub = 0;
 
 Vec3f gLightingDir;
+Color gLightingColor = { 255, 255, 255 };
 
 // 4x4 pink-black checkerboard texture to indicate missing textures
 #define MISSING_W 4
@@ -904,9 +905,12 @@ static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, cons
                 }
             }
 
-            d->color.r = r > 255 ? 255 : r;
-            d->color.g = g > 255 ? 255 : g;
-            d->color.b = b > 255 ? 255 : b;
+            f32 rf = gLightingColor[0] / 255.0f;
+            f32 gf = gLightingColor[1] / 255.0f;
+            f32 bf = gLightingColor[2] / 255.0f;
+            d->color.r = r * rf > 255 ? 255 : r * rf;
+            d->color.g = g * gf > 255 ? 255 : g * gf;
+            d->color.b = b * bf > 255 ? 255 : b * bf;
 
             if (rsp.geometry_mode & G_TEXTURE_GEN) {
                 float dotx = 0, doty = 0;

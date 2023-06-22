@@ -8549,6 +8549,12 @@ function get_last_star_or_key()
 end
 
 --- @param index integer
+--- @return integer
+function get_lighting_color(index)
+    -- ...
+end
+
+--- @param index integer
 --- @return number
 function get_lighting_dir(index)
     -- ...
@@ -8710,6 +8716,13 @@ end
 --- @param value integer
 --- @return nil
 function set_last_star_or_key(value)
+    -- ...
+end
+
+--- @param index integer
+--- @param value integer
+--- @return nil
+function set_lighting_color(index, value)
     -- ...
 end
 

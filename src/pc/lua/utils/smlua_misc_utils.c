@@ -49,17 +49,21 @@ void djui_popup_create_global(const char* message, int lines) {
     network_send_global_popup(message, lines);
 }
 
+///
+
 void hud_hide(void) {
-    gOverrideHideHud = 1;
+    gOverrideHideHud = TRUE;
 }
 
 void hud_show(void) {
-    gOverrideHideHud = 0;
+    gOverrideHideHud = FALSE;
 }
 
 bool hud_is_hidden(void) {
     return gOverrideHideHud;
 }
+
+///
 
 extern u8 gLastCollectedStarOrKey;
 s32 get_last_star_or_key(void) {
@@ -106,10 +110,14 @@ void set_save_file_modified(bool value) {
     gSaveFileModified = value ? TRUE : FALSE;
 }
 
+///
+
 extern s8 gDialogBoxState;
 s8 get_dialog_box_state() {
     return gDialogBoxState;
 }
+
+///
 
 s32 hud_get_value(enum HudDisplayValue type) {
     switch (type) {
@@ -525,8 +533,17 @@ f32 get_lighting_dir(u8 index) {
 
 void set_lighting_dir(u8 index, f32 value) {
     if (index > 2) { return; }
-
     gLightingDir[index] = value;
+}
+
+u8 get_lighting_color(u8 index) {
+    if (index > 2) { return 0; }
+    return gLightingColor[index];
+}
+
+void set_lighting_color(u8 index, u8 value) {
+    if (index > 2) { return; }
+    gLightingColor[index] = value;
 }
 
 ///
@@ -570,6 +587,8 @@ u16 get_envfx(void) {
 void set_override_envfx(s32 envfx) {
     gOverrideEnvFx = envfx;
 }
+
+///
 
 char* get_os_name(void) {
 #if defined(_WIN32) || defined(_WIN64)

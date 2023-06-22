@@ -109,6 +109,9 @@ void add_scroll_target(u32 index, const char* name, u32 offset, u32 size);
 f32 get_lighting_dir(u8 index);
 void set_lighting_dir(u8 index, f32 value);
 
+u8 get_lighting_color(u8 index);
+void set_lighting_color(u8 index, u8 value);
+
 s8 get_skybox();
 void set_override_skybox(s8 background);
 
