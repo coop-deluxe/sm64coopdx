@@ -90,8 +90,11 @@ function bhv_arena_spring_launch(obj)
         set_mario_action(m, ACT_TRIPLE_JUMP, 0)
         m.vel.y = vel.y
         m.forwardVel = 0
+        local e = gMarioStateExtras[0]
+        e.springing = 1
     end
     obj.oArenaSpringSprung = 15
+
     network_send_object(obj, false)
 end
 

@@ -24,6 +24,18 @@ function clamp(val, min, max)
     return val
 end
 
+function convert_s16(num)
+    local min = -32768
+    local max = 32767
+    while (num < min) do
+        num = max + (num - min)
+    end
+    while (num > max) do
+        num = min + (num - max)
+    end
+    return num
+end
+
 function mario_health_float(m)
     return clamp((m.health - 255) / (2176 - 255), 0, 1)
 end

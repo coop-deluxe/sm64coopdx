@@ -15,6 +15,7 @@ for i = 0, (MAX_PLAYERS - 1) do
     e.prevHurtCounter     = 0
     e.levelTimer          = 0
     e.levelTimerLevel     = 0
+    e.springing           = 0
 
     local s = gPlayerSyncTable[i]
     s.item     = ITEM_NONE
@@ -318,6 +319,14 @@ function on_set_mario_action(m)
         e.rotFrames = 0
     end
 
+    if m.playerIndex == 0 and is_player_active(m) ~= 0 then
+        if (m.action & ACT_FLAG_AIR) == 0 then
+            if e.springing == 1 then
+                e.springing = 0
+            end
+        end
+    end
+
     if s.item == ITEM_HAMMER then
         mario_hammer_on_set_action(m)
     end
@@ -448,6 +457,11 @@ function mario_update(m)
     -- set metal
     if s.metal then
         m.marioBodyState.modelState = MODEL_STATE_METAL
+    end
+
+    -- allow yaw change on springing
+    if e.springing == 1 then
+        m.faceAngle.y = m.intendedYaw - approach_s32(convert_s16(m.intendedYaw - m.faceAngle.y), 0, 0x400, 0x400)
     end
 
     -- update player items
