@@ -23,6 +23,7 @@
 #include "pc/network/network.h"
 #include "pc/lua/smlua.h"
 #include "pc/cheats.h"
+#include "hardcoded.h"
 
 void play_flip_sounds(struct MarioState *m, s16 frame1, s16 frame2, s16 frame3) {
     if (!m) { return; }
@@ -1008,7 +1009,7 @@ s32 act_ground_pound(struct MarioState *m) {
                 }
             }
             if (m->playerIndex == 0) { set_camera_shake_from_hit(SHAKE_GROUND_POUND); }
-        } else if (stepResult == AIR_STEP_HIT_WALL) {
+        } else if (stepResult == AIR_STEP_HIT_WALL && !gLevelValues.fixCollisionBugs) {
             mario_set_forward_vel(m, -16.0f);
             if (m->vel[1] > 0.0f) {
                 m->vel[1] = 0.0f;
