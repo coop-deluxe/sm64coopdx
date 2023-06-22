@@ -3632,8 +3632,10 @@ void zoom_out_if_paused_and_outside(struct GraphNodeCamera *camera) {
                 camera->focus[2] = gCamera->areaCenZ;
                 vec3f_get_dist_and_angle(camera->focus, sMarioCamState->pos, &dist, &pitch, &yaw);
                 vec3f_set_dist_and_angle(sMarioCamState->pos, camera->pos, 6000.f, 0x1000, yaw);
-                if (gCurrLevelNum != LEVEL_THI) {
-                    find_in_bounds_yaw_wdw_bob_thi(camera->pos, camera->focus, 0);
+                if (dynos_level_is_vanilla_level(gCurrLevelNum)) {
+                    if (gCurrLevelNum != LEVEL_THI) {
+                        find_in_bounds_yaw_wdw_bob_thi(camera->pos, camera->focus, 0);
+                    }
                 }
             }
         } else {
@@ -5819,8 +5821,10 @@ void check_blocking_area_processing(const u8 *mode) {
         sStatusFlags |= CAM_FLAG_BLOCK_AREA_PROCESSING;
     }
 
-    if (gCurrLevelNum == LEVEL_DDD || gCurrLevelNum == LEVEL_WDW || gCurrLevelNum == LEVEL_COTMC) {
-        sStatusFlags &= ~CAM_FLAG_BLOCK_AREA_PROCESSING;
+    if (dynos_level_is_vanilla_level(gCurrLevelNum)) {
+        if (gCurrLevelNum == LEVEL_DDD || gCurrLevelNum == LEVEL_WDW || gCurrLevelNum == LEVEL_COTMC) {
+            sStatusFlags &= ~CAM_FLAG_BLOCK_AREA_PROCESSING;
+        }
     }
 
     if (mode) {
@@ -8805,9 +8809,11 @@ void cutscene_goto_cvar_pos(struct Camera *c, f32 goalDist, s16 goalPitch, s16 r
         vec3f_copy(sCutsceneVars[0].point, sCutsceneVars[3].point);
         sStatusFlags &= ~CAM_FLAG_SMOOTH_MOVEMENT;
 
-        if (gCurrLevelNum == LEVEL_TTM) {
-            nextYaw = atan2s(sCutsceneVars[3].point[2] - c->areaCenZ,
-                             sCutsceneVars[3].point[0] - c->areaCenX);
+        if (dynos_level_is_vanilla_level(gCurrLevelNum)) {
+            if (gCurrLevelNum == LEVEL_TTM) {
+                nextYaw = atan2s(sCutsceneVars[3].point[2] - c->areaCenZ,
+                                sCutsceneVars[3].point[0] - c->areaCenX);
+            }
         }
     } else {
         if (c->cutscene == CUTSCENE_PREPARE_CANNON) {
@@ -9109,11 +9115,13 @@ BAD_RETURN(s32) cutscene_enter_pool_start(struct Camera *c) {
     if (!c) { return; }
     vec3f_copy(sCutsceneVars[3].point, sMarioCamState->pos);
 
-    if (gCurrLevelNum == LEVEL_CASTLE) { // entering HMC
-        vec3f_set(sCutsceneVars[3].point, 2485.f, -1589.f, -2659.f);
-    }
-    if (gCurrLevelNum == LEVEL_HMC) { // entering CotMC
-        vec3f_set(sCutsceneVars[3].point, 3350.f, -4589.f, 4800.f);
+    if (dynos_level_is_vanilla_level(gCurrLevelNum)) {
+        if (gCurrLevelNum == LEVEL_CASTLE) { // entering HMC
+            vec3f_set(sCutsceneVars[3].point, 2485.f, -1589.f, -2659.f);
+        }
+        if (gCurrLevelNum == LEVEL_HMC) { // entering CotMC
+            vec3f_set(sCutsceneVars[3].point, 3350.f, -4589.f, 4800.f);
+        }
     }
 
     vec3f_copy(sCutsceneVars[0].point, c->focus);
@@ -9519,27 +9527,33 @@ BAD_RETURN(s32) cutscene_non_painting_set_cam_pos(struct Camera *c) {
     struct Surface *floor;
     UNUSED Vec3f unused2;
 
-    switch (gPrevLevel) {
-        case LEVEL_HMC:
-            vec3f_set(c->pos, 3465.f, -1008.f, -2961.f);
-            break;
+    if (!dynos_level_is_vanilla_level(gCurrLevelNum)) {
+        offset_rotated(c->pos, sCutsceneVars[7].point, sCutsceneVars[5].point, sCutsceneVars[7].angle);
+        f32 floorHeight = find_floor(c->pos[0], c->pos[1] + 1000.f, c->pos[2], &floor);
+        c->pos[1] = ((floorHeight + 125) + c->pos[1]) / 2.0f;
+    } else {
+        switch (gPrevLevel) {
+            case LEVEL_HMC:
+                vec3f_set(c->pos, 3465.f, -1008.f, -2961.f);
+                break;
 
-        case LEVEL_COTMC:
-            vec3f_set(c->pos, 3465.f, -1008.f, -2961.f);
-            break;
+            case LEVEL_COTMC:
+                vec3f_set(c->pos, 3465.f, -1008.f, -2961.f);
+                break;
 
-        case LEVEL_RR:
-            vec3f_set(c->pos, -3741.f, 3151.f, 6065.f);
-            break;
+            case LEVEL_RR:
+                vec3f_set(c->pos, -3741.f, 3151.f, 6065.f);
+                break;
 
-        case LEVEL_WMOTR:
-            vec3f_set(c->pos, 1972.f, 3230.f, 5891.f);
-            break;
+            case LEVEL_WMOTR:
+                vec3f_set(c->pos, 1972.f, 3230.f, 5891.f);
+                break;
 
-        default:
-            offset_rotated(c->pos, sCutsceneVars[7].point, sCutsceneVars[5].point, sCutsceneVars[7].angle);
-            c->pos[1] = find_floor(c->pos[0], c->pos[1] + 1000.f, c->pos[2], &floor) + 125.f;
-            break;
+            default:
+                offset_rotated(c->pos, sCutsceneVars[7].point, sCutsceneVars[5].point, sCutsceneVars[7].angle);
+                c->pos[1] = find_floor(c->pos[0], c->pos[1] + 1000.f, c->pos[2], &floor) + 125.f;
+                break;
+        }
     }
 }
 
@@ -9549,9 +9563,8 @@ BAD_RETURN(s32) cutscene_non_painting_set_cam_pos(struct Camera *c) {
 BAD_RETURN(s32) cutscene_non_painting_set_cam_focus(struct Camera *c) {
     if (!c) { return; }
     offset_rotated(c->focus, sCutsceneVars[7].point, sCutsceneVars[6].point, sCutsceneVars[7].angle);
-
-    if ((gPrevLevel == LEVEL_COTMC) || (gPrevLevel == LEVEL_HMC) || (gPrevLevel == LEVEL_RR)
-        || (gPrevLevel == LEVEL_WMOTR)) {
+    
+    if (dynos_level_is_vanilla_level(gCurrLevelNum) && ((gPrevLevel == LEVEL_COTMC) || (gPrevLevel == LEVEL_HMC) || (gPrevLevel == LEVEL_RR) || (gPrevLevel == LEVEL_WMOTR))) {
         c->focus[0] = c->pos[0] + (sMarioCamState->pos[0] - c->pos[0]) * 0.7f;
         c->focus[1] = c->pos[1] + (sMarioCamState->pos[1] - c->pos[1]) * 0.4f;
         c->focus[2] = c->pos[2] + (sMarioCamState->pos[2] - c->pos[2]) * 0.7f;
@@ -9676,16 +9689,18 @@ BAD_RETURN(s32) cutscene_exit_bowser_death(struct Camera *c) {
  * This overrides cutscene_non_painting_death_start()
  */
 BAD_RETURN(s32) cutscene_non_painting_death_override_offset(UNUSED struct Camera *c) {
-    switch (gPrevLevel) {
-        case LEVEL_HMC:
-            vec3f_set(sCutsceneVars[5].point, 187.f, 369.f, -197.f);
-            break;
-        case LEVEL_COTMC:
-            vec3f_set(sCutsceneVars[5].point, 187.f, 369.f, -197.f);
-            break;
-        default:
-            vec3f_set(sCutsceneVars[5].point, 107.f, 246.f, 1307.f);
-            break;
+    if (dynos_level_is_vanilla_level(gCurrLevelNum)) {
+        switch (gPrevLevel) {
+            case LEVEL_HMC:
+                vec3f_set(sCutsceneVars[5].point, 187.f, 369.f, -197.f);
+                break;
+            case LEVEL_COTMC:
+                vec3f_set(sCutsceneVars[5].point, 187.f, 369.f, -197.f);
+                break;
+            default:
+                vec3f_set(sCutsceneVars[5].point, 107.f, 246.f, 1307.f);
+                break;
+        }
     }
 }
 
@@ -10494,10 +10509,13 @@ BAD_RETURN(s32) cutscene_exit_painting_start(struct Camera *c) {
     vec3f_set(sCutsceneVars[2].point, 258.f, -352.f, 1189.f);
     vec3f_set(sCutsceneVars[1].point, 65.f, -155.f, 444.f);
 
-    if (gPrevLevel == LEVEL_TTM) {
-        sCutsceneVars[1].point[1] = 0.f;
-        sCutsceneVars[1].point[2] = 0.f;
+    if (dynos_level_is_vanilla_level(gCurrLevelNum)) {
+        if (gPrevLevel == LEVEL_TTM) {
+            sCutsceneVars[1].point[1] = 0.f;
+            sCutsceneVars[1].point[2] = 0.f;
+        }
     }
+
     vec3f_copy(sCutsceneVars[0].point, sMarioCamState->pos);
     sCutsceneVars[0].angle[0] = 0;
     sCutsceneVars[0].angle[1] = sMarioCamState->faceAngle[1];
@@ -10564,8 +10582,10 @@ BAD_RETURN(s32) cutscene_exit_painting(struct Camera *c) {
     cutscene_event(cutscene_exit_painting_move_to_floor, c, 5, -1);
 
     //! Hardcoded position. TTM's painting is close to an opposite wall, so just fix the pos.
-    if (gPrevLevel == LEVEL_TTM) {
-        vec3f_set(c->pos, -296.f, 1261.f, 3521.f);
+    if (dynos_level_is_vanilla_level(gCurrLevelNum)) {
+        if (gPrevLevel == LEVEL_TTM) {
+            vec3f_set(c->pos, -296.f, 1261.f, 3521.f);
+        }
     }
 
     update_camera_yaw(c);
