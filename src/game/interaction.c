@@ -930,7 +930,11 @@ u32 interact_star_or_key(struct MarioState *m, UNUSED u32 interactType, struct O
     }
 
     if (m->health >= 0x100) {
-        mario_stop_riding_and_holding(m);
+
+        if (gServerSettings.stayInLevelAfterStar != 2) {
+            mario_stop_riding_and_holding(m);
+        }
+
         queue_rumble_data_mario(m, 5, 80);
 
         if (!noExit) {
