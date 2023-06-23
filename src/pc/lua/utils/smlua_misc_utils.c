@@ -261,6 +261,10 @@ void camera_set_romhack_override(enum RomhackCameraOverride rco) {
     gOverrideRomhackCamera = rco;
 }
 
+void camera_romhack_allow_centering(u8 allow) {
+    gRomhackCameraAllowCentering = allow;
+}
+
 bool camera_config_is_free_cam_enabled(void) {
 #ifdef BETTERCAMERA
     return sOverrideEnableCamera.override ? sOverrideEnableCamera.value : configEnableCamera;

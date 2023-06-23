@@ -488,6 +488,26 @@
 
 <br />
 
+## [camera_romhack_allow_centering](#camera_romhack_allow_centering)
+
+### Lua Example
+`camera_romhack_allow_centering(allow)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| allow | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void camera_romhack_allow_centering(u8 allow);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [camera_set_romhack_override](#camera_set_romhack_override)
 
 ### Lua Example

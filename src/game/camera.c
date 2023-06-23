@@ -41,6 +41,7 @@ static u8 sSoftResettingCamera = FALSE;
 u8 gCameraUseCourseSpecificSettings = TRUE;
 u8 gOverrideFreezeCamera = FALSE;
 enum RomhackCameraOverride gOverrideRomhackCamera = RCO_ALL;
+u8 gRomhackCameraAllowCentering = TRUE;
 
 /**
  * @file camera.c
@@ -12252,7 +12253,7 @@ void mode_rom_hack_camera(struct Camera *c) {
     }
 
     // center
-    if (gMarioStates[0].controller->buttonPressed & L_TRIG) {
+    if (gMarioStates[0].controller->buttonPressed & L_TRIG && gRomhackCameraAllowCentering) {
         center_rom_hack_camera();
     }
 

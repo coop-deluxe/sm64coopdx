@@ -1578,6 +1578,7 @@
    - [camera_freeze](functions-5.md#camera_freeze)
    - [camera_is_frozen](functions-5.md#camera_is_frozen)
    - [camera_reset_overrides](functions-5.md#camera_reset_overrides)
+   - [camera_romhack_allow_centering](functions-5.md#camera_romhack_allow_centering)
    - [camera_set_romhack_override](functions-5.md#camera_set_romhack_override)
    - [camera_unfreeze](functions-5.md#camera_unfreeze)
    - [course_is_main_course](functions-5.md#course_is_main_course)
