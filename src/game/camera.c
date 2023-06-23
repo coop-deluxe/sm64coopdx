@@ -10780,7 +10780,6 @@ BAD_RETURN(s32) cutscene_door_fix_cam(struct Camera *c) {
     if (!c) { return; }
     vec3f_copy(c->pos, sCutsceneVars[0].point);
     vec3f_copy(c->focus, sCutsceneVars[1].point);
-    skip_camera_interpolation();
 }
 
 /**
