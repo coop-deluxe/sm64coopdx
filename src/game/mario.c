@@ -2402,7 +2402,7 @@ void mario_update_wall(struct MarioState* m, struct WallCollisionData* wcd) {
             }
 
             // find the wall that is most "facing away"
-            if (vec3f_dist((f32*)&m->wall->normal.x, (f32*)faceAngle) < vec3f_dist((f32*)&wcd->walls[i]->normal.x, (f32*)faceAngle)) {
+            if (vec3f_dot((f32*)&m->wall->normal.x, (f32*)faceAngle) > vec3f_dot((f32*)&wcd->walls[i]->normal.x, (f32*)faceAngle)) {
                 m->wall = wcd->walls[i];
             }
         }
