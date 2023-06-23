@@ -560,7 +560,7 @@ end
 function before_phys_step(m)
     local hScale = 1.0
 
-    if is_holding_flag(m) then
+    if is_holding_flag(m) and m.action ~= ACT_SHOT_FROM_CANNON then
         hScale = 0.9
     end
 
