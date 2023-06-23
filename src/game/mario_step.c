@@ -741,7 +741,9 @@ s32 perform_air_step(struct MarioState *m, u32 stepArg) {
         vec3f_copy(gFindWallDirection, step);
 
         gFindWallDirectionActive = true;
+        gFindWallDirectionAirborne = true;
         quarterStepResult = perform_air_quarter_step(m, intendedPos, stepArg);
+        gFindWallDirectionAirborne = false;
         gFindWallDirectionActive = false;
 
         //! On one qf, hit OOB/ceil/wall to store the 2 return value, and continue

@@ -2385,9 +2385,32 @@ void set_mario_particle_flags(struct MarioState* m, u32 flags, u8 clear) {
 void mario_update_wall(struct MarioState* m, struct WallCollisionData* wcd) {
     if (!m || !wcd) { return; }
 
-    m->wall = (wcd->numWalls > 0)
-        ? wcd->walls[wcd->numWalls - 1]
-        : NULL;
+    if (gLevelValues.fixCollisionBugs) {
+        // turn face angle into a direction vector
+        Vec3f faceAngle;
+        faceAngle[0] = coss(m->faceAngle[0]) * sins(m->faceAngle[1]);
+        faceAngle[1] = sins(m->faceAngle[0]);
+        faceAngle[2] = coss(m->faceAngle[0]) * coss(m->faceAngle[1]);
+        vec3f_normalize(faceAngle);
+
+        // reset wall
+        m->wall = NULL;
+        for (int i = 0; i < wcd->numWalls; i++) {
+            if (m->wall == NULL) {
+                m->wall = wcd->walls[i];
+                continue;
+            }
+
+            // find the wall that is most "facing away"
+            if (vec3f_dist((f32*)&m->wall->normal.x, (f32*)faceAngle) < vec3f_dist((f32*)&wcd->walls[i]->normal.x, (f32*)faceAngle)) {
+                m->wall = wcd->walls[i];
+            }
+        }
+    } else {
+        m->wall = (wcd->numWalls > 0)
+            ? wcd->walls[wcd->numWalls - 1]
+            : NULL;
+    }
 
     if (gLevelValues.fixCollisionBugs && wcd->normalCount > 0) {
         vec3f_set(m->wallNormal,
