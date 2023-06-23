@@ -2385,7 +2385,7 @@ void set_mario_particle_flags(struct MarioState* m, u32 flags, u8 clear) {
 void mario_update_wall(struct MarioState* m, struct WallCollisionData* wcd) {
     if (!m || !wcd) { return; }
 
-    if (gLevelValues.fixCollisionBugs) {
+    if (gLevelValues.fixCollisionBugs && gLevelValues.fixCollisionBugsPickBestWall) {
         // turn face angle into a direction vector
         Vec3f faceAngle;
         faceAngle[0] = coss(m->faceAngle[0]) * sins(m->faceAngle[1]);

@@ -959,6 +959,7 @@
 | fixCollisionBugs | `integer` |  |
 | fixCollisionBugsFalseLedgeGrab | `integer` |  |
 | fixCollisionBugsGroundPoundBonks | `integer` |  |
+| fixCollisionBugsPickBestWall | `integer` |  |
 | fixCollisionBugsRoundedCorners | `integer` |  |
 | fixVanishFloors | `integer` |  |
 | floatingStarDance | `integer` |  |

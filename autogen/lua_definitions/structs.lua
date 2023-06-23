@@ -653,6 +653,7 @@
 --- @field public fixCollisionBugs integer
 --- @field public fixCollisionBugsFalseLedgeGrab integer
 --- @field public fixCollisionBugsGroundPoundBonks integer
+--- @field public fixCollisionBugsPickBestWall integer
 --- @field public fixCollisionBugsRoundedCorners integer
 --- @field public fixVanishFloors integer
 --- @field public floatingStarDance integer
