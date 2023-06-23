@@ -155,6 +155,7 @@ void network_receive_spawn_objects(struct Packet* p) {
             name = gNetworkPlayers[p->localIndex].name;
         }
         LOG_INFO("rx spawn object %s from %s (%s)", get_behavior_name_from_id(data.behaviorId), name, id);
+        LOG_CONSOLE("rx spawn object %s from %s (%s)", get_behavior_name_from_id(data.behaviorId), name, id);
         snprintf(gLastRemoteBhv, 256, "%s %s (%s)", get_behavior_name_from_id(data.behaviorId), name, id);
 
         struct Object* parentObj = NULL;
