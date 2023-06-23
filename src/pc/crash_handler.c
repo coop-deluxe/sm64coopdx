@@ -1,6 +1,8 @@
 // Adapted from PeachyPeach's sm64pc-omm (now sm64ex-omm)
 #include "crash_handler.h"
 
+char gLastRemoteBhv[256] = "";
+
 #if (defined(_WIN32) || defined(__linux__)) && !defined(WAPI_DUMMY)
 
 #ifdef HAVE_SDL2
@@ -25,8 +27,6 @@
 #include "pc/gfx/gfx_rendering_api.h"
 #include "pc/mods/mods.h"
 #include "pc/debuglog.h"
-
-char gLastRemoteBhv[256] = "";
 
 typedef struct {
     s32 x, y;
