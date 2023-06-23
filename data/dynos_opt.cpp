@@ -621,7 +621,6 @@ static void DynOS_Opt_CreateModelPacksSubMenu() {
 void DynOS_Opt_Init() {
 
 #ifdef COOP
-    DynOS_Gfx_Init();
 #else
     // Convert options menu
     DynOS_Opt_InitVanilla(sOptionsMenu);

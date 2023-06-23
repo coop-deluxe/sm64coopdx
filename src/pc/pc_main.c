@@ -291,6 +291,7 @@ void main_func(void) {
     sync_objects_init_system();
     djui_unicode_init();
     djui_init();
+    dynos_packs_init();
     mods_init();
 
     // load config

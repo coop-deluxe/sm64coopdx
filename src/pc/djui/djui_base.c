@@ -176,6 +176,7 @@ void djui_base_compute(struct DjuiBase* base) {
 }
 
 void djui_base_compute_tree(struct DjuiBase* base) {
+    if (!base) { return; }
     if (base->parent != NULL) {
         djui_base_compute_tree(base->parent);
     }

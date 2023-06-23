@@ -65,6 +65,7 @@ static bool djui_console_on_key_down(UNUSED struct DjuiBase* base, int scancode)
 }
 
 void djui_console_message_create(char* message) {
+    if (!gDjuiConsole) { return; }
     djui_base_compute_tree(&gDjuiConsole->base);
     struct DjuiBase* cfBase = &gDjuiConsole->flow->base;
 
