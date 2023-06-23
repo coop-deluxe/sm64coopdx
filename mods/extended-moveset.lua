@@ -2,6 +2,8 @@
 -- incompatible: moveset
 -- description: Adds various new moves from games like Sunshine and Odyssey without replacing any existing ones.\n\nOriginal author: TheGag96
 
+local enable_extended_moveset = true
+
 ------------------------
 -- initialize actions --
 ------------------------
@@ -1318,6 +1320,7 @@ end
 ---------------------------------------------------------
 
 function mario_on_set_action(m)
+    if not enable_extended_moveset then return end
     local e = gMarioStateExtras[m.playerIndex]
 
     if (m.action & ACT_FLAG_MOVING) ~= 0 then
@@ -1352,6 +1355,7 @@ function mario_on_set_action(m)
 end
 
 function before_mario_update(m)
+    if not enable_extended_moveset then return end
     local e = gMarioStateExtras[m.playerIndex]
     -- revert fake saved action
     if e.fakeSaved == true then
@@ -1377,6 +1381,7 @@ function after_mario_update(m)
 end
 
 function mario_update(m)
+    if not enable_extended_moveset then return end
     local e = gMarioStateExtras[m.playerIndex]
 
     mario_update_spin_input(m)
@@ -1441,6 +1446,17 @@ function mario_update(m)
     after_mario_update(m)
 end
 
+local function on_chat_command(msg)
+    if msg:lower() == 'off' then
+        enable_extended_moveset = false
+        djui_chat_message_create("Extended moveset is now disabled")
+    elseif msg:lower() == 'on' then
+        enable_extended_moveset = true
+        djui_chat_message_create("Extended moveset is now enabled")
+    end
+    return true
+end
+
 -----------
 -- hooks --
 -----------
@@ -1468,3 +1484,5 @@ hook_mario_action(ACT_HOLD_HEAVY_WALKING,        { every_frame = act_hold_heavy_
 hook_mario_action(ACT_FINISH_TURNING_AROUND,     { every_frame = act_finish_turning_around })
 hook_mario_action(ACT_CRAWLING,                  { every_frame = act_crawling })
 hook_mario_action(ACT_AIR_HIT_WALL,              { every_frame = act_air_hit_wall })
+
+hook_chat_command('ext-moveset', "Turn extended moveset [on|off]", on_chat_command)
