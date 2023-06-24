@@ -1,15 +1,9 @@
 #include <stdio.h>
 #include "smlua.h"
-#define STB_DS_IMPLEMENTATION 1
-#include "pc/utils/stb_ds.h"
-
-struct AllowList {
-    u64 key;
-    u8 value;
-};
+#include "data/dynos_cmap.cpp.h"
 
 #define LOT_COUNT (LOT_MAX + (LOT_AUTOGEN_MAX - LOT_AUTOGEN_MIN))
-static struct AllowList* sObjectAllowList[LOT_COUNT] = { 0 };
+static void* sObjectAllowList[LOT_COUNT] = { NULL };
 static u64 sCachedObjectAllowed[LOT_COUNT] = { 0 };
 
 static u16 smlua_lot_mapping(u16 lot) {
@@ -28,11 +22,9 @@ void smlua_cobject_allowlist_shutdown(void) {
     for (s32 i = 0; i < LOT_COUNT; i++) {
         sCachedObjectAllowed[i] = 0;
 
-        while (sObjectAllowList[i] && hmlen(sObjectAllowList[i]) > 0) {
-            hmdel(sObjectAllowList[i], sObjectAllowList[i]->key);
+        if (sObjectAllowList[i]) {
+            hmap_clear(sObjectAllowList[i]);
         }
-
-        sObjectAllowList[i] = NULL;
     }
 }
 
@@ -44,8 +36,12 @@ void smlua_cobject_allowlist_add(u16 lot, u64 pointer) {
     if (sCachedObjectAllowed[m] == pointer) { return; }
     sCachedObjectAllowed[m] = pointer;
 
-    if (!hmget(sObjectAllowList[m], pointer)) {
-        hmput(sObjectAllowList[m], pointer, 1);
+    if (!sObjectAllowList[m]) {
+        sObjectAllowList[m] = hmap_create();
+    }
+
+    if (!hmap_get(sObjectAllowList[m], pointer)) {
+        hmap_put(sObjectAllowList[m], pointer, 1);
     }
 }
 
@@ -56,12 +52,13 @@ bool smlua_cobject_allowlist_contains(u16 lot, u64 pointer) {
     u16 m = smlua_lot_mapping(lot);
     if (sCachedObjectAllowed[m] == pointer) { return true; }
 
-    return hmget(sObjectAllowList[m], pointer);
+    if (!sObjectAllowList[m]) { return false; }
+    return hmap_get(sObjectAllowList[m], pointer) != 0;
 }
 
 /////////////////////////////
 
-static struct AllowList* sPointerAllowList[LVT_MAX] = { 0 };
+static void* sPointerAllowList[LVT_MAX] = { 0 };
 static u64 sCachedPointerAllowed[LVT_MAX] = { 0 };
 
 void smlua_cpointer_allowlist_init(void) {
@@ -72,11 +69,9 @@ void smlua_cpointer_allowlist_shutdown(void) {
     for (s32 i = 0; i < LVT_MAX; i++) {
         sCachedPointerAllowed[i] = 0;
 
-        while (sPointerAllowList[i] && hmlen(sPointerAllowList[i]) > 0) {
-            hmdel(sPointerAllowList[i], sPointerAllowList[i]->key);
+        if (sPointerAllowList[i]) {
+            hmap_clear(sPointerAllowList[i]);
         }
-
-        sPointerAllowList[i] = NULL;
     }
 }
 
@@ -87,8 +82,12 @@ void smlua_cpointer_allowlist_add(u16 lvt, u64 pointer) {
     if (sCachedPointerAllowed[lvt] == pointer) { return; }
     sCachedPointerAllowed[lvt] = pointer;
 
-    if (!hmget(sPointerAllowList[lvt], pointer)) {
-        hmput(sPointerAllowList[lvt], pointer, 1);
+    if (!sPointerAllowList[lvt]) {
+        sPointerAllowList[lvt] = hmap_create();
+    }
+
+    if (!hmap_get(sPointerAllowList[lvt], pointer)) {
+        hmap_put(sPointerAllowList[lvt], pointer, 1);
     }
 }
 
@@ -98,5 +97,6 @@ bool smlua_cpointer_allowlist_contains(u16 lvt, u64 pointer) {
 
     if (sCachedPointerAllowed[lvt] == pointer) { return true; }
 
-    return hmget(sPointerAllowList[lvt], pointer);
+    if (!sPointerAllowList[lvt]) { return false; }
+    return hmap_get(sPointerAllowList[lvt], pointer) != 0;
 }
