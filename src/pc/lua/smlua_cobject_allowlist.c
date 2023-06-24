@@ -41,7 +41,7 @@ void smlua_cobject_allowlist_add(u16 lot, u64 pointer) {
     }
 
     if (!hmap_get(sObjectAllowList[m], pointer)) {
-        hmap_put(sObjectAllowList[m], pointer, 1);
+        hmap_put(sObjectAllowList[m], pointer, (void*)1);
     }
 }
 
@@ -87,7 +87,7 @@ void smlua_cpointer_allowlist_add(u16 lvt, u64 pointer) {
     }
 
     if (!hmap_get(sPointerAllowList[lvt], pointer)) {
-        hmap_put(sPointerAllowList[lvt], pointer, 1);
+        hmap_put(sPointerAllowList[lvt], pointer, (void*)1);
     }
 }
 
