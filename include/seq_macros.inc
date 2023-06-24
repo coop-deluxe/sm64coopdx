@@ -91,7 +91,11 @@
 
 .macro seq_initchannels_extended a
     .byte 0xc1
-    .byte (\a >> 56) & 0xff, (\a >> 48) & 0xff, (\a >> 40) & 0xff, (\a >> 32) & 0xff, (\a >> 24) & 0xff, (\a >> 16) & 0xff, (\a >> 8) & 0xff, \a & 0xff
+    .ifdef BITS_32
+        .byte 0, 0, 0, 0, (\a >> 24) & 0xff, (\a >> 16) & 0xff, (\a >> 8) & 0xff, \a & 0xff
+    .else
+        .byte (\a >> 56) & 0xff, (\a >> 48) & 0xff, (\a >> 40) & 0xff, (\a >> 32) & 0xff, (\a >> 24) & 0xff, (\a >> 16) & 0xff, (\a >> 8) & 0xff, \a & 0xff
+    .endif
 .endm
 
 .macro seq_changevol a
