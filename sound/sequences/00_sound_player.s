@@ -18,7 +18,12 @@ seq_setmutescale 0
   seq_setvol 127
 .endif
 seq_settempo 120
-seq_initchannels_extended 0xffffffffffffffff
+
+.ifdef BITS_32
+  seq_initchannels_extended 0xb33f
+.else
+  seq_initchannels_extended 0xffffffffffffffff
+.endif
 
 # SOUND_BANK_ACTION
 seq_startchannel_extended 0, .channel0

@@ -175,6 +175,9 @@ else
   EXTRA_CPP_INCLUDES ?=
 endif
 
+ifeq ($(TARGET_BITS), 32)
+    DEFINES += BITS_32=1
+endif
 
 # VERSION - selects the version of the game to build
 #   jp - builds the 1996 Japanese version
