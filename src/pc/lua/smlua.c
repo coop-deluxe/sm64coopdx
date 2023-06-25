@@ -308,7 +308,7 @@ void smlua_update(void) {
     // over time.
     // The real fix would be to make smlua produce less
     // garbage.
-
+}
 
 void smlua_shutdown(void) {
     hardcoded_reset_default_values();
