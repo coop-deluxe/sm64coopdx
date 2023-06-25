@@ -198,7 +198,7 @@ void produce_interpolation_frames_and_delay(void) {
     }
 
     f32 fps = frames / (clock_elapsed_f64() - sFrameTimeStart);
-    sAvgFps = sAvgFps * 0.6 + fps * 0.4;
+    sAvgFps = sAvgFps * 0.95 + fps * 0.05;
     sAvgFrames = sAvgFrames * 0.9 + frames * 0.1;
     sFrameTimeStart = sFrameTargetTime;
     sFrameTargetTime += sFrameTime * gGameSpeed;

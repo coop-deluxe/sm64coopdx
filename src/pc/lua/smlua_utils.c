@@ -420,14 +420,14 @@ void smlua_push_object(lua_State* L, u16 lot, void* p) {
     // add to allowlist
     smlua_cobject_allowlist_add(lot, (u64)(intptr_t)p);
 
-    lua_newtable(L);
-    int t = lua_gettop(L);
-    smlua_push_integer_field(t, "_lot", lot);
-    smlua_push_integer_field(t, "_pointer", (u64)(intptr_t)p);
-    lua_pushglobaltable(L);
-    lua_getfield(gLuaState, -1, "_CObject");
-    lua_setmetatable(L, -3);
-    lua_pop(L, 1); // pop global table
+    // get a cobject from a function
+    lua_getglobal(L, "_NewCObject");  // Get the function by its global name
+    lua_pushinteger(L, lot);
+    lua_pushinteger(L, (u64)(intptr_t)p);
+
+    if (lua_pcall(L, 2, 1, 0) != LUA_OK) {
+        LOG_ERROR("Error calling Lua function: %s\n", lua_tostring(L, -1));
+    }
 }
 
 void smlua_push_pointer(lua_State* L, u16 lvt, void* p) {
@@ -438,14 +438,13 @@ void smlua_push_pointer(lua_State* L, u16 lvt, void* p) {
 
     smlua_cpointer_allowlist_add(lvt, (u64)(intptr_t)p);
 
-    lua_newtable(L);
-    int t = lua_gettop(L);
-    smlua_push_integer_field(t, "_lvt", lvt);
-    smlua_push_integer_field(t, "_pointer", (u64)(intptr_t)p);
-    lua_pushglobaltable(L);
-    lua_getfield(gLuaState, -1, "_CPointer");
-    lua_setmetatable(L, -3);
-    lua_pop(L, 1); // pop global table
+    // get a cpointer from a function
+    lua_getglobal(L, "_NewCPointer");  // Get the function by its global name
+    lua_pushinteger(L, lvt);
+    lua_pushinteger(L, (u64)(intptr_t)p);
+    if (lua_pcall(L, 2, 1, 0) != LUA_OK) {
+        LOG_ERROR("Error calling Lua function: %s\n", lua_tostring(L, -1));
+    }
 }
 
 void smlua_push_integer_field(int index, char* name, lua_Integer val) {

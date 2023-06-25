@@ -338,6 +338,9 @@ function mario_local_update(m)
     local s = gPlayerSyncTable[m.playerIndex]
     local e = gMarioStateExtras[m.playerIndex]
 
+    if (m.controller.buttonDown & Z_TRIG) ~= 0 then
+        mario_fire_flower_use(m)
+    end
     -- decrease cooldown
     if e.attackCooldown > 0 then
         e.attackCooldown = e.attackCooldown - 1
