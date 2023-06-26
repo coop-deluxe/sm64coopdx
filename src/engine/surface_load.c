@@ -764,6 +764,10 @@ void load_object_collision_model(void) {
         LOG_ERROR("Object collisions had invalid vertex count");
         return;
     }
+    if (numVertices >= 4096) {
+        LOG_ERROR("Object collisions had too many vertices");
+        return;
+    }
 
     static s32 sVertexDataCount = 0;
     static s16* sVertexData = NULL;

@@ -135,13 +135,19 @@ void* growing_pool_alloc(struct GrowingPool *pool, u32 size) {
     }
 
     // search for space in nodes
-    struct GrowingPoolNode* node = pool->tail;
-    u32 depth = 0;
-    while (node) {
-        depth++;
-        s64 freeSpace = (s64)pool->nodeSize - (s64)node->usedSpace;
-        if (freeSpace > size) { break; }
-        node = node->prev;
+    struct GrowingPoolNode* node = NULL;
+    if (size < pool->nodeSize) {
+        node = pool->tail;
+        u32 depth = 0;
+        while (node && depth < 128) {
+            depth++;
+            s64 freeSpace = (s64)pool->nodeSize - (s64)node->usedSpace;
+            if (freeSpace > size) { break; }
+            node = node->prev;
+        }
+        if (depth >= 128) {
+            node = NULL;
+        }
     }
 
     // allocate new node
