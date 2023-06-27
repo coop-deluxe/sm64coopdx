@@ -39,11 +39,12 @@ void DynOS_Lvl_ModShutdown() {
 
     auto& _CustomLevelScripts = DynOS_Lvl_GetArray();
     while (_CustomLevelScripts.Count() > 0) {
-        auto& pair = _CustomLevelScripts[0];
-        DynOS_Tex_Invalid(pair.second);
-        Delete(pair.second);
-        free((void*)pair.first);
-        _CustomLevelScripts.Remove(0);
+        for (auto& pair : _CustomLevelScripts) {
+            DynOS_Tex_Invalid(pair.second);
+            Delete(pair.second);
+            free((void*)pair.first);
+        }
+        _CustomLevelScripts.Clear();
     }
 
     auto& _OverrideLevelScripts = DynosOverrideLevelScripts();

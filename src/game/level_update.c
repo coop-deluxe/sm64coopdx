@@ -1781,6 +1781,10 @@ s32 init_level(void) {
     }
     smlua_call_event_hooks(HOOK_ON_LEVEL_INIT);
 
+    // clear texture 1 on level init -- can linger and corrupt textures otherwise
+    extern u8 gGfxPcResetTex1;
+    gGfxPcResetTex1 = 1;
+
     return 1;
 }
 

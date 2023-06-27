@@ -63,6 +63,8 @@
 #define HASHMAP_LEN (MAX_CACHED_TEXTURES * 2)
 #define HASH_MASK (HASHMAP_LEN - 1)
 
+u8 gGfxPcResetTex1 = 0;
+
 struct RGBA {
     uint8_t r, g, b, a;
 };
@@ -359,6 +361,10 @@ static struct ColorCombiner *gfx_lookup_or_create_color_combiner(struct CombineM
     gfx_generate_cc(comb);
 
     return prev_combiner = comb;
+}
+
+void gfx_texture_cache_clear(void) {
+    memset(&gfx_texture_cache, 0, sizeof(gfx_texture_cache));
 }
 
 static bool gfx_texture_cache_lookup(int tile, struct TextureHashmapNode **n, const uint8_t *orig_addr, uint32_t fmt, uint32_t siz) {
@@ -1903,6 +1909,11 @@ struct GfxRenderingAPI *gfx_get_current_rendering_api(void) {
 }
 
 void gfx_start_frame(void) {
+    if (gGfxPcResetTex1 > 0) {
+        gGfxPcResetTex1--;
+        rdp.loaded_texture[1].addr = NULL;
+        rdp.loaded_texture[1].size_bytes = 0;
+    }
     gfx_wapi->handle_events();
     gfx_wapi->get_dimensions(&gfx_current_dimensions.width, &gfx_current_dimensions.height);
     if (gfx_current_dimensions.height == 0) {

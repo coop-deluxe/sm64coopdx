@@ -379,6 +379,7 @@ void DynOS_Tex_Activate(DataNode<TexData>* aNode, bool aCustomTexture) {
 
 void DynOS_Tex_Deactivate(DataNode<TexData>* aNode) {
     if (!aNode) { return; }
+    aNode->mData->mUploaded = false;
 
     // remove from custom textures
     auto& _DynosCustomTexs = DynosCustomTexs();
