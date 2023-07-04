@@ -38,6 +38,14 @@ Lights1 waluigi_sideburns_lights = gdSPDefLights1(
 	0x2D, 0x20, 0x0,
 	0x63, 0x4A, 0x0, 0x28, 0x28, 0x28);
 
+Lights1 waluigi_emblem_lights = gdSPDefLights1(
+	0x7F, 0x7F, 0x7F,
+	0xFF, 0xFF, 0xFF, 0x28, 0x28, 0x28);
+
+Lights1 waluigi_emblem_icon_lights = gdSPDefLights1(
+	0x7F, 0x7F, 0x7F,
+	0xFF, 0xFF, 0xFF, 0x28, 0x28, 0x28);
+
 Lights1 waluigi_eyes_half_lights = gdSPDefLights1(
 	0x6F, 0x4E, 0x31,
 	0xDF, 0xA1, 0x6A, 0x28, 0x28, 0x28);
@@ -88,11 +96,6 @@ u8 waluigi_custom_waluigi_metal_rgba16[] = {
 	#include "actors/waluigi/custom_waluigi_metal.rgba16.inc.c"
 };
 
-Gfx waluigi_custom_waluigi_cap_rgba16_aligner[] = {gsSPEndDisplayList()};
-u8 waluigi_custom_waluigi_cap_rgba16[] = {
-	#include "actors/waluigi/custom_waluigi_cap.rgba16.inc.c"
-};
-
 Gfx waluigi_custom_waluigi_eyes_center_rgba16_aligner[] = {gsSPEndDisplayList()};
 u8 waluigi_custom_waluigi_eyes_center_rgba16[] = {
 	#include "actors/waluigi/custom_waluigi_eyes_center.rgba16.inc.c"
@@ -106,6 +109,16 @@ u8 waluigi_custom_waluigi_mouth_rgba16[] = {
 Gfx waluigi_custom_waluigi_sideburns_rgba16_aligner[] = {gsSPEndDisplayList()};
 u8 waluigi_custom_waluigi_sideburns_rgba16[] = {
 	#include "actors/waluigi/custom_waluigi_sideburns.rgba16.inc.c"
+};
+
+Gfx waluigi_custom_waluigi_cap_rgba16_aligner[] = {gsSPEndDisplayList()};
+u8 waluigi_custom_waluigi_cap_rgba16[] = {
+	#include "actors/waluigi/custom_waluigi_cap.rgba16.inc.c"
+};
+
+Gfx waluigi_custom_waluigi_glove_rgba16_aligner[] = {gsSPEndDisplayList()};
+u8 waluigi_custom_waluigi_glove_rgba16[] = {
+	#include "actors/waluigi/custom_waluigi_glove.rgba16.inc.c"
 };
 
 Gfx waluigi_custom_waluigi_eyes_half_closed_rgba16_aligner[] = {gsSPEndDisplayList()};
@@ -156,11 +169,6 @@ u8 waluigi_wing_2_rgba16[] = {
 Gfx waluigi_wing_1_rgba16_aligner[] = {gsSPEndDisplayList()};
 u8 waluigi_wing_1_rgba16[] = {
 	#include "actors/waluigi/wing_1.rgba16.inc.c"
-};
-
-Gfx waluigi_custom_waluigi_glove_rgba16_aligner[] = {gsSPEndDisplayList()};
-u8 waluigi_custom_waluigi_glove_rgba16[] = {
-	#include "actors/waluigi/custom_waluigi_glove.rgba16.inc.c"
 };
 
 Vtx waluigi_Butt_mesh_layer_1_vtx_0[76] = {
@@ -1118,6 +1126,46 @@ Gfx waluigi_Head_DL_mesh_layer_5_tri_0[] = {
 	gsSPEndDisplayList(),
 };
 
+Vtx waluigi_Head_DL_mesh_layer_5_vtx_1[7] = {
+	{{ {300, 67, -54}, 0, {28, 29}, {250, 113, 198, 0} }},
+	{{ {186, 24, -70}, 0, {-181, 1008}, {236, 87, 166, 0} }},
+	{{ {212, 77, -24}, 0, {282, 769}, {243, 115, 204, 0} }},
+	{{ {317, 86, 0}, 0, {496, -118}, {255, 127, 0, 0} }},
+	{{ {212, 77, 24}, 0, {710, 769}, {243, 115, 52, 0} }},
+	{{ {300, 67, 54}, 0, {964, 29}, {250, 113, 58, 0} }},
+	{{ {186, 24, 70}, 0, {1173, 1008}, {236, 87, 90, 0} }},
+};
+
+Gfx waluigi_Head_DL_mesh_layer_5_tri_1[] = {
+	gsSPVertex(waluigi_Head_DL_mesh_layer_5_vtx_1 + 0, 7, 0),
+	gsSP1Triangle(0, 1, 2, 0),
+	gsSP1Triangle(3, 0, 2, 0),
+	gsSP1Triangle(4, 3, 2, 0),
+	gsSP1Triangle(3, 4, 5, 0),
+	gsSP1Triangle(5, 4, 6, 0),
+	gsSPEndDisplayList(),
+};
+
+Vtx waluigi_Head_DL_mesh_layer_5_vtx_2[7] = {
+	{{ {300, 67, -54}, 0, {28, 29}, {250, 113, 198, 0} }},
+	{{ {186, 24, -70}, 0, {-181, 1008}, {236, 87, 166, 0} }},
+	{{ {212, 77, -24}, 0, {282, 769}, {243, 115, 204, 0} }},
+	{{ {317, 86, 0}, 0, {496, -118}, {255, 127, 0, 0} }},
+	{{ {212, 77, 24}, 0, {710, 769}, {243, 115, 52, 0} }},
+	{{ {300, 67, 54}, 0, {964, 29}, {250, 113, 58, 0} }},
+	{{ {186, 24, 70}, 0, {1173, 1008}, {236, 87, 90, 0} }},
+};
+
+Gfx waluigi_Head_DL_mesh_layer_5_tri_2[] = {
+	gsSPVertex(waluigi_Head_DL_mesh_layer_5_vtx_2 + 0, 7, 0),
+	gsSP1Triangle(0, 1, 2, 0),
+	gsSP1Triangle(3, 0, 2, 0),
+	gsSP1Triangle(4, 3, 2, 0),
+	gsSP1Triangle(3, 4, 5, 0),
+	gsSP1Triangle(5, 4, 6, 0),
+	gsSPEndDisplayList(),
+};
+
 Vtx waluigi_Switch_Option_Head_Capless_Dead_DL_mesh_layer_1_vtx_0[66] = {
 	{{ {172, 81, 0}, 0, {-16, 1008}, {15, 126, 0, 0} }},
 	{{ {199, 69, 35}, 0, {-16, 1008}, {155, 76, 12, 0} }},
@@ -1628,6 +1676,26 @@ Gfx waluigi_Switch_Option_Head_Capless_Dead_DL_mesh_layer_5_tri_0[] = {
 	gsSP1Triangle(5, 6, 7, 0),
 	gsSP1Triangle(8, 5, 7, 0),
 	gsSP1Triangle(7, 9, 8, 0),
+	gsSPEndDisplayList(),
+};
+
+Vtx waluigi_Switch_Option_Head_Capless_Dead_DL_mesh_layer_5_vtx_1[7] = {
+	{{ {300, 67, 54}, 0, {964, 29}, {250, 113, 58, 0} }},
+	{{ {213, 77, 24}, 0, {710, 769}, {243, 115, 52, 0} }},
+	{{ {186, 24, 70}, 0, {1173, 1008}, {236, 87, 90, 0} }},
+	{{ {317, 86, 0}, 0, {496, -118}, {255, 127, 0, 0} }},
+	{{ {213, 77, -24}, 0, {282, 769}, {243, 115, 204, 0} }},
+	{{ {300, 67, -54}, 0, {28, 29}, {250, 113, 198, 0} }},
+	{{ {186, 24, -70}, 0, {-181, 1008}, {236, 87, 166, 0} }},
+};
+
+Gfx waluigi_Switch_Option_Head_Capless_Dead_DL_mesh_layer_5_tri_1[] = {
+	gsSPVertex(waluigi_Switch_Option_Head_Capless_Dead_DL_mesh_layer_5_vtx_1 + 0, 7, 0),
+	gsSP1Triangle(0, 1, 2, 0),
+	gsSP1Triangle(3, 1, 0, 0),
+	gsSP1Triangle(1, 3, 4, 0),
+	gsSP1Triangle(3, 5, 4, 0),
+	gsSP1Triangle(5, 6, 4, 0),
 	gsSPEndDisplayList(),
 };
 
@@ -2958,6 +3026,31 @@ Gfx waluigi_Left_Hand_DL_mesh_layer_1_tri_0[] = {
 	gsSPEndDisplayList(),
 };
 
+Vtx waluigi_Left_Hand_DL_mesh_layer_5_vtx_0[9] = {
+	{{ {31, 5, 41}, 0, {409, 561}, {228, 240, 123, 0} }},
+	{{ {54, 74, 10}, 0, {-82, 221}, {235, 57, 112, 0} }},
+	{{ {8, 54, 12}, 0, {-45, 636}, {211, 44, 110, 0} }},
+	{{ {81, 26, 40}, 0, {423, 161}, {3, 253, 127, 0} }},
+	{{ {102, -24, 6}, 0, {942, 220}, {28, 195, 108, 0} }},
+	{{ {53, -42, 9}, 0, {856, 634}, {5, 186, 106, 0} }},
+	{{ {29, -38, 5}, 0, {748, 801}, {226, 178, 96, 0} }},
+	{{ {13, -1, 27}, 0, {396, 734}, {190, 226, 104, 0} }},
+	{{ {-5, 35, 7}, 0, {47, 801}, {182, 23, 101, 0} }},
+};
+
+Gfx waluigi_Left_Hand_DL_mesh_layer_5_tri_0[] = {
+	gsSPVertex(waluigi_Left_Hand_DL_mesh_layer_5_vtx_0 + 0, 9, 0),
+	gsSP1Triangle(0, 1, 2, 0),
+	gsSP1Triangle(0, 3, 1, 0),
+	gsSP1Triangle(4, 3, 0, 0),
+	gsSP1Triangle(5, 4, 0, 0),
+	gsSP1Triangle(6, 5, 0, 0),
+	gsSP1Triangle(0, 7, 6, 0),
+	gsSP1Triangle(8, 7, 0, 0),
+	gsSP1Triangle(8, 0, 2, 0),
+	gsSPEndDisplayList(),
+};
+
 Vtx waluigi_Switch_Option_Left_Hand_Open_mesh_layer_1_vtx_0[72] = {
 	{{ {121, 73, -21}, 0, {-16, -16}, {77, 95, 34, 255} }},
 	{{ {70, 89, -20}, 0, {-16, -16}, {240, 126, 249, 255} }},
@@ -3103,6 +3196,31 @@ Gfx waluigi_Switch_Option_Left_Hand_Open_mesh_layer_1_tri_0[] = {
 	gsSP1Triangle(3, 5, 7, 0),
 	gsSP1Triangle(7, 1, 3, 0),
 	gsSP1Triangle(7, 2, 1, 0),
+	gsSPEndDisplayList(),
+};
+
+Vtx waluigi_Switch_Option_Left_Hand_Open_mesh_layer_5_vtx_0[9] = {
+	{{ {83, -17, 10}, 0, {945, 212}, {21, 227, 122, 255} }},
+	{{ {77, 41, 21}, 0, {485, 185}, {251, 44, 119, 255} }},
+	{{ {26, 16, 28}, 0, {528, 698}, {222, 13, 122, 255} }},
+	{{ {70, 89, -20}, 0, {37, 151}, {229, 79, 96, 255} }},
+	{{ {6, 53, -9}, 0, {129, 746}, {204, 67, 95, 255} }},
+	{{ {-3, 35, -9}, 0, {241, 838}, {172, 40, 87, 255} }},
+	{{ {11, 5, 17}, 0, {549, 817}, {186, 246, 106, 255} }},
+	{{ {26, -32, 6}, 0, {858, 706}, {224, 205, 112, 255} }},
+	{{ {45, -34, 10}, 0, {945, 558}, {253, 212, 119, 255} }},
+};
+
+Gfx waluigi_Switch_Option_Left_Hand_Open_mesh_layer_5_tri_0[] = {
+	gsSPVertex(waluigi_Switch_Option_Left_Hand_Open_mesh_layer_5_vtx_0 + 0, 9, 0),
+	gsSP1Triangle(0, 1, 2, 0),
+	gsSP1Triangle(2, 1, 3, 0),
+	gsSP1Triangle(2, 3, 4, 0),
+	gsSP1Triangle(5, 2, 4, 0),
+	gsSP1Triangle(5, 6, 2, 0),
+	gsSP1Triangle(2, 6, 7, 0),
+	gsSP1Triangle(7, 8, 2, 0),
+	gsSP1Triangle(8, 0, 2, 0),
 	gsSPEndDisplayList(),
 };
 
@@ -3343,6 +3461,31 @@ Gfx waluigi_Right_Hand_DL_mesh_layer_1_tri_0[] = {
 	gsSPEndDisplayList(),
 };
 
+Vtx waluigi_Right_Hand_DL_mesh_layer_5_vtx_0[9] = {
+	{{ {37, 9, -35}, 0, {404, 607}, {233, 247, 131, 0} }},
+	{{ {56, -40, -4}, 0, {-51, 674}, {8, 191, 147, 0} }},
+	{{ {33, -36, -2}, 0, {55, 845}, {230, 184, 154, 0} }},
+	{{ {105, -23, 0}, 0, {-128, 253}, {30, 200, 146, 0} }},
+	{{ {87, 28, -31}, 0, {388, 197}, {9, 0, 129, 0} }},
+	{{ {60, 75, -1}, 0, {896, 268}, {240, 62, 146, 0} }},
+	{{ {12, 56, -4}, 0, {859, 694}, {215, 49, 146, 0} }},
+	{{ {0, 39, -2}, 0, {766, 845}, {186, 28, 154, 0} }},
+	{{ {17, 1, -22}, 0, {406, 791}, {196, 230, 147, 0} }},
+};
+
+Gfx waluigi_Right_Hand_DL_mesh_layer_5_tri_0[] = {
+	gsSPVertex(waluigi_Right_Hand_DL_mesh_layer_5_vtx_0 + 0, 9, 0),
+	gsSP1Triangle(0, 1, 2, 0),
+	gsSP1Triangle(0, 3, 1, 0),
+	gsSP1Triangle(0, 4, 3, 0),
+	gsSP1Triangle(5, 4, 0, 0),
+	gsSP1Triangle(6, 5, 0, 0),
+	gsSP1Triangle(6, 0, 7, 0),
+	gsSP1Triangle(0, 8, 7, 0),
+	gsSP1Triangle(2, 8, 0, 0),
+	gsSPEndDisplayList(),
+};
+
 Vtx waluigi_Switch_Option_Right_Hand_Open_mesh_layer_1_vtx_0[73] = {
 	{{ {30, 13, -30}, 0, {406, 706}, {215, 3, 136, 255} }},
 	{{ {86, -19, -13}, 0, {-17, 214}, {62, 185, 171, 255} }},
@@ -3489,6 +3632,31 @@ Gfx waluigi_Switch_Option_Right_Hand_Open_mesh_layer_1_tri_0[] = {
 	gsSP1Triangle(7, 8, 1, 0),
 	gsSP1Triangle(1, 3, 7, 0),
 	gsSP1Triangle(3, 4, 7, 0),
+	gsSPEndDisplayList(),
+};
+
+Vtx waluigi_Switch_Option_Right_Hand_Open_mesh_layer_5_vtx_0[9] = {
+	{{ {30, 13, -30}, 0, {406, 706}, {215, 3, 136, 255} }},
+	{{ {86, -19, -13}, 0, {-17, 214}, {13, 216, 136, 255} }},
+	{{ {48, -35, -9}, 0, {-37, 612}, {243, 201, 142, 255} }},
+	{{ {81, 37, -28}, 0, {491, 96}, {245, 33, 134, 255} }},
+	{{ {76, 88, 9}, 0, {954, 98}, {225, 72, 156, 255} }},
+	{{ {13, 53, 5}, 0, {823, 735}, {202, 62, 159, 255} }},
+	{{ {3, 36, 6}, 0, {704, 856}, {172, 38, 168, 255} }},
+	{{ {16, 4, -17}, 0, {379, 847}, {178, 236, 158, 255} }},
+	{{ {30, -32, -4}, 0, {53, 766}, {214, 196, 152, 255} }},
+};
+
+Gfx waluigi_Switch_Option_Right_Hand_Open_mesh_layer_5_tri_0[] = {
+	gsSPVertex(waluigi_Switch_Option_Right_Hand_Open_mesh_layer_5_vtx_0 + 0, 9, 0),
+	gsSP1Triangle(0, 1, 2, 0),
+	gsSP1Triangle(0, 3, 1, 0),
+	gsSP1Triangle(4, 3, 0, 0),
+	gsSP1Triangle(5, 4, 0, 0),
+	gsSP1Triangle(5, 0, 6, 0),
+	gsSP1Triangle(0, 7, 6, 0),
+	gsSP1Triangle(8, 7, 0, 0),
+	gsSP1Triangle(0, 2, 8, 0),
 	gsSPEndDisplayList(),
 };
 
@@ -3662,6 +3830,31 @@ Gfx waluigi_Switch_Option_Right_Hand_Peace_mesh_layer_1_tri_0[] = {
 	gsSP1Triangle(3, 2, 4, 0),
 	gsSP1Triangle(5, 4, 2, 0),
 	gsSP1Triangle(2, 6, 5, 0),
+	gsSPEndDisplayList(),
+};
+
+Vtx waluigi_Switch_Option_Right_Hand_Peace_mesh_layer_5_vtx_0[9] = {
+	{{ {8, 58, -2}, 0, {918, 788}, {212, 52, 149, 255} }},
+	{{ {56, 80, 1}, 0, {967, 274}, {241, 62, 146, 255} }},
+	{{ {33, 7, -37}, 0, {377, 612}, {223, 250, 133, 255} }},
+	{{ {89, 18, -34}, 0, {341, 7}, {6, 4, 129, 255} }},
+	{{ {94, -22, -18}, 0, {50, 98}, {9, 201, 142, 255} }},
+	{{ {56, -47, -5}, 0, {-27, 522}, {243, 187, 150, 255} }},
+	{{ {32, -43, 0}, 0, {62, 742}, {221, 184, 157, 255} }},
+	{{ {14, -1, -22}, 0, {383, 842}, {187, 228, 153, 255} }},
+	{{ {-4, 38, 0}, 0, {782, 949}, {182, 29, 157, 255} }},
+};
+
+Gfx waluigi_Switch_Option_Right_Hand_Peace_mesh_layer_5_tri_0[] = {
+	gsSPVertex(waluigi_Switch_Option_Right_Hand_Peace_mesh_layer_5_vtx_0 + 0, 9, 0),
+	gsSP1Triangle(0, 1, 2, 0),
+	gsSP1Triangle(1, 3, 2, 0),
+	gsSP1Triangle(2, 3, 4, 0),
+	gsSP1Triangle(5, 2, 4, 0),
+	gsSP1Triangle(2, 5, 6, 0),
+	gsSP1Triangle(6, 7, 2, 0),
+	gsSP1Triangle(2, 7, 8, 0),
+	gsSP1Triangle(0, 2, 8, 0),
 	gsSPEndDisplayList(),
 };
 
@@ -3889,6 +4082,47 @@ Gfx waluigi_Switch_Option_Right_Hand_Cap_mesh_layer_1_tri_1[] = {
 	gsSPEndDisplayList(),
 };
 
+Vtx waluigi_Switch_Option_Right_Hand_Cap_mesh_layer_5_vtx_0[9] = {
+	{{ {11, 60, -3}, 0, {950, 789}, {213, 50, 147, 255} }},
+	{{ {58, 81, 0}, 0, {936, 243}, {238, 61, 146, 255} }},
+	{{ {35, 9, -36}, 0, {464, 685}, {231, 245, 132, 255} }},
+	{{ {85, 30, -32}, 0, {438, 108}, {9, 2, 129, 255} }},
+	{{ {103, -25, 1}, 0, {-56, 77}, {31, 200, 146, 255} }},
+	{{ {55, -43, -3}, 0, {-15, 625}, {7, 190, 148, 255} }},
+	{{ {31, -39, 0}, 0, {106, 862}, {228, 183, 156, 255} }},
+	{{ {16, 1, -22}, 0, {473, 904}, {190, 228, 151, 255} }},
+	{{ {-2, 41, 0}, 0, {852, 978}, {184, 29, 155, 255} }},
+};
+
+Gfx waluigi_Switch_Option_Right_Hand_Cap_mesh_layer_5_tri_0[] = {
+	gsSPVertex(waluigi_Switch_Option_Right_Hand_Cap_mesh_layer_5_vtx_0 + 0, 9, 0),
+	gsSP1Triangle(0, 1, 2, 0),
+	gsSP1Triangle(1, 3, 2, 0),
+	gsSP1Triangle(2, 3, 4, 0),
+	gsSP1Triangle(2, 4, 5, 0),
+	gsSP1Triangle(2, 5, 6, 0),
+	gsSP1Triangle(6, 7, 2, 0),
+	gsSP1Triangle(2, 7, 8, 0),
+	gsSP1Triangle(0, 2, 8, 0),
+	gsSPEndDisplayList(),
+};
+
+Vtx waluigi_Switch_Option_Right_Hand_Cap_mesh_layer_5_vtx_1[5] = {
+	{{ {131, 47, -1}, 0, {1088, 212}, {165, 63, 194, 255} }},
+	{{ {107, -19, -33}, 0, {458, 16}, {149, 18, 190, 255} }},
+	{{ {78, 11, 40}, 0, {756, 802}, {150, 40, 198, 255} }},
+	{{ {70, -52, 35}, 0, {180, 784}, {145, 252, 194, 255} }},
+	{{ {114, -92, -11}, 0, {-164, 172}, {154, 225, 186, 255} }},
+};
+
+Gfx waluigi_Switch_Option_Right_Hand_Cap_mesh_layer_5_tri_1[] = {
+	gsSPVertex(waluigi_Switch_Option_Right_Hand_Cap_mesh_layer_5_vtx_1 + 0, 5, 0),
+	gsSP1Triangle(0, 1, 2, 0),
+	gsSP1Triangle(1, 3, 2, 0),
+	gsSP1Triangle(1, 4, 3, 0),
+	gsSPEndDisplayList(),
+};
+
 Vtx waluigi_Switch_Option_Right_Hand_Wing_Cap_mesh_layer_1_vtx_0[59] = {
 	{{ {131, 47, -1}, 0, {1088, 212}, {228, 93, 174, 255} }},
 	{{ {107, -19, -33}, 0, {458, 16}, {206, 14, 140, 255} }},
@@ -4110,6 +4344,47 @@ Gfx waluigi_Switch_Option_Right_Hand_Wing_Cap_mesh_layer_1_tri_1[] = {
 	gsSP1Triangle(13, 10, 12, 0),
 	gsSP1Triangle(14, 10, 13, 0),
 	gsSP1Triangle(11, 10, 14, 0),
+	gsSPEndDisplayList(),
+};
+
+Vtx waluigi_Switch_Option_Right_Hand_Wing_Cap_mesh_layer_5_vtx_0[9] = {
+	{{ {11, 60, -3}, 0, {950, 789}, {213, 50, 147, 255} }},
+	{{ {58, 81, 0}, 0, {936, 243}, {238, 61, 146, 255} }},
+	{{ {35, 9, -36}, 0, {464, 685}, {231, 245, 132, 255} }},
+	{{ {85, 30, -32}, 0, {438, 108}, {9, 2, 129, 255} }},
+	{{ {103, -25, 1}, 0, {-56, 77}, {31, 200, 146, 255} }},
+	{{ {55, -43, -3}, 0, {-15, 625}, {7, 190, 148, 255} }},
+	{{ {31, -39, 0}, 0, {106, 862}, {228, 183, 156, 255} }},
+	{{ {16, 1, -22}, 0, {473, 904}, {190, 228, 151, 255} }},
+	{{ {-2, 41, 0}, 0, {852, 978}, {184, 29, 155, 255} }},
+};
+
+Gfx waluigi_Switch_Option_Right_Hand_Wing_Cap_mesh_layer_5_tri_0[] = {
+	gsSPVertex(waluigi_Switch_Option_Right_Hand_Wing_Cap_mesh_layer_5_vtx_0 + 0, 9, 0),
+	gsSP1Triangle(0, 1, 2, 0),
+	gsSP1Triangle(1, 3, 2, 0),
+	gsSP1Triangle(2, 3, 4, 0),
+	gsSP1Triangle(2, 4, 5, 0),
+	gsSP1Triangle(2, 5, 6, 0),
+	gsSP1Triangle(6, 7, 2, 0),
+	gsSP1Triangle(2, 7, 8, 0),
+	gsSP1Triangle(0, 2, 8, 0),
+	gsSPEndDisplayList(),
+};
+
+Vtx waluigi_Switch_Option_Right_Hand_Wing_Cap_mesh_layer_5_vtx_1[5] = {
+	{{ {131, 47, -1}, 0, {1088, 212}, {165, 63, 194, 255} }},
+	{{ {107, -19, -33}, 0, {458, 16}, {149, 18, 190, 255} }},
+	{{ {78, 11, 40}, 0, {756, 802}, {150, 40, 198, 255} }},
+	{{ {70, -52, 35}, 0, {180, 784}, {145, 252, 194, 255} }},
+	{{ {114, -92, -11}, 0, {-164, 172}, {154, 225, 186, 255} }},
+};
+
+Gfx waluigi_Switch_Option_Right_Hand_Wing_Cap_mesh_layer_5_tri_1[] = {
+	gsSPVertex(waluigi_Switch_Option_Right_Hand_Wing_Cap_mesh_layer_5_vtx_1 + 0, 5, 0),
+	gsSP1Triangle(0, 1, 2, 0),
+	gsSP1Triangle(1, 3, 2, 0),
+	gsSP1Triangle(1, 4, 3, 0),
 	gsSPEndDisplayList(),
 };
 
@@ -4497,13 +4772,8 @@ Gfx mat_waluigi_shirt[] = {
 
 Gfx mat_waluigi_cap[] = {
 	gsDPPipeSync(),
-	gsDPSetCombineLERP(TEXEL0, SHADE, TEXEL0_ALPHA, SHADE, 0, 0, 0, ENVIRONMENT, TEXEL0, SHADE, TEXEL0_ALPHA, SHADE, 0, 0, 0, ENVIRONMENT),
+	gsDPSetCombineLERP(0, 0, 0, SHADE, 0, 0, 0, ENVIRONMENT, 0, 0, 0, SHADE, 0, 0, 0, ENVIRONMENT),
 	gsSPTexture(65535, 65535, 0, 0, 1),
-	gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 1, waluigi_custom_waluigi_cap_rgba16),
-	gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 0, 0, 7, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0),
-	gsDPLoadBlock(7, 0, 0, 1023, 256),
-	gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 8, 0, 0, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0),
-	gsDPSetTileSize(0, 0, 0, 124, 124),
     gsSPCopyLightsPlayerPart(CAP),
 	gsSPEndDisplayList(),
 };
@@ -4533,7 +4803,7 @@ Gfx mat_waluigi_nose[] = {
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(0, 0, 0, SHADE, 0, 0, 0, ENVIRONMENT, 0, 0, 0, SHADE, 0, 0, 0, ENVIRONMENT),
 	gsSPTexture(65535, 65535, 0, 0, 1),
-	gsSPSetLights1(waluigi_nose_lights),
+    gsSPCopyLightsPlayerPart(NOSE),
 	gsSPEndDisplayList(),
 };
 
@@ -4576,6 +4846,48 @@ Gfx mat_waluigi_sideburns[] = {
 	gsDPSetTileSize(0, 0, 0, 124, 124),
 	gsDPSetPrimColor(0, 0, 255, 255, 255, 255),
     gsSPCopyLightsPlayerPart(HAIR),
+	gsSPEndDisplayList(),
+};
+
+Gfx mat_waluigi_emblem[] = {
+	gsDPPipeSync(),
+	gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, TEXEL0, 0, PRIMITIVE, 0, TEXEL0, 0, SHADE, 0, TEXEL0, 0, PRIMITIVE, 0),
+	gsSPClearGeometryMode(G_CULL_BACK),
+	gsSPTexture(65535, 65535, 0, 0, 1),
+	gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 1, waluigi_custom_waluigi_cap_rgba16),
+	gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 0, 0, 7, 0, G_TX_WRAP | G_TX_NOMIRROR, 5, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0),
+	gsDPLoadBlock(7, 0, 0, 1023, 256),
+	gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 8, 0, 0, 0, G_TX_WRAP | G_TX_NOMIRROR, 5, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0),
+	gsDPSetTileSize(0, 0, 0, 124, 124),
+	gsDPSetPrimColor(0, 0, 255, 255, 255, 255),
+	gsSPSetLights1(waluigi_emblem_lights),
+	gsSPEndDisplayList(),
+};
+
+Gfx mat_revert_waluigi_emblem[] = {
+	gsDPPipeSync(),
+	gsSPSetGeometryMode(G_CULL_BACK),
+	gsSPEndDisplayList(),
+};
+
+Gfx mat_waluigi_emblem_icon[] = {
+	gsDPPipeSync(),
+	gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, TEXEL0, 0, PRIMITIVE, 0, TEXEL0, 0, SHADE, 0, TEXEL0, 0, PRIMITIVE, 0),
+	gsSPClearGeometryMode(G_CULL_BACK),
+	gsSPTexture(65535, 65535, 0, 0, 1),
+	gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 1, waluigi_custom_waluigi_glove_rgba16),
+	gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 0, 0, 7, 0, G_TX_WRAP | G_TX_NOMIRROR, 5, 0, G_TX_WRAP | G_TX_NOMIRROR, 5, 0),
+	gsDPLoadBlock(7, 0, 0, 1023, 256),
+	gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 8, 0, 0, 0, G_TX_WRAP | G_TX_NOMIRROR, 5, 0, G_TX_WRAP | G_TX_NOMIRROR, 5, 0),
+	gsDPSetTileSize(0, 0, 0, 124, 124),
+	gsDPSetPrimColor(0, 0, 255, 255, 255, 255),
+	gsSPSetLights1(waluigi_emblem_icon_lights),
+	gsSPEndDisplayList(),
+};
+
+Gfx mat_revert_waluigi_emblem_icon[] = {
+	gsDPPipeSync(),
+	gsSPSetGeometryMode(G_CULL_BACK),
 	gsSPEndDisplayList(),
 };
 
@@ -4723,13 +5035,8 @@ Gfx mat_revert_waluigi_wing_1[] = {
 
 Gfx mat_waluigi_gloves[] = {
 	gsDPPipeSync(),
-	gsDPSetCombineLERP(TEXEL0, SHADE, TEXEL0_ALPHA, SHADE, 0, 0, 0, ENVIRONMENT, TEXEL0, SHADE, TEXEL0_ALPHA, SHADE, 0, 0, 0, ENVIRONMENT),
+	gsDPSetCombineLERP(0, 0, 0, SHADE, 0, 0, 0, ENVIRONMENT, 0, 0, 0, SHADE, 0, 0, 0, ENVIRONMENT),
 	gsSPTexture(65535, 65535, 0, 0, 1),
-	gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 1, waluigi_custom_waluigi_glove_rgba16),
-	gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 0, 0, 7, 0, G_TX_WRAP | G_TX_NOMIRROR, 5, 0, G_TX_WRAP | G_TX_NOMIRROR, 5, 0),
-	gsDPLoadBlock(7, 0, 0, 1023, 256),
-	gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 8, 0, 0, 0, G_TX_WRAP | G_TX_NOMIRROR, 5, 0, G_TX_WRAP | G_TX_NOMIRROR, 5, 0),
-	gsDPSetTileSize(0, 0, 0, 124, 124),
     gsSPCopyLightsPlayerPart(GLOVES),
 	gsSPEndDisplayList(),
 };
@@ -4903,48 +5210,93 @@ Gfx waluigi_Head_DL_mesh_layer_1_mat_override_eyes_down_6[] = {
 Gfx waluigi_Head_DL_mesh_layer_5[] = {
 	gsSPDisplayList(mat_waluigi_sideburns),
 	gsSPDisplayList(waluigi_Head_DL_mesh_layer_5_tri_0),
+	gsSPDisplayList(mat_waluigi_emblem),
+	gsSPDisplayList(waluigi_Head_DL_mesh_layer_5_tri_1),
+	gsSPDisplayList(mat_revert_waluigi_emblem),
+	gsSPDisplayList(mat_waluigi_emblem_icon),
+	gsSPDisplayList(waluigi_Head_DL_mesh_layer_5_tri_2),
+	gsSPDisplayList(mat_revert_waluigi_emblem_icon),
 	gsSPEndDisplayList(),
 };
 
 Gfx waluigi_Head_DL_mesh_layer_5_mat_override_metal_0[] = {
 	gsSPDisplayList(mat_waluigi_metal),
 	gsSPDisplayList(waluigi_Head_DL_mesh_layer_5_tri_0),
+	gsSPDisplayList(waluigi_Head_DL_mesh_layer_5_tri_1),
+	gsSPDisplayList(waluigi_Head_DL_mesh_layer_5_tri_2),
+	gsSPDisplayList(mat_revert_waluigi_metal),
 	gsSPEndDisplayList(),
 };
 
 Gfx waluigi_Head_DL_mesh_layer_5_mat_override_eyes_half_1[] = {
 	gsSPDisplayList(mat_waluigi_sideburns),
 	gsSPDisplayList(waluigi_Head_DL_mesh_layer_5_tri_0),
+	gsSPDisplayList(mat_waluigi_emblem),
+	gsSPDisplayList(waluigi_Head_DL_mesh_layer_5_tri_1),
+	gsSPDisplayList(mat_revert_waluigi_emblem),
+	gsSPDisplayList(mat_waluigi_emblem_icon),
+	gsSPDisplayList(waluigi_Head_DL_mesh_layer_5_tri_2),
+	gsSPDisplayList(mat_revert_waluigi_emblem_icon),
 	gsSPEndDisplayList(),
 };
 
 Gfx waluigi_Head_DL_mesh_layer_5_mat_override_eyes_closed_2[] = {
 	gsSPDisplayList(mat_waluigi_sideburns),
 	gsSPDisplayList(waluigi_Head_DL_mesh_layer_5_tri_0),
+	gsSPDisplayList(mat_waluigi_emblem),
+	gsSPDisplayList(waluigi_Head_DL_mesh_layer_5_tri_1),
+	gsSPDisplayList(mat_revert_waluigi_emblem),
+	gsSPDisplayList(mat_waluigi_emblem_icon),
+	gsSPDisplayList(waluigi_Head_DL_mesh_layer_5_tri_2),
+	gsSPDisplayList(mat_revert_waluigi_emblem_icon),
 	gsSPEndDisplayList(),
 };
 
 Gfx waluigi_Head_DL_mesh_layer_5_mat_override_eyes_left_3[] = {
 	gsSPDisplayList(mat_waluigi_sideburns),
 	gsSPDisplayList(waluigi_Head_DL_mesh_layer_5_tri_0),
+	gsSPDisplayList(mat_waluigi_emblem),
+	gsSPDisplayList(waluigi_Head_DL_mesh_layer_5_tri_1),
+	gsSPDisplayList(mat_revert_waluigi_emblem),
+	gsSPDisplayList(mat_waluigi_emblem_icon),
+	gsSPDisplayList(waluigi_Head_DL_mesh_layer_5_tri_2),
+	gsSPDisplayList(mat_revert_waluigi_emblem_icon),
 	gsSPEndDisplayList(),
 };
 
 Gfx waluigi_Head_DL_mesh_layer_5_mat_override_eyes_right_4[] = {
 	gsSPDisplayList(mat_waluigi_sideburns),
 	gsSPDisplayList(waluigi_Head_DL_mesh_layer_5_tri_0),
+	gsSPDisplayList(mat_waluigi_emblem),
+	gsSPDisplayList(waluigi_Head_DL_mesh_layer_5_tri_1),
+	gsSPDisplayList(mat_revert_waluigi_emblem),
+	gsSPDisplayList(mat_waluigi_emblem_icon),
+	gsSPDisplayList(waluigi_Head_DL_mesh_layer_5_tri_2),
+	gsSPDisplayList(mat_revert_waluigi_emblem_icon),
 	gsSPEndDisplayList(),
 };
 
 Gfx waluigi_Head_DL_mesh_layer_5_mat_override_eyes_up_5[] = {
 	gsSPDisplayList(mat_waluigi_sideburns),
 	gsSPDisplayList(waluigi_Head_DL_mesh_layer_5_tri_0),
+	gsSPDisplayList(mat_waluigi_emblem),
+	gsSPDisplayList(waluigi_Head_DL_mesh_layer_5_tri_1),
+	gsSPDisplayList(mat_revert_waluigi_emblem),
+	gsSPDisplayList(mat_waluigi_emblem_icon),
+	gsSPDisplayList(waluigi_Head_DL_mesh_layer_5_tri_2),
+	gsSPDisplayList(mat_revert_waluigi_emblem_icon),
 	gsSPEndDisplayList(),
 };
 
 Gfx waluigi_Head_DL_mesh_layer_5_mat_override_eyes_down_6[] = {
 	gsSPDisplayList(mat_waluigi_sideburns),
 	gsSPDisplayList(waluigi_Head_DL_mesh_layer_5_tri_0),
+	gsSPDisplayList(mat_waluigi_emblem),
+	gsSPDisplayList(waluigi_Head_DL_mesh_layer_5_tri_1),
+	gsSPDisplayList(mat_revert_waluigi_emblem),
+	gsSPDisplayList(mat_waluigi_emblem_icon),
+	gsSPDisplayList(waluigi_Head_DL_mesh_layer_5_tri_2),
+	gsSPDisplayList(mat_revert_waluigi_emblem_icon),
 	gsSPEndDisplayList(),
 };
 
@@ -5098,54 +5450,80 @@ Gfx waluigi_Switch_Option_Head_Capless_Dead_DL_mesh_layer_1_mat_override_eyes_de
 Gfx waluigi_Switch_Option_Head_Capless_Dead_DL_mesh_layer_5[] = {
 	gsSPDisplayList(mat_waluigi_sideburns),
 	gsSPDisplayList(waluigi_Switch_Option_Head_Capless_Dead_DL_mesh_layer_5_tri_0),
+	gsSPDisplayList(mat_waluigi_emblem),
+	gsSPDisplayList(waluigi_Switch_Option_Head_Capless_Dead_DL_mesh_layer_5_tri_1),
+	gsSPDisplayList(mat_revert_waluigi_emblem),
 	gsSPEndDisplayList(),
 };
 
 Gfx waluigi_Switch_Option_Head_Capless_Dead_DL_mesh_layer_5_mat_override_metal_0[] = {
 	gsSPDisplayList(mat_waluigi_metal),
 	gsSPDisplayList(waluigi_Switch_Option_Head_Capless_Dead_DL_mesh_layer_5_tri_0),
+	gsSPDisplayList(waluigi_Switch_Option_Head_Capless_Dead_DL_mesh_layer_5_tri_1),
+	gsSPDisplayList(mat_revert_waluigi_metal),
 	gsSPEndDisplayList(),
 };
 
 Gfx waluigi_Switch_Option_Head_Capless_Dead_DL_mesh_layer_5_mat_override_eyes_half_1[] = {
 	gsSPDisplayList(mat_waluigi_sideburns),
 	gsSPDisplayList(waluigi_Switch_Option_Head_Capless_Dead_DL_mesh_layer_5_tri_0),
+	gsSPDisplayList(mat_waluigi_emblem),
+	gsSPDisplayList(waluigi_Switch_Option_Head_Capless_Dead_DL_mesh_layer_5_tri_1),
+	gsSPDisplayList(mat_revert_waluigi_emblem),
 	gsSPEndDisplayList(),
 };
 
 Gfx waluigi_Switch_Option_Head_Capless_Dead_DL_mesh_layer_5_mat_override_eyes_closed_2[] = {
 	gsSPDisplayList(mat_waluigi_sideburns),
 	gsSPDisplayList(waluigi_Switch_Option_Head_Capless_Dead_DL_mesh_layer_5_tri_0),
+	gsSPDisplayList(mat_waluigi_emblem),
+	gsSPDisplayList(waluigi_Switch_Option_Head_Capless_Dead_DL_mesh_layer_5_tri_1),
+	gsSPDisplayList(mat_revert_waluigi_emblem),
 	gsSPEndDisplayList(),
 };
 
 Gfx waluigi_Switch_Option_Head_Capless_Dead_DL_mesh_layer_5_mat_override_eyes_left_3[] = {
 	gsSPDisplayList(mat_waluigi_sideburns),
 	gsSPDisplayList(waluigi_Switch_Option_Head_Capless_Dead_DL_mesh_layer_5_tri_0),
+	gsSPDisplayList(mat_waluigi_emblem),
+	gsSPDisplayList(waluigi_Switch_Option_Head_Capless_Dead_DL_mesh_layer_5_tri_1),
+	gsSPDisplayList(mat_revert_waluigi_emblem),
 	gsSPEndDisplayList(),
 };
 
 Gfx waluigi_Switch_Option_Head_Capless_Dead_DL_mesh_layer_5_mat_override_eyes_right_4[] = {
 	gsSPDisplayList(mat_waluigi_sideburns),
 	gsSPDisplayList(waluigi_Switch_Option_Head_Capless_Dead_DL_mesh_layer_5_tri_0),
+	gsSPDisplayList(mat_waluigi_emblem),
+	gsSPDisplayList(waluigi_Switch_Option_Head_Capless_Dead_DL_mesh_layer_5_tri_1),
+	gsSPDisplayList(mat_revert_waluigi_emblem),
 	gsSPEndDisplayList(),
 };
 
 Gfx waluigi_Switch_Option_Head_Capless_Dead_DL_mesh_layer_5_mat_override_eyes_up_5[] = {
 	gsSPDisplayList(mat_waluigi_sideburns),
 	gsSPDisplayList(waluigi_Switch_Option_Head_Capless_Dead_DL_mesh_layer_5_tri_0),
+	gsSPDisplayList(mat_waluigi_emblem),
+	gsSPDisplayList(waluigi_Switch_Option_Head_Capless_Dead_DL_mesh_layer_5_tri_1),
+	gsSPDisplayList(mat_revert_waluigi_emblem),
 	gsSPEndDisplayList(),
 };
 
 Gfx waluigi_Switch_Option_Head_Capless_Dead_DL_mesh_layer_5_mat_override_eyes_down_6[] = {
 	gsSPDisplayList(mat_waluigi_sideburns),
 	gsSPDisplayList(waluigi_Switch_Option_Head_Capless_Dead_DL_mesh_layer_5_tri_0),
+	gsSPDisplayList(mat_waluigi_emblem),
+	gsSPDisplayList(waluigi_Switch_Option_Head_Capless_Dead_DL_mesh_layer_5_tri_1),
+	gsSPDisplayList(mat_revert_waluigi_emblem),
 	gsSPEndDisplayList(),
 };
 
 Gfx waluigi_Switch_Option_Head_Capless_Dead_DL_mesh_layer_5_mat_override_eyes_dead_7[] = {
 	gsSPDisplayList(mat_waluigi_sideburns),
 	gsSPDisplayList(waluigi_Switch_Option_Head_Capless_Dead_DL_mesh_layer_5_tri_0),
+	gsSPDisplayList(mat_waluigi_emblem),
+	gsSPDisplayList(waluigi_Switch_Option_Head_Capless_Dead_DL_mesh_layer_5_tri_1),
+	gsSPDisplayList(mat_revert_waluigi_emblem),
 	gsSPEndDisplayList(),
 };
 
@@ -5572,6 +5950,20 @@ Gfx waluigi_Left_Hand_DL_mesh_layer_1_mat_override_metal_0[] = {
 	gsSPEndDisplayList(),
 };
 
+Gfx waluigi_Left_Hand_DL_mesh_layer_5[] = {
+	gsSPDisplayList(mat_waluigi_emblem_icon),
+	gsSPDisplayList(waluigi_Left_Hand_DL_mesh_layer_5_tri_0),
+	gsSPDisplayList(mat_revert_waluigi_emblem_icon),
+	gsSPEndDisplayList(),
+};
+
+Gfx waluigi_Left_Hand_DL_mesh_layer_5_mat_override_metal_0[] = {
+	gsSPDisplayList(mat_waluigi_metal),
+	gsSPDisplayList(waluigi_Left_Hand_DL_mesh_layer_5_tri_0),
+	gsSPDisplayList(mat_revert_waluigi_metal),
+	gsSPEndDisplayList(),
+};
+
 Gfx waluigi_Switch_Option_Left_Hand_Open_mesh_layer_1[] = {
 	gsSPDisplayList(mat_waluigi_gloves),
 	gsSPDisplayList(waluigi_Switch_Option_Left_Hand_Open_mesh_layer_1_tri_0),
@@ -5581,6 +5973,20 @@ Gfx waluigi_Switch_Option_Left_Hand_Open_mesh_layer_1[] = {
 Gfx waluigi_Switch_Option_Left_Hand_Open_mesh_layer_1_mat_override_metal_0[] = {
 	gsSPDisplayList(mat_waluigi_metal),
 	gsSPDisplayList(waluigi_Switch_Option_Left_Hand_Open_mesh_layer_1_tri_0),
+	gsSPEndDisplayList(),
+};
+
+Gfx waluigi_Switch_Option_Left_Hand_Open_mesh_layer_5[] = {
+	gsSPDisplayList(mat_waluigi_emblem_icon),
+	gsSPDisplayList(waluigi_Switch_Option_Left_Hand_Open_mesh_layer_5_tri_0),
+	gsSPDisplayList(mat_revert_waluigi_emblem_icon),
+	gsSPEndDisplayList(),
+};
+
+Gfx waluigi_Switch_Option_Left_Hand_Open_mesh_layer_5_mat_override_metal_0[] = {
+	gsSPDisplayList(mat_waluigi_metal),
+	gsSPDisplayList(waluigi_Switch_Option_Left_Hand_Open_mesh_layer_5_tri_0),
+	gsSPDisplayList(mat_revert_waluigi_metal),
 	gsSPEndDisplayList(),
 };
 
@@ -5620,6 +6026,20 @@ Gfx waluigi_Right_Hand_DL_mesh_layer_1_mat_override_metal_0[] = {
 	gsSPEndDisplayList(),
 };
 
+Gfx waluigi_Right_Hand_DL_mesh_layer_5[] = {
+	gsSPDisplayList(mat_waluigi_emblem_icon),
+	gsSPDisplayList(waluigi_Right_Hand_DL_mesh_layer_5_tri_0),
+	gsSPDisplayList(mat_revert_waluigi_emblem_icon),
+	gsSPEndDisplayList(),
+};
+
+Gfx waluigi_Right_Hand_DL_mesh_layer_5_mat_override_metal_0[] = {
+	gsSPDisplayList(mat_waluigi_metal),
+	gsSPDisplayList(waluigi_Right_Hand_DL_mesh_layer_5_tri_0),
+	gsSPDisplayList(mat_revert_waluigi_metal),
+	gsSPEndDisplayList(),
+};
+
 Gfx waluigi_Switch_Option_Right_Hand_Open_mesh_layer_1[] = {
 	gsSPDisplayList(mat_waluigi_gloves),
 	gsSPDisplayList(waluigi_Switch_Option_Right_Hand_Open_mesh_layer_1_tri_0),
@@ -5632,6 +6052,20 @@ Gfx waluigi_Switch_Option_Right_Hand_Open_mesh_layer_1_mat_override_metal_0[] = 
 	gsSPEndDisplayList(),
 };
 
+Gfx waluigi_Switch_Option_Right_Hand_Open_mesh_layer_5[] = {
+	gsSPDisplayList(mat_waluigi_emblem_icon),
+	gsSPDisplayList(waluigi_Switch_Option_Right_Hand_Open_mesh_layer_5_tri_0),
+	gsSPDisplayList(mat_revert_waluigi_emblem_icon),
+	gsSPEndDisplayList(),
+};
+
+Gfx waluigi_Switch_Option_Right_Hand_Open_mesh_layer_5_mat_override_metal_0[] = {
+	gsSPDisplayList(mat_waluigi_metal),
+	gsSPDisplayList(waluigi_Switch_Option_Right_Hand_Open_mesh_layer_5_tri_0),
+	gsSPDisplayList(mat_revert_waluigi_metal),
+	gsSPEndDisplayList(),
+};
+
 Gfx waluigi_Switch_Option_Right_Hand_Peace_mesh_layer_1[] = {
 	gsSPDisplayList(mat_waluigi_gloves),
 	gsSPDisplayList(waluigi_Switch_Option_Right_Hand_Peace_mesh_layer_1_tri_0),
@@ -5641,6 +6075,20 @@ Gfx waluigi_Switch_Option_Right_Hand_Peace_mesh_layer_1[] = {
 Gfx waluigi_Switch_Option_Right_Hand_Peace_mesh_layer_1_mat_override_metal_0[] = {
 	gsSPDisplayList(mat_waluigi_metal),
 	gsSPDisplayList(waluigi_Switch_Option_Right_Hand_Peace_mesh_layer_1_tri_0),
+	gsSPEndDisplayList(),
+};
+
+Gfx waluigi_Switch_Option_Right_Hand_Peace_mesh_layer_5[] = {
+	gsSPDisplayList(mat_waluigi_emblem_icon),
+	gsSPDisplayList(waluigi_Switch_Option_Right_Hand_Peace_mesh_layer_5_tri_0),
+	gsSPDisplayList(mat_revert_waluigi_emblem_icon),
+	gsSPEndDisplayList(),
+};
+
+Gfx waluigi_Switch_Option_Right_Hand_Peace_mesh_layer_5_mat_override_metal_0[] = {
+	gsSPDisplayList(mat_waluigi_metal),
+	gsSPDisplayList(waluigi_Switch_Option_Right_Hand_Peace_mesh_layer_5_tri_0),
+	gsSPDisplayList(mat_revert_waluigi_metal),
 	gsSPEndDisplayList(),
 };
 
@@ -5659,6 +6107,24 @@ Gfx waluigi_Switch_Option_Right_Hand_Cap_mesh_layer_1_mat_override_metal_0[] = {
 	gsSPEndDisplayList(),
 };
 
+Gfx waluigi_Switch_Option_Right_Hand_Cap_mesh_layer_5[] = {
+	gsSPDisplayList(mat_waluigi_emblem_icon),
+	gsSPDisplayList(waluigi_Switch_Option_Right_Hand_Cap_mesh_layer_5_tri_0),
+	gsSPDisplayList(mat_revert_waluigi_emblem_icon),
+	gsSPDisplayList(mat_waluigi_emblem),
+	gsSPDisplayList(waluigi_Switch_Option_Right_Hand_Cap_mesh_layer_5_tri_1),
+	gsSPDisplayList(mat_revert_waluigi_emblem),
+	gsSPEndDisplayList(),
+};
+
+Gfx waluigi_Switch_Option_Right_Hand_Cap_mesh_layer_5_mat_override_metal_0[] = {
+	gsSPDisplayList(mat_waluigi_metal),
+	gsSPDisplayList(waluigi_Switch_Option_Right_Hand_Cap_mesh_layer_5_tri_0),
+	gsSPDisplayList(waluigi_Switch_Option_Right_Hand_Cap_mesh_layer_5_tri_1),
+	gsSPDisplayList(mat_revert_waluigi_metal),
+	gsSPEndDisplayList(),
+};
+
 Gfx waluigi_Switch_Option_Right_Hand_Wing_Cap_mesh_layer_1[] = {
 	gsSPDisplayList(mat_waluigi_cap),
 	gsSPDisplayList(waluigi_Switch_Option_Right_Hand_Wing_Cap_mesh_layer_1_tri_0),
@@ -5671,6 +6137,24 @@ Gfx waluigi_Switch_Option_Right_Hand_Wing_Cap_mesh_layer_1_mat_override_metal_0[
 	gsSPDisplayList(mat_waluigi_metal),
 	gsSPDisplayList(waluigi_Switch_Option_Right_Hand_Wing_Cap_mesh_layer_1_tri_0),
 	gsSPDisplayList(waluigi_Switch_Option_Right_Hand_Wing_Cap_mesh_layer_1_tri_1),
+	gsSPEndDisplayList(),
+};
+
+Gfx waluigi_Switch_Option_Right_Hand_Wing_Cap_mesh_layer_5[] = {
+	gsSPDisplayList(mat_waluigi_emblem_icon),
+	gsSPDisplayList(waluigi_Switch_Option_Right_Hand_Wing_Cap_mesh_layer_5_tri_0),
+	gsSPDisplayList(mat_revert_waluigi_emblem_icon),
+	gsSPDisplayList(mat_waluigi_emblem),
+	gsSPDisplayList(waluigi_Switch_Option_Right_Hand_Wing_Cap_mesh_layer_5_tri_1),
+	gsSPDisplayList(mat_revert_waluigi_emblem),
+	gsSPEndDisplayList(),
+};
+
+Gfx waluigi_Switch_Option_Right_Hand_Wing_Cap_mesh_layer_5_mat_override_metal_0[] = {
+	gsSPDisplayList(mat_waluigi_metal),
+	gsSPDisplayList(waluigi_Switch_Option_Right_Hand_Wing_Cap_mesh_layer_5_tri_0),
+	gsSPDisplayList(waluigi_Switch_Option_Right_Hand_Wing_Cap_mesh_layer_5_tri_1),
+	gsSPDisplayList(mat_revert_waluigi_metal),
 	gsSPEndDisplayList(),
 };
 
