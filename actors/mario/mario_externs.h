@@ -17,3 +17,4 @@ extern ALIGNED8 const Texture mario_texture_wings_half_1[];
 extern ALIGNED8 const Texture mario_texture_wings_half_2[];
 extern ALIGNED8 const Texture mario_texture_metal_wings_half_1[];
 extern ALIGNED8 const Texture mario_texture_metal_wings_half_2[];
+extern ALIGNED8 const Texture mario_texture_cap_inside[];

@@ -4803,7 +4803,7 @@ Gfx mat_waluigi_nose[] = {
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(0, 0, 0, SHADE, 0, 0, 0, ENVIRONMENT, 0, 0, 0, SHADE, 0, 0, 0, ENVIRONMENT),
 	gsSPTexture(65535, 65535, 0, 0, 1),
-    gsSPCopyLightsPlayerPart(NOSE),
+    gsSPSetLights1(waluigi_nose_lights),
 	gsSPEndDisplayList(),
 };
 

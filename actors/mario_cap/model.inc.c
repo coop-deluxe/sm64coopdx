@@ -25,7 +25,7 @@ ALIGNED8 const Texture mario_cap_seg3_texture_0301CF50[] = {
 
 // 0x0301DF50
 ALIGNED8 const Texture mario_cap_seg3_texture_0301DF50[] = {
-#include "actors/mario_cap/custom_mario_cap_logo.rgba16.inc.c"
+#include "actors/mario_cap/custom_mario_cap_logo.ia16.inc.c"
 };
 
 // 0x0301E750
@@ -46,6 +46,10 @@ ALIGNED8 const Texture mario_cap_seg3_texture_03020750[] = {
 // 0x03021750
 ALIGNED8 const Texture mario_cap_seg3_texture_03021750[] = {
 #include "actors/mario_cap/mario_cap_metal_wing_tip_unused.rgba16.inc.c"
+};
+
+ALIGNED8 const Texture mario_cap_texture_cap_inside[] = {
+#include "actors/mario_cap/custom_mario_cap_inside.rgba16.inc.c"
 };
 
 // 0x03022750
@@ -180,8 +184,20 @@ const Gfx mario_cap_seg3_dl_03022CC8[] = {
 // 0x03022D10 - 0x03022D38
 const Gfx mario_cap_seg3_dl_03022D10[] = {
     gsSPDisplayList(mario_cap_seg3_dl_03022B68),
+    gsDPSetCombineMode(G_CC_MODULATERGBFADEA, G_CC_MODULATERGBFADEA),
+    gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 0, 0, G_TX_LOADTILE, 0, G_TX_WRAP | G_TX_NOMIRROR, G_TX_NOMASK, G_TX_NOLOD, G_TX_WRAP | G_TX_NOMIRROR, G_TX_NOMASK, G_TX_NOLOD),
+    gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON),
+    gsDPTileSync(),
+    gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 8, 0, G_TX_RENDERTILE, 0, G_TX_CLAMP, 5, G_TX_NOLOD, G_TX_CLAMP, 5, G_TX_NOLOD),
+    gsDPSetTileSize(0, 0, 0, (8 - 1) << G_TEXTURE_IMAGE_FRAC, (8 - 1) << G_TEXTURE_IMAGE_FRAC),
+    gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, mario_cap_texture_cap_inside),
+    gsDPLoadSync(),
+    gsDPLoadBlock(G_TX_LOADTILE, 0, 0, 8 * 8 - 1, CALC_DXT(8, G_IM_SIZ_16b_BYTES)),
     gsSPCopyLightsPlayerPart(CAP), //gsSPLight(&mario_cap_seg3_lights_0301CF08.a, 2),
     gsSPDisplayList(mario_cap_seg3_dl_03022CC8),
+    gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_OFF),
+    gsDPPipeSync(),
+    gsDPSetCombineMode(G_CC_SHADE, G_CC_SHADE),
     gsSPEndDisplayList(),
 };
 
@@ -251,23 +267,32 @@ const Gfx mario_cap_seg3_dl_03022F20[] = {
     gsSPEndDisplayList(),
 };
 
-// 0x03022F48 - 0x03022FF8
-const Gfx mario_cap_seg3_dl_03022F48[] = {
+const Gfx mario_cap_m_logo_decal_dl[] = {
     gsDPPipeSync(),
-    gsDPSetCombineMode(G_CC_BLENDRGBFADEA, G_CC_BLENDRGBFADEA),
-    gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 0, 0, G_TX_LOADTILE, 0, G_TX_WRAP | G_TX_NOMIRROR, G_TX_NOMASK, G_TX_NOLOD, G_TX_WRAP | G_TX_NOMIRROR, G_TX_NOMASK, G_TX_NOLOD),
+    gsDPSetCombineMode(G_CC_MODULATERGBFADEA, G_CC_MODULATERGBFADEA),
+    gsDPSetTile(G_IM_FMT_IA, G_IM_SIZ_16b, 0, 0, G_TX_LOADTILE, 0, G_TX_WRAP | G_TX_NOMIRROR, G_TX_NOMASK, G_TX_NOLOD, G_TX_WRAP | G_TX_NOMIRROR, G_TX_NOMASK, G_TX_NOLOD),
     gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON),
     gsDPTileSync(),
-    gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 8, 0, G_TX_RENDERTILE, 0, G_TX_CLAMP, 5, G_TX_NOLOD, G_TX_CLAMP, 5, G_TX_NOLOD),
+    gsDPSetTile(G_IM_FMT_IA, G_IM_SIZ_16b, 8, 0, G_TX_RENDERTILE, 0, G_TX_CLAMP, 5, G_TX_NOLOD, G_TX_CLAMP, 5, G_TX_NOLOD),
     gsDPSetTileSize(0, 0, 0, (32 - 1) << G_TEXTURE_IMAGE_FRAC, (32 - 1) << G_TEXTURE_IMAGE_FRAC),
-    gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, mario_cap_seg3_texture_0301DF50),
+    gsDPSetTextureImage(G_IM_FMT_IA, G_IM_SIZ_16b, 1, mario_cap_seg3_texture_0301DF50),
     gsDPLoadSync(),
     gsDPLoadBlock(G_TX_LOADTILE, 0, 0, 32 * 32 - 1, CALC_DXT(32, G_IM_SIZ_16b_BYTES)),
-    gsSPCopyLightsPlayerPart(CAP), //gsSPLight(&mario_cap_seg3_lights_0301CF38.a, 2),
+    gsSPLight(&mario_cap_seg3_lights_0301CF20.l, 1),
+    gsSPLight(&mario_cap_seg3_lights_0301CF20.a, 2),
     gsSPDisplayList(mario_cap_seg3_dl_03022B30),
     gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_OFF),
     gsDPPipeSync(),
+    gsDPSetCombineMode(G_CC_SHADE, G_CC_SHADE),
+    gsSPEndDisplayList(),
+};
+
+// 0x03022F48 - 0x03022FF8
+const Gfx mario_cap_seg3_dl_03022F48[] = {
+    gsDPPipeSync(),
     gsDPSetCombineMode(G_CC_SHADEFADEA, G_CC_SHADEFADEA),
+    gsSPCopyLightsPlayerPart(CAP), //gsSPLight(&mario_cap_seg3_lights_0301CF38.a, 2),
+    gsSPDisplayList(mario_cap_seg3_dl_03022B30),
     gsSPDisplayList(mario_cap_seg3_dl_03022D10),
     gsDPPipeSync(),
     gsDPSetCombineMode(G_CC_SHADE, G_CC_SHADE),
@@ -283,7 +308,7 @@ const Gfx mario_cap_seg3_dl_03022FF8[] = {
     gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, 0, 0, 0, ENVIRONMENT, TEXEL0, 0, SHADE, 0, 0, 0, 0, ENVIRONMENT),
     gsDPLoadTextureBlock(mario_cap_seg3_texture_0301CF50, G_IM_FMT_RGBA, G_IM_SIZ_16b, 64, 32, 0, G_TX_WRAP | G_TX_NOMIRROR, G_TX_WRAP | G_TX_NOMIRROR, 6, 5, G_TX_NOLOD, G_TX_NOLOD),
     gsSPTexture(0x0F80, 0x07C0, 0, G_TX_RENDERTILE, G_ON),
-    gsSPCopyLightsPlayerPart(CAP),
+    gsSPCopyLightsPlayerPart(METAL),
     gsSPDisplayList(mario_cap_seg3_dl_03022B30),
     gsSPDisplayList(mario_cap_seg3_dl_03022B68),
     gsSPDisplayList(mario_cap_seg3_dl_03022CC8),
@@ -329,20 +354,9 @@ const Gfx mario_cap_seg3_dl_03023108[] = {
 // 0x03023160 - 0x03023298
 const Gfx mario_cap_seg3_dl_03023160[] = {
     gsDPPipeSync(),
-    gsDPSetCombineMode(G_CC_BLENDRGBFADEA, G_CC_BLENDRGBFADEA),
-    gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 0, 0, G_TX_LOADTILE, 0, G_TX_WRAP | G_TX_NOMIRROR, G_TX_NOMASK, G_TX_NOLOD, G_TX_WRAP | G_TX_NOMIRROR, G_TX_NOMASK, G_TX_NOLOD),
-    gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON),
-    gsDPTileSync(),
-    gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 8, 0, G_TX_RENDERTILE, 0, G_TX_CLAMP, 5, G_TX_NOLOD, G_TX_CLAMP, 5, G_TX_NOLOD),
-    gsDPSetTileSize(0, 0, 0, (32 - 1) << G_TEXTURE_IMAGE_FRAC, (32 - 1) << G_TEXTURE_IMAGE_FRAC),
-    gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, mario_cap_seg3_texture_0301DF50),
-    gsDPLoadSync(),
-    gsDPLoadBlock(G_TX_LOADTILE, 0, 0, 32 * 32 - 1, CALC_DXT(32, G_IM_SIZ_16b_BYTES)),
+    gsDPSetCombineMode(G_CC_SHADEFADEA, G_CC_SHADEFADEA),
     gsSPCopyLightsPlayerPart(CAP), //gsSPLight(&mario_cap_seg3_lights_0301CF38.a, 2),
     gsSPDisplayList(mario_cap_seg3_dl_03022B30),
-    gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_OFF),
-    gsDPPipeSync(),
-    gsDPSetCombineMode(G_CC_SHADEFADEA, G_CC_SHADEFADEA),
     gsSPDisplayList(mario_cap_seg3_dl_03022D10),
     gsDPPipeSync(),
     gsSPClearGeometryMode(G_LIGHTING | G_CULL_BACK),
@@ -381,7 +395,7 @@ const Gfx mario_cap_seg3_dl_03023298[] = {
     gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 16, 0, G_TX_RENDERTILE, 0, G_TX_WRAP | G_TX_NOMIRROR, 5, G_TX_NOLOD, G_TX_WRAP | G_TX_NOMIRROR, 6, G_TX_NOLOD),
     gsDPSetTileSize(0, 0, 0, (64 - 1) << G_TEXTURE_IMAGE_FRAC, (32 - 1) << G_TEXTURE_IMAGE_FRAC),
     gsSPTexture(0x0F80, 0x07C0, 0, G_TX_RENDERTILE, G_ON),
-    gsSPCopyLightsPlayerPart(CAP), //gsSPLight(&mario_cap_seg3_lights_0301CF20.a, 2),
+    gsSPCopyLightsPlayerPart(METAL), //gsSPLight(&mario_cap_seg3_lights_0301CF20.a, 2),
     gsSPDisplayList(mario_cap_seg3_dl_03022B30),
     gsSPDisplayList(mario_cap_seg3_dl_03022B68),
     gsSPDisplayList(mario_cap_seg3_dl_03022CC8),
