@@ -54,8 +54,10 @@
 #define WARP_NODE_CREDITS_START 0xF8
 #define WARP_NODE_CREDITS_NEXT 0xF9
 #define WARP_NODE_CREDITS_END 0xFA
-
 #define WARP_NODE_CREDITS_MIN 0xF8
+
+#define MENU_LEVEL_MIN 0
+#define MENU_LEVEL_MAX 16
 
 struct SavedWarpValues gReceiveWarp = { 0 };
 extern s8 sReceivedLoadedActNum;
@@ -1399,7 +1401,7 @@ s32 play_mode_change_level(void) {
 /**
  * Unused play mode. Doesn't call transition update and doesn't reset transition at the end.
  */
-static s32 play_mode_unused(void) {
+UNUSED static s32 play_mode_unused(void) {
     if (--sTransitionTimer == -1) {
         gHudDisplay.flags = HUD_DISPLAY_NONE;
 
@@ -1443,15 +1445,9 @@ void update_menu_level(void) {
         if (sIsDemoActive) {
             stop_demo(NULL);
         }
-        if (curLevel == LEVEL_JRB) {
-            gChangeLevel = curLevel;
-            gChangeActNum = 2;
-        } else if (curLevel == LEVEL_THI) {
-            gChangeLevel = LEVEL_THI;
-        } else {
-            gChangeLevel = curLevel;
-            gChangeActNum = 6;
-        }
+
+        gChangeLevel = curLevel;
+        gChangeActNum = 6;
         gDemoCountdown = 0;
     }
     if (sIsDemoActive) {
@@ -1599,16 +1595,8 @@ void update_menu_level(void) {
         disable_background_sound();
 
         if (get_current_background_music() == 0x0021) {
-            if (curLevel == LEVEL_JRB) {
-                gChangeLevel = curLevel;
-                gChangeActNum = 2;
-            } else if (curLevel == LEVEL_THI) {
-                gChangeLevel = curLevel;
-                gChangeActNum = 6;
-            } else {
-                gChangeLevel = curLevel;
-                gChangeActNum = 6;
-            }
+            gChangeLevel = curLevel;
+            gChangeActNum = 6;
         }
     }
 }
@@ -1735,9 +1723,8 @@ s32 init_level(void) {
                     if (gDjuiInMainMenu && (gNetworkType == NT_NONE)) {
                         // pick random main menu level
                         if (configMenuRandom) {
-                            int lower = 0, upper = 10;
                             srand(time(0));
-                            int randLevel = (rand() % (upper - lower + 1)) + lower;
+                            int randLevel = rand() % (MENU_LEVEL_MAX - MENU_LEVEL_MIN) + 1;
                             configMenuLevel = randLevel;
                         }
 
