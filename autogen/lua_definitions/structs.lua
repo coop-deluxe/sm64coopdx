@@ -663,10 +663,13 @@
 --- @field public hudCapTimer integer
 --- @field public hudRedCoinsRadar integer
 --- @field public hudSecretsRadar integer
+--- @field public maxCoins integer
+--- @field public maxLives integer
 --- @field public metalCapDuration integer
 --- @field public metalCapDurationCotmc integer
 --- @field public metalCapSequence integer
 --- @field public mushroom1UpHeal integer
+--- @field public numCoinsToLife integer
 --- @field public pauseExitAnywhere boolean
 --- @field public previewBlueCoins integer
 --- @field public pssSlideStarIndex integer

@@ -969,10 +969,13 @@
 | hudCapTimer | `integer` |  |
 | hudRedCoinsRadar | `integer` |  |
 | hudSecretsRadar | `integer` |  |
+| maxCoins | `integer` |  |
+| maxLives | `integer` |  |
 | metalCapDuration | `integer` |  |
 | metalCapDurationCotmc | `integer` |  |
 | metalCapSequence | `integer` |  |
 | mushroom1UpHeal | `integer` |  |
+| numCoinsToLife | `integer` |  |
 | pauseExitAnywhere | `boolean` |  |
 | previewBlueCoins | `integer` |  |
 | pssSlideStarIndex | `integer` |  |

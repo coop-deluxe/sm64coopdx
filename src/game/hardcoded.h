@@ -82,6 +82,9 @@ struct LevelValues {
     s16 floorLowerLimitShadow;
     bool pauseExitAnywhere;
     bool disableActs;
+    u16 maxLives;
+    u16 maxCoins;
+    u16 numCoinsToLife;
 };
 
 extern struct LevelValues gLevelValues;

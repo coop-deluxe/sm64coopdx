@@ -743,7 +743,7 @@ static struct LuaObjectField sLakituStateFields[LUA_LAKITU_STATE_FIELD_COUNT] = 
     { "yaw",                              LVT_S16,     offsetof(struct LakituState, yaw),                              false, LOT_NONE  },
 };
 
-#define LUA_LEVEL_VALUES_FIELD_COUNT 42
+#define LUA_LEVEL_VALUES_FIELD_COUNT 45
 static struct LuaObjectField sLevelValuesFields[LUA_LEVEL_VALUES_FIELD_COUNT] = {
     { "cellHeightLimit",                  LVT_S16,     offsetof(struct LevelValues, cellHeightLimit),                  false, LOT_NONE          },
     { "coinsRequiredForCoinStar",         LVT_S16,     offsetof(struct LevelValues, coinsRequiredForCoinStar),         false, LOT_NONE          },
@@ -766,10 +766,13 @@ static struct LuaObjectField sLevelValuesFields[LUA_LEVEL_VALUES_FIELD_COUNT] = 
     { "hudCapTimer",                      LVT_U8,      offsetof(struct LevelValues, hudCapTimer),                      false, LOT_NONE          },
     { "hudRedCoinsRadar",                 LVT_U8,      offsetof(struct LevelValues, hudRedCoinsRadar),                 false, LOT_NONE          },
     { "hudSecretsRadar",                  LVT_U8,      offsetof(struct LevelValues, hudSecretsRadar),                  false, LOT_NONE          },
+    { "maxCoins",                         LVT_U16,     offsetof(struct LevelValues, maxCoins),                         false, LOT_NONE          },
+    { "maxLives",                         LVT_U16,     offsetof(struct LevelValues, maxLives),                         false, LOT_NONE          },
     { "metalCapDuration",                 LVT_U16,     offsetof(struct LevelValues, metalCapDuration),                 false, LOT_NONE          },
     { "metalCapDurationCotmc",            LVT_U16,     offsetof(struct LevelValues, metalCapDurationCotmc),            false, LOT_NONE          },
     { "metalCapSequence",                 LVT_U8,      offsetof(struct LevelValues, metalCapSequence),                 false, LOT_NONE          },
     { "mushroom1UpHeal",                  LVT_U8,      offsetof(struct LevelValues, mushroom1UpHeal),                  false, LOT_NONE          },
+    { "numCoinsToLife",                   LVT_U16,     offsetof(struct LevelValues, numCoinsToLife),                   false, LOT_NONE          },
     { "pauseExitAnywhere",                LVT_BOOL,    offsetof(struct LevelValues, pauseExitAnywhere),                false, LOT_NONE          },
     { "previewBlueCoins",                 LVT_U8,      offsetof(struct LevelValues, previewBlueCoins),                 false, LOT_NONE          },
     { "pssSlideStarIndex",                LVT_U8,      offsetof(struct LevelValues, pssSlideStarIndex),                false, LOT_NONE          },

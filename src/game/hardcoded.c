@@ -115,6 +115,9 @@ struct LevelValues gDefaultLevelValues = {
     .pauseExitAnywhere              = 1,
     .disableActs                    = false,
     .wingCapLookUpReq               = 10,
+    .maxLives                       = 100,
+    .maxCoins                       = 999,
+    .numCoinsToLife                 = 50
 };
 
 struct LevelValues gLevelValues = { 0 };

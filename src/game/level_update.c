@@ -1071,28 +1071,28 @@ void update_hud_values(void) {
                 gHudDisplay.coins += 1;
                 play_sound(coinSound, gMarioState->marioObj->header.gfx.cameraToObject);
 
-                if (gServerSettings.stayInLevelAfterStar > 0 && gCurrCourseNum != COURSE_NONE && (gHudDisplay.coins == 50 || gHudDisplay.coins == 100 || gHudDisplay.coins == 150)) {
+                if (gServerSettings.stayInLevelAfterStar > 0 && gCurrCourseNum != COURSE_NONE && (gHudDisplay.coins % gLevelValues.numCoinsToLife == 0 && gHudDisplay.coins > 0)) {
                     gMarioState->numLives++;
                     play_sound(SOUND_GENERAL_COLLECT_1UP, gGlobalSoundSource);
                 }
             }
         }
 
-        if (gMarioState->numLives > 100) {
-            gMarioState->numLives = 100;
+        if (gMarioState->numLives > gLevelValues.maxLives) {
+            gMarioState->numLives = gLevelValues.maxLives;
         }
 
 #if BUGFIX_MAX_LIVES
-        if (gMarioState->numCoins > 999) {
-            gMarioState->numCoins = 999;
+        if (gMarioState->numCoins > gLevelValues.maxCoins) {
+            gMarioState->numCoins = gLevelValues.maxCoins;
         }
 
-        if (gHudDisplay.coins > 999) {
-            gHudDisplay.coins = 999;
+        if (gHudDisplay.coins > gLevelValues.maxCoins) {
+            gHudDisplay.coins = gLevelValues.maxCoins;
         }
 #else
-        if (gMarioState->numCoins > 999) {
-            gMarioState->numCoins = (s16) 999;
+        if (gMarioState->numCoins > gLevelValues.maxCoins) {
+            gMarioState->numCoins = (s16) gLevelValues.maxCoins;
         }
 #endif
 

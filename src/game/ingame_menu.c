@@ -3316,7 +3316,7 @@ void print_hud_course_complete_coins(s16 x, s16 y) {
             gCourseCompleteCoins++;
             play_sound(SOUND_MENU_YOSHI_GAIN_LIVES, gGlobalSoundSource);
 
-            if (gCourseCompleteCoins == 50 || gCourseCompleteCoins == 100 || gCourseCompleteCoins == 150) {
+            if (gCourseCompleteCoins % gLevelValues.numCoinsToLife == 0 && gCourseCompleteCoins > 0) {
                 play_sound(SOUND_GENERAL_COLLECT_1UP, gGlobalSoundSource);
                 gMarioStates[0].numLives++;
             }
