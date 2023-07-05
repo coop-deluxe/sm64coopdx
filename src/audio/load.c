@@ -84,11 +84,8 @@ OSMesgQueue gAudioDmaMesgQueue;
 OSMesg gAudioDmaMesg;
 OSIoMesg gAudioDmaIoMesg;
 
-#ifdef VERSION_EU
+// increased from defaults to allow more sounds to play
 #define SAMPLE_DMA_COUNT 0x100
-#else
-#define SAMPLE_DMA_COUNT 0x90
-#endif
 
 #ifdef VERSION_SH
 struct SharedDma *sSampleDmas = NULL; // sh: 0x803503D0
@@ -451,6 +448,7 @@ void init_sample_dma_buffers(UNUSED s32 arg0) {
         sSampleDmas[gSampleDmaNumListItems].unused2 = 0;
         sSampleDmas[gSampleDmaNumListItems].ttl = 0;
         gSampleDmaNumListItems++;
+        assert(gSampleDmaNumListItems < SAMPLE_DMA_COUNT);
     }
 #if defined(VERSION_JP) || defined(VERSION_US)
 out1:
@@ -502,6 +500,7 @@ out1:
         sSampleDmas[gSampleDmaNumListItems].bufSize = sDmaBufSize;
 #endif
         gSampleDmaNumListItems++;
+        assert(gSampleDmaNumListItems < SAMPLE_DMA_COUNT);
     }
 #if defined(VERSION_JP) || defined(VERSION_US)
 out2:
