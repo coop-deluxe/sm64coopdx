@@ -307,6 +307,12 @@ struct MarioBodyState
     /*????*/ u32 updateTorsoTime;
     /*????*/ Vec3f headPos;
     //u8 padding[4];
+    /*????*/ f32 shadeR; // Shadow Red Value
+    /*????*/ f32 shadeG; // Shadow Green Value
+    /*????*/ f32 shadeB; // Shadow Blue Value
+    /*????*/ f32 lightR; // Shadow Red Value
+    /*????*/ f32 lightG; // Shadow Green Value
+    /*????*/ f32 lightB; // Shadow Blue Value
 };
 
 struct OffsetSizePair

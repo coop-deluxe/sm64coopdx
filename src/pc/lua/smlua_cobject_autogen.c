@@ -809,7 +809,7 @@ static struct LuaObjectField sMarioAnimationFields[LUA_MARIO_ANIMATION_FIELD_COU
     { "targetAnim",      LVT_COBJECT_P, offsetof(struct MarioAnimation, targetAnim),      false, LOT_ANIMATION },
 };
 
-#define LUA_MARIO_BODY_STATE_FIELD_COUNT 14
+#define LUA_MARIO_BODY_STATE_FIELD_COUNT 20
 static struct LuaObjectField sMarioBodyStateFields[LUA_MARIO_BODY_STATE_FIELD_COUNT] = {
     { "action",              LVT_U32,     offsetof(struct MarioBodyState, action),              false, LOT_NONE  },
     { "capState",            LVT_S8,      offsetof(struct MarioBodyState, capState),            false, LOT_NONE  },
@@ -820,8 +820,14 @@ static struct LuaObjectField sMarioBodyStateFields[LUA_MARIO_BODY_STATE_FIELD_CO
     { "headAngle",           LVT_COBJECT, offsetof(struct MarioBodyState, headAngle),           true,  LOT_VEC3S },
     { "headPos",             LVT_COBJECT, offsetof(struct MarioBodyState, headPos),             true,  LOT_VEC3F },
     { "heldObjLastPosition", LVT_COBJECT, offsetof(struct MarioBodyState, heldObjLastPosition), true,  LOT_VEC3F },
+    { "lightB",              LVT_F32,     offsetof(struct MarioBodyState, lightB),              false, LOT_NONE  },
+    { "lightG",              LVT_F32,     offsetof(struct MarioBodyState, lightG),              false, LOT_NONE  },
+    { "lightR",              LVT_F32,     offsetof(struct MarioBodyState, lightR),              false, LOT_NONE  },
     { "modelState",          LVT_S16,     offsetof(struct MarioBodyState, modelState),          false, LOT_NONE  },
     { "punchState",          LVT_U8,      offsetof(struct MarioBodyState, punchState),          false, LOT_NONE  },
+    { "shadeB",              LVT_F32,     offsetof(struct MarioBodyState, shadeB),              false, LOT_NONE  },
+    { "shadeG",              LVT_F32,     offsetof(struct MarioBodyState, shadeG),              false, LOT_NONE  },
+    { "shadeR",              LVT_F32,     offsetof(struct MarioBodyState, shadeR),              false, LOT_NONE  },
     { "torsoAngle",          LVT_COBJECT, offsetof(struct MarioBodyState, torsoAngle),          true,  LOT_VEC3S },
     { "torsoPos",            LVT_COBJECT, offsetof(struct MarioBodyState, torsoPos),            true,  LOT_VEC3F },
     { "updateTorsoTime",     LVT_U32,     offsetof(struct MarioBodyState, updateTorsoTime),     true,  LOT_NONE  },

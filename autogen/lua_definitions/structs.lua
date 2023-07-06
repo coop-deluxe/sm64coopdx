@@ -708,8 +708,14 @@
 --- @field public headAngle Vec3s
 --- @field public headPos Vec3f
 --- @field public heldObjLastPosition Vec3f
+--- @field public lightB number
+--- @field public lightG number
+--- @field public lightR number
 --- @field public modelState integer
 --- @field public punchState integer
+--- @field public shadeB number
+--- @field public shadeG number
+--- @field public shadeR number
 --- @field public torsoAngle Vec3s
 --- @field public torsoPos Vec3f
 --- @field public updateTorsoTime integer

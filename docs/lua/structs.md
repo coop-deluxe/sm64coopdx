@@ -1035,8 +1035,14 @@
 | headAngle | [Vec3s](structs.md#Vec3s) | read-only |
 | headPos | [Vec3f](structs.md#Vec3f) | read-only |
 | heldObjLastPosition | [Vec3f](structs.md#Vec3f) | read-only |
+| lightB | `number` |  |
+| lightG | `number` |  |
+| lightR | `number` |  |
 | modelState | `integer` |  |
 | punchState | `integer` |  |
+| shadeB | `number` |  |
+| shadeG | `number` |  |
+| shadeR | `number` |  |
 | torsoAngle | [Vec3s](structs.md#Vec3s) | read-only |
 | torsoPos | [Vec3f](structs.md#Vec3f) | read-only |
 | updateTorsoTime | `integer` | read-only |

@@ -750,14 +750,18 @@ Gfx* geo_mirror_mario_backface_culling(s32 callContext, struct GraphNode* node, 
 
 static struct PlayerColor geo_mario_get_player_color(const struct PlayerPalette *palette) {
     struct PlayerColor color = { 0 };
+    u8 index = geo_get_processing_object_index();
+    struct MarioBodyState* bodyState = &gBodyStates[index];
     for (s32 part = 0; part != PLAYER_PART_MAX; ++part) {
         color.parts[part] = (Lights1) gdSPDefLights1(
-            palette->parts[part][0] / 2,
-            palette->parts[part][1] / 2,
-            palette->parts[part][2] / 2,
-            palette->parts[part][0],
-            palette->parts[part][1],
-            palette->parts[part][2], 
+            // Shadow
+            palette->parts[part][0] * bodyState->shadeR/255.0f,
+            palette->parts[part][1] * bodyState->shadeG/255.0f,
+            palette->parts[part][2] * bodyState->shadeB/255.0f,
+            // Light
+            palette->parts[part][0] * bodyState->lightR/255.0f,
+            palette->parts[part][1] * bodyState->lightG/255.0f,
+            palette->parts[part][2] * bodyState->lightB/255.0f,
             0x28, 0x28, 0x28
         );
     }
