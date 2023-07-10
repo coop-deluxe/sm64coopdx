@@ -306,13 +306,13 @@ struct MarioBodyState
     /*????*/ Vec3f handFootPos[4];
     /*????*/ u32 updateTorsoTime;
     /*????*/ Vec3f headPos;
-    //u8 padding[4];
-    /*????*/ f32 shadeR; // Shadow Red Value
-    /*????*/ f32 shadeG; // Shadow Green Value
-    /*????*/ f32 shadeB; // Shadow Blue Value
-    /*????*/ f32 lightR; // Shadow Red Value
-    /*????*/ f32 lightG; // Shadow Green Value
-    /*????*/ f32 lightB; // Shadow Blue Value
+    /*????*/ u8 shadeR; // Shadow Red Value
+    /*????*/ u8 shadeG; // Shadow Green Value
+    /*????*/ u8 shadeB; // Shadow Blue Value
+    /*????*/ u8 lightR; // Shadow Red Value
+    /*????*/ u8 lightG; // Shadow Green Value
+    /*????*/ u8 lightB; // Shadow Blue Value
+    // u8 padding[4];
 };
 
 struct OffsetSizePair

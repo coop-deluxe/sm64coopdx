@@ -2291,13 +2291,13 @@ void init_single_mario(struct MarioState* m) {
     update_mario_info_for_cam(m);
     m->marioBodyState->punchState = 0;
 
-    m->marioBodyState->shadeR = 127.0f;
-    m->marioBodyState->shadeG = 127.0f;
-    m->marioBodyState->shadeB = 127.0f;
+    m->marioBodyState->shadeR = 127;
+    m->marioBodyState->shadeG = 127;
+    m->marioBodyState->shadeB = 127;
 
-    m->marioBodyState->lightR = 255.0f;
-    m->marioBodyState->lightG = 255.0f;
-    m->marioBodyState->lightB = 255.0f;
+    m->marioBodyState->lightR = 255;
+    m->marioBodyState->lightG = 255;
+    m->marioBodyState->lightB = 255;
 
     m->marioObj->oPosX = m->pos[0];
     m->marioObj->oPosY = m->pos[1];
