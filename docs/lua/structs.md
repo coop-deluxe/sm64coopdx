@@ -948,6 +948,7 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
+| bubbleOnDeathBarrierInCapStages | `boolean` |  |
 | cellHeightLimit | `integer` |  |
 | coinsRequiredForCoinStar | `integer` |  |
 | disableActs | `boolean` |  |

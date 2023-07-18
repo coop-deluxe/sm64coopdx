@@ -2372,8 +2372,10 @@ void check_death_barrier(struct MarioState *m) {
                 case COURSE_TOTWC:    // (21) Tower of the Wing Cap
                 case COURSE_VCUTM:    // (22) Vanish Cap Under the Moat
                 case COURSE_WMOTR:    // (23) Winged Mario over the Rainbow
-                    break;
-                default:
+                    if (!gLevelValues.bubbleOnDeathBarrierInCapStages){
+                        break;
+                    }
+                default:        
                     mario_set_bubbled(m);
                     return;
             }

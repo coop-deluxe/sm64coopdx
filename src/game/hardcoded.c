@@ -117,7 +117,8 @@ struct LevelValues gDefaultLevelValues = {
     .wingCapLookUpReq               = 10,
     .maxLives                       = 100,
     .maxCoins                       = 999,
-    .numCoinsToLife                 = 50
+    .numCoinsToLife                 = 50,
+    .bubbleOnDeathBarrierInCapStages = false
 };
 
 struct LevelValues gLevelValues = { 0 };

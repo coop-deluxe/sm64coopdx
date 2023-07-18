@@ -642,6 +642,7 @@
 --- @field public yaw integer
 
 --- @class LevelValues
+--- @field public bubbleOnDeathBarrierInCapStages boolean
 --- @field public cellHeightLimit integer
 --- @field public coinsRequiredForCoinStar integer
 --- @field public disableActs boolean

@@ -85,6 +85,7 @@ struct LevelValues {
     u16 maxLives;
     u16 maxCoins;
     u16 numCoinsToLife;
+    bool bubbleOnDeathBarrierInCapStages;
 };
 
 extern struct LevelValues gLevelValues;
