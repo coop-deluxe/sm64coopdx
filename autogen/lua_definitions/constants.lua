@@ -4776,6 +4776,12 @@ MARIO_HAND_HOLDING_WING_CAP = 4
 MARIO_HAND_RIGHT_OPEN = 5
 
 --- @type integer
+MAX_KEYS = 512
+
+--- @type integer
+MAX_KEY_VALUE_LENGTH = 64
+
+--- @type integer
 PACKET_LENGTH = 3000
 
 --- @type integer

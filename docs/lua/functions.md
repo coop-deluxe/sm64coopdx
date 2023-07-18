@@ -1096,9 +1096,14 @@
 
 <br />
 
-- mod_storage.h
+- mod_storage.c.h
+   - [mod_storage_clear](functions-3.md#mod_storage_clear)
    - [mod_storage_load](functions-3.md#mod_storage_load)
+   - [mod_storage_load_bool](functions-3.md#mod_storage_load_bool)
+   - [mod_storage_load_number](functions-3.md#mod_storage_load_number)
    - [mod_storage_save](functions-3.md#mod_storage_save)
+   - [mod_storage_save_bool](functions-3.md#mod_storage_save_bool)
+   - [mod_storage_save_number](functions-3.md#mod_storage_save_number)
 
 <br />
 

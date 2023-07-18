@@ -5667,6 +5667,11 @@ function update_all_mario_stars()
     -- ...
 end
 
+--- @return boolean
+function mod_storage_clear()
+    -- ...
+end
+
 --- @param key string
 --- @return string
 function mod_storage_load(key)
@@ -5674,9 +5679,35 @@ function mod_storage_load(key)
 end
 
 --- @param key string
+--- @return boolean
+function mod_storage_load_bool(key)
+    -- ...
+end
+
+--- @param key string
+--- @return number
+function mod_storage_load_number(key)
+    -- ...
+end
+
+--- @param key string
 --- @param value string
 --- @return boolean
 function mod_storage_save(key, value)
+    -- ...
+end
+
+--- @param key string
+--- @param value boolean
+--- @return boolean
+function mod_storage_save_bool(key, value)
+    -- ...
+end
+
+--- @param key string
+--- @param value number
+--- @return boolean
+function mod_storage_save_number(key, value)
     -- ...
 end
 

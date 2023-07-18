@@ -35,7 +35,7 @@
 #include "src/game/object_list_processor.h"
 #include "src/game/behavior_actions.h"
 #include "src/game/mario_misc.h"
-#include "src/pc/mods/mod_storage.h"
+#include "src/pc/mods/mod_storage.c.h"
 #include "src/pc/utils/misc.h"
 #include "src/game/level_update.h"
 #include "src/game/area.h"
@@ -19353,9 +19353,24 @@ int smlua_func_update_all_mario_stars(UNUSED lua_State* L) {
     return 1;
 }
 
-  ///////////////////
- // mod_storage.h //
-///////////////////
+  /////////////////////
+ // mod_storage.c.h //
+/////////////////////
+
+int smlua_func_mod_storage_clear(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "mod_storage_clear", 0, top);
+        return 0;
+    }
+
+
+    lua_pushboolean(L, mod_storage_clear());
+
+    return 1;
+}
 
 int smlua_func_mod_storage_load(lua_State* L) {
     if (L == NULL) { return 0; }
@@ -19370,6 +19385,40 @@ int smlua_func_mod_storage_load(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mod_storage_load"); return 0; }
 
     lua_pushstring(L, mod_storage_load(key));
+
+    return 1;
+}
+
+int smlua_func_mod_storage_load_bool(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "mod_storage_load_bool", 1, top);
+        return 0;
+    }
+
+    const char* key = smlua_to_string(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mod_storage_load_bool"); return 0; }
+
+    lua_pushboolean(L, mod_storage_load_bool(key));
+
+    return 1;
+}
+
+int smlua_func_mod_storage_load_number(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "mod_storage_load_number", 1, top);
+        return 0;
+    }
+
+    const char* key = smlua_to_string(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mod_storage_load_number"); return 0; }
+
+    lua_pushnumber(L, mod_storage_load_number(key));
 
     return 1;
 }
@@ -19389,6 +19438,44 @@ int smlua_func_mod_storage_save(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "mod_storage_save"); return 0; }
 
     lua_pushboolean(L, mod_storage_save(key, value));
+
+    return 1;
+}
+
+int smlua_func_mod_storage_save_bool(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "mod_storage_save_bool", 2, top);
+        return 0;
+    }
+
+    const char* key = smlua_to_string(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mod_storage_save_bool"); return 0; }
+    bool value = smlua_to_boolean(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "mod_storage_save_bool"); return 0; }
+
+    lua_pushboolean(L, mod_storage_save_bool(key, value));
+
+    return 1;
+}
+
+int smlua_func_mod_storage_save_number(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "mod_storage_save_number", 2, top);
+        return 0;
+    }
+
+    const char* key = smlua_to_string(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mod_storage_save_number"); return 0; }
+    double value = smlua_to_number(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "mod_storage_save_number"); return 0; }
+
+    lua_pushboolean(L, mod_storage_save_number(key, value));
 
     return 1;
 }
@@ -31523,9 +31610,14 @@ void smlua_bind_functions_autogen(void) {
     // misc.h
     smlua_bind_function(L, "update_all_mario_stars", smlua_func_update_all_mario_stars);
 
-    // mod_storage.h
+    // mod_storage.c.h
+    smlua_bind_function(L, "mod_storage_clear", smlua_func_mod_storage_clear);
     smlua_bind_function(L, "mod_storage_load", smlua_func_mod_storage_load);
+    smlua_bind_function(L, "mod_storage_load_bool", smlua_func_mod_storage_load_bool);
+    smlua_bind_function(L, "mod_storage_load_number", smlua_func_mod_storage_load_number);
     smlua_bind_function(L, "mod_storage_save", smlua_func_mod_storage_save);
+    smlua_bind_function(L, "mod_storage_save_bool", smlua_func_mod_storage_save_bool);
+    smlua_bind_function(L, "mod_storage_save_number", smlua_func_mod_storage_save_number);
 
     // network_player.h
     smlua_bind_function(L, "get_network_player_from_area", smlua_func_get_network_player_from_area);

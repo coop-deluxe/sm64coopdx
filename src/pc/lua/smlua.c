@@ -249,7 +249,7 @@ void smlua_init(void) {
     luaL_requiref(L, "debug", luaopen_debug, 1);
     luaL_requiref(L, "io", luaopen_io, 1);
     luaL_requiref(L, "os", luaopen_os, 1);
-    luaL_requiref(L, "package ", luaopen_package, 1);
+    luaL_requiref(L, "package", luaopen_package, 1);
 #endif
     luaL_requiref(L, "math", luaopen_math, 1);
     luaL_requiref(L, "string", luaopen_string, 1);

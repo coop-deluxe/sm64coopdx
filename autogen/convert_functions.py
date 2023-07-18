@@ -5,7 +5,7 @@ from common import *
 
 rejects = ""
 integer_types = ["u8", "u16", "u32", "u64", "s8", "s16", "s32", "s64", "int"]
-number_types = ["f32", "float"]
+number_types = ["f32", "float", "f64", "double"]
 param_override_build = {}
 out_filename = 'src/pc/lua/smlua_functions_autogen.c'
 out_filename_docs = 'docs/lua/functions%s.md'
@@ -56,7 +56,7 @@ in_files = [
     "src/game/object_list_processor.h",
     "src/game/behavior_actions.h",
     "src/game/mario_misc.h",
-    "src/pc/mods/mod_storage.h",
+    "src/pc/mods/mod_storage.c.h",
     "src/pc/utils/misc.h",
     "src/game/level_update.h",
     "src/game/area.h",
