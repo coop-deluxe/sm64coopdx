@@ -407,6 +407,27 @@ void set_whirlpools(f32 x, f32 y, f32 z, s16 strength, s16 area, s32 index) {
     gAreas[area].whirlpools[index]->strength = strength;
 }
 
+struct Struct802C0DF0 *newContents = NULL;
+u8 newContentsSize = 16;
+
+struct Struct802C0DF0* get_exclamation_box_new_contents_pointer(void) {
+    return newContents;
+}
+
+u8 get_exclamation_box_new_contents_size(void) {
+    return newContentsSize;
+}
+
+void set_exclamation_box_new_contents(struct Struct802C0DF0 contents[], u8 size) {
+    newContents = contents;
+    newContentsSize = size;
+}
+
+void restore_exclamation_box_original_contents(void) {
+    newContents = NULL;
+    newContentsSize = 16;
+}
+
 #ifdef DEVELOPMENT
 void obj_randomize(struct Object* o) {
     if (!o) { return; }

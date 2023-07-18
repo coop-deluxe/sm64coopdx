@@ -28,7 +28,7 @@ struct Struct802C0DF0 sExclamationBoxContents[] = { { 0, 0, 0, MODEL_MARIOS_WING
                                                     { 12, 0, 3, MODEL_STAR, bhvSpawnedStar },
                                                     { 13, 0, 4, MODEL_STAR, bhvSpawnedStar },
                                                     { 14, 0, 5, MODEL_STAR, bhvSpawnedStar },
-                                                    { 99, 0, 0, 0, NULL } };
+                                                    { 255, 0, 0, 0, NULL } };
 
 void bhv_rotating_exclamation_box_loop(void) {
     if (!o->parentObj || o->parentObj->oAction != 1)
@@ -122,7 +122,7 @@ static s32 exclamation_replace_model(struct MarioState* m, s32 model) {
     }
 }
 
-void exclamation_box_spawn_contents(struct Struct802C0DF0 *a0, u8 a1) {
+void exclamation_box_spawn_contents(struct Struct802C0DF0 *a0, u8 a1, u8 size) {
     struct MarioState* marioState = nearest_mario_state_to_object(o);
     struct Object* player = marioState ? marioState->marioObj : NULL;
     struct Object *sp1C = NULL;
@@ -131,7 +131,7 @@ void exclamation_box_spawn_contents(struct Struct802C0DF0 *a0, u8 a1) {
         return;
     }
 
-    while (a0->unk0 != 99) {
+   for (u8 i = 0; i < size; i++) {
         if (a1 == a0->unk0) {
             s32 model = exclamation_replace_model(marioState, a0->model);
 
@@ -152,6 +152,7 @@ void exclamation_box_spawn_contents(struct Struct802C0DF0 *a0, u8 a1) {
             // stars cant be sent here to due jankiness in oBehParams
             if (a0->behavior != smlua_override_behavior(bhvSpawnedStar) && sp1C != NULL) {
                 // hack: if any other sync objects get spawned here we have to check for them
+                // problem: going to need to sync every object
                 if (a0->behavior == smlua_override_behavior(bhvKoopaShell)) {
                     sync_object_set_id(sp1C);
                 }
@@ -166,7 +167,9 @@ void exclamation_box_spawn_contents(struct Struct802C0DF0 *a0, u8 a1) {
 }
 
 void exclamation_box_act_4(void) {
-    exclamation_box_spawn_contents(sExclamationBoxContents, o->oBehParams2ndByte);
+    struct Struct802C0DF0 *newContents = get_exclamation_box_new_contents_pointer();
+    u8 newContentsSize = get_exclamation_box_new_contents_size();
+    exclamation_box_spawn_contents(newContents ? newContents : sExclamationBoxContents, o->oBehParams2ndByte, newContentsSize);
     spawn_mist_particles_variable(0, 0, 46.0f);
     spawn_triangle_break_particles(20, 139, 0.3f, o->oAnimState);
     create_sound_spawner(SOUND_GENERAL_BREAK_BOX);

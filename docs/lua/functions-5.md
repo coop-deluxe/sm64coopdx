@@ -2209,6 +2209,24 @@
 
 <br />
 
+## [restore_exclamation_box_original_contents](#restore_exclamation_box_original_contents)
+
+### Lua Example
+`restore_exclamation_box_original_contents()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void restore_exclamation_box_original_contents(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [set_whirlpools](#set_whirlpools)
 
 ### Lua Example

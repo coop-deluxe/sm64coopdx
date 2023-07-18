@@ -14,6 +14,7 @@
 #include "include/level_misc_macros.h"
 #include "include/macro_presets.h"
 #include "utils/smlua_anim_utils.h"
+#include "utils/smlua_obj_utils.h"
 
 bool smlua_functions_valid_param_count(lua_State* L, int expected) {
     int top = lua_gettop(L);
@@ -207,6 +208,98 @@ int smlua_func_network_send(lua_State* L) {
 int smlua_func_network_send_to(lua_State* L) {
     if (!smlua_functions_valid_param_count(L, 3)) { return 0; }
     network_send_lua_custom(false);
+    return 1;
+}
+
+int smlua_func_set_exclamation_box_new_contents(lua_State* L) {
+    if (L == NULL) { return 0; }
+    if (!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    static struct Struct802C0DF0 sExclamationBoxContentsArray[255];
+
+    u8 subtable_counter = 0;
+    if (lua_type(L, 1) != LUA_TTABLE) {
+        LOG_LUA("Failed to convert parameter 1 to table");
+        return 0;
+    }
+
+    lua_pushnil(L); // Set so lua_next() pops this off upon starting
+    // Enter main table
+    while (lua_next(L, 1) != 0) {
+        // key is index -2, value is index -1
+        if (lua_type(L, -1) != LUA_TTABLE) {
+            LOG_LUA("Failed to find subtable\n");
+            return 0;
+        }
+
+        // Create an empty struct to put values in
+        struct Struct802C0DF0 sContents = { 0 };
+
+        int initialTop = lua_gettop(L); // Hopefully 3
+        lua_pushnil(L); // Set so lua_next() pops this off upon starting
+        u8 elements_counter = 0;
+        // Special care is taken here, so any invalid subtables will error
+        while (lua_next(L, initialTop) != 0) {
+            int keyIndex = lua_gettop(L) - 1;
+            int valueIndex = lua_gettop(L) - 0;
+
+            const char* key = smlua_to_string(L, keyIndex);
+            if (!gSmLuaConvertSuccess) {
+                LOG_LUA("Failed to convert key to string in subtable %u", subtable_counter);
+                return 0;
+            }
+
+            const int value = smlua_to_integer(L, valueIndex);
+            if (!gSmLuaConvertSuccess) {
+                LOG_LUA("The key \"%s\" within subtable %u has a value that is not a number (Type: %u)", key, subtable_counter, lua_type(L, valueIndex));
+                return 0;
+            }
+
+            // Bad
+            if (!strcmp(key, "index")) {
+                sContents.unk0 = value;
+                elements_counter++;
+                lua_pop(L, 1); // pop value
+            } else if (!strcmp(key, "unused")) {
+                sContents.unk1 = value;
+                elements_counter++;
+                lua_pop(L, 1); // pop value
+            } else if (!strcmp(key, "firstByte")) {
+                sContents.unk2 = value;
+                elements_counter++;
+                lua_pop(L, 1); // pop value
+            } else if (!strcmp(key, "emodel")) {
+                u16 loadedModelId = smlua_model_util_load(value);
+                sContents.model = loadedModelId;
+                elements_counter++;
+                lua_pop(L, 1); // pop value
+            } else if (!strcmp(key, "behaviorId")) {
+                sContents.behavior = get_behavior_from_id(value);
+                elements_counter++;
+                lua_pop(L, 1); // pop value
+            } else {
+                LOG_LUA("The key \"%s\" in subtable %u is invalid", key, subtable_counter);
+                return 0;
+            }
+        }
+
+        if (elements_counter != 5) {
+            LOG_LUA("Invalid elements count in subtable %u (There should be 5)", subtable_counter);
+            return 0;
+        }
+
+        // Element 254 will not be set
+        if (subtable_counter < 254) {
+            sExclamationBoxContentsArray[subtable_counter] = sContents;
+            subtable_counter++;
+        }
+
+        lua_pop(L, 1); // pop key
+    }
+    lua_pop(L, 1); // pop key
+
+    set_exclamation_box_new_contents(sExclamationBoxContentsArray, subtable_counter);
+
     return 1;
 }
 
@@ -747,4 +840,5 @@ void smlua_bind_functions(void) {
     smlua_bind_function(L, "djui_hud_render_texture_tile_interpolated", smlua_func_djui_hud_render_texture_tile_interpolated);
     smlua_bind_function(L, "level_script_parse", smlua_func_level_script_parse);
     smlua_bind_function(L, "smlua_anim_util_register_animation", smlua_func_smlua_anim_util_register_animation);
+    smlua_bind_function(L, "set_exclamation_box_new_contents", smlua_func_set_exclamation_box_new_contents);
 }

@@ -22,6 +22,7 @@
 - [Cutscene](#Cutscene)
 - [CutsceneSplinePoint](#CutsceneSplinePoint)
 - [CutsceneVariable](#CutsceneVariable)
+- [ExclamationBoxContents](#ExclamationBoxContents)
 - [FloorGeometry](#FloorGeometry)
 - [GlobalObjectAnimations](#GlobalObjectAnimations)
 - [GlobalObjectCollisionData](#GlobalObjectCollisionData)
@@ -594,6 +595,20 @@
 | unused1 | `integer` |  |
 | unused2 | `integer` |  |
 | unusedPoint | [Vec3f](structs.md#Vec3f) | read-only |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [ExclamationBoxContents](#ExclamationBoxContents)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| behaviorId | [enum BehaviorId](constants.md#enum-BehaviorId) |  |
+| emodel | [enum ModelExtendedId](constants.md#enum-ModelExtendedId) |  |
+| firstByte | `integer` |  |
+| index | `integer` |  |
+| unused | `integer` |  |
 
 [:arrow_up_small:](#)
 

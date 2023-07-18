@@ -29647,6 +29647,21 @@ int smlua_func_obj_set_vel(lua_State* L) {
     return 1;
 }
 
+int smlua_func_restore_exclamation_box_original_contents(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "restore_exclamation_box_original_contents", 0, top);
+        return 0;
+    }
+
+
+    restore_exclamation_box_original_contents();
+
+    return 1;
+}
+
 int smlua_func_set_whirlpools(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -32167,6 +32182,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "obj_move_xyz", smlua_func_obj_move_xyz);
     smlua_bind_function(L, "obj_set_model_extended", smlua_func_obj_set_model_extended);
     smlua_bind_function(L, "obj_set_vel", smlua_func_obj_set_vel);
+    smlua_bind_function(L, "restore_exclamation_box_original_contents", smlua_func_restore_exclamation_box_original_contents);
     smlua_bind_function(L, "set_whirlpools", smlua_func_set_whirlpools);
     smlua_bind_function(L, "spawn_non_sync_object", smlua_func_spawn_non_sync_object);
     smlua_bind_function(L, "spawn_sync_object", smlua_func_spawn_sync_object);

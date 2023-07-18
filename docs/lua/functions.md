@@ -1676,6 +1676,7 @@
    - [obj_move_xyz](functions-5.md#obj_move_xyz)
    - [obj_set_model_extended](functions-5.md#obj_set_model_extended)
    - [obj_set_vel](functions-5.md#obj_set_vel)
+   - [restore_exclamation_box_original_contents](functions-5.md#restore_exclamation_box_original_contents)
    - [set_whirlpools](functions-5.md#set_whirlpools)
    - [spawn_non_sync_object](functions-5.md#spawn_non_sync_object)
    - [spawn_sync_object](functions-5.md#spawn_sync_object)

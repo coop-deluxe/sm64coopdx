@@ -278,3 +278,15 @@ end
 function level_script_parse(levelNum, func)
     -- ...
 end
+
+--- @param contents ExclamationBoxContents[]
+--- @return nil
+--- The parameter should be a table containing several subtables with the following keys
+--- - index: The index of the content (used by oBehParam2ndByte)
+--- - unused: Unused
+--- - firstByte: The spawned object's oBehParam's 1st byte
+--- - emodel: The spawned object's model
+--- - behaviorId: The spawned object's behavior ID
+function set_exclamation_box_new_contents(contents)
+    -- ...
+end
