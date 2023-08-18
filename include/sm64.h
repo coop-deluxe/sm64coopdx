@@ -151,6 +151,10 @@
 #define ACT_GROUP_AUTOMATIC  /* 0x00000140 */ (5 << 6)
 #define ACT_GROUP_OBJECT     /* 0x00000180 */ (6 << 6)
 
+#define ACT_INDEX_MASK              (ACT_ID_MASK & ~ACT_GROUP_MASK)
+#define ACT_NUM_GROUPS              ((ACT_GROUP_MASK >> 6) + 1)
+#define ACT_NUM_ACTIONS_PER_GROUP   (ACT_INDEX_MASK + 1)
+
 #define ACT_FLAG_STATIONARY                  /* 0x00000200 */ (1 <<  9)
 #define ACT_FLAG_MOVING                      /* 0x00000400 */ (1 << 10)
 #define ACT_FLAG_AIR                         /* 0x00000800 */ (1 << 11)

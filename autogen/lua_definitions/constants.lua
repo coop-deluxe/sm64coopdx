@@ -7598,6 +7598,9 @@ ACT_IDLE = 0x0C400201
 ACT_ID_MASK = 0x000001FF
 
 --- @type integer
+ACT_INDEX_MASK = (ACT_ID_MASK & ~ACT_GROUP_MASK)
+
+--- @type integer
 ACT_INTRO_CUTSCENE = 0x04001301
 
 --- @type integer
@@ -7671,6 +7674,12 @@ ACT_METAL_WATER_WALKING = 0x000044F2
 
 --- @type integer
 ACT_MOVE_PUNCHING = 0x00800457
+
+--- @type integer
+ACT_NUM_ACTIONS_PER_GROUP = (ACT_INDEX_MASK + 1)
+
+--- @type integer
+ACT_NUM_GROUPS = ((ACT_GROUP_MASK >> 6) + 1)
 
 --- @type integer
 ACT_PANTING = 0x0C400205

@@ -441,8 +441,13 @@ bool is_transition_playing(void) {
 ///
 
 u32 allocate_mario_action(u32 actFlags) {
-    actFlags = actFlags & (~((u32)0x3F));
-    return actFlags | ACT_FLAG_CUSTOM_ACTION | gLuaMarioActionIndex++;
+    u32 actGroup = ((actFlags & ACT_GROUP_MASK) >> 6);
+    u32 actIndex = gLuaMarioActionIndex[actGroup]++;
+    if (actIndex >= ACT_NUM_ACTIONS_PER_GROUP) {
+        LOG_LUA("Cannot allocate more actions for group %u", actGroup);
+        return 0;
+    }
+    return (actFlags & ~ACT_INDEX_MASK) | ACT_FLAG_CUSTOM_ACTION | actIndex;
 }
 
 ///

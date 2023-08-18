@@ -98,7 +98,7 @@ static const char* LuaActionHookTypeArgName[] = {
     "max (dummy)",
 };
 
-extern u32 gLuaMarioActionIndex;
+extern u32 gLuaMarioActionIndex[];
 
 int smlua_hook_custom_bhv(BehaviorScript *bhvScript, const char *bhvName);
 

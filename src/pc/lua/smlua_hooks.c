@@ -1,4 +1,5 @@
 #include "smlua.h"
+#include "sm64.h"
 #include "behavior_commands.h"
 #include "pc/mods/mod.h"
 #include "src/game/object_list_processor.h"
@@ -851,11 +852,11 @@ struct LuaHookedMarioAction {
     struct Mod* mod;
 };
 
-#define MAX_HOOKED_ACTIONS 128
+#define MAX_HOOKED_ACTIONS (ACT_NUM_GROUPS * ACT_NUM_ACTIONS_PER_GROUP)
 
 static struct LuaHookedMarioAction sHookedMarioActions[MAX_HOOKED_ACTIONS] = { 0 };
 static int sHookedMarioActionsCount = 0;
-u32 gLuaMarioActionIndex = 0;
+u32 gLuaMarioActionIndex[ACT_NUM_GROUPS] = { 0 };
 
 int smlua_hook_mario_action(lua_State* L) {
     if (L == NULL) { return 0; }
@@ -1564,7 +1565,7 @@ void smlua_clear_hooks(void) {
         hooked->mod = NULL;
     }
     sHookedBehaviorsCount = 0;
-    gLuaMarioActionIndex = 0;
+    memset(gLuaMarioActionIndex, 0, sizeof(gLuaMarioActionIndex));
 }
 
 void smlua_bind_hooks(void) {
