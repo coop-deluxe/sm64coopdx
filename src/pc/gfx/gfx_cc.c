@@ -54,7 +54,7 @@ void gfx_cc_get_features(struct ColorCombiner* cc, struct CCFeatures* ccf) {
     }
 }
 
-void gfx_cc_print(struct ColorCombiner *cc) {
+void gfx_cc_print(UNUSED struct ColorCombiner *cc) {
     if (!sAllowCCPrint) { return; }
     // disabled for now
     return;

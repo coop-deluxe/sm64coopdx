@@ -4,7 +4,7 @@
 
 #include "bass_audio_helpers.h"
 
-HSTREAM bassh_create_fx_stream_from_file(char* data, QWORD length, QWORD offset) {
+HSTREAM bassh_create_fx_stream_from_file(const char* data, QWORD length, QWORD offset) {
     HSTREAM raw_stream = BASS_StreamCreateFile(TRUE, data, offset, length, BASS_STREAM_PRESCAN | BASS_STREAM_DECODE);
 
     HSTREAM stream = BASS_FX_TempoCreate(raw_stream, BASS_STREAM_PRESCAN);
@@ -12,7 +12,7 @@ HSTREAM bassh_create_fx_stream_from_file(char* data, QWORD length, QWORD offset)
     return stream;
 }
 
-HSAMPLE bassh_create_sample_from_file(char* data, QWORD length, QWORD offset) {
+HSAMPLE bassh_create_sample_from_file(const char* data, QWORD length, QWORD offset) {
     return BASS_SampleLoad(TRUE, data, offset, length, MAX_SAMPLE_CONCURRENT_PLAYBACKS, BASS_SAMPLE_OVER_POS);
 }
 

@@ -7558,7 +7558,7 @@
 [CustomLevelInfo](structs.md#CustomLevelInfo)
 
 ### C Prototype
-`struct CustomLevelInfo* smlua_level_util_get_info_from_short_name(char* shortName);`
+`struct CustomLevelInfo* smlua_level_util_get_info_from_short_name(const char* shortName);`
 
 [:arrow_up_small:](#)
 

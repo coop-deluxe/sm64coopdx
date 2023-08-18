@@ -32,7 +32,7 @@ void dynos_gfx_swap_animations(void *ptr) {
 
 // -- warps -- //
 
-LevelScript* dynos_get_level_script(char* scriptEntryName) {
+LevelScript* dynos_get_level_script(const char* scriptEntryName) {
     return DynOS_Lvl_GetScript(scriptEntryName);
 }
 

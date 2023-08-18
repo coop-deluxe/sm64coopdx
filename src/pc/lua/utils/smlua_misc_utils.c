@@ -594,7 +594,7 @@ void set_override_envfx(s32 envfx) {
 
 ///
 
-char* get_os_name(void) {
+const char* get_os_name(void) {
 #if defined(_WIN32) || defined(_WIN64)
     return "Windows";
 #elif __APPLE__ || __MACH__

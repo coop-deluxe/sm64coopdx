@@ -58,7 +58,7 @@ void djui_chat_message_create_from(u8 globalIndex, const char* message) {
         return;
     }
 
-    char* playerColorString = network_get_player_text_color_string(np->localIndex);
+    const char* playerColorString = network_get_player_text_color_string(np->localIndex);
     char chatMsg[256] = { 0 };
     snprintf(chatMsg, 256, "%s%s:\\#dcdcdc\\ %s", playerColorString, (np != NULL) ? np->name : "Player", message);
 

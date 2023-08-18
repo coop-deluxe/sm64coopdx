@@ -2,8 +2,8 @@
 
 #define MAX_SAMPLE_CONCURRENT_PLAYBACKS 32
 
-HSTREAM bassh_create_fx_stream_from_file(char* data, QWORD length, QWORD offset);
-HSAMPLE bassh_create_sample_from_file(char* data, QWORD length, QWORD offset);
+HSTREAM bassh_create_fx_stream_from_file(const char* data, QWORD length, QWORD offset);
+HSAMPLE bassh_create_sample_from_file(const char* data, QWORD length, QWORD offset);
 
 HSTREAM bassh_sample_get_stream(HSAMPLE sample);
 void bassh_free_sample(HSAMPLE sample);

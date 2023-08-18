@@ -280,7 +280,7 @@ static void crash_handler_produce_one_frame() {
     gfx_end_frame();
 }
 
-static void crash_handler_add_info_str(CrashHandlerText** pTextP, f32 x, f32 y, char* title, char* value) {
+static void crash_handler_add_info_str(CrashHandlerText** pTextP, f32 x, f32 y, const char* title, const char* value) {
     CrashHandlerText* pText = *pTextP;
     crash_handler_set_text(x, y, 0xFF, 0xFF, 0x00, "%s", title);
     crash_handler_set_text(-1, y, 0xFF, 0xFF, 0xFF, "%s", ": ");
@@ -288,7 +288,7 @@ static void crash_handler_add_info_str(CrashHandlerText** pTextP, f32 x, f32 y, 
     *pTextP = pText;
 }
 
-static void crash_handler_add_info_int(CrashHandlerText** pTextP, f32 x, f32 y, char* title, int value) {
+static void crash_handler_add_info_int(CrashHandlerText** pTextP, f32 x, f32 y, const char* title, int value) {
     CrashHandlerText* pText = *pTextP;
     crash_handler_set_text(x, y, 0xFF, 0xFF, 0x00, "%s", title);
     crash_handler_set_text(-1, y, 0xFF, 0xFF, 0xFF, "%s", ": ");

@@ -17,7 +17,7 @@ s32   dynos_tex_import(void **output, void *ptr, s32 tile, void *grapi, void **h
 void  dynos_gfx_swap_animations(void *ptr);
 
 // -- warps -- //
-LevelScript* dynos_get_level_script(char* scriptEntryName);
+LevelScript* dynos_get_level_script(const char* scriptEntryName);
 bool dynos_warp_to_warpnode(s32 aLevel, s32 aArea, s32 aAct, s32 aWarpId);
 bool dynos_warp_to_level(s32 aLevel, s32 aArea, s32 aAct);
 bool dynos_warp_restart_level(void);

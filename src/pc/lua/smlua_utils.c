@@ -447,27 +447,27 @@ void smlua_push_pointer(lua_State* L, u16 lvt, void* p) {
     }
 }
 
-void smlua_push_integer_field(int index, char* name, lua_Integer val) {
+void smlua_push_integer_field(int index, const char* name, lua_Integer val) {
     lua_pushinteger(gLuaState, val);
     lua_setfield(gLuaState, index, name);
 }
 
-void smlua_push_number_field(int index, char* name, lua_Number val) {
+void smlua_push_number_field(int index, const char* name, lua_Number val) {
     lua_pushnumber(gLuaState, val);
     lua_setfield(gLuaState, index, name);
 }
 
-void smlua_push_string_field(int index, char* name, const char* val) {
+void smlua_push_string_field(int index, const char* name, const char* val) {
     lua_pushstring(gLuaState, val);
     lua_setfield(gLuaState, index, name);
 }
 
-void smlua_push_nil_field(int index, char* name) {
+void smlua_push_nil_field(int index, const char* name) {
     lua_pushnil(gLuaState);
     lua_setfield(gLuaState, index, name);
 }
 
-void smlua_push_table_field(int index, char* name) {
+void smlua_push_table_field(int index, const char* name) {
     lua_newtable(gLuaState);
     lua_setfield(gLuaState, index, name);
 }
@@ -498,7 +498,7 @@ void smlua_push_lnt(struct LSTNetworkType* lnt) {
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-lua_Integer smlua_get_integer_field(int index, char* name) {
+lua_Integer smlua_get_integer_field(int index, const char* name) {
     if (lua_type(gLuaState, index) != LUA_TTABLE) {
         LOG_LUA_LINE("smlua_get_integer_field received improper type '%d'", lua_type(gLuaState, index));
         gSmLuaConvertSuccess = false;
@@ -510,7 +510,7 @@ lua_Integer smlua_get_integer_field(int index, char* name) {
     return val;
 }
 
-lua_Number smlua_get_number_field(int index, char* name) {
+lua_Number smlua_get_number_field(int index, const char* name) {
     if (lua_type(gLuaState, index) != LUA_TTABLE) {
         LOG_LUA_LINE("smlua_get_number_field received improper type '%d'", lua_type(gLuaState, index));
         gSmLuaConvertSuccess = false;
@@ -522,7 +522,7 @@ lua_Number smlua_get_number_field(int index, char* name) {
     return val;
 }
 
-LuaFunction smlua_get_function_field(int index, char *name) {
+LuaFunction smlua_get_function_field(int index, const char *name) {
     if (lua_type(gLuaState, index) != LUA_TTABLE) {
         LOG_LUA_LINE("smlua_get_function_field received improper type '%d'", lua_type(gLuaState, index));
         gSmLuaConvertSuccess = false;
@@ -645,7 +645,7 @@ LuaFunction smlua_get_any_function_mod_variable(const char *variable) {
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-char* smlua_lnt_to_str(struct LSTNetworkType* lnt) {
+const char* smlua_lnt_to_str(struct LSTNetworkType* lnt) {
     static char sLntStr[32] = "";
     switch (lnt->type) {
         case LST_NETWORK_TYPE_INTEGER:

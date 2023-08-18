@@ -937,7 +937,7 @@ void DynOS_Tex_ModShutdown();
 //
 
 Array<Pair<const char*, GfxData*>> &DynOS_Lvl_GetArray();
-LevelScript* DynOS_Lvl_GetScript(char* aScriptEntryName);
+LevelScript* DynOS_Lvl_GetScript(const char* aScriptEntryName);
 void  DynOS_Lvl_Activate(s32 modIndex, const SysPath &aFilePath, const char *aLevelName);
 GfxData* DynOS_Lvl_GetActiveGfx(void);
 const char* DynOS_Lvl_GetToken(u32 index);

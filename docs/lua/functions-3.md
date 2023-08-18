@@ -8690,7 +8690,7 @@
 - `string`
 
 ### C Prototype
-`char* network_get_player_text_color_string(u8 localIndex);`
+`const char* network_get_player_text_color_string(u8 localIndex);`
 
 [:arrow_up_small:](#)
 

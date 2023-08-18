@@ -11,6 +11,6 @@ bool network_is_server(void);
 bool network_is_moderator(void);
 
 u8* network_get_player_text_color(u8 localIndex);
-char* network_get_player_text_color_string(u8 localIndex);
+const char* network_get_player_text_color_string(u8 localIndex);
 
 #endif

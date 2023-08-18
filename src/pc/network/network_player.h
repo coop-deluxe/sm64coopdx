@@ -82,7 +82,7 @@ void network_player_palette_to_color(struct NetworkPlayer *np, enum PlayerParts 
 
 void network_player_update(void);
 
-u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex, u8 modelIndex, const struct PlayerPalette* playerPalette, char* name);
+u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex, u8 modelIndex, const struct PlayerPalette* playerPalette, const char* name);
 u8 network_player_disconnected(u8 globalIndex);
 void construct_player_popup(struct NetworkPlayer* np, char* msg, const char* level);
 

@@ -128,6 +128,6 @@ u32 get_time(void);
 u16 get_envfx(void);
 void set_override_envfx(s32 envfx);
 
-char* get_os_name(void);
+const char* get_os_name(void);
 
 #endif

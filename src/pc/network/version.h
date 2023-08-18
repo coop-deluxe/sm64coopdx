@@ -18,8 +18,8 @@
 
 #define MAX_VERSION_LENGTH 32
 #define MAX_LOCAL_VERSION_LENGTH 36
-char* get_version(void);
-char* get_version_local(void);
-char* get_game_name(void);
+const char* get_version(void);
+const char* get_version_local(void);
+const char* get_game_name(void);
 
 #endif

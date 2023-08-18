@@ -643,7 +643,7 @@ void smlua_cobject_init_globals(void) {
     }
 }
 
-void smlua_cobject_init_per_file_globals(char* path) {
+void smlua_cobject_init_per_file_globals(const char* path) {
     lua_State* L = gLuaState;
 
     lua_getfield(L, LUA_REGISTRYINDEX, path); // push per-file globals

@@ -261,6 +261,6 @@ void smlua_text_utils_extra_text_replace(s16 index, const char* text) {
     sReplacedActName[index] = true;
 }
 
-char* smlua_text_utils_get_language(void) {
+const char* smlua_text_utils_get_language(void) {
     return configLanguage;
 }

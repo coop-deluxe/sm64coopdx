@@ -67,7 +67,7 @@ static void strncat_len(char* destination, char* source, size_t destinationLengt
 
 static void discord_populate_details(char* buffer, int bufferLength) {
     // get version
-    char* version = get_version();
+    const char* version = get_version();
     int versionLength = strlen(version);
     snprintf(buffer, bufferLength, "%s", version);
     buffer += versionLength;

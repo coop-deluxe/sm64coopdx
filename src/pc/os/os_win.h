@@ -9,5 +9,5 @@
 #define os_closedir(_x) _wclosedir(_x)
 #define os_readdir(_x) _wreaddir(_x)
 
-OS_DIR* os_opendir(char* path);
-char* os_get_dir_name(os_dirent* dir);
+OS_DIR* os_opendir(const char* path);
+const char* os_get_dir_name(os_dirent* dir);

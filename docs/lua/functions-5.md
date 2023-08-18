@@ -904,7 +904,7 @@
 - `string`
 
 ### C Prototype
-`char* get_os_name(void);`
+`const char* get_os_name(void);`
 
 [:arrow_up_small:](#)
 
@@ -2413,7 +2413,7 @@
 - `string`
 
 ### C Prototype
-`char* smlua_text_utils_get_language(void);`
+`const char* smlua_text_utils_get_language(void);`
 
 [:arrow_up_small:](#)
 

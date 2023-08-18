@@ -172,7 +172,7 @@ static void coopnet_populate_description(void) {
     char* buffer = sCoopNetDescription;
     int bufferLength = 256;
     // get version
-    char* version = get_version();
+    const char* version = get_version();
     int versionLength = strlen(version);
     snprintf(buffer, bufferLength, "%s", version);
     buffer += versionLength;

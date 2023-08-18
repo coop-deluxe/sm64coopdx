@@ -5,13 +5,13 @@
 #include "os_win.h"
 #include "pc/platform.h"
 
-OS_DIR* os_opendir(char* path) {
+OS_DIR* os_opendir(const char* path) {
     wchar_t wpath[SYS_MAX_PATH] = { 0 };
     MultiByteToWideChar(CP_UTF8, 0, path, -1, wpath, SYS_MAX_PATH);
     return _wopendir(wpath);
 }
 
-char* os_get_dir_name(os_dirent* dir) {
+const char* os_get_dir_name(os_dirent* dir) {
     static char path[SYS_MAX_PATH] = { 0 };
     snprintf(path, SYS_MAX_PATH, "%ls", dir->d_name);
     return path;

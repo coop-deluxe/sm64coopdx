@@ -27451,7 +27451,7 @@ int smlua_func_smlua_level_util_get_info_from_short_name(lua_State* L) {
         return 0;
     }
 
-    char* shortName = (char*)smlua_to_cobject(L, 1, LOT_NONE);
+    const char* shortName = smlua_to_string(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "smlua_level_util_get_info_from_short_name"); return 0; }
 
     smlua_push_object(L, LOT_CUSTOMLEVELINFO, smlua_level_util_get_info_from_short_name(shortName));

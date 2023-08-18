@@ -30,19 +30,19 @@ bool packet_read_lnt(struct Packet* p, struct LSTNetworkType* lnt);
 
 void smlua_push_object(lua_State* L, u16 lot, void* p);
 void smlua_push_pointer(lua_State* L, u16 lvt, void* p);
-void smlua_push_integer_field(int index, char* name, lua_Integer val);
-void smlua_push_number_field(int index, char* name, lua_Number val);
-void smlua_push_string_field(int index, char* name, const char* val);
-void smlua_push_nil_field(int index, char* name);
-void smlua_push_table_field(int index, char* name);
+void smlua_push_integer_field(int index, const char* name, lua_Integer val);
+void smlua_push_number_field(int index, const char* name, lua_Number val);
+void smlua_push_string_field(int index, const char* name, const char* val);
+void smlua_push_nil_field(int index, const char* name);
+void smlua_push_table_field(int index, const char* name);
 
 void smlua_push_lnt(struct LSTNetworkType* lnt);
 
-lua_Integer smlua_get_integer_field(int index, char* name);
-lua_Number smlua_get_number_field(int index, char* name);
-LuaFunction smlua_get_function_field(int index, char *name);
+lua_Integer smlua_get_integer_field(int index, const char* name);
+lua_Number smlua_get_number_field(int index, const char* name);
+LuaFunction smlua_get_function_field(int index, const char *name);
 
-char* smlua_lnt_to_str(struct LSTNetworkType* lnt);
+const char* smlua_lnt_to_str(struct LSTNetworkType* lnt);
 
 s64 smlua_get_integer_mod_variable(u16 modIndex, const char* variable);
 s64 smlua_get_any_integer_mod_variable(const char* variable);

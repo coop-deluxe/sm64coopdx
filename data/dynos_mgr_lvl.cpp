@@ -21,7 +21,7 @@ Array<Pair<const char*, GfxData*>> &DynOS_Lvl_GetArray() {
     return sDynosCustomLevelScripts;
 }
 
-LevelScript* DynOS_Lvl_GetScript(char* aScriptEntryName) {
+LevelScript* DynOS_Lvl_GetScript(const char* aScriptEntryName) {
     auto& _CustomLevelScripts = DynOS_Lvl_GetArray();
     for (s32 i = 0; i < _CustomLevelScripts.Count(); ++i) {
         auto& pair = _CustomLevelScripts[i];

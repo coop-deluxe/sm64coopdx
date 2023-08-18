@@ -429,7 +429,7 @@ void smlua_set_sync_table_field_from_network(u64 seq, u16 modRemoteIndex, u16 ln
     LUA_STACK_CHECK_END();
 }
 
-void smlua_sync_table_init_globals(char* path, u16 modRemoteIndex) {
+void smlua_sync_table_init_globals(const char* path, u16 modRemoteIndex) {
     LUA_STACK_CHECK_BEGIN();
     lua_State* L = gLuaState;
 

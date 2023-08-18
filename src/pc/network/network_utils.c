@@ -43,7 +43,7 @@ u8* network_get_player_text_color(u8 localIndex) {
     return sTextRgb;
 }
 
-char* network_get_player_text_color_string(u8 localIndex) {
+const char* network_get_player_text_color_string(u8 localIndex) {
     if (localIndex >= MAX_PLAYERS) { localIndex = 0; }
     u8* rgb = network_get_player_text_color(localIndex);
     static char sColorString[10] = { 0 };

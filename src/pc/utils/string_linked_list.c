@@ -3,7 +3,7 @@
 #include <stdbool.h>
 #include "string_linked_list.h"
 
-void string_linked_list_append(struct StringLinkedList* node, char* string) {
+void string_linked_list_append(struct StringLinkedList* node, const char* string) {
     int length = strlen(string);
     while (1) {
         if (node->string == NULL) {
@@ -20,7 +20,7 @@ void string_linked_list_append(struct StringLinkedList* node, char* string) {
     }
 }
 
-bool string_linked_list_contains(struct StringLinkedList* node, char* string) {
+bool string_linked_list_contains(struct StringLinkedList* node, const char* string) {
     if (string == NULL) {
         return false;
     }

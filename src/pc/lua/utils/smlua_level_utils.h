@@ -20,7 +20,7 @@ struct CustomLevelInfo {
 
 void smlua_level_util_reset(void);
 struct CustomLevelInfo* smlua_level_util_get_info(s16 levelNum);
-struct CustomLevelInfo* smlua_level_util_get_info_from_short_name(char* shortName);
+struct CustomLevelInfo* smlua_level_util_get_info_from_short_name(const char* shortName);
 s16 level_register(const char* scriptEntryName, s16 courseNum, const char* fullName, const char* shortName, u32 acousticReach, u32 echoLevel1, u32 echoLevel2, u32 echoLevel3);
 bool level_is_vanilla_level(s16 levelNum);
 bool warp_to_warpnode(s32 aLevel, s32 aArea, s32 aAct, s32 aWarpId);
