@@ -4,31 +4,46 @@
 
 local enable_extended_moveset = true
 
+------------------------------
+----- Localize functions -----
+------------------------------
+
+local allocate_mario_action, atan2s, sins, coss, mario_update_moving_sand, mario_update_windy_ground, mario_floor_is_slope, mario_set_forward_vel, set_mario_action, queue_rumble_data_mario, set_jumping_action, play_mario_sound, play_sound, set_mario_animation, common_slide_action, set_anim_to_frame, check_fall_damage_or_get_stuck, play_sound_and_spawn_particles, mario_bonk_reflection, play_mario_landing_sound_once, common_air_action_step, perform_air_step, should_get_stuck_in_ground, play_mario_heavy_landing_sound, check_fall_damage, set_camera_shake_from_hit, drop_and_set_mario_action, stationary_ground_step, check_common_action_exits, stopping_step, mario_drop_held_object, perform_water_step, perform_water_full_step, vec3f_copy, vec3s_set, approach_f32, is_anim_at_end, float_surface_gfx, set_swimming_at_surface_particles, apply_water_current, update_air_without_turn, play_mario_landing_sound, lava_boost_on_wall, check_kick_or_dive_in_air, update_sliding, mario_check_object_grab, mario_grab_used_object, analog_stick_held_back, approach_s32, apply_slope_accel, should_begin_sliding, begin_braking_action, set_jump_from_landing, check_ground_dive_or_punch, anim_and_audio_for_walk, perform_ground_step, push_or_sidle_wall, check_ledge_climb_down, tilt_body_walking, anim_and_audio_for_hold_walk, anim_and_audio_for_heavy_walk, align_with_floor, set_mario_anim_with_accel, play_step_sound =
+    allocate_mario_action, atan2s, sins, coss, mario_update_moving_sand, mario_update_windy_ground, mario_floor_is_slope, mario_set_forward_vel, set_mario_action, queue_rumble_data_mario, set_jumping_action, play_mario_sound, play_sound, set_mario_animation, common_slide_action, set_anim_to_frame, check_fall_damage_or_get_stuck, play_sound_and_spawn_particles, mario_bonk_reflection, play_mario_landing_sound_once, common_air_action_step, perform_air_step, should_get_stuck_in_ground, play_mario_heavy_landing_sound, check_fall_damage, set_camera_shake_from_hit, drop_and_set_mario_action, stationary_ground_step, check_common_action_exits, stopping_step, mario_drop_held_object, perform_water_step, perform_water_full_step, vec3f_copy, vec3s_set, approach_f32, is_anim_at_end, float_surface_gfx, set_swimming_at_surface_particles, apply_water_current, update_air_without_turn, play_mario_landing_sound, lava_boost_on_wall, check_kick_or_dive_in_air, update_sliding, mario_check_object_grab, mario_grab_used_object, analog_stick_held_back, approach_s32, apply_slope_accel, should_begin_sliding, begin_braking_action, set_jump_from_landing, check_ground_dive_or_punch, anim_and_audio_for_walk, perform_ground_step, push_or_sidle_wall, check_ledge_climb_down, tilt_body_walking, anim_and_audio_for_hold_walk, anim_and_audio_for_heavy_walk, align_with_floor, set_mario_anim_with_accel, play_step_sound
+local math_sqrt, math_min, math_max, math_floor = math.sqrt, math.min, math.max, math.floor
+
 ------------------------
 -- initialize actions --
 ------------------------
 
-ACT_SPIN_POUND_LAND =           allocate_mario_action(ACT_GROUP_STATIONARY | ACT_FLAG_STATIONARY | ACT_FLAG_ATTACKING)
-ACT_ROLL =                      allocate_mario_action(ACT_GROUP_MOVING | ACT_FLAG_MOVING | ACT_FLAG_BUTT_OR_STOMACH_SLIDE)
-ACT_GROUND_POUND_JUMP =         allocate_mario_action(ACT_GROUP_AIRBORNE | ACT_FLAG_AIR | ACT_FLAG_ALLOW_VERTICAL_WIND_ACTION)
-ACT_SPIN_JUMP =                 allocate_mario_action(ACT_GROUP_AIRBORNE | ACT_FLAG_AIR | ACT_FLAG_ALLOW_VERTICAL_WIND_ACTION)
-ACT_SPIN_POUND =                allocate_mario_action(ACT_GROUP_AIRBORNE | ACT_FLAG_AIR | ACT_FLAG_ATTACKING)
-ACT_LEDGE_PARKOUR =             allocate_mario_action(ACT_GROUP_AIRBORNE | ACT_FLAG_AIR)
-ACT_ROLL_AIR =                  allocate_mario_action(ACT_GROUP_AIRBORNE | ACT_FLAG_AIR | ACT_FLAG_ALLOW_VERTICAL_WIND_ACTION)
-ACT_WALL_SLIDE =                allocate_mario_action(ACT_GROUP_AIRBORNE | ACT_FLAG_AIR | ACT_FLAG_MOVING | ACT_FLAG_ALLOW_VERTICAL_WIND_ACTION)
-ACT_WATER_GROUND_POUND =        allocate_mario_action(ACT_GROUP_SUBMERGED | ACT_FLAG_MOVING | ACT_FLAG_SWIMMING | ACT_FLAG_SWIMMING_OR_FLYING | ACT_FLAG_WATER_OR_TEXT | ACT_FLAG_ATTACKING)
-ACT_WATER_GROUND_POUND_LAND =   allocate_mario_action(ACT_GROUP_SUBMERGED | ACT_FLAG_STATIONARY | ACT_FLAG_SWIMMING | ACT_FLAG_SWIMMING_OR_FLYING | ACT_FLAG_WATER_OR_TEXT)
-ACT_WATER_GROUND_POUND_STROKE = allocate_mario_action(ACT_GROUP_SUBMERGED | ACT_FLAG_MOVING | ACT_FLAG_SWIMMING | ACT_FLAG_SWIMMING_OR_FLYING | ACT_FLAG_WATER_OR_TEXT)
-ACT_WATER_GROUND_POUND_JUMP =   allocate_mario_action(ACT_GROUP_SUBMERGED | ACT_FLAG_MOVING | ACT_FLAG_SWIMMING | ACT_FLAG_SWIMMING_OR_FLYING | ACT_FLAG_WATER_OR_TEXT)
+local ACT_SPIN_POUND_LAND =              allocate_mario_action(ACT_GROUP_STATIONARY | ACT_FLAG_STATIONARY | ACT_FLAG_ATTACKING)
+local ACT_ROLL =                         allocate_mario_action(ACT_GROUP_MOVING | ACT_FLAG_MOVING | ACT_FLAG_BUTT_OR_STOMACH_SLIDE)
+local ACT_GROUND_POUND_JUMP =            allocate_mario_action(ACT_GROUP_AIRBORNE | ACT_FLAG_AIR | ACT_FLAG_ALLOW_VERTICAL_WIND_ACTION)
+local ACT_SPIN_JUMP =                    allocate_mario_action(ACT_GROUP_AIRBORNE | ACT_FLAG_AIR | ACT_FLAG_ALLOW_VERTICAL_WIND_ACTION)
+local ACT_SPIN_POUND =                   allocate_mario_action(ACT_GROUP_AIRBORNE | ACT_FLAG_AIR | ACT_FLAG_ATTACKING)
+local ACT_LEDGE_PARKOUR =                allocate_mario_action(ACT_GROUP_AIRBORNE | ACT_FLAG_AIR)
+local ACT_ROLL_AIR =                     allocate_mario_action(ACT_GROUP_AIRBORNE | ACT_FLAG_AIR | ACT_FLAG_ALLOW_VERTICAL_WIND_ACTION)
+local ACT_WALL_SLIDE =                   allocate_mario_action(ACT_GROUP_AIRBORNE | ACT_FLAG_AIR | ACT_FLAG_MOVING | ACT_FLAG_ALLOW_VERTICAL_WIND_ACTION)
+local ACT_WATER_GROUND_POUND =           allocate_mario_action(ACT_GROUP_SUBMERGED | ACT_FLAG_MOVING | ACT_FLAG_SWIMMING | ACT_FLAG_SWIMMING_OR_FLYING | ACT_FLAG_WATER_OR_TEXT | ACT_FLAG_ATTACKING)
+local ACT_WATER_GROUND_POUND_LAND =      allocate_mario_action(ACT_GROUP_SUBMERGED | ACT_FLAG_STATIONARY | ACT_FLAG_SWIMMING | ACT_FLAG_SWIMMING_OR_FLYING | ACT_FLAG_WATER_OR_TEXT)
+local ACT_WATER_GROUND_POUND_STROKE =    allocate_mario_action(ACT_GROUP_SUBMERGED | ACT_FLAG_MOVING | ACT_FLAG_SWIMMING | ACT_FLAG_SWIMMING_OR_FLYING | ACT_FLAG_WATER_OR_TEXT)
+local ACT_WATER_GROUND_POUND_JUMP =      allocate_mario_action(ACT_GROUP_SUBMERGED | ACT_FLAG_MOVING | ACT_FLAG_SWIMMING | ACT_FLAG_SWIMMING_OR_FLYING | ACT_FLAG_WATER_OR_TEXT)
+local ACT_CUSTOM_DIVE_SLIDE =            allocate_mario_action(ACT_GROUP_MOVING | ACT_FLAG_MOVING | ACT_FLAG_DIVING | ACT_FLAG_ATTACKING)
+local ACT_CUSTOM_WALKING =               allocate_mario_action(ACT_GROUP_MOVING | ACT_FLAG_MOVING | ACT_FLAG_ALLOW_FIRST_PERSON)
+local ACT_CUSTOM_HOLD_WALKING =          allocate_mario_action(ACT_GROUP_MOVING | ACT_FLAG_MOVING)
+local ACT_CUSTOM_HOLD_HEAVY_WALKING =    allocate_mario_action(ACT_GROUP_MOVING | ACT_FLAG_MOVING)
+local ACT_CUSTOM_FINISH_TURNING_AROUND = allocate_mario_action(ACT_GROUP_MOVING | ACT_FLAG_MOVING)
+local ACT_CUSTOM_CRAWLING =              allocate_mario_action(ACT_GROUP_MOVING | ACT_FLAG_MOVING | ACT_FLAG_SHORT_HITBOX | ACT_FLAG_ALLOW_FIRST_PERSON)
+local ACT_CUSTOM_AIR_HIT_WALL =          allocate_mario_action(ACT_GROUP_AIRBORNE | ACT_FLAG_AIR)
 
 -----------------------------
 -- initialize extra fields --
 -----------------------------
 
-ANGLE_QUEUE_SIZE = 9
-SPIN_TIMER_SUCCESSFUL_INPUT = 4
+local ANGLE_QUEUE_SIZE = 9
+local SPIN_TIMER_SUCCESSFUL_INPUT = 4
 
-gMarioStateExtras = {}
+local gMarioStateExtras = {}
 for i=0,(MAX_PLAYERS-1) do
     gMarioStateExtras[i] = {}
     local m = gMarioStates[i]
@@ -59,7 +74,7 @@ for i=0,(MAX_PLAYERS-1) do
     e.savedWallSlide = false
 end
 
-function limit_angle(a)
+local function limit_angle(a)
     return (a + 0x8000) % 0x10000 - 0x8000
 end
 
@@ -67,10 +82,10 @@ end
 -- roll --
 ----------
 
-function update_roll_sliding_angle(m, accel, lossFactor)
+local function update_roll_sliding_angle(m, accel, lossFactor)
     local floor = m.floor
     local slopeAngle = atan2s(floor.normal.z, floor.normal.x)
-    local steepness = math.sqrt(floor.normal.x * floor.normal.x + floor.normal.z * floor.normal.z)
+    local steepness = math_sqrt(floor.normal.x * floor.normal.x + floor.normal.z * floor.normal.z)
 
     m.slideVelX = m.slideVelX + accel * steepness * sins(slopeAngle)
     m.slideVelZ = m.slideVelZ + accel * steepness * coss(slopeAngle)
@@ -102,14 +117,14 @@ function update_roll_sliding_angle(m, accel, lossFactor)
     mario_update_windy_ground(m)
 
     --! Speed is capped a frame late (butt slide HSG)
-    m.forwardVel = math.sqrt(m.slideVelX * m.slideVelX + m.slideVelZ * m.slideVelZ)
+    m.forwardVel = math_sqrt(m.slideVelX * m.slideVelX + m.slideVelZ * m.slideVelZ)
     if m.forwardVel > 100.0 then
         m.slideVelX = m.slideVelX * 100.0 / m.forwardVel
         m.slideVelZ = m.slideVelZ * 100.0 / m.forwardVel
     end
 end
 
-function update_roll_sliding(m, stopSpeed)
+local function update_roll_sliding(m, stopSpeed)
     local stopped = 0
 
     local intendedDYaw = m.intendedYaw - m.slideYaw
@@ -124,7 +139,7 @@ function update_roll_sliding(m, stopSpeed)
     local accel = 4.0
     local lossFactor = 0.994
 
-    local oldSpeed = math.sqrt(m.slideVelX * m.slideVelX + m.slideVelZ * m.slideVelZ)
+    local oldSpeed = math_sqrt(m.slideVelX * m.slideVelX + m.slideVelZ * m.slideVelZ)
 
     --! This is uses trig derivatives to rotate Mario's speed.
     -- In vanilla, it was slightly off/asymmetric since it uses the new X speed, but the old
@@ -136,7 +151,7 @@ function update_roll_sliding(m, stopSpeed)
     m.slideVelX = m.slideVelX + modSlideVelX
     m.slideVelZ = m.slideVelZ - modSlideVelZ
 
-    local newSpeed = math.sqrt(m.slideVelX * m.slideVelX + m.slideVelZ * m.slideVelZ)
+    local newSpeed = math_sqrt(m.slideVelX * m.slideVelX + m.slideVelZ * m.slideVelZ)
 
     if oldSpeed > 0.0 and newSpeed > 0.0 then
         m.slideVelX = m.slideVelX * oldSpeed / newSpeed
@@ -153,7 +168,7 @@ function update_roll_sliding(m, stopSpeed)
     return stopped
 end
 
-function act_roll(m)
+local function act_roll(m)
     local e = gMarioStateExtras[m.playerIndex]
 
     local MAX_NORMAL_ROLL_SPEED = 50.0
@@ -193,7 +208,7 @@ function act_roll(m)
             e.boostTimer = 0
 
             if m.forwardVel < MAX_NORMAL_ROLL_SPEED then
-                mario_set_forward_vel(m, math.min(m.forwardVel + ROLL_BOOST_GAIN, MAX_NORMAL_ROLL_SPEED))
+                mario_set_forward_vel(m, math_min(m.forwardVel + ROLL_BOOST_GAIN, MAX_NORMAL_ROLL_SPEED))
             end
 
             m.particleFlags = m.particleFlags | PARTICLE_HORIZONTAL_STAR
@@ -226,7 +241,7 @@ function act_roll(m)
     return 0
 end
 
-function act_roll_air(m)
+local function act_roll_air(m)
     local e = gMarioStateExtras[m.playerIndex]
     local MAX_NORMAL_ROLL_SPEED = 50.0
     local ROLL_AIR_CANCEL_LOCKOUT_TIME = 15
@@ -276,7 +291,7 @@ function act_roll_air(m)
     return false
 end
 
-function update_roll(m)
+local function update_roll(m)
     if m.action == ACT_DIVE_SLIDE then
         if (m.input & INPUT_ABOVE_SLIDE) == 0 then
             if (m.input & INPUT_Z_DOWN) ~= 0 and m.actionTimer < 2 then
@@ -308,7 +323,7 @@ function update_roll(m)
     if m.action == ACT_CROUCH_SLIDE then
         if (m.controller.buttonPressed & X_BUTTON) ~= 0 then
             m.vel.y = 19.0
-            mario_set_forward_vel(m, math.max(32, m.forwardVel))
+            mario_set_forward_vel(m, math_max(32, m.forwardVel))
             play_mario_sound(m, SOUND_ACTION_TERRAIN_JUMP, 0)
 
             play_sound(SOUND_ACTION_SPIN, m.marioObj.header.gfx.cameraToObject)
@@ -332,7 +347,7 @@ end
 -- spin --
 ----------
 
-function mario_update_spin_input(m)
+local function mario_update_spin_input(m)
     local e = gMarioStateExtras[m.playerIndex]
     local rawAngle = atan2s(-m.controller.stickY, m.controller.stickX)
     e.spinInput = 0
@@ -341,7 +356,7 @@ function mario_update_spin_input(m)
     if e.lastIntendedMag > 0.5 and m.intendedMag > 0.5 then
         local angleOverFrames = 0
         local thisFrameDelta = 0
-        local i = 0
+        -- local i = 0
 
         local newDirection = e.spinDirection
         local signedOverflow = 0
@@ -380,13 +395,13 @@ function mario_update_spin_input(m)
 
         if e.spinDirection < 0 then
             if signedOverflow ~= 0 then
-                thisFrameDelta = math.floor((1.0*e.stickLastAngle + 0x10000) - rawAngle)
+                thisFrameDelta = math_floor((1.0*e.stickLastAngle + 0x10000) - rawAngle)
             else
                 thisFrameDelta = e.stickLastAngle - rawAngle
             end
         elseif e.spinDirection > 0 then
             if signedOverflow ~= 0 then
-                thisFrameDelta = math.floor(1.0*rawAngle + 0x10000 - e.stickLastAngle)
+                thisFrameDelta = math_floor(1.0*rawAngle + 0x10000 - e.stickLastAngle)
             else
                 thisFrameDelta = rawAngle - e.stickLastAngle
             end
@@ -414,7 +429,7 @@ function mario_update_spin_input(m)
     e.lastIntendedMag = m.intendedMag
 end
 
-function act_spin_jump(m)
+local function act_spin_jump(m)
     local e = gMarioStateExtras[m.playerIndex]
     if m.actionTimer == 0 then
         -- determine clockwise/counter-clockwise spin
@@ -465,7 +480,7 @@ function act_spin_jump(m)
     return false
 end
 
-function act_spin_jump_gravity(m)
+local function act_spin_jump_gravity(m)
     if (m.flags & MARIO_WING_CAP) ~= 0 and m.vel.y < 0.0 and (m.input & INPUT_A_DOWN) ~= 0 then
         m.marioBodyState.wingFlutter = 1
         m.vel.y = m.vel.y - 0.7
@@ -490,7 +505,7 @@ function act_spin_jump_gravity(m)
     return 0
 end
 
-function act_spin_pound(m)
+local function act_spin_pound(m)
     local e = gMarioStateExtras[m.playerIndex]
     if m.actionTimer == 0 then
         m.actionState = m.actionArg
@@ -548,7 +563,7 @@ function act_spin_pound(m)
     return 0
 end
 
-function act_spin_pound_land(m)
+local function act_spin_pound_land(m)
     m.actionState = 1
 
     if m.actionTimer <= 8 then
@@ -598,7 +613,7 @@ end
 -- wall slide --
 ----------------
 
-function act_wall_slide(m)
+local function act_wall_slide(m)
     local e = gMarioStateExtras[m.playerIndex]
     e.savedWallSlideHeight = m.pos.y
     e.savedWallSlide = true
@@ -625,7 +640,7 @@ function act_wall_slide(m)
     end
 
     m.actionTimer = m.actionTimer + 1
-    if m.wall == nil and m.actionTimer > 2 then
+    if not m.wall and m.actionTimer > 2 then
         mario_set_forward_vel(m, 0.0)
         return set_mario_action(m, ACT_FREEFALL, 0)
     end
@@ -633,7 +648,7 @@ function act_wall_slide(m)
     return 0
 end
 
-function act_wall_slide_gravity(m)
+local function act_wall_slide_gravity(m)
     m.vel.y = m.vel.y - 2
 
     if m.vel.y < -15 then
@@ -641,7 +656,7 @@ function act_wall_slide_gravity(m)
     end
 end
 
-function act_air_hit_wall(m)
+local function act_air_hit_wall(m)
     if m.heldObj ~= 0 then
         mario_drop_held_object(m)
     end
@@ -678,7 +693,7 @@ end
 -- water ground pound --
 ------------------------
 
-function act_water_ground_pound(m)
+local function act_water_ground_pound(m)
     local GROUND_POUND_STROKE_SPEED = 27
     local GROUND_POUND_TIMER = 30
 
@@ -736,7 +751,6 @@ function act_water_ground_pound(m)
         -- make current apply
         stepResult = perform_water_step(m)
     else
-
         set_mario_animation(m, MARIO_ANIM_GROUND_POUND)
 
         m.particleFlags = m.particleFlags | PARTICLE_PLUNGE_BUBBLE
@@ -779,7 +793,7 @@ function act_water_ground_pound(m)
     return 0
 end
 
-function act_water_ground_pound_land(m)
+local function act_water_ground_pound_land(m)
     local GROUND_POUND_JUMP_VEL = 40.0
 
     m.actionState = 1
@@ -811,7 +825,7 @@ function act_water_ground_pound_land(m)
     return 0
 end
 
-function act_water_ground_pound_stroke(m)
+local function act_water_ground_pound_stroke(m)
     local GROUND_POUND_STROKE_TIMER = 20
     local GROUND_POUND_STROKE_DECAY = 0.3
     local stepResult = 0
@@ -844,7 +858,7 @@ function act_water_ground_pound_stroke(m)
     return 0
 end
 
-function act_water_ground_pound_jump(m)
+local function act_water_ground_pound_jump(m)
     local e = gMarioStateExtras[m.playerIndex]
     local GROUND_POUND_JUMP_TIMER = 20
     local GROUND_POUND_JUMP_DECAY = 1.4
@@ -904,7 +918,7 @@ end
 -- ledge parkour --
 -------------------
 
-function act_ledge_parkour(m)
+local function act_ledge_parkour(m)
     set_mario_animation(m, MARIO_ANIM_SLIDEFLIP)
 
     local animFrame = m.marioObj.header.gfx.animInfo.animFrame
@@ -950,7 +964,7 @@ function act_ledge_parkour(m)
     return 0
 end
 
-function act_ground_pound_jump(m)
+local function act_ground_pound_jump(m)
     local e = gMarioStateExtras[m.playerIndex]
     if check_kick_or_dive_in_air(m) ~= 0 then
         m.marioObj.header.gfx.angle.y = m.marioObj.header.gfx.angle.y + e.rotAngle
@@ -989,7 +1003,7 @@ end
 -- dive slide patched for dive hop --
 -------------------------------------
 
-function act_dive_slide(m)
+local function act_dive_slide(m)
     if (m.input & INPUT_ABOVE_SLIDE) == 0 and (m.input & INPUT_A_PRESSED) ~= 0 then
         queue_rumble_data_mario(m, 5, 80)
         if m.forwardVel > 0 then
@@ -1036,7 +1050,7 @@ end
 -- for Tight Controls and modfied speed caps         --
 -------------------------------------------------------
 
-function update_walking_speed_extended(m)
+local function update_walking_speed_extended(m)
     local maxTargetSpeed = 0
     local targetSpeed    = 0
     local firmSpeedCap   = 0
@@ -1065,7 +1079,7 @@ function update_walking_speed_extended(m)
     end
 
     if m.forwardVel <= 8.0 then
-        m.forwardVel = math.min(m.intendedMag, 8.0)  -- Same fix as Melee dashback (by Kaze)
+        m.forwardVel = math_min(m.intendedMag, 8.0)  -- Same fix as Melee dashback (by Kaze)
     end
 
     -- instead of a hard walk speed cap, going over this new firm speed cap makes you slow down to it twice as fast
@@ -1106,7 +1120,7 @@ function update_walking_speed_extended(m)
     apply_slope_accel(m)
 end
 
-function act_walking(m)
+local function act_walking(m)
     local startPos = m.pos
     local startYaw = m.faceAngle.y
 
@@ -1164,8 +1178,9 @@ function act_walking(m)
     return false
 end
 
-function act_hold_walking(m)
-    if m.heldObj ~= nil and m.heldObj.behavior == bhvJumpingBox then
+local function act_hold_walking(m)
+    -- Unlikely to happen
+    if m.heldObj and obj_has_behavior_id(m.heldObj, id_bhvJumpingBox) == 1 then
         return set_mario_action(m, ACT_CRAZY_BOX_BOUNCE, 0)
     end
 
@@ -1215,7 +1230,7 @@ function act_hold_walking(m)
     return false
 end
 
-function act_hold_heavy_walking(m)
+local function act_hold_heavy_walking(m)
     if (m.input & INPUT_B_PRESSED) ~= 0 then
         return set_mario_action(m, ACT_HEAVY_THROW, 0)
     end
@@ -1245,7 +1260,7 @@ function act_hold_heavy_walking(m)
     return false
 end
 
-function act_finish_turning_around(m)
+local function act_finish_turning_around(m)
     if (m.input & INPUT_ABOVE_SLIDE) ~= 0 then
         return set_mario_action(m, ACT_BEGIN_SLIDING, 0)
     end
@@ -1269,7 +1284,7 @@ function act_finish_turning_around(m)
     return false
 end
 
-function act_crawling(m)
+local function act_crawling(m)
     if should_begin_sliding(m) ~= 0 then
         return set_mario_action(m, ACT_BEGIN_SLIDING, 0)
     end
@@ -1319,7 +1334,7 @@ end
 
 ---------------------------------------------------------
 
-function mario_on_set_action(m)
+local function mario_on_set_action(m)
     if not enable_extended_moveset then return end
     local e = gMarioStateExtras[m.playerIndex]
 
@@ -1354,7 +1369,7 @@ function mario_on_set_action(m)
     end
 end
 
-function before_mario_update(m)
+local function before_mario_update(m)
     if not enable_extended_moveset then return end
     local e = gMarioStateExtras[m.playerIndex]
     -- revert fake saved action
@@ -1366,7 +1381,7 @@ function before_mario_update(m)
     end
 end
 
-function after_mario_update(m)
+local function after_mario_update(m)
     local e = gMarioStateExtras[m.playerIndex]
     -- pretend *_POUND_LAND is ACT_GROUND_POUND_LAND so switches work correctly
     if m.action == ACT_SPIN_POUND_LAND or m.action == ACT_WATER_GROUND_POUND_LAND then
@@ -1380,7 +1395,7 @@ function after_mario_update(m)
     end
 end
 
-function mario_update(m)
+local function mario_update(m)
     if not enable_extended_moveset then return end
     local e = gMarioStateExtras[m.playerIndex]
 
@@ -1446,6 +1461,22 @@ function mario_update(m)
     after_mario_update(m)
 end
 
+local convert_actions = {
+    [ACT_DIVE_SLIDE] = ACT_CUSTOM_DIVE_SLIDE,
+    [ACT_WALKING] = ACT_CUSTOM_WALKING,
+    [ACT_HOLD_WALKING] = ACT_CUSTOM_HOLD_WALKING,
+    [ACT_HOLD_HEAVY_WALKING] = ACT_CUSTOM_HOLD_HEAVY_WALKING,
+    [ACT_FINISH_TURNING_AROUND] = ACT_CUSTOM_FINISH_TURNING_AROUND,
+    [ACT_CRAWLING] = ACT_CUSTOM_CRAWLING,
+    [ACT_AIR_HIT_WALL] = ACT_CUSTOM_AIR_HIT_WALL
+}
+
+local function before_set_mario_action(m, action)
+    if not enable_extended_moveset then return action end
+
+    return convert_actions[action] ~= nil and convert_actions[action] or action
+end
+
 local function on_chat_command(msg)
     if msg:lower() == 'off' then
         enable_extended_moveset = false
@@ -1464,6 +1495,7 @@ end
 hook_event(HOOK_BEFORE_MARIO_UPDATE, before_mario_update)
 hook_event(HOOK_MARIO_UPDATE, mario_update)
 hook_event(HOOK_ON_SET_MARIO_ACTION, mario_on_set_action)
+hook_event(HOOK_BEFORE_SET_MARIO_ACTION, before_set_mario_action)
 
 hook_mario_action(ACT_ROLL,                      { every_frame = act_roll })
 hook_mario_action(ACT_ROLL_AIR,                  { every_frame = act_roll_air })
@@ -1477,12 +1509,12 @@ hook_mario_action(ACT_WATER_GROUND_POUND_LAND,   { every_frame = act_water_groun
 hook_mario_action(ACT_WATER_GROUND_POUND_STROKE, { every_frame = act_water_ground_pound_stroke })
 hook_mario_action(ACT_WATER_GROUND_POUND_JUMP,   { every_frame = act_water_ground_pound_jump })
 hook_mario_action(ACT_LEDGE_PARKOUR,             { every_frame = act_ledge_parkour })
-hook_mario_action(ACT_DIVE_SLIDE,                { every_frame = act_dive_slide })
-hook_mario_action(ACT_WALKING,                   { every_frame = act_walking })
-hook_mario_action(ACT_HOLD_WALKING,              { every_frame = act_hold_walking })
-hook_mario_action(ACT_HOLD_HEAVY_WALKING,        { every_frame = act_hold_heavy_walking })
-hook_mario_action(ACT_FINISH_TURNING_AROUND,     { every_frame = act_finish_turning_around })
-hook_mario_action(ACT_CRAWLING,                  { every_frame = act_crawling })
-hook_mario_action(ACT_AIR_HIT_WALL,              { every_frame = act_air_hit_wall })
+hook_mario_action(ACT_CUSTOM_DIVE_SLIDE,                { every_frame = act_dive_slide })
+hook_mario_action(ACT_CUSTOM_WALKING,                   { every_frame = act_walking })
+hook_mario_action(ACT_CUSTOM_HOLD_WALKING,              { every_frame = act_hold_walking })
+hook_mario_action(ACT_CUSTOM_HOLD_HEAVY_WALKING,        { every_frame = act_hold_heavy_walking })
+hook_mario_action(ACT_CUSTOM_FINISH_TURNING_AROUND,     { every_frame = act_finish_turning_around })
+hook_mario_action(ACT_CUSTOM_CRAWLING,                  { every_frame = act_crawling })
+hook_mario_action(ACT_CUSTOM_AIR_HIT_WALL,              { every_frame = act_air_hit_wall })
 
 hook_chat_command('ext-moveset', "Turn extended moveset [on|off]", on_chat_command)
