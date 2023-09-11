@@ -44,7 +44,7 @@ void bhv_purple_switch_loop(void) {
          */
         case PURPLE_SWITCH_PRESSED:
             cur_obj_scale_over_time(2, 3, 1.5f, 0.2f);
-            if (o->oTimer == 3) {
+            if (o->oTimer >= 3) {
                 cur_obj_play_sound_2(SOUND_GENERAL2_PURPLE_SWITCH);
                 o->oAction = PURPLE_SWITCH_TICKING;
                 cur_obj_shake_screen(SHAKE_POS_SMALL);
