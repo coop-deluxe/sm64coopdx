@@ -118,7 +118,8 @@ struct LevelValues gDefaultLevelValues = {
     .maxLives                       = 100,
     .maxCoins                       = 999,
     .numCoinsToLife                 = 50,
-    .bubbleOnDeathBarrierInCapStages = false
+    .bubbleOnDeathBarrierInCapStages = false,
+    .wdwWaterLevelSpeed             = 10.0f,
 };
 
 struct LevelValues gLevelValues = { 0 };

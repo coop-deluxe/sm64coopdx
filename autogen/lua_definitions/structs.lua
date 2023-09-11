@@ -687,6 +687,7 @@
 --- @field public vanishCapDurationVcutm integer
 --- @field public vanishCapSequence integer
 --- @field public visibleSecrets integer
+--- @field public wdwWaterLevelSpeed number
 --- @field public wingCapDuration integer
 --- @field public wingCapDurationTotwc integer
 --- @field public wingCapLookUpReq integer

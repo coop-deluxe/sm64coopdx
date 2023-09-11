@@ -1005,6 +1005,7 @@
 | vanishCapDurationVcutm | `integer` |  |
 | vanishCapSequence | `integer` |  |
 | visibleSecrets | `integer` |  |
+| wdwWaterLevelSpeed | `number` |  |
 | wingCapDuration | `integer` |  |
 | wingCapDurationTotwc | `integer` |  |
 | wingCapLookUpReq | `integer` |  |

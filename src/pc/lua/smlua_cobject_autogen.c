@@ -743,7 +743,7 @@ static struct LuaObjectField sLakituStateFields[LUA_LAKITU_STATE_FIELD_COUNT] = 
     { "yaw",                              LVT_S16,     offsetof(struct LakituState, yaw),                              false, LOT_NONE  },
 };
 
-#define LUA_LEVEL_VALUES_FIELD_COUNT 46
+#define LUA_LEVEL_VALUES_FIELD_COUNT 47
 static struct LuaObjectField sLevelValuesFields[LUA_LEVEL_VALUES_FIELD_COUNT] = {
     { "bubbleOnDeathBarrierInCapStages",  LVT_BOOL,    offsetof(struct LevelValues, bubbleOnDeathBarrierInCapStages),  false, LOT_NONE          },
     { "cellHeightLimit",                  LVT_S16,     offsetof(struct LevelValues, cellHeightLimit),                  false, LOT_NONE          },
@@ -787,6 +787,7 @@ static struct LuaObjectField sLevelValuesFields[LUA_LEVEL_VALUES_FIELD_COUNT] = 
     { "vanishCapDurationVcutm",           LVT_U16,     offsetof(struct LevelValues, vanishCapDurationVcutm),           false, LOT_NONE          },
     { "vanishCapSequence",                LVT_U8,      offsetof(struct LevelValues, vanishCapSequence),                false, LOT_NONE          },
     { "visibleSecrets",                   LVT_U8,      offsetof(struct LevelValues, visibleSecrets),                   false, LOT_NONE          },
+    { "wdwWaterLevelSpeed",               LVT_F32,     offsetof(struct LevelValues, wdwWaterLevelSpeed),               false, LOT_NONE          },
     { "wingCapDuration",                  LVT_U16,     offsetof(struct LevelValues, wingCapDuration),                  false, LOT_NONE          },
     { "wingCapDurationTotwc",             LVT_U16,     offsetof(struct LevelValues, wingCapDurationTotwc),             false, LOT_NONE          },
     { "wingCapLookUpReq",                 LVT_U8,      offsetof(struct LevelValues, wingCapLookUpReq),                 false, LOT_NONE          },
