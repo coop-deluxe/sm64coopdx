@@ -79,10 +79,6 @@ static const struct DjuiFont sDjuiFontTitle = {
 ///////////////////////
 
 static u8 djui_font_hud_index(char c) {
-    if (c == 'q' || c == 'Q') { return 50; }
-    if (c == 'v' || c == 'V') { return 50; }
-    if (c == 'x' || c == 'X') { return 50; }
-    if (c == 'z' || c == 'Z') { return 50; }
     if ((u8)c < ' ' || (u8)c > 127) { return 50; }
 
     switch (c) {

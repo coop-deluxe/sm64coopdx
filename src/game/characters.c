@@ -227,7 +227,7 @@ struct Character gCharacters[CT_MAX] = {
     [CT_WALUIGI] = {
         .type                  = CT_WALUIGI,
         .name                  = "Waluigi",
-        .hudHead               = 'z',
+        .hudHead               = '?',
         .hudHeadTexture        = { .texture = (u8*)texture_hud_char_waluigi_head, .bitSize = 8, .width = 16, .height = 16 },
         .cameraHudHead         = GLYPH_CAM_WALUIGI_HEAD,
         .modelId               = MODEL_WALUIGI,
@@ -295,7 +295,7 @@ struct Character gCharacters[CT_MAX] = {
     [CT_WARIO] = {
         .type                  = CT_WARIO,
         .name                  = "Wario",
-        .hudHead               = 'x',
+        .hudHead               = '!',
         .hudHeadTexture        = { .texture = (u8*)texture_hud_char_wario_head, .bitSize = 8, .width = 16, .height = 16 },
         .cameraHudHead         = GLYPH_CAM_WARIO_HEAD,
         .modelId               = MODEL_WARIO,
