@@ -410,11 +410,7 @@ ifeq ($(OSX_BUILD),0)
 	USE_APP := 0
 endif
 
-ifeq ($(USE_APP),0)
 TARGET_STRING := sm64.$(VERSION).$(GRUCODE)
-else
-TARGET_STRING := sm64.$(VERSION).$(GRUCODE).app
-endif
 # If non-default settings were chosen, disable COMPARE
 ifeq ($(filter $(TARGET_STRING), sm64.jp.f3d_old sm64.us.f3d_old sm64.eu.f3d_new sm64.sh.f3d_new),)
   COMPARE := 0
@@ -811,7 +807,7 @@ else ifeq ($(findstring SDL,$(WINDOW_API)),SDL)
   else ifeq ($(TARGET_RPI),1)
     BACKEND_LDFLAGS += -lGLESv2
   else ifeq ($(OSX_BUILD),1)
-    BACKEND_LDFLAGS += -framework OpenGL `pkg-config --libs glew`
+    BACKEND_LDFLAGS += -framework OpenGL `pkg-config --libs glew` -ld_classic
     EXTRA_CPP_FLAGS += -stdlib=libc++ -std=c++0x
   else
     BACKEND_LDFLAGS += -lGL
@@ -1647,12 +1643,46 @@ else
 	$(V)$(LD) $(PROF_FLAGS) -L $(BUILD_DIR) -o $@ $(O_FILES) $(ULTRA_O_FILES) $(GODDARD_O_FILES) $(LDFLAGS)
 endif
 
-
-
 .PHONY: all clean distclean default diff test load libultra res
 .PRECIOUS: $(BUILD_DIR)/bin/%.elf $(SOUND_BIN_DIR)/%.ctl $(SOUND_BIN_DIR)/%.tbl $(SOUND_SAMPLE_TABLES) $(SOUND_BIN_DIR)/%.s $(BUILD_DIR)/%
 # with no prerequisites, .SECONDARY causes no intermediate target to be removed
 .SECONDARY:
+
+APP_DIR = ./sm64ex-coop.app
+APP_CONTENTS_DIR = $(APP_DIR)/Contents
+APP_MACOS_DIR = $(APP_CONTENTS_DIR)/MacOS
+
+all:
+	@if [ "$(USE_APP)" = "0" ]; then \
+		rm -rf build/us_pc/sm64ex-coop.app; \
+    else \
+		$(PRINT) "$(GREEN)Creating App Bundle: $(BLUE)build/us_pc/sm64ex-coop.app\n"; \
+		rm -rf $(APP_DIR); \
+		rm -rf build/us_pc/sm64ex-coop.app; \
+		mkdir -p $(APP_MACOS_DIR); \
+		mkdir -p $(APP_CONTENTS_DIR)/Resources; \
+		mv build/us_pc/sm64.us.f3dex2e $(APP_MACOS_DIR)/sm64ex-coop; \
+		cp -r build/us_pc/* $(APP_MACOS_DIR); \
+		cp res/icon.icns $(APP_CONTENTS_DIR)/Resources/icon.icns; \
+		echo "APPL????" > $(APP_CONTENTS_DIR)/PkgInfo; \
+		echo '<?xml version="1.0" encoding="UTF-8"?>' > $(APP_CONTENTS_DIR)/Info.plist; \
+		echo '<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">' >> $(APP_CONTENTS_DIR)/Info.plist; \
+		echo '<plist version="1.0">' >> $(APP_CONTENTS_DIR)/Info.plist; \
+		echo '<dict>' >> $(APP_CONTENTS_DIR)/Info.plist; \
+		echo '    <key>CFBundleExecutable</key>' >> $(APP_CONTENTS_DIR)/Info.plist; \
+		echo '    <string>sm64ex-coop</string>' >> $(APP_CONTENTS_DIR)/Info.plist; \
+		echo '    <key>CFBundleIconFile</key>' >> $(APP_CONTENTS_DIR)/Info.plist; \
+		echo '    <string>icon</string>' >> $(APP_CONTENTS_DIR)/Info.plist; \
+		echo '    <key>CFBundleIconName</key>' >> $(APP_CONTENTS_DIR)/Info.plist; \
+		echo '    <string>AppIcon</string>' >> $(APP_CONTENTS_DIR)/Info.plist; \
+		echo '    <key>CFBundleDisplayName</key>' >> $(APP_CONTENTS_DIR)/Info.plist; \
+		echo '    <string>sm64ex-coop</string>' >> $(APP_CONTENTS_DIR)/Info.plist; \
+		echo '    <!-- Add other keys and values here -->' >> $(APP_CONTENTS_DIR)/Info.plist; \
+		echo '</dict>' >> $(APP_CONTENTS_DIR)/Info.plist; \
+		echo '</plist>' >> $(APP_CONTENTS_DIR)/Info.plist; \
+		chmod +x $(APP_MACOS_DIR)/sm64ex-coop; \
+		mv $(APP_DIR) build/us_pc/; \
+    fi
 
 # Remove built-in rules, to improve performance
 MAKEFLAGS += --no-builtin-rules
