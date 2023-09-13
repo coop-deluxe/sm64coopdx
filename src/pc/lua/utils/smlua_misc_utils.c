@@ -168,10 +168,10 @@ void hud_render_power_meter(s32 health, f32 x, f32 y, f32 width, f32 height) {
         { (u8*)texture_power_meter_full,           8, 32, 32 },
     };
     djui_hud_render_texture(&sPowerMeterTexturesInfo[0], x, y, width / 64, height / 64);
-    djui_hud_render_texture(&sPowerMeterTexturesInfo[1], x + width / 2, y, width / 64, height / 64);
+    djui_hud_render_texture(&sPowerMeterTexturesInfo[1], x + (width - 2) / 2, y, width / 64, height / 64);
     s32 numWedges = MIN(MAX(health >> 8, 0), 8);
     if (numWedges != 0) {
-        djui_hud_render_texture(&sPowerMeterTexturesInfo[numWedges + 1], x + width / 4, y + height / 4, width / 64,  height / 64);
+        djui_hud_render_texture(&sPowerMeterTexturesInfo[numWedges + 1], x + (width - 4) / 4, y + height / 4, width / 64,  height / 64);
     }
 }
 void hud_render_power_meter_interpolated(s32 health, f32 prevX, f32 prevY, f32 prevWidth, f32 prevHeight, f32 x, f32 y, f32 width, f32 height) {
@@ -203,14 +203,14 @@ void hud_render_power_meter_interpolated(s32 health, f32 prevX, f32 prevY, f32 p
         x,     y,     width     / 64, height     / 64);
 
     djui_hud_render_texture_interpolated(&sPowerMeterTexturesInfo[1],
-        prevX + prevWidth / 2, prevY, prevWidth / 64, prevHeight / 64,
-        x     + width     / 2, y,     width     / 64, height     / 64);
+        prevX + (prevWidth - 2) / 2, prevY, prevWidth / 64, prevHeight / 64,
+        x     + (width - 2)     / 2, y,     width     / 64, height     / 64);
 
     s32 numWedges = MIN(MAX(health >> 8, 0), 8);
     if (numWedges != 0) {
         djui_hud_render_texture_interpolated(&sPowerMeterTexturesInfo[numWedges + 1],
-            prevX + prevWidth / 4, prevY + prevHeight / 4, prevWidth / 64, prevHeight / 64,
-            x     + width     / 4, y     + height     / 4, width     / 64, height     / 64);
+            prevX + (prevWidth - 4) / 4, prevY + prevHeight / 4, prevWidth / 64, prevHeight / 64,
+            x     + (width - 4)     / 4, y     + height     / 4, width     / 64, height     / 64);
     }
 }
 
