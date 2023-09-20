@@ -660,6 +660,7 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
     gOverrideDialogPos = 0;
     gOverrideDialogColor = 0;
     gDialogMinWidth = 0;
+    gOverrideAllowToxicGasCamera = FALSE;
 
     struct Controller* cnt = gMarioStates[0].controller;
     cnt->rawStickX = 0;

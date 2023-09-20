@@ -42,6 +42,7 @@ u8 gCameraUseCourseSpecificSettings = TRUE;
 u8 gOverrideFreezeCamera = FALSE;
 enum RomhackCameraOverride gOverrideRomhackCamera = RCO_ALL;
 u8 gRomhackCameraAllowCentering = TRUE;
+u8 gOverrideAllowToxicGasCamera = FALSE;
 
 /**
  * @file camera.c
@@ -2366,10 +2367,12 @@ s16 update_default_camera(struct Camera *c) {
     }
 
     // Make Lakitu fly above the gas
-    gasHeight = find_poison_gas_level(cPos[0], cPos[2]);
-    if (gasHeight != gLevelValues.floorLowerLimit) {
-        if ((gasHeight += 130.f) > c->pos[1]) {
-            c->pos[1] = gasHeight;
+    if (gOverrideAllowToxicGasCamera || dynos_level_is_vanilla_level(gCurrLevelNum)) {
+        gasHeight = find_poison_gas_level(cPos[0], cPos[2]);
+        if (gasHeight != gLevelValues.floorLowerLimit) {
+            if ((gasHeight += 130.f) > c->pos[1]) {
+                c->pos[1] = gasHeight;
+            }
         }
     }
 

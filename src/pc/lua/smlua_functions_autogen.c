@@ -27767,6 +27767,23 @@ int smlua_func_allocate_mario_action(lua_State* L) {
     return 1;
 }
 
+int smlua_func_camera_allow_toxic_gas_camera(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "camera_allow_toxic_gas_camera", 1, top);
+        return 0;
+    }
+
+    u8 allow = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "camera_allow_toxic_gas_camera"); return 0; }
+
+    camera_allow_toxic_gas_camera(allow);
+
+    return 1;
+}
+
 int smlua_func_camera_config_enable_analog_cam(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -32070,6 +32087,7 @@ void smlua_bind_functions_autogen(void) {
     // smlua_misc_utils.h
     smlua_bind_function(L, "add_scroll_target", smlua_func_add_scroll_target);
     smlua_bind_function(L, "allocate_mario_action", smlua_func_allocate_mario_action);
+    smlua_bind_function(L, "camera_allow_toxic_gas_camera", smlua_func_camera_allow_toxic_gas_camera);
     smlua_bind_function(L, "camera_config_enable_analog_cam", smlua_func_camera_config_enable_analog_cam);
     smlua_bind_function(L, "camera_config_enable_free_cam", smlua_func_camera_config_enable_free_cam);
     smlua_bind_function(L, "camera_config_enable_mouse_look", smlua_func_camera_config_enable_mouse_look);

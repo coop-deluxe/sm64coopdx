@@ -54,6 +54,26 @@
 
 <br />
 
+## [camera_allow_toxic_gas_camera](#camera_allow_toxic_gas_camera)
+
+### Lua Example
+`camera_allow_toxic_gas_camera(allow)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| allow | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void camera_allow_toxic_gas_camera(u8 allow);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [camera_config_enable_analog_cam](#camera_config_enable_analog_cam)
 
 ### Lua Example

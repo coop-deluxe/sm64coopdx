@@ -265,6 +265,10 @@ void camera_romhack_allow_centering(u8 allow) {
     gRomhackCameraAllowCentering = allow;
 }
 
+void camera_allow_toxic_gas_camera(u8 allow) {
+    gOverrideAllowToxicGasCamera = allow;
+}
+
 bool camera_config_is_free_cam_enabled(void) {
 #ifdef BETTERCAMERA
     return sOverrideEnableCamera.override ? sOverrideEnableCamera.value : configEnableCamera;

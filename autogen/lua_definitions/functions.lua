@@ -8359,6 +8359,12 @@ function allocate_mario_action(actFlags)
     -- ...
 end
 
+--- @param allow integer
+--- @return nil
+function camera_allow_toxic_gas_camera(allow)
+    -- ...
+end
+
 --- @param enable boolean
 --- @return nil
 function camera_config_enable_analog_cam(enable)

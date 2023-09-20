@@ -19,6 +19,7 @@ enum RomhackCameraOverride {
 extern u8 gOverrideFreezeCamera;
 extern enum RomhackCameraOverride gOverrideRomhackCamera;
 extern u8 gRomhackCameraAllowCentering;
+extern u8 gOverrideAllowToxicGasCamera;
 
 /**
  * @file camera.h
