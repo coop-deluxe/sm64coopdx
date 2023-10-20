@@ -32,7 +32,7 @@ struct Character gCharacters[CT_MAX] = {
     [CT_MARIO] = {
         .type                  = CT_MARIO,
         .name                  = "Mario",
-        .hudHead               = ',',
+        .hudHead               = '(',
         .hudHeadTexture        = { .texture = (u8*)texture_hud_char_mario_head, .bitSize = 8, .width = 16, .height = 16 },
         .cameraHudHead         = GLYPH_CAM_MARIO_HEAD,
         .modelId               = MODEL_MARIO,
@@ -97,7 +97,7 @@ struct Character gCharacters[CT_MAX] = {
     [CT_LUIGI] = {
         .type                  = CT_LUIGI,
         .name                  = "Luigi",
-        .hudHead               = '.',
+        .hudHead               = ')',
         .hudHeadTexture        = { .texture = (u8*)texture_hud_char_luigi_head, .bitSize = 8, .width = 16, .height = 16 },
         .cameraHudHead         = GLYPH_CAM_LUIGI_HEAD,
         .modelId               = MODEL_LUIGI,
@@ -162,7 +162,7 @@ struct Character gCharacters[CT_MAX] = {
     [CT_TOAD] = {
         .type                  = CT_TOAD,
         .name                  = "Toad",
-        .hudHead               = '/',
+        .hudHead               = '|',
         .hudHeadTexture        = { .texture = (u8*)texture_hud_char_toad_head, .bitSize = 8, .width = 16, .height = 16 },
         .cameraHudHead         = GLYPH_CAM_TOAD_HEAD,
         .modelId               = MODEL_TOAD_PLAYER,
@@ -227,7 +227,7 @@ struct Character gCharacters[CT_MAX] = {
     [CT_WALUIGI] = {
         .type                  = CT_WALUIGI,
         .name                  = "Waluigi",
-        .hudHead               = '?',
+        .hudHead               = ']',
         .hudHeadTexture        = { .texture = (u8*)texture_hud_char_waluigi_head, .bitSize = 8, .width = 16, .height = 16 },
         .cameraHudHead         = GLYPH_CAM_WALUIGI_HEAD,
         .modelId               = MODEL_WALUIGI,
@@ -295,7 +295,7 @@ struct Character gCharacters[CT_MAX] = {
     [CT_WARIO] = {
         .type                  = CT_WARIO,
         .name                  = "Wario",
-        .hudHead               = '!',
+        .hudHead               = '[',
         .hudHeadTexture        = { .texture = (u8*)texture_hud_char_wario_head, .bitSize = 8, .width = 16, .height = 16 },
         .cameraHudHead         = GLYPH_CAM_WARIO_HEAD,
         .modelId               = MODEL_WARIO,

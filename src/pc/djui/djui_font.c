@@ -79,21 +79,34 @@ static const struct DjuiFont sDjuiFontTitle = {
 ///////////////////////
 
 static u8 djui_font_hud_index(char c) {
-    if ((u8)c < ' ' || (u8)c > 127) { return 50; }
+    if ((u8)c < ' ' || (u8)c > 127) { return 41; }
 
     switch (c) {
-        case '$':  return 51;
-        case '*':  return 53;
-        case '\'': return 56;
-        case '"':  return 57;
+        case '!':  return 36;
+        case '#':  return 37;
+        case '?':  return 38;
+        case '&':  return 39;
+        case '%':  return 40;
+        case '@':  return 41;
+        case '$':  return 42;
+        case ',':  return 43;
+        case '*':  return 44;
+        case '.':  return 45;
+        case '^':  return 46;
+        case '\'': return 47;
+        case '"':  return 48;
+        case '/':  return 49;
+        case '-':  return 50;
+        case '~':  return 51;
+        case '+':  return 52;
     }
 
     if (c >= '0' && c <= '9') { return 0  + c - '0'; }
     if (c >= 'a' && c <= 'z') { return 10 + c - 'a'; }
     if (c >= 'A' && c <= 'Z') { return 10 + c - 'A'; }
 
-    if (c >= 58) { return 50; }
-    if (main_hud_lut[(int)c] == NULL) { return 50; }
+    if (c >= 58) { return 41; }
+    if (main_hud_lut[(int)c] == NULL) { return 41; }
 
     return c;
 }

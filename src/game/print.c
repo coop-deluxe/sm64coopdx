@@ -301,11 +301,11 @@ s8 char_to_glyph_index(char c) {
     }
 
     if (c == '!') {
-        return GLYPH_EXCLAMATION_PNT; // !, JP only
+        return GLYPH_EXCLAMATION_PNT; // !, JP only (New non beta ! has been made for all versions.)
     }
 
     if (c == '#') {
-        return GLYPH_TWO_EXCLAMATION; // !!, JP only
+        return GLYPH_HASH; // !!, JP only (This was GLYPH_TWO_EXCLAMATION.)
     }
 
     if (c == '?') {
@@ -313,11 +313,11 @@ s8 char_to_glyph_index(char c) {
     }
 
     if (c == '&') {
-        return GLYPH_AMPERSAND; // &, JP only
+        return GLYPH_AMPERSAND; // &, JP only (New non beta & has been made for all versions.)
     }
 
     if (c == '%') {
-        return GLYPH_PERCENT; // %, JP only
+        return GLYPH_PERCENT; // %, JP only (New non beta % has been made for all versions.)
     }
 
     if (c == '*') {
@@ -329,7 +329,7 @@ s8 char_to_glyph_index(char c) {
     }
 
     if (c == ',') {
-        return GLYPH_MARIO_HEAD; // Imagine I drew Mario's head
+        return GLYPH_COMMA; // Imagine I drew Mario's head (A comma has been made.)
     }
 
     if (c == '-') {
@@ -337,11 +337,55 @@ s8 char_to_glyph_index(char c) {
     }
 
     if (c == '.') {
-        return GLYPH_PERIOD; // large shaded dot, JP only
+        return GLYPH_PERIOD; // large shaded dot, JP only (New non beta . has been made for all versions.)
+    }
+
+    if (c == '^') {
+        return GLYPH_KEY; // beta key, JP only. Reused for Ü in EU (New non beta key has been made for all versions and / is replaced by ^.)
+    }
+
+    if (c == '\'') {
+        return GLYPH_APOSTROPHE; // '
+    }
+
+    if (c == '"') {
+        return GLYPH_DOUBLE_QUOTE; // "
     }
 
     if (c == '/') {
-        return GLYPH_BETA_KEY; // beta key, JP only. Reused for Ü in EU.
+        return GLYPH_SLASH; // /
+    }
+
+    if (c == '@') {
+        return GLYPH_DASH; // -
+    }
+
+    if (c == '~') {
+        return GLYPH_DIVIDE; // ÷
+    }
+
+    if (c == '$') {
+        return GLYPH_PLUS; // +
+    }
+
+    if (c == '(') {
+        return GLYPH_MARIO_HEAD; // mario's glyph
+    }
+
+    if (c == ')') {
+        return GLYPH_LUIGI_HEAD; // luigi's glyph
+    }
+
+    if (c == '[') {
+        return GLYPH_WARIO_HEAD; // wario's glyph
+    }
+
+    if (c == ']') {
+        return GLYPH_WALUIGI_HEAD; // waluigi's glyph
+    }
+
+    if (c == '|') {
+        return GLYPH_TOAD_HEAD; // toad's glyph
     }
 
     return GLYPH_SPACE;
@@ -407,7 +451,7 @@ void render_text_labels(void) {
 #ifdef VERSION_EU
                 // Beta Key was removed by EU, so glyph slot reused.
                 // This produces a colorful Ü.
-                if (glyphIndex == GLYPH_BETA_KEY) {
+                if (glyphIndex == GLYPH_KEY) {
                     add_glyph_texture(GLYPH_U);
                     render_textrect(sTextLabels[i]->x, sTextLabels[i]->y, j);
 

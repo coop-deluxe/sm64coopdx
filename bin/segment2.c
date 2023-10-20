@@ -86,9 +86,15 @@ ALIGNED8 const Texture texture_hud_char_I[] = {
 #include "textures/segment2/segment2.02400.rgba16.inc.c"
 };
 
+#if defined(VERSION_JP) || defined(VERSION_SH)
+ALIGNED8 const Texture texture_hud_char_J[] = {
+#include "textures/segment2/segment2.02600.rgba16.inc.c"
+};
+#else
 ALIGNED8 static const u8 texture_hud_char_J[] = {
 #include "textures/segment2/custom_hud_j.rgba16.inc.c"
 };
+#endif
 
 ALIGNED8 const Texture texture_hud_char_K[] = {
 #include "textures/segment2/segment2.02800.rgba16.inc.c"
@@ -114,9 +120,15 @@ ALIGNED8 const Texture texture_hud_char_P[] = {
 #include "textures/segment2/segment2.03200.rgba16.inc.c"
 };
 
+#if defined(VERSION_JP) || defined(VERSION_SH)
 ALIGNED8 const Texture texture_hud_char_Q[] = {
-#include "textures/segment2/custom_hud_Q.rgba16.inc.c"
+#include "textures/segment2/segment2.03400.rgba16.inc.c"
 };
+#else
+ALIGNED8 const Texture texture_hud_char_Q[] = {
+#include "textures/segment2/custom_hud_q.rgba16.inc.c"
+};
+#endif
 
 ALIGNED8 const Texture texture_hud_char_R[] = {
 #include "textures/segment2/segment2.03600.rgba16.inc.c"
@@ -134,25 +146,43 @@ ALIGNED8 const Texture texture_hud_char_U[] = {
 #include "textures/segment2/segment2.03C00.rgba16.inc.c"
 };
 
+#if defined(VERSION_JP) || defined(VERSION_EU) || defined(VERSION_SH)
+ALIGNED8 const Texture texture_hud_char_V[] = {
+#include "textures/segment2/segment2.03E00.rgba16.inc.c"
+}
+#else
 ALIGNED8 const Texture texture_hud_char_V[] = {
 #include "textures/segment2/custom_hud_v.rgba16.inc.c"
 };
+#endif
 
 ALIGNED8 const Texture texture_hud_char_W[] = {
 #include "textures/segment2/segment2.04000.rgba16.inc.c"
 };
 
+#if defined(VERSION_JP) || defined(VERSION_SH)
+ALIGNED8 const Texture texture_hud_char_X[] = {
+#include "textures/segment2/segment2.04200.rgba16.inc.c"
+}
+#else
 ALIGNED8 const Texture texture_hud_char_X[] = {
 #include "textures/segment2/custom_hud_x.rgba16.inc.c"
 };
+#endif
 
 ALIGNED8 const Texture texture_hud_char_Y[] = {
 #include "textures/segment2/segment2.04400.rgba16.inc.c"
 };
 
+#if defined(VERSION_JP) || defined(VERSION_EU) || defined(VERSION_SH)
+ALIGNED8 const Texture texture_hud_char_Z[] = {
+#include "textures/segment2/segment2.04600.rgba16.inc.c"
+}
+#else
 ALIGNED8 const Texture texture_hud_char_Z[] = {
 #include "textures/segment2/custom_hud_z.rgba16.inc.c"
 };
+#endif
 
 ALIGNED8 const Texture texture_hud_char_apostrophe[] = {
 #include "textures/segment2/segment2.04800.rgba16.inc.c"
@@ -168,27 +198,25 @@ ALIGNED8 const Texture texture_hud_char_umlaut[] = {
 };
 #endif
 
-#if defined(VERSION_JP) || defined(VERSION_SH)
 ALIGNED8 const Texture texture_hud_char_exclamation[] = {
-#include "textures/segment2/segment2.04C00.rgba16.inc.c"// JP !
+#include "textures/segment2/custom_hud_exclamation.rgba16.inc.c"// JP ! (Beta ! no longer in use, new non beta ! was made for all versions.)
 };
 
-ALIGNED8 const Texture texture_hud_char_double_exclamation[] = {
-#include "textures/segment2/segment2.04E00.rgba16.inc.c"// JP !!
+ALIGNED8 const Texture texture_hud_char_hash[] = {
+#include "textures/segment2/custom_hud_hash.rgba16.inc.c"// JP !! (No longer !!, now # for all versions.)
 };
 
 ALIGNED8 const Texture texture_hud_char_question[] = {
-#include "textures/segment2/segment2.05000.rgba16.inc.c"// JP ?
+#include "textures/segment2/segment2.05000.rgba16.inc.c"// JP ? (Removed JP version check as ? exists in other versions.)
 };
 
 ALIGNED8 const Texture texture_hud_char_ampersand[] = {
-#include "textures/segment2/segment2.05200.rgba16.inc.c"// JP &
+#include "textures/segment2/custom_hud_ampersand.rgba16.inc.c"// JP & (Beta & no longer in use, new non beta & was made for all versions.)
 };
 
 ALIGNED8 const Texture texture_hud_char_percent[] = {
-#include "textures/segment2/segment2.05400.rgba16.inc.c"// JP %
+#include "textures/segment2/custom_hud_percent.rgba16.inc.c"// JP % (Beta % no longer in use, new non beta % was made for all versions.)
 };
-#endif
 
 ALIGNED8 const Texture texture_hud_char_slash[] = {
 #include "textures/segment2/custom_hud_slash.rgba16.inc.c"
@@ -210,17 +238,29 @@ ALIGNED8 const Texture texture_hud_char_star[] = {
 #include "textures/segment2/segment2.05C00.rgba16.inc.c"
 };
 
-#if defined(VERSION_JP) || defined(VERSION_SH)
 ALIGNED8 const Texture texture_hud_char_decimal_point[] = {
-#include "textures/segment2/segment2.05E00.rgba16.inc.c"
+#include "textures/segment2/custom_hud_period.rgba16.inc.c"
 };
-#endif
 
-#if defined(VERSION_JP) || defined(VERSION_SH)
-ALIGNED8 const Texture texture_hud_char_beta_key[] = {
-#include "textures/segment2/segment2.06000.rgba16.inc.c"
+ALIGNED8 const Texture texture_hud_char_comma[] = {
+#include "textures/segment2/custom_hud_comma.rgba16.inc.c"
 };
-#endif
+
+ALIGNED8 const Texture texture_hud_char_key[] = {
+#include "textures/segment2/custom_hud_key.rgba16.inc.c"
+};
+
+ALIGNED8 const Texture texture_hud_char_dash[] = {
+#include "textures/segment2/custom_hud_dash.rgba16.inc.c"
+};
+
+ALIGNED8 const Texture texture_hud_char_divide[] = {
+#include "textures/segment2/custom_hud_divide.rgba16.inc.c"
+};
+
+ALIGNED8 const Texture texture_hud_char_plus[] = {
+#include "textures/segment2/custom_hud_plus.rgba16.inc.c"
+};
 
 ALIGNED8 const Texture texture_credits_char_3[] = {
 #include "textures/segment2/segment2.06200.rgba16.inc.c"
@@ -1813,15 +1853,15 @@ const Texture *const main_hud_lut[] = {
     texture_hud_char_C, texture_hud_char_D, texture_hud_char_E, texture_hud_char_F,
     texture_hud_char_G, texture_hud_char_H, texture_hud_char_I, texture_hud_char_J,
     texture_hud_char_K, texture_hud_char_L, texture_hud_char_M, texture_hud_char_N,
-    texture_hud_char_O, texture_hud_char_P,               0x0, texture_hud_char_R,
+    texture_hud_char_O, texture_hud_char_P, texture_hud_char_Q, texture_hud_char_R,
     texture_hud_char_S, texture_hud_char_T, texture_hud_char_U, texture_hud_char_V,
-    texture_hud_char_W,               0x0, texture_hud_char_Y, texture_hud_char_Z,
-                  0x0,               0x0,               0x0,               0x0,
-                  0x0,               0x0,               0x0,               0x0,
-                  0x0,               0x0,               0x0,               0x0,
-                  0x0, texture_hud_char_slash, texture_hud_char_multiply, texture_hud_char_coin,
-    texture_hud_char_mario_head, texture_hud_char_star, texture_hud_char_luigi_head, 0x0,
-    texture_hud_char_apostrophe, texture_hud_char_double_quote, texture_hud_char_umlaut,
+    texture_hud_char_W, texture_hud_char_X, texture_hud_char_Y, texture_hud_char_Z,
+    texture_hud_char_exclamation, texture_hud_char_hash, texture_hud_char_question, texture_hud_char_ampersand,
+    texture_hud_char_percent, texture_hud_char_multiply, texture_hud_char_coin, texture_hud_char_comma,
+    texture_hud_char_star, texture_hud_char_decimal_point, texture_hud_char_key, texture_hud_char_apostrophe,
+    texture_hud_char_double_quote, texture_hud_char_slash, texture_hud_char_dash, texture_hud_char_divide,
+    texture_hud_char_plus, texture_hud_char_mario_head, texture_hud_char_luigi_head, texture_hud_char_wario_head,
+    texture_hud_char_waluigi_head, texture_hud_char_toad_head, texture_hud_char_umlaut,
 #elif defined(VERSION_US)
     texture_hud_char_0, texture_hud_char_1, texture_hud_char_2, texture_hud_char_3,
     texture_hud_char_4, texture_hud_char_5, texture_hud_char_6, texture_hud_char_7,
@@ -1832,12 +1872,12 @@ const Texture *const main_hud_lut[] = {
     texture_hud_char_O, texture_hud_char_P, texture_hud_char_Q, texture_hud_char_R,
     texture_hud_char_S, texture_hud_char_T, texture_hud_char_U, texture_hud_char_V,
     texture_hud_char_W, texture_hud_char_X, texture_hud_char_Y, texture_hud_char_Z,
-    texture_hud_char_wario_head,               0x0, texture_hud_char_waluigi_head,              0x0,
-                  0x0,               0x0,               0x0,               0x0,
-                  0x0,               0x0,               0x0,               0x0,
-                  0x0, texture_hud_char_slash, texture_hud_char_multiply, texture_hud_char_coin,
-    texture_hud_char_mario_head, texture_hud_char_star, texture_hud_char_luigi_head, texture_hud_char_toad_head,
-    texture_hud_char_apostrophe, texture_hud_char_double_quote,
+    texture_hud_char_exclamation, texture_hud_char_hash, texture_hud_char_question, texture_hud_char_ampersand,
+    texture_hud_char_percent, texture_hud_char_multiply, texture_hud_char_coin, texture_hud_char_comma,
+    texture_hud_char_star, texture_hud_char_decimal_point, texture_hud_char_key, texture_hud_char_apostrophe,
+    texture_hud_char_double_quote, texture_hud_char_slash, texture_hud_char_dash, texture_hud_char_divide,
+    texture_hud_char_plus, texture_hud_char_mario_head, texture_hud_char_luigi_head, texture_hud_char_wario_head,
+    texture_hud_char_waluigi_head, texture_hud_char_toad_head,                0x0,
 #else
     texture_hud_char_0, texture_hud_char_1, texture_hud_char_2, texture_hud_char_3,
     texture_hud_char_4, texture_hud_char_5, texture_hud_char_6, texture_hud_char_7,
@@ -1848,12 +1888,12 @@ const Texture *const main_hud_lut[] = {
     texture_hud_char_O, texture_hud_char_P, texture_hud_char_Q, texture_hud_char_R,
     texture_hud_char_S, texture_hud_char_T, texture_hud_char_U, texture_hud_char_V,
     texture_hud_char_W, texture_hud_char_X, texture_hud_char_Y, texture_hud_char_Z,
-    texture_hud_char_exclamation, texture_hud_char_double_exclamation, texture_hud_char_question, texture_hud_char_ampersand,
-    texture_hud_char_percent,                 0x0,                      0x0,                  0x0,
-                      0x0,                   0x0,                      0x0,                  0x0,
-                      0x0, texture_hud_char_slash, texture_hud_char_multiply, texture_hud_char_coin,
-    texture_hud_char_mario_head, texture_hud_char_star, texture_hud_char_decimal_point, texture_hud_char_beta_key,
-    texture_hud_char_apostrophe, texture_hud_char_double_quote,
+    texture_hud_char_exclamation, texture_hud_char_hash, texture_hud_char_question, texture_hud_char_ampersand,
+    texture_hud_char_percent, texture_hud_char_multiply, texture_hud_char_coin, texture_hud_char_comma,
+    texture_hud_char_star, texture_hud_char_decimal_point, texture_hud_char_key, texture_hud_char_apostrophe,
+    texture_hud_char_double_quote, texture_hud_char_slash, texture_hud_char_dash, texture_hud_char_divide,
+    texture_hud_char_plus, texture_hud_char_mario_head, texture_hud_char_luigi_head, texture_hud_char_wario_head,
+    texture_hud_char_waluigi_head, texture_hud_char_toad_head,                0x0,
 #endif
 };
 
