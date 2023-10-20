@@ -183,6 +183,7 @@
 --- @field public BowlingBallThiLargeSpeed number
 --- @field public BowlingBallThiSmallSpeed number
 --- @field public BowlingBallTtmSpeed number
+--- @field public ChillBullyDeathPosY number
 --- @field public GrateStarRequirement integer
 --- @field public InfiniteRenderDistance integer
 --- @field public KingBobombFVel number

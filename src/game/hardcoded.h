@@ -248,6 +248,7 @@ struct BehaviorValues {
     f32 BowlingBallThiLargeSpeed;
     f32 BowlingBallThiSmallSpeed;
     u16 GrateStarRequirement;
+    f32 ChillBullyDeathPosY;
     u8  ShowStarMilestones;
     u8  RespawnShellBoxes;
     u8  MultipleCapCollection;

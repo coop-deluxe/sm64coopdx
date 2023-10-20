@@ -314,6 +314,7 @@
 | BowlingBallThiLargeSpeed | `number` |  |
 | BowlingBallThiSmallSpeed | `number` |  |
 | BowlingBallTtmSpeed | `number` |  |
+| ChillBullyDeathPosY | `number` |  |
 | GrateStarRequirement | `integer` |  |
 | InfiniteRenderDistance | `integer` |  |
 | KingBobombFVel | `number` |  |
