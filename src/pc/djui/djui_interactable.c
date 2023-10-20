@@ -251,6 +251,24 @@ bool djui_interactable_on_key_down(int scancode) {
                 }
                 break;
             }
+            if (gDjuiPlayerList->base.visible) {
+                if (scancode == (int)configKeyNextPage[i]) {
+                    sPageIndex++;
+                    if (sPageIndex > ((network_player_connected_count() - 1) / sPlayerListSize)) {
+                        sPageIndex = 0;
+                    }
+                    break;
+                }
+                if (scancode == (int)configKeyPrevPage[i]) {
+                    if (sPageIndex == 0) {
+                        sPageIndex = ((network_player_connected_count() - 1) / sPlayerListSize);
+                    }
+                    else {
+                        sPageIndex--;
+                    }
+                    break;
+                }
+            }
         }
     }
 

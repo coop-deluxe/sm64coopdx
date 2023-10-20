@@ -190,7 +190,7 @@ static void djui_panel_player_name_on_focus_end(struct DjuiBase* caller) {
     if (!djui_panel_player_name_valid(inputbox1->buffer)) {
         djui_inputbox_set_text(inputbox1, DLANG(PLAYER, PLAYER));
     }
-    snprintf(configPlayerName, 20, "%s", inputbox1->buffer);
+    snprintf(configPlayerName, MAX_PLAYER_STRING, "%s", inputbox1->buffer);
     djui_inputbox_set_text_color(inputbox1, 0, 0, 0, 255);
 
     if (gNetworkType != NT_NONE) {
@@ -246,7 +246,7 @@ void djui_panel_player_create(struct DjuiBase* caller) {
             djui_base_set_size(&text1->base, 0.585f, 64);
             djui_base_set_alignment(&text1->base, DJUI_HALIGN_LEFT, DJUI_VALIGN_TOP);
 
-            struct DjuiInputbox* inputbox1 = djui_inputbox_create(&rect1->base, 20);
+            struct DjuiInputbox* inputbox1 = djui_inputbox_create(&rect1->base, MAX_PLAYER_STRING);
             djui_base_set_size_type(&inputbox1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
             djui_base_set_size(&inputbox1->base, 0.4f, 32);
             djui_base_set_alignment(&inputbox1->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_TOP);

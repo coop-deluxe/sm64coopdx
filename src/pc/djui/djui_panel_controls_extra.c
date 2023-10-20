@@ -4,7 +4,7 @@
 #include "src/pc/configfile.h"
 
 void djui_panel_controls_extra_create(struct DjuiBase* caller) {
-    f32 bindBodyHeight = 28 * 8 + 1 * 7;
+    f32 bindBodyHeight = 28 * 10 + 1 * 7;
 
     struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(CONTROLS, CONTROLS));
     struct DjuiBase* body = djui_three_panel_get_body(panel);
@@ -23,6 +23,8 @@ void djui_panel_controls_extra_create(struct DjuiBase* caller) {
             djui_bind_create(&bindBody->base, DLANG(CONTROLS, D_RIGHT), configKeyDRight);
             djui_bind_create(&bindBody->base, DLANG(CONTROLS, X),       configKeyX);
             djui_bind_create(&bindBody->base, DLANG(CONTROLS, Y),       configKeyY);
+            djui_bind_create(&bindBody->base, DLANG(CONTROLS, PREV),    configKeyPrevPage);
+            djui_bind_create(&bindBody->base, DLANG(CONTROLS, NEXT),    configKeyNextPage);
         }
 
         djui_button_create(body, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);

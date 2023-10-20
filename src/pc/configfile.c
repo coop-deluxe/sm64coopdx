@@ -97,6 +97,8 @@ unsigned int configKeyDUp[MAX_BINDS]        = { 0x0147,   0x100b,     VK_INVALID
 unsigned int configKeyDDown[MAX_BINDS]      = { 0x014f,   0x100c,     VK_INVALID };
 unsigned int configKeyDLeft[MAX_BINDS]      = { 0x0153,   0x100d,     VK_INVALID };
 unsigned int configKeyDRight[MAX_BINDS]     = { 0x0151,   0x100e,     VK_INVALID };
+unsigned int configKeyPrevPage[MAX_BINDS]   = { 0x0016,   VK_INVALID, VK_INVALID };
+unsigned int configKeyNextPage[MAX_BINDS]   = { 0x0018,   VK_INVALID, VK_INVALID };
 unsigned int configStickDeadzone = 16; // 16*DEADZONE_STEP=4960 (the original default deadzone)
 unsigned int configRumbleStrength = 50;
 #ifdef EXTERNAL_DATA
@@ -196,6 +198,8 @@ static const struct ConfigOption options[] = {
     {.name = "key_ddown",            .type = CONFIG_TYPE_BIND, .uintValue = configKeyDDown},
     {.name = "key_dleft",            .type = CONFIG_TYPE_BIND, .uintValue = configKeyDLeft},
     {.name = "key_dright",           .type = CONFIG_TYPE_BIND, .uintValue = configKeyDRight},
+    {.name = "key_prev",             .type = CONFIG_TYPE_BIND, .uintValue = configKeyPrevPage},
+    {.name = "key_next",             .type = CONFIG_TYPE_BIND, .uintValue = configKeyNextPage},
     {.name = "stick_deadzone",       .type = CONFIG_TYPE_UINT, .uintValue = &configStickDeadzone},
     {.name = "rumble_strength",      .type = CONFIG_TYPE_UINT, .uintValue = &configRumbleStrength},
     #ifdef EXTERNAL_DATA
