@@ -1,4 +1,3 @@
-
 /**
  * Behavior for bhvKoopa and bhvKoopaRaceEndpoint.
  * bhvKoopa includes normal, unshelled, tiny, and Koopa the Quick.
@@ -116,7 +115,13 @@ void bhv_koopa_init(void) {
 
     if (o->oKoopaMovementType >= KOOPA_BP_KOOPA_THE_QUICK_BASE) {
         // koopa the quick
-        o->parentObj = cur_obj_nearest_object_with_behavior(bhvKoopaRaceEndpoint);
+        if (cur_obj_nearest_object_with_behavior(bhvKoopaRaceEndpoint) != NULL) {
+            o->parentObj = cur_obj_nearest_object_with_behavior(bhvKoopaRaceEndpoint);
+        }
+        else {
+            obj_mark_for_deletion(o);
+            return;
+        }
         struct SyncObject* so  = sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
         if (so) {
             so->on_received_post   = bhv_koopa_the_quick_on_received_post;

@@ -365,7 +365,13 @@ void ukiki_act_go_to_cage(void) {
     struct Object* obj;
     f32 latDistToCage = 0.0f;
     s16 yawToCage = 0;
-    obj = cur_obj_nearest_object_with_behavior(bhvUkikiCageChild);
+    if (cur_obj_nearest_object_with_behavior(bhvUkikiCageChild) != NULL) {
+        obj = cur_obj_nearest_object_with_behavior(bhvUkikiCageChild);
+    }
+    else {
+        obj_mark_for_deletion(o);
+        return;
+    }
 
     // Ultimately is checking the cage, as it points to the parent
     // of a dummy child object of the cage.
