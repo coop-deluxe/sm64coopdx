@@ -2570,7 +2570,7 @@ void render_pause_my_score_coins(void) {
         print_generic_string(CRS_NUM_X1, 157, strCourseNum);
 #endif
 
-        if (gDialogCourseActNum >= 1 && gCurrActNum <= 6) {
+        if (gDialogCourseActNum >= 1 && gDialogCourseActNum <= 6) {
             actName = segmented_to_virtual(actNameTbl[(gCurrCourseNum - 1) * 6 + gDialogCourseActNum - 1]);
         }
 
