@@ -80,6 +80,10 @@ void slow_star_rotation(void) {
 }
 
 void bhv_spawned_star_loop(void) {
+    if (!sync_object_is_initialized(o->oSyncID)) {
+        sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
+    }
+
     if (o->oAction == 0) {
         // All of these are for checking if we spawned the star, If 
         // we didn't. We don't need the time stop.
@@ -140,6 +144,7 @@ void bhv_spawned_star_loop(void) {
     } else {
         set_sparkle_spawn_star_hitbox();
         slow_star_rotation();
+        network_send_object(o);
     }
     cur_obj_move_using_fvel_and_gravity();
     o->oFaceAngleYaw += o->oAngleVelYaw;

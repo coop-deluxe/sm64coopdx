@@ -419,6 +419,7 @@ void network_receive_object(struct Packet* p) {
 
     // deactivated
     if (o->activeFlags == ACTIVE_FLAG_DEACTIVATED) {
+        o->oSyncDeath = 1; // Force oSyncDeath if deactivated
         sync_object_forget(so->id);
     } else if (p->reliable) {
         // remember packet

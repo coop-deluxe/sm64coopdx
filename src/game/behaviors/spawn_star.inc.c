@@ -106,6 +106,10 @@ void bhv_star_spawn_init(void) {
 }
 
 void bhv_star_spawn_loop(void) {
+    if (!sync_object_is_initialized(o->oSyncID)) {
+        sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
+    }
+
     switch (o->oAction) {
         case 0:
             o->oFaceAngleYaw += 0x1000;
@@ -148,6 +152,7 @@ void bhv_star_spawn_loop(void) {
 
         case 3:
             o->oFaceAngleYaw += 0x800;
+            cur_obj_become_tangible();
             if (o->oTimer == 20) {
                 gMarioStates[0].freeze = 0;
                 gObjCutsceneDone = TRUE;
@@ -159,6 +164,8 @@ void bhv_star_spawn_loop(void) {
                 mark_obj_for_deletion(o);
                 o->oInteractStatus = 0;
             }
+
+            network_send_object(o);
             break;
     }
     spawn_star_number();
@@ -321,7 +328,7 @@ void bhv_hidden_red_coin_star_loop(void) {
             break;
 
         case 1:
-            if (o->oTimer == 3) {
+            if (o->oTimer > 2) {
                 struct Object *obj = spawn_red_coin_cutscene_star(o->oPosX, o->oPosY, o->oPosZ);
                 if (obj != NULL) {
                     if (o->oHiddenStarLastInteractedObject == &gMarioStates[0]) {
@@ -331,7 +338,7 @@ void bhv_hidden_red_coin_star_loop(void) {
                     }
                     spawn_mist_particles();
                 }
-                network_send_object(o);
+                o->activeFlags = ACTIVE_FLAG_DEACTIVATED;
             }
             break;
     }

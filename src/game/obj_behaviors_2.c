@@ -812,7 +812,7 @@ void obj_act_knockback(UNUSED f32 baseScale) {
     //! Dies immediately if above lava
     if ((o->oMoveFlags
          & (OBJ_MOVE_MASK_ON_GROUND | OBJ_MOVE_MASK_IN_WATER | OBJ_MOVE_HIT_WALL | OBJ_MOVE_ABOVE_LAVA))
-        || (o->oAction == OBJ_ACT_VERTICAL_KNOCKBACK && o->oTimer >= 9)) {
+        || (o->oAction == OBJ_ACT_VERTICAL_KNOCKBACK && o->oTimer >= 9) || o->oSyncDeath) {
         obj_die_if_health_non_positive();
     }
 
@@ -832,7 +832,7 @@ void obj_act_squished(f32 baseScale) {
     if (approach_f32_ptr(&o->header.gfx.scale[1], targetScaleY, baseScale * 0.14f)) {
         o->header.gfx.scale[0] = o->header.gfx.scale[2] = baseScale * 2.0f - o->header.gfx.scale[1];
 
-        if (o->oTimer >= 16) {
+        if (o->oTimer >= 16 || o->oSyncDeath) {
             obj_die_if_health_non_positive();
         }
     }
