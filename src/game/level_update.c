@@ -536,6 +536,10 @@ void init_mario_after_warp(void) {
         gMarioState->health = 0x880;
     }
 
+    if (gMarioState) {
+        gMarioState->skipWarpInteractionsTimer = 30;
+    }
+
     smlua_call_event_hooks(HOOK_ON_WARP);
 }
 

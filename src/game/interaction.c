@@ -1043,6 +1043,10 @@ u32 interact_warp(struct MarioState *m, UNUSED u32 interactType, struct Object *
     if (!m || !o) { return FALSE; }
     u32 action;
 
+    if (m->skipWarpInteractionsTimer > 0) {
+        return FALSE;
+    }
+
     if (m != &gMarioStates[0]) {
         // don't do for remote players
         return FALSE;
@@ -2294,6 +2298,10 @@ void mario_process_interactions(struct MarioState *m) {
     if (!m) { return; }
     sDelayInvincTimer = FALSE;
     gInteractionInvulnerable = (m->action & ACT_FLAG_INVULNERABLE) || m->invincTimer != 0;
+
+    if (m->skipWarpInteractionsTimer) {
+        m->skipWarpInteractionsTimer--;
+    }
 
     if (!(m->action & ACT_FLAG_INTANGIBLE) && m->collidedObjInteractTypes != 0 && is_player_active(m)) {
         s32 i;

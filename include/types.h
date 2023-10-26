@@ -420,6 +420,7 @@ struct MarioState
     /*????*/ u8 visibleToEnemies;
     /*????*/ u32 cap;
     /*????*/ u8 bounceSquishTimer;
+    /*????*/ u8 skipWarpInteractionsTimer;
 };
 
 struct TextureInfo
