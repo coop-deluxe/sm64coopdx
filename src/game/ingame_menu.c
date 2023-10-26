@@ -479,6 +479,9 @@ u8 str_ascii_char_to_dialog(char c) {
         case ' ': return 0x9E;
         case ',': return 0x6F;
         case '.': return 0x3F;
+        case '@': return 0xFA;
+        case '*': return 0xFB;
+        case '=': return 0xFD;
         case '\'': return 0x3E;
         case '\0': return DIALOG_CHAR_TERMINATOR;
         default:   return ((u8)c < 0xF0) ? ASCII_TO_DIALOG(c) : c;
@@ -518,6 +521,12 @@ void str_ascii_to_dialog(const char* string, u8* dialog, u16 length) {
         } else if (!strncmp(c, ")(", 2)) {
             *d = 0xE2;
             c += 1;
+        } else if (!strncmp(c, "[%]", 3)) {
+            *d = 0xE0;
+            c += 2;
+        } else if (!strncmp(c, "★", 2)) {
+            *d = 0xFA;
+            c += 2;
         } else {
             *d = str_ascii_char_to_dialog(*c);
         }
