@@ -423,7 +423,7 @@ struct GraphNodeObjectParent *init_graph_node_object_parent(struct DynamicPool *
 struct GraphNodeGenerated *init_graph_node_generated(struct DynamicPool *pool, struct GraphNodeGenerated *sp1c,
                                                      GraphNodeFunc gfxFunc, s32 parameter);
 struct GraphNodeBackground *init_graph_node_background(struct DynamicPool *pool, struct GraphNodeBackground *sp1c,
-                                                       u16 background, GraphNodeFunc backgroundFunc, s32 zero);
+                                                       u16 background, GraphNodeFunc backgroundFunc, u8 extended);
 struct GraphNodeHeldObject *init_graph_node_held_object(struct DynamicPool *pool, struct GraphNodeHeldObject *sp1c,
                                                         struct Object *objNode, Vec3s translation,
                                                         GraphNodeFunc nodeFunc, s32 playerIndex);

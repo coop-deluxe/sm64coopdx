@@ -482,7 +482,7 @@ struct GraphNodeGenerated *init_graph_node_generated(struct DynamicPool *pool,
 struct GraphNodeBackground *init_graph_node_background(struct DynamicPool *pool,
                                                        struct GraphNodeBackground *graphNode,
                                                        u16 background, GraphNodeFunc backgroundFunc,
-                                                       s32 zero) {
+                                                       u8 extended) {
     if (pool != NULL) {
         graphNode = dynamic_pool_alloc(pool, sizeof(struct GraphNodeBackground));
     }
@@ -490,14 +490,18 @@ struct GraphNodeBackground *init_graph_node_background(struct DynamicPool *pool,
     if (graphNode != NULL) {
         init_scene_graph_node_links(&graphNode->fnNode.node, GRAPH_NODE_TYPE_BACKGROUND);
 
-        if (backgroundFunc && background > BACKGROUND_CUSTOM) {
+        bool invalidBackground = (extended)
+            ? (backgroundFunc && background > BACKGROUND_CUSTOM)
+            : (backgroundFunc && background >= BACKGROUND_CUSTOM);
+
+        if (invalidBackground) {
             LOG_ERROR("invalid background id");
-            background = BACKGROUND_OCEAN_SKY;
+            background = BACKGROUND_HAUNTED;
         }
 
         graphNode->background = (background << 16) | background;
         graphNode->fnNode.func = backgroundFunc;
-        graphNode->unused = zero; // always 0, unused
+        graphNode->unused = 0; // always 0, unused
 
         if (backgroundFunc != NULL) {
             backgroundFunc(GEO_CONTEXT_CREATE, &graphNode->fnNode.node, pool);

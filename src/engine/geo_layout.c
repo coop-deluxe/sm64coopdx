@@ -692,10 +692,10 @@ void geo_layout_cmd_node_generated(void) {
 */
 void geo_layout_cmd_node_background(void) {
     struct GraphNodeBackground *graphNode;
-
+    s16 backgroundIdOrColor = cur_geo_cmd_s16(0x02);
     graphNode = init_graph_node_background(
         gGraphNodePool, NULL,
-        cur_geo_cmd_s16(0x02), // background ID, or RGBA5551 color if asm function is null
+        backgroundIdOrColor, // background ID, or RGBA5551 color if asm function is null
         (GraphNodeFunc) cur_geo_cmd_ptr(0x04), // asm function
         0);
 
@@ -783,7 +783,7 @@ void geo_layout_cmd_node_background_ext(void) {
         gGraphNodePool, NULL,
         BACKGROUND_CUSTOM, // background ID, or RGBA5551 color if asm function is null
         (GraphNodeFunc) cur_geo_cmd_ptr(0x08), // asm function
-        0);
+        1);
 
     register_scene_graph_node(&graphNode->fnNode.node);
 
