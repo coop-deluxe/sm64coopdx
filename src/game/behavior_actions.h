@@ -409,6 +409,7 @@ void bhv_hidden_star_trigger_loop(void);
 void bhv_ttm_rolling_log_init(void);
 void bhv_rolling_log_loop(void);
 void bhv_lll_rolling_log_init(void);
+void bhv_1up_trigger_init(void);
 void bhv_1up_common_init(void);
 void bhv_1up_walking_loop(void);
 void bhv_1up_running_away_loop(void);

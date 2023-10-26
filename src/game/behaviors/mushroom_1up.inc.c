@@ -19,6 +19,11 @@ void bhv_1up_interact(void) {
     }
 }
 
+void bhv_1up_trigger_init(void) {
+    obj_set_model_extended(o, E_MODEL_NONE);
+    cur_obj_hide();
+}
+
 void bhv_1up_common_init(void) {
     o->oMoveAnglePitch = -0x4000;
     o->oGravity = 3.0f;
