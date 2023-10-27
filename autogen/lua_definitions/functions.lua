@@ -8524,10 +8524,26 @@ function deref_s32_pointer(pointer)
     -- ...
 end
 
+--- @return boolean
+function djui_is_popup_disabled()
+    -- ...
+end
+
 --- @param message string
 --- @param lines integer
 --- @return nil
 function djui_popup_create_global(message, lines)
+    -- ...
+end
+
+--- @return nil
+function djui_reset_popup_disabled_override()
+    -- ...
+end
+
+--- @param value boolean
+--- @return nil
+function djui_set_popup_disabled_override(value)
     -- ...
 end
 

@@ -3,6 +3,8 @@
 #include "audio/external.h"
 #include "pc/network/network.h"
 #include "pc/utils/misc.h"
+#include "pc/configfile.h"
+#include "pc/lua/utils/smlua_misc_utils.h"
 
 #define DJUI_POPUP_LIFETIME 6.0f
 
@@ -34,6 +36,7 @@ static void djui_popup_destroy(struct DjuiBase* base) {
 }
 
 void djui_popup_create(const char* message, int lines) {
+    if (djui_is_popup_disabled()) { return; }
     struct DjuiPopup* popup = calloc(1, sizeof(struct DjuiPopup));
     struct DjuiBase* base = &popup->base;
 

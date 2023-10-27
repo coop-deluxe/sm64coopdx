@@ -695,4 +695,6 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
     discord_activity_update();
 #endif
     packet_ordered_clear_all();
+
+    djui_reset_popup_disabled_override();
 }

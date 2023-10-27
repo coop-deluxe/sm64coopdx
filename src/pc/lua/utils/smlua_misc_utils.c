@@ -49,6 +49,30 @@ void djui_popup_create_global(const char* message, int lines) {
     network_send_global_popup(message, lines);
 }
 
+struct AllowDjuiPopupOverride {
+    bool value;
+    bool override;
+};
+
+struct AllowDjuiPopupOverride sAllowDjuiPopupOverride;
+
+bool djui_is_popup_disabled(void) {
+    // return override if there is one, otherwise return the value in the config.
+    return sAllowDjuiPopupOverride.override ? sAllowDjuiPopupOverride.value : configDisablePopups;
+}
+
+void djui_set_popup_disabled_override(bool value) {
+    // enable override
+    sAllowDjuiPopupOverride.override = true;
+    // set override to value specified in lua mod
+    sAllowDjuiPopupOverride.value = value;
+}
+
+void djui_reset_popup_disabled_override(void) {
+    // disable override
+    sAllowDjuiPopupOverride.override = false;
+}
+
 ///
 
 void hud_hide(void) {

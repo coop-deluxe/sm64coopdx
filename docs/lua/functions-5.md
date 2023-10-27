@@ -606,6 +606,24 @@
 
 <br />
 
+## [djui_is_popup_disabled](#djui_is_popup_disabled)
+
+### Lua Example
+`local booleanValue = djui_is_popup_disabled()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool djui_is_popup_disabled(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [djui_popup_create_global](#djui_popup_create_global)
 
 ### Lua Example
@@ -622,6 +640,44 @@
 
 ### C Prototype
 `void djui_popup_create_global(const char* message, int lines);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [djui_reset_popup_disabled_override](#djui_reset_popup_disabled_override)
+
+### Lua Example
+`djui_reset_popup_disabled_override()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void djui_reset_popup_disabled_override(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [djui_set_popup_disabled_override](#djui_set_popup_disabled_override)
+
+### Lua Example
+`djui_set_popup_disabled_override(value)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| value | `boolean` |
+
+### Returns
+- None
+
+### C Prototype
+`void djui_set_popup_disabled_override(bool value);`
 
 [:arrow_up_small:](#)
 

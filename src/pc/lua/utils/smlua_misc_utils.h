@@ -34,6 +34,9 @@ enum HudDisplayFlags {
 };
 
 void djui_popup_create_global(const char* message, int lines);
+bool djui_is_popup_disabled(void);
+void djui_set_popup_disabled_override(bool value);
+void djui_reset_popup_disabled_override(void);
 void hud_hide(void);
 void hud_show(void);
 bool hud_is_hidden(void);
