@@ -19,6 +19,7 @@ struct CustomLevelInfo {
 #define CUSTOM_LEVEL_NUM_START 50
 
 void smlua_level_util_reset(void);
+void smlua_level_util_change_area(s32 areaIndex);
 struct CustomLevelInfo* smlua_level_util_get_info(s16 levelNum);
 struct CustomLevelInfo* smlua_level_util_get_info_from_short_name(const char* shortName);
 s16 level_register(const char* scriptEntryName, s16 courseNum, const char* fullName, const char* shortName, u32 acousticReach, u32 echoLevel1, u32 echoLevel2, u32 echoLevel3);

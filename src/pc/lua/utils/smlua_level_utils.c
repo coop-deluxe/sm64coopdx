@@ -31,6 +31,12 @@ void smlua_level_util_reset(void) {
     sCustomLevelNumNext = CUSTOM_LEVEL_NUM_START;
 }
 
+void smlua_level_util_change_area(s32 areaIndex) {
+    if (areaIndex >= MIN_AREA_INDEX && areaIndex < MAX_AREAS && gAreas[areaIndex].unk04 != NULL) {
+        change_area(areaIndex);
+    }
+}
+
 struct CustomLevelInfo* smlua_level_util_get_info(s16 levelNum) {
     struct CustomLevelInfo* node = sCustomLevelHead;
     while (node != NULL) {
