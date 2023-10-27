@@ -234,7 +234,3 @@ void DynOS_Model_ClearPool(enum ModelPool aModelPool) {
 
     assetMap.clear();
 }
-
-void DynOS_Model_Update() {
-
-}

@@ -7384,6 +7384,50 @@
 <br />
 
 
+## [collision_find_ceil](#collision_find_ceil)
+
+### Lua Example
+`local SurfaceValue = collision_find_ceil(x, y, z)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| x | `number` |
+| y | `number` |
+| z | `number` |
+
+### Returns
+[Surface](structs.md#Surface)
+
+### C Prototype
+`struct Surface* collision_find_ceil(f32 x, f32 y, f32 z);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [collision_find_floor](#collision_find_floor)
+
+### Lua Example
+`local SurfaceValue = collision_find_floor(x, y, z)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| x | `number` |
+| y | `number` |
+| z | `number` |
+
+### Returns
+[Surface](structs.md#Surface)
+
+### C Prototype
+`struct Surface* collision_find_floor(f32 x, f32 y, f32 z);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [collision_find_surface_on_ray](#collision_find_surface_on_ray)
 
 ### Lua Example
@@ -7559,6 +7603,26 @@
 
 ### C Prototype
 `struct CustomLevelInfo* smlua_level_util_get_info(s16 levelNum);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [smlua_level_util_get_info_from_course_num](#smlua_level_util_get_info_from_course_num)
+
+### Lua Example
+`local CustomLevelInfoValue = smlua_level_util_get_info_from_course_num(courseNum)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| courseNum | `integer` |
+
+### Returns
+[CustomLevelInfo](structs.md#CustomLevelInfo)
+
+### C Prototype
+`struct CustomLevelInfo* smlua_level_util_get_info_from_course_num(u8 courseNum);`
 
 [:arrow_up_small:](#)
 

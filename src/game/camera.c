@@ -3112,10 +3112,12 @@ void update_lakitu(struct Camera *c) {
     gLakituState.defMode = c->defMode;
 }
 
+extern bool gIsDemoActive;
 static void update_romhack_camera_override(struct Camera *c) {
     if (gOverrideRomhackCamera == RCO_NONE) { return; }
     if (c->mode == CAMERA_MODE_ROM_HACK) { return; }
     if (dynos_level_is_vanilla_level(gCurrLevelNum)) { return; }
+    if (gIsDemoActive) { return; }
 
     if (gOverrideRomhackCamera == RCO_ALL_EXCEPT_BOWSER) {
         if (gCurrLevelNum == LEVEL_BOWSER_1 || gCurrLevelNum == LEVEL_BOWSER_2 || gCurrLevelNum == LEVEL_BOWSER_3) {
@@ -3516,7 +3518,7 @@ void init_camera(struct Camera *c) {
                 // Make sure Bowser is in a state that we'd start speaking to him in.
                 obj = find_object_with_behavior(bhvBowser);
                 if (obj != NULL && obj->oAction != 5) { break; }
-                
+
                 start_cutscene(c, CUTSCENE_ENTER_BOWSER_ARENA);
             } else if (gSecondCameraFocus != NULL) {
                 gSecondCameraFocus->oBowserUnk88 = 2;
@@ -3525,7 +3527,7 @@ void init_camera(struct Camera *c) {
             // Make sure Bowser is in a state that we'd start speaking to him in.
             obj = find_object_with_behavior(bhvBowser);
             if (obj != NULL && obj->oAction != 5) { break; }
-            
+
             start_cutscene(c, CUTSCENE_ENTER_BOWSER_ARENA);
 #endif
             break;
@@ -3533,14 +3535,14 @@ void init_camera(struct Camera *c) {
             // Make sure Bowser is in a state that we'd start speaking to him in.
             obj = find_object_with_behavior(bhvBowser);
             if (obj != NULL && obj->oAction != 5) { break; }
-            
+
             start_cutscene(c, CUTSCENE_ENTER_BOWSER_ARENA);
             break;
         case LEVEL_BOWSER_3:
             // Make sure Bowser is in a state that we'd start speaking to him in.
             obj = find_object_with_behavior(bhvBowser);
             if (obj != NULL && obj->oAction != 5) { break; }
-  
+
             start_cutscene(c, CUTSCENE_ENTER_BOWSER_ARENA);
             break;
 
@@ -9605,7 +9607,7 @@ BAD_RETURN(s32) cutscene_non_painting_set_cam_pos(struct Camera *c) {
 BAD_RETURN(s32) cutscene_non_painting_set_cam_focus(struct Camera *c) {
     if (!c) { return; }
     offset_rotated(c->focus, sCutsceneVars[7].point, sCutsceneVars[6].point, sCutsceneVars[7].angle);
-    
+
     if (dynos_level_is_vanilla_level(gCurrLevelNum) && ((gPrevLevel == LEVEL_COTMC) || (gPrevLevel == LEVEL_HMC) || (gPrevLevel == LEVEL_RR) || (gPrevLevel == LEVEL_WMOTR))) {
         c->focus[0] = c->pos[0] + (sMarioCamState->pos[0] - c->pos[0]) * 0.7f;
         c->focus[1] = c->pos[1] + (sMarioCamState->pos[1] - c->pos[1]) * 0.4f;

@@ -69,7 +69,7 @@ s16 gChangeLevelTransition = -1;
 s16 gChangeActNum = -1;
 
 static bool sFirstCastleGroundsMenu = true;
-static bool sIsDemoActive = false;
+bool gIsDemoActive = false;
 bool gInPlayerMenu = false;
 static u16 gDemoCountdown = 0;
 static int sDemoNumber = -1;
@@ -201,7 +201,7 @@ s32 sDelayedWarpArg;
 s16 unusedEULevelUpdateBss1;
 #endif
 s8 sTimerRunning;
-s8 gNeverEnteredCastle;
+bool gNeverEnteredCastle;
 
 struct MarioState *gMarioState = &gMarioStates[0];
 u8 unused1[4] = { 0 };
@@ -1158,10 +1158,10 @@ bool find_demo_number(void) {
 }
 
 static void start_demo(void) {
-    if (sIsDemoActive) {
-        sIsDemoActive = false;
+    if (gIsDemoActive) {
+        gIsDemoActive = false;
     } else {
-        sIsDemoActive = true;
+        gIsDemoActive = true;
 
         if (find_demo_number()) {
             gChangeLevel = gCurrLevelNum;
@@ -1173,14 +1173,14 @@ static void start_demo(void) {
             load_patchable_table(&gDemo, sDemoNumber);
             gCurrDemoInput = ((struct DemoInput *) gDemo.targetAnim);
         } else {
-            sIsDemoActive = false;
+            gIsDemoActive = false;
         }
     }
 }
 
 void stop_demo(UNUSED struct DjuiBase* caller) {
-    if (sIsDemoActive) {
-        sIsDemoActive = false;
+    if (gIsDemoActive) {
+        gIsDemoActive = false;
         gCurrDemoInput = NULL;
         gChangeLevel = gCurrLevelNum;
         gDemoCountdown = 0;
@@ -1197,22 +1197,26 @@ s32 play_mode_normal(void) {
         if (gCurrDemoInput != NULL) {
             print_intro_text();
             if (gPlayer1Controller->buttonPressed & END_DEMO) {
-                level_trigger_warp(gMarioState,
-                                   gCurrLevelNum == LEVEL_PSS ? WARP_OP_DEMO_END : WARP_OP_DEMO_NEXT);
-            } else if (!gWarpTransition.isActive && sDelayedWarpOp == WARP_OP_NONE
-                       && (gPlayer1Controller->buttonPressed & START_BUTTON)) {
+                level_trigger_warp(gMarioState, gCurrLevelNum == LEVEL_PSS ? WARP_OP_DEMO_END : WARP_OP_DEMO_NEXT);
+            } else if (!gWarpTransition.isActive && sDelayedWarpOp == WARP_OP_NONE && (gPlayer1Controller->buttonPressed & START_BUTTON)) {
                 gPressedStart = 1;
                 level_trigger_warp(gMarioState, WARP_OP_DEMO_NEXT);
             }
         }
     } else {
-        if (gDjuiInMainMenu && gCurrDemoInput == NULL && configMenuDemos && !gInPlayerMenu) {
-            if ((++gDemoCountdown) == PRESS_START_DEMO_TIMER && (find_demo_number() && (sDemoNumber <= 6 && sDemoNumber > -1))) {
-                start_demo();
-            }
+        if (gDjuiInMainMenu &&
+            gCurrDemoInput == NULL &&
+            configMenuDemos &&
+            !gInPlayerMenu &&
+            (++gDemoCountdown) == PRESS_START_DEMO_TIMER &&
+            (find_demo_number() && (sDemoNumber <= 6 && sDemoNumber > -1)) &&
+            gNetworkType == NT_NONE) {
+            start_demo();
         }
 
-        if (((gCurrDemoInput != NULL) && (gPlayer1Controller->buttonPressed & END_DEMO || !sIsDemoActive || !gDjuiInMainMenu || gNetworkType != NT_NONE || gInPlayerMenu)) || (gCurrDemoInput == NULL && sIsDemoActive)) {
+        if (((gCurrDemoInput != NULL) &&
+            (gPlayer1Controller->buttonPressed & END_DEMO || !gIsDemoActive || !gDjuiInMainMenu || gNetworkType != NT_NONE || gInPlayerMenu)) ||
+            (gCurrDemoInput == NULL && gIsDemoActive)) {
             gPlayer1Controller->buttonPressed &= ~END_DEMO;
             stop_demo(NULL);
         }
@@ -1442,7 +1446,7 @@ void update_menu_level(void) {
 
     // warp to level, this feels buggy
     if (gCurrLevelNum != curLevel) {
-        if (sIsDemoActive) {
+        if (gIsDemoActive) {
             stop_demo(NULL);
         }
 
@@ -1450,7 +1454,7 @@ void update_menu_level(void) {
         gChangeActNum = 6;
         gDemoCountdown = 0;
     }
-    if (sIsDemoActive) {
+    if (gIsDemoActive) {
         return;
     }
 
@@ -1462,7 +1466,7 @@ void update_menu_level(void) {
 
     // set sFirstCastleGroundsMenu to false to prevent wall hugging bug
     if (curLevel != LEVEL_CASTLE_GROUNDS) {
-         sFirstCastleGroundsMenu = false;
+        sFirstCastleGroundsMenu = false;
     }
 
     struct Object *o;
@@ -1837,7 +1841,7 @@ s32 lvl_set_current_level(UNUSED s16 arg0, s32 levelNum) {
 
     sWarpCheckpointActive = FALSE;
     gCurrLevelNum = levelNum;
-    gCurrCourseNum = get_level_course_num(levelNum - 1);
+    gCurrCourseNum = get_level_course_num(levelNum);
 
     bool foundHook = false;
     bool hookUseActSelect = false;

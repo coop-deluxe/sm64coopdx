@@ -468,7 +468,6 @@ void read_controller_inputs(void) {
     if (gControllerBits) {
         osRecvMesg(&gSIEventMesgQueue, &D_80339BEC, OS_MESG_BLOCK);
         osContGetReadData(gInteractableOverridePad ? &gInteractablePad : &gControllerPads[0]);
-        dynos_update_opt((void *) &gControllerPads[0]);
     }
     run_demo_inputs();
 

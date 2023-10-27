@@ -2384,6 +2384,91 @@
 <br />
 
 
+## [smlua_text_utils_act_name_get](#smlua_text_utils_act_name_get)
+
+### Lua Example
+`local stringValue = smlua_text_utils_act_name_get(courseNum, actNum)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| courseNum | `integer` |
+| actNum | `integer` |
+
+### Returns
+- `string`
+
+### C Prototype
+`const char* smlua_text_utils_act_name_get(s16 courseNum, u8 actNum);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [smlua_text_utils_act_name_is_modified](#smlua_text_utils_act_name_is_modified)
+
+### Lua Example
+`local booleanValue = smlua_text_utils_act_name_is_modified(courseNum, actNum)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| courseNum | `integer` |
+| actNum | `integer` |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool smlua_text_utils_act_name_is_modified(s16 courseNum, u8 actNum);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [smlua_text_utils_act_name_replace](#smlua_text_utils_act_name_replace)
+
+### Lua Example
+`smlua_text_utils_act_name_replace(courseNum, actNum, name)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| courseNum | `integer` |
+| actNum | `integer` |
+| name | `string` |
+
+### Returns
+- None
+
+### C Prototype
+`void smlua_text_utils_act_name_replace(s16 courseNum, u8 actNum, const char* name);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [smlua_text_utils_act_name_reset](#smlua_text_utils_act_name_reset)
+
+### Lua Example
+`smlua_text_utils_act_name_reset(courseNum, actNum)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| courseNum | `integer` |
+| actNum | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void smlua_text_utils_act_name_reset(s16 courseNum, u8 actNum);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [smlua_text_utils_castle_secret_stars_replace](#smlua_text_utils_castle_secret_stars_replace)
 
 ### Lua Example
@@ -2426,6 +2511,87 @@
 
 ### C Prototype
 `void smlua_text_utils_course_acts_replace(s16 courseNum, const char* courseName, const char* act1, const char* act2, const char* act3, const char* act4, const char* act5, const char* act6);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [smlua_text_utils_course_name_get](#smlua_text_utils_course_name_get)
+
+### Lua Example
+`local stringValue = smlua_text_utils_course_name_get(courseNum)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| courseNum | `integer` |
+
+### Returns
+- `string`
+
+### C Prototype
+`const char* smlua_text_utils_course_name_get(s16 courseNum);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [smlua_text_utils_course_name_mod_index](#smlua_text_utils_course_name_mod_index)
+
+### Lua Example
+`local integerValue = smlua_text_utils_course_name_mod_index(courseNum)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| courseNum | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 smlua_text_utils_course_name_mod_index(s16 courseNum);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [smlua_text_utils_course_name_replace](#smlua_text_utils_course_name_replace)
+
+### Lua Example
+`smlua_text_utils_course_name_replace(courseNum, name)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| courseNum | `integer` |
+| name | `string` |
+
+### Returns
+- None
+
+### C Prototype
+`void smlua_text_utils_course_name_replace(s16 courseNum, const char* name);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [smlua_text_utils_course_name_reset](#smlua_text_utils_course_name_reset)
+
+### Lua Example
+`smlua_text_utils_course_name_reset(courseNum)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| courseNum | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void smlua_text_utils_course_name_reset(s16 courseNum);`
 
 [:arrow_up_small:](#)
 
@@ -2490,24 +2656,6 @@
 
 ### C Prototype
 `const char* smlua_text_utils_get_language(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [smlua_text_utils_reset_all](#smlua_text_utils_reset_all)
-
-### Lua Example
-`smlua_text_utils_reset_all()`
-
-### Parameters
-- None
-
-### Returns
-- None
-
-### C Prototype
-`void smlua_text_utils_reset_all(void);`
 
 [:arrow_up_small:](#)
 

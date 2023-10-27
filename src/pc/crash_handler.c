@@ -27,6 +27,7 @@ char gLastRemoteBhv[256] = "";
 #include "pc/gfx/gfx_rendering_api.h"
 #include "pc/mods/mods.h"
 #include "pc/debuglog.h"
+#include "pc/pc_main.h"
 
 typedef struct {
     s32 x, y;
@@ -659,16 +660,12 @@ static void crash_handler(const int signalNum, siginfo_t *info, ucontext_t *cont
 
     // Main loop
     while (true) {
-#if defined(WAPI_SDL1) || defined(WAPI_SDL2)
-        gfx_sdl.main_loop(crash_handler_produce_one_frame);
-#elif defined(WAPI_DXGI)
-        gfx_dxgi.main_loop(crash_handler_produce_one_frame);
-#endif
+        WAPI.main_loop(crash_handler_produce_one_frame);
     }
     exit(0);
 }
 
-__attribute__((constructor)) static void init_crash_handler() {
+AT_STARTUP static void init_crash_handler() {
 #ifdef _WIN32
     // Windows
     SetUnhandledExceptionFilter(crash_handler);

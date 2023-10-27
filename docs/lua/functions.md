@@ -1521,6 +1521,8 @@
 <br />
 
 - smlua_collision_utils.h
+   - [collision_find_ceil](functions-4.md#collision_find_ceil)
+   - [collision_find_floor](functions-4.md#collision_find_floor)
    - [collision_find_surface_on_ray](functions-4.md#collision_find_surface_on_ray)
    - [collision_get_temp_wall_collision_data](functions-4.md#collision_get_temp_wall_collision_data)
    - [get_water_surface_pseudo_floor](functions-4.md#get_water_surface_pseudo_floor)
@@ -1537,6 +1539,7 @@
    - [level_register](functions-4.md#level_register)
    - [smlua_level_util_change_area](functions-4.md#smlua_level_util_change_area)
    - [smlua_level_util_get_info](functions-4.md#smlua_level_util_get_info)
+   - [smlua_level_util_get_info_from_course_num](functions-4.md#smlua_level_util_get_info_from_course_num)
    - [smlua_level_util_get_info_from_short_name](functions-4.md#smlua_level_util_get_info_from_short_name)
    - [warp_exit_level](functions-4.md#warp_exit_level)
    - [warp_restart_level](functions-4.md#warp_restart_level)
@@ -1690,12 +1693,19 @@
 <br />
 
 - smlua_text_utils.h
+   - [smlua_text_utils_act_name_get](functions-5.md#smlua_text_utils_act_name_get)
+   - [smlua_text_utils_act_name_is_modified](functions-5.md#smlua_text_utils_act_name_is_modified)
+   - [smlua_text_utils_act_name_replace](functions-5.md#smlua_text_utils_act_name_replace)
+   - [smlua_text_utils_act_name_reset](functions-5.md#smlua_text_utils_act_name_reset)
    - [smlua_text_utils_castle_secret_stars_replace](functions-5.md#smlua_text_utils_castle_secret_stars_replace)
    - [smlua_text_utils_course_acts_replace](functions-5.md#smlua_text_utils_course_acts_replace)
+   - [smlua_text_utils_course_name_get](functions-5.md#smlua_text_utils_course_name_get)
+   - [smlua_text_utils_course_name_mod_index](functions-5.md#smlua_text_utils_course_name_mod_index)
+   - [smlua_text_utils_course_name_replace](functions-5.md#smlua_text_utils_course_name_replace)
+   - [smlua_text_utils_course_name_reset](functions-5.md#smlua_text_utils_course_name_reset)
    - [smlua_text_utils_dialog_replace](functions-5.md#smlua_text_utils_dialog_replace)
    - [smlua_text_utils_extra_text_replace](functions-5.md#smlua_text_utils_extra_text_replace)
    - [smlua_text_utils_get_language](functions-5.md#smlua_text_utils_get_language)
-   - [smlua_text_utils_reset_all](functions-5.md#smlua_text_utils_reset_all)
    - [smlua_text_utils_secret_star_replace](functions-5.md#smlua_text_utils_secret_star_replace)
 
 <br />

@@ -417,13 +417,15 @@ void smlua_push_object(lua_State* L, u16 lot, void* p) {
         lua_pushnil(L);
         return;
     }
+    u64 pointer = (uintptr_t) p;
+
     // add to allowlist
-    smlua_cobject_allowlist_add(lot, (u64)(intptr_t)p);
+    smlua_cobject_allowlist_add(lot, pointer);
 
     // get a cobject from a function
     lua_getglobal(L, "_NewCObject");  // Get the function by its global name
     lua_pushinteger(L, lot);
-    lua_pushinteger(L, (u64)(intptr_t)p);
+    lua_pushinteger(L, pointer);
 
     if (lua_pcall(L, 2, 1, 0) != LUA_OK) {
         LOG_ERROR("Error calling Lua function: %s\n", lua_tostring(L, -1));
@@ -436,12 +438,13 @@ void smlua_push_pointer(lua_State* L, u16 lvt, void* p) {
         return;
     }
 
-    smlua_cpointer_allowlist_add(lvt, (u64)(intptr_t)p);
+    u64 pointer = (uintptr_t) p;
+    smlua_cpointer_allowlist_add(lvt, pointer);
 
     // get a cpointer from a function
     lua_getglobal(L, "_NewCPointer");  // Get the function by its global name
     lua_pushinteger(L, lvt);
-    lua_pushinteger(L, (u64)(intptr_t)p);
+    lua_pushinteger(L, pointer);
     if (lua_pcall(L, 2, 1, 0) != LUA_OK) {
         LOG_ERROR("Error calling Lua function: %s\n", lua_tostring(L, -1));
     }
@@ -550,7 +553,7 @@ s64 smlua_get_integer_mod_variable(u16 modIndex, const char* variable) {
         LOG_ERROR("Could not find mod list entry for modIndex: %u", modIndex);
         return 0;
     }
-    
+
     u8 prevSuppress = gSmLuaSuppressErrors;
 
     int prevTop = lua_gettop(L);
@@ -601,7 +604,7 @@ LuaFunction smlua_get_function_mod_variable(u16 modIndex, const char *variable) 
         LOG_ERROR("Could not find mod list entry for modIndex: %u", modIndex);
         return 0;
     }
-    
+
     u8 prevSuppress = gSmLuaSuppressErrors;
 
     int prevTop = lua_gettop(L);

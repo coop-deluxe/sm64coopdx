@@ -131,23 +131,20 @@ static u8 bhv_snowmans_bottom_loop_continue_dialog(void) {
 }
 
 void bhv_snowmans_bottom_loop(void) {
-    s16 sp1E;
-
     struct MarioState* marioState = nearest_mario_state_to_object(o);
 
     switch (o->oAction) {
         case 0:
             if (marioState
+                && marioState->playerIndex == 0
                 && should_start_or_continue_dialog(marioState, o)
                 && (is_point_within_radius_of_mario(o->oPosX, o->oPosY, o->oPosZ, 400) == 1)
-                && set_mario_npc_dialog(&gMarioStates[0], 1, bhv_snowmans_bottom_loop_continue_dialog) == 2) {
-                sp1E = cutscene_object_with_dialog(CUTSCENE_DIALOG, o, gBehaviorValues.dialogs.SnowmanHeadBodyDialog);
-                if (sp1E) {
-                    o->oForwardVel = 10.0f;
-                    o->oAction = 1;
-                    set_mario_npc_dialog(&gMarioStates[0], 0, NULL);
-                    network_send_object(o);
-                }
+                && set_mario_npc_dialog(&gMarioStates[0], 1, bhv_snowmans_bottom_loop_continue_dialog)
+                && cutscene_object_with_dialog(CUTSCENE_DIALOG, o, gBehaviorValues.dialogs.SnowmanHeadBodyDialog)) {
+                o->oForwardVel = 10.0f;
+                o->oAction = 1;
+                set_mario_npc_dialog(&gMarioStates[0], 0, NULL);
+                network_send_object(o);
             }
             break;
 

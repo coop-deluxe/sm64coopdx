@@ -4,6 +4,7 @@
 #include "mod_cache.h"
 #include "data/dynos.c.h"
 #include "pc/debuglog.h"
+#include "pc/pc_main.h"
 
 #define MAX_SESSION_CHARS 7
 

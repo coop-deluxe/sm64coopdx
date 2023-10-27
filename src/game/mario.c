@@ -1577,6 +1577,7 @@ copyPlayerGoto:;
                 if (m == m2) { continue; }
                 find_floor(m2->pos[0], m2->pos[1], m2->pos[2], &floor2);
                 if (floor2 == NULL) { continue; }
+                LOG_INFO("OOB! teleporting to player with local index %d", i);
                 vec3f_copy(m->pos, m2->pos);
                 copiedPlayer = TRUE;
                 goto copyPlayerGoto;

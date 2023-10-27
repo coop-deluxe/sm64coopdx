@@ -3,7 +3,6 @@ extern "C" {
 #include "sm64.h"
 #include "level_commands.h"
 #include "game/level_update.h"
-#include "game/options_menu.h"
 #include "game/object_list_processor.h"
 extern s16 gMenuMode;
 extern s8 gDialogBoxState;
@@ -17,7 +16,6 @@ extern void omm_opt_init();
 //
 
 void DynOS_ReturnToMainMenu() {
-    optmenu_toggle();
     level_set_transition(0, NULL);
     gDialogBoxState = 0;
     gMenuMode = -1;
@@ -25,30 +23,10 @@ void DynOS_ReturnToMainMenu() {
 }
 
 //
-// Init
-//
-
-DYNOS_AT_STARTUP void DynOS_Init() {
-#ifdef OMM_DEFINES_H
-    omm_opt_init();
-#endif
-    DynOS_Opt_Init();
-}
-
-//
 // Update
 //
 
 static bool sDynosIsLevelEntry = false;
-void DynOS_UpdateOpt(void *aPad) {
-    if (sDynosIsLevelEntry) {
-        DynOS_Warp_SetParam(gCurrLevelNum, -1);
-        sDynosIsLevelEntry = false;
-    }
-    DynOS_Opt_Update((OSContPad *) aPad);
-    gPrevFrameObjectCount = 0;
-}
-
 void *DynOS_SwapCmd(void *aCmd) {
     return DynOS_Lvl_Override(aCmd);
 }

@@ -3,11 +3,13 @@
 
 #define DJUI_DEFAULT_PANEL_WIDTH (500.0f + (16 * 2.0f))
 #define DJUI_PANEL_HEADER_OFFSET (-16)
+#define DJUI_PANEL_MOVE_MAX 1.0f
 
 struct DjuiPanel {
     struct DjuiBase* base;
     struct DjuiPanel* parent;
     struct DjuiBase* defaultElementBase;
+    bool temporary;
     void (*on_panel_destroy)(struct DjuiBase*);
 };
 

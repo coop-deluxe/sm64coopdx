@@ -12,7 +12,6 @@ void *dynos_swap_cmd(void *cmd);
 // -- built in -- //
 void *dynos_update_cmd(void *cmd);
 void  dynos_update_gfx();
-void  dynos_update_opt(void *pad);
 s32   dynos_tex_import(void **output, void *ptr, s32 tile, void *grapi, void **hashmap, void *pool, s32 *poolpos, s32 poolsize);
 void  dynos_gfx_swap_animations(void *ptr);
 
@@ -59,7 +58,7 @@ const char* dynos_level_get_token(u32 index);
 Trajectory* dynos_level_get_trajectory(const char* name);
 void dynos_level_load_background(void *ptr);
 u64 dynos_level_cmd_get(void *cmd, u64 offset);
-void dynos_level_cmd_next(void *cmd, u64 cmdsize);
+void dynos_level_cmd_next(void *cmd);
 void dynos_level_parse_script(const void *script, s32 (*aPreprocessFunction)(u8, void *));
 void* dynos_level_get_script(s32 level);
 s32 dynos_level_get_mod_index(s32 level);

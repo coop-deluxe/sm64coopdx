@@ -154,32 +154,14 @@ static void add_surface_to_cell(s16 dynamic, s16 cellX, s16 cellZ, struct Surfac
 /**
  * Returns the lowest of three values.
  */
-static s16 min_3(s16 a0, s16 a1, s16 a2) {
-    if (a1 < a0) {
-        a0 = a1;
-    }
 
-    if (a2 < a0) {
-        a0 = a2;
-    }
-
-    return a0;
-}
+#define min_3(a0, a1, a2) MIN(MIN(a0, a1), a2)
 
 /**
  * Returns the highest of three values.
  */
-static s16 max_3(s16 a0, s16 a1, s16 a2) {
-    if (a1 > a0) {
-        a0 = a1;
-    }
 
-    if (a2 > a0) {
-        a0 = a2;
-    }
-
-    return a0;
-}
+#define max_3(a0, a1, a2) MAX(MAX(a0, a1), a2)
 
 /**
  * Every level is split into 16 * 16 cells of surfaces (to limit computing
@@ -378,48 +360,25 @@ static struct Surface *read_surface_data(s16 *vertexData, s16 **vertexIndices) {
  * Returns whether a surface has exertion/moves Mario
  * based on the surface type.
  */
-static s32 surface_has_force(s16 surfaceType) {
-    s32 hasForce = FALSE;
-
-    switch (surfaceType) {
-        case SURFACE_0004: // Unused
-        case SURFACE_FLOWING_WATER:
-        case SURFACE_DEEP_MOVING_QUICKSAND:
-        case SURFACE_SHALLOW_MOVING_QUICKSAND:
-        case SURFACE_MOVING_QUICKSAND:
-        case SURFACE_HORIZONTAL_WIND:
-        case SURFACE_INSTANT_MOVING_QUICKSAND:
-            hasForce = TRUE;
-            break;
-
-        default:
-            break;
-    }
-    return hasForce;
+static bool surface_has_force(s16 surfaceType) {
+    return surfaceType == SURFACE_0004 ||
+           surfaceType == SURFACE_FLOWING_WATER ||
+           surfaceType == SURFACE_HORIZONTAL_WIND ||
+           surfaceType == SURFACE_MOVING_QUICKSAND ||
+           surfaceType == SURFACE_DEEP_MOVING_QUICKSAND ||
+           surfaceType == SURFACE_SHALLOW_MOVING_QUICKSAND ||
+           surfaceType == SURFACE_INSTANT_MOVING_QUICKSAND;
 }
 
 /**
  * Returns whether a surface should have the
  * SURFACE_FLAG_NO_CAM_COLLISION flag.
  */
-static s32 surf_has_no_cam_collision(s16 surfaceType) {
-    s32 flags = 0;
-
-    switch (surfaceType) {
-        case SURFACE_RAYCAST:
-        case SURFACE_NO_CAM_COLLISION:
-        case SURFACE_NO_CAM_COLLISION_77: // Unused
-        case SURFACE_NO_CAM_COL_VERY_SLIPPERY:
-        case SURFACE_VANISH_CAP_WALLS:
-        case SURFACE_SWITCH:
-            flags = SURFACE_FLAG_NO_CAM_COLLISION;
-            break;
-
-        default:
-            break;
-    }
-
-    return flags;
+static bool surf_has_no_cam_collision(s16 surfaceType) {
+    return surfaceType == SURFACE_SWITCH ||
+           surfaceType == SURFACE_NO_CAM_COLLISION ||
+           surfaceType == SURFACE_NO_CAM_COLLISION_77 ||
+           surfaceType == SURFACE_NO_CAM_COL_VERY_SLIPPERY;
 }
 
 /**
@@ -427,17 +386,16 @@ static s32 surf_has_no_cam_collision(s16 surfaceType) {
  * exertion, and room.
  */
 static void load_static_surfaces(s16 **data, s16 *vertexData, s16 surfaceType, s8 **surfaceRooms) {
-    s32 i;
     s32 numSurfaces;
     struct Surface *surface;
     s8 room = 0;
-    s16 hasForce = surface_has_force(surfaceType);
-    s16 flags = surf_has_no_cam_collision(surfaceType);
+    bool hasForce = surface_has_force(surfaceType);
+    bool flags = surf_has_no_cam_collision(surfaceType);
 
     numSurfaces = *(*data);
     *data += 1;
 
-    for (i = 0; i < numSurfaces; i++) {
+    for (s32 i = 0; i < numSurfaces; i++) {
         if (*surfaceRooms != NULL) {
             room = *(*surfaceRooms);
             *surfaceRooms += 1;
@@ -486,7 +444,6 @@ static s16 *read_vertex_data(s16 **data) {
  */
 static void load_environmental_regions(s16 **data) {
     s32 numRegions;
-    s32 i;
 
     gEnvironmentRegionsLength = 0;
     gEnvironmentRegions = *data;
@@ -497,7 +454,7 @@ static void load_environmental_regions(s16 **data) {
         numRegions = 20;
     }
 
-    for (i = 0; i < numRegions; i++) {
+    for (s32 i = 0; i < numRegions; i++) {
         UNUSED s16 val, loX, loZ, hiX, hiZ;
         s16 height;
 

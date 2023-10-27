@@ -79,7 +79,7 @@ override_field_mutable = {
 override_field_invisible = {
     "Mod": [ "files" ],
     "MarioState": [ "visibleToEnemies" ],
-    "NetworkPlayer": [ "gag"],
+    "NetworkPlayer": [ "gag", "moderator"],
     "GraphNode": [ "_guard1", "_guard2" ],
 }
 
@@ -371,11 +371,11 @@ def build_struct(struct):
         if sid in override_field_invisible:
             if fid in override_field_invisible[sid]:
                 continue
-                
+
         version = None
 
         row = []
-        
+
         startStr = ''
         endStr = ' },'
         if fid in override_field_version_excludes:

@@ -25,6 +25,7 @@ struct NetworkPlayer {
     u8 type;
     u8 localIndex;
     u8 globalIndex;
+    bool moderator;
     f32 lastReceived;
     f32 lastSent;
     f32 lastPingSent;

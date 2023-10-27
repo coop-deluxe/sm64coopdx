@@ -124,7 +124,7 @@ struct HudDisplay {
 };
 
 extern struct HudDisplay gHudDisplay;
-extern s8 gNeverEnteredCastle;
+extern bool gNeverEnteredCastle;
 
 extern u32 gControlTimerStartNat;
 extern u32 gControlTimerStopNat;

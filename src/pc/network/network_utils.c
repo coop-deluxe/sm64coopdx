@@ -27,8 +27,7 @@ bool network_is_server(void) {
 }
 
 bool network_is_moderator(void) {
-    extern bool gIsModerator;
-    return gIsModerator;
+    return gNetworkPlayers[0].moderator;
 }
 
 u8* network_get_player_text_color(u8 localIndex) {

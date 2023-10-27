@@ -43,7 +43,7 @@ static inline int arg_uint(UNUSED const char *name, const char *value, unsigned 
     return 1;
 }
 
-void parse_cli_opts(int argc, char* argv[]) {
+inline void parse_cli_opts(int argc, char* argv[]) {
     // Initialize options with false values.
     memset(&gCLIOpts, 0, sizeof(gCLIOpts));
 

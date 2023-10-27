@@ -34,6 +34,8 @@
 #include "levels/wf/header.h"
 #include "levels/wmotr/header.h"
 
+#include "src/pc/pc_main.h"
+
 extern Trajectory sThiHugeMetalBallTraj[];
 extern Trajectory sThiTinyMetalBallTraj[];
 
@@ -308,8 +310,7 @@ struct PaintingValues gPaintingValues = { 0 };
  // functions //
 ///////////////
 
-__attribute__((constructor))
-void hardcoded_reset_default_values(void) {
+AT_STARTUP void hardcoded_reset_default_values(void) {
     gLevelValues = gDefaultLevelValues;
     gBehaviorValues = gDefaultBehaviorValues;
 

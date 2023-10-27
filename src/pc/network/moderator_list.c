@@ -32,9 +32,7 @@ void moderator_list_add(char* address, bool perm) {
         gModerator = malloc(sizeof(bool) * gModeratorCount);
     } else {
         gModeratorAddresses = realloc(gModeratorAddresses, sizeof(char*) * gModeratorCount);
-        assert(gModeratorAddresses != NULL);
         gModerator = realloc(gModerator, sizeof(bool) * gModeratorCount);
-        assert(gModerator != NULL);
     }
     if (gModeratorAddresses == NULL) {
         LOG_ERROR("Failed to allocate gModeratorAddresses");

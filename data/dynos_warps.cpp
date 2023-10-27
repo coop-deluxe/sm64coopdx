@@ -10,7 +10,6 @@ extern "C" {
 #include "game/level_update.h"
 #include "game/sound_init.h"
 #include "game/object_list_processor.h"
-#include "game/options_menu.h"
 #include "pc/network/packets/packet.h"
 #include "pc/lua/smlua_hooks.h"
 extern s8 gDialogBoxState;
@@ -82,19 +81,18 @@ bool DynOS_Warp_RestartLevel() {
 //
 
 bool DynOS_Warp_ExitLevel(s32 aDelay) {
-    if (DynOS_Level_GetCourse(gCurrLevelNum) == COURSE_NONE) {
+    if (DynOS_Level_GetCourse(gCurrLevelNum) == COURSE_NONE || !DynOS_Level_GetWarpDeath(gCurrLevelNum, gCurrAreaIndex)) {
         return false;
     }
 
     // Close the pause menu if it was open
-    optmenu_toggle();
     level_set_transition(0, NULL);
     gDialogBoxState = 0;
     gMenuMode = -1;
 
     // Cancel out every music/sound/sequence
     for (u16 seqid = 0; seqid != SEQ_COUNT; ++seqid) {
-    stop_background_music(seqid);
+        stop_background_music(seqid);
     }
     play_shell_music();
     stop_shell_music();
@@ -106,7 +104,7 @@ bool DynOS_Warp_ExitLevel(s32 aDelay) {
     // Play Mario head transition, and change play mode to avoid getting stuck on the pause menu
     aDelay = MAX(1, aDelay);
     gMarioState->invincTimer = -1;
-    play_transition(WARP_TRANSITION_FADE_INTO_MARIO, aDelay, 0x00, 0x00, 0x00);
+    play_transition(WARP_TRANSITION_FADE_INTO_COLOR, aDelay, 0x00, 0x00, 0x00);
     set_play_mode(0);
     sDynosExitLevelNum = gCurrLevelNum;
     sDynosExitAreaNum = gCurrAreaIndex;
@@ -114,19 +112,18 @@ bool DynOS_Warp_ExitLevel(s32 aDelay) {
 }
 
 bool DynOS_Warp_ToCastle(s32 aLevel) {
-    if (DynOS_Level_GetCourse(aLevel) == COURSE_NONE) {
+    if (DynOS_Level_GetCourse(aLevel) == COURSE_NONE || !DynOS_Level_GetWarpDeath(aLevel, 1)) {
         return false;
     }
 
     // Close the pause menu if it was open
-    optmenu_toggle();
     level_set_transition(0, NULL);
     gDialogBoxState = 0;
     gMenuMode = -1;
 
     // Cancel out every music/sound/sequence
     for (u16 seqid = 0; seqid != SEQ_COUNT; ++seqid) {
-    stop_background_music(seqid);
+        stop_background_music(seqid);
     }
     play_shell_music();
     stop_shell_music();
@@ -143,79 +140,6 @@ bool DynOS_Warp_ToCastle(s32 aLevel) {
 }
 
 //
-// Params
-//
-
-const char *DynOS_Warp_GetParamName(s32 aLevel, s32 aIndex) {
-    static const char *sLevelParams[][5] = {
-        { "", "", "", "", "" },
-        { "None", "No Submarine, No Poles", "Submarine Only", "Poles Only", "Submarine And Poles" },
-        { "None", "Water Level: Lowest", "Water Level: Low", "Water Level: High", "Water Level: Highest" },
-        { "None", "Top Flooded", "Top Drained", "Top Flooded", "Top Drained" },
-        { "None", "Clock Speed: Stopped", "Clock Speed: Slow", "Clock Speed: Fast", "Clock Speed: Random" },
-    };
-    switch (aLevel) {
-        case LEVEL_DDD: return sLevelParams[1][MIN(4, aIndex)];
-        case LEVEL_WDW: return sLevelParams[2][MIN(4, aIndex)];
-        case LEVEL_THI: return sLevelParams[3][MIN(4, aIndex)];
-        case LEVEL_TTC: return sLevelParams[4][MIN(4, aIndex)];
-    }
-    return sLevelParams[0][MIN(4, aIndex)];
-}
-
-// Called thrice
-// Pass -1 to use the previous value (only once)
-void DynOS_Warp_SetParam(s32 aLevel, s32 aIndex) {
-    static s32 sDynosWarpPrevParamIndex = -1;
-    if (aIndex == -1) {
-        aIndex = sDynosWarpPrevParamIndex;
-        sDynosWarpPrevParamIndex = -1;
-    } else {
-        sDynosWarpPrevParamIndex = aIndex;
-    }
-
-    switch (aLevel) {
-    case LEVEL_DDD:
-        switch (aIndex) {
-            case 1: gDDDBowsersSub = 0; gDDDPoles = 0; break;
-            case 2: gDDDBowsersSub = 1; gDDDPoles = 0; break;
-            case 3: gDDDBowsersSub = 0; gDDDPoles = 1; break;
-            case 4: gDDDBowsersSub = 1; gDDDPoles = 1; break;
-        }
-        break;
-
-    case LEVEL_WDW:
-        if (gEnvironmentRegions && gEnvironmentRegionsLength > 6) {
-        switch (aIndex) {
-            case 1: gEnvironmentRegions[6] = *gEnvironmentLevels =   31; gWdwWaterLevelSet = 1; break;
-            case 2: gEnvironmentRegions[6] = *gEnvironmentLevels = 1024; gWdwWaterLevelSet = 1; break;
-            case 3: gEnvironmentRegions[6] = *gEnvironmentLevels = 1792; gWdwWaterLevelSet = 1; break;
-            case 4: gEnvironmentRegions[6] = *gEnvironmentLevels = 2816; gWdwWaterLevelSet = 1; break;
-        }
-        }
-        break;
-
-    case LEVEL_THI:
-        switch (aIndex) {
-            case 1: gTHIWaterDrained = 0; break;
-            case 2: gTHIWaterDrained = 1; break;
-            case 3: gTHIWaterDrained = 0; break;
-            case 4: gTHIWaterDrained = 1; break;
-        }
-        break;
-
-    case LEVEL_TTC:
-        switch (aIndex) {
-            case 1: gTTCSpeedSetting = TTC_SPEED_STOPPED; break;
-            case 2: gTTCSpeedSetting = TTC_SPEED_SLOW; break;
-            case 3: gTTCSpeedSetting = TTC_SPEED_FAST; break;
-            case 4: gTTCSpeedSetting = TTC_SPEED_RANDOM; break;
-        }
-        break;
-    }
-}
-
-//
 // Update
 //
 
@@ -226,14 +150,13 @@ static void *DynOS_Warp_UpdateWarp(void *aCmd, bool aIsLevelInitDone) {
     if (sDynosWarpTargetArea == -1) {
 
         // Close the pause menu if it was open
-        optmenu_toggle();
         level_set_transition(0, NULL);
         gDialogBoxState = 0;
         gMenuMode = -1;
 
         // Cancel out every music/sound/sequence
         for (u16 seqid = 0; seqid != SEQ_COUNT; ++seqid) {
-        stop_background_music(seqid);
+            stop_background_music(seqid);
         }
         play_shell_music();
         stop_shell_music();
@@ -259,13 +182,10 @@ static void *DynOS_Warp_UpdateWarp(void *aCmd, bool aIsLevelInitDone) {
         gCurrLevelNum = sDynosWarpLevelNum;
         gCurrCourseNum = DynOS_Level_GetCourse(gCurrLevelNum);
         gSavedCourseNum = gCurrCourseNum;
-        gCurrActNum = MAX(1, sDynosWarpActNum * (gCurrCourseNum <= COURSE_STAGES_MAX));
+        gCurrActNum = MAX(0, sDynosWarpActNum * (gCurrCourseNum <= COURSE_STAGES_MAX));
         gDialogCourseActNum = gCurrActNum;
         gCurrAreaIndex = sDynosWarpAreaNum;
         gCurrActStarNum = sDynosWarpActNum;
-#ifndef COOP
-        DynOS_Warp_SetParam(gCurrLevelNum, DynOS_Opt_GetValue("dynos_warp_param"));
-#endif
         sDynosWarpTargetArea = gCurrAreaIndex;
 
         // Set up new level script
@@ -285,7 +205,7 @@ static void *DynOS_Warp_UpdateWarp(void *aCmd, bool aIsLevelInitDone) {
         }
 
         // Phase 3 - End level initialization
-        if (aIsLevelInitDone) {
+        if (aIsLevelInitDone && gMarioObjects[0]) {
 
             // Get Warp
             s16 *_Warp;
@@ -306,9 +226,6 @@ static void *DynOS_Warp_UpdateWarp(void *aCmd, bool aIsLevelInitDone) {
             gMarioSpawnInfo->areaIndex = gCurrAreaIndex;
             init_mario();
             set_mario_initial_action(gMarioState, sDynosWarpSpawnType, 0);
-#ifndef COOP
-            DynOS_Warp_SetParam(gCurrLevelNum, DynOS_Opt_GetValue("dynos_warp_param"));
-#endif
 
             // Init transition
             if (gCurrentArea != NULL) {
@@ -447,7 +364,7 @@ static void *DynOS_Warp_UpdateExit(void *aCmd, bool aIsLevelInitDone) {
         }
 
         // Phase 3 - End level initialization
-        if (sDynosExitTargetWarp && aIsLevelInitDone) {
+        if (sDynosExitTargetWarp && aIsLevelInitDone && gMarioObjects[0]) {
 
             // Find target position
             // Because of course, every hack has its own warp distances and orientations...
@@ -471,14 +388,18 @@ static void *DynOS_Warp_UpdateExit(void *aCmd, bool aIsLevelInitDone) {
             set_mario_initial_action(gMarioState, MARIO_SPAWN_UNKNOWN_02, 0);
 
             // Init transition
-            reset_camera(gCurrentArea->camera);
-            init_camera(gCurrentArea->camera);
+            if (gCurrentArea != NULL) {
+                reset_camera(gCurrentArea->camera);
+                init_camera(gCurrentArea->camera);
+            }
             sDelayedWarpOp = WARP_OP_NONE;
             play_transition(WARP_TRANSITION_FADE_FROM_STAR, 15, 0x00, 0x00, 0x00);
             play_sound(SOUND_MENU_MARIO_CASTLE_WARP, gGlobalSoundSource);
 
             // Set music
-            set_background_music(gCurrentArea->musicParam, gCurrentArea->musicParam2, 0);
+            if (gCurrentArea != NULL) {
+                set_background_music(gCurrentArea->musicParam, gCurrentArea->musicParam2, 0);
+            }
             sDynosExitTargetWarp = NULL;
 
             // lua hooks

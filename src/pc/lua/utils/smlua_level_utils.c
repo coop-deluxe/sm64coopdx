@@ -73,6 +73,17 @@ static struct CustomLevelInfo* smlua_level_util_get_info_from_script(char* scrip
     return NULL;
 }
 
+struct CustomLevelInfo* smlua_level_util_get_info_from_course_num(u8 courseNum) {
+    struct CustomLevelInfo* node = sCustomLevelHead;
+    while (node != NULL) {
+        if (node->courseNum == courseNum) {
+            return node;
+        }
+        node = node->next;
+    }
+    return NULL;
+}
+
 s16 level_register(const char* scriptEntryName, s16 courseNum, const char* fullName, const char* shortName, u32 acousticReach, u32 echoLevel1, u32 echoLevel2, u32 echoLevel3) {
     // validate params
     if (scriptEntryName == NULL) {

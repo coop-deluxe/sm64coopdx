@@ -168,17 +168,6 @@ void delta_interpolate_rgba(u8* res, u8* a, u8* b, f32 delta) {
     res[3] = ((a[3] * antiDelta) + (b[3] * delta));
 }
 
-/*
-void delta_interpolate_mtx(Mtx* out, Mtx* a, Mtx* b, f32 delta) {
-    f32 antiDelta = 1.0f - delta;
-    for (s32 i = 0; i < 4; i++) {
-        for (s32 j = 0; j < 4; j++) {
-            out->m[i][j] = (a->m[i][j] * antiDelta) + (b->m[i][j] * delta);
-        }
-    }
-}
-*/
-
 static f32 get_quat_compo_abs(f32 xPiece, f32 yPiece, f32 zPiece) {
     return sqrt((1.0f + xPiece + yPiece + zPiece) * 0.25f);
 }
@@ -308,7 +297,7 @@ static void rot_quat_slerp(Vec4f out, Vec4f a, Vec4f b, f32 t) {
 }
 
 // removes scaling from the shear value
-static f32 unmat_unscale_shear(f32 shear, f32 scale) {
+inline static f32 unmat_unscale_shear(f32 shear, f32 scale) {
     if (scale == 0.0f) {
         // assume no shear
         return 0.0f;
@@ -325,14 +314,14 @@ static f32 unmat_unscale_shear(f32 shear, f32 scale) {
 //
 // matrix perspective is not used in SM64, so those indices are stripped from the output parameter
 // return value was related to if matrix was non-singular, which was necessary for perspective
-// since perspective is not used, the return value is also strippped
+// since perspective is not used, the return value is also stripped
 //
 // additionally, rotation is not converted to euler angles
 // instead, it is converted to a quaternion to avoid gimbal lock
 //
 // tranfs is returned as follows:
 // scale(x, y, z), shear(xy, xz, zy), rotation(a, b, c, d), translation(x, y, z)
-static void unmatrix(Mtx * mat, f32 tranfs[13]) {
+OPTIMIZE_O3 static void unmatrix(Mtx * mat, f32 tranfs[13]) {
     int i = 0;
     Vec3f axisVecs[3] = { 0 };
     Vec3f yzCross = { 0 };
@@ -433,7 +422,7 @@ static void unmatrix(Mtx * mat, f32 tranfs[13]) {
 
 // builds a transformation matrix from a decomposed sequence from unmatrix
 // see unmatrix for what tranfs means
-static void rematrix(Mtx * mat, f32 tranfs[13]) {
+OPTIMIZE_O3 static void rematrix(Mtx * mat, f32 tranfs[13]) {
     int i;
     Vec3f rotAxes[3] = { 0 };
     Mat4 rotMat = { 0 };
@@ -479,7 +468,7 @@ static void rematrix(Mtx * mat, f32 tranfs[13]) {
     }
 }
 
-void delta_interpolate_mtx_accurate(Mtx* out, Mtx* a, Mtx* b, f32 delta) {
+OPTIMIZE_O3 inline static void delta_interpolate_mtx_accurate(Mtx* out, Mtx* a, Mtx* b, f32 delta) {
     int i = 0;
     f32 matTranfsA[13] = { 0 };
     f32 matTranfsB[13] = { 0 };
@@ -502,7 +491,7 @@ void delta_interpolate_mtx_accurate(Mtx* out, Mtx* a, Mtx* b, f32 delta) {
     rematrix(out, matTranfsB);
 }
 
-void delta_interpolate_mtx(Mtx* out, Mtx* a, Mtx* b, f32 delta) {
+OPTIMIZE_O3 void delta_interpolate_mtx(Mtx* out, Mtx* a, Mtx* b, f32 delta) {
     // HACK: Limit accurate interpolation to 64-bit builds
     if (sizeof(void*) > 4) {
         if (configInterpolationMode) {

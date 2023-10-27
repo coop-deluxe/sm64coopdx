@@ -5,6 +5,11 @@
 #include "game/ingame_menu.h"
 #include "game/save_file.h"
 #include "game/segment2.h"
+#include "game/level_info.h"
+#include "pc/pc_main.h"
+#include "../smlua.h"
+#include "smlua_level_utils.h"
+#include "smlua_text_utils.h"
 
 #ifdef VERSION_EU
 extern s32 gInGameLanguage;
@@ -14,6 +19,42 @@ extern s32 gInGameLanguage;
 static bool sReplacedDialog[DIALOG_COUNT] = { 0 };
 static bool sReplacedCourseName[COURSE_COUNT+2] = { 0 };
 static bool sReplacedActName[(COURSE_RR+2)*6] = { 0 };
+
+#define INVALID_COURSE_NUM(courseNum) (smlua_level_util_get_info_from_course_num(courseNum) == NULL && !COURSE_IS_VALID_COURSE(courseNum))
+
+void convert_string_sm64_to_ascii(char *strAscii, const u8 *str64);
+
+struct CourseName *gReplacedActNameTable[COURSE_COUNT];
+
+// Save all vanilla act names and course names
+AT_STARTUP static void smlua_text_utils_init() {
+    void **actNameTbl = get_act_name_table();
+    void **courseNameTbl = get_course_name_table();
+    char courseBuffer[50];
+    char actBuffer[50];
+
+    for (s16 courseNum = 0; courseNum < COURSE_COUNT; courseNum++) {
+        const u8 *courseName = segmented_to_virtual(courseNameTbl[courseNum]);
+        convert_string_sm64_to_ascii(courseBuffer, courseName);
+        gReplacedActNameTable[courseNum] = malloc(sizeof(struct CourseName));
+        struct CourseName* courseActNames = gReplacedActNameTable[courseNum];
+        snprintf(courseActNames->name, 50, "%s", courseBuffer);
+        snprintf(courseActNames->orig, 50, "%s", courseBuffer);
+        courseActNames->modIndex = -1;
+
+        // Individual acts
+        if (COURSE_IS_MAIN_COURSE(courseNum)) {
+            courseActNames->actName = calloc(6, sizeof(struct ActName));
+            for (s16 actNum = 0; actNum < 6; actNum++) {
+                const u8 *starName = segmented_to_virtual(actNameTbl[courseNum * 6 + actNum]);
+                convert_string_sm64_to_ascii(actBuffer, starName);
+                snprintf(courseActNames->actName[actNum].name, 50, "%s", actBuffer);
+                snprintf(courseActNames->actName[actNum].orig, 50, "%s", actBuffer);
+                courseActNames->actName[actNum].isModified = false;
+            }
+        }
+    }
+}
 
 static u8* smlua_text_utils_convert(const char* str) {
     s32 len = strlen(str);
@@ -29,7 +70,7 @@ void smlua_text_utils_reset_all(void) {
     void **dialogTableOrg = NULL;
     void **actNameTblOrg = NULL;
     void **courseNameTblOrg = NULL;
-    
+
 #ifdef VERSION_EU
     switch (gInGameLanguage) {
         case LANGUAGE_ENGLISH:
@@ -87,13 +128,27 @@ void smlua_text_utils_reset_all(void) {
         actNameTbl[i] = segmented_to_virtual(actNameTblOrg[i]);
         sReplacedActName[i] = false;
     }
+
+    for (s32 courseNum = 0; courseNum < COURSE_COUNT; courseNum++) {
+        struct CourseName* courseActNames = gReplacedActNameTable[courseNum];
+        snprintf(courseActNames->name, 50, "%s", courseActNames->orig);
+        courseActNames->modIndex = -1;
+
+        // Individual acts
+        if (COURSE_IS_MAIN_COURSE(courseNum)) {
+            for (s16 actNum = 0; actNum < 6; actNum++) {
+                snprintf(courseActNames->actName[actNum].name, 50, "%s", courseActNames->actName[actNum].orig);
+                courseActNames->actName[actNum].isModified = false;
+            }
+        }
+    }
 }
 
 void smlua_text_utils_dialog_replace(enum DialogId dialogId, UNUSED u32 unused, s8 linesPerBox, s16 leftOffset, s16 width, const char* str) {
     if (dialogId >= DIALOG_COUNT) { return; }
-    
+
     void **dialogTable = NULL;
-    
+
 #ifdef VERSION_EU
     switch (gInGameLanguage) {
         case LANGUAGE_ENGLISH:
@@ -124,75 +179,88 @@ void smlua_text_utils_dialog_replace(enum DialogId dialogId, UNUSED u32 unused, 
     sReplacedDialog[dialogId] = true;
 }
 
+#define REPLACE_ACT_NAME(i) \
+    snprintf(courseActNames->actName[i-1].name, 256, "%s", act##i); \
+    courseActNames->actName[i-1].isModified = true; \
+
 void smlua_text_utils_course_acts_replace(s16 courseNum, const char* courseName, const char* act1, const char* act2, const char* act3, const char* act4, const char* act5, const char* act6) {
     if (courseNum <= 0 || courseNum > COURSE_RR) { return; }
-    s16 courseOffset = courseNum - 1;
-    
-    void **actNameTbl = NULL;
-    void **courseNameTbl = NULL;
-    
-#ifdef VERSION_EU
-    switch (gInGameLanguage) {
-        case LANGUAGE_ENGLISH:
-            actNameTbl = segmented_to_virtual(act_name_table_eu_en);
-            courseNameTbl = segmented_to_virtual(course_name_table_eu_en);
-            break;
-        case LANGUAGE_FRENCH:
-            actNameTbl = segmented_to_virtual(act_name_table_eu_fr);
-            courseNameTbl = segmented_to_virtual(course_name_table_eu_fr);
-            break;
-        case LANGUAGE_GERMAN:
-            actNameTbl = segmented_to_virtual(act_name_table_eu_de);
-            courseNameTbl = segmented_to_virtual(course_name_table_eu_de);
-            break;
-    }
-#else
-    actNameTbl = segmented_to_virtual(seg2_act_name_table);
-    courseNameTbl = segmented_to_virtual(seg2_course_name_table);
-#endif
+    struct CourseName* courseActNames = gReplacedActNameTable[courseNum];
+    snprintf(courseActNames->name, 256, "%s", courseName + 3);
+    courseActNames->modIndex = gLuaActiveMod->index;
 
-    // replace course name
-    if (sReplacedCourseName[courseOffset]) {
-        free(courseNameTbl[courseOffset]);
-    }
-    courseNameTbl[courseOffset] = smlua_text_utils_convert(courseName);
-    sReplacedCourseName[courseOffset] = true;
+    REPLACE_ACT_NAME(1);
+    REPLACE_ACT_NAME(2);
+    REPLACE_ACT_NAME(3);
+    REPLACE_ACT_NAME(4);
+    REPLACE_ACT_NAME(5);
+    REPLACE_ACT_NAME(6);
 
-    // replace act names
-    const char* newActs[] = { act1, act2, act3, act4, act5, act6 };
-    for (s32 i = 0; i < 6; i++) {
-        s32 index = (courseOffset * 6 + i);
+    LOG_INFO("%d (%s) replacing act names 1-6 of course %d, (%s), act 1: %s", courseActNames->modIndex, gLuaActiveMod->name, courseNum, courseName, act1);
+}
 
-        if (sReplacedActName[index]) {
-            free(actNameTbl[index]);
-        }
+void smlua_text_utils_course_name_replace(s16 courseNum, const char* name) {
+    if (INVALID_COURSE_NUM(courseNum)) { return; }
 
-        actNameTbl[index] = smlua_text_utils_convert(newActs[i]);
-        sReplacedActName[index] = true;
-    }
+    struct CourseName* courseActNames = gReplacedActNameTable[courseNum];
+    snprintf(courseActNames->name, 256, "%s", name);
+    courseActNames->modIndex = gLuaActiveMod->index;
+}
+
+const char* smlua_text_utils_course_name_get(s16 courseNum) {
+    if (INVALID_COURSE_NUM(courseNum)) { return NULL; }
+
+    return gReplacedActNameTable[courseNum]->name;
+}
+
+s32 smlua_text_utils_course_name_mod_index(s16 courseNum) {
+    if (INVALID_COURSE_NUM(courseNum)) { return -1; }
+
+    return gReplacedActNameTable[courseNum]->modIndex;
+}
+
+void smlua_text_utils_course_name_reset(s16 courseNum) {
+    if (INVALID_COURSE_NUM(courseNum)) { return; }
+
+    struct CourseName* courseActNames = gReplacedActNameTable[courseNum];
+    snprintf(courseActNames->name, 50, "%s", courseActNames->orig);
+    courseActNames->modIndex = -1;
+}
+
+void smlua_text_utils_act_name_replace(s16 courseNum, u8 actNum, const char* name) {
+    if (INVALID_COURSE_NUM(courseNum) || actNum > 7) { return; }
+
+    struct CourseName* courseActNames = gReplacedActNameTable[courseNum];
+
+    snprintf(courseActNames->actName[actNum].name, 256, "%s", name);
+    courseActNames->actName[actNum].isModified = true;
+}
+
+const char* smlua_text_utils_act_name_get(s16 courseNum, u8 actNum) {
+    if (INVALID_COURSE_NUM(courseNum) || actNum > 7) { return NULL; }
+
+    return gReplacedActNameTable[courseNum]->actName[actNum].name;
+}
+
+bool smlua_text_utils_act_name_is_modified(s16 courseNum, u8 actNum) {
+    if (INVALID_COURSE_NUM(courseNum) || actNum > 7) { return false; }
+
+    return gReplacedActNameTable[courseNum]->actName[actNum].isModified;
+}
+
+void smlua_text_utils_act_name_reset(s16 courseNum, u8 actNum) {
+    if (INVALID_COURSE_NUM(courseNum) || actNum > 7) { return; }
+
+    struct CourseName* courseActNames = gReplacedActNameTable[courseNum];
+    snprintf(courseActNames->actName[actNum].name, 50, "%s", courseActNames->actName[actNum].orig);
+    courseActNames->actName[actNum].isModified = false;
 }
 
 void smlua_text_utils_secret_star_replace(s16 courseNum, const char* courseName) {
     if (courseNum <= COURSE_RR || courseNum > COURSE_COUNT) { return; }
     s16 courseOffset = courseNum - 1;
-    
-    void **courseNameTbl = NULL;
-    
-#ifdef VERSION_EU
-    switch (gInGameLanguage) {
-        case LANGUAGE_ENGLISH:
-            courseNameTbl = segmented_to_virtual(course_name_table_eu_en);
-            break;
-        case LANGUAGE_FRENCH:
-            courseNameTbl = segmented_to_virtual(course_name_table_eu_fr);
-            break;
-        case LANGUAGE_GERMAN:
-            courseNameTbl = segmented_to_virtual(course_name_table_eu_de);
-            break;
-    }
-#else
-    courseNameTbl = segmented_to_virtual(seg2_course_name_table);
-#endif
+
+    void **courseNameTbl = get_course_name_table();
 
     if (sReplacedCourseName[courseOffset]) {
         free(courseNameTbl[courseOffset]);
@@ -204,24 +272,8 @@ void smlua_text_utils_secret_star_replace(s16 courseNum, const char* courseName)
 
 void smlua_text_utils_castle_secret_stars_replace(const char* name) {
     s16 courseOffset = COURSE_COUNT;
-    
-    void **courseNameTbl = NULL;
-    
-#ifdef VERSION_EU
-    switch (gInGameLanguage) {
-        case LANGUAGE_ENGLISH:
-            courseNameTbl = segmented_to_virtual(course_name_table_eu_en);
-            break;
-        case LANGUAGE_FRENCH:
-            courseNameTbl = segmented_to_virtual(course_name_table_eu_fr);
-            break;
-        case LANGUAGE_GERMAN:
-            courseNameTbl = segmented_to_virtual(course_name_table_eu_de);
-            break;
-    }
-#else
-    courseNameTbl = segmented_to_virtual(seg2_course_name_table);
-#endif
+
+    void **courseNameTbl = get_course_name_table();
 
     if (sReplacedCourseName[courseOffset]) {
         free(courseNameTbl[courseOffset]);
@@ -234,24 +286,8 @@ void smlua_text_utils_castle_secret_stars_replace(const char* name) {
 void smlua_text_utils_extra_text_replace(s16 index, const char* text) {
     if (index < 0 || index > 6) { return; }
     index = (COURSE_RR * 6 + index);
-    
-    void **actNameTbl = NULL;
-    
-#ifdef VERSION_EU
-    switch (gInGameLanguage) {
-        case LANGUAGE_ENGLISH:
-            actNameTbl = segmented_to_virtual(act_name_table_eu_en);
-            break;
-        case LANGUAGE_FRENCH:
-            actNameTbl = segmented_to_virtual(act_name_table_eu_fr);
-            break;
-        case LANGUAGE_GERMAN:
-            actNameTbl = segmented_to_virtual(act_name_table_eu_de);
-            break;
-    }
-#else
-    actNameTbl = segmented_to_virtual(seg2_act_name_table);
-#endif
+
+    void **actNameTbl = get_act_name_table();
 
     if (sReplacedActName[index]) {
         free(actNameTbl[index]);

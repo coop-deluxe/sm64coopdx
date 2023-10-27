@@ -63,6 +63,8 @@ s8 get_level_course_num(s16 levelNum) {
         return (info ? info->courseNum : COURSE_NONE);
     }
 
+    levelNum = levelNum - 1;
+
     if (INVALID_LEVEL_NUM(levelNum)) {
         return COURSE_NONE;
     }
@@ -392,7 +394,7 @@ void save_file_do_save(s32 fileIndex, s8 forceSave) {
 
         // Write to EEPROM
         write_eeprom_savefile(fileIndex, 0, 2);
-        
+
         gSaveFileModified = FALSE;
     }
     save_main_menu_data();
@@ -412,7 +414,7 @@ void save_file_erase(s32 fileIndex) {
 void save_file_reload(u8 load_all) {
     gSaveFileModified = TRUE;
     update_all_mario_stars();
-    
+
     if (load_all == TRUE) {
         save_file_load_all(TRUE);
         save_file_do_save(gCurrSaveFileNum-1, TRUE);
@@ -818,7 +820,7 @@ void check_if_should_set_warp_checkpoint(struct WarpNode *warpNode) {
  */
 s32 check_warp_checkpoint(struct WarpNode *warpNode) {
     s16 warpCheckpointActive = FALSE;
-    s16 currCourseNum = get_level_course_num((warpNode->destLevel & 0x7F) - 1);
+    s16 currCourseNum = get_level_course_num(warpNode->destLevel & 0x7F);
 
     // gSavedCourseNum is only used in this function.
     if (gWarpCheckpoint.courseNum != COURSE_NONE && gSavedCourseNum == currCourseNum

@@ -8190,6 +8190,22 @@ function smlua_audio_utils_reset_all()
     -- ...
 end
 
+--- @param x number
+--- @param y number
+--- @param z number
+--- @return Surface
+function collision_find_ceil(x, y, z)
+    -- ...
+end
+
+--- @param x number
+--- @param y number
+--- @param z number
+--- @return Surface
+function collision_find_floor(x, y, z)
+    -- ...
+end
+
 --- @param startX number
 --- @param startY number
 --- @param startZ number
@@ -8251,6 +8267,12 @@ end
 --- @param levelNum integer
 --- @return CustomLevelInfo
 function smlua_level_util_get_info(levelNum)
+    -- ...
+end
+
+--- @param courseNum integer
+--- @return CustomLevelInfo
+function smlua_level_util_get_info_from_course_num(courseNum)
     -- ...
 end
 
@@ -9096,6 +9118,35 @@ function spawn_sync_object(behaviorId, modelId, x, y, z, objSetupFunction)
     -- ...
 end
 
+--- @param courseNum integer
+--- @param actNum integer
+--- @return string
+function smlua_text_utils_act_name_get(courseNum, actNum)
+    -- ...
+end
+
+--- @param courseNum integer
+--- @param actNum integer
+--- @return boolean
+function smlua_text_utils_act_name_is_modified(courseNum, actNum)
+    -- ...
+end
+
+--- @param courseNum integer
+--- @param actNum integer
+--- @param name string
+--- @return nil
+function smlua_text_utils_act_name_replace(courseNum, actNum, name)
+    -- ...
+end
+
+--- @param courseNum integer
+--- @param actNum integer
+--- @return nil
+function smlua_text_utils_act_name_reset(courseNum, actNum)
+    -- ...
+end
+
 --- @param name string
 --- @return nil
 function smlua_text_utils_castle_secret_stars_replace(name)
@@ -9112,6 +9163,31 @@ end
 --- @param act6 string
 --- @return nil
 function smlua_text_utils_course_acts_replace(courseNum, courseName, act1, act2, act3, act4, act5, act6)
+    -- ...
+end
+
+--- @param courseNum integer
+--- @return string
+function smlua_text_utils_course_name_get(courseNum)
+    -- ...
+end
+
+--- @param courseNum integer
+--- @return integer
+function smlua_text_utils_course_name_mod_index(courseNum)
+    -- ...
+end
+
+--- @param courseNum integer
+--- @param name string
+--- @return nil
+function smlua_text_utils_course_name_replace(courseNum, name)
+    -- ...
+end
+
+--- @param courseNum integer
+--- @return nil
+function smlua_text_utils_course_name_reset(courseNum)
     -- ...
 end
 
@@ -9135,11 +9211,6 @@ end
 
 --- @return string
 function smlua_text_utils_get_language()
-    -- ...
-end
-
---- @return nil
-function smlua_text_utils_reset_all()
     -- ...
 end
 

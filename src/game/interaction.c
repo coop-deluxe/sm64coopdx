@@ -923,12 +923,7 @@ u32 interact_star_or_key(struct MarioState *m, UNUSED u32 interactType, struct O
 
     u8 stayInLevelCommon = !(gCurrLevelNum == LEVEL_BOWSER_1 || gCurrLevelNum == LEVEL_BOWSER_2 || gCurrLevelNum == LEVEL_BOWSER_3);
     if (stayInLevelCommon && gServerSettings.stayInLevelAfterStar) { noExit = TRUE; }
-
-    if (o->behavior == bhvBowserKey) {
-        gLastCollectedStarOrKey = 1;
-    } else {
-        gLastCollectedStarOrKey = 0;
-    }
+    gLastCollectedStarOrKey = o->behavior == bhvBowserKey;
 
     if (m->health >= 0x100) {
 
@@ -981,7 +976,7 @@ u32 interact_star_or_key(struct MarioState *m, UNUSED u32 interactType, struct O
         m->interactObj = o;
         m->usedObj = o;
 
-        starIndex = (o->oBehParams >> 24) & 0x1F;
+        starIndex = o->oBehParams >> 24;
 
         if (m == &gMarioStates[0]) {
             // sync the star collection

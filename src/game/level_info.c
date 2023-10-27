@@ -9,6 +9,7 @@
 #include "save_file.h"
 #include "types.h"
 #include "pc/lua/utils/smlua_level_utils.h"
+#include "pc/lua/utils/smlua_text_utils.h"
 
 #ifdef VERSION_EU
 extern s32 gInGameLanguage;
@@ -39,7 +40,7 @@ static const struct { const char *str; u8 c; } sSm64CharMap[] = {
     { "p", 0x33 }, { "q", 0x34 }, { "r", 0x35 }, { "s", 0x36 }, { "t", 0x37 },
     { "u", 0x38 }, { "v", 0x39 }, { "w", 0x3A }, { "x", 0x3B }, { "y", 0x3C },
     { "z", 0x3D },
-    
+
     // Punctuation
     { "...", 0xE6 }, // ellipsis
     { ")(",  0xE2 }, // close-open parentheses
@@ -57,7 +58,7 @@ static const struct { const char *str; u8 c; } sSm64CharMap[] = {
     { "%",   0xF3 }, // percent
     { "?",   0xF4 }, // question mark
     { "~",   0xF7 }, // tilde
-    
+
     // Symbols
     { "[A]", 0x54 }, // bold A
     { "[B]", 0x55 }, // bold B
@@ -107,7 +108,7 @@ static void convert_string_ascii_to_sm64(u8 *str64, const char *strAscii) {
     *str64 = 0xFF;
 }
 
-static void convert_string_sm64_to_ascii(char *strAscii, const u8 *str64) {
+void convert_string_sm64_to_ascii(char *strAscii, const u8 *str64) {
     for (; *str64 != 0xFF; str64++) {
         strAscii = sm64_to_ascii_char(strAscii, str64);
     }
@@ -158,12 +159,40 @@ static void decapitalize_string_sm64(u8 *str64) {
     }
 }
 
+void *get_course_name_table() {
+    void **courseNameTbl = segmented_to_virtual(seg2_course_name_table);
+
+#ifdef VERSION_EU
+    switch (gInGameLanguage) {
+        case LANGUAGE_ENGLISH: courseNameTbl = segmented_to_virtual(course_name_table_eu_en); break;
+        case LANGUAGE_FRENCH:  courseNameTbl = segmented_to_virtual(course_name_table_eu_fr); break;
+        case LANGUAGE_GERMAN:  courseNameTbl = segmented_to_virtual(course_name_table_eu_de); break;
+    }
+#endif
+
+    return courseNameTbl;
+}
+
+void *get_act_name_table() {
+    void **actNameTbl = segmented_to_virtual(seg2_act_name_table);
+
+#ifdef VERSION_EU
+    switch (gInGameLanguage) {
+        case LANGUAGE_ENGLISH: actNameTbl = segmented_to_virtual(act_name_table_eu_en); break;
+        case LANGUAGE_FRENCH:  actNameTbl = segmented_to_virtual(act_name_table_eu_fr); break;
+        case LANGUAGE_GERMAN:  actNameTbl = segmented_to_virtual(act_name_table_eu_de); break;
+    }
+#endif
+
+    return actNameTbl;
+}
+
+extern struct CourseName *gReplacedActNameTable[];
+
 const char *get_level_name_ascii(s16 courseNum, s16 levelNum, s16 areaIndex, s16 charCase) {
     static char output[256];
 
-    // Valid course: BOB to RR, Bowser stages and Secret courses
-    // There is no course name for Cake Ending, make it defaults to "Peach's Castle"
-
+    // Custom course
     bool hasCustomName = false;
     if (levelNum >= CUSTOM_LEVEL_NUM_START) {
         struct CustomLevelInfo* info = smlua_level_util_get_info(levelNum);
@@ -173,41 +202,39 @@ const char *get_level_name_ascii(s16 courseNum, s16 levelNum, s16 areaIndex, s16
         }
     }
 
-    if (!hasCustomName && courseNum >= COURSE_MIN && courseNum < COURSE_MAX) {
-       void **courseNameTbl = NULL;
-#ifdef VERSION_EU
-        switch (gInGameLanguage) {
-            case LANGUAGE_ENGLISH: courseNameTbl = segmented_to_virtual(course_name_table_eu_en); break;
-            case LANGUAGE_FRENCH: courseNameTbl = segmented_to_virtual(course_name_table_eu_fr); break;
-            case LANGUAGE_GERMAN: courseNameTbl = segmented_to_virtual(course_name_table_eu_de); break;
-        }
-#else
-        courseNameTbl = segmented_to_virtual(seg2_course_name_table);
-#endif
-        const u8 *courseName = segmented_to_virtual(courseNameTbl[courseNum - COURSE_BOB]);
-        convert_string_sm64_to_ascii(output, courseName + 3);
+    if (gReplacedActNameTable[courseNum]->modIndex != -1) {
+        snprintf(output, 256, "%s", gReplacedActNameTable[courseNum]->name);
     }
-    
-    // Castle level
-    else if (!hasCustomName && courseNum == COURSE_NONE) {
-        switch (levelNum) {
-            case LEVEL_CASTLE: {
-                switch (areaIndex) {
-                    case 1: snprintf(output, 256, "Castle Main Floor"); break;
-                    case 2: snprintf(output, 256, "Castle Upper Floor"); break;
-                    case 3: snprintf(output, 256, "Castle Basement"); break;
-                    default: snprintf(output, 256, "Castle Purgatory"); break;
-                }
-            } break;
-            case LEVEL_CASTLE_GROUNDS: snprintf(output, 256, "Castle Grounds"); break;
-            case LEVEL_CASTLE_COURTYARD: snprintf(output, 256, "Castle Courtyard"); break;
-            default: snprintf(output, 256, "Peach's Castle");
-        }
-    }
-    
-    // Default
+
     else if (!hasCustomName) {
-        snprintf(output, 256, "Peach's Castle");
+        if (COURSE_IS_VALID_COURSE(courseNum)) {
+            void **courseNameTbl = get_course_name_table();
+            const u8 *courseName = segmented_to_virtual(courseNameTbl[courseNum - COURSE_BOB]);
+            convert_string_sm64_to_ascii(output, courseName + 3);
+            charCase = MIN(charCase, 0); // Don't need to capitalize vanilla course names
+        }
+
+        // Castle level
+        else if (courseNum == COURSE_NONE) {
+            switch (levelNum) {
+                case LEVEL_CASTLE: {
+                    switch (areaIndex) {
+                        case 1: snprintf(output, 256, "Castle Main Floor"); break;
+                        case 2: snprintf(output, 256, "Castle Upper Floor"); break;
+                        case 3: snprintf(output, 256, "Castle Basement"); break;
+                        default: snprintf(output, 256, "Castle Purgatory"); break;
+                    }
+                } break;
+                case LEVEL_CASTLE_GROUNDS: snprintf(output, 256, "Castle Grounds"); break;
+                case LEVEL_CASTLE_COURTYARD: snprintf(output, 256, "Castle Courtyard"); break;
+                default: snprintf(output, 256, "Peach's Castle");
+            }
+        }
+
+        // Default
+        else {
+            snprintf(output, 256, "Peach's Castle");
+        }
     }
 
     // Capitalize or decapitalize text
@@ -221,7 +248,8 @@ const char *get_level_name_ascii(s16 courseNum, s16 levelNum, s16 areaIndex, s16
 
 const u8 *get_level_name_sm64(s16 courseNum, s16 levelNum, s16 areaIndex, s16 charCase) {
     static u8 output[256];
-    const char *levelName = get_level_name_ascii(courseNum, levelNum, areaIndex, charCase);
+    char levelName[256];
+    snprintf(levelName, 256, " %d %s", courseNum, (char*) get_level_name_ascii(courseNum, levelNum, areaIndex, charCase));
     convert_string_ascii_to_sm64(output, levelName);
     return output;
 }
@@ -233,28 +261,24 @@ const char *get_level_name(s16 courseNum, s16 levelNum, s16 areaIndex) {
 const char *get_star_name_ascii(s16 courseNum, s16 starNum, s16 charCase) {
     static char output[256];
 
+    if (gReplacedActNameTable[courseNum]->actName && gReplacedActNameTable[courseNum]->actName[starNum - 1].isModified) {
+        snprintf(output, 256, "%s", gReplacedActNameTable[courseNum]->actName[starNum - 1].name);
+    }
+
     // Main courses: BOB to RR
-    if (COURSE_IS_MAIN_COURSE(courseNum)) {
+    else if (COURSE_IS_MAIN_COURSE(courseNum)) {
         if (starNum >= 1 && starNum <= 6) {
-            void **actNameTable = NULL;
-#ifdef VERSION_EU
-            switch (gInGameLanguage) {
-                case LANGUAGE_ENGLISH: actNameTable = segmented_to_virtual(act_name_table_eu_en); break;
-                case LANGUAGE_FRENCH: actNameTable = segmented_to_virtual(act_name_table_eu_fr); break;
-                case LANGUAGE_GERMAN: actNameTable = segmented_to_virtual(act_name_table_eu_de); break;
-            }
-#else
-            actNameTable = segmented_to_virtual(seg2_act_name_table);
-#endif
+            void **actNameTable = get_act_name_table();
             const u8 *starName = segmented_to_virtual(actNameTable[(courseNum - COURSE_BOB) * 6 + (starNum - 1)]);
             convert_string_sm64_to_ascii(output, starName);
+            charCase = MIN(charCase, 0); // Don't need to capitalize vanilla act names
         } else if (starNum == 7) {
-            snprintf(output, 256, "%d Coins Star", (s32) gLevelValues.coinsRequiredForCoinStar);
+            snprintf(output, 256, "%d Coins Star", gLevelValues.coinsRequiredForCoinStar);
         } else {
             snprintf(output, 256, "A Secret Star!");
         }
     }
-    
+
     // Castle stars: Toads' and Mips'
     else if (courseNum == COURSE_NONE) {
         switch (starNum) {
@@ -271,7 +295,7 @@ const char *get_star_name_ascii(s16 courseNum, s16 starNum, s16 charCase) {
     else if (courseNum <= COURSE_MAX) {
         snprintf(output, 256, "Star %d", starNum);
     }
-    
+
     // Default
     else {
         snprintf(output, 256, "A Secret Star!");

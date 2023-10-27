@@ -373,6 +373,7 @@ void network_send(struct Packet* p) {
 }
 
 void network_receive(u8 localIndex, void* addr, u8* data, u16 dataLength) {
+
     // receive packet
     struct Packet p = {
         .localIndex = localIndex,
@@ -680,9 +681,6 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
 
     extern s16 gMenuMode;
     gMenuMode = -1;
-
-    extern bool gIsModerator;
-    gIsModerator = false;
 
     djui_panel_shutdown();
     extern bool gDjuiInMainMenu;

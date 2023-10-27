@@ -102,12 +102,14 @@ override_disallowed_functions = {
     "src/game/obj_behaviors.c":            [ "debug_" ],
     "src/game/obj_behaviors_2.c":          [ "wiggler_jumped_on_attack_handler", "huge_goomba_weakly_attacked" ],
     "src/game/spawn_sound.c":              [ "spawner" ],
+    "src/game/level_info.h":               [ "_name_table" ],
     "src/pc/lua/utils/smlua_obj_utils.h":  [ "spawn_object_remember_field", "set_exclamation_box_new_contents", "get_exclamation_box_new_contents_pointer", "get_exclamation_box_new_contents_size" ],
     "src/game/camera.h":                   [ "update_camera", "init_camera", "stub_camera", "^reset_camera", "move_point_along_spline" ],
     "src/game/behavior_actions.h":         [ "bhv_dust_smoke_loop", "bhv_init_room" ],
     "src/pc/lua/utils/smlua_audio_utils.h": [ "smlua_audio_utils_override", "audio_custom_shutdown"],
     "src/pc/djui/djui_hud_utils.h":         [ "djui_hud_render_texture", "djui_hud_render_texture_raw", "djui_hud_render_texture_tile", "djui_hud_render_texture_tile_raw" ],
     "src/pc/lua/utils/smlua_level_utils.h": [ "smlua_level_util_reset" ],
+    "src/pc/lua/utils/smlua_text_utils.h":  [ "smlua_text_utils_reset_all" ],
     "src/pc/lua/utils/smlua_anim_utils.h":  [ "smlua_anim_util_reset", "smlua_anim_util_register_animation" ],
     "src/pc/network/lag_compensation.h":    [ "lag_compensation_clear", "lag_compensation_store" ]
 }

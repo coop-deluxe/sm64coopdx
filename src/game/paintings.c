@@ -309,7 +309,7 @@ void patch_paintings_interpolated(f32 delta) {
         if (currPItem == NULL || currPItem == &paintingZero) {
             break;
         }
-    
+
     }
 
 }
@@ -916,7 +916,7 @@ void painting_update_floors(struct Painting *painting) {
         if (!consider) {
             continue;
         }
-        // floorEntered is true iff currFloor is true and lastFloor is false
+        // floorEntered is true if currFloor is true and lastFloor is false
         // (Mario just entered the floor on this frame)
         s8 entered = (painting->ripples.lastFloors[i] ^ painting->ripples.currFloors[i]) & painting->ripples.currFloors[i];
         if (entered) {
@@ -1023,7 +1023,7 @@ s16 calculate_ripple_at_point(struct Painting *painting, f32 posX, f32 posY) {
     // For calculating the highest ripple, ans needs to start extremely low otherwise ripples under 0 won't be counted
     s16 ans = multiRippleMode == HIGHEST_RIPPLE ? -32000 : 0;
     bool flat = true;
-    
+
     if (multiRippleMode != SINGLE_RIPPLE) {
         // If multi ripple mode
         for (s32 i = 0; i < MAX_PLAYERS + 1; i++) {
@@ -1791,7 +1791,7 @@ Gfx *geo_painting_update(s32 callContext, UNUSED struct GraphNode *node, UNUSED 
     } else {
         gLastPaintingUpdateCounter = gPaintingUpdateCounter;
         gPaintingUpdateCounter = gAreaUpdateCounter;
-        
+
         // Store Mario's floor and position
         if (gMarioObject) {
             find_floor(gMarioObject->oPosX, gMarioObject->oPosY, gMarioObject->oPosZ, &surface);

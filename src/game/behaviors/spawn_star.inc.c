@@ -59,10 +59,10 @@ static struct ObjectHitbox sCollectStarHitbox = {
 };
 
 void bhv_collect_star_init(void) {
-    s8 starId;
+    s16 starId;
     u8 currentLevelStarFlags;
 
-    starId = (o->oBehParams >> 24) & 0xFF;
+    starId = o->oBehParams >> 24;
     currentLevelStarFlags = save_file_get_star_flags(gCurrSaveFileNum - 1, gCurrCourseNum - 1);
     if (currentLevelStarFlags & (1 << starId)) {
         cur_obj_set_model(MODEL_TRANSPARENT_STAR);
@@ -256,7 +256,7 @@ struct Object *spawn_no_exit_star(f32 x, f32 y, f32 z) {
 /**
  * A special star spawning routine just for a networked stars.
  * These stars require the global index for a network player for proper
- * cutscene functionality. 
+ * cutscene functionality.
  */
 struct Object *spawn_networked_default_star(f32 x, f32 y, f32 z, u8 networkPlayerIndex) {
     if (sCurrPlayMode != PLAY_MODE_NORMAL && sCurrPlayMode != PLAY_MODE_PAUSED) { return NULL; }
@@ -298,7 +298,7 @@ void bhv_hidden_red_coin_star_init(void) {
     if (gCurrentArea) {
         o->oHiddenStarTriggerCounter = gCurrentArea->numRedCoins - redCoins;
     }
-    
+
     // We haven't interacted with a player yet.
     // We also don't sync this as not only is it not required
     // but it also is only set for an interaction.
@@ -306,7 +306,7 @@ void bhv_hidden_red_coin_star_init(void) {
     // and if it wasn't. You couldn't of possibly been the one
     // who last interacted to begin with.
     o->oHiddenStarLastInteractedObject = NULL;
-    
+
     if (!sync_object_is_initialized(o->oSyncID)) {
         struct SyncObject *so = sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
         if (so) {

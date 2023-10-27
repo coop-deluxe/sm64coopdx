@@ -25,6 +25,7 @@
 #include "pc/network/network.h"
 #include "engine/math_util.h"
 #include "game/print.h"
+#include "game/level_info.h"
 
 /**
  * @file star_select.c
@@ -278,15 +279,9 @@ void print_act_selector_strings(void) {
 #endif
     unsigned char starNumbers[] = { TEXT_ZERO };
 
-#ifdef VERSION_EU
-    u8 **levelNameTbl;
-    u8 *currLevelName;
-    u8 **actNameTbl;
-#else
-    u8 **levelNameTbl = segmented_to_virtual(seg2_course_name_table);
+    u8 **levelNameTbl = get_course_name_table();
     u8 *currLevelName = segmented_to_virtual(levelNameTbl[gCurrCourseNum - 1]);
-    u8 **actNameTbl = segmented_to_virtual(seg2_act_name_table);
-#endif
+    u8 **actNameTbl = get_act_name_table();
     u8 *selectedActName;
 #ifndef VERSION_EU
     s16 lvlNameX;
@@ -298,24 +293,6 @@ void print_act_selector_strings(void) {
 #endif
 
     create_dl_ortho_matrix();
-
-#ifdef VERSION_EU
-    switch (language) {
-        case LANGUAGE_ENGLISH:
-            actNameTbl = segmented_to_virtual(act_name_table_eu_en);
-            levelNameTbl = segmented_to_virtual(course_name_table_eu_en);
-            break;
-        case LANGUAGE_FRENCH:
-            actNameTbl = segmented_to_virtual(act_name_table_eu_fr);
-            levelNameTbl = segmented_to_virtual(course_name_table_eu_fr);
-            break;
-        case LANGUAGE_GERMAN:
-            actNameTbl = segmented_to_virtual(act_name_table_eu_de);
-            levelNameTbl = segmented_to_virtual(course_name_table_eu_de);
-            break;
-    }
-    currLevelName = segmented_to_virtual(levelNameTbl[gCurrCourseNum - 1]);
-#endif
 
     // Print the coin highscore.
     gSPDisplayList(gDisplayListHead++, dl_rgba16_text_begin);

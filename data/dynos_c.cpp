@@ -14,12 +14,7 @@ void *dynos_update_cmd(void *cmd) {
 }
 
 void dynos_update_gfx() {
-    DynOS_Model_Update();
     return DynOS_UpdateGfx();
-}
-
-void dynos_update_opt(void *pad) {
-    return DynOS_UpdateOpt(pad);
 }
 
 s32 dynos_tex_import(void **output, void *ptr, s32 tile, void *grapi, void **hashmap, void *pool, s32 *poolpos, s32 poolsize) {
@@ -185,8 +180,8 @@ u64 dynos_level_cmd_get(void *cmd, u64 offset) {
     return DynOS_Level_CmdGet(cmd, offset);
 }
 
-void dynos_level_cmd_next(void *cmd, u64 cmdsize) {
-    DynOS_Level_CmdNext(cmd, cmdsize);
+void dynos_level_cmd_next(void *cmd) {
+    DynOS_Level_CmdNext((LvlCmd*) cmd);
 }
 
 void dynos_level_parse_script(const void *script, s32 (*aPreprocessFunction)(u8, void *)) {

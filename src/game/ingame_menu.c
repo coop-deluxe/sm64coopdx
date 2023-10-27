@@ -39,6 +39,7 @@
 #ifdef BETTERCAMERA
 #include "bettercamera.h"
 #endif
+#include "level_info.h"
 
 u16 gDialogColorFadeTimer;
 s8 gLastDialogLineNum;
@@ -2515,37 +2516,12 @@ void render_pause_my_score_coins(void) {
     u8 textUnfilledStar[] = { TEXT_UNFILLED_STAR };
 
     u8 strCourseNum[4];
-    void **courseNameTbl;
-    u8 *courseName;
-    void **actNameTbl;
-    u8 *actName = NULL;
-    u8 courseIndex;
+    u8 courseIndex = gCurrCourseNum - 1;
+    u8 *courseName = (u8*) get_level_name_sm64(gCurrCourseNum, gCurrLevelNum, gCurrAreaIndex, 1);
+    u8 *actName = (u8*) get_star_name_sm64(gCurrCourseNum, gDialogCourseActNum, 1);
     u8 starFlags;
 
-#ifndef VERSION_EU
-    courseNameTbl = segmented_to_virtual(seg2_course_name_table);
-    actNameTbl = segmented_to_virtual(seg2_act_name_table);
-#endif
-
-    courseIndex = gCurrCourseNum - 1;
     starFlags = save_file_get_star_flags(gCurrSaveFileNum - 1, gCurrCourseNum - 1);
-
-#ifdef VERSION_EU
-    switch (gInGameLanguage) {
-        case LANGUAGE_ENGLISH:
-            actNameTbl = segmented_to_virtual(act_name_table_eu_en);
-            courseNameTbl = segmented_to_virtual(course_name_table_eu_en);
-            break;
-        case LANGUAGE_FRENCH:
-            actNameTbl = segmented_to_virtual(act_name_table_eu_fr);
-            courseNameTbl = segmented_to_virtual(course_name_table_eu_fr);
-            break;
-        case LANGUAGE_GERMAN:
-            actNameTbl = segmented_to_virtual(act_name_table_eu_de);
-            courseNameTbl = segmented_to_virtual(course_name_table_eu_de);
-            break;
-    }
-#endif
 
     gSPDisplayList(gDisplayListHead++, dl_rgba16_text_begin);
     gDPSetEnvColor(gDisplayListHead++, 255, 255, 255, gDialogTextAlpha);
@@ -2564,8 +2540,6 @@ void render_pause_my_score_coins(void) {
         print_generic_string(MYSCORE_X, 121, textMyScore);
     }
 
-    courseName = segmented_to_virtual(courseNameTbl[courseIndex]);
-
     if (courseIndex < COURSE_STAGES_COUNT) {
 #ifdef VERSION_EU
         print_generic_string(48, 157, gTextCourseArr[gInGameLanguage]);
@@ -2578,10 +2552,6 @@ void render_pause_my_score_coins(void) {
 #else
         print_generic_string(CRS_NUM_X1, 157, strCourseNum);
 #endif
-
-        if (gDialogCourseActNum >= 1 && gDialogCourseActNum <= 6) {
-            actName = segmented_to_virtual(actNameTbl[(gCurrCourseNum - 1) * 6 + gDialogCourseActNum - 1]);
-        }
 
         if (starFlags & (1 << (gDialogCourseActNum - 1))) {
             print_generic_string(TXT_STAR_X, 140, textStar);
@@ -2838,11 +2808,7 @@ void render_pause_castle_course_stars(s16 x, s16 y, s16 fileNum, s16 courseNum) 
 }
 
 void render_pause_castle_main_strings(s16 x, s16 y) {
-#ifdef VERSION_EU
-    void **courseNameTbl;
-#else
-    void **courseNameTbl = segmented_to_virtual(seg2_course_name_table);
-#endif
+    void **courseNameTbl = get_course_name_table();
 
 #ifdef VERSION_EU
     u8 textCoin[] = { TEXT_COIN };
@@ -2855,20 +2821,6 @@ void render_pause_castle_main_strings(s16 x, s16 y) {
 
     u8 strVal[8];
     s16 starNum = gDialogLineNum;
-
-#ifdef VERSION_EU
-    switch (gInGameLanguage) {
-        case LANGUAGE_ENGLISH:
-            courseNameTbl = segmented_to_virtual(course_name_table_eu_en);
-            break;
-        case LANGUAGE_FRENCH:
-            courseNameTbl = segmented_to_virtual(course_name_table_eu_fr);
-            break;
-        case LANGUAGE_GERMAN:
-            courseNameTbl = segmented_to_virtual(course_name_table_eu_de);
-            break;
-    }
-#endif
 
     handle_menu_scrolling(MENU_SCROLL_VERTICAL, &gDialogLineNum, -1, COURSE_STAGES_COUNT + 1);
 
@@ -2936,7 +2888,7 @@ void render_pause_castle_main_strings(s16 x, s16 y) {
 static u32 pause_castle_get_stars(s32 index) {
 
     // Main courses (0-14), Secret courses (15-24)
-    if (index >= 0 && index < INDEX_CASTLE_STARS) {
+    if (COURSE_IS_VALID_COURSE(index)) {
         return save_file_get_star_flags(gCurrSaveFileNum - 1, index);
     }
 
@@ -3061,24 +3013,8 @@ void render_pause_castle_main_strings_extended(s16 x, s16 y) {
 
     gSPDisplayList(gDisplayListHead++, dl_ia_text_begin);
     gDPSetEnvColor(gDisplayListHead++, 255, 255, 255, gDialogTextAlpha);
-    
-    void **courseNameTbl = NULL;
-    
-#ifdef VERSION_EU
-    switch (gInGameLanguage) {
-        case LANGUAGE_ENGLISH:
-            courseNameTbl = segmented_to_virtual(course_name_table_eu_en);
-            break;
-        case LANGUAGE_FRENCH:
-            courseNameTbl = segmented_to_virtual(course_name_table_eu_fr);
-            break;
-        case LANGUAGE_GERMAN:
-            courseNameTbl = segmented_to_virtual(course_name_table_eu_de);
-            break;
-    }
-#else
-    courseNameTbl = segmented_to_virtual(seg2_course_name_table);
-#endif
+
+    void **courseNameTbl = get_course_name_table();
 
     // Main courses (0-14)
     if (gDialogLineNum < COURSE_STAGES_COUNT) {
@@ -3098,7 +3034,7 @@ void render_pause_castle_main_strings_extended(s16 x, s16 y) {
         render_pause_castle_course_name(courseName + 3, 160, y + 30);
         render_pause_castle_course_stars_extended(x + 20, y);
     }
-    
+
     // Castle stars (25)
     else if (gDialogLineNum == INDEX_CASTLE_STARS) {
         const u8 *courseName = courseNameTbl[COURSE_MAX];
@@ -3150,7 +3086,7 @@ s16 render_pause_courses_and_castle(void) {
             play_sound(SOUND_MENU_PAUSE_HIGHPRIO, gGlobalSoundSource);
 #endif
 
-            if (gCurrCourseNum >= COURSE_MIN && gCurrCourseNum <= COURSE_MAX) {
+            if (COURSE_IS_VALID_COURSE(gCurrCourseNum)) {
                 change_dialog_camera_angle();
                 gDialogBoxState = DIALOG_STATE_VERTICAL;
             } else {
@@ -3227,14 +3163,9 @@ s16 render_pause_courses_and_castle(void) {
     }
 
     if (gDjuiPanelPauseCreated) { shade_screen(); }
-    if (gPlayer1Controller->buttonPressed & R_TRIG)
+    if (gPlayer1Controller->buttonPressed & R_TRIG) {
         djui_panel_pause_create(NULL);
-
-#ifndef COOP
-    // call into DynOS's menu system
-    optmenu_draw();
-    optmenu_draw_prompt();
-#endif
+    }
 
     return 0;
 }
@@ -3384,32 +3315,11 @@ void render_course_complete_lvl_info_and_hud_str(void) {
     u8 textSymStar[] = { GLYPH_STAR, GLYPH_SPACE };
 #endif
 
-    void **actNameTbl;
-    void **courseNameTbl;
+    void **actNameTbl = get_act_name_table();
+    void **courseNameTbl = get_course_name_table();
     u8 *name;
 
     u8 strCourseNum[4];
-
-#ifdef VERSION_EU
-    s16 centerX;
-    switch (gInGameLanguage) {
-        case LANGUAGE_ENGLISH:
-            actNameTbl = segmented_to_virtual(act_name_table_eu_en);
-            courseNameTbl = segmented_to_virtual(course_name_table_eu_en);
-            break;
-        case LANGUAGE_FRENCH:
-            actNameTbl = segmented_to_virtual(act_name_table_eu_fr);
-            courseNameTbl = segmented_to_virtual(course_name_table_eu_fr);
-            break;
-        case LANGUAGE_GERMAN:
-            actNameTbl = segmented_to_virtual(act_name_table_eu_de);
-            courseNameTbl = segmented_to_virtual(course_name_table_eu_de);
-            break;
-    }
-#else
-    actNameTbl = segmented_to_virtual(seg2_act_name_table);
-    courseNameTbl = segmented_to_virtual(seg2_course_name_table);
-#endif
 
     if (gLastCompletedCourseNum <= COURSE_STAGES_MAX) {
         print_hud_course_complete_coins(118, 103);
@@ -3435,7 +3345,7 @@ void render_course_complete_lvl_info_and_hud_str(void) {
         gSPDisplayList(gDisplayListHead++, dl_ia_text_begin);
         gDPSetEnvColor(gDisplayListHead++, 0, 0, 0, gDialogTextAlpha);
 #ifdef VERSION_EU
-        centerX = get_str_x_pos_from_center(153, name, 12.0f);
+        s16 centerX = get_str_x_pos_from_center(153, name, 12.0f);
 #endif
         print_generic_string(TXT_NAME_X1, 130, name);
 #ifndef VERSION_EU

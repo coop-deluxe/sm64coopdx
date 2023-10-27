@@ -43,7 +43,7 @@ void DynOS_Anim_Swap(void *aPtr) {
     static Animation *pDefaultAnimation = NULL;
     static Animation  sGfxDataAnimation;
 
-    // Does the object has a model?
+    // Does the object have a model?
     struct Object *_Object = (struct Object *) aPtr;
     if (!_Object->header.gfx.sharedChild) {
         return;

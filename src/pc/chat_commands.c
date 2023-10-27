@@ -13,7 +13,6 @@
 #include "dev/chat.h"
 #endif
 
-extern bool gIsModerator;
 static enum ChatConfirmCommand sConfirming = CCC_NONE;
 static u8 sConfirmPlayerIndex = 0;
 
@@ -55,14 +54,15 @@ static void chat_construct_player_message(struct NetworkPlayer* np, char* msg) {
 }
 
 bool exec_chat_command(char* command) {
+    struct NetworkPlayer* npl = &gNetworkPlayers[0];
     enum ChatConfirmCommand ccc = sConfirming;
     sConfirming = CCC_NONE;
 
     if (ccc != CCC_NONE && strcmp("/confirm", command) == 0) {
-        if (gNetworkType == NT_SERVER || gIsModerator) {
+        struct NetworkPlayer* np = &gNetworkPlayers[sConfirmPlayerIndex];
+        if (!np->connected) return true;
+        if (gNetworkType == NT_SERVER || npl->moderator) {
             if (ccc == CCC_KICK) {
-                struct NetworkPlayer* np = &gNetworkPlayers[sConfirmPlayerIndex];
-                if (!np->connected) { return true; }
                 chat_construct_player_message(np, DLANG(CHAT, KICKING));
                 if (gNetworkType == NT_SERVER) {
                     network_send_kick(np->localIndex, EKT_KICKED);
@@ -73,10 +73,8 @@ bool exec_chat_command(char* command) {
                 return true;
             }
         }
-        if (gNetworkType == NT_SERVER || gIsModerator) {
+        if (gNetworkType == NT_SERVER || npl->moderator) {
             if (ccc == CCC_BAN) {
-                struct NetworkPlayer* np = &gNetworkPlayers[sConfirmPlayerIndex];
-                if (!np->connected) { return true; }
                 chat_construct_player_message(np, DLANG(CHAT, BANNING));
                 if (gNetworkType == NT_SERVER) {
                     network_send_kick(np->localIndex, EKT_BANNED);
@@ -89,8 +87,6 @@ bool exec_chat_command(char* command) {
             }
         }
         if (gNetworkType == NT_SERVER && ccc == CCC_PERMBAN) {
-            struct NetworkPlayer* np = &gNetworkPlayers[sConfirmPlayerIndex];
-            if (!np->connected) { return true; }
             chat_construct_player_message(np, DLANG(CHAT, PERM_BANNING));
             network_send_kick(np->localIndex, EKT_BANNED);
             ban_list_add(gNetworkSystem->get_id_str(np->localIndex), true);
@@ -98,9 +94,8 @@ bool exec_chat_command(char* command) {
             return true;
         }
         if (gNetworkType == NT_SERVER && ccc == CCC_MODERATOR) {
-            struct NetworkPlayer* np = &gNetworkPlayers[sConfirmPlayerIndex];
-            if (!np->connected) { return true; }
             chat_construct_player_message(np, DLANG(CHAT, ADD_MODERATOR));
+            np->moderator = true;
             network_send_moderator(np->localIndex);
             moderator_list_add(gNetworkSystem->get_id_str(np->localIndex), true);
             return true;
@@ -125,7 +120,7 @@ bool exec_chat_command(char* command) {
     }
 
     if (str_starts_with("/kick ", command)) {
-        if (gNetworkType != NT_SERVER && !gIsModerator) {
+        if (gNetworkType != NT_SERVER && !npl->moderator) {
             djui_chat_message_create(DLANG(CHAT, NO_PERMS));
             return true;
         }
@@ -148,7 +143,7 @@ bool exec_chat_command(char* command) {
     }
 
     if (str_starts_with("/ban ", command)) {
-        if (gNetworkType != NT_SERVER && !gIsModerator) {
+        if (gNetworkType != NT_SERVER && !npl->moderator) {
             djui_chat_message_create(DLANG(CHAT, NO_PERMS));
             return true;
         }
@@ -171,7 +166,7 @@ bool exec_chat_command(char* command) {
     }
 
     if (str_starts_with("/permban ", command)) {
-        if (gNetworkType != NT_SERVER && !gIsModerator) {
+        if (gNetworkType != NT_SERVER && !npl->moderator) {
             djui_chat_message_create(DLANG(CHAT, NO_PERMS));
             return true;
         }
@@ -226,11 +221,14 @@ bool exec_chat_command(char* command) {
 
 void display_chat_commands(void) {
     djui_chat_message_create(DLANG(CHAT, PLAYERS_DESC));
-    if (gNetworkType == NT_SERVER || gIsModerator) {
+    if (gNetworkType == NT_SERVER || gNetworkPlayers[0].moderator) {
         djui_chat_message_create(DLANG(CHAT, KICK_DESC));
         djui_chat_message_create(DLANG(CHAT, BAN_DESC));
-        djui_chat_message_create(DLANG(CHAT, PERM_BAN_DESC));
-        djui_chat_message_create(DLANG(CHAT, MOD_DESC));
+
+        if (gNetworkType == NT_SERVER) {
+            djui_chat_message_create(DLANG(CHAT, PERM_BAN_DESC));
+            djui_chat_message_create(DLANG(CHAT, MOD_DESC));
+        }
     }
 #if defined(DEVELOPMENT)
     dev_display_chat_commands();

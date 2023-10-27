@@ -10,7 +10,7 @@ extern "C" {
 static inline bool ShouldUseF32Vtx(DataNode<Vtx>* aNode) {
     for (u32 i = 0; i != aNode->mSize; ++i) {
         for (u32 j = 0; j != 3; ++j) {
-            if (aNode->mData[i].n.ob[j] < -0x7FFF || 
+            if (aNode->mData[i].n.ob[j] < -0x7FFF ||
                 aNode->mData[i].n.ob[j] > +0x7FFF) {
                 return true;
             }

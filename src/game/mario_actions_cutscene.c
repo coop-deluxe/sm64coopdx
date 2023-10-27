@@ -349,6 +349,7 @@ void cutscene_put_cap_on(struct MarioState *m) {
     m->flags &= ~MARIO_CAP_IN_HAND;
     m->flags |= MARIO_CAP_ON_HEAD;
     play_sound(SOUND_ACTION_UNKNOWN43E, m->marioObj->header.gfx.cameraToObject);
+    m->cap = 0;
 }
 
 /**
@@ -524,10 +525,10 @@ s32 act_disappeared(struct MarioState *m) {
 
 s32 act_reading_automatic_dialog(struct MarioState *m) {
     if (m == NULL) { return TRUE; }
-    
+
     // Increment our action state to continue our 'cutscene'.
     m->actionState++;
-    
+
     if (m->actionState == 2) {
         enable_time_stop_if_alone();
     }
@@ -556,7 +557,7 @@ s32 act_reading_automatic_dialog(struct MarioState *m) {
         }  else if (m->actionState == 25) { // finished action
             disable_time_stop();
             if (gNeverEnteredCastle) {
-                gNeverEnteredCastle = FALSE;
+                gNeverEnteredCastle = false;
                 play_cutscene_music(SEQUENCE_ARGS(0, SEQ_LEVEL_INSIDE_CASTLE));
             }
             if (m->prevAction == ACT_STAR_DANCE_WATER) {
@@ -567,7 +568,7 @@ s32 act_reading_automatic_dialog(struct MarioState *m) {
             }
         }
     }
-    
+
     // apply head turn
     vec3s_set(m->marioBodyState->headAngle, m->actionTimer, 0, 0);
     return FALSE;
@@ -575,9 +576,9 @@ s32 act_reading_automatic_dialog(struct MarioState *m) {
 
 s32 act_reading_sign(struct MarioState *m) {
     if (m == NULL) { return TRUE; }
-     
+
     struct Object *marioObj = m->marioObj;
-    
+
     // If anybody but us is reading a sign,
     // Don't handle their action state.
     if (m->playerIndex != 0) {
@@ -628,11 +629,11 @@ s32 act_reading_sign(struct MarioState *m) {
 
 s32 act_debug_free_move(struct MarioState *m) {
     if (m == NULL) { return TRUE; }
-    
+
     u32 action = ACT_IDLE;
 
 #ifndef DEVELOPMENT
-    if (gNetworkType == NT_SERVER && gServerSettings.enableCheats == 0 && m->action == ACT_DEBUG_FREE_MOVE) {
+    if (gServerSettings.enableCheats == 0) {
         if (m->pos[1] <= m->waterLevel - 100) {
             action = ACT_WATER_IDLE;
         } else {
@@ -690,7 +691,7 @@ s32 act_debug_free_move(struct MarioState *m) {
 
 void general_star_dance_handler(struct MarioState *m, s32 isInWater) {
     if (m == NULL) { return; }
-    
+
     if (m->actionState == 0) {
         switch (++m->actionTimer) {
             case 1:
@@ -1149,7 +1150,7 @@ s32 act_warp_door_spawn(struct MarioState *m) {
         }
     } else if (m->usedObj == NULL || (m->usedObj->oAction == 0 || m->usedObj->oAction == 100)) {
         if (m->playerIndex == 0) {
-            if (gNeverEnteredCastle == TRUE && gCurrLevelNum == LEVEL_CASTLE) {
+            if (gNeverEnteredCastle && gCurrLevelNum == LEVEL_CASTLE) {
                 set_mario_action(m, ACT_READING_AUTOMATIC_DIALOG, gBehaviorValues.dialogs.CastleEnterDialog);
             } else {
                 set_mario_action(m, ACT_IDLE, 0);
@@ -1722,7 +1723,7 @@ s32 act_shocked(struct MarioState *m) {
 
 s32 act_squished(struct MarioState *m) {
     if (m == NULL) { return TRUE; }
-    
+
     f32 spaceUnderCeil;
     s16 surfAngle;
     s32 underSteepSurf = FALSE; // seems to be responsible for setting velocity?
@@ -2534,7 +2535,7 @@ static void end_peach_cutscene_dialog_1(struct MarioState *m) {
 #endif
             sEndPeachAnimation = 6;
             break;
-            
+
 #ifdef VERSION_SH
         case 111:
 #else
@@ -2638,7 +2639,7 @@ static void end_peach_cutscene_dialog_2(struct MarioState *m) {
 
 #ifdef VERSION_SH
         case 65:
-#else        
+#else
         case 45:
 #endif
             D_8032CBE8 = 1;

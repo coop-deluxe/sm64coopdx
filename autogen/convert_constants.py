@@ -166,7 +166,7 @@ def process_define(filename, line):
             continue
         p = re.sub(r'0x[a-fA-F0-9]+', '', p)
         if re.search('[a-z]', p) != None and 'VERSION_TEXT' not in line:
-            if 'gCurrentObject' not in line:
+            if 'gCurrentObject' not in line and 'gNetworkType' not in line:
                 print('UNRECOGNIZED DEFINE: ' + line)
             return None
 

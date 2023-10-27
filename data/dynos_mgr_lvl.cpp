@@ -56,7 +56,7 @@ void DynOS_Lvl_Activate(s32 modIndex, const SysPath &aFilename, const char *aLev
     auto& _OverrideLevelScripts = DynosOverrideLevelScripts();
 
     // make sure vanilla levels were parsed
-    DynOS_Level_GetCount();
+    DynOS_Level_Init();
 
     // check for duplicates
     for (s32 i = 0; i < _CustomLevelScripts.Count(); ++i) {
@@ -121,7 +121,7 @@ const char* DynOS_Lvl_GetToken(u32 index) {
     if (index >= gfxData->mLuaTokenList.Count()) {
         return NULL;
     }
- 
+
     return gfxData->mLuaTokenList[index].begin();
 }
 

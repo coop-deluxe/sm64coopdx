@@ -100,7 +100,7 @@ extern "C" {
         }                                                              \
     }                                                                  \
     return NULL;
-    
+
 #define MGR_FIND_DATA_FROM_TABLES(_DataTable, _DataTable2, _Cast)       \
     size_t _count = sizeof(_DataTable) / (2 * sizeof(_DataTable[0]));   \
     for (u32 _i = 0; _i < _count; _i++) {                               \
@@ -181,6 +181,48 @@ static const void* sDynosBuiltinScriptPtrs[] = {
     define_builtin(level_wf_entry),
     define_builtin(level_wmotr_entry),
     define_builtin(level_main_menu_entry_1),
+};
+
+#define define_level_original(lvl, script) (void*) script
+
+void* gDynosLevelScriptsOriginal[LEVEL_COUNT] = {
+    define_level_original(0, NULL),
+    define_level_original(LEVEL_UNKNOWN_1, NULL),
+    define_level_original(LEVEL_UNKNOWN_2, NULL),
+    define_level_original(LEVEL_UNKNOWN_3, NULL),
+    define_level_original(LEVEL_BBH, level_bbh_entry),
+    define_level_original(LEVEL_CCM, level_ccm_entry),
+    define_level_original(LEVEL_CASTLE, level_castle_inside_entry),
+    define_level_original(LEVEL_HMC, level_hmc_entry),
+    define_level_original(LEVEL_SSL, level_ssl_entry),
+    define_level_original(LEVEL_BOB, level_bob_entry),
+    define_level_original(LEVEL_SL, level_sl_entry),
+    define_level_original(LEVEL_WDW, level_wdw_entry),
+    define_level_original(LEVEL_JRB, level_jrb_entry),
+    define_level_original(LEVEL_THI, level_thi_entry),
+    define_level_original(LEVEL_TTC, level_ttc_entry),
+    define_level_original(LEVEL_RR, level_rr_entry),
+    define_level_original(LEVEL_CASTLE_GROUNDS, level_castle_grounds_entry),
+    define_level_original(LEVEL_BITDW, level_bitdw_entry),
+    define_level_original(LEVEL_VCUTM, level_vcutm_entry),
+    define_level_original(LEVEL_BITFS, level_bitfs_entry),
+    define_level_original(LEVEL_SA, level_sa_entry),
+    define_level_original(LEVEL_BITS, level_bits_entry),
+    define_level_original(LEVEL_LLL, level_lll_entry),
+    define_level_original(LEVEL_DDD, level_ddd_entry),
+    define_level_original(LEVEL_WF, level_wf_entry),
+    define_level_original(LEVEL_ENDING, level_ending_entry),
+    define_level_original(LEVEL_CASTLE_COURTYARD, level_castle_courtyard_entry),
+    define_level_original(LEVEL_PSS, level_pss_entry),
+    define_level_original(LEVEL_COTMC, level_cotmc_entry),
+    define_level_original(LEVEL_TOTWC, level_totwc_entry),
+    define_level_original(LEVEL_BOWSER_1, level_bowser_1_entry),
+    define_level_original(LEVEL_WMOTR, level_wmotr_entry),
+    define_level_original(LEVEL_UNKNOWN_32, NULL),
+    define_level_original(LEVEL_BOWSER_2, level_bowser_2_entry),
+    define_level_original(LEVEL_BOWSER_3, level_bowser_3_entry),
+    define_level_original(LEVEL_UNKNOWN_35, NULL),
+    define_level_original(LEVEL_TTM, level_ttm_entry),
 };
 
 const void* DynOS_Builtin_ScriptPtr_GetFromName(const char* aDataName) {
@@ -1089,7 +1131,7 @@ static const void* sDynosBuiltinCols[] = {
     define_builtin(wf_seg7_collision_trapezoid),
     define_builtin(wf_seg7_collision_tumbling_bridge),
     define_builtin(wmotr_seg7_collision),
-    
+
     // Actor Collisions
     define_builtin(bbh_seg7_collision_coffin),
     define_builtin(bbh_seg7_collision_haunted_bookshelf),
@@ -1356,7 +1398,7 @@ static const void* sDynosBuiltinFuncs[] = {
     define_builtin(geo_movtex_draw_water_regions_ext),
     define_builtin(lvl_init_or_update),
     define_builtin(geo_choose_area_ext),
-    
+
     // Behaviors
     define_builtin(bhv_cap_switch_loop),
     define_builtin(bhv_tiny_star_particles_init),
@@ -1909,13 +1951,13 @@ static const void* sDynosBuiltinFuncs[] = {
     define_builtin(bhv_dust_smoke_loop),
     define_builtin(bhv_yoshi_loop),
     define_builtin(bhv_volcano_trap_loop),
-    
+
     // mario_misc.h
     define_builtin(bhv_toad_message_init),
     define_builtin(bhv_toad_message_loop),
     define_builtin(bhv_unlock_door_star_init),
     define_builtin(bhv_unlock_door_star_loop),
-    
+
     // Other
     define_builtin(load_object_collision_model),
     define_builtin(obj_set_secondary_camera_focus),
