@@ -1535,6 +1535,7 @@
 - smlua_level_utils.h
    - [level_is_vanilla_level](functions-4.md#level_is_vanilla_level)
    - [level_register](functions-4.md#level_register)
+   - [smlua_level_util_change_area](functions-4.md#smlua_level_util_change_area)
    - [smlua_level_util_get_info](functions-4.md#smlua_level_util_get_info)
    - [smlua_level_util_get_info_from_short_name](functions-4.md#smlua_level_util_get_info_from_short_name)
    - [warp_exit_level](functions-4.md#warp_exit_level)

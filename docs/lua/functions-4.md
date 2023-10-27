@@ -7524,6 +7524,26 @@
 
 <br />
 
+## [smlua_level_util_change_area](#smlua_level_util_change_area)
+
+### Lua Example
+`smlua_level_util_change_area(areaIndex)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| areaIndex | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void smlua_level_util_change_area(s32 areaIndex);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [smlua_level_util_get_info](#smlua_level_util_get_info)
 
 ### Lua Example

@@ -35,7 +35,7 @@
 #include "src/game/object_list_processor.h"
 #include "src/game/behavior_actions.h"
 #include "src/game/mario_misc.h"
-#include "src/pc/mods/mod_storage.h"
+#include "src/pc/mods/mod_storage.c.h"
 #include "src/pc/utils/misc.h"
 #include "src/game/level_update.h"
 #include "src/game/area.h"
@@ -296,6 +296,22 @@ int smlua_func_bhv_1up_sliding_loop(UNUSED lua_State* L) {
 
 
     bhv_1up_sliding_loop();
+
+    return 1;
+}
+
+int smlua_func_bhv_1up_trigger_init(UNUSED lua_State* L) {
+    if (!gCurrentObject) { return 0; }
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "bhv_1up_trigger_init", 0, top);
+        return 0;
+    }
+
+
+    bhv_1up_trigger_init();
 
     return 1;
 }
@@ -13685,23 +13701,6 @@ int smlua_func_level_trigger_warp(lua_State* L) {
     return 1;
 }
 
-int smlua_func_warp_special(lua_State* L) {
-    if (L == NULL) { return 0; }
-
-    int top = lua_gettop(L);
-    if (top != 1) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "warp_special", 1, top);
-        return 0;
-    }
-
-    s32 arg = smlua_to_integer(L, 1);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "warp_special"); return 0; }
-
-    warp_special(arg);
-
-    return 1;
-}
-
   /////////////
  // mario.h //
 /////////////
@@ -19370,9 +19369,24 @@ int smlua_func_update_all_mario_stars(UNUSED lua_State* L) {
     return 1;
 }
 
-  ///////////////////
- // mod_storage.h //
-///////////////////
+  /////////////////////
+ // mod_storage.c.h //
+/////////////////////
+
+int smlua_func_mod_storage_clear(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "mod_storage_clear", 0, top);
+        return 0;
+    }
+
+
+    lua_pushboolean(L, mod_storage_clear());
+
+    return 1;
+}
 
 int smlua_func_mod_storage_load(lua_State* L) {
     if (L == NULL) { return 0; }
@@ -19387,6 +19401,40 @@ int smlua_func_mod_storage_load(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mod_storage_load"); return 0; }
 
     lua_pushstring(L, mod_storage_load(key));
+
+    return 1;
+}
+
+int smlua_func_mod_storage_load_bool(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "mod_storage_load_bool", 1, top);
+        return 0;
+    }
+
+    const char* key = smlua_to_string(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mod_storage_load_bool"); return 0; }
+
+    lua_pushboolean(L, mod_storage_load_bool(key));
+
+    return 1;
+}
+
+int smlua_func_mod_storage_load_number(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "mod_storage_load_number", 1, top);
+        return 0;
+    }
+
+    const char* key = smlua_to_string(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mod_storage_load_number"); return 0; }
+
+    lua_pushnumber(L, mod_storage_load_number(key));
 
     return 1;
 }
@@ -19406,6 +19454,44 @@ int smlua_func_mod_storage_save(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "mod_storage_save"); return 0; }
 
     lua_pushboolean(L, mod_storage_save(key, value));
+
+    return 1;
+}
+
+int smlua_func_mod_storage_save_bool(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "mod_storage_save_bool", 2, top);
+        return 0;
+    }
+
+    const char* key = smlua_to_string(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mod_storage_save_bool"); return 0; }
+    bool value = smlua_to_boolean(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "mod_storage_save_bool"); return 0; }
+
+    lua_pushboolean(L, mod_storage_save_bool(key, value));
+
+    return 1;
+}
+
+int smlua_func_mod_storage_save_number(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "mod_storage_save_number", 2, top);
+        return 0;
+    }
+
+    const char* key = smlua_to_string(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mod_storage_save_number"); return 0; }
+    double value = smlua_to_number(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "mod_storage_save_number"); return 0; }
+
+    lua_pushboolean(L, mod_storage_save_number(key, value));
 
     return 1;
 }
@@ -27398,7 +27484,7 @@ int smlua_func_smlua_level_util_get_info_from_short_name(lua_State* L) {
         return 0;
     }
 
-    char* shortName = (char*)smlua_to_cobject(L, 1, LOT_NONE);
+    const char* shortName = smlua_to_string(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "smlua_level_util_get_info_from_short_name"); return 0; }
 
     smlua_push_object(L, LOT_CUSTOMLEVELINFO, smlua_level_util_get_info_from_short_name(shortName));
@@ -27710,6 +27796,23 @@ int smlua_func_allocate_mario_action(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "allocate_mario_action"); return 0; }
 
     lua_pushinteger(L, allocate_mario_action(actFlags));
+
+    return 1;
+}
+
+int smlua_func_camera_allow_toxic_gas_camera(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "camera_allow_toxic_gas_camera", 1, top);
+        return 0;
+    }
+
+    u8 allow = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "camera_allow_toxic_gas_camera"); return 0; }
+
+    camera_allow_toxic_gas_camera(allow);
 
     return 1;
 }
@@ -29641,6 +29744,21 @@ int smlua_func_obj_set_vel(lua_State* L) {
     return 1;
 }
 
+int smlua_func_restore_exclamation_box_original_contents(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "restore_exclamation_box_original_contents", 0, top);
+        return 0;
+    }
+
+
+    restore_exclamation_box_original_contents();
+
+    return 1;
+}
+
 int smlua_func_set_whirlpools(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -30580,6 +30698,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "bhv_1up_loop", smlua_func_bhv_1up_loop);
     smlua_bind_function(L, "bhv_1up_running_away_loop", smlua_func_bhv_1up_running_away_loop);
     smlua_bind_function(L, "bhv_1up_sliding_loop", smlua_func_bhv_1up_sliding_loop);
+    smlua_bind_function(L, "bhv_1up_trigger_init", smlua_func_bhv_1up_trigger_init);
     smlua_bind_function(L, "bhv_1up_walking_loop", smlua_func_bhv_1up_walking_loop);
     smlua_bind_function(L, "bhv_act_selector_init", smlua_func_bhv_act_selector_init);
     smlua_bind_function(L, "bhv_act_selector_loop", smlua_func_bhv_act_selector_loop);
@@ -31362,7 +31481,6 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "get_painting_warp_node", smlua_func_get_painting_warp_node);
     smlua_bind_function(L, "initiate_painting_warp", smlua_func_initiate_painting_warp);
     smlua_bind_function(L, "level_trigger_warp", smlua_func_level_trigger_warp);
-    smlua_bind_function(L, "warp_special", smlua_func_warp_special);
 
     // mario.h
     smlua_bind_function(L, "adjust_sound_for_speed", smlua_func_adjust_sound_for_speed);
@@ -31605,9 +31723,14 @@ void smlua_bind_functions_autogen(void) {
     // misc.h
     smlua_bind_function(L, "update_all_mario_stars", smlua_func_update_all_mario_stars);
 
-    // mod_storage.h
+    // mod_storage.c.h
+    smlua_bind_function(L, "mod_storage_clear", smlua_func_mod_storage_clear);
     smlua_bind_function(L, "mod_storage_load", smlua_func_mod_storage_load);
+    smlua_bind_function(L, "mod_storage_load_bool", smlua_func_mod_storage_load_bool);
+    smlua_bind_function(L, "mod_storage_load_number", smlua_func_mod_storage_load_number);
     smlua_bind_function(L, "mod_storage_save", smlua_func_mod_storage_save);
+    smlua_bind_function(L, "mod_storage_save_bool", smlua_func_mod_storage_save_bool);
+    smlua_bind_function(L, "mod_storage_save_number", smlua_func_mod_storage_save_number);
 
     // network_player.h
     smlua_bind_function(L, "get_network_player_from_area", smlua_func_get_network_player_from_area);
@@ -32046,6 +32169,7 @@ void smlua_bind_functions_autogen(void) {
     // smlua_misc_utils.h
     smlua_bind_function(L, "add_scroll_target", smlua_func_add_scroll_target);
     smlua_bind_function(L, "allocate_mario_action", smlua_func_allocate_mario_action);
+    smlua_bind_function(L, "camera_allow_toxic_gas_camera", smlua_func_camera_allow_toxic_gas_camera);
     smlua_bind_function(L, "camera_config_enable_analog_cam", smlua_func_camera_config_enable_analog_cam);
     smlua_bind_function(L, "camera_config_enable_free_cam", smlua_func_camera_config_enable_free_cam);
     smlua_bind_function(L, "camera_config_enable_mouse_look", smlua_func_camera_config_enable_mouse_look);
@@ -32161,6 +32285,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "obj_move_xyz", smlua_func_obj_move_xyz);
     smlua_bind_function(L, "obj_set_model_extended", smlua_func_obj_set_model_extended);
     smlua_bind_function(L, "obj_set_vel", smlua_func_obj_set_vel);
+    smlua_bind_function(L, "restore_exclamation_box_original_contents", smlua_func_restore_exclamation_box_original_contents);
     smlua_bind_function(L, "set_whirlpools", smlua_func_set_whirlpools);
     smlua_bind_function(L, "spawn_non_sync_object", smlua_func_spawn_non_sync_object);
     smlua_bind_function(L, "spawn_sync_object", smlua_func_spawn_sync_object);

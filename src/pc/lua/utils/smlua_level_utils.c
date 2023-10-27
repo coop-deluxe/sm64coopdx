@@ -2,6 +2,9 @@
 #include "types.h"
 #include "smlua_level_utils.h"
 #include "pc/lua/smlua.h"
+#include "game/area.h"
+
+#define MIN_AREA_INDEX 0
 
 struct CustomLevelInfo* sCustomLevelHead = NULL;
 static s16 sCustomLevelNumNext = CUSTOM_LEVEL_NUM_START;
