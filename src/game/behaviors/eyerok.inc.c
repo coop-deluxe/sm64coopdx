@@ -622,6 +622,7 @@ static void eyerok_hand_act_double_pound(void) {
 
 void bhv_eyerok_hand_loop(void) {
     if (!o->parentObj) { return; }
+    o->allowRemoteInteractions = TRUE;
     if (o->oAction == EYEROK_HAND_ACT_DEAD) {
         eyerok_hand_act_die_event();
         return;

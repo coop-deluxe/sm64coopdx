@@ -1250,6 +1250,7 @@
 | Field | Type | Access |
 | ----- | ---- | ------ |
 | activeFlags | `integer` |  |
+| allowRemoteInteractions | `integer` |  |
 | areaTimer | `integer` |  |
 | areaTimerDuration | `integer` |  |
 | areaTimerType | [enum AreaTimerType](constants.md#enum-AreaTimerType) |  |

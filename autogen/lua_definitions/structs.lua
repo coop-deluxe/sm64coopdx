@@ -869,6 +869,7 @@
 
 --- @class Object
 --- @field public activeFlags integer
+--- @field public allowRemoteInteractions integer
 --- @field public areaTimer integer
 --- @field public areaTimerDuration integer
 --- @field public areaTimerType AreaTimerType

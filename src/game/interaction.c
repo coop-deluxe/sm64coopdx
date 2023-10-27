@@ -2307,12 +2307,14 @@ void mario_process_interactions(struct MarioState *m) {
         s32 i;
         for (i = 0; i < 32; i++) {
             u32 interactType = sInteractionHandlers[i].interactType;
-            if (m->playerIndex != 0 && interactType != (u32)INTERACT_PLAYER && interactType != (u32)INTERACT_POLE) {
-                // skip interactions for remote
-                continue;
-            }
             if (m->collidedObjInteractTypes & interactType) {
                 struct Object *object = mario_get_collided_object(m, interactType);
+                bool allowRemoteInteractions = object && object->allowRemoteInteractions;
+
+                if (m->playerIndex != 0 && interactType != (u32)INTERACT_PLAYER && interactType != (u32)INTERACT_POLE && !allowRemoteInteractions) {
+                    // skip interactions for remote
+                    continue;
+                }
 
                 m->collidedObjInteractTypes &= ~interactType;
 

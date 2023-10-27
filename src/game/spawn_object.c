@@ -333,6 +333,7 @@ struct Object *allocate_object(struct ObjectNode *objList) {
     obj->areaTimerDuration = 0;
     obj->areaTimerRunOnceCallback = NULL;
     obj->setHome = FALSE;
+    obj->allowRemoteInteractions = FALSE;
 
     obj->usingObj = NULL;
 

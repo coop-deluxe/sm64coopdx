@@ -993,9 +993,10 @@ static struct LuaObjectField sNetworkPlayerFields[LUA_NETWORK_PLAYER_FIELD_COUNT
     { "type",                   LVT_U8,      offsetof(struct NetworkPlayer, type),                   true,  LOT_NONE          },
 };
 
-#define LUA_OBJECT_FIELD_COUNT 757
+#define LUA_OBJECT_FIELD_COUNT 758
 static struct LuaObjectField sObjectFields[LUA_OBJECT_FIELD_COUNT] = {
     { "activeFlags",                                LVT_S16,                 offsetof(struct Object, activeFlags),                                false, LOT_NONE         },
+    { "allowRemoteInteractions",                    LVT_U8,                  offsetof(struct Object, allowRemoteInteractions),                    false, LOT_NONE         },
     { "areaTimer",                                  LVT_U32,                 offsetof(struct Object, areaTimer),                                  false, LOT_NONE         },
     { "areaTimerDuration",                          LVT_U32,                 offsetof(struct Object, areaTimerDuration),                          false, LOT_NONE         },
 //  { "areaTimerRunOnceCallback)(void)",            LVT_???,                 offsetof(struct Object, areaTimerRunOnceCallback)(void)),            false, LOT_???          }, <--- UNIMPLEMENTED
