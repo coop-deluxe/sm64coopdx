@@ -39,6 +39,7 @@
    - [bhv_1up_loop](functions-2.md#bhv_1up_loop)
    - [bhv_1up_running_away_loop](functions-2.md#bhv_1up_running_away_loop)
    - [bhv_1up_sliding_loop](functions-2.md#bhv_1up_sliding_loop)
+   - [bhv_1up_trigger_init](functions-2.md#bhv_1up_trigger_init)
    - [bhv_1up_walking_loop](functions-2.md#bhv_1up_walking_loop)
    - [bhv_act_selector_init](functions-2.md#bhv_act_selector_init)
    - [bhv_act_selector_loop](functions-2.md#bhv_act_selector_loop)

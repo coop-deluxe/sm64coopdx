@@ -79,6 +79,11 @@ function bhv_1up_sliding_loop()
 end
 
 --- @return nil
+function bhv_1up_trigger_init()
+    -- ...
+end
+
+--- @return nil
 function bhv_1up_walking_loop()
     -- ...
 end

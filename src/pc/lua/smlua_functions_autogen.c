@@ -300,6 +300,22 @@ int smlua_func_bhv_1up_sliding_loop(UNUSED lua_State* L) {
     return 1;
 }
 
+int smlua_func_bhv_1up_trigger_init(UNUSED lua_State* L) {
+    if (!gCurrentObject) { return 0; }
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "bhv_1up_trigger_init", 0, top);
+        return 0;
+    }
+
+
+    bhv_1up_trigger_init();
+
+    return 1;
+}
+
 int smlua_func_bhv_1up_walking_loop(UNUSED lua_State* L) {
     if (!gCurrentObject) { return 0; }
     if (L == NULL) { return 0; }
@@ -30618,6 +30634,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "bhv_1up_loop", smlua_func_bhv_1up_loop);
     smlua_bind_function(L, "bhv_1up_running_away_loop", smlua_func_bhv_1up_running_away_loop);
     smlua_bind_function(L, "bhv_1up_sliding_loop", smlua_func_bhv_1up_sliding_loop);
+    smlua_bind_function(L, "bhv_1up_trigger_init", smlua_func_bhv_1up_trigger_init);
     smlua_bind_function(L, "bhv_1up_walking_loop", smlua_func_bhv_1up_walking_loop);
     smlua_bind_function(L, "bhv_act_selector_init", smlua_func_bhv_act_selector_init);
     smlua_bind_function(L, "bhv_act_selector_loop", smlua_func_bhv_act_selector_loop);

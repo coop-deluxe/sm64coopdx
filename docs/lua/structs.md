@@ -1131,6 +1131,7 @@
 | prevNumStarsForDialog | `integer` |  |
 | quicksandDepth | `number` |  |
 | riddenObj | [Object](structs.md#Object) |  |
+| skipWarpInteractionsTimer | `integer` |  |
 | slideVelX | `number` |  |
 | slideVelZ | `number` |  |
 | slideYaw | `integer` |  |

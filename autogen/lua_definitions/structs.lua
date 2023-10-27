@@ -785,6 +785,7 @@
 --- @field public prevNumStarsForDialog integer
 --- @field public quicksandDepth number
 --- @field public riddenObj Object
+--- @field public skipWarpInteractionsTimer integer
 --- @field public slideVelX number
 --- @field public slideVelZ number
 --- @field public slideYaw integer

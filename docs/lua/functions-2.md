@@ -232,6 +232,24 @@
 
 <br />
 
+## [bhv_1up_trigger_init](#bhv_1up_trigger_init)
+
+### Lua Example
+`bhv_1up_trigger_init()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void bhv_1up_trigger_init(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [bhv_1up_walking_loop](#bhv_1up_walking_loop)
 
 ### Lua Example
