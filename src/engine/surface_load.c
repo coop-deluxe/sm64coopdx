@@ -375,10 +375,12 @@ static bool surface_has_force(s16 surfaceType) {
  * SURFACE_FLAG_NO_CAM_COLLISION flag.
  */
 static bool surf_has_no_cam_collision(s16 surfaceType) {
-    return surfaceType == SURFACE_SWITCH ||
+    return surfaceType == SURFACE_RAYCAST ||
            surfaceType == SURFACE_NO_CAM_COLLISION ||
            surfaceType == SURFACE_NO_CAM_COLLISION_77 ||
-           surfaceType == SURFACE_NO_CAM_COL_VERY_SLIPPERY;
+           surfaceType == SURFACE_NO_CAM_COL_VERY_SLIPPERY ||
+           surfaceType == SURFACE_VANISH_CAP_WALLS ||
+           surfaceType == SURFACE_SWITCH;
 }
 
 /**
