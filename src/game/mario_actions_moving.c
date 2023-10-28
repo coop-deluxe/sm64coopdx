@@ -77,14 +77,14 @@ void play_step_sound(struct MarioState *m, s16 frame1, s16 frame2) {
     if (!m) { return; }
     if (is_anim_past_frame(m, frame1) || is_anim_past_frame(m, frame2)) {
         if (m->flags & MARIO_METAL_CAP) {
-            if (m->marioObj->header.gfx.animInfo.animID == CHAR_ANIM_TIPTOE) {
+            if (m->marioObj->header.gfx.animInfo.animID == get_character_anim(m, CHAR_ANIM_TIPTOE)) {
                 play_sound_and_spawn_particles(m, SOUND_ACTION_METAL_STEP_TIPTOE, 0);
             } else {
                 play_sound_and_spawn_particles(m, SOUND_ACTION_METAL_STEP, 0);
             }
         } else if (m->quicksandDepth > 50.0f) {
             play_sound(SOUND_ACTION_QUICKSAND_STEP, m->marioObj->header.gfx.cameraToObject);
-        } else if (m->marioObj->header.gfx.animInfo.animID == CHAR_ANIM_TIPTOE) {
+        } else if (m->marioObj->header.gfx.animInfo.animID == get_character_anim(m, CHAR_ANIM_TIPTOE)) {
             play_sound_and_spawn_particles(m, SOUND_ACTION_TERRAIN_STEP_TIPTOE, 0);
         } else {
             play_sound_and_spawn_particles(m, SOUND_ACTION_TERRAIN_STEP, 0);
@@ -755,9 +755,9 @@ void tilt_body_walking(struct MarioState *m, s16 startYaw) {
     if (!m) { return; }
     struct MarioBodyState *val0C = m->marioBodyState;
     UNUSED struct Object *marioObj = m->marioObj;
-    //s16 animID = m->marioObj->header.gfx.animInfo.animID;
-    
-    if (m->action == ACT_WALKING) {//animID == CHAR_ANIM_WALKING || animID == CHAR_ANIM_RUNNING) {
+    s16 animID = m->marioObj->header.gfx.animInfo.animID;
+
+    if (animID == get_character_anim(m, CHAR_ANIM_WALKING) || animID == get_character_anim(m, CHAR_ANIM_RUNNING)) {
         s16 dYaw = m->faceAngle[1] - startYaw;
         //! (Speed Crash) These casts can cause a crash if (dYaw * forwardVel / 12) or
         //! (forwardVel * 170) exceed or equal 2^31.

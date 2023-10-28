@@ -120,9 +120,12 @@ s16 set_mario_animation(struct MarioState *m, s32 targetAnimID) {
  * Sets the character specific animation without any acceleration, running at its default rate.
  */
 s16 set_character_animation(struct MarioState *m, s32 targetAnimID) {
+    if (!m) { return 0; }
     struct Object *o = m->marioObj;
+    if (!o || !m->animation) { return 0; }
     struct Animation *targetAnim = m->animation->targetAnim;
     s32 charAnimID = get_character_anim(m, targetAnimID);
+    if (!targetAnim) { return 0; }
     
     if (load_patchable_table(m->animation, charAnimID)) {
         targetAnim->values = (void *) VIRTUAL_TO_PHYSICAL((u8 *) targetAnim + (uintptr_t) targetAnim->values);
@@ -193,8 +196,11 @@ s16 set_mario_anim_with_accel(struct MarioState *m, s32 targetAnimID, s32 accel)
  * slowed down via acceleration.
  */
 s16 set_character_anim_with_accel(struct MarioState *m, s32 targetAnimID, s32 accel) {
+    if (!m) { return 0; }
     struct Object *o = m->marioObj;
+    if (!o || !m->animation) { return 0; }
     struct Animation *targetAnim = m->animation->targetAnim;
+    if (!targetAnim) { return 0; }
     s32 charAnimID = get_character_anim(m, targetAnimID);
 
     if (load_patchable_table(m->animation, charAnimID)) {

@@ -1566,8 +1566,9 @@ void play_character_sound_if_no_flag(struct MarioState* m, enum CharacterSound c
 f32 get_character_anim_offset(struct MarioState* m) {
     if (m == NULL || m->marioObj == NULL) { return 0; }
     struct Object* marioObj = m->marioObj;
+    if (!marioObj) { return 0; }
     struct Character* c = get_character(m);
-    if (!c->animOffsetEnabled) { return 0; }
+    if (!c || !c->animOffsetEnabled) { return 0; }
     s32 animID = marioObj->header.gfx.animInfo.animID;
     if (animID < 0 || animID >= ANIM_TYPE_MAX) { return 0; }
 
@@ -1590,8 +1591,9 @@ f32 get_character_anim_offset(struct MarioState* m) {
 void update_character_anim_offset(struct MarioState* m) {
     if (m == NULL || m->marioObj == NULL) { return; }
     struct Object* marioObj = m->marioObj;
+    if (!marioObj) { return; }
     struct Character* c = get_character(m);
-    if (!c->animOffsetEnabled) { return; }
+    if (!c || !c->animOffsetEnabled) { return; }
 
     f32 targetOffset = get_character_anim_offset(m);
 
@@ -1611,6 +1613,6 @@ s32 get_character_anim(struct MarioState* m, enum CharacterAnimID characterAnim)
     if (m == NULL || m->marioObj == NULL) { return 0; }
 	
     struct Character* character = ((m == NULL || m->character == NULL) ? &gCharacters[CT_MARIO] : m->character);
-    if (characterAnim < 0 || characterAnim >= CHAR_ANIM_MAX) { return 0; }
+    if (!character || characterAnim < 0 || characterAnim >= CHAR_ANIM_MAX) { return 0; }
     return character->anims[characterAnim];
 }
