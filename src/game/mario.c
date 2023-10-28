@@ -43,7 +43,6 @@
 #include "pc/network/network.h"
 #include "pc/lua/smlua.h"
 #include "pc/network/socket/socket.h"
-#include "pc/logfile.h"
 #ifdef BETTERCAMERA
 #include "bettercamera.h"
 #endif
@@ -2056,30 +2055,12 @@ static u8 prevent_hang(u32 hangPreventionActions[], u8* hangPreventionIndex) {
     hangPreventionActions[*hangPreventionIndex] = gMarioState->action;
     *hangPreventionIndex = *hangPreventionIndex + 1;
     if (*hangPreventionIndex < MAX_HANG_PREVENTION) { return FALSE; }
-
-    // only dump the log once
-    static u8 dumped = FALSE;
-    if (dumped) { return TRUE; }
-    dumped = TRUE;
-
-    // open the log
-    FILE* f = logfile_open(LFT_HANG);
-    if (f == NULL) { return TRUE; }
-
+    
     // complain to console
     printf("#######################################\n");
     printf("# HANG PREVENTED                      #\n");
     printf("# Send the error log to the developer #\n");
     printf("#######################################\n");
-
-    // save to log
-    fprintf(f, "(gMarioState->action: hang prevention begin)\n");
-    for (s32 i = 0; i < MAX_HANG_PREVENTION; i++) {
-        fprintf(f, "%08X\n", hangPreventionActions[i]);
-    }
-    fprintf(f, "(gMarioState->action: hang prevention end)\n");
-
-    logfile_close(LFT_HANG);
 
     return TRUE;
 }

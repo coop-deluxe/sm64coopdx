@@ -408,6 +408,8 @@ $(eval $(call validate-option,COMPARE,0 1))
 
 ifeq ($(OSX_BUILD),0)
 	USE_APP := 0
+else ifeq ($(shell uname -m),arm64)
+  DISCORD_SDK := 0
 endif
 
 TARGET_STRING := sm64.$(VERSION).$(GRUCODE)
@@ -959,7 +961,11 @@ ifeq ($(WINDOWS_BUILD),1)
     LDFLAGS += -Llib/lua/win64 -l:liblua53.a
   endif
 else ifeq ($(OSX_BUILD),1)
-  LDFLAGS += -L./lib/lua/mac/ -l lua53
+  ifeq ($(shell uname -m),arm64)
+    LDFLAGS += -L./lib/lua/mac_arm/ -l lua53
+  else
+    LDFLAGS += -L./lib/lua/mac_intel/ -l lua53
+  endif
 else ifeq ($(TARGET_RPI),1)
 	ifneq (,$(findstring aarch64,$(machine)))
     LDFLAGS += -Llib/lua/linux -l:liblua53-arm64.a
@@ -980,9 +986,15 @@ ifeq ($(COOPNET),1)
       LDFLAGS += -Llib/coopnet/win64 -l:libcoopnet.a -l:libjuice.a -lbcrypt -lws2_32 -liphlpapi
     endif
   else ifeq ($(OSX_BUILD),1)
-    LDFLAGS += -Wl,-rpath,@loader_path -L./lib/coopnet/mac/ -l coopnet
-    COOPNET_LIBS += ./lib/coopnet/mac/libcoopnet.dylib
-    COOPNET_LIBS += ./lib/coopnet/mac/libjuice.1.2.2.dylib
+    ifeq ($(shell uname -m),arm64)
+      LDFLAGS += -Wl,-rpath,@loader_path -L./lib/coopnet/mac_arm/ -l coopnet
+      COOPNET_LIBS += ./lib/coopnet/mac_arm/libcoopnet.dylib
+      COOPNET_LIBS += ./lib/coopnet/mac_arm/libjuice.1.2.2.dylib
+    else
+      LDFLAGS += -Wl,-rpath,@loader_path -L./lib/coopnet/mac_intel/ -l coopnet
+      COOPNET_LIBS += ./lib/coopnet/mac_intel/libcoopnet.dylib
+      COOPNET_LIBS += ./lib/coopnet/mac_intel/libjuice.1.2.2.dylib
+    endif
   else ifeq ($(TARGET_RPI),1)
     ifneq (,$(findstring aarch64,$(machine)))
       LDFLAGS += -Llib/coopnet/linux -l:libcoopnet-arm64.a -l:libjuice.a
