@@ -2,7 +2,7 @@
 #include "djui.h"
 
 struct DjuiConsole {
-    struct DjuiBase base;
+    struct DjuiThreePanel* panel;
     struct DjuiFlowLayout* flow;
     bool scrolling;
 };

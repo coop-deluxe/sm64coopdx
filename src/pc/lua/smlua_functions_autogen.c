@@ -13,6 +13,7 @@
 #include "src/game/mario.h"
 #include "src/pc/djui/djui_popup.h"
 #include "src/pc/network/network_utils.h"
+#include "src/pc/djui/djui_console.h"
 #include "src/pc/djui/djui_chat_message.h"
 #include "src/game/interaction.h"
 #include "src/game/level_info.h"
@@ -12060,6 +12061,25 @@ int smlua_func_djui_chat_message_create(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "djui_chat_message_create"); return 0; }
 
     djui_chat_message_create(message);
+
+    return 1;
+}
+
+  ////////////////////
+ // djui_console.h //
+////////////////////
+
+int smlua_func_djui_console_toggle(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "djui_console_toggle", 0, top);
+        return 0;
+    }
+
+
+    djui_console_toggle();
 
     return 1;
 }
@@ -28953,6 +28973,23 @@ int smlua_func_is_transition_playing(UNUSED lua_State* L) {
     return 1;
 }
 
+int smlua_func_log_to_console(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "log_to_console", 1, top);
+        return 0;
+    }
+
+    const char* message = smlua_to_string(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "log_to_console"); return 0; }
+
+    log_to_console(message);
+
+    return 1;
+}
+
 int smlua_func_movtexqc_register(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -31630,6 +31667,9 @@ void smlua_bind_functions_autogen(void) {
     // djui_chat_message.h
     smlua_bind_function(L, "djui_chat_message_create", smlua_func_djui_chat_message_create);
 
+    // djui_console.h
+    smlua_bind_function(L, "djui_console_toggle", smlua_func_djui_console_toggle);
+
     // djui_hud_utils.h
     smlua_bind_function(L, "djui_hud_get_mouse_x", smlua_func_djui_hud_get_mouse_x);
     smlua_bind_function(L, "djui_hud_get_mouse_y", smlua_func_djui_hud_get_mouse_y);
@@ -32489,6 +32529,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "hud_show", smlua_func_hud_show);
     smlua_bind_function(L, "is_game_paused", smlua_func_is_game_paused);
     smlua_bind_function(L, "is_transition_playing", smlua_func_is_transition_playing);
+    smlua_bind_function(L, "log_to_console", smlua_func_log_to_console);
     smlua_bind_function(L, "movtexqc_register", smlua_func_movtexqc_register);
     smlua_bind_function(L, "play_transition", smlua_func_play_transition);
     smlua_bind_function(L, "save_file_get_using_backup_slot", smlua_func_save_file_get_using_backup_slot);

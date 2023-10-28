@@ -135,7 +135,6 @@ void djui_render(void) {
     }
 
     djui_cursor_update();
-    djui_base_render(&gDjuiConsole->base);
     djui_interactable_update();
     djui_gfx_displaylist_end();
 }

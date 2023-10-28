@@ -16,6 +16,7 @@
 #include "game/object_list_processor.h"
 #include "game/rendering_graph_node.h"
 #include "game/level_update.h"
+#include "pc/djui/djui_console.h"
 #include "pc/djui/djui_hud_utils.h"
 #include "game/skybox.h"
 #include "pc/gfx/gfx_pc.h"
@@ -85,6 +86,12 @@ void hud_show(void) {
 
 bool hud_is_hidden(void) {
     return gOverrideHideHud;
+}
+
+///
+
+void log_to_console(const char* message) {
+    djui_console_message_create((char*)message);
 }
 
 ///

@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "djui.h"
+#include "djui_panel_menu.h"
 #include "djui_console.h"
 
 #define MAX_CONSOLE_MESSAGES 500
@@ -10,26 +11,14 @@ bool gDjuiConsoleFocus = false;
 char gDjuiConsoleTmpBuffer[CONSOLE_MAX_TMP_BUFFER] = "";
 u32 sDjuiConsoleMessages = 0;
 
-bool djui_console_render(struct DjuiBase* base) {
-    djui_base_set_size(base, gDjuiRoot->base.width.value, gDjuiRoot->base.height.value * 0.6f);
-
-    djui_rect_render(base);
-    return true;
-}
-
-static void djui_console_destroy(struct DjuiBase* base) {
-    struct DjuiConsole* console = (struct DjuiConsole*)base;
-    free(console);
-}
-
 void djui_console_toggle(void) {
     if (gDjuiConsole == NULL) { return; }
     gDjuiConsoleFocus = !gDjuiConsoleFocus;
-    djui_base_set_visible(&gDjuiConsole->base, gDjuiConsoleFocus);
+    djui_base_set_visible(&gDjuiConsole->panel->base, gDjuiConsoleFocus);
 
     if (gDjuiConsoleFocus) {
         if (gDjuiChatBoxFocus) { djui_chat_box_toggle(); }
-        djui_interactable_set_input_focus(&gDjuiConsole->base);
+        djui_interactable_set_input_focus(&gDjuiConsole->panel->base);
     } else {
         djui_interactable_set_input_focus(NULL);
     }
@@ -37,19 +26,20 @@ void djui_console_toggle(void) {
 
 static bool djui_console_on_key_down(UNUSED struct DjuiBase* base, int scancode) {
     if (gDjuiConsole == NULL) { return false; }
-    f32 yMax = gDjuiConsole->base.comp.height - gDjuiConsole->flow->base.height.value;
+    struct DjuiBase* body = djui_three_panel_get_body(gDjuiConsole->panel);
+    f32 yMax = body->height.value - gDjuiConsole->flow->base.height.value;
 
     f32* yValue = &gDjuiConsole->flow->base.y.value;
     bool canScrollUp   = (*yValue > yMax);
     bool canScrollDown = (*yValue < 0);
-    f32 pageAmount = gDjuiConsole->base.comp.height * 3.0f / 4.0f;
+    f32 pageAmount = body->height.value;
 
     switch (scancode) {
         case SCANCODE_UP:
-            if (canScrollUp) { *yValue = fmax(*yValue - 15, yMax); }
+            if (canScrollUp) { *yValue = fmax(*yValue - 30, yMax); }
             break;
         case SCANCODE_DOWN:
-            if (canScrollDown) { *yValue = fmin(*yValue + 15, 0); }
+            if (canScrollDown) { *yValue = fmin(*yValue + 30, 0); }
             break;
         case SCANCODE_PAGE_UP:
             if (canScrollUp) { *yValue = fmax(*yValue - pageAmount, yMax); }
@@ -66,10 +56,10 @@ static bool djui_console_on_key_down(UNUSED struct DjuiBase* base, int scancode)
 
 void djui_console_message_create(char* message) {
     if (!gDjuiConsole) { return; }
-    djui_base_compute_tree(&gDjuiConsole->base);
+    djui_base_compute_tree(&gDjuiConsole->panel->base);
     struct DjuiBase* cfBase = &gDjuiConsole->flow->base;
 
-    f32 maxTextWidth = gDjuiConsole->base.comp.width - gDjuiConsole->base.padding.left.value - gDjuiConsole->base.padding.right.value;
+    f32 maxTextWidth = gDjuiConsole->panel->base.comp.width - gDjuiConsole->panel->base.padding.left.value - gDjuiConsole->panel->base.padding.right.value - 20;
 
     struct DjuiText* text = djui_text_create(cfBase, message);
     struct DjuiBase* tBase = &text->base;
@@ -107,25 +97,25 @@ void djui_console_message_create(char* message) {
 
 struct DjuiConsole* djui_console_create(void) {
     if (gDjuiConsole != NULL) {
-        djui_base_destroy(&gDjuiConsole->base);
+        djui_base_destroy(&gDjuiConsole->panel->base);
         gDjuiConsole = NULL;
     }
 
     struct DjuiConsole* console = calloc(1, sizeof(struct DjuiConsole));
-    struct DjuiBase* base = &console->base;
+    struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(CONSOLE, CONSOLE));
+    djui_three_panel_set_body_size(panel, 750);
+    console->panel = panel;
 
-    djui_base_init(NULL, base, djui_console_render, djui_console_destroy);
-    djui_base_set_size_type(base, DJUI_SVT_ABSOLUTE, DJUI_SVT_ABSOLUTE);
-    djui_base_set_size(base, gDjuiRoot->base.width.value, gDjuiRoot->base.height.value * 0.6f);
-    djui_base_set_alignment(base, DJUI_HALIGN_LEFT, DJUI_VALIGN_TOP);
-    djui_base_set_color(base, 0, 0, 0, 250);
-    djui_base_set_padding(base, 0, 8, 8, 8);
-    djui_base_set_visible(base, false);
+    djui_base_set_alignment(&panel->base, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
+    djui_base_set_size_type(&panel->base, DJUI_SVT_ABSOLUTE, DJUI_SVT_ABSOLUTE);
+    djui_base_set_size(&panel->base, 850, 750 + (32 + 16) + 32 +  32);
+    djui_base_set_visible(&panel->base, false);
 
-    djui_interactable_create(base, NULL);
-    djui_interactable_hook_key(base, djui_console_on_key_down, NULL);
+    djui_interactable_create(&panel->base, NULL);
+    djui_interactable_hook_key(&panel->base, djui_console_on_key_down, NULL);
 
-    struct DjuiFlowLayout* flow = djui_flow_layout_create(base);
+    struct DjuiBase* body = djui_three_panel_get_body(panel);
+    struct DjuiFlowLayout* flow = djui_flow_layout_create(body);
     struct DjuiBase* cfBase = &flow->base;
     djui_base_set_alignment(cfBase, DJUI_HALIGN_LEFT, DJUI_VALIGN_BOTTOM);
     djui_base_set_location(cfBase, 0, 0);

@@ -3627,6 +3627,11 @@ function djui_chat_message_create(message)
     -- ...
 end
 
+--- @return nil
+function djui_console_toggle()
+    -- ...
+end
+
 --- @return number
 function djui_hud_get_mouse_x()
     -- ...
@@ -8771,6 +8776,12 @@ end
 
 --- @return boolean
 function is_transition_playing()
+    -- ...
+end
+
+--- @param message string
+--- @return nil
+function log_to_console(message)
     -- ...
 end
 

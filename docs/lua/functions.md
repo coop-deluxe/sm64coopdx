@@ -716,6 +716,11 @@
 
 <br />
 
+- djui_console.h
+   - [djui_console_toggle](functions-3.md#djui_console_toggle)
+
+<br />
+
 - djui_hud_utils.h
    - [djui_hud_get_mouse_x](functions-3.md#djui_hud_get_mouse_x)
    - [djui_hud_get_mouse_y](functions-3.md#djui_hud_get_mouse_y)
@@ -1631,6 +1636,7 @@
    - [hud_show](functions-5.md#hud_show)
    - [is_game_paused](functions-5.md#is_game_paused)
    - [is_transition_playing](functions-5.md#is_transition_playing)
+   - [log_to_console](functions-5.md#log_to_console)
    - [movtexqc_register](functions-5.md#movtexqc_register)
    - [play_transition](functions-5.md#play_transition)
    - [save_file_get_using_backup_slot](functions-5.md#save_file_get_using_backup_slot)

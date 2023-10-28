@@ -97,6 +97,7 @@ unsigned int configKeyDUp[MAX_BINDS]        = { 0x0147,   0x100b,     VK_INVALID
 unsigned int configKeyDDown[MAX_BINDS]      = { 0x014f,   0x100c,     VK_INVALID };
 unsigned int configKeyDLeft[MAX_BINDS]      = { 0x0153,   0x100d,     VK_INVALID };
 unsigned int configKeyDRight[MAX_BINDS]     = { 0x0151,   0x100e,     VK_INVALID };
+unsigned int configKeyConsole[MAX_BINDS]    = { 0x0029,   0x003B,     VK_INVALID };
 unsigned int configKeyPrevPage[MAX_BINDS]   = { 0x0016,   VK_INVALID, VK_INVALID };
 unsigned int configKeyNextPage[MAX_BINDS]   = { 0x0018,   VK_INVALID, VK_INVALID };
 unsigned int configStickDeadzone = 16; // 16*DEADZONE_STEP=4960 (the original default deadzone)

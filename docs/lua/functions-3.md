@@ -2051,6 +2051,30 @@
 <br />
 
 ---
+# functions from djui_console.h
+
+<br />
+
+
+## [djui_console_toggle](#djui_console_toggle)
+
+### Lua Example
+`djui_console_toggle()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void djui_console_toggle(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
 # functions from djui_hud_utils.h
 
 <br />

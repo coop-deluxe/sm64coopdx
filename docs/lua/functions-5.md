@@ -1261,6 +1261,26 @@
 
 <br />
 
+## [log_to_console](#log_to_console)
+
+### Lua Example
+`log_to_console(message)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| message | `string` |
+
+### Returns
+- None
+
+### C Prototype
+`void log_to_console(const char* message);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [movtexqc_register](#movtexqc_register)
 
 ### Lua Example

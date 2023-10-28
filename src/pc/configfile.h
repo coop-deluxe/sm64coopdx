@@ -56,6 +56,7 @@ extern unsigned int configKeyDUp[];
 extern unsigned int configKeyDDown[];
 extern unsigned int configKeyDLeft[];
 extern unsigned int configKeyDRight[];
+extern unsigned int configKeyConsole[];
 extern unsigned int configKeyPrevPage[];
 extern unsigned int configKeyNextPage[];
 extern unsigned int configStickDeadzone;
