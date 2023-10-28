@@ -4700,6 +4700,9 @@ CHAR_ANIM_FORWARD_SPINNING_FLIP = 207
 --- @type CharacterAnimID
 CHAR_ANIM_TRIPLE_JUMP_FLY = 208
 
+--- @type CharacterAnimID
+CHAR_ANIM_MAX = 209
+
 --- @class MarioAnimID
 
 --- @type MarioAnimID

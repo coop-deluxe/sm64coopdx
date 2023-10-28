@@ -537,6 +537,7 @@ static struct LuaObjectField sCharacterFields[LUA_CHARACTER_FIELD_COUNT] = {
     { "animWaterStarDance",                 LVT_S32,      offsetof(struct Character, animWaterStarDance),                 true, LOT_NONE        },
     { "animWaterThrowObj",                  LVT_S32,      offsetof(struct Character, animWaterThrowObj),                  true, LOT_NONE        },
     { "animWingCapFly",                     LVT_S32,      offsetof(struct Character, animWingCapFly),                     true, LOT_NONE        },
+//  { "anims",                              LOT_???,      offsetof(struct Character, anims),                              true, LOT_???         }, <--- UNIMPLEMENTED
     { "cameraHudHead",                      LVT_U32,      offsetof(struct Character, cameraHudHead),                      true, LOT_NONE        },
 //  { "capEnemyDecalGfx",                   LVT_???,      offsetof(struct Character, capEnemyDecalGfx),                   true, LOT_???         }, <--- UNIMPLEMENTED
 //  { "capEnemyGfx",                        LVT_???,      offsetof(struct Character, capEnemyGfx),                        true, LOT_???         }, <--- UNIMPLEMENTED
@@ -594,6 +595,7 @@ static struct LuaObjectField sCharacterFields[LUA_CHARACTER_FIELD_COUNT] = {
     { "soundYahoo",                         LVT_S32,      offsetof(struct Character, soundYahoo),                         true, LOT_NONE        },
     { "soundYahooWahaYippee",               LVT_S32,      offsetof(struct Character, soundYahooWahaYippee),               true, LOT_NONE        },
     { "soundYawning",                       LVT_S32,      offsetof(struct Character, soundYawning),                       true, LOT_NONE        },
+//  { "sounds",                             LOT_???,      offsetof(struct Character, sounds),                             true, LOT_???         }, <--- UNIMPLEMENTED
     { "torsoRotMult",                       LVT_F32,      offsetof(struct Character, torsoRotMult),                       true, LOT_NONE        },
     { "type",                               LVT_S32,      offsetof(struct Character, type),                               true, LOT_NONE        },
 };
