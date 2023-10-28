@@ -875,6 +875,8 @@
    - [resolve_and_return_wall_collisions_data](functions-3.md#resolve_and_return_wall_collisions_data)
    - [return_mario_anim_y_translation](functions-3.md#return_mario_anim_y_translation)
    - [set_anim_to_frame](functions-3.md#set_anim_to_frame)
+   - [set_character_anim_with_accel](functions-3.md#set_character_anim_with_accel)
+   - [set_character_animation](functions-3.md#set_character_animation)
    - [set_jump_from_landing](functions-3.md#set_jump_from_landing)
    - [set_jumping_action](functions-3.md#set_jumping_action)
    - [set_mario_action](functions-3.md#set_mario_action)

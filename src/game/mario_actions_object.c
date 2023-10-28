@@ -24,7 +24,7 @@ s8 sPunchingForwardVelocities[8] = { 0, 1, 1, 2, 3, 5, 7, 10 };
 
 void animated_stationary_ground_step(struct MarioState *m, s32 animation, u32 endAction) {
     stationary_ground_step(m);
-    set_mario_animation(m, animation);
+    set_character_animation(m, animation);
     if (is_anim_at_end(m)) {
         set_mario_action(m, endAction, 0);
     }
@@ -46,7 +46,7 @@ s32 mario_update_punch_sequence(struct MarioState *m) {
             play_character_sound(m, CHAR_SOUND_PUNCH_YAH);
             // Fall-through:
         case 1:
-            set_mario_animation(m, MARIO_ANIM_FIRST_PUNCH);
+            set_character_animation(m, CHAR_ANIM_FIRST_PUNCH);
             if (is_anim_past_end(m)) {
                 m->actionArg = 2;
             } else {
@@ -67,7 +67,7 @@ s32 mario_update_punch_sequence(struct MarioState *m) {
             break;
 
         case 2:
-            set_mario_animation(m, MARIO_ANIM_FIRST_PUNCH_FAST);
+            set_character_animation(m, CHAR_ANIM_FIRST_PUNCH_FAST);
 
             if (m->marioObj->header.gfx.animInfo.animFrame <= 0) {
                 m->flags |= MARIO_PUNCHING;
@@ -86,7 +86,7 @@ s32 mario_update_punch_sequence(struct MarioState *m) {
             play_character_sound(m, CHAR_SOUND_PUNCH_WAH);
             // Fall-through:
         case 4:
-            set_mario_animation(m, MARIO_ANIM_SECOND_PUNCH);
+            set_character_animation(m, CHAR_ANIM_SECOND_PUNCH);
             if (is_anim_past_end(m)) {
                 m->actionArg = 5;
             } else {
@@ -103,7 +103,7 @@ s32 mario_update_punch_sequence(struct MarioState *m) {
             break;
 
         case 5:
-            set_mario_animation(m, MARIO_ANIM_SECOND_PUNCH_FAST);
+            set_character_animation(m, CHAR_ANIM_SECOND_PUNCH_FAST);
             if (m->marioObj->header.gfx.animInfo.animFrame <= 0) {
                 m->flags |= MARIO_PUNCHING;
             }
@@ -119,7 +119,7 @@ s32 mario_update_punch_sequence(struct MarioState *m) {
 
         case 6:
             play_mario_action_sound(m, CHAR_SOUND_PUNCH_HOO, 1);
-            animFrame = set_mario_animation(m, MARIO_ANIM_GROUND_KICK);
+            animFrame = set_character_animation(m, CHAR_ANIM_GROUND_KICK);
             if (animFrame == 0) {
                 m->marioBodyState->punchState = (2 << 6) | 6;
             }
@@ -135,7 +135,7 @@ s32 mario_update_punch_sequence(struct MarioState *m) {
 
         case 9:
             play_mario_action_sound(m, CHAR_SOUND_PUNCH_HOO, 1);
-            set_mario_animation(m, MARIO_ANIM_BREAKDANCE);
+            set_character_animation(m, CHAR_ANIM_BREAKDANCE);
             animFrame = m->marioObj->header.gfx.animInfo.animFrame;
 
             if (animFrame >= 2 && animFrame < 8) {
@@ -207,13 +207,13 @@ s32 act_picking_up(struct MarioState *m) {
     if (m->actionState == 1 && m->heldObj != NULL) {
         if (m->heldObj->oInteractionSubtype & INT_SUBTYPE_GRABS_MARIO) {
             m->marioBodyState->grabPos = GRAB_POS_HEAVY_OBJ;
-            set_mario_animation(m, MARIO_ANIM_GRAB_HEAVY_OBJECT);
+            set_character_animation(m, CHAR_ANIM_GRAB_HEAVY_OBJECT);
             if (is_anim_at_end(m)) {
                 set_mario_action(m, ACT_HOLD_HEAVY_IDLE, 0);
             }
         } else {
             m->marioBodyState->grabPos = GRAB_POS_LIGHT_OBJ;
-            set_mario_animation(m, MARIO_ANIM_PICK_UP_LIGHT_OBJ);
+            set_character_animation(m, CHAR_ANIM_PICK_UP_LIGHT_OBJ);
             if (is_anim_at_end(m)) {
                 set_mario_action(m, ACT_HOLD_IDLE, 0);
             }
@@ -241,7 +241,7 @@ s32 act_dive_picking_up(struct MarioState *m) {
         return set_mario_action(m, ACT_BEGIN_SLIDING, 0);
     }
 
-    animated_stationary_ground_step(m, MARIO_ANIM_STOP_SLIDE_LIGHT_OBJ, ACT_HOLD_IDLE);
+    animated_stationary_ground_step(m, CHAR_ANIM_STOP_SLIDE_LIGHT_OBJ, ACT_HOLD_IDLE);
     return FALSE;
 }
 
@@ -259,7 +259,7 @@ s32 act_placing_down(struct MarioState *m) {
         mario_drop_held_object(m);
     }
 
-    animated_stationary_ground_step(m, MARIO_ANIM_PLACE_LIGHT_OBJ, ACT_IDLE);
+    animated_stationary_ground_step(m, CHAR_ANIM_PLACE_LIGHT_OBJ, ACT_IDLE);
     return FALSE;
 }
 
@@ -284,7 +284,7 @@ s32 act_throwing(struct MarioState *m) {
         queue_rumble_data_mario(m, 3, 50);
     }
 
-    animated_stationary_ground_step(m, MARIO_ANIM_GROUND_THROW, ACT_IDLE);
+    animated_stationary_ground_step(m, CHAR_ANIM_GROUND_THROW, ACT_IDLE);
     return FALSE;
 }
 
@@ -305,7 +305,7 @@ s32 act_heavy_throw(struct MarioState *m) {
         queue_rumble_data_mario(m, 3, 50);
     }
 
-    animated_stationary_ground_step(m, MARIO_ANIM_HEAVY_THROW, ACT_IDLE);
+    animated_stationary_ground_step(m, CHAR_ANIM_HEAVY_THROW, ACT_IDLE);
     return FALSE;
 }
 
@@ -323,7 +323,7 @@ s32 act_stomach_slide_stop(struct MarioState *m) {
         return set_mario_action(m, ACT_BEGIN_SLIDING, 0);
     }
 
-    animated_stationary_ground_step(m, MARIO_ANIM_SLOW_LAND_FROM_DIVE, ACT_IDLE);
+    animated_stationary_ground_step(m, CHAR_ANIM_SLOW_LAND_FROM_DIVE, ACT_IDLE);
     return FALSE;
 }
 
@@ -349,7 +349,7 @@ s32 act_picking_up_bowser(struct MarioState *m) {
         }
     }
 
-    set_mario_animation(m, MARIO_ANIM_GRAB_BOWSER);
+    set_character_animation(m, CHAR_ANIM_GRAB_BOWSER);
     if (is_anim_at_end(m)) {
         set_mario_action(m, ACT_HOLDING_BOWSER, 0);
     }
@@ -397,10 +397,10 @@ s32 act_holding_bowser(struct MarioState *m) {
             return set_mario_action(m, ACT_RELEASING_BOWSER, 1);
         }
 
-        set_mario_animation(m, MARIO_ANIM_HOLDING_BOWSER);
+        set_character_animation(m, CHAR_ANIM_HOLDING_BOWSER);
     } else {
         m->actionTimer = 0;
-        set_mario_animation(m, MARIO_ANIM_SWINGING_BOWSER);
+        set_character_animation(m, CHAR_ANIM_SWINGING_BOWSER);
     }
 
     if (m->intendedMag > 20.0f) {
@@ -470,7 +470,7 @@ s32 act_releasing_bowser(struct MarioState *m) {
     }
 
     m->angleVel[1] = 0;
-    animated_stationary_ground_step(m, MARIO_ANIM_RELEASE_BOWSER, ACT_IDLE);
+    animated_stationary_ground_step(m, CHAR_ANIM_RELEASE_BOWSER, ACT_IDLE);
     return FALSE;
 }
 

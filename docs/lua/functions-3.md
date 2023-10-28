@@ -4611,6 +4611,49 @@
 
 <br />
 
+## [set_character_anim_with_accel](#set_character_anim_with_accel)
+
+### Lua Example
+`local integerValue = set_character_anim_with_accel(m, targetAnimID, accel)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| targetAnimID | `integer` |
+| accel | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s16 set_character_anim_with_accel(struct MarioState *m, s32 targetAnimID, s32 accel);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_character_animation](#set_character_animation)
+
+### Lua Example
+`local integerValue = set_character_animation(m, targetAnimID)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| targetAnimID | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s16 set_character_animation(struct MarioState *m, s32 targetAnimID);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [set_jump_from_landing](#set_jump_from_landing)
 
 ### Lua Example

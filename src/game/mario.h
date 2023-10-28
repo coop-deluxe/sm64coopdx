@@ -13,6 +13,10 @@ s32 is_anim_at_end(struct MarioState *m);
 s32 is_anim_past_end(struct MarioState *m);
 s16 set_mario_animation(struct MarioState *m, s32 targetAnimID);
 s16 set_mario_anim_with_accel(struct MarioState *m, s32 targetAnimID, s32 accel);
+
+s16 set_character_animation(struct MarioState *m, s32 targetAnimID);
+s16 set_character_anim_with_accel(struct MarioState *m, s32 targetAnimID, s32 accel);
+
 void set_anim_to_frame(struct MarioState *m, s16 animFrame);
 s32 is_anim_past_frame(struct MarioState *m, s16 animFrame);
 s16 find_mario_anim_flags_and_translation(struct Object *o, s32 yaw, Vec3s translation);

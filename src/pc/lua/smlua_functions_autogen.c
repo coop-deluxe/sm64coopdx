@@ -14422,6 +14422,46 @@ int smlua_func_set_anim_to_frame(lua_State* L) {
     return 1;
 }
 
+int smlua_func_set_character_anim_with_accel(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 3) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "set_character_anim_with_accel", 3, top);
+        return 0;
+    }
+
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "set_character_anim_with_accel"); return 0; }
+    s32 targetAnimID = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "set_character_anim_with_accel"); return 0; }
+    s32 accel = smlua_to_integer(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "set_character_anim_with_accel"); return 0; }
+
+    lua_pushinteger(L, set_character_anim_with_accel(m, targetAnimID, accel));
+
+    return 1;
+}
+
+int smlua_func_set_character_animation(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "set_character_animation", 2, top);
+        return 0;
+    }
+
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "set_character_animation"); return 0; }
+    s32 targetAnimID = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "set_character_animation"); return 0; }
+
+    lua_pushinteger(L, set_character_animation(m, targetAnimID));
+
+    return 1;
+}
+
 int smlua_func_set_jump_from_landing(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -31712,6 +31752,8 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "resolve_and_return_wall_collisions_data", smlua_func_resolve_and_return_wall_collisions_data);
     smlua_bind_function(L, "return_mario_anim_y_translation", smlua_func_return_mario_anim_y_translation);
     smlua_bind_function(L, "set_anim_to_frame", smlua_func_set_anim_to_frame);
+    smlua_bind_function(L, "set_character_anim_with_accel", smlua_func_set_character_anim_with_accel);
+    smlua_bind_function(L, "set_character_animation", smlua_func_set_character_animation);
     smlua_bind_function(L, "set_jump_from_landing", smlua_func_set_jump_from_landing);
     smlua_bind_function(L, "set_jumping_action", smlua_func_set_jumping_action);
     smlua_bind_function(L, "set_mario_action", smlua_func_set_mario_action);

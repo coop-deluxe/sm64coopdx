@@ -4446,6 +4446,21 @@ function set_anim_to_frame(m, animFrame)
 end
 
 --- @param m MarioState
+--- @param targetAnimID integer
+--- @param accel integer
+--- @return integer
+function set_character_anim_with_accel(m, targetAnimID, accel)
+    -- ...
+end
+
+--- @param m MarioState
+--- @param targetAnimID integer
+--- @return integer
+function set_character_animation(m, targetAnimID)
+    -- ...
+end
+
+--- @param m MarioState
 --- @return integer
 function set_jump_from_landing(m)
     -- ...
