@@ -3,6 +3,7 @@
 #include "PR/ultratypes.h"
 #include "types.h"
 #include "pc/configfile.h"
+#include "mario_animation_ids.h"
 // NOTE: do not include any additional headers
 
 #define PALETTE_PRESET_MAX 33
@@ -367,6 +368,7 @@ void play_character_sound_offset(struct MarioState* m, enum CharacterSound chara
 void play_character_sound_if_no_flag(struct MarioState* m, enum CharacterSound characterSound, u32 flags);
 
 f32 get_character_anim_offset(struct MarioState* m);
+s32 get_character_anim(struct MarioState* m, enum CharacterAnimID characterAnim);
 void update_character_anim_offset(struct MarioState* m);
 
 #endif // CHARACTERS_H

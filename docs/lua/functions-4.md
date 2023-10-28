@@ -6,6 +6,108 @@
 
 
 ---
+# functions from network_utils.h
+
+<br />
+
+
+## [network_get_player_text_color_string](#network_get_player_text_color_string)
+
+### Lua Example
+`local stringValue = network_get_player_text_color_string(localIndex)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| localIndex | `integer` |
+
+### Returns
+- `string`
+
+### C Prototype
+`const char* network_get_player_text_color_string(u8 localIndex);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [network_global_index_from_local](#network_global_index_from_local)
+
+### Lua Example
+`local integerValue = network_global_index_from_local(localIndex)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| localIndex | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u8 network_global_index_from_local(u8 localIndex);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [network_is_moderator](#network_is_moderator)
+
+### Lua Example
+`local booleanValue = network_is_moderator()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool network_is_moderator(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [network_is_server](#network_is_server)
+
+### Lua Example
+`local booleanValue = network_is_server()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool network_is_server(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [network_local_index_from_global](#network_local_index_from_global)
+
+### Lua Example
+`local integerValue = network_local_index_from_global(globalIndex)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| globalIndex | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u8 network_local_index_from_global(u8 globalIndex);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
 # functions from obj_behaviors.c
 
 <br />
@@ -7642,7 +7744,7 @@
 [CustomLevelInfo](structs.md#CustomLevelInfo)
 
 ### C Prototype
-`struct CustomLevelInfo* smlua_level_util_get_info_from_short_name(const char* shortName);`
+`struct CustomLevelInfo* smlua_level_util_get_info_from_short_name(char* shortName);`
 
 [:arrow_up_small:](#)
 

@@ -3580,6 +3580,13 @@ function get_character(m)
 end
 
 --- @param m MarioState
+--- @param characterAnim CharacterAnimID
+--- @return integer
+function get_character_anim(m, characterAnim)
+    -- ...
+end
+
+--- @param m MarioState
 --- @return number
 function get_character_anim_offset(m)
     -- ...

@@ -1898,6 +1898,27 @@
 
 <br />
 
+## [get_character_anim](#get_character_anim)
+
+### Lua Example
+`local integerValue = get_character_anim(m, characterAnim)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| characterAnim | [enum CharacterAnimID](constants.md#enum-CharacterAnimID) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 get_character_anim(struct MarioState* m, enum CharacterAnimID characterAnim);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [get_character_anim_offset](#get_character_anim_offset)
 
 ### Lua Example
@@ -8708,108 +8729,6 @@
 
 ### C Prototype
 `void network_player_set_description(struct NetworkPlayer* np, const char* description, u8 r, u8 g, u8 b, u8 a);`
-
-[:arrow_up_small:](#)
-
-<br />
-
----
-# functions from network_utils.h
-
-<br />
-
-
-## [network_get_player_text_color_string](#network_get_player_text_color_string)
-
-### Lua Example
-`local stringValue = network_get_player_text_color_string(localIndex)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| localIndex | `integer` |
-
-### Returns
-- `string`
-
-### C Prototype
-`const char* network_get_player_text_color_string(u8 localIndex);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [network_global_index_from_local](#network_global_index_from_local)
-
-### Lua Example
-`local integerValue = network_global_index_from_local(localIndex)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| localIndex | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`u8 network_global_index_from_local(u8 localIndex);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [network_is_moderator](#network_is_moderator)
-
-### Lua Example
-`local booleanValue = network_is_moderator()`
-
-### Parameters
-- None
-
-### Returns
-- `boolean`
-
-### C Prototype
-`bool network_is_moderator(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [network_is_server](#network_is_server)
-
-### Lua Example
-`local booleanValue = network_is_server()`
-
-### Parameters
-- None
-
-### Returns
-- `boolean`
-
-### C Prototype
-`bool network_is_server(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [network_local_index_from_global](#network_local_index_from_global)
-
-### Lua Example
-`local integerValue = network_local_index_from_global(globalIndex)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| globalIndex | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`u8 network_local_index_from_global(u8 globalIndex);`
 
 [:arrow_up_small:](#)
 

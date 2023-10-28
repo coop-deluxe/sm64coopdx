@@ -11929,6 +11929,25 @@ int smlua_func_get_character(lua_State* L) {
     return 1;
 }
 
+int smlua_func_get_character_anim(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "get_character_anim", 2, top);
+        return 0;
+    }
+
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "get_character_anim"); return 0; }
+    int characterAnim = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "get_character_anim"); return 0; }
+
+    lua_pushinteger(L, get_character_anim(m, characterAnim));
+
+    return 1;
+}
+
 int smlua_func_get_character_anim_offset(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -27583,7 +27602,7 @@ int smlua_func_smlua_level_util_get_info_from_short_name(lua_State* L) {
         return 0;
     }
 
-    const char* shortName = smlua_to_string(L, 1);
+    char* shortName = (char*)smlua_to_cobject(L, 1, LOT_NONE);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "smlua_level_util_get_info_from_short_name"); return 0; }
 
     smlua_push_object(L, LOT_CUSTOMLEVELINFO, smlua_level_util_get_info_from_short_name(shortName));
@@ -31601,6 +31620,7 @@ void smlua_bind_functions_autogen(void) {
 
     // characters.h
     smlua_bind_function(L, "get_character", smlua_func_get_character);
+    smlua_bind_function(L, "get_character_anim", smlua_func_get_character_anim);
     smlua_bind_function(L, "get_character_anim_offset", smlua_func_get_character_anim_offset);
     smlua_bind_function(L, "play_character_sound", smlua_func_play_character_sound);
     smlua_bind_function(L, "play_character_sound_if_no_flag", smlua_func_play_character_sound_if_no_flag);

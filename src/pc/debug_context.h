@@ -5,6 +5,7 @@
 #define CTX_BEGIN(_ctx) debug_context_begin(_ctx)
 #define CTX_END(_ctx) debug_context_end(_ctx)
 #define CTX_WITHIN(_ctx) debug_context_within(_ctx)
+#define CTX_EXTENT(__ctx, __func) CTX_BEGIN(__ctx); __func(); CTX_END(__ctx);
 
 enum DebugContext {
     CTX_NONE,

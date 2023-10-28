@@ -702,6 +702,7 @@
 
 - characters.h
    - [get_character](functions-3.md#get_character)
+   - [get_character_anim](functions-3.md#get_character_anim)
    - [get_character_anim_offset](functions-3.md#get_character_anim_offset)
    - [play_character_sound](functions-3.md#play_character_sound)
    - [play_character_sound_if_no_flag](functions-3.md#play_character_sound_if_no_flag)
@@ -1123,11 +1124,11 @@
 <br />
 
 - network_utils.h
-   - [network_get_player_text_color_string](functions-3.md#network_get_player_text_color_string)
-   - [network_global_index_from_local](functions-3.md#network_global_index_from_local)
-   - [network_is_moderator](functions-3.md#network_is_moderator)
-   - [network_is_server](functions-3.md#network_is_server)
-   - [network_local_index_from_global](functions-3.md#network_local_index_from_global)
+   - [network_get_player_text_color_string](functions-4.md#network_get_player_text_color_string)
+   - [network_global_index_from_local](functions-4.md#network_global_index_from_local)
+   - [network_is_moderator](functions-4.md#network_is_moderator)
+   - [network_is_server](functions-4.md#network_is_server)
+   - [network_local_index_from_global](functions-4.md#network_local_index_from_global)
 
 <br />
 
