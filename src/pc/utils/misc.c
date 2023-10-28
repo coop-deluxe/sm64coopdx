@@ -422,7 +422,7 @@ OPTIMIZE_O3 static void unmatrix(Mtx * mat, f32 tranfs[13]) {
 
 // builds a transformation matrix from a decomposed sequence from unmatrix
 // see unmatrix for what tranfs means
-OPTIMIZE_O3 static void rematrix(Mtx * mat, f32 tranfs[13]) {
+static void rematrix(Mtx * mat, f32 tranfs[13]) {
     int i;
     Vec3f rotAxes[3] = { 0 };
     Mat4 rotMat = { 0 };
