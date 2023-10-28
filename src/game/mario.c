@@ -2057,10 +2057,7 @@ static u8 prevent_hang(u32 hangPreventionActions[], u8* hangPreventionIndex) {
     if (*hangPreventionIndex < MAX_HANG_PREVENTION) { return FALSE; }
     
     // complain to console
-    printf("#######################################\n");
-    printf("# HANG PREVENTED                      #\n");
-    printf("# Send the error log to the developer #\n");
-    printf("#######################################\n");
+    LOG_ERROR("Action loop hang prevented");
 
     return TRUE;
 }
