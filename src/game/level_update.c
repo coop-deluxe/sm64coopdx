@@ -253,6 +253,13 @@ u16 level_control_timer(s32 timerOp) {
 }
 
 u32 pressed_pause(void) {
+    if (configSingleplayerPause && network_player_connected_count() == 1) {
+        // prevent softlock in singleplayer pause, by not allowing pause in transitions
+        if (gWarpTransition.isActive || sDelayedWarpOp != WARP_OP_NONE) {
+            return FALSE;
+        }
+    }
+
     if (get_dialog_id() < 0) {
         return gPlayer1Controller->buttonPressed & START_BUTTON;
     }
