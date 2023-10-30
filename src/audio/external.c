@@ -17,6 +17,7 @@
 #include "level_table.h"
 #include "pc/debuglog.h"
 #include "pc/lua/utils/smlua_level_utils.h"
+#include "pc/lua/smlua_hooks.h"
 
 #if defined(VERSION_EU) || defined(VERSION_SH)
 #define EU_FLOAT(x) x##f
@@ -79,49 +80,25 @@ s32 gAudioErrorFlags = 0;
 #endif
 s32 sGameLoopTicked = 0;
 
-// Dialog sounds
-// The US difference is the sound for DIALOG_037 ("I win! You lose! Ha ha ha ha!
-// You're no slouch, but I'm a better sledder! Better luck next time!"), spoken
-// by Koopa instead of the penguin in JP.
-
-#define UKIKI 0
-#define TUXIE 1
-#define BOWS1 2 // Bowser Intro / Doors Laugh
-#define KOOPA 3
-#define KBOMB 4
-#define BOO 5
-#define BOMB 6
-#define BOWS2 7 // Bowser Battle Laugh
-#define GRUNT 8
-#define WIGLR 9
-#define YOSHI 10
-#define _ 0xFF
-
-#ifdef VERSION_JP
-#define DIFF KOOPA
-#else
-#define DIFF TUXIE
-#endif
-
 u8 sDialogSpeaker[] = {
-    //       0      1      2      3      4      5      6      7      8      9
-    /* 0*/ _,     BOMB,  BOMB,  BOMB,  BOMB,  KOOPA, KOOPA, KOOPA, _,     KOOPA,
-    /* 1*/ _,     _,     _,     _,     _,     _,     _,     KBOMB, _,     _,
-    /* 2*/ _,     BOWS1, BOWS1, BOWS1, BOWS1, BOWS1, BOWS1, BOWS1, BOWS1, BOWS1,
-    /* 3*/ _,     _,     _,     _,     _,     _,     _,     DIFF,  _,     _,
-    /* 4*/ _,     KOOPA, _,     _,     _,     _,     _,     BOMB,  _,     _,
-    /* 5*/ _,     _,     _,     _,     _,     TUXIE, TUXIE, TUXIE, TUXIE, TUXIE,
-    /* 6*/ _,     _,     _,     _,     _,     _,     _,     BOWS2, _,     _,
-    /* 7*/ _,     _,     _,     _,     _,     _,     _,     _,     _,     UKIKI,
-    /* 8*/ UKIKI, _,     _,     _,     _,     BOO,   _,     _,     _,     _,
-    /* 9*/ BOWS2, _,     BOWS2, BOWS2, _,     _,     _,     _,     BOO,   BOO,
-    /*10*/ UKIKI, UKIKI, _,     _,     _,     BOMB,  BOMB,  BOO,   BOO,   _,
-    /*11*/ _,     _,     _,     _,     GRUNT, GRUNT, KBOMB, GRUNT, GRUNT, _,
-    /*12*/ _,     _,     _,     _,     _,     _,     _,     _,     KBOMB, _,
-    /*13*/ _,     _,     TUXIE, _,     _,     _,     _,     _,     _,     _,
-    /*14*/ _,     _,     _,     _,     _,     _,     _,     _,     _,     _,
-    /*15*/ WIGLR, WIGLR, WIGLR, _,     _,     _,     _,     _,     _,     _,
-    /*16*/ _,     YOSHI, _,     _,     _,     _,     _,     _,     WIGLR, _
+    //     0         1         2         3         4         5         6         7         8         9
+    /* 0*/ DS_NONE,  DS_BOMB,  DS_BOMB,  DS_BOMB,  DS_BOMB,  DS_KOOPA, DS_KOOPA, DS_KOOPA, DS_NONE,  DS_KOOPA,
+    /* 1*/ DS_NONE,  DS_NONE,  DS_NONE,  DS_NONE,  DS_NONE,  DS_NONE,  DS_NONE,  DS_KBOMB, DS_NONE,  DS_NONE,
+    /* 2*/ DS_NONE,  DS_BOWS1, DS_BOWS1, DS_BOWS1, DS_BOWS1, DS_BOWS1, DS_BOWS1, DS_BOWS1, DS_BOWS1, DS_BOWS1,
+    /* 3*/ DS_NONE,  DS_NONE,  DS_NONE,  DS_NONE,  DS_NONE,  DS_NONE,  DS_NONE,  DS_DIFF,  DS_NONE,  DS_NONE,
+    /* 4*/ DS_NONE,  DS_KOOPA, DS_NONE,  DS_NONE,  DS_NONE,  DS_NONE,  DS_NONE,  DS_BOMB,  DS_NONE,  DS_NONE,
+    /* 5*/ DS_NONE,  DS_NONE,  DS_NONE,  DS_NONE,  DS_NONE,  DS_TUXIE, DS_TUXIE, DS_TUXIE, DS_TUXIE, DS_TUXIE,
+    /* 6*/ DS_NONE,  DS_NONE,  DS_NONE,  DS_NONE,  DS_NONE,  DS_NONE,  DS_NONE,  DS_BOWS2, DS_NONE,  DS_NONE,
+    /* 7*/ DS_NONE,  DS_NONE,  DS_NONE,  DS_NONE,  DS_NONE,  DS_NONE,  DS_NONE,  DS_NONE,  DS_NONE,  DS_UKIKI,
+    /* 8*/ DS_UKIKI, DS_NONE,  DS_NONE,  DS_NONE,  DS_NONE,  DS_BOO,   DS_NONE,  DS_NONE,  DS_NONE,  DS_NONE,
+    /* 9*/ DS_BOWS2, DS_NONE,  DS_BOWS2, DS_BOWS2, DS_NONE,  DS_NONE,  DS_NONE,  DS_NONE,  DS_BOO,   DS_BOO,
+    /*10*/ DS_UKIKI, DS_UKIKI, DS_NONE,  DS_NONE,  DS_NONE,  DS_BOMB,  DS_BOMB,  DS_BOO,   DS_BOO,   DS_NONE,
+    /*11*/ DS_NONE,  DS_NONE,  DS_NONE,  DS_NONE,  DS_GRUNT, DS_GRUNT, DS_KBOMB, DS_GRUNT, DS_GRUNT, DS_NONE,
+    /*12*/ DS_NONE,  DS_NONE,  DS_NONE,  DS_NONE,  DS_NONE,  DS_NONE,  DS_NONE,  DS_NONE,  DS_KBOMB, DS_NONE,
+    /*13*/ DS_NONE,  DS_NONE,  DS_TUXIE, DS_NONE,  DS_NONE,  DS_NONE,  DS_NONE,  DS_NONE,  DS_NONE,  DS_NONE,
+    /*14*/ DS_NONE,  DS_NONE,  DS_NONE,  DS_NONE,  DS_NONE,  DS_NONE,  DS_NONE,  DS_NONE,  DS_NONE,  DS_NONE,
+    /*15*/ DS_WIGLR, DS_WIGLR, DS_WIGLR, DS_NONE,  DS_NONE,  DS_NONE,  DS_NONE,  DS_NONE,  DS_NONE,  DS_NONE,
+    /*16*/ DS_NONE,  DS_YOSHI, DS_NONE,  DS_NONE,  DS_NONE,  DS_NONE,  DS_NONE,  DS_NONE,  DS_WIGLR, DS_NONE
 };
 #undef _
 STATIC_ASSERT(ARRAY_COUNT(sDialogSpeaker) == DIALOG_COUNT,
@@ -394,10 +371,10 @@ STATIC_ASSERT(ARRAY_COUNT(sBackgroundMusicDefaultVolume) == 64,
 
 u8 sCurrentBackgroundMusicSeqId = SEQUENCE_NONE;
 u8 sMusicDynamicDelay = 0;
-u8 sSoundBankUsedListBack[SOUND_BANK_COUNT] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-u8 sSoundBankFreeListFront[SOUND_BANK_COUNT] = { 8, 8, 8, 4, 4, 4, 4, 1, 4, 3, 8, 8 };
-u8 sNumSoundsInBank[SOUND_BANK_COUNT] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }; // only used for debugging
-u8 sMaxChannelsForSoundBank[SOUND_BANK_COUNT] = { 8, 8, 8, 4, 4, 4, 4, 1, 4, 3, 8, 8 };
+u8 sSoundBankUsedListBack[SOUND_BANK_COUNT] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+u8 sSoundBankFreeListFront[SOUND_BANK_COUNT] = { 8, 8, 8, 4, 4, 4, 4, 1, 4, 3, 8, 8, 8 };
+u8 sNumSoundsInBank[SOUND_BANK_COUNT] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }; // only used for debugging
+u8 sMaxChannelsForSoundBank[SOUND_BANK_COUNT] = { 8, 8, 8, 4, 4, 4, 4, 1, 4, 3, 8, 8, 8 };
 
 // Banks 2 and 7 both grew from 0x30 sounds to 0x40 in size in US.
 #ifdef VERSION_JP
@@ -406,7 +383,7 @@ u8 sMaxChannelsForSoundBank[SOUND_BANK_COUNT] = { 8, 8, 8, 4, 4, 4, 4, 1, 4, 3, 
 #define BANK27_SIZE 0x40
 #endif
 u8 sNumSoundsPerBank[SOUND_BANK_COUNT] = {
-    0x70, 0x30, BANK27_SIZE, 0x80, 0x20, 0x80, 0x20, BANK27_SIZE, 0x80, 0x80, BANK27_SIZE, BANK27_SIZE
+    0x70, 0x30, BANK27_SIZE, 0x80, 0x20, 0x80, 0x20, BANK27_SIZE, 0x80, 0x80, BANK27_SIZE, BANK27_SIZE, BANK27_SIZE
 };
 #undef BANK27_SIZE
 
@@ -1529,6 +1506,7 @@ static void update_game_sound(void) {
                         case SOUND_BANK_MARIO_VOICE:
                         case SOUND_BANK_LUIGI_VOICE:
                         case SOUND_BANK_WARIO_VOICE:
+                        case SOUND_BANK_TOAD_VOICE:
 #if defined(VERSION_EU) || defined(VERSION_SH)
                             queue_audio_cmd_s8(AUDIO_CMD_ARGS(AUDIO_CMD_REVERB, SEQ_PLAYER_SFX, channelIndex, 0),
                                           get_sound_reverb(bank, soundIndex, channelIndex));
@@ -2406,19 +2384,20 @@ void set_sound_moving_speed(u8 bank, u8 speed) {
  * Called from threads: thread5_game_loop
  */
 void play_dialog_sound(u8 dialogID) {
-    u8 speaker;
+    s32 speaker;
 
     if (dialogID >= DIALOG_COUNT) {
         dialogID = 0;
     }
 
     speaker = sDialogSpeaker[dialogID];
-    if (speaker != 0xff) {
+    smlua_call_event_hooks_int_params_ret_int(HOOK_DIALOG_SOUND, speaker, &speaker);
+    if (speaker < DS_MAX && speaker != 0xff) {
         play_sound(sDialogSpeakerVoice[speaker], gGlobalSoundSource);
 
         // Play music during bowser message that appears when first entering the
         // castle or when trying to enter a door without enough stars
-        if (speaker == BOWS1) {
+        if (speaker == DS_BOWS1) {
             seq_player_play_sequence(SEQ_PLAYER_ENV, SEQ_EVENT_KOOPA_MESSAGE, 0);
         }
     }

@@ -15,6 +15,8 @@ extern "C" {
 #include "gfx/gfx_sdl.h"
 #include "gfx/gfx_dummy.h"
 
+extern bool gCoopCompatibility;
+
 #if defined(WAPI_SDL1) || defined(WAPI_SDL2)
 # define WAPI gfx_sdl
 #elif defined(WAPI_DXGI)
@@ -53,9 +55,9 @@ extern "C" {
 #endif
 
 #ifdef GIT_HASH
-#define TITLE ({ char title[96] = ""; snprintf(title, 96, "sm64ex-coop: %s [%s]", get_version_local(), GIT_HASH); title; })
+#define TITLE ({ char title[96] = ""; snprintf(title, 96, "sm64coopdx [%s]", GIT_HASH); title; })
 #else
-#define TITLE ({ char title[96] = ""; snprintf(title, 96, "sm64ex-coop: %s", get_version_local()); title; })
+#define TITLE "sm64coopdx"
 #endif
 
 #define LOAD_STEPS 6

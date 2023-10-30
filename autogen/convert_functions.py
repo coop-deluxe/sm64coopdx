@@ -57,7 +57,7 @@ in_files = [
     "src/game/object_list_processor.h",
     "src/game/behavior_actions.h",
     "src/game/mario_misc.h",
-    "src/pc/mods/mod_storage.c.h",
+    "src/pc/mods/mod_storage.h",
     "src/pc/utils/misc.h",
     "src/game/level_update.h",
     "src/game/area.h",
@@ -81,33 +81,33 @@ override_allowed_functions = {
 }
 
 override_disallowed_functions = {
-    "src/audio/external.h":                [ " func_" ],
-    "src/engine/math_util.h":              [ "atan2s", "atan2f", "vec3s_sub" ],
-    "src/engine/surface_load.h":           [ "alloc_surface_poools" ],
-    "src/engine/surface_collision.h":      [ " debug_", "f32_find_wall_collision" ],
-    "src/game/mario_actions_airborne.c":   [ "^[us]32 act_.*" ],
-    "src/game/mario_actions_automatic.c":  [ "^[us]32 act_.*" ],
-    "src/game/mario_actions_cutscene.c":   [ "^[us]32 act_.*", " geo_", "spawn_obj" ],
-    "src/game/mario_actions_moving.c":     [ "^[us]32 act_.*" ],
-    "src/game/mario_actions_object.c":     [ "^[us]32 act_.*" ],
-    "src/game/mario_actions_stationary.c": [ "^[us]32 act_.*" ],
-    "src/game/mario_actions_submerged.c":  [ "^[us]32 act_.*" ],
-    "src/game/mario_step.h":               [ " stub_mario_step", "transfer_bully_speed" ],
-    "src/game/mario.h":                    [ " init_mario" ],
-    "src/pc/djui/djui_console.h":          [ " djui_console_create", "djui_console_message_create" ],
-    "src/pc/djui/djui_chat_message.h":     [ "create_from" ],
-    "src/game/interaction.h":              [ "process_interactions", "_handle_" ],
-    "src/game/sound_init.h":               [ "_loop_", "thread4_", "set_sound_mode" ],
-    "src/pc/network/network_utils.h":      [ "network_get_player_text_color[^_]" ],
-    "src/pc/network/network_player.h":     [ "_init", "_connected[^_]", "_shutdown", "_disconnected", "_update", "construct_player_popup" ],
-    "src/game/object_helpers.c":           [ "spawn_obj", "^bhv_", "abs[fi]", "^bit_shift", "_debug$", "^stub_", "_set_model" ],
-    "src/game/obj_behaviors.c":            [ "debug_" ],
-    "src/game/obj_behaviors_2.c":          [ "wiggler_jumped_on_attack_handler", "huge_goomba_weakly_attacked" ],
-    "src/game/spawn_sound.c":              [ "spawner" ],
-    "src/game/level_info.h":               [ "_name_table" ],
-    "src/pc/lua/utils/smlua_obj_utils.h":  [ "spawn_object_remember_field", "set_exclamation_box_new_contents", "get_exclamation_box_new_contents_pointer", "get_exclamation_box_new_contents_size" ],
-    "src/game/camera.h":                   [ "update_camera", "init_camera", "stub_camera", "^reset_camera", "move_point_along_spline" ],
-    "src/game/behavior_actions.h":         [ "bhv_dust_smoke_loop", "bhv_init_room" ],
+    "src/audio/external.h":                 [ " func_" ],
+    "src/engine/math_util.h":               [ "atan2s", "atan2f", "vec3s_sub" ],
+    "src/engine/surface_load.h":            [ "alloc_surface_poools" ],
+    "src/engine/surface_collision.h":       [ " debug_", "f32_find_wall_collision" ],
+    "src/game/mario_actions_airborne.c":    [ "^[us]32 act_.*" ],
+    "src/game/mario_actions_automatic.c":   [ "^[us]32 act_.*" ],
+    "src/game/mario_actions_cutscene.c":    [ "^[us]32 act_.*", " geo_", "spawn_obj" ],
+    "src/game/mario_actions_moving.c":      [ "^[us]32 act_.*" ],
+    "src/game/mario_actions_object.c":      [ "^[us]32 act_.*" ],
+    "src/game/mario_actions_stationary.c":  [ "^[us]32 act_.*" ],
+    "src/game/mario_actions_submerged.c":   [ "^[us]32 act_.*" ],
+    "src/game/mario_step.h":                [ " stub_mario_step", "transfer_bully_speed"],
+    "src/game/mario.h":                     [ " init_mario" ],
+    "src/pc/djui/djui_console.h":           [ " djui_console_create", "djui_console_message_create" ],
+    "src/pc/djui/djui_chat_message.h":      [ "create_from" ],
+    "src/game/interaction.h":               [ "process_interactions", "_handle_" ],
+    "src/game/sound_init.h":                [ "_loop_", "thread4_", "set_sound_mode" ],
+    "src/pc/network/network_utils.h":       [ "network_get_player_text_color[^_]" ],
+    "src/pc/network/network_player.h":      [ "_init", "_connected[^_]", "_shutdown", "_disconnected", "_update", "construct_player_popup" ],
+    "src/game/object_helpers.c":            [ "spawn_obj", "^bhv_", "abs[fi]", "^bit_shift", "_debug$", "^stub_", "_set_model" ],
+    "src/game/obj_behaviors.c":             [ "debug_" ],
+    "src/game/obj_behaviors_2.c":           [ "wiggler_jumped_on_attack_handler", "huge_goomba_weakly_attacked" ],
+    "src/game/spawn_sound.c":               [ "spawner" ],
+    "src/game/level_info.h":                [ "_name_table" ],
+    "src/pc/lua/utils/smlua_obj_utils.h":   [ "spawn_object_remember_field", "set_exclamation_box_new_contents", "get_exclamation_box_new_contents_pointer", "get_exclamation_box_new_contents_size" ],
+    "src/game/camera.h":                    [ "update_camera", "init_camera", "stub_camera", "^reset_camera", "move_point_along_spline" ],
+    "src/game/behavior_actions.h":          [ "bhv_dust_smoke_loop", "bhv_init_room" ],
     "src/pc/lua/utils/smlua_audio_utils.h": [ "smlua_audio_utils_override", "audio_custom_shutdown"],
     "src/pc/djui/djui_hud_utils.h":         [ "djui_hud_render_texture", "djui_hud_render_texture_raw", "djui_hud_render_texture_tile", "djui_hud_render_texture_tile_raw" ],
     "src/pc/lua/utils/smlua_level_utils.h": [ "smlua_level_util_reset" ],
@@ -296,9 +296,14 @@ manual_index_documentation = """
    - [network_send_object](#network_send_object)
    - [network_send_to](#network_send_to)
    - [network_send](#network_send)
-   - [djui_hud_render_texture](#djui_hud_render_texture)
    - [get_texture_info](#get_texture_info)
+   - [djui_hud_render_texture](#djui_hud_render_texture)
+   - [djui_hud_render_texture_tile](#djui_hud_render_texture_tile)
    - [djui_hud_render_texture_interpolated](#djui_hud_render_texture_interpolated)
+   - [djui_hud_render_texture_tile_interpolated](#djui_hud_render_texture_tile_interpolated)
+   - [smlua_anim_util_register_animation](#smlua_anim_util_register_animation)
+   - [level_script_parse](#level_script_parse)
+   - [set_exclamation_box_contents](#set_exclamation_box_contents)
 
 <br />
 
@@ -306,8 +311,6 @@ manual_index_documentation = """
 manual_documentation = """
 ---
 # manually written functions
-
-<br />
 
 ## [define_custom_obj_fields](#define_custom_obj_fields)
 
@@ -425,32 +428,6 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 
 <br />
 
-## [djui_hud_render_texture](#djui_hud_render_texture)
-
-Renders a texture to the screen.
-
-### Lua Example
-`djui_hud_render_texture(texInfo, x, y, scaleW, scaleH)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| texInfo | [TextureInfo](structs.md#TextureInfo) |
-| x | `number` |
-| y | `number` |
-| scaleW | `number` |
-| scaleH | `number` |
-
-### Returns
-- None
-
-### C Prototype
-`void djui_hud_render_texture(struct TextureInfo* texInfo, f32 x, f32 y, f32 scaleW, f32 scaleH);`
-
-[:arrow_up_small:](#)
-
-<br />
-
 ## [get_texture_info](#get_texture_info)
 
 Retrieves a texture by name.
@@ -473,10 +450,68 @@ Retrieves a texture by name.
 
 <br />
 
-## [djui_hud_render_texture_interpolated](#djui_hud_render_texture_interpolated)
+## [djui_hud_render_texture](#djui_hud_render_texture)
+
+Renders a texture to the screen.
 
 ### Lua Example
-`djui_hud_render_texture_interpolated(texInfo, prevX, prevY, prevScaleW, prevScaleH, x, y, scaleW, scaleH)`
+`djui_hud_render_texture(texInfo, 0, 0, 1, 1)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| texInfo | [TextureInfo](structs.md#TextureInfo) |
+| x | `number` |
+| y | `number` |
+| scaleW | `number` |
+| scaleH | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void djui_hud_render_texture(struct TextureInfo* texInfo, f32 x, f32 y, f32 scaleW, f32 scaleH);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [djui_hud_render_texture_tile](#djui_hud_render_texture_tile)
+
+Renders a tile of a texture to the screen.
+
+### Lua Example
+`djui_hud_render_texture_tile(texInfo, 0, 0, 1, 1, 0, 0, 16, 16)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| texInfo | [TextureInfo](structs.md#TextureInfo) |
+| x | `number` |
+| y | `number` |
+| scaleW | `number` |
+| scaleH | `number` |
+| tileX | `number` |
+| tileY | `number` |
+| tileW | `number` |
+| tileH | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void djui_hud_render_texture_tile(struct TextureInfo* texInfo, f32 x, f32 y, f32 scaleW, f32 scaleH, u32 tileX, u32 tileY, u32 tileW, u32 tileH);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [djui_hud_render_texture_tile_interpolated](#djui_hud_render_texture_tile_interpolated)
+
+Renders an interpolated tile of a texture to the screen.
+
+### Lua Example
+`djui_hud_render_texture_tile_interpolated(texInfo, prevX, prevY, prevScaleW, prevScaleH, 0, 0, 1, 1, 0, 0, 16, 16)`
 
 ### Parameters
 | Field | Type |
@@ -490,12 +525,90 @@ Retrieves a texture by name.
 | y | `number` |
 | scaleW | `number` |
 | scaleH | `number` |
+| tileX | `number` |
+| tileY | `number` |
+| tileW | `number` |
+| tileH | `number` |
 
 ### Returns
 - None
 
 ### C Prototype
-`void djui_hud_render_texture_interpolated(struct TextureInfo* texInfo, f32 prevX, f32 prevY, f32 prevScaleW, f32 prevScaleH, f32 x, f32 y, f32 scaleW, f32 scaleH);`
+`void djui_hud_render_texture_tile_interpolated(struct TextureInfo* texInfo, f32 prevX, f32 prevY, f32 prevScaleW, f32 prevScaleH, f32 x, f32 y, f32 scaleW, f32 scaleH, u32 tileX, u32 tileY, u32 tileW, u32 tileH);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [smlua_anim_util_register_animation](#smlua_anim_util_register_animation)
+
+Register a new Lua animation.
+
+### Lua Example
+`smlua_anim_util_register_animation("apparition_idle", 0, 189, 0, 0, 0x5A, values, index)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| name | `string` |
+| flags | `integer` |
+| animYTransDivisor | `integer` |
+| startFrame | `integer` |
+| loopStart | `integer` |
+| loopEnd | `integer` |
+| values | `table` |
+| index | `table` |
+
+### Returns
+- None
+
+### C Prototype
+`void smlua_anim_util_register_animation(const char *name, s16 flags, s16 animYTransDivisor, s16 startFrame, s16 loopStart, s16 loopEnd, s16 *values, u32 valuesLength, u16 *index, u32 indexLength);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [level_script_parse](#level_script_parse)
+
+### Lua Example
+`level_script_parse(LEVEL_BOB, func)`
+
+Parses a level script and passes area index, behavior data, macro behavior IDs and macro behavior arguments to a function.
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| levelNum | `LevelNum` |
+| func | `function` |
+
+### Returns
+- None
+
+### C Prototype
+`void smlua_func_level_script_parse(lua_State* L);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_exclamation_box_new_contents](#set_exclamation_box_new_contents)
+
+Sets the contents of an exclamation box.
+
+### Lua Example
+`set_exclamation_box_new_contents(contents)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| contents | [ExclamationBoxContents](structs.md#ExclamationBoxContents) |
+
+### Returns
+- None
+
+### C Prototype
+`void set_exclamation_box_new_contents(struct Struct802C0DF0 contents[], u8 size);`
 
 [:arrow_up_small:](#)
 
@@ -806,8 +919,8 @@ def process_files():
 
 ############################################################################
 
-fuzz_from = '/home/djoslin/.local/share/sm64ex-coop/mods/test-fuzz.lua'
-fuzz_to = '/home/djoslin/.local/share/sm64ex-coop/mods/test-fuzz.lua'
+fuzz_from = ""
+fuzz_to = ""
 fuzz_functions = ""
 
 def output_fuzz_function(fname, function):

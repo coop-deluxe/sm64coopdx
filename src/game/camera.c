@@ -2690,9 +2690,33 @@ s32 exit_c_up(struct Camera *c) {
             gCameraMovementFlags |= CAM_MOVE_STARTED_EXITING_C_UP;
             transition_next_state(c, 15);
         } else {
+#ifdef BETTERCAMERA
+            newcam_init_settings();
+            if (newcam_active == 1) {
+                // Retrieve the previous position and focus
+                vec3f_copy(c->pos, sCameraStoreCUp.pos);
+                vec3f_add(c->pos, sMarioCamState->pos);
+                vec3f_copy(c->focus, sCameraStoreCUp.focus);
+                vec3f_add(c->focus, sMarioCamState->pos);
+                // Make Mario look forward
+                sMarioCamState->headRotation[0] = 0;
+                sMarioCamState->headRotation[1] = 0;
+
+                // Finished exiting C-Up
+                gCameraMovementFlags &= ~(CAM_MOVE_STARTED_EXITING_C_UP | CAM_MOVE_C_UP_MODE);
+
+                gMarioStates[0].area->camera->mode = CAMERA_MODE_NEWCAM;
+                gLakituState.mode = CAMERA_MODE_NEWCAM;
+            } else {
+                // Let the next camera mode handle it
+                gCameraMovementFlags &= ~(CAM_MOVE_STARTED_EXITING_C_UP | CAM_MOVE_C_UP_MODE);
+                vec3f_set_dist_and_angle(checkFoc, c->pos, curDist, curPitch, curYaw + checkYaw);
+            }
+#else
             // Let the next camera mode handle it
             gCameraMovementFlags &= ~(CAM_MOVE_STARTED_EXITING_C_UP | CAM_MOVE_C_UP_MODE);
             vec3f_set_dist_and_angle(checkFoc, c->pos, curDist, curPitch, curYaw + checkYaw);
+#endif
         }
         play_sound_cbutton_down();
     }
@@ -2912,7 +2936,9 @@ static bool allow_romhack_camera_override_mode(u8 mode) {
         case CAMERA_MODE_WATER_SURFACE:
         case CAMERA_MODE_INSIDE_CANNON:
         case CAMERA_MODE_BOSS_FIGHT:
+#ifdef BETTERCAMERA
         case CAMERA_MODE_NEWCAM:
+#endif
         case CAMERA_MODE_ROM_HACK:
             return false;
         default:
@@ -2945,6 +2971,10 @@ void set_camera_mode(struct Camera *c, s16 mode, s16 frames) {
     }
 
 #ifdef BETTERCAMERA
+    if (mode == CAMERA_MODE_C_UP && gLakituState.mode == CAMERA_MODE_NEWCAM) {
+        newcam_init_settings_override(false);
+    }
+
     if (mode != CAMERA_MODE_NEWCAM && gLakituState.mode != CAMERA_MODE_NEWCAM)
     {
 #endif

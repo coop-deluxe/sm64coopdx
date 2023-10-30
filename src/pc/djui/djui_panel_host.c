@@ -12,10 +12,10 @@
 #include "pc/configfile.h"
 #include "pc/cheats.h"
 
-struct DjuiRect* sRectPort = NULL;
-struct DjuiRect* sRectPassword = NULL;
-struct DjuiInputbox* sInputboxPort = NULL;
-struct DjuiInputbox* sInputboxPassword = NULL;
+static struct DjuiRect* sRectPort = NULL;
+static struct DjuiRect* sRectPassword = NULL;
+static struct DjuiInputbox* sInputboxPort = NULL;
+static struct DjuiInputbox* sInputboxPassword = NULL;
 
 static void djui_panel_host_network_system_change(UNUSED struct DjuiBase* base) {
 #ifndef COOPNET
@@ -73,7 +73,7 @@ static void djui_panel_host_do_host(struct DjuiBase* caller) {
     }
     
     // Doesn't let you host if the player limit is not good
-    if (configAmountofPlayers < 2 || configAmountofPlayers > MAX_PLAYERS) {
+    if (configAmountofPlayers < 1 || configAmountofPlayers > MAX_PLAYERS) {
         return;
     }
     

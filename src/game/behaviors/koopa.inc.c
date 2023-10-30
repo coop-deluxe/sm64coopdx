@@ -117,8 +117,7 @@ void bhv_koopa_init(void) {
         // koopa the quick
         if (cur_obj_nearest_object_with_behavior(bhvKoopaRaceEndpoint) != NULL) {
             o->parentObj = cur_obj_nearest_object_with_behavior(bhvKoopaRaceEndpoint);
-        }
-        else {
+        } else {
             obj_mark_for_deletion(o);
             return;
         }

@@ -182,6 +182,8 @@ static f32 sDepthZSub = 0;
 
 Vec3f gLightingDir;
 Color gLightingColor = { 255, 255, 255 };
+Color gVertexColor = { 255, 255, 255 };
+Color gFogColor = { 255, 255, 255 };
 
 // 4x4 pink-black checkerboard texture to indicate missing textures
 #define MISSING_W 4
@@ -206,10 +208,10 @@ static void gfx_update_loaded_texture(uint8_t tile_number, uint32_t size_bytes, 
     rdp.loaded_texture[tile_number].addr = addr;
 }
 
-//////////////////////////////////
-// forward declaration for djui //
-//////////////////////////////////
-void djui_gfx_run_dl(Gfx* cmd);
+//////////////////////////
+// forward declaration //
+////////////////////////
+void ext_gfx_run_dl(Gfx* cmd);
 //////////////////////////////////
 
 #ifdef EXTERNAL_DATA
@@ -786,16 +788,18 @@ static void gfx_transposed_matrix_mul(float res[3], const float a[3], const floa
     res[2] = a[0] * b[2][0] + a[1] * b[2][1] + a[2] * b[2][2];
 }
 
-static void calculate_normal_dir(const Light_t *light, float coeffs[3]) {
+static void calculate_normal_dir(const Light_t *light, float coeffs[3], bool applyLightingDir) {
     float light_dir[3] = {
         light->dir[0] / 127.0f,
         light->dir[1] / 127.0f,
         light->dir[2] / 127.0f
     };
 
-    light_dir[0] += gLightingDir[0];
-    light_dir[1] += gLightingDir[1];
-    light_dir[2] += gLightingDir[2];
+    if (applyLightingDir) {
+        light_dir[0] += gLightingDir[0];
+        light_dir[1] += gLightingDir[1];
+        light_dir[2] += gLightingDir[2];
+    }
 
     gfx_transposed_matrix_mul(coeffs, light_dir, rsp.modelview_matrix_stack[rsp.modelview_matrix_stack_size - 1]);
     gfx_normalize_vector(coeffs);
@@ -866,7 +870,7 @@ static float gfx_adjust_x_for_aspect_ratio(float x) {
     return x * (4.0f / 3.0f) / ((float)gfx_current_dimensions.width / (float)gfx_current_dimensions.height);
 }
 
-static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, const Vtx *vertices) {
+static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, const Vtx *vertices, bool luaVertexColor) {
     for (size_t i = 0; i < n_vertices; i++, dest_index++) {
         const Vtx_t *v = &vertices[i].v;
         const Vtx_tn *vn = &vertices[i].n;
@@ -884,13 +888,14 @@ static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, cons
 
         if (rsp.geometry_mode & G_LIGHTING) {
             if (rsp.lights_changed) {
+                bool applyLightingDir = !(rsp.geometry_mode & G_TEXTURE_GEN);
                 for (int32_t i = 0; i < rsp.current_num_lights - 1; i++) {
-                    calculate_normal_dir(&rsp.current_lights[i], rsp.current_lights_coeffs[i]);
+                    calculate_normal_dir(&rsp.current_lights[i], rsp.current_lights_coeffs[i], applyLightingDir);
                 }
                 static const Light_t lookat_x = {{0, 0, 0}, 0, {0, 0, 0}, 0, {127, 0, 0}, 0};
                 static const Light_t lookat_y = {{0, 0, 0}, 0, {0, 0, 0}, 0, {0, 127, 0}, 0};
-                calculate_normal_dir(&lookat_x, rsp.current_lookat_coeffs[0]);
-                calculate_normal_dir(&lookat_y, rsp.current_lookat_coeffs[1]);
+                calculate_normal_dir(&lookat_x, rsp.current_lookat_coeffs[0], applyLightingDir);
+                calculate_normal_dir(&lookat_y, rsp.current_lookat_coeffs[1], applyLightingDir);
                 rsp.lights_changed = false;
             }
 
@@ -911,12 +916,12 @@ static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, cons
                 }
             }
 
-            f32 rf = gLightingColor[0] / 255.0f;
-            f32 gf = gLightingColor[1] / 255.0f;
-            f32 bf = gLightingColor[2] / 255.0f;
-            d->color.r = r * rf > 255 ? 255 : r * rf;
-            d->color.g = g * gf > 255 ? 255 : g * gf;
-            d->color.b = b * bf > 255 ? 255 : b * bf;
+            r *= gLightingColor[0] / 255.0f;
+            g *= gLightingColor[1] / 255.0f;
+            b *= gLightingColor[2] / 255.0f;
+            d->color.r = r > 255 ? 255 : r;
+            d->color.g = g > 255 ? 255 : g;
+            d->color.b = b > 255 ? 255 : b;
 
             if (rsp.geometry_mode & G_TEXTURE_GEN) {
                 float dotx = 0, doty = 0;
@@ -931,9 +936,18 @@ static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, cons
                 V = (int32_t)((doty / 127.0f + 1.0f) / 4.0f * rsp.texture_scaling_factor.t);
             }
         } else {
-            d->color.r = v->cn[0];
-            d->color.g = v->cn[1];
-            d->color.b = v->cn[2];
+            if (!(rsp.geometry_mode & G_LIGHT_MAP_EXT) && luaVertexColor) {
+                f32 r = gVertexColor[0] / 255.0f;
+                f32 g = gVertexColor[1] / 255.0f;
+                f32 b = gVertexColor[2] / 255.0f;
+                d->color.r = v->cn[0] * r;
+                d->color.g = v->cn[1] * g;
+                d->color.b = v->cn[2] * b;
+            } else {
+                d->color.r = v->cn[0];
+                d->color.g = v->cn[1];
+                d->color.b = v->cn[2];
+            }
         }
 
         d->u = U;
@@ -972,7 +986,7 @@ static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, cons
 
             if (fog_z < 0) fog_z = 0;
             if (fog_z > 255) fog_z = 255;
-            d->fog_z = fog_z; // Use alpha variable to store fog factor
+            d->fog_z = fog_z;
         }
 
         d->color.a = v->cn[3];
@@ -1142,9 +1156,12 @@ static void OPTIMIZE_O3 gfx_sp_tri1(uint8_t vtx1_idx, uint8_t vtx2_idx, uint8_t 
         }
 
         if (cm->use_fog) {
-            buf_vbo[buf_vbo_len++] = rdp.fog_color.r / 255.0f;
-            buf_vbo[buf_vbo_len++] = rdp.fog_color.g / 255.0f;
-            buf_vbo[buf_vbo_len++] = rdp.fog_color.b / 255.0f;
+            f32 r = gFogColor[0] / 255.0f;
+            f32 g = gFogColor[1] / 255.0f;
+            f32 b = gFogColor[2] / 255.0f;
+            buf_vbo[buf_vbo_len++] = (rdp.fog_color.r / 255.0f) * r;
+            buf_vbo[buf_vbo_len++] = (rdp.fog_color.g / 255.0f) * g;
+            buf_vbo[buf_vbo_len++] = (rdp.fog_color.b / 255.0f) * b;
             buf_vbo[buf_vbo_len++] = v_arr[i]->fog_z / 255.0f; // fog factor (not alpha)
         }
 
@@ -1712,11 +1729,11 @@ static void OPTIMIZE_O3 gfx_run_dl(Gfx* cmd) {
                 break;
             case G_VTX:
 #ifdef F3DEX_GBI_2
-                gfx_sp_vertex(C0(12, 8), C0(1, 7) - C0(12, 8), seg_addr(cmd->words.w1));
+                gfx_sp_vertex(C0(12, 8), C0(1, 7) - C0(12, 8), seg_addr(cmd->words.w1), true);
 #elif defined(F3DEX_GBI) || defined(F3DLP_GBI)
-                gfx_sp_vertex(C0(10, 6), C0(16, 8) / 2, seg_addr(cmd->words.w1));
+                gfx_sp_vertex(C0(10, 6), C0(16, 8) / 2, seg_addr(cmd->words.w1), true);
 #else
-                gfx_sp_vertex((C0(0, 16)) / sizeof(Vtx), C0(16, 4), seg_addr(cmd->words.w1));
+                gfx_sp_vertex((C0(0, 16)) / sizeof(Vtx), C0(16, 4), seg_addr(cmd->words.w1), true);
 #endif
                 break;
             case G_DL:
@@ -1871,14 +1888,14 @@ static void OPTIMIZE_O3 gfx_run_dl(Gfx* cmd) {
                 gfx_dp_set_color_image(C0(21, 3), C0(19, 2), C0(0, 11), seg_addr(cmd->words.w1));
                 break;
             default:
-                djui_gfx_run_dl(cmd);
+                ext_gfx_run_dl(cmd);
                 break;
         }
         ++cmd;
     }
 }
 
-static void gfx_sp_reset() {
+static void gfx_sp_reset(void) {
     rsp.modelview_matrix_stack_size = 1;
     rsp.current_num_lights = 2;
     rsp.lights_changed = true;
@@ -2091,7 +2108,7 @@ static void OPTIMIZE_O3 djui_gfx_dp_set_override(void* texture, uint32_t w, uint
 }
 
 static void OPTIMIZE_O3 djui_gfx_sp_simple_vertex(size_t n_vertices, size_t dest_index, const Vtx *vertices) {
-    gfx_sp_vertex(n_vertices, dest_index, vertices);
+    gfx_sp_vertex(n_vertices, dest_index, vertices, false);
     return;
     /*
     TODO: Figure out why the background of text goes black when mods print text
@@ -2202,7 +2219,7 @@ void gfx_pc_precomp_shader(uint32_t rgb1, uint32_t alpha1, uint32_t rgb2, uint32
     gfx_lookup_or_create_color_combiner(cm);
 }
 
-void OPTIMIZE_O3 djui_gfx_run_dl(Gfx* cmd) {
+void OPTIMIZE_O3 ext_gfx_run_dl(Gfx* cmd) {
     uint32_t opcode = cmd->words.w0 >> 24;
     switch (opcode) {
         case G_TEXCLIP_DJUI:
@@ -2211,10 +2228,17 @@ void OPTIMIZE_O3 djui_gfx_run_dl(Gfx* cmd) {
         case G_TEXOVERRIDE_DJUI:
             djui_gfx_dp_set_override(seg_addr(cmd->words.w1), 1 << C0(16, 8), 1 << C0(8, 8), C0(0, 8));
             break;
-        case G_DJUI_SIMPLE_VERT:
-            djui_gfx_sp_simple_vertex(C0(12, 8), C0(1, 7) - C0(12, 8), seg_addr(cmd->words.w1));
+        case G_VTX_EXT:
+#ifdef F3DEX_GBI_2
+            gfx_sp_vertex(C0(12, 8), C0(1, 7) - C0(12, 8), seg_addr(cmd->words.w1), false);
+#elif defined(F3DEX_GBI) || defined(F3DLP_GBI)
+            gfx_sp_vertex(C0(10, 6), C0(16, 8) / 2, seg_addr(cmd->words.w1), false);
+#else
+            gfx_sp_vertex((C0(0, 16)) / sizeof(Vtx), C0(16, 4), seg_addr(cmd->words.w1), false);
+#endif
+            // djui_gfx_sp_simple_vertex(C0(12, 8), C0(1, 7) - C0(12, 8), seg_addr(cmd->words.w1));
             break;
-        case G_DJUI_SIMPLE_TRI2:
+        case G_TRI2_EXT:
             djui_gfx_sp_simple_tri1(C0(16, 8) / 2, C0(8, 8) / 2, C0(0, 8) / 2);
             djui_gfx_sp_simple_tri1(C1(16, 8) / 2, C1(8, 8) / 2, C1(0, 8) / 2);
             break;

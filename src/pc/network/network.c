@@ -70,13 +70,19 @@ enum NetworkSystemType sNetworkReconnectType = NS_SOCKET;
 struct ServerSettings gServerSettings = {
     .playerInteractions = PLAYER_INTERACTIONS_SOLID,
     .playerKnockbackStrength = 25,
-    .skipIntro = 0,
-    .enableCheats = 0,
-    .bubbleDeath = 1,
-    .enablePlayersInLevelDisplay = 1,
-    .enablePlayerList = 1,
-    .headlessServer = 0,
+    .skipIntro = FALSE,
+    .enableCheats = FALSE,
+    .bubbleDeath = TRUE,
+    .enablePlayersInLevelDisplay = TRUE,
+    .enablePlayerList = TRUE,
+    .headlessServer = FALSE,
+    .nametags = TRUE,
     .maxPlayers = MAX_PLAYERS,
+};
+
+struct NametagsSettings gNametagsSettings = {
+    .showHealth = false,
+    .showSelfTag = false,
 };
 
 void network_set_system(enum NetworkSystemType nsType) {
@@ -113,6 +119,9 @@ bool network_init(enum NetworkType inNetworkType, bool reconnecting) {
     gServerSettings.skipIntro = configSkipIntro;
     gServerSettings.enableCheats = configEnableCheats;
     gServerSettings.bubbleDeath = configBubbleDeath;
+    gServerSettings.enablePlayersInLevelDisplay = TRUE;
+    gServerSettings.enablePlayerList = TRUE;
+    gServerSettings.nametags = configNametags;
     gServerSettings.maxPlayers = configAmountofPlayers;
 #if defined(RAPI_DUMMY) || defined(WAPI_DUMMY)
     gServerSettings.headlessServer = (inNetworkType == NT_SERVER);
@@ -638,10 +647,17 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
     gLightingColor[0] = 255;
     gLightingColor[1] = 255;
     gLightingColor[2] = 255;
+    gVertexColor[0] = 255;
+    gVertexColor[1] = 255;
+    gVertexColor[2] = 255;
+    gFogColor[0] = 255;
+    gFogColor[1] = 255;
+    gFogColor[2] = 255;
     gOverrideBackground = -1;
     gOverrideEnvFx = -1;
     gDjuiRenderBehindHud = false;
     gRomhackCameraAllowCentering = TRUE;
+    gOverrideAllowToxicGasCamera = FALSE;
     camera_reset_overrides();
     dynos_mod_shutdown();
     mods_clear(&gActiveMods);

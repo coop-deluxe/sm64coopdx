@@ -42,9 +42,9 @@ s8 gEnvFxMode = 0;
 UNUSED s32 D_80330644 = 0;
 
 /// Template for a snow particle triangle
-Vtx gSnowTempVtx[3] = { { { { -5, 5, 0 }, 0, { 0, 0 }, { 0x7F, 0x7F, 0x7F, 0xFF } } },
-                        { { { -5, -5, 0 }, 0, { 0, 960 }, { 0x7F, 0x7F, 0x7F, 0xFF } } },
-                        { { { 5, 5, 0 }, 0, { 960, 0 }, { 0x7F, 0x7F, 0x7F, 0xFF } } } };
+Vtx gSnowTempVtx[3] = { { { { -5, 5, 0 },  0, { 0, 0 },   { 0xFF, 0xFF, 0xFF, 0xFF } } },
+                        { { { -5, -5, 0 }, 0, { 0, 960 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
+                        { { { 5, 5, 0 },   0, { 960, 0 }, { 0xFF, 0xFF, 0xFF, 0xFF } } } };
 
 // Change these to make snowflakes smaller or bigger
 struct SnowFlakeVertex gSnowFlakeVertex1 = { -5, 5, 0 };

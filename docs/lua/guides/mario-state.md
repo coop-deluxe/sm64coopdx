@@ -111,4 +111,4 @@ hook_event(HOOK_MARIO_UPDATE, mario_update)
 The only time you should use `gMarioStates[0]` is if the hook you are using does not have `m` as a parameter, otherwise, do as shown above with your own function names.
 
 ## Section 4: Wrapping Up
-Hopefully, you were able to learn more about how `gMarioStates` works, if you have any questions, please join the [sm64ex-coop discord server](https://discord.gg/eXhpSRhCyM), and ask in #coop-mod-discussion.
+Hopefully, you were now able to learn more about how `gMarioStates` works.

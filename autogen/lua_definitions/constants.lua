@@ -3311,6 +3311,17 @@ FONT_TINY = 3
 --- @type DjuiFontType
 FONT_COUNT = 4
 
+--- @class HudUtilsFilter
+
+--- @type HudUtilsFilter
+FILTER_NEAREST = 0
+
+--- @type HudUtilsFilter
+FILTER_LINEAR = 1
+
+--- @type HudUtilsFilter
+FILTER_COUNT = 2
+
 --- @class HudUtilsResolution
 
 --- @type HudUtilsResolution
@@ -3350,6 +3361,9 @@ ENVFX_SNOW_WATER = 2
 ENVFX_WHIRLPOOL_BUBBLES = 13
 
 --- @type integer
+DS_DIFF = DS_TUXIE
+
+--- @type integer
 SEQ_PLAYER_ENV = 1
 
 --- @type integer
@@ -3357,6 +3371,47 @@ SEQ_PLAYER_LEVEL = 0
 
 --- @type integer
 SEQ_PLAYER_SFX = 2
+
+--- @class DialogSound
+
+--- @type DialogSound
+DS_UKIKI = 0
+
+--- @type DialogSound
+DS_TUXIE = 1
+
+--- @type DialogSound
+DS_BOWS1 = 2
+
+--- @type DialogSound
+DS_KOOPA = 3
+
+--- @type DialogSound
+DS_KBOMB = 4
+
+--- @type DialogSound
+DS_BOO = 5
+
+--- @type DialogSound
+DS_BOMB = 6
+
+--- @type DialogSound
+DS_BOWS2 = 7
+
+--- @type DialogSound
+DS_GRUNT = 8
+
+--- @type DialogSound
+DS_WIGLR = 9
+
+--- @type DialogSound
+DS_YOSHI = 10
+
+--- @type DialogSound
+DS_MAX = 11
+
+--- @type DialogSound
+DS_NONE = 0xff
 
 --- @type integer
 BACKGROUND_ABOVE_CLOUDS = 8
@@ -8984,7 +9039,13 @@ HOOK_ON_OBJECT_ANIM_UPDATE = 32
 HOOK_ON_DIALOG = 33
 
 --- @type LuaHookedEventType
-HOOK_MAX = 34
+HOOK_ON_EXIT = 34
+
+--- @type LuaHookedEventType
+HOOK_DIALOG_SOUND = 35
+
+--- @type LuaHookedEventType
+HOOK_MAX = 36
 
 --- @class HudDisplayFlags
 
@@ -10439,13 +10500,13 @@ SOUND_BANKS_ALL_BITS = 0xffff
 SOUND_BANKS_BACKGROUND = (SOUND_BANKS_ALL & ~SOUND_BANKS_FOREGROUND)
 
 --- @type integer
-SOUND_BANKS_DISABLED_AFTER_CREDITS = ( (1 << SOUND_BANK_ACTION) | (1 << SOUND_BANK_MOVING) | (1 << SOUND_BANK_MARIO_VOICE) | (1 << SOUND_BANK_GENERAL) | (1 << SOUND_BANK_LUIGI_VOICE) | (1 << SOUND_BANK_WARIO_VOICE))
+SOUND_BANKS_DISABLED_AFTER_CREDITS = ( (1 << SOUND_BANK_ACTION) | (1 << SOUND_BANK_MOVING) | (1 << SOUND_BANK_MARIO_VOICE) | (1 << SOUND_BANK_GENERAL) | (1 << SOUND_BANK_LUIGI_VOICE) | (1 << SOUND_BANK_WARIO_VOICE) | (1 << SOUND_BANK_TOAD_VOICE))
 
 --- @type integer
 SOUND_BANKS_DISABLED_DURING_INTRO_CUTSCENE = ( (1 << SOUND_BANK_ENV) | (1 << SOUND_BANK_OBJ) | (1 << SOUND_BANK_GENERAL2) | (1 << SOUND_BANK_OBJ2))
 
 --- @type integer
-SOUND_BANKS_FOREGROUND = ( (1 << SOUND_BANK_ACTION) | (1 << SOUND_BANK_MARIO_VOICE) | (1 << SOUND_BANK_MENU) | (1 << SOUND_BANK_LUIGI_VOICE) | (1 << SOUND_BANK_WARIO_VOICE))
+SOUND_BANKS_FOREGROUND = ( (1 << SOUND_BANK_ACTION) | (1 << SOUND_BANK_MARIO_VOICE) | (1 << SOUND_BANK_MENU) | (1 << SOUND_BANK_LUIGI_VOICE) | (1 << SOUND_BANK_WARIO_VOICE) | (1 << SOUND_BANK_TOAD_VOICE))
 
 --- @type integer
 SOUND_BANK_ACTION = 0
@@ -10454,7 +10515,7 @@ SOUND_BANK_ACTION = 0
 SOUND_BANK_AIR = 6
 
 --- @type integer
-SOUND_BANK_COUNT = 12
+SOUND_BANK_COUNT = 13
 
 --- @type integer
 SOUND_BANK_ENV = 4
@@ -10482,6 +10543,9 @@ SOUND_BANK_OBJ = 5
 
 --- @type integer
 SOUND_BANK_OBJ2 = 9
+
+--- @type integer
+SOUND_BANK_TOAD_VOICE = 12
 
 --- @type integer
 SOUND_BANK_WARIO_VOICE = 11
@@ -12280,6 +12344,9 @@ MINOR_VERSION_NUMBER = 0
 
 --- @type integer
 PATCH_VERSION_NUMBER = 0
+
+--- @type string
+SM64COOPDX = "sm64coopdx"
 
 --- @type integer
 VERSION_NUMBER = 36

@@ -107,7 +107,7 @@ void bassh_free_stream(HSTREAM stream) {
     BASS_ChannelFree(stream);
 }
 
-void bassh_init() {
+void bassh_init(void) {
     BOOL success = BASS_Init(-1, 44100, 0, 0, 0);
 
     if(success == FALSE) {
@@ -122,11 +122,11 @@ void bassh_init() {
     LOG_INFO("Bass Initialized on device: %s, with driver: %s", info.name, info.driver);
 }
 
-void bassh_deinit() {
+void bassh_deinit(void) {
     BASS_Free();
 }
 
-int bassh_device_count() {
+int bassh_device_count(void) {
     int count = 0;
 
     BASS_DEVICEINFO info;

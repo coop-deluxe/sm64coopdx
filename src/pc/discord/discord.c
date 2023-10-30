@@ -1,6 +1,7 @@
 #include "discord.h"
 #include "pc/djui/djui.h"
 #include "pc/debuglog.h"
+#include "pc/pc_main.h"
 
 #if defined(_WIN32) || defined(_WIN64)
 #include <windows.h>
@@ -12,7 +13,9 @@
 
 #define MAX_LAUNCH_CMD (MAX_PATH + 12)
 
-static int64_t applicationId = 752700005210390568;
+#define APPLICATION_ID_COOP   752700005210390568
+#define APPLICATION_ID_COOPDX 1159627283506679839
+
 struct DiscordApplication app = { 0 };
 static bool sFatalShown = false;
 static bool sDiscordInitialized = false;
@@ -119,7 +122,7 @@ static void discord_initialize(void) {
     // set up discord params
     struct DiscordCreateParams params = { 0 };
     DiscordCreateParamsSetDefault(&params);
-    params.client_id = applicationId;
+    params.client_id = gCoopCompatibility ? APPLICATION_ID_COOP : APPLICATION_ID_COOPDX;
     params.flags = DiscordCreateFlags_NoRequireDiscord;
     params.event_data = &app;
     params.user_events = discord_user_initialize();

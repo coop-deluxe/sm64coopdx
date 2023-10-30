@@ -24,7 +24,8 @@ in_files = [
     'src/game/hardcoded.h',
     'src/pc/mods/mod.h',
     'src/pc/lua/utils/smlua_audio_utils.h',
-    'src/game/paintings.h'
+    'src/game/paintings.h',
+    'src/pc/djui/djui_types.h'
 ]
 
 out_filename_c = 'src/pc/lua/smlua_cobject_autogen.c'
@@ -102,7 +103,7 @@ override_field_immutable = {
     "SpawnInfo": [ "syncID", "next", "unk18" ],
     "CustomLevelInfo": [ "next" ],
     "GraphNode": [ "children", "next", "parent", "prev", "type" ],
-    "GraphNodeObject": [  "angle", "animInfo", "cameraToObject", "node", "pos", "prevAngle", "prevPos", "prevScale", "prevScaleTimestamp", "prevShadowPos", "prevShadowPosTimestamp", "prevThrowMatrix", "prevThrowMatrixTimestamp", "prevTimestamp", "scale", "shadowPos", "sharedChild", "skipInterpolationTimestamp", "throwMatrix", "throwMatrixPrev", "unk4C", ],
+    "GraphNodeObject": [  "angle", "animInfo", "cameraToObject", "node", "pos", "prevAngle", "prevPos", "prevScale", "prevScaleTimestamp", "prevShadowPos", "prevShadowPosTimestamp", "prevThrowMatrix", "prevThrowMatrixTimestamp", "prevTimestamp", "scale", "shadowPos", "sharedChild", "skipInterpolationTimestamp", "throwMatrixPrev", "unk4C", ],
     "ObjectWarpNode": [ "next "],
     "Animation": [ "length" ],
     "AnimationTable": [ "count" ],
@@ -115,7 +116,8 @@ override_field_version_excludes = {
 }
 
 override_allowed_structs = {
-    "src/pc/network/network.h": [ 'ServerSettings' ],
+    "src/pc/network/network.h": [ 'ServerSettings', 'NametagsSettings' ],
+    "src/pc/djui/djui_types.h": [ 'DjuiColor' ],
 }
 
 sLuaManuallyDefinedStructs = [{
@@ -286,8 +288,8 @@ def parse_structs(extracted):
 
 ############################################################################
 
-fuzz_from = './autogen/fuzz_template.lua'
-fuzz_to = '/home/djoslin/.local/share/sm64ex-coop/mods/test-fuzz.lua'
+fuzz_from = ""
+fuzz_to = ""
 fuzz_structs = ""
 fuzz_structs_calls = ""
 fuzz_template_str = None

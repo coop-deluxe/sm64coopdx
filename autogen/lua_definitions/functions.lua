@@ -3632,6 +3632,21 @@ function djui_console_toggle()
     -- ...
 end
 
+--- @return DjuiColor
+function djui_hud_get_color()
+    -- ...
+end
+
+--- @return integer
+function djui_hud_get_filter()
+    -- ...
+end
+
+--- @return integer
+function djui_hud_get_font()
+    -- ...
+end
+
 --- @return number
 function djui_hud_get_mouse_x()
     -- ...
@@ -3649,6 +3664,16 @@ end
 
 --- @return number
 function djui_hud_get_raw_mouse_y()
+    -- ...
+end
+
+--- @return integer
+function djui_hud_get_resolution()
+    -- ...
+end
+
+--- @return HudUtilsRotation
+function djui_hud_get_rotation()
     -- ...
 end
 
@@ -3727,6 +3752,12 @@ end
 --- @param a integer
 --- @return nil
 function djui_hud_set_color(r, g, b, a)
+    -- ...
+end
+
+--- @param filterType HudUtilsFilter
+--- @return nil
+function djui_hud_set_filter(filterType)
     -- ...
 end
 
@@ -5721,6 +5752,12 @@ end
 --- @param key string
 --- @return number
 function mod_storage_load_number(key)
+    -- ...
+end
+
+--- @param key string
+--- @return boolean
+function mod_storage_remove(key)
     -- ...
 end
 
@@ -8607,6 +8644,11 @@ function get_current_save_file_num()
     -- ...
 end
 
+--- @return DateTime
+function get_date_and_time()
+    -- ...
+end
+
 --- @return integer
 function get_dialog_box_state()
     -- ...
@@ -8625,6 +8667,12 @@ end
 --- @param index integer
 --- @return number
 function get_environment_region(index)
+    -- ...
+end
+
+--- @param index integer
+--- @return integer
+function get_fog_color(index)
     -- ...
 end
 
@@ -8714,6 +8762,12 @@ end
 
 --- @return integer
 function get_ttc_speed_setting()
+    -- ...
+end
+
+--- @param index integer
+--- @return integer
+function get_vertex_color(index)
     -- ...
 end
 
@@ -8822,6 +8876,13 @@ function set_environment_region(index, value)
     -- ...
 end
 
+--- @param index integer
+--- @param value integer
+--- @return nil
+function set_fog_color(index, value)
+    -- ...
+end
+
 --- @param value boolean
 --- @return nil
 function set_got_file_coin_hi_score(value)
@@ -8899,6 +8960,13 @@ end
 --- @param speed integer
 --- @return nil
 function set_ttc_speed_setting(speed)
+    -- ...
+end
+
+--- @param index integer
+--- @param value integer
+--- @return nil
+function set_vertex_color(index, value)
     -- ...
 end
 

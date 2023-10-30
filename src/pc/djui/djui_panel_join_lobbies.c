@@ -23,16 +23,17 @@ static struct DjuiThreePanel* sDescriptionPanel = NULL;
 static struct DjuiText* sTooltip = NULL;
 static char* sPassword = NULL;
 
-static void djui_panel_join_lobby_description_create() {
+static void djui_panel_join_lobby_description_create(void) {
     f32 bodyHeight = 600;
 
     struct DjuiThreePanel* panel = djui_three_panel_create(&gDjuiRoot->base, 64, bodyHeight, 0);
+    struct DjuiThreePanelTheme theme = gDjuiThemes[configDjuiTheme]->threePanels;
 
     djui_base_set_alignment(&panel->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_CENTER);
     djui_base_set_size_type(&panel->base, DJUI_SVT_ABSOLUTE, DJUI_SVT_RELATIVE);
     djui_base_set_size(&panel->base, DJUI_DESC_PANEL_WIDTH, 1.0f);
-    djui_base_set_color(&panel->base, 0, 0, 0, 240);
-    djui_base_set_border_color(&panel->base, 0, 0, 0, 200);
+    djui_base_set_color(&panel->base, theme.rectColor.r, theme.rectColor.g, theme.rectColor.b, theme.rectColor.a);
+    djui_base_set_border_color(&panel->base, theme.borderColor.r, theme.borderColor.g, theme.borderColor.b, theme.borderColor.a);
     djui_base_set_border_width(&panel->base, 8);
     djui_base_set_padding(&panel->base, 16, 16, 16, 16);
     {
@@ -131,6 +132,10 @@ void djui_panel_join_lobbies_refresh(UNUSED struct DjuiBase* caller) {
     djui_base_set_enabled(&sRefreshButton->base, false);
     djui_paginated_update_page_buttons(sLobbyPaginated);
     ns_coopnet_query(djui_panel_join_query, djui_panel_join_query_finish, sPassword);
+}
+
+void djui_panel_join_lobbies_value_changed(UNUSED struct DjuiBase* caller) {
+    djui_panel_join_lobbies_refresh(NULL);
 }
 
 void djui_panel_join_lobbies_create(struct DjuiBase* caller, const char* password) {

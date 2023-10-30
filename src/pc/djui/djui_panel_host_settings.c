@@ -7,6 +7,7 @@
 #include "pc/utils/misc.h"
 #include "pc/configfile.h"
 #include "pc/cheats.h"
+#include "pc/pc_main.h"
 #include "djui_inputbox.h"
 
 static unsigned int sKnockbackIndex = 0;
@@ -29,7 +30,7 @@ static bool djui_panel_host_limit_valid(void) {
         limit += (*buffer - '0');
         buffer++;
     }
-    return limit >= 2 && limit <= MAX_PLAYERS;
+    return limit >= 1 && limit <= MAX_PLAYERS;
 }
 
 static void djui_panel_host_player_text_change(struct DjuiBase* caller) {
@@ -62,6 +63,7 @@ void djui_panel_host_settings_create(struct DjuiBase* caller) {
         djui_checkbox_create(body, DLANG(HOST_SETTINGS, SKIP_INTRO_CUTSCENE), &configSkipIntro, NULL);
         djui_checkbox_create(body, DLANG(HOST_SETTINGS, ENABLE_CHEATS), &configEnableCheats, NULL);
         djui_checkbox_create(body, DLANG(HOST_SETTINGS, BUBBLE_ON_DEATH), &configBubbleDeath, NULL);
+        if (!gCoopCompatibility) djui_checkbox_create(body, DLANG(HOST_SETTINGS, NAMETAGS), &configNametags, NULL);
 
         struct DjuiRect* rect1 = djui_rect_container_create(body, 32);
         {

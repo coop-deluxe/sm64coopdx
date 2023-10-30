@@ -17,7 +17,7 @@ ALIGNED8 const Texture pebble_seg3_texture_0301C300[] = {
 const Gfx pebble_seg3_dl_0301CB00[] = {
     gsDPPipeSync(),
     gsSPClearGeometryMode(G_LIGHTING),
-    gsDPSetCombineMode(G_CC_DECALRGBA, G_CC_DECALRGBA),
+    gsDPSetCombineMode(G_CC_MODULATERGBA, G_CC_MODULATERGBA),
     gsDPLoadTextureBlock(pebble_seg3_texture_0301C300, G_IM_FMT_RGBA, G_IM_SIZ_16b, 32, 32, 0, G_TX_CLAMP, G_TX_CLAMP, 5, 5, G_TX_NOLOD, G_TX_NOLOD),
     gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON),
     gsSPVertex(pebble_seg3_vertex_0301C2C0, 4, 0),

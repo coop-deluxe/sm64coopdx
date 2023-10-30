@@ -14,9 +14,14 @@
    - [network_send_object](#network_send_object)
    - [network_send_to](#network_send_to)
    - [network_send](#network_send)
-   - [djui_hud_render_texture](#djui_hud_render_texture)
    - [get_texture_info](#get_texture_info)
+   - [djui_hud_render_texture](#djui_hud_render_texture)
+   - [djui_hud_render_texture_tile](#djui_hud_render_texture_tile)
    - [djui_hud_render_texture_interpolated](#djui_hud_render_texture_interpolated)
+   - [djui_hud_render_texture_tile_interpolated](#djui_hud_render_texture_tile_interpolated)
+   - [smlua_anim_util_register_animation](#smlua_anim_util_register_animation)
+   - [level_script_parse](#level_script_parse)
+   - [set_exclamation_box_contents](#set_exclamation_box_contents)
 
 <br />
 
@@ -722,10 +727,15 @@
 <br />
 
 - djui_hud_utils.h
+   - [djui_hud_get_color](functions-3.md#djui_hud_get_color)
+   - [djui_hud_get_filter](functions-3.md#djui_hud_get_filter)
+   - [djui_hud_get_font](functions-3.md#djui_hud_get_font)
    - [djui_hud_get_mouse_x](functions-3.md#djui_hud_get_mouse_x)
    - [djui_hud_get_mouse_y](functions-3.md#djui_hud_get_mouse_y)
    - [djui_hud_get_raw_mouse_x](functions-3.md#djui_hud_get_raw_mouse_x)
    - [djui_hud_get_raw_mouse_y](functions-3.md#djui_hud_get_raw_mouse_y)
+   - [djui_hud_get_resolution](functions-3.md#djui_hud_get_resolution)
+   - [djui_hud_get_rotation](functions-3.md#djui_hud_get_rotation)
    - [djui_hud_get_screen_height](functions-3.md#djui_hud_get_screen_height)
    - [djui_hud_get_screen_width](functions-3.md#djui_hud_get_screen_width)
    - [djui_hud_is_pause_menu_created](functions-3.md#djui_hud_is_pause_menu_created)
@@ -736,6 +746,7 @@
    - [djui_hud_render_rect_interpolated](functions-3.md#djui_hud_render_rect_interpolated)
    - [djui_hud_reset_color](functions-3.md#djui_hud_reset_color)
    - [djui_hud_set_color](functions-3.md#djui_hud_set_color)
+   - [djui_hud_set_filter](functions-3.md#djui_hud_set_filter)
    - [djui_hud_set_font](functions-3.md#djui_hud_set_font)
    - [djui_hud_set_mouse_locked](functions-3.md#djui_hud_set_mouse_locked)
    - [djui_hud_set_render_behind_hud](functions-3.md#djui_hud_set_render_behind_hud)
@@ -1105,11 +1116,12 @@
 
 <br />
 
-- mod_storage.c.h
+- mod_storage.h
    - [mod_storage_clear](functions-3.md#mod_storage_clear)
    - [mod_storage_load](functions-3.md#mod_storage_load)
    - [mod_storage_load_bool](functions-3.md#mod_storage_load_bool)
    - [mod_storage_load_number](functions-3.md#mod_storage_load_number)
+   - [mod_storage_remove](functions-3.md#mod_storage_remove)
    - [mod_storage_save](functions-3.md#mod_storage_save)
    - [mod_storage_save_bool](functions-3.md#mod_storage_save_bool)
    - [mod_storage_save_number](functions-3.md#mod_storage_save_number)
@@ -1117,14 +1129,14 @@
 <br />
 
 - network_player.h
-   - [get_network_player_from_area](functions-3.md#get_network_player_from_area)
-   - [get_network_player_from_level](functions-3.md#get_network_player_from_level)
-   - [get_network_player_smallest_global](functions-3.md#get_network_player_smallest_global)
-   - [network_player_color_to_palette](functions-3.md#network_player_color_to_palette)
-   - [network_player_connected_count](functions-3.md#network_player_connected_count)
-   - [network_player_from_global_index](functions-3.md#network_player_from_global_index)
-   - [network_player_palette_to_color](functions-3.md#network_player_palette_to_color)
-   - [network_player_set_description](functions-3.md#network_player_set_description)
+   - [get_network_player_from_area](functions-4.md#get_network_player_from_area)
+   - [get_network_player_from_level](functions-4.md#get_network_player_from_level)
+   - [get_network_player_smallest_global](functions-4.md#get_network_player_smallest_global)
+   - [network_player_color_to_palette](functions-4.md#network_player_color_to_palette)
+   - [network_player_connected_count](functions-4.md#network_player_connected_count)
+   - [network_player_from_global_index](functions-4.md#network_player_from_global_index)
+   - [network_player_palette_to_color](functions-4.md#network_player_palette_to_color)
+   - [network_player_set_description](functions-4.md#network_player_set_description)
 
 <br />
 
@@ -1607,10 +1619,12 @@
    - [djui_reset_popup_disabled_override](functions-5.md#djui_reset_popup_disabled_override)
    - [djui_set_popup_disabled_override](functions-5.md#djui_set_popup_disabled_override)
    - [get_current_save_file_num](functions-5.md#get_current_save_file_num)
+   - [get_date_and_time](functions-5.md#get_date_and_time)
    - [get_dialog_box_state](functions-5.md#get_dialog_box_state)
    - [get_dialog_id](functions-5.md#get_dialog_id)
    - [get_envfx](functions-5.md#get_envfx)
    - [get_environment_region](functions-5.md#get_environment_region)
+   - [get_fog_color](functions-5.md#get_fog_color)
    - [get_got_file_coin_hi_score](functions-5.md#get_got_file_coin_hi_score)
    - [get_hand_foot_pos_x](functions-5.md#get_hand_foot_pos_x)
    - [get_hand_foot_pos_y](functions-5.md#get_hand_foot_pos_y)
@@ -1627,6 +1641,7 @@
    - [get_temp_s32_pointer](functions-5.md#get_temp_s32_pointer)
    - [get_time](functions-5.md#get_time)
    - [get_ttc_speed_setting](functions-5.md#get_ttc_speed_setting)
+   - [get_vertex_color](functions-5.md#get_vertex_color)
    - [hud_get_value](functions-5.md#hud_get_value)
    - [hud_hide](functions-5.md#hud_hide)
    - [hud_is_hidden](functions-5.md#hud_is_hidden)
@@ -1642,6 +1657,7 @@
    - [save_file_get_using_backup_slot](functions-5.md#save_file_get_using_backup_slot)
    - [save_file_set_using_backup_slot](functions-5.md#save_file_set_using_backup_slot)
    - [set_environment_region](functions-5.md#set_environment_region)
+   - [set_fog_color](functions-5.md#set_fog_color)
    - [set_got_file_coin_hi_score](functions-5.md#set_got_file_coin_hi_score)
    - [set_last_completed_course_num](functions-5.md#set_last_completed_course_num)
    - [set_last_completed_star_num](functions-5.md#set_last_completed_star_num)
@@ -1655,6 +1671,7 @@
    - [set_override_skybox](functions-5.md#set_override_skybox)
    - [set_save_file_modified](functions-5.md#set_save_file_modified)
    - [set_ttc_speed_setting](functions-5.md#set_ttc_speed_setting)
+   - [set_vertex_color](functions-5.md#set_vertex_color)
 
 <br />
 
@@ -1770,8 +1787,6 @@
 
 ---
 # manually written functions
-
-<br />
 
 ## [define_custom_obj_fields](#define_custom_obj_fields)
 
@@ -1889,32 +1904,6 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 
 <br />
 
-## [djui_hud_render_texture](#djui_hud_render_texture)
-
-Renders a texture to the screen.
-
-### Lua Example
-`djui_hud_render_texture(texInfo, x, y, scaleW, scaleH)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| texInfo | [TextureInfo](structs.md#TextureInfo) |
-| x | `number` |
-| y | `number` |
-| scaleW | `number` |
-| scaleH | `number` |
-
-### Returns
-- None
-
-### C Prototype
-`void djui_hud_render_texture(struct TextureInfo* texInfo, f32 x, f32 y, f32 scaleW, f32 scaleH);`
-
-[:arrow_up_small:](#)
-
-<br />
-
 ## [get_texture_info](#get_texture_info)
 
 Retrieves a texture by name.
@@ -1937,10 +1926,68 @@ Retrieves a texture by name.
 
 <br />
 
-## [djui_hud_render_texture_interpolated](#djui_hud_render_texture_interpolated)
+## [djui_hud_render_texture](#djui_hud_render_texture)
+
+Renders a texture to the screen.
 
 ### Lua Example
-`djui_hud_render_texture_interpolated(texInfo, prevX, prevY, prevScaleW, prevScaleH, x, y, scaleW, scaleH)`
+`djui_hud_render_texture(texInfo, 0, 0, 1, 1)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| texInfo | [TextureInfo](structs.md#TextureInfo) |
+| x | `number` |
+| y | `number` |
+| scaleW | `number` |
+| scaleH | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void djui_hud_render_texture(struct TextureInfo* texInfo, f32 x, f32 y, f32 scaleW, f32 scaleH);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [djui_hud_render_texture_tile](#djui_hud_render_texture_tile)
+
+Renders a tile of a texture to the screen.
+
+### Lua Example
+`djui_hud_render_texture_tile(texInfo, 0, 0, 1, 1, 0, 0, 16, 16)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| texInfo | [TextureInfo](structs.md#TextureInfo) |
+| x | `number` |
+| y | `number` |
+| scaleW | `number` |
+| scaleH | `number` |
+| tileX | `number` |
+| tileY | `number` |
+| tileW | `number` |
+| tileH | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void djui_hud_render_texture_tile(struct TextureInfo* texInfo, f32 x, f32 y, f32 scaleW, f32 scaleH, u32 tileX, u32 tileY, u32 tileW, u32 tileH);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [djui_hud_render_texture_tile_interpolated](#djui_hud_render_texture_tile_interpolated)
+
+Renders an interpolated tile of a texture to the screen.
+
+### Lua Example
+`djui_hud_render_texture_tile_interpolated(texInfo, prevX, prevY, prevScaleW, prevScaleH, 0, 0, 1, 1, 0, 0, 16, 16)`
 
 ### Parameters
 | Field | Type |
@@ -1954,12 +2001,90 @@ Retrieves a texture by name.
 | y | `number` |
 | scaleW | `number` |
 | scaleH | `number` |
+| tileX | `number` |
+| tileY | `number` |
+| tileW | `number` |
+| tileH | `number` |
 
 ### Returns
 - None
 
 ### C Prototype
-`void djui_hud_render_texture_interpolated(struct TextureInfo* texInfo, f32 prevX, f32 prevY, f32 prevScaleW, f32 prevScaleH, f32 x, f32 y, f32 scaleW, f32 scaleH);`
+`void djui_hud_render_texture_tile_interpolated(struct TextureInfo* texInfo, f32 prevX, f32 prevY, f32 prevScaleW, f32 prevScaleH, f32 x, f32 y, f32 scaleW, f32 scaleH, u32 tileX, u32 tileY, u32 tileW, u32 tileH);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [smlua_anim_util_register_animation](#smlua_anim_util_register_animation)
+
+Register a new Lua animation.
+
+### Lua Example
+`smlua_anim_util_register_animation("apparition_idle", 0, 189, 0, 0, 0x5A, values, index)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| name | `string` |
+| flags | `integer` |
+| animYTransDivisor | `integer` |
+| startFrame | `integer` |
+| loopStart | `integer` |
+| loopEnd | `integer` |
+| values | `table` |
+| index | `table` |
+
+### Returns
+- None
+
+### C Prototype
+`void smlua_anim_util_register_animation(const char *name, s16 flags, s16 animYTransDivisor, s16 startFrame, s16 loopStart, s16 loopEnd, s16 *values, u32 valuesLength, u16 *index, u32 indexLength);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [level_script_parse](#level_script_parse)
+
+### Lua Example
+`level_script_parse(LEVEL_BOB, func)`
+
+Parses a level script and passes area index, behavior data, macro behavior IDs and macro behavior arguments to a function.
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| levelNum | `LevelNum` |
+| func | `function` |
+
+### Returns
+- None
+
+### C Prototype
+`void smlua_func_level_script_parse(lua_State* L);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_exclamation_box_new_contents](#set_exclamation_box_new_contents)
+
+Sets the contents of an exclamation box.
+
+### Lua Example
+`set_exclamation_box_new_contents(contents)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| contents | [ExclamationBoxContents](structs.md#ExclamationBoxContents) |
+
+### Returns
+- None
+
+### C Prototype
+`void set_exclamation_box_new_contents(struct Struct802C0DF0 contents[], u8 size);`
 
 [:arrow_up_small:](#)
 

@@ -18,6 +18,28 @@
 #define SEQ_PLAYER_ENV              1  // Misc music like the puzzle jingle
 #define SEQ_PLAYER_SFX              2  // Sound effects
 
+enum DialogSound {
+    DS_UKIKI,
+    DS_TUXIE,
+    DS_BOWS1, // Bowser Intro / Doors Laugh
+    DS_KOOPA,
+    DS_KBOMB,
+    DS_BOO,
+    DS_BOMB,
+    DS_BOWS2, // Bowser Battle Laugh
+    DS_GRUNT,
+    DS_WIGLR,
+    DS_YOSHI,
+    DS_MAX,
+    DS_NONE = 0xff
+};
+
+#ifdef VERSION_JP
+#define DS_DIFF DS_KOOPA
+#else
+#define DS_DIFF DS_TUXIE
+#endif
+
 extern s32 gAudioErrorFlags;
 extern f32 gGlobalSoundSource[3];
 

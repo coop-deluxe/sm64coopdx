@@ -76,7 +76,7 @@ bool debug_context_within(enum DebugContext ctx) {
 
 #ifdef DEVELOPMENT
 
-void ctx_profiler_update_counters() {
+void ctx_profiler_update_counters(void) {
     s32 y = SCREEN_HEIGHT - 60;
     for (s32 i = 1; i < CTX_MAX; i++) {
         const char *name = sDebugContextNames[i];
@@ -87,11 +87,6 @@ void ctx_profiler_update_counters() {
         for (s32 j = 0; j != 12; ++j) {
             char c = text[j];
             if (c >= 'a' && c <= 'z') c -= ('a' - 'A');
-            if (c == 'J') c = 'I';
-            if (c == 'Q') c = 'O';
-            if (c == 'V') c = 'U';
-            if (c == 'X') c = '*';
-            if (c == 'Z') c = '2';
             if ((c < '0' || c > '9') && (c < 'A' || c > 'Z')) c = ' ';
             text[j] = c;
         }

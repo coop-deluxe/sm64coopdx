@@ -407,7 +407,7 @@ void network_player_update_course_level(struct NetworkPlayer* np, s16 courseNum,
 
         if (matchingLocal && gNetworkPlayerLocal->currCourseNum != 0) {
             construct_player_popup(np, DLANG(NOTIF, LEFT_THIS_LEVEL), NULL);
-        } else if (matchingLocal && gNetworkPlayerLocal->currCourseNum != 0) {
+        } else if (gNetworkPlayerLocal->currCourseNum == courseNum && gNetworkPlayerLocal->currCourseNum != 0) {
             construct_player_popup(np, DLANG(NOTIF, ENTERED_THIS_LEVEL), NULL);
         } else {
             construct_player_popup(np, DLANG(NOTIF, ENTERED), get_level_name(courseNum, levelNum, areaIndex));

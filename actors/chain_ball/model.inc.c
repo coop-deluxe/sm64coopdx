@@ -21,7 +21,7 @@ ALIGNED8 const Texture chain_ball_seg6_texture_06020AE8[] = {
 const Gfx chain_ball_seg6_dl_060212E8[] = {
     gsDPPipeSync(),
     gsSPClearGeometryMode(G_LIGHTING),
-    gsDPSetCombineMode(G_CC_DECALRGBA, G_CC_DECALRGBA),
+    gsDPSetCombineMode(G_CC_MODULATERGBA, G_CC_MODULATERGBA),
     gsDPLoadTextureBlock(chain_ball_seg6_texture_06020AE8, G_IM_FMT_RGBA, G_IM_SIZ_16b, 32, 32, 0, G_TX_CLAMP, G_TX_CLAMP, 5, 5, G_TX_NOLOD, G_TX_NOLOD),
     gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON),
     gsSPVertex(chain_ball_seg6_vertex_06020AA0, 4, 0),

@@ -701,6 +701,24 @@
 
 <br />
 
+## [get_date_and_time](#get_date_and_time)
+
+### Lua Example
+`local DateTimeValue = get_date_and_time()`
+
+### Parameters
+- None
+
+### Returns
+[DateTime](structs.md#DateTime)
+
+### C Prototype
+`struct DateTime* get_date_and_time(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [get_dialog_box_state](#get_dialog_box_state)
 
 ### Lua Example
@@ -713,7 +731,7 @@
 - `integer`
 
 ### C Prototype
-`s8 get_dialog_box_state();`
+`s8 get_dialog_box_state(void);`
 
 [:arrow_up_small:](#)
 
@@ -770,6 +788,26 @@
 
 ### C Prototype
 `f32 get_environment_region(u8 index);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_fog_color](#get_fog_color)
+
+### Lua Example
+`local integerValue = get_fog_color(index)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| index | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u8 get_fog_color(u8 index);`
 
 [:arrow_up_small:](#)
 
@@ -1016,7 +1054,7 @@
 - `integer`
 
 ### C Prototype
-`s8 get_skybox();`
+`s8 get_skybox(void);`
 
 [:arrow_up_small:](#)
 
@@ -1054,7 +1092,7 @@
 - `integer`
 
 ### C Prototype
-`u32 get_time(void);`
+`s64 get_time(void);`
 
 [:arrow_up_small:](#)
 
@@ -1072,7 +1110,27 @@
 - `integer`
 
 ### C Prototype
-`s16 get_ttc_speed_setting();`
+`s16 get_ttc_speed_setting(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_vertex_color](#get_vertex_color)
+
+### Lua Example
+`local integerValue = get_vertex_color(index)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| index | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u8 get_vertex_color(u8 index);`
 
 [:arrow_up_small:](#)
 
@@ -1387,6 +1445,27 @@
 
 <br />
 
+## [set_fog_color](#set_fog_color)
+
+### Lua Example
+`set_fog_color(index, value)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| index | `integer` |
+| value | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_fog_color(u8 index, u8 value);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [set_got_file_coin_hi_score](#set_got_file_coin_hi_score)
 
 ### Lua Example
@@ -1644,6 +1723,27 @@
 
 ### C Prototype
 `void set_ttc_speed_setting(s16 speed);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_vertex_color](#set_vertex_color)
+
+### Lua Example
+`set_vertex_color(index, value)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| index | `integer` |
+| value | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_vertex_color(u8 index, u8 value);`
 
 [:arrow_up_small:](#)
 

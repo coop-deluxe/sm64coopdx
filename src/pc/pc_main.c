@@ -1,6 +1,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
+#include <unistd.h>
 
 #include "sm64.h"
 
@@ -51,6 +53,8 @@
 #ifdef DISCORD_SDK
 #include "pc/discord/discord.h"
 #endif
+
+bool gCoopCompatibility;
 
 OSMesg D_80339BEC;
 OSMesgQueue gSIEventMesgQueue;
@@ -234,6 +238,7 @@ void audio_shutdown(void) {
 }
 
 void game_deinit(void) {
+    smlua_call_event_hooks(HOOK_ON_EXIT);
     configfile_save(configfile_name());
     controller_shutdown();
     audio_custom_shutdown();
@@ -276,12 +281,13 @@ void main_func(void) {
         if (i == PALETTE_PRESET_MAX) {
             configCustomPalette = configPlayerPalette;
             configfile_save(configfile_name());
-        } else if (memcmp(&configPlayerPalette, &gPalettePresets[i], sizeof(struct PlayerPalette)) == 0) {
-            break;
-        }
+        } else if (memcmp(&configPlayerPalette, &gPalettePresets[i], sizeof(struct PlayerPalette)) == 0) { break; }
     }
 
     if (configPlayerModel >= CT_MAX) { configPlayerModel = 0; }
+    if (configDjuiTheme >= DJUI_THEME_MAX) { configDjuiTheme = 0; }
+
+    gCoopCompatibility = configCoopCompatibility;
 
     if (gCLIOpts.FullScreen == 1) { configWindow.fullscreen = true; }
     else if (gCLIOpts.FullScreen == 2) { configWindow.fullscreen = false; }

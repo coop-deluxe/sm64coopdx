@@ -14,11 +14,15 @@
 #define SCANCODE_RIGHT     333
 #define SCANCODE_PAGE_DOWN 337
 #define SCANCODE_PAGE_UP   329
-
+#define SCANCODE_POS1      327
+#define SCANCODE_END       335
 
 #define SCANCODE_ENTER  28
 #define SCANCODE_SPACE  57
 #define SCANCODE_ESCAPE 1
+#define SCANCODE_TAB    15
+#define SCANCODE_LSHIFT 42
+#define SCANCODE_RSHIFT 54
 
 struct DjuiInteractable {
     bool enabled;

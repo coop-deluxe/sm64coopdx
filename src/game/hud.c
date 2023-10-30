@@ -316,21 +316,7 @@ s32 gfx_dimensions_rect_from_right_edge(s32 v) {
     return use_forced_4by3() ? SCREEN_WIDTH - v : GFX_DIMENSIONS_RECT_FROM_RIGHT_EDGE(v);
 }
 
-/**
- * Renders the amount of lives Mario has.
- */
-void render_hud_mario_lives(void) {
-#ifdef VERSION_JP
-    char* displayHead = ",";
-#else
-    char* displayHead = (gMarioStates[0].character) ? &gMarioStates[0].character->hudHead : ",";
-#endif
-    print_text(gfx_dimensions_rect_from_left_edge(22), HUD_TOP_Y, displayHead); // 'Mario Head' glyph
-    print_text(gfx_dimensions_rect_from_left_edge(38), HUD_TOP_Y, "*"); // 'X' glyph
-    print_text_fmt_int(gfx_dimensions_rect_from_left_edge(54), HUD_TOP_Y, "%d", gHudDisplay.lives);
-}
-
-static void render_hud_icon(Vtx *vtx, const u8 *texture, u32 fmt, u32 siz, s32 texW, s32 texH, s32 x, s32 y, s32 w, s32 h, s32 tileX, s32 tileY, s32 tileW, s32 tileH) {
+void render_hud_icon(Vtx *vtx, const u8 *texture, u32 fmt, u32 siz, s32 texW, s32 texH, s32 x, s32 y, s32 w, s32 h, s32 tileX, s32 tileY, s32 tileW, s32 tileH) {
     create_dl_ortho_matrix();
     if (!vtx) {
         vtx = alloc_display_list(sizeof(Vtx) * 4);
@@ -354,6 +340,16 @@ static void render_hud_icon(Vtx *vtx, const u8 *texture, u32 fmt, u32 siz, s32 t
     gSP2Triangles(gDisplayListHead++, 0, 1, 2, 0x0, 0, 2, 3, 0x0);
     gSPTexture(gDisplayListHead++, 0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_OFF);
     gDPSetCombineMode(gDisplayListHead++, G_CC_SHADE, G_CC_SHADE);
+}
+
+/**
+ * Renders the amount of lives Mario has.
+ */
+void render_hud_mario_lives(void) {
+    gDPSetEnvColor(gDisplayListHead++, 0xFF, 0xFF, 0xFF, 0xFF);
+    render_hud_icon(NULL, gMarioState->character->hudHeadTexture.texture, G_IM_FMT_RGBA, G_IM_SIZ_16b, 16, 16, gfx_dimensions_rect_from_left_edge(22), HUD_TOP_Y + 16, 16, 16, 0, 0, 16, 16);
+    print_text(gfx_dimensions_rect_from_left_edge(38), HUD_TOP_Y, "*"); // 'X' glyph
+    print_text_fmt_int(gfx_dimensions_rect_from_left_edge(54), HUD_TOP_Y, "%d", gHudDisplay.lives);
 }
 
 /**

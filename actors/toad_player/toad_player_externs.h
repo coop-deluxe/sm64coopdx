@@ -1,0 +1,11 @@
+extern ALIGNED8 const Texture toad_player_texture_spots[];
+extern ALIGNED8 const Texture toad_player_texture_hair[];
+extern ALIGNED8 const Texture toad_player_texture_blush[];
+extern ALIGNED8 const Texture toad_player_texture_eyes_front[];
+extern ALIGNED8 const Texture toad_player_texture_eyes_half_closed[];
+extern ALIGNED8 const Texture toad_player_texture_eyes_closed[];
+extern ALIGNED8 const Texture toad_player_texture_eyes_right[];
+extern ALIGNED8 const Texture toad_player_texture_eyes_left[];
+extern ALIGNED8 const Texture toad_player_texture_eyes_up[];
+extern ALIGNED8 const Texture toad_player_texture_eyes_down[];
+extern ALIGNED8 const Texture toad_player_texture_eyes_dead[];

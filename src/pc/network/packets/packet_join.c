@@ -26,6 +26,7 @@
 #include "pc/mods/mods.h"
 #include "pc/lua/smlua.h"
 #include "pc/configfile.h"
+#include "pc/pc_main.h"
 
 extern u8* gOverrideEeprom;
 static u8 eeprom[512] = { 0 };
@@ -118,6 +119,7 @@ void network_send_join(struct Packet* joinRequestPacket) {
     packet_write(&p, &gServerSettings.enableCheats, sizeof(u8));
     packet_write(&p, &gServerSettings.bubbleDeath, sizeof(u8));
     packet_write(&p, &gServerSettings.headlessServer, sizeof(u8));
+    if (!gCoopCompatibility) { packet_write(&p, &gServerSettings.nametags, sizeof(u8)); }
     packet_write(&p, &gServerSettings.maxPlayers, sizeof(u8));
     packet_write(&p, eeprom, sizeof(u8) * 512);
 
@@ -168,6 +170,7 @@ void network_receive_join(struct Packet* p) {
     packet_read(p, &gServerSettings.enableCheats, sizeof(u8));
     packet_read(p, &gServerSettings.bubbleDeath, sizeof(u8));
     packet_read(p, &gServerSettings.headlessServer, sizeof(u8));
+    if (!gCoopCompatibility) { packet_read(p, &gServerSettings.nametags, sizeof(u8)); }
     packet_read(p, &gServerSettings.maxPlayers, sizeof(u8));
     packet_read(p, eeprom, sizeof(u8) * 512);
 

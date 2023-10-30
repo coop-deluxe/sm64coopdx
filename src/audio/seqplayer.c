@@ -277,11 +277,16 @@ void sequence_player_disable_channels(struct SequencePlayer *seqPlayer, u16 chan
     }
 }
 
-void sequence_player_init_channels_extended(struct SequencePlayer* seqPlayer, u64 channelBits) {
+void sequence_player_init_channels_extended(struct SequencePlayer* seqPlayer, u64 channelBitsUpper, u64 channelBitsLower) {
     if (!seqPlayer) { return; }
+    u64 channelBits = channelBitsLower;
     LOG_DEBUG("Enabling channels (extended) with corresponding bits %llX", channelBits);
     
     for (u32 i = 0; i < CHANNELS_MAX; i++) {
+        if (i == sizeof(u64) * 8) {
+            channelBits = channelBitsUpper;
+        }
+
         if (channelBits & 1) {
             struct SequenceChannel* seqChannel = seqPlayer->channels[i];
             if (IS_SEQUENCE_CHANNEL_VALID(seqChannel) == TRUE && seqChannel->seqPlayer == seqPlayer) {
@@ -315,11 +320,16 @@ void sequence_player_init_channels_extended(struct SequencePlayer* seqPlayer, u6
     }
 }
 
-void sequence_player_disable_channels_extended(struct SequencePlayer* seqPlayer, u64 channelBits) {
+void sequence_player_disable_channels_extended(struct SequencePlayer* seqPlayer, u64 channelBitsUpper, u64 channelBitsLower) {
     if (!seqPlayer) { return; }
+    u64 channelBits = channelBitsLower;
     LOG_DEBUG("Disabling channels (extended) with corresponding bits %llX", channelBits);
 
     for (u32 i = 0; i < CHANNELS_MAX; i++) {
+        if (i == sizeof(u64) * 8) {
+            channelBits = channelBitsUpper;
+        }
+
         if (channelBits & 1) {
             struct SequenceChannel* seqChannel = seqPlayer->channels[i];
             if (IS_SEQUENCE_CHANNEL_VALID(seqChannel) == TRUE) {
@@ -2752,14 +2762,20 @@ void sequence_player_process_sequence(struct SequencePlayer *seqPlayer) {
                     case 0xc1: // seq_initchannels_extended
                         u64v = m64_read_s64(state);
 #ifdef BITS_32
-                        if (u64v == 0xb33f) { u64v = 0xffffffffffffffff; }
+                        if (u64v == 0xb33f) {
+                            m64_read_s64(state);
+                            sequence_player_init_channels_extended(seqPlayer, u64v, 0xffffffffffffffff);
+                        } else {
+                            sequence_player_init_channels_extended(seqPlayer, 0x0, m64_read_s64(state));
+                        }
+#else
+                        sequence_player_init_channels_extended(seqPlayer, u64v, m64_read_s64(state));
 #endif
-                        sequence_player_init_channels_extended(seqPlayer, u64v);
                         break;
 
                     case 0xc0: // seq_disablechannels_extended
                         u64v = m64_read_s64(state);
-                        sequence_player_disable_channels_extended(seqPlayer, u64v);
+                        sequence_player_disable_channels_extended(seqPlayer, u64v, m64_read_s64(state));
                         break;
 
                     case 0xd5: // seq_setmutescale

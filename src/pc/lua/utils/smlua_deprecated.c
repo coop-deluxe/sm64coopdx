@@ -1,3 +1,4 @@
+#include <inttypes.h>
 #include "types.h"
 #ifdef DISCORD_SDK
 #include "pc/discord/discord.h"

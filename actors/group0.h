@@ -75,7 +75,7 @@ extern const Gfx mario_face_part_cap_on_dl[];
 extern const Gfx mario_face_cap_dl[];
 extern const Gfx mario_face_back_hair_cap_on_dl[];
 extern const Gfx mario_hair_sideburn_decal_cap_on_dl[];
-extern const Gfx mario_m_logo_decal_dl[];
+extern const Gfx mario_m_decal_dl[];
 extern const Gfx mario_face_cap_on_dl[];
 extern const Gfx mario_cap_on_eyes_front[];
 extern const Gfx mario_cap_on_eyes_half_closed[];
@@ -132,6 +132,7 @@ extern const Gfx mario_cap_wings[];
 extern const Gfx mario_cap_wings_transparent[];
 extern const Gfx mario_metal_cap_wings[];
 extern const Gfx mario_metal_cap_wings_transparent[];
+extern const Gfx mario_material_revert_render_settings[];
 
 // sparkle
 extern const GeoLayout sparkles_geo[];

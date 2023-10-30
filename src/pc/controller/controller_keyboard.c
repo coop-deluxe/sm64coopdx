@@ -8,10 +8,6 @@
 #include "../configfile.h"
 #include "controller_keyboard.h"
 
-#ifdef DEVELOPMENT
-#include "dev/controller_keyboard_debug.h"
-#endif
-
 #include "pc/gfx/gfx_window_manager_api.h"
 #include "pc/pc_main.h"
 #include "engine/math_util.h"
@@ -37,10 +33,6 @@ static int keyboard_map_scancode(int scancode) {
 }
 
 bool keyboard_on_key_down(int scancode) {
-#ifdef DEVELOPMENT
-    debug_keyboard_on_key_down(scancode);
-#endif
-
     // see if interactable captures this scancode
     if (djui_interactable_on_key_down(scancode)) {
         keyboard_lastkey = scancode;
@@ -54,9 +46,6 @@ bool keyboard_on_key_down(int scancode) {
 }
 
 bool keyboard_on_key_up(int scancode) {
-#ifdef DEVELOPMENT
-    debug_keyboard_on_key_up(scancode);
-#endif
     djui_interactable_on_key_up(scancode);
 
     int mapped = keyboard_map_scancode(scancode);

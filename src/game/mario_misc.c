@@ -761,7 +761,7 @@ static struct PlayerColor geo_mario_get_player_color(const struct PlayerPalette 
             palette->parts[part][0] * bodyState->lightR / 255.0f,
             palette->parts[part][1] * bodyState->lightG / 255.0f,
             palette->parts[part][2] * bodyState->lightB / 255.0f,
-            0x28, 0x28, 0x28
+            0x28 + bodyState->lightingDirX * 127.0f, 0x28 + bodyState->lightingDirY * 127.0f, 0x28 + bodyState->lightingDirZ * 127.0f
         );
     }
     return color;

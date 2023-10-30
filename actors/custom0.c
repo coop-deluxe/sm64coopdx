@@ -9,3 +9,6 @@
 
 // luigi_cap
 #include "luigi_cap/model.inc.c"
+
+// toad_cap
+#include "toad_cap/model.inc.c"

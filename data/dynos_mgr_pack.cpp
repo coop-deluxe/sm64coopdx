@@ -178,7 +178,7 @@ PackData* DynOS_Pack_Add(const SysPath& aPath) {
 
     _Pack->mDisplayName = displayName;
 
-    _Pack->mEnabled = true;
+    _Pack->mEnabled = false;
     _Pack->mEnabledSet = false;
 
     return _Pack;

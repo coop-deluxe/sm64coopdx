@@ -2055,7 +2055,7 @@ static u8 prevent_hang(u32 hangPreventionActions[], u8* hangPreventionIndex) {
     hangPreventionActions[*hangPreventionIndex] = gMarioState->action;
     *hangPreventionIndex = *hangPreventionIndex + 1;
     if (*hangPreventionIndex < MAX_HANG_PREVENTION) { return FALSE; }
-    
+
     // complain to console
     LOG_ERROR("Action loop hang prevented");
 
@@ -2353,6 +2353,10 @@ void init_single_mario(struct MarioState* m) {
     m->marioBodyState->lightR = 255;
     m->marioBodyState->lightG = 255;
     m->marioBodyState->lightB = 255;
+
+    m->marioBodyState->lightingDirX = 0;
+    m->marioBodyState->lightingDirY = 0;
+    m->marioBodyState->lightingDirZ = 0;
 
     m->marioObj->oPosX = m->pos[0];
     m->marioObj->oPosY = m->pos[1];

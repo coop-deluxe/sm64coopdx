@@ -141,10 +141,6 @@ void DynOS_Vtx_Load(BinFile *aFile, GfxData *aGfxData) {
         }
     }
 
-    if (_Node->mSize > 6) {
-        _Node->mFlags |= GRAPH_EXTRA_FORCE_3D;
-    }
-
     // Append
     aGfxData->mVertices.Add(_Node);
 }

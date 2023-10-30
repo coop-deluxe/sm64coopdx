@@ -119,6 +119,11 @@ bool exec_chat_command(char* command) {
         return true;
     }
 
+    if (strcmp("/kick", command) == 0) {
+        djui_chat_message_create(DLANG(CHAT, PLAYER_NOT_FOUND));
+        return true;
+    }
+
     if (str_starts_with("/kick ", command)) {
         if (gNetworkType != NT_SERVER && !npl->moderator) {
             djui_chat_message_create(DLANG(CHAT, NO_PERMS));
@@ -139,6 +144,11 @@ bool exec_chat_command(char* command) {
         sConfirming = CCC_KICK;
         sConfirmPlayerIndex = np->localIndex;
 
+        return true;
+    }
+
+    if (strcmp("/ban", command) == 0) {
+        djui_chat_message_create(DLANG(CHAT, PLAYER_NOT_FOUND));
         return true;
     }
 
@@ -165,6 +175,11 @@ bool exec_chat_command(char* command) {
         return true;
     }
 
+    if (strcmp("/permban", command) == 0) {
+        djui_chat_message_create(DLANG(CHAT, PLAYER_NOT_FOUND));
+        return true;
+    }
+
     if (str_starts_with("/permban ", command)) {
         if (gNetworkType != NT_SERVER && !npl->moderator) {
             djui_chat_message_create(DLANG(CHAT, NO_PERMS));
@@ -188,7 +203,12 @@ bool exec_chat_command(char* command) {
         return true;
     }
 
-    if (str_starts_with("/moderator ", command)) {
+    if (strcmp("/moderator", command) == 0) {
+        djui_chat_message_create(DLANG(CHAT, PLAYER_NOT_FOUND));
+        return true;
+    }
+
+    if (str_starts_with("/moderator ", command)) {     
         if (gNetworkType != NT_SERVER) {
             djui_chat_message_create(DLANG(CHAT, SERVER_ONLY));
             return true;
@@ -210,7 +230,24 @@ bool exec_chat_command(char* command) {
 
         return true;
     }
-#if defined(DEVELOPMENT)
+
+
+    if (strcmp("/nametags", command) == 0) {
+        djui_chat_message_create(DLANG(CHAT, NAMETAGS_MISSING_PARAMETERS));
+        return true;
+    }
+
+    if (str_starts_with("/nametags ", command)) {
+        char *option = &command[10];
+        if (strcmp("show-tag", option) == 0) {
+            gNametagsSettings.showSelfTag = !gNametagsSettings.showSelfTag;
+        } else if (strcmp("show-health", option) == 0) {
+            gNametagsSettings.showHealth = !gNametagsSettings.showHealth;
+        }
+        return true;
+    }
+
+#ifdef DEVELOPMENT
     if (exec_dev_chat_command(command)) {
         return true;
     }
@@ -230,7 +267,8 @@ void display_chat_commands(void) {
             djui_chat_message_create(DLANG(CHAT, MOD_DESC));
         }
     }
-#if defined(DEVELOPMENT)
+    djui_chat_message_create(DLANG(CHAT, NAMETAGS_DESC));
+#ifdef DEVELOPMENT
     dev_display_chat_commands();
 #endif
     if (sConfirming != CCC_NONE) { djui_chat_message_create("/confirm"); }

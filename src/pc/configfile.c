@@ -68,7 +68,7 @@ ConfigWindow configWindow       = {
     .settings_changed = false,
     .msaa = 0,
 };
-unsigned int configFiltering    = 1;          // 0=force nearest, 1=linear, (TODO) 2=three-point
+unsigned int configFiltering    = 1;          // 0=force nearest, 1=linear, 2=three-point
 unsigned int configMasterVolume = 30; // 0 - MAX_VOLUME
 unsigned int configMusicVolume = MAX_VOLUME;
 unsigned int configSfxVolume = MAX_VOLUME;
@@ -153,6 +153,7 @@ unsigned int configInterpolationMode             = 1;
 unsigned int configGamepadNumber                 = 0;
 bool         configBackgroundGamepad             = 1;
 bool         configSingleplayerPause             = 0;
+bool         configNametags                      = true;
 bool         configDebugPrint                    = 0;
 bool         configDebugInfo                     = 0;
 bool         configDebugError                    = 0;
@@ -162,7 +163,9 @@ char         configCoopNetIp[MAX_CONFIG_STRING]  = DEFAULT_COOPNET_IP;
 unsigned int configCoopNetPort                   = DEFAULT_COOPNET_PORT;
 char         configPassword[MAX_CONFIG_STRING]   = "";
 char         configDestId[MAX_CONFIG_STRING]     = "0";
-bool         configFadeoutDistantSounds          = true;
+bool         configFadeoutDistantSounds          = false;
+unsigned int configDjuiTheme                     = DJUI_THEME_DARK_CENTERED;
+bool         configCoopCompatibility             = true;
 
 static const struct ConfigOption options[] = {
     {.name = "fullscreen",           .type = CONFIG_TYPE_BOOL, .boolValue = &configWindow.fullscreen},
@@ -258,6 +261,8 @@ static const struct ConfigOption options[] = {
     {.name = "coop_custom_palette_cap",        .type = CONFIG_TYPE_COLOR , .colorValue  = &configCustomPalette.parts[CAP]},
     {.name = "coop_stay_in_level_after_star",  .type = CONFIG_TYPE_UINT  , .uintValue   = &configStayInLevelAfterStar},
     {.name = "coop_singleplayer_pause",        .type = CONFIG_TYPE_BOOL  , .boolValue   = &configSingleplayerPause},
+    {.name = "coop_compatibility",             .type = CONFIG_TYPE_BOOL,   .boolValue   = &configCoopCompatibility},
+    {.name = "coopdx_nametags",                .type = CONFIG_TYPE_BOOL  , .boolValue   = &configNametags},
     {.name = "disable_popups",                 .type = CONFIG_TYPE_BOOL  , .boolValue   = &configDisablePopups},
 #if defined(DEVELOPMENT)
     {.name = "lua_profiler",                   .type = CONFIG_TYPE_BOOL  , .boolValue   = &configLuaProfiler},
@@ -271,12 +276,13 @@ static const struct ConfigOption options[] = {
     {.name = "debug_info",                     .type = CONFIG_TYPE_BOOL  , .boolValue   = &configDebugInfo},
     {.name = "debug_error",                    .type = CONFIG_TYPE_BOOL  , .boolValue   = &configDebugError},
     {.name = "language",                       .type = CONFIG_TYPE_STRING, .stringValue = (char*)&configLanguage, .maxStringLength = MAX_CONFIG_STRING},
-    {.name = "force_4by3",                     .type = CONFIG_TYPE_BOOL,   .boolValue   = &configForce4By3},
+    {.name = "force_4by3",                     .type = CONFIG_TYPE_BOOL  , .boolValue   = &configForce4By3},
     {.name = "coopnet_ip",                     .type = CONFIG_TYPE_STRING, .stringValue = (char*)&configCoopNetIp, .maxStringLength = MAX_CONFIG_STRING},
     {.name = "coopnet_port",                   .type = CONFIG_TYPE_UINT  , .uintValue   = &configCoopNetPort},
     {.name = "coopnet_password",               .type = CONFIG_TYPE_STRING, .stringValue = (char*)&configPassword, .maxStringLength = MAX_CONFIG_STRING},
     {.name = "coopnet_dest",                   .type = CONFIG_TYPE_STRING, .stringValue = (char*)&configDestId, .maxStringLength = MAX_CONFIG_STRING},
-    {.name = "fade_distant_sounds",            .type = CONFIG_TYPE_BOOL  , .boolValue = &configFadeoutDistantSounds},
+    {.name = "fade_distant_sounds",            .type = CONFIG_TYPE_BOOL  , .boolValue   = &configFadeoutDistantSounds},
+    {.name = "djui_theme",                     .type = CONFIG_TYPE_UINT  , .uintValue   = &configDjuiTheme},
 };
 
 // FunctionConfigOption functions
@@ -460,7 +466,9 @@ static void configfile_load_internal(const char *filename, bool* error) {
     unsigned int temp;
     *error = false;
 
+#ifdef DEVELOPMENT
     printf("Loading configuration from '%s'\n", filename);
+#endif
 
     file = fs_open(filename);
     if (file == NULL) {
@@ -544,12 +552,17 @@ static void configfile_load_internal(const char *filename, bool* error) {
                             LOG_ERROR("Configfile read bad type '%d': %s", (int)option->type, line);
                             goto NEXT_OPTION;
                     }
+#ifdef DEVELOPMENT
                     printf("option: '%s', value:", tokens[0]);
                     for (int i = 1; i < numTokens; ++i) printf(" '%s'", tokens[i]);
                     printf("\n");
+#endif
                 }
-            } else
-                puts("error: expected value");
+            } else {
+#ifdef DEVELOPMENT
+                printf("error: expected value\n");
+#endif
+            }
         }
 NEXT_OPTION:
         free(line);
@@ -584,7 +597,9 @@ void configfile_load(void) {
 void configfile_save(const char *filename) {
     FILE *file;
 
+#ifdef DEVELOPMENT
     printf("Saving configuration to '%s'\n", filename);
+#endif
 
     file = fopen(fs_get_write_path(filename), "w");
     if (file == NULL) {

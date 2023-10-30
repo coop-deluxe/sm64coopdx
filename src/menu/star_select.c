@@ -26,6 +26,7 @@
 #include "engine/math_util.h"
 #include "game/print.h"
 #include "game/level_info.h"
+#include "game/hud.h"
 
 /**
  * @file star_select.c
@@ -361,8 +362,8 @@ void print_act_selector_strings(void) {
                 if (np->currCourseNum != gCurrCourseNum) { continue; }
                 if (np->currActNum != i) { continue; }
 
-                char* displayHead = (gMarioStates[j].character) ? &gMarioStates[j].character->hudHead : ",";
-                print_text(x - 4, 207, displayHead); // 'Mario Head' glyph
+                gDPSetEnvColor(gDisplayListHead++, 255, 255, 255, 255);
+                render_hud_icon(NULL, gMarioStates[j].character->hudHeadTexture.texture, G_IM_FMT_RGBA, G_IM_SIZ_16b, 16, 16, x - 4, 223, 16, 16, 0, 0, 16, 16);
                 break;
             }
         }
@@ -382,11 +383,11 @@ void print_act_selector_strings(void) {
         if (playersInAct > 0 && gServerSettings.enablePlayersInLevelDisplay) {
             char message[16] = { 0 };
             if (playersInAct == 1) {
-                if (snprintf(message, 16, "     join      ") < 0) {
+                if (snprintf(message, 16, "     Join      ") < 0) {
                     // do nothing
                 }
             } else {
-                if (snprintf(message, 16, "%d players", playersInAct) < 0) {
+                if (snprintf(message, 16, "%d Players", playersInAct) < 0) {
                     // do nothing
                 }
             }

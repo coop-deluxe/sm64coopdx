@@ -1166,7 +1166,7 @@ void handle_special_dialog_text(s16 dialogID) { // dialog ID tables, in order
     }
 }
 
-bool handle_dialog_hook(s16 dialogId) {
+void handle_dialog_hook(s16 dialogId) {
     bool open = false;
     smlua_call_event_hooks_int_params_ret_bool(HOOK_ON_DIALOG, dialogId, &open);
     if (!open) {
@@ -2414,7 +2414,7 @@ void shade_screen(void) {
     // so scale to at least fit the screen.
 
     create_dl_scale_matrix(MENU_MTX_NOPUSH,
-                           GFX_DIMENSIONS_ASPECT_RATIO * SCREEN_HEIGHT / 130.0f, 3.0f, 1.0f);
+                           GFX_DIMENSIONS_ASPECT_RATIO * SCREEN_HEIGHT / 125.0f, 3.0f, 1.0f);
 
     gDPSetEnvColor(gDisplayListHead++, 0, 0, 0, 110);
     gSPDisplayList(gDisplayListHead++, dl_draw_text_bg_box);
@@ -3256,9 +3256,17 @@ void print_hud_course_complete_coins(s16 x, s16 y) {
             gCourseCompleteCoins++;
             play_sound(SOUND_MENU_YOSHI_GAIN_LIVES, gGlobalSoundSource);
 
-            if (gCourseCompleteCoins % gLevelValues.numCoinsToLife == 0 && gCourseCompleteCoins > 0) {
-                play_sound(SOUND_GENERAL_COLLECT_1UP, gGlobalSoundSource);
-                gMarioStates[0].numLives++;
+            // retain vanilla behavior
+            if (gLevelValues.numCoinsToLife == 50) {
+                if (gCourseCompleteCoins == 50 || gCourseCompleteCoins == 100 || gCourseCompleteCoins == 150) {
+                    play_sound(SOUND_GENERAL_COLLECT_1UP, gGlobalSoundSource);
+                    gMarioStates[0].numLives++;
+                }
+            } else {
+                if (gCourseCompleteCoins % gLevelValues.numCoinsToLife == 0 && gCourseCompleteCoins > 0) {
+                    play_sound(SOUND_GENERAL_COLLECT_1UP, gGlobalSoundSource);
+                    gMarioStates[0].numLives++;
+                }
             }
         }
 
@@ -3569,7 +3577,7 @@ void set_dialog_override_pos(s16 x, s16 y) {
     gDialogOverrideY = y;
 }
 
-void reset_dialog_override_pos() {
+void reset_dialog_override_pos(void) {
     gOverrideDialogPos = 0;
 }
 
@@ -3585,6 +3593,6 @@ void set_dialog_override_color(u8 bgR, u8 bgG, u8 bgB, u8 bgA, u8 textR, u8 text
     gDialogTextColorA = textA;
 }
 
-void reset_dialog_override_color() {
+void reset_dialog_override_color(void) {
     gOverrideDialogColor = 0;
 }

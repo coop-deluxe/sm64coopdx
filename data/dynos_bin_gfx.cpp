@@ -765,6 +765,7 @@ static void ParseGfxSymbol(GfxData* aGfxData, DataNode<Gfx>* aNode, Gfx*& aHead,
     gfx_symbol_2(gsSPFogFactor, false);
     gfx_symbol_1(gsDPSetTextureLOD, false);
     gfx_symbol_3(gsMoveWd, false);
+    gfx_symbol_3(gsSPVertexNonGlobal, true);
 
     // Special symbols
     if (_Symbol == "gsSPTexture") {

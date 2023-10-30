@@ -2,7 +2,7 @@
 #include "djui.h"
 
 struct DjuiConsole {
-    struct DjuiThreePanel* panel;
+    struct DjuiBase base;
     struct DjuiFlowLayout* flow;
     bool scrolling;
 };
@@ -12,6 +12,6 @@ extern struct DjuiConsole* gDjuiConsole;
 extern bool gDjuiConsoleFocus;
 extern char gDjuiConsoleTmpBuffer[];
 
-void djui_console_message_create(char* message);
+void djui_console_message_create(const char* message);
 void djui_console_toggle(void);
 struct DjuiConsole* djui_console_create(void);

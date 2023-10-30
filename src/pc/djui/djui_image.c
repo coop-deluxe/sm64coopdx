@@ -36,7 +36,7 @@ static bool djui_image_render(struct DjuiBase* base) {
     // render
     if (!djui_gfx_add_clipping(base)) {
         gDPSetEnvColor(gDisplayListHead++, base->color.r, base->color.g, base->color.b, base->color.a);
-        djui_gfx_render_texture(image->texture, image->textureWidth, image->textureHeight, image->textureBitSize);
+        djui_gfx_render_texture(image->texture, image->textureWidth, image->textureHeight, image->textureBitSize, false);
     }
 
     gSPPopMatrix(gDisplayListHead++, G_MTX_MODELVIEW);

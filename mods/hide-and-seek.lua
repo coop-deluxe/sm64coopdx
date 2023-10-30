@@ -1,34 +1,37 @@
 -- name: Hide and Seek
 -- incompatible: gamemode
 -- description: A simple hide-and-seek gamemode for\nCo-op.\n\nThe game is split into two teams:\n\nHiders and Seekers. The goal is for all\n\Hiders to be converted into a Seeker within a certain timeframe.\n\nAll Seekers appear as a metal character.\n\nEnjoy! :D\n\nConcept by: Super Keeberghrh
--- keep track of round info
 
+-- constants
 local ROUND_STATE_WAIT        = 0
 local ROUND_STATE_ACTIVE      = 1
 local ROUND_STATE_SEEKERS_WIN = 2
 local ROUND_STATE_HIDERS_WIN  = 3
 local ROUND_STATE_UNKNOWN_END = 4
+
+-- globals
 gGlobalSyncTable.roundState   = ROUND_STATE_WAIT -- current round state
 gGlobalSyncTable.touchTag = false
 gGlobalSyncTable.hiderCaps = false
 gGlobalSyncTable.seekerCaps = false
 gGlobalSyncTable.banKoopaShell = true
+gGlobalSyncTable.disableBLJ = true
 gGlobalSyncTable.displayTimer = 0 -- the displayed timer
+
+-- variables
 local sRoundTimer        = 0            -- the server's round timer
 local sRoundStartTimeout = 15 * 30      -- fifteen seconds
 local sRoundEndTimeout   = 3 * 60 * 30  -- three minutes
 local pauseExitTimer = 0
 local canLeave = false
-
--- flashing text index
 local sFlashingIndex = 0
-
--- pu prevention
 local puX = 0
 local puZ = 0
-
--- avoid repetion
 local np = gNetworkPlayers[0]
+local cannonTimer = 0
+
+-- server settings
+gServerSettings.bubbleDeath = 0
 
 --localize functions to improve performance
 local
@@ -157,7 +160,6 @@ local function screen_transition(trans)
     end
 end
 
-local cannonTimer = 0
 --- @param m MarioState
 local function mario_update(m)
     if (m.flags & MARIO_VANISH_CAP) ~= 0 then
@@ -165,12 +167,16 @@ local function mario_update(m)
         stop_cap_music()
     end
 
+    if gGlobalSyncTable.disableBLJ and m.forwardVel <= -55 then
+        m.forwardVel = -55
+    end
+
     -- this code runs for all players
     local s = gPlayerSyncTable[m.playerIndex]
 
     if m.playerIndex == 0 and m.action == ACT_IN_CANNON and m.actionState == 2 then
         cannonTimer = cannonTimer + 1
-        if cannonTimer >= 150 then
+        if cannonTimer >= 150 then -- 150 is 5 seconds
             m.forwardVel = 100 * coss(m.faceAngle.x)
 
             m.vel.y = 100 * sins(m.faceAngle.x)
@@ -210,7 +216,6 @@ local function mario_update(m)
     -- warp to the beninging
     if m.playerIndex == 0 then
         if gPlayerSyncTable[m.playerIndex].seeking and gGlobalSyncTable.displayTimer == 0 and gGlobalSyncTable.roundState == ROUND_STATE_ACTIVE then
-            warp_to_level(gLevelValues.entryLevel, 1, 0)
             warp_to_start_level()
         end
     end
@@ -237,9 +242,13 @@ local function mario_update(m)
     end
 end
 
-function before_set_mario_action(m, action)
+---@param m MarioState
+---@param action integer
+local function before_set_mario_action(m, action)
     if m.playerIndex == 0 then
-        if action == ACT_WAITING_FOR_DIALOG or action == ACT_READING_SIGN or action == ACT_READING_AUTOMATIC_DIALOG or action == ACT_READING_NPC_DIALOG or action == ACT_JUMBO_STAR_CUTSCENE then
+        if action == ACT_WAITING_FOR_DIALOG or action == ACT_READING_SIGN or action == ACT_READING_NPC_DIALOG or action == ACT_JUMBO_STAR_CUTSCENE then
+            return 1
+        elseif action == ACT_READING_AUTOMATIC_DIALOG and get_id_from_behavior(m.interactObj.behavior) ~= id_bhvDoor and get_id_from_behavior(m.interactObj.behavior) ~= id_bhvStarDoor then
             return 1
         elseif action == ACT_EXIT_LAND_SAVE_DIALOG then
             set_camera_mode(m.area.camera, m.area.camera.defMode, 1)
@@ -400,9 +409,16 @@ end
 
 local function on_koopa_shell_command()
     gGlobalSyncTable.banKoopaShell = not gGlobalSyncTable.banKoopaShell
-    djui_chat_message_create("Koopa Shells: " .. on_or_off(not gGlobalSyncTable.seekerCaps))
+    djui_chat_message_create("Koopa Shells: " .. on_or_off(not gGlobalSyncTable.banKoopaShell))
     return true
 end
+
+local function on_blj_command()
+    gGlobalSyncTable.disableBLJ = not gGlobalSyncTable.disableBLJ
+    djui_chat_message_create("BLJS: " .. on_or_off(not gGlobalSyncTable.disableBLJ))
+    return true
+end
+
 
 local function level_init()
     local s = gPlayerSyncTable[0]
@@ -523,10 +539,11 @@ hook_event(HOOK_ALLOW_INTERACT, allow_interact)
 hook_event(HOOK_USE_ACT_SELECT, function () return false end)
 
 if network_is_server() then
-   hook_chat_command("touch-to-tag", "turn touch tag on or off", on_touch_tag_command)
-   hook_chat_command("hiders-caps", "turn caps for hiders on or off", on_hider_cap_command)
-   hook_chat_command("seekers-caps", "turn caps for seekers on or off", on_seeker_cap_command)
+   hook_chat_command("touch-to-tag", "Turn touch tag on or off", on_touch_tag_command)
+   hook_chat_command("hiders-caps", "Turn caps for hiders on or off", on_hider_cap_command)
+   hook_chat_command("seekers-caps", "Turn caps for seekers on or off", on_seeker_cap_command)
    hook_chat_command("koopa-shell", "Turn the koopa shell on or off", on_koopa_shell_command)
+   hook_chat_command("bljs", "Turn bljs on or off", on_blj_command)
 end
 
 -- call functions when certain sync table values change

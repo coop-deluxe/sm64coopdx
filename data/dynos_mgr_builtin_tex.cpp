@@ -8,9 +8,10 @@ extern "C" {
  // Textures //
 //////////////
 
-extern ALIGNED8 const u8 texture_font_normal[];
-extern ALIGNED8 const u8 texture_font_title[];
-extern ALIGNED8 const u8 texture_font_tiny[];
+extern ALIGNED8 const Texture texture_font_normal[];
+extern ALIGNED8 const Texture texture_font_title[];
+
+extern ALIGNED8 const Texture texture_coopdx_logo[];
 
 #define define_builtin_tex(_ptr, _path, _width, _height, _bitSize) { (const char*)#_ptr, (const void*)_ptr, (const char*)_path, _width, _height, _bitSize }
 #define define_builtin_tex_(_ptr, _path, _width, _height, _bitSize) { (const char*)#_ptr "_", (const void*)_ptr, (const char*)_path, _width, _height, _bitSize }
@@ -648,31 +649,31 @@ static const struct BuiltinTexInfo sDynosBuiltinTexs[] = {
     define_builtin_tex(texture_hud_char_G, "textures/segment2/segment2.02000.rgba16.png", 16, 16, 16),
     define_builtin_tex(texture_hud_char_H, "textures/segment2/segment2.02200.rgba16.png", 16, 16, 16),
     define_builtin_tex(texture_hud_char_I, "textures/segment2/segment2.02400.rgba16.png", 16, 16, 16),
-    //define_builtin_tex(texture_hud_char_J, "textures/segment2/segment2.02600.rgba16.png"),
+    define_builtin_tex(texture_hud_char_J, "textures/segment2/custom_hud_j.rgba16.png", 16, 16, 16),
     define_builtin_tex(texture_hud_char_K, "textures/segment2/segment2.02800.rgba16.png", 16, 16, 16),
     define_builtin_tex(texture_hud_char_L, "textures/segment2/segment2.02A00.rgba16.png", 16, 16, 16),
     define_builtin_tex(texture_hud_char_M, "textures/segment2/segment2.02C00.rgba16.png", 16, 16, 16),
     define_builtin_tex(texture_hud_char_N, "textures/segment2/segment2.02E00.rgba16.png", 16, 16, 16),
     define_builtin_tex(texture_hud_char_O, "textures/segment2/segment2.03000.rgba16.png", 16, 16, 16),
     define_builtin_tex(texture_hud_char_P, "textures/segment2/segment2.03200.rgba16.png", 16, 16, 16),
-    //define_builtin_tex(texture_hud_char_Q, "textures/segment2/segment2.03400.rgba16.png"),
+    define_builtin_tex(texture_hud_char_Q, "textures/segment2/custom_hud_q.rgba16.png", 16, 16, 16),
     define_builtin_tex(texture_hud_char_R, "textures/segment2/segment2.03600.rgba16.png", 16, 16, 16),
     define_builtin_tex(texture_hud_char_S, "textures/segment2/segment2.03800.rgba16.png", 16, 16, 16),
     define_builtin_tex(texture_hud_char_T, "textures/segment2/segment2.03A00.rgba16.png", 16, 16, 16),
     define_builtin_tex(texture_hud_char_U, "textures/segment2/segment2.03C00.rgba16.png", 16, 16, 16),
-    //define_builtin_tex(texture_hud_char_V, "textures/segment2/segment2.03E00.rgba16.png"),
+    define_builtin_tex(texture_hud_char_V, "textures/segment2/custom_hud_v.rgba16.png", 16, 16, 16),
     define_builtin_tex(texture_hud_char_W, "textures/segment2/segment2.04000.rgba16.png", 16, 16, 16),
-    //define_builtin_tex(texture_hud_char_X, "textures/segment2/segment2.04200.rgba16.png"),
+    define_builtin_tex(texture_hud_char_X, "textures/segment2/custom_hud_x.rgba16.png", 16, 16, 16),
     define_builtin_tex(texture_hud_char_Y, "textures/segment2/segment2.04400.rgba16.png", 16, 16, 16),
-    //define_builtin_tex(texture_hud_char_Z, "textures/segment2/segment2.04600.rgba16.png"),
+    define_builtin_tex(texture_hud_char_Z, "textures/segment2/custom_hud_z.rgba16.png", 16, 16, 16),
     define_builtin_tex(texture_hud_char_apostrophe, "textures/segment2/segment2.04800.rgba16.png", 16, 16, 16),
     define_builtin_tex(texture_hud_char_double_quote, "textures/segment2/segment2.04A00.rgba16.png", 16, 16, 16),
-    //define_builtin_tex(texture_hud_char_umlaut, "textures/segment2/segment2.umlaut.rgba16.png"),
-    //define_builtin_tex(texture_hud_char_exclamation, "textures/segment2/segment2.04C00.rgba16.png"),
-    //define_builtin_tex(texture_hud_char_double_exclamation, "textures/segment2/segment2.04E00.rgba16.png"),
-    //define_builtin_tex(texture_hud_char_question, "textures/segment2/segment2.05000.rgba16.png"),
-    //define_builtin_tex(texture_hud_char_ampersand, "textures/segment2/segment2.05200.rgba16.png"),
-    //define_builtin_tex(texture_hud_char_percent, "textures/segment2/segment2.05400.rgba16.png"),
+    // define_builtin_tex(texture_hud_char_umlaut, "textures/segment2/segment2.umlaut.rgba16.png"),
+    define_builtin_tex(texture_hud_char_exclamation, "textures/segment2/custom_hud_exclamation.rgba16.png", 16, 16, 16),
+    define_builtin_tex(texture_hud_char_hashtag, "textures/segment2/custom_hud_hastag.rgba16.png", 16, 16, 16),
+    define_builtin_tex(texture_hud_char_question, "textures/segment2/segment2.05000.rgba16.png", 16, 16, 16),
+    define_builtin_tex(texture_hud_char_ampersand, "textures/segment2/custom_hud_ampersand.rgba16.png", 16, 16, 16),
+    define_builtin_tex(texture_hud_char_percent, "textures/segment2/custom_hud_percent.rgba16.png", 16, 16, 16),
     define_builtin_tex(texture_hud_char_multiply, "textures/segment2/segment2.05600.rgba16.png", 16, 16, 16),
     define_builtin_tex(texture_hud_char_coin, "textures/segment2/segment2.05800.rgba16.png", 16, 16, 16),
     define_builtin_tex(texture_hud_char_mario_head, "textures/segment2/segment2.05A00.rgba16.png", 16, 16, 16),
@@ -681,8 +682,13 @@ static const struct BuiltinTexInfo sDynosBuiltinTexs[] = {
     define_builtin_tex(texture_hud_char_waluigi_head, "textures/segment2/custom_waluigi_head.rgba16.png", 16, 16, 16),
     define_builtin_tex(texture_hud_char_wario_head, "textures/segment2/custom_wario_head.rgba16.png", 16, 16, 16),
     define_builtin_tex(texture_hud_char_star, "textures/segment2/segment2.05C00.rgba16.png", 16, 16, 16),
-    //define_builtin_tex(texture_hud_char_decimal_point, "textures/segment2/segment2.05E00.rgba16.png"),
-    //define_builtin_tex(texture_hud_char_beta_key, "textures/segment2/segment2.06000.rgba16.png"),
+    define_builtin_tex(texture_hud_char_period, "textures/segment2/custom_hud_period.rgba16.png", 16, 16, 16),
+    define_builtin_tex(texture_hud_char_key, "textures/segment2/custom_hud_key.rgba16.png", 16, 16, 16),
+    define_builtin_tex(texture_hud_char_comma, "textures/segment2/custom_hud_comma.rgba16.png", 16, 16, 16),
+    define_builtin_tex(texture_hud_char_dash, "textures/segment2/custom_hud_dash.rgba16.png", 16, 16, 16),
+    define_builtin_tex(texture_hud_char_divide, "textures/segment2/custom_hud_divide.rgba16.png", 16, 16, 16),
+    define_builtin_tex(texture_hud_char_period, "textures/segment2/custom_hud_period.rgba16.png", 16, 16, 16),
+    define_builtin_tex(texture_hud_char_plus, "textures/segment2/custom_hud_plus.rgba16.png", 16, 16, 16),
     define_builtin_tex(texture_credits_char_3, "textures/segment2/segment2.06200.rgba16.png", 8, 8, 16),
     define_builtin_tex(texture_credits_char_4, "textures/segment2/segment2.06280.rgba16.png", 8, 8, 16),
     define_builtin_tex(texture_credits_char_6, "textures/segment2/segment2.06300.rgba16.png", 8, 8, 16),
@@ -1050,9 +1056,12 @@ static const struct BuiltinTexInfo sDynosBuiltinTexs[] = {
     define_builtin_tex(wmotr_seg7_texture_07001400, "levels/wmotr/3.rgba16.png", 32, 8, 16),
     define_builtin_tex(wmotr_seg7_texture_07001600, "levels/wmotr/4.rgba16.png", 8, 32, 16),
     define_builtin_tex(mario_texture_metal, "actors/mario/mario_metal.rgba16.png", 64, 32, 16),
+    define_builtin_tex(mario_texture_metal_shade, "actors/mario/custom_mario_metal_shade.rgba16.png", 64, 32, 16),
+    define_builtin_tex(mario_texture_metal_light, "actors/mario/custom_mario_metal_light.rgba16.png", 64, 32, 16),
     define_builtin_tex(mario_texture_yellow_button, "actors/mario/mario_overalls_button.rgba16.png", 32, 32, 16),
-    define_builtin_tex(mario_texture_m_logo, "actors/mario/mario_logo.rgba16.png", 32, 32, 16),
-    define_builtin_tex(mario_texture_hair_sideburn, "actors/mario/mario_sideburn.rgba16.png", 32, 32, 16),
+    define_builtin_tex(mario_texture_m_logo, "actors/mario/custom_mario_logo.rgba16.png", 32, 32, 16),
+    define_builtin_tex(mario_texture_m_blend, "actors/mario/custom_mario_m_blend.rgba16.png", 32, 32, 16),
+    define_builtin_tex(mario_texture_hair_sideburn, "actors/mario/custom_mario_sideburn.rgba16.png", 32, 32, 16),
     define_builtin_tex(mario_texture_mustache, "actors/mario/mario_mustache.rgba16.png", 32, 32, 16),
     define_builtin_tex(mario_texture_eyes_front, "actors/mario/mario_eyes_center.rgba16.png", 32, 32, 16),
     define_builtin_tex(mario_texture_eyes_half_closed, "actors/mario/mario_eyes_half_closed.rgba16.png", 32, 32, 16),
@@ -1068,12 +1077,11 @@ static const struct BuiltinTexInfo sDynosBuiltinTexs[] = {
     define_builtin_tex(mario_texture_metal_wings_half_2, "actors/mario/mario_metal_wing_tip_unused.rgba16.png", 32, 64, 16),
     define_builtin_tex(mario_texture_cap_inside, "actors/mario/custom_mario_cap_inside.rgba16.png", 8, 8, 16),
     define_builtin_tex(mario_cap_seg3_texture_0301CF50, "actors/mario_cap/mario_cap_metal.rgba16.png", 64, 32, 16),
-    define_builtin_tex(mario_cap_seg3_texture_0301DF50, "actors/mario_cap/custom_mario_cap_logo.rgba16.png", 32, 32, 16),
+    define_builtin_tex(mario_cap_seg3_texture_0301DF50, "actors/mario_cap/mario_cap_logo.rgba16.png", 32, 32, 16),
     define_builtin_tex(mario_cap_seg3_texture_0301E750, "actors/mario_cap/mario_cap_wing.rgba16.png", 32, 64, 16),
     define_builtin_tex(mario_cap_seg3_texture_0301F750, "actors/mario_cap/mario_cap_wing_tip.rgba16.png", 32, 64, 16),
     define_builtin_tex(mario_cap_seg3_texture_03020750, "actors/mario_cap/mario_cap_metal_wing_unused.rgba16.png", 32, 64, 16),
     define_builtin_tex(mario_cap_seg3_texture_03021750, "actors/mario_cap/mario_cap_metal_wing_tip_unused.rgba16.png", 32, 64, 16),
-    define_builtin_tex(mario_cap_texture_cap_inside, "actors/mario_cap/custom_mario_cap_inside.rgba16.png", 8, 8, 16),
     define_builtin_tex(impact_smoke_seg6_texture_0605AA28, "actors/impact_smoke/impact_smoke_0.ia16.png", 64, 64, 16),
     define_builtin_tex(impact_smoke_seg6_texture_0605CA28, "actors/impact_smoke/impact_smoke_1.ia16.png", 64, 64, 16),
     define_builtin_tex(impact_smoke_seg6_texture_0605EA28, "actors/impact_smoke/impact_smoke_2.ia16.png", 64, 64, 16),
@@ -1082,12 +1090,17 @@ static const struct BuiltinTexInfo sDynosBuiltinTexs[] = {
     define_builtin_tex(luigi_texture_hair_sideburn, "actors/luigi/custom_luigi_sideburn.rgba16.png", 32, 32, 16),
     define_builtin_tex(luigi_texture_mustache, "actors/luigi/custom_luigi_mustache.rgba16.png", 32, 32, 16),
     define_builtin_tex(luigi_cap_seg3_texture_0301DF50, "actors/luigi_cap/custom_luigi_cap_logo.rgba16.png", 32, 32, 16),
-    define_builtin_tex(toad_player_texture_face, "actors/toad_player/custom_toad_face.rgba16.png", 32, 32, 16),
-    define_builtin_tex(toad_player_texture_eyes_closed, "actors/toad_player/custom_toad_eyes_closed.rgba16.png", 32, 32, 16),
-    define_builtin_tex(toad_player_texture_eyes_half_closed, "actors/toad_player/custom_toad_eyes_half_closed.rgba16.png", 32, 32, 16),
-    define_builtin_tex(toad_player_texture_eyes_dead, "actors/toad_player/custom_toad_eyes_dead.rgba16.png", 32, 32, 16),
+    define_builtin_tex(toad_player_texture_spots, "actors/toad_player/custom_toad_cap.ia16.png", 32, 32, 16),
     define_builtin_tex(toad_player_texture_hair, "actors/toad_player/custom_toad_hair.rgba16.png", 32, 32, 16),
-    define_builtin_tex(toad_player_texture_cap, "actors/toad_player/custom_toad_cap.rgba16.png", 32, 32, 16),
+    define_builtin_tex(toad_player_texture_blush, "actors/toad_player/custom_toad_blush.rgba16.png", 32, 32, 16),
+    define_builtin_tex(toad_player_texture_eyes_front, "actors/toad_player/custom_toad_eyes_center.rgba32.png", 32, 32, 16),
+    define_builtin_tex(toad_player_texture_eyes_half_closed, "actors/toad_player/custom_toad_eyes_half_closed.rgba32.png", 32, 32, 16),
+    define_builtin_tex(toad_player_texture_eyes_closed, "actors/toad_player/custom_toad_eyes_closed.rgba32.png", 32, 32, 16),
+    define_builtin_tex(toad_player_texture_eyes_right, "actors/toad_player/custom_toad_eyes_left.rgba32.png", 32, 32, 16),
+    define_builtin_tex(toad_player_texture_eyes_left, "actors/toad_player/custom_toad_eyes_right.rgba32.png", 32, 32, 16),
+    define_builtin_tex(toad_player_texture_eyes_up, "actors/toad_player/custom_toad_eyes_up.rgba32.png", 32, 32, 16),
+    define_builtin_tex(toad_player_texture_eyes_down, "actors/toad_player/custom_toad_eyes_down.rgba32.png", 32, 32, 16),
+    define_builtin_tex(toad_player_texture_eyes_dead, "actors/toad_player/custom_toad_eyes_dead.rgba32.png", 32, 32, 16),
     define_builtin_tex(wario_texture_white_button, "actors/wario/custom_wario_overalls_button.rgba16.png", 32, 32, 16),
     define_builtin_tex(wario_texture_w_logo, "actors/wario/custom_wario_logo.rgba16.png", 32, 32, 16),
     define_builtin_tex(wario_texture_hair_sideburn, "actors/wario/custom_wario_sideburn.rgba16.png", 32, 32, 16),
@@ -1130,9 +1143,11 @@ static const struct BuiltinTexInfo sDynosBuiltinTexs[] = {
     define_builtin_tex(waluigi_custom_waluigi_eyes_down_unused_rgba16, "actors/waluigi/custom_waluigi_eyes_down_unused.rgba16.png", 64, 32, 16),
 
     // Fonts
-    define_builtin_tex(texture_font_normal, "textures/custom_font/custom_font_normal.rgba32.png", 512, 256, 32),
+    define_builtin_tex(texture_font_normal, "textures/custom_font/custom_font_normal.rgba32.png", 256, 128, 32),
     define_builtin_tex(texture_font_title, "textures/custom_font/custom_font_title.rgba32.png", 1024, 512, 32),
-    define_builtin_tex(texture_font_tiny, "textures/custom_font/custom_font_tiny.rgba32.png", 256, 128, 32),
+
+    // Logo
+    define_builtin_tex(texture_coopdx_logo, "textures/segment2/custom_coopdx_logo.rgba32.png", 2048, 1024, 32),
     
     // Goddard
     define_builtin_tex(gd_texture_hand_open, "textures/intro_raw/hand_open.rgba16.png", 32, 32, 16),
@@ -1798,4 +1813,3 @@ const struct BuiltinTexInfo* DynOS_Builtin_Tex_GetInfoFromName(const char* aData
 
     return NULL;
 }
-

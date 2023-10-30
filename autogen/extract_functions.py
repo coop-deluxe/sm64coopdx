@@ -36,6 +36,8 @@ def extract_functions(filename):
     for line in tmp.splitlines():
         if line.strip() == '#ifdef AVOID_UB':
             gobbling = True
+        if line.strip() == '#ifdef __cplusplus':
+            gobbling = True
         if line.strip() == '#else':
             gobbling = False
         if line.strip() == '#endif':

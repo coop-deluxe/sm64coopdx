@@ -33,6 +33,15 @@ enum HudDisplayFlags {
     HUD_DISPLAY_FLAGS_EMPHASIZE_POWER = 0x8000,
 };
 
+struct DateTime {
+    s32 year;
+    s32 month;
+    s32 day;
+    s32 hour;
+    s32 minute;
+    s32 second;
+};
+
 void djui_popup_create_global(const char* message, int lines);
 void log_to_console(const char* message);
 bool djui_is_popup_disabled(void);
@@ -79,7 +88,7 @@ void camera_config_set_deceleration(u32 value);
 bool is_game_paused(void);
 bool is_transition_playing(void);
 
-s8 get_dialog_box_state();
+s8 get_dialog_box_state(void);
 s16 get_dialog_id(void);
 s32 get_last_star_or_key(void);
 void set_last_star_or_key(u8 value);
@@ -118,17 +127,24 @@ void set_lighting_dir(u8 index, f32 value);
 u8 get_lighting_color(u8 index);
 void set_lighting_color(u8 index, u8 value);
 
-s8 get_skybox();
+u8 get_vertex_color(u8 index);
+void set_vertex_color(u8 index, u8 value);
+
+u8 get_fog_color(u8 index);
+void set_fog_color(u8 index, u8 value);
+
+s8 get_skybox(void);
 void set_override_skybox(s8 background);
 
 void play_transition(s16 transType, s16 time, u8 red, u8 green, u8 blue);
 
 bool course_is_main_course(u16 courseNum);
 
-s16 get_ttc_speed_setting();
+s16 get_ttc_speed_setting(void);
 void set_ttc_speed_setting(s16 speed);
 
-u32 get_time(void);
+s64 get_time(void);
+struct DateTime* get_date_and_time(void);
 
 u16 get_envfx(void);
 void set_override_envfx(s32 envfx);

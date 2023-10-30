@@ -312,5 +312,7 @@ void DynOS_Read_Source(GfxData *aGfxData, const SysPath &aFilename) {
     }
 
     Delete(_FileBuffer);
+#ifdef DEVELOPMENT
     Print("Data read from file \"%s\"", aFilename.c_str());
+#endif
 }

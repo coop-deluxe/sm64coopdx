@@ -40,7 +40,6 @@ bool dynos_warp_to_level(s32 aLevel, s32 aArea, s32 aAct) {
 }
 
 bool dynos_warp_to_start_level(void) {
-
     // change the level to the start level
     extern s16 gChangeLevel;
     gChangeLevel = gLevelValues.entryLevel;
@@ -93,6 +92,14 @@ void dynos_pack_set_enabled(s32 index, bool value) {
     if (_Pack) {
         DynOS_Pack_SetEnabled(_Pack, value);
     }
+}
+
+bool dynos_pack_get_exists(s32 index) {
+    PackData* _Pack = DynOS_Pack_GetFromIndex(index);
+    if (_Pack) {
+        return fs_sys_dir_exists(_Pack->mPath.c_str());
+    }
+    return false;
 }
 
 void dynos_pack_init(void) {

@@ -4803,7 +4803,7 @@ Gfx mat_waluigi_nose[] = {
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(0, 0, 0, SHADE, 0, 0, 0, ENVIRONMENT, 0, 0, 0, SHADE, 0, 0, 0, ENVIRONMENT),
 	gsSPTexture(65535, 65535, 0, 0, 1),
-  gsSPSetLights1(waluigi_nose_lights),
+    gsSPSetLights1(waluigi_nose_lights),
 	gsSPEndDisplayList(),
 };
 
@@ -4997,7 +4997,7 @@ Gfx mat_waluigi_eyes_dead[] = {
 
 Gfx mat_waluigi_wing_2[] = {
 	gsDPPipeSync(),
-	gsDPSetCombineLERP(0, 0, 0, TEXEL0, TEXEL0, 0, ENVIRONMENT, 0, 0, 0, 0, TEXEL0, TEXEL0, 0, ENVIRONMENT, 0),
+	gsDPSetCombineMode(G_CC_MODULATERGBA, G_CC_MODULATERGBA),
 	gsSPClearGeometryMode(G_CULL_BACK),
 	gsSPTexture(65535, 65535, 0, 0, 1),
 	gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 1, waluigi_wing_2_rgba16),
@@ -5016,7 +5016,7 @@ Gfx mat_revert_waluigi_wing_2[] = {
 
 Gfx mat_waluigi_wing_1[] = {
 	gsDPPipeSync(),
-	gsDPSetCombineLERP(0, 0, 0, TEXEL0, TEXEL0, 0, ENVIRONMENT, 0, 0, 0, 0, TEXEL0, TEXEL0, 0, ENVIRONMENT, 0),
+	gsDPSetCombineMode(G_CC_MODULATERGBA, G_CC_MODULATERGBA),
 	gsSPClearGeometryMode(G_CULL_BACK),
 	gsSPTexture(65535, 65535, 0, 0, 1),
 	gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 1, waluigi_wing_1_rgba16),

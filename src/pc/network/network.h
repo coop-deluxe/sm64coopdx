@@ -73,7 +73,13 @@ struct ServerSettings {
     u8 enablePlayersInLevelDisplay;
     u8 enablePlayerList;
     u8 headlessServer;
+    u8 nametags;
     u8 maxPlayers;
+};
+
+struct NametagsSettings {
+    bool showHealth;
+    bool showSelfTag;
 };
 
 // Networking-specific externs
@@ -85,6 +91,7 @@ extern u32 gNetworkAreaTimer;
 extern u32 gNetworkAreaTimerClock;
 extern void* gNetworkServerAddr;
 extern struct ServerSettings gServerSettings;
+extern struct NametagsSettings gNametagsSettings;
 extern bool gNetworkSentJoin;
 extern u16 gNetworkRequestLocationTimer;
 extern u8 gDebugPacketIdBuffer[];

@@ -34,8 +34,6 @@ OSX_BUILD ?= 0
 TARGET_ARCH ?= native
 TARGET_BITS ?= 0
 
-# Enable immediate load by default
-IMMEDIATELOAD ?= 1
 # Enable better camera by default
 BETTERCAMERA ?= 1
 # Enable no drawing distance by default
@@ -487,13 +485,15 @@ endif
 # Extra Source Files                                                           #
 #==============================================================================#
 
-# Luigi and wario sounds don't work on 32-bit right now
+# Luigi, wario and toad sounds don't work on 32-bit right now
 # And the audio code is so terrible I don't care enough to figure it out at the moment
 ifeq ($(TARGET_BITS), 32)
   _ := $(shell rm -rf sound/samples/sfx_custom_luigi/*.aiff)
   _ := $(shell rm -rf sound/samples/sfx_custom_luigi_peach/*.aiff)
   _ := $(shell rm -rf sound/samples/sfx_custom_wario/*.aiff)
   _ := $(shell rm -rf sound/samples/sfx_custom_wario_peach/*.aiff)
+  _ := $(shell rm -rf sound/samples/sfx_custom_toad/*.aiff)
+  _ := $(shell rm -rf sound/samples/sfx_custom_toad_peach/*.aiff)
 
 # Copy missing character sounds from mario sound banks
 _ := $(shell $(PYTHON) $(TOOLS_DIR)/copy_mario_sounds.py)
@@ -659,9 +659,6 @@ LANG_DIR := lang
 _ := $(shell rm -rf ./$(BUILD_DIR)/$(LANG_DIR))
 
 MOD_DIR := mods
-
-# Remove old mod dir
-_ := $(shell rm -rf ./$(BUILD_DIR)/$(MOD_DIR))
 
 # Automatic dependency files
 DEP_FILES := $(O_FILES:.o=.d) $(ULTRA_O_FILES:.o=.d) $(GODDARD_O_FILES:.o=.d) $(BUILD_DIR)/$(LD_SCRIPT).d
@@ -1052,12 +1049,6 @@ endif
 
 # Check for enhancement options
 
-# Check for immediate load option
-ifeq ($(IMMEDIATELOAD),1)
-  CC_CHECK_CFLAGS += -DIMMEDIATELOAD
-  CFLAGS += -DIMMEDIATELOAD
-endif
-
 # Check for docker build workaround option
 ifeq ($(DOCKERBUILD),1)
   CC_CHECK_CFLAGS += -DDOCKERBUILD
@@ -1279,7 +1270,9 @@ $(BUILD_DIR)/$(LANG_DIR):
 	@$(CP) -f -r $(LANG_DIR) $(BUILD_DIR)
 
 $(BUILD_DIR)/$(MOD_DIR):
-	@$(CP) -f -r $(MOD_DIR) $(BUILD_DIR)
+	@if [ ! -d "$(BUILD_DIR)/$(MOD_DIR)" ]; then \
+		$(CP) -f -r $(MOD_DIR) $(BUILD_DIR); \
+	fi
 
 # Extra object file dependencies
 
@@ -1660,20 +1653,20 @@ endif
 # with no prerequisites, .SECONDARY causes no intermediate target to be removed
 .SECONDARY:
 
-APP_DIR = ./sm64ex-coop.app
+APP_DIR = ./sm64coopdx.app
 APP_CONTENTS_DIR = $(APP_DIR)/Contents
 APP_MACOS_DIR = $(APP_CONTENTS_DIR)/MacOS
 
 all:
 	@if [ "$(USE_APP)" = "0" ]; then \
-		rm -rf build/us_pc/sm64ex-coop.app; \
-    else \
-		$(PRINT) "$(GREEN)Creating App Bundle: $(BLUE)build/us_pc/sm64ex-coop.app\n"; \
+		rm -rf build/us_pc/sm64coopdx.app; \
+  else \
+		$(PRINT) "$(GREEN)Creating App Bundle: $(BLUE)build/us_pc/sm64coopdx.app\n"; \
 		rm -rf $(APP_DIR); \
-		rm -rf build/us_pc/sm64ex-coop.app; \
+		rm -rf build/us_pc/sm64coopdx.app; \
 		mkdir -p $(APP_MACOS_DIR); \
 		mkdir -p $(APP_CONTENTS_DIR)/Resources; \
-		mv build/us_pc/sm64.us.f3dex2e $(APP_MACOS_DIR)/sm64ex-coop; \
+		mv build/us_pc/sm64.us.f3dex2e $(APP_MACOS_DIR)/sm64coopdx; \
 		cp -r build/us_pc/* $(APP_MACOS_DIR); \
 		cp res/icon.icns $(APP_CONTENTS_DIR)/Resources/icon.icns; \
 		echo "APPL????" > $(APP_CONTENTS_DIR)/PkgInfo; \
@@ -1682,19 +1675,19 @@ all:
 		echo '<plist version="1.0">' >> $(APP_CONTENTS_DIR)/Info.plist; \
 		echo '<dict>' >> $(APP_CONTENTS_DIR)/Info.plist; \
 		echo '    <key>CFBundleExecutable</key>' >> $(APP_CONTENTS_DIR)/Info.plist; \
-		echo '    <string>sm64ex-coop</string>' >> $(APP_CONTENTS_DIR)/Info.plist; \
+		echo '    <string>sm64coopdx</string>' >> $(APP_CONTENTS_DIR)/Info.plist; \
 		echo '    <key>CFBundleIconFile</key>' >> $(APP_CONTENTS_DIR)/Info.plist; \
 		echo '    <string>icon</string>' >> $(APP_CONTENTS_DIR)/Info.plist; \
 		echo '    <key>CFBundleIconName</key>' >> $(APP_CONTENTS_DIR)/Info.plist; \
 		echo '    <string>AppIcon</string>' >> $(APP_CONTENTS_DIR)/Info.plist; \
 		echo '    <key>CFBundleDisplayName</key>' >> $(APP_CONTENTS_DIR)/Info.plist; \
-		echo '    <string>sm64ex-coop</string>' >> $(APP_CONTENTS_DIR)/Info.plist; \
+		echo '    <string>sm64coopdx</string>' >> $(APP_CONTENTS_DIR)/Info.plist; \
 		echo '    <!-- Add other keys and values here -->' >> $(APP_CONTENTS_DIR)/Info.plist; \
 		echo '</dict>' >> $(APP_CONTENTS_DIR)/Info.plist; \
 		echo '</plist>' >> $(APP_CONTENTS_DIR)/Info.plist; \
-		chmod +x $(APP_MACOS_DIR)/sm64ex-coop; \
+		chmod +x $(APP_MACOS_DIR)/sm64coopdx; \
 		mv $(APP_DIR) build/us_pc/; \
-    fi
+  fi
 
 # Remove built-in rules, to improve performance
 MAKEFLAGS += --no-builtin-rules

@@ -12,8 +12,8 @@
 
 #define G_TEXCLIP_DJUI     0xe1
 #define G_TEXOVERRIDE_DJUI 0xe0
-#define G_DJUI_SIMPLE_VERT 0x11
-#define G_DJUI_SIMPLE_TRI2 0x12
+#define G_VTX_EXT          0x11
+#define G_TRI2_EXT         0x12
 #define G_TEXADDR_DJUI     0x13
 #define G_EXECUTE_DJUI     0xdd
 
@@ -38,19 +38,27 @@
     _g->words.w1 = (uintptr_t)(texture);                        \
 }
 
-# define gSPVertexDjui(pkt, v, n, v0)				\
+// does not get affected by gVertexColor
+#define gSPVertexNonGlobal(pkt, v, n, v0)				\
 {									\
 	Gfx *_g = (Gfx *)(pkt);						\
 	_g->words.w0 =							\
-	  _SHIFTL(G_DJUI_SIMPLE_VERT,24,8)|_SHIFTL((n),12,8)|_SHIFTL((v0)+(n),1,7);	\
+	  _SHIFTL(G_VTX_EXT,24,8)|_SHIFTL((n),12,8)|_SHIFTL((v0)+(n),1,7);	\
 	_g->words.w1 = (uintptr_t)(v);				\
 }
+
+// does not get affected by gVertexColor
+#define gsSPVertexNonGlobal(v, n, v0) \
+{{ \
+    (_SHIFTL(G_VTX_EXT,24,8)|_SHIFTL((n),12,8)|_SHIFTL((v0)+(n),1,7)),	\
+        (uintptr_t)(v)	\
+}}
 
 #define gSP2TrianglesDjui(pkt, v00, v01, v02, flag0, v10, v11, v12, flag1)	\
 {									\
 	Gfx *_g = (Gfx *)(pkt);						\
 									\
-	_g->words.w0 = (_SHIFTL(G_DJUI_SIMPLE_TRI2, 24, 8)|				\
+	_g->words.w0 = (_SHIFTL(G_TRI2_EXT, 24, 8)|				\
 			__gsSP1Triangle_w1f(v00, v01, v02, flag0));	\
         _g->words.w1 =  __gsSP1Triangle_w1f(v10, v11, v12, flag1); 	\
 }

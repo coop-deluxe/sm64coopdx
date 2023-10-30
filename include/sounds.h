@@ -37,7 +37,8 @@
 #define SOUND_BANK_OBJ2          9
 #define SOUND_BANK_LUIGI_VOICE   10
 #define SOUND_BANK_WARIO_VOICE   11
-#define SOUND_BANK_COUNT         12
+#define SOUND_BANK_TOAD_VOICE    12
+#define SOUND_BANK_COUNT         13
 
 #define SOUND_BANKS_ALL_BITS 0xffff
 #define SOUND_BANKS_ALL ((1 << SOUND_BANK_COUNT) - 1)
@@ -46,7 +47,8 @@
     (1 << SOUND_BANK_MARIO_VOICE) |\
     (1 << SOUND_BANK_MENU) |\
     (1 << SOUND_BANK_LUIGI_VOICE) |\
-    (1 << SOUND_BANK_WARIO_VOICE))
+    (1 << SOUND_BANK_WARIO_VOICE) |\
+    (1 << SOUND_BANK_TOAD_VOICE))
 #define SOUND_BANKS_BACKGROUND (SOUND_BANKS_ALL & ~SOUND_BANKS_FOREGROUND)
 #define SOUND_BANKS_DISABLED_DURING_INTRO_CUTSCENE (\
     (1 << SOUND_BANK_ENV) |\
@@ -59,7 +61,8 @@
     (1 << SOUND_BANK_MARIO_VOICE) |\
     (1 << SOUND_BANK_GENERAL) |\
     (1 << SOUND_BANK_LUIGI_VOICE) |\
-    (1 << SOUND_BANK_WARIO_VOICE))
+    (1 << SOUND_BANK_WARIO_VOICE) |\
+    (1 << SOUND_BANK_TOAD_VOICE))
 
 /* Audio playback bitflags. */
 #define SOUND_NO_VOLUME_LOSS        0x1000000 // No volume loss with distance
@@ -104,6 +107,7 @@
 // Include our sound defines for our custom characters.
 #include "luigi_sounds.h"
 #include "wario_sounds.h"
+#include "toad_sounds.h"
 
 /**
  * The table below defines all sounds that exist in the game, and which flags

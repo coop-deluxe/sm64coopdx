@@ -110,6 +110,7 @@ extern bool         configCtxProfiler;
 extern bool         configDisableDownloadedModels;
 extern unsigned int configInterpolationMode;
 extern bool         configSingleplayerPause;
+extern bool         configNametags;
 extern bool         configDebugPrint;
 extern bool         configDebugInfo;
 extern bool         configDebugError;
@@ -120,10 +121,12 @@ extern unsigned int configCoopNetPort;
 extern char         configPassword[];
 extern char         configDestId[];
 extern bool         configFadeoutDistantSounds;
+extern unsigned int configDjuiTheme;
+extern bool         configCoopCompatibility;
 
 void configfile_load(void);
 void configfile_save(const char *filename);
 const char *configfile_name(void);
 const char *configfile_backup_name(void);
 
-#endif
+#endif // CONFIGFILE_H

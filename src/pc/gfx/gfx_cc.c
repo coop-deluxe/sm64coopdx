@@ -58,7 +58,10 @@ void gfx_cc_print(UNUSED struct ColorCombiner *cc) {
     if (!sAllowCCPrint) { return; }
     // disabled for now
     return;
-#ifdef DEVELOPMENT
+
+/*#ifdef DEVELOPMENT
+    if (!sAllowCCPrint) { return; }
+
     printf("\n>> gfx_pc_precomp_shader(");
 
     struct CombineMode* cm = &cc->cm;
@@ -71,7 +74,7 @@ void gfx_cc_print(UNUSED struct ColorCombiner *cc) {
     printf(");");
     printf("    // %016" PRIx64, cm->hash);
     printf("\n");
-#endif
+#endif*/
 }
 
 void gfx_cc_precomp(void) {

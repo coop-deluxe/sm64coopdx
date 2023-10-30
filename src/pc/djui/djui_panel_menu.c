@@ -48,10 +48,22 @@ void djui_panel_menu_back(UNUSED struct DjuiBase* base) {
 
 struct DjuiThreePanel* djui_panel_menu_create(char* headerText) {
     struct DjuiThreePanel* panel = djui_three_panel_create(&gDjuiRoot->base, 64, 0, 0);
+    const struct DjuiTheme* theme = gDjuiThemes[configDjuiTheme];
+    struct DjuiThreePanelTheme three = theme->threePanels;
+    bool center = theme->panels.center &&
+        strcmp(headerText, DLANG(HOST_MODS, MODS)) &&
+        strcmp(headerText, DLANG(HOST_MODS, ROMHACKS)) &&
+        strcmp(headerText, DLANG(LOBBIES, PUBLIC_LOBBIES)) &&
+        strcmp(headerText, DLANG(LOBBIES, PRIVATE_LOBBIES)) &&
+        strcmp(headerText, DLANG(JOIN_MESSAGE, JOINING));
+    f32 widthMultiplier = center ? theme->panels.widthMultiplier : 1.0f;
+    f32 heightMultiplier = center ? theme->panels.heightMultiplier : 1.0f;
+
     djui_base_set_size_type(&panel->base, DJUI_SVT_ABSOLUTE, DJUI_SVT_RELATIVE);
-    djui_base_set_size(&panel->base, DJUI_DEFAULT_PANEL_WIDTH, 1.0f);
-    djui_base_set_color(&panel->base, 0, 0, 0, 240);
-    djui_base_set_border_color(&panel->base, 0, 0, 0, 200);
+    djui_base_set_size(&panel->base, DJUI_DEFAULT_PANEL_WIDTH * widthMultiplier, heightMultiplier);
+    djui_base_set_color(&panel->base, three.rectColor.r, three.rectColor.g, three.rectColor.b, three.rectColor.a);
+    djui_base_set_border_color(&panel->base, three.borderColor.r, three.borderColor.g, three.borderColor.b, three.borderColor.a);
+    if (center) djui_base_set_alignment(&panel->base, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
     djui_base_set_border_width(&panel->base, 8);
     djui_base_set_padding(&panel->base, 16, 16, 16, 16);
     {

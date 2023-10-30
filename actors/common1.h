@@ -172,6 +172,7 @@ extern const Gfx mario_cap_seg3_dl_030230B0[];
 extern const Gfx mario_cap_seg3_dl_03023108[];
 extern const Gfx mario_cap_seg3_dl_03023160[];
 extern const Gfx mario_cap_seg3_dl_03023298[];
+extern const Gfx mario_cap_material_revert_render_settings[];
 
 // mist
 extern const GeoLayout mist_geo[];

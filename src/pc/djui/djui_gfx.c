@@ -28,10 +28,10 @@ void djui_gfx_displaylist_end(void) {
 }
 
 static const Vtx vertex_djui_simple_rect[] = {
-    {{{ 0, -1, 0}, 0, { 0, 0 }, { 0xff, 0xff, 0xff, 0xff }}},
-    {{{ 1, -1, 0}, 0, { 0, 0 }, { 0xff, 0xff, 0xff, 0xff }}},
-    {{{ 1,  0, 0}, 0, { 0, 0 }, { 0xff, 0xff, 0xff, 0xff }}},
-    {{{ 0,  0, 0}, 0, { 0, 0 }, { 0xff, 0xff, 0xff, 0xff }}},
+    {{{ 0, -1, 0 }, 0, { 0, 0 }, { 0xff, 0xff, 0xff, 0xff }}},
+    {{{ 1, -1, 0 }, 0, { 0, 0 }, { 0xff, 0xff, 0xff, 0xff }}},
+    {{{ 1,  0, 0 }, 0, { 0, 0 }, { 0xff, 0xff, 0xff, 0xff }}},
+    {{{ 0,  0, 0 }, 0, { 0, 0 }, { 0xff, 0xff, 0xff, 0xff }}},
 };
 
 const Gfx dl_djui_simple_rect[] = {
@@ -39,11 +39,13 @@ const Gfx dl_djui_simple_rect[] = {
     gsSPClearGeometryMode(G_LIGHTING),
     gsDPSetCombineMode(G_CC_FADE, G_CC_FADE),
     gsDPSetRenderMode(G_RM_XLU_SURF, G_RM_XLU_SURF2),
-    gsSPVertex(vertex_djui_simple_rect, 4, 0),
+    gsSPVertexNonGlobal(vertex_djui_simple_rect, 4, 0),
     gsSP2Triangles(0,  1,  2, 0x0,  0,  2,  3, 0x0),
     gsSPEndDisplayList(),
 };
 
+
+// might need to update this at some point
 f32 djui_gfx_get_scale(void) {
     u32 windowWidth, windowHeight;
     wm_api->get_dimensions(&windowWidth, &windowHeight);
@@ -69,12 +71,11 @@ const Gfx dl_djui_image[] = {
     gsSPClearGeometryMode(G_LIGHTING),
     gsDPSetCombineMode(G_CC_FADEA, G_CC_FADEA),
     gsDPSetRenderMode(G_RM_XLU_SURF, G_RM_XLU_SURF2),
-    gsDPSetTextureFilter(G_TF_POINT),
     gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON),
     gsDPLoadTextureBlock(NULL, G_IM_FMT_RGBA, G_IM_SIZ_16b, 64, 64, 0, G_TX_CLAMP, G_TX_CLAMP, 0, 0, 0, 0),
     gsSPExecuteDjui(G_TEXOVERRIDE_DJUI),
-    gsSPVertex(vertex_djui_image, 4, 0),
-    gsSPExecuteDjui(G_TEXCLIP_DJUI),
+    gsSPVertexNonGlobal(vertex_djui_image, 4, 0),
+    // gsSPExecuteDjui(G_TEXCLIP_DJUI),
     gsSP2Triangles(0,  1,  2, 0x0,  0,  2,  3, 0x0),
     gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_OFF),
     gsDPSetCombineMode(G_CC_SHADE, G_CC_SHADE),
@@ -97,12 +98,13 @@ static u8 djui_gfx_power_of_two(u32 value) {
     }
 }
 
-void djui_gfx_render_texture(const u8* texture, u32 w, u32 h, u32 bitSize) {
+void djui_gfx_render_texture(const u8* texture, u32 w, u32 h, u32 bitSize, bool filter) {
+    gDPSetTextureFilter(gDisplayListHead++, filter ? G_TF_BILERP : G_TF_POINT);
     gDPSetTextureOverrideDjui(gDisplayListHead++, texture, djui_gfx_power_of_two(w), djui_gfx_power_of_two(h), bitSize);
     gSPDisplayList(gDisplayListHead++, dl_djui_image);
 }
 
-void djui_gfx_render_texture_tile(const u8* texture, u32 w, u32 h, u32 bitSize, u32 tileX, u32 tileY, u32 tileW, u32 tileH) {
+void djui_gfx_render_texture_tile(const u8* texture, u32 w, u32 h, u32 bitSize, u32 tileX, u32 tileY, u32 tileW, u32 tileH, bool filter) {
     if (!gDisplayListHead) {
         LOG_ERROR("Retrieved a null displaylist head");
         return;
@@ -129,7 +131,7 @@ void djui_gfx_render_texture_tile(const u8* texture, u32 w, u32 h, u32 bitSize, 
     gSPClearGeometryMode(gDisplayListHead++, G_LIGHTING);
     gDPSetCombineMode(gDisplayListHead++, G_CC_FADEA, G_CC_FADEA);
     gDPSetRenderMode(gDisplayListHead++, G_RM_XLU_SURF, G_RM_XLU_SURF2);
-    gDPSetTextureFilter(gDisplayListHead++, G_TF_POINT);
+    gDPSetTextureFilter(gDisplayListHead++, filter ? G_TF_BILERP : G_TF_POINT);
 
     gSPTexture(gDisplayListHead++, 0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON);
 
@@ -138,7 +140,7 @@ void djui_gfx_render_texture_tile(const u8* texture, u32 w, u32 h, u32 bitSize, 
 
     *(gDisplayListHead++) = (Gfx) gsSPExecuteDjui(G_TEXOVERRIDE_DJUI);
 
-    gSPVertexDjui(gDisplayListHead++, vtx, 4, 0);
+    gSPVertexNonGlobal(gDisplayListHead++, vtx, 4, 0);
     *(gDisplayListHead++) = (Gfx) gsSPExecuteDjui(G_TEXCLIP_DJUI);
     gSP2TrianglesDjui(gDisplayListHead++, 0,  1,  2, 0x0,  0,  2,  3, 0x0);
 

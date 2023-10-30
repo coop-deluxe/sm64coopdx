@@ -14,9 +14,11 @@
     - [enum DialogId](#enum-DialogId)
 - [djui_hud_utils.h](#djui_hud_utilsh)
     - [enum DjuiFontType](#enum-DjuiFontType)
+    - [enum HudUtilsFilter](#enum-HudUtilsFilter)
     - [enum HudUtilsResolution](#enum-HudUtilsResolution)
 - [envfx_snow.h](#envfx_snowh)
 - [external.h](#externalh)
+    - [enum DialogSound](#enum-DialogSound)
 - [geo_commands.h](#geo_commandsh)
 - [graph_node.h](#graph_nodeh)
 - [interaction.c](#interactionc)
@@ -36,7 +38,7 @@
     - [enum MarioEyesGSCId](#enum-MarioEyesGSCId)
     - [enum MarioGrabPosGSCId](#enum-MarioGrabPosGSCId)
     - [enum MarioHandGSCId](#enum-MarioHandGSCId)
-- [mod_storage.cpp.h](#mod_storagecpph)
+- [mod_storage.h](#mod_storageh)
 - [network.h](#networkh)
     - [enum NetworkSystemType](#enum-NetworkSystemType)
     - [enum PlayerInteractions](#enum-PlayerInteractions)
@@ -1102,6 +1104,13 @@
 | FONT_TINY | 3 |
 | FONT_COUNT | 4 |
 
+### [enum HudUtilsFilter](#HudUtilsFilter)
+| Identifier | Value |
+| :--------- | :---- |
+| FILTER_NEAREST | 0 |
+| FILTER_LINEAR | 1 |
+| FILTER_COUNT | 2 |
+
 ### [enum HudUtilsResolution](#HudUtilsResolution)
 | Identifier | Value |
 | :--------- | :---- |
@@ -1129,9 +1138,27 @@
 <br />
 
 ## [external.h](#external.h)
+- DS_DIFF
 - SEQ_PLAYER_ENV
 - SEQ_PLAYER_LEVEL
 - SEQ_PLAYER_SFX
+
+### [enum DialogSound](#DialogSound)
+| Identifier | Value |
+| :--------- | :---- |
+| DS_UKIKI | 0 |
+| DS_TUXIE | 1 |
+| DS_BOWS1 | 2 |
+| DS_KOOPA | 3 |
+| DS_KBOMB | 4 |
+| DS_BOO | 5 |
+| DS_BOMB | 6 |
+| DS_BOWS2 | 7 |
+| DS_GRUNT | 8 |
+| DS_WIGLR | 9 |
+| DS_YOSHI | 10 |
+| DS_MAX | 11 |
+| DS_NONE | 0xff |
 
 [:arrow_up_small:](#)
 
@@ -1910,7 +1937,7 @@
 
 <br />
 
-## [mod_storage.cpp.h](#mod_storage.cpp.h)
+## [mod_storage.h](#mod_storage.h)
 - MAX_KEYS
 - MAX_KEY_VALUE_LENGTH
 
@@ -3193,7 +3220,9 @@
 | HOOK_JOINED_GAME | 31 |
 | HOOK_ON_OBJECT_ANIM_UPDATE | 32 |
 | HOOK_ON_DIALOG | 33 |
-| HOOK_MAX | 34 |
+| HOOK_ON_EXIT | 34 |
+| HOOK_DIALOG_SOUND | 35 |
+| HOOK_MAX | 36 |
 
 [:arrow_up_small:](#)
 
@@ -3721,6 +3750,7 @@
 - SOUND_BANK_MOVING
 - SOUND_BANK_OBJ
 - SOUND_BANK_OBJ2
+- SOUND_BANK_TOAD_VOICE
 - SOUND_BANK_WARIO_VOICE
 - SOUND_CONSTANT_FREQUENCY
 - SOUND_DISCRETE
@@ -4345,6 +4375,7 @@
 - MAX_VERSION_LENGTH
 - MINOR_VERSION_NUMBER
 - PATCH_VERSION_NUMBER
+- SM64COOPDX
 - VERSION_NUMBER
 - VERSION_REGION
 - VERSION_REGION

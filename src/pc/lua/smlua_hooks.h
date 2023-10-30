@@ -45,6 +45,8 @@ enum LuaHookedEventType {
     HOOK_JOINED_GAME,
     HOOK_ON_OBJECT_ANIM_UPDATE,
     HOOK_ON_DIALOG,
+    HOOK_ON_EXIT,
+    HOOK_DIALOG_SOUND,
     HOOK_MAX,
 };
 
@@ -83,6 +85,8 @@ static const char* LuaHookedEventTypeName[] = {
     "HOOK_JOINED_GAME",
     "HOOK_ON_OBJECT_ANIM_UPDATE",
     "HOOK_ON_DIALOG",
+    "HOOK_ON_EXIT",
+    "HOOK_DIALOG_SOUND",
     "HOOK_MAX"
 };
 
@@ -117,6 +121,7 @@ void smlua_call_event_hooks_object_model_param(enum LuaHookedEventType hookType,
 bool smlua_call_event_hooks_ret_int(enum LuaHookedEventType hookType, s32* returnValue);
 void smlua_call_event_hooks_set_camera_mode_params(enum LuaHookedEventType hookType, struct Camera *c, s16 mode, s16 frames, bool* returnValue);
 void smlua_call_event_hooks_int_params_ret_bool(enum LuaHookedEventType hookType, s16 param, bool* returnValue);
+void smlua_call_event_hooks_int_params_ret_int(enum LuaHookedEventType hookType, s32 param, s32* returnValue);
 void smlua_call_event_hooks_value_param(enum LuaHookedEventType hookType, int modIndex, int valueIndex);
 void smlua_call_event_hooks_use_act_select(enum LuaHookedEventType hookType, int value, bool* foundHook, bool* returnValue);
 void smlua_call_event_hooks_ret_bool(enum LuaHookedEventType hookType, bool* returnValue);
@@ -139,6 +144,11 @@ u32 smlua_get_action_interaction_type(struct MarioState* m);
 
 bool smlua_call_chat_command_hook(char* command);
 void smlua_display_chat_commands(void);
+char** smlua_get_chat_player_list(void);
+char** smlua_get_chat_maincommands_list(void);
+char** smlua_get_chat_subcommands_list(const char* maincommand);
+bool smlua_maincommand_exists(const char* maincommand);
+bool smlua_subcommand_exists(const char* maincommand, const char* subcommand);
 
 void smlua_clear_hooks(void);
 void smlua_bind_hooks(void);

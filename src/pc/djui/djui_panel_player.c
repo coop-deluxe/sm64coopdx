@@ -20,7 +20,7 @@ static struct DjuiSelectionbox* sPalettePresetSelection;
 static struct DjuiInputbox* sHexColorTextBox;
 static struct DjuiSlider *sSliderR, *sSliderG, *sSliderB;
 
-static void djui_panel_player_edit_palette_update_hex_code_box() {
+static void djui_panel_player_edit_palette_update_hex_code_box(void) {
     char buf[7];
     static const char digitToChar[] = "0123456789abcdef";
 
@@ -34,7 +34,7 @@ static void djui_panel_player_edit_palette_update_hex_code_box() {
     djui_inputbox_set_text(sHexColorTextBox, buf);
 }
 
-static void djui_panel_player_edit_palette_update_palette_display() {
+static void djui_panel_player_edit_palette_update_palette_display(void) {
     if (memcmp(&gNetworkPlayers[0].overridePalette, &gNetworkPlayers[0].palette, sizeof(struct PlayerPalette)) == 0) {
         gNetworkPlayers[0].overridePalette = configPlayerPalette;
     }
@@ -42,7 +42,7 @@ static void djui_panel_player_edit_palette_update_palette_display() {
     gNetworkPlayers[0].palette = configPlayerPalette;
 }
 
-static void djui_panel_player_edit_palette_update_sliders() {
+static void djui_panel_player_edit_palette_update_sliders(void) {
     for (int i = 0; i < 3; i++) sSliderChannels[i] = configCustomPalette.parts[sCurrentPlayerPart][i];
 
     djui_slider_update_value(&sSliderR->base);

@@ -1,6 +1,6 @@
 // king_bobomb.c.inc
 
-struct MarioState* king_bobomb_nearest_mario_state() {
+struct MarioState* king_bobomb_nearest_mario_state(void) {
     struct MarioState* nearest = NULL;
     f32 nearestDist = 0;
     u8 checkActive = TRUE;

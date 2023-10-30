@@ -27,7 +27,7 @@ enum newcam_flagvalues
 };
 
 extern void newcam_init_settings(void);
-extern void newcam_disable(void);
+extern void newcam_init_settings_override(bool override);
 extern void newcam_diagnostics(void);
 
 extern s16 newcam_sensitivityX; //How quick the camera works.

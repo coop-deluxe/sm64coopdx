@@ -1186,7 +1186,7 @@ static void DynOS_Lvl_GeneratePack_Recursive(const SysPath &directory, GfxData *
 }
 
 void DynOS_Lvl_GeneratePack(const SysPath &aPackFolder) {
-    Print("---------- Level pack folder: \"%s\" ----------", aPackFolder.c_str());
+    Print("Processing Levels: \"%s\"", aPackFolder.c_str());
     Array<Pair<u64, String>> _ActorsFolders;
 
     GfxData *_GfxData = New<GfxData>();

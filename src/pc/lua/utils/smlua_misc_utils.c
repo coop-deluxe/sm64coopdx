@@ -23,6 +23,10 @@
 #include "include/course_table.h"
 #include "game/level_geo.h"
 
+static struct DateTime sDateTime;
+
+///
+
 u32 get_network_area_timer(void) {
     return gNetworkAreaTimer;
 }
@@ -144,7 +148,7 @@ void set_save_file_modified(bool value) {
 ///
 
 extern s8 gDialogBoxState;
-s8 get_dialog_box_state() {
+s8 get_dialog_box_state(void) {
     return gDialogBoxState;
 }
 
@@ -592,7 +596,31 @@ void set_lighting_color(u8 index, u8 value) {
 
 ///
 
-s8 get_skybox() {
+u8 get_vertex_color(u8 index) {
+    if (index > 2) { return 0; }
+    return gVertexColor[index];
+}
+
+void set_vertex_color(u8 index, u8 value) {
+    if (index > 2) { return; }
+    gVertexColor[index] = value;
+}
+
+///
+
+u8 get_fog_color(u8 index) {
+    if (index > 2) { return 0; }
+    return gFogColor[index];
+}
+
+void set_fog_color(u8 index, u8 value) {
+    if (index > 2) { return; }
+    gFogColor[index] = value;
+}
+
+///
+
+s8 get_skybox(void) {
     return gReadOnlyBackground;
 }
 
@@ -608,7 +636,7 @@ bool course_is_main_course(u16 courseNum) {
 
 ///
 
-s16 get_ttc_speed_setting() {
+s16 get_ttc_speed_setting(void) {
     return gTTCSpeedSetting;
 }
 
@@ -618,8 +646,22 @@ void set_ttc_speed_setting(s16 speed) {
 
 ///
 
-u32 get_time(void) {
+s64 get_time(void) {
     return time(NULL);
+}
+
+struct DateTime* get_date_and_time(void) {
+    time_t currentTime;
+    time(&currentTime);
+    struct tm *lt = localtime(&currentTime);
+
+    sDateTime.year = lt->tm_year;
+    sDateTime.month = lt->tm_mon;
+    sDateTime.day = lt->tm_mday;
+    sDateTime.hour = lt->tm_hour;
+    sDateTime.minute = lt->tm_min;
+    sDateTime.second = lt->tm_sec;
+    return &sDateTime;
 }
 
 ///

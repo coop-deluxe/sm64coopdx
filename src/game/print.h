@@ -11,7 +11,7 @@
 #define GLYPH_SPACE           -1
 #define GLYPH_U               30
 #define GLYPH_EXCLAMATION_PNT 36
-#define GLYPH_HASH            37
+#define GLYPH_HASHTAG         37
 #define GLYPH_QUESTION_MARK   38
 #define GLYPH_AMPERSAND       39
 #define GLYPH_PERCENT         40

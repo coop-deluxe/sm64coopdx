@@ -1,9 +1,10 @@
-#include "mod_storage.cpp.h"
+#include "mod_storage.h"
 
 #include <iostream>
 #include <fstream>
 #include <string>
 #include "pc/mini.h"
+#include "pc/interop.h"
 
 extern "C" {
 #include "pc/platform.h"
@@ -41,7 +42,7 @@ void strdelete(char string[], char substr[]) {
     string[i] = '\0';
 }
 
-bool Char_Valid(char* buffer) {
+bool char_valid(char* buffer) {
     if (buffer[0] == '\0') { return false; }
     while (*buffer != '\0') {
         if ((*buffer >= 'a' && *buffer <= 'z') || (*buffer >= 'A' && *buffer <= 'Z') || (*buffer >= '0' && *buffer <= '9') || *buffer == '_' || *buffer == '.' || *buffer == '-') {
@@ -53,24 +54,24 @@ bool Char_Valid(char* buffer) {
     return true;
 }
 
-void Mod_Storage_Get_Filename(char* dest) {
-    const char *path = sys_user_path(); // get base sm64ex-coop appdata dir
+void mod_storage_get_filename(char* dest) {
+    const char* path = sys_user_path(); // get user path
     snprintf(dest, SYS_MAX_PATH - 1, "%s/sav/%s", path, gLuaActiveMod->relativePath); // append sav folder
     strdelete(dest, (char *)".lua"); // delete ".lua" from sav name
     strcat(dest, SAVE_EXTENSION); // append SAVE_EXTENSION
     normalize_path(dest); // fix any out of place slashes
 }
 
-bool Mod_Storage_Save(const char *key, const char *value) {
+C_FUNC bool mod_storage_save(const char* key, const char* value) {
     if (strlen(key) > MAX_KEY_VALUE_LENGTH || strlen(value) > MAX_KEY_VALUE_LENGTH) {
         return false;
     }
-    if (!Char_Valid((char *)key) || !Char_Valid((char *)value)) {
+    if (!char_valid((char *)key) || !char_valid((char *)value)) {
         return false;
     }
 
     char filename[SYS_MAX_PATH] = {0};
-    Mod_Storage_Get_Filename(filename);
+    mod_storage_get_filename(filename);
 
     // ensure savPath exists
     char savPath[SYS_MAX_PATH] = { 0 };
@@ -90,30 +91,29 @@ bool Mod_Storage_Save(const char *key, const char *value) {
     ini["storage"][key] = value;
 
     file.write(ini);
-
     file.generate(ini);
 
     return true;
 }
 
-bool Mod_Storage_Save_Number(const char* key, double value) {
-    return Mod_Storage_Save(key, std::to_string(value).c_str());
+C_FUNC bool mod_storage_save_number(const char* key, double value) {
+    return mod_storage_save(key, std::to_string(value).c_str());
 }
 
-bool Mod_Storage_Save_Bool(const char* key, bool value) {
-    return Mod_Storage_Save(key, value ? "true" : "false");
+C_FUNC bool mod_storage_save_bool(const char* key, bool value) {
+    return mod_storage_save(key, value ? "true" : "false");
 }
 
-const char *Mod_Storage_Load(const char *key) {
+C_FUNC const char* mod_storage_load(const char* key) {
     if (strlen(key) > MAX_KEY_VALUE_LENGTH) {
         return NULL;
     }
-    if (!Char_Valid((char *)key)) {
+    if (!char_valid((char *)key)) {
         return NULL;
     }
 
     char filename[SYS_MAX_PATH] = {0};
-    Mod_Storage_Get_Filename(filename);
+    mod_storage_get_filename(filename);
 
     if (!path_exists(filename)) {
         return NULL;
@@ -126,23 +126,51 @@ const char *Mod_Storage_Load(const char *key) {
     return const_cast<char*>(ini["storage"][key].c_str());
 }
 
-double Mod_Storage_Load_Number(const char *key) {
-    const char *value = Mod_Storage_Load(key);
+C_FUNC double mod_storage_load_number(const char* key) {
+    const char* value = mod_storage_load(key);
     if (value == NULL) { return 0; }
 
     return std::strtod(value, nullptr);
 }
 
-bool Mod_Storage_Load_Bool(const char *key) {
-    const char *value = Mod_Storage_Load(key);
+C_FUNC bool mod_storage_load_bool(const char* key) {
+    const char* value = mod_storage_load(key);
     if (value == NULL) { return false; }
 
     return !strcmp(value, "true");
 }
 
-bool Mod_Storage_Clear(void) {
+C_FUNC bool mod_storage_remove(const char* key) {
+    if (strlen(key) > MAX_KEY_VALUE_LENGTH) {
+        return false;
+    }
+    if (!char_valid((char *)key)) {
+        return false;
+    }
+
     char filename[SYS_MAX_PATH] = {0};
-    Mod_Storage_Get_Filename(filename);
+    mod_storage_get_filename(filename);
+
+    if (!path_exists(filename)) {
+        return false;
+    }
+
+    mINI::INIFile file(filename);
+    mINI::INIStructure ini;
+    file.read(ini);
+
+    if (ini["storage"].remove(key)) {
+        file.write(ini);
+        file.generate(ini);
+        return true;
+    }
+
+    return false;
+}
+
+C_FUNC bool mod_storage_clear(void) {
+    char filename[SYS_MAX_PATH] = {0};
+    mod_storage_get_filename(filename);
 
     if (!path_exists(filename)) {
         return false;
@@ -159,7 +187,6 @@ bool Mod_Storage_Clear(void) {
     ini["storage"].clear();
 
     file.write(ini);
-
     file.generate(ini);
 
     return true;

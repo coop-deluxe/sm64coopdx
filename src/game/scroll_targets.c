@@ -108,7 +108,7 @@ void add_vtx_scroll_target(u32 id, Vtx *vtx, u32 size) {
  * and
  *     add_vtx_scroll_targets(id, vtx, size)
  */
-void free_vtx_scroll_targets() {
+void free_vtx_scroll_targets(void) {
     struct ScrollTarget* scroll = sScrollTargets;
     struct ScrollTarget* nextScroll;
 

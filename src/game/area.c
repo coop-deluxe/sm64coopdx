@@ -27,6 +27,8 @@
 #include "pc/lua/smlua_hooks.h"
 #include "pc/djui/djui.h"
 #include "pc/djui/djui_panel_pause.h"
+#include "pc/pc_main.h"
+#include "pc/nametags.h"
 
 struct SpawnInfo gPlayerSpawnInfos[MAX_PLAYERS];
 struct Area gAreaData[MAX_AREAS];
@@ -442,11 +444,16 @@ void render_game(void) {
         gDPSetScissor(gDisplayListHead++, G_SC_NON_INTERLACE, 0, BORDER_HEIGHT, SCREEN_WIDTH,
                       SCREEN_HEIGHT - BORDER_HEIGHT);
 
-        if (!gDjuiDisabled && gDjuiRenderBehindHud) {
-            djui_reset_hud_params();
+        if (!gDjuiDisabled && !gDjuiInMainMenu) {
             create_dl_ortho_matrix();
             djui_gfx_displaylist_begin();
-            smlua_call_event_hooks_with_reset_func(HOOK_ON_HUD_RENDER, djui_reset_hud_params);
+            if (!gCoopCompatibility && gServerSettings.nametags) {
+                nametags_render();
+            }
+            if (gDjuiRenderBehindHud) {
+                djui_reset_hud_params();
+                smlua_call_event_hooks_with_reset_func(HOOK_ON_HUD_RENDER, djui_reset_hud_params);
+            }
             djui_gfx_displaylist_end();
         }
         render_hud();

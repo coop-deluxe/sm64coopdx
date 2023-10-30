@@ -22,6 +22,8 @@
 - [Cutscene](#Cutscene)
 - [CutsceneSplinePoint](#CutsceneSplinePoint)
 - [CutsceneVariable](#CutsceneVariable)
+- [DateTime](#DateTime)
+- [DjuiColor](#DjuiColor)
 - [ExclamationBoxContents](#ExclamationBoxContents)
 - [FloorGeometry](#FloorGeometry)
 - [GlobalObjectAnimations](#GlobalObjectAnimations)
@@ -31,6 +33,7 @@
 - [GraphNodeObject](#GraphNodeObject)
 - [GraphNode_802A45E4](#GraphNode_802A45E4)
 - [HandheldShakePoint](#HandheldShakePoint)
+- [HudUtilsRotation](#HudUtilsRotation)
 - [InstantWarp](#InstantWarp)
 - [LakituState](#LakituState)
 - [LevelValues](#LevelValues)
@@ -42,6 +45,7 @@
 - [Mod](#Mod)
 - [ModFile](#ModFile)
 - [ModeTransitionInfo](#ModeTransitionInfo)
+- [NametagsSettings](#NametagsSettings)
 - [NetworkPlayer](#NetworkPlayer)
 - [Object](#Object)
 - [ObjectHitbox](#ObjectHitbox)
@@ -810,6 +814,34 @@
 
 <br />
 
+## [DateTime](#DateTime)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| day | `integer` |  |
+| hour | `integer` |  |
+| minute | `integer` |  |
+| month | `integer` |  |
+| second | `integer` |  |
+| year | `integer` |  |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [DjuiColor](#DjuiColor)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| a | `integer` |  |
+| b | `integer` |  |
+| g | `integer` |  |
+| r | `integer` |  |
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [ExclamationBoxContents](#ExclamationBoxContents)
 
 | Field | Type | Access |
@@ -1078,7 +1110,7 @@
 | sharedChild | [GraphNode](structs.md#GraphNode) | read-only |
 | skipInViewCheck | `boolean` |  |
 | skipInterpolationTimestamp | `integer` | read-only |
-| throwMatrix | `Pointer` <`Mat4`> | read-only |
+| throwMatrix | `Pointer` <`Mat4`> |  |
 | throwMatrixPrev | `Pointer` <`Mat4`> | read-only |
 | unk4C | [SpawnInfo](structs.md#SpawnInfo) | read-only |
 
@@ -1108,6 +1140,18 @@
 | index | `integer` |  |
 | pad | `integer` |  |
 | point | [Vec3s](structs.md#Vec3s) | read-only |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [HudUtilsRotation](#HudUtilsRotation)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| pivotX | `number` |  |
+| pivotY | `number` |  |
+| rotation | `number` |  |
 
 [:arrow_up_small:](#)
 
@@ -1173,10 +1217,10 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
-| bubbleOnDeathBarrierInCapStages | `boolean` |  |
+| bubbleOnDeathBarrierInCapStages | `integer` |  |
 | cellHeightLimit | `integer` |  |
 | coinsRequiredForCoinStar | `integer` |  |
-| disableActs | `boolean` |  |
+| disableActs | `integer` |  |
 | entryLevel | [enum LevelNum](constants.md#enum-LevelNum) |  |
 | exitCastleArea | `integer` |  |
 | exitCastleLevel | [enum LevelNum](constants.md#enum-LevelNum) |  |
@@ -1199,10 +1243,10 @@
 | maxLives | `integer` |  |
 | metalCapDuration | `integer` |  |
 | metalCapDurationCotmc | `integer` |  |
-| metalCapSequence | `integer` |  |
+| metalCapSequence | [enum SeqId](constants.md#enum-SeqId) |  |
 | mushroom1UpHeal | `integer` |  |
 | numCoinsToLife | `integer` |  |
-| pauseExitAnywhere | `boolean` |  |
+| pauseExitAnywhere | `integer` |  |
 | previewBlueCoins | `integer` |  |
 | pssSlideStarIndex | `integer` |  |
 | pssSlideStarTime | `integer` |  |
@@ -1213,13 +1257,13 @@
 | starPositions | [StarPositions](structs.md#StarPositions) | read-only |
 | vanishCapDuration | `integer` |  |
 | vanishCapDurationVcutm | `integer` |  |
-| vanishCapSequence | `integer` |  |
+| vanishCapSequence | [enum SeqId](constants.md#enum-SeqId) |  |
 | visibleSecrets | `integer` |  |
 | wdwWaterLevelSpeed | `number` |  |
 | wingCapDuration | `integer` |  |
 | wingCapDurationTotwc | `integer` |  |
 | wingCapLookUpReq | `integer` |  |
-| wingCapSequence | `integer` |  |
+| wingCapSequence | [enum SeqId](constants.md#enum-SeqId) |  |
 
 [:arrow_up_small:](#)
 
@@ -1265,6 +1309,9 @@
 | lightB | `integer` |  |
 | lightG | `integer` |  |
 | lightR | `integer` |  |
+| lightingDirX | `number` |  |
+| lightingDirY | `number` |  |
+| lightingDirZ | `number` |  |
 | modelState | `integer` |  |
 | punchState | `integer` |  |
 | shadeB | `integer` |  |
@@ -1409,6 +1456,17 @@
 | newMode | `integer` |  |
 | transitionEnd | [LinearTransitionPoint](structs.md#LinearTransitionPoint) | read-only |
 | transitionStart | [LinearTransitionPoint](structs.md#LinearTransitionPoint) | read-only |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [NametagsSettings](#NametagsSettings)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| showHealth | `boolean` |  |
+| showSelfTag | `boolean` |  |
 
 [:arrow_up_small:](#)
 
@@ -2441,6 +2499,7 @@
 | enablePlayersInLevelDisplay | `integer` |  |
 | headlessServer | `integer` |  |
 | maxPlayers | `integer` |  |
+| nametags | `integer` |  |
 | playerInteractions | [enum PlayerInteractions](constants.md#enum-PlayerInteractions) |  |
 | playerKnockbackStrength | `integer` |  |
 | skipIntro | `integer` |  |

@@ -459,7 +459,7 @@ static void rematrix(Mtx * mat, f32 tranfs[13]) {
     rotMat[3][3] = 1.0f;
 
     // apply the rotation
-    // this is technically abuse of Mat4 vs. Mtx, but Coop doesn't target N64 anyway
+    // this is technically abuse of Mat4 vs. Mtx, but coop doesn't target N64 anyway
     mtxf_mul(mat->m, mat->m, rotMat);
 
     // translate

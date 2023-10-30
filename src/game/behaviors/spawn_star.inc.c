@@ -328,7 +328,7 @@ void bhv_hidden_red_coin_star_loop(void) {
             break;
 
         case 1:
-            if (o->oTimer > 2) {
+            if (o->oTimer >= 3) {
                 struct Object *obj = spawn_red_coin_cutscene_star(o->oPosX, o->oPosY, o->oPosZ);
                 if (obj != NULL) {
                     if (o->oHiddenStarLastInteractedObject == &gMarioStates[0]) {

@@ -628,6 +628,11 @@ void smlua_cobject_init_globals(void) {
     }
 
     {
+        smlua_push_object(L, LOT_NAMETAGSSETTINGS, &gNametagsSettings);
+        lua_setglobal(L, "gNametagsSettings");
+    }
+
+    {
         smlua_push_object(L, LOT_LEVELVALUES, &gLevelValues);
         lua_setglobal(L, "gLevelValues");
     }

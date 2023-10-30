@@ -20,9 +20,11 @@
 #undef SOUND_MARIO_LETS_A_GO
 #undef SOUND_LUIGI_LETS_A_GO
 #undef SOUND_WARIO_LETS_A_GO
+#undef SOUND_TOAD_LETS_A_GO
 #undef SOUND_MARIO_OKEY_DOKEY
 #undef SOUND_LUIGI_OKEY_DOKEY
 #undef SOUND_WARIO_OKEY_DOKEY
+#undef SOUND_TOAD_OKEY_DOKEY
 
 /////////////////
 // Bass sounds //
@@ -40,6 +42,10 @@ DECL_CHAR_BASS_SOUND_RAW(SOUND_WARIO_LETS_A_GO) {
 #include "sound/samples/sfx_custom_wario/1A.table.inc.c"
 };
 
+DECL_CHAR_BASS_SOUND_RAW(SOUND_TOAD_LETS_A_GO) {
+#include "sound/samples/sfx_custom_toad/1A.table.inc.c"
+};
+
 DECL_CHAR_BASS_SOUND_RAW(SOUND_MARIO_OKEY_DOKEY) {
 #include "sound/samples/sfx_mario_peach/0B_mario_okey_dokey.table.inc.c"
 };
@@ -52,6 +58,10 @@ DECL_CHAR_BASS_SOUND_RAW(SOUND_WARIO_OKEY_DOKEY) {
 #include "sound/samples/sfx_custom_wario_peach/0B.table.inc.c"
 };
 
+DECL_CHAR_BASS_SOUND_RAW(SOUND_TOAD_OKEY_DOKEY) {
+#include "sound/samples/sfx_custom_toad_peach/0B.table.inc.c"
+};
+
 ///////////////////////
 // Bass sounds table //
 ///////////////////////
@@ -61,9 +71,11 @@ static CharacterBassSound sCharacterBassSounds[] = {
     DECL_CHAR_BASS_SOUND(SOUND_MARIO_LETS_A_GO),
     DECL_CHAR_BASS_SOUND(SOUND_LUIGI_LETS_A_GO),
     DECL_CHAR_BASS_SOUND(SOUND_WARIO_LETS_A_GO),
+    DECL_CHAR_BASS_SOUND(SOUND_TOAD_LETS_A_GO),
     DECL_CHAR_BASS_SOUND(SOUND_MARIO_OKEY_DOKEY),
     DECL_CHAR_BASS_SOUND(SOUND_LUIGI_OKEY_DOKEY),
     DECL_CHAR_BASS_SOUND(SOUND_WARIO_OKEY_DOKEY),
+    DECL_CHAR_BASS_SOUND(SOUND_TOAD_OKEY_DOKEY),
     { 0, 0, NULL, CHAR_BASS_SOUND_NOT_LOADED, 0.f },
 };
 

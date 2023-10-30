@@ -109,7 +109,7 @@ static struct CustomAnimation *get_custom_animation_node(const char *name) {
     return NULL;
 }
 
-void smlua_anim_util_reset() {
+void smlua_anim_util_reset(void) {
     for (struct CustomAnimation *node = sCustomAnimationHead; node;) {
         struct CustomAnimation *next = node->next;
         if (node->name) {

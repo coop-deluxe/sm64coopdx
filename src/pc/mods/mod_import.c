@@ -11,7 +11,7 @@
 
 static bool mod_import_lua(char* src) {
     char dst[SYS_MAX_PATH] = { 0 };
-    if (!concat_path(dst, (char*)fs_get_write_path(MOD_DIRECTORY), path_basename(src))) {
+    if (!concat_path(dst, (char*)MOD_DIRECTORY, path_basename(src))) {
         LOG_ERROR("Failed to concat path for lua mod import");
         return false;
     }
@@ -93,13 +93,13 @@ static bool mod_import_zip(char* path, bool* isLua, bool* isDynos) {
     char dstDirectory[SYS_MAX_PATH] = { 0 };
     char dst[SYS_MAX_PATH] = { 0 };
     if (*isLua) {
-        snprintf(dstDirectory, SYS_MAX_PATH, "%s", (char*)fs_get_write_path(MOD_DIRECTORY));
+        snprintf(dstDirectory, SYS_MAX_PATH, "%s", (char*)MOD_DIRECTORY);
     } else if (*isDynos) {
-        char* dynosPath = (char*)fs_get_write_path(DYNOS_RES_FOLDER);
+        char* dynosPath = (char*)DYNOS_RES_FOLDER;
         if (!fs_sys_dir_exists(dynosPath)) {
             fs_sys_mkdir(dynosPath);
         }
-        snprintf(dstDirectory, SYS_MAX_PATH, "%s", (char*)fs_get_write_path(DYNOS_PACKS_FOLDER));
+        snprintf(dstDirectory, SYS_MAX_PATH, "%s", (char*)DYNOS_PACKS_FOLDER);
     } else {
         LOG_ERROR("Could not figure out what type of mod this is");
         mz_zip_reader_end(&zip_archive);

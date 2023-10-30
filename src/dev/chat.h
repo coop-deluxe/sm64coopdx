@@ -1,4 +1,5 @@
 #pragma once
+#include <stdbool.h>
 
 #ifdef DEVELOPMENT
 bool exec_dev_chat_command(char* command);

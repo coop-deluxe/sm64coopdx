@@ -1,26 +1,37 @@
 #include "djui.h"
+#include "pc/configfile.h"
 
 static void djui_button_update_style(struct DjuiBase* base) {
     struct DjuiButton* button = (struct DjuiButton*)base;
+    const struct DjuiTheme* theme = gDjuiThemes[configDjuiTheme];
+
     if (!button->base.enabled) {
-        u8 borderBrightness = button->style ? 50 : 75;
-        u8 rectBrightness   = button->style ? 75 : 111;
-        djui_base_set_border_color(base, borderBrightness, borderBrightness, borderBrightness, 255);
-        djui_base_set_color(&button->rect->base, rectBrightness, rectBrightness, rectBrightness, 255);
+        struct DjuiColor bc = button->style ? theme->interactables.darkBorderColor : theme->interactables.defaultBorderColor;
+        struct DjuiColor rc = button->style ? theme->interactables.darkRectColor : theme->interactables.defaultRectColor;
+        
+        djui_base_set_border_color(base, bc.r, bc.g, bc.b, bc.a);
+        djui_base_set_color(&button->rect->base, rc.r, rc.g, rc.b, rc.a);
         djui_base_set_location(&button->text->base, 0.0f, 0.0f);
     } else if (gDjuiCursorDownOn == base) {
-        djui_base_set_border_color(base, 0, 84, 153, 255);
-        djui_base_set_color(&button->rect->base, 204, 228, 247, 255);
+        struct DjuiColor bc = theme->interactables.cursorDownBorderColor;
+        struct DjuiColor rc = theme->interactables.cursorDownRectColor;
+        
+        djui_base_set_border_color(base, bc.r, bc.g, bc.b, bc.a);
+        djui_base_set_color(&button->rect->base, rc.r, rc.g, rc.b, rc.a);
         djui_base_set_location(&button->text->base, 1.0f, 1.0f);
     } else if (gDjuiHovered == base) {
-        djui_base_set_border_color(base, 0, 120, 215, 255);
-        djui_base_set_color(&button->rect->base, 229, 241, 251, 255);
+        struct DjuiColor bc = theme->interactables.hoveredBorderColor;
+        struct DjuiColor rc = theme->interactables.hoveredRectColor;
+        
+        djui_base_set_border_color(base, bc.r, bc.g, bc.b, bc.a);
+        djui_base_set_color(&button->rect->base, rc.r, rc.g, rc.b, rc.a);
         djui_base_set_location(&button->text->base, -1.0f, -1.0f);
     } else {
-        u8 borderBrightness = button->style ? 100 : 150;
-        u8 rectBrightness   = button->style ? 150 : 222;
-        djui_base_set_border_color(base, borderBrightness, borderBrightness, borderBrightness, 255);
-        djui_base_set_color(&button->rect->base, rectBrightness, rectBrightness, rectBrightness, 255);
+        struct DjuiColor bc = button->style ? theme->interactables.darkBorderColor : theme->interactables.defaultBorderColor;
+        struct DjuiColor rc   = button->style ? theme->interactables.darkRectColor : theme->interactables.defaultRectColor;
+        
+        djui_base_set_border_color(base, bc.r, bc.g, bc.b, bc.a);
+        djui_base_set_color(&button->rect->base, rc.r, rc.g, rc.b, rc.a);
         djui_base_set_location(&button->text->base, 0.0f, 0.0f);
     }
 }
@@ -40,7 +51,7 @@ struct DjuiButton* djui_button_create(struct DjuiBase* parent, const char* messa
     struct DjuiBase* base     = &button->base;
 
     djui_base_init(parent, base, NULL, djui_button_destroy);
-    djui_base_set_size(base, 200, 64);
+    djui_base_set_size(base, 200, gDjuiThemes[configDjuiTheme]->panels.center ? 50 : 64);
     djui_base_set_border_width(base, 2);
     djui_interactable_create(base, djui_button_update_style);
     button->style = 0;
@@ -51,15 +62,17 @@ struct DjuiButton* djui_button_create(struct DjuiBase* parent, const char* messa
     button->rect = rect;
 
     struct DjuiText* text = djui_text_create(&rect->base, message);
+    struct DjuiColor color = gDjuiThemes[configDjuiTheme]->interactables.textColor;
+    
     djui_base_set_size_type(&text->base, DJUI_SVT_RELATIVE, DJUI_SVT_RELATIVE);
     djui_base_set_size(&text->base, 1.0f, 1.0f);
-    djui_base_set_color(&text->base, 11, 11, 11, 255);
+    djui_base_set_color(&text->base, color.r, color.g, color.b, color.a);
     djui_text_set_alignment(text, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
     djui_text_set_drop_shadow(text, 64, 64, 64, 100);
     button->text = text;
 
     djui_base_set_size_type(base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-    djui_base_set_size(base, 1.0f, 64);
+    djui_base_set_size(base, 1.0f, gDjuiThemes[configDjuiTheme]->panels.center ? 50 : 64);
     djui_interactable_hook_click(base, on_click);
     button->style = style;
     djui_button_update_style(base);

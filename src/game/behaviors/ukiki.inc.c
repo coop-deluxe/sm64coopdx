@@ -367,8 +367,7 @@ void ukiki_act_go_to_cage(void) {
     s16 yawToCage = 0;
     if (cur_obj_nearest_object_with_behavior(bhvUkikiCageChild) != NULL) {
         obj = cur_obj_nearest_object_with_behavior(bhvUkikiCageChild);
-    }
-    else {
+    } else {
         obj_mark_for_deletion(o);
         return;
     }

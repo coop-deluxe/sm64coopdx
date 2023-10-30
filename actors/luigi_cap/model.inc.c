@@ -18,13 +18,14 @@ static const Lights1 luigi_cap_seg3_lights_0301CF38 = gdSPDefLights1(
     0x00, 0xff, 0x00, 0x28, 0x28, 0x28
 );
 
+#include "actors/mario/mario_externs.h"
 #include "actors/mario_cap/mario_cap_externs.h"
 #define luigi_cap_seg3_texture_0301CF50 mario_cap_seg3_texture_0301CF50
 #define luigi_cap_seg3_texture_0301E750 mario_cap_seg3_texture_0301E750
 #define luigi_cap_seg3_texture_0301F750 mario_cap_seg3_texture_0301F750
 #define luigi_cap_seg3_texture_03020750 mario_cap_seg3_texture_03020750
 #define luigi_cap_seg3_texture_03021750 mario_cap_seg3_texture_03021750
-#define luigi_cap_texture_cap_inside    mario_cap_texture_cap_inside
+#define luigi_cap_texture_cap_inside    mario_texture_cap_inside
 
 // 0x0301DF50
 ALIGNED8 const Texture luigi_cap_seg3_texture_0301DF50[] = {
@@ -227,7 +228,7 @@ const Gfx luigi_cap_seg3_dl_03022EA8[] = {
 // 0x03022ED8 - 0x03022F20
 const Gfx luigi_cap_seg3_dl_03022ED8[] = {
     gsDPPipeSync(),
-    gsDPSetCombineMode(G_CC_DECALRGBA, G_CC_DECALRGBA),
+    gsDPSetCombineMode(G_CC_MODULATERGBA, G_CC_MODULATERGBA),
     gsSPClearGeometryMode(G_LIGHTING | G_CULL_BACK),
     gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 0, 0, G_TX_LOADTILE, 0, G_TX_WRAP | G_TX_NOMIRROR, G_TX_NOMASK, G_TX_NOLOD, G_TX_WRAP | G_TX_NOMIRROR, G_TX_NOMASK, G_TX_NOLOD),
     gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON),

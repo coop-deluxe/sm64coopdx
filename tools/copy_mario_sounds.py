@@ -5,10 +5,12 @@ copy_directories = {
     'sound/samples/sfx_mario/': [
         'sound/samples/sfx_custom_luigi/',
         'sound/samples/sfx_custom_wario/',
+        'sound/samples/sfx_custom_toad',
     ],
     'sound/samples/sfx_mario_peach/': [
         'sound/samples/sfx_custom_luigi_peach/',
         'sound/samples/sfx_custom_wario_peach/',
+        'sound/samples/sfx_custom_toad_peach',
     ],
 }
 

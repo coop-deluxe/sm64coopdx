@@ -22,8 +22,10 @@
 
 
 static enum HudUtilsResolution sResolution = RESOLUTION_DJUI;
+static enum HudUtilsFilter sFilter = FILTER_NEAREST;
 static enum DjuiFontType sFont = FONT_NORMAL;
-static struct { f32 rotation; f32 pivotX; f32 pivotY; } sRotation = { 0, 0, 0 };
+static struct HudUtilsRotation sRotation = { 0, 0, 0 };
+static struct DjuiColor sColor = { 255, 255, 255, 255 };
 
 f32 gDjuiHudUtilsZ = 0;
 u8 gDjuiHudLockMouse = false;
@@ -140,9 +142,26 @@ void patch_djui_hud(f32 delta) {
  // others //
 ////////////
 
+u8 djui_hud_get_resolution(void) {
+    return sResolution;
+}
+
 void djui_hud_set_resolution(enum HudUtilsResolution resolutionType) {
     if (resolutionType >= RESOLUTION_COUNT) { return; }
     sResolution = resolutionType;
+}
+
+u8 djui_hud_get_filter(void) {
+    return sFilter;
+}
+
+void djui_hud_set_filter(enum HudUtilsFilter filterType) {
+    if (filterType >= FILTER_COUNT) { return; }
+    sFilter = filterType;
+}
+
+u8 djui_hud_get_font(void) {
+    return sFont;
 }
 
 void djui_hud_set_font(enum DjuiFontType fontType) {
@@ -150,16 +169,32 @@ void djui_hud_set_font(enum DjuiFontType fontType) {
     sFont = fontType;
 }
 
+struct DjuiColor* djui_hud_get_color(void) {
+    return &sColor;
+}
+
 void djui_hud_set_color(u8 r, u8 g, u8 b, u8 a) {
-    gDPSetEnvColor(gDisplayListHead++, r, g, b, a);
+    sColor.r = r;
+    sColor.g = g;
+    sColor.b = b;
+    sColor.a = a;
     sColorAltered = TRUE;
+    gDPSetEnvColor(gDisplayListHead++, r, g, b, a);
 }
 
 void djui_hud_reset_color(void) {
     if (sColorAltered) {
+        sColor.r = 255;
+        sColor.g = 255;
+        sColor.b = 255;
+        sColor.a = 255;
         sColorAltered = FALSE;
         gDPSetEnvColor(gDisplayListHead++, 255, 255, 255, 255);
     }
+}
+
+struct HudUtilsRotation* djui_hud_get_rotation(void) {
+    return &sRotation;
 }
 
 void djui_hud_set_rotation(s16 rotation, f32 pivotX, f32 pivotY) {
@@ -372,7 +407,7 @@ void djui_hud_render_texture_raw(const u8* texture, u32 bitSize, u32 width, u32 
     create_dl_scale_matrix(DJUI_MTX_NOPUSH, width * translatedW, height * translatedH, 1.0f);
 
     // render
-    djui_gfx_render_texture(texture, width, height, bitSize);
+    djui_gfx_render_texture(texture, width, height, bitSize, sFilter);
 
     // pop
     gSPPopMatrix(gDisplayListHead++, G_MTX_MODELVIEW);
@@ -407,7 +442,7 @@ void djui_hud_render_texture_tile_raw(const u8* texture, u32 bitSize, u32 width,
     create_dl_scale_matrix(DJUI_MTX_NOPUSH, width * translatedW, height * translatedH, 1.0f);
 
     // render
-    djui_gfx_render_texture_tile(texture, width, height, bitSize, tileX, tileY, tileW, tileH);
+    djui_gfx_render_texture_tile(texture, width, height, bitSize, tileX, tileY, tileW, tileH, sFilter);
 
     // pop
     gSPPopMatrix(gDisplayListHead++, G_MTX_MODELVIEW);

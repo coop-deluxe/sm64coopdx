@@ -364,7 +364,7 @@ bool sync_object_should_own(u32 syncId) {
     return true;
 }
 
-u32 sync_object_get_available_local_id() {
+u32 sync_object_get_available_local_id(void) {
     u32 startId = (gNetworkPlayers[0].globalIndex + 1) * SYNC_ID_BLOCK_SIZE;
     u32 endId = startId + SYNC_ID_BLOCK_SIZE;
     for (u32 id = startId; id < endId; id++) {

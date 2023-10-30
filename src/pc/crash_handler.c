@@ -180,7 +180,7 @@ static struct {
     pText++;                                                            \
 }
 
-void render_create_dl_ortho_matrix() {
+void render_create_dl_ortho_matrix(void) {
     static const Mtx sIdentMatrix = { {
         { 1.f, 0.f, 0.f, 0.f },
         { 0.f, 1.f, 0.f, 0.f },
@@ -199,7 +199,7 @@ void render_create_dl_ortho_matrix() {
     gSPMatrix(gDisplayListHead++, &sOrthoMatrix, G_MTX_PROJECTION | G_MTX_MUL | G_MTX_NOPUSH);
 }
 
-static void crash_handler_produce_one_frame() {
+static void crash_handler_produce_one_frame(void) {
     extern u8 gRenderingInterpolated;
     gRenderingInterpolated = false;
 
@@ -665,7 +665,7 @@ static void crash_handler(const int signalNum, siginfo_t *info, ucontext_t *cont
     exit(0);
 }
 
-AT_STARTUP static void init_crash_handler() {
+AT_STARTUP static void init_crash_handler(void) {
 #ifdef _WIN32
     // Windows
     SetUnhandledExceptionFilter(crash_handler);

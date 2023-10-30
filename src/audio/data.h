@@ -42,7 +42,7 @@ extern s16 *gWaveSamples[4];
 #if defined(VERSION_EU) || defined(VERSION_SH)
 extern u8 euUnknownData_8030194c[4];
 #ifdef VERSION_EU
-extern u16 gHeadsetPanQuantization[0x12];
+extern u16 gHeadsetPanQuantization[SOUND_BANK_COUNT];
 #else
 extern u16 gHeadsetPanQuantization[0x40];
 #endif
@@ -50,7 +50,7 @@ extern s16 euUnknownData_80301950[64];
 extern struct NoteSubEu gZeroNoteSub;
 extern struct NoteSubEu gDefaultNoteSub;
 #else
-extern u16 gHeadsetPanQuantization[12];
+extern u16 gHeadsetPanQuantization[SOUND_BANK_COUNT];
 #endif
 extern f32 gHeadsetPanVolume[128];
 extern f32 gStereoPanVolume[128];

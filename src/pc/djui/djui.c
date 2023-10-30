@@ -101,6 +101,7 @@ void djui_reset_hud_params(void) {
     djui_hud_set_font(FONT_NORMAL);
     djui_hud_set_rotation(0, 0, 0);
     djui_hud_reset_color();
+    djui_hud_set_filter(FILTER_NEAREST);
 }
 
 void djui_render(void) {
@@ -135,6 +136,7 @@ void djui_render(void) {
     }
 
     djui_cursor_update();
+    djui_base_render(&gDjuiConsole->base);
     djui_interactable_update();
     djui_gfx_displaylist_end();
 }

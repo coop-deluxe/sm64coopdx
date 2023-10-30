@@ -332,7 +332,7 @@ void patch_mtx_interpolated(f32 delta) {
 /**
  * Increments the matrix stack index and sets the matrixs at the new index.
  */
-static u8 increment_mat_stack() {
+static u8 increment_mat_stack(void) {
     Mtx *mtx = alloc_display_list(sizeof(*mtx));
     Mtx *mtxPrev = alloc_display_list(sizeof(*mtxPrev));
     if (mtx == NULL || mtxPrev == NULL) {
@@ -1153,7 +1153,7 @@ static s32 obj_is_in_view(struct GraphNodeObject *node, Mat4 matrix) {
     // visibly pop in or out at the edge of the screen.
     //
     // Half of the fov in in-game angle units instead of degrees.
-    s16 halfFov = (gCurGraphNodeCamFrustum->fov / 2.0f + 1.0f) * 32768.0f / 180.0f + 0.5f;
+    s16 halfFov = (gOverrideFOV != 0 ? gOverrideFOV : gCurGraphNodeCamFrustum->fov / 2.0f + 1.0f) * 32768.0f / 180.0f + 0.5f;
 
     f32 divisor = coss(halfFov);
     if (divisor == 0) { divisor = 1; }

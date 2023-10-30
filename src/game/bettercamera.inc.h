@@ -201,6 +201,23 @@ void newcam_init_settings(void) {
     newcam_toggle(camera_config_is_free_cam_enabled() || gDjuiInMainMenu);
 }
 
+void newcam_init_settings_override(bool override) {
+    newcam_sensitivityX = newcam_clamp(camera_config_get_x_sensitivity(), 1, 100) * 5;
+    newcam_sensitivityY = newcam_clamp(camera_config_get_y_sensitivity(), 1, 100) * 5;
+    newcam_aggression   = newcam_clamp(camera_config_get_aggression(), 0, 100);
+    newcam_panlevel     = newcam_clamp(camera_config_get_pan_level(), 0, 100);
+    newcam_invertX      = (s16)camera_config_is_x_inverted();
+    newcam_invertY      = (s16)camera_config_is_y_inverted();
+    newcam_mouse        = (u8)camera_config_is_mouse_look_enabled();
+    newcam_analogue     = (s16)camera_config_is_analog_cam_enabled();
+    newcam_degrade      = (f32)camera_config_get_deceleration();
+
+    // setup main menu camera
+    if (gDjuiInMainMenu) { newcam_tilt = 5; }
+
+    newcam_toggle(override);
+}
+
 /** Mathematic calculations. This stuffs so basic even *I* understand it lol
 Basically, it just returns a position based on angle */
 static s16 lengthdir_x(f32 length, s16 dir) {
@@ -275,7 +292,7 @@ static void newcam_rotate_button(void) {
         //8 directional camera rotation input for buttons.
         if ((gPlayer1Controller->buttonPressed & L_CBUTTONS) && newcam_analogue == 0) {
             #ifndef nosound
-            play_sound(SOUND_MENU_CAMERA_ZOOM_IN, gGlobalSoundSource);
+            play_sound(SOUND_MENU_CAMERA_TURN, gGlobalSoundSource);
             #endif
             if (newcam_modeflags & NC_FLAG_8D)
                 newcam_yaw_target = newcam_yaw_target+(ivrt(0)*0x2000);
@@ -284,7 +301,7 @@ static void newcam_rotate_button(void) {
             newcam_centering = 1;
         } else if ((gPlayer1Controller->buttonPressed & R_CBUTTONS) && newcam_analogue == 0) {
             #ifndef nosound
-            play_sound(SOUND_MENU_CAMERA_ZOOM_IN, gGlobalSoundSource);
+            play_sound(SOUND_MENU_CAMERA_TURN, gGlobalSoundSource);
             #endif
             if (newcam_modeflags & NC_FLAG_8D)
                 newcam_yaw_target = newcam_yaw_target-(ivrt(0)*0x2000);
@@ -292,7 +309,7 @@ static void newcam_rotate_button(void) {
                 newcam_yaw_target = newcam_yaw_target-(ivrt(0)*0x4000);
             newcam_centering = 1;
         }
-    } else  if (newcam_modeflags & NC_FLAG_XTURN) {
+    } else if (newcam_modeflags & NC_FLAG_XTURN) {
         //Standard camera movement
         if ((gPlayer1Controller->buttonDown & L_CBUTTONS) && newcam_analogue == 0) {
             newcam_yaw_acc = newcam_adjust_value(newcam_yaw_acc, -accel, -100);
@@ -326,7 +343,7 @@ static void newcam_rotate_button(void) {
             newcam_yaw_target = newcam_yaw+(ivrt(0)*0x3000);
             newcam_centering = 1;
             #ifndef nosound
-            play_sound(SOUND_MENU_CAMERA_ZOOM_IN, gGlobalSoundSource);
+            play_sound(SOUND_MENU_CAMERA_TURN, gGlobalSoundSource);
             #endif
         }
         newcam_framessincec[0] = 0;
@@ -336,8 +353,19 @@ static void newcam_rotate_button(void) {
             newcam_yaw_target = newcam_yaw-(ivrt(0)*0x3000);
             newcam_centering = 1;
             #ifndef nosound
+            play_sound(SOUND_MENU_CAMERA_TURN, gGlobalSoundSource);
+            #endif
+        }
+        newcam_framessincec[1] = 0;
+    }
+    if ((gPlayer1Controller->buttonPressed & U_CBUTTONS) && !(gPlayer1Controller->buttonPressed & (L_CBUTTONS | R_CBUTTONS | D_CBUTTONS)) && newcam_modeflags & NC_FLAG_YTURN && !(newcam_modeflags & NC_FLAG_8D) && newcam_analogue == 0) {
+        if (newcam_framessincec[1] < 3 && gMarioState->action & ACT_FLAG_ALLOW_FIRST_PERSON) {
+            gCameraMovementFlags |= CAM_MOVE_C_UP_MODE;
+            #ifndef nosound
             play_sound(SOUND_MENU_CAMERA_ZOOM_IN, gGlobalSoundSource);
             #endif
+            newcam_init_settings();
+            return;
         }
         newcam_framessincec[1] = 0;
     }
@@ -355,7 +383,7 @@ static void newcam_rotate_button(void) {
                     newcam_cstick_down = 1;
                     newcam_centering = 1;
                     #ifndef nosound
-                    play_sound(SOUND_MENU_CAMERA_ZOOM_IN, gGlobalSoundSource);
+                    play_sound(SOUND_MENU_CAMERA_TURN, gGlobalSoundSource);
                     #endif
                     if (newcam_stick2[0] > 20) {
                         if (newcam_modeflags & NC_FLAG_8D)

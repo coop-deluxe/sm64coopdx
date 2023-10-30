@@ -17,6 +17,11 @@ static bool str_starts_with(const char* pre, char* str) {
 }
 
 bool exec_dev_chat_command(char* command) {
+    if (strcmp("/warp", command) == 0) {
+        djui_chat_message_create("Missing parameters: [LEVEL] [AREA] [ACT]");
+        return true;
+    }
+
     if (gNetworkSystem == &gNetworkSystemSocket && str_starts_with("/warp ", command)) {
         static const struct { const char *name; s32 num; } sLevelNumByName[] = {
 #undef STUB_LEVEL
@@ -103,8 +108,18 @@ bool exec_dev_chat_command(char* command) {
         return true;
     }
 
+    if (strcmp("/lua", command) == 0) {
+        djui_chat_message_create("Missing parameter: [LUA]");
+        return true;
+    }
+
     if (str_starts_with("/lua ", command)) {
         smlua_exec_str(&command[5]);
+        return true;
+    }
+
+    if (strcmp("/luaf", command) == 0) {
+        djui_chat_message_create("Missing parameter: [FILENAME]");
         return true;
     }
 

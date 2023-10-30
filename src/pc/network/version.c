@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "version.h"
 #include "types.h"
+#include "pc/pc_main.h"
 
 static char sVersionString[MAX_VERSION_LENGTH] = { 0 };
 static char sLocalVersionString[MAX_LOCAL_VERSION_LENGTH] = { 0 };
@@ -37,11 +38,21 @@ const char* get_version_local(void) {
 }
 
 const char* get_game_name(void) {
+    if (gCoopCompatibility) {
 #ifdef DEVELOPMENT
-    return "sm64ex-coop-dev";
+        return "sm64ex-coop-dev";
 #elif !defined(VERSION_US)
-    return "sm64ex-coop-intl";
+        return "sm64ex-coop-intl";
 #else
-    return "sm64ex-coop";
+        return "sm64ex-coop";
 #endif
+    } else {
+#ifdef DEVELOPMENT
+        return "sm64coopdx-dev";
+#elif !defined(VERSION_US)
+        return "sm64coopdx-intl";
+#else
+        return "sm64coopdx";
+#endif
+    }
 }

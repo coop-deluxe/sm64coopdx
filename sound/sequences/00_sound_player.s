@@ -20,9 +20,9 @@ seq_setmutescale 0
 seq_settempo 120
 
 .ifdef BITS_32
-  seq_initchannels_extended 0xb33f
+  seq_initchannels_extended 0xb33f, 0x0
 .else
-  seq_initchannels_extended 0xffffffffffffffff
+  seq_initchannels_extended 0xffffffffffffffff, 0xffffffffffffffff
 .endif
 
 # SOUND_BANK_ACTION
@@ -113,12 +113,23 @@ seq_startchannel_extended 61, .channel11
 seq_startchannel_extended 62, .channel11
 seq_startchannel_extended 63, .channel11
 
+# SOUND_BANK_TOAD_VOICE
+seq_startchannel_extended 64, .channel12
+seq_startchannel_extended 65, .channel12
+seq_startchannel_extended 66, .channel12
+seq_startchannel_extended 67, .channel12
+seq_startchannel_extended 68, .channel12
+seq_startchannel_extended 69, .channel12
+seq_startchannel_extended 70, .channel12
+seq_startchannel_extended 71, .channel12
+
 .seq_loop:
 seq_delay 20000
 seq_jump .seq_loop
 
 .include "seq_luigi.inc"
 .include "seq_wario.inc"
+.include "seq_toad.inc"
 
 .channel0:
 chan_largenoteson

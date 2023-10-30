@@ -9,6 +9,7 @@
 
 #include "djui_types.h"
 #include "djui_font.h"
+#include "djui_theme.h"
 #include "djui_gfx.h"
 #include "djui_base.h"
 #include "djui_interactable.h"

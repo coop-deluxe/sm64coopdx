@@ -45,7 +45,6 @@ struct LevelValues {
     u8 fixCollisionBugsFalseLedgeGrab;
     u8 fixCollisionBugsGroundPoundBonks;
     u8 fixCollisionBugsPickBestWall;
-    u8 wingCapLookUpReq;
     u8 fixVanishFloors;
     u8 hudCapTimer;
     u8 hudRedCoinsRadar;
@@ -58,10 +57,14 @@ struct LevelValues {
     u8 visibleSecrets;
     u8 showStarNumber;
     u8 extendedPauseDisplay;
+    u8 pauseExitAnywhere;
+    u8 disableActs;
+    u8 bubbleOnDeathBarrierInCapStages;
     enum LevelNum entryLevel;
     enum LevelNum exitCastleLevel;
     s16 exitCastleArea;
     u8 exitCastleWarpNode;
+    s16 wingCapLookUpReq;
     enum LevelNum skipCreditsAt;
     u16 pssSlideStarTime;
     u8 pssSlideStarIndex;
@@ -72,20 +75,17 @@ struct LevelValues {
     u16 wingCapDurationTotwc;
     u16 metalCapDurationCotmc;
     u16 vanishCapDurationVcutm;
-    u8 wingCapSequence;
-    u8 metalCapSequence;
-    u8 vanishCapSequence;
+    enum SeqId wingCapSequence;
+    enum SeqId metalCapSequence;
+    enum SeqId vanishCapSequence;
     struct StarPositions starPositions;
     s16 cellHeightLimit;
     s16 floorLowerLimit;
     s16 floorLowerLimitMisc;
     s16 floorLowerLimitShadow;
-    bool pauseExitAnywhere;
-    bool disableActs;
     u16 maxLives;
     u16 maxCoins;
     u16 numCoinsToLife;
-    bool bubbleOnDeathBarrierInCapStages;
     f32 wdwWaterLevelSpeed;
 };
 

@@ -7,25 +7,35 @@
 
 static void djui_lobby_entry_update_style(struct DjuiBase* base) {
     struct DjuiLobbyEntry* entry = (struct DjuiLobbyEntry*)base;
+    const struct DjuiTheme* theme = gDjuiThemes[configDjuiTheme];
+
     if (!entry->base.enabled) {
-        u8 borderBrightness = 75;
-        u8 rectBrightness   = 111;
-        djui_base_set_border_color(base, borderBrightness, borderBrightness, borderBrightness, 255);
-        djui_base_set_color(&entry->base, rectBrightness, rectBrightness, rectBrightness, 255);
+        struct DjuiColor bc = theme->interactables.darkBorderColor;
+        struct DjuiColor rc = theme->interactables.darkRectColor;
+
+        djui_base_set_border_color(base, bc.r, bc.g, bc.b, bc.a);
+        djui_base_set_color(&entry->base, rc.r, rc.g, rc.b, rc.a);
         //djui_base_set_location(&entry->text->base, 0.0f, 0.0f);
     } else if (gDjuiCursorDownOn == base) {
-        djui_base_set_border_color(base, 0, 84, 153, 255);
-        djui_base_set_color(&entry->base, 204, 228, 247, 255);
+        struct DjuiColor bc = theme->interactables.cursorDownBorderColor;
+        struct DjuiColor rc = theme->interactables.cursorDownRectColor;
+
+        djui_base_set_border_color(base, bc.r, bc.g, bc.b, bc.a);
+        djui_base_set_color(&entry->base, rc.r, rc.g, rc.b, rc.a);
         //djui_base_set_location(&entry->text->base, 1.0f, 1.0f);
     } else if (gDjuiHovered == base) {
-        djui_base_set_border_color(base, 0, 120, 215, 255);
-        djui_base_set_color(&entry->base, 229, 241, 251, 255);
+        struct DjuiColor bc = theme->interactables.hoveredBorderColor;
+        struct DjuiColor rc = theme->interactables.hoveredRectColor;
+
+        djui_base_set_border_color(base, bc.r, bc.g, bc.b, bc.a);
+        djui_base_set_color(&entry->base, rc.r, rc.g, rc.b, rc.a);
         //djui_base_set_location(&entry->text->base, -1.0f, -1.0f);
     } else {
-        u8 borderBrightness = 150;
-        u8 rectBrightness   = 222;
-        djui_base_set_border_color(base, borderBrightness, borderBrightness, borderBrightness, 255);
-        djui_base_set_color(&entry->base, rectBrightness, rectBrightness, rectBrightness, 255);
+        struct DjuiColor bc = theme->interactables.defaultBorderColor;
+        struct DjuiColor rc = theme->interactables.defaultRectColor;
+
+        djui_base_set_border_color(base, bc.r, bc.g, bc.b, bc.a);
+        djui_base_set_color(&entry->base, rc.r, rc.g, rc.b, rc.a);
         //djui_base_set_location(&entry->text->base, 0.0f, 0.0f);
     }
 }
@@ -73,7 +83,8 @@ struct DjuiLobbyEntry* djui_lobby_entry_create(struct DjuiBase* parent, char* ho
         djui_base_set_size_type(&text->base, DJUI_SVT_RELATIVE, DJUI_SVT_RELATIVE);
         djui_base_set_size(&text->base, width, 1.0f);
 
-        djui_base_set_color(&text->base, 11, 11, 11, 255);
+        struct DjuiColor tc = gDjuiThemes[configDjuiTheme]->interactables.textColor;
+        djui_base_set_color(&text->base, tc.r, tc.g, tc.b, tc.a);
         djui_text_set_alignment(text, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
         djui_text_set_drop_shadow(text, 64, 64, 64, 100);
         x += width;

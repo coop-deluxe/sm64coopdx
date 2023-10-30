@@ -11,6 +11,8 @@
 #include "audio/external.h"
 #include "audio/effects.h"
 
+#include "pc/debuglog.h"
+
 #define PORTAMENTO_IS_SPECIAL(x) ((x).mode & 0x80)
 #define PORTAMENTO_MODE(x) ((x).mode & ~0x80)
 #define PORTAMENTO_MODE_1 1
@@ -513,11 +515,11 @@ l13cc:
         (*layer).note = alloc_note(layer);
     }
 
-    if (!layer->note) {
-        LOG_DEBUG("Failed to alloc note!\n");
-    }
-
-    if (layer->note != NULL && layer->note->parentLayer == layer) {
-        note_vibrato_init(layer->note);
+    if (layer->note != NULL) {
+        if (layer->note->parentLayer == layer) {
+            note_vibrato_init(layer->note);
+        }
+    } else {
+        LOG_DEBUG("Failed to allocate note!\n");
     }
 }

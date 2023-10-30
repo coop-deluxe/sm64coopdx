@@ -7,6 +7,7 @@ struct DjuiSelectionbox {
     struct DjuiRect* rect;
     struct DjuiText* rectText;
     struct DjuiImage* rectImage;
+    struct DjuiImage* rectImage2;
     unsigned int* value;
     char** choices;
     u8 choiceCount;

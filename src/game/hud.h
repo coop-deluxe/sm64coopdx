@@ -28,8 +28,10 @@ enum CameraHUDLut {
 extern u8 gOverrideHideHud;
 
 bool use_forced_4by3(void);
-extern s32 gfx_dimensions_rect_from_left_edge(s32 v);
-extern s32 gfx_dimensions_rect_from_right_edge(s32 v);
+s32 gfx_dimensions_rect_from_left_edge(s32 v);
+s32 gfx_dimensions_rect_from_right_edge(s32 v);
+
+void render_hud_icon(Vtx *vtx, const u8 *texture, u32 fmt, u32 siz, s32 texW, s32 texH, s32 x, s32 y, s32 w, s32 h, s32 tileX, s32 tileY, s32 tileW, s32 tileH);
 
 void set_hud_camera_status(s16 status);
 void render_hud(void);

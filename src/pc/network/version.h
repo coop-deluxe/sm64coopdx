@@ -1,6 +1,8 @@
 #ifndef VERSION_H
 #define VERSION_H
 
+#define SM64COOPDX "sm64coopdx"
+
 #define VERSION_TEXT "v"
 #define VERSION_NUMBER 36
 #define MINOR_VERSION_NUMBER 0

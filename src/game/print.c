@@ -301,23 +301,23 @@ s8 char_to_glyph_index(char c) {
     }
 
     if (c == '!') {
-        return GLYPH_EXCLAMATION_PNT; // !, JP only (New non beta ! has been made for all versions.)
+        return GLYPH_EXCLAMATION_PNT; // ! (new non beta ! has been made for all versions)
     }
 
     if (c == '#') {
-        return GLYPH_HASH; // !!, JP only (This was GLYPH_TWO_EXCLAMATION.)
+        return GLYPH_HASHTAG; // # (this was GLYPH_TWO_EXCLAMATION)
     }
 
     if (c == '?') {
-        return GLYPH_QUESTION_MARK; // ?, JP only
+        return GLYPH_QUESTION_MARK; // ?
     }
 
     if (c == '&') {
-        return GLYPH_AMPERSAND; // &, JP only (New non beta & has been made for all versions.)
+        return GLYPH_AMPERSAND; // & (new non beta & has been made for all versions)
     }
 
     if (c == '%') {
-        return GLYPH_PERCENT; // %, JP only (New non beta % has been made for all versions.)
+        return GLYPH_PERCENT; // % (new non beta % has been made for all versions)
     }
 
     if (c == '*') {
@@ -329,7 +329,7 @@ s8 char_to_glyph_index(char c) {
     }
 
     if (c == ',') {
-        return GLYPH_COMMA; // Imagine I drew Mario's head (A comma has been made.)
+        return GLYPH_COMMA; // , (this was GLYPH_MARIO_HEAD)
     }
 
     if (c == '-') {
@@ -337,11 +337,11 @@ s8 char_to_glyph_index(char c) {
     }
 
     if (c == '.') {
-        return GLYPH_PERIOD; // large shaded dot, JP only (New non beta . has been made for all versions.)
+        return GLYPH_PERIOD; // . (new non beta . has been made for all versions)
     }
 
     if (c == '^') {
-        return GLYPH_KEY; // beta key, JP only. Reused for Ü in EU (New non beta key has been made for all versions and / is replaced by ^.)
+        return GLYPH_KEY; // beta key (new non beta key has been made for all versions and / is replaced by ^)
     }
 
     if (c == '\'') {

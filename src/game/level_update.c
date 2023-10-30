@@ -42,10 +42,13 @@
 #include "pc/network/network.h"
 #include "pc/djui/djui.h"
 #include "pc/lua/smlua_hooks.h"
+#include "pc/mods/mods.h"
 
 #include "game/screen_transition.h"
 
 #include "engine/level_script.h"
+
+#include "mario_actions_cutscene.h"
 
 #define WARP_NODE_F0 0xF0
 #define WARP_NODE_DEATH 0xF1
@@ -57,7 +60,7 @@
 #define WARP_NODE_CREDITS_MIN 0xF8
 
 #define MENU_LEVEL_MIN 0
-#define MENU_LEVEL_MAX 16
+#define MENU_LEVEL_MAX 17
 
 struct SavedWarpValues gReceiveWarp = { 0 };
 extern s8 sReceivedLoadedActNum;
@@ -1078,9 +1081,19 @@ void update_hud_values(void) {
                 gHudDisplay.coins += 1;
                 play_sound(coinSound, gMarioState->marioObj->header.gfx.cameraToObject);
 
-                if (gServerSettings.stayInLevelAfterStar > 0 && gCurrCourseNum != COURSE_NONE && (gHudDisplay.coins % gLevelValues.numCoinsToLife == 0 && gHudDisplay.coins > 0)) {
-                    gMarioState->numLives++;
-                    play_sound(SOUND_GENERAL_COLLECT_1UP, gGlobalSoundSource);
+                if (gServerSettings.stayInLevelAfterStar > 0 && gCurrCourseNum != COURSE_NONE) {
+                    // retain vanilla behavior
+                    if (gLevelValues.numCoinsToLife == 50) {
+                        if (gHudDisplay.coins == 50 || gHudDisplay.coins == 100 || gHudDisplay.coins == 150) {
+                            gMarioState->numLives++;
+                            play_sound(SOUND_GENERAL_COLLECT_1UP, gGlobalSoundSource);
+                        }
+                    } else {
+                        if (gHudDisplay.coins % gLevelValues.numCoinsToLife == 0 && gHudDisplay.coins > 0) {
+                            gMarioState->numLives++;
+                            play_sound(SOUND_GENERAL_COLLECT_1UP, gGlobalSoundSource);
+                        }
+                    }
                 }
             }
         }
@@ -1099,7 +1112,7 @@ void update_hud_values(void) {
         }
 #else
         if (gMarioState->numCoins > gLevelValues.maxCoins) {
-            gMarioState->numCoins = (s16) gLevelValues.maxCoins;
+            gMarioState->numLives = (s8) gLevelValues.maxCoins;
         }
 #endif
 
@@ -1427,7 +1440,6 @@ UNUSED static s32 play_mode_unused(void) {
 }
 
 void update_menu_level(void) {
-
     // figure out level
     int curLevel = 0;
     switch (configMenuLevel) {
@@ -1448,6 +1460,7 @@ void update_menu_level(void) {
         case 14: curLevel = LEVEL_BITDW;          break;
         case 15: curLevel = LEVEL_PSS;            break;
         case 16: curLevel = LEVEL_TTC;            break;
+        case 17: curLevel = LEVEL_WDW;            break;
         default: curLevel = LEVEL_CASTLE_GROUNDS; break;
     }
 
@@ -1583,6 +1596,11 @@ void update_menu_level(void) {
             vec3f_set(gLakituState.curPos, 2500, 570, -240);
             gMarioState->faceAngle[1] = 0x2000;
             break;
+        case LEVEL_WDW:
+            vec3f_set(gMarioState->pos, -2684, 3328, 3000);
+            vec3f_set(gLakituState.curPos, -4002, 4000, 4622);
+            gMarioState->faceAngle[1] = -0x1C34;
+            break;
     }
 
     gMarioState->health = 0x880;
@@ -1605,7 +1623,7 @@ void update_menu_level(void) {
         reset_volume();
         disable_background_sound();
 
-        if (get_current_background_music() == 0x0021) {
+        if (get_current_background_music() == SEQ_MENU_FILE_SELECT) {
             gChangeLevel = curLevel;
             gChangeActNum = 6;
         }
@@ -1613,12 +1631,9 @@ void update_menu_level(void) {
 }
 
 s32 update_level(void) {
-
     // update main menu level
     if (gDjuiInMainMenu) {
         update_menu_level();
-    } else {
-        sFirstCastleGroundsMenu = false;
     }
 
     if (gFanFareDebounce > 0) { gFanFareDebounce--; }
@@ -1652,7 +1667,7 @@ s32 update_level(void) {
             changeLevel = play_mode_normal();
             break;
         case PLAY_MODE_PAUSED:
-            if (!(configSingleplayerPause && network_player_connected_count() == 1)) {
+            if (!(configSingleplayerPause && network_player_connected_count() == 1 && gActiveMods.entryCount == 0)) {
                 changeLevel = play_mode_normal();
             }
 

@@ -579,6 +579,20 @@
 --- @field public unused2 integer
 --- @field public unusedPoint Vec3f
 
+--- @class DateTime
+--- @field public day integer
+--- @field public hour integer
+--- @field public minute integer
+--- @field public month integer
+--- @field public second integer
+--- @field public year integer
+
+--- @class DjuiColor
+--- @field public a integer
+--- @field public b integer
+--- @field public g integer
+--- @field public r integer
+
 --- @class FloorGeometry
 --- @field public normalX number
 --- @field public normalY number
@@ -812,6 +826,11 @@
 --- @field public pad integer
 --- @field public point Vec3s
 
+--- @class HudUtilsRotation
+--- @field public pivotX number
+--- @field public pivotY number
+--- @field public rotation number
+
 --- @class InstantWarp
 --- @field public area integer
 --- @field public displacement Vec3s
@@ -855,10 +874,10 @@
 --- @field public yaw integer
 
 --- @class LevelValues
---- @field public bubbleOnDeathBarrierInCapStages boolean
+--- @field public bubbleOnDeathBarrierInCapStages integer
 --- @field public cellHeightLimit integer
 --- @field public coinsRequiredForCoinStar integer
---- @field public disableActs boolean
+--- @field public disableActs integer
 --- @field public entryLevel LevelNum
 --- @field public exitCastleArea integer
 --- @field public exitCastleLevel LevelNum
@@ -881,10 +900,10 @@
 --- @field public maxLives integer
 --- @field public metalCapDuration integer
 --- @field public metalCapDurationCotmc integer
---- @field public metalCapSequence integer
+--- @field public metalCapSequence SeqId
 --- @field public mushroom1UpHeal integer
 --- @field public numCoinsToLife integer
---- @field public pauseExitAnywhere boolean
+--- @field public pauseExitAnywhere integer
 --- @field public previewBlueCoins integer
 --- @field public pssSlideStarIndex integer
 --- @field public pssSlideStarTime integer
@@ -895,13 +914,13 @@
 --- @field public starPositions StarPositions
 --- @field public vanishCapDuration integer
 --- @field public vanishCapDurationVcutm integer
---- @field public vanishCapSequence integer
+--- @field public vanishCapSequence SeqId
 --- @field public visibleSecrets integer
 --- @field public wdwWaterLevelSpeed number
 --- @field public wingCapDuration integer
 --- @field public wingCapDurationTotwc integer
 --- @field public wingCapLookUpReq integer
---- @field public wingCapSequence integer
+--- @field public wingCapSequence SeqId
 
 --- @class LinearTransitionPoint
 --- @field public dist number
@@ -926,6 +945,9 @@
 --- @field public lightB integer
 --- @field public lightG integer
 --- @field public lightR integer
+--- @field public lightingDirX number
+--- @field public lightingDirY number
+--- @field public lightingDirZ number
 --- @field public modelState integer
 --- @field public punchState integer
 --- @field public shadeB integer
@@ -1042,6 +1064,10 @@
 --- @field public newMode integer
 --- @field public transitionEnd LinearTransitionPoint
 --- @field public transitionStart LinearTransitionPoint
+
+--- @class NametagsSettings
+--- @field public showHealth boolean
+--- @field public showSelfTag boolean
 
 --- @class NetworkPlayer
 --- @field public connected boolean
@@ -1961,6 +1987,7 @@
 --- @field public enablePlayersInLevelDisplay integer
 --- @field public headlessServer integer
 --- @field public maxPlayers integer
+--- @field public nametags integer
 --- @field public playerInteractions PlayerInteractions
 --- @field public playerKnockbackStrength integer
 --- @field public skipIntro integer
