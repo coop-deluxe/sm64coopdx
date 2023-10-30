@@ -263,9 +263,18 @@ u32 pressed_pause(void) {
         }
     }
 
-    if (get_dialog_id() < 0) {
-        return gPlayer1Controller->buttonPressed & START_BUTTON;
+    u32 val4 = get_dialog_id() >= 0;
+    u32 intangible = (gMarioState->action & ACT_FLAG_INTANGIBLE) != 0;
+
+    if (!intangible && !val4 && !gWarpTransition.isActive && sDelayedWarpOp == WARP_OP_NONE
+        && (gPlayer1Controller->buttonPressed & START_BUTTON)) {
+        return TRUE;
     }
+
+    // I don't agree with this official change, mods use ACT_FLAG_INTANGIBLE to prevent the player from pausing in things like cutscenes
+    // if (get_dialog_id() < 0) {
+    //     return gPlayer1Controller->buttonPressed & START_BUTTON;
+    // }
 
     return FALSE;
 }
