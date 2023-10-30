@@ -1492,17 +1492,11 @@ void update_menu_level(void) {
         sWarpDest.areaIdx = 2;
         sWarpDest.nodeId = 0x0A;
     }
-
-    // set sFirstCastleGroundsMenu to false to prevent wall hugging bug
-    if (curLevel != LEVEL_CASTLE_GROUNDS) {
-        sFirstCastleGroundsMenu = false;
-    }
-
     struct Object *o;
     // set mario/camera pos
     switch (gCurrLevelNum) {
         case LEVEL_CASTLE_GROUNDS:
-            if (!sFirstCastleGroundsMenu) {
+            if (gMarioState->action != ACT_INTRO_CUTSCENE && gMarioState->prevAction != ACT_INTRO_CUTSCENE) {
                 vec3f_set(gMarioState->pos, -1328, 260, 4664);
                 vec3f_set(gLakituState.curPos, -1328, 390, 6064);
                 gMarioState->faceAngle[1] = 0;
@@ -1765,6 +1759,7 @@ s32 init_level(void) {
 
                         if (configMenuLevel == 0 && sFirstCastleGroundsMenu) {
                             set_mario_action(gMarioState, ACT_INTRO_CUTSCENE, 7);
+                            sFirstCastleGroundsMenu = false;
                         } else {
                             set_mario_action(gMarioState, ACT_IDLE, 0);
                         }
