@@ -59,6 +59,7 @@ extern unsigned int configKeyDRight[];
 extern unsigned int configKeyConsole[];
 extern unsigned int configKeyPrevPage[];
 extern unsigned int configKeyNextPage[];
+extern unsigned int configKeyDisconnect[];
 extern unsigned int configStickDeadzone;
 extern unsigned int configRumbleStrength;
 extern unsigned int configGamepadNumber;

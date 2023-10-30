@@ -20,9 +20,19 @@ static void djui_panel_pause_resume(UNUSED struct DjuiBase* caller) {
     djui_panel_shutdown();
 }
 
-static void djui_panel_pause_quit_yes(UNUSED struct DjuiBase* caller) {
+void djui_panel_pause_quit_yes(UNUSED struct DjuiBase* caller) {
     network_reset_reconnect_and_rehost();
     network_shutdown(true, false, false, false);
+}
+
+void djui_panel_pause_disconnect_key_update(int scancode) {
+    if (gDjuiInMainMenu) { return; }
+
+    for (int i = 0; i < MAX_BINDS; i++) {
+        if (scancode == (int)configKeyDisconnect[i]) {
+            djui_panel_pause_quit_yes(NULL);
+        }
+    }
 }
 
 static void djui_panel_pause_quit(struct DjuiBase* caller) {

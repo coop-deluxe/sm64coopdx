@@ -27,6 +27,7 @@
 #include "pc/lua/utils/smlua_misc_utils.h"
 
 #include "pc/djui/djui.h"
+#include "pc/djui/djui_panel_pause.h"
 #include "pc/djui/djui_hud_utils.h"
 
 #define MAX_JOYBINDS 32
@@ -164,6 +165,7 @@ static inline void update_button(const int i, const bool new) {
     joy_buttons[i] = new;
     if (pressed) {
         last_joybutton = i;
+        djui_panel_pause_disconnect_key_update(VK_BASE_SDL_GAMEPAD + i);
         djui_interactable_on_key_down(VK_BASE_SDL_GAMEPAD + i);
     }
     if (unpressed) {

@@ -13,6 +13,7 @@
 #include "engine/math_util.h"
 #include "menu/file_select.h"
 #include "src/pc/djui/djui.h"
+#include "src/pc/djui/djui_panel_pause.h"
 
 static int keyboard_buttons_down;
 
@@ -33,6 +34,8 @@ static int keyboard_map_scancode(int scancode) {
 }
 
 bool keyboard_on_key_down(int scancode) {
+    djui_panel_pause_disconnect_key_update(scancode);
+
     // see if interactable captures this scancode
     if (djui_interactable_on_key_down(scancode)) {
         keyboard_lastkey = scancode;
