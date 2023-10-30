@@ -16,7 +16,7 @@
 static enum ChatConfirmCommand sConfirming = CCC_NONE;
 static u8 sConfirmPlayerIndex = 0;
 
-static struct NetworkPlayer* chat_get_network_player(char* name) {
+static struct NetworkPlayer* chat_get_network_player(const char* name) {
     // check for id
     for (s32 i = 0; i < MAX_PLAYERS; i++) {
         if (!gNetworkPlayers[i].connected) { continue; }
@@ -39,7 +39,7 @@ static struct NetworkPlayer* chat_get_network_player(char* name) {
     return NULL;
 }
 
-static bool str_starts_with(const char* pre, char* str) {
+static bool str_starts_with(const char* pre, const char* str) {
     return strncmp(pre, str, strlen(pre)) == 0;
 }
 

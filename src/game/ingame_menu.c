@@ -490,7 +490,7 @@ u8 str_ascii_char_to_dialog(char c) {
 }
 
 void str_ascii_to_dialog(const char* string, u8* dialog, u16 length) {
-    char* c = (char*) string;
+    const char* c = string;
     u8* d = dialog;
     u16 converted = 0;
 

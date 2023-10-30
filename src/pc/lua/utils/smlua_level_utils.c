@@ -51,7 +51,7 @@ struct CustomLevelInfo* smlua_level_util_get_info(s16 levelNum) {
     return NULL;
 }
 
-struct CustomLevelInfo* smlua_level_util_get_info_from_short_name(char* shortName) {
+struct CustomLevelInfo* smlua_level_util_get_info_from_short_name(const char* shortName) {
     struct CustomLevelInfo* node = sCustomLevelHead;
     while (node != NULL) {
         if (!strcmp(node->shortName, shortName)) {
@@ -62,7 +62,7 @@ struct CustomLevelInfo* smlua_level_util_get_info_from_short_name(char* shortNam
     return NULL;
 }
 
-static struct CustomLevelInfo* smlua_level_util_get_info_from_script(char* scriptEntryName) {
+static struct CustomLevelInfo* smlua_level_util_get_info_from_script(const char* scriptEntryName) {
     struct CustomLevelInfo* node = sCustomLevelHead;
     while (node != NULL) {
         if (!strcmp(node->scriptEntryName, scriptEntryName)) {
@@ -102,13 +102,13 @@ s16 level_register(const char* scriptEntryName, s16 courseNum, const char* fullN
     }
 
     // find duplicate
-    struct CustomLevelInfo* info = smlua_level_util_get_info_from_script((char*)scriptEntryName);
+    struct CustomLevelInfo* info = smlua_level_util_get_info_from_script(scriptEntryName);
     if (info != NULL) {
         return info->levelNum;
     }
 
     // find script
-    LevelScript* script = dynos_get_level_script((char*)scriptEntryName);
+    LevelScript* script = dynos_get_level_script(scriptEntryName);
     if (script == NULL) {
         LOG_LUA("Failed to find script: %s", scriptEntryName);
         return 0;

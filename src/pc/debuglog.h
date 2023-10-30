@@ -22,12 +22,12 @@ static void _debuglog_print_network_type(void) {
     printf(" [%02d] ", (gNetworkPlayerLocal != NULL) ? gNetworkPlayerLocal->globalIndex : -1);
 }
 
-static void _debuglog_print_log_type(char* logType) {
+static void _debuglog_print_log_type(const char* logType) {
     printf("[%s] ", logType);
 }
 
-static void _debuglog_print_short_filename(char* filename) {
-    char* last = strrchr(filename, '/');
+static void _debuglog_print_short_filename(const char* filename) {
+    const char* last = strrchr(filename, '/');
     if (last != NULL) {
         printf("%s: ", last + 1);
     }
@@ -36,7 +36,7 @@ static void _debuglog_print_short_filename(char* filename) {
     }
 }
 
-static void _debuglog_print_log(char* logType, char* filename) {
+static void _debuglog_print_log(const char* logType, char* filename) {
     _debuglog_print_timestamp();
     _debuglog_print_network_type();
     _debuglog_print_log_type(logType);

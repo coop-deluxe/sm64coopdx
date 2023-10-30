@@ -21,7 +21,7 @@ struct CustomLevelInfo {
 void smlua_level_util_reset(void);
 void smlua_level_util_change_area(s32 areaIndex);
 struct CustomLevelInfo* smlua_level_util_get_info(s16 levelNum);
-struct CustomLevelInfo* smlua_level_util_get_info_from_short_name(char* shortName);
+struct CustomLevelInfo* smlua_level_util_get_info_from_short_name(const char* shortName);
 struct CustomLevelInfo* smlua_level_util_get_info_from_course_num(u8 courseNum);
 s16 level_register(const char* scriptEntryName, s16 courseNum, const char* fullName, const char* shortName, u32 acousticReach, u32 echoLevel1, u32 echoLevel2, u32 echoLevel3);
 bool level_is_vanilla_level(s16 levelNum);

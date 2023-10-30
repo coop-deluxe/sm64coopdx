@@ -249,7 +249,7 @@ const char *get_level_name_ascii(s16 courseNum, s16 levelNum, s16 areaIndex, s16
 const u8 *get_level_name_sm64(s16 courseNum, s16 levelNum, s16 areaIndex, s16 charCase) {
     static u8 output[256];
     char levelName[256];
-    snprintf(levelName, 256, " %d %s", courseNum, (char*) get_level_name_ascii(courseNum, levelNum, areaIndex, charCase));
+    snprintf(levelName, 256, " %d %s", courseNum, get_level_name_ascii(courseNum, levelNum, areaIndex, charCase));
     convert_string_ascii_to_sm64(output, levelName);
     return output;
 }
