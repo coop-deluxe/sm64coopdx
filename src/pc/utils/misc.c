@@ -468,7 +468,7 @@ static void rematrix(Mtx * mat, f32 tranfs[13]) {
     }
 }
 
-OPTIMIZE_O3 inline static void delta_interpolate_mtx_accurate(Mtx* out, Mtx* a, Mtx* b, f32 delta) {
+inline static void delta_interpolate_mtx_accurate(Mtx* out, Mtx* a, Mtx* b, f32 delta) {
     int i = 0;
     f32 matTranfsA[13] = { 0 };
     f32 matTranfsB[13] = { 0 };
@@ -491,7 +491,7 @@ OPTIMIZE_O3 inline static void delta_interpolate_mtx_accurate(Mtx* out, Mtx* a, 
     rematrix(out, matTranfsB);
 }
 
-OPTIMIZE_O3 void delta_interpolate_mtx(Mtx* out, Mtx* a, Mtx* b, f32 delta) {
+void delta_interpolate_mtx(Mtx* out, Mtx* a, Mtx* b, f32 delta) {
     // HACK: Limit accurate interpolation to 64-bit builds
     if (sizeof(void*) > 4) {
         if (configInterpolationMode) {
