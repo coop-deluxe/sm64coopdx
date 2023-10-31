@@ -151,7 +151,6 @@ void bhv_spawned_star_loop(void) {
         }
         set_sparkle_spawn_star_hitbox();
         slow_star_rotation();
-        network_send_object(o);
     }
     cur_obj_move_using_fvel_and_gravity();
     o->oFaceAngleYaw += o->oAngleVelYaw;
