@@ -16,13 +16,14 @@ void bhv_spawned_star_init(void) {
     if (!(o->oInteractionSubtype & INT_SUBTYPE_NO_EXIT) && o->parentObj) {
         o->oBehParams = o->parentObj->oBehParams;
     }
-    s32 sp24 = (o->oBehParams >> 24) & 0xFF;
-    if (bit_shift_left(sp24) & save_file_get_star_flags(gCurrSaveFileNum - 1, gCurrCourseNum - 1))
+    s32 starId = (o->oBehParams >> 24) & 0xFF;
+    if (bit_shift_left(starId) & save_file_get_star_flags(gCurrSaveFileNum - 1, gCurrCourseNum - 1))
         cur_obj_set_model(smlua_model_util_load(E_MODEL_TRANSPARENT_STAR));
     cur_obj_play_sound_2(SOUND_GENERAL2_STAR_APPEARS);
 
     // exclamation box stars are not sent through the normal exclamation box
     // path due to jankiness in oBehParams. Send the spawn event here instead.
+    // Only exclamation boxes use bhvSpawnedStar so this check really isn't necessary
     u8 spawnedFromExclamationBox = (o->parentObj != NULL && o->parentObj->behavior == smlua_override_behavior(bhvExclamationBox));
     if (gNetworkAreaLoaded && spawnedFromExclamationBox) {
         o->oStarSpawnExtCutsceneFlags = 1;
@@ -81,7 +82,10 @@ void slow_star_rotation(void) {
 
 void bhv_spawned_star_loop(void) {
     if (!sync_object_is_initialized(o->oSyncID)) {
-        sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
+        sync_object_init(o, 4000);
+        sync_object_init_field(o, &o->oBehParams);
+        sync_object_init_field(o, &o->oAction);
+        sync_object_init_field(o, &o->oStarSpawnExtCutsceneFlags);
     }
 
     if (o->oAction == 0) {
@@ -142,6 +146,9 @@ void bhv_spawned_star_loop(void) {
             o->oAction++;
         }
     } else {
+        if (o->oTimer == 0) {
+            o->oStarSpawnExtCutsceneFlags = 0;
+        }
         set_sparkle_spawn_star_hitbox();
         slow_star_rotation();
         network_send_object(o);

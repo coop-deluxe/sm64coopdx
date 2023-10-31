@@ -107,7 +107,10 @@ void bhv_star_spawn_init(void) {
 
 void bhv_star_spawn_loop(void) {
     if (!sync_object_is_initialized(o->oSyncID)) {
-        sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
+        sync_object_init(o, 4000);
+        sync_object_init_field(o, &o->oBehParams);
+        sync_object_init_field(o, &o->oAction);
+        sync_object_init_field(o, &o->oStarSpawnExtCutsceneFlags);
     }
 
     switch (o->oAction) {
@@ -158,6 +161,7 @@ void bhv_star_spawn_loop(void) {
                 gObjCutsceneDone = TRUE;
                 clear_time_stop_flags(TIME_STOP_ENABLED | TIME_STOP_MARIO_AND_DOORS);
                 o->activeFlags &= ~ACTIVE_FLAG_INITIATED_TIME_STOP;
+                o->oStarSpawnExtCutsceneFlags = 0;
             }
 
             if (o->oInteractStatus & INT_STATUS_INTERACTED) {
