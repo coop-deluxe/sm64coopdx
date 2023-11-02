@@ -8676,6 +8676,11 @@ function get_fog_color(index)
     -- ...
 end
 
+--- @return number
+function get_fog_intensity()
+    -- ...
+end
+
 --- @return boolean
 function get_got_file_coin_hi_score()
     -- ...
@@ -8880,6 +8885,12 @@ end
 --- @param value integer
 --- @return nil
 function set_fog_color(index, value)
+    -- ...
+end
+
+--- @param intensity number
+--- @return nil
+function set_fog_intensity(intensity)
     -- ...
 end
 

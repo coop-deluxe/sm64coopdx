@@ -813,6 +813,24 @@
 
 <br />
 
+## [get_fog_intensity](#get_fog_intensity)
+
+### Lua Example
+`local numberValue = get_fog_intensity()`
+
+### Parameters
+- None
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 get_fog_intensity(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [get_got_file_coin_hi_score](#get_got_file_coin_hi_score)
 
 ### Lua Example
@@ -1461,6 +1479,26 @@
 
 ### C Prototype
 `void set_fog_color(u8 index, u8 value);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_fog_intensity](#set_fog_intensity)
+
+### Lua Example
+`set_fog_intensity(intensity)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| intensity | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_fog_intensity(f32 intensity);`
 
 [:arrow_up_small:](#)
 

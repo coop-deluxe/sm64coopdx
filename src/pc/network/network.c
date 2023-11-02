@@ -653,6 +653,7 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
     gFogColor[0] = 255;
     gFogColor[1] = 255;
     gFogColor[2] = 255;
+    gFogIntensity = 1;
     gOverrideBackground = -1;
     gOverrideEnvFx = -1;
     gDjuiRenderBehindHud = false;

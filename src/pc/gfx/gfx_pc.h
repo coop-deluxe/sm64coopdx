@@ -17,6 +17,7 @@ extern Vec3f gLightingDir;
 extern Color gLightingColor;
 extern Color gVertexColor;
 extern Color gFogColor;
+extern f32 gFogIntensity;
 
 #ifdef __cplusplus
 extern "C" {

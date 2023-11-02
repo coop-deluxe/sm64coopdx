@@ -184,6 +184,7 @@ Vec3f gLightingDir;
 Color gLightingColor = { 255, 255, 255 };
 Color gVertexColor = { 255, 255, 255 };
 Color gFogColor = { 255, 255, 255 };
+f32 gFogIntensity = 1;
 
 // 4x4 pink-black checkerboard texture to indicate missing textures
 #define MISSING_W 4
@@ -848,7 +849,7 @@ static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, cons
             z *= sDepthZMult;
             z += sDepthZAdd;
 
-            float fog_z = z * winv * rsp.fog_mul + rsp.fog_offset;
+            float fog_z = z * winv * rsp.fog_mul * gFogIntensity + rsp.fog_offset;
 
             if (fog_z < 0) fog_z = 0;
             if (fog_z > 255) fog_z = 255;
@@ -1013,7 +1014,7 @@ static void OPTIMIZE_O3 gfx_sp_tri1(uint8_t vtx1_idx, uint8_t vtx2_idx, uint8_t 
             float u = (v_arr[i]->u - rdp.texture_tile.uls * 8) / 32.0f;
             float v = (v_arr[i]->v - rdp.texture_tile.ult * 8) / 32.0f;
             if ((rdp.other_mode_h & (3U << G_MDSFT_TEXTFILT)) != G_TF_POINT) {
-                // Linear filter adds 0.5f to the coordinates
+                // Linear filter adds 0.5f to the coordinates (why?)
                 u += 0.5f;
                 v += 0.5f;
             }

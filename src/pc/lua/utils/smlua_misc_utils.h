@@ -132,6 +132,8 @@ void set_vertex_color(u8 index, u8 value);
 
 u8 get_fog_color(u8 index);
 void set_fog_color(u8 index, u8 value);
+f32 get_fog_intensity(void);
+void set_fog_intensity(f32 intensity);
 
 s8 get_skybox(void);
 void set_override_skybox(s8 background);

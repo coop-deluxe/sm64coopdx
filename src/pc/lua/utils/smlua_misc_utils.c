@@ -558,6 +558,14 @@ void set_fog_color(u8 index, u8 value) {
     gFogColor[index] = value;
 }
 
+f32 get_fog_intensity(void) {
+    return gFogIntensity;
+}
+
+void set_fog_intensity(f32 intensity) {
+    gFogIntensity = intensity;
+}
+
 ///
 
 s8 get_skybox(void) {
