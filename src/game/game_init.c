@@ -24,9 +24,7 @@
 #include "src/pc/djui/djui_panel_pause.h"
 #include "rumble_init.h"
 #include <prevent_bss_reordering.h>
-#ifdef BETTERCAMERA
 #include "bettercamera.h"
-#endif
 #include "hud.h"
 
 // FIXME: I'm not sure all of these variables belong in this file, but I don't
@@ -545,10 +543,8 @@ void init_controllers(void) {
         }
     }
 
-#ifdef BETTERCAMERA
     // load bettercam settings from the config file
     newcam_init_settings();
-#endif
 }
 
 void setup_game_memory(void) {

@@ -35,9 +35,7 @@
 #define MAX_JOYBUTTONS 32  // arbitrary; includes virtual keys for triggers
 #define AXIS_THRESHOLD (30 * 256)
 
-#ifdef BETTERCAMERA
 extern u8 newcam_mouse;
-#endif
 
 static bool init_ok = false;
 static bool haptics_enabled = false;
@@ -128,11 +126,9 @@ static void controller_sdl_init(void) {
         free(gcdata);
     }
 
-#ifdef BETTERCAMERA
     if (newcam_mouse == 1)
         SDL_SetRelativeMouseMode(SDL_TRUE);
     SDL_GetRelativeMouseState(&mouse_x, &mouse_y);
-#endif
 
     controller_sdl_bind();
 
@@ -179,7 +175,6 @@ static void controller_sdl_read(OSContPad *pad) {
         return;
     }
 
-#ifdef BETTERCAMERA
     if (!gDjuiHudLockMouse) {
         if (newcam_mouse == 1 && (!is_game_paused() || sCurrPlayMode != 2) && !gDjuiInMainMenu) {
             SDL_SetRelativeMouseMode(SDL_TRUE);
@@ -200,22 +195,9 @@ static void controller_sdl_read(OSContPad *pad) {
     // remember buttons that changed from 0 to 1
     last_mouse = (mouse_buttons ^ mouse) & mouse;
     mouse_buttons = mouse;
-#endif
+
     if (!ignore_lock && (!is_game_paused() || sCurrPlayMode != 2) && !gDjuiInMainMenu) {
         SDL_SetRelativeMouseMode(gDjuiHudLockMouse ? SDL_TRUE : SDL_FALSE);
-
-#ifndef BETTERCAMERA
-        u32 mouse = SDL_GetRelativeMouseState(&mouse_x, &mouse_y);
-
-        if (!gInteractableOverridePad) {
-            for (u32 i = 0; i < num_mouse_binds; ++i)
-                if (mouse & SDL_BUTTON(mouse_binds[i][0]))
-                    pad->button |= mouse_binds[i][1];
-        }
-        // remember buttons that changed from 0 to 1
-        last_mouse = (mouse_buttons ^ mouse) & mouse;
-        mouse_buttons = mouse;
-#endif
     }
 
     if (configBackgroundGamepad != sBackgroundGamepad) {

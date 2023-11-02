@@ -64,10 +64,6 @@ extern unsigned int configStickDeadzone;
 extern unsigned int configRumbleStrength;
 extern unsigned int configGamepadNumber;
 extern bool         configBackgroundGamepad;
-#ifdef EXTERNAL_DATA
-extern bool         configPrecacheRes;
-#endif
-#ifdef BETTERCAMERA
 extern unsigned int configCameraXSens;
 extern unsigned int configCameraYSens;
 extern unsigned int configCameraAggr;
@@ -78,7 +74,6 @@ extern bool         configCameraInvertY;
 extern bool         configEnableCamera;
 extern bool         configCameraMouse;
 extern bool         configCameraAnalog;
-#endif
 extern bool         configHUD;
 extern bool         configSkipIntro;
 extern bool         configEnableCheats;

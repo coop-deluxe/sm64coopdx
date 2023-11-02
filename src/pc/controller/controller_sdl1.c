@@ -42,9 +42,7 @@ enum {
     MAX_AXES,
 };
 
-#ifdef BETTERCAMERA
 extern u8 newcam_mouse;
-#endif
 
 static bool init_ok;
 static SDL_Joystick *sdl_joy;
@@ -126,12 +124,10 @@ static void controller_sdl_init(void) {
             if (i >= num_joy_axes)
                 joy_axis_binds[i] = -1;
     }
-
-#ifdef BETTERCAMERA
+ 
     if (newcam_mouse == 1)
         SDL_WM_GrabInput(SDL_GRAB_ON);
     SDL_GetRelativeMouseState(&mouse_x, &mouse_y);
-#endif
 
     controller_sdl_bind();
 
@@ -154,7 +150,6 @@ static inline int16_t get_axis(const int i) {
 static void controller_sdl_read(OSContPad *pad) {
     if (!init_ok) return;
 
-#ifdef BETTERCAMERA
     if (newcam_mouse == 1 && sCurrPlayMode != 2)
         SDL_WM_GrabInput(SDL_GRAB_ON);
     else
@@ -171,7 +166,6 @@ static void controller_sdl_read(OSContPad *pad) {
     // remember buttons that changed from 0 to 1
     last_mouse = (mouse_buttons ^ mouse) & mouse;
     mouse_buttons = mouse;
-#endif
 
     if (!sdl_joy) return;
 

@@ -123,9 +123,7 @@ extern u8 gOverrideAllowToxicGasCamera;
 #define CAMERA_MODE_8_DIRECTIONS      0x0E // AKA Parallel Camera, Bowser Courses & Rainbow Ride
 #define CAMERA_MODE_FREE_ROAM         0x10
 #define CAMERA_MODE_SPIRAL_STAIRS     0x11
-#ifdef BETTERCAMERA
 #define CAMERA_MODE_NEWCAM            0x12
-#endif
 #define CAMERA_MODE_ROM_HACK          0x13
 
 #define CAM_MOVE_RETURN_TO_MIDDLE       0x0001

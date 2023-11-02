@@ -103,11 +103,7 @@ unsigned int configKeyNextPage[MAX_BINDS]   = { 0x0018,   VK_INVALID, VK_INVALID
 unsigned int configKeyDisconnect[MAX_BINDS] = { 0x003C,   VK_INVALID, VK_INVALID };
 unsigned int configStickDeadzone = 16; // 16*DEADZONE_STEP=4960 (the original default deadzone)
 unsigned int configRumbleStrength = 50;
-#ifdef EXTERNAL_DATA
-bool configPrecacheRes = false;
-#endif
-#ifdef BETTERCAMERA
-// BetterCamera settings
+// better camera settings
 unsigned int configCameraXSens   = 10;
 unsigned int configCameraYSens   = 10;
 unsigned int configCameraAggr    = 0;
@@ -118,7 +114,6 @@ bool         configCameraInvertY = true;
 bool         configEnableCamera  = false;
 bool         configCameraAnalog  = false;
 bool         configCameraMouse   = false;
-#endif
 bool         configSkipIntro     = 0;
 bool         configEnableCheats  = 0;
 bool         configBubbleDeath   = true;
@@ -208,10 +203,6 @@ static const struct ConfigOption options[] = {
     {.name = "key_disconnect",       .type = CONFIG_TYPE_BIND, .uintValue = configKeyDisconnect},
     {.name = "stick_deadzone",       .type = CONFIG_TYPE_UINT, .uintValue = &configStickDeadzone},
     {.name = "rumble_strength",      .type = CONFIG_TYPE_UINT, .uintValue = &configRumbleStrength},
-    #ifdef EXTERNAL_DATA
-    {.name = "precache",             .type = CONFIG_TYPE_BOOL, .boolValue = &configPrecacheRes},
-    #endif
-    #ifdef BETTERCAMERA
     {.name = "bettercam_enable",     .type = CONFIG_TYPE_BOOL, .boolValue = &configEnableCamera},
     {.name = "bettercam_analog",     .type = CONFIG_TYPE_BOOL, .boolValue = &configCameraAnalog},
     {.name = "bettercam_mouse_look", .type = CONFIG_TYPE_BOOL, .boolValue = &configCameraMouse},
@@ -222,7 +213,6 @@ static const struct ConfigOption options[] = {
     {.name = "bettercam_aggression", .type = CONFIG_TYPE_UINT, .uintValue = &configCameraAggr},
     {.name = "bettercam_pan_level",  .type = CONFIG_TYPE_UINT, .uintValue = &configCameraPan},
     {.name = "bettercam_degrade",    .type = CONFIG_TYPE_UINT, .uintValue = &configCameraDegrade},
-    #endif
     {.name = "skip_intro",           .type = CONFIG_TYPE_BOOL, .boolValue = &configSkipIntro},
     {.name = "enable_cheats",        .type = CONFIG_TYPE_BOOL, .boolValue = &configEnableCheats},
     // debug

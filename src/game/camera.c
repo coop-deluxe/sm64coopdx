@@ -723,10 +723,9 @@ BAD_RETURN(f32) calc_y_to_curr_floor(f32 *posOff, f32 posMul, f32 posBound, f32 
         *focOff = -focBound;
     }
 }
-//Compiler gets mad if I put this any further above. thanks refresh 7
-#ifdef BETTERCAMERA
+
+// compiler gets mad if I put this any further above. thanks refresh 7
 #include "bettercamera.inc.h"
-#endif
 
 void focus_on_mario(Vec3f focus, Vec3f pos, f32 posYOff, f32 focYOff, f32 dist, s16 pitch, s16 yaw) {
     Vec3f marioPos;
@@ -2690,7 +2689,6 @@ s32 exit_c_up(struct Camera *c) {
             gCameraMovementFlags |= CAM_MOVE_STARTED_EXITING_C_UP;
             transition_next_state(c, 15);
         } else {
-#ifdef BETTERCAMERA
             newcam_init_settings();
             if (newcam_active == 1) {
                 // Retrieve the previous position and focus
@@ -2712,11 +2710,6 @@ s32 exit_c_up(struct Camera *c) {
                 gCameraMovementFlags &= ~(CAM_MOVE_STARTED_EXITING_C_UP | CAM_MOVE_C_UP_MODE);
                 vec3f_set_dist_and_angle(checkFoc, c->pos, curDist, curPitch, curYaw + checkYaw);
             }
-#else
-            // Let the next camera mode handle it
-            gCameraMovementFlags &= ~(CAM_MOVE_STARTED_EXITING_C_UP | CAM_MOVE_C_UP_MODE);
-            vec3f_set_dist_and_angle(checkFoc, c->pos, curDist, curPitch, curYaw + checkYaw);
-#endif
         }
         play_sound_cbutton_down();
     }
@@ -2936,9 +2929,7 @@ static bool allow_romhack_camera_override_mode(u8 mode) {
         case CAMERA_MODE_WATER_SURFACE:
         case CAMERA_MODE_INSIDE_CANNON:
         case CAMERA_MODE_BOSS_FIGHT:
-#ifdef BETTERCAMERA
         case CAMERA_MODE_NEWCAM:
-#endif
         case CAMERA_MODE_ROM_HACK:
             return false;
         default:
@@ -2970,62 +2961,56 @@ void set_camera_mode(struct Camera *c, s16 mode, s16 frames) {
         return;
     }
 
-#ifdef BETTERCAMERA
     if (mode == CAMERA_MODE_C_UP && gLakituState.mode == CAMERA_MODE_NEWCAM) {
         newcam_init_settings_override(false);
     }
 
-    if (mode != CAMERA_MODE_NEWCAM && gLakituState.mode != CAMERA_MODE_NEWCAM)
-    {
-#endif
-    if (mode == CAMERA_MODE_WATER_SURFACE && gCurrLevelArea == AREA_TTM_OUTSIDE) {
-    } else {
-        // Clear movement flags that would affect the transition
-        gCameraMovementFlags &= (u16)~(CAM_MOVE_RESTRICT | CAM_MOVE_ROTATE);
-        gCameraMovementFlags |= CAM_MOVING_INTO_MODE;
-        if (mode == CAMERA_MODE_NONE) {
-            mode = CAMERA_MODE_CLOSE;
+    if (mode != CAMERA_MODE_NEWCAM && gLakituState.mode != CAMERA_MODE_NEWCAM) {
+        if (mode != CAMERA_MODE_WATER_SURFACE && gCurrLevelArea != AREA_TTM_OUTSIDE) {
+            // Clear movement flags that would affect the transition
+            gCameraMovementFlags &= (u16)~(CAM_MOVE_RESTRICT | CAM_MOVE_ROTATE);
+            gCameraMovementFlags |= CAM_MOVING_INTO_MODE;
+            if (mode == CAMERA_MODE_NONE) {
+                mode = CAMERA_MODE_CLOSE;
+            }
+            sCUpCameraPitch = 0;
+            sModeOffsetYaw = 0;
+            sLakituDist = 0;
+            sLakituPitch = 0;
+            sAreaYawChange = 0;
+
+            sModeInfo.newMode = (mode != -1) ? mode : sModeInfo.lastMode;
+            sModeInfo.lastMode = c->mode;
+            sModeInfo.max = frames;
+            sModeInfo.frame = 1;
+
+            c->mode = sModeInfo.newMode;
+            gLakituState.mode = c->mode;
+
+            vec3f_copy(end->focus, c->focus);
+            vec3f_sub(end->focus, sMarioCamState->pos);
+
+            vec3f_copy(end->pos, c->pos);
+            vec3f_sub(end->pos, sMarioCamState->pos);
+
+            if (sModeInfo.newMode != CAMERA_MODE_NONE && (u32)sModeInfo.newMode < sizeof(sModeTransitions) / sizeof(sModeTransitions[0])) {
+                sAreaYaw = sModeTransitions[sModeInfo.newMode](c, end->focus, end->pos);
+            }
+
+            // End was updated by sModeTransitions
+            vec3f_sub(end->focus, sMarioCamState->pos);
+            vec3f_sub(end->pos, sMarioCamState->pos);
+
+            vec3f_copy(start->focus, gLakituState.curFocus);
+            vec3f_sub(start->focus, sMarioCamState->pos);
+
+            vec3f_copy(start->pos, gLakituState.curPos);
+            vec3f_sub(start->pos, sMarioCamState->pos);
+
+            vec3f_get_dist_and_angle(start->focus, start->pos, &start->dist, &start->pitch, &start->yaw);
+            vec3f_get_dist_and_angle(end->focus, end->pos, &end->dist, &end->pitch, &end->yaw);
         }
-        sCUpCameraPitch = 0;
-        sModeOffsetYaw = 0;
-        sLakituDist = 0;
-        sLakituPitch = 0;
-        sAreaYawChange = 0;
-
-        sModeInfo.newMode = (mode != -1) ? mode : sModeInfo.lastMode;
-        sModeInfo.lastMode = c->mode;
-        sModeInfo.max = frames;
-        sModeInfo.frame = 1;
-
-        c->mode = sModeInfo.newMode;
-        gLakituState.mode = c->mode;
-
-        vec3f_copy(end->focus, c->focus);
-        vec3f_sub(end->focus, sMarioCamState->pos);
-
-        vec3f_copy(end->pos, c->pos);
-        vec3f_sub(end->pos, sMarioCamState->pos);
-
-        if (sModeInfo.newMode != CAMERA_MODE_NONE && (u32)sModeInfo.newMode < sizeof(sModeTransitions) / sizeof(sModeTransitions[0])) {
-            sAreaYaw = sModeTransitions[sModeInfo.newMode](c, end->focus, end->pos);
-        }
-
-        // End was updated by sModeTransitions
-        vec3f_sub(end->focus, sMarioCamState->pos);
-        vec3f_sub(end->pos, sMarioCamState->pos);
-
-        vec3f_copy(start->focus, gLakituState.curFocus);
-        vec3f_sub(start->focus, sMarioCamState->pos);
-
-        vec3f_copy(start->pos, gLakituState.curPos);
-        vec3f_sub(start->pos, sMarioCamState->pos);
-
-        vec3f_get_dist_and_angle(start->focus, start->pos, &start->dist, &start->pitch, &start->yaw);
-        vec3f_get_dist_and_angle(end->focus, end->pos, &end->dist, &end->pitch, &end->yaw);
     }
-#ifdef BETTERCAMERA
-    }
-#endif
 }
 
 /**
@@ -3041,11 +3026,7 @@ void update_lakitu(struct Camera *c) {
     s16 newYaw;
     UNUSED u8 unused1[8];
 
-#ifdef BETTERCAMERA
     u8 allowPauseCheck = (c->mode != CAMERA_MODE_NEWCAM);
-#else
-    u8 allowPauseCheck = TRUE;
-#endif
 
     if (allowPauseCheck && (gCameraMovementFlags & CAM_MOVE_PAUSE_SCREEN)) {
     } else {
@@ -3117,12 +3098,7 @@ void update_lakitu(struct Camera *c) {
         gLakituState.roll += sHandheldShakeRoll;
         gLakituState.roll += gLakituState.keyDanceRoll;
 
-        if (c->mode != CAMERA_MODE_C_UP && c->cutscene == 0
-#ifdef BETTERCAMERA
-            && c->mode != CAMERA_MODE_NEWCAM
-#endif
-            )
-        {
+        if (c->mode != CAMERA_MODE_C_UP && c->cutscene == 0 && c->mode != CAMERA_MODE_NEWCAM) {
             gCheckingSurfaceCollisionsForCamera = TRUE;
             distToFloor = find_floor(gLakituState.pos[0],
                                      gLakituState.pos[1] + 20.0f,
@@ -3179,11 +3155,7 @@ void update_camera(struct Camera *c) {
 
     if (c->cutscene == 0) {
         // Only process R_TRIG if 'fixed' is not selected in the menu
-        if (cam_select_alt_mode(0) == CAM_SELECTION_MARIO
-#ifdef BETTERCAMERA
-            && c->mode != CAMERA_MODE_NEWCAM
-#endif
-            ) {
+        if (cam_select_alt_mode(0) == CAM_SELECTION_MARIO && c->mode != CAMERA_MODE_NEWCAM) {
             if ((sCurrPlayMode != PLAY_MODE_PAUSED) && gPlayer1Controller->buttonPressed & R_TRIG) {
                 bool returnValue = true;
                 if (set_cam_angle(0) == CAM_ANGLE_LAKITU) {
@@ -3228,22 +3200,16 @@ void update_camera(struct Camera *c) {
     c->mode = gLakituState.mode;
     c->defMode = gLakituState.defMode;
 
-#ifdef BETTERCAMERA
-    if (c->mode != CAMERA_MODE_NEWCAM)
-    {
-#endif
-    camera_course_processing(c);
-    stub_camera_3(c);
-    sCButtonsPressed = find_c_buttons_pressed(sCButtonsPressed, gPlayer1Controller->buttonPressed,gPlayer1Controller->buttonDown);
-#ifdef BETTERCAMERA
+    if (c->mode != CAMERA_MODE_NEWCAM) {
+        camera_course_processing(c);
+        stub_camera_3(c);
+        sCButtonsPressed = find_c_buttons_pressed(sCButtonsPressed, gPlayer1Controller->buttonPressed,gPlayer1Controller->buttonDown);
     }
 
-    if (gMarioStates[0].action == ACT_SHOT_FROM_CANNON && newcam_active)
-    {
+    if (gMarioStates[0].action == ACT_SHOT_FROM_CANNON && newcam_active) {
         gMarioStates[0].area->camera->mode = CAMERA_MODE_NEWCAM;
         gLakituState.mode = CAMERA_MODE_NEWCAM;
     }
-#endif
 
     if (c->cutscene != 0) {
         sYawSpeed = 0;
@@ -3281,11 +3247,9 @@ void update_camera(struct Camera *c) {
                     mode_cannon_camera(c);
                     break;
 
-#ifdef BETTERCAMERA
                 case CAMERA_MODE_NEWCAM:
                     newcam_loop(c);
                     break;
-#endif
 
                 default:
                     mode_mario_camera(c);
@@ -3351,11 +3315,9 @@ void update_camera(struct Camera *c) {
                     mode_rom_hack_camera(c);
                     break;
 
-#ifdef BETTERCAMERA
                 case CAMERA_MODE_NEWCAM:
                     newcam_loop(c);
                     break;
-#endif
             }
         }
     }
@@ -3662,10 +3624,8 @@ void init_camera(struct Camera *c) {
     c->yaw = gLakituState.yaw;
     c->nextYaw = gLakituState.yaw;
 
-#ifdef BETTERCAMERA
     newcam_init(c, 0);
     newcam_init_settings();
-#endif
 }
 
 /**
@@ -5784,10 +5744,10 @@ void set_camera_mode_8_directions(struct Camera *c) {
         s8DirModeBaseYaw = 0;
         s8DirModeYawOffset = 0;
     }
-#ifdef BETTERCAMERA
-    if (newcam_active == 1)
+
+    if (newcam_active == 1) {
         c->mode = CAMERA_MODE_NEWCAM;
-#endif
+    }
 }
 
 /**
@@ -5808,10 +5768,10 @@ void set_camera_mode_close_cam(u8 *mode) {
         sStatusFlags &= ~CAM_FLAG_SMOOTH_MOVEMENT;
         *mode = CAMERA_MODE_CLOSE;
     }
-#ifdef BETTERCAMERA
-    if (newcam_active == 1)
+
+    if (newcam_active == 1) {
         *mode = CAMERA_MODE_NEWCAM;
-#endif
+    }
 }
 
 /**
@@ -5837,10 +5797,10 @@ void set_camera_mode_radial(struct Camera *c, s16 transitionTime) {
         }
         sModeOffsetYaw = 0;
     }
-#ifdef BETTERCAMERA
-    if (newcam_active == 1)
+
+    if (newcam_active == 1) {
         c->mode = CAMERA_MODE_NEWCAM;
-#endif
+    }
 }
 
 /**
@@ -7297,9 +7257,7 @@ void update_camera_yaw(struct Camera *c) {
     if (!c) { return; }
     c->nextYaw = calculate_yaw(c->focus, c->pos);
     c->yaw = c->nextYaw;
-#ifdef BETTERCAMERA
     newcam_apply_outside_values(c,0);
-#endif
 }
 
 void cutscene_reset_spline(void) {
@@ -9694,14 +9652,9 @@ BAD_RETURN(s32) cutscene_non_painting_end(struct Camera *c) {
 
     if (c->defMode == CAMERA_MODE_CLOSE) {
         c->mode = CAMERA_MODE_CLOSE;
-    } else
-#ifdef BETTERCAMERA
-    if (c->defMode == CAMERA_MODE_NEWCAM) {
+    } else if (c->defMode == CAMERA_MODE_NEWCAM) {
         c->mode = CAMERA_MODE_NEWCAM;
-    }
-    else
-#endif
-    {
+    } else {
         c->mode = CAMERA_MODE_FREE_ROAM;
     }
 
@@ -10484,9 +10437,7 @@ BAD_RETURN(s32) cutscene_sliding_doors_follow_mario(struct Camera *c) {
 BAD_RETURN(s32) cutscene_sliding_doors_open(struct Camera *c) {
     UNUSED u32 pad[2];
 
-#ifdef BETTERCAMERA
     newcam_apply_outside_values(c,1);
-#endif
     reset_pan_distance(c);
     cutscene_event(cutscene_sliding_doors_open_start, c, 0, 8);
     cutscene_event(cutscene_sliding_doors_open_set_cvars, c, 8, 8);
@@ -10699,12 +10650,11 @@ BAD_RETURN(s32) cutscene_unused_exit_focus_mario(struct Camera *c) {
  */
 BAD_RETURN(s32) cutscene_exit_painting_end(struct Camera *c) {
     if (!c) { return; }
-#ifdef BETTERCAMERA
-    if (newcam_active == 1)
+    if (newcam_active == 1) {
         c->mode = CAMERA_MODE_NEWCAM;
-        else
-#endif
+    } else {
         c->mode = CAMERA_MODE_CLOSE;
+    }
     c->cutscene = 0;
     gCutsceneTimer = CUTSCENE_STOP;
     sStatusFlags |= CAM_FLAG_SMOOTH_MOVEMENT;
@@ -10874,24 +10824,13 @@ BAD_RETURN(s32) cutscene_door_follow_mario(struct Camera *c) {
  */
 BAD_RETURN(s32) cutscene_door_end(struct Camera *c) {
     if (!c) { return; }
-#ifndef BETTERCAMERA
-    if (c->defMode == CAMERA_MODE_FREE_ROAM) {
-        c->mode = CAMERA_MODE_FREE_ROAM;
-    } else {
-        c->mode = CAMERA_MODE_CLOSE;
-    }
-#else
     if (c->defMode == CAMERA_MODE_CLOSE) {
         c->mode = CAMERA_MODE_CLOSE;
-    } else
-    if (c->defMode == CAMERA_MODE_NEWCAM) {
+    } else if (c->defMode == CAMERA_MODE_NEWCAM) {
         c->mode = CAMERA_MODE_NEWCAM;
-    }
-    else
-    {
+    } else {
         c->mode = CAMERA_MODE_FREE_ROAM;
     }
-#endif
 
     c->cutscene = 0;
     gCutsceneTimer = CUTSCENE_STOP;

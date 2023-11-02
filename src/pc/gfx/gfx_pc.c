@@ -214,15 +214,6 @@ static void gfx_update_loaded_texture(uint8_t tile_number, uint32_t size_bytes, 
 void ext_gfx_run_dl(Gfx* cmd);
 //////////////////////////////////
 
-#ifdef EXTERNAL_DATA
-static inline size_t string_hash(const uint8_t *str) {
-    size_t h = 0;
-    for (const uint8_t *p = str; *p; p++)
-        h = 31 * h + *p;
-    return h;
-}
-#endif
-
 static unsigned long get_time(void) {
     return 0;
 }
@@ -370,13 +361,8 @@ void gfx_texture_cache_clear(void) {
 }
 
 static bool gfx_texture_cache_lookup(int tile, struct TextureHashmapNode **n, const uint8_t *orig_addr, uint32_t fmt, uint32_t siz) {
-    #ifdef EXTERNAL_DATA // hash and compare the data (i.e. the texture name) itself
-    size_t hash = string_hash(orig_addr);
-    #define CMPADDR(x, y) (x && !sys_strcasecmp((const char *)x, (const char *)y))
-    #else // hash and compare the address
     size_t hash = (uintptr_t)orig_addr;
     #define CMPADDR(x, y) x == y
-    #endif
 
     hash = (hash >> HASH_SHIFT) & HASH_MASK;
 
@@ -595,102 +581,6 @@ static void import_texture_ci8(int tile) {
     gfx_rapi->upload_texture(rgba32_buf, width, height);
 }
 
-
-#ifdef EXTERNAL_DATA
-
-static inline void load_texture(const char *fullpath) {
-    int w, h;
-    u64 imgsize = 0;
-
-    u8 *imgdata = fs_load_file(fullpath, (uint64_t*) &imgsize);
-    if (imgdata) {
-        // TODO: implement stbi_callbacks or some shit instead of loading the whole texture
-        u8 *data = stbi_load_from_memory(imgdata, imgsize, &w, &h, NULL, 4);
-        free(imgdata);
-        if (data) {
-            gfx_rapi->upload_texture(data, w, h);
-            stbi_image_free(data); // don't need this anymore
-            return;
-        }
-    }
-
-    fprintf(stderr, "Could not load texture: `%s`\n", fullpath);
-    // replace with missing texture
-    gfx_rapi->upload_texture(missing_texture, MISSING_W, MISSING_H);
-}
-
-
-// this is taken straight from n64graphics
-static bool texname_to_texformat(const char *name, u8 *fmt, u8 *siz) {
-    static const struct {
-        const char *name;
-        const u8 format;
-        const u8 size;
-    } fmt_table[] = {
-        { "rgba16", G_IM_FMT_RGBA, G_IM_SIZ_16b },
-        { "rgba32", G_IM_FMT_RGBA, G_IM_SIZ_32b },
-        { "ia1",    G_IM_FMT_IA,   G_IM_SIZ_8b  }, // uhh
-        { "ia4",    G_IM_FMT_IA,   G_IM_SIZ_4b  },
-        { "ia8",    G_IM_FMT_IA,   G_IM_SIZ_8b  },
-        { "ia16",   G_IM_FMT_IA,   G_IM_SIZ_16b },
-        { "i4",     G_IM_FMT_I,    G_IM_SIZ_4b  },
-        { "i8",     G_IM_FMT_I,    G_IM_SIZ_8b  },
-        { "ci8",    G_IM_FMT_I,    G_IM_SIZ_8b  },
-        { "ci16",   G_IM_FMT_I,    G_IM_SIZ_16b },
-    };
-
-    char *fstr = strrchr(name, '.');
-    if (!fstr) return false; // no format string?
-    fstr++;
-
-    for (unsigned i = 0; i < sizeof(fmt_table) / sizeof(fmt_table[0]); ++i) {
-        if (!sys_strcasecmp(fstr, fmt_table[i].name)) {
-            *fmt = fmt_table[i].format;
-            *siz = fmt_table[i].size;
-            return true;
-        }
-    }
-
-    return false;
-}
-
-// calls import_texture() on every texture in the res folder
-// we can get the format and size from the texture files
-// and then cache them using gfx_texture_cache_lookup
-static bool preload_texture(UNUSED void *user, const char *path) {
-    // strip off the extension
-    char texname[SYS_MAX_PATH];
-    strncpy(texname, path, sizeof(texname));
-    texname[sizeof(texname)-1] = 0;
-    char *dot = strrchr(texname, '.');
-    if (dot) *dot = 0;
-
-    // get the format and size from filename
-    u8 fmt, siz;
-    if (!texname_to_texformat(texname, &fmt, &siz)) {
-        fprintf(stderr, "Unknown texture format: `%s`, skipping\n", texname);
-        return true; // just skip it, might be a stray skybox or something
-    }
-
-    char *actualname = texname;
-    // strip off the prefix // TODO: make a fs_ function for this shit
-    if (!strncmp(FS_TEXTUREDIR "/", actualname, 4)) actualname += 4;
-    // this will be stored in the hashtable, so make a copy
-    actualname = sys_strdup(actualname);
-    assert(actualname);
-
-    struct TextureHashmapNode *n;
-    if (!gfx_texture_cache_lookup(0, &n, (unsigned char*)actualname, fmt, siz)) {
-        //fprintf(stdout, "Loading new texture: `%s.`\n", actualname);
-        load_texture(path); // new texture, load it
-    }
-
-
-    return true;
-}
-
-#endif // EXTERNAL_DATA
-
 static void import_texture(int tile) {
     extern s32 dynos_tex_import(void **output, void *ptr, s32 tile, void *grapi, void **hashmap, void *pool, s32 *poolpos, s32 poolsize);
     if (dynos_tex_import((void **) &rendering_state.textures[tile], (void *) rdp.loaded_texture[tile].addr, tile, gfx_rapi, (void **) gfx_texture_cache.hashmap, (void *) gfx_texture_cache.pool, (int *) &gfx_texture_cache.pool_pos, MAX_CACHED_TEXTURES)) { return; }
@@ -707,30 +597,6 @@ static void import_texture(int tile) {
         return;
     }
 
-#ifdef EXTERNAL_DATA
-    // the "texture data" is actually a C string with the path to our texture in it
-    // load it from an external image in our data path
-    const char* texid = (const char*)rdp.loaded_texture[tile].addr;
-
-    // make sure the texture id is a printable ascii string
-    bool texidIsPrintable = true;
-    char* c = (char*)texid;
-    u16 length = 0;
-    while (c != NULL && *c != '\0') {
-        if (*c < 33 || *c > 126) {
-            texidIsPrintable = false;
-            break;
-        }
-        length++;
-        c++;
-    }
-    if (texidIsPrintable && length > 0) {
-        char texname[SYS_MAX_PATH];
-        snprintf(texname, sizeof(texname), FS_TEXTUREDIR "/%s.png", texid);
-        load_texture(texname);
-        return;
-    }
-#endif
     // the texture data is actual texture data
     //int t0 = get_time();
     if (fmt == G_IM_FMT_RGBA) {
@@ -1913,13 +1779,6 @@ void gfx_init(struct GfxWindowManagerAPI *wapi, struct GfxRenderingAPI *rapi, co
 
     gfx_cc_precomp();
 }
-
-#ifdef EXTERNAL_DATA
-void gfx_precache_textures(void) {
-    // preload all textures
-    fs_walk(FS_TEXTUREDIR, preload_texture, NULL, true);
-}
-#endif
 
 struct GfxRenderingAPI *gfx_get_current_rendering_api(void) {
     return gfx_rapi;

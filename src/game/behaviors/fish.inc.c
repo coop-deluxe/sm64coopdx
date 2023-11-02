@@ -52,13 +52,10 @@ static void fish_spawner_act_spawn(void) {
  * Mario is more than 2000 units higher.
  */
 void fish_spawner_act_idle(void) {
-    // TODO: should this be re-enabled?
-/*#ifndef NODRAWINGDISTANCE
     struct Object *player = nearest_player_to_object(o);
     if ((gCurrLevelNum != LEVEL_SA) && (player->oPosY - o->oPosY > 2000.0f)) {
         o->oAction = FISH_SPAWNER_ACT_RESPAWN;
     }
-#endif*/
 }
 
 /**

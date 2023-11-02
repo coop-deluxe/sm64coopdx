@@ -305,163 +305,103 @@ void camera_allow_toxic_gas_camera(u8 allow) {
 }
 
 bool camera_config_is_free_cam_enabled(void) {
-#ifdef BETTERCAMERA
     return sOverrideEnableCamera.override ? sOverrideEnableCamera.value : configEnableCamera;
-#else
-    return false;
-#endif
 }
 
 bool camera_config_is_analog_cam_enabled(void) {
-#ifdef BETTERCAMERA
     return sOverrideCameraAnalog.override ? sOverrideCameraAnalog.value : configCameraAnalog;
-#else
-    return false;
-#endif
 }
 
 bool camera_config_is_mouse_look_enabled(void) {
-#ifdef BETTERCAMERA
     return sOverrideCameraMouse.override ? sOverrideCameraMouse.value : configCameraMouse;
-#else
-    return false;
-#endif
 }
 
 bool camera_config_is_x_inverted(void) {
-#ifdef BETTERCAMERA
     return sOverrideCameraInvertX.override ? sOverrideCameraInvertX.value : configCameraInvertX;
-#else
-    return false;
-#endif
 }
 
 bool camera_config_is_y_inverted(void) {
-#ifdef BETTERCAMERA
     return sOverrideCameraInvertY.override ? sOverrideCameraInvertY.value : configCameraInvertY;
-#else
-    return false;
-#endif
 }
 
 u32 camera_config_get_x_sensitivity(void) {
-#ifdef BETTERCAMERA
     return sOverrideCameraXSens.override ? sOverrideCameraXSens.value : configCameraXSens;
-#else
-    return 0;
-#endif
 }
 
 u32 camera_config_get_y_sensitivity(void) {
-#ifdef BETTERCAMERA
     return sOverrideCameraYSens.override ? sOverrideCameraYSens.value : configCameraYSens;
-#else
-    return 0;
-#endif
 }
 
 u32 camera_config_get_aggression(void) {
-#ifdef BETTERCAMERA
     return sOverrideCameraAggr.override ? sOverrideCameraAggr.value : configCameraAggr;
-#else
-    return 0;
-#endif
 }
 
 u32 camera_config_get_pan_level(void) {
-#ifdef BETTERCAMERA
     return sOverrideCameraPan.override ? sOverrideCameraPan.value : configCameraPan;
-#else
-    return 0;
-#endif
 }
 
 u32 camera_config_get_deceleration(void) {
-#ifdef BETTERCAMERA
     return sOverrideCameraDegrade.override ? sOverrideCameraDegrade.value : configCameraDegrade;
-#else
-    return 0;
-#endif
 }
 
 void camera_config_enable_free_cam(bool enable) {
-#ifdef BETTERCAMERA
     sOverrideEnableCamera.value = enable;
     sOverrideEnableCamera.override = true;
     newcam_init_settings();
-#endif
 }
 
 void camera_config_enable_analog_cam(bool enable) {
-#ifdef BETTERCAMERA
     sOverrideCameraAnalog.value = enable;
     sOverrideCameraAnalog.override = true;
     newcam_init_settings();
-#endif
 }
 
 void camera_config_enable_mouse_look(bool enable) {
-#ifdef BETTERCAMERA
     sOverrideCameraMouse.value = enable;
     sOverrideCameraMouse.override = true;
     newcam_init_settings();
-#endif
 }
 
 void camera_config_invert_x(bool invert) {
-#ifdef BETTERCAMERA
     sOverrideCameraInvertX.value = invert;
     sOverrideCameraInvertX.override = true;
     newcam_init_settings();
-#endif
 }
 
 void camera_config_invert_y(bool invert) {
-#ifdef BETTERCAMERA
     sOverrideCameraInvertY.value = invert;
     sOverrideCameraInvertY.override = true;
     newcam_init_settings();
-#endif
 }
 
 void camera_config_set_x_sensitivity(u32 value) {
-#ifdef BETTERCAMERA
     sOverrideCameraXSens.value = MIN(MAX(value, 1), 100);
     sOverrideCameraXSens.override = true;
     newcam_init_settings();
-#endif
 }
 
 void camera_config_set_y_sensitivity(u32 value) {
-#ifdef BETTERCAMERA
     sOverrideCameraYSens.value = MIN(MAX(value, 1), 100);
     sOverrideCameraYSens.override = true;
     newcam_init_settings();
-#endif
 }
 
 void camera_config_set_aggression(u32 value) {
-#ifdef BETTERCAMERA
     sOverrideCameraAggr.value = MIN(MAX(value, 0), 100);
     sOverrideCameraAggr.override = true;
     newcam_init_settings();
-#endif
 }
 
 void camera_config_set_pan_level(u32 value) {
-#ifdef BETTERCAMERA
     sOverrideCameraPan.value = MIN(MAX(value, 0), 100);
     sOverrideCameraPan.override = true;
     newcam_init_settings();
-#endif
 }
 
 void camera_config_set_deceleration(u32 value) {
-#ifdef BETTERCAMERA
     sOverrideCameraDegrade.value = MIN(MAX(value, 0), 100);
     sOverrideCameraDegrade.override = true;
     newcam_init_settings();
-#endif
 }
 
 ///

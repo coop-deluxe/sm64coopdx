@@ -329,15 +329,6 @@ void main_func(void) {
         network_init(NT_NONE, false);
     }
 
-#ifdef EXTERNAL_DATA
-    // precache data if needed
-    if (configPrecacheRes) {
-        fprintf(stdout, "precaching data\n");
-        fflush(stdout);
-        gfx_precache_textures();
-    }
-#endif
-
     gGameInited = true;
 
     while (true) {

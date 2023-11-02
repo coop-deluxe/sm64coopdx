@@ -34,18 +34,8 @@ OSX_BUILD ?= 0
 TARGET_ARCH ?= native
 TARGET_BITS ?= 0
 
-# Enable better camera by default
-BETTERCAMERA ?= 1
-# Enable no drawing distance by default
-NODRAWINGDISTANCE ?= 1
 # Disable texture fixes by default (helps with them purists)
 TEXTURE_FIX ?= 0
-# Enable extended options menu by default
-EXT_OPTIONS_MENU ?= 1
-# Disable text-based save-files by default
-TEXTSAVES ?= 0
-# Load resources from external files
-EXTERNAL_DATA ?= 0
 # Enable Discord Game SDK (used for Discord invites)
 DISCORD_SDK ?= 1
 # Enable CoopNet SDK (used for CoopNet server hosting)
@@ -67,8 +57,8 @@ HEADLESS ?= 0
 ICON ?= 1
 # Use .app (mac only)
 USE_APP ?= 1
-# Various workarounds for weird toolchains
 
+# Various workarounds for weird toolchains
 NO_BZERO_BCOPY ?= 0
 NO_LDIV ?= 0
 
@@ -82,11 +72,6 @@ WINDOW_API ?= SDL2
 AUDIO_API ?= SDL2
 # Controller backends (can have multiple, space separated): SDL2, SDL1
 CONTROLLER_API ?= SDL2
-
-# Misc settings for EXTERNAL_DATA
-
-BASEDIR ?= res
-BASEPACK ?= base.zip
 
 # Automatic settings for PC port(s)
 
@@ -1055,24 +1040,6 @@ ifeq ($(DOCKERBUILD),1)
   CFLAGS += -DDOCKERBUILD
 endif
 
-# Check for Puppycam option
-ifeq ($(BETTERCAMERA),1)
-  CC_CHECK_CFLAGS += -DBETTERCAMERA
-  CFLAGS += -DBETTERCAMERA
-  EXT_OPTIONS_MENU := 1
-endif
-
-#ifeq ($(TEXTSAVES),1)
-#  CC_CHECK_CFLAGS += -DTEXTSAVES
-#  CFLAGS += -DTEXTSAVES
-#endif
-
-# Check for no drawing distance option
-#ifeq ($(NODRAWINGDISTANCE),1)
-  CC_CHECK_CFLAGS += -DNODRAWINGDISTANCE
-  CFLAGS += -DNODRAWINGDISTANCE
-#endif
-
 # Check for Discord SDK option
 ifeq ($(DISCORD_SDK),1)
   CC_CHECK_CFLAGS += -DDISCORD_SDK
@@ -1103,12 +1070,6 @@ ifeq ($(TEXTURE_FIX),1)
   CFLAGS += -DTEXTURE_FIX
 endif
 
-# Check for extended options menu option
-ifeq ($(EXT_OPTIONS_MENU),1)
-  CC_CHECK_CFLAGS += -DEXT_OPTIONS_MENU
-  CFLAGS += -DEXT_OPTIONS_MENU
-endif
-
 # Check for no bzero/bcopy workaround option
 ifeq ($(NO_BZERO_BCOPY),1)
   CC_CHECK_CFLAGS += -DNO_BZERO_BCOPY
@@ -1125,16 +1086,6 @@ endif
 ifeq ($(LEGACY_GL),1)
   CC_CHECK_CFLAGS += -DLEGACY_GL
   CFLAGS += -DLEGACY_GL
-endif
-
-# Load external textures
-ifeq ($(EXTERNAL_DATA),1)
-  CC_CHECK_CFLAGS += -DEXTERNAL_DATA -DFS_BASEDIR="\"$(BASEDIR)\""
-  CFLAGS += -DEXTERNAL_DATA -DFS_BASEDIR="\"$(BASEDIR)\""
-  # tell skyconv to write names instead of actual texture data and save the split tiles so we can use them later
-  SKYTILE_DIR := $(BUILD_DIR)/textures/skybox_tiles
-  SKYCONV_ARGS := --store-names --write-tiles "$(SKYTILE_DIR)"
-  $(shell mkdir -p $(SKYTILE_DIR))
 endif
 
 #==============================================================================#
@@ -1188,40 +1139,6 @@ endef
 #==============================================================================#
 # Main Targets                                                                 #
 #==============================================================================#
-
-
-
-ifeq ($(EXTERNAL_DATA),1)
-
-BASEPACK_PATH := $(BUILD_DIR)/$(BASEDIR)/$(BASEPACK)
-BASEPACK_LST := $(BUILD_DIR)/basepack.lst
-
-# depend on resources as well
-all: $(BASEPACK_PATH)
-
-# phony target for building resources
-res: $(BASEPACK_PATH)
-
-# prepares the basepack.lst
-$(BASEPACK_LST): $(EXE)
-	@$(PRINT) "$(GREEN)Making basepack list.$(NO_COL)\n"
-	@mkdir -p $(BUILD_DIR)/$(BASEDIR)
-	@echo -n > $(BASEPACK_LST)
-	@echo "$(BUILD_DIR)/sound/bank_sets sound/bank_sets" >> $(BASEPACK_LST)
-	@echo "$(BUILD_DIR)/sound/sequences.bin sound/sequences.bin" >> $(BASEPACK_LST)
-	@echo "$(BUILD_DIR)/sound/sound_data.ctl sound/sound_data.ctl" >> $(BASEPACK_LST)
-	@echo "$(BUILD_DIR)/sound/sound_data.tbl sound/sound_data.tbl" >> $(BASEPACK_LST)
-	@$(foreach f, $(wildcard $(SKYTILE_DIR)/*), echo $(f) gfx/$(f:$(BUILD_DIR)/%=%) >> $(BASEPACK_LST);)
-	@find actors -name \*.png -exec echo "{} gfx/{}" >> $(BASEPACK_LST) \;
-	@find levels -name \*.png -exec echo "{} gfx/{}" >> $(BASEPACK_LST) \;
-	@find textures -name \*.png -exec echo "{} gfx/{}" >> $(BASEPACK_LST) \;
-
-# prepares the resource ZIP with base data
-$(BASEPACK_PATH): $(BASEPACK_LST)
-	@$(PRINT) "$(GREEN)Packing basepack zip file.$(NO_COL)\n"
-	$(V)$(PYTHON) $(TOOLS_DIR)/mkzip.py $(BASEPACK_LST) $(BASEPACK_PATH)
-
-endif
 
 #all: $(ROM)
 all: $(EXE)
@@ -1342,33 +1259,24 @@ $(BUILD_DIR)/src/game/ingame_menu.o: $(BUILD_DIR)/include/text_strings.h
 #==============================================================================#
 TEXTURE_ENCODING := u8
 
-ifeq ($(EXTERNAL_DATA),1)
-  $(BUILD_DIR)/%: %.png
-	$(call print,Dummying:,$<,$@)
-	$(V)$(PYTHON) $(TOOLS_DIR)/zeroterm.py "$(patsubst %.png,%,$^)" > $@
-else
-  # Convert PNGs to RGBA32, RGBA16, IA16, IA8, IA4, IA1, I8, I4 binary files
-  $(BUILD_DIR)/%: %.png
+# Convert PNGs to RGBA32, RGBA16, IA16, IA8, IA4, IA1, I8, I4 binary files
+$(BUILD_DIR)/%: %.png
 	$(call print,Converting:,$<,$@)
 	$(V)$(N64GRAPHICS) -s raw -i $@ -g $< -f $(lastword $(subst ., ,$@))
 
-  $(BUILD_DIR)/%.inc.c: %.png
+$(BUILD_DIR)/%.inc.c: %.png
 	$(call print,Converting:,$<,$@)
 	$(V)$(N64GRAPHICS) -s $(TEXTURE_ENCODING) -i $@ -g $< -f $(lastword ,$(subst ., ,$(basename $<)))
-endif
 
-
-ifeq ($(EXTERNAL_DATA),0)
-  # Color Index CI8
-  $(BUILD_DIR)/%.ci8: %.ci8.png
+# Color Index CI8
+$(BUILD_DIR)/%.ci8: %.ci8.png
 	$(call print,Converting:,$<,$@)
 	$(V)$(N64GRAPHICS_CI) -i $@ -g $< -f ci8
 
-  # Color Index CI4
-  $(BUILD_DIR)/%.ci4: %.ci4.png
+# Color Index CI4
+$(BUILD_DIR)/%.ci4: %.ci4.png
 	$(call print,Converting:,$<,$@)
 	$(V)$(N64GRAPHICS_CI) -i $@ -g $< -f ci4
-endif
 
 #==============================================================================#
 # Compressed Segment Generation                                                #
@@ -1463,12 +1371,6 @@ $(SOUND_BIN_DIR)/%.m64: $(SOUND_BIN_DIR)/%.o
 #==============================================================================#
 # Generated Source Code Files                                                  #
 #==============================================================================#
-
-ifeq ($(EXTERNAL_DATA),1)
-  $(SOUND_BIN_DIR)/%.inc.c: $(SOUND_BIN_DIR)/%
-	$(call print,Dummying:,$<,$@)
-	$(V)$(PYTHON) $(TOOLS_DIR)/zeroterm.py "$(patsubst $(BUILD_DIR)/%,%,$^)" | hexdump -v -e '1/1 "0x%X,"' > $@
-endif
 
 # Convert binary file to a comma-separated list of byte values for inclusion in C code
 $(BUILD_DIR)/%.inc.c: $(BUILD_DIR)/%

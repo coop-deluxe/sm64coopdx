@@ -1791,21 +1791,6 @@ u8 gShindouSequencesHeader[] = {
 };
 #endif
 
-#ifdef EXTERNAL_DATA
-# define LOAD_DATA(x) load_sound_res((const char *)x)
-# include <stdio.h>
-# include <stdlib.h>
-static inline void *load_sound_res(const char *path) {
-    void *data = fs_load_file(path, NULL);
-    if (!data) sys_fatal("could not load sound data from '%s'", path);
-    // FIXME: figure out where it is safe to free this shit
-    //        can't free it immediately after in audio_init()
-    return data;
-}
-#else
-# define LOAD_DATA(x) x
-#endif
-
 // (void) must be omitted from parameters
 void audio_init() {
 #if defined(VERSION_EU)
@@ -1956,7 +1941,7 @@ void audio_init() {
     init_sequence_players();
 #else
     gSeqFileHeader = (ALSeqFile *) buf;
-    data = LOAD_DATA(gMusicData);
+    data = gMusicData;
     audio_dma_copy_immediate((uintptr_t) data, gSeqFileHeader, 0x10);
     gSequenceCount = gSeqFileHeader->seqCount;
 #if defined(VERSION_EU)
@@ -1971,7 +1956,7 @@ void audio_init() {
 
     // Load header for CTL (assets/sound_data.ctl.s, i.e. ADSR)
     gAlCtlHeader = (ALSeqFile *) buf;
-    data = LOAD_DATA(gSoundDataADSR);
+    data = gSoundDataADSR;
     audio_dma_copy_immediate((uintptr_t) data, gAlCtlHeader, 0x10);
     size = gAlCtlHeader->seqCount * sizeof(ALSeqData) + 4;
     size = ALIGN16(size);
@@ -1987,12 +1972,12 @@ void audio_init() {
     size = ALIGN16(size);
     gAlTbl = soundAlloc(&gAudioInitPool, size);
 
-    data = LOAD_DATA(gSoundDataRaw);
+    data = gSoundDataRaw;
     audio_dma_copy_immediate((uintptr_t) data, gAlTbl, size);
     alSeqFileNew(gAlTbl, data);
 
     // Load bank sets for each sequence (assets/bank_sets.s)
-    data = LOAD_DATA(gBankSetsData);
+    data = gBankSetsData;
     gAlBankSets = soundAlloc(&gAudioInitPool, 160);
     audio_dma_copy_immediate((uintptr_t)data, gAlBankSets, 160);
 

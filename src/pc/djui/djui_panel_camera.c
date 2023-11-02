@@ -15,9 +15,7 @@ void djui_panel_camera_create(struct DjuiBase* caller) {
     {
         djui_checkbox_create(body, DLANG(CAMERA, FREE_CAMERA), &configEnableCamera, djui_panel_camera_value_changed);
         djui_checkbox_create(body, DLANG(CAMERA, ANALOG_CAMERA), &configCameraAnalog, djui_panel_camera_value_changed);
-#ifdef BETTERCAMERA
         djui_checkbox_create(body, DLANG(CAMERA, MOUSE_LOOK), &configCameraMouse, djui_panel_camera_value_changed);
-#endif
         djui_checkbox_create(body, DLANG(CAMERA, INVERT_X), &configCameraInvertX, djui_panel_camera_value_changed);
         djui_checkbox_create(body, DLANG(CAMERA, INVERT_Y), &configCameraInvertY, djui_panel_camera_value_changed);
         djui_slider_create(body, DLANG(CAMERA, X_SENSITIVITY), &configCameraXSens, 1, 100, djui_panel_camera_value_changed);
