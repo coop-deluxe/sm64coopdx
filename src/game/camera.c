@@ -44,6 +44,7 @@ u8 gOverrideFreezeCamera = FALSE;
 enum RomhackCameraOverride gOverrideRomhackCamera = RCO_ALL;
 u8 gRomhackCameraAllowCentering = TRUE;
 u8 gOverrideAllowToxicGasCamera = FALSE;
+u8 gRomhackCameraAllowDpad = FALSE;
 
 /**
  * @file camera.c
@@ -12085,6 +12086,21 @@ static f32 sRomHackWaterFocus = 0;
 static f32 sRomHackWaterPitchOffset = 0;
 u8 gRomHackCamSetCollisions = TRUE;
 
+s32 snap_to_45_degrees(s16 angle) {
+    if (angle % DEGREES(45)) {
+        s16 d1 = ABS(angle) % DEGREES(45);
+        s16 d2 = DEGREES(45) - d1;
+        if (angle > 0) {
+            if (d1 < d2) return angle - d1;
+            else return angle + d2;
+        } else {
+            if (d1 < d2) return angle + d1;
+            else return angle - d2;
+        }
+    }
+    return angle;
+}
+
 void rom_hack_cam_set_collisions(u8 enable) {
     gRomHackCamSetCollisions = enable;
 }
@@ -12231,13 +12247,28 @@ void mode_rom_hack_camera(struct Camera *c) {
         sRomHackZoom = 0;
     }
 
+    // Thank you hackersm64
+    if (gRomhackCameraAllowDpad) {
+        if (gMarioStates[0].controller->buttonPressed & U_JPAD) {
+            sRomHackYaw = DEGREES(180 + 90) - gMarioStates[0].faceAngle[1];
+        } else if (gMarioStates[0].controller->buttonDown & L_JPAD) {
+            sRomHackYaw -= DEGREES(1) * (camera_config_is_x_inverted() ? -1 : 1);
+        } else if (gMarioStates[0].controller->buttonDown & R_JPAD) {
+            sRomHackYaw += DEGREES(1) * (camera_config_is_x_inverted() ? -1 : 1);
+        } else if (gMarioStates[0].controller->buttonPressed & D_JPAD) {
+            sRomHackYaw = snap_to_45_degrees(sRomHackYaw);
+        }
+    }
+
     // center
     if (gMarioStates[0].controller->buttonPressed & L_TRIG && gRomhackCameraAllowCentering) {
         center_rom_hack_camera();
     }
 
     // clamp yaw
-    sRomHackYaw = (sRomHackYaw / DEGREES(45)) * DEGREES(45);
+    if (!gRomhackCameraAllowDpad) {
+        sRomHackYaw = (sRomHackYaw / DEGREES(45)) * DEGREES(45);
+    }
 
     // update the camera focus and such
     Vec3f pos;

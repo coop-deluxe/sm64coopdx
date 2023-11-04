@@ -62,6 +62,7 @@ bool camera_is_frozen(void);
 void camera_set_romhack_override(enum RomhackCameraOverride rco);
 void camera_romhack_allow_centering(u8 allow);
 void camera_allow_toxic_gas_camera(u8 allow);
+void camera_romhack_allow_dpad_usage(u8 allow);
 
 bool camera_config_is_free_cam_enabled(void);
 bool camera_config_is_analog_cam_enabled(void);

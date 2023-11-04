@@ -8599,6 +8599,12 @@ function camera_romhack_allow_centering(allow)
     -- ...
 end
 
+--- @param allow integer
+--- @return nil
+function camera_romhack_allow_dpad_usage(allow)
+    -- ...
+end
+
 --- @param rco RomhackCameraOverride
 --- @return nil
 function camera_set_romhack_override(rco)

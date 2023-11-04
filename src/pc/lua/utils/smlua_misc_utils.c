@@ -305,6 +305,10 @@ void camera_allow_toxic_gas_camera(u8 allow) {
     gOverrideAllowToxicGasCamera = allow;
 }
 
+void camera_romhack_allow_dpad_usage(u8 allow) {
+    gRomhackCameraAllowDpad = allow;
+}
+
 bool camera_config_is_free_cam_enabled(void) {
     return sOverrideEnableCamera.override ? sOverrideEnableCamera.value : configEnableCamera;
 }
