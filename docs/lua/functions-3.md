@@ -3988,6 +3988,26 @@
 
 <br />
 
+## [warp_special](#warp_special)
+
+### Lua Example
+`warp_special(arg)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| arg | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void warp_special(s32 arg);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ---
 # functions from mario.h
 

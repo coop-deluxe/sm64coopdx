@@ -74,7 +74,7 @@ override_allowed_functions = {
     "src/game/object_list_processor.h":     [ "set_object_respawn_info_bits" ],
     "src/game/mario_misc.h":                [ "bhv_toad.*", "bhv_unlock_door.*" ],
     "src/pc/utils/misc.h":                  [ "update_all_mario_stars" ],
-    "src/game/level_update.h":              [ "level_trigger_warp", "get_painting_warp_node", "initiate_painting_warp" ],
+    "src/game/level_update.h":              [ "level_trigger_warp", "get_painting_warp_node", "initiate_painting_warp", "warp_special" ],
     "src/game/area.h":                      [ "area_get_warp_node" ],
     "src/engine/level_script.h":            [ "area_create_warp_node" ],
     "src/game/ingame_menu.h":               [ "set_min_dialog_width", "set_dialog_override_pos", "reset_dialog_override_pos", "set_dialog_override_color", "reset_dialog_override_color" ]

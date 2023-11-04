@@ -4234,6 +4234,12 @@ function level_trigger_warp(m, warpOp)
     -- ...
 end
 
+--- @param arg integer
+--- @return nil
+function warp_special(arg)
+    -- ...
+end
+
 --- @param m MarioState
 --- @return nil
 function adjust_sound_for_speed(m)

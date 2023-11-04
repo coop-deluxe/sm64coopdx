@@ -851,6 +851,7 @@
    - [get_painting_warp_node](functions-3.md#get_painting_warp_node)
    - [initiate_painting_warp](functions-3.md#initiate_painting_warp)
    - [level_trigger_warp](functions-3.md#level_trigger_warp)
+   - [warp_special](functions-3.md#warp_special)
 
 <br />
 

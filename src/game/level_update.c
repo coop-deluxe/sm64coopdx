@@ -285,6 +285,11 @@ void set_play_mode(s16 playMode) {
 }
 
 void warp_special(s32 arg) {
+    if (arg != SPECIAL_WARP_CAKE && arg != SPECIAL_WARP_GODDARD && arg != SPECIAL_WARP_GODDARD_GAMEOVER && arg != SPECIAL_WARP_TITLE && arg != SPECIAL_WARP_LEVEL_SELECT) {
+        LOG_ERROR("Invalid parameter value for warp_special: Expected SPECIAL_WARP_CAKE, SPECIAL_WARP_GODDARD, SPECIAL_WARP_GODDARD_GAMEOVER, SPECIAL_WARP_TITLE, or SPECIAL_WARP_LEVEL_SELECT");
+        return;
+    }
+
     sCurrPlayMode = PLAY_MODE_CHANGE_LEVEL;
     D_80339ECA = 0;
     D_80339EE0 = arg;
@@ -990,12 +995,12 @@ void initiate_delayed_warp(void) {
         reset_dialog_render_state();
 
         if (gDebugLevelSelect && (sDelayedWarpOp & WARP_OP_TRIGGERS_LEVEL_SELECT)) {
-            warp_special(-9);
+            warp_special(SPECIAL_WARP_LEVEL_SELECT);
         } else if (gCurrDemoInput != NULL) {
             if (sDelayedWarpOp == WARP_OP_DEMO_END) {
-                warp_special(-8);
+                warp_special(SPECIAL_WARP_TITLE);
             } else {
-                warp_special(-2);
+                warp_special(SPECIAL_WARP_GODDARD);
             }
         } else {
             switch (sDelayedWarpOp) {
@@ -1006,14 +1011,14 @@ void initiate_delayed_warp(void) {
                     break;
 
                 case WARP_OP_CREDITS_END:
-                    warp_special(-1);
+                    warp_special(SPECIAL_WARP_CAKE);
                     sound_banks_enable(SEQ_PLAYER_SFX,
                                        SOUND_BANKS_ALL & ~SOUND_BANKS_DISABLED_AFTER_CREDITS);
                     break;
 
                 case WARP_OP_DEMO_NEXT:
                     if (!gDjuiInMainMenu) {
-                        warp_special(-2);
+                        warp_special(SPECIAL_WARP_GODDARD);
                     }
                     break;
 

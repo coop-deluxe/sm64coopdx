@@ -4011,6 +4011,21 @@ MARIO_SPAWN_UNKNOWN_27 = 0x27
 PRESS_START_DEMO_TIMER = 800
 
 --- @type integer
+SPECIAL_WARP_CAKE = -1
+
+--- @type integer
+SPECIAL_WARP_GODDARD = -2
+
+--- @type integer
+SPECIAL_WARP_GODDARD_GAMEOVER = -3
+
+--- @type integer
+SPECIAL_WARP_LEVEL_SELECT = -9
+
+--- @type integer
+SPECIAL_WARP_TITLE = -8
+
+--- @type integer
 TIMER_CONTROL_HIDE = 3
 
 --- @type integer

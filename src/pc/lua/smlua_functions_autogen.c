@@ -13832,6 +13832,23 @@ int smlua_func_level_trigger_warp(lua_State* L) {
     return 1;
 }
 
+int smlua_func_warp_special(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "warp_special", 1, top);
+        return 0;
+    }
+
+    s32 arg = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "warp_special"); return 0; }
+
+    warp_special(arg);
+
+    return 1;
+}
+
   /////////////
  // mario.h //
 /////////////
@@ -32039,6 +32056,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "get_painting_warp_node", smlua_func_get_painting_warp_node);
     smlua_bind_function(L, "initiate_painting_warp", smlua_func_initiate_painting_warp);
     smlua_bind_function(L, "level_trigger_warp", smlua_func_level_trigger_warp);
+    smlua_bind_function(L, "warp_special", smlua_func_warp_special);
 
     // mario.h
     smlua_bind_function(L, "adjust_sound_for_speed", smlua_func_adjust_sound_for_speed);

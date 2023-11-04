@@ -32,6 +32,12 @@
 
 #define WARP_OP_TRIGGERS_LEVEL_SELECT 0x10
 
+#define SPECIAL_WARP_CAKE -1
+#define SPECIAL_WARP_GODDARD -2
+#define SPECIAL_WARP_GODDARD_GAMEOVER -3
+#define SPECIAL_WARP_TITLE -8
+#define SPECIAL_WARP_LEVEL_SELECT -9
+
 #define MARIO_SPAWN_DOOR_WARP             0x01
 #define MARIO_SPAWN_UNKNOWN_02            0x02
 #define MARIO_SPAWN_UNKNOWN_03            0x03
@@ -155,6 +161,7 @@ struct WarpNode *get_painting_warp_node(void);
 void initiate_painting_warp(s16 paintingIndex);
 s16 level_trigger_warp(struct MarioState *m, s32 warpOp);
 void level_set_transition(s16 length, void (*updateFunction)(s16 *));
+void warp_special(s32 arg);
 
 s32 lvl_init_or_update(s16 initOrUpdate, UNUSED s32 unused);
 s32 lvl_init_from_save_file(UNUSED s16 arg0, s32 levelNum);
