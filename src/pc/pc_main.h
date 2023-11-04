@@ -60,8 +60,6 @@ extern bool gCoopCompatibility;
 #define TITLE "sm64coopdx"
 #endif
 
-#define LOAD_STEPS 6
-
 #define AT_STARTUP __attribute__((constructor))
 
 extern bool gGameInited;

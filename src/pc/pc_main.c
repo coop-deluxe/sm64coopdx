@@ -19,6 +19,7 @@
 #include "audio/audio_null.h"
 
 #include "pc_main.h"
+#include "loading.h"
 #include "cliopts.h"
 #include "configfile.h"
 #include "controller/controller_api.h"
@@ -238,8 +239,10 @@ void audio_shutdown(void) {
 }
 
 void game_deinit(void) {
-    smlua_call_event_hooks(HOOK_ON_EXIT);
-    configfile_save(configfile_name());
+    if (gGameInited) {
+        smlua_call_event_hooks(HOOK_ON_EXIT);
+        configfile_save(configfile_name());
+    }
     controller_shutdown();
     audio_custom_shutdown();
     audio_shutdown();
@@ -256,24 +259,28 @@ void game_exit(void) {
     exit(0);
 }
 
-void main_func(void) {
+void *main_game_init(void*) {
     const char *gamedir = gCLIOpts.GameDir[0] ? gCLIOpts.GameDir : FS_BASEDIR;
     const char *userpath = gCLIOpts.SavePath[0] ? gCLIOpts.SavePath : sys_user_path();
     fs_init(sys_ropaths, gamedir, userpath);
 
-    sync_objects_init_system();
-    djui_unicode_init();
-    djui_init();
-    dynos_packs_init();
-    mods_init();
+    dynos_gfx_init();
 
     // load config
     configfile_load();
-    if (!djui_language_init(configLanguage)) {
-        snprintf(configLanguage, MAX_CONFIG_STRING, "%s", "");
-    }
+    configWindow.settings_changed = true;
+    if (!djui_language_init(configLanguage)) { snprintf(configLanguage, MAX_CONFIG_STRING, "%s", ""); }
+    dynos_packs_init();
+    sync_objects_init_system();
 
-    dynos_pack_init();
+    mods_init();
+    enable_queued_mods();
+    if (gIsThreaded) {
+        REFRESH_MUTEX(
+            gCurrLoadingSegment.percentage = 0;
+            snprintf(gCurrLoadingSegment.str, 256, "Starting game");
+        );
+    }
 
     // If coop_custom_palette_* values are not found in sm64config.txt, the custom palette config will use the default values (Mario's palette)
     // But if no preset is found, that means the current palette is a custom palette
@@ -292,7 +299,6 @@ void main_func(void) {
     if (gCLIOpts.FullScreen == 1) { configWindow.fullscreen = true; }
     else if (gCLIOpts.FullScreen == 2) { configWindow.fullscreen = false; }
 
-    // incase the loading screen failed, or is disabled
     if (!gGfxInited) {
         gfx_init(&WAPI, &RAPI, TITLE);
         WAPI.set_keyboard_callbacks(keyboard_on_key_down, keyboard_on_key_up, keyboard_on_all_keys_up, keyboard_on_text_input);
@@ -310,9 +316,36 @@ void main_func(void) {
 
     thread5_game_loop(NULL);
 
+    gGameInited = true;
+}
+
+int main(int argc, char *argv[]) {
+
+    // Handle terminal arguments
+    if (!parse_cli_opts(argc, argv)) { return 0; }
+
+    // Create the window straight away
+    if (!gGfxInited) {
+        gfx_init(&WAPI, &RAPI, TITLE);
+        WAPI.set_keyboard_callbacks(keyboard_on_key_down, keyboard_on_key_up, keyboard_on_all_keys_up, keyboard_on_text_input);
+    }
+
+    // Start the thread for setting up the game
+    if (pthread_mutex_init(&gLoadingThreadMutex, NULL) == 0 && pthread_create(&gLoadingThreadId, NULL, main_game_init, (void*) 1) == 0) {
+        gIsThreaded = true;
+        render_loading_screen(); // Render the loading screen while the game is setup
+        gIsThreaded = false;
+    } else {
+        main_game_init(NULL); // Failsafe incase threading doesn't work
+    }
+    pthread_mutex_destroy(&gLoadingThreadMutex);
+
+    // Initialize djui
+    djui_init();
+    djui_unicode_init();
     djui_init_late();
 
-    // init network
+    // Init network
     if (gCLIOpts.Network == NT_CLIENT) {
         network_set_system(NS_SOCKET);
         snprintf(gGetHostName, MAX_CONFIG_STRING, "%s", gCLIOpts.JoinIp);
@@ -322,6 +355,12 @@ void main_func(void) {
     } else if (gCLIOpts.Network == NT_SERVER) {
         network_set_system(NS_SOCKET);
         configHostPort = gCLIOpts.NetworkPort;
+
+        // Horrible, hacky fix for mods that access marioObj straight away
+        // best fix: host with the standard main menu method
+        static struct Object sHackyObject = { 0 };
+        gMarioStates[0].marioObj = &sHackyObject;
+
         network_init(NT_SERVER, false);
         djui_panel_shutdown();
         djui_panel_modlist_create(NULL);
@@ -329,8 +368,7 @@ void main_func(void) {
         network_init(NT_NONE, false);
     }
 
-    gGameInited = true;
-
+    // Main loop
     while (true) {
         debug_context_reset();
         CTX_BEGIN(CTX_FRAME);
@@ -346,10 +384,5 @@ void main_func(void) {
     }
 
     bassh_deinit();
-}
-
-int main(int argc, char *argv[]) {
-    parse_cli_opts(argc, argv);
-    main_func();
     return 0;
 }

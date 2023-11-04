@@ -24,8 +24,25 @@ static u32 sDjuiLuaErrorTimeout = 0;
 bool gDjuiInMainMenu = true;
 bool gDjuiDisabled = false;
 bool gDjuiRenderBehindHud = false;
+static bool sDjuiInited = false;
 
 bool sDjuiRendered60fps = false;
+
+void reset_djui_text(void);
+
+void reset_djui(void) {
+    sSavedDisplayListHead = NULL;
+    sDjuiPauseOptions = NULL;
+    sDjuiLuaError = NULL;
+    sDjuiLuaErrorTimeout = 0;
+    if (gDjuiRoot) djui_base_destroy(&gDjuiRoot->base);
+
+    if (gDjuiConsole) djui_base_destroy(&gDjuiConsole->panel->base);
+    extern u32 sDjuiConsoleMessages;
+    sDjuiConsoleMessages = 0;
+
+    sDjuiInited = false;
+}
 
 void patch_djui_before(void) {
     sDjuiRendered60fps = false;
@@ -68,6 +85,7 @@ void djui_init(void) {
     djui_panel_playerlist_create(NULL);
 
     djui_console_create();
+    sDjuiInited = true;
 }
 
 void djui_init_late(void) {
@@ -91,6 +109,7 @@ void djui_connect_menu_open(void) {
 }
 
 void djui_lua_error(char* text) {
+    if (!sDjuiLuaError) { return; }
     djui_text_set_text(sDjuiLuaError, text);
     djui_base_set_visible(&sDjuiLuaError->base, true);
     sDjuiLuaErrorTimeout = 30 * 5;
@@ -105,7 +124,7 @@ void djui_reset_hud_params(void) {
 }
 
 void djui_render(void) {
-    if (gDjuiDisabled) { return; }
+    if (!sDjuiInited || gDjuiDisabled) { return; }
     djui_reset_hud_params();
 
     sSavedDisplayListHead = gDisplayListHead;

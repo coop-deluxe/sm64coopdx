@@ -275,8 +275,7 @@ static void crash_handler_produce_one_frame(void) {
     // Render frame
     end_master_display_list();
     alloc_display_list(0);
-    extern void send_display_list(struct SPTask *spTask);
-    send_display_list(&gGfxPool->spTask);
+    gfx_run((Gfx*) gGfxSPTask->task.t.data_ptr); // send_display_list
     display_and_vsync();
     gfx_end_frame();
 }
@@ -302,7 +301,7 @@ static CRASH_HANDLER_TYPE crash_handler(EXCEPTION_POINTERS *ExceptionInfo) {
 #elif __linux__
 static void crash_handler(const int signalNum, siginfo_t *info, ucontext_t *context) {
 #endif
-    LOG_INFO("game crashed! preparing crash screen...");
+    printf("game crashed! preparing crash screen...\n");
     memset(sCrashHandlerText, 0, sizeof(sCrashHandlerText));
     CrashHandlerText *pText = &sCrashHandlerText[0];
     gDjuiDisabled = true;
@@ -658,6 +657,11 @@ static void crash_handler(const int signalNum, siginfo_t *info, ucontext_t *cont
     }
 #endif
 
+    // Incase it crashed before the game window opened
+    if (!gGfxInited) gfx_init(&WAPI, &RAPI, TITLE);
+    djui_init();
+    djui_unicode_init();
+
     // Main loop
     while (true) {
         WAPI.main_loop(crash_handler_produce_one_frame);
@@ -670,17 +674,17 @@ AT_STARTUP static void init_crash_handler(void) {
     // Windows
     SetUnhandledExceptionFilter(crash_handler);
 #elif __linux__
+
     // Linux
-    struct sigaction linux_crash_handler;
+    struct sigaction linuxCrashHandler;
+    linuxCrashHandler.sa_handler = (void*) &crash_handler;
+    sigemptyset(&linuxCrashHandler.sa_mask);
+    linuxCrashHandler.sa_flags = SA_SIGINFO; // Get extra info about the crash
 
-    linux_crash_handler.sa_handler = (void *)crash_handler;
-    sigemptyset(&linux_crash_handler.sa_mask);
-    linux_crash_handler.sa_flags = SA_SIGINFO; // Get extra info about the crash
-
-    sigaction(SIGBUS, &linux_crash_handler, NULL);
-    sigaction(SIGFPE, &linux_crash_handler, NULL);
-    sigaction(SIGILL, &linux_crash_handler, NULL);
-    sigaction(SIGSEGV, &linux_crash_handler, NULL);
+    sigaction(SIGBUS, &linuxCrashHandler, NULL);
+    sigaction(SIGFPE, &linuxCrashHandler, NULL);
+    sigaction(SIGILL, &linuxCrashHandler, NULL);
+    sigaction(SIGSEGV, &linuxCrashHandler, NULL);
 #endif
 }
 

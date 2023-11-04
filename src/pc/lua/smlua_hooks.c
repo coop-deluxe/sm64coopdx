@@ -10,10 +10,7 @@
 #include "pc/crash_handler.h"
 #include "src/game/hud.h"
 #include "pc/debug_context.h"
-#include "pc/network/network.h"
-#include "pc/network/network_player.h"
-#include "pc/network/socket/socket.h"
-#include "pc/chat_commands.h"
+#include "pc/pc_main.h"
 
 #if defined(DEVELOPMENT)
 #include "../mods/mods.h"
@@ -92,6 +89,8 @@ struct LuaHookedEvent {
 static struct LuaHookedEvent sHookedEvents[HOOK_MAX] = { 0 };
 
 int smlua_call_hook(lua_State* L, int nargs, int nresults, int errfunc, struct Mod* activeMod) {
+    if (!gGameInited) { return 0; } // Don't call hooks while the game is booting
+
     struct Mod* prev = gLuaActiveMod;
     gLuaActiveMod = activeMod;
     gLuaLastHookMod = activeMod;

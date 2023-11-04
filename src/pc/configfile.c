@@ -279,6 +279,23 @@ static const struct ConfigOption options[] = {
 
 // FunctionConfigOption functions
 
+struct QueuedMods {
+    char* path;
+    struct QueuedMods *next;
+};
+
+static struct QueuedMods *sQueuedEnableModsHead = NULL;
+
+void enable_queued_mods() {
+    while (sQueuedEnableModsHead) {
+        struct QueuedMods *next = sQueuedEnableModsHead->next;
+        mods_enable(sQueuedEnableModsHead->path);
+        free(sQueuedEnableModsHead->path);
+        free(sQueuedEnableModsHead);
+        sQueuedEnableModsHead = next;
+    }
+}
+
 static void enable_mod_read(char** tokens, UNUSED int numTokens) {
     char combined[256] = { 0 };
     for (int i = 1; i < numTokens; i++) {
@@ -286,7 +303,16 @@ static void enable_mod_read(char** tokens, UNUSED int numTokens) {
         strncat(combined, tokens[i], 255);
     }
 
-    mods_enable(combined);
+    struct QueuedMods* queued = malloc(sizeof(struct QueuedMods));
+    queued->path = strdup(combined);
+    queued->next = NULL;
+    if (!sQueuedEnableModsHead) {
+        sQueuedEnableModsHead = queued;
+    } else {
+        struct QueuedMods* tail = sQueuedEnableModsHead;
+        while (tail->next) { tail = tail->next; }
+        tail->next = queued;
+    }
 }
 
 static void enable_mod_write(FILE* file) {

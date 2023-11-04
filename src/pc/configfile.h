@@ -120,6 +120,7 @@ extern bool         configFadeoutDistantSounds;
 extern unsigned int configDjuiTheme;
 extern bool         configCoopCompatibility;
 
+void enable_queued_mods();
 void configfile_load(void);
 void configfile_save(const char *filename);
 const char *configfile_name(void);

@@ -25,6 +25,7 @@ bool dynos_warp_exit_level(s32 aDelay);
 bool dynos_warp_to_castle(s32 aLevel);
 
 // -- dynos packs -- //
+void dynos_gfx_init(void);
 void dynos_packs_init(void);
 int dynos_pack_get_count(void);
 const char* dynos_pack_get_name(s32 index);
