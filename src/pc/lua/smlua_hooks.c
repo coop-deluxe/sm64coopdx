@@ -10,6 +10,10 @@
 #include "pc/crash_handler.h"
 #include "src/game/hud.h"
 #include "pc/debug_context.h"
+#include "pc/network/network.h"
+#include "pc/network/network_player.h"
+#include "pc/network/socket/socket.h"
+#include "pc/chat_commands.h"
 #include "pc/pc_main.h"
 
 #if defined(DEVELOPMENT)
@@ -1489,7 +1493,7 @@ char* remove_color_codes(const char* str) {
 
 bool is_valid_subcommand(const char* start, const char* end) {
     for (const char* ptr = start; ptr < end; ptr++) {
-        if (isspace(*ptr)) {
+        if (isspace(*ptr) || *ptr == '\0') {
             return false;
         }
     }
@@ -1542,12 +1546,12 @@ char** smlua_get_chat_player_list(void) {
 
 
 char** smlua_get_chat_maincommands_list(void) {
-#ifndef DEVELOPMENT
-    char* additionalCmds[] = {"players", "kick", "ban", "permban", "moderator", "confirm", "help", "?"};
-    s32 additionalCmdsCount = 8;
-#else
+#if defined(DEVELOPMENT)
     char* additionalCmds[] = {"players", "kick", "ban", "permban", "moderator", "confirm", "help", "?", "warp", "lua", "luaf"};
     s32 additionalCmdsCount = 11;
+#else
+    char* additionalCmds[] = {"players", "kick", "ban", "permban", "moderator", "confirm", "help", "?"};
+    s32 additionalCmdsCount = 8;
 #endif
 
     char** commands = (char**) malloc((sHookedChatCommandsCount + additionalCmdsCount + 1) * sizeof(char*));
@@ -1603,22 +1607,18 @@ char** smlua_get_chat_subcommands_list(const char* maincommand) {
             free(noColorsDesc);
         }
     }
-    char** empty = (char**) malloc(sizeof(char*));
-    empty[0] = NULL;
-    return empty;
+    return NULL;
 }
 
 bool smlua_maincommand_exists(const char* maincommand) {
     char** commands = smlua_get_chat_maincommands_list();
+    bool result = false;
 
     s32 i = 0;
     while (commands[i] != NULL) {
         if (strcmp(commands[i], maincommand) == 0) {
-            for (s32 j = 0; commands[j] != NULL; j++) {
-                free(commands[j]);
-            }
-            free(commands);
-            return true;
+            result = true;
+            break;
         }
         i++;
     }
@@ -1627,21 +1627,23 @@ bool smlua_maincommand_exists(const char* maincommand) {
         free(commands[j]);
     }
     free(commands);
-    return false;
+    
+    return result;
 }
-
 
 bool smlua_subcommand_exists(const char* maincommand, const char* subcommand) {
     char** subcommands = smlua_get_chat_subcommands_list(maincommand);
 
+    if (subcommands == NULL) {
+        return false;
+    }
+
+    bool result = false;
     s32 i = 0;
     while (subcommands[i] != NULL) {
         if (strcmp(subcommands[i], subcommand) == 0) {
-            for (s32 j = 0; subcommands[j] != NULL; j++) {
-                free(subcommands[j]);
-            }
-            free(subcommands);
-            return true;
+            result = true;
+            break;
         }
         i++;
     }
@@ -1650,7 +1652,8 @@ bool smlua_subcommand_exists(const char* maincommand, const char* subcommand) {
         free(subcommands[j]);
     }
     free(subcommands);
-    return false;
+    
+    return result;
 }
 
   //////////////////////////////

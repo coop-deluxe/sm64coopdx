@@ -44,28 +44,28 @@ void reset_tab_completion_all(void) {
 void sent_history_init(ArrayList *arrayList) {
     if (!arrayList->initialized) {
         arrayList->size = 0;
-		arrayList->initialized = 1;
+        arrayList->initialized = 1;
         arrayList->currentIndex = -1;
-        strncpy(arrayList->currentMessage, "", MAX_MSG_LENGTH - 1);
+        snprintf(arrayList->currentMessage, MAX_MSG_LENGTH, "%s", "");
     }
 }
 
 void sent_history_add_message(ArrayList *arrayList, const char *newMessage) {
     if (arrayList->size == MAX_HISTORY_SIZE) {
         for (s32 i = 1; i < MAX_HISTORY_SIZE; i++) {
-            strncpy(arrayList->messages[i-1], arrayList->messages[i], MAX_MSG_LENGTH);
+            snprintf(arrayList->messages[i-1], MAX_MSG_LENGTH, "%s", arrayList->messages[i]);
         }
         arrayList->size--;
     }
 
-    strncpy(arrayList->messages[arrayList->size], newMessage, MAX_MSG_LENGTH - 1);
+    snprintf(arrayList->messages[arrayList->size], MAX_MSG_LENGTH, "%s", newMessage);
     arrayList->messages[arrayList->size][MAX_MSG_LENGTH - 1] = '\0';
     arrayList->size++;
 }
 
 void sent_history_update_current_message(ArrayList *arrayList, const char *message) {
     if (arrayList->currentIndex == -1) {
-        strncpy(arrayList->currentMessage, message, MAX_MSG_LENGTH - 1);
+        snprintf(arrayList->currentMessage, MAX_MSG_LENGTH, "%s", message);
     }
 }
 
@@ -90,7 +90,7 @@ void sent_history_navigate(ArrayList *arrayList, bool navigateUp) {
 }
 
 void sent_history_reset_navigation(ArrayList *arrayList) {
-    strncpy(arrayList->currentMessage, "", MAX_MSG_LENGTH - 1);
+    snprintf(arrayList->currentMessage, MAX_MSG_LENGTH, "%s", "");
     arrayList->currentIndex = -1;
 }
 
@@ -158,17 +158,15 @@ static char* get_main_command_from_input(const char* input) {
     }
     size_t len = spacePos - input;
     char* command = (char*) malloc(len + 1);
-    strncpy(command, input, len);
+    snprintf(command, len + 1, "%s", input);
     command[len] = '\0';
     return command;
 }
 
 static bool complete_subcommand(const char* mainCommand, const char* subCommandPrefix) {
     char** subcommands = smlua_get_chat_subcommands_list(mainCommand);
+
     if (!subcommands || !subcommands[0]) {
-        if (subcommands) {
-            free(subcommands);
-        }
         return false;
     }
 
@@ -220,10 +218,20 @@ CurrentWordInfo get_current_word_info(char* buffer, s32 position) {
     s32 currentWordStart = position;
     s32 currentWordEnd = position;
 
-    while (currentWordStart > 0 && buffer[currentWordStart - 1] != ' ') { currentWordStart--; }
-    while (buffer[currentWordEnd] != '\0' && buffer[currentWordEnd] != ' ') { currentWordEnd++; }
+    while (currentWordStart > 0 && buffer[currentWordStart - 1] != ' ') {
+        currentWordStart--;
+    }
 
-    strncpy(info.word, &buffer[currentWordStart], currentWordEnd - currentWordStart);
+    while (buffer[currentWordEnd] != '\0' && buffer[currentWordEnd] != ' ') {
+        currentWordEnd++;
+    }
+
+    s32 wordLength = currentWordEnd - currentWordStart;
+    if (wordLength > MAX_MSG_LENGTH - 1) {
+        wordLength = MAX_MSG_LENGTH - 1;
+    }
+
+    snprintf(info.word, wordLength + 1, "%.*s", wordLength, &buffer[currentWordStart]);
 
     s32 wordCount = 0;
     for (s32 i = 0; i <= currentWordStart; i++) {
@@ -246,10 +254,7 @@ void djui_inputbox_replace_current_word(struct DjuiInputbox* inputbox, char* tex
     while (inputbox->buffer[currentWordEnd] != '\0' && inputbox->buffer[currentWordEnd] != ' ') { currentWordEnd++; }
 
     char newBuffer[MAX_MSG_LENGTH];
-    memset(newBuffer, 0, MAX_MSG_LENGTH);
-    strncpy(newBuffer, inputbox->buffer, currentWordStart);
-    strcat(newBuffer, text);
-    strcat(newBuffer, &inputbox->buffer[currentWordEnd]);
+    snprintf(newBuffer, MAX_MSG_LENGTH, "%.*s%s%s", currentWordStart, inputbox->buffer, text, &inputbox->buffer[currentWordEnd]);
 
     djui_inputbox_set_text(inputbox, newBuffer);
     djui_inputbox_move_cursor_to_position(inputbox, currentWordStart + strlen(text));
@@ -296,6 +301,105 @@ static bool complete_player_name(const char* namePrefix) {
     return completionSuccess;
 }
 
+static bool handle_tab_completion(void) {
+    bool alreadyTabCompleted = false;
+    if (gDjuiChatBox->chatInput->buffer[0] == '/') {
+        char* spacePosition = strrchr(sCommandsTabCompletionOriginalText, ' ');
+        if (spacePosition != NULL) {
+            char* mainCommand = get_main_command_from_input(sCommandsTabCompletionOriginalText);
+            if (mainCommand) {
+                if (!complete_subcommand(mainCommand + 1, spacePosition + 1)) {
+                    reset_tab_completion_all();
+                } else {
+                    alreadyTabCompleted = true;
+                }
+                free(mainCommand);
+            }
+        } else {
+            if (sCommandsTabCompletionIndex == -1) {
+                snprintf(sCommandsTabCompletionOriginalText, MAX_MSG_LENGTH, "%s", gDjuiChatBox->chatInput->buffer);
+            }
+            
+            char* bufferWithoutSlash = sCommandsTabCompletionOriginalText + 1;
+            char** commands = smlua_get_chat_maincommands_list();
+            s32 foundCommandsCount = 0;
+            
+            for (s32 i = 0; commands[i] != NULL; i++) {
+                if (strncmp(commands[i], bufferWithoutSlash, strlen(bufferWithoutSlash)) == 0) {
+                    foundCommandsCount++;
+                }
+            }
+            
+            if (foundCommandsCount > 0) {
+                sCommandsTabCompletionIndex = (sCommandsTabCompletionIndex + 1) % foundCommandsCount;
+                s32 currentIndex = 0;
+                
+                for (s32 i = 0; commands[i] != NULL; i++) {
+                    if (strncmp(commands[i], bufferWithoutSlash, strlen(bufferWithoutSlash)) == 0) {
+                        if (currentIndex == sCommandsTabCompletionIndex) {
+                            char completion[MAX_MSG_LENGTH];
+                            snprintf(completion, MAX_MSG_LENGTH, "/%s", commands[i]);
+                            djui_inputbox_set_text(gDjuiChatBox->chatInput, completion);
+                            djui_inputbox_move_cursor_to_end(gDjuiChatBox->chatInput);
+                            alreadyTabCompleted = true;
+                        }
+                        currentIndex++;
+                    }
+                }
+            } else {
+                char* spacePositionB = strrchr(sCommandsTabCompletionOriginalText, ' ');
+                if (spacePositionB != NULL) {
+                    char* mainCommandB = get_main_command_from_input(sCommandsTabCompletionOriginalText);
+                    if (mainCommandB) {
+                        if (!complete_subcommand(mainCommandB + 1, spacePositionB + 1)) {
+                            reset_tab_completion_all();
+                        } else {
+                            alreadyTabCompleted = true;
+                        }
+                        free(mainCommandB);
+                    }
+                }
+            }
+            
+            for (s32 i = 0; commands[i] != NULL; i++) {
+                free(commands[i]);
+            }
+            free(commands);
+        }
+    }
+    if (!alreadyTabCompleted) {
+        if (gDjuiChatBox->chatInput->selection[0] != gDjuiChatBox->chatInput->selection[1]) {
+            alreadyTabCompleted = true;
+        }
+    }
+    if (!alreadyTabCompleted) {
+        CurrentWordInfo wordCurrent = get_current_word_info(gDjuiChatBox->chatInput->buffer, gDjuiChatBox->chatInput->selection[0]);
+        if (gDjuiChatBox->chatInput->buffer[0] == '/') {
+            if (wordCurrent.index == 1 && smlua_maincommand_exists(wordCurrent.word + 1)) {
+                alreadyTabCompleted = true;
+            } else if (wordCurrent.index == 2) {
+                CurrentWordInfo worldMainCommand = get_current_word_info(gDjuiChatBox->chatInput->buffer, 0);
+                if (smlua_maincommand_exists(worldMainCommand.word + 1) && smlua_subcommand_exists(worldMainCommand.word + 1, wordCurrent.word)) {
+                    alreadyTabCompleted = true;
+                }
+            }
+        }
+    }
+    if (!alreadyTabCompleted) {
+        CurrentWordInfo wordInfo = get_current_word_info(gDjuiChatBox->chatInput->buffer, gDjuiChatBox->chatInput->selection[0]);
+        if (wordInfo.index != -1) {
+            if (sPlayersTabCompletionIndex == -1) {
+                snprintf(sPlayersTabCompletionOriginalText, MAX_MSG_LENGTH, "%s", wordInfo.word);
+            }
+            if (!complete_player_name(sPlayersTabCompletionOriginalText)) {
+                reset_tab_completion_players();
+            } else {
+                alreadyTabCompleted = true;
+            }
+        }
+    }
+}
+
 static bool djui_chat_box_input_on_key_down(struct DjuiBase* base, int scancode) {
     sent_history_init(&sentHistory);
 
@@ -308,7 +412,7 @@ static bool djui_chat_box_input_on_key_down(struct DjuiBase* base, int scancode)
     f32 pageAmount = gDjuiChatBox->chatContainer->base.elem.height * 3.0f / 4.0f;
 
     char previousText[MAX_MSG_LENGTH];
-    strncpy(previousText, gDjuiChatBox->chatInput->buffer, MAX_MSG_LENGTH - 1);
+    snprintf(previousText, MAX_MSG_LENGTH, "%s", gDjuiChatBox->chatInput->buffer);
 
     switch (scancode) {
         case SCANCODE_UP:
@@ -342,102 +446,7 @@ static bool djui_chat_box_input_on_key_down(struct DjuiBase* base, int scancode)
             if (canScrollUp) { *yValue = fmax(*yValue - pageAmount, yMax); }
             return true;
         case SCANCODE_TAB:
-            bool alreadyTabCompleted = false;
-            if (gDjuiChatBox->chatInput->buffer[0] == '/') {
-                char* spacePosition = strrchr(sCommandsTabCompletionOriginalText, ' ');
-                if (spacePosition != NULL) {
-                    char* mainCommand = get_main_command_from_input(sCommandsTabCompletionOriginalText);
-                    if (mainCommand) {
-                        if (!complete_subcommand(mainCommand + 1, spacePosition + 1)) {
-                            reset_tab_completion_all();
-                        } else {
-                            alreadyTabCompleted = true;
-                        }
-                        free(mainCommand);
-                    }
-                } else {
-                    if (sCommandsTabCompletionIndex == -1) {
-                        strncpy(sCommandsTabCompletionOriginalText, gDjuiChatBox->chatInput->buffer, MAX_MSG_LENGTH - 1);
-                    }
-                    
-                    char* bufferWithoutSlash = sCommandsTabCompletionOriginalText + 1;
-                    char** commands = smlua_get_chat_maincommands_list();
-                    s32 foundCommandsCount = 0;
-                    
-                    for (s32 i = 0; commands[i] != NULL; i++) {
-                        if (strncmp(commands[i], bufferWithoutSlash, strlen(bufferWithoutSlash)) == 0) {
-                            foundCommandsCount++;
-                        }
-                    }
-                    
-                    if (foundCommandsCount > 0) {
-                        sCommandsTabCompletionIndex = (sCommandsTabCompletionIndex + 1) % foundCommandsCount;
-                        s32 currentIndex = 0;
-                        
-                        for (s32 i = 0; commands[i] != NULL; i++) {
-                            if (strncmp(commands[i], bufferWithoutSlash, strlen(bufferWithoutSlash)) == 0) {
-                                if (currentIndex == sCommandsTabCompletionIndex) {
-                                    char completion[MAX_MSG_LENGTH];
-                                    snprintf(completion, MAX_MSG_LENGTH, "/%s", commands[i]);
-                                    djui_inputbox_set_text(gDjuiChatBox->chatInput, completion);
-                                    djui_inputbox_move_cursor_to_end(gDjuiChatBox->chatInput);
-                                    alreadyTabCompleted = true;
-                                }
-                                currentIndex++;
-                            }
-                        }
-                    } else {
-                        char* spacePositionB = strrchr(sCommandsTabCompletionOriginalText, ' ');
-                        if (spacePositionB != NULL) {
-                            char* mainCommandB = get_main_command_from_input(sCommandsTabCompletionOriginalText);
-                            if (mainCommandB) {
-                                if (!complete_subcommand(mainCommandB + 1, spacePositionB + 1)) {
-                                    reset_tab_completion_all();
-                                } else {
-                                    alreadyTabCompleted = true;
-                                }
-                                free(mainCommandB);
-                            }
-                        }
-                    }
-                    
-                    for (s32 i = 0; commands[i] != NULL; i++) {
-                        free(commands[i]);
-                    }
-                    free(commands);
-                }
-            }
-            if (!alreadyTabCompleted) {
-                if (gDjuiChatBox->chatInput->selection[0] != gDjuiChatBox->chatInput->selection[1]) {
-                    alreadyTabCompleted = true;
-                }
-            }
-            if (!alreadyTabCompleted) {
-                CurrentWordInfo wordCurrent = get_current_word_info(gDjuiChatBox->chatInput->buffer, gDjuiChatBox->chatInput->selection[0]);
-                if (gDjuiChatBox->chatInput->buffer[0] == '/') {
-                    if (wordCurrent.index == 1 && smlua_maincommand_exists(wordCurrent.word + 1)) {
-                        alreadyTabCompleted = true;
-                    } else if (wordCurrent.index == 2) {
-                        CurrentWordInfo worldMainCommand = get_current_word_info(gDjuiChatBox->chatInput->buffer, 0);
-                        if (smlua_maincommand_exists(worldMainCommand.word + 1) && smlua_subcommand_exists(worldMainCommand.word + 1, wordCurrent.word)) {
-                            alreadyTabCompleted = true;
-                        }
-                    }
-                }
-            }
-            if (!alreadyTabCompleted) {
-                CurrentWordInfo wordInfo = get_current_word_info(gDjuiChatBox->chatInput->buffer, gDjuiChatBox->chatInput->selection[0]);
-                if (wordInfo.index != -1) {
-                    if (sPlayersTabCompletionIndex == -1) {
-                        strncpy(sPlayersTabCompletionOriginalText, wordInfo.word, MAX_MSG_LENGTH - 1);
-                    }
-                    if (!complete_player_name(sPlayersTabCompletionOriginalText)) {
-                        reset_tab_completion_players();
-                    } else {
-                        alreadyTabCompleted = true;
-                    }
-                }
-            }
+            handle_tab_completion();
             return true;
         case SCANCODE_ENTER:
             reset_tab_completion_all();
@@ -455,6 +464,15 @@ static bool djui_chat_box_input_on_key_down(struct DjuiBase* base, int scancode)
                 reset_tab_completion_all();
             }
             return returnValueOnOtherKeyDown;
+    }
+}
+
+static void djui_chat_box_input_on_text_input(struct DjuiBase *base, char* text) {
+    size_t expectedIndex = strlen(gDjuiChatBox->chatInput->buffer);
+    bool isTextDifferent = (expectedIndex >= MAX_MSG_LENGTH) || (gDjuiChatBox->chatInput->buffer[expectedIndex] != text[0]);
+    djui_inputbox_on_text_input(base, text);
+    if (isTextDifferent) {
+        reset_tab_completion_all();
     }
 }
 

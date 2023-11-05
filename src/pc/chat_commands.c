@@ -123,7 +123,7 @@ bool exec_chat_command(char* command) {
         djui_chat_message_create(DLANG(CHAT, PLAYER_NOT_FOUND));
         return true;
     }
-
+  
     if (str_starts_with("/kick ", command)) {
         if (gNetworkType != NT_SERVER && !npl->moderator) {
             djui_chat_message_create(DLANG(CHAT, NO_PERMS));

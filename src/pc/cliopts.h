@@ -2,6 +2,7 @@
 #define _CLIOPTS_H
 
 #include "platform.h"
+#include "pc/configfile.h"
 
 enum NetworkType {
     NT_NONE,
@@ -22,6 +23,8 @@ struct PCCLIOptions  {
     char ConfigFile[SYS_MAX_PATH];
     char SavePath[SYS_MAX_PATH];
     char GameDir[SYS_MAX_PATH];
+    char PlayerName[MAX_PLAYER_STRING];
+    unsigned int RandomPlayerName;
 };
 
 extern struct PCCLIOptions gCLIOpts;
