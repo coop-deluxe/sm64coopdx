@@ -793,6 +793,24 @@
 
 <br />
 
+## [get_first_person_camera_enabled](#get_first_person_camera_enabled)
+
+### Lua Example
+`local booleanValue = get_first_person_camera_enabled()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool get_first_person_camera_enabled(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [get_fog_color](#get_fog_color)
 
 ### Lua Example
@@ -1458,6 +1476,26 @@
 
 ### C Prototype
 `void set_environment_region(u8 index, s32 value);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_first_person_camera_enabled](#set_first_person_camera_enabled)
+
+### Lua Example
+`set_first_person_camera_enabled(enable)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| enable | `boolean` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_first_person_camera_enabled(bool enable);`
 
 [:arrow_up_small:](#)
 

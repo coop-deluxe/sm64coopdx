@@ -4,7 +4,6 @@
 #include <fstream>
 #include <string>
 #include "pc/mini.h"
-#include "pc/interop.h"
 
 extern "C" {
 #include "pc/platform.h"
@@ -14,6 +13,8 @@ extern "C" {
 #include "pc/fs/fs.h"
 #include "pc/debuglog.h"
 }
+
+#define C_FIELD extern "C"
 
 void strdelete(char string[], char substr[]) {
     // i is used to loop through the string
@@ -62,7 +63,7 @@ void mod_storage_get_filename(char* dest) {
     normalize_path(dest); // fix any out of place slashes
 }
 
-C_FUNC bool mod_storage_save(const char* key, const char* value) {
+C_FIELD bool mod_storage_save(const char* key, const char* value) {
     if (strlen(key) > MAX_KEY_VALUE_LENGTH || strlen(value) > MAX_KEY_VALUE_LENGTH) {
         return false;
     }
@@ -96,15 +97,15 @@ C_FUNC bool mod_storage_save(const char* key, const char* value) {
     return true;
 }
 
-C_FUNC bool mod_storage_save_number(const char* key, double value) {
+C_FIELD bool mod_storage_save_number(const char* key, double value) {
     return mod_storage_save(key, std::to_string(value).c_str());
 }
 
-C_FUNC bool mod_storage_save_bool(const char* key, bool value) {
+C_FIELD bool mod_storage_save_bool(const char* key, bool value) {
     return mod_storage_save(key, value ? "true" : "false");
 }
 
-C_FUNC const char* mod_storage_load(const char* key) {
+C_FIELD const char* mod_storage_load(const char* key) {
     if (strlen(key) > MAX_KEY_VALUE_LENGTH) {
         return NULL;
     }
@@ -126,21 +127,21 @@ C_FUNC const char* mod_storage_load(const char* key) {
     return const_cast<char*>(ini["storage"][key].c_str());
 }
 
-C_FUNC double mod_storage_load_number(const char* key) {
+C_FIELD double mod_storage_load_number(const char* key) {
     const char* value = mod_storage_load(key);
     if (value == NULL) { return 0; }
 
     return std::strtod(value, nullptr);
 }
 
-C_FUNC bool mod_storage_load_bool(const char* key) {
+C_FIELD bool mod_storage_load_bool(const char* key) {
     const char* value = mod_storage_load(key);
     if (value == NULL) { return false; }
 
     return !strcmp(value, "true");
 }
 
-C_FUNC bool mod_storage_remove(const char* key) {
+C_FIELD bool mod_storage_remove(const char* key) {
     if (strlen(key) > MAX_KEY_VALUE_LENGTH) {
         return false;
     }
@@ -168,7 +169,7 @@ C_FUNC bool mod_storage_remove(const char* key) {
     return false;
 }
 
-C_FUNC bool mod_storage_clear(void) {
+C_FIELD bool mod_storage_clear(void) {
     char filename[SYS_MAX_PATH] = {0};
     mod_storage_get_filename(filename);
 

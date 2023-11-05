@@ -8670,6 +8670,11 @@ function get_environment_region(index)
     -- ...
 end
 
+--- @return boolean
+function get_first_person_camera_enabled()
+    -- ...
+end
+
 --- @param index integer
 --- @return integer
 function get_fog_color(index)
@@ -8878,6 +8883,12 @@ end
 --- @param value integer
 --- @return nil
 function set_environment_region(index, value)
+    -- ...
+end
+
+--- @param enable boolean
+--- @return nil
+function set_first_person_camera_enabled(enable)
     -- ...
 end
 

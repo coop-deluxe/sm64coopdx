@@ -151,6 +151,9 @@ struct DateTime* get_date_and_time(void);
 u16 get_envfx(void);
 void set_override_envfx(s32 envfx);
 
+bool get_first_person_camera_enabled(void);
+void set_first_person_camera_enabled(bool enable);
+
 const char* get_os_name(void);
 
 #endif

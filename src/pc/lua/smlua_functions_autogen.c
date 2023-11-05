@@ -28670,6 +28670,21 @@ int smlua_func_get_environment_region(lua_State* L) {
     return 1;
 }
 
+int smlua_func_get_first_person_camera_enabled(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "get_first_person_camera_enabled", 0, top);
+        return 0;
+    }
+
+
+    lua_pushboolean(L, get_first_person_camera_enabled());
+
+    return 1;
+}
+
 int smlua_func_get_fog_color(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -29258,6 +29273,23 @@ int smlua_func_set_environment_region(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "set_environment_region"); return 0; }
 
     set_environment_region(index, value);
+
+    return 1;
+}
+
+int smlua_func_set_first_person_camera_enabled(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "set_first_person_camera_enabled", 1, top);
+        return 0;
+    }
+
+    bool enable = smlua_to_boolean(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "set_first_person_camera_enabled"); return 0; }
+
+    set_first_person_camera_enabled(enable);
 
     return 1;
 }
@@ -32740,6 +32772,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "get_dialog_id", smlua_func_get_dialog_id);
     smlua_bind_function(L, "get_envfx", smlua_func_get_envfx);
     smlua_bind_function(L, "get_environment_region", smlua_func_get_environment_region);
+    smlua_bind_function(L, "get_first_person_camera_enabled", smlua_func_get_first_person_camera_enabled);
     smlua_bind_function(L, "get_fog_color", smlua_func_get_fog_color);
     smlua_bind_function(L, "get_fog_intensity", smlua_func_get_fog_intensity);
     smlua_bind_function(L, "get_got_file_coin_hi_score", smlua_func_get_got_file_coin_hi_score);
@@ -32774,6 +32807,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "save_file_get_using_backup_slot", smlua_func_save_file_get_using_backup_slot);
     smlua_bind_function(L, "save_file_set_using_backup_slot", smlua_func_save_file_set_using_backup_slot);
     smlua_bind_function(L, "set_environment_region", smlua_func_set_environment_region);
+    smlua_bind_function(L, "set_first_person_camera_enabled", smlua_func_set_first_person_camera_enabled);
     smlua_bind_function(L, "set_fog_color", smlua_func_set_fog_color);
     smlua_bind_function(L, "set_fog_intensity", smlua_func_set_fog_intensity);
     smlua_bind_function(L, "set_got_file_coin_hi_score", smlua_func_set_got_file_coin_hi_score);

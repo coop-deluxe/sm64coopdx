@@ -34,6 +34,7 @@
 #include "pc/network/network.h"
 #include "pc/lua/smlua_hooks.h"
 #include "pc/djui/djui.h"
+#include "first_person_cam.h"
 
 #define CBUTTON_MASK (U_CBUTTONS | D_CBUTTONS | L_CBUTTONS | R_CBUTTONS)
 
@@ -3147,7 +3148,7 @@ void update_camera(struct Camera *c) {
     gCamera = c;
     update_camera_hud_status(c);
 
-    if (gOverrideFreezeCamera && !gDjuiInMainMenu) {
+    if ((gOverrideFreezeCamera || update_first_person()) && !gDjuiInMainMenu) {
         return;
     }
 
@@ -3447,6 +3448,10 @@ void reset_camera(struct Camera *c) {
     gRecentCutscene = 0;
     unused8033B30C = 0;
     unused8033B310 = 0;
+
+    if (gFirstPersonEnabled) {
+        gFirstPersonYaw = gMarioStates[0].faceAngle[1] + 0x8000;
+    }
 }
 
 void init_camera(struct Camera *c) {

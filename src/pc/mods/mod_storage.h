@@ -25,4 +25,4 @@ bool mod_storage_clear(void);
 }
 #endif
 
-#endif
+#endif // MOD_STORAGE_H

@@ -22,6 +22,7 @@
 #include "pc/gfx/gfx_pc.h"
 #include "include/course_table.h"
 #include "game/level_geo.h"
+#include "game/first_person_cam.h"
 
 static struct DateTime sDateTime;
 
@@ -620,6 +621,17 @@ u16 get_envfx(void) {
 
 void set_override_envfx(s32 envfx) {
     gOverrideEnvFx = envfx;
+}
+
+///
+
+bool get_first_person_camera_enabled(void) {
+    return gFirstPersonEnabled;
+}
+
+void set_first_person_camera_enabled(bool enable) {
+    if (gFirstPersonEnabled && !enable) { gFOVState.fov = 45.0f; }
+    gFirstPersonEnabled = enable;
 }
 
 ///
