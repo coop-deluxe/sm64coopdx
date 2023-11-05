@@ -299,20 +299,7 @@ void *main_game_init(void*) {
     if (gCLIOpts.FullScreen == 1) { configWindow.fullscreen = true; }
     else if (gCLIOpts.FullScreen == 2) { configWindow.fullscreen = false; }
 
-    if (gCLIOpts.RandomPlayerName == 1) {
-        struct timespec TS;
-        clock_gettime(CLOCK_MONOTONIC, &TS);
-        srand((unsigned int)(TS.tv_nsec ^ TS.tv_sec ^ getpid()));
-
-        char randomDigits[9];
-        for (int i = 0; i < 8; i++) {
-            randomDigits[i] = '0' + (rand() % 10);
-        }
-        randomDigits[8] = '\0';
-
-        snprintf(configPlayerName, MAX_PLAYER_STRING, "Player%s", randomDigits);
-        printf("\nRandom Playername (Start-Parameter): %s\n\n", configPlayerName);
-    } else if (gCLIOpts.PlayerName[0] != '\0') {
+    if (gCLIOpts.PlayerName[0] != '\0') {
         snprintf(configPlayerName, MAX_PLAYER_STRING, "%s", gCLIOpts.PlayerName);
         printf("\nCustom Playername (Start-Parameter): %s\n\n", configPlayerName);
     }

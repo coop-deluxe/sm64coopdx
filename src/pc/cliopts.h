@@ -24,7 +24,6 @@ struct PCCLIOptions  {
     char SavePath[SYS_MAX_PATH];
     char GameDir[SYS_MAX_PATH];
     char PlayerName[MAX_PLAYER_STRING];
-    unsigned int RandomPlayerName;
 };
 
 extern struct PCCLIOptions gCLIOpts;

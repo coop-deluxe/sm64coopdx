@@ -301,7 +301,7 @@ static bool complete_player_name(const char* namePrefix) {
     return completionSuccess;
 }
 
-static bool handle_tab_completion(void) {
+static void handle_tab_completion(void) {
     bool alreadyTabCompleted = false;
     if (gDjuiChatBox->chatInput->buffer[0] == '/') {
         char* spacePosition = strrchr(sCommandsTabCompletionOriginalText, ' ');

@@ -26,7 +26,6 @@ static void print_help(void) {
     printf("%-20s\tStarts the game and joins an existing server.\n", "--client IP PORT");
     printf("%-20s\tStarts the game using a poolsize of your choice.\n", "--poolsize POOLSIZE");
     printf("%-20s\tStarts the game with a specific playername.\n", "--playername PLAYERNAME");
-    printf("%-20s\tStarts the game with a random playername.\n", "--randomplayername");
 }
 
 static inline int arg_string(const char *name, const char *value, char *target, int maxLength) {
@@ -90,9 +89,6 @@ bool parse_cli_opts(int argc, char* argv[]) {
 
         else if (strcmp(argv[i], "--playername") == 0 && (i + 1) < argc)
             arg_string("--playername", argv[++i], gCLIOpts.PlayerName, MAX_PLAYER_STRING);
-
-        else if (strcmp(argv[i], "--randomplayername") == 0)
-            gCLIOpts.RandomPlayerName = 1;
 
         // Print help
         else if (strcmp(argv[i], "--help") == 0) {
