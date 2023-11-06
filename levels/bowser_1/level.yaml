@@ -6,7 +6,7 @@ area-count: 1
 objects: []
 shared-path: []
 # loaded files
-skybox-bin: bidw
+skybox-bin: bitdw
 texture-bin: null
 effects: false
 actor-bins: [group12]

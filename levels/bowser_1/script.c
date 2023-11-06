@@ -19,7 +19,7 @@
 const LevelScript level_bowser_1_entry[] = {
     INIT_LEVEL(),
     LOAD_MIO0(/*seg*/ 0x07, _bowser_1_segment_7SegmentRomStart, _bowser_1_segment_7SegmentRomEnd),
-    LOAD_MIO0(/*seg*/ 0x0A, _bidw_skybox_mio0SegmentRomStart, _bidw_skybox_mio0SegmentRomEnd),
+    LOAD_MIO0(/*seg*/ 0x0A, _bitdw_skybox_mio0SegmentRomStart, _bitdw_skybox_mio0SegmentRomEnd),
     LOAD_MIO0(/*seg*/ 0x06, _group12_mio0SegmentRomStart, _group12_mio0SegmentRomEnd),
     LOAD_RAW( /*seg*/ 0x0D, _group12_geoSegmentRomStart, _group12_geoSegmentRomEnd),
     ALLOC_LEVEL_POOL(),

@@ -69,7 +69,7 @@ s8 gReadOnlyBackground;
 s8 gOverrideBackground = -1;
 
 extern SkyboxTexture bbh_skybox_ptrlist;
-extern SkyboxTexture bidw_skybox_ptrlist;
+extern SkyboxTexture bitdw_skybox_ptrlist;
 extern SkyboxTexture bitfs_skybox_ptrlist;
 extern SkyboxTexture bits_skybox_ptrlist;
 extern SkyboxTexture ccm_skybox_ptrlist;
@@ -88,7 +88,7 @@ SkyboxTexture *sSkyboxTextures[10] = {
     &ccm_skybox_ptrlist,
     &ssl_skybox_ptrlist,
     &bbh_skybox_ptrlist,
-    &bidw_skybox_ptrlist,
+    &bitdw_skybox_ptrlist,
     &clouds_skybox_ptrlist,
     &bits_skybox_ptrlist,
 };

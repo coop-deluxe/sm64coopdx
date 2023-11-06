@@ -300,12 +300,12 @@ static void write_skybox_c() { /* write c data to disc */
             if (storeNamesOnly) {
                 fprintf(
                     cFile,
-                    "ALIGNED8 static const Texture %s_skybox_texture_%05X[] = "
+                    "ALIGNED8 const Texture %s_skybox_texture_%05X[] = "
                     "\"textures/skybox_tiles/%s.%d.rgba16\";\n\n",
                     skyboxName, tiles[i].pos, skyboxName, tiles[i].pos
                 );
             } else {
-                fprintf(cFile, "ALIGNED8 static const Texture %s_skybox_texture_%05X[] = {\n", skyboxName, tiles[i].pos);
+                fprintf(cFile, "ALIGNED8 const Texture %s_skybox_texture_%05X[] = {\n", skyboxName, tiles[i].pos);
                 print_raw_data(cFile, &tiles[i]);
                 fputs("};\n\n", cFile);
             }
@@ -606,7 +606,7 @@ int main(int argc, char *argv[]) {
     }
 
     if (type == Skybox && mode == Split) {
-        // Extract the skybox's name (ie: bbh, bidw) from the input png
+        // Extract the skybox's name (ie: bbh, bitdw) from the input png
         char *base = basename(input);
         strcpy(skyboxName, base);
         char *extension = strrchr(skyboxName, '.');
