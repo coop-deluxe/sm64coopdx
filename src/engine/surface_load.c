@@ -392,7 +392,7 @@ static void load_static_surfaces(s16 **data, s16 *vertexData, s16 surfaceType, s
     struct Surface *surface;
     s8 room = 0;
     bool hasForce = surface_has_force(surfaceType);
-    bool flags = surf_has_no_cam_collision(surfaceType);
+    s8 flags = surf_has_no_cam_collision(surfaceType) ? SURFACE_FLAG_NO_CAM_COLLISION : 0;
 
     numSurfaces = *(*data);
     *data += 1;
@@ -407,7 +407,7 @@ static void load_static_surfaces(s16 **data, s16 *vertexData, s16 surfaceType, s
         if (surface != NULL) {
             surface->room = room;
             surface->type = surfaceType;
-            surface->flags = (s8) flags;
+            surface->flags = flags;
 
             if (hasForce) {
                 surface->force = *(*data + 3);
@@ -671,7 +671,7 @@ void load_object_surfaces(s16** data, s16* vertexData) {
 
     hasForce = surface_has_force(surfaceType);
 
-    flags = surf_has_no_cam_collision(surfaceType);
+    flags = surf_has_no_cam_collision(surfaceType) ? SURFACE_FLAG_NO_CAM_COLLISION : 0;
     flags |= SURFACE_FLAG_DYNAMIC;
 
     // The DDD warp is initially loaded at the origin and moved to the proper
