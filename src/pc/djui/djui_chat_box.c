@@ -476,16 +476,6 @@ static void djui_chat_box_input_on_text_input(struct DjuiBase *base, char* text)
     }
 }
 
-static void djui_chat_box_input_on_text_input(struct DjuiBase *base, char* text) {
-    char previousText[MAX_MSG_LENGTH];
-    strncpy(previousText, gDjuiChatBox->chatInput->buffer, MAX_MSG_LENGTH - 1);
-    djui_inputbox_on_text_input(base, text);
-    if (strcmp(previousText, gDjuiChatBox->chatInput->buffer) != 0) {
-        reset_tab_completion_all();
-    }
-}
-
-
 void djui_chat_box_toggle(void) {
     if (gDjuiChatBox == NULL) { return; }
     if (!gDjuiChatBoxFocus) { sDjuiChatBoxClearText = true; }

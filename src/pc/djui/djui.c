@@ -37,7 +37,7 @@ void reset_djui(void) {
     sDjuiLuaErrorTimeout = 0;
     if (gDjuiRoot) djui_base_destroy(&gDjuiRoot->base);
 
-    if (gDjuiConsole) djui_base_destroy(&gDjuiConsole->panel->base);
+    if (gDjuiConsole) djui_base_destroy(&gDjuiConsole->base);
     extern u32 sDjuiConsoleMessages;
     sDjuiConsoleMessages = 0;
 
