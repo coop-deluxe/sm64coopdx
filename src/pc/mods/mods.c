@@ -157,7 +157,7 @@ static u32 mods_count_directory(char* modsBasePath) {
 }
 
 static void mods_load(struct Mods* mods, char* modsBasePath, bool isUserModPath) {
-    if (gIsThreaded) { REFRESH_MUTEX(snprintf(gCurrLoadingSegment.str, 256, "Generating DynOS Packs in %s mod path (%s)", isUserModPath ? "user" : "local", modsBasePath)); }
+    if (gIsThreaded) { REFRESH_MUTEX(snprintf(gCurrLoadingSegment.str, 256, "Generating DynOS Packs In %s Path (%s)", isUserModPath ? "User" : "Local", modsBasePath)); }
 
     // generate bins
     dynos_generate_packs(modsBasePath);
@@ -186,7 +186,7 @@ static void mods_load(struct Mods* mods, char* modsBasePath, bool isUserModPath)
         return;
     }
     f32 count = (f32) mods_count_directory(modsBasePath);
-    if (gIsThreaded) { REFRESH_MUTEX(snprintf(gCurrLoadingSegment.str, 256, "Loading Mods in %s mod path (%s)", isUserModPath ? "user" : "local", modsBasePath)); }
+    if (gIsThreaded) { REFRESH_MUTEX(snprintf(gCurrLoadingSegment.str, 256, "Loading Mods In %s Mod Path (%s)", isUserModPath ? "User" : "Local", modsBasePath)); }
 
     // iterate
     char path[SYS_MAX_PATH] = { 0 };
@@ -257,7 +257,7 @@ void mods_enable(char* relativePath) {
 }
 
 void mods_init(void) {
-    if (gIsThreaded) { REFRESH_MUTEX(snprintf(gCurrLoadingSegment.str, 256, "Caching mods")); }
+    if (gIsThreaded) { REFRESH_MUTEX(snprintf(gCurrLoadingSegment.str, 256, "Caching Mods")); }
 
     // load mod cache
     mod_cache_load();

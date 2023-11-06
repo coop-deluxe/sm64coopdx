@@ -10,11 +10,13 @@
 #include "loading.h"
 #include "pc/utils/misc.h"
 
+extern ALIGNED8 u8 texture_coopdx_logo[];
+
 struct LoadingSegment gCurrLoadingSegment = { "", 0 };
 
 struct LoadingScreen {
     struct DjuiBase base;
-    struct DjuiText* splashText;
+    struct DjuiImage* splashImage;
     struct DjuiText* loadingText;
     struct DjuiText* loadingDesc;
     struct DjuiProgressBar *loadingBar;
@@ -29,8 +31,7 @@ bool gIsThreaded = false;
 extern Vp D_8032CF00;
 extern u8 gRenderingInterpolated;
 
-static void loading_screen_produce_one_frame() {
-
+static void loading_screen_produce_one_frame(void) {
     // Start frame
     gfx_start_frame();
     config_gfx_pool();
@@ -72,9 +73,6 @@ static bool loading_screen_on_render(struct DjuiBase* base) {
 
     // Fill the screen
     djui_base_set_size(base, windowWidth, windowHeight);
-
-    // Splash text
-    djui_base_set_location(&sLoading->splashText->base, (windowWidth / 2) - 416, 0);
 
     {
         // Loading... text
@@ -120,21 +118,20 @@ static void loading_screen_destroy(struct DjuiBase* base) {
     sLoading = NULL;
 }
 
-void render_loading_screen() {
+void render_loading_screen(void) {
     struct LoadingScreen* load = malloc(sizeof(struct LoadingScreen));
     struct DjuiBase* base = &load->base;
 
     djui_base_init(NULL, base, loading_screen_on_render, loading_screen_destroy);
 
     {
-        // Splash text
-        struct DjuiText* splashDjuiText = djui_text_create(base, "\\#ff0800\\SM\\#1be700\\64\\#00b3ff\\EX\\#ffef00\\COOP");
-        djui_text_set_font(splashDjuiText, gDjuiFonts[1]);
-        djui_text_set_font_scale(splashDjuiText, gDjuiFonts[1]->defaultFontScale * 4);
-        djui_text_set_alignment(splashDjuiText, DJUI_HALIGN_CENTER, DJUI_VALIGN_TOP);
-        djui_base_set_size(&splashDjuiText->base, 800, 800);
+        // Splash image
+        struct DjuiImage* splashImage = djui_image_create(base, texture_coopdx_logo, 2048, 1024, 32);
+        djui_base_set_size(&splashImage->base, 740.0f, 364.0f);
+        djui_base_set_alignment(&splashImage->base, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
+        djui_base_set_location(&splashImage->base, 0, -100);
 
-        load->splashText = splashDjuiText;
+        load->splashImage = splashImage;
     }
 
     {
@@ -143,7 +140,7 @@ void render_loading_screen() {
         djui_base_set_size_type(&text->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
         djui_base_set_size(&text->base, 1.0f, 32 * 4);
         djui_base_set_color(&text->base, 200, 200, 200, 255);
-        djui_base_set_location(&text->base, 0, 400);
+        djui_base_set_location(&text->base, 0, 800);
         djui_text_set_alignment(text, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
         djui_text_set_font(text, gDjuiFonts[0]);
         djui_text_set_font_scale(text, gDjuiFonts[0]->defaultFontScale * 2);

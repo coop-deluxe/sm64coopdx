@@ -20,6 +20,6 @@ extern pthread_mutex_t gLoadingThreadMutex;
 
 extern bool gIsThreaded;
 
-void render_loading_screen();
+void render_loading_screen(void);
 
 #endif

@@ -278,12 +278,13 @@ void *main_game_init(void*) {
     if (gIsThreaded) {
         REFRESH_MUTEX(
             gCurrLoadingSegment.percentage = 0;
-            snprintf(gCurrLoadingSegment.str, 256, "Starting game");
+            snprintf(gCurrLoadingSegment.str, 256, "Starting Game");
         );
     }
 
     // If coop_custom_palette_* values are not found in sm64config.txt, the custom palette config will use the default values (Mario's palette)
     // But if no preset is found, that means the current palette is a custom palette
+    // This is so terrible
     for (int i = 0; i <= PALETTE_PRESET_MAX; i++) {
         if (i == PALETTE_PRESET_MAX) {
             configCustomPalette = configPlayerPalette;
@@ -301,7 +302,6 @@ void *main_game_init(void*) {
 
     if (gCLIOpts.PlayerName[0] != '\0') {
         snprintf(configPlayerName, MAX_PLAYER_STRING, "%s", gCLIOpts.PlayerName);
-        printf("\nCustom Playername (Start-Parameter): %s\n\n", configPlayerName);
     }
   
     if (!gGfxInited) {
@@ -372,6 +372,8 @@ int main(int argc, char *argv[]) {
     } else {
         network_init(NT_NONE, false);
     }
+
+    WAPI.delay(200);
 
     // Main loop
     while (true) {
