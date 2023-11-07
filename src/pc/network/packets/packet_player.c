@@ -387,7 +387,7 @@ void network_receive_player(struct Packet* p) {
     np->currPositionValid = true;
 
 #ifndef DEVELOPMENT
-    if (gNetworkType == NT_SERVER && gServerSettings.enableCheats == 0) {
+    if (gNetworkType == NT_SERVER) {
         if (m->action == ACT_DEBUG_FREE_MOVE) {
             network_send_kick(np->localIndex, EKT_CLOSE_CONNECTION);
             network_player_disconnected(np->localIndex);

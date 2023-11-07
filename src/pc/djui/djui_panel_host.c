@@ -10,7 +10,6 @@
 #include "pc/network/network.h"
 #include "pc/utils/misc.h"
 #include "pc/configfile.h"
-#include "pc/cheats.h"
 
 static struct DjuiRect* sRectPort = NULL;
 static struct DjuiRect* sRectPassword = NULL;

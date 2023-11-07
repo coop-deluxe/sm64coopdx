@@ -1,6 +1,5 @@
 #include "cliopts.h"
 #include "configfile.h"
-#include "cheats.h"
 #include "pc_main.h"
 #include "platform.h"
 #include "macros.h"
@@ -15,7 +14,6 @@ struct PCCLIOptions gCLIOpts;
 
 static void print_help(void) {
     printf("\nsm64ex-coop\n");
-    printf("%-20s\tEnables the cheat menu.\n", "--cheats");
     printf("%-20s\tSaves the configuration file as CONFIGNAME.\n", "--configfile CONFIGNAME");
     printf("%-20s\tSets additional data directory name (only 'res' is used by default).\n", "--gamedir DIRNAME");
     printf("%-20s\tOverrides the default save/config path ('!' expands to executable path).\n", "--savepath SAVEPATH");
@@ -72,10 +70,7 @@ bool parse_cli_opts(int argc, char* argv[]) {
                 gCLIOpts.NetworkPort = 7777;
             }
 
-        } else if (strcmp(argv[i], "--cheats") == 0) // Enable cheats menu
-            gServerSettings.enableCheats = true;
-
-        else if (strcmp(argv[i], "--poolsize") == 0) // Main pool size
+        } else if (strcmp(argv[i], "--poolsize") == 0) // Main pool size
             arg_uint("--poolsize", argv[++i], &gCLIOpts.PoolSize);
 
         else if (strcmp(argv[i], "--configfile") == 0 && (i + 1) < argc)

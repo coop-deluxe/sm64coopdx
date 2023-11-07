@@ -633,15 +633,13 @@ s32 act_debug_free_move(struct MarioState *m) {
     u32 action = ACT_IDLE;
 
 #ifndef DEVELOPMENT
-    if (gServerSettings.enableCheats == 0) {
-        if (m->pos[1] <= m->waterLevel - 100) {
-            action = ACT_WATER_IDLE;
-        } else {
-            action = ACT_FREEFALL;
-        }
-        set_mario_action(m, action, 0);
-        return FALSE;
+    if (m->pos[1] <= m->waterLevel - 100) {
+        action = ACT_WATER_IDLE;
+    } else {
+        action = ACT_FREEFALL;
     }
+    set_mario_action(m, action, 0);
+    return FALSE;
 #endif
 
     // integer immediates, generates convert instructions for some reason

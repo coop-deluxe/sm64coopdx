@@ -6,7 +6,6 @@
 #include "pc/network/network.h"
 #include "pc/utils/misc.h"
 #include "pc/configfile.h"
-#include "pc/cheats.h"
 #include "pc/mods/mods.h"
 #include "pc/mods/mods_utils.h"
 #include "djui_panel_main.h"

@@ -9,7 +9,6 @@
 #include "src/game/hardcoded.h"
 #include "src/game/scroll_targets.h"
 #include "pc/configfile.h"
-#include "pc/cheats.h"
 #include "pc/djui/djui.h"
 #include "pc/djui/djui_panel.h"
 #include "pc/djui/djui_hud_utils.h"
@@ -117,7 +116,7 @@ bool network_init(enum NetworkType inNetworkType, bool reconnecting) {
     gServerSettings.playerKnockbackStrength = configPlayerKnockbackStrength;
     gServerSettings.stayInLevelAfterStar = configStayInLevelAfterStar;
     gServerSettings.skipIntro = configSkipIntro;
-    gServerSettings.enableCheats = configEnableCheats;
+    gServerSettings.enableCheats = 0;
     gServerSettings.bubbleDeath = configBubbleDeath;
     gServerSettings.enablePlayersInLevelDisplay = TRUE;
     gServerSettings.enablePlayerList = TRUE;

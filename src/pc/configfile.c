@@ -115,7 +115,6 @@ bool         configEnableCamera  = false;
 bool         configCameraAnalog  = false;
 bool         configCameraMouse   = false;
 bool         configSkipIntro     = 0;
-bool         configEnableCheats  = 0;
 bool         configBubbleDeath   = true;
 unsigned int configAmountofPlayers = 16;
 bool         configHUD           = true;
@@ -214,7 +213,6 @@ static const struct ConfigOption options[] = {
     {.name = "bettercam_pan_level",  .type = CONFIG_TYPE_UINT, .uintValue = &configCameraPan},
     {.name = "bettercam_degrade",    .type = CONFIG_TYPE_UINT, .uintValue = &configCameraDegrade},
     {.name = "skip_intro",           .type = CONFIG_TYPE_BOOL, .boolValue = &configSkipIntro},
-    {.name = "enable_cheats",        .type = CONFIG_TYPE_BOOL, .boolValue = &configEnableCheats},
     // debug
     {.name = "debug_offset",                   .type = CONFIG_TYPE_U64   , .u64Value    = &gPcDebug.bhvOffset},
     {.name = "debug_tags",                     .type = CONFIG_TYPE_U64   , .u64Value    = gPcDebug.tags},

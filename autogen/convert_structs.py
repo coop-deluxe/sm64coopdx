@@ -84,6 +84,10 @@ override_field_invisible = {
     "GraphNode": [ "_guard1", "_guard2" ],
 }
 
+override_field_deprecated = {
+    "ServerSettings": [ "enableCheats" ],
+}
+
 override_field_immutable = {
     "MarioState": [ "playerIndex", "controller", "marioObj", "marioBodyState", "statusForCamera", "area" ],
     "MarioAnimation": [ "animDmaTable" ],
@@ -519,6 +523,10 @@ def doc_struct_field(struct, field):
     sid = struct['identifier']
     if sid in override_field_invisible:
         if fid in override_field_invisible[sid]:
+            return ''
+
+    if sid in override_field_deprecated:
+        if fid in override_field_deprecated[sid]:
             return ''
 
     if '???' in lvt or '???' in lot:

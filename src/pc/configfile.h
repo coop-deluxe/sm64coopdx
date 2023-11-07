@@ -76,7 +76,6 @@ extern bool         configCameraMouse;
 extern bool         configCameraAnalog;
 extern bool         configHUD;
 extern bool         configSkipIntro;
-extern bool         configEnableCheats;
 extern bool         configBubbleDeath;
 extern unsigned int configAmountofPlayers;
 extern char         configJoinIp[];

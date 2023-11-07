@@ -14,7 +14,6 @@
 #include "rumble_init.h"
 #include "pc/debuglog.h"
 #include "pc/configfile.h"
-#include "pc/cheats.h"
 #include "pc/network/network.h"
 #include "pc/lua/smlua.h"
 
@@ -160,7 +159,7 @@ s32 set_triple_jump_action(struct MarioState *m, UNUSED u32 action, UNUSED u32 a
 
     if (m->flags & MARIO_WING_CAP) {
         return set_mario_action(m, ACT_FLYING_TRIPLE_JUMP, 0);
-    } else if (m->forwardVel > 20.0f || (gServerSettings.enableCheats && gCheats.alwaysTripleJump && m->playerIndex == 0)) {
+    } else if (m->forwardVel > 20.0f) {
         return set_mario_action(m, ACT_TRIPLE_JUMP, 0);
     } else {
         return set_mario_action(m, ACT_JUMP, 0);
@@ -483,12 +482,7 @@ void update_walking_speed(struct MarioState *m) {
         m->forwardVel = 48.0f;
     }
 
-    // handles the "Super responsive controls" cheat. The content of the "else" is Mario's original code for turning around.
-    if (gServerSettings.enableCheats && gCheats.responsiveControls && m->playerIndex == 0) {
-        m->faceAngle[1] = m->intendedYaw;
-    } else {
-        m->faceAngle[1] = m->intendedYaw - approach_s32((s16)(m->intendedYaw - m->faceAngle[1]), 0, 0x800, 0x800);
-    }
+    m->faceAngle[1] = m->intendedYaw - approach_s32((s16)(m->intendedYaw - m->faceAngle[1]), 0, 0x800, 0x800);
     apply_slope_accel(m);
 }
 

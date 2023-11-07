@@ -3,11 +3,9 @@
 #include "djui_panel_player.h"
 #include "djui_panel_dynos.h"
 #include "djui_panel_options.h"
-#include "djui_panel_cheats.h"
 #include "djui_panel_host.h"
 #include "djui_panel_menu.h"
 #include "djui_panel_confirm.h"
-#include "pc/cheats.h"
 #include "pc/pc_main.h"
 #include "pc/network/network.h"
 #include "game/object_helpers.h"
@@ -67,10 +65,6 @@ void djui_panel_pause_create(struct DjuiBase* caller) {
 
         struct DjuiButton* button3 = djui_button_create(body, DLANG(PAUSE, OPTIONS), DJUI_BUTTON_STYLE_NORMAL, djui_panel_options_create);
         defaultBase = &button3->base;
-
-        if (gServerSettings.enableCheats) {
-            djui_button_create(body, DLANG(PAUSE, CHEATS), DJUI_BUTTON_STYLE_NORMAL, djui_panel_cheats_create);
-        }
 
         if (gNetworkType == NT_SERVER) {
             djui_button_create(body, DLANG(PAUSE, SERVER_SETTINGS), DJUI_BUTTON_STYLE_NORMAL, djui_panel_host_create);

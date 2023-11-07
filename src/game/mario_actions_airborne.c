@@ -20,7 +20,6 @@
 #include "pc/configfile.h"
 #include "pc/network/network.h"
 #include "pc/lua/smlua.h"
-#include "pc/cheats.h"
 #include "hardcoded.h"
 
 void play_flip_sounds(struct MarioState *m, s16 frame1, s16 frame2, s16 frame3) {
@@ -58,7 +57,7 @@ s32 lava_boost_on_wall(struct MarioState *m) {
     if (!m) { return 0; }
     bool allow = true;
     smlua_call_event_hooks_mario_param_and_int_ret_bool(HOOK_ALLOW_HAZARD_SURFACE, m, HAZARD_TYPE_LAVA_WALL, &allow);
-    if ((gServerSettings.enableCheats && gCheats.godMode) || (!allow) || gDjuiInMainMenu) { return FALSE; }
+    if ((!allow) || gDjuiInMainMenu) { return FALSE; }
     m->faceAngle[1] = atan2s(m->wallNormal[2], m->wallNormal[0]);
 
     if (m->forwardVel < 24.0f) {
@@ -76,7 +75,6 @@ s32 lava_boost_on_wall(struct MarioState *m) {
 
 s32 check_fall_damage(struct MarioState *m, u32 hardFallAction) {
     if (!m) { return 0; }
-    if (gServerSettings.enableCheats && gCheats.godMode && m->playerIndex == 0) { return FALSE; }
     
     f32 fallHeight;
     f32 damageHeight;
