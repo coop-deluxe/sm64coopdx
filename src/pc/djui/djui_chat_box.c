@@ -459,11 +459,13 @@ static bool djui_chat_box_input_on_key_down(struct DjuiBase* base, int scancode)
             djui_chat_box_input_escape(gDjuiChatBox->chatInput);
             return true;
         default:
-            bool returnValueOnOtherKeyDown = djui_inputbox_on_key_down(base, scancode);
-            if (strcmp(previousText, gDjuiChatBox->chatInput->buffer) != 0) {
-                reset_tab_completion_all();
+            {
+                bool returnValueOnOtherKeyDown = djui_inputbox_on_key_down(base, scancode);
+                if (strcmp(previousText, gDjuiChatBox->chatInput->buffer) != 0) {
+                    reset_tab_completion_all();
+                }
+                return returnValueOnOtherKeyDown;
             }
-            return returnValueOnOtherKeyDown;
     }
 }
 

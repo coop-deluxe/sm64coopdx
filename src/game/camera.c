@@ -3606,13 +3606,13 @@ void init_camera(struct Camera *c) {
     if (sSoftResettingCamera) {
         c->cutscene = 0;
         sSoftResettingCamera = FALSE;
-    }
-
-    // Set the camera pos to marioOffset (relative to Mario), added to Mario's position
-    offset_rotated(c->pos, sMarioCamState->pos, marioOffset, sMarioCamState->faceAngle);
-    if (c->mode != CAMERA_MODE_BEHIND_MARIO) {
-        c->pos[1] = find_floor(sMarioCamState->pos[0], sMarioCamState->pos[1] + 100.f,
-                               sMarioCamState->pos[2], &floor) + 125.f;
+    } else {
+        // Set the camera pos to marioOffset (relative to Mario), added to Mario's position
+        offset_rotated(c->pos, sMarioCamState->pos, marioOffset, sMarioCamState->faceAngle);
+        if (c->mode != CAMERA_MODE_BEHIND_MARIO) {
+            c->pos[1] = find_floor(sMarioCamState->pos[0], sMarioCamState->pos[1] + 100.f,
+                                sMarioCamState->pos[2], &floor) + 125.f;
+        }
     }
     vec3f_copy(c->focus, sMarioCamState->pos);
     vec3f_copy(gLakituState.curPos, c->pos);

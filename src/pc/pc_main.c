@@ -259,7 +259,7 @@ void game_exit(void) {
     exit(0);
 }
 
-void *main_game_init(void*) {
+void* main_game_init(UNUSED void* arg) {
     const char *gamedir = gCLIOpts.GameDir[0] ? gCLIOpts.GameDir : FS_BASEDIR;
     const char *userpath = gCLIOpts.SavePath[0] ? gCLIOpts.SavePath : sys_user_path();
     fs_init(sys_ropaths, gamedir, userpath);
