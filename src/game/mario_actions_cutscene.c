@@ -753,6 +753,7 @@ void general_star_dance_handler(struct MarioState *m, s32 isInWater) {
             set_mario_action(m, isInWater ? ACT_WATER_IDLE : (m->pos[1] <= m->floorHeight ? ACT_IDLE : ACT_FREEFALL), 0);
         }
         if (gServerSettings.stayInLevelAfterStar) {
+            if (m->statusForCamera) { m->statusForCamera->action = m->action; }
             soft_reset_camera(m->area->camera);
         }
     }

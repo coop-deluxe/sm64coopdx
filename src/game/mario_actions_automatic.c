@@ -1113,6 +1113,7 @@ s32 act_bubbled(struct MarioState* m) {
         m->marioObj->header.gfx.node.flags &= ~GRAPH_RENDER_INVISIBLE;
         m->invincTimer = 30 * 3;
         if (m->playerIndex == 0) {
+            if (m->statusForCamera) { m->statusForCamera->action = m->action; }
             soft_reset_camera(m->area->camera);
         }
         u8 underWater = (m->pos[1] < ((f32)m->waterLevel));
