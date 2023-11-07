@@ -65,6 +65,13 @@ s8 gCourseNumToLevelNumTable[] = {
 STATIC_ASSERT(ARRAY_COUNT(gLevelToCourseNumTable) == LEVEL_COUNT - 1,
               "change this array if you are adding levels");
 
+s8 get_level_num_from_course_num(s16 courseNum) {
+    if (courseNum < 0 || courseNum >= COURSE_COUNT) {
+        return LEVEL_NONE;
+    }
+    return gCourseNumToLevelNumTable[courseNum];
+}
+
 s8 get_level_course_num(s16 levelNum) {
     if (levelNum >= CUSTOM_LEVEL_NUM_START) {
         struct CustomLevelInfo* info = smlua_level_util_get_info(levelNum);

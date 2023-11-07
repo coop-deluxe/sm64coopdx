@@ -4,6 +4,8 @@
 #include "types.h"
 #include "dialog_ids.h"
 
+#define MAX_ACTS 6
+
 struct ActName {
     char name[256];
     char orig[256];

@@ -129,6 +129,7 @@ extern struct WarpCheckpoint gWarpCheckpoint;
 extern s8 gMainMenuDataModified;
 extern s8 gSaveFileModified;
 
+s8 get_level_num_from_course_num(s16 courseNum);
 s8 get_level_course_num(s16 levelNum);
 void touch_coin_score_age(s32 fileIndex, s32 courseIndex);
 void save_file_do_save(s32 fileIndex, s8 forceSave);
