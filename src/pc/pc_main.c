@@ -200,6 +200,11 @@ void produce_interpolation_frames_and_delay(void) {
 }
 
 inline static void buffer_audio(void) {
+    const f32 master_mod = (f32)configMasterVolume / 127.0f;
+    set_sequence_player_volume(SEQ_PLAYER_LEVEL, (f32)configMusicVolume / 127.0f * master_mod);
+    set_sequence_player_volume(SEQ_PLAYER_SFX, (f32)configSfxVolume / 127.0f * master_mod);
+    set_sequence_player_volume(SEQ_PLAYER_ENV, (f32)configEnvVolume / 127.0f * master_mod);
+
     int samples_left = audio_api->buffered();
     u32 num_audio_samples = samples_left < audio_api->get_desired_buffered() ? SAMPLES_HIGH : SAMPLES_LOW;
     s16 audio_buffer[SAMPLES_HIGH * 2 * 2];
@@ -214,16 +219,9 @@ void produce_one_frame(void) {
 
     CTX_EXTENT(CTX_INTERP, patch_interpolations_before);
 
-    const f32 master_mod = (f32)configMasterVolume / 127.0f;
-    set_sequence_player_volume(SEQ_PLAYER_LEVEL, (f32)configMusicVolume / 127.0f * master_mod);
-    set_sequence_player_volume(SEQ_PLAYER_SFX, (f32)configSfxVolume / 127.0f * master_mod);
-    set_sequence_player_volume(SEQ_PLAYER_ENV, (f32)configEnvVolume / 127.0f * master_mod);
-
     CTX_EXTENT(CTX_GAME_LOOP, game_loop_one_iteration);
 
     CTX_EXTENT(CTX_SMLUA, smlua_update);
-
-    thread6_rumble_loop(NULL);
 
     CTX_EXTENT(CTX_AUDIO, buffer_audio);
 
@@ -303,7 +301,7 @@ void* main_game_init(UNUSED void* arg) {
     if (gCLIOpts.PlayerName[0] != '\0') {
         snprintf(configPlayerName, MAX_PLAYER_STRING, "%s", gCLIOpts.PlayerName);
     }
-  
+
     if (!gGfxInited) {
         gfx_init(&WAPI, &RAPI, TITLE);
         WAPI.set_keyboard_callbacks(keyboard_on_key_down, keyboard_on_key_up, keyboard_on_all_keys_up, keyboard_on_text_input);

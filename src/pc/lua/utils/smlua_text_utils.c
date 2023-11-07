@@ -24,7 +24,7 @@ static bool sReplacedActName[(COURSE_RR+2)*6] = { 0 };
 
 void convert_string_sm64_to_ascii(char *strAscii, const u8 *str64);
 
-struct CourseName *gReplacedActNameTable[COURSE_COUNT];
+struct CourseName *gReplacedActNameTable[COURSE_END];
 
 // Save all vanilla act names and course names
 AT_STARTUP static void smlua_text_utils_init() {
@@ -33,7 +33,7 @@ AT_STARTUP static void smlua_text_utils_init() {
     char courseBuffer[50];
     char actBuffer[50];
 
-    for (s16 courseNum = 0; courseNum < COURSE_COUNT; courseNum++) {
+    for (s16 courseNum = 0; courseNum < COURSE_END; courseNum++) {
         const u8 *courseName = segmented_to_virtual(courseNameTbl[courseNum]);
         convert_string_sm64_to_ascii(courseBuffer, courseName);
         gReplacedActNameTable[courseNum] = malloc(sizeof(struct CourseName));
@@ -179,15 +179,15 @@ void smlua_text_utils_dialog_replace(enum DialogId dialogId, UNUSED u32 unused, 
     sReplacedDialog[dialogId] = true;
 }
 
-#define REPLACE_ACT_NAME(i) \
-    snprintf(courseActNames->actName[i-1].name, 256, "%s", act##i); \
-    courseActNames->actName[i-1].isModified = true; \
-
 void smlua_text_utils_course_acts_replace(s16 courseNum, const char* courseName, const char* act1, const char* act2, const char* act3, const char* act4, const char* act5, const char* act6) {
     if (courseNum <= 0 || courseNum > COURSE_RR) { return; }
     struct CourseName* courseActNames = gReplacedActNameTable[courseNum];
     snprintf(courseActNames->name, 256, "%s", courseName + 3);
     courseActNames->modIndex = gLuaActiveMod->index;
+
+#define REPLACE_ACT_NAME(i) \
+    snprintf(courseActNames->actName[i-1].name, 256, "%s", act##i); \
+    courseActNames->actName[i-1].isModified = true; \
 
     REPLACE_ACT_NAME(1);
     REPLACE_ACT_NAME(2);
@@ -195,8 +195,6 @@ void smlua_text_utils_course_acts_replace(s16 courseNum, const char* courseName,
     REPLACE_ACT_NAME(4);
     REPLACE_ACT_NAME(5);
     REPLACE_ACT_NAME(6);
-
-    LOG_INFO("%d (%s) replacing act names 1-6 of course %d, (%s), act 1: %s", courseActNames->modIndex, gLuaActiveMod->name, courseNum, courseName, act1);
 }
 
 void smlua_text_utils_course_name_replace(s16 courseNum, const char* name) {

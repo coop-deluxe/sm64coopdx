@@ -280,10 +280,8 @@ void print_act_selector_strings(void) {
 #endif
     unsigned char starNumbers[] = { TEXT_ZERO };
 
-    u8 **levelNameTbl = get_course_name_table();
-    u8 *currLevelName = segmented_to_virtual(levelNameTbl[gCurrCourseNum - 1]);
-    u8 **actNameTbl = get_act_name_table();
-    u8 *selectedActName;
+    const u8 *currLevelName = get_level_name_sm64(gCurrCourseNum, gCurrLevelNum, gCurrAreaIndex, 1);
+    const u8 *selectedActName = get_star_name_sm64(gCurrCourseNum, sSelectedActIndex + 1, 1);
 #ifndef VERSION_EU
     s16 lvlNameX;
     s16 actNameX;
@@ -314,9 +312,9 @@ void print_act_selector_strings(void) {
 
     if (currLevelName != NULL) {
 #ifdef VERSION_EU
-        print_generic_string(get_str_x_pos_from_center(160, currLevelName + 3, 10.0f), 33, currLevelName + 3);
+        print_generic_string(get_str_x_pos_from_center(160, (u8*) currLevelName + 3, 10.0f), 33, currLevelName + 3);
 #else
-        lvlNameX = get_str_x_pos_from_center(160, currLevelName + 3, 10.0f);
+        lvlNameX = get_str_x_pos_from_center(160, (u8*) currLevelName + 3, 10.0f);
         print_generic_string(lvlNameX, 33, currLevelName + 3);
 #endif
     }
@@ -333,12 +331,10 @@ void print_act_selector_strings(void) {
     gDPSetEnvColor(gDisplayListHead++, 0, 0, 0, 255);
     // Print the name of the selected act.
     if (sVisibleStars != 0) {
-        selectedActName = segmented_to_virtual(actNameTbl[(gCurrCourseNum - 1) * 6 + sSelectedActIndex]);
-
 #ifdef VERSION_EU
-        print_menu_generic_string(get_str_x_pos_from_center(ACT_NAME_X, selectedActName, 8.0f), 81, selectedActName);
+        print_menu_generic_string(get_str_x_pos_from_center(ACT_NAME_X, (u8*) selectedActName, 8.0f), 81, selectedActName);
 #else
-        actNameX = get_str_x_pos_from_center(ACT_NAME_X, selectedActName, 8.0f);
+        actNameX = get_str_x_pos_from_center(ACT_NAME_X, (u8*) selectedActName, 8.0f);
         print_menu_generic_string(actNameX, 81, selectedActName);
 #endif
     }

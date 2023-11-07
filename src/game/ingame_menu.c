@@ -2796,8 +2796,6 @@ void render_pause_castle_course_stars(s16 x, s16 y, s16 fileNum, s16 courseNum) 
 }
 
 void render_pause_castle_main_strings(s16 x, s16 y) {
-    void **courseNameTbl = get_course_name_table();
-
 #ifdef VERSION_EU
     u8 textCoin[] = { TEXT_COIN };
     u8 textX[] = { TEXT_VARIABLE_X };
@@ -2805,7 +2803,8 @@ void render_pause_castle_main_strings(s16 x, s16 y) {
     u8 textCoin[] = { TEXT_COIN_X };
 #endif
 
-    void *courseName;
+    u8 courseNum = gDialogLineNum + 1;
+    const u8 *courseName = get_level_name_sm64(courseNum, courseNum < COURSE_COUNT ? gCourseNumToLevelNumTable[courseNum] : LEVEL_NONE, 1, 1);
 
     u8 strVal[8];
     s16 starNum = gDialogLineNum;
@@ -2839,7 +2838,6 @@ void render_pause_castle_main_strings(s16 x, s16 y) {
     gDPSetEnvColor(gDisplayListHead++, 255, 255, 255, gDialogTextAlpha);
 
     if (gDialogLineNum < COURSE_STAGES_COUNT) {
-        courseName = segmented_to_virtual(courseNameTbl[gDialogLineNum]);
         render_pause_castle_course_stars(x, y, gCurrSaveFileNum - 1, gDialogLineNum);
         print_generic_string(x + 34, y - 5, textCoin);
 #ifdef VERSION_EU
@@ -2852,7 +2850,6 @@ void render_pause_castle_main_strings(s16 x, s16 y) {
 #endif
     } else {
         u8 textStarX[] = { TEXT_STAR_X };
-        courseName = segmented_to_virtual(courseNameTbl[COURSE_MAX]);
         print_generic_string(x + 40, y + 13, textStarX);
         int_to_str(save_file_get_total_star_count(gCurrSaveFileNum - 1, COURSE_BONUS_STAGES - 1, COURSE_MAX - 1), strVal);
         print_generic_string(x + 60, y + 13, strVal);
@@ -3002,11 +2999,10 @@ void render_pause_castle_main_strings_extended(s16 x, s16 y) {
     gSPDisplayList(gDisplayListHead++, dl_ia_text_begin);
     gDPSetEnvColor(gDisplayListHead++, 255, 255, 255, gDialogTextAlpha);
 
-    void **courseNameTbl = get_course_name_table();
+    const u8 *courseName = get_level_name_sm64(gDialogLineNum, gDialogLineNum < COURSE_COUNT ? gCourseNumToLevelNumTable[gDialogLineNum] : LEVEL_NONE, 1, 1);
 
     // Main courses (0-14)
     if (gDialogLineNum < COURSE_STAGES_COUNT) {
-        const u8 *courseName = courseNameTbl[gDialogLineNum];
         const u8 textCoin[] = { TEXT_COIN_X };
         u8 textCoinCount[8];
         render_pause_castle_course_name(courseName, 160, y + 30);
@@ -3018,14 +3014,12 @@ void render_pause_castle_main_strings_extended(s16 x, s16 y) {
 
     // Secret courses (15-24)
     else if (gDialogLineNum >= COURSE_STAGES_COUNT && gDialogLineNum < INDEX_CASTLE_STARS) {
-        const u8 *courseName = courseNameTbl[gDialogLineNum];
         render_pause_castle_course_name(courseName + 3, 160, y + 30);
         render_pause_castle_course_stars_extended(x + 20, y);
     }
 
     // Castle stars (25)
     else if (gDialogLineNum == INDEX_CASTLE_STARS) {
-        const u8 *courseName = courseNameTbl[COURSE_MAX];
         const u8 textStar[] = { TEXT_STAR_X };
         u8 textStarCount[8];
         render_pause_castle_course_name(courseName + 3, 160, y + 30);
@@ -3310,9 +3304,6 @@ void render_course_complete_lvl_info_and_hud_str(void) {
     UNUSED u8 textClear[] = { TEXT_CLEAR };
     u8 textSymStar[] = { GLYPH_STAR, GLYPH_SPACE };
 #endif
-
-    void **actNameTbl = get_act_name_table();
-    void **courseNameTbl = get_course_name_table();
     u8 *name;
 
     u8 strCourseNum[4];
@@ -3321,11 +3312,7 @@ void render_course_complete_lvl_info_and_hud_str(void) {
         print_hud_course_complete_coins(118, 103);
         play_star_fanfare_and_flash_hud(1, 1 << (gLastCompletedStarNum - 1));
 
-        if (gLastCompletedStarNum == 7) {
-            name = segmented_to_virtual(actNameTbl[COURSE_STAGES_MAX * 6 + 1]);
-        } else {
-            name = segmented_to_virtual(actNameTbl[(gLastCompletedCourseNum - 1) * 6 + gLastCompletedStarNum - 1]);
-        }
+        name = (u8*) get_star_name_sm64(gLastCompletedCourseNum, gLastCompletedStarNum, 1);
 
         gSPDisplayList(gDisplayListHead++, dl_ia_text_begin);
         int_to_str(gLastCompletedCourseNum, strCourseNum);
@@ -3337,7 +3324,7 @@ void render_course_complete_lvl_info_and_hud_str(void) {
         print_generic_string(CRS_NUM_X3, 167, strCourseNum);
         gSPDisplayList(gDisplayListHead++, dl_ia_text_end);
     } else if ((gLastCompletedCourseNum == COURSE_BITDW || gLastCompletedCourseNum == COURSE_BITFS) && gLastCollectedStarOrKey == 1) {
-        name = segmented_to_virtual(courseNameTbl[gLastCompletedCourseNum - 1]);
+        name = (u8*) get_level_name_sm64(gLastCompletedCourseNum, gCurrLevelNum, gCurrAreaIndex, 1) + 3;
         gSPDisplayList(gDisplayListHead++, dl_ia_text_begin);
         gDPSetEnvColor(gDisplayListHead++, 0, 0, 0, gDialogTextAlpha);
 #ifdef VERSION_EU
@@ -3358,7 +3345,7 @@ void render_course_complete_lvl_info_and_hud_str(void) {
         play_star_fanfare_and_flash_hud(2, 0); //! 2 isn't defined, originally for key hud?
         return;
     } else {
-        name = segmented_to_virtual(actNameTbl[COURSE_STAGES_MAX * 6]);
+        name = (u8*) get_star_name_sm64(gLastCompletedCourseNum, gLastCompletedStarNum, 1);
         print_hud_course_complete_coins(118, 103);
         play_star_fanfare_and_flash_hud(1, 1 << (gLastCompletedStarNum - 1));
     }

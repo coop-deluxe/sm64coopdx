@@ -202,12 +202,12 @@ const char *get_level_name_ascii(s16 courseNum, s16 levelNum, s16 areaIndex, s16
         }
     }
 
-    if (gReplacedActNameTable[courseNum]->modIndex != -1) {
+    if (courseNum >= 0 && courseNum <= COURSE_MAX && gReplacedActNameTable[courseNum]->modIndex != -1) {
         snprintf(output, 256, "%s", gReplacedActNameTable[courseNum]->name);
     }
 
     else if (!hasCustomName) {
-        if (COURSE_IS_VALID_COURSE(courseNum)) {
+        if (COURSE_IS_MAIN_COURSE(courseNum)) {
             void **courseNameTbl = get_course_name_table();
             const u8 *courseName = segmented_to_virtual(courseNameTbl[courseNum - COURSE_BOB]);
             convert_string_sm64_to_ascii(output, courseName + 3);
@@ -261,7 +261,9 @@ const char *get_level_name(s16 courseNum, s16 levelNum, s16 areaIndex) {
 const char *get_star_name_ascii(s16 courseNum, s16 starNum, s16 charCase) {
     static char output[256];
 
-    if (gReplacedActNameTable[courseNum]->actName && gReplacedActNameTable[courseNum]->actName[starNum - 1].isModified) {
+    if (starNum >= 0 && starNum <= 6 &&
+        courseNum >= 0 && courseNum <= COURSE_MAX &&
+        gReplacedActNameTable[courseNum]->actName && gReplacedActNameTable[courseNum]->actName[starNum - 1].isModified) {
         snprintf(output, 256, "%s", gReplacedActNameTable[courseNum]->actName[starNum - 1].name);
     }
 

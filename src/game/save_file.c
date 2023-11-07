@@ -54,6 +54,14 @@ s8 gLevelToCourseNumTable[] = {
 #undef STUB_LEVEL
 #undef DEFINE_LEVEL
 
+#define STUB_LEVEL(_0, levelenum, _2, _3, _4, _5, _6, _7, _8) levelenum,
+#define DEFINE_LEVEL(_0, levelenum, _2, _3, _4, _5, _6, _7, _8, _9, _10) levelenum,
+s8 gCourseNumToLevelNumTable[] = {
+#include "levels/level_defines.h"
+};
+#undef STUB_LEVEL
+#undef DEFINE_LEVEL
+
 STATIC_ASSERT(ARRAY_COUNT(gLevelToCourseNumTable) == LEVEL_COUNT - 1,
               "change this array if you are adding levels");
 
