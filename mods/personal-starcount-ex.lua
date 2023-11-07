@@ -122,7 +122,7 @@ local function set_hud_star_positions(m, height, width)
         -- Move HUD graphics away from the TIMER HUD
         if timer_current_value ~= 0 then
             timer_offset_X = 60
-            timer_offset_Y = 17
+            timer_offset_Y = -17
         end
 
         star_counter_offset_X = is_in_cutscenes[m.action] and 22 or 76
@@ -173,7 +173,7 @@ local function set_hud_star_positions(m, height, width)
         -- Move HUD graphics away from the TIMER HUD
         if timer_current_value ~= 0 then
             timer_offset_X = 0
-            timer_offset_Y = -10
+            timer_offset_Y = 12
         end
 
         star_counter_offset_X = 76
