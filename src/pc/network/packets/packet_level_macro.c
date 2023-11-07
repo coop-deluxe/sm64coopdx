@@ -6,6 +6,7 @@
 #include "game/interaction.h"
 #include "game/level_update.h"
 #include "game/macro_special_objects.h"
+#include "game/area.h"
 #include "macro_presets.h"
 #include "object_constants.h"
 #include "object_fields.h"
@@ -115,7 +116,7 @@ void network_send_level_macro(struct NetworkPlayer* destNp) {
         return;
     }
 
-    for (s32 i = 0; i < 8; i++) {
+    for (s32 i = 0; i < MAX_AREAS; i++) {
         network_send_level_macro_area(destNp, i);
     }
 }
@@ -134,7 +135,7 @@ void network_receive_level_macro(struct Packet* p) {
 
     u8 thisAreaIndex;
     packet_read(p, &thisAreaIndex, sizeof(u8));
-    if (thisAreaIndex >= 8) {
+    if (thisAreaIndex >= MAX_AREAS) {
         LOG_ERROR("Receiving 'location response' with invalid areaIndex!");
         return;
     }

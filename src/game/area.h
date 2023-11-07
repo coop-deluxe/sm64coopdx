@@ -26,7 +26,7 @@ struct ObjectWarpNode
 #define INSTANT_WARP_INDEX_START  0x00 // Equal and greater than Surface 0x1B
 #define INSTANT_WARP_INDEX_STOP   0x04 // Less than Surface 0x1F
 
-#define MAX_AREAS 8
+#define MAX_AREAS 16
 
 struct InstantWarp
 {

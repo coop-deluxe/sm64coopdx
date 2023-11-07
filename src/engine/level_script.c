@@ -373,7 +373,7 @@ static void level_reset_globals(void) {
     gEnvFxMode = ENVFX_MODE_NONE;
 
     // clear area's level pool pointers
-    for (int i = 0; i < 8; i++) {
+    for (int i = 0; i < MAX_AREAS; i++) {
         gAreas[i].unk04 = NULL;
     }
 
@@ -407,7 +407,7 @@ static void level_cmd_free_level_pool(void) {
         gLevelPool = NULL;
     }
 
-    for (i = 0; i < 8; i++) {
+    for (i = 0; i < MAX_AREAS; i++) {
         if (gAreaData[i].terrainData != NULL) {
             alloc_surface_pools();
             break;
@@ -421,7 +421,7 @@ static void level_cmd_begin_area(void) {
     u8 areaIndex = CMD_GET(u8, 2);
     void *geoLayoutAddr = CMD_GET(void *, 4);
 
-    if (areaIndex < 8) {
+    if (areaIndex < MAX_AREAS) {
         u32 id = 0;
         struct GraphNodeRoot *screenArea = (struct GraphNodeRoot *) dynos_model_load_geo(&id, MODEL_POOL_LEVEL, geoLayoutAddr, false);
         struct GraphNodeCamera *node = (struct GraphNodeCamera *) screenArea->views[0];

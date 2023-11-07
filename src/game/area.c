@@ -228,7 +228,7 @@ void clear_areas(void) {
     gPlayerSpawnInfos[0].areaIndex = -1;
     gPlayerSpawnInfos[1].areaIndex = -1;
 
-    for (s32 i = 0; i < 8; i++) {
+    for (s32 i = 0; i < MAX_AREAS; i++) {
         gAreaData[i].index = i;
         gAreaData[i].flags = 0;
         gAreaData[i].terrainType = 0;
@@ -258,7 +258,7 @@ void clear_area_graph_nodes(void) {
         gWarpTransition.isActive = FALSE;
     }
 
-    for (s32 i = 0; i < 8; i++) {
+    for (s32 i = 0; i < MAX_AREAS; i++) {
         if (gAreaData[i].unk04 != NULL) {
             geo_call_global_function_nodes(&gAreaData[i].unk04->node, GEO_CONTEXT_AREA_INIT);
             gAreaData[i].unk04 = NULL;
