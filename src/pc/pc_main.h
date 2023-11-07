@@ -42,6 +42,7 @@ extern bool gCoopCompatibility;
 # endif
 #elif defined(RAPI_DUMMY)
 # define RAPI gfx_dummy_renderer_api
+# define RAPI_NAME "Dummy"
 #else
 # error No rendering API!
 #endif
@@ -52,6 +53,10 @@ extern bool gCoopCompatibility;
 #endif
 #ifndef RAPI
 #define RAPI gfx_dummy_renderer_api
+#endif
+
+#ifndef RAPI_NAME
+#define RAPI_NAME "Dummy"
 #endif
 
 #ifdef GIT_HASH

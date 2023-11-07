@@ -12361,7 +12361,7 @@ MINOR_VERSION_NUMBER = 0
 PATCH_VERSION_NUMBER = 0
 
 --- @type string
-SM64COOPDX = "sm64coopdx"
+SM64COOPDX_VERSION = "v0.1"
 
 --- @type integer
 VERSION_NUMBER = 36
