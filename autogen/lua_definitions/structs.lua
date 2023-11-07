@@ -1050,6 +1050,7 @@
 --- @field public isDirectory boolean
 --- @field public name string
 --- @field public relativePath string
+--- @field public renderBehindHud boolean
 --- @field public selectable boolean
 
 --- @class ModFile

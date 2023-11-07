@@ -12480,23 +12480,6 @@ int smlua_func_djui_hud_set_mouse_locked(lua_State* L) {
     return 1;
 }
 
-int smlua_func_djui_hud_set_render_behind_hud(lua_State* L) {
-    if (L == NULL) { return 0; }
-
-    int top = lua_gettop(L);
-    if (top != 1) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "djui_hud_set_render_behind_hud", 1, top);
-        return 0;
-    }
-
-    bool enable = smlua_to_boolean(L, 1);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "djui_hud_set_render_behind_hud"); return 0; }
-
-    djui_hud_set_render_behind_hud(enable);
-
-    return 1;
-}
-
 int smlua_func_djui_hud_set_resolution(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -27619,6 +27602,23 @@ int smlua_func_smlua_collision_util_get(lua_State* L) {
  // smlua_deprecated.h //
 ////////////////////////
 
+int smlua_func_djui_hud_set_render_behind_hud(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "djui_hud_set_render_behind_hud", 1, top);
+        return 0;
+    }
+
+    bool enable = smlua_to_boolean(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "djui_hud_set_render_behind_hud"); return 0; }
+
+    djui_hud_set_render_behind_hud(enable);
+
+    return 1;
+}
+
 int smlua_func_network_discord_id_from_local_index(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -31987,7 +31987,6 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "djui_hud_set_filter", smlua_func_djui_hud_set_filter);
     smlua_bind_function(L, "djui_hud_set_font", smlua_func_djui_hud_set_font);
     smlua_bind_function(L, "djui_hud_set_mouse_locked", smlua_func_djui_hud_set_mouse_locked);
-    smlua_bind_function(L, "djui_hud_set_render_behind_hud", smlua_func_djui_hud_set_render_behind_hud);
     smlua_bind_function(L, "djui_hud_set_resolution", smlua_func_djui_hud_set_resolution);
     smlua_bind_function(L, "djui_hud_set_rotation", smlua_func_djui_hud_set_rotation);
     smlua_bind_function(L, "djui_hud_world_pos_to_screen_pos", smlua_func_djui_hud_world_pos_to_screen_pos);
@@ -32739,6 +32738,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "smlua_collision_util_get", smlua_func_smlua_collision_util_get);
 
     // smlua_deprecated.h
+    smlua_bind_function(L, "djui_hud_set_render_behind_hud", smlua_func_djui_hud_set_render_behind_hud);
     smlua_bind_function(L, "network_discord_id_from_local_index", smlua_func_network_discord_id_from_local_index);
 
     // smlua_level_utils.h

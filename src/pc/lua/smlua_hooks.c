@@ -168,20 +168,60 @@ void smlua_call_event_hooks(enum LuaHookedEventType hookType) {
     }
 }
 
-void smlua_call_event_hooks_with_reset_func(enum LuaHookedEventType hookType, void (*resetFunc)(void)) {
+void smlua_call_event_on_hud_render(void (*resetFunc)(void)) {
     lua_State* L = gLuaState;
     if (L == NULL) { return; }
-    struct LuaHookedEvent* hook = &sHookedEvents[hookType];
+    if (resetFunc) { resetFunc(); }
+
+    struct LuaHookedEvent* hook = &sHookedEvents[HOOK_ON_HUD_RENDER];
+    for (int i = 0; i < hook->count; i++) {
+        // support deprecated render behind hud
+        if (hook->mod[i]->renderBehindHud) { continue; }
+
+        // push the callback onto the stack
+        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
+
+        // call the callback
+        if (0 != smlua_call_hook(L, 0, 0, 0, hook->mod[i])) {
+            LOG_LUA("Failed to call the event_hook callback: %u", HOOK_ON_HUD_RENDER);
+        }
+        if (resetFunc) { resetFunc(); }
+    }
+}
+
+void smlua_call_event_on_hud_render_behind(void (*resetFunc)(void)) {
+    lua_State* L = gLuaState;
+    if (L == NULL) { return; }
+    if (resetFunc) { resetFunc(); }
+
+    struct LuaHookedEvent* hook = &sHookedEvents[HOOK_ON_HUD_RENDER_BEHIND];
     for (int i = 0; i < hook->count; i++) {
         // push the callback onto the stack
         lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
 
         // call the callback
         if (0 != smlua_call_hook(L, 0, 0, 0, hook->mod[i])) {
-            LOG_LUA("Failed to call the event_hook callback: %u", hookType);
+            LOG_LUA("Failed to call the event_hook callback: %u", HOOK_ON_HUD_RENDER_BEHIND);
         }
         if (resetFunc) { resetFunc(); }
     }
+
+    // support deprecated render behind hud
+    hook = &sHookedEvents[HOOK_ON_HUD_RENDER];
+    for (int i = 0; i < hook->count; i++) {
+        // support deprecated render behind hud
+        if (!hook->mod[i]->renderBehindHud) { continue; }
+
+        // push the callback onto the stack
+        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
+
+        // call the callback
+        if (0 != smlua_call_hook(L, 0, 0, 0, hook->mod[i])) {
+            LOG_LUA("Failed to call the event_hook callback: %u", HOOK_ON_HUD_RENDER);
+        }
+        if (resetFunc) { resetFunc(); }
+    }
+
 }
 
 void smlua_call_event_hooks_bool_param(enum LuaHookedEventType hookType, bool value) {

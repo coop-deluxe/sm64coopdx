@@ -33,6 +33,7 @@ struct Mod {
     bool isDirectory;
     bool enabled;
     bool selectable;
+    bool renderBehindHud;
     size_t size;
     u8 customBehaviorIndex;
 };

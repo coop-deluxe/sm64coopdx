@@ -592,10 +592,6 @@ bool djui_hud_world_pos_to_screen_pos(Vec3f pos, Vec3f out) {
     return true;
 }
 
-void djui_hud_set_render_behind_hud(bool enable) {
-    gDjuiRenderBehindHud = enable;
-}
-
 bool djui_hud_is_pause_menu_created(void) {
     return gDjuiPanelPauseCreated;
 }

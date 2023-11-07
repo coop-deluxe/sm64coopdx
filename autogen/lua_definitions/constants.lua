@@ -9060,7 +9060,10 @@ HOOK_ON_EXIT = 34
 HOOK_DIALOG_SOUND = 35
 
 --- @type LuaHookedEventType
-HOOK_MAX = 36
+HOOK_ON_HUD_RENDER_BEHIND = 36
+
+--- @type LuaHookedEventType
+HOOK_MAX = 37
 
 --- @class HudDisplayFlags
 
@@ -12359,9 +12362,6 @@ MINOR_VERSION_NUMBER = 0
 
 --- @type integer
 PATCH_VERSION_NUMBER = 0
-
---- @type string
-SM64COOPDX_VERSION = "v0.1"
 
 --- @type integer
 VERSION_NUMBER = 36

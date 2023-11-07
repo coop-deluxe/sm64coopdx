@@ -655,7 +655,6 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
     gFogIntensity = 1;
     gOverrideBackground = -1;
     gOverrideEnvFx = -1;
-    gDjuiRenderBehindHud = false;
     gRomhackCameraAllowCentering = TRUE;
     gOverrideAllowToxicGasCamera = FALSE;
     gRomhackCameraAllowDpad = FALSE;

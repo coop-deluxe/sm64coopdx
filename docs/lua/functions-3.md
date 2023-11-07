@@ -2516,26 +2516,6 @@
 
 <br />
 
-## [djui_hud_set_render_behind_hud](#djui_hud_set_render_behind_hud)
-
-### Lua Example
-`djui_hud_set_render_behind_hud(enable)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| enable | `boolean` |
-
-### Returns
-- None
-
-### C Prototype
-`void djui_hud_set_render_behind_hud(bool enable);`
-
-[:arrow_up_small:](#)
-
-<br />
-
 ## [djui_hud_set_resolution](#djui_hud_set_resolution)
 
 ### Lua Example

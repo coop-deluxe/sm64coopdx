@@ -3773,12 +3773,6 @@ function djui_hud_set_mouse_locked(locked)
     -- ...
 end
 
---- @param enable boolean
---- @return nil
-function djui_hud_set_render_behind_hud(enable)
-    -- ...
-end
-
 --- @param resolutionType HudUtilsResolution
 --- @return nil
 function djui_hud_set_resolution(resolutionType)
@@ -8300,6 +8294,12 @@ end
 --- @param name string
 --- @return Pointer_Collision
 function smlua_collision_util_get(name)
+    -- ...
+end
+
+--- @param enable boolean
+--- @return nil
+function djui_hud_set_render_behind_hud(enable)
     -- ...
 end
 
