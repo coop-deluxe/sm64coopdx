@@ -121,6 +121,7 @@ static void packet_ordered_add_to_table(struct OrderedPacketTable* opt, struct P
 
 void packet_ordered_add(struct Packet* p) {
     u8 globalId = p->orderedFromGlobalId;
+    if (globalId > MAX_PLAYERS) { return; }
     struct OrderedPacketTable* opt = orderedPacketTable[globalId];
 
     // try to find a ordered packet table for the packet's group
@@ -161,6 +162,7 @@ void packet_ordered_add(struct Packet* p) {
 
 void packet_ordered_clear_table(u8 globalIndex, u16 groupId) {
     LOG_INFO("clearing out ordered packet table for %d (%d)", globalIndex, groupId);
+    if (globalIndex > MAX_PLAYERS) { return; }
 
     struct OrderedPacketTable* opt = orderedPacketTable[globalIndex];
     struct OrderedPacketTable* optLast = opt;
@@ -196,6 +198,7 @@ void packet_ordered_clear_table(u8 globalIndex, u16 groupId) {
 }
 
 void packet_ordered_clear(u8 globalIndex) {
+    if (globalIndex > MAX_PLAYERS) { return; }
     if (!gAllowOrderedPacketClear) {
         LOG_INFO("disallowed ordered packets to be cleared");
         return;
