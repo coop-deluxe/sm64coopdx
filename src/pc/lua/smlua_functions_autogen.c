@@ -23355,22 +23355,6 @@ int smlua_func_cur_obj_outside_home_square(lua_State* L) {
     return 1;
 }
 
-int smlua_func_cur_obj_progress_direction_table(UNUSED lua_State* L) {
-    if (L == NULL) { return 0; }
-
-    int top = lua_gettop(L);
-    if (top != 0) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "cur_obj_progress_direction_table", 0, top);
-        return 0;
-    }
-
-
-    extern s32 cur_obj_progress_direction_table(void);
-    lua_pushinteger(L, cur_obj_progress_direction_table());
-
-    return 1;
-}
-
 int smlua_func_cur_obj_push_mario_away(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -23597,24 +23581,6 @@ int smlua_func_cur_obj_set_billboard_if_vanilla_cam(UNUSED lua_State* L) {
 
     extern void cur_obj_set_billboard_if_vanilla_cam(void);
     cur_obj_set_billboard_if_vanilla_cam();
-
-    return 1;
-}
-
-int smlua_func_cur_obj_set_direction_table(lua_State* L) {
-    if (L == NULL) { return 0; }
-
-    int top = lua_gettop(L);
-    if (top != 1) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "cur_obj_set_direction_table", 1, top);
-        return 0;
-    }
-
-    s8 * a0 = (s8 *)smlua_to_cpointer(L, 1, LVT_S8_P);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "cur_obj_set_direction_table"); return 0; }
-
-    extern s32 cur_obj_set_direction_table(s8 *a0);
-    lua_pushinteger(L, cur_obj_set_direction_table(a0));
 
     return 1;
 }
@@ -32520,7 +32486,6 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "cur_obj_nearest_object_with_behavior", smlua_func_cur_obj_nearest_object_with_behavior);
     smlua_bind_function(L, "cur_obj_outside_home_rectangle", smlua_func_cur_obj_outside_home_rectangle);
     smlua_bind_function(L, "cur_obj_outside_home_square", smlua_func_cur_obj_outside_home_square);
-    smlua_bind_function(L, "cur_obj_progress_direction_table", smlua_func_cur_obj_progress_direction_table);
     smlua_bind_function(L, "cur_obj_push_mario_away", smlua_func_cur_obj_push_mario_away);
     smlua_bind_function(L, "cur_obj_push_mario_away_from_cylinder", smlua_func_cur_obj_push_mario_away_from_cylinder);
     smlua_bind_function(L, "cur_obj_reflect_move_angle_off_wall", smlua_func_cur_obj_reflect_move_angle_off_wall);
@@ -32534,7 +32499,6 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "cur_obj_scale_over_time", smlua_func_cur_obj_scale_over_time);
     smlua_bind_function(L, "cur_obj_set_behavior", smlua_func_cur_obj_set_behavior);
     smlua_bind_function(L, "cur_obj_set_billboard_if_vanilla_cam", smlua_func_cur_obj_set_billboard_if_vanilla_cam);
-    smlua_bind_function(L, "cur_obj_set_direction_table", smlua_func_cur_obj_set_direction_table);
     smlua_bind_function(L, "cur_obj_set_face_angle_to_move_angle", smlua_func_cur_obj_set_face_angle_to_move_angle);
     smlua_bind_function(L, "cur_obj_set_hitbox_and_die_if_attacked", smlua_func_cur_obj_set_hitbox_and_die_if_attacked);
     smlua_bind_function(L, "cur_obj_set_hitbox_radius_and_height", smlua_func_cur_obj_set_hitbox_radius_and_height);

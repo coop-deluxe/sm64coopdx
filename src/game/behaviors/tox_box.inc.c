@@ -1,12 +1,12 @@
 // tox_box.c.inc
 
-s8 D_8032F8F0[] = { 4, 1, 4, 1, 6, 1, 6, 1, 5, 1, 5, 1, 6, 1, 6, 1, 5, 1, 2, 4, 1, 4, 1, 4, 1, 2,
-                    5, 1, 5, 1, 7, 1, 7, 1, 4, 1, 4, 1, 7, 1, 7, 1, 5, 1, 5, 1, 5, 1, 2, 4, 1, -1 };
-s8 D_8032F924[] = { 4, 1, 4, 1, 7, 1, 7, 1, 7, 1, 2, 6, 1, 6, 1, 6, 1, 5,
-                    1, 5, 1, 6, 1, 5, 1, 5, 1, 2, 4, 1, 4, 1, 7, 1, -1 };
-s8 D_8032F948[] = { 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 2, 5, 1, 5, 1, 5, 1, 5,
-                    1, 5, 1, 7, 1, 2, 6, 1, 6, 1, 5, 1, 2, 4, 1, 7, 1, -1 };
-s8 *D_8032F96C[] = { D_8032F8F0, D_8032F924, D_8032F948 };
+s8 sToxBoxDirectionTable0[] = { 4, 1, 4, 1, 6, 1, 6, 1, 5, 1, 5, 1, 6, 1, 6, 1, 5, 1, 2, 4, 1, 4, 1, 4, 1, 2,
+                                5, 1, 5, 1, 7, 1, 7, 1, 4, 1, 4, 1, 7, 1, 7, 1, 5, 1, 5, 1, 5, 1, 2, 4, 1, -1 };
+s8 sToxBoxDirectionTable1[] = { 4, 1, 4, 1, 7, 1, 7, 1, 7, 1, 2, 6, 1, 6, 1, 6, 1, 5,
+                                1, 5, 1, 6, 1, 5, 1, 5, 1, 2, 4, 1, 4, 1, 7, 1, -1 };
+s8 sToxBoxDirectionTable2[] = { 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 2, 5, 1, 5, 1, 5, 1, 5,
+                                1, 5, 1, 7, 1, 2, 6, 1, 6, 1, 5, 1, 2, 4, 1, 7, 1, -1 };
+s8 *sToxBoxDirectionTables[] = { sToxBoxDirectionTable0, sToxBoxDirectionTable1, sToxBoxDirectionTable2 };
 
 void tox_box_shake_screen(void) {
     if (o && o->oDistanceToMario < 3000.0f)
@@ -71,9 +71,8 @@ void tox_box_act_3(void) {
 
 void tox_box_act_0(void) {
     if (!o) { return; }
-    if (!BHV_ARR_CHECK(D_8032F96C, o->oBehParams2ndByte, s8*)) { return; }
-    s8 *sp1C = D_8032F96C[o->oBehParams2ndByte];
-    o->oAction = cur_obj_set_direction_table(sp1C);
+    if (!BHV_ARR_CHECK(sToxBoxDirectionTables, o->oBehParams2ndByte, s8*)) { return; }
+    o->oAction = cur_obj_set_direction_table(sToxBoxDirectionTables[o->oBehParams2ndByte]);
 }
 
 void (*sToxBoxActions[])(void) = { tox_box_act_0, tox_box_act_1, tox_box_act_2, tox_box_act_3,

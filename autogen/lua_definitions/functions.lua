@@ -6990,11 +6990,6 @@ function cur_obj_outside_home_square(halfLength)
     -- ...
 end
 
---- @return integer
-function cur_obj_progress_direction_table()
-    -- ...
-end
-
 --- @param radius number
 --- @return nil
 function cur_obj_push_mario_away(radius)
@@ -7068,12 +7063,6 @@ end
 
 --- @return nil
 function cur_obj_set_billboard_if_vanilla_cam()
-    -- ...
-end
-
---- @param a0 Pointer_integer
---- @return integer
-function cur_obj_set_direction_table(a0)
     -- ...
 end
 

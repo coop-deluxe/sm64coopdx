@@ -2716,20 +2716,28 @@ s32 cur_obj_set_direction_table(s8 *a0) {
 
 s32 cur_obj_progress_direction_table(void) {
     if (!o) { return 0; }
-    s8 spF;
-    s8 *sp8 = o->oToxBoxMovementPattern;
-    s32 sp4 = o->oToxBoxMovementStep + 1;
-    if (!sp8) { return 0; }
+    s8 ret;
+    s8 *table = o->oToxBoxMovementPattern;
+    s32 index = o->oToxBoxMovementStep + 1;
+    if (!table) { return 0; }
 
-    if (sp8[sp4] != -1) {
-        spF = sp8[sp4];
+    s32 tableLength = 0;
+    while (table[tableLength] != -1 && tableLength < 50) {
+        tableLength++;
+    }
+
+    if (tableLength >= 50 || index >= tableLength) {
+        ret = table[0];
+        o->oToxBoxMovementStep = 0;
+    } else if (table[index] != -1) {
+        ret = table[index];
         o->oToxBoxMovementStep++;
     } else {
-        spF = sp8[0];
+        ret = table[0];
         o->oToxBoxMovementStep = 0;
     }
 
-    return spF;
+    return ret;
 }
 
 void stub_obj_helpers_3(UNUSED s32 sp0, UNUSED s32 sp4) {

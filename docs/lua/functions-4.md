@@ -3753,24 +3753,6 @@
 
 <br />
 
-## [cur_obj_progress_direction_table](#cur_obj_progress_direction_table)
-
-### Lua Example
-`local integerValue = cur_obj_progress_direction_table()`
-
-### Parameters
-- None
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 cur_obj_progress_direction_table(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
 ## [cur_obj_push_mario_away](#cur_obj_push_mario_away)
 
 ### Lua Example
@@ -4017,26 +3999,6 @@
 
 ### C Prototype
 `void cur_obj_set_billboard_if_vanilla_cam(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [cur_obj_set_direction_table](#cur_obj_set_direction_table)
-
-### Lua Example
-`local integerValue = cur_obj_set_direction_table(a0)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| a0 | `Pointer` <`integer`> |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 cur_obj_set_direction_table(s8 *a0);`
 
 [:arrow_up_small:](#)
 
