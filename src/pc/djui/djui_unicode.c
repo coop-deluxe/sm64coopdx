@@ -365,6 +365,7 @@ void djui_unicode_cleanup_end(char* text) {
 char djui_unicode_get_base_char(char* text) {
     if ((u8)*text < ' ') { return '?'; }
     if ((u8)*text < 128) { return *text; }
+    if (!sCharMap) { return '?'; }
     u64 key = convert_unicode_char_to_u64(text);
     struct SmCodeGlyph* glyph = hmap_get(sCharMap, key);
     return (glyph != NULL || ((u8)glyph->base < (u8)'!')) ? glyph->base : '?';
