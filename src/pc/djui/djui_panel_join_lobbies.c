@@ -176,6 +176,7 @@ void djui_panel_join_lobbies_create(struct DjuiBase* caller, const char* passwor
     }
 
     struct DjuiPanel* p = djui_panel_add(caller, panel, defaultBase);
+    if (!p) { return; }
     p->on_panel_destroy = djui_panel_join_lobbies_on_destroy;
 }
 
