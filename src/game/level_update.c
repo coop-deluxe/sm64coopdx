@@ -630,7 +630,9 @@ void warp_credits(void) {
 
     set_mario_action(gMarioState, marioAction, 0);
 
-    reset_camera(gCurrentArea->camera);
+    if (gCurrentArea) {
+        reset_camera(gCurrentArea->camera);
+    }
 
     sWarpDest.type = WARP_TYPE_NOT_WARPING;
     sDelayedWarpOp = WARP_OP_NONE;
@@ -638,7 +640,9 @@ void warp_credits(void) {
     play_transition(WARP_TRANSITION_FADE_FROM_COLOR, 0x14, 0x00, 0x00, 0x00);
 
     if (gCurrCreditsEntry == NULL || gCurrCreditsEntry == sCreditsSequence) {
-        set_background_music(gCurrentArea->musicParam, gCurrentArea->musicParam2, 0);
+        if (gCurrentArea) {
+            set_background_music(gCurrentArea->musicParam, gCurrentArea->musicParam2, 0);
+        }
     }
 }
 
