@@ -1000,6 +1000,11 @@ static s32 bhv_cmd_call_native_ext(void) {
     }
     
     // Get our mod.
+    if (modIndex >= gActiveMods.entryCount) {
+        LOG_LUA("Failed to call lua function, could not find mod");
+        gCurBhvCommand += 2;
+        return BHV_PROC_CONTINUE;
+    }
     struct Mod *mod = gActiveMods.entries[modIndex];
 
     // Push the callback onto the stack

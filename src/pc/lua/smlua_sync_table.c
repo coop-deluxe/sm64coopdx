@@ -135,6 +135,11 @@ static void smlua_sync_table_call_hook(int syncTableIndex, int keyIndex, int pre
 
         // get entry
         u16 modRemoteIndex = smlua_get_integer_field(syncTableIndex, "_remoteIndex");
+        if (modRemoteIndex >= gActiveMods.entryCount) {
+            LOG_ERROR("Failed to find mod");
+            lua_pop(L, 4);
+            return;
+        }
         struct Mod* mod = gActiveMods.entries[modRemoteIndex];
 
         // call hook
@@ -303,6 +308,10 @@ void smlua_set_sync_table_field_from_network(u64 seq, u16 modRemoteIndex, u16 ln
     lua_State* L = gLuaState;
 
     // figure out entry
+    if (modRemoteIndex >= gActiveMods.entryCount) {
+        LOG_ERROR("Could not find mod list entry for modRemoteIndex: %u", modRemoteIndex);
+        return;
+    }
     struct Mod* mod = gActiveMods.entries[modRemoteIndex];
     if (mod == NULL) {
         LOG_ERROR("Could not find mod list entry for modRemoteIndex: %u", modRemoteIndex);

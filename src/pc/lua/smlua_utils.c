@@ -547,6 +547,11 @@ s64 smlua_get_integer_mod_variable(u16 modIndex, const char* variable) {
         return 0;
     }
 
+    if (modIndex >= gActiveMods.entryCount) {
+        LOG_ERROR("Could not find mod list entry");
+        return 0;
+    }
+
     // figure out entry
     struct Mod* mod = gActiveMods.entries[modIndex];
     if (mod == NULL) {
@@ -597,6 +602,11 @@ s64 smlua_get_any_integer_mod_variable(const char* variable) {
 
 LuaFunction smlua_get_function_mod_variable(u16 modIndex, const char *variable) {
     lua_State *L = gLuaState;
+
+    if (modIndex >= gActiveMods.entryCount) {
+        LOG_ERROR("Could not find mod list entry for modIndex: %u", modIndex);
+        return 0;
+    }
 
     // figure out entry
     struct Mod *mod = gActiveMods.entries[modIndex];
