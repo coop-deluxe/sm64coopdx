@@ -235,6 +235,8 @@ static bool DynOS_Tex_WriteBinary(GfxData* aGfxData, const SysPath &aOutputFilen
 /////////////
 
 DataNode<TexData>* DynOS_Tex_Load(BinFile *aFile, GfxData *aGfxData) {
+    if (!aFile || !aGfxData) { return NULL; }
+
     DataNode<TexData> *_Node = New<DataNode<TexData>>();
 
     // Name
