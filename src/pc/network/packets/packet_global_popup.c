@@ -2,6 +2,7 @@
 #include "../network.h"
 #include "pc/debuglog.h"
 #include "pc/djui/djui.h"
+#include "pc/debuglog.h"
 
 void network_send_global_popup(const char* message, int lines) {
     // get message length
@@ -31,4 +32,12 @@ void network_receive_global_popup(struct Packet* p) {
     packet_read(p, message, messageLength * sizeof(u8));
     // show popup
     djui_popup_create(message, lines);
+
+    struct NetworkPlayer* np = &gNetworkPlayers[p->localIndex];
+    if (gNetworkSystem && gNetworkSystem->get_id_str && np->connected && strlen(np->name) > 0) {
+        LOG_CONSOLE("[%s] %s: %s", gNetworkSystem->get_id_str(np->localIndex), np->name, message);
+        LOG_INFO("[%s] %s: %s", gNetworkSystem->get_id_str(np->localIndex), np->name, message);
+    } else {
+        LOG_INFO("rx popup: %s", message);
+    }
 }
