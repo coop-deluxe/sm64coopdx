@@ -2768,20 +2768,21 @@ void move_into_c_up(struct Camera *c) {
     if (!c) { return; }
     struct LinearTransitionPoint *start = &sModeInfo.transitionStart;
     struct LinearTransitionPoint *end = &sModeInfo.transitionEnd;
+    s16 modInfoMax = MAX(sModeInfo.frame, 1);
 
     f32 dist  = end->dist  - start->dist;
     s16 pitch = end->pitch - start->pitch;
     s16 yaw   = end->yaw   - start->yaw;
 
     // Linearly interpolate from start to end position's polar coordinates
-    dist  = start->dist  + dist  * sModeInfo.frame / sModeInfo.max;
-    pitch = start->pitch + pitch * sModeInfo.frame / sModeInfo.max;
-    yaw   = start->yaw   + yaw   * sModeInfo.frame / sModeInfo.max;
+    dist  = start->dist  + dist  * sModeInfo.frame / modInfoMax;
+    pitch = start->pitch + pitch * sModeInfo.frame / modInfoMax;
+    yaw   = start->yaw   + yaw   * sModeInfo.frame / modInfoMax;
 
     // Linearly interpolate the focus from start to end
-    c->focus[0] = start->focus[0] + (end->focus[0] - start->focus[0]) * sModeInfo.frame / sModeInfo.max;
-    c->focus[1] = start->focus[1] + (end->focus[1] - start->focus[1]) * sModeInfo.frame / sModeInfo.max;
-    c->focus[2] = start->focus[2] + (end->focus[2] - start->focus[2]) * sModeInfo.frame / sModeInfo.max;
+    c->focus[0] = start->focus[0] + (end->focus[0] - start->focus[0]) * sModeInfo.frame / modInfoMax;
+    c->focus[1] = start->focus[1] + (end->focus[1] - start->focus[1]) * sModeInfo.frame / modInfoMax;
+    c->focus[2] = start->focus[2] + (end->focus[2] - start->focus[2]) * sModeInfo.frame / modInfoMax;
 
     vec3f_add(c->focus, sMarioCamState->pos);
     vec3f_set_dist_and_angle(c->focus, c->pos, dist, pitch, yaw);
@@ -2790,7 +2791,7 @@ void move_into_c_up(struct Camera *c) {
     sMarioCamState->headRotation[1] = 0;
 
     // Finished zooming in
-    if (++sModeInfo.frame == sModeInfo.max) {
+    if (++sModeInfo.frame >= modInfoMax) {
         gCameraMovementFlags &= ~CAM_MOVING_INTO_MODE;
     }
 }
@@ -2963,8 +2964,52 @@ void set_camera_mode(struct Camera *c, s16 mode, s16 frames) {
         return;
     }
 
-    if (mode == CAMERA_MODE_C_UP && gLakituState.mode == CAMERA_MODE_NEWCAM) {
+    if (mode != CAMERA_MODE_NEWCAM && gLakituState.mode != CAMERA_MODE_NEWCAM) {
         newcam_init_settings_override(false);
+        if (!(mode == CAMERA_MODE_WATER_SURFACE && gCurrLevelArea == AREA_TTM_OUTSIDE)) {
+            // Clear movement flags that would affect the transition
+            gCameraMovementFlags &= (u16)~(CAM_MOVE_RESTRICT | CAM_MOVE_ROTATE);
+            gCameraMovementFlags |= CAM_MOVING_INTO_MODE;
+            if (mode == CAMERA_MODE_NONE) {
+                mode = CAMERA_MODE_CLOSE;
+            }
+            sCUpCameraPitch = 0;
+            sModeOffsetYaw = 0;
+            sLakituDist = 0;
+            sLakituPitch = 0;
+            sAreaYawChange = 0;
+
+            sModeInfo.newMode = (mode != -1) ? mode : sModeInfo.lastMode;
+            sModeInfo.lastMode = c->mode;
+            sModeInfo.max = MAX(frames, 1);
+            sModeInfo.frame = 1;
+
+            c->mode = sModeInfo.newMode;
+            gLakituState.mode = c->mode;
+
+            vec3f_copy(end->focus, c->focus);
+            vec3f_sub(end->focus, sMarioCamState->pos);
+
+            vec3f_copy(end->pos, c->pos);
+            vec3f_sub(end->pos, sMarioCamState->pos);
+
+            if (sModeInfo.newMode != CAMERA_MODE_NONE && (u32)sModeInfo.newMode < sizeof(sModeTransitions) / sizeof(sModeTransitions[0])) {
+                sAreaYaw = sModeTransitions[sModeInfo.newMode](c, end->focus, end->pos);
+            }
+
+            // End was updated by sModeTransitions
+            vec3f_sub(end->focus, sMarioCamState->pos);
+            vec3f_sub(end->pos, sMarioCamState->pos);
+
+            vec3f_copy(start->focus, gLakituState.curFocus);
+            vec3f_sub(start->focus, sMarioCamState->pos);
+
+            vec3f_copy(start->pos, gLakituState.curPos);
+            vec3f_sub(start->pos, sMarioCamState->pos);
+
+            vec3f_get_dist_and_angle(start->focus, start->pos, &start->dist, &start->pitch, &start->yaw);
+            vec3f_get_dist_and_angle(end->focus, end->pos, &end->dist, &end->pitch, &end->yaw);
+        }
     }
 
     if (mode != CAMERA_MODE_NEWCAM && gLakituState.mode != CAMERA_MODE_NEWCAM) {
