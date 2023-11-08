@@ -238,9 +238,14 @@ void network_send_to(u8 localIndex, struct Packet* p) {
         packet_set_destination(p, 0);
         localIndex = (gNetworkPlayerServer != NULL) ? gNetworkPlayerServer->localIndex : 0;
     } else {
+        u8 idx = (localIndex == 0) ? p->localIndex : localIndex;
+        if (idx >= MAX_PLAYERS) {
+            LOG_ERROR("Could not set destination to %u", idx);
+            return;
+        }
         packet_set_destination(p, p->requestBroadcast
                                 ? PACKET_DESTINATION_BROADCAST
-                                : gNetworkPlayers[(localIndex == 0) ? p->localIndex : localIndex].globalIndex);
+                                : gNetworkPlayers[idx].globalIndex);
     }
 
     // sanity checks
@@ -254,6 +259,10 @@ void network_send_to(u8 localIndex, struct Packet* p) {
     }
 
     if (gNetworkType == NT_SERVER) {
+        if (localIndex >= MAX_PLAYERS) {
+            LOG_ERROR("Could not get network player %u", localIndex);
+            return;
+        }
         struct NetworkPlayer* np = &gNetworkPlayers[localIndex];
         // don't send a packet to a player that can't receive it
         if (p->levelAreaMustMatch) {
@@ -330,7 +339,9 @@ void network_send_to(u8 localIndex, struct Packet* p) {
 
     network_remember_debug_packet(p->packetType, true);
 
-    gNetworkPlayers[localIndex].lastSent = clock_elapsed();
+    if (localIndex < MAX_PLAYERS) {
+        gNetworkPlayers[localIndex].lastSent = clock_elapsed();
+    }
 }
 
 void network_send(struct Packet* p) {
