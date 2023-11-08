@@ -53,11 +53,11 @@ static void shift_UV_JUMP(s32 vtxIndex, u16 vertcount, s16 speed, u16 bhv, u16 c
 
     if (bhv < SCROLL_UV_X) {
         for (i = 0; i < vertcount; i++) {
-            verts[i]->n.ob[bhv] += speed;
+            verts[i]->n.ob[MIN(bhv, 2)] += speed;
         }
     } else {
         for (i = 0; i < vertcount; i++) {
-            verts[i]->n.tc[bhv-SCROLL_UV_X] += speed;
+            verts[i]->n.tc[MIN(bhv-SCROLL_UV_X, 1)] += speed;
         }
     }
 }
@@ -80,9 +80,9 @@ static void shift_UV_NORMAL(u32 vtxIndex, u16 vertcount, s16 speed, u16 bhv, u16
 
         for (i = 0; i < vertcount; i++) {
             if (correction == 0) {
-                verts[i]->n.ob[bhv] += speed;
+                verts[i]->n.ob[MIN(bhv, 2)] += speed;
             } else {
-                verts[i]->n.ob[bhv] -= correction;
+                verts[i]->n.ob[MIN(bhv, 2)] -= correction;
             }
         }
     } else {
@@ -93,9 +93,9 @@ static void shift_UV_NORMAL(u32 vtxIndex, u16 vertcount, s16 speed, u16 bhv, u16
 
         for (i = 0; i < vertcount; i++) {
             if (correction == 0) {
-                verts[i]->n.tc[bhv-SCROLL_UV_X] += speed;
+                verts[i]->n.tc[MIN(bhv-SCROLL_UV_X, 1)] += speed;
             } else {
-                verts[i]->n.tc[bhv-SCROLL_UV_X] -= correction;
+                verts[i]->n.tc[MIN(bhv-SCROLL_UV_X, 1)] -= correction;
             }
         }
     }
@@ -115,11 +115,11 @@ static void shift_UV_SINE(u32 vtxIndex, u16 vertcount, s16 speed, u16 bhv, u16 c
 
     if (bhv < SCROLL_UV_X) {
         for (i = 0; i < vertcount; i++) {
-            verts[i]->n.ob[bhv] += sins(verts[0]->n.flag) * speed;
+            verts[i]->n.ob[MIN(bhv, 2)] += sins(verts[0]->n.flag) * speed;
         }
     } else {
         for (i = 0; i < vertcount; i++) {
-            verts[i]->n.tc[bhv-SCROLL_UV_X] += (u16) (sins(verts[0]->n.flag) * speed);
+            verts[i]->n.tc[MIN(bhv-SCROLL_UV_X, 1)] += (u16) (sins(verts[0]->n.flag) * speed);
         }
     }
     verts[0]->n.flag += cycle * 0x23;
