@@ -865,6 +865,7 @@ void build_synthetic_wave(struct Note *note, struct SequenceChannelLayer *seqLay
     note->instOrWave = (u8) seqLayer->seqChannel->instOrWave;
     for (i = -1, pos = 0; pos < 0x40; pos += stepSize) {
         i++;
+        if (i >= 0x40) { break; }
         note->synthesisBuffers->samples[i] = gWaveSamples[seqLayer->seqChannel->instOrWave - 0x80][pos];
     }
 
