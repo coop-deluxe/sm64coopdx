@@ -168,7 +168,7 @@ s32 act_idle(struct MarioState *m) {
             // actionTimer is used to track how many cycles have passed.
             if (++m->actionState == 3) {
                 f32 deltaYOfFloorBehindMario = m->pos[1] - find_floor_height_relative_polar(m, -0x8000, 60.0f);
-                if (deltaYOfFloorBehindMario < -24.0f || 24.0f < deltaYOfFloorBehindMario || (m->floor && (m->floor->flags & SURFACE_FLAG_DYNAMIC)) {
+                if (deltaYOfFloorBehindMario < -24.0f || 24.0f < deltaYOfFloorBehindMario || (m->floor && (m->floor->flags & SURFACE_FLAG_DYNAMIC))) {
                     m->actionState = 0;
                 } else {
                     // If Mario hasn't turned his head 10 times yet, stay idle instead of going to sleep.
