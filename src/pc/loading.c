@@ -4,8 +4,6 @@
 #include "djui/djui.h"
 #include "pc/djui/djui_unicode.h"
 
-#include "controller/controller_keyboard.h"
-
 #include "pc_main.h"
 #include "loading.h"
 #include "pc/utils/misc.h"
@@ -29,7 +27,6 @@ pthread_mutex_t gLoadingThreadMutex = PTHREAD_MUTEX_INITIALIZER;
 bool gIsThreaded = false;
 
 extern Vp D_8032CF00;
-extern u8 gRenderingInterpolated;
 
 static void loading_screen_produce_one_frame(void) {
     // Start frame

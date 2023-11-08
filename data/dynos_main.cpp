@@ -40,7 +40,8 @@ void *DynOS_UpdateCmd(void *aCmd) {
 }
 
 void DynOS_UpdateGfx() {
-    DynOS_Gfx_Update();
+    DynOS_Mod_Update();
+    DynOS_Tex_Update();
 }
 
 bool DynOS_IsTransitionActive() {

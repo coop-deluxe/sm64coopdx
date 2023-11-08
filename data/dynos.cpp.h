@@ -779,7 +779,6 @@ static type &__##name() {           \
 // Main
 //
 
-void DynOS_UpdateOpt(void *aPad);
 void *DynOS_SwapCmd(void *aCmd);
 void *DynOS_UpdateCmd(void *aCmd);
 void DynOS_UpdateGfx();
@@ -793,7 +792,6 @@ void DynOS_ReturnToMainMenu();
 //
 
 void DynOS_Gfx_Init();
-void DynOS_Gfx_Update();
 void DynOS_Gfx_Free(GfxData *aGfxData);
 
 //
@@ -999,7 +997,6 @@ void DynOS_Col_Generate(const SysPath &aPackFolder, Array<Pair<u64, String>> _Ac
 
 DataNode<GeoLayout>* DynOS_Geo_Parse(GfxData* aGfxData, DataNode<GeoLayout>* aNode, bool aDisplayPercent);
 void DynOS_Geo_Write(BinFile *aFile, GfxData *aGfxData, DataNode<GeoLayout> *aNode);
-DataNode<GeoLayout>** DynOS_Geo_GetLoading(void);
 void DynOS_Geo_Load(BinFile *aFile, GfxData *aGfxData);
 
 DataNode<Gfx>* DynOS_Gfx_Parse(GfxData* aGfxData, DataNode<Gfx>* aNode);

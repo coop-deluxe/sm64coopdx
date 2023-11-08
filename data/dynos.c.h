@@ -39,7 +39,6 @@ void dynos_generate_packs(const char* directory);
 void dynos_actor_override(void** aSharedChild);
 void dynos_add_actor_custom(const char *filePath, const char* geoName);
 const void* dynos_geolayout_get(const char *name);
-void *dynos_geolayout_to_graphnode(const void *geoLayout, bool keepInMemory);
 
 // -- collisions -- //
 void dynos_add_collision(const char *filePath, const char* collisionName);
