@@ -4,7 +4,6 @@
 
 #include "../configfile.h"
 
-#include "controller_recorded_tas.h"
 #include "controller_keyboard.h"
 #include "controller_sdl.h"
 
@@ -21,7 +20,6 @@ int mouse_window_x;
 int mouse_window_y;
 
 static struct ControllerAPI *controller_implementations[] = {
-    &controller_recorded_tas,
     #if defined(CAPI_SDL2) || defined(CAPI_SDL1)
     &controller_sdl,
     #endif
