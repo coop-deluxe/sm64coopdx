@@ -32,11 +32,15 @@ struct SpawnObjectData {
 
 static u32 generate_parent_id(struct Object* objects[], u8 onIndex, bool sanitize) {
     struct Object* o = objects[onIndex];
+    if (!o) { return (u32)-1; }
 
     // special case if the parent is itself
     if (o->parentObj == o) { return (u32)-1; }
 
     if (onIndex == 0) {
+        if (!o->parentObj) {
+            return (u32)-1;
+        }
         if (sanitize && o->parentObj->oSyncID == 0) {
             return (u32)-1;
         }
