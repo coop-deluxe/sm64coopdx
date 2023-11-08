@@ -7150,6 +7150,8 @@ s32 rotate_camera_around_walls(struct Camera *c, Vec3f cPos, s16 *avoidYaw, s16 
  */
 void find_mario_floor_and_ceil(struct PlayerGeometry *pg) {
     if (!pg) { return; }
+    if (!sMarioCamState) { return; }
+
     struct Surface *surf = NULL;
     s16 tempCheckingSurfaceCollisionsForCamera = gCheckingSurfaceCollisionsForCamera;
     gCheckingSurfaceCollisionsForCamera = TRUE;
