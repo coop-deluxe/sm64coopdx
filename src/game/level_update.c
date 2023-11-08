@@ -1756,7 +1756,7 @@ s32 init_level(void) {
             if (gCurrDemoInput != NULL) {
                 set_mario_action(gMarioState, ACT_IDLE, 0);
             } else if (!gDebugLevelSelect) {
-                if (gMarioState->action != ACT_UNINITIALIZED) {
+                if (gMarioState && gMarioState->action != ACT_UNINITIALIZED) {
                     bool skipIntro = (gNetworkType == NT_NONE || gServerSettings.skipIntro != 0);
                     if (gDjuiInMainMenu && (gNetworkType == NT_NONE)) {
                         // pick random main menu level
@@ -1789,7 +1789,7 @@ s32 init_level(void) {
             play_transition(WARP_TRANSITION_FADE_FROM_STAR, 0x10, 0xFF, 0xFF, 0xFF);
         }
 
-        if (gCurrDemoInput == NULL) {
+        if (gCurrDemoInput == NULL && gCurrentArea) {
             set_background_music(gCurrentArea->musicParam, gCurrentArea->musicParam2, 0);
         }
     }
@@ -1798,7 +1798,7 @@ s32 init_level(void) {
         cancel_rumble();
     }
 
-    if (gMarioState->action == ACT_INTRO_CUTSCENE) {
+    if (gMarioState && gMarioState->action == ACT_INTRO_CUTSCENE) {
         sound_banks_disable(SEQ_PLAYER_SFX, SOUND_BANKS_DISABLED_DURING_INTRO_CUTSCENE);
     }
 
