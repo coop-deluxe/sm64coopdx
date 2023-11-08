@@ -327,6 +327,7 @@ void djui_inputbox_on_focus_end(UNUSED struct DjuiBase* base) {
 }
 
 void djui_inputbox_on_text_input(struct DjuiBase *base, char* text) {
+    if (!base || !text) { return; }
     struct DjuiInputbox *inputbox = (struct DjuiInputbox *) base;
     char* msg = inputbox->buffer;
     int msgLen = strlen(msg);

@@ -40,6 +40,8 @@ static s32 RetrieveCurrentAnimationIndex(struct Object *aObject) {
 
 // Must be called twice, before and after geo_set_animation_globals
 void DynOS_Anim_Swap(void *aPtr) {
+    if (!aPtr) { return; }
+
     static Animation *pDefaultAnimation = NULL;
     static Animation  sGfxDataAnimation;
 
