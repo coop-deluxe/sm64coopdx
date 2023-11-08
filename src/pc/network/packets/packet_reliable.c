@@ -137,9 +137,10 @@ static float adjust_max_elapsed(enum PacketType packetType, float maxElapsed) {
         case PACKET_MOD_LIST_ENTRY:
         case PACKET_MOD_LIST_FILE:
         case PACKET_MOD_LIST_DONE:
-            return MIN(0.5f + maxElapsed * 2.0f, 5);
+        case PACKET_LUA_SYNC_TABLE:
+            return MIN(0.5f + maxElapsed * 2.0f, 4);
         default:
-            return MIN(maxElapsed, 5);
+            return MIN(maxElapsed, 4);
     }
 }
 
@@ -157,13 +158,12 @@ void network_update_reliable(void) {
         f32 elapsed = (clock_elapsed() - node->lastSend);
         f32 maxElapsed = get_max_elapsed_time(node->sendAttempts);
         maxElapsed = adjust_max_elapsed(node->p.packetType, maxElapsed);
-        if (maxElapsed > 3) { maxElapsed = 3; }
 
         // adjust resend time based on ping
         struct NetworkPlayer* np = &gNetworkPlayers[node->p.localIndex];
         f32 pingElapsed = np->ping / 1000.0f;
         if (pingElapsed > 1.0f) { pingElapsed = 1.0f; }
-        pingElapsed *= 1.1f;
+        pingElapsed *= 1.25f;
         if (maxElapsed < pingElapsed) { maxElapsed = pingElapsed; }
 
         if (elapsed > maxElapsed) {

@@ -49,7 +49,11 @@ void network_receive_pong(struct Packet* p) {
     }
 
     u32 ping = (now - timestamp) * 1000;
-    np->ping = np->ping * 0.5f + ping * 0.5f;
+    if (ping > np->ping) {
+        np->ping = ping;
+    } else {
+        np->ping = np->ping * 0.7f + ping * 0.3f;
+    }
     if (np->ping > 1000) { np->ping = 1000; }
     //LOG_INFO("rx pong from %u: %u", globalIndex, ping);
 }
