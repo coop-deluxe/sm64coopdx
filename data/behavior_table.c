@@ -589,7 +589,7 @@ const char* get_behavior_name_from_id(enum BehaviorId id) {
 
 enum BehaviorId get_id_from_behavior_name(const char* name) {
     for (enum BehaviorId i = 0; i < id_bhv_max_count; i++) {
-        if (!strcmp(name, gBehaviorTable[i].name)) {
+        if (gBehaviorTable[i].name && !strcmp(name, gBehaviorTable[i].name)) {
             return i;
         }
     }
