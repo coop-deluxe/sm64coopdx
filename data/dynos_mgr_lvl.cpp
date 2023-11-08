@@ -84,6 +84,11 @@ void DynOS_Lvl_Activate(s32 modIndex, const SysPath &aFilename, const char *aLev
 
     // Override vanilla script
     auto& newScripts = _Node->mLevelScripts;
+    if (newScripts.Count() <= 0) {
+        PrintError("Could not find level scripts: '%s'", aLevelName);
+        return;
+    }
+
     auto& newScriptNode = newScripts[newScripts.Count() - 1];
     const void* originalScript = DynOS_Builtin_ScriptPtr_GetFromName(newScriptNode->mName.begin());
     if (originalScript == NULL) {
