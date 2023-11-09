@@ -12,7 +12,7 @@ char gDjuiConsoleTmpBuffer[CONSOLE_MAX_TMP_BUFFER] = "";
 u32 sDjuiConsoleMessages = 0;
 
 bool djui_console_render(struct DjuiBase* base) {
-    djui_base_set_size(base, gDjuiRoot->base.width.value, gDjuiRoot->base.height.value * 0.6f);
+    djui_base_set_size(base, gDjuiRoot->base.width.value, gDjuiRoot->base.height.value * 0.5f);
 
     djui_rect_render(base);
     return true;
@@ -27,12 +27,6 @@ void djui_console_toggle(void) {
     if (gDjuiConsole == NULL) { return; }
     gDjuiConsoleFocus = !gDjuiConsoleFocus;
     djui_base_set_visible(&gDjuiConsole->base, gDjuiConsoleFocus);
-
-    u32 windowWidth, windowHeight;
-    wm_api->get_dimensions(&windowWidth, &windowHeight);
-    f32 scaledHeight = (windowHeight * 0.6f) / djui_gfx_get_scale();
-
-    djui_base_set_size(&gDjuiConsole->base, 1, MIN(scaledHeight, 1000));
 
     if (gDjuiConsoleFocus) {
         if (gDjuiChatBoxFocus) { djui_chat_box_toggle(); }
@@ -123,7 +117,7 @@ struct DjuiConsole* djui_console_create(void) {
 
     djui_base_init(NULL, base, djui_console_render, djui_console_destroy);
     djui_base_set_size_type(base, DJUI_SVT_ABSOLUTE, DJUI_SVT_ABSOLUTE);
-    djui_base_set_size(base, gDjuiRoot->base.width.value, 1000);
+    djui_base_set_size(base, gDjuiRoot->base.width.value, gDjuiRoot->base.height.value * 0.5f);
     djui_base_set_alignment(base, DJUI_HALIGN_LEFT, DJUI_VALIGN_TOP);
     djui_base_set_color(base, 0, 0, 0, 220);
     djui_base_set_padding(base, 0, 8, 8, 8);
