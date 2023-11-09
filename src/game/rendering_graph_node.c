@@ -1142,6 +1142,8 @@ static void geo_process_shadow(struct GraphNodeShadow *node) {
  * Since (0,0,0) is unaffected by rotation, columns 0, 1 and 2 are ignored.
  */
 static s32 obj_is_in_view(struct GraphNodeObject *node, Mat4 matrix) {
+    if (!node || !gCurGraphNodeCamFrustum) { return FALSE; }
+
     if (node->node.flags & GRAPH_RENDER_INVISIBLE) {
         return FALSE;
     } else if (node->skipInViewCheck) {
