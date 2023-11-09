@@ -24,16 +24,11 @@ static Array<Pair<const char*, void *>>& DynosCustomActors() {
 //       clean up the actor management code more
 
 void DynOS_Actor_AddCustom(const SysPath &aFilename, const char *aActorName) {
+    const void* georef = DynOS_Builtin_Actor_GetFromName(aActorName);
 
     u16 actorLen = strlen(aActorName);
     char* actorName = (char*)calloc(1, sizeof(char) * (actorLen + 1));
     strcpy(actorName, aActorName);
-
-    const void* georef = DynOS_Builtin_Actor_GetFromName(aActorName);
-    if (!georef) {
-        PrintError("  ERROR: Couldn't find georef for \"%s\"", actorName);
-        free(actorName);
-    }
 
     GfxData *_GfxData = DynOS_Actor_LoadFromBinary(aFilename, actorName, aFilename, false);
     if (!_GfxData) {
