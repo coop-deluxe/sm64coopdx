@@ -4,6 +4,7 @@
 #include "djui_panel_menu.h"
 #include "game/save_file.h"
 #include "pc/network/network.h"
+#include "pc/pc_main.h"
 #include "pc/utils/misc.h"
 #include "pc/configfile.h"
 #include "djui_inputbox.h"
