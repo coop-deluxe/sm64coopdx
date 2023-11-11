@@ -301,7 +301,7 @@ static CRASH_HANDLER_TYPE crash_handler(EXCEPTION_POINTERS *ExceptionInfo) {
 #elif __linux__
 static void crash_handler(const int signalNum, siginfo_t *info, ucontext_t *context) {
 #endif
-    printf("game crashed! preparing crash screen...\n");
+    printf("Game crashed! preparing crash screen...\n");
     memset(sCrashHandlerText, 0, sizeof(sCrashHandlerText));
     CrashHandlerText *pText = &sCrashHandlerText[0];
     gDjuiDisabled = true;

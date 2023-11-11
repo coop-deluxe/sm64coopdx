@@ -24,20 +24,11 @@ FluffaMario: Model Designer\n\
 \n\
 Contributors:\n\
 ArcticJaguar725: Fixing a sound engine bug\n\
-Isaac: Loading screen initially on sm64coopdx\n\
-iZePlayzYT: Improving chat initially on sm64coopdx\n\
+Isaac: Loading screen testing initially on sm64coopdx\n\
 \n\
-It is recommended you download the sm64coopdx repository if you want to make mods or DynOS Packs.\n\
-\n\
-OS: %s\n\
 Renderer: %s\n\
-sm64coopdx Version: %s\n\
-sm64ex-coop Version: %s\n\
 Build Type: %s",
-            get_os_name(),
             RAPI_NAME,
-            SM64COOPDX_VERSION,
-            get_version_local(),
 #ifdef DEVELOPMENT
             "Development"
 #else
@@ -48,7 +39,7 @@ Build Type: %s",
         struct DjuiText* text = djui_text_create(body, sInfo);
         const struct DjuiTheme* theme = gDjuiThemes[configDjuiTheme];
         djui_base_set_location(&text->base, 0, 0);
-        djui_base_set_size(&text->base, (DJUI_DEFAULT_PANEL_WIDTH * theme->panels.widthMultiplier) - 64, 670);
+        djui_base_set_size(&text->base, (DJUI_DEFAULT_PANEL_WIDTH * theme->panels.widthMultiplier) - 64, 480);
         djui_base_set_color(&text->base, 220, 220, 220, 255);
         djui_text_set_drop_shadow(text, 64, 64, 64, 100);
         djui_text_set_alignment(text, DJUI_HALIGN_CENTER, DJUI_VALIGN_TOP);
