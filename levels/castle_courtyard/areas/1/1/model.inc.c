@@ -692,6 +692,22 @@ static const Vtx castle_courtyard_seg7_vertex_07002180[] = {
 
 // 0x070021C0 - 0x070022A0
 static const Vtx castle_courtyard_seg7_vertex_070021C0[] = {
+#ifdef ENHANCE_LEVEL_TEXTURES
+    {{{ -4095,    728,  -3378}, 0, {   192,   2084}, {0xff, 0xff, 0xff, 0xff}}},
+    {{{ -4486,   1000,  -2810}, 0, {   364,   1576}, {0xff, 0xff, 0xff, 0xff}}},
+    {{{ -3583,    512,  -3071}, 0, {    36,   1792}, {0xff, 0xff, 0xff, 0xff}}},
+    {{{ -3583,    614,  -2047}, 0, {    96,    868}, {0xff, 0xff, 0xff, 0xff}}},
+    {{{ -4914,    898,  -2047}, 0, {   482,   1040}, {0xff, 0xff, 0xff, 0xff}}},
+    {{{ -4709,   1382,  -1228}, 0, {   556,    120}, {0xff, 0xff, 0xff, 0xff}}},
+    {{{ -3583,    614,  -1228}, 0, {   130,    160}, {0xff, 0xff, 0xff, 0xff}}},
+    {{{ -3583,    512,   -511}, 0, {   138,   -424}, {0xff, 0xff, 0xff, 0xff}}},
+    {{{ -4699,   1280,   -501}, 0, {   564,   -480}, {0xff, 0xff, 0xff, 0xff}}},
+    {{{ -4455,   1638,    434}, 0, {   610,  -1464}, {0xff, 0xff, 0xff, 0xff}}},
+    {{{ -3583,    614,    307}, 0, {   192,  -1172}, {0xff, 0xff, 0xff, 0xff}}},
+    {{{ -4147,   1690,    755}, 0, {   556,  -1820}, {0xff, 0xff, 0xff, 0xff}}},
+    {{{ -3839,   1638,   1075}, 0, {   482,  -2144}, {0xff, 0xff, 0xff, 0xff}}},
+    {{{ -3071,    614,    717}, 0, {    80,  -1628}, {0xff, 0xff, 0xff, 0xff}}},
+#else
     {{{ -4095,    728,  -3378}, 0, {   192,   2084}, {0x30, 0xdb, 0x02, 0xff}}},
     {{{ -4486,   1000,  -2810}, 0, {   364,   1576}, {0x30, 0xdb, 0x02, 0xff}}},
     {{{ -3583,    512,  -3071}, 0, {    36,   1792}, {0x30, 0xdb, 0x02, 0xff}}},
@@ -706,10 +722,27 @@ static const Vtx castle_courtyard_seg7_vertex_070021C0[] = {
     {{{ -4147,   1690,    755}, 0, {   556,  -1820}, {0x30, 0xdb, 0x02, 0xff}}},
     {{{ -3839,   1638,   1075}, 0, {   482,  -2144}, {0x30, 0xdb, 0x02, 0xff}}},
     {{{ -3071,    614,    717}, 0, {    80,  -1628}, {0x30, 0xdb, 0x02, 0xff}}},
+#endif
 };
 
 // 0x070022A0 - 0x07002380
 static const Vtx castle_courtyard_seg7_vertex_070022A0[] = {
+#ifdef ENHANCE_LEVEL_TEXTURES
+    {{{  4545,    666,  -1135}, 0, {   614,   2096}, {0xff, 0xff, 0xff, 0xff}}},
+    {{{  3584,    614,  -1228}, 0, {    62,   1720}, {0xff, 0xff, 0xff, 0xff}}},
+    {{{  3584,    512,   -511}, 0, {   124,   1020}, {0xff, 0xff, 0xff, 0xff}}},
+    {{{ -3839,   1638,   1075}, 0, {   482,  -2144}, {0xff, 0xff, 0xff, 0xff}}},
+    {{{ -3071,   1126,   1434}, 0, {   208,  -2428}, {0xff, 0xff, 0xff, 0xff}}},
+    {{{ -3071,    614,    717}, 0, {    80,  -1628}, {0xff, 0xff, 0xff, 0xff}}},
+    {{{ -2559,    512,    717}, 0, {   -64,  -1696}, {0xff, 0xff, 0xff, 0xff}}},
+    {{{ -2559,   1024,   1434}, 0, {    62,  -2496}, {0xff, 0xff, 0xff, 0xff}}},
+    {{{  3584,    614,    307}, 0, {   284,    240}, {0xff, 0xff, 0xff, 0xff}}},
+    {{{  4198,   1126,    307}, 0, {   820,    584}, {0xff, 0xff, 0xff, 0xff}}},
+    {{{  3651,   1000,    987}, 0, {   574,   -348}, {0xff, 0xff, 0xff, 0xff}}},
+    {{{  3072,    614,    717}, 0, {    68,   -404}, {0xff, 0xff, 0xff, 0xff}}},
+    {{{  4318,   1024,   -460}, 0, {   732,   1376}, {0xff, 0xff, 0xff, 0xff}}},
+    {{{  3584,    614,  -2047}, 0, {   -54,   2508}, {0xff, 0xff, 0xff, 0xff}}},
+#else
     {{{  4545,    666,  -1135}, 0, {   614,   2096}, {0x30, 0xdb, 0x02, 0xff}}},
     {{{  3584,    614,  -1228}, 0, {    62,   1720}, {0x30, 0xdb, 0x02, 0xff}}},
     {{{  3584,    512,   -511}, 0, {   124,   1020}, {0x30, 0xdb, 0x02, 0xff}}},
@@ -724,6 +757,7 @@ static const Vtx castle_courtyard_seg7_vertex_070022A0[] = {
     {{{  3072,    614,    717}, 0, {    68,   -404}, {0x30, 0xdb, 0x02, 0xff}}},
     {{{  4318,   1024,   -460}, 0, {   732,   1376}, {0x30, 0xdb, 0x02, 0xff}}},
     {{{  3584,    614,  -2047}, 0, {   -54,   2508}, {0x30, 0xdb, 0x02, 0xff}}},
+#endif
 };
 
 // 0x07002380 - 0x07002470
@@ -1382,7 +1416,11 @@ static const Gfx castle_courtyard_seg7_dl_070041A0[] = {
 
 // 0x070041D8 - 0x07004370
 static const Gfx castle_courtyard_seg7_dl_070041D8[] = {
+#ifdef ENHANCE_LEVEL_TEXTURES
+    gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, castle_courtyard_seg7_texture_07000000),
+#else
     gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, outside_09004800),
+#endif
     gsDPLoadSync(),
     gsDPLoadBlock(G_TX_LOADTILE, 0, 0, 32 * 64 - 1, CALC_DXT(32, G_IM_SIZ_16b_BYTES)),
     gsSPVertex(castle_courtyard_seg7_vertex_070021C0, 14, 0),
@@ -1398,6 +1436,11 @@ static const Gfx castle_courtyard_seg7_dl_070041D8[] = {
     gsSP2Triangles( 8,  9,  2, 0x0,  8, 10,  9, 0x0),
     gsSP2Triangles( 8, 11, 10, 0x0,  9, 12,  2, 0x0),
     gsSP2Triangles(12,  0,  2, 0x0, 13,  1,  0, 0x0),
+#ifdef ENHANCE_LEVEL_TEXTURES
+    gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, outside_09004800),
+    gsDPLoadSync(),
+    gsDPLoadBlock(G_TX_LOADTILE, 0, 0, 32 * 64 - 1, CALC_DXT(32, G_IM_SIZ_16b_BYTES)),
+#endif
     gsSPVertex(castle_courtyard_seg7_vertex_07002380, 15, 0),
     gsSP2Triangles( 0,  1,  2, 0x0,  1,  3,  2, 0x0),
     gsSP2Triangles( 4,  5,  6, 0x0,  7,  8,  6, 0x0),

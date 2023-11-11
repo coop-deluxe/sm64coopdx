@@ -40,6 +40,7 @@ void smlua_push_lnt(struct LSTNetworkType* lnt);
 
 lua_Integer smlua_get_integer_field(int index, const char* name);
 lua_Number smlua_get_number_field(int index, const char* name);
+const char* smlua_get_string_field(int index, const char* name);
 LuaFunction smlua_get_function_field(int index, const char *name);
 
 const char* smlua_lnt_to_str(struct LSTNetworkType* lnt);

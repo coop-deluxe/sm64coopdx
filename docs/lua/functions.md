@@ -19,6 +19,8 @@
    - [djui_hud_render_texture_tile](#djui_hud_render_texture_tile)
    - [djui_hud_render_texture_interpolated](#djui_hud_render_texture_interpolated)
    - [djui_hud_render_texture_tile_interpolated](#djui_hud_render_texture_tile_interpolated)
+   - [texture_override_set](#texture_override_set)
+   - [texture_override_reset](#texture_override_reset)
    - [smlua_anim_util_register_animation](#smlua_anim_util_register_animation)
    - [level_script_parse](#level_script_parse)
    - [set_exclamation_box_contents](#set_exclamation_box_contents)
@@ -2014,6 +2016,51 @@ Renders an interpolated tile of a texture to the screen.
 
 ### C Prototype
 `void djui_hud_render_texture_tile_interpolated(struct TextureInfo* texInfo, f32 prevX, f32 prevY, f32 prevScaleW, f32 prevScaleH, f32 x, f32 y, f32 scaleW, f32 scaleH, u32 tileX, u32 tileY, u32 tileW, u32 tileH);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [texture_override_reset](#texture_override_reset)
+
+Resets an overridden texture.
+
+### Lua Example
+`texture_override_reset("outside_09004000")`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| textureName | `string` |
+
+### Returns
+- None
+
+### C Prototype
+`void dynos_texture_override_reset(const char* textureName);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [texture_override_set](#texture_override_set)
+
+Overrides a texture with a custom `TextureInfo`.
+
+### Lua Example
+`texture_override_set("outside_09004000", overrideTexInfo)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| textureName | `string` |
+| overrideTexInfo | [TextureInfo](structs.md#TextureInfo) |
+
+### Returns
+- None
+
+### C Prototype
+`void dynos_texture_override_set(const char* textureName, struct TextureInfo* overrideTexInfo);`
 
 [:arrow_up_small:](#)
 

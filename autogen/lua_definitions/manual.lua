@@ -164,33 +164,35 @@ function network_init_object(object, standardSync, fieldTable)
     -- ...
 end
 
---- @param object Object
---- @param reliable boolean
+--- @param object Object Object to sync
+--- @param reliable boolean Whether or not the game should try to resend the packet in case its lost, good for important packets
 --- @return nil
 --- Sends a sync packet to sync up the object with everyone else
 function network_send_object(object, reliable)
     -- ...
 end
 
---- @param reliable boolean
---- @param dataTable table
+--- @param reliable boolean Whether or not the game should try to resend the packet in case its lost, good for important packets
+--- @param dataTable table Table of values to be included in the packet
 --- @return nil
---- Note: `dataTable` can only contain strings, integers, numbers, booleans, and nil
+--- `dataTable` can only contain strings, integers, numbers, booleans, and nil
 function network_send(reliable, dataTable)
     -- ...
 end
 
---- @param toLocalIndex integer
---- @param reliable boolean
---- @param dataTable table
+--- @param toLocalIndex integer The local index to send the packet to
+--- @param reliable boolean Whether or not the game should try to resend the packet in case its lost, good for important packets
+--- @param dataTable table Table of values to be included in the packet
 --- @return nil
---- Note: `dataTable` can only contain strings, integers, numbers, booleans, and nil
+--- `dataTable` can only contain strings, integers, numbers, booleans, and nil
 function network_send_to(toLocalIndex, reliable, dataTable)
     -- ...
 end
 
 --- @param textureName string
 --- @return TextureInfo
+--- Gets the `TextureInfo` of a texture by name
+--- - Note: This also works with vanilla textures
 function get_texture_info(textureName)
     -- ...
 end
@@ -201,6 +203,7 @@ end
 --- @param scaleW number
 --- @param scaleH number
 --- @return nil
+--- Renders a texture to the screen
 function djui_hud_render_texture(texInfo, x, y, scaleW, scaleH)
     -- ...
 end
@@ -215,6 +218,7 @@ end
 --- @param tileW number
 --- @param tileH number
 --- @return nil
+--- Renders a tile of a texture to the screen
 function djui_hud_render_texture_tile(texInfo, x, y, scaleW, scaleH, tileX, tileY, tileW, tileH)
     -- ...
 end
@@ -229,6 +233,7 @@ end
 --- @param scaleW number
 --- @param scaleH number
 --- @return nil
+--- Renders an interpolated texture to the screen
 function djui_hud_render_texture_interpolated(texInfo, prevX, prevY, prevScaleW, prevScaleH, x, y, scaleW, scaleH)
     -- ...
 end
@@ -247,7 +252,23 @@ end
 --- @param tileW number
 --- @param tileH number
 --- @return nil
+--- Renders an interpolated tile of a texture to the screen
 function djui_hud_render_texture_tile_interpolated(texInfo, prevX, prevY, prevScaleW, prevScaleH, x, y, scaleW, scaleH, tileX, tileY, tileW, tileH)
+    -- ...
+end
+
+--- @param textureName string
+--- @param overrideTexInfo TextureInfo
+--- @return nil
+--- Overrides a texture with a custom `TextureInfo`
+function texture_override_set(textureName, overrideTexInfo)
+    -- ...
+end
+
+--- @param textureName string
+--- @return nil
+--- Resets an overridden texture
+function texture_override_reset(textureName)
     -- ...
 end
 
@@ -260,6 +281,7 @@ end
 --- @param values table
 --- @param index table
 --- @return nil
+--- Registers an animation that can be used in objects if `smlua_anim_util_set_animation` is called
 function smlua_anim_util_register_animation(name, flags, animYTransDivisor, startFrame, loopStart, loopEnd, values, index)
     -- ...
 end

@@ -2652,6 +2652,7 @@
 | ----- | ---- | ------ |
 | bitSize | `integer` | read-only |
 | height | `integer` | read-only |
+| name | `string` | read-only |
 | texture | `Pointer` <`integer`> | read-only |
 | width | `integer` | read-only |
 

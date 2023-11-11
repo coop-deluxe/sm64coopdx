@@ -12,3 +12,7 @@ ALIGNED8 const Texture castle_grounds_seg7_texture_07001000[] = {
 ALIGNED8 const Texture castle_grounds_seg7_texture_07002000[] = {
 #include "levels/castle_grounds/2.rgba16.inc.c"
 };
+
+ALIGNED8 const Texture castle_grounds_seg7_texture_07003000[] = {
+#include "levels/castle_grounds/6_custom.rgba16.inc.c"
+};

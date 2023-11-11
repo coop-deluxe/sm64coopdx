@@ -910,6 +910,8 @@ void DynOS_Tex_Activate(DataNode<TexData>* aNode, bool aCustomTexture);
 void DynOS_Tex_Deactivate(DataNode<TexData>* aNode);
 void DynOS_Tex_AddCustom(const SysPath &aFilename, const char *aTexName);
 bool DynOS_Tex_Get(const char* aTexName, struct TextureInfo* aOutTexInfo);
+void DynOS_Tex_Override_Set(const char* textureName, struct TextureInfo* aOverrideTexInfo);
+void DynOS_Tex_Override_Reset(const char* textureName);
 void DynOS_Tex_ModShutdown();
 
 //

@@ -148,6 +148,14 @@ bool dynos_texture_get(const char* textureName, struct TextureInfo* outTextureIn
     return DynOS_Tex_Get(textureName, outTextureInfo);
 }
 
+void dynos_texture_override_set(const char* textureName, struct TextureInfo* overrideTextureInfo) {
+    DynOS_Tex_Override_Set(textureName, overrideTextureInfo);
+}
+
+void dynos_texture_override_reset(const char* textureName) {
+    DynOS_Tex_Override_Reset(textureName);
+}
+
 // -- movtexqcs -- //
 
 void dynos_movtexqc_register(const char* name, s16 level, s16 area, s16 type) {

@@ -525,6 +525,18 @@ lua_Number smlua_get_number_field(int index, const char* name) {
     return val;
 }
 
+const char* smlua_get_string_field(int index, const char* name) {
+    if (lua_type(gLuaState, index) != LUA_TTABLE) {
+        LOG_LUA_LINE("smlua_get_string_field received improper type '%d'", lua_type(gLuaState, index));
+        gSmLuaConvertSuccess = false;
+        return 0;
+    }
+    lua_getfield(gLuaState, index, name);
+    const char* val = smlua_to_string(gLuaState, -1);
+    lua_pop(gLuaState, 1);
+    return val;
+}
+
 LuaFunction smlua_get_function_field(int index, const char *name) {
     if (lua_type(gLuaState, index) != LUA_TTABLE) {
         LOG_LUA_LINE("smlua_get_function_field received improper type '%d'", lua_type(gLuaState, index));

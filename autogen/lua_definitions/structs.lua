@@ -2085,6 +2085,7 @@
 --- @class TextureInfo
 --- @field public bitSize integer
 --- @field public height integer
+--- @field public name string
 --- @field public texture Pointer_integer
 --- @field public width integer
 

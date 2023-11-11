@@ -2321,6 +2321,11 @@ static const struct BuiltinTexInfo sDynosBuiltinTexs[] = {
     //define_builtin_tex(texture_menu_kurs_upper, "levels/menu/main_menu_seg7_eu.0DDA0.rgba16.png"),
     //define_builtin_tex(texture_menu_course_lower, "levels/menu/main_menu_seg7_eu.0EDA0.rgba16.png"),
 
+#ifdef ENHANCE_LEVEL_TEXTURES
+    define_builtin_tex(castle_courtyard_seg7_texture_07000000, "levels/castle_courtyard/0_custom.rgba16.png", 32, 64, 16),
+    define_builtin_tex(castle_grounds_seg7_texture_07003000, "levels/castle_grounds/6_custom.rgba16.png", 32, 64, 16),
+#endif
+
 #ifdef VERSION_EU
     define_builtin_tex(texture_menu_font_char_D, "levels/menu/main_menu_seg7_eu.0AF80.ia8.png", 8, 8, 16),
     define_builtin_tex(texture_menu_font_char_comma, "levels/menu/main_menu_seg7_eu.0B640.ia8.png", 8, 8, 16),

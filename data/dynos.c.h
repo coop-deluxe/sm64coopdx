@@ -47,6 +47,8 @@ Collision* dynos_collision_get(const char* collisionName);
 // -- textures -- //
 void dynos_add_texture(const char *filePath, const char* textureName);
 bool dynos_texture_get(const char* textureName, struct TextureInfo* outTextureInfo);
+void dynos_texture_override_set(const char* textureName, struct TextureInfo* overrideTextureInfo);
+void dynos_texture_override_reset(const char* textureName);
 
 // -- movtexqcs -- //
 void dynos_movtexqc_register(const char* name, s16 level, s16 area, s16 type);

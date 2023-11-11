@@ -341,6 +341,10 @@ int smlua_func_get_texture_info(lua_State* L) {
     lua_pushinteger(L, texInfo.height);
     lua_settable(L, -3);
 
+    lua_pushstring(L, "name");
+    lua_pushstring(L, texInfo.name);
+    lua_settable(L, -3);
+
     return 1;
 }
 
@@ -371,6 +375,9 @@ int smlua_func_djui_hud_render_texture(lua_State* L) {
 
         tmpTexInfo.height  = smlua_get_integer_field(top+1, "height");
         if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1's 'height' field"); return 0; }
+
+        tmpTexInfo.name    = smlua_get_string_field(top+1, "name");
+        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1's 'name' field"); return 0; }
 
         lua_settop(L, top);
     }
@@ -416,6 +423,9 @@ int smlua_func_djui_hud_render_texture_tile(lua_State* L) {
 
         tmpTexInfo.height  = smlua_get_integer_field(top+1, "height");
         if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1's 'height' field"); return 0; }
+
+        tmpTexInfo.name    = smlua_get_string_field(top+1, "name");
+        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1's 'name' field"); return 0; }
 
         lua_settop(L, top);
     }
@@ -470,6 +480,9 @@ int smlua_func_djui_hud_render_texture_interpolated(lua_State* L) {
         tmpTexInfo.height  = smlua_get_integer_field(top+1, "height");
         if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1's 'height' field"); return 0; }
 
+        tmpTexInfo.name    = smlua_get_string_field(top+1, "name");
+        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1's 'name' field"); return 0; }
+
         lua_settop(L, top);
     }
 
@@ -523,6 +536,9 @@ int smlua_func_djui_hud_render_texture_tile_interpolated(lua_State* L) {
         tmpTexInfo.height  = smlua_get_integer_field(top+1, "height");
         if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1's 'height' field"); return 0; }
 
+        tmpTexInfo.name    = smlua_get_string_field(top+1, "name");
+        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1's 'name' field"); return 0; }
+
         lua_settop(L, top);
     }
 
@@ -552,6 +568,58 @@ int smlua_func_djui_hud_render_texture_tile_interpolated(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 13"); return 0; }
 
     djui_hud_render_texture_tile_interpolated(texInfo, prevX, prevY, prevScaleW, prevScaleH, x, y, scaleW, scaleH, tileX, tileY, tileW, tileH);
+
+    return 1;
+}
+
+int smlua_func_texture_override_set(lua_State* L) {
+    if (!smlua_functions_valid_param_count(L, 2)) { return 0; }
+
+    const char* textureName = smlua_to_string(L, 1);
+
+    struct TextureInfo tmpOverrideTexInfo = { 0 };
+    struct TextureInfo* overrideTexInfo = &tmpOverrideTexInfo;
+
+    if (smlua_is_cobject(L, 2, LOT_TEXTUREINFO)) {
+        overrideTexInfo = (struct TextureInfo*)smlua_to_cobject(L, 2, LOT_TEXTUREINFO);
+        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 2"); return 0; }
+    } else {
+        int top = lua_gettop(L);
+        lua_pushvalue(L, 2);
+
+        lua_pushstring(L, "texture");
+        lua_gettable(L, top+1);
+        tmpOverrideTexInfo.texture = smlua_to_cpointer(L, lua_gettop(L), LVT_U8_P);
+        lua_pop(L, 1);
+        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 2's 'texture' field"); return 0; }
+
+        tmpOverrideTexInfo.bitSize = smlua_get_integer_field(top+1, "bitSize");
+        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 2's 'bitSize' field"); return 0; }
+
+        tmpOverrideTexInfo.width   = smlua_get_integer_field(top+1, "width");
+        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 2's 'width' field"); return 0; }
+
+        tmpOverrideTexInfo.height  = smlua_get_integer_field(top+1, "height");
+        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 2's 'height' field"); return 0; }
+        
+        tmpOverrideTexInfo.name  = smlua_get_string_field(top+1, "name");
+        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 2's 'name' field"); return 0; }
+
+        lua_settop(L, top);
+    }
+
+    dynos_texture_override_set(textureName, overrideTexInfo);
+
+    return 1;
+}
+
+int smlua_func_texture_override_reset(lua_State* L) {
+    if (!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    const char* textureName = smlua_to_string(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
+
+    dynos_texture_override_reset(textureName);
 
     return 1;
 }
@@ -838,6 +906,8 @@ void smlua_bind_functions(void) {
     smlua_bind_function(L, "djui_hud_render_texture_tile", smlua_func_djui_hud_render_texture_tile);
     smlua_bind_function(L, "djui_hud_render_texture_interpolated", smlua_func_djui_hud_render_texture_interpolated);
     smlua_bind_function(L, "djui_hud_render_texture_tile_interpolated", smlua_func_djui_hud_render_texture_tile_interpolated);
+    smlua_bind_function(L, "texture_override_set", smlua_func_texture_override_set);
+    smlua_bind_function(L, "texture_override_reset", smlua_func_texture_override_reset);
     smlua_bind_function(L, "level_script_parse", smlua_func_level_script_parse);
     smlua_bind_function(L, "smlua_anim_util_register_animation", smlua_func_smlua_anim_util_register_animation);
     smlua_bind_function(L, "set_exclamation_box_new_contents", smlua_func_set_exclamation_box_new_contents);

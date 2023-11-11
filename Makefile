@@ -36,6 +36,8 @@ TARGET_BITS ?= 0
 
 # Disable texture fixes by default (helps with them purists)
 TEXTURE_FIX ?= 0
+# Enable level texture enhancements by default (Castle Grounds and Castle Courtyard recolorable texture hills)
+ENHANCE_LEVEL_TEXTURES ?= 1
 # Enable Discord Game SDK (used for Discord invites)
 DISCORD_SDK ?= 1
 # Enable CoopNet SDK (used for CoopNet server hosting)
@@ -1068,6 +1070,12 @@ endif
 ifeq ($(TEXTURE_FIX),1)
   CC_CHECK_CFLAGS += -DTEXTURE_FIX
   CFLAGS += -DTEXTURE_FIX
+endif
+
+# Check for enhance level textures option
+ifeq ($(ENHANCE_LEVEL_TEXTURES),1)
+  CC_CHECK_CFLAGS += -DENHANCE_LEVEL_TEXTURES
+  CFLAGS += -DENHANCE_LEVEL_TEXTURES
 endif
 
 # Check for no bzero/bcopy workaround option

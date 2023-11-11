@@ -433,6 +433,7 @@ struct TextureInfo
     u8 bitSize;
     u32 width;
     u32 height;
+    const char* name;
 };
 
 #define PLAY_MODE_NORMAL 0
