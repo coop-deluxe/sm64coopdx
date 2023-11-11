@@ -97,6 +97,7 @@ void packet_process(struct Packet* p) {
         case PACKET_LEAVING:                 network_receive_leaving(p);                 break;
         case PACKET_SAVE_FILE:               network_receive_save_file(p);               break;
         case PACKET_SAVE_SET_FLAG:           network_receive_save_set_flag(p);           break;
+        case PACKET_SAVE_REMOVE_FLAG:        network_receive_save_remove_flag(p);        break;
         case PACKET_NETWORK_PLAYERS:         network_receive_network_players(p);         break;
         case PACKET_DEATH:                   network_receive_death(p);                   break;
 

@@ -8067,6 +8067,14 @@ end
 
 --- @param fileIndex integer
 --- @param courseIndex integer
+--- @param starFlagsToRemove integer
+--- @return nil
+function save_file_remove_star_flags(fileIndex, courseIndex, starFlagsToRemove)
+    -- ...
+end
+
+--- @param fileIndex integer
+--- @param courseIndex integer
 --- @param coinScore integer
 --- @return nil
 function save_file_set_course_coin_score(fileIndex, courseIndex, coinScore)

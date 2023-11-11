@@ -33,6 +33,7 @@ enum PacketType {
     PACKET_LEAVING,
     PACKET_SAVE_FILE,
     PACKET_SAVE_SET_FLAG,
+    PACKET_SAVE_REMOVE_FLAG,
     PACKET_NETWORK_PLAYERS,
     PACKET_DEATH,
 
@@ -260,6 +261,10 @@ void network_receive_save_file(struct Packet* p);
 // packet_save_set_flag.c
 void network_send_save_set_flag(s32 fileIndex, s32 courseIndex, u8 courseStars, u32 flags);
 void network_receive_save_set_flag(struct Packet* p);
+
+// packet_save_remove_flag.c
+void network_send_save_remove_flag(s32 fileIndex, s32 courseIndex, u8 courseStarsToRemove, u32 flagsToRemove);
+void network_receive_save_remove_flag(struct Packet* p);
 
 // packet_network_players.c
 void network_send_network_players_request(void);

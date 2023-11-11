@@ -7007,6 +7007,28 @@
 
 <br />
 
+## [save_file_remove_star_flags](#save_file_remove_star_flags)
+
+### Lua Example
+`save_file_remove_star_flags(fileIndex, courseIndex, starFlagsToRemove)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| fileIndex | `integer` |
+| courseIndex | `integer` |
+| starFlagsToRemove | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void save_file_remove_star_flags(s32 fileIndex, s32 courseIndex, u32 starFlagsToRemove);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [save_file_set_course_coin_score](#save_file_set_course_coin_score)
 
 ### Lua Example

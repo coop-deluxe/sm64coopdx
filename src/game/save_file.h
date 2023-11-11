@@ -148,6 +148,7 @@ void save_file_clear_flags(u32 flags);
 u32 save_file_get_flags(void);
 u32 save_file_get_star_flags(s32 fileIndex, s32 courseIndex);
 void save_file_set_star_flags(s32 fileIndex, s32 courseIndex, u32 starFlags);
+void save_file_remove_star_flags(s32 fileIndex, s32 courseIndex, u32 starFlagsToRemove);
 s32 save_file_get_course_coin_score(s32 fileIndex, s32 courseIndex);
 void save_file_set_course_coin_score(s32 fileIndex, s32 courseIndex, u8 coinScore);
 s32 save_file_is_cannon_unlocked(s32 fileIndex, s32 courseIndex);

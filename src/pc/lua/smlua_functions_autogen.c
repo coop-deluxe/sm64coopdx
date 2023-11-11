@@ -26947,6 +26947,27 @@ int smlua_func_save_file_reload(lua_State* L) {
     return 1;
 }
 
+int smlua_func_save_file_remove_star_flags(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 3) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "save_file_remove_star_flags", 3, top);
+        return 0;
+    }
+
+    s32 fileIndex = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "save_file_remove_star_flags"); return 0; }
+    s32 courseIndex = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "save_file_remove_star_flags"); return 0; }
+    u32 starFlagsToRemove = smlua_to_integer(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "save_file_remove_star_flags"); return 0; }
+
+    save_file_remove_star_flags(fileIndex, courseIndex, starFlagsToRemove);
+
+    return 1;
+}
+
 int smlua_func_save_file_set_course_coin_score(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -32684,6 +32705,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "save_file_get_total_star_count", smlua_func_save_file_get_total_star_count);
     smlua_bind_function(L, "save_file_is_cannon_unlocked", smlua_func_save_file_is_cannon_unlocked);
     smlua_bind_function(L, "save_file_reload", smlua_func_save_file_reload);
+    smlua_bind_function(L, "save_file_remove_star_flags", smlua_func_save_file_remove_star_flags);
     smlua_bind_function(L, "save_file_set_course_coin_score", smlua_func_save_file_set_course_coin_score);
     smlua_bind_function(L, "save_file_set_flags", smlua_func_save_file_set_flags);
     smlua_bind_function(L, "save_file_set_star_flags", smlua_func_save_file_set_star_flags);

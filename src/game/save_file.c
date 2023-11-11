@@ -703,6 +703,22 @@ void save_file_set_star_flags(s32 fileIndex, s32 courseIndex, u32 starFlags) {
     gSaveFileModified = TRUE;
 }
 
+void save_file_remove_star_flags(s32 fileIndex, s32 courseIndex, u32 starFlagsToRemove) {
+    if (INVALID_FILE_INDEX(fileIndex)) { return; }
+    if (INVALID_SRC_SLOT(gSaveFileUsingBackupSlot)) { return; }
+    
+    if (courseIndex == -1) {
+        gSaveBuffer.files[fileIndex][gSaveFileUsingBackupSlot].flags &= ~STAR_FLAG_TO_SAVE_FLAG(starFlagsToRemove);
+        network_send_save_remove_flag(fileIndex, courseIndex, 0, STAR_FLAG_TO_SAVE_FLAG(starFlagsToRemove));
+    } 
+    else if (!INVALID_COURSE_STAR_INDEX(courseIndex)) {
+        gSaveBuffer.files[fileIndex][gSaveFileUsingBackupSlot].courseStars[courseIndex] &= ~starFlagsToRemove;
+        network_send_save_remove_flag(fileIndex, courseIndex, starFlagsToRemove, 0);
+    }
+
+    gSaveFileModified = TRUE;
+}
+
 s32 save_file_get_course_coin_score(s32 fileIndex, s32 courseIndex) {
     if (INVALID_FILE_INDEX(fileIndex)) { return 0; }
     if (INVALID_SRC_SLOT(gSaveFileUsingBackupSlot)) { return 0; }
