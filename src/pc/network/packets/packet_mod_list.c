@@ -5,6 +5,7 @@
 #include "pc/djui/djui.h"
 #include "pc/djui/djui_panel_join_message.h"
 #include "pc/debuglog.h"
+#include "pc/pc_main.h"
 #include "pc/mods/mod_cache.h"
 
 void network_send_mod_list_request(void) {
@@ -84,6 +85,9 @@ void network_send_mod_list(void) {
         packet_write(&p, mod->relativePath, sizeof(u8) * relativePathLength);
         packet_write(&p, &modSize, sizeof(u64));
         packet_write(&p, &mod->isDirectory, sizeof(u8));
+        if (!gCoopCompatibility) {
+            packet_write(&p, &mod->deluxe, sizeof(u8));
+        }
         packet_write(&p, &mod->fileCount, sizeof(u16));
         network_send_to(0, &p);
         LOG_INFO("    '%s': %llu", mod->name, (u64)mod->size);
@@ -222,6 +226,9 @@ void network_receive_mod_list_entry(struct Packet* p) {
     packet_read(p, mod->relativePath, relativePathLength * sizeof(u8));
     packet_read(p, &mod->size, sizeof(u64));
     packet_read(p, &mod->isDirectory, sizeof(u8));
+    if (!gCoopCompatibility) {
+        packet_read(p, &mod->deluxe, sizeof(u8));
+    }
     normalize_path(mod->relativePath);
     LOG_INFO("    '%s': %llu", mod->name, (u64)mod->size);
 

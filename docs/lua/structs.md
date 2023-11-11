@@ -1420,6 +1420,7 @@
 | ----- | ---- | ------ |
 | basePath | `string` | read-only |
 | customBehaviorIndex | `integer` | read-only |
+| deluxe | `boolean` | read-only |
 | description | `string` | read-only |
 | enabled | `boolean` | read-only |
 | fileCount | `integer` | read-only |

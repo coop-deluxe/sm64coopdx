@@ -3,6 +3,7 @@
 #include "mods.h"
 #include "mods_utils.h"
 #include "pc/debuglog.h"
+#include "pc/pc_main.h"
 
 #if defined(_WIN32) || defined(_WIN64)
 #include <windows.h>
@@ -19,6 +20,16 @@ void mods_size_enforce(struct Mods* mods) {
     for (int i = 0; i < mods->entryCount; i++) {
         struct Mod* mod = mods->entries[i];
         if (mod->size >= MAX_MOD_SIZE) {
+            mod->enabled = false;
+            mod->selectable = false;
+        }
+    }
+}
+
+void mods_deluxe_enforce(struct Mods* mods) {
+    for (int i = 0; i < mods->entryCount; i++) {
+        struct Mod* mod = mods->entries[i];
+        if (mod->deluxe && gCoopCompatibility) {
             mod->enabled = false;
             mod->selectable = false;
         }
@@ -76,6 +87,7 @@ void mods_update_selectable(void) {
     }
 
     mods_size_enforce(&gLocalMods);
+    mods_deluxe_enforce(&gLocalMods);
 }
 
 void mods_delete_folder(char* path) {
