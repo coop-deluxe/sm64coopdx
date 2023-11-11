@@ -3,6 +3,7 @@
 #include "game/level_update.h"
 #include "game/area.h"
 #include "game/mario.h"
+#include "game/first_person_cam.h"
 #include "game/hardcoded.h"
 #include "game/scroll_targets.h"
 #include "audio/external.h"
@@ -645,6 +646,11 @@ void smlua_cobject_init_globals(void) {
     {
         smlua_push_object(L, LOT_PAINTINGVALUES, &gPaintingValues);
         lua_setglobal(L, "gPaintingValues");
+    }
+
+    {
+        smlua_push_object(L, LOT_FIRSTPERSONCAMERA, &gFirstPersonCamera);
+        lua_setglobal(L, "gFirstPersonCamera");
     }
 }
 

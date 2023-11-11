@@ -3495,8 +3495,8 @@ void reset_camera(struct Camera *c) {
     unused8033B30C = 0;
     unused8033B310 = 0;
 
-    if (gFirstPersonEnabled) {
-        gFirstPersonYaw = gMarioStates[0].faceAngle[1] + 0x8000;
+    if (gFirstPersonCamera.enabled) {
+        gFirstPersonCamera.yaw = gMarioStates[0].faceAngle[1] + 0x8000;
     }
 }
 

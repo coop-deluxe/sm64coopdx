@@ -593,6 +593,13 @@
 --- @field public g integer
 --- @field public r integer
 
+--- @class FirstPersonCamera
+--- @field public crouch number
+--- @field public enabled boolean
+--- @field public fov number
+--- @field public pitch integer
+--- @field public yaw integer
+
 --- @class FloorGeometry
 --- @field public normalX number
 --- @field public normalY number

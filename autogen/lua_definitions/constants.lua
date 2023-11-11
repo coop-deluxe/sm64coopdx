@@ -3414,6 +3414,9 @@ DS_MAX = 11
 DS_NONE = 0xff
 
 --- @type integer
+FIRST_PERSON_DEFAULT_FOV = 70
+
+--- @type integer
 BACKGROUND_ABOVE_CLOUDS = 8
 
 --- @type integer

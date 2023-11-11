@@ -21,6 +21,7 @@
 #include "src/pc/lua/utils/smlua_audio_utils.h"
 #include "src/game/paintings.h"
 #include "src/pc/djui/djui_types.h"
+#include "src/game/first_person_cam.h"
 
 #include "include/object_fields.h"
 
@@ -671,6 +672,15 @@ static struct LuaObjectField sDjuiColorFields[LUA_DJUI_COLOR_FIELD_COUNT] = {
     { "b", LVT_U8, offsetof(struct DjuiColor, b), false, LOT_NONE },
     { "g", LVT_U8, offsetof(struct DjuiColor, g), false, LOT_NONE },
     { "r", LVT_U8, offsetof(struct DjuiColor, r), false, LOT_NONE },
+};
+
+#define LUA_FIRST_PERSON_CAMERA_FIELD_COUNT 5
+static struct LuaObjectField sFirstPersonCameraFields[LUA_FIRST_PERSON_CAMERA_FIELD_COUNT] = {
+    { "crouch",  LVT_F32,  offsetof(struct FirstPersonCamera, crouch),  false, LOT_NONE },
+    { "enabled", LVT_BOOL, offsetof(struct FirstPersonCamera, enabled), true,  LOT_NONE },
+    { "fov",     LVT_F32,  offsetof(struct FirstPersonCamera, fov),     false, LOT_NONE },
+    { "pitch",   LVT_S16,  offsetof(struct FirstPersonCamera, pitch),   false, LOT_NONE },
+    { "yaw",     LVT_S16,  offsetof(struct FirstPersonCamera, yaw),     false, LOT_NONE },
 };
 
 #define LUA_FLOOR_GEOMETRY_FIELD_COUNT 4
@@ -2410,6 +2420,7 @@ struct LuaObjectTable sLuaObjectAutogenTable[LOT_AUTOGEN_MAX - LOT_AUTOGEN_MIN] 
     { LOT_CUTSCENEVARIABLE,          sCutsceneVariableFields,          LUA_CUTSCENE_VARIABLE_FIELD_COUNT            },
     { LOT_DATETIME,                  sDateTimeFields,                  LUA_DATE_TIME_FIELD_COUNT                    },
     { LOT_DJUICOLOR,                 sDjuiColorFields,                 LUA_DJUI_COLOR_FIELD_COUNT                   },
+    { LOT_FIRSTPERSONCAMERA,         sFirstPersonCameraFields,         LUA_FIRST_PERSON_CAMERA_FIELD_COUNT          },
     { LOT_FLOORGEOMETRY,             sFloorGeometryFields,             LUA_FLOOR_GEOMETRY_FIELD_COUNT               },
     { LOT_GLOBALOBJECTANIMATIONS,    sGlobalObjectAnimationsFields,    LUA_GLOBAL_OBJECT_ANIMATIONS_FIELD_COUNT     },
     { LOT_GLOBALOBJECTCOLLISIONDATA, sGlobalObjectCollisionDataFields, LUA_GLOBAL_OBJECT_COLLISION_DATA_FIELD_COUNT },

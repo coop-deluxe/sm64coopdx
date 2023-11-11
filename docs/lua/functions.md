@@ -1625,7 +1625,6 @@
    - [get_dialog_id](functions-5.md#get_dialog_id)
    - [get_envfx](functions-5.md#get_envfx)
    - [get_environment_region](functions-5.md#get_environment_region)
-   - [get_first_person_camera_enabled](functions-5.md#get_first_person_camera_enabled)
    - [get_fog_color](functions-5.md#get_fog_color)
    - [get_fog_intensity](functions-5.md#get_fog_intensity)
    - [get_got_file_coin_hi_score](functions-5.md#get_got_file_coin_hi_score)

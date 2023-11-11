@@ -19,6 +19,7 @@
 - [envfx_snow.h](#envfx_snowh)
 - [external.h](#externalh)
     - [enum DialogSound](#enum-DialogSound)
+- [first_person_cam.h](#first_person_camh)
 - [geo_commands.h](#geo_commandsh)
 - [graph_node.h](#graph_nodeh)
 - [interaction.c](#interactionc)
@@ -1159,6 +1160,13 @@
 | DS_YOSHI | 10 |
 | DS_MAX | 11 |
 | DS_NONE | 0xff |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [first_person_cam.h](#first_person_cam.h)
+- FIRST_PERSON_DEFAULT_FOV
 
 [:arrow_up_small:](#)
 

@@ -15,7 +15,8 @@
 #include "pc/utils/misc.h"
 #include "pc/debuglog.h"
 #include "game/skybox.h"
-#include "include/course_table.h"
+#include "game/first_person_cam.h"
+#include "course_table.h"
 
 /**
  * This file contains the code that processes the scene graph for rendering.
@@ -236,7 +237,7 @@ void patch_mtx_interpolated(f32 delta) {
         u16 perspNorm;
         f32 fovInterpolated = delta_interpolate_f32(sPerspectiveNode->prevFov, sPerspectiveNode->fov, delta);
         f32 near = MIN(sPerspectiveNode->near, gProjectionMaxNearValue);
-        guPerspective(sPerspectiveMtx, &perspNorm, not_zero(fovInterpolated, gOverrideFOV), sPerspectiveAspect, not_zero(near, gOverrideNear), not_zero(sPerspectiveNode->far, gOverrideFar), 1.0f);
+        guPerspective(sPerspectiveMtx, &perspNorm, not_zero(fovInterpolated, gOverrideFOV), sPerspectiveAspect, gFirstPersonCamera.enabled && !gDjuiInMainMenu ? 1 : not_zero(near, gOverrideNear), not_zero(sPerspectiveNode->far, gOverrideFar), 1.0f);
         gSPMatrix(sPerspectivePos, VIRTUAL_TO_PHYSICAL(sPerspectiveNode), G_MTX_PROJECTION | G_MTX_LOAD | G_MTX_NOPUSH);
     }
 
@@ -487,7 +488,7 @@ static void geo_process_perspective(struct GraphNodePerspective *node) {
     gProjectionVanillaNearValue = node->near;
     gProjectionVanillaFarValue = node->far;
     f32 near = MIN(node->near, gProjectionMaxNearValue);
-    guPerspective(mtx, &perspNorm, not_zero(node->prevFov, gOverrideFOV), aspect, not_zero(near, gOverrideNear), not_zero(node->far, gOverrideFar), 1.0f);
+    guPerspective(mtx, &perspNorm, not_zero(node->prevFov, gOverrideFOV), aspect, gFirstPersonCamera.enabled && !gDjuiInMainMenu ? 1 : not_zero(near, gOverrideNear), not_zero(node->far, gOverrideFar), 1.0f);
 
     sPerspectiveNode = node;
     sPerspectiveMtx = mtx;

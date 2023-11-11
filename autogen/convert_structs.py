@@ -25,7 +25,8 @@ in_files = [
     'src/pc/mods/mod.h',
     'src/pc/lua/utils/smlua_audio_utils.h',
     'src/game/paintings.h',
-    'src/pc/djui/djui_types.h'
+    'src/pc/djui/djui_types.h',
+    'src/game/first_person_cam.h'
 ]
 
 out_filename_c = 'src/pc/lua/smlua_cobject_autogen.c'
@@ -112,6 +113,7 @@ override_field_immutable = {
     "Animation": [ "length" ],
     "AnimationTable": [ "count" ],
     "Controller": [ "controllerData", "statusData" ],
+    "FirstPersonCamera": [ "enabled" ],
 }
 
 override_field_version_excludes = {

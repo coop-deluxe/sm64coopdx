@@ -25,6 +25,7 @@
 - [DateTime](#DateTime)
 - [DjuiColor](#DjuiColor)
 - [ExclamationBoxContents](#ExclamationBoxContents)
+- [FirstPersonCamera](#FirstPersonCamera)
 - [FloorGeometry](#FloorGeometry)
 - [GlobalObjectAnimations](#GlobalObjectAnimations)
 - [GlobalObjectCollisionData](#GlobalObjectCollisionData)
@@ -851,6 +852,20 @@
 | firstByte | `integer` |  |
 | index | `integer` |  |
 | unused | `integer` |  |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [FirstPersonCamera](#FirstPersonCamera)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| crouch | `number` |  |
+| enabled | `boolean` | read-only |
+| fov | `number` |  |
+| pitch | `integer` |  |
+| yaw | `integer` |  |
 
 [:arrow_up_small:](#)
 

@@ -813,24 +813,6 @@
 
 <br />
 
-## [get_first_person_camera_enabled](#get_first_person_camera_enabled)
-
-### Lua Example
-`local booleanValue = get_first_person_camera_enabled()`
-
-### Parameters
-- None
-
-### Returns
-- `boolean`
-
-### C Prototype
-`bool get_first_person_camera_enabled(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
 ## [get_fog_color](#get_fog_color)
 
 ### Lua Example

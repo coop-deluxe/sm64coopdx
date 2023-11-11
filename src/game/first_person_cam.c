@@ -19,10 +19,13 @@
 
 #define CLAMP(_val, _min, _max) MAX(MIN((_val), _max), _min)
 
-bool gFirstPersonEnabled = false;
-s16 gFirstPersonYaw = 0;
-static s16 sFirstPersonPitch = 0;
-static f32 sFirstPersonCrouch = 0;
+struct FirstPersonCamera gFirstPersonCamera = {
+    .enabled = false,
+    .pitch = 0,
+    .yaw = 0,
+    .crouch = 0,
+    .fov = FIRST_PERSON_DEFAULT_FOV
+};
 
 extern s16 gMenuMode;
 
@@ -38,14 +41,14 @@ void update_first_person_camera(void) {
 
     if (gMenuMode == -1) {
         // update pitch
-        sFirstPersonPitch -= sensY * (invY * m->controller->extStickY - 1.5f * mouse_y);
-        sFirstPersonPitch = CLAMP(sFirstPersonPitch, -0x3F00, 0x3F00);
+        gFirstPersonCamera.pitch -= sensY * (invY * m->controller->extStickY - 1.5f * mouse_y);
+        gFirstPersonCamera.pitch = CLAMP(gFirstPersonCamera.pitch, -0x3F00, 0x3F00);
 
         // update yaw
         if (m->controller->buttonPressed & L_TRIG) {
-            gFirstPersonYaw = m->faceAngle[1] + 0x8000;
+            gFirstPersonCamera.yaw = m->faceAngle[1] + 0x8000;
         } else {
-            gFirstPersonYaw += sensX * (invX * m->controller->extStickX - 1.5f * mouse_x);
+            gFirstPersonCamera.yaw += sensX * (invX * m->controller->extStickX - 1.5f * mouse_x);
         }
 
         gDjuiHudLockMouse = true;
@@ -56,51 +59,51 @@ void update_first_person_camera(void) {
     // fix yaw for some specific actions
     // if the left stick is held, use Mario's yaw to set the camera's yaw
     // otherwise, set Mario's yaw to the camera's yaw
-    u32 actions[] = { ACT_FLYING, ACT_HOLDING_BOWSER, ACT_TORNADO_TWIRLING, ACT_FLAG_ON_POLE, ACT_FLAG_SWIMMING };
+    u32 actions[] = { ACT_HOLDING_BOWSER, ACT_TORNADO_TWIRLING, ACT_FLAG_ON_POLE, ACT_FLAG_SWIMMING, ACT_FLAG_SWIMMING_OR_FLYING };
     for (s32 i = 0; i < 4; i++) {
         u32 flag = actions[i];
         if ((m->action & flag) == flag) {
             if (ABS(m->controller->stickX) > 4) {
-                gFirstPersonYaw = m->faceAngle[1] + 0x8000;
+                gFirstPersonCamera.yaw = m->faceAngle[1] + 0x8000;
             } else {
-                m->faceAngle[1] = gFirstPersonYaw - 0x8000;
+                m->faceAngle[1] = gFirstPersonCamera.yaw - 0x8000;
             }
             break;
         }
     }
     if (m->action == ACT_LEDGE_GRAB) {
-        gFirstPersonYaw = m->faceAngle[1] + 0x8000;
+        gFirstPersonCamera.yaw = m->faceAngle[1] + 0x8000;
     }
 
-    gLakituState.yaw = gFirstPersonYaw;
-    m->area->camera->yaw = gFirstPersonYaw;
+    gLakituState.yaw = gFirstPersonCamera.yaw;
+    m->area->camera->yaw = gFirstPersonCamera.yaw;
 
     // update crouch
     if (m->action == ACT_START_CROUCHING || m->action == ACT_CROUCHING || m->action == ACT_STOP_CROUCHING ||
        m->action == ACT_START_CRAWLING || m->action == ACT_CRAWLING || m->action == ACT_STOP_CRAWLING ||
        m->action == ACT_CROUCH_SLIDE || m->action == ACT_LEDGE_GRAB) {
         f32 inc = 10 * (m->controller->buttonDown & Z_TRIG) != 0 || m->action == ACT_CROUCH_SLIDE || m->action == ACT_LEDGE_GRAB ? 1 : -1;
-        sFirstPersonCrouch = CLAMP(sFirstPersonCrouch + inc, 0, MARIO_HEAD_POS - MARIO_HEAD_POS_SHORT);
+        gFirstPersonCamera.crouch = CLAMP(gFirstPersonCamera.crouch + inc, 0, MARIO_HEAD_POS - MARIO_HEAD_POS_SHORT);
     } else {
-        sFirstPersonCrouch = CLAMP(sFirstPersonCrouch - 10, 0, MARIO_HEAD_POS - MARIO_HEAD_POS_SHORT);
+        gFirstPersonCamera.crouch = CLAMP(gFirstPersonCamera.crouch - 10, 0, MARIO_HEAD_POS - MARIO_HEAD_POS_SHORT);
     }
 
     if (m->action == ACT_LEDGE_GRAB) {
-        sFirstPersonCrouch = MARIO_HEAD_POS - MARIO_HEAD_POS_SHORT;
+        gFirstPersonCamera.crouch = MARIO_HEAD_POS - MARIO_HEAD_POS_SHORT;
     }
 
     // update pos
-    gLakituState.pos[0] = m->pos[0] + coss(sFirstPersonPitch) * sins(gFirstPersonYaw);
-    gLakituState.pos[1] = m->pos[1] + sins(sFirstPersonPitch) + (MARIO_HEAD_POS - sFirstPersonCrouch);
-    gLakituState.pos[2] = m->pos[2] + coss(sFirstPersonPitch) * coss(gFirstPersonYaw);
+    gLakituState.pos[0] = m->pos[0] + coss(gFirstPersonCamera.pitch) * sins(gFirstPersonCamera.yaw);
+    gLakituState.pos[1] = m->pos[1] + sins(gFirstPersonCamera.pitch) + (MARIO_HEAD_POS - gFirstPersonCamera.crouch);
+    gLakituState.pos[2] = m->pos[2] + coss(gFirstPersonCamera.pitch) * coss(gFirstPersonCamera.yaw);
     vec3f_copy(m->area->camera->pos, gLakituState.pos);
     vec3f_copy(gLakituState.curPos, gLakituState.pos);
     vec3f_copy(gLakituState.goalPos, gLakituState.pos);
 
     // update focus
-    gLakituState.focus[0] = m->pos[0] - 100 * coss(sFirstPersonPitch) * sins(gFirstPersonYaw);
-    gLakituState.focus[1] = m->pos[1] - 100 * sins(sFirstPersonPitch) + (MARIO_HEAD_POS - sFirstPersonCrouch);
-    gLakituState.focus[2] = m->pos[2] - 100 * coss(sFirstPersonPitch) * coss(gFirstPersonYaw);
+    gLakituState.focus[0] = m->pos[0] - 100 * coss(gFirstPersonCamera.pitch) * sins(gFirstPersonCamera.yaw);
+    gLakituState.focus[1] = m->pos[1] - 100 * sins(gFirstPersonCamera.pitch) + (MARIO_HEAD_POS - gFirstPersonCamera.crouch);
+    gLakituState.focus[2] = m->pos[2] - 100 * coss(gFirstPersonCamera.pitch) * coss(gFirstPersonCamera.yaw);
     vec3f_copy(m->area->camera->focus, gLakituState.focus);
     vec3f_copy(gLakituState.curFocus, gLakituState.focus);
     vec3f_copy(gLakituState.goalFocus, gLakituState.focus);
@@ -112,11 +115,11 @@ void update_first_person_camera(void) {
     gLakituState.focVSpeed = 0;
     vec3s_set(gLakituState.shakeMagnitude, 0, 0, 0);
 
-    gFOVState.fov = FIRST_PERSON_FOV;
+    gFOVState.fov = gFirstPersonCamera.fov;
 }
 
 bool update_first_person(void) {
-    if (gFirstPersonEnabled && !gDjuiInMainMenu) {
+    if (gFirstPersonCamera.enabled && !gDjuiInMainMenu) {
         if (gCurrActNum == 99) {
             return false;
         }
@@ -139,7 +142,7 @@ bool update_first_person(void) {
         }
 
         if (m->action == ACT_SHOT_FROM_CANNON && m->area->camera->mode == CAMERA_MODE_INSIDE_CANNON) {
-            gFirstPersonYaw = m->faceAngle[1] + 0x8000;
+            gFirstPersonCamera.yaw = m->faceAngle[1] + 0x8000;
             m->area->camera->mode = CAMERA_MODE_FREE_ROAM;
         }
 

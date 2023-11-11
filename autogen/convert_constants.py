@@ -42,7 +42,8 @@ in_files = [
     "include/level_commands.h",
     "src/audio/external.h",
     "src/game/envfx_snow.h",
-    "src/pc/mods/mod_storage.h"
+    "src/pc/mods/mod_storage.h",
+    "src/game/first_person_cam.h"
 ]
 
 exclude_constants = {

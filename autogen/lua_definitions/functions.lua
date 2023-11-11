@@ -8671,11 +8671,6 @@ function get_environment_region(index)
     -- ...
 end
 
---- @return boolean
-function get_first_person_camera_enabled()
-    -- ...
-end
-
 --- @param index integer
 --- @return integer
 function get_fog_color(index)

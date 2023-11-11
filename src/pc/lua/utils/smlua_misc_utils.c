@@ -628,13 +628,9 @@ void set_override_envfx(s32 envfx) {
 
 ///
 
-bool get_first_person_camera_enabled(void) {
-    return gFirstPersonEnabled;
-}
-
 void set_first_person_camera_enabled(bool enable) {
-    if (gFirstPersonEnabled && !enable) { gFOVState.fov = 45.0f; }
-    gFirstPersonEnabled = enable;
+    if (gFirstPersonCamera.enabled && !enable) { gFOVState.fov = 45.0f; }
+    gFirstPersonCamera.enabled = enable;
 }
 
 ///

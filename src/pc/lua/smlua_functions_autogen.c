@@ -28670,21 +28670,6 @@ int smlua_func_get_environment_region(lua_State* L) {
     return 1;
 }
 
-int smlua_func_get_first_person_camera_enabled(UNUSED lua_State* L) {
-    if (L == NULL) { return 0; }
-
-    int top = lua_gettop(L);
-    if (top != 0) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "get_first_person_camera_enabled", 0, top);
-        return 0;
-    }
-
-
-    lua_pushboolean(L, get_first_person_camera_enabled());
-
-    return 1;
-}
-
 int smlua_func_get_fog_color(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -32772,7 +32757,6 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "get_dialog_id", smlua_func_get_dialog_id);
     smlua_bind_function(L, "get_envfx", smlua_func_get_envfx);
     smlua_bind_function(L, "get_environment_region", smlua_func_get_environment_region);
-    smlua_bind_function(L, "get_first_person_camera_enabled", smlua_func_get_first_person_camera_enabled);
     smlua_bind_function(L, "get_fog_color", smlua_func_get_fog_color);
     smlua_bind_function(L, "get_fog_intensity", smlua_func_get_fog_intensity);
     smlua_bind_function(L, "get_got_file_coin_hi_score", smlua_func_get_got_file_coin_hi_score);

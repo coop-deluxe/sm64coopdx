@@ -28,6 +28,7 @@
 #include "game/level_geo.h"
 #include "menu/intro_geo.h"
 #include "game/ingame_menu.h"
+#include "game/first_person_cam.h"
 
 #ifdef DISCORD_SDK
 #include "pc/discord/discord.h"
@@ -700,6 +701,12 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
     cnt->buttonPressed = 0;
     cnt->extStickX = 0;
     cnt->extStickY = 0;
+
+    gFirstPersonCamera.enabled = false;
+    gFirstPersonCamera.pitch = 0;
+    gFirstPersonCamera.yaw = 0;
+    gFirstPersonCamera.crouch = 0;
+    gFirstPersonCamera.fov = FIRST_PERSON_DEFAULT_FOV;
 
     extern void save_file_load_all(UNUSED u8 reload);
     save_file_load_all(TRUE);

@@ -66,6 +66,10 @@ gPaintingValues = {}
 --- @type ServerSettings
 gServerSettings = {}
 
+--- @type FirstPersonCamera
+--- The struct that contains the values for the first person camera
+gFirstPersonCamera = {}
+
 -----------
 -- hooks --
 -----------

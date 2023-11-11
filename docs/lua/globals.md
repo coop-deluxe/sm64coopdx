@@ -30,8 +30,8 @@ The `gActiveMods[]` table is an array that starts at `0`, and contains a [Mod](s
 
 <br />
 
-## [gCharacter](#gCharacter)
-The `gCharacter[]` table is an array from `0` to `(CT_MAX - 1)` that contains a [Character](structs.md#Character) struct for each possible character.
+## [gCharacters](#gCharacter)
+The `gCharacters[]` table is an array from `0` to `(CT_MAX - 1)` that contains a [Character](structs.md#Character) struct for each possible character.
 
 [:arrow_up_small:](#)
 
@@ -65,6 +65,22 @@ The `gGlobalObjectCollisionData` table contains references to object collision d
 
 <br />
 
+## [gServerSettings](#gServerSettings)
+`gServerSettings`'s fields are listed in [ServerSettings](structs.md#ServerSettings).
+
+__**NOTE**__: The fields in this struct do not sync well and changing them outside of init in if statements or functions can cause desyncs. Make sure the field gets changed on every player's end if you change it after init.
+
+[:arrow_up_small:](#)
+
+## [gNametagsSettings](#gNametagsSettings)
+`gNametagsSettings`'s fields are listed in [NametagsSettings](structs.md#NametagsSettings).
+
+__**NOTE**__: The fields in this struct are not synced and are meant to be changed from Lua. If you want a change to sync for everyone, call it during init outside of any if statements and functions or make sure the field gets changed on every player's end.
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [gLevelValues](#gLevelValues)
 `gLevelValues`'s fields are listed in [LevelValues](structs.md#LevelValues).
 
@@ -79,10 +95,15 @@ The `gGlobalObjectCollisionData` table contains references to object collision d
 
 <br />
 
-## [gServerSettings](#gServerSettings)
-`gServerSettings`'s fields are listed in [ServerSettings](structs.md#ServerSettings).
+## [gPaintingValues](#gPaintingValues)
+`gPaintingValues`'s fields are listed in [PaintingValues](structs.md#PaintingValues).
 
-__**NOTE**__: You should only change the fields in this struct on init, and it shouldn't be done inside of if statements or functions. Failing to follow this advice can result in desyncs.
+[:arrow_up_small:](#)
+
+<br />
+
+## [gFirstPersonCamera](#gFirstPersonCamera)
+`gFirstPersonCamera`'s fields are listed in [FirstPersonCamera](structs.md#FirstPersonCamera).
 
 [:arrow_up_small:](#)
 
