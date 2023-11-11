@@ -73,7 +73,7 @@ static bool loading_screen_on_render(struct DjuiBase* base) {
 
     {
         // Loading... text
-        char* loadingStr = DLANG(LOADING_SCREEN, LOADING);
+        char* loadingStr = "Loading";
         char tmp[20] = "";
         switch ((u8) floor(clock_elapsed()) % 3) {
             case 0:  snprintf(tmp, 20, "%s...", loadingStr); break;
@@ -153,7 +153,7 @@ void render_loading_screen(void) {
         djui_base_set_color(&text->base, 200, 200, 200, 255);
         djui_text_set_alignment(text, DJUI_HALIGN_CENTER, DJUI_VALIGN_TOP);
         djui_text_set_font(text, gDjuiFonts[0]);
-        djui_text_set_font_scale(text, gDjuiFonts[0]->defaultFontScale * 2);
+        djui_text_set_font_scale(text, gDjuiFonts[0]->defaultFontScale * 1.5f);
 
         load->loadingDesc = text;
     }

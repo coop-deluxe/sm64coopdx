@@ -81,22 +81,15 @@ void djui_reset_popup_disabled_override(void) {
 
 ///
 
-void hud_hide(void) {
-    gOverrideHideHud = TRUE;
-}
-
-void hud_show(void) {
-    gOverrideHideHud = FALSE;
-}
-
-bool hud_is_hidden(void) {
-    return gOverrideHideHud;
+void log_to_console(const char* message) {
+    djui_console_message_create(message);
 }
 
 ///
 
-void log_to_console(const char* message) {
-    djui_console_message_create((char*)message);
+extern s8 gDialogBoxState;
+s8 get_dialog_box_state(void) {
+    return gDialogBoxState;
 }
 
 ///
@@ -148,12 +141,17 @@ void set_save_file_modified(bool value) {
 
 ///
 
-extern s8 gDialogBoxState;
-s8 get_dialog_box_state(void) {
-    return gDialogBoxState;
+void hud_hide(void) {
+    gOverrideHideHud = TRUE;
 }
 
-///
+void hud_show(void) {
+    gOverrideHideHud = FALSE;
+}
+
+bool hud_is_hidden(void) {
+    return gOverrideHideHud;
+}
 
 s32 hud_get_value(enum HudDisplayValue type) {
     switch (type) {
@@ -192,16 +190,16 @@ void hud_render_power_meter(s32 health, f32 x, f32 y, f32 width, f32 height) {
     extern const u8 texture_power_meter_two_segments[];
     extern const u8 texture_power_meter_one_segments[];
     static struct TextureInfo sPowerMeterTexturesInfo[] = {
-        { (u8*)texture_power_meter_left_side,      8, 32, 64 },
-        { (u8*)texture_power_meter_right_side,     8, 32, 64 },
-        { (u8*)texture_power_meter_one_segments,   8, 32, 32 },
-        { (u8*)texture_power_meter_two_segments,   8, 32, 32 },
-        { (u8*)texture_power_meter_three_segments, 8, 32, 32 },
-        { (u8*)texture_power_meter_four_segments,  8, 32, 32 },
-        { (u8*)texture_power_meter_five_segments,  8, 32, 32 },
-        { (u8*)texture_power_meter_six_segments,   8, 32, 32 },
-        { (u8*)texture_power_meter_seven_segments, 8, 32, 32 },
-        { (u8*)texture_power_meter_full,           8, 32, 32 },
+        { (u8*)texture_power_meter_left_side,      8, 32, 64, "texture_power_meter_left_side"      },
+        { (u8*)texture_power_meter_right_side,     8, 32, 64, "texture_power_meter_right_side"     },
+        { (u8*)texture_power_meter_one_segments,   8, 32, 32, "texture_power_meter_one_segments"   },
+        { (u8*)texture_power_meter_two_segments,   8, 32, 32, "texture_power_meter_two_segments"   },
+        { (u8*)texture_power_meter_three_segments, 8, 32, 32, "texture_power_meter_three_segments" },
+        { (u8*)texture_power_meter_four_segments,  8, 32, 32, "texture_power_meter_four_segments"  },
+        { (u8*)texture_power_meter_five_segments,  8, 32, 32, "texture_power_meter_five_segments"  },
+        { (u8*)texture_power_meter_six_segments,   8, 32, 32, "texture_power_meter_six_segments"   },
+        { (u8*)texture_power_meter_seven_segments, 8, 32, 32, "texture_power_meter_seven_segments" },
+        { (u8*)texture_power_meter_full,           8, 32, 32, "texture_power_meter_full"           },
     };
     djui_hud_render_texture(&sPowerMeterTexturesInfo[0], x, y, width / 64, height / 64);
     djui_hud_render_texture(&sPowerMeterTexturesInfo[1], x + (width - 2) / 2, y, width / 64, height / 64);
@@ -210,6 +208,7 @@ void hud_render_power_meter(s32 health, f32 x, f32 y, f32 width, f32 height) {
         djui_hud_render_texture(&sPowerMeterTexturesInfo[numWedges + 1], x + (width - 4) / 4, y + height / 4, width / 64,  height / 64);
     }
 }
+
 void hud_render_power_meter_interpolated(s32 health, f32 prevX, f32 prevY, f32 prevWidth, f32 prevHeight, f32 x, f32 y, f32 width, f32 height) {
     extern const u8 texture_power_meter_left_side[];
     extern const u8 texture_power_meter_right_side[];
@@ -222,16 +221,16 @@ void hud_render_power_meter_interpolated(s32 health, f32 prevX, f32 prevY, f32 p
     extern const u8 texture_power_meter_two_segments[];
     extern const u8 texture_power_meter_one_segments[];
     static struct TextureInfo sPowerMeterTexturesInfo[] = {
-        { (u8*)texture_power_meter_left_side,      8, 32, 64 },
-        { (u8*)texture_power_meter_right_side,     8, 32, 64 },
-        { (u8*)texture_power_meter_one_segments,   8, 32, 32 },
-        { (u8*)texture_power_meter_two_segments,   8, 32, 32 },
-        { (u8*)texture_power_meter_three_segments, 8, 32, 32 },
-        { (u8*)texture_power_meter_four_segments,  8, 32, 32 },
-        { (u8*)texture_power_meter_five_segments,  8, 32, 32 },
-        { (u8*)texture_power_meter_six_segments,   8, 32, 32 },
-        { (u8*)texture_power_meter_seven_segments, 8, 32, 32 },
-        { (u8*)texture_power_meter_full,           8, 32, 32 },
+        { (u8*)texture_power_meter_left_side,      8, 32, 64, "texture_power_meter_left_side"      },
+        { (u8*)texture_power_meter_right_side,     8, 32, 64, "texture_power_meter_right_side"     },
+        { (u8*)texture_power_meter_one_segments,   8, 32, 32, "texture_power_meter_one_segments"   },
+        { (u8*)texture_power_meter_two_segments,   8, 32, 32, "texture_power_meter_two_segments"   },
+        { (u8*)texture_power_meter_three_segments, 8, 32, 32, "texture_power_meter_three_segments" },
+        { (u8*)texture_power_meter_four_segments,  8, 32, 32, "texture_power_meter_four_segments"  },
+        { (u8*)texture_power_meter_five_segments,  8, 32, 32, "texture_power_meter_five_segments"  },
+        { (u8*)texture_power_meter_six_segments,   8, 32, 32, "texture_power_meter_six_segments"   },
+        { (u8*)texture_power_meter_seven_segments, 8, 32, 32, "texture_power_meter_seven_segments" },
+        { (u8*)texture_power_meter_full,           8, 32, 32, "texture_power_meter_full"           },
     };
 
     djui_hud_render_texture_interpolated(&sPowerMeterTexturesInfo[0],

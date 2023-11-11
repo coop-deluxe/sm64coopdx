@@ -62,7 +62,7 @@ override_field_names = {
 
 override_field_types = {
     "Surface": { "normal": "Vec3f" },
-    "Object": { "oAnimations": "ObjectAnimPointer*"},
+    "Object": { "oAnimations": "ObjectAnimPointer*" },
 }
 
 override_field_mutable = {

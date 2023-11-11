@@ -4,11 +4,6 @@
 #include "dialog_ids.h"
 #include "game/camera.h"
 
-u32 get_network_area_timer(void);
-
-s32* get_temp_s32_pointer(s32 initialValue);
-s32 deref_s32_pointer(s32* pointer);
-
 enum HudDisplayValue {
     HUD_DISPLAY_LIVES,
     HUD_DISPLAY_COINS,
@@ -42,11 +37,32 @@ struct DateTime {
     s32 second;
 };
 
+u32 get_network_area_timer(void);
+
+s32* get_temp_s32_pointer(s32 initialValue);
+s32 deref_s32_pointer(s32* pointer);
+
 void djui_popup_create_global(const char* message, int lines);
-void log_to_console(const char* message);
 bool djui_is_popup_disabled(void);
 void djui_set_popup_disabled_override(bool value);
 void djui_reset_popup_disabled_override(void);
+
+void log_to_console(const char* message);
+
+s8 get_dialog_box_state(void);
+s16 get_dialog_id(void);
+
+s32 get_last_star_or_key(void);
+void set_last_star_or_key(u8 value);
+u8 get_last_completed_course_num(void);
+void set_last_completed_course_num(u8 courseNum);
+u8 get_last_completed_star_num(void);
+void set_last_completed_star_num(u8 starNum);
+bool get_got_file_coin_hi_score(void);
+void set_got_file_coin_hi_score(bool value);
+bool get_save_file_modified(void);
+void set_save_file_modified(bool value);
+
 void hud_hide(void);
 void hud_show(void);
 bool hud_is_hidden(void);
@@ -88,19 +104,6 @@ void camera_config_set_deceleration(u32 value);
 
 bool is_game_paused(void);
 bool is_transition_playing(void);
-
-s8 get_dialog_box_state(void);
-s16 get_dialog_id(void);
-s32 get_last_star_or_key(void);
-void set_last_star_or_key(u8 value);
-u8 get_last_completed_course_num(void);
-void set_last_completed_course_num(u8 courseNum);
-u8 get_last_completed_star_num(void);
-void set_last_completed_star_num(u8 starNum);
-bool get_got_file_coin_hi_score(void);
-void set_got_file_coin_hi_score(bool value);
-bool get_save_file_modified(void);
-void set_save_file_modified(bool value);
 
 u32 allocate_mario_action(u32 actFlags);
 
