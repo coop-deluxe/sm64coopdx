@@ -18,8 +18,8 @@ issues sm64ex-coop development has.\n\
 \n\
 Coop Deluxe Team:\n\
 Agent X: Creator\n\
-AngelicMiracles: Co-creator\n\
-eros71: Testing and fixing\n\
+AngelicMiracles: Co-Creator\n\
+eros71: Testing And Fixing\n\
 FluffaMario: Model Designer\n\
 \n\
 Contributors:\n\
