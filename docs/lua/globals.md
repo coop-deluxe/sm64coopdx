@@ -105,6 +105,8 @@ __**NOTE**__: The fields in this struct are not synced and are meant to be chang
 ## [gFirstPersonCamera](#gFirstPersonCamera)
 `gFirstPersonCamera`'s fields are listed in [FirstPersonCamera](structs.md#FirstPersonCamera).
 
+__**NOTE**__: `gFirstPersonCamera.enabled` returns whether or not first person is enabled at all. `get_first_person_enabled()` also accounts for certain conditions that make the camera exit first person mode and will return `false` if so.
+
 [:arrow_up_small:](#)
 
 <br />

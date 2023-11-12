@@ -62,7 +62,8 @@ in_files = [
     "src/game/level_update.h",
     "src/game/area.h",
     "src/engine/level_script.h",
-    "src/game/ingame_menu.h"
+    "src/game/ingame_menu.h",
+    "src/game/first_person_cam.h"
 ]
 
 override_allowed_functions = {
@@ -113,7 +114,8 @@ override_disallowed_functions = {
     "src/pc/lua/utils/smlua_level_utils.h": [ "smlua_level_util_reset" ],
     "src/pc/lua/utils/smlua_text_utils.h":  [ "smlua_text_utils_reset_all" ],
     "src/pc/lua/utils/smlua_anim_utils.h":  [ "smlua_anim_util_reset", "smlua_anim_util_register_animation" ],
-    "src/pc/network/lag_compensation.h":    [ "lag_compensation_clear", "lag_compensation_store" ]
+    "src/pc/network/lag_compensation.h":    [ "lag_compensation_clear", "lag_compensation_store" ],
+    "src/game/first_person_cam.h":          [ "first_person_update" ]
 }
 
 override_hide_functions = {

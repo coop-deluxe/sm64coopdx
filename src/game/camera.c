@@ -3194,7 +3194,7 @@ void update_camera(struct Camera *c) {
     gCamera = c;
     update_camera_hud_status(c);
 
-    if ((gOverrideFreezeCamera || update_first_person()) && !gDjuiInMainMenu) {
+    if ((gOverrideFreezeCamera || first_person_update()) && !gDjuiInMainMenu) {
         return;
     }
 

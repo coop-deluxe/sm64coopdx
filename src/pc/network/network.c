@@ -703,10 +703,8 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
     cnt->extStickY = 0;
 
     gFirstPersonCamera.enabled = false;
-    gFirstPersonCamera.pitch = 0;
-    gFirstPersonCamera.yaw = 0;
-    gFirstPersonCamera.crouch = 0;
     gFirstPersonCamera.fov = FIRST_PERSON_DEFAULT_FOV;
+    first_person_reset();
 
     extern void save_file_load_all(UNUSED u8 reload);
     save_file_load_all(TRUE);

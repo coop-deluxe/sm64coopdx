@@ -628,13 +628,6 @@ void set_override_envfx(s32 envfx) {
 
 ///
 
-void set_first_person_camera_enabled(bool enable) {
-    if (gFirstPersonCamera.enabled && !enable) { gFOVState.fov = 45.0f; }
-    gFirstPersonCamera.enabled = enable;
-}
-
-///
-
 const char* get_os_name(void) {
 #if defined(_WIN32) || defined(_WIN64)
     return "Windows";

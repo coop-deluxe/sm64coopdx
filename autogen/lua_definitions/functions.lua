@@ -3998,6 +3998,22 @@ function stop_sounds_in_continuous_banks()
 end
 
 --- @return nil
+function first_person_reset()
+    -- ...
+end
+
+--- @return boolean
+function get_first_person_enabled()
+    -- ...
+end
+
+--- @param enable boolean
+--- @return nil
+function set_first_person_enabled(enable)
+    -- ...
+end
+
+--- @return nil
 function reset_dialog_override_color()
     -- ...
 end
@@ -8879,12 +8895,6 @@ end
 --- @param value integer
 --- @return nil
 function set_environment_region(index, value)
-    -- ...
-end
-
---- @param enable boolean
---- @return nil
-function set_first_person_camera_enabled(enable)
     -- ...
 end
 

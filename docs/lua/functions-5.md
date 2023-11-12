@@ -1483,26 +1483,6 @@
 
 <br />
 
-## [set_first_person_camera_enabled](#set_first_person_camera_enabled)
-
-### Lua Example
-`set_first_person_camera_enabled(enable)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| enable | `boolean` |
-
-### Returns
-- None
-
-### C Prototype
-`void set_first_person_camera_enabled(bool enable);`
-
-[:arrow_up_small:](#)
-
-<br />
-
 ## [set_fog_color](#set_fog_color)
 
 ### Lua Example

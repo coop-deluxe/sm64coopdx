@@ -29,10 +29,30 @@ struct FirstPersonCamera gFirstPersonCamera = {
 
 extern s16 gMenuMode;
 
-/**
- * A mode that implements an first person player camera. (referenced from Gun Mod v3)
- */
-void update_first_person_camera(void) {
+bool first_person_check_cancels(void) {
+    struct MarioState *m = &gMarioStates[0];
+
+    if (m->action == ACT_FIRST_PERSON || m->action == ACT_IN_CANNON || m->action == ACT_READING_NPC_DIALOG || m->action == ACT_DISAPPEARED) {
+        return true;
+    }
+    struct Object *bowser = find_object_with_behavior(bhvBowser);
+    if (bowser != NULL && (bowser->oAction == 5 || bowser->oAction == 6)) {
+        return true;
+    }
+
+    return false;
+}
+
+bool get_first_person_enabled(void) {
+    return gFirstPersonCamera.enabled && !first_person_check_cancels();
+}
+
+void set_first_person_enabled(bool enable) {
+    if (gFirstPersonCamera.enabled && !enable) { gFOVState.fov = 45.0f; }
+    gFirstPersonCamera.enabled = enable;
+}
+
+void first_person_camera_update(void) {
     struct MarioState *m = &gMarioStates[0];
     f32 sensX = 0.3f * camera_config_get_x_sensitivity();
     f32 sensY = 0.4f * camera_config_get_y_sensitivity();
@@ -59,8 +79,8 @@ void update_first_person_camera(void) {
     // fix yaw for some specific actions
     // if the left stick is held, use Mario's yaw to set the camera's yaw
     // otherwise, set Mario's yaw to the camera's yaw
-    u32 actions[] = { ACT_HOLDING_BOWSER, ACT_TORNADO_TWIRLING, ACT_FLAG_ON_POLE, ACT_FLAG_SWIMMING, ACT_FLAG_SWIMMING_OR_FLYING };
-    for (s32 i = 0; i < 4; i++) {
+    u32 actions[] = { ACT_FLYING, ACT_HOLDING_BOWSER, ACT_TORNADO_TWIRLING, ACT_FLAG_ON_POLE, ACT_FLAG_SWIMMING, ACT_FLAG_SWIMMING_OR_FLYING };
+    for (s32 i = 0; i < 6; i++) {
         u32 flag = actions[i];
         if ((m->action & flag) == flag) {
             if (ABS(m->controller->stickX) > 4) {
@@ -118,7 +138,7 @@ void update_first_person_camera(void) {
     gFOVState.fov = gFirstPersonCamera.fov;
 }
 
-bool update_first_person(void) {
+bool first_person_update(void) {
     if (gFirstPersonCamera.enabled && !gDjuiInMainMenu) {
         if (gCurrActNum == 99) {
             return false;
@@ -127,19 +147,8 @@ bool update_first_person(void) {
         struct MarioState *m = &gMarioStates[0];
 
         // check cancels
-        if (m->action == ACT_FIRST_PERSON || m->action == ACT_IN_CANNON || m->action == ACT_READING_NPC_DIALOG) {
-            gFOVState.fov = 45.0f;
-            return false;
-        }
-        if (m->action == ACT_DISAPPEARED) {
-            gFOVState.fov = 45.0f;
-            return false;
-        }
-        struct Object *bowser = find_object_with_behavior(bhvBowser);
-        if (bowser != NULL && (bowser->oAction == 5 || bowser->oAction == 6)) {
-            gFOVState.fov = 45.0f;
-            return false;
-        }
+        bool cancel = first_person_check_cancels();
+        if (cancel) { return false; }
 
         if (m->action == ACT_SHOT_FROM_CANNON && m->area->camera->mode == CAMERA_MODE_INSIDE_CANNON) {
             gFirstPersonCamera.yaw = m->faceAngle[1] + 0x8000;
@@ -160,7 +169,7 @@ bool update_first_person(void) {
             vec3f_sum(m->marioObj->header.gfx.pos, m->pos, camDir);
         }
 
-        update_first_person_camera();
+        first_person_camera_update();
 
         return true;
     } else if (!camera_config_is_mouse_look_enabled()) {
@@ -168,4 +177,10 @@ bool update_first_person(void) {
     }
 
     return false;
+}
+
+void first_person_reset(void) {
+    gFirstPersonCamera.pitch = 0;
+    gFirstPersonCamera.yaw = 0;
+    gFirstPersonCamera.crouch = 0;
 }

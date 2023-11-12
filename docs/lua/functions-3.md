@@ -3243,6 +3243,68 @@
 <br />
 
 ---
+# functions from first_person_cam.h
+
+<br />
+
+
+## [first_person_reset](#first_person_reset)
+
+### Lua Example
+`first_person_reset()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void first_person_reset(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_first_person_enabled](#get_first_person_enabled)
+
+### Lua Example
+`local booleanValue = get_first_person_enabled()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool get_first_person_enabled(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_first_person_enabled](#set_first_person_enabled)
+
+### Lua Example
+`set_first_person_enabled(enable)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| enable | `boolean` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_first_person_enabled(bool enable);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
 # functions from ingame_menu.h
 
 <br />

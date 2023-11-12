@@ -798,6 +798,13 @@
 
 <br />
 
+- first_person_cam.h
+   - [first_person_reset](functions-3.md#first_person_reset)
+   - [get_first_person_enabled](functions-3.md#get_first_person_enabled)
+   - [set_first_person_enabled](functions-3.md#set_first_person_enabled)
+
+<br />
+
 - ingame_menu.h
    - [reset_dialog_override_color](functions-3.md#reset_dialog_override_color)
    - [reset_dialog_override_pos](functions-3.md#reset_dialog_override_pos)
@@ -1659,7 +1666,6 @@
    - [save_file_get_using_backup_slot](functions-5.md#save_file_get_using_backup_slot)
    - [save_file_set_using_backup_slot](functions-5.md#save_file_set_using_backup_slot)
    - [set_environment_region](functions-5.md#set_environment_region)
-   - [set_first_person_camera_enabled](functions-5.md#set_first_person_camera_enabled)
    - [set_fog_color](functions-5.md#set_fog_color)
    - [set_fog_intensity](functions-5.md#set_fog_intensity)
    - [set_got_file_coin_hi_score](functions-5.md#set_got_file_coin_hi_score)
