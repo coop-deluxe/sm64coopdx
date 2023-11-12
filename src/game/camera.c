@@ -505,7 +505,6 @@ static void skip_camera_interpolation(void) {
     gLakituState.skipCameraInterpolationTimestamp = gGlobalTimer;
     extern s32 gCamSkipInterp;
     gCamSkipInterp = 1;
-
 }
 
 /**
@@ -5533,13 +5532,10 @@ void warp_camera(f32 displacementX, f32 displacementY, f32 displacementZ) {
     vec3f_add(gLakituState.goalFocus, displacement);
     marioStates->waterLevel += displacementY;
 
-    if (gLakituState.mode != CAMERA_MODE_NEWCAM) {
-        vec3f_add(start->focus, displacement);
-        vec3f_add(start->pos, displacement);
-        vec3f_add(end->focus, displacement);
-        vec3f_add(end->pos, displacement);
-    }
-    skip_camera_interpolation();
+    vec3f_add(start->focus, displacement);
+    vec3f_add(start->pos, displacement);
+    vec3f_add(end->focus, displacement);
+    vec3f_add(end->pos, displacement);
 }
 
 /**
