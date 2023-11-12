@@ -5533,10 +5533,12 @@ void warp_camera(f32 displacementX, f32 displacementY, f32 displacementZ) {
     vec3f_add(gLakituState.goalFocus, displacement);
     marioStates->waterLevel += displacementY;
 
-    vec3f_add(start->focus, displacement);
-    vec3f_add(start->pos, displacement);
-    vec3f_add(end->focus, displacement);
-    vec3f_add(end->pos, displacement);
+    if (gLakituState.mode != CAMERA_MODE_NEWCAM) {
+        vec3f_add(start->focus, displacement);
+        vec3f_add(start->pos, displacement);
+        vec3f_add(end->focus, displacement);
+        vec3f_add(end->pos, displacement);
+    }
     skip_camera_interpolation();
 }
 
