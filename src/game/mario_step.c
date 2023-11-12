@@ -294,6 +294,8 @@ static s32 perform_ground_quarter_step(struct MarioState *m, Vec3f nextPos) {
     mario_update_wall(m, &upperWcd);
 
     if (floor == NULL) {
+        //HOOK_ON_COLLIDE_LEVEL_BOUNDS, coopdx
+        smlua_call_event_hooks_mario_param(HOOK_ON_COLLIDE_LEVEL_BOUNDS, m);
         return GROUND_STEP_HIT_WALL_STOP_QSTEPS;
     }
 
@@ -468,6 +470,8 @@ s32 perform_air_quarter_step(struct MarioState *m, Vec3f intendedPos, u32 stepAr
         }
 
         m->pos[1] = nextPos[1];
+        //HOOK_ON_COLLIDE_LEVEL_BOUNDS, coopdx
+        smlua_call_event_hooks_mario_param(HOOK_ON_COLLIDE_LEVEL_BOUNDS, m);
         return AIR_STEP_HIT_WALL;
     }
 

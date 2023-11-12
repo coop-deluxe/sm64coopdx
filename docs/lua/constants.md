@@ -3236,7 +3236,8 @@
 | HOOK_ON_EXIT | 34 |
 | HOOK_DIALOG_SOUND | 35 |
 | HOOK_ON_HUD_RENDER_BEHIND | 36 |
-| HOOK_MAX | 37 |
+| HOOK_ON_COLLIDE_LEVEL_BOUNDS | 37 |
+| HOOK_MAX | 38 |
 
 [:arrow_up_small:](#)
 

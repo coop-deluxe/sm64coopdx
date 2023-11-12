@@ -9066,7 +9066,10 @@ HOOK_DIALOG_SOUND = 35
 HOOK_ON_HUD_RENDER_BEHIND = 36
 
 --- @type LuaHookedEventType
-HOOK_MAX = 37
+HOOK_ON_COLLIDE_LEVEL_BOUNDS = 37
+
+--- @type LuaHookedEventType
+HOOK_MAX = 38
 
 --- @class HudDisplayFlags
 
