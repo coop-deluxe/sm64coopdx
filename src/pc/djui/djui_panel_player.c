@@ -265,10 +265,15 @@ void djui_panel_player_create(struct DjuiBase* caller) {
         }
         djui_selectionbox_create(body, DLANG(PLAYER, MODEL), modelChoices, CT_MAX, &configPlayerModel, djui_panel_player_value_changed);
 
+        time_t currentTime;
+        time(&currentTime);
+        struct tm *lt = localtime(&currentTime);
+        bool aprilFools = lt->tm_mon == 3 && lt->tm_mday == 1; // months are 0 indexed
+
         char* paletteChoices[PALETTE_PRESET_MAX+1] = {
             DLANG(PALETTE, MARIO),
             DLANG(PALETTE, LUIGI),
-            DLANG(PALETTE, WALUIGI),
+            aprilFools ? "Lame Shitilizer" : DLANG(PALETTE, WALUIGI),
             DLANG(PALETTE, WARIO),
             DLANG(PALETTE, CHUCKYA),
             DLANG(PALETTE, GOOMBA),
@@ -297,7 +302,7 @@ void djui_panel_player_create(struct DjuiBase* caller) {
             DLANG(PALETTE, RASPBERRY),
             DLANG(PALETTE, BUBBLEGUM),
             DLANG(PALETTE, ICE_MARIO),
-            DLANG(PALETTE, ICE_LUIGI),
+            aprilFools ? "The Shitilizer" : DLANG(PALETTE, ICE_LUIGI),
             DLANG(PALETTE, TOAD),
             DLANG(PALETTE, CUSTOM),
         };
