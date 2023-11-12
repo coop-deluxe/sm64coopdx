@@ -48,6 +48,7 @@ enum LuaHookedEventType {
     HOOK_ON_EXIT,
     HOOK_DIALOG_SOUND,
     HOOK_ON_HUD_RENDER_BEHIND,
+    HOOK_ON_COLLIDE_LEVEL_BOUNDS,
     HOOK_MAX,
 };
 
@@ -89,6 +90,7 @@ static const char* LuaHookedEventTypeName[] = {
     "HOOK_ON_EXIT",
     "HOOK_DIALOG_SOUND",
     "HOOK_ON_HUD_RENDER_BEHIND",
+    "HOOK_ON_COLLIDE_LEVEL_BOUNDS",
     "HOOK_MAX"
 };
 
