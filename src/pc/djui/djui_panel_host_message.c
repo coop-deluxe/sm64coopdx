@@ -62,7 +62,7 @@ void djui_panel_host_message_create(struct DjuiBase* caller) {
         struct DjuiText* text1 = djui_text_create(body, warningMessage);
         djui_base_set_size_type(&text1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
         djui_base_set_size(&text1->base, 1.0f, textHeight);
-        djui_base_set_color(&text1->base, 200, 200, 200, 255);
+        djui_base_set_color(&text1->base, 220, 220, 220, 255);
 
         struct DjuiRect* rect1 = djui_rect_container_create(body, 64);
         {

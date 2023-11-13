@@ -27,7 +27,7 @@ static void djui_progress_bar_set_default_style(struct DjuiBase* base) {
     struct DjuiProgressBar* progress = (struct DjuiProgressBar*)base;
     djui_base_set_border_color(&progress->rect->base, 173, 173, 173, 255);
     djui_base_set_color(&progress->rect->base, 0, 0, 0, 0);
-    djui_base_set_color(&progress->rectValue->base, 200, 200, 200, 255);
+    djui_base_set_color(&progress->rectValue->base, 220, 220, 220, 255);
 }
 
 static void djui_progress_bar_destroy(struct DjuiBase* base) {

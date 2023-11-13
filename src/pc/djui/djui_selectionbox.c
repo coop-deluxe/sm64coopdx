@@ -7,14 +7,14 @@ extern ALIGNED8 u8 texture_selectionbox_forward_icon[];
 
 static void djui_selectionbox_update_style(struct DjuiBase* base) {
     struct DjuiSelectionbox* selectionbox = (struct DjuiSelectionbox*)base;
-    const struct DjuiTheme* theme = gDjuiThemes[configDjuiTheme];
+    struct DjuiTheme* theme = gDjuiThemes[configDjuiTheme];
     f32 x = selectionbox->rect->base.elem.x;
     bool activeRegion = (gCursorX >= x);
 
     if (!selectionbox->base.enabled) {
         struct DjuiSelectionbox* selectionbox = (struct DjuiSelectionbox*)base;
-        struct DjuiColor bc = theme->interactables.darkBorderColor;
-        struct DjuiColor rc = theme->interactables.darkRectColor;
+        struct DjuiColor bc = djui_theme_shade_color(theme->interactables.defaultBorderColor);
+        struct DjuiColor rc = djui_theme_shade_color(theme->interactables.defaultRectColor);
         struct DjuiColor tc = theme->interactables.textColor;
 
         djui_base_set_border_color(&selectionbox->rect->base, bc.r, bc.g, bc.b, bc.a);

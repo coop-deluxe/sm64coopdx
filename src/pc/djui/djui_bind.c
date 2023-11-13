@@ -65,7 +65,7 @@ struct DjuiBind* djui_bind_create(struct DjuiBase* parent, const char* message, 
     djui_base_set_size(&text->base, 0.3f, 1.0f);
     djui_text_set_alignment(text, DJUI_HALIGN_LEFT, DJUI_VALIGN_BOTTOM);
     djui_text_set_drop_shadow(text, 64, 64, 64, 100);
-    djui_base_set_color(&text->base, 200, 200, 200, 255);
+    djui_base_set_color(&text->base, 220, 220, 220, 255);
     bind->text = text;
 
     struct DjuiRect* rect = djui_rect_create(&bind->base);

@@ -7,11 +7,11 @@
 
 static void djui_lobby_entry_update_style(struct DjuiBase* base) {
     struct DjuiLobbyEntry* entry = (struct DjuiLobbyEntry*)base;
-    const struct DjuiTheme* theme = gDjuiThemes[configDjuiTheme];
+    struct DjuiTheme* theme = gDjuiThemes[configDjuiTheme];
 
     if (!entry->base.enabled) {
-        struct DjuiColor bc = theme->interactables.darkBorderColor;
-        struct DjuiColor rc = theme->interactables.darkRectColor;
+        struct DjuiColor bc = djui_theme_shade_color(theme->interactables.defaultBorderColor);
+        struct DjuiColor rc = djui_theme_shade_color(theme->interactables.defaultRectColor);
 
         djui_base_set_border_color(base, bc.r, bc.g, bc.b, bc.a);
         djui_base_set_color(&entry->base, rc.r, rc.g, rc.b, rc.a);

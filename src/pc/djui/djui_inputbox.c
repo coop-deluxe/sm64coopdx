@@ -18,11 +18,11 @@ static u8 sCursorBlink = 0;
 
 static void djui_inputbox_update_style(struct DjuiBase* base) {
     struct DjuiInputbox* inputbox = (struct DjuiInputbox*)base;
-    const struct DjuiTheme* theme = gDjuiThemes[configDjuiTheme];
+    struct DjuiTheme* theme = gDjuiThemes[configDjuiTheme];
 
     if (!inputbox->base.enabled) {
         struct DjuiColor bc = theme->interactables.defaultBorderColor;
-        struct DjuiColor rc = theme->interactables.darkRectColor;
+        struct DjuiColor rc = djui_theme_shade_color(theme->interactables.defaultRectColor);
 
         djui_base_set_border_color(base, bc.r, bc.g, bc.b, bc.a);
         djui_base_set_color(&inputbox->base, rc.r, rc.g, rc.b, rc.a);
@@ -578,7 +578,7 @@ static void djui_inputbox_destroy(struct DjuiBase* base) {
 struct DjuiInputbox* djui_inputbox_create(struct DjuiBase* parent, u16 bufferSize) {
     struct DjuiInputbox* inputbox = calloc(1, sizeof(struct DjuiInputbox));
     struct DjuiBase* base         = &inputbox->base;
-    const struct DjuiTheme* theme = gDjuiThemes[configDjuiTheme];
+    struct DjuiTheme* theme = gDjuiThemes[configDjuiTheme];
     inputbox->bufferSize = bufferSize;
     inputbox->buffer = calloc(bufferSize, sizeof(char));
 

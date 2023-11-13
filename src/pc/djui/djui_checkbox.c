@@ -20,8 +20,8 @@ static void djui_checkbox_update_style(struct DjuiBase* base) {
     } else {
         djui_base_set_border_color(&checkbox->rect->base, 173, 173, 173, 255);
         djui_base_set_color(&checkbox->rect->base, 0, 0, 0, 0);
-        djui_base_set_color(&checkbox->text->base, 200, 200, 200, 255);
-        djui_base_set_color(&checkbox->rectValue->base, 200, 200, 200, 255);
+        djui_base_set_color(&checkbox->text->base, 220, 220, 220, 255);
+        djui_base_set_color(&checkbox->rectValue->base, 220, 220, 220, 255);
     }
     djui_base_set_visible(&checkbox->rectValue->base, *checkbox->value);
 }

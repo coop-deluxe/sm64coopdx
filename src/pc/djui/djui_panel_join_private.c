@@ -27,7 +27,7 @@ void djui_panel_join_private_create(struct DjuiBase* caller) {
         u16 directLines = djui_text_count_lines(text1, 12);
         f32 directTextHeight = 32 * 0.8125f * directLines + 8;
         djui_base_set_size(&text1->base, 1.0f, directTextHeight);
-        djui_base_set_color(&text1->base, 200, 200, 200, 255);
+        djui_base_set_color(&text1->base, 220, 220, 220, 255);
 
         struct DjuiInputbox* inputbox1 = djui_inputbox_create(body, 256);
         inputbox1->passwordChar[0] = '#';

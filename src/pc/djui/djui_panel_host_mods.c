@@ -48,6 +48,7 @@ static void djui_panel_host_mods_description_create(void) {
         djui_base_set_size(&description->base, 1.0f, 1.0f);
         djui_base_set_color(&description->base, 222, 222, 222, 255);
         djui_text_set_alignment(description, DJUI_HALIGN_LEFT, DJUI_VALIGN_CENTER);
+        djui_text_set_drop_shadow(description, 64, 64, 64, 100);
         sTooltip = description;
     }
     sDescriptionPanel = panel;

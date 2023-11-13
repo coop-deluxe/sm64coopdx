@@ -3,11 +3,11 @@
 
 static void djui_button_update_style(struct DjuiBase* base) {
     struct DjuiButton* button = (struct DjuiButton*)base;
-    const struct DjuiTheme* theme = gDjuiThemes[configDjuiTheme];
+    struct DjuiTheme* theme = gDjuiThemes[configDjuiTheme];
 
     if (!button->base.enabled) {
-        struct DjuiColor bc = button->style ? theme->interactables.darkBorderColor : theme->interactables.defaultBorderColor;
-        struct DjuiColor rc = button->style ? theme->interactables.darkRectColor : theme->interactables.defaultRectColor;
+        struct DjuiColor bc = button->style ? djui_theme_shade_color(theme->interactables.defaultBorderColor) : theme->interactables.defaultBorderColor;
+        struct DjuiColor rc = button->style ? djui_theme_shade_color(theme->interactables.defaultRectColor) : theme->interactables.defaultRectColor;
         
         djui_base_set_border_color(base, bc.r, bc.g, bc.b, bc.a);
         djui_base_set_color(&button->rect->base, rc.r, rc.g, rc.b, rc.a);
@@ -27,8 +27,8 @@ static void djui_button_update_style(struct DjuiBase* base) {
         djui_base_set_color(&button->rect->base, rc.r, rc.g, rc.b, rc.a);
         djui_base_set_location(&button->text->base, -1.0f, -1.0f);
     } else {
-        struct DjuiColor bc = button->style ? theme->interactables.darkBorderColor : theme->interactables.defaultBorderColor;
-        struct DjuiColor rc   = button->style ? theme->interactables.darkRectColor : theme->interactables.defaultRectColor;
+        struct DjuiColor bc = button->style ? djui_theme_shade_color(theme->interactables.defaultBorderColor) : theme->interactables.defaultBorderColor;
+        struct DjuiColor rc = button->style ? djui_theme_shade_color(theme->interactables.defaultRectColor) : theme->interactables.defaultRectColor;
         
         djui_base_set_border_color(base, bc.r, bc.g, bc.b, bc.a);
         djui_base_set_color(&button->rect->base, rc.r, rc.g, rc.b, rc.a);

@@ -23,8 +23,8 @@ static void djui_slider_update_style(struct DjuiBase* base) {
     } else {
         djui_base_set_border_color(&slider->rect->base, 173, 173, 173, 255);
         djui_base_set_color(&slider->rect->base, 0, 0, 0, 0);
-        djui_base_set_color(&slider->text->base, 200, 200, 200, 255);
-        djui_base_set_color(&slider->rectValue->base, 200, 200, 200, 255);
+        djui_base_set_color(&slider->text->base, 220, 220, 220, 255);
+        djui_base_set_color(&slider->rectValue->base, 220, 220, 220, 255);
     }
 }
 

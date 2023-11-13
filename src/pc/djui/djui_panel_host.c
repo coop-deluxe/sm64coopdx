@@ -110,9 +110,10 @@ void djui_panel_host_create(struct DjuiBase* caller) {
             {
                 struct DjuiText* text1 = djui_text_create(&sRectPort->base, DLANG(HOST, PORT));
                 djui_base_set_size_type(&text1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-                djui_base_set_color(&text1->base, 200, 200, 200, 255);
+                djui_base_set_color(&text1->base, 220, 220, 220, 255);
                 djui_base_set_size(&text1->base, 0.585f, 64);
                 djui_base_set_alignment(&text1->base, DJUI_HALIGN_LEFT, DJUI_VALIGN_TOP);
+                djui_text_set_drop_shadow(text1, 64, 64, 64, 100);
                 if (gNetworkType == NT_SERVER) {
                     djui_base_set_enabled(&text1->base, false);
                 }
@@ -138,7 +139,7 @@ void djui_panel_host_create(struct DjuiBase* caller) {
             {
                 struct DjuiText* text1 = djui_text_create(&sRectPassword->base, DLANG(HOST, PASSWORD));
                 djui_base_set_size_type(&text1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-                djui_base_set_color(&text1->base, 200, 200, 200, 255);
+                djui_base_set_color(&text1->base, 220, 220, 220, 255);
                 djui_base_set_size(&text1->base, 0.585f, 64);
                 djui_base_set_alignment(&text1->base, DJUI_HALIGN_LEFT, DJUI_VALIGN_TOP);
                 if (gNetworkType == NT_SERVER) {
@@ -166,9 +167,10 @@ void djui_panel_host_create(struct DjuiBase* caller) {
         {
             struct DjuiText* text1 = djui_text_create(&rect2->base, DLANG(HOST, SAVE_SLOT));
             djui_base_set_size_type(&text1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-            djui_base_set_color(&text1->base, 200, 200, 200, 255);
+            djui_base_set_color(&text1->base, 220, 220, 220, 255);
             djui_base_set_size(&text1->base, 0.585f, 64);
             djui_base_set_alignment(&text1->base, DJUI_HALIGN_LEFT, DJUI_VALIGN_TOP);
+            djui_text_set_drop_shadow(text1, 64, 64, 64, 100);
 
             char starString[32] = { 0 };
             snprintf(starString, 32, "%c x%d", '~' + 1, save_file_get_total_star_count(configHostSaveSlot - 1, 0, 24));

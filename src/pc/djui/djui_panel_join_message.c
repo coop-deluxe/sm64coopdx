@@ -61,7 +61,7 @@ void djui_panel_join_message_create(struct DjuiBase* caller) {
         struct DjuiText* text1 = djui_text_create(body, "\n...");
         djui_base_set_size_type(&text1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
         djui_base_set_size(&text1->base, 1.0f, 32 * 4);
-        djui_base_set_color(&text1->base, 200, 200, 200, 255);
+        djui_base_set_color(&text1->base, 220, 220, 220, 255);
         djui_text_set_alignment(text1, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
         text1->base.tag = 0;
         text1->base.on_render_pre = djui_panel_join_message_render_pre;

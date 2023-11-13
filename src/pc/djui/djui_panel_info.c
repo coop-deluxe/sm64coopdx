@@ -37,7 +37,7 @@ Build Type: %s",
         );
 
         struct DjuiText* text = djui_text_create(body, sInfo);
-        const struct DjuiTheme* theme = gDjuiThemes[configDjuiTheme];
+        struct DjuiTheme* theme = gDjuiThemes[configDjuiTheme];
         djui_base_set_location(&text->base, 0, 0);
         djui_base_set_size(&text->base, (DJUI_DEFAULT_PANEL_WIDTH * theme->panels.widthMultiplier) - 64, 480);
         djui_base_set_color(&text->base, 220, 220, 220, 255);

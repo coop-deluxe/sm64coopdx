@@ -6,6 +6,7 @@ enum DjuiThemeType {
     DJUI_THEME_DARK,
     DJUI_THEME_LIGHT_CENTERED,
     DJUI_THEME_DARK_CENTERED,
+    DJUI_THEME_FILE_SELECT,
     DJUI_THEME_MAX
 };
 
@@ -19,9 +20,6 @@ struct DjuiInteractableTheme {
     struct DjuiColor defaultBorderColor;
     struct DjuiColor cursorDownBorderColor;
     struct DjuiColor hoveredBorderColor;
-
-    struct DjuiColor darkRectColor;
-    struct DjuiColor darkBorderColor;
 };
 
 struct DjuiThreePanelTheme {
@@ -33,6 +31,7 @@ struct DjuiPanelTheme {
     f32 widthMultiplier;
     f32 heightMultiplier;
     bool center;
+    bool hudFontHeader;
 };
 
 struct DjuiTheme {
@@ -45,4 +44,5 @@ struct DjuiTheme {
 
 extern struct DjuiTheme* gDjuiThemes[];
 
+struct DjuiColor djui_theme_shade_color(struct DjuiColor color);
 void djui_themes_init(void);

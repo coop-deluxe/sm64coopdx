@@ -48,7 +48,7 @@ void djui_panel_menu_back(UNUSED struct DjuiBase* base) {
 
 struct DjuiThreePanel* djui_panel_menu_create(char* headerText) {
     struct DjuiThreePanel* panel = djui_three_panel_create(&gDjuiRoot->base, 64, 0, 0);
-    const struct DjuiTheme* theme = gDjuiThemes[configDjuiTheme];
+    struct DjuiTheme* theme = gDjuiThemes[configDjuiTheme];
     struct DjuiThreePanelTheme three = theme->threePanels;
     bool center = theme->panels.center &&
         strcmp(headerText, DLANG(HOST_MODS, MODS)) &&
@@ -67,15 +67,20 @@ struct DjuiThreePanel* djui_panel_menu_create(char* headerText) {
     djui_base_set_border_width(&panel->base, 8);
     djui_base_set_padding(&panel->base, 16, 16, 16, 16);
     {
-        generate_rainbow_text(headerText);
-        struct DjuiText* header = djui_text_create(&panel->base, sRainbowText);
+        bool hudFontHeader = gDjuiThemes[configDjuiTheme]->panels.hudFontHeader;
+        if (!hudFontHeader) { generate_rainbow_text(headerText); }
+        struct DjuiText* header = djui_text_create(&panel->base, hudFontHeader ? headerText : sRainbowText);
         djui_base_set_size_type(&header->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
         djui_base_set_size(&header->base, 1.0f, 1.0f);
-        djui_base_set_color(&header->base, 255, 8, 0, 255);
+        if (hudFontHeader) {
+            djui_base_set_color(&header->base, 255, 255, 255, 255);
+        } else {
+            djui_base_set_color(&header->base, 255, 8, 0, 255);
+        }
         djui_base_set_location(&header->base, 0, DJUI_PANEL_HEADER_OFFSET);
         djui_text_set_alignment(header, DJUI_HALIGN_CENTER, DJUI_VALIGN_BOTTOM);
-        djui_text_set_font(header, gDjuiFonts[1]);
-        djui_text_set_font_scale(header, gDjuiFonts[1]->defaultFontScale);
+        djui_text_set_font(header, hudFontHeader ? gDjuiFonts[2] : gDjuiFonts[1]);
+        djui_text_set_font_scale(header, gDjuiFonts[1]->defaultFontScale * (hudFontHeader ? 0.7f : 1.0f));
 
         struct DjuiFlowLayout* body = djui_flow_layout_create(&panel->base);
         djui_base_set_alignment(&body->base, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);

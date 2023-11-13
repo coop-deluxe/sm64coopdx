@@ -16,7 +16,7 @@ void djui_panel_confirm_create(struct DjuiBase* caller, char* title, char* messa
         f32 textHeight = 32 * 0.8125f * lines + 8;
         djui_base_set_size(&text->base, 1.0f, textHeight);
 
-        djui_base_set_color(&text->base, 200, 200, 200, 255);
+        djui_base_set_color(&text->base, 220, 220, 220, 255);
         djui_text_set_alignment(text, DJUI_HALIGN_CENTER, DJUI_VALIGN_TOP);
 
         struct DjuiRect* rect1 = djui_rect_container_create(body, 64);

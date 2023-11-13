@@ -5,48 +5,42 @@ static struct DjuiTheme sDjuiThemeLight = {
     .name = "LIGHT_THEME",
     .interactables = {
         .textColor = {
-            .r = 11, .g = 11, .b = 11, .a = 255
+            11, 11, 11, 255
         },
 
         .defaultRectColor = {
-            .r = 222, .g = 222, .b = 222, .a = 255
+            222, 222, 222, 255
         },
         .cursorDownRectColor = {
-            .r = 204, .g = 228, .b = 247, .a = 255
+            204, 228, 247, 255
         },
         .hoveredRectColor = {
-            .r = 229, .g = 241, .b = 251, .a = 255
+            229, 241, 251, 255
         },
 
         .defaultBorderColor = {
-            .r = 75, .g = 75, .b = 75, .a = 255
+            75, 75, 75, 255
         },
         .cursorDownBorderColor = {
-            .r = 0, .g = 84, .b = 153, .a = 255
+            0, 84, 153, 255
         },
         .hoveredBorderColor = {
-            .r = 0, .g = 120, .b = 215, .a = 255
-        },
-
-        .darkRectColor = {
-            .r = 150, .g = 150, .b = 150, .a = 255
-        },
-        .darkBorderColor = {
-            .r = 100, .g = 100, .b = 100, .a = 255
+            0, 120, 215, 255
         }
     },
     .threePanels = {
         .rectColor = {
-            .r = 0, .g = 0, .b = 0, .a = 235
+            0, 0, 0, 235
         },
         .borderColor = {
-            .r = 0, .g = 0, .b = 0, .a = 200
-        },
+            0, 0, 0, 200
+        }
     },
     .panels = {
         .widthMultiplier = 1.0f,
         .heightMultiplier = 1.0f,
-        .center = false
+        .center = false,
+        .hudFontHeader = false
     }
 };
 
@@ -55,48 +49,42 @@ static struct DjuiTheme sDjuiThemeDark = {
     .name = "DARK_THEME",
     .interactables = {
         .textColor = {
-            .r = 220, .g = 220, .b = 220, .a = 255
+            220, 220, 220, 255
         },
 
         .defaultRectColor = {
-            .r = 22, .g = 22, .b = 22, .a = 255
+            22, 22, 22, 255
         },
         .cursorDownRectColor = {
-            .r = 100, .g = 100, .b = 100, .a = 255
+            100, 100, 100, 255
         },
         .hoveredRectColor = {
-            .r = 80, .g = 80, .b = 80, .a = 255
+            80, 80, 80, 255
         },
 
         .defaultBorderColor = {
-            .r = 75, .g = 75, .b = 75, .a = 255
+            75, 75, 75, 255
         },
         .cursorDownBorderColor = {
-            .r = 0, .g = 84, .b = 153, .a = 255
+            0, 84, 153, 255
         },
         .hoveredBorderColor = {
-            .r = 0, .g = 120, .b = 215, .a = 255
-        },
-
-        .darkRectColor = {
-            .r = 10, .g = 10, .b = 10, .a = 255
-        },
-        .darkBorderColor = {
-            .r = 75, .g = 75, .b = 75, .a = 255
+            0, 120, 215, 255
         }
     },
     .threePanels = {
         .rectColor = {
-            .r = 0, .g = 0, .b = 0, .a = 235
+            0, 0, 0, 235
         },
         .borderColor = {
-            .r = 0, .g = 0, .b = 0, .a = 200
-        },
+            0, 0, 0, 200
+        }
     },
     .panels = {
         .widthMultiplier = 1.0f,
         .heightMultiplier = 1.0f,
-        .center = false
+        .center = false,
+        .hudFontHeader = false
     }
 };
 
@@ -105,48 +93,42 @@ static struct DjuiTheme sDjuiThemeLightCentered = {
     .name = "LIGHT_THEME_CENTERED",
     .interactables = {
         .textColor = {
-            .r = 11, .g = 11, .b = 11, .a = 255
+            11, 11, 11, 255
         },
 
         .defaultRectColor = {
-            .r = 222, .g = 222, .b = 222, .a = 255
+            222, 222, 222, 255
         },
         .cursorDownRectColor = {
-            .r = 204, .g = 228, .b = 247, .a = 255
+            204, 228, 247, 255
         },
         .hoveredRectColor = {
-            .r = 229, .g = 241, .b = 251, .a = 255
+            229, 241, 251, 255
         },
 
         .defaultBorderColor = {
-            .r = 75, .g = 75, .b = 75, .a = 255
+            75, 75, 75, 255
         },
         .cursorDownBorderColor = {
-            .r = 0, .g = 84, .b = 153, .a = 255
+            0, 84, 153, 255
         },
         .hoveredBorderColor = {
-            .r = 0, .g = 120, .b = 215, .a = 255
-        },
-
-        .darkRectColor = {
-            .r = 150, .g = 150, .b = 150, .a = 255
-        },
-        .darkBorderColor = {
-            .r = 100, .g = 100, .b = 100, .a = 255
-        },
+            0, 120, 215, 255
+        }
     },
     .threePanels = {
         .rectColor = {
-            .r = 0, .g = 0, .b = 0, .a = 235
+            0, 0, 0, 235
         },
         .borderColor = {
-            .r = 0, .g = 0, .b = 0, .a = 200
-        },
+            0, 0, 0, 200
+        }
     },
     .panels = {
         .widthMultiplier = 1.25f,
         .heightMultiplier = 0.88f,
-        .center = true
+        .center = true,
+        .hudFontHeader = false
     }
 };
 
@@ -155,48 +137,86 @@ static struct DjuiTheme sDjuiThemeDarkCentered = {
     .name = "DARK_THEME_CENTERED",
     .interactables = {
         .textColor = {
-            .r = 220, .g = 220, .b = 220, .a = 255
+            220, 220, 220, 255
         },
 
         .defaultRectColor = {
-            .r = 22, .g = 22, .b = 22, .a = 255
+            22, 22, 22, 255
         },
         .cursorDownRectColor = {
-            .r = 100, .g = 100, .b = 100, .a = 255
+            100, 100, 100, 255
         },
         .hoveredRectColor = {
-            .r = 80, .g = 80, .b = 80, .a = 255
+            80, 80, 80, 255
         },
 
         .defaultBorderColor = {
-            .r = 75, .g = 75, .b = 75, .a = 255
+            75, 75, 75, 255
         },
         .cursorDownBorderColor = {
-            .r = 0, .g = 84, .b = 153, .a = 255
+            0, 84, 153, 255
         },
         .hoveredBorderColor = {
-            .r = 0, .g = 120, .b = 215, .a = 255
-        },
-
-        .darkRectColor = {
-            .r = 10, .g = 10, .b = 10, .a = 255
-        },
-        .darkBorderColor = {
-            .r = 75, .g = 75, .b = 75, .a = 255
+            0, 120, 215, 255
         }
     },
     .threePanels = {
         .rectColor = {
-            .r = 0, .g = 0, .b = 0, .a = 235
+            0, 0, 0, 235
         },
         .borderColor = {
-            .r = 0, .g = 0, .b = 0, .a = 200
-        },
+            0, 0, 0, 200
+        }
     },
     .panels = {
         .widthMultiplier = 1.25f,
         .heightMultiplier = 0.88f,
-        .center = true
+        .center = true,
+        .hudFontHeader = false
+    }
+};
+
+static struct DjuiTheme sDjuiThemeFileSelect = {
+    .id = "FILE_SELECT_THEME",
+    .name = "FILE_SELECT_THEME",
+    .interactables = {
+        .textColor = {
+            11, 11, 11, 255
+        },
+
+        .defaultRectColor = {
+            200, 215, 197, 255
+        },
+        .cursorDownRectColor = {
+            204, 228, 247, 255
+        },
+        .hoveredRectColor = {
+            229, 241, 251, 255
+        },
+
+        .defaultBorderColor = {
+            74, 79, 74, 255
+        },
+        .cursorDownBorderColor = {
+            0, 84, 153, 255
+        },
+        .hoveredBorderColor = {
+            0, 120, 215, 255
+        }
+    },
+    .threePanels = {
+        .rectColor = {
+            208, 165, 32, 255
+        },
+        .borderColor = {
+            182, 135, 8, 255
+        }
+    },
+    .panels = {
+        .widthMultiplier = 1.5f,
+        .heightMultiplier = 0.88f,
+        .center = true,
+        .hudFontHeader = true
     }
 };
 
@@ -204,8 +224,16 @@ struct DjuiTheme* gDjuiThemes[] = {
     &sDjuiThemeLight,
     &sDjuiThemeDark,
     &sDjuiThemeLightCentered,
-    &sDjuiThemeDarkCentered
+    &sDjuiThemeDarkCentered,
+    &sDjuiThemeFileSelect
 };
+
+struct DjuiColor djui_theme_shade_color(struct DjuiColor color) {
+    color.r *= 0.5f;
+    color.g *= 0.5f;
+    color.b *= 0.5f;
+    return color;
+}
 
 void djui_themes_init(void) {
     for (s32 i = 0; i < DJUI_THEME_MAX; i++) {

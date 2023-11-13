@@ -165,8 +165,9 @@ struct DjuiPaginated* djui_paginated_create(struct DjuiBase* parent, u32 showCou
     paginated->prevButton = sPrevButton;
 
     sPageNumText = djui_text_create(&paginated->base, "");
-    djui_base_set_color(&sPageNumText->base, 200, 200, 200, 255);
+    djui_base_set_color(&sPageNumText->base, 220, 220, 220, 255);
     djui_base_set_alignment(&sPageNumText->base, DJUI_HALIGN_CENTER, DJUI_VALIGN_BOTTOM);
+    djui_text_set_drop_shadow(sPageNumText, 64, 64, 64, 100);
     sPageNumText->base.y.value -= 30;
 
     sNextButton = djui_button_create(&paginated->base, ">", DJUI_BUTTON_STYLE_NORMAL, djui_paginated_next);
