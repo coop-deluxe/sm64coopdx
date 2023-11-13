@@ -67,9 +67,7 @@ All of this is a holdover from when there were only two players. It was a reason
 - [Custom Level](examples/custom-level)
 - [Custom HUD Texture](examples/custom-hud-texture)
 - [Custom Audio Test](examples/audio-test)
+- [Custom Texture Overriding](examples/texture-override)
 
 ## Example Lua mods (large)
-- [Extended Moveset](../../mods/extended-moveset.lua)
-- [Character Movesets](../../mods/character-movesets.lua)
 - [Hide and Seek Gamemode](../../mods/hide-and-seek.lua)
-- [Football (soccer) Gamemode](../../mods/football.lua)
