@@ -112,6 +112,7 @@ void network_send_join(struct Packet* joinRequestPacket) {
     packet_write(&p, &globalIndex, sizeof(u8));
     packet_write(&p, &gCurrSaveFileNum, sizeof(s16));
     packet_write(&p, &gServerSettings.playerInteractions, sizeof(u8));
+    if (!gCoopCompatibility) { packet_write(&p, &gServerSettings.bouncyLevelBounds, sizeof(u8)); }
     packet_write(&p, &gServerSettings.playerKnockbackStrength, sizeof(u8));
     packet_write(&p, &gServerSettings.stayInLevelAfterStar, sizeof(u8));
     packet_write(&p, &gServerSettings.skipIntro, sizeof(u8));
@@ -163,6 +164,7 @@ void network_receive_join(struct Packet* p) {
     packet_read(p, &myGlobalIndex, sizeof(u8));
     packet_read(p, &gCurrSaveFileNum, sizeof(s16));
     packet_read(p, &gServerSettings.playerInteractions, sizeof(u8));
+    if (!gCoopCompatibility) { packet_read(p, &gServerSettings.bouncyLevelBounds, sizeof(u8)); }
     packet_read(p, &gServerSettings.playerKnockbackStrength, sizeof(u8));
     packet_read(p, &gServerSettings.stayInLevelAfterStar, sizeof(u8));
     packet_read(p, &gServerSettings.skipIntro, sizeof(u8));

@@ -63,8 +63,15 @@ enum PlayerInteractions {
     PLAYER_INTERACTIONS_PVP,
 };
 
+enum BouncyLevelBounds {
+    BOUNCY_LEVEL_BOUNDS_OFF,
+    BOUNCY_LEVEL_BOUNDS_ON,
+    BOUNCY_LEVEL_BOUNDS_ON_CAP,
+};
+
 struct ServerSettings {
     enum PlayerInteractions playerInteractions;
+    enum BouncyLevelBounds bouncyLevelBounds;
     u8 playerKnockbackStrength;
     u8 stayInLevelAfterStar;
     u8 skipIntro;

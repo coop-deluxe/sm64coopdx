@@ -114,11 +114,10 @@ bool         configCameraInvertY = true;
 bool         configEnableCamera  = false;
 bool         configCameraAnalog  = false;
 bool         configCameraMouse   = false;
+// coop-specific
 bool         configSkipIntro     = 0;
 bool         configBubbleDeath   = true;
 unsigned int configAmountofPlayers = 16;
-bool         configHUD           = true;
-// coop-specific
 char         configJoinIp[MAX_CONFIG_STRING] = "";
 unsigned int configJoinPort                      = DEFAULT_PORT;
 unsigned int configHostPort                      = DEFAULT_PORT;
@@ -126,6 +125,8 @@ unsigned int configHostSaveSlot                  = 1;
 unsigned int configPlayerInteraction             = 1;
 unsigned int configPlayerKnockbackStrength       = 25;
 unsigned int configStayInLevelAfterStar          = 0;
+bool         configNametags                      = true;
+unsigned int configBouncyLevelBounds             = 0;
 unsigned int configNetworkSystem                 = 0;
 char         configPlayerName[MAX_PLAYER_STRING] = "";
 unsigned int configPlayerModel                   = 0;
@@ -148,7 +149,6 @@ unsigned int configInterpolationMode             = 1;
 unsigned int configGamepadNumber                 = 0;
 bool         configBackgroundGamepad             = 1;
 bool         configSingleplayerPause             = 0;
-bool         configNametags                      = true;
 bool         configDebugPrint                    = 0;
 bool         configDebugInfo                     = 0;
 bool         configDebugError                    = 0;
@@ -163,56 +163,56 @@ unsigned int configDjuiTheme                     = DJUI_THEME_DARK_CENTERED;
 bool         configCoopCompatibility             = true;
 
 static const struct ConfigOption options[] = {
-    {.name = "fullscreen",           .type = CONFIG_TYPE_BOOL, .boolValue = &configWindow.fullscreen},
-    {.name = "window_x",             .type = CONFIG_TYPE_UINT, .uintValue = &configWindow.x},
-    {.name = "window_y",             .type = CONFIG_TYPE_UINT, .uintValue = &configWindow.y},
-    {.name = "window_w",             .type = CONFIG_TYPE_UINT, .uintValue = &configWindow.w},
-    {.name = "window_h",             .type = CONFIG_TYPE_UINT, .uintValue = &configWindow.h},
-    {.name = "vsync",                .type = CONFIG_TYPE_BOOL, .boolValue = &configWindow.vsync},
-    {.name = "texture_filtering",    .type = CONFIG_TYPE_UINT, .uintValue = &configFiltering},
-    {.name = "msaa",                 .type = CONFIG_TYPE_UINT, .uintValue = &configWindow.msaa},
-    {.name = "master_volume",        .type = CONFIG_TYPE_UINT, .uintValue = &configMasterVolume},
-    {.name = "music_volume",         .type = CONFIG_TYPE_UINT, .uintValue = &configMusicVolume},
-    {.name = "sfx_volume",           .type = CONFIG_TYPE_UINT, .uintValue = &configSfxVolume},
-    {.name = "env_volume",           .type = CONFIG_TYPE_UINT, .uintValue = &configEnvVolume},
-    {.name = "key_a",                .type = CONFIG_TYPE_BIND, .uintValue = configKeyA},
-    {.name = "key_b",                .type = CONFIG_TYPE_BIND, .uintValue = configKeyB},
-    {.name = "key_x",                .type = CONFIG_TYPE_BIND, .uintValue = configKeyX},
-    {.name = "key_y",                .type = CONFIG_TYPE_BIND, .uintValue = configKeyY},
-    {.name = "key_start",            .type = CONFIG_TYPE_BIND, .uintValue = configKeyStart},
-    {.name = "key_l",                .type = CONFIG_TYPE_BIND, .uintValue = configKeyL},
-    {.name = "key_r",                .type = CONFIG_TYPE_BIND, .uintValue = configKeyR},
-    {.name = "key_z",                .type = CONFIG_TYPE_BIND, .uintValue = configKeyZ},
-    {.name = "key_cup",              .type = CONFIG_TYPE_BIND, .uintValue = configKeyCUp},
-    {.name = "key_cdown",            .type = CONFIG_TYPE_BIND, .uintValue = configKeyCDown},
-    {.name = "key_cleft",            .type = CONFIG_TYPE_BIND, .uintValue = configKeyCLeft},
-    {.name = "key_cright",           .type = CONFIG_TYPE_BIND, .uintValue = configKeyCRight},
-    {.name = "key_stickup",          .type = CONFIG_TYPE_BIND, .uintValue = configKeyStickUp},
-    {.name = "key_stickdown",        .type = CONFIG_TYPE_BIND, .uintValue = configKeyStickDown},
-    {.name = "key_stickleft",        .type = CONFIG_TYPE_BIND, .uintValue = configKeyStickLeft},
-    {.name = "key_stickright",       .type = CONFIG_TYPE_BIND, .uintValue = configKeyStickRight},
-    {.name = "key_chat",             .type = CONFIG_TYPE_BIND, .uintValue = configKeyChat},
-    {.name = "key_playerlist",       .type = CONFIG_TYPE_BIND, .uintValue = configKeyPlayerList},
-    {.name = "key_dup",              .type = CONFIG_TYPE_BIND, .uintValue = configKeyDUp},
-    {.name = "key_ddown",            .type = CONFIG_TYPE_BIND, .uintValue = configKeyDDown},
-    {.name = "key_dleft",            .type = CONFIG_TYPE_BIND, .uintValue = configKeyDLeft},
-    {.name = "key_dright",           .type = CONFIG_TYPE_BIND, .uintValue = configKeyDRight},
-    {.name = "key_prev",             .type = CONFIG_TYPE_BIND, .uintValue = configKeyPrevPage},
-    {.name = "key_next",             .type = CONFIG_TYPE_BIND, .uintValue = configKeyNextPage},
-    {.name = "key_disconnect",       .type = CONFIG_TYPE_BIND, .uintValue = configKeyDisconnect},
-    {.name = "stick_deadzone",       .type = CONFIG_TYPE_UINT, .uintValue = &configStickDeadzone},
-    {.name = "rumble_strength",      .type = CONFIG_TYPE_UINT, .uintValue = &configRumbleStrength},
-    {.name = "bettercam_enable",     .type = CONFIG_TYPE_BOOL, .boolValue = &configEnableCamera},
-    {.name = "bettercam_analog",     .type = CONFIG_TYPE_BOOL, .boolValue = &configCameraAnalog},
-    {.name = "bettercam_mouse_look", .type = CONFIG_TYPE_BOOL, .boolValue = &configCameraMouse},
-    {.name = "bettercam_invertx",    .type = CONFIG_TYPE_BOOL, .boolValue = &configCameraInvertX},
-    {.name = "bettercam_inverty",    .type = CONFIG_TYPE_BOOL, .boolValue = &configCameraInvertY},
-    {.name = "bettercam_xsens",      .type = CONFIG_TYPE_UINT, .uintValue = &configCameraXSens},
-    {.name = "bettercam_ysens",      .type = CONFIG_TYPE_UINT, .uintValue = &configCameraYSens},
-    {.name = "bettercam_aggression", .type = CONFIG_TYPE_UINT, .uintValue = &configCameraAggr},
-    {.name = "bettercam_pan_level",  .type = CONFIG_TYPE_UINT, .uintValue = &configCameraPan},
-    {.name = "bettercam_degrade",    .type = CONFIG_TYPE_UINT, .uintValue = &configCameraDegrade},
-    {.name = "skip_intro",           .type = CONFIG_TYPE_BOOL, .boolValue = &configSkipIntro},
+    {.name = "fullscreen",                     .type = CONFIG_TYPE_BOOL, .boolValue = &configWindow.fullscreen},
+    {.name = "window_x",                       .type = CONFIG_TYPE_UINT, .uintValue = &configWindow.x},
+    {.name = "window_y",                       .type = CONFIG_TYPE_UINT, .uintValue = &configWindow.y},
+    {.name = "window_w",                       .type = CONFIG_TYPE_UINT, .uintValue = &configWindow.w},
+    {.name = "window_h",                       .type = CONFIG_TYPE_UINT, .uintValue = &configWindow.h},
+    {.name = "vsync",                          .type = CONFIG_TYPE_BOOL, .boolValue = &configWindow.vsync},
+    {.name = "texture_filtering",              .type = CONFIG_TYPE_UINT, .uintValue = &configFiltering},
+    {.name = "msaa",                           .type = CONFIG_TYPE_UINT, .uintValue = &configWindow.msaa},
+    {.name = "master_volume",                  .type = CONFIG_TYPE_UINT, .uintValue = &configMasterVolume},
+    {.name = "music_volume",                   .type = CONFIG_TYPE_UINT, .uintValue = &configMusicVolume},
+    {.name = "sfx_volume",                     .type = CONFIG_TYPE_UINT, .uintValue = &configSfxVolume},
+    {.name = "env_volume",                     .type = CONFIG_TYPE_UINT, .uintValue = &configEnvVolume},
+    {.name = "key_a",                          .type = CONFIG_TYPE_BIND, .uintValue = configKeyA},
+    {.name = "key_b",                          .type = CONFIG_TYPE_BIND, .uintValue = configKeyB},
+    {.name = "key_x",                          .type = CONFIG_TYPE_BIND, .uintValue = configKeyX},
+    {.name = "key_y",                          .type = CONFIG_TYPE_BIND, .uintValue = configKeyY},
+    {.name = "key_start",                      .type = CONFIG_TYPE_BIND, .uintValue = configKeyStart},
+    {.name = "key_l",                          .type = CONFIG_TYPE_BIND, .uintValue = configKeyL},
+    {.name = "key_r",                          .type = CONFIG_TYPE_BIND, .uintValue = configKeyR},
+    {.name = "key_z",                          .type = CONFIG_TYPE_BIND, .uintValue = configKeyZ},
+    {.name = "key_cup",                        .type = CONFIG_TYPE_BIND, .uintValue = configKeyCUp},
+    {.name = "key_cdown",                      .type = CONFIG_TYPE_BIND, .uintValue = configKeyCDown},
+    {.name = "key_cleft",                      .type = CONFIG_TYPE_BIND, .uintValue = configKeyCLeft},
+    {.name = "key_cright",                     .type = CONFIG_TYPE_BIND, .uintValue = configKeyCRight},
+    {.name = "key_stickup",                    .type = CONFIG_TYPE_BIND, .uintValue = configKeyStickUp},
+    {.name = "key_stickdown",                  .type = CONFIG_TYPE_BIND, .uintValue = configKeyStickDown},
+    {.name = "key_stickleft",                  .type = CONFIG_TYPE_BIND, .uintValue = configKeyStickLeft},
+    {.name = "key_stickright",                 .type = CONFIG_TYPE_BIND, .uintValue = configKeyStickRight},
+    {.name = "key_chat",                       .type = CONFIG_TYPE_BIND, .uintValue = configKeyChat},
+    {.name = "key_playerlist",                 .type = CONFIG_TYPE_BIND, .uintValue = configKeyPlayerList},
+    {.name = "key_dup",                        .type = CONFIG_TYPE_BIND, .uintValue = configKeyDUp},
+    {.name = "key_ddown",                      .type = CONFIG_TYPE_BIND, .uintValue = configKeyDDown},
+    {.name = "key_dleft",                      .type = CONFIG_TYPE_BIND, .uintValue = configKeyDLeft},
+    {.name = "key_dright",                     .type = CONFIG_TYPE_BIND, .uintValue = configKeyDRight},
+    {.name = "key_prev",                       .type = CONFIG_TYPE_BIND, .uintValue = configKeyPrevPage},
+    {.name = "key_next",                       .type = CONFIG_TYPE_BIND, .uintValue = configKeyNextPage},
+    {.name = "key_disconnect",                 .type = CONFIG_TYPE_BIND, .uintValue = configKeyDisconnect},
+    {.name = "stick_deadzone",                 .type = CONFIG_TYPE_UINT, .uintValue = &configStickDeadzone},
+    {.name = "rumble_strength",                .type = CONFIG_TYPE_UINT, .uintValue = &configRumbleStrength},
+    {.name = "bettercam_enable",               .type = CONFIG_TYPE_BOOL, .boolValue = &configEnableCamera},
+    {.name = "bettercam_analog",               .type = CONFIG_TYPE_BOOL, .boolValue = &configCameraAnalog},
+    {.name = "bettercam_mouse_look",           .type = CONFIG_TYPE_BOOL, .boolValue = &configCameraMouse},
+    {.name = "bettercam_invertx",              .type = CONFIG_TYPE_BOOL, .boolValue = &configCameraInvertX},
+    {.name = "bettercam_inverty",              .type = CONFIG_TYPE_BOOL, .boolValue = &configCameraInvertY},
+    {.name = "bettercam_xsens",                .type = CONFIG_TYPE_UINT, .uintValue = &configCameraXSens},
+    {.name = "bettercam_ysens",                .type = CONFIG_TYPE_UINT, .uintValue = &configCameraYSens},
+    {.name = "bettercam_aggression",           .type = CONFIG_TYPE_UINT, .uintValue = &configCameraAggr},
+    {.name = "bettercam_pan_level",            .type = CONFIG_TYPE_UINT, .uintValue = &configCameraPan},
+    {.name = "bettercam_degrade",              .type = CONFIG_TYPE_UINT, .uintValue = &configCameraDegrade},
+    {.name = "skip_intro",                     .type = CONFIG_TYPE_BOOL, .boolValue = &configSkipIntro},
     // debug
     {.name = "debug_offset",                   .type = CONFIG_TYPE_U64   , .u64Value    = &gPcDebug.bhvOffset},
     {.name = "debug_tags",                     .type = CONFIG_TYPE_U64   , .u64Value    = gPcDebug.tags},
@@ -229,6 +229,8 @@ static const struct ConfigOption options[] = {
     {.name = "coop_network_system",            .type = CONFIG_TYPE_UINT  , .uintValue   = &configNetworkSystem},
     {.name = "coop_player_interaction",        .type = CONFIG_TYPE_UINT  , .uintValue   = &configPlayerInteraction},
     {.name = "coop_player_knockback_strength", .type = CONFIG_TYPE_UINT  , .uintValue   = &configPlayerKnockbackStrength},
+    {.name = "coopdx_nametags",                .type = CONFIG_TYPE_BOOL  , .boolValue   = &configNametags},
+    {.name = "coopdx_bouncy_bounds",           .type = CONFIG_TYPE_UINT  , .uintValue   = &configBouncyLevelBounds},
     {.name = "coop_player_model",              .type = CONFIG_TYPE_UINT  , .uintValue   = &configPlayerModel},
     {.name = "coop_player_name",               .type = CONFIG_TYPE_STRING, .stringValue = (char*)&configPlayerName, .maxStringLength = MAX_PLAYER_STRING},
     {.name = "coop_menu_level",                .type = CONFIG_TYPE_UINT  , .uintValue   = &configMenuLevel},
@@ -252,7 +254,6 @@ static const struct ConfigOption options[] = {
     {.name = "coop_stay_in_level_after_star",  .type = CONFIG_TYPE_UINT  , .uintValue   = &configStayInLevelAfterStar},
     {.name = "coop_singleplayer_pause",        .type = CONFIG_TYPE_BOOL  , .boolValue   = &configSingleplayerPause},
     {.name = "coop_compatibility",             .type = CONFIG_TYPE_BOOL,   .boolValue   = &configCoopCompatibility},
-    {.name = "coopdx_nametags",                .type = CONFIG_TYPE_BOOL  , .boolValue   = &configNametags},
     {.name = "disable_popups",                 .type = CONFIG_TYPE_BOOL  , .boolValue   = &configDisablePopups},
 #if defined(DEVELOPMENT)
     {.name = "lua_profiler",                   .type = CONFIG_TYPE_BOOL  , .boolValue   = &configLuaProfiler},

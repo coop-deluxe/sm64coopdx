@@ -69,6 +69,7 @@ enum NetworkSystemType sNetworkReconnectType = NS_SOCKET;
 
 struct ServerSettings gServerSettings = {
     .playerInteractions = PLAYER_INTERACTIONS_SOLID,
+    .bouncyLevelBounds = BOUNCY_LEVEL_BOUNDS_OFF,
     .playerKnockbackStrength = 25,
     .skipIntro = FALSE,
     .enableCheats = FALSE,
@@ -114,6 +115,7 @@ bool network_init(enum NetworkType inNetworkType, bool reconnecting) {
 
     // set server settings
     gServerSettings.playerInteractions = configPlayerInteraction;
+    gServerSettings.bouncyLevelBounds = configBouncyLevelBounds;
     gServerSettings.playerKnockbackStrength = configPlayerKnockbackStrength;
     gServerSettings.stayInLevelAfterStar = configStayInLevelAfterStar;
     gServerSettings.skipIntro = configSkipIntro;
