@@ -140,10 +140,6 @@ void first_person_camera_update(void) {
 
 bool first_person_update(void) {
     if (gFirstPersonCamera.enabled && !gDjuiInMainMenu) {
-        if (gCurrActNum == 99) {
-            return false;
-        }
-
         struct MarioState *m = &gMarioStates[0];
 
         // check cancels
