@@ -742,8 +742,8 @@ Gfx* geo_mirror_mario_backface_culling(s32 callContext, struct GraphNode* node, 
             gSPEndDisplayList(&gfx[2]);
         }
         u32 layer = ((asGenerated->parameter & 0x02) == 2) ? LAYER_TRANSPARENT : LAYER_OPAQUE;
-        if ((asGenerated->parameter & 0xFC) != 0) {
-            layer = asGenerated->parameter >> 2;
+        if ((asGenerated->parameter & 0xF0)) {
+            layer = asGenerated->parameter >> 0xF;
         }
         asGenerated->fnNode.node.flags = (asGenerated->fnNode.node.flags & 0xFF) | (layer << 8);
     }
