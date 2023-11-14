@@ -15,7 +15,7 @@
 #include "pc/lua/smlua.h"
 
 extern Gfx mario_cap_seg3_dl_03022F48[];
-extern Gfx mario_cap_m_logo_decal_dl[];
+extern Gfx mario_cap_m_logo_decal[];
 extern Gfx luigi_cap_seg3_dl_03022F48[];
 extern Gfx luigi_cap_l_logo_decal_dl[];
 extern Gfx toad_cap_Cap_mesh_layer_1[];
@@ -41,9 +41,9 @@ struct Character gCharacters[CT_MAX] = {
         .capMetalModelId       = MODEL_MARIOS_METAL_CAP,
         .capWingModelId        = MODEL_MARIOS_WING_CAP,
         .capMetalWingModelId   = MODEL_MARIOS_WINGED_METAL_CAP,
-        .capEnemyLayer         = LAYER_TRANSPARENT,
+        .capEnemyLayer         = LAYER_ALPHA,
         .capEnemyGfx           = mario_cap_seg3_dl_03022F48,
-        .capEnemyDecalGfx      = mario_cap_m_logo_decal_dl,
+        .capEnemyDecalGfx      = mario_cap_m_logo_decal,
         .torsoRotMult          = 1.0f,
         // anim
         .animOffsetEnabled     = false,
