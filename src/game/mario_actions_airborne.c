@@ -415,7 +415,7 @@ u32 common_air_action_step(struct MarioState *m, u32 landAction, s32 animation, 
             set_character_animation(m, animation);
 
             if (m->forwardVel > 16.0f) {
-                if (m->wall == NULL && gServerSettings.bouncyLevelBounds == BOUNCY_LEVEL_BOUNDS_OFF) {
+                if (gServerSettings.bouncyLevelBounds == BOUNCY_LEVEL_BOUNDS_OFF || m->wall != NULL) {
                     queue_rumble_data_mario(m, 5, 40);
                     mario_bonk_reflection(m, FALSE);
                     m->faceAngle[1] += 0x8000;
