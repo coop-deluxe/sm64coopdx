@@ -122,7 +122,7 @@ struct DjuiSlider* djui_slider_create(struct DjuiBase* parent, const char* messa
     struct DjuiRect* rect = djui_rect_create(&slider->base);
     djui_base_set_alignment(&rect->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_CENTER);
     djui_base_set_size_type(&rect->base, DJUI_SVT_RELATIVE, DJUI_SVT_RELATIVE);
-    djui_base_set_size(&rect->base, 0.4f, 1.0f);
+    djui_base_set_size(&rect->base, 0.45f, 1.0f);
     djui_base_set_color(&rect->base, 0, 0, 0, 0);
     djui_base_set_border_width(&rect->base, 2);
     slider->rect = rect;

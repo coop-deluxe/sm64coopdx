@@ -80,7 +80,7 @@ void djui_panel_display_create(struct DjuiBase* caller) {
 
             struct DjuiInputbox* inputbox1 = djui_inputbox_create(&rect1->base, 32);
             djui_base_set_size_type(&inputbox1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-            djui_base_set_size(&inputbox1->base, 0.4f, 32);
+            djui_base_set_size(&inputbox1->base, 0.45f, 32);
             djui_base_set_alignment(&inputbox1->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_TOP);
             char frameLimitString[32] = { 0 };
             snprintf(frameLimitString, 32, "%d", configFrameLimit);

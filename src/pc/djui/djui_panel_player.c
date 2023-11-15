@@ -148,7 +148,7 @@ static void djui_panel_player_edit_palette_create(struct DjuiBase* caller) {
 
             sHexColorTextBox = djui_inputbox_create(&rect1->base, 7);
             djui_base_set_size_type(&sHexColorTextBox->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-            djui_base_set_size(&sHexColorTextBox->base, 0.4f, 32);
+            djui_base_set_size(&sHexColorTextBox->base, 0.45f, 32);
             djui_base_set_alignment(&sHexColorTextBox->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_TOP);
             djui_panel_player_edit_palette_update_hex_code_box();
             djui_interactable_hook_value_change(&sHexColorTextBox->base, djui_panel_player_edit_palette_hex_code_changed);
@@ -249,7 +249,7 @@ void djui_panel_player_create(struct DjuiBase* caller) {
 
             struct DjuiInputbox* inputbox1 = djui_inputbox_create(&rect1->base, MAX_PLAYER_STRING);
             djui_base_set_size_type(&inputbox1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-            djui_base_set_size(&inputbox1->base, 0.4f, 32);
+            djui_base_set_size(&inputbox1->base, 0.45f, 32);
             djui_base_set_alignment(&inputbox1->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_TOP);
             if (djui_panel_player_name_valid(configPlayerName)) {
                 djui_inputbox_set_text(inputbox1, configPlayerName);

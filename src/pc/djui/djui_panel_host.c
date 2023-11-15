@@ -120,7 +120,7 @@ void djui_panel_host_create(struct DjuiBase* caller) {
 
                 sInputboxPort = djui_inputbox_create(&sRectPort->base, 32);
                 djui_base_set_size_type(&sInputboxPort->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-                djui_base_set_size(&sInputboxPort->base, 0.4f, 32);
+                djui_base_set_size(&sInputboxPort->base, 0.45f, 32);
                 djui_base_set_alignment(&sInputboxPort->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_TOP);
                 char portString[32] = { 0 };
                 snprintf(portString, 32, "%d", configHostPort);
@@ -149,7 +149,7 @@ void djui_panel_host_create(struct DjuiBase* caller) {
                 sInputboxPassword = djui_inputbox_create(&sRectPassword->base, 32);
                 sInputboxPassword->passwordChar[0] = '#';
                 djui_base_set_size_type(&sInputboxPassword->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-                djui_base_set_size(&sInputboxPassword->base, 0.4f, 32);
+                djui_base_set_size(&sInputboxPassword->base, 0.45f, 32);
                 djui_base_set_alignment(&sInputboxPassword->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_TOP);
                 char portPassword[64] = { 0 };
                 snprintf(portPassword, 64, "%s", configPassword);
@@ -175,7 +175,7 @@ void djui_panel_host_create(struct DjuiBase* caller) {
             char starString[32] = { 0 };
             snprintf(starString, 32, "%c x%d", '~' + 1, save_file_get_total_star_count(configHostSaveSlot - 1, 0, 24));
             struct DjuiButton* button1 = djui_button_create(&rect2->base, starString, DJUI_BUTTON_STYLE_NORMAL, djui_panel_host_save_create);
-            djui_base_set_size(&button1->base, 0.4f, 32);
+            djui_base_set_size(&button1->base, 0.45f, 32);
             djui_base_set_alignment(&button1->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_TOP);
         }
 
