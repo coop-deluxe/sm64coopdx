@@ -7199,15 +7199,13 @@ void find_mario_floor_and_ceil(struct PlayerGeometry *pg) {
     s16 tempCheckingSurfaceCollisionsForCamera = gCheckingSurfaceCollisionsForCamera;
     gCheckingSurfaceCollisionsForCamera = TRUE;
 
-    if (find_floor(sMarioCamState->pos[0], sMarioCamState->pos[1] + 10.f,
-                   sMarioCamState->pos[2], &surf) != gLevelValues.floorLowerLimit) {
+    if (find_floor(sMarioCamState->pos[0], sMarioCamState->pos[1] + 10.f, sMarioCamState->pos[2], &surf) != gLevelValues.floorLowerLimit && surf != NULL) {
         pg->currFloorType = surf->type;
     } else {
         pg->currFloorType = 0;
     }
 
-    if (find_ceil(sMarioCamState->pos[0], sMarioCamState->pos[1] - 10.f,
-                  sMarioCamState->pos[2], &surf) != gLevelValues.cellHeightLimit) {
+    if (find_ceil(sMarioCamState->pos[0], sMarioCamState->pos[1] - 10.f, sMarioCamState->pos[2], &surf) != gLevelValues.cellHeightLimit && surf != NULL) {
         pg->currCeilType = surf->type;
     } else {
         pg->currCeilType = 0;
