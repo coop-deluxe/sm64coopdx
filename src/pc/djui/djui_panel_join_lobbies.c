@@ -109,6 +109,7 @@ void djui_panel_join_query_finish(void) {
         djui_base_set_size_type(&text->base, DJUI_SVT_RELATIVE, DJUI_SVT_RELATIVE);
         djui_base_set_size(&text->base, 1, 1);
         djui_text_set_alignment(text, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
+        djui_text_set_drop_shadow(text, 64, 64, 64, 100);
     }
     djui_paginated_update_page_buttons(sLobbyPaginated);
 }

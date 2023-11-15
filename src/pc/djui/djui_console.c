@@ -119,7 +119,7 @@ struct DjuiConsole* djui_console_create(void) {
     djui_base_set_size_type(base, DJUI_SVT_ABSOLUTE, DJUI_SVT_ABSOLUTE);
     djui_base_set_size(base, gDjuiRoot->base.width.value, gDjuiRoot->base.height.value * 0.5f);
     djui_base_set_alignment(base, DJUI_HALIGN_LEFT, DJUI_VALIGN_TOP);
-    djui_base_set_color(base, 0, 0, 0, 220);
+    djui_base_set_color(base, 0, 0, 0, 200);
     djui_base_set_padding(base, 0, 8, 8, 8);
     djui_base_set_visible(base, false);
 
