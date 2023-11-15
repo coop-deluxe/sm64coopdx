@@ -4030,6 +4030,27 @@
 
 <br />
 
+## [lvl_set_current_level](#lvl_set_current_level)
+
+### Lua Example
+`local integerValue = lvl_set_current_level(arg0, levelNum)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| arg0 | `integer` |
+| levelNum | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 lvl_set_current_level(UNUSED s16 arg0, s32 levelNum);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [warp_special](#warp_special)
 
 ### Lua Example

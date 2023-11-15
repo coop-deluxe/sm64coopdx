@@ -48,17 +48,6 @@
 
 #include "engine/level_script.h"
 
-#include "mario_actions_cutscene.h"
-
-#define WARP_NODE_F0 0xF0
-#define WARP_NODE_DEATH 0xF1
-#define WARP_NODE_F2 0xF2
-#define WARP_NODE_WARP_FLOOR 0xF3
-#define WARP_NODE_CREDITS_START 0xF8
-#define WARP_NODE_CREDITS_NEXT 0xF9
-#define WARP_NODE_CREDITS_END 0xFA
-#define WARP_NODE_CREDITS_MIN 0xF8
-
 #define MENU_LEVEL_MIN 0
 #define MENU_LEVEL_MAX 17
 
