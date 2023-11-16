@@ -1,3 +1,4 @@
+#include "geo_header.h"
 // Normal Mario Geo
 
 const GeoLayout luigi_geo_face_and_wings[] = {
