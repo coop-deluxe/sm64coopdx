@@ -28,8 +28,14 @@ static const Lights1 luigi_brown2_lights_group = gdSPDefLights1(
     0x73, 0x06, 0x00, 0x28, 0x28, 0x28
 );
 
+static const Lights1 luigi_black_lights_group = gdSPDefLights1(
+    0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x28, 0x28, 0x28
+);
+
 #include "actors/mario/mario_externs.h"
-#define luigi_texture_metal              mario_texture_metal
+#define luigi_texture_metal_shade        mario_texture_metal_shade
+#define luigi_texture_metal_light        mario_texture_metal_light
 #define luigi_texture_yellow_button      mario_texture_yellow_button
 #define luigi_texture_eyes_front         mario_texture_eyes_front
 #define luigi_texture_eyes_half_closed   mario_texture_eyes_half_closed
@@ -46,11 +52,27 @@ static const Lights1 luigi_brown2_lights_group = gdSPDefLights1(
 #define luigi_texture_cap_inside         mario_texture_cap_inside
 
 ALIGNED8 const Texture luigi_texture_l_logo[] = {
-#include "actors/luigi/custom_luigi_logo.ia16.inc.c"
+#include "actors/luigi/custom_luigi_logo.rgba16.inc.c"
+};
+
+ALIGNED8 const Texture luigi_texture_l_blend[] = {
+#include "actors/luigi/custom_luigi_logo_blend.rgba16.inc.c"
+};
+
+ALIGNED8 const Texture luigi_texture_l_cap[] = {
+#include "actors/luigi/custom_luigi_cap.rgba16.inc.c"
 };
 
 ALIGNED8 const Texture luigi_texture_hair_sideburn[] = {
-#include "actors/luigi/custom_luigi_sideburn.rgba16.inc.c"
+#include "actors/luigi/custom_luigi_sideburn.rgba32.inc.c"
+};
+
+ALIGNED8 const Texture luigi_texture_add_sideburn[] = {
+#include "actors/luigi/custom_luigi_sideburn_add.rgba32.inc.c"
+};
+
+ALIGNED8 const Texture luigi_texture_skin_sideburn[] = {
+#include "actors/luigi/custom_luigi_skin.rgba16.inc.c"
 };
 
 ALIGNED8 const Texture luigi_texture_mustache[] = {
@@ -226,12 +248,22 @@ const Gfx luigi_butt[] = {
 };
 
 const Gfx luigi_metal_butt[] = {
-    gsDPPipeSync(),
-    gsSPSetGeometryMode(G_TEXTURE_GEN),
-    gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, 0, 0, 0, ENVIRONMENT, TEXEL0, 0, SHADE, 0, 0, 0, 0, ENVIRONMENT),
-    gsDPLoadTextureBlock(luigi_texture_metal, G_IM_FMT_RGBA, G_IM_SIZ_16b, 64, 32, 0, G_TX_WRAP | G_TX_NOMIRROR, G_TX_WRAP | G_TX_NOMIRROR, 6, 5, G_TX_NOLOD, G_TX_NOLOD),
-    gsSPTexture(0x0F80, 0x07C0, 0, G_TX_RENDERTILE, G_ON),
-    gsSPCopyLightsPlayerPart(METAL),
+	gsDPPipeSync(),
+	gsDPSetCombineLERP(TEXEL0, 0, SHADE, TEXEL1, 0, 0, 0, ENVIRONMENT, TEXEL0, 0, SHADE, TEXEL1, 0, 0, 0, ENVIRONMENT),
+	gsSPSetGeometryMode(G_TEXTURE_GEN),
+	gsSPTexture(4032, 1984, 0, 0, 1),
+    gsSPLight(&luigi_black_lights_group.l, 1),
+    gsSPCopyLightEXT(2, 15),
+	gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 1, luigi_texture_metal_shade),
+	gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 0, 0, 7, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0),
+	gsDPLoadBlock(7, 0, 0, 2047, 128),
+	gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 16, 0, 0, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0, G_TX_CLAMP | G_TX_NOMIRROR, 6, 0),
+	gsDPSetTileSize(0, 0, 0, 252, 124),
+	gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 1, luigi_texture_metal_light),
+	gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 0, 512, 6, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0),
+	gsDPLoadBlock(6, 0, 0, 2047, 128),
+	gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 16, 512, 1, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0, G_TX_CLAMP | G_TX_NOMIRROR, 6, 0),
+	gsDPSetTileSize(1, 0, 0, 252, 124),
     gsSPDisplayList(luigi_butt_dl),
     gsSPEndDisplayList(),
 };
@@ -311,6 +343,8 @@ const Gfx luigi_left_arm_shared_dl[] = {
 };
 
 const Gfx luigi_left_arm[] = {
+    gsDPPipeSync(),
+    gsDPSetCombineMode(G_CC_SHADEFADEA, G_CC_SHADEFADEA),
     gsSPCopyLightsPlayerPart(SHIRT), // gsSPLight(&luigi_green_lights_group.a, 2),
 	gsSPDisplayList(luigi_left_arm_shared_dl),
 	gsSPEndDisplayList(),
@@ -469,6 +503,8 @@ const Gfx luigi_left_hand_closed_shared_dl[] = {
 };
 
 const Gfx luigi_left_hand_closed[] = {
+    gsDPPipeSync(),
+    gsDPSetCombineMode(G_CC_SHADEFADEA, G_CC_SHADEFADEA),
     gsSPCopyLightsPlayerPart(GLOVES), // glove light, set in mario_misc.c
 	gsSPDisplayList(luigi_left_hand_closed_shared_dl),
 	gsSPEndDisplayList(),
@@ -550,6 +586,8 @@ const Gfx luigi_right_arm_shared_dl[] = {
 };
 
 const Gfx luigi_right_arm[] = {
+    gsDPPipeSync(),
+    gsDPSetCombineMode(G_CC_SHADEFADEA, G_CC_SHADEFADEA),
     gsSPCopyLightsPlayerPart(SHIRT), // gsSPLight(&luigi_green_lights_group.a, 2),
 	gsSPDisplayList(luigi_right_arm_shared_dl),
 	gsSPEndDisplayList(),
@@ -705,6 +743,8 @@ const Gfx luigi_right_hand_closed_dl[] = {
 };
 
 const Gfx luigi_right_hand_closed[] = {
+    gsDPPipeSync(),
+    gsDPSetCombineMode(G_CC_SHADEFADEA, G_CC_SHADEFADEA),
     gsSPCopyLightsPlayerPart(GLOVES), // glove light, set in mario_misc.c
 	gsSPDisplayList(luigi_right_hand_closed_dl),
 	gsSPEndDisplayList(),
@@ -789,12 +829,22 @@ const Gfx luigi_left_thigh[] = {
 };
 
 const Gfx luigi_metal_left_thigh[] = {
-    gsDPPipeSync(),
-    gsSPSetGeometryMode(G_TEXTURE_GEN),
-    gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, 0, 0, 0, ENVIRONMENT, TEXEL0, 0, SHADE, 0, 0, 0, 0, ENVIRONMENT),
-    gsDPLoadTextureBlock(luigi_texture_metal, G_IM_FMT_RGBA, G_IM_SIZ_16b, 64, 32, 0, G_TX_WRAP | G_TX_NOMIRROR, G_TX_WRAP | G_TX_NOMIRROR, 6, 5, G_TX_NOLOD, G_TX_NOLOD),
-    gsSPTexture(0x0F80, 0x07C0, 0, G_TX_RENDERTILE, G_ON),
-    gsSPCopyLightsPlayerPart(METAL),
+	gsDPPipeSync(),
+	gsDPSetCombineLERP(TEXEL0, 0, SHADE, TEXEL1, 0, 0, 0, ENVIRONMENT, TEXEL0, 0, SHADE, TEXEL1, 0, 0, 0, ENVIRONMENT),
+	gsSPSetGeometryMode(G_TEXTURE_GEN),
+	gsSPTexture(4032, 1984, 0, 0, 1),
+    gsSPLight(&luigi_black_lights_group.l, 1),
+    gsSPCopyLightEXT(2, 15),
+	gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 1, luigi_texture_metal_shade),
+	gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 0, 0, 7, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0),
+	gsDPLoadBlock(7, 0, 0, 2047, 128),
+	gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 16, 0, 0, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0, G_TX_CLAMP | G_TX_NOMIRROR, 6, 0),
+	gsDPSetTileSize(0, 0, 0, 252, 124),
+	gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 1, luigi_texture_metal_light),
+	gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 0, 512, 6, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0),
+	gsDPLoadBlock(6, 0, 0, 2047, 128),
+	gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 16, 512, 1, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0, G_TX_CLAMP | G_TX_NOMIRROR, 6, 0),
+	gsDPSetTileSize(1, 0, 0, 252, 124),
     gsSPDisplayList(luigi_left_thigh_dl),
     gsSPEndDisplayList(),
 };
@@ -903,6 +953,8 @@ const Gfx luigi_left_foot_shared_dl[] = {
 };
 
 const Gfx luigi_left_foot[] = {
+    gsDPPipeSync(),
+    gsDPSetCombineMode(G_CC_SHADEFADEA, G_CC_SHADEFADEA),
     gsSPCopyLightsPlayerPart(SHOES),
 	gsSPDisplayList(luigi_left_foot_shared_dl),
 	gsSPEndDisplayList(),
@@ -974,6 +1026,8 @@ const Gfx luigi_right_thigh_shared_dl[] = {
 };
 
 const Gfx luigi_right_thigh[] = {
+    gsDPPipeSync(),
+    gsDPSetCombineMode(G_CC_SHADEFADEA, G_CC_SHADEFADEA),
     gsSPCopyLightsPlayerPart(PANTS), // gsSPLight(&luigi_blue_lights_group.a, 2),
 	gsSPDisplayList(luigi_right_thigh_shared_dl),
 	gsSPEndDisplayList(),
@@ -1094,6 +1148,8 @@ const Gfx luigi_right_foot_dl[] = {
 };
 
 const Gfx luigi_right_foot[] = {
+    gsDPPipeSync(),
+    gsDPSetCombineMode(G_CC_SHADEFADEA, G_CC_SHADEFADEA),
     gsSPCopyLightsPlayerPart(SHOES),
 	gsSPDisplayList(luigi_right_foot_dl),
     gsDPPipeSync(),
@@ -1895,7 +1951,26 @@ Gfx luigi_face_back_hair_cap_on_dl[] = {
 	gsSPEndDisplayList(),
 };
 
-const Gfx luigi_hair_sideburn_decal_cap_on_dl[] = {
+const Gfx luigi_hair_sideburn_decal_cap_on[] = {
+    gsDPPipeSync(),
+    gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, TEXEL0, 0, ENVIRONMENT, 0, TEXEL0, 0, SHADE, COMBINED, 0, 0, 0, COMBINED),
+    gsDPSetCycleType(G_CYC_2CYCLE),
+    gsSPTexture(65535, 65535, 0, 0, 1),
+    gsSPLight(&luigi_black_lights_group.l, 1),
+    gsSPCopyLightEXT(2, 11),
+    gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_32b_LOAD_BLOCK, 1, luigi_texture_hair_sideburn),
+    gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_32b_LOAD_BLOCK, 0, 0, 7, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0),
+    gsDPLoadBlock(7, 0, 0, 1023, 128),
+    gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_32b, 8, 0, 0, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0),
+    gsDPSetTileSize(0, 0, 0, 124, 124),
+    gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_32b_LOAD_BLOCK, 1, luigi_texture_add_sideburn),
+    gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_32b_LOAD_BLOCK, 0, 512, 6, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0),
+    gsDPLoadBlock(6, 0, 0, 1023, 128),
+    gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_32b, 8, 512, 1, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0),
+    gsDPSetTileSize(1, 0, 0, 124, 124),
+    gsSPDisplayList(luigi_hair_sideburn_cap_on_dl),
+    gsDPSetCycleType(G_CYC_1CYCLE),
+    gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_OFF),
     gsDPPipeSync(),
     gsDPSetCombineMode(G_CC_MODULATERGBFADEA, G_CC_MODULATERGBFADEA),
     gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 0, 0, G_TX_LOADTILE, 0, G_TX_WRAP | G_TX_NOMIRROR, G_TX_NOMASK, G_TX_NOLOD, G_TX_WRAP | G_TX_NOMIRROR, G_TX_NOMASK, G_TX_NOLOD),
@@ -1903,10 +1978,10 @@ const Gfx luigi_hair_sideburn_decal_cap_on_dl[] = {
     gsDPTileSync(),
     gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 8, 0, G_TX_RENDERTILE, 0, G_TX_CLAMP, 5, G_TX_NOLOD, G_TX_CLAMP, 5, G_TX_NOLOD),
     gsDPSetTileSize(0, 0, 0, (32 - 1) << G_TEXTURE_IMAGE_FRAC, (32 - 1) << G_TEXTURE_IMAGE_FRAC),
-    gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, luigi_texture_hair_sideburn),
+    gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, luigi_texture_skin_sideburn),
     gsDPLoadSync(),
     gsDPLoadBlock(G_TX_LOADTILE, 0, 0, 32 * 32 - 1, CALC_DXT(32, G_IM_SIZ_16b_BYTES)),
-    gsSPCopyLightsPlayerPart(HAIR),
+    gsSPCopyLightsPlayerPart(SKIN),
     gsSPDisplayList(luigi_hair_sideburn_cap_on_dl),
     gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_OFF),
     gsDPPipeSync(),
@@ -1914,19 +1989,38 @@ const Gfx luigi_hair_sideburn_decal_cap_on_dl[] = {
     gsSPEndDisplayList(),
 };
 
-const Gfx luigi_l_logo_decal_dl[] = {
+const Gfx luigi_l_logo_decal[] = {
+    gsDPPipeSync(),
+    gsDPSetCombineLERP(TEXEL0, SHADE, TEXEL1, SHADE, TEXEL0, 0, ENVIRONMENT, 0, COMBINED, TEXEL0, PRIMITIVE, COMBINED, 0, 0, 0, COMBINED),
+    gsDPSetCycleType(G_CYC_2CYCLE),
+    gsSPTexture(65535, 65535, 0, 0, 1),
+    gsDPSetPrimColor(0, 0, 127, 127, 127, 255),
+    gsSPLight(&luigi_black_lights_group.l, 1),
+    gsSPCopyLightEXT(2, 15),
+    gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 1, luigi_texture_l_logo),
+    gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 0, 0, 7, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0),
+    gsDPLoadBlock(7, 0, 0, 1023, 256),
+    gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 8, 0, 0, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0),
+    gsDPSetTileSize(0, 0, 0, 124, 124),
+    gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 1, luigi_texture_l_blend),
+    gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 0, 256, 6, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0),
+    gsDPLoadBlock(6, 0, 0, 1023, 256),
+    gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 8, 256, 1, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0),
+    gsDPSetTileSize(1, 0, 0, 124, 124),
+    gsSPDisplayList(luigi_l_logo_dl),
+    gsDPSetCycleType(G_CYC_1CYCLE),
+    gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_OFF),
     gsDPPipeSync(),
     gsDPSetCombineMode(G_CC_MODULATERGBFADEA, G_CC_MODULATERGBFADEA),
-    gsDPSetTile(G_IM_FMT_IA, G_IM_SIZ_16b, 0, 0, G_TX_LOADTILE, 0, G_TX_WRAP | G_TX_NOMIRROR, G_TX_NOMASK, G_TX_NOLOD, G_TX_WRAP | G_TX_NOMIRROR, G_TX_NOMASK, G_TX_NOLOD),
+    gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 0, 0, G_TX_LOADTILE, 0, G_TX_WRAP | G_TX_NOMIRROR, G_TX_NOMASK, G_TX_NOLOD, G_TX_WRAP | G_TX_NOMIRROR, G_TX_NOMASK, G_TX_NOLOD),
     gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON),
     gsDPTileSync(),
-    gsDPSetTile(G_IM_FMT_IA, G_IM_SIZ_16b, 8, 0, G_TX_RENDERTILE, 0, G_TX_CLAMP, 5, G_TX_NOLOD, G_TX_CLAMP, 5, G_TX_NOLOD),
+    gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 8, 0, G_TX_RENDERTILE, 0, G_TX_CLAMP, 5, G_TX_NOLOD, G_TX_CLAMP, 5, G_TX_NOLOD),
     gsDPSetTileSize(0, 0, 0, (32 - 1) << G_TEXTURE_IMAGE_FRAC, (32 - 1) << G_TEXTURE_IMAGE_FRAC),
-    gsDPSetTextureImage(G_IM_FMT_IA, G_IM_SIZ_16b, 1, luigi_texture_l_logo),
+    gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, luigi_texture_l_cap),
     gsDPLoadSync(),
     gsDPLoadBlock(G_TX_LOADTILE, 0, 0, 32 * 32 - 1, CALC_DXT(32, G_IM_SIZ_16b_BYTES)),
-    gsSPLight(&luigi_white_lights_group.l, 1),
-    gsSPLight(&luigi_white_lights_group.a, 2),
+    gsSPCopyLightsPlayerPart(CAP),
     gsSPDisplayList(luigi_l_logo_dl),
     gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_OFF),
     gsDPPipeSync(),
@@ -1935,10 +2029,8 @@ const Gfx luigi_l_logo_decal_dl[] = {
 };
 
 const Gfx luigi_face_cap_on_dl[] = {
-    gsSPDisplayList(luigi_hair_sideburn_cap_on_dl),
     gsSPDisplayList(luigi_face_part_cap_on_dl),
     gsSPCopyLightsPlayerPart(CAP),
-	gsSPDisplayList(luigi_l_logo_dl),
     gsSPDisplayList(luigi_face_cap_dl),
     gsSPCopyLightsPlayerPart(HAIR),
     gsSPDisplayList(luigi_face_back_hair_cap_on_dl),
@@ -2628,7 +2720,26 @@ Gfx luigi_face_hair_cap_off_dl[] = {
 	gsSPEndDisplayList(),
 };
 
-const Gfx luigi_hair_sideburn_decal_cap_off_dl[] = {
+const Gfx luigi_hair_sideburn_decal_cap_off[] = {
+    gsDPPipeSync(),
+    gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, TEXEL0, 0, ENVIRONMENT, 0, TEXEL0, 0, SHADE, COMBINED, 0, 0, 0, COMBINED),
+    gsDPSetCycleType(G_CYC_2CYCLE),
+    gsSPTexture(65535, 65535, 0, 0, 1),
+    gsSPLight(&luigi_black_lights_group.l, 1),
+    gsSPCopyLightEXT(2, 11),
+    gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_32b_LOAD_BLOCK, 1, luigi_texture_hair_sideburn),
+    gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_32b_LOAD_BLOCK, 0, 0, 7, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0),
+    gsDPLoadBlock(7, 0, 0, 1023, 128),
+    gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_32b, 8, 0, 0, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0),
+    gsDPSetTileSize(0, 0, 0, 124, 124),
+    gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_32b_LOAD_BLOCK, 1, luigi_texture_add_sideburn),
+    gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_32b_LOAD_BLOCK, 0, 512, 6, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0),
+    gsDPLoadBlock(6, 0, 0, 1023, 128),
+    gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_32b, 8, 512, 1, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0),
+    gsDPSetTileSize(1, 0, 0, 124, 124),
+    gsSPDisplayList(luigi_hair_sideburn_cap_off_dl),
+    gsDPSetCycleType(G_CYC_1CYCLE),
+    gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_OFF),
     gsDPPipeSync(),
     gsDPSetCombineMode(G_CC_MODULATERGBFADEA, G_CC_MODULATERGBFADEA),
     gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 0, 0, G_TX_LOADTILE, 0, G_TX_WRAP | G_TX_NOMIRROR, G_TX_NOMASK, G_TX_NOLOD, G_TX_WRAP | G_TX_NOMIRROR, G_TX_NOMASK, G_TX_NOLOD),
@@ -2636,10 +2747,10 @@ const Gfx luigi_hair_sideburn_decal_cap_off_dl[] = {
     gsDPTileSync(),
     gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 8, 0, G_TX_RENDERTILE, 0, G_TX_CLAMP, 5, G_TX_NOLOD, G_TX_CLAMP, 5, G_TX_NOLOD),
     gsDPSetTileSize(0, 0, 0, (32 - 1) << G_TEXTURE_IMAGE_FRAC, (32 - 1) << G_TEXTURE_IMAGE_FRAC),
-    gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, luigi_texture_hair_sideburn),
+    gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, luigi_texture_skin_sideburn),
     gsDPLoadSync(),
     gsDPLoadBlock(G_TX_LOADTILE, 0, 0, 32 * 32 - 1, CALC_DXT(32, G_IM_SIZ_16b_BYTES)),
-    gsSPCopyLightsPlayerPart(HAIR),
+    gsSPCopyLightsPlayerPart(SKIN),
     gsSPDisplayList(luigi_hair_sideburn_cap_off_dl),
     gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_OFF),
     gsDPPipeSync(),
@@ -2648,7 +2759,6 @@ const Gfx luigi_hair_sideburn_decal_cap_off_dl[] = {
 };
 
 const Gfx luigi_face_cap_off_dl[] = {
-	gsSPDisplayList(luigi_hair_sideburn_cap_off_dl),
     gsSPDisplayList(luigi_face_part_cap_off_dl),
     gsSPCopyLightsPlayerPart(HAIR),
     gsSPDisplayList(luigi_face_hair_cap_off_dl),
@@ -2995,6 +3105,8 @@ const Gfx luigi_left_hand_open_shared_dl[] = {
 };
 
 const Gfx luigi_left_hand_open[] = {
+    gsDPPipeSync(),
+    gsDPSetCombineMode(G_CC_SHADEFADEA, G_CC_SHADEFADEA),
     gsSPCopyLightsPlayerPart(GLOVES), // glove light, set in mario_misc.c
     gsSPDisplayList(luigi_left_hand_open_shared_dl),
     gsSPEndDisplayList(),
@@ -3137,6 +3249,8 @@ const Gfx luigi_right_hand_open_dl[] = {
 };
 
 const Gfx luigi_right_hand_open[] = {
+    gsDPPipeSync(),
+    gsDPSetCombineMode(G_CC_SHADEFADEA, G_CC_SHADEFADEA),
     gsSPCopyLightsPlayerPart(GLOVES), // glove light, set in mario_misc.c
     gsSPDisplayList(luigi_right_hand_open_dl),
     gsSPEndDisplayList(),
@@ -3398,19 +3512,38 @@ const Gfx luigi_right_hand_cap_bottom_dl[] = {
 	gsSPEndDisplayList(),
 };
 
-const Gfx luigi_right_hand_cap_decal_dl[] = {
+const Gfx luigi_right_hand_cap_decal[] = {
+    gsDPPipeSync(),
+    gsDPSetCombineLERP(TEXEL0, SHADE, TEXEL1, SHADE, TEXEL0, 0, ENVIRONMENT, 0, COMBINED, TEXEL0, PRIMITIVE, COMBINED, 0, 0, 0, COMBINED),
+    gsDPSetCycleType(G_CYC_2CYCLE),
+    gsSPTexture(65535, 65535, 0, 0, 1),
+    gsDPSetPrimColor(0, 0, 127, 127, 127, 255),
+    gsSPLight(&luigi_black_lights_group.l, 1),
+    gsSPCopyLightEXT(2, 15),
+    gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 1, luigi_texture_l_logo),
+    gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 0, 0, 7, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0),
+    gsDPLoadBlock(7, 0, 0, 1023, 256),
+    gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 8, 0, 0, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0),
+    gsDPSetTileSize(0, 0, 0, 124, 124),
+    gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 1, luigi_texture_l_blend),
+    gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 0, 256, 6, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0),
+    gsDPLoadBlock(6, 0, 0, 1023, 256),
+    gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 8, 256, 1, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0),
+    gsDPSetTileSize(1, 0, 0, 124, 124),
+    gsSPDisplayList(luigi_right_hand_cap_l_logo_dl),
+    gsDPSetCycleType(G_CYC_1CYCLE),
+    gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_OFF),
     gsDPPipeSync(),
     gsDPSetCombineMode(G_CC_MODULATERGBFADEA, G_CC_MODULATERGBFADEA),
-    gsDPSetTile(G_IM_FMT_IA, G_IM_SIZ_16b, 0, 0, G_TX_LOADTILE, 0, G_TX_WRAP | G_TX_NOMIRROR, G_TX_NOMASK, G_TX_NOLOD, G_TX_WRAP | G_TX_NOMIRROR, G_TX_NOMASK, G_TX_NOLOD),
+    gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 0, 0, G_TX_LOADTILE, 0, G_TX_WRAP | G_TX_NOMIRROR, G_TX_NOMASK, G_TX_NOLOD, G_TX_WRAP | G_TX_NOMIRROR, G_TX_NOMASK, G_TX_NOLOD),
     gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON),
     gsDPTileSync(),
-    gsDPSetTile(G_IM_FMT_IA, G_IM_SIZ_16b, 8, 0, G_TX_RENDERTILE, 0, G_TX_CLAMP, 5, G_TX_NOLOD, G_TX_CLAMP, 5, G_TX_NOLOD),
+    gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 8, 0, G_TX_RENDERTILE, 0, G_TX_CLAMP, 5, G_TX_NOLOD, G_TX_CLAMP, 5, G_TX_NOLOD),
     gsDPSetTileSize(0, 0, 0, (32 - 1) << G_TEXTURE_IMAGE_FRAC, (32 - 1) << G_TEXTURE_IMAGE_FRAC),
-    gsDPSetTextureImage(G_IM_FMT_IA, G_IM_SIZ_16b, 1, luigi_texture_l_logo),
+    gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, luigi_texture_l_cap),
     gsDPLoadSync(),
     gsDPLoadBlock(G_TX_LOADTILE, 0, 0, 32 * 32 - 1, CALC_DXT(32, G_IM_SIZ_16b_BYTES)),
-    gsSPLight(&luigi_white_lights_group.l, 1),
-    gsSPLight(&luigi_white_lights_group.a, 2),
+    gsSPCopyLightsPlayerPart(CAP),
     gsSPDisplayList(luigi_right_hand_cap_l_logo_dl),
     gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_OFF),
     gsDPPipeSync(),
@@ -3419,6 +3552,7 @@ const Gfx luigi_right_hand_cap_decal_dl[] = {
 };
 
 const Gfx luigi_right_hand_cap_dl[] = {
+    gsSPCopyLightsPlayerPart(CAP),
     gsSPDisplayList(luigi_right_hand_cap_top_dl),
     gsSPCopyLightsPlayerPart(GLOVES), // glove light, set in luigi_misc.c
     gsSPDisplayList(luigi_right_hand_cap_hand_position_dl),
@@ -3439,52 +3573,53 @@ const Gfx luigi_right_hand_cap_dl[] = {
     gsSPEndDisplayList(),
 };
 
-static const Vtx luigi_right_hand_cap_wings_half_1_dl_vertex[10] = {
-	{{{368, 146, 7}, 0, {990, 0}, {0xBE, 0x66, 0xDA, 0xFE}}},
-	{{{166, 37, 68}, 0, {0, 2012}, {0xBE, 0x66, 0xDA, 0xFE}}},
-	{{{212, 96, 143}, 0, {990, 2012}, {0xBE, 0x66, 0xDA, 0xFE}}},
-	{{{368, 146, 7}, 0, {990, 0}, {0xBD, 0x65, 0xD9, 0xFE}}},
-	{{{322, 87, -67}, 0, {0, 0}, {0xBD, 0x65, 0xD9, 0xFE}}},
-	{{{166, 37, 68}, 0, {0, 2012}, {0xBD, 0x65, 0xD9, 0xFE}}},
-	{{{178, -177, 128}, 0, {990, 2012}, {0xA7, 0xB3, 0xCF, 0xFE}}},
-	{{{149, -100, 60}, 0, {0, 2012}, {0xA7, 0xB3, 0xCF, 0xFE}}},
-	{{{319, -248, -14}, 0, {990, 0}, {0xA7, 0xB3, 0xCF, 0xFE}}},
-	{{{290, -171, -81}, 0, {0, 0}, {0xA7, 0xB3, 0xCF, 0xFE}}},
+// 0x0401AF60
+static const Vtx luigi_right_hand_cap_wings_half_1_dl_vertex[] = {
+    {{{   368,    146,      7}, 0, {   990,      0}, {0xff, 0xff, 0xff, 0xff}}},
+    {{{   166,     37,     68}, 0, {     0,   2012}, {0xff, 0xff, 0xff, 0xff}}},
+    {{{   212,     96,    143}, 0, {   990,   2012}, {0xff, 0xff, 0xff, 0xff}}},
+    {{{   368,    146,      7}, 0, {   990,      0}, {0xff, 0xff, 0xff, 0xff}}},
+    {{{   322,     87,    -67}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
+    {{{   166,     37,     68}, 0, {     0,   2012}, {0xff, 0xff, 0xff, 0xff}}},
+    {{{   178,   -177,    128}, 0, {   990,   2012}, {0xff, 0xff, 0xff, 0xff}}},
+    {{{   149,   -100,     60}, 0, {     0,   2012}, {0xff, 0xff, 0xff, 0xff}}},
+    {{{   319,   -248,    -14}, 0, {   990,      0}, {0xff, 0xff, 0xff, 0xff}}},
+    {{{   290,   -171,    -81}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
 };
 
-static const Vtx luigi_right_hand_cap_wings_half_2_dl_vertex[8] = {
-	{{{414, 206, 82}, 0, {990, 0}, {0xBD, 0x65, 0xD9, 0xFE}}},
-	{{{212, 96, 143}, 0, {0, 2012}, {0xBD, 0x65, 0xD9, 0xFE}}},
-	{{{258, 156, 218}, 0, {990, 2012}, {0xBD, 0x65, 0xD9, 0xFE}}},
-	{{{368, 146, 7}, 0, {0, 0}, {0xBD, 0x65, 0xD9, 0xFE}}},
-	{{{178, -177, 128}, 0, {0, 2012}, {0xA8, 0xB3, 0xCF, 0xFE}}},
-	{{{319, -248, -14}, 0, {0, 0}, {0xA8, 0xB3, 0xCF, 0xFE}}},
-	{{{349, -325, 53}, 0, {990, 0}, {0xA8, 0xB3, 0xCF, 0xFE}}},
-	{{{207, -253, 195}, 0, {990, 2012}, {0xA8, 0xB3, 0xCF, 0xFE}}},
+// 0x0401B000
+static const Vtx luigi_right_hand_cap_wings_half_2_dl_vertex[] = {
+    {{{   414,    206,     82}, 0, {   990,      0}, {0xff, 0xff, 0xff, 0xff}}},
+    {{{   212,     96,    143}, 0, {     0,   2012}, {0xff, 0xff, 0xff, 0xff}}},
+    {{{   258,    156,    218}, 0, {   990,   2012}, {0xff, 0xff, 0xff, 0xff}}},
+    {{{   368,    146,      7}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
+    {{{   178,   -177,    128}, 0, {     0,   2012}, {0xff, 0xff, 0xff, 0xff}}},
+    {{{   319,   -248,    -14}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
+    {{{   349,   -325,     53}, 0, {   990,      0}, {0xff, 0xff, 0xff, 0xff}}},
+    {{{   207,   -253,    195}, 0, {   990,   2012}, {0xff, 0xff, 0xff, 0xff}}},
 };
 
+// 0x0401B080 - 0x0401B0B0
 const Gfx luigi_right_hand_cap_wings_half_1_dl[] = {
-	gsSPVertex(luigi_right_hand_cap_wings_half_1_dl_vertex + 0, 10, 0),
-	gsSP1Triangle(0, 1, 2, 0),
-	gsSP1Triangle(3, 4, 5, 0),
-	gsSP1Triangle(6, 7, 8, 0),
-	gsSP1Triangle(7, 9, 8, 0),
-	gsSPEndDisplayList(),
+    gsSPVertex(luigi_right_hand_cap_wings_half_1_dl_vertex, 10, 0),
+    gsSP2Triangles( 0,  1,  2, 0x0,  3,  4,  5, 0x0),
+    gsSP2Triangles( 6,  7,  8, 0x0,  7,  9,  8, 0x0),
+    gsSPEndDisplayList(),
 };
 
+// 0x0401B0B0 - 0x0401B0E0
 const Gfx luigi_right_hand_cap_wings_half_2_dl[] = {
-	gsSPVertex(luigi_right_hand_cap_wings_half_2_dl_vertex + 0, 8, 0),
-	gsSP1Triangle(0, 1, 2, 0),
-	gsSP1Triangle(0, 3, 1, 0),
-	gsSP1Triangle(4, 5, 6, 0),
-	gsSP1Triangle(7, 4, 6, 0),
-	gsSPEndDisplayList(),
+    gsSPVertex(luigi_right_hand_cap_wings_half_2_dl_vertex, 8, 0),
+    gsSP2Triangles( 0,  1,  2, 0x0,  0,  3,  1, 0x0),
+    gsSP2Triangles( 4,  5,  6, 0x0,  7,  4,  6, 0x0),
+    gsSPEndDisplayList(),
 };
 
+// 0x0401B0E0 - 0x0401B138
 const Gfx luigi_right_hand_cap_wings_intial_dl[] = {
     gsDPPipeSync(),
     gsDPSetCombineMode(G_CC_MODULATERGBA, G_CC_MODULATERGBA),
-    gsSPClearGeometryMode(G_CULL_BACK | G_SHADING_SMOOTH),
+    gsSPClearGeometryMode(G_LIGHTING | G_CULL_BACK),
     gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 0, 0, G_TX_LOADTILE, 0, G_TX_WRAP | G_TX_NOMIRROR, G_TX_NOMASK, G_TX_NOLOD, G_TX_WRAP | G_TX_NOMIRROR, G_TX_NOMASK, G_TX_NOLOD),
     gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON),
     gsSPLight(&luigi_white_lights_group.l, 1),
@@ -3498,7 +3633,7 @@ const Gfx luigi_right_hand_cap_wings_intial_dl[] = {
 const Gfx luigi_right_hand_cap_wings_transparent_intial_dl[] = {
     gsDPPipeSync(),
     gsDPSetCombineMode(G_CC_DECALFADEA, G_CC_DECALFADEA),
-    gsSPClearGeometryMode(G_CULL_BACK | G_SHADING_SMOOTH),
+    gsSPClearGeometryMode(G_LIGHTING | G_CULL_BACK),
     gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 0, 0, G_TX_LOADTILE, 0, G_TX_WRAP | G_TX_NOMIRROR, G_TX_NOMASK, G_TX_NOLOD, G_TX_WRAP | G_TX_NOMIRROR, G_TX_NOMASK, G_TX_NOLOD),
     gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON),
     gsSPLight(&luigi_white_lights_group.l, 1),
@@ -3509,19 +3644,18 @@ const Gfx luigi_right_hand_cap_wings_transparent_intial_dl[] = {
     gsSPEndDisplayList(),
 };
 
+// 0x0401B138 - 0x0401B158
 const Gfx luigi_right_hand_cap_wings_end_dl[] = {
     gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_OFF),
     gsDPPipeSync(),
     gsDPSetCombineMode(G_CC_SHADE, G_CC_SHADE),
-    gsSPSetGeometryMode(G_CULL_BACK | G_SHADING_SMOOTH),
+    gsSPSetGeometryMode(G_LIGHTING | G_CULL_BACK),
     gsSPEndDisplayList(),
 };
 
 const Gfx luigi_right_hand_cap[] = {
     gsDPPipeSync(),
     gsDPSetCombineMode(G_CC_SHADEFADEA, G_CC_SHADEFADEA),
-    gsSPCopyLightsPlayerPart(CAP),
-    gsSPDisplayList(luigi_right_hand_cap_l_logo_dl),
     gsSPDisplayList(luigi_right_hand_cap_dl),
     gsSPEndDisplayList(),
 };
@@ -3797,31 +3931,37 @@ const Gfx luigi_right_hand_peace_shared_dl[] = {
 };
 
 const Gfx luigi_right_hand_peace[] = {
+    gsDPPipeSync(),
+    gsDPSetCombineMode(G_CC_SHADEFADEA, G_CC_SHADEFADEA),
     gsSPCopyLightsPlayerPart(GLOVES), // glove light, set in mario_misc.c
     gsSPDisplayList(luigi_right_hand_peace_shared_dl),
     gsSPEndDisplayList(),
 };
 
+// 0x0401C940
 static const Vtx luigi_wings_half_1_dl_vertex[] = {
-    {{{  -105,    212,      0}, 0, {     0,      0}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{  -105,      0,      0}, 0, {     0,   2012}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{     0,      0,      0}, 0, {   990,   2012}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{     0,    212,      0}, 0, {   990,      0}, {0x00, 0x00, 0x7f, 0xff}}},
+    {{{  -105,    212,      0}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
+    {{{  -105,      0,      0}, 0, {     0,   2012}, {0xff, 0xff, 0xff, 0xff}}},
+    {{{     0,      0,      0}, 0, {   990,   2012}, {0xff, 0xff, 0xff, 0xff}}},
+    {{{     0,    212,      0}, 0, {   990,      0}, {0xff, 0xff, 0xff, 0xff}}},
 };
 
+// 0x0401C980
 static const Vtx luigi_wings_half_2_dl_vertex[] = {
-    {{{     0,      0,      0}, 0, {     0,   2012}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{   106,    212,      0}, 0, {   990,      0}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{     0,    212,      0}, 0, {     0,      0}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{   106,      0,      0}, 0, {   990,   2012}, {0x00, 0x00, 0x7f, 0xff}}},
+    {{{     0,      0,      0}, 0, {     0,   2012}, {0xff, 0xff, 0xff, 0xff}}},
+    {{{   106,    212,      0}, 0, {   990,      0}, {0xff, 0xff, 0xff, 0xff}}},
+    {{{     0,    212,      0}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
+    {{{   106,      0,      0}, 0, {   990,   2012}, {0xff, 0xff, 0xff, 0xff}}},
 };
 
+// 0x0401C9C0 - 0x0401C9E0
 const Gfx luigi_wings_half_1_dl[] = {
     gsSPVertex(luigi_wings_half_1_dl_vertex, 4, 0),
     gsSP2Triangles( 0,  1,  2, 0x0,  0,  2,  3, 0x0),
     gsSPEndDisplayList(),
 };
 
+// 0x0401C9E0 - 0x0401CA00
 const Gfx luigi_wings_half_2_dl[] = {
     gsSPVertex(luigi_wings_half_2_dl_vertex, 4, 0),
     gsSP2Triangles( 0,  1,  2, 0x0,  0,  3,  1, 0x0),
@@ -3832,7 +3972,7 @@ const Gfx luigi_wings_half_2_dl[] = {
 const Gfx luigi_cap_wings[] = {
     gsDPPipeSync(),
     gsDPSetCombineMode(G_CC_MODULATERGBA, G_CC_MODULATERGBA),
-    gsSPClearGeometryMode(G_CULL_BACK | G_SHADING_SMOOTH),
+    gsSPClearGeometryMode(G_LIGHTING | G_CULL_BACK),
     gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 0, 0, G_TX_LOADTILE, 0, G_TX_WRAP | G_TX_NOMIRROR, G_TX_NOMASK, G_TX_NOLOD, G_TX_WRAP | G_TX_NOMIRROR, G_TX_NOMASK, G_TX_NOLOD),
     gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON),
     gsDPTileSync(),
@@ -3851,7 +3991,7 @@ const Gfx luigi_cap_wings[] = {
     gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_OFF),
     gsDPPipeSync(),
     gsDPSetCombineMode(G_CC_SHADE, G_CC_SHADE),
-    gsSPSetGeometryMode(G_CULL_BACK | G_SHADING_SMOOTH),
+    gsSPSetGeometryMode(G_LIGHTING | G_CULL_BACK),
     gsSPEndDisplayList(),
 };
 
@@ -3859,7 +3999,7 @@ const Gfx luigi_cap_wings[] = {
 const Gfx luigi_cap_wings_transparent[] = {
     gsDPPipeSync(),
     gsDPSetCombineMode(G_CC_DECALFADEA, G_CC_DECALFADEA),
-    gsSPClearGeometryMode(G_CULL_BACK | G_SHADING_SMOOTH),
+    gsSPClearGeometryMode(G_LIGHTING | G_CULL_BACK),
     gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 0, 0, G_TX_LOADTILE, 0, G_TX_WRAP | G_TX_NOMIRROR, G_TX_NOMASK, G_TX_NOLOD, G_TX_WRAP | G_TX_NOMIRROR, G_TX_NOMASK, G_TX_NOLOD),
     gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON),
     gsDPTileSync(),
@@ -3878,7 +4018,7 @@ const Gfx luigi_cap_wings_transparent[] = {
     gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_OFF),
     gsDPPipeSync(),
     gsDPSetCombineMode(G_CC_SHADEFADEA, G_CC_SHADEFADEA),
-    gsSPSetGeometryMode(G_CULL_BACK | G_SHADING_SMOOTH),
+    gsSPSetGeometryMode(G_LIGHTING | G_CULL_BACK),
     gsSPEndDisplayList(),
 };
 
@@ -3886,7 +4026,7 @@ const Gfx luigi_cap_wings_transparent[] = {
 const Gfx luigi_metal_cap_wings[] = {
     gsDPPipeSync(),
     gsDPSetCombineMode(G_CC_MODULATERGBA, G_CC_MODULATERGBA),
-    gsSPClearGeometryMode(G_CULL_BACK | G_SHADING_SMOOTH),
+    gsSPClearGeometryMode(G_LIGHTING | G_CULL_BACK),
     gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 0, 0, G_TX_LOADTILE, 0, G_TX_WRAP | G_TX_NOMIRROR, G_TX_NOMASK, G_TX_NOLOD, G_TX_WRAP | G_TX_NOMIRROR, G_TX_NOMASK, G_TX_NOLOD),
     gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON),
     gsDPTileSync(),
@@ -3905,22 +4045,22 @@ const Gfx luigi_metal_cap_wings[] = {
     gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_OFF),
     gsDPPipeSync(),
     gsDPSetCombineMode(G_CC_SHADE, G_CC_SHADE),
-    gsSPSetGeometryMode(G_CULL_BACK | G_SHADING_SMOOTH),
+    gsSPSetGeometryMode(G_LIGHTING | G_CULL_BACK),
     gsSPEndDisplayList(),
 };
 
 // 0x0401CC28 - 0x0401CD20
 const Gfx luigi_metal_cap_wings_transparent[] = {
     gsDPPipeSync(),
-    gsSPClearGeometryMode(G_TEXTURE_GEN),
-    gsSPTexture(0x0F80, 0x07C0, 0, G_TX_RENDERTILE, G_OFF),
     gsDPSetCombineMode(G_CC_DECALFADEA, G_CC_DECALFADEA),
-    gsSPClearGeometryMode(G_CULL_BACK | G_SHADING_SMOOTH),
+    gsSPClearGeometryMode(G_LIGHTING | G_CULL_BACK),
     gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 0, 0, G_TX_LOADTILE, 0, G_TX_WRAP | G_TX_NOMIRROR, G_TX_NOMASK, G_TX_NOLOD, G_TX_WRAP | G_TX_NOMIRROR, G_TX_NOMASK, G_TX_NOLOD),
     gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON),
     gsDPTileSync(),
     gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 8, 0, G_TX_RENDERTILE, 0, G_TX_CLAMP, 6, G_TX_NOLOD, G_TX_CLAMP, 5, G_TX_NOLOD),
     gsDPSetTileSize(0, 0, 0, (32 - 1) << G_TEXTURE_IMAGE_FRAC, (64 - 1) << G_TEXTURE_IMAGE_FRAC),
+    gsSPLight(&luigi_white_lights_group.l, 1),
+    gsSPLight(&luigi_white_lights_group.a, 2),
     gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, luigi_texture_metal_wings_half_1),
     gsDPLoadSync(),
     gsDPLoadBlock(G_TX_LOADTILE, 0, 0, 32 * 64 - 1, CALC_DXT(32, G_IM_SIZ_16b_BYTES)),
@@ -3931,9 +4071,18 @@ const Gfx luigi_metal_cap_wings_transparent[] = {
     gsSPDisplayList(luigi_wings_half_2_dl),
     gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_OFF),
     gsDPPipeSync(),
-    gsSPSetGeometryMode(G_TEXTURE_GEN | G_CULL_BACK | G_SHADING_SMOOTH),
-    gsDPSetCombineMode(G_CC_DECALFADE, G_CC_DECALFADE),
-    gsDPLoadTextureBlock(luigi_texture_metal, G_IM_FMT_RGBA, G_IM_SIZ_16b, 64, 32, 0, G_TX_WRAP | G_TX_NOMIRROR, G_TX_WRAP | G_TX_NOMIRROR, 6, 5, G_TX_NOLOD, G_TX_NOLOD),
-    gsSPTexture(0x0F80, 0x07C0, 0, G_TX_RENDERTILE, G_ON),
+    gsDPSetCombineMode(G_CC_SHADEFADEA, G_CC_SHADEFADEA),
+    gsSPSetGeometryMode(G_LIGHTING | G_CULL_BACK),
     gsSPEndDisplayList(),
+};
+
+const Gfx luigi_material_revert_render_settings[] = {
+	gsDPPipeSync(),
+	gsSPSetGeometryMode(G_LIGHTING),
+	gsSPClearGeometryMode(G_TEXTURE_GEN),
+	gsDPSetCombineLERP(0, 0, 0, SHADE, 0, 0, 0, ENVIRONMENT, 0, 0, 0, SHADE, 0, 0, 0, ENVIRONMENT),
+	gsSPTexture(65535, 65535, 0, 0, 0),
+	gsDPSetEnvColor(255, 255, 255, 255),
+	gsDPSetAlphaCompare(G_AC_NONE),
+	gsSPEndDisplayList(),
 };

@@ -2143,8 +2143,10 @@ const Gfx mario_hair_sideburn_decal_cap_on[] = {
 
 const Gfx mario_m_logo_decal[] = {
     gsDPPipeSync(),
-    gsDPSetCombineLERP(TEXEL0, SHADE, TEXEL1, SHADE, TEXEL0, 0, ENVIRONMENT, 0, TEXEL0, SHADE, TEXEL1, SHADE, TEXEL0, 0, ENVIRONMENT, 0),
+    gsDPSetCombineLERP(TEXEL0, SHADE, TEXEL1, SHADE, TEXEL0, 0, ENVIRONMENT, 0, COMBINED, TEXEL0, PRIMITIVE, COMBINED, 0, 0, 0, COMBINED),
+    gsDPSetCycleType(G_CYC_2CYCLE),
     gsSPTexture(65535, 65535, 0, 0, 1),
+    gsDPSetPrimColor(0, 0, 127, 127, 127, 255),
     gsSPLight(&mario_black_lights_group.l, 1),
     gsSPCopyLightEXT(2, 15),
     gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 1, mario_texture_m_logo),
@@ -2158,6 +2160,7 @@ const Gfx mario_m_logo_decal[] = {
     gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 8, 256, 1, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0),
     gsDPSetTileSize(1, 0, 0, 124, 124),
     gsSPDisplayList(mario_m_logo_dl),
+    gsDPSetCycleType(G_CYC_1CYCLE),
     gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_OFF),
     gsDPPipeSync(),
     gsDPSetCombineMode(G_CC_MODULATERGBFADEA, G_CC_MODULATERGBFADEA),
@@ -3722,8 +3725,10 @@ const Gfx mario_right_hand_cap_bottom_dl[] = {
 
 const Gfx mario_right_hand_cap_decal[] = {
     gsDPPipeSync(),
-    gsDPSetCombineLERP(TEXEL0, SHADE, TEXEL1, SHADE, TEXEL0, 0, ENVIRONMENT, 0, TEXEL0, SHADE, TEXEL1, SHADE, TEXEL0, 0, ENVIRONMENT, 0),
+    gsDPSetCombineLERP(TEXEL0, SHADE, TEXEL1, SHADE, TEXEL0, 0, ENVIRONMENT, 0, COMBINED, TEXEL0, PRIMITIVE, COMBINED, 0, 0, 0, COMBINED),
+    gsDPSetCycleType(G_CYC_2CYCLE),
     gsSPTexture(65535, 65535, 0, 0, 1),
+    gsDPSetPrimColor(0, 0, 127, 127, 127, 255),
     gsSPLight(&mario_black_lights_group.l, 1),
     gsSPCopyLightEXT(2, 15),
     gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 1, mario_texture_m_logo),
@@ -3737,6 +3742,7 @@ const Gfx mario_right_hand_cap_decal[] = {
     gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 8, 256, 1, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0),
     gsDPSetTileSize(1, 0, 0, 124, 124),
     gsSPDisplayList(mario_right_hand_cap_m_logo_dl),
+    gsDPSetCycleType(G_CYC_1CYCLE),
     gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_OFF),
     gsDPPipeSync(),
     gsDPSetCombineMode(G_CC_MODULATERGBFADEA, G_CC_MODULATERGBFADEA),
@@ -3895,7 +3901,6 @@ const Gfx mario_right_hand_cap_wings_transparent[] = {
     gsSPDisplayList(mario_right_hand_cap_wings_end_dl),
     gsSPEndDisplayList(),
 };
-
 
 // 0x0401B230 - 0x0401B278
 const Gfx mario_metal_right_hand_cap_shared_dl[] = {
@@ -4335,10 +4340,8 @@ const Gfx mario_metal_cap_wings_transparent[] = {
     gsSPDisplayList(mario_wings_half_2_dl),
     gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_OFF),
     gsDPPipeSync(),
-    gsSPSetGeometryMode(G_TEXTURE_GEN | G_LIGHTING | G_CULL_BACK),
-    gsDPSetCombineMode(G_CC_DECALFADE, G_CC_DECALFADE),
-    gsDPLoadTextureBlock(mario_texture_metal, G_IM_FMT_RGBA, G_IM_SIZ_16b, 64, 32, 0, G_TX_WRAP | G_TX_NOMIRROR, G_TX_WRAP | G_TX_NOMIRROR, 6, 5, G_TX_NOLOD, G_TX_NOLOD),
-    gsSPTexture(0x0F80, 0x07C0, 0, G_TX_RENDERTILE, G_ON),
+    gsDPSetCombineMode(G_CC_SHADEFADEA, G_CC_SHADEFADEA),
+    gsSPSetGeometryMode(G_LIGHTING | G_CULL_BACK),
     gsSPEndDisplayList(),
 };
 
