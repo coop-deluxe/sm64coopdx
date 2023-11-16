@@ -17,7 +17,7 @@
 extern Gfx mario_cap_seg3_dl_03022F48[];
 extern Gfx mario_cap_m_logo_decal[];
 extern Gfx luigi_cap_seg3_dl_03022F48[];
-extern Gfx luigi_cap_l_logo_decal_dl[];
+extern Gfx luigi_cap_l_logo_decal[];
 extern Gfx toad_cap_Cap_mesh_layer_1[];
 extern Gfx toad_cap_Cap_mesh_layer_5[];
 extern Gfx waluigi_cap_seg3_dl_03022F48[];
@@ -318,9 +318,9 @@ struct Character gCharacters[CT_MAX] = {
         .capMetalModelId       = MODEL_LUIGIS_METAL_CAP,
         .capWingModelId        = MODEL_LUIGIS_WING_CAP,
         .capMetalWingModelId   = MODEL_LUIGIS_WINGED_METAL_CAP,
-        .capEnemyLayer         = LAYER_TRANSPARENT,
+        .capEnemyLayer         = LAYER_ALPHA,
         .capEnemyGfx           = luigi_cap_seg3_dl_03022F48,
-        .capEnemyDecalGfx      = luigi_cap_l_logo_decal_dl,
+        .capEnemyDecalGfx      = luigi_cap_l_logo_decal,
         .torsoRotMult          = 1.0f,
         // anim
         .animOffsetEnabled     = false,
