@@ -2323,6 +2323,8 @@ void init_single_mario(struct MarioState* m) {
     m->marioBodyState->lightingDirY = 0;
     m->marioBodyState->lightingDirZ = 0;
 
+    m->marioBodyState->allowPartRotation = FALSE;
+
     m->marioObj->oPosX = m->pos[0];
     m->marioObj->oPosY = m->pos[1];
     m->marioObj->oPosZ = m->pos[2];

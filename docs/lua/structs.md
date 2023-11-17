@@ -1314,6 +1314,7 @@
 | Field | Type | Access |
 | ----- | ---- | ------ |
 | action | `integer` |  |
+| allowPartRotation | `integer` |  |
 | capState | `integer` |  |
 | eyeState | `integer` |  |
 | grabPos | `integer` |  |
@@ -2510,6 +2511,7 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
+| bouncyLevelBounds | [enum BouncyLevelBounds](constants.md#enum-BouncyLevelBounds) |  |
 | bubbleDeath | `integer` |  |
 | enablePlayerList | `integer` |  |
 | enablePlayersInLevelDisplay | `integer` |  |

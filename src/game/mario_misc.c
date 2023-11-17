@@ -430,7 +430,8 @@ Gfx* geo_mario_tilt_torso(s32 callContext, struct GraphNode* node, Mat4* mtx) {
     if (callContext == GEO_CONTEXT_RENDER) {
         struct GraphNodeRotation* rotNode = (struct GraphNodeRotation*) node->next;
 
-        if (action != ACT_BUTT_SLIDE && action != ACT_HOLD_BUTT_SLIDE && action != ACT_WALKING && action != ACT_RIDING_SHELL_GROUND) {
+        if (action != ACT_BUTT_SLIDE && action != ACT_HOLD_BUTT_SLIDE && action != ACT_WALKING && action != ACT_RIDING_SHELL_GROUND 
+        && !bodyState->allowPartRotation) {
             vec3s_copy(bodyState->torsoAngle, gVec3sZero);
         }
         rotNode->rotation[0] = bodyState->torsoAngle[1] * character->torsoRotMult;
@@ -468,7 +469,7 @@ Gfx* geo_mario_head_rotation(s32 callContext, struct GraphNode* node, Mat4* c) {
             rotNode->rotation[0] = gPlayerCameraState[plrIdx].headRotation[1];
             rotNode->rotation[2] = gPlayerCameraState[plrIdx].headRotation[0];
         }
-        else if (action & ACT_FLAG_WATER_OR_TEXT) {
+        else if (action & ACT_FLAG_WATER_OR_TEXT || bodyState->allowPartRotation) {
             rotNode->rotation[0] = bodyState->headAngle[1];
             rotNode->rotation[1] = bodyState->headAngle[2];
             rotNode->rotation[2] = bodyState->headAngle[0];
