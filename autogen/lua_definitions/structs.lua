@@ -942,6 +942,7 @@
 
 --- @class MarioBodyState
 --- @field public action integer
+--- @field public allowPartRotation integer
 --- @field public capState integer
 --- @field public eyeState integer
 --- @field public grabPos integer
@@ -1990,6 +1991,7 @@
 --- @field public surface Surface
 
 --- @class ServerSettings
+--- @field public bouncyLevelBounds BouncyLevelBounds
 --- @field public bubbleDeath integer
 --- @field public enableCheats integer
 --- @field public enablePlayerList integer

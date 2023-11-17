@@ -316,6 +316,7 @@ struct MarioBodyState
     /*????*/ f32 lightingDirX;
     /*????*/ f32 lightingDirY;
     /*????*/ f32 lightingDirZ;
+    /*????*/ u8 allowPartRotation;
     // u8 padding[4];
 };
 
