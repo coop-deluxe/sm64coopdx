@@ -35,6 +35,9 @@ bool first_person_check_cancels(void) {
     if (m->action == ACT_FIRST_PERSON || m->action == ACT_IN_CANNON || m->action == ACT_READING_NPC_DIALOG || m->action == ACT_DISAPPEARED) {
         return true;
     }
+
+    if (gLuaLoadingMod != NULL) { return false; }
+
     struct Object *bowser = find_object_with_behavior(bhvBowser);
     if (bowser != NULL && (bowser->oAction == 5 || bowser->oAction == 6)) {
         return true;
