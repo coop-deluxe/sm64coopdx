@@ -3193,7 +3193,7 @@ void update_camera(struct Camera *c) {
     gCamera = c;
     update_camera_hud_status(c);
 
-    if ((gOverrideFreezeCamera || first_person_update()) && !gDjuiInMainMenu) {
+    if ((gOverrideFreezeCamera || get_first_person_enabled()) && !gDjuiInMainMenu) {
         return;
     }
 

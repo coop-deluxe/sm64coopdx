@@ -141,13 +141,13 @@ void first_person_camera_update(void) {
     gFOVState.fov = gFirstPersonCamera.fov;
 }
 
-bool first_person_update(void) {
+void first_person_update(void) {
     if (gFirstPersonCamera.enabled && !gDjuiInMainMenu) {
-        struct MarioState *m = &gMarioStates[0];
-
         // check cancels
         bool cancel = first_person_check_cancels();
-        if (cancel) { return false; }
+        if (cancel) { return; }
+
+        struct MarioState *m = &gMarioStates[0];
 
         if (m->action == ACT_SHOT_FROM_CANNON && m->area->camera->mode == CAMERA_MODE_INSIDE_CANNON) {
             gFirstPersonCamera.yaw = m->faceAngle[1] + 0x8000;
@@ -169,13 +169,9 @@ bool first_person_update(void) {
         }
 
         first_person_camera_update();
-
-        return true;
     } else if (!camera_config_is_mouse_look_enabled()) {
         gDjuiHudLockMouse = false;
     }
-
-    return false;
 }
 
 void first_person_reset(void) {
