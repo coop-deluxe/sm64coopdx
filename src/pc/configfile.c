@@ -601,10 +601,10 @@ NEXT_OPTION:
 }
 
 void configfile_load(void) {
-#ifdef DEVELOPMENT
-    configfile_load_internal(configfile_name(), NULL);
-#else
     bool configReadError = false;
+#ifdef DEVELOPMENT
+    configfile_load_internal(configfile_name(), &configReadError);
+#else
     configfile_load_internal(configfile_name(), &configReadError);
     if (configReadError) {
         configfile_load_internal(configfile_backup_name(), &configReadError);
