@@ -602,12 +602,16 @@ NEXT_OPTION:
 
 void configfile_load(void) {
     bool configReadError = false;
+#ifdef DEVELOPMENT
+    configfile_load_internal(configfile_name(), &configReadError);
+#else
     configfile_load_internal(configfile_name(), &configReadError);
     if (configReadError) {
         configfile_load_internal(configfile_backup_name(), &configReadError);
     } else {
         configfile_save(configfile_backup_name());
     }
+#endif
 }
 
 // Writes the config file to 'filename'

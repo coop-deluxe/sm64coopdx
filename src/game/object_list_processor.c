@@ -20,6 +20,7 @@
 #include "platform_displacement.h"
 #include "profiler.h"
 #include "spawn_object.h"
+#include "first_person_cam.h"
 #include "engine/math_util.h"
 #include "pc/network/network.h"
 #include "pc/lua/smlua.h"
@@ -292,6 +293,8 @@ void bhv_mario_update(void) {
     smlua_call_event_hooks_mario_param(HOOK_MARIO_UPDATE, gMarioState);
     particleFlags |= gMarioState->particleFlags;
     gCurrentObject->oMarioParticleFlags = particleFlags;
+
+    if (stateIndex == 0) { first_person_update(); }
 
     // This code is meant to preserve old Lua mods' ability to set overridePaletteIndex and paletteIndex and still work
     // as they expected. USE_REAL_PALETTE_VAR is meant to help support cases where mods will do:

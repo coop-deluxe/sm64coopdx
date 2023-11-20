@@ -1,3 +1,4 @@
+#include "geo_header.h"
 // Normal Mario Geo
 
 // 0x170002E0

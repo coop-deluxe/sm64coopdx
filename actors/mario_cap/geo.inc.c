@@ -1,3 +1,4 @@
+#include "geo_header.h"
 // 0x16000CA4
 const GeoLayout marios_cap_geo[] = {
    GEO_NODE_START(),

@@ -13867,6 +13867,25 @@ int smlua_func_level_trigger_warp(lua_State* L) {
     return 1;
 }
 
+int smlua_func_lvl_set_current_level(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "lvl_set_current_level", 2, top);
+        return 0;
+    }
+
+    s16 arg0 = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "lvl_set_current_level"); return 0; }
+    s32 levelNum = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "lvl_set_current_level"); return 0; }
+
+    lua_pushinteger(L, lvl_set_current_level(arg0, levelNum));
+
+    return 1;
+}
+
 int smlua_func_warp_special(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -32084,6 +32103,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "get_painting_warp_node", smlua_func_get_painting_warp_node);
     smlua_bind_function(L, "initiate_painting_warp", smlua_func_initiate_painting_warp);
     smlua_bind_function(L, "level_trigger_warp", smlua_func_level_trigger_warp);
+    smlua_bind_function(L, "lvl_set_current_level", smlua_func_lvl_set_current_level);
     smlua_bind_function(L, "warp_special", smlua_func_warp_special);
 
     // mario.h

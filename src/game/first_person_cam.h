@@ -19,7 +19,7 @@ extern struct FirstPersonCamera gFirstPersonCamera;
 bool get_first_person_enabled(void);
 void set_first_person_enabled(bool enable);
 
-bool first_person_update(void);
+void first_person_update(void);
 void first_person_reset(void);
 
 #endif

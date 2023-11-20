@@ -41,6 +41,7 @@
     - [enum MarioHandGSCId](#enum-MarioHandGSCId)
 - [mod_storage.h](#mod_storageh)
 - [network.h](#networkh)
+    - [enum BouncyLevelBounds](#enum-BouncyLevelBounds)
     - [enum NetworkSystemType](#enum-NetworkSystemType)
     - [enum PlayerInteractions](#enum-PlayerInteractions)
 - [network_player.h](#network_playerh)
@@ -1427,6 +1428,14 @@
 - TIMER_CONTROL_SHOW
 - TIMER_CONTROL_START
 - TIMER_CONTROL_STOP
+- WARP_NODE_CREDITS_END
+- WARP_NODE_CREDITS_MIN
+- WARP_NODE_CREDITS_NEXT
+- WARP_NODE_CREDITS_START
+- WARP_NODE_DEATH
+- WARP_NODE_F0
+- WARP_NODE_F2
+- WARP_NODE_WARP_FLOOR
 - WARP_OP_CREDITS_END
 - WARP_OP_CREDITS_NEXT
 - WARP_OP_CREDITS_START
@@ -1961,6 +1970,13 @@
 ## [network.h](#network.h)
 - PACKET_LENGTH
 - SYNC_DISTANCE_INFINITE
+
+### [enum BouncyLevelBounds](#BouncyLevelBounds)
+| Identifier | Value |
+| :--------- | :---- |
+| BOUNCY_LEVEL_BOUNDS_OFF | 0 |
+| BOUNCY_LEVEL_BOUNDS_ON | 1 |
+| BOUNCY_LEVEL_BOUNDS_ON_CAP | 2 |
 
 ### [enum NetworkSystemType](#NetworkSystemType)
 | Identifier | Value |
