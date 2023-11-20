@@ -355,7 +355,7 @@ bool sync_object_should_own(u32 syncId) {
 
     // check distance
     for (s32 i = 0; i < MAX_PLAYERS; i++) {
-        if (i != 0 && !is_player_active(&gMarioStates[i])) { continue; }
+        if (i != 0 && !is_player_in_local_area(&gMarioStates[i])) { continue; }
         if (player_distance(&gMarioStates[0], so->o) > player_distance(&gMarioStates[i], so->o)) { return false; }
     }
 

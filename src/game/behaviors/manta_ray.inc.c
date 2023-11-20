@@ -89,12 +89,12 @@ static void manta_ray_act_spawn_ring(void) {
     struct Object *ringManager = o->parentObj;
     struct Object *ring;
 
-    if (o->oTimer == 300) {
+    if (!sync_object_is_owned_locally(o->oSyncID)) { return; }
+
+    if (o->oTimer >= 300) {
         o->oTimer = 0;
     }
     
-    if (!sync_object_is_owned_locally(o->oSyncID)) { return; }
-
     if (o->oTimer == 0 || o->oTimer == 50 || o->oTimer == 150 || o->oTimer == 200 || o->oTimer == 250) {
         ring = spawn_object(o, MODEL_WATER_RING, bhvMantaRayWaterRing);
         if (ring != NULL) {
