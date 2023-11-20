@@ -1139,14 +1139,14 @@
 <br />
 
 - network_player.h
-   - [get_network_player_from_area](functions-4.md#get_network_player_from_area)
-   - [get_network_player_from_level](functions-4.md#get_network_player_from_level)
-   - [get_network_player_smallest_global](functions-4.md#get_network_player_smallest_global)
-   - [network_player_color_to_palette](functions-4.md#network_player_color_to_palette)
-   - [network_player_connected_count](functions-4.md#network_player_connected_count)
-   - [network_player_from_global_index](functions-4.md#network_player_from_global_index)
-   - [network_player_palette_to_color](functions-4.md#network_player_palette_to_color)
-   - [network_player_set_description](functions-4.md#network_player_set_description)
+   - [get_network_player_from_area](functions-3.md#get_network_player_from_area)
+   - [get_network_player_from_level](functions-3.md#get_network_player_from_level)
+   - [get_network_player_smallest_global](functions-3.md#get_network_player_smallest_global)
+   - [network_player_color_to_palette](functions-3.md#network_player_color_to_palette)
+   - [network_player_connected_count](functions-3.md#network_player_connected_count)
+   - [network_player_from_global_index](functions-3.md#network_player_from_global_index)
+   - [network_player_palette_to_color](functions-3.md#network_player_palette_to_color)
+   - [network_player_set_description](functions-3.md#network_player_set_description)
 
 <br />
 
@@ -1732,7 +1732,7 @@
 
 - smlua_text_utils.h
    - [smlua_text_utils_act_name_get](functions-5.md#smlua_text_utils_act_name_get)
-   - [smlua_text_utils_act_name_is_modified](functions-5.md#smlua_text_utils_act_name_is_modified)
+   - [smlua_text_utils_act_name_mod_index](functions-5.md#smlua_text_utils_act_name_mod_index)
    - [smlua_text_utils_act_name_replace](functions-5.md#smlua_text_utils_act_name_replace)
    - [smlua_text_utils_act_name_reset](functions-5.md#smlua_text_utils_act_name_reset)
    - [smlua_text_utils_castle_secret_stars_replace](functions-5.md#smlua_text_utils_castle_secret_stars_replace)

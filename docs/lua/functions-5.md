@@ -2583,10 +2583,10 @@
 
 <br />
 
-## [smlua_text_utils_act_name_is_modified](#smlua_text_utils_act_name_is_modified)
+## [smlua_text_utils_act_name_mod_index](#smlua_text_utils_act_name_mod_index)
 
 ### Lua Example
-`local booleanValue = smlua_text_utils_act_name_is_modified(courseNum, actNum)`
+`local integerValue = smlua_text_utils_act_name_mod_index(courseNum, actNum)`
 
 ### Parameters
 | Field | Type |
@@ -2595,10 +2595,10 @@
 | actNum | `integer` |
 
 ### Returns
-- `boolean`
+- `integer`
 
 ### C Prototype
-`bool smlua_text_utils_act_name_is_modified(s16 courseNum, u8 actNum);`
+`s32 smlua_text_utils_act_name_mod_index(s16 courseNum, u8 actNum);`
 
 [:arrow_up_small:](#)
 

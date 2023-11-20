@@ -9,7 +9,7 @@
 struct ActName {
     char name[256];
     char orig[256];
-    bool isModified;
+    s32 modIndex;
 };
 
 struct CourseName {
@@ -18,6 +18,8 @@ struct CourseName {
     char orig[256];
     s32 modIndex;
 };
+
+extern struct CourseName *gReplacedActNameTable[];
 
 void smlua_text_utils_reset_all(void);
 void smlua_text_utils_dialog_replace(enum DialogId dialogId, u32 unused, s8 linesPerBox, s16 leftOffset, s16 width, const char* str);
@@ -29,7 +31,7 @@ s32 smlua_text_utils_course_name_mod_index(s16 courseNum);
 void smlua_text_utils_course_name_reset(s16 courseNum);
 void smlua_text_utils_act_name_replace(s16 courseNum, u8 actNum, const char* name);
 const char* smlua_text_utils_act_name_get(s16 courseNum, u8 actNum);
-bool smlua_text_utils_act_name_is_modified(s16 courseNum, u8 actNum);
+s32 smlua_text_utils_act_name_mod_index(s16 courseNum, u8 actNum);
 void smlua_text_utils_act_name_reset(s16 courseNum, u8 actNum);
 void smlua_text_utils_castle_secret_stars_replace(const char* name);
 void smlua_text_utils_extra_text_replace(s16 index, const char* text);

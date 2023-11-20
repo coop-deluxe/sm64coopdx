@@ -9271,8 +9271,8 @@ end
 
 --- @param courseNum integer
 --- @param actNum integer
---- @return boolean
-function smlua_text_utils_act_name_is_modified(courseNum, actNum)
+--- @return integer
+function smlua_text_utils_act_name_mod_index(courseNum, actNum)
     -- ...
 end
 

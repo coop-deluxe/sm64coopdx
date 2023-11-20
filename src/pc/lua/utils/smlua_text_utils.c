@@ -33,11 +33,11 @@ AT_STARTUP static void smlua_text_utils_init() {
     char courseBuffer[50];
     char actBuffer[50];
 
+    // Course/Star names
     for (s16 courseNum = 0; courseNum < COURSE_END; courseNum++) {
-        const u8 *courseName = segmented_to_virtual(courseNameTbl[courseNum]);
-        convert_string_sm64_to_ascii(courseBuffer, courseName);
         gReplacedActNameTable[courseNum] = malloc(sizeof(struct CourseName));
         struct CourseName* courseActNames = gReplacedActNameTable[courseNum];
+        convert_string_sm64_to_ascii(courseBuffer, segmented_to_virtual(courseNameTbl[courseNum]));
         snprintf(courseActNames->name, 50, "%s", courseBuffer);
         snprintf(courseActNames->orig, 50, "%s", courseBuffer);
         courseActNames->modIndex = -1;
@@ -46,11 +46,10 @@ AT_STARTUP static void smlua_text_utils_init() {
         if (COURSE_IS_MAIN_COURSE(courseNum)) {
             courseActNames->actName = calloc(MAX_ACTS, sizeof(struct ActName));
             for (s16 actNum = 0; actNum < MAX_ACTS; actNum++) {
-                const u8 *starName = segmented_to_virtual(actNameTbl[courseNum * MAX_ACTS + actNum]);
-                convert_string_sm64_to_ascii(actBuffer, starName);
+                convert_string_sm64_to_ascii(actBuffer, segmented_to_virtual(actNameTbl[courseNum * MAX_ACTS + actNum]));
                 snprintf(courseActNames->actName[actNum].name, 50, "%s", actBuffer);
                 snprintf(courseActNames->actName[actNum].orig, 50, "%s", actBuffer);
-                courseActNames->actName[actNum].isModified = false;
+                courseActNames->actName[actNum].modIndex = -1;
             }
         }
     }
@@ -138,7 +137,7 @@ void smlua_text_utils_reset_all(void) {
         if (COURSE_IS_MAIN_COURSE(courseNum)) {
             for (s16 actNum = 0; actNum < MAX_ACTS; actNum++) {
                 snprintf(courseActNames->actName[actNum].name, 50, "%s", courseActNames->actName[actNum].orig);
-                courseActNames->actName[actNum].isModified = false;
+                courseActNames->actName[actNum].modIndex = -1;
             }
         }
     }
@@ -187,7 +186,7 @@ void smlua_text_utils_course_acts_replace(s16 courseNum, const char* courseName,
 
 #define REPLACE_ACT_NAME(i) \
     snprintf(courseActNames->actName[i-1].name, 256, "%s", act##i); \
-    courseActNames->actName[i-1].isModified = true; \
+    courseActNames->actName[i-1].modIndex = gLuaActiveMod->index; \
 
     REPLACE_ACT_NAME(1);
     REPLACE_ACT_NAME(2);
@@ -231,7 +230,7 @@ void smlua_text_utils_act_name_replace(s16 courseNum, u8 actNum, const char* nam
     struct CourseName* courseActNames = gReplacedActNameTable[courseNum];
 
     snprintf(courseActNames->actName[actNum].name, 256, "%s", name);
-    courseActNames->actName[actNum].isModified = true;
+    courseActNames->actName[actNum].modIndex = gLuaActiveMod->index;
 }
 
 const char* smlua_text_utils_act_name_get(s16 courseNum, u8 actNum) {
@@ -240,10 +239,10 @@ const char* smlua_text_utils_act_name_get(s16 courseNum, u8 actNum) {
     return gReplacedActNameTable[courseNum]->actName[actNum].name;
 }
 
-bool smlua_text_utils_act_name_is_modified(s16 courseNum, u8 actNum) {
+s32 smlua_text_utils_act_name_mod_index(s16 courseNum, u8 actNum) {
     if (INVALID_COURSE_NUM(courseNum) || actNum >= MAX_ACTS) { return false; }
 
-    return gReplacedActNameTable[courseNum]->actName[actNum].isModified;
+    return gReplacedActNameTable[courseNum]->actName[actNum].modIndex;
 }
 
 void smlua_text_utils_act_name_reset(s16 courseNum, u8 actNum) {
@@ -251,7 +250,7 @@ void smlua_text_utils_act_name_reset(s16 courseNum, u8 actNum) {
 
     struct CourseName* courseActNames = gReplacedActNameTable[courseNum];
     snprintf(courseActNames->actName[actNum].name, 50, "%s", courseActNames->actName[actNum].orig);
-    courseActNames->actName[actNum].isModified = false;
+    courseActNames->actName[actNum].modIndex = gLuaActiveMod->index;
 }
 
 void smlua_text_utils_secret_star_replace(s16 courseNum, const char* courseName) {

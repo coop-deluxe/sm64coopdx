@@ -187,8 +187,6 @@ void *get_act_name_table() {
     return actNameTbl;
 }
 
-extern struct CourseName *gReplacedActNameTable[];
-
 const char *get_level_name_ascii(s16 courseNum, s16 levelNum, s16 areaIndex, s16 charCase) {
     static char output[256];
 
@@ -207,7 +205,7 @@ const char *get_level_name_ascii(s16 courseNum, s16 levelNum, s16 areaIndex, s16
     }
 
     else if (!hasCustomName) {
-        if (COURSE_IS_VALID_COURSE(courseNum)) {
+        if (courseNum >= COURSE_MIN && courseNum < COURSE_MAX) {
             void **courseNameTbl = get_course_name_table();
             const u8 *courseName = segmented_to_virtual(courseNameTbl[courseNum - COURSE_BOB]);
             convert_string_sm64_to_ascii(output, courseName + 3);
@@ -264,7 +262,7 @@ const char *get_star_name_ascii(s16 courseNum, s16 starNum, s16 charCase) {
     s16 starIndex = starNum - 1;
     if (starIndex >= 0 && starIndex < MAX_ACTS &&
         courseNum >= 0 && courseNum < COURSE_END &&
-        gReplacedActNameTable[courseNum]->actName && gReplacedActNameTable[courseNum]->actName[starIndex].isModified) {
+        gReplacedActNameTable[courseNum]->actName && gReplacedActNameTable[courseNum]->actName[starIndex].modIndex != -1) {
         snprintf(output, 256, "%s", gReplacedActNameTable[courseNum]->actName[starIndex].name);
     }
 

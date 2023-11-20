@@ -30338,21 +30338,21 @@ int smlua_func_smlua_text_utils_act_name_get(lua_State* L) {
     return 1;
 }
 
-int smlua_func_smlua_text_utils_act_name_is_modified(lua_State* L) {
+int smlua_func_smlua_text_utils_act_name_mod_index(lua_State* L) {
     if (L == NULL) { return 0; }
 
     int top = lua_gettop(L);
     if (top != 2) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "smlua_text_utils_act_name_is_modified", 2, top);
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "smlua_text_utils_act_name_mod_index", 2, top);
         return 0;
     }
 
     s16 courseNum = smlua_to_integer(L, 1);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "smlua_text_utils_act_name_is_modified"); return 0; }
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "smlua_text_utils_act_name_mod_index"); return 0; }
     u8 actNum = smlua_to_integer(L, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "smlua_text_utils_act_name_is_modified"); return 0; }
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "smlua_text_utils_act_name_mod_index"); return 0; }
 
-    lua_pushboolean(L, smlua_text_utils_act_name_is_modified(courseNum, actNum));
+    lua_pushinteger(L, smlua_text_utils_act_name_mod_index(courseNum, actNum));
 
     return 1;
 }
@@ -32931,7 +32931,7 @@ void smlua_bind_functions_autogen(void) {
 
     // smlua_text_utils.h
     smlua_bind_function(L, "smlua_text_utils_act_name_get", smlua_func_smlua_text_utils_act_name_get);
-    smlua_bind_function(L, "smlua_text_utils_act_name_is_modified", smlua_func_smlua_text_utils_act_name_is_modified);
+    smlua_bind_function(L, "smlua_text_utils_act_name_mod_index", smlua_func_smlua_text_utils_act_name_mod_index);
     smlua_bind_function(L, "smlua_text_utils_act_name_replace", smlua_func_smlua_text_utils_act_name_replace);
     smlua_bind_function(L, "smlua_text_utils_act_name_reset", smlua_func_smlua_text_utils_act_name_reset);
     smlua_bind_function(L, "smlua_text_utils_castle_secret_stars_replace", smlua_func_smlua_text_utils_castle_secret_stars_replace);
