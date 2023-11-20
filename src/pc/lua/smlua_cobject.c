@@ -604,54 +604,47 @@ void smlua_cobject_init_globals(void) {
     }
 
     {
-        smlua_push_object(L, LOT_GLOBALTEXTURES, &gGlobalTextures);
-        lua_setglobal(L, "gTextures");
+        lua_newtable(L);
+        int t = lua_gettop(gLuaState);
+        for (s32 i = 0; i < PALETTE_PRESET_MAX; i++) {
+            lua_pushinteger(L, i);
+            smlua_push_object(L, LOT_PLAYERPALETTE, &gPalettePresets[i]);
+            lua_settable(L, t);
+        }
+        lua_setglobal(L, "gPalettePresets");
     }
 
-    {
-        smlua_push_object(L, LOT_GLOBALOBJECTANIMATIONS, &gGlobalObjectAnimations);
-        lua_setglobal(L, "gObjectAnimations");
-    }
+#define EXPOSE_GLOBAL(lot, ptr) \
+    { \
+        smlua_push_object(L, lot, &ptr); \
+        lua_setglobal(L, #ptr); \
+    } \
 
-    {
-        smlua_push_object(L, LOT_GLOBALOBJECTCOLLISIONDATA, &gGlobalObjectCollisionData);
-        lua_setglobal(L, "gGlobalObjectCollisionData");
-    }
+#define EXPOSE_GLOBAL_WITH_NAME(lot, ptr, name) \
+    { \
+        smlua_push_object(L, lot, &ptr); \
+        lua_setglobal(L, name); \
+    } \
 
-    {
-        smlua_push_object(L, LOT_LAKITUSTATE, &gLakituState);
-        lua_setglobal(L, "gLakituState");
-    }
+    EXPOSE_GLOBAL_WITH_NAME(LOT_GLOBALTEXTURES, gGlobalTextures, "gTextures");
 
-    {
-        smlua_push_object(L, LOT_SERVERSETTINGS, &gServerSettings);
-        lua_setglobal(L, "gServerSettings");
-    }
+    EXPOSE_GLOBAL_WITH_NAME(LOT_GLOBALOBJECTANIMATIONS, gGlobalObjectAnimations, "gObjectAnimations");
 
-    {
-        smlua_push_object(L, LOT_NAMETAGSSETTINGS, &gNametagsSettings);
-        lua_setglobal(L, "gNametagsSettings");
-    }
+    EXPOSE_GLOBAL(LOT_PAINTINGVALUES, gPaintingValues);
 
-    {
-        smlua_push_object(L, LOT_LEVELVALUES, &gLevelValues);
-        lua_setglobal(L, "gLevelValues");
-    }
+    EXPOSE_GLOBAL(LOT_GLOBALOBJECTCOLLISIONDATA, gGlobalObjectCollisionData); // I wish we named this gObjectCollisionData
 
-    {
-        smlua_push_object(L, LOT_BEHAVIORVALUES, &gBehaviorValues);
-        lua_setglobal(L, "gBehaviorValues");
-    }
+    EXPOSE_GLOBAL(LOT_LEVELVALUES, gLevelValues);
 
-    {
-        smlua_push_object(L, LOT_PAINTINGVALUES, &gPaintingValues);
-        lua_setglobal(L, "gPaintingValues");
-    }
+    EXPOSE_GLOBAL(LOT_BEHAVIORVALUES, gBehaviorValues);
 
-    {
-        smlua_push_object(L, LOT_FIRSTPERSONCAMERA, &gFirstPersonCamera);
-        lua_setglobal(L, "gFirstPersonCamera");
-    }
+    EXPOSE_GLOBAL(LOT_FIRSTPERSONCAMERA, gFirstPersonCamera);
+
+    EXPOSE_GLOBAL(LOT_LAKITUSTATE, gLakituState);
+
+    EXPOSE_GLOBAL(LOT_SERVERSETTINGS, gServerSettings);
+
+    EXPOSE_GLOBAL(LOT_NAMETAGSSETTINGS, gNametagsSettings);
 }
 
 void smlua_cobject_init_per_file_globals(const char* path) {

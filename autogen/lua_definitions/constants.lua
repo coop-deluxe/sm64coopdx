@@ -9104,7 +9104,10 @@ HOOK_ON_HUD_RENDER_BEHIND = 36
 HOOK_ON_COLLIDE_LEVEL_BOUNDS = 37
 
 --- @type LuaHookedEventType
-HOOK_MAX = 38
+HOOK_MIRROR_MARIO_RENDER = 38
+
+--- @type LuaHookedEventType
+HOOK_MAX = 39
 
 --- @class HudDisplayFlags
 

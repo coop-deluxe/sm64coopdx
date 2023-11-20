@@ -916,6 +916,28 @@ bool smlua_call_event_hooks_mario_param_and_int_and_int_ret_int(enum LuaHookedEv
     return false;
 }
 
+void smlua_call_event_hooks_graph_node_object_and_int_param(enum LuaHookedEventType hookType, struct GraphNodeObject* node, s32 param) {
+    lua_State* L = gLuaState;
+    if (L == NULL) { return; }
+    struct LuaHookedEvent* hook = &sHookedEvents[hookType];
+    for (int i = 0; i < hook->count; i++) {
+        // push the callback onto the stack
+        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
+
+        // push graph node object
+        smlua_push_object(L, LOT_GRAPHNODEOBJECT, node);
+
+        // push param
+        lua_pushinteger(L, param);
+
+        // call the callback
+        if (0 != smlua_call_hook(L, 2, 0, 0, hook->mod[i])) {
+            LOG_LUA("Failed to call the callback: %u", hookType);
+            continue;
+        }
+    }
+}
+
   ////////////////////
  // hooked actions //
 ////////////////////
@@ -1554,7 +1576,7 @@ s32 sort_alphabetically(const void *a, const void *b) {
 }
 
 char** smlua_get_chat_player_list(void) {
-    char* playerNames[MAX_PLAYERS] = { NULL }; 
+    char* playerNames[MAX_PLAYERS] = { NULL };
     s32 playerCount = 0;
 
     for (s32 i = 0; i < MAX_PLAYERS; i++) {
@@ -1667,7 +1689,7 @@ bool smlua_maincommand_exists(const char* maincommand) {
         free(commands[j]);
     }
     free(commands);
-    
+
     return result;
 }
 
@@ -1692,7 +1714,7 @@ bool smlua_subcommand_exists(const char* maincommand, const char* subcommand) {
         free(subcommands[j]);
     }
     free(subcommands);
-    
+
     return result;
 }
 

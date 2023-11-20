@@ -25,6 +25,7 @@
 #include "hardcoded.h"
 #include "sound_init.h"
 #include "pc/network/network.h"
+#include "pc/lua/smlua_hooks.h"
 
 #define TOAD_STAR_1_REQUIREMENT gBehaviorValues.ToadStar1Requirement
 #define TOAD_STAR_2_REQUIREMENT gBehaviorValues.ToadStar2Requirement
@@ -705,6 +706,8 @@ Gfx* geo_render_mirror_mario(s32 callContext, struct GraphNode* node, UNUSED Mat
                     gMirrorMario[i].scale[0] *= -1.0f;
                     // TODO: does rendering the mirror room still crash?
                     gMirrorMario[i].node.flags |= GRAPH_RENDER_ACTIVE;
+
+                    smlua_call_event_hooks_graph_node_object_and_int_param(HOOK_MIRROR_MARIO_RENDER, &gMirrorMario[i], i);
                 } else {
                     gMirrorMario[i].node.flags &= ~GRAPH_RENDER_ACTIVE;
                 }
