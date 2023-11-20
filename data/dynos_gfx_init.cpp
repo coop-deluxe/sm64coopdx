@@ -2,6 +2,8 @@
 #include "src/pc/loading.h"
 
 void DynOS_Gfx_GeneratePacks(const char* directory) {
+    if (gIsThreaded) { REFRESH_MUTEX(snprintf(gCurrLoadingSegment.str, 256, "Generating DynOS Packs in path:\n\\#808080\\%s", directory)); }
+
     DIR *modsDir = opendir(directory);
     if (!modsDir) { return; }
 
@@ -57,6 +59,7 @@ static void ScanPacksFolder(SysPath _DynosPacksFolder) {
             // If pack folder exists, add it to the pack list
             SysPath _PackFolder = fstring("%s/%s", _DynosPacksFolder.c_str(), _DynosPacksEnt->d_name);
             if (fs_sys_dir_exists(_PackFolder.c_str())) {
+                if (gIsThreaded) { REFRESH_MUTEX(snprintf(gCurrLoadingSegment.str, 256, "Generating DynOS pack:\n\\#808080\\%s", _PackFolder.c_str())); }
                 DynOS_Pack_Add(_PackFolder);
                 DynOS_Actor_GeneratePack(_PackFolder);
                 DynOS_Tex_GeneratePack(_PackFolder, _PackFolder, false);
