@@ -1,25 +1,8 @@
 #include "dynos.cpp.h"
 extern "C" {
-#include "sm64.h"
 #include "level_commands.h"
 #include "game/level_update.h"
 #include "game/object_list_processor.h"
-extern s16 gMenuMode;
-extern s8 gDialogBoxState;
-#ifdef OMM_DEFINES_H
-extern void omm_opt_init();
-#endif
-}
-
-//
-// Main Menu
-//
-
-void DynOS_ReturnToMainMenu() {
-    level_set_transition(0, NULL);
-    gDialogBoxState = 0;
-    gMenuMode = -1;
-    fade_into_special_warp(-2, 0);
 }
 
 //

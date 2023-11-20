@@ -4,7 +4,6 @@ extern "C" {
 #include "game/save_file.h"
 #include "levels/scripts.h"
 #include "pc/lua/utils/smlua_level_utils.h"
-
 }
 
 //
@@ -15,6 +14,12 @@ extern "C" {
 extern const BehaviorScript *sWarpBhvSpawnTable[];
 #include "engine/level_script.h"
 }
+
+#define DYNOS_LEVEL_MOD_INDEX_VANILLA (-1)
+
+extern void *gDynosLevelScriptsOriginal[LEVEL_COUNT];
+
+void DynOS_Level_ParseScript(const void *aScript, s32 (*aPreprocessFunction)(u8, void *));
 
 //
 // Data
@@ -38,10 +43,7 @@ struct DynosLevelScript {
     s32 mModIndex;
 };
 
-#define DYNOS_LEVEL_MOD_INDEX_VANILLA (-1)
-
 static DynosLevelScript sDynosLevelScripts[LEVEL_COUNT] = { { NULL, DYNOS_LEVEL_MOD_INDEX_VANILLA } };
-extern void *gDynosLevelScriptsOriginal[LEVEL_COUNT];
 static Array<DynosWarp> sDynosLevelWarps[LEVEL_COUNT] = { Array<DynosWarp>() };
 
 u64 DynOS_Level_CmdGet(void *aCmd, u64 aOffset) {
@@ -55,8 +57,6 @@ LvlCmd *DynOS_Level_CmdNext(LvlCmd *aCmd) {
     return (LvlCmd*) (u64(aCmd) + _Offset);
 }
 
-void DynOS_Level_ParseScript(const void *aScript, s32 (*aPreprocessFunction)(u8, void *));
-
 //
 // Init
 //
@@ -66,28 +66,28 @@ static s32 DynOS_Level_PreprocessMasterScript(u8 aType, void *aCmd) {
     static s32 sDynosLevelNum = -1;
 
     if (sDynosScriptExecLevelTable) {
+        switch (aType) {
 
-        // JUMP_IF
-        if (aType == 0x0C) {
-            sDynosLevelNum = (s32) DynOS_Level_CmdGet(aCmd, 0x04);
-            return 0;
-        }
+            // JUMP_IF
+            case 0x0C: {
+                sDynosLevelNum = (s32) DynOS_Level_CmdGet(aCmd, 0x04);
+            } return 0;
 
-        // EXECUTE
-        if (aType == 0x00) {
-            void *_Script = (void *) DynOS_Level_CmdGet(aCmd, 0x0C);
-            if (sDynosLevelNum >= 0 && sDynosLevelNum < LEVEL_COUNT && !sDynosLevelScripts[sDynosLevelNum].mLevelScript) {
-                sDynosLevelScripts[sDynosLevelNum].mLevelScript = _Script;
-                sDynosLevelScripts[sDynosLevelNum].mModIndex = DYNOS_LEVEL_MOD_INDEX_VANILLA;
-                gDynosLevelScriptsOriginal[sDynosLevelNum] = _Script;
-            }
-            sDynosLevelNum = -1;
-            return 2;
-        }
+            // EXECUTE
+            case 0x00: {
+                void *_Script = (void *) DynOS_Level_CmdGet(aCmd, 0x0C);
+                if (sDynosLevelNum >= 0 && sDynosLevelNum < LEVEL_COUNT && !sDynosLevelScripts[sDynosLevelNum].mLevelScript) {
+                    sDynosLevelScripts[sDynosLevelNum].mLevelScript = _Script;
+                    sDynosLevelScripts[sDynosLevelNum].mModIndex = DYNOS_LEVEL_MOD_INDEX_VANILLA;
+                    gDynosLevelScriptsOriginal[sDynosLevelNum] = _Script;
+                }
+                sDynosLevelNum = -1;
+            } return 2;
 
-        // EXIT or SLEEP
-        if (aType == 0x02 || aType == 0x03) {
-            return 3;
+            // EXIT or SLEEP
+            case 0x02:
+            case 0x03:
+                return 3;
         }
     } else if (aType == 0x06) { // JUMP_LINK
         sDynosScriptExecLevelTable = true;
@@ -97,68 +97,63 @@ static s32 DynOS_Level_PreprocessMasterScript(u8 aType, void *aCmd) {
 }
 
 static s32 sDynosCurrentLevelNum;
+static u8 sDynosAreaIndex = 0;
+
+inline static DynosWarp *DynOS_Level_GetWarpStruct(u8 aId) {
+    for (s32 i = 0; i != sDynosLevelWarps[sDynosCurrentLevelNum].Count(); ++i) {
+        if (sDynosLevelWarps[sDynosCurrentLevelNum][i].mArea == sDynosAreaIndex &&
+            sDynosLevelWarps[sDynosCurrentLevelNum][i].mId == aId) {
+            return &sDynosLevelWarps[sDynosCurrentLevelNum][i];
+        }
+    }
+    DynosWarp _Warp;
+    _Warp.mArea = sDynosAreaIndex;
+    _Warp.mId = aId;
+    sDynosLevelWarps[sDynosCurrentLevelNum].Add(_Warp);
+    return &sDynosLevelWarps[sDynosCurrentLevelNum][sDynosLevelWarps[sDynosCurrentLevelNum].Count() - 1];
+};
+
 static s32 DynOS_Level_PreprocessScript(u8 aType, void *aCmd) {
-    static u8 sDynosAreaIndex = 0;
-    static auto _GetWarpStruct = [](u8 aArea, u8 aId) -> DynosWarp * {
-        for (s32 i = 0; i != sDynosLevelWarps[sDynosCurrentLevelNum].Count(); ++i) {
-            if (sDynosLevelWarps[sDynosCurrentLevelNum][i].mArea == aArea &&
-                sDynosLevelWarps[sDynosCurrentLevelNum][i].mId == aId) {
-                return &sDynosLevelWarps[sDynosCurrentLevelNum][i];
-            }
-        }
-        DynosWarp _Warp;
-        _Warp.mArea = aArea;
-        _Warp.mId = aId;
-        sDynosLevelWarps[sDynosCurrentLevelNum].Add(_Warp);
-        return &sDynosLevelWarps[sDynosCurrentLevelNum][sDynosLevelWarps[sDynosCurrentLevelNum].Count() - 1];
-    };
+    switch (aType) {
 
-    // AREA
-    if (aType == 0x1F) {
-        sDynosAreaIndex = (u8) DynOS_Level_CmdGet(aCmd, 2);
-    }
+        // AREA
+        case 0x1F: {
+            sDynosAreaIndex = (u8) DynOS_Level_CmdGet(aCmd, 2);
+        } break;
 
-    // OBJECT
-    else if (aType == 0x24) {
-        const BehaviorScript *bhv = (const BehaviorScript *) DynOS_Level_CmdGet(aCmd, 20);
-        for (s32 i = 0; i < 20; ++i) {
-            if (sWarpBhvSpawnTable[i] == bhv) {
-                DynosWarp *_Warp = _GetWarpStruct(sDynosAreaIndex, ((((u32) DynOS_Level_CmdGet(aCmd, 16)) >> 16) & 0xFF));
-                if (_Warp->mType == -1) {
-                    _Warp->mType = i;
-                    _Warp->mPosX = (s16) DynOS_Level_CmdGet(aCmd, 4);
-                    _Warp->mPosY = (s16) DynOS_Level_CmdGet(aCmd, 6);
-                    _Warp->mPosZ = (s16) DynOS_Level_CmdGet(aCmd, 8);
-                    _Warp->mAngle = (s16)((((s32)((s16) DynOS_Level_CmdGet(aCmd, 12))) * 0x8000) / 180);
+        // OBJECT
+        case 0x24: {
+            const BehaviorScript *bhv = (const BehaviorScript *) DynOS_Level_CmdGet(aCmd, 20);
+            for (s32 i = 0; i < 20; ++i) {
+                if (sWarpBhvSpawnTable[i] == bhv) {
+                    DynosWarp *_Warp = DynOS_Level_GetWarpStruct(((((u32) DynOS_Level_CmdGet(aCmd, 16)) >> 16) & 0xFF));
+                    if (_Warp->mType == -1) {
+                        _Warp->mType = i;
+                        _Warp->mPosX = (s16) DynOS_Level_CmdGet(aCmd, 4);
+                        _Warp->mPosY = (s16) DynOS_Level_CmdGet(aCmd, 6);
+                        _Warp->mPosZ = (s16) DynOS_Level_CmdGet(aCmd, 8);
+                        _Warp->mAngle = ((s16) DynOS_Level_CmdGet(aCmd, 12) * 0x8000) / 180;
+                    }
+                    break;
                 }
-                break;
             }
-        }
-    }
+        } break;
 
-    // WARP_NODE
-    else if (aType == 0x26) {
-        DynosWarp *_Warp = _GetWarpStruct(sDynosAreaIndex, (u8) DynOS_Level_CmdGet(aCmd, 2));
-        if (_Warp->mDestLevel == 0) {
-            _Warp->mDestLevel = (u8) DynOS_Level_CmdGet(aCmd, 3);
-            _Warp->mDestArea = (u8) DynOS_Level_CmdGet(aCmd, 4);
-            _Warp->mDestId = (u8) DynOS_Level_CmdGet(aCmd, 5);
-        }
-    }
+        // WARP_NODE or PAINTING_WARP_NODE
+        case 0x26:
+        case 0x27: {
+            DynosWarp *_Warp = DynOS_Level_GetWarpStruct((u8) DynOS_Level_CmdGet(aCmd, 2));
+            if (_Warp->mDestLevel == 0) {
+                _Warp->mDestLevel = (u8) DynOS_Level_CmdGet(aCmd, 3);
+                _Warp->mDestArea = (u8) DynOS_Level_CmdGet(aCmd, 4);
+                _Warp->mDestId = (u8) DynOS_Level_CmdGet(aCmd, 5);
+            }
+        } break;
 
-    // PAINTING_WARP_NODE
-    else if (aType == 0x27) {
-        DynosWarp *_Warp = _GetWarpStruct(sDynosAreaIndex, (u8) DynOS_Level_CmdGet(aCmd, 2));
-        if (_Warp->mDestLevel == 0) {
-            _Warp->mDestLevel = (u8) DynOS_Level_CmdGet(aCmd, 3);
-            _Warp->mDestArea = (u8) DynOS_Level_CmdGet(aCmd, 4);
-            _Warp->mDestId = (u8) DynOS_Level_CmdGet(aCmd, 5);
-        }
-    }
-
-    // SLEEP or SLEEP_BEFORE_EXIT
-    else if (aType == 0x03 || aType == 0x04) {
-        return 3;
+        // SLEEP or SLEEP_BEFORE_EXIT
+        case 0x03:
+        case 0x04:
+            return 3;
     }
 
     return 0;
@@ -170,7 +165,7 @@ void DynOS_Level_Init() {
     if (!sInited) {
 
         // Level warps
-        for (sDynosCurrentLevelNum = 0; sDynosCurrentLevelNum != LEVEL_COUNT; ++sDynosCurrentLevelNum) {
+        for (sDynosCurrentLevelNum = 0; sDynosCurrentLevelNum < LEVEL_COUNT; ++sDynosCurrentLevelNum) {
             sDynosLevelScripts[sDynosCurrentLevelNum].mLevelScript = gDynosLevelScriptsOriginal[sDynosCurrentLevelNum];
             sDynosLevelScripts[sDynosCurrentLevelNum].mModIndex = DYNOS_LEVEL_MOD_INDEX_VANILLA;
             if (sDynosLevelScripts[sDynosCurrentLevelNum].mLevelScript) {
@@ -353,18 +348,18 @@ void DynOS_Level_ParseScript(const void *aScript, s32 (*aPreprocessFunction)(u8,
         switch (_Action) {
             case 0:
                 switch (_CmdType) {
-                    case 0x00: _Cmd = DynOS_Level_CmdExecute(_Stack, _Cmd); break;
-                    case 0x01: _Cmd = DynOS_Level_CmdExitAndExecute(_Stack, _Cmd); break;
-                    case 0x02: _Cmd = DynOS_Level_CmdExit(_Stack, _Cmd); break;
-                    case 0x05: _Cmd = DynOS_Level_CmdJump(_Stack, _Cmd); break;
-                    case 0x06: _Cmd = DynOS_Level_CmdJumpLink(_Stack, _Cmd); break;
-                    case 0x07: _Cmd = DynOS_Level_CmdReturn(_Stack, _Cmd); break;
+                    case 0x00: _Cmd = DynOS_Level_CmdExecute(_Stack, _Cmd);         break;
+                    case 0x01: _Cmd = DynOS_Level_CmdExitAndExecute(_Stack, _Cmd);  break;
+                    case 0x02: _Cmd = DynOS_Level_CmdExit(_Stack, _Cmd);            break;
+                    case 0x05: _Cmd = DynOS_Level_CmdJump(_Stack, _Cmd);            break;
+                    case 0x06: _Cmd = DynOS_Level_CmdJumpLink(_Stack, _Cmd);        break;
+                    case 0x07: _Cmd = DynOS_Level_CmdReturn(_Stack, _Cmd);          break;
                     case 0x08: _Cmd = DynOS_Level_CmdJumpLinkPushArg(_Stack, _Cmd); break;
-                    case 0x09: _Cmd = DynOS_Level_CmdJumpRepeat(_Stack, _Cmd); break;
-                    case 0x0A: _Cmd = DynOS_Level_CmdLoopBegin(_Stack, _Cmd); break;
-                    case 0x0B: _Cmd = DynOS_Level_CmdLoopUntil(_Stack, _Cmd); break;
-                    case 0x0C: _Cmd = DynOS_Level_CmdJumpIf(_Stack, _Cmd); break;
-                    case 0x0D: _Cmd = DynOS_Level_CmdJumpLinkIf(_Stack, _Cmd); break;
+                    case 0x09: _Cmd = DynOS_Level_CmdJumpRepeat(_Stack, _Cmd);      break;
+                    case 0x0A: _Cmd = DynOS_Level_CmdLoopBegin(_Stack, _Cmd);       break;
+                    case 0x0B: _Cmd = DynOS_Level_CmdLoopUntil(_Stack, _Cmd);       break;
+                    case 0x0C: _Cmd = DynOS_Level_CmdJumpIf(_Stack, _Cmd);          break;
+                    case 0x0D: _Cmd = DynOS_Level_CmdJumpLinkIf(_Stack, _Cmd);      break;
 
                     // coop
                     case 0x42: _Cmd = DynOS_Level_CmdJumpArea(_Stack, _Cmd, aPreprocessFunction); break;
