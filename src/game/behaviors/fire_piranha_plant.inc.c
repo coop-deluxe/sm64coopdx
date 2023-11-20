@@ -10,11 +10,6 @@ struct ObjectHitbox sFirePiranhaPlantHitbox = {
     /* hurtboxHeight:     */ 150,
 };
 
-f32 D_80331B5C[] = {
-    0.5f,
-    2.0f,
-};
-
 struct ObjectHitbox sPiranhaPlantFireHitbox = {
     /* interactType:      */ INTERACT_FLAME,
     /* downOffset:        */ 10,
@@ -30,11 +25,15 @@ struct ObjectHitbox sPiranhaPlantFireHitbox = {
 s32 sNumActiveFirePiranhaPlants;
 s32 sNumKilledFirePiranhaPlants;
 
+inline static u8 is_giant_fire_piranha_plant() {
+    return (o->oBehParams & 0x00FF0000) != 0;
+}
+
 void bhv_fire_piranha_plant_init(void) {
-    o->oFirePiranhaPlantNeutralScale = D_80331B5C[(u16)(o->oBehParams >> 16)];
+    o->oFirePiranhaPlantNeutralScale = (is_giant_fire_piranha_plant() ? 2.f : 0.5f);
     obj_set_hitbox(o, &sFirePiranhaPlantHitbox);
 
-    if ((u16)(o->oBehParams >> 16) != 0) {
+    if (is_giant_fire_piranha_plant()) {
         o->oFlags |= 0x00004000;
         o->oHealth = 1;
 
@@ -72,7 +71,7 @@ static void fire_piranha_plant_act_hide(void) {
             sNumActiveFirePiranhaPlants -= 1;
             o->oFirePiranhaPlantActive = FALSE;
 
-            if ((u16)(o->oBehParams >> 16) != 0 && o->oHealth == 0) {
+            if (is_giant_fire_piranha_plant() && o->oHealth == 0) {
                 if (++sNumKilledFirePiranhaPlants == 5) {
                     f32* starPos = gLevelValues.starPositions.BigPiranhasStarPos;
                     spawn_default_star(starPos[0], starPos[1], starPos[2]);
