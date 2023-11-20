@@ -723,7 +723,17 @@ s32 save_file_get_course_coin_score(s32 fileIndex, s32 courseIndex) {
     if (INVALID_FILE_INDEX(fileIndex)) { return 0; }
     if (INVALID_SRC_SLOT(gSaveFileUsingBackupSlot)) { return 0; }
     if (INVALID_COURSE_COIN_INDEX(courseIndex)) { return 0; }
-    return gSaveBuffer.files[fileIndex][gSaveFileUsingBackupSlot].courseCoinScores[courseIndex];
+    u8 coinScore = gSaveBuffer.files[fileIndex][gSaveFileUsingBackupSlot].courseCoinScores[courseIndex];
+
+    // sanity check - if we've collected 100 coin star... we have to have had at least 100
+    if (coinScore < 100) {
+        u8 stars = save_file_get_star_flags(fileIndex, courseIndex);
+        if ((stars & (1 << 6))) {
+            coinScore = 100;
+        }
+    }
+
+    return coinScore;
 }
 
 void save_file_set_course_coin_score(s32 fileIndex, s32 courseIndex, u8 coinScore) {

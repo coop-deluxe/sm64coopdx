@@ -98,7 +98,7 @@ void bhv_act_selector_star_type_loop(void) {
  * Renders the 100 coin star with an special star selector type.
  */
 void render_100_coin_star(u8 stars) {
-    if ((stars & (1 << 6)) && sStarSelectorModels[6]) {
+    if ((stars & (1 << 6))) {
         // If the 100 coin star has been collected, create a new star selector next to the coin score.
         sStarSelectorModels[6] = spawn_object_abs_with_rot(gCurrentObject, 0, MODEL_STAR,
                                                         bhvActSelectorStarType, 370, 24, -300, 0, 0, 0);
