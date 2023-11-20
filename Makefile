@@ -305,7 +305,7 @@ TARGET := sm64.$(VERSION)
 #   f3d_new - default for EU and Shindou versions
 #   f3dex   -
 #   f3dex2  -
-#   f3dex2e -
+#   f3dex2e - default for PC Port
 #   f3dzex  - newer, experimental microcode used in Animal Crossing
 $(eval $(call validate-option,GRUCODE,f3d_old f3dex f3dex2 f3dex2e f3d_new f3dzex))
 
@@ -381,28 +381,13 @@ endif
 
 ifeq ($(NON_MATCHING),1)
   DEFINES += NON_MATCHING=1 AVOID_UB=1
-  COMPARE := 0
 endif
-
-
-# COMPARE - whether to verify the SHA-1 hash of the ROM after building
-#   1 - verifies the SHA-1 hash of the selected version of the game
-#   0 - does not verify the hash
-COMPARE ?= 1
-$(eval $(call validate-option,COMPARE,0 1))
 
 ifeq ($(OSX_BUILD),0)
 	USE_APP := 0
 else ifeq ($(shell uname -m),arm64)
   DISCORD_SDK := 0
 endif
-
-TARGET_STRING := sm64.$(VERSION).$(GRUCODE)
-# If non-default settings were chosen, disable COMPARE
-ifeq ($(filter $(TARGET_STRING), sm64.jp.f3d_old sm64.us.f3d_old sm64.eu.f3d_new sm64.sh.f3d_new),)
-  COMPARE := 0
-endif
-
 
 # Whether to hide commands or not
 VERBOSE ?= 0
@@ -418,12 +403,6 @@ ifeq ($(filter clean distclean,$(MAKECMDGOALS)),)
   $(info ==== Build Options ====)
   $(info Version:        $(VERSION))
   $(info Microcode:      $(GRUCODE))
-  $(info Target:         $(TARGET))
-  ifeq ($(COMPARE),1)
-    $(info Compare ROM:    yes)
-  else
-    $(info Compare ROM:    no)
-  endif
   ifeq ($(NON_MATCHING),1)
     $(info Build Matching: no)
   else
@@ -499,12 +478,12 @@ BUILD_DIR_BASE := build
 BUILD_DIR := $(BUILD_DIR_BASE)/$(VERSION)_pc
 
 ifeq ($(WINDOWS_BUILD),1)
-	EXE := $(BUILD_DIR)/$(TARGET_STRING).exe
+	EXE := $(BUILD_DIR)/sm64coopdx.exe
 else # Linux builds/binary namer
 	ifeq ($(TARGET_RPI),1)
-		EXE := $(BUILD_DIR)/$(TARGET_STRING).arm
+		EXE := $(BUILD_DIR)/sm64coopdx.arm
 	else
-		EXE := $(BUILD_DIR)/$(TARGET_STRING)
+		EXE := $(BUILD_DIR)/sm64coopdx
 	endif
 endif
 
@@ -1155,11 +1134,6 @@ ifeq ($(WINDOWS_BUILD),1)
 exemap: $(EXE)
 	$(V)$(OBJDUMP) -t $(EXE) > $(BUILD_DIR)/coop.map
 all: exemap
-endif
-
-ifeq ($(COMPARE),1)
-	@$(PRINT) "$(GREEN)Checking if ROM matches.. $(NO_COL)\n"
-	@$(SHA1SUM) --quiet -c $(TARGET).sha1 && $(PRINT) "$(TARGET): $(GREEN)OK$(NO_COL)\n" || ($(PRINT) "$(YELLOW)Building the ROM file has succeeded, but does not match the original ROM.\nThis is expected, and not an error, if you are making modifications.\nTo silence this message, use 'make COMPARE=0.' $(NO_COL)\n" && false)
 endif
 
 clean:

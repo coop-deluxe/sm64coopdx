@@ -601,6 +601,9 @@ NEXT_OPTION:
 }
 
 void configfile_load(void) {
+#ifdef DEVELOPMENT
+    configfile_load_internal(configfile_name(), NULL);
+#else
     bool configReadError = false;
     configfile_load_internal(configfile_name(), &configReadError);
     if (configReadError) {
@@ -608,6 +611,7 @@ void configfile_load(void) {
     } else {
         configfile_save(configfile_backup_name());
     }
+#endif
 }
 
 // Writes the config file to 'filename'
