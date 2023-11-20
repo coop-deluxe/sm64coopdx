@@ -5,7 +5,6 @@
 #include "djui_panel_pause.h"
 #include "djui_panel_join.h"
 #include "djui_panel_join_message.h"
-#include "djui_console.h"
 #include "../debuglog.h"
 #include "pc/cliopts.h"
 #include "game/level_update.h"

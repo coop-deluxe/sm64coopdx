@@ -147,10 +147,11 @@ static inline int16_t get_axis(const int i) {
         return 0;
 }
 
+extern s16 gMenuMode;
 static void controller_sdl_read(OSContPad *pad) {
     if (!init_ok) return;
 
-    if (newcam_mouse == 1 && sCurrPlayMode != 2)
+    if (newcam_mouse == 1 && gMenuMode == -1 && !gDjuiChatBoxFocus && !gDjuiConsoleFocus)
         SDL_WM_GrabInput(SDL_GRAB_ON);
     else
         SDL_WM_GrabInput(SDL_GRAB_OFF);

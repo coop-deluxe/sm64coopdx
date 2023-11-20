@@ -33,6 +33,7 @@
 #include "djui_popup.h"
 #include "djui_chat_box.h"
 #include "djui_chat_message.h"
+#include "djui_console.h"
 #include "djui_paginated.h"
 
 extern struct DjuiRoot* gDjuiRoot;

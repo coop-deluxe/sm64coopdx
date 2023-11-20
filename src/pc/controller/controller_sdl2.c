@@ -169,14 +169,15 @@ static inline void update_button(const int i, const bool new) {
     }
 }
 
-u8 ignore_lock = FALSE;
+extern s16 gMenuMode;
+bool ignore_lock = false;
 static void controller_sdl_read(OSContPad *pad) {
     if (!init_ok) {
         return;
     }
 
     if (!gDjuiHudLockMouse) {
-        if (newcam_mouse == 1 && (!is_game_paused() || sCurrPlayMode != 2) && !gDjuiInMainMenu) {
+        if (newcam_mouse == 1 && gMenuMode == -1 && !gDjuiInMainMenu && !gDjuiChatBoxFocus && !gDjuiConsoleFocus) {
             SDL_SetRelativeMouseMode(SDL_TRUE);
             ignore_lock = true;
         } else {
@@ -196,7 +197,7 @@ static void controller_sdl_read(OSContPad *pad) {
     last_mouse = (mouse_buttons ^ mouse) & mouse;
     mouse_buttons = mouse;
 
-    if (!ignore_lock && (!is_game_paused() || sCurrPlayMode != 2) && !gDjuiInMainMenu) {
+    if (!ignore_lock && gMenuMode == -1 && !gDjuiInMainMenu && !gDjuiChatBoxFocus && !gDjuiConsoleFocus) {
         SDL_SetRelativeMouseMode(gDjuiHudLockMouse ? SDL_TRUE : SDL_FALSE);
     }
 

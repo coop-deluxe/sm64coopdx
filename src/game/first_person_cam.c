@@ -10,6 +10,7 @@
 #include "engine/math_util.h"
 
 #include "pc/controller/controller_mouse.h"
+#include "pc/djui/djui.h"
 #include "pc/djui/djui_hud_utils.h"
 #include "pc/lua/utils/smlua_misc_utils.h"
 #include "pc/lua/smlua_hooks.h"
@@ -62,7 +63,7 @@ void first_person_camera_update(void) {
     u8 invX = camera_config_is_x_inverted() ? 1 : -1;
     u8 invY = camera_config_is_y_inverted() ? 1 : -1;
 
-    if (gMenuMode == -1) {
+    if (gMenuMode == -1 && !gDjuiChatBoxFocus && !gDjuiConsoleFocus) {
         // update pitch
         gFirstPersonCamera.pitch -= sensY * (invY * m->controller->extStickY - 1.5f * mouse_y);
         gFirstPersonCamera.pitch = CLAMP(gFirstPersonCamera.pitch, -0x3F00, 0x3F00);
@@ -153,8 +154,6 @@ void first_person_update(void) {
             gFirstPersonCamera.yaw = m->faceAngle[1] + 0x8000;
             m->area->camera->mode = CAMERA_MODE_FREE_ROAM;
         }
-
-        gDjuiHudLockMouse = gMenuMode == -1;
 
         m->marioBodyState->modelState = 0x100;
         if (m->heldObj) {

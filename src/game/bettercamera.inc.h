@@ -412,7 +412,7 @@ static void newcam_rotate_button(void) {
             newcam_tilt_acc -= (newcam_tilt_acc*((f32)newcam_degrade/100));
     }
 
-    if ((newcam_mouse == 1) && !gDjuiInMainMenu) {
+    if ((newcam_mouse == 1) && !gDjuiInMainMenu && !gDjuiChatBoxFocus && !gDjuiConsoleFocus) {
         newcam_yaw += ivrt(0) * mouse_x * 16;
         newcam_tilt += ivrt(1) * mouse_y * 16;
     }
