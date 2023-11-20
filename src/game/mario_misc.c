@@ -674,6 +674,7 @@ Gfx* geo_render_mirror_mario(s32 callContext, struct GraphNode* node, UNUSED Mat
     for (s32 i = 0; i < MAX_PLAYERS; i++) {
         f32 mirroredX;
         struct MarioState* marioState = &gMarioStates[i];
+        struct NetworkPlayer* np = &gNetworkPlayers[i];
         struct Object* mario = marioState->marioObj;
 
         switch (callContext) {
@@ -687,7 +688,7 @@ Gfx* geo_render_mirror_mario(s32 callContext, struct GraphNode* node, UNUSED Mat
                 geo_remove_child_from_parent(node, &gMirrorMario[i].node);
                 break;
             case GEO_CONTEXT_RENDER:
-                if (mario && (((struct GraphNode*)&mario->header.gfx)->flags & GRAPH_RENDER_ACTIVE)) {
+                if (mario && (((struct GraphNode*)&mario->header.gfx)->flags & GRAPH_RENDER_ACTIVE) && np->connected) {
                     // TODO: Is this a geo layout copy or a graph node copy?
                     gMirrorMario[i].sharedChild = mario->header.gfx.sharedChild;
                     dynos_actor_override((void*)&gMirrorMario[i].sharedChild);
