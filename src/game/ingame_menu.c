@@ -2873,7 +2873,7 @@ void render_pause_castle_main_strings(s16 x, s16 y) {
 static u32 pause_castle_get_stars(s32 index) {
 
     // Main courses (0-14), Secret courses (15-24)
-    if (COURSE_IS_VALID_COURSE(index)) {
+    if (COURSE_IS_VALID_COURSE(index + 1)) {
         return save_file_get_star_flags(gCurrSaveFileNum - 1, index);
     }
 

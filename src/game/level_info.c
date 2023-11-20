@@ -207,7 +207,7 @@ const char *get_level_name_ascii(s16 courseNum, s16 levelNum, s16 areaIndex, s16
     }
 
     else if (!hasCustomName) {
-        if (COURSE_IS_MAIN_COURSE(courseNum)) {
+        if (COURSE_IS_VALID_COURSE(courseNum)) {
             void **courseNameTbl = get_course_name_table();
             const u8 *courseName = segmented_to_virtual(courseNameTbl[courseNum - COURSE_BOB]);
             convert_string_sm64_to_ascii(output, courseName + 3);
