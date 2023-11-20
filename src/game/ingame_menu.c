@@ -2804,7 +2804,11 @@ void render_pause_castle_main_strings(s16 x, s16 y) {
 #endif
 
     u8 courseNum = gDialogLineNum + 1;
-    const u8 *courseName = get_level_name_sm64(courseNum, get_level_num_from_course_num(courseNum), 1, 1);
+    const u8 *courseName = (
+        gDialogLineNum == COURSE_STAGES_COUNT ?
+        ((const u8 **) get_course_name_table())[COURSE_MAX] : // Castle secret stars
+        get_level_name_sm64(courseNum, get_level_num_from_course_num(courseNum), 1, 1)
+    );
 
     u8 strVal[8];
     s16 starNum = gDialogLineNum;
@@ -2999,7 +3003,12 @@ void render_pause_castle_main_strings_extended(s16 x, s16 y) {
     gSPDisplayList(gDisplayListHead++, dl_ia_text_begin);
     gDPSetEnvColor(gDisplayListHead++, 255, 255, 255, gDialogTextAlpha);
 
-    const u8 *courseName = get_level_name_sm64(gDialogLineNum, get_level_num_from_course_num(gDialogLineNum), 1, 1);
+    u8 courseNum = gDialogLineNum + 1;
+    const u8 *courseName = (
+        gDialogLineNum >= INDEX_CASTLE_STARS ?
+        ((const u8 **) get_course_name_table())[COURSE_MAX] : // Castle secret stars
+        get_level_name_sm64(courseNum, get_level_num_from_course_num(courseNum), 1, 1)
+    );
 
     // Main courses (0-14)
     if (gDialogLineNum < COURSE_STAGES_COUNT) {
