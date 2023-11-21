@@ -21,7 +21,10 @@ gNetworkPlayers = {}
 gActiveMods = {}
 
 --- @type Character[]
-gCharacter = {}
+gCharacters = {}
+
+--- @type PlayerPalette[]
+gPalettePresets = {}
 
 --- @type GlobalTextures
 gTextures = {}
@@ -31,6 +34,9 @@ gObjectAnimations = {}
 
 --- @type GlobalObjectCollisionData
 gGlobalObjectCollisionData = {}
+
+--- @type PaintingValues
+gPaintingValues = {}
 
 --- @alias SyncTable table
 
@@ -52,23 +58,20 @@ gLevelValues = {}
 --- @type BehaviorValues
 gBehaviorValues = {}
 
---- @type PlayerPalette[]
-gPalettePresets = {}
+--- @type FirstPersonCamera
+--- The struct that contains the values for the first person camera
+gFirstPersonCamera = {}
 
 --- @type LakituState
 --- The primary struct that controls the camera
 --- - Local player only
 gLakituState = {}
 
---- @type PaintingValues
-gPaintingValues = {}
-
 --- @type ServerSettings
 gServerSettings = {}
 
---- @type FirstPersonCamera
---- The struct that contains the values for the first person camera
-gFirstPersonCamera = {}
+--- @type NametagsSettings
+gNametagsSettings = {}
 
 -----------
 -- hooks --
