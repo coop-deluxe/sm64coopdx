@@ -10,6 +10,42 @@ struct DjuiConsole* gDjuiConsole = NULL;
 bool gDjuiConsoleFocus = false;
 char gDjuiConsoleTmpBuffer[CONSOLE_MAX_TMP_BUFFER] = "";
 u32 sDjuiConsoleMessages = 0;
+bool sDjuiConsoleQueueMessages = true;
+
+struct ConsoleQueuedMessage {
+    char* message;
+    struct ConsoleQueuedMessage* next;
+};
+
+struct ConsoleQueuedMessage* sConsoleQueuedMessages = NULL;
+
+static void djui_console_message_queue(char* message) {
+    struct ConsoleQueuedMessage* queued = malloc(sizeof(struct ConsoleQueuedMessage));
+    queued->message = strdup(message);
+    queued->next = NULL;
+    if (sConsoleQueuedMessages == NULL) {
+        sConsoleQueuedMessages = queued;
+        return;
+    }
+
+    struct ConsoleQueuedMessage* entry = sConsoleQueuedMessages;
+    while (entry->next) { entry = entry->next; }
+    entry->next = queued;
+}
+
+void djui_console_message_dequeue(void) {
+    if (!gDjuiConsole) { return; }
+    sDjuiConsoleQueueMessages = false;
+    struct ConsoleQueuedMessage* entry = sConsoleQueuedMessages;
+    while (entry) {
+        struct ConsoleQueuedMessage* next = entry->next;
+        djui_console_message_create(entry->message);
+        free(entry->message);
+        free(entry);
+        entry = next;
+    }
+    sConsoleQueuedMessages = NULL;
+}
 
 bool djui_console_render(struct DjuiBase* base) {
     djui_base_set_size(base, gDjuiRoot->base.width.value, gDjuiRoot->base.height.value * 0.5f);
@@ -66,8 +102,12 @@ static bool djui_console_on_key_down(UNUSED struct DjuiBase* base, int scancode)
 }
 
 void djui_console_message_create(const char* message) {
-    if (!gDjuiConsole) { return; }
+    if (sDjuiConsoleQueueMessages || !gDjuiConsole) {
+        djui_console_message_queue(message);
+        return;
+    }
     djui_base_compute_tree(&gDjuiConsole->base);
+
     struct DjuiBase* cfBase = &gDjuiConsole->flow->base;
 
     f32 maxTextWidth = gDjuiConsole->base.comp.width - gDjuiConsole->base.padding.left.value - gDjuiConsole->base.padding.right.value;

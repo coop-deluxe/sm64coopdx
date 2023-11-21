@@ -747,6 +747,7 @@ static void ParseGfxSymbol(GfxData* aGfxData, DataNode<Gfx>* aNode, Gfx*& aHead,
     gfx_symbol_5(gsDPLoadBlock);
     gfx_symbol_2(gsDPSetRenderMode, false);
     gfx_symbol_2(gsSPGeometryMode, false);
+    gfx_symbol_2(gsSPGeometryModeSetFirst, false);
     gfx_symbol_6(gsDPSetPrimColor);
     gfx_symbol_4(gsDPSetEnvColor);
     gfx_symbol_4(gsDPSetFogColor);

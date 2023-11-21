@@ -349,6 +349,7 @@ int main(int argc, char *argv[]) {
     djui_init();
     djui_unicode_init();
     djui_init_late();
+    djui_console_message_dequeue();
 
     // Init network
     if (gCLIOpts.Network == NT_CLIENT) {
