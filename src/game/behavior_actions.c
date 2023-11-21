@@ -49,10 +49,6 @@
 #include "pc/lua/utils/smlua_model_utils.h"
 #include "pc/lua/smlua_hooks.h"
 
-#include "pc/lua/smlua.h"
-#include "pc/lua/smlua_utils.h"
-#include "pc/lua/utils/smlua_obj_utils.h"
-
 #define o gCurrentObject
 
 struct WFRotatingPlatformData {
@@ -78,7 +74,6 @@ struct Struct8032F698 {
     s16 unk4;
 };
 
-/* Moved to smlua_obj_utils.h
 struct Struct802C0DF0 {
     u8 unk0;
     u8 unk1;
@@ -86,7 +81,6 @@ struct Struct802C0DF0 {
     u8 model;
     const BehaviorScript *behavior;
 };
-*/
 
 struct Struct8032F754 {
     s32 unk0;

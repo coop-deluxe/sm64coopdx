@@ -149,6 +149,52 @@ hook_event(HOOK_MARIO_UPDATE, mario_update)
 
 <br />
 
+## [hook_exclamation_box](#hook_exclamation_box)
+
+Activated when an exclamation box breaks, allowing mods to take control over exclamation boxes.
+- `readFunction` is called after the exclamation box breaks, allowing mods to read the object that spawned.
+  - No return value is necessary.
+- `writeFunction` is called when the exclamation box breaks, allowing mods to override the spawned object. 
+  - Returning the spawned object is highly recommended as it prevents spawning both the vanilla and new object at the same time. It also allows `readFunction` to function properly.
+
+### Parameters
+
+| Field | Type |
+| ----- | ---- |
+| readFunction | `Lua Function` ([Object](structs.md#Object)) |
+| writeFunction | `Lua Function` ([Object](structs.md#Object)): [Object](structs.md#Object) |
+
+### Lua Example
+
+```lua
+local objects_to_spawn = {
+    [0] = {id_bhvGoomba, E_MODEL_GOOMBA},
+    [1] = {id_bhvKoopa, E_MODEL_KOOPA_WITH_SHELL},
+    [2] = {id_bhvTenCoinsSpawn, E_MODEL_NONE},
+    [3] = {id_bhvChainChomp, E_MODEL_CHAIN_CHOMP},
+    [4] = {id_bhvHeaveHo, E_MODEL_HEAVE_HO},
+    [5] = {id_bhvWingCap, E_MODEL_MARIOS_WING_CAP},
+    [6] = {id_bhvKoopaShell, E_MODEL_KOOPA_SHELL},
+    [7] = {id_bhvBoo, E_MODEL_BOO},
+}
+
+local function readFunction(obj)
+    if obj_has_behavior_id(obj, id_bhvFlame) ~= 0 then
+        print("FIREEEEEEEEE")
+    end
+end
+
+---@param box Object
+local function writeFunction(box)
+    local spawn_object = objects_to_spawn[box.oBehParams2ndByte]
+    return spawn_sync_object(spawn_object[1], spawn_object[2], box.oPosX, box.oPosY, box.oPosZ, nil)
+end
+
+hook_exclamation_box(readFunction, writeFunction)
+```
+
+<br />
+
 ## [hook_mario_action](#hook_mario_action)
 `hook_mario_action()` allows Lua mods to create new actions or override existing ones.
 

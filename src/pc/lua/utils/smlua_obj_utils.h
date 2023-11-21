@@ -5,14 +5,6 @@
 #include "smlua_model_utils.h"
 #include "game/object_list_processor.h"
 
-struct Struct802C0DF0 {
-    u8 unk0; // Index
-    u8 unk1; // Unused
-    u8 unk2; // oBehParams1stByte
-    u16 model;
-    const BehaviorScript *behavior;
-};
-
 struct Object* spawn_sync_object(enum BehaviorId behaviorId, enum ModelExtendedId modelId, f32 x, f32 y, f32 z, LuaFunction objSetupFunction);
 struct Object* spawn_non_sync_object(enum BehaviorId behaviorId, enum ModelExtendedId modelId, f32 x, f32 y, f32 z, LuaFunction objSetupFunction);
 
@@ -64,10 +56,5 @@ void obj_set_vel(struct Object *o, f32 vx, f32 vy, f32 vz);
 void obj_move_xyz(struct Object *o, f32 dx, f32 dy, f32 dz);
 
 void set_whirlpools(f32 x, f32 y, f32 z, s16 strength, s16 area, s32 index);
-
-struct Struct802C0DF0* get_exclamation_box_new_contents_pointer(void);
-u8 get_exclamation_box_new_contents_size(void);
-void set_exclamation_box_new_contents(struct Struct802C0DF0 contents[], u8 size);
-void restore_exclamation_box_original_contents(void);
 
 #endif

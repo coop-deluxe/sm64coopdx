@@ -28,7 +28,7 @@ struct Struct802C0DF0 sExclamationBoxContents[] = { { 0, 0, 0, MODEL_MARIOS_WING
                                                     { 12, 0, 3, MODEL_STAR, bhvSpawnedStar },
                                                     { 13, 0, 4, MODEL_STAR, bhvSpawnedStar },
                                                     { 14, 0, 5, MODEL_STAR, bhvSpawnedStar },
-                                                    { 255, 0, 0, 0, NULL } };
+                                                    { 99, 0, 0, 0, NULL } };
 
 void bhv_rotating_exclamation_box_loop(void) {
     if (!o->parentObj || o->parentObj->oAction != 1)
@@ -122,26 +122,33 @@ static s32 exclamation_replace_model(struct MarioState* m, s32 model) {
     }
 }
 
-void exclamation_box_spawn_contents(struct Struct802C0DF0 *a0, u8 a1, u8 size) {
+void exclamation_box_spawn_contents(struct Struct802C0DF0 *a0, u8 a1) {
     struct MarioState* marioState = nearest_mario_state_to_object(o);
     struct Object* player = marioState ? marioState->marioObj : NULL;
-    struct Object *sp1C = NULL;
+    struct Object *spawnedObject = NULL;
 
     if (o->oExclamationBoxForce) {
         return;
     }
 
-   for (u8 i = 0; i < size; i++) {
+    struct Object* luaSpawnedObject = NULL;
+    if ((luaSpawnedObject = smlua_call_exclamation_box_hook(o, true)) != NULL) {
+        (void *)smlua_call_exclamation_box_hook(luaSpawnedObject, false);
+        return;
+    }
+
+    while (a0->unk0 != 99) {
         if (a1 == a0->unk0) {
             s32 model = exclamation_replace_model(marioState, a0->model);
 
-            sp1C = spawn_object(o, model, a0->behavior);
-            if (sp1C != NULL) {
-                sp1C->oVelY = 20.0f;
-                sp1C->oForwardVel = 3.0f;
+            spawnedObject = spawn_object(o, model, a0->behavior);
+            (void *)smlua_call_exclamation_box_hook(spawnedObject, false);
+            if (spawnedObject != NULL) {
+                spawnedObject->oVelY = 20.0f;
+                spawnedObject->oForwardVel = 3.0f;
                 if (player) {
-                    sp1C->oMoveAngleYaw = player->oMoveAngleYaw;
-                    sp1C->globalPlayerIndex = player->globalPlayerIndex;
+                    spawnedObject->oMoveAngleYaw = player->oMoveAngleYaw;
+                    spawnedObject->globalPlayerIndex = player->globalPlayerIndex;
                 }
             }
             o->oBehParams |= a0->unk2 << 24;
@@ -150,13 +157,12 @@ void exclamation_box_spawn_contents(struct Struct802C0DF0 *a0, u8 a1, u8 size) {
 
             // send non-star spawn events
             // stars cant be sent here to due jankiness in oBehParams
-            if (a0->behavior != smlua_override_behavior(bhvSpawnedStar) && sp1C != NULL) {
+            if (a0->behavior != smlua_override_behavior(bhvSpawnedStar) && spawnedObject != NULL) {
                 // hack: if any other sync objects get spawned here we have to check for them
-                // problem: going to need to sync every object
                 if (a0->behavior == smlua_override_behavior(bhvKoopaShell)) {
-                    sync_object_set_id(sp1C);
+                    sync_object_set_id(spawnedObject);
                 }
-                struct Object* spawn_objects[] = { sp1C };
+                struct Object* spawn_objects[] = { spawnedObject };
                 u32 models[] = { model };
                 network_send_spawn_objects(spawn_objects, models, 1);
             }
@@ -167,9 +173,7 @@ void exclamation_box_spawn_contents(struct Struct802C0DF0 *a0, u8 a1, u8 size) {
 }
 
 void exclamation_box_act_4(void) {
-    struct Struct802C0DF0 *newContents = get_exclamation_box_new_contents_pointer();
-    u8 newContentsSize = get_exclamation_box_new_contents_size();
-    exclamation_box_spawn_contents(newContents ? newContents : sExclamationBoxContents, o->oBehParams2ndByte, newContentsSize);
+    exclamation_box_spawn_contents(sExclamationBoxContents, o->oBehParams2ndByte);
     spawn_mist_particles_variable(0, 0, 46.0f);
     spawn_triangle_break_particles(20, 139, 0.3f, o->oAnimState);
     create_sound_spawner(SOUND_GENERAL_BREAK_BOX);
