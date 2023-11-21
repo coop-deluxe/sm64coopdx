@@ -28,28 +28,28 @@ bool gIsThreaded = false;
 extern Vp D_8032CF00;
 
 static void loading_screen_produce_one_frame(void) {
-    // Start frame
+    // start frame
     gfx_start_frame();
     config_gfx_pool();
     init_render_image();
     create_dl_ortho_matrix();
     djui_gfx_displaylist_begin();
 
-    // Fix scaling issues
+    // fix scaling issues
     gSPViewport(gDisplayListHead++, VIRTUAL_TO_PHYSICAL(&D_8032CF00));
     gDPSetScissor(gDisplayListHead++, G_SC_NON_INTERLACE, 0, BORDER_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT - BORDER_HEIGHT);
 
-    // Clear screen
+    // clear screen
     create_dl_translation_matrix(MENU_MTX_PUSH, GFX_DIMENSIONS_FROM_LEFT_EDGE(0), 240.f, 0.f);
     create_dl_scale_matrix(MENU_MTX_NOPUSH, (GFX_DIMENSIONS_ASPECT_RATIO * SCREEN_HEIGHT) / 130.f, 3.f, 1.f);
     gDPSetEnvColor(gDisplayListHead++, 0x00, 0x00, 0x00, 0xFF);
     gSPDisplayList(gDisplayListHead++, dl_draw_text_bg_box);
     gSPPopMatrix(gDisplayListHead++, G_MTX_MODELVIEW);
 
-    // Render loading screen elements
+    // render loading screen elements
     if (sLoading) { djui_base_render(&sLoading->base); }
 
-    // Render frame
+    // render frame
     djui_gfx_displaylist_end();
     end_master_display_list();
     alloc_display_list(0);
@@ -67,19 +67,16 @@ static bool loading_screen_on_render(struct DjuiBase* base) {
     windowWidth /= scale;
     windowHeight /= scale;
 
-    f32 loadingDescY1 = windowHeight * 0.5f - sLoading->loadingDesc->base.height.value * 0.5f;
-    f32 loadingDescY2 = windowHeight * 0.5f + sLoading->loadingDesc->base.height.value * 0.5f;
-
-    // Fill the screen
+    // fill the screen
     djui_base_set_size(base, windowWidth, windowHeight);
 
     {
-        // Loading text description
+        // loading text description
         char buffer[256] = "";
         u32 length = strlen(gCurrLoadingSegment.str);
         if (length > 0) {
             if (gCurrLoadingSegment.percentage > 0) {
-                snprintf(buffer, 256, "%s\n\\#C8C8C8\\%d%%", gCurrLoadingSegment.str, (u8) floor(gCurrLoadingSegment.percentage * 100));
+                snprintf(buffer, 256, "%s\n\\#c8c8c8\\%d%%", gCurrLoadingSegment.str, (u8)floor(gCurrLoadingSegment.percentage * 100));
             } else {
                 snprintf(buffer, 256, "%s...", gCurrLoadingSegment.str);
             }
@@ -93,11 +90,11 @@ static bool loading_screen_on_render(struct DjuiBase* base) {
             }
         }
         djui_text_set_text(sLoading->loadingDesc, buffer);
-        djui_base_set_location(&sLoading->loadingDesc->base, 0, loadingDescY1);
+        djui_base_set_location(&sLoading->loadingDesc->base, 0, windowHeight - 250);
     }
 
-    // Loading bar
-    djui_base_set_location(&sLoading->loadingBar->base, windowWidth / 4, loadingDescY2 + 64);
+    // loading bar
+    djui_base_set_location(&sLoading->loadingBar->base, windowWidth / 4, windowHeight - 100);
     djui_base_set_visible(&sLoading->loadingBar->base, gCurrLoadingSegment.percentage > 0 && strlen(gCurrLoadingSegment.str) > 0);
 
     djui_base_compute(base);
@@ -116,40 +113,37 @@ static void loading_screen_destroy(struct DjuiBase* base) {
 void render_loading_screen(void) {
     struct LoadingScreen* load = malloc(sizeof(struct LoadingScreen));
     struct DjuiBase* base = &load->base;
-    f32 nextY = 0;
 
     djui_base_init(NULL, base, loading_screen_on_render, loading_screen_destroy);
 
     {
-        // Splash image
+        // splash image
         struct DjuiImage* splashImage = djui_image_create(base, texture_coopdx_logo, 2048, 1024, 32);
         djui_base_set_size(&splashImage->base, 740.0f, 364.0f);
         djui_base_set_alignment(&splashImage->base, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
         djui_base_set_location(&splashImage->base, 0, -100);
-        nextY += gDjuiFonts[1]->defaultFontScale * 3.0f;
 
         load->splashImage = splashImage;
     }
 
     {
-        // Current loading stage text
+        // current loading stage text
         struct DjuiText *text = djui_text_create(base, "");
         djui_base_set_location_type(&text->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
         djui_base_set_location(&text->base, 0, 0);
-        nextY += gDjuiFonts[0]->defaultFontScale * 3.0f;
 
         djui_base_set_size_type(&text->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-        djui_base_set_size(&text->base, 1.0f, gDjuiFonts[0]->defaultFontScale * 3.0f);
+        djui_base_set_size(&text->base, 1.0f, gDjuiFonts[0]->defaultFontScale * 4.0f);
         djui_base_set_color(&text->base, 200, 200, 200, 255);
         djui_text_set_alignment(text, DJUI_HALIGN_CENTER, DJUI_VALIGN_TOP);
         djui_text_set_font(text, gDjuiFonts[0]);
-        djui_text_set_font_scale(text, gDjuiFonts[0]->defaultFontScale * 1);
+        djui_text_set_font_scale(text, gDjuiFonts[0]->defaultFontScale * 1.5f);
 
         load->loadingDesc = text;
     }
 
     {
-        // Loading bar
+        // loading bar
         struct DjuiProgressBar *progressBar = djui_progress_bar_create(base, &gCurrLoadingSegment.percentage, 0.0f, 1.0f, false);
         djui_base_set_location_type(&progressBar->base, DJUI_SVT_ABSOLUTE, DJUI_SVT_ABSOLUTE);
         djui_base_set_location(&progressBar->base, 0, 0);
@@ -161,14 +155,14 @@ void render_loading_screen(void) {
 
     sLoading = load;
 
-    // Loading screen loop
+    // loading screen loop
     while (!gGameInited) {
         WAPI.main_loop(loading_screen_produce_one_frame);
     }
 
     pthread_join(gLoadingThreadId, NULL);
 
-    // Reset some things after rendering the loading screen
+    // reset some things after rendering the loading screen
     reset_djui();
     alloc_display_list_reset();
     gDisplayListHead = NULL;
