@@ -2452,7 +2452,7 @@ void render_pause_red_coins(void) {
         if (collected >= 100) red_coins_print_glyph(&x, (collected / 100) % 10, 12);
         if (collected >= 10) red_coins_print_glyph(&x, (collected / 10) % 10, 12);
         red_coins_print_glyph(&x, collected % 10, 15);
-        red_coins_print_glyph(&x, GLYPH_MULTIPLY - 1, 15);
+        red_coins_print_glyph(&x, GLYPH_SLASH, 15);
         if (gCurrentArea->numRedCoins >= 100) red_coins_print_glyph(&x, (gCurrentArea->numRedCoins / 100) % 10, 12);
         if (gCurrentArea->numRedCoins >= 10) red_coins_print_glyph(&x, (gCurrentArea->numRedCoins / 10) % 10, 12);
         red_coins_print_glyph(&x, gCurrentArea->numRedCoins % 10, 15);
