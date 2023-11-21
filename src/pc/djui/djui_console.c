@@ -19,7 +19,7 @@ struct ConsoleQueuedMessage {
 
 struct ConsoleQueuedMessage* sConsoleQueuedMessages = NULL;
 
-static void djui_console_message_queue(char* message) {
+static void djui_console_message_queue(const char* message) {
     struct ConsoleQueuedMessage* queued = malloc(sizeof(struct ConsoleQueuedMessage));
     queued->message = strdup(message);
     queued->next = NULL;

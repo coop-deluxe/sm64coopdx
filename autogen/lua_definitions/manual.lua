@@ -17,14 +17,11 @@ gNetworkPlayers = {}
 --- @type Mod[]
 --- Array of all mods loaded, starting from 0
 --- - All mods are loaded in the same order for every player
---- - Index 0 is the first mod in the list (The top of the mod list)
+--- - Index 0 is the first mod in the list (the top of the mod list)
 gActiveMods = {}
 
 --- @type Character[]
 gCharacters = {}
-
---- @type PlayerPalette[]
-gPalettePresets = {}
 
 --- @type GlobalTextures
 gTextures = {}
