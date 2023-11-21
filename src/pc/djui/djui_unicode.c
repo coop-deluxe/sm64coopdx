@@ -170,6 +170,8 @@ struct SmCodeGlyph sSmCodeGlyphs[] = {
     { "Ź", 'Z', 0, 0 },
     { "Ż", 'Z', 0, 0 },
     { "Ł", 'L', 12, 0 },
+    { "Ą", 'A', 0, 0 },
+    { "ą", 'a', 0, 0 },
 };
 
 struct SmCodeGlyph sSmCodeDuplicateGlyphs[] = {
