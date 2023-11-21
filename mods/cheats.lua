@@ -236,6 +236,29 @@ gLang = {
 		RF_DESC = "Maakt snel vuren voor Mario's A-knop mogelijk.",
 		BLJA_DESC = "Maakt achteruit lange sprongen overal mogelijk.",
 		ATJ_DESC = "Hiermee kan Mario altijd een hinkstapsprong uitvoeren."
+	},
+	
+	["Polish"] = {
+		MJ = "Skok Ksiezycowy",
+		GM = "Tryb Boga",
+		IL = "Nieskonczone Zycia",
+		SS = "Super Szybkosc",
+		RC = "Responsywne Sterowanie",
+		RF = "Szybkostrzelnosc",
+		BLJA = "BLJ Gdziekolwiek",
+		ATJ = "Potrojny Skok Zawsze",
+		CHEATS = 'oszustwa',
+        EXIT = 'Wyjście',
+		DESC = '- Otwiera menu Kody.',
+		EXIT_DESC = "Wyjdź z menu cheatów.",
+		MJ_DESC = "Pozwala Mario skakać bardzo wysoko.",
+		GM_DESC = "Uczyń Mario niepokonanym.",
+		IL_DESC = "Daje Mario nieskończone życie.",
+		SS_DESC = "Zwiększa prędkość ruchu Mario.",
+		RC_DESC = "Poprawia responsywność sterowania.",
+		RF_DESC = "Umożliwia szybkie strzelanie przyciskiem A Mario.",
+		BLJA_DESC = "Umożliwia dalekie skoki do tyłu w dowolnym miejscu.",
+		ATJ_DESC = "Pozwala Mario zawsze wykonać potrójny skok.",
 	}
 }
 
