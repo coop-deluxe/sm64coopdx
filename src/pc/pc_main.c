@@ -78,9 +78,6 @@ f64 gGameSpeed = 1.0f; // TODO: should probably remove
 static const f64 sFrameTime = (1.0 / ((double)FRAMERATE));
 static f64 sFrameTargetTime = 0;
 static f64 sFrameTimeStart;
-static f64 sLastFrameTimeStart;
-static f32 sAvgFrames = 1;
-static f32 sAvgFps = 0;
 
 bool gGameInited = false;
 bool gGfxInited = false;
@@ -189,14 +186,22 @@ void produce_interpolation_frames_and_delay(void) {
         frames++;
     }
 
-    f32 fps = frames / (clock_elapsed_f64() - sFrameTimeStart);
-    sAvgFps = sAvgFps * 0.95 + fps * 0.05;
-    sAvgFrames = sAvgFrames * 0.9 + frames * 0.1;
+    static u64 sFramesSinceFpsUpdate = 0;
+    static u64 sLastFpsUpdateTime = 0;
+
+    sFramesSinceFpsUpdate += frames;
+
+    u64 sCurrentFpsUpdateTime = (u64)clock_elapsed_f64();
+    if (sLastFpsUpdateTime != sCurrentFpsUpdateTime) {
+        u32 fps = sFramesSinceFpsUpdate / ((f32)(sCurrentFpsUpdateTime - sLastFpsUpdateTime));
+        sLastFpsUpdateTime = sCurrentFpsUpdateTime;
+        sFramesSinceFpsUpdate = 0;
+        //printf("fps: %u\n", fps);
+    }
+
     sFrameTimeStart = sFrameTargetTime;
     sFrameTargetTime += sFrameTime * gGameSpeed;
     gRenderingInterpolated = false;
-
-    //printf(">>> fpt: %llu, fps: %f :: %f\n", frames, sAvgFps, fps);
 }
 
 inline static void buffer_audio(void) {
