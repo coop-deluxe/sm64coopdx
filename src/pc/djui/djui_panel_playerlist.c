@@ -3,6 +3,7 @@
 #include "djui.h"
 #include "djui_panel_menu.h"
 #include "djui_panel_playerlist.h"
+#include "djui_panel_modlist.h"
 #include "game/level_info.h"
 #include "game/mario_misc.h"
 #include "pc/configfile.h"
@@ -57,6 +58,12 @@ static void playerlist_update_row(u8 i, struct NetworkPlayer *np) {
 }
 
 void djui_panel_playerlist_on_render_pre(UNUSED struct DjuiBase* base, UNUSED bool* skipRender) {
+    if (gDjuiInMainMenu || gNetworkType == NT_NONE) {
+        djui_base_set_visible(&gDjuiPlayerList->base, false);
+        djui_base_set_visible(&gDjuiModList->base, false);
+        return;
+    }
+
     s32 j = 0;
     sPlayer = 0;
 
