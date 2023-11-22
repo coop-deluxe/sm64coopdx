@@ -18,6 +18,7 @@ static struct DjuiFlowLayout* sModLayout = NULL;
 static struct DjuiThreePanel* sDescriptionPanel = NULL;
 static struct DjuiText* sTooltip = NULL;
 static s64 sTag = 0;
+static bool sWarned = false;
 
 void djui_panel_host_mods_create(struct DjuiBase* caller);
 
@@ -72,6 +73,15 @@ static void djui_mod_checkbox_on_hover_end(UNUSED struct DjuiBase* base) {
 
 static void djui_mod_checkbox_on_value_change(UNUSED struct DjuiBase* base) {
     mods_update_selectable();
+
+    if (mods_get_enabled_count() >= 10) {
+        if (!sWarned) {
+            sWarned = true;
+            djui_popup_create(DLANG(HOST_MODS, WARNING), 3);
+        }
+    } else {
+        sWarned = false;
+    }
 
     u16 index = 0;
     struct DjuiBaseChild* node = sModLayout->base.child;
