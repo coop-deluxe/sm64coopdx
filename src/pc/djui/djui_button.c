@@ -51,7 +51,7 @@ struct DjuiButton* djui_button_create(struct DjuiBase* parent, const char* messa
     struct DjuiBase* base     = &button->base;
 
     djui_base_init(parent, base, NULL, djui_button_destroy);
-    djui_base_set_size(base, 200, gDjuiThemes[configDjuiTheme]->panels.center ? 50 : 64);
+    djui_base_set_size(base, 200, configDjuiThemeCenter ? 50 : 64);
     djui_base_set_border_width(base, 2);
     djui_interactable_create(base, djui_button_update_style);
     button->style = 0;
@@ -72,7 +72,7 @@ struct DjuiButton* djui_button_create(struct DjuiBase* parent, const char* messa
     button->text = text;
 
     djui_base_set_size_type(base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-    djui_base_set_size(base, 1.0f, gDjuiThemes[configDjuiTheme]->panels.center ? 50 : 64);
+    djui_base_set_size(base, 1.0f, configDjuiThemeCenter ? 50 : 64);
     djui_interactable_hook_click(base, on_click);
     button->style = style;
     djui_button_update_style(base);

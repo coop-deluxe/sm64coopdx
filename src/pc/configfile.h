@@ -117,6 +117,7 @@ extern char         configPassword[];
 extern char         configDestId[];
 extern bool         configFadeoutDistantSounds;
 extern unsigned int configDjuiTheme;
+extern bool         configDjuiThemeCenter;
 extern bool         configCoopCompatibility;
 
 void enable_queued_mods();

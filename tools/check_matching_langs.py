@@ -40,10 +40,10 @@ for filename in os.listdir("lang"):
             if not missing_sections and not extra_sections and not any(missing_keys.values()):
                 print(f"{filename} is matching to English.ini.")
             else:
-                # if missing_sections:
-                #     print(f"Missing sections: {', '.join(missing_sections)}")
-                # if extra_sections:
-                #     print(f"Extra sections: {', '.join(extra_sections)}")
+                if missing_sections:
+                    print(f"Missing sections: {', '.join(missing_sections)}")
+                if extra_sections:
+                    print(f"Extra sections: {', '.join(extra_sections)}")
                 for section, keys in missing_keys.items():
                     if keys:
                         print(f"Missing keys in section '{section}': {', '.join(keys)}")

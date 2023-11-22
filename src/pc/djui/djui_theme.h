@@ -1,12 +1,14 @@
 #pragma once
 #include "djui.h"
 
+#define DJUI_THEME_CENTERED_WIDTH 1.25f
+#define DJUI_THEME_CENTERED_HEIGHT 0.88f
+
 enum DjuiThemeType {
     DJUI_THEME_LIGHT,
     DJUI_THEME_DARK,
-    DJUI_THEME_LIGHT_CENTERED,
-    DJUI_THEME_DARK_CENTERED,
     DJUI_THEME_FILE_SELECT,
+    DJUI_THEME_MARIO,
     DJUI_THEME_MAX
 };
 
@@ -28,9 +30,6 @@ struct DjuiThreePanelTheme {
 };
 
 struct DjuiPanelTheme {
-    f32 widthMultiplier;
-    f32 heightMultiplier;
-    bool center;
     bool hudFontHeader;
 };
 

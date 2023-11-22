@@ -50,14 +50,14 @@ struct DjuiThreePanel* djui_panel_menu_create(char* headerText) {
     struct DjuiThreePanel* panel = djui_three_panel_create(&gDjuiRoot->base, 64, 0, 0);
     struct DjuiTheme* theme = gDjuiThemes[configDjuiTheme];
     struct DjuiThreePanelTheme three = theme->threePanels;
-    bool center = theme->panels.center &&
+    bool center = configDjuiThemeCenter &&
         strcmp(headerText, DLANG(HOST_MODS, MODS)) &&
         strcmp(headerText, DLANG(HOST_MODS, ROMHACKS)) &&
         strcmp(headerText, DLANG(LOBBIES, PUBLIC_LOBBIES)) &&
         strcmp(headerText, DLANG(LOBBIES, PRIVATE_LOBBIES)) &&
         strcmp(headerText, DLANG(JOIN_MESSAGE, JOINING));
-    f32 widthMultiplier = center ? theme->panels.widthMultiplier : 1.0f;
-    f32 heightMultiplier = center ? theme->panels.heightMultiplier : 1.0f;
+    f32 widthMultiplier = center ? DJUI_THEME_CENTERED_WIDTH : 1.0f;
+    f32 heightMultiplier = center ? DJUI_THEME_CENTERED_HEIGHT : 1.0f;
 
     djui_base_set_size_type(&panel->base, DJUI_SVT_ABSOLUTE, DJUI_SVT_RELATIVE);
     djui_base_set_size(&panel->base, DJUI_DEFAULT_PANEL_WIDTH * widthMultiplier, heightMultiplier);

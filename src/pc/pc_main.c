@@ -193,10 +193,10 @@ void produce_interpolation_frames_and_delay(void) {
 
     u64 sCurrentFpsUpdateTime = (u64)clock_elapsed_f64();
     if (sLastFpsUpdateTime != sCurrentFpsUpdateTime) {
-        u32 fps = sFramesSinceFpsUpdate / ((f32)(sCurrentFpsUpdateTime - sLastFpsUpdateTime));
+        // u32 fps = sFramesSinceFpsUpdate / ((f32)(sCurrentFpsUpdateTime - sLastFpsUpdateTime));
         sLastFpsUpdateTime = sCurrentFpsUpdateTime;
         sFramesSinceFpsUpdate = 0;
-        //printf("fps: %u\n", fps);
+        // printf("fps: %u\n", fps);
     }
 
     sFrameTimeStart = sFrameTargetTime;
