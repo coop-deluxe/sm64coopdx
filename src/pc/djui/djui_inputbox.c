@@ -442,7 +442,7 @@ static void djui_inputbox_render_selection(struct DjuiInputbox* inputbox) {
             create_dl_translation_matrix(DJUI_MTX_PUSH, x - DJUI_INPUTBOX_CURSOR_WIDTH / 2.0f, -0.1f, 0);
             create_dl_scale_matrix(DJUI_MTX_NOPUSH, DJUI_INPUTBOX_CURSOR_WIDTH, 0.8f, 1.0f);
             struct DjuiColor color = gDjuiThemes[configDjuiTheme]->interactables.textColor;
-            gDPSetEnvColor(gDisplayListHead++, color.r, color.g, color.b, 255);
+            gDPSetEnvColor(gDisplayListHead++, color.r, color.g, color.b, color.a);
             gSPDisplayList(gDisplayListHead++, dl_djui_simple_rect);
             gSPPopMatrix(gDisplayListHead++, G_MTX_MODELVIEW);
         }
@@ -533,6 +533,8 @@ static bool djui_inputbox_render(struct DjuiBase* base) {
     }
 
     // set color
+    struct DjuiColor color = gDjuiThemes[configDjuiTheme]->interactables.textColor;
+    djui_inputbox_set_text_color(inputbox, color.r, color.g, color.b, color.a);
     gDPSetEnvColor(gDisplayListHead++, inputbox->textColor.r, inputbox->textColor.g, inputbox->textColor.b, inputbox->textColor.a);
 
     // make selection well formed
@@ -548,7 +550,7 @@ static bool djui_inputbox_render(struct DjuiBase* base) {
     for (u16 i = 0; i < inputbox->bufferSize; i++) {
         if (*c == '\0') { break; }
 
-        // deal with seleciton color
+        // deal with selection color
         if (selection[0] != selection[1]) {
             bool insideSelection = (i >= selection[0]) && (i < selection[1]);
             if (insideSelection && !wasInsideSelection) {
