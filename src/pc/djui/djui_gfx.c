@@ -47,13 +47,24 @@ const Gfx dl_djui_simple_rect[] = {
 f32 djui_gfx_get_scale(void) {
     u32 windowWidth, windowHeight;
     wm_api->get_dimensions(&windowWidth, &windowHeight);
-    if (windowHeight < 768) {
-        return 0.5f;
-    } else if (windowHeight < 1440) {
-        return 1.0f;
-    } else {
-        return 2.0f;
-    }
+        switch (gDjuiScale)
+        {
+        case 0:
+            return 0.85f;
+            break;
+
+        case 1:
+            return 1.0f;
+            break;
+
+        case 2:
+            return 1.5f;
+            break;
+        
+        default:
+            wm_api->get_dimensions(&windowWidth, &windowHeight);
+            break;
+        }
 }
 /////////////////////////////////////////////
 

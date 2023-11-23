@@ -16,6 +16,7 @@ extern "C" {
 #include "gfx/gfx_dummy.h"
 
 extern bool gCoopCompatibility;
+extern u32 gDjuiScale;
 
 #if defined(WAPI_SDL1) || defined(WAPI_SDL2)
 # define WAPI gfx_sdl
