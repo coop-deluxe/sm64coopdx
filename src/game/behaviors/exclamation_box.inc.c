@@ -133,6 +133,7 @@ void exclamation_box_spawn_contents(struct Struct802C0DF0 *a0, u8 a1) {
 
     struct Object* luaSpawnedObject = NULL;
     if ((luaSpawnedObject = smlua_call_exclamation_box_hook(o, true)) != NULL) {
+        luaSpawnedObject->parentObj = o; // Allows spawned stars to work like it was a normal exclamation box
         (void *)smlua_call_exclamation_box_hook(luaSpawnedObject, false);
         return;
     }

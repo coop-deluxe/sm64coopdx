@@ -1867,10 +1867,12 @@ struct Object* smlua_call_exclamation_box_hook(struct Object* obj, bool write) {
         struct Object* returnObject = NULL;
         if (write) {
             returnObject = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
+            if (!gSmLuaConvertSuccess || returnObject == NULL) {
+                LOG_LUA("Return value type is invalid for writeFunction: %d", lua_type(L, 1));
+                continue;
+            }
         }
         lua_pop(L, 1);
-
-        if (!gSmLuaConvertSuccess) { return NULL; }
 
         return returnObject;
     }
