@@ -28,7 +28,7 @@ struct DjuiBase* djui_panel_find_first_interactable(struct DjuiBaseChild* child)
     }
 
     // If we didn't find anything at all. Return NULL.
-    LOG_ERROR("Failed to find a interactable for child %p.", child);
+    // LOG_ERROR("Failed to find a interactable for child %p.", child);
     return NULL;
 }
 

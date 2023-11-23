@@ -64,6 +64,7 @@ void djui_panel_display_create(struct DjuiBase* caller) {
 
         djui_checkbox_create(body, DLANG(DISPLAY, FORCE_4BY3), &configForce4By3, djui_panel_display_apply);
 
+        djui_checkbox_create(body, DLANG(DISPLAY, SHOW_FPS), &configShowFPS, NULL);
         djui_checkbox_create(body, DLANG(DISPLAY, VSYNC), &configWindow.vsync, djui_panel_display_apply);
         djui_checkbox_create(body, DLANG(DISPLAY, UNCAPPED_FRAMERATE), &configUncappedFramerate, djui_panel_display_uncapped_change);
 

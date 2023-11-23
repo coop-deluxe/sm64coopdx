@@ -43,6 +43,7 @@
 #include "pc/djui/djui_unicode.h"
 #include "pc/djui/djui_panel.h"
 #include "pc/djui/djui_panel_modlist.h"
+#include "pc/djui/djui_fps_display.h"
 #include "pc/debuglog.h"
 #include "pc/utils/misc.h"
 
@@ -196,7 +197,8 @@ void produce_interpolation_frames_and_delay(void) {
         u32 fps = sFramesSinceFpsUpdate / ((f32)(sCurrentFpsUpdateTime - sLastFpsUpdateTime));
         sLastFpsUpdateTime = sCurrentFpsUpdateTime;
         sFramesSinceFpsUpdate = 0;
-        // printf("fps: %u\n", fps);
+
+        djui_fps_display_update(floor(fps));
     }
 
     sFrameTimeStart = sFrameTargetTime;

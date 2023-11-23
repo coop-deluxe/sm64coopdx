@@ -5,6 +5,7 @@
 #include "djui_panel_pause.h"
 #include "djui_panel_join.h"
 #include "djui_panel_join_message.h"
+#include "djui_fps_display.h"
 #include "../debuglog.h"
 #include "pc/cliopts.h"
 #include "game/level_update.h"
@@ -81,6 +82,9 @@ void djui_init(void) {
     djui_panel_playerlist_create(NULL);
 
     djui_console_create();
+
+    djui_fps_display_create();
+
     sDjuiInited = true;
 }
 
@@ -139,6 +143,8 @@ void djui_render(void) {
     if (gDjuiRoot != NULL) {
         djui_base_render(&gDjuiRoot->base);
     }
+
+    djui_fps_display_render();
 
     if (sDjuiLuaErrorTimeout > 0) {
         sDjuiLuaErrorTimeout--;

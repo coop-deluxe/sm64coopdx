@@ -137,6 +137,7 @@ bool         configMenuRandom                    = false;
 bool         configMenuDemos                     = false;
 struct PlayerPalette configPlayerPalette         = {{{ 0x00, 0x00, 0xff }, { 0xff, 0x00, 0x00 }, { 0xff, 0xff, 0xff }, { 0x72, 0x1c, 0x0e }, { 0x73, 0x06, 0x00 }, { 0xfe, 0xc1, 0x79 }, { 0xff, 0x00, 0x00 }}};
 struct PlayerPalette configCustomPalette         = {{{ 0x00, 0x00, 0xff }, { 0xff, 0x00, 0x00 }, { 0xff, 0xff, 0xff }, { 0x72, 0x1c, 0x0e }, { 0x73, 0x06, 0x00 }, { 0xfe, 0xc1, 0x79 }, { 0xff, 0x00, 0x00 }}};
+bool         configShowFPS                       = false;
 bool         configUncappedFramerate             = true;
 unsigned int configFrameLimit                    = 60;
 unsigned int configDrawDistance                  = 5;
@@ -218,6 +219,7 @@ static const struct ConfigOption options[] = {
     {.name = "debug_offset",                   .type = CONFIG_TYPE_U64   , .u64Value    = &gPcDebug.bhvOffset},
     {.name = "debug_tags",                     .type = CONFIG_TYPE_U64   , .u64Value    = gPcDebug.tags},
     // coop-specific
+    {.name = "show_fps",                       .type = CONFIG_TYPE_BOOL  , .boolValue   = &configShowFPS},
     {.name = "uncapped_framerate",             .type = CONFIG_TYPE_BOOL  , .boolValue   = &configUncappedFramerate},
     {.name = "frame_limit"       ,             .type = CONFIG_TYPE_UINT  , .uintValue   = &configFrameLimit},
     {.name = "amount_of_players",              .type = CONFIG_TYPE_UINT  , .uintValue   = &configAmountofPlayers},
