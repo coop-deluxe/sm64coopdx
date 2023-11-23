@@ -22,6 +22,7 @@ const char *sys_user_path(void);
 const char *sys_exe_path(void);
 const char *sys_file_extension(const char *fpath);
 const char *sys_file_name(const char *fpath);
+void sys_swap_backslashes(char* buffer);
 
 // shows an error message in some way and terminates the game
 void sys_fatal(const char *fmt, ...) __attribute__ ((noreturn));

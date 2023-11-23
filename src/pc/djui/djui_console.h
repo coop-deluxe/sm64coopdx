@@ -7,7 +7,7 @@ struct DjuiConsole {
     bool scrolling;
 };
 
-#define CONSOLE_MAX_TMP_BUFFER 256
+#define CONSOLE_MAX_TMP_BUFFER 512
 extern struct DjuiConsole* gDjuiConsole;
 extern bool gDjuiConsoleFocus;
 extern char gDjuiConsoleTmpBuffer[];

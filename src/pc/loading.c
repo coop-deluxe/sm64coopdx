@@ -81,13 +81,7 @@ static bool loading_screen_on_render(struct DjuiBase* base) {
                 snprintf(buffer, 256, "%s...", gCurrLoadingSegment.str);
             }
 
-            // swap around the backslashes
-            bool inColor = false;
-            for (u32 i = 0; i < length; i++) {
-                if (buffer[i] == '\\' && buffer[MIN(i+1,length)] == '#') { inColor = true; }
-                if (buffer[i] == '\\' && !inColor) { buffer[i] = '/'; }
-                if (buffer[i] == '\\' && inColor && buffer[MIN(i+1,length)] != '#') { inColor = false; }
-            }
+            sys_swap_backslashes(buffer);
         }
         djui_text_set_text(sLoading->loadingDesc, buffer);
         djui_base_set_location(&sLoading->loadingDesc->base, 0, windowHeight - 250);

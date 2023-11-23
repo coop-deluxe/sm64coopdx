@@ -736,6 +736,7 @@ void Print(const char *aFmt, Args... aArgs) {
 template <typename... Args>
 void PrintConsole(const char *aFmt, Args... aArgs) {
     snprintf(gDjuiConsoleTmpBuffer, CONSOLE_MAX_TMP_BUFFER, aFmt, aArgs...);
+    sys_swap_backslashes(gDjuiConsoleTmpBuffer);
     djui_console_message_create(gDjuiConsoleTmpBuffer);
 }
 

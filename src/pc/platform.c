@@ -66,6 +66,16 @@ const char *sys_file_name(const char *fpath) {
     return sep + 1;
 }
 
+void sys_swap_backslashes(char* buffer) {
+    size_t length = strlen(buffer);
+    bool inColor = false;
+    for (u32 i = 0; i < length; i++) {
+        if (buffer[i] == '\\' && buffer[MIN(i + 1, length)] == '#') { inColor = true; }
+        if (buffer[i] == '\\' && !inColor) { buffer[i] = '/'; }
+        if (buffer[i] == '\\' && inColor && buffer[MIN( i + 1, length)] != '#') { inColor = false; }
+    }
+}
+
 /* this calls a platform-specific impl function after forming the error message */
 
 static void sys_fatal_impl(const char *msg) __attribute__ ((noreturn));
