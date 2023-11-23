@@ -130,6 +130,7 @@ unsigned int configBouncyLevelBounds             = 0;
 unsigned int configNetworkSystem                 = 0;
 char         configPlayerName[MAX_PLAYER_STRING] = "";
 unsigned int configPlayerModel                   = 0;
+bool         configMenuStaffRoll                 = true;
 unsigned int configMenuLevel                     = 0;
 bool         configMenuSound                     = false;
 bool         configMenuRandom                    = false;
@@ -144,7 +145,6 @@ bool         configDisablePopups                 = 0;
 bool         configLuaProfiler                   = 0;
 bool         configCtxProfiler                   = 0;
 #endif
-bool         configDisableDownloadedModels       = 0;
 unsigned int configInterpolationMode             = 1;
 unsigned int configGamepadNumber                 = 0;
 bool         configBackgroundGamepad             = 1;
@@ -234,6 +234,7 @@ static const struct ConfigOption options[] = {
     {.name = "coopdx_bouncy_bounds",           .type = CONFIG_TYPE_UINT  , .uintValue   = &configBouncyLevelBounds},
     {.name = "coop_player_model",              .type = CONFIG_TYPE_UINT  , .uintValue   = &configPlayerModel},
     {.name = "coop_player_name",               .type = CONFIG_TYPE_STRING, .stringValue = (char*)&configPlayerName, .maxStringLength = MAX_PLAYER_STRING},
+    {.name = "coopdx_menu_staff_roll",         .type = CONFIG_TYPE_BOOL  , .boolValue   = &configMenuStaffRoll},
     {.name = "coop_menu_level",                .type = CONFIG_TYPE_UINT  , .uintValue   = &configMenuLevel},
     {.name = "coop_menu_sound",                .type = CONFIG_TYPE_BOOL  , .boolValue   = &configMenuSound},
     {.name = "coop_menu_random",               .type = CONFIG_TYPE_BOOL  , .boolValue   = &configMenuRandom},
@@ -260,7 +261,6 @@ static const struct ConfigOption options[] = {
     {.name = "lua_profiler",                   .type = CONFIG_TYPE_BOOL  , .boolValue   = &configLuaProfiler},
     {.name = "ctx_profiler",                   .type = CONFIG_TYPE_BOOL  , .boolValue   = &configCtxProfiler},
 #endif
-    {.name = "disable_downloaded_models",      .type = CONFIG_TYPE_BOOL  , .boolValue   = &configDisableDownloadedModels},
     {.name = "interpolation_mode",             .type = CONFIG_TYPE_UINT  , .uintValue   = &configInterpolationMode},
     {.name = "gamepad_number",                 .type = CONFIG_TYPE_UINT  , .uintValue   = &configGamepadNumber},
     {.name = "background_gamepad",             .type = CONFIG_TYPE_UINT  , .boolValue   = &configBackgroundGamepad},
@@ -596,6 +596,9 @@ NEXT_OPTION:
 
     if (configFrameLimit < 30)   { configFrameLimit = 30; }
     if (configFrameLimit > 3000) { configFrameLimit = 3000; }
+
+    if (configPlayerModel >= CT_MAX) { configPlayerModel = 0; }
+    if (configDjuiTheme >= DJUI_THEME_MAX) { configDjuiTheme = 0; }
 
 #ifndef COOPNET
     configNetworkSystem = NS_SOCKET;

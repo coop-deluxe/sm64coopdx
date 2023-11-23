@@ -89,6 +89,7 @@ extern unsigned int configBouncyLevelBounds;
 extern unsigned int configNetworkSystem;
 extern char         configPlayerName[];
 extern unsigned int configPlayerModel;
+extern bool         configMenuStaffRoll;
 extern unsigned int configMenuLevel;
 extern bool         configMenuSound;
 extern bool         configMenuRandom;
@@ -103,7 +104,6 @@ extern bool         configDisablePopups;
 extern bool         configLuaProfiler;
 extern bool         configCtxProfiler;
 #endif
-extern bool         configDisableDownloadedModels;
 extern unsigned int configInterpolationMode;
 extern bool         configSingleplayerPause;
 extern bool         configDebugPrint;

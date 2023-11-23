@@ -193,7 +193,7 @@ void produce_interpolation_frames_and_delay(void) {
 
     u64 sCurrentFpsUpdateTime = (u64)clock_elapsed_f64();
     if (sLastFpsUpdateTime != sCurrentFpsUpdateTime) {
-        // u32 fps = sFramesSinceFpsUpdate / ((f32)(sCurrentFpsUpdateTime - sLastFpsUpdateTime));
+        u32 fps = sFramesSinceFpsUpdate / ((f32)(sCurrentFpsUpdateTime - sLastFpsUpdateTime));
         sLastFpsUpdateTime = sCurrentFpsUpdateTime;
         sFramesSinceFpsUpdate = 0;
         // printf("fps: %u\n", fps);
@@ -295,9 +295,6 @@ void* main_game_init(UNUSED void* arg) {
             configfile_save(configfile_name());
         } else if (memcmp(&configPlayerPalette, &gPalettePresets[i], sizeof(struct PlayerPalette)) == 0) { break; }
     }
-
-    if (configPlayerModel >= CT_MAX) { configPlayerModel = 0; }
-    if (configDjuiTheme >= DJUI_THEME_MAX) { configDjuiTheme = 0; }
 
     gCoopCompatibility = configCoopCompatibility;
 

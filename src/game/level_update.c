@@ -959,7 +959,7 @@ s16 level_trigger_warp(struct MarioState *m, s32 warpOp) {
 
             case WARP_OP_CREDITS_NEXT:
                 if (gCurrCreditsEntry == &sCreditsSequence[0]) {
-                    sDelayedWarpTimer = 60;
+                    sDelayedWarpTimer = gDjuiInMainMenu ? 1 : 60;
                     play_transition(WARP_TRANSITION_FADE_INTO_COLOR, 0x3C, 0x00, 0x00, 0x00);
                 } else {
                     sDelayedWarpTimer = 20;
@@ -1030,7 +1030,7 @@ void initiate_delayed_warp(void) {
                     break;
 
                 case WARP_OP_CREDITS_NEXT:
-                    sound_banks_disable(SEQ_PLAYER_SFX, SOUND_BANKS_ALL);
+                    sound_banks_disable(SEQ_PLAYER_SFX, gDjuiInMainMenu ? SOUND_BANKS_ALL & ~(1 << SOUND_BANK_MENU) : SOUND_BANKS_ALL);
 
                     gCurrCreditsEntry += 1;
 
@@ -1038,7 +1038,10 @@ void initiate_delayed_warp(void) {
                         lvl_skip_credits();
                     } else if (gCurrCreditsEntry != NULL) {
                         gCurrActNum = gCurrCreditsEntry->unk02 & 0x07;
-                        if ((gCurrCreditsEntry + 1)->levelNum == LEVEL_NONE) {
+                        if (gCurrCreditsEntry->levelNum == LEVEL_CASTLE_GROUNDS && gDjuiInMainMenu) {
+                            gCurrCreditsEntry = &sCreditsSequence[1];
+                            destWarpNode = WARP_NODE_CREDITS_NEXT;
+                        } else if ((gCurrCreditsEntry + 1)->levelNum == LEVEL_NONE) {
                             destWarpNode = WARP_NODE_CREDITS_END;
                         } else {
                             destWarpNode = WARP_NODE_CREDITS_NEXT;
@@ -1232,6 +1235,7 @@ s32 play_mode_normal(void) {
         }
     } else {
         if (gDjuiInMainMenu &&
+            !configMenuStaffRoll &&
             gCurrDemoInput == NULL &&
             configMenuDemos &&
             !gInPlayerMenu &&
@@ -1448,7 +1452,7 @@ UNUSED static s32 play_mode_unused(void) {
 
 void update_menu_level(void) {
     // figure out level
-    int curLevel = 0;
+    s32 curLevel = 0;
     switch (configMenuLevel) {
         case 0:  curLevel = LEVEL_CASTLE_GROUNDS; break;
         case 1:  curLevel = LEVEL_BOB;            break;
@@ -1471,25 +1475,41 @@ void update_menu_level(void) {
         default: curLevel = LEVEL_CASTLE_GROUNDS; break;
     }
 
-    // warp to level, this feels buggy
+    // figure out music
+    stop_cap_music();
+    if (!configMenuSound || configMenuStaffRoll || curLevel == LEVEL_CASTLE_GROUNDS) {
+        reset_volume();
+        disable_background_sound();
+        set_background_music(0, SEQ_MENU_FILE_SELECT, 0);
+    } else {
+        reset_volume();
+        disable_background_sound();
+        set_background_music(gCurrentArea->musicParam, gCurrentArea->musicParam2, 0);
+    }
+
+    if (configMenuStaffRoll) {
+        return;
+    } else {
+        gCurrCreditsEntry = NULL;
+    }
+
+    // warp to level
     if (gCurrLevelNum != curLevel) {
         if (gIsDemoActive) {
             stop_demo(NULL);
         }
 
-        gChangeLevel = curLevel;
-        gChangeActNum = 6;
+        dynos_warp_to_level(curLevel, 1, 6);
         gDemoCountdown = 0;
     }
-    if (gIsDemoActive) {
-        return;
-    }
+    if (gIsDemoActive) { return; }
 
     if (gCurrAreaIndex != 2 && gCurrLevelNum == LEVEL_THI) {
         sWarpDest.type = WARP_TYPE_CHANGE_AREA;
         sWarpDest.areaIdx = 2;
         sWarpDest.nodeId = 0x0A;
     }
+
     struct Object *o;
     // set mario/camera pos
     switch (gCurrLevelNum) {
@@ -1613,22 +1633,6 @@ void update_menu_level(void) {
     gMarioState->controller->stickY = 0;
     gMarioState->controller->stickMag = 0;
     gMarioState->intendedMag = 0;
-
-    // figure out music
-    stop_cap_music();
-    if (!configMenuSound || curLevel == LEVEL_CASTLE_GROUNDS) {
-        reset_volume();
-        disable_background_sound();
-        set_background_music(0, 0x0021, 0);
-    } else {
-        reset_volume();
-        disable_background_sound();
-
-        if (get_current_background_music() == SEQ_MENU_FILE_SELECT) {
-            gChangeLevel = curLevel;
-            gChangeActNum = 6;
-        }
-    }
 }
 
 s32 update_level(void) {
@@ -1747,7 +1751,7 @@ s32 init_level(void) {
             } else if (!gDebugLevelSelect) {
                 if (gMarioState && gMarioState->action != ACT_UNINITIALIZED) {
                     bool skipIntro = (gNetworkType == NT_NONE || gServerSettings.skipIntro != 0);
-                    if (gDjuiInMainMenu && (gNetworkType == NT_NONE)) {
+                    if (gDjuiInMainMenu && gNetworkType == NT_NONE) {
                         // pick random main menu level
                         if (configMenuRandom) {
                             srand(time(0));
@@ -1755,13 +1759,19 @@ s32 init_level(void) {
                             configMenuLevel = randLevel;
                         }
 
-                        if (configMenuLevel == 0 && sFirstCastleGroundsMenu) {
-                            set_mario_action(gMarioState, ACT_INTRO_CUTSCENE, 7);
+                        if (configMenuStaffRoll) {
+                            gMarioState->marioObj->header.gfx.node.flags &= ~GRAPH_RENDER_ACTIVE;
+                            warp_credits();
+                            level_trigger_warp(gMarioState, WARP_OP_CREDITS_NEXT);
                             sFirstCastleGroundsMenu = false;
                         } else {
-                            set_mario_action(gMarioState, ACT_IDLE, 0);
+                            if (configMenuLevel == 0 && sFirstCastleGroundsMenu) {
+                                set_mario_action(gMarioState, ACT_INTRO_CUTSCENE, 7);
+                                sFirstCastleGroundsMenu = false;
+                            } else {
+                                set_mario_action(gMarioState, ACT_IDLE, 0);
+                            }
                         }
-
                     } else if (skipIntro || save_file_exists(gCurrSaveFileNum - 1)) {
                         set_mario_action(gMarioState, ACT_IDLE, 0);
                     } else {

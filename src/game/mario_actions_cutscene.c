@@ -2969,7 +2969,7 @@ static s32 act_credits_cutscene(struct MarioState *m) {
             m->actionState += 2;
         }
 
-        if (gCurrCreditsEntry != NULL) {
+        if (gCurrCreditsEntry != NULL && !gDjuiInMainMenu) {
             if (m->playerIndex == 0) {
                 s32 width = m->actionState * 640 / 100;
                 s32 height = m->actionState * 480 / 100;
@@ -2999,6 +2999,7 @@ static s32 act_credits_cutscene(struct MarioState *m) {
 
         m->marioObj->header.gfx.angle[1] += (gCurrCreditsEntry->unk02 & 0xC0) << 8;
     }
+
     return FALSE;
 }
 
