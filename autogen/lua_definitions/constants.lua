@@ -274,14 +274,14 @@ function approach_f32(current, target, inc, dec)
             current = target
         end
     end
-    return current;
+    return current
 end
 
---- @param current number
---- @param target number
---- @param inc number
---- @param dec number
---- @return number
+--- @param current integer
+--- @param target integer
+--- @param inc integer
+--- @param dec integer
+--- @return integer
 function approach_s32(current, target, inc, dec)
     if current < target then
         current = current + inc
@@ -301,8 +301,15 @@ function approach_s32(current, target, inc, dec)
     elseif current < -2147483648 then
         current = 2147483647 + (current - (-2147483648))
     end
-    return current;
+    return current
 end
+
+-----------
+-- sound --
+-----------
+
+--- @type Vec3f
+gGlobalSoundSource = { x = 0, y = 0, z = 0 }
 
 --- @param bank number
 --- @param soundID number
