@@ -2080,7 +2080,7 @@ s32 cur_obj_detect_steep_floor(s16 steepAngleDegrees) {
         if (intendedFloorHeight < gLevelValues.floorLowerLimitMisc) {
             o->oWallAngle = o->oMoveAngleYaw + 0x8000;
             return 2;
-        } else if (intendedFloor->normal.y < steepNormalY && deltaFloorHeight > 0
+        } else if (intendedFloor && intendedFloor->normal.y < steepNormalY && deltaFloorHeight > 0
                    && intendedFloorHeight > o->oPosY) {
             o->oWallAngle = atan2s(intendedFloor->normal.z, intendedFloor->normal.x);
             return 1;
