@@ -60,7 +60,7 @@ void djui_panel_main_menu_create(struct DjuiBase* caller) {
             "WDW"
         };
 
-        char* djuiScaleChoices[3] = {"x0.85", "x1.0", "x1.5"};
+        char* djuiScaleChoices[3] = {"x0.85", "x1.0", "x1.25"};
 
         struct DjuiSelectionbox* selectionbox1 = djui_selectionbox_create(body, DLANG(MENU_OPTIONS, LEVEL), levelChoices, 18, &configMenuLevel, NULL);
         djui_base_set_enabled(&selectionbox1->base, !configMenuRandom);

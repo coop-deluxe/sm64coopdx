@@ -55,7 +55,7 @@ f32 djui_gfx_get_scale(void) {
             return 1.0f;
 
         case 2:
-            return 1.5f;
+            return 1.25f;
 
         default:
             return 1.0f;
