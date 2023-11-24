@@ -419,6 +419,8 @@ u32 check_ledge_grab(struct MarioState *m, struct Surface *wall, Vec3f intendedP
     ledgePos[2] = nextPos[2] - wall->normal.z * 60.0f;
     ledgePos[1] = find_floor(ledgePos[0], nextPos[1] + 160.0f, ledgePos[2], &ledgeFloor);
 
+    if (!ledgeFloor) { return FALSE; }
+
     if (gLevelValues.fixCollisionBugs && gLevelValues.fixCollisionBugsFalseLedgeGrab) {
         // fix false ledge grabs
         if (!ledgeFloor || ledgeFloor->normal.y < 0.90630779f) {
