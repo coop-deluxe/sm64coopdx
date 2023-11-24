@@ -216,8 +216,9 @@ void wiggler_update_segments(void) {
 static void wiggler_act_walk(void) {
     struct MarioState *marioState = nearest_mario_state_to_object(o);
     struct Object* player = marioState ? marioState->marioObj : NULL;
-    s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
+    s32 distanceToPlayer = player ? dist_between_objects(o, player) : 25000;
     s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
+    treat_far_home_as_mario(1200.0f, &distanceToPlayer, &angleToPlayer);
 
     o->oWigglerWalkAnimSpeed = 0.06f * o->oForwardVel;
 
@@ -481,7 +482,7 @@ void bhv_wiggler_update(void) {
     }
 
     struct Object* player = nearest_player_to_object(o);
-    s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
+    s32 distanceToPlayer = player ? dist_between_objects(o, player) : 25000;
     s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
     o->oDistanceToMario = distanceToPlayer;
     o->oAngleToMario = angleToPlayer;
