@@ -7,8 +7,6 @@
 #include "src/pc/configfile.h"
 #include "src/game/level_update.h"
 
-static bool sChangedScale = false;
-
 static struct DjuiSelectionbox* sLevelBox = NULL;
 
 static void djui_panel_random_menu(UNUSED struct DjuiBase* caller) {

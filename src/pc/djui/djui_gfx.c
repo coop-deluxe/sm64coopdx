@@ -30,8 +30,8 @@ void djui_gfx_displaylist_end(void) {
 static const Vtx vertex_djui_simple_rect[] = {
     {{{ 0, -1, 0 }, 0, { 0, 0 }, { 0xff, 0xff, 0xff, 0xff }}},
     {{{ 1, -1, 0 }, 0, { 0, 0 }, { 0xff, 0xff, 0xff, 0xff }}},
-    {{{ 1, 0, 0 }, 0, { 0, 0 }, { 0xff, 0xff, 0xff, 0xff }}},
-    {{{ 0, 0, 0 }, 0, { 0, 0 }, { 0xff, 0xff, 0xff, 0xff }}},
+    {{{ 1,  0, 0 }, 0, { 0, 0 }, { 0xff, 0xff, 0xff, 0xff }}},
+    {{{ 0,  0, 0 }, 0, { 0, 0 }, { 0xff, 0xff, 0xff, 0xff }}},
 };
 
 const Gfx dl_djui_simple_rect[] = {
@@ -58,10 +58,10 @@ f32 djui_gfx_get_scale(void) {
 /////////////////////////////////////////////
 
 static const Vtx vertex_djui_image[] = {
-    {{{ 0, -1, 0 }, 0, { 0, 0 }, { 0xff, 0xff, 0xff, 0xff }}},
+    {{{ 0, -1, 0 }, 0, {   0,  2048 }, { 0xff, 0xff, 0xff, 0xff }}},
     {{{ 1, -1, 0 }, 0, { 2048, 2048 }, { 0xff, 0xff, 0xff, 0xff }}},
-    {{{ 1, 0, 0 }, 0, { 2048, 0 }, { 0xff, 0xff, 0xff, 0xff }}},
-    {{{ 0, 0, 0 }, 0, { 0, 0 }, { 0xff, 0xff, 0xff, 0xff }}},
+    {{{ 1,  0, 0 }, 0, { 2048,    0 }, { 0xff, 0xff, 0xff, 0xff }}},
+    {{{ 0,  0, 0 }, 0, { 0,       0 }, { 0xff, 0xff, 0xff, 0xff }}},
 };
 
 const Gfx dl_djui_image[] = {
@@ -85,14 +85,14 @@ static u8 djui_gfx_power_of_two(u32 value) {
         case 2:    return 1;
         case 4:    return 2;
         case 8:    return 3;
-        case 16:    return 4;
-        case 32:    return 5;
-        case 64:    return 6;
-        case 128:    return 7;
-        case 256:    return 8;
-        case 512:   return 9;
-        case 1024:    return 10;
-        default:    return 11;
+        case 16:   return 4;
+        case 32:   return 5;
+        case 64:   return 6;
+        case 128:  return 7;
+        case 256:  return 8;
+        case 512:  return 9;
+        case 1024: return 10;
+        default:   return 11;
     }
 }
 
@@ -167,7 +167,7 @@ void djui_gfx_size_translate(f32* size) {
     u32 windowWidth, windowHeight;
     wm_api->get_dimensions(&windowWidth, &windowHeight);
 
-    *size = *size * ((f32)SCREEN_HEIGHT / (f32)windowHeight) * djui_gfx_get_scale()
+    *size = *size * ((f32)SCREEN_HEIGHT / (f32)windowHeight) * djui_gfx_get_scale();
 }
 
 bool djui_gfx_add_clipping_specific(struct DjuiBase* base, f32 dX, f32 dY, f32 dW, f32 dH) {
