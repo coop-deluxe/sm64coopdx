@@ -131,6 +131,9 @@ bool network_init(enum NetworkType inNetworkType, bool reconnecting) {
     gServerSettings.headlessServer = 0;
 #endif
 
+    gNametagsSettings.showHealth = false;
+    gNametagsSettings.showSelfTag = false;
+
     // initialize the network system
     gNetworkSentJoin = false;
     int rc = gNetworkSystem->initialize(inNetworkType, reconnecting);
