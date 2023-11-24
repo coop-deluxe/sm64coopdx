@@ -2722,13 +2722,14 @@ s32 cur_obj_progress_direction_table(void) {
     if (!table) { return 0; }
 
     s32 tableLength = 0;
-    while (table[tableLength] != -1 && tableLength < 50) {
+    while (table[tableLength] != -1 && tableLength < 150) {
         tableLength++;
     }
 
-    if (tableLength >= 50 || index >= tableLength) {
+    if (tableLength < 0 || index < 0 || tableLength >= 150 || index >= tableLength) {
         ret = table[0];
         o->oToxBoxMovementStep = 0;
+        LOG_ERROR("Exceeded direction table! tableLength %d, index %d\n", tableLength, index);
     } else if (table[index] != -1) {
         ret = table[index];
         o->oToxBoxMovementStep++;
