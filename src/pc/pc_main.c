@@ -73,7 +73,6 @@ u8 gRenderingInterpolated = 0;
 f32 gRenderingDelta = 0;
 
 f64 gGameSpeed = 1.0f; // TODO: should probably remove
-u32 gDjuiScale = 1; //0 = 0.85, 1 = 1.0, 2 = 1.5
 
 #define FRAMERATE 30
 static const f64 sFrameTime = (1.0 / ((double)FRAMERATE));
@@ -263,12 +262,7 @@ void game_exit(void) {
     exit(0);
 }
 
-void* main_game_init(UNUSED void* arg) {    
-    if (gDjuiScale != 0 || gDjuiScale != 1 || gDjuiScale != 2) { 
-        gDjuiScale = 1; 
-        configDjuiScale = 1;
-        }
-    
+void* main_game_init(UNUSED void* arg) {
     const char *gamedir = gCLIOpts.GameDir[0] ? gCLIOpts.GameDir : FS_BASEDIR;
     const char *userpath = gCLIOpts.SavePath[0] ? gCLIOpts.SavePath : sys_user_path();
     fs_init(sys_ropaths, gamedir, userpath);

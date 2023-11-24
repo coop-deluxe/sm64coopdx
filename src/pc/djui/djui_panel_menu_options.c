@@ -7,9 +7,7 @@
 #include "src/pc/configfile.h"
 #include "src/game/level_update.h"
 
-static struct DjuiText* sRestartText = NULL;
-
-bool changedScale = false;
+static bool sChangedScale = false;
 
 static struct DjuiSelectionbox* sLevelBox = NULL;
 
@@ -17,7 +15,7 @@ static void djui_panel_random_menu(UNUSED struct DjuiBase* caller) {
     djui_base_set_enabled(&sLevelBox->base, !configMenuRandom);
 }
 
-static void djui_panel_misc_djui_theme_change(UNUSED struct DjuiBase* caller) {
+static void djui_panel_misc_djui_setting_change(UNUSED struct DjuiBase* caller) {
     // god this is so hacky and terrible - djoslin0, 2023
     if (gDjuiInMainMenu) {
         djui_panel_shutdown();
@@ -34,14 +32,6 @@ static void djui_panel_misc_djui_theme_change(UNUSED struct DjuiBase* caller) {
         djui_panel_shutdown();
     }
 
-}
-
-static void djui_panel_misc_djui_scale_change(UNUSED struct DjuiBase* caller) {
-    if (changedScale) {
-        djui_text_set_text(sRestartText, DLANG(DISPLAY, MUST_RESTART));
-    } else {
-        changedScale = true;
-    }
 }
 
 void djui_panel_main_menu_create(struct DjuiBase* caller) {
@@ -84,27 +74,13 @@ void djui_panel_main_menu_create(struct DjuiBase* caller) {
         for (int i = 0; i < DJUI_THEME_MAX; i++) {
             themeChoices[i] = (char*)gDjuiThemes[i]->name;
         }
-        djui_selectionbox_create(body, DLANG(DJUI_THEMES, DJUI_THEME), themeChoices, DJUI_THEME_MAX, &configDjuiTheme, djui_panel_misc_djui_theme_change);
+        djui_selectionbox_create(body, DLANG(DJUI_THEMES, DJUI_THEME), themeChoices, DJUI_THEME_MAX, &configDjuiTheme, djui_panel_misc_djui_setting_change);
 
-        djui_checkbox_create(body, DLANG(DJUI_THEMES, CENTER), &configDjuiThemeCenter, djui_panel_misc_djui_theme_change);
+        djui_checkbox_create(body, DLANG(DJUI_THEMES, CENTER), &configDjuiThemeCenter, djui_panel_misc_djui_setting_change);
         
-        djui_selectionbox_create(body, DLANG(DJUI_THEMES, DJUI_SCALE), djuiScaleChoices, 3, &configDjuiScale, djui_panel_misc_djui_scale_change);
+        djui_selectionbox_create(body, DLANG(DJUI_THEMES, DJUI_SCALE), djuiScaleChoices, 3, &configDjuiScale, djui_panel_misc_djui_setting_change);
 
         djui_button_create(body, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
-
-        // Must restart text
-        sRestartText = djui_text_create(body, "");
-        djui_text_set_alignment(sRestartText, DJUI_HALIGN_CENTER, DJUI_VALIGN_TOP);
-        djui_base_set_color(&sRestartText->base, 255, 100, 100, 255);
-        djui_base_set_size_type(&sRestartText->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-        djui_base_set_size(&sRestartText->base, 1.0f, 64);
-
-        // force the restart text to update
-        if (changedScale) {
-            djui_text_set_text(sRestartText, DLANG(DISPLAY, MUST_RESTART));
-        } else {
-            djui_text_set_text(sRestartText, "");
-        }
     }
 
     djui_panel_add(caller, panel, NULL);
