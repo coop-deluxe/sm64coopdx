@@ -1,11 +1,10 @@
 #include "djui.h"
-#include "djui_theme.h"
 #include "djui_panel.h"
 #include "djui_panel_menu.h"
 #include "djui_panel_menu_options.h"
 #include "djui_panel_main.h"
 #include "djui_panel_options.h"
-#include "djui_panel_pause.h"
+//#include "djui_panel_pause.h"
 #include "djui_panel_language.h"
 #include "djui_panel_info.h"
 #include "pc/utils/misc.h"
@@ -24,25 +23,6 @@ static void djui_panel_compatibility_checkbox_on_value_change(UNUSED struct Djui
 }
 
 void djui_panel_misc_create(struct DjuiBase* caller);
-
-static void djui_panel_misc_djui_theme_change(UNUSED struct DjuiBase* caller) {
-    // god this is so hacky and terrible - djoslin0, 2023
-    if (gDjuiInMainMenu) {
-        djui_panel_shutdown();
-        gDjuiInMainMenu = true;
-        djui_panel_main_create(NULL);
-        djui_panel_options_create(NULL);
-        djui_panel_misc_create(NULL);
-    } else if (gDjuiPanelPauseCreated) {
-        djui_panel_shutdown();
-        djui_panel_pause_create(NULL);
-        djui_panel_options_create(NULL);
-        djui_panel_misc_create(NULL);
-    } else {
-        djui_panel_shutdown();
-    }
-
-}
 
 #ifdef DEVELOPMENT
 void djui_panel_options_debug_create(struct DjuiBase* caller) {
@@ -74,14 +54,6 @@ void djui_panel_misc_create(struct DjuiBase* caller) {
         djui_checkbox_create(body, DLANG(MISC, PAUSE_IN_SINGLEPLAYER), &configSingleplayerPause, NULL);
         djui_checkbox_create(body, DLANG(MISC, DISABLE_POPUPS), &configDisablePopups, NULL);
         
-        char* themeChoices[DJUI_THEME_MAX];
-        for (int i = 0; i < DJUI_THEME_MAX; i++) {
-            themeChoices[i] = (char*)gDjuiThemes[i]->name;
-        }
-        djui_selectionbox_create(body, DLANG(DJUI_THEMES, DJUI_THEME), themeChoices, DJUI_THEME_MAX, &configDjuiTheme, djui_panel_misc_djui_theme_change);
-
-        djui_checkbox_create(body, DLANG(DJUI_THEMES, CENTER), &configDjuiThemeCenter, djui_panel_misc_djui_theme_change);
-
         djui_checkbox_create(body, DLANG(MISC, COOP_COMPATIBILITY), &configCoopCompatibility, djui_panel_compatibility_checkbox_on_value_change);
         
         djui_button_create(body, DLANG(MISC, LANGUAGE), DJUI_BUTTON_STYLE_NORMAL, djui_panel_language_create);

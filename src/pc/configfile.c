@@ -162,6 +162,7 @@ char         configDestId[MAX_CONFIG_STRING]     = "0";
 bool         configFadeoutDistantSounds          = false;
 unsigned int configDjuiTheme                     = DJUI_THEME_DARK;
 bool         configDjuiThemeCenter               = true;
+unsigned int configDjuiScale                     = 1;
 bool         configCoopCompatibility             = true;
 
 static const struct ConfigOption options[] = {
@@ -277,7 +278,8 @@ static const struct ConfigOption options[] = {
     {.name = "coopnet_dest",                   .type = CONFIG_TYPE_STRING, .stringValue = (char*)&configDestId, .maxStringLength = MAX_CONFIG_STRING},
     {.name = "fade_distant_sounds",            .type = CONFIG_TYPE_BOOL  , .boolValue   = &configFadeoutDistantSounds},
     {.name = "djui_theme",                     .type = CONFIG_TYPE_UINT  , .uintValue   = &configDjuiTheme},
-    {.name = "djui_theme_center",              .type = CONFIG_TYPE_BOOL  , .boolValue   = &configDjuiThemeCenter}
+    {.name = "djui_theme_center",              .type = CONFIG_TYPE_BOOL  , .boolValue   = &configDjuiThemeCenter},
+    {.name = "djui_scale",                     .type = CONFIG_TYPE_UINT  , .uintValue   = &configDjuiScale}
 };
 
 // FunctionConfigOption functions
