@@ -1802,7 +1802,7 @@ int smlua_hook_exclamation_box(lua_State* L) {
         return 0;
     }
 
-    if (sHookedBehaviorsCount > MAX_HOOKED_EXCLAMATION_BOXES) {
+    if (sHookedExclamationBoxesCount > MAX_HOOKED_EXCLAMATION_BOXES) {
         LOG_LUA_LINE("hook_exclamation_box() calls exceeded maximum references");
         return 0;
     }
@@ -1839,7 +1839,7 @@ int smlua_hook_exclamation_box(lua_State* L) {
     hooked->mod = gLuaActiveMod;
 
     if (!gSmLuaConvertSuccess) { return 0; }
-    sHookedBehaviorsCount++;
+    sHookedExclamationBoxesCount++;
     return 1;
 }
 
@@ -1847,7 +1847,7 @@ int smlua_hook_exclamation_box(lua_State* L) {
 struct Object* smlua_call_exclamation_box_hook(struct Object* obj, bool write) {
     lua_State* L = gLuaState;
     if (L == NULL) { return NULL; }
-    for (int i = 0; i < sHookedBehaviorsCount; i++) {
+    for (int i = 0; i < sHookedExclamationBoxesCount; i++) {
         struct LuaHookedExclamationBox* hook = &sHookedExclamationBoxes[i];
 
         // Push 2 potential callbacks
@@ -1865,9 +1865,9 @@ struct Object* smlua_call_exclamation_box_hook(struct Object* obj, bool write) {
 
         // output the return value
         struct Object* returnObject = NULL;
-        if (write) {
+        if (write && reference != 0) {
             returnObject = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
-            if (!gSmLuaConvertSuccess || returnObject == NULL) {
+            if (lua_type(L, 1) != LUA_TTABLE || !gSmLuaConvertSuccess) {
                 LOG_LUA("Return value type is invalid for writeFunction: %d", lua_type(L, 1));
                 continue;
             }
