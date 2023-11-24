@@ -443,7 +443,7 @@ void network_receive_object(struct Packet* p) {
         deltaPos[1] = o->oPosZ - oldPos[2];
         for (s32 i = 0; i < MAX_PLAYERS; i++) {
             if (!is_player_active(&gMarioStates[i])) { continue; }
-            if (gMarioStates[i].marioObj->platform != o) { continue; }
+            if (!gMarioStates[i].marioObj || gMarioStates[i].marioObj->platform != o) { continue; }
             for (s32 j = 0; j < 3; j++) { gMarioStates[i].pos[j] += deltaPos[j]; }
         }
     }
