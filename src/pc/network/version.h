@@ -5,7 +5,7 @@
 
 #define VERSION_TEXT "beta"
 #define VERSION_NUMBER 36
-#define MINOR_VERSION_NUMBER 0
+#define MINOR_VERSION_NUMBER 1
 #define PATCH_VERSION_NUMBER 0
 
 #if defined(VERSION_JP)
