@@ -286,6 +286,8 @@ u32 djui_unicode_get_sprite_index(char* text) {
 }
 
 f32 djui_unicode_get_sprite_width(char* text, const f32 font_widths[]) {
+    if (!text) { return 0; }
+
     // check for ASCI
     if ((u8)*text < 128) {
         // make sure it's in the valid range
