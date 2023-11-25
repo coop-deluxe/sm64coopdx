@@ -160,7 +160,7 @@ void first_person_update(void) {
             Vec3f camDir = {
                 m->area->camera->focus[0] - m->area->camera->pos[0],
                 m->area->camera->focus[1] - m->area->camera->pos[1],
-                m->area->camera->focus[2] - m->area->camera->pos[2],
+                m->area->camera->focus[2] - m->area->camera->pos[2]
             };
             vec3f_normalize(camDir);
             vec3f_mul(camDir, 100);

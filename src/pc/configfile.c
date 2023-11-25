@@ -627,9 +627,7 @@ void configfile_load(void) {
 void configfile_save(const char *filename) {
     FILE *file;
 
-#ifdef DEVELOPMENT
     printf("Saving configuration to '%s'\n", filename);
-#endif
 
     file = fopen(fs_get_write_path(filename), "w");
     if (file == NULL) {

@@ -4,7 +4,6 @@
 #include "djui_panel_menu_options.h"
 #include "djui_panel_main.h"
 #include "djui_panel_options.h"
-//#include "djui_panel_pause.h"
 #include "djui_panel_language.h"
 #include "djui_panel_info.h"
 #include "pc/utils/misc.h"

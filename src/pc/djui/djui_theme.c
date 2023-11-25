@@ -172,9 +172,9 @@ struct DjuiTheme* gDjuiThemes[] = {
 };
 
 struct DjuiColor djui_theme_shade_color(struct DjuiColor color) {
-    color.r *= 0.75f;
-    color.g *= 0.75f;
-    color.b *= 0.75f;
+    color.r *= 0.6f;
+    color.g *= 0.6f;
+    color.b *= 0.6f;
     return color;
 }
 
