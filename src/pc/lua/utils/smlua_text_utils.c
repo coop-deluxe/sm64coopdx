@@ -41,6 +41,7 @@ AT_STARTUP static void smlua_text_utils_init() {
         snprintf(courseActNames->name, 50, "%s", courseBuffer);
         snprintf(courseActNames->orig, 50, "%s", courseBuffer);
         courseActNames->modIndex = -1;
+        courseActNames->actName = NULL;
 
         // Individual acts
         if (COURSE_IS_MAIN_COURSE(courseNum)) {
