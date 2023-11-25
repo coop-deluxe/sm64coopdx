@@ -69,6 +69,8 @@ static void enemy_lakitu_update_speed_and_angle(void) {
     s32 distanceToPlayer = player ? dist_between_objects(o, player) : 25000;
     s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
 
+    treat_far_home_as_mario(2000.0f, &distanceToPlayer, &angleToPlayer);
+
     f32 minSpeed = 0;
     s16 turnSpeed = 0;
 
