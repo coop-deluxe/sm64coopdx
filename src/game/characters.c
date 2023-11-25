@@ -955,7 +955,7 @@ struct Character gCharacters[CT_MAX] = {
         .animSlidingOnBottomWithLightObj =      MARIO_ANIM_SLIDING_ON_BOTTOM_WITH_LIGHT_OBJ,
         .animStandUpFromSlidingWithLightObj =   MARIO_ANIM_STAND_UP_FROM_SLIDING_WITH_LIGHT_OBJ,
         .animRidingShell =                      MARIO_ANIM_RIDING_SHELL,
-        .animWalking =                          WALUIGI_ANIM_WALKING,
+        .animWalking =                          MARIO_ANIM_WALKING,
         .animForwardFlip =                      MARIO_ANIM_FORWARD_FLIP,
         .animJumpRidingShell =                  MARIO_ANIM_JUMP_RIDING_SHELL,
         .animLandFromDoubleJump =               MARIO_ANIM_LAND_FROM_DOUBLE_JUMP,
@@ -997,7 +997,7 @@ struct Character gCharacters[CT_MAX] = {
         .animForwardSpinning =                  MARIO_ANIM_FORWARD_SPINNING,
         .animBackwardSpinning =                 MARIO_ANIM_BACKWARD_SPINNING,
         .animBreakdance =                       MARIO_ANIM_BREAKDANCE,
-        .animRunning =                          WALUIGI_ANIM_RUNNING,
+        .animRunning =                          MARIO_ANIM_RUNNING,
         .animRunningUnused =                    MARIO_ANIM_RUNNING_UNUSED,
         .animSoftBackKb =                       MARIO_ANIM_SOFT_BACK_KB,
         .animSoftFrontKb =                      MARIO_ANIM_SOFT_FRONT_KB,
@@ -1614,6 +1614,6 @@ s32 get_character_anim(struct MarioState* m, enum CharacterAnimID characterAnim)
     if (m == NULL || m->marioObj == NULL) { return 0; }
 
     struct Character* character = ((m == NULL || m->character == NULL) ? &gCharacters[CT_MARIO] : m->character);
-    if (!character || characterAnim < 0 || characterAnim >= CHAR_ANIM_MAX) { return 0; }
+    if (!character || characterAnim < 0 || characterAnim >= CHAR_ANIM_MAX) { return characterAnim; }
     return character->anims[characterAnim];
 }

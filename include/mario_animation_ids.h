@@ -215,8 +215,8 @@ enum MarioAnimID
     /* 0xCE */ MARIO_ANIM_RETURN_FROM_STAR_DANCE,
     /* 0xCF */ MARIO_ANIM_FORWARD_SPINNING_FLIP,
     /* 0xD0 */ MARIO_ANIM_TRIPLE_JUMP_FLY,
-    /* 0xD1 */ WALUIGI_ANIM_WALKING,
-    /* 0xD2 */ WALUIGI_ANIM_RUNNING
+    /* 0xD1 */ // WALUIGI_ANIM_WALKING, // disabling for now until we find a better way to deal with OMM
+    /* 0xD2 */ // WALUIGI_ANIM_RUNNING  // disabling for now until we find a better way to deal with OMM
 };
 
 /* Character Animation IDs*/
