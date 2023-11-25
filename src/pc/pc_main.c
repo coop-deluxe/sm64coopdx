@@ -337,11 +337,15 @@ int main(int argc, char *argv[]) {
     }
 
     // Start the thread for setting up the game
+#ifndef WAPI_DXGI
     if (pthread_mutex_init(&gLoadingThreadMutex, NULL) == 0 && pthread_create(&gLoadingThreadId, NULL, main_game_init, (void*) 1) == 0) {
         gIsThreaded = true;
         render_loading_screen(); // Render the loading screen while the game is setup
         gIsThreaded = false;
     } else {
+#else
+    {
+#endif
         main_game_init(NULL); // Failsafe incase threading doesn't work
     }
     pthread_mutex_destroy(&gLoadingThreadMutex);

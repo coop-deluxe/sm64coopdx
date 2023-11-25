@@ -20,6 +20,9 @@
 #endif
 #include <PR/gbi.h>
 
+#define DECLARE_GFX_DXGI_FUNCTIONS
+#include "gfx_dxgi.h"
+
 #include "../configfile.h"
 #include "../pc_main.h"
 
@@ -37,9 +40,6 @@ extern "C" {
 #include "gfx_pc.h"
 
 #define WINCLASS_NAME L"N64GAME"
-
-#define DECLARE_GFX_DXGI_FUNCTIONS
-#include "gfx_dxgi.h"
 
 #ifdef VERSION_EU
 #define FRAME_INTERVAL_US_NUMERATOR 40000
