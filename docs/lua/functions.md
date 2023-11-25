@@ -724,6 +724,7 @@
 <br />
 
 - djui_console.h
+   - [djui_console_message_dequeue](functions-3.md#djui_console_message_dequeue)
    - [djui_console_toggle](functions-3.md#djui_console_toggle)
 
 <br />
@@ -1139,14 +1140,14 @@
 <br />
 
 - network_player.h
-   - [get_network_player_from_area](functions-3.md#get_network_player_from_area)
-   - [get_network_player_from_level](functions-3.md#get_network_player_from_level)
-   - [get_network_player_smallest_global](functions-3.md#get_network_player_smallest_global)
-   - [network_player_color_to_palette](functions-3.md#network_player_color_to_palette)
-   - [network_player_connected_count](functions-3.md#network_player_connected_count)
-   - [network_player_from_global_index](functions-3.md#network_player_from_global_index)
-   - [network_player_palette_to_color](functions-3.md#network_player_palette_to_color)
-   - [network_player_set_description](functions-3.md#network_player_set_description)
+   - [get_network_player_from_area](functions-4.md#get_network_player_from_area)
+   - [get_network_player_from_level](functions-4.md#get_network_player_from_level)
+   - [get_network_player_smallest_global](functions-4.md#get_network_player_smallest_global)
+   - [network_player_color_to_palette](functions-4.md#network_player_color_to_palette)
+   - [network_player_connected_count](functions-4.md#network_player_connected_count)
+   - [network_player_from_global_index](functions-4.md#network_player_from_global_index)
+   - [network_player_palette_to_color](functions-4.md#network_player_palette_to_color)
+   - [network_player_set_description](functions-4.md#network_player_set_description)
 
 <br />
 

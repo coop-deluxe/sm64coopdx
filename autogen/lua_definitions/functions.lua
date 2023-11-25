@@ -3626,6 +3626,11 @@ function djui_chat_message_create(message)
 end
 
 --- @return nil
+function djui_console_message_dequeue()
+    -- ...
+end
+
+--- @return nil
 function djui_console_toggle()
     -- ...
 end
