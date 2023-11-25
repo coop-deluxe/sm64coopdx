@@ -51,6 +51,7 @@ void sent_history_init(ArrayList *arrayList) {
 }
 
 void sent_history_add_message(ArrayList *arrayList, const char *newMessage) {
+    if (!newMessage || newMessage[0] != '/') { return; }
     if (arrayList->size == MAX_HISTORY_SIZE) {
         for (s32 i = 1; i < MAX_HISTORY_SIZE; i++) {
             snprintf(arrayList->messages[i-1], MAX_MSG_LENGTH, "%s", arrayList->messages[i]);
@@ -126,7 +127,7 @@ static void djui_chat_box_input_enter(struct DjuiInputbox* chatInput) {
     if (strlen(chatInput->buffer) != 0) {
         sent_history_add_message(&sentHistory, chatInput->buffer);
         if (chatInput->buffer[0] == '/') {
-            if (strcmp(chatInput->buffer, "/help") == 0 || strcmp(chatInput->buffer, "/?") == 0) {
+            if (strcmp(chatInput->buffer, "/help") == 0 || strcmp(chatInput->buffer, "/?") == 0 || strcmp(chatInput->buffer, "/") == 0) {
                 display_chat_commands();
             } else if (!exec_chat_command(chatInput->buffer)) {
                 char extendedUnknownCommandMessage[MAX_MSG_LENGTH];
@@ -416,26 +417,36 @@ static bool djui_chat_box_input_on_key_down(struct DjuiBase* base, int scancode)
 
     switch (scancode) {
         case SCANCODE_UP:
-            sent_history_update_current_message(&sentHistory, gDjuiChatBox->chatInput->buffer);
-            sent_history_navigate(&sentHistory, true);
-            if (strcmp(previousText, gDjuiChatBox->chatInput->buffer) != 0) {
-                reset_tab_completion_all();
+            if (gDjuiChatBox->chatInput && gDjuiChatBox->chatInput->buffer && gDjuiChatBox->chatInput->buffer[0] != '/') {
+                gDjuiChatBox->scrolling = true;
+                if (canScrollDown) { *yValue = fmin(*yValue + 15, 0); }
+            } else {
+                sent_history_update_current_message(&sentHistory, gDjuiChatBox->chatInput->buffer);
+                sent_history_navigate(&sentHistory, true);
+                if (strcmp(previousText, gDjuiChatBox->chatInput->buffer) != 0) {
+                    reset_tab_completion_all();
+                }
             }
             return true;
         case SCANCODE_DOWN:
-            sent_history_update_current_message(&sentHistory, gDjuiChatBox->chatInput->buffer);
-            sent_history_navigate(&sentHistory, false);
-            if (strcmp(previousText, gDjuiChatBox->chatInput->buffer) != 0) {
-                reset_tab_completion_all();
+            if (gDjuiChatBox->chatInput && gDjuiChatBox->chatInput->buffer && gDjuiChatBox->chatInput->buffer[0] != '/') {
+                gDjuiChatBox->scrolling = true;
+                if (canScrollUp) { *yValue = fmax(*yValue - 15, yMax); }
+            } else {
+                sent_history_update_current_message(&sentHistory, gDjuiChatBox->chatInput->buffer);
+                sent_history_navigate(&sentHistory, false);
+                if (strcmp(previousText, gDjuiChatBox->chatInput->buffer) != 0) {
+                    reset_tab_completion_all();
+                }
             }
             return true;
         case SCANCODE_PAGE_UP:
             gDjuiChatBox->scrolling = true;
-            if (canScrollDown) { *yValue = fmin(*yValue + 15, 0); }
+            if (canScrollDown) { *yValue = fmin(*yValue + pageAmount, 0); }
             return true;
         case SCANCODE_PAGE_DOWN:
             gDjuiChatBox->scrolling = true;
-            if (canScrollUp) { *yValue = fmax(*yValue - 15, yMax); }
+                if (canScrollUp) { *yValue = fmax(*yValue - pageAmount, yMax); }
             return true;
         case SCANCODE_POS1:
             gDjuiChatBox->scrolling = true;
