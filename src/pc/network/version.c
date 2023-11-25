@@ -3,6 +3,9 @@
 #include "types.h"
 #include "pc/pc_main.h"
 
+#undef VERSION_TEXT
+#define VERSION_TEXT "v"
+
 static char sVersionString[MAX_VERSION_LENGTH] = { 0 };
 static char sLocalVersionString[MAX_LOCAL_VERSION_LENGTH] = { 0 };
 

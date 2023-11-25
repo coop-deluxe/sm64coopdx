@@ -3,7 +3,7 @@
 
 #define SM64COOPDX_VERSION "v0.1"
 
-#define VERSION_TEXT "v"
+#define VERSION_TEXT "beta"
 #define VERSION_NUMBER 36
 #define MINOR_VERSION_NUMBER 0
 #define PATCH_VERSION_NUMBER 0
