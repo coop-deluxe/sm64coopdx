@@ -163,15 +163,36 @@ struct GraphNode* DynOS_Model_GetGeo(u32 aId) {
     return vec.back().graphNode;
 }
 
-u32 DynOS_Model_GetIdFromGraphNode(struct GraphNode* aNode) {
+static u32 DynOS_Model_GetIdFromGeoRef(u32 aIndex, void* aGeoRef) {
     u32 lowest = 9999;
     for (auto& it : sIdMap) {
-        if (it.first > lowest) { continue; }
+        u32 id = it.first;
+        if (id > lowest) { continue; }
+        if (!it.second.size() || it.second.empty()) { continue; }
+        auto& node = it.second.back();
+        if (aGeoRef == node.graphNode->georef) {
+            lowest = id;
+        }
+    }
+    if (lowest < 9999) { return lowest; }
+    return aIndex;
+}
+
+u32 DynOS_Model_GetIdFromGraphNode(struct GraphNode* aNode) {
+    u32 lowest = 9999;
+    void* georef = NULL;
+    for (auto& it : sIdMap) {
+        u32 id = it.first;
+        if (id > lowest) { continue; }
         if (!it.second.size() || it.second.empty()) { continue; }
         auto& node = it.second.back();
         if (aNode == node.graphNode) {
-            lowest = it.first;
+            lowest = id;
+            georef = (void*)node.graphNode->georef;
         }
+    }
+    if (georef) {
+        lowest = DynOS_Model_GetIdFromGeoRef(lowest, georef);
     }
     if (lowest < 9999) { return lowest; }
     return MODEL_ERROR_MODEL;
