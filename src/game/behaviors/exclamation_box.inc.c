@@ -131,19 +131,11 @@ void exclamation_box_spawn_contents(struct Struct802C0DF0 *a0, u8 a1) {
         return;
     }
 
-    struct Object* luaSpawnedObject = NULL;
-    if ((luaSpawnedObject = smlua_call_exclamation_box_hook(o, true)) != NULL) {
-        luaSpawnedObject->parentObj = o; // Allows spawned stars to work like it was a normal exclamation box
-        (void *)smlua_call_exclamation_box_hook(luaSpawnedObject, false);
-        return;
-    }
-
     while (a0->unk0 != 99) {
         if (a1 == a0->unk0) {
             s32 model = exclamation_replace_model(marioState, a0->model);
 
             spawnedObject = spawn_object(o, model, a0->behavior);
-            (void *)smlua_call_exclamation_box_hook(spawnedObject, false);
             if (spawnedObject != NULL) {
                 spawnedObject->oVelY = 20.0f;
                 spawnedObject->oForwardVel = 3.0f;

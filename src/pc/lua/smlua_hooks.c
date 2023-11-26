@@ -1777,110 +1777,6 @@ int smlua_hook_on_sync_table_change(lua_State* L) {
     return 1;
 }
 
-  ////////////////////////////
- // hooked exclamation box //
-////////////////////////////
-
-struct LuaHookedExclamationBox {
-    int readFuncReference;
-    int writeFuncReference;
-    struct Mod* mod;
-};
-
-#define MAX_HOOKED_EXCLAMATION_BOXES 255 // Way more than needed, but better safe than sorry
-
-static struct LuaHookedExclamationBox sHookedExclamationBoxes[MAX_HOOKED_EXCLAMATION_BOXES] = { 0 };
-static int sHookedExclamationBoxesCount = 0;
-
-// Bind to lua
-int smlua_hook_exclamation_box(lua_State* L) {
-    if (L == NULL) { return 0; }
-    if (!smlua_functions_valid_param_count(L, 2)) { return 0; }
-
-    if (gLuaLoadingMod == NULL) {
-        LOG_LUA_LINE("hook_exclamation_box() can only be called on load.");
-        return 0;
-    }
-
-    if (sHookedExclamationBoxesCount > MAX_HOOKED_EXCLAMATION_BOXES) {
-        LOG_LUA_LINE("hook_exclamation_box() calls exceeded maximum references");
-        return 0;
-    }
-
-    int readReference = 0;
-    int readReferenceType = lua_type(L, 1);
-    if (readReferenceType == LUA_TNIL) {
-        // nothing
-    } else if (readReferenceType == LUA_TFUNCTION) {
-        // get reference
-        lua_pushvalue(L, 1);
-        readReference = luaL_ref(L, LUA_REGISTRYINDEX);
-    } else {
-        LOG_LUA_LINE("Hook exclamation box: tried to reference non-function for read function");
-        return 0;
-    }
-
-    int writeReference = 0;
-    int writeReferenceType = lua_type(L, 2);
-    if (writeReferenceType == LUA_TNIL) {
-        // nothing
-    } else if (writeReferenceType == LUA_TFUNCTION) {
-        // get reference
-        lua_pushvalue(L, 2);
-        writeReference = luaL_ref(L, LUA_REGISTRYINDEX);
-    } else {
-        LOG_LUA_LINE("Hook exclamation box: tried to reference non-function for write function");
-        return 0;
-    }
-
-    struct LuaHookedExclamationBox* hooked = &sHookedExclamationBoxes[sHookedExclamationBoxesCount];
-    hooked->readFuncReference = readReference;
-    hooked->writeFuncReference = writeReference;
-    hooked->mod = gLuaActiveMod;
-
-    if (!gSmLuaConvertSuccess) { return 0; }
-    sHookedExclamationBoxesCount++;
-    return 1;
-}
-
-// Called from the exclamation boxes
-struct Object* smlua_call_exclamation_box_hook(struct Object* obj, bool write) {
-    lua_State* L = gLuaState;
-    if (L == NULL) { return NULL; }
-    for (int i = 0; i < sHookedExclamationBoxesCount; i++) {
-        struct LuaHookedExclamationBox* hook = &sHookedExclamationBoxes[i];
-
-        // Push 2 potential callbacks
-        int reference = write ? hook->writeFuncReference : hook->readFuncReference;
-        lua_rawgeti(L, LUA_REGISTRYINDEX, reference);
-
-        // push object
-        smlua_push_object(L, LOT_OBJECT, obj);
-
-        // call the callback
-        if (reference != 0 && 0 != smlua_call_hook(L, 1, 1, 0, hook->mod)) {
-            LOG_LUA("Failed to call the exclamation box callback: %s", (write ? "writeFunction" : "readFunction"));
-            continue;
-        }
-
-        // output the return value
-        struct Object* returnObject = NULL;
-        if (write && reference != 0) {
-            returnObject = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
-            if (lua_type(L, 1) != LUA_TTABLE || !gSmLuaConvertSuccess) {
-                LOG_LUA("Return value type is invalid for writeFunction: %d", lua_type(L, 1));
-                continue;
-            }
-        }
-        lua_pop(L, 1);
-
-        return returnObject;
-    }
-
-    return NULL;
-}
-
-
   //////////
  // misc //
 //////////
@@ -1956,5 +1852,4 @@ void smlua_bind_hooks(void) {
     smlua_bind_function(L, "hook_on_sync_table_change", smlua_hook_on_sync_table_change);
     smlua_bind_function(L, "hook_behavior", smlua_hook_behavior);
     smlua_bind_function(L, "update_chat_command_description", smlua_update_chat_command_description);
-    smlua_bind_function(L, "hook_exclamation_box", smlua_hook_exclamation_box);
 }

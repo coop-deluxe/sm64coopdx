@@ -140,9 +140,6 @@ bool smlua_call_event_hooks_mario_param_and_int_ret_int(enum LuaHookedEventType 
 bool smlua_call_event_hooks_mario_param_and_int_and_int_ret_int(enum LuaHookedEventType hookType, struct MarioState* m, s32 param, u32 args, s32* returnValue);
 void smlua_call_event_hooks_graph_node_object_and_int_param(enum LuaHookedEventType hookType, struct GraphNodeObject* node, s32 param);
 
-int smlua_hook_exclamation_box(lua_State* L);
-struct Object* smlua_call_exclamation_box_hook(struct Object* obj, bool write);
-
 enum BehaviorId smlua_get_original_behavior_id(const BehaviorScript* behavior);
 const BehaviorScript* smlua_override_behavior(const BehaviorScript* behavior);
 const BehaviorScript* smlua_get_hooked_behavior_from_id(enum BehaviorId id, bool returnOriginal);
