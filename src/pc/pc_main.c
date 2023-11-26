@@ -376,7 +376,6 @@ int main(int argc, char *argv[]) {
         djui_panel_modlist_create(NULL);
     } else {
         network_init(NT_NONE, false);
-        WAPI.delay(200);
     }
 
     // Main loop

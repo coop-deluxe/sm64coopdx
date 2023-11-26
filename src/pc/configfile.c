@@ -162,7 +162,7 @@ char         configDestId[MAX_CONFIG_STRING]     = "0";
 bool         configFadeoutDistantSounds          = false;
 unsigned int configDjuiTheme                     = DJUI_THEME_DARK;
 bool         configDjuiThemeCenter               = true;
-unsigned int configDjuiScale                     = 1;
+unsigned int configDjuiScale                     = 0;
 bool         configCoopCompatibility             = true;
 
 static const struct ConfigOption options[] = {

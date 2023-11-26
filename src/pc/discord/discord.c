@@ -1,5 +1,6 @@
 #include "discord.h"
 #include "pc/djui/djui.h"
+#include "pc/crash_handler.h"
 #include "pc/debuglog.h"
 #include "pc/pc_main.h"
 
@@ -89,6 +90,7 @@ static void on_current_user_update(UNUSED void* data) {
 
     // remember user id
     app.userId = user.id;
+    gPcDebug.debugId = app.userId;
 
     // copy over discord username if we haven't set one yet
     if (configPlayerName[0] == '\0' && strlen(user.username) > 0) {
@@ -122,7 +124,7 @@ static void discord_initialize(void) {
     // set up discord params
     struct DiscordCreateParams params = { 0 };
     DiscordCreateParamsSetDefault(&params);
-    params.client_id = gCoopCompatibility ? APPLICATION_ID_COOP : APPLICATION_ID_COOPDX;
+    params.client_id = gCoopCompatibility ? APPLICATION_ID_COOP : APPLICATION_ID_COOPDX; // you have to have activity status on if you don't want discord to prompt you to authorize on every boot
     params.flags = DiscordCreateFlags_NoRequireDiscord;
     params.event_data = &app;
     params.user_events = discord_user_initialize();

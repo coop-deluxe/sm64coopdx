@@ -1550,7 +1550,7 @@ all:
 		rm -rf build/us_pc/sm64coopdx.app; \
 		mkdir -p $(APP_MACOS_DIR); \
 		mkdir -p $(APP_CONTENTS_DIR)/Resources; \
-		mv build/us_pc/sm64.us.f3dex2e $(APP_MACOS_DIR)/sm64coopdx; \
+		mv build/us_pc/sm64coopdx $(APP_MACOS_DIR)/sm64coopdx; \
 		cp -r build/us_pc/* $(APP_MACOS_DIR); \
 		cp res/icon.icns $(APP_CONTENTS_DIR)/Resources/icon.icns; \
 		echo "APPL????" > $(APP_CONTENTS_DIR)/PkgInfo; \
