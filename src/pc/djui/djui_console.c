@@ -14,14 +14,16 @@ bool sDjuiConsoleQueueMessages = true;
 
 struct ConsoleQueuedMessage {
     char* message;
+    enum ConsoleMessageLevel level;
     struct ConsoleQueuedMessage* next;
 };
 
 struct ConsoleQueuedMessage* sConsoleQueuedMessages = NULL;
 
-static void djui_console_message_queue(const char* message) {
+static void djui_console_message_queue(const char* message, enum ConsoleMessageLevel level) {
     struct ConsoleQueuedMessage* queued = malloc(sizeof(struct ConsoleQueuedMessage));
     queued->message = strdup(message);
+    queued->level = level;
     queued->next = NULL;
     if (sConsoleQueuedMessages == NULL) {
         sConsoleQueuedMessages = queued;
@@ -39,7 +41,7 @@ void djui_console_message_dequeue(void) {
     struct ConsoleQueuedMessage* entry = sConsoleQueuedMessages;
     while (entry) {
         struct ConsoleQueuedMessage* next = entry->next;
-        djui_console_message_create(entry->message);
+        djui_console_message_create(entry->message, entry->level);
         free(entry->message);
         free(entry);
         entry = next;
@@ -101,9 +103,9 @@ static bool djui_console_on_key_down(UNUSED struct DjuiBase* base, int scancode)
     return true;
 }
 
-void djui_console_message_create(const char* message) {
+void djui_console_message_create(const char* message, enum ConsoleMessageLevel level) {
     if (sDjuiConsoleQueueMessages || !gDjuiConsole) {
-        djui_console_message_queue(message);
+        djui_console_message_queue(message, level);
         return;
     }
     djui_base_compute_tree(&gDjuiConsole->base);
@@ -117,7 +119,17 @@ void djui_console_message_create(const char* message) {
     djui_base_set_alignment(tBase, DJUI_HALIGN_LEFT, DJUI_VALIGN_BOTTOM);
     djui_base_set_size_type(tBase, DJUI_SVT_ABSOLUTE, DJUI_SVT_ABSOLUTE);
     djui_base_set_size(tBase, maxTextWidth, 32);
-    djui_base_set_color(tBase, 220, 220, 220, 255);
+    switch (level) {
+        case CONSOLE_MESSAGE_INFO:
+            djui_base_set_color(tBase, 220, 220, 220, 255);
+            break;
+        case CONSOLE_MESSAGE_WARNING:
+            djui_base_set_color(tBase, 255, 255, 160, 255);
+            break;
+        case CONSOLE_MESSAGE_ERROR:
+            djui_base_set_color(tBase, 255, 160, 160, 255);
+            break;
+    }
 
     // figure out chat message height
     text->base.comp.width = maxTextWidth;

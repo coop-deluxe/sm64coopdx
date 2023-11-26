@@ -43,12 +43,14 @@ in_files = [
     "src/audio/external.h",
     "src/game/envfx_snow.h",
     "src/pc/mods/mod_storage.h",
-    "src/game/first_person_cam.h"
+    "src/game/first_person_cam.h",
+    "src/pc/djui/djui_console.h"
 ]
 
 exclude_constants = {
     "*": [ "^MAXCONTROLLERS$", "^AREA_[^T].*", "^AREA_T[HTO]", "^CONT_ERR.*", "^READ_MASK$", "^SIGN_RANGE$", ],
-    "src/game/obj_behaviors.c": [ "^o$" ]
+    "src/game/obj_behaviors.c": [ "^o$" ],
+    "src/pc/djui/djui_console.h": [ "CONSOLE_MAX_TMP_BUFFER" ]
 }
 
 include_constants = {

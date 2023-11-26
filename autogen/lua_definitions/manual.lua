@@ -133,13 +133,13 @@ end
 -- functions --
 ---------------
 
---- @param t number
+--- @param t number Angle
 --- @return number
 function sins(t)
     -- ...
 end
 
---- @param t number
+--- @param t number Angle
 --- @return number
 function coss(t)
     -- ...
@@ -276,6 +276,21 @@ function texture_override_reset(textureName)
     -- ...
 end
 
+--- @class bhvData
+--- @field behavior BehaviorId
+--- @field behaviorArg integer
+
+--- @param levelNum LevelNum | integer
+--- @param func fun(areaIndex:number, bhvData:bhvData, macroBhvIds:BehaviorId[], macroBhvArgs:integer[])
+--- @return nil
+--- When `func` is called, arguments are filled depending on the level command:
+--- - `AREA` command: only `areaIndex` is filled. It's a number.
+--- - `OBJECT` command: only `bhvData` is filled. `bhvData` is a table with two fields: `behavior` and `behaviorArg`.
+--- - `MACRO` command: only `macroBhvIds` and `macroBhvArgs` are filled. `macrobhvIds` is a list of behavior ids. `macroBhvArgs` is a list of behavior params. Both lists have the same size and start at index 0.
+function level_script_parse(levelNum, func)
+    -- ...
+end
+
 --- @param name string
 --- @param flags integer
 --- @param animYTransDivisor integer
@@ -290,18 +305,11 @@ function smlua_anim_util_register_animation(name, flags, animYTransDivisor, star
     -- ...
 end
 
---- @class bhvData
-    --- @field behavior BehaviorId
-    --- @field behaviorArg integer
-
---- @param levelNum LevelNum | integer
---- @param func fun(areaIndex:number, bhvData:bhvData, macroBhvIds:BehaviorId[], macroBhvArgs:integer[])
+--- @param message string The message to log
+--- @param level? ConsoleMessageLevel Optional; Determines whether the message should appear as info, a warning or an error.
 --- @return nil
---- When `func` is called, arguments are filled depending on the level command:
---- - `AREA` command: only `areaIndex` is filled. It's a number.
---- - `OBJECT` command: only `bhvData` is filled. `bhvData` is a table with two fields: `behavior` and `behaviorArg`.
---- - `MACRO` command: only `macroBhvIds` and `macroBhvArgs` are filled. `macrobhvIds` is a list of behavior ids. `macroBhvArgs` is a list of behavior params. Both lists have the same size and start at index 0.
-function level_script_parse(levelNum, func)
+--- Logs a message to the in-game console
+function log_to_console(message, level)
     -- ...
 end
 

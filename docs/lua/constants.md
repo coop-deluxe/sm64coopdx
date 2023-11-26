@@ -12,6 +12,8 @@
     - [enum PlayerParts](#enum-PlayerParts)
 - [dialog_ids.h](#dialog_idsh)
     - [enum DialogId](#enum-DialogId)
+- [djui_console.h](#djui_consoleh)
+    - [enum ConsoleMessageLevel](#enum-ConsoleMessageLevel)
 - [djui_hud_utils.h](#djui_hud_utilsh)
     - [enum DjuiFontType](#enum-DjuiFontType)
     - [enum HudUtilsFilter](#enum-HudUtilsFilter)
@@ -1090,6 +1092,19 @@
 | DIALOG_168 | 168 |
 | DIALOG_169 | 169 |
 | DIALOG_COUNT | 170 |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [djui_console.h](#djui_console.h)
+
+### [enum ConsoleMessageLevel](#ConsoleMessageLevel)
+| Identifier | Value |
+| :--------- | :---- |
+| CONSOLE_MESSAGE_INFO | 0 |
+| CONSOLE_MESSAGE_WARNING | 1 |
+| CONSOLE_MESSAGE_ERROR | 2 |
 
 [:arrow_up_small:](#)
 

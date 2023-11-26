@@ -47,8 +47,6 @@ bool djui_is_popup_disabled(void);
 void djui_set_popup_disabled_override(bool value);
 void djui_reset_popup_disabled_override(void);
 
-void log_to_console(const char* message);
-
 s8 get_dialog_box_state(void);
 s16 get_dialog_id(void);
 

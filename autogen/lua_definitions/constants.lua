@@ -3299,6 +3299,17 @@ DIALOG_169 = 169
 --- @type DialogId
 DIALOG_COUNT = 170
 
+--- @class ConsoleMessageLevel
+
+--- @type ConsoleMessageLevel
+CONSOLE_MESSAGE_INFO = 0
+
+--- @type ConsoleMessageLevel
+CONSOLE_MESSAGE_WARNING = 1
+
+--- @type ConsoleMessageLevel
+CONSOLE_MESSAGE_ERROR = 2
+
 --- @class DjuiFontType
 
 --- @type DjuiFontType

@@ -8873,12 +8873,6 @@ function is_transition_playing()
     -- ...
 end
 
---- @param message string
---- @return nil
-function log_to_console(message)
-    -- ...
-end
-
 --- @param name string
 --- @param level integer
 --- @param area integer

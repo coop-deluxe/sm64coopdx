@@ -307,7 +307,7 @@ manual_index_documentation = """
    - [texture_override_reset](#texture_override_reset)
    - [smlua_anim_util_register_animation](#smlua_anim_util_register_animation)
    - [level_script_parse](#level_script_parse)
-   - [set_exclamation_box_contents](#set_exclamation_box_contents)
+   - [log_to_console](#log_to_console)
 
 <br />
 
@@ -641,23 +641,24 @@ Parses a level script and passes area index, behavior data, macro behavior IDs a
 
 <br />
 
-## [set_exclamation_box_new_contents](#set_exclamation_box_new_contents)
+## [log_to_console](#log_to_console)
 
-Sets the contents of an exclamation box.
+Logs a message to the in-game console.
 
 ### Lua Example
-`set_exclamation_box_new_contents(contents)`
+`log_to_console("sm64coopdx FTW", CONSOLE_MESSAGE_INFO)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| contents | [ExclamationBoxContents](structs.md#ExclamationBoxContents) |
+| message | `string` |
+| level | `ConsoleMessageLevel` |
 
 ### Returns
 - None
 
 ### C Prototype
-`void set_exclamation_box_new_contents(struct Struct802C0DF0 contents[], u8 size);`
+`void log_to_console(const char* message, enum ConsoleMessageLevel level);`
 
 [:arrow_up_small:](#)
 

@@ -81,12 +81,6 @@ void djui_reset_popup_disabled_override(void) {
 
 ///
 
-void log_to_console(const char* message) {
-    djui_console_message_create(message);
-}
-
-///
-
 extern s8 gDialogBoxState;
 s8 get_dialog_box_state(void) {
     return gDialogBoxState;

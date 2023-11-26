@@ -29253,23 +29253,6 @@ int smlua_func_is_transition_playing(UNUSED lua_State* L) {
     return 1;
 }
 
-int smlua_func_log_to_console(lua_State* L) {
-    if (L == NULL) { return 0; }
-
-    int top = lua_gettop(L);
-    if (top != 1) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "log_to_console", 1, top);
-        return 0;
-    }
-
-    const char* message = smlua_to_string(L, 1);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "log_to_console"); return 0; }
-
-    log_to_console(message);
-
-    return 1;
-}
-
 int smlua_func_movtexqc_register(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -32868,7 +32851,6 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "hud_show", smlua_func_hud_show);
     smlua_bind_function(L, "is_game_paused", smlua_func_is_game_paused);
     smlua_bind_function(L, "is_transition_playing", smlua_func_is_transition_playing);
-    smlua_bind_function(L, "log_to_console", smlua_func_log_to_console);
     smlua_bind_function(L, "movtexqc_register", smlua_func_movtexqc_register);
     smlua_bind_function(L, "play_transition", smlua_func_play_transition);
     smlua_bind_function(L, "save_file_get_using_backup_slot", smlua_func_save_file_get_using_backup_slot);
