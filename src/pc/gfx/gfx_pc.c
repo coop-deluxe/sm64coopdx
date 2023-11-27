@@ -603,8 +603,10 @@ static void import_texture(int tile) {
 
     if (!rdp.loaded_texture[tile].addr) {
 #ifdef DEVELOPMENT
+/*
         fprintf(stderr, "NULL texture: tile %d, format %d/%d, size %d\n",
                 tile, (int)fmt, (int)siz, (int)rdp.loaded_texture[tile].size_bytes);
+*/
 #endif
         return;
     }

@@ -684,6 +684,9 @@ const GeoLayout wario_geo[] = {
          GEO_CLOSE_NODE(),
          GEO_ASM(1, geo_mirror_mario_backface_culling),
       GEO_CLOSE_NODE(),
+      GEO_DISPLAY_LIST(LAYER_OPAQUE, wario_material_revert_render_settings),
+      GEO_DISPLAY_LIST(LAYER_ALPHA, wario_material_revert_render_settings),
+      GEO_DISPLAY_LIST(LAYER_TRANSPARENT, wario_material_revert_render_settings),
    GEO_CLOSE_NODE(),
    GEO_END(),
 };

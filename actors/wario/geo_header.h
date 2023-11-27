@@ -117,3 +117,4 @@ extern const Gfx wario_cap_wings[];
 extern const Gfx wario_cap_wings_transparent[];
 extern const Gfx wario_metal_cap_wings[];
 extern const Gfx wario_metal_cap_wings_transparent[];
+extern const Gfx wario_material_revert_render_settings[];

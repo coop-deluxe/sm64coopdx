@@ -4738,7 +4738,7 @@ Gfx mat_waluigi_body[] = {
 	gsDPLoadBlock(7, 0, 0, 1023, 256),
 	gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 8, 0, 0, 0, G_TX_WRAP | G_TX_NOMIRROR, 5, 0, G_TX_WRAP | G_TX_NOMIRROR, 5, 0),
 	gsDPSetTileSize(0, 0, 0, 124, 124),
-    gsSPCopyLightsPlayerPart(PANTS),
+	gsSPCopyLightsPlayerPart(PANTS),
 	gsSPEndDisplayList(),
 };
 
@@ -4752,7 +4752,7 @@ Gfx mat_waluigi_metal[] = {
 	gsDPLoadBlock(7, 0, 0, 2047, 128),
 	gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 16, 0, 0, 0, G_TX_WRAP | G_TX_NOMIRROR, 5, 0, G_TX_WRAP | G_TX_NOMIRROR, 6, 0),
 	gsDPSetTileSize(0, 0, 0, 252, 124),
-    gsSPCopyLightsPlayerPart(METAL),
+	gsSPCopyLightsPlayerPart(METAL),
 	gsSPEndDisplayList(),
 };
 
@@ -4766,7 +4766,7 @@ Gfx mat_waluigi_shirt[] = {
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(0, 0, 0, SHADE, 0, 0, 0, ENVIRONMENT, 0, 0, 0, SHADE, 0, 0, 0, ENVIRONMENT),
 	gsSPTexture(65535, 65535, 0, 0, 1),
-    gsSPCopyLightsPlayerPart(SHIRT),
+	gsSPCopyLightsPlayerPart(SHIRT),
 	gsSPEndDisplayList(),
 };
 
@@ -4774,7 +4774,7 @@ Gfx mat_waluigi_cap[] = {
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(0, 0, 0, SHADE, 0, 0, 0, ENVIRONMENT, 0, 0, 0, SHADE, 0, 0, 0, ENVIRONMENT),
 	gsSPTexture(65535, 65535, 0, 0, 1),
-    gsSPCopyLightsPlayerPart(CAP),
+	gsSPCopyLightsPlayerPart(CAP),
 	gsSPEndDisplayList(),
 };
 
@@ -4787,7 +4787,7 @@ Gfx mat_waluigi_eyes_open[] = {
 	gsDPLoadBlock(7, 0, 0, 2047, 128),
 	gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 16, 0, 0, 0, G_TX_WRAP | G_TX_NOMIRROR, 5, 0, G_TX_WRAP | G_TX_NOMIRROR, 6, 0),
 	gsDPSetTileSize(0, 0, 0, 252, 124),
-    gsSPCopyLightsPlayerPart(SKIN),
+	gsSPCopyLightsPlayerPart(SKIN),
 	gsSPEndDisplayList(),
 };
 
@@ -4795,7 +4795,7 @@ Gfx mat_waluigi_hair[] = {
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(0, 0, 0, SHADE, 0, 0, 0, ENVIRONMENT, 0, 0, 0, SHADE, 0, 0, 0, ENVIRONMENT),
 	gsSPTexture(65535, 65535, 0, 0, 1),
-    gsSPCopyLightsPlayerPart(HAIR),
+	gsSPCopyLightsPlayerPart(HAIR),
 	gsSPEndDisplayList(),
 };
 
@@ -4816,7 +4816,7 @@ Gfx mat_waluigi_mouth_closed[] = {
 	gsDPLoadBlock(7, 0, 0, 2047, 128),
 	gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 16, 0, 0, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0, G_TX_CLAMP | G_TX_NOMIRROR, 6, 0),
 	gsDPSetTileSize(0, 0, 0, 252, 124),
-    gsSPCopyLightsPlayerPart(SKIN),
+	gsSPCopyLightsPlayerPart(SKIN),
 	gsSPEndDisplayList(),
 };
 
@@ -4845,7 +4845,7 @@ Gfx mat_waluigi_sideburns[] = {
 	gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 8, 0, 0, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0),
 	gsDPSetTileSize(0, 0, 0, 124, 124),
 	gsDPSetPrimColor(0, 0, 255, 255, 255, 255),
-    gsSPCopyLightsPlayerPart(HAIR),
+	gsSPCopyLightsPlayerPart(HAIR),
 	gsSPEndDisplayList(),
 };
 
@@ -4900,7 +4900,7 @@ Gfx mat_waluigi_eyes_half[] = {
 	gsDPLoadBlock(7, 0, 0, 2047, 128),
 	gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 16, 0, 0, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0, G_TX_CLAMP | G_TX_NOMIRROR, 6, 0),
 	gsDPSetTileSize(0, 0, 0, 252, 124),
-    gsSPCopyLightsPlayerPart(SKIN),
+	gsSPCopyLightsPlayerPart(SKIN),
 	gsSPEndDisplayList(),
 };
 
@@ -4913,7 +4913,7 @@ Gfx mat_waluigi_eyes_closed[] = {
 	gsDPLoadBlock(7, 0, 0, 2047, 128),
 	gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 16, 0, 0, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0, G_TX_CLAMP | G_TX_NOMIRROR, 6, 0),
 	gsDPSetTileSize(0, 0, 0, 252, 124),
-    gsSPCopyLightsPlayerPart(SKIN),
+	gsSPCopyLightsPlayerPart(SKIN),
 	gsSPEndDisplayList(),
 };
 
@@ -4926,7 +4926,7 @@ Gfx mat_waluigi_eyes_left[] = {
 	gsDPLoadBlock(7, 0, 0, 2047, 128),
 	gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 16, 0, 0, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0, G_TX_CLAMP | G_TX_NOMIRROR, 6, 0),
 	gsDPSetTileSize(0, 0, 0, 252, 124),
-    gsSPCopyLightsPlayerPart(SKIN),
+	gsSPCopyLightsPlayerPart(SKIN),
 	gsSPEndDisplayList(),
 };
 
@@ -4939,7 +4939,7 @@ Gfx mat_waluigi_eyes_right[] = {
 	gsDPLoadBlock(7, 0, 0, 2047, 128),
 	gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 16, 0, 0, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0, G_TX_CLAMP | G_TX_NOMIRROR, 6, 0),
 	gsDPSetTileSize(0, 0, 0, 252, 124),
-    gsSPCopyLightsPlayerPart(SKIN),
+	gsSPCopyLightsPlayerPart(SKIN),
 	gsSPEndDisplayList(),
 };
 
@@ -4952,7 +4952,7 @@ Gfx mat_waluigi_eyes_up[] = {
 	gsDPLoadBlock(7, 0, 0, 2047, 128),
 	gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 16, 0, 0, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0, G_TX_CLAMP | G_TX_NOMIRROR, 6, 0),
 	gsDPSetTileSize(0, 0, 0, 252, 124),
-    gsSPCopyLightsPlayerPart(SKIN),
+	gsSPCopyLightsPlayerPart(SKIN),
 	gsSPEndDisplayList(),
 };
 
@@ -4965,7 +4965,7 @@ Gfx mat_waluigi_eyes_down[] = {
 	gsDPLoadBlock(7, 0, 0, 2047, 128),
 	gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 16, 0, 0, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0, G_TX_CLAMP | G_TX_NOMIRROR, 6, 0),
 	gsDPSetTileSize(0, 0, 0, 252, 124),
-    gsSPCopyLightsPlayerPart(SKIN),
+	gsSPCopyLightsPlayerPart(SKIN),
 	gsSPEndDisplayList(),
 };
 
@@ -4978,7 +4978,7 @@ Gfx mat_waluigi_waluigi_mouth_open[] = {
 	gsDPLoadBlock(7, 0, 0, 2047, 128),
 	gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 16, 0, 0, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0, G_TX_CLAMP | G_TX_NOMIRROR, 6, 0),
 	gsDPSetTileSize(0, 0, 0, 252, 124),
-    gsSPCopyLightsPlayerPart(SKIN),
+	gsSPCopyLightsPlayerPart(SKIN),
 	gsSPEndDisplayList(),
 };
 
@@ -4991,7 +4991,7 @@ Gfx mat_waluigi_eyes_dead[] = {
 	gsDPLoadBlock(7, 0, 0, 2047, 128),
 	gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 16, 0, 0, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0, G_TX_CLAMP | G_TX_NOMIRROR, 6, 0),
 	gsDPSetTileSize(0, 0, 0, 252, 124),
-    gsSPCopyLightsPlayerPart(SKIN),
+	gsSPCopyLightsPlayerPart(SKIN),
 	gsSPEndDisplayList(),
 };
 
@@ -5037,7 +5037,7 @@ Gfx mat_waluigi_gloves[] = {
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(0, 0, 0, SHADE, 0, 0, 0, ENVIRONMENT, 0, 0, 0, SHADE, 0, 0, 0, ENVIRONMENT),
 	gsSPTexture(65535, 65535, 0, 0, 1),
-    gsSPCopyLightsPlayerPart(GLOVES),
+	gsSPCopyLightsPlayerPart(GLOVES),
 	gsSPEndDisplayList(),
 };
 
@@ -5045,7 +5045,7 @@ Gfx mat_waluigi_shoes[] = {
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(0, 0, 0, SHADE, 0, 0, 0, ENVIRONMENT, 0, 0, 0, SHADE, 0, 0, 0, ENVIRONMENT),
 	gsSPTexture(65535, 65535, 0, 0, 1),
-    gsSPCopyLightsPlayerPart(SHOES),
+	gsSPCopyLightsPlayerPart(SHOES),
 	gsSPEndDisplayList(),
 };
 
@@ -6258,6 +6258,18 @@ Gfx waluigi_material_revert_render_settings[] = {
 	gsSPTexture(65535, 65535, 0, 0, 0),
 	gsDPSetEnvColor(255, 255, 255, 255),
 	gsDPSetAlphaCompare(G_AC_NONE),
+
+	gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 1, 0),
+	gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 0, 0, 7, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0),
+	gsDPLoadBlock(7, 0, 0, 1023, 256),
+	gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 8, 0, 0, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0),
+	gsDPSetTileSize(0, 0, 0, 124, 124),
+
+	gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 1, 0),
+	gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 0, 256, 6, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0),
+	gsDPLoadBlock(6, 0, 0, 1023, 256),
+	gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 8, 256, 1, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0),
+	gsDPSetTileSize(1, 0, 0, 124, 124),
 	gsSPEndDisplayList(),
 };
 
