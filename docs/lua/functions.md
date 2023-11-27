@@ -800,6 +800,7 @@
 <br />
 
 - first_person_cam.h
+   - [first_person_check_cancels](functions-3.md#first_person_check_cancels)
    - [first_person_reset](functions-3.md#first_person_reset)
    - [get_first_person_enabled](functions-3.md#get_first_person_enabled)
    - [set_first_person_enabled](functions-3.md#set_first_person_enabled)

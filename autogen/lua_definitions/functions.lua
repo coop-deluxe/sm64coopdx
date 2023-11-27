@@ -4000,6 +4000,12 @@ function stop_sounds_in_continuous_banks()
     -- ...
 end
 
+--- @param m MarioState
+--- @return boolean
+function first_person_check_cancels(m)
+    -- ...
+end
+
 --- @return nil
 function first_person_reset()
     -- ...

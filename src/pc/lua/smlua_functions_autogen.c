@@ -13184,6 +13184,23 @@ int smlua_func_stop_sounds_in_continuous_banks(UNUSED lua_State* L) {
  // first_person_cam.h //
 ////////////////////////
 
+int smlua_func_first_person_check_cancels(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "first_person_check_cancels", 1, top);
+        return 0;
+    }
+
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "first_person_check_cancels"); return 0; }
+
+    lua_pushboolean(L, first_person_check_cancels(m));
+
+    return 1;
+}
+
 int smlua_func_first_person_reset(UNUSED lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -32039,6 +32056,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "stop_sounds_in_continuous_banks", smlua_func_stop_sounds_in_continuous_banks);
 
     // first_person_cam.h
+    smlua_bind_function(L, "first_person_check_cancels", smlua_func_first_person_check_cancels);
     smlua_bind_function(L, "first_person_reset", smlua_func_first_person_reset);
     smlua_bind_function(L, "get_first_person_enabled", smlua_func_get_first_person_enabled);
     smlua_bind_function(L, "set_first_person_enabled", smlua_func_set_first_person_enabled);
