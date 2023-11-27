@@ -97,7 +97,7 @@ The lua functions sent to `hook_event()` will be automatically called by SM64 wh
 | HOOK_ON_PLAYER_CONNECTED | Called when a player connects | [MarioState](structs.md#MarioState) connector |
 | HOOK_ON_PLAYER_DISCONNECTED | Called when a player disconnects | [MarioState](structs.md#MarioState) disconnector |
 | HOOK_ON_HUD_RENDER | Called when the HUD is being rendered | None |
-| HOOK_ON_HUD_RENDER_BEHIND | Called before the HUD is being rendered | None |
+| HOOK_ON_HUD_RENDER_BEHIND | Called when the HUD is being rendered, every HUD call in this hook renders behind the vanilla HUD | None |
 | HOOK_ALLOW_INTERACT | Called before mario interacts with an object, return `true` to allow the interaction | [MarioState](structs.md#MarioState) interactor, [Object](structs.md#Object) interactee, [enum InteractionType](constants.md#enum-InteractionType) interactType |
 | HOOK_ON_INTERACT | Called when mario interacts with an object | [MarioState](structs.md#MarioState) interactor, [Object](structs.md#Object) interactee, [enum InteractionType](constants.md#enum-InteractionType) interactType, bool interactValue |
 | HOOK_ON_LEVEL_INIT | Called when the level is initialized | None |
@@ -124,7 +124,6 @@ The lua functions sent to `hook_event()` will be automatically called by SM64 wh
 | HOOK_ON_DIALOG | Called when a dialog appears. Return `false` to prevent it from appearing | `integer` dialogId |
 | HOOK_ON_EXIT | Called before the game shuts down | None |
 | HOOK_DIALOG_SOUND | Called when a dialog box sound is going to play, return a `DS_*` constant to override the sound | `integer` dialogSound |
-| HOOK_ON_HUD_RENDER_BEHIND | Called when the HUD is being rendered, every HUD call in this hook renders behind the vanilla HUD | None |
 | HOOK_ON_COLLIDE_LEVEL_BOUNDS | Called when a mario collides with the level boundaries | [MarioState](structs.md#MarioState)mario |
 | HOOK_MIRROR_MARIO_RENDER | Called when a Mirror Mario is rendered. | [GraphNodeObject](structs.md#GraphNodeObject) mirrorMario | `integer` mirrorMarioIndex |
 
