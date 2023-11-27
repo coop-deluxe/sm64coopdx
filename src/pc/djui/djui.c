@@ -62,11 +62,10 @@ void patch_djui_interpolated(UNUSED f32 delta) {
 void djui_init(void) {
     gDjuiRoot = djui_root_create();
 
-    sDjuiPauseOptions = djui_text_create(&gDjuiRoot->base, "R Button - Options");
+    sDjuiPauseOptions = djui_text_create(&gDjuiRoot->base, DLANG(MISC, R_BUTTON));
     djui_base_set_size_type(&sDjuiPauseOptions->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
     djui_base_set_size(&sDjuiPauseOptions->base, 1.0f, 32);
     djui_base_set_location(&sDjuiPauseOptions->base, 0, 16);
-    djui_text_set_drop_shadow(sDjuiPauseOptions, 0, 0, 0, 255);
     djui_text_set_alignment(sDjuiPauseOptions, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
     djui_base_set_visible(&sDjuiPauseOptions->base, false);
 
