@@ -1,4 +1,5 @@
 #include "discord.h"
+#include "pc/pc_main.h"
 #include "pc/djui/djui.h"
 #include "pc/mods/mods.h"
 #include "pc/debuglog.h"
@@ -67,7 +68,10 @@ static void strncat_len(char* destination, char* source, size_t destinationLengt
 
 static void discord_populate_details(char* buffer, int bufferLength) {
     // get version
+    bool stored = gCoopCompatibility;
+    gCoopCompatibility = true;
     const char* version = get_version();
+    gCoopCompatibility = stored;
     int versionLength = strlen(version);
     snprintf(buffer, bufferLength, "%s", version);
     buffer += versionLength;
