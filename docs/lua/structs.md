@@ -848,6 +848,7 @@
 | ----- | ---- | ------ |
 | crouch | `number` |  |
 | enabled | `boolean` | read-only |
+| forceRoll | `boolean` |  |
 | fov | `number` |  |
 | pitch | `integer` |  |
 | yaw | `integer` |  |

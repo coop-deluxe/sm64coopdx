@@ -22,6 +22,7 @@
 
 struct FirstPersonCamera gFirstPersonCamera = {
     .enabled = false,
+    .forceRoll = true,
     .pitch = 0,
     .yaw = 0,
     .crouch = 0,
@@ -131,6 +132,9 @@ void first_person_camera_update(void) {
     vec3f_copy(gLakituState.goalFocus, gLakituState.focus);
 
     // set other values
+    if (gFirstPersonCamera.forceRoll) {
+        gLakituState.roll = 0;
+    }
     gLakituState.posHSpeed = 0;
     gLakituState.posVSpeed = 0;
     gLakituState.focHSpeed = 0;
