@@ -2253,6 +2253,7 @@ void get_currently_playing_sound(u8 bank, u8 *numPlayingSounds, u8 *numSoundsInB
  * Called from threads: thread5_game_loop
  */
 void stop_sound(u32 soundBits, f32 *pos) {
+    pos = smlua_get_vec3f_for_play_sound(pos);
     u8 bank = (soundBits & SOUNDARGS_MASK_BANK) >> SOUNDARGS_SHIFT_BANK;
     if (bank >= SOUND_BANK_COUNT) { return; }
     u8 soundIndex = sSoundBanks[bank][0].next;
