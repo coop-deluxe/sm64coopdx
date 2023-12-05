@@ -358,18 +358,17 @@ static void newcam_rotate_button(void) {
         }
         newcam_framessincec[1] = 0;
     }
-    // TODO: find a better way to do this
-    // if ((gPlayer1Controller->buttonPressed & U_CBUTTONS) && newcam_modeflags & NC_FLAG_YTURN && !(newcam_modeflags & NC_FLAG_8D) && newcam_analogue == 0) {
-    //     if (newcam_framessincec[1] < 3 && gMarioState->action & ACT_FLAG_ALLOW_FIRST_PERSON) {
-    //         gCameraMovementFlags |= CAM_MOVE_C_UP_MODE;
-    //         #ifndef nosound
-    //         play_sound(SOUND_MENU_CAMERA_ZOOM_IN, gGlobalSoundSource);
-    //         #endif
-    //         newcam_init_settings();
-    //         return;
-    //     }
-    //     newcam_framessincec[1] = 0;
-    // }
+    if ((gPlayer1Controller->buttonPressed & U_CBUTTONS) && newcam_modeflags & NC_FLAG_YTURN && !(newcam_modeflags & NC_FLAG_8D) && newcam_analogue == 0 && configCameraCUp) {
+        if (newcam_framessincec[1] < 3 && gMarioState->action & ACT_FLAG_ALLOW_FIRST_PERSON) {
+            gCameraMovementFlags |= CAM_MOVE_C_UP_MODE;
+            #ifndef nosound
+            play_sound(SOUND_MENU_CAMERA_ZOOM_IN, gGlobalSoundSource);
+            #endif
+            newcam_init_settings();
+            return;
+        }
+        newcam_framessincec[1] = 0;
+    }
 
 
     //There's not much point in keeping this behind a check, but it wouldn't hurt, just incase any 2player shenanigans ever happen, it makes it easy to disable.

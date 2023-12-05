@@ -335,7 +335,7 @@ u32 camera_config_get_aggression(void) {
 }
 
 u32 camera_config_get_pan_level(void) {
-    return sOverrideCameraPan.override ? sOverrideCameraPan.value : configCameraPan;
+    return sOverrideCameraPan.override ? sOverrideCameraPan.value : 0;
 }
 
 u32 camera_config_get_deceleration(void) {

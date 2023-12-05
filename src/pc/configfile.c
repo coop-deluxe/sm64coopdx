@@ -107,12 +107,12 @@ unsigned int configRumbleStrength = 50;
 unsigned int configCameraXSens   = 10;
 unsigned int configCameraYSens   = 10;
 unsigned int configCameraAggr    = 0;
-unsigned int configCameraPan     = 0;
 unsigned int configCameraDegrade = 50; // 0 - 100%
 bool         configCameraInvertX = false;
 bool         configCameraInvertY = true;
 bool         configEnableCamera  = false;
 bool         configCameraAnalog  = false;
+bool         configCameraCUp     = false;
 bool         configCameraMouse   = false;
 // coop-specific
 bool         configSkipIntro     = 0;
@@ -141,18 +141,18 @@ bool         configShowFPS                       = false;
 bool         configUncappedFramerate             = true;
 unsigned int configFrameLimit                    = 60;
 unsigned int configDrawDistance                  = 5;
-bool         configDisablePopups                 = 0;
+bool         configDisablePopups                 = false;
 #if defined(DEVELOPMENT)
-bool         configLuaProfiler                   = 0;
-bool         configCtxProfiler                   = 0;
+bool         configLuaProfiler                   = false;
+bool         configCtxProfiler                   = false;
 #endif
 unsigned int configInterpolationMode             = 1;
 unsigned int configGamepadNumber                 = 0;
-bool         configBackgroundGamepad             = 1;
-bool         configSingleplayerPause             = 0;
-bool         configDebugPrint                    = 0;
-bool         configDebugInfo                     = 0;
-bool         configDebugError                    = 0;
+bool         configBackgroundGamepad             = true;
+bool         configSingleplayerPause             = false;
+bool         configDebugPrint                    = false;
+bool         configDebugInfo                     = false;
+bool         configDebugError                    = false;
 char         configLanguage[MAX_CONFIG_STRING]   = "";
 bool         configForce4By3                     = false;
 char         configCoopNetIp[MAX_CONFIG_STRING]  = DEFAULT_COOPNET_IP;
@@ -207,13 +207,13 @@ static const struct ConfigOption options[] = {
     {.name = "rumble_strength",                .type = CONFIG_TYPE_UINT, .uintValue = &configRumbleStrength},
     {.name = "bettercam_enable",               .type = CONFIG_TYPE_BOOL, .boolValue = &configEnableCamera},
     {.name = "bettercam_analog",               .type = CONFIG_TYPE_BOOL, .boolValue = &configCameraAnalog},
+    {.name = "bettercam_cup",                  .type = CONFIG_TYPE_BOOL, .boolValue = &configCameraCUp},
     {.name = "bettercam_mouse_look",           .type = CONFIG_TYPE_BOOL, .boolValue = &configCameraMouse},
     {.name = "bettercam_invertx",              .type = CONFIG_TYPE_BOOL, .boolValue = &configCameraInvertX},
     {.name = "bettercam_inverty",              .type = CONFIG_TYPE_BOOL, .boolValue = &configCameraInvertY},
     {.name = "bettercam_xsens",                .type = CONFIG_TYPE_UINT, .uintValue = &configCameraXSens},
     {.name = "bettercam_ysens",                .type = CONFIG_TYPE_UINT, .uintValue = &configCameraYSens},
     {.name = "bettercam_aggression",           .type = CONFIG_TYPE_UINT, .uintValue = &configCameraAggr},
-    {.name = "bettercam_pan_level",            .type = CONFIG_TYPE_UINT, .uintValue = &configCameraPan},
     {.name = "bettercam_degrade",              .type = CONFIG_TYPE_UINT, .uintValue = &configCameraDegrade},
     {.name = "skip_intro",                     .type = CONFIG_TYPE_BOOL, .boolValue = &configSkipIntro},
     // debug

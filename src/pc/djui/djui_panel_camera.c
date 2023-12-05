@@ -14,6 +14,7 @@ void djui_panel_camera_create(struct DjuiBase* caller) {
     struct DjuiBase* body = djui_three_panel_get_body(panel);
     {
         djui_checkbox_create(body, DLANG(CAMERA, FREE_CAMERA), &configEnableCamera, djui_panel_camera_value_changed);
+        djui_checkbox_create(body, DLANG(CAMERA, C_UP), &configCameraCUp, djui_panel_camera_value_changed);
         djui_checkbox_create(body, DLANG(CAMERA, ANALOG_CAMERA), &configCameraAnalog, djui_panel_camera_value_changed);
         djui_checkbox_create(body, DLANG(CAMERA, MOUSE_LOOK), &configCameraMouse, djui_panel_camera_value_changed);
         djui_checkbox_create(body, DLANG(CAMERA, INVERT_X), &configCameraInvertX, djui_panel_camera_value_changed);
@@ -21,7 +22,6 @@ void djui_panel_camera_create(struct DjuiBase* caller) {
         djui_slider_create(body, DLANG(CAMERA, X_SENSITIVITY), &configCameraXSens, 1, 100, djui_panel_camera_value_changed);
         djui_slider_create(body, DLANG(CAMERA, Y_SENSITIVITY), &configCameraYSens, 1, 100, djui_panel_camera_value_changed);
         djui_slider_create(body, DLANG(CAMERA, AGGRESSION), &configCameraAggr, 0, 100, djui_panel_camera_value_changed);
-        djui_slider_create(body, DLANG(CAMERA, PAN_LEVEL), &configCameraPan, 0, 100, djui_panel_camera_value_changed);
         djui_slider_create(body, DLANG(CAMERA, DECELERATION), &configCameraDegrade, 0, 100, djui_panel_camera_value_changed);
 
         djui_button_create(body, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
