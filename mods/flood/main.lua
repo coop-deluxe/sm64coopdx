@@ -1,6 +1,6 @@
 -- name: Flood
 -- incompatible: gamemode
--- description: Flood v2.4.2\nBy \\#ec7731\\Agent X\\#dcdcdc\\\n\nThis mod adds a flood escape gamemode\nto sm64ex-coop, you must escape the flood and reach the top of the level before everything is flooded.
+-- description: Flood v2.4.5\nBy \\#ec7731\\Agent X\\#dcdcdc\\\n\nThis mod adds a flood escape gamemode\nto sm64ex-coop, you must escape the flood and reach the top of the level before everything is flooded.
 
 if unsupported then return end
 
@@ -93,7 +93,7 @@ local function server_update()
             local active = 0
             for i = 0, (MAX_PLAYERS - 1) do
                 local m = gMarioStates[i]
-                if active_player(m) ~= 0 and m.health > 0xff and not gPlayerSyncTable[i].finished then
+                if active_player(m) ~= 0 and m.health > 0xFF and not gPlayerSyncTable[i].finished then
                     active = active + 1
                 end
             end
@@ -101,7 +101,7 @@ local function server_update()
             if active == 0 then
                 local dead = 0
                 for i = 0, (MAX_PLAYERS) - 1 do
-                    if active_player(gMarioStates[i]) ~= 0 and gMarioStates[i].health <= 0xff then
+                    if active_player(gMarioStates[i]) ~= 0 and gMarioStates[i].health <= 0xFF then
                         dead = dead + 1
                     end
                 end
@@ -215,7 +215,7 @@ end
 local function mario_update(m)
     if not gNetworkPlayers[m.playerIndex].connected then return end
 
-    if m.health > 0xff then
+    if m.health > 0xFF then
         network_player_set_description(gNetworkPlayers[m.playerIndex], "Alive", 75, 255, 75, 255)
     else
         network_player_set_description(gNetworkPlayers[m.playerIndex], "Dead", 255, 75, 75, 255)
@@ -298,10 +298,10 @@ local function mario_update(m)
         end
 
         if m.action == ACT_QUICKSAND_DEATH then
-            m.health = 0xff
+            m.health = 0xFF
         end
 
-        if m.health <= 0xff then
+        if m.health <= 0xFF then
             if network_player_connected_count() > 1 then
                 m.area.camera.cutscene = 0
                 set_mario_spectator(m)
@@ -376,7 +376,7 @@ local function on_hud_render()
     djui_hud_set_font(FONT_HUD)
 
     djui_hud_render_texture(gTextures.coin, 5, 5, 1, 1)
-    djui_hud_print_text("x", 21, 5, 1)
+    djui_hud_print_text(">", 21, 5, 1)
     djui_hud_print_text(tostring(hud_get_value(HUD_DISPLAY_COINS)), 37, 5, 1)
 
     if gGlobalSyncTable.speedMultiplier ~= 1 then

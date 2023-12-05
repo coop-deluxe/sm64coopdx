@@ -168,7 +168,7 @@ end
 local function on_death()
     local m = gMarioStates[0]
     if m.floor.type == SURFACE_DEATH_PLANE or m.floor.type == SURFACE_VERTICAL_WIND then
-        m.health = 0xff
+        m.health = 0xFF
     end
     return false
 end
@@ -183,7 +183,7 @@ end
 
 --- @param m MarioState
 local function allow_hazard_surface(m)
-    if m.health <= 0xff then return false end
+    if m.health <= 0xFF then return false end
     return true
 end
 

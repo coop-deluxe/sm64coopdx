@@ -66,7 +66,7 @@ end
 --- @param m MarioState
 function set_mario_spectator(m)
     if m.action ~= ACT_SPECTATOR then
-        sPlayerFirstPerson.pos = { x = m.pos.x, y = if_then_else(m.health > 0xff, m.pos.y, gGlobalSyncTable.waterLevel), z = m.pos.z }
+        sPlayerFirstPerson.pos = { x = m.pos.x, y = if_then_else(m.health > 0xFF, m.pos.y, gGlobalSyncTable.waterLevel), z = m.pos.z }
     end
     m.action = ACT_SPECTATOR
 end
@@ -91,7 +91,7 @@ local function act_spectator(m)
         vec3f_copy(m.marioObj.header.gfx.pos, m.pos)
         vec3f_copy(m.marioObj.header.gfx.angle, m.faceAngle)
         m.marioObj.header.gfx.angle.y = 0
-        m.health = 0xff
+        m.health = 0xFF
         m.healCounter = 0
         m.hurtCounter = 0
     end

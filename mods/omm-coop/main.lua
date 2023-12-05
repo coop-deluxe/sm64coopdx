@@ -1,3 +1,0 @@
--- name: OMM Rebirth
--- incompatible: moveset
--- description: Super Mario Odyssey Moves and Cappy.\nVersion: 1.1\nAuthor: PeachyPeach\nContributors: Isaac,\nPrince Frizzy,\nJokerFactor (Playtester),\nMr.Needlemouse (Playtester)\n\nIncludes:\n- Most moves from Odyssey\n- Custom star dance and death sequences\n- Improved power-ups\n- Odyssey HUD\n- Settings menu and star display menu\n- Improved non-stop mode\n- Fully custom camera mode\n- Inbuilt support for other mods

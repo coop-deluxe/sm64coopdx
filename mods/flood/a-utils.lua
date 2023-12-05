@@ -80,21 +80,6 @@ function if_then_else(cond, ifTrue, ifFalse)
     return ifFalse
 end
 
-function approach_number(current, target, inc, dec)
-    if current < target then
-        current = current + inc
-        if current > target then
-            current = target
-        end
-    else
-        current = current - dec
-        if current < target then
-            current = target
-        end
-    end
-    return current
-end
-
 function string_without_hex(name)
     local s = ''
     local inSlash = false
