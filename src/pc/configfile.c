@@ -107,6 +107,7 @@ unsigned int configRumbleStrength = 50;
 unsigned int configCameraXSens   = 10;
 unsigned int configCameraYSens   = 10;
 unsigned int configCameraAggr    = 0;
+unsigned int configCameraPan     = 0;
 unsigned int configCameraDegrade = 50; // 0 - 100%
 bool         configCameraInvertX = false;
 bool         configCameraInvertY = true;
@@ -214,6 +215,7 @@ static const struct ConfigOption options[] = {
     {.name = "bettercam_xsens",                .type = CONFIG_TYPE_UINT, .uintValue = &configCameraXSens},
     {.name = "bettercam_ysens",                .type = CONFIG_TYPE_UINT, .uintValue = &configCameraYSens},
     {.name = "bettercam_aggression",           .type = CONFIG_TYPE_UINT, .uintValue = &configCameraAggr},
+    {.name = "bettercam_pan_level",            .type = CONFIG_TYPE_UINT, .uintValue = &configCameraPan},
     {.name = "bettercam_degrade",              .type = CONFIG_TYPE_UINT, .uintValue = &configCameraDegrade},
     {.name = "skip_intro",                     .type = CONFIG_TYPE_BOOL, .boolValue = &configSkipIntro},
     // debug
