@@ -109,6 +109,10 @@ ifeq ($(HOST_OS),Windows)
   WINDOWS_BUILD := 1
 endif
 
+ifeq ($(HOST_OS),Darwin)
+  OSX_BUILD := 1
+endif
+
 # MXE overrides
 
 ifeq ($(WINDOWS_BUILD),1)
