@@ -6,6 +6,7 @@
 #include "level_update.h"
 #include "object_list_processor.h"
 #include "object_helpers.h"
+#include "mario.h"
 
 #include "engine/math_util.h"
 
@@ -104,9 +105,7 @@ void first_person_camera_update(void) {
     m->area->camera->yaw = gFirstPersonCamera.yaw;
 
     // update crouch
-    if (m->action == ACT_START_CROUCHING || m->action == ACT_CROUCHING || m->action == ACT_STOP_CROUCHING ||
-       m->action == ACT_START_CRAWLING || m->action == ACT_CRAWLING || m->action == ACT_STOP_CRAWLING ||
-       m->action == ACT_CROUCH_SLIDE || m->action == ACT_LEDGE_GRAB) {
+    if (mario_is_crouching(m) || m->action == ACT_LEDGE_GRAB) {
         f32 inc = 10 * (m->controller->buttonDown & Z_TRIG) != 0 || m->action == ACT_CROUCH_SLIDE || m->action == ACT_LEDGE_GRAB ? 1 : -1;
         gFirstPersonCamera.crouch = CLAMP(gFirstPersonCamera.crouch + inc, 0, MARIO_HEAD_POS - MARIO_HEAD_POS_SHORT);
     } else {

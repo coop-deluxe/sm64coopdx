@@ -4547,6 +4547,26 @@
 
 <br />
 
+## [mario_is_crouching](#mario_is_crouching)
+
+### Lua Example
+`local booleanValue = mario_is_crouching(m)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool mario_is_crouching(struct MarioState *m);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [mario_set_bubbled](#mario_set_bubbled)
 
 ### Lua Example

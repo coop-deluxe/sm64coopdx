@@ -14328,6 +14328,23 @@ int smlua_func_mario_get_terrain_sound_addend(lua_State* L) {
     return 1;
 }
 
+int smlua_func_mario_is_crouching(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "mario_is_crouching", 1, top);
+        return 0;
+    }
+
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mario_is_crouching"); return 0; }
+
+    lua_pushboolean(L, mario_is_crouching(m));
+
+    return 1;
+}
+
 int smlua_func_mario_set_bubbled(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -32130,6 +32147,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "mario_floor_is_steep", smlua_func_mario_floor_is_steep);
     smlua_bind_function(L, "mario_get_floor_class", smlua_func_mario_get_floor_class);
     smlua_bind_function(L, "mario_get_terrain_sound_addend", smlua_func_mario_get_terrain_sound_addend);
+    smlua_bind_function(L, "mario_is_crouching", smlua_func_mario_is_crouching);
     smlua_bind_function(L, "mario_set_bubbled", smlua_func_mario_set_bubbled);
     smlua_bind_function(L, "mario_set_forward_vel", smlua_func_mario_set_forward_vel);
     smlua_bind_function(L, "mario_update_wall", smlua_func_mario_update_wall);

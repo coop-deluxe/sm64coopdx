@@ -492,6 +492,14 @@ void play_mario_sound(struct MarioState *m, s32 actionSound, s32 marioSound) {
  *                     ACTIONS                    *
  **************************************************/
 
+bool mario_is_crouching(struct MarioState *m) {
+    if (!m) { return false; }
+
+    return m->action == ACT_START_CROUCHING || m->action == ACT_CROUCHING || m->action == ACT_STOP_CROUCHING ||
+        m->action == ACT_START_CRAWLING || m->action == ACT_CRAWLING || m->action == ACT_STOP_CRAWLING ||
+        m->action == ACT_CROUCH_SLIDE;
+}
+
 bool mario_can_bubble(struct MarioState* m) {
     if (!m) { return false; }
     if (!gServerSettings.bubbleDeath) { return false; }

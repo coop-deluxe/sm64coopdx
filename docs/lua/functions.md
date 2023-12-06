@@ -888,6 +888,7 @@
    - [mario_floor_is_steep](functions-3.md#mario_floor_is_steep)
    - [mario_get_floor_class](functions-3.md#mario_get_floor_class)
    - [mario_get_terrain_sound_addend](functions-3.md#mario_get_terrain_sound_addend)
+   - [mario_is_crouching](functions-3.md#mario_is_crouching)
    - [mario_set_bubbled](functions-3.md#mario_set_bubbled)
    - [mario_set_forward_vel](functions-3.md#mario_set_forward_vel)
    - [mario_update_wall](functions-3.md#mario_update_wall)

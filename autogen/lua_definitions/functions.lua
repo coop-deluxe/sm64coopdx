@@ -4405,6 +4405,12 @@ function mario_get_terrain_sound_addend(m)
 end
 
 --- @param m MarioState
+--- @return boolean
+function mario_is_crouching(m)
+    -- ...
+end
+
+--- @param m MarioState
 --- @return nil
 function mario_set_bubbled(m)
     -- ...
