@@ -31,6 +31,7 @@
 #include "pc/network/network.h"
 #include "pc/network/lag_compensation.h"
 #include "pc/lua/smlua_hooks.h"
+#include "pc/pc_main.h"
 
 u8 sDelayInvincTimer;
 s16 gInteractionInvulnerable;
@@ -176,6 +177,10 @@ s16 mario_obj_angle_to_object(struct MarioState *m, struct Object *o) {
  */
 static u32 determine_interaction_internal(struct MarioState *m, struct Object *o, u8 isPVP) {
     if (!m || !o) { return 0; }
+
+    // when set to false, angle checks apply again. I would just restore the original
+    // determine_interaction function but this is easier with keeping compatibility
+    if (!gCoopCompatibility) { isPVP = FALSE; }
 
     u32 interaction = 0;
     u32 action = m->action;
