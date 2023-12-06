@@ -39,7 +39,9 @@ bool first_person_check_cancels(struct MarioState *m) {
     if (gLuaLoadingMod != NULL) { return false; }
 
     struct Object *bowser = find_object_with_behavior(bhvBowser);
-    if (bowser != NULL && (bowser->oAction == 5 || bowser->oAction == 6)) {
+    if ((gCurrLevelNum == LEVEL_BOWSER_1 || gCurrLevelNum == LEVEL_BOWSER_2 || gCurrLevelNum == LEVEL_BOWSER_3) &&
+        bowser != NULL &&
+        (bowser->oAction == 5 || bowser->oAction == 6)) {
         return true;
     }
 
