@@ -1183,6 +1183,8 @@
 
 ## [first_person_cam.h](#first_person_cam.h)
 - FIRST_PERSON_DEFAULT_FOV
+- FIRST_PERSON_MARIO_HEAD_POS
+- FIRST_PERSON_MARIO_HEAD_POS_SHORT
 
 [:arrow_up_small:](#)
 

@@ -16,9 +16,6 @@
 #include "pc/lua/utils/smlua_misc_utils.h"
 #include "pc/lua/smlua_hooks.h"
 
-#define MARIO_HEAD_POS 120
-#define MARIO_HEAD_POS_SHORT MARIO_HEAD_POS / 2
-
 #define CLAMP(_val, _min, _max) MAX(MIN((_val), _max), _min)
 
 struct FirstPersonCamera gFirstPersonCamera = {
@@ -107,18 +104,18 @@ void first_person_camera_update(void) {
     // update crouch
     if (mario_is_crouching(m) || m->action == ACT_LEDGE_GRAB) {
         f32 inc = 10 * (m->controller->buttonDown & Z_TRIG) != 0 || m->action == ACT_CROUCH_SLIDE || m->action == ACT_LEDGE_GRAB ? 1 : -1;
-        gFirstPersonCamera.crouch = CLAMP(gFirstPersonCamera.crouch + inc, 0, MARIO_HEAD_POS - MARIO_HEAD_POS_SHORT);
+        gFirstPersonCamera.crouch = CLAMP(gFirstPersonCamera.crouch + inc, 0, FIRST_PERSON_MARIO_HEAD_POS - FIRST_PERSON_MARIO_HEAD_POS_SHORT);
     } else {
-        gFirstPersonCamera.crouch = CLAMP(gFirstPersonCamera.crouch - 10, 0, MARIO_HEAD_POS - MARIO_HEAD_POS_SHORT);
+        gFirstPersonCamera.crouch = CLAMP(gFirstPersonCamera.crouch - 10, 0, FIRST_PERSON_MARIO_HEAD_POS - FIRST_PERSON_MARIO_HEAD_POS_SHORT);
     }
 
     if (m->action == ACT_LEDGE_GRAB) {
-        gFirstPersonCamera.crouch = MARIO_HEAD_POS - MARIO_HEAD_POS_SHORT;
+        gFirstPersonCamera.crouch = FIRST_PERSON_MARIO_HEAD_POS - FIRST_PERSON_MARIO_HEAD_POS_SHORT;
     }
 
     // update pos
     gLakituState.pos[0] = m->pos[0] + coss(gFirstPersonCamera.pitch) * sins(gFirstPersonCamera.yaw);
-    gLakituState.pos[1] = m->pos[1] + sins(gFirstPersonCamera.pitch) + (MARIO_HEAD_POS - gFirstPersonCamera.crouch);
+    gLakituState.pos[1] = m->pos[1] + sins(gFirstPersonCamera.pitch) + (FIRST_PERSON_MARIO_HEAD_POS - gFirstPersonCamera.crouch);
     gLakituState.pos[2] = m->pos[2] + coss(gFirstPersonCamera.pitch) * coss(gFirstPersonCamera.yaw);
     vec3f_copy(m->area->camera->pos, gLakituState.pos);
     vec3f_copy(gLakituState.curPos, gLakituState.pos);
@@ -126,7 +123,7 @@ void first_person_camera_update(void) {
 
     // update focus
     gLakituState.focus[0] = m->pos[0] - 100 * coss(gFirstPersonCamera.pitch) * sins(gFirstPersonCamera.yaw);
-    gLakituState.focus[1] = m->pos[1] - 100 * sins(gFirstPersonCamera.pitch) + (MARIO_HEAD_POS - gFirstPersonCamera.crouch);
+    gLakituState.focus[1] = m->pos[1] - 100 * sins(gFirstPersonCamera.pitch) + (FIRST_PERSON_MARIO_HEAD_POS - gFirstPersonCamera.crouch);
     gLakituState.focus[2] = m->pos[2] - 100 * coss(gFirstPersonCamera.pitch) * coss(gFirstPersonCamera.yaw);
     vec3f_copy(m->area->camera->focus, gLakituState.focus);
     vec3f_copy(gLakituState.curFocus, gLakituState.focus);

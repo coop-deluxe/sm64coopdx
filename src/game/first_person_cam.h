@@ -5,6 +5,9 @@
 
 #define FIRST_PERSON_DEFAULT_FOV 70
 
+#define FIRST_PERSON_MARIO_HEAD_POS 120
+#define FIRST_PERSON_MARIO_HEAD_POS_SHORT 60
+
 struct FirstPersonCamera {
     bool enabled;
     bool forceRoll;

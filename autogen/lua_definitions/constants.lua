@@ -3433,6 +3433,12 @@ DS_NONE = 0xff
 FIRST_PERSON_DEFAULT_FOV = 70
 
 --- @type integer
+FIRST_PERSON_MARIO_HEAD_POS = 120
+
+--- @type integer
+FIRST_PERSON_MARIO_HEAD_POS_SHORT = 60
+
+--- @type integer
 BACKGROUND_ABOVE_CLOUDS = 8
 
 --- @type integer
