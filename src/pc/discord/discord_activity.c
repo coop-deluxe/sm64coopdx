@@ -78,10 +78,13 @@ static void discord_populate_details(char* buffer, int bufferLength) {
     bufferLength -= versionLength;
 
     // get mod strings
-    if (gActiveMods.entryCount <= 0) { return; }
-    char* strings[gActiveMods.entryCount];
+    u8 autoexecMod = mods_has_autoexec_mod();
+    if (gActiveMods.entryCount - autoexecMod <= 0) { return; }
+    char* strings[gActiveMods.entryCount - autoexecMod];
     for (int i = 0; i < gActiveMods.entryCount; i++) {
-        strings[i] = gActiveMods.entries[i]->name;
+        struct Mod* mod = gActiveMods.entries[i];
+        if (mod_get_is_autoexec(mod)) { continue; }
+        strings[i] = mod->name;
     }
 
     // add seperator
@@ -90,7 +93,7 @@ static void discord_populate_details(char* buffer, int bufferLength) {
     bufferLength -= 3;
 
     // concat mod strings
-    str_seperator_concat(buffer, bufferLength, strings, gActiveMods.entryCount, ", ");
+    str_seperator_concat(buffer, bufferLength, strings, gActiveMods.entryCount - autoexecMod, ", ");
 }
 
 void discord_activity_update(void) {

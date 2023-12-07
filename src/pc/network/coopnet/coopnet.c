@@ -180,8 +180,9 @@ static void coopnet_populate_description(void) {
     bufferLength -= versionLength;
 
     // get mod strings
-    if (gActiveMods.entryCount <= 0) { return; }
-    char* strings[gActiveMods.entryCount - mods_has_autoexec_mod()];
+    u8 autoexecMod = mods_has_autoexec_mod();
+    if (gActiveMods.entryCount - autoexecMod <= 0) { return; }
+    char* strings[gActiveMods.entryCount - autoexecMod];
     for (int i = 0; i < gActiveMods.entryCount; i++) {
         struct Mod* mod = gActiveMods.entries[i];
         if (mod_get_is_autoexec(mod)) { continue; }
@@ -195,7 +196,7 @@ static void coopnet_populate_description(void) {
     bufferLength -= strlen(sep);
 
     // concat mod strings
-    str_seperator_concat(buffer, bufferLength, strings, gActiveMods.entryCount, "\\#dcdcdc\\\n");
+    str_seperator_concat(buffer, bufferLength, strings, gActiveMods.entryCount - autoexecMod, "\\#dcdcdc\\\n");
 }
 
 void ns_coopnet_update(void) {
