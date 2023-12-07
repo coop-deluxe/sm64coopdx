@@ -199,8 +199,10 @@ bool djui_interactable_on_key_down(int scancode) {
         return true;
     }
 
-    for (int i = 0; i < MAX_BINDS; i++) {
-        if (scancode == (int)configKeyConsole[i]) { djui_console_toggle(); }
+    if (!gDjuiChatBoxFocus && gDjuiChatBox != NULL) {
+        for (int i = 0; i < MAX_BINDS; i++) {
+            if (scancode == (int)configKeyConsole[i]) { djui_console_toggle(); break; }
+        }
     }
 
     bool keyFocused = (gInteractableFocus != NULL)
