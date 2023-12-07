@@ -264,6 +264,19 @@ void game_exit(void) {
     exit(0);
 }
 
+void enable_autoexec_mod(void) {
+    for (int i = 0; i < gLocalMods.entryCount; i ++) {
+        struct Mod* mod = gLocalMods.entries[i];
+        if (mod_get_is_autoexec(mod)) {
+#ifdef DEVELOPMENT
+            mod->enabled = true;
+#else
+            mod->enabled = false;
+#endif
+        }
+    }
+}
+
 void* main_game_init(UNUSED void* arg) {
     const char *gamedir = gCLIOpts.GameDir[0] ? gCLIOpts.GameDir : FS_BASEDIR;
     const char *userpath = gCLIOpts.SavePath[0] ? gCLIOpts.SavePath : sys_user_path();
@@ -281,6 +294,7 @@ void* main_game_init(UNUSED void* arg) {
 
     mods_init();
     enable_queued_mods();
+    enable_autoexec_mod();
     if (gIsThreaded) {
         REFRESH_MUTEX(
             gCurrLoadingSegment.percentage = 0;

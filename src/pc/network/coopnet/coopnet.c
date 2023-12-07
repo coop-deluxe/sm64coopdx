@@ -181,9 +181,11 @@ static void coopnet_populate_description(void) {
 
     // get mod strings
     if (gActiveMods.entryCount <= 0) { return; }
-    char* strings[gActiveMods.entryCount];
+    char* strings[gActiveMods.entryCount - mods_has_autoexec_mod()];
     for (int i = 0; i < gActiveMods.entryCount; i++) {
-        strings[i] = gActiveMods.entries[i]->name;
+        struct Mod* mod = gActiveMods.entries[i];
+        if (mod_get_is_autoexec(mod)) { continue; }
+        strings[i] = mod->name;
     }
 
     // add seperator

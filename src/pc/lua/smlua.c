@@ -288,13 +288,6 @@ void smlua_init(void) {
         gLuaActiveMod = NULL;
         gLuaLoadingMod = NULL;
     }
-
-#ifdef DEVELOPMENT
-    // autoexec
-    if (path_exists("autoexec.lua")) {
-        smlua_exec_file("autoexec.lua");
-    }
-#endif
 }
 
 void smlua_update(void) {

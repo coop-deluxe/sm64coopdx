@@ -138,6 +138,9 @@ void djui_panel_host_mods_create(struct DjuiBase* caller) {
         struct DjuiBase* layoutBase = &paginated->layout->base;
         for (int i = 0; i < gLocalMods.entryCount; i++) {
             struct Mod* mod = gLocalMods.entries[i];
+            if (mod_get_is_autoexec(mod)) {
+                continue;
+            }
             if (isRomHacks != (mod->incompatible && strstr(mod->incompatible, "romhack"))) {
                 continue;
             }

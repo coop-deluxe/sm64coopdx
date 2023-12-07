@@ -51,12 +51,13 @@ void network_send_mod_list(void) {
     snprintf(version, MAX_VERSION_LENGTH, "%s", get_version());
     LOG_INFO("sending version: %s", version);
     packet_write(&p, &version, sizeof(u8) * MAX_VERSION_LENGTH);
-    packet_write(&p, &gActiveMods.entryCount, sizeof(u16));
+    packet_write(&p, &gActiveMods.entryCount - mods_has_autoexec_mod(), sizeof(u16));
     network_send_to(0, &p);
 
     LOG_INFO("sent mod list (%u):", gActiveMods.entryCount);
     for (u16 i = 0; i < gActiveMods.entryCount; i++) {
         struct Mod* mod = gActiveMods.entries[i];
+        if (mod_get_is_autoexec(mod)) { continue; }
 
         u16 nameLength = strlen(mod->name);
         if (nameLength > MOD_NAME_MAX_LENGTH) { nameLength = MOD_NAME_MAX_LENGTH; }

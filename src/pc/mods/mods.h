@@ -24,6 +24,7 @@ extern char gRemoteModsBasePath[];
 
 void mods_get_main_mod_name(char* destination, u32 maxSize);
 u16  mods_get_enabled_count(void);
+u8   mods_has_autoexec_mod(void);
 bool mods_generate_remote_base_path(void);
 void mods_activate(struct Mods* mods);
 void mods_clear(struct Mods* mods);
