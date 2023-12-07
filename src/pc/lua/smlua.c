@@ -291,7 +291,9 @@ void smlua_init(void) {
 
 #ifdef DEVELOPMENT
     // autoexec
-    smlua_exec_file("autoexec.lua");
+    if (path_exists("autoexec.lua")) {
+        smlua_exec_file("autoexec.lua");
+    }
 #endif
 }
 
