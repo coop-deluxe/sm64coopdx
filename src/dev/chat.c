@@ -76,7 +76,7 @@ bool exec_dev_chat_command(char* command) {
         }
 
         // Area
-        s32 area = -1;
+        s32 area = 1;
         if (sscanf(paramArea, "%d", &area) <= 0) {
             char message[256];
             snprintf(message, 256, "Invalid [AREA] parameter: %s", paramArea);
@@ -85,7 +85,7 @@ bool exec_dev_chat_command(char* command) {
         }
 
         // Act
-        s32 act = -1;
+        s32 act = 1;
         if (sscanf(paramAct, "%d", &act) <= 0) {
             char message[256];
             snprintf(message, 256, "Invalid [ACT] parameter: %s", paramAct);
@@ -108,10 +108,32 @@ bool exec_dev_chat_command(char* command) {
         return true;
     }
 
+    if (strcmp("/lua", command) == 0) {
+        djui_chat_message_create("Missing parameter: [LUA]");
+        return true;
+    }
+
+    if (str_starts_with("/lua ", command)) {
+        smlua_exec_str(&command[5]);
+        return true;
+    }
+
+    if (strcmp("/luaf", command) == 0) {
+        djui_chat_message_create("Missing parameter: [FILENAME]");
+        return true;
+    }
+
+    if (str_starts_with("/luaf ", command)) {
+        smlua_exec_file(&command[6]);
+        return true;
+    }
+
     return false;
 }
 
 void dev_display_chat_commands(void) {
     djui_chat_message_create("/warp [LEVEL] [AREA] [ACT] - Level can be either a numeric value or a shorthand name");
+    djui_chat_message_create("/lua [LUA] - Execute Lua code from a string");
+    djui_chat_message_create("/luaf [FILENAME] - Execute Lua code from a file");
 }
 #endif
