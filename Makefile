@@ -57,7 +57,7 @@ ASAN ?= 0
 HEADLESS ?= 0
 # Enable Game ICON
 ICON ?= 1
-# Use .app (mac only)
+# Use .app (for macOS)
 USE_APP ?= 1
 
 # Various workarounds for weird toolchains
