@@ -1678,6 +1678,8 @@ extern ALIGNED8 const Texture toad_player_texture_eyes_dead[];
 extern ALIGNED8 const Texture wario_texture_white_button[];
 extern ALIGNED8 const Texture wario_texture_w_logo[];
 extern ALIGNED8 const Texture wario_texture_hair_sideburn[];
+extern ALIGNED8 const Texture wario_texture_add_sideburn[];
+extern ALIGNED8 const Texture wario_texture_skin_sideburn[];
 extern ALIGNED8 const Texture wario_texture_mouth[];
 extern ALIGNED8 const Texture wario_texture_mouth_dead[];
 extern ALIGNED8 const Texture wario_texture_eyes_front[];
@@ -1688,7 +1690,6 @@ extern ALIGNED8 const Texture wario_texture_eyes_left[];
 extern ALIGNED8 const Texture wario_texture_eyes_up[];
 extern ALIGNED8 const Texture wario_texture_eyes_down[];
 extern ALIGNED8 const Texture wario_texture_eyes_dead[];
-extern ALIGNED8 const Texture wario_cap_seg3_texture_0301DF50[];
 
 extern ALIGNED8 const Texture waluigi_custom_waluigi_overalls_button_rgba16[];
 extern ALIGNED8 const Texture waluigi_custom_waluigi_metal_rgba16[];

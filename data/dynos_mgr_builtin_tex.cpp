@@ -1109,7 +1109,9 @@ static const struct BuiltinTexInfo sDynosBuiltinTexs[] = {
     define_builtin_tex(toad_player_texture_eyes_dead, "actors/toad_player/custom_toad_eyes_dead.rgba32.png", 32, 32, 16),
     define_builtin_tex(wario_texture_white_button, "actors/wario/custom_wario_overalls_button.rgba16.png", 32, 32, 16),
     define_builtin_tex(wario_texture_w_logo, "actors/wario/custom_wario_logo.rgba16.png", 32, 32, 16),
-    define_builtin_tex(wario_texture_hair_sideburn, "actors/wario/custom_wario_sideburn.rgba16.png", 32, 32, 16),
+    define_builtin_tex(wario_texture_hair_sideburn, "actors/wario/custom_wario_sideburn.rgba32.png", 32, 32, 16),
+    define_builtin_tex(wario_texture_add_sideburn, "actors/wario/custom_wario_sideburn_add.rgba32.png", 32, 32, 16),
+    define_builtin_tex(wario_texture_skin_sideburn, "actors/wario/custom_wario_skin.rgba16.png", 32, 32, 16),
     define_builtin_tex(wario_texture_mouth, "actors/wario/custom_wario_mouth.rgba16.png", 64, 32, 16),
     define_builtin_tex(wario_texture_mouth_dead, "actors/wario/custom_wario_mouth_dead.rgba16.png", 64, 32, 16),
     define_builtin_tex(wario_texture_eyes_front, "actors/wario/custom_wario_eyes_center.rgba16.png", 64, 32, 16),
@@ -1120,7 +1122,6 @@ static const struct BuiltinTexInfo sDynosBuiltinTexs[] = {
     define_builtin_tex(wario_texture_eyes_up, "actors/wario/custom_wario_eyes_up_unused.rgba16.png", 64, 32, 16),
     define_builtin_tex(wario_texture_eyes_down, "actors/wario/custom_wario_eyes_down_unused.rgba16.png", 64, 32, 16),
     define_builtin_tex(wario_texture_eyes_dead, "actors/wario/custom_wario_eyes_dead.rgba16.png", 64, 32, 16),
-    define_builtin_tex(wario_cap_seg3_texture_0301DF50, "actors/wario_cap/custom_wario_cap_logo.rgba16.png", 32, 32, 16),
     
     // Waluigi
     define_builtin_tex(waluigi_custom_waluigi_overalls_button_rgba16, "actors/waluigi/custom_waluigi_overalls_button.rgba16.png", 32, 32, 16),
