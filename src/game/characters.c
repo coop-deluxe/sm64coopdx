@@ -1157,7 +1157,7 @@ struct Character gCharacters[CT_MAX] = {
         .capEnemyDecalGfx      = NULL,
         .torsoRotMult          = 1.0f,
         // anim
-        .animOffsetEnabled     = true,
+        .animOffsetEnabled     = false,
 
         // character anims
         .animSlowLedgeGrab =                    MARIO_ANIM_SLOW_LEDGE_GRAB,
