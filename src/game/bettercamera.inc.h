@@ -359,7 +359,7 @@ static void newcam_rotate_button(void) {
         newcam_framessincec[1] = 0;
     }
     if ((gPlayer1Controller->buttonPressed & U_CBUTTONS) && newcam_modeflags & NC_FLAG_YTURN && !(newcam_modeflags & NC_FLAG_8D) && newcam_analogue == 0 && configCameraCUp) {
-        if (newcam_framessincec[1] < 3 && gMarioState->action & ACT_FLAG_ALLOW_FIRST_PERSON) {
+        if (newcam_framessincec[1] < 6 && gMarioState->action & ACT_FLAG_ALLOW_FIRST_PERSON) {
             gCameraMovementFlags |= CAM_MOVE_C_UP_MODE;
             #ifndef nosound
             play_sound(SOUND_MENU_CAMERA_ZOOM_IN, gGlobalSoundSource);
