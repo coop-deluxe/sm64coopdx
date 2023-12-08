@@ -107,7 +107,6 @@ extern bool         configLuaProfiler;
 extern bool         configCtxProfiler;
 #endif
 extern unsigned int configInterpolationMode;
-extern bool         configSingleplayerPause;
 extern bool         configDebugPrint;
 extern bool         configDebugInfo;
 extern bool         configDebugError;

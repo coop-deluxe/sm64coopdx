@@ -245,17 +245,10 @@ u16 level_control_timer(s32 timerOp) {
 }
 
 u32 pressed_pause(void) {
-    if (configSingleplayerPause && network_player_connected_count() == 1) {
-        // prevent softlock in singleplayer pause, by not allowing pause in transitions
-        if (gWarpTransition.isActive || sDelayedWarpOp != WARP_OP_NONE) {
-            return FALSE;
-        }
-    }
-
-    u32 val4 = get_dialog_id() >= 0;
+    u32 dialogActive = get_dialog_id() >= 0;
     u32 intangible = (gMarioState->action & ACT_FLAG_INTANGIBLE) != 0;
 
-    if (!intangible && !val4 && !gWarpTransition.isActive && sDelayedWarpOp == WARP_OP_NONE
+    if (!intangible && !dialogActive && !gWarpTransition.isActive && sDelayedWarpOp == WARP_OP_NONE
         && (gPlayer1Controller->buttonPressed & START_BUTTON)) {
         return TRUE;
     }
@@ -1672,13 +1665,8 @@ s32 update_level(void) {
             changeLevel = play_mode_normal();
             break;
         case PLAY_MODE_PAUSED:
-            if (!(configSingleplayerPause && network_player_connected_count() == 1 && gActiveMods.entryCount == 0)) {
-                changeLevel = play_mode_normal();
-            }
-
-            if (sCurrPlayMode == PLAY_MODE_PAUSED) {
-                changeLevel = play_mode_paused();
-            }
+            changeLevel = play_mode_normal();
+            changeLevel = play_mode_paused();
             break;
         case PLAY_MODE_CHANGE_AREA:
             changeLevel = play_mode_change_area();
