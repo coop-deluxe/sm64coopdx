@@ -1287,7 +1287,7 @@ void cur_obj_update(void) {
     }
 
     // handle network area timer
-    if (gCurrentObject->areaTimerType != AREA_TIMER_TYPE_NONE && !(gMenuMode == -1 && configSingleplayerPause)) {
+    if (gCurrentObject->areaTimerType != AREA_TIMER_TYPE_NONE) {
         // make sure the area is valid
         if (gNetworkPlayerLocal == NULL || !gNetworkPlayerLocal->currAreaSyncValid) {
             goto cur_obj_update_end;
@@ -1437,7 +1437,7 @@ cur_obj_update_begin:;
     }
 
     // update network area timer
-    if (gCurrentObject->areaTimerType != AREA_TIMER_TYPE_NONE && !(gMenuMode == -1 && configSingleplayerPause)) {
+    if (gCurrentObject->areaTimerType != AREA_TIMER_TYPE_NONE) {
         gCurrentObject->areaTimer++;
         if (gCurrentObject->areaTimer < gNetworkAreaTimer) {
             goto cur_obj_update_begin;

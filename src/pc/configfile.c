@@ -150,7 +150,6 @@ bool         configCtxProfiler                   = false;
 unsigned int configInterpolationMode             = 1;
 unsigned int configGamepadNumber                 = 0;
 bool         configBackgroundGamepad             = true;
-bool         configSingleplayerPause             = false;
 bool         configDebugPrint                    = false;
 bool         configDebugInfo                     = false;
 bool         configDebugError                    = false;
@@ -260,7 +259,6 @@ static const struct ConfigOption options[] = {
     {.name = "coop_custom_palette_skin",       .type = CONFIG_TYPE_COLOR , .colorValue  = &configCustomPalette.parts[SKIN]},
     {.name = "coop_custom_palette_cap",        .type = CONFIG_TYPE_COLOR , .colorValue  = &configCustomPalette.parts[CAP]},
     {.name = "coop_stay_in_level_after_star",  .type = CONFIG_TYPE_UINT  , .uintValue   = &configStayInLevelAfterStar},
-    {.name = "coop_singleplayer_pause",        .type = CONFIG_TYPE_BOOL  , .boolValue   = &configSingleplayerPause},
     {.name = "coop_compatibility",             .type = CONFIG_TYPE_BOOL  ,  .boolValue   = &configCoopCompatibility},
     {.name = "disable_popups",                 .type = CONFIG_TYPE_BOOL  , .boolValue   = &configDisablePopups},
 #if defined(DEVELOPMENT)

@@ -48,7 +48,6 @@ void djui_panel_misc_create(struct DjuiBase* caller) {
     djui_themes_init();
 
     {
-        djui_checkbox_create(body, DLANG(MISC, PAUSE_IN_SINGLEPLAYER), &configSingleplayerPause, NULL);
         djui_checkbox_create(body, DLANG(MISC, DISABLE_POPUPS), &configDisablePopups, NULL);
         
         djui_checkbox_create(body, DLANG(MISC, COOP_COMPATIBILITY), &configCoopCompatibility, djui_panel_compatibility_checkbox_on_value_change);

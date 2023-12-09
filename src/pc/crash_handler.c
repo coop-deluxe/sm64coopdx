@@ -288,6 +288,13 @@ static void crash_handler_add_info_str(CrashHandlerText** pTextP, f32 x, f32 y, 
     *pTextP = pText;
 }
 
+static void crash_handler_add_version_str(CrashHandlerText** pTextP, f32 x, f32 y) {
+    CrashHandlerText* pText = *pTextP;
+    crash_handler_set_text(x, y, 0xFF, 0xFF, 0x00, "%s", "sm64coopdx ");
+    crash_handler_set_text(-1, y, 0x00, 0xFF, 0xFF, "%s", SM64COOPDX_VERSION);
+    *pTextP = pText;
+}
+
 static void crash_handler_add_info_int(CrashHandlerText** pTextP, f32 x, f32 y, const char* title, int value) {
     CrashHandlerText* pText = *pTextP;
     crash_handler_set_text(x, y, 0xFF, 0xFF, 0x00, "%s", title);
@@ -637,7 +644,7 @@ static void crash_handler(const int signalNum, siginfo_t *info, ucontext_t *cont
         }
     }
 
-    crash_handler_add_info_str(&pText, 335, 208, "Version", get_version_local());
+    crash_handler_add_version_str(&pText, 335, 208);
     crash_handler_add_info_str(&pText, 8, 208, "RemoteBhv", gLastRemoteBhv);
 
     // sounds
