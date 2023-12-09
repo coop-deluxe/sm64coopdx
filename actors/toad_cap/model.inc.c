@@ -378,14 +378,9 @@ Gfx mat_revert_toad_cap_metal[] = {
 
 Gfx mat_toad_cap_cap_base[] = {
 	gsDPPipeSync(),
-	gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, TEXEL0, 0, ENVIRONMENT, 0, TEXEL0, 0, SHADE, 0, TEXEL0, 0, ENVIRONMENT, 0),
+	gsDPSetCombineLERP(0, 0, 0, SHADE, 0, 0, 0, ENVIRONMENT, 0, 0, 0, SHADE, 0, 0, 0, ENVIRONMENT),
 	gsSPTexture(65535, 65535, 0, 0, 1),
 	gsSPCopyLightsPlayerPart(GLOVES),
-	gsDPSetTextureImage(G_IM_FMT_IA, G_IM_SIZ_16b_LOAD_BLOCK, 1, toad_cap_texture_cap),
-	gsDPSetTile(G_IM_FMT_IA, G_IM_SIZ_16b_LOAD_BLOCK, 0, 0, 7, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0),
-	gsDPLoadBlock(7, 0, 0, 1023, 256),
-	gsDPSetTile(G_IM_FMT_IA, G_IM_SIZ_16b, 8, 0, 0, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0),
-	gsDPSetTileSize(0, 0, 0, 124, 124),
 	gsSPEndDisplayList(),
 };
 
@@ -492,14 +487,14 @@ Gfx mat_revert_toad_cap_metal_wing_tip[] = {
 };
 
 Gfx toad_cap_Cap_mesh_layer_1[] = {
+	gsSPDisplayList(mat_toad_cap_cap_base),
+	gsSPDisplayList(toad_cap_Cap_mesh_layer_1_tri_0),
 	gsSPDisplayList(mat_toad_cap_toad_cap_inside),
 	gsSPDisplayList(toad_cap_Cap_mesh_layer_1_tri_1),
 	gsSPEndDisplayList(),
 };
 
 Gfx toad_cap_Cap_mesh_layer_5[] = {
-	gsSPDisplayList(mat_toad_cap_cap_base),
-	gsSPDisplayList(toad_cap_Cap_mesh_layer_1_tri_0),
 	gsSPDisplayList(mat_toad_cap_cap_spots),
 	gsSPDisplayList(toad_cap_Cap_mesh_layer_5_tri_0),
 	gsSPEndDisplayList(),

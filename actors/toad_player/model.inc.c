@@ -2000,14 +2000,9 @@ Gfx mat_revert_toad_player_metal_vest[] = {
 
 Gfx mat_toad_player_cap_base[] = {
 	gsDPPipeSync(),
-	gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, TEXEL0, 0, ENVIRONMENT, 0, TEXEL0, 0, SHADE, 0, TEXEL0, 0, ENVIRONMENT, 0),
+	gsDPSetCombineLERP(0, 0, 0, SHADE, 0, 0, 0, ENVIRONMENT, 0, 0, 0, SHADE, 0, 0, 0, ENVIRONMENT),
 	gsSPTexture(65535, 65535, 0, 0, 1),
 	gsSPCopyLightsPlayerPart(GLOVES),
-	gsDPSetTextureImage(G_IM_FMT_IA, G_IM_SIZ_16b_LOAD_BLOCK, 1, toad_player_texture_cap),
-	gsDPSetTile(G_IM_FMT_IA, G_IM_SIZ_16b_LOAD_BLOCK, 0, 0, 7, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0),
-	gsDPLoadBlock(7, 0, 0, 1023, 256),
-	gsDPSetTile(G_IM_FMT_IA, G_IM_SIZ_16b, 8, 0, 0, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0),
-	gsDPSetTileSize(0, 0, 0, 124, 124),
 	gsSPEndDisplayList(),
 };
 
@@ -2363,15 +2358,19 @@ Gfx toad_player_Torso_mesh_layer_1_mat_override_metal_0[] = {
 	gsSPEndDisplayList(),
 };
 
-Gfx toad_player_Cap_DL_mesh_layer_4[] = {
+Gfx toad_player_cap_base[] = {
 	gsSPDisplayList(mat_toad_player_cap_base),
 	gsSPDisplayList(toad_player_Cap_DL_mesh_layer_4_tri_0),
-	gsSPDisplayList(mat_toad_player_cap_spots),
-	gsSPDisplayList(toad_player_Cap_DL_mesh_layer_4_tri_1),
 	gsSPEndDisplayList(),
 };
 
-Gfx toad_player_Cap_DL_mesh_layer_4_mat_override_metal_0[] = {
+Gfx toad_player_cap_decal[] = {
+	gsSPDisplayList(mat_toad_player_cap_spots),
+	gsSPDisplayList(toad_player_Cap_DL_mesh_layer_4_tri_0),
+	gsSPEndDisplayList(),
+};
+
+Gfx toad_player_metal_cap[] = {
 	gsSPDisplayList(mat_toad_player_metal),
 	gsSPDisplayList(toad_player_Cap_DL_mesh_layer_4_tri_0),
 	gsSPDisplayList(mat_revert_toad_player_metal),
@@ -2585,34 +2584,28 @@ Gfx toad_player_Right_Hand_Peace_Switch_Option_Right_Hand_Peace_mesh_layer_1_mat
 	gsSPEndDisplayList(),
 };
 
-Gfx toad_player_Right_Hand_Switch_Option_Right_Hand_Cap_mesh_layer_1[] = {
+Gfx toad_player_right_hand_cap[] = {
 	gsSPDisplayList(mat_toad_player_beige),
 	gsSPDisplayList(toad_player_Right_Hand_Switch_Option_Right_Hand_Cap_mesh_layer_1_tri_0),
+	gsSPDisplayList(mat_toad_player_cap_base),
+	gsSPDisplayList(toad_player_Right_Hand_Switch_Option_Right_Hand_Cap_mesh_layer_4_tri_0),
 	gsSPDisplayList(mat_toad_player_toad_cap_inside),
 	gsSPDisplayList(toad_player_Right_Hand_Switch_Option_Right_Hand_Cap_mesh_layer_1_tri_1),
 	gsSPEndDisplayList(),
 };
 
-Gfx toad_player_Right_Hand_Switch_Option_Right_Hand_Cap_mesh_layer_1_mat_override_metal_0[] = {
+Gfx toad_player_right_hand_cap_metal[] = {
 	gsSPDisplayList(mat_toad_player_metal),
 	gsSPDisplayList(toad_player_Right_Hand_Switch_Option_Right_Hand_Cap_mesh_layer_1_tri_0),
+	gsSPDisplayList(toad_player_Right_Hand_Switch_Option_Right_Hand_Cap_mesh_layer_4_tri_0),
 	gsSPDisplayList(toad_player_Right_Hand_Switch_Option_Right_Hand_Cap_mesh_layer_1_tri_1),
 	gsSPDisplayList(mat_revert_toad_player_metal),
 	gsSPEndDisplayList(),
 };
 
-Gfx toad_player_Right_Hand_Switch_Option_Right_Hand_Cap_mesh_layer_4[] = {
-	gsSPDisplayList(mat_toad_player_cap_base),
-	gsSPDisplayList(toad_player_Right_Hand_Switch_Option_Right_Hand_Cap_mesh_layer_4_tri_0),
+Gfx toad_player_right_hand_cap_decal[] = {
 	gsSPDisplayList(mat_toad_player_cap_spots),
-	gsSPDisplayList(toad_player_Right_Hand_Switch_Option_Right_Hand_Cap_mesh_layer_4_tri_1),
-	gsSPEndDisplayList(),
-};
-
-Gfx toad_player_Right_Hand_Switch_Option_Right_Hand_Cap_mesh_layer_4_mat_override_metal_0[] = {
-	gsSPDisplayList(mat_toad_player_metal),
 	gsSPDisplayList(toad_player_Right_Hand_Switch_Option_Right_Hand_Cap_mesh_layer_4_tri_0),
-	gsSPDisplayList(mat_revert_toad_player_metal),
 	gsSPEndDisplayList(),
 };
 
