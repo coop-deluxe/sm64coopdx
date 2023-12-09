@@ -397,7 +397,6 @@ const Gfx mario_cap_seg3_dl_03023160[] = {
     gsDPPipeSync(),
     gsDPSetCombineMode(G_CC_SHADEFADEA, G_CC_SHADEFADEA),
     gsSPCopyLightsPlayerPart(CAP), //gsSPLight(&mario_cap_seg3_lights_0301CF38.a, 2),
-    gsSPDisplayList(mario_cap_seg3_dl_03022B30),
     gsSPDisplayList(mario_cap_seg3_dl_03022D10),
     gsDPPipeSync(),
     gsSPClearGeometryMode(G_LIGHTING | G_CULL_BACK),

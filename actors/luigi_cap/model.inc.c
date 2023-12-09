@@ -368,7 +368,6 @@ const Gfx luigi_cap_seg3_dl_03023160[] = {
     gsDPPipeSync(),
     gsDPSetCombineMode(G_CC_SHADEFADEA, G_CC_SHADEFADEA),
     gsSPCopyLightsPlayerPart(CAP), //gsSPLight(&luigi_cap_seg3_lights_0301CF38.a, 2),
-    gsSPDisplayList(luigi_cap_seg3_dl_03022B30),
     gsSPDisplayList(luigi_cap_seg3_dl_03022D10),
     gsDPPipeSync(),
     gsSPClearGeometryMode(G_LIGHTING | G_CULL_BACK),
