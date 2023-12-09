@@ -7,6 +7,7 @@ static const Lights1 toad_cap_black_lights_group = gdSPDefLights1(
 #include "actors/toad_player/toad_player_externs.h"
 #define toad_cap_texture_metal_shade        mario_texture_metal_shade
 #define toad_cap_texture_metal_light        mario_texture_metal_light
+#define toad_cap_texture_cap                toad_player_texture_cap
 #define toad_cap_texture_spots              toad_player_texture_spots
 #define toad_cap_texture_wings_half_1       mario_texture_wings_half_1
 #define toad_cap_texture_wings_half_2       mario_texture_wings_half_2
@@ -313,14 +314,14 @@ Gfx toad_cap_Cap_mesh_layer_5_tri_0[] = {
 };
 
 Vtx toad_cap_Wing_Cap_Wings_mesh_layer_4_vtx_0[8] = {
-	{{ {-132, 118, -76}, 0, {974, 1996}, {167, 238, 89, 255} }},
-	{{ {-62, 145, -1}, 0, {-16, 1996}, {167, 238, 89, 255} }},
-	{{ {-192, 321, -94}, 0, {974, -16}, {166, 237, 88, 255} }},
-	{{ {-125, 348, -19}, 0, {-16, -16}, {166, 236, 88, 255} }},
-	{{ {192, 321, -94}, 0, {974, -16}, {90, 237, 88, 255} }},
-	{{ {62, 145, -1}, 0, {-16, 1996}, {89, 238, 89, 255} }},
-	{{ {132, 118, -76}, 0, {974, 1996}, {89, 238, 89, 255} }},
-	{{ {125, 348, -19}, 0, {-16, -16}, {90, 236, 88, 255} }},
+	{{ {-132, 118, -76}, 0, {974, 1996}, {0xff, 0xff, 0xff, 0xff} }},
+	{{ {-62, 145, -1}, 0, {-16, 1996}, {0xff, 0xff, 0xff, 0xff} }},
+	{{ {-192, 321, -94}, 0, {974, -16}, {0xff, 0xff, 0xff, 0xff} }},
+	{{ {-125, 348, -19}, 0, {-16, -16}, {0xff, 0xff, 0xff, 0xff} }},
+	{{ {192, 321, -94}, 0, {974, -16}, {0xff, 0xff, 0xff, 0xff} }},
+	{{ {62, 145, -1}, 0, {-16, 1996}, {0xff, 0xff, 0xff, 0xff} }},
+	{{ {132, 118, -76}, 0, {974, 1996}, {0xff, 0xff, 0xff, 0xff} }},
+	{{ {125, 348, -19}, 0, {-16, -16}, {0xff, 0xff, 0xff, 0xff} }},
 };
 
 Gfx toad_cap_Wing_Cap_Wings_mesh_layer_4_tri_0[] = {
@@ -331,14 +332,14 @@ Gfx toad_cap_Wing_Cap_Wings_mesh_layer_4_tri_0[] = {
 };
 
 Vtx toad_cap_Wing_Cap_Wings_mesh_layer_4_vtx_1[8] = {
-	{{ {-132, 118, -76}, 0, {-16, 1996}, {167, 238, 89, 255} }},
-	{{ {-192, 321, -94}, 0, {-16, -16}, {166, 237, 88, 255} }},
-	{{ {-261, 293, -171}, 0, {974, -16}, {166, 237, 88, 255} }},
-	{{ {-201, 90, -153}, 0, {974, 1996}, {166, 237, 88, 255} }},
-	{{ {261, 293, -171}, 0, {974, -16}, {90, 237, 88, 255} }},
-	{{ {192, 321, -94}, 0, {-16, -16}, {90, 237, 88, 255} }},
-	{{ {132, 118, -76}, 0, {-16, 1996}, {89, 238, 89, 255} }},
-	{{ {201, 90, -153}, 0, {974, 1996}, {90, 237, 88, 255} }},
+	{{ {-132, 118, -76}, 0, {-16, 1996}, {0xff, 0xff, 0xff, 0xff} }},
+	{{ {-192, 321, -94}, 0, {-16, -16}, {0xff, 0xff, 0xff, 0xff} }},
+	{{ {-261, 293, -171}, 0, {974, -16}, {0xff, 0xff, 0xff, 0xff} }},
+	{{ {-201, 90, -153}, 0, {974, 1996}, {0xff, 0xff, 0xff, 0xff} }},
+	{{ {261, 293, -171}, 0, {974, -16}, {0xff, 0xff, 0xff, 0xff} }},
+	{{ {192, 321, -94}, 0, {-16, -16}, {0xff, 0xff, 0xff, 0xff} }},
+	{{ {132, 118, -76}, 0, {-16, 1996}, {0xff, 0xff, 0xff, 0xff} }},
+	{{ {201, 90, -153}, 0, {974, 1996}, {0xff, 0xff, 0xff, 0xff} }},
 };
 
 Gfx toad_cap_Wing_Cap_Wings_mesh_layer_4_tri_1[] = {
@@ -388,10 +389,10 @@ Gfx mat_toad_cap_toad_cap_inside[] = {
 	gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, TEXEL0, 0, ENVIRONMENT, 0, TEXEL0, 0, SHADE, 0, TEXEL0, 0, ENVIRONMENT, 0),
 	gsSPTexture(65535, 65535, 0, 0, 1),
 	gsSPCopyLightsPlayerPart(GLOVES),
-	gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 1, toad_cap_texture_cap_inside),
-	gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 0, 0, 7, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0),
+	gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_32b_LOAD_BLOCK, 1, toad_cap_texture_cap_inside),
+	gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_32b_LOAD_BLOCK, 0, 0, 7, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0),
 	gsDPLoadBlock(7, 0, 0, 63, 1024),
-	gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 2, 0, 0, 0, G_TX_CLAMP | G_TX_NOMIRROR, 3, 0, G_TX_CLAMP | G_TX_NOMIRROR, 3, 0),
+	gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_32b, 2, 0, 0, 0, G_TX_CLAMP | G_TX_NOMIRROR, 3, 0, G_TX_CLAMP | G_TX_NOMIRROR, 3, 0),
 	gsDPSetTileSize(0, 0, 0, 28, 28),
 	gsSPEndDisplayList(),
 };
@@ -412,7 +413,7 @@ Gfx mat_toad_cap_cap_spots[] = {
 Gfx mat_toad_cap_wing[] = {
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(0, 0, 0, TEXEL0, TEXEL0, 0, ENVIRONMENT, 0, 0, 0, 0, TEXEL0, TEXEL0, 0, ENVIRONMENT, 0),
-	gsSPGeometryMode(G_CULL_BACK, 0),
+    gsSPClearGeometryMode(G_LIGHTING | G_CULL_BACK),
 	gsSPTexture(65535, 65535, 0, 0, 1),
 	gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 1, toad_cap_texture_wings_half_1),
 	gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 0, 0, 7, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0),
@@ -424,14 +425,14 @@ Gfx mat_toad_cap_wing[] = {
 
 Gfx mat_revert_toad_cap_wing[] = {
 	gsDPPipeSync(),
-	gsSPGeometryMode(0, G_CULL_BACK),
+    gsSPSetGeometryMode(G_LIGHTING | G_CULL_BACK),
 	gsSPEndDisplayList(),
 };
 
 Gfx mat_toad_cap_wing_tip[] = {
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(0, 0, 0, TEXEL0, TEXEL0, 0, ENVIRONMENT, 0, 0, 0, 0, TEXEL0, TEXEL0, 0, ENVIRONMENT, 0),
-	gsSPGeometryMode(G_CULL_BACK, 0),
+    gsSPClearGeometryMode(G_LIGHTING | G_CULL_BACK),
 	gsSPTexture(65535, 65535, 0, 0, 1),
 	gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 1, toad_cap_texture_wings_half_2),
 	gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 0, 0, 7, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0),
@@ -443,14 +444,14 @@ Gfx mat_toad_cap_wing_tip[] = {
 
 Gfx mat_revert_toad_cap_wing_tip[] = {
 	gsDPPipeSync(),
-	gsSPGeometryMode(0, G_CULL_BACK),
+    gsSPSetGeometryMode(G_LIGHTING | G_CULL_BACK),
 	gsSPEndDisplayList(),
 };
 
 Gfx mat_toad_cap_metal_wing[] = {
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(0, 0, 0, TEXEL0, TEXEL0, 0, ENVIRONMENT, 0, 0, 0, 0, TEXEL0, TEXEL0, 0, ENVIRONMENT, 0),
-	gsSPGeometryMode(G_CULL_BACK, 0),
+    gsSPClearGeometryMode(G_LIGHTING | G_CULL_BACK),
 	gsSPTexture(65535, 65535, 0, 0, 1),
 	gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 1, toad_cap_texture_metal_wings_half_1),
 	gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 0, 0, 7, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0),
@@ -462,14 +463,14 @@ Gfx mat_toad_cap_metal_wing[] = {
 
 Gfx mat_revert_toad_cap_metal_wing[] = {
 	gsDPPipeSync(),
-	gsSPGeometryMode(0, G_CULL_BACK),
+    gsSPSetGeometryMode(G_LIGHTING | G_CULL_BACK),
 	gsSPEndDisplayList(),
 };
 
 Gfx mat_toad_cap_metal_wing_tip[] = {
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(0, 0, 0, TEXEL0, TEXEL0, 0, ENVIRONMENT, 0, 0, 0, 0, TEXEL0, TEXEL0, 0, ENVIRONMENT, 0),
-	gsSPGeometryMode(G_CULL_BACK, 0),
+    gsSPClearGeometryMode(G_LIGHTING | G_CULL_BACK),
 	gsSPTexture(65535, 65535, 0, 0, 1),
 	gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 1, toad_cap_texture_metal_wings_half_2),
 	gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 0, 0, 7, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0),
@@ -481,7 +482,7 @@ Gfx mat_toad_cap_metal_wing_tip[] = {
 
 Gfx mat_revert_toad_cap_metal_wing_tip[] = {
 	gsDPPipeSync(),
-	gsSPGeometryMode(0, G_CULL_BACK),
+    gsSPSetGeometryMode(G_LIGHTING | G_CULL_BACK),
 	gsSPEndDisplayList(),
 };
 
@@ -502,7 +503,6 @@ Gfx toad_cap_Cap_mesh_layer_5[] = {
 Gfx toad_cap_Metal_Cap_mesh_layer_1[] = {
 	gsSPDisplayList(mat_toad_cap_metal),
 	gsSPDisplayList(toad_cap_Cap_mesh_layer_1_tri_0),
-	gsSPDisplayList(toad_cap_Cap_mesh_layer_1_tri_1),
 	gsSPDisplayList(mat_revert_toad_cap_metal),
 	gsSPEndDisplayList(),
 };
@@ -528,13 +528,26 @@ Gfx toad_cap_Winged_Metal_Cap_Wings_mesh_layer_4[] = {
 };
 
 Gfx toad_cap_material_revert_render_settings[] = {
-	gsDPPipeSync(),
-	gsSPSetGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_TEXTURE_GEN),
-	gsDPSetCombineLERP(0, 0, 0, SHADE, 0, 0, 0, ENVIRONMENT, 0, 0, 0, SHADE, 0, 0, 0, ENVIRONMENT),
-	gsSPTexture(65535, 65535, 0, 0, 0),
-	gsDPSetEnvColor(255, 255, 255, 255),
-	gsDPSetAlphaCompare(G_AC_NONE),
-	gsSPEndDisplayList(),
+    gsDPPipeSync(),
+    gsSPSetGeometryMode(G_LIGHTING),
+    gsSPClearGeometryMode(G_TEXTURE_GEN),
+    gsDPSetCombineLERP(0, 0, 0, SHADE, 0, 0, 0, ENVIRONMENT, 0, 0, 0, SHADE, 0, 0, 0, ENVIRONMENT),
+    gsSPTexture(65535, 65535, 0, 0, 0),
+    gsDPSetEnvColor(255, 255, 255, 255),
+    gsDPSetAlphaCompare(G_AC_NONE),
+
+    gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 1, 0),
+    gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 0, 0, 7, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0),
+    gsDPLoadBlock(7, 0, 0, 1023, 256),
+    gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 8, 0, 0, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0),
+    gsDPSetTileSize(0, 0, 0, 124, 124),
+
+    gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 1, 0),
+    gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 0, 256, 6, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0),
+    gsDPLoadBlock(6, 0, 0, 1023, 256),
+    gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 8, 256, 1, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0),
+    gsDPSetTileSize(1, 0, 0, 124, 124),
+
+    gsSPEndDisplayList(),
 };
 

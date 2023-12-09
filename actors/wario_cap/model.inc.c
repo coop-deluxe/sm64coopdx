@@ -18,19 +18,21 @@ static const Lights1 wario_cap_seg3_lights_0301CF38 = gdSPDefLights1(
     0xff, 0xbd, 0x00, 0x28, 0x28, 0x28
 );
 
-#include "actors/mario/mario_externs.h"
-#include "actors/mario_cap/mario_cap_externs.h"
-#define wario_cap_seg3_texture_0301CF50 mario_cap_seg3_texture_0301CF50
-#define wario_cap_seg3_texture_0301E750 mario_cap_seg3_texture_0301E750
-#define wario_cap_seg3_texture_0301F750 mario_cap_seg3_texture_0301F750
-#define wario_cap_seg3_texture_03020750 mario_cap_seg3_texture_03020750
-#define wario_cap_seg3_texture_03021750 mario_cap_seg3_texture_03021750
-#define wario_cap_texture_cap_inside    mario_texture_cap_inside
+static const Lights1 wario_cap_black_lights_group = gdSPDefLights1(
+    0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x28, 0x28, 0x28
+);
 
-// 0x0301DF50
-ALIGNED8 const Texture wario_cap_seg3_texture_0301DF50[] = {
-#include "actors/wario_cap/custom_wario_cap_logo.rgba16.inc.c"
-};
+#include "actors/mario/mario_externs.h"
+#include "actors/wario/wario_externs.h"
+#define wario_cap_texture_metal_shade        mario_texture_metal_shade
+#define wario_cap_texture_metal_light        mario_texture_metal_light
+#define wario_cap_texture_w_logo             wario_texture_w_logo
+#define wario_cap_texture_wings_half_1       mario_texture_wings_half_1
+#define wario_cap_texture_wings_half_2       mario_texture_wings_half_2
+#define wario_cap_texture_metal_wings_half_1 mario_texture_metal_wings_half_1
+#define wario_cap_texture_metal_wings_half_2 mario_texture_metal_wings_half_2
+#define wario_cap_texture_cap_inside         mario_texture_cap_inside
 
 // 0x03022750
 static const Vtx wario_cap_seg3_vertex_03022750[] = {
@@ -183,30 +185,30 @@ const Gfx wario_cap_seg3_dl_03022D10[] = {
 
 // 0x03022D38
 static const Vtx wario_cap_seg3_vertex_03022D38[] = {
-    {{{   199,    247,    -55}, 0, {   990,      0}, {0x59, 0xed, 0x58, 0xff}}},
-    {{{   131,    274,     20}, 0, {     0,      0}, {0x59, 0xed, 0x58, 0xff}}},
-    {{{    69,     71,     38}, 0, {     0,   2012}, {0x59, 0xed, 0x58, 0xff}}},
-    {{{   199,    247,    -55}, 0, {   990,      0}, {0x58, 0xee, 0x58, 0xff}}},
-    {{{    69,     71,     38}, 0, {     0,   2012}, {0x58, 0xee, 0x58, 0xff}}},
-    {{{   138,     44,    -37}, 0, {   990,   2012}, {0x58, 0xee, 0x58, 0xff}}},
-    {{{  -137,     44,    -37}, 0, {   990,   2012}, {0xa8, 0xee, 0x58, 0xff}}},
-    {{{   -68,     71,     38}, 0, {     0,   2012}, {0xa8, 0xee, 0x58, 0xff}}},
-    {{{  -198,    247,    -55}, 0, {   990,      0}, {0xa8, 0xee, 0x58, 0xff}}},
-    {{{   -68,     71,     38}, 0, {     0,   2012}, {0xa7, 0xed, 0x58, 0xff}}},
-    {{{  -130,    274,     20}, 0, {     0,      0}, {0xa7, 0xed, 0x58, 0xff}}},
-    {{{  -198,    247,    -55}, 0, {   990,      0}, {0xa7, 0xed, 0x58, 0xff}}},
+    {{{   199,    247,    -55}, 0, {   990,      0}, {0xff, 0xff, 0xff, 0xff}}},
+    {{{   131,    274,     20}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
+    {{{    69,     71,     38}, 0, {     0,   2012}, {0xff, 0xff, 0xff, 0xff}}},
+    {{{   199,    247,    -55}, 0, {   990,      0}, {0xff, 0xff, 0xff, 0xff}}},
+    {{{    69,     71,     38}, 0, {     0,   2012}, {0xff, 0xff, 0xff, 0xff}}},
+    {{{   138,     44,    -37}, 0, {   990,   2012}, {0xff, 0xff, 0xff, 0xff}}},
+    {{{  -137,     44,    -37}, 0, {   990,   2012}, {0xff, 0xff, 0xff, 0xff}}},
+    {{{   -68,     71,     38}, 0, {     0,   2012}, {0xff, 0xff, 0xff, 0xff}}},
+    {{{  -198,    247,    -55}, 0, {   990,      0}, {0xff, 0xff, 0xff, 0xff}}},
+    {{{   -68,     71,     38}, 0, {     0,   2012}, {0xff, 0xff, 0xff, 0xff}}},
+    {{{  -130,    274,     20}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
+    {{{  -198,    247,    -55}, 0, {   990,      0}, {0xff, 0xff, 0xff, 0xff}}},
 };
 
 // 0x03022DF8
 static const Vtx wario_cap_seg3_vertex_03022DF8[] = {
-    {{{   268,    219,   -132}, 0, {   990,      0}, {0x59, 0xed, 0x57, 0xff}}},
-    {{{   199,    247,    -55}, 0, {     0,      0}, {0x59, 0xed, 0x57, 0xff}}},
-    {{{   138,     44,    -37}, 0, {     0,   2012}, {0x59, 0xed, 0x57, 0xff}}},
-    {{{   207,     16,   -114}, 0, {   990,   2012}, {0x59, 0xed, 0x57, 0xff}}},
-    {{{  -206,     16,   -114}, 0, {   990,   2012}, {0xa7, 0xed, 0x57, 0xff}}},
-    {{{  -137,     44,    -37}, 0, {     0,   2012}, {0xa7, 0xed, 0x57, 0xff}}},
-    {{{  -267,    219,   -132}, 0, {   990,      0}, {0xa7, 0xed, 0x57, 0xff}}},
-    {{{  -198,    247,    -55}, 0, {     0,      0}, {0xa7, 0xed, 0x57, 0xff}}},
+    {{{   268,    219,   -132}, 0, {   990,      0}, {0xff, 0xff, 0xff, 0xff}}},
+    {{{   199,    247,    -55}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
+    {{{   138,     44,    -37}, 0, {     0,   2012}, {0xff, 0xff, 0xff, 0xff}}},
+    {{{   207,     16,   -114}, 0, {   990,   2012}, {0xff, 0xff, 0xff, 0xff}}},
+    {{{  -206,     16,   -114}, 0, {   990,   2012}, {0xff, 0xff, 0xff, 0xff}}},
+    {{{  -137,     44,    -37}, 0, {     0,   2012}, {0xff, 0xff, 0xff, 0xff}}},
+    {{{  -267,    219,   -132}, 0, {   990,      0}, {0xff, 0xff, 0xff, 0xff}}},
+    {{{  -198,    247,    -55}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
 };
 
 // 0x03022E78 - 0x03022EA8
@@ -256,7 +258,7 @@ const Gfx wario_cap_seg3_dl_03022F48[] = {
     gsDPTileSync(),
     gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 8, 0, G_TX_RENDERTILE, 0, G_TX_CLAMP, 5, G_TX_NOLOD, G_TX_CLAMP, 5, G_TX_NOLOD),
     gsDPSetTileSize(0, 0, 0, (32 - 1) << G_TEXTURE_IMAGE_FRAC, (32 - 1) << G_TEXTURE_IMAGE_FRAC),
-    gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, wario_cap_seg3_texture_0301DF50),
+    gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, wario_cap_texture_w_logo),
     gsDPLoadSync(),
     gsDPLoadBlock(G_TX_LOADTILE, 0, 0, 32 * 32 - 1, CALC_DXT(32, G_IM_SIZ_16b_BYTES)),
     gsSPCopyLightsPlayerPart(CAP), //gsSPLight(&wario_cap_seg3_lights_0301CF38.a, 2),
@@ -274,12 +276,22 @@ const Gfx wario_cap_seg3_dl_03022F48[] = {
 
 // 0x03022FF8 - 0x030230B0
 const Gfx wario_cap_seg3_dl_03022FF8[] = {
-    gsDPPipeSync(),
-    gsSPSetGeometryMode(G_TEXTURE_GEN),
-    gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, 0, 0, 0, ENVIRONMENT, TEXEL0, 0, SHADE, 0, 0, 0, 0, ENVIRONMENT),
-    gsDPLoadTextureBlock(wario_cap_seg3_texture_0301CF50, G_IM_FMT_RGBA, G_IM_SIZ_16b, 64, 32, 0, G_TX_WRAP | G_TX_NOMIRROR, G_TX_WRAP | G_TX_NOMIRROR, 6, 5, G_TX_NOLOD, G_TX_NOLOD),
-    gsSPTexture(0x0F80, 0x07C0, 0, G_TX_RENDERTILE, G_ON),
-    gsSPCopyLightsPlayerPart(METAL),
+	gsDPPipeSync(),
+	gsDPSetCombineLERP(TEXEL0, 0, SHADE, TEXEL1, 0, 0, 0, ENVIRONMENT, TEXEL0, 0, SHADE, TEXEL1, 0, 0, 0, ENVIRONMENT),
+	gsSPSetGeometryMode(G_TEXTURE_GEN),
+	gsSPTexture(4032, 1984, 0, 0, 1),
+    gsSPLight(&wario_cap_black_lights_group.l, 1),
+    gsSPCopyLightEXT(2, 15),
+	gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 1, wario_cap_texture_metal_shade),
+	gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 0, 0, 7, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0),
+	gsDPLoadBlock(7, 0, 0, 2047, 128),
+	gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 16, 0, 0, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0, G_TX_CLAMP | G_TX_NOMIRROR, 6, 0),
+	gsDPSetTileSize(0, 0, 0, 252, 124),
+	gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 1, wario_cap_texture_metal_light),
+	gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 0, 512, 6, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0),
+	gsDPLoadBlock(6, 0, 0, 2047, 128),
+	gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 16, 512, 1, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0, G_TX_CLAMP | G_TX_NOMIRROR, 6, 0),
+	gsDPSetTileSize(1, 0, 0, 252, 124),
     gsSPDisplayList(wario_cap_seg3_dl_03022B30),
     gsSPDisplayList(wario_cap_seg3_dl_03022B68),
     gsSPDisplayList(wario_cap_seg3_dl_03022CC8),
@@ -295,11 +307,11 @@ const Gfx wario_cap_seg3_dl_03022FF8[] = {
 // 0x030230B0 - 0x03023108
 const Gfx wario_cap_seg3_dl_030230B0[] = {
     gsSPDisplayList(wario_cap_seg3_dl_03022ED8),
-    gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, wario_cap_seg3_texture_0301E750),
+    gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, wario_cap_texture_wings_half_1),
     gsDPLoadSync(),
     gsDPLoadBlock(G_TX_LOADTILE, 0, 0, 32 * 64 - 1, CALC_DXT(32, G_IM_SIZ_16b_BYTES)),
     gsSPDisplayList(wario_cap_seg3_dl_03022E78),
-    gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, wario_cap_seg3_texture_0301F750),
+    gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, wario_cap_texture_wings_half_2),
     gsDPLoadSync(),
     gsDPLoadBlock(G_TX_LOADTILE, 0, 0, 32 * 64 - 1, CALC_DXT(32, G_IM_SIZ_16b_BYTES)),
     gsSPDisplayList(wario_cap_seg3_dl_03022EA8),
@@ -310,11 +322,11 @@ const Gfx wario_cap_seg3_dl_030230B0[] = {
 // 0x03023108 - 0x03023160
 const Gfx wario_cap_seg3_dl_03023108[] = {
     gsSPDisplayList(wario_cap_seg3_dl_03022ED8),
-    gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, wario_cap_seg3_texture_03020750),
+    gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, wario_cap_texture_metal_wings_half_1),
     gsDPLoadSync(),
     gsDPLoadBlock(G_TX_LOADTILE, 0, 0, 32 * 64 - 1, CALC_DXT(32, G_IM_SIZ_16b_BYTES)),
     gsSPDisplayList(wario_cap_seg3_dl_03022E78),
-    gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, wario_cap_seg3_texture_03021750),
+    gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, wario_cap_texture_metal_wings_half_2),
     gsDPLoadSync(),
     gsDPLoadBlock(G_TX_LOADTILE, 0, 0, 32 * 64 - 1, CALC_DXT(32, G_IM_SIZ_16b_BYTES)),
     gsSPDisplayList(wario_cap_seg3_dl_03022EA8),
@@ -331,7 +343,7 @@ const Gfx wario_cap_seg3_dl_03023160[] = {
     gsDPTileSync(),
     gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 8, 0, G_TX_RENDERTILE, 0, G_TX_CLAMP, 5, G_TX_NOLOD, G_TX_CLAMP, 5, G_TX_NOLOD),
     gsDPSetTileSize(0, 0, 0, (32 - 1) << G_TEXTURE_IMAGE_FRAC, (32 - 1) << G_TEXTURE_IMAGE_FRAC),
-    gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, wario_cap_seg3_texture_0301DF50),
+    gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, wario_cap_texture_w_logo),
     gsDPLoadSync(),
     gsDPLoadBlock(G_TX_LOADTILE, 0, 0, 32 * 32 - 1, CALC_DXT(32, G_IM_SIZ_16b_BYTES)),
     gsSPCopyLightsPlayerPart(CAP), //gsSPLight(&wario_cap_seg3_lights_0301CF38.a, 2),
@@ -347,11 +359,11 @@ const Gfx wario_cap_seg3_dl_03023160[] = {
     gsDPTileSync(),
     gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 8, 0, G_TX_RENDERTILE, 0, G_TX_CLAMP, 6, G_TX_NOLOD, G_TX_CLAMP, 5, G_TX_NOLOD),
     gsDPSetTileSize(0, 0, 0, (32 - 1) << G_TEXTURE_IMAGE_FRAC, (64 - 1) << G_TEXTURE_IMAGE_FRAC),
-    gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, wario_cap_seg3_texture_0301E750),
+    gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, wario_cap_texture_wings_half_1),
     gsDPLoadSync(),
     gsDPLoadBlock(G_TX_LOADTILE, 0, 0, 32 * 64 - 1, CALC_DXT(32, G_IM_SIZ_16b_BYTES)),
     gsSPDisplayList(wario_cap_seg3_dl_03022E78),
-    gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, wario_cap_seg3_texture_0301F750),
+    gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, wario_cap_texture_wings_half_2),
     gsDPLoadSync(),
     gsDPLoadBlock(G_TX_LOADTILE, 0, 0, 32 * 64 - 1, CALC_DXT(32, G_IM_SIZ_16b_BYTES)),
     gsSPDisplayList(wario_cap_seg3_dl_03022EA8),
@@ -366,18 +378,22 @@ const Gfx wario_cap_seg3_dl_03023160[] = {
 
 // 0x03023298 - 0x030233D0
 const Gfx wario_cap_seg3_dl_03023298[] = {
-    gsDPPipeSync(),
-    gsSPSetGeometryMode(G_TEXTURE_GEN),
-    gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, 0, 0, 0, ENVIRONMENT, TEXEL0, 0, SHADE, 0, 0, 0, 0, ENVIRONMENT),
-    gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, wario_cap_seg3_texture_0301CF50),
-    gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 0, 0, G_TX_LOADTILE, 0, G_TX_WRAP | G_TX_NOMIRROR, 5, G_TX_NOLOD, G_TX_WRAP | G_TX_NOMIRROR, 6, G_TX_NOLOD),
-    gsDPLoadSync(),
-    gsDPLoadBlock(G_TX_LOADTILE, 0, 0, 64 * 32 - 1, CALC_DXT(64, G_IM_SIZ_16b_BYTES)),
-    gsDPPipeSync(),
-    gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 16, 0, G_TX_RENDERTILE, 0, G_TX_WRAP | G_TX_NOMIRROR, 5, G_TX_NOLOD, G_TX_WRAP | G_TX_NOMIRROR, 6, G_TX_NOLOD),
-    gsDPSetTileSize(0, 0, 0, (64 - 1) << G_TEXTURE_IMAGE_FRAC, (32 - 1) << G_TEXTURE_IMAGE_FRAC),
-    gsSPTexture(0x0F80, 0x07C0, 0, G_TX_RENDERTILE, G_ON),
-    gsSPCopyLightsPlayerPart(METAL),
+	gsDPPipeSync(),
+	gsDPSetCombineLERP(TEXEL0, 0, SHADE, TEXEL1, 0, 0, 0, ENVIRONMENT, TEXEL0, 0, SHADE, TEXEL1, 0, 0, 0, ENVIRONMENT),
+	gsSPSetGeometryMode(G_TEXTURE_GEN),
+	gsSPTexture(4032, 1984, 0, 0, 1),
+    gsSPLight(&wario_cap_black_lights_group.l, 1),
+    gsSPCopyLightEXT(2, 15),
+	gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 1, wario_cap_texture_metal_shade),
+	gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 0, 0, 7, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0),
+	gsDPLoadBlock(7, 0, 0, 2047, 128),
+	gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 16, 0, 0, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0, G_TX_CLAMP | G_TX_NOMIRROR, 6, 0),
+	gsDPSetTileSize(0, 0, 0, 252, 124),
+	gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 1, wario_cap_texture_metal_light),
+	gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 0, 512, 6, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0),
+	gsDPLoadBlock(6, 0, 0, 2047, 128),
+	gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 16, 512, 1, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0, G_TX_CLAMP | G_TX_NOMIRROR, 6, 0),
+	gsDPSetTileSize(1, 0, 0, 252, 124),
     gsSPDisplayList(wario_cap_seg3_dl_03022B30),
     gsSPDisplayList(wario_cap_seg3_dl_03022B68),
     gsSPDisplayList(wario_cap_seg3_dl_03022CC8),
@@ -389,11 +405,11 @@ const Gfx wario_cap_seg3_dl_03023298[] = {
     gsDPTileSync(),
     gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 8, 0, G_TX_RENDERTILE, 0, G_TX_CLAMP, 6, G_TX_NOLOD, G_TX_CLAMP, 5, G_TX_NOLOD),
     gsDPSetTileSize(0, 0, 0, (32 - 1) << G_TEXTURE_IMAGE_FRAC, (64 - 1) << G_TEXTURE_IMAGE_FRAC),
-    gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, wario_cap_seg3_texture_03020750),
+    gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, wario_cap_texture_metal_wings_half_1),
     gsDPLoadSync(),
     gsDPLoadBlock(G_TX_LOADTILE, 0, 0, 32 * 64 - 1, CALC_DXT(32, G_IM_SIZ_16b_BYTES)),
     gsSPDisplayList(wario_cap_seg3_dl_03022E78),
-    gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, wario_cap_seg3_texture_03021750),
+    gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, wario_cap_texture_metal_wings_half_2),
     gsDPLoadSync(),
     gsDPLoadBlock(G_TX_LOADTILE, 0, 0, 32 * 64 - 1, CALC_DXT(32, G_IM_SIZ_16b_BYTES)),
     gsSPDisplayList(wario_cap_seg3_dl_03022EA8),
@@ -403,5 +419,29 @@ const Gfx wario_cap_seg3_dl_03023298[] = {
     gsSPSetGeometryMode(G_LIGHTING | G_CULL_BACK),
     gsDPSetAlphaCompare(G_AC_NONE),
     gsDPSetEnvColor(255, 255, 255, 255),
+    gsSPEndDisplayList(),
+};
+
+const Gfx wario_cap_material_revert_render_settings[] = {
+    gsDPPipeSync(),
+    gsSPSetGeometryMode(G_LIGHTING),
+    gsSPClearGeometryMode(G_TEXTURE_GEN),
+    gsDPSetCombineLERP(0, 0, 0, SHADE, 0, 0, 0, ENVIRONMENT, 0, 0, 0, SHADE, 0, 0, 0, ENVIRONMENT),
+    gsSPTexture(65535, 65535, 0, 0, 0),
+    gsDPSetEnvColor(255, 255, 255, 255),
+    gsDPSetAlphaCompare(G_AC_NONE),
+
+    gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 1, 0),
+    gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 0, 0, 7, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0),
+    gsDPLoadBlock(7, 0, 0, 1023, 256),
+    gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 8, 0, 0, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0),
+    gsDPSetTileSize(0, 0, 0, 124, 124),
+
+    gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 1, 0),
+    gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 0, 256, 6, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0),
+    gsDPLoadBlock(6, 0, 0, 1023, 256),
+    gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 8, 256, 1, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0),
+    gsDPSetTileSize(1, 0, 0, 124, 124),
+
     gsSPEndDisplayList(),
 };
