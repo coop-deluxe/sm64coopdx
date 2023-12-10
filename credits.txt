@@ -1,4 +1,14 @@
-Developers:
+sm64coopdx Developers:
+    Agent X
+    AngelicMiracles
+    FluffaMario
+
+sm64coopdx Contributors:
+    eros71
+    ArcticJaguar725
+    Isaac
+
+sm64ex-coop Developers:
     Agent X
     djoslin0
     fgsfds
@@ -9,7 +19,7 @@ Developers:
     PeachyPeach
     theclashingfritz
 
-Contributors:
+sm64ex-coop Contributors:
     AloXado320
     Altiami
     Amy54Desu
@@ -43,9 +53,10 @@ Contributors:
     Victor Diego Alejandro Diaz Urbaneja
 
 Sounds:
-    Andrat         :  Luigi voice lines
-    Dark the Eagle :  Wario voice lines
+    Andrat         : Luigi voice lines
+    Dark the Eagle : Wario voice lines
+    Ninten_King_64 : Toad voice lines
 
-The custom models, animations, and warps use DynOS. DynOS was created by PeachyPeach.
+The custom models, levels, textures, animations, and warps use DynOS. DynOS was created by PeachyPeach.
 
-sm64ex-coop was built on top of sm64ex, which was built on top of the sm64 decomp project.
+sm64coopdx was built on top of sm64ex-coop, which was built on top of sm64ex, which was built on top of the sm64 decomp project.
