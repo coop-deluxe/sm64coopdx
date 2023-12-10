@@ -169,7 +169,7 @@ function network_init_object(object, standardSync, fieldTable)
 end
 
 --- @param object Object Object to sync
---- @param reliable boolean Whether or not the game should try to resend the packet in case its lost, good for important packets
+--- @param reliable boolean Whether or not the game should try to resend the packet in case it gets lost, good for important packets
 --- @return nil
 --- Sends a sync packet to sync up the object with everyone else
 function network_send_object(object, reliable)
