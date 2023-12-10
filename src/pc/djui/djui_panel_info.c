@@ -11,10 +11,12 @@ void djui_panel_info_create(struct DjuiBase* caller) {
     struct DjuiBase* body = djui_three_panel_get_body(panel);
     {
         snprintf(sInfo, 1024, "sm64coopdx is a project started by the Coop Deluxe team \
-to actively maintain sm64ex-coop. The purpose of it is to \
-add more features, customizability and power to the Lua \
-API without having to jump through the many hoops of \
-issues sm64ex-coop development has.\n\
+to actively maintain, improve on and provide a better \
+community for sm64ex-coop. We are adding more features, \
+customizability, and power to the Lua API without having to \
+jump through the many hoops of issues sm64ex-coop \
+development has, or deal with cool new features being \
+turned down by overly cautious developers.\n\
 \n\
 Coop Deluxe Team:\n\
 Agent X: Creator\n\
