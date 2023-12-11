@@ -86,7 +86,7 @@ void network_send_join(struct Packet* joinRequestPacket) {
                 break;
             }
         }
-        if (globalIndex == UNKNOWN_LOCAL_INDEX || globalIndex >= network_player_connected_count()) {
+        if (globalIndex == UNKNOWN_LOCAL_INDEX) {
             network_send_kick(0, EKT_FULL_PARTY);
             return;
         }
