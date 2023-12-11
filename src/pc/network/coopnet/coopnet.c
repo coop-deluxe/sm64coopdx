@@ -123,7 +123,7 @@ static void coopnet_on_error(enum MPacketErrorNumber error, uint64_t tag) {
             network_shutdown(false, false, false, false);
             break;
         case MERR_LOBBY_JOIN_FULL:
-            djui_popup_create(DLANG(NOTIF, LOBBY_JOIN_FULL), 2);
+            djui_popup_create(DLANG(NOTIF, DISCONNECT_FULL), 2);
             network_shutdown(false, false, false, false);
             break;
         case MERR_LOBBY_JOIN_FAILED:
