@@ -15,6 +15,7 @@ static void djui_panel_dynos_apply(struct DjuiBase* caller) {
 }
 
 static void djui_panel_dynos_refresh(UNUSED struct DjuiBase* base) {
+    dynos_gfx_init();
     dynos_packs_init();
 
     djui_panel_shutdown();
