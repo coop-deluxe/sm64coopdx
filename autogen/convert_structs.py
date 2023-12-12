@@ -87,6 +87,7 @@ override_field_invisible = {
 
 override_field_deprecated = {
     "ServerSettings": [ "enableCheats" ],
+    "NetworkPlayer": [ "paletteIndex", "overridePaletteIndex", "overridePaletteIndexLp" ]
 }
 
 override_field_immutable = {

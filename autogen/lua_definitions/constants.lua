@@ -2596,7 +2596,7 @@ RCO_ALL_EXCEPT_BOWSER = 1
 RCO_NONE = 2
 
 --- @type integer
-PALETTE_PRESET_MAX = 33
+PALETTE_PRESET_MAX = 45
 
 --- @class CharacterSound
 
@@ -2755,33 +2755,170 @@ CT_WARIO = 4
 --- @type CharacterType
 CT_MAX = 5
 
---- @class PlayerParts
+--- @class PalettePreset
 
---- @type PlayerParts
+--- @type PalettePreset
+PALETTE_MARIO = 0
+
+--- @type PalettePreset
+PALETTE_LUIGI = 1
+
+--- @type PalettePreset
+PALETTE_TOAD = 2
+
+--- @type PalettePreset
+PALETTE_WARIO = 3
+
+--- @type PalettePreset
+PALETTE_WALUIGI = 4
+
+--- @type PalettePreset
+PALETTE_YOSHI = 5
+
+--- @type PalettePreset
+PALETTE_TOADETTE = 6
+
+--- @type PalettePreset
+PALETTE_BUCKEN_BERRY = 7
+
+--- @type PalettePreset
+PALETTE_ALA_GOLD = 8
+
+--- @type PalettePreset
+PALETTE_FIRE_MARIO = 9
+
+--- @type PalettePreset
+PALETTE_FIRE_LUIGI = 10
+
+--- @type PalettePreset
+PALETTE_ICE_MARIO = 11
+
+--- @type PalettePreset
+PALETTE_ICE_LUIGI = 12
+
+--- @type PalettePreset
+PALETTE_TOADSWORTH = 13
+
+--- @type PalettePreset
+PALETTE_PEACH = 14
+
+--- @type PalettePreset
+PALETTE_DAISY = 15
+
+--- @type PalettePreset
+PALETTE_WARIO_WOODS = 16
+
+--- @type PalettePreset
+PALETTE_GB = 17
+
+--- @type PalettePreset
+PALETTE_SNES = 18
+
+--- @type PalettePreset
+PALETTE_SWITCH = 19
+
+--- @type PalettePreset
+PALETTE_CLOVER = 20
+
+--- @type PalettePreset
+PALETTE_COBALT = 21
+
+--- @type PalettePreset
+PALETTE_RUBY = 22
+
+--- @type PalettePreset
+PALETTE_FURY = 23
+
+--- @type PalettePreset
+PALETTE_HOT_PINK = 24
+
+--- @type PalettePreset
+PALETTE_NICE_PINK = 25
+
+--- @type PalettePreset
+PALETTE_SEAFOAM = 26
+
+--- @type PalettePreset
+PALETTE_LILAC = 27
+
+--- @type PalettePreset
+PALETTE_COPPER = 28
+
+--- @type PalettePreset
+PALETTE_AZURE = 29
+
+--- @type PalettePreset
+PALETTE_BURGUNDY = 30
+
+--- @type PalettePreset
+PALETTE_MINT = 31
+
+--- @type PalettePreset
+PALETTE_ORANGE = 32
+
+--- @type PalettePreset
+PALETTE_ARCTIC = 33
+
+--- @type PalettePreset
+PALETTE_BLACK = 34
+
+--- @type PalettePreset
+PALETTE_BUBBLEGUM = 35
+
+--- @type PalettePreset
+PALETTE_BUSY_BEE = 36
+
+--- @type PalettePreset
+PALETTE_FORTRESS = 37
+
+--- @type PalettePreset
+PALETTE_BLUEBERRY_PIE = 38
+
+--- @type PalettePreset
+PALETTE_RASPBERRY = 39
+
+--- @type PalettePreset
+PALETTE_COFFEE = 40
+
+--- @type PalettePreset
+PALETTE_MARGIN = 41
+
+--- @type PalettePreset
+PALETTE_PUMPKIN = 42
+
+--- @type PalettePreset
+PALETTE_SOIL = 43
+
+--- @type PalettePreset
+PALETTE_CREVASE = 44
+
+--- @class PlayerPart
+
+--- @type PlayerPart
 PANTS = 0
 
---- @type PlayerParts
+--- @type PlayerPart
 SHIRT = 1
 
---- @type PlayerParts
+--- @type PlayerPart
 GLOVES = 2
 
---- @type PlayerParts
+--- @type PlayerPart
 SHOES = 3
 
---- @type PlayerParts
+--- @type PlayerPart
 HAIR = 4
 
---- @type PlayerParts
+--- @type PlayerPart
 SKIN = 5
 
---- @type PlayerParts
+--- @type PlayerPart
 CAP = 6
 
---- @type PlayerParts
+--- @type PlayerPart
 PLAYER_PART_MAX = 7
 
---- @type PlayerParts
+--- @type PlayerPart
 METAL = CAP
 
 --- @class DialogId

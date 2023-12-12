@@ -83,14 +83,14 @@
 | Field | Type |
 | ----- | ---- |
 | np | [NetworkPlayer](structs.md#NetworkPlayer) |
-| part | [enum PlayerParts](constants.md#enum-PlayerParts) |
+| part | [enum PlayerPart](constants.md#enum-PlayerPart) |
 | color | `Color` |
 
 ### Returns
 - None
 
 ### C Prototype
-`void network_player_color_to_palette(struct NetworkPlayer *np, enum PlayerParts part, Color color);`
+`void network_player_color_to_palette(struct NetworkPlayer *np, enum PlayerPart part, Color color);`
 
 [:arrow_up_small:](#)
 
@@ -143,14 +143,14 @@
 | Field | Type |
 | ----- | ---- |
 | np | [NetworkPlayer](structs.md#NetworkPlayer) |
-| part | [enum PlayerParts](constants.md#enum-PlayerParts) |
+| part | [enum PlayerPart](constants.md#enum-PlayerPart) |
 | out | `Color` |
 
 ### Returns
 - None
 
 ### C Prototype
-`void network_player_palette_to_color(struct NetworkPlayer *np, enum PlayerParts part, Color out);`
+`void network_player_palette_to_color(struct NetworkPlayer *np, enum PlayerPart part, Color out);`
 
 [:arrow_up_small:](#)
 

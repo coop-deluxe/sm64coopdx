@@ -1505,10 +1505,7 @@
 | onRxSeqId | `integer` | read-only |
 | overrideModelIndex | `integer` |  |
 | overridePalette | [PlayerPalette](structs.md#PlayerPalette) |  |
-| overridePaletteIndex | `integer` |  |
-| overridePaletteIndexLp | `integer` | read-only |
 | palette | [PlayerPalette](structs.md#PlayerPalette) | read-only |
-| paletteIndex | `integer` | read-only |
 | ping | `integer` | read-only |
 | type | `integer` | read-only |
 

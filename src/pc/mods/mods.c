@@ -27,7 +27,7 @@ void mods_get_main_mod_name(char* destination, u32 maxSize) {
 
     for (u16 i = 0; i < gLocalMods.entryCount; i++) {
         struct Mod* mod = gLocalMods.entries[i];
-        if (!mod->enabled) { continue; }
+        if (!mod->enabled || mod_get_is_autoexec(mod)) { continue; }
         size_t size = mod_get_lua_size(mod);
         if (size > pickedSize) {
             picked = mod;

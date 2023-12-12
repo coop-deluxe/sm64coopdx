@@ -127,7 +127,7 @@ struct NetworkPlayer *get_network_player_smallest_global(void) {
     return smallest;
 }
 
-void network_player_color_to_palette(struct NetworkPlayer *np, enum PlayerParts part, Color color) {
+void network_player_color_to_palette(struct NetworkPlayer *np, enum PlayerPart part, Color color) {
     if (np == NULL || !(part < PLAYER_PART_MAX && part >= 0)) { return; }
 
     np->palette.parts[part][0] = color[0];
@@ -136,7 +136,7 @@ void network_player_color_to_palette(struct NetworkPlayer *np, enum PlayerParts 
     np->overridePalette = np->palette;
 }
 
-void network_player_palette_to_color(struct NetworkPlayer *np, enum PlayerParts part, Color out) {
+void network_player_palette_to_color(struct NetworkPlayer *np, enum PlayerPart part, Color out) {
     if (np == NULL || !(part < PLAYER_PART_MAX && part >= 0)) {
         if (np == NULL) { // output config palette instead if np is NULL
             out[0] = configPlayerPalette.parts[part][0];

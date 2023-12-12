@@ -9,7 +9,8 @@
 - [characters.h](#charactersh)
     - [enum CharacterSound](#enum-CharacterSound)
     - [enum CharacterType](#enum-CharacterType)
-    - [enum PlayerParts](#enum-PlayerParts)
+    - [enum PalettePreset](#enum-PalettePreset)
+    - [enum PlayerPart](#enum-PlayerPart)
 - [dialog_ids.h](#dialog_idsh)
     - [enum DialogId](#enum-DialogId)
 - [djui_console.h](#djui_consoleh)
@@ -899,7 +900,56 @@
 | CT_WARIO | 4 |
 | CT_MAX | 5 |
 
-### [enum PlayerParts](#PlayerParts)
+### [enum PalettePreset](#PalettePreset)
+| Identifier | Value |
+| :--------- | :---- |
+| PALETTE_MARIO | 0 |
+| PALETTE_LUIGI | 1 |
+| PALETTE_TOAD | 2 |
+| PALETTE_WARIO | 3 |
+| PALETTE_WALUIGI | 4 |
+| PALETTE_YOSHI | 5 |
+| PALETTE_TOADETTE | 6 |
+| PALETTE_BUCKEN_BERRY | 7 |
+| PALETTE_ALA_GOLD | 8 |
+| PALETTE_FIRE_MARIO | 9 |
+| PALETTE_FIRE_LUIGI | 10 |
+| PALETTE_ICE_MARIO | 11 |
+| PALETTE_ICE_LUIGI | 12 |
+| PALETTE_TOADSWORTH | 13 |
+| PALETTE_PEACH | 14 |
+| PALETTE_DAISY | 15 |
+| PALETTE_WARIO_WOODS | 16 |
+| PALETTE_GB | 17 |
+| PALETTE_SNES | 18 |
+| PALETTE_SWITCH | 19 |
+| PALETTE_CLOVER | 20 |
+| PALETTE_COBALT | 21 |
+| PALETTE_RUBY | 22 |
+| PALETTE_FURY | 23 |
+| PALETTE_HOT_PINK | 24 |
+| PALETTE_NICE_PINK | 25 |
+| PALETTE_SEAFOAM | 26 |
+| PALETTE_LILAC | 27 |
+| PALETTE_COPPER | 28 |
+| PALETTE_AZURE | 29 |
+| PALETTE_BURGUNDY | 30 |
+| PALETTE_MINT | 31 |
+| PALETTE_ORANGE | 32 |
+| PALETTE_ARCTIC | 33 |
+| PALETTE_BLACK | 34 |
+| PALETTE_BUBBLEGUM | 35 |
+| PALETTE_BUSY_BEE | 36 |
+| PALETTE_FORTRESS | 37 |
+| PALETTE_BLUEBERRY_PIE | 38 |
+| PALETTE_RASPBERRY | 39 |
+| PALETTE_COFFEE | 40 |
+| PALETTE_MARGIN | 41 |
+| PALETTE_PUMPKIN | 42 |
+| PALETTE_SOIL | 43 |
+| PALETTE_CREVASE | 44 |
+
+### [enum PlayerPart](#PlayerPart)
 | Identifier | Value |
 | :--------- | :---- |
 | PANTS | 0 |

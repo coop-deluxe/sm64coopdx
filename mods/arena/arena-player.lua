@@ -446,10 +446,10 @@ function mario_update(m)
     end
 
     -- update palette
-    if s.team == 2 then
-        np.overridePaletteIndex = 7
-    elseif s.team == 1 then
-        np.overridePaletteIndex = 15
+    if s.team == 1 then
+        np.overridePaletteIndex = PALETTE_RUBY
+    elseif s.team == 2 then
+        np.overridePaletteIndex = PALETTE_COBALT
     else
         np.overridePaletteIndex = np.paletteIndex
     end

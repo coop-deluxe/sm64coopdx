@@ -5843,7 +5843,7 @@ function get_network_player_smallest_global()
 end
 
 --- @param np NetworkPlayer
---- @param part PlayerParts
+--- @param part PlayerPart
 --- @param color Color
 --- @return nil
 function network_player_color_to_palette(np, part, color)
@@ -5862,7 +5862,7 @@ function network_player_from_global_index(globalIndex)
 end
 
 --- @param np NetworkPlayer
---- @param part PlayerParts
+--- @param part PlayerPart
 --- @param out Color
 --- @return nil
 function network_player_palette_to_color(np, part, out)
