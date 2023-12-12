@@ -22,7 +22,7 @@ bool exec_dev_chat_command(char* command) {
         return true;
     }
 
-    if (gNetworkSystem == &gNetworkSystemSocket && str_starts_with("/warp ", command)) {
+    if (str_starts_with("/warp ", command)) {
         static const struct { const char *name; s32 num; } sLevelNumByName[] = {
 #undef STUB_LEVEL
 #undef DEFINE_LEVEL
