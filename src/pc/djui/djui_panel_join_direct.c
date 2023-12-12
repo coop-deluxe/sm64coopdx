@@ -15,6 +15,17 @@
 #include "macros.h"
 
 static struct DjuiInputbox* sInputboxIp = NULL;
+#ifndef COOPNET
+static struct DjuiText* sRestartText = NULL;
+
+static void djui_panel_compatibility_checkbox_on_value_change(UNUSED struct DjuiBase* caller) {
+    if (gCoopCompatibility != configCoopCompatibility) {
+        djui_text_set_text(sRestartText, DLANG(DISPLAY, MUST_RESTART));
+    } else {
+        djui_text_set_text(sRestartText, "");
+    }
+}
+#endif
 
 static bool djui_panel_join_direct_ip_parse_numbers(char** msg) {
     int num = 0;
@@ -172,6 +183,10 @@ void djui_panel_join_direct_create(struct DjuiBase* caller) {
         sInputboxIp = inputbox1;
         djui_panel_join_direct_ip_text_set(inputbox1);
 
+#ifndef COOPNET
+        djui_checkbox_create(body, DLANG(MISC, COOP_COMPATIBILITY), &configCoopCompatibility, djui_panel_compatibility_checkbox_on_value_change);
+#endif
+
         struct DjuiRect* rect2 = djui_rect_container_create(body, 64);
         {
             struct DjuiButton* button1 = djui_button_create(&rect2->base, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
@@ -183,6 +198,14 @@ void djui_panel_join_direct_create(struct DjuiBase* caller) {
             djui_base_set_alignment(&button2->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_TOP);
             defaultBase = &button2->base;
         }
+
+#ifndef COOPNET
+        sRestartText = djui_text_create(body, "");
+        djui_text_set_alignment(sRestartText, DJUI_HALIGN_CENTER, DJUI_VALIGN_TOP);
+        djui_base_set_color(&sRestartText->base, 255, 100, 100, 255);
+        djui_base_set_size_type(&sRestartText->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+        djui_base_set_size(&sRestartText->base, 1.0f, 64);
+#endif
     }
 
     djui_panel_add(caller, panel, defaultBase);
