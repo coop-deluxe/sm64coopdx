@@ -6,7 +6,7 @@
 #include "mario_animation_ids.h"
 // NOTE: do not include any additional headers
 
-#define PALETTE_PRESET_MAX 33
+#define PALETTE_PRESET_MAX 51
 
 enum PlayerParts {
     PANTS, SHIRT, GLOVES, SHOES, HAIR, SKIN, CAP, PLAYER_PART_MAX, METAL = CAP
