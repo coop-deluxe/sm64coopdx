@@ -193,7 +193,8 @@ static u32 determine_interaction_internal(struct MarioState *m, struct Object *o
     }
 
     if (interaction == 0 && action & ACT_FLAG_ATTACKING) {
-        if (m->flags & (MARIO_PUNCHING | MARIO_KICKING | MARIO_TRIPPING)) {
+        u32 flags = gCoopCompatibility ? (MARIO_PUNCHING | MARIO_KICKING | MARIO_TRIPPING) : (MARIO_PUNCHING | MARIO_KICKING);
+        if (m->flags & flags) {
             s16 dYawToObject = mario_obj_angle_to_object(m, o) - m->faceAngle[1];
 
             if (m->flags & MARIO_PUNCHING) {
