@@ -257,20 +257,20 @@ bool exec_chat_command(char* command) {
 }
 
 void display_chat_commands(void) {
-    djui_chat_message_create(DLANG(CHAT, PLAYERS_DESC));
+    djui_chat_command_message_create(DLANG(CHAT, PLAYERS_DESC));
     if (gNetworkType == NT_SERVER || gNetworkPlayers[0].moderator) {
-        djui_chat_message_create(DLANG(CHAT, KICK_DESC));
-        djui_chat_message_create(DLANG(CHAT, BAN_DESC));
+        djui_chat_command_message_create(DLANG(CHAT, KICK_DESC));
+        djui_chat_command_message_create(DLANG(CHAT, BAN_DESC));
 
         if (gNetworkType == NT_SERVER) {
-            djui_chat_message_create(DLANG(CHAT, PERM_BAN_DESC));
-            djui_chat_message_create(DLANG(CHAT, MOD_DESC));
+            djui_chat_command_message_create(DLANG(CHAT, PERM_BAN_DESC));
+            djui_chat_command_message_create(DLANG(CHAT, MOD_DESC));
         }
     }
-    djui_chat_message_create(DLANG(CHAT, NAMETAGS_DESC));
+    djui_chat_command_message_create(DLANG(CHAT, NAMETAGS_DESC));
 #ifdef DEVELOPMENT
     dev_display_chat_commands();
 #endif
-    if (sConfirming != CCC_NONE) { djui_chat_message_create("/confirm"); }
+    if (sConfirming != CCC_NONE) { djui_chat_command_message_create("/confirm"); }
     smlua_display_chat_commands();
 }

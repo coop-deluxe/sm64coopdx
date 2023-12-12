@@ -49,7 +49,7 @@ void djui_panel_misc_create(struct DjuiBase* caller) {
 
     {
         djui_checkbox_create(body, DLANG(MISC, DISABLE_POPUPS), &configDisablePopups, NULL);
-        
+        djui_checkbox_create(body, DLANG(MISC, CHAT_USE_ALTERNATIVE_BEHAVIOUR), &configUseAlternativeChatBehaviour, NULL);
         djui_checkbox_create(body, DLANG(MISC, COOP_COMPATIBILITY), &configCoopCompatibility, djui_panel_compatibility_checkbox_on_value_change);
         
         djui_button_create(body, DLANG(MISC, LANGUAGE), DJUI_BUTTON_STYLE_NORMAL, djui_panel_language_create);

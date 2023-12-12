@@ -64,7 +64,6 @@ void djui_panel_display_create(struct DjuiBase* caller) {
 
         djui_checkbox_create(body, DLANG(DISPLAY, FORCE_4BY3), &configForce4By3, djui_panel_display_apply);
 
-        djui_checkbox_create(body, DLANG(DISPLAY, SHOW_FPS), &configShowFPS, NULL);
         djui_checkbox_create(body, DLANG(DISPLAY, VSYNC), &configWindow.vsync, djui_panel_display_apply);
         djui_checkbox_create(body, DLANG(DISPLAY, UNCAPPED_FRAMERATE), &configUncappedFramerate, djui_panel_display_uncapped_change);
 
@@ -90,6 +89,9 @@ void djui_panel_display_create(struct DjuiBase* caller) {
             djui_base_set_enabled(&inputbox1->base, !configUncappedFramerate);
             sFrameLimitInput = inputbox1;
         }
+
+        char* showFPSChoices[7] = { DLANG(DISPLAY, DISPLAY_FPS_OFF), DLANG(DISPLAY, DISPLAY_FPS_ON_DEFAULT), DLANG(DISPLAY, DISPLAY_FPS_ON_0_PERCENT), DLANG(DISPLAY, DISPLAY_FPS_ON_25_PERCENT), DLANG(DISPLAY, DISPLAY_FPS_ON_50_PERCENT), DLANG(DISPLAY, DISPLAY_FPS_ON_75_PERCENT), DLANG(DISPLAY, DISPLAY_FPS_ON_100_PERCENT) };
+        djui_selectionbox_create(body, DLANG(DISPLAY, DISPLAY_FPS), showFPSChoices, 7, &configDisplayFPS, NULL);
 
         char* interpChoices[2] = { DLANG(DISPLAY, FAST), DLANG(DISPLAY, ACCURATE) };
         struct DjuiSelectionbox* selectionbox1 = djui_selectionbox_create(body, DLANG(DISPLAY, INTERPOLATION), interpChoices, 2, &configInterpolationMode, NULL);

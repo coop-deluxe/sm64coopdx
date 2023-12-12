@@ -102,3 +102,45 @@ void djui_chat_message_create(const char* message) {
     f32 messageWidth = djui_text_find_width(chatText, 10);
     chatMessage->messageWidth = messageWidth + 8;
 }
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+void djui_chat_command_message_create(const char* msg) {
+    char* modifiedMsg = strdup(msg);
+
+    char *newlinePos;
+    while ((newlinePos = strstr(modifiedMsg, "\n"))) {
+        memmove(newlinePos, newlinePos + 1, strlen(newlinePos));
+    }
+
+    char *quotePos;
+    while ((quotePos = strstr(modifiedMsg, "\"\""))) {
+        memmove(quotePos, quotePos + 2, strlen(quotePos + 1));
+    }
+
+    char* startColor;
+    while ((startColor = strstr(modifiedMsg, "\\#"))) {
+        char* endColor = strstr(startColor + 2, "\\");
+        if (endColor) {
+            memmove(startColor, endColor + 1, strlen(endColor));
+        } else {
+            break;
+        }
+    }
+
+    const char* space = strchr(modifiedMsg, ' ');
+    if (space) {
+        char modified_message[strlen(modifiedMsg) + strlen("\\#a0a0ff\\") + strlen("\\#80ff80\\") + 2];
+        snprintf(modified_message, sizeof(modified_message), "\\#a0a0ff\\%.*s \\#80ff80\\%s", (int)(space - modifiedMsg), modifiedMsg, space + 1);
+        djui_chat_message_create(modified_message);
+    } else {
+        char modified_message[strlen(modifiedMsg) + strlen("\\#a0a0ff\\") + 1];
+        snprintf(modified_message, sizeof(modified_message), "\\#a0a0ff\\%s", modifiedMsg);
+        djui_chat_message_create(modified_message);
+    }
+
+    free(modifiedMsg);
+}
+ 

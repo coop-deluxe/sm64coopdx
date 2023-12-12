@@ -14,7 +14,7 @@
 #define SCANCODE_RIGHT     333
 #define SCANCODE_PAGE_DOWN 337
 #define SCANCODE_PAGE_UP   329
-#define SCANCODE_POS1      327
+#define SCANCODE_HOME      327
 #define SCANCODE_END       335
 
 #define SCANCODE_ENTER  28

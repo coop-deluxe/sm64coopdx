@@ -1535,7 +1535,7 @@ void smlua_display_chat_commands(void) {
         struct LuaHookedChatCommand* hook = &sHookedChatCommands[i];
         char msg[256] = { 0 };
         snprintf(msg, 256, "/%s %s", hook->command, hook->description);
-        djui_chat_message_create(msg);
+        djui_chat_command_message_create(msg);
     }
 }
 

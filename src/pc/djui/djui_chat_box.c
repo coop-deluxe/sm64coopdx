@@ -51,7 +51,7 @@ void sent_history_init(ArrayList *arrayList) {
 }
 
 void sent_history_add_message(ArrayList *arrayList, const char *newMessage) {
-    if (!newMessage || newMessage[0] != '/') { return; }
+    if (!newMessage) { return; }
     if (arrayList->size == MAX_HISTORY_SIZE) {
         for (s32 i = 1; i < MAX_HISTORY_SIZE; i++) {
             snprintf(arrayList->messages[i-1], MAX_MSG_LENGTH, "%s", arrayList->messages[i]);
@@ -131,7 +131,7 @@ static void djui_chat_box_input_enter(struct DjuiInputbox* chatInput) {
                 display_chat_commands();
             } else if (!exec_chat_command(chatInput->buffer)) {
                 char extendedUnknownCommandMessage[MAX_MSG_LENGTH];
-                snprintf(extendedUnknownCommandMessage, sizeof(extendedUnknownCommandMessage), "%s (/help)", DLANG(CHAT, UNRECOGNIZED));
+                snprintf(extendedUnknownCommandMessage, sizeof(extendedUnknownCommandMessage), "\\#ff8080\\%s \\#ffff80\\(/help)", DLANG(CHAT, UNRECOGNIZED));
                 djui_chat_message_create(extendedUnknownCommandMessage);
             }
         } else {
@@ -417,7 +417,31 @@ static bool djui_chat_box_input_on_key_down(struct DjuiBase* base, int scancode)
 
     switch (scancode) {
         case SCANCODE_UP:
-            if (gDjuiChatBox->chatInput && gDjuiChatBox->chatInput->buffer && gDjuiChatBox->chatInput->buffer[0] != '/') {
+            if (configUseAlternativeChatBehaviour) {
+                sent_history_update_current_message(&sentHistory, gDjuiChatBox->chatInput->buffer);
+                sent_history_navigate(&sentHistory, true);
+                if (strcmp(previousText, gDjuiChatBox->chatInput->buffer) != 0) {
+                    reset_tab_completion_all();
+                }
+            } else {
+                gDjuiChatBox->scrolling = true;
+                if (canScrollDown) { *yValue = fmin(*yValue + 15, 0); }
+            }
+            return true;
+        case SCANCODE_DOWN:
+            if (configUseAlternativeChatBehaviour) {
+                sent_history_update_current_message(&sentHistory, gDjuiChatBox->chatInput->buffer);
+                sent_history_navigate(&sentHistory, false);
+                if (strcmp(previousText, gDjuiChatBox->chatInput->buffer) != 0) {
+                    reset_tab_completion_all();
+                }
+            } else {
+                gDjuiChatBox->scrolling = true;
+                if (canScrollUp) { *yValue = fmax(*yValue - 15, yMax); }
+            }
+            return true;
+        case SCANCODE_PAGE_UP:
+            if (configUseAlternativeChatBehaviour) {
                 gDjuiChatBox->scrolling = true;
                 if (canScrollDown) { *yValue = fmin(*yValue + 15, 0); }
             } else {
@@ -428,8 +452,8 @@ static bool djui_chat_box_input_on_key_down(struct DjuiBase* base, int scancode)
                 }
             }
             return true;
-        case SCANCODE_DOWN:
-            if (gDjuiChatBox->chatInput && gDjuiChatBox->chatInput->buffer && gDjuiChatBox->chatInput->buffer[0] != '/') {
+        case SCANCODE_PAGE_DOWN:
+            if (configUseAlternativeChatBehaviour) {
                 gDjuiChatBox->scrolling = true;
                 if (canScrollUp) { *yValue = fmax(*yValue - 15, yMax); }
             } else {
@@ -440,15 +464,7 @@ static bool djui_chat_box_input_on_key_down(struct DjuiBase* base, int scancode)
                 }
             }
             return true;
-        case SCANCODE_PAGE_UP:
-            gDjuiChatBox->scrolling = true;
-            if (canScrollDown) { *yValue = fmin(*yValue + pageAmount, 0); }
-            return true;
-        case SCANCODE_PAGE_DOWN:
-            gDjuiChatBox->scrolling = true;
-                if (canScrollUp) { *yValue = fmax(*yValue - pageAmount, yMax); }
-            return true;
-        case SCANCODE_POS1:
+        case SCANCODE_HOME:
             gDjuiChatBox->scrolling = true;
             if (canScrollDown) { *yValue = fmin(*yValue + pageAmount, 0); }
             return true;

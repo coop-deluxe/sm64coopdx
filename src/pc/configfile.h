@@ -97,11 +97,12 @@ extern bool         configMenuRandom;
 extern bool         configMenuDemos;
 extern struct PlayerPalette configPlayerPalette;
 extern struct PlayerPalette configCustomPalette;
-extern bool         configShowFPS;
+extern unsigned int configDisplayFPS;
 extern bool         configUncappedFramerate;
 extern unsigned int configFrameLimit;
 extern unsigned int configDrawDistance;
 extern bool         configDisablePopups;
+extern bool configUseAlternativeChatBehaviour;
 #if defined(DEVELOPMENT)
 extern bool         configLuaProfiler;
 extern bool         configCtxProfiler;

@@ -10,3 +10,5 @@ struct DjuiChatMessage {
 
 void djui_chat_message_create_from(u8 globalIndex, const char* message);
 void djui_chat_message_create(const char* message);
+void djui_chat_command_message_create(const char* message);
+ 
