@@ -362,8 +362,12 @@ s32 perform_ground_step(struct MarioState *m) {
     for (i = 0; i < 4; i++) {
         Vec3f step = { 0 };
         if (m->floor) {
-            step[0] = m->floor->normal.y * (m->vel[0] / 4.0f);
-            step[2] = m->floor->normal.y * (m->vel[2] / 4.0f);
+            f32 floorNormal;
+            if (!smlua_call_event_hooks_mario_param_ret_float(HOOK_OVERRIDE_PHYS_STEP_DEFACTO_SPEED, m, &floorNormal)) {
+                floorNormal = m->floor->normal.y;
+            }
+            step[0] = floorNormal * (m->vel[0] / 4.0f);
+            step[2] = floorNormal * (m->vel[2] / 4.0f);
         }
 
         intendedPos[0] = m->pos[0] + step[0];

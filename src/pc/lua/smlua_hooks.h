@@ -50,6 +50,7 @@ enum LuaHookedEventType {
     HOOK_ON_HUD_RENDER_BEHIND,
     HOOK_ON_COLLIDE_LEVEL_BOUNDS,
     HOOK_MIRROR_MARIO_RENDER,
+    HOOK_OVERRIDE_PHYS_STEP_DEFACTO_SPEED,
     HOOK_MAX,
 };
 
@@ -93,6 +94,7 @@ static const char* LuaHookedEventTypeName[] = {
     "HOOK_ON_HUD_RENDER_BEHIND",
     "HOOK_ON_COLLIDE_LEVEL_BOUNDS",
     "HOOK_MIRROR_MARIO_RENDER",
+    "HOOK_OVERRIDE_PHYS_STEP_DEFACTO_SPEED",
     "HOOK_MAX"
 };
 
@@ -137,6 +139,7 @@ bool smlua_call_event_hooks_mario_character_sound_param_ret_int(enum LuaHookedEv
 void smlua_call_event_hooks_mario_action_params_ret_int(enum LuaHookedEventType hookType, struct MarioState *m, u32 action, u32* returnValue);
 void smlua_call_event_hooks_mario_param_and_int_ret_bool(enum LuaHookedEventType hookType, struct MarioState* m, s32 param, bool* returnValue);
 bool smlua_call_event_hooks_mario_param_and_int_ret_int(enum LuaHookedEventType hookType, struct MarioState* m, s32 param, s32* returnValue);
+bool smlua_call_event_hooks_mario_param_ret_float(enum LuaHookedEventType hookType, struct MarioState* m, f32* returnValue);
 bool smlua_call_event_hooks_mario_param_and_int_and_int_ret_int(enum LuaHookedEventType hookType, struct MarioState* m, s32 param, u32 args, s32* returnValue);
 void smlua_call_event_hooks_graph_node_object_and_int_param(enum LuaHookedEventType hookType, struct GraphNodeObject* node, s32 param);
 

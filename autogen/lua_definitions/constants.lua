@@ -9260,7 +9260,10 @@ HOOK_ON_COLLIDE_LEVEL_BOUNDS = 37
 HOOK_MIRROR_MARIO_RENDER = 38
 
 --- @type LuaHookedEventType
-HOOK_MAX = 39
+HOOK_OVERRIDE_PHYS_STEP_DEFACTO_SPEED = 39
+
+--- @type LuaHookedEventType
+HOOK_MAX = 40
 
 --- @class HudDisplayFlags
 

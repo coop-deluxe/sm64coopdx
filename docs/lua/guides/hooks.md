@@ -124,8 +124,9 @@ The lua functions sent to `hook_event()` will be automatically called by SM64 wh
 | HOOK_ON_DIALOG | Called when a dialog appears. Return `false` to prevent it from appearing | `integer` dialogId |
 | HOOK_ON_EXIT | Called before the game shuts down | None |
 | HOOK_DIALOG_SOUND | Called when a dialog box sound is going to play, return a `DS_*` constant to override the sound | `integer` dialogSound |
-| HOOK_ON_COLLIDE_LEVEL_BOUNDS | Called when a mario collides with the level boundaries | [MarioState](structs.md#MarioState)mario |
-| HOOK_MIRROR_MARIO_RENDER | Called when a Mirror Mario is rendered. | [GraphNodeObject](structs.md#GraphNodeObject) mirrorMario | `integer` mirrorMarioIndex |
+| HOOK_ON_COLLIDE_LEVEL_BOUNDS | Called when a mario collides with the level boundaries | [MarioState](structs.md#MarioState) mario |
+| HOOK_MIRROR_MARIO_RENDER | Called when a Mirror Mario is rendered | [GraphNodeObject](structs.md#GraphNodeObject) mirrorMario | `integer` mirrorMarioIndex |
+| HOOK_OVERRIDE_PHYS_STEP_DEFACTO_SPEED | Called when slope defacto speed for walking is being calculated, overrides the floor normal in the equation | [MarioState](structs.md#MarioState) mario |
 
 ### Parameters
 
