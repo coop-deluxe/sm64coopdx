@@ -640,11 +640,12 @@ void render_hud(void) {
             render_hud_mario_lives();
         }
 
-        if (hudDisplayFlags & HUD_DISPLAY_FLAG_LIVES && showHud && gLevelValues.hudCapTimer) {
-            render_hud_cap_timer();
-        }
+        // coop hud elements
+        if (showHud) {
+            if (gLevelValues.hudCapTimer) {
+                render_hud_cap_timer();
+            }
 
-        if (hudDisplayFlags & HUD_DISPLAY_FLAG_LIVES && showHud) {
             render_hud_red_coins_and_secrets_radar();
         }
 
