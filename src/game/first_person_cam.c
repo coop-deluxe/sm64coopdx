@@ -24,7 +24,8 @@ struct FirstPersonCamera gFirstPersonCamera = {
     .pitch = 0,
     .yaw = 0,
     .crouch = 0,
-    .fov = FIRST_PERSON_DEFAULT_FOV
+    .fov = FIRST_PERSON_DEFAULT_FOV,
+    .offset = { 0, 0, 0 }
 };
 
 extern s16 gMenuMode;
@@ -114,17 +115,17 @@ void first_person_camera_update(void) {
     }
 
     // update pos
-    gLakituState.pos[0] = m->pos[0] + coss(gFirstPersonCamera.pitch) * sins(gFirstPersonCamera.yaw);
-    gLakituState.pos[1] = m->pos[1] + sins(gFirstPersonCamera.pitch) + (FIRST_PERSON_MARIO_HEAD_POS - gFirstPersonCamera.crouch);
-    gLakituState.pos[2] = m->pos[2] + coss(gFirstPersonCamera.pitch) * coss(gFirstPersonCamera.yaw);
+    gLakituState.pos[0] = (m->pos[0] + gFirstPersonCamera.offset[0]) + coss(gFirstPersonCamera.pitch) * sins(gFirstPersonCamera.yaw);
+    gLakituState.pos[1] = (m->pos[1] + gFirstPersonCamera.offset[1]) + sins(gFirstPersonCamera.pitch) + (FIRST_PERSON_MARIO_HEAD_POS - gFirstPersonCamera.crouch);
+    gLakituState.pos[2] = (m->pos[2] + gFirstPersonCamera.offset[2]) + coss(gFirstPersonCamera.pitch) * coss(gFirstPersonCamera.yaw);
     vec3f_copy(m->area->camera->pos, gLakituState.pos);
     vec3f_copy(gLakituState.curPos, gLakituState.pos);
     vec3f_copy(gLakituState.goalPos, gLakituState.pos);
 
     // update focus
-    gLakituState.focus[0] = m->pos[0] - 100 * coss(gFirstPersonCamera.pitch) * sins(gFirstPersonCamera.yaw);
-    gLakituState.focus[1] = m->pos[1] - 100 * sins(gFirstPersonCamera.pitch) + (FIRST_PERSON_MARIO_HEAD_POS - gFirstPersonCamera.crouch);
-    gLakituState.focus[2] = m->pos[2] - 100 * coss(gFirstPersonCamera.pitch) * coss(gFirstPersonCamera.yaw);
+    gLakituState.focus[0] = (m->pos[0] + gFirstPersonCamera.offset[0]) - 100 * coss(gFirstPersonCamera.pitch) * sins(gFirstPersonCamera.yaw);
+    gLakituState.focus[1] = (m->pos[1] + gFirstPersonCamera.offset[1]) - 100 * sins(gFirstPersonCamera.pitch) + (FIRST_PERSON_MARIO_HEAD_POS - gFirstPersonCamera.crouch);
+    gLakituState.focus[2] = (m->pos[2] + gFirstPersonCamera.offset[2]) - 100 * coss(gFirstPersonCamera.pitch) * coss(gFirstPersonCamera.yaw);
     vec3f_copy(m->area->camera->focus, gLakituState.focus);
     vec3f_copy(gLakituState.curFocus, gLakituState.focus);
     vec3f_copy(gLakituState.goalFocus, gLakituState.focus);
@@ -174,7 +175,12 @@ void first_person_update(void) {
 }
 
 void first_person_reset(void) {
+    gFirstPersonCamera.forceRoll = false;
     gFirstPersonCamera.pitch = 0;
     gFirstPersonCamera.yaw = 0;
     gFirstPersonCamera.crouch = 0;
+    gFirstPersonCamera.fov = FIRST_PERSON_DEFAULT_FOV;
+    gFirstPersonCamera.offset[0] = 0;
+    gFirstPersonCamera.offset[1] = 0;
+    gFirstPersonCamera.offset[2] = 0;
 }

@@ -15,6 +15,7 @@ struct FirstPersonCamera {
     s16 yaw;
     f32 crouch;
     f32 fov;
+    Vec3f offset;
 };
 
 extern struct FirstPersonCamera gFirstPersonCamera;
