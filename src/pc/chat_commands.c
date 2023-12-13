@@ -231,20 +231,21 @@ bool exec_chat_command(char* command) {
         return true;
     }
 
-
-    if (strcmp("/nametags", command) == 0) {
-        djui_chat_message_create(DLANG(CHAT, NAMETAGS_MISSING_PARAMETERS));
-        return true;
-    }
-
-    if (str_starts_with("/nametags ", command)) {
-        char *option = &command[10];
-        if (strcmp("show-tag", option) == 0) {
-            gNametagsSettings.showSelfTag = !gNametagsSettings.showSelfTag;
-        } else if (strcmp("show-health", option) == 0) {
-            gNametagsSettings.showHealth = !gNametagsSettings.showHealth;
+    if (gServerSettings.nametags) {
+        if (strcmp("/nametags", command) == 0) {
+            djui_chat_message_create(DLANG(CHAT, NAMETAGS_MISSING_PARAMETERS));
+            return true;
         }
-        return true;
+
+        if (str_starts_with("/nametags ", command)) {
+            char *option = &command[10];
+            if (strcmp("show-tag", option) == 0) {
+                gNametagsSettings.showSelfTag = !gNametagsSettings.showSelfTag;
+            } else if (strcmp("show-health", option) == 0) {
+                gNametagsSettings.showHealth = !gNametagsSettings.showHealth;
+            }
+            return true;
+        }
     }
 
 #ifdef DEVELOPMENT
@@ -267,7 +268,9 @@ void display_chat_commands(void) {
             djui_chat_message_create(DLANG(CHAT, MOD_DESC));
         }
     }
-    djui_chat_message_create(DLANG(CHAT, NAMETAGS_DESC));
+    if (gServerSettings.nametags) {
+        djui_chat_message_create(DLANG(CHAT, NAMETAGS_DESC));
+    }
 #ifdef DEVELOPMENT
     dev_display_chat_commands();
 #endif

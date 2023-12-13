@@ -164,14 +164,22 @@ void network_receive_join(struct Packet* p) {
     packet_read(p, &myGlobalIndex, sizeof(u8));
     packet_read(p, &gCurrSaveFileNum, sizeof(s16));
     packet_read(p, &gServerSettings.playerInteractions, sizeof(u8));
-    if (!gCoopCompatibility) { packet_read(p, &gServerSettings.bouncyLevelBounds, sizeof(u8)); }
+    if (!gCoopCompatibility) {
+        packet_read(p, &gServerSettings.bouncyLevelBounds, sizeof(u8));
+    } else {
+        gServerSettings.bouncyLevelBounds = BOUNCY_LEVEL_BOUNDS_OFF;
+    }
     packet_read(p, &gServerSettings.playerKnockbackStrength, sizeof(u8));
     packet_read(p, &gServerSettings.stayInLevelAfterStar, sizeof(u8));
     packet_read(p, &gServerSettings.skipIntro, sizeof(u8));
     packet_read(p, &gServerSettings.enableCheats, sizeof(u8));
     packet_read(p, &gServerSettings.bubbleDeath, sizeof(u8));
     packet_read(p, &gServerSettings.headlessServer, sizeof(u8));
-    if (!gCoopCompatibility) { packet_read(p, &gServerSettings.nametags, sizeof(u8)); }
+    if (!gCoopCompatibility) {
+        packet_read(p, &gServerSettings.nametags, sizeof(u8));
+    } else {
+        gServerSettings.nametags = false;
+    }
     packet_read(p, &gServerSettings.maxPlayers, sizeof(u8));
     packet_read(p, eeprom, sizeof(u8) * 512);
 
