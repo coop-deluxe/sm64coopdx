@@ -21,6 +21,7 @@
 #include "pc/network/network.h"
 #include "pc/lua/smlua.h"
 #include "hardcoded.h"
+#include "first_person_cam.h"
 
 void play_flip_sounds(struct MarioState *m, s16 frame1, s16 frame2, s16 frame3) {
     if (!m) { return; }
@@ -326,6 +327,10 @@ void update_flying_yaw(struct MarioState *m) {
 void update_flying_pitch(struct MarioState *m) {
     if (!m) { return; }
     s16 targetPitchVel = -(s16)(m->controller->stickY * (m->forwardVel / 5.0f));
+    if (get_first_person_enabled()) {
+        f32 mag = ((f32)gFirstPersonCamera.pitch / 0x3F00) * 64;
+        targetPitchVel = -(s16)(mag * (m->forwardVel / 5.0f));
+    }
 
     if (targetPitchVel > 0) {
         if (m->angleVel[0] < 0) {
