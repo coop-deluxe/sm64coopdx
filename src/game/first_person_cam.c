@@ -7,6 +7,8 @@
 #include "object_list_processor.h"
 #include "object_helpers.h"
 #include "mario.h"
+#include "hardcoded.h"
+#include "save_file.h"
 
 #include "engine/math_util.h"
 
@@ -104,7 +106,8 @@ void first_person_camera_update(void) {
 
     // update crouch
     if (mario_is_crouching(m) || m->action == ACT_LEDGE_GRAB) {
-        f32 inc = 10 * (m->controller->buttonDown & Z_TRIG) != 0 || m->action == ACT_CROUCH_SLIDE || m->action == ACT_LEDGE_GRAB ? 1 : -1;
+        bool up = (m->controller->buttonDown & Z_TRIG) != 0 || m->action == ACT_CROUCH_SLIDE || m->action == ACT_LEDGE_GRAB;
+        f32 inc = 10 * (up ? 1 : -1);
         gFirstPersonCamera.crouch = CLAMP(gFirstPersonCamera.crouch + inc, 0, FIRST_PERSON_MARIO_HEAD_POS - FIRST_PERSON_MARIO_HEAD_POS_SHORT);
     } else {
         gFirstPersonCamera.crouch = CLAMP(gFirstPersonCamera.crouch - 10, 0, FIRST_PERSON_MARIO_HEAD_POS - FIRST_PERSON_MARIO_HEAD_POS_SHORT);
@@ -154,6 +157,14 @@ void first_person_update(void) {
         if (m->action == ACT_SHOT_FROM_CANNON && m->area->camera->mode == CAMERA_MODE_INSIDE_CANNON) {
             gFirstPersonCamera.yaw = m->faceAngle[1] + 0x8000;
             m->area->camera->mode = CAMERA_MODE_FREE_ROAM;
+        }
+
+        if (gFirstPersonCamera.pitch <= -0x3F00 &&
+            m->floor && m->floor->type == SURFACE_LOOK_UP_WARP &&
+            save_file_get_total_star_count(gCurrSaveFileNum - 1, COURSE_MIN - 1, COURSE_MAX - 1) >= gLevelValues.wingCapLookUpReq &&
+            m->forwardVel == 0 &&
+            sCurrPlayMode != PLAY_MODE_PAUSED) {
+            level_trigger_warp(m, WARP_OP_LOOK_UP);
         }
 
         m->marioBodyState->modelState = 0x100;
