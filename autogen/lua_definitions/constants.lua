@@ -5677,6 +5677,12 @@ PACKET_LENGTH = 3000
 --- @type integer
 SYNC_DISTANCE_INFINITE = 0
 
+--- @type integer
+SYNC_DISTANCE_ONLY_DEATH = -1
+
+--- @type integer
+SYNC_DISTANCE_ONLY_EVENTS = -2
+
 --- @class BouncyLevelBounds
 
 --- @type BouncyLevelBounds

@@ -2035,6 +2035,8 @@
 ## [network.h](#network.h)
 - PACKET_LENGTH
 - SYNC_DISTANCE_INFINITE
+- SYNC_DISTANCE_ONLY_DEATH
+- SYNC_DISTANCE_ONLY_EVENTS
 
 ### [enum BouncyLevelBounds](#BouncyLevelBounds)
 | Identifier | Value |

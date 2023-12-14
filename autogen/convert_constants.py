@@ -163,6 +163,7 @@ def process_define(filename, line):
 
     val = val.replace('(u8)', '')
     val = val.replace('(u64)', '')
+    val = re.sub(r'\.\d+f', '', val)
 
     for p in val.split(' '):
         if p.startswith('0x'):
