@@ -60,8 +60,8 @@ void first_person_camera_update(void) {
     struct MarioState *m = &gMarioStates[0];
     f32 sensX = 0.3f * camera_config_get_x_sensitivity();
     f32 sensY = 0.4f * camera_config_get_y_sensitivity();
-    u8 invX = camera_config_is_x_inverted() ? 1 : -1;
-    u8 invY = camera_config_is_y_inverted() ? 1 : -1;
+    s16 invX = camera_config_is_x_inverted() ? 1 : -1;
+    s16 invY = camera_config_is_y_inverted() ? 1 : -1;
 
     if (gMenuMode == -1 && !gDjuiChatBoxFocus && !gDjuiConsoleFocus) {
         // update pitch
