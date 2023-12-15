@@ -401,6 +401,8 @@ struct Object *create_object(const BehaviorScript *bhvScript) {
             break;
     }
 
+    smlua_call_event_hooks_object_param(HOOK_ON_OBJECT_LOAD, obj);
+
     return obj;
 }
 

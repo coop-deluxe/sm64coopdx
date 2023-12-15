@@ -9269,7 +9269,10 @@ HOOK_MIRROR_MARIO_RENDER = 38
 HOOK_OVERRIDE_PHYS_STEP_DEFACTO_SPEED = 39
 
 --- @type LuaHookedEventType
-HOOK_MAX = 40
+HOOK_ON_OBJECT_LOAD = 40
+
+--- @type LuaHookedEventType
+HOOK_MAX = 41
 
 --- @class HudDisplayFlags
 
