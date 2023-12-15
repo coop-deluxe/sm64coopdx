@@ -846,6 +846,7 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
+| centerL | `boolean` |  |
 | crouch | `number` |  |
 | enabled | `boolean` | read-only |
 | forceRoll | `boolean` |  |

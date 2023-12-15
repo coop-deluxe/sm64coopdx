@@ -591,6 +591,7 @@
 --- @field public r integer
 
 --- @class FirstPersonCamera
+--- @field public centerL boolean
 --- @field public crouch number
 --- @field public enabled boolean
 --- @field public forceRoll boolean

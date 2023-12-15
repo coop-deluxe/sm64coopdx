@@ -23,6 +23,7 @@
 struct FirstPersonCamera gFirstPersonCamera = {
     .enabled = false,
     .forceRoll = true,
+    .centerL = true,
     .pitch = 0,
     .yaw = 0,
     .crouch = 0,
@@ -71,7 +72,7 @@ void first_person_camera_update(void) {
         gFirstPersonCamera.pitch = CLAMP(gFirstPersonCamera.pitch, -0x3F00, 0x3F00);
 
         // update yaw
-        if (m->controller->buttonPressed & L_TRIG) {
+        if (m->controller->buttonPressed & L_TRIG && gFirstPersonCamera.centerL) {
             gFirstPersonCamera.yaw = m->faceAngle[1] + 0x8000;
         } else {
             gFirstPersonCamera.yaw += sensX * (invX * m->controller->extStickX - 1.5f * mouse_x);
@@ -187,6 +188,7 @@ void first_person_update(void) {
 
 void first_person_reset(void) {
     gFirstPersonCamera.forceRoll = false;
+    gFirstPersonCamera.centerL = true;
     gFirstPersonCamera.pitch = 0;
     gFirstPersonCamera.yaw = 0;
     gFirstPersonCamera.crouch = 0;
