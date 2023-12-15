@@ -2,7 +2,7 @@
 -- description: Run /matrix and a builtin texture name to replace with the digital rain
 -- deluxe: true
 
-if SM64COOPDX_VERSION ~= nil then
+if SM64COOPDX_VERSION == nil then
     local first = false
     hook_event(HOOK_ON_LEVEL_INIT, function()
         if not first then
