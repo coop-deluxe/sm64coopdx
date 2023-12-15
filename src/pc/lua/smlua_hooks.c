@@ -98,22 +98,20 @@ int smlua_call_hook(lua_State* L, int nargs, int nresults, int errfunc, struct M
     struct Mod* prev = gLuaActiveMod;
     gLuaActiveMod = activeMod;
     gLuaLastHookMod = activeMod;
-#if defined(DEVELOPMENT)
+
     extern bool configLuaProfiler;
     if (configLuaProfiler) {
         lua_profiler_start_counter(activeMod);
     }
-#endif
 
     CTX_BEGIN(CTX_HOOK);
     int rc = smlua_pcall(L, nargs, nresults, errfunc);
     CTX_END(CTX_HOOK);
 
-#if defined(DEVELOPMENT)
     if (configLuaProfiler) {
         lua_profiler_stop_counter(activeMod);
     }
-#endif
+
     gLuaActiveMod = prev;
     return rc;
 }
