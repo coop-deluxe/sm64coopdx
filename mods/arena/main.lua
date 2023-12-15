@@ -43,7 +43,6 @@ local gGameLevels = {
 _G.Arena = {
     add_level = function (levelNum, levelName)
         table.insert(gGameLevels, { level = levelNum, name = levelName })
-        update_chat_command_description('arena-level', string.format('[%s] sets level', get_level_choices()))
     end
 }
 
@@ -402,6 +401,14 @@ end
 
 ---
 
+local function split(s)
+    local result = {}
+    for match in (s):gmatch(string.format("[^%s]+", " ")) do
+        table.insert(result, match)
+    end
+    return result
+end
+
 function level_check()
     local np = gNetworkPlayers[0]
     if np.currLevelNum ~= gGlobalSyncTable.currentLevel or np.currActNum ~= 1 or np.currAreaIndex ~= 1 then
@@ -447,11 +454,11 @@ function on_update()
 end
 
 function on_gamemode_command(msg)
-
+    msg = msg:lower()
     local setMode = nil
 
     for i, gm in ipairs(gGameModes) do
-        if msg == gm.shortName then
+        if msg == gm.shortName:lower() then
             setMode = i
         end
     end
@@ -475,14 +482,16 @@ function on_gamemode_command(msg)
         return true
     end
 
-    return false
+    djui_chat_message_create("/arena \\#00ffff\\gamemode\\#ffff00\\ " .. string.format("[%s|random]\\#dcdcdc\\ sets gamemode", sGameModeShortTimes))
+    return true
 end
 
 function on_level_command(msg)
+    msg = msg:lower()
     local setLevel = nil
 
     for i, gl in ipairs(gGameLevels) do
-        if msg == gl.name then
+        if msg == gl.name:lower() then
             setLevel = i
         end
     end
@@ -495,7 +504,24 @@ function on_level_command(msg)
         return true
     end
 
-    return false
+    djui_chat_message_create("/arena \\#00ffff\\level\\#ffff00\\ " .. string.format("[%s]\\#dcdcdc\\ sets level", get_level_choices()))
+    return true
+end
+
+local function on_arena_command(msg)
+    local args = split(msg)
+    if args[1] == "gamemode" then
+        return on_gamemode_command(args[2] or "")
+    elseif args[1] == "level" then
+        local name = args[2] or ""
+        if args[3] ~= nil then
+            name = name .. " " .. args[3]
+        end
+        return on_level_command(name or "")
+    end
+
+    djui_chat_message_create("/arena \\#00ffff\\[gamemode|level]")
+    return true
 end
 
 hook_event(HOOK_ON_SYNC_VALID, on_sync_valid)
@@ -522,6 +548,9 @@ function get_level_choices()
 end
 
 if network_is_server() then
-    hook_chat_command('arena-gamemode', string.format("[%s|random] sets gamemode", sGameModeShortTimes), on_gamemode_command)
-    hook_chat_command('arena-level', string.format('[%s] sets level', get_level_choices()), on_level_command)
+    hook_chat_command("arena", "\\#00ffff\\[gamemode|level]", on_arena_command)
+end
+
+if _G.dayNightCycleApi ~= nil then
+    _G.dayNightCycleApi.enable_day_night_cycle(false)
 end
