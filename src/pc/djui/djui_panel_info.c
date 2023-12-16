@@ -25,6 +25,7 @@ eros71: Tester & Developer\n\
 FluffaMario: Model Designer\n\
 \n\
 Contributors:\n\
+Pup64HCP: Website\n\
 ArcticJaguar725: Fixing a sound engine bug\n\
 Isaac: Loading screen testing initially on sm64coopdx\n\
 \n\
