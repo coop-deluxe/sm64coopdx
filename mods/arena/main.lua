@@ -20,7 +20,7 @@ gGameModes = {
     [GAME_MODE_FT]    = { shortName = 'FT',    name = 'Flag Tag',              teams = false, teamSpawns = false, useScore = true,  scoreCap = 60,  minPlayers = 0, maxPlayers = 99 },
     [GAME_MODE_TFT]   = { shortName = 'TFT',   name = 'Team Flag Tag',         teams = true,  teamSpawns = false, useScore = true,  scoreCap = 120, minPlayers = 4, maxPlayers = 99 },
     [GAME_MODE_KOTH]  = { shortName = 'KOTH',  name = 'King of the Hill',      teams = false, teamSpawns = false, useScore = true,  scoreCap = 45,  minPlayers = 0, maxPlayers = 6  },
-    [GAME_MODE_TKOTH] = { shortName = 'TKOTH', name = 'Team King of the Hill', teams = true,  teamSpawns = false, useScore = true,  scoreCap = 90,  minPlayers = 4, maxPlayers = 99 },
+    [GAME_MODE_TKOTH] = { shortName = 'TKOTH', name = 'Team King of the Hill', teams = true,  teamSpawns = false, useScore = true,  scoreCap = 90,  minPlayers = 4, maxPlayers = 99 }
 }
 
 LEVEL_ARENA_ORIGIN    = level_register('level_arena_origin_entry',    COURSE_NONE, 'Origin',    'origin',    28000, 0x28, 0x28, 0x28)
@@ -29,14 +29,16 @@ LEVEL_ARENA_PILLARS   = level_register('level_arena_pillars_entry',   COURSE_NON
 LEVEL_ARENA_FORTS     = level_register('level_arena_forts_entry',     COURSE_NONE, 'Forts',     'forts',     28000, 0x28, 0x28, 0x28)
 LEVEL_ARENA_CITADEL   = level_register('level_arena_citadel_entry',   COURSE_NONE, 'Citadel',   'citadel',   28000, 0x28, 0x28, 0x28)
 LEVEL_ARENA_SPIRE     = level_register('level_arena_spire_entry',     COURSE_NONE, 'Spire',     'spire',     28000, 0x28, 0x28, 0x28)
+LEVEL_ARENA_RAINBOW   = level_register('level_arena_rainbow_entry',   COURSE_NONE, 'Rainbow',   'rainbow',   28000, 0x28, 0x28, 0x28)
 
 local gGameLevels = {
     { level = LEVEL_ARENA_ORIGIN,    name = 'Origin'    },
     { level = LEVEL_ARENA_SKY_BEACH, name = 'Sky Beach' },
     { level = LEVEL_ARENA_PILLARS,   name = 'Pillars'   },
     { level = LEVEL_ARENA_FORTS,     name = 'Forts'     },
-    { level = LEVEL_ARENA_CITADEL,   name = 'Citadel' },
-    { level = LEVEL_ARENA_SPIRE,     name = 'Spire' },
+    { level = LEVEL_ARENA_CITADEL,   name = 'Citadel'   },
+    { level = LEVEL_ARENA_SPIRE,     name = 'Spire'     },
+    { level = LEVEL_ARENA_RAINBOW,   name = 'Rainbow'   }
 }
 
 -- expose certain functions to other mods
@@ -464,7 +466,7 @@ function on_gamemode_command(msg)
     end
 
     if msg == 'random' then
-        djui_chat_message_create('Setting to random gamemode.')
+        djui_chat_message_create("[Arena] Setting to random gamemode.")
         sRandomizeMode = true
         round_end()
         sWaitTimer = 1
@@ -473,7 +475,7 @@ function on_gamemode_command(msg)
     end
 
     if setMode ~= nil then
-        djui_chat_message_create('Setting game mode.')
+        djui_chat_message_create("[Arena] Setting game mode.")
         gGlobalSyncTable.gameMode = setMode
         sRandomizeMode = false
         round_end()
@@ -508,6 +510,21 @@ function on_level_command(msg)
     return true
 end
 
+function on_jump_leniency_command(msg)
+    local num = tonumber(msg)
+    if not network_is_server and not network_is_moderator() then
+        djui_chat_message_create("\\#ffa0a0\\[Arena] You need to be a moderator to use this command.")
+        return true
+    elseif num == nil then
+        djui_chat_message_create("\\#ffa0a0\\[Arena] Invalid number!")
+        return true
+    else
+        gGlobalSyncTable.jumpLeniency = num
+        djui_chat_message_create("[Arena] The number of jump leniency frames has been set to " .. num)
+        return true
+    end
+end
+
 local function on_arena_command(msg)
     local args = split(msg)
     if args[1] == "gamemode" then
@@ -518,9 +535,11 @@ local function on_arena_command(msg)
             name = name .. " " .. args[3]
         end
         return on_level_command(name or "")
+    elseif args[1] == "jump-leniency" then
+        return on_jump_leniency_command(args[2] or "")
     end
 
-    djui_chat_message_create("/arena \\#00ffff\\[gamemode|level]")
+    djui_chat_message_create("/arena \\#00ffff\\[gamemode|level|jump-leniency]")
     return true
 end
 
@@ -548,7 +567,7 @@ function get_level_choices()
 end
 
 if network_is_server() then
-    hook_chat_command("arena", "\\#00ffff\\[gamemode|level]", on_arena_command)
+    hook_chat_command("arena", "\\#00ffff\\[gamemode|level|jump-leniency]", on_arena_command)
 end
 
 if _G.dayNightCycleApi ~= nil then
