@@ -2595,9 +2595,6 @@ RCO_ALL_EXCEPT_BOWSER = 1
 --- @type RomhackCameraOverride
 RCO_NONE = 2
 
---- @type integer
-PALETTE_PRESET_MAX = 45
-
 --- @class CharacterSound
 
 --- @type CharacterSound
@@ -2812,85 +2809,91 @@ PALETTE_WARIO_WOODS = 16
 PALETTE_GB = 17
 
 --- @type PalettePreset
-PALETTE_SNES = 18
+PALETTE_N64 = 18
 
 --- @type PalettePreset
-PALETTE_SWITCH = 19
+PALETTE_SNES = 19
 
 --- @type PalettePreset
-PALETTE_CLOVER = 20
+PALETTE_SWITCH = 20
 
 --- @type PalettePreset
-PALETTE_COBALT = 21
+PALETTE_CLOVER = 21
 
 --- @type PalettePreset
-PALETTE_RUBY = 22
+PALETTE_COBALT = 22
 
 --- @type PalettePreset
-PALETTE_FURY = 23
+PALETTE_RUBY = 23
 
 --- @type PalettePreset
-PALETTE_HOT_PINK = 24
+PALETTE_FURY = 24
 
 --- @type PalettePreset
-PALETTE_NICE_PINK = 25
+PALETTE_HOT_PINK = 25
 
 --- @type PalettePreset
-PALETTE_SEAFOAM = 26
+PALETTE_NICE_PINK = 26
 
 --- @type PalettePreset
-PALETTE_LILAC = 27
+PALETTE_SEAFOAM = 27
 
 --- @type PalettePreset
-PALETTE_COPPER = 28
+PALETTE_LILAC = 28
 
 --- @type PalettePreset
-PALETTE_AZURE = 29
+PALETTE_COPPER = 29
 
 --- @type PalettePreset
-PALETTE_BURGUNDY = 30
+PALETTE_AZURE = 30
 
 --- @type PalettePreset
-PALETTE_MINT = 31
+PALETTE_BURGUNDY = 31
 
 --- @type PalettePreset
-PALETTE_ORANGE = 32
+PALETTE_MINT = 32
 
 --- @type PalettePreset
-PALETTE_ARCTIC = 33
+PALETTE_ORANGE = 33
 
 --- @type PalettePreset
-PALETTE_BLACK = 34
+PALETTE_ARCTIC = 34
 
 --- @type PalettePreset
-PALETTE_BUBBLEGUM = 35
+PALETTE_BLACK = 35
 
 --- @type PalettePreset
-PALETTE_BUSY_BEE = 36
+PALETTE_BUBBLEGUM = 36
 
 --- @type PalettePreset
-PALETTE_FORTRESS = 37
+PALETTE_BUSY_BEE = 37
 
 --- @type PalettePreset
-PALETTE_BLUEBERRY_PIE = 38
+PALETTE_FORTRESS = 38
 
 --- @type PalettePreset
-PALETTE_RASPBERRY = 39
+PALETTE_BLUEBERRY_PIE = 39
 
 --- @type PalettePreset
-PALETTE_COFFEE = 40
+PALETTE_RASPBERRY = 40
 
 --- @type PalettePreset
-PALETTE_MARGIN = 41
+PALETTE_COFFEE = 41
 
 --- @type PalettePreset
-PALETTE_PUMPKIN = 42
+PALETTE_MARGIN = 42
 
 --- @type PalettePreset
-PALETTE_SOIL = 43
+PALETTE_PUMPKIN = 43
 
 --- @type PalettePreset
-PALETTE_CREVASE = 44
+PALETTE_SOIL = 44
+
+--- @type PalettePreset
+PALETTE_CREVASE = 45
+
+--- @type PalettePreset
+PALETTE_PRESET_MAX = 46
 
 --- @class PlayerPart
 

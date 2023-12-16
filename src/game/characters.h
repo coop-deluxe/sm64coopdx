@@ -6,8 +6,6 @@
 #include "mario_animation_ids.h"
 // NOTE: do not include any additional headers
 
-#define PALETTE_PRESET_MAX 45
-
 enum PalettePreset {
     PALETTE_MARIO,
     PALETTE_LUIGI,
@@ -27,6 +25,7 @@ enum PalettePreset {
     PALETTE_DAISY,
     PALETTE_WARIO_WOODS,
     PALETTE_GB,
+    PALETTE_N64,
     PALETTE_SNES,
     PALETTE_SWITCH,
     PALETTE_CLOVER,
@@ -53,7 +52,8 @@ enum PalettePreset {
     PALETTE_MARGIN,
     PALETTE_PUMPKIN,
     PALETTE_SOIL,
-    PALETTE_CREVASE
+    PALETTE_CREVASE,
+    PALETTE_PRESET_MAX
 };
 
 enum PlayerPart {

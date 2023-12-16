@@ -291,6 +291,7 @@ void djui_panel_player_create(struct DjuiBase* caller) {
             DLANG(PALETTE, DAISY),
             DLANG(PALETTE, WARIO_WOODS),
             DLANG(PALETTE, GB),
+            DLANG(PALETTE, N64),
             DLANG(PALETTE, SNES),
             DLANG(PALETTE, SWITCH),
             DLANG(PALETTE, CLOVER),
