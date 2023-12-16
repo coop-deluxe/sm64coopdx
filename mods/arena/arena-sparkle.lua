@@ -1,3 +1,5 @@
+if SM64COOPDX_VERSION == nil then return end
+
 define_custom_obj_fields({
     oArenaSparkleOwner = 'u32',
     oArenaSparkleOffsetX = 'f32',

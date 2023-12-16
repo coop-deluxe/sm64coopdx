@@ -1,3 +1,15 @@
+if SM64COOPDX_VERSION == nil then
+    local first = false
+    hook_event(HOOK_ON_LEVEL_INIT, function()
+        if not first then
+            first = true
+            play_sound(SOUND_MENU_CAMERA_BUZZ, gMarioStates[0].marioObj.header.gfx.cameraToObject)
+            djui_chat_message_create("\\#ff7f7f\\This version of Arena is not supported with sm64ex-coop\nas it uses sm64coopdx exclusive Lua functionality.\n\\#dcdcdc\\To play this mod, try out sm64coopdx at\n\\#7f7fff\\https://sm64coopdx.com")
+        end
+    end)
+    return
+end
+
 ITEM_NONE        = 0
 ITEM_METAL_CAP   = 1
 ITEM_HAMMER      = 2

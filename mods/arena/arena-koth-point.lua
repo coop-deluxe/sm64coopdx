@@ -1,3 +1,5 @@
+if SM64COOPDX_VERSION == nil then return end
+
 sArenaKothPoints = {}
 
 function bhv_arena_koth_init(obj)

@@ -1,3 +1,5 @@
+if SM64COOPDX_VERSION == nil then return end
+
 gHudIcons = {
     flags = {
         [0] = { tex = TEX_FLAG, prevX = 0, prevY = 0, r = 255, g = 255, b = 255 },

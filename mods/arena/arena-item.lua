@@ -1,3 +1,5 @@
+if SM64COOPDX_VERSION == nil then return end
+
 local arenaItemTimeout = 30 * 15 -- 15 seconds
 
 -----------------
@@ -58,7 +60,7 @@ function bhv_arena_item_collect_metal_cap(obj)
 
     m.flags = m.flags | MARIO_CAP_ON_HEAD
 
-    play_sound(SOUND_MENU_STAR_SOUND, m.marioObj.header.gfx.cameraToObject)
+    play_sound(SOUND_MENU_STAR_SOUND, gGlobalSoundSource)
     play_character_sound(m, CHAR_SOUND_HERE_WE_GO)
 
     play_cap_music(capMusic)

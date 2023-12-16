@@ -1,3 +1,5 @@
+if SM64COOPDX_VERSION == nil then return end
+
 local pauseMenuShouldShowMusic = true
 local pauseMenuMusicRGBA = {200,200,200,255}
 local pauseMenuShowLevelID = false

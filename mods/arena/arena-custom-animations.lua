@@ -1,3 +1,5 @@
+if SM64COOPDX_VERSION == nil then return end
+
 smlua_anim_util_register_animation("luigi_run",
     0,
     0,

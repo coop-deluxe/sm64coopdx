@@ -1,6 +1,9 @@
 -- name: Arena
 -- description: A arena-shooter inspired game mode with custom weapons and levels.\nSeven gamemodes in one, three custom stages, five weapons.
 -- incompatible: gamemode arena
+-- deluxe: true
+
+if SM64COOPDX_VERSION == nil then return end
 
 GAME_STATE_ACTIVE   = 1
 GAME_STATE_INACTIVE = 2

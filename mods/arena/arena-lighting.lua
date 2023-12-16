@@ -1,3 +1,5 @@
+if SM64COOPDX_VERSION == nil then return end
+
 -- lighting for Rainbow Road
 
 function on_level_init()
