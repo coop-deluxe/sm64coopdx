@@ -209,7 +209,7 @@ static u32 determine_interaction_internal(struct MarioState *m, struct Object *o
                     interaction = INT_KICK;
                 }
             }
-            if (m->flags & MARIO_TRIPPING) {
+            if (m->flags & MARIO_TRIPPING && gCoopCompatibility) {
                 // 180 degrees total, or 90 each way
                 if (-0x4000 <= dYawToObject && dYawToObject <= 0x4000) {
                     interaction = INT_TRIP;
