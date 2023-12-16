@@ -2,7 +2,6 @@
 #include "djui_panel.h"
 #include "djui_panel_menu.h"
 #include "pc/lua/utils/smlua_misc_utils.h"
-#include "pc/pc_main.h"
 
 static char sInfo[1024];
 
@@ -25,23 +24,15 @@ eros71: Tester & Developer\n\
 FluffaMario: Model Designer\n\
 \n\
 Contributors:\n\
+mike_dobukai: Logo\n\
 Pup64HCP: Website\n\
 ArcticJaguar725: Fixing a sound engine bug\n\
-Isaac: Loading screen testing initially on sm64coopdx\n\
-\n\
-Renderer: %s\n\
-Build Type: %s",
-            RAPI_NAME,
-#ifdef DEVELOPMENT
-            "Development"
-#else
-            "Standard"
-#endif
+Isaac: Loading screen testing initially on sm64coopdx"
         );
 
         struct DjuiText* text = djui_text_create(body, sInfo);
         djui_base_set_location(&text->base, 0, 0);
-        djui_base_set_size(&text->base, (DJUI_DEFAULT_PANEL_WIDTH * (configDjuiThemeCenter ? DJUI_THEME_CENTERED_WIDTH : 1)) - 64, 480);
+        djui_base_set_size(&text->base, (DJUI_DEFAULT_PANEL_WIDTH * (configDjuiThemeCenter ? DJUI_THEME_CENTERED_WIDTH : 1)) - 64, 497);
         djui_base_set_color(&text->base, 220, 220, 220, 255);
         djui_text_set_drop_shadow(text, 64, 64, 64, 100);
         djui_text_set_alignment(text, DJUI_HALIGN_CENTER, DJUI_VALIGN_TOP);
