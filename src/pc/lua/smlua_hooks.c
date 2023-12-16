@@ -16,7 +16,6 @@
 #include "pc/chat_commands.h"
 #include "pc/pc_main.h"
 
-#if defined(DEVELOPMENT)
 #include "../mods/mods.h"
 #include "game/print.h"
 #include "gfx_dimensions.h"
@@ -76,8 +75,6 @@ void lua_profiler_update_counters(void) {
         print_text(gfx_dimensions_rect_from_left_edge(4), y, text);
     }
 }
-
-#endif
 
 #define MAX_HOOKED_REFERENCES 64
 #define LUA_BEHAVIOR_FLAG (1 << 15)
