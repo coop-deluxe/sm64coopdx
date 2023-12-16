@@ -124,8 +124,7 @@ static void discord_initialize(void) {
     // set up discord params
     struct DiscordCreateParams params = { 0 };
     DiscordCreateParamsSetDefault(&params);
-    // params.client_id = gCoopCompatibility ? APPLICATION_ID_COOP : APPLICATION_ID_COOPDX; // you have to have activity status on if you don't want discord to prompt you to authorize on every boot
-    params.client_id = APPLICATION_ID_COOP; // hide sm64coopdx for now
+    params.client_id = gCoopCompatibility ? APPLICATION_ID_COOP : APPLICATION_ID_COOPDX; // you have to have activity status on if you don't want discord to prompt you to authorize on every boot
     params.flags = DiscordCreateFlags_NoRequireDiscord;
     params.event_data = &app;
     params.user_events = discord_user_initialize();
