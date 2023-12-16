@@ -637,7 +637,8 @@ static bool DynOS_Col_WriteBinary(const SysPath &aOutputFilename, GfxData *aGfxD
     DynOS_Col_Write(_File, aGfxData, _Node);
 
     BinFile::Close(_File);
-    return DynOS_Bin_Compress(aOutputFilename);
+    // return DynOS_Bin_Compress(aOutputFilename);
+    return true;
 }
 
   /////////////
@@ -693,9 +694,9 @@ void DynOS_Col_Generate(const SysPath &aPackFolder, Array<Pair<u64, String>> _Ac
         if (fs_sys_file_exists(_ColFilename.c_str())) {
 #ifdef DEVELOPMENT
             // Compress file to gain some space
-            if (!DynOS_Bin_IsCompressed(_ColFilename)) {
+            /*if (!DynOS_Bin_IsCompressed(_ColFilename)) {
                 DynOS_Bin_Compress(_ColFilename);
-            }
+            }*/
 #endif
             continue;
         }
