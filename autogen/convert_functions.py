@@ -115,7 +115,7 @@ override_disallowed_functions = {
     "src/pc/lua/utils/smlua_text_utils.h":  [ "smlua_text_utils_reset_all" ],
     "src/pc/lua/utils/smlua_anim_utils.h":  [ "smlua_anim_util_reset", "smlua_anim_util_register_animation" ],
     "src/pc/network/lag_compensation.h":    [ "lag_compensation_clear", "lag_compensation_store" ],
-    "src/game/first_person_cam.h":          [ "first_person_update", "get_dest_fov", "get_dest_near" ]
+    "src/game/first_person_cam.h":          [ "first_person_update" ]
 }
 
 override_hide_functions = {
