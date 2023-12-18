@@ -69,11 +69,19 @@ function string_space_to_underscore(string)
     return s
 end
 
+function version_coop_dx()
+    if SM64COOPDX_VERSION then
+        return true
+    else
+        return false
+    end
+end
+
 ----------------------
 -- Global Variables --
 ----------------------
 
-modVersion = "1.5"
+modVersion = "1.5.1"
 
 allowMenu = {}
 
