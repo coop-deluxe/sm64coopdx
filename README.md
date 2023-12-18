@@ -6,9 +6,9 @@ Run `./extract_assets.py --clean && make clean` or `make distclean` to clear ROM
 
 ## How to Play
 
-[Instructions on how to play are available on the wiki.](https://github.com/coop-deluxe/sm64coopdx/wiki/How-to-Play)
+[Instructions on how to play are available on the wiki.](https://github.com/djoslin0/sm64ex-coop/wiki/How-to-Play)
 
-- The easiest way is to download [coop-compiler](https://github.com/coop-compiler/coop-compiler/releases/latest/download/coop-compiler.exe)
+- The easiest way to play is by using [coopdx-patcher](https://github.com/coop-compiler/coop-compiler/releases/latest/download/coop-compiler.exe)
 
 ## Goal (accomplished)
 Create a mod for the PC port where multiple people can play together online.
