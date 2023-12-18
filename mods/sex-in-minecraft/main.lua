@@ -1,4 +1,4 @@
--- name: Sex in Minecraft
+-- name: Vargskelethor Joel - Sex in Minecraft
 -- description: Creeper pussy, oh so nice\nGreen block asshole, tight like paradise\nPickaxe my dick, till it explodes\nPlaying Minecraft and swallowing loads\nJumped on the bed and spam in chat\nI'm gonna cum I'm gonna splat\nMinecraft roleplay on the server tonight\nWhen I find a diamond, I get so tight\nYeah\nI'm having sex in Minecraft\nOoh\nOoh I jumped, I jump on the bed\nAughh\nWe're having sex in Minecraft\nOoh\nYeah we jumped, we jump on the bed\nBuild a penis out of brick\nThen I'll make a TNT dick\nI'll blow it up and jump some more\nOn the Minecraft server I am a whore\nScream into the mic like a demon\nIn the Minecraft world I drown in semen\nThere's something wrong in my head\nDoesn't matter as I fuck in my shed\nYeah\nI'm having sex in Minecraft\nOoh\nOoh I jumped, I jump on the bed\nAughh\nWe're having sex in Minecraft\nOoh\nYeah we jumped, we jump on the bed\nMinecraft\nMinecraft\nMinecraft\nMinecraft\nSex
 
 local image = get_texture_info("grandma")
@@ -43,6 +43,7 @@ end
 function on_hud_render()
     if show then
         djui_hud_set_resolution(RESOLUTION_N64)
+        djui_hud_set_filter(FILTER_LINEAR)
         posWidth = djui_hud_get_screen_width()
         posHeight = djui_hud_get_screen_height()
         djui_hud_set_color(0, 0, 0, 255)
