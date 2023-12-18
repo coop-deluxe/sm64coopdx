@@ -68,7 +68,7 @@ ConfigWindow configWindow       = {
     .settings_changed = false,
     .msaa = 0,
 };
-unsigned int configFiltering    = 1;          // 0=force nearest, 1=linear, 2=three-point
+unsigned int configFiltering    = 2;          // 0=force nearest, 1=linear, 2=three-point
 unsigned int configMasterVolume = 80; // 0 - MAX_VOLUME
 unsigned int configMusicVolume = MAX_VOLUME;
 unsigned int configSfxVolume = MAX_VOLUME;
@@ -104,8 +104,8 @@ unsigned int configKeyDisconnect[MAX_BINDS] = { VK_INVALID, VK_INVALID, VK_INVAL
 unsigned int configStickDeadzone = 16; // 16*DEADZONE_STEP=4960 (the original default deadzone)
 unsigned int configRumbleStrength = 50;
 // better camera settings
-unsigned int configCameraXSens   = 10;
-unsigned int configCameraYSens   = 10;
+unsigned int configCameraXSens   = 50;
+unsigned int configCameraYSens   = 50;
 unsigned int configCameraAggr    = 0;
 unsigned int configCameraPan     = 0;
 unsigned int configCameraDegrade = 50; // 0 - 100%
@@ -139,9 +139,9 @@ bool         configMenuDemos                     = false;
 struct PlayerPalette configPlayerPalette         = {{{ 0x00, 0x00, 0xff }, { 0xff, 0x00, 0x00 }, { 0xff, 0xff, 0xff }, { 0x72, 0x1c, 0x0e }, { 0x73, 0x06, 0x00 }, { 0xfe, 0xc1, 0x79 }, { 0xff, 0x00, 0x00 }}};
 struct PlayerPalette configCustomPalette         = {{{ 0x00, 0x00, 0xff }, { 0xff, 0x00, 0x00 }, { 0xff, 0xff, 0xff }, { 0x72, 0x1c, 0x0e }, { 0x73, 0x06, 0x00 }, { 0xfe, 0xc1, 0x79 }, { 0xff, 0x00, 0x00 }}};
 bool         configShowFPS                       = false;
-bool         configUncappedFramerate             = true;
-unsigned int configFrameLimit                    = 60;
-unsigned int configDrawDistance                  = 5;
+bool         configUncappedFramerate             = false;
+unsigned int configFrameLimit                    = 144;
+unsigned int configDrawDistance                  = 4;
 bool         configDisablePopups                 = false;
 bool         configLuaProfiler                   = false;
 #ifdef DEVELOPMENT
