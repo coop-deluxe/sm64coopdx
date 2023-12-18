@@ -13231,23 +13231,6 @@ int smlua_func_get_first_person_enabled(UNUSED lua_State* L) {
     return 1;
 }
 
-int smlua_func_set_first_person_enabled(lua_State* L) {
-    if (L == NULL) { return 0; }
-
-    int top = lua_gettop(L);
-    if (top != 1) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "set_first_person_enabled", 1, top);
-        return 0;
-    }
-
-    bool enable = smlua_to_boolean(L, 1);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "set_first_person_enabled"); return 0; }
-
-    set_first_person_enabled(enable);
-
-    return 1;
-}
-
   ///////////////////
  // ingame_menu.h //
 ///////////////////
@@ -32076,7 +32059,6 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "first_person_check_cancels", smlua_func_first_person_check_cancels);
     smlua_bind_function(L, "first_person_reset", smlua_func_first_person_reset);
     smlua_bind_function(L, "get_first_person_enabled", smlua_func_get_first_person_enabled);
-    smlua_bind_function(L, "set_first_person_enabled", smlua_func_set_first_person_enabled);
 
     // ingame_menu.h
     smlua_bind_function(L, "reset_dialog_override_color", smlua_func_reset_dialog_override_color);

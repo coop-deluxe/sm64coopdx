@@ -113,8 +113,7 @@ override_field_immutable = {
     "ObjectWarpNode": [ "next "],
     "Animation": [ "length" ],
     "AnimationTable": [ "count" ],
-    "Controller": [ "controllerData", "statusData" ],
-    "FirstPersonCamera": [ "enabled" ],
+    "Controller": [ "controllerData", "statusData" ]
 }
 
 override_field_version_excludes = {

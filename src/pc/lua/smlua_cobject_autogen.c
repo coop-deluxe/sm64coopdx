@@ -674,13 +674,12 @@ static struct LuaObjectField sDjuiColorFields[LUA_DJUI_COLOR_FIELD_COUNT] = {
     { "r", LVT_U8, offsetof(struct DjuiColor, r), false, LOT_NONE },
 };
 
-#define LUA_FIRST_PERSON_CAMERA_FIELD_COUNT 8
+#define LUA_FIRST_PERSON_CAMERA_FIELD_COUNT 7
 static struct LuaObjectField sFirstPersonCameraFields[LUA_FIRST_PERSON_CAMERA_FIELD_COUNT] = {
     { "centerL",   LVT_BOOL,    offsetof(struct FirstPersonCamera, centerL),   false, LOT_NONE  },
     { "crouch",    LVT_F32,     offsetof(struct FirstPersonCamera, crouch),    false, LOT_NONE  },
-    { "enabled",   LVT_BOOL,    offsetof(struct FirstPersonCamera, enabled),   true,  LOT_NONE  },
+    { "enabled",   LVT_BOOL,    offsetof(struct FirstPersonCamera, enabled),   false, LOT_NONE  },
     { "forceRoll", LVT_BOOL,    offsetof(struct FirstPersonCamera, forceRoll), false, LOT_NONE  },
-    { "fov",       LVT_F32,     offsetof(struct FirstPersonCamera, fov),       false, LOT_NONE  },
     { "offset",    LVT_COBJECT, offsetof(struct FirstPersonCamera, offset),    true,  LOT_VEC3F },
     { "pitch",     LVT_S16,     offsetof(struct FirstPersonCamera, pitch),     false, LOT_NONE  },
     { "yaw",       LVT_S16,     offsetof(struct FirstPersonCamera, yaw),       false, LOT_NONE  },

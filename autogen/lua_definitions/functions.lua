@@ -4016,12 +4016,6 @@ function get_first_person_enabled()
     -- ...
 end
 
---- @param enable boolean
---- @return nil
-function set_first_person_enabled(enable)
-    -- ...
-end
-
 --- @return nil
 function reset_dialog_override_color()
     -- ...

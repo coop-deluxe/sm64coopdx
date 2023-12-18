@@ -595,7 +595,6 @@
 --- @field public crouch number
 --- @field public enabled boolean
 --- @field public forceRoll boolean
---- @field public fov number
 --- @field public offset Vec3f
 --- @field public pitch integer
 --- @field public yaw integer

@@ -15,7 +15,6 @@ struct FirstPersonCamera {
     s16 pitch;
     s16 yaw;
     f32 crouch;
-    f32 fov;
     Vec3f offset;
 };
 
@@ -24,7 +23,9 @@ extern struct FirstPersonCamera gFirstPersonCamera;
 bool first_person_check_cancels(struct MarioState *m);
 
 bool get_first_person_enabled(void);
-void set_first_person_enabled(bool enable);
+
+f32 get_dest_fov(f32 fov);
+f32 get_dest_near(f32 near);
 
 void first_person_update(void);
 void first_person_reset(void);

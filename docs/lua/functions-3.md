@@ -3322,26 +3322,6 @@
 
 <br />
 
-## [set_first_person_enabled](#set_first_person_enabled)
-
-### Lua Example
-`set_first_person_enabled(enable)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| enable | `boolean` |
-
-### Returns
-- None
-
-### C Prototype
-`void set_first_person_enabled(bool enable);`
-
-[:arrow_up_small:](#)
-
-<br />
-
 ---
 # functions from ingame_menu.h
 

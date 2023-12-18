@@ -20,6 +20,7 @@
 #include "game/camera.h"
 #include "game/hud.h"
 #include "game/rendering_graph_node.h"
+#include "game/first_person_cam.h"
 
 #include "engine/math_util.h"
 
@@ -578,7 +579,7 @@ bool djui_hud_world_pos_to_screen_pos(Vec3f pos, Vec3f out) {
     out[1] *= 256.0f / out[2];
 
     // fov of 45.0 is the default fov
-    f32 fovDefault = tanf(not_zero(45.0f, gOverrideFOV) * ((f32)M_PI / 360.0f));
+    f32 fovDefault = tanf(get_dest_fov(45.0f) * ((f32)M_PI / 360.0f));
     f32 fovCurrent = tanf((gFOVState.fov + gFOVState.fovOffset) * ((f32)M_PI / 360.0f));
 
     f32 fovDifference = (fovDefault / fovCurrent) * 1.13f;

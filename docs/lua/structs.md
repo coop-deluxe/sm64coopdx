@@ -848,9 +848,8 @@
 | ----- | ---- | ------ |
 | centerL | `boolean` |  |
 | crouch | `number` |  |
-| enabled | `boolean` | read-only |
+| enabled | `boolean` |  |
 | forceRoll | `boolean` |  |
-| fov | `number` |  |
 | offset | [Vec3f](structs.md#Vec3f) | read-only |
 | pitch | `integer` |  |
 | yaw | `integer` |  |

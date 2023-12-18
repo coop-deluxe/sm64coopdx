@@ -9,6 +9,7 @@
 #include "mario.h"
 #include "hardcoded.h"
 #include "save_file.h"
+#include "rendering_graph_node.h"
 
 #include "engine/math_util.h"
 
@@ -27,7 +28,6 @@ struct FirstPersonCamera gFirstPersonCamera = {
     .pitch = 0,
     .yaw = 0,
     .crouch = 0,
-    .fov = FIRST_PERSON_DEFAULT_FOV,
     .offset = { 0, 0, 0 }
 };
 
@@ -54,9 +54,12 @@ bool get_first_person_enabled(void) {
     return gFirstPersonCamera.enabled && !first_person_check_cancels(&gMarioStates[0]);
 }
 
-void set_first_person_enabled(bool enable) {
-    if (gFirstPersonCamera.enabled && !enable) { gFOVState.fov = 45.0f; }
-    gFirstPersonCamera.enabled = enable;
+f32 get_dest_fov(f32 fov) {
+    return get_first_person_enabled() ? FIRST_PERSON_DEFAULT_FOV : not_zero(fov, gOverrideFOV);
+}
+
+f32 get_dest_near(f32 near) {
+    return get_first_person_enabled() ? 1 : not_zero(near, gOverrideNear);
 }
 
 void first_person_camera_update(void) {
@@ -143,8 +146,6 @@ void first_person_camera_update(void) {
     gLakituState.focHSpeed = 0;
     gLakituState.focVSpeed = 0;
     vec3s_set(gLakituState.shakeMagnitude, 0, 0, 0);
-
-    gFOVState.fov = gFirstPersonCamera.fov;
 }
 
 void first_person_update(void) {
@@ -192,7 +193,6 @@ void first_person_reset(void) {
     gFirstPersonCamera.pitch = 0;
     gFirstPersonCamera.yaw = 0;
     gFirstPersonCamera.crouch = 0;
-    gFirstPersonCamera.fov = FIRST_PERSON_DEFAULT_FOV;
     gFirstPersonCamera.offset[0] = 0;
     gFirstPersonCamera.offset[1] = 0;
     gFirstPersonCamera.offset[2] = 0;
