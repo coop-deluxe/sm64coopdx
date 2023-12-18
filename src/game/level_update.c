@@ -1626,6 +1626,9 @@ void update_menu_level(void) {
     gMarioState->controller->stickY = 0;
     gMarioState->controller->stickMag = 0;
     gMarioState->intendedMag = 0;
+    // reset shadow
+    gMarioState->marioObj->header.gfx.shadowInvisible = false;
+    gMarioState->marioObj->header.gfx.disableAutomaticShadowPos = false;
 }
 
 s32 update_level(void) {
