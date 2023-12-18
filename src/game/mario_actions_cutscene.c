@@ -394,16 +394,16 @@ s32 set_mario_npc_dialog(struct MarioState* m, s32 actionArg, u8 (*inContinueDia
 
     s32 dialogState = 0;
 
-    if (m->playerIndex == 0) {
-        if (actionArg == 0 || inContinueDialogFunction == NULL) {
-            localDialogNPCBehavior = NULL;
-            gContinueDialogFunction = NULL;
-            gContinueDialogFunctionObject = NULL;
-        } else {
-            gContinueDialogFunction = inContinueDialogFunction;
-            gContinueDialogFunctionObject = gCurrentObject;
-        }
-    }
+    // if (m->playerIndex == 0) {
+    //     if (actionArg == 0 || inContinueDialogFunction == NULL) {
+    //         localDialogNPCBehavior = NULL;
+    //         gContinueDialogFunction = NULL;
+    //         gContinueDialogFunctionObject = NULL;
+    //     } else {
+    //         gContinueDialogFunction = inContinueDialogFunction;
+    //         gContinueDialogFunctionObject = gCurrentObject;
+    //     }
+    // }
 
     // in dialog
     if (m->action == ACT_READING_NPC_DIALOG) {

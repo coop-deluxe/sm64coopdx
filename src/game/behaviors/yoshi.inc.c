@@ -225,19 +225,13 @@ void bhv_yoshi_loop(void) {
     }
 
     if (sYoshiTalkingState > 2) {
-        if (gHudDisplay.lives >= 100) {
+        if (gHudDisplay.lives >= 100 && !gMarioStates[0].specialTripleJump) {
             gMarioStates[0].specialTripleJump = true;
             sYoshiTalkingState = 3;
+            set_mario_action(&gMarioStates[0], ACT_IDLE, 0);
         } else if ((gGlobalTimer & 0x03) == 0) {
             play_sound(SOUND_MENU_YOSHI_GAIN_LIVES, gGlobalSoundSource);
             gMarioStates[0].numLives++;
-        }
-    }
-
-    if (gMarioStates[0].action == ACT_WAITING_FOR_DIALOG) {
-        if (gMarioStates[0].interactObj == o) {
-            set_mario_action(&gMarioStates[0], ACT_IDLE, 0);
-            o->oInteractStatus = 0;
         }
     }
     curr_obj_random_blink(&o->oYoshiBlinkTimer);
