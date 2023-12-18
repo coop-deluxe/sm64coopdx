@@ -49,6 +49,18 @@ u16 mods_get_enabled_count(void) {
     return enabled;
 }
 
+u16 mods_get_character_select_count(void) {
+    u16 enabled = 0;
+
+    for (u16 i = 0; i < gLocalMods.entryCount; i++) {
+        struct Mod* mod = gLocalMods.entries[i];
+        if (!mod->enabled || strcmp(mod->name, "[CS]")) { continue; }
+        enabled++;
+    }
+
+    return enabled;
+}
+
 u8 mods_has_autoexec_mod(void) {
     for (u16 i = 0; i < gLocalMods.entryCount; i++) {
         if (mod_get_is_autoexec(gLocalMods.entries[i])) { return TRUE; }

@@ -74,7 +74,7 @@ static void djui_mod_checkbox_on_hover_end(UNUSED struct DjuiBase* base) {
 static void djui_mod_checkbox_on_value_change(UNUSED struct DjuiBase* base) {
     mods_update_selectable();
 
-    if (mods_get_enabled_count() >= 10) {
+    if (mods_get_enabled_count() - mods_get_character_select_count() >= 10) {
         if (!sWarned) {
             sWarned = true;
             djui_popup_create(DLANG(HOST_MODS, WARNING), 3);
