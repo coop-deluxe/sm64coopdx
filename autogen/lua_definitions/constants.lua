@@ -3465,7 +3465,10 @@ FONT_HUD = 2
 FONT_TINY = 3
 
 --- @type DjuiFontType
-FONT_COUNT = 4
+FONT_ALIASED = 4
+
+--- @type DjuiFontType
+FONT_COUNT = 5
 
 --- @class HudUtilsFilter
 
