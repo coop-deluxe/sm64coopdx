@@ -745,7 +745,7 @@ void PrintError(const char *aFmt, Args... aArgs) {
     printf(aFmt, aArgs...);
     printf("\r\n");
     fflush(stdout);
-    PrintConsole(aFmt, CONSOLE_MESSAGE_ERROR, aArgs...);
+    // PrintConsole(aFmt, CONSOLE_MESSAGE_ERROR, aArgs...);
 }
 #define PrintDataError(...) { \
     if (aGfxData->mErrorCount == 0) Print("  ERROR!"); \

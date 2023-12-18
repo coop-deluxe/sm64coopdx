@@ -25,3 +25,6 @@
 *.png binary
 *.aiff binary
 *.ico binary
+*.mp3 binary
+*.lvl binary
+*.tex binary
