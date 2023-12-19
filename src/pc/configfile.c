@@ -163,7 +163,7 @@ bool         configFadeoutDistantSounds          = false;
 unsigned int configDjuiTheme                     = DJUI_THEME_DARK;
 bool         configDjuiThemeCenter               = true;
 unsigned int configDjuiScale                     = 0;
-bool         configCoopCompatibility             = true;
+bool         configCoopCompatibility             = false;
 
 static const struct ConfigOption options[] = {
     {.name = "fullscreen",                     .type = CONFIG_TYPE_BOOL, .boolValue = &configWindow.fullscreen},
