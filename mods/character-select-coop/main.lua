@@ -244,20 +244,21 @@ local function mario_update(m)
     end
     
     if m.playerIndex == 0 and stallFrame > 1 then
-        characterTable[1].forceChar = gNetworkPlayers[m.playerIndex].modelIndex
+        local modelIndex = gNetworkPlayers[m.playerIndex].modelIndex
+        characterTable[1].forceChar = modelIndex
         if currChar == 1 then
-            characterTable[1].color = defaultPlayerColors[gNetworkPlayers[m.playerIndex].modelIndex]
-            characterTable[1].lifeIcon = defaultIcons[gNetworkPlayers[m.playerIndex].modelIndex]
+            characterTable[1].color = defaultPlayerColors[modelIndex]
+            characterTable[1].lifeIcon = defaultIcons[modelIndex]
         end
         if optionTable[optionTableRef.localModels].toggle > 0 then
-            gPlayerSyncTable[0].modelId = characterTable[currChar].model
-            gPlayerSyncTable[0].capModels = characterTable[currChar].capModels
+            gPlayerSyncTable[m.playerIndex].modelId = characterTable[currChar].model
+            gPlayerSyncTable[m.playerIndex].capModels = characterTable[currChar].capModels
             if characterTable[currChar].forceChar ~= nil then
                 gNetworkPlayers[m.playerIndex].overrideModelIndex = characterTable[currChar].forceChar
             end
         else
-            gPlayerSyncTable[0].modelId = nil
-            gPlayerSyncTable[0].capModels = nil
+            gPlayerSyncTable[m.playerIndex].modelId = nil
+            gPlayerSyncTable[m.playerIndex].capModels = nil
             gNetworkPlayers[m.playerIndex].overrideModelIndex = characterTable[1].forceChar
         end
 
