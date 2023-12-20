@@ -1842,7 +1842,7 @@ void audio_init() {
     }
 
 #ifdef VERSION_EU
-    // We want the refresh rate to be 60 FPS on PC. 
+    // We want the refresh rate to be 60 FPS on PC.
     // We shouldn't need to worry about PAL specfic computers anymore.
     D_EU_802298D0 = 16.713f;
     gRefreshRate = 60;

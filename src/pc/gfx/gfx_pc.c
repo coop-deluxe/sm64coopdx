@@ -216,6 +216,7 @@ static void gfx_update_loaded_texture(uint8_t tile_number, uint32_t size_bytes, 
 // forward declaration //
 ////////////////////////
 void ext_gfx_run_dl(Gfx* cmd);
+
 //////////////////////////////////
 
 static unsigned long get_time(void) {
@@ -366,7 +367,7 @@ void gfx_texture_cache_clear(void) {
 
 static bool gfx_texture_cache_lookup(int tile, struct TextureHashmapNode **n, const uint8_t *orig_addr, uint32_t fmt, uint32_t siz) {
     size_t hash = (uintptr_t)orig_addr;
-    #define CMPADDR(x, y) x == y
+#define CMPADDR(x, y) x == y
 
     hash = (hash >> HASH_SHIFT) & HASH_MASK;
 

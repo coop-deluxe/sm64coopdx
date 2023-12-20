@@ -140,7 +140,7 @@ u8 gMenuHoldKeyIndex = 0;
 u8 gMenuHoldKeyTimer = 0;
 s32 gDialogResponse = 0;
 
-#if (defined(VERSION_JP) || defined(VERSION_SH) || defined(VERSION_EU))
+#if defined(VERSION_JP) || defined(VERSION_SH) || defined(VERSION_EU)
 #ifdef VERSION_EU
 #define CHCACHE_BUFLEN (8 * 8)  // EU only converts 8x8
 #else
