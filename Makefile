@@ -628,7 +628,7 @@ _ := $(shell rm -rf ./$(BUILD_DIR)/$(LANG_DIR))
 MOD_DIR := mods
 
 # Remove old mod dir
-_ := $(PYTHON) $(TOOLS_DIR)/remove_built_in_mods.py
+_ := $(shell $(PYTHON) $(TOOLS_DIR)/remove_built_in_mods.py)
 
 # Automatic dependency files
 DEP_FILES := $(O_FILES:.o=.d) $(ULTRA_O_FILES:.o=.d) $(GODDARD_O_FILES:.o=.d) $(BUILD_DIR)/$(LD_SCRIPT).d
