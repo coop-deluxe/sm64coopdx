@@ -34,7 +34,7 @@ struct FirstPersonCamera gFirstPersonCamera = {
 extern s16 gMenuMode;
 
 bool first_person_check_cancels(struct MarioState *m) {
-    if (m->action == ACT_FIRST_PERSON || m->action == ACT_IN_CANNON || m->action == ACT_READING_NPC_DIALOG || m->action == ACT_DISAPPEARED) {
+    if (m->action == ACT_FIRST_PERSON || m->action == ACT_IN_CANNON || m->action == ACT_READING_NPC_DIALOG || m->action == ACT_DISAPPEARED || m->action == ACT_FLYING) {
         return true;
     }
 
