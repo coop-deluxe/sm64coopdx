@@ -5,6 +5,7 @@
 #include "djui_panel_pause.h"
 #include "djui_panel_join.h"
 #include "djui_panel_join_message.h"
+#include "djui_panel_changelog.h"
 #include "djui_fps_display.h"
 #include "../debuglog.h"
 #include "pc/cliopts.h"
@@ -93,6 +94,10 @@ void djui_init_late(void) {
         if (configLanguage[0] == '\0') {
             gPanelLanguageOnStartup = true;
             djui_panel_language_create(NULL);
+        }
+        if (strcmp(configLastVersion, SM64COOPDX_VERSION)) {
+            djui_panel_changelog_create(NULL);
+            strncpy(configLastVersion, SM64COOPDX_VERSION, MAX_CONFIG_STRING);
         }
         //djui_panel_debug_create();
     }

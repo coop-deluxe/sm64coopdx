@@ -116,54 +116,55 @@ bool         configCameraAnalog  = false;
 bool         configCameraCUp     = false;
 bool         configCameraMouse   = false;
 // coop-specific
-bool         configSkipIntro     = 0;
-bool         configBubbleDeath   = true;
-unsigned int configAmountofPlayers = 16;
-char         configJoinIp[MAX_CONFIG_STRING] = "";
-unsigned int configJoinPort                      = DEFAULT_PORT;
-unsigned int configHostPort                      = DEFAULT_PORT;
-unsigned int configHostSaveSlot                  = 1;
-unsigned int configPlayerInteraction             = 1;
-unsigned int configPlayerKnockbackStrength       = 25;
-unsigned int configStayInLevelAfterStar          = 0;
-bool         configNametags                      = true;
-unsigned int configBouncyLevelBounds             = 0;
-unsigned int configNetworkSystem                 = 0;
-char         configPlayerName[MAX_PLAYER_STRING] = "";
-unsigned int configPlayerModel                   = 0;
-bool         configMenuStaffRoll                 = true;
-unsigned int configMenuLevel                     = 0;
-bool         configMenuSound                     = false;
-bool         configMenuRandom                    = false;
-bool         configMenuDemos                     = false;
-struct PlayerPalette configPlayerPalette         = {{{ 0x00, 0x00, 0xff }, { 0xff, 0x00, 0x00 }, { 0xff, 0xff, 0xff }, { 0x72, 0x1c, 0x0e }, { 0x73, 0x06, 0x00 }, { 0xfe, 0xc1, 0x79 }, { 0xff, 0x00, 0x00 }}};
-struct PlayerPalette configCustomPalette         = {{{ 0x00, 0x00, 0xff }, { 0xff, 0x00, 0x00 }, { 0xff, 0xff, 0xff }, { 0x72, 0x1c, 0x0e }, { 0x73, 0x06, 0x00 }, { 0xfe, 0xc1, 0x79 }, { 0xff, 0x00, 0x00 }}};
-bool         configShowFPS                       = false;
-bool         configUncappedFramerate             = false;
-unsigned int configFrameLimit                    = 144;
-unsigned int configDrawDistance                  = 4;
-bool         configDisablePopups                 = false;
-bool         configLuaProfiler                   = false;
+bool         configSkipIntro                      = 0;
+bool         configBubbleDeath                    = true;
+unsigned int configAmountofPlayers                = 16;
+char         configJoinIp[MAX_CONFIG_STRING]      = "";
+unsigned int configJoinPort                       = DEFAULT_PORT;
+unsigned int configHostPort                       = DEFAULT_PORT;
+unsigned int configHostSaveSlot                   = 1;
+unsigned int configPlayerInteraction              = 1;
+unsigned int configPlayerKnockbackStrength        = 25;
+unsigned int configStayInLevelAfterStar           = 0;
+bool         configNametags                       = true;
+unsigned int configBouncyLevelBounds              = 0;
+unsigned int configNetworkSystem                  = 0;
+char         configPlayerName[MAX_PLAYER_STRING]  = "";
+unsigned int configPlayerModel                    = 0;
+bool         configMenuStaffRoll                  = true;
+unsigned int configMenuLevel                      = 0;
+bool         configMenuSound                      = false;
+bool         configMenuRandom                     = false;
+bool         configMenuDemos                      = false;
+struct PlayerPalette configPlayerPalette          = {{{ 0x00, 0x00, 0xff }, { 0xff, 0x00, 0x00 }, { 0xff, 0xff, 0xff }, { 0x72, 0x1c, 0x0e }, { 0x73, 0x06, 0x00 }, { 0xfe, 0xc1, 0x79 }, { 0xff, 0x00, 0x00 }}};
+struct PlayerPalette configCustomPalette          = {{{ 0x00, 0x00, 0xff }, { 0xff, 0x00, 0x00 }, { 0xff, 0xff, 0xff }, { 0x72, 0x1c, 0x0e }, { 0x73, 0x06, 0x00 }, { 0xfe, 0xc1, 0x79 }, { 0xff, 0x00, 0x00 }}};
+bool         configShowFPS                        = false;
+bool         configUncappedFramerate              = false;
+unsigned int configFrameLimit                     = 144;
+unsigned int configDrawDistance                   = 4;
+bool         configDisablePopups                  = false;
+bool         configLuaProfiler                    = false;
 #ifdef DEVELOPMENT
-bool         configCtxProfiler                   = false;
+bool         configCtxProfiler                    = false;
 #endif
-unsigned int configInterpolationMode             = 1;
-unsigned int configGamepadNumber                 = 0;
-bool         configBackgroundGamepad             = true;
-bool         configDebugPrint                    = false;
-bool         configDebugInfo                     = false;
-bool         configDebugError                    = false;
-char         configLanguage[MAX_CONFIG_STRING]   = "";
-bool         configForce4By3                     = false;
-char         configCoopNetIp[MAX_CONFIG_STRING]  = DEFAULT_COOPNET_IP;
-unsigned int configCoopNetPort                   = DEFAULT_COOPNET_PORT;
-char         configPassword[MAX_CONFIG_STRING]   = "";
-char         configDestId[MAX_CONFIG_STRING]     = "0";
-bool         configFadeoutDistantSounds          = false;
-unsigned int configDjuiTheme                     = DJUI_THEME_DARK;
-bool         configDjuiThemeCenter               = true;
-unsigned int configDjuiScale                     = 0;
-bool         configCoopCompatibility             = false;
+unsigned int configInterpolationMode              = 1;
+unsigned int configGamepadNumber                  = 0;
+bool         configBackgroundGamepad              = true;
+bool         configDebugPrint                     = false;
+bool         configDebugInfo                      = false;
+bool         configDebugError                     = false;
+char         configLanguage[MAX_CONFIG_STRING]    = "";
+bool         configForce4By3                      = false;
+char         configCoopNetIp[MAX_CONFIG_STRING]   = DEFAULT_COOPNET_IP;
+unsigned int configCoopNetPort                    = DEFAULT_COOPNET_PORT;
+char         configPassword[MAX_CONFIG_STRING]    = "";
+char         configDestId[MAX_CONFIG_STRING]      = "0";
+bool         configFadeoutDistantSounds           = false;
+unsigned int configDjuiTheme                      = DJUI_THEME_DARK;
+bool         configDjuiThemeCenter                = true;
+unsigned int configDjuiScale                      = 0;
+bool         configCoopCompatibility              = false;
+char         configLastVersion[MAX_CONFIG_STRING] = SM64COOPDX_VERSION;
 
 static const struct ConfigOption options[] = {
     {.name = "fullscreen",                     .type = CONFIG_TYPE_BOOL, .boolValue = &configWindow.fullscreen},
@@ -280,7 +281,8 @@ static const struct ConfigOption options[] = {
     {.name = "fade_distant_sounds",            .type = CONFIG_TYPE_BOOL  , .boolValue   = &configFadeoutDistantSounds},
     {.name = "djui_theme",                     .type = CONFIG_TYPE_UINT  , .uintValue   = &configDjuiTheme},
     {.name = "djui_theme_center",              .type = CONFIG_TYPE_BOOL  , .boolValue   = &configDjuiThemeCenter},
-    {.name = "djui_scale",                     .type = CONFIG_TYPE_UINT  , .uintValue   = &configDjuiScale}
+    {.name = "djui_scale",                     .type = CONFIG_TYPE_UINT  , .uintValue   = &configDjuiScale},
+    {.name = "last_version",                   .type = CONFIG_TYPE_STRING, .stringValue = (char*)&configLastVersion, .maxStringLength = MAX_CONFIG_STRING}
 };
 
 // FunctionConfigOption functions

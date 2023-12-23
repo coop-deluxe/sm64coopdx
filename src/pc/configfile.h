@@ -121,6 +121,7 @@ extern unsigned int configDjuiTheme;
 extern bool         configDjuiThemeCenter;
 extern unsigned int configDjuiScale;
 extern bool         configCoopCompatibility;
+extern char         configLastVersion[];
 
 void enable_queued_mods();
 void configfile_load(void);
