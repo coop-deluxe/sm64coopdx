@@ -1083,7 +1083,7 @@ static void geo_process_shadow(struct GraphNodeShadow *node) {
             gShadowInterpCurrent->gfx = shadowListPrev;
         }
 
-        if (gCurGraphNodeObject->shadowInvisible) {
+        if (gCurGraphNodeObject->shadowInvisible || (gCurGraphNodeObject == &gMarioState->marioObj->header.gfx && get_first_person_enabled())) {
             shadowListPrev = NULL;
         }
 
