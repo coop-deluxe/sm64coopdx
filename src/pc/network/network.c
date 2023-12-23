@@ -707,6 +707,10 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
     cnt->extStickX = 0;
     cnt->extStickY = 0;
 
+    // reset shadow
+    gMarioStates[0].marioObj->header.gfx.shadowInvisible = false;
+    gMarioStates[0].marioObj->header.gfx.disableAutomaticShadowPos = false;
+
     gFirstPersonCamera.enabled = false;
     gFirstPersonCamera.fov = FIRST_PERSON_DEFAULT_FOV;
     first_person_reset();
