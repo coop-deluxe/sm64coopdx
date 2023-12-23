@@ -26,7 +26,7 @@ local character_add = function(name, description, credit, color, modelInfo, forc
         name = name and string_space_to_underscore(name) or "Untitled",
         description = description and description or {"No description has been provided"},
         credit = credit and credit or "Unknown",
-        color = color and color or menuColorTable[8],
+        color = color and color or {r = 255, g = 255, b = 255},
         model = modelInfo and (type(modelInfo) == "table" and modelInfo[1] or modelInfo) or E_MODEL_ARMATURE,
         capModels = type(modelInfo) == "table" and modelInfo[2] or nil,
         forceChar = forceChar and forceChar or CT_MARIO,
@@ -91,7 +91,7 @@ local version_get = function ()
 end
 
 local is_menu_open = function ()
-    return menu
+    return menuAndTransition
 end
 
 local hook_allow_menu_open = function (func)
