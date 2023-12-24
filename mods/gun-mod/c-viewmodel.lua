@@ -10,6 +10,7 @@ gFirstPersonViewmodels = {
 --- @param o Object
 local function bhv_viewmodel_init(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.oGraphYOffset = 0
 end
 
 --- @param o Object

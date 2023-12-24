@@ -452,21 +452,6 @@ endif
 # Extra Source Files                                                           #
 #==============================================================================#
 
-# Luigi, wario and toad sounds don't work on 32-bit right now
-# And the audio code is so terrible I don't care enough to figure it out at the moment
-ifeq ($(TARGET_BITS), 32)
-  _ := $(shell rm -rf sound/samples/sfx_custom_luigi/*.aiff)
-  _ := $(shell rm -rf sound/samples/sfx_custom_luigi_peach/*.aiff)
-  _ := $(shell rm -rf sound/samples/sfx_custom_wario/*.aiff)
-  _ := $(shell rm -rf sound/samples/sfx_custom_wario_peach/*.aiff)
-  _ := $(shell rm -rf sound/samples/sfx_custom_toad/*.aiff)
-  _ := $(shell rm -rf sound/samples/sfx_custom_toad_peach/*.aiff)
-
-# Copy missing character sounds from mario sound banks
-_ := $(shell $(PYTHON) $(TOOLS_DIR)/copy_mario_sounds.py)
-
-endif
-
 # Copy missing instrument samples from the music sound banks
 _ := $(shell $(PYTHON) $(TOOLS_DIR)/copy_extended_sounds.py)
 
@@ -996,11 +981,6 @@ export LANG := C
 #==============================================================================#
 # Extra CC Flags                                                               #
 #==============================================================================#
-
-# Identify that this is a coop build so that one patch can be applied to EX
-# and/or COOP. They can choose to ifdef entity synchronization out.
-CC_CHECK_CFLAGS += -DCOOP
-CFLAGS += -DCOOP
 
 # Enforce -Werror in strict mode
 ifeq ($(STRICT),1)

@@ -256,6 +256,7 @@ end
 function hurt_mr_blizzard(obj)
     play_sound(SOUND_OBJ_SNOWMAN_EXPLODE, obj.header.gfx.cameraToObject)
     obj_mark_for_deletion(obj)
+    obj_spawn_loot_yellow_coins(obj, obj.oNumLootCoins, 20)
     network_send_object(obj, false)
     return true
 end
@@ -295,6 +296,13 @@ function hurt_bully(obj, bulletObj)
 end
 
 --- @param obj Object
+function hurt_moneybag(obj)
+    obj.oInteractStatus = INT_STATUS_INTERACTED | INT_STATUS_WAS_ATTACKED | INT_ATTACK_NOT_FROM_BELOW
+    network_send_object(obj, false)
+    return true
+end
+
+--- @param obj Object
 --- @param bulletObj Object
 function hurt_king_bobomb(obj, bulletObj)
     if (obj.oGmHealth <= 0 or gWeaponTable[obj_get_weapon_id(bulletObj)].strong) and obj.oHealth > 0 then
@@ -324,8 +332,8 @@ end
 
 --- @param bulletObj Object
 function hurt_yoshi(_, bulletObj)
-    bulletObj.oAction = 2
     bullet_ricochet(bulletObj)
+    bulletObj.oAction = 2
 
     djui_chat_message_create("\\#a0ffa0\\Yoshi\\#dcdcdc\\: no lol")
     play_sound(SOUND_MENU_MESSAGE_APPEAR, gGlobalSoundSource)

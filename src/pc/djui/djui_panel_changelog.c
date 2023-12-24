@@ -9,22 +9,21 @@ void djui_panel_changelog_create(struct DjuiBase* caller) {
     struct DjuiBase* body = djui_three_panel_get_body(panel);
 
     {
-        snprintf(sChangelog, 1024, "Welcome back!\n\
-v0.1.2:\n\
+        snprintf(sChangelog, 1024, "Welcome back! - v0.1.2:\n\
 Changes:\n\
 Disable sm64ex-coop Compatibility by default\n\
 Restored Luigi's original color palette\n\
 Made mario step code use his hitbox height instead of a constant number for his height\n\
 Hid Mario's shadow in First Person\n\
 Cancelled First Person if Mario is flying\n\
-\n\
+Updated language files\n\
+Add --console launch parameter\n\
 Fixes:\n\
 Reverted dialog cutscene changes to prevent softlocks\n\
 Fixed DynOS related crashes\n\
 Fixed Mario's shadow not resetting\n\
-\n\
-Mods:\n\
-Updated Gun Mod DX and Character Select\n\
+Mod Changes:\n\
+Updated Gun Mod DX, Day Night Cycle, Character Select and mQuake\n\
 Updated SiM description\n\
 Removed Flood and Cheats due to future plans with them"
         );

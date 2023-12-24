@@ -1,5 +1,5 @@
 -- name: .Gun Mod DX
--- description: Gun Mod DX v3.0\nBy \\#ec7731\\Agent X\\#dcdcdc\\\nSpecial thanks to \\#f296af\\PeachyPeach\\#dcdcdc\\\n\nThis is a rewritten & overhauled version of my original Gun Mod for sm64ex-coop. I thought this would make a good mod to bundle with sm64coopdx.\n\nPress [\\#3040ff\\Y\\#dcdcdc\\] to shoot\nPress [\\#3040ff\\X\\#dcdcdc\\] to reload\nRun \\#00ffff\\/gm help\\#dcdcdc\\ for help
+-- description: Gun Mod DX v3.0.1\nBy \\#ec7731\\Agent X\\#dcdcdc\\\nSpecial thanks to \\#f296af\\PeachyPeach\\#dcdcdc\\\n\nThis is a rewritten & overhauled version of my original Gun Mod for sm64ex-coop. I thought this would make a good mod to bundle with sm64coopdx. If you have two pistols, you are able to dual wield them as well!\n\nPress [\\#3040ff\\Y\\#dcdcdc\\] to shoot\nPress [\\#3040ff\\X\\#dcdcdc\\] to reload\nRun \\#00ffff\\/gm help\\#dcdcdc\\ for help
 -- deluxe: true
 
 if SM64COOPDX_VERSION == nil then return end
@@ -40,6 +40,7 @@ gShootableHitboxes = {
     [id_bhvBigBully] = hurt_bully,
     [id_bhvSmallChillBully] = hurt_bully,
     [id_bhvBigChillBully] = hurt_bully,
+    [id_bhvMoneybag] = hurt_moneybag,
     [id_bhvKingBobomb] = hurt_king_bobomb,
     [id_bhvBowser] = hurt_bowser,
     [id_bhvYoshi] = hurt_yoshi
@@ -293,7 +294,7 @@ local function on_gm_command(msg)
         return on_give_command(args[2] or "")
     end
 
-    if msg:gsub("%s+", "") == "" then
+    if msg:gsub("%s+", "") == "" and (network_is_server() or network_is_moderator()) then
         gGlobalSyncTable.gunModEnabled = not gGlobalSyncTable.gunModEnabled
         djui_chat_message_create("[Gun Mod] Status: " .. on_or_off(gGlobalSyncTable.gunModEnabled))
     else

@@ -2295,6 +2295,8 @@ void init_single_mario(struct MarioState* m) {
     m->area = gCurrentArea;
     m->marioObj = gMarioObjects[m->playerIndex];
     if (m->marioObj == NULL) { return; }
+    m->marioObj->header.gfx.shadowInvisible = false;
+    m->marioObj->header.gfx.disableAutomaticShadowPos = false;
     m->marioObj->header.gfx.animInfo.animID = -1;
     vec3s_copy(m->faceAngle, spawnInfo->startAngle);
     vec3s_set(m->angleVel, 0, 0, 0);
