@@ -57,6 +57,11 @@ bool parse_cli_opts(int argc, char* argv[]) {
         else if (strcmp(argv[i], "--windowed") == 0) // Open game in windowed mode
             gCLIOpts.FullScreen = 2;
 
+#if defined(_WIN32) || defined(_WIN64)
+        else if (strcmp(argv[i], "--console") == 0) // Open game with console
+            gCLIOpts.Console = 1;
+#endif
+
         else if (strcmp(argv[i], "--server") == 0 && (i + 1) < argc) { // Host server
             gCLIOpts.Network = NT_SERVER;
             arg_uint("--server <port>", argv[++i], &gCLIOpts.NetworkPort);

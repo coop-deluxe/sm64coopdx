@@ -16,6 +16,9 @@ enum NetworkType {
 struct PCCLIOptions  {
     unsigned int SkipIntro;
     unsigned int FullScreen;
+#if defined(_WIN32) || defined(_WIN64)
+    unsigned int Console;
+#endif
     enum NetworkType Network;
     char JoinIp[IP_MAX_LEN];
     unsigned int NetworkPort;

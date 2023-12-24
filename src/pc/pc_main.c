@@ -56,6 +56,10 @@
 #include "pc/discord/discord.h"
 #endif
 
+#if defined(_WIN32) || defined(_WIN64)
+#include <windows.h>
+#endif
+
 bool gCoopCompatibility;
 
 OSMesg D_80339BEC;
@@ -343,6 +347,16 @@ int main(int argc, char *argv[]) {
 
     // Handle terminal arguments
     if (!parse_cli_opts(argc, argv)) { return 0; }
+
+#if defined(_WIN32) || defined(_WIN64)
+    // Handle Windows console
+    if (gCLIOpts.Console && AllocConsole()) {
+        FILE* fDummy;
+        freopen_s(&fDummy, "CONOUT$", "w", stdout);
+        freopen_s(&fDummy, "CONOUT$", "w", stderr);
+        freopen_s(&fDummy, "CONIN$", "r", stdin);
+    }
+#endif
 
     // Create the window straight away
     if (!gGfxInited) {

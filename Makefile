@@ -873,9 +873,6 @@ ifeq ($(WINDOWS_BUILD),1)
   ifeq ($(CROSS),)
     LDFLAGS += -no-pie
   endif
-  ifeq ($(WINDOWS_CONSOLE),1)
-    LDFLAGS += -mconsole
-  endif
 else ifeq ($(TARGET_RPI),1)
   LDFLAGS := $(OPT_FLAGS) -lm $(BACKEND_LDFLAGS) -no-pie
 else ifeq ($(OSX_BUILD),1)

@@ -294,7 +294,7 @@ struct QueuedMods {
 
 static struct QueuedMods *sQueuedEnableModsHead = NULL;
 
-void enable_queued_mods() {
+void enable_queued_mods(void) {
     while (sQueuedEnableModsHead) {
         struct QueuedMods *next = sQueuedEnableModsHead->next;
         mods_enable(sQueuedEnableModsHead->path);
@@ -630,13 +630,13 @@ void configfile_load(void) {
 void configfile_save(const char *filename) {
     FILE *file;
 
-    printf("Saving configuration to '%s'\n", filename);
-
     file = fopen(fs_get_write_path(filename), "w");
     if (file == NULL) {
         // error
         return;
     }
+
+    printf("Saving configuration to '%s'\n", filename);
 
     for (unsigned int i = 0; i < ARRAY_LEN(options); i++) {
         const struct ConfigOption *option = &options[i];
