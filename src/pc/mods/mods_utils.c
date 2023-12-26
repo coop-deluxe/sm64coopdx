@@ -44,20 +44,23 @@ static bool mods_incompatible_match(struct Mod* a, struct Mod* b) {
         return false;
     }
 
-    char* ai = a->incompatible;
-    char* bi = b->incompatible;
+    char* ai = strdup(a->incompatible);
+    char* bi = strdup(b->incompatible);
     char* atoken = NULL;
     char* btoken = NULL;
     char* arest = NULL;
     char* brest = NULL;
 
     for (atoken = strtok_r(ai, " ", &arest); atoken != NULL; atoken = strtok_r(NULL, " ", &arest)) {
-        for (btoken = strtok_r(bi, " ", &brest); btoken != NULL; btoken = strtok_r(NULL, " ", &brest)) {
+        for (btoken = strtok_r(bi, " ", &brest); btoken != NULL; btoken = strtok_r(NULL, " ", &brest)) {z
             if (!strcmp(atoken, btoken)) {
                 return true;
             }
         }
     }
+
+    free(ai);
+    free(bi);
 
     return false;
 }
