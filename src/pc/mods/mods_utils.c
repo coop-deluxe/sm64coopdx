@@ -52,7 +52,7 @@ static bool mods_incompatible_match(struct Mod* a, struct Mod* b) {
     char* brest = NULL;
 
     for (atoken = strtok_r(ai, " ", &arest); atoken != NULL; atoken = strtok_r(NULL, " ", &arest)) {
-        for (btoken = strtok_r(bi, " ", &brest); btoken != NULL; btoken = strtok_r(NULL, " ", &brest)) {z
+        for (btoken = strtok_r(bi, " ", &brest); btoken != NULL; btoken = strtok_r(NULL, " ", &brest)) {
             if (!strcmp(atoken, btoken)) {
                 return true;
             }
