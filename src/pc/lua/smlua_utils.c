@@ -774,7 +774,7 @@ void smlua_logline(void) {
     int level = 0;
     while (lua_getstack(L, level, &info)) {
         lua_getinfo(L, "nSl", &info);
-        LOG_LUA("  [%d] %s:%d -- %s [%s]",
+        LOG_LUA("\t[%d] %s:%d -- %s [%s]",
             level, info.short_src, info.currentline,
             (info.name ? info.name : "<unknown>"), info.what);
         ++level;
