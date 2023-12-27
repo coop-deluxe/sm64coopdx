@@ -761,7 +761,7 @@ else ifeq ($(findstring SDL,$(WINDOW_API)),SDL)
   else ifeq ($(TARGET_RPI),1)
     BACKEND_LDFLAGS += -lGLESv2
   else ifeq ($(OSX_BUILD),1)
-    BACKEND_LDFLAGS += -framework OpenGL `pkg-config --libs glew` -ld_classic
+    BACKEND_LDFLAGS += -framework OpenGL `pkg-config --libs glew`
     EXTRA_CPP_FLAGS += -stdlib=libc++ -std=c++0x
   else
     BACKEND_LDFLAGS += -lGL
