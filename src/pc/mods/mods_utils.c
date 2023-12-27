@@ -44,8 +44,8 @@ static bool mods_incompatible_match(struct Mod* a, struct Mod* b) {
         return false;
     }
 
-    char* ai = a->incompatible;
-    char* bi = b->incompatible;
+    char* ai = strdup(a->incompatible);
+    char* bi = strdup(b->incompatible);
     char* atoken = NULL;
     char* btoken = NULL;
     char* arest = NULL;
@@ -58,6 +58,9 @@ static bool mods_incompatible_match(struct Mod* a, struct Mod* b) {
             }
         }
     }
+
+    free(ai);
+    free(bi);
 
     return false;
 }
