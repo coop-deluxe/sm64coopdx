@@ -94,6 +94,8 @@
 #include <sys/stat.h>
 #include <cctype>
 
+#define MINI_CASE_SENSITIVE
+
 namespace mINI
 {
 	namespace INIStringUtil
