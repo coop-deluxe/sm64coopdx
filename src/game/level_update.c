@@ -1493,7 +1493,8 @@ void update_menu_level(void) {
             stop_demo(NULL);
         }
 
-        dynos_warp_to_level(curLevel, 1, 6);
+        gChangeLevel = curLevel;
+        gChangeActNum = 6;
         gDemoCountdown = 0;
     }
     if (gIsDemoActive) { return; }
