@@ -20,8 +20,8 @@
 #include "pc/debuglog.h"
 #include "pc/djui/djui_console.h"
 
-#define LOG_LUA(...)  { if (!gSmLuaSuppressErrors) { _debuglog_print_log("LUA ", __FILE__), printf(__VA_ARGS__), printf("\n"), smlua_mod_error(), snprintf(gDjuiConsoleTmpBuffer, CONSOLE_MAX_TMP_BUFFER, __VA_ARGS__), sys_swap_backslashes(gDjuiConsoleTmpBuffer), djui_console_message_create(gDjuiConsoleTmpBuffer, CONSOLE_MESSAGE_ERROR); } }
-#define LOG_LUA_LINE(...)  { if (!gSmLuaSuppressErrors) { _debuglog_print_log("LUA ", __FILE__), printf(__VA_ARGS__), printf("\n"), smlua_mod_error(); snprintf(gDjuiConsoleTmpBuffer, CONSOLE_MAX_TMP_BUFFER, __VA_ARGS__), sys_swap_backslashes(gDjuiConsoleTmpBuffer), djui_console_message_create(gDjuiConsoleTmpBuffer, CONSOLE_MESSAGE_ERROR), smlua_logline(); } }
+#define LOG_LUA(...)  { if (!gSmLuaSuppressErrors) { printf("[LUA] "), printf(__VA_ARGS__), printf("\n"), smlua_mod_error(), snprintf(gDjuiConsoleTmpBuffer, CONSOLE_MAX_TMP_BUFFER, __VA_ARGS__), sys_swap_backslashes(gDjuiConsoleTmpBuffer), djui_console_message_create(gDjuiConsoleTmpBuffer, CONSOLE_MESSAGE_ERROR); } }
+#define LOG_LUA_LINE(...)  { if (!gSmLuaSuppressErrors) { printf("[LUA] "), printf(__VA_ARGS__), printf("\n"), smlua_mod_error(); snprintf(gDjuiConsoleTmpBuffer, CONSOLE_MAX_TMP_BUFFER, __VA_ARGS__), sys_swap_backslashes(gDjuiConsoleTmpBuffer), djui_console_message_create(gDjuiConsoleTmpBuffer, CONSOLE_MESSAGE_ERROR), smlua_logline(); } }
 
 #ifdef DEVELOPMENT
 #define LUA_STACK_CHECK_BEGIN() int __LUA_STACK_TOP = lua_gettop(gLuaState)
