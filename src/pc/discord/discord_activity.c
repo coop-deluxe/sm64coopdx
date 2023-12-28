@@ -96,6 +96,11 @@ static void discord_populate_details(char* buffer, int bufferLength) {
 void discord_activity_update(void) {
     sCurActivity.type = DiscordActivityType_Playing;
 
+    strncpy(sCurActivity.assets.large_image, "characters", 128);
+    strncpy(sCurActivity.assets.large_text, "sm64coopdx Characters", 128);
+    strncpy(sCurActivity.assets.small_image, "icon", 128);
+    strncpy(sCurActivity.assets.small_text, "sm64coopdx Icon", 128);
+
     if (gNetworkType != NT_NONE && gNetworkSystem) {
         gNetworkSystem->get_lobby_id(sCurActivity.party.id, 128);
         gNetworkSystem->get_lobby_secret(sCurActivity.secrets.join, 128);
