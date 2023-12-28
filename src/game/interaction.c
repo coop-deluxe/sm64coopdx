@@ -31,7 +31,6 @@
 #include "pc/network/network.h"
 #include "pc/network/lag_compensation.h"
 #include "pc/lua/smlua_hooks.h"
-#include "pc/pc_main.h"
 
 u8 sDelayInvincTimer;
 s16 gInteractionInvulnerable;
@@ -180,7 +179,7 @@ static u32 determine_interaction_internal(struct MarioState *m, struct Object *o
 
     // when set to false, angle checks apply again. I would just restore the original
     // determine_interaction function but this is easier with keeping compatibility
-    if (!gCoopCompatibility) { isPVP = FALSE; }
+    if (!configCoopCompatibility) { isPVP = FALSE; }
 
     u32 interaction = 0;
     u32 action = m->action;
@@ -193,7 +192,7 @@ static u32 determine_interaction_internal(struct MarioState *m, struct Object *o
     }
 
     if (interaction == 0 && action & ACT_FLAG_ATTACKING) {
-        u32 flags = gCoopCompatibility ? (MARIO_PUNCHING | MARIO_KICKING | MARIO_TRIPPING) : (MARIO_PUNCHING | MARIO_KICKING);
+        u32 flags = configCoopCompatibility ? (MARIO_PUNCHING | MARIO_KICKING | MARIO_TRIPPING) : (MARIO_PUNCHING | MARIO_KICKING);
         if (m->flags & flags) {
             s16 dYawToObject = mario_obj_angle_to_object(m, o) - m->faceAngle[1];
 
@@ -209,7 +208,7 @@ static u32 determine_interaction_internal(struct MarioState *m, struct Object *o
                     interaction = INT_KICK;
                 }
             }
-            if (m->flags & MARIO_TRIPPING && gCoopCompatibility) {
+            if (m->flags & MARIO_TRIPPING && configCoopCompatibility) {
                 // 180 degrees total, or 90 each way
                 if (-0x4000 <= dYawToObject && dYawToObject <= 0x4000) {
                     interaction = INT_TRIP;

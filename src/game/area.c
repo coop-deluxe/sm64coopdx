@@ -27,7 +27,6 @@
 #include "pc/lua/smlua_hooks.h"
 #include "pc/djui/djui.h"
 #include "pc/djui/djui_panel_pause.h"
-#include "pc/pc_main.h"
 #include "pc/nametags.h"
 
 struct SpawnInfo gPlayerSpawnInfos[MAX_PLAYERS];
@@ -448,7 +447,7 @@ void render_game(void) {
             djui_reset_hud_params();
             create_dl_ortho_matrix();
             djui_gfx_displaylist_begin();
-            if (!gCoopCompatibility && gServerSettings.nametags && !gDjuiInMainMenu) {
+            if (!configCoopCompatibility && gServerSettings.nametags && !gDjuiInMainMenu) {
                 nametags_render();
             }
             smlua_call_event_on_hud_render_behind(djui_reset_hud_params);

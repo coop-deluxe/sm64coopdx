@@ -3,7 +3,6 @@
 #include "mods.h"
 #include "mods_utils.h"
 #include "pc/debuglog.h"
-#include "pc/pc_main.h"
 
 #if defined(_WIN32) || defined(_WIN64)
 #include <windows.h>
@@ -29,7 +28,7 @@ void mods_size_enforce(struct Mods* mods) {
 void mods_deluxe_enforce(struct Mods* mods) {
     for (int i = 0; i < mods->entryCount; i++) {
         struct Mod* mod = mods->entries[i];
-        if (mod->deluxe && gCoopCompatibility) {
+        if (mod->deluxe && configCoopCompatibility) {
             mod->enabled = false;
             mod->selectable = false;
         }

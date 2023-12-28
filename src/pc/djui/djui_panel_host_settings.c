@@ -4,7 +4,6 @@
 #include "djui_panel_menu.h"
 #include "game/save_file.h"
 #include "pc/network/network.h"
-#include "pc/pc_main.h"
 #include "pc/utils/misc.h"
 #include "pc/configfile.h"
 #include "djui_inputbox.h"
@@ -62,11 +61,11 @@ void djui_panel_host_settings_create(struct DjuiBase* caller) {
         djui_checkbox_create(body, DLANG(HOST_SETTINGS, SKIP_INTRO_CUTSCENE), &configSkipIntro, NULL);
         djui_checkbox_create(body, DLANG(HOST_SETTINGS, BUBBLE_ON_DEATH), &configBubbleDeath, NULL);
         struct DjuiCheckbox* checkbox = djui_checkbox_create(body, DLANG(HOST_SETTINGS, NAMETAGS), &configNametags, NULL);
-        djui_base_set_enabled(&checkbox->base, !gCoopCompatibility);
+        djui_base_set_enabled(&checkbox->base, !configCoopCompatibility);
 
         char* bChoices[3] = { DLANG(HOST_SETTINGS, BOUNCY_BOUNDS_OFF), DLANG(HOST_SETTINGS, BOUNCY_BOUNDS_ON), DLANG(HOST_SETTINGS, BOUNCY_BOUNDS_ON_CAP) };
         struct DjuiSelectionbox* selectionbox = djui_selectionbox_create(body, DLANG(HOST_SETTINGS, BOUNCY_LEVEL_BOUNDS), bChoices, 3, &configBouncyLevelBounds, NULL);
-        djui_base_set_enabled(&selectionbox->base, !gCoopCompatibility);
+        djui_base_set_enabled(&selectionbox->base, !configCoopCompatibility);
 
         struct DjuiRect* rect1 = djui_rect_container_create(body, 32);
         {

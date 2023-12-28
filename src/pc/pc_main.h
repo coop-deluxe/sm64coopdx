@@ -15,8 +15,6 @@ extern "C" {
 #include "gfx/gfx_sdl.h"
 #include "gfx/gfx_dummy.h"
 
-extern bool gCoopCompatibility;
-
 #if defined(WAPI_SDL1) || defined(WAPI_SDL2)
 # define WAPI gfx_sdl
 #elif defined(WAPI_DXGI)

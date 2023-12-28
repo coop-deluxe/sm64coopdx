@@ -9,16 +9,13 @@
 #include "djui_panel_changelog.h"
 #include "pc/utils/misc.h"
 #include "pc/configfile.h"
-#include "pc/pc_main.h"
 #include "game/hardcoded.h"
-
-static struct DjuiText* sRestartText = NULL;
+#include "pc/discord/discord.h"
 
 static void djui_panel_compatibility_checkbox_on_value_change(UNUSED struct DjuiBase* caller) {
-    if (gCoopCompatibility != configCoopCompatibility) {
-        djui_text_set_text(sRestartText, DLANG(DISPLAY, MUST_RESTART));
-    } else {
-        djui_text_set_text(sRestartText, "");
+    gDiscordInitialized = false;
+    if (gVersionText != NULL) {
+        djui_text_set_text(gVersionText, get_version_local());
     }
 }
 
@@ -50,7 +47,9 @@ void djui_panel_misc_create(struct DjuiBase* caller) {
 
     {
         djui_checkbox_create(body, DLANG(MISC, DISABLE_POPUPS), &configDisablePopups, NULL);
-        djui_checkbox_create(body, DLANG(MISC, COOP_COMPATIBILITY), &configCoopCompatibility, djui_panel_compatibility_checkbox_on_value_change);
+        if (gDjuiInMainMenu) {
+            djui_checkbox_create(body, DLANG(MISC, COOP_COMPATIBILITY), &configCoopCompatibility, djui_panel_compatibility_checkbox_on_value_change);
+        }
 #ifndef DEVELOPMENT
         djui_checkbox_create(body, DLANG(MISC, LUA_PROFILER), &configLuaProfiler, NULL);
 #endif
@@ -63,19 +62,6 @@ void djui_panel_misc_create(struct DjuiBase* caller) {
         djui_button_create(body, DLANG(MISC, DEBUG), DJUI_BUTTON_STYLE_NORMAL, djui_panel_options_debug_create);
 #endif
         djui_button_create(body, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
-
-        sRestartText = djui_text_create(body, "");
-        djui_text_set_alignment(sRestartText, DJUI_HALIGN_CENTER, DJUI_VALIGN_TOP);
-        djui_base_set_color(&sRestartText->base, 255, 100, 100, 255);
-        djui_base_set_size_type(&sRestartText->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-        djui_base_set_size(&sRestartText->base, 1.0f, 64);
-    }
-
-    // force the restart text to update
-    if (gCoopCompatibility != configCoopCompatibility) {
-        djui_text_set_text(sRestartText, DLANG(DISPLAY, MUST_RESTART));
-    } else {
-        djui_text_set_text(sRestartText, "");
     }
 
     djui_panel_add(caller, panel, NULL);

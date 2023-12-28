@@ -29,6 +29,8 @@ struct DiscordApplication {
     DiscordUserId userId;
 };
 
+extern bool gDiscordInitialized;
+
 void discord_update(void);
 void discord_fatal(int rc);
 void discord_activity_update_check(void);

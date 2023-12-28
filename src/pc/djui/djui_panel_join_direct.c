@@ -5,24 +5,23 @@
 #include "djui_panel_modlist.h"
 #include "djui_panel_join_message.h"
 #include "djui_lobby_entry.h"
-#include "src/pc/network/network.h"
-#include "src/pc/network/socket/socket.h"
-#include "src/pc/network/coopnet/coopnet.h"
-#include "src/pc/network/socket/domain_res.h"
-#include "src/pc/utils/misc.h"
-#include "src/pc/configfile.h"
-#include "src/pc/debuglog.h"
+#include "djui_panel_main.h"
+#include "pc/network/network.h"
+#include "pc/network/socket/socket.h"
+#include "pc/network/coopnet/coopnet.h"
+#include "pc/network/socket/domain_res.h"
+#include "pc/utils/misc.h"
+#include "pc/configfile.h"
+#include "pc/debuglog.h"
 #include "macros.h"
+#include "pc/discord/discord.h"
 
 static struct DjuiInputbox* sInputboxIp = NULL;
 #ifndef COOPNET
-static struct DjuiText* sRestartText = NULL;
-
 static void djui_panel_compatibility_checkbox_on_value_change(UNUSED struct DjuiBase* caller) {
-    if (gCoopCompatibility != configCoopCompatibility) {
-        djui_text_set_text(sRestartText, DLANG(DISPLAY, MUST_RESTART));
-    } else {
-        djui_text_set_text(sRestartText, "");
+    gDiscordInitialized = false;
+    if (gVersionText != NULL) {
+        djui_text_set_text(gVersionText, get_version_local());
     }
 }
 #endif
@@ -184,7 +183,9 @@ void djui_panel_join_direct_create(struct DjuiBase* caller) {
         djui_panel_join_direct_ip_text_set(inputbox1);
 
 #ifndef COOPNET
-        djui_checkbox_create(body, DLANG(MISC, COOP_COMPATIBILITY), &configCoopCompatibility, djui_panel_compatibility_checkbox_on_value_change);
+        if (gDjuiInMainMenu) {
+            djui_checkbox_create(body, DLANG(MISC, COOP_COMPATIBILITY), &configCoopCompatibility, djui_panel_compatibility_checkbox_on_value_change);
+        }
 #endif
 
         struct DjuiRect* rect2 = djui_rect_container_create(body, 64);
@@ -198,14 +199,6 @@ void djui_panel_join_direct_create(struct DjuiBase* caller) {
             djui_base_set_alignment(&button2->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_TOP);
             defaultBase = &button2->base;
         }
-
-#ifndef COOPNET
-        sRestartText = djui_text_create(body, "");
-        djui_text_set_alignment(sRestartText, DJUI_HALIGN_CENTER, DJUI_VALIGN_TOP);
-        djui_base_set_color(&sRestartText->base, 255, 100, 100, 255);
-        djui_base_set_size_type(&sRestartText->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-        djui_base_set_size(&sRestartText->base, 1.0f, 64);
-#endif
     }
 
     djui_panel_add(caller, panel, defaultBase);

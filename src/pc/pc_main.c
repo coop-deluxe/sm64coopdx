@@ -60,8 +60,6 @@
 #include <windows.h>
 #endif
 
-bool gCoopCompatibility;
-
 OSMesg D_80339BEC;
 OSMesgQueue gSIEventMesgQueue;
 
@@ -315,8 +313,6 @@ void* main_game_init(UNUSED void* arg) {
             configfile_save(configfile_name());
         } else if (memcmp(&configPlayerPalette, &gPalettePresets[i], sizeof(struct PlayerPalette)) == 0) { break; }
     }
-
-    gCoopCompatibility = configCoopCompatibility;
 
     if (gCLIOpts.FullScreen == 1) { configWindow.fullscreen = true; }
     else if (gCLIOpts.FullScreen == 2) { configWindow.fullscreen = false; }

@@ -2,7 +2,6 @@
 #include "pc/djui/djui.h"
 #include "pc/crash_handler.h"
 #include "pc/debuglog.h"
-#include "pc/pc_main.h"
 
 #if defined(_WIN32) || defined(_WIN64)
 #include <windows.h>
@@ -19,7 +18,7 @@
 
 struct DiscordApplication app = { 0 };
 static bool sFatalShown = false;
-static bool sDiscordInitialized = false;
+bool gDiscordInitialized = false;
 static bool sDiscordFailed = false;
 
 static void discord_sdk_log_callback(UNUSED void* hook_data, enum EDiscordLogLevel level, const char* message) {
@@ -114,8 +113,13 @@ struct IDiscordUserEvents* discord_user_initialize(void) {
 }
 
 static void discord_initialize(void) {
-    if (sDiscordInitialized) { return; }
-    sDiscordInitialized = true;
+    if (gDiscordInitialized) {
+        return;
+    } else if (app.core != NULL) { // reinit
+        app.core->destroy(app.core); // why does it ask for itself?
+        app.core = NULL;
+    }
+    gDiscordInitialized = true;
 
     if (app.core != NULL) {
         app.core->set_log_hook(app.core, DiscordLogLevel_Debug, NULL, discord_sdk_log_callback);
@@ -124,7 +128,7 @@ static void discord_initialize(void) {
     // set up discord params
     struct DiscordCreateParams params = { 0 };
     DiscordCreateParamsSetDefault(&params);
-    params.client_id = gCoopCompatibility ? APPLICATION_ID_COOP : APPLICATION_ID_COOPDX; // you have to have activity status on if you don't want discord to prompt you to authorize on every boot
+    params.client_id = configCoopCompatibility ? APPLICATION_ID_COOP : APPLICATION_ID_COOPDX; // you have to have activity status on if you don't want discord to prompt you to authorize on every boot
     params.flags = DiscordCreateFlags_NoRequireDiscord;
     params.event_data = &app;
     params.user_events = discord_user_initialize();
@@ -169,7 +173,7 @@ u64 discord_get_user_id(void) {
 
 void discord_update(void) {
     if (sDiscordFailed) { return; }
-    if (!sDiscordInitialized) { discord_initialize(); }
+    if (!gDiscordInitialized) { discord_initialize(); }
     if (sDiscordFailed) { return; }
 
     discord_activity_update_check();
