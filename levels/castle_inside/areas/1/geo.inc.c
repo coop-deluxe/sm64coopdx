@@ -271,26 +271,23 @@ const GeoLayout castle_geo_001400[] = {
          GEO_OPEN_NODE(),
             GEO_CAMERA(13, 0, 2000, 6000, 0, 0, 0, geo_camera_main),
             GEO_OPEN_NODE(),
-               GEO_SWITCH_CASE(17, geo_switch_area),
-               GEO_OPEN_NODE(),
-                  GEO_BRANCH(1, castle_geo_000F30), // 0x0E000F30
-                  GEO_BRANCH(1, castle_geo_000F70), // 0x0E000F70
-                  GEO_BRANCH(1, castle_geo_000F88), // 0x0E000F88
-                  GEO_BRANCH(1, castle_geo_000FA8), // 0x0E000FA8
-                  GEO_BRANCH(1, castle_geo_000FD0), // 0x0E000FD0
-                  GEO_BRANCH(1, castle_geo_001000), // 0x0E001000
-                  GEO_BRANCH(1, castle_geo_001038), // 0x0E001038
-                  GEO_BRANCH(1, castle_geo_001088), // 0x0E001088
-                  GEO_BRANCH(1, castle_geo_0010C8), // 0x0E0010C8
-                  GEO_BRANCH(1, castle_geo_001110), // 0x0E001110
-                  GEO_BRANCH(1, castle_geo_001158), // 0x0E001158
-                  GEO_BRANCH(1, castle_geo_0011A8), // 0x0E0011A8
-                  GEO_BRANCH(1, castle_geo_001200), // 0x0E001200
-                  GEO_BRANCH(1, castle_geo_001260), // 0x0E001260
-                  GEO_BRANCH(1, castle_geo_0012C8), // 0x0E0012C8
-                  GEO_BRANCH(1, castle_geo_001348), // 0x0E001348
-                  GEO_BRANCH(1, castle_geo_0013B8), // 0x0E0013B8
-               GEO_CLOSE_NODE(),
+               GEO_BRANCH(1, castle_geo_000F30), // 0x0E000F30
+               GEO_BRANCH(1, castle_geo_000F70), // 0x0E000F70
+               GEO_BRANCH(1, castle_geo_000F88), // 0x0E000F88
+               GEO_BRANCH(1, castle_geo_000FA8), // 0x0E000FA8
+               GEO_BRANCH(1, castle_geo_000FD0), // 0x0E000FD0
+               GEO_BRANCH(1, castle_geo_001000), // 0x0E001000
+               GEO_BRANCH(1, castle_geo_001038), // 0x0E001038
+               GEO_BRANCH(1, castle_geo_001088), // 0x0E001088
+               GEO_BRANCH(1, castle_geo_0010C8), // 0x0E0010C8
+               GEO_BRANCH(1, castle_geo_001110), // 0x0E001110
+               GEO_BRANCH(1, castle_geo_001158), // 0x0E001158
+               GEO_BRANCH(1, castle_geo_0011A8), // 0x0E0011A8
+               GEO_BRANCH(1, castle_geo_001200), // 0x0E001200
+               GEO_BRANCH(1, castle_geo_001260), // 0x0E001260
+               GEO_BRANCH(1, castle_geo_0012C8), // 0x0E0012C8
+               GEO_BRANCH(1, castle_geo_001348), // 0x0E001348
+               GEO_BRANCH(1, castle_geo_0013B8), // 0x0E0013B8
                GEO_RENDER_OBJ(),
                GEO_ASM(0, geo_envfx_main),
             GEO_CLOSE_NODE(),

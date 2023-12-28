@@ -304,27 +304,24 @@ const GeoLayout hmc_geo_000B90[] = {
          GEO_OPEN_NODE(),
             GEO_CAMERA(16, 0, 2000, 6000, 0, 0, 0, geo_camera_main),
             GEO_OPEN_NODE(),
-               GEO_SWITCH_CASE(18, geo_switch_area),
-               GEO_OPEN_NODE(),
-                  GEO_BRANCH(1, hmc_geo_0005E8), // 0x0E0005E8
-                  GEO_BRANCH(1, hmc_geo_000618), // 0x0E000618
-                  GEO_BRANCH(1, hmc_geo_000658), // 0x0E000658
-                  GEO_BRANCH(1, hmc_geo_0006A8), // 0x0E0006A8
-                  GEO_BRANCH(1, hmc_geo_0006E0), // 0x0E0006E0
-                  GEO_BRANCH(1, hmc_geo_000700), // 0x0E000700
-                  GEO_BRANCH(1, hmc_geo_000748), // 0x0E000748
-                  GEO_BRANCH(1, hmc_geo_000770), // 0x0E000770
-                  GEO_BRANCH(1, hmc_geo_000798), // 0x0E000798
-                  GEO_BRANCH(1, hmc_geo_0007F8), // 0x0E0007F8
-                  GEO_BRANCH(1, hmc_geo_000850), // 0x0E000850
-                  GEO_BRANCH(1, hmc_geo_0008D0), // 0x0E0008D0
-                  GEO_BRANCH(1, hmc_geo_000938), // 0x0E000938
-                  GEO_BRANCH(1, hmc_geo_000998), // 0x0E000998
-                  GEO_BRANCH(1, hmc_geo_000A18), // 0x0E000A18
-                  GEO_BRANCH(1, hmc_geo_000A88), // 0x0E000A88
-                  GEO_BRANCH(1, hmc_geo_000AE8), // 0x0E000AE8
-                  GEO_BRANCH(1, hmc_geo_000B48), // 0x0E000B48
-               GEO_CLOSE_NODE(),
+               GEO_BRANCH(1, hmc_geo_0005E8), // 0x0E0005E8
+               GEO_BRANCH(1, hmc_geo_000618), // 0x0E000618
+               GEO_BRANCH(1, hmc_geo_000658), // 0x0E000658
+               GEO_BRANCH(1, hmc_geo_0006A8), // 0x0E0006A8
+               GEO_BRANCH(1, hmc_geo_0006E0), // 0x0E0006E0
+               GEO_BRANCH(1, hmc_geo_000700), // 0x0E000700
+               GEO_BRANCH(1, hmc_geo_000748), // 0x0E000748
+               GEO_BRANCH(1, hmc_geo_000770), // 0x0E000770
+               GEO_BRANCH(1, hmc_geo_000798), // 0x0E000798
+               GEO_BRANCH(1, hmc_geo_0007F8), // 0x0E0007F8
+               GEO_BRANCH(1, hmc_geo_000850), // 0x0E000850
+               GEO_BRANCH(1, hmc_geo_0008D0), // 0x0E0008D0
+               GEO_BRANCH(1, hmc_geo_000938), // 0x0E000938
+               GEO_BRANCH(1, hmc_geo_000998), // 0x0E000998
+               GEO_BRANCH(1, hmc_geo_000A18), // 0x0E000A18
+               GEO_BRANCH(1, hmc_geo_000A88), // 0x0E000A88
+               GEO_BRANCH(1, hmc_geo_000AE8), // 0x0E000AE8
+               GEO_BRANCH(1, hmc_geo_000B48), // 0x0E000B48
                GEO_RENDER_OBJ(),
                GEO_ASM(0, geo_envfx_main),
             GEO_CLOSE_NODE(),
