@@ -111,7 +111,9 @@ bool network_init(enum NetworkType inNetworkType, bool reconnecting) {
     }
 
     network_forget_all_reliable();
+    #ifndef OSX_BUILD
     crash_handler_init();
+    #endif
 
     // set server settings
     gServerSettings.playerInteractions = configPlayerInteraction;

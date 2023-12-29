@@ -721,6 +721,7 @@ struct PcDebug gPcDebug = {
     .lastModRun = NULL,
 };
 
+#ifndef OSX_BUILD
 void crash_handler_init(void) {
     u64* first = gPcDebug.tags;
     *first = 0;
@@ -745,3 +746,4 @@ void crash_handler_init(void) {
         tag++;
     }
 }
+#endif
