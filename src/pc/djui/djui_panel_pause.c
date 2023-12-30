@@ -24,7 +24,7 @@ void djui_panel_pause_quit_yes(UNUSED struct DjuiBase* caller) {
 }
 
 void djui_panel_pause_disconnect_key_update(int scancode) {
-    if (gDjuiInMainMenu) { return; }
+    if (gDjuiInMainMenu || find_object_with_behavior(bhvActSelector) != NULL) { return; }
 
     for (int i = 0; i < MAX_BINDS; i++) {
         if (scancode == (int)configKeyDisconnect[i]) {

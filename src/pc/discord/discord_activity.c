@@ -118,7 +118,7 @@ void discord_activity_update(void) {
     } else if (gNetworkType == NT_SERVER) {
         strcpy(sCurActivity.state, "Waiting for players...");
     } else {
-        strcpy(sCurActivity.state, "In-game.");
+        strcpy(sCurActivity.state, "In the menus.");
         sCurActivity.party.size.current_size = 1;
         if (sCurActivity.party.size.max_size < 1) { sCurActivity.party.size.max_size = 1; }
     }
