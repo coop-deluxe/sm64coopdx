@@ -275,7 +275,7 @@ void smlua_init(void) {
         gPcDebug.lastModRun = gLuaActiveMod;
         for (int j = 0; j < mod->fileCount; j++) {
             struct ModFile* file = &mod->files[j];
-            if (!str_ends_with(file->relativePath, ".lua")) {
+            if (!(str_ends_with(file->relativePath, ".lua") || str_ends_with(file->relativePath, ".luac"))) {
                 continue;
             }
             smlua_load_script(mod, file, i);
@@ -288,7 +288,7 @@ void smlua_init(void) {
 void smlua_update(void) {
     lua_State* L = gLuaState;
     if (L == NULL) { return; }
-    
+
     smlua_call_event_hooks(HOOK_UPDATE);
     // Collect our garbage after calling our hooks.
     // If we don't, Lag can quickly build up from our mods.
