@@ -10,7 +10,7 @@ local audioSpecial = nil --Used for things like cap music
 local audioCurSeq = nil
 local bgms = {
 	[56] =         {audio='rainbow.ogg', loopEnd = 218.781, loopStart = 06.975, volume = -5, name="Ric Fellini - All my Loving"}, --B1
-	[57] =         {audio='space.ogg', loopEnd = 300, loopStart = 06.975, volume = -5, name="Echo the Dolphin - Title Screen"}, --B1
+	-- [57] =         {audio='space.ogg', loopEnd = 300, loopStart = 06.975, volume = -5, name="Echo the Dolphin - Title Screen"}, --B1
 }
 
 -- disable cap music
