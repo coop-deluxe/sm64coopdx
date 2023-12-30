@@ -16,6 +16,7 @@
 *.ld text
 *.inc text
 *.txt text
+*.lua text
 *.json text
 *.yaml text
 
@@ -28,3 +29,4 @@
 *.mp3 binary
 *.lvl binary
 *.tex binary
+*.luac binary
