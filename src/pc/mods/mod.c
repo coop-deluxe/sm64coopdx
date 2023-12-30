@@ -13,7 +13,7 @@ size_t mod_get_lua_size(struct Mod* mod) {
 
     for (int i = 0; i < mod->fileCount; i++) {
         struct ModFile* file = &mod->files[i];
-        if (!str_ends_with(file->relativePath, ".lua")) { continue; }
+        if (!(str_ends_with(file->relativePath, ".lua") || str_ends_with(file->relativePath, ".luac"))) { continue; }
         size += file->size;
     }
 
@@ -318,7 +318,7 @@ static bool mod_load_files(struct Mod* mod, char* modName, char* fullPath) {
 
     // deal with mod directory
     {
-        const char* fileTypes[] = { ".lua", NULL };
+        const char* fileTypes[] = { ".lua", ".luac", NULL };
         if (!mod_load_files_dir(mod, fullPath, "", fileTypes)) { return false; }
     }
 
