@@ -259,7 +259,7 @@ def build_to_c(built_files):
     txt = 'char gSmluaConstants[] = ""\n'
     for line in lines:
         txt += '"%s\\n"\n' % line
-    txt += ';'
+    txt += '"if get_coop_compatibility_enabled() then SM64COOPDX_VERSION = nil end";'
     return txt
 
 ############################################################################

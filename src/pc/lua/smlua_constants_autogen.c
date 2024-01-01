@@ -4393,4 +4393,4 @@ char gSmluaConstants[] = ""
 "VERSION_REGION = 'US'\n"
 "MAX_VERSION_LENGTH = 32\n"
 "MAX_LOCAL_VERSION_LENGTH = 36\n"
-;
+"if get_coop_compatibility_enabled() then SM64COOPDX_VERSION = nil end";

@@ -622,6 +622,12 @@ void set_override_envfx(s32 envfx) {
 
 ///
 
+bool get_coop_compatibility_enabled(void) {
+    return configCoopCompatibility;
+}
+
+///
+
 const char* get_os_name(void) {
 #if defined(_WIN32) || defined(_WIN64)
     return "Windows";

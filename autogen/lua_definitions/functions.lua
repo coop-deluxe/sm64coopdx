@@ -8686,6 +8686,11 @@ function djui_set_popup_disabled_override(value)
     -- ...
 end
 
+--- @return boolean
+function get_coop_compatibility_enabled()
+    -- ...
+end
+
 --- @return integer
 function get_current_save_file_num()
     -- ...

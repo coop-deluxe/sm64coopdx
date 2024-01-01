@@ -703,6 +703,24 @@
 
 <br />
 
+## [get_coop_compatibility_enabled](#get_coop_compatibility_enabled)
+
+### Lua Example
+`local booleanValue = get_coop_compatibility_enabled()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool get_coop_compatibility_enabled(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [get_current_save_file_num](#get_current_save_file_num)
 
 ### Lua Example

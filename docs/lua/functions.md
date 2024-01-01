@@ -1631,6 +1631,7 @@
    - [djui_popup_create_global](functions-5.md#djui_popup_create_global)
    - [djui_reset_popup_disabled_override](functions-5.md#djui_reset_popup_disabled_override)
    - [djui_set_popup_disabled_override](functions-5.md#djui_set_popup_disabled_override)
+   - [get_coop_compatibility_enabled](functions-5.md#get_coop_compatibility_enabled)
    - [get_current_save_file_num](functions-5.md#get_current_save_file_num)
    - [get_date_and_time](functions-5.md#get_date_and_time)
    - [get_dialog_box_state](functions-5.md#get_dialog_box_state)
