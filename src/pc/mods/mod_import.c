@@ -76,7 +76,7 @@ static bool mod_import_zip(char* path, bool* isLua, bool* isDynos) {
             return false;
         }
 
-        if (str_ends_with(file_stat.m_filename, ".lua")) {
+        if (str_ends_with(file_stat.m_filename, ".lua") || str_ends_with(file_stat.m_filename, ".luac")) {
             path_get_folder(file_stat.m_filename, luaPath);
             *isLua = true;
             break;
@@ -214,7 +214,7 @@ bool mod_import_file(char* path) {
         return false;
     }
 
-    if (str_ends_with(path, ".lua")) {
+    if (str_ends_with(path, ".lua") || str_ends_with(path, ".luac")) {
         isLua = true;
         ret = mod_import_lua(path);
     } else if (str_ends_with(path, ".zip")) {
