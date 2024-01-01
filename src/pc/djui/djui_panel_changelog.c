@@ -33,7 +33,6 @@ Fixed singleplayer not forcing direct connection\n\
 Fixed water camera and TTM star cutscene in first person\n\
 Fixed random crashes with built-in mods\n\
 Lua API Changes:\n\
-Allowed luac files to be read\n\
 Allowed over exposure (>255) in marioBodyState light and shade values\n\
 Undefined SM64COOPDX_VERSION if sm64ex-coop compatibility is on\n\
 Added get_coop_compatibility_enabled()\n\
@@ -41,7 +40,8 @@ Added gControllers\n\
 Mod Changes:\n\
 Fixed custom music bug and updated rainbow level with Arena\n\
 Updated mQuake\n\
-Re-added Hide and Seek"
+Re-added Hide and Seek\n\
+Updated Day Night Cycle DX and Gun Mod DX"
         );
 
         struct DjuiText* text = djui_text_create(body, sChangelog);

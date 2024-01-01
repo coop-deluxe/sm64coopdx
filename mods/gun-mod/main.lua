@@ -1,5 +1,6 @@
--- name: .Gun Mod DX
--- description: Gun Mod DX v3.0.1\nBy \\#ec7731\\Agent X\\#dcdcdc\\\nSpecial thanks to \\#f296af\\PeachyPeach\\#dcdcdc\\\n\nThis is a rewritten & overhauled version of my original Gun Mod for sm64ex-coop. I thought this would make a good mod to bundle with sm64coopdx. If you have two pistols, you are able to dual wield them as well!\n\nPress [\\#3040ff\\Y\\#dcdcdc\\] to shoot\nPress [\\#3040ff\\X\\#dcdcdc\\] to reload\nRun \\#00ffff\\/gm help\\#dcdcdc\\ for help
+-- name: Gun Mod DX
+-- incompatible: weapon
+-- description: Gun Mod DX v3.0.2\nBy \\#ec7731\\Agent X\\#dcdcdc\\\nSpecial thanks to \\#f296af\\PeachyPeach\\#dcdcdc\\\n\nThis is a rewritten & overhauled version of my original Gun Mod for sm64ex-coop. I thought this would make a good mod to bundle with sm64coopdx. If you have two pistols, you are able to dual wield them as well!\n\nPress [\\#3040ff\\Y\\#dcdcdc\\] to shoot\nPress [\\#3040ff\\X\\#dcdcdc\\] to reload\nRun \\#00ffff\\/gm help\\#dcdcdc\\ for help
 -- deluxe: true
 
 if SM64COOPDX_VERSION == nil then return end
@@ -358,8 +359,7 @@ _G.gunModApi = {
     bullet_ricochet = bullet_ricochet,
     obj_generate_hitbox_multiply_func = obj_generate_hitbox_multiply_func,
     obj_generate_health_func = obj_generate_health_func,
-    shootable_register = shootable_register,
-    gm_hook_behavior = gm_hook_behavior
+    shootable_register = shootable_register
 }
 
 local fov = mod_storage_load_number("fov")

@@ -166,25 +166,6 @@ function obj_skip_in_view_check(obj)
     obj.header.gfx.skipInViewCheck = true
 end
 
--- generic
-function obj_generate_hitbox_multiply_func(radius, height)
-    --- @param o Object
-    local func = function(o)
-        o.hitboxRadius = o.hitboxRadius * radius
-        o.hitboxHeight = o.hitboxHeight * height
-    end
-    return func
-end
-
--- generic
-function obj_generate_health_func(health)
-    --- @param o Object
-    local func = function(o)
-        o.oGmHealth = health
-    end
-    return func
-end
-
 --- @param o Object
 function obj_sign_hitbox(o)
     o.hitboxRadius = o.hitboxRadius * 0.75
@@ -216,6 +197,25 @@ end
 function obj_king_bobomb_hitbox(o)
     o.oGmHealth = HEALTH_KING_BOBOMB
     o.hitboxHeight = o.hitboxHeight * 3
+end
+
+-- generic
+function obj_generate_hitbox_multiply_func(radius, height)
+    --- @param o Object
+    local func = function(o)
+        o.hitboxRadius = o.hitboxRadius * radius
+        o.hitboxHeight = o.hitboxHeight * height
+    end
+    return func
+end
+
+-- generic
+function obj_generate_health_func(health)
+    --- @param o Object
+    local func = function(o)
+        o.oGmHealth = health
+    end
+    return func
 end
 
 function gm_hook_behavior(id, override, init, loop)

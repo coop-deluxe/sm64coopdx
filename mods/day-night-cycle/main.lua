@@ -1,42 +1,11 @@
--- name: .Day Night Cycle DX
+-- name: Day Night Cycle DX
 -- incompatible: light
--- description: Day Night Cycle DX v2.0\nBy \\#ec7731\\Agent X\n\n\\#dcdcdc\\This mod adds a fully featured day night cycle system with night, sunrise, day and sunset to sm64coopdx. Days last 24 minutes and you can switch to and from 24 hour time with /time 24h\n\nSpecial thanks to \\#00ffff\\AngelicMiracles \\#dcdcdc\\for the sunset, sunrise and night time skyboxes
+-- description: Day Night Cycle DX v2.0.1\nBy \\#ec7731\\Agent X\n\n\\#dcdcdc\\This mod adds a fully featured day night cycle system with night, sunrise, day and sunset to sm64coopdx. Days last 24 minutes and you can switch to and from 24 hour time with /time 24h\n\nSpecial thanks to \\#00ffff\\AngelicMiracles \\#dcdcdc\\for the sunset, sunrise and night time skyboxes
 -- deluxe: true
 
 --- @diagnostic disable: undefined-global
 
 if SM64COOPDX_VERSION == nil then return end
-
-SECOND = 30
-MINUTE = SECOND * 60
-
-HOUR_SUNRISE_START = 4
-HOUR_SUNRISE_END = 5
-HOUR_SUNRISE_DURATION = HOUR_SUNRISE_END - HOUR_SUNRISE_START
-
-HOUR_SUNSET_START = 19
-HOUR_SUNSET_END = 20
-HOUR_SUNSET_DURATION = HOUR_SUNSET_END - HOUR_SUNSET_START
-
-HOUR_DAY_START = 6
-HOUR_NIGHT_START = 21
-
-local DIR_DARK = 0.6
-local DIR_BRIGHT = 1
-
-local COLOR_NIGHT   = { r = 70,  g = 75,  b = 100 }
-local COLOR_SUNRISE = { r = 255, g = 255, b = 200 }
-local COLOR_DAY     = { r = 255, g = 255, b = 255 }
-local COLOR_SUNSET  = { r = 255, g = 155, b = 100 }
-
-local FOG_COLOR_NIGHT = { r = 30, g = 30, b = 50 }
-
-local COLOR_DISPLAY_DARK   = { r = 48,  g = 90,  b = 200 }
-local COLOR_DISPLAY_BRIGHT = { r = 255, g = 255, b = 80  }
-
-local SKYBOX_SCALE = 200
-
-local REAL_MINUTE = 1 / 60
 
 gGlobalSyncTable.dncEnabled = true
 local dncDisplayTime = true

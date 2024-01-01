@@ -1,17 +1,7 @@
+if SM64COOPDX_VERSION == nil then return end
+
 -- localize functions to improve performance
 local play_sound,table_insert,get_skybox,level_is_vanilla_level,math_floor,math_ceil = play_sound,table.insert,get_skybox,level_is_vanilla_level,math.floor,math.ceil
-
-if SM64COOPDX_VERSION == nil then
-    local first = false
-    hook_event(HOOK_ON_LEVEL_INIT, function()
-        if not first then
-            first = true
-            play_sound(SOUND_MENU_CAMERA_BUZZ, gMarioStates[0].marioObj.header.gfx.cameraToObject)
-            djui_chat_message_create("\\#ff7f7f\\Day Night Cycle is no longer supported with sm64ex-coop\nas it uses sm64coopdx exclusive Lua functionality.\n\\#dcdcdc\\To play this mod, try out sm64coopdx at\n\\#7f7fff\\https://sm64coopdx.com")
-        end
-    end)
-    return
-end
 
 function if_then_else(cond, ifTrue, ifFalse)
     if cond then return ifTrue end

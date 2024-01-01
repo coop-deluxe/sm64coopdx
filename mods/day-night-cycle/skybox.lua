@@ -1,29 +1,5 @@
 if SM64COOPDX_VERSION == nil then return end
 
-local SKYBOX_DAY = 0
-local SKYBOX_SUNSET = 1
-local SKYBOX_NIGHT = 2
-
--- standard skyboxes
-E_MODEL_SKYBOX_OCEAN_SKY = smlua_model_util_get_id("skybox_ocean_sky_geo")
-local E_MODEL_SKYBOX_FLAMING_SKY = smlua_model_util_get_id("skybox_flaming_sky_geo")
-local E_MODEL_SKYBOX_UNDERWATER_CITY = smlua_model_util_get_id("skybox_underwater_city_geo")
-local E_MODEL_SKYBOX_BELOW_CLOUDS = smlua_model_util_get_id("skybox_below_clouds_geo")
-local E_MODEL_SKYBOX_SNOW_MOUNTAINS = smlua_model_util_get_id("skybox_snow_mountains_geo")
-local E_MODEL_SKYBOX_DESERT = smlua_model_util_get_id("skybox_desert_geo")
-local E_MODEL_SKYBOX_HAUNTED = smlua_model_util_get_id("skybox_haunted_geo")
-local E_MODEL_SKYBOX_GREEN_SKY = smlua_model_util_get_id("skybox_green_sky_geo")
-local E_MODEL_SKYBOX_ABOVE_CLOUDS = smlua_model_util_get_id("skybox_above_clouds_geo")
-local E_MODEL_SKYBOX_PURPLE_SKY = smlua_model_util_get_id("skybox_purple_sky_geo")
-local E_MODEL_SKYBOX_SUNRISE = smlua_model_util_get_id("skybox_sunrise_geo")
-E_MODEL_SKYBOX_SUNSET = smlua_model_util_get_id("skybox_sunset_geo")
-E_MODEL_SKYBOX_NIGHT = smlua_model_util_get_id("skybox_night_geo")
-
--- below clouds skyboxes
-local E_MODEL_SKYBOX_BELOW_CLOUDS_NIGHT = smlua_model_util_get_id("skybox_below_clouds_night_geo")
-local E_MODEL_SKYBOX_BELOW_CLOUDS_SUNRISE = smlua_model_util_get_id("skybox_below_clouds_sunrise_geo")
-local E_MODEL_SKYBOX_BELOW_CLOUDS_SUNSET = smlua_model_util_get_id("skybox_below_clouds_sunset_geo")
-
 gVanillaSkyboxModels = {
     [BACKGROUND_OCEAN_SKY] = E_MODEL_SKYBOX_OCEAN_SKY,
     [BACKGROUND_FLAMING_SKY] = E_MODEL_SKYBOX_FLAMING_SKY,
