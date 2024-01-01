@@ -46,7 +46,7 @@ Updated Day Night Cycle DX and Gun Mod DX"
         djui_text_set_drop_shadow(text, 64, 64, 64, 100);
         djui_text_set_alignment(text, DJUI_HALIGN_LEFT, DJUI_VALIGN_TOP);
 
-        djui_button_create(body, "OK", DJUI_BUTTON_STYLE_BACK, djui_panel_back);
+        djui_button_create(body, "OK", DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
     }
 
     djui_panel_add(caller, panel, NULL);
