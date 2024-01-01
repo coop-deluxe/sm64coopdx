@@ -37,6 +37,13 @@ The `gCharacters[]` table is an array from `0` to `(CT_MAX - 1)` that contains a
 
 <br />
 
+## [gControllers](#gControllers)
+The `gControllers[]` table is an array from `0` to `(MAX_PLAYERS - 1)` that contains a [Controller](structs.md#Controller) struct for each possible player.
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [gTextures](#gTextures)
 The `gTextures` table contains references to textures. Listed in [GlobalTextures](structs.md#GlobalTextures).
 

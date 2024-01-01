@@ -603,6 +603,17 @@ void smlua_cobject_init_globals(void) {
         lua_setglobal(L, "gCharacters");
     }
 
+    {
+        lua_newtable(L);
+        int t = lua_gettop(gLuaState);
+        for (s32 i = 0; i < MAX_PLAYERS; i++) {
+            lua_pushinteger(L, i);
+            smlua_push_object(L, LOT_CONTROLLER, &gControllers[i]);
+            lua_settable(L, t);
+        }
+        lua_setglobal(L, "gControllers");
+    }
+
 #define EXPOSE_GLOBAL(lot, ptr) \
     { \
         smlua_push_object(L, lot, &ptr); \

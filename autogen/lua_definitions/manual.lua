@@ -23,6 +23,9 @@ gActiveMods = {}
 --- @type Character[]
 gCharacters = {}
 
+--- @type Controller[]
+gControllers = {}
+
 --- @type GlobalTextures
 gTextures = {}
 
