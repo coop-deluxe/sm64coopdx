@@ -2967,7 +2967,7 @@ void set_camera_mode(struct Camera *c, s16 mode, s16 frames) {
     }
 
     if (mode != CAMERA_MODE_NEWCAM && gLakituState.mode != CAMERA_MODE_NEWCAM) {
-        if (mode != CAMERA_MODE_WATER_SURFACE && gCurrLevelArea != AREA_TTM_OUTSIDE) {
+        if (!(mode == CAMERA_MODE_WATER_SURFACE && gCurrLevelArea == AREA_TTM_OUTSIDE)) {
             // Clear movement flags that would affect the transition
             gCameraMovementFlags &= (u16)~(CAM_MOVE_RESTRICT | CAM_MOVE_ROTATE);
             gCameraMovementFlags |= CAM_MOVING_INTO_MODE;
