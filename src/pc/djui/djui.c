@@ -97,7 +97,6 @@ void djui_init_late(void) {
         }
         if (strcmp(configLastVersion, SM64COOPDX_VERSION)) {
             djui_panel_changelog_create(NULL);
-            strncpy(configLastVersion, SM64COOPDX_VERSION, MAX_CONFIG_STRING);
         }
         //djui_panel_debug_create();
     }
