@@ -4,11 +4,6 @@
 
 static char sChangelog[1200];
 
-void djui_panel_changelog_back(UNUSED struct DjuiBase* caller) {
-    strncpy(configLastVersion, SM64COOPDX_VERSION, MAX_CONFIG_STRING);
-    djui_panel_back();
-}
-
 void djui_panel_changelog_create(struct DjuiBase* caller) {
     struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(CHANGELOG, CHANGELOG_TITLE));
     struct DjuiBase* body = djui_three_panel_get_body(panel);
@@ -51,7 +46,7 @@ Updated Day Night Cycle DX and Gun Mod DX"
         djui_text_set_drop_shadow(text, 64, 64, 64, 100);
         djui_text_set_alignment(text, DJUI_HALIGN_LEFT, DJUI_VALIGN_TOP);
 
-        djui_button_create(body, "OK", DJUI_BUTTON_STYLE_BACK, djui_panel_changelog_back);
+        djui_button_create(body, "OK", DJUI_BUTTON_STYLE_BACK, djui_panel_back);
     }
 
     djui_panel_add(caller, panel, NULL);
