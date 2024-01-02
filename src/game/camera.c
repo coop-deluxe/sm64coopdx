@@ -7379,9 +7379,11 @@ void reset_pan_distance(UNUSED struct Camera *c) {
 }
 
 /**
- * Easter egg: the player 2 controller can move the camera's focus in the ending and credits.
+ * Easter egg: the player 2 (1) controller can move the camera's focus in the ending and credits.
  */
 void player2_rotate_cam(struct Camera *c, s16 minPitch, s16 maxPitch, s16 minYaw, s16 maxYaw) {
+    if (gDjuiInMainMenu) { return; }
+
     f32 distCamToFocus;
     s16 pitch, yaw, pitchCap;
 
