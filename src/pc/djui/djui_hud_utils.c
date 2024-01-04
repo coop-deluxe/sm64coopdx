@@ -29,6 +29,7 @@ static enum HudUtilsFilter sFilter = FILTER_NEAREST;
 static enum DjuiFontType sFont = FONT_NORMAL;
 static struct HudUtilsRotation sRotation = { 0, 0, 0 };
 static struct DjuiColor sColor = { 255, 255, 255, 255 };
+static struct DjuiColor sRefColor = { 255, 255, 255, 255 };
 
 f32 gDjuiHudUtilsZ = 0;
 u8 gDjuiHudLockMouse = false;
@@ -173,7 +174,11 @@ void djui_hud_set_font(enum DjuiFontType fontType) {
 }
 
 struct DjuiColor* djui_hud_get_color(void) {
-    return &sColor;
+    sRefColor.r = sColor.r;
+    sRefColor.g = sColor.g;
+    sRefColor.b = sColor.b;
+    sRefColor.a = sColor.a;
+    return &sRefColor;
 }
 
 void djui_hud_set_color(u8 r, u8 g, u8 b, u8 a) {
