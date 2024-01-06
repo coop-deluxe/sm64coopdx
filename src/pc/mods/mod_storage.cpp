@@ -64,30 +64,23 @@ void mod_storage_get_filename(char* dest) {
 }
 
 C_FIELD bool mod_storage_save(const char* key, const char* value) {
-    if (strlen(key) > MAX_KEY_VALUE_LENGTH || strlen(value) > MAX_KEY_VALUE_LENGTH) {
-        return false;
-    }
-    if (!char_valid((char *)key) || !char_valid((char *)value)) {
-        return false;
-    }
+    if (gLuaActiveMod == NULL) { return false; }
+    if (strlen(key) > MAX_KEY_VALUE_LENGTH || strlen(value) > MAX_KEY_VALUE_LENGTH) { return false; }
+    if (!char_valid((char *)key) || !char_valid((char *)value)) { return false; }
 
     char filename[SYS_MAX_PATH] = {0};
     mod_storage_get_filename(filename);
 
     // ensure savPath exists
     char savPath[SYS_MAX_PATH] = { 0 };
-    if (snprintf(savPath, SYS_MAX_PATH - 1, "%s", fs_get_write_path(SAVE_DIRECTORY)) < 0) {
-        return false;
-    }
+    if (snprintf(savPath, SYS_MAX_PATH - 1, "%s", fs_get_write_path(SAVE_DIRECTORY)) < 0) { return false; }
     if (!fs_sys_dir_exists(savPath)) { fs_sys_mkdir(savPath); }
 
     mINI::INIFile file(filename);
     mINI::INIStructure ini;
     file.read(ini);
 
-    if (ini["storage"].size() + 1 > MAX_KEYS) {
-        return false;
-    }
+    if (ini["storage"].size() + 1 > MAX_KEYS) { return false; }
 
     ini["storage"][key] = value;
 
@@ -106,19 +99,14 @@ C_FIELD bool mod_storage_save_bool(const char* key, bool value) {
 }
 
 C_FIELD const char* mod_storage_load(const char* key) {
-    if (strlen(key) > MAX_KEY_VALUE_LENGTH) {
-        return NULL;
-    }
-    if (!char_valid((char *)key)) {
-        return NULL;
-    }
+    if (gLuaActiveMod == NULL) { return NULL; }
+    if (strlen(key) > MAX_KEY_VALUE_LENGTH) { return NULL; }
+    if (!char_valid((char *)key)) { return NULL; }
 
     char filename[SYS_MAX_PATH] = {0};
     mod_storage_get_filename(filename);
 
-    if (!path_exists(filename)) {
-        return NULL;
-    }
+    if (!path_exists(filename)) { return NULL; }
 
     mINI::INIFile file(filename);
     mINI::INIStructure ini;
@@ -142,19 +130,14 @@ C_FIELD bool mod_storage_load_bool(const char* key) {
 }
 
 C_FIELD bool mod_storage_remove(const char* key) {
-    if (strlen(key) > MAX_KEY_VALUE_LENGTH) {
-        return false;
-    }
-    if (!char_valid((char *)key)) {
-        return false;
-    }
+    if (gLuaActiveMod == NULL) { return false; }
+    if (strlen(key) > MAX_KEY_VALUE_LENGTH) { return false; }
+    if (!char_valid((char *)key)) { return false; }
 
     char filename[SYS_MAX_PATH] = {0};
     mod_storage_get_filename(filename);
 
-    if (!path_exists(filename)) {
-        return false;
-    }
+    if (!path_exists(filename)) { return false; }
 
     mINI::INIFile file(filename);
     mINI::INIStructure ini;
@@ -170,20 +153,18 @@ C_FIELD bool mod_storage_remove(const char* key) {
 }
 
 C_FIELD bool mod_storage_clear(void) {
+    if (gLuaActiveMod == NULL) { return false; }
+
     char filename[SYS_MAX_PATH] = {0};
     mod_storage_get_filename(filename);
 
-    if (!path_exists(filename)) {
-        return false;
-    }
+    if (!path_exists(filename)) { return false; }
 
     mINI::INIFile file(filename);
     mINI::INIStructure ini;
     file.read(ini);
 
-    if (ini["storage"].size() == 0) {
-        return false;
-    }
+    if (ini["storage"].size() == 0) { return false; }
 
     ini["storage"].clear();
 
