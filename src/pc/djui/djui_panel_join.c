@@ -7,11 +7,15 @@
 #include "djui_panel_main.h"
 #include "pc/network/network.h"
 #include "pc/utils/misc.h"
+#ifdef DISCORD_SDK
 #include "pc/discord/discord.h"
+#endif
 
 #ifdef COOPNET
 static void djui_panel_compatibility_checkbox_on_value_change(UNUSED struct DjuiBase* caller) {
+#ifdef DISCORD_SDK
     gDiscordInitialized = false;
+#endif
     if (gVersionText != NULL) {
         djui_text_set_text(gVersionText, get_version_local());
     }
