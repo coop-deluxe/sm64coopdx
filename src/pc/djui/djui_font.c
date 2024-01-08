@@ -133,20 +133,6 @@ static const struct DjuiFont sDjuiFontHud = {
     .char_width           = djui_font_hud_char_width,
 };
 
-  ///////////////////////////////
- // font 4 (legacy tiny font) //
-///////////////////////////////
-
-static const struct DjuiFont sDjuiFontTiny = {
-    .charWidth            = 0.5f,
-    .charHeight           = 1.0f,
-    .lineHeight           = 0.8125f,
-    .defaultFontScale     = 16.0f,
-    .textBeginDisplayList = NULL,
-    .render_char          = djui_font_normal_render_char,
-    .char_width           = djui_font_normal_char_width,
-};
-
   ////////////////////////////////
  // font 5 (DJ's aliased font) //
 ////////////////////////////////
@@ -187,6 +173,5 @@ const struct DjuiFont* gDjuiFonts[] = {
     &sDjuiFontNormal,
     &sDjuiFontTitle,
     &sDjuiFontHud,
-    &sDjuiFontTiny,
     &sDjuiFontAliased
 };

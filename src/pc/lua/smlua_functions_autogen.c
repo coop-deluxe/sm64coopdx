@@ -12471,7 +12471,7 @@ int smlua_func_djui_hud_set_font(lua_State* L) {
         return 0;
     }
 
-    int fontType = smlua_to_integer(L, 1);
+    s8 fontType = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "djui_hud_set_font"); return 0; }
 
     djui_hud_set_font(fontType);

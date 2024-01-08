@@ -3764,7 +3764,7 @@ function djui_hud_set_filter(filterType)
     -- ...
 end
 
---- @param fontType DjuiFontType
+--- @param fontType integer
 --- @return nil
 function djui_hud_set_font(fontType)
     -- ...

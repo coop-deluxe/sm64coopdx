@@ -2502,13 +2502,13 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| fontType | [enum DjuiFontType](constants.md#enum-DjuiFontType) |
+| fontType | `integer` |
 
 ### Returns
 - None
 
 ### C Prototype
-`void djui_hud_set_font(enum DjuiFontType fontType);`
+`void djui_hud_set_font(s8 fontType);`
 
 [:arrow_up_small:](#)
 

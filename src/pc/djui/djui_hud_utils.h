@@ -17,7 +17,6 @@ enum DjuiFontType {
     FONT_NORMAL,
     FONT_MENU,
     FONT_HUD,
-    FONT_TINY,
     FONT_ALIASED,
     FONT_COUNT,
 };
@@ -54,7 +53,7 @@ void djui_hud_set_resolution(enum HudUtilsResolution resolutionType);
 u8 djui_hud_get_filter(void);
 void djui_hud_set_filter(enum HudUtilsFilter filterType);
 u8 djui_hud_get_font(void);
-void djui_hud_set_font(enum DjuiFontType fontType);
+void djui_hud_set_font(s8 fontType);
 struct DjuiColor* djui_hud_get_color(void);
 void djui_hud_set_color(u8 r, u8 g, u8 b, u8 a);
 void djui_hud_reset_color(void);

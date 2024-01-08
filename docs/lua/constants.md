@@ -1169,9 +1169,8 @@
 | FONT_NORMAL | 0 |
 | FONT_MENU | 1 |
 | FONT_HUD | 2 |
-| FONT_TINY | 3 |
-| FONT_ALIASED | 4 |
-| FONT_COUNT | 5 |
+| FONT_ALIASED | 3 |
+| FONT_COUNT | 4 |
 
 ### [enum HudUtilsFilter](#HudUtilsFilter)
 | Identifier | Value |

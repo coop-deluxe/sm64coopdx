@@ -2,6 +2,10 @@
 
 math.randomseed(get_time())
 
+--------------
+-- CObjects --
+--------------
+
 _CObjectPool = {}
 
 _CObject = {
@@ -89,6 +93,10 @@ _ReadOnlyTable = {
     __newindex = function (t,k,v)
     end
 }
+
+--------------------
+-- math functions --
+--------------------
 
 --- @param dest Vec3f
 --- @param src Vec3f
@@ -385,6 +393,11 @@ COURSE_MAX = 25
 COURSE_COUNT = 25
 --- @type integer
 COURSE_MIN = 1
+
+-----------------
+-- legacy font --
+-----------------
+FONT_TINY = -1
 
 --- @type integer
 INSTANT_WARP_INDEX_START = 0x00
@@ -3462,13 +3475,10 @@ FONT_MENU = 1
 FONT_HUD = 2
 
 --- @type DjuiFontType
-FONT_TINY = 3
+FONT_ALIASED = 3
 
 --- @type DjuiFontType
-FONT_ALIASED = 4
-
---- @type DjuiFontType
-FONT_COUNT = 5
+FONT_COUNT = 4
 
 --- @class HudUtilsFilter
 
