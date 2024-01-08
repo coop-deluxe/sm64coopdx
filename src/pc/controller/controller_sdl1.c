@@ -168,6 +168,7 @@ static void controller_sdl_read(OSContPad *pad) {
     last_mouse = (mouse_buttons ^ mouse) & mouse;
     mouse_buttons = mouse;
 
+    if (configDisableGamepads) { return; }
     if (!sdl_joy) return;
 
     SDL_JoystickUpdate();

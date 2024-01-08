@@ -307,9 +307,6 @@ f32 djui_unicode_get_sprite_width(char* text, const f32 font_widths[]) {
     if (glyph) {
         if (glyph->width) {
             // use the custom width
-            if (font_widths[0] < 1) {
-                return glyph->width / 32.0f;
-            }
             return glyph->width;
         }
         if ((u8)glyph->base < (u8)'!') {

@@ -206,6 +206,7 @@ static void controller_sdl_read(OSContPad *pad) {
         SDL_SetHint(SDL_HINT_JOYSTICK_ALLOW_BACKGROUND_EVENTS, sBackgroundGamepad ? "1" : "0");
     }
 
+    if (configDisableGamepads) { return; }
 
     SDL_GameControllerUpdate();
 

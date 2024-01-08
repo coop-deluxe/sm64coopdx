@@ -150,6 +150,7 @@ bool         configCtxProfiler                    = false;
 unsigned int configInterpolationMode              = 1;
 unsigned int configGamepadNumber                  = 0;
 bool         configBackgroundGamepad              = true;
+bool         configDisableGamepads                = false;
 bool         configDebugPrint                     = false;
 bool         configDebugInfo                      = false;
 bool         configDebugError                     = false;
@@ -269,6 +270,7 @@ static const struct ConfigOption options[] = {
     {.name = "interpolation_mode",             .type = CONFIG_TYPE_UINT  , .uintValue   = &configInterpolationMode},
     {.name = "gamepad_number",                 .type = CONFIG_TYPE_UINT  , .uintValue   = &configGamepadNumber},
     {.name = "background_gamepad",             .type = CONFIG_TYPE_UINT  , .boolValue   = &configBackgroundGamepad},
+    {.name = "disable_gamepads",               .type = CONFIG_TYPE_BOOL  , .boolValue   = &configDisableGamepads},
     {.name = "debug_print",                    .type = CONFIG_TYPE_BOOL  , .boolValue   = &configDebugPrint},
     {.name = "debug_info",                     .type = CONFIG_TYPE_BOOL  , .boolValue   = &configDebugInfo},
     {.name = "debug_error",                    .type = CONFIG_TYPE_BOOL  , .boolValue   = &configDebugError},

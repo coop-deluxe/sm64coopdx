@@ -64,6 +64,7 @@ extern unsigned int configStickDeadzone;
 extern unsigned int configRumbleStrength;
 extern unsigned int configGamepadNumber;
 extern bool         configBackgroundGamepad;
+extern bool         configDisableGamepads;
 extern unsigned int configCameraXSens;
 extern unsigned int configCameraYSens;
 extern unsigned int configCameraAggr;
