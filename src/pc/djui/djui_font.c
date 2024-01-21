@@ -75,7 +75,7 @@ static const struct DjuiFont sDjuiFontTitle = {
 };
 
   ///////////////////////
- // font 3 (hud font) //
+ // font 2 (hud font) //
 ///////////////////////
 
 static u8 djui_font_hud_index(char c) {
@@ -134,7 +134,7 @@ static const struct DjuiFont sDjuiFontHud = {
 };
 
   ////////////////////////////////
- // font 5 (DJ's aliased font) //
+ // font 3 (DJ's aliased font) //
 ////////////////////////////////
 
 static void djui_font_aliased_render_char(char* c) {
@@ -165,6 +165,64 @@ static const struct DjuiFont sDjuiFontAliased = {
     .char_width           = djui_font_aliased_char_width,
 };
 
+  ////////////////////////////////////////
+ // font 4/5 (custom hud font/recolor) //
+////////////////////////////////////////
+
+static void djui_font_custom_hud_render_char(char* c) {
+    // replace undisplayable characters
+    if (*c == ' ') { return; }
+
+    u32 index = djui_unicode_get_sprite_index(c);
+
+    u32 tx = index % 16;
+    u32 ty = index / 16;
+
+    extern ALIGNED8 const u8 texture_font_hud[];
+    djui_gfx_render_texture_tile(texture_font_hud, 512, 512, 32, tx * 32, ty * 32, 32, 32, false);
+}
+
+static void djui_font_custom_hud_recolor_render_char(char* c) {
+    // replace undisplayable characters
+    if (*c == ' ') { return; }
+
+    u32 index = djui_unicode_get_sprite_index(c);
+
+    u32 tx = index % 16;
+    u32 ty = index / 16;
+
+    extern ALIGNED8 const u8 texture_font_hud_recolor[];
+    djui_gfx_render_texture_tile(texture_font_hud_recolor, 512, 512, 32, tx * 32, ty * 32, 32, 32, false);
+}
+
+static f32 djui_font_custom_hud_char_width(char* text) {
+    char c = *text;
+    if (c == ' ') { return 0.3750f; }
+    c = djui_unicode_get_base_char(text);
+    extern const f32 font_hud_widths[];
+    return font_hud_widths[(u8)c - '!'];
+}
+
+static const struct DjuiFont sDjuiFontCustomHud = {
+    .charWidth            = 1.0f,
+    .charHeight           = 0.9f,
+    .lineHeight           = 0.7f,
+    .defaultFontScale     = 32.0f,
+    .textBeginDisplayList = NULL,
+    .render_char          = djui_font_custom_hud_render_char,
+    .char_width           = djui_font_custom_hud_char_width,
+};
+
+static const struct DjuiFont sDjuiFontCustomHudRecolor = {
+    .charWidth            = 1.0f,
+    .charHeight           = 0.9f,
+    .lineHeight           = 0.7f,
+    .defaultFontScale     = 32.0f,
+    .textBeginDisplayList = NULL,
+    .render_char          = djui_font_custom_hud_recolor_render_char,
+    .char_width           = djui_font_custom_hud_char_width,
+};
+
   ///////////////
  // font list //
 ///////////////
@@ -173,5 +231,7 @@ const struct DjuiFont* gDjuiFonts[] = {
     &sDjuiFontNormal,
     &sDjuiFontTitle,
     &sDjuiFontHud,
-    &sDjuiFontAliased
+    &sDjuiFontAliased,
+    &sDjuiFontCustomHud,
+    &sDjuiFontCustomHudRecolor
 };
