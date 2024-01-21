@@ -1170,7 +1170,9 @@
 | FONT_MENU | 1 |
 | FONT_HUD | 2 |
 | FONT_ALIASED | 3 |
-| FONT_COUNT | 4 |
+| FONT_CUSTOM_HUD | 4 |
+| FONT_RECOLOR_HUD | 5 |
+| FONT_COUNT | 6 |
 
 ### [enum HudUtilsFilter](#HudUtilsFilter)
 | Identifier | Value |

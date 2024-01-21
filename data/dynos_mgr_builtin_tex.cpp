@@ -8,11 +8,6 @@ extern "C" {
  // Textures //
 //////////////
 
-extern ALIGNED8 const Texture texture_font_normal[];
-extern ALIGNED8 const Texture texture_font_title[];
-
-extern ALIGNED8 const Texture texture_coopdx_logo[];
-
 #define define_builtin_tex(_ptr, _path, _width, _height, _bitSize) { (const char*)#_ptr, (const void*)_ptr, (const char*)_path, _width, _height, _bitSize }
 #define define_builtin_tex_(_ptr, _path, _width, _height, _bitSize) { (const char*)#_ptr "_", (const void*)_ptr, (const char*)_path, _width, _height, _bitSize }
 
@@ -1152,7 +1147,10 @@ static const struct BuiltinTexInfo sDynosBuiltinTexs[] = {
 
     // Fonts
     define_builtin_tex(texture_font_normal, "textures/custom_font/custom_font_normal.rgba32.png", 256, 128, 32),
+    define_builtin_tex(texture_font_aliased, "textures/custom_font/custom_font_aliased.rgba32.png", 512, 256, 32),
     define_builtin_tex(texture_font_title, "textures/custom_font/custom_font_title.rgba32.png", 1024, 512, 32),
+    define_builtin_tex(texture_font_hud, "textures/custom_font/custom_font_normal.rgba32.png", 512, 512, 32),
+    define_builtin_tex(texture_font_hud_recolor, "textures/custom_font/custom_font_aliased.rgba32.png", 512, 512, 32),
 
     // Logo
     define_builtin_tex(texture_coopdx_logo, "textures/segment2/custom_coopdx_logo.rgba32.png", 2048, 1024, 32),
