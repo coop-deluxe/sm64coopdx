@@ -27,7 +27,7 @@ Contributors:\n\
 mike_dobukai: Logo\n\
 Pup64HCP: Website\n\
 ArcticJaguar725: Fixing a sound engine bug\n\
-Isaac: Loading screen testing initially on sm64coopdx"
+Mr. Porkchop: New aliased font"
         );
 
         struct DjuiText* text = djui_text_create(body, sInfo);
