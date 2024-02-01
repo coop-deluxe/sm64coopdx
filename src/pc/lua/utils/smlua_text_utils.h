@@ -5,6 +5,7 @@
 #include "dialog_ids.h"
 
 #define MAX_ACTS 6
+#define MAX_ACTS_AND_100_COINS 7
 
 struct ActName {
     char name[256];

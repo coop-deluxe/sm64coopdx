@@ -45,13 +45,14 @@ void smlua_text_utils_init(void) {
 
         // Individual acts
         if (COURSE_IS_MAIN_COURSE(courseNum)) {
-            courseActNames->actName = calloc(MAX_ACTS, sizeof(struct ActName));
+            courseActNames->actName = calloc(MAX_ACTS_AND_100_COINS, sizeof(struct ActName));
             for (s16 actNum = 0; actNum < MAX_ACTS; actNum++) {
                 convert_string_sm64_to_ascii(actBuffer, segmented_to_virtual(actNameTbl[courseNum * MAX_ACTS + actNum]));
                 snprintf(courseActNames->actName[actNum].name, 50, "%s", actBuffer);
                 snprintf(courseActNames->actName[actNum].orig, 50, "%s", actBuffer);
                 courseActNames->actName[actNum].modIndex = -1;
             }
+            courseActNames->actName[MAX_ACTS_AND_100_COINS].modIndex = -1;
         }
     }
 }
@@ -136,7 +137,7 @@ void smlua_text_utils_reset_all(void) {
 
         // Individual acts
         if (COURSE_IS_MAIN_COURSE(courseNum)) {
-            for (s16 actNum = 0; actNum < MAX_ACTS; actNum++) {
+            for (s16 actNum = 0; actNum < MAX_ACTS_AND_100_COINS; actNum++) {
                 snprintf(courseActNames->actName[actNum].name, 50, "%s", courseActNames->actName[actNum].orig);
                 courseActNames->actName[actNum].modIndex = -1;
             }
@@ -226,7 +227,7 @@ void smlua_text_utils_course_name_reset(s16 courseNum) {
 }
 
 void smlua_text_utils_act_name_replace(s16 courseNum, u8 actNum, const char* name) {
-    if (INVALID_COURSE_NUM(courseNum) || actNum >= MAX_ACTS) { return; }
+    if (INVALID_COURSE_NUM(courseNum) || actNum >= MAX_ACTS_AND_100_COINS) { return; }
 
     struct CourseName* courseActNames = gReplacedActNameTable[courseNum];
 
@@ -235,19 +236,19 @@ void smlua_text_utils_act_name_replace(s16 courseNum, u8 actNum, const char* nam
 }
 
 const char* smlua_text_utils_act_name_get(s16 courseNum, u8 actNum) {
-    if (INVALID_COURSE_NUM(courseNum) || actNum >= MAX_ACTS) { return NULL; }
+    if (INVALID_COURSE_NUM(courseNum) || actNum >= MAX_ACTS_AND_100_COINS) { return NULL; }
 
     return gReplacedActNameTable[courseNum]->actName[actNum].name;
 }
 
 s32 smlua_text_utils_act_name_mod_index(s16 courseNum, u8 actNum) {
-    if (INVALID_COURSE_NUM(courseNum) || actNum >= MAX_ACTS) { return false; }
+    if (INVALID_COURSE_NUM(courseNum) || actNum >= MAX_ACTS_AND_100_COINS) { return false; }
 
     return gReplacedActNameTable[courseNum]->actName[actNum].modIndex;
 }
 
 void smlua_text_utils_act_name_reset(s16 courseNum, u8 actNum) {
-    if (INVALID_COURSE_NUM(courseNum) || actNum >= MAX_ACTS) { return; }
+    if (INVALID_COURSE_NUM(courseNum) || actNum >= MAX_ACTS_AND_100_COINS) { return; }
 
     struct CourseName* courseActNames = gReplacedActNameTable[courseNum];
     snprintf(courseActNames->actName[actNum].name, 50, "%s", courseActNames->actName[actNum].orig);

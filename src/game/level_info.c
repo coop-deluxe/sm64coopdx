@@ -261,7 +261,7 @@ const char *get_star_name_ascii(s16 courseNum, s16 starNum, s16 charCase) {
     static char output[256];
 
     s16 starIndex = starNum - 1;
-    if (starIndex >= 0 && starIndex < MAX_ACTS &&
+    if (starIndex >= 0 && starIndex < MAX_ACTS_AND_100_COINS &&
         courseNum >= 0 && courseNum < COURSE_END &&
         gReplacedActNameTable[courseNum]->actName && gReplacedActNameTable[courseNum]->actName[starIndex].modIndex != -1) {
         snprintf(output, 256, "%s", gReplacedActNameTable[courseNum]->actName[starIndex].name);
