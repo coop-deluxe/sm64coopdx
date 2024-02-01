@@ -1478,7 +1478,7 @@ u32 interact_player_pvp(struct MarioState* attacker, struct MarioState* victim) 
 
     // call the Lua hook
     bool allow = true;
-    smlua_call_event_hooks_mario_params_ret_bool(HOOK_ALLOW_PVP_ATTACK, attacker, cVictim, &allow);
+    smlua_call_event_hooks_mario_params_ret_bool(HOOK_ALLOW_PVP_ATTACK, attacker, cVictim, interaction, &allow);
     if (!allow) {
         // Lua blocked the interaction
         return FALSE;
@@ -1531,7 +1531,7 @@ u32 interact_player_pvp(struct MarioState* attacker, struct MarioState* victim) 
     bounce_back_from_attack(attacker, interaction);
     victim->interactObj = NULL;
 
-    smlua_call_event_hooks_mario_params(HOOK_ON_PVP_ATTACK, attacker, victim);
+    smlua_call_event_hooks_mario_params(HOOK_ON_PVP_ATTACK, attacker, victim, interaction);
     return FALSE;
 }
 

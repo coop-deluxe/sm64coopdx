@@ -317,7 +317,7 @@ void smlua_call_event_hooks_mario_param_ret_bool(enum LuaHookedEventType hookTyp
     }
 }
 
-void smlua_call_event_hooks_mario_params(enum LuaHookedEventType hookType, struct MarioState* m1, struct MarioState* m2) {
+void smlua_call_event_hooks_mario_params(enum LuaHookedEventType hookType, struct MarioState* m1, struct MarioState* m2, u32 interaction) {
     lua_State* L = gLuaState;
     if (L == NULL) { return; }
     struct LuaHookedEvent* hook = &sHookedEvents[hookType];
@@ -337,15 +337,18 @@ void smlua_call_event_hooks_mario_params(enum LuaHookedEventType hookType, struc
         lua_gettable(L, -2);
         lua_remove(L, -2);
 
+        // push interaction
+        lua_pushinteger(L, interaction);
+
         // call the callback
-        if (0 != smlua_call_hook(L, 2, 0, 0, hook->mod[i])) {
+        if (0 != smlua_call_hook(L, 3, 0, 0, hook->mod[i])) {
             LOG_LUA("Failed to call the callback: %u", hookType);
             continue;
         }
     }
 }
 
-void smlua_call_event_hooks_mario_params_ret_bool(enum LuaHookedEventType hookType, struct MarioState* m1, struct MarioState* m2, bool* returnValue) {
+void smlua_call_event_hooks_mario_params_ret_bool(enum LuaHookedEventType hookType, struct MarioState* m1, struct MarioState* m2, u32 interaction, bool* returnValue) {
     lua_State* L = gLuaState;
     if (L == NULL) { return; }
     struct LuaHookedEvent* hook = &sHookedEvents[hookType];
@@ -367,8 +370,11 @@ void smlua_call_event_hooks_mario_params_ret_bool(enum LuaHookedEventType hookTy
         lua_gettable(L, -2);
         lua_remove(L, -2);
 
+        // push interaction
+        lua_pushinteger(L, interaction);
+
         // call the callback
-        if (0 != smlua_call_hook(L, 2, 1, 0, hook->mod[i])) {
+        if (0 != smlua_call_hook(L, 3, 1, 0, hook->mod[i])) {
             LOG_LUA("Failed to call the callback: %u", hookType);
             continue;
         }

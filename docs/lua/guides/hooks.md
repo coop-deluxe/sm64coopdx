@@ -1,7 +1,7 @@
 ## [:rewind: Lua Reference](../lua.md)
 
 # Hooks
-Hooks are a way for SM64 to trigger Lua code, whereas the functions listed in [functions](functions.md) allow Lua to trigger SM64 code.
+Hooks are a way for SM64 to trigger Lua code, whereas the functions listed in [functions](../functions.md) allow Lua to trigger SM64 code.
 
 # Supported Hooks
 - [hook_behavior](#hook_behavior)
@@ -19,15 +19,15 @@ Hooks are a way for SM64 to trigger Lua code, whereas the functions listed in [f
 
 | Field | Type | Notes |
 | ----- | ---- | ----- |
-| behaviorId | [enum BehaviorId](constants.md#enum-BehaviorId) | Set to `nil` to create a new behavior |
-| objectList | [enum ObjectList](constants.md#enum-ObjectList) |  |
+| behaviorId | [enum BehaviorId](../constants.md#enum-BehaviorId) | Set to `nil` to create a new behavior |
+| objectList | [enum ObjectList](../constants.md#enum-ObjectList) |  |
 | replaceBehavior | `bool` | Prevents the original behavior code from running |
-| initFunction | `Lua Function` ([Object](structs.md#Object) obj) | Runs once per object |
-| loopFunction | `Lua Function` ([Object](structs.md#Object) obj) | Runs once per frame per object |
+| initFunction | `Lua Function` ([Object](../structs.md#Object) obj) | Runs once per object |
+| loopFunction | `Lua Function` ([Object](../structs.md#Object) obj) | Runs once per frame per object |
 | behaviorName | `string` | Optional, name to give to the behavior |
 
 ### Returns
-- [enum BehaviorId](constants.md#enum-BehaviorId)
+- [enum BehaviorId](../constants.md#enum-BehaviorId)
 
 ### Lua Example
 
@@ -88,46 +88,46 @@ The lua functions sent to `hook_event()` will be automatically called by SM64 wh
 | Type | Description | Parameters |
 | :--- | :---------- | :--------- |
 | HOOK_UPDATE | Called once per frame | None |
-| HOOK_MARIO_UPDATE | Called once per player per frame at the end of a mario update | [MarioState](structs.md#MarioState) mario |
-| HOOK_BEFORE_MARIO_UPDATE | Called once per player per frame at the beginning of a mario update | [MarioState](structs.md#MarioState) mario |
-| HOOK_ON_SET_MARIO_ACTION | Called every time a player's current action is changed | [MarioState](structs.md#MarioState) mario |
-| HOOK_BEFORE_PHYS_STEP | Called once per player per frame before physics code is run, return an integer to cancel it with your own step result | [MarioState](structs.md#MarioState) mario, `integer` stepType |
-| HOOK_ALLOW_PVP_ATTACK | Called when one player attacks another, return `true` to allow the attack | [MarioState](structs.md#MarioState) attacker, [MarioState](structs.md#MarioState) victim |
-| HOOK_ON_PVP_ATTACK | Called when one player attacks another | [MarioState](structs.md#MarioState) attacker, [MarioState](structs.md#MarioState) victim |
-| HOOK_ON_PLAYER_CONNECTED | Called when a player connects | [MarioState](structs.md#MarioState) connector |
-| HOOK_ON_PLAYER_DISCONNECTED | Called when a player disconnects | [MarioState](structs.md#MarioState) disconnector |
+| HOOK_MARIO_UPDATE | Called once per player per frame at the end of a mario update | [MarioState](../structs.md#MarioState) mario |
+| HOOK_BEFORE_MARIO_UPDATE | Called once per player per frame at the beginning of a mario update | [MarioState](../structs.md#MarioState) mario |
+| HOOK_ON_SET_MARIO_ACTION | Called every time a player's current action is changed | [MarioState](../structs.md#MarioState) mario |
+| HOOK_BEFORE_PHYS_STEP | Called once per player per frame before physics code is run, return an integer to cancel it with your own step result | [MarioState](../structs.md#MarioState) mario, `integer` stepType |
+| HOOK_ALLOW_PVP_ATTACK | Called when one player attacks another, return `true` to allow the attack | [MarioState](../structs.md#MarioState) attacker, [MarioState](../structs.md#MarioState) victim, `integer` interaction |
+| HOOK_ON_PVP_ATTACK | Called when one player attacks another | [MarioState](../structs.md#MarioState) attacker, [MarioState](../structs.md#MarioState) victim, `integer` interaction |
+| HOOK_ON_PLAYER_CONNECTED | Called when a player connects | [MarioState](../structs.md#MarioState) connector |
+| HOOK_ON_PLAYER_DISCONNECTED | Called when a player disconnects | [MarioState](../structs.md#MarioState) disconnector |
 | HOOK_ON_HUD_RENDER | Called when the HUD is being rendered | None |
 | HOOK_ON_HUD_RENDER_BEHIND | Called when the HUD is being rendered, every HUD call in this hook renders behind the vanilla HUD | None |
-| HOOK_ALLOW_INTERACT | Called before mario interacts with an object, return `true` to allow the interaction | [MarioState](structs.md#MarioState) interactor, [Object](structs.md#Object) interactee, [enum InteractionType](constants.md#enum-InteractionType) interactType |
-| HOOK_ON_INTERACT | Called when mario interacts with an object | [MarioState](structs.md#MarioState) interactor, [Object](structs.md#Object) interactee, [enum InteractionType](constants.md#enum-InteractionType) interactType, bool interactValue |
+| HOOK_ALLOW_INTERACT | Called before mario interacts with an object, return `true` to allow the interaction | [MarioState](../structs.md#MarioState) interactor, [Object](../structs.md#Object) interactee, [enum InteractionType](../constants.md#enum-InteractionType) interactType |
+| HOOK_ON_INTERACT | Called when mario interacts with an object | [MarioState](../structs.md#MarioState) interactor, [Object](../structs.md#Object) interactee, [enum InteractionType](../constants.md#enum-InteractionType) interactType, bool interactValue |
 | HOOK_ON_LEVEL_INIT | Called when the level is initialized | None |
 | HOOK_ON_WARP | Called when the local player warps | None |
 | HOOK_ON_SYNC_VALID | Called when the current area is synchronized | None |
-| HOOK_ON_OBJECT_UNLOAD | Called when any object is unloaded | [Object](structs.md#Object) unloadedObject |
-| HOOK_ON_SYNC_OBJECT_UNLOAD | Called when any networked object is unloaded | [Object](structs.md#Object) unloadedObject |
+| HOOK_ON_OBJECT_UNLOAD | Called when any object is unloaded | [Object](../structs.md#Object) unloadedObject |
+| HOOK_ON_SYNC_OBJECT_UNLOAD | Called when any networked object is unloaded | [Object](../structs.md#Object) unloadedObject |
 | HOOK_ON_PAUSE_EXIT | Called when the local player exits through the pause screen, return `false` to prevent the exit |  `boolean` usedExitToCastle |
-| HOOK_GET_STAR_COLLECTION_DIALOG | Called when the local player collects a star, return a [DialogId](constants.md#enum-DialogId) to show a message | None |
-| HOOK_ON_SET_CAMERA_MODE | Called when the camera mode gets set, return `false` to prevent the camera mode from being set | [Camera](structs.md#Camera), `integer` mode, `integer` frames |
-| HOOK_ON_OBJECT_RENDER | Called right before an object is rendered **Note:** You must set the `hookRender` field of the object to a non-zero value | [Object](structs.md#Object) renderedObj |
-| HOOK_ON_DEATH | Called when the local player dies, return `false` to prevent normal death sequence | [MarioState](structs.md#MarioState) localMario |
+| HOOK_GET_STAR_COLLECTION_DIALOG | Called when the local player collects a star, return a [DialogId](../constants.md#enum-DialogId) to show a message | None |
+| HOOK_ON_SET_CAMERA_MODE | Called when the camera mode gets set, return `false` to prevent the camera mode from being set | [Camera](../structs.md#Camera), `integer` mode, `integer` frames |
+| HOOK_ON_OBJECT_RENDER | Called right before an object is rendered **Note:** You must set the `hookRender` field of the object to a non-zero value | [Object](../structs.md#Object) renderedObj |
+| HOOK_ON_DEATH | Called when the local player dies, return `false` to prevent normal death sequence | [MarioState](../structs.md#MarioState) localMario |
 | HOOK_ON_PACKET_RECEIVE | Called when the mod receives a packet that used `network_send()` or `network_send_to()` | `table` dataTable |
 | HOOK_USE_ACT_SELECT | Called when the level changes, return `true` to show act selection screen and `false` otherwise | `integer` levelNum |
 | HOOK_ON_CHANGE_CAMERA_ANGLE | Called when the player changes the camera mode to Lakitu cam or Mario cam, return `false` to prevent the change | `integer` mode |
 | HOOK_ON_SCREEN_TRANSITION | Called when the game is about to play a transition, return `false` to prevent the transition from playing | `integer` type |
-| HOOK_ALLOW_HAZARD_SURFACE | Called once per player per frame. Return `false` to prevent the player from being affected by lava or quicksand | [MarioState](structs.md#MarioState) mario, `integer` hazardType |
-| HOOK_ON_CHAT_MESSAGE | Called when a chat message gets sent. Return `false` to prevent the message from being sent | [MarioState](structs.md#MarioState) messageSender, `string` messageSent |
-| HOOK_OBJECT_SET_MODEL | Called when a behavior changes models. Also runs when a behavior spawns | [Object](structs.md#Object) obj, `integer` modelID |
-| HOOK_CHARACTER_SOUND | Called when mario retrieves a character sound to play, return a character sound or `0` to override it | [MarioState](structs.md#MarioState) mario, [enum CharacterSound](constants.md#enum-CharacterSound) characterSound |
-| HOOK_BEFORE_SET_MARIO_ACTION | Called before Mario's action changes Return an action to change the incoming action or `1` to cancel the action change | [MarioState](structs.md#MarioState) mario, `integer` incomingAction |
+| HOOK_ALLOW_HAZARD_SURFACE | Called once per player per frame. Return `false` to prevent the player from being affected by lava or quicksand | [MarioState](../structs.md#MarioState) mario, `integer` hazardType |
+| HOOK_ON_CHAT_MESSAGE | Called when a chat message gets sent. Return `false` to prevent the message from being sent | [MarioState](../structs.md#MarioState) messageSender, `string` messageSent |
+| HOOK_OBJECT_SET_MODEL | Called when a behavior changes models. Also runs when a behavior spawns | [Object](../structs.md#Object) obj, `integer` modelID |
+| HOOK_CHARACTER_SOUND | Called when mario retrieves a character sound to play, return a character sound or `0` to override it | [MarioState](../structs.md#MarioState) mario, [enum CharacterSound](../constants.md#enum-CharacterSound) characterSound |
+| HOOK_BEFORE_SET_MARIO_ACTION | Called before Mario's action changes Return an action to change the incoming action or `1` to cancel the action change | [MarioState](../structs.md#MarioState) mario, `integer` incomingAction |
 | HOOK_JOINED_GAME | Called when the local player finishes the join process (if the player isn't the host) | None |
-| HOOK_ON_OBJECT_ANIM_UPDATE | Called when an object's animation is updated | [Object](structs.md#Object) objNode |
+| HOOK_ON_OBJECT_ANIM_UPDATE | Called when an object's animation is updated | [Object](../structs.md#Object) objNode |
 | HOOK_ON_DIALOG | Called when a dialog appears. Return `false` to prevent it from appearing | `integer` dialogId |
 | HOOK_ON_EXIT | Called before the game shuts down | None |
 | HOOK_DIALOG_SOUND | Called when a dialog box sound is going to play, return a `DS_*` constant to override the sound | `integer` dialogSound |
-| HOOK_ON_COLLIDE_LEVEL_BOUNDS | Called when a mario collides with the level boundaries | [MarioState](structs.md#MarioState) mario |
-| HOOK_MIRROR_MARIO_RENDER | Called when a Mirror Mario is rendered | [GraphNodeObject](structs.md#GraphNodeObject) mirrorMario | `integer` mirrorMarioIndex |
-| HOOK_OVERRIDE_PHYS_STEP_DEFACTO_SPEED | Called when slope defacto speed for walking is being calculated, overrides the floor normal in the equation | [MarioState](structs.md#MarioState) mario |
-| HOOK_ON_OBJECT_LOAD | Called when an object is spawned in | [Object](structs.md#Object) obj |
+| HOOK_ON_COLLIDE_LEVEL_BOUNDS | Called when a mario collides with the level boundaries | [MarioState](../structs.md#MarioState) mario |
+| HOOK_MIRROR_MARIO_RENDER | Called when a Mirror Mario is rendered | [GraphNodeObject](../structs.md#GraphNodeObject) mirrorMario | `integer` mirrorMarioIndex |
+| HOOK_OVERRIDE_PHYS_STEP_DEFACTO_SPEED | Called when slope defacto speed for walking is being calculated, overrides the floor normal in the equation | [MarioState](../structs.md#MarioState) mario |
+| HOOK_ON_OBJECT_LOAD | Called when an object is spawned in | [Object](../structs.md#Object) obj |
 | HOOK_ON_PLAY_SOUND | Called when a sound is going to play, return a `SOUND_*` constant or `NO_SOUND` to override the sound | `integer` soundBits, `Vec3f` pos |
 
 ### Parameters
@@ -160,8 +160,8 @@ hook_event(HOOK_MARIO_UPDATE, mario_update)
 | Field | Type |
 | ----- | ---- |
 | action_id | `integer` |
-| func | Table with entries for [Action Hook Types](#action-hook-types) of `Lua Function` ([MarioState](structs.md#MarioState) m) |
-| interaction_type | [enum InteractionFlag](constants.md#enum-InteractionFlag) <optional> |
+| func | Table with entries for [Action Hook Types](#action-hook-types) of `Lua Function` ([MarioState](../structs.md#MarioState) m) |
+| interaction_type | [enum InteractionFlag](../constants.md#enum-InteractionFlag) <optional> |
 
 #### [Action Hook Types](#action-hook-types)
 
@@ -238,7 +238,7 @@ hook_mario_action(ACT_WALL_SLIDE, { every_frame = act_wall_slide, gravity = act_
 
 ## [hook_on_sync_table_change](#hook_on_sync_table_change)
 `hook_on_sync_table_change()` allows Lua mods to react to sync table changes.
- - `syncTable` parameter must be a sync table, e.g. [gGlobalSyncTable](globals.md#gGlobalSyncTable), [gPlayerSyncTable[]](globals.md#gPlayerSyncTable), or one of their child tables.
+ - `syncTable` parameter must be a sync table, e.g. [gGlobalSyncTable](../globals.md#gGlobalSyncTable), [gPlayerSyncTable[]](../globals.md#gPlayerSyncTable), or one of their child tables.
  - `field` parameter must be one of the fields in the `SyncTable`.
  - `tag` parameter can be any type, and is automatically passed to the callback.
  - `func` parameter must be a function with three parameters: `tag`, `oldVal`, and `newVal`.
