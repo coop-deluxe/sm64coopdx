@@ -669,6 +669,7 @@ static const struct BuiltinTexInfo sDynosBuiltinTexs[] = {
     define_builtin_tex(texture_hud_char_question, "textures/segment2/segment2.05000.rgba16.png", 16, 16, 16),
     define_builtin_tex(texture_hud_char_ampersand, "textures/segment2/custom_hud_ampersand.rgba16.png", 16, 16, 16),
     define_builtin_tex(texture_hud_char_percent, "textures/segment2/custom_hud_percent.rgba16.png", 16, 16, 16),
+    define_builtin_tex(texture_hud_char_slash, "textures/segment2/custom_hud_slash.rgba16.png", 16, 16, 16),
     define_builtin_tex(texture_hud_char_multiply, "textures/segment2/segment2.05600.rgba16.png", 16, 16, 16),
     define_builtin_tex(texture_hud_char_coin, "textures/segment2/segment2.05800.rgba16.png", 16, 16, 16),
     define_builtin_tex(texture_hud_char_mario_head, "textures/segment2/segment2.05A00.rgba16.png", 16, 16, 16),
