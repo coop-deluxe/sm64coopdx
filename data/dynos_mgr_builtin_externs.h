@@ -656,6 +656,7 @@ extern ALIGNED8 const Texture texture_hud_char_hashtag[];
 extern ALIGNED8 const Texture texture_hud_char_question[];
 extern ALIGNED8 const Texture texture_hud_char_ampersand[];
 extern ALIGNED8 const Texture texture_hud_char_percent[];
+extern ALIGNED8 const Texture texture_hud_char_slash[];
 extern ALIGNED8 const Texture texture_hud_char_multiply[];
 extern ALIGNED8 const Texture texture_hud_char_coin[];
 extern ALIGNED8 const Texture texture_hud_char_mario_head[];
