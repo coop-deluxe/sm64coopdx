@@ -1334,7 +1334,7 @@ static u8 get_sound_reverb(UNUSED u8 bank, UNUSED u8 soundIndex, u8 channelIndex
         area = 0;
     } else {
 #endif
-        level = (gCurrLevelNum > LEVEL_MAX ? LEVEL_MAX : gCurrLevelNum);
+        level = gCurrLevelNum;
         area = gCurrAreaIndex - 1;
         if (area > 2) {
             area = 2;
