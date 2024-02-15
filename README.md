@@ -6,7 +6,7 @@ Run `./extract_assets.py --clean && make clean` or `make distclean` to clear ROM
 
 ## How to Play
 
-The easiest way to play is by using [coopdx-patcher](https://github.com/coop-deluxe/coopdx-patcher/releases/latest/download/coopdx-patcher.exe). Simply drag and drop your ROM into the program or run `coopdx-patcher "your_rom_name.z64"`.
+The easiest way to play is by using [coopdx-patcher](https://github.com/coop-deluxe/coopdx-patcher/releases/latest/download/coopdx-patcher.zip). Simply drag and drop your ROM into the program or run `coopdx-patcher "your_rom_name.z64"`.
 
 ## How to Compile
 
