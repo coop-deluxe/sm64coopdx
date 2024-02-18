@@ -5,6 +5,8 @@
 
 #include "types.h"
 
+#include "pc/lua/utils/smlua_audio_utils.h"
+
 // Sequence arguments, passed to seq_player_play_sequence. seqId may be bit-OR'ed with
 // SEQ_VARIATION; this will load the same sequence, but set a variation
 // bit which may be read by the sequence script.
@@ -44,7 +46,7 @@ extern s32 gAudioErrorFlags;
 extern f32 gGlobalSoundSource[3];
 
 extern const u8 sBackgroundMusicDefaultVolumeDefault[35];
-extern u8 sBackgroundMusicDefaultVolume[64];
+extern u8 sBackgroundMusicDefaultVolume[MAX_AUDIO_OVERRIDE];
 
 // defined in data.c, used by the game
 extern u32 gAudioRandom;

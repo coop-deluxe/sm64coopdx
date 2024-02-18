@@ -299,7 +299,7 @@ const u8 sBackgroundMusicDefaultVolumeDefault[35] = {
 };
 
 // Default volume for background music sequences (playing on player 0).
-u8 sBackgroundMusicDefaultVolume[64] = {
+u8 sBackgroundMusicDefaultVolume[MAX_AUDIO_OVERRIDE] = {
     127, // SEQ_SOUND_PLAYER
     80,  // SEQ_EVENT_CUTSCENE_COLLECT_STAR
     80,  // SEQ_MENU_TITLE_SCREEN
@@ -366,7 +366,7 @@ u8 sBackgroundMusicDefaultVolume[64] = {
     75,  // SEQ_???
 };
 
-STATIC_ASSERT(ARRAY_COUNT(sBackgroundMusicDefaultVolume) == 64,
+STATIC_ASSERT(ARRAY_COUNT(sBackgroundMusicDefaultVolume) == MAX_AUDIO_OVERRIDE,
               "change this array if you are adding sequences");
 
 u8 sCurrentBackgroundMusicSeqId = SEQUENCE_NONE;
@@ -836,6 +836,7 @@ extern f32 *smlua_get_vec3f_for_play_sound(f32 *pos);
 
 void play_sound(s32 soundBits, f32 *pos) {
     pos = smlua_get_vec3f_for_play_sound(pos);
+    smlua_call_event_hooks_on_play_sound(HOOK_ON_PLAY_SOUND, soundBits, pos, &soundBits);
     sSoundRequests[sSoundRequestCount].soundBits = soundBits;
     sSoundRequests[sSoundRequestCount].position = pos;
     sSoundRequests[sSoundRequestCount].customFreqScale = 0;
@@ -844,6 +845,7 @@ void play_sound(s32 soundBits, f32 *pos) {
 
 void play_sound_with_freq_scale(s32 soundBits, f32* pos, f32 freqScale) {
     pos = smlua_get_vec3f_for_play_sound(pos);
+    smlua_call_event_hooks_on_play_sound(HOOK_ON_PLAY_SOUND, soundBits, pos, &soundBits);
     sSoundRequests[sSoundRequestCount].soundBits = soundBits;
     sSoundRequests[sSoundRequestCount].position = pos;
     sSoundRequests[sSoundRequestCount].customFreqScale = freqScale;

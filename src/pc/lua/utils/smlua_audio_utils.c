@@ -10,8 +10,6 @@
 #include "bass_audio/bass_audio_helpers.h"
 #include "pc/debuglog.h"
 
-#define MAX_AUDIO_OVERRIDE 128
-
 struct AudioOverride {
     bool enabled;
     bool loaded;

@@ -671,6 +671,52 @@ void smlua_call_event_hooks_value_param(enum LuaHookedEventType hookType, int mo
     }
 }
 
+void smlua_call_event_hooks_on_play_sound(enum LuaHookedEventType hookType, s32 soundBits, f32* pos, s32* returnValue) {
+    lua_State* L = gLuaState;
+    if (L == NULL) { return; }
+    struct LuaHookedEvent* hook = &sHookedEvents[hookType];
+    for (int i = 0; i < hook->count; i++) {
+        s32 prevTop = lua_gettop(L);
+
+        // push the callback onto the stack
+        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
+
+        // push sound bits
+        lua_pushinteger(L, soundBits);
+
+        // push vec3f
+        lua_newtable(L);
+        int valTableIndex = lua_gettop(L);
+
+        lua_pushstring(L, "x");
+        lua_pushnumber(L, pos[0]);
+        lua_settable(L, valTableIndex);
+
+        lua_pushstring(L, "y");
+        lua_pushnumber(L, pos[1]);
+        lua_settable(L, valTableIndex);
+
+        lua_pushstring(L, "z");
+        lua_pushnumber(L, pos[2]);
+        lua_settable(L, valTableIndex);
+
+        // call the callback
+        if (0 != smlua_call_hook(L, 2, 1, 0, hook->mod[i])) {
+            LOG_LUA("Failed to call the callback: %u", hookType);
+            continue;
+        }
+
+        // output the return value
+        if (lua_type(L, -1) == LUA_TNUMBER) {
+            *returnValue = smlua_to_integer(L, -1);
+            lua_settop(L, prevTop);
+            return;
+        } else {
+            lua_settop(L, prevTop);
+        }
+    }
+}
+
 void smlua_call_event_hooks_use_act_select(enum LuaHookedEventType hookType, int value, bool* foundHook, bool* returnValue) {
     lua_State* L = gLuaState;
     *foundHook = false;

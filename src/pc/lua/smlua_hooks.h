@@ -52,6 +52,7 @@ enum LuaHookedEventType {
     HOOK_MIRROR_MARIO_RENDER,
     HOOK_OVERRIDE_PHYS_STEP_DEFACTO_SPEED,
     HOOK_ON_OBJECT_LOAD,
+    HOOK_ON_PLAY_SOUND,
     HOOK_MAX,
 };
 
@@ -97,6 +98,7 @@ static const char* LuaHookedEventTypeName[] = {
     "HOOK_MIRROR_MARIO_RENDER",
     "HOOK_OVERRIDE_PHYS_STEP_DEFACTO_SPEED",
     "HOOK_ON_OBJECT_LOAD",
+    "HOOK_ON_PLAY_SOUND",
     "HOOK_MAX"
 };
 
@@ -134,6 +136,7 @@ void smlua_call_event_hooks_set_camera_mode_params(enum LuaHookedEventType hookT
 void smlua_call_event_hooks_int_params_ret_bool(enum LuaHookedEventType hookType, s16 param, bool* returnValue);
 void smlua_call_event_hooks_int_params_ret_int(enum LuaHookedEventType hookType, s32 param, s32* returnValue);
 void smlua_call_event_hooks_value_param(enum LuaHookedEventType hookType, int modIndex, int valueIndex);
+void smlua_call_event_hooks_on_play_sound(enum LuaHookedEventType hookType, s32 soundBits, f32* pos, s32* returnValue);
 void smlua_call_event_hooks_use_act_select(enum LuaHookedEventType hookType, int value, bool* foundHook, bool* returnValue);
 void smlua_call_event_hooks_ret_bool(enum LuaHookedEventType hookType, bool* returnValue);
 void smlua_call_event_hooks_on_chat_message(enum LuaHookedEventType hookType, struct MarioState* m, const char* message, bool* returnValue);

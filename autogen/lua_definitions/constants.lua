@@ -397,6 +397,7 @@ COURSE_MIN = 1
 -----------------
 -- legacy font --
 -----------------
+
 FONT_TINY = -1
 
 --- @type integer
@@ -9294,7 +9295,10 @@ HOOK_OVERRIDE_PHYS_STEP_DEFACTO_SPEED = 39
 HOOK_ON_OBJECT_LOAD = 40
 
 --- @type LuaHookedEventType
-HOOK_MAX = 41
+HOOK_ON_PLAY_SOUND = 41
+
+--- @type LuaHookedEventType
+HOOK_MAX = 42
 
 --- @class HudDisplayFlags
 
@@ -12595,7 +12599,7 @@ MINOR_VERSION_NUMBER = 1
 PATCH_VERSION_NUMBER = 0
 
 --- @type string
-SM64COOPDX_VERSION = "v0.1.3"
+SM64COOPDX_VERSION = "v0.1.4"
 
 --- @type integer
 VERSION_NUMBER = 36

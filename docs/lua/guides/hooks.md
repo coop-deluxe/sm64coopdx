@@ -128,6 +128,7 @@ The lua functions sent to `hook_event()` will be automatically called by SM64 wh
 | HOOK_MIRROR_MARIO_RENDER | Called when a Mirror Mario is rendered | [GraphNodeObject](structs.md#GraphNodeObject) mirrorMario | `integer` mirrorMarioIndex |
 | HOOK_OVERRIDE_PHYS_STEP_DEFACTO_SPEED | Called when slope defacto speed for walking is being calculated, overrides the floor normal in the equation | [MarioState](structs.md#MarioState) mario |
 | HOOK_ON_OBJECT_LOAD | Called when an object is spawned in | [Object](structs.md#Object) obj |
+| HOOK_ON_PLAY_SOUND | Called when a sound is going to play, return a `SOUND_*` constant or `NO_SOUND` to override the sound | `integer` soundBits, `Vec3f` pos |
 
 ### Parameters
 
