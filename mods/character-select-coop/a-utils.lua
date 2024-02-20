@@ -1,7 +1,3 @@
-----------------------
--- Global Functions --
-----------------------
-
 local saveableCharacters = {
     ["1"] = true,
     ["2"] = true,
@@ -41,6 +37,10 @@ local saveableCharacters = {
     ["z"] = true,
     ["_"] = true,
     ["-"] = true,
+    ["."] = true,
+
+    -- Replace with Underscore
+    [" "] = false,
 }
 
 function string_underscore_to_space(string)
@@ -62,25 +62,32 @@ function string_space_to_underscore(string)
         local c = string:sub(i,i)
         if saveableCharacters[string.lower(c)] then
             s = s .. c
-        else
+        elseif saveableCharacters[string.lower(c)] ~= nil then
             s = s .. "_"
         end
     end
     return s
 end
 
-function version_coop_dx()
-    if SM64COOPDX_VERSION then
-        return true
-    else
-        return false
+function string_split(s)
+    local result = {}
+    for match in (s):gmatch(string.format("[^%s]+", " ")) do
+        table.insert(result, match)
+    end
+    return result
+end
+
+client_is_coop_dx = get_coop_compatibility_enabled ~= nil -- Checks if Client is DX
+-- network_is_coop_dx = SM64COOPDX_VERSION ~= nil -- Checks if Coop Compatibility is Off (As of now unused)
+
+ommActive = false
+for i in pairs(gActiveMods) do
+    local name = gActiveMods[i].name
+    if (name:find("OMM Rebirth")) then
+        ommActive = true
     end
 end
 
-----------------------
--- Global Variables --
-----------------------
-
-modVersion = "1.5.3"
+modVersion = "1.6"
 
 allowMenu = {}
