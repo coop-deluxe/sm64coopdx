@@ -88,6 +88,6 @@ for i in pairs(gActiveMods) do
     end
 end
 
-modVersion = "1.6"
+modVersion = "1.6.1"
 
 allowMenu = {}
