@@ -980,7 +980,7 @@ u32 interact_star_or_key(struct MarioState *m, UNUSED u32 interactType, struct O
         m->interactObj = o;
         m->usedObj = o;
 
-        starIndex = o->oBehParams >> 24;
+        starIndex = (o->oBehParams >> 24) & (gLevelValues.useGlobalStarIds ? 0xFF : 0x1F);
 
         if (m == &gMarioStates[0]) {
             // sync the star collection

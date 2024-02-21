@@ -121,7 +121,8 @@ struct LevelValues gDefaultLevelValues = {
     .maxLives                         = 100,
     .maxCoins                         = 999,
     .numCoinsToLife                   = 50,
-    .wdwWaterLevelSpeed               = 10.0f
+    .wdwWaterLevelSpeed               = 10.0f,
+    .useGlobalStarIds                 = FALSE
 };
 
 struct LevelValues gLevelValues = { 0 };

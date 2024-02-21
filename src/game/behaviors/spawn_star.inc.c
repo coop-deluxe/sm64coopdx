@@ -63,8 +63,8 @@ void bhv_collect_star_init(void) {
     u8 currentLevelStarFlags;
 
     starId = o->oBehParams >> 24;
-    currentLevelStarFlags = save_file_get_star_flags(gCurrSaveFileNum - 1, gCurrCourseNum - 1);
-    if (currentLevelStarFlags & (1 << starId)) {
+    currentLevelStarFlags = save_file_get_star_flags(gCurrSaveFileNum - 1, (gLevelValues.useGlobalStarIds ? (starId / 7) - 1 : gCurrCourseNum - 1));
+    if (currentLevelStarFlags & (1 << (gLevelValues.useGlobalStarIds ? starId % 7 : starId))) {
         cur_obj_set_model(MODEL_TRANSPARENT_STAR);
     } else {
         cur_obj_set_model(MODEL_STAR);

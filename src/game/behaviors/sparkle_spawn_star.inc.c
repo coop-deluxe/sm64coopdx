@@ -17,8 +17,9 @@ void bhv_spawned_star_init(void) {
         o->oBehParams = o->parentObj->oBehParams;
     }
     s32 starId = (o->oBehParams >> 24) & 0xFF;
-    if (bit_shift_left(starId) & save_file_get_star_flags(gCurrSaveFileNum - 1, gCurrCourseNum - 1))
+    if (bit_shift_left(gLevelValues.useGlobalStarIds ? starId % 7 : starId) & save_file_get_star_flags(gCurrSaveFileNum - 1, (gLevelValues.useGlobalStarIds ? (starId / 7) - 1 : gCurrCourseNum - 1))) {
         cur_obj_set_model(smlua_model_util_load(E_MODEL_TRANSPARENT_STAR));
+    }
     cur_obj_play_sound_2(SOUND_GENERAL2_STAR_APPEARS);
 
     // exclamation box stars are not sent through the normal exclamation box

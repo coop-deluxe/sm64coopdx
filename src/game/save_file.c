@@ -10,6 +10,7 @@
 #include "level_table.h"
 #include "course_table.h"
 #include "rumble_init.h"
+#include "hardcoded.h"
 #include "macros.h"
 #include "pc/network/network.h"
 #include "pc/lua/utils/smlua_level_utils.h"
@@ -524,7 +525,8 @@ void save_file_collect_star_or_key(s16 coinScore, s16 starIndex, u8 fromNetwork)
     if (INVALID_FILE_INDEX(fileIndex)) { return; }
     if (INVALID_SRC_SLOT(gSaveFileUsingBackupSlot)) { return; }
 
-    s32 starFlag = 1 << starIndex;
+    s32 starByte = (starIndex / 7) - 1;
+    s32 starFlag = 1 << (gLevelValues.useGlobalStarIds ? (starIndex % 7) : starIndex);
     UNUSED s32 flags = save_file_get_flags();
 
     if (!fromNetwork) {
@@ -568,8 +570,9 @@ void save_file_collect_star_or_key(s16 coinScore, s16 starIndex, u8 fromNetwork)
             break;
 
         default:
-            if (!(save_file_get_star_flags(fileIndex, courseIndex) & starFlag)) {
-                save_file_set_star_flags(fileIndex, courseIndex, starFlag);
+            s32 index = gLevelValues.useGlobalStarIds ? starByte : courseIndex;
+            if (!(save_file_get_star_flags(fileIndex, index) & starFlag)) {
+                save_file_set_star_flags(fileIndex, index, starFlag);
             }
             break;
     }

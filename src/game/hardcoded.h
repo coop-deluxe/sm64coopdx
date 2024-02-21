@@ -87,6 +87,7 @@ struct LevelValues {
     u16 maxCoins;
     u16 numCoinsToLife;
     f32 wdwWaterLevelSpeed;
+    u8 useGlobalStarIds;
 };
 
 extern struct LevelValues gLevelValues;

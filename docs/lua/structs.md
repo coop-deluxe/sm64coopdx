@@ -1258,6 +1258,7 @@
 | skipCreditsAt | [enum LevelNum](constants.md#enum-LevelNum) |  |
 | starHeal | `integer` |  |
 | starPositions | [StarPositions](structs.md#StarPositions) | read-only |
+| useGlobalStarIds | `integer` |  |
 | vanishCapDuration | `integer` |  |
 | vanishCapDurationVcutm | `integer` |  |
 | vanishCapSequence | [enum SeqId](constants.md#enum-SeqId) |  |

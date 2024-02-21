@@ -919,6 +919,7 @@
 --- @field public skipCreditsAt LevelNum
 --- @field public starHeal integer
 --- @field public starPositions StarPositions
+--- @field public useGlobalStarIds integer
 --- @field public vanishCapDuration integer
 --- @field public vanishCapDurationVcutm integer
 --- @field public vanishCapSequence SeqId
