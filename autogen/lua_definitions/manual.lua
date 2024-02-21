@@ -268,6 +268,8 @@ end
 --- @param overrideTexInfo TextureInfo
 --- @return nil
 --- Overrides a texture with a custom `TextureInfo`
+--- * textureName must be the codename of a vanilla texture, you can find these in files such as `texture.inc.c`s
+--- * overrideTexInfo can be any TextureInfo
 function texture_override_set(textureName, overrideTexInfo)
     -- ...
 end
