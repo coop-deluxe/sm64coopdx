@@ -336,6 +336,7 @@
 | RacingPenguinHeight | `number` |  |
 | RacingPenguinRadius | `number` |  |
 | RespawnShellBoxes | `integer` |  |
+| ShowStarDialog | `integer` |  |
 | ShowStarMilestones | `integer` |  |
 | ToadStar1Requirement | `integer` |  |
 | ToadStar2Requirement | `integer` |  |

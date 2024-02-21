@@ -251,6 +251,7 @@ struct BehaviorValues {
     u16 GrateStarRequirement;
     f32 ChillBullyDeathPosY;
     u8  ShowStarMilestones;
+    u8  ShowStarDialog;
     u8  RespawnShellBoxes;
     u8  MultipleCapCollection;
     u8  InfiniteRenderDistance;

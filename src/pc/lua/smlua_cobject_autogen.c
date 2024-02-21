@@ -218,7 +218,7 @@ static struct LuaObjectField sBehaviorTrajectoriesFields[LUA_BEHAVIOR_TRAJECTORI
     { "UnagiTrajectory",               LVT_TRAJECTORY_P, offsetof(struct BehaviorTrajectories, UnagiTrajectory),               false, LOT_POINTER },
 };
 
-#define LUA_BEHAVIOR_VALUES_FIELD_COUNT 30
+#define LUA_BEHAVIOR_VALUES_FIELD_COUNT 31
 static struct LuaObjectField sBehaviorValuesFields[LUA_BEHAVIOR_VALUES_FIELD_COUNT] = {
     { "BowlingBallBob2Speed",     LVT_F32,     offsetof(struct BehaviorValues, BowlingBallBob2Speed),     false, LOT_NONE                 },
     { "BowlingBallBobSpeed",      LVT_F32,     offsetof(struct BehaviorValues, BowlingBallBobSpeed),      false, LOT_NONE                 },
@@ -243,6 +243,7 @@ static struct LuaObjectField sBehaviorValuesFields[LUA_BEHAVIOR_VALUES_FIELD_COU
     { "RacingPenguinHeight",      LVT_F32,     offsetof(struct BehaviorValues, RacingPenguinHeight),      false, LOT_NONE                 },
     { "RacingPenguinRadius",      LVT_F32,     offsetof(struct BehaviorValues, RacingPenguinRadius),      false, LOT_NONE                 },
     { "RespawnShellBoxes",        LVT_U8,      offsetof(struct BehaviorValues, RespawnShellBoxes),        false, LOT_NONE                 },
+    { "ShowStarDialog",           LVT_U8,      offsetof(struct BehaviorValues, ShowStarDialog),           false, LOT_NONE                 },
     { "ShowStarMilestones",       LVT_U8,      offsetof(struct BehaviorValues, ShowStarMilestones),       false, LOT_NONE                 },
     { "ToadStar1Requirement",     LVT_U16,     offsetof(struct BehaviorValues, ToadStar1Requirement),     false, LOT_NONE                 },
     { "ToadStar2Requirement",     LVT_U16,     offsetof(struct BehaviorValues, ToadStar2Requirement),     false, LOT_NONE                 },

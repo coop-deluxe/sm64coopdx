@@ -198,6 +198,7 @@
 --- @field public RacingPenguinHeight number
 --- @field public RacingPenguinRadius number
 --- @field public RespawnShellBoxes integer
+--- @field public ShowStarDialog integer
 --- @field public ShowStarMilestones integer
 --- @field public ToadStar1Requirement integer
 --- @field public ToadStar2Requirement integer

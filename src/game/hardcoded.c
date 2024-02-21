@@ -156,6 +156,7 @@ struct BehaviorValues gDefaultBehaviorValues = {
     .GrateStarRequirement     = 120,
     .ChillBullyDeathPosY      = 1030.0f,
     .ShowStarMilestones       = TRUE,
+    .ShowStarDialog           = TRUE,
     .RespawnShellBoxes        = TRUE,
     .MultipleCapCollection    = FALSE,
     .InfiniteRenderDistance   = TRUE,

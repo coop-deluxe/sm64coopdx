@@ -725,11 +725,15 @@ void general_star_dance_handler(struct MarioState *m, s32 isInWater) {
                 if ((m->actionArg & 1) == 0) {
                     level_trigger_warp(m, WARP_OP_STAR_EXIT);
                 } else if (m->playerIndex == 0) {
-                    enable_time_stop_if_alone();
-                    create_dialog_box_with_response((gLastCompletedStarNum == 7)
-                        ? gBehaviorValues.dialogs.HundredCoinsDialog
-                        : gBehaviorValues.dialogs.CollectedStarDialog);
-                    m->actionState = 1;
+                    if (gBehaviorValues.ShowStarDialog) {
+                        enable_time_stop_if_alone();
+                        create_dialog_box_with_response((gLastCompletedStarNum == 7)
+                            ? gBehaviorValues.dialogs.HundredCoinsDialog
+                            : gBehaviorValues.dialogs.CollectedStarDialog);
+                        m->actionState = 1;
+                    } else {
+                        m->actionState = 2;
+                    }
                 } else {
                     set_mario_action(m, isInWater ? ACT_WATER_IDLE : (m->pos[1] <= m->floorHeight ? ACT_IDLE : ACT_FREEFALL), 0);
                 }
