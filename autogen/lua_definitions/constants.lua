@@ -9358,6 +9358,9 @@ HUD_DISPLAY_FLAGS = 5
 --- @type HudDisplayValue
 HUD_DISPLAY_TIMER = 6
 
+--- @type HudDisplayValue
+HUD_DISPLAY_CAMERA_STATUS = 7
+
 --- @class ModelExtendedId
 
 --- @type ModelExtendedId

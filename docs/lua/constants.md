@@ -3360,6 +3360,7 @@
 | HUD_DISPLAY_KEYS | 4 |
 | HUD_DISPLAY_FLAGS | 5 |
 | HUD_DISPLAY_TIMER | 6 |
+| HUD_DISPLAY_CAMERA_STATUS | 7 |
 
 [:arrow_up_small:](#)
 

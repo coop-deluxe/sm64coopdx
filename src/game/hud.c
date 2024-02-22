@@ -545,6 +545,10 @@ void render_hud_timer(void) {
     gSPDisplayList(gDisplayListHead++, dl_hud_img_end);
 }
 
+s16 get_hud_camera_status(void) {
+    return sCameraHUD.status;
+}
+
 /**
  * Sets HUD status camera value depending of the actions
  * defined in update_camera_status.
