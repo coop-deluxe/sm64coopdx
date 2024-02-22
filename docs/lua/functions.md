@@ -860,6 +860,7 @@
 - level_update.h
    - [get_painting_warp_node](functions-3.md#get_painting_warp_node)
    - [initiate_painting_warp](functions-3.md#initiate_painting_warp)
+   - [level_control_timer_running](functions-3.md#level_control_timer_running)
    - [level_trigger_warp](functions-3.md#level_trigger_warp)
    - [lvl_set_current_level](functions-3.md#lvl_set_current_level)
    - [warp_special](functions-3.md#warp_special)
@@ -1130,14 +1131,14 @@
 <br />
 
 - mod_storage.h
-   - [mod_storage_clear](functions-3.md#mod_storage_clear)
-   - [mod_storage_load](functions-3.md#mod_storage_load)
-   - [mod_storage_load_bool](functions-3.md#mod_storage_load_bool)
-   - [mod_storage_load_number](functions-3.md#mod_storage_load_number)
-   - [mod_storage_remove](functions-3.md#mod_storage_remove)
-   - [mod_storage_save](functions-3.md#mod_storage_save)
-   - [mod_storage_save_bool](functions-3.md#mod_storage_save_bool)
-   - [mod_storage_save_number](functions-3.md#mod_storage_save_number)
+   - [mod_storage_clear](functions-4.md#mod_storage_clear)
+   - [mod_storage_load](functions-4.md#mod_storage_load)
+   - [mod_storage_load_bool](functions-4.md#mod_storage_load_bool)
+   - [mod_storage_load_number](functions-4.md#mod_storage_load_number)
+   - [mod_storage_remove](functions-4.md#mod_storage_remove)
+   - [mod_storage_save](functions-4.md#mod_storage_save)
+   - [mod_storage_save_bool](functions-4.md#mod_storage_save_bool)
+   - [mod_storage_save_number](functions-4.md#mod_storage_save_number)
 
 <br />
 

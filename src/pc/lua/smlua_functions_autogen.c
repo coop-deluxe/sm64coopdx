@@ -13880,6 +13880,21 @@ int smlua_func_initiate_painting_warp(lua_State* L) {
     return 1;
 }
 
+int smlua_func_level_control_timer_running(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "level_control_timer_running", 0, top);
+        return 0;
+    }
+
+
+    lua_pushinteger(L, level_control_timer_running());
+
+    return 1;
+}
+
 int smlua_func_level_trigger_warp(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -32279,6 +32294,7 @@ void smlua_bind_functions_autogen(void) {
     // level_update.h
     smlua_bind_function(L, "get_painting_warp_node", smlua_func_get_painting_warp_node);
     smlua_bind_function(L, "initiate_painting_warp", smlua_func_initiate_painting_warp);
+    smlua_bind_function(L, "level_control_timer_running", smlua_func_level_control_timer_running);
     smlua_bind_function(L, "level_trigger_warp", smlua_func_level_trigger_warp);
     smlua_bind_function(L, "lvl_set_current_level", smlua_func_lvl_set_current_level);
     smlua_bind_function(L, "warp_special", smlua_func_warp_special);

@@ -4246,6 +4246,11 @@ function initiate_painting_warp(paintingIndex)
     -- ...
 end
 
+--- @return integer
+function level_control_timer_running()
+    -- ...
+end
+
 --- @param m MarioState
 --- @param warpOp integer
 --- @return integer

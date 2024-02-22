@@ -4047,6 +4047,24 @@
 
 <br />
 
+## [level_control_timer_running](#level_control_timer_running)
+
+### Lua Example
+`local integerValue = level_control_timer_running()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u8 level_control_timer_running(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [level_trigger_warp](#level_trigger_warp)
 
 ### Lua Example
@@ -8681,173 +8699,6 @@
 
 ### C Prototype
 `void update_all_mario_stars(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
----
-# functions from mod_storage.h
-
-<br />
-
-
-## [mod_storage_clear](#mod_storage_clear)
-
-### Lua Example
-`local booleanValue = mod_storage_clear()`
-
-### Parameters
-- None
-
-### Returns
-- `boolean`
-
-### C Prototype
-`bool mod_storage_clear(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [mod_storage_load](#mod_storage_load)
-
-### Lua Example
-`local stringValue = mod_storage_load(key)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| key | `string` |
-
-### Returns
-- `string`
-
-### C Prototype
-`const char *mod_storage_load(const char* key);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [mod_storage_load_bool](#mod_storage_load_bool)
-
-### Lua Example
-`local booleanValue = mod_storage_load_bool(key)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| key | `string` |
-
-### Returns
-- `boolean`
-
-### C Prototype
-`bool mod_storage_load_bool(const char* key);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [mod_storage_load_number](#mod_storage_load_number)
-
-### Lua Example
-`local numberValue = mod_storage_load_number(key)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| key | `string` |
-
-### Returns
-- `number`
-
-### C Prototype
-`double mod_storage_load_number(const char* key);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [mod_storage_remove](#mod_storage_remove)
-
-### Lua Example
-`local booleanValue = mod_storage_remove(key)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| key | `string` |
-
-### Returns
-- `boolean`
-
-### C Prototype
-`bool mod_storage_remove(const char* key);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [mod_storage_save](#mod_storage_save)
-
-### Lua Example
-`local booleanValue = mod_storage_save(key, value)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| key | `string` |
-| value | `string` |
-
-### Returns
-- `boolean`
-
-### C Prototype
-`bool mod_storage_save(const char* key, const char* value);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [mod_storage_save_bool](#mod_storage_save_bool)
-
-### Lua Example
-`local booleanValue = mod_storage_save_bool(key, value)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| key | `string` |
-| value | `boolean` |
-
-### Returns
-- `boolean`
-
-### C Prototype
-`bool mod_storage_save_bool(const char* key, bool value);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [mod_storage_save_number](#mod_storage_save_number)
-
-### Lua Example
-`local booleanValue = mod_storage_save_number(key, value)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| key | `string` |
-| value | `number` |
-
-### Returns
-- `boolean`
-
-### C Prototype
-`bool mod_storage_save_number(const char* key, double value);`
 
 [:arrow_up_small:](#)
 
