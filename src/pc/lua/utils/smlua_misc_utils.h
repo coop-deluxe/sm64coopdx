@@ -68,6 +68,8 @@ s32  hud_get_value(enum HudDisplayValue type);
 void hud_set_value(enum HudDisplayValue type, s32 value);
 void hud_render_power_meter(s32 health, f32 x, f32 y, f32 width, f32 height);
 void hud_render_power_meter_interpolated(s32 health, f32 prevX, f32 prevY, f32 prevWidth, f32 prevHeight, f32 x, f32 y, f32 width, f32 height);
+s8 hud_get_flash(void);
+void hud_set_flash(s8 value);
 
 void camera_reset_overrides(void);
 void camera_freeze(void);
@@ -152,6 +154,8 @@ struct DateTime* get_date_and_time(void);
 
 u16 get_envfx(void);
 void set_override_envfx(s32 envfx);
+
+u32 get_global_timer(void);
 
 bool get_coop_compatibility_enabled(void);
 

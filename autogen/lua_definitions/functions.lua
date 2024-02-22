@@ -8744,6 +8744,11 @@ function get_fog_intensity()
     -- ...
 end
 
+--- @return integer
+function get_global_timer()
+    -- ...
+end
+
 --- @return boolean
 function get_got_file_coin_hi_score()
     -- ...
@@ -8850,6 +8855,11 @@ function gfx_get_adjust_for_aspect_ratio()
     -- ...
 end
 
+--- @return integer
+function hud_get_flash()
+    -- ...
+end
+
 --- @param type HudDisplayValue
 --- @return integer
 function hud_get_value(type)
@@ -8887,6 +8897,12 @@ end
 --- @param height number
 --- @return nil
 function hud_render_power_meter_interpolated(health, prevX, prevY, prevWidth, prevHeight, x, y, width, height)
+    -- ...
+end
+
+--- @param value integer
+--- @return nil
+function hud_set_flash(value)
     -- ...
 end
 

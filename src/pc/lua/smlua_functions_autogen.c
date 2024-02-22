@@ -28890,6 +28890,21 @@ int smlua_func_get_fog_intensity(UNUSED lua_State* L) {
     return 1;
 }
 
+int smlua_func_get_global_timer(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "get_global_timer", 0, top);
+        return 0;
+    }
+
+
+    lua_pushinteger(L, get_global_timer());
+
+    return 1;
+}
+
 int smlua_func_get_got_file_coin_hi_score(UNUSED lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -29197,6 +29212,21 @@ int smlua_func_gfx_get_adjust_for_aspect_ratio(UNUSED lua_State* L) {
     return 1;
 }
 
+int smlua_func_hud_get_flash(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "hud_get_flash", 0, top);
+        return 0;
+    }
+
+
+    lua_pushinteger(L, hud_get_flash());
+
+    return 1;
+}
+
 int smlua_func_hud_get_value(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -29298,6 +29328,23 @@ int smlua_func_hud_render_power_meter_interpolated(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 9, "hud_render_power_meter_interpolated"); return 0; }
 
     hud_render_power_meter_interpolated(health, prevX, prevY, prevWidth, prevHeight, x, y, width, height);
+
+    return 1;
+}
+
+int smlua_func_hud_set_flash(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "hud_set_flash", 1, top);
+        return 0;
+    }
+
+    s8 value = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "hud_set_flash"); return 0; }
+
+    hud_set_flash(value);
 
     return 1;
 }
@@ -32975,6 +33022,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "get_environment_region", smlua_func_get_environment_region);
     smlua_bind_function(L, "get_fog_color", smlua_func_get_fog_color);
     smlua_bind_function(L, "get_fog_intensity", smlua_func_get_fog_intensity);
+    smlua_bind_function(L, "get_global_timer", smlua_func_get_global_timer);
     smlua_bind_function(L, "get_got_file_coin_hi_score", smlua_func_get_got_file_coin_hi_score);
     smlua_bind_function(L, "get_hand_foot_pos_x", smlua_func_get_hand_foot_pos_x);
     smlua_bind_function(L, "get_hand_foot_pos_y", smlua_func_get_hand_foot_pos_y);
@@ -32994,11 +33042,13 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "get_vertex_color", smlua_func_get_vertex_color);
     smlua_bind_function(L, "gfx_enable_adjust_for_aspect_ratio", smlua_func_gfx_enable_adjust_for_aspect_ratio);
     smlua_bind_function(L, "gfx_get_adjust_for_aspect_ratio", smlua_func_gfx_get_adjust_for_aspect_ratio);
+    smlua_bind_function(L, "hud_get_flash", smlua_func_hud_get_flash);
     smlua_bind_function(L, "hud_get_value", smlua_func_hud_get_value);
     smlua_bind_function(L, "hud_hide", smlua_func_hud_hide);
     smlua_bind_function(L, "hud_is_hidden", smlua_func_hud_is_hidden);
     smlua_bind_function(L, "hud_render_power_meter", smlua_func_hud_render_power_meter);
     smlua_bind_function(L, "hud_render_power_meter_interpolated", smlua_func_hud_render_power_meter_interpolated);
+    smlua_bind_function(L, "hud_set_flash", smlua_func_hud_set_flash);
     smlua_bind_function(L, "hud_set_value", smlua_func_hud_set_value);
     smlua_bind_function(L, "hud_show", smlua_func_hud_show);
     smlua_bind_function(L, "is_game_paused", smlua_func_is_game_paused);

@@ -172,17 +172,18 @@ void hud_set_value(enum HudDisplayValue type, s32 value) {
     }
 }
 
+extern const u8 texture_power_meter_left_side[];
+extern const u8 texture_power_meter_right_side[];
+extern const u8 texture_power_meter_full[];
+extern const u8 texture_power_meter_seven_segments[];
+extern const u8 texture_power_meter_six_segments[];
+extern const u8 texture_power_meter_five_segments[];
+extern const u8 texture_power_meter_four_segments[];
+extern const u8 texture_power_meter_three_segments[];
+extern const u8 texture_power_meter_two_segments[];
+extern const u8 texture_power_meter_one_segments[];
+
 void hud_render_power_meter(s32 health, f32 x, f32 y, f32 width, f32 height) {
-    extern const u8 texture_power_meter_left_side[];
-    extern const u8 texture_power_meter_right_side[];
-    extern const u8 texture_power_meter_full[];
-    extern const u8 texture_power_meter_seven_segments[];
-    extern const u8 texture_power_meter_six_segments[];
-    extern const u8 texture_power_meter_five_segments[];
-    extern const u8 texture_power_meter_four_segments[];
-    extern const u8 texture_power_meter_three_segments[];
-    extern const u8 texture_power_meter_two_segments[];
-    extern const u8 texture_power_meter_one_segments[];
     static struct TextureInfo sPowerMeterTexturesInfo[] = {
         { (u8*)texture_power_meter_left_side,      8, 32, 64, "texture_power_meter_left_side"      },
         { (u8*)texture_power_meter_right_side,     8, 32, 64, "texture_power_meter_right_side"     },
@@ -204,16 +205,6 @@ void hud_render_power_meter(s32 health, f32 x, f32 y, f32 width, f32 height) {
 }
 
 void hud_render_power_meter_interpolated(s32 health, f32 prevX, f32 prevY, f32 prevWidth, f32 prevHeight, f32 x, f32 y, f32 width, f32 height) {
-    extern const u8 texture_power_meter_left_side[];
-    extern const u8 texture_power_meter_right_side[];
-    extern const u8 texture_power_meter_full[];
-    extern const u8 texture_power_meter_seven_segments[];
-    extern const u8 texture_power_meter_six_segments[];
-    extern const u8 texture_power_meter_five_segments[];
-    extern const u8 texture_power_meter_four_segments[];
-    extern const u8 texture_power_meter_three_segments[];
-    extern const u8 texture_power_meter_two_segments[];
-    extern const u8 texture_power_meter_one_segments[];
     static struct TextureInfo sPowerMeterTexturesInfo[] = {
         { (u8*)texture_power_meter_left_side,      8, 32, 64, "texture_power_meter_left_side"      },
         { (u8*)texture_power_meter_right_side,     8, 32, 64, "texture_power_meter_right_side"     },
@@ -241,6 +232,14 @@ void hud_render_power_meter_interpolated(s32 health, f32 prevX, f32 prevY, f32 p
             prevX + (prevWidth - 4) / 4, prevY + prevHeight / 4, prevWidth / 64, prevHeight / 64,
             x     + (width - 4)     / 4, y     + height     / 4, width     / 64, height     / 64);
     }
+}
+
+s8 hud_get_flash(void) {
+    return gHudFlash;
+}
+
+void hud_set_flash(s8 value) {
+    gHudFlash = value;
 }
 
 ///
@@ -618,6 +617,12 @@ u16 get_envfx(void) {
 
 void set_override_envfx(s32 envfx) {
     gOverrideEnvFx = envfx;
+}
+
+///
+
+u32 get_global_timer(void) {
+    return gGlobalTimer;
 }
 
 ///

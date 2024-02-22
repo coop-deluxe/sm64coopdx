@@ -869,6 +869,24 @@
 
 <br />
 
+## [get_global_timer](#get_global_timer)
+
+### Lua Example
+`local integerValue = get_global_timer()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 get_global_timer(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [get_got_file_coin_hi_score](#get_got_file_coin_hi_score)
 
 ### Lua Example
@@ -1230,6 +1248,24 @@
 
 <br />
 
+## [hud_get_flash](#hud_get_flash)
+
+### Lua Example
+`local integerValue = hud_get_flash()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`s8 hud_get_flash(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [hud_get_value](#hud_get_value)
 
 ### Lua Example
@@ -1333,6 +1369,26 @@
 
 ### C Prototype
 `void hud_render_power_meter_interpolated(s32 health, f32 prevX, f32 prevY, f32 prevWidth, f32 prevHeight, f32 x, f32 y, f32 width, f32 height);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [hud_set_flash](#hud_set_flash)
+
+### Lua Example
+`hud_set_flash(value)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| value | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void hud_set_flash(s8 value);`
 
 [:arrow_up_small:](#)
 
