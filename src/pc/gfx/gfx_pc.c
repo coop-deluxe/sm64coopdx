@@ -189,6 +189,8 @@ Color gVertexColor = { 255, 255, 255 };
 Color gFogColor = { 255, 255, 255 };
 f32 gFogIntensity = 1;
 
+bool gAdjustForAspectRatio = true;
+
 // 4x4 pink-black checkerboard texture to indicate missing textures
 #define MISSING_W 4
 #define MISSING_H 4
@@ -751,6 +753,8 @@ static void gfx_sp_pop_matrix(uint32_t count) {
 }
 
 static float gfx_adjust_x_for_aspect_ratio(float x) {
+    if (!gAdjustForAspectRatio) return x * (4.0 / 3.0f) / (4.0f / 3.0f);
+
     return x * (4.0f / 3.0f) / ((float)gfx_current_dimensions.width / (float)gfx_current_dimensions.height);
 }
 
@@ -1816,7 +1820,7 @@ void gfx_start_frame(void) {
         // Avoid division by zero
         gfx_current_dimensions.height = 1;
     }
-    gfx_current_dimensions.aspect_ratio = (float)gfx_current_dimensions.width / (float)gfx_current_dimensions.height;
+    gfx_current_dimensions.aspect_ratio = gAdjustForAspectRatio ? ((float)gfx_current_dimensions.width / (float)gfx_current_dimensions.height) : (4.0f / 3.0f);
 }
 
 void gfx_run(Gfx *commands) {

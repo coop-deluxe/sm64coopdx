@@ -155,6 +155,9 @@ void set_override_envfx(s32 envfx);
 
 bool get_coop_compatibility_enabled(void);
 
+bool gfx_get_adjust_for_aspect_ratio(void);
+void gfx_enable_adjust_for_aspect_ratio(bool enable);
+
 const char* get_os_name(void);
 
 #endif

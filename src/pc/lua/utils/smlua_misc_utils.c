@@ -628,6 +628,16 @@ bool get_coop_compatibility_enabled(void) {
 
 ///
 
+bool gfx_get_adjust_for_aspect_ratio(void) {
+    return gAdjustForAspectRatio;
+}
+
+void gfx_enable_adjust_for_aspect_ratio(bool enable) {
+    gAdjustForAspectRatio = enable;
+}
+
+///
+
 const char* get_os_name(void) {
 #if defined(_WIN32) || defined(_WIN64)
     return "Windows";

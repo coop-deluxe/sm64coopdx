@@ -8828,6 +8828,17 @@ function get_vertex_color(index)
     -- ...
 end
 
+--- @param enable boolean
+--- @return nil
+function gfx_enable_adjust_for_aspect_ratio(enable)
+    -- ...
+end
+
+--- @return boolean
+function gfx_get_adjust_for_aspect_ratio()
+    -- ...
+end
+
 --- @param type HudDisplayValue
 --- @return integer
 function hud_get_value(type)
