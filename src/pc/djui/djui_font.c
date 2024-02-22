@@ -1,5 +1,6 @@
 #include "djui.h"
 #include "djui_unicode.h"
+#include "djui_hud_utils.h"
 #include "game/segment2.h"
 
   ///////////////////////////////////
@@ -116,7 +117,7 @@ static void djui_font_hud_render_char(char* text) {
     if (c == ' ') { return; }
     c = djui_unicode_get_base_char(text);
     u8 index = djui_font_hud_index(c);
-    djui_gfx_render_texture(main_hud_lut[index], 16, 16, 16, false);
+    djui_gfx_render_texture(main_hud_lut[index], 16, 16, 16, djui_hud_get_filter());
 }
 
 static f32 djui_font_hud_char_width(UNUSED char* text) {
