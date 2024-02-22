@@ -27547,6 +27547,21 @@ int smlua_func_audio_stream_stop(lua_State* L) {
     return 1;
 }
 
+int smlua_func_smlua_audio_utils_get_note_freq_scale(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "smlua_audio_utils_get_note_freq_scale", 0, top);
+        return 0;
+    }
+
+
+    lua_pushnumber(L, smlua_audio_utils_get_note_freq_scale());
+
+    return 1;
+}
+
 int smlua_func_smlua_audio_utils_replace_sequence(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -27581,6 +27596,23 @@ int smlua_func_smlua_audio_utils_reset_all(UNUSED lua_State* L) {
 
 
     smlua_audio_utils_reset_all();
+
+    return 1;
+}
+
+int smlua_func_smlua_audio_utils_set_note_freq_scale(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "smlua_audio_utils_set_note_freq_scale", 1, top);
+        return 0;
+    }
+
+    f32 freq = smlua_to_number(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "smlua_audio_utils_set_note_freq_scale"); return 0; }
+
+    smlua_audio_utils_set_note_freq_scale(freq);
 
     return 1;
 }
@@ -32824,8 +32856,10 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "audio_stream_set_tempo", smlua_func_audio_stream_set_tempo);
     smlua_bind_function(L, "audio_stream_set_volume", smlua_func_audio_stream_set_volume);
     smlua_bind_function(L, "audio_stream_stop", smlua_func_audio_stream_stop);
+    smlua_bind_function(L, "smlua_audio_utils_get_note_freq_scale", smlua_func_smlua_audio_utils_get_note_freq_scale);
     smlua_bind_function(L, "smlua_audio_utils_replace_sequence", smlua_func_smlua_audio_utils_replace_sequence);
     smlua_bind_function(L, "smlua_audio_utils_reset_all", smlua_func_smlua_audio_utils_reset_all);
+    smlua_bind_function(L, "smlua_audio_utils_set_note_freq_scale", smlua_func_smlua_audio_utils_set_note_freq_scale);
 
     // smlua_collision_utils.h
     smlua_bind_function(L, "collision_find_ceil", smlua_func_collision_find_ceil);

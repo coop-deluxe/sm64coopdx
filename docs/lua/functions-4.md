@@ -7599,6 +7599,24 @@
 
 <br />
 
+## [smlua_audio_utils_get_note_freq_scale](#smlua_audio_utils_get_note_freq_scale)
+
+### Lua Example
+`local numberValue = smlua_audio_utils_get_note_freq_scale()`
+
+### Parameters
+- None
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 smlua_audio_utils_get_note_freq_scale(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [smlua_audio_utils_replace_sequence](#smlua_audio_utils_replace_sequence)
 
 ### Lua Example
@@ -7635,6 +7653,26 @@
 
 ### C Prototype
 `void smlua_audio_utils_reset_all(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [smlua_audio_utils_set_note_freq_scale](#smlua_audio_utils_set_note_freq_scale)
+
+### Lua Example
+`smlua_audio_utils_set_note_freq_scale(freq)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| freq | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void smlua_audio_utils_set_note_freq_scale(f32 freq);`
 
 [:arrow_up_small:](#)
 

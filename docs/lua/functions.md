@@ -1547,8 +1547,10 @@
    - [audio_stream_set_tempo](functions-4.md#audio_stream_set_tempo)
    - [audio_stream_set_volume](functions-4.md#audio_stream_set_volume)
    - [audio_stream_stop](functions-4.md#audio_stream_stop)
+   - [smlua_audio_utils_get_note_freq_scale](functions-4.md#smlua_audio_utils_get_note_freq_scale)
    - [smlua_audio_utils_replace_sequence](functions-4.md#smlua_audio_utils_replace_sequence)
    - [smlua_audio_utils_reset_all](functions-4.md#smlua_audio_utils_reset_all)
+   - [smlua_audio_utils_set_note_freq_scale](functions-4.md#smlua_audio_utils_set_note_freq_scale)
 
 <br />
 

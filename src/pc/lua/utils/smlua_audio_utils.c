@@ -1,6 +1,7 @@
 #include "types.h"
 #include "seq_ids.h"
 #include "audio/external.h"
+#include "audio/playback.h"
 #include "game/camera.h"
 #include "engine/math_util.h"
 #include "pc/mods/mods.h"
@@ -142,6 +143,14 @@ void smlua_audio_utils_replace_sequence(u8 sequenceId, u8 bankId, u8 defaultVolu
     }
 
     LOG_LUA_LINE("Could not find m64 at path: %s", m64path);
+}
+
+f32 smlua_audio_utils_get_note_freq_scale(void) {
+    return gNoteFreqScale;
+}
+
+void smlua_audio_utils_set_note_freq_scale(f32 freq) {
+    gNoteFreqScale = freq;
 }
 
   //////////
