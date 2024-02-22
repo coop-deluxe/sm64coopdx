@@ -158,6 +158,9 @@ bool get_coop_compatibility_enabled(void);
 bool gfx_get_adjust_for_aspect_ratio(void);
 void gfx_enable_adjust_for_aspect_ratio(bool enable);
 
+void set_window_title(const char* title);
+void reset_window_title(void);
+
 const char* get_os_name(void);
 
 #endif

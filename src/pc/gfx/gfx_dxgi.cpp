@@ -670,6 +670,14 @@ static int gfx_dxgi_get_max_msaa(void) {
     return 0;
 }
 
+static void gfx_dxgi_set_window_title(const char* title) {
+    SetWindowTextA(dxgi.h_wnd, title);
+}
+
+static void gfx_dxgi_reset_window_title(void) {
+    SetWindowTextA(dxgi.h_wnd, TITLE);
+}
+
 HWND gfx_dxgi_get_h_wnd(void) {
     return dxgi.h_wnd;
 }

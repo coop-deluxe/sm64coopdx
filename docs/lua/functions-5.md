@@ -1460,6 +1460,24 @@
 
 <br />
 
+## [reset_window_title](#reset_window_title)
+
+### Lua Example
+`reset_window_title()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void reset_window_title(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [save_file_get_using_backup_slot](#save_file_get_using_backup_slot)
 
 ### Lua Example
@@ -1838,6 +1856,26 @@
 
 ### C Prototype
 `void set_vertex_color(u8 index, u8 value);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_window_title](#set_window_title)
+
+### Lua Example
+`set_window_title(title)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| title | `string` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_window_title(const char* title);`
 
 [:arrow_up_small:](#)
 

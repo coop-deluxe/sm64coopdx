@@ -255,6 +255,14 @@ static int gfx_sdl_get_max_msaa(void) {
     return maxSamples;
 }
 
+static void gfx_sdl_set_window_title(const char* title) {
+    SDL_SetWindowTitle(wnd, title);
+}
+
+static void gfx_sdl_reset_window_title(void) {
+    SDL_SetWindowTitle(wnd, TITLE);
+}
+
 static void gfx_sdl_shutdown(void) {
     if (SDL_WasInit(0)) {
         if (ctx) { SDL_GL_DeleteContext(ctx); ctx = NULL; }
@@ -287,6 +295,8 @@ struct GfxWindowManagerAPI gfx_sdl = {
     gfx_sdl_set_cursor_visible,
     gfx_sdl_delay,
     gfx_sdl_get_max_msaa,
+    gfx_sdl_set_window_title,
+    gfx_sdl_reset_window_title
 };
 
 #endif // BACKEND_WM

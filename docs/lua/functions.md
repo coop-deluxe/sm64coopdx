@@ -1672,6 +1672,7 @@
    - [is_transition_playing](functions-5.md#is_transition_playing)
    - [movtexqc_register](functions-5.md#movtexqc_register)
    - [play_transition](functions-5.md#play_transition)
+   - [reset_window_title](functions-5.md#reset_window_title)
    - [save_file_get_using_backup_slot](functions-5.md#save_file_get_using_backup_slot)
    - [save_file_set_using_backup_slot](functions-5.md#save_file_set_using_backup_slot)
    - [set_environment_region](functions-5.md#set_environment_region)
@@ -1691,6 +1692,7 @@
    - [set_save_file_modified](functions-5.md#set_save_file_modified)
    - [set_ttc_speed_setting](functions-5.md#set_ttc_speed_setting)
    - [set_vertex_color](functions-5.md#set_vertex_color)
+   - [set_window_title](functions-5.md#set_window_title)
 
 <br />
 

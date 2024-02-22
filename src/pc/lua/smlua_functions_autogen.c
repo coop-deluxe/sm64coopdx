@@ -29414,6 +29414,21 @@ int smlua_func_play_transition(lua_State* L) {
     return 1;
 }
 
+int smlua_func_reset_window_title(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "reset_window_title", 0, top);
+        return 0;
+    }
+
+
+    reset_window_title();
+
+    return 1;
+}
+
 int smlua_func_save_file_get_using_backup_slot(UNUSED lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -29741,6 +29756,23 @@ int smlua_func_set_vertex_color(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "set_vertex_color"); return 0; }
 
     set_vertex_color(index, value);
+
+    return 1;
+}
+
+int smlua_func_set_window_title(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "set_window_title", 1, top);
+        return 0;
+    }
+
+    const char* title = smlua_to_string(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "set_window_title"); return 0; }
+
+    set_window_title(title);
 
     return 1;
 }
@@ -32973,6 +33005,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "is_transition_playing", smlua_func_is_transition_playing);
     smlua_bind_function(L, "movtexqc_register", smlua_func_movtexqc_register);
     smlua_bind_function(L, "play_transition", smlua_func_play_transition);
+    smlua_bind_function(L, "reset_window_title", smlua_func_reset_window_title);
     smlua_bind_function(L, "save_file_get_using_backup_slot", smlua_func_save_file_get_using_backup_slot);
     smlua_bind_function(L, "save_file_set_using_backup_slot", smlua_func_save_file_set_using_backup_slot);
     smlua_bind_function(L, "set_environment_region", smlua_func_set_environment_region);
@@ -32992,6 +33025,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "set_save_file_modified", smlua_func_set_save_file_modified);
     smlua_bind_function(L, "set_ttc_speed_setting", smlua_func_set_ttc_speed_setting);
     smlua_bind_function(L, "set_vertex_color", smlua_func_set_vertex_color);
+    smlua_bind_function(L, "set_window_title", smlua_func_set_window_title);
 
     // smlua_model_utils.h
     smlua_bind_function(L, "smlua_model_util_get_id", smlua_func_smlua_model_util_get_id);

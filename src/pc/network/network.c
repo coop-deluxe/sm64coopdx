@@ -722,6 +722,8 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
     extern s16 gMenuMode;
     gMenuMode = -1;
 
+    reset_window_title();
+
     djui_panel_shutdown();
     extern bool gDjuiInMainMenu;
     if (!gDjuiInMainMenu) {

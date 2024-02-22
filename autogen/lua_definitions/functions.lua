@@ -8931,6 +8931,11 @@ function play_transition(transType, time, red, green, blue)
     -- ...
 end
 
+--- @return nil
+function reset_window_title()
+    -- ...
+end
+
 --- @return boolean
 function save_file_get_using_backup_slot()
     -- ...
@@ -9046,6 +9051,12 @@ end
 --- @param value integer
 --- @return nil
 function set_vertex_color(index, value)
+    -- ...
+end
+
+--- @param title string
+--- @return nil
+function set_window_title(title)
     -- ...
 end
 
