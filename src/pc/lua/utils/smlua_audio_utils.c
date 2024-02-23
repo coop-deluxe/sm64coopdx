@@ -157,7 +157,7 @@ void smlua_audio_utils_set_note_freq_scale(f32 freq) {
  // bass //
 //////////
 
-#define MAX_BASS_FILES 128
+#define MAX_BASS_FILES 256
 struct BassAudio sBassAudio[MAX_BASS_FILES];
 u32 sBassAudioCount = 0;
 
