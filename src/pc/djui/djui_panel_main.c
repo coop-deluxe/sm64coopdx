@@ -10,8 +10,6 @@
 
 extern ALIGNED8 u8 texture_coopdx_logo[];
 
-struct DjuiText* gVersionText = NULL;
-
 bool gDjuiPanelMainCreated = false;
 
 static void djui_panel_main_quit_yes(UNUSED struct DjuiBase* caller) {
@@ -48,11 +46,11 @@ void djui_panel_main_create(struct DjuiBase* caller) {
             djui_base_set_location(&button4->base, 0, -30.0f);
         }
 
-        gVersionText = djui_text_create(&panel->base, get_version_local());
-        djui_base_set_size_type(&gVersionText->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-        djui_base_set_size(&gVersionText->base, 1.0f, 1.0f);
-        djui_base_set_color(&gVersionText->base, 50, 50, 50, 255);
-        djui_text_set_alignment(gVersionText, DJUI_HALIGN_RIGHT, DJUI_VALIGN_BOTTOM);
+        struct DjuiText* version = djui_text_create(&panel->base, SM64COOPDX_VERSION);
+        djui_base_set_size_type(&version->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+        djui_base_set_size(&version->base, 1.0f, 1.0f);
+        djui_base_set_color(&version->base, 50, 50, 50, 255);
+        djui_text_set_alignment(version, DJUI_HALIGN_RIGHT, DJUI_VALIGN_BOTTOM);
     }
 
     djui_panel_add(caller, panel, NULL);

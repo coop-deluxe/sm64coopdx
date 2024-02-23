@@ -5,7 +5,6 @@
 #include "djui_panel_modlist.h"
 #include "djui_panel_join_message.h"
 #include "djui_lobby_entry.h"
-#include "djui_panel_main.h"
 #include "pc/network/network.h"
 #include "pc/network/socket/socket.h"
 #include "pc/network/coopnet/coopnet.h"
@@ -24,9 +23,6 @@ static void djui_panel_compatibility_checkbox_on_value_change(UNUSED struct Djui
 #ifdef DISCORD_SDK
     gDiscordInitialized = false;
 #endif
-    if (gVersionText != NULL) {
-        djui_text_set_text(gVersionText, get_version_local());
-    }
 }
 #endif
 

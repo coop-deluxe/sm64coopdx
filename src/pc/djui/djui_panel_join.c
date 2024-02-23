@@ -4,7 +4,6 @@
 #include "djui_panel_join_lobbies.h"
 #include "djui_panel_join_private.h"
 #include "djui_panel_join_direct.h"
-#include "djui_panel_main.h"
 #include "pc/network/network.h"
 #include "pc/utils/misc.h"
 #ifdef DISCORD_SDK
@@ -16,9 +15,6 @@ static void djui_panel_compatibility_checkbox_on_value_change(UNUSED struct Djui
 #ifdef DISCORD_SDK
     gDiscordInitialized = false;
 #endif
-    if (gVersionText != NULL) {
-        djui_text_set_text(gVersionText, get_version_local());
-    }
 }
 
 static void djui_panel_join_public_lobbies(struct DjuiBase* caller) {

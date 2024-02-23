@@ -2,7 +2,6 @@
 #include "djui_panel.h"
 #include "djui_panel_menu.h"
 #include "djui_panel_menu_options.h"
-#include "djui_panel_main.h"
 #include "djui_panel_options.h"
 #include "djui_panel_language.h"
 #include "djui_panel_info.h"
@@ -18,9 +17,6 @@ static void djui_panel_compatibility_checkbox_on_value_change(UNUSED struct Djui
 #ifdef DISCORD_SDK
     gDiscordInitialized = false;
 #endif
-    if (gVersionText != NULL) {
-        djui_text_set_text(gVersionText, get_version_local());
-    }
 }
 
 #ifdef DEVELOPMENT
