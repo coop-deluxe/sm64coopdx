@@ -799,8 +799,7 @@ static void ParseGfxSymbol(GfxData* aGfxData, DataNode<Gfx>* aNode, Gfx*& aHead,
     gfx_symbol_1(gsDPSetTextureDetail, false);
     gfx_symbol_1(gsDPSetColorDither, false);
     gfx_symbol_2(gsDPSetPrimDepth, false);
-    gfx_symbol_4(GBL_c1);
-    gfx_symbol_4(GBL_c2);
+    gfx_symbol_4(gsDPSetBlendColor);
 
     gfx_symbol_2(gsSPCopyLightEXT, false);
     gfx_symbol_1(gsSPCopyLightsPlayerPart, false);
