@@ -288,6 +288,36 @@ s64 DynOS_Gfx_ParseGfxConstants(const String& _Arg, bool* found) {
     gfx_constant(G_AC_DITHER);
     gfx_constant(G_ZS_PIXEL);
     gfx_constant(G_ZS_PRIM);
+    gfx_constant(G_SETOTHERMODE_H);
+    gfx_constant(G_SETOTHERMODE_L);
+    gfx_constant(G_BL_CLR_IN);
+    gfx_constant(G_BL_CLR_MEM);
+    gfx_constant(G_BL_CLR_BL);
+    gfx_constant(G_BL_CLR_FOG);
+    gfx_constant(G_BL_1MA);
+    gfx_constant(G_BL_A_MEM);
+    gfx_constant(G_BL_A_IN);
+    gfx_constant(G_BL_A_FOG);
+    gfx_constant(G_BL_A_SHADE);
+    gfx_constant(G_BL_1);
+    gfx_constant(G_BL_0);
+    gfx_constant(AA_EN);
+    gfx_constant(Z_CMP);
+    gfx_constant(Z_UPD);
+    gfx_constant(ZMODE_OPA);
+    gfx_constant(ZMODE_INTER);
+    gfx_constant(ZMODE_XLU);
+    gfx_constant(ZMODE_DEC);
+    gfx_constant(IM_RD);
+    gfx_constant(CLR_ON_CVG);
+    gfx_constant(CVG_DST_CLAMP);
+    gfx_constant(CVG_DST_WRAP);
+    gfx_constant(CVG_DST_FULL);
+    gfx_constant(CVG_DST_SAVE);
+    gfx_constant(CVG_X_ALPHA);
+    gfx_constant(ALPHA_CVG_SEL);
+    gfx_constant(FORCE_BL);
+    gfx_constant(TEX_EDGE);
 
     // MW constants
     gfx_constant(G_MW_MATRIX);
@@ -296,6 +326,10 @@ s64 DynOS_Gfx_ParseGfxConstants(const String& _Arg, bool* found) {
     gfx_constant(G_MW_SEGMENT);
     gfx_constant(G_MW_FOG);
     gfx_constant(G_MW_LIGHTCOL);
+
+    // PM constants
+    gfx_constant(G_PM_1PRIMITIVE);
+    gfx_constant(G_PM_NPRIMITIVE);
 
     // Texture/scale/rotate constants
     gfx_constant(G_TEXTURE_IMAGE_FRAC);
@@ -760,6 +794,13 @@ static void ParseGfxSymbol(GfxData* aGfxData, DataNode<Gfx>* aNode, Gfx*& aHead,
     gfx_symbol_1(gsDPSetTextureConvert, false);
     gfx_symbol_1(gsDPSetCombineKey, false);
     gfx_symbol_1(gsDPSetTextureConvert, false);
+    gfx_symbol_1(gsDPPipelineMode, false);
+    gfx_symbol_4(gsSPSetOtherMode);
+    gfx_symbol_1(gsDPSetTextureDetail, false);
+    gfx_symbol_1(gsDPSetColorDither, false);
+    gfx_symbol_2(gsDPSetPrimDepth, false);
+    gfx_symbol_4(GBL_c1);
+    gfx_symbol_4(GBL_c2);
 
     gfx_symbol_2(gsSPCopyLightEXT, false);
     gfx_symbol_1(gsSPCopyLightsPlayerPart, false);
