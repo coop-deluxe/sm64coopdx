@@ -1,5 +1,3 @@
-#include <SDL2/SDL_hints.h>
-#define WAPI_SDL2
 #ifdef WAPI_SDL2
 
 #ifdef __MINGW32__
