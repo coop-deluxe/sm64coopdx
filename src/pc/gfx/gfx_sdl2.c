@@ -1,3 +1,5 @@
+#include <SDL2/SDL_hints.h>
+#define WAPI_SDL2
 #ifdef WAPI_SDL2
 
 #ifdef __MINGW32__
@@ -107,6 +109,7 @@ static void gfx_sdl_reset_dimension_and_pos(void) {
 }
 
 static void gfx_sdl_init(const char *window_title) {
+    SDL_SetHint(SDL_HINT_VIDEO_X11_NET_WM_BYPASS_COMPOSITOR, "0");
     SDL_Init(SDL_INIT_VIDEO);
     SDL_StartTextInput();
 
