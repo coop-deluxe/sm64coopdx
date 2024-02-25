@@ -517,6 +517,7 @@ void djui_hud_render_texture_tile_interpolated(struct TextureInfo* texInfo, f32 
     interp->width = texInfo->width;
     interp->height = texInfo->height;
     interp->z = savedZ;
+    interp->resolution = sResolution;
 }
 
 void djui_hud_render_rect(f32 x, f32 y, f32 width, f32 height) {
@@ -571,6 +572,7 @@ void djui_hud_render_rect_interpolated(f32 prevX, f32 prevY, f32 prevWidth, f32 
     interp->width = 1;
     interp->height = 1;
     interp->z = savedZ;
+    interp->resolution = sResolution;
 }
 
 static void hud_rotate_and_translate_vec3f(Vec3f vec, Mat4* mtx, Vec3f out) {
