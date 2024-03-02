@@ -48,7 +48,7 @@ Removed Sex in Minecraft (Agent X)"
 
         djui_paginated_calculate_height(paginated);
 
-        djui_button_create(body, "OK", DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
+        djui_button_create(body, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
     }
 
     djui_panel_add(caller, panel, NULL);
