@@ -1996,7 +1996,7 @@ const Gfx luigi_l_logo_decal[] = {
     gsSPTexture(65535, 65535, 0, 0, 1),
     gsDPSetPrimColor(0, 0, 127, 127, 127, 255),
     gsSPLight(&luigi_black_lights_group.l, 1),
-    gsSPCopyLightEXT(2, 15),
+    gsSPCopyLightEXT(2, 5),
     gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 1, luigi_texture_l_logo),
     gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 0, 0, 7, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0),
     gsDPLoadBlock(7, 0, 0, 1023, 256),
@@ -3519,7 +3519,7 @@ const Gfx luigi_right_hand_cap_decal[] = {
     gsSPTexture(65535, 65535, 0, 0, 1),
     gsDPSetPrimColor(0, 0, 127, 127, 127, 255),
     gsSPLight(&luigi_black_lights_group.l, 1),
-    gsSPCopyLightEXT(2, 15),
+    gsSPCopyLightEXT(2, 5),
     gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 1, luigi_texture_l_logo),
     gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 0, 0, 7, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0),
     gsDPLoadBlock(7, 0, 0, 1023, 256),
@@ -3554,7 +3554,7 @@ const Gfx luigi_right_hand_cap_decal[] = {
 const Gfx luigi_right_hand_cap_dl[] = {
     gsSPCopyLightsPlayerPart(CAP),
     gsSPDisplayList(luigi_right_hand_cap_top_dl),
-    gsSPCopyLightsPlayerPart(GLOVES), // glove light, set in luigi_misc.c
+    gsSPCopyLightsPlayerPart(GLOVES), // glove light, set in mario_misc.c
     gsSPDisplayList(luigi_right_hand_cap_hand_position_dl),
     gsDPSetCombineMode(G_CC_MODULATERGBFADEA, G_CC_MODULATERGBFADEA),
     gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 0, 0, G_TX_LOADTILE, 0, G_TX_WRAP | G_TX_NOMIRROR, G_TX_NOMASK, G_TX_NOLOD, G_TX_WRAP | G_TX_NOMIRROR, G_TX_NOMASK, G_TX_NOLOD),

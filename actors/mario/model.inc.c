@@ -2148,7 +2148,7 @@ const Gfx mario_m_logo_decal[] = {
     gsSPTexture(65535, 65535, 0, 0, 1),
     gsDPSetPrimColor(0, 0, 127, 127, 127, 255),
     gsSPLight(&mario_black_lights_group.l, 1),
-    gsSPCopyLightEXT(2, 15),
+    gsSPCopyLightEXT(2, 5),
 
     gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 1, mario_texture_m_logo),
     gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 0, 0, 7, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0),
@@ -3733,7 +3733,7 @@ const Gfx mario_right_hand_cap_decal[] = {
     gsSPTexture(65535, 65535, 0, 0, 1),
     gsDPSetPrimColor(0, 0, 127, 127, 127, 255),
     gsSPLight(&mario_black_lights_group.l, 1),
-    gsSPCopyLightEXT(2, 15),
+    gsSPCopyLightEXT(2, 5),
     gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 1, mario_texture_m_logo),
     gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 0, 0, 7, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0),
     gsDPLoadBlock(7, 0, 0, 1023, 256),

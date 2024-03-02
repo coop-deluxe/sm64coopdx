@@ -258,7 +258,7 @@ const Gfx luigi_cap_l_logo_decal[] = {
     gsSPTexture(65535, 65535, 0, 0, 1),
     gsDPSetPrimColor(0, 0, 127, 127, 127, 255),
     gsSPLight(&luigi_cap_black_lights_group.l, 1),
-    gsSPCopyLightEXT(2, 15),
+    gsSPCopyLightEXT(2, 5),
     gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 1, luigi_cap_texture_l_logo),
     gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 0, 0, 7, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0),
     gsDPLoadBlock(7, 0, 0, 1023, 256),
