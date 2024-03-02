@@ -14,6 +14,12 @@ static void djui_panel_dynos_apply(struct DjuiBase* caller) {
     dynos_pack_set_enabled(caller->tag, caller->bTag);
 }
 
+static void djui_panel_dynos_global_player_models(UNUSED struct DjuiBase* caller) {
+    for (s32 i = 0; i < MAX_PLAYERS; i++) {
+        network_player_update_model(i);
+    }
+}
+
 static void djui_panel_dynos_refresh(UNUSED struct DjuiBase* base) {
     dynos_gfx_init();
     dynos_packs_init();
@@ -46,6 +52,12 @@ void djui_panel_dynos_create(struct DjuiBase* caller) {
         }
         djui_paginated_calculate_height(paginated);
 
+        struct DjuiRect* space = djui_rect_create(body);
+        djui_base_set_size_type(&space->base, DJUI_SVT_ABSOLUTE, DJUI_SVT_ABSOLUTE);
+        djui_base_set_size(&space->base, (DJUI_DEFAULT_PANEL_WIDTH * (configDjuiThemeCenter ? DJUI_THEME_CENTERED_WIDTH : 1)) - 32, 1);
+        djui_base_set_color(&space->base, 220, 220, 220, 255);
+
+        djui_checkbox_create(body, DLANG(DYNOS, GLOBAL_PLAYER_MODELS), &configGlobalPlayerModels, djui_panel_dynos_global_player_models);
         if (gNetworkType == NT_NONE) {
             struct DjuiRect* rect1 = djui_rect_container_create(body, 64);
             {
@@ -56,7 +68,7 @@ void djui_panel_dynos_create(struct DjuiBase* caller) {
             djui_button_create(body, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
         }
 
-        panel->bodySize.value = paginated->base.height.value + 16 + 64;
+        panel->bodySize.value = paginated->base.height.value + 16 + 64 + 64;
     }
 
     djui_panel_add(caller, panel, NULL);

@@ -25818,6 +25818,28 @@ int smlua_func_obj_set_billboard(lua_State* L) {
     return 1;
 }
 
+int smlua_func_obj_set_character_model(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 3) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "obj_set_character_model", 3, top);
+        return 0;
+    }
+
+    struct Object* obj = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "obj_set_character_model"); return 0; }
+    u16 index = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "obj_set_character_model"); return 0; }
+    s32 modelID = smlua_to_integer(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "obj_set_character_model"); return 0; }
+
+    extern void obj_set_character_model(struct Object* obj, u16 index, s32 modelID);
+    obj_set_character_model(obj, index, modelID);
+
+    return 1;
+}
+
 /*
 int smlua_func_obj_set_collision_data(lua_State* L) {
     if (L == NULL) { return 0; }
@@ -32855,6 +32877,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "obj_set_angle", smlua_func_obj_set_angle);
     smlua_bind_function(L, "obj_set_behavior", smlua_func_obj_set_behavior);
     smlua_bind_function(L, "obj_set_billboard", smlua_func_obj_set_billboard);
+    smlua_bind_function(L, "obj_set_character_model", smlua_func_obj_set_character_model);
     //smlua_bind_function(L, "obj_set_collision_data", smlua_func_obj_set_collision_data); <--- UNIMPLEMENTED
     smlua_bind_function(L, "obj_set_cylboard", smlua_func_obj_set_cylboard);
     smlua_bind_function(L, "obj_set_face_angle", smlua_func_obj_set_face_angle);

@@ -39,7 +39,7 @@ void network_player_update_model(u8 localIndex) {
     m->character = &gCharacters[index];
 
     if (m->marioObj == NULL) { return; }
-    obj_set_model(m->marioObj, m->character->modelId);
+    obj_set_character_model(m->marioObj, m->playerIndex, m->character->modelId);
 }
 
 bool network_player_any_connected(void) {

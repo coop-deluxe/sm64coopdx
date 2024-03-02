@@ -1441,6 +1441,14 @@ void obj_set_model(struct Object* obj, s32 modelID) {
     smlua_call_event_hooks_object_model_param(HOOK_OBJECT_SET_MODEL, obj, modelID);
 }
 
+void obj_set_character_model(struct Object* obj, u16 index, s32 modelID) {
+    obj->header.gfx.sharedChild = dynos_model_get_geo(modelID);
+    if (configGlobalPlayerModels || index == 0) {
+        dynos_actor_override((void*)&obj->header.gfx.sharedChild);
+    }
+    smlua_call_event_hooks_object_model_param(HOOK_OBJECT_SET_MODEL, obj, modelID);
+}
+
 void mario_set_flag(s32 flag) {
     gMarioStates[0].flags |= flag;
 }

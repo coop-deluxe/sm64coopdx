@@ -122,6 +122,7 @@ extern unsigned int configDjuiTheme;
 extern bool         configDjuiThemeCenter;
 extern unsigned int configDjuiScale;
 extern bool         configCoopCompatibility;
+extern bool         configGlobalPlayerModels;
 extern char         configLastVersion[];
 
 void enable_queued_mods();
