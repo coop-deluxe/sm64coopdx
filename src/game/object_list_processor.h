@@ -23,7 +23,7 @@
 /**
  * The maximum number of objects that can be loaded at once.
  */
-#define OBJECT_POOL_CAPACITY 960
+#define OBJECT_POOL_CAPACITY 1200
 
 /**
  * Every object is categorized into an object list, which controls the order
