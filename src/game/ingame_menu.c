@@ -2442,6 +2442,14 @@ static inline void red_coins_print_glyph(s16 *x, u8 glyph, u8 width) {
 }
 
 void render_pause_red_coins(void) {
+    if (gCurrentArea->numRedCoins == 8) {
+        u8 collected = gCurrentArea->numRedCoins - count_objects_with_behavior(bhvRedCoin);
+        for (s32 x = 0; x < collected; x++) {
+            print_animated_red_coin(GFX_DIMENSIONS_FROM_RIGHT_EDGE(30) - x * 20, 16);
+        }
+        return;
+    }
+
     if (gCurrentArea->numRedCoins > 0) {
         u8 collected = gCurrentArea->numRedCoins - count_objects_with_behavior(bhvRedCoin);
         s16 x = gfx_dimensions_rect_from_left_edge(38);
