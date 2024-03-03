@@ -995,7 +995,7 @@ static struct LuaObjectField sLakituStateFields[LUA_LAKITU_STATE_FIELD_COUNT] = 
     { "yaw",                              LVT_S16,     offsetof(struct LakituState, yaw),                              false, LOT_NONE  },
 };
 
-#define LUA_LEVEL_VALUES_FIELD_COUNT 48
+#define LUA_LEVEL_VALUES_FIELD_COUNT 49
 static struct LuaObjectField sLevelValuesFields[LUA_LEVEL_VALUES_FIELD_COUNT] = {
     { "bubbleOnDeathBarrierInCapStages",  LVT_U8,      offsetof(struct LevelValues, bubbleOnDeathBarrierInCapStages),  false, LOT_NONE          },
     { "cellHeightLimit",                  LVT_S16,     offsetof(struct LevelValues, cellHeightLimit),                  false, LOT_NONE          },
@@ -1045,6 +1045,7 @@ static struct LuaObjectField sLevelValuesFields[LUA_LEVEL_VALUES_FIELD_COUNT] = 
     { "wingCapDurationTotwc",             LVT_U16,     offsetof(struct LevelValues, wingCapDurationTotwc),             false, LOT_NONE          },
     { "wingCapLookUpReq",                 LVT_S16,     offsetof(struct LevelValues, wingCapLookUpReq),                 false, LOT_NONE          },
     { "wingCapSequence",                  LVT_S32,     offsetof(struct LevelValues, wingCapSequence),                  false, LOT_NONE          },
+    { "zoomOutCameraOnPause",             LVT_U8,      offsetof(struct LevelValues, zoomOutCameraOnPause),             false, LOT_NONE          },
 };
 
 #define LUA_LINEAR_TRANSITION_POINT_FIELD_COUNT 5

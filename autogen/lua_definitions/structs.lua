@@ -930,6 +930,7 @@
 --- @field public wingCapDurationTotwc integer
 --- @field public wingCapLookUpReq integer
 --- @field public wingCapSequence SeqId
+--- @field public zoomOutCameraOnPause integer
 
 --- @class LinearTransitionPoint
 --- @field public dist number

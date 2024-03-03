@@ -1269,6 +1269,7 @@
 | wingCapDurationTotwc | `integer` |  |
 | wingCapLookUpReq | `integer` |  |
 | wingCapSequence | [enum SeqId](constants.md#enum-SeqId) |  |
+| zoomOutCameraOnPause | `integer` |  |
 
 [:arrow_up_small:](#)
 

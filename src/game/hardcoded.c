@@ -112,7 +112,7 @@ struct LevelValues gDefaultLevelValues = {
         .CcmSlideStarPos              = {  2500.0f, -4350.0f,  5750.0f },
         .UkikiCageStarPos             = {  2500.0f, -1200.0f,  1300.0f },
         .UnagiStarPos                 = {  6833.0f, -3654.0f,  2230.0f },
-        .JetstreamRingStarPos         = {  3400.0f, -3200.0f,  -500.0f },
+        .JetstreamRingStarPos         = {  3400.0f, -3200.0f,  -500.0f }
     },
     .cellHeightLimit                  = CELL_HEIGHT_LIMIT,
     .floorLowerLimit                  = FLOOR_LOWER_LIMIT,
@@ -122,7 +122,8 @@ struct LevelValues gDefaultLevelValues = {
     .maxCoins                         = 999,
     .numCoinsToLife                   = 50,
     .wdwWaterLevelSpeed               = 10.0f,
-    .useGlobalStarIds                 = FALSE
+    .useGlobalStarIds                 = FALSE,
+    .zoomOutCameraOnPause             = TRUE
 };
 
 struct LevelValues gLevelValues = { 0 };
@@ -245,7 +246,7 @@ struct BehaviorValues gDefaultBehaviorValues = {
         .WigglerAttack3Dialog          = DIALOG_151,
         .WigglerDialog                 = DIALOG_150,
         .WingCourseDialog              = DIALOG_131,
-        .YoshiDialog                   = DIALOG_161,
+        .YoshiDialog                   = DIALOG_161
     },
     .trajectories = {
         .KoopaBobTrajectory            = (Trajectory*) bob_seg7_trajectory_koopa,
@@ -277,7 +278,7 @@ struct BehaviorValues gDefaultBehaviorValues = {
         .PlatformBitfsTrajectory       = (Trajectory*) bitfs_seg7_trajectory_070159AC,
         .PlatformHmcTrajectory         = (Trajectory*) hmc_seg7_trajectory_0702B86C,
         .PlatformLllTrajectory         = (Trajectory*) lll_seg7_trajectory_0702856C,
-        .PlatformLll2Trajectory        = (Trajectory*) lll_seg7_trajectory_07028660,
+        .PlatformLll2Trajectory        = (Trajectory*) lll_seg7_trajectory_07028660
     }
 };
 
