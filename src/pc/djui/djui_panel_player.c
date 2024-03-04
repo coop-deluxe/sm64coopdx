@@ -20,6 +20,8 @@ static struct DjuiSelectionbox* sPalettePresetSelection;
 static struct DjuiInputbox* sHexColorTextBox;
 static struct DjuiSlider *sSliderR, *sSliderG, *sSliderB;
 
+bool gDjuiPanelPlayerCreated = false;
+
 static void djui_panel_player_edit_palette_update_hex_code_box(void) {
     char buf[7];
     static const char digitToChar[] = "0123456789abcdef";
@@ -337,4 +339,5 @@ void djui_panel_player_create(struct DjuiBase* caller) {
 
     struct DjuiPanel* p = djui_panel_add(caller, panel, NULL);
     p->on_panel_destroy = djui_panel_player_destroy;
+    gDjuiPanelPlayerCreated = true;
 }

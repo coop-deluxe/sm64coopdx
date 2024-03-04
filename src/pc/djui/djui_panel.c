@@ -3,6 +3,7 @@
 #include "djui_panel_main.h"
 #include "djui_panel_pause.h"
 #include "djui_panel_join_message.h"
+#include "djui_panel_player.h"
 #include "src/pc/debuglog.h"
 #include "src/pc/utils/misc.h"
 #include "sounds.h"
@@ -121,6 +122,7 @@ void djui_panel_back(void) {
     play_sound(SOUND_MENU_CLICK_FILE_SELECT, gGlobalSoundSource);
 
     gDjuiPanelJoinMessageVisible = false;
+    gDjuiPanelPlayerCreated = false;
 }
 
 void djui_panel_update(void) {

@@ -7,6 +7,7 @@
 #include "pc/network/network.h"
 #include "djui_panel_main.h"
 #include "djui_panel_options.h"
+#include "djui_panel_player.h"
 
 void djui_panel_dynos_create(struct DjuiBase* caller);
 
@@ -72,4 +73,5 @@ void djui_panel_dynos_create(struct DjuiBase* caller) {
     }
 
     djui_panel_add(caller, panel, NULL);
+    gDjuiPanelPlayerCreated = true;
 }

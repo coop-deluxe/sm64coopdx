@@ -34,6 +34,7 @@
 #include "pc/network/network.h"
 #include "pc/lua/smlua_hooks.h"
 #include "pc/djui/djui.h"
+#include "pc/djui/djui_panel_player.h"
 #include "first_person_cam.h"
 
 #define CBUTTON_MASK (U_CBUTTONS | D_CBUTTONS | L_CBUTTONS | R_CBUTTONS)
@@ -3660,7 +3661,7 @@ void zoom_out_if_paused_and_outside(struct GraphNodeCamera *camera) {
         areaMaskIndex = 0;
         areaBit = 0;
     }
-    if (gCameraMovementFlags & CAM_MOVE_PAUSE_SCREEN) {
+    if (gCameraMovementFlags & CAM_MOVE_PAUSE_SCREEN && !gDjuiPanelPlayerCreated) {
         if (sFramesPaused >= 2) {
             if (sZoomOutAreaMasks[areaMaskIndex] & areaBit) {
 
