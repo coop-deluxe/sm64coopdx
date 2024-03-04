@@ -57,7 +57,8 @@ struct DjuiThreePanel* djui_panel_menu_create(char* headerText) {
         strcmp(headerText, DLANG(LOBBIES, PRIVATE_LOBBIES)) &&
         strcmp(headerText, DLANG(JOIN_MESSAGE, JOINING)) &&
         strcmp(headerText, DLANG(PLAYER, PLAYER_TITLE)) &&
-        strcmp(headerText, DLANG(PLAYER, PALETTE));
+        strcmp(headerText, DLANG(PLAYER, PALETTE)) &&
+        strcmp(headerText, DLANG(DYNOS, DYNOS));
     f32 widthMultiplier = center ? DJUI_THEME_CENTERED_WIDTH : 1.0f;
     f32 heightMultiplier = center ? DJUI_THEME_CENTERED_HEIGHT : 1.0f;
 
