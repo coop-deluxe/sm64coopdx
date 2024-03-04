@@ -518,6 +518,7 @@ function allow_pvp_attack(m1, m2)
 end
 
 gLevelValues.disableActs = true
+gLevelValues.zoomOutCameraOnPause = false
 
 -----------
 -- hooks --
