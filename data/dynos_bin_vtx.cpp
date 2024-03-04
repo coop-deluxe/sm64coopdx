@@ -8,15 +8,15 @@ extern "C" {
 #define F32VTX_SENTINEL_2 0x5854
 
 static inline bool ShouldUseF32Vtx(DataNode<Vtx>* aNode) {
-    for (u32 i = 0; i != aNode->mSize; ++i) {
-        for (u32 j = 0; j != 3; ++j) {
-            if (aNode->mData[i].n.ob[j] < -0x7FFF ||
-                aNode->mData[i].n.ob[j] > +0x7FFF) {
-                return true;
-            }
-        }
-    }
-    return false;
+    // for (u32 i = 0; i != aNode->mSize; ++i) {
+    //     for (u32 j = 0; j != 3; ++j) {
+    //         if (aNode->mData[i].n.ob[j] < -0x7FFF ||
+    //             aNode->mData[i].n.ob[j] > +0x7FFF) {
+    //             return true;
+    //         }
+    //     }
+    // }
+    return true;
 }
 
 static inline bool IsUsingF32Vtx(Vec3f ob) {
