@@ -18,12 +18,10 @@ void djui_panel_modlist_create(UNUSED struct DjuiBase* caller) {
         gDjuiModList = NULL;
     }
 
-    u8 autoexecMod = mods_has_autoexec_mod();
-
     // only create if we have mods
-    if (gActiveMods.entryCount - autoexecMod == 0) { return; }
+    if (gActiveMods.entryCount == 0) { return; }
 
-    f32 bodyHeight = ((gActiveMods.entryCount - autoexecMod) * 32) + (gActiveMods.entryCount - 1 - autoexecMod) * 4;
+    f32 bodyHeight = (gActiveMods.entryCount * 32) + (gActiveMods.entryCount - 1) * 4;
     struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(MODLIST, MODS));
     djui_three_panel_set_body_size(panel, bodyHeight);
     gDjuiModList = panel;
@@ -42,7 +40,6 @@ void djui_panel_modlist_create(UNUSED struct DjuiBase* caller) {
 
     for (int i = 0; i < gActiveMods.entryCount; i++) {
         struct Mod* mod = gActiveMods.entries[i];
-        if (mod_get_is_autoexec(mod)) { continue; }
 
         struct DjuiFlowLayout* row = djui_flow_layout_create(body);
         djui_base_set_size_type(&row->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);

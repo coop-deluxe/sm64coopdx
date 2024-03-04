@@ -27,7 +27,7 @@ void mods_get_main_mod_name(char* destination, u32 maxSize) {
 
     for (u16 i = 0; i < gLocalMods.entryCount; i++) {
         struct Mod* mod = gLocalMods.entries[i];
-        if (!mod->enabled || mod_get_is_autoexec(mod)) { continue; }
+        if (!mod->enabled) { continue; }
         size_t size = mod_get_lua_size(mod);
         if (size > pickedSize) {
             picked = mod;
@@ -59,13 +59,6 @@ u16 mods_get_character_select_count(void) {
     }
 
     return enabled;
-}
-
-u8 mods_has_autoexec_mod(void) {
-    for (u16 i = 0; i < gLocalMods.entryCount; i++) {
-        if (mod_get_is_autoexec(gLocalMods.entries[i])) { return TRUE; }
-    }
-    return FALSE;
 }
 
 static void mods_local_store_enabled(void) {
@@ -125,14 +118,6 @@ bool mods_generate_remote_base_path(void) {
     return true;
 }
 
-static struct Mod* get_autoexec_mod(void) {
-    for (u16 i = 0; i < gLocalMods.entryCount; i++) {
-        if (mod_get_is_autoexec(gLocalMods.entries[i])) {
-            return gLocalMods.entries[i];
-        }
-    }
-}
-
 void mods_activate(struct Mods* mods) {
     mods_clear(&gActiveMods);
 
@@ -143,11 +128,8 @@ void mods_activate(struct Mods* mods) {
         if (mod->enabled) { enabledCount++; }
     }
 
-    // is joining a game and has an autoexec mod
-    bool autoexec = mods == &gRemoteMods && mods_has_autoexec_mod();
-
     // allocate
-    gActiveMods.entries = calloc(enabledCount + autoexec, sizeof(struct Mod*));
+    gActiveMods.entries = calloc(enabledCount, sizeof(struct Mod*));
     if (gActiveMods.entries == NULL) {
         LOG_ERROR("Failed to allocate active mods table!");
         return;
@@ -156,9 +138,8 @@ void mods_activate(struct Mods* mods) {
     // copy enabled entries
     gActiveMods.entryCount = 0;
     gActiveMods.size = 0;
-    for (int i = 0; i < mods->entryCount + autoexec; i++) {
-        // checks if the mod is out of the remote mods bounds and if so, use the autoexec mod
-        struct Mod* mod = i == mods->entryCount ? get_autoexec_mod() : mods->entries[i];
+    for (int i = 0; i < mods->entryCount; i++) {
+        struct Mod* mod = mods->entries[i];
         if (mod->enabled) {
             mod->index = gActiveMods.entryCount;
             gActiveMods.entries[gActiveMods.entryCount++] = mod;
