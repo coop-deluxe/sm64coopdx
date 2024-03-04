@@ -123,6 +123,7 @@ void smlua_anim_util_reset(void) {
                 free((void *) node->anim->values);
             }
         }
+        free(node->anim);
         free(node);
         node = next;
     }
