@@ -30,7 +30,7 @@ static struct DjuiTheme sDjuiThemeLight = {
     },
     .threePanels = {
         .rectColor = {
-            0, 0, 0, 235
+            0, 0, 0, 230
         },
         .borderColor = {
             0, 0, 0, 200
@@ -71,7 +71,7 @@ static struct DjuiTheme sDjuiThemeDark = {
     },
     .threePanels = {
         .rectColor = {
-            0, 0, 0, 235
+            0, 0, 0, 230
         },
         .borderColor = {
             0, 0, 0, 200
