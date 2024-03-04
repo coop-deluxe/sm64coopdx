@@ -691,7 +691,9 @@ Gfx* geo_render_mirror_mario(s32 callContext, struct GraphNode* node, UNUSED Mat
                 if (mario && (((struct GraphNode*)&mario->header.gfx)->flags & GRAPH_RENDER_ACTIVE) && np->connected) {
                     // TODO: Is this a geo layout copy or a graph node copy?
                     gMirrorMario[i].sharedChild = mario->header.gfx.sharedChild;
-                    dynos_actor_override((void*)&gMirrorMario[i].sharedChild);
+                    if (configGlobalPlayerModels || i == 0) {
+                        dynos_actor_override((void*)&gMirrorMario[i].sharedChild);
+                    }
                     gMirrorMario[i].areaIndex = mario->header.gfx.areaIndex;
                     vec3s_copy(gMirrorMario[i].angle, mario->header.gfx.angle);
                     vec3f_copy(gMirrorMario[i].pos, mario->header.gfx.pos);
