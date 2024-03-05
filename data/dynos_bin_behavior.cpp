@@ -168,7 +168,7 @@ s64 DynOS_Bhv_ParseBehaviorIntegerScriptConstants(const String &_Arg, bool *foun
 
     // Object List Types
     bhv_constant(OBJ_LIST_PLAYER);
-    bhv_constant(OBJ_LIST_UNUSED_1);
+    bhv_constant(OBJ_LIST_EXT);
     bhv_constant(OBJ_LIST_DESTRUCTIVE);
     bhv_constant(OBJ_LIST_UNUSED_3);
     bhv_constant(OBJ_LIST_GENACTOR);

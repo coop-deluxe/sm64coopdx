@@ -32,7 +32,7 @@
 enum ObjectList
 {
     OBJ_LIST_PLAYER,      //  (0) Mario
-    OBJ_LIST_UNUSED_1,    //  (1) (unused)
+    OBJ_LIST_EXT,         //  (1) extra object list for Lua mods to use
     OBJ_LIST_DESTRUCTIVE, //  (2) things that can be used to destroy other objects, like
                           //      bob-ombs and corkboxes
     OBJ_LIST_UNUSED_3,    //  (3) (unused)

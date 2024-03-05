@@ -7676,7 +7676,7 @@ TIME_STOP_UNKNOWN_0 = (1 << 0)
 OBJ_LIST_PLAYER = 0
 
 --- @type ObjectList
-OBJ_LIST_UNUSED_1 = 1
+OBJ_LIST_EXT = 1
 
 --- @type ObjectList
 OBJ_LIST_DESTRUCTIVE = 2

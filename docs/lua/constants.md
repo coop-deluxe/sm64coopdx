@@ -2743,7 +2743,7 @@
 | Identifier | Value |
 | :--------- | :---- |
 | OBJ_LIST_PLAYER | 0 |
-| OBJ_LIST_UNUSED_1 | 1 |
+| OBJ_LIST_EXT | 1 |
 | OBJ_LIST_DESTRUCTIVE | 2 |
 | OBJ_LIST_UNUSED_3 | 3 |
 | OBJ_LIST_GENACTOR | 4 |
