@@ -1335,7 +1335,7 @@ s32 play_mode_paused(void) {
         game_exit();
     }*/
 
-    if (!gLevelValues.zoomOutCameraOnPause) {
+    if (!gLevelValues.zoomOutCameraOnPause || !network_check_singleplayer_pause()) {
         gCameraMovementFlags &= ~CAM_MOVE_PAUSE_SCREEN;
     }
     return 0;
