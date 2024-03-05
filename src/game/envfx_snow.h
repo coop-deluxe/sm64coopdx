@@ -9,12 +9,14 @@
 #define ENVFX_SNOW_WATER    2  // Secret Aquarium, Sunken Ship
 #define ENVFX_SNOW_BLIZZARD 3  // unused
 
-#define ENVFX_BUBBLE_START      10 // Separates snow effects and flower/bubble effects
+#define ENVFX_BUBBLE_START      10 // separates snow effects and flower/bubble effects
 
 #define ENVFX_FLOWERS           11 // unused
 #define ENVFX_LAVA_BUBBLES      12 // LLL, BitFS, Bowser 2
 #define ENVFX_WHIRLPOOL_BUBBLES 13 // DDD
 #define ENVFX_JETSTREAM_BUBBLES 14 // JRB, DDD (submarine area)
+
+#define ENVFX_MODE_NO_OVERRIDE -1 // used for set_override_envfx()
 
 struct EnvFxParticle {
     s8 isAlive;

@@ -3525,6 +3525,9 @@ ENVFX_LAVA_BUBBLES = 12
 ENVFX_MODE_NONE = 0
 
 --- @type integer
+ENVFX_MODE_NO_OVERRIDE = -1
+
+--- @type integer
 ENVFX_SNOW_BLIZZARD = 3
 
 --- @type integer
