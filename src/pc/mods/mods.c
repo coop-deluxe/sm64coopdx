@@ -61,6 +61,19 @@ u16 mods_get_character_select_count(void) {
     return enabled;
 }
 
+bool mods_get_all_pausable(void) {
+    bool pausable = true;
+
+    for (u16 i = 0; i < gActiveMods.entryCount; i++) {
+        if (!gActiveMods.entries[i]->pausable) {
+            pausable = false;
+            break;
+        }
+    }
+
+    return pausable;
+}
+
 static void mods_local_store_enabled(void) {
     assert(sLocalEnabledPaths == NULL);
     struct LocalEnabledPath* prev = NULL;

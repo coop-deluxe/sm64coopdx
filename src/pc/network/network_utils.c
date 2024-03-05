@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "network_utils.h"
 #include "game/mario_misc.h"
+#include "pc/mods/mods.h"
 
 u8 network_global_index_from_local(u8 localIndex) {
     if (gNetworkType == NT_SERVER) { return localIndex; }
@@ -48,4 +49,9 @@ const char* network_get_player_text_color_string(u8 localIndex) {
     static char sColorString[10] = { 0 };
     snprintf(sColorString, 10, "\\#%02x%02x%02x\\", rgb[0], rgb[1], rgb[2]);
     return sColorString;
+}
+
+extern s16 gMenuMode;
+bool network_check_singleplayer_pause(void) {
+    return gMenuMode != -1 && network_player_connected_count() == 1 && mods_get_all_pausable();
 }

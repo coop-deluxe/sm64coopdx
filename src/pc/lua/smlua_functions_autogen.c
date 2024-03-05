@@ -20003,6 +20003,21 @@ int smlua_func_network_player_set_description(lua_State* L) {
  // network_utils.h //
 /////////////////////
 
+int smlua_func_network_check_singleplayer_pause(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "network_check_singleplayer_pause", 0, top);
+        return 0;
+    }
+
+
+    lua_pushboolean(L, network_check_singleplayer_pause());
+
+    return 1;
+}
+
 int smlua_func_network_get_player_text_color_string(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -32586,6 +32601,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "network_player_set_description", smlua_func_network_player_set_description);
 
     // network_utils.h
+    smlua_bind_function(L, "network_check_singleplayer_pause", smlua_func_network_check_singleplayer_pause);
     smlua_bind_function(L, "network_get_player_text_color_string", smlua_func_network_get_player_text_color_string);
     smlua_bind_function(L, "network_global_index_from_local", smlua_func_network_global_index_from_local);
     smlua_bind_function(L, "network_is_moderator", smlua_func_network_is_moderator);

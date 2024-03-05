@@ -1275,7 +1275,6 @@ static BhvCommandProc BehaviorCmdTable[BEHAVIOR_CMD_TABLE_MAX] = {
     bhv_cmd_load_collision_data_ext, //41
 };
 
-extern s16 gMenuMode;
 // Execute the behavior script of the current object, process the object flags, and other miscellaneous code for updating objects.
 void cur_obj_update(void) {
     if (!gCurrentObject) { return; }
@@ -1287,7 +1286,7 @@ void cur_obj_update(void) {
     }
 
     // handle network area timer
-    if (gCurrentObject->areaTimerType != AREA_TIMER_TYPE_NONE && !(gMenuMode != -1 && network_player_connected_count() == 1 && gActiveMods.entryCount == 0)) {
+    if (gCurrentObject->areaTimerType != AREA_TIMER_TYPE_NONE && !network_check_singleplayer_pause()) {
         // make sure the area is valid
         if (gNetworkPlayerLocal == NULL || !gNetworkPlayerLocal->currAreaSyncValid) {
             goto cur_obj_update_end;
@@ -1437,7 +1436,7 @@ cur_obj_update_begin:;
     }
 
     // update network area timer
-    if (gCurrentObject->areaTimerType != AREA_TIMER_TYPE_NONE && !(gMenuMode != -1 && network_player_connected_count() == 1 && gActiveMods.entryCount == 0)) {
+    if (gCurrentObject->areaTimerType != AREA_TIMER_TYPE_NONE && !network_check_singleplayer_pause()) {
         gCurrentObject->areaTimer++;
         if (gCurrentObject->areaTimer < gNetworkAreaTimer) {
             goto cur_obj_update_begin;

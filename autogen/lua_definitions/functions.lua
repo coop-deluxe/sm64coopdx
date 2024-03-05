@@ -5885,6 +5885,11 @@ function network_player_set_description(np, description, r, g, b, a)
     -- ...
 end
 
+--- @return boolean
+function network_check_singleplayer_pause()
+    -- ...
+end
+
 --- @param localIndex integer
 --- @return string
 function network_get_player_text_color_string(localIndex)

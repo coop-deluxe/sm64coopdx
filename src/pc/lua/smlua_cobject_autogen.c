@@ -1177,7 +1177,7 @@ static struct LuaObjectField sMarioStateFields[LUA_MARIO_STATE_FIELD_COUNT] = {
     { "waterLevel",                LVT_S16,       offsetof(struct MarioState, waterLevel),                false, LOT_NONE              },
 };
 
-#define LUA_MOD_FIELD_COUNT 13
+#define LUA_MOD_FIELD_COUNT 14
 static struct LuaObjectField sModFields[LUA_MOD_FIELD_COUNT] = {
     { "basePath",            LVT_STRING,   offsetof(struct Mod, basePath),            true, LOT_NONE },
     { "customBehaviorIndex", LVT_U8,       offsetof(struct Mod, customBehaviorIndex), true, LOT_NONE },
@@ -1189,6 +1189,7 @@ static struct LuaObjectField sModFields[LUA_MOD_FIELD_COUNT] = {
     { "index",               LVT_S32,      offsetof(struct Mod, index),               true, LOT_NONE },
     { "isDirectory",         LVT_BOOL,     offsetof(struct Mod, isDirectory),         true, LOT_NONE },
     { "name",                LVT_STRING_P, offsetof(struct Mod, name),                true, LOT_NONE },
+    { "pausable",            LVT_BOOL,     offsetof(struct Mod, pausable),            true, LOT_NONE },
     { "relativePath",        LVT_STRING,   offsetof(struct Mod, relativePath),        true, LOT_NONE },
     { "renderBehindHud",     LVT_BOOL,     offsetof(struct Mod, renderBehindHud),     true, LOT_NONE },
     { "selectable",          LVT_BOOL,     offsetof(struct Mod, selectable),          true, LOT_NONE },

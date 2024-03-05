@@ -86,6 +86,7 @@ void network_send_mod_list(void) {
         packet_write(&p, &mod->isDirectory, sizeof(u8));
         if (!configCoopCompatibility) {
             packet_write(&p, &mod->deluxe, sizeof(u8));
+            packet_write(&p, &mod->pausable, sizeof(u8));
         }
         packet_write(&p, &mod->fileCount, sizeof(u16));
         network_send_to(0, &p);
@@ -227,6 +228,7 @@ void network_receive_mod_list_entry(struct Packet* p) {
     packet_read(p, &mod->isDirectory, sizeof(u8));
     if (!configCoopCompatibility) {
         packet_read(p, &mod->deluxe, sizeof(u8));
+        packet_read(p, &mod->pausable, sizeof(u8));
     }
     normalize_path(mod->relativePath);
     LOG_INFO("    '%s': %llu", mod->name, (u64)mod->size);

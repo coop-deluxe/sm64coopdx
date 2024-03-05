@@ -354,6 +354,24 @@
 <br />
 
 
+## [network_check_singleplayer_pause](#network_check_singleplayer_pause)
+
+### Lua Example
+`local booleanValue = network_check_singleplayer_pause()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool network_check_singleplayer_pause(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [network_get_player_text_color_string](#network_get_player_text_color_string)
 
 ### Lua Example

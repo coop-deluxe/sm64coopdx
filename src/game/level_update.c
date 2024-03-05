@@ -1669,7 +1669,7 @@ s32 update_level(void) {
             changeLevel = play_mode_normal();
             break;
         case PLAY_MODE_PAUSED:
-            if (!(network_player_connected_count() == 1 && gActiveMods.entryCount == 0)) {
+            if (!network_check_singleplayer_pause()) {
                 changeLevel = play_mode_normal();
             }
 

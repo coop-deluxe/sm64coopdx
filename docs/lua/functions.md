@@ -1155,6 +1155,7 @@
 <br />
 
 - network_utils.h
+   - [network_check_singleplayer_pause](functions-4.md#network_check_singleplayer_pause)
    - [network_get_player_text_color_string](functions-4.md#network_get_player_text_color_string)
    - [network_global_index_from_local](functions-4.md#network_global_index_from_local)
    - [network_is_moderator](functions-4.md#network_is_moderator)

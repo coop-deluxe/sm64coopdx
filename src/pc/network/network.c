@@ -502,7 +502,6 @@ static void network_rehost_update(void) {
     djui_panel_do_host(true);
 }
 
-extern s16 gMenuMode;
 static void network_update_area_timer(void) {
     bool brokenClock = false;
 #ifdef DEVELOPMENT
@@ -523,7 +522,7 @@ static void network_update_area_timer(void) {
     //brokenClock = (skipClockCount > 0);
 #endif
     if (!brokenClock) {
-        if (gMenuMode != -1 && network_player_connected_count() == 1 && gActiveMods.entryCount == 0) {
+        if (network_check_singleplayer_pause()) {
             gNetworkAreaTimerClock++;
         }
         // update network area timer

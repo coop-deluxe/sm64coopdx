@@ -1435,6 +1435,7 @@
 | index | `integer` | read-only |
 | isDirectory | `boolean` | read-only |
 | name | `string` | read-only |
+| pausable | `boolean` | read-only |
 | relativePath | `string` | read-only |
 | renderBehindHud | `boolean` | read-only |
 | selectable | `boolean` | read-only |

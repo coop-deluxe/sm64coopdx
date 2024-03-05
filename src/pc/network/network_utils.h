@@ -13,4 +13,6 @@ bool network_is_moderator(void);
 u8* network_get_player_text_color(u8 localIndex);
 const char* network_get_player_text_color_string(u8 localIndex);
 
+bool network_check_singleplayer_pause(void);
+
 #endif
