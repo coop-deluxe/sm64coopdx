@@ -12379,4 +12379,19 @@ s32 update_rom_hack_camera(struct Camera *c, Vec3f focus, Vec3f pos) {
     c->nextYaw = c->yaw;
     return camYaw;
 }
+/**
+ * Hopefully this works
+ */
+#include <Mouse.h>
+
+
+// Create mouse object
+
+Microsoft::WRL::ComPtr<Mouse> g_mouse;
+
+
+// Lock mouse cursor
+
+g_mouse->SetCursorMode(Mouse::CursorMode::Locked);
+
 
