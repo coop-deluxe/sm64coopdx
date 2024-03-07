@@ -10,6 +10,7 @@
 #include "pc/network/network.h"
 #include "pc/utils/misc.h"
 #include "pc/configfile.h"
+#include "pc/update_checker.h"
 
 static struct DjuiRect* sRectPort = NULL;
 static struct DjuiRect* sRectPassword = NULL;
@@ -200,6 +201,14 @@ void djui_panel_host_create(struct DjuiBase* caller) {
             defaultBase = (gNetworkType == NT_SERVER)
                         ? &button1->base
                         : &button2->base;
+        }
+
+        if (gUpdateMessage) {
+            struct DjuiText* message = djui_text_create(&panel->base, DLANG(NOTIF, UPDATE_AVAILABLE));
+            djui_base_set_size_type(&message->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+            djui_base_set_size(&message->base, 1.0f, 1.0f);
+            djui_base_set_color(&message->base, 255, 255, 160, 255);
+            djui_text_set_alignment(message, DJUI_HALIGN_CENTER, DJUI_VALIGN_BOTTOM);
         }
     }
 

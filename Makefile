@@ -904,6 +904,13 @@ endif
 # Zlib
 LDFLAGS += -lz
 
+# Update checker library
+ifeq ($(WINDOWS_BUILD),1)
+  LDFLAGS += -lwininet
+else
+  LDFLAGS += -lcurl
+endif
+
 # Lua
 ifeq ($(WINDOWS_BUILD),1)
   ifeq ($(TARGET_BITS), 32)
@@ -927,7 +934,7 @@ else
   LDFLAGS += -Llib/lua/linux -l:liblua53.a -ldl
 endif
 
-# coopnet
+# CoopNet
 COOPNET_LIBS :=
 ifeq ($(COOPNET),1)
   ifeq ($(WINDOWS_BUILD),1)

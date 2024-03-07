@@ -7,6 +7,7 @@
 
 static char sVersionString[MAX_VERSION_LENGTH] = { 0 };
 static char sLocalVersionString[MAX_LOCAL_VERSION_LENGTH] = { 0 };
+static char sDxVersionString[MAX_VERSION_LENGTH] = { 0 };
 
 const char* get_version(void) {
     if (configCoopCompatibility) {
@@ -25,9 +26,9 @@ const char* get_version(void) {
 #endif
     } else {
 #if defined(VERSION_US)
-        snprintf(sVersionString, MAX_VERSION_LENGTH, "%s", SM64COOPDX_VERSION);
+        snprintf(sVersionString, MAX_VERSION_LENGTH, "v%s", SM64COOPDX_VERSION);
 #else
-        snprintf(sVersionString, MAX_VERSION_LENGTH, "%s %s", SM64COOPDX_VERSION, VERSION_REGION);
+        snprintf(sVersionString, MAX_VERSION_LENGTH, "v%s %s", SM64COOPDX_VERSION, VERSION_REGION);
 #endif
     }
     return sVersionString;
@@ -46,13 +47,24 @@ const char* get_version_local(void) {
 #endif
     } else {
 #if defined(VERSION_US)
-        snprintf(sLocalVersionString, MAX_LOCAL_VERSION_LENGTH, "%s", SM64COOPDX_VERSION);
+        snprintf(sLocalVersionString, MAX_LOCAL_VERSION_LENGTH, "v%s", SM64COOPDX_VERSION);
 #else
-        snprintf(sLocalVersionString, MAX_LOCAL_VERSION_LENGTH, "%s %s", VERSION_TEXT, SM64COOPDX_VERSION, VERSION_REGION);
+        snprintf(sLocalVersionString, MAX_LOCAL_VERSION_LENGTH, "v%s %s", VERSION_TEXT, SM64COOPDX_VERSION, VERSION_REGION);
 #endif
     }
 
     return sLocalVersionString;
+}
+
+// I want to redo this whole file when I remove sm64ex-coop compatibility
+const char* get_version_dx(void) {
+#if defined(VERSION_US)
+    snprintf(sDxVersionString, MAX_LOCAL_VERSION_LENGTH, "v%s", SM64COOPDX_VERSION);
+#else
+    snprintf(sDxVersionString, MAX_LOCAL_VERSION_LENGTH, "v%s %s", VERSION_TEXT, SM64COOPDX_VERSION, VERSION_REGION);
+#endif
+
+    return sDxVersionString;
 }
 
 const char* get_game_name(void) {

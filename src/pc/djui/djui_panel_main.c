@@ -7,6 +7,7 @@
 #include "djui_panel_confirm.h"
 #include "src/pc/controller/controller_sdl.h"
 #include "src/pc/pc_main.h"
+#include "src/pc/update_checker.h"
 
 extern ALIGNED8 u8 texture_coopdx_logo[];
 
@@ -46,11 +47,20 @@ void djui_panel_main_create(struct DjuiBase* caller) {
             djui_base_set_location(&button4->base, 0, -30.0f);
         }
 
-        struct DjuiText* version = djui_text_create(&panel->base, SM64COOPDX_VERSION);
-        djui_base_set_size_type(&version->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-        djui_base_set_size(&version->base, 1.0f, 1.0f);
-        djui_base_set_color(&version->base, 50, 50, 50, 255);
-        djui_text_set_alignment(version, DJUI_HALIGN_RIGHT, DJUI_VALIGN_BOTTOM);
+        // these two cannot co-exist for some reason
+        if (gUpdateMessage) {
+            struct DjuiText* message = djui_text_create(&panel->base, DLANG(NOTIF, UPDATE_AVAILABLE));
+            djui_base_set_size_type(&message->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+            djui_base_set_size(&message->base, 1.0f, 1.0f);
+            djui_base_set_color(&message->base, 255, 255, 160, 255);
+            djui_text_set_alignment(message, DJUI_HALIGN_CENTER, DJUI_VALIGN_BOTTOM);
+        } else {
+            struct DjuiText* version = djui_text_create(&panel->base, get_version_dx());
+            djui_base_set_size_type(&version->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+            djui_base_set_size(&version->base, 1.0f, 1.0f);
+            djui_base_set_color(&version->base, 50, 50, 50, 255);
+            djui_text_set_alignment(version, DJUI_HALIGN_RIGHT, DJUI_VALIGN_BOTTOM);
+        }
     }
 
     djui_panel_add(caller, panel, NULL);

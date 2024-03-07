@@ -39,6 +39,7 @@
 #include "pc/network/version.h"
 #include "pc/network/socket/domain_res.h"
 #include "pc/network/network_player.h"
+#include "pc/update_checker.h"
 #include "pc/djui/djui.h"
 #include "pc/djui/djui_unicode.h"
 #include "pc/djui/djui_panel.h"
@@ -278,6 +279,9 @@ void* main_game_init(UNUSED void* arg) {
     configfile_load();
     configWindow.settings_changed = true;
     if (!djui_language_init(configLanguage)) { snprintf(configLanguage, MAX_CONFIG_STRING, "%s", ""); }
+
+    check_for_updates();
+
     dynos_packs_init();
     sync_objects_init_system();
 
@@ -368,6 +372,8 @@ int main(int argc, char *argv[]) {
     djui_unicode_init();
     djui_init_late();
     djui_console_message_dequeue();
+
+    show_update_popup();
 
     // Init network
     if (gCLIOpts.Network == NT_CLIENT) {

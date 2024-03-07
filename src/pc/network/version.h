@@ -1,7 +1,7 @@
 #ifndef VERSION_H
 #define VERSION_H
 
-#define SM64COOPDX_VERSION "v0.1.4"
+#define SM64COOPDX_VERSION "0.1.5"
 
 #define VERSION_TEXT "beta"
 #define VERSION_NUMBER 36
@@ -22,6 +22,7 @@
 #define MAX_LOCAL_VERSION_LENGTH 36
 const char* get_version(void);
 const char* get_version_local(void);
+const char* get_version_dx(void);
 const char* get_game_name(void);
 
 #endif
