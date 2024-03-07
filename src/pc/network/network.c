@@ -116,7 +116,7 @@ bool network_init(enum NetworkType inNetworkType, bool reconnecting) {
 
     // set server settings
     gServerSettings.playerInteractions = configPlayerInteraction;
-    gServerSettings.bouncyLevelBounds = configBouncyLevelBounds;
+    gServerSettings.bouncyLevelBounds = configCoopCompatibility ? 0 : configBouncyLevelBounds;
     gServerSettings.playerKnockbackStrength = configPlayerKnockbackStrength;
     gServerSettings.stayInLevelAfterStar = configStayInLevelAfterStar;
     gServerSettings.skipIntro = configSkipIntro;
@@ -124,7 +124,7 @@ bool network_init(enum NetworkType inNetworkType, bool reconnecting) {
     gServerSettings.bubbleDeath = configBubbleDeath;
     gServerSettings.enablePlayersInLevelDisplay = TRUE;
     gServerSettings.enablePlayerList = TRUE;
-    gServerSettings.nametags = configNametags;
+    gServerSettings.nametags = configCoopCompatibility ? FALSE : configNametags;
     gServerSettings.maxPlayers = configAmountofPlayers;
 #if defined(RAPI_DUMMY) || defined(WAPI_DUMMY)
     gServerSettings.headlessServer = (inNetworkType == NT_SERVER);
