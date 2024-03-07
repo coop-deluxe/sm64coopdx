@@ -41,21 +41,18 @@ size_t write_callback(char *ptr, size_t size, size_t nmemb, char **data) {
 // function to download a text file from the internet
 const char* get_version_remote(void) {
 #if defined(_WIN32) || defined(_WIN64)
-    HINTERNET hInternet, hUrl;
-    DWORD bytesRead;
     char buffer[8];
 
     // initialize WinINet
-    hInternet = InternetOpenA("sm64coopdx", INTERNET_OPEN_TYPE_DIRECT, NULL, NULL, 0);
+    HINTERNET hInternet = InternetOpenA("sm64coopdx", INTERNET_OPEN_TYPE_DIRECT, NULL, NULL, 0);
     if (!hInternet) {
         printf("Failed to check for updates!\n");
         InternetCloseHandle(hInternet);
-        InternetCloseHandle(hUrl);
         return NULL;
     }
 
     // open the URL
-    hUrl = InternetOpenUrlA(hInternet, URL, NULL, 0, INTERNET_FLAG_RELOAD, 0);
+    HINTERNET hUrl = InternetOpenUrlA(hInternet, URL, NULL, 0, INTERNET_FLAG_RELOAD, 0);
     if (!hUrl) {
         printf("Failed to check for updates!\n");
         InternetCloseHandle(hInternet);
@@ -69,6 +66,7 @@ const char* get_version_remote(void) {
     HttpQueryInfo(hUrl, HTTP_QUERY_CONTENT_LENGTH | HTTP_QUERY_FLAG_NUMBER, &contentLength, &dwSize, NULL);
 
     // read data from the URL
+    DWORD bytesRead;
     if (!InternetReadFile(hUrl, buffer, sizeof(buffer), &bytesRead)) {
         printf("Failed to check for updates!\n");
         InternetCloseHandle(hInternet);
@@ -82,33 +80,33 @@ const char* get_version_remote(void) {
     InternetCloseHandle(hUrl);
     InternetCloseHandle(hInternet);
 #else
-    CURL *curl;
-    CURLcode res;
-    char *data = NULL;
+    char* buffer = NULL;
     
     // initialize libcurl
-    curl = curl_easy_init();
-    if (!curl) {
+    CURL *curl = curl_easy_init();
+    if (!curl || curl_global_init(CURL_GLOBAL_ALL) != CURLE_OK) {
         printf("Failed to check for updates!\n");
         return NULL;
     }
 
-    // set the URL to retrieve data from
+    // set properties
+    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_callback);
+    curl_easy_setopt(curl, CURLOPT_WRITEDATA, &buffer);
+    curl_easy_setopt(curl, CURLOPT_TIMEOUT, 3); // only allow 3 seconds
+    curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, 3);
     curl_easy_setopt(curl, CURLOPT_URL, URL);
 
-    // set the write callback function to store received data into the buffer
-    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_callback);
-    curl_easy_setopt(curl, CURLOPT_WRITEDATA, &data);
-
     // perform the request
-    res = curl_easy_perform(curl);
+    CURLcode res = curl_easy_perform(curl);
     if (res != CURLE_OK) {
         printf("Failed to check for updates!\n");
         curl_easy_cleanup(curl);
         return NULL;
     }
 
-    strncpy(sRemoteVersion, data, 8);
+    if (!buffer) { return NULL; }
+
+    strncpy(sRemoteVersion, buffer, 8);
 
     // Clean up
     curl_easy_cleanup(curl);
@@ -123,7 +121,6 @@ void check_for_updates(void) {
         snprintf(gCurrLoadingSegment.str, 256, "Checking For Updates");
     );
 
-#if defined(_WIN32) || defined(_WIN64)
     const char* remoteVersion = get_version_remote();
     if (strcmp(get_version_remote(), SM64COOPDX_VERSION)) {
         snprintf(
@@ -137,7 +134,4 @@ void check_for_updates(void) {
         );
         gUpdateMessage = true;
     }
-#else
-
-#endif
 }
