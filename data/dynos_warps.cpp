@@ -221,7 +221,7 @@ static void *DynOS_Warp_UpdateWarp(void *aCmd, bool aIsLevelInitDone) {
             gMarioSpawnInfo->startPos[1] = _Warp[4];
             gMarioSpawnInfo->startPos[2] = _Warp[5] + (sDynosWarpSpawnType == MARIO_SPAWN_DOOR_WARP) * 300.0f * coss(_Warp[6]);
             gMarioSpawnInfo->startAngle[0] = 0;
-            gMarioSpawnInfo->startAngle[1] = _Warp[6] + (gCurrLevelNum == LEVEL_CASTLE_GROUNDS && DynOS_Level_IsVanillaLevel(LEVEL_CASTLE_GROUNDS) ? 0x8000 : 0);
+            gMarioSpawnInfo->startAngle[1] = _Warp[6] + (!configCoopCompatibility && gCurrLevelNum == LEVEL_CASTLE_GROUNDS && DynOS_Level_IsVanillaLevel(LEVEL_CASTLE_GROUNDS) ? 0x8000 : 0);
             gMarioSpawnInfo->startAngle[2] = 0;
             gMarioSpawnInfo->areaIndex = gCurrAreaIndex;
             init_mario();
