@@ -14,7 +14,7 @@
 #define URL "https://sm64coopdx.com/download/version.txt"
 
 static char sVersionUpdateTextBuffer[256] = { 0 };
-static char sRemoteVersion[8];
+static char sRemoteVersion[8] = { 0 };
 
 bool gUpdateMessage = false;
 
@@ -39,7 +39,7 @@ size_t write_callback(char *ptr, size_t size, size_t nmemb, char **data) {
 #endif
 
 // function to download a text file from the internet
-const char* get_version_remote(void) {
+void get_version_remote(void) {
 #if defined(_WIN32) || defined(_WIN64)
     char buffer[8];
 
@@ -48,7 +48,7 @@ const char* get_version_remote(void) {
     if (!hInternet) {
         printf("Failed to check for updates!\n");
         InternetCloseHandle(hInternet);
-        return NULL;
+        return;
     }
 
     // open the URL
@@ -57,7 +57,7 @@ const char* get_version_remote(void) {
         printf("Failed to check for updates!\n");
         InternetCloseHandle(hInternet);
         InternetCloseHandle(hUrl);
-        return NULL;
+        return;
     }
 
     // calculate the size of the file
@@ -71,7 +71,7 @@ const char* get_version_remote(void) {
         printf("Failed to check for updates!\n");
         InternetCloseHandle(hInternet);
         InternetCloseHandle(hUrl);
-        return NULL;
+        return;
     }
 
     strncpy(sRemoteVersion, buffer, 8);
@@ -86,7 +86,7 @@ const char* get_version_remote(void) {
     CURL *curl = curl_easy_init();
     if (!curl || curl_global_init(CURL_GLOBAL_ALL) != CURLE_OK) {
         printf("Failed to check for updates!\n");
-        return NULL;
+        return;
     }
 
     // set properties
@@ -101,18 +101,16 @@ const char* get_version_remote(void) {
     if (res != CURLE_OK) {
         printf("Failed to check for updates!\n");
         curl_easy_cleanup(curl);
-        return NULL;
+        return;
     }
 
-    if (!buffer) { return NULL; }
+    if (!buffer) { return; }
 
     strncpy(sRemoteVersion, buffer, 8);
 
     // Clean up
     curl_easy_cleanup(curl);
 #endif
-
-    return sRemoteVersion;
 }
 
 void check_for_updates(void) {
@@ -121,14 +119,14 @@ void check_for_updates(void) {
         snprintf(gCurrLoadingSegment.str, 256, "Checking For Updates");
     );
 
-    const char* remoteVersion = get_version_remote();
-    if (strcmp(get_version_remote(), SM64COOPDX_VERSION)) {
+    get_version_remote();
+    if (sRemoteVersion[0] != '\0' && strcmp(sRemoteVersion, SM64COOPDX_VERSION)) {
         snprintf(
             sVersionUpdateTextBuffer, 256,
             "\\#ffffa0\\%s\n\\#dcdcdc\\%s: v%s\n%s: v%s",
             DLANG(NOTIF, UPDATE_AVAILABLE),
             DLANG(NOTIF, LATEST_VERSION),
-            remoteVersion,
+            sRemoteVersion,
             DLANG(NOTIF, YOUR_VERSION),
             SM64COOPDX_VERSION
         );
