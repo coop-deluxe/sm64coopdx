@@ -2784,10 +2784,10 @@ PALETTE_WARIO = 3
 PALETTE_WALUIGI = 4
 
 --- @type PalettePreset
-PALETTE_YOSHI = 5
+PALETTE_TOADETTE = 5
 
 --- @type PalettePreset
-PALETTE_TOADETTE = 6
+PALETTE_YOSHI = 6
 
 --- @type PalettePreset
 PALETTE_BUCKEN_BERRY = 7
