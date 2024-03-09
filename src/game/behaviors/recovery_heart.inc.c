@@ -46,7 +46,7 @@ void bhv_recovery_heart_loop(void) {
         for (s32 i = 0; i < MAX_PLAYERS; i++) {
             if (!gMarioStates[i].visibleToEnemies) { continue; }
             if (!is_player_active(&gMarioStates[i])) { continue; }
-            if (&gMarioStates[i] == nearestInteractingState || dist_between_objects(o, gMarioStates[i].marioObj) < 1000) {
+            if (&gMarioStates[i] == nearestInteractingState || (dist_between_objects(o, gMarioStates[i].marioObj) < 1000 && configCoopCompatibility)) {
                 gMarioStates[i].healCounter += 4;
             }
         }
