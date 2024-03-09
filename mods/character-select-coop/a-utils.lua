@@ -1,3 +1,17 @@
+MOD_VERSION = "1.7"
+IS_COOPDX = get_coop_compatibility_enabled ~= nil
+
+ommActive = false
+for i in pairs(gActiveMods) do
+    if gActiveMods[i].relativePath == "omm-coop" then
+        ommActive = true
+        break
+    end
+end
+
+-- localize functions to improve performance
+local string_lower,table_insert = string.lower,table.insert
+
 local saveableCharacters = {
     ["1"] = true,
     ["2"] = true,
@@ -43,51 +57,49 @@ local saveableCharacters = {
     [" "] = false,
 }
 
+--- @param string string
+--- Replaces underscores in the string with spaces
 function string_underscore_to_space(string)
-    local s = ''
-    for i = 1, #string do
-        local c = string:sub(i,i)
-        if c ~= '_' then
-            s = s .. c
-        else
-            s = s .. " "
-        end
-    end
-    return s
+    if string == nil then return "" end
+    return string:gsub("_", " ")
 end
 
+--- @param string string
+--- Constructs a new string but only with characters from `saveableCharacters`
+--- * Spaces are the notable character that gets turned into an underscore
 function string_space_to_underscore(string)
     local s = ''
     for i = 1, #string do
         local c = string:sub(i,i)
-        if saveableCharacters[string.lower(c)] then
+        if saveableCharacters[string_lower(c)] then
             s = s .. c
-        elseif saveableCharacters[string.lower(c)] ~= nil then
+        elseif saveableCharacters[string_lower(c)] ~= nil then
             s = s .. "_"
         end
     end
     return s
 end
 
-function string_split(s)
+--- @param string string
+--- Splits a string into a table by spaces
+function string_split(string)
     local result = {}
-    for match in (s):gmatch(string.format("[^%s]+", " ")) do
-        table.insert(result, match)
+    for match in string:gmatch(string.format("[^%s]+", " ")) do
+        table_insert(result, match)
     end
     return result
 end
 
-client_is_coop_dx = get_coop_compatibility_enabled ~= nil -- Checks if Client is DX
--- network_is_coop_dx = SM64COOPDX_VERSION ~= nil -- Checks if Coop Compatibility is Off (As of now unused)
-
-ommActive = false
-for i in pairs(gActiveMods) do
-    local name = gActiveMods[i].name
-    if (name:find("OMM Rebirth")) then
-        ommActive = true
-    end
+--- @param param number
+--- @param caseTable table
+--- Switch statement function
+function switch(param, caseTable)
+    local case = caseTable[param]
+    if case then return case() end
+    local def = caseTable['default']
+    return def and def() or nil
 end
 
-modVersion = "1.6.1"
-
 allowMenu = {}
+
+renderInMenuTable = {}

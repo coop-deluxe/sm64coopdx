@@ -10,6 +10,9 @@ gCustomVoiceSamples = {}
 gCustomVoiceSamplesBackup = {}
 gCustomVoiceStream = nil
 
+-- localize functions to improve performance
+local audio_sample_stop,audio_sample_destroy,type,math_random,audio_stream_stop,audio_stream_destroy,audio_stream_load,audio_stream_play,audio_sample_load,audio_sample_play,is_game_paused,play_character_sound = audio_sample_stop,audio_sample_destroy,type,math.random,audio_stream_stop,audio_stream_destroy,audio_stream_load,audio_stream_play,audio_sample_load,audio_sample_play,is_game_paused,play_character_sound
+
 --- @param m MarioState
 function stop_custom_character_sound(m, sound)
     local voice_sample = gCustomVoiceSamples[m.playerIndex]
