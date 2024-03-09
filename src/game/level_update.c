@@ -849,7 +849,7 @@ void verify_warp(struct MarioState *m, bool killMario) {
             }
         }
         else {
-            warp_to_start_level();
+            dynos_warp_to_start_level();
         }
     }
 }
