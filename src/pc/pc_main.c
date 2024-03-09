@@ -338,12 +338,10 @@ int main(int argc, char *argv[]) {
 
 #if defined(_WIN32) || defined(_WIN64)
     // Handle Windows console
-    if (gCLIOpts.Console && AllocConsole()) {
-        FILE* fDummy;
-        freopen_s(&fDummy, "CONOUT$", "w", stdout);
-        freopen_s(&fDummy, "CONOUT$", "w", stderr);
-        freopen_s(&fDummy, "CONIN$", "r", stdin);
+    if (!gCLIOpts.Console) {
+        FreeConsole();
     }
+
 #endif
 
     // Create the window straight away
