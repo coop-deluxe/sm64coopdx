@@ -29232,38 +29232,6 @@ int smlua_func_get_vertex_color(lua_State* L) {
     return 1;
 }
 
-int smlua_func_gfx_enable_adjust_for_aspect_ratio(lua_State* L) {
-    if (L == NULL) { return 0; }
-
-    int top = lua_gettop(L);
-    if (top != 1) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "gfx_enable_adjust_for_aspect_ratio", 1, top);
-        return 0;
-    }
-
-    bool enable = smlua_to_boolean(L, 1);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "gfx_enable_adjust_for_aspect_ratio"); return 0; }
-
-    gfx_enable_adjust_for_aspect_ratio(enable);
-
-    return 1;
-}
-
-int smlua_func_gfx_get_adjust_for_aspect_ratio(UNUSED lua_State* L) {
-    if (L == NULL) { return 0; }
-
-    int top = lua_gettop(L);
-    if (top != 0) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "gfx_get_adjust_for_aspect_ratio", 0, top);
-        return 0;
-    }
-
-
-    lua_pushboolean(L, gfx_get_adjust_for_aspect_ratio());
-
-    return 1;
-}
-
 int smlua_func_hud_get_flash(UNUSED lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -33095,8 +33063,6 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "get_time", smlua_func_get_time);
     smlua_bind_function(L, "get_ttc_speed_setting", smlua_func_get_ttc_speed_setting);
     smlua_bind_function(L, "get_vertex_color", smlua_func_get_vertex_color);
-    smlua_bind_function(L, "gfx_enable_adjust_for_aspect_ratio", smlua_func_gfx_enable_adjust_for_aspect_ratio);
-    smlua_bind_function(L, "gfx_get_adjust_for_aspect_ratio", smlua_func_gfx_get_adjust_for_aspect_ratio);
     smlua_bind_function(L, "hud_get_flash", smlua_func_hud_get_flash);
     smlua_bind_function(L, "hud_get_value", smlua_func_hud_get_value);
     smlua_bind_function(L, "hud_hide", smlua_func_hud_hide);

@@ -1663,8 +1663,6 @@
    - [get_time](functions-5.md#get_time)
    - [get_ttc_speed_setting](functions-5.md#get_ttc_speed_setting)
    - [get_vertex_color](functions-5.md#get_vertex_color)
-   - [gfx_enable_adjust_for_aspect_ratio](functions-5.md#gfx_enable_adjust_for_aspect_ratio)
-   - [gfx_get_adjust_for_aspect_ratio](functions-5.md#gfx_get_adjust_for_aspect_ratio)
    - [hud_get_flash](functions-5.md#hud_get_flash)
    - [hud_get_value](functions-5.md#hud_get_value)
    - [hud_hide](functions-5.md#hud_hide)

@@ -635,16 +635,6 @@ bool get_coop_compatibility_enabled(void) {
 
 ///
 
-bool gfx_get_adjust_for_aspect_ratio(void) {
-    return gAdjustForAspectRatio;
-}
-
-void gfx_enable_adjust_for_aspect_ratio(bool enable) {
-    gAdjustForAspectRatio = enable;
-}
-
-///
-
 void set_window_title(const char* title) {
     WAPI.set_window_title(title);
 }

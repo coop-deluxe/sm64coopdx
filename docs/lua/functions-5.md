@@ -1210,44 +1210,6 @@
 
 <br />
 
-## [gfx_enable_adjust_for_aspect_ratio](#gfx_enable_adjust_for_aspect_ratio)
-
-### Lua Example
-`gfx_enable_adjust_for_aspect_ratio(enable)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| enable | `boolean` |
-
-### Returns
-- None
-
-### C Prototype
-`void gfx_enable_adjust_for_aspect_ratio(bool enable);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [gfx_get_adjust_for_aspect_ratio](#gfx_get_adjust_for_aspect_ratio)
-
-### Lua Example
-`local booleanValue = gfx_get_adjust_for_aspect_ratio()`
-
-### Parameters
-- None
-
-### Returns
-- `boolean`
-
-### C Prototype
-`bool gfx_get_adjust_for_aspect_ratio(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
 ## [hud_get_flash](#hud_get_flash)
 
 ### Lua Example

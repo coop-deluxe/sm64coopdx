@@ -19,8 +19,6 @@ extern Color gVertexColor;
 extern Color gFogColor;
 extern f32 gFogIntensity;
 
-extern bool gAdjustForAspectRatio;
-
 #ifdef __cplusplus
 extern "C" {
 #endif
