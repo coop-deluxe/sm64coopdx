@@ -125,7 +125,7 @@ static void controller_sdl_init(void) {
                 joy_axis_binds[i] = -1;
     }
  
-    if (newcam_mouse == 1)
+    if (newcam_mouse == 1 && gMenuMode == -1 && !gDjuiChatBoxFocus && !gDjuiConsoleFocus)
         SDL_WM_GrabInput(SDL_GRAB_ON);
     SDL_GetRelativeMouseState(&mouse_x, &mouse_y);
 

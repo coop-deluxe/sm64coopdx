@@ -187,7 +187,6 @@ void djui_interactable_set_input_focus(struct DjuiBase* base) {
     djui_interactable_on_focus_end(gInteractableFocus);
     gInteractableFocus = base;
     djui_interactable_on_focus_begin(base);
-    djui_cursor_set_visible(base == NULL);
 }
 
 bool djui_interactable_is_input_focus(struct DjuiBase* base) {
