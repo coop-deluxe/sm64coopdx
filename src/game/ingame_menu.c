@@ -2445,7 +2445,7 @@ void render_pause_red_coins(void) {
     if (gCurrentArea->numRedCoins == 8) {
         u8 collected = gCurrentArea->numRedCoins - count_objects_with_behavior(bhvRedCoin);
         for (s32 x = 0; x < collected; x++) {
-            print_animated_red_coin(GFX_DIMENSIONS_FROM_RIGHT_EDGE(30) - x * 20, 16);
+            print_animated_red_coin(gfx_dimensions_rect_from_right_edge(30) - x * 20, 16);
         }
         return;
     }
