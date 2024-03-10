@@ -34,7 +34,7 @@ const LevelScript level_ending_entry[] = {
     // L1:
     /*17*/ //SLEEP(/*frames*/ 1),
     /*18*/ //JUMP(level_ending_entry + 17),
-    SLEEP_BEFORE_EXIT(/*frames*/ 30 * 5),
+    SLEEP_BEFORE_EXIT(/*frames*/ 30 * 10),
     /*15*/ CALL(/*arg*/ 0, /*func*/ lvl_exiting_credits),
     CLEAR_LEVEL(),
     EXIT(),
