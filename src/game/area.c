@@ -367,6 +367,7 @@ void area_update_objects(void) {
  * transition type, time in frames, and the RGB color that will fill the screen.
  */
 void play_transition(s16 transType, s16 time, u8 red, u8 green, u8 blue) {
+    reset_screen_transition_timers();
     bool returnValue = true;
     smlua_call_event_hooks_int_params_ret_bool(HOOK_ON_SCREEN_TRANSITION, transType, &returnValue);
     if (!returnValue) { return; }
