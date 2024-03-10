@@ -268,9 +268,8 @@ void game_exit(void) {
 }
 
 void* main_game_init(UNUSED void* arg) {
-    const char *gamedir = gCLIOpts.GameDir[0] ? gCLIOpts.GameDir : FS_BASEDIR;
-    const char *userpath = gCLIOpts.SavePath[0] ? gCLIOpts.SavePath : sys_user_path();
-    fs_init(sys_ropaths, gamedir, userpath);
+    const char *userpath = gCLIOpts.savePath[0] ? gCLIOpts.savePath : sys_user_path();
+    fs_init(sys_ropaths, FS_BASEDIR, userpath);
 
     if (gIsThreaded) { REFRESH_MUTEX(snprintf(gCurrLoadingSegment.str, 256, "Loading")); }
     dynos_gfx_init();
@@ -280,7 +279,7 @@ void* main_game_init(UNUSED void* arg) {
     configWindow.settings_changed = true;
     if (!djui_language_init(configLanguage)) { snprintf(configLanguage, MAX_CONFIG_STRING, "%s", ""); }
 
-    if (gCLIOpts.Network != NT_SERVER) {
+    if (gCLIOpts.network != NT_SERVER) {
         check_for_updates();
     }
 
@@ -306,11 +305,11 @@ void* main_game_init(UNUSED void* arg) {
         } else if (memcmp(&configPlayerPalette, &gPalettePresets[i], sizeof(struct PlayerPalette)) == 0) { break; }
     }
 
-    if (gCLIOpts.FullScreen == 1) { configWindow.fullscreen = true; }
-    else if (gCLIOpts.FullScreen == 2) { configWindow.fullscreen = false; }
+    if (gCLIOpts.fullscreen == 1) { configWindow.fullscreen = true; }
+    else if (gCLIOpts.fullscreen == 2) { configWindow.fullscreen = false; }
 
-    if (gCLIOpts.PlayerName[0] != '\0') {
-        snprintf(configPlayerName, MAX_PLAYER_STRING, "%s", gCLIOpts.PlayerName);
+    if (gCLIOpts.playerName[0] != '\0') {
+        snprintf(configPlayerName, MAX_PLAYER_STRING, "%s", gCLIOpts.playerName);
     }
 
     if (!gGfxInited) {
@@ -339,7 +338,7 @@ int main(int argc, char *argv[]) {
 
 #if defined(_WIN32) || defined(_WIN64)
     // Handle Windows console
-    if (!gCLIOpts.Console) {
+    if (!gCLIOpts.console) {
         FreeConsole();
     }
 
@@ -377,15 +376,15 @@ int main(int argc, char *argv[]) {
     show_update_popup();
 
     // Init network
-    if (gCLIOpts.Network == NT_CLIENT) {
+    if (gCLIOpts.network == NT_CLIENT) {
         network_set_system(NS_SOCKET);
-        snprintf(gGetHostName, MAX_CONFIG_STRING, "%s", gCLIOpts.JoinIp);
-        snprintf(configJoinIp, MAX_CONFIG_STRING, "%s", gCLIOpts.JoinIp);
-        configJoinPort = gCLIOpts.NetworkPort;
+        snprintf(gGetHostName, MAX_CONFIG_STRING, "%s", gCLIOpts.joinIp);
+        snprintf(configJoinIp, MAX_CONFIG_STRING, "%s", gCLIOpts.joinIp);
+        configJoinPort = gCLIOpts.networkPort;
         network_init(NT_CLIENT, false);
-    } else if (gCLIOpts.Network == NT_SERVER) {
+    } else if (gCLIOpts.network == NT_SERVER) {
         network_set_system(NS_SOCKET);
-        configHostPort = gCLIOpts.NetworkPort;
+        configHostPort = gCLIOpts.networkPort;
         djui_panel_do_host(NULL);
     } else {
         network_init(NT_NONE, false);

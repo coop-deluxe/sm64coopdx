@@ -10,20 +10,22 @@
 #include <stdio.h>
 #include <string.h>
 
-struct PCCLIOptions gCLIOpts;
+struct CLIOptions gCLIOpts;
 
 static void print_help(void) {
-    printf("\nsm64coopdx\n");
-    printf("%-20s\tSaves the configuration file as CONFIGNAME.\n", "--configfile CONFIGNAME");
-    printf("%-20s\tSets additional data directory name (only 'res' is used by default).\n", "--gamedir DIRNAME");
-    printf("%-20s\tOverrides the default save/config path ('!' expands to executable path).\n", "--savepath SAVEPATH");
-    printf("%-20s\tStarts the game in full screen mode.\n", "--fullscreen");
-    printf("%-20s\tSkips the Peach and Castle intro when starting a new game.\n", "--skip-intro");
-    printf("%-20s\tStarts the game in windowed mode.\n", "--windowed");
-    printf("%-20s\tStarts the game and creates a new server.\n", "--server PORT");
-    printf("%-20s\tStarts the game and joins an existing server.\n", "--client IP PORT");
-    printf("%-20s\tStarts the game using a poolsize of your choice.\n", "--poolsize POOLSIZE");
-    printf("%-20s\tStarts the game with a specific playername.\n", "--playername PLAYERNAME");
+    printf("sm64coopdx\n");
+#if defined(_WIN32) || defined(_WIN64)
+    printf("--console               Enables the Windows console.\n");
+#endif
+    printf("--savepath SAVEPATH     Overrides the default save/config path ('!' expands to executable path).\n");
+    printf("--configfile CONFIGNAME Saves the configuration file as CONFIGNAME.\n");
+    printf("--hide-loading-screen   Hides the loading screen before the menu boots up.\n");
+    printf("--fullscreen            Starts the game in full screen mode.\n");
+    printf("--windowed              Starts the game in windowed mode.\n");
+    printf("--skip-intro            Skips the Peach and Lakitu intros when on a zero star save.\n");
+    printf("--server PORT           Starts the game and creates a new server on PORT.\n");
+    printf("--client IP PORT        Starts the game and joins an existing server.\n");
+    printf("--playername PLAYERNAME Starts the game with a specific playername.\n");
 }
 
 static inline int arg_string(const char *name, const char *value, char *target, int maxLength) {
@@ -43,55 +45,42 @@ static inline int arg_uint(UNUSED const char *name, const char *value, unsigned 
 }
 
 bool parse_cli_opts(int argc, char* argv[]) {
-
-    // Initialize options with false values.
+    // initialize options with false values
     memset(&gCLIOpts, 0, sizeof(gCLIOpts));
 
     for (int i = 1; i < argc; i++) {
-        if (strcmp(argv[i], "--skip-intro") == 0) // Skip Peach Intro
-            gCLIOpts.SkipIntro = 1;
-
-        else if (strcmp(argv[i], "--fullscreen") == 0) // Open game in fullscreen
-            gCLIOpts.FullScreen = 1;
-
-        else if (strcmp(argv[i], "--windowed") == 0) // Open game in windowed mode
-            gCLIOpts.FullScreen = 2;
-
 #if defined(_WIN32) || defined(_WIN64)
-        else if (strcmp(argv[i], "--console") == 0) // Open game with console
-            gCLIOpts.Console = 1;
+        if (!strcmp(argv[i], "--console")) {
+            gCLIOpts.console = true;
+        } else if (!strcmp(argv[i], "--savepath") && (i + 1) < argc) {
+#else
+        if (!strcmp(argv[i], "--savepath") && (i + 1) < argc) {
 #endif
-
-        else if (strcmp(argv[i], "--server") == 0 && (i + 1) < argc) { // Host server
-            gCLIOpts.Network = NT_SERVER;
-            arg_uint("--server <port>", argv[++i], &gCLIOpts.NetworkPort);
-
-        } else if (strcmp(argv[i], "--client") == 0 && (((i + 1) < argc) || (i + 2) < argc)) { // Join server
-            gCLIOpts.Network = NT_CLIENT;
-            arg_string("--client <ip>", argv[++i], gCLIOpts.JoinIp, IP_MAX_LEN);
+            arg_string("--savepath", argv[++i], gCLIOpts.savePath, SYS_MAX_PATH);
+        } else if (!strcmp(argv[i], "--configfile") && (i + 1) < argc) {
+            arg_string("--configfile", argv[++i], gCLIOpts.configFile, SYS_MAX_PATH);
+        } else if (!strcmp(argv[i], "--hide-loading-screen")) {
+            gCLIOpts.hideLoadingScreen = true;
+        } else if (!strcmp(argv[i], "--fullscreen")) {
+            gCLIOpts.fullscreen = 1;
+        } else if (!strcmp(argv[i], "--windowed")) {
+            gCLIOpts.fullscreen = 2;
+        } else if (!strcmp(argv[i], "--skip-intro")) {
+            gCLIOpts.skipIntro = true;
+        } else if (!strcmp(argv[i], "--server") && (i + 1) < argc) {
+            gCLIOpts.network = NT_SERVER;
+            arg_uint("--server <port>", argv[++i], &gCLIOpts.networkPort);
+        } else if (!strcmp(argv[i], "--client") && (((i + 1) < argc) || (i + 2) < argc)) {
+            gCLIOpts.network = NT_CLIENT;
+            arg_string("--client <ip>", argv[++i], gCLIOpts.joinIp, IP_MAX_LEN);
             if ((i + 2) < argc) {
-                arg_uint("--client <port>", argv[++i], &gCLIOpts.NetworkPort);
+                arg_uint("--client <port>", argv[++i], &gCLIOpts.networkPort);
             } else {
-                gCLIOpts.NetworkPort = 7777;
+                gCLIOpts.networkPort = 7777;
             }
-
-        } else if (strcmp(argv[i], "--poolsize") == 0) // Main pool size
-            arg_uint("--poolsize", argv[++i], &gCLIOpts.PoolSize);
-
-        else if (strcmp(argv[i], "--configfile") == 0 && (i + 1) < argc)
-            arg_string("--configfile", argv[++i], gCLIOpts.ConfigFile, SYS_MAX_PATH);
-
-        else if (strcmp(argv[i], "--gamedir") == 0 && (i + 1) < argc)
-            arg_string("--gamedir", argv[++i], gCLIOpts.GameDir, SYS_MAX_PATH);
-
-        else if (strcmp(argv[i], "--savepath") == 0 && (i + 1) < argc)
-            arg_string("--savepath", argv[++i], gCLIOpts.SavePath, SYS_MAX_PATH);
-
-        else if (strcmp(argv[i], "--playername") == 0 && (i + 1) < argc)
-            arg_string("--playername", argv[++i], gCLIOpts.PlayerName, MAX_PLAYER_STRING);
-
-        // Print help
-        else if (strcmp(argv[i], "--help") == 0) {
+        } else if (!strcmp(argv[i], "--playername") && (i + 1) < argc) {
+            arg_string("--playername", argv[++i], gCLIOpts.playerName, MAX_PLAYER_STRING);
+        } else if (!strcmp(argv[i], "--help")) {
             print_help();
             return false;
         }

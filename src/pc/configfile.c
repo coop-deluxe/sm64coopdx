@@ -482,7 +482,7 @@ static unsigned int tokenize_string(char *str, int maxTokens, char **tokens) {
 
 // Gets the config file path and caches it
 const char *configfile_name(void) {
-    return (gCLIOpts.ConfigFile[0]) ? gCLIOpts.ConfigFile : CONFIGFILE_DEFAULT;
+    return (gCLIOpts.configFile[0]) ? gCLIOpts.configFile : CONFIGFILE_DEFAULT;
 }
 
 const char *configfile_backup_name(void) {

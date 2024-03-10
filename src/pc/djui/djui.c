@@ -89,18 +89,17 @@ void djui_init(void) {
 }
 
 void djui_init_late(void) {
-    if (gCLIOpts.Network != NT_SERVER) {
-        djui_panel_main_create(NULL);
-        if (configLanguage[0] == '\0') {
-            gPanelLanguageOnStartup = true;
-            djui_panel_language_create(NULL);
-        }
-        if (strcmp(configLastVersion, SM64COOPDX_VERSION)) {
-            strncpy(configLastVersion, SM64COOPDX_VERSION, MAX_CONFIG_STRING);
-            djui_panel_changelog_create(NULL);
-        }
-        //djui_panel_debug_create();
+    djui_panel_main_create(NULL);
+    if (configLanguage[0] == '\0') {
+        gPanelLanguageOnStartup = true;
+        djui_panel_language_create(NULL);
     }
+    if (strcmp(configLastVersion, SM64COOPDX_VERSION)) {
+        strncpy(configLastVersion, SM64COOPDX_VERSION, MAX_CONFIG_STRING);
+        djui_panel_changelog_create(NULL);
+    }
+
+    // djui_panel_debug_create();
     djui_cursor_create();
 }
 

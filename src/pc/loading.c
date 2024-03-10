@@ -7,6 +7,7 @@
 #include "pc_main.h"
 #include "loading.h"
 #include "pc/utils/misc.h"
+#include "pc/cliopts.h"
 
 extern ALIGNED8 u8 texture_coopdx_logo[];
 
@@ -47,7 +48,7 @@ static void loading_screen_produce_one_frame(void) {
     gSPPopMatrix(gDisplayListHead++, G_MTX_MODELVIEW);
 
     // render loading screen elements
-    if (sLoading) { djui_base_render(&sLoading->base); }
+    if (sLoading && !gCLIOpts.hideLoadingScreen) { djui_base_render(&sLoading->base); }
 
     // render frame
     djui_gfx_displaylist_end();

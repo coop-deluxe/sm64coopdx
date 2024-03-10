@@ -119,7 +119,7 @@ bool network_init(enum NetworkType inNetworkType, bool reconnecting) {
     gServerSettings.bouncyLevelBounds = configCoopCompatibility ? 0 : configBouncyLevelBounds;
     gServerSettings.playerKnockbackStrength = configPlayerKnockbackStrength;
     gServerSettings.stayInLevelAfterStar = configStayInLevelAfterStar;
-    gServerSettings.skipIntro = configSkipIntro;
+    gServerSettings.skipIntro = gCLIOpts.skipIntro ? TRUE : configSkipIntro;
     gServerSettings.enableCheats = 0;
     gServerSettings.bubbleDeath = configBubbleDeath;
     gServerSettings.enablePlayersInLevelDisplay = TRUE;
