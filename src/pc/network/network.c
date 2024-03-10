@@ -701,7 +701,7 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
     gOverrideAllowToxicGasCamera = FALSE;
     gNoteFreqScale = 1.0f;
 
-    struct Controller* cnt = gMarioStates[0].controller;
+    struct Controller* cnt = gPlayer1Controller;
     cnt->rawStickX = 0;
     cnt->rawStickY = 0;
     cnt->stickX = 0;

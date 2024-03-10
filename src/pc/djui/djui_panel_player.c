@@ -166,6 +166,7 @@ static void djui_panel_player_edit_palette_create(struct DjuiBase* caller) {
     }
 
     djui_panel_add(caller, panel, NULL);
+    gDjuiPanelPlayerCreated = true;
 }
 
 static bool djui_panel_player_name_valid(char* buffer) {

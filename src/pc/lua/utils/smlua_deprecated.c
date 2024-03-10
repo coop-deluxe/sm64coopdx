@@ -5,7 +5,7 @@
 #endif
 #include "pc/lua/smlua.h"
 
-char* network_discord_id_from_local_index(u8 localIndex) {
+char* network_discord_id_from_local_index(UNUSED u8 localIndex) {
 #ifdef DISCORD_SDK
     static char sDiscordId[64] = "";
     if (localIndex == 0) {
