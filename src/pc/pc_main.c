@@ -331,6 +331,7 @@ void* main_game_init(UNUSED void* arg) {
     gGameInited = true;
 }
 
+extern void djui_panel_do_host(bool reconnecting);
 int main(int argc, char *argv[]) {
 
     // Handle terminal arguments
@@ -385,15 +386,7 @@ int main(int argc, char *argv[]) {
     } else if (gCLIOpts.Network == NT_SERVER) {
         network_set_system(NS_SOCKET);
         configHostPort = gCLIOpts.NetworkPort;
-
-        // Horrible, hacky fix for mods that access marioObj straight away
-        // best fix: host with the standard main menu method
-        static struct Object sHackyObject = { 0 };
-        gMarioStates[0].marioObj = &sHackyObject;
-
-        network_init(NT_SERVER, false);
-        djui_panel_shutdown();
-        djui_panel_modlist_create(NULL);
+        djui_panel_do_host(NULL);
     } else {
         network_init(NT_NONE, false);
     }
