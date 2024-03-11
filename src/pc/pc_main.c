@@ -330,7 +330,7 @@ void* main_game_init(UNUSED void* arg) {
     gGameInited = true;
 }
 
-extern void djui_panel_do_host(bool reconnecting);
+extern void djui_panel_do_host(bool reconnecting, bool playSound);
 int main(int argc, char *argv[]) {
 
     // Handle terminal arguments
@@ -385,7 +385,8 @@ int main(int argc, char *argv[]) {
     } else if (gCLIOpts.network == NT_SERVER) {
         network_set_system(NS_SOCKET);
         configHostPort = gCLIOpts.networkPort;
-        djui_panel_do_host(NULL);
+
+        djui_panel_do_host(NULL, false);
     } else {
         network_init(NT_NONE, false);
     }

@@ -494,12 +494,12 @@ void network_rehost_begin(void) {
     sNetworkRehostTimer = 2;
 }
 
+extern void djui_panel_do_host(bool reconnecting, bool playSound);
 static void network_rehost_update(void) {
-    extern void djui_panel_do_host(bool reconnecting);
     if (sNetworkRehostTimer <= 0) { return; }
     if (--sNetworkRehostTimer != 0) { return; }
 
-    djui_panel_do_host(true);
+    djui_panel_do_host(true, true);
 }
 
 static void network_update_area_timer(void) {

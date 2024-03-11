@@ -3,17 +3,18 @@
 #include "djui_panel.h"
 #include "djui_panel_menu.h"
 #include "djui_panel_modlist.h"
-#include "src/pc/network/network.h"
-#include "src/pc/utils/misc.h"
-#include "src/pc/configfile.h"
+#include "pc/network/network.h"
 #include "pc/utils/misc.h"
-#include "src/game/level_update.h"
-#include "src/game/hardcoded.h"
-#include "src/engine/math_util.h"
+#include "pc/configfile.h"
+#include "pc/utils/misc.h"
+#include "game/level_update.h"
+#include "game/hardcoded.h"
+#include "game/area.h"
+#include "engine/math_util.h"
 #include "audio/external.h"
 #include "sounds.h"
 
-void djui_panel_do_host(bool reconnecting) {
+void djui_panel_do_host(bool reconnecting, bool playSound) {
     stop_demo(NULL);
     djui_panel_shutdown();
     extern s16 gCurrSaveFileNum;
@@ -35,15 +36,14 @@ void djui_panel_do_host(bool reconnecting) {
     gChangeLevelTransition = gLevelValues.entryLevel;
 
     if (gMarioState->marioObj) vec3f_copy(gMarioState->marioObj->header.gfx.cameraToObject, gGlobalSoundSource);
+    if (playSound) { play_character_sound(gMarioState, CHAR_SOUND_OKEY_DOKEY); }
 
-    play_character_sound(gMarioState, CHAR_SOUND_OKEY_DOKEY);
-    extern void play_transition(s16 transType, s16 time, u8 red, u8 green, u8 blue);
-    play_transition(0x09, 0x14, 0x00, 0x00, 0x00);
+    play_transition(WARP_TRANSITION_FADE_INTO_STAR, 0x14, 0x00, 0x00, 0x00);
 }
 
 void djui_panel_host_message_do_host(UNUSED struct DjuiBase* caller) {
     network_reset_reconnect_and_rehost();
-    djui_panel_do_host(false);
+    djui_panel_do_host(false, true);
 }
 
 void djui_panel_host_message_create(struct DjuiBase* caller) {

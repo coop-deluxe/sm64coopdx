@@ -65,6 +65,7 @@ static void djui_panel_host_password_text_change(UNUSED struct DjuiBase* caller)
     }
 }
 
+extern void djui_panel_do_host(bool reconnecting, bool playSound);
 static void djui_panel_host_do_host(struct DjuiBase* caller) {
     if (!djui_panel_host_port_valid()) {
         djui_interactable_set_input_focus(&sInputboxPort->base);
@@ -82,9 +83,8 @@ static void djui_panel_host_do_host(struct DjuiBase* caller) {
     if (gNetworkType == NT_SERVER) {
         network_rehost_begin();
     } else if (configNetworkSystem == NS_COOPNET || configAmountofPlayers == 1) {
-        extern void djui_panel_do_host(bool reconnecting);
         network_reset_reconnect_and_rehost();
-        djui_panel_do_host(false);
+        djui_panel_do_host(false, true);
     } else {
         djui_panel_host_message_create(caller);
     }
