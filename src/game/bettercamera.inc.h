@@ -461,15 +461,18 @@ static void newcam_update_values(void) {
     //For tilt, this just limits it so it doesn't go further than 90 degrees either way. 90 degrees is actually 16384, but can sometimes lead to issues, so I just leave it shy of 90.
     u8 waterflag = 0;
     u8 centering = 0;
+    u8 ycentering = 1;
 
     if (newcam_modeflags & NC_FLAG_XTURN)
         newcam_yaw -= ((newcam_yaw_acc*(newcam_sensitivityX/10))*ivrt(0));
-    if (((newcam_tilt <= 12000) && (newcam_tilt >= -12000)) && newcam_modeflags & NC_FLAG_YTURN)
+    if (((newcam_tilt <= 15000) && (newcam_tilt >= -15000)) && newcam_modeflags & NC_FLAG_YTURN)
         newcam_tilt += ((newcam_tilt_acc*ivrt(1))*(newcam_sensitivityY/10));
 
-    if (newcam_tilt > 12000)
-        newcam_tilt = 12000;
-    if (newcam_tilt < -12000)
+    if (newcam_tilt > 15000)
+        newcam_tilt = 15000;
+    if (newcam_tilt < -15000 && gMarioStates[0].pos[1] - gMarioStates[0].floorHeight > 20)
+        newcam_tilt = -15000;
+    if (newcam_tilt < -12000 && gMarioStates[0].pos[1] - gMarioStates[0].floorHeight < 20)
         newcam_tilt = -12000;
 
     if (newcam_turnwait > 0 && gMarioStates[0].vel[1] == 0) {
@@ -485,10 +488,10 @@ static void newcam_update_values(void) {
 
     if (newcam_modeflags & NC_FLAG_SLIDECORRECT) {
         switch (gMarioStates[0].action) {
-            case ACT_BUTT_SLIDE: if (gMarioStates[0].forwardVel > 8) centering = 1; break;
-            case ACT_STOMACH_SLIDE: if (gMarioStates[0].forwardVel > 8) centering = 1; break;
-            case ACT_HOLD_BUTT_SLIDE: if (gMarioStates[0].forwardVel > 8) centering = 1; break;
-            case ACT_HOLD_STOMACH_SLIDE: if (gMarioStates[0].forwardVel > 8) centering = 1; break;
+            case ACT_BUTT_SLIDE: if (gMarioStates[0].forwardVel > 8) centering = 1; ycentering = 0; break;
+            case ACT_STOMACH_SLIDE: if (gMarioStates[0].forwardVel > 8) centering = 1; ycentering = 0; break;
+            case ACT_HOLD_BUTT_SLIDE: if (gMarioStates[0].forwardVel > 8) centering = 1; ycentering = 0; break;
+            case ACT_HOLD_STOMACH_SLIDE: if (gMarioStates[0].forwardVel > 8) centering = 1; ycentering = 0; break;
         }
     }
 
@@ -522,7 +525,7 @@ static void newcam_update_values(void) {
 
     if (waterflag && newcam_modeflags & NC_FLAG_XTURN) {
         newcam_yaw = (approach_s16_symmetric(newcam_yaw,-gMarioStates[0].faceAngle[1]-0x4000,(gMarioStates[0].forwardVel*128)));
-        if ((signed)gMarioStates[0].forwardVel > 1)
+        if ((signed)gMarioStates[0].forwardVel > 1 && ycentering)
             newcam_tilt = (approach_s16_symmetric(newcam_tilt,(-gMarioStates[0].faceAngle[0]*0.8)+3000,(gMarioStates[0].forwardVel*32)));
         else
             newcam_tilt = (approach_s16_symmetric(newcam_tilt,3000,32));
