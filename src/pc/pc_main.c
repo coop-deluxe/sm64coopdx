@@ -383,7 +383,7 @@ int main(int argc, char *argv[]) {
         configJoinPort = gCLIOpts.networkPort;
         network_init(NT_CLIENT, false);
     } else if (gCLIOpts.network == NT_SERVER) {
-        network_set_system(NS_SOCKET);
+        configNetworkSystem = NS_SOCKET;
         configHostPort = gCLIOpts.networkPort;
 
         djui_panel_do_host(NULL, false);
