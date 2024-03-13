@@ -19,8 +19,8 @@ development has, or deal with cool new features being \
 turned down by overly cautious developers.\n\
 \n\
 Coop Deluxe Team:\n\
-Agent X: Creator\n\
-AngelicMiracles: Co-Creator\n\
+Agent X: Lead Developer, Creator\n\
+AngelicMiracles: Creator\n\
 eros71: Tester & Developer\n\
 FluffaMario: Model Designer\n\
 Contributors:\n\

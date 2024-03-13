@@ -1,3 +1,7 @@
+#if defined(_WIN32) || defined(_WIN64)
+#include <windows.h>
+#endif
+
 #include "djui.h"
 #include "djui_panel.h"
 #include "djui_panel_player.h"
@@ -12,11 +16,7 @@
 #include "pc/utils/misc.h"
 #include "pc/pc_main.h"
 
-#if defined(_WIN32) || defined(_WIN64)
-#include <windows.h>
-#endif
-
-void djui_panel_options_open_user_folder(UNUSED struct DjuiBase* caller) {
+static void djui_panel_options_open_user_folder(UNUSED struct DjuiBase* caller) {
 #if defined(_WIN32) || defined(_WIN64)
     // Windows
     ShellExecuteA(NULL, "open", sys_user_path(), NULL, NULL, SW_SHOWNORMAL);
@@ -33,7 +33,7 @@ void djui_panel_options_open_user_folder(UNUSED struct DjuiBase* caller) {
 #endif
 }
 
-void djui_panel_options_back(struct DjuiBase* caller) {
+static void djui_panel_options_back(struct DjuiBase* caller) {
     configfile_save(configfile_name());
     djui_panel_menu_back(caller);
 }
