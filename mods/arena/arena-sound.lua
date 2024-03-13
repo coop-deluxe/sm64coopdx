@@ -9,14 +9,19 @@ local audioMain = nil --Used for the main audio
 local audioSpecial = nil --Used for things like cap music
 local audioCurSeq = nil
 local bgms = {
-	[56] =         {audio='rainbow.ogg', loopEnd = 218.781, loopStart = 06.975, volume = -5, name="Ric Fellini - All my Loving"}, --B1
-	-- [57] =         {audio='space.ogg', loopEnd = 300, loopStart = 06.975, volume = -5, name="Echo the Dolphin - Title Screen"}, --B1
+	[50] =         {audio='arena.ogg',   loopEnd = 112.583, loopStart = 19.928, volume = -5, name="Mako Reactor - Final Fantasy 7" }, --B1
+	[52] =         {audio='arena.ogg',   loopEnd = 112.583, loopStart = 19.928, volume = -5, name="Mako Reactor - Final Fantasy 7" }, --B1
+	[53] =         {audio='arena.ogg',   loopEnd = 112.583, loopStart = 19.928, volume = -5, name="Mako Reactor - Final Fantasy 7" }, --B1
+	[54] =         {audio='arena.ogg',   loopEnd = 112.583, loopStart = 19.928, volume = -5, name="Mako Reactor - Final Fantasy 7" }, --
+	[55] =         {audio='snow.ogg',    loopEnd = 500,     loopStart = 0,      volume = -5, name="Frosty Citadel - Sonic Gaiden" }, --B1
+	[56] =         {audio='rainbow.ogg', loopEnd = 148.657, loopStart = 12.406, volume = -5, name="Rainbow Road - Coop Deluxe" }, --B1
+	[57] =         {audio='city.ogg',    loopEnd = 500,     loopStart = 06.975, volume = -5, name="City Outskirts - Sonic Megamix"}, --B2
 }
 
 -- disable cap music
 function music()
     local np = gNetworkPlayers[0]
-    if np.currLevelNum == LEVEL_ARENA_RAINBOW or LEVEL_ARENA_SPACE then
+    if np.currLevelNum == LEVEL_ARENA_RAINBOW or LEVEL_ARENA_CITY or LEVEL_ARENA_ORIGIN or LEVEL_ARENA_FORTS or LEVEL_ARENA_SPIRE or LEVEL_ARENA_CITADEL then
         stop_cap_music()
     end
 end
