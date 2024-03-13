@@ -13,9 +13,7 @@ local function on_level_init()
         set_lighting_dir(1, -10)
     elseif gNetworkPlayers[0].currLevelNum == LEVEL_ARENA_PILLARS then
         set_lighting_dir(1, -10)
-    elseif gNetworkPlayers[0].currLevelNum == LEVEL_ARENA_SKY_BEACH then
-        set_lighting_dir(1, 0)
-    elseif gNetworkPlayers[0].currLevelNum == LEVEL_ARENA_SPIRE then
+    else
         set_lighting_dir(1, 0)
     end
 end
