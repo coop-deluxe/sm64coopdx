@@ -9,8 +9,6 @@
 #include "effects.h"
 #include "external.h"
 
-f32 gNoteFreqScale = 1.0f;
-
 void note_set_resampling_rate(struct Note *note, f32 resamplingRateInput);
 
 #if defined(VERSION_EU) || defined(VERSION_SH)
@@ -600,7 +598,7 @@ void process_notes(void) {
             frequency = (frequency < cap ? frequency : cap);
             scale *= 4.3498e-5f; // ~1 / 23000
             velocity = velocity * scale * scale;
-            note_set_frequency(note, frequency * gNoteFreqScale);
+            note_set_frequency(note, frequency);
             note_set_vel_pan_reverb(note, velocity, pan, reverb);
             continue;
         }

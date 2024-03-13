@@ -16,8 +16,6 @@
 #define NOTE_ALLOC_SEQ 4
 #define NOTE_ALLOC_GLOBAL_FREELIST 8
 
-extern f32 gNoteFreqScale;
-
 void process_notes(void);
 void seq_channel_layer_note_decay(struct SequenceChannelLayer *seqLayer);
 void seq_channel_layer_note_release(struct SequenceChannelLayer *seqLayer);

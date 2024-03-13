@@ -6,8 +6,6 @@
 void smlua_audio_utils_reset_all(void);
 bool smlua_audio_utils_override(u8 sequenceId, s32* bankId, void** seqData);
 void smlua_audio_utils_replace_sequence(u8 sequenceId, u8 bankId, u8 defaultVolume, const char* m64Name);
-f32 smlua_audio_utils_get_note_freq_scale(void);
-void smlua_audio_utils_set_note_freq_scale(f32 freq);
 
   //////////
  // bass //

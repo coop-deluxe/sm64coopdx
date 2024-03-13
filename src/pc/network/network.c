@@ -29,7 +29,6 @@
 #include "menu/intro_geo.h"
 #include "game/ingame_menu.h"
 #include "game/first_person_cam.h"
-#include "audio/playback.h"
 
 #ifdef DISCORD_SDK
 #include "pc/discord/discord.h"
@@ -699,7 +698,6 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
     gOverrideDialogColor = 0;
     gDialogMinWidth = 0;
     gOverrideAllowToxicGasCamera = FALSE;
-    gNoteFreqScale = 1.0f;
 
     struct Controller* cnt = gPlayer1Controller;
     cnt->rawStickX = 0;

@@ -8293,11 +8293,6 @@ function audio_stream_stop(audio)
     -- ...
 end
 
---- @return number
-function smlua_audio_utils_get_note_freq_scale()
-    -- ...
-end
-
 --- @param sequenceId integer
 --- @param bankId integer
 --- @param defaultVolume integer
@@ -8309,12 +8304,6 @@ end
 
 --- @return nil
 function smlua_audio_utils_reset_all()
-    -- ...
-end
-
---- @param freq number
---- @return nil
-function smlua_audio_utils_set_note_freq_scale(freq)
     -- ...
 end
 
