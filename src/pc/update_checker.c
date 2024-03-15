@@ -74,6 +74,7 @@ void get_version_remote(void) {
         return;
     }
 
+    buffer[bytesRead] = '\0';
     strncpy(sRemoteVersion, buffer, 8);
 
     // close handles
@@ -114,10 +115,7 @@ void get_version_remote(void) {
 }
 
 void check_for_updates(void) {
-    REFRESH_MUTEX(
-        gCurrLoadingSegment.percentage = 0;
-        snprintf(gCurrLoadingSegment.str, 256, "Checking For Updates");
-    );
+    if (gIsThreaded) { REFRESH_MUTEX(snprintf(gCurrLoadingSegment.str, 256, "Checking For Updates")); }
 
     get_version_remote();
     if (sRemoteVersion[0] != '\0' && strcmp(sRemoteVersion, SM64COOPDX_VERSION)) {
