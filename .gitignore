@@ -21,12 +21,6 @@
 *.la
 *.lo
 
-# Shared objects (inc. Windows DLLs)
-*.dll
-*.so
-*.so.*
-*.dylib
-
 # Executables
 *.exe
 *.out
@@ -87,11 +81,6 @@ sm64config.txt
 !/sound/**/*custom*/**/*.aiff
 !/assets/**/*custom*.bin
 !/assets/**/*custom*/**/*.bin
-!/lib/discordsdk/*.*
-!/lib/discordsdk/x86/*.*
-!/lib/bass/**
-!/lib/bass/x86/**
-!/lib/lua/**/*.*
 
 # visual studio
 build-windows-visual-studio/.vs
