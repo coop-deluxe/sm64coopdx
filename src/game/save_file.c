@@ -553,6 +553,7 @@ void save_file_collect_star_or_key(s16 coinScore, s16 starIndex, u8 fromNetwork)
         }
     }
 
+    s32 index = gLevelValues.useGlobalStarIds ? starByte : courseIndex;
     switch (gCurrLevelNum) {
         case LEVEL_BOWSER_1:
             if (!(save_file_get_flags() & (SAVE_FLAG_HAVE_KEY_1 | SAVE_FLAG_UNLOCKED_BASEMENT_DOOR))) {
@@ -570,7 +571,6 @@ void save_file_collect_star_or_key(s16 coinScore, s16 starIndex, u8 fromNetwork)
             break;
 
         default:
-            s32 index = gLevelValues.useGlobalStarIds ? starByte : courseIndex;
             if (!(save_file_get_star_flags(fileIndex, index) & starFlag)) {
                 save_file_set_star_flags(fileIndex, index, starFlag);
             }
