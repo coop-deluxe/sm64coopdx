@@ -2,6 +2,7 @@
 
 math.randomseed(get_time())
 
+
 --------------
 -- CObjects --
 --------------
@@ -93,6 +94,7 @@ _ReadOnlyTable = {
     __newindex = function (t,k,v)
     end
 }
+
 
 --------------------
 -- math functions --
@@ -312,6 +314,7 @@ function approach_s32(current, target, inc, dec)
     return current
 end
 
+
 -----------
 -- sound --
 -----------
@@ -393,6 +396,7 @@ COURSE_MAX = 25
 COURSE_COUNT = 25
 --- @type integer
 COURSE_MIN = 1
+
 
 -----------------
 -- legacy font --
@@ -12593,22 +12597,16 @@ SPTASK_STATE_FINISHED = 3
 SPTASK_STATE_FINISHED_DP = 4
 
 --- @type integer
-MAX_LOCAL_VERSION_LENGTH = 36
-
---- @type integer
 MAX_VERSION_LENGTH = 32
 
 --- @type integer
-MINOR_VERSION_NUMBER = 1
+MINOR_VERSION_NUMBER = 3
 
 --- @type integer
 PATCH_VERSION_NUMBER = 0
 
---- @type string
-SM64COOPDX_VERSION = "0.2"
-
 --- @type integer
-VERSION_NUMBER = 36
+VERSION_NUMBER = 0
 
 --- @type string
 VERSION_REGION = "JP"
@@ -12623,4 +12621,4 @@ VERSION_REGION = "SH"
 VERSION_REGION = "US"
 
 --- @type string
-VERSION_TEXT = "beta"
+VERSION_TEXT = "v"

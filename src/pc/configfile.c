@@ -166,7 +166,7 @@ bool         configDjuiThemeCenter                = true;
 unsigned int configDjuiScale                      = 0;
 bool         configCoopCompatibility              = false;
 bool         configGlobalPlayerModels             = true;
-char         configLastVersion[MAX_CONFIG_STRING] = SM64COOPDX_VERSION;
+char         configLastVersion[MAX_CONFIG_STRING] = "";
 
 static const struct ConfigOption options[] = {
     {.name = "fullscreen",                     .type = CONFIG_TYPE_BOOL, .boolValue = &configWindow.fullscreen},
@@ -609,7 +609,10 @@ NEXT_OPTION:
     if (configFrameLimit > 3000) { configFrameLimit = 3000; }
 
     if (configPlayerModel >= CT_MAX) { configPlayerModel = 0; }
+
     if (configDjuiTheme >= DJUI_THEME_MAX) { configDjuiTheme = 0; }
+
+    if (!strcmp(configLastVersion, "")) { strncpy(configLastVersion, get_version(), MAX_CONFIG_STRING); }
 
 #ifndef COOPNET
     configNetworkSystem = NS_SOCKET;

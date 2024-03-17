@@ -118,15 +118,15 @@ void check_for_updates(void) {
     if (gIsThreaded) { REFRESH_MUTEX(snprintf(gCurrLoadingSegment.str, 256, "Checking For Updates")); }
 
     get_version_remote();
-    if (sRemoteVersion[0] != '\0' && strcmp(sRemoteVersion, SM64COOPDX_VERSION)) {
+    if (sRemoteVersion[0] != '\0' && strcmp(sRemoteVersion, get_version())) {
         snprintf(
             sVersionUpdateTextBuffer, 256,
-            "\\#ffffa0\\%s\n\\#dcdcdc\\%s: v%s\n%s: v%s",
+            "\\#ffffa0\\%s\n\\#dcdcdc\\%s: v%s\n%s: %s",
             DLANG(NOTIF, UPDATE_AVAILABLE),
             DLANG(NOTIF, LATEST_VERSION),
             sRemoteVersion,
             DLANG(NOTIF, YOUR_VERSION),
-            SM64COOPDX_VERSION
+            get_version()
         );
         gUpdateMessage = true;
     }

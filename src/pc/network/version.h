@@ -1,11 +1,9 @@
 #ifndef VERSION_H
 #define VERSION_H
 
-#define SM64COOPDX_VERSION "0.2"
-
-#define VERSION_TEXT "beta"
-#define VERSION_NUMBER 36
-#define MINOR_VERSION_NUMBER 1
+#define VERSION_TEXT "v"
+#define VERSION_NUMBER 0
+#define MINOR_VERSION_NUMBER 3
 #define PATCH_VERSION_NUMBER 0
 
 #if defined(VERSION_JP)
@@ -18,11 +16,16 @@
     #define VERSION_REGION "US"
 #endif
 
+#ifdef DEVELOPMENT
+    #define GAME_NAME "sm64coopdx-dev"
+#elif !defined(VERSION_US)
+    #define GAME_NAME "sm64coopdx-intl"
+#else
+    #define GAME_NAME "sm64coopdx"
+#endif
+
 #define MAX_VERSION_LENGTH 32
-#define MAX_LOCAL_VERSION_LENGTH 36
+
 const char* get_version(void);
-const char* get_version_local(void);
-const char* get_version_dx(void);
-const char* get_game_name(void);
 
 #endif

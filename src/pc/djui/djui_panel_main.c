@@ -55,7 +55,7 @@ void djui_panel_main_create(struct DjuiBase* caller) {
             djui_base_set_color(&message->base, 255, 255, 160, 255);
             djui_text_set_alignment(message, DJUI_HALIGN_CENTER, DJUI_VALIGN_BOTTOM);
         } else {
-            struct DjuiText* version = djui_text_create(&panel->base, get_version_dx());
+            struct DjuiText* version = djui_text_create(&panel->base, get_version());
             djui_base_set_size_type(&version->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
             djui_base_set_size(&version->base, 1.0f, 1.0f);
             djui_base_set_color(&version->base, 50, 50, 50, 255);

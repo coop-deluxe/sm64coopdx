@@ -169,7 +169,7 @@ def process_define(filename, line):
         if p.startswith('0x'):
             continue
         p = re.sub(r'0x[a-fA-F0-9]+', '', p)
-        if re.search('[a-z]', p) != None and "VERSION_TEXT" not in line and "SM64COOPDX_VERSION" not in line:
+        if re.search('[a-z]', p) != None and "VERSION_TEXT" not in line:
             if 'gCurrentObject' not in line and verbose:
                 print('UNRECOGNIZED DEFINE: ' + line)
             return None
@@ -259,7 +259,7 @@ def build_to_c(built_files):
     txt = 'char gSmluaConstants[] = ""\n'
     for line in lines:
         txt += '"%s\\n"\n' % line
-    txt += '"if get_coop_compatibility_enabled() then SM64COOPDX_VERSION = nil end";'
+    txt += '"SM64COOPDX_VERSION = VERSION_TEXT .. VERSION_NUMBER .. \'.\' .. MINOR_VERSION_NUMBER .. (PATCH_VERSION_NUMBER > 0 and \'.\' .. PATCH_VERSION_NUMBER or \'\')";'
     return txt
 
 ############################################################################

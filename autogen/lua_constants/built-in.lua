@@ -1,5 +1,6 @@
 math.randomseed(get_time())
 
+
 --------------
 -- CObjects --
 --------------
@@ -91,6 +92,7 @@ _ReadOnlyTable = {
     __newindex = function (t,k,v)
     end
 }
+
 
 --------------------
 -- math functions --
@@ -310,6 +312,7 @@ function approach_s32(current, target, inc, dec)
     return current
 end
 
+
 -----------
 -- sound --
 -----------
@@ -391,6 +394,7 @@ COURSE_MAX = 25
 COURSE_COUNT = 25
 --- @type integer
 COURSE_MIN = 1
+
 
 -----------------
 -- legacy font --

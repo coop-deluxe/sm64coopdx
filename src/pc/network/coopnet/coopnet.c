@@ -30,7 +30,7 @@ bool ns_coopnet_query(QueryCallbackPtr callback, QueryFinishCallbackPtr finishCa
     gCoopNetCallbacks.OnLobbyListGot = callback;
     gCoopNetCallbacks.OnLobbyListFinish = finishCallback;
     if (coopnet_initialize() != COOPNET_OK) { return false; }
-    if (coopnet_lobby_list_get(get_game_name(), password) != COOPNET_OK) { return false; }
+    if (coopnet_lobby_list_get(GAME_NAME, password) != COOPNET_OK) { return false; }
     return true;
 }
 
@@ -208,12 +208,12 @@ void ns_coopnet_update(void) {
             if (sReconnecting) {
                 LOG_INFO("Update lobby");
                 coopnet_populate_description();
-                coopnet_lobby_update(sLocalLobbyId, get_game_name(), get_version(), configPlayerName, mode, sCoopNetDescription);
+                coopnet_lobby_update(sLocalLobbyId, GAME_NAME, get_version(), configPlayerName, mode, sCoopNetDescription);
             } else {
                 LOG_INFO("Create lobby");
                 snprintf(gCoopNetPassword, 64, "%s", configPassword);
                 coopnet_populate_description();
-                coopnet_lobby_create(get_game_name(), get_version(), configPlayerName, mode, (uint16_t)configAmountofPlayers, gCoopNetPassword, sCoopNetDescription);
+                coopnet_lobby_create(GAME_NAME, get_version(), configPlayerName, mode, (uint16_t)configAmountofPlayers, gCoopNetPassword, sCoopNetDescription);
             }
         } else if (sNetworkType == NT_CLIENT) {
             LOG_INFO("Join lobby");
