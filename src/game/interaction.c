@@ -130,13 +130,13 @@ u32 get_mario_cap_flag(struct Object *capObject) {
     if (!capObject) { return 0; }
     const BehaviorScript *script = virtual_to_segmented(0x13, capObject->behavior);
 
-    if (script == bhvNormalCap) {
+    if (script == smlua_override_behavior(bhvNormalCap)) {
         return MARIO_NORMAL_CAP;
-    } else if (script == bhvMetalCap) {
+    } else if (script == smlua_override_behavior(bhvMetalCap)) {
         return MARIO_METAL_CAP;
-    } else if (script == bhvWingCap) {
+    } else if (script == smlua_override_behavior(bhvWingCap)) {
         return MARIO_WING_CAP;
-    } else if (script == bhvVanishCap) {
+    } else if (script == smlua_override_behavior(bhvVanishCap)) {
         return MARIO_VANISH_CAP;
     }
 
@@ -914,7 +914,7 @@ u32 interact_star_or_key(struct MarioState *m, UNUSED u32 interactType, struct O
 
     u8 stayInLevelCommon = !(gCurrLevelNum == LEVEL_BOWSER_1 || gCurrLevelNum == LEVEL_BOWSER_2 || gCurrLevelNum == LEVEL_BOWSER_3);
     if (stayInLevelCommon && gServerSettings.stayInLevelAfterStar) { noExit = TRUE; }
-    gLastCollectedStarOrKey = o->behavior == bhvBowserKey;
+    gLastCollectedStarOrKey = o->behavior == smlua_override_behavior(bhvBowserKey);
 
     if (m->health >= 0x100) {
 
