@@ -36,51 +36,29 @@ The build system has the following package requirements:
 * libsdl2-dev
 * libglew-dev
 * git
+* libcurl
+* zlib
 
-#### Debian / Ubuntu - targeting 32 bits
-```
-sudo apt install build-essential git python3 libglew-dev:i386 libsdl2-dev:i386 libz-dev:i386
-```
 #### Debian / Ubuntu - targeting 64 bits
 ```
-sudo apt install build-essential git python3 libglew-dev libsdl2-dev libz-dev
+sudo apt install build-essential git python3 libglew-dev libsdl2-dev libz-dev libcurl4-openssl-dev
+```
+#### Debian / Ubuntu - targeting 32 bits
+```
+sudo apt install build-essential git python3 libglew-dev:i386 libsdl2-dev:i386 libz-dev:i386 libcurl4-openssl-dev:i386
 ```
 #### Fedora - targeting 64 bits
 ```
-sudo dnf install make gcc python3 glew-devel SDL2-devel zlib-devel
+sudo dnf install make gcc python3 glew-devel SDL2-devel zlib-devel libcurl-devel
 ```
 #### Fedora - targeting 32 bits
 ```
-sudo dnf install python3.i686 glew-devel.i686 SDL2-devel.i686 zlib-devel.i686
+sudo dnf install python3.i686 glew-devel.i686 SDL2-devel.i686 zlib-devel.i686 libcurl-devel.i686
 ```
 #### Arch Linux
-There is an AUR package (courtesy of @narukeh) avaliable under the name sm64pc-git. Install it using your AUR helper of choice.
-
-If you want to build it yourself:
-
 ```
-sudo pacman -S base-devel python sdl2 glew zlib-devel
+sudo pacman -S base-devel python sdl2 glew zlib-devel libcurl-devel
 ```
-
-#### Void Linux - targeting 64 bits
-```
-sudo xbps-install -S base-devel python3 SDL2-devel glew-devel libz-dev
-```
-#### Void Linux - targeting 32 bits
-```
-sudo xbps-install -S base-devel python3 SDL2-devel-32bit glew-devel-32bit libz-dev-32bit
-```
-#### Nix OS
-It is recommended you create a nix-shell enviroment for compiling it. Create a file called whatever you want.nix and insert
-
-```
-{ pkgs ? import <nixpkgs> {} }:
-  pkgs.mkShell {
-    # nativeBuildInputs is usually what you want -- tools you need to run
-    nativeBuildInputs = [ pkgs.gcc pkgs.python310 pkgs.SDL2 pkgs.glew pkgs.zlib pkgs.git];
-}
-```
-then run `nix-shell name.nix`
 
 #### Obtain the source code.
 You can either download the ZIP file from github, or clone it with git:
@@ -96,7 +74,7 @@ Follow the Homebrew installation instructions [here](https://brew.sh), pasting t
 #### Install dependencies.
 After installing homebrew, enter this command in the terminal to install packages necessary to build sm64coopdx:
 ```
-brew install make mingw-w64 gcc gcc@9 sdl2 pkg-config glew glfw3 libusb audiofile coreutils
+brew install make mingw-w64 gcc gcc@9 sdl2 pkg-config glew glfw3 libusb audiofile coreutils curl
 ```
 
 #### Obtain the source code.
