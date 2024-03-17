@@ -39,11 +39,11 @@ The build system has the following package requirements:
 
 #### Debian / Ubuntu - targeting 32 bits
 ```
-sudo apt install build-essential git python3 libglew-dev:i386 libsdl2-dev:i386 libz-dev:i386
+sudo apt install build-essential git python3 libglew-dev:i386 libsdl2-dev:i386 libz-dev:i386 libcurl4-gnutls-dev:i386
 ```
 #### Debian / Ubuntu - targeting 64 bits
 ```
-sudo apt install build-essential git python3 libglew-dev libsdl2-dev libz-dev
+sudo apt install build-essential git python3 libglew-dev libsdl2-dev libz-dev libcurl4-gnutls-dev
 ```
 #### Fedora - targeting 64 bits
 ```
