@@ -13,7 +13,6 @@
 
 #define MAX_LAUNCH_CMD (MAX_PATH + 12)
 
-#define APPLICATION_ID_COOP   752700005210390568
 #define APPLICATION_ID_COOPDX 1159627283506679839
 
 struct DiscordApplication app = { 0 };
@@ -128,7 +127,7 @@ static void discord_initialize(void) {
     // set up discord params
     struct DiscordCreateParams params = { 0 };
     DiscordCreateParamsSetDefault(&params);
-    params.client_id = configCoopCompatibility ? APPLICATION_ID_COOP : APPLICATION_ID_COOPDX; // you have to have activity status on if you don't want discord to prompt you to authorize on every boot
+    params.client_id = APPLICATION_ID_COOPDX;
     params.flags = DiscordCreateFlags_NoRequireDiscord;
     params.event_data = &app;
     params.user_events = discord_user_initialize();

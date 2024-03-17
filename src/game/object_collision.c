@@ -38,7 +38,7 @@ int detect_player_hitbox_overlap(struct MarioState* local, struct MarioState* re
     f32 dx = aTorso[0] - bTorso[0];
     UNUSED f32 sp30 = sp3C - sp38;
     f32 dz = aTorso[2] - bTorso[2];
-    f32 collisionRadius = (a->hitboxRadius + b->hitboxRadius) * (configCoopCompatibility ? 2.25f : 1.6f); // 1.5f before
+    f32 collisionRadius = (a->hitboxRadius + b->hitboxRadius) * 1.6f; // slightly increased from 1.5f for the sake of it
     f32 distance = sqrtf(dx * dx + dz * dz);
 
     if (collisionRadius * scale > distance) {

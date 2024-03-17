@@ -174,12 +174,8 @@ s16 mario_obj_angle_to_object(struct MarioState *m, struct Object *o) {
  * Determines Mario's interaction with a given object depending on their proximity,
  * action, speed, and position.
  */
-static u32 determine_interaction_internal(struct MarioState *m, struct Object *o, u8 isPVP) {
+u32 determine_interaction(struct MarioState *m, struct Object *o) {
     if (!m || !o) { return 0; }
-
-    // when set to false, angle checks apply again. I would just restore the original
-    // determine_interaction function but this is easier with keeping compatibility
-    if (!configCoopCompatibility) { isPVP = FALSE; }
 
     u32 interaction = 0;
     u32 action = m->action;
@@ -192,29 +188,28 @@ static u32 determine_interaction_internal(struct MarioState *m, struct Object *o
     }
 
     if (interaction == 0 && action & ACT_FLAG_ATTACKING) {
-        u32 flags = configCoopCompatibility ? (MARIO_PUNCHING | MARIO_KICKING | MARIO_TRIPPING) : (MARIO_PUNCHING | MARIO_KICKING);
+        u32 flags = (o->oInteractType & INTERACT_PLAYER) ? (MARIO_PUNCHING | MARIO_KICKING) : (MARIO_PUNCHING | MARIO_KICKING | MARIO_TRIPPING);
         if (m->flags & flags) {
             s16 dYawToObject = mario_obj_angle_to_object(m, o) - m->faceAngle[1];
 
             if (m->flags & MARIO_PUNCHING) {
                 // 120 degrees total, or 60 each way
-                if (isPVP || (-0x2AAA <= dYawToObject && dYawToObject <= 0x2AAA)) {
+                if (-0x2AAA <= dYawToObject && dYawToObject <= 0x2AAA) {
                     interaction = INT_PUNCH;
                 }
             }
             if (m->flags & MARIO_KICKING) {
                 // 120 degrees total, or 60 each way
-                if (isPVP || (-0x2AAA <= dYawToObject && dYawToObject <= 0x2AAA)) {
+                if (-0x2AAA <= dYawToObject && dYawToObject <= 0x2AAA) {
                     interaction = INT_KICK;
                 }
             }
-            if (m->flags & MARIO_TRIPPING && configCoopCompatibility) {
+            if (m->flags & MARIO_TRIPPING) {
                 // 180 degrees total, or 90 each way
                 if (-0x4000 <= dYawToObject && dYawToObject <= 0x4000) {
                     interaction = INT_TRIP;
                 }
             }
-
         } else if (action == ACT_GROUND_POUND) {
             if (m->vel[1] < 0.0f) {
                 interaction = INT_GROUND_POUND;
@@ -264,14 +259,6 @@ static u32 determine_interaction_internal(struct MarioState *m, struct Object *o
     }
 
     return interaction;
-}
-
-u32 determine_interaction(struct MarioState *m, struct Object *o) {
-    return determine_interaction_internal(m, o, FALSE);
-}
-
-u32 determine_interaction_pvp(struct MarioState *m, struct Object *o) {
-    return determine_interaction_internal(m, o, TRUE);
 }
 
 /**
@@ -1334,9 +1321,7 @@ static u8 resolve_player_collision(struct MarioState* m, struct MarioState* m2) 
 
     // bounce
     u32 interaction = determine_interaction(m, m2->marioObj);
-    f32 aboveFloor = m2->pos[1] - m2->floorHeight;
-    bool aboveFloorCheck = configCoopCompatibility ? (aboveFloor < 1) : true;
-    if ((interaction & INT_HIT_FROM_ABOVE) && aboveFloorCheck) {
+    if (interaction & INT_HIT_FROM_ABOVE) {
         m2->bounceSquishTimer = max(m2->bounceSquishTimer, 4);
 
         f32 velY;
@@ -1489,12 +1474,12 @@ u32 interact_player_pvp(struct MarioState* attacker, struct MarioState* victim) 
     }
 
     // see if it was an attack
-    u32 interaction = determine_interaction_pvp(attacker, cVictim->marioObj);
+    u32 interaction = determine_interaction(attacker, cVictim->marioObj);
     if (!(interaction & INT_ANY_ATTACK) || (interaction & INT_HIT_FROM_ABOVE) || !passes_pvp_interaction_checks(attacker, cVictim)) {
         return FALSE;
     }
 
-    // call the lua hook
+    // call the Lua hook
     bool allow = true;
     smlua_call_event_hooks_mario_params_ret_bool(HOOK_ALLOW_PVP_ATTACK, attacker, cVictim, &allow);
     if (!allow) {

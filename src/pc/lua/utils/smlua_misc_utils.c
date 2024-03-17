@@ -629,12 +629,6 @@ u32 get_global_timer(void) {
 
 ///
 
-bool get_coop_compatibility_enabled(void) {
-    return configCoopCompatibility;
-}
-
-///
-
 void set_window_title(const char* title) {
     WAPI.set_window_title(title);
 }

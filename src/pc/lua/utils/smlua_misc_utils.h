@@ -158,8 +158,6 @@ void set_override_envfx(s32 envfx);
 
 u32 get_global_timer(void);
 
-bool get_coop_compatibility_enabled(void);
-
 void set_window_title(const char* title);
 void reset_window_title(void);
 

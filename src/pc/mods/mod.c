@@ -432,8 +432,6 @@ static void mod_extract_fields(struct Mod* mod) {
             if (snprintf(mod->description, MOD_DESCRIPTION_MAX_LENGTH, "%s", extracted) < 0) {
                 LOG_INFO("Truncated mod description field '%s'", mod->description);
             }
-        } else if (!mod->deluxe && (extracted = extract_lua_field("-- deluxe:", buffer))) {
-            mod->deluxe = !strcmp(extracted, "true");
         } else if (!mod->pausable && (extracted = extract_lua_field("-- pausable:", buffer))) {
             mod->pausable = !strcmp(extracted, "true");
         }

@@ -164,7 +164,6 @@ bool         configFadeoutDistantSounds           = false;
 unsigned int configDjuiTheme                      = DJUI_THEME_DARK;
 bool         configDjuiThemeCenter                = true;
 unsigned int configDjuiScale                      = 0;
-bool         configCoopCompatibility              = false;
 bool         configGlobalPlayerModels             = true;
 char         configLastVersion[MAX_CONFIG_STRING] = "";
 
@@ -262,7 +261,6 @@ static const struct ConfigOption options[] = {
     {.name = "coop_custom_palette_skin",       .type = CONFIG_TYPE_COLOR , .colorValue  = &configCustomPalette.parts[SKIN]},
     {.name = "coop_custom_palette_cap",        .type = CONFIG_TYPE_COLOR , .colorValue  = &configCustomPalette.parts[CAP]},
     {.name = "coop_stay_in_level_after_star",  .type = CONFIG_TYPE_UINT  , .uintValue   = &configStayInLevelAfterStar},
-    {.name = "coop_compatibility",             .type = CONFIG_TYPE_BOOL  ,  .boolValue   = &configCoopCompatibility},
     {.name = "coopdx_global_player_models",    .type = CONFIG_TYPE_BOOL  , .boolValue   = &configGlobalPlayerModels},
     {.name = "disable_popups",                 .type = CONFIG_TYPE_BOOL  , .boolValue   = &configDisablePopups},
     {.name = "lua_profiler",                   .type = CONFIG_TYPE_BOOL  , .boolValue   = &configLuaProfiler},

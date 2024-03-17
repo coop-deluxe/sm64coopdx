@@ -448,7 +448,7 @@ void render_game(void) {
             djui_reset_hud_params();
             create_dl_ortho_matrix();
             djui_gfx_displaylist_begin();
-            if (!configCoopCompatibility && gServerSettings.nametags && !gDjuiInMainMenu) {
+            if (gServerSettings.nametags && !gDjuiInMainMenu) {
                 nametags_render();
             }
             smlua_call_event_on_hud_render_behind(djui_reset_hud_params);

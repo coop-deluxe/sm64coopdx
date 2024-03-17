@@ -401,3 +401,10 @@ COURSE_MIN = 1
 -----------------
 
 FONT_TINY = -1
+
+
+----------------------
+-- legacy functions --
+----------------------
+
+function get_coop_compatibility_enabled() return false end

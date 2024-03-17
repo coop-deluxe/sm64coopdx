@@ -18,13 +18,6 @@
 #endif
 
 static struct DjuiInputbox* sInputboxIp = NULL;
-#ifndef COOPNET
-static void djui_panel_compatibility_checkbox_on_value_change(UNUSED struct DjuiBase* caller) {
-#ifdef DISCORD_SDK
-    gDiscordInitialized = false;
-#endif
-}
-#endif
 
 static bool djui_panel_join_direct_ip_parse_numbers(char** msg) {
     int num = 0;
@@ -181,12 +174,6 @@ void djui_panel_join_direct_create(struct DjuiBase* caller) {
         djui_interactable_hook_value_change(&inputbox1->base, djui_panel_join_direct_ip_text_change);
         sInputboxIp = inputbox1;
         djui_panel_join_direct_ip_text_set(inputbox1);
-
-#ifndef COOPNET
-        if (gDjuiInMainMenu) {
-            djui_checkbox_create(body, DLANG(MISC, COOP_COMPATIBILITY), &configCoopCompatibility, djui_panel_compatibility_checkbox_on_value_change);
-        }
-#endif
 
         struct DjuiRect* rect2 = djui_rect_container_create(body, 64);
         {

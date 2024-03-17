@@ -25,16 +25,6 @@ void mods_size_enforce(struct Mods* mods) {
     }
 }
 
-void mods_deluxe_enforce(struct Mods* mods) {
-    for (int i = 0; i < mods->entryCount; i++) {
-        struct Mod* mod = mods->entries[i];
-        if (mod->deluxe && configCoopCompatibility) {
-            mod->enabled = false;
-            mod->selectable = false;
-        }
-    }
-}
-
 static bool mods_incompatible_match(struct Mod* a, struct Mod* b) {
     if (a->incompatible == NULL || b->incompatible == NULL) {
         return false;
@@ -89,7 +79,6 @@ void mods_update_selectable(void) {
     }
 
     mods_size_enforce(&gLocalMods);
-    mods_deluxe_enforce(&gLocalMods);
 }
 
 void mods_delete_folder(char* path) {
