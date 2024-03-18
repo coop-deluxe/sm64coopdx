@@ -17,7 +17,7 @@
 
 uint64_t gCoopNetDesiredLobby = 0;
 char gCoopNetPassword[64] = "";
-char sCoopNetDescription[256] = "";
+char sCoopNetDescription[512] = "";
 
 static uint64_t sLocalLobbyId = 0;
 static uint64_t sLocalLobbyOwnerId = 0;
@@ -171,7 +171,7 @@ bool ns_coopnet_is_connected(void) {
 
 static void coopnet_populate_description(void) {
     char* buffer = sCoopNetDescription;
-    int bufferLength = 256;
+    int bufferLength = 512;
     // get version
     const char* version = get_version();
     int versionLength = strlen(version);
