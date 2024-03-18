@@ -887,7 +887,7 @@ const void *DynOS_Actor_GetLayoutFromName(const char *aActorName);
 ActorGfx* DynOS_Actor_GetActorGfx(const GraphNode* aGraphNode);
 void DynOS_Actor_Valid(const void* aGeoref, ActorGfx& aActorGfx);
 void DynOS_Actor_Invalid(const void* aGeoref, s32 aPackIndex);
-void DynOS_Actor_Override(void** aSharedChild);
+void DynOS_Actor_Override(struct Object* obj, void** aSharedChild);
 void DynOS_Actor_Override_All(void);
 void DynOS_Actor_ModShutdown();
 

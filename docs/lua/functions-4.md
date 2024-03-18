@@ -5979,28 +5979,6 @@
 
 <br />
 
-## [obj_set_character_model](#obj_set_character_model)
-
-### Lua Example
-`obj_set_character_model(obj, index, modelID)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| obj | [Object](structs.md#Object) |
-| index | `integer` |
-| modelID | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void obj_set_character_model(struct Object* obj, u16 index, s32 modelID);`
-
-[:arrow_up_small:](#)
-
-<br />
-
 ## [obj_set_cylboard](#obj_set_cylboard)
 
 ### Lua Example

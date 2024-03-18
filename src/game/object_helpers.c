@@ -1437,15 +1437,7 @@ void cur_obj_set_model(s32 modelID) {
 
 void obj_set_model(struct Object* obj, s32 modelID) {
     obj->header.gfx.sharedChild = dynos_model_get_geo(modelID);
-    dynos_actor_override((void*)&obj->header.gfx.sharedChild);
-    smlua_call_event_hooks_object_model_param(HOOK_OBJECT_SET_MODEL, obj, modelID);
-}
-
-void obj_set_character_model(struct Object* obj, u16 index, s32 modelID) {
-    obj->header.gfx.sharedChild = dynos_model_get_geo(modelID);
-    if (configGlobalPlayerModels || index == 0) {
-        dynos_actor_override((void*)&obj->header.gfx.sharedChild);
-    }
+    dynos_actor_override(obj, (void*)&obj->header.gfx.sharedChild);
     smlua_call_event_hooks_object_model_param(HOOK_OBJECT_SET_MODEL, obj, modelID);
 }
 

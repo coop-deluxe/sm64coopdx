@@ -1444,7 +1444,6 @@
    - [obj_set_angle](functions-4.md#obj_set_angle)
    - [obj_set_behavior](functions-4.md#obj_set_behavior)
    - [obj_set_billboard](functions-4.md#obj_set_billboard)
-   - [obj_set_character_model](functions-4.md#obj_set_character_model)
    - [obj_set_cylboard](functions-4.md#obj_set_cylboard)
    - [obj_set_face_angle](functions-4.md#obj_set_face_angle)
    - [obj_set_face_angle_to_move_angle](functions-4.md#obj_set_face_angle_to_move_angle)

@@ -7694,14 +7694,6 @@ function obj_set_billboard(obj)
 end
 
 --- @param obj Object
---- @param index integer
---- @param modelID integer
---- @return nil
-function obj_set_character_model(obj, index, modelID)
-    -- ...
-end
-
---- @param obj Object
 --- @return nil
 function obj_set_cylboard(obj)
     -- ...

@@ -115,8 +115,8 @@ void dynos_generate_packs(const char* directory) {
 
 // -- geos -- //
 
-void dynos_actor_override(void** aSharedChild) {
-    DynOS_Actor_Override(aSharedChild);
+void dynos_actor_override(struct Object* obj, void** aSharedChild) {
+    DynOS_Actor_Override(obj, aSharedChild);
 }
 
 void dynos_add_actor_custom(const char *filePath, const char* geoName) {

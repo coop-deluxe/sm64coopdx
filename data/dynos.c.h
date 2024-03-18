@@ -36,7 +36,7 @@ void dynos_pack_init(void);
 void dynos_generate_packs(const char* directory);
 
 // -- geos -- //
-void dynos_actor_override(void** aSharedChild);
+void dynos_actor_override(struct Object* obj, void** aSharedChild);
 void dynos_add_actor_custom(const char *filePath, const char* geoName);
 const void* dynos_geolayout_get(const char *name);
 
