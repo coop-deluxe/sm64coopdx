@@ -2,11 +2,21 @@ sm64coopdx Developers:
     Agent X
     AngelicMiracles
     FluffaMario
+    Isaac0-dev
+    theclashingfritz
 
 sm64coopdx Contributors:
     eros71
     ArcticJaguar725
-    Isaac
+    djoslin0 (Rom asset extractor)
+    kermeet
+    crapbass
+    Cooliokid 956
+    Ale64
+    Sharen
+    Dominicentek
+    crapbass
+    kermeet
 
 sm64ex-coop Developers:
     Agent X
