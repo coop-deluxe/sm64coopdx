@@ -2,8 +2,8 @@
 #define VERSION_H
 
 #define VERSION_TEXT "v"
-#define VERSION_NUMBER 0
-#define MINOR_VERSION_NUMBER 3
+#define VERSION_NUMBER 1
+#define MINOR_VERSION_NUMBER 0
 #define PATCH_VERSION_NUMBER 0
 
 #if defined(VERSION_JP)
