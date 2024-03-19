@@ -683,6 +683,8 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
     mods_clear(&gActiveMods);
     mods_clear(&gRemoteMods);
     smlua_shutdown();
+    extern s16 gChangeLevel;
+    gChangeLevel = LEVEL_CASTLE_GROUNDS;
     network_player_init();
     camera_set_use_course_specific_settings(true);
     free_vtx_scroll_targets();
