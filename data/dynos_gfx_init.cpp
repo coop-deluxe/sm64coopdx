@@ -2,7 +2,7 @@
 #include "src/pc/loading.h"
 
 void DynOS_Gfx_GeneratePacks(const char* directory) {
-    if (gIsThreaded) { REFRESH_MUTEX(snprintf(gCurrLoadingSegment.str, 256, "Generating DynOS Packs In Path:\n\\#808080\\%s", directory)); }
+    snprintf(gCurrLoadingSegment.str, 256, "Generating DynOS Packs In Path:\n\\#808080\\%s", directory);
 
     DIR *modsDir = opendir(directory);
     if (!modsDir) { return; }
@@ -40,7 +40,7 @@ void DynOS_Gfx_GeneratePacks(const char* directory) {
             DynOS_Tex_GeneratePack(_TexturePackFolder, _TexturePackOutputFolder, true);
         }
 
-        if (gIsThreaded) REFRESH_MUTEX(gCurrLoadingSegment.percentage = (f32) i / (f32) pathCount);
+        REFRESH_MUTEX(gCurrLoadingSegment.percentage = (f32) i / (f32) pathCount);
     }
 
     closedir(modsDir);

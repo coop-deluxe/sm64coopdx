@@ -581,7 +581,7 @@ const BehaviorScript* get_behavior_from_id(enum BehaviorId id) {
 
 const char* get_behavior_name_from_id(enum BehaviorId id) {
     if (id < 0 || id >= id_bhv_max_count) {
-        return NULL;
+        return smlua_get_name_from_hooked_behavior_id(id);
     }
 
     return gBehaviorTable[id].name;

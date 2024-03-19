@@ -10,15 +10,17 @@ struct LoadingSegment {
 
 extern struct LoadingSegment gCurrLoadingSegment;
 
+extern bool gIsThreaded;
+
 #define REFRESH_MUTEX(...) \
+if (gIsThreaded) { \
     pthread_mutex_lock(&gLoadingThreadMutex); \
     __VA_ARGS__; \
     pthread_mutex_unlock(&gLoadingThreadMutex); \
+} \
 
 extern pthread_t gLoadingThreadId;
 extern pthread_mutex_t gLoadingThreadMutex;
-
-extern bool gIsThreaded;
 
 void render_loading_screen(void);
 

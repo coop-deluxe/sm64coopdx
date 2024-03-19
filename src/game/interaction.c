@@ -956,11 +956,8 @@ u32 interact_star_or_key(struct MarioState *m, UNUSED u32 interactType, struct O
             }
         }
 
-        for (s32 i = 0; i < MAX_PLAYERS; i++) {
-            struct MarioState* marioState = &gMarioStates[i];
-            if (!is_player_active(marioState)) { continue; }
-            if (marioState->marioObj == NULL) { continue; }
-            spawn_object(marioState->marioObj, MODEL_NONE, bhvStarKeyCollectionPuffSpawner);
+        if (m->marioObj != NULL) {
+            spawn_object(m->marioObj, MODEL_NONE, bhvStarKeyCollectionPuffSpawner);
         }
 
         o->oInteractStatus = INT_STATUS_INTERACTED;
@@ -2366,7 +2363,7 @@ void check_death_barrier(struct MarioState *m) {
                     if (!gLevelValues.bubbleOnDeathBarrierInCapStages){
                         break;
                     }
-                default:        
+                default:
                     mario_set_bubbled(m);
                     return;
             }

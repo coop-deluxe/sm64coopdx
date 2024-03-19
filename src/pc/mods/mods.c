@@ -45,7 +45,7 @@ u16 mods_get_enabled_count(void) {
         if (!gLocalMods.entries[i]->enabled) { continue; }
         enabled++;
     }
-    
+
     return enabled;
 }
 
@@ -193,7 +193,7 @@ static u32 mods_count_directory(char* modsBasePath) {
 }
 
 static void mods_load(struct Mods* mods, char* modsBasePath, bool isUserModPath) {
-    if (gIsThreaded) { REFRESH_MUTEX(snprintf(gCurrLoadingSegment.str, 256, "Generating DynOS Packs In %s Mod Path:\n\\#808080\\%s", isUserModPath ? "User" : "Local", modsBasePath)); }
+    REFRESH_MUTEX(snprintf(gCurrLoadingSegment.str, 256, "Generating DynOS Packs In %s Mod Path:\n\\#808080\\%s", isUserModPath ? "User" : "Local", modsBasePath));
 
     // generate bins
     dynos_generate_packs(modsBasePath);
@@ -223,7 +223,7 @@ static void mods_load(struct Mods* mods, char* modsBasePath, bool isUserModPath)
     }
     f32 count = (f32) mods_count_directory(modsBasePath);
 
-    if (gIsThreaded) { REFRESH_MUTEX(snprintf(gCurrLoadingSegment.str, 256, "Loading Mods In %s Mod Path:\n\\#808080\\%s", isUserModPath ? "User" : "Local", modsBasePath)); }
+    REFRESH_MUTEX(snprintf(gCurrLoadingSegment.str, 256, "Loading Mods In %s Mod Path:\n\\#808080\\%s", isUserModPath ? "User" : "Local", modsBasePath));
 
     // iterate
     char path[SYS_MAX_PATH] = { 0 };
@@ -232,18 +232,18 @@ static void mods_load(struct Mods* mods, char* modsBasePath, bool isUserModPath)
         // sanity check / fill path[]
         if (!directory_sanity_check(dir, modsBasePath, path)) { continue; }
 
-        if (gIsThreaded) { REFRESH_MUTEX(snprintf(gCurrLoadingSegment.str, 256, "Loading Mod:\n\\#808080\\%s/%s", modsBasePath, dir->d_name)); }
+        REFRESH_MUTEX(snprintf(gCurrLoadingSegment.str, 256, "Loading Mod:\n\\#808080\\%s/%s", modsBasePath, dir->d_name));
 
         // load the mod
         if (!mod_load(mods, modsBasePath, dir->d_name)) {
             break;
         }
 
-        if (gIsThreaded) { REFRESH_MUTEX(gCurrLoadingSegment.percentage = (f32) i / count); }
+        REFRESH_MUTEX(gCurrLoadingSegment.percentage = (f32) i / count);
     }
 
     closedir(d);
-    if (gIsThreaded) { REFRESH_MUTEX(gCurrLoadingSegment.percentage = 1); }
+    REFRESH_MUTEX(gCurrLoadingSegment.percentage = 1);
 }
 
 void mods_refresh_local(void) {
@@ -297,7 +297,7 @@ void mods_enable(char* relativePath) {
 }
 
 void mods_init(void) {
-    if (gIsThreaded) { REFRESH_MUTEX(snprintf(gCurrLoadingSegment.str, 256, "Caching Mods")); }
+    REFRESH_MUTEX(snprintf(gCurrLoadingSegment.str, 256, "Caching Mods"));
 
     // load mod cache
     mod_cache_load();

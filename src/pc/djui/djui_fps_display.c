@@ -23,10 +23,14 @@ void djui_fps_display_render(void) {
     }
 }
 
+void djui_fps_display_on_destroy(UNUSED struct DjuiBase* base) {
+    free(sFpsDisplay);
+}
+
 void djui_fps_display_create(void) {
-    struct DjuiFpsDisplay *fpsDisplay = malloc(sizeof(struct DjuiFpsDisplay));
+    struct DjuiFpsDisplay *fpsDisplay = calloc(1, sizeof(struct DjuiFpsDisplay));
     struct DjuiBase* base = &fpsDisplay->base;
-    djui_base_init(NULL, base, NULL, NULL);
+    djui_base_init(NULL, base, NULL, djui_fps_display_on_destroy);
     djui_base_set_size(base, 150, 50);
     djui_base_set_color(base, 0, 0, 0, 240);
     djui_base_set_border_color(base, 0, 0, 0, 200);
@@ -45,4 +49,10 @@ void djui_fps_display_create(void) {
     }
 
     sFpsDisplay = fpsDisplay;
+}
+
+void djui_fps_display_destroy(void) {
+    if (sFpsDisplay) {
+        djui_base_destroy(&sFpsDisplay->base);
+    }
 }

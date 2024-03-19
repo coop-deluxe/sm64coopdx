@@ -161,6 +161,7 @@ void djui_console_message_create(const char* message, enum ConsoleMessageLevel l
 struct DjuiConsole* djui_console_create(void) {
     if (gDjuiConsole != NULL) {
         djui_base_destroy(&gDjuiConsole->base);
+        free(gDjuiConsole);
         gDjuiConsole = NULL;
     }
 
