@@ -115,7 +115,7 @@ void get_version_remote(void) {
 }
 
 void check_for_updates(void) {
-    if (gIsThreaded) { REFRESH_MUTEX(snprintf(gCurrLoadingSegment.str, 256, "Checking For Updates")); }
+    REFRESH_MUTEX(snprintf(gCurrLoadingSegment.str, 256, "Checking For Updates"));
 
     get_version_remote();
     if (sRemoteVersion[0] != '\0' && strcmp(sRemoteVersion, get_version())) {
