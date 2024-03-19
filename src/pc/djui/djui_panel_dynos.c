@@ -1,13 +1,13 @@
 #include "djui.h"
 #include "djui_panel.h"
 #include "djui_panel_menu.h"
-#include "src/pc/utils/misc.h"
-#include "src/pc/configfile.h"
+#include "pc/utils/misc.h"
+#include "pc/configfile.h"
 #include "data/dynos.c.h"
 #include "pc/network/network.h"
 #include "djui_panel_main.h"
 #include "djui_panel_options.h"
-#include "djui_panel_player.h"
+#include "game/level_update.h"
 
 void djui_panel_dynos_create(struct DjuiBase* caller);
 
@@ -32,7 +32,12 @@ static void djui_panel_dynos_refresh(UNUSED struct DjuiBase* base) {
     djui_panel_dynos_create(NULL);
 }
 
+static void djui_panel_dynos_destroy(UNUSED struct DjuiBase* caller) {
+    gInPlayerMenu = false;
+}
+
 void djui_panel_dynos_create(struct DjuiBase* caller) {
+    gInPlayerMenu = true;
     int packCount = dynos_pack_get_count();
     struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(DYNOS, DYNOS));
     struct DjuiBase* body = djui_three_panel_get_body(panel);
@@ -72,6 +77,6 @@ void djui_panel_dynos_create(struct DjuiBase* caller) {
         panel->bodySize.value = paginated->base.height.value + 16 + 64 + 64;
     }
 
-    djui_panel_add(caller, panel, NULL);
-    gDjuiPanelPlayerCreated = true;
+    struct DjuiPanel* p = djui_panel_add(caller, panel, NULL);
+    p->on_panel_destroy = djui_panel_dynos_destroy;
 }
