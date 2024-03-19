@@ -1,8 +1,11 @@
 #ifndef VERSION_H
 #define VERSION_H
 
-#define VERSION_TEXT "v"
-#define VERSION_NUMBER 1
+#define SM64COOPDX_VERSION "v1.0"
+
+// sm64ex-coop version, for mod compatibility
+#define VERSION_TEXT "beta"
+#define VERSION_NUMBER 37
 #define MINOR_VERSION_NUMBER 0
 #define PATCH_VERSION_NUMBER 0
 

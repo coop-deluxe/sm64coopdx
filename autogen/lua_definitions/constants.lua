@@ -12612,8 +12612,11 @@ MINOR_VERSION_NUMBER = 0
 --- @type integer
 PATCH_VERSION_NUMBER = 0
 
+--- @type string
+SM64COOPDX_VERSION = "v1.0"
+
 --- @type integer
-VERSION_NUMBER = 1
+VERSION_NUMBER = 37
 
 --- @type string
 VERSION_REGION = "JP"
@@ -12628,4 +12631,4 @@ VERSION_REGION = "SH"
 VERSION_REGION = "US"
 
 --- @type string
-VERSION_TEXT = "v"
+VERSION_TEXT = "beta"
