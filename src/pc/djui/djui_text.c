@@ -1,6 +1,7 @@
 #include <string.h>
 #include "djui.h"
 #include "djui_unicode.h"
+#include "djui_hud_utils.h"
 #include "game/segment2.h"
 
 static u8 sSavedR = 0;
@@ -389,7 +390,7 @@ struct DjuiText* djui_text_create(struct DjuiBase* parent, const char* message) 
     djui_base_init(parent, base, djui_text_render, djui_text_destroy);
 
     text->message = NULL;
-    djui_text_set_font(text, gDjuiFonts[0]);
+    djui_text_set_font(text, gDjuiFonts[configDjuiThemeFont == 0 ? FONT_NORMAL : FONT_ALIASED]);
     djui_text_set_font_scale(text, text->font->defaultFontScale);
     djui_text_set_text(text, message);
     djui_text_set_alignment(text, DJUI_HALIGN_LEFT, DJUI_VALIGN_TOP);

@@ -120,6 +120,7 @@ extern char         configDestId[];
 extern bool         configFadeoutDistantSounds;
 extern unsigned int configDjuiTheme;
 extern bool         configDjuiThemeCenter;
+extern unsigned int configDjuiThemeFont;
 extern unsigned int configDjuiScale;
 extern bool         configGlobalPlayerModels;
 extern char         configLastVersion[];

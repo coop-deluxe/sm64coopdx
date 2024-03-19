@@ -13,11 +13,12 @@
 #include "gfx/gfx_window_manager_api.h"
 #include "controller/controller_api.h"
 #include "fs/fs.h"
-#include "pc/mods/mods.h"
-#include "pc/network/ban_list.h"
-#include "pc/crash_handler.h"
-#include "pc/network/moderator_list.h"
+#include "mods/mods.h"
+#include "network/ban_list.h"
+#include "crash_handler.h"
+#include "network/moderator_list.h"
 #include "debuglog.h"
+#include "djui/djui_hud_utils.h"
 
 #define ARRAY_LEN(arr) (sizeof(arr) / sizeof(arr[0]))
 
@@ -163,6 +164,7 @@ char         configDestId[MAX_CONFIG_STRING]      = "0";
 bool         configFadeoutDistantSounds           = false;
 unsigned int configDjuiTheme                      = DJUI_THEME_DARK;
 bool         configDjuiThemeCenter                = true;
+unsigned int configDjuiThemeFont                  = FONT_NORMAL;
 unsigned int configDjuiScale                      = 0;
 bool         configGlobalPlayerModels             = true;
 char         configLastVersion[MAX_CONFIG_STRING] = "";
@@ -237,11 +239,11 @@ static const struct ConfigOption options[] = {
     {.name = "coop_network_system",            .type = CONFIG_TYPE_UINT  , .uintValue   = &configNetworkSystem},
     {.name = "coop_player_interaction",        .type = CONFIG_TYPE_UINT  , .uintValue   = &configPlayerInteraction},
     {.name = "coop_player_knockback_strength", .type = CONFIG_TYPE_UINT  , .uintValue   = &configPlayerKnockbackStrength},
-    {.name = "coopdx_nametags",                .type = CONFIG_TYPE_BOOL  , .boolValue   = &configNametags},
-    {.name = "coopdx_bouncy_bounds",           .type = CONFIG_TYPE_UINT  , .uintValue   = &configBouncyLevelBounds},
+    {.name = "coop_nametags",                  .type = CONFIG_TYPE_BOOL  , .boolValue   = &configNametags},
+    {.name = "coop_bouncy_bounds",             .type = CONFIG_TYPE_UINT  , .uintValue   = &configBouncyLevelBounds},
     {.name = "coop_player_model",              .type = CONFIG_TYPE_UINT  , .uintValue   = &configPlayerModel},
     {.name = "coop_player_name",               .type = CONFIG_TYPE_STRING, .stringValue = (char*)&configPlayerName, .maxStringLength = MAX_PLAYER_STRING},
-    {.name = "coopdx_menu_staff_roll",         .type = CONFIG_TYPE_BOOL  , .boolValue   = &configMenuStaffRoll},
+    {.name = "coop_menu_staff_roll",           .type = CONFIG_TYPE_BOOL  , .boolValue   = &configMenuStaffRoll},
     {.name = "coop_menu_level",                .type = CONFIG_TYPE_UINT  , .uintValue   = &configMenuLevel},
     {.name = "coop_menu_sound",                .type = CONFIG_TYPE_BOOL  , .boolValue   = &configMenuSound},
     {.name = "coop_menu_random",               .type = CONFIG_TYPE_BOOL  , .boolValue   = &configMenuRandom},
@@ -261,7 +263,7 @@ static const struct ConfigOption options[] = {
     {.name = "coop_custom_palette_skin",       .type = CONFIG_TYPE_COLOR , .colorValue  = &configCustomPalette.parts[SKIN]},
     {.name = "coop_custom_palette_cap",        .type = CONFIG_TYPE_COLOR , .colorValue  = &configCustomPalette.parts[CAP]},
     {.name = "coop_stay_in_level_after_star",  .type = CONFIG_TYPE_UINT  , .uintValue   = &configStayInLevelAfterStar},
-    {.name = "coopdx_global_player_models",    .type = CONFIG_TYPE_BOOL  , .boolValue   = &configGlobalPlayerModels},
+    {.name = "coop_global_player_models",      .type = CONFIG_TYPE_BOOL  , .boolValue   = &configGlobalPlayerModels},
     {.name = "disable_popups",                 .type = CONFIG_TYPE_BOOL  , .boolValue   = &configDisablePopups},
     {.name = "lua_profiler",                   .type = CONFIG_TYPE_BOOL  , .boolValue   = &configLuaProfiler},
 #ifdef DEVELOPMENT
@@ -283,6 +285,7 @@ static const struct ConfigOption options[] = {
     {.name = "fade_distant_sounds",            .type = CONFIG_TYPE_BOOL  , .boolValue   = &configFadeoutDistantSounds},
     {.name = "djui_theme",                     .type = CONFIG_TYPE_UINT  , .uintValue   = &configDjuiTheme},
     {.name = "djui_theme_center",              .type = CONFIG_TYPE_BOOL  , .boolValue   = &configDjuiThemeCenter},
+    {.name = "djui_theme_font",                .type = CONFIG_TYPE_UINT  , .uintValue   = &configDjuiThemeFont},
     {.name = "djui_scale",                     .type = CONFIG_TYPE_UINT  , .uintValue   = &configDjuiScale},
     {.name = "last_version",                   .type = CONFIG_TYPE_STRING, .stringValue = (char*)&configLastVersion, .maxStringLength = MAX_CONFIG_STRING}
 };
