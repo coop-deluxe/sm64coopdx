@@ -868,8 +868,9 @@ else
   LDFLAGS := $(BITS) -march=$(TARGET_ARCH) -lm $(BACKEND_LDFLAGS) -no-pie -lpthread
 endif
 
+# used by crash handler and loading screen on linux
 ifeq ($(WINDOWS_BUILD),0)
-  LDFLAGS += -rdynamic
+  LDFLAGS += -rdynamic -ldl -pthread
 endif
 
 # icon

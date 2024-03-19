@@ -685,9 +685,6 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
     smlua_shutdown();
     extern s16 gChangeLevel;
     gChangeLevel = LEVEL_CASTLE_GROUNDS;
-    if (gSkipInterpolationTitleScreen || find_object_with_behavior(bhvActSelector) != NULL) {
-        dynos_warp_to_level(LEVEL_CASTLE_GROUNDS, 1, 0);
-    }
     network_player_init();
     camera_set_use_course_specific_settings(true);
     free_vtx_scroll_targets();

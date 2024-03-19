@@ -47,4 +47,4 @@ void djui_lua_error(char* text);
 void djui_render(void);
 void djui_reset_hud_params(void);
 
-void reset_djui(void);
+void djui_shutdown(void);

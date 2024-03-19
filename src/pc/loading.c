@@ -20,7 +20,7 @@ struct LoadingScreen {
     struct DjuiProgressBar *loadingBar;
 };
 
-struct LoadingScreen* sLoading = NULL;
+static struct LoadingScreen* sLoading = NULL;
 pthread_t gLoadingThreadId;
 pthread_mutex_t gLoadingThreadMutex = PTHREAD_MUTEX_INITIALIZER;
 
@@ -77,7 +77,7 @@ static bool loading_screen_on_render(struct DjuiBase* base) {
         u32 length = strlen(gCurrLoadingSegment.str);
         if (length > 0) {
             if (gCurrLoadingSegment.percentage > 0) {
-                snprintf(buffer, 256, "%s\n\\#c8c8c8\\%d%%", gCurrLoadingSegment.str, (u8)floor(gCurrLoadingSegment.percentage * 100));
+                snprintf(buffer, 256, "%s\n\\#dcdcdc\\%d%%", gCurrLoadingSegment.str, (u8)floor(gCurrLoadingSegment.percentage * 100));
             } else {
                 snprintf(buffer, 256, "%s...", gCurrLoadingSegment.str);
             }
@@ -106,7 +106,7 @@ static void loading_screen_destroy(struct DjuiBase* base) {
 }
 
 void render_loading_screen(void) {
-    struct LoadingScreen* load = malloc(sizeof(struct LoadingScreen));
+    struct LoadingScreen* load = calloc(1, sizeof(struct LoadingScreen));
     struct DjuiBase* base = &load->base;
 
     djui_base_init(NULL, base, loading_screen_on_render, loading_screen_destroy);
@@ -156,13 +156,13 @@ void render_loading_screen(void) {
     }
 
     pthread_join(gLoadingThreadId, NULL);
+    gIsThreaded = false;
 
     // reset some things after rendering the loading screen
-    reset_djui();
+    djui_base_destroy(base);
+    djui_shutdown();
     alloc_display_list_reset();
     gDisplayListHead = NULL;
-    djui_init();
-    djui_unicode_init();
     rendering_init();
     configWindow.settings_changed = true;
 }

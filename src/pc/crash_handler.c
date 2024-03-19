@@ -42,6 +42,8 @@ static CrashHandlerText sCrashHandlerText[128 + 256 + 4];
 #define MEMNEW(typ, cnt)            calloc(sizeof(typ), cnt)
 #define STRING(str, size, fmt, ...) char str[size]; snprintf(str, size, fmt, __VA_ARGS__);
 
+#define BACK_TRACE_SIZE 15
+
 #ifdef _WIN32
 
 #define OS_NAME "Windows"
@@ -207,6 +209,7 @@ static void crash_handler_produce_one_frame(void) {
     gfx_start_frame();
     config_gfx_pool();
     init_render_image();
+    create_dl_ortho_matrix();
 
     float minAspectRatio = 1.743468f;
     float aspectScale = 1.0f;
@@ -306,7 +309,7 @@ static void crash_handler_add_info_int(CrashHandlerText** pTextP, f32 x, f32 y, 
 #ifdef _WIN32
 static CRASH_HANDLER_TYPE crash_handler(EXCEPTION_POINTERS *ExceptionInfo) {
 #elif __linux__
-static void crash_handler(const int signalNum, siginfo_t *info, ucontext_t *context) {
+static void crash_handler(const int signalNum, siginfo_t *info, UNUSED ucontext_t *context) {
 #endif
     printf("Game crashed! preparing crash screen...\n");
     memset(sCrashHandlerText, 0, sizeof(sCrashHandlerText));
@@ -352,8 +355,10 @@ static void crash_handler(const int signalNum, siginfo_t *info, ucontext_t *cont
                     char segFaultStr[255] = "";
                     if (info->si_code == SEGV_MAPERR) {
                         snprintf(segFaultStr, 255, "The game tried to read unmapped memory at address %p", info->si_addr);
+#ifdef __x86_64__
                     } else if (info->si_code == SEGV_ACCERR) {
                         snprintf(segFaultStr, 255, "The game tried to %s at address %016llX", ((context->uc_mcontext.gregs[REG_ERR] & 0x2) != 0 ? "write" : "read"), (u64) info->si_addr);
+#endif
                     } else {
                         snprintf(segFaultStr, 255, "Unknown segmentation fault at address %p", info->si_addr);
                     }
@@ -373,6 +378,7 @@ static void crash_handler(const int signalNum, siginfo_t *info, ucontext_t *cont
 
     // Registers
     crash_handler_set_text(8, 22, 0xFF, 0xFF, 0xFF, "%s", "Registers:");
+#if defined(_WIN32) || (defined(__linux__) && defined(__x86_64__))
 #ifdef _WIN32
     if (ExceptionInfo && ExceptionInfo->ContextRecord) {
         PCONTEXT cr = ExceptionInfo->ContextRecord;
@@ -456,6 +462,9 @@ static void crash_handler(const int signalNum, siginfo_t *info, ucontext_t *cont
     } else {
         crash_handler_set_text(8, 30, 0x80, 0x80, 0x80, "%s", "Unable to access the registers.");
     }
+#else
+    crash_handler_set_text(8, 30, 0x80, 0x80, 0x80, "%s", "Cannot access the registers on this system.");
+#endif
 
     // Stack trace
     crash_handler_set_text(8, 72, 0xFF, 0xFF, 0xFF, "%s", "Stack trace:");
@@ -542,7 +551,7 @@ static void crash_handler(const int signalNum, siginfo_t *info, ucontext_t *cont
 #else
         s32 frames = CaptureStackWalkBackTrace(ExceptionInfo->ContextRecord, 0, 64, stack);
 #endif
-        for (s32 i = 1, j = 0; i < frames && j < 15; ++i) {
+        for (s32 i = 1, j = 0; i < frames && j < BACK_TRACE_SIZE; ++i) {
             s32 y = 80 + j++ * 8;
             crash_handler_set_text( 8, y, 0xFF, 0xFF, 0x00, "0x%016llX", (PTR) stack[i]);
             crash_handler_set_text(-1, y, 0xFF, 0xFF, 0xFF, "%s", ": ");
@@ -563,13 +572,12 @@ static void crash_handler(const int signalNum, siginfo_t *info, ucontext_t *cont
             }
         }
 #elif __linux__
-    void *trace[15];
-    int traceSize = backtrace(trace, 15);
-
+    void *trace[BACK_TRACE_SIZE];
+    u8 traceSize = backtrace(trace, BACK_TRACE_SIZE);
     if (traceSize > 0) {
         // Unwind and print call stack
         char **messages = backtrace_symbols(trace, traceSize);
-        for (s32 i = 1, j = 0; i < traceSize && j < 15; ++i) {
+        for (s32 i = 1, j = 0; i < traceSize && j < BACK_TRACE_SIZE; ++i) {
             s32 y = 80 + j++ * 8;
             crash_handler_set_text( 8, y, 0xFF, 0xFF, 0x00, "0x%016llX", (u64) strtoul(strstr(messages[i], "[") + 1, NULL, 16));
             crash_handler_set_text(-1, y, 0xFF, 0xFF, 0xFF, "%s", ": ");
@@ -595,8 +603,10 @@ static void crash_handler(const int signalNum, siginfo_t *info, ucontext_t *cont
     crash_handler_add_info_int(&pText, 315, -4 + (8 * 3), "Players", network_player_connected_count());
 
     s32 syncObjects = 0;
-    for (struct SyncObject* so = sync_object_get_first(); so != NULL; so = sync_object_get_next()) {
-        if (so->o != NULL) { syncObjects++; }
+    if (gGameInited) {
+        for (struct SyncObject* so = sync_object_get_first(); so != NULL; so = sync_object_get_next()) {
+            if (so->o != NULL) { syncObjects++; }
+        }
     }
     crash_handler_add_info_int(&pText, 315, -4 + (8 * 4), "SyncObj", syncObjects);
 
@@ -664,10 +674,9 @@ static void crash_handler(const int signalNum, siginfo_t *info, ucontext_t *cont
     }
 #endif
 
-    // Incase it crashed before the game window opened
+    // In case the game crashed before the game window opened
     if (!gGfxInited) gfx_init(&WAPI, &RAPI, TITLE);
-    djui_init();
-    djui_unicode_init();
+    if (!gGameInited) djui_unicode_init();
 
     // Main loop
     while (true) {

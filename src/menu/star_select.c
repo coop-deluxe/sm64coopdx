@@ -469,6 +469,9 @@ s32 lvl_update_obj_and_load_act_button_actions(UNUSED s32 arg, UNUSED s32 unused
         sReceivedLoadedActNum = 0;
     }
 
+    // Cancel the act selector while on the main menu
+    if (gDjuiInMainMenu) { return 1; }
+
     area_update_objects();
     sActSelectorMenuTimer++;
     return sLoadedActNum;

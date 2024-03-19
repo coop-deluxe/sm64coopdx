@@ -36,6 +36,8 @@
 #include "pc/lua/smlua_hooks.h"
 #include "game/camera.h"
 #include "level_info.h"
+#include "pc/lua/utils/smlua_text_utils.h"
+#include "pc/lua/utils/smlua_math_utils.h"
 
 u16 gDialogColorFadeTimer;
 s8 gLastDialogLineNum;
@@ -2513,8 +2515,9 @@ void render_pause_my_score_coins(void) {
 
     u8 strCourseNum[4];
     u8 courseIndex = gCurrCourseNum - 1;
+    u8 starIndex = clamp(gDialogCourseActNum, 1, MAX_ACTS);
     u8 *courseName = (u8*) get_level_name_sm64(gCurrCourseNum, gCurrLevelNum, gCurrAreaIndex, 1);
-    u8 *actName = (u8*) get_star_name_sm64(gCurrCourseNum, gDialogCourseActNum, 1);
+    u8 *actName = (u8*) get_star_name_sm64(gCurrCourseNum, starIndex, 1);
     u8 starFlags;
 
     starFlags = save_file_get_star_flags(gCurrSaveFileNum - 1, gCurrCourseNum - 1);
@@ -2549,7 +2552,7 @@ void render_pause_my_score_coins(void) {
         print_generic_string(CRS_NUM_X1, 157, strCourseNum);
 #endif
 
-        if (starFlags & (1 << (gDialogCourseActNum - 1))) {
+        if (starFlags & (1 << (starIndex - 1))) {
             print_generic_string(TXT_STAR_X, 140, textStar);
         } else {
             print_generic_string(TXT_STAR_X, 140, textUnfilledStar);
