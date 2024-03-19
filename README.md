@@ -1,5 +1,5 @@
-# sm64coopdx
-Online multiplayer mod for the Super Mario 64 PC port that synchronizes all entities and every level for multiple players. Fork of [sm64ex-coop](https://github.com/djoslin0/sm64ex-coop). 
+![sm64coopdx Logo](textures/segment2/custom_coopdx_logo.rgba32.png)
+sm64coopdx is online multiplayer mod for the Super Mario 64 PC port that synchronizes all entities and every level for multiple players. Fork & official continuation of [sm64ex-coop](https://github.com/djoslin0/sm64ex-coop). 
 
 Feel free to report bugs and contribute, but remember, there must be **no upload of any copyrighted asset**. 
 Run `./extract_assets.py --clean && make clean` or `make distclean` to clear ROM assets, however this is unnecessary for contributing because the .gitignore file already excludes ROM assets.
