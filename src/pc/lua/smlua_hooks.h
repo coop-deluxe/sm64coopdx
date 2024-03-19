@@ -152,6 +152,7 @@ enum BehaviorId smlua_get_original_behavior_id(const BehaviorScript* behavior);
 const BehaviorScript* smlua_override_behavior(const BehaviorScript* behavior);
 const BehaviorScript* smlua_get_hooked_behavior_from_id(enum BehaviorId id, bool returnOriginal);
 bool smlua_is_behavior_hooked(const BehaviorScript *behavior);
+const char* smlua_get_name_from_hooked_behavior_id(enum BehaviorId id);
 bool smlua_call_behavior_hook(const BehaviorScript** behavior, struct Object* object, bool before);
 
 int smlua_call_hook(lua_State* L, int nargs, int nresults, int errfunc, struct Mod* activeMod);

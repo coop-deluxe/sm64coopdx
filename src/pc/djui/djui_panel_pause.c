@@ -34,7 +34,7 @@ void djui_panel_pause_disconnect_key_update(int scancode) {
 }
 
 static void djui_panel_pause_quit(struct DjuiBase* caller) {
-    if (find_object_with_behavior(bhvActSelector) != NULL || gMarioStates[0].action == ACT_PUSHING_DOOR || gMarioStates[0].action == ACT_PULLING_DOOR) { return; }
+    if (gMarioStates[0].action == ACT_PUSHING_DOOR || gMarioStates[0].action == ACT_PULLING_DOOR) { return; }
 
     if (gNetworkType == NT_SERVER) {
         djui_panel_confirm_create(caller,
@@ -56,7 +56,7 @@ void djui_panel_pause_create(struct DjuiBase* caller) {
     struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(PAUSE, PAUSE_TITLE));
     struct DjuiBase* body = djui_three_panel_get_body(panel);
     {
-        
+
         struct DjuiRect* rect1 = djui_rect_container_create(body, 64);
         {
             djui_button_left_create(&rect1->base, DLANG(PAUSE, PLAYER), DJUI_BUTTON_STYLE_NORMAL, djui_panel_player_create);
@@ -78,7 +78,7 @@ void djui_panel_pause_create(struct DjuiBase* caller) {
             djui_button_create(body, DLANG(PAUSE, DISCONNECT), DJUI_BUTTON_STYLE_BACK, djui_panel_pause_quit);
         }
     }
-    
+
     djui_panel_add(caller, panel, defaultBase);
     gInteractableOverridePad = true;
     gDjuiPanelPauseCreated = true;

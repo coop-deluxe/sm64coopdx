@@ -60,6 +60,7 @@ s16 gChangeLevel = -1;
 s16 gChangeLevelTransition = -1;
 s16 gChangeActNum = -1;
 
+static bool sCancelNextActSelector = true; // Cancel the act selector after the main menu
 static bool sFirstCastleGroundsMenu = true;
 bool gIsDemoActive = false;
 bool gInPlayerMenu = false;
@@ -247,7 +248,7 @@ u16 level_control_timer(s32 timerOp) {
 u32 pressed_pause(void) {
     u32 dialogActive = get_dialog_id() >= 0;
     u32 intangible = (gMarioState->action & ACT_FLAG_INTANGIBLE) != 0;
-    u32 firstPerson = gMarioState->action == ACT_FIRST_PERSON; 
+    u32 firstPerson = gMarioState->action == ACT_FIRST_PERSON;
 
     if (!intangible && !dialogActive && !firstPerson && !gWarpTransition.isActive && sDelayedWarpOp == WARP_OP_NONE
         && (gPlayer1Controller->buttonPressed & START_BUTTON)) {
@@ -1637,6 +1638,7 @@ s32 update_level(void) {
     if (gDjuiInMainMenu) {
         update_menu_level();
     }
+    sCancelNextActSelector = gDjuiInMainMenu;
 
     if (gFanFareDebounce > 0) { gFanFareDebounce--; }
 
@@ -1914,6 +1916,11 @@ s32 lvl_set_current_level(UNUSED s16 arg0, s32 levelNum) {
     }
 
     if (gDebugLevelSelect && !gShowProfiler) {
+        return 0;
+    }
+
+    if (sCancelNextActSelector) {
+        sCancelNextActSelector = false;
         return 0;
     }
 

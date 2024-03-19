@@ -1175,6 +1175,7 @@ struct LuaHookedBehavior {
     u32 originalId;
     BehaviorScript *behavior;
     const BehaviorScript* originalBehavior;
+    const char* bhvName;
     int initReference;
     int loopReference;
     bool replace;
@@ -1233,6 +1234,15 @@ bool smlua_is_behavior_hooked(const BehaviorScript *behavior) {
     }
 
     return false;
+}
+
+const char* smlua_get_name_from_hooked_behavior_id(enum BehaviorId id) {
+    for (int i = 0; i < sHookedBehaviorsCount; i++) {
+        struct LuaHookedBehavior *hooked = &sHookedBehaviors[i];
+        if (hooked->behaviorId != id && hooked->overrideId != id) { continue; }
+        return hooked->bhvName;
+    }
+    return NULL;
 }
 
 int smlua_hook_custom_bhv(BehaviorScript *bhvScript, const char *bhvName) {
@@ -1392,6 +1402,7 @@ int smlua_hook_behavior(lua_State* L) {
     hooked->overrideId = noOverrideId ? customBehaviorId : overrideBehaviorId;
     hooked->originalId = customBehaviorId; // For LUA behaviors. The only behavior id they have IS their custom one.
     hooked->originalBehavior = originalBehavior ? originalBehavior : hooked->behavior;
+    hooked->bhvName = bhvName;
     hooked->initReference = initReference;
     hooked->loopReference = loopReference;
     hooked->replace = replaceBehavior;

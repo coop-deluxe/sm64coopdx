@@ -284,13 +284,10 @@ void bhv_mario_update(void) {
     if ((stateIndex == 0) || (!is_player_active(gMarioState))) {
         gMarioState->particleFlags = 0;
     }
-    
+
     smlua_call_event_hooks_mario_param(HOOK_BEFORE_MARIO_UPDATE, gMarioState);
 
-    u32 particleFlags = 0;
-    s32 i;
-
-    particleFlags = execute_mario_action(gCurrentObject);
+    u32 particleFlags = execute_mario_action(gCurrentObject);
     smlua_call_event_hooks_mario_param(HOOK_MARIO_UPDATE, gMarioState);
     particleFlags |= gMarioState->particleFlags;
     gCurrentObject->oMarioParticleFlags = particleFlags;
@@ -320,14 +317,10 @@ void bhv_mario_update(void) {
     // to sync it with the Mario object
     copy_mario_state_to_object(gMarioState);
 
-    i = 0;
-    while (sParticleTypes[i].particleFlag != 0) {
+    for (s32 i = 0; sParticleTypes[i].particleFlag != 0; i++) {
         if (particleFlags & sParticleTypes[i].particleFlag) {
-            spawn_particle(sParticleTypes[i].activeParticleFlag, sParticleTypes[i].model,
-                           sParticleTypes[i].behavior);
+            spawn_particle(sParticleTypes[i].activeParticleFlag, sParticleTypes[i].model, sParticleTypes[i].behavior);
         }
-
-        i++;
     }
 
     update_character_anim_offset(gMarioState);

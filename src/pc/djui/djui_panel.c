@@ -18,7 +18,7 @@ bool djui_panel_is_active(void) {
     return (sPanelList != NULL);
 }
 
-struct DjuiBase* djui_panel_find_first_interactable(struct DjuiBaseChild* child) {
+static struct DjuiBase* djui_panel_find_first_interactable(struct DjuiBaseChild* child) {
     while (child) {
         if (child->base->interactable && child->base->interactable->enabled) {
             return child->base;

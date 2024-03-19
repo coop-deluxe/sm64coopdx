@@ -258,6 +258,7 @@ void game_deinit(void) {
     network_shutdown(true, true, false, false);
     smlua_shutdown();
     mods_shutdown();
+    djui_shutdown();
     gGameInited = false;
 }
 
@@ -267,11 +268,13 @@ void game_exit(void) {
     exit(0);
 }
 
-void* main_game_init(UNUSED void* arg) {
+void* main_game_init(void* isThreaded) {
+    gIsThreaded = isThreaded != NULL;
+
     const char *userpath = gCLIOpts.savePath[0] ? gCLIOpts.savePath : sys_user_path();
     fs_init(sys_ropaths, FS_BASEDIR, userpath);
 
-    if (gIsThreaded) { REFRESH_MUTEX(snprintf(gCurrLoadingSegment.str, 256, "Loading")); }
+    REFRESH_MUTEX(snprintf(gCurrLoadingSegment.str, 256, "Loading"));
     dynos_gfx_init();
 
     // load config
@@ -288,12 +291,10 @@ void* main_game_init(UNUSED void* arg) {
 
     mods_init();
     enable_queued_mods();
-    if (gIsThreaded) {
-        REFRESH_MUTEX(
-            gCurrLoadingSegment.percentage = 0;
-            snprintf(gCurrLoadingSegment.str, 256, "Starting Game");
-        );
-    }
+    REFRESH_MUTEX(
+        gCurrLoadingSegment.percentage = 0;
+        snprintf(gCurrLoadingSegment.str, 256, "Starting game");
+    );
 
     // If coop_custom_palette_* values are not found in sm64config.txt, the custom palette config will use the default values (Mario's palette)
     // But if no preset is found, that means the current palette is a custom palette
@@ -308,19 +309,10 @@ void* main_game_init(UNUSED void* arg) {
     if (gCLIOpts.fullscreen == 1) { configWindow.fullscreen = true; }
     else if (gCLIOpts.fullscreen == 2) { configWindow.fullscreen = false; }
 
-    if (gCLIOpts.playerName[0] != '\0') {
-        snprintf(configPlayerName, MAX_PLAYER_STRING, "%s", gCLIOpts.playerName);
-    }
-
     if (!gGfxInited) {
         gfx_init(&WAPI, &RAPI, TITLE);
         WAPI.set_keyboard_callbacks(keyboard_on_key_down, keyboard_on_key_up, keyboard_on_all_keys_up, keyboard_on_text_input);
     }
-
-#if defined(AAPI_SDL1) || defined(AAPI_SDL2)
-    if (audio_api == NULL && audio_sdl.init()) { audio_api = &audio_sdl; }
-#endif
-    if (audio_api == NULL) { audio_api = &audio_null; }
 
     audio_init();
     sound_init();
@@ -352,20 +344,28 @@ int main(int argc, char *argv[]) {
 
     // Start the thread for setting up the game
 #ifndef WAPI_DXGI
-    if (pthread_mutex_init(&gLoadingThreadMutex, NULL) == 0 && pthread_create(&gLoadingThreadId, NULL, main_game_init, (void*) 1) == 0) {
-        gIsThreaded = true;
-        render_loading_screen(); // Render the loading screen while the game is setup
-        gIsThreaded = false;
-    } else {
-#else
-    {
+    bool threadSuccess = false;
+    if (pthread_mutex_init(&gLoadingThreadMutex, NULL) == 0) {
+        if (pthread_create(&gLoadingThreadId, NULL, main_game_init, (void*) 1) == 0) {
+            render_loading_screen(); // Render the loading screen while the game is setup
+            threadSuccess = true;
+        }
+        pthread_mutex_destroy(&gLoadingThreadMutex);
+    }
+    if (!threadSuccess)
 #endif
+    {
         main_game_init(NULL); // Failsafe incase threading doesn't work
     }
-    pthread_mutex_destroy(&gLoadingThreadMutex);
 
     // initialize sm64 data and controllers
     thread5_game_loop(NULL);
+
+    // Initialize sound outside threads
+#if defined(AAPI_SDL1) || defined(AAPI_SDL2)
+    if (!audio_api && audio_sdl.init()) { audio_api = &audio_sdl; }
+#endif
+    if (!audio_api) { audio_api = &audio_null; }
 
     // Initialize djui
     djui_init();

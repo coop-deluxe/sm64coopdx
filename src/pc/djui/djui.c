@@ -28,18 +28,27 @@ static bool sDjuiInited = false;
 
 bool sDjuiRendered60fps = false;
 
-void reset_djui_text(void);
-
-void reset_djui(void) {
+void djui_shutdown(void) {
     sSavedDisplayListHead = NULL;
+    if (sDjuiPauseOptions) djui_base_destroy(&sDjuiPauseOptions->base);
+    if (sDjuiLuaError) djui_base_destroy(&sDjuiLuaError->base);
     sDjuiPauseOptions = NULL;
     sDjuiLuaError = NULL;
     sDjuiLuaErrorTimeout = 0;
-    if (gDjuiRoot) djui_base_destroy(&gDjuiRoot->base);
 
-    if (gDjuiConsole) djui_base_destroy(&gDjuiConsole->base);
+    if (gDjuiConsole) {
+        djui_base_destroy(&gDjuiConsole->base);
+        free(gDjuiConsole);
+        gDjuiConsole = NULL;
+    }
     extern u32 sDjuiConsoleMessages;
     sDjuiConsoleMessages = 0;
+
+    if (gDjuiRoot) {
+        djui_base_destroy(&gDjuiRoot->base);
+    }
+
+    djui_fps_display_destroy();
 
     sDjuiInited = false;
 }
