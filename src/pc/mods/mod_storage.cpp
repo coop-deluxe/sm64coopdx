@@ -30,7 +30,7 @@ void strdelete(char string[], char substr[]) {
         if (strstr(&string[i], substr) == &string[i]) {
             // determine the string's new length after removing the substr occurrence
             string_length -= substr_length;
-            // shift forward the remaining characters in the string after the substr 
+            // shift forward the remaining characters in the string after the substr
             // occurrence by the length of substr, effectively removing it!
             for (u16 j = i; j < string_length; j++) {
                 string[j] = string[j + substr_length];
@@ -112,7 +112,11 @@ C_FIELD const char* mod_storage_load(const char* key) {
     mINI::INIStructure ini;
     file.read(ini);
 
-    return const_cast<char*>(ini["storage"][key].c_str());
+    // Store string results in a temporary buffer
+    // this assumes mod_storage_load will only ever be called by Lua
+    static char value[MAX_KEY_VALUE_LENGTH];
+    snprintf(value, MAX_KEY_VALUE_LENGTH, "%s", const_cast<char*>(ini["storage"][key].c_str()));
+    return value;
 }
 
 C_FIELD double mod_storage_load_number(const char* key) {
