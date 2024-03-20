@@ -282,9 +282,9 @@ void* main_game_init(void* isThreaded) {
     configWindow.settings_changed = true;
     if (!djui_language_init(configLanguage)) { snprintf(configLanguage, MAX_CONFIG_STRING, "%s", ""); }
 
-    if (gCLIOpts.network != NT_SERVER) {
-        check_for_updates();
-    }
+    // if (gCLIOpts.network != NT_SERVER) {
+    //     check_for_updates();
+    // }
 
     dynos_packs_init();
     sync_objects_init_system();
