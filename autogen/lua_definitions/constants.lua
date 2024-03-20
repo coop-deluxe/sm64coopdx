@@ -12631,4 +12631,4 @@ VERSION_REGION = "SH"
 VERSION_REGION = "US"
 
 --- @type string
-VERSION_TEXT = "beta"
+VERSION_TEXT = "v"
