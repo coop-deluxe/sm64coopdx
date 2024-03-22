@@ -734,10 +734,10 @@ void Print(const char *aFmt, Args... aArgs) {
 }
 
 template <typename... Args>
-void PrintConsole(const char *aFmt, Args... aArgs) {
+void PrintConsole(enum ConsoleMessageLevel level, const char *aFmt, Args... aArgs) {
     snprintf(gDjuiConsoleTmpBuffer, CONSOLE_MAX_TMP_BUFFER, aFmt, aArgs...);
     sys_swap_backslashes(gDjuiConsoleTmpBuffer);
-    djui_console_message_create(gDjuiConsoleTmpBuffer, CONSOLE_MESSAGE_INFO);
+    djui_console_message_create(gDjuiConsoleTmpBuffer, level);
 }
 
 template <typename... Args>
@@ -750,7 +750,7 @@ void PrintError(const char *aFmt, Args... aArgs) {
 #define PrintDataError(...) { \
     if (aGfxData->mErrorCount == 0) Print("  ERROR!"); \
     Print(__VA_ARGS__); \
-    PrintConsole(__VA_ARGS__); \
+    PrintConsole(CONSOLE_MESSAGE_ERROR, __VA_ARGS__); \
     aGfxData->mErrorCount++; \
 }
 

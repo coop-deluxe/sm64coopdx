@@ -462,6 +462,19 @@ bool DynOS_Tex_Get(const char* aTexName, struct TextureInfo* aOutTexInfo) {
             // load the texture if it hasn't been yet
             if (_Data->mRawData.begin() == NULL) {
                 u8 *_RawData = stbi_load_from_memory(_Data->mPngData.begin(), _Data->mPngData.Count(), &_Data->mRawWidth, &_Data->mRawHeight, NULL, 4);
+                // texture data is corrupted
+                if (_RawData == NULL) {
+                    PrintError("Attempted to load corrupted tex file: %s", aTexName);
+                    PrintConsole(CONSOLE_MESSAGE_ERROR, "Attempted to load corrupted tex file: %s", aTexName);
+                    return false;
+                }
+                // texture width or height is NPOT
+                if (!(_Data->mRawWidth > 0 && _Data->mRawWidth & (_Data->mRawWidth - 1) == 0) ||
+                    !(_Data->mRawHeight > 0 && _Data->mRawHeight & (_Data->mRawHeight - 1) == 0)) {
+                    PrintError("Attempted to load tex file with non power of two width or height: %s", aTexName);
+                    PrintConsole(CONSOLE_MESSAGE_ERROR, "Attempted to load tex file with non power of two width or height: %s", aTexName);
+                    return false;
+                }
                 _Data->mRawFormat = G_IM_FMT_RGBA;
                 _Data->mRawSize   = G_IM_SIZ_32b;
                 _Data->mRawData   = Array<u8>(_RawData, _RawData + (_Data->mRawWidth * _Data->mRawHeight * 4));
