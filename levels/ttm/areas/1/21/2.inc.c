@@ -1,10 +1,6 @@
+#include "pc/rom_assets.h"
 // 0x07011D00 - 0x07011D40
-static const Vtx ttm_seg7_vertex_07011D00[] = {
-    {{{  -519,   -204,    -91}, 0, { -4490,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{  -519,   -306,    -91}, 0, { -4490,    990}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   292,   -306,    532}, 0, {  5728,    990}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   292,   -204,    532}, 0, {  5728,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(ttm_seg7_vertex_07011D00, 0x004d1910, 104662, 0x00011d00, 64);
 
 // 0x07011D40 - 0x07011D78
 static const Gfx ttm_seg7_dl_07011D40[] = {

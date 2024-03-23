@@ -778,7 +778,7 @@ int smlua_func_smlua_anim_util_register_animation(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("%s: Failed to convert parameter '%s'", "smlua_anim_util_register_animation", "loopEnd"); return 0; }
 
     u32 valuesLength = 0;
-    s16 *values = (s16 *) smlua_to_u16_list(L, 7, &valuesLength);
+    u16 *values = (u16 *) smlua_to_u16_list(L, 7, &valuesLength);
     if (!values) { LOG_LUA("%s: Failed to convert parameter '%s'", "smlua_anim_util_register_animation", "values"); return 0; }
 
     u32 indexLength = 0;

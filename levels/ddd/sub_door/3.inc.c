@@ -1,10 +1,6 @@
+#include "pc/rom_assets.h"
 // 0x07009190 - 0x070091D0
-static const Vtx ddd_seg7_vertex_07009190[] = {
-    {{{  4941,  -1015,  -4187}, 0, {  1118,   -288}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{  2893,  -1015,  -4187}, 0, {  -158,   -288}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{  2893,  -3063,  -4187}, 0, {  -158,   2264}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{  4941,  -3063,  -4187}, 0, {  1118,   2264}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(ddd_seg7_vertex_07009190, 0x0048d930, 33063, 0x00009190, 64);
 
 // 0x070091D0 - 0x07009208
 static const Gfx ddd_seg7_dl_070091D0[] = {

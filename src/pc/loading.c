@@ -1,6 +1,3 @@
-#include "gfx_dimensions.h"
-#include "game/segment2.h"
-
 #include "djui/djui.h"
 #include "pc/djui/djui_unicode.h"
 
@@ -8,6 +5,7 @@
 #include "loading.h"
 #include "pc/utils/misc.h"
 #include "pc/cliopts.h"
+#include "rom_checker.h"
 
 extern ALIGNED8 u8 texture_coopdx_logo[];
 
@@ -26,41 +24,22 @@ pthread_mutex_t gLoadingThreadMutex = PTHREAD_MUTEX_INITIALIZER;
 
 bool gIsThreaded = false;
 
-extern Vp D_8032CF00;
+#define RUN_THREADED if (gIsThreaded)
 
-static void loading_screen_produce_one_frame(void) {
-    // start frame
-    gfx_start_frame();
-    config_gfx_pool();
-    init_render_image();
-    create_dl_ortho_matrix();
-    djui_gfx_displaylist_begin();
+void loading_screen_set_segment_text(const char *text) {
+    snprintf(gCurrLoadingSegment.str, 256, text);
+}
 
-    // fix scaling issues
-    gSPViewport(gDisplayListHead++, VIRTUAL_TO_PHYSICAL(&D_8032CF00));
-    gDPSetScissor(gDisplayListHead++, G_SC_NON_INTERLACE, 0, BORDER_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT - BORDER_HEIGHT);
-
-    // clear screen
-    create_dl_translation_matrix(MENU_MTX_PUSH, GFX_DIMENSIONS_FROM_LEFT_EDGE(0), 240.f, 0.f);
-    create_dl_scale_matrix(MENU_MTX_NOPUSH, (GFX_DIMENSIONS_ASPECT_RATIO * SCREEN_HEIGHT) / 130.f, 3.f, 1.f);
-    gDPSetEnvColor(gDisplayListHead++, 0x00, 0x00, 0x00, 0xFF);
-    gSPDisplayList(gDisplayListHead++, dl_draw_text_bg_box);
-    gSPPopMatrix(gDisplayListHead++, G_MTX_MODELVIEW);
-
-    // render loading screen elements
+static void loading_screen_produce_frame_callback() {
     if (sLoading && !gCLIOpts.hideLoadingScreen) { djui_base_render(&sLoading->base); }
+}
 
-    // render frame
-    djui_gfx_displaylist_end();
-    end_master_display_list();
-    alloc_display_list(0);
-    gfx_run((Gfx*) gGfxSPTask->task.t.data_ptr); // send_display_list
-    display_and_vsync();
-    gfx_end_frame();
+static void loading_screen_produce_one_frame() {
+    produce_one_dummy_frame(loading_screen_produce_frame_callback);
 }
 
 static bool loading_screen_on_render(struct DjuiBase* base) {
-    pthread_mutex_lock(&gLoadingThreadMutex);
+    RUN_THREADED { pthread_mutex_lock(&gLoadingThreadMutex); }
 
     u32 windowWidth, windowHeight;
     WAPI.get_dimensions(&windowWidth, &windowHeight);
@@ -94,7 +73,7 @@ static bool loading_screen_on_render(struct DjuiBase* base) {
 
     djui_base_compute(base);
 
-    pthread_mutex_unlock(&gLoadingThreadMutex);
+    RUN_THREADED { pthread_mutex_unlock(&gLoadingThreadMutex); }
 
     return true;
 }
@@ -105,7 +84,7 @@ static void loading_screen_destroy(struct DjuiBase* base) {
     sLoading = NULL;
 }
 
-void render_loading_screen(void) {
+void init_loading_screen() {
     struct LoadingScreen* load = calloc(1, sizeof(struct LoadingScreen));
     struct DjuiBase* base = &load->base;
 
@@ -149,6 +128,19 @@ void render_loading_screen(void) {
     }
 
     sLoading = load;
+}
+
+void loading_screen_reset() {
+    djui_base_destroy(&sLoading->base);
+    djui_shutdown();
+    alloc_display_list_reset();
+    gDisplayListHead = NULL;
+    rendering_init();
+    configWindow.settings_changed = true;
+}
+
+void render_loading_screen() {
+    if (!sLoading) { init_loading_screen(); }
 
     // loading screen loop
     while (!gGameInited) {
@@ -158,11 +150,15 @@ void render_loading_screen(void) {
     pthread_join(gLoadingThreadId, NULL);
     gIsThreaded = false;
 
-    // reset some things after rendering the loading screen
-    djui_base_destroy(base);
-    djui_shutdown();
-    alloc_display_list_reset();
-    gDisplayListHead = NULL;
-    rendering_init();
-    configWindow.settings_changed = true;
+    loading_screen_reset();
+}
+
+void render_rom_setup_screen() {
+    if (!sLoading) { init_loading_screen(); }
+
+    loading_screen_set_segment_text("No rom detected, drag & drop Super Mario 64 (U) [!].z64 on to this screen");
+
+    while (!gRomIsValid) {
+        WAPI.main_loop(loading_screen_produce_one_frame);
+    }
 }

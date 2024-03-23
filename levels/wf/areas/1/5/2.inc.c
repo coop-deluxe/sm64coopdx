@@ -1,3 +1,4 @@
+#include "pc/rom_assets.h"
 // 0x07005E48 - 0x07005E60
 static const Lights1 wf_seg7_lights_07005E48 = gdSPDefLights1(
     0x66, 0x66, 0x66,
@@ -5,12 +6,7 @@ static const Lights1 wf_seg7_lights_07005E48 = gdSPDefLights1(
 );
 
 // 0x07005E60 - 0x07005EA0
-static const Vtx wf_seg7_vertex_07005E60[] = {
-    {{{   255,   -127,   -255}, 0, {  2012,   2010}, {0x38, 0x71, 0x00, 0xff}}},
-    {{{  -256,    128,    256}, 0, {     0,   -274}, {0x38, 0x71, 0x00, 0xff}}},
-    {{{   255,   -127,    256}, 0, {     0,   2010}, {0x38, 0x71, 0x00, 0xff}}},
-    {{{  -256,    128,   -255}, 0, {  2012,   -274}, {0x38, 0x71, 0x00, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(wf_seg7_vertex_07005E60, 0x00496090, 31162, 0x00005e60, 64);
 
 // 0x07005EA0 - 0x07005EE8
 static const Gfx wf_seg7_dl_07005EA0[] = {

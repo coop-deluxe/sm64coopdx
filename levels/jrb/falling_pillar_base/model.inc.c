@@ -1,3 +1,4 @@
+#include "pc/rom_assets.h"
 // 0x0700AEF0 - 0x0700AF08
 static const Lights1 jrb_seg7_lights_0700AEF0 = gdSPDefLights1(
     0x3f, 0x3f, 0x3f,
@@ -5,13 +6,7 @@ static const Lights1 jrb_seg7_lights_0700AEF0 = gdSPDefLights1(
 );
 
 // 0x0700AF08 - 0x0700AF58
-static const Vtx jrb_seg7_vertex_0700AF08[] = {
-    {{{   102,      0,   -101}, 0, {  2012,  -1054}, {0x33, 0x67, 0xcc, 0xff}}},
-    {{{     0,    102,      0}, 0, {   992,      0}, {0x00, 0x7e, 0x00, 0xff}}},
-    {{{   102,      0,    102}, 0, {  2012,    990}, {0x33, 0x67, 0x33, 0xff}}},
-    {{{  -101,      0,   -101}, 0, {     0,  -1054}, {0xcc, 0x67, 0xcc, 0xff}}},
-    {{{  -101,      0,    102}, 0, {     0,    990}, {0xcc, 0x67, 0x33, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(jrb_seg7_vertex_0700AF08, 0x0041a760, 37817, 0x0000af08, 80);
 
 // 0x0700AF58 - 0x0700AFB0
 static const Gfx jrb_seg7_dl_0700AF58[] = {

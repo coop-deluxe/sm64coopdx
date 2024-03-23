@@ -1,17 +1,11 @@
+#include "pc/rom_assets.h"
 // Yellow Sphere (used in a lot of things)
 
 // 0x0601EB48
-static const Vtx yellow_sphere_seg6_vertex_0601EB48[] = {
-    {{{   -76,    -76,      0}, 0, {     0,    992}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    77,    -76,      0}, 0, {   992,    992}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    77,     77,      0}, 0, {   992,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -76,     77,      0}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(yellow_sphere_seg6_vertex_0601EB48, 0x00188440, 199722, 0x0001eb48, 64);
 
 // 0x0601EB88
-ALIGNED8 const Texture yellow_sphere_seg6_texture_0601EB88[] = {
-#include "actors/yellow_sphere/yellow_sphere.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(yellow_sphere_seg6_texture_0601EB88, "actors/yellow_sphere/yellow_sphere.rgba16.inc.c", 0x0012a7e0, 32879, 0x00000040, 2048);
 
 // 0x0601F388 - 0x0601F3C0
 const Gfx yellow_sphere_seg6_dl_0601F388[] = {

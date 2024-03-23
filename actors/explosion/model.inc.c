@@ -1,47 +1,29 @@
+#include "pc/rom_assets.h"
 // Explosion
 
 // 0x030009C8
-static const Vtx explosion_seg3_vertex_030009C8[] = {
-    {{{  -128,   -128,      0}, 0, {     0,    992}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   128,   -128,      0}, 0, {   992,    992}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   128,    128,      0}, 0, {   992,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{  -128,    128,      0}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(explosion_seg3_vertex_030009C8, 0x00201410, 96653, 0x000009c8, 64);
 
 // 0x03000A08
-ALIGNED8 const Texture explosion_seg3_texture_03000A08[] = {
-#include "actors/explosion/explosion_0.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(explosion_seg3_texture_03000A08, "actors/explosion/explosion_0.rgba16.inc.c", 0x00201410, 96653, 0x00000a08, 2048);
 
 // 0x03001208
-ALIGNED8 const Texture explosion_seg3_texture_03001208[] = {
-#include "actors/explosion/explosion_1.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(explosion_seg3_texture_03001208, "actors/explosion/explosion_1.rgba16.inc.c", 0x00201410, 96653, 0x00001208, 2048);
 
 // 0x03001A08
-ALIGNED8 const Texture explosion_seg3_texture_03001A08[] = {
-#include "actors/explosion/explosion_2.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(explosion_seg3_texture_03001A08, "actors/explosion/explosion_2.rgba16.inc.c", 0x00201410, 96653, 0x00001a08, 2048);
 
 // 0x03002208
-ALIGNED8 const Texture explosion_seg3_texture_03002208[] = {
-#include "actors/explosion/explosion_3.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(explosion_seg3_texture_03002208, "actors/explosion/explosion_3.rgba16.inc.c", 0x00201410, 96653, 0x00002208, 2048);
 
 // 0x03002A08
-ALIGNED8 const Texture explosion_seg3_texture_03002A08[] = {
-#include "actors/explosion/explosion_4.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(explosion_seg3_texture_03002A08, "actors/explosion/explosion_4.rgba16.inc.c", 0x00201410, 96653, 0x00002a08, 2048);
 
 // 0x03003208
-ALIGNED8 const Texture explosion_seg3_texture_03003208[] = {
-#include "actors/explosion/explosion_5.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(explosion_seg3_texture_03003208, "actors/explosion/explosion_5.rgba16.inc.c", 0x00201410, 96653, 0x00003208, 2048);
 
 // 0x03003A08
-ALIGNED8 const Texture explosion_seg3_texture_03003A08[] = {
-#include "actors/explosion/explosion_6.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(explosion_seg3_texture_03003A08, "actors/explosion/explosion_6.rgba16.inc.c", 0x00201410, 96653, 0x00003a08, 2048);
 
 // 0x03004208 - 0x03004298
 const Gfx explosion_seg3_dl_03004208[] = {

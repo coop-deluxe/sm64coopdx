@@ -7,7 +7,7 @@
 #include "sm64.h"
 
 #include "pc/lua/smlua.h"
-
+#include "pc/lua/utils/smlua_text_utils.h"
 #include "game/memory.h"
 #include "audio/external.h"
 
@@ -18,6 +18,8 @@
 #include "audio/audio_sdl.h"
 #include "audio/audio_null.h"
 
+#include "rom_assets.h"
+#include "rom_checker.h"
 #include "pc_main.h"
 #include "loading.h"
 #include "cliopts.h"
@@ -53,6 +55,9 @@
 #include "debug_context.h"
 #include "menu/intro_geo.h"
 
+#include "gfx_dimensions.h"
+#include "game/segment2.h"
+
 #ifdef DISCORD_SDK
 #include "pc/discord/discord.h"
 #endif
@@ -60,6 +65,8 @@
 #if defined(_WIN32) || defined(_WIN64)
 #include <windows.h>
 #endif
+
+extern Vp D_8032CF00;
 
 OSMesg D_80339BEC;
 OSMesgQueue gSIEventMesgQueue;
@@ -238,6 +245,39 @@ void produce_one_frame(void) {
     CTX_EXTENT(CTX_RENDER, produce_interpolation_frames_and_delay);
 }
 
+// Used for rendering 2D scenes fullscreen like the loading or crash screens
+void produce_one_dummy_frame(void (*callback)()) {
+
+    // Start frame
+    gfx_start_frame();
+    config_gfx_pool();
+    init_render_image();
+    create_dl_ortho_matrix();
+    djui_gfx_displaylist_begin();
+
+    // Fix scaling issues
+    gSPViewport(gDisplayListHead++, VIRTUAL_TO_PHYSICAL(&D_8032CF00));
+    gDPSetScissor(gDisplayListHead++, G_SC_NON_INTERLACE, 0, BORDER_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT - BORDER_HEIGHT);
+
+    // Clear screen
+    create_dl_translation_matrix(MENU_MTX_PUSH, GFX_DIMENSIONS_FROM_LEFT_EDGE(0), 240.f, 0.f);
+    create_dl_scale_matrix(MENU_MTX_NOPUSH, (GFX_DIMENSIONS_ASPECT_RATIO * SCREEN_HEIGHT) / 130.f, 3.f, 1.f);
+    gDPSetEnvColor(gDisplayListHead++, 0x00, 0x00, 0x00, 0xFF);
+    gSPDisplayList(gDisplayListHead++, dl_draw_text_bg_box);
+    gSPPopMatrix(gDisplayListHead++, G_MTX_MODELVIEW);
+
+    // Call the callback
+    callback();
+
+    // Render frame
+    djui_gfx_displaylist_end();
+    end_master_display_list();
+    alloc_display_list(0);
+    gfx_run((Gfx*) gGfxSPTask->task.t.data_ptr); // send_display_list
+    display_and_vsync();
+    gfx_end_frame();
+}
+
 void audio_shutdown(void) {
     audio_custom_shutdown();
     if (audio_api) {
@@ -274,26 +314,29 @@ void* main_game_init(void* isThreaded) {
     const char *userpath = gCLIOpts.savePath[0] ? gCLIOpts.savePath : sys_user_path();
     fs_init(sys_ropaths, FS_BASEDIR, userpath);
 
-    REFRESH_MUTEX(snprintf(gCurrLoadingSegment.str, 256, "Loading"));
-    dynos_gfx_init();
-
     // load config
     configfile_load();
     configWindow.settings_changed = true;
     if (!djui_language_init(configLanguage)) { snprintf(configLanguage, MAX_CONFIG_STRING, "%s", ""); }
 
+    if (gIsThreaded) { REFRESH_MUTEX(loading_screen_set_segment_text("Loading")); }
+    dynos_gfx_init();
+    enable_queued_dynos_packs();
+    sync_objects_init_system();
+
     // if (gCLIOpts.network != NT_SERVER) {
     //     check_for_updates();
     // }
 
-    dynos_packs_init();
-    sync_objects_init_system();
+    if (gIsThreaded) { REFRESH_MUTEX(loading_screen_set_segment_text("Loading rom assets")); }
+    rom_assets_load();
+    smlua_text_utils_init();
 
     mods_init();
     enable_queued_mods();
     REFRESH_MUTEX(
         gCurrLoadingSegment.percentage = 0;
-        snprintf(gCurrLoadingSegment.str, 256, "Starting game");
+        loading_screen_set_segment_text("Starting game");
     );
 
     // If coop_custom_palette_* values are not found in sm64config.txt, the custom palette config will use the default values (Mario's palette)
@@ -340,6 +383,11 @@ int main(int argc, char *argv[]) {
     if (!gGfxInited) {
         gfx_init(&WAPI, &RAPI, TITLE);
         WAPI.set_keyboard_callbacks(keyboard_on_key_down, keyboard_on_key_up, keyboard_on_all_keys_up, keyboard_on_text_input);
+    }
+
+    // Render the rom setup screen
+    if (!main_rom_handler()) {
+        render_rom_setup_screen(); // Holds the game load until a valid rom is provided
     }
 
     // Start the thread for setting up the game

@@ -1,52 +1,32 @@
+#include "pc/rom_assets.h"
 // Water Splash
 
 // 0x0402A588
-static const Vtx water_splash_seg4_vertex_0402A588[] = {
-    {{{   -64,      0,      0}, 0, {     0,   2016}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    64,      0,      0}, 0, {   992,   2016}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    64,    256,      0}, 0, {   992,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -64,    256,      0}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(water_splash_seg4_vertex_0402A588, 0x00114750, 78432, 0x0002a588, 64);
 
 // 0x0402A5C8
-ALIGNED8 const Texture water_splash_seg4_texture_0402A5C8[] = {
-#include "actors/water_splash/water_splash_0.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(water_splash_seg4_texture_0402A5C8, "actors/water_splash/water_splash_0.rgba16.inc.c", 0x00114750, 78432, 0x0002a5c8, 4096);
 
 // 0x0402B5C8
-ALIGNED8 const Texture water_splash_seg4_texture_0402B5C8[] = {
-#include "actors/water_splash/water_splash_1.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(water_splash_seg4_texture_0402B5C8, "actors/water_splash/water_splash_1.rgba16.inc.c", 0x00114750, 78432, 0x0002b5c8, 4096);
 
 // 0x0402C5C8
-ALIGNED8 const Texture water_splash_seg4_texture_0402C5C8[] = {
-#include "actors/water_splash/water_splash_2.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(water_splash_seg4_texture_0402C5C8, "actors/water_splash/water_splash_2.rgba16.inc.c", 0x00114750, 78432, 0x0002c5c8, 4096);
 
 // 0x0402D5C8
-ALIGNED8 const Texture water_splash_seg4_texture_0402D5C8[] = {
-#include "actors/water_splash/water_splash_3.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(water_splash_seg4_texture_0402D5C8, "actors/water_splash/water_splash_3.rgba16.inc.c", 0x00114750, 78432, 0x0002d5c8, 4096);
 
 // 0x0402E5C8
-ALIGNED8 const Texture water_splash_seg4_texture_0402E5C8[] = {
-#include "actors/water_splash/water_splash_4.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(water_splash_seg4_texture_0402E5C8, "actors/water_splash/water_splash_4.rgba16.inc.c", 0x00114750, 78432, 0x0002e5c8, 4096);
 
 // 0x0402F5C8
-ALIGNED8 const Texture water_splash_seg4_texture_0402F5C8[] = {
-#include "actors/water_splash/water_splash_5.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(water_splash_seg4_texture_0402F5C8, "actors/water_splash/water_splash_5.rgba16.inc.c", 0x00114750, 78432, 0x0002f5c8, 4096);
 
 // 0x040305C8
-ALIGNED8 const Texture water_splash_seg4_texture_040305C8[] = {
-#include "actors/water_splash/water_splash_6.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(water_splash_seg4_texture_040305C8, "actors/water_splash/water_splash_6.rgba16.inc.c", 0x00114750, 78432, 0x000305c8, 4096);
 
 // 0x040315C8
-ALIGNED8 const Texture water_splash_seg4_texture_040315C8[] = {
-#include "actors/water_splash/water_splash_7.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(water_splash_seg4_texture_040315C8, "actors/water_splash/water_splash_7.rgba16.inc.c", 0x00114750, 78432, 0x000315c8, 4096);
 
 // 0x040325C8 - 0x04032640
 const Gfx water_splash_seg4_dl_040325C8[] = {

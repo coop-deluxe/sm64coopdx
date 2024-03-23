@@ -1,3 +1,4 @@
+#include "pc/rom_assets.h"
 // Transparent Star
 
 // 0x0302C488
@@ -7,20 +8,7 @@ static const Lights1 transparent_star_seg3_lights_0302C488 = gdSPDefLights1(
 );
 
 // 0x0302C4A0
-static const Vtx transparent_star_seg3_vertex_0302C4A0[] = {
-    {{{     0,      8,    -89}, 0, {     0,      0}, {0x00, 0x07, 0x82, 0xff}}},
-    {{{   190,   -201,      0}, 0, {     0,      0}, {0x55, 0xa3, 0x00, 0xff}}},
-    {{{     0,   -129,      0}, 0, {     0,      0}, {0x00, 0x82, 0x00, 0xff}}},
-    {{{   146,    -42,      0}, 0, {     0,      0}, {0x7c, 0xe7, 0x00, 0xff}}},
-    {{{     0,      8,     90}, 0, {     0,      0}, {0x00, 0x07, 0x7e, 0xff}}},
-    {{{   257,     84,      0}, 0, {     0,      0}, {0x68, 0x47, 0x00, 0xff}}},
-    {{{  -145,    -42,      0}, 0, {     0,      0}, {0x84, 0xe7, 0x00, 0xff}}},
-    {{{  -189,   -201,      0}, 0, {     0,      0}, {0xaa, 0xa3, 0x00, 0xff}}},
-    {{{  -256,     84,      0}, 0, {     0,      0}, {0x97, 0x47, 0x00, 0xff}}},
-    {{{     0,    246,      0}, 0, {     0,      0}, {0x00, 0x7e, 0x00, 0xff}}},
-    {{{    96,     99,      0}, 0, {     0,      0}, {0x3d, 0x6f, 0x00, 0xff}}},
-    {{{   -95,     99,      0}, 0, {     0,      0}, {0xc3, 0x6f, 0x00, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(transparent_star_seg3_vertex_0302C4A0, 0x00201410, 96653, 0x0002b6f0, 192);
 
 // 0x0302C560 - 0x0302C620
 const Gfx transparent_star_seg3_dl_0302C560[] = {

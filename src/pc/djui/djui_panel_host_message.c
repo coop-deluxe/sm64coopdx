@@ -36,7 +36,7 @@ void djui_panel_do_host(bool reconnecting, bool playSound) {
     gChangeLevelTransition = gLevelValues.entryLevel;
 
     if (gMarioState->marioObj) vec3f_copy(gMarioState->marioObj->header.gfx.cameraToObject, gGlobalSoundSource);
-    if (playSound) { play_character_sound(gMarioState, CHAR_SOUND_OKEY_DOKEY); }
+    if (playSound) { gDelayedInitSound = CHAR_SOUND_OKEY_DOKEY; }
 
     play_transition(WARP_TRANSITION_FADE_INTO_STAR, 0x14, 0x00, 0x00, 0x00);
 }

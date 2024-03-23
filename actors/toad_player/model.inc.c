@@ -2678,4 +2678,3 @@ Gfx toad_player_material_revert_render_settings[] = {
 
     gsSPEndDisplayList(),
 };
-

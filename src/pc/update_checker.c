@@ -26,7 +26,7 @@ void show_update_popup(void) {
 #if !(defined(_WIN32) || defined(_WIN64))
 size_t write_callback(char *ptr, size_t size, size_t nmemb, char **data) {
     size_t realsize = size * nmemb;
-    
+
     // allocate memory for the received data and copy it into the buffer
     *data = realloc(*data, realsize + 1);
     if (*data == NULL) { return 0; }
@@ -82,7 +82,7 @@ void get_version_remote(void) {
     InternetCloseHandle(hInternet);
 #else
     char* buffer = NULL;
-    
+
     // initialize libcurl
     CURL *curl = curl_easy_init();
     if (!curl || curl_global_init(CURL_GLOBAL_ALL) != CURLE_OK) {
@@ -115,7 +115,7 @@ void get_version_remote(void) {
 }
 
 void check_for_updates(void) {
-    REFRESH_MUTEX(snprintf(gCurrLoadingSegment.str, 256, "Checking For Updates"));
+    REFRESH_MUTEX(loading_screen_set_segment_text("Checking For Updates"));
 
     get_version_remote();
     if (sRemoteVersion[0] != '\0' && strcmp(sRemoteVersion, get_version())) {

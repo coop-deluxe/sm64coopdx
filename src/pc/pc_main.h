@@ -69,6 +69,7 @@ extern bool gGameInited;
 extern bool gGfxInited;
 
 extern struct GfxWindowManagerAPI* wm_api;
+void produce_one_dummy_frame(void (*callback)());
 void game_deinit(void);
 void game_exit(void);
 

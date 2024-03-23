@@ -512,9 +512,9 @@ GODDARD_C_FILES   := $(foreach dir,$(GODDARD_SRC_DIRS),$(wildcard $(dir)/*.c))
 ULTRA_S_FILES     := $(foreach dir,$(ULTRA_SRC_DIRS),$(wildcard $(dir)/*.s))
 GENERATED_C_FILES := $(BUILD_DIR)/assets/mario_anim_data.c $(BUILD_DIR)/assets/demo_data.c
 
-ifeq ($(TARGET_N64),0)
-  GENERATED_C_FILES += $(addprefix $(BUILD_DIR)/bin/,$(addsuffix _skybox.c,$(notdir $(basename $(wildcard textures/skyboxes/*.png)))))
-endif
+#ifeq ($(TARGET_N64),0)
+#  GENERATED_C_FILES += $(addprefix $(BUILD_DIR)/bin/,$(addsuffix _skybox.c,$(notdir $(basename $(wildcard textures/skyboxes/*.png)))))
+#endif
 
 # "If we're N64, use the above"
 ifeq ($(TARGET_N64),0)
@@ -988,6 +988,7 @@ endif
 # Prevent a crash with -sopt
 export LANG := C
 
+
 #==============================================================================#
 # Extra CC Flags                                                               #
 #==============================================================================#
@@ -1172,6 +1173,8 @@ endif
 
 $(BUILD_DIR)/src/game/characters.o:   $(SOUND_SAMPLE_TABLES)
 $(SOUND_BIN_DIR)/sound_data.o:        $(SOUND_BIN_DIR)/sound_data.ctl.inc.c $(SOUND_BIN_DIR)/sound_data.tbl.inc.c $(SOUND_BIN_DIR)/sequences.bin.inc.c $(SOUND_BIN_DIR)/bank_sets.inc.c
+$(SOUND_BIN_DIR)/samples_assets.o:    $(SOUND_BIN_DIR)/samples_offsets.inc.c
+$(SOUND_BIN_DIR)/sequences_assets.o:  $(SOUND_BIN_DIR)/sequences_offsets.inc.c
 $(BUILD_DIR)/levels/scripts.o:        $(BUILD_DIR)/include/level_headers.h
 
 ifeq ($(VERSION),sh)
@@ -1192,11 +1195,9 @@ ifeq ($(VERSION),eu)
   $(BUILD_DIR)/bin/eu/translation_en.o: $(BUILD_DIR)/text/us/define_text.inc.c
   $(BUILD_DIR)/bin/eu/translation_de.o: $(BUILD_DIR)/text/de/define_text.inc.c
   $(BUILD_DIR)/bin/eu/translation_fr.o: $(BUILD_DIR)/text/fr/define_text.inc.c
-  $(BUILD_DIR)/levels/menu/leveldata.o: $(BUILD_DIR)/include/text_strings.h
   $(BUILD_DIR)/levels/menu/leveldata.o: $(BUILD_DIR)/text/us/define_courses.inc.c
   $(BUILD_DIR)/levels/menu/leveldata.o: $(BUILD_DIR)/text/de/define_courses.inc.c
   $(BUILD_DIR)/levels/menu/leveldata.o: $(BUILD_DIR)/text/fr/define_courses.inc.c
-  $(BUILD_DIR)/src/game/level_info.o: $(BUILD_DIR)/include/text_strings.h
   $(BUILD_DIR)/src/game/level_info.o: $(BUILD_DIR)/text/us/define_courses.inc.c
   $(BUILD_DIR)/src/game/level_info.o: $(BUILD_DIR)/text/de/define_courses.inc.c
   $(BUILD_DIR)/src/game/level_info.o: $(BUILD_DIR)/text/fr/define_courses.inc.c
@@ -1217,13 +1218,6 @@ ALL_DIRS := $(BUILD_DIR) $(addprefix $(BUILD_DIR)/,$(SRC_DIRS) $(GODDARD_SRC_DIR
 
 # Make sure build directory exists before compiling anything
 DUMMY != mkdir -p $(ALL_DIRS)
-
-$(BUILD_DIR)/include/text_strings.h: $(BUILD_DIR)/include/text_menu_strings.h
-$(BUILD_DIR)/src/menu/file_select.o: $(BUILD_DIR)/include/text_strings.h
-$(BUILD_DIR)/src/menu/star_select.o: $(BUILD_DIR)/include/text_strings.h
-$(BUILD_DIR)/src/game/camera.o:      $(BUILD_DIR)/include/text_strings.h
-$(BUILD_DIR)/src/game/ingame_menu.o: $(BUILD_DIR)/include/text_strings.h
-
 
 #==============================================================================#
 # Texture Generation                                                           #
@@ -1296,8 +1290,6 @@ $(BUILD_DIR)/%.table: %.aiff
 	$(call print,Extracting codebook:,$<,$@)
 	$(V)$(AIFF_EXTRACT_CODEBOOK) $< >$@
 	$(call print,Piping:,$<,$@.inc.c)
-	$(V)hexdump -v -e '1/1 "0x%X,"' $< > $@.inc.c
-	$(V)echo >> $@.inc.c
 
 $(BUILD_DIR)/%.aifc: $(BUILD_DIR)/%.table %.aiff
 	$(call print,Encoding VADPCM:,$<,$@)
@@ -1322,6 +1314,12 @@ $(SOUND_BIN_DIR)/ctl_header: $(SOUND_BIN_DIR)/sound_data.ctl
 	@true
 
 $(SOUND_BIN_DIR)/tbl_header: $(SOUND_BIN_DIR)/sound_data.ctl
+	@true
+
+$(SOUND_BIN_DIR)/samples_offsets.inc.c: $(SOUND_BIN_DIR)/sound_data.ctl
+	@true
+
+$(SOUND_BIN_DIR)/sequences_offsets.inc.c: $(SOUND_BIN_DIR)/sound_data.ctl
 	@true
 
 $(SOUND_BIN_DIR)/sequences.bin: $(SOUND_BANK_FILES) sound/sequences.json $(SOUND_SEQUENCE_DIRS) $(SOUND_SEQUENCE_FILES) $(ENDIAN_BITWIDTH)
@@ -1360,12 +1358,6 @@ $(BUILD_DIR)/assets/demo_data.c: assets/demo_data.json $(wildcard assets/demos/*
 	$(V)$(PYTHON) $(TOOLS_DIR)/demo_data_converter.py assets/demo_data.json $(DEF_INC_CFLAGS) > $@
 
 # Encode in-game text strings
-$(BUILD_DIR)/include/text_strings.h: include/text_strings.h.in
-	$(call print,Encoding:,$<,$@)
-	$(V)$(TEXTCONV) charmap.txt $< $@
-$(BUILD_DIR)/include/text_menu_strings.h: include/text_menu_strings.h.in
-	$(call print,Encoding:,$<,$@)
-	$(V)$(TEXTCONV) charmap_menu.txt $< $@
 $(BUILD_DIR)/text/%/define_courses.inc.c: text/define_courses.inc.c text/%/courses.h
 	@$(PRINT) "$(GREEN)Preprocessing: $(BLUE)$@ $(NO_COL)\n"
 	$(V)$(CPP) $(PROF_FLAGS) $(CPPFLAGS) $< -o - -I text/$*/ | $(TEXTCONV) charmap.txt - $@

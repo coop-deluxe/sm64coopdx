@@ -1,39 +1,26 @@
+#include "pc/rom_assets.h"
 // Wiggler Body
 
 // 0x05005A30
-ALIGNED8 const Texture wiggler_seg5_texture_05005A30[] = {
-#include "actors/wiggler/wiggler_segment_left_side.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(wiggler_seg5_texture_05005A30, "actors/wiggler/wiggler_segment_left_side.rgba16.inc.c", 0x00180bb0, 29674, 0x00005a30, 4096);
 
 // 0x05006A30
-ALIGNED8 const Texture wiggler_seg5_texture_05006A30[] = {
-#include "actors/wiggler/wiggler_segment_right_side.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(wiggler_seg5_texture_05006A30, "actors/wiggler/wiggler_segment_right_side.rgba16.inc.c", 0x00180bb0, 29674, 0x00006a30, 4096);
 
 // 0x05007A30
-ALIGNED8 const Texture wiggler_seg5_texture_05007A30[] = {
-#include "actors/wiggler/wiggler_eye.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(wiggler_seg5_texture_05007A30, "actors/wiggler/wiggler_eye.rgba16.inc.c", 0x00180bb0, 29674, 0x00007a30, 2048);
 
 // 0x05008230
-ALIGNED8 const Texture wiggler_seg5_texture_05008230[] = {
-#include "actors/wiggler/wiggler_flower.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(wiggler_seg5_texture_05008230, "actors/wiggler/wiggler_flower.rgba16.inc.c", 0x00180bb0, 29674, 0x00008230, 2048);
 
 // 0x05008A30
-ALIGNED8 const Texture wiggler_seg5_texture_05008A30[] = {
-#include "actors/wiggler/wiggler_frown.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(wiggler_seg5_texture_05008A30, "actors/wiggler/wiggler_frown.rgba16.inc.c", 0x00180bb0, 29674, 0x00008a30, 2048);
 
 // 0x05009230
-ALIGNED8 const Texture wiggler_seg5_texture_05009230[] = {
-#include "actors/wiggler/wiggler_nose_left_side.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(wiggler_seg5_texture_05009230, "actors/wiggler/wiggler_nose_left_side.rgba16.inc.c", 0x00180bb0, 29674, 0x00009230, 4096);
 
 // 0x0500A230
-ALIGNED8 const Texture wiggler_seg5_texture_0500A230[] = {
-#include "actors/wiggler/wiggler_nose_right_side.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(wiggler_seg5_texture_0500A230, "actors/wiggler/wiggler_nose_right_side.rgba16.inc.c", 0x00180bb0, 29674, 0x0000a230, 4096);
 
 // 0x0500B230
 static const Lights1 wiggler_seg5_lights_0500B230 = gdSPDefLights1(
@@ -54,216 +41,40 @@ UNUSED static const Lights1 wiggler_body_lights_unused = gdSPDefLights1(
 );
 
 // 0x0500B278
-static const Vtx wiggler_seg5_vertex_0500B278[] = {
-    {{{    19,      5,    -31}, 0, {     0,      0}, {0x40, 0x2b, 0x9d, 0x00}}},
-    {{{    20,    -37,    -43}, 0, {     0,      0}, {0x48, 0xeb, 0x9a, 0x00}}},
-    {{{    -5,    -36,    -43}, 0, {     0,      0}, {0xbd, 0xe4, 0x99, 0x00}}},
-    {{{    -2,      5,    -31}, 0, {     0,      0}, {0xca, 0x32, 0x9a, 0xff}}},
-    {{{    20,    -66,    -21}, 0, {     0,      0}, {0x42, 0xa1, 0xce, 0xff}}},
-    {{{    20,    -66,     21}, 0, {     0,      0}, {0x42, 0xa1, 0x32, 0xff}}},
-    {{{     0,    -59,     21}, 0, {     0,      0}, {0xb7, 0xa1, 0x27, 0xff}}},
-    {{{     0,    -59,    -21}, 0, {     0,      0}, {0xb7, 0xa1, 0xd9, 0xff}}},
-    {{{    20,    -37,     43}, 0, {     0,      0}, {0x48, 0xeb, 0x66, 0xff}}},
-    {{{    19,      5,     31}, 0, {     0,      0}, {0x40, 0x2b, 0x63, 0xff}}},
-    {{{    -2,      5,     31}, 0, {     0,      0}, {0xca, 0x32, 0x66, 0xff}}},
-    {{{    -5,    -36,     43}, 0, {     0,      0}, {0xbd, 0xe4, 0x67, 0xff}}},
-    {{{    18,     34,     15}, 0, {     0,      0}, {0x41, 0x5b, 0x3a, 0xff}}},
-    {{{    18,     34,    -15}, 0, {     0,      0}, {0x41, 0x5b, 0xc6, 0xff}}},
-    {{{     0,     28,    -15}, 0, {     0,      0}, {0xba, 0x5b, 0xcc, 0xff}}},
-    {{{     0,     28,     15}, 0, {     0,      0}, {0xba, 0x5b, 0x34, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(wiggler_seg5_vertex_0500B278, 0x00180bb0, 29674, 0x0000b278, 256);
 
 // 0x0500B378
-static const Vtx wiggler_seg5_vertex_0500B378[] = {
-    {{{     0,    -59,     21}, 0, {     0,      0}, {0xb7, 0xa1, 0x27, 0xff}}},
-    {{{    -5,    -36,     43}, 0, {     0,      0}, {0xbd, 0xe4, 0x67, 0x00}}},
-    {{{   -17,    -33,     21}, 0, {     0,      0}, {0x89, 0xe3, 0x1f, 0x00}}},
-    {{{    -2,      5,     31}, 0, {     0,      0}, {0xca, 0x32, 0x66, 0xff}}},
-    {{{     0,     28,     15}, 0, {     0,      0}, {0xba, 0x5b, 0x34, 0xff}}},
-    {{{   -15,      5,     15}, 0, {     0,      0}, {0x8f, 0x2a, 0x26, 0xff}}},
-    {{{   -15,      5,    -15}, 0, {     0,      0}, {0x8f, 0x2a, 0xda, 0xff}}},
-    {{{   -17,    -33,    -21}, 0, {     0,      0}, {0x89, 0xe3, 0xe1, 0xff}}},
-    {{{    -2,      5,    -31}, 0, {     0,      0}, {0xca, 0x32, 0x9a, 0xff}}},
-    {{{    -5,    -36,    -43}, 0, {     0,      0}, {0xbd, 0xe4, 0x99, 0xff}}},
-    {{{     0,     28,    -15}, 0, {     0,      0}, {0xba, 0x5b, 0xcc, 0xff}}},
-    {{{    18,     34,    -15}, 0, {     0,      0}, {0x41, 0x5b, 0xc6, 0xff}}},
-    {{{    19,      5,    -31}, 0, {     0,      0}, {0x40, 0x2b, 0x9d, 0xff}}},
-    {{{     0,    -59,    -21}, 0, {     0,      0}, {0xb7, 0xa1, 0xd9, 0xff}}},
-    {{{    20,    -66,    -21}, 0, {     0,      0}, {0x42, 0xa1, 0xce, 0xff}}},
-    {{{    20,    -37,    -43}, 0, {     0,      0}, {0x48, 0xeb, 0x9a, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(wiggler_seg5_vertex_0500B378, 0x00180bb0, 29674, 0x0000b378, 256);
 
 // 0x0500B478
-static const Vtx wiggler_seg5_vertex_0500B478[] = {
-    {{{    20,    -37,     43}, 0, {     0,      0}, {0x48, 0xeb, 0x66, 0xff}}},
-    {{{    -5,    -36,     43}, 0, {     0,      0}, {0xbd, 0xe4, 0x67, 0x00}}},
-    {{{     0,    -59,     21}, 0, {     0,      0}, {0xb7, 0xa1, 0x27, 0x00}}},
-    {{{    20,    -66,     21}, 0, {     0,      0}, {0x42, 0xa1, 0x32, 0xff}}},
-    {{{   -15,      5,     15}, 0, {     0,      0}, {0x8f, 0x2a, 0x26, 0xff}}},
-    {{{   -17,    -33,     21}, 0, {     0,      0}, {0x89, 0xe3, 0x1f, 0xff}}},
-    {{{    -2,      5,     31}, 0, {     0,      0}, {0xca, 0x32, 0x66, 0xff}}},
-    {{{    18,     34,     15}, 0, {     0,      0}, {0x41, 0x5b, 0x3a, 0xff}}},
-    {{{    19,      5,     31}, 0, {     0,      0}, {0x40, 0x2b, 0x63, 0xff}}},
-    {{{     0,     28,     15}, 0, {     0,      0}, {0xba, 0x5b, 0x34, 0xff}}},
-    {{{    20,    -66,    -21}, 0, {     0,      0}, {0x7f, 0x02, 0x00, 0xff}}},
-    {{{    20,    -37,    -43}, 0, {     0,      0}, {0x3d, 0xed, 0x93, 0xff}}},
-    {{{    19,      5,    -31}, 0, {     0,      0}, {0x1b, 0x32, 0x8f, 0xff}}},
-    {{{    18,     34,    -15}, 0, {     0,      0}, {0x7f, 0x02, 0x00, 0xff}}},
-    {{{    18,     34,     15}, 0, {     0,      0}, {0x06, 0x6e, 0x3e, 0xff}}},
-    {{{    19,      5,     31}, 0, {     0,      0}, {0x39, 0x2b, 0x68, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(wiggler_seg5_vertex_0500B478, 0x00180bb0, 29674, 0x0000b478, 256);
 
 // 0x0500B578
-static const Vtx wiggler_seg5_vertex_0500B578[] = {
-    {{{    20,    -66,    -21}, 0, {     0,      0}, {0x7f, 0x02, 0x00, 0xff}}},
-    {{{    19,      5,     31}, 0, {     0,      0}, {0x39, 0x2b, 0x68, 0x00}}},
-    {{{    20,    -37,     43}, 0, {     0,      0}, {0x1b, 0xe7, 0x79, 0x00}}},
-    {{{    20,    -66,     21}, 0, {     0,      0}, {0x7f, 0x02, 0x00, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(wiggler_seg5_vertex_0500B578, 0x00180bb0, 29674, 0x0000b578, 64);
 
 // 0x0500B5B8
-static const Vtx wiggler_seg5_vertex_0500B5B8[] = {
-    {{{    53,     -2,    -13}, 0, {     0,      0}, {0x00, 0xd8, 0x88, 0x00}}},
-    {{{    53,    -11,      0}, 0, {     0,      0}, {0x01, 0x81, 0x01, 0x00}}},
-    {{{    -3,    -12,      0}, 0, {     0,      0}, {0x01, 0x81, 0x01, 0x00}}},
-    {{{    -3,     -2,    -13}, 0, {     0,      0}, {0x00, 0xd8, 0x88, 0xff}}},
-    {{{    53,     -1,     13}, 0, {     0,      0}, {0x00, 0xda, 0x79, 0xff}}},
-    {{{    53,     13,      8}, 0, {     0,      0}, {0xff, 0x67, 0x49, 0xff}}},
-    {{{    -4,     13,      8}, 0, {     0,      0}, {0xff, 0x67, 0x49, 0xff}}},
-    {{{    -3,     -2,     13}, 0, {     0,      0}, {0x00, 0xda, 0x79, 0xff}}},
-    {{{    53,     13,     -8}, 0, {     0,      0}, {0xff, 0x66, 0xb5, 0xff}}},
-    {{{    -4,     13,     -8}, 0, {     0,      0}, {0xff, 0x66, 0xb5, 0xff}}},
-    {{{    -3,    -12,      0}, 0, {     0,      0}, {0xd3, 0x8d, 0xe6, 0xff}}},
-    {{{    -3,     -2,     13}, 0, {     0,      0}, {0x81, 0xff, 0x00, 0xff}}},
-    {{{    -4,     13,      8}, 0, {     0,      0}, {0x81, 0xff, 0x00, 0xff}}},
-    {{{    -4,     13,     -8}, 0, {     0,      0}, {0xd0, 0x6c, 0xd3, 0xff}}},
-    {{{    -3,     -2,    -13}, 0, {     0,      0}, {0xd2, 0xf6, 0x8b, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(wiggler_seg5_vertex_0500B5B8, 0x00180bb0, 29674, 0x0000b5b8, 240);
 
 // 0x0500B6A8
-static const Vtx wiggler_seg5_vertex_0500B6A8[] = {
-    {{{    42,     -2,    -13}, 0, {     0,      0}, {0x00, 0xd8, 0x88, 0x00}}},
-    {{{    42,    -12,      0}, 0, {     0,      0}, {0x00, 0x81, 0x01, 0x00}}},
-    {{{    -6,    -12,      0}, 0, {     0,      0}, {0x00, 0x81, 0x01, 0x00}}},
-    {{{    -6,     -2,    -13}, 0, {     0,      0}, {0x00, 0xd8, 0x88, 0xff}}},
-    {{{    42,     -2,     13}, 0, {     0,      0}, {0x00, 0xda, 0x79, 0xff}}},
-    {{{    42,     13,      8}, 0, {     0,      0}, {0x00, 0x67, 0x49, 0xff}}},
-    {{{    -6,     13,      8}, 0, {     0,      0}, {0x00, 0x67, 0x49, 0xff}}},
-    {{{    -6,     -2,     13}, 0, {     0,      0}, {0x00, 0xda, 0x79, 0xff}}},
-    {{{    42,     13,     -8}, 0, {     0,      0}, {0x00, 0x66, 0xb5, 0xff}}},
-    {{{    -6,     13,     -8}, 0, {     0,      0}, {0x00, 0x66, 0xb5, 0xff}}},
-    {{{    42,    -12,      0}, 0, {     0,      0}, {0x7f, 0x00, 0x00, 0xff}}},
-    {{{    42,     -2,    -13}, 0, {     0,      0}, {0x2f, 0xc2, 0x9d, 0xff}}},
-    {{{    42,     13,     -8}, 0, {     0,      0}, {0x2f, 0x4b, 0xa6, 0xff}}},
-    {{{    42,     13,      8}, 0, {     0,      0}, {0x2f, 0x6d, 0x2c, 0xff}}},
-    {{{    42,     -2,     13}, 0, {     0,      0}, {0x2f, 0xf8, 0x75, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(wiggler_seg5_vertex_0500B6A8, 0x00180bb0, 29674, 0x0000b6a8, 240);
 
 // 0x0500B798
-static const Vtx wiggler_seg5_vertex_0500B798[] = {
-    {{{    -2,      5,     31}, 0, {     0,      0}, {0xca, 0x32, 0x66, 0x00}}},
-    {{{    -5,    -36,     43}, 0, {     0,      0}, {0xbd, 0xe4, 0x67, 0x00}}},
-    {{{    20,    -37,     43}, 0, {     0,      0}, {0x48, 0xeb, 0x66, 0x00}}},
-    {{{    19,      5,     31}, 0, {     0,      0}, {0x40, 0x2b, 0x63, 0xff}}},
-    {{{     0,    -59,     21}, 0, {     0,      0}, {0xb7, 0xa1, 0x27, 0xff}}},
-    {{{     0,    -59,    -21}, 0, {     0,      0}, {0xb7, 0xa1, 0xd9, 0xff}}},
-    {{{    20,    -66,    -21}, 0, {     0,      0}, {0x42, 0xa1, 0xce, 0xff}}},
-    {{{    20,    -66,     21}, 0, {     0,      0}, {0x42, 0xa1, 0x32, 0xff}}},
-    {{{    -5,    -36,    -43}, 0, {     0,      0}, {0xbd, 0xe4, 0x99, 0xff}}},
-    {{{    -2,      5,    -31}, 0, {     0,      0}, {0xca, 0x32, 0x9a, 0xff}}},
-    {{{    19,      5,    -31}, 0, {     0,      0}, {0x40, 0x2b, 0x9d, 0xff}}},
-    {{{    20,    -37,    -43}, 0, {     0,      0}, {0x48, 0xeb, 0x9a, 0xff}}},
-    {{{     0,     28,    -15}, 0, {     0,      0}, {0xba, 0x5b, 0xcc, 0xff}}},
-    {{{     0,     28,     15}, 0, {     0,      0}, {0xba, 0x5b, 0x34, 0xff}}},
-    {{{    18,     34,     15}, 0, {     0,      0}, {0x41, 0x5b, 0x3a, 0xff}}},
-    {{{    18,     34,    -15}, 0, {     0,      0}, {0x41, 0x5b, 0xc6, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(wiggler_seg5_vertex_0500B798, 0x00180bb0, 29674, 0x0000b798, 256);
 
 // 0x0500B898
-static const Vtx wiggler_seg5_vertex_0500B898[] = {
-    {{{   -17,    -33,    -21}, 0, {     0,      0}, {0x89, 0xe3, 0xe1, 0xff}}},
-    {{{    -5,    -36,    -43}, 0, {     0,      0}, {0xbd, 0xe4, 0x99, 0x00}}},
-    {{{     0,    -59,    -21}, 0, {     0,      0}, {0xb7, 0xa1, 0xd9, 0x00}}},
-    {{{   -15,      5,    -15}, 0, {     0,      0}, {0x8f, 0x2a, 0xda, 0xff}}},
-    {{{     0,     28,    -15}, 0, {     0,      0}, {0xba, 0x5b, 0xcc, 0xff}}},
-    {{{    -2,      5,    -31}, 0, {     0,      0}, {0xca, 0x32, 0x9a, 0xff}}},
-    {{{   -17,    -33,     21}, 0, {     0,      0}, {0x89, 0xe3, 0x1f, 0xff}}},
-    {{{   -15,      5,     15}, 0, {     0,      0}, {0x8f, 0x2a, 0x26, 0xff}}},
-    {{{    -5,    -36,     43}, 0, {     0,      0}, {0xbd, 0xe4, 0x67, 0xff}}},
-    {{{    -2,      5,     31}, 0, {     0,      0}, {0xca, 0x32, 0x66, 0xff}}},
-    {{{    19,      5,     31}, 0, {     0,      0}, {0x40, 0x2b, 0x63, 0xff}}},
-    {{{    18,     34,     15}, 0, {     0,      0}, {0x41, 0x5b, 0x3a, 0xff}}},
-    {{{     0,     28,     15}, 0, {     0,      0}, {0xba, 0x5b, 0x34, 0xff}}},
-    {{{     0,    -59,     21}, 0, {     0,      0}, {0xb7, 0xa1, 0x27, 0xff}}},
-    {{{    20,    -37,     43}, 0, {     0,      0}, {0x48, 0xeb, 0x66, 0xff}}},
-    {{{    20,    -66,     21}, 0, {     0,      0}, {0x42, 0xa1, 0x32, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(wiggler_seg5_vertex_0500B898, 0x00180bb0, 29674, 0x0000b898, 256);
 
 // 0x0500B998
-static const Vtx wiggler_seg5_vertex_0500B998[] = {
-    {{{    20,    -66,    -21}, 0, {     0,      0}, {0x42, 0xa1, 0xce, 0xff}}},
-    {{{     0,    -59,    -21}, 0, {     0,      0}, {0xb7, 0xa1, 0xd9, 0x00}}},
-    {{{    -5,    -36,    -43}, 0, {     0,      0}, {0xbd, 0xe4, 0x99, 0x00}}},
-    {{{    20,    -37,    -43}, 0, {     0,      0}, {0x48, 0xeb, 0x9a, 0xff}}},
-    {{{    -2,      5,    -31}, 0, {     0,      0}, {0xca, 0x32, 0x9a, 0xff}}},
-    {{{   -17,    -33,    -21}, 0, {     0,      0}, {0x89, 0xe3, 0xe1, 0xff}}},
-    {{{   -15,      5,    -15}, 0, {     0,      0}, {0x8f, 0x2a, 0xda, 0xff}}},
-    {{{    19,      5,    -31}, 0, {     0,      0}, {0x40, 0x2b, 0x9d, 0xff}}},
-    {{{     0,     28,    -15}, 0, {     0,      0}, {0xba, 0x5b, 0xcc, 0xff}}},
-    {{{    18,     34,    -15}, 0, {     0,      0}, {0x41, 0x5b, 0xc6, 0xff}}},
-    {{{    20,    -66,    -21}, 0, {     0,      0}, {0x7f, 0x02, 0x00, 0xff}}},
-    {{{    20,    -37,    -43}, 0, {     0,      0}, {0x3d, 0xed, 0x93, 0xff}}},
-    {{{    19,      5,    -31}, 0, {     0,      0}, {0x1b, 0x32, 0x8f, 0xff}}},
-    {{{    18,     34,    -15}, 0, {     0,      0}, {0x7f, 0x02, 0x00, 0xff}}},
-    {{{    18,     34,     15}, 0, {     0,      0}, {0x06, 0x6e, 0x3e, 0xff}}},
-    {{{    19,      5,     31}, 0, {     0,      0}, {0x39, 0x2b, 0x68, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(wiggler_seg5_vertex_0500B998, 0x00180bb0, 29674, 0x0000b998, 256);
 
 // 0x0500BA98
-static const Vtx wiggler_seg5_vertex_0500BA98[] = {
-    {{{    20,    -66,    -21}, 0, {     0,      0}, {0x7f, 0x02, 0x00, 0xff}}},
-    {{{    19,      5,     31}, 0, {     0,      0}, {0x39, 0x2b, 0x68, 0x00}}},
-    {{{    20,    -37,     43}, 0, {     0,      0}, {0x1b, 0xe7, 0x79, 0x00}}},
-    {{{    20,    -66,     21}, 0, {     0,      0}, {0x7f, 0x02, 0x00, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(wiggler_seg5_vertex_0500BA98, 0x00180bb0, 29674, 0x0000b578, 64);
 
 // 0x0500BAD8
-static const Vtx wiggler_seg5_vertex_0500BAD8[] = {
-    {{{    -3,     -2,     13}, 0, {     0,      0}, {0x00, 0xd8, 0x78, 0x00}}},
-    {{{    -3,    -12,      0}, 0, {     0,      0}, {0x01, 0x81, 0xff, 0x00}}},
-    {{{    53,    -11,      0}, 0, {     0,      0}, {0x01, 0x81, 0xff, 0x00}}},
-    {{{    53,     -2,     13}, 0, {     0,      0}, {0x00, 0xd8, 0x78, 0xff}}},
-    {{{    -3,     -2,    -13}, 0, {     0,      0}, {0x00, 0xda, 0x87, 0xff}}},
-    {{{    -4,     13,     -8}, 0, {     0,      0}, {0xff, 0x67, 0xb7, 0xff}}},
-    {{{    53,     13,     -8}, 0, {     0,      0}, {0xff, 0x67, 0xb7, 0xff}}},
-    {{{    53,     -1,    -13}, 0, {     0,      0}, {0x00, 0xda, 0x87, 0xff}}},
-    {{{    -4,     13,      8}, 0, {     0,      0}, {0xff, 0x66, 0x4b, 0xff}}},
-    {{{    53,     13,      8}, 0, {     0,      0}, {0xff, 0x66, 0x4b, 0xff}}},
-    {{{    -4,     13,      8}, 0, {     0,      0}, {0xd0, 0x4b, 0x5a, 0xff}}},
-    {{{    -4,     13,     -8}, 0, {     0,      0}, {0xd0, 0x6c, 0xd5, 0xff}}},
-    {{{    -3,     -2,    -13}, 0, {     0,      0}, {0x81, 0xff, 0x00, 0xff}}},
-    {{{    -3,    -12,      0}, 0, {     0,      0}, {0x81, 0xff, 0x00, 0xff}}},
-    {{{    -3,     -2,     13}, 0, {     0,      0}, {0xd2, 0xc1, 0x63, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(wiggler_seg5_vertex_0500BAD8, 0x00180bb0, 29674, 0x0000bad8, 240);
 
 // 0x0500BBC8
-static const Vtx wiggler_seg5_vertex_0500BBC8[] = {
-    {{{    -6,     -2,     13}, 0, {     0,      0}, {0x00, 0xd8, 0x78, 0x00}}},
-    {{{    -6,    -12,      0}, 0, {     0,      0}, {0x00, 0x81, 0xff, 0x00}}},
-    {{{    42,    -12,      0}, 0, {     0,      0}, {0x00, 0x81, 0xff, 0x00}}},
-    {{{    42,     -2,     13}, 0, {     0,      0}, {0x00, 0xd8, 0x78, 0xff}}},
-    {{{    -6,     -2,    -13}, 0, {     0,      0}, {0x00, 0xda, 0x87, 0xff}}},
-    {{{    -6,     13,     -8}, 0, {     0,      0}, {0x00, 0x67, 0xb7, 0xff}}},
-    {{{    42,     13,     -8}, 0, {     0,      0}, {0x00, 0x67, 0xb7, 0xff}}},
-    {{{    42,     -2,    -13}, 0, {     0,      0}, {0x00, 0xda, 0x87, 0xff}}},
-    {{{    -6,     13,      8}, 0, {     0,      0}, {0x00, 0x66, 0x4b, 0xff}}},
-    {{{    42,     13,      8}, 0, {     0,      0}, {0x00, 0x66, 0x4b, 0xff}}},
-    {{{    42,     13,     -8}, 0, {     0,      0}, {0x2e, 0x4d, 0xa7, 0xff}}},
-    {{{    42,     13,      8}, 0, {     0,      0}, {0x2f, 0x6c, 0x2d, 0xff}}},
-    {{{    42,     -2,     13}, 0, {     0,      0}, {0x7f, 0x00, 0x00, 0xff}}},
-    {{{    42,    -12,      0}, 0, {     0,      0}, {0x7f, 0x00, 0x00, 0xff}}},
-    {{{    42,     -2,    -13}, 0, {     0,      0}, {0x2f, 0xc4, 0x9c, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(wiggler_seg5_vertex_0500BBC8, 0x00180bb0, 29674, 0x0000bbc8, 240);
 
 // 0x0500BCB8 - 0x0500BE10
 const Gfx wiggler_seg5_dl_0500BCB8[] = {
@@ -384,20 +195,10 @@ const Gfx wiggler_seg5_dl_0500C100[] = {
 };
 
 // 0x0500C188
-static const Vtx wiggler_seg5_vertex_0500C188[] = {
-    {{{     0,     21,      0}, 0, {   990,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -20,    -20,      0}, 0, {     0,   2012}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,    -20,      0}, 0, {   990,   2012}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -20,     21,      0}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(wiggler_seg5_vertex_0500C188, 0x00180bb0, 29674, 0x0000c188, 64);
 
 // 0x0500C1C8
-static const Vtx wiggler_seg5_vertex_0500C1C8[] = {
-    {{{    21,     21,      0}, 0, {   990,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,     21,      0}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,    -20,      0}, 0, {     0,   2012}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    21,    -20,      0}, 0, {   990,   2012}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(wiggler_seg5_vertex_0500C1C8, 0x00180bb0, 29674, 0x0000c1c8, 64);
 
 // 0x0500C208 - 0x0500C240
 const Gfx wiggler_seg5_dl_0500C208[] = {

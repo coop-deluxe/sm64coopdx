@@ -1,3 +1,4 @@
+#include "pc/rom_assets.h"
 // Snowman
 
 // ???
@@ -28,29 +29,19 @@ UNUSED static const Lights1 snowman_lights_unused4 = gdSPDefLights1(
 );
 
 // 0x05008C70
-ALIGNED8 const Texture snowman_seg5_texture_05008C70[] = {
-#include "actors/snowman/mr_blizzard_mitten.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(snowman_seg5_texture_05008C70, "actors/snowman/mr_blizzard_mitten.rgba16.inc.c", 0x00160670, 20585, 0x00008c70, 2048);
 
 // 0x05009470
-ALIGNED8 const Texture snowman_seg5_texture_05009470[] = {
-#include "actors/snowman/mr_blizzard_left_side.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(snowman_seg5_texture_05009470, "actors/snowman/mr_blizzard_left_side.rgba16.inc.c", 0x00160670, 20585, 0x00009470, 4096);
 
 // 0x0500A470
-ALIGNED8 const Texture snowman_seg5_texture_0500A470[] = {
-#include "actors/snowman/mr_blizzard_right_side.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(snowman_seg5_texture_0500A470, "actors/snowman/mr_blizzard_right_side.rgba16.inc.c", 0x00160670, 20585, 0x0000a470, 4096);
 
 // 0x0500B470
-ALIGNED8 const Texture snowman_seg5_texture_0500B470[] = {
-#include "actors/snowman/mr_blizzard_eye.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(snowman_seg5_texture_0500B470, "actors/snowman/mr_blizzard_eye.rgba16.inc.c", 0x00160670, 20585, 0x0000b470, 2048);
 
 // 0x0500BC70
-ALIGNED8 const Texture snowman_seg5_texture_0500BC70[] = {
-#include "actors/snowman/mr_blizzard_mouth.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(snowman_seg5_texture_0500BC70, "actors/snowman/mr_blizzard_mouth.rgba16.inc.c", 0x00160670, 20585, 0x0000bc70, 2048);
 
 // 0x0500C470
 static const Lights1 snowman_seg5_lights_0500C470 = gdSPDefLights1(
@@ -59,12 +50,7 @@ static const Lights1 snowman_seg5_lights_0500C470 = gdSPDefLights1(
 );
 
 // 0x0500C488
-static const Vtx snowman_seg5_vertex_0500C488[] = {
-    {{{   -23,      1,     -6}, 0, {     0,      0}, {0x82, 0xfd, 0xfd, 0xff}}},
-    {{{    76,    -17,     -6}, 0, {     0,      0}, {0xea, 0x84, 0xf9, 0xff}}},
-    {{{    75,     15,     15}, 0, {     0,      0}, {0xe1, 0x36, 0x6e, 0xff}}},
-    {{{    75,     17,    -23}, 0, {     0,      0}, {0xe4, 0x42, 0x99, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(snowman_seg5_vertex_0500C488, 0x00160670, 20585, 0x0000c488, 64);
 
 // 0x0500C4C8 - 0x0500C500
 const Gfx snowman_seg5_dl_0500C4C8[] = {
@@ -87,20 +73,10 @@ const Gfx snowman_seg5_dl_0500C500[] = {
 };
 
 // 0x0500C530
-static const Vtx snowman_seg5_vertex_0500C530[] = {
-    {{{     0,     76,      0}, 0, {   990,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -76,    -76,      0}, 0, {     0,   2012}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,    -76,      0}, 0, {   990,   2012}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -76,     76,      0}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(snowman_seg5_vertex_0500C530, 0x00160670, 20585, 0x0000c530, 64);
 
 // 0x0500C570
-static const Vtx snowman_seg5_vertex_0500C570[] = {
-    {{{    76,     76,      0}, 0, {   990,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,    -76,      0}, 0, {     0,   2012}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    76,    -76,      0}, 0, {   990,   2012}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,     76,      0}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(snowman_seg5_vertex_0500C570, 0x00160670, 20585, 0x0000c570, 64);
 
 // 0x0500C5B0 - 0x0500C5E8
 const Gfx snowman_seg5_dl_0500C5B0[] = {
@@ -142,16 +118,7 @@ const Gfx snowman_seg5_dl_0500C620[] = {
 };
 
 // 0x0500C698
-static const Vtx snowman_seg5_vertex_0500C698[] = {
-    {{{    69,    191,   -132}, 0, {  -370,   -440}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -63,    230,      0}, 0, {  1472,   1328}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    69,    230,      0}, 0, {  1472,   -440}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -63,    191,   -132}, 0, {  -370,   1328}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    69,    230,      0}, 0, {  -370,   -440}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -63,    191,    133}, 0, {  1472,   1328}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    69,    191,    133}, 0, {  1472,   -440}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -63,    230,      0}, 0, {  -370,   1328}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(snowman_seg5_vertex_0500C698, 0x00160670, 20585, 0x0000c698, 128);
 
 // 0x0500C718 - 0x0500C760
 const Gfx snowman_seg5_dl_0500C718[] = {
@@ -189,37 +156,10 @@ static const Lights1 snowman_seg5_lights_0500C7D0 = gdSPDefLights1(
 );
 
 // 0x0500C7E8
-static const Vtx snowman_seg5_vertex_0500C7E8[] = {
-    {{{     3,    -44,    -24}, 0, {   672,   1148}, {0xc1, 0xb9, 0xad, 0xff}}},
-    {{{   105,    -63,    -17}, 0, {   720,    626}, {0x31, 0xca, 0x99, 0xff}}},
-    {{{   116,   -101,     11}, 0, {   888,    570}, {0x2d, 0x8c, 0xeb, 0xff}}},
-    {{{    -4,      4,    -29}, 0, {   458,   1184}, {0xad, 0x03, 0xa1, 0xff}}},
-    {{{    96,    -30,    -36}, 0, {   578,    662}, {0x1e, 0xde, 0x8a, 0xff}}},
-    {{{    97,     16,    -36}, 0, {   364,    654}, {0x13, 0x2a, 0x8a, 0xff}}},
-    {{{   208,    -42,     25}, 0, {   588,     84}, {0x57, 0xa8, 0x19, 0xff}}},
-    {{{   128,    -61,      9}, 0, {   704,    502}, {0x69, 0xbf, 0x1b, 0xff}}},
-    {{{    57,    -20,     36}, 0, {   546,    864}, {0x02, 0xf8, 0x7e, 0xff}}},
-    {{{   132,     90,     32}, 0, {    20,    460}, {0x13, 0x52, 0x5e, 0xff}}},
-    {{{   215,     42,     28}, 0, {   206,     34}, {0x45, 0x40, 0xac, 0xff}}},
-    {{{    69,    -56,     36}, 0, {   704,    810}, {0x04, 0xe8, 0x7c, 0xff}}},
-    {{{    -2,     45,    -14}, 0, {   270,   1168}, {0xa1, 0x42, 0xce, 0xff}}},
-    {{{    33,     83,     26}, 0, {    88,    974}, {0xcd, 0x72, 0x0f, 0xff}}},
-    {{{   107,     63,     -2}, 0, {   148,    596}, {0x0f, 0x52, 0xa1, 0xff}}},
-    {{{    36,    -86,     11}, 0, {   850,    988}, {0xbd, 0xa8, 0x3d, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(snowman_seg5_vertex_0500C7E8, 0x00160670, 20585, 0x0000c7e8, 256);
 
 // 0x0500C8E8
-static const Vtx snowman_seg5_vertex_0500C8E8[] = {
-    {{{    69,    -56,     36}, 0, {   704,    810}, {0x04, 0xe8, 0x7c, 0xff}}},
-    {{{    57,    -20,     36}, 0, {   546,    864}, {0x02, 0xf8, 0x7e, 0xff}}},
-    {{{     6,      0,     28}, 0, {   472,   1124}, {0xa3, 0xf5, 0x55, 0xff}}},
-    {{{    33,     83,     26}, 0, {    88,    974}, {0xcd, 0x72, 0x0f, 0xff}}},
-    {{{    -4,      4,    -29}, 0, {   458,   1184}, {0xad, 0x03, 0xa1, 0xff}}},
-    {{{     3,    -44,    -24}, 0, {   672,   1148}, {0xc1, 0xb9, 0xad, 0xff}}},
-    {{{    -2,     45,    -14}, 0, {   270,   1168}, {0xa1, 0x42, 0xce, 0xff}}},
-    {{{    36,    -86,     11}, 0, {   850,    988}, {0xbd, 0xa8, 0x3d, 0xff}}},
-    {{{   116,   -101,     11}, 0, {   888,    570}, {0x2d, 0x8c, 0xeb, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(snowman_seg5_vertex_0500C8E8, 0x00160670, 20585, 0x0000c8e8, 144);
 
 // 0x0500C978 - 0x0500CAA8
 const Gfx snowman_seg5_dl_0500C978[] = {
@@ -265,20 +205,10 @@ const Gfx snowman_seg5_dl_0500CAA8[] = {
 };
 
 // 0x0500CB08
-static const Vtx snowman_seg5_vertex_0500CB08[] = {
-    {{{     0,     57,      0}, 0, {   990,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -57,    -57,      0}, 0, {     0,   2012}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,    -57,      0}, 0, {   990,   2012}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -57,     57,      0}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(snowman_seg5_vertex_0500CB08, 0x00160670, 20585, 0x0000cb08, 64);
 
 // 0x0500CB48
-static const Vtx snowman_seg5_vertex_0500CB48[] = {
-    {{{    57,     57,      0}, 0, {   990,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,    -57,      0}, 0, {     0,   2012}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    57,    -57,      0}, 0, {   990,   2012}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,     57,      0}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(snowman_seg5_vertex_0500CB48, 0x00160670, 20585, 0x0000cb48, 64);
 
 // 0x0500CB88 - 0x0500CBC0
 const Gfx snowman_seg5_dl_0500CB88[] = {
@@ -320,12 +250,7 @@ const Gfx snowman_seg5_dl_0500CBF8[] = {
 };
 
 // 0x0500CC70
-static const Vtx snowman_seg5_vertex_0500CC70[] = {
-    {{{   -90,    210,    -56}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{  -134,    182,    -56}, 0, {     0,    990}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{  -134,    182,     57}, 0, {   990,    990}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -90,    210,     57}, 0, {   990,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(snowman_seg5_vertex_0500CC70, 0x00160670, 20585, 0x0000cc70, 64);
 
 // 0x0500CCB0 - 0x0500CCE8
 const Gfx snowman_seg5_dl_0500CCB0[] = {

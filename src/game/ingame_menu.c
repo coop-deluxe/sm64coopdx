@@ -23,7 +23,6 @@
 #include "segment7.h"
 #include "seq_ids.h"
 #include "sm64.h"
-#include "text_strings.h"
 #include "types.h"
 #include "macros.h"
 #include "hardcoded.h"
@@ -38,6 +37,7 @@
 #include "level_info.h"
 #include "pc/lua/utils/smlua_text_utils.h"
 #include "pc/lua/utils/smlua_math_utils.h"
+#include "menu/ingame_text.h"
 
 u16 gDialogColorFadeTimer;
 s8 gLastDialogLineNum;
@@ -1863,31 +1863,21 @@ void render_dialog_string_color(s8 linesPerBox) {
 
 s16 gMenuMode = -1;
 
-u8 gEndCutsceneStrEn0[] = { TEXT_FILE_MARIO_EXCLAMATION };
-u8 gEndCutsceneStrEn1[] = { TEXT_POWER_STARS_RESTORED };
-u8 gEndCutsceneStrEn2[] = { TEXT_THANKS_TO_YOU };
-u8 gEndCutsceneStrEn3[] = { TEXT_THANK_YOU_MARIO };
-u8 gEndCutsceneStrEn4[] = { TEXT_SOMETHING_SPECIAL };
-u8 gEndCutsceneStrEn5[] = { TEXT_LISTEN_EVERYBODY };
-u8 gEndCutsceneStrEn6[] = { TEXT_LETS_HAVE_CAKE };
-u8 gEndCutsceneStrEn7[] = { TEXT_FOR_MARIO };
-u8 gEndCutsceneStrEn8[] = { TEXT_FILE_MARIO_QUESTION };
-
 u8 *gEndCutsceneStringsEn[] = {
-    gEndCutsceneStrEn0,
-    gEndCutsceneStrEn1,
-    gEndCutsceneStrEn2,
-    gEndCutsceneStrEn3,
-    gEndCutsceneStrEn4,
-    gEndCutsceneStrEn5,
-    gEndCutsceneStrEn6,
-    gEndCutsceneStrEn7,
+    INGAME_TEXT_PTR(TEXT_FILE_MARIO_EXCLAMATION),
+    INGAME_TEXT_PTR(TEXT_POWER_STARS_RESTORED),
+    INGAME_TEXT_PTR(TEXT_THANKS_TO_YOU),
+    INGAME_TEXT_PTR(TEXT_THANK_YOU_MARIO),
+    INGAME_TEXT_PTR(TEXT_SOMETHING_SPECIAL),
+    INGAME_TEXT_PTR(TEXT_LISTEN_EVERYBODY),
+    INGAME_TEXT_PTR(TEXT_LETS_HAVE_CAKE),
+    INGAME_TEXT_PTR(TEXT_FOR_MARIO),
     // This [8] string is actually unused. In the cutscene handler, the developers do not
     // set the 8th one, but use the first string again at the very end, so Peach ends up
     // saying "Mario!" twice. It is likely that she was originally meant to say "Mario?" at
     // the end but the developers changed their mind, possibly because the line recorded
     // sounded more like an exclamation than a question.
-    gEndCutsceneStrEn8,
+    INGAME_TEXT_PTR(TEXT_FILE_MARIO_QUESTION),
     NULL
 };
 
@@ -2507,11 +2497,11 @@ void render_pause_my_score_coins(void) {
     };
 #define textMyScore textMyScore[gInGameLanguage]
 #else
-    u8 textCourse[] = { TEXT_COURSE };
-    u8 textMyScore[] = { TEXT_MY_SCORE };
+    INGAME_TEXT_COPY(textCourse, TEXT_COURSE);
+    INGAME_TEXT_COPY(textMyScore, TEXT_MY_SCORE);
 #endif
-    u8 textStar[] = { TEXT_STAR };
-    u8 textUnfilledStar[] = { TEXT_UNFILLED_STAR };
+    INGAME_TEXT_COPY(textStar, TEXT_STAR);
+    INGAME_TEXT_COPY(textUnfilledStar, TEXT_UNFILLED_STAR);
 
     u8 strCourseNum[4];
     u8 courseIndex = gCurrCourseNum - 1;
@@ -2589,8 +2579,8 @@ void render_pause_my_score_coins(void) {
 #endif
 
 void render_pause_camera_options(s16 x, s16 y, s8 *index, s16 xIndex) {
-    u8 textLakituMario[] = { TEXT_LAKITU_MARIO };
-    u8 textLakituStop[] = { TEXT_LAKITU_STOP };
+    INGAME_TEXT_COPY(textLakituMario, TEXT_LAKITU_MARIO);
+    INGAME_TEXT_COPY(textLakituStop, TEXT_LAKITU_STOP);
 #ifdef VERSION_EU
     u8 textNormalUpClose[][20] = {
         { TEXT_NORMAL_UPCLOSE },
@@ -2605,8 +2595,8 @@ void render_pause_camera_options(s16 x, s16 y, s8 *index, s16 xIndex) {
 #define textNormalUpClose textNormalUpClose[gInGameLanguage]
 #define textNormalFixed   textNormalFixed[gInGameLanguage]
 #else
-    u8 textNormalUpClose[] = { TEXT_NORMAL_UPCLOSE };
-    u8 textNormalFixed[] = { TEXT_NORMAL_FIXED };
+    INGAME_TEXT_COPY(textNormalUpClose, TEXT_NORMAL_UPCLOSE);
+    INGAME_TEXT_COPY(textNormalFixed, TEXT_NORMAL_FIXED);
 #endif
 
     handle_menu_scrolling(MENU_SCROLL_HORIZONTAL, index, 1, 2);
@@ -2668,9 +2658,9 @@ void render_pause_course_options(s16 x, s16 y, s8 *index, s16 yIndex) {
 #define textExitCourse   textExitCourse[gInGameLanguage]
 #define textCameraAngleR textCameraAngleR[gInGameLanguage]
 #else
-    u8 textContinue[] = { TEXT_CONTINUE };
-    u8 textExitCourse[] = { TEXT_EXIT_COURSE };
-    u8 textCameraAngleR[] = { TEXT_CAMERA_ANGLE_R };
+    INGAME_TEXT_COPY(textContinue, TEXT_CONTINUE);
+    INGAME_TEXT_COPY(textExitCourse, TEXT_EXIT_COURSE);
+    INGAME_TEXT_COPY(textCameraAngleR, TEXT_CAMERA_ANGLE_R);
 #endif
 
     handle_menu_scrolling(MENU_SCROLL_VERTICAL, index, 1, 4);
@@ -2751,7 +2741,7 @@ void highlight_last_course_complete_stars(void) {
 }
 
 void print_hud_pause_colorful_str(void) {
-    u8 textPause[] = { TEXT_PAUSE };
+    INGAME_TEXT_COPY(textPause, TEXT_PAUSE);
 
     gSPDisplayList(gDisplayListHead++, dl_rgba16_text_begin);
     gDPSetEnvColor(gDisplayListHead++, 255, 255, 255, gDialogTextAlpha);
@@ -2771,7 +2761,7 @@ void render_pause_castle_course_stars(s16 x, s16 y, s16 fileNum, s16 courseNum) 
 
     u8 str[COURSE_STAGES_COUNT * 2];
 
-    u8 textStar[] = { TEXT_STAR };
+    INGAME_TEXT_COPY(textStar, TEXT_STAR);
 
     u8 starFlags = save_file_get_star_flags(fileNum, courseNum);
     u16 starCount = save_file_get_course_star_count(fileNum, courseNum);
@@ -2811,7 +2801,7 @@ void render_pause_castle_main_strings(s16 x, s16 y) {
     u8 textCoin[] = { TEXT_COIN };
     u8 textX[] = { TEXT_VARIABLE_X };
 #else
-    u8 textCoin[] = { TEXT_COIN_X };
+    INGAME_TEXT_COPY(textCoin, TEXT_COIN_X);
 #endif
 
     u8 courseNum = gDialogLineNum + 1;
@@ -2864,7 +2854,7 @@ void render_pause_castle_main_strings(s16 x, s16 y) {
         print_generic_string(x - 17, y + 30, courseName);
 #endif
     } else {
-        u8 textStarX[] = { TEXT_STAR_X };
+        INGAME_TEXT_COPY(textStarX, TEXT_STAR_X);
         print_generic_string(x + 40, y + 13, textStarX);
         int_to_str(save_file_get_total_star_count(gCurrSaveFileNum - 1, COURSE_BONUS_STAGES - 1, COURSE_MAX - 1), strVal);
         print_generic_string(x + 60, y + 13, strVal);
@@ -2973,7 +2963,7 @@ static void render_pause_castle_course_stars_extended(s16 x, s16 y) {
 
     // Render the 100 coins star next to the coin counter for main courses
     if (isMainCourse && (stars & 0x40)) {
-        const u8 textStar[] = { TEXT_STAR };
+        INGAME_TEXT_COPY(textStar, TEXT_STAR);
         print_generic_string(x + 89, y - 5, textStar);
     }
 
@@ -3023,7 +3013,7 @@ void render_pause_castle_main_strings_extended(s16 x, s16 y) {
 
     // Main courses (0-14)
     if (gDialogLineNum < COURSE_STAGES_COUNT) {
-        const u8 textCoin[] = { TEXT_COIN_X };
+        INGAME_TEXT_COPY(textCoin, TEXT_COIN_X);
         u8 textCoinCount[8];
         render_pause_castle_course_name(courseName, 160, y + 30);
         render_pause_castle_course_stars_extended(x + 20, y);
@@ -3040,7 +3030,7 @@ void render_pause_castle_main_strings_extended(s16 x, s16 y) {
 
     // Castle stars (25)
     else if (gDialogLineNum == INDEX_CASTLE_STARS) {
-        const u8 textStar[] = { TEXT_STAR_X };
+        INGAME_TEXT_COPY(textStar, TEXT_STAR_X);
         u8 textStarCount[8];
         render_pause_castle_course_name(courseName + 3, 160, y + 30);
         print_generic_string(x + 60, y + 13, textStar);
@@ -3202,8 +3192,8 @@ void print_hud_course_complete_string(s8 str) {
         { TEXT_HUD_CONGRATULATIONS_DE }
     };
 #else
-    u8 textHiScore[] = { TEXT_HUD_HI_SCORE };
-    u8 textCongratulations[] = { TEXT_HUD_CONGRATULATIONS };
+    INGAME_TEXT_COPY(textHiScore, TEXT_HUD_HI_SCORE);
+    INGAME_TEXT_COPY(textCongratulations, TEXT_HUD_CONGRATULATIONS);
 #endif
 
     u8 colorFade = sins(gDialogColorFadeTimer) * 50.0f + 200.0f;
@@ -3319,9 +3309,9 @@ void render_course_complete_lvl_info_and_hud_str(void) {
     u8 textSymStar[] = { GLYPH_STAR, GLYPH_SPACE };
 #define textCourse gTextCourseArr[gInGameLanguage]
 #else
-    u8 textCourse[] = { TEXT_COURSE };
-    UNUSED u8 textCatch[] = { TEXT_CATCH }; // unused in US
-    UNUSED u8 textClear[] = { TEXT_CLEAR };
+    INGAME_TEXT_COPY(textCourse, TEXT_COURSE);
+    INGAME_TEXT_COPY(textCatch, TEXT_CATCH); // unused in US
+    INGAME_TEXT_COPY(textClear, TEXT_CLEAR);
     u8 textSymStar[] = { GLYPH_STAR, GLYPH_SPACE };
 #endif
     u8 *name;
@@ -3445,10 +3435,10 @@ void render_save_confirmation(s16 x, s16 y, s8 *index, s16 sp6e)
 #define textContinueWithoutSave textContinueWithoutSaveArr[gInGameLanguage]
     s16 xOffset = get_str_x_pos_from_center(160, textContinueWithoutSaveArr[gInGameLanguage], 12.0f);
 #else
-    u8 textSaveAndContinue[] = { TEXT_SAVE_AND_CONTINUE };
+    INGAME_TEXT_COPY(textSaveAndContinue, TEXT_SAVE_AND_CONTINUE);
     //u8 textSaveAndQuit[] = { TEXT_SAVE_AND_QUIT };
     //u8 textSaveExitGame[] = { TEXT_SAVE_EXIT_GAME };
-    u8 textContinueWithoutSave[] = { TEXT_CONTINUE_WITHOUT_SAVING };
+    INGAME_TEXT_COPY(textContinueWithoutSave, TEXT_CONTINUE_WITHOUT_SAVING);
 #endif
 
     handle_menu_scrolling(MENU_SCROLL_VERTICAL, index, 1, 2); // decreased to '2' to prevent Exit Game

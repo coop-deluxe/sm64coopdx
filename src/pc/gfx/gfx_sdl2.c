@@ -38,6 +38,7 @@
 #include "src/pc/controller/controller_bind_mapping.h"
 #include "pc/utils/misc.h"
 #include "pc/mods/mod_import.h"
+#include "pc/rom_checker.h"
 
 #ifndef GL_MAX_SAMPLES
 #define GL_MAX_SAMPLES 0x8D57
@@ -175,7 +176,13 @@ static void gfx_sdl_onkeyup(int scancode) {
 }
 
 static void gfx_sdl_ondropfile(char* path) {
-    mod_import_file(path);
+    if (!gRomIsValid) {
+        rom_on_drop_file(path);
+        return;
+    }
+    if (gGameInited) {
+        mod_import_file(path);
+    }
 }
 
 static void gfx_sdl_handle_events(void) {

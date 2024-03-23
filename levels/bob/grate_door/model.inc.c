@@ -1,11 +1,6 @@
+#include "pc/rom_assets.h"
 // 0x0700E810 - 0x0700E860
-static const Vtx bob_seg7_vertex_0700E810[] = {
-    {{{     0,    384,      0}, 0, { -1956,  -2076}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   320,    640,      0}, 0, {   598,  -4120}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   128,    640,      0}, 0, {  -934,  -4120}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,      0,      0}, 0, { -1956,    990}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   320,      0,      0}, 0, {   598,    990}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(bob_seg7_vertex_0700E810, 0x003fc2b0, 38830, 0x0000e810, 80);
 
 // 0x0700E860 - 0x0700E8A0
 static const Gfx bob_seg7_dl_0700E860[] = {

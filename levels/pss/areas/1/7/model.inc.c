@@ -1,3 +1,4 @@
+#include "pc/rom_assets.h"
 // 0x0700E348 - 0x0700E360
 static const Lights1 pss_seg7_lights_0700E348 = gdSPDefLights1(
     0x3f, 0x3f, 0x3f,
@@ -5,12 +6,7 @@ static const Lights1 pss_seg7_lights_0700E348 = gdSPDefLights1(
 );
 
 // 0x0700E360 - 0x0700E3A0
-static const Vtx pss_seg7_vertex_0700E360[] = {
-    {{{ -5845,  -4509,   3251}, 0, {  6100,    990}, {0x00, 0x7e, 0x0b, 0xff}}},
-    {{{ -5845,  -4490,   3047}, 0, {  6100,  -1054}, {0x00, 0x7e, 0x0b, 0xff}}},
-    {{{ -6869,  -4490,   3047}, 0, { -4118,  -1054}, {0x00, 0x7e, 0x0b, 0xff}}},
-    {{{ -6869,  -4509,   3251}, 0, { -4118,    990}, {0x00, 0x7e, 0x0b, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(pss_seg7_vertex_0700E360, 0x004af930, 34262, 0x0000e360, 64);
 
 // 0x0700E3A0 - 0x0700E3E8
 static const Gfx pss_seg7_dl_0700E3A0[] = {

@@ -160,7 +160,7 @@ bool mod_file_create_directories(struct Mod* mod, struct ModFile* modFile) {
 
 //////////////////////////////////////////////////////////////////////////////////////////
 
-bool str_ends_with(char* string, char* suffix) {
+bool str_ends_with(const char* string, const char* suffix) {
     if (string == NULL || suffix == NULL) { return false; }
 
     size_t stringLength = strlen(string);

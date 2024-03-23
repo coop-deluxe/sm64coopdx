@@ -1,3 +1,4 @@
+#include "pc/rom_assets.h"
 // Exclamation Box
 
 // 0x08012E10
@@ -7,76 +8,34 @@ static const Lights1 exclamation_box_seg8_lights_08012E10 = gdSPDefLights1(
 );
 
 // 0x08012E28
-ALIGNED8 const Texture exclamation_box_seg8_texture_08012E28[] = {
-#include "actors/exclamation_box/vanish_cap_box_front.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(exclamation_box_seg8_texture_08012E28, "actors/exclamation_box/vanish_cap_box_front.rgba16.inc.c", 0x001f2200, 59076, 0x00012e28, 2048);
 
 // 0x08013628
-ALIGNED8 const Texture exclamation_box_seg8_texture_08013628[] = {
-#include "actors/exclamation_box/vanish_cap_box_side.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(exclamation_box_seg8_texture_08013628, "actors/exclamation_box/vanish_cap_box_side.rgba16.inc.c", 0x001f2200, 59076, 0x00013628, 4096);
 
 // 0x08014628
-ALIGNED8 const Texture exclamation_box_seg8_texture_08014628[] = {
-#include "actors/exclamation_box/metal_cap_box_front.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(exclamation_box_seg8_texture_08014628, "actors/exclamation_box/metal_cap_box_front.rgba16.inc.c", 0x001f2200, 59076, 0x00014628, 2048);
 
 // 0x08014E28
-ALIGNED8 const Texture exclamation_box_seg8_texture_08014E28[] = {
-#include "actors/exclamation_box/metal_cap_box_side.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(exclamation_box_seg8_texture_08014E28, "actors/exclamation_box/metal_cap_box_side.rgba16.inc.c", 0x001f2200, 59076, 0x00014e28, 4096);
 
 // 0x08015E28
-ALIGNED8 const Texture exclamation_box_seg8_texture_08015E28[] = {
-#include "actors/exclamation_box/wing_cap_box_front.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(exclamation_box_seg8_texture_08015E28, "actors/exclamation_box/wing_cap_box_front.rgba16.inc.c", 0x001f2200, 59076, 0x00015e28, 2048);
 
 // 0x08016628
-ALIGNED8 const Texture exclamation_box_seg8_texture_08016628[] = {
-#include "actors/exclamation_box/wing_cap_box_side.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(exclamation_box_seg8_texture_08016628, "actors/exclamation_box/wing_cap_box_side.rgba16.inc.c", 0x001f2200, 59076, 0x00016628, 4096);
 
 // 0x08017628
-ALIGNED8 const Texture exclamation_box_seg8_texture_08017628[] = {
-#include "actors/exclamation_box/exclamation_box_front.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(exclamation_box_seg8_texture_08017628, "actors/exclamation_box/exclamation_box_front.rgba16.inc.c", 0x001f2200, 59076, 0x00017628, 2048);
 
 // 0x08017E28
-ALIGNED8 const Texture exclamation_box_seg8_texture_08017E28[] = {
-#include "actors/exclamation_box/exclamation_box_side.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(exclamation_box_seg8_texture_08017E28, "actors/exclamation_box/exclamation_box_side.rgba16.inc.c", 0x001f2200, 59076, 0x00017e28, 4096);
 
 // 0x08018E28
-static const Vtx exclamation_box_seg8_vertex_08018E28[] = {
-    {{{   -25,      1,    -25}, 0, {   992,    992}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{   -25,     52,    -25}, 0, {   992,      0}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{    26,     52,    -25}, 0, {     0,      0}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{   -25,      1,     26}, 0, {     0,    992}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{    26,      1,     26}, 0, {   992,    992}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{    26,     52,     26}, 0, {   992,      0}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{   -25,     52,     26}, 0, {     0,      0}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{    26,     52,    -25}, 0, {   992,      0}, {0x7f, 0x00, 0x00, 0xff}}},
-    {{{    26,      1,     26}, 0, {     0,    992}, {0x7f, 0x00, 0x00, 0xff}}},
-    {{{    26,      1,    -25}, 0, {   992,    992}, {0x7f, 0x00, 0x00, 0xff}}},
-    {{{    26,     52,     26}, 0, {     0,      0}, {0x7f, 0x00, 0x00, 0xff}}},
-    {{{   -25,      1,    -25}, 0, {     0,    992}, {0x81, 0x00, 0x00, 0xff}}},
-    {{{   -25,      1,     26}, 0, {   992,    992}, {0x81, 0x00, 0x00, 0xff}}},
-    {{{   -25,     52,     26}, 0, {   992,      0}, {0x81, 0x00, 0x00, 0xff}}},
-    {{{   -25,     52,    -25}, 0, {     0,      0}, {0x81, 0x00, 0x00, 0xff}}},
-    {{{    26,      1,    -25}, 0, {     0,    992}, {0x00, 0x00, 0x81, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(exclamation_box_seg8_vertex_08018E28, 0x001f2200, 59076, 0x00018e28, 256);
 
 // 0x08018F28
-static const Vtx exclamation_box_seg8_vertex_08018F28[] = {
-    {{{    26,      1,    -25}, 0, {   992,   2014}, {0x00, 0x81, 0x00, 0xff}}},
-    {{{    26,      1,     26}, 0, {   992,      0}, {0x00, 0x81, 0x00, 0xff}}},
-    {{{   -25,      1,     26}, 0, {     0,      0}, {0x00, 0x81, 0x00, 0xff}}},
-    {{{   -25,      1,    -25}, 0, {     0,   2014}, {0x00, 0x81, 0x00, 0xff}}},
-    {{{   -25,     52,    -25}, 0, {     0,      0}, {0x00, 0x7f, 0x00, 0xff}}},
-    {{{   -25,     52,     26}, 0, {     0,   2014}, {0x00, 0x7f, 0x00, 0xff}}},
-    {{{    26,     52,     26}, 0, {   992,   2014}, {0x00, 0x7f, 0x00, 0xff}}},
-    {{{    26,     52,    -25}, 0, {   992,      0}, {0x00, 0x7f, 0x00, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(exclamation_box_seg8_vertex_08018F28, 0x001f2200, 59076, 0x00018f28, 128);
 
 // 0x08018FA8 - 0x08019008
 const Gfx exclamation_box_seg8_dl_08018FA8[] = {
@@ -116,36 +75,10 @@ const Gfx exclamation_box_seg8_dl_08019058[] = {
 };
 
 // 0x080190A0
-static const Vtx exclamation_box_seg8_vertex_080190A0[] = {
-    {{{   -25,      1,     26}, 0, {   992,    992}, {0x81, 0x00, 0x00, 0xff}}},
-    {{{   -25,     52,     26}, 0, {   992,      0}, {0x81, 0x00, 0x00, 0xff}}},
-    {{{   -25,     52,    -25}, 0, {     0,      0}, {0x81, 0x00, 0x00, 0xff}}},
-    {{{    26,      1,     26}, 0, {   992,    992}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{    26,     52,     26}, 0, {   992,      0}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{   -25,     52,     26}, 0, {     0,      0}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{   -25,      1,     26}, 0, {     0,    992}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{    26,      1,    -25}, 0, {   992,    992}, {0x7f, 0x00, 0x00, 0xff}}},
-    {{{    26,     52,    -25}, 0, {   992,      0}, {0x7f, 0x00, 0x00, 0xff}}},
-    {{{    26,     52,     26}, 0, {     0,      0}, {0x7f, 0x00, 0x00, 0xff}}},
-    {{{    26,      1,     26}, 0, {     0,    992}, {0x7f, 0x00, 0x00, 0xff}}},
-    {{{   -25,      1,    -25}, 0, {   992,    992}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{    26,     52,    -25}, 0, {     0,      0}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{    26,      1,    -25}, 0, {     0,    992}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{   -25,     52,    -25}, 0, {   992,      0}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{   -25,      1,    -25}, 0, {     0,    992}, {0x81, 0x00, 0x00, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(exclamation_box_seg8_vertex_080190A0, 0x001f2200, 59076, 0x000190a0, 256);
 
 // 0x080191A0
-static const Vtx exclamation_box_seg8_vertex_080191A0[] = {
-    {{{   -25,     52,     26}, 0, {     0,    992}, {0x00, 0x7f, 0x00, 0xff}}},
-    {{{    26,     52,     26}, 0, {  2014,    992}, {0x00, 0x7f, 0x00, 0xff}}},
-    {{{    26,     52,    -25}, 0, {  2014,      0}, {0x00, 0x7f, 0x00, 0xff}}},
-    {{{   -25,     52,    -25}, 0, {     0,      0}, {0x00, 0x7f, 0x00, 0xff}}},
-    {{{   -25,      1,     26}, 0, {     0,      0}, {0x00, 0x81, 0x00, 0xff}}},
-    {{{   -25,      1,    -25}, 0, {     0,    992}, {0x00, 0x81, 0x00, 0xff}}},
-    {{{    26,      1,    -25}, 0, {  2014,    992}, {0x00, 0x81, 0x00, 0xff}}},
-    {{{    26,      1,     26}, 0, {  2014,      0}, {0x00, 0x81, 0x00, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(exclamation_box_seg8_vertex_080191A0, 0x001f2200, 59076, 0x000191a0, 128);
 
 // 0x08019220 - 0x08019280
 const Gfx exclamation_box_seg8_dl_08019220[] = {

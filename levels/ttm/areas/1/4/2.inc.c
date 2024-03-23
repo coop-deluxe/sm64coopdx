@@ -1,3 +1,4 @@
+#include "pc/rom_assets.h"
 // 0x0700AFF0 - 0x0700B008
 static const Lights1 ttm_seg7_lights_0700AFF0 = gdSPDefLights1(
     0x4c, 0x4c, 0x4c,
@@ -5,14 +6,7 @@ static const Lights1 ttm_seg7_lights_0700AFF0 = gdSPDefLights1(
 );
 
 // 0x0700B008 - 0x0700B068
-static const Vtx ttm_seg7_vertex_0700B008[] = {
-    {{{   -43,   1523,     95}, 0, {   990,      0}, {0xd3, 0x00, 0x76, 0xff}}},
-    {{{   -58,   1523,      9}, 0, {   510,      0}, {0xeb, 0x00, 0x83, 0xff}}},
-    {{{   -58,  -1634,      9}, 0, {   510,    990}, {0x89, 0x00, 0xd5, 0xff}}},
-    {{{    26,  -1634,     40}, 0, {     0,    990}, {0x7d, 0x00, 0xec, 0xff}}},
-    {{{    26,   1523,     40}, 0, {     0,      0}, {0x7d, 0x00, 0xec, 0xff}}},
-    {{{   -43,  -1634,     95}, 0, {   990,    990}, {0xd3, 0x00, 0x76, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(ttm_seg7_vertex_0700B008, 0x004d1910, 104662, 0x0000b008, 96);
 
 // 0x0700B068 - 0x0700B0D0
 static const Gfx ttm_seg7_dl_0700B068[] = {

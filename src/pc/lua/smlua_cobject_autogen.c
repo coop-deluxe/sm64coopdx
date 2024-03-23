@@ -51,7 +51,7 @@ static struct LuaObjectField sAnimationFields[LUA_ANIMATION_FIELD_COUNT] = {
     { "loopStart",         LVT_S16,   offsetof(struct Animation, loopStart),         false, LOT_NONE    },
     { "startFrame",        LVT_S16,   offsetof(struct Animation, startFrame),        false, LOT_NONE    },
     { "unusedBoneCount",   LVT_S16,   offsetof(struct Animation, unusedBoneCount),   false, LOT_NONE    },
-    { "values",            LVT_S16_P, offsetof(struct Animation, values),            false, LOT_POINTER },
+    { "values",            LVT_U16_P, offsetof(struct Animation, values),            false, LOT_POINTER },
     { "valuesLength",      LVT_U32,   offsetof(struct Animation, valuesLength),      false, LOT_NONE    },
 };
 

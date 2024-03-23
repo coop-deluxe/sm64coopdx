@@ -66,10 +66,6 @@ void dynos_gfx_init(void) {
     DynOS_Gfx_Init();
 }
 
-void dynos_packs_init(void) {
-    DynOS_Pack_Init();
-}
-
 int dynos_pack_get_count(void) {
     return DynOS_Pack_GetCount();
 }
@@ -103,10 +99,6 @@ bool dynos_pack_get_exists(s32 index) {
         return fs_sys_dir_exists(_Pack->mPath.c_str());
     }
     return false;
-}
-
-void dynos_pack_init(void) {
-    DynOS_Pack_Init();
 }
 
 void dynos_generate_packs(const char* directory) {

@@ -231,7 +231,6 @@ bool mod_import_file(char* path) {
             djui_popup_create(msg, 2);
         } else if (isDynos) {
             dynos_gfx_init();
-            dynos_packs_init();
             djui_language_replace(DLANG(NOTIF, IMPORT_DYNOS_SUCCESS), msg, SYS_MAX_PATH, '@', basename);
             djui_popup_create(msg, 2);
         }

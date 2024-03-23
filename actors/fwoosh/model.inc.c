@@ -1,17 +1,11 @@
+#include "pc/rom_assets.h"
 // Fwoosh
 
 // 0x050157C8
-static const Vtx fwoosh_seg5_vertex_050157C8[] = {
-    {{{   -19,    -19,      0}, 0, {   992,    992}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    20,    -19,      0}, 0, {     0,    992}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    20,     20,      0}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -19,     20,      0}, 0, {   992,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(fwoosh_seg5_vertex_050157C8, 0x001521d0, 57608, 0x000157c8, 64);
 
 // 0x05015808
-ALIGNED8 const Texture fwoosh_seg5_texture_05015808[] = {
-#include "actors/fwoosh/fwoosh_face.ia16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(fwoosh_seg5_texture_05015808, "actors/fwoosh/fwoosh_face.ia16.inc.c", 0x001521d0, 57608, 0x00015808, 2048);
 
 // 0x05016008 - 0x05016040
 const Gfx fwoosh_seg5_dl_05016008[] = {

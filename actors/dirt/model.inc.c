@@ -1,3 +1,4 @@
+#include "pc/rom_assets.h"
 // Dirt
 
 // 0x0302BD68
@@ -25,16 +26,10 @@ static const Lights1 dirt_seg3_lights_0302BDB0 = gdSPDefLights1(
 );
 
 // 0x0302BDC8
-static const Vtx dirt_seg3_vertex_0302BDC8[] = {
-    {{{  -101,    -60,      0}, 0, {  -130,    467}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{   102,    -60,      0}, 0, {   599,    467}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{     0,     92,      0}, 0, {   234,    -81}, {0x00, 0x00, 0x7f, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(dirt_seg3_vertex_0302BDC8, 0x00201410, 96653, 0x0002bdc8, 48);
 
 // 0x0302BDF8
-ALIGNED8 const Texture dirt_seg3_texture_0302BDF8[] = {
-#include "actors/dirt/dirt_particle.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(dirt_seg3_texture_0302BDF8, "actors/dirt/dirt_particle.rgba16.inc.c", 0x00201410, 96653, 0x0002bdf8, 512);
 
 // 0x0302BFF8 - 0x0302C028
 const Gfx dirt_seg3_dl_0302BFF8[] = {
@@ -65,46 +60,16 @@ const Gfx dirt_seg3_dl_0302C028[] = {
 };
 
 // 0x0302C098
-static const Vtx dirt_seg3_vertex_0302C098[] = {
-    {{{   -10,      0,     10}, 0, {     0,      0}, {0x00, 0x7f, 0x00, 0x00}}},
-    {{{    10,      0,     10}, 0, {     0,      0}, {0x00, 0x7f, 0x00, 0x00}}},
-    {{{     0,      0,    -10}, 0, {     0,      0}, {0x00, 0x7f, 0x00, 0x00}}},
-};
+ROM_ASSET_LOAD_VTX(dirt_seg3_vertex_0302C098, 0x00201410, 96653, 0x0002c098, 48);
 
 // 0x0302C0C8
-static const Vtx dirt_seg3_vertex_0302C0C8[] = {
-    {{{   -10,     10,      0}, 0, {     0,      0}, {0xff, 0xff, 0x00, 0xff}}},
-    {{{    10,     10,      0}, 0, {     0,      0}, {0xff, 0xff, 0x00, 0xff}}},
-    {{{     0,    -10,      0}, 0, {     0,      0}, {0xff, 0xff, 0x00, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(dirt_seg3_vertex_0302C0C8, 0x00201410, 96653, 0x0002c0c8, 48);
 
 // 0x0302C0F8
-static const Vtx dirt_seg3_vertex_0302C0F8[] = {
-    {{{     0,     -8,      0}, 0, {     0,      0}, {0x00, 0x00, 0x81, 0x00}}},
-    {{{   -32,     80,      0}, 0, {     0,      0}, {0x00, 0x00, 0x81, 0x00}}},
-    {{{    32,     80,      0}, 0, {     0,      0}, {0x00, 0x00, 0x81, 0x00}}},
-    {{{   -52,     28,      0}, 0, {     0,      0}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{  -116,     80,      0}, 0, {     0,      0}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{   -84,    -52,      0}, 0, {     0,      0}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{    52,     28,      0}, 0, {     0,      0}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{    84,    -52,      0}, 0, {     0,      0}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{   116,     80,      0}, 0, {     0,      0}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{     0,    160,      0}, 0, {     0,      0}, {0x00, 0x00, 0x81, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(dirt_seg3_vertex_0302C0F8, 0x00201410, 96653, 0x0002c0f8, 160);
 
 // 0x0302C198
-static const Vtx dirt_seg3_vertex_0302C198[] = {
-    {{{     0,     -8,      0}, 0, {     0,      0}, {0xff, 0xff, 0x00, 0xff}}},
-    {{{   -32,     80,      0}, 0, {     0,      0}, {0xff, 0xff, 0x00, 0xff}}},
-    {{{    32,     80,      0}, 0, {     0,      0}, {0xff, 0xff, 0x00, 0xff}}},
-    {{{   -52,     28,      0}, 0, {     0,      0}, {0xff, 0xff, 0x00, 0xff}}},
-    {{{  -116,     80,      0}, 0, {     0,      0}, {0xff, 0xff, 0x00, 0xff}}},
-    {{{   -84,    -52,      0}, 0, {     0,      0}, {0xff, 0xff, 0x00, 0xff}}},
-    {{{    52,     28,      0}, 0, {     0,      0}, {0xff, 0xff, 0x00, 0xff}}},
-    {{{    84,    -52,      0}, 0, {     0,      0}, {0xff, 0xff, 0x00, 0xff}}},
-    {{{   116,     80,      0}, 0, {     0,      0}, {0xff, 0xff, 0x00, 0xff}}},
-    {{{     0,    160,      0}, 0, {     0,      0}, {0xff, 0xff, 0x00, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(dirt_seg3_vertex_0302C198, 0x00201410, 96653, 0x0002c198, 160);
 
 // 0x0302C238 - 0x0302C298
 const Gfx dirt_seg3_dl_0302C238[] = {

@@ -130,7 +130,7 @@ void smlua_anim_util_reset(void) {
     sCustomAnimationHead = NULL;
 }
 
-void smlua_anim_util_register_animation(const char *name, s16 flags, s16 animYTransDivisor, s16 startFrame, s16 loopStart, s16 loopEnd, s16 *values, u32 valuesLength, u16 *index, u32 indexLength) {
+void smlua_anim_util_register_animation(const char *name, s16 flags, s16 animYTransDivisor, s16 startFrame, s16 loopStart, s16 loopEnd, u16 *values, u32 valuesLength, u16 *index, u32 indexLength) {
 
     // NULL-checks
     if (!name) {

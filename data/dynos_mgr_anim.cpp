@@ -99,8 +99,8 @@ void DynOS_Anim_Swap(void *aPtr) {
             sGfxDataAnimation.loopStart = _AnimData->mUnk06;
             sGfxDataAnimation.loopEnd = _AnimData->mUnk08;
             sGfxDataAnimation.unusedBoneCount = _AnimData->mUnk0A.second;
-            sGfxDataAnimation.values = _AnimData->mValues.second.begin();
-            sGfxDataAnimation.index = _AnimData->mIndex.second.begin();
+            sGfxDataAnimation.values = (u16*)_AnimData->mValues.second.begin();
+            sGfxDataAnimation.index = (u16*)_AnimData->mIndex.second.begin();
             sGfxDataAnimation.valuesLength = _AnimData->mValues.second.Count();
             sGfxDataAnimation.indexLength = _AnimData->mIndex.second.Count();
             sGfxDataAnimation.length = _AnimData->mLength;

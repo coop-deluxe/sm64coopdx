@@ -1,17 +1,11 @@
+#include "pc/rom_assets.h"
 // Mushroom 1-Up
 
 // 0x030295E8
-static const Vtx mushroom_1up_seg3_vertex_030295E8[] = {
-    {{{    31,     31,      0}, 0, {   990,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -30,     31,      0}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -30,    -30,      0}, 0, {     0,   2012}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    31,    -30,      0}, 0, {   990,   2012}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(mushroom_1up_seg3_vertex_030295E8, 0x00201410, 96653, 0x000295e8, 64);
 
 // 0x03029628
-ALIGNED8 const Texture mushroom_1up_seg3_texture_03029628[] = {
-#include "actors/mushroom_1up/1-up_mushroom.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(mushroom_1up_seg3_texture_03029628, "actors/mushroom_1up/1-up_mushroom.rgba16.inc.c", 0x00201410, 96653, 0x00029628, 4096);
 
 // 0x0302A628 - 0x0302A660
 const Gfx mushroom_1up_seg3_dl_0302A628[] = {

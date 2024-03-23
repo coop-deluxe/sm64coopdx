@@ -1,3 +1,4 @@
+#include "pc/rom_assets.h"
 #include <PR/ultratypes.h>
 #include <PR/gbi.h>
 
@@ -5,9 +6,6 @@
 #include "surface_terrains.h"
 #include "types.h"
 
-#ifdef VERSION_EU
-#include "text_strings.h"
-#endif
 #include "make_const_nonconst.h"
 
 // 0x07000000 - 0x07000018
@@ -17,52 +15,22 @@ static const Lights1 lights_menu_save_button = gdSPDefLights1(
 );
 
 // 0x07000018 - 0x07000818
-ALIGNED8 const Texture texture_menu_stone[] = {
-#include "levels/menu/main_menu_seg7.00018.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_stone, "levels/menu/main_menu_seg7.00018.rgba16.inc.c", 0x002a65b0, 22255, 0x00000018, 2048);
 
 // 0x07000818 - 0x07001018
-ALIGNED8 const Texture texture_menu_dark_stone[] = {
-#include "levels/menu/main_menu_seg7.00818.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_dark_stone, "levels/menu/main_menu_seg7.00818.rgba16.inc.c", 0x002a65b0, 22255, 0x00000818, 2048);
 
 // 0x07001018 - 0x07002018
-ALIGNED8 const Texture texture_menu_mario_save[] = {
-#include "levels/menu/main_menu_seg7.01018.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_mario_save, "levels/menu/main_menu_seg7.01018.rgba16.inc.c", 0x002a65b0, 22255, 0x00001018, 4096);
 
 // 0x07002018 - 0x07003018
-ALIGNED8 const Texture texture_menu_mario_new[] = {
-#include "levels/menu/main_menu_seg7.02018.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_mario_new, "levels/menu/main_menu_seg7.02018.rgba16.inc.c", 0x002a65b0, 22255, 0x00002018, 4096);
 
 // 0x07003018 - 0x07003118
-static const Vtx vertex_menu_save_button_borders[] = {
-    {{{  -163,   -122,      0}, 0, {     0,    990}, {0x00, 0xb6, 0x66, 0xff}}},
-    {{{   163,   -122,      0}, 0, {   990,    990}, {0x00, 0xb6, 0x66, 0xff}}},
-    {{{  -122,    -81,     30}, 0, {    96,    820}, {0x00, 0xb6, 0x66, 0xff}}},
-    {{{   122,    -81,     30}, 0, {   862,    820}, {0x00, 0xb6, 0x66, 0xff}}},
-    {{{  -163,   -122,      0}, 0, {     0,    990}, {0xb6, 0x00, 0x66, 0xff}}},
-    {{{  -122,    -81,     30}, 0, {    96,    820}, {0xb6, 0x00, 0x66, 0xff}}},
-    {{{  -163,    122,      0}, 0, {     0,      0}, {0xb6, 0x00, 0x66, 0xff}}},
-    {{{  -122,     81,     30}, 0, {    96,    138}, {0xb6, 0x00, 0x66, 0xff}}},
-    {{{  -122,     81,     30}, 0, {    96,    138}, {0x00, 0x4a, 0x66, 0xff}}},
-    {{{   122,     81,     30}, 0, {   862,    138}, {0x00, 0x4a, 0x66, 0xff}}},
-    {{{   163,    122,      0}, 0, {   990,      0}, {0x00, 0x4a, 0x66, 0xff}}},
-    {{{  -163,    122,      0}, 0, {     0,      0}, {0x00, 0x4a, 0x66, 0xff}}},
-    {{{   122,     81,     30}, 0, {   862,    138}, {0x4a, 0x00, 0x66, 0xff}}},
-    {{{   122,    -81,     30}, 0, {   862,    820}, {0x4a, 0x00, 0x66, 0xff}}},
-    {{{   163,   -122,      0}, 0, {   990,    990}, {0x4a, 0x00, 0x66, 0xff}}},
-    {{{   163,    122,      0}, 0, {   990,      0}, {0x4a, 0x00, 0x66, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(vertex_menu_save_button_borders, 0x002a65b0, 22255, 0x00003018, 256);
 
 // 0x07003118 - 0x07003158
-static const Vtx vertex_menu_save_button_front[] = {
-    {{{   122,     81,     30}, 0, {  2012,      0}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{  -122,     81,     30}, 0, {     0,      0}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{   122,    -81,     30}, 0, {  2012,    990}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{  -122,    -81,     30}, 0, {     0,    990}, {0x00, 0x00, 0x7f, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(vertex_menu_save_button_front, 0x002a65b0, 22255, 0x00003118, 64);
 
 // 0x07003158 - 0x070031A0
 static const Gfx dl_tex_block_menu_save_button_base[] = {
@@ -104,12 +72,7 @@ static const Gfx dl_vertex_menu_save_button_front[] = {
 };
 
 // 0x07003258 - 0x07003298
-static const Vtx vertex_menu_save_button_back[] = {
-    {{{   163,   -122,      0}, 0, {     0,    990}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{  -163,   -122,      0}, 0, {   990,    990}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{   163,    122,      0}, 0, {     0,      0}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{  -163,    122,      0}, 0, {   990,      0}, {0x00, 0x00, 0x81, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(vertex_menu_save_button_back, 0x002a65b0, 22255, 0x00003258, 64);
 
 // 0x07003298 - 0x070032E0
 static const Gfx dl_tex_block_menu_save_button_back[] = {
@@ -195,106 +158,31 @@ static const Lights1 lights_menu_main_button = gdSPDefLights1(
 );
 
 // 0x07003468 - 0x07003468
-ALIGNED8 const Texture texture_menu_erase[] = {
-#include "levels/menu/main_menu_seg7.03468.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_erase, "levels/menu/main_menu_seg7.03468.rgba16.inc.c", 0x002a65b0, 22255, 0x00003468, 2048);
 
 // 0x07003C68 - 0x07003C68
-ALIGNED8 const Texture texture_menu_copy[] = {
-#include "levels/menu/main_menu_seg7.03C68.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_copy, "levels/menu/main_menu_seg7.03C68.rgba16.inc.c", 0x002a65b0, 22255, 0x00003c68, 2048);
 
 // 0x07004468 - 0x07004468
-ALIGNED8 const Texture texture_menu_file[] = {
-#include "levels/menu/main_menu_seg7.04468.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_file, "levels/menu/main_menu_seg7.04468.rgba16.inc.c", 0x002a65b0, 22255, 0x00004468, 2048);
 
 // 0x07004C68 - 0x07004C68
-ALIGNED8 const Texture texture_menu_score[] = {
-#include "levels/menu/main_menu_seg7.04C68.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_score, "levels/menu/main_menu_seg7.04C68.rgba16.inc.c", 0x002a65b0, 22255, 0x00004c68, 2048);
 
 // 0x07005468 - 0x07005468
-ALIGNED8 const Texture texture_menu_sound[] = {
-#include "levels/menu/main_menu_seg7.05468.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_sound, "levels/menu/main_menu_seg7.05468.rgba16.inc.c", 0x002a65b0, 22255, 0x00005468, 2048);
 
 // 0x07005C68 - 0x07005D68
-static const Vtx vertex_menu_main_button_group1[] = {
-    {{{  -163,   -122,      0}, 0, {   990,      0}, {0xb6, 0x00, 0x66, 0xff}}},
-    {{{  -122,    -81,     30}, 0, {   862,    138}, {0xb6, 0x00, 0x66, 0xff}}},
-    {{{  -163,    122,      0}, 0, {   990,    990}, {0xb6, 0x00, 0x66, 0xff}}},
-    {{{  -143,    102,      0}, 0, {   926,    904}, {0x59, 0x00, 0xa7, 0xff}}},
-    {{{  -133,     92,     10}, 0, {   894,    862}, {0x59, 0x00, 0xa7, 0xff}}},
-    {{{  -133,    -92,     10}, 0, {   894,     96}, {0x59, 0x00, 0xa7, 0xff}}},
-    {{{  -133,     92,     10}, 0, {   894,    862}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{   133,    -92,     10}, 0, {    64,     96}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{  -133,    -92,     10}, 0, {   894,     96}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{   133,     92,     10}, 0, {    64,    862}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{   133,     92,     10}, 0, {    64,    862}, {0x00, 0xa7, 0xa7, 0xff}}},
-    {{{  -133,     92,     10}, 0, {   894,    862}, {0x00, 0xa7, 0xa7, 0xff}}},
-    {{{  -143,    102,      0}, 0, {   926,    904}, {0x00, 0xa7, 0xa7, 0xff}}},
-    {{{   143,   -102,      0}, 0, {    32,     54}, {0xa7, 0x00, 0xa7, 0xff}}},
-    {{{   133,     92,     10}, 0, {    64,    862}, {0xa7, 0x00, 0xa7, 0xff}}},
-    {{{   143,    102,      0}, 0, {    32,    904}, {0xa7, 0x00, 0xa7, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(vertex_menu_main_button_group1, 0x002a65b0, 22255, 0x00005c68, 256);
 
 // 0x07005D68 - 0x07005E68
-static const Vtx vertex_menu_main_button_group2[] = {
-    {{{   143,   -102,      0}, 0, {    32,     54}, {0xa7, 0x00, 0xa7, 0xff}}},
-    {{{   133,    -92,     10}, 0, {    64,     96}, {0xa7, 0x00, 0xa7, 0xff}}},
-    {{{   133,     92,     10}, 0, {    64,    862}, {0xa7, 0x00, 0xa7, 0xff}}},
-    {{{   133,     92,     10}, 0, {    64,    862}, {0x00, 0xa7, 0xa7, 0xff}}},
-    {{{  -143,    102,      0}, 0, {   926,    904}, {0x00, 0xa7, 0xa7, 0xff}}},
-    {{{   143,    102,      0}, 0, {    32,    904}, {0x00, 0xa7, 0xa7, 0xff}}},
-    {{{  -143,   -102,      0}, 0, {   926,     54}, {0x00, 0x59, 0xa7, 0xff}}},
-    {{{   133,    -92,     10}, 0, {    64,     96}, {0x00, 0x59, 0xa7, 0xff}}},
-    {{{   143,   -102,      0}, 0, {    32,     54}, {0x00, 0x59, 0xa7, 0xff}}},
-    {{{  -133,    -92,     10}, 0, {   894,     96}, {0x00, 0x59, 0xa7, 0xff}}},
-    {{{  -143,    102,      0}, 0, {   926,    904}, {0x59, 0x00, 0xa7, 0xff}}},
-    {{{  -133,    -92,     10}, 0, {   894,     96}, {0x59, 0x00, 0xa7, 0xff}}},
-    {{{  -143,   -102,      0}, 0, {   926,     54}, {0x59, 0x00, 0xa7, 0xff}}},
-    {{{   163,    122,      0}, 0, {     0,    990}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{  -143,    102,      0}, 0, {   926,    904}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{  -163,    122,      0}, 0, {   990,    990}, {0x00, 0x00, 0x81, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(vertex_menu_main_button_group2, 0x002a65b0, 22255, 0x00005d68, 256);
 
 // 0x07005E68 - 0x07005F48
-static const Vtx vertex_menu_main_button_group3[] = {
-    {{{   163,    122,      0}, 0, {     0,    990}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{   143,    102,      0}, 0, {    32,    904}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{  -143,    102,      0}, 0, {   926,    904}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{   143,   -102,      0}, 0, {    32,     54}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{   163,   -122,      0}, 0, {     0,      0}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{  -163,    122,      0}, 0, {   990,    990}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{  -143,   -102,      0}, 0, {   926,     54}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{  -163,   -122,      0}, 0, {   990,      0}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{   163,   -122,      0}, 0, {     0,      0}, {0x00, 0xb6, 0x66, 0xff}}},
-    {{{   122,    -81,     30}, 0, {    96,    138}, {0x00, 0xb6, 0x66, 0xff}}},
-    {{{  -122,    -81,     30}, 0, {   862,    138}, {0x00, 0xb6, 0x66, 0xff}}},
-    {{{  -122,    -81,     30}, 0, {   862,    138}, {0xb6, 0x00, 0x66, 0xff}}},
-    {{{  -122,     81,     30}, 0, {   862,    820}, {0xb6, 0x00, 0x66, 0xff}}},
-    {{{  -163,    122,      0}, 0, {   990,    990}, {0xb6, 0x00, 0x66, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(vertex_menu_main_button_group3, 0x002a65b0, 22255, 0x00005e68, 224);
 
 // 0x07005F48 - 0x07006038
-static const Vtx vertex_menu_main_button_group4[] = {
-    {{{  -122,     81,     30}, 0, {   862,    820}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{  -122,    -81,     30}, 0, {   862,    138}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{   122,    -81,     30}, 0, {    96,    138}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{  -163,   -122,      0}, 0, {   990,      0}, {0x00, 0xb6, 0x66, 0xff}}},
-    {{{   163,   -122,      0}, 0, {     0,      0}, {0x00, 0xb6, 0x66, 0xff}}},
-    {{{  -122,    -81,     30}, 0, {   862,    138}, {0x00, 0xb6, 0x66, 0xff}}},
-    {{{  -122,     81,     30}, 0, {   862,    820}, {0x00, 0x4a, 0x66, 0xff}}},
-    {{{   122,     81,     30}, 0, {    96,    820}, {0x00, 0x4a, 0x66, 0xff}}},
-    {{{   163,    122,      0}, 0, {     0,    990}, {0x00, 0x4a, 0x66, 0xff}}},
-    {{{  -163,    122,      0}, 0, {   990,    990}, {0x00, 0x4a, 0x66, 0xff}}},
-    {{{   122,     81,     30}, 0, {    96,    820}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{   163,    122,      0}, 0, {     0,    990}, {0x4a, 0x00, 0x66, 0xff}}},
-    {{{   122,     81,     30}, 0, {    96,    820}, {0x4a, 0x00, 0x66, 0xff}}},
-    {{{   163,   -122,      0}, 0, {     0,      0}, {0x4a, 0x00, 0x66, 0xff}}},
-    {{{   122,    -81,     30}, 0, {    96,    138}, {0x4a, 0x00, 0x66, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(vertex_menu_main_button_group4, 0x002a65b0, 22255, 0x00005f48, 240);
 
 // 0x07006038 - 0x07006150
 static const Gfx dl_vertex_menu_main_button[] = {
@@ -406,22 +294,13 @@ const Gfx dl_menu_generic_button[] = {
 };
 
 // 0x070062E8 - 0x07006328
-static const Vtx vertex_menu_hand[] = {
-    {{{     0,      0,      0}, 0, {     0,   1984}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{    32,      0,      0}, 0, {  1984,   1984}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{    32,     32,      0}, 0, {  1984,      0}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{     0,     32,      0}, 0, {     0,      0}, {0x00, 0x00, 0x7f, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(vertex_menu_hand, 0x002a65b0, 22255, 0x000062e8, 64);
 
 // 0x07006328 - 0x07006B28
-ALIGNED8 const Texture texture_menu_idle_hand[] = {
-#include "levels/menu/main_menu_seg7.06328.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_idle_hand, "levels/menu/main_menu_seg7.06328.rgba16.inc.c", 0x002a65b0, 22255, 0x00006328, 2048);
 
 // 0x07006B28 - 0x07007328
-ALIGNED8 const Texture texture_menu_grabbing_hand[] = {
-#include "levels/menu/main_menu_seg7.06B28.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_grabbing_hand, "levels/menu/main_menu_seg7.06B28.rgba16.inc.c", 0x002a65b0, 22255, 0x00006b28, 2048);
 
 // 0x07007328 - 0x070073A0
 static const Gfx dl_menu_hand[] = {
@@ -456,144 +335,88 @@ const Gfx dl_menu_grabbing_hand[] = {
 };
 
 // 0x070073D0
-ALIGNED8 const Texture texture_menu_hud_char_katakana_hu[] = {
-#include "levels/menu/main_menu_seg7.073D0.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_hud_char_katakana_hu, "levels/menu/main_menu_seg7.073D0.rgba16.inc.c", 0x002a65b0, 22255, 0x000073d0, 512);
 
 // 0x070075D0
-ALIGNED8 const Texture texture_menu_hud_char_katakana_small_a[] = {
-#include "levels/menu/main_menu_seg7.075D0.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_hud_char_katakana_small_a, "levels/menu/main_menu_seg7.075D0.rgba16.inc.c", 0x002a65b0, 22255, 0x000075d0, 512);
 
 // 0x070077D0
-ALIGNED8 const Texture texture_menu_hud_char_katakana_i[] = {
-#include "levels/menu/main_menu_seg7.077D0.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_hud_char_katakana_i, "levels/menu/main_menu_seg7.077D0.rgba16.inc.c", 0x002a65b0, 22255, 0x000077d0, 512);
 
 // 0x070079D0
-ALIGNED8 const Texture texture_menu_hud_char_katakana_ru[] = {
-#include "levels/menu/main_menu_seg7.079D0.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_hud_char_katakana_ru, "levels/menu/main_menu_seg7.079D0.rgba16.inc.c", 0x002a65b0, 22255, 0x000079d0, 512);
 
 // 0x07007BD0
-ALIGNED8 const Texture texture_menu_hud_char_katakana_se[] = {
-#include "levels/menu/main_menu_seg7.07BD0.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_hud_char_katakana_se, "levels/menu/main_menu_seg7.07BD0.rgba16.inc.c", 0x002a65b0, 22255, 0x00007bd0, 512);
 
 // 0x07007DD0
-ALIGNED8 const Texture texture_menu_hud_char_katakana_re[] = {
-#include "levels/menu/main_menu_seg7.07DD0.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_hud_char_katakana_re, "levels/menu/main_menu_seg7.07DD0.rgba16.inc.c", 0x002a65b0, 22255, 0x00007dd0, 512);
 
 // 0x07007FD0
-ALIGNED8 const Texture texture_menu_hud_char_katakana_ku[] = {
-#include "levels/menu/main_menu_seg7.07FD0.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_hud_char_katakana_ku, "levels/menu/main_menu_seg7.07FD0.rgba16.inc.c", 0x002a65b0, 22255, 0x00007fd0, 512);
 
 // 0x070081D0
-ALIGNED8 const Texture texture_menu_hud_char_katakana_to[] = {
-#include "levels/menu/main_menu_seg7.081D0.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_hud_char_katakana_to, "levels/menu/main_menu_seg7.081D0.rgba16.inc.c", 0x002a65b0, 22255, 0x000081d0, 512);
 
 // 0x070083D0
-ALIGNED8 const Texture texture_menu_hud_char_hiragana_wo[] = {
-#include "levels/menu/main_menu_seg7.083D0.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_hud_char_hiragana_wo, "levels/menu/main_menu_seg7.083D0.rgba16.inc.c", 0x002a65b0, 22255, 0x000083d0, 512);
 
 // 0x070085D0
-ALIGNED8 const Texture texture_menu_hud_char_katakana_ko[] = {
-#include "levels/menu/main_menu_seg7.085D0.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_hud_char_katakana_ko, "levels/menu/main_menu_seg7.085D0.rgba16.inc.c", 0x002a65b0, 22255, 0x000085d0, 512);
 
 // 0x070087D0
-ALIGNED8 const Texture texture_menu_hud_char_kana_handakuten_pi[] = {
-#include "levels/menu/main_menu_seg7.087D0.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_hud_char_kana_handakuten_pi, "levels/menu/main_menu_seg7.087D0.rgba16.inc.c", 0x002a65b0, 22255, 0x000087d0, 512);
 
 // 0x070089D0
-ALIGNED8 const Texture texture_menu_hud_char_choonpu[] = {
-#include "levels/menu/main_menu_seg7.089D0.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_hud_char_choonpu, "levels/menu/main_menu_seg7.089D0.rgba16.inc.c", 0x002a65b0, 22255, 0x000089d0, 512);
 
 // 0x07008BD0
-ALIGNED8 const Texture texture_menu_hud_char_hiragana_su[] = {
-#include "levels/menu/main_menu_seg7.08BD0.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_hud_char_hiragana_su, "levels/menu/main_menu_seg7.08BD0.rgba16.inc.c", 0x002a65b0, 22255, 0x00008bd0, 512);
 
 // 0x07008DD0
-ALIGNED8 const Texture texture_menu_hud_char_hiragana_ru[] = {
-#include "levels/menu/main_menu_seg7.08DD0.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_hud_char_hiragana_ru, "levels/menu/main_menu_seg7.08DD0.rgba16.inc.c", 0x002a65b0, 22255, 0x00008dd0, 512);
 
 // 0x07008FD0
-ALIGNED8 const Texture texture_menu_hud_char_hiragana_ke[] = {
-#include "levels/menu/main_menu_seg7.08FD0.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_hud_char_hiragana_ke, "levels/menu/main_menu_seg7.08FD0.rgba16.inc.c", 0x002a65b0, 22255, 0x00008fd0, 512);
 
 // 0x070091D0
-ALIGNED8 const Texture texture_menu_hud_char_katakana_ma[] = {
-#include "levels/menu/main_menu_seg7.091D0.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_hud_char_katakana_ma, "levels/menu/main_menu_seg7.091D0.rgba16.inc.c", 0x002a65b0, 22255, 0x000091d0, 512);
 
 // 0x070093D0
-ALIGNED8 const Texture texture_menu_hud_char_katakana_ri[] = {
-#include "levels/menu/main_menu_seg7.093D0.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_hud_char_katakana_ri, "levels/menu/main_menu_seg7.093D0.rgba16.inc.c", 0x002a65b0, 22255, 0x000093d0, 512);
 
 // 0x070095D0
-ALIGNED8 const Texture texture_menu_hud_char_katakana_o[] = {
-#include "levels/menu/main_menu_seg7.095D0.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_hud_char_katakana_o, "levels/menu/main_menu_seg7.095D0.rgba16.inc.c", 0x002a65b0, 22255, 0x000095d0, 512);
 
 // 0x070097D0
-ALIGNED8 const Texture texture_menu_hud_char_katakana_su[] = {
-#include "levels/menu/main_menu_seg7.097D0.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_hud_char_katakana_su, "levels/menu/main_menu_seg7.097D0.rgba16.inc.c", 0x002a65b0, 22255, 0x000097d0, 512);
 
 // 0x070099D0
-ALIGNED8 const Texture texture_menu_hud_char_katakana_a[] = {
-#include "levels/menu/main_menu_seg7.099D0.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_hud_char_katakana_a, "levels/menu/main_menu_seg7.099D0.rgba16.inc.c", 0x002a65b0, 22255, 0x000099d0, 512);
 
 // 0x07009BD0
-ALIGNED8 const Texture texture_menu_hud_char_hiragana_mi[] = {
-#include "levels/menu/main_menu_seg7.09BD0.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_hud_char_hiragana_mi, "levels/menu/main_menu_seg7.09BD0.rgba16.inc.c", 0x002a65b0, 22255, 0x00009bd0, 512);
 
 // 0x07009DD0
-ALIGNED8 const Texture texture_menu_hud_char_hira_dakuten_do[] = {
-#include "levels/menu/main_menu_seg7.09DD0.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_hud_char_hira_dakuten_do, "levels/menu/main_menu_seg7.09DD0.rgba16.inc.c", 0x002a65b0, 22255, 0x00009dd0, 512);
 
 // 0x07009FD0
-ALIGNED8 const Texture texture_menu_hud_char_hiragana_no[] = {
-#include "levels/menu/main_menu_seg7.09FD0.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_hud_char_hiragana_no, "levels/menu/main_menu_seg7.09FD0.rgba16.inc.c", 0x002a65b0, 22255, 0x00009fd0, 512);
 
 // 0x0700A1D0
-ALIGNED8 const Texture texture_menu_hud_char_question[] = {
-#include "levels/menu/main_menu_seg7.0A1D0.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_hud_char_question, "levels/menu/main_menu_seg7.0A1D0.rgba16.inc.c", 0x002a65b0, 22255, 0x0000a1d0, 512);
 
 // 0x0700A3D0
-ALIGNED8 const Texture texture_menu_hud_char_katakana_sa[] = {
-#include "levels/menu/main_menu_seg7.0A3D0.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_hud_char_katakana_sa, "levels/menu/main_menu_seg7.0A3D0.rgba16.inc.c", 0x002a65b0, 22255, 0x0000a3d0, 512);
 
 // 0x0700A5D0
-ALIGNED8 const Texture texture_menu_hud_char_katakana_u[] = {
-#include "levels/menu/main_menu_seg7.0A5D0.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_hud_char_katakana_u, "levels/menu/main_menu_seg7.0A5D0.rgba16.inc.c", 0x002a65b0, 22255, 0x0000a5d0, 512);
 
 // 0x0700A7D0
-ALIGNED8 const Texture texture_menu_hud_char_katakana_n[] = {
-#include "levels/menu/main_menu_seg7.0A7D0.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_hud_char_katakana_n, "levels/menu/main_menu_seg7.0A7D0.rgba16.inc.c", 0x002a65b0, 22255, 0x0000a7d0, 512);
 
 // 0x0700A9D0
-ALIGNED8 const Texture texture_menu_hud_char_kana_dakuten_do[] = {
-#include "levels/menu/main_menu_seg7.0A9D0.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_hud_char_kana_dakuten_do, "levels/menu/main_menu_seg7.0A9D0.rgba16.inc.c", 0x002a65b0, 22255, 0x0000a9d0, 512);
 
 // Menu HUD print table, only used in JP
 // 0x0700ABD0
@@ -1268,69 +1091,43 @@ ALIGNED8 const Texture texture_menu_font_char_jp_exclamation[] = {
 #else
 
 // 0x0700AC40
-ALIGNED8 const Texture texture_menu_font_char_0[] = {
-#include "levels/menu/main_menu_seg7_us.0AC40.ia8.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_font_char_0, "levels/menu/main_menu_seg7_us.0AC40.ia8.inc.c", 0x002a65b0, 22255, 0x0000ac40, 64);
 
 // 0x0700AC80
-ALIGNED8 const Texture texture_menu_font_char_1[] = {
-#include "levels/menu/main_menu_seg7_us.0AC80.ia8.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_font_char_1, "levels/menu/main_menu_seg7_us.0AC80.ia8.inc.c", 0x002a65b0, 22255, 0x0000ac80, 64);
 
 // 0x0700ACC0
-ALIGNED8 const Texture texture_menu_font_char_2[] = {
-#include "levels/menu/main_menu_seg7_us.0ACC0.ia8.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_font_char_2, "levels/menu/main_menu_seg7_us.0ACC0.ia8.inc.c", 0x002a65b0, 22255, 0x0000acc0, 64);
 
 // 0x0700AD00
-ALIGNED8 const Texture texture_menu_font_char_3[] = {
-#include "levels/menu/main_menu_seg7_us.0AD00.ia8.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_font_char_3, "levels/menu/main_menu_seg7_us.0AD00.ia8.inc.c", 0x002a65b0, 22255, 0x0000ad00, 64);
 
 // 0x0700AD40
-ALIGNED8 const Texture texture_menu_font_char_4[] = {
-#include "levels/menu/main_menu_seg7_us.0AD40.ia8.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_font_char_4, "levels/menu/main_menu_seg7_us.0AD40.ia8.inc.c", 0x002a65b0, 22255, 0x0000ad40, 64);
 
 // 0x0700AD80
-ALIGNED8 const Texture texture_menu_font_char_5[] = {
-#include "levels/menu/main_menu_seg7_us.0AD80.ia8.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_font_char_5, "levels/menu/main_menu_seg7_us.0AD80.ia8.inc.c", 0x002a65b0, 22255, 0x0000ad80, 64);
 
 // 0x0700ADC0
-ALIGNED8 const Texture texture_menu_font_char_6[] = {
-#include "levels/menu/main_menu_seg7_us.0ADC0.ia8.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_font_char_6, "levels/menu/main_menu_seg7_us.0ADC0.ia8.inc.c", 0x002a65b0, 22255, 0x0000adc0, 64);
 
 // 0x0700AE00
-ALIGNED8 const Texture texture_menu_font_char_7[] = {
-#include "levels/menu/main_menu_seg7_us.0AE00.ia8.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_font_char_7, "levels/menu/main_menu_seg7_us.0AE00.ia8.inc.c", 0x002a65b0, 22255, 0x0000ae00, 64);
 
 // 0x0700AE40
-ALIGNED8 const Texture texture_menu_font_char_8[] = {
-#include "levels/menu/main_menu_seg7_us.0AE40.ia8.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_font_char_8, "levels/menu/main_menu_seg7_us.0AE40.ia8.inc.c", 0x002a65b0, 22255, 0x0000ae40, 64);
 
 // 0x0700AE80
-ALIGNED8 const Texture texture_menu_font_char_9[] = {
-#include "levels/menu/main_menu_seg7_us.0AE80.ia8.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_font_char_9, "levels/menu/main_menu_seg7_us.0AE80.ia8.inc.c", 0x002a65b0, 22255, 0x0000ae80, 64);
 
 // 0x0700AEC0
-ALIGNED8 const Texture texture_menu_font_char_A[] = {
-#include "levels/menu/main_menu_seg7_us.0AEC0.ia8.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_font_char_A, "levels/menu/main_menu_seg7_us.0AEC0.ia8.inc.c", 0x002a65b0, 22255, 0x0000aec0, 64);
 
 // 0x0700AF00
-ALIGNED8 const Texture texture_menu_font_char_B[] = {
-#include "levels/menu/main_menu_seg7_us.0AF00.ia8.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_font_char_B, "levels/menu/main_menu_seg7_us.0AF00.ia8.inc.c", 0x002a65b0, 22255, 0x0000af00, 64);
 
 // 0x0700AF40
-ALIGNED8 const Texture texture_menu_font_char_C[] = {
-#include "levels/menu/main_menu_seg7_us.0AF40.ia8.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_font_char_C, "levels/menu/main_menu_seg7_us.0AF40.ia8.inc.c", 0x002a65b0, 22255, 0x0000af40, 64);
 
 #ifdef VERSION_EU
 // 0x0700AF80
@@ -1341,140 +1138,86 @@ ALIGNED8 const Texture texture_menu_font_char_D[] = {
 #else
 
 // 0x0700AF80
-ALIGNED8 const Texture texture_menu_font_char_D[] = {
-#include "levels/menu/main_menu_seg7_us.0AF80.ia8.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_font_char_D, "levels/menu/main_menu_seg7_us.0AF80.ia8.inc.c", 0x002a65b0, 22255, 0x0000af80, 64);
 #endif
 
 // 0x0700AFC0
-ALIGNED8 const Texture texture_menu_font_char_E[] = {
-#include "levels/menu/main_menu_seg7_us.0AFC0.ia8.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_font_char_E, "levels/menu/main_menu_seg7_us.0AFC0.ia8.inc.c", 0x002a65b0, 22255, 0x0000afc0, 64);
 
 // 0x0700B000
-ALIGNED8 const Texture texture_menu_font_char_F[] = {
-#include "levels/menu/main_menu_seg7_us.0B000.ia8.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_font_char_F, "levels/menu/main_menu_seg7_us.0B000.ia8.inc.c", 0x002a65b0, 22255, 0x0000b000, 64);
 
 // 0x0700B040
-ALIGNED8 const Texture texture_menu_font_char_G[] = {
-#include "levels/menu/main_menu_seg7_us.0B040.ia8.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_font_char_G, "levels/menu/main_menu_seg7_us.0B040.ia8.inc.c", 0x002a65b0, 22255, 0x0000b040, 64);
 
 // 0x0700B080
-ALIGNED8 const Texture texture_menu_font_char_H[] = {
-#include "levels/menu/main_menu_seg7_us.0B080.ia8.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_font_char_H, "levels/menu/main_menu_seg7_us.0B080.ia8.inc.c", 0x002a65b0, 22255, 0x0000b080, 64);
 
 // 0x0700B0C0
-ALIGNED8 const Texture texture_menu_font_char_I[] = {
-#include "levels/menu/main_menu_seg7_us.0B0C0.ia8.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_font_char_I, "levels/menu/main_menu_seg7_us.0B0C0.ia8.inc.c", 0x002a65b0, 22255, 0x0000b0c0, 64);
 
 // 0x0700B100
-ALIGNED8 const Texture texture_menu_font_char_J[] = {
-#include "levels/menu/main_menu_seg7_us.0B100.ia8.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_font_char_J, "levels/menu/main_menu_seg7_us.0B100.ia8.inc.c", 0x002a65b0, 22255, 0x0000b100, 64);
 
 // 0x0700B140
-ALIGNED8 const Texture texture_menu_font_char_K[] = {
-#include "levels/menu/main_menu_seg7_us.0B140.ia8.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_font_char_K, "levels/menu/main_menu_seg7_us.0B140.ia8.inc.c", 0x002a65b0, 22255, 0x0000b140, 64);
 
 // 0x0700B180
-ALIGNED8 const Texture texture_menu_font_char_L[] = {
-#include "levels/menu/main_menu_seg7_us.0B180.ia8.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_font_char_L, "levels/menu/main_menu_seg7_us.0B180.ia8.inc.c", 0x002a65b0, 22255, 0x0000b180, 64);
 
 // 0x0700B1C0
-ALIGNED8 const Texture texture_menu_font_char_M[] = {
-#include "levels/menu/main_menu_seg7_us.0B1C0.ia8.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_font_char_M, "levels/menu/main_menu_seg7_us.0B1C0.ia8.inc.c", 0x002a65b0, 22255, 0x0000b1c0, 64);
 
 // 0x0700B200
-ALIGNED8 const Texture texture_menu_font_char_N[] = {
-#include "levels/menu/main_menu_seg7_us.0B200.ia8.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_font_char_N, "levels/menu/main_menu_seg7_us.0B200.ia8.inc.c", 0x002a65b0, 22255, 0x0000b200, 64);
 
 // 0x0700B240
-ALIGNED8 const Texture texture_menu_font_char_O[] = {
-#include "levels/menu/main_menu_seg7_us.0B240.ia8.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_font_char_O, "levels/menu/main_menu_seg7_us.0B240.ia8.inc.c", 0x002a65b0, 22255, 0x0000b240, 64);
 
 // 0x0700B280
-ALIGNED8 const Texture texture_menu_font_char_P[] = {
-#include "levels/menu/main_menu_seg7_us.0B280.ia8.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_font_char_P, "levels/menu/main_menu_seg7_us.0B280.ia8.inc.c", 0x002a65b0, 22255, 0x0000b280, 64);
 
 // 0x0700B2C0
-ALIGNED8 const Texture texture_menu_font_char_Q[] = {
-#include "levels/menu/main_menu_seg7_us.0B2C0.ia8.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_font_char_Q, "levels/menu/main_menu_seg7_us.0B2C0.ia8.inc.c", 0x002a65b0, 22255, 0x0000b2c0, 64);
 
 // 0x0700B300
-ALIGNED8 const Texture texture_menu_font_char_R[] = {
-#include "levels/menu/main_menu_seg7_us.0B300.ia8.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_font_char_R, "levels/menu/main_menu_seg7_us.0B300.ia8.inc.c", 0x002a65b0, 22255, 0x0000b300, 64);
 
 // 0x0700B340
-ALIGNED8 const Texture texture_menu_font_char_S[] = {
-#include "levels/menu/main_menu_seg7_us.0B340.ia8.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_font_char_S, "levels/menu/main_menu_seg7_us.0B340.ia8.inc.c", 0x002a65b0, 22255, 0x0000b340, 64);
 
 // 0x0700B380
-ALIGNED8 const Texture texture_menu_font_char_T[] = {
-#include "levels/menu/main_menu_seg7_us.0B380.ia8.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_font_char_T, "levels/menu/main_menu_seg7_us.0B380.ia8.inc.c", 0x002a65b0, 22255, 0x0000b380, 64);
 
 // 0x0700B3C0
-ALIGNED8 const Texture texture_menu_font_char_U[] = {
-#include "levels/menu/main_menu_seg7_us.0B3C0.ia8.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_font_char_U, "levels/menu/main_menu_seg7_us.0B3C0.ia8.inc.c", 0x002a65b0, 22255, 0x0000b3c0, 64);
 
 // 0x0700B400
-ALIGNED8 const Texture texture_menu_font_char_V[] = {
-#include "levels/menu/main_menu_seg7_us.0B400.ia8.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_font_char_V, "levels/menu/main_menu_seg7_us.0B400.ia8.inc.c", 0x002a65b0, 22255, 0x0000b400, 64);
 
 // 0x0700B440
-ALIGNED8 const Texture texture_menu_font_char_W[] = {
-#include "levels/menu/main_menu_seg7_us.0B440.ia8.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_font_char_W, "levels/menu/main_menu_seg7_us.0B440.ia8.inc.c", 0x002a65b0, 22255, 0x0000b440, 64);
 
 // 0x0700B480
-ALIGNED8 const Texture texture_menu_font_char_X[] = {
-#include "levels/menu/main_menu_seg7_us.0B480.ia8.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_font_char_X, "levels/menu/main_menu_seg7_us.0B480.ia8.inc.c", 0x002a65b0, 22255, 0x0000b480, 64);
 
 // 0x0700B4C0
-ALIGNED8 const Texture texture_menu_font_char_Y[] = {
-#include "levels/menu/main_menu_seg7_us.0B4C0.ia8.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_font_char_Y, "levels/menu/main_menu_seg7_us.0B4C0.ia8.inc.c", 0x002a65b0, 22255, 0x0000b4c0, 64);
 
 // 0x0700B500
-ALIGNED8 const Texture texture_menu_font_char_Z[] = {
-#include "levels/menu/main_menu_seg7_us.0B500.ia8.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_font_char_Z, "levels/menu/main_menu_seg7_us.0B500.ia8.inc.c", 0x002a65b0, 22255, 0x0000b500, 64);
 
 // 0x0700B540
-ALIGNED8 const Texture texture_menu_font_char_coin[] = {
-#include "levels/menu/main_menu_seg7_us.0B540.ia8.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_font_char_coin, "levels/menu/main_menu_seg7_us.0B540.ia8.inc.c", 0x002a65b0, 22255, 0x0000b540, 64);
 
 // 0x0700B580
-ALIGNED8 const Texture texture_menu_font_char_multiply[] = {
-#include "levels/menu/main_menu_seg7_us.0B580.ia8.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_font_char_multiply, "levels/menu/main_menu_seg7_us.0B580.ia8.inc.c", 0x002a65b0, 22255, 0x0000b580, 64);
 
 // 0x0700B5C0
-ALIGNED8 const Texture texture_menu_font_char_star_filled[] = {
-#include "levels/menu/main_menu_seg7_us.0B5C0.ia8.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_font_char_star_filled, "levels/menu/main_menu_seg7_us.0B5C0.ia8.inc.c", 0x002a65b0, 22255, 0x0000b5c0, 64);
 
 // 0x0700B600
-ALIGNED8 const Texture texture_menu_font_char_dash[] = {
-#include "levels/menu/main_menu_seg7_us.0B600.ia8.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_font_char_dash, "levels/menu/main_menu_seg7_us.0B600.ia8.inc.c", 0x002a65b0, 22255, 0x0000b600, 64);
 
 #ifdef VERSION_EU
 // 0x0700B640
@@ -1490,45 +1233,29 @@ ALIGNED8 const Texture texture_menu_font_char_apostrophe[] = {
 #else
 
 // 0x0700B640
-ALIGNED8 const Texture texture_menu_font_char_comma[] = {
-#include "levels/menu/main_menu_seg7_us.0B640.ia8.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_font_char_comma, "levels/menu/main_menu_seg7_us.0B640.ia8.inc.c", 0x002a65b0, 22255, 0x0000b640, 64);
 
 // 0x0700B680
-ALIGNED8 const Texture texture_menu_font_char_apostrophe[] = {
-#include "levels/menu/main_menu_seg7_us.0B680.ia8.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_font_char_apostrophe, "levels/menu/main_menu_seg7_us.0B680.ia8.inc.c", 0x002a65b0, 22255, 0x0000b680, 64);
 #endif
 
 // 0x0700B6C0
-ALIGNED8 const Texture texture_menu_font_char_exclamation[] = {
-#include "levels/menu/main_menu_seg7_us.0B6C0.ia8.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_font_char_exclamation, "levels/menu/main_menu_seg7_us.0B6C0.ia8.inc.c", 0x002a65b0, 22255, 0x0000b6c0, 64);
 
 // 0x0700B700
-ALIGNED8 const Texture texture_menu_font_char_question[] = {
-#include "levels/menu/main_menu_seg7_us.0B700.ia8.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_font_char_question, "levels/menu/main_menu_seg7_us.0B700.ia8.inc.c", 0x002a65b0, 22255, 0x0000b700, 64);
 
 // 0x0700B740
-ALIGNED8 const Texture texture_menu_font_char_mface1[] = {
-#include "levels/menu/main_menu_seg7_us.0B740.ia8.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_font_char_mface1, "levels/menu/main_menu_seg7_us.0B740.ia8.inc.c", 0x002a65b0, 22255, 0x0000b740, 64);
 
 // 0x0700B780
-ALIGNED8 const Texture texture_menu_font_char_mface2[] = {
-#include "levels/menu/main_menu_seg7_us.0B780.ia8.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_font_char_mface2, "levels/menu/main_menu_seg7_us.0B780.ia8.inc.c", 0x002a65b0, 22255, 0x0000b780, 64);
 
 // 0x0700B7C0
-ALIGNED8 const Texture texture_menu_font_char_period[] = {
-#include "levels/menu/main_menu_seg7_us.0B7C0.ia8.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_font_char_period, "levels/menu/main_menu_seg7_us.0B7C0.ia8.inc.c", 0x002a65b0, 22255, 0x0000b638, 64);
 
 // 0x0700B800
-ALIGNED8 const Texture texture_menu_font_char_ampersand[] = {
-#include "levels/menu/main_menu_seg7_us.0B800.ia8.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_font_char_ampersand, "levels/menu/main_menu_seg7_us.0B800.ia8.inc.c", 0x002a65b0, 22255, 0x0000b800, 64);
 #endif
 
 #ifdef VERSION_EU
@@ -1744,31 +1471,17 @@ ALIGNED8 const Texture texture_menu_course_lower[] = {
 #else
 
 // 0x0700D1A8 - 0x0700E1A8
-ALIGNED8 const Texture texture_menu_course_upper[] = {
-#include "levels/menu/main_menu_seg7.0D1A8.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_course_upper, "levels/menu/main_menu_seg7.0D1A8.rgba16.inc.c", 0x002a65b0, 22255, 0x0000bce0, 4096);
 
 // 0x0700E1A8 - 0x0700F1A8
-ALIGNED8 const Texture texture_menu_course_lower[] = {
-#include "levels/menu/main_menu_seg7.0E1A8.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_menu_course_lower, "levels/menu/main_menu_seg7.0E1A8.rgba16.inc.c", 0x002a65b0, 22255, 0x0000cce0, 4096);
 #endif
 
 // 0x0700F1A8 - 0x0700F1E8
-static const Vtx vertex_menu_course_upper[] = {
-    {{{   -32,      0,      0}, 0, {     0,   1984}, {0x00, 0x00, 0x7f, 0x00}}},
-    {{{    32,      0,      0}, 0, {  4032,   1984}, {0x00, 0x00, 0x7f, 0x00}}},
-    {{{    32,     32,      0}, 0, {  4032,      0}, {0x00, 0x00, 0x7f, 0x00}}},
-    {{{   -32,     32,      0}, 0, {     0,      0}, {0x00, 0x00, 0x7f, 0x00}}},
-};
+ROM_ASSET_LOAD_VTX(vertex_menu_course_upper, 0x002a65b0, 22255, 0x0000dce0, 64);
 
 // 0x0700F1E8 - 0x0700F228
-static const Vtx vertex_menu_course_lower[] = {
-    {{{   -32,    -32,      0}, 0, {     0,   1984}, {0x00, 0x00, 0x7f, 0x00}}},
-    {{{    32,    -32,      0}, 0, {  4032,   1984}, {0x00, 0x00, 0x7f, 0x00}}},
-    {{{    32,      0,      0}, 0, {  4032,      0}, {0x00, 0x00, 0x7f, 0x00}}},
-    {{{   -32,      0,      0}, 0, {     0,      0}, {0x00, 0x00, 0x7f, 0x00}}},
-};
+ROM_ASSET_LOAD_VTX(vertex_menu_course_lower, 0x002a65b0, 22255, 0x0000dd20, 64);
 
 // 0x0700F228 - 0x0700F2F8
 const Gfx dl_menu_rgba16_wood_course[] = {
@@ -1825,19 +1538,7 @@ const Gfx dl_menu_texture_kurs_upper[] = {
 #endif
 
 // 0x0700F2F8 - 0x0700F328
-const Collision main_menu_seg7_collision[] = {
-    COL_INIT(),
-    COL_VERTEX_INIT(0x4),
-    COL_VERTEX( 8192, -1000, -8192),
-    COL_VERTEX(-8192, -1000, -8192),
-    COL_VERTEX(-8192, -1000,  8192),
-    COL_VERTEX( 8192, -1000,  8192),
-    COL_TRI_INIT(SURFACE_DEFAULT, 2),
-    COL_TRI(0, 1, 2),
-    COL_TRI(0, 2, 3),
-    COL_TRI_STOP(),
-    COL_END(),
-};
+ROM_ASSET_LOAD_COLLISION(main_menu_seg7_collision, 0x002a65b0, 22255, 0x0000de30, 48);
 
 #ifdef VERSION_EU
 

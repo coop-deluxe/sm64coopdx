@@ -22,6 +22,10 @@ if (gIsThreaded) { \
 extern pthread_t gLoadingThreadId;
 extern pthread_mutex_t gLoadingThreadMutex;
 
-void render_loading_screen(void);
+extern bool gIsThreaded;
+
+void loading_screen_set_segment_text(const char *text);
+void render_loading_screen();
+void render_rom_setup_screen();
 
 #endif

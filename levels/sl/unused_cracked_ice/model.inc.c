@@ -1,3 +1,4 @@
+#include "pc/rom_assets.h"
 // 0x0700A7F0 - 0x0700A808
 static const Lights1 sl_seg7_lights_0700A7F0 = gdSPDefLights1(
     0x7f, 0x7f, 0x7f,
@@ -5,12 +6,7 @@ static const Lights1 sl_seg7_lights_0700A7F0 = gdSPDefLights1(
 );
 
 // 0x0700A808 - 0x0700A848
-static const Vtx sl_seg7_vertex_0700A808[] = {
-    {{{  -101,      0,    102}, 0, {   734,    734}, {0x00, 0x7f, 0x00, 0xff}}},
-    {{{   102,      0,    102}, 0, {   734,    224}, {0x00, 0x7f, 0x00, 0xff}}},
-    {{{  -101,      0,   -101}, 0, {   224,    734}, {0x00, 0x7f, 0x00, 0xff}}},
-    {{{   102,      0,   -101}, 0, {   224,    224}, {0x00, 0x7f, 0x00, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(sl_seg7_vertex_0700A808, 0x00405fb0, 34952, 0x0000a808, 64);
 
 // 0x0700A848 - 0x0700A890
 static const Gfx sl_seg7_dl_0700A848[] = {

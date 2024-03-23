@@ -38,7 +38,6 @@ void djui_shutdown(void) {
 
     if (gDjuiConsole) {
         djui_base_destroy(&gDjuiConsole->base);
-        free(gDjuiConsole);
         gDjuiConsole = NULL;
     }
     extern u32 sDjuiConsoleMessages;

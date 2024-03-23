@@ -1,26 +1,14 @@
+#include "pc/rom_assets.h"
 // Mr I (white eyeball)
 
 // 0x06000000
-static const Vtx mr_i_eyeball_seg6_vertex_06000000[] = {
-    {{{  -100,      0,      0}, 0, {     0,   2016}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,      0,      0}, 0, {   992,   2016}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,    200,      0}, 0, {   992,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{  -100,    200,      0}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,      0,      0}, 0, {     0,   2016}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   100,      0,      0}, 0, {   992,   2016}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   100,    200,      0}, 0, {   992,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,    200,      0}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(mr_i_eyeball_seg6_vertex_06000000, 0x001e7ee0, 40011, 0x00000000, 128);
 
 // 0x06000080
-ALIGNED8 const Texture mr_i_eyeball_seg6_texture_06000080[] = {
-#include "actors/mr_i_eyeball/mr_i_eyeball_left_side.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(mr_i_eyeball_seg6_texture_06000080, "actors/mr_i_eyeball/mr_i_eyeball_left_side.rgba16.inc.c", 0x001e7ee0, 40011, 0x00000080, 4096);
 
 // 0x06001080
-ALIGNED8 const Texture mr_i_eyeball_seg6_texture_06001080[] = {
-#include "actors/mr_i_eyeball/mr_i_eyeball_right_side.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(mr_i_eyeball_seg6_texture_06001080, "actors/mr_i_eyeball/mr_i_eyeball_right_side.rgba16.inc.c", 0x001e7ee0, 40011, 0x00001080, 4096);
 
 // 0x06002080 - 0x06002128
 const Gfx mr_i_eyeball_seg6_dl_06002080[] = {

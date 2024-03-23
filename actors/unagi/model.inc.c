@@ -1,3 +1,4 @@
+#include "pc/rom_assets.h"
 // Unagi (Eel)
 
 // Unreferenced light group
@@ -49,62 +50,28 @@ UNUSED static const Lights1 unagi_lights_unused8 = gdSPDefLights1(
 );
 
 // 0x0500AF20
-ALIGNED8 const Texture unagi_seg5_texture_0500AF20[] = {
-#include "actors/unagi/unagi_body.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(unagi_seg5_texture_0500AF20, "actors/unagi/unagi_body.rgba16.inc.c", 0x0013b910, 41727, 0x0000af20, 2048);
 
 // 0x0500B720
-ALIGNED8 const Texture unagi_seg5_texture_0500B720[] = {
-#include "actors/unagi/unagi_eye.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(unagi_seg5_texture_0500B720, "actors/unagi/unagi_eye.rgba16.inc.c", 0x0013b910, 41727, 0x0000b720, 512);
 
 // 0x0500B920
-ALIGNED8 const Texture unagi_seg5_texture_0500B920[] = {
-#include "actors/unagi/unagi_head_base.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(unagi_seg5_texture_0500B920, "actors/unagi/unagi_head_base.rgba16.inc.c", 0x0013b910, 41727, 0x0000b920, 2048);
 
 // 0x0500C120
-ALIGNED8 const Texture unagi_seg5_texture_0500C120[] = {
-#include "actors/unagi/unagi_tooth.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(unagi_seg5_texture_0500C120, "actors/unagi/unagi_tooth.rgba16.inc.c", 0x0013b910, 41727, 0x0000c120, 512);
 
 // 0x0500C320
-ALIGNED8 const Texture unagi_seg5_texture_0500C320[] = {
-#include "actors/unagi/unagi_mouth.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(unagi_seg5_texture_0500C320, "actors/unagi/unagi_mouth.rgba16.inc.c", 0x0013b910, 41727, 0x0000c320, 128);
 
 // 0x0500C3A0
-ALIGNED8 const Texture unagi_seg5_texture_0500C3A0[] = {
-#include "actors/unagi/unagi_tail.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(unagi_seg5_texture_0500C3A0, "actors/unagi/unagi_tail.rgba16.inc.c", 0x0013b910, 41727, 0x0000c3a0, 2048);
 
 // 0x0500CBA0
-static const Vtx unagi_seg5_vertex_0500CBA0[] = {
-    {{{   179,     42,    160}, 0, {   -25,    134}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,      0,   -164}, 0, {   224,    223}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   179,     42,   -150}, 0, {   213,    134}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   429,     24,    -89}, 0, {   166,     12}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   429,     24,     90}, 0, {    29,     12}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   521,     42,      0}, 0, {    98,    -33}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,      0,    170}, 0, {     0,    223}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(unagi_seg5_vertex_0500CBA0, 0x0013b910, 41727, 0x0000cba0, 112);
 
 // 0x0500CC10
-static const Vtx unagi_seg5_vertex_0500CC10[] = {
-    {{{     0,      0,    170}, 0, {   670,    620}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   106,    210,     85}, 0, {   518,   1064}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -59,    157,     53}, 0, {   754,    954}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   368,     99,      0}, 0, {   148,    830}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   429,     24,    -89}, 0, {    60,    670}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   179,     42,   -150}, 0, {   416,    710}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,      0,   -164}, 0, {   670,    620}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   106,    210,    -84}, 0, {   518,   1064}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   265,    166,      0}, 0, {   294,    974}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -59,    157,    -51}, 0, {   754,    954}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   521,     42,      0}, 0, {   -68,    710}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   429,     24,     90}, 0, {    60,    670}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   179,     42,    160}, 0, {   416,    710}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(unagi_seg5_vertex_0500CC10, 0x0013b910, 41727, 0x0000cc10, 208);
 
 // 0x0500CCE0 - 0x0500CD30
 const Gfx unagi_seg5_dl_0500CCE0[] = {
@@ -167,26 +134,10 @@ const Gfx unagi_seg5_dl_0500CDD0[] = {
 };
 
 // 0x0500CEA8
-static const Vtx unagi_seg5_vertex_0500CEA8[] = {
-    {{{   528,      0,   -117}, 0, {     0,    452}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   531,    208,    -60}, 0, {   -36,   1008}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   646,      0,      0}, 0, {  -258,    452}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   528,      0,    123}, 0, {     0,    452}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   451,   -175,      0}, 0, {   116,    -22}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,      0,   -107}, 0, {   990,    452}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,      0,    118}, 0, {   990,    452}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,   -159,      0}, 0, {   990,     22}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -98,      0,      0}, 0, {  1182,    452}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,    188,      0}, 0, {   990,    960}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   531,    208,     61}, 0, {   -36,   1008}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(unagi_seg5_vertex_0500CEA8, 0x0013b910, 41727, 0x0000cea8, 176);
 
 // 0x0500CF58
-static const Vtx unagi_seg5_vertex_0500CF58[] = {
-    {{{   531,    208,     61}, 0, {     0,      0}, {0x89, 0x19, 0x2e, 0xff}}},
-    {{{   531,    208,    -60}, 0, {     0,      0}, {0x89, 0x19, 0x2e, 0xff}}},
-    {{{     0,    188,      0}, 0, {     0,      0}, {0x89, 0x19, 0x2e, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(unagi_seg5_vertex_0500CF58, 0x0013b910, 41727, 0x0000cf58, 48);
 
 // 0x0500CF88 - 0x0500D038
 const Gfx unagi_seg5_dl_0500CF88[] = {
@@ -244,18 +195,7 @@ const Gfx unagi_seg5_dl_0500D050[] = {
 };
 
 // 0x0500D120
-static const Vtx unagi_seg5_vertex_0500D120[] = {
-    {{{  -357,      0,      0}, 0, {  -242,    452}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{  -253,      0,    118}, 0, {     0,    452}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{  -253,    160,      0}, 0, {     0,     22}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   245,      0,     99}, 0, {   994,    452}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   245,    151,      0}, 0, {   994,     46}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   245,      0,    -89}, 0, {   994,    452}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{  -253,      0,   -107}, 0, {     0,    452}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   316,      0,      0}, 0, {  1138,    452}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{  -253,   -187,      0}, 0, {     0,    960}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   245,   -173,      0}, 0, {   994,    920}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(unagi_seg5_vertex_0500D120, 0x0013b910, 41727, 0x0000d120, 160);
 
 // 0x0500D1C0 - 0x0500D268
 const Gfx unagi_seg5_dl_0500D1C0[] = {
@@ -302,18 +242,7 @@ const Gfx unagi_seg5_dl_0500D268[] = {
 };
 
 // 0x0500D320
-static const Vtx unagi_seg5_vertex_0500D320[] = {
-    {{{   -93,      0,      0}, 0, {  -224,    452}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,      0,     99}, 0, {     0,    452}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,    151,      0}, 0, {     0,     46}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   495,      0,     90}, 0, {   992,    452}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   495,    146,      0}, 0, {   992,     60}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   495,      0,    -79}, 0, {   992,    452}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,      0,    -89}, 0, {     0,    452}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   575,      0,      0}, 0, {  1158,    452}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,   -173,      0}, 0, {     0,    920}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   495,   -159,      0}, 0, {   992,    882}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(unagi_seg5_vertex_0500D320, 0x0013b910, 41727, 0x0000d320, 160);
 
 // 0x0500D3C0 - 0x0500D468
 const Gfx unagi_seg5_dl_0500D3C0[] = {
@@ -360,18 +289,7 @@ const Gfx unagi_seg5_dl_0500D468[] = {
 };
 
 // 0x0500D520
-static const Vtx unagi_seg5_vertex_0500D520[] = {
-    {{{   -79,      0,      0}, 0, {  -202,    452}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,      0,     90}, 0, {     0,    452}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,    146,      0}, 0, {     0,     60}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   476,      0,     57}, 0, {   990,    452}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,   -159,      0}, 0, {     0,    882}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,      0,    -79}, 0, {     0,    452}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   476,      0,    -56}, 0, {   990,    452}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   476,   -126,      0}, 0, {   990,    794}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   476,    132,      0}, 0, {   990,     98}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   528,      0,      0}, 0, {  1102,    452}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(unagi_seg5_vertex_0500D520, 0x0013b910, 41727, 0x0000d520, 160);
 
 // 0x0500D5C0 - 0x0500D668
 const Gfx unagi_seg5_dl_0500D5C0[] = {
@@ -418,16 +336,7 @@ const Gfx unagi_seg5_dl_0500D668[] = {
 };
 
 // 0x0500D720
-static const Vtx unagi_seg5_vertex_0500D720[] = {
-    {{{   327,    -97,      0}, 0, {   676,    896}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   471,      0,      0}, 0, {   988,    478}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,      0,     57}, 0, {     0,    480}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   328,    102,      0}, 0, {   678,     44}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,    132,      0}, 0, {     0,    -82}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -56,      0,      0}, 0, {  -152,    478}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,   -126,      0}, 0, {     0,   1018}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,      0,    -56}, 0, {     0,    478}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(unagi_seg5_vertex_0500D720, 0x0013b910, 41727, 0x0000d720, 128);
 
 // 0x0500D7A0 - 0x0500D828
 const Gfx unagi_seg5_dl_0500D7A0[] = {
@@ -472,56 +381,13 @@ const Gfx unagi_seg5_dl_0500D828[] = {
 };
 
 // 0x0500D8E0
-static const Vtx unagi_seg5_vertex_0500D8E0[] = {
-    {{{   226,     66,   -164}, 0, {     0,    223}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   221,    236,     61}, 0, {   138,    142}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   226,     66,    170}, 0, {   219,    223}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   679,     53,    -95}, 0, {    21,      1}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   405,    108,   -150}, 0, {   -21,    135}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   679,     53,     96}, 0, {   167,      1}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   768,     55,      0}, 0, {    94,    -42}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   405,    108,    160}, 0, {   216,    135}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   226,     66,    170}, 0, {   224,    223}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   221,    236,    -60}, 0, {    46,    142}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(unagi_seg5_vertex_0500D8E0, 0x0013b910, 41727, 0x0000d8e0, 160);
 
 // 0x0500D980
-static const Vtx unagi_seg5_vertex_0500D980[] = {
-    {{{   679,     53,     96}, 0, {    26,    592}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   405,    108,    160}, 0, {   414,    710}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   506,    -68,    121}, 0, {   272,    332}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   700,    -50,     39}, 0, {    -4,    370}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   224,   -180,     55}, 0, {   672,     92}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   470,   -137,      0}, 0, {   322,    186}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   599,    -87,      0}, 0, {   140,    292}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   226,     66,    170}, 0, {   668,    620}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   506,    -68,   -116}, 0, {   272,    332}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   700,    -50,    -38}, 0, {    -4,    370}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   768,     55,      0}, 0, {   -98,    596}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   679,     53,    -95}, 0, {    26,    592}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   224,   -180,    -54}, 0, {   672,     92}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   226,     66,   -164}, 0, {   668,    620}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,      0,   -112}, 0, {   990,    478}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(unagi_seg5_vertex_0500D980, 0x0013b910, 41727, 0x0000d980, 240);
 
 // 0x0500DA70
-static const Vtx unagi_seg5_vertex_0500DA70[] = {
-    {{{     3,    208,    -60}, 0, {   986,    922}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   221,    236,    -60}, 0, {   676,    980}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   226,     66,   -164}, 0, {   668,    620}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,      0,   -112}, 0, {   990,    478}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{  -112,      0,      0}, 0, {  1150,    478}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   224,   -180,    -54}, 0, {   672,     92}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -68,   -121,      0}, 0, {  1088,    220}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     3,    208,     61}, 0, {   986,    922}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   506,    -68,   -116}, 0, {   272,    332}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   405,    108,   -150}, 0, {   414,    710}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   679,     53,    -95}, 0, {    26,    592}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,      0,    118}, 0, {   990,    478}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   226,     66,    170}, 0, {   668,    620}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   221,    236,     61}, 0, {   676,    980}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   224,   -180,     55}, 0, {   672,     92}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(unagi_seg5_vertex_0500DA70, 0x0013b910, 41727, 0x0000da70, 240);
 
 // 0x0500DB60 - 0x0500DBC0
 const Gfx unagi_seg5_dl_0500DB60[] = {
@@ -596,17 +462,7 @@ const Gfx unagi_seg5_dl_0500DD08[] = {
 };
 
 // 0x0500DDE0
-static const Vtx unagi_seg5_vertex_0500DDE0[] = {
-    {{{   506,    -68,   -120}, 0, {  1519,    199}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   679,     53,    -99}, 0, {   224,    609}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   700,    -50,    -42}, 0, {   224,   -160}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   768,     55,     -3}, 0, {  -519,    232}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   768,     55,      4}, 0, {  -520,    232}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   679,     53,    100}, 0, {   223,    609}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   700,    -50,     43}, 0, {   224,   -160}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   679,     53,    100}, 0, {   224,    609}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   506,    -68,    125}, 0, {  1526,    211}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(unagi_seg5_vertex_0500DDE0, 0x0013b910, 41727, 0x0000dde0, 144);
 
 // 0x0500DE70 - 0x0500DEB8
 const Gfx unagi_seg5_dl_0500DE70[] = {
@@ -647,20 +503,7 @@ const Gfx unagi_seg5_dl_0500DEB8[] = {
 };
 
 // 0x0500DF70
-static const Vtx unagi_seg5_vertex_0500DF70[] = {
-    {{{   673,    102,    -92}, 0, {  1493,    521}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   758,    123,      0}, 0, {   -43,    646}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   760,     50,      0}, 0, {   -43,    -51}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   671,     48,    -92}, 0, {  1520,     12}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   398,    103,    157}, 0, {  5385,    384}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   671,     48,     93}, 0, {    -7,    -64}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   673,    102,     93}, 0, {  -149,    567}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   398,    103,   -147}, 0, {  3179,    441}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   673,    102,    -93}, 0, {   -51,    545}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   671,     48,    -92}, 0, {   -31,    -64}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   673,    102,     93}, 0, {  1493,    521}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   671,     48,     93}, 0, {  1520,     12}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(unagi_seg5_vertex_0500DF70, 0x0013b910, 41727, 0x0000df70, 192);
 
 // 0x0500E030 - 0x0500E088
 const Gfx unagi_seg5_dl_0500E030[] = {
@@ -702,20 +545,7 @@ const Gfx unagi_seg5_dl_0500E088[] = {
 };
 
 // 0x0500E140
-static const Vtx unagi_seg5_vertex_0500E140[] = {
-    {{{   164,     46,    153}, 0, { -4789,    510}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   424,    -17,     85}, 0, {   558,    496}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   426,     27,     84}, 0, {   558,     27}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   164,     46,   -143}, 0, { -4747,    504}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   426,     27,    -83}, 0, {   558,     27}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   424,    -17,    -84}, 0, {   558,    496}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   426,     27,     84}, 0, {  -931,    132}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   424,    -17,     85}, 0, {  -971,    479}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   519,    -31,      0}, 0, {   491,    610}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   514,     43,      0}, 0, {   491,    -22}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   426,     27,    -83}, 0, {  -931,    132}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   424,    -17,    -84}, 0, {  -971,    479}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(unagi_seg5_vertex_0500E140, 0x0013b910, 41727, 0x0000e140, 192);
 
 // 0x0500E200 - 0x0500E258
 const Gfx unagi_seg5_dl_0500E200[] = {

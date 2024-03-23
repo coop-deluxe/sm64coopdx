@@ -102,8 +102,8 @@ struct Animation {
     /*0x06*/ s16 loopStart;
     /*0x08*/ s16 loopEnd;
     /*0x0A*/ s16 unusedBoneCount;
-    /*0x0C*/ const s16 *values;
-    /*0x10*/ const u16 *index;
+    /*0x0C*/ u16 *values;
+    /*0x10*/ u16 *index;
     /*0x14*/ u32 length; // only used with Mario animations to determine how much to load. 0 otherwise.
     /*????*/ u32 valuesLength;
     /*????*/ u32 indexLength;

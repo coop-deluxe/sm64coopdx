@@ -1,6 +1,5 @@
-ALIGNED8 const Texture castle_grounds_seg7_us_texture_0700EAE8[] = {
-#include "levels/castle_grounds/5.ia8.inc.c"
-};
+#include "pc/rom_assets.h"
+ROM_ASSET_LOAD_TEXTURE(castle_grounds_seg7_us_texture_0700EAE8, "levels/castle_grounds/5.ia8.inc.c", 0x0044abc0, 39442, 0x0000eae8, 2048);
 
 // 0x0700F2E8
 const Gfx castle_grounds_seg7_us_dl_0700F2E8[] = {

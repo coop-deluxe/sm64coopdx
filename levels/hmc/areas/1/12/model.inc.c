@@ -1,14 +1,6 @@
+#include "pc/rom_assets.h"
 // 0x07013DB8 - 0x07013E38
-static const Vtx hmc_seg7_vertex_07013DB8[] = {
-    {{{  5671,   -306,    819}, 0, {  6100,    990}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{  5671,   -204,    205}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{  5671,   -306,    205}, 0, {     0,    990}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{  5671,   -204,    819}, 0, {  6100,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{  5466,   -511,    819}, 0, {  6100,    990}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{  5466,   -409,    205}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{  5466,   -511,    205}, 0, {     0,    990}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{  5466,   -409,    819}, 0, {  6100,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(hmc_seg7_vertex_07013DB8, 0x003d0dc0, 89137, 0x00013db8, 128);
 
 // 0x07013E38 - 0x07013E80
 static const Gfx hmc_seg7_dl_07013E38[] = {

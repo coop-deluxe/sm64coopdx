@@ -1,21 +1,15 @@
+#include "pc/rom_assets.h"
 // Chain Ball
 
 
 // 0x06020AA0
-static const Vtx chain_ball_seg6_vertex_06020AA0[] = {
-    {{{   -26,    -26,      0}, 0, {     0,    992}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    26,    -26,      0}, 0, {   992,    992}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    26,     26,      0}, 0, {   992,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -26,     26,      0}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(chain_ball_seg6_vertex_06020AA0, 0x001c4230, 80474, 0x00020aa0, 64);
 
 // align? binid?
 UNUSED static const u64 chain_ball_unused_1 = 0;
 
 // 0x06020AE8
-ALIGNED8 const Texture chain_ball_seg6_texture_06020AE8[] = {
-#include "actors/chain_ball/chain_ball.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(chain_ball_seg6_texture_06020AE8, "actors/chain_ball/chain_ball.rgba16.inc.c", 0x001c4230, 80474, 0x00020ae8, 2048);
 
 // 0x060212E8 - 0x06021380
 const Gfx chain_ball_seg6_dl_060212E8[] = {

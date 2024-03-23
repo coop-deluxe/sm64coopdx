@@ -10,6 +10,7 @@ struct ModCacheEntry {
     struct ModCacheEntry* next;
 };
 
+void mod_cache_md5(const char* inPath, u8* outDataPath);
 void mod_cache_shutdown(void);
 struct ModCacheEntry* mod_cache_get_from_hash(u8* dataHash);
 struct ModCacheEntry* mod_cache_get_from_path(const char* path, bool validate);

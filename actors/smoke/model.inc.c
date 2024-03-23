@@ -1,17 +1,11 @@
+#include "pc/rom_assets.h"
 // Smoke
 
 // 0x05007280
-static const Vtx smoke_seg5_vertex_05007280[] = {
-    {{{    26,     26,      0}, 0, {   990,      0}, {0xff, 0xff, 0xff, 0xb4}}},
-    {{{   -25,     26,      0}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xb4}}},
-    {{{   -25,    -25,      0}, 0, {     0,    990}, {0xff, 0xff, 0xff, 0xb4}}},
-    {{{    26,    -25,      0}, 0, {   990,    990}, {0xff, 0xff, 0xff, 0xb4}}},
-};
+ROM_ASSET_LOAD_VTX(smoke_seg5_vertex_05007280, 0x001521d0, 57608, 0x00007280, 64);
 
 // 0x050072C0
-ALIGNED8 const Texture smoke_seg5_texture_050072C0[] = {
-#include "actors/smoke/smoke.ia16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(smoke_seg5_texture_050072C0, "actors/smoke/smoke.ia16.inc.c", 0x001521d0, 57608, 0x000072c0, 2048);
 
 // 0x05007AC0 - 0x05007AF8
 const Gfx smoke_seg5_dl_05007AC0[] = {

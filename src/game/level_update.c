@@ -60,12 +60,14 @@ s16 gChangeLevel = -1;
 s16 gChangeLevelTransition = -1;
 s16 gChangeActNum = -1;
 
-static bool sCancelNextActSelector = true; // Cancel the act selector after the main menu
+s16 gDelayedInitSound = -1;
+
 static bool sFirstCastleGroundsMenu = true;
 bool gIsDemoActive = false;
 bool gInPlayerMenu = false;
 static u16 gDemoCountdown = 0;
 static int sDemoNumber = -1;
+static bool sCancelNextActSelector = false;
 
 // TODO: Make these ifdefs better
 const char *credits01[] = { "1GAME DIRECTOR", "SHIGERU MIYAMOTO" };
@@ -1808,6 +1810,11 @@ s32 init_level(void) {
     // clear texture 1 on level init -- can linger and corrupt textures otherwise
     extern u8 gGfxPcResetTex1;
     gGfxPcResetTex1 = 1;
+
+    if (gDelayedInitSound >= 0) {
+        play_character_sound(&gMarioStates[0], gDelayedInitSound);
+        gDelayedInitSound = -1;
+    }
 
     return 1;
 }

@@ -1,3 +1,4 @@
+#include "pc/rom_assets.h"
 // 0x0700CB60 - 0x0700CB78
 static const Lights1 ttm_seg7_lights_0700CB60 = gdSPDefLights1(
     0x7f, 0x7f, 0x7f,
@@ -11,29 +12,13 @@ static const Lights1 ttm_seg7_lights_0700CB78 = gdSPDefLights1(
 );
 
 // 0x0700CB90 - 0x0700CBF0
-static const Vtx ttm_seg7_vertex_0700CB90[] = {
-    {{{  -323,   -387,    -61}, 0, {  8458,  -5948}, {0x9c, 0xf1, 0x4b, 0xff}}},
-    {{{   -30,    389,    495}, 0, {  9592,  -7498}, {0x9c, 0xf1, 0x4b, 0xff}}},
-    {{{  -224,    389,    235}, 0, {  8972,  -7498}, {0x9c, 0xf1, 0x4b, 0xff}}},
-    {{{  -323,   -387,    -61}, 0, {  8458,  -5948}, {0xc2, 0xd1, 0x63, 0xff}}},
-    {{{   377,    389,    751}, 0, { 10552,  -7498}, {0xc2, 0xd1, 0x63, 0xff}}},
-    {{{   -30,    389,    495}, 0, {  9592,  -7498}, {0xc2, 0xd1, 0x63, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(ttm_seg7_vertex_0700CB90, 0x004d1910, 104662, 0x0000cb90, 96);
 
 // 0x0700CBF0 - 0x0700CC20
-static const Vtx ttm_seg7_vertex_0700CBF0[] = {
-    {{{  -323,   -387,    -61}, 0, {   974,  -2960}, {0x82, 0x0d, 0x07, 0xff}}},
-    {{{  -224,    389,    235}, 0, {  1654,  -4488}, {0x82, 0x0d, 0x07, 0xff}}},
-    {{{  -282,    389,   -714}, 0, {  -132,  -4554}, {0x82, 0x0d, 0x07, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(ttm_seg7_vertex_0700CBF0, 0x004d1910, 104662, 0x0000cbf0, 48);
 
 // 0x0700CC20 - 0x0700CC60
-static const Vtx ttm_seg7_vertex_0700CC20[] = {
-    {{{   377,    389,    751}, 0, {  7672,  -3032}, {0x00, 0x7f, 0x00, 0xff}}},
-    {{{  -224,    389,    235}, 0, {  6470,  -4062}, {0x00, 0x7f, 0x00, 0xff}}},
-    {{{   -30,    389,    495}, 0, {  6856,  -3544}, {0x00, 0x7f, 0x00, 0xff}}},
-    {{{  -282,    389,   -714}, 0, {  6352,  -5960}, {0x00, 0x7f, 0x00, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(ttm_seg7_vertex_0700CC20, 0x004d1910, 104662, 0x0000cc20, 64);
 
 // 0x0700CC60 - 0x0700CCC8
 static const Gfx ttm_seg7_dl_0700CC60[] = {

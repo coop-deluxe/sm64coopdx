@@ -1,17 +1,11 @@
+#include "pc/rom_assets.h"
 // Leaves
 
 // 0x0301CBA0
-static const Vtx leaves_seg3_vertex_0301CBA0[] = {
-    {{{   -10,    -10,      0}, 0, {     0,    480}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    10,    -10,      0}, 0, {   480,    480}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    10,     10,      0}, 0, {   480,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -10,     10,      0}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(leaves_seg3_vertex_0301CBA0, 0x00201410, 96653, 0x0001cba0, 64);
 
 // 0x0301CBE0
-ALIGNED8 const Texture leaves_seg3_texture_0301CBE0[] = {
-#include "actors/leaves/leaf.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(leaves_seg3_texture_0301CBE0, "actors/leaves/leaf.rgba16.inc.c", 0x00201410, 96653, 0x0001cbe0, 512);
 
 // 0x0301CDE0 - 0x0301CE70
 const Gfx leaves_seg3_dl_0301CDE0[] = {

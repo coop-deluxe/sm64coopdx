@@ -1,3 +1,4 @@
+#include "pc/rom_assets.h"
 #include <PR/ultratypes.h>
 #include <PR/gbi.h>
 
@@ -10,157 +11,91 @@
 
 // SM64 (US/JP/EU/SH) Segment 02
 
-ALIGNED8 const Texture texture_hud_char_0[] = {
-#include "textures/segment2/segment2.00000.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_hud_char_0, "textures/segment2/segment2.00000.rgba16.inc.c", 0x00108a40, 48390, 0x00000000, 512);
 
-ALIGNED8 const Texture texture_hud_char_1[] = {
-#include "textures/segment2/segment2.00200.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_hud_char_1, "textures/segment2/segment2.00200.rgba16.inc.c", 0x00108a40, 48390, 0x00000200, 512);
 
-ALIGNED8 const Texture texture_hud_char_2[] = {
-#include "textures/segment2/segment2.00400.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_hud_char_2, "textures/segment2/segment2.00400.rgba16.inc.c", 0x00108a40, 48390, 0x00000400, 512);
 
-ALIGNED8 const Texture texture_hud_char_3[] = {
-#include "textures/segment2/segment2.00600.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_hud_char_3, "textures/segment2/segment2.00600.rgba16.inc.c", 0x00108a40, 48390, 0x00000600, 512);
 
-ALIGNED8 const Texture texture_hud_char_4[] = {
-#include "textures/segment2/segment2.00800.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_hud_char_4, "textures/segment2/segment2.00800.rgba16.inc.c", 0x00108a40, 48390, 0x00000800, 512);
 
-ALIGNED8 const Texture texture_hud_char_5[] = {
-#include "textures/segment2/segment2.00A00.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_hud_char_5, "textures/segment2/segment2.00A00.rgba16.inc.c", 0x00108a40, 48390, 0x00000a00, 512);
 
-ALIGNED8 const Texture texture_hud_char_6[] = {
-#include "textures/segment2/segment2.00C00.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_hud_char_6, "textures/segment2/segment2.00C00.rgba16.inc.c", 0x00108a40, 48390, 0x00000c00, 512);
 
-ALIGNED8 const Texture texture_hud_char_7[] = {
-#include "textures/segment2/segment2.00E00.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_hud_char_7, "textures/segment2/segment2.00E00.rgba16.inc.c", 0x00108a40, 48390, 0x00000e00, 512);
 
-ALIGNED8 const Texture texture_hud_char_8[] = {
-#include "textures/segment2/segment2.01000.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_hud_char_8, "textures/segment2/segment2.01000.rgba16.inc.c", 0x00108a40, 48390, 0x00001000, 512);
 
-ALIGNED8 const Texture texture_hud_char_9[] = {
-#include "textures/segment2/segment2.01200.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_hud_char_9, "textures/segment2/segment2.01200.rgba16.inc.c", 0x00108a40, 48390, 0x00001200, 512);
 
-ALIGNED8 const Texture texture_hud_char_A[] = {
-#include "textures/segment2/segment2.01400.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_hud_char_A, "textures/segment2/segment2.01400.rgba16.inc.c", 0x00108a40, 48390, 0x00001400, 512);
 
-ALIGNED8 const Texture texture_hud_char_B[] = {
-#include "textures/segment2/segment2.01600.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_hud_char_B, "textures/segment2/segment2.01600.rgba16.inc.c", 0x00108a40, 48390, 0x00001600, 512);
 
-ALIGNED8 const Texture texture_hud_char_C[] = {
-#include "textures/segment2/segment2.01800.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_hud_char_C, "textures/segment2/segment2.01800.rgba16.inc.c", 0x00108a40, 48390, 0x00001800, 512);
 
-ALIGNED8 const Texture texture_hud_char_D[] = {
-#include "textures/segment2/segment2.01A00.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_hud_char_D, "textures/segment2/segment2.01A00.rgba16.inc.c", 0x00108a40, 48390, 0x00001a00, 512);
 
-ALIGNED8 const Texture texture_hud_char_E[] = {
-#include "textures/segment2/segment2.01C00.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_hud_char_E, "textures/segment2/segment2.01C00.rgba16.inc.c", 0x00108a40, 48390, 0x00001c00, 512);
 
-ALIGNED8 const Texture texture_hud_char_F[] = {
-#include "textures/segment2/segment2.01E00.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_hud_char_F, "textures/segment2/segment2.01E00.rgba16.inc.c", 0x00108a40, 48390, 0x00001e00, 512);
 
-ALIGNED8 const Texture texture_hud_char_G[] = {
-#include "textures/segment2/segment2.02000.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_hud_char_G, "textures/segment2/segment2.02000.rgba16.inc.c", 0x00108a40, 48390, 0x00002000, 512);
 
-ALIGNED8 const Texture texture_hud_char_H[] = {
-#include "textures/segment2/segment2.02200.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_hud_char_H, "textures/segment2/segment2.02200.rgba16.inc.c", 0x00108a40, 48390, 0x00002200, 512);
 
-ALIGNED8 const Texture texture_hud_char_I[] = {
-#include "textures/segment2/segment2.02400.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_hud_char_I, "textures/segment2/segment2.02400.rgba16.inc.c", 0x00108a40, 48390, 0x00002400, 512);
 
 ALIGNED8 const Texture texture_hud_char_J[] = {
 #include "textures/segment2/custom_hud_j.rgba16.inc.c"
 };
 
-ALIGNED8 const Texture texture_hud_char_K[] = {
-#include "textures/segment2/segment2.02800.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_hud_char_K, "textures/segment2/segment2.02800.rgba16.inc.c", 0x00108a40, 48390, 0x00002600, 512);
 
-ALIGNED8 const Texture texture_hud_char_L[] = {
-#include "textures/segment2/segment2.02A00.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_hud_char_L, "textures/segment2/segment2.02A00.rgba16.inc.c", 0x00108a40, 48390, 0x00002800, 512);
 
-ALIGNED8 const Texture texture_hud_char_M[] = {
-#include "textures/segment2/segment2.02C00.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_hud_char_M, "textures/segment2/segment2.02C00.rgba16.inc.c", 0x00108a40, 48390, 0x00002a00, 512);
 
-ALIGNED8 const Texture texture_hud_char_N[] = {
-#include "textures/segment2/segment2.02E00.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_hud_char_N, "textures/segment2/segment2.02E00.rgba16.inc.c", 0x00108a40, 48390, 0x00002c00, 512);
 
-ALIGNED8 const Texture texture_hud_char_O[] = {
-#include "textures/segment2/segment2.03000.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_hud_char_O, "textures/segment2/segment2.03000.rgba16.inc.c", 0x00108a40, 48390, 0x00002e00, 512);
 
-ALIGNED8 const Texture texture_hud_char_P[] = {
-#include "textures/segment2/segment2.03200.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_hud_char_P, "textures/segment2/segment2.03200.rgba16.inc.c", 0x00108a40, 48390, 0x00003000, 512);
 
 ALIGNED8 const Texture texture_hud_char_Q[] = {
 #include "textures/segment2/custom_hud_q.rgba16.inc.c"
 };
 
-ALIGNED8 const Texture texture_hud_char_R[] = {
-#include "textures/segment2/segment2.03600.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_hud_char_R, "textures/segment2/segment2.03600.rgba16.inc.c", 0x00108a40, 48390, 0x00003200, 512);
 
-ALIGNED8 const Texture texture_hud_char_S[] = {
-#include "textures/segment2/segment2.03800.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_hud_char_S, "textures/segment2/segment2.03800.rgba16.inc.c", 0x00108a40, 48390, 0x00003400, 512);
 
-ALIGNED8 const Texture texture_hud_char_T[] = {
-#include "textures/segment2/segment2.03A00.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_hud_char_T, "textures/segment2/segment2.03A00.rgba16.inc.c", 0x00108a40, 48390, 0x00003600, 512);
 
-ALIGNED8 const Texture texture_hud_char_U[] = {
-#include "textures/segment2/segment2.03C00.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_hud_char_U, "textures/segment2/segment2.03C00.rgba16.inc.c", 0x00108a40, 48390, 0x00003800, 512);
 
 ALIGNED8 const Texture texture_hud_char_V[] = {
 #include "textures/segment2/custom_hud_v.rgba16.inc.c"
 };
 
-ALIGNED8 const Texture texture_hud_char_W[] = {
-#include "textures/segment2/segment2.04000.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_hud_char_W, "textures/segment2/segment2.04000.rgba16.inc.c", 0x00108a40, 48390, 0x00003a00, 512);
 
 ALIGNED8 const Texture texture_hud_char_X[] = {
 #include "textures/segment2/custom_hud_x.rgba16.inc.c"
 };
 
-ALIGNED8 const Texture texture_hud_char_Y[] = {
-#include "textures/segment2/segment2.04400.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_hud_char_Y, "textures/segment2/segment2.04400.rgba16.inc.c", 0x00108a40, 48390, 0x00003c00, 512);
 
 ALIGNED8 const Texture texture_hud_char_Z[] = {
 #include "textures/segment2/custom_hud_z.rgba16.inc.c"
 };
 
-ALIGNED8 const Texture texture_hud_char_apostrophe[] = {
-#include "textures/segment2/segment2.04800.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_hud_char_apostrophe, "textures/segment2/segment2.04800.rgba16.inc.c", 0x00108a40, 48390, 0x00003e00, 512);
 
-ALIGNED8 const Texture texture_hud_char_double_quote[] = {
-#include "textures/segment2/segment2.04A00.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_hud_char_double_quote, "textures/segment2/segment2.04A00.rgba16.inc.c", 0x00108a40, 48390, 0x00004000, 512);
 
 #ifdef VERSION_EU
 ALIGNED8 const Texture texture_hud_char_umlaut[] = {
@@ -176,9 +111,7 @@ ALIGNED8 const Texture texture_hud_char_hashtag[] = {
 #include "textures/segment2/custom_hud_hashtag.rgba16.inc.c" // originally JP !!
 };
 
-ALIGNED8 const Texture texture_hud_char_question[] = {
-#include "textures/segment2/segment2.05000.rgba16.inc.c" // JP ? (removed JP version check as ? exists in other versions)
-};
+ROM_ASSET_LOAD_TEXTURE(texture_hud_char_question, "textures/segment2/segment2.05000.rgba16.inc.c", 0x002a65b0, 22255, 0x0000a1d0, 512);
 
 ALIGNED8 const Texture texture_hud_char_ampersand[] = {
 #include "textures/segment2/custom_hud_ampersand.rgba16.inc.c" // beta & no longer in use, new non beta & was made for all versions
@@ -192,21 +125,13 @@ ALIGNED8 const Texture texture_hud_char_slash[] = {
 #include "textures/segment2/custom_hud_slash.rgba16.inc.c"
 };
 
-ALIGNED8 const Texture texture_hud_char_multiply[] = {
-#include "textures/segment2/segment2.05600.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_hud_char_multiply, "textures/segment2/segment2.05600.rgba16.inc.c", 0x00108a40, 48390, 0x00004200, 512);
 
-ALIGNED8 const Texture texture_hud_char_coin[] = {
-#include "textures/segment2/segment2.05800.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_hud_char_coin, "textures/segment2/segment2.05800.rgba16.inc.c", 0x00108a40, 48390, 0x00004400, 512);
 
-ALIGNED8 const Texture texture_hud_char_mario_head[] = {
-#include "textures/segment2/segment2.05A00.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_hud_char_mario_head, "textures/segment2/segment2.05A00.rgba16.inc.c", 0x00108a40, 48390, 0x00004600, 512);
 
-ALIGNED8 const Texture texture_hud_char_star[] = {
-#include "textures/segment2/segment2.05C00.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_hud_char_star, "textures/segment2/segment2.05C00.rgba16.inc.c", 0x00108a40, 48390, 0x00004800, 512);
 
 ALIGNED8 const Texture texture_hud_char_period[] = {
 #include "textures/segment2/custom_hud_period.rgba16.inc.c"
@@ -232,125 +157,65 @@ ALIGNED8 const Texture texture_hud_char_plus[] = {
 #include "textures/segment2/custom_hud_plus.rgba16.inc.c"
 };
 
-ALIGNED8 const Texture texture_credits_char_3[] = {
-#include "textures/segment2/segment2.06200.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_credits_char_3, "textures/segment2/segment2.06200.rgba16.inc.c", 0x00108a40, 48390, 0x00004a00, 128);
 
-ALIGNED8 const Texture texture_credits_char_4[] = {
-#include "textures/segment2/segment2.06280.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_credits_char_4, "textures/segment2/segment2.06280.rgba16.inc.c", 0x00108a40, 48390, 0x00004a80, 128);
 
-ALIGNED8 const Texture texture_credits_char_6[] = {
-#include "textures/segment2/segment2.06300.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_credits_char_6, "textures/segment2/segment2.06300.rgba16.inc.c", 0x00108a40, 48390, 0x00004b00, 128);
 
-ALIGNED8 const Texture texture_credits_char_A[] = {
-#include "textures/segment2/segment2.06380.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_credits_char_A, "textures/segment2/segment2.06380.rgba16.inc.c", 0x00108a40, 48390, 0x00004b80, 128);
 
-ALIGNED8 const Texture texture_credits_char_B[] = {
-#include "textures/segment2/segment2.06400.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_credits_char_B, "textures/segment2/segment2.06400.rgba16.inc.c", 0x00108a40, 48390, 0x00004c00, 128);
 
-ALIGNED8 const Texture texture_credits_char_C[] = {
-#include "textures/segment2/segment2.06480.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_credits_char_C, "textures/segment2/segment2.06480.rgba16.inc.c", 0x00108a40, 48390, 0x00004c80, 128);
 
-ALIGNED8 const Texture texture_credits_char_D[] = {
-#include "textures/segment2/segment2.06500.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_credits_char_D, "textures/segment2/segment2.06500.rgba16.inc.c", 0x00108a40, 48390, 0x00004d00, 128);
 
-ALIGNED8 const Texture texture_credits_char_E[] = {
-#include "textures/segment2/segment2.06580.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_credits_char_E, "textures/segment2/segment2.06580.rgba16.inc.c", 0x00108a40, 48390, 0x00004d80, 128);
 
-ALIGNED8 const Texture texture_credits_char_F[] = {
-#include "textures/segment2/segment2.06600.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_credits_char_F, "textures/segment2/segment2.06600.rgba16.inc.c", 0x00108a40, 48390, 0x00004e00, 128);
 
-ALIGNED8 const Texture texture_credits_char_G[] = {
-#include "textures/segment2/segment2.06680.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_credits_char_G, "textures/segment2/segment2.06680.rgba16.inc.c", 0x00108a40, 48390, 0x00004e80, 128);
 
-ALIGNED8 const Texture texture_credits_char_H[] = {
-#include "textures/segment2/segment2.06700.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_credits_char_H, "textures/segment2/segment2.06700.rgba16.inc.c", 0x00108a40, 48390, 0x00004f00, 128);
 
-ALIGNED8 const Texture texture_credits_char_I[] = {
-#include "textures/segment2/segment2.06780.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_credits_char_I, "textures/segment2/segment2.06780.rgba16.inc.c", 0x00108a40, 48390, 0x00004f80, 128);
 
-ALIGNED8 const Texture texture_credits_char_J[] = {
-#include "textures/segment2/segment2.06800.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_credits_char_J, "textures/segment2/segment2.06800.rgba16.inc.c", 0x00108a40, 48390, 0x00005000, 128);
 
-ALIGNED8 const Texture texture_credits_char_K[] = {
-#include "textures/segment2/segment2.06880.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_credits_char_K, "textures/segment2/segment2.06880.rgba16.inc.c", 0x00108a40, 48390, 0x00005080, 128);
 
-ALIGNED8 const Texture texture_credits_char_L[] = {
-#include "textures/segment2/segment2.06900.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_credits_char_L, "textures/segment2/segment2.06900.rgba16.inc.c", 0x00108a40, 48390, 0x00005100, 128);
 
-ALIGNED8 const Texture texture_credits_char_M[] = {
-#include "textures/segment2/segment2.06980.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_credits_char_M, "textures/segment2/segment2.06980.rgba16.inc.c", 0x00108a40, 48390, 0x00005180, 128);
 
-ALIGNED8 const Texture texture_credits_char_N[] = {
-#include "textures/segment2/segment2.06A00.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_credits_char_N, "textures/segment2/segment2.06A00.rgba16.inc.c", 0x00108a40, 48390, 0x00005200, 128);
 
-ALIGNED8 const Texture texture_credits_char_O[] = {
-#include "textures/segment2/segment2.06A80.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_credits_char_O, "textures/segment2/segment2.06A80.rgba16.inc.c", 0x00108a40, 48390, 0x00005280, 128);
 
-ALIGNED8 const Texture texture_credits_char_P[] = {
-#include "textures/segment2/segment2.06B00.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_credits_char_P, "textures/segment2/segment2.06B00.rgba16.inc.c", 0x00108a40, 48390, 0x00005300, 128);
 
-ALIGNED8 const Texture texture_credits_char_Q[] = {
-#include "textures/segment2/segment2.06B80.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_credits_char_Q, "textures/segment2/segment2.06B80.rgba16.inc.c", 0x00108a40, 48390, 0x00005380, 128);
 
-ALIGNED8 const Texture texture_credits_char_R[] = {
-#include "textures/segment2/segment2.06C00.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_credits_char_R, "textures/segment2/segment2.06C00.rgba16.inc.c", 0x00108a40, 48390, 0x00005400, 128);
 
-ALIGNED8 const Texture texture_credits_char_S[] = {
-#include "textures/segment2/segment2.06C80.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_credits_char_S, "textures/segment2/segment2.06C80.rgba16.inc.c", 0x00108a40, 48390, 0x00005480, 128);
 
-ALIGNED8 const Texture texture_credits_char_T[] = {
-#include "textures/segment2/segment2.06D00.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_credits_char_T, "textures/segment2/segment2.06D00.rgba16.inc.c", 0x00108a40, 48390, 0x00005500, 128);
 
-ALIGNED8 const Texture texture_credits_char_U[] = {
-#include "textures/segment2/segment2.06D80.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_credits_char_U, "textures/segment2/segment2.06D80.rgba16.inc.c", 0x00108a40, 48390, 0x00005580, 128);
 
-ALIGNED8 const Texture texture_credits_char_V[] = {
-#include "textures/segment2/segment2.06E00.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_credits_char_V, "textures/segment2/segment2.06E00.rgba16.inc.c", 0x00108a40, 48390, 0x00005600, 128);
 
-ALIGNED8 const Texture texture_credits_char_W[] = {
-#include "textures/segment2/segment2.06E80.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_credits_char_W, "textures/segment2/segment2.06E80.rgba16.inc.c", 0x00108a40, 48390, 0x00005680, 128);
 
-ALIGNED8 const Texture texture_credits_char_X[] = {
-#include "textures/segment2/segment2.06F00.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_credits_char_X, "textures/segment2/segment2.06F00.rgba16.inc.c", 0x00108a40, 48390, 0x00005700, 128);
 
-ALIGNED8 const Texture texture_credits_char_Y[] = {
-#include "textures/segment2/segment2.06F80.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_credits_char_Y, "textures/segment2/segment2.06F80.rgba16.inc.c", 0x00108a40, 48390, 0x00005780, 128);
 
-ALIGNED8 const Texture texture_credits_char_Z[] = {
-#include "textures/segment2/segment2.07000.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_credits_char_Z, "textures/segment2/segment2.07000.rgba16.inc.c", 0x00108a40, 48390, 0x00005800, 128);
 
-ALIGNED8 const Texture texture_credits_char_period[] = {
-#include "textures/segment2/segment2.07080.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_credits_char_period, "textures/segment2/segment2.07080.rgba16.inc.c", 0x00108a40, 48390, 0x00005880, 128);
 
 // JP Small Font
 #if defined(VERSION_JP) || defined(VERSION_SH)
@@ -498,9 +363,7 @@ ALIGNED8 const Texture texture_font_char_jp_Z[] = {
 #include "textures/segment2/segment2.07330.ia1.inc.c"
 };
 
-ALIGNED8 const Texture texture_font_char_jp_long_vowel[] = {
-#include "textures/segment2/segment2.07340.ia1.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_jp_long_vowel, "textures/segment2/segment2.07340.ia1.inc.c", 0x00108a40, 48390, 0x00005df2, 16);
 
 ALIGNED8 const Texture texture_font_char_jp_exclamation[] = {
 #include "textures/segment2/segment2.07350.ia1.inc.c"
@@ -1341,13 +1204,9 @@ ALIGNED8 const Texture texture_font_char_eu_double_quote_close[] = {
 #include "textures/segment2/font_graphics.06400.ia1.inc.c"
 };
 
-ALIGNED8 const Texture texture_font_char_eu_colon[] = {
-#include "textures/segment2/font_graphics.06410.ia1.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_eu_colon, "textures/segment2/font_graphics.06410.ia1.inc.c", 0x00188440, 199722, 0x00014676, 16);
 
-ALIGNED8 const Texture texture_font_char_EU_slash[] = {
-#include "textures/segment2/font_graphics.06420.ia1.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_EU_slash, "textures/segment2/font_graphics.06420.ia1.inc.c", 0x001c4230, 80474, 0x00020b5b, 16);
 
 ALIGNED8 const Texture texture_font_char_eu_button_A[] = {
 #include "textures/segment2/font_graphics.06430.ia1.inc.c"
@@ -1419,394 +1278,200 @@ ALIGNED8 const Texture texture_font_char_eu_eszeet[] = {
 
 // US Small Font
 #else
-ALIGNED8 const Texture texture_font_char_us_0[] = {
-#include "textures/segment2/font_graphics.05900.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_1[] = {
-#include "textures/segment2/font_graphics.05940.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_2[] = {
-#include "textures/segment2/font_graphics.05980.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_3[] = {
-#include "textures/segment2/font_graphics.059C0.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_4[] = {
-#include "textures/segment2/font_graphics.05A00.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_5[] = {
-#include "textures/segment2/font_graphics.05A40.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_6[] = {
-#include "textures/segment2/font_graphics.05A80.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_7[] = {
-#include "textures/segment2/font_graphics.05AC0.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_8[] = {
-#include "textures/segment2/font_graphics.05B00.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_9[] = {
-#include "textures/segment2/font_graphics.05B40.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_A[] = {
-#include "textures/segment2/font_graphics.05B80.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_B[] = {
-#include "textures/segment2/font_graphics.05BC0.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_C[] = {
-#include "textures/segment2/font_graphics.05C00.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_D[] = {
-#include "textures/segment2/font_graphics.05C40.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_E[] = {
-#include "textures/segment2/font_graphics.05C80.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_F[] = {
-#include "textures/segment2/font_graphics.05CC0.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_G[] = {
-#include "textures/segment2/font_graphics.05D00.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_H[] = {
-#include "textures/segment2/font_graphics.05D40.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_I[] = {
-#include "textures/segment2/font_graphics.05D80.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_J[] = {
-#include "textures/segment2/font_graphics.05DC0.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_K[] = {
-#include "textures/segment2/font_graphics.05E00.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_L[] = {
-#include "textures/segment2/font_graphics.05E40.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_M[] = {
-#include "textures/segment2/font_graphics.05E80.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_N[] = {
-#include "textures/segment2/font_graphics.05EC0.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_O[] = {
-#include "textures/segment2/font_graphics.05F00.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_P[] = {
-#include "textures/segment2/font_graphics.05F40.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_Q[] = {
-#include "textures/segment2/font_graphics.05F80.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_R[] = {
-#include "textures/segment2/font_graphics.05FC0.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_S[] = {
-#include "textures/segment2/font_graphics.06000.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_T[] = {
-#include "textures/segment2/font_graphics.06040.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_U[] = {
-#include "textures/segment2/font_graphics.06080.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_V[] = {
-#include "textures/segment2/font_graphics.060C0.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_W[] = {
-#include "textures/segment2/font_graphics.06100.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_X[] = {
-#include "textures/segment2/font_graphics.06140.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_Y[] = {
-#include "textures/segment2/font_graphics.06180.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_Z[] = {
-#include "textures/segment2/font_graphics.061C0.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_a[] = {
-#include "textures/segment2/font_graphics.06200.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_b[] = {
-#include "textures/segment2/font_graphics.06240.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_c[] = {
-#include "textures/segment2/font_graphics.06280.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_d[] = {
-#include "textures/segment2/font_graphics.062C0.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_e[] = {
-#include "textures/segment2/font_graphics.06300.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_f[] = {
-#include "textures/segment2/font_graphics.06340.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_g[] = {
-#include "textures/segment2/font_graphics.06380.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_h[] = {
-#include "textures/segment2/font_graphics.063C0.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_i[] = {
-#include "textures/segment2/font_graphics.06400.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_j[] = {
-#include "textures/segment2/font_graphics.06440.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_k[] = {
-#include "textures/segment2/font_graphics.06480.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_l[] = {
-#include "textures/segment2/font_graphics.064C0.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_m[] = {
-#include "textures/segment2/font_graphics.06500.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_n[] = {
-#include "textures/segment2/font_graphics.06540.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_o[] = {
-#include "textures/segment2/font_graphics.06580.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_p[] = {
-#include "textures/segment2/font_graphics.065C0.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_q[] = {
-#include "textures/segment2/font_graphics.06600.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_r[] = {
-#include "textures/segment2/font_graphics.06640.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_s[] = {
-#include "textures/segment2/font_graphics.06680.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_t[] = {
-#include "textures/segment2/font_graphics.066C0.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_u[] = {
-#include "textures/segment2/font_graphics.06700.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_v[] = {
-#include "textures/segment2/font_graphics.06740.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_w[] = {
-#include "textures/segment2/font_graphics.06780.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_x[] = {
-#include "textures/segment2/font_graphics.067C0.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_y[] = {
-#include "textures/segment2/font_graphics.06800.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_z[] = {
-#include "textures/segment2/font_graphics.06840.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_left_right_arrow[] = {
-#include "textures/segment2/font_graphics.06880.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_exclamation[] = {
-#include "textures/segment2/font_graphics.068C0.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_coin[] = {
-#include "textures/segment2/font_graphics.06900.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_multiply[] = {
-#include "textures/segment2/font_graphics.06940.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_open_parentheses[] = {
-#include "textures/segment2/font_graphics.06980.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_close_open_parentheses[] = {
-#include "textures/segment2/font_graphics.069C0.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_close_parentheses[] = {
-#include "textures/segment2/font_graphics.06A00.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_tilde[] = {
-#include "textures/segment2/font_graphics.06A40.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_period[] = {
-#include "textures/segment2/font_graphics.06A80.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_percent[] = {
-#include "textures/segment2/font_graphics.06AC0.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_interpunct[] = {
-#include "textures/segment2/font_graphics.06B00.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_comma[] = {
-#include "textures/segment2/font_graphics.06B40.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_apostrophe[] = {
-#include "textures/segment2/font_graphics.06B80.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_question[] = {
-#include "textures/segment2/font_graphics.06BC0.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_star_filled[] = {
-#include "textures/segment2/font_graphics.06C00.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_star_hollow[] = {
-#include "textures/segment2/font_graphics.06C40.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_double_quote_open[] = {
-#include "textures/segment2/font_graphics.06C80.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_double_quote_close[] = {
-#include "textures/segment2/font_graphics.06CC0.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_ellipsis[] = {
-#include "textures/segment2/font_graphics.06D00.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_slash[] = {
-#include "textures/segment2/font_graphics.06D40.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_ampersand[] = {
-#include "textures/segment2/font_graphics.06D80.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_button_A[] = {
-#include "textures/segment2/font_graphics.06DC0.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_button_B[] = {
-#include "textures/segment2/font_graphics.06E00.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_button_C[] = {
-#include "textures/segment2/font_graphics.06E40.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_button_Z[] = {
-#include "textures/segment2/font_graphics.06E80.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_button_R[] = {
-#include "textures/segment2/font_graphics.06EC0.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_button_C_up[] = {
-#include "textures/segment2/font_graphics.06F00.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_button_C_down[] = {
-#include "textures/segment2/font_graphics.06F40.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_button_C_left[] = {
-#include "textures/segment2/font_graphics.06F80.ia4.inc.c"
-};
-
-ALIGNED8 const Texture texture_font_char_us_button_C_right[] = {
-#include "textures/segment2/font_graphics.06FC0.ia4.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_0, "textures/segment2/font_graphics.05900.ia4.inc.c", 0x00108a40, 48390, 0x00005900, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_1, "textures/segment2/font_graphics.05940.ia4.inc.c", 0x00108a40, 48390, 0x00005940, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_2, "textures/segment2/font_graphics.05980.ia4.inc.c", 0x00108a40, 48390, 0x00005980, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_3, "textures/segment2/font_graphics.059C0.ia4.inc.c", 0x00108a40, 48390, 0x000059c0, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_4, "textures/segment2/font_graphics.05A00.ia4.inc.c", 0x00108a40, 48390, 0x00005a00, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_5, "textures/segment2/font_graphics.05A40.ia4.inc.c", 0x00108a40, 48390, 0x00005a40, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_6, "textures/segment2/font_graphics.05A80.ia4.inc.c", 0x00108a40, 48390, 0x00005a80, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_7, "textures/segment2/font_graphics.05AC0.ia4.inc.c", 0x00108a40, 48390, 0x00005ac0, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_8, "textures/segment2/font_graphics.05B00.ia4.inc.c", 0x00108a40, 48390, 0x00005b00, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_9, "textures/segment2/font_graphics.05B40.ia4.inc.c", 0x00108a40, 48390, 0x00005b40, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_A, "textures/segment2/font_graphics.05B80.ia4.inc.c", 0x00108a40, 48390, 0x00005b80, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_B, "textures/segment2/font_graphics.05BC0.ia4.inc.c", 0x00108a40, 48390, 0x00005bc0, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_C, "textures/segment2/font_graphics.05C00.ia4.inc.c", 0x00108a40, 48390, 0x00005c00, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_D, "textures/segment2/font_graphics.05C40.ia4.inc.c", 0x00108a40, 48390, 0x00005c40, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_E, "textures/segment2/font_graphics.05C80.ia4.inc.c", 0x00108a40, 48390, 0x00005c80, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_F, "textures/segment2/font_graphics.05CC0.ia4.inc.c", 0x00108a40, 48390, 0x00005cc0, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_G, "textures/segment2/font_graphics.05D00.ia4.inc.c", 0x00108a40, 48390, 0x00005d00, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_H, "textures/segment2/font_graphics.05D40.ia4.inc.c", 0x00108a40, 48390, 0x00005d40, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_I, "textures/segment2/font_graphics.05D80.ia4.inc.c", 0x00108a40, 48390, 0x00005d80, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_J, "textures/segment2/font_graphics.05DC0.ia4.inc.c", 0x00108a40, 48390, 0x00005dc0, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_K, "textures/segment2/font_graphics.05E00.ia4.inc.c", 0x00108a40, 48390, 0x00005e00, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_L, "textures/segment2/font_graphics.05E40.ia4.inc.c", 0x00108a40, 48390, 0x00005e40, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_M, "textures/segment2/font_graphics.05E80.ia4.inc.c", 0x00108a40, 48390, 0x00005e80, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_N, "textures/segment2/font_graphics.05EC0.ia4.inc.c", 0x00108a40, 48390, 0x00005ec0, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_O, "textures/segment2/font_graphics.05F00.ia4.inc.c", 0x00108a40, 48390, 0x00005f00, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_P, "textures/segment2/font_graphics.05F40.ia4.inc.c", 0x00108a40, 48390, 0x00005f40, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_Q, "textures/segment2/font_graphics.05F80.ia4.inc.c", 0x00108a40, 48390, 0x00005f80, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_R, "textures/segment2/font_graphics.05FC0.ia4.inc.c", 0x00108a40, 48390, 0x00005fc0, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_S, "textures/segment2/font_graphics.06000.ia4.inc.c", 0x00108a40, 48390, 0x00006000, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_T, "textures/segment2/font_graphics.06040.ia4.inc.c", 0x00108a40, 48390, 0x00006040, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_U, "textures/segment2/font_graphics.06080.ia4.inc.c", 0x00108a40, 48390, 0x00006080, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_V, "textures/segment2/font_graphics.060C0.ia4.inc.c", 0x00108a40, 48390, 0x000060c0, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_W, "textures/segment2/font_graphics.06100.ia4.inc.c", 0x00108a40, 48390, 0x00006100, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_X, "textures/segment2/font_graphics.06140.ia4.inc.c", 0x00108a40, 48390, 0x00006140, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_Y, "textures/segment2/font_graphics.06180.ia4.inc.c", 0x00108a40, 48390, 0x00006180, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_Z, "textures/segment2/font_graphics.061C0.ia4.inc.c", 0x00108a40, 48390, 0x000061c0, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_a, "textures/segment2/font_graphics.06200.ia4.inc.c", 0x00108a40, 48390, 0x00006200, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_b, "textures/segment2/font_graphics.06240.ia4.inc.c", 0x00108a40, 48390, 0x00006240, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_c, "textures/segment2/font_graphics.06280.ia4.inc.c", 0x00108a40, 48390, 0x00006280, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_d, "textures/segment2/font_graphics.062C0.ia4.inc.c", 0x00108a40, 48390, 0x000062c0, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_e, "textures/segment2/font_graphics.06300.ia4.inc.c", 0x00108a40, 48390, 0x00006300, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_f, "textures/segment2/font_graphics.06340.ia4.inc.c", 0x00108a40, 48390, 0x00006340, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_g, "textures/segment2/font_graphics.06380.ia4.inc.c", 0x00108a40, 48390, 0x00006380, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_h, "textures/segment2/font_graphics.063C0.ia4.inc.c", 0x00108a40, 48390, 0x000063c0, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_i, "textures/segment2/font_graphics.06400.ia4.inc.c", 0x00108a40, 48390, 0x00006400, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_j, "textures/segment2/font_graphics.06440.ia4.inc.c", 0x00108a40, 48390, 0x00006440, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_k, "textures/segment2/font_graphics.06480.ia4.inc.c", 0x00108a40, 48390, 0x00006480, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_l, "textures/segment2/font_graphics.064C0.ia4.inc.c", 0x00108a40, 48390, 0x000064c0, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_m, "textures/segment2/font_graphics.06500.ia4.inc.c", 0x00108a40, 48390, 0x00006500, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_n, "textures/segment2/font_graphics.06540.ia4.inc.c", 0x00108a40, 48390, 0x00006540, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_o, "textures/segment2/font_graphics.06580.ia4.inc.c", 0x00108a40, 48390, 0x00006580, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_p, "textures/segment2/font_graphics.065C0.ia4.inc.c", 0x00108a40, 48390, 0x000065c0, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_q, "textures/segment2/font_graphics.06600.ia4.inc.c", 0x00108a40, 48390, 0x00006600, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_r, "textures/segment2/font_graphics.06640.ia4.inc.c", 0x00108a40, 48390, 0x00006640, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_s, "textures/segment2/font_graphics.06680.ia4.inc.c", 0x00108a40, 48390, 0x00006680, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_t, "textures/segment2/font_graphics.066C0.ia4.inc.c", 0x00108a40, 48390, 0x000066c0, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_u, "textures/segment2/font_graphics.06700.ia4.inc.c", 0x00108a40, 48390, 0x00006700, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_v, "textures/segment2/font_graphics.06740.ia4.inc.c", 0x00108a40, 48390, 0x00006740, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_w, "textures/segment2/font_graphics.06780.ia4.inc.c", 0x00108a40, 48390, 0x00006780, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_x, "textures/segment2/font_graphics.067C0.ia4.inc.c", 0x00108a40, 48390, 0x000067c0, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_y, "textures/segment2/font_graphics.06800.ia4.inc.c", 0x00108a40, 48390, 0x00006800, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_z, "textures/segment2/font_graphics.06840.ia4.inc.c", 0x00108a40, 48390, 0x00006840, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_left_right_arrow, "textures/segment2/font_graphics.06880.ia4.inc.c", 0x00108a40, 48390, 0x00006880, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_exclamation, "textures/segment2/font_graphics.068C0.ia4.inc.c", 0x00108a40, 48390, 0x000068c0, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_coin, "textures/segment2/font_graphics.06900.ia4.inc.c", 0x00108a40, 48390, 0x00006900, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_multiply, "textures/segment2/font_graphics.06940.ia4.inc.c", 0x00108a40, 48390, 0x00006940, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_open_parentheses, "textures/segment2/font_graphics.06980.ia4.inc.c", 0x00108a40, 48390, 0x00006980, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_close_open_parentheses, "textures/segment2/font_graphics.069C0.ia4.inc.c", 0x00108a40, 48390, 0x000069c0, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_close_parentheses, "textures/segment2/font_graphics.06A00.ia4.inc.c", 0x00108a40, 48390, 0x00006a00, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_tilde, "textures/segment2/font_graphics.06A40.ia4.inc.c", 0x00108a40, 48390, 0x00006a40, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_period, "textures/segment2/font_graphics.06A80.ia4.inc.c", 0x00108a40, 48390, 0x00006a80, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_percent, "textures/segment2/font_graphics.06AC0.ia4.inc.c", 0x00108a40, 48390, 0x00006ac0, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_interpunct, "textures/segment2/font_graphics.06B00.ia4.inc.c", 0x00108a40, 48390, 0x00006b00, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_comma, "textures/segment2/font_graphics.06B40.ia4.inc.c", 0x00108a40, 48390, 0x00006b40, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_apostrophe, "textures/segment2/font_graphics.06B80.ia4.inc.c", 0x00108a40, 48390, 0x00006b80, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_question, "textures/segment2/font_graphics.06BC0.ia4.inc.c", 0x00108a40, 48390, 0x00006bc0, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_star_filled, "textures/segment2/font_graphics.06C00.ia4.inc.c", 0x00108a40, 48390, 0x00006c00, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_star_hollow, "textures/segment2/font_graphics.06C40.ia4.inc.c", 0x00108a40, 48390, 0x00006c40, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_double_quote_open, "textures/segment2/font_graphics.06C80.ia4.inc.c", 0x00108a40, 48390, 0x00006c80, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_double_quote_close, "textures/segment2/font_graphics.06CC0.ia4.inc.c", 0x00108a40, 48390, 0x00006cc0, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_ellipsis, "textures/segment2/font_graphics.06D00.ia4.inc.c", 0x00108a40, 48390, 0x00006d00, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_slash, "textures/segment2/font_graphics.06D40.ia4.inc.c", 0x00108a40, 48390, 0x00006d40, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_ampersand, "textures/segment2/font_graphics.06D80.ia4.inc.c", 0x00108a40, 48390, 0x00006d80, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_button_A, "textures/segment2/font_graphics.06DC0.ia4.inc.c", 0x00108a40, 48390, 0x00006dc0, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_button_B, "textures/segment2/font_graphics.06E00.ia4.inc.c", 0x00108a40, 48390, 0x00006e00, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_button_C, "textures/segment2/font_graphics.06E40.ia4.inc.c", 0x00108a40, 48390, 0x00006e40, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_button_Z, "textures/segment2/font_graphics.06E80.ia4.inc.c", 0x00108a40, 48390, 0x00006e80, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_button_R, "textures/segment2/font_graphics.06EC0.ia4.inc.c", 0x00108a40, 48390, 0x00006ec0, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_button_C_up, "textures/segment2/font_graphics.06F00.ia4.inc.c", 0x00108a40, 48390, 0x00006f00, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_button_C_down, "textures/segment2/font_graphics.06F40.ia4.inc.c", 0x00108a40, 48390, 0x00006f40, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_button_C_left, "textures/segment2/font_graphics.06F80.ia4.inc.c", 0x00108a40, 48390, 0x00006f80, 64);
+
+ROM_ASSET_LOAD_TEXTURE(texture_font_char_us_button_C_right, "textures/segment2/font_graphics.06FC0.ia4.inc.c", 0x00108a40, 48390, 0x00006fc0, 64);
 #endif
 
-ALIGNED8 const Texture texture_hud_char_camera[] = {
-#include "textures/segment2/segment2.07B50.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_hud_char_camera, "textures/segment2/segment2.07B50.rgba16.inc.c", 0x00108a40, 48390, 0x00007000, 512);
 
-ALIGNED8 const Texture texture_hud_char_lakitu[] = {
-#include "textures/segment2/segment2.07D50.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_hud_char_lakitu, "textures/segment2/segment2.07D50.rgba16.inc.c", 0x00108a40, 48390, 0x00007200, 512);
 
-ALIGNED8 const Texture texture_hud_char_no_camera[] = {
-#include "textures/segment2/segment2.07F50.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_hud_char_no_camera, "textures/segment2/segment2.07F50.rgba16.inc.c", 0x00108a40, 48390, 0x00007400, 512);
 
-ALIGNED8 const Texture texture_hud_char_arrow_up[] = {
-#include "textures/segment2/segment2.08150.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_hud_char_arrow_up, "textures/segment2/segment2.08150.rgba16.inc.c", 0x00108a40, 48390, 0x00007600, 128);
 
-ALIGNED8 const Texture texture_hud_char_arrow_down[] = {
-#include "textures/segment2/segment2.081D0.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_hud_char_arrow_down, "textures/segment2/segment2.081D0.rgba16.inc.c", 0x00108a40, 48390, 0x00007680, 128);
 
 // TODO: move these out of the font
 extern ALIGNED8 const Texture texture_hud_char_luigi_head[];
@@ -2179,12 +1844,7 @@ const Gfx dl_rgba16_text_end[] = {
 };
 
 // 0x0200EDA8 - 0x0200EDE8
-static const Vtx vertex_text_bg_box[] = {
-    {{{     0,    -80,      0}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   130,    -80,      0}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   130,      0,      0}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,      0,      0}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(vertex_text_bg_box, 0x00108a40, 48390, 0x00011c08, 64);
 
 // 0x0200EDE8 - 0x0200EE28
 const Gfx dl_draw_text_bg_box[] = {
@@ -2199,19 +1859,16 @@ const Gfx dl_draw_text_bg_box[] = {
 
 #ifndef VERSION_EU
 // 0x0200EE28 - 0x0200EE68
-static const Vtx vertex_ia8_char[] = {
 #if defined(VERSION_JP) || defined(VERSION_SH)
+static const Vtx vertex_ia8_char[] = {
     {{{     0,      0,      0}, 0, {     0,   1024}, {0xff, 0xff, 0xff, 0xff}}},
     {{{     8,      0,      0}, 0, {   512,   1024}, {0xff, 0xff, 0xff, 0xff}}},
     {{{     8,     16,      0}, 0, {   512,      0}, {0xff, 0xff, 0xff, 0xff}}},
     {{{     0,     16,      0}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-#else
-    {{{     0,      0,      0}, 0, {     0,    256}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     8,      0,      0}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     8,     16,      0}, 0, {   480,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,     16,      0}, 0, {   480,    256}, {0xff, 0xff, 0xff, 0xff}}},
-#endif
 };
+#else
+ROM_ASSET_LOAD_VTX(vertex_ia8_char, 0x00108a40, 48390, 0x00011c88, 64);
+#endif
 // !EU
 #endif
 
@@ -2312,11 +1969,7 @@ const Gfx dl_ia_text_end[] = {
 #endif
 
 // 0x0200EF30 - 0x0200EF60
-static const Vtx vertex_triangle[] = {
-    {{{     0,      0,      0}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     8,      8,      0}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,     16,      0}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(vertex_triangle, 0x00108a40, 48390, 0x00011d90, 48);
 
 // 0x0200EF60 - 0x0200EFB0
 const Gfx dl_draw_triangle[] = {
@@ -2333,12 +1986,7 @@ const Gfx dl_draw_triangle[] = {
 };
 
 // 0x0200EFB0 - 0x0200EFF0
-static const Vtx vertex_billboard_num[] = {
-    {{{   -32,    -32,      0}, 0, {     0,   1024}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    32,    -32,      0}, 0, {  1024,   1024}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    32,     32,      0}, 0, {  1024,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -32,     32,      0}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(vertex_billboard_num, 0x00108a40, 48390, 0x00011e10, 64);
 
 // 0x0200EFF0 - 0x0200F038
 const Gfx dl_billboard_num_begin[] = {
@@ -2567,49 +2215,27 @@ define_dl_billboard_num3(xx7, 7, 5);
 define_dl_billboard_num3(xx8, 8, 5);
 define_dl_billboard_num3(xx9, 9, 5);
 
-ALIGNED8 const Texture texture_shadow_quarter_circle[] = {
-#include "textures/segment2/shadow_quarter_circle.ia8.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_shadow_quarter_circle, "textures/segment2/shadow_quarter_circle.ia8.inc.c", 0x00108a40, 48390, 0x000120b8, 256);
 
-ALIGNED8 const Texture texture_shadow_quarter_square[] = {
-#include "textures/segment2/shadow_quarter_square.ia8.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_shadow_quarter_square, "textures/segment2/shadow_quarter_square.ia8.inc.c", 0x00108a40, 48390, 0x000121b8, 256);
 
-const Texture texture_transition_star_half[] = {
-#include "textures/segment2/segment2.0F458.ia8.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_transition_star_half, "textures/segment2/segment2.0F458.ia8.inc.c", 0x00108a40, 48390, 0x000122b8, 2048);
 
-const Texture texture_transition_circle_half[] = {
-#include "textures/segment2/segment2.0FC58.ia8.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_transition_circle_half, "textures/segment2/segment2.0FC58.ia8.inc.c", 0x00108a40, 48390, 0x00012ab8, 2048);
 
-const Texture texture_transition_mario[] = {
-#include "textures/segment2/segment2.10458.ia8.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_transition_mario, "textures/segment2/segment2.10458.ia8.inc.c", 0x00108a40, 48390, 0x000132b8, 4096);
 
-const Texture texture_transition_bowser_half[] = {
-#include "textures/segment2/segment2.11458.ia8.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_transition_bowser_half, "textures/segment2/segment2.11458.ia8.inc.c", 0x00108a40, 48390, 0x000142b8, 2048);
 
-const Texture texture_waterbox_water[] = {
-#include "textures/segment2/segment2.11C58.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_waterbox_water, "textures/segment2/segment2.11C58.rgba16.inc.c", 0x00108a40, 48390, 0x00014ab8, 2048);
 
-const Texture texture_waterbox_jrb_water[] = {
-#include "textures/segment2/segment2.12458.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_waterbox_jrb_water, "textures/segment2/segment2.12458.rgba16.inc.c", 0x00108a40, 48390, 0x000152b8, 2048);
 
-const Texture texture_waterbox_unknown_water[] = {
-#include "textures/segment2/segment2.12C58.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_waterbox_unknown_water, "textures/segment2/segment2.12C58.rgba16.inc.c", 0x00108a40, 48390, 0x00015ab8, 2048);
 
-const Texture texture_waterbox_mist[] = {
-#include "textures/segment2/segment2.13458.ia16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_waterbox_mist, "textures/segment2/segment2.13458.ia16.inc.c", 0x00108a40, 48390, 0x000162b8, 2048);
 
-const Texture texture_waterbox_lava[] = {
-#include "textures/segment2/segment2.13C58.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_waterbox_lava, "textures/segment2/segment2.13C58.rgba16.inc.c", 0x00108a40, 48390, 0x00016ab8, 2048);
 
 // Unreferenced light group
 static const Lights1 segment2_lights_unused = gdSPDefLights1(
@@ -2790,9 +2416,7 @@ const Gfx dl_waterbox_end[] = {
 };
 
 // 0x02014838 - 0x02014878
-ALIGNED8 const Texture texture_ia8_up_arrow[] = {
-#include "textures/segment2/segment2.14838.ia8.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(texture_ia8_up_arrow, "textures/segment2/segment2.14838.ia8.inc.c", 0x00108a40, 48390, 0x00017698, 64);
 
 // 0x02014878 - 0x020148B0
 const Gfx dl_ia8_up_arrow_begin[] = {

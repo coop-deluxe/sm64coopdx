@@ -1,3 +1,4 @@
+#include "pc/rom_assets.h"
 #include <PR/ultratypes.h>
 #include <PR/gbi.h>
 
@@ -244,392 +245,245 @@ const Gfx dl_cake_end_screen_eu_070297D8[] = {
 
 // VERSION_EU
 #else
+ROM_ASSET_LOAD_TEXTURE(cake_end_texture_0, "cake_end_texture_0", 0x0049e710, 56736, 0x00000000, 3200);
 
-#include "levels/ending/cake.inc.c"
+ROM_ASSET_LOAD_TEXTURE(cake_end_texture_1, "cake_end_texture_1", 0x0049e710, 56736, 0x00000c80, 3200);
+
+ROM_ASSET_LOAD_TEXTURE(cake_end_texture_2, "cake_end_texture_2", 0x0049e710, 56736, 0x00000c80, 3200);
+
+ROM_ASSET_LOAD_TEXTURE(cake_end_texture_3, "cake_end_texture_3", 0x0049e710, 56736, 0x00002580, 3200);
+
+ROM_ASSET_LOAD_TEXTURE(cake_end_texture_4, "cake_end_texture_4", 0x0049e710, 56736, 0x00003200, 3200);
+
+ROM_ASSET_LOAD_TEXTURE(cake_end_texture_5, "cake_end_texture_5", 0x0049e710, 56736, 0x00003e80, 3200);
+
+ROM_ASSET_LOAD_TEXTURE(cake_end_texture_6, "cake_end_texture_6", 0x0049e710, 56736, 0x00004b00, 3200);
+
+ROM_ASSET_LOAD_TEXTURE(cake_end_texture_7, "cake_end_texture_7", 0x0049e710, 56736, 0x00005780, 3200);
+
+ROM_ASSET_LOAD_TEXTURE(cake_end_texture_8, "cake_end_texture_8", 0x0049e710, 56736, 0x00006400, 3200);
+
+ROM_ASSET_LOAD_TEXTURE(cake_end_texture_9, "cake_end_texture_9", 0x0049e710, 56736, 0x00007080, 3200);
+
+ROM_ASSET_LOAD_TEXTURE(cake_end_texture_10, "cake_end_texture_10", 0x0049e710, 56736, 0x00007d00, 3200);
+
+ROM_ASSET_LOAD_TEXTURE(cake_end_texture_11, "cake_end_texture_11", 0x0049e710, 56736, 0x00008980, 3200);
+
+ROM_ASSET_LOAD_TEXTURE(cake_end_texture_12, "cake_end_texture_12", 0x0049e710, 56736, 0x00009600, 3200);
+
+ROM_ASSET_LOAD_TEXTURE(cake_end_texture_13, "cake_end_texture_13", 0x0049e710, 56736, 0x0000a280, 3200);
+
+ROM_ASSET_LOAD_TEXTURE(cake_end_texture_14, "cake_end_texture_14", 0x0049e710, 56736, 0x0000af00, 3200);
+
+ROM_ASSET_LOAD_TEXTURE(cake_end_texture_15, "cake_end_texture_15", 0x0049e710, 56736, 0x0000bb80, 3200);
+
+ROM_ASSET_LOAD_TEXTURE(cake_end_texture_16, "cake_end_texture_16", 0x0049e710, 56736, 0x0000c800, 3200);
+
+ROM_ASSET_LOAD_TEXTURE(cake_end_texture_17, "cake_end_texture_17", 0x0049e710, 56736, 0x0000d480, 3200);
+
+ROM_ASSET_LOAD_TEXTURE(cake_end_texture_18, "cake_end_texture_18", 0x0049e710, 56736, 0x0000e100, 3200);
+
+ROM_ASSET_LOAD_TEXTURE(cake_end_texture_19, "cake_end_texture_19", 0x0049e710, 56736, 0x0000ed80, 3200);
+
+ROM_ASSET_LOAD_TEXTURE(cake_end_texture_20, "cake_end_texture_20", 0x0049e710, 56736, 0x0000fa00, 3200);
+
+ROM_ASSET_LOAD_TEXTURE(cake_end_texture_21, "cake_end_texture_21", 0x0049e710, 56736, 0x00010680, 3200);
+
+ROM_ASSET_LOAD_TEXTURE(cake_end_texture_22, "cake_end_texture_22", 0x0049e710, 56736, 0x00011300, 3200);
+
+ROM_ASSET_LOAD_TEXTURE(cake_end_texture_23, "cake_end_texture_23", 0x0049e710, 56736, 0x00011f80, 3200);
+
+ROM_ASSET_LOAD_TEXTURE(cake_end_texture_24, "cake_end_texture_24", 0x0049e710, 56736, 0x00012c00, 3200);
+
+ROM_ASSET_LOAD_TEXTURE(cake_end_texture_25, "cake_end_texture_25", 0x0049e710, 56736, 0x00013880, 3200);
+
+ROM_ASSET_LOAD_TEXTURE(cake_end_texture_26, "cake_end_texture_26", 0x0049e710, 56736, 0x00014500, 3200);
+
+ROM_ASSET_LOAD_TEXTURE(cake_end_texture_27, "cake_end_texture_27", 0x0049e710, 56736, 0x00015180, 3200);
+
+ROM_ASSET_LOAD_TEXTURE(cake_end_texture_28, "cake_end_texture_28", 0x0049e710, 56736, 0x00015e00, 3200);
+
+ROM_ASSET_LOAD_TEXTURE(cake_end_texture_29, "cake_end_texture_29", 0x0049e710, 56736, 0x00016a80, 3200);
+
+ROM_ASSET_LOAD_TEXTURE(cake_end_texture_30, "cake_end_texture_30", 0x0049e710, 56736, 0x00017700, 3200);
+
+ROM_ASSET_LOAD_TEXTURE(cake_end_texture_31, "cake_end_texture_31", 0x0049e710, 56736, 0x00018380, 3200);
+
+ROM_ASSET_LOAD_TEXTURE(cake_end_texture_32, "cake_end_texture_32", 0x0049e710, 56736, 0x00019000, 3200);
+
+ROM_ASSET_LOAD_TEXTURE(cake_end_texture_33, "cake_end_texture_33", 0x0049e710, 56736, 0x00019c80, 3200);
+
+ROM_ASSET_LOAD_TEXTURE(cake_end_texture_34, "cake_end_texture_34", 0x0049e710, 56736, 0x0001a900, 3200);
+
+ROM_ASSET_LOAD_TEXTURE(cake_end_texture_35, "cake_end_texture_35", 0x0049e710, 56736, 0x0001b580, 3200);
+
+ROM_ASSET_LOAD_TEXTURE(cake_end_texture_36, "cake_end_texture_36", 0x0049e710, 56736, 0x0001c200, 3200);
+
+ROM_ASSET_LOAD_TEXTURE(cake_end_texture_37, "cake_end_texture_37", 0x0049e710, 56736, 0x0001ce80, 3200);
+
+ROM_ASSET_LOAD_TEXTURE(cake_end_texture_38, "cake_end_texture_38", 0x0049e710, 56736, 0x0001db00, 3200);
+
+ROM_ASSET_LOAD_TEXTURE(cake_end_texture_39, "cake_end_texture_39", 0x0049e710, 56736, 0x0001e780, 3200);
+
+ROM_ASSET_LOAD_TEXTURE(cake_end_texture_40, "cake_end_texture_40", 0x0049e710, 56736, 0x0001f400, 3200);
+
+ROM_ASSET_LOAD_TEXTURE(cake_end_texture_41, "cake_end_texture_41", 0x0049e710, 56736, 0x00020080, 3200);
+
+ROM_ASSET_LOAD_TEXTURE(cake_end_texture_42, "cake_end_texture_42", 0x0049e710, 56736, 0x00020d00, 3200);
+
+ROM_ASSET_LOAD_TEXTURE(cake_end_texture_43, "cake_end_texture_43", 0x0049e710, 56736, 0x00021980, 3200);
+
+ROM_ASSET_LOAD_TEXTURE(cake_end_texture_44, "cake_end_texture_44", 0x002d0040, 25776, 0x00017a40, 3200);
+
+ROM_ASSET_LOAD_TEXTURE(cake_end_texture_45, "cake_end_texture_45", 0x0049e710, 56736, 0x00023280, 3200);
+
+ROM_ASSET_LOAD_TEXTURE(cake_end_texture_46, "cake_end_texture_46", 0x0049e710, 56736, 0x00023f00, 3200);
+
+ROM_ASSET_LOAD_TEXTURE(cake_end_texture_47, "cake_end_texture_47", 0x002d0040, 25776, 0x00017a40, 3200);
 
 // 0x07025800 - 0x07025840
-static const Vtx cake_end_vertex_07025800[] = {
-    {{{     0,    220,     -1}, 0, {     0,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    80,    220,     -1}, 0, {  2528,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    80,    240,     -1}, 0, {  2528,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,    240,     -1}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(cake_end_vertex_07025800, 0x0049e710, 56736, 0x00025800, 64);
 
 // 0x07025840 - 0x07025880
-static const Vtx cake_end_vertex_07025840[] = {
-    {{{    80,    220,     -1}, 0, {     0,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   160,    220,     -1}, 0, {  2528,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   160,    240,     -1}, 0, {  2528,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    80,    240,     -1}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(cake_end_vertex_07025840, 0x0049e710, 56736, 0x00025840, 64);
 
 // 0x07025880 - 0x070258C0
-static const Vtx cake_end_vertex_07025880[] = {
-    {{{   160,    220,     -1}, 0, {     0,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   240,    220,     -1}, 0, {  2528,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   240,    240,     -1}, 0, {  2528,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   160,    240,     -1}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(cake_end_vertex_07025880, 0x0049e710, 56736, 0x00025880, 64);
 
 // 0x070258C0 - 0x07025900
-static const Vtx cake_end_vertex_070258C0[] = {
-    {{{   240,    220,     -1}, 0, {     0,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   320,    220,     -1}, 0, {  2528,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   320,    240,     -1}, 0, {  2528,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   240,    240,     -1}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(cake_end_vertex_070258C0, 0x0049e710, 56736, 0x000258c0, 64);
 
 // 0x07025900 - 0x07025940
-static const Vtx cake_end_vertex_07025900[] = {
-    {{{     0,    200,     -1}, 0, {     0,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    80,    200,     -1}, 0, {  2528,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    80,    220,     -1}, 0, {  2528,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,    220,     -1}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(cake_end_vertex_07025900, 0x0049e710, 56736, 0x00025900, 64);
 
 // 0x07025940 - 0x07025980
-static const Vtx cake_end_vertex_07025940[] = {
-    {{{    80,    200,     -1}, 0, {     0,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   160,    200,     -1}, 0, {  2528,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   160,    220,     -1}, 0, {  2528,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    80,    220,     -1}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(cake_end_vertex_07025940, 0x0049e710, 56736, 0x00025940, 64);
 
 // 0x07025980 - 0x070259C0
-static const Vtx cake_end_vertex_07025980[] = {
-    {{{   160,    200,     -1}, 0, {     0,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   240,    200,     -1}, 0, {  2528,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   240,    220,     -1}, 0, {  2528,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   160,    220,     -1}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(cake_end_vertex_07025980, 0x0049e710, 56736, 0x00025980, 64);
 
 // 0x070259C0 - 0x07025A00
-static const Vtx cake_end_vertex_070259C0[] = {
-    {{{   240,    200,     -1}, 0, {     0,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   320,    200,     -1}, 0, {  2528,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   320,    220,     -1}, 0, {  2528,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   240,    220,     -1}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(cake_end_vertex_070259C0, 0x0049e710, 56736, 0x000259c0, 64);
 
 // 0x07025A00 - 0x07025A40
-static const Vtx cake_end_vertex_07025A00[] = {
-    {{{     0,    180,     -1}, 0, {     0,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    80,    180,     -1}, 0, {  2528,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    80,    200,     -1}, 0, {  2528,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,    200,     -1}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(cake_end_vertex_07025A00, 0x0049e710, 56736, 0x00025a00, 64);
 
 // 0x07025A40 - 0x07025A80
-static const Vtx cake_end_vertex_07025A40[] = {
-    {{{    80,    180,     -1}, 0, {     0,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   160,    180,     -1}, 0, {  2528,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   160,    200,     -1}, 0, {  2528,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    80,    200,     -1}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(cake_end_vertex_07025A40, 0x0049e710, 56736, 0x00025a40, 64);
 
 // 0x07025A80 - 0x07025AC0
-static const Vtx cake_end_vertex_07025A80[] = {
-    {{{   160,    180,     -1}, 0, {     0,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   240,    180,     -1}, 0, {  2528,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   240,    200,     -1}, 0, {  2528,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   160,    200,     -1}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(cake_end_vertex_07025A80, 0x0049e710, 56736, 0x00025a80, 64);
 
 // 0x07025AC0 - 0x07025B00
-static const Vtx cake_end_vertex_07025AC0[] = {
-    {{{   240,    180,     -1}, 0, {     0,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   320,    180,     -1}, 0, {  2528,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   320,    200,     -1}, 0, {  2528,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   240,    200,     -1}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(cake_end_vertex_07025AC0, 0x0049e710, 56736, 0x00025ac0, 64);
 
 // 0x07025B00 - 0x07025B40
-static const Vtx cake_end_vertex_07025B00[] = {
-    {{{     0,    160,     -1}, 0, {     0,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    80,    160,     -1}, 0, {  2528,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    80,    180,     -1}, 0, {  2528,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,    180,     -1}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(cake_end_vertex_07025B00, 0x0049e710, 56736, 0x00025b00, 64);
 
 // 0x07025B40 - 0x07025B80
-static const Vtx cake_end_vertex_07025B40[] = {
-    {{{    80,    160,     -1}, 0, {     0,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   160,    160,     -1}, 0, {  2528,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   160,    180,     -1}, 0, {  2528,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    80,    180,     -1}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(cake_end_vertex_07025B40, 0x0049e710, 56736, 0x00025b40, 64);
 
 // 0x07025B80 - 0x07025BC0
-static const Vtx cake_end_vertex_07025B80[] = {
-    {{{   160,    160,     -1}, 0, {     0,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   240,    160,     -1}, 0, {  2528,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   240,    180,     -1}, 0, {  2528,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   160,    180,     -1}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(cake_end_vertex_07025B80, 0x0049e710, 56736, 0x00025b80, 64);
 
 // 0x07025BC0 - 0x07025C00
-static const Vtx cake_end_vertex_07025BC0[] = {
-    {{{   240,    160,     -1}, 0, {     0,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   320,    160,     -1}, 0, {  2528,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   320,    180,     -1}, 0, {  2528,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   240,    180,     -1}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(cake_end_vertex_07025BC0, 0x0049e710, 56736, 0x00025bc0, 64);
 
 // 0x07025C00 - 0x07025C40
-static const Vtx cake_end_vertex_07025C00[] = {
-    {{{     0,    140,     -1}, 0, {     0,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    80,    140,     -1}, 0, {  2528,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    80,    160,     -1}, 0, {  2528,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,    160,     -1}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(cake_end_vertex_07025C00, 0x0049e710, 56736, 0x00025c00, 64);
 
 // 0x07025C40 - 0x07025C80
-static const Vtx cake_end_vertex_07025C40[] = {
-    {{{    80,    140,     -1}, 0, {     0,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   160,    140,     -1}, 0, {  2528,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   160,    160,     -1}, 0, {  2528,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    80,    160,     -1}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(cake_end_vertex_07025C40, 0x0049e710, 56736, 0x00025c40, 64);
 
 // 0x07025C80 - 0x07025CC0
-static const Vtx cake_end_vertex_07025C80[] = {
-    {{{   160,    140,     -1}, 0, {     0,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   240,    140,     -1}, 0, {  2528,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   240,    160,     -1}, 0, {  2528,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   160,    160,     -1}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(cake_end_vertex_07025C80, 0x0049e710, 56736, 0x00025c80, 64);
 
 // 0x07025CC0 - 0x07025D00
-static const Vtx cake_end_vertex_07025CC0[] = {
-    {{{   240,    140,     -1}, 0, {     0,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   320,    140,     -1}, 0, {  2528,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   320,    160,     -1}, 0, {  2528,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   240,    160,     -1}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(cake_end_vertex_07025CC0, 0x0049e710, 56736, 0x00025cc0, 64);
 
 // 0x07025D00 - 0x07025D40
-static const Vtx cake_end_vertex_07025D00[] = {
-    {{{     0,    120,     -1}, 0, {     0,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    80,    120,     -1}, 0, {  2528,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    80,    140,     -1}, 0, {  2528,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,    140,     -1}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(cake_end_vertex_07025D00, 0x0049e710, 56736, 0x00025d00, 64);
 
 // 0x07025D40 - 0x07025D80
-static const Vtx cake_end_vertex_07025D40[] = {
-    {{{    80,    120,     -1}, 0, {     0,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   160,    120,     -1}, 0, {  2528,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   160,    140,     -1}, 0, {  2528,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    80,    140,     -1}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(cake_end_vertex_07025D40, 0x0049e710, 56736, 0x00025d40, 64);
 
 // 0x07025D80 - 0x07025DC0
-static const Vtx cake_end_vertex_07025D80[] = {
-    {{{   160,    120,     -1}, 0, {     0,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   240,    120,     -1}, 0, {  2528,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   240,    140,     -1}, 0, {  2528,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   160,    140,     -1}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(cake_end_vertex_07025D80, 0x0049e710, 56736, 0x00025d80, 64);
 
 // 0x07025DC0 - 0x07025E00
-static const Vtx cake_end_vertex_07025DC0[] = {
-    {{{   240,    120,     -1}, 0, {     0,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   320,    120,     -1}, 0, {  2528,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   320,    140,     -1}, 0, {  2528,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   240,    140,     -1}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(cake_end_vertex_07025DC0, 0x0049e710, 56736, 0x00025dc0, 64);
 
 // 0x07025E00 - 0x07025E40
-static const Vtx cake_end_vertex_07025E00[] = {
-    {{{     0,    100,     -1}, 0, {     0,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    80,    100,     -1}, 0, {  2528,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    80,    120,     -1}, 0, {  2528,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,    120,     -1}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(cake_end_vertex_07025E00, 0x0049e710, 56736, 0x00025e00, 64);
 
 // 0x07025E40 - 0x07025E80
-static const Vtx cake_end_vertex_07025E40[] = {
-    {{{    80,    100,     -1}, 0, {     0,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   160,    100,     -1}, 0, {  2528,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   160,    120,     -1}, 0, {  2528,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    80,    120,     -1}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(cake_end_vertex_07025E40, 0x0049e710, 56736, 0x00025e40, 64);
 
 // 0x07025E80 - 0x07025EC0
-static const Vtx cake_end_vertex_07025E80[] = {
-    {{{   160,    100,     -1}, 0, {     0,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   240,    100,     -1}, 0, {  2528,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   240,    120,     -1}, 0, {  2528,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   160,    120,     -1}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(cake_end_vertex_07025E80, 0x0049e710, 56736, 0x00025e80, 64);
 
 // 0x07025EC0 - 0x07025F00
-static const Vtx cake_end_vertex_07025EC0[] = {
-    {{{   240,    100,     -1}, 0, {     0,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   320,    100,     -1}, 0, {  2528,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   320,    120,     -1}, 0, {  2528,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   240,    120,     -1}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(cake_end_vertex_07025EC0, 0x0049e710, 56736, 0x00025ec0, 64);
 
 // 0x07025F00 - 0x07025F40
-static const Vtx cake_end_vertex_07025F00[] = {
-    {{{     0,     80,     -1}, 0, {     0,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    80,     80,     -1}, 0, {  2528,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    80,    100,     -1}, 0, {  2528,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,    100,     -1}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(cake_end_vertex_07025F00, 0x0049e710, 56736, 0x00025f00, 64);
 
 // 0x07025F40 - 0x07025F80
-static const Vtx cake_end_vertex_07025F40[] = {
-    {{{    80,     80,     -1}, 0, {     0,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   160,     80,     -1}, 0, {  2528,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   160,    100,     -1}, 0, {  2528,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    80,    100,     -1}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(cake_end_vertex_07025F40, 0x0049e710, 56736, 0x00025f40, 64);
 
 // 0x07025F80 - 0x07025FC0
-static const Vtx cake_end_vertex_07025F80[] = {
-    {{{   160,     80,     -1}, 0, {     0,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   240,     80,     -1}, 0, {  2528,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   240,    100,     -1}, 0, {  2528,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   160,    100,     -1}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(cake_end_vertex_07025F80, 0x0049e710, 56736, 0x00025f80, 64);
 
 // 0x07025FC0 - 0x07026000
-static const Vtx cake_end_vertex_07025FC0[] = {
-    {{{   240,     80,     -1}, 0, {     0,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   320,     80,     -1}, 0, {  2528,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   320,    100,     -1}, 0, {  2528,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   240,    100,     -1}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(cake_end_vertex_07025FC0, 0x0049e710, 56736, 0x00025fc0, 64);
 
 // 0x07026000 - 0x07026040
-static const Vtx cake_end_vertex_07026000[] = {
-    {{{     0,     60,     -1}, 0, {     0,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    80,     60,     -1}, 0, {  2528,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    80,     80,     -1}, 0, {  2528,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,     80,     -1}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(cake_end_vertex_07026000, 0x002708c0, 12510, 0x00000000, 64);
 
 // 0x07026040 - 0x07026080
-static const Vtx cake_end_vertex_07026040[] = {
-    {{{    80,     60,     -1}, 0, {     0,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   160,     60,     -1}, 0, {  2528,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   160,     80,     -1}, 0, {  2528,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    80,     80,     -1}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(cake_end_vertex_07026040, 0x0049e710, 56736, 0x00026040, 64);
 
 // 0x07026080 - 0x070260C0
-static const Vtx cake_end_vertex_07026080[] = {
-    {{{   160,     60,     -1}, 0, {     0,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   240,     60,     -1}, 0, {  2528,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   240,     80,     -1}, 0, {  2528,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   160,     80,     -1}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(cake_end_vertex_07026080, 0x0049e710, 56736, 0x00026080, 64);
 
 // 0x070260C0 - 0x07026100
-static const Vtx cake_end_vertex_070260C0[] = {
-    {{{   240,     60,     -1}, 0, {     0,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   320,     60,     -1}, 0, {  2528,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   320,     80,     -1}, 0, {  2528,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   240,     80,     -1}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(cake_end_vertex_070260C0, 0x0049e710, 56736, 0x000260c0, 64);
 
 // 0x07026100 - 0x07026140
-static const Vtx cake_end_vertex_07026100[] = {
-    {{{     0,     40,     -1}, 0, {     0,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    80,     40,     -1}, 0, {  2528,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    80,     60,     -1}, 0, {  2528,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,     60,     -1}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(cake_end_vertex_07026100, 0x002708c0, 12510, 0x00000040, 64);
 
 // 0x07026140 - 0x07026180
-static const Vtx cake_end_vertex_07026140[] = {
-    {{{    80,     40,     -1}, 0, {     0,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   160,     40,     -1}, 0, {  2528,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   160,     60,     -1}, 0, {  2528,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    80,     60,     -1}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(cake_end_vertex_07026140, 0x0049e710, 56736, 0x00026140, 64);
 
 // 0x07026180 - 0x070261C0
-static const Vtx cake_end_vertex_07026180[] = {
-    {{{   160,     40,     -1}, 0, {     0,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   240,     40,     -1}, 0, {  2528,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   240,     60,     -1}, 0, {  2528,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   160,     60,     -1}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(cake_end_vertex_07026180, 0x0049e710, 56736, 0x00026180, 64);
 
 // 0x070261C0 - 0x07026200
-static const Vtx cake_end_vertex_070261C0[] = {
-    {{{   240,     40,     -1}, 0, {     0,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   320,     40,     -1}, 0, {  2528,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   320,     60,     -1}, 0, {  2528,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   240,     60,     -1}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(cake_end_vertex_070261C0, 0x0049e710, 56736, 0x000261c0, 64);
 
 // 0x07026200 - 0x07026240
-static const Vtx cake_end_vertex_07026200[] = {
-    {{{     0,     20,     -1}, 0, {     0,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    80,     20,     -1}, 0, {  2528,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    80,     40,     -1}, 0, {  2528,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,     40,     -1}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(cake_end_vertex_07026200, 0x002708c0, 12510, 0x00000080, 64);
 
 // 0x07026240 - 0x07026280
-static const Vtx cake_end_vertex_07026240[] = {
-    {{{    80,     20,     -1}, 0, {     0,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   160,     20,     -1}, 0, {  2528,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   160,     40,     -1}, 0, {  2528,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    80,     40,     -1}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(cake_end_vertex_07026240, 0x0049e710, 56736, 0x00026240, 64);
 
 // 0x07026280 - 0x070262C0
-static const Vtx cake_end_vertex_07026280[] = {
-    {{{   160,     20,     -1}, 0, {     0,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   240,     20,     -1}, 0, {  2528,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   240,     40,     -1}, 0, {  2528,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   160,     40,     -1}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(cake_end_vertex_07026280, 0x0049e710, 56736, 0x00026280, 64);
 
 // 0x070262C0 - 0x07026300
-static const Vtx cake_end_vertex_070262C0[] = {
-    {{{   240,     20,     -1}, 0, {     0,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   320,     20,     -1}, 0, {  2528,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   320,     40,     -1}, 0, {  2528,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   240,     40,     -1}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(cake_end_vertex_070262C0, 0x0049e710, 56736, 0x000262c0, 64);
 
 // 0x07026300 - 0x07026340
-static const Vtx cake_end_vertex_07026300[] = {
-    {{{     0,      0,     -1}, 0, {     0,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    80,      0,     -1}, 0, {  2528,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    80,     20,     -1}, 0, {  2528,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,     20,     -1}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(cake_end_vertex_07026300, 0x002708c0, 12510, 0x000000c0, 64);
 
 // 0x07026340 - 0x07026380
-static const Vtx cake_end_vertex_07026340[] = {
-    {{{    80,      0,     -1}, 0, {     0,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   160,      0,     -1}, 0, {  2528,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   160,     20,     -1}, 0, {  2528,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    80,     20,     -1}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(cake_end_vertex_07026340, 0x0049e710, 56736, 0x00026340, 64);
 
 // 0x07026380 - 0x070263C0
-static const Vtx cake_end_vertex_07026380[] = {
-    {{{   160,      0,     -1}, 0, {     0,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   240,      0,     -1}, 0, {  2528,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   240,     20,     -1}, 0, {  2528,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   160,     20,     -1}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(cake_end_vertex_07026380, 0x0049e710, 56736, 0x00026380, 64);
 
 // 0x070263C0 - 0x07026400
-static const Vtx cake_end_vertex_070263C0[] = {
-    {{{   240,      0,     -1}, 0, {     0,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   320,      0,     -1}, 0, {  2528,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   320,     20,     -1}, 0, {  2528,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   240,     20,     -1}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(cake_end_vertex_070263C0, 0x0049e710, 56736, 0x000263c0, 64);
 
 // 0x07026400 - 0x07027350
 const Gfx dl_cake_end_screen[] = {

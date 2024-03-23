@@ -1,3 +1,4 @@
+#include "pc/rom_assets.h"
 // Bookend
 
 // Unreferenced light group
@@ -25,29 +26,19 @@ UNUSED static const Lights1 bookend_lights_unused4 = gdSPDefLights1(
 );
 
 // 0x05000060
-ALIGNED8 const Texture bookend_seg5_texture_05000060[] = {
-#include "actors/bookend/bookend_spine.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(bookend_seg5_texture_05000060, "actors/bookend/bookend_spine.rgba16.inc.c", 0x00166c60, 26968, 0x00000060, 1024);
 
 // 0x05000460
-ALIGNED8 const Texture bookend_seg5_texture_05000460[] = {
-#include "actors/bookend/bookend_tooth.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(bookend_seg5_texture_05000460, "actors/bookend/bookend_tooth.rgba16.inc.c", 0x00166c60, 26968, 0x00000460, 1024);
 
 // 0x05000860
-ALIGNED8 const Texture bookend_seg5_texture_05000860[] = {
-#include "actors/bookend/bookend_mouth.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(bookend_seg5_texture_05000860, "actors/bookend/bookend_mouth.rgba16.inc.c", 0x00166c60, 26968, 0x00000860, 1024);
 
 // 0x05000C60
-ALIGNED8 const Texture bookend_seg5_texture_05000C60[] = {
-#include "actors/bookend/bookend_pages.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(bookend_seg5_texture_05000C60, "actors/bookend/bookend_pages.rgba16.inc.c", 0x00166c60, 26968, 0x00000c60, 1024);
 
 // 0x05001060
-ALIGNED8 const Texture bookend_seg5_texture_05001060[] = {
-#include "actors/bookend/bookend_cover.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(bookend_seg5_texture_05001060, "actors/bookend/bookend_cover.rgba16.inc.c", 0x00166c60, 26968, 0x00001060, 2048);
 
 // 0x05001860
 static const Lights1 bookend_seg5_lights_05001860 = gdSPDefLights1(
@@ -56,20 +47,10 @@ static const Lights1 bookend_seg5_lights_05001860 = gdSPDefLights1(
 );
 
 // 0x05001878
-static const Vtx bookend_seg5_vertex_05001878[] = {
-    {{{   -10,      0,    108}, 0, {     0,    990}, {0x83, 0xed, 0x00, 0xff}}},
-    {{{    -4,    -39,   -109}, 0, {   479,      0}, {0x83, 0xed, 0x00, 0xff}}},
-    {{{    -4,    -39,    108}, 0, {   479,    990}, {0x83, 0xed, 0x00, 0xff}}},
-    {{{   -10,      0,   -109}, 0, {     0,      0}, {0x83, 0xed, 0x00, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(bookend_seg5_vertex_05001878, 0x00166c60, 26968, 0x00001878, 64);
 
 // 0x050018B8
-static const Vtx bookend_seg5_vertex_050018B8[] = {
-    {{{    -4,    -39,   -109}, 0, {   479,      0}, {0x00, 0x81, 0x00, 0xff}}},
-    {{{   185,    -39,    108}, 0, {     0,    990}, {0x00, 0x81, 0x00, 0xff}}},
-    {{{    -4,    -39,    108}, 0, {   479,    990}, {0x00, 0x81, 0x00, 0xff}}},
-    {{{   185,    -39,   -109}, 0, {     0,      0}, {0x00, 0x81, 0x00, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(bookend_seg5_vertex_050018B8, 0x00166c60, 26968, 0x000018b8, 64);
 
 // 0x050018F8 - 0x05001940
 const Gfx bookend_seg5_dl_050018F8[] = {
@@ -122,20 +103,10 @@ static const Lights1 bookend_seg5_lights_05001A08 = gdSPDefLights1(
 );
 
 // 0x05001A20
-static const Vtx bookend_seg5_vertex_05001A20[] = {
-    {{{    -4,    -39,   -107}, 0, {   479,    990}, {0x83, 0xed, 0x00, 0xff}}},
-    {{{    -4,    -39,    110}, 0, {   479,      0}, {0x83, 0xed, 0x00, 0xff}}},
-    {{{   -10,      0,    110}, 0, {     0,      0}, {0x83, 0xed, 0x00, 0xff}}},
-    {{{   -10,      0,   -107}, 0, {     0,    990}, {0x83, 0xed, 0x00, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(bookend_seg5_vertex_05001A20, 0x00166c60, 26968, 0x00001a20, 64);
 
 // 0x05001A60
-static const Vtx bookend_seg5_vertex_05001A60[] = {
-    {{{    -4,    -39,   -107}, 0, {     0,    990}, {0x00, 0x81, 0x00, 0xff}}},
-    {{{   185,    -39,    110}, 0, {   990,      0}, {0x00, 0x81, 0x00, 0xff}}},
-    {{{    -4,    -39,    110}, 0, {     0,      0}, {0x00, 0x81, 0x00, 0xff}}},
-    {{{   185,    -39,   -107}, 0, {   990,    990}, {0x00, 0x81, 0x00, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(bookend_seg5_vertex_05001A60, 0x00166c60, 26968, 0x00001a60, 64);
 
 // 0x05001AA0 - 0x05001AE8
 const Gfx bookend_seg5_dl_05001AA0[] = {
@@ -188,28 +159,10 @@ static const Lights1 bookend_seg5_lights_05001BB0 = gdSPDefLights1(
 );
 
 // 0x05001BC8
-static const Vtx bookend_seg5_vertex_05001BC8[] = {
-    {{{   -10,      0,    103}, 0, {     0,    990}, {0x00, 0x7f, 0x00, 0xff}}},
-    {{{   159,      0,   -104}, 0, {   479,      0}, {0x00, 0x7f, 0x00, 0xff}}},
-    {{{   -10,      0,   -104}, 0, {     0,      0}, {0x00, 0x7f, 0x00, 0xff}}},
-    {{{   159,      0,    103}, 0, {   479,    990}, {0x00, 0x7f, 0x00, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(bookend_seg5_vertex_05001BC8, 0x00166c60, 26968, 0x00001bc8, 64);
 
 // 0x05001C08
-static const Vtx bookend_seg5_vertex_05001C08[] = {
-    {{{   159,      0,    103}, 0, {     0,     -6}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{   -10,      0,    103}, 0, {     0,    990}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{    -4,    -38,    103}, 0, {   479,    990}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{   170,    -38,    103}, 0, {   479,      0}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{   159,      0,   -104}, 0, {     0,      0}, {0x79, 0x23, 0x00, 0xff}}},
-    {{{   159,      0,    103}, 0, {     0,    990}, {0x79, 0x23, 0x00, 0xff}}},
-    {{{   170,    -38,    103}, 0, {   479,    990}, {0x79, 0x23, 0x00, 0xff}}},
-    {{{   170,    -38,   -104}, 0, {   479,      0}, {0x79, 0x23, 0x00, 0xff}}},
-    {{{   -10,      0,   -104}, 0, {     0,     -6}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{   159,      0,   -104}, 0, {     0,    990}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{   170,    -38,   -104}, 0, {   479,    990}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{    -4,    -38,   -104}, 0, {   479,      0}, {0x00, 0x00, 0x81, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(bookend_seg5_vertex_05001C08, 0x00166c60, 26968, 0x00001c08, 192);
 
 // 0x05001CC8 - 0x05001D10
 const Gfx bookend_seg5_dl_05001CC8[] = {
@@ -261,28 +214,10 @@ static const Lights1 bookend_seg5_lights_05001DE0 = gdSPDefLights1(
 );
 
 // 0x05001DF8
-static const Vtx bookend_seg5_vertex_05001DF8[] = {
-    {{{   -10,      0,    105}, 0, {     0,      0}, {0x00, 0x7f, 0x00, 0xff}}},
-    {{{   159,      0,   -102}, 0, {   479,    990}, {0x00, 0x7f, 0x00, 0xff}}},
-    {{{   -10,      0,   -102}, 0, {     0,    990}, {0x00, 0x7f, 0x00, 0xff}}},
-    {{{   159,      0,    105}, 0, {   479,      0}, {0x00, 0x7f, 0x00, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(bookend_seg5_vertex_05001DF8, 0x00166c60, 26968, 0x00001df8, 64);
 
 // 0x05001E38
-static const Vtx bookend_seg5_vertex_05001E38[] = {
-    {{{   170,    -38,   -102}, 0, {   479,    990}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{    -4,    -38,   -102}, 0, {   479,      0}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{   -10,      0,   -102}, 0, {     0,     -6}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{   159,      0,   -102}, 0, {     0,    990}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{   170,    -38,    105}, 0, {   479,    990}, {0x79, 0x23, 0x00, 0xff}}},
-    {{{   170,    -38,   -102}, 0, {   479,      0}, {0x79, 0x23, 0x00, 0xff}}},
-    {{{   159,      0,   -102}, 0, {     0,      0}, {0x79, 0x23, 0x00, 0xff}}},
-    {{{   159,      0,    105}, 0, {     0,    990}, {0x79, 0x23, 0x00, 0xff}}},
-    {{{    -4,    -38,    105}, 0, {   479,    990}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{   170,    -38,    105}, 0, {   479,      0}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{   159,      0,    105}, 0, {     0,     -6}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{   -10,      0,    105}, 0, {     0,    990}, {0x00, 0x00, 0x7f, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(bookend_seg5_vertex_05001E38, 0x00166c60, 26968, 0x00001e38, 192);
 
 // 0x05001EF8 - 0x05001F40
 const Gfx bookend_seg5_dl_05001EF8[] = {
@@ -334,20 +269,7 @@ static const Lights1 bookend_seg5_lights_05002010 = gdSPDefLights1(
 );
 
 // 0x05002028
-static const Vtx bookend_seg5_vertex_05002028[] = {
-    {{{   157,     -1,    -48}, 0, {     6,    358}, {0x83, 0xee, 0x00, 0xff}}},
-    {{{   151,     39,    -72}, 0, {   475,    624}, {0x83, 0xee, 0x00, 0xff}}},
-    {{{   157,     -1,    -99}, 0, {   372,  -1002}, {0x83, 0xee, 0x00, 0xff}}},
-    {{{   157,     -1,      0}, 0, {   106,    390}, {0x83, 0xee, 0x00, 0xff}}},
-    {{{   151,     39,    -24}, 0, {   465,    636}, {0x83, 0xee, 0x00, 0xff}}},
-    {{{   157,     -1,    -48}, 0, {   461,   -950}, {0x83, 0xee, 0x00, 0xff}}},
-    {{{   157,     -1,     51}, 0, {   -54,    352}, {0x83, 0xee, 0x00, 0xff}}},
-    {{{   151,     39,     26}, 0, {   478,    570}, {0x83, 0xee, 0x00, 0xff}}},
-    {{{   157,     -1,      0}, 0, {   446,   -978}, {0x83, 0xee, 0x00, 0xff}}},
-    {{{   157,     -1,    103}, 0, {    66,    302}, {0x83, 0xee, 0x00, 0xff}}},
-    {{{   151,     39,     78}, 0, {   495,    590}, {0x83, 0xee, 0x00, 0xff}}},
-    {{{   157,     -1,     51}, 0, {   462,   -962}, {0x83, 0xee, 0x00, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(bookend_seg5_vertex_05002028, 0x00166c60, 26968, 0x00002028, 192);
 
 // 0x050020E8 - 0x05002140
 const Gfx bookend_seg5_dl_050020E8[] = {
@@ -387,20 +309,7 @@ static const Lights1 bookend_seg5_lights_050021B0 = gdSPDefLights1(
 );
 
 // 0x050021C8
-static const Vtx bookend_seg5_vertex_050021C8[] = {
-    {{{   157,     -1,    100}, 0, {    32,    394}, {0x83, 0xee, 0x00, 0xff}}},
-    {{{   151,     39,     73}, 0, {   426,    774}, {0x83, 0xee, 0x00, 0xff}}},
-    {{{   157,     -1,     49}, 0, {   414,   -722}, {0x83, 0xee, 0x00, 0xff}}},
-    {{{   157,     -1,     49}, 0, {   -39,    392}, {0x83, 0xee, 0x00, 0xff}}},
-    {{{   151,     39,     25}, 0, {   457,    852}, {0x83, 0xee, 0x00, 0xff}}},
-    {{{   157,     -1,      0}, 0, {   363,   -564}, {0x83, 0xee, 0x00, 0xff}}},
-    {{{   157,     -1,      0}, 0, {    -1,    360}, {0x83, 0xee, 0x00, 0xff}}},
-    {{{   151,     39,    -25}, 0, {   473,    906}, {0x83, 0xee, 0x00, 0xff}}},
-    {{{   157,     -1,    -50}, 0, {   372,   -932}, {0x83, 0xee, 0x00, 0xff}}},
-    {{{   157,     -1,    -50}, 0, {    12,    240}, {0x83, 0xee, 0x00, 0xff}}},
-    {{{   151,     39,    -77}, 0, {   491,    632}, {0x83, 0xee, 0x00, 0xff}}},
-    {{{   157,     -1,   -102}, 0, {   365,  -1004}, {0x83, 0xee, 0x00, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(bookend_seg5_vertex_050021C8, 0x00166c60, 26968, 0x000021c8, 192);
 
 // 0x05002288 - 0x050022E0
 const Gfx bookend_seg5_dl_05002288[] = {

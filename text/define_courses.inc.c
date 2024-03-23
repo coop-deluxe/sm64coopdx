@@ -1,11 +1,11 @@
 #define COURSE_ACTS(id, name, a,b,c,d,e,f) \
-    static const u8 GLUE2(COURSE_TABLE, _ ## id)[] = { name };
+    static u8 GLUE2(COURSE_TABLE, _ ## id)[name] = { 0xFF };
 
 #define SECRET_STAR(id, name) \
-    static const u8 GLUE2(COURSE_TABLE, _ ## id)[] = { name };
+    static u8 GLUE2(COURSE_TABLE, _ ## id)[name] = { 0xFF };
 
 #define CASTLE_SECRET_STARS(str) \
-    static const u8 GLUE2(COURSE_TABLE, _castle_secret_stars)[] = { str };
+    static u8 GLUE2(COURSE_TABLE, _castle_secret_stars)[str] = { 0xFF };
 
 #define EXTRA_TEXT(id, str)
 

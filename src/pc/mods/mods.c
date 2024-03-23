@@ -297,7 +297,7 @@ void mods_enable(char* relativePath) {
 }
 
 void mods_init(void) {
-    REFRESH_MUTEX(snprintf(gCurrLoadingSegment.str, 256, "Caching Mods"));
+    REFRESH_MUTEX(loading_screen_set_segment_text("Caching Mods"));
 
     // load mod cache
     mod_cache_load();

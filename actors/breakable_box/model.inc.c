@@ -1,3 +1,4 @@
+#include "pc/rom_assets.h"
 // Breakable Box
 
 // 0x08011A78
@@ -7,48 +8,16 @@ static const Lights1 breakable_box_seg8_lights_08011A80 = gdSPDefLights1(
 );
 
 // 0x08011A90
-ALIGNED8 const Texture breakable_box_seg8_texture_08011A90[] = {
-#include "actors/breakable_box/crazy_box_surface.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(breakable_box_seg8_texture_08011A90, "actors/breakable_box/crazy_box_surface.rgba16.inc.c", 0x001f2200, 59076, 0x00011a90, 2048);
 
 // 0x08012290
-ALIGNED8 const Texture breakable_box_seg8_texture_08012290[] = {
-#include "actors/breakable_box/cork_box_surface.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(breakable_box_seg8_texture_08012290, "actors/breakable_box/cork_box_surface.rgba16.inc.c", 0x001f2200, 59076, 0x00012290, 2048);
 
 // 0x08012A90
-static const Vtx breakable_box_seg8_vertex_08012A90[] = {
-    {{{  -100,      0,   -100}, 0, {   992,      0}, {0x81, 0x00, 0x00, 0xff}}},
-    {{{  -100,      0,    100}, 0, {   992,    992}, {0x81, 0x00, 0x00, 0xff}}},
-    {{{  -100,    200,    100}, 0, {     0,    992}, {0x81, 0x00, 0x00, 0xff}}},
-    {{{  -100,      0,    100}, 0, {     0,    992}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{   100,      0,    100}, 0, {   992,    992}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{   100,    200,    100}, 0, {   992,      0}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{  -100,    200,    100}, 0, {     0,      0}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{   100,      0,   -100}, 0, {   992,      0}, {0x00, 0x81, 0x00, 0xff}}},
-    {{{   100,      0,    100}, 0, {     0,      0}, {0x00, 0x81, 0x00, 0xff}}},
-    {{{  -100,      0,    100}, 0, {     0,    992}, {0x00, 0x81, 0x00, 0xff}}},
-    {{{  -100,      0,   -100}, 0, {   992,    992}, {0x00, 0x81, 0x00, 0xff}}},
-    {{{   100,    200,   -100}, 0, {     0,      0}, {0x7f, 0x00, 0x00, 0xff}}},
-    {{{   100,    200,    100}, 0, {     0,    992}, {0x7f, 0x00, 0x00, 0xff}}},
-    {{{   100,      0,    100}, 0, {   992,    992}, {0x7f, 0x00, 0x00, 0xff}}},
-    {{{   100,      0,   -100}, 0, {   992,      0}, {0x7f, 0x00, 0x00, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(breakable_box_seg8_vertex_08012A90, 0x001f2200, 59076, 0x00012a90, 240);
 
 // 0x08012B80
-static const Vtx breakable_box_seg8_vertex_08012B80[] = {
-    {{{  -100,    200,    100}, 0, {     0,      0}, {0x00, 0x7f, 0x00, 0xff}}},
-    {{{   100,    200,   -100}, 0, {   992,    992}, {0x00, 0x7f, 0x00, 0xff}}},
-    {{{  -100,    200,   -100}, 0, {   992,      0}, {0x00, 0x7f, 0x00, 0xff}}},
-    {{{   100,    200,    100}, 0, {     0,    992}, {0x00, 0x7f, 0x00, 0xff}}},
-    {{{   100,    200,   -100}, 0, {     0,      0}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{   100,      0,   -100}, 0, {     0,    992}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{  -100,      0,   -100}, 0, {   992,    992}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{  -100,    200,   -100}, 0, {   992,      0}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{  -100,      0,   -100}, 0, {   992,      0}, {0x81, 0x00, 0x00, 0xff}}},
-    {{{  -100,    200,    100}, 0, {     0,    992}, {0x81, 0x00, 0x00, 0xff}}},
-    {{{  -100,    200,   -100}, 0, {     0,      0}, {0x81, 0x00, 0x00, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(breakable_box_seg8_vertex_08012B80, 0x001f2200, 59076, 0x00012b80, 176);
 
 // 0x08012C30 - 0x08012CD8
 const Gfx breakable_box_seg8_dl_08012C30[] = {

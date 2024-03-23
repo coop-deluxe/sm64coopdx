@@ -1,3 +1,4 @@
+#include "pc/rom_assets.h"
 // TODO: what is this? 0700C4C0-0700C4C8 [8,8]
 UNUSED static const u64 castle_grounds_unused_0 = 0;
 
@@ -17,51 +18,22 @@ static const Lights1 castle_grounds_seg7_lights_0700C4E0 = gdSPDefLights1(
 UNUSED static const u64 castle_grounds_unused_1 = 0;
 
 // 0x0700C500 - 0x0700C530
-static const Vtx castle_grounds_seg7_vertex_0700C500[] = {
-    {{{     0,      0,     75}, 0, {     0,      0}, {0x00, 0x7f, 0x00, 0x00}}},
-    {{{   287,      0,      0}, 0, {     0,      0}, {0x00, 0x7f, 0x00, 0x00}}},
-    {{{     0,      0,    -74}, 0, {     0,      0}, {0x00, 0x7f, 0x00, 0x00}}},
-};
+ROM_ASSET_LOAD_VTX(castle_grounds_seg7_vertex_0700C500, 0x0044abc0, 39442, 0x0000c500, 48);
 
 // 0x0700C530 - 0x0700C570
-static const Vtx castle_grounds_seg7_vertex_0700C530[] = {
-    {{{     0,      0,    150}, 0, {     0,      0}, {0x00, 0x7f, 0x00, 0x00}}},
-    {{{   287,      0,     75}, 0, {     0,      0}, {0x00, 0x7f, 0x00, 0x00}}},
-    {{{   287,      0,    -74}, 0, {     0,      0}, {0x00, 0x7f, 0x00, 0x00}}},
-    {{{     0,      0,   -149}, 0, {     0,      0}, {0x00, 0x7f, 0x00, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(castle_grounds_seg7_vertex_0700C530, 0x0044abc0, 39442, 0x0000c530, 64);
 
 // 0x0700C570 - 0x0700C5B0
-static const Vtx castle_grounds_seg7_vertex_0700C570[] = {
-    {{{     0,      0,    240}, 0, {     0,      0}, {0x00, 0x7f, 0x00, 0x00}}},
-    {{{   345,      0,    150}, 0, {     0,      0}, {0x00, 0x7f, 0x00, 0x00}}},
-    {{{   345,      0,   -149}, 0, {     0,      0}, {0x00, 0x7f, 0x00, 0x00}}},
-    {{{     0,      0,   -239}, 0, {     0,      0}, {0x00, 0x7f, 0x00, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(castle_grounds_seg7_vertex_0700C570, 0x0044abc0, 39442, 0x0000c570, 64);
 
 // 0x0700C5B0 - 0x0700C5F0
-static const Vtx castle_grounds_seg7_vertex_0700C5B0[] = {
-    {{{     0,      0,    360}, 0, {     0,      0}, {0x00, 0x7f, 0x00, 0x00}}},
-    {{{   460,      0,    240}, 0, {     0,      0}, {0x00, 0x7f, 0x00, 0x00}}},
-    {{{   460,      0,   -239}, 0, {     0,      0}, {0x00, 0x7f, 0x00, 0x00}}},
-    {{{     0,      0,   -359}, 0, {     0,      0}, {0x00, 0x7f, 0x00, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(castle_grounds_seg7_vertex_0700C5B0, 0x0044abc0, 39442, 0x0000c5b0, 64);
 
 // 0x0700C5F0 - 0x0700C640
-static const Vtx castle_grounds_seg7_vertex_0700C5F0[] = {
-    {{{   460,      0,   -359}, 0, {     0,      0}, {0x00, 0x7f, 0x00, 0x00}}},
-    {{{     0,      0,   -479}, 0, {     0,      0}, {0x00, 0x7f, 0x00, 0x00}}},
-    {{{     0,      0,      0}, 0, {     0,      0}, {0x00, 0x7f, 0x00, 0x00}}},
-    {{{     0,      0,    480}, 0, {     0,      0}, {0x00, 0x7f, 0x00, 0xff}}},
-    {{{   460,      0,    360}, 0, {     0,      0}, {0x00, 0x7f, 0x00, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(castle_grounds_seg7_vertex_0700C5F0, 0x0044abc0, 39442, 0x0000c5f0, 80);
 
 // 0x0700C640 - 0x0700C670
-static const Vtx castle_grounds_seg7_vertex_0700C640[] = {
-    {{{   460,      0,    360}, 0, {     0,      0}, {0x00, 0x7f, 0x00, 0x00}}},
-    {{{   460,      0,   -359}, 0, {     0,      0}, {0x00, 0x7f, 0x00, 0x00}}},
-    {{{     0,      0,      0}, 0, {     0,      0}, {0x00, 0x7f, 0x00, 0x00}}},
-};
+ROM_ASSET_LOAD_VTX(castle_grounds_seg7_vertex_0700C640, 0x0044abc0, 39442, 0x0000c640, 48);
 
 // 0x0700C670 - 0x0700C6A8
 const Gfx castle_grounds_seg7_dl_0700C670[] = {

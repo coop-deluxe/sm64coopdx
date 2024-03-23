@@ -97,6 +97,7 @@ extern u8 unused3[4];
 
 extern s16 gChangeLevel;
 extern s16 gChangeActNum;
+extern s16 gDelayedInitSound;
 
 struct WarpDest {
     u8 type;

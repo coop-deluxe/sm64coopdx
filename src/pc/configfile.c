@@ -290,16 +290,16 @@ static const struct ConfigOption options[] = {
 
 // FunctionConfigOption functions
 
-struct QueuedMods {
+struct QueuedFile {
     char* path;
-    struct QueuedMods *next;
+    struct QueuedFile *next;
 };
 
-static struct QueuedMods *sQueuedEnableModsHead = NULL;
+static struct QueuedFile *sQueuedEnableModsHead = NULL;
 
 void enable_queued_mods(void) {
     while (sQueuedEnableModsHead) {
-        struct QueuedMods *next = sQueuedEnableModsHead->next;
+        struct QueuedFile *next = sQueuedEnableModsHead->next;
         mods_enable(sQueuedEnableModsHead->path);
         free(sQueuedEnableModsHead->path);
         free(sQueuedEnableModsHead);
@@ -314,13 +314,13 @@ static void enable_mod_read(char** tokens, UNUSED int numTokens) {
         strncat(combined, tokens[i], 255);
     }
 
-    struct QueuedMods* queued = malloc(sizeof(struct QueuedMods));
+    struct QueuedFile* queued = malloc(sizeof(struct QueuedFile));
     queued->path = strdup(combined);
     queued->next = NULL;
     if (!sQueuedEnableModsHead) {
         sQueuedEnableModsHead = queued;
     } else {
-        struct QueuedMods* tail = sQueuedEnableModsHead;
+        struct QueuedFile* tail = sQueuedEnableModsHead;
         while (tail->next) { tail = tail->next; }
         tail->next = queued;
     }
@@ -361,32 +361,56 @@ static void moderator_write(FILE* file) {
     }
 }
 
+static struct QueuedFile *sQueuedEnableDynosPacksHead = NULL;
+
+void enable_queued_dynos_packs() {
+    while (sQueuedEnableDynosPacksHead) {
+        int packCount = dynos_pack_get_count();
+        const char *path = sQueuedEnableDynosPacksHead->path;
+        for (int i = 0; i < packCount; i++) {
+            const char* pack = dynos_pack_get_name(i);
+            if (!strcmp(path, pack)) {
+                dynos_pack_set_enabled(i, true);
+                break;
+            }
+        }
+
+        struct QueuedFile *next = sQueuedEnableDynosPacksHead->next;
+        free(sQueuedEnableDynosPacksHead->path);
+        free(sQueuedEnableDynosPacksHead);
+        sQueuedEnableDynosPacksHead = next;
+    }
+}
+
 static void dynos_pack_read(char** tokens, int numTokens) {
-    if (numTokens < 3) { return; }
+    if (numTokens < 2) { return; }
+    if (strcmp(tokens[numTokens-1], "false") == 0) { return; } // Only accept enabled packs. Default is disabled. (old coop config compatibility)
     char fullPackName[256] = { 0 };
-    for (int i = 1; i < numTokens-1; i++) {
+    for (int i = 1; i < numTokens; i++) {
+        if (i == numTokens - 1 && strcmp(tokens[i], "true") == 0) { break; } // old coop config compatibility
         if (i != 1) { strncat(fullPackName, " ", 255); }
         strncat(fullPackName, tokens[i], 255);
     }
 
-    bool enabled = !(strcmp(tokens[numTokens-1], "true"));
-    int packCount = dynos_pack_get_count();
-
-    for (int i = 0; i < packCount; i++) {
-        const char* pack = dynos_pack_get_name(i);
-        if (!strcmp(fullPackName, pack)) {
-            dynos_pack_set_enabled(i, enabled);
-            break;
-        }
+    struct QueuedFile* queued = malloc(sizeof(struct QueuedFile));
+    queued->path = strdup(fullPackName);
+    queued->next = NULL;
+    if (!sQueuedEnableDynosPacksHead) {
+        sQueuedEnableDynosPacksHead = queued;
+    } else {
+        struct QueuedFile* tail = sQueuedEnableDynosPacksHead;
+        while (tail->next) { tail = tail->next; }
+        tail->next = queued;
     }
 }
 
 static void dynos_pack_write(FILE* file) {
     int packCount = dynos_pack_get_count();
     for (int i = 0; i < packCount; i++) {
-        bool enabled = dynos_pack_get_enabled(i);
-        const char* pack = dynos_pack_get_name(i);
-        fprintf(file, "%s %s %s\n", "dynos-pack:", pack, enabled ? "true" : "false");
+        if (dynos_pack_get_enabled(i)) {
+            const char* pack = dynos_pack_get_name(i);
+            fprintf(file, "%s %s\n", "dynos-pack:", pack);
+        }
     }
 }
 

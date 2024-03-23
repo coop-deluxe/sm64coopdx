@@ -1,3 +1,4 @@
+#include "pc/rom_assets.h"
 // Mario Cap (Normal Cap, Metal, Winged, etc)
 
 // 0x0301CF08
@@ -36,116 +37,37 @@ static const Lights1 mario_cap_black_lights_group = gdSPDefLights1(
 #define mario_cap_texture_cap_inside         mario_texture_cap_inside
 
 // 0x0301CF50
-ALIGNED8 const Texture mario_cap_seg3_texture_0301CF50[] = {
-#include "actors/mario_cap/mario_cap_metal.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(mario_cap_seg3_texture_0301CF50, "actors/mario_cap/mario_cap_metal.rgba16.inc.c", 0x00114750, 78432, 0x00000090, 4096);
 
 // 0x0301DF50
-ALIGNED8 const Texture mario_cap_seg3_texture_0301DF50[] = {
-#include "actors/mario_cap/mario_cap_logo.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(mario_cap_seg3_texture_0301DF50, "actors/mario_cap/mario_cap_logo.rgba16.inc.c", 0x00114750, 78432, 0x00001890, 2048);
 
 // 0x0301E750
-ALIGNED8 const Texture mario_cap_seg3_texture_0301E750[] = {
-#include "actors/mario_cap/mario_cap_wing.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(mario_cap_seg3_texture_0301E750, "actors/mario_cap/mario_cap_wing.rgba16.inc.c", 0x00114750, 78432, 0x00008090, 4096);
 
 // 0x0301F750
-ALIGNED8 const Texture mario_cap_seg3_texture_0301F750[] = {
-#include "actors/mario_cap/mario_cap_wing_tip.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(mario_cap_seg3_texture_0301F750, "actors/mario_cap/mario_cap_wing_tip.rgba16.inc.c", 0x00114750, 78432, 0x00009090, 4096);
 
 // 0x03020750
-ALIGNED8 const Texture mario_cap_seg3_texture_03020750[] = {
-#include "actors/mario_cap/mario_cap_metal_wing_unused.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(mario_cap_seg3_texture_03020750, "actors/mario_cap/mario_cap_metal_wing_unused.rgba16.inc.c", 0x00114750, 78432, 0x0000a090, 4096);
 
 // 0x03021750
-ALIGNED8 const Texture mario_cap_seg3_texture_03021750[] = {
-#include "actors/mario_cap/mario_cap_metal_wing_tip_unused.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(mario_cap_seg3_texture_03021750, "actors/mario_cap/mario_cap_metal_wing_tip_unused.rgba16.inc.c", 0x00114750, 78432, 0x0000b090, 4096);
 
 // 0x03022750
-static const Vtx mario_cap_seg3_vertex_03022750[] = {
-    {{{    33,     35,    118}, 0, {   728,    758}, {0x30, 0x26, 0x6e, 0xff}}},
-    {{{    96,     22,     45}, 0, {  1240,    876}, {0x48, 0xa4, 0x31, 0xff}}},
-    {{{    71,    101,    113}, 0, {  1028,    148}, {0x55, 0x16, 0x5b, 0xff}}},
-    {{{     0,    110,    143}, 0, {   460,     68}, {0x00, 0x34, 0x73, 0xff}}},
-    {{{   -31,     35,    118}, 0, {   206,    762}, {0xd0, 0x26, 0x6f, 0xff}}},
-    {{{   -70,    101,    113}, 0, {  -106,    158}, {0xab, 0x16, 0x5b, 0xff}}},
-    {{{   -95,     22,     46}, 0, {  -302,    890}, {0xa8, 0xb9, 0x38, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(mario_cap_seg3_vertex_03022750, 0x00114750, 78432, 0x0001bf50, 112);
 
 // 0x030227C0
-static const Vtx mario_cap_seg3_vertex_030227C0[] = {
-    {{{   -66,      2,    139}, 0, {     0,      0}, {0xb0, 0xbb, 0x45, 0xff}}},
-    {{{     0,      0,    163}, 0, {     0,      0}, {0x00, 0xba, 0x69, 0xff}}},
-    {{{   -31,     35,    118}, 0, {     0,      0}, {0xd0, 0x26, 0x6f, 0xff}}},
-    {{{   -32,     17,    109}, 0, {     0,      0}, {0x00, 0x83, 0xf0, 0xff}}},
-    {{{    33,     17,    109}, 0, {     0,      0}, {0xfb, 0x84, 0xea, 0xff}}},
-    {{{   -95,     22,     46}, 0, {     0,      0}, {0xa8, 0xb9, 0x38, 0xff}}},
-    {{{  -101,     10,     -7}, 0, {     0,      0}, {0xd8, 0x89, 0x11, 0xff}}},
-    {{{   -70,    101,    113}, 0, {     0,      0}, {0xab, 0x16, 0x5b, 0xff}}},
-    {{{  -135,     70,     23}, 0, {     0,      0}, {0x84, 0x15, 0x10, 0xff}}},
-    {{{  -125,     38,    -45}, 0, {     0,      0}, {0x8d, 0xec, 0xd1, 0xff}}},
-    {{{   -86,      1,    -60}, 0, {     0,      0}, {0xce, 0x8c, 0xf6, 0xff}}},
-    {{{   -41,    144,     64}, 0, {     0,      0}, {0xdc, 0x79, 0x00, 0xff}}},
-    {{{   -76,     84,    -60}, 0, {     0,      0}, {0xd5, 0x6e, 0xd3, 0xff}}},
-    {{{   136,     70,     22}, 0, {     0,      0}, {0x7b, 0x16, 0x10, 0xff}}},
-    {{{    71,    101,    113}, 0, {     0,      0}, {0x55, 0x16, 0x5b, 0xff}}},
-    {{{    96,     22,     45}, 0, {     0,      0}, {0x48, 0xa4, 0x31, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(mario_cap_seg3_vertex_030227C0, 0x00114750, 78432, 0x0001bfc0, 256);
 
 // 0x030228C0
-static const Vtx mario_cap_seg3_vertex_030228C0[] = {
-    {{{    42,    144,     64}, 0, {     0,      0}, {0x2b, 0x76, 0x0d, 0xff}}},
-    {{{   136,     70,     22}, 0, {     0,      0}, {0x7b, 0x16, 0x10, 0xff}}},
-    {{{    76,     84,    -60}, 0, {     0,      0}, {0x2a, 0x6c, 0xcf, 0xff}}},
-    {{{   103,     10,     -6}, 0, {     0,      0}, {0x42, 0x96, 0x12, 0xff}}},
-    {{{   126,     38,    -46}, 0, {     0,      0}, {0x73, 0xec, 0xd0, 0xff}}},
-    {{{    71,    101,    113}, 0, {     0,      0}, {0x55, 0x16, 0x5b, 0xff}}},
-    {{{    96,     22,     45}, 0, {     0,      0}, {0x48, 0xa4, 0x31, 0xff}}},
-    {{{    67,      2,    139}, 0, {     0,      0}, {0x50, 0xba, 0x44, 0xff}}},
-    {{{    33,     17,    109}, 0, {     0,      0}, {0xfb, 0x84, 0xea, 0xff}}},
-    {{{    33,     35,    118}, 0, {     0,      0}, {0x30, 0x26, 0x6e, 0xff}}},
-    {{{    86,      1,    -60}, 0, {     0,      0}, {0x20, 0x86, 0xfe, 0xff}}},
-    {{{     0,      0,    163}, 0, {     0,      0}, {0x00, 0xba, 0x69, 0xff}}},
-    {{{   -31,     35,    118}, 0, {     0,      0}, {0xd0, 0x26, 0x6f, 0xff}}},
-    {{{    53,      0,   -118}, 0, {     0,      0}, {0x2c, 0xb5, 0xa5, 0xff}}},
-    {{{    49,     62,   -139}, 0, {     0,      0}, {0x32, 0x49, 0xa6, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(mario_cap_seg3_vertex_030228C0, 0x00114750, 78432, 0x0001c0c0, 240);
 
 // 0x030229B0
-static const Vtx mario_cap_seg3_vertex_030229B0[] = {
-    {{{   -76,     84,    -60}, 0, {     0,      0}, {0xd5, 0x6e, 0xd3, 0xff}}},
-    {{{   -41,    144,     64}, 0, {     0,      0}, {0xdc, 0x79, 0x00, 0xff}}},
-    {{{    76,     84,    -60}, 0, {     0,      0}, {0x2a, 0x6c, 0xcf, 0xff}}},
-    {{{     0,    110,    143}, 0, {     0,      0}, {0x00, 0x34, 0x73, 0xff}}},
-    {{{    42,    144,     64}, 0, {     0,      0}, {0x2b, 0x76, 0x0d, 0xff}}},
-    {{{   -70,    101,    113}, 0, {     0,      0}, {0xab, 0x16, 0x5b, 0xff}}},
-    {{{    71,    101,    113}, 0, {     0,      0}, {0x55, 0x16, 0x5b, 0xff}}},
-    {{{    49,     62,   -139}, 0, {     0,      0}, {0x32, 0x49, 0xa6, 0xff}}},
-    {{{   126,     38,    -46}, 0, {     0,      0}, {0x73, 0xec, 0xd0, 0xff}}},
-    {{{   -52,      0,   -118}, 0, {     0,      0}, {0xd2, 0x9d, 0xc1, 0xff}}},
-    {{{   -49,     62,   -138}, 0, {     0,      0}, {0xce, 0x1a, 0x8f, 0xff}}},
-    {{{    53,      0,   -118}, 0, {     0,      0}, {0x2c, 0xb5, 0xa5, 0xff}}},
-    {{{  -125,     38,    -45}, 0, {     0,      0}, {0x8d, 0xec, 0xd1, 0xff}}},
-    {{{    86,      1,    -60}, 0, {     0,      0}, {0x20, 0x86, 0xfe, 0xff}}},
-    {{{   -86,      1,    -60}, 0, {     0,      0}, {0xce, 0x8c, 0xf6, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(mario_cap_seg3_vertex_030229B0, 0x00114750, 78432, 0x0001c1b0, 240);
 
 // 0x03022AA0
-static const Vtx mario_cap_seg3_vertex_03022AA0[] = {
-    {{{    86,      1,    -60}, 0, {     0,      0}, {0x20, 0x86, 0xfe, 0xff}}},
-    {{{   -86,      1,    -60}, 0, {     0,      0}, {0xce, 0x8c, 0xf6, 0xff}}},
-    {{{   -52,      0,   -118}, 0, {     0,      0}, {0xd2, 0x9d, 0xc1, 0xff}}},
-    {{{    33,     17,    109}, 0, {     0,      0}, {0xfb, 0x84, 0xea, 0xff}}},
-    {{{   -32,     17,    109}, 0, {     0,      0}, {0x00, 0x83, 0xf0, 0xff}}},
-    {{{  -101,     10,     -7}, 0, {     0,      0}, {0xd8, 0x89, 0x11, 0xff}}},
-    {{{    96,     22,     45}, 0, {     0,      0}, {0x48, 0xa4, 0x31, 0xff}}},
-    {{{   103,     10,     -6}, 0, {     0,      0}, {0x42, 0x96, 0x12, 0xff}}},
-    {{{    53,      0,   -118}, 0, {     0,      0}, {0x2c, 0xb5, 0xa5, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(mario_cap_seg3_vertex_03022AA0, 0x00114750, 78432, 0x0001c2a0, 144);
 
 // 0x03022B30 - 0x03022B68
 const Gfx mario_cap_seg3_dl_03022B30[] = {
