@@ -49,7 +49,8 @@ void djui_hud_print_outlined_text_interpolated(const char* text, f32 prevX, f32 
 }
 
 void nametags_render(void) {
-    if ((!gNametagsSettings.showSelfTag && network_player_connected_count() == 1) ||
+    if (gNetworkType == NT_NONE ||
+        (!gNametagsSettings.showSelfTag && network_player_connected_count() == 1) ||
         !gNetworkPlayerLocal->currAreaSyncValid ||
         find_object_with_behavior(bhvActSelector) != NULL) {
         return;
