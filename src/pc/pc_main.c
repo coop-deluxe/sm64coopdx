@@ -322,7 +322,6 @@ void* main_game_init(void* isThreaded) {
     gGameInited = true;
 }
 
-extern void djui_panel_do_host(bool reconnecting, bool playSound);
 int main(int argc, char *argv[]) {
 
     // Handle terminal arguments
@@ -332,6 +331,7 @@ int main(int argc, char *argv[]) {
     // Handle Windows console
     if (!gCLIOpts.console) {
         FreeConsole();
+        freopen("NUL", "w", stdout);
     }
 
 #endif
@@ -386,6 +386,7 @@ int main(int argc, char *argv[]) {
         configNetworkSystem = NS_SOCKET;
         configHostPort = gCLIOpts.networkPort;
 
+        extern void djui_panel_do_host(bool reconnecting, bool playSound);
         djui_panel_do_host(NULL, false);
     } else {
         network_init(NT_NONE, false);
