@@ -20,3 +20,17 @@ void djui_hud_set_render_behind_hud(bool enable) {
     if (!gLuaActiveMod) { return; }
     gLuaActiveMod->renderBehindHud = enable;
 }
+
+struct ModAudio* audio_stream_load_url(UNUSED const char* url) {
+    return NULL;
+}
+
+f32 audio_stream_get_tempo(UNUSED struct ModAudio* audio) {
+    return 1;
+}
+
+void audio_stream_set_tempo(UNUSED struct ModAudio* audio, UNUSED f32 tempo) {
+}
+
+void audio_stream_set_speed(UNUSED struct ModAudio* audio, UNUSED f32 initial_freq, UNUSED f32 speed, UNUSED bool pitch) {
+}

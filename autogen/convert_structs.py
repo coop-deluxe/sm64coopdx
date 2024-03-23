@@ -104,7 +104,6 @@ override_field_immutable = {
     "Area": [ "localAreaTimer", "nextSyncID", "unk04", "objectSpawnInfos", "paintingWarpNodes", "warpNodes" ],
     "Mod": [ "*" ],
     "ModFile": [ "*" ],
-    "BassAudio": [ "*" ],
     "Painting": [ "id", "imageCount", "textureType", "textureWidth", "textureHeight" ],
     "SpawnInfo": [ "syncID", "next", "unk18" ],
     "CustomLevelInfo": [ "next" ],

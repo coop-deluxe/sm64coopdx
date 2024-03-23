@@ -87,15 +87,6 @@ static struct LuaObjectField sAreaFields[LUA_AREA_FIELD_COUNT] = {
 //  { "whirlpools",          LOT_???,       offsetof(struct Area, whirlpools),          false, LOT_???            }, <--- UNIMPLEMENTED
 };
 
-#define LUA_BASS_AUDIO_FIELD_COUNT 5
-static struct LuaObjectField sBassAudioFields[LUA_BASS_AUDIO_FIELD_COUNT] = {
-    { "file",     LVT_COBJECT_P, offsetof(struct BassAudio, file),     true, LOT_MODFILE },
-    { "handle",   LVT_U32,       offsetof(struct BassAudio, handle),   true, LOT_NONE    },
-    { "isStream", LVT_BOOL,      offsetof(struct BassAudio, isStream), true, LOT_NONE    },
-    { "loaded",   LVT_BOOL,      offsetof(struct BassAudio, loaded),   true, LOT_NONE    },
-    { "rawData",  LVT_STRING_P,  offsetof(struct BassAudio, rawData),  true, LOT_NONE    },
-};
-
 #define LUA_BEHAVIOR_DIALOGS_FIELD_COUNT 84
 static struct LuaObjectField sBehaviorDialogsFields[LUA_BEHAVIOR_DIALOGS_FIELD_COUNT] = {
     { "BobombBuddyBob1Dialog",         LVT_S32, offsetof(struct BehaviorDialogs, BobombBuddyBob1Dialog),         false, LOT_NONE },
@@ -1193,6 +1184,22 @@ static struct LuaObjectField sModFields[LUA_MOD_FIELD_COUNT] = {
     { "renderBehindHud",     LVT_BOOL,     offsetof(struct Mod, renderBehindHud),     true, LOT_NONE },
     { "selectable",          LVT_BOOL,     offsetof(struct Mod, selectable),          true, LOT_NONE },
 //  { "size",                LVT_???,      offsetof(struct Mod, size),                true, LOT_???  }, <--- UNIMPLEMENTED
+};
+
+#define LUA_MOD_AUDIO_FIELD_COUNT 3
+static struct LuaObjectField sModAudioFields[LUA_MOD_AUDIO_FIELD_COUNT] = {
+    { "file",             LVT_COBJECT_P, offsetof(struct ModAudio, file),             false, LOT_MODFILE              },
+    { "isStream",         LVT_BOOL,      offsetof(struct ModAudio, isStream),         false, LOT_NONE                 },
+    { "sampleCopiesTail", LVT_COBJECT_P, offsetof(struct ModAudio, sampleCopiesTail), false, LOT_MODAUDIOSAMPLECOPIES },
+//  { "sound",            LVT_???,       offsetof(struct ModAudio, sound),            false, LOT_???                  }, <--- UNIMPLEMENTED
+};
+
+#define LUA_MOD_AUDIO_SAMPLE_COPIES_FIELD_COUNT 3
+static struct LuaObjectField sModAudioSampleCopiesFields[LUA_MOD_AUDIO_SAMPLE_COPIES_FIELD_COUNT] = {
+    { "next",   LVT_COBJECT_P, offsetof(struct ModAudioSampleCopies, next),   false, LOT_MODAUDIOSAMPLECOPIES },
+    { "parent", LVT_COBJECT_P, offsetof(struct ModAudioSampleCopies, parent), false, LOT_MODAUDIO             },
+    { "prev",   LVT_COBJECT_P, offsetof(struct ModAudioSampleCopies, prev),   false, LOT_MODAUDIOSAMPLECOPIES },
+//  { "sound",  LVT_???,       offsetof(struct ModAudioSampleCopies, sound),  false, LOT_???                  }, <--- UNIMPLEMENTED
 };
 
 #define LUA_MOD_FILE_FIELD_COUNT 3
@@ -2410,7 +2417,6 @@ struct LuaObjectTable sLuaObjectAutogenTable[LOT_AUTOGEN_MAX - LOT_AUTOGEN_MIN] 
     { LOT_ANIMATION,                 sAnimationFields,                 LUA_ANIMATION_FIELD_COUNT                    },
     { LOT_ANIMATIONTABLE,            sAnimationTableFields,            LUA_ANIMATION_TABLE_FIELD_COUNT              },
     { LOT_AREA,                      sAreaFields,                      LUA_AREA_FIELD_COUNT                         },
-    { LOT_BASSAUDIO,                 sBassAudioFields,                 LUA_BASS_AUDIO_FIELD_COUNT                   },
     { LOT_BEHAVIORDIALOGS,           sBehaviorDialogsFields,           LUA_BEHAVIOR_DIALOGS_FIELD_COUNT             },
     { LOT_BEHAVIORTRAJECTORIES,      sBehaviorTrajectoriesFields,      LUA_BEHAVIOR_TRAJECTORIES_FIELD_COUNT        },
     { LOT_BEHAVIORVALUES,            sBehaviorValuesFields,            LUA_BEHAVIOR_VALUES_FIELD_COUNT              },
@@ -2446,6 +2452,8 @@ struct LuaObjectTable sLuaObjectAutogenTable[LOT_AUTOGEN_MAX - LOT_AUTOGEN_MIN] 
     { LOT_MARIOBODYSTATE,            sMarioBodyStateFields,            LUA_MARIO_BODY_STATE_FIELD_COUNT             },
     { LOT_MARIOSTATE,                sMarioStateFields,                LUA_MARIO_STATE_FIELD_COUNT                  },
     { LOT_MOD,                       sModFields,                       LUA_MOD_FIELD_COUNT                          },
+    { LOT_MODAUDIO,                  sModAudioFields,                  LUA_MOD_AUDIO_FIELD_COUNT                    },
+    { LOT_MODAUDIOSAMPLECOPIES,      sModAudioSampleCopiesFields,      LUA_MOD_AUDIO_SAMPLE_COPIES_FIELD_COUNT      },
     { LOT_MODFILE,                   sModFileFields,                   LUA_MOD_FILE_FIELD_COUNT                     },
     { LOT_MODETRANSITIONINFO,        sModeTransitionInfoFields,        LUA_MODE_TRANSITION_INFO_FIELD_COUNT         },
     { LOT_NAMETAGSSETTINGS,          sNametagsSettingsFields,          LUA_NAMETAGS_SETTINGS_FIELD_COUNT            },

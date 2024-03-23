@@ -8147,19 +8147,19 @@ function smlua_anim_util_set_animation(obj, name)
     -- ...
 end
 
---- @param audio BassAudio
+--- @param audio ModAudio
 --- @return nil
 function audio_sample_destroy(audio)
     -- ...
 end
 
 --- @param filename string
---- @return BassAudio
+--- @return ModAudio
 function audio_sample_load(filename)
     -- ...
 end
 
---- @param audio BassAudio
+--- @param audio ModAudio
 --- @param position Vec3f
 --- @param volume number
 --- @return nil
@@ -8167,67 +8167,55 @@ function audio_sample_play(audio, position, volume)
     -- ...
 end
 
---- @param audio BassAudio
+--- @param audio ModAudio
 --- @return nil
 function audio_sample_stop(audio)
     -- ...
 end
 
---- @param audio BassAudio
+--- @param audio ModAudio
 --- @return nil
 function audio_stream_destroy(audio)
     -- ...
 end
 
---- @param audio BassAudio
+--- @param audio ModAudio
 --- @return number
 function audio_stream_get_frequency(audio)
     -- ...
 end
 
---- @param audio BassAudio
+--- @param audio ModAudio
 --- @return boolean
 function audio_stream_get_looping(audio)
     -- ...
 end
 
---- @param audio BassAudio
+--- @param audio ModAudio
 --- @return number
 function audio_stream_get_position(audio)
     -- ...
 end
 
---- @param audio BassAudio
---- @return number
-function audio_stream_get_tempo(audio)
-    -- ...
-end
-
---- @param audio BassAudio
+--- @param audio ModAudio
 --- @return number
 function audio_stream_get_volume(audio)
     -- ...
 end
 
 --- @param filename string
---- @return BassAudio
+--- @return ModAudio
 function audio_stream_load(filename)
     -- ...
 end
 
---- @param url string
---- @return BassAudio
-function audio_stream_load_url(url)
-    -- ...
-end
-
---- @param audio BassAudio
+--- @param audio ModAudio
 --- @return nil
 function audio_stream_pause(audio)
     -- ...
 end
 
---- @param audio BassAudio
+--- @param audio ModAudio
 --- @param restart boolean
 --- @param volume number
 --- @return nil
@@ -8235,51 +8223,35 @@ function audio_stream_play(audio, restart, volume)
     -- ...
 end
 
---- @param audio BassAudio
+--- @param audio ModAudio
 --- @param freq number
 --- @return nil
 function audio_stream_set_frequency(audio, freq)
     -- ...
 end
 
---- @param audio BassAudio
+--- @param audio ModAudio
 --- @param looping boolean
 --- @return nil
 function audio_stream_set_looping(audio, looping)
     -- ...
 end
 
---- @param audio BassAudio
+--- @param audio ModAudio
 --- @param pos number
 --- @return nil
 function audio_stream_set_position(audio, pos)
     -- ...
 end
 
---- @param audio BassAudio
---- @param initial_freq number
---- @param speed number
---- @param pitch boolean
---- @return nil
-function audio_stream_set_speed(audio, initial_freq, speed, pitch)
-    -- ...
-end
-
---- @param audio BassAudio
---- @param tempo number
---- @return nil
-function audio_stream_set_tempo(audio, tempo)
-    -- ...
-end
-
---- @param audio BassAudio
+--- @param audio ModAudio
 --- @param volume number
 --- @return nil
 function audio_stream_set_volume(audio, volume)
     -- ...
 end
 
---- @param audio BassAudio
+--- @param audio ModAudio
 --- @return nil
 function audio_stream_stop(audio)
     -- ...
@@ -8339,6 +8311,34 @@ end
 --- @param name string
 --- @return Pointer_Collision
 function smlua_collision_util_get(name)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- @return number
+function audio_stream_get_tempo(audio)
+    -- ...
+end
+
+--- @param url string
+--- @return ModAudio
+function audio_stream_load_url(url)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- @param initial_freq number
+--- @param speed number
+--- @param pitch boolean
+--- @return nil
+function audio_stream_set_speed(audio, initial_freq, speed, pitch)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- @param tempo number
+--- @return nil
+function audio_stream_set_tempo(audio, tempo)
     -- ...
 end
 

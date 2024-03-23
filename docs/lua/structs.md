@@ -5,7 +5,6 @@
 - [Animation](#Animation)
 - [AnimationTable](#AnimationTable)
 - [Area](#Area)
-- [BassAudio](#BassAudio)
 - [BehaviorDialogs](#BehaviorDialogs)
 - [BehaviorTrajectories](#BehaviorTrajectories)
 - [BehaviorValues](#BehaviorValues)
@@ -43,6 +42,8 @@
 - [MarioBodyState](#MarioBodyState)
 - [MarioState](#MarioState)
 - [Mod](#Mod)
+- [ModAudio](#ModAudio)
+- [ModAudioSampleCopies](#ModAudioSampleCopies)
 - [ModFile](#ModFile)
 - [ModeTransitionInfo](#ModeTransitionInfo)
 - [NametagsSettings](#NametagsSettings)
@@ -158,20 +159,6 @@
 | terrainData | `Pointer` <`integer`> | read-only |
 | terrainType | `integer` |  |
 | warpNodes | [ObjectWarpNode](structs.md#ObjectWarpNode) | read-only |
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [BassAudio](#BassAudio)
-
-| Field | Type | Access |
-| ----- | ---- | ------ |
-| file | [ModFile](structs.md#ModFile) | read-only |
-| handle | `integer` | read-only |
-| isStream | `boolean` | read-only |
-| loaded | `boolean` | read-only |
-| rawData | `string` | read-only |
 
 [:arrow_up_small:](#)
 
@@ -1438,6 +1425,30 @@
 | relativePath | `string` | read-only |
 | renderBehindHud | `boolean` | read-only |
 | selectable | `boolean` | read-only |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [ModAudio](#ModAudio)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| file | [ModFile](structs.md#ModFile) |  |
+| isStream | `boolean` |  |
+| sampleCopiesTail | [ModAudioSampleCopies](structs.md#ModAudioSampleCopies) |  |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [ModAudioSampleCopies](#ModAudioSampleCopies)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| next | [ModAudioSampleCopies](structs.md#ModAudioSampleCopies) |  |
+| parent | [ModAudio](structs.md#ModAudio) |  |
+| prev | [ModAudioSampleCopies](structs.md#ModAudioSampleCopies) |  |
 
 [:arrow_up_small:](#)
 

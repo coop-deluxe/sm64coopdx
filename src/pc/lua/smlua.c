@@ -289,6 +289,8 @@ void smlua_update(void) {
     lua_State* L = gLuaState;
     if (L == NULL) { return; }
 
+    audio_sample_destroy_pending_copies();
+
     smlua_call_event_hooks(HOOK_UPDATE);
     // Collect our garbage after calling our hooks.
     // If we don't, Lag can quickly build up from our mods.

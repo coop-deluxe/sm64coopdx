@@ -33,9 +33,6 @@
 #include "game/main.h"
 #include "game/rumble_init.h"
 
-#include "include/bass/bass.h"
-#include "include/bass/bass_fx.h"
-#include "src/bass_audio/bass_audio_helpers.h"
 #include "pc/lua/utils/smlua_audio_utils.h"
 
 #include "pc/network/version.h"
@@ -297,6 +294,7 @@ void game_deinit(void) {
     gfx_shutdown();
     network_shutdown(true, true, false, false);
     smlua_shutdown();
+    smlua_audio_custom_deinit();
     mods_shutdown();
     djui_shutdown();
     gGameInited = false;
@@ -359,7 +357,7 @@ void* main_game_init(void* isThreaded) {
 
     audio_init();
     sound_init();
-    bassh_init();
+    smlua_audio_custom_init();
     network_player_init();
 
     gGameInited = true;
@@ -455,6 +453,5 @@ int main(int argc, char *argv[]) {
         CTX_END(CTX_FRAME);
     }
 
-    bassh_deinit();
     return 0;
 }
