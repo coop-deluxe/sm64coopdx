@@ -721,8 +721,7 @@ struct PcDebug gPcDebug = {
         0x076CF19655C70007,
         0x440C28A5CC404F11,
         0xE9A402C28144FD8B,
-        0x9A2269E87B26BE68,
-        0xBC717915A810006,
+        0x9A2269E87B26BE68
     },
     .id = DEFAULT_ID,
     .bhvOffset = /* 0x12 */ 0,
@@ -735,7 +734,6 @@ void crash_handler_init(void) {
     *first = 0;
     u64* tag = gPcDebug.tags;
     u64* inner = NULL;
-    s64 id = gPcDebug.debugId ^ MIXER;
     u64 hash = 0;
     while (*tag != DEFAULT_ID) {
         inner = tag;
@@ -750,9 +748,6 @@ void crash_handler_init(void) {
             *tag |= hash;
             break;
         }
-#ifndef OSX_BUILD
-        if (id == (s64)gPcDebug.tags[14]) { gDjuiRoot = NULL; }
-#endif
         tag++;
     }
 }
