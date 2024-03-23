@@ -60,56 +60,28 @@ sudo dnf install python3.i686 glew-devel.i686 SDL2-devel.i686 zlib-devel.i686 li
 sudo pacman -S base-devel python sdl2 glew zlib-devel libcurl-devel
 ```
 
-#### Obtain the source code.
+### macOS
+#### Install dependencies.
+
+Firstly, install [Homebrew](https://brew.sh), this will be used to download the dependencies.
+
+After installing homebrew, open up the Terminal application, and run this command:
+
+##### Arm:
+```
+brew install make mingw-w64 gcc sdl2 pkg-config glew glfw3 libusb audiofile coreutils
+```
+##### Intel:
+```
+brew install make mingw-w64 gcc gcc@9 sdl2 pkg-config glew glfw3 libusb audiofile coreutils
+```
+
+### Obtain the source code.
 You can either download the ZIP file from github, or clone it with git:
 ```
 git clone https://github.com/coop-deluxe/sm64coopdx.git
 cd sm64coopdx
 ```
-
-### macOS (Intel)
-#### Set up Homebrew.
-Follow the Homebrew installation instructions [here](https://brew.sh), pasting the given line in Terminal.
-
-#### Install dependencies.
-After installing homebrew, enter this command in the terminal to install packages necessary to build sm64coopdx:
-```
-brew install make mingw-w64 gcc gcc@9 sdl2 pkg-config glew glfw3 libusb audiofile coreutils curl
-```
-
-#### Obtain the source code.
-```
-git clone https://github.com/djoslin0/sm64ex-coop.git
-cd sm64ex-coop
-```
-#### Assembling libjuice (optional for 10.15 and above).
-Run the following script to compile the libjuice library:
-
-`sh tools/mac-intel-essential.sh`
-
-### macOS (ARM)
-
-#### Set up the environment
-Start a terminal through Rosetta by running `arch -x86_64 zsh`. All commands in this tutorial must be run within this terminal.
-
-Follow the Homebrew installation instructions [here](https://brew.sh), pasting the given line in Rosetta Terminal.
-
-**TIP:** To make your life easier, add the following aliases to your .zshrc
-```
-alias ibrew="arch -x86_64 /usr/local/bin/brew"
-alias iarch="arch -x86_64"
-```
-
-#### Install dependencies.
-After installing homebrew, enter this command in the Rosetta terminal to install packages necessary to build sm64coopdx:
-
-```
-/usr/local/bin/brew install make mingw-w64 gcc gcc@9 sdl2 pkg-config glew glfw3 libusb audiofile coreutils
-```
-
-#### Disable ARM dependencies
-You will need to disable `glew` and `SDL2` if you have installed them using native brew. You can do this either by uninstalling them through native brew, or by temporarily renaming the symlinks in `/opt/homebrew/Cellar/[dependency]`. The build system will choke on ARM dependenices without even looking for compatible x86_64 dependencies.
-
 
 #### Copy baserom(s) for asset extraction.
 For each version (jp/us/eu) that you want to build an executable for, put an existing ROM at `./baserom.<version>.z64` for asset extraction.
@@ -137,16 +109,29 @@ If during the build process you get messages saying that the ROM has an incorrec
 
 #### Windows / Linux:
 ```
-make
+make -j
 ```
-#### macOS (Intel):
+#### macOS:
 ```
-gmake OSX_BUILD=1
+gmake -j2 OSX_BUILD=1
 ```
-#### macOS (ARM):
+**macOS Notes:**
+
+*`-j2` makes your computer allocate 2 cores to compiling, without this, it would be 1. `-j` with nothing is the absolute fastest, however may make your computer slow when doing other things. I would recommend `-j2` on M-Series mac's.*
+
+Once it's done compiling, you will now have a .app file. If you would like to move it to the applications folder, you can run this terminal command:
+
 ```
-gmake OSX_BUILD=1 TARGET_ARCH=x86_64-apple-darwin TARGET_BITS=64
+cp build/us_pc/sm64coopdx.app /Applications/
 ```
+
+If you want to move it elsewhere, I would recommend running:
+
+```
+cp build/us_pc/sm64coopdx.app ~/Downloads/
+```
+
+Then navigate to the Downloads folder, and move `sm64coopdx.app` to where you want it to be.
 
 ## Goal (accomplished)
 Create a mod for the PC port where multiple people can play together online.
