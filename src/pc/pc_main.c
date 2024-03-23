@@ -326,7 +326,7 @@ void* main_game_init(void* isThreaded) {
     //     check_for_updates();
     // }
 
-    if (gIsThreaded) { REFRESH_MUTEX(loading_screen_set_segment_text("Loading rom assets")); }
+    if (gIsThreaded) { REFRESH_MUTEX(loading_screen_set_segment_text("Loading ROM Assets")); }
     rom_assets_load();
     smlua_text_utils_init();
 
@@ -334,7 +334,7 @@ void* main_game_init(void* isThreaded) {
     enable_queued_mods();
     REFRESH_MUTEX(
         gCurrLoadingSegment.percentage = 0;
-        loading_screen_set_segment_text("Starting game");
+        loading_screen_set_segment_text("Starting Game");
     );
 
     // If coop_custom_palette_* values are not found in sm64config.txt, the custom palette config will use the default values (Mario's palette)
