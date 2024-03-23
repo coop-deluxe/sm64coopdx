@@ -363,7 +363,7 @@ static void moderator_write(FILE* file) {
 
 static struct QueuedFile *sQueuedEnableDynosPacksHead = NULL;
 
-void enable_queued_dynos_packs() {
+void enable_queued_dynos_packs(void) {
     while (sQueuedEnableDynosPacksHead) {
         int packCount = dynos_pack_get_count();
         const char *path = sQueuedEnableDynosPacksHead->path;

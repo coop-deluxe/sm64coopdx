@@ -160,7 +160,7 @@ static void decapitalize_string_sm64(u8 *str64) {
     }
 }
 
-void *get_course_name_table() {
+void *get_course_name_table(void) {
     void **courseNameTbl = segmented_to_virtual(seg2_course_name_table);
 
 #ifdef VERSION_EU
@@ -174,7 +174,7 @@ void *get_course_name_table() {
     return courseNameTbl;
 }
 
-void *get_act_name_table() {
+void *get_act_name_table(void) {
     void **actNameTbl = segmented_to_virtual(seg2_act_name_table);
 
 #ifdef VERSION_EU

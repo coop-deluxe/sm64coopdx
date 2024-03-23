@@ -3,8 +3,8 @@
 
 #include <PR/ultratypes.h>
 
-void *get_course_name_table();
-void *get_act_name_table();
+void *get_course_name_table(void);
+void *get_act_name_table(void);
 const char *get_level_name_ascii(s16 courseNum, s16 levelNum, s16 areaIndex, s16 charCase);
 const u8   *get_level_name_sm64(s16 courseNum, s16 levelNum, s16 areaIndex, s16 charCase);
 const char *get_level_name(s16 courseNum, s16 levelNum, s16 areaIndex);

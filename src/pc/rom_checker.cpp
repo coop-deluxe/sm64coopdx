@@ -71,7 +71,7 @@ inline static bool scan_path_for_rom(const char *dir) {
 }
 
 extern "C" {
-bool main_rom_handler() {
+bool main_rom_handler(void) {
     if (scan_path_for_rom(sys_user_path())) { return true; }
     scan_path_for_rom(sys_exe_path());
     return gRomIsValid;

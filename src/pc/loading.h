@@ -25,7 +25,7 @@ extern pthread_mutex_t gLoadingThreadMutex;
 extern bool gIsThreaded;
 
 void loading_screen_set_segment_text(const char *text);
-void render_loading_screen();
-void render_rom_setup_screen();
+void render_loading_screen(void);
+void render_rom_setup_screen(void);
 
 #endif

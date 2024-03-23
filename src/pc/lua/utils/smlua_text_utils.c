@@ -27,7 +27,7 @@ void convert_string_sm64_to_ascii(char *strAscii, const u8 *str64);
 struct CourseName *gReplacedActNameTable[COURSE_END];
 
 // Save all vanilla act names and course names
-void smlua_text_utils_init() {
+void smlua_text_utils_init(void) {
     void **actNameTbl = get_act_name_table();
     void **courseNameTbl = get_course_name_table();
     char courseBuffer[50];

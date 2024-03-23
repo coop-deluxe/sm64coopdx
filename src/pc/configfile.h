@@ -124,8 +124,8 @@ extern unsigned int configDjuiScale;
 extern bool         configGlobalPlayerModels;
 extern char         configLastVersion[];
 
-void enable_queued_mods();
-void enable_queued_dynos_packs();
+void enable_queued_mods(void);
+void enable_queued_dynos_packs(void);
 void configfile_load(void);
 void configfile_save(const char *filename);
 const char *configfile_name(void);

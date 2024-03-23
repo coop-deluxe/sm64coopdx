@@ -636,7 +636,7 @@ static void newcam_set_pan(void) {
     newcam_pan_z = newcam_pan_z*(min(newcam_distance/newcam_distance_target,1));
 }
 
-static void newcam_level_bounds() {
+static void newcam_level_bounds(void) {
     u8 hasMinY = FALSE;
     f32 minY = 0;
     get_area_minimum_y(&hasMinY, &minY);

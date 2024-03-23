@@ -30,11 +30,11 @@ void loading_screen_set_segment_text(const char *text) {
     snprintf(gCurrLoadingSegment.str, 256, text);
 }
 
-static void loading_screen_produce_frame_callback() {
+static void loading_screen_produce_frame_callback(void) {
     if (sLoading && !gCLIOpts.hideLoadingScreen) { djui_base_render(&sLoading->base); }
 }
 
-static void loading_screen_produce_one_frame() {
+static void loading_screen_produce_one_frame(void) {
     produce_one_dummy_frame(loading_screen_produce_frame_callback);
 }
 
@@ -84,7 +84,7 @@ static void loading_screen_destroy(struct DjuiBase* base) {
     sLoading = NULL;
 }
 
-void init_loading_screen() {
+void init_loading_screen(void) {
     struct LoadingScreen* load = calloc(1, sizeof(struct LoadingScreen));
     struct DjuiBase* base = &load->base;
 
@@ -93,7 +93,7 @@ void init_loading_screen() {
     {
         // splash image
         struct DjuiImage* splashImage = djui_image_create(base, texture_coopdx_logo, 2048, 1024, 32);
-        djui_base_set_size(&splashImage->base, 740.0f, 364.0f);
+        djui_base_set_size(&splashImage->base, 1024, 512);
         djui_base_set_alignment(&splashImage->base, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
         djui_base_set_location(&splashImage->base, 0, -100);
 
@@ -111,7 +111,7 @@ void init_loading_screen() {
         djui_base_set_color(&text->base, 200, 200, 200, 255);
         djui_text_set_alignment(text, DJUI_HALIGN_CENTER, DJUI_VALIGN_TOP);
         djui_text_set_font(text, gDjuiFonts[0]);
-        djui_text_set_font_scale(text, gDjuiFonts[0]->defaultFontScale * 1.5f);
+        djui_text_set_font_scale(text, gDjuiFonts[0]->defaultFontScale * 1.9f);
 
         load->loadingDesc = text;
     }
@@ -130,7 +130,7 @@ void init_loading_screen() {
     sLoading = load;
 }
 
-void loading_screen_reset() {
+void loading_screen_reset(void) {
     djui_base_destroy(&sLoading->base);
     djui_shutdown();
     alloc_display_list_reset();
@@ -139,7 +139,7 @@ void loading_screen_reset() {
     configWindow.settings_changed = true;
 }
 
-void render_loading_screen() {
+void render_loading_screen(void) {
     if (!sLoading) { init_loading_screen(); }
 
     // loading screen loop
@@ -153,7 +153,7 @@ void render_loading_screen() {
     loading_screen_reset();
 }
 
-void render_rom_setup_screen() {
+void render_rom_setup_screen(void) {
     if (!sLoading) { init_loading_screen(); }
 
     loading_screen_set_segment_text("No rom detected, drag & drop Super Mario 64 (U) [!].z64 on to this screen");
