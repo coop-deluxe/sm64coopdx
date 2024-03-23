@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include "djui.h"
 #include "djui_unicode.h"
+#include "djui_hud_utils.h"
 #include "pc/gfx/gfx_window_manager_api.h"
 #include "pc/pc_main.h"
 #include "game/segment2.h"
@@ -18,26 +19,15 @@ static u8 sCursorBlink = 0;
 
 static void djui_inputbox_update_style(struct DjuiBase* base) {
     struct DjuiInputbox* inputbox = (struct DjuiInputbox*)base;
-    struct DjuiTheme* theme = gDjuiThemes[configDjuiTheme];
-
     if (!inputbox->base.enabled) {
-        struct DjuiColor bc = theme->interactables.defaultBorderColor;
-        struct DjuiColor rc = djui_theme_shade_color(theme->interactables.defaultRectColor);
-
-        djui_base_set_border_color(base, bc.r, bc.g, bc.b, bc.a);
-        djui_base_set_color(&inputbox->base, rc.r, rc.g, rc.b, rc.a);
+        djui_base_set_border_color(base, 90, 90, 90, 255);
+        djui_base_set_color(&inputbox->base, 140, 140, 140, 255);
     } else if (gDjuiHovered == base) {
-        struct DjuiColor bc = theme->interactables.hoveredBorderColor;
-        struct DjuiColor rc = theme->interactables.hoveredRectColor;
-
-        djui_base_set_border_color(base, bc.r, bc.g, bc.b, bc.a);
-        djui_base_set_color(&inputbox->base, rc.r, rc.g, rc.b, rc.a);
+        djui_base_set_border_color(base, 0, 120, 215, 255);
+        djui_base_set_color(&inputbox->base, 255, 255, 255, 255);
     } else {
-        struct DjuiColor bc = theme->interactables.defaultBorderColor;
-        struct DjuiColor rc = theme->interactables.defaultRectColor;
-
-        djui_base_set_border_color(base, bc.r, bc.g, bc.b, bc.a);
-        djui_base_set_color(&inputbox->base, rc.r, rc.g, rc.b, rc.a);
+        djui_base_set_border_color(base, 150, 150, 150, 255);
+        djui_base_set_color(&inputbox->base, 240, 240, 240, 255);
     }
 }
 
@@ -88,7 +78,7 @@ void djui_inputbox_hook_escape_press(struct DjuiInputbox* inputbox, void (*on_es
 
 static u16 djui_inputbox_get_cursor_index(struct DjuiInputbox* inputbox) {
     struct DjuiBaseRect*   comp = &inputbox->base.comp;
-    const struct DjuiFont* font = gDjuiFonts[0];
+    const struct DjuiFont* font = gDjuiFonts[configDjuiThemeFont == 0 ? FONT_NORMAL : FONT_ALIASED];
 
     f32 cX = (gCursorX - (comp->x + inputbox->viewX)) / font->defaultFontScale;
     f32 x = 0;
@@ -327,7 +317,6 @@ void djui_inputbox_on_focus_end(UNUSED struct DjuiBase* base) {
 }
 
 void djui_inputbox_on_text_input(struct DjuiBase *base, char* text) {
-    if (!base || !text) { return; }
     struct DjuiInputbox *inputbox = (struct DjuiInputbox *) base;
     char* msg = inputbox->buffer;
     int msgLen = strlen(msg);
@@ -392,7 +381,7 @@ void djui_inputbox_on_text_input(struct DjuiBase *base, char* text) {
 
 static void djui_inputbox_render_char(struct DjuiInputbox* inputbox, char* c, f32* drawX, f32* additionalShift) {
     struct DjuiBaseRect*   comp = &inputbox->base.comp;
-    const struct DjuiFont* font = gDjuiFonts[0];
+    const struct DjuiFont* font = gDjuiFonts[configDjuiThemeFont == 0 ? FONT_NORMAL : FONT_ALIASED];
     f32 dX = comp->x + *drawX;
     f32 dY = comp->y;
     f32 dW = font->charWidth  * font->defaultFontScale;
@@ -414,7 +403,7 @@ static void djui_inputbox_render_char(struct DjuiInputbox* inputbox, char* c, f3
 }
 
 static void djui_inputbox_render_selection(struct DjuiInputbox* inputbox) {
-    const struct DjuiFont* font = gDjuiFonts[0];
+    const struct DjuiFont* font = gDjuiFonts[configDjuiThemeFont == 0 ? FONT_NORMAL : FONT_ALIASED];
 
     // make selection well formed
     u16 selection[2] = { 0 };
@@ -441,8 +430,7 @@ static void djui_inputbox_render_selection(struct DjuiInputbox* inputbox) {
         if (sCursorBlink < DJUI_INPUTBOX_MID_BLINK && djui_interactable_is_input_focus(&inputbox->base)) {
             create_dl_translation_matrix(DJUI_MTX_PUSH, x - DJUI_INPUTBOX_CURSOR_WIDTH / 2.0f, -0.1f, 0);
             create_dl_scale_matrix(DJUI_MTX_NOPUSH, DJUI_INPUTBOX_CURSOR_WIDTH, 0.8f, 1.0f);
-            struct DjuiColor color = gDjuiThemes[configDjuiTheme]->interactables.textColor;
-            gDPSetEnvColor(gDisplayListHead++, color.r, color.g, color.b, color.a);
+            gDPSetEnvColor(gDisplayListHead++, 0, 0, 0, 255);
             gSPDisplayList(gDisplayListHead++, dl_djui_simple_rect);
             gSPPopMatrix(gDisplayListHead++, G_MTX_MODELVIEW);
         }
@@ -480,7 +468,7 @@ static void djui_inputbox_render_selection(struct DjuiInputbox* inputbox) {
 }
 
 static void djui_inputbox_keep_selection_in_view(struct DjuiInputbox* inputbox) {
-    const struct DjuiFont* font = gDjuiFonts[0];
+    const struct DjuiFont* font = gDjuiFonts[configDjuiThemeFont == 0 ? FONT_NORMAL : FONT_ALIASED];
 
     // calculate where our cursor is
     f32 cursorX = inputbox->viewX;
@@ -503,7 +491,7 @@ static void djui_inputbox_keep_selection_in_view(struct DjuiInputbox* inputbox) 
 static bool djui_inputbox_render(struct DjuiBase* base) {
     struct DjuiInputbox* inputbox = (struct DjuiInputbox*)base;
     struct DjuiBaseRect* comp     = &base->comp;
-    const struct DjuiFont* font   = gDjuiFonts[0];
+    const struct DjuiFont* font   = gDjuiFonts[configDjuiThemeFont == 0 ? FONT_NORMAL : FONT_ALIASED];
     djui_rect_render(base);
 
     // Shift the text away from the left side a tad
@@ -533,8 +521,6 @@ static bool djui_inputbox_render(struct DjuiBase* base) {
     }
 
     // set color
-    struct DjuiColor color = gDjuiThemes[configDjuiTheme]->interactables.textColor;
-    djui_inputbox_set_text_color(inputbox, color.r, color.g, color.b, color.a);
     gDPSetEnvColor(gDisplayListHead++, inputbox->textColor.r, inputbox->textColor.g, inputbox->textColor.b, inputbox->textColor.a);
 
     // make selection well formed
@@ -550,7 +536,7 @@ static bool djui_inputbox_render(struct DjuiBase* base) {
     for (u16 i = 0; i < inputbox->bufferSize; i++) {
         if (*c == '\0') { break; }
 
-        // deal with selection color
+        // deal with seleciton color
         if (selection[0] != selection[1]) {
             bool insideSelection = (i >= selection[0]) && (i < selection[1]);
             if (insideSelection && !wasInsideSelection) {
@@ -580,14 +566,13 @@ static void djui_inputbox_destroy(struct DjuiBase* base) {
 struct DjuiInputbox* djui_inputbox_create(struct DjuiBase* parent, u16 bufferSize) {
     struct DjuiInputbox* inputbox = calloc(1, sizeof(struct DjuiInputbox));
     struct DjuiBase* base         = &inputbox->base;
-    struct DjuiTheme* theme = gDjuiThemes[configDjuiTheme];
     inputbox->bufferSize = bufferSize;
     inputbox->buffer = calloc(bufferSize, sizeof(char));
 
     djui_base_init(parent, base, djui_inputbox_render, djui_inputbox_destroy);
     djui_base_set_size(base, 200, 32);
     djui_base_set_border_width(base, 2);
-    djui_inputbox_set_text_color(inputbox, theme->interactables.textColor.r, theme->interactables.textColor.g, theme->interactables.textColor.b, theme->interactables.textColor.a);
+    djui_inputbox_set_text_color(inputbox, 0, 0, 0, 255);
     djui_interactable_create(base, djui_inputbox_update_style);
     djui_interactable_hook_cursor_down(base, djui_inputbox_on_cursor_down_begin, djui_inputbox_on_cursor_down, NULL);
     djui_interactable_hook_key(base, djui_inputbox_on_key_down, djui_inputbox_on_key_up);
