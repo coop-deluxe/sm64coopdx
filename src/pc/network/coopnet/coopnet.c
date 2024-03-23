@@ -13,6 +13,20 @@
 #include "pc/discord/discord.h"
 #endif
 
+// ! Temporary, show this build of coop as sm64ex-coop
+// to let other players know the update is out
+#undef GAME_NAME
+#define GAME_NAME "sm64ex-coop"
+static char sVersionString[MAX_VERSION_LENGTH] = { 0 };
+const char* get_version_online(void) {
+#if defined(VERSION_US)
+    snprintf(sVersionString, MAX_VERSION_LENGTH, "%s%d", VERSION_TEXT, VERSION_NUMBER);
+#else
+    snprintf(sVersionString, MAX_VERSION_LENGTH, "%s%d %s", VERSION_TEXT, VERSION_NUMBER, VERSION_REGION);
+#endif
+    return sVersionString;
+}
+
 #ifdef COOPNET
 
 uint64_t gCoopNetDesiredLobby = 0;
@@ -144,7 +158,7 @@ static bool ns_coopnet_initialize(enum NetworkType networkType, bool reconnectin
     sNetworkType = networkType;
     sReconnecting = reconnecting;
     if (reconnecting) { return true; }
-    return coopnet_is_connected() 
+    return coopnet_is_connected()
         ? true
         : (coopnet_initialize() == COOPNET_OK);
 }
@@ -173,7 +187,7 @@ static void coopnet_populate_description(void) {
     char* buffer = sCoopNetDescription;
     int bufferLength = 512;
     // get version
-    const char* version = get_version();
+    const char* version = get_version_online();
     int versionLength = strlen(version);
     snprintf(buffer, bufferLength, "%s", version);
     buffer += versionLength;
@@ -208,12 +222,12 @@ void ns_coopnet_update(void) {
             if (sReconnecting) {
                 LOG_INFO("Update lobby");
                 coopnet_populate_description();
-                coopnet_lobby_update(sLocalLobbyId, GAME_NAME, get_version(), configPlayerName, mode, sCoopNetDescription);
+                coopnet_lobby_update(sLocalLobbyId, GAME_NAME, get_version_online(), configPlayerName, mode, sCoopNetDescription);
             } else {
                 LOG_INFO("Create lobby");
                 snprintf(gCoopNetPassword, 64, "%s", configPassword);
                 coopnet_populate_description();
-                coopnet_lobby_create(GAME_NAME, get_version(), configPlayerName, mode, (uint16_t)configAmountofPlayers, gCoopNetPassword, sCoopNetDescription);
+                coopnet_lobby_create(GAME_NAME, get_version_online(), configPlayerName, mode, (uint16_t)configAmountofPlayers, gCoopNetPassword, sCoopNetDescription);
             }
         } else if (sNetworkType == NT_CLIENT) {
             LOG_INFO("Join lobby");
