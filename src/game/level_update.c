@@ -1627,12 +1627,14 @@ void update_menu_level(void) {
     gMarioState->health = 0x880;
     // reset input
     gMarioState->input = 0;
+    gMarioState->intendedMag = 0;
     gMarioState->controller->rawStickX = 0;
     gMarioState->controller->rawStickY = 0;
     gMarioState->controller->stickX = 0;
     gMarioState->controller->stickY = 0;
+    gMarioState->controller->extStickX = 0;
+    gMarioState->controller->extStickY = 0;
     gMarioState->controller->stickMag = 0;
-    gMarioState->intendedMag = 0;
 }
 
 s32 update_level(void) {
