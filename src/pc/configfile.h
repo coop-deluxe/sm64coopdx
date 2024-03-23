@@ -75,7 +75,6 @@ extern bool         configCameraInvertY;
 extern bool         configEnableCamera;
 extern bool         configCameraMouse;
 extern bool         configCameraAnalog;
-extern bool         configCameraCUp;
 extern bool         configSkipIntro;
 extern bool         configBubbleDeath;
 extern unsigned int configAmountofPlayers;

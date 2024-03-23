@@ -114,7 +114,6 @@ bool         configCameraInvertX = false;
 bool         configCameraInvertY = true;
 bool         configEnableCamera  = false;
 bool         configCameraAnalog  = false;
-bool         configCameraCUp     = false;
 bool         configCameraMouse   = false;
 // coop-specific
 bool         configSkipIntro                      = 0;
@@ -212,7 +211,6 @@ static const struct ConfigOption options[] = {
     {.name = "rumble_strength",                .type = CONFIG_TYPE_UINT, .uintValue = &configRumbleStrength},
     {.name = "bettercam_enable",               .type = CONFIG_TYPE_BOOL, .boolValue = &configEnableCamera},
     {.name = "bettercam_analog",               .type = CONFIG_TYPE_BOOL, .boolValue = &configCameraAnalog},
-    {.name = "bettercam_cup",                  .type = CONFIG_TYPE_BOOL, .boolValue = &configCameraCUp},
     {.name = "bettercam_mouse_look",           .type = CONFIG_TYPE_BOOL, .boolValue = &configCameraMouse},
     {.name = "bettercam_invertx",              .type = CONFIG_TYPE_BOOL, .boolValue = &configCameraInvertX},
     {.name = "bettercam_inverty",              .type = CONFIG_TYPE_BOOL, .boolValue = &configCameraInvertY},
