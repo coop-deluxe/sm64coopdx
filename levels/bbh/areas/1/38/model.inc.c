@@ -21,7 +21,7 @@ static const Gfx bbh_seg7_dl_0701EE90[] = {
     gsDPSetTextureImage(G_IM_FMT_IA, G_IM_SIZ_16b, 1, spooky_0900B800),
     gsDPLoadSync(),
     gsDPLoadBlock(G_TX_LOADTILE, 0, 0, 32 * 64 - 1, CALC_DXT(32, G_IM_SIZ_16b_BYTES)),
-    gsSPVertex(bbh_seg7_vertex_0701EE08, 4, 0),
+    gsSPVertexNonGlobal(bbh_seg7_vertex_0701EE08, 4, 0),
     gsSP2Triangles( 0,  1,  2, 0x0,  0,  2,  3, 0x0),
     gsSPEndDisplayList(),
 };
