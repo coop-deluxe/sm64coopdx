@@ -748,6 +748,8 @@ struct GfxWindowManagerAPI gfx_dxgi = {
     gfx_dxgi_set_cursor_visible,
     gfx_dxgi_delay,
     gfx_dxgi_get_max_msaa,
+    gfx_dxgi_set_window_title,
+    gfx_dxgi_reset_window_title
 };
 
 #endif
