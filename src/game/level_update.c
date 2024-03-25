@@ -834,26 +834,25 @@ void initiate_painting_warp(s16 paintingIndex) {
 
 
 void verify_warp(struct MarioState *m, bool killMario) {
-    if (area_get_warp_node(sSourceWarpNodeId) == NULL) {
-        if (area_get_warp_node(WARP_NODE_DEATH) != NULL) {
-            if (killMario) {
-                m->numLives--;
-                if (m->numLives <= -1) {
-                    sDelayedWarpOp = WARP_OP_GAME_OVER;
-                } else {
-                    sSourceWarpNodeId = WARP_NODE_DEATH;
-                }
-            }
-            else {
-                sSourceWarpNodeId = WARP_NODE_DEATH;
-            }
-        }
-        else {
-            dynos_warp_to_start_level();
-        }
+    if (area_get_warp_node(sSourceWarpNodeId) != NULL) { return; }
+
+    if (area_get_warp_node(WARP_NODE_DEATH) == NULL) {
+        dynos_warp_to_start_level();
+        return;
+    }
+    
+    if (!killMario) {
+        sSourceWarpNodeId = WARP_NODE_DEATH;
+        return;
+    }
+
+    m->numLives--;
+    if (m->numLives < 0) {
+        sDelayedWarpOp = WARP_OP_GAME_OVER;
+    } else {
+        sSourceWarpNodeId = WARP_NODE_DEATH;
     }
 }
-
 
 
 /**
