@@ -47,8 +47,14 @@ static bool loading_screen_on_render(struct DjuiBase* base) {
     windowWidth /= scale;
     windowHeight /= scale;
 
+    f32 loadingDescY1 = windowHeight * 0.5f - sLoading->loadingDesc->base.height.value * 0.5f;
+    f32 loadingDescY2 = windowHeight * 0.5f + sLoading->loadingDesc->base.height.value * 0.5f;
+
     // fill the screen
     djui_base_set_size(base, windowWidth, windowHeight);
+
+    // splash logo
+    djui_base_set_location(&sLoading->splashImage->base, 0, loadingDescY1 - (sLoading->splashImage->base.height.value));
 
     {
         // loading text description
@@ -64,11 +70,11 @@ static bool loading_screen_on_render(struct DjuiBase* base) {
             sys_swap_backslashes(buffer);
         }
         djui_text_set_text(sLoading->loadingDesc, buffer);
-        djui_base_set_location(&sLoading->loadingDesc->base, 0, windowHeight - 250);
+        djui_base_set_location(&sLoading->loadingDesc->base, 0, loadingDescY1);
     }
 
     // loading bar
-    djui_base_set_location(&sLoading->loadingBar->base, windowWidth / 4, windowHeight - 100);
+    djui_base_set_location(&sLoading->loadingBar->base, windowWidth / 4, loadingDescY2 + 64);
     djui_base_set_visible(&sLoading->loadingBar->base, gCurrLoadingSegment.percentage > 0 && strlen(gCurrLoadingSegment.str) > 0);
 
     djui_base_compute(base);
@@ -93,9 +99,9 @@ void init_loading_screen(void) {
     {
         // splash image
         struct DjuiImage* splashImage = djui_image_create(base, texture_coopdx_logo, 2048, 1024, 32);
-        djui_base_set_size(&splashImage->base, 1024, 512);
-        djui_base_set_alignment(&splashImage->base, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
-        djui_base_set_location(&splashImage->base, 0, -100);
+        djui_base_set_location_type(&splashImage->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+        djui_base_set_alignment(&splashImage->base, DJUI_HALIGN_CENTER, DJUI_VALIGN_TOP);
+        djui_base_set_size(&splashImage->base, 740.0f, 364.0f);
 
         load->splashImage = splashImage;
     }
@@ -107,11 +113,11 @@ void init_loading_screen(void) {
         djui_base_set_location(&text->base, 0, 0);
 
         djui_base_set_size_type(&text->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-        djui_base_set_size(&text->base, 1.0f, gDjuiFonts[0]->defaultFontScale * 4.0f);
+        djui_base_set_size(&text->base, 1.0f, gDjuiFonts[0]->defaultFontScale * 3.0f);
         djui_base_set_color(&text->base, 200, 200, 200, 255);
         djui_text_set_alignment(text, DJUI_HALIGN_CENTER, DJUI_VALIGN_TOP);
         djui_text_set_font(text, gDjuiFonts[0]);
-        djui_text_set_font_scale(text, gDjuiFonts[0]->defaultFontScale * 1.9f);
+        djui_text_set_font_scale(text, gDjuiFonts[0]->defaultFontScale * 1);
 
         load->loadingDesc = text;
     }
