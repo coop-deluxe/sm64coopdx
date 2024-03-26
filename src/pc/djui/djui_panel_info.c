@@ -10,13 +10,14 @@ void djui_panel_info_create(struct DjuiBase* caller) {
     struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(INFORMATION, INFORMATION_TITLE));
     struct DjuiBase* body = djui_three_panel_get_body(panel);
     {
-        snprintf(sInfo, 1024, "sm64coopdx is a project started by the Coop Deluxe team \
-to actively maintain, improve on and provide a better \
-community for sm64ex-coop. We are adding more features, \
-customizability, and power to the Lua API without having to \
-jump through the many hoops of issues sm64ex-coop \
-development has, or deal with cool new features being \
-turned down by overly cautious developers.\n\
+        snprintf(sInfo, 1024, "\
+sm64coopdx is an online multiplayer project for the \
+Super Mario 64 PC port, started by the Coop Deluxe Team.\n\
+Its purpose is to actively maintain and improve \
+sm64ex-coop, an original idea from djoslin0.\n\
+More features, customizability, and power to the Lua API \
+allow modders and players to enjoy Super Mario 64 \
+more than ever!\n\
 \n\
 Coop Deluxe Team:\n\
 Agent X: Lead Developer, Creator\n\
