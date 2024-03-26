@@ -451,6 +451,10 @@ void DynOS_Tex_AddCustom(const SysPath &aFilename, const char *aTexName) {
     }
 }
 
+static inline bool IsPowerOfTwo(int n) {
+    return (ceil(log2(n)) == floor(log2(n)));
+}
+
 bool DynOS_Tex_Get(const char* aTexName, struct TextureInfo* aOutTexInfo) {
     #define CONVERT_TEXINFO { \
         /* translate bit size */ \
@@ -483,8 +487,8 @@ bool DynOS_Tex_Get(const char* aTexName, struct TextureInfo* aOutTexInfo) {
                     return false;
                 }
                 // texture width or height is NPOT
-                if (!(_Data->mRawWidth > 0 && _Data->mRawWidth & (_Data->mRawWidth - 1) == 0) ||
-                    !(_Data->mRawHeight > 0 && _Data->mRawHeight & (_Data->mRawHeight - 1) == 0)) {
+                if ((_Data->mRawWidth > 0 && _Data->mRawWidth & (_Data->mRawWidth - 1) == 0) ||
+                    (_Data->mRawHeight > 0 && _Data->mRawHeight & (_Data->mRawHeight - 1) == 0)) {
                     PrintError("Attempted to load tex file with non power of two width or height: %s", aTexName);
                     PrintConsole(CONSOLE_MESSAGE_ERROR, "Attempted to load tex file with non power of two width or height: %s", aTexName);
                     return false;
