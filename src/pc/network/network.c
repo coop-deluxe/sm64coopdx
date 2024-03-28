@@ -79,6 +79,7 @@ struct ServerSettings gServerSettings = {
     .headlessServer = FALSE,
     .nametags = TRUE,
     .maxPlayers = MAX_PLAYERS,
+    .pauseAnywhere = FALSE,
 };
 
 struct NametagsSettings gNametagsSettings = {
@@ -125,6 +126,7 @@ bool network_init(enum NetworkType inNetworkType, bool reconnecting) {
     gServerSettings.enablePlayerList = TRUE;
     gServerSettings.nametags = configNametags;
     gServerSettings.maxPlayers = configAmountofPlayers;
+    gServerSettings.pauseAnywhere = configPauseAnywhere;
 #if defined(RAPI_DUMMY) || defined(WAPI_DUMMY)
     gServerSettings.headlessServer = (inNetworkType == NT_SERVER);
 #else

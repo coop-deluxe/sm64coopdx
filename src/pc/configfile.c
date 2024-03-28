@@ -118,6 +118,7 @@ bool         configCameraMouse   = false;
 // coop-specific
 bool         configSkipIntro                      = 0;
 bool         configBubbleDeath                    = true;
+bool         configPauseAnywhere                  = false;
 unsigned int configAmountofPlayers                = 16;
 char         configJoinIp[MAX_CONFIG_STRING]      = "";
 unsigned int configJoinPort                       = DEFAULT_PORT;
@@ -220,6 +221,7 @@ static const struct ConfigOption options[] = {
     {.name = "bettercam_pan_level",            .type = CONFIG_TYPE_UINT, .uintValue = &configCameraPan},
     {.name = "bettercam_degrade",              .type = CONFIG_TYPE_UINT, .uintValue = &configCameraDegrade},
     {.name = "skip_intro",                     .type = CONFIG_TYPE_BOOL, .boolValue = &configSkipIntro},
+    {.name = "pause_anywhere",                 .type = CONFIG_TYPE_BOOL, .boolValue = &configPauseAnywhere},
     // debug
     {.name = "debug_offset",                   .type = CONFIG_TYPE_U64   , .u64Value    = &gPcDebug.bhvOffset},
     {.name = "debug_tags",                     .type = CONFIG_TYPE_U64   , .u64Value    = gPcDebug.tags},

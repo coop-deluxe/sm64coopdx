@@ -82,6 +82,7 @@ struct ServerSettings {
     u8 headlessServer;
     u8 nametags;
     u8 maxPlayers;
+    u8 pauseAnywhere;
 };
 
 struct NametagsSettings {

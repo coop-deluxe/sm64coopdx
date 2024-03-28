@@ -257,10 +257,9 @@ u32 pressed_pause(void) {
         return TRUE;
     }
 
-    // I don't agree with this official change, mods use ACT_FLAG_INTANGIBLE to prevent the player from pausing in things like cutscenes
-    // if (get_dialog_id() < 0) {
-    //     return gPlayer1Controller->buttonPressed & START_BUTTON;
-    // }
+    if (gServerSettings.pauseAnywhere && get_dialog_id() < 0) {
+        return gPlayer1Controller->buttonPressed & START_BUTTON;
+    }
 
     return FALSE;
 }

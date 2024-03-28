@@ -77,6 +77,7 @@ extern bool         configCameraMouse;
 extern bool         configCameraAnalog;
 extern bool         configSkipIntro;
 extern bool         configBubbleDeath;
+extern bool         configPauseAnywhere;
 extern unsigned int configAmountofPlayers;
 extern char         configJoinIp[];
 extern unsigned int configJoinPort;
