@@ -3154,7 +3154,7 @@ s16 render_pause_courses_and_castle(void) {
         gDialogTextAlpha += 25;
     }
 
-    if (gDjuiPanelPauseCreated) { shade_screen(); }
+    if (gDjuiPanelPauseCreated && !gInPlayerMenu) { shade_screen(); }
     if (gPlayer1Controller->buttonPressed & R_TRIG) {
         djui_panel_pause_create(NULL);
     }

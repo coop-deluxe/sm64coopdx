@@ -28,6 +28,7 @@
 #include "paintings.h"
 #include "engine/graph_node.h"
 #include "level_table.h"
+#include "mario.h"
 #include "game/hardcoded.h"
 #include "game/sound_init.h"
 #include "pc/configfile.h"
@@ -472,6 +473,8 @@ s32 update_slide_or_0f_camera(struct Camera *c, Vec3f, Vec3f);
 s32 update_spiral_stairs_camera(struct Camera *c, Vec3f, Vec3f);
 s32 update_rom_hack_camera(struct Camera *c, Vec3f, Vec3f);
 void mode_rom_hack_camera(struct Camera *c);
+void cutscene_take_cap_off(struct MarioState *m);
+void cutscene_put_cap_on(struct MarioState *m);
 
 typedef s32 (*CameraTransition)(struct Camera *c, Vec3f, Vec3f);
 CameraTransition sModeTransitions[] = {
@@ -3343,6 +3346,12 @@ void update_camera(struct Camera *c) {
     update_lakitu(c);
 
     gLakituState.lastFrameAction = sMarioCamState->action;
+
+    // Make sure the palette editor cutscene is properly reset
+    if (c->paletteEditorCap && c->cutscene != CUTSCENE_PALETTE_EDITOR && (gMarioState->flags & MARIO_CAP_ON_HEAD) == 0) {
+        cutscene_put_cap_on(gMarioState);
+        c->paletteEditorCap = false;
+    }
 }
 
 void soft_reset_camera(struct Camera* c) {
@@ -10849,6 +10858,35 @@ BAD_RETURN(s32) cutscene_door_mode(struct Camera *c) {
     }
 }
 
+// coop specific
+void cutscene_palette_editor(struct Camera *c) {
+    if (!c) { return; }
+    struct MarioState* m = gMarioState;
+
+    if (!gInPlayerMenu) {
+        if (c->paletteEditorCap) {
+            if (!(m->flags & MARIO_CAP_ON_HEAD)) {
+                set_mario_action(m, ACT_PUTTING_ON_CAP, 0);
+            }
+            c->paletteEditorCap = false;
+        }
+        c->cutscene = 0;
+        return;
+    }
+    if (m->action == ACT_IDLE && m->flags & MARIO_CAP_ON_HEAD) {
+        set_mario_action(m, ACT_TAKING_OFF_CAP, 0);
+        c->paletteEditorCap = true;
+    }
+
+    c->pos[0] = m->pos[0] + (0x200 * sins(m->faceAngle[1]));
+    c->pos[1] = m->pos[1] + 0x80;
+    c->pos[2] = m->pos[2] + (0x200 * coss(m->faceAngle[1]));
+
+    c->focus[0] = m->pos[0];
+    c->focus[1] = m->pos[1] + 0x80;
+    c->focus[2] = m->pos[2];
+}
+
 /******************************************************************************************************
  * Cutscenes
  ******************************************************************************************************/
@@ -11245,6 +11283,10 @@ struct Cutscene sCutsceneReadMessage[] = {
     { cutscene_read_message, CUTSCENE_LOOP },
     { cutscene_read_message_set_flag, 15 },
     { cutscene_read_message_end, 0 }
+};
+
+struct Cutscene sCutscenePaletteEditor[] = {
+    { cutscene_palette_editor, CUTSCENE_LOOP },
 };
 
 /* TODO:
@@ -11720,6 +11762,7 @@ void play_cutscene(struct Camera *c) {
         CUTSCENE(CUTSCENE_RACE_DIALOG, sCutsceneDialog)
         CUTSCENE(CUTSCENE_ENTER_PYRAMID_TOP, sCutsceneEnterPyramidTop)
         CUTSCENE(CUTSCENE_SSL_PYRAMID_EXPLODE, sCutscenePyramidTopExplode)
+        CUTSCENE(CUTSCENE_PALETTE_EDITOR, sCutscenePaletteEditor)
     }
 
 #undef CUTSCENE

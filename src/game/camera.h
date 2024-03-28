@@ -257,6 +257,7 @@ extern u8 gRomhackCameraAllowDpad;
 #define CUTSCENE_EXIT_WATERFALL       179
 #define CUTSCENE_EXIT_FALL_WMOTR      180
 #define CUTSCENE_ENTER_POOL           181
+#define CUTSCENE_PALETTE_EDITOR       182
 
 /**
  * Stop the cutscene.
@@ -575,6 +576,7 @@ struct Camera
     /// when paused. See zoom_out_if_paused_and_outside
     /*0x68*/ f32 areaCenY;
     /*????*/ Mat4 mtx;
+    /*????*/ bool paletteEditorCap;
 };
 
 /**

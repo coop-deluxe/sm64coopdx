@@ -1646,6 +1646,12 @@ void update_menu_level(void) {
             gMarioState->faceAngle[1] = -0x1C34;
             break;
     }
+    gLakituState.skipCameraInterpolationTimestamp = gGlobalTimer;
+    extern s32 gCamSkipInterp;
+    gCamSkipInterp = 1;
+    vec3f_copy(gCurrentArea->camera->pos, gLakituState.curPos);
+    vec3f_copy(gLakituState.pos, gLakituState.curPos);
+    vec3f_copy(gLakituState.goalPos, gLakituState.curPos);
 
     gMarioState->health = 0x880;
     // reset input

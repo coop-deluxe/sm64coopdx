@@ -219,6 +219,7 @@
 --- @field public mode integer
 --- @field public mtx Mat4
 --- @field public nextYaw integer
+--- @field public paletteEditorCap boolean
 --- @field public pos Vec3f
 --- @field public unusedVec1 Vec3f
 --- @field public yaw integer

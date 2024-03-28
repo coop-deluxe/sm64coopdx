@@ -20,6 +20,14 @@ static struct DjuiSelectionbox* sPalettePresetSelection;
 static struct DjuiInputbox* sHexColorTextBox;
 static struct DjuiSlider *sSliderR, *sSliderG, *sSliderB;
 
+bool gDjuiPanelPlayerCreated = false;
+
+static void djui_panel_player_update_camera_cutscene(void) {
+    if (gMarioState->area && gMarioState->area->camera && gMarioState->area->camera->cutscene == 0) {
+        gMarioState->area->camera->cutscene = CUTSCENE_PALETTE_EDITOR;
+    }
+}
+
 static void djui_panel_player_edit_palette_update_hex_code_box(void) {
     char buf[7];
     static const char digitToChar[] = "0123456789abcdef";
@@ -235,6 +243,7 @@ static void djui_panel_player_destroy(UNUSED struct DjuiBase* caller) {
 
 void djui_panel_player_create(struct DjuiBase* caller) {
     djui_panel_player_prevent_demo(NULL);
+    djui_panel_player_update_camera_cutscene();
     gInPlayerMenu = true;
 
     struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(PLAYER, PLAYER_TITLE));

@@ -2463,6 +2463,9 @@ CUTSCENE_LOOP = 0x7FFF
 CUTSCENE_NONPAINTING_DEATH = 170
 
 --- @type integer
+CUTSCENE_PALETTE_EDITOR = 182
+
+--- @type integer
 CUTSCENE_PREPARE_CANNON = 150
 
 --- @type integer
@@ -8796,6 +8799,9 @@ ACT_SUFFOCATION = 0x00021314
 
 --- @type integer
 ACT_SWIMMING_END = 0x300024D1
+
+--- @type integer
+ACT_TAKING_OFF_CAP = 0x0000133E
 
 --- @type integer
 ACT_TELEPORT_FADE_IN = 0x00001337
