@@ -129,11 +129,11 @@ static void gfx_dummy_renderer_unload_shader(UNUSED struct ShaderProgram *old_pr
 static void gfx_dummy_renderer_load_shader(UNUSED struct ShaderProgram *new_prg) {
 }
 
-static struct ShaderProgram *gfx_dummy_renderer_create_and_load_new_shader(UNUSED uint32_t shader_id) {
+static struct ShaderProgram *gfx_dummy_renderer_create_and_load_new_shader(UNUSED struct ColorCombiner* cc) {
     return NULL;
 }
 
-static struct ShaderProgram *gfx_dummy_renderer_lookup_shader(UNUSED uint32_t shader_id) {
+static struct ShaderProgram *gfx_dummy_renderer_lookup_shader(UNUSED struct ColorCombiner* cc) {
     return NULL;
 }
 

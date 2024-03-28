@@ -30,7 +30,8 @@ static struct {
     f64 disp;
 } sLuaProfilerCounters[MAX_PROFILED_MODS];
 
-static void lua_profiler_start_counter(struct Mod *mod) {
+static void lua_profiler_start_counter(UNUSED struct Mod *mod) {
+#ifndef WAPI_DUMMY
     for (s32 i = 0; i != MIN(MAX_PROFILED_MODS, gActiveMods.entryCount); ++i) {
         if (gActiveMods.entries[i] == mod) {
             f64 freq = SDL_GetPerformanceFrequency();
@@ -39,9 +40,11 @@ static void lua_profiler_start_counter(struct Mod *mod) {
             return;
         }
     }
+#endif
 }
 
-static void lua_profiler_stop_counter(struct Mod *mod) {
+static void lua_profiler_stop_counter(UNUSED struct Mod *mod) {
+#ifndef WAPI_DUMMY
     for (s32 i = 0; i != MIN(MAX_PROFILED_MODS, gActiveMods.entryCount); ++i) {
         if (gActiveMods.entries[i] == mod) {
             f64 freq = SDL_GetPerformanceFrequency();
@@ -51,6 +54,7 @@ static void lua_profiler_stop_counter(struct Mod *mod) {
             return;
         }
     }
+#endif
 }
 
 void lua_profiler_update_counters(void) {

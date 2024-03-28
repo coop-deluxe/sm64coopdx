@@ -385,11 +385,16 @@ int main(int argc, char *argv[]) {
 
     // Render the rom setup screen
     if (!main_rom_handler()) {
+#if !defined(WAPI_DXGI) && !defined(WAPI_DUMMY)
         render_rom_setup_screen(); // Holds the game load until a valid rom is provided
+#else
+        printf("ERROR: could not find valid vanilla us sm64 rom in game's user folder\n");
+        return 0;
+#endif
     }
 
     // Start the thread for setting up the game
-#ifndef WAPI_DXGI
+#if !defined(WAPI_DXGI) && !defined(WAPI_DUMMY)
     bool threadSuccess = false;
     if (pthread_mutex_init(&gLoadingThreadMutex, NULL) == 0) {
         if (pthread_create(&gLoadingThreadId, NULL, main_game_init, (void*) 1) == 0) {
