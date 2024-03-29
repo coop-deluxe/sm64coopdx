@@ -35,7 +35,7 @@ void smlua_text_utils_init(void) {
 
     // Course/Star names
     for (s16 courseNum = 0; courseNum < COURSE_END; courseNum++) {
-        gReplacedActNameTable[courseNum] = malloc(sizeof(struct CourseName));
+        gReplacedActNameTable[courseNum] = calloc(1, sizeof(struct CourseName));
         struct CourseName* courseActNames = gReplacedActNameTable[courseNum];
         convert_string_sm64_to_ascii(courseBuffer, segmented_to_virtual(courseNameTbl[courseNum]));
         snprintf(courseActNames->name, 50, "%s", courseBuffer);
@@ -52,7 +52,7 @@ void smlua_text_utils_init(void) {
                 snprintf(courseActNames->actName[actNum].orig, 50, "%s", actBuffer);
                 courseActNames->actName[actNum].modIndex = -1;
             }
-            courseActNames->actName[MAX_ACTS_AND_100_COINS].modIndex = -1;
+            courseActNames->actName[MAX_ACTS_AND_100_COINS - 1].modIndex = -1;
         }
     }
 }
