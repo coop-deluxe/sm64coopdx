@@ -685,7 +685,6 @@ HWND gfx_dxgi_get_h_wnd(void) {
 void gfx_dxgi_shutdown(void) {
 }
 
-// TODO: is this even right????
 bool gfx_dxgi_has_focus(void) {
     return GetFocus() == dxgi.h_wnd;
 }
