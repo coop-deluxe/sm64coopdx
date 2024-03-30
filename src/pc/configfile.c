@@ -140,6 +140,7 @@ struct PlayerPalette configPlayerPalette          = {{{ 0x00, 0x00, 0xff }, { 0x
 struct PlayerPalette configCustomPalette          = {{{ 0x00, 0x00, 0xff }, { 0xff, 0x00, 0x00 }, { 0xff, 0xff, 0xff }, { 0x72, 0x1c, 0x0e }, { 0x73, 0x06, 0x00 }, { 0xfe, 0xc1, 0x79 }, { 0xff, 0x00, 0x00 }}};
 bool         configShowFPS                        = false;
 bool         configUncappedFramerate              = false;
+bool         configReduceFramerateFocusLoss       = true;
 unsigned int configFrameLimit                     = 144;
 unsigned int configDrawDistance                   = 4;
 bool         configDisablePopups                  = false;
@@ -161,6 +162,7 @@ unsigned int configCoopNetPort                    = DEFAULT_COOPNET_PORT;
 char         configPassword[MAX_CONFIG_STRING]    = "";
 char         configDestId[MAX_CONFIG_STRING]      = "0";
 bool         configFadeoutDistantSounds           = false;
+bool         configMuteFocusLoss                  = true;
 unsigned int configDjuiTheme                      = DJUI_THEME_DARK;
 bool         configDjuiThemeCenter                = true;
 unsigned int configDjuiScale                      = 0;
@@ -227,6 +229,7 @@ static const struct ConfigOption options[] = {
     // coop-specific
     {.name = "show_fps",                       .type = CONFIG_TYPE_BOOL  , .boolValue   = &configShowFPS},
     {.name = "uncapped_framerate",             .type = CONFIG_TYPE_BOOL  , .boolValue   = &configUncappedFramerate},
+    {.name = "reduce_framerate_focus_loss",    .type = CONFIG_TYPE_BOOL  , .boolValue   = &configReduceFramerateFocusLoss},
     {.name = "frame_limit"       ,             .type = CONFIG_TYPE_UINT  , .uintValue   = &configFrameLimit},
     {.name = "amount_of_players",              .type = CONFIG_TYPE_UINT  , .uintValue   = &configAmountofPlayers},
     {.name = "bubble_death",                   .type = CONFIG_TYPE_BOOL  , .boolValue   = &configBubbleDeath},
@@ -283,6 +286,7 @@ static const struct ConfigOption options[] = {
     {.name = "coopnet_password",               .type = CONFIG_TYPE_STRING, .stringValue = (char*)&configPassword, .maxStringLength = MAX_CONFIG_STRING},
     {.name = "coopnet_dest",                   .type = CONFIG_TYPE_STRING, .stringValue = (char*)&configDestId, .maxStringLength = MAX_CONFIG_STRING},
     {.name = "fade_distant_sounds",            .type = CONFIG_TYPE_BOOL  , .boolValue   = &configFadeoutDistantSounds},
+    {.name = "mute_focus_loss",                .type = CONFIG_TYPE_BOOL  , .boolValue   = &configMuteFocusLoss},
     {.name = "djui_theme",                     .type = CONFIG_TYPE_UINT  , .uintValue   = &configDjuiTheme},
     {.name = "djui_theme_center",              .type = CONFIG_TYPE_BOOL  , .boolValue   = &configDjuiThemeCenter},
     {.name = "djui_scale",                     .type = CONFIG_TYPE_UINT  , .uintValue   = &configDjuiScale},
