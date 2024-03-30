@@ -1,3 +1,6 @@
+#include <stdio.h>
+#include <string.h>
+
 #include "djui.h"
 #include "djui_panel.h"
 #include "djui_panel_menu.h"
@@ -18,18 +21,33 @@ static struct DjuiBase* sLayoutBase = NULL;
 bool gPanelLanguageOnStartup = false;
 
 // HACK: this is abysmal, replace soon or god so help me
-static const char* lang_native_name(const char* en_name) {
-    if (!strcmp(en_name, "German")) return "Deutsch";
-    else if (!strcmp(en_name, "Czech")) return "čeština";
-    else if (!strcmp(en_name, "Dutch")) return "Nederlands";
-    else if (!strcmp(en_name, "French")) return "Français";
-    else if (!strcmp(en_name, "Italian")) return "Italiano";
-    else if (!strcmp(en_name, "Polish")) return "język polski";
-    else if (!strcmp(en_name, "Portuguese")) return "português";
-    else if (!strcmp(en_name, "Russian")) return "русский";
-    else if (!strcmp(en_name, "Spanish")) return "Español";
+static const char* lang_native_name(const char* lang_name) {
+    if (!strcmp(lang_name, "German")) return "Deutsch";
+    else if (!strcmp(lang_name, "Czech")) return "čeština";
+    else if (!strcmp(lang_name, "Dutch")) return "Nederlands";
+    else if (!strcmp(lang_name, "French")) return "Français";
+    else if (!strcmp(lang_name, "Italian")) return "Italiano";
+    else if (!strcmp(lang_name, "Polish")) return "język polski";
+    else if (!strcmp(lang_name, "Portuguese")) return "português";
+    else if (!strcmp(lang_name, "Russian")) return "русский";
+    else if (!strcmp(lang_name, "Spanish")) return "Español";
 
-    return en_name;
+    return lang_name;
+}
+
+// HACK: you thought the above func was bad? Well this is even fucking worse
+static const char* lang_native_to_orig(const char* lang_name) {
+    if (!strcmp(lang_name, "Deutsch (German)")) return "German";
+    else if (!strcmp(lang_name, "čeština (Czech)")) return "Czech";
+    else if (!strcmp(lang_name, "Nederlands (Dutch)")) return "Dutch";
+    else if (!strcmp(lang_name, "Français (French)")) return "French";
+    else if (!strcmp(lang_name, "Italiano (Italian)")) return "Italian";
+    else if (!strcmp(lang_name, "język polski (Polish)")) return "Polish";
+    else if (!strcmp(lang_name, "português (Portuguese)")) return "Portuguese";
+    else if (!strcmp(lang_name, "русский (Russian)")) return "Russian";
+    else if (!strcmp(lang_name, "Español (Spanish)")) return "Spanish";
+
+    return lang_name;
 }
 
 static void select_language(struct DjuiBase* caller) {
@@ -46,8 +64,12 @@ static void select_language(struct DjuiBase* caller) {
         child = child->next;
     }
 
-    if (strcmp(configLanguage, checkbox->text->message)) {
-        snprintf(configLanguage, MAX_CONFIG_STRING, "%s", checkbox->text->message);
+    const char* orig_text = lang_native_to_orig(checkbox->text->message);
+
+    printf("Txt: %s\n", orig_text);
+
+    if (strcmp(configLanguage, orig_text)) {
+        snprintf(configLanguage, MAX_CONFIG_STRING, "%s", orig_text);
         sLanguageChanged = true;
     }
 
