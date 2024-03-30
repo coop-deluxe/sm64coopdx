@@ -17,6 +17,21 @@ static bool sLanguageChanged = false;
 static struct DjuiBase* sLayoutBase = NULL;
 bool gPanelLanguageOnStartup = false;
 
+// HACK: this is abysmal, replace soon or god so help me
+static const char* lang_native_name(const char* en_name) {
+    if (!strcmp(en_name, "German")) return "Deutsch";
+    else if (!strcmp(en_name, "Czech")) return "čeština";
+    else if (!strcmp(en_name, "Dutch")) return "Nederlands";
+    else if (!strcmp(en_name, "French")) return "Français";
+    else if (!strcmp(en_name, "Italian")) return "Italiano";
+    else if (!strcmp(en_name, "Polish")) return "język polski";
+    else if (!strcmp(en_name, "Portuguese")) return "português";
+    else if (!strcmp(en_name, "Russian")) return "русский";
+    else if (!strcmp(en_name, "Spanish")) return "Español";
+
+    return en_name;
+}
+
 static void select_language(struct DjuiBase* caller) {
     // god this is so hacky and terrible
     struct DjuiCheckbox* checkbox = (struct DjuiCheckbox*) caller;
@@ -122,10 +137,18 @@ void djui_panel_language_create(struct DjuiBase* caller) {
             }
             if (strlen(path) == 0) { continue; }
 
+            char* fmtPath;
+
+            // This is actually shit but it works
+            if (strcmp(path, "English") != 0) asprintf(&fmtPath, "%s (%s)", lang_native_name(path), path);
+            else asprintf(&fmtPath, "%s", path);
+
             bool match = !strcmp(path, configLanguage);
             if (match) { foundMatch = true; }
-            struct DjuiCheckbox* checkbox = djui_checkbox_create(sLayoutBase, path, match ? &sTrue : &sFalse, select_language);
+            struct DjuiCheckbox* checkbox = djui_checkbox_create(sLayoutBase, fmtPath, match ? &sTrue : &sFalse, select_language);
             if (!strcmp(path, "English")) { chkEnglish = checkbox; }
+
+            free(fmtPath);
         }
 
         os_closedir(d);
