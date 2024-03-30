@@ -103,7 +103,7 @@ If during the build process you get messages saying that the ROM has an incorrec
 
 `HEADLESS [0|1]`: Enable or disable headless mode (meant for servers.)
 
-`RENDER_API [GL|GL_LEGACY|D3D11|D3D12|DUMMY]`: Sets the rendering API.
+`RENDER_API [GL|GL_LEGACY|D3D11|DUMMY]`: Sets the rendering API.
 
 `WINDOW_API [SDL1|SDL2|DXGI|DUMMY]` Sets the window API.
 

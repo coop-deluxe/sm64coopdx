@@ -1,4 +1,4 @@
-#if defined(RAPI_D3D11) || defined(RAPI_D3D12)
+#ifdef RAPI_D3D11
 
 #ifndef GFX_DIRECT3D_COMMON_H
 #define GFX_DIRECT3D_COMMON_H

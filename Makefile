@@ -66,9 +66,9 @@ NO_LDIV ?= 0
 
 # Backend selection
 
-# Renderers: GL, GL_LEGACY, D3D11, D3D12, DUMMY
+# Renderers: GL, GL_LEGACY, D3D11, DUMMY
 RENDER_API ?= GL
-# Window managers: SDL1, SDL2, DXGI (forced if D3D11 or D3D12 in RENDER_API), DUMMY (forced if RENDER_API is DUMMY)
+# Window managers: SDL1, SDL2, DXGI (forced if RENDER_API is D3D11), DUMMY (forced if RENDER_API is DUMMY)
 WINDOW_API ?= SDL2
 # Audio backends: SDL1, SDL2, DUMMY
 AUDIO_API ?= SDL2
@@ -341,7 +341,7 @@ endif
 
 # Check backends
 
-ifneq (,$(filter $(RENDER_API),D3D11 D3D12))
+ifneq (,$(filter $(RENDER_API),D3D11))
   ifneq ($(WINDOWS_BUILD),1)
     $(error DirectX is only supported on Windows)
   endif
@@ -733,9 +733,6 @@ SDL2_USED := 0
 # for now, it's either SDL+GL or DXGI+DirectX, so choose based on WAPI
 ifeq ($(WINDOW_API),DXGI)
   DXBITS := `cat $(ENDIAN_BITWIDTH) | tr ' ' '\n' | tail -1`
-  ifeq ($(RENDER_API),D3D12)
-    BACKEND_CFLAGS += -Iinclude/dxsdk
-  endif
   BACKEND_LDFLAGS += -ld3dcompiler -ldxgi -ldxguid
   BACKEND_LDFLAGS += -lsetupapi -ldinput8 -luser32 -lgdi32 -limm32 -lole32 -loleaut32 -lshell32 -lwinmm -lversion -luuid -static
 else ifeq ($(findstring SDL,$(WINDOW_API)),SDL)

@@ -1,4 +1,4 @@
-#if defined(RAPI_D3D11) || defined(RAPI_D3D12)
+#ifdef RAPI_D3D11
 
 #include <cstdio>
 

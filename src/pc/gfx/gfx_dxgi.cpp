@@ -23,15 +23,16 @@
 #define DECLARE_GFX_DXGI_FUNCTIONS
 #include "gfx_dxgi.h"
 
-#include "../configfile.h"
-#include "../pc_main.h"
-
 extern "C" {
 #include "src/pc/mods/mod_import.h"
 #ifdef DISCORD_SDK
 #include "pc/discord/discord.h"
 #endif
+#include "pc/network/version.h"
 }
+
+#include "../configfile.h"
+#include "../pc_main.h"
 
 #include "gfx_window_manager_api.h"
 #include "gfx_rendering_api.h"
@@ -215,9 +216,8 @@ static void update_screen_settings(void) {
     if (configWindow.fullscreen != dxgi.is_full_screen)
         toggle_borderless_window_full_screen(configWindow.fullscreen);
     if (!dxgi.is_full_screen) {
-        /*
         // this code is buggy, and I just simply don't care enough about direct x to fix it
-        // when this is enabled, the window will be placed in the wrong spot... often off screen
+        // when this is enabled, the window will be placed in the wrong spot...
         const int screen_width = GetSystemMetrics(SM_CXSCREEN);
         const int screen_height = GetSystemMetrics(SM_CYSCREEN);
 
@@ -226,7 +226,6 @@ static void update_screen_settings(void) {
         RECT wr = { xpos, ypos, xpos + (int)configWindow.w, ypos + (int)configWindow.h };
         AdjustWindowRect(&wr, WS_OVERLAPPEDWINDOW, FALSE);
         SetWindowPos(dxgi.h_wnd, NULL, wr.left, wr.top, wr.right - wr.left, wr.bottom - wr.top, SWP_NOACTIVATE | SWP_NOZORDER);
-        */
     }
 }
 

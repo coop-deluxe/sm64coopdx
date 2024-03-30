@@ -9,7 +9,6 @@ extern "C" {
 
 #include "gfx/gfx_opengl.h"
 #include "gfx/gfx_direct3d11.h"
-#include "gfx/gfx_direct3d12.h"
 
 #include "gfx/gfx_dxgi.h"
 #include "gfx/gfx_sdl.h"
@@ -28,9 +27,6 @@ extern "C" {
 #if defined(RAPI_D3D11)
 # define RAPI gfx_direct3d11_api
 # define RAPI_NAME "DirectX 11"
-#elif defined(RAPI_D3D12)
-# define RAPI gfx_direct3d12_api
-# define RAPI_NAME "DirectX 12"
 #elif defined(RAPI_GL) || defined(RAPI_GL_LEGACY)
 # define RAPI gfx_opengl_api
 # ifdef USE_GLES
