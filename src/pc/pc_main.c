@@ -217,7 +217,7 @@ void produce_interpolation_frames_and_delay(void) {
 inline static void buffer_audio(void) {
     const f32 master_mod = (f32)configMasterVolume / 127.0f;
 
-    bool tarMute = configMuteFocusLoss && !WAPI.has_focus();
+    bool should_mute = configMuteFocusLoss && !WAPI.has_focus();
     set_sequence_player_volume(SEQ_PLAYER_LEVEL, tarMute ? 0 : (f32)configMusicVolume / 127.0f * master_mod);
     set_sequence_player_volume(SEQ_PLAYER_SFX, tarMute ? 0 : (f32)configSfxVolume / 127.0f * master_mod);
     set_sequence_player_volume(SEQ_PLAYER_ENV, tarMute ? 0 : (f32)configEnvVolume / 127.0f * master_mod);
