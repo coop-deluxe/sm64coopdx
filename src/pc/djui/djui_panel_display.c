@@ -23,6 +23,10 @@ static void djui_panel_display_uncapped_change(UNUSED struct DjuiBase* caller) {
     djui_base_set_enabled(&sInterpolationSelectionBox->base, (configFrameLimit > 30 || (configFrameLimit <= 30 && configUncappedFramerate)));
 }
 
+static void djui_panel_display_reduce_change(UNUSED struct DjuiBase* caller) {
+    djui_base_set_enabled(&sFrameLimitInput->base, !configReduceFramerateFocusLoss);
+}
+
 static void djui_panel_display_frame_limit_text_change(struct DjuiBase* caller) {
     struct DjuiInputbox* inputbox1 = (struct DjuiInputbox*)caller;
     s32 frameLimit = atoi(inputbox1->buffer);
@@ -67,6 +71,7 @@ void djui_panel_display_create(struct DjuiBase* caller) {
         djui_checkbox_create(body, DLANG(DISPLAY, SHOW_FPS), &configShowFPS, NULL);
         djui_checkbox_create(body, DLANG(DISPLAY, VSYNC), &configWindow.vsync, djui_panel_display_apply);
         djui_checkbox_create(body, DLANG(DISPLAY, UNCAPPED_FRAMERATE), &configUncappedFramerate, djui_panel_display_uncapped_change);
+        djui_checkbox_create(body, DLANG(DISPLAY, REDUCE_FRAMERATE_FOCUS_LOSS), &configReduceFramerateFocusLoss, djui_panel_display_reduce_change);
 
         struct DjuiRect* rect1 = djui_rect_container_create(body, 32);
         {

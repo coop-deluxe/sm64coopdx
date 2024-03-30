@@ -177,8 +177,14 @@ void produce_interpolation_frames_and_delay(void) {
         gfx_end_frame();
 
         // delay
-        if (!configUncappedFramerate) {
-            f64 targetDelta = 1.0 / (f64) configFrameLimit;
+        f64 tarFramerate = 0;
+
+        // TODO: ensure this is properly implemented on all window backends
+        if (configReduceFramerateFocusLoss && !WAPI.has_focus()) tarFramerate = 15;
+        else if (!configUncappedFramerate) tarFramerate = configFrameLimit;
+
+        if (tarFramerate > 0) {
+            f64 targetDelta = 1.0 / (f64) tarFramerate;
             f64 now = clock_elapsed_f64();
             f64 actualDelta = now - curTime;
             if (actualDelta < targetDelta) {
@@ -211,9 +217,11 @@ void produce_interpolation_frames_and_delay(void) {
 
 inline static void buffer_audio(void) {
     const f32 master_mod = (f32)configMasterVolume / 127.0f;
-    set_sequence_player_volume(SEQ_PLAYER_LEVEL, (f32)configMusicVolume / 127.0f * master_mod);
-    set_sequence_player_volume(SEQ_PLAYER_SFX, (f32)configSfxVolume / 127.0f * master_mod);
-    set_sequence_player_volume(SEQ_PLAYER_ENV, (f32)configEnvVolume / 127.0f * master_mod);
+
+    bool tarMute = configMuteFocusLoss && !WAPI.has_focus();
+    set_sequence_player_volume(SEQ_PLAYER_LEVEL, tarMute ? 0 : (f32)configMusicVolume / 127.0f * master_mod);
+    set_sequence_player_volume(SEQ_PLAYER_SFX, tarMute ? 0 : (f32)configSfxVolume / 127.0f * master_mod);
+    set_sequence_player_volume(SEQ_PLAYER_ENV, tarMute ? 0 : (f32)configEnvVolume / 127.0f * master_mod);
 
     int samples_left = audio_api->buffered();
     u32 num_audio_samples = samples_left < audio_api->get_desired_buffered() ? SAMPLES_HIGH : SAMPLES_LOW;
