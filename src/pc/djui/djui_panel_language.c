@@ -20,32 +20,32 @@ static bool sLanguageChanged = false;
 static struct DjuiBase* sLayoutBase = NULL;
 bool gPanelLanguageOnStartup = false;
 
-// HACK: this is abysmal, replace soon or god so help me
+const char* language_hell[][2] = {
+    {"German", "Deutsch (German)"},
+    {"Czech", "čeština (Czech)"},
+    {"Dutch", "Nederlands (Dutch)"},
+    {"French", "Français (French)"},
+    {"Italian", "Italiano (Italian)"},
+    {"Polish", "język polski (Polish)"},
+    {"Portuguese", "português (Portuguese)"},
+    {"Russian", "русский (Russian)"},
+    {"Spanish", "Español (Spanish)"},
+    {NULL, NULL}
+};
+
+// HACK: Better than the original but still not good
 static const char* lang_native_name(const char* lang_name) {
-    if (!strcmp(lang_name, "German")) return "Deutsch";
-    else if (!strcmp(lang_name, "Czech")) return "čeština";
-    else if (!strcmp(lang_name, "Dutch")) return "Nederlands";
-    else if (!strcmp(lang_name, "French")) return "Français";
-    else if (!strcmp(lang_name, "Italian")) return "Italiano";
-    else if (!strcmp(lang_name, "Polish")) return "język polski";
-    else if (!strcmp(lang_name, "Portuguese")) return "português";
-    else if (!strcmp(lang_name, "Russian")) return "русский";
-    else if (!strcmp(lang_name, "Spanish")) return "Español";
+    for (int i = 0; i < 10; i++) {
+        if (!strcmp(lang_name, language_hell[i][0])) return language_hell[i][1];
+    }
 
     return lang_name;
 }
 
-// HACK: you thought the above func was bad? Well this is even fucking worse
-static const char* lang_native_to_orig(const char* lang_name) {
-    if (!strcmp(lang_name, "Deutsch (German)")) return "German";
-    else if (!strcmp(lang_name, "čeština (Czech)")) return "Czech";
-    else if (!strcmp(lang_name, "Nederlands (Dutch)")) return "Dutch";
-    else if (!strcmp(lang_name, "Français (French)")) return "French";
-    else if (!strcmp(lang_name, "Italiano (Italian)")) return "Italian";
-    else if (!strcmp(lang_name, "język polski (Polish)")) return "Polish";
-    else if (!strcmp(lang_name, "português (Portuguese)")) return "Portuguese";
-    else if (!strcmp(lang_name, "русский (Russian)")) return "Russian";
-    else if (!strcmp(lang_name, "Español (Spanish)")) return "Spanish";
+static const char* lang_native_to_eng_name(const char* lang_name) {
+    for (int i = 0; i < 10; i++) {
+        if (!strcmp(lang_name, language_hell[i][1])) return language_hell[i][0];
+    }
 
     return lang_name;
 }
@@ -64,7 +64,7 @@ static void select_language(struct DjuiBase* caller) {
         child = child->next;
     }
 
-    const char* orig_text = lang_native_to_orig(checkbox->text->message);
+    const char* orig_text = lang_native_to_eng_name(checkbox->text->message);
 
     if (strcmp(configLanguage, orig_text)) {
         snprintf(configLanguage, MAX_CONFIG_STRING, "%s", orig_text);
@@ -160,7 +160,7 @@ void djui_panel_language_create(struct DjuiBase* caller) {
             char* fmtPath;
 
             // This is actually shit but it works
-            if (strcmp(path, "English") != 0) asprintf(&fmtPath, "%s (%s)", lang_native_name(path), path);
+            if (strcmp(path, "English") != 0) asprintf(&fmtPath, "%s", lang_native_name(path));
             else asprintf(&fmtPath, "%s", path);
 
             bool match = !strcmp(path, configLanguage);
