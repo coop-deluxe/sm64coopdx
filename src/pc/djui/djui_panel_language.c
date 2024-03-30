@@ -66,8 +66,6 @@ static void select_language(struct DjuiBase* caller) {
 
     const char* orig_text = lang_native_to_orig(checkbox->text->message);
 
-    printf("Txt: %s\n", orig_text);
-
     if (strcmp(configLanguage, orig_text)) {
         snprintf(configLanguage, MAX_CONFIG_STRING, "%s", orig_text);
         sLanguageChanged = true;
