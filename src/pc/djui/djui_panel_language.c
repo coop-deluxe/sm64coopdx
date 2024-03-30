@@ -29,13 +29,12 @@ const char* language_hell[][2] = {
     {"Polish", "język polski (Polish)"},
     {"Portuguese", "português (Portuguese)"},
     {"Russian", "русский (Russian)"},
-    {"Spanish", "Español (Spanish)"},
-    {NULL, NULL}
+    {"Spanish", "Español (Spanish)"}
 };
 
 // HACK: Better than the original but still not good
 static const char* lang_native_name(const char* lang_name) {
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 9; i++) {
         if (!strcmp(lang_name, language_hell[i][0])) return language_hell[i][1];
     }
 
@@ -43,7 +42,7 @@ static const char* lang_native_name(const char* lang_name) {
 }
 
 static const char* lang_native_to_eng_name(const char* lang_name) {
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 9; i++) {
         if (!strcmp(lang_name, language_hell[i][1])) return language_hell[i][0];
     }
 
