@@ -685,6 +685,11 @@ HWND gfx_dxgi_get_h_wnd(void) {
 void gfx_dxgi_shutdown(void) {
 }
 
+// TODO: is this even right????
+bool gfx_dxgi_has_focus(void) {
+    return GetFocus() == dxgi.h_wnd;
+}
+
 void gfx_dxgi_start_text_input(void) { inTextInput = TRUE; }
 void gfx_dxgi_stop_text_input(void) { inTextInput = FALSE; }
 
@@ -741,6 +746,7 @@ struct GfxWindowManagerAPI gfx_dxgi = {
     gfx_dxgi_swap_buffers_end,
     gfx_dxgi_get_time,
     gfx_dxgi_shutdown,
+    gfx_dxgi_has_focus,
     gfx_dxgi_start_text_input,
     gfx_dxgi_stop_text_input,
     gfx_dxgi_get_clipboard_text,

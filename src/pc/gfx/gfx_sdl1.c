@@ -197,6 +197,10 @@ static void gfx_sdl_shutdown(void) {
         SDL_Quit();
 }
 
+static bool gfx_sdl_has_focus(void) {
+    return SDL_GetAppState() & SDL_APPINPUTFOCUS;
+}
+
 static void gfx_sdl_start_text_input(void) { return; }
 static void gfx_sdl_stop_text_input(void) { return; }
 static char* gfx_sdl_get_clipboard_text(void) { return NULL; }
@@ -214,6 +218,7 @@ struct GfxWindowManagerAPI gfx_sdl = {
     gfx_sdl_swap_buffers_end,
     gfx_sdl_get_time,
     gfx_sdl_shutdown,
+    gfx_sdl_has_focus,
     gfx_sdl_start_text_input,
     gfx_sdl_stop_text_input,
     gfx_sdl_get_clipboard_text,

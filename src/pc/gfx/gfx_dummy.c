@@ -195,6 +195,10 @@ static void gfx_dummy_renderer_finish_render(void) {
 static void gfx_dummy_renderer_shutdown(void) {
 }
 
+static bool gfx_dummy_renderer_has_focus(void) {
+    return true;
+}
+
 struct GfxWindowManagerAPI gfx_dummy_wm_api = {
     gfx_dummy_wm_init,
     gfx_dummy_wm_set_keyboard_callbacks,
@@ -240,6 +244,7 @@ struct GfxRenderingAPI gfx_dummy_renderer_api = {
     gfx_dummy_renderer_start_frame,
     gfx_dummy_renderer_end_frame,
     gfx_dummy_renderer_finish_render,
-    gfx_dummy_renderer_shutdown
+    gfx_dummy_renderer_shutdown,
+    gfx_dummy_renderer_has_focus
 };
 #endif

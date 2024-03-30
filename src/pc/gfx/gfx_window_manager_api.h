@@ -20,6 +20,7 @@ struct GfxWindowManagerAPI {
     void (*swap_buffers_end)(void);
     double (*get_time)(void); // For debug
     void (*shutdown)(void);
+    bool (*has_focus)(void);
     void (*start_text_input)(void);
     void (*stop_text_input)(void);
     char* (*get_clipboard_text)(void);
