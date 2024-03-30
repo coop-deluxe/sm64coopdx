@@ -177,13 +177,13 @@ void produce_interpolation_frames_and_delay(void) {
         gfx_end_frame();
 
         // delay
-        f64 target_framerate = 0;
+        f64 targetFramerate = 0;
 
-        if (configReduceFramerateFocusLoss && !WAPI.has_focus()) target_framerate = 15;
-        else if (!configUncappedFramerate) target_framerate = configFrameLimit;
+        if (configReduceFramerateFocusLoss && !WAPI.has_focus()) targetFramerate = 15;
+        else if (!configUncappedFramerate) targetFramerate = configFrameLimit;
 
-        if (target_framerate > 0) {
-            f64 targetDelta = 1.0 / (f64) target_framerate;
+        if (targetFramerate > 0) {
+            f64 targetDelta = 1.0 / (f64) targetFramerate;
             f64 now = clock_elapsed_f64();
             f64 actualDelta = now - curTime;
             if (actualDelta < targetDelta) {
