@@ -13,7 +13,7 @@ void djui_panel_info_create(struct DjuiBase* caller) {
         snprintf(sInfo, 1024, "\
 sm64coopdx is an online multiplayer project for the \
 Super Mario 64 PC port, started by the Coop Deluxe Team.\n\
-It's purpose is to actively maintain and improve \
+Its purpose is to actively maintain and improve \
 sm64ex-coop, an original idea from djoslin0.\n\
 More features, customizability, and power to the Lua API \
 allow modders and players to enjoy Super Mario 64 \
