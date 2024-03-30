@@ -218,9 +218,9 @@ inline static void buffer_audio(void) {
     const f32 master_mod = (f32)configMasterVolume / 127.0f;
 
     bool should_mute = configMuteFocusLoss && !WAPI.has_focus();
-    set_sequence_player_volume(SEQ_PLAYER_LEVEL, tarMute ? 0 : (f32)configMusicVolume / 127.0f * master_mod);
-    set_sequence_player_volume(SEQ_PLAYER_SFX, tarMute ? 0 : (f32)configSfxVolume / 127.0f * master_mod);
-    set_sequence_player_volume(SEQ_PLAYER_ENV, tarMute ? 0 : (f32)configEnvVolume / 127.0f * master_mod);
+    set_sequence_player_volume(SEQ_PLAYER_LEVEL, should_mute ? 0 : (f32)configMusicVolume / 127.0f * master_mod);
+    set_sequence_player_volume(SEQ_PLAYER_SFX, should_mute ? 0 : (f32)configSfxVolume / 127.0f * master_mod);
+    set_sequence_player_volume(SEQ_PLAYER_ENV, should_mute ? 0 : (f32)configEnvVolume / 127.0f * master_mod);
 
     int samples_left = audio_api->buffered();
     u32 num_audio_samples = samples_left < audio_api->get_desired_buffered() ? SAMPLES_HIGH : SAMPLES_LOW;
