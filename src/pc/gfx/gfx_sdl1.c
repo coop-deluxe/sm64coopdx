@@ -180,10 +180,6 @@ static void gfx_sdl_delay(u32 ms) {
     SDL_Delay(ms);
 }
 
-static int gfx_sdl_get_max_msaa(void) {
-    return 0;
-}
-
 static void gfx_sdl_set_window_title(const char* title) {
     SDL_WM_SetCaption(title, NULL);
 }
@@ -220,7 +216,6 @@ struct GfxWindowManagerAPI gfx_sdl = {
     gfx_sdl_set_clipboard_text,
     gfx_sdl_set_cursor_visible,
     gfx_sdl_delay,
-    gfx_sdl_get_max_msaa,
     gfx_sdl_set_window_title,
     gfx_sdl_reset_window_title
 };
