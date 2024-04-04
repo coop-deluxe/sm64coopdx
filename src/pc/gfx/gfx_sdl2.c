@@ -112,6 +112,10 @@ static void gfx_sdl_reset_dimension_and_pos(void) {
 }
 
 static void gfx_sdl_init(const char *window_title) {
+#if defined(_WIN32) || defined(_WIN64)
+    SetProcessDPIAware();
+#endif
+
     SDL_SetHint(SDL_HINT_VIDEO_X11_NET_WM_BYPASS_COMPOSITOR, "0");
     SDL_Init(SDL_INIT_VIDEO);
     SDL_StartTextInput();
@@ -143,10 +147,6 @@ static void gfx_sdl_init(const char *window_title) {
     }
 
     controller_bind_init();
-
-#if defined(_WIN32) || defined(_WIN64)
-    SetProcessDPIAware();
-#endif
 }
 
 static void gfx_sdl_main_loop(void (*run_one_game_iter)(void)) {

@@ -95,6 +95,10 @@ static void gfx_sdl_set_mode(void) {
 }
 
 static void gfx_sdl_init(const char *window_title) {
+#if defined(_WIN32) || defined(_WIN64)
+    SetProcessDPIAware();
+#endif
+
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) != 0)
         sys_fatal("Could not init SDL1 video: %s\n", SDL_GetError());
 
@@ -114,10 +118,6 @@ static void gfx_sdl_init(const char *window_title) {
     }
 
     controller_bind_init();
-
-#if defined(_WIN32) || defined(_WIN64)
-    SetProcessDPIAware();
-#endif
 }
 
 static void gfx_sdl_main_loop(void (*run_one_game_iter)(void)) {
