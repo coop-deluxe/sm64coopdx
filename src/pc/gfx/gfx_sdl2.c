@@ -6,6 +6,10 @@
 #define FOR_WINDOWS 0
 #endif
 
+#if defined(_WIN32) || defined(_WIN64)
+#include <windows.h>
+#endif
+
 #if FOR_WINDOWS
 #define GLEW_STATIC
 #include <GL/glew.h>
@@ -139,6 +143,10 @@ static void gfx_sdl_init(const char *window_title) {
     }
 
     controller_bind_init();
+
+#if defined(_WIN32) || defined(_WIN64)
+    SetProcessDPIAware();
+#endif
 }
 
 static void gfx_sdl_main_loop(void (*run_one_game_iter)(void)) {
