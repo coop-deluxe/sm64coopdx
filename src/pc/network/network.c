@@ -621,6 +621,8 @@ void network_update(void) {
 }
 
 void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnecting) {
+    smlua_call_event_hooks(HOOK_ON_EXIT);
+
     if (gDjuiChatBox != NULL) {
         djui_base_destroy(&gDjuiChatBox->base);
         gDjuiChatBox = NULL;

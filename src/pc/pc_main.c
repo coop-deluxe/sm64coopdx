@@ -284,10 +284,7 @@ void audio_shutdown(void) {
 }
 
 void game_deinit(void) {
-    if (gGameInited) {
-        smlua_call_event_hooks(HOOK_ON_EXIT);
-        configfile_save(configfile_name());
-    }
+    if (gGameInited) { configfile_save(configfile_name()); }
     controller_shutdown();
     audio_custom_shutdown();
     audio_shutdown();
