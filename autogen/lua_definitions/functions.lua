@@ -4923,11 +4923,6 @@ function mario_ready_to_speak(m)
     -- ...
 end
 
---- @return nil
-function print_displaying_credits_entry()
-    -- ...
-end
-
 --- @param m MarioState
 --- @param object Object
 --- @return integer

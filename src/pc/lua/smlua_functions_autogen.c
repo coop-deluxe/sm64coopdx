@@ -15896,22 +15896,6 @@ int smlua_func_mario_ready_to_speak(lua_State* L) {
     return 1;
 }
 
-int smlua_func_print_displaying_credits_entry(UNUSED lua_State* L) {
-    if (L == NULL) { return 0; }
-
-    int top = lua_gettop(L);
-    if (top != 0) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "print_displaying_credits_entry", 0, top);
-        return 0;
-    }
-
-
-    extern void print_displaying_credits_entry(void);
-    print_displaying_credits_entry();
-
-    return 1;
-}
-
 int smlua_func_should_start_or_continue_dialog(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -32343,7 +32327,6 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "launch_mario_until_land", smlua_func_launch_mario_until_land);
     smlua_bind_function(L, "mario_execute_cutscene_action", smlua_func_mario_execute_cutscene_action);
     smlua_bind_function(L, "mario_ready_to_speak", smlua_func_mario_ready_to_speak);
-    smlua_bind_function(L, "print_displaying_credits_entry", smlua_func_print_displaying_credits_entry);
     smlua_bind_function(L, "should_start_or_continue_dialog", smlua_func_should_start_or_continue_dialog);
     smlua_bind_function(L, "stuck_in_ground_handler", smlua_func_stuck_in_ground_handler);
 

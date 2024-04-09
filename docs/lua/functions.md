@@ -977,7 +977,6 @@
    - [launch_mario_until_land](functions-3.md#launch_mario_until_land)
    - [mario_execute_cutscene_action](functions-3.md#mario_execute_cutscene_action)
    - [mario_ready_to_speak](functions-3.md#mario_ready_to_speak)
-   - [print_displaying_credits_entry](functions-3.md#print_displaying_credits_entry)
    - [should_start_or_continue_dialog](functions-3.md#should_start_or_continue_dialog)
    - [stuck_in_ground_handler](functions-3.md#stuck_in_ground_handler)
 
@@ -1131,14 +1130,14 @@
 <br />
 
 - mod_storage.h
-   - [mod_storage_clear](functions-4.md#mod_storage_clear)
-   - [mod_storage_load](functions-4.md#mod_storage_load)
-   - [mod_storage_load_bool](functions-4.md#mod_storage_load_bool)
-   - [mod_storage_load_number](functions-4.md#mod_storage_load_number)
-   - [mod_storage_remove](functions-4.md#mod_storage_remove)
-   - [mod_storage_save](functions-4.md#mod_storage_save)
-   - [mod_storage_save_bool](functions-4.md#mod_storage_save_bool)
-   - [mod_storage_save_number](functions-4.md#mod_storage_save_number)
+   - [mod_storage_clear](functions-3.md#mod_storage_clear)
+   - [mod_storage_load](functions-3.md#mod_storage_load)
+   - [mod_storage_load_bool](functions-3.md#mod_storage_load_bool)
+   - [mod_storage_load_number](functions-3.md#mod_storage_load_number)
+   - [mod_storage_remove](functions-3.md#mod_storage_remove)
+   - [mod_storage_save](functions-3.md#mod_storage_save)
+   - [mod_storage_save_bool](functions-3.md#mod_storage_save_bool)
+   - [mod_storage_save_number](functions-3.md#mod_storage_save_number)
 
 <br />
 

@@ -88,7 +88,7 @@ override_disallowed_functions = {
     "src/engine/surface_collision.h":       [ " debug_", "f32_find_wall_collision" ],
     "src/game/mario_actions_airborne.c":    [ "^[us]32 act_.*" ],
     "src/game/mario_actions_automatic.c":   [ "^[us]32 act_.*" ],
-    "src/game/mario_actions_cutscene.c":    [ "^[us]32 act_.*", " geo_", "spawn_obj" ],
+    "src/game/mario_actions_cutscene.c":    [ "^[us]32 act_.*", " geo_", "spawn_obj", "print_displaying_credits_entry" ],
     "src/game/mario_actions_moving.c":      [ "^[us]32 act_.*" ],
     "src/game/mario_actions_object.c":      [ "^[us]32 act_.*" ],
     "src/game/mario_actions_stationary.c":  [ "^[us]32 act_.*" ],
