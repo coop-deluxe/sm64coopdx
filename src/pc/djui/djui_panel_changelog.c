@@ -72,7 +72,7 @@ Updated Arena and added Blimp City, new music for levels and fixed KOTH, Rainbow
         for (int i = 0; i < 5; i++) {
             struct DjuiText* text = djui_text_create(layoutBase, sChangelog[i]);
             djui_base_set_location(&text->base, 0, 0);
-            djui_base_set_size(&text->base, (DJUI_DEFAULT_PANEL_WIDTH * (configDjuiThemeCenter ? DJUI_THEME_CENTERED_WIDTH : 1)) - 64, 450);
+            djui_base_set_size(&text->base, (DJUI_DEFAULT_PANEL_WIDTH * (configDjuiThemeCenter ? DJUI_THEME_CENTERED_WIDTH : 1)) - 64, 360);
             djui_base_set_color(&text->base, 220, 220, 220, 255);
             djui_text_set_drop_shadow(text, 64, 64, 64, 100);
             djui_text_set_alignment(text, DJUI_HALIGN_LEFT, DJUI_VALIGN_TOP);
