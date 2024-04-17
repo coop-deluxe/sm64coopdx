@@ -6,17 +6,16 @@ sm64coopdx Developers:
     theclashingfritz
 
 sm64coopdx Contributors:
-    eros71
-    ArcticJaguar725
-    djoslin0 (Rom asset extractor)
-    kermeet
-    crapbass
-    Cooliokid 956
     Ale64
-    Sharen
-    Dominicentek
+    ArcticJaguar725
+    Cooliokid 956
     crapbass
+    djoslin0 (Rom asset extractor)
+    Dominicentek
+    eros71
+    iZePlayz
     kermeet
+    Sharen
 
 sm64ex-coop Developers:
     Agent X
@@ -47,6 +46,7 @@ sm64ex-coop Contributors:
     Filipianosol
     GammaTendonNine
     gunvalk
+    iZePlayz
     jkcoxson
     Llennpie
     LuigiNoodle
