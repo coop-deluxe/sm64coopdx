@@ -24,7 +24,7 @@
 #include "gfx_dxgi.h"
 
 extern "C" {
-#include "src/pc/mods/mod_import.h"
+#include "pc/mods/mod_import.h"
 #ifdef DISCORD_SDK
 #include "pc/discord/discord.h"
 #endif

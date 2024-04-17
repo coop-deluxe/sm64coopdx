@@ -1,9 +1,9 @@
 #include "djui.h"
 #include "djui_panel.h"
 #include "djui_panel_menu.h"
-#include "src/pc/utils/misc.h"
-#include "src/pc/configfile.h"
-#include "src/game/bettercamera.h"
+#include "pc/utils/misc.h"
+#include "pc/configfile.h"
+#include "game/bettercamera.h"
 
 void djui_panel_camera_value_changed(UNUSED struct DjuiBase* caller) {
     newcam_init_settings();

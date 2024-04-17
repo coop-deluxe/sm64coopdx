@@ -1,6 +1,6 @@
 #include "dynos.cpp.h"
 extern "C" {
-#include "src/game/moving_texture.h"
+#include "game/moving_texture.h"
 #include "game/hardcoded.h"
 
 void *dynos_swap_cmd(void *cmd) {

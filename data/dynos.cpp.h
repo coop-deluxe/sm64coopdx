@@ -7,8 +7,8 @@
 extern "C" {
 #include "engine/behavior_script.h"
 #include "engine/math_util.h"
-#include "src/game/moving_texture.h"
-#include "src/pc/djui/djui_console.h"
+#include "game/moving_texture.h"
+#include "pc/djui/djui_console.h"
 }
 
 #define FUNCTION_CODE   (u32) 0x434E5546

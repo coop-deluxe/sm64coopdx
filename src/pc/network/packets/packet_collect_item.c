@@ -4,10 +4,10 @@
 #include "object_constants.h"
 #include "behavior_table.h"
 #include "course_table.h"
-#include "src/game/interaction.h"
-#include "src/engine/math_util.h"
-#include "src/game/memory.h"
-#include "src/game/object_helpers.h"
+#include "game/interaction.h"
+#include "engine/math_util.h"
+#include "game/memory.h"
+#include "game/object_helpers.h"
 #include "pc/lua/smlua_hooks.h"
 
 static f32 dist_to_pos(struct Object* o, f32* pos) {

@@ -3,10 +3,10 @@
 #include "djui_panel_menu.h"
 #include "djui_panel_controls_n64.h"
 #include "djui_panel_controls_extra.h"
-#include "src/pc/utils/misc.h"
-#include "src/pc/configfile.h"
-#include "src/pc/controller/controller_api.h"
-#include "src/pc/controller/controller_sdl.h"
+#include "pc/utils/misc.h"
+#include "pc/configfile.h"
+#include "pc/controller/controller_api.h"
+#include "pc/controller/controller_sdl.h"
 
 void djui_panel_controls_value_change(UNUSED struct DjuiBase* caller) {
     controller_reconfigure();

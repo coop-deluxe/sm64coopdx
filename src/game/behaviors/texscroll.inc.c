@@ -7,7 +7,7 @@
 
 #include <math.h>
 #include "engine/math_util.h"
-#include "src/game/scroll_targets.h"
+#include "game/scroll_targets.h"
 #include "pc/pc_main.h"
 #include "pc/utils/misc.h"
 

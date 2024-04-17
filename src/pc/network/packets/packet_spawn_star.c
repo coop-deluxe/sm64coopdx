@@ -2,7 +2,7 @@
 #include "../network.h"
 #include "object_fields.h"
 #include "behavior_data.h"
-#include "src/game/behavior_actions.h"
+#include "game/behavior_actions.h"
 #include "pc/lua/smlua_hooks.h"
 #include "pc/debuglog.h"
 

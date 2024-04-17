@@ -1,5 +1,5 @@
 #include "dynos.cpp.h"
-#include "src/pc/loading.h"
+#include "pc/loading.h"
 
 void DynOS_Gfx_GeneratePacks(const char* directory) {
     snprintf(gCurrLoadingSegment.str, 256, "Generating DynOS Packs In Path:\n\\#808080\\%s", directory);

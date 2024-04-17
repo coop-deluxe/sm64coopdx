@@ -3,11 +3,11 @@
 #include "djui_panel_main.h"
 #include "djui_panel_pause.h"
 #include "djui_panel_join_message.h"
-#include "src/pc/debuglog.h"
-#include "src/pc/utils/misc.h"
+#include "pc/debuglog.h"
+#include "pc/utils/misc.h"
 #include "sounds.h"
 #include "audio/external.h"
-#include "src/game/bettercamera.h"
+#include "game/bettercamera.h"
 
 static struct DjuiPanel* sPanelList = NULL;
 static struct DjuiPanel* sPanelRemoving = NULL;

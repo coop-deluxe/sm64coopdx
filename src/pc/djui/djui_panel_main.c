@@ -5,9 +5,9 @@
 #include "djui_panel_options.h"
 #include "djui_panel_menu.h"
 #include "djui_panel_confirm.h"
-#include "src/pc/controller/controller_sdl.h"
-#include "src/pc/pc_main.h"
-#include "src/pc/update_checker.h"
+#include "pc/controller/controller_sdl.h"
+#include "pc/pc_main.h"
+#include "pc/update_checker.h"
 
 extern ALIGNED8 u8 texture_coopdx_logo[];
 

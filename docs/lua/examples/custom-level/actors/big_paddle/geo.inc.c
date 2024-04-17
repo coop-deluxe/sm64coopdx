@@ -1,4 +1,4 @@
-#include "src/game/envfx_snow.h"
+#include "game/envfx_snow.h"
 
 const GeoLayout big_paddle_geo[] = {
 	GEO_NODE_START(),

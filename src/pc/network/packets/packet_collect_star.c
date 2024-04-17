@@ -5,9 +5,9 @@
 #include "object_fields.h"
 #include "object_constants.h"
 #include "game/interaction.h"
-#include "src/game/memory.h"
-#include "src/game/object_helpers.h"
-#include "src/game/save_file.h"
+#include "game/memory.h"
+#include "game/object_helpers.h"
+#include "game/save_file.h"
 #include "pc/lua/smlua_hooks.h"
 #include "pc/debuglog.h"
 

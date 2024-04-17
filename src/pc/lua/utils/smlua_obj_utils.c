@@ -1,8 +1,8 @@
 #include "types.h"
 #include "object_constants.h"
 #include "object_fields.h"
-#include "src/game/object_helpers.h"
-#include "src/game/interaction.h"
+#include "game/object_helpers.h"
+#include "game/interaction.h"
 #include "engine/math_util.h"
 
 #include "pc/lua/smlua.h"

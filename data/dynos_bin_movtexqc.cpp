@@ -2,7 +2,7 @@
 
 extern "C" {
 #include "include/level_misc_macros.h"
-#include "src/game/moving_texture.h"
+#include "game/moving_texture.h"
 }
 
 #pragma GCC diagnostic push

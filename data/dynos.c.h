@@ -5,7 +5,7 @@
 #include "dynos.h"
 #include "types.h"
 #include "engine/behavior_script.h"
-#include "src/game/moving_texture.h"
+#include "game/moving_texture.h"
 
 void *dynos_swap_cmd(void *cmd);
 

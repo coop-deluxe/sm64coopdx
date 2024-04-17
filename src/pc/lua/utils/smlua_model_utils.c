@@ -2,9 +2,9 @@
 #include "types.h"
 #include "geo_commands.h"
 
-#include "src/game/area.h"
-#include "src/engine/graph_node.h"
-#include "src/engine/level_script.h"
+#include "game/area.h"
+#include "engine/graph_node.h"
+#include "engine/level_script.h"
 
 // models
 #include "actors/common0.h"

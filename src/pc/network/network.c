@@ -6,8 +6,8 @@
 #include "game/level_update.h"
 #include "object_constants.h"
 #include "behavior_table.h"
-#include "src/game/hardcoded.h"
-#include "src/game/scroll_targets.h"
+#include "game/hardcoded.h"
+#include "game/scroll_targets.h"
 #include "pc/configfile.h"
 #include "pc/djui/djui.h"
 #include "pc/djui/djui_panel.h"
@@ -37,7 +37,7 @@
 // fix warnings when including rendering_graph_node
 #undef near
 #undef far
-#include "src/game/rendering_graph_node.h"
+#include "game/rendering_graph_node.h"
 
 // Mario 64 specific externs
 extern s16 sCurrPlayMode;

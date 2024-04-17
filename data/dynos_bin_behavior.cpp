@@ -9,11 +9,11 @@ extern "C" {
 #include "include/model_ids.h"
 #include "include/object_constants.h"
 #include "include/object_fields.h"
-#include "src/game/area.h"
-#include "src/game/object_list_processor.h"
-#include "src/game/interaction.h"
-#include "src/pc/lua/utils/smlua_anim_utils.h"
-#include "src/pc/lua/utils/smlua_collision_utils.h"
+#include "game/area.h"
+#include "game/object_list_processor.h"
+#include "game/interaction.h"
+#include "pc/lua/utils/smlua_anim_utils.h"
+#include "pc/lua/utils/smlua_collision_utils.h"
 
 // Models and Animations
 #include "actors/common0.h"

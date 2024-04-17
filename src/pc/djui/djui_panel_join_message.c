@@ -3,9 +3,9 @@
 #include "djui_panel_menu.h"
 #include "djui_panel_main.h"
 #include "djui_panel_join_message.h"
-#include "src/pc/network/network.h"
-#include "src/pc/utils/misc.h"
-#include "src/pc/configfile.h"
+#include "pc/network/network.h"
+#include "pc/utils/misc.h"
+#include "pc/configfile.h"
 
 #define DJUI_JOIN_MESSAGE_ELAPSE 60
 bool gDjuiPanelJoinMessageVisible = false;

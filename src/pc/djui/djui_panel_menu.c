@@ -1,8 +1,8 @@
 #include "djui.h"
 #include "djui_panel.h"
 #include "djui_unicode.h"
-#include "src/pc/utils/misc.h"
-#include "src/pc/configfile.h"
+#include "pc/utils/misc.h"
+#include "pc/configfile.h"
 
 #define RAINBOW_TEXT_LEN 255
 

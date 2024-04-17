@@ -1,6 +1,6 @@
 #include <PR/ultratypes.h>
 
-#include "src/pc/network/network.h"
+#include "pc/network/network.h"
 #include "types.h"
 #include "actors/common1.h"
 #include "actors/group12.h"

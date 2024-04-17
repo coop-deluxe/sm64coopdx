@@ -7,7 +7,7 @@
 #include <ultra64.h>
 #include "macros.h"
 #include "pc/network/version.h"
-#include "src/pc/platform.h"
+#include "pc/platform.h"
 
 // Certain functions are marked as having return values, but do not
 // actually return a value. This causes undefined behavior, which we'd rather
@@ -450,7 +450,7 @@ struct TextureInfo
 #define COOP_OBJ_FLAG_NON_SYNC    (1 << 2)
 #define COOP_OBJ_FLAG_INITIALIZED (1 << 3)
 
-#include "src/game/characters.h"
+#include "game/characters.h"
 #include "data/dynos.c.h"
 
 #endif // _SM64_TYPES_H_

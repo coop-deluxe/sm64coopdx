@@ -3,7 +3,7 @@
 
 #include "PR/ultratypes.h"
 #include <types.h>
-#include "src/pc/platform.h"
+#include "pc/platform.h"
 
 #define MOD_NAME_MAX_LENGTH 64
 #define MOD_INCOMPATIBLE_MAX_LENGTH 256

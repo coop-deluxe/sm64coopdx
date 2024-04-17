@@ -3,7 +3,7 @@
 
 #include "PR/ultratypes.h"
 #include <types.h>
-#include "src/pc/platform.h"
+#include "pc/platform.h"
 
 void mods_size_enforce(struct Mods* mods);
 void mods_update_selectable(void);

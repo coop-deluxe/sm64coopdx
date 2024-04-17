@@ -2,9 +2,9 @@
 extern "C" {
 #include "sm64.h"
 #include "geo_commands.h"
-#include "src/game/camera.h"
-#include "src/game/envfx_snow.h"
-#include "src/game/paintings.h"
+#include "game/camera.h"
+#include "game/envfx_snow.h"
+#include "game/paintings.h"
 }
 
 #pragma GCC diagnostic push

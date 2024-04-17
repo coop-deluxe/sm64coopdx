@@ -6,9 +6,9 @@
 #include "djui_panel_options.h"
 #include "djui_panel_misc.h"
 #include "djui_panel_pause.h"
-#include "src/pc/utils/misc.h"
-#include "src/pc/configfile.h"
-#include "src/game/level_update.h"
+#include "pc/utils/misc.h"
+#include "pc/configfile.h"
+#include "game/level_update.h"
 
 static struct DjuiSelectionbox* sLevelBox = NULL;
 static struct DjuiCheckbox* sUseStageMusicCheckbox = NULL;

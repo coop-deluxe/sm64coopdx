@@ -1,6 +1,6 @@
 #include "dynos.cpp.h"
 extern "C" {
-#include "src/game/area.h"
+#include "game/area.h"
 }
 
 struct RegisteredMovtexQC {

@@ -1,6 +1,6 @@
 #include "types.h"
 
-#include "src/engine/surface_collision.h"
+#include "engine/surface_collision.h"
 #include "include/surface_terrains.h"
 #include "game/mario_step.h"
 

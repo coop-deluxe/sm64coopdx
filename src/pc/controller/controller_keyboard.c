@@ -12,8 +12,8 @@
 #include "pc/pc_main.h"
 #include "engine/math_util.h"
 #include "menu/file_select.h"
-#include "src/pc/djui/djui.h"
-#include "src/pc/djui/djui_panel_pause.h"
+#include "pc/djui/djui.h"
+#include "pc/djui/djui_panel_pause.h"
 
 static int keyboard_buttons_down;
 

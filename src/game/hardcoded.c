@@ -34,7 +34,7 @@
 #include "levels/wf/header.h"
 #include "levels/wmotr/header.h"
 
-#include "src/pc/pc_main.h"
+#include "pc/pc_main.h"
 
 extern Trajectory sThiHugeMetalBallTraj[];
 extern Trajectory sThiTinyMetalBallTraj[];

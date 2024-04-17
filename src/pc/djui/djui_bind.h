@@ -1,6 +1,6 @@
 #pragma once
 #include "djui.h"
-#include "src/pc/configfile.h"
+#include "pc/configfile.h"
 
 struct DjuiBind {
     struct DjuiBase base;

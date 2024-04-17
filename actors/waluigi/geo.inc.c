@@ -1,5 +1,3 @@
-#include "src/game/envfx_snow.h"
-
 const GeoLayout waluigi_2_LoD_Switch_opt0_Cap_Effect_Switch_opt0_Hatless_Switch_opt0_Eye_Material_Switch_opt7_Eye_Material_Switch_Capless_opt1[] = {
 	GEO_NODE_START(),
 	GEO_OPEN_NODE(),

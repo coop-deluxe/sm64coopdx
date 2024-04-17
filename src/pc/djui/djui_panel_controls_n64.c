@@ -1,7 +1,7 @@
 #include "djui.h"
 #include "djui_panel.h"
 #include "djui_panel_menu.h"
-#include "src/pc/configfile.h"
+#include "pc/configfile.h"
 
 void djui_panel_controls_n64_create(struct DjuiBase* caller) {
     f32 bindBodyHeight = 28 * 14 + 1 * 13;

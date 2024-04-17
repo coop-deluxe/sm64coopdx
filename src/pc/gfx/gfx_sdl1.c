@@ -22,8 +22,8 @@
 #include "../cliopts.h"
 #include "../platform.h"
 
-#include "src/pc/controller/controller_keyboard.h"
-#include "src/pc/controller/controller_bind_mapping.h"
+#include "pc/controller/controller_keyboard.h"
+#include "pc/controller/controller_bind_mapping.h"
 
 // TODO: figure out if this shit even works
 #ifdef VERSION_EU

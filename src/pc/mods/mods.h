@@ -3,7 +3,7 @@
 
 #include "PR/ultratypes.h"
 #include <types.h>
-#include "src/pc/platform.h"
+#include "pc/platform.h"
 #include "mod.h"
 
 #define MAX_MOD_SIZE (35 * 1048576) // 35MB

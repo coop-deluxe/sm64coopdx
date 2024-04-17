@@ -1,8 +1,8 @@
 #include "djui.h"
 #include "djui_panel.h"
 #include "djui_panel_menu.h"
-#include "src/pc/utils/misc.h"
-#include "src/pc/configfile.h"
+#include "pc/utils/misc.h"
+#include "pc/configfile.h"
 
 void djui_panel_sound_create(struct DjuiBase* caller) {
     struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(SOUND, SOUND));

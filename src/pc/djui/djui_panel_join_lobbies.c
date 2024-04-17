@@ -4,12 +4,12 @@
 #include "djui_panel_menu.h"
 #include "djui_panel_join_message.h"
 #include "djui_lobby_entry.h"
-#include "src/pc/network/network.h"
-#include "src/pc/network/socket/socket.h"
-#include "src/pc/network/coopnet/coopnet.h"
-#include "src/pc/utils/misc.h"
-#include "src/pc/configfile.h"
-#include "src/pc/debuglog.h"
+#include "pc/network/network.h"
+#include "pc/network/socket/socket.h"
+#include "pc/network/coopnet/coopnet.h"
+#include "pc/utils/misc.h"
+#include "pc/configfile.h"
+#include "pc/debuglog.h"
 #include "macros.h"
 
 #ifdef COOPNET

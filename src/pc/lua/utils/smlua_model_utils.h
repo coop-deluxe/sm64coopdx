@@ -1,7 +1,7 @@
 #ifndef SMLUA_MODEL_UTILS_H
 #define SMLUA_MODEL_UTILS_H
 
-#include "src/game/memory.h"
+#include "game/memory.h"
 
 enum ModelExtendedId {
     E_MODEL_NONE,

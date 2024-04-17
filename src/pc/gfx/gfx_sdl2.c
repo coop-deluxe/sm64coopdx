@@ -37,9 +37,9 @@
 #include "../configfile.h"
 #include "../cliopts.h"
 
-#include "src/pc/controller/controller_keyboard.h"
-#include "src/pc/controller/controller_sdl.h"
-#include "src/pc/controller/controller_bind_mapping.h"
+#include "pc/controller/controller_keyboard.h"
+#include "pc/controller/controller_sdl.h"
+#include "pc/controller/controller_bind_mapping.h"
 #include "pc/utils/misc.h"
 #include "pc/mods/mod_import.h"
 #include "pc/rom_checker.h"
