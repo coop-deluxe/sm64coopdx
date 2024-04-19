@@ -1856,14 +1856,6 @@ void audio_init() {
 #endif
 #endif
 
-#ifdef TARGET_N64
-    eu_stubbed_printf_3("Clear Workarea %x -%x size %x \n",
-        (uintptr_t) &gAudioGlobalsStartMarker,
-        (uintptr_t) &gAudioGlobalsEndMarker,
-        (uintptr_t) &gAudioGlobalsEndMarker - (uintptr_t) &gAudioGlobalsStartMarker
-    );
-#endif
-
     eu_stubbed_printf_1("AudioHeap is %x\n", gAudioHeapSize);
 
     for (i = 0; i < NUMAIBUFFERS; i++) {
