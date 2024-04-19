@@ -4,48 +4,23 @@
 #include "djui_panel_changelog.h"
 #include "pc/lua/utils/smlua_misc_utils.h"
 
-static char sInfo[3][1024];
+static char sInfo[512];
 
 void djui_panel_info_create(struct DjuiBase *caller) {
     struct DjuiThreePanel *panel = djui_panel_menu_create(DLANG(INFORMATION, INFORMATION_TITLE));
     struct DjuiBase *body = djui_three_panel_get_body(panel);
     {
-        struct DjuiPaginated *paginated = djui_paginated_create(body, 1);
-        struct DjuiBase *layoutBase = &paginated->layout->base;
+        snprintf(sInfo, 512, "\
+sm64coopdx is an online multiplayer project for the Super Mario 64 PC port, started by the Coop Deluxe Team.\n\
+Its purpose is to actively maintain and improve, but also continue sm64ex-coop, an original idea from djoslin0.\n\
+More features, customizability, and power to the Lua API allow modders and players to enjoy Super Mario 64 more than ever!");
 
-        snprintf(sInfo[0], 1024, "\
-sm64coopdx is an online multiplayer project for the \
-Super Mario 64 PC port, started by the Coop Deluxe Team.\n\
-Its purpose is to actively maintain and improve \
-sm64ex-coop, an original idea from djoslin0.\n\
-More features, customizability, and power to the Lua API \
-allow modders and players to enjoy Super Mario 64 \
-more than ever!");
-
-        snprintf(sInfo[1], 1024, "Coop Deluxe Team:\n\
-Agent X: Lead Developer, Creator\n\
-AngelicMiracles: Creator\n\
-eros71: Tester & Developer\n\
-Isaac0-dev: Developer\n\
-FluffaMario: Model Designer");
-
-        snprintf(sInfo[2], 1024, "Contributors:\n\
-mike_dobukai: Logo\n\
-Pup64HCP: Website\n\
-ArcticJaguar725: Fixing a sound engine bug\n\
-Mr. Porkchop: New aliased font\n\
-PeachyPeach: Extra fixes");
-
-        for (int i = 0; i < 3; i++) {
-            struct DjuiText* text = djui_text_create(layoutBase, sInfo[i]);
-            djui_base_set_location(&text->base, 0, 0);
-            djui_base_set_size(&text->base, (DJUI_DEFAULT_PANEL_WIDTH * (configDjuiThemeCenter ? DJUI_THEME_CENTERED_WIDTH : 1)) - 64, 250);
-            djui_base_set_color(&text->base, 220, 220, 220, 255);
-            djui_text_set_drop_shadow(text, 64, 64, 64, 100);
-            djui_text_set_alignment(text, DJUI_HALIGN_CENTER, DJUI_VALIGN_TOP);
-        }
-
-        djui_paginated_calculate_height(paginated);
+        struct DjuiText* text = djui_text_create(body, sInfo);
+        djui_base_set_location(&text->base, 0, 0);
+        djui_base_set_size(&text->base, (DJUI_DEFAULT_PANEL_WIDTH * (configDjuiThemeCenter ? DJUI_THEME_CENTERED_WIDTH : 1)) - 64, 220);
+        djui_base_set_color(&text->base, 220, 220, 220, 255);
+        djui_text_set_drop_shadow(text, 64, 64, 64, 100);
+        djui_text_set_alignment(text, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
 
         struct DjuiRect* rect1 = djui_rect_container_create(body, 64);
         {
