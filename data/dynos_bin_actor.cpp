@@ -245,7 +245,7 @@ static void DynOS_Actor_Generate(const SysPath &aPackFolder, Array<Pair<u64, Str
 }
 
 void DynOS_Actor_GeneratePack(const SysPath &aPackFolder) {
-    Print("Processing Actors: \"%s\"", aPackFolder.c_str());
+    Print("Processing actors: \"%s\"", aPackFolder.c_str());
     Array<Pair<u64, String>> _ActorsFolders;
     GfxData *_GfxData = New<GfxData>();
 

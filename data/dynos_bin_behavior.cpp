@@ -2647,7 +2647,7 @@ static void DynOS_Bhv_Generate(const SysPath &aPackFolder, Array<Pair<u64, Strin
 }
 
 void DynOS_Bhv_GeneratePack(const SysPath &aPackFolder) {
-    Print("Processing Behaviors: \"%s\"", aPackFolder.c_str());
+    Print("Processing behaviors: \"%s\"", aPackFolder.c_str());
     Array<Pair<u64, String>> _BehaviorsFolders;
     GfxData *_GfxData = New<GfxData>();
 

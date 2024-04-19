@@ -176,9 +176,7 @@ BinFile *DynOS_Bin_Decompress(const SysPath &aFilename) {
         DynOS_Bin_Compress_Free();
         return BinFile::OpenR(aFilename.c_str());
     }
-#ifdef DEVELOPMENT
     PrintNoNewLine("Decompressing file \"%s\"...", aFilename.c_str());
-#endif
 
     // Read expected uncompressed file size
     if (!DynOS_Bin_Compress_Check(
@@ -228,15 +226,11 @@ BinFile *DynOS_Bin_Decompress(const SysPath &aFilename) {
         PrintError("ERROR: uncompress rc: %d, length uncompressed: %lu, length compressed: %lu, length header: %lu", uncompressRc, sLengthUncompressed, sLengthCompressed, _LengthHeader);
         return NULL;
     }
-#ifdef DEVELOPMENT
     Print("uncompress rc: %d, length uncompressed: %lu, length compressed: %lu, length header: %lu", uncompressRc, sLengthUncompressed, sLengthCompressed, _LengthHeader);
-#endif
 
     // Return uncompressed data as a BinFile
     BinFile *_BinFile = BinFile::OpenB(sBufferUncompressed, sLengthUncompressed);
     DynOS_Bin_Compress_Free();
-#ifdef DEVELOPMENT
     Print(" Done.");
-#endif
     return _BinFile;
 }

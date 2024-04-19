@@ -570,9 +570,11 @@ static void configfile_load_internal(const char *filename, bool* error) {
                     }
                 }
 
-                if (option == NULL)
+                if (option == NULL) {
+#ifdef DEVELOPMENT
                     printf("unknown option '%s'\n", tokens[0]);
-                else {
+#endif
+                } else {
                     switch (option->type) {
                         case CONFIG_TYPE_BOOL:
                             if (strcmp(tokens[1], "true") == 0)

@@ -466,7 +466,7 @@ static void DynOS_Tex_GeneratePack_Recursive(const SysPath &aPackFolder, SysPath
 }
 
 void DynOS_Tex_GeneratePack(const SysPath &aPackFolder, SysPath &aOutputFolder, bool aAllowCustomTextures) {
-    Print("Processing Textures: \"%s\"", aPackFolder.c_str());
+    Print("Processing textures: \"%s\"", aPackFolder.c_str());
 
     // skip generation if any .tex files exist
     if (FileTypeExists(aOutputFolder, ".tex")) {

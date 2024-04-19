@@ -1168,7 +1168,7 @@ static s32 bhv_cmd_spawn_obj_ext(void) {
 static s32 bhv_cmd_load_animations_ext(void) {
     //u8 field = BHV_CMD_GET_2ND_U8(0);
     
-    printf("LOAD_ANIMATIONS_EXT is not yet supported! Skipping behavior command.\n");
+    LOG_ERROR("LOAD_ANIMATIONS_EXT is not yet supported! Skipping behavior command.\n");
     
     //BehaviorScript *behavior = (BehaviorScript *)gCurrentObject->behavior;
 
