@@ -120,6 +120,13 @@ static void gfx_sdl_init(const char *window_title) {
     SDL_Init(SDL_INIT_VIDEO);
     SDL_StartTextInput();
 
+    if (configWindow.msaa > 0) {
+        SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
+        SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, configWindow.msaa);
+    } else {
+        SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 0);
+    }
+
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
@@ -259,6 +266,13 @@ static void gfx_sdl_delay(u32 ms) {
     SDL_Delay(ms);
 }
 
+static int gfx_sdl_get_max_msaa(void) {
+    int maxSamples = 0;
+    glGetIntegerv(GL_MAX_SAMPLES, &maxSamples);
+    if (maxSamples > 16) { maxSamples = 16; }
+    return maxSamples;
+}
+
 static void gfx_sdl_set_window_title(const char* title) {
     SDL_SetWindowTitle(wnd, title);
 }
@@ -298,6 +312,7 @@ struct GfxWindowManagerAPI gfx_sdl = {
     gfx_sdl_set_clipboard_text,
     gfx_sdl_set_cursor_visible,
     gfx_sdl_delay,
+    gfx_sdl_get_max_msaa,
     gfx_sdl_set_window_title,
     gfx_sdl_reset_window_title
 };

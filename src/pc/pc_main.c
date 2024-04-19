@@ -306,12 +306,7 @@ void game_exit(void) {
 void* main_game_init(void* isThreaded) {
     gIsThreaded = isThreaded != NULL;
 
-    const char *userpath = gCLIOpts.savePath[0] ? gCLIOpts.savePath : sys_user_path();
-    fs_init(sys_ropaths, FS_BASEDIR, userpath);
-
-    // load config
-    configfile_load();
-    configWindow.settings_changed = true;
+    // load language
     if (!djui_language_init(configLanguage)) { snprintf(configLanguage, MAX_CONFIG_STRING, "%s", ""); }
 
     if (gIsThreaded) { REFRESH_MUTEX(loading_screen_set_segment_text("Loading")); }
@@ -373,6 +368,10 @@ int main(int argc, char *argv[]) {
     }
 
 #endif
+
+    const char *userpath = gCLIOpts.savePath[0] ? gCLIOpts.savePath : sys_user_path();
+    fs_init(sys_ropaths, FS_BASEDIR, userpath);
+    configfile_load();
 
     // Create the window straight away
     if (!gGfxInited) {

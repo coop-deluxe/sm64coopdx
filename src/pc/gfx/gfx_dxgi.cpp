@@ -665,6 +665,10 @@ void gfx_dxgi_delay(u32 ms) {
     Sleep(ms);
 }
 
+static int gfx_dxgi_get_max_msaa(void) {
+    return 0;
+}
+
 static void gfx_dxgi_set_window_title(const char* title) {
     SetWindowTextA(dxgi.h_wnd, title);
 }
@@ -742,6 +746,7 @@ struct GfxWindowManagerAPI gfx_dxgi = {
     gfx_dxgi_set_clipboard_text,
     gfx_dxgi_set_cursor_visible,
     gfx_dxgi_delay,
+    gfx_dxgi_get_max_msaa,
     gfx_dxgi_set_window_title,
     gfx_dxgi_reset_window_title
 };
