@@ -13,126 +13,126 @@
         "inst0": {
             "release_rate": 208,
             "envelope": "envelope0",
-            "sound": "00"
+            "sound": "00_wario_waaaooow"
         },
         "inst1": {
             "release_rate": 208,
             "envelope": "envelope0",
-            "sound": "01"
+            "sound": "01_wario_hoohoo"
         },
         "inst2": {
             "release_rate": 208,
             "envelope": "envelope0",
-            "sound": "02"
+            "sound": "02_wario_panting"
         },
         "inst3": {
             "release_rate": 208,
             "envelope": "envelope0",
-            "sound": "03"
+            "sound": "03_wario_dying"
         },
         "inst4": {
             "release_rate": 208,
             "envelope": "envelope0",
-            "sound": "04"
+            "sound": "04_wario_on_fire"
         },
         "inst5": {
             "release_rate": 208,
             "envelope": "envelope0",
-            "sound": "05"
+            "sound": "05_wario_uh2"
         },
         "inst6": {
             "release_rate": 208,
             "envelope": "envelope0",
-            "sound": "06"
+            "sound": "06_wario_coughing"
         },
         "inst7": {
             "release_rate": 208,
             "envelope": "envelope0",
-            "sound": "07"
+            "sound": "07_wario_its_a_me_mario"
         },
         "inst8": {
             "release_rate": 208,
             "envelope": "envelope0",
-            "sound": "08"
+            "sound": "08_wario_punch_yah"
         },
         "inst9": {
             "release_rate": 208,
             "envelope": "envelope0",
-            "sound": "09"
+            "sound": "09_wario_punch_hoo"
         },
         "inst10": {
             "release_rate": 208,
             "envelope": "envelope0",
-            "sound": "0A"
+            "sound": "0A_wario_mama_mia"
         },
         "inst11": {
             "release_rate": 208,
             "envelope": "envelope0",
-            "sound": "0B"
+            "sound": "0B_wario_okey_dokey"
         },
         "inst12": {
             "release_rate": 208,
             "envelope": "envelope0",
-            "sound": "0C"
+            "sound": "0C_wario_drowning"
         },
         "inst13": {
             "release_rate": 208,
             "envelope": "envelope0",
-            "sound": "0D"
+            "sound": "0D_wario_thank_you_playing_my_game"
         },
         "inst14": {
             "ifdef": ["EXTENDED_CHAR_SOUNDS"],
             "release_rate": 208,
             "envelope": "envelope0",
-            "sound": "0E"
+            "sound": "0E_wario_peach_dear_mario"
         },
         "inst15": {
             "ifdef": ["EXTENDED_CHAR_SOUNDS"],
             "release_rate": 208,
             "envelope": "envelope0",
-            "sound": "0F"
+            "sound": "0F_wario_peach_mario"
         },
         "inst16": {
             "ifdef": ["EXTENDED_CHAR_SOUNDS"],
             "release_rate": 208,
             "envelope": "envelope0",
-            "sound": "10"
+            "sound": "10_wario_peach_power_of_the_stars"
         },
         "inst17": {
             "ifdef": ["EXTENDED_CHAR_SOUNDS"],
             "release_rate": 208,
             "envelope": "envelope0",
-            "sound": "11"
+            "sound": "11_wario_peach_thanks_to_you"
         },
         "inst18": {
             "ifdef": ["EXTENDED_CHAR_SOUNDS"],
             "release_rate": 208,
             "envelope": "envelope0",
-            "sound": "12"
+            "sound": "12_wario_peach_thank_you_mario"
         },
         "inst19": {
             "ifdef": ["EXTENDED_CHAR_SOUNDS"],
             "release_rate": 208,
             "envelope": "envelope0",
-            "sound": "13"
+            "sound": "13_wario_peach_something_special"
         },
         "inst20": {
             "ifdef": ["EXTENDED_CHAR_SOUNDS"],
             "release_rate": 208,
             "envelope": "envelope0",
-            "sound": "14"
+            "sound": "14_wario_peach_bake_a_cake"
         },
         "inst21": {
             "ifdef": ["EXTENDED_CHAR_SOUNDS"],
             "release_rate": 208,
             "envelope": "envelope0",
-            "sound": "15"
+            "sound": "15_wario_peach_for_mario"
         },
         "inst22": {
             "ifdef": ["EXTENDED_CHAR_SOUNDS"],
             "release_rate": 208,
             "envelope": "envelope0",
-            "sound": "16"
+            "sound": "16_wario_peach_mario2"
         }
     },
     "instrument_list": [
