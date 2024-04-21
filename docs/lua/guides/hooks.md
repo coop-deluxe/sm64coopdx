@@ -129,8 +129,7 @@ The lua functions sent to `hook_event()` will be automatically called by SM64 wh
 | HOOK_OVERRIDE_PHYS_STEP_DEFACTO_SPEED | Called when slope defacto speed for walking is being calculated, overrides the floor normal in the equation | [MarioState](structs.md#MarioState) mario |
 | HOOK_ON_OBJECT_LOAD | Called when an object is spawned in | [Object](structs.md#Object) obj |
 | HOOK_ON_PLAY_SOUND | Called when a sound is going to play, return a `SOUND_*` constant or `NO_SOUND` to override the sound | `integer` soundBits, `Vec3f` pos |
-| HOOK_ON_ATTACK_OBJECT | Called when a player (or another object..?) attacks an object | [Object](structs.md#Object) victim, `integer` interactionId |
-| HOOK_ON_BOUNCE_BACK_FROM_ATTACK | Called when a player bounces back from an attack | [MarioState](structs.md#MarioState) attacker, `integer` interactionId |
+| HOOK_ON_ATTACK_OBJECT | Called when a player attacks an object. May be double-fired in some cases, you'll need to write special code for this | [MarioState](structs.md#MarioState) attacker, [Object](structs.md#Object) victim, `integer` interactionId |
 
 ### Parameters
 
@@ -150,24 +149,28 @@ end
 hook_event(HOOK_MARIO_UPDATE, mario_update)
 ```
 
-This following example shows how to use `HOOK_ON_ATTACK_OBJECT` and `HOOK_ON_BOUNCE_BACK_FROM_ATTACK` in conjunction.
-Note that you will need to adjust this code for the case of koopa shells. You can see the C file `src/game/interaction.c` for usages of `attack_object` to see how `bounce_back_from_attack` is not called.
+This following example shows how to use `HOOK_ON_ATTACK_OBJECT` and prevent double-firing.
 ```lua
-local object = null
-local mario = null
-
-local function onAttackObject(o, interaction)
-    object = o
+local doubleFire = {}
+local function onObjectAttack(m,o,int)
+    if doubleFire[o] == nil then doubleFire[o] = 2 end
+    if doubleFire[o] == 2 then
+        print("Player attacked an object!")
+    end
 end
 
-local function onBounce(m, interaction)
-    mario = m
-
-    print(mario, " vs. ", object)
+local function update()
+    local nDoubleFire = {}
+    for o,i in pairs(doubleFire) do
+        if i - 1 ~= 0 then
+            nDoubleFire[o] = i - 1
+        end
+    end
+    doubleFire = nDoubleFire
 end
 
-hook_event(HOOK_ON_ATTACK_OBJECT, onAttackObject)
-hook_event(HOOK_ON_BOUNCE_BACK_FROM_ATTACK, onBounce)
+hook_event(HOOK_ON_ATTACK_OBJECT, onObjectAttack)
+hook_event(HOOK_UPDATE, update)
 ```
 
 [:arrow_up_small:](#)
