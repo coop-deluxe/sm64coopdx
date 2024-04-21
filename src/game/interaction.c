@@ -307,6 +307,8 @@ u32 attack_object(struct Object *o, s32 interaction) {
     }
 
     o->oInteractStatus = attackType + (INT_STATUS_INTERACTED | INT_STATUS_WAS_ATTACKED);
+
+    smlua_call_event_hooks_object_model_param(HOOK_ON_ATTACK_OBJECT, o, interaction);
     return attackType;
 }
 
@@ -798,6 +800,8 @@ void bounce_back_from_attack(struct MarioState *m, u32 interaction) {
     if (interaction & (INT_PUNCH | INT_KICK | INT_TRIP | INT_FAST_ATTACK_OR_SHELL)) {
         play_sound(SOUND_ACTION_HIT_2, m->marioObj->header.gfx.cameraToObject);
     }
+
+    smlua_call_event_hooks_mario_action_params_no_ret(HOOK_ON_BOUNCE_BACK_FROM_ATTACK, m, interaction);
 }
 
 u32 should_push_or_pull_door(struct MarioState *m, struct Object *o) {
@@ -842,6 +846,7 @@ u32 take_damage_from_interact_object(struct MarioState *m) {
 
     queue_rumble_data_mario(m, 5, 80);
     if (m->playerIndex == 0) { set_camera_shake_from_hit(shake); }
+
     return damage;
 }
 
