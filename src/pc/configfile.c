@@ -144,6 +144,7 @@ bool         configUncappedFramerate              = false;
 unsigned int configFrameLimit                     = 144;
 unsigned int configDrawDistance                   = 4;
 bool         configDisablePopups                  = false;
+bool         configUseStandardKeyBindingsChat     = false;
 bool         configLuaProfiler                    = false;
 #ifdef DEVELOPMENT
 bool         configCtxProfiler                    = false;
@@ -265,6 +266,7 @@ static const struct ConfigOption options[] = {
     {.name = "coop_stay_in_level_after_star",  .type = CONFIG_TYPE_UINT  , .uintValue   = &configStayInLevelAfterStar},
     {.name = "coop_global_player_models",      .type = CONFIG_TYPE_BOOL  , .boolValue   = &configGlobalPlayerModels},
     {.name = "disable_popups",                 .type = CONFIG_TYPE_BOOL  , .boolValue   = &configDisablePopups},
+    {.name = "use_standard_key_bindings_chat", .type = CONFIG_TYPE_BOOL  , .boolValue   = &configUseStandardKeyBindingsChat},
     {.name = "lua_profiler",                   .type = CONFIG_TYPE_BOOL  , .boolValue   = &configLuaProfiler},
 #ifdef DEVELOPMENT
     {.name = "ctx_profiler",                   .type = CONFIG_TYPE_BOOL  , .boolValue   = &configCtxProfiler},

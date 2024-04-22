@@ -103,6 +103,7 @@ extern bool         configUncappedFramerate;
 extern unsigned int configFrameLimit;
 extern unsigned int configDrawDistance;
 extern bool         configDisablePopups;
+extern bool         configUseStandardKeyBindingsChat;
 extern bool         configLuaProfiler;
 #ifdef DEVELOPMENT
 extern bool         configCtxProfiler;

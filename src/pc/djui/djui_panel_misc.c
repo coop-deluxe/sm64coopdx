@@ -66,6 +66,7 @@ void djui_panel_misc_create(struct DjuiBase* caller) {
 
     {
         djui_checkbox_create(body, DLANG(MISC, DISABLE_POPUPS), &configDisablePopups, NULL);
+        djui_checkbox_create(body, DLANG(MISC, USE_STANDARD_KEY_BINDINGS_CHAT), &configUseStandardKeyBindingsChat, NULL);
 #ifndef DEVELOPMENT
         djui_checkbox_create(body, DLANG(MISC, LUA_PROFILER), &configLuaProfiler, NULL);
 #endif
