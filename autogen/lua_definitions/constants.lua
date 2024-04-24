@@ -9324,7 +9324,10 @@ HOOK_ON_OBJECT_LOAD = 40
 HOOK_ON_PLAY_SOUND = 41
 
 --- @type LuaHookedEventType
-HOOK_MAX = 42
+HOOK_ON_SEQ_LOAD = 42
+
+--- @type LuaHookedEventType
+HOOK_MAX = 43
 
 --- @class HudDisplayFlags
 

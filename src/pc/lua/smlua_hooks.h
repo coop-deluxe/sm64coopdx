@@ -53,6 +53,7 @@ enum LuaHookedEventType {
     HOOK_OVERRIDE_PHYS_STEP_DEFACTO_SPEED,
     HOOK_ON_OBJECT_LOAD,
     HOOK_ON_PLAY_SOUND,
+    HOOK_ON_SEQ_LOAD,
     HOOK_MAX,
 };
 
@@ -99,6 +100,7 @@ static const char* LuaHookedEventTypeName[] = {
     "HOOK_OVERRIDE_PHYS_STEP_DEFACTO_SPEED",
     "HOOK_ON_OBJECT_LOAD",
     "HOOK_ON_PLAY_SOUND",
+    "HOOK_ON_SEQ_LOAD",
     "HOOK_MAX"
 };
 
@@ -147,6 +149,7 @@ bool smlua_call_event_hooks_mario_param_and_int_ret_int(enum LuaHookedEventType 
 bool smlua_call_event_hooks_mario_param_ret_float(enum LuaHookedEventType hookType, struct MarioState* m, f32* returnValue);
 bool smlua_call_event_hooks_mario_param_and_int_and_int_ret_int(enum LuaHookedEventType hookType, struct MarioState* m, s32 param, u32 args, s32* returnValue);
 void smlua_call_event_hooks_graph_node_object_and_int_param(enum LuaHookedEventType hookType, struct GraphNodeObject* node, s32 param);
+void smlua_call_event_hooks_on_seq_load(enum LuaHookedEventType hookType, u32 player, u32 seqId, s32 loadAsync, u8* returnValue);
 
 enum BehaviorId smlua_get_original_behavior_id(const BehaviorScript* behavior);
 const BehaviorScript* smlua_override_behavior(const BehaviorScript* behavior);

@@ -12,6 +12,7 @@
 #include "pc/platform.h"
 #include "pc/fs/fs.h"
 #include "pc/lua/utils/smlua_audio_utils.h"
+#include "pc/lua/smlua_hooks.h"
 
 #define ALIGN16(val) (((val) + 0xF) & ~0xF)
 
@@ -1552,6 +1553,13 @@ void preload_sequence(u32 seqId, u8 preloadMask) {
 void load_sequence_internal(u32 player, u32 seqId, s32 loadAsync);
 
 void load_sequence(u32 player, u32 seqId, s32 loadAsync) {
+    u8 returnValue = 0;
+
+    smlua_call_event_hooks_on_seq_load(HOOK_ON_SEQ_LOAD, player, seqId, loadAsync, &returnValue);
+    if (returnValue != 0) {
+        seqId = returnValue;
+    }
+
     if (!loadAsync) {
         gAudioLoadLock = AUDIO_LOCK_LOADING;
     }
