@@ -12,6 +12,7 @@
 #define NETWORK_PLAYER_PING_TIMEOUT 3
 #define MAX_RX_SEQ_IDS 256
 #define USE_REAL_PALETTE_VAR 0xFF
+#define MAX_DESCRIPTION_STRING 20
 
 enum NetworkPlayerType {
     NPT_UNKNOWN,
