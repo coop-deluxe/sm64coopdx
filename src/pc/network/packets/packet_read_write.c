@@ -62,7 +62,7 @@ void packet_init(struct Packet* packet, enum PacketType packetType, bool reliabl
     if (packet->levelAreaMustMatch) {
         packet_write(packet, &gCurrCourseNum,  sizeof(u8));
         packet_write(packet, &gCurrActStarNum, sizeof(u8));
-        packet_write(packet, &gCurrLevelNum,   sizeof(u8));
+        packet_write(packet, &gCurrLevelNum,   sizeof(s16));
         packet_write(packet, &gCurrAreaIndex,  sizeof(u8));
         packet->courseNum = gCurrCourseNum;
         packet->actNum    = gCurrActStarNum;
@@ -71,7 +71,7 @@ void packet_init(struct Packet* packet, enum PacketType packetType, bool reliabl
     } else if (packet->levelMustMatch) {
         packet_write(packet, &gCurrCourseNum,  sizeof(u8));
         packet_write(packet, &gCurrActStarNum, sizeof(u8));
-        packet_write(packet, &gCurrLevelNum,   sizeof(u8));
+        packet_write(packet, &gCurrLevelNum,   sizeof(s16));
         packet->courseNum = gCurrCourseNum;
         packet->actNum    = gCurrActStarNum;
         packet->levelNum  = gCurrLevelNum;
@@ -170,12 +170,12 @@ u8 packet_initial_read(struct Packet* packet) {
     if (packet->levelAreaMustMatch) {
         packet_read(packet, &packet->courseNum, sizeof(u8));
         packet_read(packet, &packet->actNum,    sizeof(u8));
-        packet_read(packet, &packet->levelNum,  sizeof(u8));
+        packet_read(packet, &packet->levelNum,  sizeof(s16));
         packet_read(packet, &packet->areaIndex, sizeof(u8));
     } else if (packet->levelMustMatch) {
         packet_read(packet, &packet->courseNum, sizeof(u8));
         packet_read(packet, &packet->actNum,    sizeof(u8));
-        packet_read(packet, &packet->levelNum,  sizeof(u8));
+        packet_read(packet, &packet->levelNum,  sizeof(s16));
     }
 
     // don't drop packet

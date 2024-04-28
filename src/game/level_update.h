@@ -101,7 +101,7 @@ extern s16 gDelayedInitSound;
 
 struct WarpDest {
     u8 type;
-    u8 levelNum;
+    s16 levelNum;
     u8 areaIdx;
     u8 nodeId;
     u32 arg;
@@ -176,8 +176,8 @@ void warp_special(s32 arg);
 void initiate_warp(s16 destLevel, s16 destArea, s16 destWarpNode, s32 arg3);
 
 s32 lvl_init_or_update(s16 initOrUpdate, UNUSED s32 unused);
-s32 lvl_init_from_save_file(UNUSED s16 arg0, s32 levelNum);
-s32 lvl_set_current_level(UNUSED s16 arg0, s32 levelNum);
+s32 lvl_init_from_save_file(UNUSED s16 arg0, s16 levelNum);
+s32 lvl_set_current_level(UNUSED s16 arg0, s16 levelNum);
 s32 lvl_play_the_end_screen_sound(UNUSED s16 arg0, UNUSED s32 arg1);
 void basic_update(UNUSED s16 *arg);
 

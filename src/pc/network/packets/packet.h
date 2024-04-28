@@ -107,7 +107,7 @@ struct Packet {
     u16 orderedSeqId;
     u8 courseNum;
     u8 actNum;
-    u8 levelNum;
+    s16 levelNum;
     u8 areaIndex;
     u8 buffer[PACKET_LENGTH];
 };
