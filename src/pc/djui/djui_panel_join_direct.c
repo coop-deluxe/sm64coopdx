@@ -8,7 +8,6 @@
 #include "pc/network/network.h"
 #include "pc/network/socket/socket.h"
 #include "pc/network/coopnet/coopnet.h"
-#include "pc/network/socket/domain_res.h"
 #include "pc/utils/misc.h"
 #include "pc/configfile.h"
 #include "pc/debuglog.h"

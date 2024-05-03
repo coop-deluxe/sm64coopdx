@@ -7,6 +7,7 @@
 #include <sys/socket.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <netdb.h>
 
 #define SOCKET unsigned int
 #define INVALID_SOCKET (unsigned int)(-1)

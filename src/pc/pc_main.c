@@ -36,7 +36,7 @@
 #include "pc/lua/utils/smlua_audio_utils.h"
 
 #include "pc/network/version.h"
-#include "pc/network/socket/domain_res.h"
+#include "pc/network/socket/socket.h"
 #include "pc/network/network_player.h"
 #include "pc/update_checker.h"
 #include "pc/djui/djui.h"
