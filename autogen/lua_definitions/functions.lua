@@ -4081,7 +4081,239 @@ end
 --- @param interactType integer
 --- @param o Object
 --- @return integer
+function interact_bbh_entrance(m, interactType, o)
+    -- ...
+end
+
+--- @param m MarioState
+--- @param interactType integer
+--- @param o Object
+--- @return integer
+function interact_bounce_top(m, interactType, o)
+    -- ...
+end
+
+--- @param m MarioState
+--- @param interactType integer
+--- @param o Object
+--- @return integer
+function interact_breakable(m, interactType, o)
+    -- ...
+end
+
+--- @param m MarioState
+--- @param interactType integer
+--- @param o Object
+--- @return integer
+function interact_bully(m, interactType, o)
+    -- ...
+end
+
+--- @param m MarioState
+--- @param interactType integer
+--- @param o Object
+--- @return integer
+function interact_cannon_base(m, interactType, o)
+    -- ...
+end
+
+--- @param m MarioState
+--- @param interactType integer
+--- @param o Object
+--- @return integer
+function interact_cap(m, interactType, o)
+    -- ...
+end
+
+--- @param m MarioState
+--- @param interactType integer
+--- @param o Object
+--- @return integer
+function interact_clam_or_bubba(m, interactType, o)
+    -- ...
+end
+
+--- @param m MarioState
+--- @param interactType integer
+--- @param o Object
+--- @return integer
+function interact_coin(m, interactType, o)
+    -- ...
+end
+
+--- @param m MarioState
+--- @param interactType integer
+--- @param o Object
+--- @return integer
 function interact_damage(m, interactType, o)
+    -- ...
+end
+
+--- @param m MarioState
+--- @param interactType integer
+--- @param o Object
+--- @return integer
+function interact_door(m, interactType, o)
+    -- ...
+end
+
+--- @param m MarioState
+--- @param interactType integer
+--- @param o Object
+--- @return integer
+function interact_flame(m, interactType, o)
+    -- ...
+end
+
+--- @param m MarioState
+--- @param interactType integer
+--- @param o Object
+--- @return integer
+function interact_grabbable(m, interactType, o)
+    -- ...
+end
+
+--- @param m MarioState
+--- @param interactType integer
+--- @param o Object
+--- @return integer
+function interact_hit_from_below(m, interactType, o)
+    -- ...
+end
+
+--- @param m MarioState
+--- @param interactType integer
+--- @param o Object
+--- @return integer
+function interact_hoot(m, interactType, o)
+    -- ...
+end
+
+--- @param m MarioState
+--- @param interactType integer
+--- @param o Object
+--- @return integer
+function interact_igloo_barrier(m, interactType, o)
+    -- ...
+end
+
+--- @param m MarioState
+--- @param interactType integer
+--- @param o Object
+--- @return integer
+function interact_koopa_shell(m, interactType, o)
+    -- ...
+end
+
+--- @param m MarioState
+--- @param interactType integer
+--- @param o Object
+--- @return integer
+function interact_mr_blizzard(m, interactType, o)
+    -- ...
+end
+
+--- @param m MarioState
+--- @param interactType integer
+--- @param o Object
+--- @return integer
+function interact_player(m, interactType, o)
+    -- ...
+end
+
+--- @param m MarioState
+--- @param interactType integer
+--- @param o Object
+--- @return integer
+function interact_pole(m, interactType, o)
+    -- ...
+end
+
+--- @param m MarioState
+--- @param interactType integer
+--- @param o Object
+--- @return integer
+function interact_shock(m, interactType, o)
+    -- ...
+end
+
+--- @param m MarioState
+--- @param interactType integer
+--- @param o Object
+--- @return integer
+function interact_snufit_bullet(m, interactType, o)
+    -- ...
+end
+
+--- @param m MarioState
+--- @param interactType integer
+--- @param o Object
+--- @return integer
+function interact_spiny_walking(m, interactType, o)
+    -- ...
+end
+
+--- @param m MarioState
+--- @param interactType integer
+--- @param o Object
+--- @return integer
+function interact_star_or_key(m, interactType, o)
+    -- ...
+end
+
+--- @param m MarioState
+--- @param interactType integer
+--- @param o Object
+--- @return integer
+function interact_strong_wind(m, interactType, o)
+    -- ...
+end
+
+--- @param m MarioState
+--- @param interactType integer
+--- @param o Object
+--- @return integer
+function interact_text(m, interactType, o)
+    -- ...
+end
+
+--- @param m MarioState
+--- @param interactType integer
+--- @param o Object
+--- @return integer
+function interact_tornado(m, interactType, o)
+    -- ...
+end
+
+--- @param m MarioState
+--- @param interactType integer
+--- @param o Object
+--- @return integer
+function interact_warp(m, interactType, o)
+    -- ...
+end
+
+--- @param m MarioState
+--- @param interactType integer
+--- @param o Object
+--- @return integer
+function interact_warp_door(m, interactType, o)
+    -- ...
+end
+
+--- @param m MarioState
+--- @param interactType integer
+--- @param o Object
+--- @return integer
+function interact_water_ring(m, interactType, o)
+    -- ...
+end
+
+--- @param m MarioState
+--- @param interactType integer
+--- @param o Object
+--- @return integer
+function interact_whirlpool(m, interactType, o)
     -- ...
 end
 

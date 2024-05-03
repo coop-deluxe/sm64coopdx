@@ -3,46 +3,46 @@
 
 #include "smlua.h"
 
-#include "audio/external.h"
-#include "engine/math_util.h"
-#include "engine/surface_collision.h"
-#include "engine/surface_load.h"
-#include "game/camera.h"
-#include "game/characters.h"
-#include "game/mario_step.h"
-#include "game/mario.h"
-#include "pc/djui/djui_popup.h"
-#include "pc/network/network_utils.h"
-#include "pc/djui/djui_console.h"
-#include "pc/djui/djui_chat_message.h"
-#include "game/interaction.h"
-#include "game/level_info.h"
-#include "game/save_file.h"
-#include "game/sound_init.h"
-#include "pc/djui/djui_hud_utils.h"
-#include "pc/network/network_player.h"
-#include "pc/network/lag_compensation.h"
+#include "src/audio/external.h"
+#include "src/engine/math_util.h"
+#include "src/engine/surface_collision.h"
+#include "src/engine/surface_load.h"
+#include "src/game/camera.h"
+#include "src/game/characters.h"
+#include "src/game/mario_step.h"
+#include "src/game/mario.h"
+#include "src/pc/djui/djui_popup.h"
+#include "src/pc/network/network_utils.h"
+#include "src/pc/djui/djui_console.h"
+#include "src/pc/djui/djui_chat_message.h"
+#include "src/game/interaction.h"
+#include "src/game/level_info.h"
+#include "src/game/save_file.h"
+#include "src/game/sound_init.h"
+#include "src/pc/djui/djui_hud_utils.h"
+#include "src/pc/network/network_player.h"
+#include "src/pc/network/lag_compensation.h"
 #include "include/behavior_table.h"
-#include "pc/lua/utils/smlua_obj_utils.h"
-#include "pc/lua/utils/smlua_misc_utils.h"
-#include "pc/lua/utils/smlua_collision_utils.h"
-#include "pc/lua/utils/smlua_math_utils.h"
-#include "pc/lua/utils/smlua_model_utils.h"
-#include "pc/lua/utils/smlua_text_utils.h"
-#include "pc/lua/utils/smlua_audio_utils.h"
-#include "pc/lua/utils/smlua_level_utils.h"
-#include "pc/lua/utils/smlua_anim_utils.h"
-#include "pc/lua/utils/smlua_deprecated.h"
-#include "game/object_list_processor.h"
-#include "game/behavior_actions.h"
-#include "game/mario_misc.h"
-#include "pc/mods/mod_storage.h"
-#include "pc/utils/misc.h"
-#include "game/level_update.h"
-#include "game/area.h"
-#include "engine/level_script.h"
-#include "game/ingame_menu.h"
-#include "game/first_person_cam.h"
+#include "src/pc/lua/utils/smlua_obj_utils.h"
+#include "src/pc/lua/utils/smlua_misc_utils.h"
+#include "src/pc/lua/utils/smlua_collision_utils.h"
+#include "src/pc/lua/utils/smlua_math_utils.h"
+#include "src/pc/lua/utils/smlua_model_utils.h"
+#include "src/pc/lua/utils/smlua_text_utils.h"
+#include "src/pc/lua/utils/smlua_audio_utils.h"
+#include "src/pc/lua/utils/smlua_level_utils.h"
+#include "src/pc/lua/utils/smlua_anim_utils.h"
+#include "src/pc/lua/utils/smlua_deprecated.h"
+#include "src/game/object_list_processor.h"
+#include "src/game/behavior_actions.h"
+#include "src/game/mario_misc.h"
+#include "src/pc/mods/mod_storage.h"
+#include "src/pc/utils/misc.h"
+#include "src/game/level_update.h"
+#include "src/game/area.h"
+#include "src/engine/level_script.h"
+#include "src/game/ingame_menu.h"
+#include "src/game/first_person_cam.h"
 
 
   ////////////
@@ -13406,6 +13406,174 @@ int smlua_func_get_door_save_file_flag(lua_State* L) {
     return 1;
 }
 
+int smlua_func_interact_bbh_entrance(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 3) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "interact_bbh_entrance", 3, top);
+        return 0;
+    }
+
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "interact_bbh_entrance"); return 0; }
+    u32 interactType = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "interact_bbh_entrance"); return 0; }
+    struct Object* o = (struct Object*)smlua_to_cobject(L, 3, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "interact_bbh_entrance"); return 0; }
+
+    lua_pushinteger(L, interact_bbh_entrance(m, interactType, o));
+
+    return 1;
+}
+
+int smlua_func_interact_bounce_top(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 3) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "interact_bounce_top", 3, top);
+        return 0;
+    }
+
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "interact_bounce_top"); return 0; }
+    u32 interactType = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "interact_bounce_top"); return 0; }
+    struct Object* o = (struct Object*)smlua_to_cobject(L, 3, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "interact_bounce_top"); return 0; }
+
+    lua_pushinteger(L, interact_bounce_top(m, interactType, o));
+
+    return 1;
+}
+
+int smlua_func_interact_breakable(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 3) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "interact_breakable", 3, top);
+        return 0;
+    }
+
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "interact_breakable"); return 0; }
+    u32 interactType = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "interact_breakable"); return 0; }
+    struct Object* o = (struct Object*)smlua_to_cobject(L, 3, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "interact_breakable"); return 0; }
+
+    lua_pushinteger(L, interact_breakable(m, interactType, o));
+
+    return 1;
+}
+
+int smlua_func_interact_bully(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 3) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "interact_bully", 3, top);
+        return 0;
+    }
+
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "interact_bully"); return 0; }
+    u32 interactType = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "interact_bully"); return 0; }
+    struct Object* o = (struct Object*)smlua_to_cobject(L, 3, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "interact_bully"); return 0; }
+
+    lua_pushinteger(L, interact_bully(m, interactType, o));
+
+    return 1;
+}
+
+int smlua_func_interact_cannon_base(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 3) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "interact_cannon_base", 3, top);
+        return 0;
+    }
+
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "interact_cannon_base"); return 0; }
+    u32 interactType = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "interact_cannon_base"); return 0; }
+    struct Object* o = (struct Object*)smlua_to_cobject(L, 3, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "interact_cannon_base"); return 0; }
+
+    lua_pushinteger(L, interact_cannon_base(m, interactType, o));
+
+    return 1;
+}
+
+int smlua_func_interact_cap(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 3) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "interact_cap", 3, top);
+        return 0;
+    }
+
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "interact_cap"); return 0; }
+    u32 interactType = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "interact_cap"); return 0; }
+    struct Object* o = (struct Object*)smlua_to_cobject(L, 3, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "interact_cap"); return 0; }
+
+    lua_pushinteger(L, interact_cap(m, interactType, o));
+
+    return 1;
+}
+
+int smlua_func_interact_clam_or_bubba(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 3) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "interact_clam_or_bubba", 3, top);
+        return 0;
+    }
+
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "interact_clam_or_bubba"); return 0; }
+    u32 interactType = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "interact_clam_or_bubba"); return 0; }
+    struct Object* o = (struct Object*)smlua_to_cobject(L, 3, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "interact_clam_or_bubba"); return 0; }
+
+    lua_pushinteger(L, interact_clam_or_bubba(m, interactType, o));
+
+    return 1;
+}
+
+int smlua_func_interact_coin(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 3) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "interact_coin", 3, top);
+        return 0;
+    }
+
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "interact_coin"); return 0; }
+    u32 interactType = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "interact_coin"); return 0; }
+    struct Object* o = (struct Object*)smlua_to_cobject(L, 3, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "interact_coin"); return 0; }
+
+    lua_pushinteger(L, interact_coin(m, interactType, o));
+
+    return 1;
+}
+
 int smlua_func_interact_damage(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -13423,6 +13591,447 @@ int smlua_func_interact_damage(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "interact_damage"); return 0; }
 
     lua_pushinteger(L, interact_damage(m, interactType, o));
+
+    return 1;
+}
+
+int smlua_func_interact_door(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 3) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "interact_door", 3, top);
+        return 0;
+    }
+
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "interact_door"); return 0; }
+    u32 interactType = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "interact_door"); return 0; }
+    struct Object* o = (struct Object*)smlua_to_cobject(L, 3, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "interact_door"); return 0; }
+
+    lua_pushinteger(L, interact_door(m, interactType, o));
+
+    return 1;
+}
+
+int smlua_func_interact_flame(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 3) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "interact_flame", 3, top);
+        return 0;
+    }
+
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "interact_flame"); return 0; }
+    u32 interactType = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "interact_flame"); return 0; }
+    struct Object* o = (struct Object*)smlua_to_cobject(L, 3, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "interact_flame"); return 0; }
+
+    lua_pushinteger(L, interact_flame(m, interactType, o));
+
+    return 1;
+}
+
+int smlua_func_interact_grabbable(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 3) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "interact_grabbable", 3, top);
+        return 0;
+    }
+
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "interact_grabbable"); return 0; }
+    u32 interactType = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "interact_grabbable"); return 0; }
+    struct Object* o = (struct Object*)smlua_to_cobject(L, 3, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "interact_grabbable"); return 0; }
+
+    lua_pushinteger(L, interact_grabbable(m, interactType, o));
+
+    return 1;
+}
+
+int smlua_func_interact_hit_from_below(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 3) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "interact_hit_from_below", 3, top);
+        return 0;
+    }
+
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "interact_hit_from_below"); return 0; }
+    u32 interactType = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "interact_hit_from_below"); return 0; }
+    struct Object* o = (struct Object*)smlua_to_cobject(L, 3, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "interact_hit_from_below"); return 0; }
+
+    lua_pushinteger(L, interact_hit_from_below(m, interactType, o));
+
+    return 1;
+}
+
+int smlua_func_interact_hoot(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 3) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "interact_hoot", 3, top);
+        return 0;
+    }
+
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "interact_hoot"); return 0; }
+    u32 interactType = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "interact_hoot"); return 0; }
+    struct Object* o = (struct Object*)smlua_to_cobject(L, 3, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "interact_hoot"); return 0; }
+
+    lua_pushinteger(L, interact_hoot(m, interactType, o));
+
+    return 1;
+}
+
+int smlua_func_interact_igloo_barrier(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 3) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "interact_igloo_barrier", 3, top);
+        return 0;
+    }
+
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "interact_igloo_barrier"); return 0; }
+    u32 interactType = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "interact_igloo_barrier"); return 0; }
+    struct Object* o = (struct Object*)smlua_to_cobject(L, 3, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "interact_igloo_barrier"); return 0; }
+
+    lua_pushinteger(L, interact_igloo_barrier(m, interactType, o));
+
+    return 1;
+}
+
+int smlua_func_interact_koopa_shell(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 3) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "interact_koopa_shell", 3, top);
+        return 0;
+    }
+
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "interact_koopa_shell"); return 0; }
+    u32 interactType = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "interact_koopa_shell"); return 0; }
+    struct Object* o = (struct Object*)smlua_to_cobject(L, 3, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "interact_koopa_shell"); return 0; }
+
+    lua_pushinteger(L, interact_koopa_shell(m, interactType, o));
+
+    return 1;
+}
+
+int smlua_func_interact_mr_blizzard(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 3) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "interact_mr_blizzard", 3, top);
+        return 0;
+    }
+
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "interact_mr_blizzard"); return 0; }
+    u32 interactType = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "interact_mr_blizzard"); return 0; }
+    struct Object* o = (struct Object*)smlua_to_cobject(L, 3, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "interact_mr_blizzard"); return 0; }
+
+    lua_pushinteger(L, interact_mr_blizzard(m, interactType, o));
+
+    return 1;
+}
+
+int smlua_func_interact_player(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 3) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "interact_player", 3, top);
+        return 0;
+    }
+
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "interact_player"); return 0; }
+    u32 interactType = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "interact_player"); return 0; }
+    struct Object* o = (struct Object*)smlua_to_cobject(L, 3, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "interact_player"); return 0; }
+
+    lua_pushinteger(L, interact_player(m, interactType, o));
+
+    return 1;
+}
+
+int smlua_func_interact_pole(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 3) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "interact_pole", 3, top);
+        return 0;
+    }
+
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "interact_pole"); return 0; }
+    u32 interactType = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "interact_pole"); return 0; }
+    struct Object* o = (struct Object*)smlua_to_cobject(L, 3, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "interact_pole"); return 0; }
+
+    lua_pushinteger(L, interact_pole(m, interactType, o));
+
+    return 1;
+}
+
+int smlua_func_interact_shock(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 3) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "interact_shock", 3, top);
+        return 0;
+    }
+
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "interact_shock"); return 0; }
+    u32 interactType = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "interact_shock"); return 0; }
+    struct Object* o = (struct Object*)smlua_to_cobject(L, 3, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "interact_shock"); return 0; }
+
+    lua_pushinteger(L, interact_shock(m, interactType, o));
+
+    return 1;
+}
+
+int smlua_func_interact_snufit_bullet(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 3) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "interact_snufit_bullet", 3, top);
+        return 0;
+    }
+
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "interact_snufit_bullet"); return 0; }
+    u32 interactType = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "interact_snufit_bullet"); return 0; }
+    struct Object* o = (struct Object*)smlua_to_cobject(L, 3, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "interact_snufit_bullet"); return 0; }
+
+    lua_pushinteger(L, interact_snufit_bullet(m, interactType, o));
+
+    return 1;
+}
+
+int smlua_func_interact_spiny_walking(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 3) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "interact_spiny_walking", 3, top);
+        return 0;
+    }
+
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "interact_spiny_walking"); return 0; }
+    u32 interactType = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "interact_spiny_walking"); return 0; }
+    struct Object* o = (struct Object*)smlua_to_cobject(L, 3, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "interact_spiny_walking"); return 0; }
+
+    lua_pushinteger(L, interact_spiny_walking(m, interactType, o));
+
+    return 1;
+}
+
+int smlua_func_interact_star_or_key(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 3) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "interact_star_or_key", 3, top);
+        return 0;
+    }
+
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "interact_star_or_key"); return 0; }
+    u32 interactType = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "interact_star_or_key"); return 0; }
+    struct Object* o = (struct Object*)smlua_to_cobject(L, 3, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "interact_star_or_key"); return 0; }
+
+    lua_pushinteger(L, interact_star_or_key(m, interactType, o));
+
+    return 1;
+}
+
+int smlua_func_interact_strong_wind(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 3) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "interact_strong_wind", 3, top);
+        return 0;
+    }
+
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "interact_strong_wind"); return 0; }
+    u32 interactType = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "interact_strong_wind"); return 0; }
+    struct Object* o = (struct Object*)smlua_to_cobject(L, 3, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "interact_strong_wind"); return 0; }
+
+    lua_pushinteger(L, interact_strong_wind(m, interactType, o));
+
+    return 1;
+}
+
+int smlua_func_interact_text(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 3) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "interact_text", 3, top);
+        return 0;
+    }
+
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "interact_text"); return 0; }
+    u32 interactType = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "interact_text"); return 0; }
+    struct Object* o = (struct Object*)smlua_to_cobject(L, 3, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "interact_text"); return 0; }
+
+    lua_pushinteger(L, interact_text(m, interactType, o));
+
+    return 1;
+}
+
+int smlua_func_interact_tornado(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 3) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "interact_tornado", 3, top);
+        return 0;
+    }
+
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "interact_tornado"); return 0; }
+    u32 interactType = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "interact_tornado"); return 0; }
+    struct Object* o = (struct Object*)smlua_to_cobject(L, 3, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "interact_tornado"); return 0; }
+
+    lua_pushinteger(L, interact_tornado(m, interactType, o));
+
+    return 1;
+}
+
+int smlua_func_interact_warp(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 3) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "interact_warp", 3, top);
+        return 0;
+    }
+
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "interact_warp"); return 0; }
+    u32 interactType = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "interact_warp"); return 0; }
+    struct Object* o = (struct Object*)smlua_to_cobject(L, 3, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "interact_warp"); return 0; }
+
+    lua_pushinteger(L, interact_warp(m, interactType, o));
+
+    return 1;
+}
+
+int smlua_func_interact_warp_door(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 3) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "interact_warp_door", 3, top);
+        return 0;
+    }
+
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "interact_warp_door"); return 0; }
+    u32 interactType = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "interact_warp_door"); return 0; }
+    struct Object* o = (struct Object*)smlua_to_cobject(L, 3, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "interact_warp_door"); return 0; }
+
+    lua_pushinteger(L, interact_warp_door(m, interactType, o));
+
+    return 1;
+}
+
+int smlua_func_interact_water_ring(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 3) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "interact_water_ring", 3, top);
+        return 0;
+    }
+
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "interact_water_ring"); return 0; }
+    u32 interactType = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "interact_water_ring"); return 0; }
+    struct Object* o = (struct Object*)smlua_to_cobject(L, 3, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "interact_water_ring"); return 0; }
+
+    lua_pushinteger(L, interact_water_ring(m, interactType, o));
+
+    return 1;
+}
+
+int smlua_func_interact_whirlpool(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 3) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "interact_whirlpool", 3, top);
+        return 0;
+    }
+
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "interact_whirlpool"); return 0; }
+    u32 interactType = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "interact_whirlpool"); return 0; }
+    struct Object* o = (struct Object*)smlua_to_cobject(L, 3, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "interact_whirlpool"); return 0; }
+
+    lua_pushinteger(L, interact_whirlpool(m, interactType, o));
 
     return 1;
 }
@@ -32182,7 +32791,36 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "determine_interaction", smlua_func_determine_interaction);
     smlua_bind_function(L, "does_mario_have_normal_cap_on_head", smlua_func_does_mario_have_normal_cap_on_head);
     smlua_bind_function(L, "get_door_save_file_flag", smlua_func_get_door_save_file_flag);
+    smlua_bind_function(L, "interact_bbh_entrance", smlua_func_interact_bbh_entrance);
+    smlua_bind_function(L, "interact_bounce_top", smlua_func_interact_bounce_top);
+    smlua_bind_function(L, "interact_breakable", smlua_func_interact_breakable);
+    smlua_bind_function(L, "interact_bully", smlua_func_interact_bully);
+    smlua_bind_function(L, "interact_cannon_base", smlua_func_interact_cannon_base);
+    smlua_bind_function(L, "interact_cap", smlua_func_interact_cap);
+    smlua_bind_function(L, "interact_clam_or_bubba", smlua_func_interact_clam_or_bubba);
+    smlua_bind_function(L, "interact_coin", smlua_func_interact_coin);
     smlua_bind_function(L, "interact_damage", smlua_func_interact_damage);
+    smlua_bind_function(L, "interact_door", smlua_func_interact_door);
+    smlua_bind_function(L, "interact_flame", smlua_func_interact_flame);
+    smlua_bind_function(L, "interact_grabbable", smlua_func_interact_grabbable);
+    smlua_bind_function(L, "interact_hit_from_below", smlua_func_interact_hit_from_below);
+    smlua_bind_function(L, "interact_hoot", smlua_func_interact_hoot);
+    smlua_bind_function(L, "interact_igloo_barrier", smlua_func_interact_igloo_barrier);
+    smlua_bind_function(L, "interact_koopa_shell", smlua_func_interact_koopa_shell);
+    smlua_bind_function(L, "interact_mr_blizzard", smlua_func_interact_mr_blizzard);
+    smlua_bind_function(L, "interact_player", smlua_func_interact_player);
+    smlua_bind_function(L, "interact_pole", smlua_func_interact_pole);
+    smlua_bind_function(L, "interact_shock", smlua_func_interact_shock);
+    smlua_bind_function(L, "interact_snufit_bullet", smlua_func_interact_snufit_bullet);
+    smlua_bind_function(L, "interact_spiny_walking", smlua_func_interact_spiny_walking);
+    smlua_bind_function(L, "interact_star_or_key", smlua_func_interact_star_or_key);
+    smlua_bind_function(L, "interact_strong_wind", smlua_func_interact_strong_wind);
+    smlua_bind_function(L, "interact_text", smlua_func_interact_text);
+    smlua_bind_function(L, "interact_tornado", smlua_func_interact_tornado);
+    smlua_bind_function(L, "interact_warp", smlua_func_interact_warp);
+    smlua_bind_function(L, "interact_warp_door", smlua_func_interact_warp_door);
+    smlua_bind_function(L, "interact_water_ring", smlua_func_interact_water_ring);
+    smlua_bind_function(L, "interact_whirlpool", smlua_func_interact_whirlpool);
     smlua_bind_function(L, "mario_blow_off_cap", smlua_func_mario_blow_off_cap);
     smlua_bind_function(L, "mario_check_object_grab", smlua_func_mario_check_object_grab);
     smlua_bind_function(L, "mario_drop_held_object", smlua_func_mario_drop_held_object);

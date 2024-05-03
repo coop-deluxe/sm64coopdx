@@ -2,26 +2,26 @@
 /* SHOULD NOT BE MANUALLY CHANGED */
 #include "smlua.h"
 #include "include/types.h"
-#include "game/area.h"
-#include "game/camera.h"
-#include "game/characters.h"
-#include "engine/surface_collision.h"
-#include "pc/network/network_player.h"
-#include "pc/djui/djui_hud_utils.h"
-#include "game/object_helpers.h"
-#include "game/mario_step.h"
-#include "pc/lua/utils/smlua_anim_utils.h"
-#include "pc/lua/utils/smlua_misc_utils.h"
-#include "pc/lua/utils/smlua_collision_utils.h"
-#include "pc/lua/utils/smlua_level_utils.h"
-#include "game/spawn_sound.h"
-#include "pc/network/network.h"
-#include "game/hardcoded.h"
-#include "pc/mods/mod.h"
-#include "pc/lua/utils/smlua_audio_utils.h"
-#include "game/paintings.h"
-#include "pc/djui/djui_types.h"
-#include "game/first_person_cam.h"
+#include "src/game/area.h"
+#include "src/game/camera.h"
+#include "src/game/characters.h"
+#include "src/engine/surface_collision.h"
+#include "src/pc/network/network_player.h"
+#include "src/pc/djui/djui_hud_utils.h"
+#include "src/game/object_helpers.h"
+#include "src/game/mario_step.h"
+#include "src/pc/lua/utils/smlua_anim_utils.h"
+#include "src/pc/lua/utils/smlua_misc_utils.h"
+#include "src/pc/lua/utils/smlua_collision_utils.h"
+#include "src/pc/lua/utils/smlua_level_utils.h"
+#include "src/game/spawn_sound.h"
+#include "src/pc/network/network.h"
+#include "src/game/hardcoded.h"
+#include "src/pc/mods/mod.h"
+#include "src/pc/lua/utils/smlua_audio_utils.h"
+#include "src/game/paintings.h"
+#include "src/pc/djui/djui_types.h"
+#include "src/game/first_person_cam.h"
 
 #include "include/object_fields.h"
 
@@ -2194,7 +2194,7 @@ static struct LuaObjectField sRayIntersectionInfoFields[LUA_RAY_INTERSECTION_INF
     { "surface", LVT_COBJECT_P, offsetof(struct RayIntersectionInfo, surface), false, LOT_SURFACE },
 };
 
-#define LUA_SERVER_SETTINGS_FIELD_COUNT 12
+#define LUA_SERVER_SETTINGS_FIELD_COUNT 13
 static struct LuaObjectField sServerSettingsFields[LUA_SERVER_SETTINGS_FIELD_COUNT] = {
     { "bouncyLevelBounds",           LVT_S32, offsetof(struct ServerSettings, bouncyLevelBounds),           false, LOT_NONE },
     { "bubbleDeath",                 LVT_U8,  offsetof(struct ServerSettings, bubbleDeath),                 false, LOT_NONE },
@@ -2204,6 +2204,7 @@ static struct LuaObjectField sServerSettingsFields[LUA_SERVER_SETTINGS_FIELD_COU
     { "headlessServer",              LVT_U8,  offsetof(struct ServerSettings, headlessServer),              false, LOT_NONE },
     { "maxPlayers",                  LVT_U8,  offsetof(struct ServerSettings, maxPlayers),                  false, LOT_NONE },
     { "nametags",                    LVT_U8,  offsetof(struct ServerSettings, nametags),                    false, LOT_NONE },
+    { "pauseAnywhere",               LVT_U8,  offsetof(struct ServerSettings, pauseAnywhere),               false, LOT_NONE },
     { "playerInteractions",          LVT_S32, offsetof(struct ServerSettings, playerInteractions),          false, LOT_NONE },
     { "playerKnockbackStrength",     LVT_U8,  offsetof(struct ServerSettings, playerKnockbackStrength),     false, LOT_NONE },
     { "skipIntro",                   LVT_U8,  offsetof(struct ServerSettings, skipIntro),                   false, LOT_NONE },

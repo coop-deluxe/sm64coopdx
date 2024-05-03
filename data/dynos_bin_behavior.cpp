@@ -107,6 +107,7 @@ s64 DynOS_Bhv_ParseBehaviorIntegerScriptConstants(const String &_Arg, bool *foun
     bhv_constant(INTERACT_POLE);
     bhv_constant(INTERACT_KOOPA);
     bhv_constant(INTERACT_UNKNOWN_08);
+    bhv_constant(INTERACT_SPINY_WALKING);
     bhv_constant(INTERACT_BREAKABLE);
     bhv_constant(INTERACT_STRONG_WIND);
     bhv_constant(INTERACT_WARP_DOOR);
@@ -2494,7 +2495,7 @@ static DataNode<BehaviorScript> *DynOS_Bhv_Load(BinFile *aFile, GfxData *aGfxDat
         // We have nothing to return, So return NULL.
         return NULL;
     }
-    
+
     // Allocate our node.
     DataNode<BehaviorScript> *_Node = New<DataNode<BehaviorScript>>();
 
@@ -2518,7 +2519,7 @@ static DataNode<BehaviorScript> *DynOS_Bhv_Load(BinFile *aFile, GfxData *aGfxDat
         // We have nothing to return, So return NULL.
         return NULL;
     }
-    
+
     // If we have nothing in the .bhv file, It compiled incorrectly or is maliciously crafted.
     // We also check if the specified behavior size is valid for the file.
     u32 dataSize = aFile->Read<u32>();
@@ -2548,7 +2549,7 @@ static DataNode<BehaviorScript> *DynOS_Bhv_Load(BinFile *aFile, GfxData *aGfxDat
             _Node->mData[i] = (uintptr_t) _Value;
         }
     }
-    
+
     // Add it
     if (aGfxData != NULL) {
         aGfxData->mBehaviorScripts.Add(_Node);

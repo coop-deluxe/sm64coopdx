@@ -2518,6 +2518,7 @@
 | headlessServer | `integer` |  |
 | maxPlayers | `integer` |  |
 | nametags | `integer` |  |
+| pauseAnywhere | `integer` |  |
 | playerInteractions | [enum PlayerInteractions](constants.md#enum-PlayerInteractions) |  |
 | playerKnockbackStrength | `integer` |  |
 | skipIntro | `integer` |  |

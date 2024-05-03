@@ -2006,6 +2006,7 @@
 --- @field public headlessServer integer
 --- @field public maxPlayers integer
 --- @field public nametags integer
+--- @field public pauseAnywhere integer
 --- @field public playerInteractions PlayerInteractions
 --- @field public playerKnockbackStrength integer
 --- @field public skipIntro integer
