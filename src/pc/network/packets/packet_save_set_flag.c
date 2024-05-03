@@ -29,12 +29,12 @@ void network_receive_save_set_flag(struct Packet* p) {
     packet_read(p, &flags,       sizeof(u32));
     packet_read(p, &backupSlot,  sizeof(u8));
 
-    if (fileIndex >= NUM_SAVE_FILES) {
+    if (fileIndex < 0 || fileIndex >= NUM_SAVE_FILES) {
         LOG_ERROR("Invalid fileIndex: %d", fileIndex);
         return;
     }
 
-    if (courseIndex >= COURSE_COUNT) {
+    if (courseIndex < 0 || courseIndex >= COURSE_COUNT) {
         LOG_ERROR("Invalid courseIndex: %d", courseIndex);
         return;
     }
