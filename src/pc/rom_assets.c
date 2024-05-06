@@ -86,7 +86,6 @@ static bool rom_asset_load_segment(u32 physicalAddress, u32 physicalSize) {
 // so they can be shaded by Lua and not stand out as being unlit
 static inline bool rom_asset_override_vertex_colors(void* ptr) {
     extern Vtx hoot_seg5_vertex_05002E50[];
-    extern Vtx hoot_seg5_vertex_05002E50[];
     extern Vtx hoot_seg5_vertex_05002F78[];
     extern Vtx hoot_seg5_vertex_050030A0[];
     extern Vtx hoot_seg5_vertex_050031C8[];
@@ -102,7 +101,6 @@ static inline bool rom_asset_override_vertex_colors(void* ptr) {
     extern Vtx lll_seg7_vertex_07013830[];
     extern Vtx ttc_seg7_vertex_0700B238[];
     return ptr == hoot_seg5_vertex_05002E50 ||
-           ptr == hoot_seg5_vertex_05002E50 ||
            ptr == hoot_seg5_vertex_05002F78 ||
            ptr == hoot_seg5_vertex_050030A0 ||
            ptr == hoot_seg5_vertex_050031C8 ||

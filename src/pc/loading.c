@@ -31,7 +31,7 @@ void loading_screen_set_segment_text(const char *text) {
 }
 
 static void loading_screen_produce_frame_callback(void) {
-    if (sLoading && !gCLIOpts.hideLoadingScreen) { djui_base_render(&sLoading->base); }
+    if (sLoading) { djui_base_render(&sLoading->base); }
 }
 
 static void loading_screen_produce_one_frame(void) {

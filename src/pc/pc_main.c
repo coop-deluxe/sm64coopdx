@@ -93,6 +93,10 @@ bool gGfxInited = false;
 static struct AudioAPI *audio_api;
 struct GfxWindowManagerAPI *wm_api = &WAPI;
 
+#if !defined(WAPI_DXGI) && !defined(WAPI_DUMMY)
+#define LOADING_SCREEN_SUPPORTED
+#endif
+
 extern void gfx_run(Gfx *commands);
 extern void thread5_game_loop(void *arg);
 extern void create_next_audio_buffer(s16 *samples, u32 num_samples);
@@ -381,18 +385,21 @@ int main(int argc, char *argv[]) {
 
     // Render the rom setup screen
     if (!main_rom_handler()) {
-#if !defined(WAPI_DXGI) && !defined(WAPI_DUMMY)
-        render_rom_setup_screen(); // Holds the game load until a valid rom is provided
-#else
-        printf("ERROR: could not find valid vanilla us sm64 rom in game's user folder\n");
-        return 0;
+#ifdef LOADING_SCREEN_SUPPORTED
+        if (!gCLIOpts.hideLoadingScreen) {
+            render_rom_setup_screen(); // Holds the game load until a valid rom is provided
+        } else
 #endif
+        {
+            printf("ERROR: could not find valid vanilla us sm64 rom in game's user folder\n");
+            return 0;
+        }
     }
 
     // Start the thread for setting up the game
-#if !defined(WAPI_DXGI) && !defined(WAPI_DUMMY)
+#ifdef LOADING_SCREEN_SUPPORTED
     bool threadSuccess = false;
-    if (pthread_mutex_init(&gLoadingThreadMutex, NULL) == 0) {
+    if (!gCLIOpts.hideLoadingScreen && pthread_mutex_init(&gLoadingThreadMutex, NULL) == 0) {
         if (pthread_create(&gLoadingThreadId, NULL, main_game_init, (void*) 1) == 0) {
             render_loading_screen(); // Render the loading screen while the game is setup
             threadSuccess = true;
