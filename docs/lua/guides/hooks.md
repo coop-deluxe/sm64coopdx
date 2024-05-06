@@ -121,7 +121,7 @@ The lua functions sent to `hook_event()` will be automatically called by SM64 wh
 | HOOK_BEFORE_SET_MARIO_ACTION | Called before Mario's action changes Return an action to change the incoming action or `1` to cancel the action change | [MarioState](../structs.md#MarioState) mario, `integer` incomingAction |
 | HOOK_JOINED_GAME | Called when the local player finishes the join process (if the player isn't the host) | None |
 | HOOK_ON_OBJECT_ANIM_UPDATE | Called when an object's animation is updated | [Object](../structs.md#Object) objNode |
-| HOOK_ON_DIALOG | Called when a dialog appears. Return `false` to prevent it from appearing | `integer` dialogId |
+| HOOK_ON_DIALOG | Called when a dialog appears. Return `false` to prevent it from appearing. Return a second parameter as any string to override the text in the textbox | `integer` dialogId |
 | HOOK_ON_EXIT | Called before the game shuts down | None |
 | HOOK_DIALOG_SOUND | Called when a dialog box sound is going to play, return a `DS_*` constant to override the sound | `integer` dialogSound |
 | HOOK_ON_COLLIDE_LEVEL_BOUNDS | Called when a mario collides with the level boundaries | [MarioState](../structs.md#MarioState) mario |

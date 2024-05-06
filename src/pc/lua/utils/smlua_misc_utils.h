@@ -163,4 +163,6 @@ void reset_window_title(void);
 
 const char* get_os_name(void);
 
+s32 get_dialog_response();
+
 #endif

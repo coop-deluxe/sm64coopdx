@@ -654,3 +654,9 @@ const char* get_os_name(void) {
     return "Unknown";
 #endif
 }
+
+///
+
+s32 get_dialog_response() {
+    return gDialogResponse;
+}

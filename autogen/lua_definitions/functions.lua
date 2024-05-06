@@ -4022,6 +4022,31 @@ function set_first_person_enabled(enable)
     -- ...
 end
 
+--- @param dialog integer
+--- @return nil
+function create_dialog_box(dialog)
+    -- ...
+end
+
+--- @param dialog integer
+--- @return nil
+function create_dialog_box_with_response(dialog)
+    -- ...
+end
+
+--- @param dialog integer
+--- @param dialogVar integer
+--- @return nil
+function create_dialog_box_with_var(dialog, dialogVar)
+    -- ...
+end
+
+--- @param dialog integer
+--- @return nil
+function create_dialog_inverted_box(dialog)
+    -- ...
+end
+
 --- @return nil
 function reset_dialog_override_color()
     -- ...
@@ -4029,6 +4054,11 @@ end
 
 --- @return nil
 function reset_dialog_override_pos()
+    -- ...
+end
+
+--- @return nil
+function reset_dialog_render_state()
     -- ...
 end
 
@@ -4049,6 +4079,12 @@ end
 --- @param y integer
 --- @return nil
 function set_dialog_override_pos(x, y)
+    -- ...
+end
+
+--- @param mode integer
+--- @return nil
+function set_menu_mode(mode)
     -- ...
 end
 
@@ -8940,6 +8976,11 @@ end
 
 --- @return integer
 function get_dialog_id()
+    -- ...
+end
+
+--- @return integer
+function get_dialog_response()
     -- ...
 end
 

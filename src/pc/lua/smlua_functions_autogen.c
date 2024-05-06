@@ -13252,6 +13252,76 @@ int smlua_func_set_first_person_enabled(lua_State* L) {
  // ingame_menu.h //
 ///////////////////
 
+int smlua_func_create_dialog_box(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "create_dialog_box", 1, top);
+        return 0;
+    }
+
+    s16 dialog = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "create_dialog_box"); return 0; }
+
+    create_dialog_box(dialog);
+
+    return 1;
+}
+
+int smlua_func_create_dialog_box_with_response(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "create_dialog_box_with_response", 1, top);
+        return 0;
+    }
+
+    s16 dialog = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "create_dialog_box_with_response"); return 0; }
+
+    create_dialog_box_with_response(dialog);
+
+    return 1;
+}
+
+int smlua_func_create_dialog_box_with_var(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "create_dialog_box_with_var", 2, top);
+        return 0;
+    }
+
+    s16 dialog = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "create_dialog_box_with_var"); return 0; }
+    s32 dialogVar = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "create_dialog_box_with_var"); return 0; }
+
+    create_dialog_box_with_var(dialog, dialogVar);
+
+    return 1;
+}
+
+int smlua_func_create_dialog_inverted_box(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "create_dialog_inverted_box", 1, top);
+        return 0;
+    }
+
+    s16 dialog = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "create_dialog_inverted_box"); return 0; }
+
+    create_dialog_inverted_box(dialog);
+
+    return 1;
+}
+
 int smlua_func_reset_dialog_override_color(UNUSED lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -13278,6 +13348,21 @@ int smlua_func_reset_dialog_override_pos(UNUSED lua_State* L) {
 
 
     reset_dialog_override_pos();
+
+    return 1;
+}
+
+int smlua_func_reset_dialog_render_state(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "reset_dialog_render_state", 0, top);
+        return 0;
+    }
+
+
+    reset_dialog_render_state();
 
     return 1;
 }
@@ -13328,6 +13413,23 @@ int smlua_func_set_dialog_override_pos(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "set_dialog_override_pos"); return 0; }
 
     set_dialog_override_pos(x, y);
+
+    return 1;
+}
+
+int smlua_func_set_menu_mode(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "set_menu_mode", 1, top);
+        return 0;
+    }
+
+    s16 mode = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "set_menu_mode"); return 0; }
+
+    set_menu_mode(mode);
 
     return 1;
 }
@@ -29402,6 +29504,21 @@ int smlua_func_get_dialog_id(UNUSED lua_State* L) {
     return 1;
 }
 
+int smlua_func_get_dialog_response(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "get_dialog_response", 0, top);
+        return 0;
+    }
+
+
+    lua_pushinteger(L, get_dialog_response());
+
+    return 1;
+}
+
 int smlua_func_get_envfx(UNUSED lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -32781,10 +32898,16 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "set_first_person_enabled", smlua_func_set_first_person_enabled);
 
     // ingame_menu.h
+    smlua_bind_function(L, "create_dialog_box", smlua_func_create_dialog_box);
+    smlua_bind_function(L, "create_dialog_box_with_response", smlua_func_create_dialog_box_with_response);
+    smlua_bind_function(L, "create_dialog_box_with_var", smlua_func_create_dialog_box_with_var);
+    smlua_bind_function(L, "create_dialog_inverted_box", smlua_func_create_dialog_inverted_box);
     smlua_bind_function(L, "reset_dialog_override_color", smlua_func_reset_dialog_override_color);
     smlua_bind_function(L, "reset_dialog_override_pos", smlua_func_reset_dialog_override_pos);
+    smlua_bind_function(L, "reset_dialog_render_state", smlua_func_reset_dialog_render_state);
     smlua_bind_function(L, "set_dialog_override_color", smlua_func_set_dialog_override_color);
     smlua_bind_function(L, "set_dialog_override_pos", smlua_func_set_dialog_override_pos);
+    smlua_bind_function(L, "set_menu_mode", smlua_func_set_menu_mode);
     smlua_bind_function(L, "set_min_dialog_width", smlua_func_set_min_dialog_width);
 
     // interaction.h
@@ -33589,6 +33712,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "get_date_and_time", smlua_func_get_date_and_time);
     smlua_bind_function(L, "get_dialog_box_state", smlua_func_get_dialog_box_state);
     smlua_bind_function(L, "get_dialog_id", smlua_func_get_dialog_id);
+    smlua_bind_function(L, "get_dialog_response", smlua_func_get_dialog_response);
     smlua_bind_function(L, "get_envfx", smlua_func_get_envfx);
     smlua_bind_function(L, "get_environment_region", smlua_func_get_environment_region);
     smlua_bind_function(L, "get_fog_color", smlua_func_get_fog_color);

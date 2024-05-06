@@ -1156,9 +1156,14 @@ void handle_special_dialog_text(s16 dialogID) { // dialog ID tables, in order
     }
 }
 
+static u8 sHookString[255];
+static bool sOverrideDialogString = false;
+void convert_string_ascii_to_sm64(u8 *str64, const char *strAscii, bool menu);
 void handle_dialog_hook(s16 dialogId) {
     bool open = false;
-    smlua_call_event_hooks_int_params_ret_bool(HOOK_ON_DIALOG, dialogId, &open);
+    const char *str = smlua_call_event_hooks_int_ret_bool_and_string(HOOK_ON_DIALOG, dialogId, &open);
+    sOverrideDialogString = str != NULL;
+    if (sOverrideDialogString) { convert_string_ascii_to_sm64(sHookString, str, false); }
     if (!open) {
         gDialogLineNum = 1;
         gDialogBoxState = DIALOG_STATE_CLOSING;
@@ -1521,7 +1526,7 @@ void handle_dialog_text_and_pages(s8 colorMode, struct DialogEntry *dialog, s8 l
 
     u8 strChar;
 
-    u8 *str = segmented_to_virtual(dialog->str);
+    u8 *str = sOverrideDialogString ? sHookString : segmented_to_virtual(dialog->str);
     s8 lineNum = 1;
 
     s8 totalLines;
@@ -2297,7 +2302,7 @@ void print_peach_letter_message(void) {
 #endif
     dialog = segmented_to_virtual(dialogTable[gDialogID]);
 
-    str = segmented_to_virtual(dialog->str);
+    str = sOverrideDialogString ? sHookString : segmented_to_virtual(dialog->str);
 
     create_dl_translation_matrix(MENU_MTX_PUSH, 97.0f, 118.0f, 0);
 
@@ -3580,4 +3585,9 @@ void set_dialog_override_color(u8 bgR, u8 bgG, u8 bgB, u8 bgA, u8 textR, u8 text
 
 void reset_dialog_override_color(void) {
     gOverrideDialogColor = 0;
+}
+
+void close_dialog_box(u8 state) {
+    if (state > DIALOG_STATE_CLOSING) { return; }
+    gDialogBoxState = state;
 }

@@ -1340,6 +1340,24 @@
 
 <br />
 
+## [get_dialog_response](#get_dialog_response)
+
+### Lua Example
+`local integerValue = get_dialog_response()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 get_dialog_response();`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [get_envfx](#get_envfx)
 
 ### Lua Example

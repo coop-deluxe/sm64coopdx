@@ -3348,6 +3348,87 @@
 <br />
 
 
+## [create_dialog_box](#create_dialog_box)
+
+### Lua Example
+`create_dialog_box(dialog)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dialog | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void create_dialog_box(s16 dialog);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [create_dialog_box_with_response](#create_dialog_box_with_response)
+
+### Lua Example
+`create_dialog_box_with_response(dialog)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dialog | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void create_dialog_box_with_response(s16 dialog);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [create_dialog_box_with_var](#create_dialog_box_with_var)
+
+### Lua Example
+`create_dialog_box_with_var(dialog, dialogVar)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dialog | `integer` |
+| dialogVar | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void create_dialog_box_with_var(s16 dialog, s32 dialogVar);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [create_dialog_inverted_box](#create_dialog_inverted_box)
+
+### Lua Example
+`create_dialog_inverted_box(dialog)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dialog | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void create_dialog_inverted_box(s16 dialog);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [reset_dialog_override_color](#reset_dialog_override_color)
 
 ### Lua Example
@@ -3379,6 +3460,24 @@
 
 ### C Prototype
 `void reset_dialog_override_pos();`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [reset_dialog_render_state](#reset_dialog_render_state)
+
+### Lua Example
+`reset_dialog_render_state()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void reset_dialog_render_state(void);`
 
 [:arrow_up_small:](#)
 
@@ -3427,6 +3526,26 @@
 
 ### C Prototype
 `void set_dialog_override_pos(s16 x, s16 y);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_menu_mode](#set_menu_mode)
+
+### Lua Example
+`set_menu_mode(mode)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| mode | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_menu_mode(s16 mode);`
 
 [:arrow_up_small:](#)
 

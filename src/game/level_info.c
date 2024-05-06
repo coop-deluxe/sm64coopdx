@@ -102,7 +102,7 @@ static char *sm64_to_ascii_char(char *strAscii, const u8 *str64) {
     return strAscii + 1;
 }
 
-static void convert_string_ascii_to_sm64(u8 *str64, const char *strAscii, bool menu) {
+void convert_string_ascii_to_sm64(u8 *str64, const char *strAscii, bool menu) {
     for (; *strAscii != 0; str64++) {
         strAscii = ascii_to_sm64_char(str64, strAscii, menu);
     }

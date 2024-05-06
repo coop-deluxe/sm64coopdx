@@ -808,10 +808,16 @@
 <br />
 
 - ingame_menu.h
+   - [create_dialog_box](functions-3.md#create_dialog_box)
+   - [create_dialog_box_with_response](functions-3.md#create_dialog_box_with_response)
+   - [create_dialog_box_with_var](functions-3.md#create_dialog_box_with_var)
+   - [create_dialog_inverted_box](functions-3.md#create_dialog_inverted_box)
    - [reset_dialog_override_color](functions-3.md#reset_dialog_override_color)
    - [reset_dialog_override_pos](functions-3.md#reset_dialog_override_pos)
+   - [reset_dialog_render_state](functions-3.md#reset_dialog_render_state)
    - [set_dialog_override_color](functions-3.md#set_dialog_override_color)
    - [set_dialog_override_pos](functions-3.md#set_dialog_override_pos)
+   - [set_menu_mode](functions-3.md#set_menu_mode)
    - [set_min_dialog_width](functions-3.md#set_min_dialog_width)
 
 <br />
@@ -1661,6 +1667,7 @@
    - [get_date_and_time](functions-5.md#get_date_and_time)
    - [get_dialog_box_state](functions-5.md#get_dialog_box_state)
    - [get_dialog_id](functions-5.md#get_dialog_id)
+   - [get_dialog_response](functions-5.md#get_dialog_response)
    - [get_envfx](functions-5.md#get_envfx)
    - [get_environment_region](functions-5.md#get_environment_region)
    - [get_fog_color](functions-5.md#get_fog_color)

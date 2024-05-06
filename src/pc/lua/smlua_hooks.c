@@ -1052,6 +1052,42 @@ void smlua_call_event_hooks_graph_node_object_and_int_param(enum LuaHookedEventT
     }
 }
 
+const char *smlua_call_event_hooks_int_ret_bool_and_string(enum LuaHookedEventType hookType, s32 param, bool* returnValue) {
+    lua_State* L = gLuaState;
+    if (L == NULL) { return NULL; }
+    *returnValue = true;
+    const char *retString = NULL;
+
+    struct LuaHookedEvent* hook = &sHookedEvents[hookType];
+    for (int i = 0; i < hook->count; i++) {
+        s32 prevTop = lua_gettop(L);
+
+        // push the callback onto the stack
+        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
+
+        // push param
+        lua_pushinteger(L, param);
+
+        // call the callback
+        if (0 != smlua_call_hook(L, 1, 2, 0, hook->mod[i])) {
+            LOG_LUA("Failed to call the callback: %u", hookType);
+            continue;
+        }
+
+        // output the return values
+        if (lua_type(L, -2) == LUA_TBOOLEAN) {
+            *returnValue = smlua_to_boolean(L, -2);
+        }
+        if (lua_type(L, -1) == LUA_TSTRING) {
+            retString = smlua_to_string(L, -1);
+            lua_settop(L, prevTop);
+            return retString;
+        }
+        lua_settop(L, prevTop);
+    }
+    return NULL;
+}
+
   ////////////////////
  // hooked actions //
 ////////////////////
