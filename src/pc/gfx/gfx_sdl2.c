@@ -170,7 +170,7 @@ static void gfx_sdl_get_dimensions(uint32_t *width, uint32_t *height) {
 static void gfx_sdl_onkeydown(int scancode) {
     const Uint8 *state = SDL_GetKeyboardState(NULL);
 
-    if (state[SDL_SCANCODE_LALT] && state[SDL_SCANCODE_RETURN]) {
+    if ((state[SDL_SCANCODE_LALT] || state[SDL_SCANCODE_RALT]) && state[SDL_SCANCODE_RETURN]) {
         configWindow.fullscreen = !configWindow.fullscreen;
         configWindow.settings_changed = true;
         return;
