@@ -508,7 +508,7 @@ int smlua_func_texture_override_set(lua_State* L) {
 
         tmpOverrideTexInfo.height  = smlua_get_integer_field(top+1, "height");
         if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 2's 'height' field"); return 0; }
-        
+
         tmpOverrideTexInfo.name  = smlua_get_string_field(top+1, "name");
         if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 2's 'name' field"); return 0; }
 
@@ -741,7 +741,7 @@ static u16 *smlua_to_u16_list(lua_State* L, int index, u32* length) {
             free(values);
             return 0;
         }
-            
+
         u16 value = smlua_to_integer(L, indexValue);
         if (!gSmLuaConvertSuccess) {
             LOG_LUA("smlua_to_u16_list: Failed to convert table value");
@@ -813,6 +813,37 @@ int smlua_func_log_to_console(lua_State* L) {
     return 1;
 }
 
+  ////////////////////
+ // scroll targets //
+////////////////////
+
+int smlua_func_add_scroll_target(lua_State* L) {
+
+    // add_scroll_target used to require offset and size of the vertex buffer to be used
+    if (!smlua_functions_valid_param_range(L, 2, 4)) { return 0; }
+    int paramCount = lua_gettop(L);
+
+    u32 index = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "add_scroll_target"); return 0; }
+    const char* name = smlua_to_string(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "add_scroll_target"); return 0; }
+
+    // If the offset and size parameters are provided, use them, although they aren't required.
+    u32 offset = 0;
+    u32 size = 0;
+    switch (paramCount) {
+        case 4:
+            size = smlua_to_integer(L, 4);
+        case 3:
+            offset = smlua_to_integer(L, 3);
+            break;
+    }
+
+    dynos_add_scroll_target(index, name, offset, size);
+
+    return 1;
+}
+
   //////////
  // bind //
 //////////
@@ -841,4 +872,5 @@ void smlua_bind_functions(void) {
     smlua_bind_function(L, "level_script_parse", smlua_func_level_script_parse);
     smlua_bind_function(L, "smlua_anim_util_register_animation", smlua_func_smlua_anim_util_register_animation);
     smlua_bind_function(L, "log_to_console", smlua_func_log_to_console);
+    smlua_bind_function(L, "add_scroll_target", smlua_func_add_scroll_target);
 }

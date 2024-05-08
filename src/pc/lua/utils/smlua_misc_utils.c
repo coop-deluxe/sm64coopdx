@@ -507,12 +507,6 @@ void set_override_far(f32 far) {
 
 ///
 
-void add_scroll_target(u32 index, const char* name, u32 offset, u32 size) {
-    dynos_add_scroll_target(index, name, offset, size);
-}
-
-///
-
 f32 get_lighting_dir(u8 index) {
     if (index > 2) { return 0; }
     return gLightingDir[index];

@@ -1627,7 +1627,6 @@
 <br />
 
 - smlua_misc_utils.h
-   - [add_scroll_target](functions-5.md#add_scroll_target)
    - [allocate_mario_action](functions-5.md#allocate_mario_action)
    - [camera_allow_toxic_gas_camera](functions-5.md#camera_allow_toxic_gas_camera)
    - [camera_config_enable_analog_cam](functions-5.md#camera_config_enable_analog_cam)

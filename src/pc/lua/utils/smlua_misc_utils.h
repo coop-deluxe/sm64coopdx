@@ -124,8 +124,6 @@ void set_override_fov(f32 fov);
 void set_override_near(f32 near);
 void set_override_far(f32 far);
 
-void add_scroll_target(u32 index, const char* name, u32 offset, u32 size);
-
 f32 get_lighting_dir(u8 index);
 void set_lighting_dir(u8 index, f32 value);
 

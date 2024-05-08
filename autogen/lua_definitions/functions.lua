@@ -8755,15 +8755,6 @@ function sqrf(x)
     -- ...
 end
 
---- @param index integer
---- @param name string
---- @param offset integer
---- @param size integer
---- @return nil
-function add_scroll_target(index, name, offset, size)
-    -- ...
-end
-
 --- @param actFlags integer
 --- @return integer
 function allocate_mario_action(actFlags)

@@ -1,18 +1,5 @@
 #include "scroll_targets.h"
 
-/*
- * A scroll target is basically just a bunch of Vtx to
- * apply a movement to. Each scroll targets have an id.
- * The id is what the behavior is using to know which
- * vertices to move.
- */
-struct ScrollTarget {
-    u32 id;
-    u32 size;
-    Vtx* *vertices;
-    struct ScrollTarget *next;
-};
-
 static struct ScrollTarget *sScrollTargets = NULL;
 
 /*
@@ -20,7 +7,7 @@ static struct ScrollTarget *sScrollTargets = NULL;
  * and returns the vertices.
  * Returns NULL if not found.
  */
-Vtx* *get_scroll_targets(u32 id) {
+struct ScrollTarget *get_scroll_targets(u32 id, u16 size, u16 offset) {
     struct ScrollTarget *scroll = sScrollTargets;
 
     while (scroll) {
@@ -31,7 +18,22 @@ Vtx* *get_scroll_targets(u32 id) {
     }
 
     if (scroll) {
-        return scroll->vertices;
+
+        // If we need to, realloc the block of vertices
+        if ((!scroll->hasOffset && offset > 0) || size < scroll->size) {
+            if (size > scroll->size) { size = scroll->size; } // Don't use an invalid size
+            scroll->hasOffset = true;
+            Vtx* *newVtx = calloc(size, sizeof(Vtx*));
+            if (!newVtx) { return NULL; }
+            for (u32 i = 0; i < size; i++) {
+                newVtx[i] = scroll->vertices[i + offset];
+            }
+            free(scroll->vertices);
+            scroll->vertices = newVtx;
+            scroll->size = size;
+        }
+
+        return scroll;
     }
     return NULL;
 }
@@ -44,7 +46,7 @@ Vtx* *get_scroll_targets(u32 id) {
  * Also sets up the static sScrollTargets variable if there
  * isn't any scroll targets.
  */
-struct ScrollTarget* find_or_create_scroll_targets(u32 id) {
+struct ScrollTarget* find_or_create_scroll_targets(u32 id, bool hasOffset) {
     struct ScrollTarget *scroll = sScrollTargets;
     struct ScrollTarget *lastScroll = NULL;
 
@@ -63,6 +65,7 @@ struct ScrollTarget* find_or_create_scroll_targets(u32 id) {
         scroll->size = 0;
         scroll->vertices = NULL;
         scroll->next = NULL;
+        scroll->hasOffset = hasOffset;
         if (lastScroll) {
             lastScroll->next = scroll;
         } else {
@@ -79,14 +82,13 @@ struct ScrollTarget* find_or_create_scroll_targets(u32 id) {
  * Mods have to use the lua binding of this function to
  * make the scrolling textures work.
  */
-void add_vtx_scroll_target(u32 id, Vtx *vtx, u32 size) {
-    struct ScrollTarget *scroll = find_or_create_scroll_targets(id);
+void add_vtx_scroll_target(u32 id, Vtx *vtx, u32 size, bool hasOffset) {
+    struct ScrollTarget *scroll = find_or_create_scroll_targets(id, hasOffset);
     if (!scroll) { return; }
-    Vtx* *newArray;
-    u32 oldSize = sizeof(void*) * scroll->size;
-    u32 newSize = oldSize + (sizeof(void*) * size);
+    u32 oldSize = sizeof(Vtx*) * scroll->size;
+    u32 newSize = oldSize + (sizeof(Vtx*) * size);
 
-    newArray = realloc(scroll->vertices, newSize);
+    Vtx* *newArray = realloc(scroll->vertices, newSize);
 
     if (!newArray) {
         newArray = malloc(newSize);

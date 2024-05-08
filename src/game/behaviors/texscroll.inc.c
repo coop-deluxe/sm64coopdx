@@ -11,39 +11,8 @@
 #include "pc/pc_main.h"
 #include "pc/utils/misc.h"
 
-/* SCROLLING BHVS */
-#define SCROLL_X 0
-#define SCROLL_Y 1
-#define SCROLL_Z 2
-#define SCROLL_UV_X 4
-#define SCROLL_UV_Y 5
-
-/* SCROLLING TYPES */
-#define MODE_SCROLL_UV 0
-#define MODE_SCROLL_SINE 1
-#define MODE_SCROLL_JUMP 2
-
-// typedef struct {
-    // float		  ob[3];	/* x, y, z */
-    // unsigned short flag;
-    // short		  tc[2];	/* texture coord */
-    // signed char	  n[3];	/* normal */
-    // unsigned char  a;      /* alpha  */
-// } Vtx_tn;
-
-// typedef union {
-    // Vtx_t		  v;  /* Use this one for colors  */
-    // Vtx_tn         n;  /* Use this one for normals */
-    // long long int  force_structure_alignment;
-// } Vtx;
-
-static void shift_UV_JUMP(s32 vtxIndex, u16 vertcount, s16 speed, u16 bhv, u16 cycle) {
-    Vtx* *verts = get_scroll_targets(vtxIndex);
+static inline void shift_UV_JUMP(Vtx* *verts, u16 vertcount, s16 speed, u16 bhv, u16 cycle) {
     u16 i;
-
-    if (verts == NULL) {
-        return;
-    }
 
     if (verts[0]->n.flag++ <= cycle) {
         return;
@@ -62,15 +31,10 @@ static void shift_UV_JUMP(s32 vtxIndex, u16 vertcount, s16 speed, u16 bhv, u16 c
     }
 }
 
-static void shift_UV_NORMAL(u32 vtxIndex, u16 vertcount, s16 speed, u16 bhv, u16 cycle) {
+static inline void shift_UV_NORMAL(Vtx* *verts, u16 vertcount, s16 speed, u16 bhv, u16 cycle) {
     u16 overflownum = 0x1000;
-    Vtx* *verts = get_scroll_targets(vtxIndex);
     u16 correction = 0;
     u16 i;
-
-    if (verts == NULL) {
-        return;
-    }
 
     if (bhv < SCROLL_UV_X) {
         if (verts[0]->n.flag >= cycle) {
@@ -105,13 +69,8 @@ static void shift_UV_NORMAL(u32 vtxIndex, u16 vertcount, s16 speed, u16 bhv, u16
     }
 }
 
-static void shift_UV_SINE(u32 vtxIndex, u16 vertcount, s16 speed, u16 bhv, u16 cycle) {
-    Vtx* *verts = get_scroll_targets(vtxIndex);
+static inline void shift_UV_SINE(Vtx* *verts, u16 vertcount, s16 speed, u16 bhv, u16 cycle) {
     u32 i;
-
-    if (verts == NULL) {
-        return;
-    }
 
     if (bhv < SCROLL_UV_X) {
         for (i = 0; i < vertcount; i++) {
@@ -130,7 +89,7 @@ static void shift_UV_SINE(u32 vtxIndex, u16 vertcount, s16 speed, u16 bhv, u16 c
  *   Xpos = speed
  *   Ypos = scrolling behavior/axis
  *   Zpos = vertices amount
- *   Xrot = offset (unused)
+ *   Xrot = offset
  *   Yrot = scrolling type
  *   Zrot = cycle
  *   Behavior param = scroll target index
@@ -142,24 +101,25 @@ void uv_update_scroll(void) {
     u16 vertCount = (u16) o->oPosZ;
     u16 scrollType = (u16) round(o->oFaceAngleYaw * 180.0 / 0x8000);
     u16 cycle = (u16) round(o->oFaceAngleRoll * 180.0 / 0x8000);
+    u16 offset = (u16) round(o->oFaceAnglePitch * 180.0 / 0x8000);
     u32 vtxIndex = (u32) o->oBehParams;
 
-    // Check for invalid scrolling behavior
-    if (bhv == 3 || bhv > SCROLL_UV_Y) {
-        return;
-    }
+    struct ScrollTarget *scroll = get_scroll_targets(vtxIndex, vertCount, offset);
+    if (!scroll || !scroll->vertices) { return; }
 
+    // Check for invalid scrolling behavior
+    if (bhv == 3 || bhv > SCROLL_UV_Y) { return; }
+
+    Vtx* *verts = scroll->vertices;
     switch (scrollType) {
         case MODE_SCROLL_UV:
-            shift_UV_NORMAL(vtxIndex, vertCount, speed, bhv, cycle);
+            shift_UV_NORMAL(verts, vertCount, speed, bhv, cycle);
             break;
         case MODE_SCROLL_SINE:
-            shift_UV_SINE(vtxIndex, vertCount, speed, bhv, cycle);
+            shift_UV_SINE(verts, vertCount, speed, bhv, cycle);
             break;
         case MODE_SCROLL_JUMP:
-            shift_UV_JUMP(vtxIndex, vertCount, speed, bhv, cycle);
-            break;
-        default:
+            shift_UV_JUMP(verts, vertCount, speed, bhv, cycle);
             break;
     }
 }
