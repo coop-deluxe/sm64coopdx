@@ -456,7 +456,7 @@ static inline bool IsPowerOfTwo(int n) {
 }
 
 bool DynOS_Tex_Get(const char* aTexName, struct TextureInfo* aOutTexInfo) {
-    #define CONVERT_TEXINFO { \
+    #define CONVERT_TEXINFO() { \
         /* translate bit size */ \
         switch (_Data->mRawSize) { \
             case G_IM_SIZ_8b:  aOutTexInfo->bitSize = 8; break; \
@@ -499,23 +499,23 @@ bool DynOS_Tex_Get(const char* aTexName, struct TextureInfo* aOutTexInfo) {
                 free(_RawData);
             }
 
-            CONVERT_TEXINFO;
+            CONVERT_TEXINFO();
             return true;
         }
     }
 
-    // check valid textures
-    for (DataNode<TexData>* _Node : DynosValidTextures()) {
-        if (_Node->mName == aTexName) {
-            auto& _Data = _Node->mData;
-            CONVERT_TEXINFO;
-            return true;
-        }
-    };
-
     // check builtin textures
     const struct BuiltinTexInfo* info = DynOS_Builtin_Tex_GetInfoFromName(aTexName);
-    if (!info) { return false; }
+    if (!info) {
+        for (DataNode<TexData>* _Node : DynosValidTextures()) { // check valid textures
+            if (_Node->mName == aTexName) {
+                auto& _Data = _Node->mData;
+                CONVERT_TEXINFO();
+                return true;
+            }
+        }
+        return false;
+    }
     aOutTexInfo->bitSize = info->bitSize;
     aOutTexInfo->width   = info->width;
     aOutTexInfo->height  = info->height;

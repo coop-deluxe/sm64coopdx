@@ -80,8 +80,6 @@ u32 gNumVblanks = 0;
 u8 gRenderingInterpolated = 0;
 f32 gRenderingDelta = 0;
 
-f64 gGameSpeed = 1.0f; // TODO: should probably remove
-
 #define FRAMERATE 30
 static const f64 sFrameTime = (1.0 / ((double)FRAMERATE));
 static f64 sFrameTargetTime = 0;
@@ -172,26 +170,23 @@ void produce_interpolation_frames_and_delay(void) {
 
     gRenderingInterpolated = true;
 
-    // sanity check target time to deal with hangs and such
-    if (fabs(sFrameTargetTime - curTime) > 1) { sFrameTargetTime = curTime - 0.01f; }
-
     // interpolate and render
     while ((curTime = clock_elapsed_f64()) < sFrameTargetTime) {
         gfx_start_frame();
-        f32 delta = MIN((curTime - sFrameTimeStart) / (sFrameTargetTime - sFrameTimeStart), 1);
+        f32 delta = (!configUncappedFramerate && configFrameLimit == FRAMERATE) ? 1 : MAX(MIN((curTime - sFrameTimeStart) / (sFrameTargetTime - sFrameTimeStart), 1), 0);
         gRenderingDelta = delta;
-        if (!gSkipInterpolationTitleScreen && (configFrameLimit > 30 || configUncappedFramerate)) { patch_interpolations(delta); }
+        if (!gSkipInterpolationTitleScreen) { patch_interpolations(delta); }
         send_display_list(gGfxSPTask);
         gfx_end_frame();
 
         // delay
-        if (!configUncappedFramerate) {
+        if (!configUncappedFramerate && !configWindow.vsync) {
             f64 targetDelta = 1.0 / (f64) configFrameLimit;
             f64 now = clock_elapsed_f64();
             f64 actualDelta = now - curTime;
             if (actualDelta < targetDelta) {
                 f64 delay = ((targetDelta - actualDelta) * 1000.0);
-                WAPI.delay((u32) delay);
+                if (delay > 0) { WAPI.delay((u32) delay * 0.9); }
             }
         }
 
@@ -205,15 +200,15 @@ void produce_interpolation_frames_and_delay(void) {
 
     u64 sCurrentFpsUpdateTime = (u64)clock_elapsed_f64();
     if (sLastFpsUpdateTime != sCurrentFpsUpdateTime) {
-        u32 fps = sFramesSinceFpsUpdate / ((f32)(sCurrentFpsUpdateTime - sLastFpsUpdateTime));
+        u32 fps = sFramesSinceFpsUpdate / (sCurrentFpsUpdateTime - sLastFpsUpdateTime);
         sLastFpsUpdateTime = sCurrentFpsUpdateTime;
         sFramesSinceFpsUpdate = 0;
 
-        djui_fps_display_update(floor(fps));
+        djui_fps_display_update(fps);
     }
 
     sFrameTimeStart = sFrameTargetTime;
-    sFrameTargetTime += sFrameTime * gGameSpeed;
+    sFrameTargetTime += sFrameTime;
     gRenderingInterpolated = false;
 }
 

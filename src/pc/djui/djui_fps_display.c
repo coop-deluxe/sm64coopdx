@@ -8,7 +8,7 @@ struct DjuiFpsDisplay {
 
 struct DjuiFpsDisplay *sFpsDisplay = NULL;
 
-void djui_fps_display_update(s16 fps) {
+void djui_fps_display_update(u16 fps) {
     if (configShowFPS) {
         char fpsText[30] = "";
         snprintf(fpsText, 30, "\\#dcdcdc\\FPS: \\#ffffff\\%d", fps);
