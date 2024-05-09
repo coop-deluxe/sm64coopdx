@@ -26,7 +26,7 @@ void rng_position_init(f32 x, f32 y, f32 z) {
     for (u8 i = 0; i < RNG_POSITION_MAX; i++) {
         if (sRngPosition[i].life != 0) { continue; }
         sRngPosition[i].life = RNG_POSITION_LIFE;
-        sRngPosition[i].seed = (u16)((position[0] / (3 * RNG_POSITION_MATCH_DIST)) + (position[1] / (3 * RNG_POSITION_MATCH_DIST)));
+        sRngPosition[i].seed = (u16)((position[0] / 3) + (position[1] / 3));
         vec3f_copy(sRngPosition[i].position, position);
         gOverrideRngPosition = &sRngPosition[i];
         return;
