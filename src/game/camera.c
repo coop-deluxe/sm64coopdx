@@ -10870,6 +10870,7 @@ void cutscene_palette_editor(struct Camera *c) {
             }
             c->paletteEditorCap = false;
         }
+        gCutsceneTimer = CUTSCENE_STOP;
         c->cutscene = 0;
         return;
     }
