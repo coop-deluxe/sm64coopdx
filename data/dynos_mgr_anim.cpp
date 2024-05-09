@@ -47,7 +47,7 @@ void DynOS_Anim_Swap(void *aPtr) {
 
     // Does the object have a model?
     struct Object *_Object = (struct Object *) aPtr;
-    if (!_Object->header.gfx.sharedChild) {
+    if (!_Object->header.gfx.sharedChild || !_Object->header.gfx.animInfo.curAnim) {
         return;
     }
 
@@ -78,6 +78,7 @@ void DynOS_Anim_Swap(void *aPtr) {
             if (gMarioStates[i].marioObj == NULL) { continue; }
             if (_Object == gMarioStates[i].marioObj) {
                 _AnimIndex = RetrieveCurrentMarioAnimationIndex(i);
+                break;
             }
         }
         if (_AnimIndex == -1) {
