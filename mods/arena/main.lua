@@ -1,5 +1,5 @@
 -- name: Arena
--- description: A arena-shooter inspired game mode with custom weapons and levels.\nSeven gamemodes in one, three custom stages, five weapons.
+-- description: An arena-shooter inspired game mode with custom weapons and levels.\nSeven gamemodes in one, three custom stages, and five weapons.
 -- incompatible: gamemode arena
 -- deluxe: true
 
