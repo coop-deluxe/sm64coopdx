@@ -158,6 +158,21 @@ void network_receive_spawn_objects(struct Packet* p) {
             id = gNetworkSystem->get_id_str(p->localIndex);
             name = gNetworkPlayers[p->localIndex].name;
         }
+
+        // Don't overwrite existing sync objects
+        {
+            u32 syncID = data.rawData[0x04]; // o->oSyncID
+            struct SyncObject *so = sync_object_get(syncID);
+            if (so && so->o) {
+                if (so->o->behavior == get_behavior_from_id(data.behaviorId)) {
+                    LOG_ERROR("recieved duplicate sync object with id %d from %s (%s)", syncID, name, id);
+                } else {
+                    LOG_ERROR("recieved duplicate sync object with id %d with different behavior %s from %s (%s)", syncID, get_behavior_name_from_id(data.behaviorId), name, id);
+                }
+                continue;
+            }
+        }
+
         LOG_INFO("rx spawn object %s from %s (%s)", get_behavior_name_from_id(data.behaviorId), name, id);
         LOG_CONSOLE("rx spawn object %s from %s\\#dcdcdc\\ (%s)", get_behavior_name_from_id(data.behaviorId), name, id);
         snprintf(gLastRemoteBhv, 256, "%s %s (%s)", get_behavior_name_from_id(data.behaviorId), name, id);
