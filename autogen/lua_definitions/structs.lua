@@ -794,6 +794,7 @@
 --- @field public areaIndex integer
 --- @field public cameraToObject Vec3f
 --- @field public disableAutomaticShadowPos boolean
+--- @field public inited boolean
 --- @field public node GraphNode
 --- @field public pos Vec3f
 --- @field public prevAngle Vec3s

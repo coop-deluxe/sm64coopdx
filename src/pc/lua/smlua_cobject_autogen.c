@@ -883,7 +883,7 @@ static struct LuaObjectField sGraphNodeFields[LUA_GRAPH_NODE_FIELD_COUNT] = {
     { "type",       LVT_S16,       offsetof(struct GraphNode, type),       true,  LOT_NONE      },
 };
 
-#define LUA_GRAPH_NODE_OBJECT_FIELD_COUNT 26
+#define LUA_GRAPH_NODE_OBJECT_FIELD_COUNT 27
 static struct LuaObjectField sGraphNodeObjectFields[LUA_GRAPH_NODE_OBJECT_FIELD_COUNT] = {
     { "activeAreaIndex",            LVT_S8,        offsetof(struct GraphNodeObject, activeAreaIndex),            false, LOT_NONE      },
     { "angle",                      LVT_COBJECT,   offsetof(struct GraphNodeObject, angle),                      true,  LOT_VEC3S     },
@@ -891,6 +891,7 @@ static struct LuaObjectField sGraphNodeObjectFields[LUA_GRAPH_NODE_OBJECT_FIELD_
     { "areaIndex",                  LVT_S8,        offsetof(struct GraphNodeObject, areaIndex),                  false, LOT_NONE      },
     { "cameraToObject",             LVT_COBJECT,   offsetof(struct GraphNodeObject, cameraToObject),             true,  LOT_VEC3F     },
     { "disableAutomaticShadowPos",  LVT_BOOL,      offsetof(struct GraphNodeObject, disableAutomaticShadowPos),  false, LOT_NONE      },
+    { "inited",                     LVT_BOOL,      offsetof(struct GraphNodeObject, inited),                     false, LOT_NONE      },
     { "node",                       LVT_COBJECT,   offsetof(struct GraphNodeObject, node),                       true,  LOT_GRAPHNODE },
     { "pos",                        LVT_COBJECT,   offsetof(struct GraphNodeObject, pos),                        true,  LOT_VEC3F     },
     { "prevAngle",                  LVT_COBJECT,   offsetof(struct GraphNodeObject, prevAngle),                  true,  LOT_VEC3S     },

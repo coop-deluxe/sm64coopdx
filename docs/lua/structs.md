@@ -1085,6 +1085,7 @@
 | areaIndex | `integer` |  |
 | cameraToObject | [Vec3f](structs.md#Vec3f) | read-only |
 | disableAutomaticShadowPos | `boolean` |  |
+| inited | `boolean` |  |
 | node | [GraphNode](structs.md#GraphNode) | read-only |
 | pos | [Vec3f](structs.md#Vec3f) | read-only |
 | prevAngle | [Vec3s](structs.md#Vec3s) | read-only |

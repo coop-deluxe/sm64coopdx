@@ -176,6 +176,8 @@ struct GraphNodeObject
     /*0x54*/ Vec3f cameraToObject;
     u32 skipInterpolationTimestamp;
     bool skipInViewCheck;
+
+    bool inited;
 };
 
 struct ObjectNode

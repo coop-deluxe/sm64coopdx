@@ -324,6 +324,7 @@ struct Object *allocate_object(struct ObjectNode *objList) {
     obj->header.gfx.angle[0] = 0;
     obj->header.gfx.angle[1] = 0;
     obj->header.gfx.angle[2] = 0;
+    obj->header.gfx.inited = false;
 
     obj->coopFlags = 0;
     obj->hookRender = 0;
