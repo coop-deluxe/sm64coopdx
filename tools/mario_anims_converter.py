@@ -87,7 +87,7 @@ def parse_file(filename, lines):
         is_indices = line.startswith("u16 ") and line.endswith("[] = {")
         is_values = line.startswith("s16 ") and line.endswith("[] = {")
         is_asset = line.startswith("ROM_ASSET_LOAD_ANIM(")
-        if not is_struct and not is_asset:
+        if not is_struct and not is_indices and not is_values and not is_asset:
             raise_error(filename, lineindex, "\"" + line + "\" does not follow the pattern \"static const struct Animation anim_x[] = {\", \"static const u16 anim_x_indices[] = {\" or \"static const s16 anim_x_values[] = {\"")
 
         if is_struct:
