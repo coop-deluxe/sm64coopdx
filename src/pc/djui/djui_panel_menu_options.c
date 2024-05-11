@@ -42,8 +42,6 @@ static void djui_panel_misc_djui_setting_change(UNUSED struct DjuiBase* caller) 
         djui_panel_options_create(NULL);
         djui_panel_misc_create(NULL);
         djui_panel_main_menu_create(NULL);
-    } else {
-        djui_panel_shutdown();
     }
 }
 

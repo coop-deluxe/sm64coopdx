@@ -48,16 +48,18 @@ static void djui_panel_language_destroy(UNUSED struct DjuiBase* caller) {
             snprintf(configLanguage, MAX_CONFIG_STRING, "%s", "");
         }
 
-        djui_panel_shutdown();
         if (gPanelLanguageOnStartup) {
+            djui_panel_shutdown();
             gDjuiInMainMenu = true;
             djui_panel_main_create(NULL);
         } else if (gDjuiInMainMenu) {
+            djui_panel_shutdown();
             gDjuiInMainMenu = true;
             djui_panel_main_create(NULL);
             djui_panel_options_create(NULL);
             djui_panel_misc_create(NULL);
         } else if (gDjuiPanelPauseCreated) {
+            djui_panel_shutdown();
             djui_panel_pause_create(NULL);
             djui_panel_options_create(NULL);
             djui_panel_misc_create(NULL);
