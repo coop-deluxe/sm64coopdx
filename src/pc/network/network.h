@@ -79,6 +79,7 @@ struct ServerSettings {
     u8 bubbleDeath;
     u8 enablePlayersInLevelDisplay;
     u8 enablePlayerList;
+    u8 enableChat;
     u8 headlessServer;
     u8 nametags;
     u8 maxPlayers;
