@@ -8,21 +8,8 @@
 
 #include "../platform.h"
 
-// FS_BASEDIR is usually defined in the build script
-#ifndef FS_BASEDIR
-# define FS_BASEDIR "res"
-#endif
-
-#ifndef FS_BASEPACK_PREFIX
-# define FS_BASEPACK_PREFIX "base"
-#endif
-
-#define FS_TEXTUREDIR "gfx"
-#define FS_SOUNDDIR "sound"
-
 #define SAVE_FILENAME "sm64_save_file.bin"
 
-extern char fs_gamedir[];
 extern char fs_writepath[];
 
 // receives the full path
@@ -81,15 +68,11 @@ typedef struct {
 // takes the supplied NULL-terminated list of read-only directories and mounts all the packs in them,
 // then mounts the directories themselves, then mounts all the packs in `gamedir`, then mounts `gamedir` itself,
 // then does the same with `userdir`
-// initializes the `fs_gamedir` and `fs_userdir` variables
-bool fs_init(const char **rodirs, const char *gamedir, const char *userdir);
-
+// initializes the `fs_userdir` variable
+bool fs_init(const char *userdir);
 // mounts the pack at physical path `realpath` to the root of the filesystem
 // packs mounted later take priority over packs mounted earlier
 bool fs_mount(const char *realpath);
-
-// removes the pack at physical path from the virtual filesystem
-bool fs_unmount(const char *realpath);
 
 /* generalized filesystem functions that call matching packtype functions for each pack in the searchpath */
 
@@ -101,24 +84,15 @@ fs_pathlist_t fs_enumerate(const char *base, const bool recur);
 // call this on a list returned by fs_enumerate() to free it
 void fs_pathlist_free(fs_pathlist_t *pathlist);
 
-bool fs_is_file(const char *fname);
-bool fs_is_dir(const char *fname);
-
 fs_file_t *fs_open(const char *vpath);
 void fs_close(fs_file_t *file);
 int64_t fs_read(fs_file_t *file, void *buf, const uint64_t size);
 const char *fs_readline(fs_file_t *file, char *dst, const uint64_t size);
-bool fs_seek(fs_file_t *file, const int64_t ofs);
-int64_t fs_tell(fs_file_t *file);
 int64_t fs_size(fs_file_t *file);
 bool fs_eof(fs_file_t *file);
 
 void *fs_load_file(const char *vpath, uint64_t *outsize);
 const char *fs_readline(fs_file_t *file, char *dst, uint64_t size);
-
-// tries to find the first file with the filename that starts with `prefix`
-// puts full filename into `outname` and returns it or returns NULL if nothing matches
-const char *fs_match(char *outname, const size_t outlen, const char *prefix);
 
 // takes a virtual path and prepends the write path to it
 const char *fs_get_write_path(const char *vpath);
@@ -129,7 +103,6 @@ const char *fs_convert_path(char *buf, const size_t bufsiz, const char *path);
 /* these operate on the real filesystem and are used by fs_packtype_dir */
 
 bool fs_sys_walk(const char *base, walk_fn_t walk, void *user, const bool recur);
-fs_pathlist_t fs_sys_enumerate(const char *base, const bool recur);
 bool fs_sys_file_exists(const char *name);
 bool fs_sys_dir_exists(const char *name);
 bool fs_sys_mkdir(const char *name); // creates with 0777 by default

@@ -5,12 +5,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-/* Platform-specific functions and whatnot */
+/* platform-specific functions and whatnot */
 
 #define SYS_MAX_PATH 4096 // FIXME: define this on different platforms
-
-// NULL terminated list of platform specific read-only data paths
-extern const char *sys_ropaths[];
 
 // crossplatform impls of misc stuff
 char *sys_strdup(const char *src);

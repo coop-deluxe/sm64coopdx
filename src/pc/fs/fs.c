@@ -17,7 +17,6 @@
 #include "../platform.h"
 #include "fs.h"
 
-char fs_gamedir[SYS_MAX_PATH] = "";
 char fs_writepath[SYS_MAX_PATH] = "";
 
 struct fs_dir_s {
@@ -28,11 +27,9 @@ struct fs_dir_s {
 };
 
 extern fs_packtype_t fs_packtype_dir;
-extern fs_packtype_t fs_packtype_zip;
 
 static fs_packtype_t *fs_packers[] = {
-    &fs_packtype_dir,
-    &fs_packtype_zip,
+    &fs_packtype_dir
 };
 
 static fs_dir_t *fs_searchpaths = NULL;
@@ -44,45 +41,7 @@ static inline fs_dir_t *fs_find_dir(const char *realpath) {
     return NULL;
 }
 
-static int mount_cmp(const void *p1, const void *p2) {
-    const char *s1 = sys_file_name(*(const char **)p1);
-    const char *s2 = sys_file_name(*(const char **)p2);
-
-    // check if one or both of these are basepacks
-    const int plen = strlen(FS_BASEPACK_PREFIX);
-    const bool is_base1 = !strncmp(s1, FS_BASEPACK_PREFIX, plen);
-    const bool is_base2 = !strncmp(s2, FS_BASEPACK_PREFIX, plen);
-
-    // if both are basepacks, compare the postfixes only
-    if (is_base1 && is_base2) return strcmp(s1 + plen, s2 + plen);
-    // if only one is a basepack, it goes first
-    if (is_base1) return -1;
-    if (is_base2) return 1;
-    // otherwise strcmp order
-    return strcmp(s1, s2);
-}
-
-static void scan_path_dir(const char *ropath, const char *dir) {
-    char dirpath[SYS_MAX_PATH];
-    snprintf(dirpath, sizeof(dirpath), "%s/%s", ropath, dir);
-
-    if (!fs_sys_dir_exists(dirpath)) return;
-
-    // since filename order in readdir() isn't guaranteed, collect paths and sort them in strcmp() order
-    // (but with basepacks first)
-    fs_pathlist_t plist = fs_sys_enumerate(dirpath, false);
-    if (plist.paths) {
-        qsort(plist.paths, plist.numpaths, sizeof(char *), mount_cmp);
-        for (int32_t i = 0; i < plist.numpaths; ++i)
-            fs_mount(plist.paths[i]);
-        fs_pathlist_free(&plist);
-    }
-
-    // mount the directory itself
-    fs_mount(dirpath);
-}
-
-bool fs_init(const char **rodirs, const char *gamedir, const char *writepath) {
+bool fs_init(const char *writepath) {
     char buf[SYS_MAX_PATH];
 
     // expand and remember the write path
@@ -92,26 +51,6 @@ bool fs_init(const char **rodirs, const char *gamedir, const char *writepath) {
     printf("fs: writepath set to `%s`\n", fs_writepath);
 #endif
 
-    // remember the game directory name
-    strncpy(fs_gamedir, gamedir, sizeof(fs_gamedir));
-    fs_gamedir[sizeof(fs_gamedir)-1] = 0;
-#ifdef DEVELOPMENT
-    printf("fs: gamedir set to `%s`\n", fs_gamedir);
-#endif
-
-    // first, scan all possible paths and mount all basedirs in them
-    for (const char **p = rodirs; p && *p; ++p)
-        scan_path_dir(fs_convert_path(buf, sizeof(buf), *p), FS_BASEDIR);
-    scan_path_dir(fs_writepath, FS_BASEDIR);
-
-    // then mount all the gamedirs in them, if the game dir isn't the same
-    if (sys_strcasecmp(FS_BASEDIR, fs_gamedir)) {
-        for (const char **p = rodirs; p && *p; ++p)
-            scan_path_dir(fs_convert_path(buf, sizeof(buf), *p), fs_gamedir);
-        scan_path_dir(fs_writepath, fs_gamedir);
-    }
-
-    // as a special case, mount writepath itself
     fs_mount(fs_writepath);
 
     return true;
@@ -164,20 +103,6 @@ bool fs_mount(const char *realpath) {
     return true;
 }
 
-bool fs_unmount(const char *realpath) {
-    fs_dir_t *dir = fs_find_dir(realpath);
-    if (dir) {
-        dir->packer->unmount(dir->pack);
-        free((void *)dir->realpath);
-        if (dir->prev) dir->prev->next = dir->next;
-        if (dir->next) dir->next->prev = dir->prev;
-        if (dir == fs_searchpaths) fs_searchpaths = dir->next;
-        free(dir);
-        return true;
-    }
-    return false;
-}
-
 fs_walk_result_t fs_walk(const char *base, walk_fn_t walkfn, void *user, const bool recur) {
     bool found = false;
     for (fs_dir_t *dir = fs_searchpaths; dir; dir = dir->next) {
@@ -188,22 +113,6 @@ fs_walk_result_t fs_walk(const char *base, walk_fn_t walkfn, void *user, const b
             found = true;
     }
     return found ? FS_WALK_SUCCESS : FS_WALK_NOTFOUND;
-}
-
-bool fs_is_file(const char *fname) {
-    for (fs_dir_t *dir = fs_searchpaths; dir; dir = dir->next) {
-        if (dir->packer->is_file(dir->pack, fname))
-            return true;
-    }
-    return false;
-}
-
-bool fs_is_dir(const char *fname) {
-    for (fs_dir_t *dir = fs_searchpaths; dir; dir = dir->next) {
-        if (dir->packer->is_dir(dir->pack, fname))
-            return true;
-    }
-    return false;
 }
 
 fs_file_t *fs_open(const char *vpath) {
@@ -227,16 +136,6 @@ int64_t fs_read(fs_file_t *file, void *buf, const uint64_t size) {
     return file->parent->packer->read(file->parent->pack, file, buf, size);
 }
 
-bool fs_seek(fs_file_t *file, const int64_t ofs) {
-    if (!file) return -1;
-    return file->parent->packer->seek(file->parent->pack, file, ofs);
-}
-
-int64_t fs_tell(fs_file_t *file) {
-    if (!file) return -1;
-    return file->parent->packer->tell(file->parent->pack, file);
-}
-
 int64_t fs_size(fs_file_t *file) {
     if (!file) return -1;
     return file->parent->packer->size(file->parent->pack, file);
@@ -253,31 +152,6 @@ struct matchdata_s {
     char *dst;
     size_t dst_len;
 };
-
-static bool match_walk(void *user, const char *path) {
-    struct matchdata_s *data = (struct matchdata_s *)user;
-    if (!strncmp(path, data->prefix, data->prefix_len)) {
-        // found our lad, copy path to destination and terminate
-        strncpy(data->dst, path, data->dst_len);
-        data->dst[data->dst_len - 1] = 0;
-        return false;
-    }
-    return true;
-}
-
-const char *fs_match(char *outname, const size_t outlen, const char *prefix) {
-    struct matchdata_s data = {
-        .prefix = prefix,
-        .prefix_len = strlen(prefix),
-        .dst = outname,
-        .dst_len = outlen,
-    };
-
-    if (fs_walk("", match_walk, &data, true) == FS_WALK_INTERRUPTED)
-        return outname;
-
-    return NULL;
-}
 
 static bool enumerate_walk(void *user, const char *path) {
     fs_pathlist_t *data = (fs_pathlist_t *)user;
@@ -438,18 +312,6 @@ bool fs_sys_walk(const char *base, walk_fn_t walk, void *user, const bool recur)
     closedir(dir);
     return ret;
 #endif
-}
-
-fs_pathlist_t fs_sys_enumerate(const char *base, const bool recur) {
-    char **paths = malloc(sizeof(char *) * 32);
-    fs_pathlist_t pathlist = { paths, 0, 32 };
-
-    if (!paths) return pathlist;
-
-    if (!fs_sys_walk(base, enumerate_walk, &pathlist, recur))
-        fs_pathlist_free(&pathlist);
-
-    return pathlist;
 }
 
 bool fs_sys_mkdir(const char *name) {

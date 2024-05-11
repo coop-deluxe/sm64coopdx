@@ -369,7 +369,7 @@ int main(int argc, char *argv[]) {
 #endif
 
     const char *userpath = gCLIOpts.savePath[0] ? gCLIOpts.savePath : sys_user_path();
-    fs_init(sys_ropaths, FS_BASEDIR, userpath);
+    fs_init(userpath);
     configfile_load();
 
     // Create the window straight away

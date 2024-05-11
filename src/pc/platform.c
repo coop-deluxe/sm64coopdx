@@ -9,20 +9,6 @@
 #include "fs/fs.h"
 #include "configfile.h"
 
-/* NULL terminated list of platform specific read-only data paths */
-/* priority is top first */
-const char *sys_ropaths[] = {
-    ".", // working directory
-    "!", // executable directory
-#if defined(__linux__) || defined(__unix__)
-    // some common UNIX directories for read only stuff
-    "/usr/local/share/sm64pc",
-    "/usr/share/sm64pc",
-    "/opt/sm64pc",
-#endif
-    NULL,
-};
-
 /* these are not available on some platforms, so might as well */
 
 char *sys_strlwr(char *src) {
@@ -95,35 +81,6 @@ void sys_fatal(const char *fmt, ...) {
 // we can just ask SDL for most of this shit if we have it
 #include <SDL2/SDL.h>
 
-// TEMPORARY: check the old save folder and copy contents to the new path
-// this will be removed after a while
-static inline bool copy_userdata(const char *userdir) {
-    char oldpath[SYS_MAX_PATH] = { 0 };
-    char path[SYS_MAX_PATH] = { 0 };
-
-    // check if a save already exists in the new folder
-    snprintf(path, sizeof(path), "%s/" SAVE_FILENAME, userdir);
-    if (fs_sys_file_exists(path)) return false;
-
-    // check if a save exists in the old folder ('pc' instead of 'ex')
-    strncpy(oldpath, path, sizeof(oldpath));
-    const unsigned int len = strlen(userdir);
-    oldpath[len - 2] = 'p'; oldpath[len - 1] = 'c';
-    if (!fs_sys_file_exists(oldpath)) return false;
-
-    printf("old save detected at '%s', copying to '%s'\n", oldpath, path);
-
-    bool ret = fs_sys_copy_file(oldpath, path);
-
-    // also try to copy the config
-    path[len] = oldpath[len] = 0;
-    strncat(path, "/" CONFIGFILE_DEFAULT, SYS_MAX_PATH - 1);
-    strncat(oldpath, "/" CONFIGFILE_DEFAULT, SYS_MAX_PATH - 1);
-    fs_sys_copy_file(oldpath, path);
-
-    return ret;
-}
-
 const char *sys_user_path(void) {
     static char path[SYS_MAX_PATH] = { 0 };
 
@@ -141,8 +98,6 @@ const char *sys_user_path(void) {
 
         if (!fs_sys_dir_exists(path) && !fs_sys_mkdir(path))
             path[0] = 0; // somehow failed, we got no user path
-        else
-            copy_userdata(path); // TEMPORARY: try to copy old saves, if any
     }
 
     return path;
