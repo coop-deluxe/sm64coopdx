@@ -894,7 +894,7 @@ def process_function(fname, line):
 
     line = line.replace('UNUSED', '')
 
-    match = re.search('[a-zA-Z0-9_]+\(', line)
+    match = re.search(r'[a-zA-Z0-9_]+\(', line)
     function['type'] = normalize_type(line[0:match.span()[0]])
     function['identifier'] = match.group()[0:-1]
 
@@ -911,7 +911,7 @@ def process_function(fname, line):
                 param['type'] = normalize_type(param_str)
                 param['identifier'] = 'arg%d' % param_index
             else:
-                match = re.search('[a-zA-Z0-9_\[\]]+$', param_str)
+                match = re.search(r'[a-zA-Z0-9_\[\]]+$', param_str)
                 if match == None:
                     return None
                 param['type'] = normalize_type(param_str[0:match.span()[0]])

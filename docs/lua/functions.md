@@ -1668,7 +1668,6 @@
    - [get_dialog_id](functions-5.md#get_dialog_id)
    - [get_dialog_response](functions-5.md#get_dialog_response)
    - [get_envfx](functions-5.md#get_envfx)
-   - [get_environment_region](functions-5.md#get_environment_region)
    - [get_fog_color](functions-5.md#get_fog_color)
    - [get_fog_intensity](functions-5.md#get_fog_intensity)
    - [get_global_timer](functions-5.md#get_global_timer)
@@ -1689,6 +1688,7 @@
    - [get_time](functions-5.md#get_time)
    - [get_ttc_speed_setting](functions-5.md#get_ttc_speed_setting)
    - [get_vertex_color](functions-5.md#get_vertex_color)
+   - [get_water_level](functions-5.md#get_water_level)
    - [hud_get_flash](functions-5.md#hud_get_flash)
    - [hud_get_value](functions-5.md#hud_get_value)
    - [hud_hide](functions-5.md#hud_hide)
@@ -1705,7 +1705,6 @@
    - [reset_window_title](functions-5.md#reset_window_title)
    - [save_file_get_using_backup_slot](functions-5.md#save_file_get_using_backup_slot)
    - [save_file_set_using_backup_slot](functions-5.md#save_file_set_using_backup_slot)
-   - [set_environment_region](functions-5.md#set_environment_region)
    - [set_fog_color](functions-5.md#set_fog_color)
    - [set_fog_intensity](functions-5.md#set_fog_intensity)
    - [set_got_file_coin_hi_score](functions-5.md#set_got_file_coin_hi_score)
@@ -1722,6 +1721,7 @@
    - [set_save_file_modified](functions-5.md#set_save_file_modified)
    - [set_ttc_speed_setting](functions-5.md#set_ttc_speed_setting)
    - [set_vertex_color](functions-5.md#set_vertex_color)
+   - [set_water_level](functions-5.md#set_water_level)
    - [set_window_title](functions-5.md#set_window_title)
 
 <br />

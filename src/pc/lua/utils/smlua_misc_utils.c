@@ -472,18 +472,26 @@ void movtexqc_register(const char* name, s16 level, s16 area, s16 type) {
 
 ///
 
-f32 get_environment_region(u8 index) {
-    s32 idx = 6 * index;
-    if (gEnvironmentRegions != NULL && index > 0 && index <= gEnvironmentRegions[0] && gEnvironmentRegionsLength > idx) {
-        return gEnvironmentRegions[idx];
+s16 get_water_level(u8 index) {
+    u8 id = 6 * (index + 1);
+    if (gEnvironmentRegions && index < gEnvironmentRegions[0] && gEnvironmentRegionsLength > id) {
+        return gEnvironmentRegions[id];
     }
     return gLevelValues.floorLowerLimit;
 }
 
-void set_environment_region(u8 index, s32 value) {
-    s32 idx = 6 * index;
-    if (gEnvironmentRegions != NULL && index > 0 && index <= gEnvironmentRegions[0] && gEnvironmentRegionsLength > idx) {
-        gEnvironmentRegions[idx] = value;
+void set_water_level(u8 index, s16 height, bool sync) {
+    if (sync && (!gNetworkPlayerLocal || !gNetworkPlayerLocal->currAreaSyncValid)) { return; }
+
+    u8 id = 6 * (index + 1);
+    if (gEnvironmentRegions && index < gEnvironmentRegions[0] && gEnvironmentRegionsLength > id) {
+        if (gEnvironmentRegions[id] == height) {
+            return;
+        }
+        if (sync) {
+            network_send_change_water_level(id, height);
+        }
+        gEnvironmentRegions[id] = height;
     }
 }
 
@@ -623,6 +631,12 @@ u32 get_global_timer(void) {
 
 ///
 
+s32 get_dialog_response() {
+    return gDialogResponse;
+}
+
+///
+
 void set_window_title(const char* title) {
     WAPI.set_window_title(title);
 }
@@ -647,10 +661,4 @@ const char* get_os_name(void) {
 #else
     return "Unknown";
 #endif
-}
-
-///
-
-s32 get_dialog_response() {
-    return gDialogResponse;
 }

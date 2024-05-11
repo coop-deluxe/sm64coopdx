@@ -117,8 +117,8 @@ bool save_file_get_using_backup_slot(void);
 void save_file_set_using_backup_slot(bool usingBackupSlot);
 
 void movtexqc_register(const char* name, s16 level, s16 area, s16 type);
-f32 get_environment_region(u8 index);
-void set_environment_region(u8 index, s32 value);
+s16 get_water_level(u8 index);
+void set_water_level(u8 index, s16 height, bool sync);
 
 void set_override_fov(f32 fov);
 void set_override_near(f32 near);
@@ -156,11 +156,11 @@ void set_override_envfx(s32 envfx);
 
 u32 get_global_timer(void);
 
+s32 get_dialog_response();
+
 void set_window_title(const char* title);
 void reset_window_title(void);
 
 const char* get_os_name(void);
-
-s32 get_dialog_response();
 
 #endif

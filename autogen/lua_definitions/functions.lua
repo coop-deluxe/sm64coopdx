@@ -8611,9 +8611,22 @@ function djui_hud_set_render_behind_hud(enable)
     -- ...
 end
 
+--- @param index integer
+--- @return number
+function get_environment_region(index)
+    -- ...
+end
+
 --- @param localIndex integer
 --- @return string
 function network_discord_id_from_local_index(localIndex)
+    -- ...
+end
+
+--- @param index integer
+--- @param value integer
+--- @return nil
+function set_environment_region(index, value)
     -- ...
 end
 
@@ -8981,12 +8994,6 @@ function get_envfx()
 end
 
 --- @param index integer
---- @return number
-function get_environment_region(index)
-    -- ...
-end
-
---- @param index integer
 --- @return integer
 function get_fog_color(index)
     -- ...
@@ -9094,6 +9101,12 @@ end
 --- @param index integer
 --- @return integer
 function get_vertex_color(index)
+    -- ...
+end
+
+--- @param index integer
+--- @return integer
+function get_water_level(index)
     -- ...
 end
 
@@ -9208,13 +9221,6 @@ end
 --- @param index integer
 --- @param value integer
 --- @return nil
-function set_environment_region(index, value)
-    -- ...
-end
-
---- @param index integer
---- @param value integer
---- @return nil
 function set_fog_color(index, value)
     -- ...
 end
@@ -9309,6 +9315,14 @@ end
 --- @param value integer
 --- @return nil
 function set_vertex_color(index, value)
+    -- ...
+end
+
+--- @param index integer
+--- @param height integer
+--- @param sync boolean
+--- @return nil
+function set_water_level(index, height, sync)
     -- ...
 end
 

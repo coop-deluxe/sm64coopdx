@@ -4858,7 +4858,7 @@
 - `integer`
 
 ### C Prototype
-`s32 lvl_set_current_level(UNUSED s16 arg0, s32 levelNum);`
+`s32 lvl_set_current_level(UNUSED s16 arg0, s16 levelNum);`
 
 [:arrow_up_small:](#)
 

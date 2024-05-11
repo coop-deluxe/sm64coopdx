@@ -7,3 +7,6 @@ struct ModAudio* audio_stream_load_url(const char* url);
 f32 audio_stream_get_tempo(struct ModAudio* audio);
 void audio_stream_set_tempo(struct ModAudio* audio, f32 tempo);
 void audio_stream_set_speed(struct ModAudio* audio, f32 initial_freq, f32 speed, bool pitch);
+
+f32 get_environment_region(u8 index);
+void set_environment_region(u8 index, s32 value);

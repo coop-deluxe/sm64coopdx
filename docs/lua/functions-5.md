@@ -1353,26 +1353,6 @@
 
 <br />
 
-## [get_environment_region](#get_environment_region)
-
-### Lua Example
-`local numberValue = get_environment_region(index)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| index | `integer` |
-
-### Returns
-- `number`
-
-### C Prototype
-`f32 get_environment_region(u8 index);`
-
-[:arrow_up_small:](#)
-
-<br />
-
 ## [get_fog_color](#get_fog_color)
 
 ### Lua Example
@@ -1752,6 +1732,26 @@
 
 <br />
 
+## [get_water_level](#get_water_level)
+
+### Lua Example
+`local integerValue = get_water_level(index)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| index | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s16 get_water_level(u8 index);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [hud_get_flash](#hud_get_flash)
 
 ### Lua Example
@@ -2076,27 +2076,6 @@
 
 <br />
 
-## [set_environment_region](#set_environment_region)
-
-### Lua Example
-`set_environment_region(index, value)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| index | `integer` |
-| value | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void set_environment_region(u8 index, s32 value);`
-
-[:arrow_up_small:](#)
-
-<br />
-
 ## [set_fog_color](#set_fog_color)
 
 ### Lua Example
@@ -2416,6 +2395,28 @@
 
 ### C Prototype
 `void set_vertex_color(u8 index, u8 value);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_water_level](#set_water_level)
+
+### Lua Example
+`set_water_level(index, height, sync)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| index | `integer` |
+| height | `integer` |
+| sync | `boolean` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_water_level(u8 index, s16 height, bool sync);`
 
 [:arrow_up_small:](#)
 

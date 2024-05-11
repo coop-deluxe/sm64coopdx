@@ -53,6 +53,7 @@ enum PacketType {
     PACKET_LEVEL_MACRO,
     PACKET_LEVEL_AREA_INFORM,
     PACKET_LEVEL_RESPAWN_INFO,
+    PACKET_CHANGE_WATER_LEVEL,
 
     PACKET_PLAYER_SETTINGS,
 
@@ -331,6 +332,10 @@ void network_receive_level_area_inform(struct Packet* p);
 // packet_level_respawn_info.c
 void network_send_level_respawn_info(struct Object* o, u8 respawnInfoBits);
 void network_receive_level_respawn_info(struct Packet* p);
+
+// packet_change_water_level.c
+void network_send_change_water_level(u8 index, s16 height);
+void network_receive_change_water_level(struct Packet* p);
 
 // packet_debug_sync.c
 void network_send_debug_sync(void);
