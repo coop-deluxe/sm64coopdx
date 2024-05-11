@@ -169,7 +169,7 @@ def process_define(filename, line):
         if p.startswith('0x'):
             continue
         p = re.sub(r'0x[a-fA-F0-9]+', '', p)
-        if re.search('[a-z]', p) != None and "VERSION_TEXT" not in line and "SM64COOPDX_VERSION" not in line:
+        if re.search(r'[a-z]', p) != None and "VERSION_TEXT" not in line and "SM64COOPDX_VERSION" not in line:
             if 'gCurrentObject' not in line and verbose:
                 print('UNRECOGNIZED DEFINE: ' + line)
             return None

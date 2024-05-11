@@ -2072,6 +2072,7 @@
 <br />
 
 ## [network_player.h](#network_player.h)
+- MAX_DESCRIPTION_STRING
 - MAX_RX_SEQ_IDS
 - NETWORK_PLAYER_PING_TIMEOUT
 - NETWORK_PLAYER_TIMEOUT

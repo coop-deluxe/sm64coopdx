@@ -5766,6 +5766,9 @@ PLAYER_INTERACTIONS_SOLID = 1
 PLAYER_INTERACTIONS_PVP = 2
 
 --- @type integer
+MAX_DESCRIPTION_STRING = 20
+
+--- @type integer
 MAX_RX_SEQ_IDS = 256
 
 --- @type integer
