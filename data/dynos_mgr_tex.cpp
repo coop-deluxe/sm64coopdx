@@ -489,8 +489,8 @@ bool DynOS_Tex_Get(const char* aTexName, struct TextureInfo* aOutTexInfo) {
                 // texture width or height is NPOT
                 if ((_Data->mRawWidth > 0 && _Data->mRawWidth & (_Data->mRawWidth - 1) == 0) ||
                     (_Data->mRawHeight > 0 && _Data->mRawHeight & (_Data->mRawHeight - 1) == 0)) {
-                    PrintError("Attempted to load tex file with non power of two width or height: %s", aTexName);
-                    PrintConsole(CONSOLE_MESSAGE_ERROR, "Attempted to load tex file with non power of two width or height: %s", aTexName);
+                    PrintError("Tex file '%s' has non power of two width or height", aTexName);
+                    PrintConsole(CONSOLE_MESSAGE_WARNING, "Tex file '%s' has non power of two width or height", aTexName);
                     return false;
                 }
                 _Data->mRawFormat = G_IM_FMT_RGBA;
