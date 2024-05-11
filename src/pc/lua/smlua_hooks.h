@@ -54,6 +54,7 @@ enum LuaHookedEventType {
     HOOK_ON_OBJECT_LOAD,
     HOOK_ON_PLAY_SOUND,
     HOOK_ON_SEQ_LOAD,
+    HOOK_ON_ATTACK_OBJECT,
     HOOK_MAX,
 };
 
@@ -101,6 +102,7 @@ static const char* LuaHookedEventTypeName[] = {
     "HOOK_ON_OBJECT_LOAD",
     "HOOK_ON_PLAY_SOUND",
     "HOOK_ON_SEQ_LOAD",
+    "HOOK_ON_ATTACK_OBJECT",
     "HOOK_MAX"
 };
 
@@ -131,6 +133,7 @@ void smlua_call_event_hooks_mario_params(enum LuaHookedEventType hookType, struc
 void smlua_call_event_hooks_mario_params_ret_bool(enum LuaHookedEventType hookType, struct MarioState* m1, struct MarioState* m2, u32 interaction, bool* returnValue);
 void smlua_call_event_hooks_interact_params(enum LuaHookedEventType hookType, struct MarioState* m, struct Object* obj, u32 interactType, bool interactValue);
 void smlua_call_event_hooks_interact_params_ret_bool(enum LuaHookedEventType hookType, struct MarioState* m, struct Object* obj, u32 interactType, bool* returnValue);
+void smlua_call_event_hooks_interact_params_no_ret(enum LuaHookedEventType hookType, struct MarioState* m, struct Object* obj, u32 interactType);
 void smlua_call_event_hooks_object_param(enum LuaHookedEventType hookType, struct Object* obj);
 void smlua_call_event_hooks_object_model_param(enum LuaHookedEventType hookType, struct Object* obj, s32 modelID);
 bool smlua_call_event_hooks_ret_int(enum LuaHookedEventType hookType, s32* returnValue);

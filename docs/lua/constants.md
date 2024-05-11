@@ -3335,7 +3335,8 @@
 | HOOK_ON_OBJECT_LOAD | 40 |
 | HOOK_ON_PLAY_SOUND | 41 |
 | HOOK_ON_SEQ_LOAD | 42 |
-| HOOK_MAX | 43 |
+| HOOK_ON_ATTACK_OBJECT | 43 |
+| HOOK_MAX | 44 |
 
 [:arrow_up_small:](#)
 

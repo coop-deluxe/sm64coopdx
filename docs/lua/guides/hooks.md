@@ -129,6 +129,8 @@ The lua functions sent to `hook_event()` will be automatically called by SM64 wh
 | HOOK_OVERRIDE_PHYS_STEP_DEFACTO_SPEED | Called when slope defacto speed for walking is being calculated, overrides the floor normal in the equation | [MarioState](../structs.md#MarioState) mario |
 | HOOK_ON_OBJECT_LOAD | Called when an object is spawned in | [Object](../structs.md#Object) obj |
 | HOOK_ON_PLAY_SOUND | Called when a sound is going to play, return a `SOUND_*` constant or `NO_SOUND` to override the sound | `integer` soundBits, `Vec3f` pos |
+| HOOK_ON_SEQ_LOAD | Called when a sequence is going to play, return a `SEQ_*` constant to override the sequence. `SEQ_SOUND_PLAYER` (0) is silence. | `integer` player, `integer` seqID |
+| HOOK_ON_ATTACK_OBJECT | Called when a player attacks an object. May be double-fired in some cases, you'll need to write special code for this | [MarioState](structs.md#MarioState) attacker, [Object](structs.md#Object) victim, `integer` interactionId |
 
 ### Parameters
 
