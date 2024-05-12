@@ -8941,6 +8941,11 @@ function deref_s32_pointer(pointer)
 end
 
 --- @return boolean
+function djui_is_playerlist_open()
+    -- ...
+end
+
+--- @return boolean
 function djui_is_popup_disabled()
     -- ...
 end
@@ -9175,11 +9180,6 @@ end
 
 --- @return boolean
 function is_game_paused()
-    -- ...
-end
-
---- @return boolean
-function is_playerlist_open()
     -- ...
 end
 

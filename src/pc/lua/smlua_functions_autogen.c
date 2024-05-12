@@ -29391,6 +29391,21 @@ int smlua_func_deref_s32_pointer(lua_State* L) {
     return 1;
 }
 
+int smlua_func_djui_is_playerlist_open(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "djui_is_playerlist_open", 0, top);
+        return 0;
+    }
+
+
+    lua_pushboolean(L, djui_is_playerlist_open());
+
+    return 1;
+}
+
 int smlua_func_djui_is_popup_disabled(UNUSED lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -30068,21 +30083,6 @@ int smlua_func_is_game_paused(UNUSED lua_State* L) {
 
 
     lua_pushboolean(L, is_game_paused());
-
-    return 1;
-}
-
-int smlua_func_is_playerlist_open(UNUSED lua_State* L) {
-    if (L == NULL) { return 0; }
-
-    int top = lua_gettop(L);
-    if (top != 0) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "is_playerlist_open", 0, top);
-        return 0;
-    }
-
-
-    lua_pushboolean(L, is_playerlist_open());
 
     return 1;
 }
@@ -33735,6 +33735,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "camera_unfreeze", smlua_func_camera_unfreeze);
     smlua_bind_function(L, "course_is_main_course", smlua_func_course_is_main_course);
     smlua_bind_function(L, "deref_s32_pointer", smlua_func_deref_s32_pointer);
+    smlua_bind_function(L, "djui_is_playerlist_open", smlua_func_djui_is_playerlist_open);
     smlua_bind_function(L, "djui_is_popup_disabled", smlua_func_djui_is_popup_disabled);
     smlua_bind_function(L, "djui_popup_create_global", smlua_func_djui_popup_create_global);
     smlua_bind_function(L, "djui_reset_popup_disabled_override", smlua_func_djui_reset_popup_disabled_override);
@@ -33776,7 +33777,6 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "hud_set_value", smlua_func_hud_set_value);
     smlua_bind_function(L, "hud_show", smlua_func_hud_show);
     smlua_bind_function(L, "is_game_paused", smlua_func_is_game_paused);
-    smlua_bind_function(L, "is_playerlist_open", smlua_func_is_playerlist_open);
     smlua_bind_function(L, "is_transition_playing", smlua_func_is_transition_playing);
     smlua_bind_function(L, "movtexqc_register", smlua_func_movtexqc_register);
     smlua_bind_function(L, "play_transition", smlua_func_play_transition);

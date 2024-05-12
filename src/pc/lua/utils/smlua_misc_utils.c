@@ -638,7 +638,7 @@ s32 get_dialog_response(void) {
 
 ///
 
-bool is_playerlist_open(void) {
+bool djui_is_playerlist_open(void) {
     return gDjuiPlayerList->base.visible;
 }
 

@@ -158,7 +158,7 @@ u32 get_global_timer(void);
 
 s32 get_dialog_response(void);
 
-bool is_playerlist_open(void);
+bool djui_is_playerlist_open(void);
 
 void set_window_title(const char* title);
 void reset_window_title(void);

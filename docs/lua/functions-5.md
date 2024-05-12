@@ -1168,6 +1168,24 @@
 
 <br />
 
+## [djui_is_playerlist_open](#djui_is_playerlist_open)
+
+### Lua Example
+`local booleanValue = djui_is_playerlist_open()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool djui_is_playerlist_open(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [djui_is_popup_disabled](#djui_is_popup_disabled)
 
 ### Lua Example
@@ -1950,24 +1968,6 @@
 
 ### C Prototype
 `bool is_game_paused(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [is_playerlist_open](#is_playerlist_open)
-
-### Lua Example
-`local booleanValue = is_playerlist_open()`
-
-### Parameters
-- None
-
-### Returns
-- `boolean`
-
-### C Prototype
-`bool is_playerlist_open(void);`
 
 [:arrow_up_small:](#)
 
