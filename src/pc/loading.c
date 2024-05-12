@@ -5,7 +5,7 @@
 #include "loading.h"
 #include "pc/utils/misc.h"
 #include "pc/cliopts.h"
-#include "rom_checker.h"
+#include "startup.h"
 
 extern ALIGNED8 u8 texture_coopdx_logo[];
 

@@ -7,10 +7,12 @@ extern "C" {
 #include "platform.h"
 #include "mods/mods_utils.h" // for str_ends_with
 #include "mods/mod_cache.h"  // for md5 hashing
+#include "loading.h"
 }
 
-#include "loading.h"
+namespace fs = std::filesystem;
 
+bool gUserFolderCopied = false;
 bool gRomIsValid = false;
 char gRomFilename[255] = "";
 
@@ -27,6 +29,16 @@ static struct VanillaMD5 sVanillaMD5[] = {
     { "us", "20b854b239203baf6c961b850a4a51a2" },
     { NULL, NULL },
 };
+
+static void copy_old_user_folder() {
+    char* oldpath = (char*)sys_old_user_path();
+    char* newpath = (char*)sys_user_path();
+
+    if (fs::exists(oldpath) && (fs::is_empty(newpath) || !fs::exists(newpath))) {
+        fs::copy(oldpath, newpath);
+        gUserFolderCopied = true;
+    }
+}
 
 static bool is_rom_valid(const std::string romPath) {
     u8 dataHash[16] = { 0 };
@@ -71,6 +83,10 @@ inline static bool scan_path_for_rom(const char *dir) {
 }
 
 extern "C" {
+void old_user_folder_handler(void) {
+    copy_old_user_folder();
+}
+
 bool main_rom_handler(void) {
     if (scan_path_for_rom(sys_user_path())) { return true; }
     scan_path_for_rom(sys_exe_path());

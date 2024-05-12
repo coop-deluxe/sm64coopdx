@@ -85,6 +85,28 @@ const char *sys_user_path(void) {
     static char path[SYS_MAX_PATH] = { 0 };
 
     // get the new pref path from SDL
+    char *sdlpath = SDL_GetPrefPath("", "sm64coopdx");
+    if (sdlpath) {
+        const unsigned int len = strlen(sdlpath);
+        strncpy(path, sdlpath, sizeof(path));
+        path[sizeof(path)-1] = 0;
+
+        SDL_free(sdlpath);
+
+        if (path[len-1] == '/' || path[len-1] == '\\')
+            path[len-1] = 0; // strip the trailing separator
+
+        if (!fs_sys_dir_exists(path) && !fs_sys_mkdir(path))
+            path[0] = 0; // somehow failed, we got no user path
+    }
+
+    return path;
+}
+
+const char *sys_old_user_path(void) {
+    static char path[SYS_MAX_PATH] = { 0 };
+
+    // get the new pref path from SDL
     char *sdlpath = SDL_GetPrefPath("", "sm64ex-coop");
     if (sdlpath) {
         const unsigned int len = strlen(sdlpath);
@@ -132,6 +154,10 @@ static void sys_fatal_impl(const char *msg) {
 #endif
 
 const char *sys_user_path(void) {
+    return ".";
+}
+
+const char *sys_old_user_path(void) {
     return ".";
 }
 

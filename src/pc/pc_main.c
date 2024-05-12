@@ -19,7 +19,7 @@
 #include "audio/audio_null.h"
 
 #include "rom_assets.h"
-#include "rom_checker.h"
+#include "startup.h"
 #include "pc_main.h"
 #include "loading.h"
 #include "cliopts.h"
@@ -372,6 +372,8 @@ int main(int argc, char *argv[]) {
     }
 
 #endif
+
+    old_user_folder_handler();
 
     const char *userpath = gCLIOpts.savePath[0] ? gCLIOpts.savePath : sys_user_path();
     fs_init(userpath);
