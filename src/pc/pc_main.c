@@ -435,6 +435,11 @@ int main(int argc, char *argv[]) {
         configNetworkSystem = NS_SOCKET;
         configHostPort = gCLIOpts.networkPort;
 
+        // Horrible, hacky fix for mods that access marioObj straight away
+        // best fix: host with the standard main menu method
+        static struct Object sHackyObject = { 0 };
+        gMarioStates[0].marioObj = &sHackyObject;
+
         extern void djui_panel_do_host(bool reconnecting, bool playSound);
         djui_panel_do_host(NULL, false);
     } else {
