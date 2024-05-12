@@ -1699,6 +1699,7 @@
    - [hud_set_value](functions-5.md#hud_set_value)
    - [hud_show](functions-5.md#hud_show)
    - [is_game_paused](functions-5.md#is_game_paused)
+   - [is_playerlist_open](functions-5.md#is_playerlist_open)
    - [is_transition_playing](functions-5.md#is_transition_playing)
    - [movtexqc_register](functions-5.md#movtexqc_register)
    - [play_transition](functions-5.md#play_transition)

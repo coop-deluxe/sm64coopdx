@@ -30072,6 +30072,21 @@ int smlua_func_is_game_paused(UNUSED lua_State* L) {
     return 1;
 }
 
+int smlua_func_is_playerlist_open(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "is_playerlist_open", 0, top);
+        return 0;
+    }
+
+
+    lua_pushboolean(L, is_playerlist_open());
+
+    return 1;
+}
+
 int smlua_func_is_transition_playing(UNUSED lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -33761,6 +33776,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "hud_set_value", smlua_func_hud_set_value);
     smlua_bind_function(L, "hud_show", smlua_func_hud_show);
     smlua_bind_function(L, "is_game_paused", smlua_func_is_game_paused);
+    smlua_bind_function(L, "is_playerlist_open", smlua_func_is_playerlist_open);
     smlua_bind_function(L, "is_transition_playing", smlua_func_is_transition_playing);
     smlua_bind_function(L, "movtexqc_register", smlua_func_movtexqc_register);
     smlua_bind_function(L, "play_transition", smlua_func_play_transition);

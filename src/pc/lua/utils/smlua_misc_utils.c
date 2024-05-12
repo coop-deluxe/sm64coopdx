@@ -18,6 +18,7 @@
 #include "game/level_update.h"
 #include "pc/djui/djui_console.h"
 #include "pc/djui/djui_hud_utils.h"
+#include "pc/djui/djui_panel_playerlist.h"
 #include "game/skybox.h"
 #include "pc/gfx/gfx_pc.h"
 #include "include/course_table.h"
@@ -631,8 +632,14 @@ u32 get_global_timer(void) {
 
 ///
 
-s32 get_dialog_response() {
+s32 get_dialog_response(void) {
     return gDialogResponse;
+}
+
+///
+
+bool is_playerlist_open(void) {
+    return gDjuiPlayerList->base.visible;
 }
 
 ///

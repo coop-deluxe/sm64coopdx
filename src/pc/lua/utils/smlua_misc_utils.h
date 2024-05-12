@@ -156,7 +156,9 @@ void set_override_envfx(s32 envfx);
 
 u32 get_global_timer(void);
 
-s32 get_dialog_response();
+s32 get_dialog_response(void);
+
+bool is_playerlist_open(void);
 
 void set_window_title(const char* title);
 void reset_window_title(void);

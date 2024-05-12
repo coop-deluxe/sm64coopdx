@@ -9179,6 +9179,11 @@ function is_game_paused()
 end
 
 --- @return boolean
+function is_playerlist_open()
+    -- ...
+end
+
+--- @return boolean
 function is_transition_playing()
     -- ...
 end
