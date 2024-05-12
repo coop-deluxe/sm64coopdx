@@ -76,7 +76,6 @@ struct ServerSettings gServerSettings = {
     .bubbleDeath = TRUE,
     .enablePlayersInLevelDisplay = TRUE,
     .enablePlayerList = TRUE,
-    .enableChat = TRUE,
     .headlessServer = FALSE,
     .nametags = TRUE,
     .maxPlayers = MAX_PLAYERS,
@@ -125,7 +124,6 @@ bool network_init(enum NetworkType inNetworkType, bool reconnecting) {
     gServerSettings.bubbleDeath = configBubbleDeath;
     gServerSettings.enablePlayersInLevelDisplay = TRUE;
     gServerSettings.enablePlayerList = TRUE;
-    gServerSettings.enableChat = TRUE;
     gServerSettings.nametags = configNametags;
     gServerSettings.maxPlayers = configAmountofPlayers;
     gServerSettings.pauseAnywhere = configPauseAnywhere;

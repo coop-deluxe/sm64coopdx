@@ -223,7 +223,7 @@ bool djui_interactable_on_key_down(int scancode) {
         return true;
     }
 
-    if (gDjuiChatBox != NULL && !gDjuiChatBoxFocus && gServerSettings.enableChat) {
+    if (gDjuiChatBox != NULL && !gDjuiChatBoxFocus) {
         bool pressChat = false;
         for (int i = 0; i < MAX_BINDS; i++) {
             if (scancode == (int)configKeyChat[i]) { pressChat = true; }

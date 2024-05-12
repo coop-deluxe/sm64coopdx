@@ -2514,7 +2514,6 @@
 | ----- | ---- | ------ |
 | bouncyLevelBounds | [enum BouncyLevelBounds](constants.md#enum-BouncyLevelBounds) |  |
 | bubbleDeath | `integer` |  |
-| enableChat | `integer` |  |
 | enablePlayerList | `integer` |  |
 | enablePlayersInLevelDisplay | `integer` |  |
 | headlessServer | `integer` |  |
