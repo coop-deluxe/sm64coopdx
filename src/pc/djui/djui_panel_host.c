@@ -173,8 +173,8 @@ void djui_panel_host_create(struct DjuiBase* caller) {
             djui_base_set_alignment(&text1->base, DJUI_HALIGN_LEFT, DJUI_VALIGN_TOP);
             djui_text_set_drop_shadow(text1, 64, 64, 64, 100);
 
-            char starString[32] = { 0 };
-            snprintf(starString, 32, "%c x%d", '~' + 1, save_file_get_total_star_count(configHostSaveSlot - 1, 0, 24));
+            char starString[64] = { 0 };
+            snprintf(starString, 64, "%c x%d - %s", '~' + 1, save_file_get_total_star_count(configHostSaveSlot - 1, 0, 24), configSaveNames[configHostSaveSlot]);
             struct DjuiButton* button1 = djui_button_create(&rect2->base, starString, DJUI_BUTTON_STYLE_NORMAL, djui_panel_host_save_create);
             djui_base_set_size(&button1->base, 0.45f, 32);
             djui_base_set_alignment(&button1->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_TOP);

@@ -12,6 +12,7 @@
 #define MAX_VOLUME 127
 #define MAX_CONFIG_STRING 64
 #define MAX_PLAYER_STRING 60
+#define MAX_SAVE_NAME_STRING 32
 
 #define DEFAULT_PORT 7777
 #define DEFAULT_COOPNET_IP "net.coop64.us"
@@ -26,6 +27,8 @@ typedef struct {
     bool settings_changed;
     unsigned int msaa;
 } ConfigWindow;
+
+extern char configSaveNames[4][MAX_SAVE_NAME_STRING];
 
 extern ConfigWindow configWindow;
 extern unsigned int configFiltering;
