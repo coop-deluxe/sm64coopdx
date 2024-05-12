@@ -16,6 +16,7 @@ sm64coopdx Contributors:
     iZePlayz
     kermeet
     Sharen
+    eeliottheking
 
 sm64ex-coop Developers:
     Agent X
