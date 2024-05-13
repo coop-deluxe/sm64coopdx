@@ -31,36 +31,24 @@ SpatialPartitionCell gDynamicSurfacePartition[NUM_CELLS][NUM_CELLS];
 /**
  * Pools of data to contain either surface nodes or surfaces.
  */
-struct GrowingPool* sSurfaceNodePool = NULL;
-struct GrowingPool* sSurfacePool = NULL;
+static struct GrowingArray *sSurfaceNodePool = NULL;
+static struct GrowingArray *sSurfacePool = NULL;
 
 /**
  * Allocate the part of the surface node pool to contain a surface node.
  */
-static struct SurfaceNode* alloc_surface_node(void) {
-    struct SurfaceNode* node = (struct SurfaceNode*)growing_pool_alloc(sSurfaceNodePool, sizeof(struct SurfaceNode));
-    node->next = NULL;
-
-    gSurfaceNodesAllocated++;
-    return node;
+static struct SurfaceNode *alloc_surface_node(void) {
+    sSurfaceNodePool->count = gSurfaceNodesAllocated++;
+    return growing_array_alloc(sSurfaceNodePool, sizeof(struct SurfaceNode));
 }
 
 /**
  * Allocate the part of the surface pool to contain a surface and
  * initialize the surface.
  */
-static struct Surface* alloc_surface(void) {
-    struct Surface* surface = (struct Surface*)growing_pool_alloc(sSurfacePool, sizeof(struct Surface));
-
-    surface->type = 0;
-    surface->force = 0;
-    surface->flags = 0;
-    surface->room = 0;
-    surface->object = NULL;
-
-    gSurfacesAllocated++;
-
-    return surface;
+static struct Surface *alloc_surface(void) {
+    sSurfacePool->count = gSurfacesAllocated++;
+    return growing_array_alloc(sSurfacePool, sizeof(struct Surface));
 }
 
 /**
@@ -481,8 +469,8 @@ void alloc_surface_pools(void) {
     clear_static_surfaces();
     clear_dynamic_surfaces();
 
-    sSurfaceNodePool = growing_pool_init(sSurfaceNodePool, sizeof(struct SurfaceNode) * 1000);
-    sSurfacePool = growing_pool_init(sSurfacePool, sizeof(struct Surface) * 1000);
+    sSurfaceNodePool = growing_array_init(sSurfaceNodePool, 0x1000);
+    sSurfacePool = growing_array_init(sSurfacePool, 0x400);
 
     gEnvironmentRegions = NULL;
     gSurfaceNodesAllocated = 0;

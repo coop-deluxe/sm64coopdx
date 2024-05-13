@@ -2,6 +2,7 @@
 #include <string.h>
 
 #include "memory.h"
+#include "print.h"
 #include "pc/debuglog.h"
 
 #define ALIGN16(val) (((val) + 0xF) & ~0xF)
@@ -178,6 +179,63 @@ void growing_pool_free_pool(struct GrowingPool *pool) {
         node = prev;
     }
     free(pool);
+}
+
+  ///////////////////
+ // growing array //
+///////////////////
+
+struct GrowingArray *growing_array_init(struct GrowingArray *array, u32 capacity) {
+    growing_array_free(&array);
+    array = calloc(1, sizeof(struct GrowingArray));
+    array->buffer = calloc(capacity, sizeof(void *));
+    array->capacity = capacity;
+    array->count = 0;
+    return array;
+}
+
+void *growing_array_alloc(struct GrowingArray *array, u32 size) {
+    if (array && array->buffer) {
+
+        // Increase capacity if needed
+        while (array->count >= array->capacity) {
+            u32 newCapacity = array->capacity * 2;
+            void **newBuffer = calloc(newCapacity, sizeof(void *));
+            memcpy(newBuffer, array->buffer, array->capacity * sizeof(void *));
+            free(array->buffer);
+            array->buffer = newBuffer;
+            array->capacity = newCapacity;
+        }
+
+        // Alloc element if needed
+        void **elem = &array->buffer[array->count++];
+        if (!*elem) {
+            *elem = malloc(size);
+        }
+        memset(*elem, 0, size);
+        return *elem;
+    }
+    return NULL;
+}
+
+void growing_array_free(struct GrowingArray **array) {
+    if (*array) {
+        for (u32 i = 0; i != (*array)->capacity; ++i) {
+            if ((*array)->buffer[i]) {
+                free((*array)->buffer[i]);
+            }
+        }
+        free((*array)->buffer);
+        free(*array);
+        *array = NULL;
+    }
+}
+
+void growing_array_debug_print(struct GrowingArray *array, const char *name, s32 x, s32 y) {
+    char text[256];
+    u32 allocated = 0; for (u32 i = 0; i != array->capacity; ++i) { allocated += (array->buffer[i] != NULL); }
+    snprintf(text, 256, "%-12s %5u/%5u/%5u", name, array->count, allocated, array->capacity);
+    print_text(x, y, text);
 }
 
   ///////////////////
