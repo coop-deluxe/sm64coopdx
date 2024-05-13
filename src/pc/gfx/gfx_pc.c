@@ -1865,6 +1865,7 @@ void gfx_shutdown(void) {
         if (gfx_wapi->shutdown) gfx_wapi->shutdown();
         gfx_wapi = NULL;
     }
+    gGfxInited = false;
 }
 
   /////////////////////////

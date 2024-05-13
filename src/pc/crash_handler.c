@@ -28,6 +28,7 @@ char gLastRemoteBhv[256] = "";
 #include "pc/mods/mods.h"
 #include "pc/debuglog.h"
 #include "pc/pc_main.h"
+#include "controller/controller_keyboard.h"
 
 typedef struct {
     s32 x, y;
@@ -201,33 +202,12 @@ void render_create_dl_ortho_matrix(void) {
     gSPMatrix(gDisplayListHead++, &sOrthoMatrix, G_MTX_PROJECTION | G_MTX_MUL | G_MTX_NOPUSH);
 }
 
-static void crash_handler_produce_one_frame(void) {
-    extern u8 gRenderingInterpolated;
-    gRenderingInterpolated = false;
-
-    // Start frame
-    gfx_start_frame();
-    config_gfx_pool();
-    init_render_image();
-    create_dl_ortho_matrix();
-
+static void crash_handler_produce_one_frame_callback(void) {
     float minAspectRatio = 1.743468f;
     float aspectScale = 1.0f;
     if (gfx_current_dimensions.aspect_ratio < minAspectRatio) {
         aspectScale = gfx_current_dimensions.aspect_ratio / minAspectRatio;
     }
-
-    // Fix scaling issues
-    extern Vp D_8032CF00;
-    gSPViewport(gDisplayListHead++, VIRTUAL_TO_PHYSICAL(&D_8032CF00));
-    gDPSetScissor(gDisplayListHead++, G_SC_NON_INTERLACE, 0, BORDER_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT - BORDER_HEIGHT);
-
-    // Clear screen
-    create_dl_translation_matrix(MENU_MTX_PUSH, GFX_DIMENSIONS_FROM_LEFT_EDGE(0), 240.f, 0.f);
-    create_dl_scale_matrix(MENU_MTX_NOPUSH, (GFX_DIMENSIONS_ASPECT_RATIO * SCREEN_HEIGHT) / 130.f, 3.f, 1.f);
-    gDPSetEnvColor(gDisplayListHead++, 0x02, 0x06, 0x0F, 0xFF);
-    gSPDisplayList(gDisplayListHead++, dl_draw_text_bg_box);
-    gSPPopMatrix(gDisplayListHead++, G_MTX_MODELVIEW);
 
     // Print text
     const struct DjuiFont* font = gDjuiFonts[0];
@@ -274,13 +254,12 @@ static void crash_handler_produce_one_frame(void) {
         // pop
         gSPPopMatrix(gDisplayListHead++, G_MTX_MODELVIEW);
     }
+}
 
-    // Render frame
-    end_master_display_list();
-    alloc_display_list(0);
-    gfx_run((Gfx*) gGfxSPTask->task.t.data_ptr); // send_display_list
-    display_and_vsync();
-    gfx_end_frame();
+static void crash_handler_produce_one_frame(void) {
+    extern u8 gRenderingInterpolated;
+    gRenderingInterpolated = false;
+    produce_one_dummy_frame(crash_handler_produce_one_frame_callback);
 }
 
 static void crash_handler_add_info_str(CrashHandlerText** pTextP, f32 x, f32 y, const char* title, const char* value) {
@@ -675,7 +654,10 @@ static void crash_handler(const int signalNum, siginfo_t *info, UNUSED ucontext_
 #endif
 
     // In case the game crashed before the game window opened
-    if (!gGfxInited) gfx_init(&WAPI, &RAPI, TITLE);
+    if (!gGfxInited) {
+        gfx_init(&WAPI, &RAPI, TITLE);
+        WAPI.set_keyboard_callbacks(keyboard_on_key_down, keyboard_on_key_up, keyboard_on_all_keys_up, keyboard_on_text_input);
+    }
     if (!gGameInited) djui_unicode_init();
 
     // Main loop

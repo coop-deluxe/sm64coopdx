@@ -26,6 +26,8 @@ void convert_string_sm64_to_ascii(char *strAscii, const u8 *str64);
 
 struct CourseName *gReplacedActNameTable[COURSE_END];
 
+static bool sSmluaTextUtilsInited = false;
+
 // Save all vanilla act names and course names
 void smlua_text_utils_init(void) {
     void **actNameTbl = get_act_name_table();
@@ -54,6 +56,17 @@ void smlua_text_utils_init(void) {
             }
             courseActNames->actName[MAX_ACTS_AND_100_COINS - 1].modIndex = -1;
         }
+    }
+    sSmluaTextUtilsInited = true;
+}
+
+void smlua_text_utils_shutdown(void) {
+    if (sSmluaTextUtilsInited) {
+        for (s16 courseNum = 0; courseNum < COURSE_END; courseNum++) {
+            free(gReplacedActNameTable[courseNum]->actName);
+            free(gReplacedActNameTable[courseNum]);
+        }
+        sSmluaTextUtilsInited = false;
     }
 }
 
@@ -130,16 +143,18 @@ void smlua_text_utils_reset_all(void) {
         sReplacedActName[i] = false;
     }
 
-    for (s32 courseNum = 0; courseNum < COURSE_COUNT; courseNum++) {
-        struct CourseName* courseActNames = gReplacedActNameTable[courseNum];
-        snprintf(courseActNames->name, 50, "%s", courseActNames->orig);
-        courseActNames->modIndex = -1;
+    if (sSmluaTextUtilsInited) {
+        for (s32 courseNum = 0; courseNum < COURSE_COUNT; courseNum++) {
+            struct CourseName* courseActNames = gReplacedActNameTable[courseNum];
+            snprintf(courseActNames->name, 50, "%s", courseActNames->orig);
+            courseActNames->modIndex = -1;
 
-        // Individual acts
-        if (COURSE_IS_MAIN_COURSE(courseNum)) {
-            for (s16 actNum = 0; actNum < MAX_ACTS_AND_100_COINS; actNum++) {
-                snprintf(courseActNames->actName[actNum].name, 50, "%s", courseActNames->actName[actNum].orig);
-                courseActNames->actName[actNum].modIndex = -1;
+            // Individual acts
+            if (COURSE_IS_MAIN_COURSE(courseNum)) {
+                for (s16 actNum = 0; actNum < MAX_ACTS_AND_100_COINS; actNum++) {
+                    snprintf(courseActNames->actName[actNum].name, 50, "%s", courseActNames->actName[actNum].orig);
+                    courseActNames->actName[actNum].modIndex = -1;
+                }
             }
         }
     }

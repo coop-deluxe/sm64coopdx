@@ -291,12 +291,13 @@ void game_deinit(void) {
     controller_shutdown();
     audio_custom_shutdown();
     audio_shutdown();
-    gfx_shutdown();
     network_shutdown(true, true, false, false);
+    smlua_text_utils_shutdown();
     smlua_shutdown();
     smlua_audio_custom_deinit();
     mods_shutdown();
     djui_shutdown();
+    gfx_shutdown();
     gGameInited = false;
 }
 

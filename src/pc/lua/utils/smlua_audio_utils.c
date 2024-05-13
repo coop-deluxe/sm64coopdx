@@ -159,8 +159,8 @@ void smlua_audio_utils_replace_sequence(u8 sequenceId, u8 bankId, u8 defaultVolu
 #define MA_SOUND_STREAM_FLAGS (MA_SOUND_FLAG_NO_SPATIALIZATION | MA_SOUND_FLAG_STREAM)
 #define MA_SOUND_SAMPLE_FLAGS (MA_SOUND_FLAG_NO_SPATIALIZATION | MA_SOUND_FLAG_NO_PITCH | MA_SOUND_FLAG_DECODE) // No pitch, pre-decode audio samples
 
-struct DynamicPool *sModAudio;
 ma_engine gModAudioEngine;
+static struct DynamicPool *sModAudio;
 
 static struct ModAudio* find_mod_audio(struct ModFile* file) {
     struct DynamicPoolNode* node = sModAudio->tail;
@@ -543,7 +543,10 @@ void smlua_audio_custom_init(void) {
 }
 
 void smlua_audio_custom_deinit(void) {
-    audio_custom_shutdown();
-    free(sModAudio);
-    ma_engine_uninit(&gModAudioEngine);
+    if (sModAudio) {
+        audio_custom_shutdown();
+        free(sModAudio);
+        ma_engine_uninit(&gModAudioEngine);
+        sModAudio = NULL;
+    }
 }
