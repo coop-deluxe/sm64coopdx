@@ -2618,6 +2618,91 @@
 
 <br />
 
+## [obj_get_field_f32](#obj_get_field_f32)
+
+### Lua Example
+`local numberValue = obj_get_field_f32(o, fieldIndex)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| o | [Object](structs.md#Object) |
+| fieldIndex | `integer` |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 obj_get_field_f32(struct Object *o, s32 fieldIndex);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_get_field_s16](#obj_get_field_s16)
+
+### Lua Example
+`local integerValue = obj_get_field_s16(o, fieldIndex, fieldSubIndex)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| o | [Object](structs.md#Object) |
+| fieldIndex | `integer` |
+| fieldSubIndex | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s16 obj_get_field_s16(struct Object *o, s32 fieldIndex, s32 fieldSubIndex);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_get_field_s32](#obj_get_field_s32)
+
+### Lua Example
+`local integerValue = obj_get_field_s32(o, fieldIndex)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| o | [Object](structs.md#Object) |
+| fieldIndex | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 obj_get_field_s32(struct Object *o, s32 fieldIndex);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_get_field_u32](#obj_get_field_u32)
+
+### Lua Example
+`local integerValue = obj_get_field_u32(o, fieldIndex)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| o | [Object](structs.md#Object) |
+| fieldIndex | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 obj_get_field_u32(struct Object *o, s32 fieldIndex);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [obj_get_first](#obj_get_first)
 
 ### Lua Example
@@ -3067,6 +3152,95 @@
 
 ### C Prototype
 `void obj_move_xyz(struct Object *o, f32 dx, f32 dy, f32 dz);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_set_field_f32](#obj_set_field_f32)
+
+### Lua Example
+`obj_set_field_f32(o, fieldIndex, value)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| o | [Object](structs.md#Object) |
+| fieldIndex | `integer` |
+| value | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void obj_set_field_f32(struct Object *o, s32 fieldIndex, f32 value);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_set_field_s16](#obj_set_field_s16)
+
+### Lua Example
+`obj_set_field_s16(o, fieldIndex, fieldSubIndex, value)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| o | [Object](structs.md#Object) |
+| fieldIndex | `integer` |
+| fieldSubIndex | `integer` |
+| value | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void obj_set_field_s16(struct Object *o, s32 fieldIndex, s32 fieldSubIndex, s16 value);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_set_field_s32](#obj_set_field_s32)
+
+### Lua Example
+`obj_set_field_s32(o, fieldIndex, value)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| o | [Object](structs.md#Object) |
+| fieldIndex | `integer` |
+| value | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void obj_set_field_s32(struct Object *o, s32 fieldIndex, s32 value);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_set_field_u32](#obj_set_field_u32)
+
+### Lua Example
+`obj_set_field_u32(o, fieldIndex, value)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| o | [Object](structs.md#Object) |
+| fieldIndex | `integer` |
+| value | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void obj_set_field_u32(struct Object *o, s32 fieldIndex, u32 value);`
 
 [:arrow_up_small:](#)
 

@@ -9386,6 +9386,35 @@ function obj_get_collided_object(o, index)
     -- ...
 end
 
+--- @param o Object
+--- @param fieldIndex integer
+--- @return number
+function obj_get_field_f32(o, fieldIndex)
+    -- ...
+end
+
+--- @param o Object
+--- @param fieldIndex integer
+--- @param fieldSubIndex integer
+--- @return integer
+function obj_get_field_s16(o, fieldIndex, fieldSubIndex)
+    -- ...
+end
+
+--- @param o Object
+--- @param fieldIndex integer
+--- @return integer
+function obj_get_field_s32(o, fieldIndex)
+    -- ...
+end
+
+--- @param o Object
+--- @param fieldIndex integer
+--- @return integer
+function obj_get_field_u32(o, fieldIndex)
+    -- ...
+end
+
 --- @param objList ObjectList
 --- @return Object
 function obj_get_first(objList)
@@ -9529,6 +9558,39 @@ end
 --- @param dz number
 --- @return nil
 function obj_move_xyz(o, dx, dy, dz)
+    -- ...
+end
+
+--- @param o Object
+--- @param fieldIndex integer
+--- @param value number
+--- @return nil
+function obj_set_field_f32(o, fieldIndex, value)
+    -- ...
+end
+
+--- @param o Object
+--- @param fieldIndex integer
+--- @param fieldSubIndex integer
+--- @param value integer
+--- @return nil
+function obj_set_field_s16(o, fieldIndex, fieldSubIndex, value)
+    -- ...
+end
+
+--- @param o Object
+--- @param fieldIndex integer
+--- @param value integer
+--- @return nil
+function obj_set_field_s32(o, fieldIndex, value)
+    -- ...
+end
+
+--- @param o Object
+--- @param fieldIndex integer
+--- @param value integer
+--- @return nil
+function obj_set_field_u32(o, fieldIndex, value)
     -- ...
 end
 

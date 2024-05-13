@@ -150,7 +150,7 @@ static void packet_write_object_full_sync(struct Packet* p, struct Object* o) {
     if (!so || !so->fullObjectSync) { return; }
 
     // write all of raw data
-    packet_write(p, o->rawData.asU32, sizeof(u32) * 80);
+    packet_write(p, o->rawData.asU32, sizeof(u32) * OBJECT_NUM_FIELDS);
 }
 
 static void packet_read_object_full_sync(struct Packet* p, struct Object* o) {
@@ -158,7 +158,7 @@ static void packet_read_object_full_sync(struct Packet* p, struct Object* o) {
     if (!so || !so->fullObjectSync) { return; }
 
     // read all of raw data
-    packet_read(p, o->rawData.asU32, sizeof(u32) * 80);
+    packet_read(p, o->rawData.asU32, sizeof(u32) * OBJECT_NUM_FIELDS);
 }
 
 // ----- standard fields ----- //

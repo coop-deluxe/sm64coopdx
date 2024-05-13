@@ -34,7 +34,23 @@ s32 obj_count_objects_with_behavior_id(enum BehaviorId behaviorId);
 
 struct Object *obj_get_collided_object(struct Object *o, s16 index);
 
-// misc obj helpers
+//
+// Object fields
+//
+
+u32 obj_get_field_u32(struct Object *o, s32 fieldIndex);
+s32 obj_get_field_s32(struct Object *o, s32 fieldIndex);
+f32 obj_get_field_f32(struct Object *o, s32 fieldIndex);
+s16 obj_get_field_s16(struct Object *o, s32 fieldIndex, s32 fieldSubIndex);
+
+void obj_set_field_u32(struct Object *o, s32 fieldIndex, u32 value);
+void obj_set_field_s32(struct Object *o, s32 fieldIndex, s32 value);
+void obj_set_field_f32(struct Object *o, s32 fieldIndex, f32 value);
+void obj_set_field_s16(struct Object *o, s32 fieldIndex, s32 fieldSubIndex, s16 value);
+
+//
+// Misc object helpers
+//
 
 struct SpawnParticlesInfo* obj_get_temp_spawn_particles_info(enum ModelExtendedId modelId);
 struct ObjectHitbox* get_temp_object_hitbox(void);

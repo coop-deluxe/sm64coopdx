@@ -124,7 +124,12 @@ bool smlua_valid_lvt(u16 lvt) {
  // obj behavior //
 //////////////////
 
-#define CUSTOM_FIELD_MAX 11
+static const struct { enum LuaValueType lvt; const char *name; } sCustomFieldValidTypes[] = {
+    { LVT_U32, "u32" },
+    { LVT_S32, "s32" },
+    { LVT_F32, "f32" },
+};
+
 #define CUSTOM_FIELD_ITEM_LEN 48
 struct CustomFieldItem {
     char key[CUSTOM_FIELD_ITEM_LEN];
@@ -168,6 +173,24 @@ static void smlua_add_custom_field_linked(struct CustomFieldItem** head, struct 
     }
 }
 
+static enum LuaValueType smlua_get_custom_field_type(const char *name) {
+    for (s32 i = 0; i != ARRAY_COUNT(sCustomFieldValidTypes); ++i) {
+        if (strcmp(name, sCustomFieldValidTypes[i].name) == 0) {
+            return sCustomFieldValidTypes[i].lvt;
+        }
+    }
+    return LVT_MAX;
+}
+
+static const char *smlua_get_custom_field_type_name(enum LuaValueType lvt) {
+    for (s32 i = 0; i != ARRAY_COUNT(sCustomFieldValidTypes); ++i) {
+        if (lvt == sCustomFieldValidTypes[i].lvt) {
+            return sCustomFieldValidTypes[i].name;
+        }
+    }
+    return NULL;
+}
+
 static int smlua_func_define_custom_obj_fields(lua_State* L) {
     LUA_STACK_CHECK_BEGIN();
     if (!smlua_functions_valid_param_count(L, 1)) { return 0; }
@@ -183,7 +206,7 @@ static int smlua_func_define_custom_obj_fields(lua_State* L) {
     }
 
     struct CustomFieldItem* customFieldsHead = NULL;
-    struct CustomFieldItem customFields[CUSTOM_FIELD_MAX] = { 0 };
+    struct CustomFieldItem customFields[OBJECT_NUM_CUSTOM_FIELDS] = { 0 };
     u16 customFieldCount = 0;
 
     // get _custom_object_fields
@@ -227,16 +250,13 @@ static int smlua_func_define_custom_obj_fields(lua_State* L) {
         }
 
         const char* value = smlua_to_string(L, valueIndex);
-        enum LuaValueType lvt = LVT_U32;
-        if (!strcmp(value, "u32")) { lvt = LVT_U32; }
-        else if (!strcmp(value, "s32")) { lvt = LVT_S32; }
-        else if (!strcmp(value, "f32")) { lvt = LVT_F32; }
-        else {
+        enum LuaValueType lvt = smlua_get_custom_field_type(value);
+        if (lvt == LVT_MAX) {
             LOG_LUA_LINE("Invalid value name for define_custom_obj_fields()");
             return 0;
         }
 
-        if (customFieldCount >= CUSTOM_FIELD_MAX) {
+        if (customFieldCount >= OBJECT_NUM_CUSTOM_FIELDS) {
             LOG_LUA_LINE("Ran out of custom fields!");
             return 0;
         }
@@ -250,14 +270,9 @@ static int smlua_func_define_custom_obj_fields(lua_State* L) {
     lua_settop(L, iterationTop);
 
     struct CustomFieldItem* node = customFieldsHead;
-    u32 fieldIndex = 0x1B;
+    u32 fieldIndex = OBJECT_CUSTOM_FIELDS_START;
     while (node != NULL) {
-        // keep fieldIndex in range
-        if (fieldIndex < 0x1B) {
-            fieldIndex = 0x1B;
-        } else if (fieldIndex > 0x22 && fieldIndex < 0x48) {
-            fieldIndex = 0x48;
-        } else if (fieldIndex > 0x4A) {
+        if (fieldIndex >= OBJECT_NUM_FIELDS) {
             LOG_LUA_LINE("Ran out of custom fields!");
             return 0;
         }
@@ -278,7 +293,7 @@ static int smlua_func_define_custom_obj_fields(lua_State* L) {
         }
         lua_settable(L, -3); // set _custom_object_fields
 
-        LOG_INFO("Registered custom object field: %02X - %s", fieldIndex, node->key);
+        LOG_INFO("Registered custom object field: 0x%02X as %s - %s", fieldIndex, smlua_get_custom_field_type_name(node->lvt), node->key);
 
         fieldIndex++;
 
@@ -326,7 +341,7 @@ struct LuaObjectField* smlua_get_custom_field(lua_State* L, u32 lot, int keyInde
     lua_rawget(L, -2);
     u32 fieldIndex = smlua_to_integer(L, -1);
     lua_pop(L, 1);
-    bool validFieldIndex = (fieldIndex >= 0x1B && fieldIndex <= 0x22) || (fieldIndex >= 0x48 && fieldIndex <= 0x4A);
+    bool validFieldIndex = (fieldIndex >= OBJECT_CUSTOM_FIELDS_START && fieldIndex < OBJECT_NUM_FIELDS);
     if (!gSmLuaConvertSuccess || !validFieldIndex) {
         lua_pop(L, 1); // pop value table
         lua_pop(L, 1); // pop _custom_fields

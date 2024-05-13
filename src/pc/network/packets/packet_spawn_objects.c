@@ -22,7 +22,7 @@ struct SpawnObjectData {
     u32 model;
     u32 behaviorId;
     s16 activeFlags;
-    s32 rawData[80];
+    s32 rawData[OBJECT_NUM_FIELDS];
     u8 setHome;
     u8 globalPlayerIndex;
     u16 extendedModelId;
@@ -102,7 +102,7 @@ void network_send_spawn_objects_to(u8 sendToLocalIndex, struct Object* objects[]
         packet_write(&p, &model, sizeof(u32));
         packet_write(&p, &behaviorId, sizeof(u32));
         packet_write(&p, &o->activeFlags, sizeof(s16));
-        packet_write(&p, o->rawData.asU32, sizeof(u32) * 0x50);
+        packet_write(&p, o->rawData.asU32, sizeof(u32) * OBJECT_NUM_FIELDS);
         packet_write(&p, &o->header.gfx.scale[0], sizeof(f32));
         packet_write(&p, &o->header.gfx.scale[1], sizeof(f32));
         packet_write(&p, &o->header.gfx.scale[2], sizeof(f32));
@@ -144,7 +144,7 @@ void network_receive_spawn_objects(struct Packet* p) {
         packet_read(p, &data.model, sizeof(u32));
         packet_read(p, &data.behaviorId, sizeof(u32));
         packet_read(p, &data.activeFlags, sizeof(s16));
-        packet_read(p, &data.rawData, sizeof(u32) * 0x50);
+        packet_read(p, &data.rawData, sizeof(u32) * OBJECT_NUM_FIELDS);
         packet_read(p, &scale[0], sizeof(f32));
         packet_read(p, &scale[1], sizeof(f32));
         packet_read(p, &scale[2], sizeof(f32));
@@ -227,7 +227,7 @@ void network_receive_spawn_objects(struct Packet* p) {
         o->coopFlags |= COOP_OBJ_FLAG_NETWORK;
         o->setHome = data.setHome;
 
-        memcpy(o->rawData.asU32, data.rawData, sizeof(u32) * 80);
+        memcpy(o->rawData.asU32, data.rawData, sizeof(u32) * OBJECT_NUM_FIELDS);
 
         o->header.gfx.scale[0] = scale[0];
         o->header.gfx.scale[1] = scale[1];

@@ -30656,6 +30656,84 @@ int smlua_func_obj_get_collided_object(lua_State* L) {
     return 1;
 }
 
+int smlua_func_obj_get_field_f32(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "obj_get_field_f32", 2, top);
+        return 0;
+    }
+
+    struct Object* o = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "obj_get_field_f32"); return 0; }
+    s32 fieldIndex = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "obj_get_field_f32"); return 0; }
+
+    lua_pushnumber(L, obj_get_field_f32(o, fieldIndex));
+
+    return 1;
+}
+
+int smlua_func_obj_get_field_s16(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 3) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "obj_get_field_s16", 3, top);
+        return 0;
+    }
+
+    struct Object* o = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "obj_get_field_s16"); return 0; }
+    s32 fieldIndex = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "obj_get_field_s16"); return 0; }
+    s32 fieldSubIndex = smlua_to_integer(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "obj_get_field_s16"); return 0; }
+
+    lua_pushinteger(L, obj_get_field_s16(o, fieldIndex, fieldSubIndex));
+
+    return 1;
+}
+
+int smlua_func_obj_get_field_s32(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "obj_get_field_s32", 2, top);
+        return 0;
+    }
+
+    struct Object* o = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "obj_get_field_s32"); return 0; }
+    s32 fieldIndex = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "obj_get_field_s32"); return 0; }
+
+    lua_pushinteger(L, obj_get_field_s32(o, fieldIndex));
+
+    return 1;
+}
+
+int smlua_func_obj_get_field_u32(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "obj_get_field_u32", 2, top);
+        return 0;
+    }
+
+    struct Object* o = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "obj_get_field_u32"); return 0; }
+    s32 fieldIndex = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "obj_get_field_u32"); return 0; }
+
+    lua_pushinteger(L, obj_get_field_u32(o, fieldIndex));
+
+    return 1;
+}
+
 int smlua_func_obj_get_first(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -31054,6 +31132,92 @@ int smlua_func_obj_move_xyz(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "obj_move_xyz"); return 0; }
 
     obj_move_xyz(o, dx, dy, dz);
+
+    return 1;
+}
+
+int smlua_func_obj_set_field_f32(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 3) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "obj_set_field_f32", 3, top);
+        return 0;
+    }
+
+    struct Object* o = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "obj_set_field_f32"); return 0; }
+    s32 fieldIndex = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "obj_set_field_f32"); return 0; }
+    f32 value = smlua_to_number(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "obj_set_field_f32"); return 0; }
+
+    obj_set_field_f32(o, fieldIndex, value);
+
+    return 1;
+}
+
+int smlua_func_obj_set_field_s16(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 4) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "obj_set_field_s16", 4, top);
+        return 0;
+    }
+
+    struct Object* o = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "obj_set_field_s16"); return 0; }
+    s32 fieldIndex = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "obj_set_field_s16"); return 0; }
+    s32 fieldSubIndex = smlua_to_integer(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "obj_set_field_s16"); return 0; }
+    s16 value = smlua_to_integer(L, 4);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "obj_set_field_s16"); return 0; }
+
+    obj_set_field_s16(o, fieldIndex, fieldSubIndex, value);
+
+    return 1;
+}
+
+int smlua_func_obj_set_field_s32(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 3) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "obj_set_field_s32", 3, top);
+        return 0;
+    }
+
+    struct Object* o = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "obj_set_field_s32"); return 0; }
+    s32 fieldIndex = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "obj_set_field_s32"); return 0; }
+    s32 value = smlua_to_integer(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "obj_set_field_s32"); return 0; }
+
+    obj_set_field_s32(o, fieldIndex, value);
+
+    return 1;
+}
+
+int smlua_func_obj_set_field_u32(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 3) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "obj_set_field_u32", 3, top);
+        return 0;
+    }
+
+    struct Object* o = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "obj_set_field_u32"); return 0; }
+    s32 fieldIndex = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "obj_set_field_u32"); return 0; }
+    u32 value = smlua_to_integer(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "obj_set_field_u32"); return 0; }
+
+    obj_set_field_u32(o, fieldIndex, value);
 
     return 1;
 }
@@ -33812,6 +33976,10 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "obj_check_overlap_with_hitbox_params", smlua_func_obj_check_overlap_with_hitbox_params);
     smlua_bind_function(L, "obj_count_objects_with_behavior_id", smlua_func_obj_count_objects_with_behavior_id);
     smlua_bind_function(L, "obj_get_collided_object", smlua_func_obj_get_collided_object);
+    smlua_bind_function(L, "obj_get_field_f32", smlua_func_obj_get_field_f32);
+    smlua_bind_function(L, "obj_get_field_s16", smlua_func_obj_get_field_s16);
+    smlua_bind_function(L, "obj_get_field_s32", smlua_func_obj_get_field_s32);
+    smlua_bind_function(L, "obj_get_field_u32", smlua_func_obj_get_field_u32);
     smlua_bind_function(L, "obj_get_first", smlua_func_obj_get_first);
     smlua_bind_function(L, "obj_get_first_with_behavior_id", smlua_func_obj_get_first_with_behavior_id);
     smlua_bind_function(L, "obj_get_first_with_behavior_id_and_field_f32", smlua_func_obj_get_first_with_behavior_id_and_field_f32);
@@ -33834,6 +34002,10 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "obj_is_secret", smlua_func_obj_is_secret);
     smlua_bind_function(L, "obj_is_valid_for_interaction", smlua_func_obj_is_valid_for_interaction);
     smlua_bind_function(L, "obj_move_xyz", smlua_func_obj_move_xyz);
+    smlua_bind_function(L, "obj_set_field_f32", smlua_func_obj_set_field_f32);
+    smlua_bind_function(L, "obj_set_field_s16", smlua_func_obj_set_field_s16);
+    smlua_bind_function(L, "obj_set_field_s32", smlua_func_obj_set_field_s32);
+    smlua_bind_function(L, "obj_set_field_u32", smlua_func_obj_set_field_u32);
     smlua_bind_function(L, "obj_set_model_extended", smlua_func_obj_set_model_extended);
     smlua_bind_function(L, "obj_set_vel", smlua_func_obj_set_vel);
     smlua_bind_function(L, "set_whirlpools", smlua_func_set_whirlpools);
