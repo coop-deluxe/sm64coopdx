@@ -39,7 +39,6 @@ void bhv_scuttlebug_loop(void) {
     }
 
     struct Object *player = nearest_player_to_object(o);
-    s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
 
     cur_obj_update_floor_and_walls();
     if (o->oSubAction != 0
@@ -62,14 +61,14 @@ void bhv_scuttlebug_loop(void) {
         case 1:
             o->oForwardVel = 5.0f;
             if (player && cur_obj_lateral_dist_from_obj_to_home(player) > 1000.0f) {
-                angleToPlayer = cur_obj_angle_to_home();
+                o->oAngleToMario = cur_obj_angle_to_home();
             } else {
                 if (o->oScuttlebugUnkF8 == 0) {
                     o->oScuttlebugUnkFC = 0;
                     if (player) {
-                        angleToPlayer = obj_angle_to_object(o, player);
+                        o->oAngleToMario = obj_angle_to_object(o, player);
                     }
-                    if (abs_angle_diff(angleToPlayer, o->oMoveAngleYaw) < 0x800) {
+                    if (abs_angle_diff(o->oAngleToMario, o->oMoveAngleYaw) < 0x800) {
                         o->oScuttlebugUnkF8 = 1;
                         o->oVelY = 20.0f;
                         cur_obj_play_sound_2(SOUND_OBJ2_SCUTTLEBUG_ALERT);
@@ -81,17 +80,17 @@ void bhv_scuttlebug_loop(void) {
                         o->oScuttlebugUnkF8 = 0;
                 }
             }
-            if (update_angle_from_move_flags(&angleToPlayer))
+            if (update_angle_from_move_flags(&o->oAngleToMario))
                 o->oSubAction = 2;
-            cur_obj_rotate_yaw_toward(angleToPlayer, 0x200);
+            cur_obj_rotate_yaw_toward(o->oAngleToMario, 0x200);
             break;
         case 2:
             o->oForwardVel = 5.0f;
-            if ((s16) o->oMoveAngleYaw == (s16)angleToPlayer)
+            if ((s16) o->oMoveAngleYaw == (s16)o->oAngleToMario)
                 o->oSubAction = 1;
             if (o->oPosY - o->oHomeY < -200.0f)
                 obj_mark_for_deletion(o);
-            cur_obj_rotate_yaw_toward(angleToPlayer, 0x400);
+            cur_obj_rotate_yaw_toward(o->oAngleToMario, 0x400);
             break;
         case 3:
             o->oFlags &= ~8;
