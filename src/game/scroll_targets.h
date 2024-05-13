@@ -31,7 +31,16 @@ struct ScrollTarget {
     u32 id;
     u32 size;
     Vtx* *vertices;
+
     bool hasOffset;
+    bool hasInterpInit;
+    bool needInterp;
+    f32 *interpF32;
+    f32 *prevF32;
+    s16 *interpS16;
+    s16 *prevS16;
+    u16 bhv;
+
     struct ScrollTarget *next;
 };
 

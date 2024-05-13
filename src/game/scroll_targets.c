@@ -60,7 +60,7 @@ struct ScrollTarget* find_or_create_scroll_targets(u32 id, bool hasOffset) {
     }
 
     if (scroll == NULL) {
-        scroll = malloc(sizeof(struct ScrollTarget));
+        scroll = calloc(1, sizeof(struct ScrollTarget));
         scroll->id = id;
         scroll->size = 0;
         scroll->vertices = NULL;
@@ -91,7 +91,7 @@ void add_vtx_scroll_target(u32 id, Vtx *vtx, u32 size, bool hasOffset) {
     Vtx* *newArray = realloc(scroll->vertices, newSize);
 
     if (!newArray) {
-        newArray = malloc(newSize);
+        newArray = calloc(1, newSize);
         memcpy(newArray, scroll->vertices, oldSize);
         free(scroll->vertices);
     }
@@ -116,10 +116,47 @@ void free_vtx_scroll_targets(void) {
 
     while (scroll) {
         nextScroll = scroll->next;
+        free(scroll->interpF32);
+        free(scroll->prevF32);
+        free(scroll->interpS16);
+        free(scroll->prevS16);
         free(scroll->vertices);
         free(scroll);
         scroll = nextScroll;
     }
 
     sScrollTargets = NULL;
+}
+
+void patch_scroll_targets_before(void) {
+    struct ScrollTarget *scroll = sScrollTargets;
+
+    while (scroll) {
+        scroll->needInterp = false;
+        scroll = scroll->next;
+    }
+}
+
+void patch_scroll_targets_interpolated(f32 delta) {
+    f32 antiDelta = 1.0f - delta;
+    struct ScrollTarget *scroll = sScrollTargets;
+
+    while (scroll) {
+        if (scroll->needInterp) {
+            Vtx* *verts = scroll->vertices;
+            if (scroll->bhv < SCROLL_UV_X) {
+                u8 bhvIndex = MIN(scroll->bhv, 2);
+                for (u16 k = 0; k < scroll->size; k++) {
+                    verts[k]->n.ob[bhvIndex] = scroll->prevF32[k] * antiDelta + scroll->interpF32[k] * delta;
+                }
+            } else {
+                u8 bhvIndex = MIN(scroll->bhv-SCROLL_UV_X, 1);
+                for (u16 k = 0; k < scroll->size; k++) {
+                    verts[k]->n.tc[bhvIndex] = (int) scroll->prevS16[k] * antiDelta + scroll->interpS16[k] * delta;
+                }
+            }
+        }
+
+        scroll = scroll->next;
+    }
 }

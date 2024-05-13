@@ -11,7 +11,8 @@
 #include "pc/pc_main.h"
 #include "pc/utils/misc.h"
 
-static inline void shift_UV_JUMP(Vtx* *verts, u16 vertcount, s16 speed, u16 bhv, u16 cycle) {
+static inline void shift_UV_JUMP(struct ScrollTarget *scroll, u16 vertcount, s16 speed, u16 bhv, u16 cycle) {
+    Vtx* *verts = scroll->vertices;
     u16 i;
 
     if (verts[0]->n.flag++ <= cycle) {
@@ -22,16 +23,17 @@ static inline void shift_UV_JUMP(Vtx* *verts, u16 vertcount, s16 speed, u16 bhv,
 
     if (bhv < SCROLL_UV_X) {
         for (i = 0; i < vertcount; i++) {
-            verts[i]->n.ob[MIN(bhv, 2)] += speed;
+            scroll->interpF32[i] += speed;
         }
     } else {
         for (i = 0; i < vertcount; i++) {
-            verts[i]->n.tc[MIN(bhv-SCROLL_UV_X, 1)] += speed;
+            scroll->interpS16[i] += speed;
         }
     }
 }
 
-static inline void shift_UV_NORMAL(Vtx* *verts, u16 vertcount, s16 speed, u16 bhv, u16 cycle) {
+static inline void shift_UV_NORMAL(struct ScrollTarget *scroll, u16 vertcount, s16 speed, u16 bhv, u16 cycle) {
+    Vtx* *verts = scroll->vertices;
     u16 overflownum = 0x1000;
     u16 correction = 0;
     u16 i;
@@ -44,9 +46,9 @@ static inline void shift_UV_NORMAL(Vtx* *verts, u16 vertcount, s16 speed, u16 bh
 
         for (i = 0; i < vertcount; i++) {
             if (correction == 0) {
-                verts[i]->n.ob[MIN(bhv, 2)] += speed;
+                scroll->interpF32[i] += speed;
             } else {
-                verts[i]->n.ob[MIN(bhv, 2)] -= correction;
+                scroll->interpF32[i] -= correction;
             }
         }
     } else {
@@ -57,28 +59,42 @@ static inline void shift_UV_NORMAL(Vtx* *verts, u16 vertcount, s16 speed, u16 bh
 
         for (i = 0; i < vertcount; i++) {
             if (correction == 0) {
-                verts[i]->n.tc[MIN(bhv-SCROLL_UV_X, 1)] += speed;
+                scroll->interpS16[i] += speed;
             } else {
-                verts[i]->n.tc[MIN(bhv-SCROLL_UV_X, 1)] -= correction;
+                scroll->interpS16[i] -= correction;
             }
         }
     }
 
     if (correction == 0) {
         verts[0]->n.flag++;
+    } else {
+        if (bhv < SCROLL_UV_X) {
+            u8 bhvIndex = MIN(bhv, 2);
+            for (i = 0; i < vertcount; i++) {
+                verts[i]->n.ob[bhvIndex] = scroll->interpF32[i];
+            }
+        } else {
+            u8 bhvIndex = MIN(bhv-SCROLL_UV_X, 1);
+            for (i = 0; i < vertcount; i++) {
+                verts[i]->n.tc[bhvIndex] = scroll->interpS16[i];
+            }
+        }
+        scroll->needInterp = false;
     }
 }
 
-static inline void shift_UV_SINE(Vtx* *verts, u16 vertcount, s16 speed, u16 bhv, u16 cycle) {
+static inline void shift_UV_SINE(struct ScrollTarget *scroll, u16 vertcount, s16 speed, u16 bhv, u16 cycle) {
+    Vtx* *verts = scroll->vertices;
     u32 i;
 
     if (bhv < SCROLL_UV_X) {
         for (i = 0; i < vertcount; i++) {
-            verts[i]->n.ob[MIN(bhv, 2)] += sins(verts[0]->n.flag) * speed;
+            scroll->interpF32[i] += sins(verts[0]->n.flag) * speed;
         }
     } else {
         for (i = 0; i < vertcount; i++) {
-            verts[i]->n.tc[MIN(bhv-SCROLL_UV_X, 1)] += (u16) (sins(verts[0]->n.flag) * speed);
+            scroll->interpS16[i] += (u16) (sins(verts[0]->n.flag) * speed);
         }
     }
     verts[0]->n.flag += cycle * 0x23;
@@ -104,22 +120,60 @@ void uv_update_scroll(void) {
     u16 offset = (u16) round(o->oFaceAnglePitch * 180.0 / 0x8000);
     u32 vtxIndex = (u32) o->oBehParams;
 
-    struct ScrollTarget *scroll = get_scroll_targets(vtxIndex, vertCount, offset);
-    if (!scroll || !scroll->vertices) { return; }
-
     // Check for invalid scrolling behavior
     if (bhv == 3 || bhv > SCROLL_UV_Y) { return; }
 
+    struct ScrollTarget *scroll = get_scroll_targets(vtxIndex, vertCount, offset);
+    if (!scroll || !scroll->vertices) { return; }
+
     Vtx* *verts = scroll->vertices;
+
+    // Init interpolation
+    if (!scroll->hasInterpInit) {
+        scroll->hasInterpInit = true;
+        scroll->bhv = bhv;
+        if (bhv < SCROLL_UV_X) {
+            scroll->interpF32 = calloc(scroll->size, sizeof(f32));
+            scroll->prevF32 = calloc(scroll->size, sizeof(f32));
+
+            u8 bhvIndex = MIN(bhv, 2);
+            for (u16 k = 0; k < scroll->size; k++) {
+                scroll->interpF32[k] = verts[k]->n.ob[bhvIndex];
+            }
+        } else {
+            scroll->interpS16 = calloc(scroll->size, sizeof(s16));
+            scroll->prevS16 = calloc(scroll->size, sizeof(s16));
+
+            u8 bhvIndex = MIN(bhv-SCROLL_UV_X, 1);
+            for (u16 k = 0; k < scroll->size; k++) {
+                scroll->interpS16[k] = verts[k]->n.tc[bhvIndex];
+            }
+        }
+    }
+
+    // Prepare for interpolation
+    if (bhv < SCROLL_UV_X) {
+        u8 bhvIndex = MIN(bhv, 2);
+        for (u16 k = 0; k < scroll->size; k++) {
+            scroll->prevF32[k] = verts[k]->n.ob[bhvIndex];
+        }
+    } else {
+        u8 bhvIndex = MIN(bhv-SCROLL_UV_X, 1);
+        for (u16 k = 0; k < scroll->size; k++) {
+            scroll->prevS16[k] = verts[k]->n.tc[bhvIndex];
+        }
+    }
+    scroll->needInterp = true;
+
     switch (scrollType) {
         case MODE_SCROLL_UV:
-            shift_UV_NORMAL(verts, vertCount, speed, bhv, cycle);
+            shift_UV_NORMAL(scroll, vertCount, speed, bhv, cycle);
             break;
         case MODE_SCROLL_SINE:
-            shift_UV_SINE(verts, vertCount, speed, bhv, cycle);
+            shift_UV_SINE(scroll, vertCount, speed, bhv, cycle);
             break;
         case MODE_SCROLL_JUMP:
-            shift_UV_JUMP(verts, vertCount, speed, bhv, cycle);
+            shift_UV_JUMP(scroll, vertCount, speed, bhv, cycle);
             break;
     }
 }

@@ -126,6 +126,7 @@ extern void patch_bubble_particles_before(void);
 extern void patch_snow_particles_before(void);
 extern void patch_djui_before(void);
 extern void patch_djui_hud_before(void);
+extern void patch_scroll_targets_before(void);
 
 extern void patch_mtx_interpolated(f32 delta);
 extern void patch_screen_transition_interpolated(f32 delta);
@@ -137,6 +138,7 @@ extern void patch_bubble_particles_interpolated(f32 delta);
 extern void patch_snow_particles_interpolated(f32 delta);
 extern void patch_djui_interpolated(f32 delta);
 extern void patch_djui_hud(f32 delta);
+extern void patch_scroll_targets_interpolated(f32 delta);
 
 static void patch_interpolations_before(void) {
     patch_mtx_before();
@@ -149,6 +151,7 @@ static void patch_interpolations_before(void) {
     patch_snow_particles_before();
     patch_djui_before();
     patch_djui_hud_before();
+    patch_scroll_targets_before();
 }
 
 static inline void patch_interpolations(f32 delta) {
@@ -162,6 +165,7 @@ static inline void patch_interpolations(f32 delta) {
     patch_snow_particles_interpolated(delta);
     patch_djui_interpolated(delta);
     patch_djui_hud(delta);
+    patch_scroll_targets_interpolated(delta);
 }
 
 void produce_interpolation_frames_and_delay(void) {
