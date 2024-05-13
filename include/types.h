@@ -432,6 +432,7 @@ struct MarioState
     /*????*/ u32 cap;
     /*????*/ u8 bounceSquishTimer;
     /*????*/ u8 skipWarpInteractionsTimer;
+    /*????*/ s16 dialogId;
 };
 
 struct TextureInfo

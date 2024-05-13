@@ -983,6 +983,7 @@
 --- @field public controller Controller
 --- @field public curAnimOffset number
 --- @field public currentRoom integer
+--- @field public dialogId integer
 --- @field public doubleJumpTimer integer
 --- @field public faceAngle Vec3s
 --- @field public fadeWarpOpacity integer

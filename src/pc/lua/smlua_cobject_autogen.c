@@ -1087,7 +1087,7 @@ static struct LuaObjectField sMarioBodyStateFields[LUA_MARIO_BODY_STATE_FIELD_CO
     { "wingFlutter",         LVT_S8,      offsetof(struct MarioBodyState, wingFlutter),         false, LOT_NONE  },
 };
 
-#define LUA_MARIO_STATE_FIELD_COUNT 79
+#define LUA_MARIO_STATE_FIELD_COUNT 80
 static struct LuaObjectField sMarioStateFields[LUA_MARIO_STATE_FIELD_COUNT] = {
     { "action",                    LVT_U32,       offsetof(struct MarioState, action),                    false, LOT_NONE              },
     { "actionArg",                 LVT_U32,       offsetof(struct MarioState, actionArg),                 false, LOT_NONE              },
@@ -1107,6 +1107,7 @@ static struct LuaObjectField sMarioStateFields[LUA_MARIO_STATE_FIELD_COUNT] = {
     { "controller",                LVT_COBJECT_P, offsetof(struct MarioState, controller),                true,  LOT_CONTROLLER        },
     { "curAnimOffset",             LVT_F32,       offsetof(struct MarioState, curAnimOffset),             false, LOT_NONE              },
     { "currentRoom",               LVT_S16,       offsetof(struct MarioState, currentRoom),               false, LOT_NONE              },
+    { "dialogId",                  LVT_S16,       offsetof(struct MarioState, dialogId),                  true,  LOT_NONE              },
     { "doubleJumpTimer",           LVT_U8,        offsetof(struct MarioState, doubleJumpTimer),           false, LOT_NONE              },
     { "faceAngle",                 LVT_COBJECT,   offsetof(struct MarioState, faceAngle),                 true,  LOT_VEC3S             },
     { "fadeWarpOpacity",           LVT_U8,        offsetof(struct MarioState, fadeWarpOpacity),           false, LOT_NONE              },

@@ -91,7 +91,7 @@ override_field_deprecated = {
 }
 
 override_field_immutable = {
-    "MarioState": [ "playerIndex", "controller", "marioObj", "marioBodyState", "statusForCamera", "area" ],
+    "MarioState": [ "playerIndex", "controller", "marioObj", "marioBodyState", "statusForCamera", "area", "dialogId" ],
     "MarioAnimation": [ "animDmaTable" ],
     "ObjectNode": [ "next", "prev" ],
     "Character": [ "*" ],

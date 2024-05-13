@@ -540,7 +540,7 @@ s32 act_reading_automatic_dialog(struct MarioState *m) {
         // set Mario dialog
         if (m->actionState == 9) {
             // only show dialog for local player
-            if (m == &gMarioStates[0]) {
+            if (m->playerIndex == 0) {
                 u32 actionArg = m->actionArg;
                 if (GET_HIGH_U16_OF_32(actionArg) == 0) {
                     create_dialog_box(GET_LOW_U16_OF_32(actionArg));
@@ -549,7 +549,8 @@ s32 act_reading_automatic_dialog(struct MarioState *m) {
                 }
             }
         } else if (m->actionState == 10) { // wait until dialog is done
-            if (get_dialog_id() >= 0) {
+            if ((m->playerIndex == 0 && get_dialog_id() >= 0) ||
+                (m->playerIndex != 0 && m->dialogId != 0)) {
                 m->actionState--;
             }
         } else if (m->actionState < 19) { // wait until dialog is done
@@ -1006,6 +1007,7 @@ s32 act_unlocking_star_door(struct MarioState *m) {
             m->actionState++;
             break;
         case 1:
+            set_character_animation(m, CHAR_ANIM_SUMMON_STAR);
             if (is_anim_at_end(m)) {
                 if (m->playerIndex == 0 || allowRemoteStarSpawn) {
                     if (m->playerIndex != 0) { allowRemoteStarSpawn = FALSE; }
@@ -1021,6 +1023,7 @@ s32 act_unlocking_star_door(struct MarioState *m) {
             }
             break;
         case 3:
+            set_character_animation(m, CHAR_ANIM_RETURN_STAR_APPROACH_DOOR);
             if (m->playerIndex != 0) { allowRemoteStarSpawn = TRUE; }
             if (is_anim_at_end(m)) {
                 save_file_set_flags(get_door_save_file_flag(m->usedObj));
@@ -1142,6 +1145,19 @@ s32 act_going_through_door(struct MarioState *m) {
 
 s32 act_warp_door_spawn(struct MarioState *m) {
     if (!m) { return 0; }
+
+    // Check if other players are also using this door
+    // if they are, cancel our interaction with the door
+    if (m->usedObj) {
+        for (u8 i = 0; i < MAX_PLAYERS; i++) {
+            struct MarioState *m2 = &gMarioStates[i];
+            if (is_player_active(m2) && (m2->action == ACT_PULLING_DOOR || m2->action == ACT_PUSHING_DOOR) && m->usedObj == m2->usedObj) {
+                m->usedObj = NULL;
+                break;
+            }
+        }
+    }
+
     if (m->actionState == 0) {
         m->actionState = 1;
         if (m->usedObj != NULL) {

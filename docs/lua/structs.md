@@ -1344,6 +1344,7 @@
 | controller | [Controller](structs.md#Controller) | read-only |
 | curAnimOffset | `number` |  |
 | currentRoom | `integer` |  |
+| dialogId | `integer` | read-only |
 | doubleJumpTimer | `integer` |  |
 | faceAngle | [Vec3s](structs.md#Vec3s) | read-only |
 | fadeWarpOpacity | `integer` |  |
