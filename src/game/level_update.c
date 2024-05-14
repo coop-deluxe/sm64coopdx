@@ -795,7 +795,10 @@ static void initiate_painting_warp_node(struct WarpNode *pWarpNode) {
     initiate_warp(warpNode.destLevel & 0x7F, warpNode.destArea, warpNode.destNode, 0);
     check_if_should_set_warp_checkpoint(&warpNode);
 
-    play_transition_after_delay(WARP_TRANSITION_FADE_INTO_COLOR, 30, 255, 255, 255, 45);
+    extern s16 gMenuMode;
+    if (gMenuMode == -1) {
+        play_transition_after_delay(WARP_TRANSITION_FADE_INTO_COLOR, 30, 255, 255, 255, 45);
+    }
     level_set_transition(74, basic_update);
 
     play_sound(SOUND_MENU_STAR_SOUND, gGlobalSoundSource);
