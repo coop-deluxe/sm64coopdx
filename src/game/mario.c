@@ -123,7 +123,7 @@ s16 set_character_animation(struct MarioState *m, s32 targetAnimID) {
     struct Animation *targetAnim = m->animation->targetAnim;
     s32 charAnimID = get_character_anim(m, targetAnimID);
     if (!targetAnim) { return 0; }
-    
+
     if (load_patchable_table(m->animation, charAnimID)) {
         targetAnim->values = (void *) VIRTUAL_TO_PHYSICAL((u8 *) targetAnim + (uintptr_t) targetAnim->values);
         targetAnim->index = (void *) VIRTUAL_TO_PHYSICAL((u8 *) targetAnim + (uintptr_t) targetAnim->index);
@@ -2379,7 +2379,7 @@ void init_mario(void) {
     }
 }
 
-static void init_mario_single_from_save_file(struct MarioState* m, u16 index) {
+void init_mario_single_from_save_file(struct MarioState* m, u16 index) {
     if (!m) { return; }
     m->playerIndex = index;
     m->flags = 0;

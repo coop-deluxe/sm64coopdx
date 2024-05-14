@@ -15,6 +15,7 @@
 #ifdef DISCORD_SDK
 #include "pc/discord/discord.h"
 #endif
+#include "game/mario.h"
 
 struct NetworkPlayer gNetworkPlayers[MAX_PLAYERS] = { 0 };
 struct NetworkPlayer *gNetworkPlayerLocal = NULL;
@@ -373,6 +374,9 @@ u8 network_player_disconnected(u8 globalIndex) {
 #ifdef DISCORD_SDK
         discord_activity_update();
 #endif
+
+        // reset mario state
+        init_mario_single_from_save_file(&gMarioStates[i], i);
 
         return i;
     }
