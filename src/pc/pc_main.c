@@ -373,7 +373,7 @@ int main(int argc, char *argv[]) {
 
 #endif
 
-    old_user_folder_handler();
+    legacy_folder_handler();
 
     const char *userpath = gCLIOpts.savePath[0] ? gCLIOpts.savePath : sys_user_path();
     fs_init(userpath);

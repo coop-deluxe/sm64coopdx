@@ -419,8 +419,8 @@ static void DynOS_Tex_GeneratePack_Recursive(const SysPath &aPackFolder, SysPath
         }
 
         // skip files that have already been generated
-        char buffer[1024];
-        snprintf(buffer, 1024, "%s.tex", _Path.substr(0, _Path.size() - 4).c_str());
+        char buffer[SYS_MAX_PATH];
+        snprintf(buffer, SYS_MAX_PATH, "%s.tex", _Path.substr(0, _Path.size() - 4).c_str());
         if (fs_sys_file_exists(buffer)) {
             continue;
         }

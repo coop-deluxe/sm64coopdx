@@ -8,7 +8,7 @@
 
 #define MAX_MOD_SIZE (35 * 1048576) // 35MB
 #define MOD_DIRECTORY "mods"
-#define TMP_DIRECTORY "tmp"
+#define TMP_DIRECTORY ".tmp"
 
 struct Mods {
     struct Mod** entries;

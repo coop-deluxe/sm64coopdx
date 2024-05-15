@@ -6,6 +6,10 @@
 #include "pc/debuglog.h"
 #include "pc/loading.h"
 
+#if defined(_WIN32) || defined(_WIN64)
+#include <windows.h>
+#endif
+
 #define MAX_SESSION_CHARS 7
 
 struct Mods gLocalMods = { 0 };
@@ -113,7 +117,12 @@ bool mods_generate_remote_base_path(void) {
         LOG_ERROR("Failed to concat tmp path");
         return false;
     }
-    if (!fs_sys_dir_exists(tmpPath)) { fs_sys_mkdir(tmpPath); }
+    if (!fs_sys_dir_exists(tmpPath)) {
+        fs_sys_mkdir(tmpPath);
+#if defined(_WIN32) || defined(_WIN64)
+        SetFileAttributesA(tmpPath, FILE_ATTRIBUTE_HIDDEN);
+#endif
+    }
 
     // generate session
     char session[MAX_SESSION_CHARS + 1] = { 0 };

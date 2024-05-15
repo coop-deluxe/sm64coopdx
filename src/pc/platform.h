@@ -7,7 +7,7 @@
 
 /* platform-specific functions and whatnot */
 
-#define SYS_MAX_PATH 4096 // FIXME: define this on different platforms
+#define SYS_MAX_PATH 4096
 
 // crossplatform impls of misc stuff
 char *sys_strdup(const char *src);

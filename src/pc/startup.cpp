@@ -3,10 +3,15 @@
 #include <vector>
 #include <filesystem>
 
+#if defined(_WIN32) || defined(_WIN64)
+#include <windows.h>
+#endif
+
 extern "C" {
 #include "platform.h"
 #include "mods/mods_utils.h" // for str_ends_with
 #include "mods/mod_cache.h"  // for md5 hashing
+#include "mods/mods.h"
 #include "loading.h"
 }
 
@@ -30,13 +35,23 @@ static struct VanillaMD5 sVanillaMD5[] = {
     { NULL, NULL },
 };
 
-static void copy_old_user_folder() {
-    char* oldpath = (char*)sys_old_user_path();
-    char* newpath = (char*)sys_user_path();
-
-    if (fs::exists(oldpath) && (fs::is_empty(newpath) || !fs::exists(newpath))) {
-        fs::copy(oldpath, newpath);
+inline static void copy_old_user_folder() {
+    std::string userPath = sys_user_path();
+    std::string oldPath = sys_old_user_path();
+    if (fs::exists(oldPath) && (fs::is_empty(userPath) || !fs::exists(userPath))) {
+        fs::copy(oldPath, userPath, fs::copy_options::recursive);
         gUserFolderCopied = true;
+    }
+}
+
+inline static void rename_tmp_folder() {
+    std::string userPath = sys_user_path();
+    std::string oldPath = userPath + "/tmp";
+    if (fs::exists(oldPath)) {
+#if defined(_WIN32) || defined(_WIN64)
+        SetFileAttributesA(oldPath.c_str(), FILE_ATTRIBUTE_HIDDEN);
+#endif
+        fs::rename(oldPath, userPath + "/" + TMP_DIRECTORY);
     }
 }
 
@@ -83,8 +98,9 @@ inline static bool scan_path_for_rom(const char *dir) {
 }
 
 extern "C" {
-void old_user_folder_handler(void) {
+void legacy_folder_handler(void) {
     copy_old_user_folder();
+    if (gUserFolderCopied) { rename_tmp_folder(); }
 }
 
 bool main_rom_handler(void) {
