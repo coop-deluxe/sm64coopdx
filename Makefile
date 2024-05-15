@@ -174,7 +174,7 @@ endif
 #   eu - builds the 1997 PAL version
 #   sh - builds the 1997 Japanese Shindou version, with rumble pak support
 VERSION ?= us
-$(eval $(call validate-option,VERSION,jp us eu sh))
+$(eval $(call validate-option,VERSION,us))
 
 # Graphics microcode used
 GRUCODE ?= f3dex2e
