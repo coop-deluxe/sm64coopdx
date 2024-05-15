@@ -1118,7 +1118,7 @@
 typedef struct {
 	float		ob[3];	/* x, y, z */
 	unsigned short	flag;
-	int      		tc[2];	/* texture coord */
+	short		tc[2];	/* texture coord */
 	unsigned char	cn[4];	/* color & alpha */
 } Vtx_t;
 
@@ -1128,7 +1128,7 @@ typedef struct {
 typedef struct {
 	float		ob[3];	/* x, y, z */
 	unsigned short	flag;
-	int     		tc[2];	/* texture coord */
+	short		tc[2];	/* texture coord */
 	signed char	n[3];	/* normal */
 	unsigned char   a;      /* alpha  */
 } Vtx_tn;
