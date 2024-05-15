@@ -83,9 +83,9 @@ void nametags_render(void) {
             strncpy(name, np->name, MAX_PLAYER_STRING + 1);
             name_without_hex(name);
             Color color = {
-                np->palette.parts[SHIRT][0],
-                np->palette.parts[SHIRT][1],
-                np->palette.parts[SHIRT][2]
+                np->palette.parts[CAP][0],
+                np->palette.parts[CAP][1],
+                np->palette.parts[CAP][2]
             };
             f32 measure = djui_hud_measure_text(name) * scale * 0.5f;
             f32 alpha = m->action == ACT_START_CROUCHING ||
