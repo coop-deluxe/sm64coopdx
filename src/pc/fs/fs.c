@@ -48,7 +48,7 @@ bool fs_init(const char *writepath) {
     strncpy(fs_writepath, fs_convert_path(buf, sizeof(buf), writepath), sizeof(fs_writepath));
     fs_writepath[sizeof(fs_writepath)-1] = 0;
 #ifdef DEVELOPMENT
-    printf("fs: writepath set to `%s`\n", fs_writepath);
+    printf("FS: writepath set to `%s`\n", fs_writepath);
 #endif
 
     fs_mount(fs_writepath);
@@ -77,7 +77,7 @@ bool fs_mount(const char *realpath) {
 
     if (!pack || !packer) {
         if (tried)
-            fprintf(stderr, "fs: could not mount '%s'\n", realpath);
+            fprintf(stderr, "FS: could not mount '%s'\n", realpath);
         return false;
     }
 
@@ -97,7 +97,7 @@ bool fs_mount(const char *realpath) {
     fs_searchpaths = dir;
 
 #ifdef DEVELOPMENT
-    printf("fs: mounting '%s'\n", realpath);
+    printf("FS: mounting '%s'\n", realpath);
 #endif
 
     return true;
@@ -272,6 +272,31 @@ bool fs_sys_file_exists(const char *name) {
 bool fs_sys_dir_exists(const char *name) {
     struct stat st;
     return (stat(name, &st) == 0 && S_ISDIR(st.st_mode));
+}
+
+bool fs_sys_dir_is_empty(const char *name) {
+    DIR *dir;
+    struct dirent *ent;
+
+    if (!(dir = opendir(name))) {
+        fprintf(stderr, "fs_sys_dir_is_empty(): could not open `%s`\n", name);
+        return true;
+    }
+
+    bool ret = true;
+    while ((ent = readdir(dir)) != NULL) {
+        // skip "." and ".."
+        if (ent->d_name[0] == '.' && (ent->d_name[1] == '\0' || 
+           (ent->d_name[1] == '.' && ent->d_name[2] == '\0'))) {
+            continue;
+        }
+
+        ret = false;
+        break;
+    }
+
+    closedir(dir);
+    return ret;
 }
 
 bool fs_sys_walk(const char *base, walk_fn_t walk, void *user, const bool recur) {

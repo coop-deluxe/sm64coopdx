@@ -15,7 +15,6 @@
 #include "djui_hud_utils.h"
 #include "engine/math_util.h"
 #include "pc/utils/misc.h"
-#include "pc/startup.h"
 
 static Gfx* sSavedDisplayListHead = NULL;
 
@@ -110,10 +109,6 @@ void djui_init_late(void) {
 
     // djui_panel_debug_create();
     djui_cursor_create();
-
-    if (gUserFolderCopied) {
-        djui_popup_create(DLANG(NOTIF, USER_FOLDER_COPIED), 4);
-    }
 }
 
 void djui_connect_menu_open(void) {

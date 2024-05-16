@@ -30,7 +30,7 @@ extern "C" {
 
 #define DYNOS_VERSION           "1.0"
 #define DYNOS_EXE_FOLDER        sys_exe_path()
-#define DYNOS_USER_FOLDER       sys_user_path()
+#define DYNOS_USER_FOLDER       fs_get_write_path("")
 #define DYNOS_RES_FOLDER        "dynos"
 #define DYNOS_PACKS_FOLDER      DYNOS_RES_FOLDER "/packs"
 #define DYNOS_CONFIG_FILENAME   "DynOS." DYNOS_VERSION ".config.txt"

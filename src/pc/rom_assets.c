@@ -1,7 +1,7 @@
 #include <PR/ultratypes.h>
 #include "rom_assets.h"
 #include "pc/debuglog.h"
-#include "startup.h"
+#include "rom_checker.h"
 
 struct RomAsset {
     void* ptr;

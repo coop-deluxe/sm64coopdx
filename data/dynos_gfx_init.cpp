@@ -75,6 +75,6 @@ void DynOS_Gfx_Init() {
     ScanPacksFolder(_DynosPacksFolder);
 
     // Scan the user path folder
-    SysPath _DynosPacksUserFolder = fstring("%s/%s", DYNOS_USER_FOLDER, DYNOS_PACKS_FOLDER);
+    SysPath _DynosPacksUserFolder = fstring("%s%s", DYNOS_USER_FOLDER, DYNOS_PACKS_FOLDER);
     ScanPacksFolder(_DynosPacksUserFolder);
 }

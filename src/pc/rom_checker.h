@@ -1,6 +1,5 @@
 #include "types.h"
 
-extern bool gUserFolderCopied;
 extern bool gRomIsValid;
 extern char gRomFilename[];
 

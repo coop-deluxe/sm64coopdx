@@ -65,11 +65,8 @@ typedef struct {
     void (*close)(void *pack, fs_file_t *file);   // closes a virtual file previously opened with ->open()
 } fs_packtype_t;
 
-// takes the supplied NULL-terminated list of read-only directories and mounts all the packs in them,
-// then mounts the directories themselves, then mounts all the packs in `gamedir`, then mounts `gamedir` itself,
-// then does the same with `userdir`
-// initializes the `fs_userdir` variable
-bool fs_init(const char *userdir);
+// mounts `writepath`
+bool fs_init(const char *writepath);
 // mounts the pack at physical path `realpath` to the root of the filesystem
 // packs mounted later take priority over packs mounted earlier
 bool fs_mount(const char *realpath);
@@ -105,6 +102,7 @@ const char *fs_convert_path(char *buf, const size_t bufsiz, const char *path);
 bool fs_sys_walk(const char *base, walk_fn_t walk, void *user, const bool recur);
 bool fs_sys_file_exists(const char *name);
 bool fs_sys_dir_exists(const char *name);
+bool fs_sys_dir_is_empty(const char *name);
 bool fs_sys_mkdir(const char *name); // creates with 0777 by default
 bool fs_sys_copy_file(const char *oldname, const char *newname);
 

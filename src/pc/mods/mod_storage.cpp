@@ -56,8 +56,8 @@ bool char_valid(char* buffer) {
 }
 
 void mod_storage_get_filename(char* dest) {
-    const char* path = sys_user_path(); // get user path
-    snprintf(dest, SYS_MAX_PATH - 1, "%s/sav/%s", path, gLuaActiveMod->relativePath); // append sav folder
+    const char* path = fs_get_write_path(""); // get user path
+    snprintf(dest, SYS_MAX_PATH - 1, "%ssav/%s", path, gLuaActiveMod->relativePath); // append sav folder
     strdelete(dest, (char *)".lua"); // delete ".lua" from sav name
     strcat(dest, SAVE_EXTENSION); // append SAVE_EXTENSION
     normalize_path(dest); // fix any out of place slashes

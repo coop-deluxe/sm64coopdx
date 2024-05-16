@@ -13,13 +13,13 @@ extern "C" {
 #include "mods/mod_cache.h"  // for md5 hashing
 #include "mods/mods.h"
 #include "loading.h"
+#include "fs/fs.h"
 }
 
 namespace fs = std::filesystem;
 
-bool gUserFolderCopied = false;
 bool gRomIsValid = false;
-char gRomFilename[255] = "";
+char gRomFilename[SYS_MAX_PATH] = "";
 
 struct VanillaMD5 {
     const char *localizationName;
@@ -35,23 +35,14 @@ static struct VanillaMD5 sVanillaMD5[] = {
     { NULL, NULL },
 };
 
-inline static void copy_old_user_folder() {
-    std::string userPath = sys_user_path();
-    std::string oldPath = sys_old_user_path();
-    if (fs::exists(oldPath) && (fs::is_empty(userPath) || !fs::exists(userPath))) {
-        fs::copy(oldPath, userPath, fs::copy_options::recursive);
-        gUserFolderCopied = true;
-    }
-}
-
 inline static void rename_tmp_folder() {
-    std::string userPath = sys_user_path();
-    std::string oldPath = userPath + "/tmp";
+    std::string userPath = fs_get_write_path("");
+    std::string oldPath = userPath + "tmp";
     if (fs::exists(oldPath)) {
 #if defined(_WIN32) || defined(_WIN64)
         SetFileAttributesA(oldPath.c_str(), FILE_ATTRIBUTE_HIDDEN);
 #endif
-        fs::rename(oldPath, userPath + "/" + TMP_DIRECTORY);
+        fs::rename(oldPath, userPath + TMP_DIRECTORY);
     }
 }
 
@@ -65,9 +56,9 @@ static bool is_rom_valid(const std::string romPath) {
     }
 
     bool foundHash = false;
-    for (struct VanillaMD5 *md5 = sVanillaMD5; md5->localizationName != NULL; md5++) {
+    for (VanillaMD5 *md5 = sVanillaMD5; md5->localizationName != NULL; md5++) {
         if (md5->md5 == ss.str()) {
-            std::string destPath = sys_user_path() + std::string("/baserom.") + md5->localizationName + ".z64";
+            std::string destPath = fs_get_write_path("") + std::string("baserom.") + md5->localizationName + ".z64";
 
             // Copy the rom to the user path
             if (romPath != destPath && !std::filesystem::exists(std::filesystem::path(destPath))) {
@@ -77,7 +68,7 @@ static bool is_rom_valid(const std::string romPath) {
                 );
             }
 
-            snprintf(gRomFilename, 255, "%s", destPath.c_str()); // Load the copied rom
+            snprintf(gRomFilename, SYS_MAX_PATH, "%s", destPath.c_str()); // Load the copied rom
             gRomIsValid = true;
             foundHash = true;
             break;
@@ -99,12 +90,11 @@ inline static bool scan_path_for_rom(const char *dir) {
 
 extern "C" {
 void legacy_folder_handler(void) {
-    copy_old_user_folder();
-    if (gUserFolderCopied) { rename_tmp_folder(); }
+    rename_tmp_folder();
 }
 
 bool main_rom_handler(void) {
-    if (scan_path_for_rom(sys_user_path())) { return true; }
+    if (scan_path_for_rom(fs_get_write_path(""))) { return true; }
     scan_path_for_rom(sys_exe_path());
     return gRomIsValid;
 }

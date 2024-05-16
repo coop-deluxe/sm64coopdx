@@ -19,7 +19,7 @@
 #include "audio/audio_null.h"
 
 #include "rom_assets.h"
-#include "startup.h"
+#include "rom_checker.h"
 #include "pc_main.h"
 #include "loading.h"
 #include "cliopts.h"
@@ -360,12 +360,11 @@ void* main_game_init(void* isThreaded) {
 }
 
 int main(int argc, char *argv[]) {
-
-    // Handle terminal arguments
+    // handle terminal arguments
     if (!parse_cli_opts(argc, argv)) { return 0; }
 
 #if defined(_WIN32) || defined(_WIN64)
-    // Handle Windows console
+    // handle Windows console
     if (!gCLIOpts.console) {
         FreeConsole();
         freopen("NUL", "w", stdout);
@@ -373,23 +372,23 @@ int main(int argc, char *argv[]) {
 
 #endif
 
-    legacy_folder_handler();
-
-    const char *userpath = gCLIOpts.savePath[0] ? gCLIOpts.savePath : sys_user_path();
-    fs_init(userpath);
+    const char* userPath = gCLIOpts.savePath[0] ? gCLIOpts.savePath : sys_user_path();
+    fs_init(userPath);
     configfile_load();
 
-    // Create the window straight away
+    legacy_folder_handler();
+
+    // create the window almost straight away
     if (!gGfxInited) {
         gfx_init(&WAPI, &RAPI, TITLE);
         WAPI.set_keyboard_callbacks(keyboard_on_key_down, keyboard_on_key_up, keyboard_on_all_keys_up, keyboard_on_text_input);
     }
 
-    // Render the rom setup screen
+    // render the rom setup screen
     if (!main_rom_handler()) {
 #ifdef LOADING_SCREEN_SUPPORTED
         if (!gCLIOpts.hideLoadingScreen) {
-            render_rom_setup_screen(); // Holds the game load until a valid rom is provided
+            render_rom_setup_screen(); // holds the game load until a valid rom is provided
         } else
 #endif
         {
@@ -398,12 +397,12 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    // Start the thread for setting up the game
+    // start the thread for setting up the game
 #ifdef LOADING_SCREEN_SUPPORTED
     bool threadSuccess = false;
     if (!gCLIOpts.hideLoadingScreen && pthread_mutex_init(&gLoadingThreadMutex, NULL) == 0) {
         if (pthread_create(&gLoadingThreadId, NULL, main_game_init, (void*) 1) == 0) {
-            render_loading_screen(); // Render the loading screen while the game is setup
+            render_loading_screen(); // render the loading screen while the game is setup
             threadSuccess = true;
         }
         pthread_mutex_destroy(&gLoadingThreadMutex);
@@ -411,19 +410,19 @@ int main(int argc, char *argv[]) {
     if (!threadSuccess)
 #endif
     {
-        main_game_init(NULL); // Failsafe incase threading doesn't work
+        main_game_init(NULL); // failsafe incase threading doesn't work
     }
 
     // initialize sm64 data and controllers
     thread5_game_loop(NULL);
 
-    // Initialize sound outside threads
+    // initialize sound outside threads
 #if defined(AAPI_SDL1) || defined(AAPI_SDL2)
     if (!audio_api && audio_sdl.init()) { audio_api = &audio_sdl; }
 #endif
     if (!audio_api) { audio_api = &audio_null; }
 
-    // Initialize djui
+    // initialize djui
     djui_init();
     djui_unicode_init();
     djui_init_late();
@@ -431,7 +430,7 @@ int main(int argc, char *argv[]) {
 
     show_update_popup();
 
-    // Init network
+    // initialize network
     if (gCLIOpts.network == NT_CLIENT) {
         network_set_system(NS_SOCKET);
         snprintf(gGetHostName, MAX_CONFIG_STRING, "%s", gCLIOpts.joinIp);
@@ -442,7 +441,7 @@ int main(int argc, char *argv[]) {
         configNetworkSystem = NS_SOCKET;
         configHostPort = gCLIOpts.networkPort;
 
-        // Horrible, hacky fix for mods that access marioObj straight away
+        // horrible, hacky fix for mods that access marioObj straight away
         // best fix: host with the standard main menu method
         static struct Object sHackyObject = { 0 };
         gMarioStates[0].marioObj = &sHackyObject;
@@ -453,7 +452,7 @@ int main(int argc, char *argv[]) {
         network_init(NT_NONE, false);
     }
 
-    // Main loop
+    // main loop
     while (true) {
         debug_context_reset();
         CTX_BEGIN(CTX_FRAME);
