@@ -4,15 +4,19 @@
 #include "pc/utils/misc.h"
 #include "pc/configfile.h"
 #include "game/bettercamera.h"
+#include "game/first_person_cam.h"
+#include "pc/lua/utils/smlua_misc_utils.h"
 
 #define FREE_CAMERA_OPTIONS 9
+
+#define ENABLE_FREE_CAMERA configEnableCamera || gFirstPersonCamera.enabled || (gOverrideEnableCamera.override && gOverrideEnableCamera.value)
 
 static struct DjuiBase* sFreeCameraOptions[FREE_CAMERA_OPTIONS] = { 0 };
 static u8 sIndex = 0;
 
 static struct DjuiCheckbox* djui_linked_checkbox_create(struct DjuiBase* parent, const char* message, bool* value, void (*on_value_change)(struct DjuiBase*)) {
     struct DjuiCheckbox* checkbox = djui_checkbox_create(parent, message, value, on_value_change);
-    djui_base_set_enabled(&checkbox->base, configEnableCamera);
+    djui_base_set_enabled(&checkbox->base, ENABLE_FREE_CAMERA);
     sFreeCameraOptions[sIndex] = &checkbox->base;
     sIndex++;
     return checkbox;
@@ -20,7 +24,7 @@ static struct DjuiCheckbox* djui_linked_checkbox_create(struct DjuiBase* parent,
 
 static struct DjuiSlider* djui_linked_slider_create(struct DjuiBase* parent, const char* message, unsigned int* value, unsigned int min, unsigned int max, void (*on_value_change)(struct DjuiBase*)) {
     struct DjuiSlider* slider = djui_slider_create(parent, message, value, min, max, on_value_change);
-    djui_base_set_enabled(&slider->base, configEnableCamera);
+    djui_base_set_enabled(&slider->base, ENABLE_FREE_CAMERA);
     sFreeCameraOptions[sIndex] = &slider->base;
     sIndex++;
     return slider;
@@ -29,7 +33,7 @@ static struct DjuiSlider* djui_linked_slider_create(struct DjuiBase* parent, con
 static void djui_panel_camera_value_changed(UNUSED struct DjuiBase* caller) {
     newcam_init_settings();
     for (s32 i = 0; i < FREE_CAMERA_OPTIONS; i++) {
-        djui_base_set_enabled(sFreeCameraOptions[i], configEnableCamera);
+        djui_base_set_enabled(sFreeCameraOptions[i], ENABLE_FREE_CAMERA);
     }
 }
 

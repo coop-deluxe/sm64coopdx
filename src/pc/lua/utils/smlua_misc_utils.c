@@ -247,21 +247,16 @@ void hud_set_flash(s8 value) {
 
 ///
 
-struct CameraOverride {
-    unsigned int value;
-    bool override;
-};
-
-struct CameraOverride sOverrideCameraXSens   = { 0 };
-struct CameraOverride sOverrideCameraYSens   = { 0 };
-struct CameraOverride sOverrideCameraAggr    = { 0 };
-struct CameraOverride sOverrideCameraPan     = { 0 };
-struct CameraOverride sOverrideCameraDegrade = { 0 };
-struct CameraOverride sOverrideCameraInvertX = { 0 };
-struct CameraOverride sOverrideCameraInvertY = { 0 };
-struct CameraOverride sOverrideEnableCamera  = { 0 };
-struct CameraOverride sOverrideCameraAnalog  = { 0 };
-struct CameraOverride sOverrideCameraMouse   = { 0 };
+static struct CameraOverride sOverrideCameraXSens   = { 0 };
+static struct CameraOverride sOverrideCameraYSens   = { 0 };
+static struct CameraOverride sOverrideCameraAggr    = { 0 };
+static struct CameraOverride sOverrideCameraPan     = { 0 };
+static struct CameraOverride sOverrideCameraDegrade = { 0 };
+static struct CameraOverride sOverrideCameraInvertX = { 0 };
+static struct CameraOverride sOverrideCameraInvertY = { 0 };
+struct CameraOverride gOverrideEnableCamera = { 0 };
+static struct CameraOverride sOverrideCameraAnalog  = { 0 };
+static struct CameraOverride sOverrideCameraMouse   = { 0 };
 
 void camera_reset_overrides(void) {
     sOverrideCameraXSens.override = false;
@@ -271,7 +266,7 @@ void camera_reset_overrides(void) {
     sOverrideCameraDegrade.override = false;
     sOverrideCameraInvertX.override = false;
     sOverrideCameraInvertY.override = false;
-    sOverrideEnableCamera.override = false;
+    gOverrideEnableCamera.override = false;
     sOverrideCameraAnalog.override = false;
     sOverrideCameraMouse.override = false;
 }
@@ -305,7 +300,7 @@ void camera_romhack_allow_dpad_usage(u8 allow) {
 }
 
 bool camera_config_is_free_cam_enabled(void) {
-    return sOverrideEnableCamera.override ? sOverrideEnableCamera.value : configEnableCamera;
+    return gOverrideEnableCamera.override ? gOverrideEnableCamera.value : configEnableCamera;
 }
 
 bool camera_config_is_analog_cam_enabled(void) {
@@ -345,8 +340,8 @@ u32 camera_config_get_deceleration(void) {
 }
 
 void camera_config_enable_free_cam(bool enable) {
-    sOverrideEnableCamera.value = enable;
-    sOverrideEnableCamera.override = true;
+    gOverrideEnableCamera.value = enable;
+    gOverrideEnableCamera.override = true;
     newcam_init_settings();
 }
 
