@@ -4503,6 +4503,13 @@ function area_create_warp_node(id, destLevel, destArea, destNode, checkpoint, o)
     -- ...
 end
 
+--- @param arg integer
+--- @param color integer
+--- @return nil
+function fade_into_special_warp(arg, color)
+    -- ...
+end
+
 --- @return WarpNode
 function get_painting_warp_node()
     -- ...
