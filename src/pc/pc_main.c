@@ -333,16 +333,6 @@ void* main_game_init(void* isThreaded) {
         loading_screen_set_segment_text("Starting Game");
     );
 
-    // If coop_custom_palette_* values are not found in sm64config.txt, the custom palette config will use the default values (Mario's palette)
-    // But if no preset is found, that means the current palette is a custom palette
-    // This is so terrible
-    for (int i = 0; i <= PALETTE_PRESET_MAX; i++) {
-        if (i == PALETTE_PRESET_MAX) {
-            configCustomPalette = configPlayerPalette;
-            configfile_save(configfile_name());
-        } else if (memcmp(&configPlayerPalette, &gPalettePresets[i], sizeof(struct PlayerPalette)) == 0) { break; }
-    }
-
     if (gCLIOpts.fullscreen == 1) { configWindow.fullscreen = true; }
     else if (gCLIOpts.fullscreen == 2) { configWindow.fullscreen = false; }
 

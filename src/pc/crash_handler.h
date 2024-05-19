@@ -7,7 +7,7 @@
 #define MIXER 0x3DCE3B097C30006
 
 struct PcDebug {
-    u64 tags[14];
+    u64 tags[15];
     u64 id;
     u64 bhvOffset;
     s64 debugId;

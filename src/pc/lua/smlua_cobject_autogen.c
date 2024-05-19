@@ -22,6 +22,7 @@
 #include "src/game/paintings.h"
 #include "src/pc/djui/djui_types.h"
 #include "src/game/first_person_cam.h"
+#include "src/game/player_palette.h"
 
 #include "include/object_fields.h"
 

@@ -2,8 +2,8 @@
 #define CONFIGFILE_H
 
 #include <stdbool.h>
-#include "PR/ultratypes.h"
-#include "game/characters.h"
+#include <PR/ultratypes.h>
+#include "game/player_palette.h"
 
 #define CONFIGFILE_DEFAULT "sm64config.txt"
 #define CONFIGFILE_BACKUP "sm64config-backup.txt"
@@ -99,7 +99,6 @@ extern bool         configMenuSound;
 extern bool         configMenuRandom;
 extern bool         configMenuDemos;
 extern struct PlayerPalette configPlayerPalette;
-extern struct PlayerPalette configCustomPalette;
 extern bool         configShowFPS;
 extern bool         configUncappedFramerate;
 extern unsigned int configFrameLimit;

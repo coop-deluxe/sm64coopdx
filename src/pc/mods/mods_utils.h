@@ -1,7 +1,7 @@
 #ifndef MODS_UTILS_H
 #define MODS_UTILS_H
 
-#include "PR/ultratypes.h"
+#include <PR/ultratypes.h>
 #include <types.h>
 #include "pc/platform.h"
 

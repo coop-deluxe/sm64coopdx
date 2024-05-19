@@ -6110,14 +6110,6 @@ function get_network_player_smallest_global()
     -- ...
 end
 
---- @param np NetworkPlayer
---- @param part PlayerPart
---- @param color Color
---- @return nil
-function network_player_color_to_palette(np, part, color)
-    -- ...
-end
-
 --- @return integer
 function network_player_connected_count()
     -- ...
@@ -6131,9 +6123,29 @@ end
 
 --- @param np NetworkPlayer
 --- @param part PlayerPart
---- @param out Color
+--- @param index integer
+--- @return integer
+function network_player_get_override_palette_color_channel(np, part, index)
+    -- ...
+end
+
+--- @param np NetworkPlayer
+--- @param part PlayerPart
+--- @param index integer
+--- @return integer
+function network_player_get_palette_color_channel(np, part, index)
+    -- ...
+end
+
+--- @param np NetworkPlayer
+--- @return boolean
+function network_player_is_override_palette_same(np)
+    -- ...
+end
+
+--- @param np NetworkPlayer
 --- @return nil
-function network_player_palette_to_color(np, part, out)
+function network_player_reset_override_palette_color(np)
     -- ...
 end
 
@@ -6145,6 +6157,14 @@ end
 --- @param a integer
 --- @return nil
 function network_player_set_description(np, description, r, g, b, a)
+    -- ...
+end
+
+--- @param np NetworkPlayer
+--- @param part PlayerPart
+--- @param color Color
+--- @return nil
+function network_player_set_override_palette_color(np, part, color)
     -- ...
 end
 
@@ -8626,6 +8646,22 @@ end
 --- @param localIndex integer
 --- @return string
 function network_discord_id_from_local_index(localIndex)
+    -- ...
+end
+
+--- @param np NetworkPlayer
+--- @param part PlayerPart
+--- @param color Color
+--- @return nil
+function network_player_color_to_palette(np, part, color)
+    -- ...
+end
+
+--- @param np NetworkPlayer
+--- @param part PlayerPart
+--- @param out Color
+--- @return nil
+function network_player_palette_to_color(np, part, out)
     -- ...
 end
 

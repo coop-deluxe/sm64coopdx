@@ -20577,35 +20577,6 @@ int smlua_func_get_network_player_smallest_global(UNUSED lua_State* L) {
     return 1;
 }
 
-int smlua_func_network_player_color_to_palette(lua_State* L) {
-    if (L == NULL) { return 0; }
-
-    int top = lua_gettop(L);
-    if (top != 3) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "network_player_color_to_palette", 3, top);
-        return 0;
-    }
-
-    struct NetworkPlayer* np = (struct NetworkPlayer*)smlua_to_cobject(L, 1, LOT_NETWORKPLAYER);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "network_player_color_to_palette"); return 0; }
-    int part = smlua_to_integer(L, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "network_player_color_to_palette"); return 0; }
-
-    u8* color = smlua_get_color_from_buffer();
-    color[0] = smlua_get_integer_field(3, "r");
-    color[1] = smlua_get_integer_field(3, "g");
-    color[2] = smlua_get_integer_field(3, "b");
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "network_player_color_to_palette"); return 0; }
-
-    network_player_color_to_palette(np, part, color);
-
-    smlua_push_integer_field(3, "r", color[0]);
-    smlua_push_integer_field(3, "g", color[1]);
-    smlua_push_integer_field(3, "b", color[2]);
-
-    return 1;
-}
-
 int smlua_func_network_player_connected_count(UNUSED lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -20638,31 +20609,78 @@ int smlua_func_network_player_from_global_index(lua_State* L) {
     return 1;
 }
 
-int smlua_func_network_player_palette_to_color(lua_State* L) {
+int smlua_func_network_player_get_override_palette_color_channel(lua_State* L) {
     if (L == NULL) { return 0; }
 
     int top = lua_gettop(L);
     if (top != 3) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "network_player_palette_to_color", 3, top);
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "network_player_get_override_palette_color_channel", 3, top);
         return 0;
     }
 
     struct NetworkPlayer* np = (struct NetworkPlayer*)smlua_to_cobject(L, 1, LOT_NETWORKPLAYER);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "network_player_palette_to_color"); return 0; }
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "network_player_get_override_palette_color_channel"); return 0; }
     int part = smlua_to_integer(L, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "network_player_palette_to_color"); return 0; }
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "network_player_get_override_palette_color_channel"); return 0; }
+    u8 index = smlua_to_integer(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "network_player_get_override_palette_color_channel"); return 0; }
 
-    u8* out = smlua_get_color_from_buffer();
-    out[0] = smlua_get_integer_field(3, "r");
-    out[1] = smlua_get_integer_field(3, "g");
-    out[2] = smlua_get_integer_field(3, "b");
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "network_player_palette_to_color"); return 0; }
+    lua_pushinteger(L, network_player_get_override_palette_color_channel(np, part, index));
 
-    network_player_palette_to_color(np, part, out);
+    return 1;
+}
 
-    smlua_push_integer_field(3, "r", out[0]);
-    smlua_push_integer_field(3, "g", out[1]);
-    smlua_push_integer_field(3, "b", out[2]);
+int smlua_func_network_player_get_palette_color_channel(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 3) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "network_player_get_palette_color_channel", 3, top);
+        return 0;
+    }
+
+    struct NetworkPlayer* np = (struct NetworkPlayer*)smlua_to_cobject(L, 1, LOT_NETWORKPLAYER);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "network_player_get_palette_color_channel"); return 0; }
+    int part = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "network_player_get_palette_color_channel"); return 0; }
+    u8 index = smlua_to_integer(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "network_player_get_palette_color_channel"); return 0; }
+
+    lua_pushinteger(L, network_player_get_palette_color_channel(np, part, index));
+
+    return 1;
+}
+
+int smlua_func_network_player_is_override_palette_same(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "network_player_is_override_palette_same", 1, top);
+        return 0;
+    }
+
+    struct NetworkPlayer* np = (struct NetworkPlayer*)smlua_to_cobject(L, 1, LOT_NETWORKPLAYER);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "network_player_is_override_palette_same"); return 0; }
+
+    lua_pushboolean(L, network_player_is_override_palette_same(np));
+
+    return 1;
+}
+
+int smlua_func_network_player_reset_override_palette_color(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "network_player_reset_override_palette_color", 1, top);
+        return 0;
+    }
+
+    struct NetworkPlayer* np = (struct NetworkPlayer*)smlua_to_cobject(L, 1, LOT_NETWORKPLAYER);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "network_player_reset_override_palette_color"); return 0; }
+
+    network_player_reset_override_palette_color(np);
 
     return 1;
 }
@@ -20690,6 +20708,35 @@ int smlua_func_network_player_set_description(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 6, "network_player_set_description"); return 0; }
 
     network_player_set_description(np, description, r, g, b, a);
+
+    return 1;
+}
+
+int smlua_func_network_player_set_override_palette_color(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 3) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "network_player_set_override_palette_color", 3, top);
+        return 0;
+    }
+
+    struct NetworkPlayer* np = (struct NetworkPlayer*)smlua_to_cobject(L, 1, LOT_NETWORKPLAYER);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "network_player_set_override_palette_color"); return 0; }
+    int part = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "network_player_set_override_palette_color"); return 0; }
+
+    u8* color = smlua_get_color_from_buffer();
+    color[0] = smlua_get_integer_field(3, "r");
+    color[1] = smlua_get_integer_field(3, "g");
+    color[2] = smlua_get_integer_field(3, "b");
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "network_player_set_override_palette_color"); return 0; }
+
+    network_player_set_override_palette_color(np, part, color);
+
+    smlua_push_integer_field(3, "r", color[0]);
+    smlua_push_integer_field(3, "g", color[1]);
+    smlua_push_integer_field(3, "b", color[2]);
 
     return 1;
 }
@@ -28502,6 +28549,64 @@ int smlua_func_network_discord_id_from_local_index(lua_State* L) {
     return 1;
 }
 
+int smlua_func_network_player_color_to_palette(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 3) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "network_player_color_to_palette", 3, top);
+        return 0;
+    }
+
+    struct NetworkPlayer* np = (struct NetworkPlayer*)smlua_to_cobject(L, 1, LOT_NETWORKPLAYER);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "network_player_color_to_palette"); return 0; }
+    int part = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "network_player_color_to_palette"); return 0; }
+
+    u8* color = smlua_get_color_from_buffer();
+    color[0] = smlua_get_integer_field(3, "r");
+    color[1] = smlua_get_integer_field(3, "g");
+    color[2] = smlua_get_integer_field(3, "b");
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "network_player_color_to_palette"); return 0; }
+
+    network_player_color_to_palette(np, part, color);
+
+    smlua_push_integer_field(3, "r", color[0]);
+    smlua_push_integer_field(3, "g", color[1]);
+    smlua_push_integer_field(3, "b", color[2]);
+
+    return 1;
+}
+
+int smlua_func_network_player_palette_to_color(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 3) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "network_player_palette_to_color", 3, top);
+        return 0;
+    }
+
+    struct NetworkPlayer* np = (struct NetworkPlayer*)smlua_to_cobject(L, 1, LOT_NETWORKPLAYER);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "network_player_palette_to_color"); return 0; }
+    int part = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "network_player_palette_to_color"); return 0; }
+
+    u8* out = smlua_get_color_from_buffer();
+    out[0] = smlua_get_integer_field(3, "r");
+    out[1] = smlua_get_integer_field(3, "g");
+    out[2] = smlua_get_integer_field(3, "b");
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "network_player_palette_to_color"); return 0; }
+
+    network_player_palette_to_color(np, part, out);
+
+    smlua_push_integer_field(3, "r", out[0]);
+    smlua_push_integer_field(3, "g", out[1]);
+    smlua_push_integer_field(3, "b", out[2]);
+
+    return 1;
+}
+
 int smlua_func_set_environment_region(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -33448,11 +33553,14 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "get_network_player_from_area", smlua_func_get_network_player_from_area);
     smlua_bind_function(L, "get_network_player_from_level", smlua_func_get_network_player_from_level);
     smlua_bind_function(L, "get_network_player_smallest_global", smlua_func_get_network_player_smallest_global);
-    smlua_bind_function(L, "network_player_color_to_palette", smlua_func_network_player_color_to_palette);
     smlua_bind_function(L, "network_player_connected_count", smlua_func_network_player_connected_count);
     smlua_bind_function(L, "network_player_from_global_index", smlua_func_network_player_from_global_index);
-    smlua_bind_function(L, "network_player_palette_to_color", smlua_func_network_player_palette_to_color);
+    smlua_bind_function(L, "network_player_get_override_palette_color_channel", smlua_func_network_player_get_override_palette_color_channel);
+    smlua_bind_function(L, "network_player_get_palette_color_channel", smlua_func_network_player_get_palette_color_channel);
+    smlua_bind_function(L, "network_player_is_override_palette_same", smlua_func_network_player_is_override_palette_same);
+    smlua_bind_function(L, "network_player_reset_override_palette_color", smlua_func_network_player_reset_override_palette_color);
     smlua_bind_function(L, "network_player_set_description", smlua_func_network_player_set_description);
+    smlua_bind_function(L, "network_player_set_override_palette_color", smlua_func_network_player_set_override_palette_color);
 
     // network_utils.h
     smlua_bind_function(L, "network_check_singleplayer_pause", smlua_func_network_check_singleplayer_pause);
@@ -33859,6 +33967,8 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "djui_hud_set_render_behind_hud", smlua_func_djui_hud_set_render_behind_hud);
     smlua_bind_function(L, "get_environment_region", smlua_func_get_environment_region);
     smlua_bind_function(L, "network_discord_id_from_local_index", smlua_func_network_discord_id_from_local_index);
+    smlua_bind_function(L, "network_player_color_to_palette", smlua_func_network_player_color_to_palette);
+    smlua_bind_function(L, "network_player_palette_to_color", smlua_func_network_player_palette_to_color);
     smlua_bind_function(L, "set_environment_region", smlua_func_set_environment_region);
 
     // smlua_level_utils.h

@@ -1275,28 +1275,6 @@
 
 <br />
 
-## [network_player_color_to_palette](#network_player_color_to_palette)
-
-### Lua Example
-`network_player_color_to_palette(np, part, color)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| np | [NetworkPlayer](structs.md#NetworkPlayer) |
-| part | [enum PlayerPart](constants.md#enum-PlayerPart) |
-| color | `Color` |
-
-### Returns
-- None
-
-### C Prototype
-`void network_player_color_to_palette(struct NetworkPlayer *np, enum PlayerPart part, Color color);`
-
-[:arrow_up_small:](#)
-
-<br />
-
 ## [network_player_connected_count](#network_player_connected_count)
 
 ### Lua Example
@@ -1335,23 +1313,85 @@
 
 <br />
 
-## [network_player_palette_to_color](#network_player_palette_to_color)
+## [network_player_get_override_palette_color_channel](#network_player_get_override_palette_color_channel)
 
 ### Lua Example
-`network_player_palette_to_color(np, part, out)`
+`local integerValue = network_player_get_override_palette_color_channel(np, part, index)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | np | [NetworkPlayer](structs.md#NetworkPlayer) |
 | part | [enum PlayerPart](constants.md#enum-PlayerPart) |
-| out | `Color` |
+| index | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u8 network_player_get_override_palette_color_channel(struct NetworkPlayer *np, enum PlayerPart part, u8 index);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [network_player_get_palette_color_channel](#network_player_get_palette_color_channel)
+
+### Lua Example
+`local integerValue = network_player_get_palette_color_channel(np, part, index)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| np | [NetworkPlayer](structs.md#NetworkPlayer) |
+| part | [enum PlayerPart](constants.md#enum-PlayerPart) |
+| index | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u8 network_player_get_palette_color_channel(struct NetworkPlayer *np, enum PlayerPart part, u8 index);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [network_player_is_override_palette_same](#network_player_is_override_palette_same)
+
+### Lua Example
+`local booleanValue = network_player_is_override_palette_same(np)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| np | [NetworkPlayer](structs.md#NetworkPlayer) |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool network_player_is_override_palette_same(struct NetworkPlayer *np);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [network_player_reset_override_palette_color](#network_player_reset_override_palette_color)
+
+### Lua Example
+`network_player_reset_override_palette_color(np)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| np | [NetworkPlayer](structs.md#NetworkPlayer) |
 
 ### Returns
 - None
 
 ### C Prototype
-`void network_player_palette_to_color(struct NetworkPlayer *np, enum PlayerPart part, Color out);`
+`void network_player_reset_override_palette_color(struct NetworkPlayer *np);`
 
 [:arrow_up_small:](#)
 
@@ -1377,6 +1417,28 @@
 
 ### C Prototype
 `void network_player_set_description(struct NetworkPlayer* np, const char* description, u8 r, u8 g, u8 b, u8 a);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [network_player_set_override_palette_color](#network_player_set_override_palette_color)
+
+### Lua Example
+`network_player_set_override_palette_color(np, part, color)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| np | [NetworkPlayer](structs.md#NetworkPlayer) |
+| part | [enum PlayerPart](constants.md#enum-PlayerPart) |
+| color | `Color` |
+
+### Returns
+- None
+
+### C Prototype
+`void network_player_set_override_palette_color(struct NetworkPlayer *np, enum PlayerPart part, Color color);`
 
 [:arrow_up_small:](#)
 
@@ -8375,401 +8437,6 @@
 
 ### C Prototype
 `void smlua_anim_util_set_animation(struct Object *obj, const char *name);`
-
-[:arrow_up_small:](#)
-
-<br />
-
----
-# functions from smlua_audio_utils.h
-
-<br />
-
-
-## [audio_sample_destroy](#audio_sample_destroy)
-
-### Lua Example
-`audio_sample_destroy(audio)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| audio | [ModAudio](structs.md#ModAudio) |
-
-### Returns
-- None
-
-### C Prototype
-`void audio_sample_destroy(struct ModAudio* audio);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [audio_sample_load](#audio_sample_load)
-
-### Lua Example
-`local ModAudioValue = audio_sample_load(filename)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| filename | `string` |
-
-### Returns
-[ModAudio](structs.md#ModAudio)
-
-### C Prototype
-`struct ModAudio* audio_sample_load(const char* filename);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [audio_sample_play](#audio_sample_play)
-
-### Lua Example
-`audio_sample_play(audio, position, volume)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| audio | [ModAudio](structs.md#ModAudio) |
-| position | [Vec3f](structs.md#Vec3f) |
-| volume | `number` |
-
-### Returns
-- None
-
-### C Prototype
-`void audio_sample_play(struct ModAudio* audio, Vec3f position, f32 volume);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [audio_sample_stop](#audio_sample_stop)
-
-### Lua Example
-`audio_sample_stop(audio)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| audio | [ModAudio](structs.md#ModAudio) |
-
-### Returns
-- None
-
-### C Prototype
-`void audio_sample_stop(struct ModAudio* audio);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [audio_stream_destroy](#audio_stream_destroy)
-
-### Lua Example
-`audio_stream_destroy(audio)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| audio | [ModAudio](structs.md#ModAudio) |
-
-### Returns
-- None
-
-### C Prototype
-`void audio_stream_destroy(struct ModAudio* audio);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [audio_stream_get_frequency](#audio_stream_get_frequency)
-
-### Lua Example
-`local numberValue = audio_stream_get_frequency(audio)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| audio | [ModAudio](structs.md#ModAudio) |
-
-### Returns
-- `number`
-
-### C Prototype
-`f32 audio_stream_get_frequency(struct ModAudio* audio);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [audio_stream_get_looping](#audio_stream_get_looping)
-
-### Lua Example
-`local booleanValue = audio_stream_get_looping(audio)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| audio | [ModAudio](structs.md#ModAudio) |
-
-### Returns
-- `boolean`
-
-### C Prototype
-`bool audio_stream_get_looping(struct ModAudio* audio);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [audio_stream_get_position](#audio_stream_get_position)
-
-### Lua Example
-`local numberValue = audio_stream_get_position(audio)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| audio | [ModAudio](structs.md#ModAudio) |
-
-### Returns
-- `number`
-
-### C Prototype
-`f32 audio_stream_get_position(struct ModAudio* audio);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [audio_stream_get_volume](#audio_stream_get_volume)
-
-### Lua Example
-`local numberValue = audio_stream_get_volume(audio)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| audio | [ModAudio](structs.md#ModAudio) |
-
-### Returns
-- `number`
-
-### C Prototype
-`f32 audio_stream_get_volume(struct ModAudio* audio);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [audio_stream_load](#audio_stream_load)
-
-### Lua Example
-`local ModAudioValue = audio_stream_load(filename)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| filename | `string` |
-
-### Returns
-[ModAudio](structs.md#ModAudio)
-
-### C Prototype
-`struct ModAudio* audio_stream_load(const char* filename);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [audio_stream_pause](#audio_stream_pause)
-
-### Lua Example
-`audio_stream_pause(audio)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| audio | [ModAudio](structs.md#ModAudio) |
-
-### Returns
-- None
-
-### C Prototype
-`void audio_stream_pause(struct ModAudio* audio);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [audio_stream_play](#audio_stream_play)
-
-### Lua Example
-`audio_stream_play(audio, restart, volume)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| audio | [ModAudio](structs.md#ModAudio) |
-| restart | `boolean` |
-| volume | `number` |
-
-### Returns
-- None
-
-### C Prototype
-`void audio_stream_play(struct ModAudio* audio, bool restart, f32 volume);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [audio_stream_set_frequency](#audio_stream_set_frequency)
-
-### Lua Example
-`audio_stream_set_frequency(audio, freq)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| audio | [ModAudio](structs.md#ModAudio) |
-| freq | `number` |
-
-### Returns
-- None
-
-### C Prototype
-`void audio_stream_set_frequency(struct ModAudio* audio, f32 freq);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [audio_stream_set_looping](#audio_stream_set_looping)
-
-### Lua Example
-`audio_stream_set_looping(audio, looping)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| audio | [ModAudio](structs.md#ModAudio) |
-| looping | `boolean` |
-
-### Returns
-- None
-
-### C Prototype
-`void audio_stream_set_looping(struct ModAudio* audio, bool looping);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [audio_stream_set_position](#audio_stream_set_position)
-
-### Lua Example
-`audio_stream_set_position(audio, pos)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| audio | [ModAudio](structs.md#ModAudio) |
-| pos | `number` |
-
-### Returns
-- None
-
-### C Prototype
-`void audio_stream_set_position(struct ModAudio* audio, f32 pos);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [audio_stream_set_volume](#audio_stream_set_volume)
-
-### Lua Example
-`audio_stream_set_volume(audio, volume)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| audio | [ModAudio](structs.md#ModAudio) |
-| volume | `number` |
-
-### Returns
-- None
-
-### C Prototype
-`void audio_stream_set_volume(struct ModAudio* audio, f32 volume);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [audio_stream_stop](#audio_stream_stop)
-
-### Lua Example
-`audio_stream_stop(audio)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| audio | [ModAudio](structs.md#ModAudio) |
-
-### Returns
-- None
-
-### C Prototype
-`void audio_stream_stop(struct ModAudio* audio);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [smlua_audio_utils_replace_sequence](#smlua_audio_utils_replace_sequence)
-
-### Lua Example
-`smlua_audio_utils_replace_sequence(sequenceId, bankId, defaultVolume, m64Name)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| sequenceId | `integer` |
-| bankId | `integer` |
-| defaultVolume | `integer` |
-| m64Name | `string` |
-
-### Returns
-- None
-
-### C Prototype
-`void smlua_audio_utils_replace_sequence(u8 sequenceId, u8 bankId, u8 defaultVolume, const char* m64Name);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [smlua_audio_utils_reset_all](#smlua_audio_utils_reset_all)
-
-### Lua Example
-`smlua_audio_utils_reset_all()`
-
-### Parameters
-- None
-
-### Returns
-- None
-
-### C Prototype
-`void smlua_audio_utils_reset_all(void);`
 
 [:arrow_up_small:](#)
 

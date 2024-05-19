@@ -598,6 +598,11 @@ MOD_DIR := mods
 # Remove old mod dir
 _ := $(shell $(PYTHON) $(TOOLS_DIR)/remove_built_in_mods.py)
 
+PALETTES_DIR := palettes
+
+# Remove old palettes dir
+_ := $(shell rm -rf ./$(BUILD_DIR)/$(PALETTES_DIR))
+
 # Automatic dependency files
 DEP_FILES := $(O_FILES:.o=.d) $(ULTRA_O_FILES:.o=.d) $(GODDARD_O_FILES:.o=.d) $(BUILD_DIR)/$(LD_SCRIPT).d
 
@@ -1130,6 +1135,9 @@ $(BUILD_DIR)/$(LANG_DIR):
 $(BUILD_DIR)/$(MOD_DIR):
 	$(CP) -f -r $(MOD_DIR) $(BUILD_DIR)
 
+$(BUILD_DIR)/$(PALETTES_DIR):
+	@$(CP) -f -r $(PALETTES_DIR) $(BUILD_DIR)
+
 # Extra object file dependencies
 
 ifeq ($(TARGET_N64),1)
@@ -1475,7 +1483,7 @@ ifeq ($(TARGET_N64),1)
   $(BUILD_DIR)/$(TARGET).objdump: $(ELF)
 	$(OBJDUMP) -D $< > $@
 else
-  $(EXE): $(O_FILES) $(MIO0_FILES:.mio0=.o) $(ULTRA_O_FILES) $(GODDARD_O_FILES) $(BUILD_DIR)/$(RPC_LIBS) $(BUILD_DIR)/$(DISCORD_SDK_LIBS) $(BUILD_DIR)/$(COOPNET_LIBS) $(BUILD_DIR)/$(LANG_DIR) $(BUILD_DIR)/$(MOD_DIR)
+  $(EXE): $(O_FILES) $(MIO0_FILES:.mio0=.o) $(ULTRA_O_FILES) $(GODDARD_O_FILES) $(BUILD_DIR)/$(RPC_LIBS) $(BUILD_DIR)/$(DISCORD_SDK_LIBS) $(BUILD_DIR)/$(COOPNET_LIBS) $(BUILD_DIR)/$(LANG_DIR) $(BUILD_DIR)/$(MOD_DIR) $(BUILD_DIR)/$(PALETTES_DIR)
 	@$(PRINT) "$(GREEN)Linking executable: $(BLUE)$@ $(NO_COL)\n"
 	$(V)$(LD) $(PROF_FLAGS) -L $(BUILD_DIR) -o $@ $(O_FILES) $(ULTRA_O_FILES) $(GODDARD_O_FILES) $(LDFLAGS)
 endif

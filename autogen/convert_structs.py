@@ -6,27 +6,28 @@ from extract_object_fields import *
 from common import *
 
 in_files = [
-    'include/types.h',
-    'src/game/area.h',
-    'src/game/camera.h',
-    'src/game/characters.h',
-    'src/engine/surface_collision.h',
-    'src/pc/network/network_player.h',
-    'src/pc/djui/djui_hud_utils.h',
-    'src/game/object_helpers.h',
-    'src/game/mario_step.h',
-    'src/pc/lua/utils/smlua_anim_utils.h',
-    'src/pc/lua/utils/smlua_misc_utils.h',
-    'src/pc/lua/utils/smlua_collision_utils.h',
-    'src/pc/lua/utils/smlua_level_utils.h',
-    'src/game/spawn_sound.h',
-    'src/pc/network/network.h',
-    'src/game/hardcoded.h',
-    'src/pc/mods/mod.h',
-    'src/pc/lua/utils/smlua_audio_utils.h',
-    'src/game/paintings.h',
-    'src/pc/djui/djui_types.h',
-    'src/game/first_person_cam.h'
+    "include/types.h",
+    "src/game/area.h",
+    "src/game/camera.h",
+    "src/game/characters.h",
+    "src/engine/surface_collision.h",
+    "src/pc/network/network_player.h",
+    "src/pc/djui/djui_hud_utils.h",
+    "src/game/object_helpers.h",
+    "src/game/mario_step.h",
+    "src/pc/lua/utils/smlua_anim_utils.h",
+    "src/pc/lua/utils/smlua_misc_utils.h",
+    "src/pc/lua/utils/smlua_collision_utils.h",
+    "src/pc/lua/utils/smlua_level_utils.h",
+    "src/game/spawn_sound.h",
+    "src/pc/network/network.h",
+    "src/game/hardcoded.h",
+    "src/pc/mods/mod.h",
+    "src/pc/lua/utils/smlua_audio_utils.h",
+    "src/game/paintings.h",
+    "src/pc/djui/djui_types.h",
+    "src/game/first_person_cam.h",
+    "src/game/player_palette.h"
 ]
 
 out_filename_c = 'src/pc/lua/smlua_cobject_autogen.c'
@@ -122,8 +123,9 @@ override_field_version_excludes = {
 }
 
 override_allowed_structs = {
-    "src/pc/network/network.h": [ 'ServerSettings', 'NametagsSettings' ],
-    "src/pc/djui/djui_types.h": [ 'DjuiColor' ],
+    "src/pc/network/network.h": [ "ServerSettings", "NametagsSettings" ],
+    "src/pc/djui/djui_types.h": [ "DjuiColor" ],
+    "src/game/player_palette.h": [ "PlayerPalette" ]
 }
 
 sLuaManuallyDefinedStructs = [{

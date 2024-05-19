@@ -50,6 +50,9 @@ local gGameLevels = {
 _G.Arena = {
     add_level = function (levelNum, levelName)
         table.insert(gGameLevels, { level = levelNum, name = levelName })
+    end,
+    get_player_team = function (localIndex)
+        return gPlayerSyncTable[localIndex].team
     end
 }
 

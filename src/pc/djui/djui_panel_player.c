@@ -1,31 +1,42 @@
-#include <stdio.h>
-#include <stdlib.h>
 #include "djui.h"
 #include "djui_panel.h"
 #include "djui_panel_menu.h"
 #include "djui_unicode.h"
-#include "pc/configfile.h"
+#include "djui_panel_main.h"
+#include "djui_panel_pause.h"
+#include "djui_panel_options.h"
 #include "pc/network/network_player.h"
+#include "pc/platform.h"
 #include "game/level_update.h"
 #include "game/area.h"
 
-#define PALETTE_CUSTOM PALETTE_PRESET_MAX
+static unsigned int sPalettePresetIndex = 0;
+static unsigned int sCurrentPlayerPart = PANTS;
+static unsigned int sSliderChannels[3] = { 0 };
+static bool sReloadPalettePresetSelection = false;
 
-static unsigned int sPalettePresetIndex = PALETTE_CUSTOM;
-static unsigned int sCurrentPlayerPart  = SHIRT;
-static unsigned int sSliderChannels[3]  = {0};
+static struct DjuiSelectionbox* sPalettePresetSelection = NULL;
 
-static struct DjuiSelectionbox* sPalettePresetSelection;
+static struct DjuiInputbox* sHexColorTextBox = NULL;
+static struct DjuiSlider *sSliderR = NULL;
+static struct DjuiSlider *sSliderG = NULL;
+static struct DjuiSlider *sSliderB = NULL;
+static struct DjuiInputbox* sPalettePresetNameTextBox = NULL;
 
-static struct DjuiInputbox* sHexColorTextBox;
-static struct DjuiSlider *sSliderR, *sSliderG, *sSliderB;
 
-bool gDjuiPanelPlayerCreated = false;
+void djui_panel_player_create(struct DjuiBase* caller);
 
-static void djui_panel_player_update_camera_cutscene(void) {
-    if (gMarioState->area && gMarioState->area->camera && gMarioState->area->camera->cutscene == 0) {
-        gMarioState->area->camera->cutscene = CUTSCENE_PALETTE_EDITOR;
+////////////////////////
+// edit palette panel //
+////////////////////////
+
+static unsigned int djui_panel_player_edit_palette_get_palette_index(struct PlayerPalette palette) {
+    for (int i = 0; i < gPresetPaletteCount; i++) {
+        if (memcmp(&palette, &gPresetPalettes[i].palette, sizeof(struct PlayerPalette)) == 0) {
+            return i + 1;
+        }
     }
+    return 0;
 }
 
 static void djui_panel_player_edit_palette_update_hex_code_box(void) {
@@ -33,8 +44,8 @@ static void djui_panel_player_edit_palette_update_hex_code_box(void) {
     static const char digitToChar[] = "0123456789abcdef";
 
     for (size_t i = 0; i < 3; i++) {
-        buf[2*i]   = digitToChar[configCustomPalette.parts[sCurrentPlayerPart][i] >> 4];
-        buf[2*i+1] = digitToChar[configCustomPalette.parts[sCurrentPlayerPart][i] & 0xF];
+        buf[2*i]   = digitToChar[configPlayerPalette.parts[sCurrentPlayerPart][i] >> 4];
+        buf[2*i+1] = digitToChar[configPlayerPalette.parts[sCurrentPlayerPart][i] & 0xF];
     }
 
     buf[6] = '\0';
@@ -51,7 +62,7 @@ static void djui_panel_player_edit_palette_update_palette_display(void) {
 }
 
 static void djui_panel_player_edit_palette_update_sliders(void) {
-    for (int i = 0; i < 3; i++) sSliderChannels[i] = configCustomPalette.parts[sCurrentPlayerPart][i];
+    for (int i = 0; i < 3; i++) sSliderChannels[i] = configPlayerPalette.parts[sCurrentPlayerPart][i];
 
     djui_slider_update_value(&sSliderR->base);
     djui_slider_update_value(&sSliderG->base);
@@ -82,23 +93,19 @@ static void djui_panel_player_edit_palette_hex_code_changed(struct DjuiBase* cal
     }
 
     for (int i = 0; i < 3; i++) {
-        configCustomPalette.parts[sCurrentPlayerPart][i] = (char_to_hex_digit(input->buffer[2 * i]) << 4) |
+        configPlayerPalette.parts[sCurrentPlayerPart][i] = (char_to_hex_digit(input->buffer[2 * i]) << 4) |
                                                            char_to_hex_digit(input->buffer[2 * i + 1]);
     }
-    configPlayerPalette = configCustomPalette;
 
     djui_panel_player_edit_palette_update_sliders();
     djui_panel_player_edit_palette_update_palette_display();
-    sPalettePresetIndex = PALETTE_CUSTOM;
 }
 
 static void djui_panel_player_edit_palette_slider_changed(UNUSED struct DjuiBase* caller, size_t index) {
-    configCustomPalette.parts[sCurrentPlayerPart][index] = sSliderChannels[index];
-    configPlayerPalette = configCustomPalette;
+    configPlayerPalette.parts[sCurrentPlayerPart][index] = sSliderChannels[index];
 
     djui_panel_player_edit_palette_update_hex_code_box();
     djui_panel_player_edit_palette_update_palette_display();
-    sPalettePresetIndex = PALETTE_CUSTOM;
 }
 
 static void djui_panel_player_edit_palette_red_changed(UNUSED struct DjuiBase* caller) {
@@ -113,13 +120,75 @@ static void djui_panel_player_edit_palette_blue_changed(UNUSED struct DjuiBase* 
     djui_panel_player_edit_palette_slider_changed(caller, 2);
 }
 
+static bool djui_panel_player_edit_palette_preset_name_valid(char* buffer) {
+    if (buffer[0] == '\0') { return false; }
+    char* c = buffer;
+    while (*c != '\0') {
+        if (!djui_unicode_valid_char(c)) { return false; }
+        c = djui_unicode_next_char(c);
+    }
+    return true;
+}
+
+static void djui_panel_player_edit_palette_preset_name_text_change(struct DjuiBase* caller) {
+    struct DjuiInputbox* inputbox1 = (struct DjuiInputbox*)caller;
+    if (djui_panel_player_edit_palette_preset_name_valid(inputbox1->buffer)) {
+        djui_inputbox_set_text_color(inputbox1, 0, 0, 0, 255);
+    } else {
+        djui_inputbox_set_text_color(inputbox1, 255, 0, 0, 255);
+    }
+}
+
+static void djui_panel_player_edit_palette_preset_name_on_focus_end(struct DjuiBase* caller) {
+    struct DjuiInputbox* inputbox1 = (struct DjuiInputbox*)caller;
+    if (!djui_panel_player_edit_palette_preset_name_valid(inputbox1->buffer)) {
+        djui_inputbox_set_text(inputbox1, "Unnamed");
+    }
+    djui_inputbox_set_text_color(inputbox1, 0, 0, 0, 255);
+
+    djui_inputbox_on_focus_end(&inputbox1->base);
+}
+
+static void djui_panel_player_edit_palette_delete(UNUSED struct DjuiBase* caller) {
+    // if (!player_palette_delete(fs_get_write_path(PALETTES_DIRECTORY), sPalettePresetNameTextBox->buffer)) {
+    //     player_palette_delete(sys_exe_path(), sPalettePresetNameTextBox->buffer);
+    // }
+    player_palette_delete(fs_get_write_path(PALETTES_DIRECTORY), sPalettePresetNameTextBox->buffer);
+    sReloadPalettePresetSelection = true;
+}
+
+static void djui_panel_player_edit_palette_export(UNUSED struct DjuiBase* caller) {
+    player_palette_export(sPalettePresetNameTextBox->buffer);
+    sReloadPalettePresetSelection = true;
+}
+
 static void (*sSavedDestroy)(struct DjuiBase*);
-void djui_panel_player_edit_palette_destroy(struct DjuiBase* caller) {
+static void djui_panel_player_edit_palette_destroy(struct DjuiBase* caller) {
     if (gNetworkType != NT_NONE) {
         network_send_player_settings();
     }
 
-    djui_selectionbox_update_value(&sPalettePresetSelection->base); // since editing palette values can change it
+    if (sPalettePresetSelection) {
+        sPalettePresetIndex = djui_panel_player_edit_palette_get_palette_index(configPlayerPalette);
+        djui_selectionbox_update_value(&sPalettePresetSelection->base);
+    }
+
+    if (sReloadPalettePresetSelection) {
+        sReloadPalettePresetSelection = false;
+        if (gDjuiInMainMenu) {
+            djui_panel_shutdown();
+            gDjuiInMainMenu = true;
+            djui_panel_main_create(NULL);
+            djui_panel_options_create(NULL);
+            djui_panel_player_create(NULL);
+        } else if (gDjuiPanelPauseCreated) {
+            djui_panel_shutdown();
+            djui_panel_pause_create(NULL);
+            djui_panel_options_create(NULL);
+            djui_panel_player_create(NULL);
+        }
+        return;
+    }
 
     (*sSavedDestroy)(caller);
 }
@@ -127,14 +196,9 @@ void djui_panel_player_edit_palette_destroy(struct DjuiBase* caller) {
 static void djui_panel_player_edit_palette_create(struct DjuiBase* caller) {
     gInPlayerMenu = true;
 
-    char* sPartStrings[PLAYER_PART_MAX] = { DLANG(PLAYER, OVERALLS), DLANG(PLAYER, SHIRT), DLANG(PLAYER, GLOVES), DLANG(PLAYER, SHOES), DLANG(PLAYER, HAIR), DLANG(PLAYER, SKIN), DLANG(PLAYER, CAP) };
+    char* sPartStrings[PLAYER_PART_MAX] = { DLANG(PLAYER, OVERALLS), DLANG(PLAYER, SHIRT), DLANG(PLAYER, GLOVES), DLANG(PLAYER, SHOES), DLANG(PLAYER, HAIR), DLANG(PLAYER, SKIN), DLANG(PLAYER, CAP), DLANG(PLAYER, EMBLEM) };
 
     struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(PLAYER, PALETTE));
-
-    // Set current palette to custom when clicking on Edit Palette
-    sPalettePresetIndex = PALETTE_CUSTOM;
-    configPlayerPalette = configCustomPalette;
-    djui_panel_player_edit_palette_update_palette_display();
 
     // A bit of a gross hack to send out palette changes and update the palette preset selection box on unpause AND
     // pressing the Back button
@@ -144,7 +208,7 @@ static void djui_panel_player_edit_palette_create(struct DjuiBase* caller) {
     struct DjuiBase* body = djui_three_panel_get_body(panel);
 
     {
-        sCurrentPlayerPart = SHIRT;
+        sCurrentPlayerPart = PANTS;
         djui_selectionbox_create(body, DLANG(PLAYER, PART), sPartStrings, PLAYER_PART_MAX, &sCurrentPlayerPart, djui_panel_player_edit_palette_part_changed);
 
         struct DjuiRect* rect1 = djui_rect_container_create(body, 32);
@@ -164,17 +228,67 @@ static void djui_panel_player_edit_palette_create(struct DjuiBase* caller) {
             djui_interactable_hook_value_change(&sHexColorTextBox->base, djui_panel_player_edit_palette_hex_code_changed);
         }
 
-        for (int i = 0; i < 3; i++) sSliderChannels[i] = configCustomPalette.parts[SHIRT][i];
+        for (int i = 0; i < 3; i++) sSliderChannels[i] = configPlayerPalette.parts[PANTS][i];
 
         sSliderR = djui_slider_create(body, DLANG(PLAYER, RED), &sSliderChannels[0], 0, 255, djui_panel_player_edit_palette_red_changed);
+        djui_base_set_color(&sSliderR->rectValue->base, 255, 0, 0, 255);
+        sSliderR->updateRectValueColor = false;
         sSliderG = djui_slider_create(body, DLANG(PLAYER, GREEN), &sSliderChannels[1], 0, 255, djui_panel_player_edit_palette_green_changed);
+        djui_base_set_color(&sSliderG->rectValue->base, 0, 255, 0, 255);
+        sSliderG->updateRectValueColor = false;
         sSliderB = djui_slider_create(body, DLANG(PLAYER, BLUE), &sSliderChannels[2], 0, 255, djui_panel_player_edit_palette_blue_changed);
+        djui_base_set_color(&sSliderB->rectValue->base, 0, 0, 255, 255);
+        sSliderB->updateRectValueColor = false;
+
+        struct DjuiRect* space = djui_rect_create(body);
+        djui_base_set_size_type(&space->base, DJUI_SVT_ABSOLUTE, DJUI_SVT_ABSOLUTE);
+        djui_base_set_size(&space->base, 0, 32);
+        djui_base_set_color(&space->base, 0, 0, 0, 0);
+
+        struct DjuiRect* rect2 = djui_rect_container_create(body, 32);
+        {
+            struct DjuiText* text1 = djui_text_create(&rect2->base, DLANG(PLAYER, PRESET_NAME));
+            djui_base_set_size_type(&text1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+            djui_base_set_color(&text1->base, 220, 220, 220, 255);
+            djui_base_set_size(&text1->base, 0.585f, 64);
+            djui_base_set_alignment(&text1->base, DJUI_HALIGN_LEFT, DJUI_VALIGN_TOP);
+            djui_text_set_drop_shadow(text1, 64, 64, 64, 100);
+
+            char* name = "Unnamed";
+            if (gPresetPaletteCount > 0) {
+                for (int i = 0; i < gPresetPaletteCount; i++) {
+                    if (memcmp(&configPlayerPalette, &gPresetPalettes[i].palette, sizeof(struct PlayerPalette)) == 0) {
+                        name = gPresetPalettes[i].name;
+                    }
+                }
+            }
+            sPalettePresetNameTextBox = djui_inputbox_create(&rect2->base, 32);
+            djui_inputbox_set_text(sPalettePresetNameTextBox, name);
+            djui_base_set_size_type(&sPalettePresetNameTextBox->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+            djui_base_set_size(&sPalettePresetNameTextBox->base, 0.45f, 32);
+            djui_base_set_alignment(&sPalettePresetNameTextBox->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_TOP);
+            djui_interactable_hook_value_change(&sPalettePresetNameTextBox->base, djui_panel_player_edit_palette_preset_name_text_change);
+            djui_interactable_hook_focus(&sPalettePresetNameTextBox->base, djui_inputbox_on_focus_begin, NULL, djui_panel_player_edit_palette_preset_name_on_focus_end);
+        }
+
+        struct DjuiRect* rect3 = djui_rect_container_create(body, 32);
+        {
+            struct DjuiButton* button1 = djui_button_left_create(&rect3->base, DLANG(PLAYER, DELETE_PRESET), DJUI_BUTTON_STYLE_NORMAL, djui_panel_player_edit_palette_delete);
+            djui_base_set_size(&button1->base, 0.485f, 32);
+            struct DjuiButton* button2 = djui_button_right_create(&rect3->base, DLANG(PLAYER, SAVE_PRESET), DJUI_BUTTON_STYLE_NORMAL, djui_panel_player_edit_palette_export);
+            djui_base_set_size(&button2->base, 0.485f, 32);
+        }
 
         djui_button_create(body, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
     }
 
     djui_panel_add(caller, panel, NULL);
 }
+
+
+//////////////////
+// player panel //
+//////////////////
 
 static bool djui_panel_player_name_valid(char* buffer) {
     if (buffer[0] == '\0') { return false; }
@@ -210,15 +324,25 @@ static void djui_panel_player_name_on_focus_end(struct DjuiBase* caller) {
     djui_inputbox_on_focus_end(&inputbox1->base);
 }
 
-static void djui_panel_player_value_changed(UNUSED struct DjuiBase* caller) {
-    if (sPalettePresetIndex != PALETTE_CUSTOM) {
-        configPlayerPalette = gPalettePresets[sPalettePresetIndex];
-    } else {
-        configPlayerPalette = configCustomPalette;
+
+static void djui_panel_player_prevent_demo(struct DjuiBase* caller) {
+    if (!gDjuiInMainMenu) {
+        if (caller != NULL) {
+            djui_panel_menu_back(NULL);
+        }
     }
+}
+
+static void djui_panel_player_update_camera_cutscene(void) {
+    if (gMarioState->area && gMarioState->area->camera && gMarioState->area->camera->cutscene == 0) {
+        gMarioState->area->camera->cutscene = CUTSCENE_PALETTE_EDITOR;
+    }
+}
+
+static void djui_panel_player_value_changed(UNUSED struct DjuiBase* caller) {
     djui_panel_player_edit_palette_update_palette_display();
 
-    if (configPlayerModel >= CT_MAX) { configPlayerModel = 0; }
+    if (configPlayerModel >= CT_MAX) { configPlayerModel = CT_MARIO; }
     if (gNetworkPlayers[0].overrideModelIndex == gNetworkPlayers[0].modelIndex) { gNetworkPlayers[0].overrideModelIndex = configPlayerModel; }
 
     gNetworkPlayers[0].modelIndex = configPlayerModel;
@@ -229,12 +353,10 @@ static void djui_panel_player_value_changed(UNUSED struct DjuiBase* caller) {
     }
 }
 
-static void djui_panel_player_prevent_demo(struct DjuiBase* caller) {
-    if (!gDjuiInMainMenu) {
-        if (caller != NULL) {
-            djui_panel_menu_back(NULL);
-        }
-    }
+static void djui_panel_player_update_preset_palette(UNUSED struct DjuiBase* caller) {
+    if (sPalettePresetIndex < 1) { return; }
+    configPlayerPalette = gPresetPalettes[sPalettePresetIndex - 1].palette;
+    djui_panel_player_edit_palette_update_palette_display();
 }
 
 static void djui_panel_player_destroy(UNUSED struct DjuiBase* caller) {
@@ -248,7 +370,6 @@ void djui_panel_player_create(struct DjuiBase* caller) {
 
     struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(PLAYER, PLAYER_TITLE));
     struct DjuiBase* body = djui_three_panel_get_body(panel);
-
     {
         struct DjuiRect* rect1 = djui_rect_container_create(body, 32);
         {
@@ -272,75 +393,31 @@ void djui_panel_player_create(struct DjuiBase* caller) {
             djui_interactable_hook_focus(&inputbox1->base, djui_inputbox_on_focus_begin, NULL, djui_panel_player_name_on_focus_end);
         }
 
-        char* modelChoices[CT_MAX] = { 0 };
+        char* characterChoices[CT_MAX] = { 0 };
         for (int i = 0; i < CT_MAX; i++) {
-            modelChoices[i] = gCharacters[i].name;
+            characterChoices[i] = gCharacters[i].name;
         }
-        djui_selectionbox_create(body, DLANG(PLAYER, MODEL), modelChoices, CT_MAX, &configPlayerModel, djui_panel_player_value_changed);
+        djui_selectionbox_create(body, DLANG(PLAYER, MODEL), characterChoices, CT_MAX, &configPlayerModel, djui_panel_player_value_changed);
 
-        time_t currentTime;
-        time(&currentTime);
-        struct tm *lt = localtime(&currentTime);
-        bool aprilFools = lt->tm_mon == 3 && lt->tm_mday == 1; // months are 0 indexed
+        player_palettes_reset();
+        player_palettes_read(sys_exe_path());
+        player_palettes_read(fs_get_write_path(PALETTES_DIRECTORY));
 
-        char* paletteChoices[PALETTE_PRESET_MAX+1] = {
-            DLANG(PALETTE, MARIO),
-            DLANG(PALETTE, LUIGI),
-            DLANG(PALETTE, TOAD),
-            DLANG(PALETTE, WARIO),
-            aprilFools ? "Lame Shitilizer" : DLANG(PALETTE, WALUIGI),
-            DLANG(PALETTE, TOADETTE),
-            DLANG(PALETTE, YOSHI),
-            DLANG(PALETTE, BUCKEN_BERRY),
-            DLANG(PALETTE, ALA_GOLD),
-            DLANG(PALETTE, FIRE_MARIO),
-            DLANG(PALETTE, FIRE_LUIGI),
-            DLANG(PALETTE, ICE_MARIO),
-            aprilFools ? "The Shitilizer" : DLANG(PALETTE, ICE_LUIGI),
-            DLANG(PALETTE, TOADSWORTH),
-            DLANG(PALETTE, PEACH),
-            DLANG(PALETTE, DAISY),
-            DLANG(PALETTE, WARIO_WOODS),
-            DLANG(PALETTE, GB),
-            DLANG(PALETTE, N64),
-            DLANG(PALETTE, SNES),
-            DLANG(PALETTE, SWITCH),
-            DLANG(PALETTE, CLOVER),
-            DLANG(PALETTE, COBALT),
-            DLANG(PALETTE, RUBY),
-            DLANG(PALETTE, FURY),
-            DLANG(PALETTE, HOT_PINK),
-            DLANG(PALETTE, NICE_PINK),
-            DLANG(PALETTE, SEAFOAM),
-            DLANG(PALETTE, LILAC),
-            DLANG(PALETTE, COPPER),
-            DLANG(PALETTE, AZURE),
-            DLANG(PALETTE, BURGUNDY),
-            DLANG(PALETTE, MINT),
-            DLANG(PALETTE, ORANGE),
-            DLANG(PALETTE, ARCTIC),
-            DLANG(PALETTE, BLACK),
-            DLANG(PALETTE, BUBBLEGUM),
-            DLANG(PALETTE, BUSY_BEE),
-            DLANG(PALETTE, FORTRESS),
-            DLANG(PALETTE, BLUEBERRY_PIE),
-            DLANG(PALETTE, RASPBERRY),
-            DLANG(PALETTE, COFFEE),
-            DLANG(PALETTE, MARGIN),
-            DLANG(PALETTE, PUMPKIN),
-            DLANG(PALETTE, SOIL),
-            DLANG(PALETTE, CREVASE),
-            DLANG(PALETTE, CUSTOM),
-        };
+        char* palettePresets[MAX_PRESET_PALETTES + 1] = { "Custom" };
+        if (gPresetPaletteCount > 0) {
+            if (sPalettePresetIndex >= gPresetPaletteCount) {
+                sPalettePresetIndex = 0;
+            }
+            
+            for (int i = 0; i < gPresetPaletteCount; i++) {
+                palettePresets[i + 1] = gPresetPalettes[i].name;
 
-        for (int i = 0; i < PALETTE_PRESET_MAX; i++) {
-            if (memcmp(&gNetworkPlayers[0].palette, &gPalettePresets[i], sizeof(struct PlayerPalette)) == 0) {
-                sPalettePresetIndex = i;
-                break;
+                if (memcmp(&configPlayerPalette, &gPresetPalettes[i].palette, sizeof(struct PlayerPalette)) == 0) {
+                    sPalettePresetIndex = i + 1;
+                }
             }
         }
-
-        sPalettePresetSelection = djui_selectionbox_create(body, DLANG(PLAYER, PALETTE_PRESET), paletteChoices, PALETTE_PRESET_MAX+1, &sPalettePresetIndex, djui_panel_player_value_changed);
+        sPalettePresetSelection = djui_selectionbox_create(body, DLANG(PLAYER, PALETTE_PRESET), palettePresets, gPresetPaletteCount + 1, &sPalettePresetIndex, djui_panel_player_update_preset_palette);
 
         djui_button_create(body, DLANG(PLAYER, EDIT_PALETTE), DJUI_BUTTON_STYLE_NORMAL, djui_panel_player_edit_palette_create);
         djui_button_create(body, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);

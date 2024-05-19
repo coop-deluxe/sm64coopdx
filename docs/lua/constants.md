@@ -9,8 +9,6 @@
 - [characters.h](#charactersh)
     - [enum CharacterSound](#enum-CharacterSound)
     - [enum CharacterType](#enum-CharacterType)
-    - [enum PalettePreset](#enum-PalettePreset)
-    - [enum PlayerPart](#enum-PlayerPart)
 - [dialog_ids.h](#dialog_idsh)
     - [enum DialogId](#enum-DialogId)
 - [djui_console.h](#djui_consoleh)
@@ -55,6 +53,8 @@
 - [object_list_processor.h](#object_list_processorh)
     - [enum ObjectList](#enum-ObjectList)
 - [os_cont.h](#os_conth)
+- [player_palette.h](#player_paletteh)
+    - [enum PlayerPart](#enum-PlayerPart)
 - [save_file.h](#save_fileh)
     - [enum SaveFileIndex](#enum-SaveFileIndex)
 - [seq_ids.h](#seq_idsh)
@@ -899,70 +899,6 @@
 | CT_WALUIGI | 3 |
 | CT_WARIO | 4 |
 | CT_MAX | 5 |
-
-### [enum PalettePreset](#PalettePreset)
-| Identifier | Value |
-| :--------- | :---- |
-| PALETTE_MARIO | 0 |
-| PALETTE_LUIGI | 1 |
-| PALETTE_TOAD | 2 |
-| PALETTE_WARIO | 3 |
-| PALETTE_WALUIGI | 4 |
-| PALETTE_TOADETTE | 5 |
-| PALETTE_YOSHI | 6 |
-| PALETTE_BUCKEN_BERRY | 7 |
-| PALETTE_ALA_GOLD | 8 |
-| PALETTE_FIRE_MARIO | 9 |
-| PALETTE_FIRE_LUIGI | 10 |
-| PALETTE_ICE_MARIO | 11 |
-| PALETTE_ICE_LUIGI | 12 |
-| PALETTE_TOADSWORTH | 13 |
-| PALETTE_PEACH | 14 |
-| PALETTE_DAISY | 15 |
-| PALETTE_WARIO_WOODS | 16 |
-| PALETTE_GB | 17 |
-| PALETTE_N64 | 18 |
-| PALETTE_SNES | 19 |
-| PALETTE_SWITCH | 20 |
-| PALETTE_CLOVER | 21 |
-| PALETTE_COBALT | 22 |
-| PALETTE_RUBY | 23 |
-| PALETTE_FURY | 24 |
-| PALETTE_HOT_PINK | 25 |
-| PALETTE_NICE_PINK | 26 |
-| PALETTE_SEAFOAM | 27 |
-| PALETTE_LILAC | 28 |
-| PALETTE_COPPER | 29 |
-| PALETTE_AZURE | 30 |
-| PALETTE_BURGUNDY | 31 |
-| PALETTE_MINT | 32 |
-| PALETTE_ORANGE | 33 |
-| PALETTE_ARCTIC | 34 |
-| PALETTE_BLACK | 35 |
-| PALETTE_BUBBLEGUM | 36 |
-| PALETTE_BUSY_BEE | 37 |
-| PALETTE_FORTRESS | 38 |
-| PALETTE_BLUEBERRY_PIE | 39 |
-| PALETTE_RASPBERRY | 40 |
-| PALETTE_COFFEE | 41 |
-| PALETTE_MARGIN | 42 |
-| PALETTE_PUMPKIN | 43 |
-| PALETTE_SOIL | 44 |
-| PALETTE_CREVASE | 45 |
-| PALETTE_PRESET_MAX | 46 |
-
-### [enum PlayerPart](#PlayerPart)
-| Identifier | Value |
-| :--------- | :---- |
-| PANTS | 0 |
-| SHIRT | 1 |
-| GLOVES | 2 |
-| SHOES | 3 |
-| HAIR | 4 |
-| SKIN | 5 |
-| CAP | 6 |
-| PLAYER_PART_MAX | 7 |
-| METAL | CAP |
 
 [:arrow_up_small:](#)
 
@@ -2816,6 +2752,27 @@
 - X_BUTTON
 - Y_BUTTON
 - Z_TRIG
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [player_palette.h](#player_palette.h)
+- MAX_PRESET_PALETTES
+
+### [enum PlayerPart](#PlayerPart)
+| Identifier | Value |
+| :--------- | :---- |
+| PANTS | 0 |
+| SHIRT | 1 |
+| GLOVES | 2 |
+| SHOES | 3 |
+| HAIR | 4 |
+| SKIN | 5 |
+| CAP | 6 |
+| EMBLEM | 7 |
+| PLAYER_PART_MAX | 8 |
+| METAL | CAP |
 
 [:arrow_up_small:](#)
 

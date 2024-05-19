@@ -398,6 +398,35 @@ COURSE_COUNT = 25
 COURSE_MIN = 1
 
 
+------------------------------
+-- player palette functions --
+------------------------------
+
+--- @param np NetworkPlayer
+--- @param part PlayerPart
+--- @return Color
+function network_player_get_palette_color(np, part)
+    local color = {
+        r = network_player_get_palette_color_channel(np, part, 0),
+        g = network_player_get_palette_color_channel(np, part, 1),
+        b = network_player_get_palette_color_channel(np, part, 2)
+    }
+    return color
+end
+
+--- @param np NetworkPlayer
+--- @param part PlayerPart
+--- @return Color
+function network_player_get_override_palette_color(np, part)
+    local color = {
+        r = network_player_get_override_palette_color_channel(np, part, 0),
+        g = network_player_get_override_palette_color_channel(np, part, 1),
+        b = network_player_get_override_palette_color_channel(np, part, 2)
+    }
+    return color
+end
+
+
 -----------------
 -- legacy font --
 -----------------
@@ -2779,178 +2808,6 @@ CT_WARIO = 4
 
 --- @type CharacterType
 CT_MAX = 5
-
---- @class PalettePreset
-
---- @type PalettePreset
-PALETTE_MARIO = 0
-
---- @type PalettePreset
-PALETTE_LUIGI = 1
-
---- @type PalettePreset
-PALETTE_TOAD = 2
-
---- @type PalettePreset
-PALETTE_WARIO = 3
-
---- @type PalettePreset
-PALETTE_WALUIGI = 4
-
---- @type PalettePreset
-PALETTE_TOADETTE = 5
-
---- @type PalettePreset
-PALETTE_YOSHI = 6
-
---- @type PalettePreset
-PALETTE_BUCKEN_BERRY = 7
-
---- @type PalettePreset
-PALETTE_ALA_GOLD = 8
-
---- @type PalettePreset
-PALETTE_FIRE_MARIO = 9
-
---- @type PalettePreset
-PALETTE_FIRE_LUIGI = 10
-
---- @type PalettePreset
-PALETTE_ICE_MARIO = 11
-
---- @type PalettePreset
-PALETTE_ICE_LUIGI = 12
-
---- @type PalettePreset
-PALETTE_TOADSWORTH = 13
-
---- @type PalettePreset
-PALETTE_PEACH = 14
-
---- @type PalettePreset
-PALETTE_DAISY = 15
-
---- @type PalettePreset
-PALETTE_WARIO_WOODS = 16
-
---- @type PalettePreset
-PALETTE_GB = 17
-
---- @type PalettePreset
-PALETTE_N64 = 18
-
---- @type PalettePreset
-PALETTE_SNES = 19
-
---- @type PalettePreset
-PALETTE_SWITCH = 20
-
---- @type PalettePreset
-PALETTE_CLOVER = 21
-
---- @type PalettePreset
-PALETTE_COBALT = 22
-
---- @type PalettePreset
-PALETTE_RUBY = 23
-
---- @type PalettePreset
-PALETTE_FURY = 24
-
---- @type PalettePreset
-PALETTE_HOT_PINK = 25
-
---- @type PalettePreset
-PALETTE_NICE_PINK = 26
-
---- @type PalettePreset
-PALETTE_SEAFOAM = 27
-
---- @type PalettePreset
-PALETTE_LILAC = 28
-
---- @type PalettePreset
-PALETTE_COPPER = 29
-
---- @type PalettePreset
-PALETTE_AZURE = 30
-
---- @type PalettePreset
-PALETTE_BURGUNDY = 31
-
---- @type PalettePreset
-PALETTE_MINT = 32
-
---- @type PalettePreset
-PALETTE_ORANGE = 33
-
---- @type PalettePreset
-PALETTE_ARCTIC = 34
-
---- @type PalettePreset
-PALETTE_BLACK = 35
-
---- @type PalettePreset
-PALETTE_BUBBLEGUM = 36
-
---- @type PalettePreset
-PALETTE_BUSY_BEE = 37
-
---- @type PalettePreset
-PALETTE_FORTRESS = 38
-
---- @type PalettePreset
-PALETTE_BLUEBERRY_PIE = 39
-
---- @type PalettePreset
-PALETTE_RASPBERRY = 40
-
---- @type PalettePreset
-PALETTE_COFFEE = 41
-
---- @type PalettePreset
-PALETTE_MARGIN = 42
-
---- @type PalettePreset
-PALETTE_PUMPKIN = 43
-
---- @type PalettePreset
-PALETTE_SOIL = 44
-
---- @type PalettePreset
-PALETTE_CREVASE = 45
-
---- @type PalettePreset
-PALETTE_PRESET_MAX = 46
-
---- @class PlayerPart
-
---- @type PlayerPart
-PANTS = 0
-
---- @type PlayerPart
-SHIRT = 1
-
---- @type PlayerPart
-GLOVES = 2
-
---- @type PlayerPart
-SHOES = 3
-
---- @type PlayerPart
-HAIR = 4
-
---- @type PlayerPart
-SKIN = 5
-
---- @type PlayerPart
-CAP = 6
-
---- @type PlayerPart
-PLAYER_PART_MAX = 7
-
---- @type PlayerPart
-METAL = CAP
 
 --- @class DialogId
 
@@ -7886,6 +7743,41 @@ Y_BUTTON = CONT_Y
 
 --- @type integer
 Z_TRIG = CONT_G
+
+--- @type integer
+MAX_PRESET_PALETTES = 128
+
+--- @class PlayerPart
+
+--- @type PlayerPart
+PANTS = 0
+
+--- @type PlayerPart
+SHIRT = 1
+
+--- @type PlayerPart
+GLOVES = 2
+
+--- @type PlayerPart
+SHOES = 3
+
+--- @type PlayerPart
+HAIR = 4
+
+--- @type PlayerPart
+SKIN = 5
+
+--- @type PlayerPart
+CAP = 6
+
+--- @type PlayerPart
+EMBLEM = 7
+
+--- @type PlayerPart
+PLAYER_PART_MAX = 8
+
+--- @type PlayerPart
+METAL = CAP
 
 --- @type integer
 EEPROM_SIZE = 0x200

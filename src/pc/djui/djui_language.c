@@ -7,7 +7,7 @@
 #include "pc/djui/djui_language.h"
 #include "pc/djui/djui_popup.h"
 
-ini_t* sLang = NULL;
+static ini_t* sLang = NULL;
 
 bool djui_language_init(char* lang) {
     // free old ini

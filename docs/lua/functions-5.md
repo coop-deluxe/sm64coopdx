@@ -6,6 +6,401 @@
 
 
 ---
+# functions from smlua_audio_utils.h
+
+<br />
+
+
+## [audio_sample_destroy](#audio_sample_destroy)
+
+### Lua Example
+`audio_sample_destroy(audio)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+
+### Returns
+- None
+
+### C Prototype
+`void audio_sample_destroy(struct ModAudio* audio);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_sample_load](#audio_sample_load)
+
+### Lua Example
+`local ModAudioValue = audio_sample_load(filename)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| filename | `string` |
+
+### Returns
+[ModAudio](structs.md#ModAudio)
+
+### C Prototype
+`struct ModAudio* audio_sample_load(const char* filename);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_sample_play](#audio_sample_play)
+
+### Lua Example
+`audio_sample_play(audio, position, volume)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+| position | [Vec3f](structs.md#Vec3f) |
+| volume | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void audio_sample_play(struct ModAudio* audio, Vec3f position, f32 volume);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_sample_stop](#audio_sample_stop)
+
+### Lua Example
+`audio_sample_stop(audio)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+
+### Returns
+- None
+
+### C Prototype
+`void audio_sample_stop(struct ModAudio* audio);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_stream_destroy](#audio_stream_destroy)
+
+### Lua Example
+`audio_stream_destroy(audio)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+
+### Returns
+- None
+
+### C Prototype
+`void audio_stream_destroy(struct ModAudio* audio);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_stream_get_frequency](#audio_stream_get_frequency)
+
+### Lua Example
+`local numberValue = audio_stream_get_frequency(audio)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 audio_stream_get_frequency(struct ModAudio* audio);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_stream_get_looping](#audio_stream_get_looping)
+
+### Lua Example
+`local booleanValue = audio_stream_get_looping(audio)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool audio_stream_get_looping(struct ModAudio* audio);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_stream_get_position](#audio_stream_get_position)
+
+### Lua Example
+`local numberValue = audio_stream_get_position(audio)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 audio_stream_get_position(struct ModAudio* audio);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_stream_get_volume](#audio_stream_get_volume)
+
+### Lua Example
+`local numberValue = audio_stream_get_volume(audio)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 audio_stream_get_volume(struct ModAudio* audio);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_stream_load](#audio_stream_load)
+
+### Lua Example
+`local ModAudioValue = audio_stream_load(filename)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| filename | `string` |
+
+### Returns
+[ModAudio](structs.md#ModAudio)
+
+### C Prototype
+`struct ModAudio* audio_stream_load(const char* filename);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_stream_pause](#audio_stream_pause)
+
+### Lua Example
+`audio_stream_pause(audio)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+
+### Returns
+- None
+
+### C Prototype
+`void audio_stream_pause(struct ModAudio* audio);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_stream_play](#audio_stream_play)
+
+### Lua Example
+`audio_stream_play(audio, restart, volume)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+| restart | `boolean` |
+| volume | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void audio_stream_play(struct ModAudio* audio, bool restart, f32 volume);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_stream_set_frequency](#audio_stream_set_frequency)
+
+### Lua Example
+`audio_stream_set_frequency(audio, freq)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+| freq | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void audio_stream_set_frequency(struct ModAudio* audio, f32 freq);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_stream_set_looping](#audio_stream_set_looping)
+
+### Lua Example
+`audio_stream_set_looping(audio, looping)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+| looping | `boolean` |
+
+### Returns
+- None
+
+### C Prototype
+`void audio_stream_set_looping(struct ModAudio* audio, bool looping);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_stream_set_position](#audio_stream_set_position)
+
+### Lua Example
+`audio_stream_set_position(audio, pos)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+| pos | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void audio_stream_set_position(struct ModAudio* audio, f32 pos);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_stream_set_volume](#audio_stream_set_volume)
+
+### Lua Example
+`audio_stream_set_volume(audio, volume)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+| volume | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void audio_stream_set_volume(struct ModAudio* audio, f32 volume);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_stream_stop](#audio_stream_stop)
+
+### Lua Example
+`audio_stream_stop(audio)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+
+### Returns
+- None
+
+### C Prototype
+`void audio_stream_stop(struct ModAudio* audio);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [smlua_audio_utils_replace_sequence](#smlua_audio_utils_replace_sequence)
+
+### Lua Example
+`smlua_audio_utils_replace_sequence(sequenceId, bankId, defaultVolume, m64Name)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| sequenceId | `integer` |
+| bankId | `integer` |
+| defaultVolume | `integer` |
+| m64Name | `string` |
+
+### Returns
+- None
+
+### C Prototype
+`void smlua_audio_utils_replace_sequence(u8 sequenceId, u8 bankId, u8 defaultVolume, const char* m64Name);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [smlua_audio_utils_reset_all](#smlua_audio_utils_reset_all)
+
+### Lua Example
+`smlua_audio_utils_reset_all()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void smlua_audio_utils_reset_all(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
 # functions from smlua_collision_utils.h
 
 <br />

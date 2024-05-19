@@ -51,3 +51,27 @@ void set_environment_region(u8 index, s32 value) {
         gEnvironmentRegions[idx] = value;
     }
 }
+
+void network_player_color_to_palette(struct NetworkPlayer *np, enum PlayerPart part, Color color) {
+    if (np == NULL || !(part < PLAYER_PART_MAX && part >= 0)) { return; }
+
+    np->palette.parts[part][0] = color[0];
+    np->palette.parts[part][1] = color[1];
+    np->palette.parts[part][2] = color[2];
+    np->overridePalette = np->palette;
+}
+
+void network_player_palette_to_color(struct NetworkPlayer *np, enum PlayerPart part, Color out) {
+    if (np == NULL || !(part < PLAYER_PART_MAX && part >= 0)) {
+        if (np == NULL) { // output config palette instead if np is NULL
+            out[0] = configPlayerPalette.parts[part][0];
+            out[1] = configPlayerPalette.parts[part][1];
+            out[2] = configPlayerPalette.parts[part][2];
+        }
+        return;
+    }
+
+    out[0] = np->palette.parts[part][0];
+    out[1] = np->palette.parts[part][1];
+    out[2] = np->palette.parts[part][2];
+}

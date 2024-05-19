@@ -58,7 +58,7 @@ struct NetworkPlayer {
     u16 rxSeqIds[MAX_RX_SEQ_IDS];
     u32 rxPacketHash[MAX_RX_SEQ_IDS];
 
-    // legacy fields to allow mods not to break
+    // legacy fields to allow mods not to break (they don't do anything anymore)
     u8 paletteIndex;
     u8 overridePaletteIndex;
     u8 overridePaletteIndexLp;
@@ -79,8 +79,11 @@ struct NetworkPlayer* get_network_player_from_level(s16 courseNum, s16 actNum, s
 struct NetworkPlayer* get_network_player_from_area(s16 courseNum, s16 actNum, s16 levelNum, s16 areaIndex);
 struct NetworkPlayer* get_network_player_smallest_global(void);
 
-void network_player_color_to_palette(struct NetworkPlayer *np, enum PlayerPart part, Color color);
-void network_player_palette_to_color(struct NetworkPlayer *np, enum PlayerPart part, Color out);
+u8 network_player_get_palette_color_channel(struct NetworkPlayer *np, enum PlayerPart part, u8 index);
+u8 network_player_get_override_palette_color_channel(struct NetworkPlayer *np, enum PlayerPart part, u8 index);
+void network_player_set_override_palette_color(struct NetworkPlayer *np, enum PlayerPart part, Color color);
+void network_player_reset_override_palette_color(struct NetworkPlayer *np);
+bool network_player_is_override_palette_same(struct NetworkPlayer *np);
 
 void network_player_update(void);
 

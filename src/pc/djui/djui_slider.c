@@ -9,26 +9,26 @@ static void djui_slider_update_style(struct DjuiBase* base) {
         djui_base_set_border_color(&slider->rect->base, 93, 93, 93, 255);
         djui_base_set_color(&slider->rect->base, 0, 0, 0, 0);
         djui_base_set_color(&slider->text->base, 100, 100, 100, 255);
-        djui_base_set_color(&slider->rectValue->base, 100, 100, 100, 255);
+        if (slider->updateRectValueColor) { djui_base_set_color(&slider->rectValue->base, 100, 100, 100, 255); }
     } else if (gInteractableFocus == base) {
         djui_base_set_border_color(&slider->rect->base, 20, 170, 255, 255);
         djui_base_set_color(&slider->rect->base, 255, 255, 255, 32);
         djui_base_set_color(&slider->text->base, 229, 241, 251, 255);
-        djui_base_set_color(&slider->rectValue->base, 255, 255, 255, 255);
+        if (slider->updateRectValueColor) { djui_base_set_color(&slider->rectValue->base, 255, 255, 255, 255); }
     } else if (gDjuiCursorDownOn == base && activeRegion) {
         djui_base_set_border_color(&slider->rect->base, 20, 170, 255, 255);
         djui_base_set_color(&slider->rect->base, 255, 255, 255, 32);
         djui_base_set_color(&slider->text->base, 229, 241, 251, 255);
-        djui_base_set_color(&slider->rectValue->base, 255, 255, 255, 255);
+        if (slider->updateRectValueColor) { djui_base_set_color(&slider->rectValue->base, 255, 255, 255, 255); }
     } else if (gDjuiHovered == base && activeRegion) {
         djui_base_set_border_color(&slider->rect->base, 0, 120, 215, 255);
         djui_base_set_color(&slider->text->base, 229, 241, 251, 255);
-        djui_base_set_color(&slider->rectValue->base, 229, 241, 251, 255);
+        if (slider->updateRectValueColor) { djui_base_set_color(&slider->rectValue->base, 229, 241, 251, 255); }
     } else {
         djui_base_set_border_color(&slider->rect->base, 173, 173, 173, 255);
         djui_base_set_color(&slider->rect->base, 0, 0, 0, 0);
         djui_base_set_color(&slider->text->base, 220, 220, 220, 255);
-        djui_base_set_color(&slider->rectValue->base, 220, 220, 220, 255);
+        if (slider->updateRectValueColor) { djui_base_set_color(&slider->rectValue->base, 220, 220, 220, 255); }
     }
 }
 
@@ -109,6 +109,8 @@ struct DjuiSlider* djui_slider_create(struct DjuiBase* parent, const char* messa
     slider->value = value;
     slider->min = min;
     slider->max = max;
+
+    slider->updateRectValueColor = true;
 
     djui_base_init(parent, base, NULL, djui_slider_destroy);
     djui_interactable_create(base, djui_slider_update_style);

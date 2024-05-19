@@ -138,7 +138,6 @@ void djui_panel_language_create(struct DjuiBase* caller) {
 
 skip_langs:
         djui_button_create(body, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
-
     }
 
     struct DjuiPanel* p = djui_panel_add(caller, panel, NULL);

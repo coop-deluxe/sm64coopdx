@@ -170,7 +170,7 @@ u8 djui_hud_get_font(void) {
 }
 
 void djui_hud_set_font(s8 fontType) {
-    if (fontType >= FONT_COUNT) { return; }
+    if (fontType >= FONT_COUNT || fontType < -1) { return; }
     sLegacy = fontType == -1;
     if (sLegacy) { fontType = 0; }
     sFont = fontType;

@@ -23,7 +23,7 @@ struct NetworkPlayer *gNetworkPlayerServer = NULL;
 static char sDefaultPlayerName[] = "Player";
 
 void network_player_init(void) {
-    gNetworkPlayers[0].modelIndex = (configPlayerModel < CT_MAX) ? configPlayerModel : 0;
+    gNetworkPlayers[0].modelIndex = (configPlayerModel < CT_MAX) ? configPlayerModel : CT_MARIO;
     gNetworkPlayers[0].palette = configPlayerPalette;
     gNetworkPlayers[0].overrideModelIndex = gNetworkPlayers[0].modelIndex;
     gNetworkPlayers[0].overridePalette = gNetworkPlayers[0].palette;
@@ -128,28 +128,36 @@ struct NetworkPlayer *get_network_player_smallest_global(void) {
     return smallest;
 }
 
-void network_player_color_to_palette(struct NetworkPlayer *np, enum PlayerPart part, Color color) {
-    if (np == NULL || !(part < PLAYER_PART_MAX && part >= 0)) { return; }
+u8 network_player_get_palette_color_channel(struct NetworkPlayer *np, enum PlayerPart part, u8 index) {
+    if (np == NULL || part < 0 || part >= PLAYER_PART_MAX || index > 2) { return 0; }
 
-    np->palette.parts[part][0] = color[0];
-    np->palette.parts[part][1] = color[1];
-    np->palette.parts[part][2] = color[2];
+    return np->palette.parts[part][index];
+}
+
+u8 network_player_get_override_palette_color_channel(struct NetworkPlayer *np, enum PlayerPart part, u8 index) {
+    if (np == NULL || part < 0 || part >= PLAYER_PART_MAX || index > 2) { return 0; }
+
+    return np->overridePalette.parts[part][index];
+}
+
+void network_player_set_override_palette_color(struct NetworkPlayer *np, enum PlayerPart part, Color color) {
+    if (part < 0 || part >= PLAYER_PART_MAX) { return; }
+
+    np->overridePalette.parts[part][0] = color[0];
+    np->overridePalette.parts[part][1] = color[1];
+    np->overridePalette.parts[part][2] = color[2];
+}
+
+void network_player_reset_override_palette_color(struct NetworkPlayer *np) {
+    if (np == NULL) { return; }
+
     np->overridePalette = np->palette;
 }
 
-void network_player_palette_to_color(struct NetworkPlayer *np, enum PlayerPart part, Color out) {
-    if (np == NULL || !(part < PLAYER_PART_MAX && part >= 0)) {
-        if (np == NULL) { // output config palette instead if np is NULL
-            out[0] = configPlayerPalette.parts[part][0];
-            out[1] = configPlayerPalette.parts[part][1];
-            out[2] = configPlayerPalette.parts[part][2];
-        }
-        return;
-    }
+bool network_player_is_override_palette_same(struct NetworkPlayer *np) {
+    if (np == NULL) { return false; }
 
-    out[0] = np->palette.parts[part][0];
-    out[1] = np->palette.parts[part][1];
-    out[2] = np->palette.parts[part][2];
+    return memcmp(&np->palette, &np->overridePalette, sizeof(struct PlayerPalette)) == 0;
 }
 
 void network_player_update(void) {
@@ -280,10 +288,6 @@ u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex, u8 mode
     np->palette = *palette;
     np->overrideModelIndex = modelIndex;
     np->overridePalette = *palette;
-
-    np->paletteIndex           = USE_REAL_PALETTE_VAR;
-    np->overridePaletteIndex   = USE_REAL_PALETTE_VAR;
-    np->overridePaletteIndexLp = USE_REAL_PALETTE_VAR;
 
     snprintf(np->name, MAX_PLAYER_STRING, "%s", name);
     network_player_update_model(localIndex);
