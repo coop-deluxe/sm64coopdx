@@ -124,10 +124,23 @@ static bool djui_panel_player_edit_palette_preset_name_valid(char* buffer) {
     if (buffer[0] == '\0') { return false; }
     char* c = buffer;
     while (*c != '\0') {
+        if (*c == '/' || *c == '\\') { return false; }
         if (!djui_unicode_valid_char(c)) { return false; }
         c = djui_unicode_next_char(c);
     }
     return true;
+}
+
+static char* djui_panel_player_edit_palette_preset_name_get_text(void) {
+    char* name = "Unnamed";
+    if (gPresetPaletteCount > 0) {
+        for (int i = 0; i < gPresetPaletteCount; i++) {
+            if (memcmp(&configPlayerPalette, &gPresetPalettes[i].palette, sizeof(struct PlayerPalette)) == 0) {
+                name = gPresetPalettes[i].name;
+            }
+        }
+    }
+    return name;
 }
 
 static void djui_panel_player_edit_palette_preset_name_text_change(struct DjuiBase* caller) {
@@ -142,7 +155,7 @@ static void djui_panel_player_edit_palette_preset_name_text_change(struct DjuiBa
 static void djui_panel_player_edit_palette_preset_name_on_focus_end(struct DjuiBase* caller) {
     struct DjuiInputbox* inputbox1 = (struct DjuiInputbox*)caller;
     if (!djui_panel_player_edit_palette_preset_name_valid(inputbox1->buffer)) {
-        djui_inputbox_set_text(inputbox1, "Unnamed");
+        djui_inputbox_set_text(inputbox1, djui_panel_player_edit_palette_preset_name_get_text());
     }
     djui_inputbox_set_text_color(inputbox1, 0, 0, 0, 255);
 
@@ -184,7 +197,6 @@ static void djui_panel_player_edit_palette_destroy(struct DjuiBase* caller) {
         } else if (gDjuiPanelPauseCreated) {
             djui_panel_shutdown();
             djui_panel_pause_create(NULL);
-            djui_panel_options_create(NULL);
             djui_panel_player_create(NULL);
         }
         return;
@@ -254,16 +266,8 @@ static void djui_panel_player_edit_palette_create(struct DjuiBase* caller) {
             djui_base_set_alignment(&text1->base, DJUI_HALIGN_LEFT, DJUI_VALIGN_TOP);
             djui_text_set_drop_shadow(text1, 64, 64, 64, 100);
 
-            char* name = "Unnamed";
-            if (gPresetPaletteCount > 0) {
-                for (int i = 0; i < gPresetPaletteCount; i++) {
-                    if (memcmp(&configPlayerPalette, &gPresetPalettes[i].palette, sizeof(struct PlayerPalette)) == 0) {
-                        name = gPresetPalettes[i].name;
-                    }
-                }
-            }
             sPalettePresetNameTextBox = djui_inputbox_create(&rect2->base, 32);
-            djui_inputbox_set_text(sPalettePresetNameTextBox, name);
+            djui_inputbox_set_text(sPalettePresetNameTextBox, djui_panel_player_edit_palette_preset_name_get_text());
             djui_base_set_size_type(&sPalettePresetNameTextBox->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
             djui_base_set_size(&sPalettePresetNameTextBox->base, 0.45f, 32);
             djui_base_set_alignment(&sPalettePresetNameTextBox->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_TOP);
