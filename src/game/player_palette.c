@@ -41,7 +41,7 @@ void player_palettes_reset(void) {
     gPresetPaletteCount = 0;
 }
 
-static u8 read(const char* data) {
+static u8 read_value(const char* data) {
     if (data == NULL) { return 0; }
     for (size_t i = 0; i < strlen(data); i++) {
         char c = data[i];
@@ -85,14 +85,14 @@ void player_palettes_read(const char* palettesPath) {
         if (!player_palette_init(palettesPath, path)) { continue; }
 
         struct PlayerPalette palette = {{
-            { read(ini_get(sPalette, "PALETTE", "PANTS_R")), read(ini_get(sPalette, "PALETTE", "PANTS_G")), read(ini_get(sPalette, "PALETTE", "PANTS_B")) },
-            { read(ini_get(sPalette, "PALETTE", "SHIRT_R")), read(ini_get(sPalette, "PALETTE", "SHIRT_G")), read(ini_get(sPalette, "PALETTE", "SHIRT_B")) },
-            { read(ini_get(sPalette, "PALETTE", "GLOVES_R")), read(ini_get(sPalette, "PALETTE", "GLOVES_G")), read(ini_get(sPalette, "PALETTE", "GLOVES_B")) },
-            { read(ini_get(sPalette, "PALETTE", "SHOES_R")), read(ini_get(sPalette, "PALETTE", "SHOES_G")), read(ini_get(sPalette, "PALETTE", "SHOES_B")) },
-            { read(ini_get(sPalette, "PALETTE", "HAIR_R")), read(ini_get(sPalette, "PALETTE", "HAIR_G")), read(ini_get(sPalette, "PALETTE", "HAIR_B")) },
-            { read(ini_get(sPalette, "PALETTE", "SKIN_R")), read(ini_get(sPalette, "PALETTE", "SKIN_G")), read(ini_get(sPalette, "PALETTE", "SKIN_B")) },
-            { read(ini_get(sPalette, "PALETTE", "CAP_R")), read(ini_get(sPalette, "PALETTE", "CAP_G")), read(ini_get(sPalette, "PALETTE", "CAP_B")) },
-            { read(ini_get(sPalette, "PALETTE", "EMBLEM_R")), read(ini_get(sPalette, "PALETTE", "EMBLEM_G")), read(ini_get(sPalette, "PALETTE", "EMBLEM_B")) }
+            { read_value(ini_get(sPalette, "PALETTE", "PANTS_R")), read_value(ini_get(sPalette, "PALETTE", "PANTS_G")), read_value(ini_get(sPalette, "PALETTE", "PANTS_B")) },
+            { read_value(ini_get(sPalette, "PALETTE", "SHIRT_R")), read_value(ini_get(sPalette, "PALETTE", "SHIRT_G")), read_value(ini_get(sPalette, "PALETTE", "SHIRT_B")) },
+            { read_value(ini_get(sPalette, "PALETTE", "GLOVES_R")), read_value(ini_get(sPalette, "PALETTE", "GLOVES_G")), read_value(ini_get(sPalette, "PALETTE", "GLOVES_B")) },
+            { read_value(ini_get(sPalette, "PALETTE", "SHOES_R")), read_value(ini_get(sPalette, "PALETTE", "SHOES_G")), read_value(ini_get(sPalette, "PALETTE", "SHOES_B")) },
+            { read_value(ini_get(sPalette, "PALETTE", "HAIR_R")), read_value(ini_get(sPalette, "PALETTE", "HAIR_G")), read_value(ini_get(sPalette, "PALETTE", "HAIR_B")) },
+            { read_value(ini_get(sPalette, "PALETTE", "SKIN_R")), read_value(ini_get(sPalette, "PALETTE", "SKIN_G")), read_value(ini_get(sPalette, "PALETTE", "SKIN_B")) },
+            { read_value(ini_get(sPalette, "PALETTE", "CAP_R")), read_value(ini_get(sPalette, "PALETTE", "CAP_G")), read_value(ini_get(sPalette, "PALETTE", "CAP_B")) },
+            { read_value(ini_get(sPalette, "PALETTE", "EMBLEM_R")), read_value(ini_get(sPalette, "PALETTE", "EMBLEM_G")), read_value(ini_get(sPalette, "PALETTE", "EMBLEM_B")) }
         }};
         // free
         ini_free(sPalette);
