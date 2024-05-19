@@ -28,8 +28,8 @@ extern struct PresetPalette gPresetPalettes[MAX_PRESET_PALETTES];
 extern u16 gPresetPaletteCount;
 
 void player_palettes_reset(void);
-void player_palettes_read(const char* palettePath);
+void player_palettes_read(const char* palettePath, bool appendPalettes);
 void player_palette_export(char* name);
-bool player_palette_delete(const char* palettesPath, char* name);
+bool player_palette_delete(const char* palettesPath, char* name, bool appendPalettes);
 
 #endif
