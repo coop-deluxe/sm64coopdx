@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <ctype.h>
 #include "pc/ini.h"
 #include "pc/mods/mods.h"
 #include "pc/mods/mods_utils.h"
@@ -43,13 +44,14 @@ void player_palettes_reset(void) {
 
 static u8 read_value(const char* data) {
     if (data == NULL) { return 0; }
+    data = sys_strlwr((char*)data);
     for (size_t i = 0; i < strlen(data); i++) {
         char c = data[i];
         if (!((c >= '0' && c <= '9') || (c >= 'a' && c <= 'f') || c == 'x')) {
             return 0;
         }
     }
-    return strtol(data, NULL, 0);
+    return MIN(strtol(data, NULL, 0), 255);
 }
 
 void player_palettes_read(const char* palettesPath) {
@@ -82,7 +84,12 @@ void player_palettes_read(const char* palettesPath) {
         }
         if (strlen(path) == 0) { continue; }
 
-        if (!player_palette_init(palettesPath, path)) { continue; }
+        if (!player_palette_init(palettesPath, path)) {
+#ifdef DEVELOPMENT
+            printf("Failed to load palette '%s.ini'\n", path);
+#endif
+            continue;
+        }
 
         struct PlayerPalette palette = {{
             { read_value(ini_get(sPalette, "PALETTE", "PANTS_R")), read_value(ini_get(sPalette, "PALETTE", "PANTS_G")), read_value(ini_get(sPalette, "PALETTE", "PANTS_B")) },
@@ -100,6 +107,9 @@ void player_palettes_read(const char* palettesPath) {
         strncpy(gPresetPalettes[gPresetPaletteCount].name, path, 4096);
         gPresetPalettes[gPresetPaletteCount].palette = palette;
         gPresetPaletteCount++;
+#ifdef DEVELOPMENT
+        printf("Loaded palette '%s.ini'\n", path);
+#endif
         if (gPresetPaletteCount >= MAX_PRESET_PALETTES) { break; }
     }
 
