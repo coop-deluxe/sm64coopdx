@@ -38,11 +38,12 @@ static struct VanillaMD5 sVanillaMD5[] = {
 inline static void rename_tmp_folder() {
     std::string userPath = fs_get_write_path("");
     std::string oldPath = userPath + "tmp";
-    if (fs::exists(oldPath)) {
+    std::string newPath = userPath + TMP_DIRECTORY;
+    if (fs::exists(oldPath) && !fs::exists(newPath)) {
 #if defined(_WIN32) || defined(_WIN64)
         SetFileAttributesA(oldPath.c_str(), FILE_ATTRIBUTE_HIDDEN);
 #endif
-        fs::rename(oldPath, userPath + TMP_DIRECTORY);
+        fs::rename(oldPath, newPath);
     }
 }
 
