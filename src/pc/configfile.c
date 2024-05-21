@@ -79,104 +79,107 @@ ConfigWindow configWindow       = {
     .msaa = 0,
 };
 
-unsigned int configFiltering    = 2;          // 0=force nearest, 1=linear, 2=three-point
-unsigned int configMasterVolume = 80; // 0 - MAX_VOLUME
-unsigned int configMusicVolume = MAX_VOLUME;
-unsigned int configSfxVolume = MAX_VOLUME;
-unsigned int configEnvVolume = MAX_VOLUME;
-
-// Keyboard mappings (VK_ values, by default keyboard/gamepad/mouse)
-unsigned int configKeyA[MAX_BINDS]          = { 0x0026,     0x1000,     0x1103     };
-unsigned int configKeyB[MAX_BINDS]          = { 0x0033,     0x1001,     0x1101     };
-unsigned int configKeyX[MAX_BINDS]          = { 0x0017,     0x1002,     VK_INVALID };
-unsigned int configKeyY[MAX_BINDS]          = { 0x0032,     0x1003,     VK_INVALID };
-unsigned int configKeyStart[MAX_BINDS]      = { 0x0039,     0x1006,     VK_INVALID };
-unsigned int configKeyL[MAX_BINDS]          = { 0x002A,     0x1009,     0x1104     };
-unsigned int configKeyR[MAX_BINDS]          = { 0x0036,     0x100A,     0x101B     };
-unsigned int configKeyZ[MAX_BINDS]          = { 0x0025,     0x1007,     0x101A     };
-unsigned int configKeyCUp[MAX_BINDS]        = { 0x0148,     VK_INVALID, VK_INVALID };
-unsigned int configKeyCDown[MAX_BINDS]      = { 0x0150,     VK_INVALID, VK_INVALID };
-unsigned int configKeyCLeft[MAX_BINDS]      = { 0x014B,     VK_INVALID, VK_INVALID };
-unsigned int configKeyCRight[MAX_BINDS]     = { 0x014D,     VK_INVALID, VK_INVALID };
-unsigned int configKeyStickUp[MAX_BINDS]    = { 0x0011,     VK_INVALID, VK_INVALID };
-unsigned int configKeyStickDown[MAX_BINDS]  = { 0x001F,     VK_INVALID, VK_INVALID };
-unsigned int configKeyStickLeft[MAX_BINDS]  = { 0x001E,     VK_INVALID, VK_INVALID };
-unsigned int configKeyStickRight[MAX_BINDS] = { 0x0020,     VK_INVALID, VK_INVALID };
-unsigned int configKeyChat[MAX_BINDS]       = { 0x001C,     VK_INVALID, VK_INVALID };
-unsigned int configKeyPlayerList[MAX_BINDS] = { 0x000F,     0x1004,     VK_INVALID };
-unsigned int configKeyDUp[MAX_BINDS]        = { 0x0147,     0x100b,     VK_INVALID };
-unsigned int configKeyDDown[MAX_BINDS]      = { 0x014f,     0x100c,     VK_INVALID };
-unsigned int configKeyDLeft[MAX_BINDS]      = { 0x0153,     0x100d,     VK_INVALID };
-unsigned int configKeyDRight[MAX_BINDS]     = { 0x0151,     0x100e,     VK_INVALID };
-unsigned int configKeyConsole[MAX_BINDS]    = { 0x0029,     0x003B,     VK_INVALID };
-unsigned int configKeyPrevPage[MAX_BINDS]   = { 0x0016,     VK_INVALID, VK_INVALID };
-unsigned int configKeyNextPage[MAX_BINDS]   = { 0x0018,     VK_INVALID, VK_INVALID };
-unsigned int configKeyDisconnect[MAX_BINDS] = { VK_INVALID, VK_INVALID, VK_INVALID };
-unsigned int configStickDeadzone = 16; // 16*DEADZONE_STEP=4960 (the original default deadzone)
-unsigned int configRumbleStrength = 50;
-// better camera settings
-unsigned int configCameraXSens   = 50;
-unsigned int configCameraYSens   = 50;
-unsigned int configCameraAggr    = 0;
-unsigned int configCameraPan     = 0;
-unsigned int configCameraDegrade = 50; // 0 - 100%
-bool         configCameraInvertX = false;
-bool         configCameraInvertY = true;
-bool         configEnableCamera  = false;
-bool         configCameraAnalog  = false;
-bool         configCameraMouse   = false;
-// coop-specific
-bool         configSkipIntro                      = 0;
-bool         configBubbleDeath                    = true;
-bool         configPauseAnywhere                  = false;
+// display settings
+unsigned int configFiltering                      = 2; // 0 = Nearest, 1 = Bilinear, 2 = Trilinear
+bool         configShowFPS                        = false;
+bool         configUncappedFramerate              = false;
+unsigned int configFrameLimit                     = 60;
+bool         configForce4By3                      = false;
+unsigned int configInterpolationMode              = 1;
+unsigned int configDrawDistance                   = 4;
+// sound settings
+unsigned int configMasterVolume                   = 80; // 0 - MAX_VOLUME
+unsigned int configMusicVolume                    = MAX_VOLUME;
+unsigned int configSfxVolume                      = MAX_VOLUME;
+unsigned int configEnvVolume                      = MAX_VOLUME;
+bool         configFadeoutDistantSounds           = false;
+// control binds
+unsigned int configKeyA[MAX_BINDS]                = { 0x0026,     0x1000,     0x1103     };
+unsigned int configKeyB[MAX_BINDS]                = { 0x0033,     0x1001,     0x1101     };
+unsigned int configKeyX[MAX_BINDS]                = { 0x0017,     0x1002,     VK_INVALID };
+unsigned int configKeyY[MAX_BINDS]                = { 0x0032,     0x1003,     VK_INVALID };
+unsigned int configKeyStart[MAX_BINDS]            = { 0x0039,     0x1006,     VK_INVALID };
+unsigned int configKeyL[MAX_BINDS]                = { 0x002A,     0x1009,     0x1104     };
+unsigned int configKeyR[MAX_BINDS]                = { 0x0036,     0x100A,     0x101B     };
+unsigned int configKeyZ[MAX_BINDS]                = { 0x0025,     0x1007,     0x101A     };
+unsigned int configKeyCUp[MAX_BINDS]              = { 0x0148,     VK_INVALID, VK_INVALID };
+unsigned int configKeyCDown[MAX_BINDS]            = { 0x0150,     VK_INVALID, VK_INVALID };
+unsigned int configKeyCLeft[MAX_BINDS]            = { 0x014B,     VK_INVALID, VK_INVALID };
+unsigned int configKeyCRight[MAX_BINDS]           = { 0x014D,     VK_INVALID, VK_INVALID };
+unsigned int configKeyStickUp[MAX_BINDS]          = { 0x0011,     VK_INVALID, VK_INVALID };
+unsigned int configKeyStickDown[MAX_BINDS]        = { 0x001F,     VK_INVALID, VK_INVALID };
+unsigned int configKeyStickLeft[MAX_BINDS]        = { 0x001E,     VK_INVALID, VK_INVALID };
+unsigned int configKeyStickRight[MAX_BINDS]       = { 0x0020,     VK_INVALID, VK_INVALID };
+unsigned int configKeyChat[MAX_BINDS]             = { 0x001C,     VK_INVALID, VK_INVALID };
+unsigned int configKeyPlayerList[MAX_BINDS]       = { 0x000F,     0x1004,     VK_INVALID };
+unsigned int configKeyDUp[MAX_BINDS]              = { 0x0147,     0x100b,     VK_INVALID };
+unsigned int configKeyDDown[MAX_BINDS]            = { 0x014f,     0x100c,     VK_INVALID };
+unsigned int configKeyDLeft[MAX_BINDS]            = { 0x0153,     0x100d,     VK_INVALID };
+unsigned int configKeyDRight[MAX_BINDS]           = { 0x0151,     0x100e,     VK_INVALID };
+unsigned int configKeyConsole[MAX_BINDS]          = { 0x0029,     0x003B,     VK_INVALID };
+unsigned int configKeyPrevPage[MAX_BINDS]         = { 0x0016,     VK_INVALID, VK_INVALID };
+unsigned int configKeyNextPage[MAX_BINDS]         = { 0x0018,     VK_INVALID, VK_INVALID };
+unsigned int configKeyDisconnect[MAX_BINDS]       = { VK_INVALID, VK_INVALID, VK_INVALID };
+unsigned int configStickDeadzone                  = 16;
+unsigned int configRumbleStrength                 = 50;
+unsigned int configGamepadNumber                  = 0;
+bool         configBackgroundGamepad              = true;
+bool         configDisableGamepads                = false;
+// free camera settings
+bool         configEnableCamera                   = false;
+bool         configCameraAnalog                   = false;
+bool         configCameraMouse                    = false;
+bool         configCameraInvertX                  = false;
+bool         configCameraInvertY                  = true;
+unsigned int configCameraXSens                    = 50;
+unsigned int configCameraYSens                    = 50;
+unsigned int configCameraAggr                     = 0;
+unsigned int configCameraPan                      = 0;
+unsigned int configCameraDegrade                  = 50; // 0 - 100%
+// debug
+bool         configLuaProfiler                    = false;
+bool         configDebugPrint                     = false;
+bool         configDebugInfo                      = false;
+bool         configDebugError                     = false;
+#ifdef DEVELOPMENT
+bool         configCtxProfiler                    = false;
+#endif
+// player settings
+char         configPlayerName[MAX_PLAYER_STRING]  = "";
+unsigned int configPlayerModel                    = 0;
+struct PlayerPalette configPlayerPalette          = { { { 0x00, 0x00, 0xff }, { 0xff, 0x00, 0x00 }, { 0xff, 0xff, 0xff }, { 0x72, 0x1c, 0x0e }, { 0x73, 0x06, 0x00 }, { 0xfe, 0xc1, 0x79 }, { 0xff, 0x00, 0x00 }, { 0xff, 0x00, 0x00 } } };
+// coop settings
 unsigned int configAmountofPlayers                = 16;
-char         configJoinIp[MAX_CONFIG_STRING]      = "";
-unsigned int configJoinPort                       = DEFAULT_PORT;
+bool         configBubbleDeath                    = true;
 unsigned int configHostPort                       = DEFAULT_PORT;
 unsigned int configHostSaveSlot                   = 1;
+char         configJoinIp[MAX_CONFIG_STRING]      = "";
+unsigned int configJoinPort                       = DEFAULT_PORT;
+unsigned int configNetworkSystem                  = 0;
 unsigned int configPlayerInteraction              = 1;
 unsigned int configPlayerKnockbackStrength        = 25;
 unsigned int configStayInLevelAfterStar           = 0;
 bool         configNametags                       = true;
 unsigned int configBouncyLevelBounds              = 0;
-unsigned int configNetworkSystem                  = 0;
-char         configPlayerName[MAX_PLAYER_STRING]  = "";
-unsigned int configPlayerModel                    = 0;
+bool         configSkipIntro                      = 0;
+bool         configPauseAnywhere                  = false;
 bool         configMenuStaffRoll                  = true;
 unsigned int configMenuLevel                      = 0;
 bool         configMenuSound                      = false;
 bool         configMenuRandom                     = false;
 bool         configMenuDemos                      = false;
-struct PlayerPalette configPlayerPalette          = { { { 0x00, 0x00, 0xff }, { 0xff, 0x00, 0x00 }, { 0xff, 0xff, 0xff }, { 0x72, 0x1c, 0x0e }, { 0x73, 0x06, 0x00 }, { 0xfe, 0xc1, 0x79 }, { 0xff, 0x00, 0x00 }, { 0xff, 0x00, 0x00 } } };
-bool         configShowFPS                        = false;
-bool         configUncappedFramerate              = false;
-unsigned int configFrameLimit                     = 144;
-unsigned int configDrawDistance                   = 4;
+bool         configGlobalPlayerModels             = true;
 bool         configDisablePopups                  = false;
 bool         configUseStandardKeyBindingsChat     = false;
-bool         configLuaProfiler                    = false;
-#ifdef DEVELOPMENT
-bool         configCtxProfiler                    = false;
-#endif
-unsigned int configInterpolationMode              = 1;
-unsigned int configGamepadNumber                  = 0;
-bool         configBackgroundGamepad              = true;
-bool         configDisableGamepads                = false;
-bool         configDebugPrint                     = false;
-bool         configDebugInfo                      = false;
-bool         configDebugError                     = false;
 char         configLanguage[MAX_CONFIG_STRING]    = "";
-bool         configForce4By3                      = false;
 char         configCoopNetIp[MAX_CONFIG_STRING]   = DEFAULT_COOPNET_IP;
 unsigned int configCoopNetPort                    = DEFAULT_COOPNET_PORT;
 char         configPassword[MAX_CONFIG_STRING]    = "";
 char         configDestId[MAX_CONFIG_STRING]      = "0";
-bool         configFadeoutDistantSounds           = false;
 unsigned int configDjuiTheme                      = DJUI_THEME_DARK;
 bool         configDjuiThemeCenter                = true;
 unsigned int configDjuiThemeFont                  = FONT_NORMAL;
 unsigned int configDjuiScale                      = 0;
-bool         configGlobalPlayerModels             = true;
 char         configLastVersion[MAX_CONFIG_STRING] = "";
 
 static const struct ConfigOption options[] = {
@@ -186,21 +189,22 @@ static const struct ConfigOption options[] = {
     {.name = "window_y",                       .type = CONFIG_TYPE_UINT, .uintValue = &configWindow.y},
     {.name = "window_w",                       .type = CONFIG_TYPE_UINT, .uintValue = &configWindow.w},
     {.name = "window_h",                       .type = CONFIG_TYPE_UINT, .uintValue = &configWindow.h},
-    // display settings
     {.name = "vsync",                          .type = CONFIG_TYPE_BOOL, .boolValue = &configWindow.vsync},
-    {.name = "texture_filtering",              .type = CONFIG_TYPE_UINT, .uintValue = &configFiltering},
     {.name = "msaa",                           .type = CONFIG_TYPE_UINT, .uintValue = &configWindow.msaa},
-    {.name = "show_fps",                       .type = CONFIG_TYPE_BOOL  , .boolValue   = &configShowFPS},
-    {.name = "uncapped_framerate",             .type = CONFIG_TYPE_BOOL  , .boolValue   = &configUncappedFramerate},
-    {.name = "frame_limit"       ,             .type = CONFIG_TYPE_UINT  , .uintValue   = &configFrameLimit},
-    {.name = "force_4by3",                     .type = CONFIG_TYPE_BOOL  , .boolValue   = &configForce4By3},
-    {.name = "interpolation_mode",             .type = CONFIG_TYPE_UINT  , .uintValue   = &configInterpolationMode},
+    // display settings
+    {.name = "texture_filtering",              .type = CONFIG_TYPE_UINT, .uintValue = &configFiltering},
+    {.name = "show_fps",                       .type = CONFIG_TYPE_BOOL, .boolValue = &configShowFPS},
+    {.name = "uncapped_framerate",             .type = CONFIG_TYPE_BOOL, .boolValue = &configUncappedFramerate},
+    {.name = "frame_limit",                    .type = CONFIG_TYPE_UINT, .uintValue = &configFrameLimit},
+    {.name = "force_4by3",                     .type = CONFIG_TYPE_BOOL, .boolValue = &configForce4By3},
+    {.name = "interpolation_mode",             .type = CONFIG_TYPE_UINT, .uintValue = &configInterpolationMode},
+    {.name = "coop_draw_distance",             .type = CONFIG_TYPE_UINT, .uintValue = &configDrawDistance},
     // sound settings
     {.name = "master_volume",                  .type = CONFIG_TYPE_UINT, .uintValue = &configMasterVolume},
     {.name = "music_volume",                   .type = CONFIG_TYPE_UINT, .uintValue = &configMusicVolume},
     {.name = "sfx_volume",                     .type = CONFIG_TYPE_UINT, .uintValue = &configSfxVolume},
     {.name = "env_volume",                     .type = CONFIG_TYPE_UINT, .uintValue = &configEnvVolume},
-    {.name = "fade_distant_sounds",            .type = CONFIG_TYPE_BOOL  , .boolValue   = &configFadeoutDistantSounds},
+    {.name = "fade_distant_sounds",            .type = CONFIG_TYPE_BOOL, .boolValue = &configFadeoutDistantSounds},
     // control binds
     {.name = "key_a",                          .type = CONFIG_TYPE_BIND, .uintValue = configKeyA},
     {.name = "key_b",                          .type = CONFIG_TYPE_BIND, .uintValue = configKeyB},
@@ -224,15 +228,15 @@ static const struct ConfigOption options[] = {
     {.name = "key_ddown",                      .type = CONFIG_TYPE_BIND, .uintValue = configKeyDDown},
     {.name = "key_dleft",                      .type = CONFIG_TYPE_BIND, .uintValue = configKeyDLeft},
     {.name = "key_dright",                     .type = CONFIG_TYPE_BIND, .uintValue = configKeyDRight},
+    {.name = "key_console",                    .type = CONFIG_TYPE_BIND, .uintValue = configKeyConsole},
     {.name = "key_prev",                       .type = CONFIG_TYPE_BIND, .uintValue = configKeyPrevPage},
     {.name = "key_next",                       .type = CONFIG_TYPE_BIND, .uintValue = configKeyNextPage},
     {.name = "key_disconnect",                 .type = CONFIG_TYPE_BIND, .uintValue = configKeyDisconnect},
-    {.name = "key_console",                    .type = CONFIG_TYPE_BIND, .uintValue = configKeyConsole},
     {.name = "stick_deadzone",                 .type = CONFIG_TYPE_UINT, .uintValue = &configStickDeadzone},
     {.name = "rumble_strength",                .type = CONFIG_TYPE_UINT, .uintValue = &configRumbleStrength},
-    {.name = "gamepad_number",                 .type = CONFIG_TYPE_UINT  , .uintValue   = &configGamepadNumber},
-    {.name = "background_gamepad",             .type = CONFIG_TYPE_UINT  , .boolValue   = &configBackgroundGamepad},
-    {.name = "disable_gamepads",               .type = CONFIG_TYPE_BOOL  , .boolValue   = &configDisableGamepads},
+    {.name = "gamepad_number",                 .type = CONFIG_TYPE_UINT, .uintValue = &configGamepadNumber},
+    {.name = "background_gamepad",             .type = CONFIG_TYPE_UINT, .boolValue = &configBackgroundGamepad},
+    {.name = "disable_gamepads",               .type = CONFIG_TYPE_BOOL, .boolValue = &configDisableGamepads},
     // free camera settings
     {.name = "bettercam_enable",               .type = CONFIG_TYPE_BOOL, .boolValue = &configEnableCamera},
     {.name = "bettercam_analog",               .type = CONFIG_TYPE_BOOL, .boolValue = &configCameraAnalog},
@@ -244,62 +248,61 @@ static const struct ConfigOption options[] = {
     {.name = "bettercam_aggression",           .type = CONFIG_TYPE_UINT, .uintValue = &configCameraAggr},
     {.name = "bettercam_pan_level",            .type = CONFIG_TYPE_UINT, .uintValue = &configCameraPan},
     {.name = "bettercam_degrade",              .type = CONFIG_TYPE_UINT, .uintValue = &configCameraDegrade},
-    {.name = "skip_intro",                     .type = CONFIG_TYPE_BOOL, .boolValue = &configSkipIntro},
-    {.name = "pause_anywhere",                 .type = CONFIG_TYPE_BOOL, .boolValue = &configPauseAnywhere},
     // debug
-    {.name = "debug_offset",                   .type = CONFIG_TYPE_U64   , .u64Value    = &gPcDebug.bhvOffset},
-    {.name = "debug_tags",                     .type = CONFIG_TYPE_U64   , .u64Value    = gPcDebug.tags},
-    {.name = "lua_profiler",                   .type = CONFIG_TYPE_BOOL  , .boolValue   = &configLuaProfiler},
-    {.name = "debug_print",                    .type = CONFIG_TYPE_BOOL  , .boolValue   = &configDebugPrint},
-    {.name = "debug_info",                     .type = CONFIG_TYPE_BOOL  , .boolValue   = &configDebugInfo},
-    {.name = "debug_error",                    .type = CONFIG_TYPE_BOOL  , .boolValue   = &configDebugError},
+    {.name = "debug_offset",                   .type = CONFIG_TYPE_U64,  .u64Value    = &gPcDebug.bhvOffset},
+    {.name = "debug_tags",                     .type = CONFIG_TYPE_U64,  .u64Value    = gPcDebug.tags},
+    {.name = "lua_profiler",                   .type = CONFIG_TYPE_BOOL, .boolValue   = &configLuaProfiler},
+    {.name = "debug_print",                    .type = CONFIG_TYPE_BOOL, .boolValue   = &configDebugPrint},
+    {.name = "debug_info",                     .type = CONFIG_TYPE_BOOL, .boolValue   = &configDebugInfo},
+    {.name = "debug_error",                    .type = CONFIG_TYPE_BOOL, .boolValue   = &configDebugError},
 #ifdef DEVELOPMENT
-    {.name = "ctx_profiler",                   .type = CONFIG_TYPE_BOOL  , .boolValue   = &configCtxProfiler},
+    {.name = "ctx_profiler",                   .type = CONFIG_TYPE_BOOL, .boolValue   = &configCtxProfiler},
 #endif
     // player settings
     {.name = "coop_player_name",               .type = CONFIG_TYPE_STRING, .stringValue = (char*)&configPlayerName, .maxStringLength = MAX_PLAYER_STRING},
-    {.name = "coop_player_model",              .type = CONFIG_TYPE_UINT  , .uintValue   = &configPlayerModel},
-    {.name = "coop_player_palette_pants",      .type = CONFIG_TYPE_COLOR , .colorValue  = &configPlayerPalette.parts[PANTS]},
-    {.name = "coop_player_palette_shirt",      .type = CONFIG_TYPE_COLOR , .colorValue  = &configPlayerPalette.parts[SHIRT]},
-    {.name = "coop_player_palette_gloves",     .type = CONFIG_TYPE_COLOR , .colorValue  = &configPlayerPalette.parts[GLOVES]},
-    {.name = "coop_player_palette_shoes",      .type = CONFIG_TYPE_COLOR , .colorValue  = &configPlayerPalette.parts[SHOES]},
-    {.name = "coop_player_palette_hair",       .type = CONFIG_TYPE_COLOR , .colorValue  = &configPlayerPalette.parts[HAIR]},
-    {.name = "coop_player_palette_skin",       .type = CONFIG_TYPE_COLOR , .colorValue  = &configPlayerPalette.parts[SKIN]},
-    {.name = "coop_player_palette_cap",        .type = CONFIG_TYPE_COLOR , .colorValue  = &configPlayerPalette.parts[CAP]},
-    {.name = "coop_player_palette_emblem",     .type = CONFIG_TYPE_COLOR , .colorValue  = &configPlayerPalette.parts[EMBLEM]},
+    {.name = "coop_player_model",              .type = CONFIG_TYPE_UINT,   .uintValue   = &configPlayerModel},
+    {.name = "coop_player_palette_pants",      .type = CONFIG_TYPE_COLOR,  .colorValue  = &configPlayerPalette.parts[PANTS]},
+    {.name = "coop_player_palette_shirt",      .type = CONFIG_TYPE_COLOR,  .colorValue  = &configPlayerPalette.parts[SHIRT]},
+    {.name = "coop_player_palette_gloves",     .type = CONFIG_TYPE_COLOR,  .colorValue  = &configPlayerPalette.parts[GLOVES]},
+    {.name = "coop_player_palette_shoes",      .type = CONFIG_TYPE_COLOR,  .colorValue  = &configPlayerPalette.parts[SHOES]},
+    {.name = "coop_player_palette_hair",       .type = CONFIG_TYPE_COLOR,  .colorValue  = &configPlayerPalette.parts[HAIR]},
+    {.name = "coop_player_palette_skin",       .type = CONFIG_TYPE_COLOR,  .colorValue  = &configPlayerPalette.parts[SKIN]},
+    {.name = "coop_player_palette_cap",        .type = CONFIG_TYPE_COLOR,  .colorValue  = &configPlayerPalette.parts[CAP]},
+    {.name = "coop_player_palette_emblem",     .type = CONFIG_TYPE_COLOR,  .colorValue  = &configPlayerPalette.parts[EMBLEM]},
     // coop settings
-    {.name = "amount_of_players",              .type = CONFIG_TYPE_UINT  , .uintValue   = &configAmountofPlayers},
-    {.name = "bubble_death",                   .type = CONFIG_TYPE_BOOL  , .boolValue   = &configBubbleDeath},
-    {.name = "coop_draw_distance",             .type = CONFIG_TYPE_UINT  , .uintValue   = &configDrawDistance},
-    {.name = "coop_host_port",                 .type = CONFIG_TYPE_UINT  , .uintValue   = &configHostPort},
-    {.name = "coop_host_save_slot",            .type = CONFIG_TYPE_UINT  , .uintValue   = &configHostSaveSlot},
+    {.name = "amount_of_players",              .type = CONFIG_TYPE_UINT,   .uintValue   = &configAmountofPlayers},
+    {.name = "bubble_death",                   .type = CONFIG_TYPE_BOOL,   .boolValue   = &configBubbleDeath},
+    {.name = "coop_host_port",                 .type = CONFIG_TYPE_UINT,   .uintValue   = &configHostPort},
+    {.name = "coop_host_save_slot",            .type = CONFIG_TYPE_UINT,   .uintValue   = &configHostSaveSlot},
     {.name = "coop_join_ip",                   .type = CONFIG_TYPE_STRING, .stringValue = (char*)&configJoinIp, .maxStringLength = MAX_CONFIG_STRING},
-    {.name = "coop_join_port",                 .type = CONFIG_TYPE_UINT  , .uintValue   = &configJoinPort},
-    {.name = "coop_network_system",            .type = CONFIG_TYPE_UINT  , .uintValue   = &configNetworkSystem},
-    {.name = "coop_player_interaction",        .type = CONFIG_TYPE_UINT  , .uintValue   = &configPlayerInteraction},
-    {.name = "coop_player_knockback_strength", .type = CONFIG_TYPE_UINT  , .uintValue   = &configPlayerKnockbackStrength},
-    {.name = "coop_nametags",                  .type = CONFIG_TYPE_BOOL  , .boolValue   = &configNametags},
-    {.name = "coop_bouncy_bounds",             .type = CONFIG_TYPE_UINT  , .uintValue   = &configBouncyLevelBounds},
-    {.name = "coop_menu_staff_roll",           .type = CONFIG_TYPE_BOOL  , .boolValue   = &configMenuStaffRoll},
-    {.name = "coop_menu_level",                .type = CONFIG_TYPE_UINT  , .uintValue   = &configMenuLevel},
-    {.name = "coop_menu_sound",                .type = CONFIG_TYPE_BOOL  , .boolValue   = &configMenuSound},
-    {.name = "coop_menu_random",               .type = CONFIG_TYPE_BOOL  , .boolValue   = &configMenuRandom},
-    {.name = "coop_menu_demos",                .type = CONFIG_TYPE_BOOL  , .boolValue   = &configMenuDemos},
-    {.name = "coop_stay_in_level_after_star",  .type = CONFIG_TYPE_UINT  , .uintValue   = &configStayInLevelAfterStar},
-    {.name = "coop_global_player_models",      .type = CONFIG_TYPE_BOOL  , .boolValue   = &configGlobalPlayerModels},
-    {.name = "disable_popups",                 .type = CONFIG_TYPE_BOOL  , .boolValue   = &configDisablePopups},
-    {.name = "use_standard_key_bindings_chat", .type = CONFIG_TYPE_BOOL  , .boolValue   = &configUseStandardKeyBindingsChat},
+    {.name = "coop_join_port",                 .type = CONFIG_TYPE_UINT,   .uintValue   = &configJoinPort},
+    {.name = "coop_network_system",            .type = CONFIG_TYPE_UINT,   .uintValue   = &configNetworkSystem},
+    {.name = "coop_player_interaction",        .type = CONFIG_TYPE_UINT,   .uintValue   = &configPlayerInteraction},
+    {.name = "coop_player_knockback_strength", .type = CONFIG_TYPE_UINT,   .uintValue   = &configPlayerKnockbackStrength},
+    {.name = "coop_stay_in_level_after_star",  .type = CONFIG_TYPE_UINT,   .uintValue   = &configStayInLevelAfterStar},
+    {.name = "coop_nametags",                  .type = CONFIG_TYPE_BOOL,   .boolValue   = &configNametags},
+    {.name = "coop_bouncy_bounds",             .type = CONFIG_TYPE_UINT,   .uintValue   = &configBouncyLevelBounds},
+    {.name = "skip_intro",                     .type = CONFIG_TYPE_BOOL,   .boolValue   = &configSkipIntro},
+    {.name = "pause_anywhere",                 .type = CONFIG_TYPE_BOOL,   .boolValue   = &configPauseAnywhere},
+    {.name = "coop_menu_staff_roll",           .type = CONFIG_TYPE_BOOL,   .boolValue   = &configMenuStaffRoll},
+    {.name = "coop_menu_level",                .type = CONFIG_TYPE_UINT,   .uintValue   = &configMenuLevel},
+    {.name = "coop_menu_sound",                .type = CONFIG_TYPE_BOOL,   .boolValue   = &configMenuSound},
+    {.name = "coop_menu_random",               .type = CONFIG_TYPE_BOOL,   .boolValue   = &configMenuRandom},
+    {.name = "coop_menu_demos",                .type = CONFIG_TYPE_BOOL,   .boolValue   = &configMenuDemos},
+    {.name = "coop_global_player_models",      .type = CONFIG_TYPE_BOOL,   .boolValue   = &configGlobalPlayerModels},
+    {.name = "disable_popups",                 .type = CONFIG_TYPE_BOOL,   .boolValue   = &configDisablePopups},
+    {.name = "use_standard_key_bindings_chat", .type = CONFIG_TYPE_BOOL,   .boolValue   = &configUseStandardKeyBindingsChat},
     {.name = "language",                       .type = CONFIG_TYPE_STRING, .stringValue = (char*)&configLanguage, .maxStringLength = MAX_CONFIG_STRING},
     // CoopNet settings
     {.name = "coopnet_ip",                     .type = CONFIG_TYPE_STRING, .stringValue = (char*)&configCoopNetIp, .maxStringLength = MAX_CONFIG_STRING},
-    {.name = "coopnet_port",                   .type = CONFIG_TYPE_UINT  , .uintValue   = &configCoopNetPort},
+    {.name = "coopnet_port",                   .type = CONFIG_TYPE_UINT,   .uintValue   = &configCoopNetPort},
     {.name = "coopnet_password",               .type = CONFIG_TYPE_STRING, .stringValue = (char*)&configPassword, .maxStringLength = MAX_CONFIG_STRING},
     {.name = "coopnet_dest",                   .type = CONFIG_TYPE_STRING, .stringValue = (char*)&configDestId, .maxStringLength = MAX_CONFIG_STRING},
     // DJUI settings
-    {.name = "djui_theme",                     .type = CONFIG_TYPE_UINT  , .uintValue   = &configDjuiTheme},
-    {.name = "djui_theme_center",              .type = CONFIG_TYPE_BOOL  , .boolValue   = &configDjuiThemeCenter},
-    {.name = "djui_theme_font",                .type = CONFIG_TYPE_UINT  , .uintValue   = &configDjuiThemeFont},
-    {.name = "djui_scale",                     .type = CONFIG_TYPE_UINT  , .uintValue   = &configDjuiScale},
+    {.name = "djui_theme",                     .type = CONFIG_TYPE_UINT,   .uintValue   = &configDjuiTheme},
+    {.name = "djui_theme_center",              .type = CONFIG_TYPE_BOOL,   .boolValue   = &configDjuiThemeCenter},
+    {.name = "djui_theme_font",                .type = CONFIG_TYPE_UINT,   .uintValue   = &configDjuiThemeFont},
+    {.name = "djui_scale",                     .type = CONFIG_TYPE_UINT,   .uintValue   = &configDjuiScale},
     // other
     {.name = "last_version",                   .type = CONFIG_TYPE_STRING, .stringValue = (char*)&configLastVersion, .maxStringLength = MAX_CONFIG_STRING}
 };
