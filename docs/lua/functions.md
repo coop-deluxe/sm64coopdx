@@ -1556,6 +1556,7 @@
 <br />
 
 - smlua_anim_utils.h
+   - [get_mario_vanilla_animation](functions-4.md#get_mario_vanilla_animation)
    - [smlua_anim_util_get_current_animation_name](functions-4.md#smlua_anim_util_get_current_animation_name)
    - [smlua_anim_util_set_animation](functions-4.md#smlua_anim_util_set_animation)
 

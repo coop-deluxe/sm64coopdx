@@ -27843,6 +27843,23 @@ int smlua_func_touch_coin_score_age(lua_State* L) {
  // smlua_anim_utils.h //
 ////////////////////////
 
+int smlua_func_get_mario_vanilla_animation(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "get_mario_vanilla_animation", 1, top);
+        return 0;
+    }
+
+    u16 index = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "get_mario_vanilla_animation"); return 0; }
+
+    smlua_push_object(L, LOT_ANIMATION, get_mario_vanilla_animation(index));
+
+    return 1;
+}
+
 int smlua_func_smlua_anim_util_get_current_animation_name(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -33801,6 +33818,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "touch_coin_score_age", smlua_func_touch_coin_score_age);
 
     // smlua_anim_utils.h
+    smlua_bind_function(L, "get_mario_vanilla_animation", smlua_func_get_mario_vanilla_animation);
     smlua_bind_function(L, "smlua_anim_util_get_current_animation_name", smlua_func_smlua_anim_util_get_current_animation_name);
     smlua_bind_function(L, "smlua_anim_util_set_animation", smlua_func_smlua_anim_util_set_animation);
 

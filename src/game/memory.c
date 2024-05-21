@@ -298,19 +298,37 @@ void alloc_anim_dma_table(struct MarioAnimation* marioAnim, void* srcAddr, struc
     marioAnim->targetAnim = targetAnim;
 }
 
-s32 load_patchable_table(struct MarioAnimation *a, u32 index) {
-    struct MarioAnimDmaRelatedThing *sp20 = a->animDmaTable;
+s32 load_patchable_table(struct MarioAnimation *a, u32 index, bool isAnim) {
+    if (isAnim) {
+        static struct MarioAnimDmaRelatedThing *marioAnims = (struct MarioAnimDmaRelatedThing *) gMarioAnims;
+        if (index < marioAnims->count) {
+            u8* addr = gMarioAnims + marioAnims->anim[index].offset;
 
-    if (index < sp20->count) {
-        u8* addr = sp20->srcAddr + sp20->anim[index].offset;
-        u32 size = sp20->anim[index].size;
+            if (a->currentAnimAddr != addr) {
+                a->targetAnim = (struct Animation *) addr;
+                a->currentAnimAddr = addr;
 
-        if (a->targetAnim && a->currentAnimAddr != addr) {
-            memcpy(a->targetAnim, addr, size);
-            a->currentAnimAddr = addr;
-            return TRUE;
+                if ((uintptr_t) a->targetAnim->values < (uintptr_t) a->targetAnim) {
+                    a->targetAnim->values = (void *) VIRTUAL_TO_PHYSICAL((u8 *) a->targetAnim + (uintptr_t) a->targetAnim->values);
+                }
+                if ((uintptr_t) a->targetAnim->index < (uintptr_t) a->targetAnim) {
+                    a->targetAnim->index = (void *) VIRTUAL_TO_PHYSICAL((u8 *) a->targetAnim + (uintptr_t) a->targetAnim->index);
+                }
+            }
         }
+    } else {
+        struct MarioAnimDmaRelatedThing *sp20 = a->animDmaTable;
+        if (index < sp20->count) {
+            u8* addr = sp20->srcAddr + sp20->anim[index].offset;
+            u32 size = sp20->anim[index].size;
 
+            if (a->targetAnim && a->currentAnimAddr != addr) {
+                memcpy(a->targetAnim, addr, size);
+                a->currentAnimAddr = addr;
+                return TRUE;
+            }
+        }
     }
+
     return FALSE;
 }

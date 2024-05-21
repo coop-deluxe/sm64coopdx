@@ -842,7 +842,7 @@ void verify_warp(struct MarioState *m, bool killMario) {
         dynos_warp_to_start_level();
         return;
     }
-    
+
     if (!killMario) {
         sSourceWarpNodeId = WARP_NODE_DEATH;
         return;
@@ -1223,7 +1223,7 @@ static void start_demo(void) {
         if (sDemoNumber <= 6 && sDemoNumber > -1) {
             gCurrDemoInput = NULL;
             alloc_anim_dma_table(&gDemo, gDemoInputs, gDemoTargetAnim);
-            load_patchable_table(&gDemo, sDemoNumber);
+            load_patchable_table(&gDemo, sDemoNumber, false);
             gCurrDemoInput = ((struct DemoInput *) gDemo.targetAnim);
         } else {
             gIsDemoActive = false;

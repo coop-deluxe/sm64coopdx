@@ -79,6 +79,6 @@ void alloc_display_list_reset(void);
 void *alloc_display_list(u32 size);
 
 void alloc_anim_dma_table(struct MarioAnimation* marioAnim, void *b, struct Animation *targetAnim);
-s32 load_patchable_table(struct MarioAnimation *a, u32 b);
+s32 load_patchable_table(struct MarioAnimation *a, u32 b, bool isAnim);
 
 #endif // MEMORY_H

@@ -88,6 +88,22 @@ struct GlobalObjectAnimations gGlobalObjectAnimations = {
     .yoshi_seg5_anims_05024100        = (struct AnimationTable*) &yoshi_seg5_anims_05024100,
 };
 
+struct Animation *get_mario_vanilla_animation(u16 index) {
+    static struct MarioAnimDmaRelatedThing *marioAnims = (struct MarioAnimDmaRelatedThing *) gMarioAnims;
+
+    if (index < marioAnims->count) {
+        struct Animation* anim = (struct Animation*) (gMarioAnims + marioAnims->anim[index].offset);
+        if ((uintptr_t) anim->values < (uintptr_t) anim) {
+            anim->values = (void *) VIRTUAL_TO_PHYSICAL((u8 *) anim + (uintptr_t) anim->values);
+        }
+        if ((uintptr_t) anim->index < (uintptr_t) anim) {
+            anim->index = (void *) VIRTUAL_TO_PHYSICAL((u8 *) anim + (uintptr_t) anim->index);
+        }
+        return anim;
+    }
+    return NULL;
+}
+
   ///////////////////////
  // custom animations //
 ///////////////////////

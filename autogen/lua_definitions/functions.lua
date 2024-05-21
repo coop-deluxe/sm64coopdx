@@ -8397,6 +8397,12 @@ function touch_coin_score_age(fileIndex, courseIndex)
     -- ...
 end
 
+--- @param index integer
+--- @return Animation
+function get_mario_vanilla_animation(index)
+    -- ...
+end
+
 --- @param obj Object
 --- @return string
 function smlua_anim_util_get_current_animation_name(obj)

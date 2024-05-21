@@ -13,9 +13,9 @@ extern "C" {
 
 // Retrieve the current Mario's animation index
 static s32 RetrieveCurrentMarioAnimationIndex(u32 aPlayerIndex) {
-    struct MarioAnimDmaRelatedThing *_AnimDmaTable = gMarioStates[aPlayerIndex].animation->animDmaTable;
-    for (s32 i = 0; i != (s32) _AnimDmaTable->count; ++i) {
-        void *_AnimAddr = _AnimDmaTable->srcAddr + _AnimDmaTable->anim[i].offset;
+    static struct MarioAnimDmaRelatedThing *_MarioAnims = (struct MarioAnimDmaRelatedThing *) gMarioAnims;
+    for (s32 i = 0; i != (s32) _MarioAnims->count; ++i) {
+        void *_AnimAddr = gMarioAnims + _MarioAnims->anim[i].offset;
         if (_AnimAddr == gMarioStates[aPlayerIndex].animation->currentAnimAddr) {
             return i;
         }
