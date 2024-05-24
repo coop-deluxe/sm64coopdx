@@ -231,7 +231,23 @@ static char* djui_text_render_line_parse_escape(char* c1, char* c2) {
     }
 
     if (parsingColor) {
-        if (colorPieces == 6) {
+       if (colorPieces == 3) {
+            u32 r = (color >> 8) & 0xF;
+            u32 g = (color >> 4) & 0xF;
+            u32 b = (color >> 0) & 0xF;
+            sSavedR = (r << 4) | r;
+            sSavedG = (g << 4) | g;
+            sSavedB = (b << 4) | b;
+        } else if (colorPieces == 4) {
+            u32 r = (color >> 12) & 0xF;
+            u32 g = (color >> 8) & 0xF;
+            u32 b = (color >> 4) & 0xF;
+            u32 a = (color >> 0) & 0xF;
+            sSavedR = (r << 4) | r;
+            sSavedG = (g << 4) | g;
+            sSavedB = (b << 4) | b;
+            sSavedA = (a << 4) | a;
+        } else if (colorPieces == 6) {
             sSavedR = ((color >> 16) & 0xFF);
             sSavedG = ((color >>  8) & 0xFF);
             sSavedB = ((color >>  0) & 0xFF);
