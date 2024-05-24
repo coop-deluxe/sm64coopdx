@@ -2177,7 +2177,6 @@ s32 execute_mario_action(UNUSED struct Object *o) {
                 break;
             }
 
-
             switch (gMarioState->action & ACT_GROUP_MASK) {
                 case ACT_GROUP_STATIONARY:
                     inLoop = mario_execute_stationary_action(gMarioState);
