@@ -9301,7 +9301,10 @@ HOOK_ON_OBJECT_LOAD = 40
 HOOK_ON_PLAY_SOUND = 41
 
 --- @type LuaHookedEventType
-HOOK_MAX = 42
+HOOK_BEFORE_MARIO_HEALTH_UPDATE = 42
+
+--- @type LuaHookedEventType
+HOOK_MAX = 43
 
 --- @class HudDisplayFlags
 

@@ -1782,6 +1782,9 @@ void set_submerged_cam_preset_and_spawn_bubbles(struct MarioState *m) {
  */
 void update_mario_health(struct MarioState *m) {
     if (!m) { return; }
+
+    smlua_call_event_hooks_mario_param(HOOK_BEFORE_MARIO_HEALTH_UPDATE, gMarioState);
+
     s32 terrainIsSnow;
 
     if (m->health >= 0x100) {
@@ -2173,6 +2176,7 @@ s32 execute_mario_action(UNUSED struct Object *o) {
             if (prevent_hang(hangPreventionActions, &hangPreventionIndex)) {
                 break;
             }
+
 
             switch (gMarioState->action & ACT_GROUP_MASK) {
                 case ACT_GROUP_STATIONARY:
