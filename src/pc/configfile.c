@@ -59,10 +59,10 @@ struct FunctionConfigOption {
 
 static_assert(NUM_SAVE_FILES == 4); // update this if more save slots are added
 char configSaveNames[4][MAX_SAVE_NAME_STRING] = {
-    "Super Mario 64",
-    "Super Mario 64",
-    "Super Mario 64",
-    "Super Mario 64"
+    "SM64",
+    "SM64",
+    "SM64",
+    "SM64"
 };
 
 // Video/audio stuff

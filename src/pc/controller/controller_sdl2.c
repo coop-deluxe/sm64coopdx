@@ -151,7 +151,7 @@ static SDL_Haptic *controller_sdl_init_haptics(const int joy) {
         return NULL;
     }
 
-    printf("controller %s has haptics support, rumble enabled\n", SDL_JoystickNameForIndex(joy));
+    printf("Controller %s has haptics support, rumble enabled\n", SDL_JoystickNameForIndex(joy));
     return hap;
 }
 
