@@ -160,7 +160,7 @@ static struct DjuiTheme sDjuiThemeMario = {
         }
     },
     .panels = {
-        .hudFontHeader = false
+        .hudFontHeader = true
     }
 };
 
