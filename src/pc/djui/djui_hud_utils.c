@@ -218,15 +218,8 @@ u32 djui_hud_get_screen_width(void) {
     u32 windowWidth, windowHeight;
     wm_api->get_dimensions(&windowWidth, &windowHeight);
 
-    if (use_forced_4by3() && sResolution == RESOLUTION_DJUI) {
-        windowWidth -= (GFX_DIMENSIONS_FROM_LEFT_EDGE(0) + GFX_DIMENSIONS_FROM_RIGHT_EDGE(0));
-    }
-
     if (sResolution == RESOLUTION_N64) {
-        f32 aspect = use_forced_4by3()
-            ? (4.0f / 3.0f)
-            : GFX_DIMENSIONS_ASPECT_RATIO;
-        return (aspect) * SCREEN_HEIGHT;
+        return (GFX_DIMENSIONS_ASPECT_RATIO) * SCREEN_HEIGHT;
     } else {
         return (windowWidth / djui_gfx_get_scale());
     }

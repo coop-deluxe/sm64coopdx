@@ -2393,7 +2393,7 @@ void change_dialog_camera_angle(void) {
 }
 
 void shade_screen(void) {
-    create_dl_translation_matrix(MENU_MTX_PUSH, gfx_dimensions_rect_from_left_edge(0), 240.0f, 0);
+    create_dl_translation_matrix(MENU_MTX_PUSH, GFX_DIMENSIONS_RECT_FROM_LEFT_EDGE(0), 240.0f, 0);
 
     // This is a bit weird. It reuses the dialog text box (width 130, height -80),
     // so scale to at least fit the screen.
@@ -2449,7 +2449,7 @@ void render_pause_red_coins(void) {
 
     if (gCurrentArea->numRedCoins > 0) {
         u8 collected = gCurrentArea->numRedCoins - count_objects_with_behavior(bhvRedCoin);
-        s16 x = gfx_dimensions_rect_from_left_edge(38);
+        s16 x = GFX_DIMENSIONS_RECT_FROM_LEFT_EDGE(38);
         print_animated_red_coin(x - 8, 20);
         gSPDisplayList(gDisplayListHead++, dl_rgba16_text_begin);
         gDPSetEnvColor(gDisplayListHead++, 255, 255, 255, gDialogTextAlpha);

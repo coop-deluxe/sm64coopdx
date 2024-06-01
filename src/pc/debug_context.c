@@ -4,6 +4,7 @@
 #include "debuglog.h"
 #include "game/print.h"
 #include "game/hud.h"
+#include "gfx_dimensions.h"
 
 static u32 sCtxDepth[CTX_MAX] = { 0 };
 

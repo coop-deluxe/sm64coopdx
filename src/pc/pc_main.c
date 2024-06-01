@@ -217,18 +217,18 @@ void produce_interpolation_frames_and_delay(void) {
 }
 
 inline static void buffer_audio(void) {
-    const f32 master_mod = (f32)configMasterVolume / 127.0f;
-    set_sequence_player_volume(SEQ_PLAYER_LEVEL, (f32)configMusicVolume / 127.0f * master_mod);
-    set_sequence_player_volume(SEQ_PLAYER_SFX, (f32)configSfxVolume / 127.0f * master_mod);
-    set_sequence_player_volume(SEQ_PLAYER_ENV, (f32)configEnvVolume / 127.0f * master_mod);
+    const f32 masterMod = (f32)configMasterVolume / 127.0f;
+    set_sequence_player_volume(SEQ_PLAYER_LEVEL, (f32)configMusicVolume / 127.0f * masterMod);
+    set_sequence_player_volume(SEQ_PLAYER_SFX, (f32)configSfxVolume / 127.0f * masterMod);
+    set_sequence_player_volume(SEQ_PLAYER_ENV, (f32)configEnvVolume / 127.0f * masterMod);
 
-    int samples_left = audio_api->buffered();
-    u32 num_audio_samples = samples_left < audio_api->get_desired_buffered() ? SAMPLES_HIGH : SAMPLES_LOW;
-    s16 audio_buffer[SAMPLES_HIGH * 2 * 2];
+    int samplesLeft = audio_api->buffered();
+    u32 numAudioSamples = samplesLeft < audio_api->get_desired_buffered() ? SAMPLES_HIGH : SAMPLES_LOW;
+    s16 audioBuffer[SAMPLES_HIGH * 2 * 2];
     for (s32 i = 0; i < 2; i++) {
-        create_next_audio_buffer(audio_buffer + i * (num_audio_samples * 2), num_audio_samples);
+        create_next_audio_buffer(audioBuffer + i * (numAudioSamples * 2), numAudioSamples);
     }
-    audio_api->play((u8 *)audio_buffer, 2 * num_audio_samples * 4);
+    audio_api->play((u8 *)audioBuffer, 2 * numAudioSamples * 4);
 }
 
 void produce_one_frame(void) {

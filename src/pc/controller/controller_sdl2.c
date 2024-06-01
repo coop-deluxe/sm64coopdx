@@ -11,21 +11,19 @@
 
 #include <SDL2/SDL.h>
 
-// Analog camera movement by Pathétique (github.com/vrmiguel), y0shin and Mors
-// Contribute or communicate bugs at github.com/vrmiguel/sm64-analog-camera
-
 #include <ultra64.h>
 
 #include "controller_api.h"
 #include "controller_sdl.h"
 #include "controller_mouse.h"
-#include "../configfile.h"
-#include "../platform.h"
-#include "../fs/fs.h"
+#include "pc/pc_main.h"
+#include "pc/configfile.h"
+#include "pc/platform.h"
+#include "pc/fs/fs.h"
 
 #include "game/level_update.h"
+#include "game/first_person_cam.h"
 #include "pc/lua/utils/smlua_misc_utils.h"
-
 #include "pc/djui/djui.h"
 #include "pc/djui/djui_panel_pause.h"
 #include "pc/djui/djui_hud_utils.h"
@@ -170,20 +168,15 @@ static inline void update_button(const int i, const bool new) {
 }
 
 extern s16 gMenuMode;
-bool ignore_lock = false;
 static void controller_sdl_read(OSContPad *pad) {
     if (!init_ok) {
         return;
     }
 
-    if (!gDjuiHudLockMouse) {
-        if (newcam_mouse == 1 && gMenuMode == -1 && !gDjuiInMainMenu && !gDjuiChatBoxFocus && !gDjuiConsoleFocus) {
-            SDL_SetRelativeMouseMode(SDL_TRUE);
-            ignore_lock = true;
-        } else {
-            SDL_SetRelativeMouseMode(SDL_FALSE);
-            ignore_lock = false;
-        }
+    if ((newcam_mouse == 1 || gFirstPersonCamera.enabled || gDjuiHudLockMouse) && gMenuMode == -1 && !gDjuiInMainMenu && !gDjuiChatBoxFocus && !gDjuiConsoleFocus) {
+        SDL_SetRelativeMouseMode(SDL_TRUE);
+    } else {
+        SDL_SetRelativeMouseMode(SDL_FALSE);
     }
 
     u32 mouse = SDL_GetRelativeMouseState(&mouse_x, &mouse_y);
@@ -196,10 +189,6 @@ static void controller_sdl_read(OSContPad *pad) {
     // remember buttons that changed from 0 to 1
     last_mouse = (mouse_buttons ^ mouse) & mouse;
     mouse_buttons = mouse;
-
-    if (!ignore_lock && gMenuMode == -1 && !gDjuiInMainMenu && !gDjuiChatBoxFocus && !gDjuiConsoleFocus) {
-        SDL_SetRelativeMouseMode(gDjuiHudLockMouse ? SDL_TRUE : SDL_FALSE);
-    }
 
     if (configBackgroundGamepad != sBackgroundGamepad) {
         sBackgroundGamepad = configBackgroundGamepad;

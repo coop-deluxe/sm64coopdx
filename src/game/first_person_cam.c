@@ -77,10 +77,6 @@ void first_person_camera_update(void) {
         } else {
             gFirstPersonCamera.yaw += sensX * (invX * m->controller->extStickX - 1.5f * mouse_x);
         }
-
-        gDjuiHudLockMouse = true;
-    } else {
-        gDjuiHudLockMouse = false;
     }
 
     // fix yaw for some specific actions
@@ -181,8 +177,6 @@ void first_person_update(void) {
         }
 
         first_person_camera_update();
-    } else if (!camera_config_is_mouse_look_enabled()) {
-        gDjuiHudLockMouse = false;
     }
 }
 
