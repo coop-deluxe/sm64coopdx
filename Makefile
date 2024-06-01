@@ -963,6 +963,7 @@ endif
 # Prevent a crash with -sopt
 export LANG := C
 
+LDFLAGS += -latomic
 
 #==============================================================================#
 # Extra CC Flags                                                               #

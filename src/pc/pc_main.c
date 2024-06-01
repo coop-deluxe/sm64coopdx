@@ -313,7 +313,7 @@ void* main_game_init(void* isThreaded) {
     // load language
     if (!djui_language_init(configLanguage)) { snprintf(configLanguage, MAX_CONFIG_STRING, "%s", ""); }
 
-    if (gIsThreaded) { REFRESH_MUTEX(loading_screen_set_segment_text("Loading")); }
+    REFRESH_MUTEX(loading_screen_set_segment_text("Loading"));
     dynos_gfx_init();
     enable_queued_dynos_packs();
     sync_objects_init_system();
@@ -322,7 +322,7 @@ void* main_game_init(void* isThreaded) {
     //     check_for_updates();
     // }
 
-    if (gIsThreaded) { REFRESH_MUTEX(loading_screen_set_segment_text("Loading ROM Assets")); }
+    REFRESH_MUTEX(loading_screen_set_segment_text("Loading ROM Assets"));
     rom_assets_load();
     smlua_text_utils_init();
 
