@@ -71,7 +71,7 @@ static void djui_hud_position_translate(f32* x, f32* y) {
     if (sResolution == RESOLUTION_DJUI) {
         djui_gfx_position_translate(x, y);
     } else {
-        *x = gfx_dimensions_rect_from_left_edge(0) + *x;
+        *x = GFX_DIMENSIONS_FROM_LEFT_EDGE(0) + *x;
         *y = SCREEN_HEIGHT - *y;
     }
 }

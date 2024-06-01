@@ -84,7 +84,6 @@ unsigned int configFiltering                      = 2; // 0 = Nearest, 1 = Bilin
 bool         configShowFPS                        = false;
 bool         configUncappedFramerate              = false;
 unsigned int configFrameLimit                     = 60;
-bool         configForce4By3                      = false;
 unsigned int configInterpolationMode              = 1;
 unsigned int configDrawDistance                   = 4;
 // sound settings
@@ -196,7 +195,6 @@ static const struct ConfigOption options[] = {
     {.name = "show_fps",                       .type = CONFIG_TYPE_BOOL, .boolValue = &configShowFPS},
     {.name = "uncapped_framerate",             .type = CONFIG_TYPE_BOOL, .boolValue = &configUncappedFramerate},
     {.name = "frame_limit",                    .type = CONFIG_TYPE_UINT, .uintValue = &configFrameLimit},
-    {.name = "force_4by3",                     .type = CONFIG_TYPE_BOOL, .boolValue = &configForce4By3},
     {.name = "interpolation_mode",             .type = CONFIG_TYPE_UINT, .uintValue = &configInterpolationMode},
     {.name = "coop_draw_distance",             .type = CONFIG_TYPE_UINT, .uintValue = &configDrawDistance},
     // sound settings

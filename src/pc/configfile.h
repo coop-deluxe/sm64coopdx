@@ -36,7 +36,6 @@ extern unsigned int configFiltering;
 extern bool         configShowFPS;
 extern bool         configUncappedFramerate;
 extern unsigned int configFrameLimit;
-extern bool         configForce4By3;
 extern unsigned int configInterpolationMode;
 extern unsigned int configDrawDistance;
 // sound settings
