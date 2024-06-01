@@ -1,5 +1,3 @@
-if SM64COOPDX_VERSION == nil then return end
-
 sArenaSpawns = {}
 
 function bhv_arena_spawn_init(obj)

@@ -1,5 +1,3 @@
-if SM64COOPDX_VERSION == nil then return end
-
 local arenaItemTimeout = 30 * 15 -- 15 seconds
 
 -----------------

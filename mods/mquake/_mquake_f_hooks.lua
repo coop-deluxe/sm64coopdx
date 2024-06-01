@@ -1,5 +1,3 @@
-if SM64COOPDX_VERSION == nil then return end
-
 hook_mario_action(ACT_DM_GROUNDED_MOVEMENT, act_dm_grounded_movement)
 hook_mario_action(ACT_DM_GROUNDED_IDLE, act_dm_grounded_movement)
 hook_mario_action(ACT_DM_AIR_MOVEMENT, act_dm_air_movement) 

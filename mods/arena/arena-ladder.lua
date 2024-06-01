@@ -1,5 +1,3 @@
-ACT_LADDER = allocate_mario_action(ACT_GROUP_AIRBORNE | ACT_FLAG_AIR)
-
 -- behavior params:
 
 -- ladder height

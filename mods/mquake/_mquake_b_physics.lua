@@ -1,4 +1,3 @@
-if SM64COOPDX_VERSION == nil then return end
 local collision_find_surface_on_ray,vec3f_dist,vec3f_sub,vec3f_dot,vec3f_project,vec3f_add,vec3f_copy,level_trigger_warp,vec3f_length,clampf,is_game_paused,vec3f_normalize,vec3f_mul = collision_find_surface_on_ray,vec3f_dist,vec3f_sub,vec3f_dot,vec3f_project,vec3f_add,vec3f_copy,level_trigger_warp,vec3f_length,clampf,is_game_paused,vec3f_normalize,vec3f_mul
 
 

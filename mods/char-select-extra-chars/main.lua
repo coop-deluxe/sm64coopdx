@@ -1,18 +1,6 @@
 -- name: [CS] Extra Characters
 -- description: [CS] Extra Characters\nBy Coop Deluxe Team\n\nThis Character Select pack adds other characters from the Mario series! Currently, The only character that has been added is \\#ff46a1\\Toadette\\#dcdcdc\\.
--- deluxe: true
 
-if SM64COOPDX_VERSION == nil then
-    local first = false
-    hook_event(HOOK_ON_LEVEL_INIT, function()
-        if not first then
-            first = true
-            play_sound(SOUND_MENU_CAMERA_BUZZ, gMarioStates[0].marioObj.header.gfx.cameraToObject)
-            djui_chat_message_create("\\#ffa0a0\\Extra Characters is not supported with sm64ex-coop\nas it uses sm64coopdx exclusive Lua functionality.\n\\#dcdcdc\\To play this mod, try out sm64coopdx at\n\\#7f7fff\\https://sm64coopdx.com")
-        end
-    end)
-    return
-end
 if not _G.charSelectExists then
     local first = false
     hook_event(HOOK_ON_LEVEL_INIT, function()

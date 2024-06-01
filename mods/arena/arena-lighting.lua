@@ -1,5 +1,3 @@
-if SM64COOPDX_VERSION == nil then return end
-
 local function on_level_init()
     if gNetworkPlayers[0].currLevelNum == LEVEL_ARENA_RAINBOW then
         set_lighting_dir(1, -10)

@@ -1,4 +1,3 @@
-if SM64COOPDX_VERSION == nil then return end
 local play_step_sound,set_mario_action,play_character_sound,vec3f_length,perform_ground_step,vec3f_copy,perform_air_step,clampf,vec3f_add,set_mario_particle_flags,play_mario_heavy_landing_sound = play_step_sound,set_mario_action,play_character_sound,vec3f_length,perform_ground_step,vec3f_copy,perform_air_step,clampf,vec3f_add,set_mario_particle_flags,play_mario_heavy_landing_sound
 
 

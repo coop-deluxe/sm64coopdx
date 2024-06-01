@@ -1,5 +1,3 @@
-if SM64COOPDX_VERSION == nil then return end
-
 --Scrolling Textures for Rainbow Road
 add_scroll_target(0, "arena_rainbow_dl_StarRoad_mesh_layer_5_vtx_0", 0, 539)
 add_scroll_target(1, "arena_rainbow_dl_RoadBuilding_mesh_layer_1_vtx_0", 0, 122)
