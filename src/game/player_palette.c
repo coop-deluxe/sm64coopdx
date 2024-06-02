@@ -60,7 +60,7 @@ void player_palettes_read(const char* palettesPath, bool appendPalettes) {
     if (appendPalettes) {
         snprintf(lpath, SYS_MAX_PATH, "%s/palettes", palettesPath);
     } else {
-        strncpy(lpath, palettesPath, SYS_MAX_PATH);
+        snprintf(lpath, SYS_MAX_PATH, "%s", palettesPath);
     }
 
     // open directory
@@ -104,7 +104,7 @@ void player_palettes_read(const char* palettesPath, bool appendPalettes) {
         // free
         ini_free(sPalette);
         sPalette = NULL;
-        strncpy(gPresetPalettes[gPresetPaletteCount].name, path, 4096);
+        snprintf(gPresetPalettes[gPresetPaletteCount].name, 64, "%s", path);
         gPresetPalettes[gPresetPaletteCount].palette = palette;
         gPresetPaletteCount++;
 #ifdef DEVELOPMENT

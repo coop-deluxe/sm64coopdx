@@ -63,6 +63,7 @@
 - [smlua_hooks.h](#smlua_hooksh)
     - [enum LuaActionHookType](#enum-LuaActionHookType)
     - [enum LuaHookedEventType](#enum-LuaHookedEventType)
+    - [enum LuaModMenuElementType](#enum-LuaModMenuElementType)
 - [smlua_misc_utils.h](#smlua_misc_utilsh)
     - [enum HudDisplayFlags](#enum-HudDisplayFlags)
     - [enum HudDisplayValue](#enum-HudDisplayValue)
@@ -3293,7 +3294,17 @@
 | HOOK_ON_PLAY_SOUND | 41 |
 | HOOK_ON_SEQ_LOAD | 42 |
 | HOOK_ON_ATTACK_OBJECT | 43 |
-| HOOK_MAX | 44 |
+| HOOK_ON_LANGUAGE_CHANGED | 44 |
+| HOOK_MAX | 45 |
+
+### [enum LuaModMenuElementType](#LuaModMenuElementType)
+| Identifier | Value |
+| :--------- | :---- |
+| MOD_MENU_ELEMENT_BUTTON | 0 |
+| MOD_MENU_ELEMENT_CHECKBOX | 1 |
+| MOD_MENU_ELEMENT_SLIDER | 2 |
+| MOD_MENU_ELEMENT_INPUTBOX | 3 |
+| MOD_MENU_ELEMENT_MAX | 4 |
 
 [:arrow_up_small:](#)
 

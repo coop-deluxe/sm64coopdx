@@ -139,6 +139,7 @@ s8 gLastDialogResponse = 0;
 u8 gMenuHoldKeyIndex = 0;
 u8 gMenuHoldKeyTimer = 0;
 s32 gDialogResponse = 0;
+bool gForceUnpause = false;
 
 #if defined(VERSION_JP) || defined(VERSION_SH) || defined(VERSION_EU)
 #ifdef VERSION_EU
@@ -3103,16 +3104,19 @@ s16 render_pause_courses_and_castle(void) {
                 }
 
 #ifdef VERSION_EU
-                if (gPlayer1Controller->buttonPressed & (A_BUTTON | Z_TRIG | START_BUTTON))
+                if (gPlayer1Controller->buttonPressed & (A_BUTTON | Z_TRIG | START_BUTTON)
+                 || gForceUnpause)
 #else
                 if (gPlayer1Controller->buttonPressed & A_BUTTON
-                 || gPlayer1Controller->buttonPressed & START_BUTTON)
+                 || gPlayer1Controller->buttonPressed & START_BUTTON
+                 || gForceUnpause)
 #endif
                 {
                     level_set_transition(0, NULL);
                     play_sound(SOUND_MENU_PAUSE_2, gGlobalSoundSource);
                     gDialogBoxState = DIALOG_STATE_OPENING;
                     gMenuMode = -1;
+                    gForceUnpause = false;
 
                     if (gDialogLineNum == 2 || gDialogLineNum == 3) {
                         num = gDialogLineNum;
@@ -3138,16 +3142,19 @@ s16 render_pause_courses_and_castle(void) {
                 }
 
 #ifdef VERSION_EU
-                if (gPlayer1Controller->buttonPressed & (A_BUTTON | Z_TRIG | START_BUTTON))
+                if (gPlayer1Controller->buttonPressed & (A_BUTTON | Z_TRIG | START_BUTTON)
+                 || gForceUnpause)
 #else
                 if (gPlayer1Controller->buttonPressed & A_BUTTON
-                 || gPlayer1Controller->buttonPressed & START_BUTTON)
+                 || gPlayer1Controller->buttonPressed & START_BUTTON
+                 || gForceUnpause)
 #endif
                 {
                     level_set_transition(0, NULL);
                     play_sound(SOUND_MENU_PAUSE_2, gGlobalSoundSource);
                     gMenuMode = -1;
                     gDialogBoxState = DIALOG_STATE_OPENING;
+                    gForceUnpause = false;
 
                     return 1;
                 }

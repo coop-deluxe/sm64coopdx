@@ -44,9 +44,9 @@ struct NetworkPlayer {
     u8 gag;
     u32 ping;
     struct PlayerPalette palette;
-    char name[MAX_PLAYER_STRING+1];
+    char name[MAX_CONFIG_STRING];
 
-    char description[MAX_DESCRIPTION_STRING+1];
+    char description[MAX_DESCRIPTION_STRING];
     u8 descriptionR;
     u8 descriptionG;
     u8 descriptionB;
@@ -58,7 +58,7 @@ struct NetworkPlayer {
     u16 rxSeqIds[MAX_RX_SEQ_IDS];
     u32 rxPacketHash[MAX_RX_SEQ_IDS];
 
-    // legacy fields to allow mods not to break (they don't do anything anymore)
+    // legacy fields to allow mods not to fully break (they don't do anything anymore)
     u8 paletteIndex;
     u8 overridePaletteIndex;
     u8 overridePaletteIndexLp;

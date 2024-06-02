@@ -9,6 +9,7 @@
 #include "pc/utils/misc.h"
 #include "pc/configfile.h"
 #include "pc/os/os.h"
+#include "pc/lua/smlua_hooks.h"
 
 extern bool directory_sanity_check(struct dirent* dir, char* dirPath, char* outPath);
 static bool sTrue = true;
@@ -34,6 +35,7 @@ static void select_language(struct DjuiBase* caller) {
     if (strcmp(configLanguage, checkbox->text->message)) {
         snprintf(configLanguage, MAX_CONFIG_STRING, "%s", checkbox->text->message);
         sLanguageChanged = true;
+        smlua_call_event_hooks_string_param(HOOK_ON_LANGUAGE_CHANGED, configLanguage);
     }
 
     checkbox->value = &sTrue;

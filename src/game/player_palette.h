@@ -18,7 +18,7 @@ struct PlayerPalette {
 #pragma pack()
 
 struct PresetPalette {
-    char name[4096];
+    char name[64];
     struct PlayerPalette palette;
 };
 

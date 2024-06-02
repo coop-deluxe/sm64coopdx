@@ -9,6 +9,10 @@ Hooks are a way for SM64 to trigger Lua code, whereas the functions listed in [f
 - [hook_event](#hook_event)
 - [hook_mario_action](#hook_mario_action)
 - [hook_on_sync_table_change](#hook_on_sync_table_change)
+- [hook_mod_menu_button](#hook_mod_menu_button)
+- [hook_mod_menu_checkbox](#hook_mod_menu_checkbox)
+- [hook_mod_menu_slider](#hook_mod_menu_slider)
+- [hook_mod_menu_inputbox](#hook_mod_menu_inputbox)
 
 <br />
 
@@ -63,17 +67,17 @@ id_bhvExample = hook_behavior(nil, OBJ_LIST_DEFAULT, true, bhv_example_init, bhv
 
 ```lua
 function on_test_command(msg)
-    if msg == 'on' then
-        djui_chat_message_create('Test: enabled')
+    if msg == "on" then
+        djui_chat_message_create("Test: enabled")
         return true
-    elseif msg == 'off' then
-        djui_chat_message_create('Test: disabled')
+    elseif msg == "off" then
+        djui_chat_message_create("Test: disabled")
         return true
     end
     return false
 end
 
-hook_chat_command('test', "[on|off] turn test on or off", on_hide_and_seek_command)
+hook_chat_command("test", "[on|off] turn test on or off", on_hide_and_seek_command)
 ```
 
 [:arrow_up_small:](#)
@@ -131,6 +135,7 @@ The lua functions sent to `hook_event()` will be automatically called by SM64 wh
 | HOOK_ON_PLAY_SOUND | Called when a sound is going to play, return a `SOUND_*` constant or `NO_SOUND` to override the sound | `integer` soundBits, `Vec3f` pos |
 | HOOK_ON_SEQ_LOAD | Called when a sequence is going to play, return a `SEQ_*` constant to override the sequence. `SEQ_SOUND_PLAYER` (0) is silence. | `integer` player, `integer` seqID |
 | HOOK_ON_ATTACK_OBJECT | Called when a player attacks an object. May be double-fired in some cases, you'll need to write special code for this | [MarioState](structs.md#MarioState) attacker, [Object](structs.md#Object) victim, `integer` interactionId |
+| HOOK_ON_LANGUAGE_CHANGED | Called when the language is changed | `string` language |
 
 ### Parameters
 
@@ -144,7 +149,7 @@ The lua functions sent to `hook_event()` will be automatically called by SM64 wh
 The following example will print out a message 16 times per frame (once for every possible player).
 ```lua
 function mario_update(m)
-    print('Mario update was called for player index ', m.playerIndex)
+    print("Mario update was called for player index ", m.playerIndex)
 end
 
 hook_event(HOOK_MARIO_UPDATE, mario_update)
@@ -261,14 +266,140 @@ hook_mario_action(ACT_WALL_SLIDE, { every_frame = act_wall_slide, gravity = act_
 
 ```lua
 function on_testing_field_changed(tag, oldVal, newVal)
-    print('testingField changed:', tag, ',', oldVal, '->', newVal)
+    print("testingField changed:", tag, ",", oldVal, "->", newVal)
 end
 
-hook_on_sync_table_change(gGlobalSyncTable, 'testingField', 'tag', on_testing_field_changed)
+hook_on_sync_table_change(gGlobalSyncTable, "testingField", "tag", on_testing_field_changed)
 
--- now when testingField is set, either locally or over the network, on_testing_field_changed() will be called
-gGlobalSyncTable.testingField = 'hello'
-
+-- now when testingField is set, either locally or over the network on_testing_field_changed() will be called
+gGlobalSyncTable.testingField = "hello"
 ```
 
 [:arrow_up_small:](#)
+
+<br />
+
+## [hook_mod_menu_button](#hook_mod_menu_button)
+`hook_mod_menu_button()` allows Lua to add buttons to their designated mod menu submenu.
+
+### Parameters
+
+| Field | Type |
+| ----- | ---- |
+| message | `string` |
+| func | `Lua Function` (`integer` index) |
+
+### Lua Example
+
+```lua
+local menu1Open = false
+local menu2Open = false
+
+--- @param index integer
+local function on_open_menu(index)
+    if index == 0 then
+        menu1Open = true
+        menu2Open = false
+    else
+        menu1Open = false
+        menu2Open = true
+    end
+end
+
+-- you can always do separate functions too!
+hook_mod_menu_button("Open Menu 1", on_open_menu)
+hook_mod_menu_button("Open Menu 2", on_open_menu)
+```
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [hook_mod_menu_checkbox](#hook_mod_menu_checkbox)
+`hook_mod_menu_checkbox()` allows Lua to add checkboxes to their designated mod menu submenu.
+
+### Parameters
+
+| Field | Type |
+| ----- | ---- |
+| message | `string` |
+| defaultValue | `boolean` |
+| func | `Lua Function` (`integer` index, `boolean` value) |
+
+### Lua Example
+
+```lua
+local flyMode = false
+local noclipMode = false
+
+--- @param index integer
+--- @param value boolean
+local function on_set_player_mode(index, value)
+    if index == 0 then
+        flyMode = value
+    else
+        noclipMode = value
+    end
+end
+
+-- you can always do separate functions too!
+hook_mod_menu_checkbox("Fly Mode", false, on_set_player_mode)
+hook_mod_menu_checkbox("Noclip Mode", false, on_set_player_mode)
+```
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [hook_mod_menu_slider](#hook_mod_menu_slider)
+`hook_mod_menu_slider()` allows Lua to add sliders to their designated mod menu submenu.
+
+### Parameters
+
+| Field | Type |
+| ----- | ---- |
+| message | `string` |
+| defaultValue | `integer` |
+| min | `integer` |
+| max | `integer` |
+| func | `Lua Function` (`integer` index, `integer` value) |
+
+### Lua Example
+
+```lua
+local timeScale = 0.0
+
+local function on_set_time_scale(index, value)
+    timeScale = value
+end
+
+hook_mod_menu_slider("Time Scale", 1, 0, 10, on_set_time_scale)
+```
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [hook_mod_menu_inputbox](#hook_mod_menu_inputbox)
+`hook_mod_menu_inputbox()` allows Lua to add textboxes to their designated mod menu submenu.
+
+### Parameters
+
+| Field | Type |
+| ----- | ---- |
+| message | `string` |
+| defaultValue | `string` |
+| stringLength | `integer` |
+| func | `Lua Function` (`integer` index, `string` value) |
+
+### Lua Example
+
+```lua
+--- @param index integer
+--- @param value string
+local function on_set_network_player_description(index, value)
+    network_player_set_description(gNetworkPlayers[0], value, 255, 255, 255, 255)
+end
+
+hook_mod_menu_inputbox("Network Player Description", on_set_network_player_description)
+```

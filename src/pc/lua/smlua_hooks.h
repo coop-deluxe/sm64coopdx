@@ -55,6 +55,7 @@ enum LuaHookedEventType {
     HOOK_ON_PLAY_SOUND,
     HOOK_ON_SEQ_LOAD,
     HOOK_ON_ATTACK_OBJECT,
+    HOOK_ON_LANGUAGE_CHANGED,
     HOOK_MAX,
 };
 
@@ -103,6 +104,7 @@ static const char* LuaHookedEventTypeName[] = {
     "HOOK_ON_PLAY_SOUND",
     "HOOK_ON_SEQ_LOAD",
     "HOOK_ON_ATTACK_OBJECT",
+    "HOOK_ON_LANGUAGE_CHANGED",
     "HOOK_MAX"
 };
 
@@ -118,7 +120,31 @@ static const char* LuaActionHookTypeArgName[] = {
     "max (dummy)",
 };
 
+enum LuaModMenuElementType {
+    MOD_MENU_ELEMENT_BUTTON,
+    MOD_MENU_ELEMENT_CHECKBOX,
+    MOD_MENU_ELEMENT_SLIDER,
+    MOD_MENU_ELEMENT_INPUTBOX,
+    MOD_MENU_ELEMENT_MAX
+};
+
+struct LuaHookedModMenuElement {
+    enum LuaModMenuElementType element;
+    char name[64];
+    // use a union here?
+    bool boolValue;
+    u32 uintValue;
+    char stringValue[256];
+    u32 length;
+    u32 sliderMin;
+    u32 sliderMax;
+    int reference;
+    struct Mod* mod;
+};
+
 extern u32 gLuaMarioActionIndex[];
+extern struct LuaHookedModMenuElement gHookedModMenuElements[];
+extern int gHookedModMenuElementsCount;
 
 int smlua_hook_custom_bhv(BehaviorScript *bhvScript, const char *bhvName);
 
@@ -154,6 +180,7 @@ bool smlua_call_event_hooks_mario_param_and_int_and_int_ret_int(enum LuaHookedEv
 void smlua_call_event_hooks_graph_node_object_and_int_param(enum LuaHookedEventType hookType, struct GraphNodeObject* node, s32 param);
 void smlua_call_event_hooks_on_seq_load(enum LuaHookedEventType hookType, u32 player, u32 seqId, s32 loadAsync, u8* returnValue);
 const char *smlua_call_event_hooks_int_ret_bool_and_string(enum LuaHookedEventType hookType, s32 param, bool* returnValue);
+void smlua_call_event_hooks_string_param(enum LuaHookedEventType hookType, const char* string);
 
 enum BehaviorId smlua_get_original_behavior_id(const BehaviorScript* behavior);
 const BehaviorScript* smlua_override_behavior(const BehaviorScript* behavior);
@@ -173,6 +200,8 @@ char** smlua_get_chat_maincommands_list(void);
 char** smlua_get_chat_subcommands_list(const char* maincommand);
 bool smlua_maincommand_exists(const char* maincommand);
 bool smlua_subcommand_exists(const char* maincommand, const char* subcommand);
+
+void smlua_call_mod_menu_element_hook(struct LuaHookedModMenuElement* hooked, int index);
 
 void smlua_clear_hooks(void);
 void smlua_bind_hooks(void);

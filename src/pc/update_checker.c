@@ -75,7 +75,7 @@ void get_version_remote(void) {
     }
 
     buffer[bytesRead] = '\0';
-    strncpy(sRemoteVersion, buffer, 8);
+    snprintf(sRemoteVersion, 8, "%s", buffer);
 
     // close handles
     InternetCloseHandle(hUrl);
@@ -107,7 +107,7 @@ void get_version_remote(void) {
 
     if (!buffer) { return; }
 
-    strncpy(sRemoteVersion, buffer, 8);
+    snprintf(sRemoteVersion, 8, "%s", buffer);
 
     // Clean up
     curl_easy_cleanup(curl);

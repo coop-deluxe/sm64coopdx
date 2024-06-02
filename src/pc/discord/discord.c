@@ -94,7 +94,7 @@ static void on_current_user_update(UNUSED void* data) {
     if (configPlayerName[0] == '\0' && strlen(user.username) > 0) {
         char* cname = configPlayerName;
         char* dname = user.username;
-        for (int i = 0; i < MAX_PLAYER_STRING - 1; i++) {
+        for (int i = 0; i < MAX_CONFIG_STRING - 1; i++) {
             if (*dname >= '!' && *dname <= '~') {
                 *cname = *dname;
                 cname++;

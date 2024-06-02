@@ -103,7 +103,7 @@ void djui_init_late(void) {
         djui_panel_language_create(NULL);
     }
     if (strcmp(configLastVersion, get_version())) {
-        strncpy(configLastVersion, get_version(), MAX_CONFIG_STRING);
+        snprintf(configLastVersion, MAX_CONFIG_STRING, "%s", get_version());
         djui_panel_changelog_create(NULL);
     }
 

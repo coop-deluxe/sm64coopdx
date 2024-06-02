@@ -1,3 +1,4 @@
+#include "sm64.h"
 #include "djui.h"
 #include "djui_panel.h"
 #include "djui_panel_player.h"
@@ -6,11 +7,12 @@
 #include "djui_panel_host.h"
 #include "djui_panel_menu.h"
 #include "djui_panel_confirm.h"
+#include "djui_panel_mod_menu.h"
 #include "pc/pc_main.h"
 #include "pc/network/network.h"
+#include "pc/lua/smlua_hooks.h"
 #include "game/object_helpers.h"
 #include "behavior_table.h"
-#include "sm64.h"
 
 bool gDjuiPanelPauseCreated = false;
 
@@ -56,7 +58,6 @@ void djui_panel_pause_create(struct DjuiBase* caller) {
     struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(PAUSE, PAUSE_TITLE));
     struct DjuiBase* body = djui_three_panel_get_body(panel);
     {
-
         struct DjuiRect* rect1 = djui_rect_container_create(body, 64);
         {
             djui_button_left_create(&rect1->base, DLANG(PAUSE, PLAYER), DJUI_BUTTON_STYLE_NORMAL, djui_panel_player_create);
@@ -68,6 +69,20 @@ void djui_panel_pause_create(struct DjuiBase* caller) {
 
         if (gNetworkType == NT_SERVER) {
             djui_button_create(body, DLANG(PAUSE, SERVER_SETTINGS), DJUI_BUTTON_STYLE_NORMAL, djui_panel_host_create);
+        }
+
+        if (gHookedModMenuElementsCount == 1 && gHookedModMenuElements[0].element == MOD_MENU_ELEMENT_BUTTON) {
+            struct LuaHookedModMenuElement* hooked = &gHookedModMenuElements[0];
+            char buffer[256] = { 0 };
+            if (strlen(hooked->name) > 0) {
+                snprintf(buffer, 256, "%s - %s", hooked->mod->name, hooked->name);
+            } else {
+                snprintf(buffer, 256, "%s", hooked->mod->name);
+            }
+            struct DjuiButton* button = djui_button_create(body, buffer, DJUI_BUTTON_STYLE_NORMAL, djui_panel_mod_menu_mod_element);
+            button->base.tag = 0;
+        } else if (gHookedModMenuElementsCount > 0) {
+            djui_button_create(body, DLANG(PAUSE, MOD_MENU), DJUI_BUTTON_STYLE_NORMAL, djui_panel_mod_menu_create);
         }
 
         djui_button_create(body, DLANG(PAUSE, RESUME), DJUI_BUTTON_STYLE_NORMAL, djui_panel_pause_resume);

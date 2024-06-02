@@ -31,7 +31,7 @@ static u8 eeprom[512] = { 0 };
 
 static u8   sJoinRequestPlayerModel;
 static struct PlayerPalette sJoinRequestPlayerPalette;
-static char sJoinRequestPlayerName[MAX_PLAYER_STRING];
+static char sJoinRequestPlayerName[MAX_CONFIG_STRING];
 bool gCurrentlyJoining = false;
 
 void network_send_join_request(void) {
@@ -48,7 +48,7 @@ void network_send_join_request(void) {
 
     packet_write(&p, &configPlayerModel,   sizeof(u8));
     packet_write(&p, &configPlayerPalette, sizeof(struct PlayerPalette));
-    packet_write(&p, &configPlayerName,    sizeof(u8) * MAX_PLAYER_STRING);
+    packet_write(&p, &configPlayerName,    sizeof(u8) * MAX_CONFIG_STRING);
 
     network_send_to((gNetworkPlayerServer != NULL) ? gNetworkPlayerServer->localIndex : 0, &p);
     LOG_INFO("sending join request");
@@ -63,11 +63,11 @@ void network_receive_join_request(struct Packet* p) {
         packet_read(p, &version, sizeof(u8) * MAX_VERSION_LENGTH);
         packet_read(p, &sJoinRequestPlayerModel,   sizeof(u8));
         packet_read(p, &sJoinRequestPlayerPalette, sizeof(struct PlayerPalette));
-        packet_read(p, &sJoinRequestPlayerName,    sizeof(u8) * MAX_PLAYER_STRING);
+        packet_read(p, &sJoinRequestPlayerName,    sizeof(u8) * MAX_CONFIG_STRING);
     } else {
         sJoinRequestPlayerModel = 0;
         sJoinRequestPlayerPalette = DEFAULT_MARIO_PALETTE;
-        snprintf(sJoinRequestPlayerName, MAX_PLAYER_STRING, "%s", "Player");
+        snprintf(sJoinRequestPlayerName, MAX_CONFIG_STRING, "%s", "Player");
     }
 
     network_send_join(p);

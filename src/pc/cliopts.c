@@ -79,7 +79,7 @@ bool parse_cli_opts(int argc, char* argv[]) {
                 gCLIOpts.networkPort = 7777;
             }
         } else if (!strcmp(argv[i], "--playername") && (i + 1) < argc) {
-            arg_string("--playername", argv[++i], gCLIOpts.playerName, MAX_PLAYER_STRING);
+            arg_string("--playername", argv[++i], gCLIOpts.playerName, MAX_CONFIG_STRING);
         } else if (!strcmp(argv[i], "--help")) {
             print_help();
             return false;

@@ -144,7 +144,7 @@ bool         configDebugError                     = false;
 bool         configCtxProfiler                    = false;
 #endif
 // player settings
-char         configPlayerName[MAX_PLAYER_STRING]  = "";
+char         configPlayerName[MAX_CONFIG_STRING]  = "";
 unsigned int configPlayerModel                    = 0;
 struct PlayerPalette configPlayerPalette          = { { { 0x00, 0x00, 0xff }, { 0xff, 0x00, 0x00 }, { 0xff, 0xff, 0xff }, { 0x72, 0x1c, 0x0e }, { 0x73, 0x06, 0x00 }, { 0xfe, 0xc1, 0x79 }, { 0xff, 0x00, 0x00 }, { 0xff, 0x00, 0x00 } } };
 // coop settings
@@ -257,7 +257,7 @@ static const struct ConfigOption options[] = {
     {.name = "ctx_profiler",                   .type = CONFIG_TYPE_BOOL, .boolValue   = &configCtxProfiler},
 #endif
     // player settings
-    {.name = "coop_player_name",               .type = CONFIG_TYPE_STRING, .stringValue = (char*)&configPlayerName, .maxStringLength = MAX_PLAYER_STRING},
+    {.name = "coop_player_name",               .type = CONFIG_TYPE_STRING, .stringValue = (char*)&configPlayerName, .maxStringLength = MAX_CONFIG_STRING},
     {.name = "coop_player_model",              .type = CONFIG_TYPE_UINT,   .uintValue   = &configPlayerModel},
     {.name = "coop_player_palette_pants",      .type = CONFIG_TYPE_COLOR,  .colorValue  = &configPlayerPalette.parts[PANTS]},
     {.name = "coop_player_palette_shirt",      .type = CONFIG_TYPE_COLOR,  .colorValue  = &configPlayerPalette.parts[SHIRT]},
@@ -446,7 +446,7 @@ static void save_name_read(char** tokens, int numTokens) {
         }
 
     }
-    strncpy(configSaveNames[index], fullSaveName, MAX_SAVE_NAME_STRING);
+    snprintf(configSaveNames[index], MAX_SAVE_NAME_STRING, "%s", fullSaveName);
 }
 
 static void save_name_write(FILE* file) {
@@ -679,7 +679,7 @@ NEXT_OPTION:
 
     if (configDjuiTheme >= DJUI_THEME_MAX) { configDjuiTheme = 0; }
 
-    if (!strcmp(configLastVersion, "")) { strncpy(configLastVersion, get_version(), MAX_CONFIG_STRING); }
+    if (!strcmp(configLastVersion, "")) { snprintf(configLastVersion, MAX_CONFIG_STRING, "%s", get_version()); }
 
 #ifndef COOPNET
     configNetworkSystem = NS_SOCKET;

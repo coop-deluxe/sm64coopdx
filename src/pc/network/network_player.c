@@ -259,7 +259,7 @@ u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex, u8 mode
         np->palette = *palette;
         network_player_update_model(localIndex);
 
-        snprintf(np->name, MAX_PLAYER_STRING, "%s", name);
+        snprintf(np->name, MAX_CONFIG_STRING, "%s", name);
         return localIndex;
     }
 
@@ -289,7 +289,7 @@ u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex, u8 mode
     np->overrideModelIndex = modelIndex;
     np->overridePalette = *palette;
 
-    snprintf(np->name, MAX_PLAYER_STRING, "%s", name);
+    snprintf(np->name, MAX_CONFIG_STRING, "%s", name);
     network_player_update_model(localIndex);
 
     // clear networking fields

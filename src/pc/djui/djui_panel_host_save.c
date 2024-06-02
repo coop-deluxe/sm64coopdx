@@ -16,7 +16,7 @@ static char* sSaveLetters[] = { "A", "B", "C", "D" };
 static void djui_panel_host_save_update_button(struct DjuiButton* button, int slot);
 
 static void djui_panel_host_save_save_name_change(UNUSED struct DjuiBase* caller) {
-    strncpy(configSaveNames[sButtonTag], sSaveNameInputBox->buffer, MAX_SAVE_NAME_STRING);
+    snprintf(configSaveNames[sButtonTag], MAX_SAVE_NAME_STRING, "%s", sSaveNameInputBox->buffer);
     if (strlen(sSaveNameInputBox->buffer) >= 64) {
         djui_inputbox_set_text(sSaveNameInputBox, configSaveNames[sButtonTag]);
     }
@@ -47,7 +47,7 @@ static void djui_panel_edit_create(struct DjuiBase* caller) {
             djui_base_set_size(&sSaveNameInputBox->base, 0.45f, 32);
             djui_base_set_alignment(&sSaveNameInputBox->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_TOP);
             char saveName[MAX_SAVE_NAME_STRING] = { 0 };
-            strncpy(saveName, configSaveNames[sButtonTag], MAX_SAVE_NAME_STRING);
+            snprintf(saveName, MAX_SAVE_NAME_STRING, "%s", configSaveNames[sButtonTag]);
             djui_inputbox_set_text(sSaveNameInputBox, saveName);
             djui_interactable_hook_value_change(&sSaveNameInputBox->base, djui_panel_host_save_save_name_change);
         }

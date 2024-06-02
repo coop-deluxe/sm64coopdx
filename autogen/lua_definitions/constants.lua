@@ -9228,7 +9228,27 @@ HOOK_ON_SEQ_LOAD = 42
 HOOK_ON_ATTACK_OBJECT = 43
 
 --- @type LuaHookedEventType
-HOOK_MAX = 44
+HOOK_ON_LANGUAGE_CHANGED = 44
+
+--- @type LuaHookedEventType
+HOOK_MAX = 45
+
+--- @class LuaModMenuElementType
+
+--- @type LuaModMenuElementType
+MOD_MENU_ELEMENT_BUTTON = 0
+
+--- @type LuaModMenuElementType
+MOD_MENU_ELEMENT_CHECKBOX = 1
+
+--- @type LuaModMenuElementType
+MOD_MENU_ELEMENT_SLIDER = 2
+
+--- @type LuaModMenuElementType
+MOD_MENU_ELEMENT_INPUTBOX = 3
+
+--- @type LuaModMenuElementType
+MOD_MENU_ELEMENT_MAX = 4
 
 --- @class HudDisplayFlags
 

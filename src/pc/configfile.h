@@ -11,7 +11,6 @@
 #define MAX_BINDS  3
 #define MAX_VOLUME 127
 #define MAX_CONFIG_STRING 64
-#define MAX_PLAYER_STRING 60
 #define MAX_SAVE_NAME_STRING 32
 
 #define DEFAULT_PORT 7777
@@ -96,7 +95,7 @@ extern bool         configDebugError;
 extern bool         configCtxProfiler;
 #endif
 // player settings
-extern char         configPlayerName[MAX_PLAYER_STRING];
+extern char         configPlayerName[MAX_CONFIG_STRING];
 extern unsigned int configPlayerModel;
 extern struct PlayerPalette configPlayerPalette;
 // coop settings

@@ -1227,7 +1227,8 @@ def def_function(function):
     if rtype.startswith('Pointer_') and rtype not in def_pointers:
         def_pointers.append(rtype)
 
-    s += '--- @return %s\n' % rtype
+    if rtype != "nil":
+        s += '--- @return %s\n' % rtype
     s += "function %s(%s)\n    -- ...\nend\n\n" % (fid, param_str)
 
     return s

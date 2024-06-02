@@ -129,6 +129,7 @@ extern u8 gDialogTextColorR;
 extern u8 gDialogTextColorG;
 extern u8 gDialogTextColorB;
 extern u8 gDialogTextColorA;
+extern bool gForceUnpause;
 
 void create_dl_identity_matrix(void);
 void create_dl_translation_matrix(s8 pushOp, f32 x, f32 y, f32 z);

@@ -8401,6 +8401,26 @@
 <br />
 
 
+## [get_mario_vanilla_animation](#get_mario_vanilla_animation)
+
+### Lua Example
+`local AnimationValue = get_mario_vanilla_animation(index)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| index | `integer` |
+
+### Returns
+[Animation](structs.md#Animation)
+
+### C Prototype
+`struct Animation *get_mario_vanilla_animation(u16 index);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [smlua_anim_util_get_current_animation_name](#smlua_anim_util_get_current_animation_name)
 
 ### Lua Example

@@ -91,8 +91,8 @@ void nametags_render(void) {
                 scale = clampf(1 - scale, 0, NAMETAG_MAX_SCALE);
             }
 
-            char name[MAX_PLAYER_STRING + 1];
-            strncpy(name, np->name, MAX_PLAYER_STRING + 1);
+            char name[MAX_CONFIG_STRING];
+            snprintf(name, MAX_CONFIG_STRING, "%s", np->name);
             name_without_hex(name);
             Color color = {
                 np->palette.parts[CAP][0],

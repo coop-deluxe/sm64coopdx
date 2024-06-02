@@ -88,7 +88,7 @@ static const char *sys_old_user_path(void) {
     char *sdlPath = SDL_GetPrefPath("", "sm64ex-coop");
     if (sdlPath) {
         const unsigned int len = strlen(sdlPath);
-        strncpy(path, sdlPath, sizeof(path));
+        snprintf(path, sizeof(path), "%s", sdlPath);
         path[sizeof(path)-1] = 0;
 
         SDL_free(sdlPath);
@@ -113,7 +113,7 @@ const char *sys_user_path(void) {
         }
 
         const unsigned int len = strlen(sdlPath);
-        strncpy(path, sdlPath, sizeof(path));
+        snprintf(path, sizeof(path), "%s", sdlPath);
         path[sizeof(path)-1] = 0;
 
         SDL_free(sdlPath);
@@ -131,7 +131,7 @@ const char *sys_exe_path(void) {
     if (sdlPath && sdlPath[0]) {
         // use the SDL path if it exists
         const unsigned int len = strlen(sdlPath);
-        strncpy(path, sdlPath, sizeof(path));
+        snprintf(path, sizeof(path), "%s", sdlPath);
         path[sizeof(path)-1] = 0;
         SDL_free(sdlPath);
         if (path[len-1] == '/' || path[len-1] == '\\')

@@ -26,8 +26,8 @@ static struct DjuiInputbox* sPalettePresetNameTextBox = NULL;
 
 void djui_panel_player_create(struct DjuiBase* caller);
 
-////////////////////////
-// edit palette panel //
+  ////////////////////////
+ // edit palette panel //
 ////////////////////////
 
 static unsigned int djui_panel_player_edit_palette_get_palette_index(struct PlayerPalette palette) {
@@ -290,8 +290,8 @@ static void djui_panel_player_edit_palette_create(struct DjuiBase* caller) {
 }
 
 
-//////////////////
-// player panel //
+  //////////////////
+ // player panel //
 //////////////////
 
 static bool djui_panel_player_name_valid(char* buffer) {
@@ -319,7 +319,7 @@ static void djui_panel_player_name_on_focus_end(struct DjuiBase* caller) {
     if (!djui_panel_player_name_valid(inputbox1->buffer)) {
         djui_inputbox_set_text(inputbox1, DLANG(PLAYER, PLAYER));
     }
-    snprintf(configPlayerName, MAX_PLAYER_STRING, "%s", inputbox1->buffer);
+    snprintf(configPlayerName, MAX_CONFIG_STRING, "%s", inputbox1->buffer);
     djui_inputbox_set_text_color(inputbox1, 0, 0, 0, 255);
 
     if (gNetworkType != NT_NONE) {
@@ -384,7 +384,7 @@ void djui_panel_player_create(struct DjuiBase* caller) {
             djui_base_set_alignment(&text1->base, DJUI_HALIGN_LEFT, DJUI_VALIGN_TOP);
             djui_text_set_drop_shadow(text1, 64, 64, 64, 100);
 
-            struct DjuiInputbox* inputbox1 = djui_inputbox_create(&rect1->base, MAX_PLAYER_STRING);
+            struct DjuiInputbox* inputbox1 = djui_inputbox_create(&rect1->base, MAX_CONFIG_STRING);
             djui_base_set_size_type(&inputbox1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
             djui_base_set_size(&inputbox1->base, 0.45f, 32);
             djui_base_set_alignment(&inputbox1->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_TOP);
