@@ -73,7 +73,7 @@ static bool smlua_check_binary_header(struct ModFile *file) {
     if (f) {
 
         // Read signature
-        char signature[sizeof(LUA_SIGNATURE)] = {0};
+        char signature[sizeof(LUA_SIGNATURE)] = { 0 };
         if (fread(signature, 1, sizeof(LUA_SIGNATURE) - 1, f) != sizeof(LUA_SIGNATURE) - 1) {
             LOG_LUA("Failed to load lua script '%s': File too short.", file->cachedPath);
             fclose(f);
