@@ -79,7 +79,7 @@ void djui_panel_pause_create(struct DjuiBase* caller) {
             } else {
                 snprintf(buffer, 256, "%s", hooked->mod->name);
             }
-            struct DjuiButton* button = djui_button_create(body, buffer, DJUI_BUTTON_STYLE_NORMAL, djui_panel_mod_menu_mod_element);
+            struct DjuiButton* button = djui_button_create(body, buffer, DJUI_BUTTON_STYLE_NORMAL, djui_panel_mod_menu_mod_button);
             button->base.tag = 0;
         } else if (gHookedModMenuElementsCount > 0) {
             djui_button_create(body, DLANG(PAUSE, MOD_MENU), DJUI_BUTTON_STYLE_NORMAL, djui_panel_mod_menu_create);

@@ -15,10 +15,25 @@ static char* to_uppercase(char* str) {
     return buffer;
 }
 
-// generic
-void djui_panel_mod_menu_mod_element(struct DjuiBase* caller) {
+void djui_panel_mod_menu_mod_button(struct DjuiBase* caller) {
     struct LuaHookedModMenuElement* hooked = &gHookedModMenuElements[caller->tag];
     smlua_call_mod_menu_element_hook(hooked, caller->tag);
+    struct DjuiButton* button = (struct DjuiButton*)caller;
+    djui_text_set_text(button->text, hooked->name);
+}
+
+void djui_panel_mod_menu_mod_checkbox(struct DjuiBase* caller) {
+    struct LuaHookedModMenuElement* hooked = &gHookedModMenuElements[caller->tag];
+    smlua_call_mod_menu_element_hook(hooked, caller->tag);
+    struct DjuiCheckbox* checkbox = (struct DjuiCheckbox*)caller;
+    djui_text_set_text(checkbox->text, hooked->name);
+}
+
+void djui_panel_mod_menu_mod_slider(struct DjuiBase* caller) {
+    struct LuaHookedModMenuElement* hooked = &gHookedModMenuElements[caller->tag];
+    smlua_call_mod_menu_element_hook(hooked, caller->tag);
+    struct DjuiSlider* slider = (struct DjuiSlider*)caller;
+    djui_text_set_text(slider->text, hooked->name);
 }
 
 static void djui_panel_mod_menu_mod_inputbox(struct DjuiBase* caller) {
@@ -32,15 +47,15 @@ static void djui_panel_mod_menu_mod_create_element(struct DjuiBase* parent, int 
     struct LuaHookedModMenuElement* hooked = &gHookedModMenuElements[i];
     switch (hooked->element) {
         case MOD_MENU_ELEMENT_BUTTON:
-            struct DjuiButton* button = djui_button_create(parent, hooked->name, DJUI_BUTTON_STYLE_NORMAL, djui_panel_mod_menu_mod_element);
+            struct DjuiButton* button = djui_button_create(parent, hooked->name, DJUI_BUTTON_STYLE_NORMAL, djui_panel_mod_menu_mod_button);
             button->base.tag = i;
             break;
         case MOD_MENU_ELEMENT_CHECKBOX:
-            struct DjuiCheckbox* checkbox = djui_checkbox_create(parent, hooked->name, &hooked->boolValue, djui_panel_mod_menu_mod_element);
+            struct DjuiCheckbox* checkbox = djui_checkbox_create(parent, hooked->name, &hooked->boolValue, djui_panel_mod_menu_mod_checkbox);
             checkbox->base.tag = i;
             break;
         case MOD_MENU_ELEMENT_SLIDER:
-            struct DjuiSlider* slider = djui_slider_create(parent, hooked->name, &hooked->uintValue, hooked->sliderMin, hooked->sliderMax, djui_panel_mod_menu_mod_element);
+            struct DjuiSlider* slider = djui_slider_create(parent, hooked->name, &hooked->uintValue, hooked->sliderMin, hooked->sliderMax, djui_panel_mod_menu_mod_slider);
             slider->base.tag = i;
             break;
         case MOD_MENU_ELEMENT_INPUTBOX:
