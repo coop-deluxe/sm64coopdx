@@ -2626,8 +2626,8 @@ static void DynOS_Bhv_Generate(const SysPath &aPackFolder, Array<Pair<u64, Strin
         _GfxData->mGeoNodeStack.Clear();
 
         // Parse data
-        PrintNoNewLine("%s.bhv: Model identifier: %X - Processing... ", _BhvRootName.begin(), _GfxData->mModelIdentifier);
-        PrintConsole(CONSOLE_MESSAGE_INFO, "%s.bhv: Model identifier: %X - Processing... ", _BhvRootName.begin(), _GfxData->mModelIdentifier);
+        PrintNoNewLine("%s.bhv: Behavior identifier: %X - Processing... ", _BhvRootName.begin(), _GfxData->mModelIdentifier);
+        PrintConsole(CONSOLE_MESSAGE_INFO, "%s.bhv: Behavior identifier: %X - Processing... ", _BhvRootName.begin(), _GfxData->mModelIdentifier);
         DynOS_Bhv_Parse(_GfxData, _BhvNode, true);
 
         // Write if no error
