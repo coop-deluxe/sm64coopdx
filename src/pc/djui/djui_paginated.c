@@ -56,7 +56,6 @@ static void djui_paginated_next(struct DjuiBase* base) {
     if (paginated->startIndex >= count) { paginated->startIndex -= paginated->showCount; }
 
     djui_paginated_update_page_buttons(paginated);
-
 }
 
 void djui_paginated_calculate_height(struct DjuiPaginated* paginated) {
@@ -169,8 +168,10 @@ struct DjuiPaginated* djui_paginated_create(struct DjuiBase* parent, u32 showCou
     sPageNumText = djui_text_create(&paginated->base, "");
     djui_base_set_color(&sPageNumText->base, 220, 220, 220, 255);
     djui_base_set_alignment(&sPageNumText->base, DJUI_HALIGN_CENTER, DJUI_VALIGN_BOTTOM);
+    djui_text_set_alignment(sPageNumText, DJUI_HALIGN_CENTER, DJUI_VALIGN_TOP);
     djui_text_set_drop_shadow(sPageNumText, 64, 64, 64, 100);
     sPageNumText->base.y.value -= 30;
+    sPageNumText->base.width.value += 30;
 
     sNextButton = djui_button_create(&paginated->base, ">", DJUI_BUTTON_STYLE_NORMAL, djui_paginated_next);
     djui_base_set_alignment(&sNextButton->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_BOTTOM);

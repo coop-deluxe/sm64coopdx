@@ -10,8 +10,8 @@ static void djui_lobby_entry_update_style(struct DjuiBase* base) {
     struct DjuiTheme* theme = gDjuiThemes[configDjuiTheme];
 
     if (!entry->base.enabled) {
-        struct DjuiColor bc = djui_theme_shade_color(theme->interactables.defaultBorderColor);
-        struct DjuiColor rc = djui_theme_shade_color(theme->interactables.defaultRectColor);
+        struct DjuiColor bc = djui_theme_shade_color(theme->interactables.defaultBorderColor, 0.3f);
+        struct DjuiColor rc = djui_theme_shade_color(theme->interactables.defaultRectColor, 0.3f);
 
         djui_base_set_border_color(base, bc.r, bc.g, bc.b, bc.a);
         djui_base_set_color(&entry->base, rc.r, rc.g, rc.b, rc.a);

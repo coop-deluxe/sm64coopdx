@@ -22,9 +22,9 @@ static void djui_panel_host_save_save_name_change(UNUSED struct DjuiBase* caller
     }
 }
 
-static void djui_panel_edit_back(struct DjuiBase* caller) {
+static bool djui_panel_edit_back(UNUSED struct DjuiBase* caller) {
     djui_panel_host_save_update_button(sSaveButtons[sButtonTag], sButtonTag);
-    djui_panel_menu_back(caller);
+    return false;
 }
 
 static void djui_panel_edit_create(struct DjuiBase* caller) {
@@ -52,9 +52,10 @@ static void djui_panel_edit_create(struct DjuiBase* caller) {
             djui_interactable_hook_value_change(&sSaveNameInputBox->base, djui_panel_host_save_save_name_change);
         }
 
-        djui_button_create(body, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_edit_back);
+        djui_button_create(body, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
     }
-    
+
+    panel->on_back = djui_panel_edit_back;
     djui_panel_add(caller, panel, NULL);
 }
 

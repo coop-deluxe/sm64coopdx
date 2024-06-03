@@ -171,10 +171,10 @@ struct DjuiTheme* gDjuiThemes[] = {
     &sDjuiThemeMario
 };
 
-struct DjuiColor djui_theme_shade_color(struct DjuiColor color) {
-    color.r *= 0.6f;
-    color.g *= 0.6f;
-    color.b *= 0.6f;
+struct DjuiColor djui_theme_shade_color(struct DjuiColor color, f32 mult) {
+    color.r *= mult;
+    color.g *= mult;
+    color.b *= mult;
     return color;
 }
 

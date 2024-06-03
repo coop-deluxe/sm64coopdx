@@ -43,5 +43,5 @@ struct DjuiTheme {
 
 extern struct DjuiTheme* gDjuiThemes[];
 
-struct DjuiColor djui_theme_shade_color(struct DjuiColor color);
+struct DjuiColor djui_theme_shade_color(struct DjuiColor color, f32 mult);
 void djui_themes_init(void);

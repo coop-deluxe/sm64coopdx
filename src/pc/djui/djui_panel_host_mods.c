@@ -17,7 +17,6 @@
 static struct DjuiFlowLayout* sModLayout = NULL;
 static struct DjuiThreePanel* sDescriptionPanel = NULL;
 static struct DjuiText* sTooltip = NULL;
-static s64 sTag = 0;
 static bool sWarned = false;
 
 void djui_panel_host_mods_create(struct DjuiBase* caller);
@@ -115,13 +114,12 @@ static void djui_panel_host_mods_destroy(struct DjuiBase* base) {
         djui_base_destroy(&sDescriptionPanel->base);
         sDescriptionPanel = NULL;
     }
+    sModLayout = NULL;
+    sTooltip = NULL;
 }
 
 void djui_panel_host_mods_create(struct DjuiBase* caller) {
-    if (caller != NULL) {
-        sTag = caller->tag;
-    }
-    bool isRomHacks = sTag;
+    bool isRomHacks = caller != NULL ? caller->tag != 0 : false;
 
     mods_update_selectable();
     djui_panel_host_mods_description_create();

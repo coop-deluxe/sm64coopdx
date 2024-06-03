@@ -24,11 +24,15 @@ static struct DjuiText* sDjuiLuaError = NULL;
 static u32 sDjuiLuaErrorTimeout = 0;
 bool gDjuiInMainMenu = true;
 bool gDjuiDisabled = false;
+bool gDjuiShuttingDown = false;
 static bool sDjuiInited = false;
 
 bool sDjuiRendered60fps = false;
 
 void djui_shutdown(void) {
+    gDjuiShuttingDown = true;
+    djui_panel_shutdown();
+
     sSavedDisplayListHead = NULL;
     if (sDjuiPauseOptions) djui_base_destroy(&sDjuiPauseOptions->base);
     if (sDjuiLuaError) djui_base_destroy(&sDjuiLuaError->base);
@@ -49,6 +53,7 @@ void djui_shutdown(void) {
 
     djui_fps_display_destroy();
 
+    gDjuiShuttingDown = false;
     sDjuiInited = false;
 }
 

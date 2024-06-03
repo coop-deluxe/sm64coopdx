@@ -56,6 +56,7 @@ struct DjuiPanel* djui_panel_add(struct DjuiBase* caller, struct DjuiThreePanel*
     panel->parent = sPanelList;
     panel->base = panelBase;
     panel->defaultElementBase = defaultElementBase;
+    panel->on_back = threePanel->on_back;
     panel->on_panel_destroy = NULL;
     sPanelList = panel;
 
@@ -97,6 +98,13 @@ void djui_panel_back(void) {
     if (sPanelList->parent == NULL) {
         if (gDjuiPanelPauseCreated) { djui_panel_shutdown(); }
         return;
+    }
+
+    // call back hook, return true to cancel back
+    if (sPanelList->on_back) {
+        if (sPanelList->on_back(sPanelList->base)) {
+            return;
+        }
     }
 
     // deselect cursor input
@@ -177,6 +185,7 @@ void djui_panel_update(void) {
     }
 }
 
+extern bool gDjuiShuttingDown;
 void djui_panel_shutdown(void) {
     static bool sShuttingDown = false;
     if (sShuttingDown) { return; }
@@ -210,10 +219,12 @@ void djui_panel_shutdown(void) {
     gDjuiPanelMainCreated = false;
     gDjuiPanelPauseCreated = false;
     djui_cursor_set_visible(false);
-    configfile_save(configfile_name());
-    if (gDjuiInMainMenu) {
-        gDjuiInMainMenu = false;
-        newcam_init_settings();
+    if (!gDjuiShuttingDown) {
+        configfile_save(configfile_name());
+        if (gDjuiInMainMenu) {
+            gDjuiInMainMenu = false;
+            newcam_init_settings();
+        }
     }
     sShuttingDown = false;
 }
