@@ -120,6 +120,8 @@ static const char* LuaActionHookTypeArgName[] = {
     "max (dummy)",
 };
 
+#define MAX_HOOKED_MOD_MENU_ELEMENTS 256
+
 enum LuaModMenuElementType {
     MOD_MENU_ELEMENT_BUTTON,
     MOD_MENU_ELEMENT_CHECKBOX,

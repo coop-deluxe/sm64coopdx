@@ -2,8 +2,7 @@
 #include "djui_panel.h"
 #include "djui_panel_menu.h"
 #include "pc/lua/smlua_hooks.h"
-
-static char* sDjuiPanelModMenuModName = NULL;
+#include "pc/mods/mods.h"
 
 static char* to_uppercase(char* str) {
     char* buffer = strdup(str);
@@ -82,13 +81,23 @@ static void djui_panel_mod_menu_mod_create_element(struct DjuiBase* parent, int 
 }
 
 void djui_panel_mod_menu_mod_create(struct DjuiBase* caller) {
-    struct DjuiThreePanel* panel = djui_panel_menu_create(to_uppercase(sDjuiPanelModMenuModName));
+    struct Mod* mod = NULL;
+    for (int i = 0; i < gActiveMods.entryCount; i++) {
+        if (gActiveMods.entries[i]->index == caller->tag) {
+            mod = gActiveMods.entries[i];
+        }
+    }
+    if (mod == NULL) { return; }
+
+    struct DjuiThreePanel* panel = djui_panel_menu_create(to_uppercase(mod->name));
     struct DjuiBase* body = djui_three_panel_get_body(panel);
     {
         struct DjuiPaginated* paginated = djui_paginated_create(body, 8);
         struct DjuiBase* layoutBase = &paginated->layout->base;
         for (int i = 0; i < gHookedModMenuElementsCount; i++) {
-            djui_panel_mod_menu_mod_create_element(layoutBase, i);
+            if (gHookedModMenuElements[i].mod == mod) {
+                djui_panel_mod_menu_mod_create_element(layoutBase, i);
+            }
         }
         djui_paginated_calculate_height(paginated);
 
@@ -104,13 +113,24 @@ void djui_panel_mod_menu_create(struct DjuiBase* caller) {
     {
         struct DjuiPaginated* paginated = djui_paginated_create(body, 8);
         struct DjuiBase* layoutBase = &paginated->layout->base;
-        struct Mod* lastMod = NULL;
+        struct Mod* addedMods[MAX_HOOKED_MOD_MENU_ELEMENTS] = { 0 };
+        int modCount = 0;
         for (int i = 0; i < gHookedModMenuElementsCount; i++) {
             struct LuaHookedModMenuElement* hooked = &gHookedModMenuElements[i];
-            if (lastMod == hooked->mod) { continue; }
-            lastMod = hooked->mod;
-            sDjuiPanelModMenuModName = lastMod->name;
-            djui_button_create(layoutBase, hooked->mod->name, DJUI_BUTTON_STYLE_NORMAL, djui_panel_mod_menu_mod_create);
+            bool shouldContinue = false;
+            for (int i = 0; i < MAX_HOOKED_MOD_MENU_ELEMENTS; i++) {
+                if (addedMods[i] == NULL) { break; }
+                if (addedMods[i] == hooked->mod) {
+                    shouldContinue = true;
+                    break;
+                }
+            }
+            if (shouldContinue) { continue; }
+
+            struct DjuiButton* button = djui_button_create(layoutBase, hooked->mod->name, DJUI_BUTTON_STYLE_NORMAL, djui_panel_mod_menu_mod_create);
+            button->base.tag = hooked->mod->index;
+            addedMods[modCount] = hooked->mod;
+            modCount++;
         }
         djui_paginated_calculate_height(paginated);
 

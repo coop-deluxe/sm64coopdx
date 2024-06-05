@@ -1989,8 +1989,6 @@ int smlua_hook_on_sync_table_change(lua_State* L) {
  // hooked mod menu button //
 ////////////////////////////
 
-#define MAX_HOOKED_MOD_MENU_ELEMENTS 256
-
 struct LuaHookedModMenuElement gHookedModMenuElements[MAX_HOOKED_MOD_MENU_ELEMENTS] = { 0 };
 int gHookedModMenuElementsCount = 0;
 
@@ -2009,7 +2007,7 @@ int smlua_hook_mod_menu_button(lua_State* L) {
     }
 
     const char* name = smlua_to_string(L, 1);
-    if (name == NULL || !gSmLuaConvertSuccess) {
+    if (name == NULL || strlen(name) == 0 || !gSmLuaConvertSuccess) {
         LOG_LUA_LINE("Hook mod menu element: tried to hook invalid element");
         return 0;
     }
@@ -2210,12 +2208,7 @@ int smlua_update_mod_menu_element_name(lua_State* L) {
     }
 
     const char* name = smlua_to_string(L, 2);
-    if (name == NULL || !gSmLuaConvertSuccess) {
-        LOG_LUA_LINE("Update mod menu element: tried to update invalid name");
-        return 0;
-    }
-
-    if (gHookedModMenuElements[index].element != MOD_MENU_ELEMENT_BUTTON && strlen(name) == 0) {
+    if (name == NULL || strlen(name) == 0 || !gSmLuaConvertSuccess) {
         LOG_LUA_LINE("Update mod menu element: tried to update invalid name");
         return 0;
     }
