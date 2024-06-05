@@ -1997,6 +1997,24 @@
 
 <br />
 
+## [get_local_discord_id](#get_local_discord_id)
+
+### Lua Example
+`local stringValue = get_local_discord_id()`
+
+### Parameters
+- None
+
+### Returns
+- `string`
+
+### C Prototype
+`const char* get_local_discord_id(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [get_network_area_timer](#get_network_area_timer)
 
 ### Lua Example

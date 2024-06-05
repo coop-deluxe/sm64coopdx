@@ -25,6 +25,10 @@
 #include "game/level_geo.h"
 #include "game/first_person_cam.h"
 
+#ifdef DISCORD_SDK
+#include "pc/discord/discord.h"
+#endif
+
 static struct DateTime sDateTime;
 
 ///
@@ -635,6 +639,18 @@ s32 get_dialog_response(void) {
 
 bool djui_is_playerlist_open(void) {
     return gDjuiPlayerList->base.visible;
+}
+
+///
+
+const char* get_local_discord_id(void) {
+#ifdef DISCORD_SDK
+    static char sDiscordId[64] = "";
+    snprintf(sDiscordId, 64, "%" PRIu64 "", (uint64_t)discord_get_user_id());
+    return sDiscordId;
+#else
+    return NULL;
+#endif
 }
 
 ///

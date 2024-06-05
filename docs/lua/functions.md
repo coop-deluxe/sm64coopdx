@@ -1686,6 +1686,7 @@
    - [get_last_star_or_key](functions-5.md#get_last_star_or_key)
    - [get_lighting_color](functions-5.md#get_lighting_color)
    - [get_lighting_dir](functions-5.md#get_lighting_dir)
+   - [get_local_discord_id](functions-5.md#get_local_discord_id)
    - [get_network_area_timer](functions-5.md#get_network_area_timer)
    - [get_os_name](functions-5.md#get_os_name)
    - [get_save_file_modified](functions-5.md#get_save_file_modified)

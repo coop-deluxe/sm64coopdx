@@ -39,6 +39,7 @@ extern struct Mod* gLuaActiveMod;
 extern struct Mod* gLuaLastHookMod;
 
 void smlua_mod_error(void);
+void smlua_mod_warning(void);
 int smlua_error_handler(UNUSED lua_State* L);
 int smlua_pcall(lua_State* L, int nargs, int nresults, int errfunc);
 void smlua_exec_file(const char* path);

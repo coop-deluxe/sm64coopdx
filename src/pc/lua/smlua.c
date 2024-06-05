@@ -23,7 +23,18 @@ void smlua_mod_error(void) {
     if (mod == NULL) { return; }
     char txt[255] = { 0 };
     snprintf(txt, 254, "'%s\\#ff0000\\' has script errors!", mod->name);
-    djui_lua_error(txt);
+    static const struct DjuiColor color = { 255, 0, 0, 255 };
+    djui_lua_error(txt, color);
+}
+
+void smlua_mod_warning(void) {
+    struct Mod* mod = gLuaActiveMod;
+    if (mod == NULL) { mod = gLuaLastHookMod; }
+    if (mod == NULL) { return; }
+    char txt[255] = { 0 };
+    snprintf(txt, 254, "'%s\\#ffe600\\' is using deprecated functions!", mod->name);
+    static const struct DjuiColor color = { 255, 230, 0, 255 };
+    djui_lua_error(txt, color);
 }
 
 int smlua_error_handler(lua_State* L) {

@@ -167,6 +167,8 @@ s32 get_dialog_response(void);
 
 bool djui_is_playerlist_open(void);
 
+const char* get_local_discord_id(void);
+
 void set_window_title(const char* title);
 void reset_window_title(void);
 

@@ -124,8 +124,9 @@ void djui_connect_menu_open(void) {
     djui_panel_join_message_create(NULL);
 }
 
-void djui_lua_error(char* text) {
+void djui_lua_error(char* text, struct DjuiColor color) {
     if (!sDjuiLuaError) { return; }
+    djui_base_set_color(&sDjuiLuaError->base, color.r, color.g, color.b, color.a);
     djui_text_set_text(sDjuiLuaError, text);
     djui_base_set_visible(&sDjuiLuaError->base, true);
     sDjuiLuaErrorTimeout = 30 * 5;

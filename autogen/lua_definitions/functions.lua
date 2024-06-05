@@ -8101,6 +8101,11 @@ function get_lighting_dir(index)
     -- ...
 end
 
+--- @return string
+function get_local_discord_id()
+    -- ...
+end
+
 --- @return integer
 function get_network_area_timer()
     -- ...
