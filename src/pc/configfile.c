@@ -678,6 +678,7 @@ NEXT_OPTION:
     if (configPlayerModel >= CT_MAX) { configPlayerModel = 0; }
 
     if (configDjuiTheme >= DJUI_THEME_MAX) { configDjuiTheme = 0; }
+    if (configDjuiScale >= 5) { configDjuiScale = 0; }
 
     if (!strcmp(configLastVersion, "")) { snprintf(configLastVersion, MAX_CONFIG_STRING, "%s", get_version()); }
 
