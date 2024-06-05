@@ -9,6 +9,7 @@ enum DjuiThemeType {
     DJUI_THEME_DARK,
     DJUI_THEME_FILE_SELECT,
     DJUI_THEME_MARIO,
+    DJUI_THEME_ODYSSEY,
     DJUI_THEME_MAX
 };
 
