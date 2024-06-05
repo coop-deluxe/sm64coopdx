@@ -402,9 +402,6 @@ function mario_local_update(m)
         end
     end
 
-    -- check for ladder
-    mario_check_for_ladder(m)
-
     e.prevHurtCounter = m.hurtCounter
 end
 
