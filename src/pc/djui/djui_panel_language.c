@@ -10,6 +10,7 @@
 #include "pc/configfile.h"
 #include "pc/os/os.h"
 #include "pc/lua/smlua_hooks.h"
+#include "game/bettercamera.h"
 
 extern bool directory_sanity_check(struct dirent* dir, char* dirPath, char* outPath);
 static bool sTrue = true;
@@ -70,6 +71,7 @@ static void djui_panel_language_destroy(UNUSED struct DjuiBase* caller) {
     if (configLanguage[0] == '\0') {
         snprintf(configLanguage, MAX_CONFIG_STRING, "%s", "English");
     }
+    newcam_init_settings();
     gPanelLanguageOnStartup = false;
 }
 
