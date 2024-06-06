@@ -32470,6 +32470,25 @@ int smlua_func_load_object_collision_model(UNUSED lua_State* L) {
     return 1;
 }
 
+int smlua_func_obj_get_surface_from_index(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "obj_get_surface_from_index", 2, top);
+        return 0;
+    }
+
+    struct Object* o = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "obj_get_surface_from_index"); return 0; }
+    u32 index = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "obj_get_surface_from_index"); return 0; }
+
+    smlua_push_object(L, LOT_SURFACE, obj_get_surface_from_index(o, index));
+
+    return 1;
+}
+
 
 
 void smlua_bind_functions_autogen(void) {
@@ -34235,5 +34254,6 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "get_area_terrain_size", smlua_func_get_area_terrain_size);
     smlua_bind_function(L, "load_area_terrain", smlua_func_load_area_terrain);
     smlua_bind_function(L, "load_object_collision_model", smlua_func_load_object_collision_model);
+    smlua_bind_function(L, "obj_get_surface_from_index", smlua_func_obj_get_surface_from_index);
 
 }

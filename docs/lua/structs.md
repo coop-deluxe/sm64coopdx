@@ -1559,6 +1559,7 @@
 | hurtboxHeight | `number` |  |
 | hurtboxRadius | `number` |  |
 | numCollidedObjs | `integer` |  |
+| numSurfaces | `integer` | read-only |
 | parentObj | [Object](structs.md#Object) |  |
 | platform | [Object](structs.md#Object) |  |
 | prevObj | [Object](structs.md#Object) |  |

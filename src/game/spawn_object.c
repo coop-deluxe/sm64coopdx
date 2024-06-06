@@ -233,6 +233,9 @@ void unload_object(struct Object *obj) {
         smlua_call_event_hooks_object_param(HOOK_ON_SYNC_OBJECT_UNLOAD, obj);
     }
 
+    obj->firstSurface = 0;
+    obj->numSurfaces = 0;
+
     smlua_call_event_hooks_object_param(HOOK_ON_OBJECT_UNLOAD, obj);
 
     deallocate_object(&gFreeObjectList, &obj->header);
@@ -337,6 +340,9 @@ struct Object *allocate_object(struct ObjectNode *objList) {
     obj->allowRemoteInteractions = FALSE;
 
     obj->usingObj = NULL;
+
+    obj->firstSurface = 0;
+    obj->numSurfaces = 0;
 
     return obj;
 }

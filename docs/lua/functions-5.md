@@ -4734,6 +4734,27 @@
 
 <br />
 
+## [obj_get_surface_from_index](#obj_get_surface_from_index)
+
+### Lua Example
+`local SurfaceValue = obj_get_surface_from_index(o, index)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| o | [Object](structs.md#Object) |
+| index | `integer` |
+
+### Returns
+[Surface](structs.md#Surface)
+
+### C Prototype
+`struct Surface *obj_get_surface_from_index(struct Object *o, u32 index);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ---
 
 [< prev](functions-4.md) | [1](functions.md) | [2](functions-2.md) | [3](functions-3.md) | [4](functions-4.md) | 5]

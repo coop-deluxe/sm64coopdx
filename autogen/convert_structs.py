@@ -84,6 +84,7 @@ override_field_invisible = {
     "MarioState": [ "visibleToEnemies" ],
     "NetworkPlayer": [ "gag", "moderator"],
     "GraphNode": [ "_guard1", "_guard2" ],
+    "Object": [ "firstSurface" ],
 }
 
 override_field_deprecated = {
@@ -98,7 +99,7 @@ override_field_immutable = {
     "Character": [ "*" ],
     "NetworkPlayer": [ "*" ],
     "TextureInfo": [ "*" ],
-    "Object": ["oSyncID", "coopFlags", "oChainChompSegments", "oWigglerSegments", "oHauntedChairUnk100", "oTTCTreadmillBigSurface", "oTTCTreadmillSmallSurface", "bhvStackIndex", "respawnInfoType" ],
+    "Object": ["oSyncID", "coopFlags", "oChainChompSegments", "oWigglerSegments", "oHauntedChairUnk100", "oTTCTreadmillBigSurface", "oTTCTreadmillSmallSurface", "bhvStackIndex", "respawnInfoType", "numSurfaces" ],
     "GlobalObjectAnimations": [ "*"],
     "SpawnParticlesInfo": [ "model" ],
     "MarioBodyState": [ "updateTorsoTime" ],

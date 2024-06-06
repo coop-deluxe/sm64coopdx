@@ -595,6 +595,12 @@ void clear_dynamic_surfaces(void) {
         gSurfaceNodesAllocated = gNumStaticSurfaceNodes;
 
         clear_spatial_partition(&gDynamicSurfacePartition[0][0]);
+
+        for (u16 i = 0; i < OBJECT_POOL_CAPACITY; i++) {
+            struct Object *obj = &gObjectPool[i];
+            obj->firstSurface = 0;
+            obj->numSurfaces = 0;
+        }
     }
 }
 
@@ -674,6 +680,15 @@ void load_object_surfaces(s16** data, s16* vertexData) {
         struct Surface* surface = read_surface_data(vertexData, data);
 
         if (surface != NULL) {
+
+            // Set index of first surface
+            if (gCurrentObject->firstSurface == 0) {
+                gCurrentObject->firstSurface = gSurfacesAllocated - 1;
+            }
+
+            // Increase surface count
+            gCurrentObject->numSurfaces++;
+
             surface->object = gCurrentObject;
             surface->type = surfaceType;
 
@@ -762,4 +777,11 @@ void load_object_collision_model(void) {
     } else {
         gCurrentObject->header.gfx.node.flags &= ~GRAPH_RENDER_ACTIVE;
     }
+}
+
+struct Surface *obj_get_surface_from_index(struct Object *o, u32 index) {
+    if (!o || o->firstSurface == 0) { return NULL; }
+    if (index >= o->numSurfaces) { return NULL; }
+    struct Surface *surf = sSurfacePool->buffer[o->firstSurface + index];
+    return surf;
 }

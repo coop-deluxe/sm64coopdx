@@ -1145,6 +1145,7 @@
 --- @field public hurtboxHeight number
 --- @field public hurtboxRadius number
 --- @field public numCollidedObjs integer
+--- @field public numSurfaces integer
 --- @field public o1UpForceSpawn integer
 --- @field public o1UpHiddenUnkF4 integer
 --- @field public oAction integer

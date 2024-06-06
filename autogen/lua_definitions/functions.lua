@@ -8908,6 +8908,13 @@ function load_object_collision_model()
     -- ...
 end
 
+--- @param o Object
+--- @param index integer
+--- @return Surface
+function obj_get_surface_from_index(o, index)
+    -- ...
+end
+
 --- @class Pointer_integer
 --- @class Pointer_BehaviorScript
 --- @class Pointer_number
