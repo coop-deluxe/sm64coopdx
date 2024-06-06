@@ -99,6 +99,9 @@ extern s16 gChangeLevel;
 extern s16 gChangeActNum;
 extern s16 gDelayedInitSound;
 
+extern bool gInPlayerMenu;
+#define gMenuStaffRoll configMenuLevel == 0
+
 struct WarpDest {
     u8 type;
     s16 levelNum;
@@ -144,8 +147,6 @@ extern bool gNeverEnteredCastle;
 
 extern u32 gControlTimerStartNat;
 extern u32 gControlTimerStopNat;
-
-extern bool gInPlayerMenu;
 
 enum HUDDisplayFlag {
     HUD_DISPLAY_FLAG_LIVES = 0x0001,

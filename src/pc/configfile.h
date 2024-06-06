@@ -113,7 +113,6 @@ extern bool         configNametags;
 extern unsigned int configBouncyLevelBounds;
 extern bool         configSkipIntro;
 extern bool         configPauseAnywhere;
-extern bool         configMenuStaffRoll;
 extern unsigned int configMenuLevel;
 extern bool         configMenuSound;
 extern bool         configMenuRandom;

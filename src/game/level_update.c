@@ -48,8 +48,8 @@
 
 #include "engine/level_script.h"
 
-#define MENU_LEVEL_MIN 0
-#define MENU_LEVEL_MAX 17
+#define MENU_LEVEL_MIN 1
+#define MENU_LEVEL_MAX 18
 
 struct SavedWarpValues gReceiveWarp = { 0 };
 extern s8 sReceivedLoadedActNum;
@@ -1258,7 +1258,7 @@ s32 play_mode_normal(void) {
         }
     } else {
         if (gDjuiInMainMenu &&
-            !configMenuStaffRoll &&
+            !gMenuStaffRoll &&
             gCurrDemoInput == NULL &&
             configMenuDemos &&
             !gInPlayerMenu &&
@@ -1479,30 +1479,30 @@ void update_menu_level(void) {
     // figure out level
     s32 curLevel = 0;
     switch (configMenuLevel) {
-        case 0:  curLevel = LEVEL_CASTLE_GROUNDS; break;
-        case 1:  curLevel = LEVEL_BOB;            break;
-        case 2:  curLevel = LEVEL_WF;             break;
-        case 3:  curLevel = LEVEL_WMOTR;          break;
-        case 4:  curLevel = LEVEL_JRB;            break;
-        case 5:  curLevel = LEVEL_SSL;            break;
-        case 6:  curLevel = LEVEL_TTM;            break;
-        case 7:  curLevel = LEVEL_SL;             break;
-        case 8:  curLevel = LEVEL_BBH;            break;
-        case 9:  curLevel = LEVEL_LLL;            break;
-        case 10: curLevel = LEVEL_THI;            break;
-        case 11: curLevel = LEVEL_HMC;            break;
-        case 12: curLevel = LEVEL_CCM;            break;
-        case 13: curLevel = LEVEL_RR;             break;
-        case 14: curLevel = LEVEL_BITDW;          break;
-        case 15: curLevel = LEVEL_PSS;            break;
-        case 16: curLevel = LEVEL_TTC;            break;
-        case 17: curLevel = LEVEL_WDW;            break;
+        case 1:  curLevel = LEVEL_CASTLE_GROUNDS; break;
+        case 2:  curLevel = LEVEL_BOB;            break;
+        case 3:  curLevel = LEVEL_WF;             break;
+        case 4:  curLevel = LEVEL_WMOTR;          break;
+        case 5:  curLevel = LEVEL_JRB;            break;
+        case 6:  curLevel = LEVEL_SSL;            break;
+        case 7:  curLevel = LEVEL_TTM;            break;
+        case 8:  curLevel = LEVEL_SL;             break;
+        case 9:  curLevel = LEVEL_BBH;            break;
+        case 10: curLevel = LEVEL_LLL;            break;
+        case 11: curLevel = LEVEL_THI;            break;
+        case 12: curLevel = LEVEL_HMC;            break;
+        case 13: curLevel = LEVEL_CCM;            break;
+        case 14: curLevel = LEVEL_RR;             break;
+        case 15: curLevel = LEVEL_BITDW;          break;
+        case 16: curLevel = LEVEL_PSS;            break;
+        case 17: curLevel = LEVEL_TTC;            break;
+        case 18: curLevel = LEVEL_WDW;            break;
         default: curLevel = LEVEL_CASTLE_GROUNDS; break;
     }
 
     // figure out music
     stop_cap_music();
-    if (!configMenuSound || configMenuStaffRoll || curLevel == LEVEL_CASTLE_GROUNDS) {
+    if (!configMenuSound || gMenuStaffRoll || curLevel == LEVEL_CASTLE_GROUNDS) {
         reset_volume();
         disable_background_sound();
         set_background_music(0, SEQ_MENU_FILE_SELECT, 0);
@@ -1512,7 +1512,7 @@ void update_menu_level(void) {
         set_background_music(gCurrentArea->musicParam, gCurrentArea->musicParam2, 0);
     }
 
-    if (configMenuStaffRoll) {
+    if (gMenuStaffRoll) {
         return;
     } else {
         gCurrCreditsEntry = NULL;
@@ -1652,7 +1652,9 @@ void update_menu_level(void) {
     gLakituState.skipCameraInterpolationTimestamp = gGlobalTimer;
     extern s32 gCamSkipInterp;
     gCamSkipInterp = 1;
-    vec3f_copy(gCurrentArea->camera->pos, gLakituState.curPos);
+    if (gCurrentArea != NULL) {
+        vec3f_copy(gCurrentArea->camera->pos, gLakituState.curPos);
+    }
     vec3f_copy(gLakituState.pos, gLakituState.curPos);
     vec3f_copy(gLakituState.goalPos, gLakituState.curPos);
 
@@ -1794,13 +1796,13 @@ s32 init_level(void) {
                             configMenuLevel = randLevel;
                         }
 
-                        if (configMenuStaffRoll) {
+                        if (gMenuStaffRoll) {
                             gMarioState->marioObj->header.gfx.node.flags &= ~GRAPH_RENDER_ACTIVE;
                             warp_credits();
                             level_trigger_warp(gMarioState, WARP_OP_CREDITS_NEXT);
                             sFirstCastleGroundsMenu = false;
                         } else {
-                            if (configMenuLevel == 0 && sFirstCastleGroundsMenu) {
+                            if (configMenuLevel == 1 && sFirstCastleGroundsMenu) {
                                 set_mario_action(gMarioState, ACT_INTRO_CUTSCENE, 7);
                                 sFirstCastleGroundsMenu = false;
                             } else {

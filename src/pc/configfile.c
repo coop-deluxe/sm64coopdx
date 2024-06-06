@@ -20,6 +20,7 @@
 #include "debuglog.h"
 #include "djui/djui_hud_utils.h"
 #include "game/save_file.h"
+#include "game/level_update.h"
 
 #define ARRAY_LEN(arr) (sizeof(arr) / sizeof(arr[0]))
 
@@ -162,7 +163,6 @@ bool         configNametags                       = true;
 unsigned int configBouncyLevelBounds              = 0;
 bool         configSkipIntro                      = 0;
 bool         configPauseAnywhere                  = false;
-bool         configMenuStaffRoll                  = true;
 unsigned int configMenuLevel                      = 0;
 bool         configMenuSound                      = false;
 bool         configMenuRandom                     = false;
@@ -282,7 +282,6 @@ static const struct ConfigOption options[] = {
     {.name = "coop_bouncy_bounds",             .type = CONFIG_TYPE_UINT,   .uintValue   = &configBouncyLevelBounds},
     {.name = "skip_intro",                     .type = CONFIG_TYPE_BOOL,   .boolValue   = &configSkipIntro},
     {.name = "pause_anywhere",                 .type = CONFIG_TYPE_BOOL,   .boolValue   = &configPauseAnywhere},
-    {.name = "coop_menu_staff_roll",           .type = CONFIG_TYPE_BOOL,   .boolValue   = &configMenuStaffRoll},
     {.name = "coop_menu_level",                .type = CONFIG_TYPE_UINT,   .uintValue   = &configMenuLevel},
     {.name = "coop_menu_sound",                .type = CONFIG_TYPE_BOOL,   .boolValue   = &configMenuSound},
     {.name = "coop_menu_random",               .type = CONFIG_TYPE_BOOL,   .boolValue   = &configMenuRandom},
