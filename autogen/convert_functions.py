@@ -97,7 +97,7 @@ override_disallowed_functions = {
     "src/game/mario.h":                     [ " init_mario" ],
     "src/pc/djui/djui_console.h":           [ " djui_console_create", "djui_console_message_create" ],
     "src/pc/djui/djui_chat_message.h":      [ "create_from" ],
-    "src/game/interaction.h":               [ "process_interactions", "_handle_" ],
+    "src/game/interaction.h":               [ "process_interaction", "_handle_" ],
     "src/game/sound_init.h":                [ "_loop_", "thread4_", "set_sound_mode" ],
     "src/pc/network/network_utils.h":       [ "network_get_player_text_color[^_]" ],
     "src/pc/network/network_player.h":      [ "_init", "_connected[^_]", "_shutdown", "_disconnected", "_update", "construct_player_popup" ],
@@ -797,17 +797,26 @@ def build_function(function, do_extern):
         return 0;
     }\n\n""" % (len(function['params']), function['identifier'], len(function['params']))
 
+    is_interact_func = fid.startswith('interact_') and fname == 'interaction.h'
+
     i = 1
     for param in function['params']:
-        s += build_param(param, i)
-        s += '    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %%u for function \'%%s\'", %d, "%s"); return 0; }\n' % (i, fid)
+        if is_interact_func and param['identifier'] == 'interactType':
+            s += "    // interactType skipped so mods can't lie about what interaction it is\n"
+        else:
+            s += build_param(param, i)
+            s += '    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %%u for function \'%%s\'", %d, "%s"); return 0; }\n' % (i, fid)
         i += 1
     s += '\n'
 
     if do_extern:
         s += '    extern %s\n' % function['line']
 
-    s += build_call(function)
+    if is_interact_func:
+        # special case for interaction functions to call the hooks associated with interactions
+        s += "    lua_pushinteger(L, process_interaction(m, " + fid.upper() + ", o, " + fid + "));\n"
+    else:
+        s += build_call(function)
 
     i = 1
     for param in function['params']:

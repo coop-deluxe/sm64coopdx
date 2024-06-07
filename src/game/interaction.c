@@ -2248,6 +2248,22 @@ void check_kick_or_punch_wall(struct MarioState *m) {
     }
 }
 
+// Intended for interactions triggered by mods
+u32 process_interaction(struct MarioState *m, u32 interactType, struct Object *o, u32 (*interact_function)(struct MarioState *, u32 interactType, struct Object *)) {
+    if (!m || !o) { return FALSE; }
+    bool allow = true;
+    smlua_call_event_hooks_interact_params_ret_bool(HOOK_ALLOW_INTERACT, m, o, interactType, &allow);
+    if (allow) {
+        if (interact_function(m, interactType, o)) {
+            smlua_call_event_hooks_interact_params(HOOK_ON_INTERACT, m, o, interactType, true);
+            return TRUE;
+        } else {
+            smlua_call_event_hooks_interact_params(HOOK_ON_INTERACT, m, o, interactType, false);
+        }
+    }
+    return FALSE;
+}
+
 void mario_process_interactions(struct MarioState *m) {
     if (!m) { return; }
     sDelayInvincTimer = FALSE;

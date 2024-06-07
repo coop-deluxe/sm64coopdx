@@ -13519,12 +13519,11 @@ int smlua_func_interact_bbh_entrance(lua_State* L) {
 
     struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "interact_bbh_entrance"); return 0; }
-    u32 interactType = smlua_to_integer(L, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "interact_bbh_entrance"); return 0; }
+    // interactType skipped so mods can't lie about what interaction it is
     struct Object* o = (struct Object*)smlua_to_cobject(L, 3, LOT_OBJECT);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "interact_bbh_entrance"); return 0; }
 
-    lua_pushinteger(L, interact_bbh_entrance(m, interactType, o));
+    lua_pushinteger(L, process_interaction(m, INTERACT_BBH_ENTRANCE, o, interact_bbh_entrance));
 
     return 1;
 }
@@ -13540,12 +13539,11 @@ int smlua_func_interact_bounce_top(lua_State* L) {
 
     struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "interact_bounce_top"); return 0; }
-    u32 interactType = smlua_to_integer(L, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "interact_bounce_top"); return 0; }
+    // interactType skipped so mods can't lie about what interaction it is
     struct Object* o = (struct Object*)smlua_to_cobject(L, 3, LOT_OBJECT);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "interact_bounce_top"); return 0; }
 
-    lua_pushinteger(L, interact_bounce_top(m, interactType, o));
+    lua_pushinteger(L, process_interaction(m, INTERACT_BOUNCE_TOP, o, interact_bounce_top));
 
     return 1;
 }
@@ -13561,12 +13559,11 @@ int smlua_func_interact_breakable(lua_State* L) {
 
     struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "interact_breakable"); return 0; }
-    u32 interactType = smlua_to_integer(L, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "interact_breakable"); return 0; }
+    // interactType skipped so mods can't lie about what interaction it is
     struct Object* o = (struct Object*)smlua_to_cobject(L, 3, LOT_OBJECT);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "interact_breakable"); return 0; }
 
-    lua_pushinteger(L, interact_breakable(m, interactType, o));
+    lua_pushinteger(L, process_interaction(m, INTERACT_BREAKABLE, o, interact_breakable));
 
     return 1;
 }
@@ -13582,12 +13579,11 @@ int smlua_func_interact_bully(lua_State* L) {
 
     struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "interact_bully"); return 0; }
-    u32 interactType = smlua_to_integer(L, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "interact_bully"); return 0; }
+    // interactType skipped so mods can't lie about what interaction it is
     struct Object* o = (struct Object*)smlua_to_cobject(L, 3, LOT_OBJECT);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "interact_bully"); return 0; }
 
-    lua_pushinteger(L, interact_bully(m, interactType, o));
+    lua_pushinteger(L, process_interaction(m, INTERACT_BULLY, o, interact_bully));
 
     return 1;
 }
@@ -13603,12 +13599,11 @@ int smlua_func_interact_cannon_base(lua_State* L) {
 
     struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "interact_cannon_base"); return 0; }
-    u32 interactType = smlua_to_integer(L, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "interact_cannon_base"); return 0; }
+    // interactType skipped so mods can't lie about what interaction it is
     struct Object* o = (struct Object*)smlua_to_cobject(L, 3, LOT_OBJECT);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "interact_cannon_base"); return 0; }
 
-    lua_pushinteger(L, interact_cannon_base(m, interactType, o));
+    lua_pushinteger(L, process_interaction(m, INTERACT_CANNON_BASE, o, interact_cannon_base));
 
     return 1;
 }
@@ -13624,12 +13619,11 @@ int smlua_func_interact_cap(lua_State* L) {
 
     struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "interact_cap"); return 0; }
-    u32 interactType = smlua_to_integer(L, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "interact_cap"); return 0; }
+    // interactType skipped so mods can't lie about what interaction it is
     struct Object* o = (struct Object*)smlua_to_cobject(L, 3, LOT_OBJECT);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "interact_cap"); return 0; }
 
-    lua_pushinteger(L, interact_cap(m, interactType, o));
+    lua_pushinteger(L, process_interaction(m, INTERACT_CAP, o, interact_cap));
 
     return 1;
 }
@@ -13645,12 +13639,11 @@ int smlua_func_interact_clam_or_bubba(lua_State* L) {
 
     struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "interact_clam_or_bubba"); return 0; }
-    u32 interactType = smlua_to_integer(L, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "interact_clam_or_bubba"); return 0; }
+    // interactType skipped so mods can't lie about what interaction it is
     struct Object* o = (struct Object*)smlua_to_cobject(L, 3, LOT_OBJECT);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "interact_clam_or_bubba"); return 0; }
 
-    lua_pushinteger(L, interact_clam_or_bubba(m, interactType, o));
+    lua_pushinteger(L, process_interaction(m, INTERACT_CLAM_OR_BUBBA, o, interact_clam_or_bubba));
 
     return 1;
 }
@@ -13666,12 +13659,11 @@ int smlua_func_interact_coin(lua_State* L) {
 
     struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "interact_coin"); return 0; }
-    u32 interactType = smlua_to_integer(L, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "interact_coin"); return 0; }
+    // interactType skipped so mods can't lie about what interaction it is
     struct Object* o = (struct Object*)smlua_to_cobject(L, 3, LOT_OBJECT);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "interact_coin"); return 0; }
 
-    lua_pushinteger(L, interact_coin(m, interactType, o));
+    lua_pushinteger(L, process_interaction(m, INTERACT_COIN, o, interact_coin));
 
     return 1;
 }
@@ -13687,12 +13679,11 @@ int smlua_func_interact_damage(lua_State* L) {
 
     struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "interact_damage"); return 0; }
-    u32 interactType = smlua_to_integer(L, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "interact_damage"); return 0; }
+    // interactType skipped so mods can't lie about what interaction it is
     struct Object* o = (struct Object*)smlua_to_cobject(L, 3, LOT_OBJECT);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "interact_damage"); return 0; }
 
-    lua_pushinteger(L, interact_damage(m, interactType, o));
+    lua_pushinteger(L, process_interaction(m, INTERACT_DAMAGE, o, interact_damage));
 
     return 1;
 }
@@ -13708,12 +13699,11 @@ int smlua_func_interact_door(lua_State* L) {
 
     struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "interact_door"); return 0; }
-    u32 interactType = smlua_to_integer(L, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "interact_door"); return 0; }
+    // interactType skipped so mods can't lie about what interaction it is
     struct Object* o = (struct Object*)smlua_to_cobject(L, 3, LOT_OBJECT);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "interact_door"); return 0; }
 
-    lua_pushinteger(L, interact_door(m, interactType, o));
+    lua_pushinteger(L, process_interaction(m, INTERACT_DOOR, o, interact_door));
 
     return 1;
 }
@@ -13729,12 +13719,11 @@ int smlua_func_interact_flame(lua_State* L) {
 
     struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "interact_flame"); return 0; }
-    u32 interactType = smlua_to_integer(L, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "interact_flame"); return 0; }
+    // interactType skipped so mods can't lie about what interaction it is
     struct Object* o = (struct Object*)smlua_to_cobject(L, 3, LOT_OBJECT);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "interact_flame"); return 0; }
 
-    lua_pushinteger(L, interact_flame(m, interactType, o));
+    lua_pushinteger(L, process_interaction(m, INTERACT_FLAME, o, interact_flame));
 
     return 1;
 }
@@ -13750,12 +13739,11 @@ int smlua_func_interact_grabbable(lua_State* L) {
 
     struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "interact_grabbable"); return 0; }
-    u32 interactType = smlua_to_integer(L, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "interact_grabbable"); return 0; }
+    // interactType skipped so mods can't lie about what interaction it is
     struct Object* o = (struct Object*)smlua_to_cobject(L, 3, LOT_OBJECT);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "interact_grabbable"); return 0; }
 
-    lua_pushinteger(L, interact_grabbable(m, interactType, o));
+    lua_pushinteger(L, process_interaction(m, INTERACT_GRABBABLE, o, interact_grabbable));
 
     return 1;
 }
@@ -13771,12 +13759,11 @@ int smlua_func_interact_hit_from_below(lua_State* L) {
 
     struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "interact_hit_from_below"); return 0; }
-    u32 interactType = smlua_to_integer(L, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "interact_hit_from_below"); return 0; }
+    // interactType skipped so mods can't lie about what interaction it is
     struct Object* o = (struct Object*)smlua_to_cobject(L, 3, LOT_OBJECT);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "interact_hit_from_below"); return 0; }
 
-    lua_pushinteger(L, interact_hit_from_below(m, interactType, o));
+    lua_pushinteger(L, process_interaction(m, INTERACT_HIT_FROM_BELOW, o, interact_hit_from_below));
 
     return 1;
 }
@@ -13792,12 +13779,11 @@ int smlua_func_interact_hoot(lua_State* L) {
 
     struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "interact_hoot"); return 0; }
-    u32 interactType = smlua_to_integer(L, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "interact_hoot"); return 0; }
+    // interactType skipped so mods can't lie about what interaction it is
     struct Object* o = (struct Object*)smlua_to_cobject(L, 3, LOT_OBJECT);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "interact_hoot"); return 0; }
 
-    lua_pushinteger(L, interact_hoot(m, interactType, o));
+    lua_pushinteger(L, process_interaction(m, INTERACT_HOOT, o, interact_hoot));
 
     return 1;
 }
@@ -13813,12 +13799,11 @@ int smlua_func_interact_igloo_barrier(lua_State* L) {
 
     struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "interact_igloo_barrier"); return 0; }
-    u32 interactType = smlua_to_integer(L, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "interact_igloo_barrier"); return 0; }
+    // interactType skipped so mods can't lie about what interaction it is
     struct Object* o = (struct Object*)smlua_to_cobject(L, 3, LOT_OBJECT);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "interact_igloo_barrier"); return 0; }
 
-    lua_pushinteger(L, interact_igloo_barrier(m, interactType, o));
+    lua_pushinteger(L, process_interaction(m, INTERACT_IGLOO_BARRIER, o, interact_igloo_barrier));
 
     return 1;
 }
@@ -13834,12 +13819,11 @@ int smlua_func_interact_koopa_shell(lua_State* L) {
 
     struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "interact_koopa_shell"); return 0; }
-    u32 interactType = smlua_to_integer(L, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "interact_koopa_shell"); return 0; }
+    // interactType skipped so mods can't lie about what interaction it is
     struct Object* o = (struct Object*)smlua_to_cobject(L, 3, LOT_OBJECT);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "interact_koopa_shell"); return 0; }
 
-    lua_pushinteger(L, interact_koopa_shell(m, interactType, o));
+    lua_pushinteger(L, process_interaction(m, INTERACT_KOOPA_SHELL, o, interact_koopa_shell));
 
     return 1;
 }
@@ -13855,12 +13839,11 @@ int smlua_func_interact_mr_blizzard(lua_State* L) {
 
     struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "interact_mr_blizzard"); return 0; }
-    u32 interactType = smlua_to_integer(L, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "interact_mr_blizzard"); return 0; }
+    // interactType skipped so mods can't lie about what interaction it is
     struct Object* o = (struct Object*)smlua_to_cobject(L, 3, LOT_OBJECT);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "interact_mr_blizzard"); return 0; }
 
-    lua_pushinteger(L, interact_mr_blizzard(m, interactType, o));
+    lua_pushinteger(L, process_interaction(m, INTERACT_MR_BLIZZARD, o, interact_mr_blizzard));
 
     return 1;
 }
@@ -13876,12 +13859,11 @@ int smlua_func_interact_player(lua_State* L) {
 
     struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "interact_player"); return 0; }
-    u32 interactType = smlua_to_integer(L, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "interact_player"); return 0; }
+    // interactType skipped so mods can't lie about what interaction it is
     struct Object* o = (struct Object*)smlua_to_cobject(L, 3, LOT_OBJECT);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "interact_player"); return 0; }
 
-    lua_pushinteger(L, interact_player(m, interactType, o));
+    lua_pushinteger(L, process_interaction(m, INTERACT_PLAYER, o, interact_player));
 
     return 1;
 }
@@ -13897,12 +13879,11 @@ int smlua_func_interact_pole(lua_State* L) {
 
     struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "interact_pole"); return 0; }
-    u32 interactType = smlua_to_integer(L, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "interact_pole"); return 0; }
+    // interactType skipped so mods can't lie about what interaction it is
     struct Object* o = (struct Object*)smlua_to_cobject(L, 3, LOT_OBJECT);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "interact_pole"); return 0; }
 
-    lua_pushinteger(L, interact_pole(m, interactType, o));
+    lua_pushinteger(L, process_interaction(m, INTERACT_POLE, o, interact_pole));
 
     return 1;
 }
@@ -13918,12 +13899,11 @@ int smlua_func_interact_shock(lua_State* L) {
 
     struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "interact_shock"); return 0; }
-    u32 interactType = smlua_to_integer(L, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "interact_shock"); return 0; }
+    // interactType skipped so mods can't lie about what interaction it is
     struct Object* o = (struct Object*)smlua_to_cobject(L, 3, LOT_OBJECT);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "interact_shock"); return 0; }
 
-    lua_pushinteger(L, interact_shock(m, interactType, o));
+    lua_pushinteger(L, process_interaction(m, INTERACT_SHOCK, o, interact_shock));
 
     return 1;
 }
@@ -13939,12 +13919,11 @@ int smlua_func_interact_snufit_bullet(lua_State* L) {
 
     struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "interact_snufit_bullet"); return 0; }
-    u32 interactType = smlua_to_integer(L, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "interact_snufit_bullet"); return 0; }
+    // interactType skipped so mods can't lie about what interaction it is
     struct Object* o = (struct Object*)smlua_to_cobject(L, 3, LOT_OBJECT);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "interact_snufit_bullet"); return 0; }
 
-    lua_pushinteger(L, interact_snufit_bullet(m, interactType, o));
+    lua_pushinteger(L, process_interaction(m, INTERACT_SNUFIT_BULLET, o, interact_snufit_bullet));
 
     return 1;
 }
@@ -13960,12 +13939,11 @@ int smlua_func_interact_spiny_walking(lua_State* L) {
 
     struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "interact_spiny_walking"); return 0; }
-    u32 interactType = smlua_to_integer(L, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "interact_spiny_walking"); return 0; }
+    // interactType skipped so mods can't lie about what interaction it is
     struct Object* o = (struct Object*)smlua_to_cobject(L, 3, LOT_OBJECT);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "interact_spiny_walking"); return 0; }
 
-    lua_pushinteger(L, interact_spiny_walking(m, interactType, o));
+    lua_pushinteger(L, process_interaction(m, INTERACT_SPINY_WALKING, o, interact_spiny_walking));
 
     return 1;
 }
@@ -13981,12 +13959,11 @@ int smlua_func_interact_star_or_key(lua_State* L) {
 
     struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "interact_star_or_key"); return 0; }
-    u32 interactType = smlua_to_integer(L, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "interact_star_or_key"); return 0; }
+    // interactType skipped so mods can't lie about what interaction it is
     struct Object* o = (struct Object*)smlua_to_cobject(L, 3, LOT_OBJECT);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "interact_star_or_key"); return 0; }
 
-    lua_pushinteger(L, interact_star_or_key(m, interactType, o));
+    lua_pushinteger(L, process_interaction(m, INTERACT_STAR_OR_KEY, o, interact_star_or_key));
 
     return 1;
 }
@@ -14002,12 +13979,11 @@ int smlua_func_interact_strong_wind(lua_State* L) {
 
     struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "interact_strong_wind"); return 0; }
-    u32 interactType = smlua_to_integer(L, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "interact_strong_wind"); return 0; }
+    // interactType skipped so mods can't lie about what interaction it is
     struct Object* o = (struct Object*)smlua_to_cobject(L, 3, LOT_OBJECT);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "interact_strong_wind"); return 0; }
 
-    lua_pushinteger(L, interact_strong_wind(m, interactType, o));
+    lua_pushinteger(L, process_interaction(m, INTERACT_STRONG_WIND, o, interact_strong_wind));
 
     return 1;
 }
@@ -14023,12 +13999,11 @@ int smlua_func_interact_text(lua_State* L) {
 
     struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "interact_text"); return 0; }
-    u32 interactType = smlua_to_integer(L, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "interact_text"); return 0; }
+    // interactType skipped so mods can't lie about what interaction it is
     struct Object* o = (struct Object*)smlua_to_cobject(L, 3, LOT_OBJECT);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "interact_text"); return 0; }
 
-    lua_pushinteger(L, interact_text(m, interactType, o));
+    lua_pushinteger(L, process_interaction(m, INTERACT_TEXT, o, interact_text));
 
     return 1;
 }
@@ -14044,12 +14019,11 @@ int smlua_func_interact_tornado(lua_State* L) {
 
     struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "interact_tornado"); return 0; }
-    u32 interactType = smlua_to_integer(L, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "interact_tornado"); return 0; }
+    // interactType skipped so mods can't lie about what interaction it is
     struct Object* o = (struct Object*)smlua_to_cobject(L, 3, LOT_OBJECT);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "interact_tornado"); return 0; }
 
-    lua_pushinteger(L, interact_tornado(m, interactType, o));
+    lua_pushinteger(L, process_interaction(m, INTERACT_TORNADO, o, interact_tornado));
 
     return 1;
 }
@@ -14065,12 +14039,11 @@ int smlua_func_interact_warp(lua_State* L) {
 
     struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "interact_warp"); return 0; }
-    u32 interactType = smlua_to_integer(L, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "interact_warp"); return 0; }
+    // interactType skipped so mods can't lie about what interaction it is
     struct Object* o = (struct Object*)smlua_to_cobject(L, 3, LOT_OBJECT);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "interact_warp"); return 0; }
 
-    lua_pushinteger(L, interact_warp(m, interactType, o));
+    lua_pushinteger(L, process_interaction(m, INTERACT_WARP, o, interact_warp));
 
     return 1;
 }
@@ -14086,12 +14059,11 @@ int smlua_func_interact_warp_door(lua_State* L) {
 
     struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "interact_warp_door"); return 0; }
-    u32 interactType = smlua_to_integer(L, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "interact_warp_door"); return 0; }
+    // interactType skipped so mods can't lie about what interaction it is
     struct Object* o = (struct Object*)smlua_to_cobject(L, 3, LOT_OBJECT);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "interact_warp_door"); return 0; }
 
-    lua_pushinteger(L, interact_warp_door(m, interactType, o));
+    lua_pushinteger(L, process_interaction(m, INTERACT_WARP_DOOR, o, interact_warp_door));
 
     return 1;
 }
@@ -14107,12 +14079,11 @@ int smlua_func_interact_water_ring(lua_State* L) {
 
     struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "interact_water_ring"); return 0; }
-    u32 interactType = smlua_to_integer(L, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "interact_water_ring"); return 0; }
+    // interactType skipped so mods can't lie about what interaction it is
     struct Object* o = (struct Object*)smlua_to_cobject(L, 3, LOT_OBJECT);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "interact_water_ring"); return 0; }
 
-    lua_pushinteger(L, interact_water_ring(m, interactType, o));
+    lua_pushinteger(L, process_interaction(m, INTERACT_WATER_RING, o, interact_water_ring));
 
     return 1;
 }
@@ -14128,12 +14099,11 @@ int smlua_func_interact_whirlpool(lua_State* L) {
 
     struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "interact_whirlpool"); return 0; }
-    u32 interactType = smlua_to_integer(L, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "interact_whirlpool"); return 0; }
+    // interactType skipped so mods can't lie about what interaction it is
     struct Object* o = (struct Object*)smlua_to_cobject(L, 3, LOT_OBJECT);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "interact_whirlpool"); return 0; }
 
-    lua_pushinteger(L, interact_whirlpool(m, interactType, o));
+    lua_pushinteger(L, process_interaction(m, INTERACT_WHIRLPOOL, o, interact_whirlpool));
 
     return 1;
 }
