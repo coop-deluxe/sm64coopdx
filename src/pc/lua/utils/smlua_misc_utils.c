@@ -503,14 +503,14 @@ void set_override_fov(f32 fov) {
 
 ///
 
-void set_override_near(f32 near) {
-    gOverrideNear = near;
+void set_override_near(f32 nearClip) {
+    gOverrideNear = nearClip;
 }
 
 ///
 
-void set_override_far(f32 far) {
-    gOverrideFar = far;
+void set_override_far(f32 farClip) {
+    gOverrideFar = farClip;
 }
 
 ///
