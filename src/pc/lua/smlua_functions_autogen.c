@@ -30040,6 +30040,66 @@ int smlua_func_get_vertex_color(lua_State* L) {
     return 1;
 }
 
+int smlua_func_get_volume_env(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "get_volume_env", 0, top);
+        return 0;
+    }
+
+
+    lua_pushnumber(L, get_volume_env());
+
+    return 1;
+}
+
+int smlua_func_get_volume_level(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "get_volume_level", 0, top);
+        return 0;
+    }
+
+
+    lua_pushnumber(L, get_volume_level());
+
+    return 1;
+}
+
+int smlua_func_get_volume_master(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "get_volume_master", 0, top);
+        return 0;
+    }
+
+
+    lua_pushnumber(L, get_volume_master());
+
+    return 1;
+}
+
+int smlua_func_get_volume_sfx(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "get_volume_sfx", 0, top);
+        return 0;
+    }
+
+
+    lua_pushnumber(L, get_volume_sfx());
+
+    return 1;
+}
+
 int smlua_func_get_water_level(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -30629,6 +30689,74 @@ int smlua_func_set_vertex_color(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "set_vertex_color"); return 0; }
 
     set_vertex_color(index, value);
+
+    return 1;
+}
+
+int smlua_func_set_volume_env(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "set_volume_env", 1, top);
+        return 0;
+    }
+
+    f32 volume = smlua_to_number(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "set_volume_env"); return 0; }
+
+    set_volume_env(volume);
+
+    return 1;
+}
+
+int smlua_func_set_volume_level(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "set_volume_level", 1, top);
+        return 0;
+    }
+
+    f32 volume = smlua_to_number(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "set_volume_level"); return 0; }
+
+    set_volume_level(volume);
+
+    return 1;
+}
+
+int smlua_func_set_volume_master(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "set_volume_master", 1, top);
+        return 0;
+    }
+
+    f32 volume = smlua_to_number(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "set_volume_master"); return 0; }
+
+    set_volume_master(volume);
+
+    return 1;
+}
+
+int smlua_func_set_volume_sfx(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "set_volume_sfx", 1, top);
+        return 0;
+    }
+
+    f32 volume = smlua_to_number(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "set_volume_sfx"); return 0; }
+
+    set_volume_sfx(volume);
 
     return 1;
 }
@@ -34113,6 +34241,10 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "get_time", smlua_func_get_time);
     smlua_bind_function(L, "get_ttc_speed_setting", smlua_func_get_ttc_speed_setting);
     smlua_bind_function(L, "get_vertex_color", smlua_func_get_vertex_color);
+    smlua_bind_function(L, "get_volume_env", smlua_func_get_volume_env);
+    smlua_bind_function(L, "get_volume_level", smlua_func_get_volume_level);
+    smlua_bind_function(L, "get_volume_master", smlua_func_get_volume_master);
+    smlua_bind_function(L, "get_volume_sfx", smlua_func_get_volume_sfx);
     smlua_bind_function(L, "get_water_level", smlua_func_get_water_level);
     smlua_bind_function(L, "hud_get_flash", smlua_func_hud_get_flash);
     smlua_bind_function(L, "hud_get_value", smlua_func_hud_get_value);
@@ -34146,6 +34278,10 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "set_save_file_modified", smlua_func_set_save_file_modified);
     smlua_bind_function(L, "set_ttc_speed_setting", smlua_func_set_ttc_speed_setting);
     smlua_bind_function(L, "set_vertex_color", smlua_func_set_vertex_color);
+    smlua_bind_function(L, "set_volume_env", smlua_func_set_volume_env);
+    smlua_bind_function(L, "set_volume_level", smlua_func_set_volume_level);
+    smlua_bind_function(L, "set_volume_master", smlua_func_set_volume_master);
+    smlua_bind_function(L, "set_volume_sfx", smlua_func_set_volume_sfx);
     smlua_bind_function(L, "set_water_level", smlua_func_set_water_level);
     smlua_bind_function(L, "set_window_title", smlua_func_set_window_title);
 

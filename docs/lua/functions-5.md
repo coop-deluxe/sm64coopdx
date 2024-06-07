@@ -2163,6 +2163,78 @@
 
 <br />
 
+## [get_volume_env](#get_volume_env)
+
+### Lua Example
+`local numberValue = get_volume_env()`
+
+### Parameters
+- None
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 get_volume_env(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_volume_level](#get_volume_level)
+
+### Lua Example
+`local numberValue = get_volume_level()`
+
+### Parameters
+- None
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 get_volume_level(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_volume_master](#get_volume_master)
+
+### Lua Example
+`local numberValue = get_volume_master()`
+
+### Parameters
+- None
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 get_volume_master(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_volume_sfx](#get_volume_sfx)
+
+### Lua Example
+`local numberValue = get_volume_sfx()`
+
+### Parameters
+- None
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 get_volume_sfx(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [get_water_level](#get_water_level)
 
 ### Lua Example
@@ -2826,6 +2898,86 @@
 
 ### C Prototype
 `void set_vertex_color(u8 index, u8 value);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_volume_env](#set_volume_env)
+
+### Lua Example
+`set_volume_env(volume)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| volume | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_volume_env(f32 volume);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_volume_level](#set_volume_level)
+
+### Lua Example
+`set_volume_level(volume)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| volume | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_volume_level(f32 volume);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_volume_master](#set_volume_master)
+
+### Lua Example
+`set_volume_master(volume)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| volume | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_volume_master(f32 volume);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_volume_sfx](#set_volume_sfx)
+
+### Lua Example
+`set_volume_sfx(volume)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| volume | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_volume_sfx(f32 volume);`
 
 [:arrow_up_small:](#)
 

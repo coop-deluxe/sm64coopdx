@@ -24,6 +24,7 @@
 #include "include/course_table.h"
 #include "game/level_geo.h"
 #include "game/first_person_cam.h"
+#include "pc/lua/utils/smlua_math_utils.h"
 
 #ifdef DISCORD_SDK
 #include "pc/discord/discord.h"
@@ -651,6 +652,40 @@ const char* get_local_discord_id(void) {
 #else
     return NULL;
 #endif
+}
+
+///
+
+f32 get_volume_master(void) {
+    return gLuaVolumeMaster;
+}
+
+f32 get_volume_level(void) {
+    return gLuaVolumeLevel;
+}
+
+f32 get_volume_sfx(void) {
+    return gLuaVolumeSfx;
+}
+
+f32 get_volume_env(void) {
+    return gLuaVolumeEnv;
+}
+
+void set_volume_master(f32 volume) {
+    gLuaVolumeMaster = clampf(volume, 0.0f, 1.0f);
+}
+
+void set_volume_level(f32 volume) {
+    gLuaVolumeLevel = clampf(volume, 0.0f, 1.0f);
+}
+
+void set_volume_sfx(f32 volume) {
+    gLuaVolumeSfx = clampf(volume, 0.0f, 1.0f);
+}
+
+void set_volume_env(f32 volume) {
+    gLuaVolumeEnv = clampf(volume, 0.0f, 1.0f);
 }
 
 ///

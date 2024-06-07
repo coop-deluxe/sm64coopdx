@@ -8148,6 +8148,26 @@ function get_vertex_color(index)
     -- ...
 end
 
+--- @return number
+function get_volume_env()
+    -- ...
+end
+
+--- @return number
+function get_volume_level()
+    -- ...
+end
+
+--- @return number
+function get_volume_master()
+    -- ...
+end
+
+--- @return number
+function get_volume_sfx()
+    -- ...
+end
+
 --- @param index integer
 --- @return integer
 function get_water_level(index)
@@ -8333,6 +8353,26 @@ end
 --- @param index integer
 --- @param value integer
 function set_vertex_color(index, value)
+    -- ...
+end
+
+--- @param volume number
+function set_volume_env(volume)
+    -- ...
+end
+
+--- @param volume number
+function set_volume_level(volume)
+    -- ...
+end
+
+--- @param volume number
+function set_volume_master(volume)
+    -- ...
+end
+
+--- @param volume number
+function set_volume_sfx(volume)
     -- ...
 end
 

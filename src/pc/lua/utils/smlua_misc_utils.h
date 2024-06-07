@@ -169,6 +169,15 @@ bool djui_is_playerlist_open(void);
 
 const char* get_local_discord_id(void);
 
+f32 get_volume_master(void);
+f32 get_volume_level(void);
+f32 get_volume_sfx(void);
+f32 get_volume_env(void);
+void set_volume_master(f32 volume);
+void set_volume_level(f32 volume);
+void set_volume_sfx(f32 volume);
+void set_volume_env(f32 volume);
+
 void set_window_title(const char* title);
 void reset_window_title(void);
 

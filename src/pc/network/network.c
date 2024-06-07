@@ -20,8 +20,9 @@
 #include "pc/mods/mods.h"
 #include "pc/crash_handler.h"
 #include "pc/debuglog.h"
-#include "game/camera.h"
+#include "pc/pc_main.h"
 #include "pc/gfx/gfx_pc.h"
+#include "game/camera.h"
 #include "game/skybox.h"
 #include "game/object_list_processor.h"
 #include "game/object_helpers.h"
@@ -699,6 +700,10 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
     gOverrideDialogColor = 0;
     gDialogMinWidth = 0;
     gOverrideAllowToxicGasCamera = FALSE;
+    gLuaVolumeMaster = 1.0f;
+    gLuaVolumeLevel = 1.0f;
+    gLuaVolumeSfx = 1.0f;
+    gLuaVolumeEnv = 1.0f;
 
     struct Controller* cnt = gPlayer1Controller;
     cnt->rawStickX = 0;
