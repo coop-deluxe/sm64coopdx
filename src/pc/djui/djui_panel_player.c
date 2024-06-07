@@ -338,8 +338,8 @@ static void djui_panel_player_prevent_demo(struct DjuiBase* caller) {
 }
 
 static void djui_panel_player_update_camera_cutscene(void) {
-    if (gMarioState->area && gMarioState->area->camera && gMarioState->area->camera->cutscene == 0) {
-        gMarioState->area->camera->cutscene = CUTSCENE_PALETTE_EDITOR;
+    if (gCamera && gCamera->cutscene == 0) {
+        gCamera->cutscene = CUTSCENE_PALETTE_EDITOR;
     }
 }
 
@@ -412,7 +412,7 @@ void djui_panel_player_create(struct DjuiBase* caller) {
             if (sPalettePresetIndex >= gPresetPaletteCount) {
                 sPalettePresetIndex = 0;
             }
-            
+
             for (int i = 0; i < gPresetPaletteCount; i++) {
                 palettePresets[i + 1] = gPresetPalettes[i].name;
 
@@ -425,6 +425,13 @@ void djui_panel_player_create(struct DjuiBase* caller) {
 
         djui_button_create(body, DLANG(PLAYER, EDIT_PALETTE), DJUI_BUTTON_STYLE_NORMAL, djui_panel_player_edit_palette_create);
         djui_button_create(body, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
+
+        {
+            struct DjuiText *text = djui_text_create(body, DLANG(PLAYER, CAP_TOGGLE));
+            djui_text_set_alignment(text, DJUI_HALIGN_CENTER, DJUI_VALIGN_TOP);
+            djui_base_set_size_type(&text->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+            djui_base_set_size(&text->base, 1.0f, 64);
+        }
     }
 
     struct DjuiPanel* p = djui_panel_add(caller, panel, NULL);

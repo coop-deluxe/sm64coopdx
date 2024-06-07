@@ -574,60 +574,17 @@ static int smlua__set_field(lua_State* L) {
 void smlua_cobject_init_globals(void) {
     lua_State* L = gLuaState;
 
-    {
-        lua_newtable(L);
-        int t = lua_gettop(gLuaState);
-        for (s32 i = 0; i < MAX_PLAYERS; i++) {
-            lua_pushinteger(L, i);
-            smlua_push_object(L, LOT_MARIOSTATE, &gMarioStates[i]);
-            lua_settable(L, t);
-        }
-        lua_setglobal(L, "gMarioStates");
-    }
-
-    {
-        lua_newtable(L);
-        int t = lua_gettop(gLuaState);
-        for (s32 i = 0; i < MAX_PLAYERS; i++) {
-            lua_pushinteger(L, i);
-            smlua_push_object(L, LOT_NETWORKPLAYER, &gNetworkPlayers[i]);
-            lua_settable(L, t);
-        }
-        lua_setglobal(L, "gNetworkPlayers");
-    }
-
-    {
-        lua_newtable(L);
-        int t = lua_gettop(gLuaState);
-        for (s32 i = 0; i < gActiveMods.entryCount; i++) {
-            lua_pushinteger(L, i);
-            smlua_push_object(L, LOT_MOD, gActiveMods.entries[i]);
-            lua_settable(L, t);
-        }
-        lua_setglobal(L, "gActiveMods");
-    }
-
-    {
-        lua_newtable(L);
-        int t = lua_gettop(gLuaState);
-        for (s32 i = 0; i < CT_MAX; i++) {
-            lua_pushinteger(L, i);
-            smlua_push_object(L, LOT_CHARACTER, &gCharacters[i]);
-            lua_settable(L, t);
-        }
-        lua_setglobal(L, "gCharacters");
-    }
-
-    {
-        lua_newtable(L);
-        int t = lua_gettop(gLuaState);
-        for (s32 i = 0; i < MAX_PLAYERS; i++) {
-            lua_pushinteger(L, i);
-            smlua_push_object(L, LOT_CONTROLLER, &gControllers[i]);
-            lua_settable(L, t);
-        }
-        lua_setglobal(L, "gControllers");
-    }
+#define EXPOSE_GLOBAL_ARRAY(lot, ptr, iterator) \
+    { \
+        lua_newtable(L); \
+        int t = lua_gettop(gLuaState); \
+        for (s32 i = 0; i < iterator; i++) { \
+            lua_pushinteger(L, i); \
+            smlua_push_object(L, lot, &ptr[i]); \
+            lua_settable(L, t); \
+        } \
+        lua_setglobal(L, #ptr); \
+    } \
 
 #define EXPOSE_GLOBAL(lot, ptr) \
     { \
@@ -641,13 +598,36 @@ void smlua_cobject_init_globals(void) {
         lua_setglobal(L, name); \
     } \
 
+    // Array structs
+
+    EXPOSE_GLOBAL_ARRAY(LOT_MARIOSTATE, gMarioStates, MAX_PLAYERS);
+
+    EXPOSE_GLOBAL_ARRAY(LOT_NETWORKPLAYER, gNetworkPlayers, MAX_PLAYERS);
+
+    {
+        lua_newtable(L);
+        int t = lua_gettop(gLuaState);
+        for (s32 i = 0; i < gActiveMods.entryCount; i++) {
+            lua_pushinteger(L, i);
+            smlua_push_object(L, LOT_MOD, gActiveMods.entries[i]);
+            lua_settable(L, t);
+        }
+        lua_setglobal(L, "gActiveMods");
+    }
+
+    EXPOSE_GLOBAL_ARRAY(LOT_CHARACTER, gCharacters, CT_MAX);
+
+    EXPOSE_GLOBAL_ARRAY(LOT_CONTROLLER, gControllers, MAX_PLAYERS);
+
+    // Structs
+
     EXPOSE_GLOBAL_WITH_NAME(LOT_GLOBALTEXTURES, gGlobalTextures, "gTextures");
 
     EXPOSE_GLOBAL_WITH_NAME(LOT_GLOBALOBJECTANIMATIONS, gGlobalObjectAnimations, "gObjectAnimations");
 
     EXPOSE_GLOBAL(LOT_PAINTINGVALUES, gPaintingValues);
 
-    EXPOSE_GLOBAL(LOT_GLOBALOBJECTCOLLISIONDATA, gGlobalObjectCollisionData); // I wish we named this gObjectCollisionData
+    EXPOSE_GLOBAL(LOT_GLOBALOBJECTCOLLISIONDATA, gGlobalObjectCollisionData);
 
     EXPOSE_GLOBAL(LOT_LEVELVALUES, gLevelValues);
 

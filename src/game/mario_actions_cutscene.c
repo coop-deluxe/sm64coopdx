@@ -1863,12 +1863,13 @@ s32 act_squished(struct MarioState *m) {
 s32 act_putting_on_cap(struct MarioState *m) {
     s32 animFrame = set_character_animation(m, CHAR_ANIM_PUT_CAP_ON);
 
-    if (animFrame == 0 && !m->area->camera->paletteEditorCap) {
+    if (animFrame == 0 && !gCamera->paletteEditorCap) {
         enable_time_stop_if_alone();
     }
 
     if (animFrame == 28) {
         cutscene_put_cap_on(m);
+        gCamera->paletteEditorCap = false;
     }
 
     if (is_anim_at_end(m)) {
@@ -1885,16 +1886,19 @@ s32 act_taking_off_cap(struct MarioState *m) {
     s16 animFrame = set_character_animation(m, CHAR_ANIM_TAKE_CAP_OFF_THEN_ON);
     switch (animFrame) {
         case 0:
-            if (!m->area->camera->paletteEditorCap) {
+            if (!gCamera->paletteEditorCap) {
                 enable_time_stop_if_alone();
             }
             break;
         case 12:
             cutscene_take_cap_off(m);
+            if (gCamera->cutscene == CUTSCENE_PALETTE_EDITOR) { gCamera->paletteEditorCap = true; }
             break;
-        case 30:
-            set_mario_action(m, ACT_IDLE, 0);
-            disable_time_stop();
+        default:
+            if (animFrame >= 30) {
+                set_mario_action(m, ACT_IDLE, 0);
+                disable_time_stop();
+            }
             break;
     }
 

@@ -3348,8 +3348,9 @@ void update_camera(struct Camera *c) {
     gLakituState.lastFrameAction = sMarioCamState->action;
 
     // Make sure the palette editor cutscene is properly reset
-    if (c->paletteEditorCap && c->cutscene != CUTSCENE_PALETTE_EDITOR && (gMarioState->flags & MARIO_CAP_ON_HEAD) == 0) {
-        cutscene_put_cap_on(gMarioState);
+    struct MarioState *m = gMarioState;
+    if (c->paletteEditorCap && c->cutscene != CUTSCENE_PALETTE_EDITOR && !(m->flags & MARIO_CAP_ON_HEAD) && m->action != ACT_PUTTING_ON_CAP) {
+        cutscene_put_cap_on(m);
         c->paletteEditorCap = false;
     }
 }
@@ -10865,18 +10866,37 @@ void cutscene_palette_editor(struct Camera *c) {
 
     if (!gInPlayerMenu) {
         if (c->paletteEditorCap) {
-            if (!(m->flags & MARIO_CAP_ON_HEAD)) {
+            if (m->action == ACT_IDLE && !(m->flags & MARIO_CAP_ON_HEAD)) {
                 set_mario_action(m, ACT_PUTTING_ON_CAP, 0);
             }
-            c->paletteEditorCap = false;
         }
         gCutsceneTimer = CUTSCENE_STOP;
         c->cutscene = 0;
         return;
     }
-    if (m->action == ACT_IDLE && m->flags & MARIO_CAP_ON_HEAD) {
-        set_mario_action(m, ACT_TAKING_OFF_CAP, 0);
-        c->paletteEditorCap = true;
+
+    static bool pressed = false;
+    if (gInteractablePad.button & PAD_BUTTON_Z) {
+        if (!pressed && m->action != ACT_TAKING_OFF_CAP && m->action != ACT_PUTTING_ON_CAP) {
+            if (m->flags & MARIO_CAP_ON_HEAD) {
+                if (m->action == ACT_IDLE) {
+                    set_mario_action(m, ACT_TAKING_OFF_CAP, 0);
+                } else {
+                    cutscene_take_cap_off(m);
+                    gCamera->paletteEditorCap = true;
+                }
+            } else {
+                if (m->action == ACT_IDLE) {
+                    set_mario_action(m, ACT_PUTTING_ON_CAP, 0);
+                } else {
+                    cutscene_put_cap_on(m);
+                    gCamera->paletteEditorCap = false;
+                }
+            }
+        }
+        pressed = true;
+    } else {
+        pressed = false;
     }
 
     c->pos[0] = m->pos[0] + (0x200 * sins(m->faceAngle[1]));

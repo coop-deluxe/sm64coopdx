@@ -4,6 +4,7 @@
 
 #define PAD_BUTTON_A     ((u16)(1 << 15))
 #define PAD_BUTTON_B     ((u16)(1 << 14))
+#define PAD_BUTTON_Z     ((u16)(1 << 13))
 #define PAD_BUTTON_START ((u16)(1 << 12))
 
 #define MOUSE_BUTTON_1  ((u16)(1 << 0))
