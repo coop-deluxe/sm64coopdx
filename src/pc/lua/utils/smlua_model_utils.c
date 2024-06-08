@@ -493,7 +493,7 @@ u16 smlua_model_util_load(enum ModelExtendedId extId) {
     return (u16)id;
 }
 
-u32 smlua_model_util_get_id(const char* name) {
+enum ModelExtendedId smlua_model_util_get_id(const char* name) {
     // find geolayout
     const void* asset = dynos_geolayout_get(name);
     if (asset == NULL) {

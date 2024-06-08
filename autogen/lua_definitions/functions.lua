@@ -8389,7 +8389,7 @@ function set_window_title(title)
 end
 
 --- @param name string
---- @return integer
+--- @return ModelExtendedId
 function smlua_model_util_get_id(name)
     -- ...
 end

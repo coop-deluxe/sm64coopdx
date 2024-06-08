@@ -3034,7 +3034,7 @@
 ## [smlua_model_util_get_id](#smlua_model_util_get_id)
 
 ### Lua Example
-`local integerValue = smlua_model_util_get_id(name)`
+`local enumValue = smlua_model_util_get_id(name)`
 
 ### Parameters
 | Field | Type |
@@ -3042,10 +3042,10 @@
 | name | `string` |
 
 ### Returns
-- `integer`
+[enum ModelExtendedId](constants.md#enum-ModelExtendedId)
 
 ### C Prototype
-`u32 smlua_model_util_get_id(const char* name);`
+`enum ModelExtendedId smlua_model_util_get_id(const char* name);`
 
 [:arrow_up_small:](#)
 

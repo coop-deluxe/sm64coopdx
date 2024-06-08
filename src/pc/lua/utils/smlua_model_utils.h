@@ -398,6 +398,6 @@ enum ModelExtendedId {
 void smlua_model_util_clear(void);
 void smlua_model_util_store_in_slot(u32 slot, const char* name);
 u16 smlua_model_util_load(enum ModelExtendedId extId);
-u32 smlua_model_util_get_id(const char* name);
+enum ModelExtendedId smlua_model_util_get_id(const char* name);
 
 #endif
