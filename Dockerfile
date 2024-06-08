@@ -8,7 +8,8 @@ RUN apt-get update && \
         libcapstone-dev \
         pkgconf \
         python3 \
-        libz-dev
+        libz-dev \
+        libcurl4-openssl-dev
 
 RUN mkdir /sm64
 WORKDIR /sm64
