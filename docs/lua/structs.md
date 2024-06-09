@@ -1449,6 +1449,7 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
+| baseVolume | `number` |  |
 | file | [ModFile](structs.md#ModFile) |  |
 | isStream | `boolean` |  |
 | sampleCopiesTail | [ModAudioSampleCopies](structs.md#ModAudioSampleCopies) |  |

@@ -25,6 +25,7 @@
 #include "game/level_geo.h"
 #include "game/first_person_cam.h"
 #include "pc/lua/utils/smlua_math_utils.h"
+#include "pc/lua/utils/smlua_audio_utils.h"
 
 #ifdef DISCORD_SDK
 #include "pc/discord/discord.h"
@@ -674,18 +675,22 @@ f32 get_volume_env(void) {
 
 void set_volume_master(f32 volume) {
     gLuaVolumeMaster = clampf(volume, 0.0f, 1.0f);
+    audio_custom_update_volume();
 }
 
 void set_volume_level(f32 volume) {
     gLuaVolumeLevel = clampf(volume, 0.0f, 1.0f);
+    audio_custom_update_volume();
 }
 
 void set_volume_sfx(f32 volume) {
     gLuaVolumeSfx = clampf(volume, 0.0f, 1.0f);
+    audio_custom_update_volume();
 }
 
 void set_volume_env(f32 volume) {
     gLuaVolumeEnv = clampf(volume, 0.0f, 1.0f);
+    audio_custom_update_volume();
 }
 
 ///

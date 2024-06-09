@@ -23,6 +23,7 @@ struct ModAudio {
     ma_sound sound;
     struct ModAudioSampleCopies* sampleCopiesTail;
     bool isStream;
+    f32 baseVolume;
 };
 
 struct ModAudio* audio_stream_load(const char* filename);
@@ -44,6 +45,8 @@ struct ModAudio* audio_sample_load(const char* filename);
 void audio_sample_destroy(struct ModAudio* audio);
 void audio_sample_stop(struct ModAudio* audio);
 void audio_sample_play(struct ModAudio* audio, Vec3f position, f32 volume);
+
+void audio_custom_update_volume(void);
 
 void audio_custom_shutdown(void);
 

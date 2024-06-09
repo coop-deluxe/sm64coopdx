@@ -1066,6 +1066,7 @@
 --- @field public selectable boolean
 
 --- @class ModAudio
+--- @field public baseVolume number
 --- @field public file ModFile
 --- @field public isStream boolean
 --- @field public sampleCopiesTail ModAudioSampleCopies
