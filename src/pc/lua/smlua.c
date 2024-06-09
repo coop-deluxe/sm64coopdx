@@ -31,6 +31,7 @@ void smlua_mod_warning(void) {
     struct Mod* mod = gLuaActiveMod;
     if (mod == NULL) { mod = gLuaLastHookMod; }
     if (mod == NULL) { return; }
+    if (mod->ignoreScriptWarnings) { return; }
     char txt[255] = { 0 };
     snprintf(txt, 254, "'%s\\#ffe600\\' is using deprecated functions!", mod->name);
     static const struct DjuiColor color = { 255, 230, 0, 255 };

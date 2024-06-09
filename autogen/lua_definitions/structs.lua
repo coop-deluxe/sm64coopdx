@@ -234,6 +234,9 @@
 --- @field public shakeSpeed integer
 --- @field public unusedIsSleeping integer
 
+--- @class CameraOverride
+--- @field public override boolean
+
 --- @class CameraStoredInfo
 --- @field public cannonYOffset number
 --- @field public focus Vec3f
@@ -1052,6 +1055,7 @@
 --- @field public description string
 --- @field public enabled boolean
 --- @field public fileCount integer
+--- @field public ignoreScriptWarnings boolean
 --- @field public incompatible string
 --- @field public index integer
 --- @field public isDirectory boolean

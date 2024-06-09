@@ -85,6 +85,7 @@ void network_send_mod_list(void) {
         packet_write(&p, &modSize, sizeof(u64));
         packet_write(&p, &mod->isDirectory, sizeof(u8));
         packet_write(&p, &mod->pausable, sizeof(u8));
+        packet_write(&p, &mod->ignoreScriptWarnings, sizeof(u8));
         packet_write(&p, &mod->fileCount, sizeof(u16));
         network_send_to(0, &p);
         LOG_INFO("    '%s': %llu", mod->name, (u64)mod->size);
@@ -224,6 +225,7 @@ void network_receive_mod_list_entry(struct Packet* p) {
     packet_read(p, &mod->size, sizeof(u64));
     packet_read(p, &mod->isDirectory, sizeof(u8));
     packet_read(p, &mod->pausable, sizeof(u8));
+    packet_read(p, &mod->ignoreScriptWarnings, sizeof(u8));
     normalize_path(mod->relativePath);
     LOG_INFO("    '%s': %llu", mod->name, (u64)mod->size);
 

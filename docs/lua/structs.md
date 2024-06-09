@@ -11,6 +11,7 @@
 - [BullyCollisionData](#BullyCollisionData)
 - [Camera](#Camera)
 - [CameraFOVStatus](#CameraFOVStatus)
+- [CameraOverride](#CameraOverride)
 - [CameraStoredInfo](#CameraStoredInfo)
 - [CameraTrigger](#CameraTrigger)
 - [ChainSegment](#ChainSegment)
@@ -386,6 +387,16 @@
 | shakePhase | `integer` |  |
 | shakeSpeed | `integer` |  |
 | unusedIsSleeping | `integer` |  |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [CameraOverride](#CameraOverride)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| override | `boolean` |  |
 
 [:arrow_up_small:](#)
 
@@ -1420,6 +1431,7 @@
 | description | `string` | read-only |
 | enabled | `boolean` | read-only |
 | fileCount | `integer` | read-only |
+| ignoreScriptWarnings | `boolean` | read-only |
 | incompatible | `string` | read-only |
 | index | `integer` | read-only |
 | isDirectory | `boolean` | read-only |

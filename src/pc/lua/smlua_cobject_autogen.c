@@ -287,6 +287,12 @@ static struct LuaObjectField sCameraFOVStatusFields[LUA_CAMERA_FOVSTATUS_FIELD_C
     { "unusedIsSleeping", LVT_U32, offsetof(struct CameraFOVStatus, unusedIsSleeping), false, LOT_NONE },
 };
 
+#define LUA_CAMERA_OVERRIDE_FIELD_COUNT 1
+static struct LuaObjectField sCameraOverrideFields[LUA_CAMERA_OVERRIDE_FIELD_COUNT] = {
+    { "override", LVT_BOOL, offsetof(struct CameraOverride, override), false, LOT_NONE },
+//  { "value",    LVT_???,  offsetof(struct CameraOverride, value),    false, LOT_???  }, <--- UNIMPLEMENTED
+};
+
 #define LUA_CAMERA_STORED_INFO_FIELD_COUNT 4
 static struct LuaObjectField sCameraStoredInfoFields[LUA_CAMERA_STORED_INFO_FIELD_COUNT] = {
     { "cannonYOffset", LVT_F32,     offsetof(struct CameraStoredInfo, cannonYOffset), false, LOT_NONE  },
@@ -1172,22 +1178,23 @@ static struct LuaObjectField sMarioStateFields[LUA_MARIO_STATE_FIELD_COUNT] = {
     { "waterLevel",                LVT_S16,       offsetof(struct MarioState, waterLevel),                false, LOT_NONE              },
 };
 
-#define LUA_MOD_FIELD_COUNT 13
+#define LUA_MOD_FIELD_COUNT 14
 static struct LuaObjectField sModFields[LUA_MOD_FIELD_COUNT] = {
-    { "basePath",            LVT_STRING,   offsetof(struct Mod, basePath),            true, LOT_NONE },
-    { "customBehaviorIndex", LVT_U8,       offsetof(struct Mod, customBehaviorIndex), true, LOT_NONE },
-    { "description",         LVT_STRING_P, offsetof(struct Mod, description),         true, LOT_NONE },
-    { "enabled",             LVT_BOOL,     offsetof(struct Mod, enabled),             true, LOT_NONE },
-    { "fileCount",           LVT_U16,      offsetof(struct Mod, fileCount),           true, LOT_NONE },
-    { "incompatible",        LVT_STRING_P, offsetof(struct Mod, incompatible),        true, LOT_NONE },
-    { "index",               LVT_S32,      offsetof(struct Mod, index),               true, LOT_NONE },
-    { "isDirectory",         LVT_BOOL,     offsetof(struct Mod, isDirectory),         true, LOT_NONE },
-    { "name",                LVT_STRING_P, offsetof(struct Mod, name),                true, LOT_NONE },
-    { "pausable",            LVT_BOOL,     offsetof(struct Mod, pausable),            true, LOT_NONE },
-    { "relativePath",        LVT_STRING,   offsetof(struct Mod, relativePath),        true, LOT_NONE },
-    { "renderBehindHud",     LVT_BOOL,     offsetof(struct Mod, renderBehindHud),     true, LOT_NONE },
-    { "selectable",          LVT_BOOL,     offsetof(struct Mod, selectable),          true, LOT_NONE },
-//  { "size",                LVT_???,      offsetof(struct Mod, size),                true, LOT_???  }, <--- UNIMPLEMENTED
+    { "basePath",             LVT_STRING,   offsetof(struct Mod, basePath),             true, LOT_NONE },
+    { "customBehaviorIndex",  LVT_U8,       offsetof(struct Mod, customBehaviorIndex),  true, LOT_NONE },
+    { "description",          LVT_STRING_P, offsetof(struct Mod, description),          true, LOT_NONE },
+    { "enabled",              LVT_BOOL,     offsetof(struct Mod, enabled),              true, LOT_NONE },
+    { "fileCount",            LVT_U16,      offsetof(struct Mod, fileCount),            true, LOT_NONE },
+    { "ignoreScriptWarnings", LVT_BOOL,     offsetof(struct Mod, ignoreScriptWarnings), true, LOT_NONE },
+    { "incompatible",         LVT_STRING_P, offsetof(struct Mod, incompatible),         true, LOT_NONE },
+    { "index",                LVT_S32,      offsetof(struct Mod, index),                true, LOT_NONE },
+    { "isDirectory",          LVT_BOOL,     offsetof(struct Mod, isDirectory),          true, LOT_NONE },
+    { "name",                 LVT_STRING_P, offsetof(struct Mod, name),                 true, LOT_NONE },
+    { "pausable",             LVT_BOOL,     offsetof(struct Mod, pausable),             true, LOT_NONE },
+    { "relativePath",         LVT_STRING,   offsetof(struct Mod, relativePath),         true, LOT_NONE },
+    { "renderBehindHud",      LVT_BOOL,     offsetof(struct Mod, renderBehindHud),      true, LOT_NONE },
+    { "selectable",           LVT_BOOL,     offsetof(struct Mod, selectable),           true, LOT_NONE },
+//  { "size",                 LVT_???,      offsetof(struct Mod, size),                 true, LOT_???  }, <--- UNIMPLEMENTED
 };
 
 #define LUA_MOD_AUDIO_FIELD_COUNT 3
@@ -2429,6 +2436,7 @@ struct LuaObjectTable sLuaObjectAutogenTable[LOT_AUTOGEN_MAX - LOT_AUTOGEN_MIN] 
     { LOT_BULLYCOLLISIONDATA,        sBullyCollisionDataFields,        LUA_BULLY_COLLISION_DATA_FIELD_COUNT         },
     { LOT_CAMERA,                    sCameraFields,                    LUA_CAMERA_FIELD_COUNT                       },
     { LOT_CAMERAFOVSTATUS,           sCameraFOVStatusFields,           LUA_CAMERA_FOVSTATUS_FIELD_COUNT             },
+    { LOT_CAMERAOVERRIDE,            sCameraOverrideFields,            LUA_CAMERA_OVERRIDE_FIELD_COUNT              },
     { LOT_CAMERASTOREDINFO,          sCameraStoredInfoFields,          LUA_CAMERA_STORED_INFO_FIELD_COUNT           },
     { LOT_CAMERATRIGGER,             sCameraTriggerFields,             LUA_CAMERA_TRIGGER_FIELD_COUNT               },
     { LOT_CHAINSEGMENT,              sChainSegmentFields,              LUA_CHAIN_SEGMENT_FIELD_COUNT                },

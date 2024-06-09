@@ -35,6 +35,7 @@ struct Mod {
     bool selectable;
     bool renderBehindHud;
     bool pausable;
+    bool ignoreScriptWarnings;
     size_t size;
     u8 customBehaviorIndex;
 };
