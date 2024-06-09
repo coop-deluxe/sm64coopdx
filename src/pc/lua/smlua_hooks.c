@@ -2248,18 +2248,6 @@ void smlua_call_mod_menu_element_hook(struct LuaHookedModMenuElement* hooked, in
         LOG_LUA("Failed to call the mod menu element callback: %s", hooked->name);
         return;
     }
-
-    // output the return value
-    bool returnValue = false;
-    if (lua_type(L, -1) == LUA_TBOOLEAN) {
-        returnValue = smlua_to_boolean(L, -1);
-    }
-    lua_pop(L, 1);
-
-    if (!gSmLuaConvertSuccess || !returnValue || hooked->element != MOD_MENU_ELEMENT_BUTTON) { return; }
-
-    gForceUnpause = true;
-    djui_panel_shutdown();
 }
 
 

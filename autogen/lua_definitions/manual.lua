@@ -147,7 +147,7 @@ end
 
 --- @param name string The text to show on the button
 --- @param func fun(index:integer) The function that is called when the button is pressed
---- Hooks a DJUI button into the mod menu. If you want to unpause the game when the button is pressed, return `true` from `func` to do so
+--- Hooks a DJUI button into the mod menu
 function hook_mod_menu_button(name, func)
     -- ...
 end
