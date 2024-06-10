@@ -18,7 +18,13 @@ void djui_panel_mod_menu_mod_button(struct DjuiBase* caller) {
     struct LuaHookedModMenuElement* hooked = &gHookedModMenuElements[caller->tag];
     smlua_call_mod_menu_element_hook(hooked, caller->tag);
     struct DjuiButton* button = (struct DjuiButton*)caller;
-    djui_text_set_text(button->text, hooked->name);
+    if (gHookedModMenuElementsCount == 1) {
+        char buffer[256] = { 0 };
+        snprintf(buffer, 256, "%s - %s", hooked->mod->name, hooked->name);
+        djui_text_set_text(button->text, buffer);
+    } else {
+        djui_text_set_text(button->text, hooked->name);
+    }
 }
 
 void djui_panel_mod_menu_mod_checkbox(struct DjuiBase* caller) {
