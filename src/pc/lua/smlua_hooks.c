@@ -1813,35 +1813,49 @@ char** smlua_get_chat_player_list(void) {
     return sortedPlayers;
 }
 
-
 char** smlua_get_chat_maincommands_list(void) {
 #if defined(DEVELOPMENT)
-    char* additionalCmds[] = {"players", "kick", "ban", "permban", "moderator", "confirm", "help", "?", "warp", "lua", "luaf"};
-    s32 additionalCmdsCount = 11;
+    s32 defaultCmdsCount = 11;
+    static char* defaultCmds[] = {"players", "kick", "ban", "permban", "moderator", "help", "?", "warp", "lua", "luaf", NULL};
 #else
-    char* additionalCmds[] = {"players", "kick", "ban", "permban", "moderator", "confirm", "help", "?"};
-    s32 additionalCmdsCount = 8;
+    s32 defaultCmdsCount = 8;
+    static char* defaultCmds[] = {"players", "kick", "ban", "permban", "moderator", "help", "?", NULL};
 #endif
-
-    char** commands = (char**) malloc((sHookedChatCommandsCount + additionalCmdsCount + 1) * sizeof(char*));
-
+    s32 defaultCmdsCountNew = 0;
+    for (s32 i = 0; i < defaultCmdsCount; i++) {
+        if (defaultCmds[i] != NULL) {
+            defaultCmdsCountNew++;
+        } else if (gServerSettings.nametags && defaultCmds[i] == NULL) {
+            defaultCmds[i] = "nametags";
+            defaultCmdsCountNew++;
+            break;
+        }
+    }
+    char** commands = (char**) malloc((sHookedChatCommandsCount + defaultCmdsCountNew + 1) * sizeof(char*));
     for (s32 i = 0; i < sHookedChatCommandsCount; i++) {
         struct LuaHookedChatCommand* hook = &sHookedChatCommands[i];
         commands[i] = strdup(hook->command);
     }
-
-    for (s32 i = 0; i < additionalCmdsCount; i++) {
-        commands[sHookedChatCommandsCount + i] = strdup(additionalCmds[i]);
+    for (s32 i = 0; i < defaultCmdsCount; i++) {
+        if (defaultCmds[i] != NULL) {
+            commands[sHookedChatCommandsCount + i] = strdup(defaultCmds[i]);
+        }
     }
-
-    commands[sHookedChatCommandsCount + additionalCmdsCount] = NULL;
-
-    qsort(commands, sHookedChatCommandsCount + additionalCmdsCount, sizeof(char*), sort_alphabetically);
-
+    commands[sHookedChatCommandsCount + defaultCmdsCountNew] = NULL;
+    qsort(commands, sHookedChatCommandsCount + defaultCmdsCountNew, sizeof(char*), sort_alphabetically);
     return commands;
 }
 
 char** smlua_get_chat_subcommands_list(const char* maincommand) {
+    if (gServerSettings.nametags && strcmp(maincommand, "nametags") == 0) {
+        s32 count = 2;
+        char** subcommands = (char**) malloc((count + 1) * sizeof(char*));
+        subcommands[0] = strdup("show-tag");
+        subcommands[1] = strdup("show-health");
+        subcommands[2] = NULL;
+        return subcommands;
+    }
+
     for (s32 i = 0; i < sHookedChatCommandsCount; i++) {
         struct LuaHookedChatCommand* hook = &sHookedChatCommands[i];
         if (strcmp(hook->command, maincommand) == 0) {
