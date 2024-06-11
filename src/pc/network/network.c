@@ -700,10 +700,10 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
     gOverrideDialogColor = 0;
     gDialogMinWidth = 0;
     gOverrideAllowToxicGasCamera = FALSE;
-    gLuaVolumeMaster = 1.0f;
-    gLuaVolumeLevel = 1.0f;
-    gLuaVolumeSfx = 1.0f;
-    gLuaVolumeEnv = 1.0f;
+    gLuaVolumeMaster = 127;
+    gLuaVolumeLevel = 127;
+    gLuaVolumeSfx = 127;
+    gLuaVolumeEnv = 127;
 
     struct Controller* cnt = gPlayer1Controller;
     cnt->rawStickX = 0;

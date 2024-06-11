@@ -88,10 +88,10 @@ static f64 sFrameTimeStart;
 bool gGameInited = false;
 bool gGfxInited = false;
 
-f32 gLuaVolumeMaster = 1.0f;
-f32 gLuaVolumeLevel = 1.0f;
-f32 gLuaVolumeSfx = 1.0f;
-f32 gLuaVolumeEnv = 1.0f;
+u8 gLuaVolumeMaster = 127;
+u8 gLuaVolumeLevel = 127;
+u8 gLuaVolumeSfx = 127;
+u8 gLuaVolumeEnv = 127;
 
 static struct AudioAPI *audio_api;
 struct GfxWindowManagerAPI *wm_api = &WAPI;
@@ -222,10 +222,10 @@ void produce_interpolation_frames_and_delay(void) {
 }
 
 inline static void buffer_audio(void) {
-    const f32 masterMod = (f32)configMasterVolume / 127.0f * gLuaVolumeMaster;
-    set_sequence_player_volume(SEQ_PLAYER_LEVEL, (f32)configMusicVolume / 127.0f * gLuaVolumeLevel * masterMod);
-    set_sequence_player_volume(SEQ_PLAYER_SFX, (f32)configSfxVolume / 127.0f * gLuaVolumeSfx * masterMod);
-    set_sequence_player_volume(SEQ_PLAYER_ENV, (f32)configEnvVolume / 127.0f * gLuaVolumeEnv * masterMod);
+    const f32 masterMod = (f32)configMasterVolume / 127.0f * (f32)gLuaVolumeMaster / 127.0f;
+    set_sequence_player_volume(SEQ_PLAYER_LEVEL, (f32)configMusicVolume / 127.0f * (f32)gLuaVolumeLevel / 127.0f * masterMod);
+    set_sequence_player_volume(SEQ_PLAYER_SFX, (f32)configSfxVolume / 127.0f * (f32)gLuaVolumeSfx / 127.0f * masterMod);
+    set_sequence_player_volume(SEQ_PLAYER_ENV, (f32)configEnvVolume / 127.0f * (f32)gLuaVolumeEnv / 127.0f * masterMod);
 
     int samplesLeft = audio_api->buffered();
     u32 numAudioSamples = samplesLeft < audio_api->get_desired_buffered() ? SAMPLES_HIGH : SAMPLES_LOW;

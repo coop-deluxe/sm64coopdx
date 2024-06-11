@@ -674,22 +674,22 @@ f32 get_volume_env(void) {
 }
 
 void set_volume_master(f32 volume) {
-    gLuaVolumeMaster = clampf(volume, 0.0f, 1.0f);
+    gLuaVolumeMaster = MIN(volume, 127);
     audio_custom_update_volume();
 }
 
 void set_volume_level(f32 volume) {
-    gLuaVolumeLevel = clampf(volume, 0.0f, 1.0f);
+    gLuaVolumeLevel = MIN(volume, 127);
     audio_custom_update_volume();
 }
 
 void set_volume_sfx(f32 volume) {
-    gLuaVolumeSfx = clampf(volume, 0.0f, 1.0f);
+    gLuaVolumeSfx = MIN(volume, 127);
     audio_custom_update_volume();
 }
 
 void set_volume_env(f32 volume) {
-    gLuaVolumeEnv = clampf(volume, 0.0f, 1.0f);
+    gLuaVolumeEnv = MIN(volume, 127);
     audio_custom_update_volume();
 }
 

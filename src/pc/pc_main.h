@@ -64,10 +64,10 @@ extern "C" {
 extern bool gGameInited;
 extern bool gGfxInited;
 
-extern f32 gLuaVolumeMaster;
-extern f32 gLuaVolumeLevel;
-extern f32 gLuaVolumeSfx;
-extern f32 gLuaVolumeEnv;
+extern u8 gLuaVolumeMaster;
+extern u8 gLuaVolumeLevel;
+extern u8 gLuaVolumeSfx;
+extern u8 gLuaVolumeEnv;
 
 extern struct GfxWindowManagerAPI* wm_api;
 void produce_one_dummy_frame(void (*callback)());
