@@ -23,6 +23,7 @@ static struct DjuiSlider *sSliderG = NULL;
 static struct DjuiSlider *sSliderB = NULL;
 static struct DjuiInputbox* sPalettePresetNameTextBox = NULL;
 
+static struct DjuiRect *sColorRect = NULL;
 
 void djui_panel_player_create(struct DjuiBase* caller);
 
@@ -61,12 +62,19 @@ static void djui_panel_player_edit_palette_update_palette_display(void) {
     gNetworkPlayers[0].palette = configPlayerPalette;
 }
 
+static void djui_panel_player_update_color_rect(void) {
+    if (sColorRect) {
+        djui_base_set_color(&sColorRect->base, sSliderChannels[0], sSliderChannels[1], sSliderChannels[2], 0xFF);
+    }
+}
+
 static void djui_panel_player_edit_palette_update_sliders(void) {
     for (int i = 0; i < 3; i++) sSliderChannels[i] = configPlayerPalette.parts[sCurrentPlayerPart][i];
 
     djui_slider_update_value(&sSliderR->base);
     djui_slider_update_value(&sSliderG->base);
     djui_slider_update_value(&sSliderB->base);
+    djui_panel_player_update_color_rect();
 }
 
 static void djui_panel_player_edit_palette_part_changed(UNUSED struct DjuiBase* caller) {
@@ -106,6 +114,7 @@ static void djui_panel_player_edit_palette_slider_changed(UNUSED struct DjuiBase
 
     djui_panel_player_edit_palette_update_hex_code_box();
     djui_panel_player_edit_palette_update_palette_display();
+    djui_panel_player_update_color_rect();
 }
 
 static void djui_panel_player_edit_palette_red_changed(UNUSED struct DjuiBase* caller) {
@@ -181,6 +190,8 @@ static void djui_panel_player_edit_palette_destroy(struct DjuiBase* caller) {
         network_send_player_settings();
     }
 
+    sColorRect = NULL;
+
     if (sPalettePresetSelection) {
         sPalettePresetIndex = djui_panel_player_edit_palette_get_palette_index(configPlayerPalette);
         djui_selectionbox_update_value(&sPalettePresetSelection->base);
@@ -253,9 +264,17 @@ static void djui_panel_player_edit_palette_create(struct DjuiBase* caller) {
         sSliderB->updateRectValueColor = false;
 
         struct DjuiRect* space = djui_rect_create(body);
-        djui_base_set_size_type(&space->base, DJUI_SVT_ABSOLUTE, DJUI_SVT_ABSOLUTE);
-        djui_base_set_size(&space->base, 0, 32);
+        djui_base_set_alignment(&space->base, DJUI_HALIGN_CENTER, DJUI_VALIGN_TOP);
+        djui_base_set_size_type(&space->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+        djui_base_set_size(&space->base, 0.95f, 32);
         djui_base_set_color(&space->base, 0, 0, 0, 0);
+        djui_base_set_border_width(&space->base, 2);
+        djui_base_set_border_color(&space->base, 173, 173, 173, 255);
+
+        struct DjuiRect* rectValue = djui_rect_create(&space->base);
+        djui_base_set_size_type(&rectValue->base, DJUI_SVT_RELATIVE, DJUI_SVT_RELATIVE);
+        djui_base_set_color(&rectValue->base, sSliderChannels[0], sSliderChannels[1], sSliderChannels[2], 255);
+        sColorRect = rectValue;
 
         struct DjuiRect* rect2 = djui_rect_container_create(body, 32);
         {
