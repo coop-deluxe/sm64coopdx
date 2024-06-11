@@ -451,8 +451,8 @@ void DynOS_Tex_AddCustom(const SysPath &aFilename, const char *aTexName) {
     }
 }
 
-static inline bool IsPowerOfTwo(int n) {
-    return (ceil(log2(n)) == floor(log2(n)));
+static inline bool IsPowerOfTwo(s32 n) {
+    return (n > 0) && ((n & (n - 1)) == 0);
 }
 
 bool DynOS_Tex_Get(const char* aTexName, struct TextureInfo* aOutTexInfo) {
@@ -487,8 +487,7 @@ bool DynOS_Tex_Get(const char* aTexName, struct TextureInfo* aOutTexInfo) {
                     return false;
                 }
                 // texture width or height is NPOT
-                if ((_Data->mRawWidth > 0 && _Data->mRawWidth & (_Data->mRawWidth - 1) == 0) ||
-                    (_Data->mRawHeight > 0 && _Data->mRawHeight & (_Data->mRawHeight - 1) == 0)) {
+                if (!IsPowerOfTwo(_Data->mRawWidth) || !IsPowerOfTwo(_Data->mRawHeight)) {
                     PrintError("Tex file '%s' has non power of two width or height", aTexName);
                     PrintConsole(CONSOLE_MESSAGE_WARNING, "Tex file '%s' has non power of two width or height", aTexName);
                     return false;
