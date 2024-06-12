@@ -316,9 +316,7 @@ void audio_stream_set_position(struct ModAudio* audio, f32 pos) {
     if (!audio_sanity_check(audio, true, "setpos")) {
         return;
     }
-    u64 length;
-    ma_sound_get_length_in_pcm_frames(&audio->sound, &length);
-    ma_sound_seek_to_pcm_frame(&audio->sound, (u64)(length * pos));
+    ma_sound_seek_to_pcm_frame(&audio->sound, pos * ma_engine_get_sample_rate(&gModAudioEngine));
 }
 
 bool audio_stream_get_looping(struct ModAudio* audio) {
