@@ -1095,6 +1095,7 @@
 <br />
 
 - mario_step.h
+   - [check_ledge_grab](functions-3.md#check_ledge_grab)
    - [get_additive_y_vel_for_jumps](functions-3.md#get_additive_y_vel_for_jumps)
    - [init_bully_collision_data](functions-3.md#init_bully_collision_data)
    - [mario_bonk_reflection](functions-3.md#mario_bonk_reflection)

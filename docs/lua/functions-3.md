@@ -8181,6 +8181,29 @@
 <br />
 
 
+## [check_ledge_grab](#check_ledge_grab)
+
+### Lua Example
+`local integerValue = check_ledge_grab(m, wall, intendedPos, nextPos)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| wall | [Surface](structs.md#Surface) |
+| intendedPos | [Vec3f](structs.md#Vec3f) |
+| nextPos | [Vec3f](structs.md#Vec3f) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 check_ledge_grab(struct MarioState *m, struct Surface *wall, Vec3f intendedPos, Vec3f nextPos);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [get_additive_y_vel_for_jumps](#get_additive_y_vel_for_jumps)
 
 ### Lua Example

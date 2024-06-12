@@ -17816,6 +17816,45 @@ int smlua_func_bhv_unlock_door_star_loop(UNUSED lua_State* L) {
  // mario_step.h //
 //////////////////
 
+int smlua_func_check_ledge_grab(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 4) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "check_ledge_grab", 4, top);
+        return 0;
+    }
+
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "check_ledge_grab"); return 0; }
+    struct Surface* wall = (struct Surface*)smlua_to_cobject(L, 2, LOT_SURFACE);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "check_ledge_grab"); return 0; }
+
+    f32* intendedPos = smlua_get_vec3f_from_buffer();
+    intendedPos[0] = smlua_get_number_field(3, "x");
+    intendedPos[1] = smlua_get_number_field(3, "y");
+    intendedPos[2] = smlua_get_number_field(3, "z");
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "check_ledge_grab"); return 0; }
+
+    f32* nextPos = smlua_get_vec3f_from_buffer();
+    nextPos[0] = smlua_get_number_field(4, "x");
+    nextPos[1] = smlua_get_number_field(4, "y");
+    nextPos[2] = smlua_get_number_field(4, "z");
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "check_ledge_grab"); return 0; }
+
+    lua_pushinteger(L, check_ledge_grab(m, wall, intendedPos, nextPos));
+
+    smlua_push_number_field(3, "x", intendedPos[0]);
+    smlua_push_number_field(3, "y", intendedPos[1]);
+    smlua_push_number_field(3, "z", intendedPos[2]);
+
+    smlua_push_number_field(4, "x", nextPos[0]);
+    smlua_push_number_field(4, "y", nextPos[1]);
+    smlua_push_number_field(4, "z", nextPos[2]);
+
+    return 1;
+}
+
 int smlua_func_get_additive_y_vel_for_jumps(UNUSED lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -32329,6 +32368,33 @@ int smlua_func_find_floor(lua_State* L) {
 }
 */
 
+/*
+int smlua_func_find_floor_air(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 5) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "find_floor_air", 5, top);
+        return 0;
+    }
+
+    f32 xPos = smlua_to_number(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "find_floor_air"); return 0; }
+    f32 yPos = smlua_to_number(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "find_floor_air"); return 0; }
+    f32 zPos = smlua_to_number(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "find_floor_air"); return 0; }
+    f32 velocity = smlua_to_number(L, 4);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "find_floor_air"); return 0; }
+//  struct Surface** pfloor = (struct Surface**)smlua_to_cobject(L, 5, LOT_???); <--- UNIMPLEMENTED
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 5, "find_floor_air"); return 0; }
+
+    lua_pushnumber(L, find_floor_air(xPos, yPos, zPos, velocity, pfloor));
+
+    return 1;
+}
+*/
+
 int smlua_func_find_floor_height(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -32399,8 +32465,8 @@ int smlua_func_find_surface_on_ray(lua_State* L) {
     if (L == NULL) { return 0; }
 
     int top = lua_gettop(L);
-    if (top != 4) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "find_surface_on_ray", 4, top);
+    if (top != 5) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "find_surface_on_ray", 5, top);
         return 0;
     }
 
@@ -32424,8 +32490,10 @@ int smlua_func_find_surface_on_ray(lua_State* L) {
     hit_pos[1] = smlua_get_number_field(4, "y");
     hit_pos[2] = smlua_get_number_field(4, "z");
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "find_surface_on_ray"); return 0; }
+    f32 precision = smlua_to_number(L, 5);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 5, "find_surface_on_ray"); return 0; }
 
-    find_surface_on_ray(orig, dir, hit_surface, hit_pos);
+    find_surface_on_ray(orig, dir, hit_surface, hit_pos, precision);
 
     smlua_push_number_field(1, "x", orig[0]);
     smlua_push_number_field(1, "y", orig[1]);
@@ -33627,6 +33695,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "bhv_unlock_door_star_loop", smlua_func_bhv_unlock_door_star_loop);
 
     // mario_step.h
+    smlua_bind_function(L, "check_ledge_grab", smlua_func_check_ledge_grab);
     smlua_bind_function(L, "get_additive_y_vel_for_jumps", smlua_func_get_additive_y_vel_for_jumps);
     smlua_bind_function(L, "init_bully_collision_data", smlua_func_init_bully_collision_data);
     smlua_bind_function(L, "mario_bonk_reflection", smlua_func_mario_bonk_reflection);
@@ -34347,6 +34416,7 @@ void smlua_bind_functions_autogen(void) {
     //smlua_bind_function(L, "find_ceil", smlua_func_find_ceil); <--- UNIMPLEMENTED
     smlua_bind_function(L, "find_ceil_height", smlua_func_find_ceil_height);
     //smlua_bind_function(L, "find_floor", smlua_func_find_floor); <--- UNIMPLEMENTED
+    //smlua_bind_function(L, "find_floor_air", smlua_func_find_floor_air); <--- UNIMPLEMENTED
     smlua_bind_function(L, "find_floor_height", smlua_func_find_floor_height);
     //smlua_bind_function(L, "find_floor_height_and_data", smlua_func_find_floor_height_and_data); <--- UNIMPLEMENTED
     smlua_bind_function(L, "find_poison_gas_level", smlua_func_find_poison_gas_level);

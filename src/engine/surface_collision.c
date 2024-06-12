@@ -177,7 +177,6 @@ static s32 find_wall_collisions_from_list(struct SurfaceNode *surfaceNode,
             if (!gFindWallDirectionActive && vec3f_dot(norm, cNorm) < 0) { continue; }
 
         } else {
-
             offset = surf->normal.x * x + surf->normal.y * y + surf->normal.z * z + surf->originOffset;
 
             if (offset < -radius || offset > radius) {
@@ -877,6 +876,86 @@ f32 find_floor(f32 xPos, f32 yPos, f32 zPos, struct Surface **pfloor) {
     return height;
 }
 
+/**
+ * Find the highest floor under a given position and return the height.
+ */
+f32 find_floor_air(f32 xPos, f32 yPos, f32 zPos, f32 velocity, struct Surface **pfloor) {
+    s16 cellZ, cellX;
+
+    struct Surface *floor, *dynamicFloor;
+    struct SurfaceNode *surfaceList;
+
+    f32 height = gLevelValues.floorLowerLimit;// + 9000.0f;
+    f32 dynamicHeight = gLevelValues.floorLowerLimit;// + 9000.0f;
+
+    //! (Parallel Universes) Because position is casted to an s16, reaching higher
+    // float locations  can return floors despite them not existing there.
+    //(Dynamic floors will unload due to the range.)
+    s16 x = (s16) xPos;
+    s16 y = (s16) yPos;
+    s16 z = (s16) zPos;
+
+    *pfloor = NULL;
+
+#if EXTENDED_BOUNDS_MODE != 3
+    if (x <= -LEVEL_BOUNDARY_MAX || x >= LEVEL_BOUNDARY_MAX) {
+        return height;
+    }
+    if (z <= -LEVEL_BOUNDARY_MAX || z >= LEVEL_BOUNDARY_MAX) {
+        return height;
+    }
+#endif
+
+    // Each level is split into cells to limit load, find the appropriate cell.
+    cellX = ((x + LEVEL_BOUNDARY_MAX) / CELL_SIZE) & NUM_CELLS_INDEX;
+    cellZ = ((z + LEVEL_BOUNDARY_MAX) / CELL_SIZE) & NUM_CELLS_INDEX;
+
+    // Check for surfaces belonging to objects.
+    surfaceList = gDynamicSurfacePartition[cellZ][cellX][SPATIAL_PARTITION_FLOORS].next;
+    if (velocity < 10.f) {
+        dynamicFloor = find_floor_from_list(surfaceList, x, y, z, &dynamicHeight);
+    } else {
+        dynamicFloor = 0;
+    }
+
+    // Check for surfaces that are a part of level geometry.
+    surfaceList = gStaticSurfacePartition[cellZ][cellX][SPATIAL_PARTITION_FLOORS].next;
+    floor = find_floor_from_list(surfaceList, x, y, z, &height);
+
+    // To prevent the Merry-Go-Round room from loading when Mario passes above the hole that leads
+    // there, SURFACE_INTANGIBLE is used. This prevent the wrong room from loading, but can also allow
+    // Mario to pass through.
+    if (!gFindFloorIncludeSurfaceIntangible) {
+        //! (BBH Crash) Most NULL checking is done by checking the height of the floor returned
+        //  instead of checking directly for a NULL floor. If this check returns a NULL floor
+        //  (happens when there is no floor under the SURFACE_INTANGIBLE floor) but returns the height
+        //  of the SURFACE_INTANGIBLE floor instead of the typical -11000 returned for a NULL floor.
+        if (floor != NULL && floor->type == SURFACE_INTANGIBLE) {
+            floor = find_floor_from_list(surfaceList, x, (s32)(height - 200.0f), z, &height);
+        }
+    } else {
+        // To prevent accidentally leaving the floor tangible, stop checking for it.
+        gFindFloorIncludeSurfaceIntangible = FALSE;
+    }
+
+    // If a floor was missed, increment the debug counter.
+    if (floor == NULL) {
+        gNumFindFloorMisses += 1;
+    }
+
+    if (dynamicHeight > height) {
+        floor = dynamicFloor;
+        height = dynamicHeight;
+    }
+
+    *pfloor = floor;
+
+    // Increment the debug tracker.
+    gNumCalls.floor += 1;
+
+    return height;
+}
+
 /**************************************************
  *               ENVIRONMENTAL BOXES              *
  **************************************************/
@@ -1190,7 +1269,7 @@ void find_surface_on_ray_cell(s16 cellX, s16 cellZ, Vec3f orig, Vec3f normalized
     }
 }
 
-void find_surface_on_ray(Vec3f orig, Vec3f dir, struct Surface **hit_surface, Vec3f hit_pos)
+void find_surface_on_ray(Vec3f orig, Vec3f dir, struct Surface **hit_surface, Vec3f hit_pos, f32 precision)
 {
     f32 max_length;
     s16 cellZ, cellX;
@@ -1222,9 +1301,6 @@ void find_surface_on_ray(Vec3f orig, Vec3f dir, struct Surface **hit_surface, Ve
         find_surface_on_ray_cell(cellX, cellZ, orig, normalized_dir, dir_length, hit_surface, hit_pos, &max_length);
         return;
     }
-
-    // increase collision checking precision (normally 1)
-    f32 precision = 3;
 
     // Get cells we cross using DDA
     if (absx(dir[0]) >= absx(dir[2]))
