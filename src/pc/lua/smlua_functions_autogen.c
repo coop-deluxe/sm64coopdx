@@ -13079,6 +13079,23 @@ int smlua_func_sound_banks_enable(lua_State* L) {
     return 1;
 }
 
+int smlua_func_sound_get_level_intensity(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "sound_get_level_intensity", 1, top);
+        return 0;
+    }
+
+    f32 distance = smlua_to_number(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "sound_get_level_intensity"); return 0; }
+
+    lua_pushnumber(L, sound_get_level_intensity(distance));
+
+    return 1;
+}
+
 int smlua_func_stop_background_music(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -33352,6 +33369,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "set_audio_fadeout", smlua_func_set_audio_fadeout);
     smlua_bind_function(L, "sound_banks_disable", smlua_func_sound_banks_disable);
     smlua_bind_function(L, "sound_banks_enable", smlua_func_sound_banks_enable);
+    smlua_bind_function(L, "sound_get_level_intensity", smlua_func_sound_get_level_intensity);
     smlua_bind_function(L, "stop_background_music", smlua_func_stop_background_music);
     smlua_bind_function(L, "stop_secondary_music", smlua_func_stop_secondary_music);
     smlua_bind_function(L, "stop_sound", smlua_func_stop_sound);

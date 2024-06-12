@@ -791,6 +791,7 @@
    - [set_audio_fadeout](functions-3.md#set_audio_fadeout)
    - [sound_banks_disable](functions-3.md#sound_banks_disable)
    - [sound_banks_enable](functions-3.md#sound_banks_enable)
+   - [sound_get_level_intensity](functions-3.md#sound_get_level_intensity)
    - [stop_background_music](functions-3.md#stop_background_music)
    - [stop_secondary_music](functions-3.md#stop_secondary_music)
    - [stop_sound](functions-3.md#stop_sound)

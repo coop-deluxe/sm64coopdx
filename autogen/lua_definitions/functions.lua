@@ -3313,6 +3313,12 @@ function sound_banks_enable(player, bankMask)
     -- ...
 end
 
+--- @param distance number
+--- @return number
+function sound_get_level_intensity(distance)
+    -- ...
+end
+
 --- @param seqId integer
 function stop_background_music(seqId)
     -- ...

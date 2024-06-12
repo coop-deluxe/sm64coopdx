@@ -3161,6 +3161,26 @@
 
 <br />
 
+## [sound_get_level_intensity](#sound_get_level_intensity)
+
+### Lua Example
+`local numberValue = sound_get_level_intensity(distance)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| distance | `number` |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 sound_get_level_intensity(f32 distance);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [stop_background_music](#stop_background_music)
 
 ### Lua Example
