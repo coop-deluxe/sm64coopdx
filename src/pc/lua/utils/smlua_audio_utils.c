@@ -367,7 +367,7 @@ f32 audio_stream_get_volume(struct ModAudio* audio) {
     if (!audio_sanity_check(audio, true, "getvol")) {
         return 0;
     }
-    return ma_sound_get_volume(&audio->sound);
+    return audio->baseVolume;
 }
 
 void audio_stream_set_volume(struct ModAudio* audio, f32 volume) {
@@ -377,6 +377,7 @@ void audio_stream_set_volume(struct ModAudio* audio, f32 volume) {
     f32 masterVolume = (f32)configMasterVolume / 127.0f;
     f32 musicVolume = (f32)configMusicVolume / 127.0f;
     ma_sound_set_volume(&audio->sound, masterVolume * musicVolume * volume);
+    audio->baseVolume = volume;
 }
 
 // void audio_stream_set_speed(struct ModAudio* audio, f32 initial_freq, f32 speed, bool pitch) {
