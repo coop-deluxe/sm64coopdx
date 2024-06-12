@@ -1078,7 +1078,7 @@ void initiate_delayed_warp(void) {
                 default:
                     warpNode = area_get_warp_node(sSourceWarpNodeId);
                     if (warpNode != NULL) {
-                        initiate_warp(warpNode->node.destLevel & 0x7F, warpNode->node.destArea,
+                        initiate_warp(warpNode->node.destLevel, warpNode->node.destArea,
                                         warpNode->node.destNode, sDelayedWarpArg);
 
                         check_if_should_set_warp_checkpoint(&warpNode->node);
