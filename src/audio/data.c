@@ -44,7 +44,7 @@ struct AudioSessionSettingsEU gAudioSessionPresets[] = {
 };
 #endif
 
-#define MAX_SIMUL_NOTES 48
+#define MAX_SIMUL_NOTES 128
 
 // Format:
 // - frequency
