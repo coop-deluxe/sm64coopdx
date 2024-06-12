@@ -380,6 +380,10 @@ static void djui_panel_player_update_preset_palette(UNUSED struct DjuiBase* call
     if (sPalettePresetIndex < 1) { return; }
     configPlayerPalette = gPresetPalettes[sPalettePresetIndex - 1].palette;
     djui_panel_player_edit_palette_update_palette_display();
+
+    if (gNetworkType != NT_NONE) {
+        network_send_player_settings();
+    }
 }
 
 static void djui_panel_player_destroy(UNUSED struct DjuiBase* caller) {
