@@ -5663,6 +5663,7 @@ const BehaviorScript bhvFerrisWheelPlatform[] = {
     BEGIN(OBJ_LIST_SURFACE),
     ID(id_bhvFerrisWheelPlatform),
     OR_INT(oFlags, OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE),
+    CALL_NATIVE(bhv_ferris_wheel_platform_init),
     BEGIN_LOOP(),
         CALL_NATIVE(bhv_ferris_wheel_platform_update),
         CALL_NATIVE(load_object_collision_model),

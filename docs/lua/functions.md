@@ -229,6 +229,7 @@
    - [bhv_falling_pillar_init](functions-2.md#bhv_falling_pillar_init)
    - [bhv_falling_pillar_loop](functions-2.md#bhv_falling_pillar_loop)
    - [bhv_ferris_wheel_axle_init](functions-2.md#bhv_ferris_wheel_axle_init)
+   - [bhv_ferris_wheel_platform_init](functions-2.md#bhv_ferris_wheel_platform_init)
    - [bhv_ferris_wheel_platform_update](functions-2.md#bhv_ferris_wheel_platform_update)
    - [bhv_fire_piranha_plant_init](functions-2.md#bhv_fire_piranha_plant_init)
    - [bhv_fire_piranha_plant_update](functions-2.md#bhv_fire_piranha_plant_update)

@@ -3230,6 +3230,22 @@ int smlua_func_bhv_ferris_wheel_axle_init(UNUSED lua_State* L) {
     return 1;
 }
 
+int smlua_func_bhv_ferris_wheel_platform_init(UNUSED lua_State* L) {
+    if (!gCurrentObject) { return 0; }
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "bhv_ferris_wheel_platform_init", 0, top);
+        return 0;
+    }
+
+
+    bhv_ferris_wheel_platform_init();
+
+    return 1;
+}
+
 int smlua_func_bhv_ferris_wheel_platform_update(UNUSED lua_State* L) {
     if (!gCurrentObject) { return 0; }
     if (L == NULL) { return 0; }
@@ -32826,6 +32842,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "bhv_falling_pillar_init", smlua_func_bhv_falling_pillar_init);
     smlua_bind_function(L, "bhv_falling_pillar_loop", smlua_func_bhv_falling_pillar_loop);
     smlua_bind_function(L, "bhv_ferris_wheel_axle_init", smlua_func_bhv_ferris_wheel_axle_init);
+    smlua_bind_function(L, "bhv_ferris_wheel_platform_init", smlua_func_bhv_ferris_wheel_platform_init);
     smlua_bind_function(L, "bhv_ferris_wheel_platform_update", smlua_func_bhv_ferris_wheel_platform_update);
     smlua_bind_function(L, "bhv_fire_piranha_plant_init", smlua_func_bhv_fire_piranha_plant_init);
     smlua_bind_function(L, "bhv_fire_piranha_plant_update", smlua_func_bhv_fire_piranha_plant_update);

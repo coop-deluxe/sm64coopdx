@@ -797,6 +797,10 @@ function bhv_ferris_wheel_axle_init()
     -- ...
 end
 
+function bhv_ferris_wheel_platform_init()
+    -- ...
+end
+
 function bhv_ferris_wheel_platform_update()
     -- ...
 end
