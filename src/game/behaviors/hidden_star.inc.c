@@ -58,7 +58,6 @@ void bhv_hidden_star_loop(void) {
     }
 }
 
-/* TODO: this is likely not a checkpoint but a Secret */
 void bhv_hidden_star_trigger_loop(void) {
     if ((o->oInteractStatus & INT_STATUS_INTERACTED) || (gMarioStates[0].visibleToEnemies && obj_check_if_collided_with_object(o, gMarioObjects[0]) == 1)) {
         struct Object *hiddenStar = cur_obj_nearest_object_with_behavior(bhvHiddenStar);

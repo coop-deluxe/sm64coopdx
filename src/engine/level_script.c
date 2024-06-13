@@ -132,9 +132,9 @@ static void area_check_red_coin_or_secret(void *arg, bool isMacroObject) {
     } else {
         bhv = (const BehaviorScript *) arg;
     }
-    if (bhv == smlua_override_behavior(bhvRedCoin)) {
+    if (bhv == bhvRedCoin) {
         gAreas[sCurrAreaIndex].numRedCoins++;
-    } else if (bhv == smlua_override_behavior(bhvHiddenStarTrigger)) {
+    } else if (bhv == bhvHiddenStarTrigger) {
         gAreas[sCurrAreaIndex].numSecrets++;
     }
 }

@@ -1151,6 +1151,8 @@ s32 count_unimportant_objects(void) {
 }
 
 s32 count_objects_with_behavior(const BehaviorScript *behavior) {
+    if (!behavior) { return 0; }
+    behavior = smlua_override_behavior(behavior);
     uintptr_t *behaviorAddr = segmented_to_virtual(behavior);
 
     u32 objList = get_object_list_from_behavior(behaviorAddr);
