@@ -10,17 +10,19 @@
 #include "pc/configfile.h"
 #include "game/level_update.h"
 
+static struct DjuiSelectionbox* sLevelBox = NULL;
 static struct DjuiCheckbox* sUseStageMusicCheckbox = NULL;
 static struct DjuiCheckbox* sRandomStageCheckbox = NULL;
 static struct DjuiCheckbox* sVanillaDemosCheckbox = NULL;
 
 void djui_panel_main_menu_create(struct DjuiBase* caller);
 
-static void djui_panel_menu_options_level_menu(UNUSED struct DjuiBase* caller) {
-    djui_base_set_enabled(&sUseStageMusicCheckbox->base, !gMenuStaffRoll);
-    djui_base_set_enabled(&sRandomStageCheckbox->base, !gMenuStaffRoll);
-    djui_base_set_enabled(&sVanillaDemosCheckbox->base, !gMenuStaffRoll);
-    if (gMenuStaffRoll) {
+static void djui_panel_level_menu(UNUSED struct DjuiBase* caller) {
+    djui_base_set_enabled(&sLevelBox->base, !(configMenuRandom || configMenuStaffRoll));
+    djui_base_set_enabled(&sUseStageMusicCheckbox->base, !configMenuStaffRoll);
+    djui_base_set_enabled(&sRandomStageCheckbox->base, !configMenuStaffRoll);
+    djui_base_set_enabled(&sVanillaDemosCheckbox->base, !configMenuStaffRoll);
+    if (configMenuStaffRoll) {
         warp_credits();
         level_trigger_warp(gMarioState, WARP_OP_CREDITS_NEXT);
     }
@@ -60,8 +62,7 @@ void djui_panel_main_menu_create(struct DjuiBase* caller) {
         djui_selectionbox_create(body, DLANG(DJUI_THEMES, DJUI_FONT), djuiFontChoices, 2, &configDjuiThemeFont, djui_panel_menu_options_djui_setting_change);
 
         if (gDjuiInMainMenu) {
-            char* levelChoices[] = {
-                DLANG(MENU_OPTIONS, STAFF_ROLL),
+            char* levelChoices[18] = {
                 "CG",
                 "BOB",
                 "WF",
@@ -82,16 +83,19 @@ void djui_panel_main_menu_create(struct DjuiBase* caller) {
                 "WDW"
             };
 
-            djui_selectionbox_create(body, DLANG(MENU_OPTIONS, LEVEL), levelChoices, 19, &configMenuLevel, djui_panel_menu_options_level_menu);
+            struct DjuiSelectionbox* selectionbox1 = djui_selectionbox_create(body, DLANG(MENU_OPTIONS, LEVEL), levelChoices, 18, &configMenuLevel, NULL);
+            djui_base_set_enabled(&selectionbox1->base, !(configMenuRandom || configMenuStaffRoll));
+            sLevelBox = selectionbox1;
 
+            djui_checkbox_create(body, DLANG(MENU_OPTIONS, STAFF_ROLL), &configMenuStaffRoll, djui_panel_level_menu);
             struct DjuiCheckbox* checkbox1 = djui_checkbox_create(body, DLANG(MENU_OPTIONS, USE_STAGE_MUSIC), &configMenuSound, NULL);
-            djui_base_set_enabled(&checkbox1->base, !gMenuStaffRoll);
+            djui_base_set_enabled(&checkbox1->base, !configMenuStaffRoll);
             sUseStageMusicCheckbox = checkbox1;
-            struct DjuiCheckbox* checkbox2 = djui_checkbox_create(body, DLANG(MENU_OPTIONS, RANDOM_STAGE), &configMenuRandom, djui_panel_menu_options_level_menu);
-            djui_base_set_enabled(&checkbox2->base, !gMenuStaffRoll);
+            struct DjuiCheckbox* checkbox2 = djui_checkbox_create(body, DLANG(MENU_OPTIONS, RANDOM_STAGE), &configMenuRandom, djui_panel_level_menu);
+            djui_base_set_enabled(&checkbox2->base, !configMenuStaffRoll);
             sRandomStageCheckbox = checkbox2;
             struct DjuiCheckbox* checkbox3 = djui_checkbox_create(body, DLANG(MENU_OPTIONS, PLAY_VANILLA_DEMOS), &configMenuDemos, stop_demo);
-            djui_base_set_enabled(&checkbox3->base, !gMenuStaffRoll);
+            djui_base_set_enabled(&checkbox3->base, !configMenuStaffRoll);
             sVanillaDemosCheckbox = checkbox3;
         }
 
