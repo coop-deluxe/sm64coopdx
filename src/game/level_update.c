@@ -1652,7 +1652,9 @@ void update_menu_level(void) {
     gLakituState.skipCameraInterpolationTimestamp = gGlobalTimer;
     extern s32 gCamSkipInterp;
     gCamSkipInterp = 1;
-    vec3f_copy(gCurrentArea->camera->pos, gLakituState.curPos);
+    if (gCurrentArea != NULL) { 
+        vec3f_copy(gCurrentArea->camera->pos, gLakituState.curPos);
+    }
     vec3f_copy(gLakituState.pos, gLakituState.curPos);
     vec3f_copy(gLakituState.goalPos, gLakituState.curPos);
 
