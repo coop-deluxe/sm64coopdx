@@ -35,7 +35,7 @@ static void loading_screen_produce_frame_callback(void) {
 }
 
 static void loading_screen_produce_one_frame(void) {
-    produce_one_dummy_frame(loading_screen_produce_frame_callback);
+    produce_one_dummy_frame(loading_screen_produce_frame_callback, 0x00, 0x00, 0x00);
 }
 
 static bool loading_screen_on_render(struct DjuiBase* base) {

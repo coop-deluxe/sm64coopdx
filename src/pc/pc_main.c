@@ -250,31 +250,30 @@ void produce_one_frame(void) {
     CTX_EXTENT(CTX_RENDER, produce_interpolation_frames_and_delay);
 }
 
-// Used for rendering 2D scenes fullscreen like the loading or crash screens
-void produce_one_dummy_frame(void (*callback)()) {
-
-    // Start frame
+// used for rendering 2D scenes fullscreen like the loading or crash screens
+void produce_one_dummy_frame(void (*callback)(), u8 clearColorR, u8 clearColorG, u8 clearColorB) {
+    // start frame
     gfx_start_frame();
     config_gfx_pool();
     init_render_image();
     create_dl_ortho_matrix();
     djui_gfx_displaylist_begin();
 
-    // Fix scaling issues
+    // fix scaling issues
     gSPViewport(gDisplayListHead++, VIRTUAL_TO_PHYSICAL(&D_8032CF00));
     gDPSetScissor(gDisplayListHead++, G_SC_NON_INTERLACE, 0, BORDER_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT - BORDER_HEIGHT);
 
-    // Clear screen
+    // clear screen
     create_dl_translation_matrix(MENU_MTX_PUSH, GFX_DIMENSIONS_FROM_LEFT_EDGE(0), 240.f, 0.f);
     create_dl_scale_matrix(MENU_MTX_NOPUSH, (GFX_DIMENSIONS_ASPECT_RATIO * SCREEN_HEIGHT) / 130.f, 3.f, 1.f);
-    gDPSetEnvColor(gDisplayListHead++, 0x00, 0x00, 0x00, 0xFF);
+    gDPSetEnvColor(gDisplayListHead++, clearColorR, clearColorG, clearColorB, 0xFF);
     gSPDisplayList(gDisplayListHead++, dl_draw_text_bg_box);
     gSPPopMatrix(gDisplayListHead++, G_MTX_MODELVIEW);
 
-    // Call the callback
+    // call the callback
     callback();
 
-    // Render frame
+    // render frame
     djui_gfx_displaylist_end();
     end_master_display_list();
     alloc_display_list(0);

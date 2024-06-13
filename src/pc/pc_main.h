@@ -70,7 +70,7 @@ extern u8 gLuaVolumeSfx;
 extern u8 gLuaVolumeEnv;
 
 extern struct GfxWindowManagerAPI* wm_api;
-void produce_one_dummy_frame(void (*callback)());
+void produce_one_dummy_frame(void (*callback)(), u8 clearColorR, u8 clearColorG, u8 clearColorB);
 void game_deinit(void);
 void game_exit(void);
 

@@ -259,7 +259,7 @@ static void crash_handler_produce_one_frame_callback(void) {
 static void crash_handler_produce_one_frame(void) {
     extern u8 gRenderingInterpolated;
     gRenderingInterpolated = false;
-    produce_one_dummy_frame(crash_handler_produce_one_frame_callback);
+    produce_one_dummy_frame(crash_handler_produce_one_frame_callback, 0x02, 0x06, 0x0F);
 }
 
 static void crash_handler_add_info_str(CrashHandlerText** pTextP, f32 x, f32 y, const char* title, const char* value) {
