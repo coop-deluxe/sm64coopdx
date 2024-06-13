@@ -7357,6 +7357,11 @@ function save_file_do_save(fileIndex, forceSave)
     -- ...
 end
 
+--- @param fileIndex integer
+function save_file_erase(fileIndex)
+    -- ...
+end
+
 function save_file_erase_current_backup_save()
     -- ...
 end

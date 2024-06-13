@@ -8068,6 +8068,26 @@
 
 <br />
 
+## [save_file_erase](#save_file_erase)
+
+### Lua Example
+`save_file_erase(fileIndex)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| fileIndex | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void save_file_erase(s32 fileIndex);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [save_file_erase_current_backup_save](#save_file_erase_current_backup_save)
 
 ### Lua Example
