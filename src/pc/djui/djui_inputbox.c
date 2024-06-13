@@ -13,8 +13,9 @@
 #define DJUI_INPUTBOX_MID_BLINK (DJUI_INPUTBOX_MAX_BLINK / 2)
 #define DJUI_INPUTBOX_CURSOR_WIDTH (2.0f / 32.0f)
 
-static u8 sHeldShift = 0;
+static u8 sHeldShift   = 0;
 static u8 sHeldControl = 0;
+static u8 sHeldAlt     = 0;
 static u8 sCursorBlink = 0;
 
 static void djui_inputbox_update_style(struct DjuiBase* base) {
@@ -178,13 +179,16 @@ bool djui_inputbox_on_key_down(struct DjuiBase *base, int scancode) {
     u16 s2 = fmax(sel[0], sel[1]);
 
     switch (scancode) {
-        case SCANCODE_CONTROL_LEFT:  sHeldControl |= (1 << 0); return true;
-        case SCANCODE_CONTROL_RIGHT: sHeldControl |= (1 << 1); return true;
         case SCANCODE_SHIFT_LEFT:    sHeldShift   |= (1 << 0); return true;
         case SCANCODE_SHIFT_RIGHT:   sHeldShift   |= (1 << 1); return true;
+        case SCANCODE_CONTROL_LEFT:  sHeldControl |= (1 << 0); return true;
+        case SCANCODE_CONTROL_RIGHT: sHeldControl |= (1 << 1); return true;
+        case SCANCODE_ALT_LEFT:      sHeldAlt     |= (1 << 0); return true;
+        case SCANCODE_ALT_RIGHT:     sHeldAlt     |= (1 << 1); return true;
     }
 
-    if (scancode == SCANCODE_LEFT) {
+    // [Left], [Ctrl]+[Left], [Shift]+[Left], [Ctrl]+[Shift]+[Left]
+    if (!sHeldAlt && scancode == SCANCODE_LEFT) {
         if (sHeldControl) {
             sel[0] = djui_inputbox_jump_word_left(msg, len, sel[0]);
         } else if (sel[0] > 0) {
@@ -195,7 +199,8 @@ bool djui_inputbox_on_key_down(struct DjuiBase *base, int scancode) {
         return true;
     }
 
-    if (scancode == SCANCODE_RIGHT) {
+    // [Right], [Ctrl]+[Right], [Shift]+[Right], [Ctrl]+[Shift]+[Right]
+    if (!sHeldAlt && scancode == SCANCODE_RIGHT) {
         if (sHeldControl) {
             sel[0] = djui_inputbox_jump_word_right(msg, len, sel[0]);
         } else if (sel[0] < len) {
@@ -206,21 +211,24 @@ bool djui_inputbox_on_key_down(struct DjuiBase *base, int scancode) {
         return true;
     }
 
-    if (scancode == SCANCODE_HOME) {
+    // [Home], [Shift]+[Home]
+    if (!sHeldAlt && scancode == SCANCODE_HOME) {
         sel[0] = 0;
         if (!sHeldShift) { sel[1] = sel[0]; }
         sCursorBlink = 0;
         return true;
     }
 
-    if (scancode == SCANCODE_END) {
+    // [End], [Shift]+[End]
+    if (!sHeldAlt && scancode == SCANCODE_END) {
         sel[0] = len;
         if (!sHeldShift) { sel[1] = sel[0]; }
         sCursorBlink = 0;
         return true;
     }
 
-    if (scancode == SCANCODE_BACKSPACE) {
+    // [Backspace], [Ctrl]+[Backspace]
+    if (!sHeldAlt && scancode == SCANCODE_BACKSPACE) {
         if (sel[0] == sel[1]) {
             if (sHeldControl) {
                 sel[0] = djui_inputbox_jump_word_left(msg, len, sel[0]);
@@ -235,7 +243,8 @@ bool djui_inputbox_on_key_down(struct DjuiBase *base, int scancode) {
         return true;
     }
 
-    if (scancode == SCANCODE_DELETE) {
+    // [Delete], [Ctrl]+[Delete]
+    if (!sHeldAlt && scancode == SCANCODE_DELETE) {
         if (sel[0] == sel[1]) {
             if (sHeldControl) {
                 sel[1] = djui_inputbox_jump_word_right(msg, len, sel[1]);
@@ -250,13 +259,18 @@ bool djui_inputbox_on_key_down(struct DjuiBase *base, int scancode) {
         return true;
     }
 
-    if ((sHeldControl && scancode == SCANCODE_V) || (sHeldShift && scancode == SCANCODE_INSERT)) {
+    // [Ctrl]+[V], [Shift]+[Insert]
+    if (!sHeldAlt &&
+        ((!sHeldShift && sHeldControl && scancode == SCANCODE_V) ||
+        (!sHeldControl && sHeldShift && scancode == SCANCODE_INSERT))) {
         djui_interactable_on_text_input(wm_api->get_clipboard_text());
         sCursorBlink = 0;
         return true;
     }
 
-    if (sHeldControl && (scancode == SCANCODE_C || scancode == SCANCODE_X)) {
+    // [Ctrl]+[C], [Ctrl]+[X]
+    if (!sHeldAlt && !sHeldShift && sHeldControl &&
+        (scancode == SCANCODE_C || scancode == SCANCODE_X)) {
         if (sel[0] != sel[1]) {
             char clipboardText[256] = { 0 };
             char* cs1 = djui_unicode_at_index(msg, s1);
@@ -271,14 +285,16 @@ bool djui_inputbox_on_key_down(struct DjuiBase *base, int scancode) {
         return true;
     }
 
-    if (sHeldControl && scancode == SCANCODE_A) {
+    // [Ctrl]+[A]
+    if (!sHeldAlt && !sHeldShift && sHeldControl && scancode == SCANCODE_A) {
         inputbox->selection[0] = djui_unicode_len(msg);
         inputbox->selection[1] = 0;
         sCursorBlink = 0;
         return true;
     }
 
-    if (scancode == SCANCODE_ESCAPE) {
+    // [Esc]
+    if (!sHeldAlt && !sHeldShift && !sHeldControl && scancode == SCANCODE_ESCAPE) {
         djui_interactable_set_input_focus(NULL);
         if (inputbox->on_escape_press) {
             inputbox->on_escape_press(inputbox);
@@ -286,7 +302,8 @@ bool djui_inputbox_on_key_down(struct DjuiBase *base, int scancode) {
         return true;
     }
 
-    if (scancode == SCANCODE_ENTER) {
+    // [Enter]
+    if (!sHeldAlt && !sHeldShift && !sHeldControl && scancode == SCANCODE_ENTER) {
         djui_interactable_set_input_focus(NULL);
         if (inputbox->on_enter_press) {
             inputbox->on_enter_press(inputbox);
@@ -299,16 +316,19 @@ bool djui_inputbox_on_key_down(struct DjuiBase *base, int scancode) {
 
 void djui_inputbox_on_key_up(UNUSED struct DjuiBase *base, int scancode) {
     switch (scancode) {
-        case SCANCODE_CONTROL_LEFT:  sHeldControl &= ~(1 << 0); break;
-        case SCANCODE_CONTROL_RIGHT: sHeldControl &= ~(1 << 1); break;
         case SCANCODE_SHIFT_LEFT:    sHeldShift   &= ~(1 << 0); break;
         case SCANCODE_SHIFT_RIGHT:   sHeldShift   &= ~(1 << 1); break;
+        case SCANCODE_CONTROL_LEFT:  sHeldControl &= ~(1 << 0); break;
+        case SCANCODE_CONTROL_RIGHT: sHeldControl &= ~(1 << 1); break;
+        case SCANCODE_ALT_LEFT:      sHeldAlt     &= ~(1 << 0); break;
+        case SCANCODE_ALT_RIGHT:     sHeldAlt     &= ~(1 << 1); break;
     }
 }
 
 void djui_inputbox_on_focus_begin(UNUSED struct DjuiBase* base) {
-    sHeldControl = 0;
     sHeldShift   = 0;
+    sHeldControl = 0;
+    sHeldAlt     = 0;
     wm_api->start_text_input();
 }
 
@@ -422,7 +442,7 @@ static void djui_inputbox_render_selection(struct DjuiInputbox* inputbox) {
         }
         c = djui_unicode_next_char(c);
     }
-    
+
     sCursorBlink = (sCursorBlink + 1) % DJUI_INPUTBOX_MAX_BLINK;
 
     // render only cursor when there is no selection width
