@@ -87,9 +87,10 @@ The `MarioState` structure contains 76 different variables, this guide will try 
 |`specialTripleJump`|`integer`|Can be used as a bool, sets whether or not to use the special triple jump unlocked after talking to Yoshi.
 |`wallNormal`|`Vec3f`|The angle of the current wall on the x, y, and z axis.
 |`cap`|`integer`|Where Mario's cap is meant to be. Can be on Mario's head, the snowman's head in Snowman's Land, held by Klepto, or on Ukiki's head.
+|`dialogID`|`integer`|The id of the current dialog Mario is in. The default value for not being in any dialog is -1.
 
 ## Section 3: When should I use `gMarioStates`?
-Most of the time you won't be using `gMarioStates[0]` to access your Mario, but rather use a hook. A lot of hooks pass `m` through the function. What does this mean? Well, here is a example with comments to explain it as good as possible:
+Most of the time you won't be using `gMarioStates[0]` to access your Mario, but rather use a hook. A lot of hooks pass `m` through the function. What does this mean? Well, here is a example with comments to explain it as well as possible:
 
 ```lua
 -- m here is gMarioStates with the index being 0...16, one of those, so you are not always modifying your own mario.
