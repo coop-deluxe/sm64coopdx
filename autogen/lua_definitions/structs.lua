@@ -174,6 +174,7 @@
 --- @field public BowlingBallThiSmallSpeed number
 --- @field public BowlingBallTtmSpeed number
 --- @field public ChillBullyDeathPosY number
+--- @field public CourtyardBoosRequirement integer
 --- @field public GrateStarRequirement integer
 --- @field public InfiniteRenderDistance integer
 --- @field public KingBobombFVel number
@@ -902,6 +903,7 @@
 --- @field public hudCapTimer integer
 --- @field public hudRedCoinsRadar integer
 --- @field public hudSecretsRadar integer
+--- @field public infiniteStairsRequirement integer
 --- @field public maxCoins integer
 --- @field public maxLives integer
 --- @field public metalCapDuration integer

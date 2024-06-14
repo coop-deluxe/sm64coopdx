@@ -69,6 +69,7 @@ struct LevelValues {
     u16 pssSlideStarTime;
     u8 pssSlideStarIndex;
     s16 coinsRequiredForCoinStar;
+    s16 infiniteStairsRequirement;
     u16 wingCapDuration;
     u16 metalCapDuration;
     u16 vanishCapDuration;
@@ -256,6 +257,7 @@ struct BehaviorValues {
     u8  RespawnShellBoxes;
     u8  MultipleCapCollection;
     u8  InfiniteRenderDistance;
+    s16 CourtyardBoosRequirement;
     struct StarsNeededForDialog starsNeededForDialog;
     struct BehaviorDialogs dialogs;
     struct BehaviorTrajectories trajectories;

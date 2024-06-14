@@ -307,6 +307,7 @@
 | BowlingBallThiSmallSpeed | `number` |  |
 | BowlingBallTtmSpeed | `number` |  |
 | ChillBullyDeathPosY | `number` |  |
+| CourtyardBoosRequirement | `integer` |  |
 | GrateStarRequirement | `integer` |  |
 | InfiniteRenderDistance | `integer` |  |
 | KingBobombFVel | `number` |  |
@@ -1243,6 +1244,7 @@
 | hudCapTimer | `integer` |  |
 | hudRedCoinsRadar | `integer` |  |
 | hudSecretsRadar | `integer` |  |
+| infiniteStairsRequirement | `integer` |  |
 | maxCoins | `integer` |  |
 | maxLives | `integer` |  |
 | metalCapDuration | `integer` |  |
