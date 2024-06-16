@@ -1596,6 +1596,7 @@
    - [collision_find_ceil](functions-5.md#collision_find_ceil)
    - [collision_find_floor](functions-5.md#collision_find_floor)
    - [collision_find_surface_on_ray](functions-5.md#collision_find_surface_on_ray)
+   - [collision_find_surface_on_ray_precision](functions-5.md#collision_find_surface_on_ray_precision)
    - [collision_get_temp_wall_collision_data](functions-5.md#collision_get_temp_wall_collision_data)
    - [get_water_surface_pseudo_floor](functions-5.md#get_water_surface_pseudo_floor)
    - [smlua_collision_util_get](functions-5.md#smlua_collision_util_get)

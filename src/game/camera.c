@@ -12181,7 +12181,7 @@ static u8 rom_hack_cam_can_see_mario(Vec3f desiredPos) {
             camdir[2] = target[2] - desiredPos[2];
 
             Vec3f hitpos;
-            find_surface_on_ray(desiredPos, camdir, &surf, hitpos);
+            find_surface_on_ray(desiredPos, camdir, &surf, hitpos, 3.0f);
             if (surf == NULL) {
                 return true;
             }
@@ -12200,7 +12200,7 @@ void rom_hack_cam_walk(Vec3f pos, Vec3f dir, f32 dist) {
 
     struct Surface* surf = NULL;
     Vec3f hitpos;
-    find_surface_on_ray(pos, movement, &surf, hitpos);
+    find_surface_on_ray(pos, movement, &surf, hitpos, 3.0f);
 
     if (surf == NULL) {
         pos[0] += movement[0];

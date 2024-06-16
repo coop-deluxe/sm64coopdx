@@ -475,6 +475,32 @@
 
 <br />
 
+## [collision_find_surface_on_ray_precision](#collision_find_surface_on_ray_precision)
+
+### Lua Example
+`local RayIntersectionInfoValue = collision_find_surface_on_ray_precision(startX, startY, startZ, dirX, dirY, dirZ, precision)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| startX | `number` |
+| startY | `number` |
+| startZ | `number` |
+| dirX | `number` |
+| dirY | `number` |
+| dirZ | `number` |
+| precision | `number` |
+
+### Returns
+[RayIntersectionInfo](structs.md#RayIntersectionInfo)
+
+### C Prototype
+`struct RayIntersectionInfo* collision_find_surface_on_ray_precision(f32 startX, f32 startY, f32 startZ, f32 dirX, f32 dirY, f32 dirZ, f32 precision);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [collision_get_temp_wall_collision_data](#collision_get_temp_wall_collision_data)
 
 ### Lua Example

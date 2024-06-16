@@ -161,7 +161,15 @@ struct RayIntersectionInfo* collision_find_surface_on_ray(f32 startX, f32 startY
     static struct RayIntersectionInfo info = { 0 };
     Vec3f orig = { startX, startY, startZ };
     Vec3f dir = { dirX, dirY, dirZ };
-    find_surface_on_ray(orig, dir, &info.surface, info.hitPos);
+    find_surface_on_ray(orig, dir, &info.surface, info.hitPos, 3.0f);
+    return &info;
+}
+
+struct RayIntersectionInfo* collision_find_surface_on_ray_precision(f32 startX, f32 startY, f32 startZ, f32 dirX, f32 dirY, f32 dirZ, f32 precision) {
+    static struct RayIntersectionInfo info = { 0 };
+    Vec3f orig = { startX, startY, startZ };
+    Vec3f dir = { dirX, dirY, dirZ };
+    find_surface_on_ray(orig, dir, &info.surface, info.hitPos, precision);
     return &info;
 }
 

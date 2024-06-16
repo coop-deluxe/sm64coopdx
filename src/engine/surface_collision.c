@@ -1190,8 +1190,7 @@ void find_surface_on_ray_cell(s16 cellX, s16 cellZ, Vec3f orig, Vec3f normalized
     }
 }
 
-void find_surface_on_ray(Vec3f orig, Vec3f dir, struct Surface **hit_surface, Vec3f hit_pos)
-{
+void find_surface_on_ray(Vec3f orig, Vec3f dir, struct Surface **hit_surface, Vec3f hit_pos, f32 precision) {
     f32 max_length;
     s16 cellZ, cellX;
     f32 fCellZ, fCellX;
@@ -1222,9 +1221,6 @@ void find_surface_on_ray(Vec3f orig, Vec3f dir, struct Surface **hit_surface, Ve
         find_surface_on_ray_cell(cellX, cellZ, orig, normalized_dir, dir_length, hit_surface, hit_pos, &max_length);
         return;
     }
-
-    // increase collision checking precision (normally 1)
-    f32 precision = 3;
 
     // Get cells we cross using DDA
     if (absx(dir[0]) >= absx(dir[2]))
