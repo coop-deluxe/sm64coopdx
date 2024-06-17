@@ -7610,29 +7610,6 @@ function collision_find_floor(x, y, z)
     -- ...
 end
 
---- @param startX number
---- @param startY number
---- @param startZ number
---- @param dirX number
---- @param dirY number
---- @param dirZ number
---- @return RayIntersectionInfo
-function collision_find_surface_on_ray(startX, startY, startZ, dirX, dirY, dirZ)
-    -- ...
-end
-
---- @param startX number
---- @param startY number
---- @param startZ number
---- @param dirX number
---- @param dirY number
---- @param dirZ number
---- @param precision number
---- @return RayIntersectionInfo
-function collision_find_surface_on_ray_precision(startX, startY, startZ, dirX, dirY, dirZ, precision)
-    -- ...
-end
-
 --- @return WallCollisionData
 function collision_get_temp_wall_collision_data()
     -- ...

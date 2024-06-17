@@ -82,40 +82,41 @@ override_allowed_functions = {
 }
 
 override_disallowed_functions = {
-    "src/audio/external.h":                 [ " func_" ],
-    "src/engine/math_util.h":               [ "atan2s", "atan2f", "vec3s_sub" ],
-    "src/engine/surface_load.h":            [ "alloc_surface_poools" ],
-    "src/engine/surface_collision.h":       [ " debug_", "f32_find_wall_collision" ],
-    "src/game/mario_actions_airborne.c":    [ "^[us]32 act_.*" ],
-    "src/game/mario_actions_automatic.c":   [ "^[us]32 act_.*" ],
-    "src/game/mario_actions_cutscene.c":    [ "^[us]32 act_.*", " geo_", "spawn_obj", "print_displaying_credits_entry" ],
-    "src/game/mario_actions_moving.c":      [ "^[us]32 act_.*" ],
-    "src/game/mario_actions_object.c":      [ "^[us]32 act_.*" ],
-    "src/game/mario_actions_stationary.c":  [ "^[us]32 act_.*" ],
-    "src/game/mario_actions_submerged.c":   [ "^[us]32 act_.*" ],
-    "src/game/mario_step.h":                [ " stub_mario_step", "transfer_bully_speed" ],
-    "src/game/mario.h":                     [ " init_mario" ],
-    "src/pc/djui/djui_console.h":           [ " djui_console_create", "djui_console_message_create" ],
-    "src/pc/djui/djui_chat_message.h":      [ "create_from" ],
-    "src/game/interaction.h":               [ "process_interaction", "_handle_" ],
-    "src/game/sound_init.h":                [ "_loop_", "thread4_", "set_sound_mode" ],
-    "src/pc/network/network_utils.h":       [ "network_get_player_text_color[^_]" ],
-    "src/pc/network/network_player.h":      [ "_init", "_connected[^_]", "_shutdown", "_disconnected", "_update", "construct_player_popup" ],
-    "src/game/object_helpers.c":            [ "spawn_obj", "^bhv_", "abs[fi]", "^bit_shift", "_debug$", "^stub_", "_set_model", "cur_obj_set_direction_table", "cur_obj_progress_direction_table" ],
-    "src/game/obj_behaviors.c":             [ "debug_" ],
-    "src/game/obj_behaviors_2.c":           [ "wiggler_jumped_on_attack_handler", "huge_goomba_weakly_attacked" ],
-    "src/game/spawn_sound.c":               [ "spawner" ],
-    "src/game/level_info.h":                [ "_name_table" ],
-    "src/pc/lua/utils/smlua_obj_utils.h":   [ "spawn_object_remember_field" ],
-    "src/game/camera.h":                    [ "update_camera", "init_camera", "stub_camera", "^reset_camera", "move_point_along_spline" ],
-    "src/game/behavior_actions.h":          [ "bhv_dust_smoke_loop", "bhv_init_room" ],
-    "src/pc/lua/utils/smlua_audio_utils.h": [ "smlua_audio_utils_override", "audio_custom_shutdown", "smlua_audio_custom_init", "smlua_audio_custom_deinit", "audio_sample_destroy_pending_copies", "audio_custom_update_volume" ],
-    "src/pc/djui/djui_hud_utils.h":         [ "djui_hud_render_texture", "djui_hud_render_texture_raw", "djui_hud_render_texture_tile", "djui_hud_render_texture_tile_raw" ],
-    "src/pc/lua/utils/smlua_level_utils.h": [ "smlua_level_util_reset" ],
-    "src/pc/lua/utils/smlua_text_utils.h":  [ "smlua_text_utils_init", "smlua_text_utils_shutdown", "smlua_text_utils_reset_all" ],
-    "src/pc/lua/utils/smlua_anim_utils.h":  [ "smlua_anim_util_reset", "smlua_anim_util_register_animation" ],
-    "src/pc/network/lag_compensation.h":    [ "lag_compensation_clear", "lag_compensation_store" ],
-    "src/game/first_person_cam.h":          [ "first_person_update" ]
+    "src/audio/external.h":                     [ " func_" ],
+    "src/engine/math_util.h":                   [ "atan2s", "atan2f", "vec3s_sub" ],
+    "src/engine/surface_load.h":                [ "alloc_surface_poools" ],
+    "src/engine/surface_collision.h":           [ " debug_", "f32_find_wall_collision" ],
+    "src/game/mario_actions_airborne.c":        [ "^[us]32 act_.*" ],
+    "src/game/mario_actions_automatic.c":       [ "^[us]32 act_.*" ],
+    "src/game/mario_actions_cutscene.c":        [ "^[us]32 act_.*", " geo_", "spawn_obj", "print_displaying_credits_entry" ],
+    "src/game/mario_actions_moving.c":          [ "^[us]32 act_.*" ],
+    "src/game/mario_actions_object.c":          [ "^[us]32 act_.*" ],
+    "src/game/mario_actions_stationary.c":      [ "^[us]32 act_.*" ],
+    "src/game/mario_actions_submerged.c":       [ "^[us]32 act_.*" ],
+    "src/game/mario_step.h":                    [ " stub_mario_step", "transfer_bully_speed" ],
+    "src/game/mario.h":                         [ " init_mario" ],
+    "src/pc/djui/djui_console.h":               [ " djui_console_create", "djui_console_message_create" ],
+    "src/pc/djui/djui_chat_message.h":          [ "create_from" ],
+    "src/game/interaction.h":                   [ "process_interaction", "_handle_" ],
+    "src/game/sound_init.h":                    [ "_loop_", "thread4_", "set_sound_mode" ],
+    "src/pc/network/network_utils.h":           [ "network_get_player_text_color[^_]" ],
+    "src/pc/network/network_player.h":          [ "_init", "_connected[^_]", "_shutdown", "_disconnected", "_update", "construct_player_popup" ],
+    "src/game/object_helpers.c":                [ "spawn_obj", "^bhv_", "abs[fi]", "^bit_shift", "_debug$", "^stub_", "_set_model", "cur_obj_set_direction_table", "cur_obj_progress_direction_table" ],
+    "src/game/obj_behaviors.c":                 [ "debug_" ],
+    "src/game/obj_behaviors_2.c":               [ "wiggler_jumped_on_attack_handler", "huge_goomba_weakly_attacked" ],
+    "src/game/spawn_sound.c":                   [ "spawner" ],
+    "src/game/level_info.h":                    [ "_name_table" ],
+    "src/pc/lua/utils/smlua_obj_utils.h":       [ "spawn_object_remember_field" ],
+    "src/game/camera.h":                        [ "update_camera", "init_camera", "stub_camera", "^reset_camera", "move_point_along_spline" ],
+    "src/game/behavior_actions.h":              [ "bhv_dust_smoke_loop", "bhv_init_room" ],
+    "src/pc/lua/utils/smlua_audio_utils.h":     [ "smlua_audio_utils_override", "audio_custom_shutdown", "smlua_audio_custom_init", "smlua_audio_custom_deinit", "audio_sample_destroy_pending_copies", "audio_custom_update_volume" ],
+    "src/pc/djui/djui_hud_utils.h":             [ "djui_hud_render_texture", "djui_hud_render_texture_raw", "djui_hud_render_texture_tile", "djui_hud_render_texture_tile_raw" ],
+    "src/pc/lua/utils/smlua_level_utils.h":     [ "smlua_level_util_reset" ],
+    "src/pc/lua/utils/smlua_text_utils.h":      [ "smlua_text_utils_init", "smlua_text_utils_shutdown", "smlua_text_utils_reset_all" ],
+    "src/pc/lua/utils/smlua_anim_utils.h":      [ "smlua_anim_util_reset", "smlua_anim_util_register_animation" ],
+    "src/pc/network/lag_compensation.h":        [ "lag_compensation_clear", "lag_compensation_store" ],
+    "src/game/first_person_cam.h":              [ "first_person_update" ],
+    "src/pc/lua/utils/smlua_collision_utils.h": [ "collision_find_surface_on_ray" ]
 }
 
 override_hide_functions = {
@@ -308,6 +309,8 @@ manual_index_documentation = """
    - [smlua_anim_util_register_animation](#smlua_anim_util_register_animation)
    - [level_script_parse](#level_script_parse)
    - [log_to_console](#log_to_console)
+   - [add_scroll_target](#add_scroll_target)
+   - [collision_find_surface_on_ray](#collision_find_surface_on_ray)
 
 <br />
 
@@ -652,13 +655,64 @@ Logs a message to the in-game console.
 | Field | Type |
 | ----- | ---- |
 | message | `string` |
-| level | `ConsoleMessageLevel` |
+| level (optional) | `ConsoleMessageLevel` |
 
 ### Returns
 - None
 
 ### C Prototype
 `void log_to_console(const char* message, enum ConsoleMessageLevel level);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [add_scroll_target](#add_scroll_target)
+
+Registers a vertex buffer to be used for a scrolling texture. Should be used with `RM_Scroll_Texture` or `editor_Scroll_Texture`
+
+### Lua Example
+`add_scroll_target(0, "arena_rainbow_dl_StarRoad_mesh_layer_5_vtx_0")`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| index | `integer` |
+| name | `string` |
+
+### Returns
+- None
+
+### C Prototype
+`void dynos_add_scroll_target(u32 index, const char *name, u32 offset, u32 size);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [collision_find_surface_on_ray](#collision_find_surface_on_ray)
+
+Shoots a raycast from `startX`, `startY`, and `startZ` in the direction of `dirX`, `dirY`, and `dirZ`.
+
+### Lua Example
+`collision_find_surface_on_ray(0, 0, 0, 50, 100, 50)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| startX | `number` |
+| startY | `number` |
+| startZ | `number` |
+| dirX | `number` |
+| dirY | `number` |
+| dirZ | `number` |
+| precision (optional) | `number` |
+
+### Returns
+- [RayIntersectionInfo](structs.md#RayIntersectionInfo)
+
+### C Prototype
+`struct RayIntersectionInfo* collision_find_surface_on_ray(f32 startX, f32 startY, f32 startZ, f32 dirX, f32 dirY, f32 dirZ, f32 precision);`
 
 [:arrow_up_small:](#)
 

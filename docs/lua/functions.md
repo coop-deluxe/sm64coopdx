@@ -24,6 +24,8 @@
    - [smlua_anim_util_register_animation](#smlua_anim_util_register_animation)
    - [level_script_parse](#level_script_parse)
    - [log_to_console](#log_to_console)
+   - [add_scroll_target](#add_scroll_target)
+   - [collision_find_surface_on_ray](#collision_find_surface_on_ray)
 
 <br />
 
@@ -1595,8 +1597,6 @@
 - smlua_collision_utils.h
    - [collision_find_ceil](functions-5.md#collision_find_ceil)
    - [collision_find_floor](functions-5.md#collision_find_floor)
-   - [collision_find_surface_on_ray](functions-5.md#collision_find_surface_on_ray)
-   - [collision_find_surface_on_ray_precision](functions-5.md#collision_find_surface_on_ray_precision)
    - [collision_get_temp_wall_collision_data](functions-5.md#collision_get_temp_wall_collision_data)
    - [get_water_surface_pseudo_floor](functions-5.md#get_water_surface_pseudo_floor)
    - [smlua_collision_util_get](functions-5.md#smlua_collision_util_get)
@@ -2202,13 +2202,64 @@ Logs a message to the in-game console.
 | Field | Type |
 | ----- | ---- |
 | message | `string` |
-| level | `ConsoleMessageLevel` |
+| level (optional) | `ConsoleMessageLevel` |
 
 ### Returns
 - None
 
 ### C Prototype
 `void log_to_console(const char* message, enum ConsoleMessageLevel level);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [add_scroll_target](#add_scroll_target)
+
+Registers a vertex buffer to be used for a scrolling texture. Should be used with `RM_Scroll_Texture` or `editor_Scroll_Texture`
+
+### Lua Example
+`add_scroll_target(0, "arena_rainbow_dl_StarRoad_mesh_layer_5_vtx_0")`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| index | `integer` |
+| name | `string` |
+
+### Returns
+- None
+
+### C Prototype
+`void dynos_add_scroll_target(u32 index, const char *name, u32 offset, u32 size);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [collision_find_surface_on_ray](#collision_find_surface_on_ray)
+
+Shoots a raycast from `startX`, `startY`, and `startZ` in the direction of `dirX`, `dirY`, and `dirZ`.
+
+### Lua Example
+`collision_find_surface_on_ray(0, 0, 0, 50, 100, 50)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| startX | `number` |
+| startY | `number` |
+| startZ | `number` |
+| dirX | `number` |
+| dirY | `number` |
+| dirZ | `number` |
+| precision (optional) | `number` |
+
+### Returns
+- [RayIntersectionInfo](structs.md#RayIntersectionInfo)
+
+### C Prototype
+`struct RayIntersectionInfo* collision_find_surface_on_ray(f32 startX, f32 startY, f32 startZ, f32 dirX, f32 dirY, f32 dirZ, f32 precision);`
 
 [:arrow_up_small:](#)
 

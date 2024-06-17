@@ -28383,62 +28383,6 @@ int smlua_func_collision_find_floor(lua_State* L) {
     return 1;
 }
 
-int smlua_func_collision_find_surface_on_ray(lua_State* L) {
-    if (L == NULL) { return 0; }
-
-    int top = lua_gettop(L);
-    if (top != 6) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "collision_find_surface_on_ray", 6, top);
-        return 0;
-    }
-
-    f32 startX = smlua_to_number(L, 1);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "collision_find_surface_on_ray"); return 0; }
-    f32 startY = smlua_to_number(L, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "collision_find_surface_on_ray"); return 0; }
-    f32 startZ = smlua_to_number(L, 3);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "collision_find_surface_on_ray"); return 0; }
-    f32 dirX = smlua_to_number(L, 4);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "collision_find_surface_on_ray"); return 0; }
-    f32 dirY = smlua_to_number(L, 5);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 5, "collision_find_surface_on_ray"); return 0; }
-    f32 dirZ = smlua_to_number(L, 6);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 6, "collision_find_surface_on_ray"); return 0; }
-
-    smlua_push_object(L, LOT_RAYINTERSECTIONINFO, collision_find_surface_on_ray(startX, startY, startZ, dirX, dirY, dirZ));
-
-    return 1;
-}
-
-int smlua_func_collision_find_surface_on_ray_precision(lua_State* L) {
-    if (L == NULL) { return 0; }
-
-    int top = lua_gettop(L);
-    if (top != 7) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "collision_find_surface_on_ray_precision", 7, top);
-        return 0;
-    }
-
-    f32 startX = smlua_to_number(L, 1);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "collision_find_surface_on_ray_precision"); return 0; }
-    f32 startY = smlua_to_number(L, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "collision_find_surface_on_ray_precision"); return 0; }
-    f32 startZ = smlua_to_number(L, 3);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "collision_find_surface_on_ray_precision"); return 0; }
-    f32 dirX = smlua_to_number(L, 4);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "collision_find_surface_on_ray_precision"); return 0; }
-    f32 dirY = smlua_to_number(L, 5);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 5, "collision_find_surface_on_ray_precision"); return 0; }
-    f32 dirZ = smlua_to_number(L, 6);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 6, "collision_find_surface_on_ray_precision"); return 0; }
-    f32 precision = smlua_to_number(L, 7);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 7, "collision_find_surface_on_ray_precision"); return 0; }
-
-    smlua_push_object(L, LOT_RAYINTERSECTIONINFO, collision_find_surface_on_ray_precision(startX, startY, startZ, dirX, dirY, dirZ, precision));
-
-    return 1;
-}
-
 int smlua_func_collision_get_temp_wall_collision_data(UNUSED lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -34190,8 +34134,6 @@ void smlua_bind_functions_autogen(void) {
     // smlua_collision_utils.h
     smlua_bind_function(L, "collision_find_ceil", smlua_func_collision_find_ceil);
     smlua_bind_function(L, "collision_find_floor", smlua_func_collision_find_floor);
-    smlua_bind_function(L, "collision_find_surface_on_ray", smlua_func_collision_find_surface_on_ray);
-    smlua_bind_function(L, "collision_find_surface_on_ray_precision", smlua_func_collision_find_surface_on_ray_precision);
     smlua_bind_function(L, "collision_get_temp_wall_collision_data", smlua_func_collision_get_temp_wall_collision_data);
     smlua_bind_function(L, "get_water_surface_pseudo_floor", smlua_func_get_water_surface_pseudo_floor);
     smlua_bind_function(L, "smlua_collision_util_get", smlua_func_smlua_collision_util_get);
