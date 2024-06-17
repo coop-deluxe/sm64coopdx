@@ -3110,18 +3110,26 @@ s16 render_pause_courses_and_castle(void) {
                  || gPlayer1Controller->buttonPressed & START_BUTTON)
 #endif
                 {
-                    level_set_transition(0, NULL);
-                    play_sound(SOUND_MENU_PAUSE_2, gGlobalSoundSource);
-                    gDialogBoxState = DIALOG_STATE_OPENING;
-                    gMenuMode = -1;
-
+                    bool allowExit = true;
                     if (gDialogLineNum == 2 || gDialogLineNum == 3) {
-                        num = gDialogLineNum;
-                    } else {
-                        num = 1;
+                        smlua_call_event_hooks_bool_param_ret_bool(HOOK_ON_PAUSE_EXIT, (gDialogLineNum == 3), &allowExit);
                     }
+                    if (allowExit) {
+                        level_set_transition(0, NULL);
+                        play_sound(SOUND_MENU_PAUSE_2, gGlobalSoundSource);
+                        gDialogBoxState = DIALOG_STATE_OPENING;
+                        gMenuMode = -1;
 
-                    return num;
+                        if (gDialogLineNum == 2 || gDialogLineNum == 3) {
+                            num = gDialogLineNum;
+                        } else {
+                            num = 1;
+                        }
+
+                        return num;
+                    } else {
+                        play_sound(SOUND_MENU_CAMERA_BUZZ | (0xFF << 8), gGlobalSoundSource);
+                    }
                 }
             }
             break;
