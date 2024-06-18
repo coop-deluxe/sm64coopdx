@@ -867,7 +867,7 @@ int smlua_func_collision_find_surface_on_ray(lua_State* L) {
     f32 precision = paramCount == 7 ? smlua_to_number(L, 7) : 3.0f;
     if (!gSmLuaConvertSuccess) { LOG_LUA("collision_find_surface_on_ray: Failed to convert parameter 7"); return 0; }
 
-    collision_find_surface_on_ray(startX, startY, startZ, dirX, dirY, dirZ, precision);
+    smlua_push_object(L, LOT_RAYINTERSECTIONINFO, collision_find_surface_on_ray(startX, startY, startZ, dirX, dirY, dirZ, precision));
 
     return 1;
 }
