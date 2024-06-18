@@ -12,7 +12,7 @@ bool gDjuiChatBoxFocus = false;
 static bool sDjuiChatBoxClearText = false;
 
 #define MAX_HISTORY_SIZE 256
-#define MAX_MSG_LENGTH 201
+#define MAX_MSG_LENGTH 501
 
 typedef struct {
     s32 initialized;
