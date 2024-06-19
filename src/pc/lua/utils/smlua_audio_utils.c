@@ -262,6 +262,7 @@ struct ModAudio* audio_load_internal(const char* filename, bool isStream) {
     }
 
     audio->isStream = isStream;
+    audio->loaded = true;
     return audio;
 }
 

@@ -24,6 +24,7 @@ struct ModAudio {
     struct ModAudioSampleCopies* sampleCopiesTail;
     bool isStream;
     f32 baseVolume;
+    bool loaded;
 };
 
 struct ModAudio* audio_stream_load(const char* filename);
