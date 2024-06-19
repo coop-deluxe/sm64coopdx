@@ -201,8 +201,8 @@ static u32 mods_count_directory(char* modsBasePath) {
     return pathCount;
 }
 
-static void mods_load(struct Mods* mods, char* modsBasePath, bool isUserModPath) {
-    REFRESH_MUTEX(snprintf(gCurrLoadingSegment.str, 256, "Generating DynOS Packs In %s Mod Path:\n\\#808080\\%s", isUserModPath ? "User" : "Local", modsBasePath));
+static void mods_load(struct Mods* mods, char* modsBasePath, UNUSED bool isUserModPath) {
+    LOADING_SCREEN_MUTEX(snprintf(gCurrLoadingSegment.str, 256, "Generating DynOS Packs In %s Mod Path:\n\\#808080\\%s", isUserModPath ? "User" : "Local", modsBasePath));
 
     // generate bins
     dynos_generate_packs(modsBasePath);
@@ -230,9 +230,9 @@ static void mods_load(struct Mods* mods, char* modsBasePath, bool isUserModPath)
         LOG_ERROR("Could not open directory '%s'", modsBasePath);
         return;
     }
-    f32 count = (f32) mods_count_directory(modsBasePath);
+    UNUSED f32 count = (f32) mods_count_directory(modsBasePath);
 
-    REFRESH_MUTEX(snprintf(gCurrLoadingSegment.str, 256, "Loading Mods In %s Mod Path:\n\\#808080\\%s", isUserModPath ? "User" : "Local", modsBasePath));
+    LOADING_SCREEN_MUTEX(snprintf(gCurrLoadingSegment.str, 256, "Loading Mods In %s Mod Path:\n\\#808080\\%s", isUserModPath ? "User" : "Local", modsBasePath));
 
     // iterate
     char path[SYS_MAX_PATH] = { 0 };
@@ -241,18 +241,18 @@ static void mods_load(struct Mods* mods, char* modsBasePath, bool isUserModPath)
         // sanity check / fill path[]
         if (!directory_sanity_check(dir, modsBasePath, path)) { continue; }
 
-        REFRESH_MUTEX(snprintf(gCurrLoadingSegment.str, 256, "Loading Mod:\n\\#808080\\%s/%s", modsBasePath, dir->d_name));
+        LOADING_SCREEN_MUTEX(snprintf(gCurrLoadingSegment.str, 256, "Loading Mod:\n\\#808080\\%s/%s", modsBasePath, dir->d_name));
 
         // load the mod
         if (!mod_load(mods, modsBasePath, dir->d_name)) {
             break;
         }
 
-        REFRESH_MUTEX(gCurrLoadingSegment.percentage = (f32) i / count);
+        LOADING_SCREEN_MUTEX(gCurrLoadingSegment.percentage = (f32) i / count);
     }
 
     closedir(d);
-    REFRESH_MUTEX(gCurrLoadingSegment.percentage = 1);
+    LOADING_SCREEN_MUTEX(gCurrLoadingSegment.percentage = 1);
 }
 
 void mods_refresh_local(void) {
@@ -306,7 +306,7 @@ void mods_enable(char* relativePath) {
 }
 
 void mods_init(void) {
-    REFRESH_MUTEX(loading_screen_set_segment_text("Caching Mods"));
+    LOADING_SCREEN_MUTEX(loading_screen_set_segment_text("Caching Mods"));
 
     // load mod cache
     mod_cache_load();

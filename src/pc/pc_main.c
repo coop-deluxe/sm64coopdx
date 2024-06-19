@@ -96,10 +96,6 @@ u8 gLuaVolumeEnv = 127;
 static struct AudioAPI *audio_api;
 struct GfxWindowManagerAPI *wm_api = &WAPI;
 
-#if !defined(WAPI_DXGI) && !defined(WAPI_DUMMY)
-#define LOADING_SCREEN_SUPPORTED
-#endif
-
 extern void gfx_run(Gfx *commands);
 extern void thread5_game_loop(void *arg);
 extern void create_next_audio_buffer(s16 *samples, u32 num_samples);
@@ -317,7 +313,7 @@ void* main_game_init(void* isThreaded) {
     // load language
     if (!djui_language_init(configLanguage)) { snprintf(configLanguage, MAX_CONFIG_STRING, "%s", ""); }
 
-    REFRESH_MUTEX(loading_screen_set_segment_text("Loading"));
+    LOADING_SCREEN_MUTEX(loading_screen_set_segment_text("Loading"));
     dynos_gfx_init();
     enable_queued_dynos_packs();
     sync_objects_init_system();
@@ -326,13 +322,13 @@ void* main_game_init(void* isThreaded) {
     //     check_for_updates();
     // }
 
-    REFRESH_MUTEX(loading_screen_set_segment_text("Loading ROM Assets"));
+    LOADING_SCREEN_MUTEX(loading_screen_set_segment_text("Loading ROM Assets"));
     rom_assets_load();
     smlua_text_utils_init();
 
     mods_init();
     enable_queued_mods();
-    REFRESH_MUTEX(
+    LOADING_SCREEN_MUTEX(
         gCurrLoadingSegment.percentage = 0;
         loading_screen_set_segment_text("Starting Game");
     );

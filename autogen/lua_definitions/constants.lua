@@ -9082,6 +9082,9 @@ WATER_STEP_HIT_WALL = 4
 --- @type integer
 WATER_STEP_NONE = 0
 
+--- @type integer
+MAX_HOOKED_MOD_MENU_ELEMENTS = 256
+
 --- @class LuaActionHookType
 
 --- @type LuaActionHookType
