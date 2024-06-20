@@ -39,6 +39,7 @@
 extern struct DjuiRoot* gDjuiRoot;
 extern bool gDjuiInMainMenu;
 extern bool gDjuiDisabled;
+extern u32 gDjuiLuaErrorTimeout;
 
 void djui_init(void);
 void djui_init_late(void);

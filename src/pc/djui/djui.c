@@ -21,7 +21,7 @@ static Gfx* sSavedDisplayListHead = NULL;
 struct DjuiRoot* gDjuiRoot = NULL;
 static struct DjuiText* sDjuiPauseOptions = NULL;
 static struct DjuiText* sDjuiLuaError = NULL;
-static u32 sDjuiLuaErrorTimeout = 0;
+u32 gDjuiLuaErrorTimeout = 0;
 bool gDjuiInMainMenu = true;
 bool gDjuiDisabled = false;
 bool gDjuiShuttingDown = false;
@@ -38,7 +38,7 @@ void djui_shutdown(void) {
     if (sDjuiLuaError) djui_base_destroy(&sDjuiLuaError->base);
     sDjuiPauseOptions = NULL;
     sDjuiLuaError = NULL;
-    sDjuiLuaErrorTimeout = 0;
+    gDjuiLuaErrorTimeout = 0;
 
     if (gDjuiConsole) {
         djui_base_destroy(&gDjuiConsole->base);
@@ -129,7 +129,7 @@ void djui_lua_error(char* text, struct DjuiColor color) {
     djui_base_set_color(&sDjuiLuaError->base, color.r, color.g, color.b, color.a);
     djui_text_set_text(sDjuiLuaError, text);
     djui_base_set_visible(&sDjuiLuaError->base, true);
-    sDjuiLuaErrorTimeout = 30 * 5;
+    gDjuiLuaErrorTimeout = 30 * 5;
 }
 
 void djui_reset_hud_params(void) {
@@ -163,9 +163,9 @@ void djui_render(void) {
 
     djui_fps_display_render();
 
-    if (sDjuiLuaErrorTimeout > 0) {
-        sDjuiLuaErrorTimeout--;
-        if (sDjuiLuaErrorTimeout == 0) {
+    if (gDjuiLuaErrorTimeout > 0) {
+        gDjuiLuaErrorTimeout--;
+        if (gDjuiLuaErrorTimeout == 0) {
             djui_base_set_visible(&sDjuiLuaError->base, false);
         }
     }

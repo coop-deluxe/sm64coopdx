@@ -730,6 +730,7 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
 
     reset_window_title();
 
+    gDjuiLuaErrorTimeout = 0;
     djui_panel_shutdown();
     extern bool gDjuiInMainMenu;
     if (!gDjuiInMainMenu) {
