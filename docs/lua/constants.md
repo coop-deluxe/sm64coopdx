@@ -2773,7 +2773,7 @@
 | CAP | 6 |
 | EMBLEM | 7 |
 | PLAYER_PART_MAX | 8 |
-| METAL | CAP |
+| METAL | EMBLEM |
 
 [:arrow_up_small:](#)
 
@@ -3239,7 +3239,6 @@
 <br />
 
 ## [smlua_hooks.h](#smlua_hooks.h)
-- MAX_HOOKED_MOD_MENU_ELEMENTS
 
 ### [enum LuaActionHookType](#LuaActionHookType)
 | Identifier | Value |

@@ -7777,7 +7777,7 @@ EMBLEM = 7
 PLAYER_PART_MAX = 8
 
 --- @type PlayerPart
-METAL = CAP
+METAL = EMBLEM
 
 --- @type integer
 EEPROM_SIZE = 0x200
@@ -9081,9 +9081,6 @@ WATER_STEP_HIT_WALL = 4
 
 --- @type integer
 WATER_STEP_NONE = 0
-
---- @type integer
-MAX_HOOKED_MOD_MENU_ELEMENTS = 256
 
 --- @class LuaActionHookType
 
