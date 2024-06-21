@@ -760,11 +760,6 @@ void initiate_warp(s16 destLevel, s16 destArea, s16 destWarpNode, s32 arg3) {
     sWarpDest.arg = arg3;
 }
 
-// From Surface 0xD3 to 0xFC
-#define PAINTING_WARP_INDEX_START 0x00 // Value greater than or equal to Surface 0xD3
-#define PAINTING_WARP_INDEX_FA 0x2A    // THI Huge Painting index left
-#define PAINTING_WARP_INDEX_END 0x2D   // Value less than Surface 0xFD
-
 /**
  * Check if Mario is above and close to a painting warp floor, and return the
  * corresponding warp node.
@@ -1220,9 +1215,7 @@ static void start_demo(void) {
             gChangeLevel = gCurrLevelNum;
         }
 
-        if (sDemoNumber <= 6 && sDemoNumber > -1) {
-            gCurrDemoInput = NULL;
-            alloc_anim_dma_table(&gDemo, gDemoInputs, gDemoTargetAnim);
+        if (sDemoNumber >= 0 && sDemoNumber <= 6) {
             load_patchable_table(&gDemo, sDemoNumber, false);
             gCurrDemoInput = ((struct DemoInput *) gDemo.targetAnim);
         } else {
