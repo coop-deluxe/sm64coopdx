@@ -107,11 +107,11 @@ void init_loading_screen(void) {
         djui_base_set_location(&text->base, 0, 0);
 
         djui_base_set_size_type(&text->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-        djui_base_set_size(&text->base, 1.0f, gDjuiFonts[0]->defaultFontScale * 6.0f);
+        djui_base_set_size(&text->base, 1.0f, gDjuiFonts[0]->defaultFontScale * 4.5f); // 3 lines
         djui_base_set_color(&text->base, 220, 220, 220, 255);
         djui_text_set_alignment(text, DJUI_HALIGN_CENTER, DJUI_VALIGN_TOP);
         djui_text_set_font(text, gDjuiFonts[0]);
-        djui_text_set_font_scale(text, gDjuiFonts[0]->defaultFontScale * 2);
+        djui_text_set_font_scale(text, gDjuiFonts[0]->defaultFontScale * 1.5f);
 
         load->loadingDesc = text;
     }
