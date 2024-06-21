@@ -75,7 +75,7 @@ Gfx *geo_update_layer_transparency(s32 callContext, struct GraphNode *node, UNUS
     dlStart = NULL;
 
     if (callContext == GEO_CONTEXT_RENDER) {
-        objectGraphNode = (struct Object *) gCurGraphNodeObject; // TODO: change this to object pointer?
+        objectGraphNode = (struct Object *) gCurGraphNodeObject;
         currentGraphNode = (struct GraphNodeGenerated *) node;
         sp2C = (struct GraphNodeGenerated *) node;
 
@@ -98,7 +98,9 @@ Gfx *geo_update_layer_transparency(s32 callContext, struct GraphNode *node, UNUS
                 0x100 | (currentGraphNode->fnNode.node.flags & 0xFF);
             }
 
-            objectGraphNode->oAnimState = 0;
+            if (currentGraphNode->parameter != 30) {
+                objectGraphNode->oAnimState = 0;
+            }
         } else {
             if (currentGraphNode->parameter == 20) {
                 currentGraphNode->fnNode.node.flags =
@@ -108,7 +110,9 @@ Gfx *geo_update_layer_transparency(s32 callContext, struct GraphNode *node, UNUS
                 0x500 | (currentGraphNode->fnNode.node.flags & 0xFF);
             }
 
-            objectGraphNode->oAnimState = 1;
+            if (currentGraphNode->parameter != 30) {
+                objectGraphNode->oAnimState = 1;
+            }
 
 #ifdef VERSION_JP
             if (currentGraphNode->parameter == 10) {

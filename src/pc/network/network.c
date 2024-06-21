@@ -30,6 +30,7 @@
 #include "menu/intro_geo.h"
 #include "game/ingame_menu.h"
 #include "game/first_person_cam.h"
+#include "game/envfx_snow.h"
 
 #ifdef DISCORD_SDK
 #include "pc/discord/discord.h"
@@ -679,7 +680,7 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
     gFogColor[2] = 255;
     gFogIntensity = 1;
     gOverrideBackground = -1;
-    gOverrideEnvFx = -1;
+    gOverrideEnvFx = ENVFX_MODE_NO_OVERRIDE;
     gRomhackCameraAllowCentering = TRUE;
     gOverrideAllowToxicGasCamera = FALSE;
     gRomhackCameraAllowDpad = FALSE;
