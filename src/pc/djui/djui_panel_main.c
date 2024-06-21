@@ -30,7 +30,7 @@ void djui_panel_main_create(struct DjuiBase* caller) {
         struct DjuiBase* body = djui_three_panel_get_body(panel);
         {
             struct DjuiImage* logo = djui_image_create(body, texture_coopdx_logo, 2048, 1024, 32);
-            djui_base_set_size(&logo->base, 400, 200);
+            djui_base_set_size(&logo->base, 550, 275);
             djui_base_set_alignment(&logo->base, DJUI_HALIGN_CENTER, DJUI_VALIGN_TOP);
             djui_base_set_location_type(&logo->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
             djui_base_set_location(&logo->base, 0, -30);

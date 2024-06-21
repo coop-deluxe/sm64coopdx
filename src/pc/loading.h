@@ -4,6 +4,7 @@
 #include <pthread.h>
 
 #include "cliopts.h"
+#include "djui/djui_hud_utils.h"
 
 struct LoadingSegment {
     char str[256];
@@ -33,7 +34,7 @@ extern pthread_mutex_t gLoadingThreadMutex;
 
 extern bool gIsThreaded;
 
-void loading_screen_set_segment_text(const char *text);
+void loading_screen_set_segment_text(const char* text);
 void render_loading_screen(void);
 void render_rom_setup_screen(void);
 
