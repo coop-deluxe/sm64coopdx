@@ -124,4 +124,6 @@ Collision* smlua_collision_util_get(const char* name);
 
 struct WallCollisionData* collision_get_temp_wall_collision_data(void);
 
+struct Surface* get_surface_from_wcd_index(struct WallCollisionData* wcd, s8 index);
+
 #endif

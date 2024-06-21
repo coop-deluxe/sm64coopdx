@@ -1598,6 +1598,7 @@
    - [collision_find_ceil](functions-5.md#collision_find_ceil)
    - [collision_find_floor](functions-5.md#collision_find_floor)
    - [collision_get_temp_wall_collision_data](functions-5.md#collision_get_temp_wall_collision_data)
+   - [get_surface_from_wcd_index](functions-5.md#get_surface_from_wcd_index)
    - [get_water_surface_pseudo_floor](functions-5.md#get_water_surface_pseudo_floor)
    - [smlua_collision_util_get](functions-5.md#smlua_collision_util_get)
 

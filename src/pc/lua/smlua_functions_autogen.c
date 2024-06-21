@@ -28398,6 +28398,25 @@ int smlua_func_collision_get_temp_wall_collision_data(UNUSED lua_State* L) {
     return 1;
 }
 
+int smlua_func_get_surface_from_wcd_index(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "get_surface_from_wcd_index", 2, top);
+        return 0;
+    }
+
+    struct WallCollisionData* wcd = (struct WallCollisionData*)smlua_to_cobject(L, 1, LOT_WALLCOLLISIONDATA);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "get_surface_from_wcd_index"); return 0; }
+    s8 index = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "get_surface_from_wcd_index"); return 0; }
+
+    smlua_push_object(L, LOT_SURFACE, get_surface_from_wcd_index(wcd, index));
+
+    return 1;
+}
+
 int smlua_func_get_water_surface_pseudo_floor(UNUSED lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -34135,6 +34154,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "collision_find_ceil", smlua_func_collision_find_ceil);
     smlua_bind_function(L, "collision_find_floor", smlua_func_collision_find_floor);
     smlua_bind_function(L, "collision_get_temp_wall_collision_data", smlua_func_collision_get_temp_wall_collision_data);
+    smlua_bind_function(L, "get_surface_from_wcd_index", smlua_func_get_surface_from_wcd_index);
     smlua_bind_function(L, "get_water_surface_pseudo_floor", smlua_func_get_water_surface_pseudo_floor);
     smlua_bind_function(L, "smlua_collision_util_get", smlua_func_smlua_collision_util_get);
 

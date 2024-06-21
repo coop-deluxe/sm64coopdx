@@ -190,3 +190,8 @@ struct WallCollisionData* collision_get_temp_wall_collision_data(void) {
     memset(&sTmpWcd, 0, sizeof(struct WallCollisionData));
     return &sTmpWcd;
 }
+
+struct Surface* get_surface_from_wcd_index(struct WallCollisionData* wcd, s8 index) {
+    if (index < 0 || index >= 4) { return NULL; }
+    return wcd->walls[index];
+}

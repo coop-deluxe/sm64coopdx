@@ -7615,6 +7615,13 @@ function collision_get_temp_wall_collision_data()
     -- ...
 end
 
+--- @param wcd WallCollisionData
+--- @param index integer
+--- @return Surface
+function get_surface_from_wcd_index(wcd, index)
+    -- ...
+end
+
 --- @return Surface
 function get_water_surface_pseudo_floor()
     -- ...
