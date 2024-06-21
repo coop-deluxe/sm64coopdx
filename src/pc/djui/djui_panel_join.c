@@ -12,12 +12,6 @@
 #endif
 
 #ifdef COOPNET
-static void djui_panel_compatibility_checkbox_on_value_change(UNUSED struct DjuiBase* caller) {
-#ifdef DISCORD_SDK
-    gDiscordInitialized = false;
-#endif
-}
-
 static void djui_panel_join_public_lobbies(struct DjuiBase* caller) {
     djui_panel_join_lobbies_create(caller, "");
 }

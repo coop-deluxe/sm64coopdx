@@ -75,6 +75,7 @@ extern unsigned int configRumbleStrength;
 extern unsigned int configGamepadNumber;
 extern bool         configBackgroundGamepad;
 extern bool         configDisableGamepads;
+extern bool         configUseStandardKeyBindingsChat;
 // free camera settings
 extern bool         configEnableCamera;
 extern bool         configCameraAnalog;
@@ -120,17 +121,20 @@ extern bool         configMenuRandom;
 extern bool         configMenuDemos;
 extern bool         configGlobalPlayerModels;
 extern bool         configDisablePopups;
-extern bool         configUseStandardKeyBindingsChat;
 extern char         configLanguage[MAX_CONFIG_STRING];
+// CoopNet settings
 extern char         configCoopNetIp[MAX_CONFIG_STRING];
 extern unsigned int configCoopNetPort;
 extern char         configPassword[MAX_CONFIG_STRING];
 extern char         configDestId[MAX_CONFIG_STRING];
+// DJUI settings
 extern unsigned int configDjuiTheme;
 extern bool         configDjuiThemeCenter;
 extern unsigned int configDjuiThemeFont;
 extern unsigned int configDjuiScale;
+// other
 extern char         configLastVersion[MAX_CONFIG_STRING];
+extern unsigned int configRulesVersion;
 
 void enable_queued_mods(void);
 void enable_queued_dynos_packs(void);

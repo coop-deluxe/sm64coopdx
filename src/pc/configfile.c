@@ -124,6 +124,7 @@ unsigned int configRumbleStrength                 = 50;
 unsigned int configGamepadNumber                  = 0;
 bool         configBackgroundGamepad              = true;
 bool         configDisableGamepads                = false;
+bool         configUseStandardKeyBindingsChat     = false;
 // free camera settings
 bool         configEnableCamera                   = false;
 bool         configCameraAnalog                   = false;
@@ -169,17 +170,20 @@ bool         configMenuRandom                     = false;
 bool         configMenuDemos                      = false;
 bool         configGlobalPlayerModels             = true;
 bool         configDisablePopups                  = false;
-bool         configUseStandardKeyBindingsChat     = false;
 char         configLanguage[MAX_CONFIG_STRING]    = "";
+// CoopNet settings
 char         configCoopNetIp[MAX_CONFIG_STRING]   = DEFAULT_COOPNET_IP;
 unsigned int configCoopNetPort                    = DEFAULT_COOPNET_PORT;
 char         configPassword[MAX_CONFIG_STRING]    = "";
 char         configDestId[MAX_CONFIG_STRING]      = "0";
+// DJUI settings
 unsigned int configDjuiTheme                      = DJUI_THEME_DARK;
 bool         configDjuiThemeCenter                = true;
 unsigned int configDjuiThemeFont                  = FONT_NORMAL;
 unsigned int configDjuiScale                      = 0;
+// other
 char         configLastVersion[MAX_CONFIG_STRING] = "";
+unsigned int configRulesVersion                   = 0;
 
 static const struct ConfigOption options[] = {
     // window settings
@@ -235,6 +239,7 @@ static const struct ConfigOption options[] = {
     {.name = "gamepad_number",                 .type = CONFIG_TYPE_UINT, .uintValue = &configGamepadNumber},
     {.name = "background_gamepad",             .type = CONFIG_TYPE_UINT, .boolValue = &configBackgroundGamepad},
     {.name = "disable_gamepads",               .type = CONFIG_TYPE_BOOL, .boolValue = &configDisableGamepads},
+    {.name = "use_standard_key_bindings_chat", .type = CONFIG_TYPE_BOOL,   .boolValue   = &configUseStandardKeyBindingsChat},
     // free camera settings
     {.name = "bettercam_enable",               .type = CONFIG_TYPE_BOOL, .boolValue = &configEnableCamera},
     {.name = "bettercam_analog",               .type = CONFIG_TYPE_BOOL, .boolValue = &configCameraAnalog},
@@ -289,7 +294,6 @@ static const struct ConfigOption options[] = {
     {.name = "coop_menu_demos",                .type = CONFIG_TYPE_BOOL,   .boolValue   = &configMenuDemos},
     {.name = "coop_global_player_models",      .type = CONFIG_TYPE_BOOL,   .boolValue   = &configGlobalPlayerModels},
     {.name = "disable_popups",                 .type = CONFIG_TYPE_BOOL,   .boolValue   = &configDisablePopups},
-    {.name = "use_standard_key_bindings_chat", .type = CONFIG_TYPE_BOOL,   .boolValue   = &configUseStandardKeyBindingsChat},
     {.name = "language",                       .type = CONFIG_TYPE_STRING, .stringValue = (char*)&configLanguage, .maxStringLength = MAX_CONFIG_STRING},
     // CoopNet settings
     {.name = "coopnet_ip",                     .type = CONFIG_TYPE_STRING, .stringValue = (char*)&configCoopNetIp, .maxStringLength = MAX_CONFIG_STRING},
@@ -302,7 +306,8 @@ static const struct ConfigOption options[] = {
     {.name = "djui_theme_font",                .type = CONFIG_TYPE_UINT,   .uintValue   = &configDjuiThemeFont},
     {.name = "djui_scale",                     .type = CONFIG_TYPE_UINT,   .uintValue   = &configDjuiScale},
     // other
-    {.name = "last_version",                   .type = CONFIG_TYPE_STRING, .stringValue = (char*)&configLastVersion, .maxStringLength = MAX_CONFIG_STRING}
+    {.name = "last_version",                   .type = CONFIG_TYPE_STRING, .stringValue = (char*)&configLastVersion, .maxStringLength = MAX_CONFIG_STRING},
+    {.name = "rules_version",                  .type = CONFIG_TYPE_UINT,   .uintValue   = &configRulesVersion}
 };
 
 // FunctionConfigOption functions

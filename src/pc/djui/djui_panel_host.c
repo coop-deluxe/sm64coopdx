@@ -6,6 +6,7 @@
 #include "djui_panel_host_settings.h"
 #include "djui_panel_host_save.h"
 #include "djui_panel_host_message.h"
+#include "djui_panel_rules.h"
 #include "game/save_file.h"
 #include "pc/network/network.h"
 #include "pc/utils/misc.h"
@@ -83,6 +84,12 @@ static void djui_panel_host_do_host(struct DjuiBase* caller) {
     if (gNetworkType == NT_SERVER) {
         network_rehost_begin();
     } else if (configNetworkSystem == NS_COOPNET || configAmountofPlayers == 1) {
+#ifdef COOPNET
+        if (sInputboxPassword->buffer[0] == '\0' && configRulesVersion != RULES_VERSION && configAmountofPlayers > 1) {
+            djui_panel_rules_create(caller);
+            return;
+        }
+#endif
         network_reset_reconnect_and_rehost();
         djui_panel_do_host(false, true);
     } else {

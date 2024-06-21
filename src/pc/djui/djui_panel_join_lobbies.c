@@ -4,6 +4,7 @@
 #include "djui_panel_menu.h"
 #include "djui_panel_join_message.h"
 #include "djui_lobby_entry.h"
+#include "djui_panel_rules.h"
 #include "pc/network/network.h"
 #include "pc/network/socket/socket.h"
 #include "pc/network/coopnet/coopnet.h"
@@ -143,6 +144,10 @@ void djui_panel_join_lobbies_create(struct DjuiBase* caller, const char* passwor
     if (sPassword) { free(sPassword); sPassword = NULL; }
     sPassword = strdup(password);
     bool private = (strlen(password) > 0);
+    if (!private && configRulesVersion != RULES_VERSION) {
+        djui_panel_rules_create(caller);
+        return;
+    }
 
     djui_panel_join_lobby_description_create();
 
@@ -161,6 +166,8 @@ void djui_panel_join_lobbies_create(struct DjuiBase* caller, const char* passwor
             djui_base_set_size(&text->base, 1, 1);
             djui_text_set_alignment(text, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
         }
+
+        djui_button_create(body, DLANG(RULES, RULES), DJUI_BUTTON_STYLE_NORMAL, djui_panel_rules_create);
 
         struct DjuiRect* rect2 = djui_rect_container_create(body, 64);
         {
