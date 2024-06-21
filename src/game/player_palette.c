@@ -114,6 +114,40 @@ void player_palettes_read(const char* palettesPath, bool appendPalettes) {
     }
 
     os_closedir(d);
+
+    // this should mean we are in the exe path's palette dir
+    if (appendPalettes) {
+        struct PresetPalette characterPresetPalettes[MAX_PRESET_PALETTES] = { 0 };
+        u8 characterPresetPaletteCount = 0;
+
+        // copy character palettes first
+        for (int c = 0; c < CT_MAX; c++) { // heh, c++
+            for (int i = 0; i < gPresetPaletteCount; i++) {
+                if (!strcmp(gPresetPalettes[i].name, gCharacters[c].name)) {
+                    characterPresetPalettes[characterPresetPaletteCount++] = gPresetPalettes[i];
+                }
+            }
+        }
+        
+        // copy remaining palettes
+        for (int i = 0; i < gPresetPaletteCount; i++) {
+            bool isCharacterPalette = false;
+            for (int c = 0; c < CT_MAX; c++) { // heh, c++
+                if (!strcmp(gPresetPalettes[i].name, gCharacters[c].name)) {
+                    isCharacterPalette = true;
+                    break;
+                }
+            }
+            if (!isCharacterPalette) {
+                characterPresetPalettes[characterPresetPaletteCount++] = gPresetPalettes[i];
+            }
+        }
+
+        // finally, write to gPresetPalettes
+        for (int i = 0; i < gPresetPaletteCount; i++) {
+            gPresetPalettes[i] = characterPresetPalettes[i];
+        }
+    }
 }
 
 void player_palette_export(char* name) {
