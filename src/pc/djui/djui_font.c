@@ -54,7 +54,7 @@ static void djui_font_title_render_char(char* c) {
     u32 ty = index / 16;
 
     extern ALIGNED8 const u8 texture_font_title[];
-    djui_gfx_render_texture_tile(texture_font_title, 1024, 512, 32, tx * 64, ty * 64, 64, 64, false);
+    djui_gfx_render_texture_tile(texture_font_title, 1024, 512, 32, tx * 64 - 8, ty * 64 - 4, 64, 64, true);
 }
 
 static f32 djui_font_title_char_width(char* text) {
@@ -62,7 +62,7 @@ static f32 djui_font_title_char_width(char* text) {
     if (c == ' ') { return 0.30f; }
     c = djui_unicode_get_base_char(text);
     extern const f32 font_title_widths[];
-    return font_title_widths[(u8)c - '!'];
+    return font_title_widths[(u8)c - '!'] * 1.1f;
 }
 
 static const struct DjuiFont sDjuiFontTitle = {

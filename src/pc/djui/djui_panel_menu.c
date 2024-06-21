@@ -7,10 +7,10 @@
 #define RAINBOW_TEXT_LEN 255
 
 char* sRainbowColors[] = {
-    "\\#ff4040\\",
-    "\\#50e750\\",
-    "\\#50b3ff\\",
-    "\\#ffef50\\",
+    "\\#ff3030\\",
+    "\\#40e740\\",
+    "\\#40b0ff\\",
+    "\\#ffef40\\",
 };
 
 char sRainbowText[RAINBOW_TEXT_LEN + 1] = { 0 };
