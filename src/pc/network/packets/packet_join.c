@@ -78,15 +78,17 @@ void network_send_join(struct Packet* joinRequestPacket) {
 
     // figure out id
     u8 globalIndex = joinRequestPacket->localIndex;
+    u8 connectedCount = 1;
     if (globalIndex == UNKNOWN_LOCAL_INDEX) {
         for (u32 i = 1; i < MAX_PLAYERS; i++) {
-            if (i >= gServerSettings.maxPlayers) { break; }
             if (!gNetworkPlayers[i].connected) {
                 globalIndex = i;
                 break;
+            } else {
+                connectedCount++;
             }
         }
-        if (globalIndex == UNKNOWN_LOCAL_INDEX) {
+        if (globalIndex == UNKNOWN_LOCAL_INDEX || connectedCount >= gServerSettings.maxPlayers) {
             network_send_kick(0, EKT_FULL_PARTY);
             return;
         }
