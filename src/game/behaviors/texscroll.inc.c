@@ -154,13 +154,13 @@ void uv_update_scroll(void) {
     // Prepare for interpolation
     if (bhv < SCROLL_UV_X) {
         u8 bhvIndex = MIN(bhv, 2);
-        for (u16 k = 0; k < scroll->size; k++) {
-            scroll->prevF32[k] = verts[k]->n.ob[bhvIndex];
+        for (u16 i = 0; i < scroll->size; i++) {
+            scroll->prevF32[i] = verts[i]->n.ob[bhvIndex];
         }
     } else {
         u8 bhvIndex = MIN(bhv-SCROLL_UV_X, 1);
-        for (u16 k = 0; k < scroll->size; k++) {
-            scroll->prevS16[k] = verts[k]->n.tc[bhvIndex];
+        for (u16 i = 0; i < scroll->size; i++) {
+            scroll->prevS16[i] = verts[i]->n.tc[bhvIndex];
         }
     }
     scroll->needInterp = true;
