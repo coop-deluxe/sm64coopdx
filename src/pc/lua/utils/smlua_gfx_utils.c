@@ -2,6 +2,7 @@
 #include "pc/gfx/gfx_pc.h"
 #include "game/rendering_graph_node.h"
 #include "game/skybox.h"
+#include "geo_commands.h"
 
 void set_override_fov(f32 fov) {
     gOverrideFOV = fov;
@@ -76,10 +77,12 @@ void set_fog_intensity(f32 intensity) {
 ///
 
 s8 get_skybox(void) {
+    if (gOverrideBackground != -1) { return gOverrideBackground; }
     return gReadOnlyBackground;
 }
 
 void set_override_skybox(s8 background) {
+    if (background < -1 || background > BACKGROUND_CUSTOM) { return; }
     gOverrideBackground = background;
 }
 
