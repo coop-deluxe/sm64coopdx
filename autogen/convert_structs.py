@@ -17,6 +17,7 @@ in_files = [
     "src/game/mario_step.h",
     "src/pc/lua/utils/smlua_anim_utils.h",
     "src/pc/lua/utils/smlua_misc_utils.h",
+    "src/pc/lua/utils/smlua_camera_utils.h",
     "src/pc/lua/utils/smlua_collision_utils.h",
     "src/pc/lua/utils/smlua_level_utils.h",
     "src/game/spawn_sound.h",

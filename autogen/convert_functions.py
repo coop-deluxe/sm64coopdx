@@ -42,6 +42,8 @@ in_files = [
     "include/behavior_table.h",
     "src/pc/lua/utils/smlua_obj_utils.h",
     "src/pc/lua/utils/smlua_misc_utils.h",
+    "src/pc/lua/utils/smlua_camera_utils.h",
+    "src/pc/lua/utils/smlua_gfx_utils.h",
     "src/pc/lua/utils/smlua_collision_utils.h",
     "src/pc/lua/utils/smlua_math_utils.h",
     "src/pc/lua/utils/smlua_model_utils.h",

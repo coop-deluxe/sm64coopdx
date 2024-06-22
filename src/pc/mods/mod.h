@@ -2,7 +2,7 @@
 #define MOD_H
 
 #include <PR/ultratypes.h>
-#include <types.h>
+#include "types.h"
 #include "pc/platform.h"
 
 #define MOD_NAME_MAX_LENGTH 64

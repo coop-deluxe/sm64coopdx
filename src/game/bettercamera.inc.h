@@ -9,7 +9,7 @@
 #include "engine/surface_collision.h"
 #include "pc/configfile.h"
 #include "pc/controller/controller_mouse.h"
-#include "pc/lua/utils/smlua_misc_utils.h"
+#include "pc/lua/utils/smlua_camera_utils.h"
 
 #if defined(__MINGW32__) && !defined(__MINGW64_VERSION_MAJOR) 
 //quick and dirty fix for some older MinGW.org mingwrt

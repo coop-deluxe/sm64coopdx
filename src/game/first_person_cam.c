@@ -15,7 +15,7 @@
 #include "pc/controller/controller_mouse.h"
 #include "pc/djui/djui.h"
 #include "pc/djui/djui_hud_utils.h"
-#include "pc/lua/utils/smlua_misc_utils.h"
+#include "pc/lua/utils/smlua_camera_utils.h"
 #include "pc/lua/smlua_hooks.h"
 
 #define CLAMP(_val, _min, _max) MAX(MIN((_val), _max), _min)

@@ -7594,6 +7594,143 @@ function smlua_audio_utils_reset_all()
     -- ...
 end
 
+--- @param allow integer
+function camera_allow_toxic_gas_camera(allow)
+    -- ...
+end
+
+--- @param enable boolean
+function camera_config_enable_analog_cam(enable)
+    -- ...
+end
+
+--- @param enable boolean
+function camera_config_enable_free_cam(enable)
+    -- ...
+end
+
+--- @param enable boolean
+function camera_config_enable_mouse_look(enable)
+    -- ...
+end
+
+--- @return integer
+function camera_config_get_aggression()
+    -- ...
+end
+
+--- @return integer
+function camera_config_get_deceleration()
+    -- ...
+end
+
+--- @return integer
+function camera_config_get_pan_level()
+    -- ...
+end
+
+--- @return integer
+function camera_config_get_x_sensitivity()
+    -- ...
+end
+
+--- @return integer
+function camera_config_get_y_sensitivity()
+    -- ...
+end
+
+--- @param invert boolean
+function camera_config_invert_x(invert)
+    -- ...
+end
+
+--- @param invert boolean
+function camera_config_invert_y(invert)
+    -- ...
+end
+
+--- @return boolean
+function camera_config_is_analog_cam_enabled()
+    -- ...
+end
+
+--- @return boolean
+function camera_config_is_free_cam_enabled()
+    -- ...
+end
+
+--- @return boolean
+function camera_config_is_mouse_look_enabled()
+    -- ...
+end
+
+--- @return boolean
+function camera_config_is_x_inverted()
+    -- ...
+end
+
+--- @return boolean
+function camera_config_is_y_inverted()
+    -- ...
+end
+
+--- @param value integer
+function camera_config_set_aggression(value)
+    -- ...
+end
+
+--- @param value integer
+function camera_config_set_deceleration(value)
+    -- ...
+end
+
+--- @param value integer
+function camera_config_set_pan_level(value)
+    -- ...
+end
+
+--- @param value integer
+function camera_config_set_x_sensitivity(value)
+    -- ...
+end
+
+--- @param value integer
+function camera_config_set_y_sensitivity(value)
+    -- ...
+end
+
+function camera_freeze()
+    -- ...
+end
+
+--- @return boolean
+function camera_is_frozen()
+    -- ...
+end
+
+function camera_reset_overrides()
+    -- ...
+end
+
+--- @param allow integer
+function camera_romhack_allow_centering(allow)
+    -- ...
+end
+
+--- @param allow integer
+function camera_romhack_allow_dpad_usage(allow)
+    -- ...
+end
+
+--- @param rco RomhackCameraOverride
+function camera_set_romhack_override(rco)
+    -- ...
+end
+
+function camera_unfreeze()
+    -- ...
+end
+
 --- @param x number
 --- @param y number
 --- @param z number
@@ -7693,6 +7830,101 @@ end
 --- @param index integer
 --- @param value integer
 function set_environment_region(index, value)
+    -- ...
+end
+
+--- @param index integer
+--- @return integer
+function get_fog_color(index)
+    -- ...
+end
+
+--- @return number
+function get_fog_intensity()
+    -- ...
+end
+
+--- @param index integer
+--- @return integer
+function get_lighting_color(index)
+    -- ...
+end
+
+--- @param index integer
+--- @return number
+function get_lighting_dir(index)
+    -- ...
+end
+
+--- @return integer
+function get_skybox()
+    -- ...
+end
+
+--- @param index integer
+--- @return integer
+function get_skybox_color(index)
+    -- ...
+end
+
+--- @param index integer
+--- @return integer
+function get_vertex_color(index)
+    -- ...
+end
+
+--- @param index integer
+--- @param value integer
+function set_fog_color(index, value)
+    -- ...
+end
+
+--- @param intensity number
+function set_fog_intensity(intensity)
+    -- ...
+end
+
+--- @param index integer
+--- @param value integer
+function set_lighting_color(index, value)
+    -- ...
+end
+
+--- @param index integer
+--- @param value number
+function set_lighting_dir(index, value)
+    -- ...
+end
+
+--- @param far number
+function set_override_far(far)
+    -- ...
+end
+
+--- @param fov number
+function set_override_fov(fov)
+    -- ...
+end
+
+--- @param near number
+function set_override_near(near)
+    -- ...
+end
+
+--- @param background integer
+function set_override_skybox(background)
+    -- ...
+end
+
+--- @param index integer
+--- @param value integer
+function set_skybox_color(index, value)
+    -- ...
+end
+
+--- @param index integer
+--- @param value integer
+function set_vertex_color(index, value)
     -- ...
 end
 
@@ -7839,143 +8071,6 @@ function allocate_mario_action(actFlags)
     -- ...
 end
 
---- @param allow integer
-function camera_allow_toxic_gas_camera(allow)
-    -- ...
-end
-
---- @param enable boolean
-function camera_config_enable_analog_cam(enable)
-    -- ...
-end
-
---- @param enable boolean
-function camera_config_enable_free_cam(enable)
-    -- ...
-end
-
---- @param enable boolean
-function camera_config_enable_mouse_look(enable)
-    -- ...
-end
-
---- @return integer
-function camera_config_get_aggression()
-    -- ...
-end
-
---- @return integer
-function camera_config_get_deceleration()
-    -- ...
-end
-
---- @return integer
-function camera_config_get_pan_level()
-    -- ...
-end
-
---- @return integer
-function camera_config_get_x_sensitivity()
-    -- ...
-end
-
---- @return integer
-function camera_config_get_y_sensitivity()
-    -- ...
-end
-
---- @param invert boolean
-function camera_config_invert_x(invert)
-    -- ...
-end
-
---- @param invert boolean
-function camera_config_invert_y(invert)
-    -- ...
-end
-
---- @return boolean
-function camera_config_is_analog_cam_enabled()
-    -- ...
-end
-
---- @return boolean
-function camera_config_is_free_cam_enabled()
-    -- ...
-end
-
---- @return boolean
-function camera_config_is_mouse_look_enabled()
-    -- ...
-end
-
---- @return boolean
-function camera_config_is_x_inverted()
-    -- ...
-end
-
---- @return boolean
-function camera_config_is_y_inverted()
-    -- ...
-end
-
---- @param value integer
-function camera_config_set_aggression(value)
-    -- ...
-end
-
---- @param value integer
-function camera_config_set_deceleration(value)
-    -- ...
-end
-
---- @param value integer
-function camera_config_set_pan_level(value)
-    -- ...
-end
-
---- @param value integer
-function camera_config_set_x_sensitivity(value)
-    -- ...
-end
-
---- @param value integer
-function camera_config_set_y_sensitivity(value)
-    -- ...
-end
-
-function camera_freeze()
-    -- ...
-end
-
---- @return boolean
-function camera_is_frozen()
-    -- ...
-end
-
-function camera_reset_overrides()
-    -- ...
-end
-
---- @param allow integer
-function camera_romhack_allow_centering(allow)
-    -- ...
-end
-
---- @param allow integer
-function camera_romhack_allow_dpad_usage(allow)
-    -- ...
-end
-
---- @param rco RomhackCameraOverride
-function camera_set_romhack_override(rco)
-    -- ...
-end
-
-function camera_unfreeze()
-    -- ...
-end
-
 --- @param courseNum integer
 --- @return boolean
 function course_is_main_course(courseNum)
@@ -8043,17 +8138,6 @@ function get_envfx()
     -- ...
 end
 
---- @param index integer
---- @return integer
-function get_fog_color(index)
-    -- ...
-end
-
---- @return number
-function get_fog_intensity()
-    -- ...
-end
-
 --- @return integer
 function get_global_timer()
     -- ...
@@ -8100,18 +8184,6 @@ function get_last_star_or_key()
     -- ...
 end
 
---- @param index integer
---- @return integer
-function get_lighting_color(index)
-    -- ...
-end
-
---- @param index integer
---- @return number
-function get_lighting_dir(index)
-    -- ...
-end
-
 --- @return string
 function get_local_discord_id()
     -- ...
@@ -8132,11 +8204,6 @@ function get_save_file_modified()
     -- ...
 end
 
---- @return integer
-function get_skybox()
-    -- ...
-end
-
 --- @param initialValue integer
 --- @return Pointer_integer
 function get_temp_s32_pointer(initialValue)
@@ -8150,12 +8217,6 @@ end
 
 --- @return integer
 function get_ttc_speed_setting()
-    -- ...
-end
-
---- @param index integer
---- @return integer
-function get_vertex_color(index)
     -- ...
 end
 
@@ -8283,17 +8344,6 @@ function save_file_set_using_backup_slot(usingBackupSlot)
     -- ...
 end
 
---- @param index integer
---- @param value integer
-function set_fog_color(index, value)
-    -- ...
-end
-
---- @param intensity number
-function set_fog_intensity(intensity)
-    -- ...
-end
-
 --- @param value boolean
 function set_got_file_coin_hi_score(value)
     -- ...
@@ -8314,40 +8364,8 @@ function set_last_star_or_key(value)
     -- ...
 end
 
---- @param index integer
---- @param value integer
-function set_lighting_color(index, value)
-    -- ...
-end
-
---- @param index integer
---- @param value number
-function set_lighting_dir(index, value)
-    -- ...
-end
-
 --- @param envfx integer
 function set_override_envfx(envfx)
-    -- ...
-end
-
---- @param far number
-function set_override_far(far)
-    -- ...
-end
-
---- @param fov number
-function set_override_fov(fov)
-    -- ...
-end
-
---- @param near number
-function set_override_near(near)
-    -- ...
-end
-
---- @param background integer
-function set_override_skybox(background)
     -- ...
 end
 
@@ -8358,12 +8376,6 @@ end
 
 --- @param speed integer
 function set_ttc_speed_setting(speed)
-    -- ...
-end
-
---- @param index integer
---- @param value integer
-function set_vertex_color(index, value)
     -- ...
 end
 

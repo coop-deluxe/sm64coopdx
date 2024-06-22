@@ -3,7 +3,7 @@
 
 #include <PR/ultratypes.h>
 #include <time.h>
-#include <types.h>
+#include "types.h"
 #include <assert.h>
 #include "network_player.h"
 #include "network_utils.h"

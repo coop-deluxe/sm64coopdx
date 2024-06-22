@@ -29,7 +29,7 @@
 #include "spawn_sound.h"
 #include "pc/network/network.h"
 #include "pc/lua/smlua_hooks.h"
-#include "pc/lua/utils/smlua_misc_utils.h"
+#include "pc/lua/utils/smlua_camera_utils.h"
 #include "first_person_cam.h"
 
 u8 (*gContinueDialogFunction)(void) = NULL;

@@ -12,6 +12,7 @@
 #include "src/game/mario_step.h"
 #include "src/pc/lua/utils/smlua_anim_utils.h"
 #include "src/pc/lua/utils/smlua_misc_utils.h"
+#include "src/pc/lua/utils/smlua_camera_utils.h"
 #include "src/pc/lua/utils/smlua_collision_utils.h"
 #include "src/pc/lua/utils/smlua_level_utils.h"
 #include "src/game/spawn_sound.h"

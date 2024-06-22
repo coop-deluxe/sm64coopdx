@@ -2,7 +2,7 @@
 #define MODS_UTILS_H
 
 #include <PR/ultratypes.h>
-#include <types.h>
+#include "types.h"
 #include "pc/platform.h"
 
 void mods_size_enforce(struct Mods* mods);

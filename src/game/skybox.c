@@ -68,6 +68,7 @@ extern u8 gRenderingInterpolated;
 
 s8 gReadOnlyBackground;
 s8 gOverrideBackground = -1;
+Color gSkyboxColor = { 255, 255, 255 };
 
 extern SkyboxTexture bbh_skybox_ptrlist;
 extern SkyboxTexture bitdw_skybox_ptrlist;
@@ -213,14 +214,17 @@ Vtx *make_skybox_rect(s32 tileIndex, s8 colorIndex, s32 row, s32 col) {
     f32 y = SKYBOX_HEIGHT - tileIndex / SKYBOX_COLS * SKYBOX_TILE_HEIGHT;
 
     if (verts != NULL) {
-        make_vertex(verts, 0, x, y, -1, 0, 0, sSkyboxColors[colorIndex][0], sSkyboxColors[colorIndex][1],
-                    sSkyboxColors[colorIndex][2], 255);
-        make_vertex(verts, 1, x, y - SKYBOX_TILE_HEIGHT, -1, 0, 31 << 5, sSkyboxColors[colorIndex][0], sSkyboxColors[colorIndex][1],
-                    sSkyboxColors[colorIndex][2], 255);
-        make_vertex(verts, 2, x + SKYBOX_TILE_WIDTH, y - SKYBOX_TILE_HEIGHT, -1, 31 << 5, 31 << 5, sSkyboxColors[colorIndex][0],
-                    sSkyboxColors[colorIndex][1], sSkyboxColors[colorIndex][2], 255);
-        make_vertex(verts, 3, x + SKYBOX_TILE_WIDTH, y, -1, 31 << 5, 0, sSkyboxColors[colorIndex][0], sSkyboxColors[colorIndex][1],
-                    sSkyboxColors[colorIndex][2], 255);
+        f32 r = gSkyboxColor[0] / 255.0f;
+        f32 g = gSkyboxColor[1] / 255.0f;
+        f32 b = gSkyboxColor[2] / 255.0f;
+        make_vertex(verts, 0, x, y, -1, 0, 0, sSkyboxColors[colorIndex][0] * r, sSkyboxColors[colorIndex][1] * g,
+                    sSkyboxColors[colorIndex][2] * b, 255);
+        make_vertex(verts, 1, x, y - SKYBOX_TILE_HEIGHT, -1, 0, 31 << 5, sSkyboxColors[colorIndex][0] * r, sSkyboxColors[colorIndex][1] * g,
+                    sSkyboxColors[colorIndex][2] * b, 255);
+        make_vertex(verts, 2, x + SKYBOX_TILE_WIDTH, y - SKYBOX_TILE_HEIGHT, -1, 31 << 5, 31 << 5, sSkyboxColors[colorIndex][0] * r,
+                    sSkyboxColors[colorIndex][1] * g, sSkyboxColors[colorIndex][2] * b, 255);
+        make_vertex(verts, 3, x + SKYBOX_TILE_WIDTH, y, -1, 31 << 5, 0, sSkyboxColors[colorIndex][0] * r, sSkyboxColors[colorIndex][1] * g,
+                    sSkyboxColors[colorIndex][2] * b, 255);
     } else {
     }
     return verts;
@@ -251,7 +255,7 @@ void draw_skybox_tile_grid(Gfx **dlist, s8 background, s8 player, s8 colorIndex)
             Vtx *vertices = make_skybox_rect(tileIndex, colorIndex, row, col);
 
             gLoadBlockTexture((*dlist)++, 32, 32, G_IM_FMT_RGBA, texture);
-            gSPVertex((*dlist)++, VIRTUAL_TO_PHYSICAL(vertices), 4, 0);
+            gSPVertexNonGlobal((*dlist)++, VIRTUAL_TO_PHYSICAL(vertices), 4, 0);
             gSPDisplayList((*dlist)++, dl_draw_quad_verts_0123);
         }
     }

@@ -38,12 +38,7 @@ struct DateTime {
     s32 second;
 };
 
-struct CameraOverride {
-    unsigned int value;
-    bool override;
-};
 
-extern struct CameraOverride gOverrideEnableCamera;
 
 u32 get_network_area_timer(void);
 
@@ -79,37 +74,6 @@ void hud_render_power_meter_interpolated(s32 health, f32 prevX, f32 prevY, f32 p
 s8 hud_get_flash(void);
 void hud_set_flash(s8 value);
 
-void camera_reset_overrides(void);
-void camera_freeze(void);
-void camera_unfreeze(void);
-bool camera_is_frozen(void);
-void camera_set_romhack_override(enum RomhackCameraOverride rco);
-void camera_romhack_allow_centering(u8 allow);
-void camera_allow_toxic_gas_camera(u8 allow);
-void camera_romhack_allow_dpad_usage(u8 allow);
-
-bool camera_config_is_free_cam_enabled(void);
-bool camera_config_is_analog_cam_enabled(void);
-bool camera_config_is_mouse_look_enabled(void);
-bool camera_config_is_x_inverted(void);
-bool camera_config_is_y_inverted(void);
-u32  camera_config_get_x_sensitivity(void);
-u32  camera_config_get_y_sensitivity(void);
-u32  camera_config_get_aggression(void);
-u32  camera_config_get_pan_level(void);
-u32  camera_config_get_deceleration(void);
-
-void camera_config_enable_free_cam(bool enable);
-void camera_config_enable_analog_cam(bool enable);
-void camera_config_enable_mouse_look(bool enable);
-void camera_config_invert_x(bool invert);
-void camera_config_invert_y(bool invert);
-void camera_config_set_x_sensitivity(u32 value);
-void camera_config_set_y_sensitivity(u32 value);
-void camera_config_set_aggression(u32 value);
-void camera_config_set_pan_level(u32 value);
-void camera_config_set_deceleration(u32 value);
-
 bool is_game_paused(void);
 bool is_transition_playing(void);
 
@@ -126,27 +90,6 @@ void save_file_set_using_backup_slot(bool usingBackupSlot);
 void movtexqc_register(const char* name, s16 level, s16 area, s16 type);
 s16 get_water_level(u8 index);
 void set_water_level(u8 index, s16 height, bool sync);
-
-void set_override_fov(f32 fov);
-void set_override_near(f32 near);
-void set_override_far(f32 far);
-
-f32 get_lighting_dir(u8 index);
-void set_lighting_dir(u8 index, f32 value);
-
-u8 get_lighting_color(u8 index);
-void set_lighting_color(u8 index, u8 value);
-
-u8 get_vertex_color(u8 index);
-void set_vertex_color(u8 index, u8 value);
-
-u8 get_fog_color(u8 index);
-void set_fog_color(u8 index, u8 value);
-f32 get_fog_intensity(void);
-void set_fog_intensity(f32 intensity);
-
-s8 get_skybox(void);
-void set_override_skybox(s8 background);
 
 void play_transition(s16 transType, s16 time, u8 red, u8 green, u8 blue);
 
