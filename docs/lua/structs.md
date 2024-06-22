@@ -1245,6 +1245,7 @@
 | hudRedCoinsRadar | `integer` |  |
 | hudSecretsRadar | `integer` |  |
 | infiniteStairsRequirement | `integer` |  |
+| jrbDarkenSkybox | `integer` |  |
 | maxCoins | `integer` |  |
 | maxLives | `integer` |  |
 | metalCapDuration | `integer` |  |

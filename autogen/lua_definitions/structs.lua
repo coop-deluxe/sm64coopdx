@@ -904,6 +904,7 @@
 --- @field public hudRedCoinsRadar integer
 --- @field public hudSecretsRadar integer
 --- @field public infiniteStairsRequirement integer
+--- @field public jrbDarkenSkybox integer
 --- @field public maxCoins integer
 --- @field public maxLives integer
 --- @field public metalCapDuration integer

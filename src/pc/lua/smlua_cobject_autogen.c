@@ -996,7 +996,7 @@ static struct LuaObjectField sLakituStateFields[LUA_LAKITU_STATE_FIELD_COUNT] = 
     { "yaw",                              LVT_S16,     offsetof(struct LakituState, yaw),                              false, LOT_NONE  },
 };
 
-#define LUA_LEVEL_VALUES_FIELD_COUNT 50
+#define LUA_LEVEL_VALUES_FIELD_COUNT 51
 static struct LuaObjectField sLevelValuesFields[LUA_LEVEL_VALUES_FIELD_COUNT] = {
     { "bubbleOnDeathBarrierInCapStages",  LVT_U8,      offsetof(struct LevelValues, bubbleOnDeathBarrierInCapStages),  false, LOT_NONE          },
     { "cellHeightLimit",                  LVT_S16,     offsetof(struct LevelValues, cellHeightLimit),                  false, LOT_NONE          },
@@ -1021,6 +1021,7 @@ static struct LuaObjectField sLevelValuesFields[LUA_LEVEL_VALUES_FIELD_COUNT] = 
     { "hudRedCoinsRadar",                 LVT_U8,      offsetof(struct LevelValues, hudRedCoinsRadar),                 false, LOT_NONE          },
     { "hudSecretsRadar",                  LVT_U8,      offsetof(struct LevelValues, hudSecretsRadar),                  false, LOT_NONE          },
     { "infiniteStairsRequirement",        LVT_S16,     offsetof(struct LevelValues, infiniteStairsRequirement),        false, LOT_NONE          },
+    { "jrbDarkenSkybox",                  LVT_U8,      offsetof(struct LevelValues, jrbDarkenSkybox),                  false, LOT_NONE          },
     { "maxCoins",                         LVT_U16,     offsetof(struct LevelValues, maxCoins),                         false, LOT_NONE          },
     { "maxLives",                         LVT_U16,     offsetof(struct LevelValues, maxLives),                         false, LOT_NONE          },
     { "metalCapDuration",                 LVT_U16,     offsetof(struct LevelValues, metalCapDuration),                 false, LOT_NONE          },

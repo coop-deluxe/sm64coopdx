@@ -124,7 +124,8 @@ struct LevelValues gDefaultLevelValues = {
     .numCoinsToLife                   = 50,
     .wdwWaterLevelSpeed               = 10.0f,
     .useGlobalStarIds                 = FALSE,
-    .zoomOutCameraOnPause             = TRUE
+    .zoomOutCameraOnPause             = TRUE,
+    .jrbDarkenSkybox                  = TRUE
 };
 
 struct LevelValues gLevelValues = { 0 };
