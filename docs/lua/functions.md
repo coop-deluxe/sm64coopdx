@@ -609,6 +609,17 @@
 
 <br />
 
+- behavior_script.h
+   - [draw_distance_scalar](functions-2.md#draw_distance_scalar)
+   - [obj_update_gfx_pos_and_angle](functions-2.md#obj_update_gfx_pos_and_angle)
+   - [position_based_random_float_position](functions-2.md#position_based_random_float_position)
+   - [position_based_random_u16](functions-2.md#position_based_random_u16)
+   - [random_float](functions-2.md#random_float)
+   - [random_sign](functions-2.md#random_sign)
+   - [random_u16](functions-2.md#random_u16)
+
+<br />
+
 - behavior_table.h
    - [get_behavior_from_id](functions-2.md#get_behavior_from_id)
    - [get_behavior_name_from_id](functions-2.md#get_behavior_name_from_id)

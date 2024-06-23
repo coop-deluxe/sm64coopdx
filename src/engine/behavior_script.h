@@ -31,7 +31,6 @@ void obj_update_gfx_pos_and_angle(struct Object *obj);
 
 u16 position_based_random_u16(void);
 f32 position_based_random_float_position(void);
-u8 cur_obj_is_last_nat_update_per_frame(void);
 f32 draw_distance_scalar(void);
 
 #endif // BEHAVIOR_SCRIPT_H

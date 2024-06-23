@@ -2343,6 +2343,41 @@ function vec3f_copy_2(dest, src)
     -- ...
 end
 
+--- @return number
+function draw_distance_scalar()
+    -- ...
+end
+
+--- @param obj Object
+function obj_update_gfx_pos_and_angle(obj)
+    -- ...
+end
+
+--- @return number
+function position_based_random_float_position()
+    -- ...
+end
+
+--- @return integer
+function position_based_random_u16()
+    -- ...
+end
+
+--- @return number
+function random_float()
+    -- ...
+end
+
+--- @return integer
+function random_sign()
+    -- ...
+end
+
+--- @return integer
+function random_u16()
+    -- ...
+end
+
 --- @param id BehaviorId
 --- @return Pointer_BehaviorScript
 function get_behavior_from_id(id)

@@ -65,7 +65,8 @@ in_files = [
     "src/game/area.h",
     "src/engine/level_script.h",
     "src/game/ingame_menu.h",
-    "src/game/first_person_cam.h"
+    "src/game/first_person_cam.h",
+    "src/engine/behavior_script.h"
 ]
 
 override_allowed_functions = {
@@ -118,7 +119,8 @@ override_disallowed_functions = {
     "src/pc/lua/utils/smlua_anim_utils.h":      [ "smlua_anim_util_reset", "smlua_anim_util_register_animation" ],
     "src/pc/network/lag_compensation.h":        [ "lag_compensation_clear", "lag_compensation_store" ],
     "src/game/first_person_cam.h":              [ "first_person_update" ],
-    "src/pc/lua/utils/smlua_collision_utils.h": [ "collision_find_surface_on_ray" ]
+    "src/pc/lua/utils/smlua_collision_utils.h": [ "collision_find_surface_on_ray" ],
+    "src/engine/behavior_script.h":             [ "stub_behavior_script_2", "cur_obj_update" ]
 }
 
 override_hide_functions = {

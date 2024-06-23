@@ -1464,10 +1464,6 @@ f32 position_based_random_float_position(void) {
     return rnd / (double)0x10000;
 }
 
-u8 cur_obj_is_last_nat_update_per_frame(void) {
-    return (gCurrentObject->areaTimer == (gNetworkAreaTimer - 1));
-}
-
 f32 draw_distance_scalar(void) {
     if (!gBehaviorValues.InfiniteRenderDistance) { return 1.0f; }
     

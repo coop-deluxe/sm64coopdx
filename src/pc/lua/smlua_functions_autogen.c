@@ -45,6 +45,7 @@
 #include "src/engine/level_script.h"
 #include "src/game/ingame_menu.h"
 #include "src/game/first_person_cam.h"
+#include "src/engine/behavior_script.h"
 
 
   ////////////
@@ -9616,6 +9617,117 @@ int smlua_func_vec3f_copy_2(lua_State* L) {
     smlua_push_number_field(2, "x", src[0]);
     smlua_push_number_field(2, "y", src[1]);
     smlua_push_number_field(2, "z", src[2]);
+
+    return 1;
+}
+
+  ///////////////////////
+ // behavior_script.h //
+///////////////////////
+
+int smlua_func_draw_distance_scalar(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "draw_distance_scalar", 0, top);
+        return 0;
+    }
+
+
+    lua_pushnumber(L, draw_distance_scalar());
+
+    return 1;
+}
+
+int smlua_func_obj_update_gfx_pos_and_angle(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "obj_update_gfx_pos_and_angle", 1, top);
+        return 0;
+    }
+
+    struct Object* obj = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "obj_update_gfx_pos_and_angle"); return 0; }
+
+    obj_update_gfx_pos_and_angle(obj);
+
+    return 1;
+}
+
+int smlua_func_position_based_random_float_position(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "position_based_random_float_position", 0, top);
+        return 0;
+    }
+
+
+    lua_pushnumber(L, position_based_random_float_position());
+
+    return 1;
+}
+
+int smlua_func_position_based_random_u16(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "position_based_random_u16", 0, top);
+        return 0;
+    }
+
+
+    lua_pushinteger(L, position_based_random_u16());
+
+    return 1;
+}
+
+int smlua_func_random_float(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "random_float", 0, top);
+        return 0;
+    }
+
+
+    lua_pushnumber(L, random_float());
+
+    return 1;
+}
+
+int smlua_func_random_sign(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "random_sign", 0, top);
+        return 0;
+    }
+
+
+    lua_pushinteger(L, random_sign());
+
+    return 1;
+}
+
+int smlua_func_random_u16(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "random_u16", 0, top);
+        return 0;
+    }
+
+
+    lua_pushinteger(L, random_u16());
 
     return 1;
 }
@@ -33268,6 +33380,15 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "update_angle_from_move_flags", smlua_func_update_angle_from_move_flags);
     smlua_bind_function(L, "uv_update_scroll", smlua_func_uv_update_scroll);
     smlua_bind_function(L, "vec3f_copy_2", smlua_func_vec3f_copy_2);
+
+    // behavior_script.h
+    smlua_bind_function(L, "draw_distance_scalar", smlua_func_draw_distance_scalar);
+    smlua_bind_function(L, "obj_update_gfx_pos_and_angle", smlua_func_obj_update_gfx_pos_and_angle);
+    smlua_bind_function(L, "position_based_random_float_position", smlua_func_position_based_random_float_position);
+    smlua_bind_function(L, "position_based_random_u16", smlua_func_position_based_random_u16);
+    smlua_bind_function(L, "random_float", smlua_func_random_float);
+    smlua_bind_function(L, "random_sign", smlua_func_random_sign);
+    smlua_bind_function(L, "random_u16", smlua_func_random_u16);
 
     // behavior_table.h
     smlua_bind_function(L, "get_behavior_from_id", smlua_func_get_behavior_from_id);
