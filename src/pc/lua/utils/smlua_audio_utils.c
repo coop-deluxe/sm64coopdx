@@ -16,6 +16,7 @@
 #include "pc/utils/misc.h"
 #include "pc/debuglog.h"
 #include "pc/pc_main.h"
+#include "pc/fs/fmem.h"
 #include "audio/external.h"
 
 struct AudioOverride {
@@ -81,22 +82,24 @@ bool smlua_audio_utils_override(u8 sequenceId, s32* bankId, void** seqData) {
     static u8* buffer = NULL;
     static long int length = 0;
 
-    FILE* fp = fopen(override->filename, "rb");
+    FILE* fp = f_open_r(override->filename);
     if (!fp) { return false; }
-    fseek(fp, 0L, SEEK_END);
-    length = ftell(fp);
+    f_seek(fp, 0L, SEEK_END);
+    length = f_tell(fp);
 
     buffer = malloc(length+1);
     if (buffer == NULL) {
         LOG_ERROR("Failed to malloc m64 sound file");
-        fclose(fp);
+        f_close(fp);
+        f_delete(fp);
         return false;
     }
 
-    fseek(fp, 0L, SEEK_SET);
-    fread(buffer, length, 1, fp);
+    f_seek(fp, 0L, SEEK_SET);
+    f_read(buffer, length, 1, fp);
 
-    fclose(fp);
+    f_close(fp);
+    f_delete(fp);
 
     // cache
     override->loaded = true;
@@ -251,12 +254,53 @@ struct ModAudio* audio_load_internal(const char* filename, bool isStream) {
     audio->file = modFile;
 
     // load audio
-    ma_result result = ma_sound_init_from_file(
-        &gModAudioEngine, modFile->cachedPath,
+    FILE *f = f_open_r(modFile->cachedPath);
+    if (!f) {
+        LOG_ERROR("failed to load audio file '%s': file not found", filename);
+        return NULL;
+    }
+
+    f_seek(f, 0, SEEK_END);
+    u32 size = f_tell(f);
+    f_rewind(f);
+    void *buffer = calloc(size, 1);
+    if (!buffer) {
+        f_close(f);
+        f_delete(f);
+        LOG_ERROR("failed to load audio file '%s': cannot allocate buffer of size: %d", filename, size);
+        return NULL;
+    }
+
+    // read the audio buffer
+    if (f_read(buffer, 1, size, f) < size) {
+        free(buffer);
+        f_close(f);
+        f_delete(f);
+        LOG_ERROR("failed to load audio file '%s': cannot read audio buffer of size: %d", filename, size);
+        return NULL;
+    }
+    f_close(f);
+    f_delete(f);
+
+    // decode the audio buffer
+    // note: buffer and decoder are not freed after a successful call, because ma_decoder_init_memory() does not make copies of them
+    ma_decoder *decoder = calloc(1, sizeof(ma_decoder));
+    ma_result result = ma_decoder_init_memory(buffer, size, NULL, decoder);
+    if (result != MA_SUCCESS) {
+        free(decoder);
+        free(buffer);
+        LOG_ERROR("failed to load audio file '%s': failed to decode raw audio: %d", filename, result);
+        return NULL;
+    }
+
+    result = ma_sound_init_from_data_source(
+        &gModAudioEngine, decoder,
         isStream ? MA_SOUND_STREAM_FLAGS : MA_SOUND_SAMPLE_FLAGS,
-        NULL, NULL, &audio->sound
+        NULL, &audio->sound
     );
     if (result != MA_SUCCESS) {
+        free(decoder);
+        free(buffer);
         LOG_ERROR("failed to load audio file '%s': %d", filename, result);
         return NULL;
     }

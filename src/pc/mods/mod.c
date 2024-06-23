@@ -6,6 +6,7 @@
 #include "pc/utils/misc.h"
 #include "pc/utils/md5.h"
 #include "pc/debuglog.h"
+#include "pc/fs/fmem.h"
 
 size_t mod_get_lua_size(struct Mod* mod) {
     if (!mod) { return 0; }
@@ -171,7 +172,8 @@ void mod_clear(struct Mod* mod) {
         for (int j = 0; j < mod->fileCount; j++) {
             struct ModFile* file = &mod->files[j];
             if (file->fp != NULL) {
-                fclose(file->fp);
+                f_close(file->fp);
+                f_delete(file->fp);
                 file->fp = NULL;
             }
             if (file->cachedPath != NULL) {

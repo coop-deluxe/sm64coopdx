@@ -5,6 +5,7 @@
 #include "data/dynos.c.h"
 #include "pc/debuglog.h"
 #include "pc/loading.h"
+#include "pc/fs/fmem.h"
 
 #if defined(_WIN32) || defined(_WIN64)
 #include <windows.h>
@@ -322,7 +323,8 @@ void mods_clear(struct Mods* mods) {
             for (int j = 0; j < mod->fileCount; j++) {
                 struct ModFile* file = &mod->files[j];
                 if (file->fp != NULL) {
-                    fclose(file->fp);
+                    f_close(file->fp);
+                    f_delete(file->fp);
                     file->fp = NULL;
                 }
             }

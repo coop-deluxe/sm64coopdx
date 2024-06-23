@@ -23,6 +23,7 @@
 #include "pc/debuglog.h"
 #include "pc/pc_main.h"
 #include "pc/gfx/gfx_pc.h"
+#include "pc/fs/fmem.h"
 #include "game/camera.h"
 #include "game/skybox.h"
 #include "game/object_list_processor.h"
@@ -726,6 +727,7 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
     save_file_load_all(TRUE);
     extern void save_file_set_using_backup_slot(bool usingBackupSlot);
     save_file_set_using_backup_slot(false);
+    f_shutdown();
 
     extern s16 gMenuMode;
     gMenuMode = -1;
