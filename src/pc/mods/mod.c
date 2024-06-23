@@ -454,18 +454,18 @@ bool mod_load(struct Mods* mods, char* basePath, char* modName) {
         return true;
     }
 
-    bool isDirectory = is_directory(fullPath);
+    bool isDirectory = fs_sys_dir_exists(fullPath);
 
     // make sure mod is valid
     if (str_ends_with(modName, ".lua")) {
         valid = true;
-    } else if (is_directory(fullPath)) {
+    } else if (fs_sys_dir_exists(fullPath)) {
         char tmpPath[SYS_MAX_PATH] = { 0 };
         if (!concat_path(tmpPath, fullPath, "main.lua")) {
             LOG_ERROR("Failed to concat path '%s' + '%s'", fullPath, "main.lua");
             return true;
         }
-        valid = path_exists(tmpPath);
+        valid = fs_sys_path_exists(tmpPath);
     }
 
     if (!valid) {

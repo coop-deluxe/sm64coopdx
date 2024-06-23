@@ -3,7 +3,6 @@
 #include "pc/ini.h"
 #include "pc/mods/mods.h"
 #include "pc/mods/mods_utils.h"
-#include "pc/os/os.h"
 #include "player_palette.h"
 
 const struct PlayerPalette DEFAULT_MARIO_PALETTE =
@@ -64,14 +63,14 @@ void player_palettes_read(const char* palettesPath, bool appendPalettes) {
     }
 
     // open directory
-    os_dirent* dir = NULL;
+    struct dirent* dir = NULL;
 
-    OS_DIR* d = os_opendir(lpath);
+    DIR* d = opendir(lpath);
     if (!d) { return; }
 
     // iterate
     char path[SYS_MAX_PATH] = { 0 };
-    while ((dir = os_readdir(d)) != NULL) {
+    while ((dir = readdir(d)) != NULL) {
         // sanity check / fill path[]
         if (!directory_sanity_check(dir, lpath, path)) { continue; }
         snprintf(path, SYS_MAX_PATH, "%s", os_get_dir_name(dir));
@@ -113,7 +112,7 @@ void player_palettes_read(const char* palettesPath, bool appendPalettes) {
         if (gPresetPaletteCount >= MAX_PRESET_PALETTES) { break; }
     }
 
-    os_closedir(d);
+    closedir(d);
 
     // this should mean we are in the exe path's palette dir
     if (appendPalettes) {
@@ -128,7 +127,7 @@ void player_palettes_read(const char* palettesPath, bool appendPalettes) {
                 }
             }
         }
-        
+
         // copy remaining palettes
         for (int i = 0; i < gPresetPaletteCount; i++) {
             bool isCharacterPalette = false;

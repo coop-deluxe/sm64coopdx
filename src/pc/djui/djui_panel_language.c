@@ -8,7 +8,6 @@
 #include "pc/debuglog.h"
 #include "pc/utils/misc.h"
 #include "pc/configfile.h"
-#include "pc/os/os.h"
 #include "pc/lua/smlua_hooks.h"
 #include "game/bettercamera.h"
 
@@ -86,9 +85,9 @@ void djui_panel_language_create(struct DjuiBase* caller) {
         snprintf(lpath, SYS_MAX_PATH, "%s/lang", sys_exe_path());
 
         // open directory
-        os_dirent* dir = NULL;
+        struct dirent* dir = NULL;
 
-        OS_DIR* d = os_opendir(lpath);
+        DIR* d = opendir(lpath);
         if (!d) {
             LOG_ERROR("Could not open directory '%s'", lpath);
 
@@ -111,10 +110,10 @@ void djui_panel_language_create(struct DjuiBase* caller) {
 
         // iterate
         char path[SYS_MAX_PATH] = { 0 };
-        while ((dir = os_readdir(d)) != NULL) {
+        while ((dir = readdir(d)) != NULL) {
             // sanity check / fill path[]
             //if (!directory_sanity_check(dir, lpath, path)) { continue; }
-            snprintf(path, SYS_MAX_PATH, "%s", os_get_dir_name(dir));
+            snprintf(path, SYS_MAX_PATH, "%s", dir->d_name);
 
             // strip the name before the .
             char* c = path;
@@ -130,7 +129,7 @@ void djui_panel_language_create(struct DjuiBase* caller) {
             if (!strcmp(path, "English")) { chkEnglish = checkbox; }
         }
 
-        os_closedir(d);
+        closedir(d);
 
         if (!foundMatch && chkEnglish) {
             chkEnglish->value = &sTrue;

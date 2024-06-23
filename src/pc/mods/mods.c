@@ -218,7 +218,7 @@ static void mods_load(struct Mods* mods, char* modsBasePath, UNUSED bool isUserM
     normalize_path(modsBasePath);
 
     // check for existence
-    if (!is_directory(modsBasePath)) {
+    if (!fs_sys_dir_exists(modsBasePath)) {
         LOG_ERROR("Could not find directory '%s'", modsBasePath);
     }
 
@@ -275,10 +275,8 @@ void mods_refresh_local(void) {
     // load mods
     if (hasUserPath) { mods_load(&gLocalMods, userModPath, true); }
 
-    const char* exePath = path_to_executable();
     char defaultModsPath[SYS_MAX_PATH] = { 0 };
-    path_get_folder((char*)exePath, defaultModsPath);
-    strncat(defaultModsPath, MOD_DIRECTORY, SYS_MAX_PATH-1);
+    snprintf(defaultModsPath, SYS_MAX_PATH, "%s/%s", sys_exe_path(), MOD_DIRECTORY);
     mods_load(&gLocalMods, defaultModsPath, false);
 
     // sort

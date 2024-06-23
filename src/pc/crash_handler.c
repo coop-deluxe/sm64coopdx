@@ -40,7 +40,7 @@ static CrashHandlerText sCrashHandlerText[128 + 256 + 4];
 #define PTR long long unsigned int)(uintptr_t
 
 #define ARRAY_SIZE(a)               (sizeof(a) / sizeof(a[0]))
-#define MEMNEW(typ, cnt)            calloc(sizeof(typ), cnt)
+#define MEMNEW(typ, cnt)            calloc(cnt, sizeof(typ))
 #define STRING(str, size, fmt, ...) char str[size]; snprintf(str, size, fmt, __VA_ARGS__);
 
 #define BACK_TRACE_SIZE 15
@@ -457,15 +457,9 @@ static void crash_handler(const int signalNum, siginfo_t *info, UNUSED ucontext_
 
         // Load symbols
         char filename[256] = { 0 };
-        if (GetModuleFileName(NULL, filename, sizeof(filename))) {
-            int index = strlen(filename);
-            while (--index > 0) {
-                if (filename[index] == '\\') {
-                    filename[index] = '\0';
-                    break;
-                }
-            }
-            strncat(filename, "\\coop.map", 255);
+        const char *exe_path = sys_exe_path();
+        if (NULL != exe_path) {
+            snprintf(filename, 256, "%s/%s", exe_path, "coop.map");
         } else {
             snprintf(filename, 256, "%s", "coop.map");
         }

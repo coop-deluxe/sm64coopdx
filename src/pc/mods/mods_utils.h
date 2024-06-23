@@ -16,10 +16,6 @@ bool str_ends_with(const char* string, const char* suffix);
 
 char* extract_lua_field(char* fieldName, char* buffer);
 
-const char* path_to_executable(void);
-bool path_is_portable_filename(char* string);
-bool path_exists(char* path);
-bool is_directory(char* path);
 void normalize_path(char* path);
 bool concat_path(char* destination, char* path, char* fname);
 char* path_basename(char* path);

@@ -115,7 +115,7 @@ C_FIELD const char* mod_storage_load(const char* key) {
 
     char filename[SYS_MAX_PATH] = { 0 };
     mod_storage_get_filename(filename);
-    if (!path_exists(filename)) { return NULL; }
+    if (!fs_sys_path_exists(filename)) { return NULL; }
 
     mINI::INIFile file(filename);
     mINI::INIStructure ini;
@@ -152,7 +152,7 @@ C_FIELD bool mod_storage_remove(const char* key) {
 
     char filename[SYS_MAX_PATH] = { 0 };
     mod_storage_get_filename(filename);
-    if (!path_exists(filename)) { return false; }
+    if (!fs_sys_path_exists(filename)) { return false; }
 
     mINI::INIFile file(filename);
     mINI::INIStructure ini;
@@ -172,7 +172,7 @@ C_FIELD bool mod_storage_clear(void) {
 
     char filename[SYS_MAX_PATH] = { 0 };
     mod_storage_get_filename(filename);
-    if (!path_exists(filename)) { return false; }
+    if (!fs_sys_path_exists(filename)) { return false; }
 
     mINI::INIFile file(filename);
     mINI::INIStructure ini;

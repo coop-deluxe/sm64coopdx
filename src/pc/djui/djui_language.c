@@ -17,12 +17,9 @@ bool djui_language_init(char* lang) {
     }
 
     // construct path
-    char exePath[SYS_MAX_PATH] = "";
-    path_get_folder((char*)path_to_executable(), exePath);
-
     char path[SYS_MAX_PATH] = "";
     if (!lang || lang[0] == '\0') { lang = "English"; }
-    snprintf(path, SYS_MAX_PATH, "%s/lang/%s.ini", exePath, lang);
+    snprintf(path, SYS_MAX_PATH, "%s/lang/%s.ini", sys_exe_path(), lang);
 
     // load
     sLang = ini_load(path);
