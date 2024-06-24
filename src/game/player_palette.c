@@ -73,7 +73,7 @@ void player_palettes_read(const char* palettesPath, bool appendPalettes) {
     while ((dir = readdir(d)) != NULL) {
         // sanity check / fill path[]
         if (!directory_sanity_check(dir, lpath, path)) { continue; }
-        snprintf(path, SYS_MAX_PATH, "%s", os_get_dir_name(dir));
+        snprintf(path, SYS_MAX_PATH, "%s", dir->d_name);
 
         // strip the name before the .
         char* c = path;
