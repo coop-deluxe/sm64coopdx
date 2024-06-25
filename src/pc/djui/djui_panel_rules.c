@@ -52,8 +52,8 @@ DLANG(RULES, RULE_5));
 
             struct DjuiRect* rect = djui_rect_container_create(body, 64);
             {
-                djui_button_left_create(&rect->base, DLANG(MENU, YES), DJUI_BUTTON_STYLE_NORMAL, djui_panel_rules_accept);
-                djui_button_right_create(&rect->base, DLANG(MENU, NO), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
+                djui_button_left_create(&rect->base, DLANG(MENU, NO), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
+                djui_button_right_create(&rect->base, DLANG(MENU, YES), DJUI_BUTTON_STYLE_NORMAL, djui_panel_rules_accept);
             }
         } else {
             djui_button_create(body, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
