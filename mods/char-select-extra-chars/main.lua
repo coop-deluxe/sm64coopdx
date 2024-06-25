@@ -1,5 +1,6 @@
 -- name: [CS] Extra Characters
--- description: [CS] Extra Characters\nBy Coop Deluxe Team\n\nThis Character Select pack adds other characters from the Mario series! Currently, The only character that has been added is \\#ff46a1\\Toadette\\#dcdcdc\\.
+-- description: [CS] Extra Characters\nBy Coop Deluxe Team\n\nThis Character Select pack adds other characters from the Mario series! Currently, The only character that has been added is just \\#ff46a1\\Toadette\\#dcdcdc\\.
+-- pausable: true
 
 if not _G.charSelectExists then
     local first = false

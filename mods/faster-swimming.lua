@@ -1,6 +1,6 @@
 -- name: Faster Swimming
--- incompatible:
 -- description: Everyone swims faster.
+-- pausable: true
 
 function mario_before_phys_step(m)
     local hScale = 1.0
