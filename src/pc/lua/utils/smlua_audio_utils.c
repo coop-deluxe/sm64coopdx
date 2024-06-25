@@ -163,11 +163,11 @@ void smlua_audio_utils_replace_sequence(u8 sequenceId, u8 bankId, u8 defaultVolu
 #define MA_SOUND_STREAM_FLAGS (MA_SOUND_FLAG_NO_SPATIALIZATION | MA_SOUND_FLAG_STREAM)
 #define MA_SOUND_SAMPLE_FLAGS (MA_SOUND_FLAG_NO_SPATIALIZATION | MA_SOUND_FLAG_NO_PITCH | MA_SOUND_FLAG_DECODE) // No pitch, pre-decode audio samples
 
-ma_engine gModAudioEngine;
-static struct DynamicPool *sModAudio;
+static ma_engine sModAudioEngine;
+static struct DynamicPool *sModAudioPool;
 
 static struct ModAudio* find_mod_audio(struct ModFile* file) {
-    struct DynamicPoolNode* node = sModAudio->tail;
+    struct DynamicPoolNode* node = sModAudioPool->tail;
     while (node) {
         struct DynamicPoolNode* prev = node->prev;
         struct ModAudio* audio = node->ptr;
@@ -243,7 +243,7 @@ struct ModAudio* audio_load_internal(const char* filename, bool isStream) {
 
     // allocate in ModAudio pool
     if (audio == NULL) {
-        audio = dynamic_pool_alloc(sModAudio, sizeof(struct ModAudio));
+        audio = dynamic_pool_alloc(sModAudioPool, sizeof(struct ModAudio));
         if (!audio) {
             LOG_LUA_LINE("Could not allocate space for new mod audio!");
             return NULL;
@@ -294,7 +294,7 @@ struct ModAudio* audio_load_internal(const char* filename, bool isStream) {
     }
 
     result = ma_sound_init_from_data_source(
-        &gModAudioEngine, decoder,
+        &sModAudioEngine, decoder,
         isStream ? MA_SOUND_STREAM_FLAGS : MA_SOUND_SAMPLE_FLAGS,
         NULL, &audio->sound
     );
@@ -315,15 +315,16 @@ struct ModAudio* audio_stream_load(const char* filename) {
 }
 
 void audio_stream_destroy(struct ModAudio* audio) {
-    if (!audio_sanity_check(audio, true, "destroy")) {
+    if (!audio_sanity_check(audio, true, "destroy stream")) {
         return;
     }
 
     ma_sound_uninit(&audio->sound);
+    dynamic_pool_free(sModAudioPool, audio);
 }
 
 void audio_stream_play(struct ModAudio* audio, bool restart, f32 volume) {
-    if (!audio_sanity_check(audio, true, "play")) {
+    if (!audio_sanity_check(audio, true, "play stream")) {
         return;
     }
     f32 masterVolume = (f32)configMasterVolume / 127.0f * (f32)gLuaVolumeMaster / 127.0f;
@@ -335,14 +336,14 @@ void audio_stream_play(struct ModAudio* audio, bool restart, f32 volume) {
 }
 
 void audio_stream_pause(struct ModAudio* audio) {
-    if (!audio_sanity_check(audio, true, "pause")) {
+    if (!audio_sanity_check(audio, true, "pause stream")) {
         return;
     }
     ma_sound_stop(&audio->sound);
 }
 
 void audio_stream_stop(struct ModAudio* audio) {
-    if (!audio_sanity_check(audio, true, "stop")) {
+    if (!audio_sanity_check(audio, true, "stop stream")) {
         return;
     }
     ma_sound_stop(&audio->sound);
@@ -350,7 +351,7 @@ void audio_stream_stop(struct ModAudio* audio) {
 }
 
 f32 audio_stream_get_position(struct ModAudio* audio) {
-    if (!audio_sanity_check(audio, true, "getpos")) {
+    if (!audio_sanity_check(audio, true, "get stream position")) {
         return 0;
     }
     // ! This gets the time that the audio has been playing for, but is not reset when the stream loops
@@ -358,63 +359,63 @@ f32 audio_stream_get_position(struct ModAudio* audio) {
 }
 
 void audio_stream_set_position(struct ModAudio* audio, f32 pos) {
-    if (!audio_sanity_check(audio, true, "setpos")) {
+    if (!audio_sanity_check(audio, true, "set stream position")) {
         return;
     }
-    ma_sound_seek_to_pcm_frame(&audio->sound, pos * ma_engine_get_sample_rate(&gModAudioEngine));
+    ma_sound_seek_to_pcm_frame(&audio->sound, pos * ma_engine_get_sample_rate(&sModAudioEngine));
 }
 
 bool audio_stream_get_looping(struct ModAudio* audio) {
-    if (!audio_sanity_check(audio, true, "getloop")) {
+    if (!audio_sanity_check(audio, true, "get stream looping")) {
         return false;
     }
     return ma_sound_is_looping(&audio->sound);
 }
 
 void audio_stream_set_looping(struct ModAudio* audio, bool looping) {
-    if (!audio_sanity_check(audio, true, "setloop")) {
+    if (!audio_sanity_check(audio, true, "set stream looping")) {
         return;
     }
     ma_sound_set_looping(&audio->sound, looping);
 }
 
 f32 audio_stream_get_frequency(struct ModAudio* audio) {
-    if (!audio_sanity_check(audio, true, "getfreq")) {
+    if (!audio_sanity_check(audio, true, "get stream frequency")) {
         return 0;
     }
     return ma_sound_get_pitch(&audio->sound);
 }
 
 void audio_stream_set_frequency(struct ModAudio* audio, f32 freq) {
-    if (!audio_sanity_check(audio, true, "setfreq")) {
+    if (!audio_sanity_check(audio, true, "set stream frequency")) {
         return;
     }
     ma_sound_set_pitch(&audio->sound, freq);
 }
 
 // f32 audio_stream_get_tempo(struct ModAudio* audio) {
-//     if (!audio_sanity_check(audio, true, "gettempo")) {
+//     if (!audio_sanity_check(audio, true, "get stream tempo")) {
 //         return 0;
 //     }
 //     return bassh_get_tempo(audio->handle);
 // }
 
 // void audio_stream_set_tempo(struct ModAudio* audio, f32 tempo) {
-//     if (!audio_sanity_check(audio, true, "settempo")) {
+//     if (!audio_sanity_check(audio, true, "set stream tempo")) {
 //         return;
 //     }
 //     bassh_set_tempo(audio->handle, tempo);
 // }
 
 f32 audio_stream_get_volume(struct ModAudio* audio) {
-    if (!audio_sanity_check(audio, true, "getvol")) {
+    if (!audio_sanity_check(audio, true, "get stream volume")) {
         return 0;
     }
     return audio->baseVolume;
 }
 
 void audio_stream_set_volume(struct ModAudio* audio, f32 volume) {
-    if (!audio_sanity_check(audio, true, "setvol")) {
+    if (!audio_sanity_check(audio, true, "set stream volume")) {
         return;
     }
     f32 masterVolume = (f32)configMasterVolume / 127.0f;
@@ -424,7 +425,7 @@ void audio_stream_set_volume(struct ModAudio* audio, f32 volume) {
 }
 
 // void audio_stream_set_speed(struct ModAudio* audio, f32 initial_freq, f32 speed, bool pitch) {
-//     if (!audio_sanity_check(audio, true, "setspeed")) {
+//     if (!audio_sanity_check(audio, true, "set stream speed")) {
 //         return;
 //     }
 //     bassh_set_speed(audio->handle, initial_freq, speed, pitch);
@@ -496,7 +497,7 @@ struct ModAudio* audio_sample_load(const char* filename) {
 }
 
 void audio_sample_destroy(struct ModAudio* audio) {
-    if (!audio_sanity_check(audio, false, "destroy")) {
+    if (!audio_sanity_check(audio, false, "destroy sample")) {
         return;
     }
 
@@ -504,10 +505,11 @@ void audio_sample_destroy(struct ModAudio* audio) {
         audio_sample_destroy_copies(audio);
     }
     ma_sound_uninit(&audio->sound);
+    dynamic_pool_free(sModAudioPool, audio);
 }
 
 void audio_sample_stop(struct ModAudio* audio) {
-    if (!audio_sanity_check(audio, false, "stop")) {
+    if (!audio_sanity_check(audio, false, "stop sample")) {
         return;
     }
     if (audio->sampleCopiesTail) {
@@ -518,14 +520,14 @@ void audio_sample_stop(struct ModAudio* audio) {
 }
 
 void audio_sample_play(struct ModAudio* audio, Vec3f position, f32 volume) {
-    if (!audio_sanity_check(audio, false, "play")) {
+    if (!audio_sanity_check(audio, false, "play sample")) {
         return;
     }
 
     ma_sound *sound = &audio->sound;
     if (ma_sound_is_playing(sound)) {
         struct ModAudioSampleCopies* copy = calloc(1, sizeof(struct ModAudioSampleCopies));
-        ma_sound_init_copy(&gModAudioEngine, sound, MA_SOUND_SAMPLE_FLAGS, NULL, &copy->sound);
+        ma_sound_init_copy(&sModAudioEngine, sound, MA_SOUND_SAMPLE_FLAGS, NULL, &copy->sound);
         copy->parent = audio;
 
         if (!audio->sampleCopiesTail) {
@@ -565,7 +567,7 @@ void audio_sample_play(struct ModAudio* audio, Vec3f position, f32 volume) {
 }
 
 void audio_custom_update_volume(void) {
-    struct DynamicPoolNode* node = sModAudio->tail;
+    struct DynamicPoolNode* node = sModAudioPool->tail;
     while (node) {
         struct DynamicPoolNode* prev = node->prev;
         struct ModAudio* audio = node->ptr;
@@ -579,8 +581,8 @@ void audio_custom_update_volume(void) {
 }
 
 void audio_custom_shutdown(void) {
-    if (!sModAudio) { return; }
-    struct DynamicPoolNode* node = sModAudio->tail;
+    if (!sModAudioPool) { return; }
+    struct DynamicPoolNode* node = sModAudioPool->tail;
     while (node) {
         struct DynamicPoolNode* prev = node->prev;
         struct ModAudio* audio = node->ptr;
@@ -591,23 +593,23 @@ void audio_custom_shutdown(void) {
         }
         node = prev;
     }
-    dynamic_pool_free_pool(sModAudio);
+    dynamic_pool_free_pool(sModAudioPool);
 }
 
 void smlua_audio_custom_init(void) {
-    sModAudio = dynamic_pool_init();
+    sModAudioPool = dynamic_pool_init();
 
-    ma_result result = ma_engine_init(NULL, &gModAudioEngine);
+    ma_result result = ma_engine_init(NULL, &sModAudioEngine);
     if (result != MA_SUCCESS) {
-        LOG_ERROR("failed to init miniaudio: %d", result);
+        LOG_ERROR("failed to init Miniaudio: %d", result);
     }
 }
 
 void smlua_audio_custom_deinit(void) {
-    if (sModAudio) {
+    if (sModAudioPool) {
         audio_custom_shutdown();
-        free(sModAudio);
-        ma_engine_uninit(&gModAudioEngine);
-        sModAudio = NULL;
+        free(sModAudioPool);
+        ma_engine_uninit(&sModAudioEngine);
+        sModAudioPool = NULL;
     }
 }
