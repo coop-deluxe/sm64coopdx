@@ -11,7 +11,7 @@ static struct DjuiBase* sSaveButtonCaller = NULL;
 static struct DjuiButton* sSaveButtons[NUM_SAVE_FILES] = { NULL };
 static s32 sButtonTag = 0;
 
-static char* sSaveLetters[] = { "A", "B", "C", "D" };
+static char* sSaveLetters[NUM_SAVE_FILES] = { "A", "B", "C", "D" };
 
 static void djui_panel_host_save_update_button(struct DjuiButton* button, int slot);
 
@@ -23,6 +23,9 @@ static void djui_panel_host_save_save_name_change(UNUSED struct DjuiBase* caller
 }
 
 static bool djui_panel_edit_back(UNUSED struct DjuiBase* caller) {
+    if (configSaveNames[sButtonTag][0] == '\0') {
+        snprintf(configSaveNames[sButtonTag], MAX_SAVE_NAME_STRING, "SM64");
+    }
     djui_panel_host_save_update_button(sSaveButtons[sButtonTag], sButtonTag);
     return false;
 }
