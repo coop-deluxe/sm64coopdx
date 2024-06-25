@@ -47,6 +47,9 @@ static bool loading_screen_on_render(struct DjuiBase* base) {
     windowWidth /= scale;
     windowHeight /= scale;
 
+    f32 loadingDescY1 = windowHeight * 0.5f + sLoading->splashImage->base.height.value * 0.25f;
+    f32 loadingDescY2 = windowHeight * 0.5f + sLoading->splashImage->base.height.value * 0.55f;
+
     // fill the screen
     djui_base_set_size(base, windowWidth, windowHeight);
 
@@ -64,11 +67,11 @@ static bool loading_screen_on_render(struct DjuiBase* base) {
             sys_swap_backslashes(buffer);
         }
         djui_text_set_text(sLoading->loadingDesc, buffer);
-        djui_base_set_location(&sLoading->loadingDesc->base, 0, windowHeight - 375);
+        djui_base_set_location(&sLoading->loadingDesc->base, 0, loadingDescY1);
     }
 
     // loading bar
-    djui_base_set_location(&sLoading->loadingBar->base, windowWidth / 4, windowHeight - 200);
+    djui_base_set_location(&sLoading->loadingBar->base, windowWidth / 4, loadingDescY2);
     djui_base_set_visible(&sLoading->loadingBar->base, gCurrLoadingSegment.percentage > 0 && strlen(gCurrLoadingSegment.str) > 0);
 
     djui_base_compute(base);
