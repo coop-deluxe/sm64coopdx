@@ -119,9 +119,9 @@ extern unsigned int configMenuLevel;
 extern bool         configMenuSound;
 extern bool         configMenuRandom;
 extern bool         configMenuDemos;
-extern bool         configGlobalPlayerModels;
 extern bool         configDisablePopups;
 extern char         configLanguage[MAX_CONFIG_STRING];
+extern bool         configDynosLocalPlayerModelOnly;
 // CoopNet settings
 extern char         configCoopNetIp[MAX_CONFIG_STRING];
 extern unsigned int configCoopNetPort;

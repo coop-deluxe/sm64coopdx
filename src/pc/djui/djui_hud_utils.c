@@ -20,9 +20,9 @@
 #include "game/camera.h"
 #include "game/hud.h"
 #include "game/rendering_graph_node.h"
+#include "pc/lua/smlua.h"
 
 #include "engine/math_util.h"
-
 
 static enum HudUtilsResolution sResolution = RESOLUTION_DJUI;
 static enum HudUtilsFilter sFilter = FILTER_NEAREST;
@@ -392,7 +392,16 @@ void djui_hud_print_text_interpolated(const char* message, f32 prevX, f32 prevY,
     interp->resolution = sResolution;
 }
 
+static inline bool is_power_of_two(u32 n) {
+    return (n > 0) && ((n & (n - 1)) == 0);
+}
+
 void djui_hud_render_texture_raw(const u8* texture, u32 bitSize, u32 width, u32 height, f32 x, f32 y, f32 scaleW, f32 scaleH) {
+    if (!is_power_of_two(width) || !is_power_of_two(height)) {
+        LOG_LUA_LINE("Tried to render DJUI HUD texture with NPOT width or height");
+        return;
+    }
+
     gDjuiHudUtilsZ += 0.01f;
 
     // translate position
