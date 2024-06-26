@@ -59,7 +59,7 @@ void set_first_person_enabled(bool enable) {
     gFirstPersonCamera.enabled = enable;
 }
 
-void first_person_camera_update(void) {
+static void first_person_camera_update(void) {
     struct MarioState *m = &gMarioStates[0];
     f32 sensX = 0.3f * camera_config_get_x_sensitivity();
     f32 sensY = 0.4f * camera_config_get_y_sensitivity();

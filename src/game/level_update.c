@@ -1490,7 +1490,7 @@ void update_menu_level(void) {
     if (!configMenuSound || configMenuStaffRoll || curLevel == LEVEL_CASTLE_GROUNDS) {
         reset_volume();
         disable_background_sound();
-        set_background_music(0, SEQ_MENU_FILE_SELECT, 0);
+        set_background_music(0, SEQ_MENU_TITLE_SCREEN, 0);
     } else {
         reset_volume();
         disable_background_sound();
@@ -1634,9 +1634,7 @@ void update_menu_level(void) {
             gMarioState->faceAngle[1] = -0x1C34;
             break;
     }
-    gLakituState.skipCameraInterpolationTimestamp = gGlobalTimer;
-    extern s32 gCamSkipInterp;
-    gCamSkipInterp = 1;
+
     if (gCurrentArea != NULL) { 
         vec3f_copy(gCurrentArea->camera->pos, gLakituState.curPos);
     }
@@ -1659,6 +1657,7 @@ void update_menu_level(void) {
 s32 update_level(void) {
     // update main menu level
     if (gDjuiInMainMenu) {
+        skip_camera_interpolation(); // we can't have nice things with this engine and interpolation
         update_menu_level();
     }
     sCancelNextActSelector = gDjuiInMainMenu;

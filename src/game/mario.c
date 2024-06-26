@@ -2147,7 +2147,7 @@ s32 execute_mario_action(UNUSED struct Object *o) {
 
         // Make remote players disappear when they enter a painting
         // should use same logic as in get_painting_warp_node
-        if (gMarioState->playerIndex != 0) {
+        if (gMarioState->playerIndex != 0 && gCurrentArea->paintingWarpNodes != NULL) {
             s32 paintingIndex = gMarioState->floor->type - SURFACE_PAINTING_WARP_D3;
             if (paintingIndex >= PAINTING_WARP_INDEX_START && paintingIndex < PAINTING_WARP_INDEX_END) {
                 if (paintingIndex < PAINTING_WARP_INDEX_FA || gMarioState->pos[1] - gMarioState->floorHeight < 80.0f) {

@@ -504,7 +504,7 @@ CameraTransition sModeTransitions[] = {
 extern u8 sDanceCutsceneIndexTable[][4];
 extern u8 sZoomOutAreaMasks[];
 
-static void skip_camera_interpolation(void) {
+void skip_camera_interpolation(void) {
     gLakituState.skipCameraInterpolationTimestamp = gGlobalTimer;
     extern s32 gCamSkipInterp;
     gCamSkipInterp = 1;
@@ -10784,12 +10784,6 @@ BAD_RETURN(s32) cutscene_door_move_behind_mario(struct Camera *c) {
     set_focus_rel_mario(c, 0.f, 125.f, 0.f, 0);
     vec3s_set(sCutsceneVars[0].angle, 0, sMarioCamState->faceAngle[1] + doorRotation, 0);
     vec3f_set(camOffset, 0.f, 125.f, 250.f);
-
-    if (doorRotation == 0) { //! useless code
-        camOffset[0] = 0.f;
-    } else {
-        camOffset[0] = 0.f;
-    }
 
     offset_rotated(c->pos, sMarioCamState->pos, camOffset, sCutsceneVars[0].angle);
     skip_camera_interpolation();

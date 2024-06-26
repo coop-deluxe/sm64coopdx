@@ -16,7 +16,7 @@ struct StateExtras {
     Vec3f prevPos;
     f32 prevScale;
 };
-struct StateExtras sStateExtras[MAX_PLAYERS];
+static struct StateExtras sStateExtras[MAX_PLAYERS];
 
 void name_without_hex(char* input) {
     s32 i, j;
@@ -81,7 +81,6 @@ void nametags_render(void) {
         pos[1] = m->pos[1] + 210;
 
         if (djui_hud_world_pos_to_screen_pos(pos, out) &&
-            m->marioBodyState->updateTorsoTime == gMarioStates[0].marioBodyState->updateTorsoTime &&
             m->action != ACT_IN_CANNON &&
             (i != 0 || (i == 0 && m->action != ACT_FIRST_PERSON))) {
             f32 scale = NAMETAG_MAX_SCALE;
@@ -101,7 +100,7 @@ void nametags_render(void) {
             };
             f32 measure = djui_hud_measure_text(name) * scale * 0.5f;
 
-            f32 alpha = (np->fadeOpacity / 32) * 255;
+            f32 alpha = (np->fadeOpacity / 32.0f) * 255;
 
             struct StateExtras* e = &sStateExtras[i];
             djui_hud_print_outlined_text_interpolated(name, e->prevPos[0] - measure, e->prevPos[1], e->prevScale, out[0] - measure, out[1], scale, color[0], color[1], color[2], alpha, 0.25);
