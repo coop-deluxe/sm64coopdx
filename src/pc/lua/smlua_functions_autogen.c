@@ -20804,19 +20804,19 @@ int smlua_func_network_player_is_override_palette_same(lua_State* L) {
     return 1;
 }
 
-int smlua_func_network_player_reset_override_palette_color(lua_State* L) {
+int smlua_func_network_player_reset_override_palette(lua_State* L) {
     if (L == NULL) { return 0; }
 
     int top = lua_gettop(L);
     if (top != 1) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "network_player_reset_override_palette_color", 1, top);
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "network_player_reset_override_palette", 1, top);
         return 0;
     }
 
     struct NetworkPlayer* np = (struct NetworkPlayer*)smlua_to_cobject(L, 1, LOT_NETWORKPLAYER);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "network_player_reset_override_palette_color"); return 0; }
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "network_player_reset_override_palette"); return 0; }
 
-    network_player_reset_override_palette_color(np);
+    network_player_reset_override_palette(np);
 
     return 1;
 }
@@ -33923,7 +33923,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "network_player_get_override_palette_color_channel", smlua_func_network_player_get_override_palette_color_channel);
     smlua_bind_function(L, "network_player_get_palette_color_channel", smlua_func_network_player_get_palette_color_channel);
     smlua_bind_function(L, "network_player_is_override_palette_same", smlua_func_network_player_is_override_palette_same);
-    smlua_bind_function(L, "network_player_reset_override_palette_color", smlua_func_network_player_reset_override_palette_color);
+    smlua_bind_function(L, "network_player_reset_override_palette", smlua_func_network_player_reset_override_palette);
     smlua_bind_function(L, "network_player_set_description", smlua_func_network_player_set_description);
     smlua_bind_function(L, "network_player_set_override_palette_color", smlua_func_network_player_set_override_palette_color);
 

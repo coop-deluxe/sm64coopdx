@@ -141,7 +141,7 @@ int smlua_hook_event(lua_State* L) {
 
     int ref = luaL_ref(L, LUA_REGISTRYINDEX);
     if (ref == -1) {
-        LOG_LUA_LINE("tried to hook undefined function to '%s'", LuaHookedEventTypeName[hookType]);
+        LOG_LUA_LINE("Tried to hook undefined function to '%s'", LuaHookedEventTypeName[hookType]);
         return 0;
     }
 

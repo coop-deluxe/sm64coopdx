@@ -72,7 +72,7 @@ int smlua_func_atan2s(lua_State* L) {
 
 int smlua_func_init_mario_after_warp(lua_State* L) {
     if (network_player_connected_count() >= 2) {
-        LOG_LUA_LINE("init_mario_after_warp can only be used in single-player");
+        LOG_LUA_LINE("init_mario_after_warp() can only be used in singleplayer");
         return 0;
     }
 
@@ -104,7 +104,7 @@ int smlua_func_initiate_warp(lua_State* L) {
 
 int smlua_func_reset_level(lua_State* L) {
     if (network_player_connected_count() >= 2) {
-        LOG_LUA_LINE("reset_level() can only be used in single-player");
+        LOG_LUA_LINE("reset_level() can only be used in singleplayer");
         return 0;
     }
 

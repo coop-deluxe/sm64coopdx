@@ -1245,41 +1245,38 @@ static struct LuaObjectField sNametagsSettingsFields[LUA_NAMETAGS_SETTINGS_FIELD
     { "showSelfTag", LVT_BOOL, offsetof(struct NametagsSettings, showSelfTag), false, LOT_NONE },
 };
 
-#define LUA_NETWORK_PLAYER_FIELD_COUNT 31
+#define LUA_NETWORK_PLAYER_FIELD_COUNT 28
 static struct LuaObjectField sNetworkPlayerFields[LUA_NETWORK_PLAYER_FIELD_COUNT] = {
-    { "connected",              LVT_BOOL,    offsetof(struct NetworkPlayer, connected),              true,  LOT_NONE          },
-    { "currActNum",             LVT_S16,     offsetof(struct NetworkPlayer, currActNum),             true,  LOT_NONE          },
-    { "currAreaIndex",          LVT_S16,     offsetof(struct NetworkPlayer, currAreaIndex),          true,  LOT_NONE          },
-    { "currAreaSyncValid",      LVT_BOOL,    offsetof(struct NetworkPlayer, currAreaSyncValid),      true,  LOT_NONE          },
-    { "currCourseNum",          LVT_S16,     offsetof(struct NetworkPlayer, currCourseNum),          true,  LOT_NONE          },
-    { "currLevelAreaSeqId",     LVT_U16,     offsetof(struct NetworkPlayer, currLevelAreaSeqId),     true,  LOT_NONE          },
-    { "currLevelNum",           LVT_S16,     offsetof(struct NetworkPlayer, currLevelNum),           true,  LOT_NONE          },
-    { "currLevelSyncValid",     LVT_BOOL,    offsetof(struct NetworkPlayer, currLevelSyncValid),     true,  LOT_NONE          },
-    { "currPositionValid",      LVT_BOOL,    offsetof(struct NetworkPlayer, currPositionValid),      true,  LOT_NONE          },
-    { "description",            LVT_STRING,  offsetof(struct NetworkPlayer, description),            true,  LOT_NONE          },
-    { "descriptionA",           LVT_U8,      offsetof(struct NetworkPlayer, descriptionA),           true,  LOT_NONE          },
-    { "descriptionB",           LVT_U8,      offsetof(struct NetworkPlayer, descriptionB),           true,  LOT_NONE          },
-    { "descriptionG",           LVT_U8,      offsetof(struct NetworkPlayer, descriptionG),           true,  LOT_NONE          },
-    { "descriptionR",           LVT_U8,      offsetof(struct NetworkPlayer, descriptionR),           true,  LOT_NONE          },
-    { "fadeOpacity",            LVT_U8,      offsetof(struct NetworkPlayer, fadeOpacity),            true,  LOT_NONE          },
-    { "globalIndex",            LVT_U8,      offsetof(struct NetworkPlayer, globalIndex),            true,  LOT_NONE          },
-    { "lastPingSent",           LVT_F32,     offsetof(struct NetworkPlayer, lastPingSent),           true,  LOT_NONE          },
-    { "lastReceived",           LVT_F32,     offsetof(struct NetworkPlayer, lastReceived),           true,  LOT_NONE          },
-    { "lastSent",               LVT_F32,     offsetof(struct NetworkPlayer, lastSent),               true,  LOT_NONE          },
-    { "localIndex",             LVT_U8,      offsetof(struct NetworkPlayer, localIndex),             true,  LOT_NONE          },
-    { "modelIndex",             LVT_U8,      offsetof(struct NetworkPlayer, modelIndex),             true,  LOT_NONE          },
-    { "name",                   LVT_STRING,  offsetof(struct NetworkPlayer, name),                   true,  LOT_NONE          },
-    { "onRxSeqId",              LVT_U8,      offsetof(struct NetworkPlayer, onRxSeqId),              true,  LOT_NONE          },
-    { "overrideModelIndex",     LVT_U8,      offsetof(struct NetworkPlayer, overrideModelIndex),     false, LOT_NONE          },
-    { "overridePalette",        LVT_COBJECT, offsetof(struct NetworkPlayer, overridePalette),        false, LOT_PLAYERPALETTE },
-    { "overridePaletteIndex",   LVT_U8,      offsetof(struct NetworkPlayer, overridePaletteIndex),   false, LOT_NONE          },
-    { "overridePaletteIndexLp", LVT_U8,      offsetof(struct NetworkPlayer, overridePaletteIndexLp), true,  LOT_NONE          },
-    { "palette",                LVT_COBJECT, offsetof(struct NetworkPlayer, palette),                true,  LOT_PLAYERPALETTE },
-    { "paletteIndex",           LVT_U8,      offsetof(struct NetworkPlayer, paletteIndex),           true,  LOT_NONE          },
-    { "ping",                   LVT_U32,     offsetof(struct NetworkPlayer, ping),                   true,  LOT_NONE          },
-//  { "rxPacketHash",           LOT_???,     offsetof(struct NetworkPlayer, rxPacketHash),           true,  LOT_???           }, <--- UNIMPLEMENTED
-//  { "rxSeqIds",               LOT_???,     offsetof(struct NetworkPlayer, rxSeqIds),               true,  LOT_???           }, <--- UNIMPLEMENTED
-    { "type",                   LVT_U8,      offsetof(struct NetworkPlayer, type),                   true,  LOT_NONE          },
+    { "connected",          LVT_BOOL,    offsetof(struct NetworkPlayer, connected),          true,  LOT_NONE          },
+    { "currActNum",         LVT_S16,     offsetof(struct NetworkPlayer, currActNum),         true,  LOT_NONE          },
+    { "currAreaIndex",      LVT_S16,     offsetof(struct NetworkPlayer, currAreaIndex),      true,  LOT_NONE          },
+    { "currAreaSyncValid",  LVT_BOOL,    offsetof(struct NetworkPlayer, currAreaSyncValid),  true,  LOT_NONE          },
+    { "currCourseNum",      LVT_S16,     offsetof(struct NetworkPlayer, currCourseNum),      true,  LOT_NONE          },
+    { "currLevelAreaSeqId", LVT_U16,     offsetof(struct NetworkPlayer, currLevelAreaSeqId), true,  LOT_NONE          },
+    { "currLevelNum",       LVT_S16,     offsetof(struct NetworkPlayer, currLevelNum),       true,  LOT_NONE          },
+    { "currLevelSyncValid", LVT_BOOL,    offsetof(struct NetworkPlayer, currLevelSyncValid), true,  LOT_NONE          },
+    { "currPositionValid",  LVT_BOOL,    offsetof(struct NetworkPlayer, currPositionValid),  true,  LOT_NONE          },
+    { "description",        LVT_STRING,  offsetof(struct NetworkPlayer, description),        true,  LOT_NONE          },
+    { "descriptionA",       LVT_U8,      offsetof(struct NetworkPlayer, descriptionA),       true,  LOT_NONE          },
+    { "descriptionB",       LVT_U8,      offsetof(struct NetworkPlayer, descriptionB),       true,  LOT_NONE          },
+    { "descriptionG",       LVT_U8,      offsetof(struct NetworkPlayer, descriptionG),       true,  LOT_NONE          },
+    { "descriptionR",       LVT_U8,      offsetof(struct NetworkPlayer, descriptionR),       true,  LOT_NONE          },
+    { "fadeOpacity",        LVT_U8,      offsetof(struct NetworkPlayer, fadeOpacity),        true,  LOT_NONE          },
+    { "globalIndex",        LVT_U8,      offsetof(struct NetworkPlayer, globalIndex),        true,  LOT_NONE          },
+    { "lastPingSent",       LVT_F32,     offsetof(struct NetworkPlayer, lastPingSent),       true,  LOT_NONE          },
+    { "lastReceived",       LVT_F32,     offsetof(struct NetworkPlayer, lastReceived),       true,  LOT_NONE          },
+    { "lastSent",           LVT_F32,     offsetof(struct NetworkPlayer, lastSent),           true,  LOT_NONE          },
+    { "localIndex",         LVT_U8,      offsetof(struct NetworkPlayer, localIndex),         true,  LOT_NONE          },
+    { "modelIndex",         LVT_U8,      offsetof(struct NetworkPlayer, modelIndex),         true,  LOT_NONE          },
+    { "name",               LVT_STRING,  offsetof(struct NetworkPlayer, name),               true,  LOT_NONE          },
+    { "onRxSeqId",          LVT_U8,      offsetof(struct NetworkPlayer, onRxSeqId),          true,  LOT_NONE          },
+    { "overrideModelIndex", LVT_U8,      offsetof(struct NetworkPlayer, overrideModelIndex), false, LOT_NONE          },
+    { "overridePalette",    LVT_COBJECT, offsetof(struct NetworkPlayer, overridePalette),    false, LOT_PLAYERPALETTE },
+    { "palette",            LVT_COBJECT, offsetof(struct NetworkPlayer, palette),            true,  LOT_PLAYERPALETTE },
+    { "ping",               LVT_U32,     offsetof(struct NetworkPlayer, ping),               true,  LOT_NONE          },
+//  { "rxPacketHash",       LOT_???,     offsetof(struct NetworkPlayer, rxPacketHash),       true,  LOT_???           }, <--- UNIMPLEMENTED
+//  { "rxSeqIds",           LOT_???,     offsetof(struct NetworkPlayer, rxSeqIds),           true,  LOT_???           }, <--- UNIMPLEMENTED
+    { "type",               LVT_U8,      offsetof(struct NetworkPlayer, type),               true,  LOT_NONE          },
 };
 
 #define LUA_OBJECT_FIELD_COUNT 759
@@ -2211,11 +2208,10 @@ static struct LuaObjectField sRayIntersectionInfoFields[LUA_RAY_INTERSECTION_INF
     { "surface", LVT_COBJECT_P, offsetof(struct RayIntersectionInfo, surface), false, LOT_SURFACE },
 };
 
-#define LUA_SERVER_SETTINGS_FIELD_COUNT 13
+#define LUA_SERVER_SETTINGS_FIELD_COUNT 12
 static struct LuaObjectField sServerSettingsFields[LUA_SERVER_SETTINGS_FIELD_COUNT] = {
     { "bouncyLevelBounds",           LVT_S32, offsetof(struct ServerSettings, bouncyLevelBounds),           false, LOT_NONE },
     { "bubbleDeath",                 LVT_U8,  offsetof(struct ServerSettings, bubbleDeath),                 false, LOT_NONE },
-    { "enableCheats",                LVT_U8,  offsetof(struct ServerSettings, enableCheats),                false, LOT_NONE },
     { "enablePlayerList",            LVT_U8,  offsetof(struct ServerSettings, enablePlayerList),            false, LOT_NONE },
     { "enablePlayersInLevelDisplay", LVT_U8,  offsetof(struct ServerSettings, enablePlayersInLevelDisplay), false, LOT_NONE },
     { "headlessServer",              LVT_U8,  offsetof(struct ServerSettings, headlessServer),              false, LOT_NONE },

@@ -1123,10 +1123,7 @@
 --- @field public onRxSeqId integer
 --- @field public overrideModelIndex integer
 --- @field public overridePalette PlayerPalette
---- @field public overridePaletteIndex integer
---- @field public overridePaletteIndexLp integer
 --- @field public palette PlayerPalette
---- @field public paletteIndex integer
 --- @field public ping integer
 --- @field public type integer
 
@@ -2012,7 +2009,6 @@
 --- @class ServerSettings
 --- @field public bouncyLevelBounds BouncyLevelBounds
 --- @field public bubbleDeath integer
---- @field public enableCheats integer
 --- @field public enablePlayerList integer
 --- @field public enablePlayersInLevelDisplay integer
 --- @field public headlessServer integer

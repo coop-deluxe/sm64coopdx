@@ -5413,7 +5413,7 @@ function network_player_is_override_palette_same(np)
 end
 
 --- @param np NetworkPlayer
-function network_player_reset_override_palette_color(np)
+function network_player_reset_override_palette(np)
     -- ...
 end
 

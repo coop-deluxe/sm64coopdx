@@ -76,7 +76,6 @@ struct ServerSettings gServerSettings = {
     .bouncyLevelBounds = BOUNCY_LEVEL_BOUNDS_OFF,
     .playerKnockbackStrength = 25,
     .skipIntro = FALSE,
-    .enableCheats = FALSE,
     .bubbleDeath = TRUE,
     .enablePlayersInLevelDisplay = TRUE,
     .enablePlayerList = TRUE,
@@ -124,7 +123,6 @@ bool network_init(enum NetworkType inNetworkType, bool reconnecting) {
     gServerSettings.playerKnockbackStrength = configPlayerKnockbackStrength;
     gServerSettings.stayInLevelAfterStar = configStayInLevelAfterStar;
     gServerSettings.skipIntro = gCLIOpts.skipIntro ? TRUE : configSkipIntro;
-    gServerSettings.enableCheats = 0;
     gServerSettings.bubbleDeath = configBubbleDeath;
     gServerSettings.enablePlayersInLevelDisplay = TRUE;
     gServerSettings.enablePlayerList = TRUE;
@@ -734,7 +732,6 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
 
     reset_window_title();
 
-    gDjuiLuaErrorTimeout = 0;
     djui_panel_shutdown();
     extern bool gDjuiInMainMenu;
     if (!gDjuiInMainMenu) {

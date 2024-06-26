@@ -1377,10 +1377,10 @@
 
 <br />
 
-## [network_player_reset_override_palette_color](#network_player_reset_override_palette_color)
+## [network_player_reset_override_palette](#network_player_reset_override_palette)
 
 ### Lua Example
-`network_player_reset_override_palette_color(np)`
+`network_player_reset_override_palette(np)`
 
 ### Parameters
 | Field | Type |
@@ -1391,7 +1391,7 @@
 - None
 
 ### C Prototype
-`void network_player_reset_override_palette_color(struct NetworkPlayer *np);`
+`void network_player_reset_override_palette(struct NetworkPlayer *np);`
 
 [:arrow_up_small:](#)
 

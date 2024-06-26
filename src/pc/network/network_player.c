@@ -148,7 +148,7 @@ void network_player_set_override_palette_color(struct NetworkPlayer *np, enum Pl
     np->overridePalette.parts[part][2] = color[2];
 }
 
-void network_player_reset_override_palette_color(struct NetworkPlayer *np) {
+void network_player_reset_override_palette(struct NetworkPlayer *np) {
     if (np == NULL) { return; }
 
     np->overridePalette = np->palette;
