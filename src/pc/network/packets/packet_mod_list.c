@@ -9,8 +9,8 @@
 
 void network_send_mod_list_request(void) {
     SOFT_ASSERT(gNetworkType == NT_CLIENT);
-    mods_clear(&gRemoteMods);
     mods_clear(&gActiveMods);
+    mods_clear(&gRemoteMods);
 
     if (!mods_generate_remote_base_path()) {
         LOG_ERROR("Failed to generate remote base path!");

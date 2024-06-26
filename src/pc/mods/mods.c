@@ -350,7 +350,7 @@ void mods_clear(struct Mods* mods) {
 void mods_shutdown(void) {
     mod_cache_save();
     mod_cache_shutdown();
-    mods_clear(&gRemoteMods);
     mods_clear(&gActiveMods);
+    mods_clear(&gRemoteMods);
     mods_clear(&gLocalMods);
 }
