@@ -87,7 +87,7 @@ void djui_panel_join_query(uint64_t aLobbyId, UNUSED uint64_t aOwnerId, uint16_t
     snprintf(mode, 64, "%s", aMode);
 
     char version[MAX_VERSION_LENGTH] = { 0 };
-    snprintf(version, MAX_VERSION_LENGTH, "%s", get_version());
+    snprintf(version, MAX_VERSION_LENGTH, "%s", get_version_online());
     if (strcmp(version, aVersion) != 0) {
         snprintf(mode, 64, "\\#ff0000\\[%s]", aVersion);
     }
@@ -167,7 +167,7 @@ void djui_panel_join_lobbies_create(struct DjuiBase* caller, const char* passwor
             djui_text_set_alignment(text, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
         }
 
-        djui_button_create(body, DLANG(RULES, RULES), DJUI_BUTTON_STYLE_NORMAL, djui_panel_rules_create);
+        if (!private) { djui_button_create(body, DLANG(RULES, RULES), DJUI_BUTTON_STYLE_NORMAL, djui_panel_rules_create); }
 
         struct DjuiRect* rect2 = djui_rect_container_create(body, 64);
         {

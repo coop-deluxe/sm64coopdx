@@ -17,15 +17,6 @@
 // to let other players know the update is out
 #undef GAME_NAME
 #define GAME_NAME "sm64ex-coop"
-static char sVersionString[MAX_VERSION_LENGTH] = { 0 };
-const char* get_version_online(void) {
-#if defined(VERSION_US)
-    snprintf(sVersionString, MAX_VERSION_LENGTH, "%s%d", VERSION_TEXT, VERSION_NUMBER);
-#else
-    snprintf(sVersionString, MAX_VERSION_LENGTH, "%s%d %s", VERSION_TEXT, VERSION_NUMBER, VERSION_REGION);
-#endif
-    return sVersionString;
-}
 
 #ifdef COOPNET
 

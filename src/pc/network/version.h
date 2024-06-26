@@ -1,9 +1,9 @@
 #ifndef VERSION_H
 #define VERSION_H
 
-#define SM64COOPDX_VERSION "v1.0"
+#define SM64COOPDX_VERSION "Prerelease 2"
 
-// sm64ex-coop version, for mod compatibility
+// internal version
 #define VERSION_TEXT "v"
 #define VERSION_NUMBER 37
 #define MINOR_VERSION_NUMBER 0
@@ -24,11 +24,12 @@
 #elif !defined(VERSION_US)
     #define GAME_NAME "sm64coopdx-intl"
 #else
-    #define GAME_NAME "sm64coopdx"
+    #define GAME_NAME "sm64coopdx-TESTING"
 #endif
 
 #define MAX_VERSION_LENGTH 32
 
 const char* get_version(void);
+const char* get_version_online(void);
 
 #endif

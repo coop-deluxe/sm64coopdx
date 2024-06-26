@@ -17,7 +17,7 @@ More features, customization, and power to the Lua API allow modders and players
 
         struct DjuiText* text = djui_text_create(body, sInfo);
         djui_base_set_location(&text->base, 0, 0);
-        djui_base_set_size(&text->base, (DJUI_DEFAULT_PANEL_WIDTH * (configDjuiThemeCenter ? DJUI_THEME_CENTERED_WIDTH : 1)) - 64, 220);
+        djui_base_set_size(&text->base, (DJUI_DEFAULT_PANEL_WIDTH * (configDjuiThemeCenter ? DJUI_THEME_CENTERED_WIDTH : 1)) - 64, 300);
         djui_base_set_color(&text->base, 220, 220, 220, 255);
         djui_text_set_drop_shadow(text, 64, 64, 64, 100);
         djui_text_set_alignment(text, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);

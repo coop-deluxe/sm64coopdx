@@ -118,7 +118,6 @@ void network_send_join(struct Packet* joinRequestPacket) {
     packet_write(&p, &gServerSettings.playerKnockbackStrength, sizeof(u8));
     packet_write(&p, &gServerSettings.stayInLevelAfterStar, sizeof(u8));
     packet_write(&p, &gServerSettings.skipIntro, sizeof(u8));
-    packet_write(&p, &gServerSettings.enableCheats, sizeof(u8));
     packet_write(&p, &gServerSettings.bubbleDeath, sizeof(u8));
     packet_write(&p, &gServerSettings.headlessServer, sizeof(u8));
     packet_write(&p, &gServerSettings.nametags, sizeof(u8));
@@ -171,7 +170,6 @@ void network_receive_join(struct Packet* p) {
     packet_read(p, &gServerSettings.playerKnockbackStrength, sizeof(u8));
     packet_read(p, &gServerSettings.stayInLevelAfterStar, sizeof(u8));
     packet_read(p, &gServerSettings.skipIntro, sizeof(u8));
-    packet_read(p, &gServerSettings.enableCheats, sizeof(u8));
     packet_read(p, &gServerSettings.bubbleDeath, sizeof(u8));
     packet_read(p, &gServerSettings.headlessServer, sizeof(u8));
     packet_read(p, &gServerSettings.nametags, sizeof(u8));

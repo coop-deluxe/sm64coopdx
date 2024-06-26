@@ -1886,7 +1886,7 @@ s32 act_taking_off_cap(struct MarioState *m) {
     s16 animFrame = set_character_animation(m, CHAR_ANIM_TAKE_CAP_OFF_THEN_ON);
     switch (animFrame) {
         case 0:
-            if (!gCamera->paletteEditorCap) {
+            if (gCamera->cutscene != CUTSCENE_PALETTE_EDITOR) {
                 enable_time_stop_if_alone();
             }
             break;

@@ -34,7 +34,7 @@ void smlua_mod_warning(void) {
     if (mod == NULL) { return; }
     if (mod->ignoreScriptWarnings) { return; }
     char txt[255] = { 0 };
-    snprintf(txt, 254, "'%s\\#ffe600\\' is using deprecated functions!", mod->name);
+    snprintf(txt, 254, "'%s\\#ffe600\\' has script warnings!", mod->name);
     static const struct DjuiColor color = { 255, 230, 0, 255 };
     djui_lua_error(txt, color);
 }

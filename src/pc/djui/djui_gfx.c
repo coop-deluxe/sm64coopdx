@@ -65,6 +65,7 @@ f32 djui_gfx_get_scale(void) {
         }
     }
 }
+
 /////////////////////////////////////////////
 
 static const Vtx vertex_djui_image[] = {
