@@ -210,7 +210,7 @@ static void smlua_load_script(struct Mod* mod, struct ModFile* file, u16 remoteI
 
     f_seek(f, 0, SEEK_END);
     size_t length = f_tell(f);
-    char *buffer = calloc(length + 1, 1);
+    void *buffer = calloc(length + 1, 1);
     if (!buffer) {
         LOG_LUA("Failed to load lua script '%s': Cannot allocate buffer.", file->cachedPath);
         gLuaInitializingScript = 0;
@@ -226,7 +226,7 @@ static void smlua_load_script(struct Mod* mod, struct ModFile* file, u16 remoteI
     f_close(f);
     f_delete(f);
 
-    if (luaL_loadstring(L, buffer) != LUA_OK) { // only run on success
+    if (luaL_loadbuffer(L, buffer, length, file->cachedPath) != LUA_OK) { // only run on success
         LOG_LUA("Failed to load lua script '%s'.", file->cachedPath);
         LOG_LUA("%s", smlua_to_string(L, lua_gettop(L)));
         gLuaInitializingScript = 0;
