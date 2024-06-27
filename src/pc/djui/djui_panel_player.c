@@ -430,7 +430,7 @@ void djui_panel_player_create(struct DjuiBase* caller) {
         player_palettes_read(sys_exe_path(), true);
         player_palettes_read(fs_get_write_path(PALETTES_DIRECTORY), false);
 
-        char* palettePresets[MAX_PRESET_PALETTES + 1] = { "Custom" };
+        char* palettePresets[MAX_PRESET_PALETTES + 1] = { DLANG(PALETTE, CUSTOM) };
         if (gPresetPaletteCount > 0) {
             if (sPalettePresetIndex >= gPresetPaletteCount) {
                 sPalettePresetIndex = 0;
