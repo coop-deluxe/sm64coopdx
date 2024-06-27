@@ -23,6 +23,7 @@ static struct DjuiText* sDjuiPauseOptions = NULL;
 static struct DjuiText* sDjuiLuaError = NULL;
 static u32 sDjuiLuaErrorTimeout = 0;
 bool gDjuiInMainMenu = true;
+bool gDjuiInPlayerMenu = false;
 bool gDjuiDisabled = false;
 bool gDjuiShuttingDown = false;
 static bool sDjuiInited = false;

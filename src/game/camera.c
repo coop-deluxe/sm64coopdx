@@ -3648,7 +3648,7 @@ void zoom_out_if_paused_and_outside(struct GraphNodeCamera *camera) {
         areaMaskIndex = 0;
         areaBit = 0;
     }
-    if (gCameraMovementFlags & CAM_MOVE_PAUSE_SCREEN && !gInPlayerMenu) {
+    if (gCameraMovementFlags & CAM_MOVE_PAUSE_SCREEN && !gDjuiInPlayerMenu) {
         if (sFramesPaused >= 2) {
             if (sZoomOutAreaMasks[areaMaskIndex] & areaBit) {
 
@@ -10858,7 +10858,7 @@ void cutscene_palette_editor(struct Camera *c) {
     if (!c) { return; }
     struct MarioState* m = gMarioState;
 
-    if (!gInPlayerMenu) {
+    if (!gDjuiInPlayerMenu) {
         if (c->paletteEditorCap) {
             if (m->action == ACT_IDLE && !(m->flags & MARIO_CAP_ON_HEAD)) {
                 set_mario_action(m, ACT_PUTTING_ON_CAP, 0);

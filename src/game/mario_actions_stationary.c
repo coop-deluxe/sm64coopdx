@@ -132,7 +132,7 @@ s32 act_idle(struct MarioState *m) {
         if (m->area && ((m->area->terrainType & TERRAIN_MASK) == TERRAIN_SNOW)) {
             return set_mario_action(m, ACT_SHIVERING, 0);
         } else {
-            if (gDjuiInMainMenu || gInPlayerMenu) {
+            if (gDjuiInMainMenu || gDjuiInPlayerMenu) {
                 m->actionState = 0;
                 m->actionTimer = 0;
             } else {
@@ -206,6 +206,10 @@ s32 act_start_sleeping(struct MarioState *m) {
 
     if (m->quicksandDepth > 30.0f) {
         return set_mario_action(m, ACT_IN_QUICKSAND, 0);
+    }
+
+    if (m->playerIndex == 0 && gDjuiInPlayerMenu) {
+        return set_mario_action(m, ACT_IDLE, 0);
     }
 
     if (m->actionState == 4) {
@@ -285,6 +289,10 @@ s32 act_sleeping(struct MarioState *m) {
         }
 
         if (m->pos[1] - find_floor_height_relative_polar(m, -0x8000, 60.0f) > 24.0f) {
+            return set_mario_action(m, ACT_WAKING_UP, m->actionState);
+        }
+
+        if (gDjuiInPlayerMenu) {
             return set_mario_action(m, ACT_WAKING_UP, m->actionState);
         }
     }

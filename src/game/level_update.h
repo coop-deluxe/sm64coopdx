@@ -150,8 +150,6 @@ extern bool gNeverEnteredCastle;
 extern u32 gControlTimerStartNat;
 extern u32 gControlTimerStopNat;
 
-extern bool gInPlayerMenu;
-
 enum HUDDisplayFlag {
     HUD_DISPLAY_FLAG_LIVES = 0x0001,
     HUD_DISPLAY_FLAG_COIN_COUNT = 0x0002,

@@ -217,7 +217,7 @@ static void djui_panel_player_edit_palette_destroy(struct DjuiBase* caller) {
 }
 
 static void djui_panel_player_edit_palette_create(struct DjuiBase* caller) {
-    gInPlayerMenu = true;
+    gDjuiInPlayerMenu = true;
 
     char* sPartStrings[PLAYER_PART_MAX] = { DLANG(PLAYER, OVERALLS), DLANG(PLAYER, SHIRT), DLANG(PLAYER, GLOVES), DLANG(PLAYER, SHOES), DLANG(PLAYER, HAIR), DLANG(PLAYER, SKIN), DLANG(PLAYER, CAP), DLANG(PLAYER, EMBLEM) };
 
@@ -387,13 +387,13 @@ static void djui_panel_player_update_preset_palette(UNUSED struct DjuiBase* call
 }
 
 static void djui_panel_player_destroy(UNUSED struct DjuiBase* caller) {
-    gInPlayerMenu = false;
+    gDjuiInPlayerMenu = false;
 }
 
 void djui_panel_player_create(struct DjuiBase* caller) {
     djui_panel_player_prevent_demo(NULL);
     djui_panel_player_update_camera_cutscene();
-    gInPlayerMenu = true;
+    gDjuiInPlayerMenu = true;
 
     struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(PLAYER, PLAYER_TITLE));
     struct DjuiBase* body = djui_three_panel_get_body(panel);

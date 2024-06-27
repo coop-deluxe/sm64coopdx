@@ -65,7 +65,6 @@ s16 gDelayedInitSound = -1;
 
 static bool sFirstCastleGroundsMenu = true;
 bool gIsDemoActive = false;
-bool gInPlayerMenu = false;
 static u16 gDemoCountdown = 0;
 static int sDemoNumber = -1;
 static bool sCancelNextActSelector = false;
@@ -1256,7 +1255,7 @@ s32 play_mode_normal(void) {
             !configMenuStaffRoll &&
             gCurrDemoInput == NULL &&
             configMenuDemos &&
-            !gInPlayerMenu &&
+            !gDjuiInPlayerMenu &&
             (++gDemoCountdown) == PRESS_START_DEMO_TIMER &&
             (find_demo_number() && (sDemoNumber <= 6 && sDemoNumber > -1)) &&
             gNetworkType == NT_NONE) {
@@ -1264,7 +1263,7 @@ s32 play_mode_normal(void) {
         }
 
         if (((gCurrDemoInput != NULL) &&
-            (gPlayer1Controller->buttonPressed & END_DEMO || !gIsDemoActive || !gDjuiInMainMenu || gNetworkType != NT_NONE || gInPlayerMenu)) ||
+            (gPlayer1Controller->buttonPressed & END_DEMO || !gIsDemoActive || !gDjuiInMainMenu || gNetworkType != NT_NONE || gDjuiInPlayerMenu)) ||
             (gCurrDemoInput == NULL && gIsDemoActive)) {
             gPlayer1Controller->buttonPressed &= ~END_DEMO;
             stop_demo(NULL);
