@@ -114,6 +114,7 @@ sound_ref .sound_luigi_wah2
   sound_ref .sound_luigi_snoring3
   sound_ref .sound_luigi_so_longa_bowser
   sound_ref .sound_luigi_ima_tired
+  sound_ref .sound_luigi_lets_a_go
 .endif
 
 .sound_luigi_jump_hoo:
@@ -628,5 +629,15 @@ layer_jump .layer_luigi_C4E
 
   .layer_luigi_F08:
   layer_note1 39, 0x96, 127
+  layer_end
+
+  .sound_luigi_lets_a_go:
+  chan_setbank 11
+  chan_setinstr 26
+  chan_setlayer 0, .layer_luigi_311D
+  chan_end
+
+  .layer_luigi_311D:
+  layer_note1 39, 0x46, 127
   layer_end
 .endif

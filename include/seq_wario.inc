@@ -114,6 +114,7 @@ sound_ref .sound_wario_wah2
   sound_ref .sound_wario_snoring3
   sound_ref .sound_wario_so_longa_bowser
   sound_ref .sound_wario_ima_tired
+  sound_ref .sound_wario_lets_a_go
 .endif
 
 .sound_wario_jump_hoo:
@@ -623,5 +624,15 @@ layer_jump .layer_wario_C4E
 
   .layer_wario_F08:
   layer_note1 39, 0xe1, 127
+  layer_end
+
+  .sound_wario_lets_a_go:
+  chan_setbank 13
+  chan_setinstr 26
+  chan_setlayer 0, .layer_wario_311D
+  chan_end
+
+  .layer_wario_311D:
+  layer_note1 39, 0x5A, 127
   layer_end
 .endif
