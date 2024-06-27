@@ -1706,6 +1706,24 @@
 
 <br />
 
+## [skip_camera_interpolation](#skip_camera_interpolation)
+
+### Lua Example
+`skip_camera_interpolation()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void skip_camera_interpolation(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [soft_reset_camera](#soft_reset_camera)
 
 ### Lua Example

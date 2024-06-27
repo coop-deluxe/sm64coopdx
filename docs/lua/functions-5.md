@@ -1135,6 +1135,26 @@
 
 <br />
 
+## [get_lighting_color_ambient](#get_lighting_color_ambient)
+
+### Lua Example
+`local integerValue = get_lighting_color_ambient(index)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| index | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u8 get_lighting_color_ambient(u8 index);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [get_lighting_dir](#get_lighting_dir)
 
 ### Lua Example
@@ -1270,6 +1290,27 @@
 
 ### C Prototype
 `void set_lighting_color(u8 index, u8 value);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_lighting_color_ambient](#set_lighting_color_ambient)
+
+### Lua Example
+`set_lighting_color_ambient(index, value)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| index | `integer` |
+| value | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_lighting_color_ambient(u8 index, u8 value);`
 
 [:arrow_up_small:](#)
 

@@ -669,9 +669,12 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
     gLightingDir[0] = 0;
     gLightingDir[1] = 0;
     gLightingDir[2] = 0;
-    gLightingColor[0] = 255;
-    gLightingColor[1] = 255;
-    gLightingColor[2] = 255;
+    gLightingColor[0][0] = 255;
+    gLightingColor[0][1] = 255;
+    gLightingColor[0][2] = 255;
+    gLightingColor[1][0] = 255;
+    gLightingColor[1][1] = 255;
+    gLightingColor[1][2] = 255;
     gVertexColor[0] = 255;
     gVertexColor[1] = 255;
     gVertexColor[2] = 255;

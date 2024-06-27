@@ -11868,6 +11868,21 @@ int smlua_func_shake_camera_yaw(lua_State* L) {
     return 1;
 }
 
+int smlua_func_skip_camera_interpolation(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "skip_camera_interpolation", 0, top);
+        return 0;
+    }
+
+
+    skip_camera_interpolation();
+
+    return 1;
+}
+
 int smlua_func_soft_reset_camera(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -29276,6 +29291,23 @@ int smlua_func_get_lighting_color(lua_State* L) {
     return 1;
 }
 
+int smlua_func_get_lighting_color_ambient(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "get_lighting_color_ambient", 1, top);
+        return 0;
+    }
+
+    u8 index = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "get_lighting_color_ambient"); return 0; }
+
+    lua_pushinteger(L, get_lighting_color_ambient(index));
+
+    return 1;
+}
+
 int smlua_func_get_lighting_dir(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -29393,6 +29425,25 @@ int smlua_func_set_lighting_color(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "set_lighting_color"); return 0; }
 
     set_lighting_color(index, value);
+
+    return 1;
+}
+
+int smlua_func_set_lighting_color_ambient(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "set_lighting_color_ambient", 2, top);
+        return 0;
+    }
+
+    u8 index = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "set_lighting_color_ambient"); return 0; }
+    u8 value = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "set_lighting_color_ambient"); return 0; }
+
+    set_lighting_color_ambient(index, value);
 
     return 1;
 }
@@ -33481,6 +33532,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "shake_camera_pitch", smlua_func_shake_camera_pitch);
     smlua_bind_function(L, "shake_camera_roll", smlua_func_shake_camera_roll);
     smlua_bind_function(L, "shake_camera_yaw", smlua_func_shake_camera_yaw);
+    smlua_bind_function(L, "skip_camera_interpolation", smlua_func_skip_camera_interpolation);
     smlua_bind_function(L, "soft_reset_camera", smlua_func_soft_reset_camera);
     smlua_bind_function(L, "start_cutscene", smlua_func_start_cutscene);
     smlua_bind_function(L, "start_object_cutscene_without_focus", smlua_func_start_object_cutscene_without_focus);
@@ -34371,6 +34423,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "get_fog_color", smlua_func_get_fog_color);
     smlua_bind_function(L, "get_fog_intensity", smlua_func_get_fog_intensity);
     smlua_bind_function(L, "get_lighting_color", smlua_func_get_lighting_color);
+    smlua_bind_function(L, "get_lighting_color_ambient", smlua_func_get_lighting_color_ambient);
     smlua_bind_function(L, "get_lighting_dir", smlua_func_get_lighting_dir);
     smlua_bind_function(L, "get_skybox", smlua_func_get_skybox);
     smlua_bind_function(L, "get_skybox_color", smlua_func_get_skybox_color);
@@ -34378,6 +34431,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "set_fog_color", smlua_func_set_fog_color);
     smlua_bind_function(L, "set_fog_intensity", smlua_func_set_fog_intensity);
     smlua_bind_function(L, "set_lighting_color", smlua_func_set_lighting_color);
+    smlua_bind_function(L, "set_lighting_color_ambient", smlua_func_set_lighting_color_ambient);
     smlua_bind_function(L, "set_lighting_dir", smlua_func_set_lighting_dir);
     smlua_bind_function(L, "set_override_far", smlua_func_set_override_far);
     smlua_bind_function(L, "set_override_fov", smlua_func_set_override_fov);

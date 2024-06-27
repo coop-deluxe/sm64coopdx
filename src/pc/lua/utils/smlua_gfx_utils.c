@@ -34,12 +34,23 @@ void set_lighting_dir(u8 index, f32 value) {
 
 u8 get_lighting_color(u8 index) {
     if (index > 2) { return 0; }
-    return gLightingColor[index];
+    return gLightingColor[0][index];
+}
+
+u8 get_lighting_color_ambient(u8 index) {
+    if (index > 2) { return 0; }
+    return gLightingColor[1][index];
 }
 
 void set_lighting_color(u8 index, u8 value) {
     if (index > 2) { return; }
-    gLightingColor[index] = value;
+    gLightingColor[0][index] = value;
+    gLightingColor[1][index] = value;
+}
+
+void set_lighting_color_ambient(u8 index, u8 value) {
+    if (index > 2) { return; }
+    gLightingColor[1][index] = value;
 }
 
 ///

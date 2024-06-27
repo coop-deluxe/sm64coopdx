@@ -11,7 +11,9 @@ f32 get_lighting_dir(u8 index);
 void set_lighting_dir(u8 index, f32 value);
 
 u8 get_lighting_color(u8 index);
+u8 get_lighting_color_ambient(u8 index);
 void set_lighting_color(u8 index, u8 value);
+void set_lighting_color_ambient(u8 index, u8 value);
 
 u8 get_vertex_color(u8 index);
 void set_vertex_color(u8 index, u8 value);

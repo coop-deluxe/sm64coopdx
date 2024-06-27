@@ -2946,6 +2946,10 @@ function shake_camera_yaw(pos, focus)
     -- ...
 end
 
+function skip_camera_interpolation()
+    -- ...
+end
+
 --- @param c Camera
 function soft_reset_camera(c)
     -- ...
@@ -7886,6 +7890,12 @@ function get_lighting_color(index)
 end
 
 --- @param index integer
+--- @return integer
+function get_lighting_color_ambient(index)
+    -- ...
+end
+
+--- @param index integer
 --- @return number
 function get_lighting_dir(index)
     -- ...
@@ -7922,6 +7932,12 @@ end
 --- @param index integer
 --- @param value integer
 function set_lighting_color(index, value)
+    -- ...
+end
+
+--- @param index integer
+--- @param value integer
+function set_lighting_color_ambient(index, value)
     -- ...
 end
 
