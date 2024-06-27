@@ -311,7 +311,7 @@ chan_setlayer 0, .layer_luigi_D50
 chan_end
 
 .layer_luigi_D50:
-layer_note1 39, 0x1e, 127
+layer_note1 39, 0x28, 127
 layer_end
 
 .sound_luigi_on_fire:
