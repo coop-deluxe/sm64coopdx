@@ -10866,6 +10866,7 @@ void cutscene_palette_editor(struct Camera *c) {
         }
         gCutsceneTimer = CUTSCENE_STOP;
         c->cutscene = 0;
+        skip_camera_interpolation();
         return;
     }
 

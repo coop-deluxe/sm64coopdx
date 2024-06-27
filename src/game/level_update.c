@@ -1638,12 +1638,6 @@ void update_menu_level(void) {
             break;
     }
 
-    if (gCurrentArea != NULL) { 
-        vec3f_copy(gCurrentArea->camera->pos, gLakituState.curPos);
-    }
-    vec3f_copy(gLakituState.pos, gLakituState.curPos);
-    vec3f_copy(gLakituState.goalPos, gLakituState.curPos);
-
     gMarioState->health = 0x880;
     // reset input
     gMarioState->input = 0;
@@ -1660,7 +1654,6 @@ void update_menu_level(void) {
 s32 update_level(void) {
     // update main menu level
     if (gDjuiInMainMenu) {
-        skip_camera_interpolation(); // we can't have nice things with this engine and interpolation
         update_menu_level();
     }
     sCancelNextActSelector = gDjuiInMainMenu;
