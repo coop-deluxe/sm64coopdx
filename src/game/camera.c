@@ -10874,7 +10874,7 @@ void cutscene_palette_editor(struct Camera *c) {
         if (!pressed && m->action != ACT_TAKING_OFF_CAP && m->action != ACT_PUTTING_ON_CAP) {
             if (m->flags & MARIO_CAP_ON_HEAD) {
                 if (m->action == ACT_IDLE) {
-                    set_mario_action(m, ACT_TAKING_OFF_CAP, 0);
+                    set_mario_action(m, ACT_TAKING_OFF_CAP, 1); // Add palette editor action arg
                 } else {
                     cutscene_take_cap_off(m);
                     gCamera->paletteEditorCap = true;

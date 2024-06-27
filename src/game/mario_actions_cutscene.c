@@ -1882,20 +1882,21 @@ s32 act_putting_on_cap(struct MarioState *m) {
 }
 
 // coop custom action
+// actionArg == 1: the action was inited from CUTSCENE_PALETTE_EDITOR
 s32 act_taking_off_cap(struct MarioState *m) {
     s16 animFrame = set_character_animation(m, CHAR_ANIM_TAKE_CAP_OFF_THEN_ON);
     switch (animFrame) {
         case 0:
-            if (gCamera->cutscene != CUTSCENE_PALETTE_EDITOR) {
+            if (m->actionArg != 1) {
                 enable_time_stop_if_alone();
             }
             break;
         case 12:
             cutscene_take_cap_off(m);
-            if (gCamera->cutscene == CUTSCENE_PALETTE_EDITOR) { gCamera->paletteEditorCap = true; }
+            if (m->actionArg == 1) { gCamera->paletteEditorCap = true; }
             break;
         default:
-            if (animFrame >= 30) {
+            if (animFrame >= 30 || gCamera->cutscene != CUTSCENE_PALETTE_EDITOR) {
                 set_mario_action(m, ACT_IDLE, 0);
                 disable_time_stop();
             }
