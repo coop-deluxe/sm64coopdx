@@ -43,6 +43,7 @@
 #include "pc/djui/djui.h"
 #include "pc/lua/smlua_hooks.h"
 #include "pc/mods/mods.h"
+#include "pc/nametags.h"
 
 #include "game/screen_transition.h"
 
@@ -681,6 +682,7 @@ void check_instant_warp(void) {
                 }
 
                 warp_camera(warp->displacement[0], warp->displacement[1], warp->displacement[2]);
+                skip_camera_interpolation();
                 gMarioStates[0].area->camera->yaw = cameraAngle;
 
                 return;
@@ -1351,6 +1353,7 @@ s32 play_mode_paused(void) {
 
     if (!gLevelValues.zoomOutCameraOnPause || !network_check_singleplayer_pause()) {
         gCameraMovementFlags &= ~CAM_MOVE_PAUSE_SCREEN;
+        skip_camera_interpolation();
     }
     return 0;
 }
@@ -1830,6 +1833,9 @@ s32 init_level(void) {
     // clear texture 1 on level init -- can linger and corrupt textures otherwise
     extern u8 gGfxPcResetTex1;
     gGfxPcResetTex1 = 1;
+
+    // reset nametags
+    nametags_reset();
 
     if (gDelayedInitSound >= 0) {
         play_character_sound(&gMarioStates[0], gDelayedInitSound);

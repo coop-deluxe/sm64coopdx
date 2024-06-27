@@ -15,6 +15,7 @@
 struct StateExtras {
     Vec3f prevPos;
     f32 prevScale;
+    bool inited;
 };
 static struct StateExtras sStateExtras[MAX_PLAYERS];
 
@@ -43,7 +44,7 @@ void djui_hud_print_outlined_text_interpolated(const char* text, f32 prevX, f32 
     djui_hud_print_text_interpolated(text, prevX,              prevY - prevOffset, prevScale, x,          y - offset, scale);
     djui_hud_print_text_interpolated(text, prevX,              prevY + prevOffset, prevScale, x,          y + offset, scale);
     // render text
-    djui_hud_set_color(r, g, b, 255);
+    djui_hud_set_color(r, g, b, a);
     djui_hud_print_text_interpolated(text, prevX, prevY, prevScale, x, y, scale);
     djui_hud_set_color(255, 255, 255, 255);
 }
@@ -72,6 +73,8 @@ void nametags_render(void) {
             case ACT_START_CRAWLING:
             case ACT_CRAWLING:
             case ACT_STOP_CRAWLING:
+            case ACT_IN_CANNON:
+            case ACT_DISAPPEARED:
             continue;
         }
 
@@ -81,7 +84,6 @@ void nametags_render(void) {
         pos[1] = m->pos[1] + 210;
 
         if (djui_hud_world_pos_to_screen_pos(pos, out) &&
-            m->action != ACT_IN_CANNON &&
             (i != 0 || (i == 0 && m->action != ACT_FIRST_PERSON))) {
             f32 scale = NAMETAG_MAX_SCALE;
             f32 dist = vec3f_dist(gLakituState.pos, m->pos);
@@ -100,9 +102,14 @@ void nametags_render(void) {
             };
             f32 measure = djui_hud_measure_text(name) * scale * 0.5f;
 
-            f32 alpha = (np->fadeOpacity / 32.0f) * 255;
+            u8 alpha = i == 0 ? 255 : MIN(np->fadeOpacity << 3, 255);
 
             struct StateExtras* e = &sStateExtras[i];
+            if (!e->inited) {
+                vec3f_copy(e->prevPos, out);
+                e->prevScale = scale;
+                e->inited = true;
+            }
             djui_hud_print_outlined_text_interpolated(name, e->prevPos[0] - measure, e->prevPos[1], e->prevScale, out[0] - measure, out[1], scale, color[0], color[1], color[2], alpha, 0.25);
 
             if (i != 0 && gNametagsSettings.showHealth) {
@@ -118,5 +125,11 @@ void nametags_render(void) {
             vec3f_copy(e->prevPos, out);
             e->prevScale = scale;
         }
+    }
+}
+
+void nametags_reset(void) {
+    for (u8 i = 0; i < MAX_PLAYERS; i++) {
+        sStateExtras[i].inited = false;
     }
 }
