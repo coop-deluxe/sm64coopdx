@@ -2810,13 +2810,6 @@ void render_pause_castle_main_strings(s16 x, s16 y) {
     INGAME_TEXT_COPY(textCoin, TEXT_COIN_X);
 #endif
 
-    u8 courseNum = gDialogLineNum + 1;
-    const u8 *courseName = (
-        gDialogLineNum == COURSE_STAGES_COUNT ?
-        ((const u8 **) get_course_name_table())[COURSE_MAX] : // Castle secret stars
-        get_level_name_sm64(courseNum, get_level_num_from_course_num(courseNum), 1, 1)
-    );
-
     u8 strVal[8];
     s16 starNum = gDialogLineNum;
 
@@ -2847,6 +2840,13 @@ void render_pause_castle_main_strings(s16 x, s16 y) {
 
     gSPDisplayList(gDisplayListHead++, dl_ia_text_begin);
     gDPSetEnvColor(gDisplayListHead++, 255, 255, 255, gDialogTextAlpha);
+
+    u8 courseNum = gDialogLineNum + 1;
+    const u8 *courseName = (
+        gDialogLineNum == COURSE_STAGES_COUNT ?
+        ((const u8 **) get_course_name_table())[COURSE_MAX] : // Castle secret stars
+        get_level_name_sm64(courseNum, get_level_num_from_course_num(courseNum), 1, 1)
+    );
 
     if (gDialogLineNum < COURSE_STAGES_COUNT) {
         render_pause_castle_course_stars(x, y, gCurrSaveFileNum - 1, gDialogLineNum);
