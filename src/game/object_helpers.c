@@ -1951,7 +1951,7 @@ void obj_set_cylboard(struct Object *obj) {
 
 void cur_obj_set_billboard_if_vanilla_cam(void) {
     if (!o) { return; }
-    if (camera_config_is_free_cam_enabled() || get_first_person_enabled()) {
+    if (get_first_person_enabled()) {
         o->header.gfx.node.flags &= ~GRAPH_RENDER_BILLBOARD;
         o->header.gfx.node.flags |= GRAPH_RENDER_CYLBOARD;
     } else {
