@@ -19,7 +19,7 @@ struct MoveData {
     //struct Surface *Wall;
     struct Surface *Floor;
     struct Surface *Ceil;
-    f32 IntendedPos[3]; // Position we believe to be a good enough approximation for where mario can go
+    f32 IntendedPos[3]; // Position we believe to be a good enough approximation for where Mario can go
     f32 GoalPos[3];     // Position we originally wanted to move towards
     f32 FloorHeight;
     f32 CeilHeight;
