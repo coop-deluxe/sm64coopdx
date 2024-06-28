@@ -35,7 +35,7 @@ DLANG(RULES, RULE_5));
 
         struct DjuiText* text1 = djui_text_create(body, sRules);
         djui_base_set_location(&text1->base, 0, 0);
-        djui_base_set_size(&text1->base, (DJUI_DEFAULT_PANEL_WIDTH * (configDjuiThemeCenter ? DJUI_THEME_CENTERED_WIDTH : 1)) - 64, 200);
+        djui_base_set_size(&text1->base, (DJUI_DEFAULT_PANEL_WIDTH * (configDjuiThemeCenter ? DJUI_THEME_CENTERED_WIDTH : 1)) - 64, 220);
         djui_base_set_color(&text1->base, 220, 220, 220, 255);
         djui_text_set_drop_shadow(text1, 64, 64, 64, 100);
         djui_text_set_alignment(text1, DJUI_HALIGN_LEFT, DJUI_VALIGN_TOP);
