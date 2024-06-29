@@ -641,8 +641,6 @@ void smlua_cobject_init_globals(void) {
 
     EXPOSE_GLOBAL(LOT_NAMETAGSSETTINGS, gNametagsSettings);
 
-    EXPOSE_GLOBAL(LOT_AREA, gCurrentArea);
-
     EXPOSE_GLOBAL(LOT_CAMERA, gCamera);
 }
 
