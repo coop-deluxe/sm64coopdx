@@ -13,6 +13,8 @@ local math_floor,smlua_text_utils_get_language,table_insert,approach_s32,set_mar
 --- @field public func function
 --- @field public allowHazardSurfaces boolean
 
+local CHEATS_VERSION = "v1.0"
+
 --- @type Cheat[]
 local sCheats = {}
 
@@ -56,7 +58,7 @@ local function lang_string(strings)
 end
 
 --- @param codename string
---- @param names table
+--- @param names table<string, string>
 --- @param hook LuaHookedEventType
 --- @param func function
 --- @param allowHazardSurfaces boolean
@@ -134,7 +136,7 @@ end
 
 --- @param m MarioState
 local function rapid_fire_update(m)
-    if (m.controller.buttonDown & A_BUTTON) ~= 0 and get_network_area_timer() % 2 == 0 then
+    if (m.controller.buttonDown & A_BUTTON) ~= 0 and get_global_timer() % 2 == 0 then
         m.controller.buttonPressed = m.controller.buttonPressed | A_BUTTON
     end
 end
@@ -353,6 +355,23 @@ local function update_cheat(index, value)
         end
     end
 end
+
+
+local sReadonlyMetatable = {
+    __index = function(table, key)
+        return rawget(table, key)
+    end,
+
+    __newindex = function()
+        error("attempt to update a read-only table", 2)
+    end
+}
+
+_G.cheatsApi = {
+    version = CHEATS_VERSION,
+    register_cheat = register_cheat
+}
+setmetatable(_G.cheatsApi, sReadonlyMetatable)
 
 hook_event(HOOK_MARIO_UPDATE, generate_mario_hook_function(HOOK_MARIO_UPDATE))
 hook_event(HOOK_BEFORE_MARIO_UPDATE, generate_mario_hook_function(HOOK_BEFORE_MARIO_UPDATE))

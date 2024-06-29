@@ -71,12 +71,34 @@ void djui_panel_pause_create(struct DjuiBase* caller) {
             djui_button_create(body, DLANG(PAUSE, SERVER_SETTINGS), DJUI_BUTTON_STYLE_NORMAL, djui_panel_host_create);
         }
 
-        if (gHookedModMenuElementsCount == 1 && gHookedModMenuElements[0].element == MOD_MENU_ELEMENT_BUTTON) {
+        struct Mod* addedMods[MAX_HOOKED_MOD_MENU_ELEMENTS] = { 0 };
+        int modCount = 0;
+        for (int i = 0; i < gHookedModMenuElementsCount; i++) {
+            struct LuaHookedModMenuElement* hooked = &gHookedModMenuElements[i];
+            bool shouldContinue = false;
+            for (int i = 0; i < MAX_HOOKED_MOD_MENU_ELEMENTS; i++) {
+                if (addedMods[i] == NULL) { break; }
+                if (addedMods[i] == hooked->mod) {
+                    shouldContinue = true;
+                    break;
+                }
+            }
+            if (shouldContinue) { continue; }
+            addedMods[modCount++] = hooked->mod;
+        }
+
+        if (modCount == 1) {
             struct LuaHookedModMenuElement* hooked = &gHookedModMenuElements[0];
             char buffer[256] = { 0 };
-            snprintf(buffer, 256, "%s - %s", hooked->mod->name, hooked->name);
-            struct DjuiButton* button = djui_button_create(body, buffer, DJUI_BUTTON_STYLE_NORMAL, djui_panel_mod_menu_mod_button);
-            button->base.tag = 0;
+            if (gHookedModMenuElementsCount == 1 && gHookedModMenuElements[0].element == MOD_MENU_ELEMENT_BUTTON) {
+                snprintf(buffer, 256, "%s - %s", hooked->mod->name, hooked->name);
+                struct DjuiButton* button = djui_button_create(body, buffer, DJUI_BUTTON_STYLE_NORMAL, djui_panel_mod_menu_mod_button);
+                button->base.tag = 0;
+            } else {
+                snprintf(buffer, 256, "%s", hooked->mod->name);
+                struct DjuiButton* button = djui_button_create(body, buffer, DJUI_BUTTON_STYLE_NORMAL, djui_panel_mod_menu_mod_create);
+                button->base.tag = hooked->mod->index;
+            }
         } else if (gHookedModMenuElementsCount > 0) {
             djui_button_create(body, DLANG(PAUSE, MOD_MENU), DJUI_BUTTON_STYLE_NORMAL, djui_panel_mod_menu_create);
         }

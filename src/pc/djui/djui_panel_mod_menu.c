@@ -135,8 +135,7 @@ void djui_panel_mod_menu_create(struct DjuiBase* caller) {
 
             struct DjuiButton* button = djui_button_create(layoutBase, hooked->mod->name, DJUI_BUTTON_STYLE_NORMAL, djui_panel_mod_menu_mod_create);
             button->base.tag = hooked->mod->index;
-            addedMods[modCount] = hooked->mod;
-            modCount++;
+            addedMods[modCount++] = hooked->mod;
         }
         djui_paginated_calculate_height(paginated);
 

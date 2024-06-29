@@ -2010,11 +2010,6 @@ int smlua_hook_mod_menu_button(lua_State* L) {
     if (L == NULL) { return 0; }
     if (!smlua_functions_valid_param_count(L, 2)) { return 0; }
 
-    if (gLuaLoadingMod == NULL) {
-        LOG_LUA_LINE("hook_mod_menu_button() can only be called on load.");
-        return 0;
-    }
-
     if (gHookedModMenuElementsCount >= MAX_HOOKED_MOD_MENU_ELEMENTS) {
         LOG_LUA_LINE("Hooked mod menu element exceeded maximum references!");
         return 0;
@@ -2051,11 +2046,6 @@ int smlua_hook_mod_menu_button(lua_State* L) {
 int smlua_hook_mod_menu_checkbox(lua_State* L) {
     if (L == NULL) { return 0; }
     if (!smlua_functions_valid_param_count(L, 3)) { return 0; }
-
-    if (gLuaLoadingMod == NULL) {
-        LOG_LUA_LINE("hook_mod_menu_checkbox() can only be called on load.");
-        return 0;
-    }
 
     if (gHookedModMenuElementsCount >= MAX_HOOKED_MOD_MENU_ELEMENTS) {
         LOG_LUA_LINE("Hooked mod menu element exceeded maximum references!");
@@ -2099,11 +2089,6 @@ int smlua_hook_mod_menu_checkbox(lua_State* L) {
 int smlua_hook_mod_menu_slider(lua_State* L) {
     if (L == NULL) { return 0; }
     if (!smlua_functions_valid_param_count(L, 5)) { return 0; }
-
-    if (gLuaLoadingMod == NULL) {
-        LOG_LUA_LINE("hook_mod_menu_slider() can only be called on load.");
-        return 0;
-    }
 
     if (gHookedModMenuElementsCount >= MAX_HOOKED_MOD_MENU_ELEMENTS) {
         LOG_LUA_LINE("Hooked mod menu element exceeded maximum references!");
@@ -2159,11 +2144,6 @@ int smlua_hook_mod_menu_slider(lua_State* L) {
 int smlua_hook_mod_menu_inputbox(lua_State* L) {
     if (L == NULL) { return 0; }
     if (!smlua_functions_valid_param_count(L, 4)) { return 0; }
-
-    if (gLuaLoadingMod == NULL) {
-        LOG_LUA_LINE("hook_mod_menu_inputbox() can only be called on load.");
-        return 0;
-    }
 
     if (gHookedModMenuElementsCount >= MAX_HOOKED_MOD_MENU_ELEMENTS) {
         LOG_LUA_LINE("Hooked mod menu element exceeded maximum references!");
