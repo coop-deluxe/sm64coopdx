@@ -4070,6 +4070,15 @@ MARIO_SPAWN_UNKNOWN_03 = 0x03
 MARIO_SPAWN_UNKNOWN_27 = 0x27
 
 --- @type integer
+PAINTING_WARP_INDEX_END = 0x2D
+
+--- @type integer
+PAINTING_WARP_INDEX_FA = 0x2A
+
+--- @type integer
+PAINTING_WARP_INDEX_START = 0x00
+
+--- @type integer
 PRESS_START_DEMO_TIMER = 800
 
 --- @type integer
@@ -9231,7 +9240,10 @@ HOOK_ON_ATTACK_OBJECT = 43
 HOOK_ON_LANGUAGE_CHANGED = 44
 
 --- @type LuaHookedEventType
-HOOK_MAX = 45
+HOOK_ON_MODS_LOADED = 45
+
+--- @type LuaHookedEventType
+HOOK_MAX = 46
 
 --- @class LuaModMenuElementType
 
@@ -12564,7 +12576,7 @@ MINOR_VERSION_NUMBER = 0
 PATCH_VERSION_NUMBER = 0
 
 --- @type string
-SM64COOPDX_VERSION = "v1.0"
+SM64COOPDX_VERSION = "Prerelease_4"
 
 --- @type integer
 VERSION_NUMBER = 37

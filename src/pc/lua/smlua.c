@@ -333,6 +333,8 @@ void smlua_init(void) {
         gLuaActiveMod = NULL;
         gLuaLoadingMod = NULL;
     }
+
+    smlua_call_event_hooks(HOOK_ON_MODS_LOADED);
 }
 
 void smlua_update(void) {

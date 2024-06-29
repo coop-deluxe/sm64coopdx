@@ -56,6 +56,7 @@ enum LuaHookedEventType {
     HOOK_ON_SEQ_LOAD,
     HOOK_ON_ATTACK_OBJECT,
     HOOK_ON_LANGUAGE_CHANGED,
+    HOOK_ON_MODS_LOADED,
     HOOK_MAX,
 };
 
@@ -105,6 +106,7 @@ static const char* LuaHookedEventTypeName[] = {
     "HOOK_ON_SEQ_LOAD",
     "HOOK_ON_ATTACK_OBJECT",
     "HOOK_ON_LANGUAGE_CHANGED",
+    "HOOK_ON_MODS_LOADED",
     "HOOK_MAX"
 };
 

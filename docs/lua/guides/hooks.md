@@ -136,6 +136,7 @@ The lua functions sent to `hook_event()` will be automatically called by SM64 wh
 | HOOK_ON_SEQ_LOAD | Called when a sequence is going to play, return a `SEQ_*` constant to override the sequence. `SEQ_SOUND_PLAYER` (0) is silence. | `integer` player, `integer` seqID |
 | HOOK_ON_ATTACK_OBJECT | Called when a player attacks an object. May be double-fired in some cases, you'll need to write special code for this | [MarioState](structs.md#MarioState) attacker, [Object](structs.md#Object) victim, `integer` interactionId |
 | HOOK_ON_LANGUAGE_CHANGED | Called when the language is changed | `string` language |
+| HOOK_ON_MODS_LOADED | Called directly after every mod file is loaded in by smlua | None |
 
 ### Parameters
 
