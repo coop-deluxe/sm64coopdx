@@ -33,7 +33,7 @@ void djui_panel_main_create(struct DjuiBase* caller) {
             if (configDjuiThemeCenter) {
                 djui_base_set_size(&logo->base, 550, 275);
             } else {
-                djui_base_set_size(&logo->base, 500, 250);
+                djui_base_set_size(&logo->base, 480, 240);
             }
             djui_base_set_alignment(&logo->base, DJUI_HALIGN_CENTER, DJUI_VALIGN_TOP);
             djui_base_set_location_type(&logo->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
