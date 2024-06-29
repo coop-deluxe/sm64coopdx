@@ -1217,6 +1217,8 @@ static void start_demo(void) {
         }
 
         if (sDemoNumber >= 0 && sDemoNumber <= 6) {
+            gCurrDemoInput = NULL;
+            alloc_anim_dma_table(&gDemo, gDemoInputs, gDemoTargetAnim);
             load_patchable_table(&gDemo, sDemoNumber, false);
             gCurrDemoInput = ((struct DemoInput *) gDemo.targetAnim);
         } else {
