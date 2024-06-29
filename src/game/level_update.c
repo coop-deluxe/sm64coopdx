@@ -624,7 +624,7 @@ void warp_credits(void) {
 
     play_transition(WARP_TRANSITION_FADE_FROM_COLOR, 0x14, 0x00, 0x00, 0x00);
 
-    if (gCurrCreditsEntry == NULL || gCurrCreditsEntry == sCreditsSequence) {
+    if ((gCurrCreditsEntry == NULL || gCurrCreditsEntry == sCreditsSequence) && !gDjuiInMainMenu) {
         if (gCurrentArea) {
             set_background_music(gCurrentArea->musicParam, gCurrentArea->musicParam2, 0);
         }
