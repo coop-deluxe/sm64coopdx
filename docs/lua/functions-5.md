@@ -1989,6 +1989,24 @@
 
 <br />
 
+## [djui_menu_get_font](#djui_menu_get_font)
+
+### Lua Example
+`local enumValue = djui_menu_get_font()`
+
+### Parameters
+- None
+
+### Returns
+[enum DjuiFontType](constants.md#enum-DjuiFontType)
+
+### C Prototype
+`enum DjuiFontType djui_menu_get_font(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [djui_popup_create_global](#djui_popup_create_global)
 
 ### Lua Example

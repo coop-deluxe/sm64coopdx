@@ -8144,6 +8144,11 @@ function djui_is_popup_disabled()
     -- ...
 end
 
+--- @return DjuiFontType
+function djui_menu_get_font()
+    -- ...
+end
+
 --- @param message string
 --- @param lines integer
 function djui_popup_create_global(message, lines)

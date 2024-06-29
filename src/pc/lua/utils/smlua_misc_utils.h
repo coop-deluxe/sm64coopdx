@@ -49,6 +49,8 @@ void djui_popup_create_global(const char* message, int lines);
 bool djui_is_popup_disabled(void);
 void djui_set_popup_disabled_override(bool value);
 void djui_reset_popup_disabled_override(void);
+bool djui_is_playerlist_open(void);
+enum DjuiFontType djui_menu_get_font(void);
 
 s8 get_dialog_box_state(void);
 s16 get_dialog_id(void);
@@ -107,8 +109,6 @@ void set_override_envfx(s32 envfx);
 u32 get_global_timer(void);
 
 s32 get_dialog_response(void);
-
-bool djui_is_playerlist_open(void);
 
 const char* get_local_discord_id(void);
 

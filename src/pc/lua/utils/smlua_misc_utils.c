@@ -86,6 +86,14 @@ void djui_reset_popup_disabled_override(void) {
     sAllowDjuiPopupOverride.override = false;
 }
 
+bool djui_is_playerlist_open(void) {
+    return gDjuiPlayerList->base.visible;
+}
+
+enum DjuiFontType djui_menu_get_font(void) {
+    return configDjuiThemeFont == 0 ? FONT_NORMAL : FONT_ALIASED;
+}
+
 ///
 
 extern s8 gDialogBoxState;
@@ -399,12 +407,6 @@ u32 get_global_timer(void) {
 
 s32 get_dialog_response(void) {
     return gDialogResponse;
-}
-
-///
-
-bool djui_is_playerlist_open(void) {
-    return gDjuiPlayerList->base.visible;
 }
 
 ///

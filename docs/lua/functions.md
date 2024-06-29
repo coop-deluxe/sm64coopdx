@@ -1709,6 +1709,7 @@
    - [deref_s32_pointer](functions-5.md#deref_s32_pointer)
    - [djui_is_playerlist_open](functions-5.md#djui_is_playerlist_open)
    - [djui_is_popup_disabled](functions-5.md#djui_is_popup_disabled)
+   - [djui_menu_get_font](functions-5.md#djui_menu_get_font)
    - [djui_popup_create_global](functions-5.md#djui_popup_create_global)
    - [djui_reset_popup_disabled_override](functions-5.md#djui_reset_popup_disabled_override)
    - [djui_set_popup_disabled_override](functions-5.md#djui_set_popup_disabled_override)
