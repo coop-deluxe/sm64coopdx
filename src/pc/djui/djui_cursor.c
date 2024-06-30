@@ -1,7 +1,6 @@
 #include "djui.h"
 #include "djui_panel.h"
 #include "pc/controller/controller_mouse.h"
-#include "pc/controller/controller_sdl.h"
 #include "pc/gfx/gfx_window_manager_api.h"
 #include "pc/pc_main.h"
 
@@ -118,7 +117,7 @@ void djui_cursor_update(void) {
     if (sMouseCursor == NULL) { return; }
     if (!djui_panel_is_active()) { return; }
 
-    controller_sdl_read_mouse_window();
+    controller_mouse_read_window();
 
     // check if mouse is in control again
     static bool sFirstUpdate = true;

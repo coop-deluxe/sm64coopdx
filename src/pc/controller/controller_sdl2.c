@@ -48,7 +48,6 @@ static u32 joy_binds[MAX_JOYBINDS][2] = { 0 };
 static u32 mouse_binds[MAX_JOYBINDS][2] = { 0 };
 
 static bool joy_buttons[MAX_JOYBUTTONS] = { false };
-static u32 mouse_buttons = 0;
 static u32 last_mouse = VK_INVALID;
 static u32 last_joybutton = VK_INVALID;
 static u32 last_gamepad = 0;
@@ -124,13 +123,13 @@ static void controller_sdl_init(void) {
         free(gcdata);
     }
 
-    if (newcam_mouse == 1)
-        SDL_SetRelativeMouseMode(SDL_TRUE);
-    SDL_GetRelativeMouseState(&mouse_x, &mouse_y);
+    if (newcam_mouse == 1) { controller_mouse_enter_relative(); }
+    controller_mouse_read_relative();
 
     controller_sdl_bind();
 
     init_ok = true;
+    mouse_init_ok = true;
 }
 
 static SDL_Haptic *controller_sdl_init_haptics(const int joy) {
@@ -169,17 +168,17 @@ static inline void update_button(const int i, const bool new) {
 
 extern s16 gMenuMode;
 static void controller_sdl_read(OSContPad *pad) {
-    if (!init_ok) {
-        return;
-    }
+    if (!init_ok) { return; }
 
     if ((newcam_mouse == 1 || gFirstPersonCamera.enabled || gDjuiHudLockMouse) && gMenuMode == -1 && !gDjuiInMainMenu && !gDjuiChatBoxFocus && !gDjuiConsoleFocus && WAPI.has_focus()) {
-        SDL_SetRelativeMouseMode(SDL_TRUE);
+        controller_mouse_enter_relative();
     } else {
-        SDL_SetRelativeMouseMode(SDL_FALSE);
+        controller_mouse_leave_relative();
     }
 
-    u32 mouse = SDL_GetRelativeMouseState(&mouse_x, &mouse_y);
+    u32 mouse_prev = mouse_buttons;
+    controller_mouse_read_relative();
+    u32 mouse = mouse_buttons;
 
     if (!gInteractableOverridePad) {
         for (u32 i = 0; i < num_mouse_binds; ++i)
@@ -187,8 +186,7 @@ static void controller_sdl_read(OSContPad *pad) {
                 pad->button |= mouse_binds[i][1];
     }
     // remember buttons that changed from 0 to 1
-    last_mouse = (mouse_buttons ^ mouse) & mouse;
-    mouse_buttons = mouse;
+    last_mouse = (mouse_prev ^ mouse) & mouse;
 
     if (configBackgroundGamepad != sBackgroundGamepad) {
         sBackgroundGamepad = configBackgroundGamepad;
@@ -221,7 +219,7 @@ static void controller_sdl_read(OSContPad *pad) {
             return;
         }
     }
-    
+
     int16_t leftx = SDL_GameControllerGetAxis(sdl_cntrl, SDL_CONTROLLER_AXIS_LEFTX);
     int16_t lefty = SDL_GameControllerGetAxis(sdl_cntrl, SDL_CONTROLLER_AXIS_LEFTY);
     int16_t rightx = SDL_GameControllerGetAxis(sdl_cntrl, SDL_CONTROLLER_AXIS_RIGHTX);
@@ -278,24 +276,6 @@ static void controller_sdl_read(OSContPad *pad) {
     }
 }
 
-void controller_sdl_read_mouse_window(void) {
-    if (!init_ok) { return; }
-
-#if defined(_WIN32) && (defined(RAPI_D3D12) || defined(RAPI_D3D11))
-    mouse_window_buttons = 0;
-    mouse_window_buttons |= (GetAsyncKeyState(VK_LBUTTON) ? (1 << 0) : 0);
-    mouse_window_buttons |= (GetAsyncKeyState(VK_RBUTTON) ? (1 << 1) : 0);
-    POINT p;
-    if (GetCursorPos(&p) && ScreenToClient(GetActiveWindow(), &p))
-    {
-        mouse_window_x = p.x;
-        mouse_window_y = p.y;
-    }
-#else
-    mouse_window_buttons = SDL_GetMouseState(&mouse_window_x, &mouse_window_y);
-#endif
-}
-
 static void controller_sdl_rumble_play(f32 strength, f32 length) {
     if (sdl_haptic)
         SDL_HapticRumblePlay(sdl_haptic, strength, (u32)(length * 1000.0f));
@@ -342,6 +322,7 @@ static void controller_sdl_shutdown(void) {
 
     haptics_enabled = false;
     init_ok = false;
+    mouse_init_ok = false;
 }
 
 struct ControllerAPI controller_sdl = {

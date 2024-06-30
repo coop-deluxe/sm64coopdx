@@ -708,7 +708,7 @@ static bool gfx_dxgi_has_focus(void) {
     return GetFocus() == dxgi.h_wnd;
 }
 
-HWND gfx_dxgi_get_h_wnd(void) {
+extern "C" HWND gfx_dxgi_get_h_wnd(void) {
     return dxgi.h_wnd;
 }
 

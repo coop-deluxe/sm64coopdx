@@ -3,7 +3,6 @@
 #include <PR/gbi.h>
 #include <string.h>
 
-#include "pc/controller/controller_sdl.h"
 #include "pc/controller/controller_mouse.h"
 #include "pc/gfx/gfx_pc.h"
 #include "pc/gfx/gfx_window_manager_api.h"
@@ -235,16 +234,12 @@ u32 djui_hud_get_screen_height(void) {
 }
 
 f32 djui_hud_get_mouse_x(void) {
-#ifdef HAVE_SDL2
-    controller_sdl_read_mouse_window();
-#endif
+    controller_mouse_read_window();
     return mouse_window_x / djui_gfx_get_scale();
 }
 
 f32 djui_hud_get_mouse_y(void) {
-#ifdef HAVE_SDL2
-    controller_sdl_read_mouse_window();
-#endif
+    controller_mouse_read_window();
     return mouse_window_y / djui_gfx_get_scale();
 }
 
