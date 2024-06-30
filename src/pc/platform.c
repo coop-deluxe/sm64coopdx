@@ -5,7 +5,7 @@
 #include <string.h>
 #include <ctype.h>
 
-#if defined(_WIN32) || defined(_WIN64)
+#ifdef _WIN32
     #include <windows.h>
     #include <shlobj.h>
     #include <shlwapi.h>
@@ -82,18 +82,120 @@ void sys_fatal(const char *fmt, ...) {
     sys_fatal_impl(msg);
 }
 
-#if defined(_WIN32) || defined(_WIN64)
+#ifdef _WIN32
 
-static BOOL sys_windows_short_path(LPSTR destPath, SIZE_T destSize, LPWSTR wideLongPath)
+static bool sys_windows_pathname_is_portable(const wchar_t *name, size_t size)
 {
-    WCHAR wideShortPath[SYS_MAX_PATH];
+    for (size_t i = 0; i < size; i++) {
+        wchar_t c = name[i];
+
+        // character outside the ASCII printable range
+        if ((c < L' ') || (c > L'~')) { return false; }
+
+        // characters unallowed in filenames
+        switch (c) {
+            // skipping ':', as it will appear with the drive specifier
+            case L'<': case L'>': case L'/': case L'\\':
+            case L'"': case L'|': case L'?': case L'*':
+                return false;
+        }
+    }
+    return true;
+}
+
+static wchar_t *sys_windows_pathname_get_delim(const wchar_t *name)
+{
+    const wchar_t *sep1 = wcschr(name, L'/');
+    const wchar_t *sep2 = wcschr(name, L'\\');
+
+    if (NULL == sep1) { return (wchar_t*)sep2; }
+    if (NULL == sep2) { return (wchar_t*)sep1; }
+
+    return (sep1 < sep2) ? (wchar_t*)sep1 : (wchar_t*)sep2;
+}
+
+bool sys_windows_short_path_from_wcs(char *destPath, size_t destSize, const wchar_t *wcsLongPath)
+{
+    wchar_t wcsShortPath[SYS_MAX_PATH]; // converted with WinAPI
+    wchar_t wcsPortablePath[SYS_MAX_PATH]; // non-unicode parts replaced back with long forms
 
     // Convert the Long Path in Wide Format to the alternate short form.
-    // It will still point to already existing directory.
-    if (0 == GetShortPathNameW(wideLongPath, wideShortPath, SYS_MAX_PATH)) { return FALSE; }
+    // It will still point to already existing directory or file.
+    if (0 == GetShortPathNameW(wcsLongPath, wcsShortPath, SYS_MAX_PATH)) { return FALSE; }
+
+    // Scanning the paths side-by-side, to keep the portable (ASCII)
+    // parts of the absolute path unchanged (in the long form)
+    wcsPortablePath[0] = L'\0';
+    const wchar_t *longPart = wcsLongPath;
+    wchar_t *shortPart = wcsShortPath;
+
+    while (true) {
+        int longLength;
+        int shortLength;
+        const wchar_t *sourcePart;
+        int sourceLength;
+        int bufferLength;
+
+        const wchar_t *longDelim = sys_windows_pathname_get_delim(longPart);
+        wchar_t *shortDelim = sys_windows_pathname_get_delim(shortPart);
+
+        if (NULL == longDelim) {
+            longLength = wcslen(longPart); // final part of the scanned path
+        } else {
+            longLength = longDelim - longPart; // ptr diff measured in WCHARs
+        }
+
+        if (NULL == shortDelim) {
+            shortLength = wcslen(shortPart); // final part of the scanned path
+        } else {
+            shortLength = shortDelim - shortPart; // ptr diff measured in WCHARs
+        }
+
+        if (sys_windows_pathname_is_portable(longPart, longLength)) {
+            // take the original name (subdir or filename)
+            sourcePart = longPart;
+            sourceLength = longLength;
+        } else {
+            // take the converted alternate (short) name
+            sourcePart = shortPart;
+            sourceLength = shortLength;
+        }
+
+        // take into account the slash-or-backslash separator
+        if (L'\0' != sourcePart[sourceLength]) { sourceLength++; }
+
+        // how many WCHARs are still left in the buffer
+        bufferLength = (SYS_MAX_PATH - 1) - wcslen(wcsPortablePath);
+        if (sourceLength > bufferLength) { return false; }
+
+        wcsncat(wcsPortablePath, sourcePart, sourceLength);
+
+        // path end reached?
+        if ((NULL == longDelim) || (NULL == shortDelim)) { break; }
+
+        // compare the next name
+        longPart = longDelim + 1;
+        shortPart = shortDelim + 1;
+    }
 
     // Short Path can be safely represented by the US-ASCII Charset.
-    return (WideCharToMultiByte(CP_ACP, 0, wideShortPath, (-1), destPath, destSize, NULL, NULL) > 0);
+    return (WideCharToMultiByte(CP_ACP, 0, wcsPortablePath, (-1), destPath, destSize, NULL, NULL) > 0);
+}
+
+bool sys_windows_short_path_from_mbs(char *destPath, size_t destSize, const char *mbsLongPath)
+{
+    // Converting the absolute path in UTF-8 format (MultiByte String)
+    // to an alternate (portable) format usable on Windows.
+    // Assuming the given paths points to an already existing file or folder.
+
+    wchar_t wcsWidePath[SYS_MAX_PATH];
+
+    if (MultiByteToWideChar(CP_UTF8, 0, mbsLongPath, (-1), wcsWidePath, SYS_MAX_PATH) > 0)
+    {
+        return sys_windows_short_path_from_wcs(destPath, destSize, wcsWidePath);
+    }
+
+    return false;
 }
 
 const char *sys_user_path(void)
@@ -142,7 +244,7 @@ const char *sys_user_path(void)
         if (ERROR_ALREADY_EXISTS != GetLastError()) { return NULL; }
     }
 
-    return sys_windows_short_path(shortPath, SYS_MAX_PATH, widePath) ? shortPath : NULL;
+    return sys_windows_short_path_from_wcs(shortPath, SYS_MAX_PATH, widePath) ? shortPath : NULL;
 }
 
 const char *sys_exe_path(void)
@@ -157,7 +259,7 @@ const char *sys_exe_path(void)
     if (NULL != lastBackslash) { *lastBackslash = L'\0'; }
     else { return NULL; }
 
-    return sys_windows_short_path(shortPath, SYS_MAX_PATH, widePath) ? shortPath : NULL;
+    return sys_windows_short_path_from_wcs(shortPath, SYS_MAX_PATH, widePath) ? shortPath : NULL;
 }
 
 static void sys_fatal_impl(const char *msg) {

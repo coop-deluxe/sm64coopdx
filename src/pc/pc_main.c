@@ -353,17 +353,28 @@ int main(int argc, char *argv[]) {
     // handle terminal arguments
     if (!parse_cli_opts(argc, argv)) { return 0; }
 
-#if defined(_WIN32) || defined(_WIN64)
+#ifdef _WIN32
     // handle Windows console
-    if (!gCLIOpts.console) {
+    if (gCLIOpts.console) {
+        SetConsoleOutputCP(CP_UTF8);
+    } else {
         FreeConsole();
         freopen("NUL", "w", stdout);
     }
-
 #endif
 
-    const char* userPath = gCLIOpts.savePath[0] ? gCLIOpts.savePath : sys_user_path();
-    fs_init(userPath);
+#ifdef _WIN32
+    if (gCLIOpts.savePath[0]) {
+        char portable_path[SYS_MAX_PATH] = {};
+        sys_windows_short_path_from_mbs(portable_path, SYS_MAX_PATH, gCLIOpts.savePath);
+        fs_init(portable_path);
+    } else {
+        fs_init(sys_user_path());
+    }
+#else
+    fs_init(gCLIOpts.savePath[0] ? gCLIOpts.savePath : sys_user_path());
+#endif
+
     configfile_load();
 
     legacy_folder_handler();

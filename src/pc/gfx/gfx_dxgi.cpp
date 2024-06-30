@@ -24,15 +24,13 @@
 #include "gfx_dxgi.h"
 
 extern "C" {
-#include "pc/mods/mod_import.h"
-#ifdef DISCORD_SDK
-#include "pc/discord/discord.h"
-#endif
-#include "pc/network/version.h"
+    #include "pc/mods/mod_import.h"
+    #include "pc/rom_checker.h"
+    #include "pc/network/version.h"
+    #include "pc/configfile.h"
 }
 
-#include "../configfile.h"
-#include "../pc_main.h"
+#include "pc/pc_main.h"
 
 #include "gfx_window_manager_api.h"
 #include "gfx_rendering_api.h"
@@ -91,7 +89,6 @@ static struct {
     bool sync_interval_means_frames_to_wait;
     UINT length_in_vsync_frames;
 
-    void (*run_one_game_iter)(void);
     bool (*on_key_down)(int scancode);
     bool (*on_key_up)(int scancode);
     void (*on_all_keys_up)(void);
@@ -244,100 +241,122 @@ static void gfx_dxgi_on_resize(void) {
     }
 }
 
-static void onkeydown(WPARAM w_param, LPARAM l_param) {
+static void gfx_dxgi_on_key_down(WPARAM w_param, LPARAM l_param) {
     int key = ((l_param >> 16) & 0x1ff);
-    if (inTextInput) {
-        const int keyboardScanCode = (l_param >> 16) & 0x00ff;
-        const int virtualKey = w_param;
-
-        BYTE keyboardState[256];
-        GetKeyboardState(keyboardState);
-
-        WORD ascii = 0;
-        const int len = ToAscii(virtualKey, keyboardScanCode, keyboardState, &ascii, 0);
-        if (len > 0) {
-            dxgi.on_text_input((char*)&ascii);
-        }
-    }
-    if (dxgi.on_key_down != nullptr) {
-        dxgi.on_key_down(key);
-    }
+    if (dxgi.on_key_down != nullptr) { dxgi.on_key_down(key); }
 }
-static void onkeyup(WPARAM w_param, LPARAM l_param) {
+static void gfx_dxgi_on_key_up(WPARAM w_param, LPARAM l_param) {
     int key = ((l_param >> 16) & 0x1ff);
-    if (dxgi.on_key_up != nullptr) {
-        dxgi.on_key_up(key);
+    if (dxgi.on_key_up != nullptr) { dxgi.on_key_up(key); }
+}
+
+static void gfx_dxgi_on_text_input(wchar_t code_unit) {
+    if (inTextInput && (!IS_HIGH_SURROGATE(code_unit)) && (!IS_LOW_SURROGATE(code_unit))) {
+        char utf8_buffer[3 + 1];
+        if (code_unit >= 0x0800) { // 3-byte encoding
+            utf8_buffer[0] = 0xe0 | ((code_unit >> 12) & 0x0f);
+            utf8_buffer[1] = 0x80 | ((code_unit >>  6) & 0x3f);
+            utf8_buffer[2] = 0x80 | (code_unit         & 0x3f);
+            utf8_buffer[3] = '\0';
+        } else if (code_unit >= 0x0080) { // 2-byte encoding
+            utf8_buffer[0] = 0xc0 | ((code_unit >> 6) & 0x1f);
+            utf8_buffer[1] = 0x80 | (code_unit        & 0x3f);
+            utf8_buffer[2] = '\0';
+        } else { // 1-byte encoding
+            if (code_unit < ' ') { return; } // skipping control chars
+            utf8_buffer[0] = (char)code_unit;
+            utf8_buffer[1] = '\0';
+        }
+
+        dxgi.on_text_input(utf8_buffer);
     }
 }
 
 static LRESULT CALLBACK gfx_dxgi_wnd_proc(HWND h_wnd, UINT message, WPARAM w_param, LPARAM l_param) {
+    WCHAR wcsFileName[MAX_PATH];
+    char szFileName[MAX_PATH];
+
     switch (message) {
-        case WM_SIZE:
+        case WM_SIZE: {
             gfx_dxgi_on_resize();
-            break;
-        case WM_DESTROY:
+            return 0;
+        }
+        case WM_CLOSE: {
+            DestroyWindow(h_wnd);
+            return 0;
+        }
+        case WM_DESTROY: {
             game_exit();
-            break;
-        case WM_PAINT:
-            if (dxgi.showing_error) {
-                return DefWindowProcW(h_wnd, message, w_param, l_param);
-            } else {
-                if (dxgi.run_one_game_iter != nullptr) {
-                    dxgi.run_one_game_iter();
-                }
-            }
-            break;
-        case WM_ACTIVATEAPP:
+            PostQuitMessage(0);
+            return 0;
+        }
+        case WM_ACTIVATEAPP: {
             if (dxgi.on_all_keys_up != nullptr) {
                 dxgi.on_all_keys_up();
+                return 0;
             }
             break;
-        case WM_KEYDOWN:
-            onkeydown(w_param, l_param);
-            break;
-        case WM_KEYUP:
-            onkeyup(w_param, l_param);
-            break;
-        case WM_SYSKEYDOWN:
+        }
+        case WM_KEYDOWN: {
+            gfx_dxgi_on_key_down(w_param, l_param);
+            return 0;
+        }
+        case WM_KEYUP: {
+            gfx_dxgi_on_key_up(w_param, l_param);
+            return 0;
+        }
+        case WM_CHAR: {
+            // some keyboard input translated to a single UTF-16LE code unit
+            gfx_dxgi_on_text_input((wchar_t)w_param);
+            return 0;
+        }
+        case WM_SYSKEYDOWN: {
             if ((w_param == VK_RETURN) && ((l_param & 1 << 30) == 0)) {
                 toggle_borderless_window_full_screen(!dxgi.is_full_screen);
-                break;
-            } else {
-                return DefWindowProcW(h_wnd, message, w_param, l_param);
-            }
-        case WM_DROPFILES: {
-                HDROP hDrop = (HDROP)w_param;
-                UINT nFiles = DragQueryFile(hDrop, 0xFFFFFFFF, NULL, 0);
-                for (UINT i = 0; i < nFiles; i++)
-                {
-                    char szFileName[MAX_PATH] = { 0 };
-                    DragQueryFile(hDrop, i, szFileName, MAX_PATH);
-                    mod_import_file(szFileName);
-                }
-                DragFinish(hDrop);
+                return 0;
             }
             break;
-        default:
-            return DefWindowProcW(h_wnd, message, w_param, l_param);
+        }
+        case WM_LBUTTONDOWN: {
+            if (!gRomIsValid) {
+                OPENFILENAMEW ofn;
+                ZeroMemory(&ofn, sizeof(ofn));
+                ofn.lStructSize = sizeof(ofn);
+                ofn.hwndOwner = h_wnd;
+                ofn.lpstrFilter = L"N64 ROM files (*.z64)\0*.z64\0";
+                ofn.lpstrFile = wcsFileName;
+                ofn.nMaxFile = MAX_PATH;
+                ofn.lpstrTitle = L"Select the \"Super Mario 64 (U) [!]\" ROM file..";
+                ofn.Flags = (OFN_DONTADDTORECENT | OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST);
+
+                wcsFileName[0] = L'\0';
+                if (GetOpenFileNameW(&ofn) && sys_windows_short_path_from_wcs(szFileName, MAX_PATH, wcsFileName)) {
+                    rom_on_drop_file(szFileName);
+                }
+                return 0;
+            }
+            break;
+        }
+        case WM_DROPFILES: {
+            HDROP hDrop = (HDROP)w_param;
+            UINT nFiles = DragQueryFileW(hDrop, 0xFFFFFFFF, NULL, 0);
+            for (UINT i = 0; i < nFiles; i++) {
+                if (0 != DragQueryFileW(hDrop, i, wcsFileName, MAX_PATH)) {
+                    if (sys_windows_short_path_from_wcs(szFileName, MAX_PATH, wcsFileName)) {
+                        if (!gRomIsValid) {
+                            rom_on_drop_file(szFileName);
+                        } else if (gGameInited) {
+                            mod_import_file(szFileName);
+                        }
+                    }
+                }
+            }
+            DragFinish(hDrop);
+            return 0;
+        }
     }
 
-    if (configWindow.reset) {
-        dxgi.last_maximized_state = false;
-        configWindow.reset = false;
-        configWindow.x = WAPI_WIN_CENTERPOS;
-        configWindow.y = WAPI_WIN_CENTERPOS;
-        configWindow.w = DESIRED_SCREEN_WIDTH;
-        configWindow.h = DESIRED_SCREEN_HEIGHT;
-        configWindow.fullscreen = false;
-        configWindow.settings_changed = true;
-    }
-
-    if (configWindow.settings_changed) {
-        configWindow.settings_changed = false;
-        update_screen_settings();
-    }
-
-    return 0;
+    return DefWindowProcW(h_wnd, message, w_param, l_param);
 }
 
 static void gfx_dxgi_init(const char *window_title) {
@@ -406,16 +425,7 @@ static void gfx_dxgi_set_keyboard_callbacks(bool (*on_key_down)(int scancode), b
 }
 
 static void gfx_dxgi_main_loop(void (*run_one_game_iter)(void)) {
-    dxgi.run_one_game_iter = run_one_game_iter;
-
-    MSG msg;
-    while (GetMessage(&msg, nullptr, 0, 0)) {
-        TranslateMessage(&msg);
-        DispatchMessage(&msg);
-#ifdef DISCORD_SDK
-        discord_update();
-#endif
-    }
+    run_one_game_iter();
 }
 
 static void gfx_dxgi_get_dimensions(uint32_t *width, uint32_t *height) {
@@ -424,11 +434,28 @@ static void gfx_dxgi_get_dimensions(uint32_t *width, uint32_t *height) {
 }
 
 static void gfx_dxgi_handle_events(void) {
-    /*MSG msg;
-    while (PeekMessageW(&msg, nullptr, 0, 0, PM_REMOVE)) {
+    MSG msg;
+    while (PeekMessageW(&msg, NULL, 0, 0, PM_REMOVE) != 0) {
         TranslateMessage(&msg);
-        DispatchMessage(&msg);
-    }*/
+        DispatchMessageW(&msg);
+        if (msg.message == WM_QUIT) { break; }
+    }
+
+    if (configWindow.reset) {
+        dxgi.last_maximized_state = false;
+        configWindow.reset = false;
+        configWindow.x = WAPI_WIN_CENTERPOS;
+        configWindow.y = WAPI_WIN_CENTERPOS;
+        configWindow.w = DESIRED_SCREEN_WIDTH;
+        configWindow.h = DESIRED_SCREEN_HEIGHT;
+        configWindow.fullscreen = false;
+        configWindow.settings_changed = true;
+    }
+
+    if (configWindow.settings_changed) {
+        configWindow.settings_changed = false;
+        update_screen_settings();
+    }
 }
 
 static uint64_t qpc_to_us(uint64_t qpc) {

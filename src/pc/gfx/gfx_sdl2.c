@@ -186,13 +186,22 @@ static void gfx_sdl_onkeyup(int scancode) {
 }
 
 static void gfx_sdl_ondropfile(char* path) {
+#ifdef _WIN32
+    char portable_path[SYS_MAX_PATH];
+    if (sys_windows_short_path_from_mbs(portable_path, SYS_MAX_PATH, path)) {
+        if (!gRomIsValid) {
+            rom_on_drop_file(portable_path);
+        } else if (gGameInited) {
+            mod_import_file(portable_path);
+        }
+    }
+#else
     if (!gRomIsValid) {
         rom_on_drop_file(path);
-        return;
-    }
-    if (gGameInited) {
+    } else if (gGameInited) {
         mod_import_file(path);
     }
+#endif
 }
 
 static void gfx_sdl_handle_events(void) {

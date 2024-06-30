@@ -168,7 +168,14 @@ bool str_ends_with(const char* string, const char* suffix) {
 
     if (suffixLength > stringLength) { return false; }
 
-    return !strcmp(&string[stringLength - suffixLength], suffix);
+#ifdef _WIN32
+    // Paths on Windows are case-insensitive and might have
+    // upper-case or mixed-case endings.
+    return (0 == _stricmp(&(string[stringLength - suffixLength]), suffix));
+#else
+    // Always expecting lower-case file paths and extensions
+    return (0 == strcmp(&(string[stringLength - suffixLength]), suffix));
+#endif
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
