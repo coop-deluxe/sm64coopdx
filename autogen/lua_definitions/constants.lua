@@ -5500,9 +5500,6 @@ MARIO_ANIM_TRIPLE_JUMP_FLY = 208
 --- @type MarioAnimID
 WALUIGI_ANIM_WALKING = 209
 
---- @type MarioAnimID
-WALUIGI_ANIM_RUNNING = 210
-
 --- @class MarioCapGSCId
 
 --- @type MarioCapGSCId
