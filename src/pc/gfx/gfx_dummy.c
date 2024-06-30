@@ -80,14 +80,14 @@ static void gfx_dummy_wm_delay(u32 ms) {
     sleep_ms(ms);
 }
 
-static int gfx_dummy_get_max_msaa(void) {
+static int gfx_dummy_wm_get_max_msaa(void) {
     return 0;
 }
 
-static void gfx_dummy_set_window_title(UNUSED const char* title) {
+static void gfx_dummy_wm_set_window_title(UNUSED const char* title) {
 }
 
-static void gfx_dummy_reset_window_title(void) {
+static void gfx_dummy_wm_reset_window_title(void) {
 }
 
 static void gfx_dummy_wm_swap_buffers_begin(void) {
@@ -117,6 +117,10 @@ static void gfx_dummy_wm_set_clipboard_text(UNUSED char* text) {
 }
 
 static void gfx_dummy_wm_set_cursor_visible(UNUSED bool visible) {
+}
+
+static bool gfx_dummy_wm_has_focus(void) {
+    return true;
 }
 
 static bool gfx_dummy_renderer_z_is_from_0_to_1(void) {
@@ -212,9 +216,10 @@ struct GfxWindowManagerAPI gfx_dummy_wm_api = {
     gfx_dummy_wm_set_clipboard_text,
     gfx_dummy_wm_set_cursor_visible,
     gfx_dummy_wm_delay,
-    gfx_dummy_get_max_msaa,
-    gfx_dummy_set_window_title,
-    gfx_dummy_reset_window_title
+    gfx_dummy_wm_get_max_msaa,
+    gfx_dummy_wm_set_window_title,
+    gfx_dummy_wm_reset_window_title,
+    gfx_dummy_wm_has_focus
 };
 
 struct GfxRenderingAPI gfx_dummy_renderer_api = {

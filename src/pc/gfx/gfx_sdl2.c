@@ -298,6 +298,10 @@ static void gfx_sdl_shutdown(void) {
     }
 }
 
+static bool gfx_sdl_has_focus(void) {
+    return (SDL_GetWindowFlags(wnd) & SDL_WINDOW_INPUT_FOCUS);
+}
+
 static void gfx_sdl_start_text_input(void) { SDL_StartTextInput(); }
 static void gfx_sdl_stop_text_input(void) { SDL_StopTextInput(); }
 static char* gfx_sdl_get_clipboard_text(void) { return SDL_GetClipboardText(); }
@@ -323,7 +327,8 @@ struct GfxWindowManagerAPI gfx_sdl = {
     gfx_sdl_delay,
     gfx_sdl_get_max_msaa,
     gfx_sdl_set_window_title,
-    gfx_sdl_reset_window_title
+    gfx_sdl_reset_window_title,
+    gfx_sdl_has_focus
 };
 
 #endif // BACKEND_WM

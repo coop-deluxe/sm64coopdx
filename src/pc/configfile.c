@@ -71,7 +71,7 @@ ConfigWindow configWindow       = {
     .y = WAPI_WIN_CENTERPOS,
     .w = DESIRED_SCREEN_WIDTH,
     .h = DESIRED_SCREEN_HEIGHT,
-    .vsync = 0,
+    .vsync = 1,
     .reset = false,
     .fullscreen = false,
     .exiting_fullscreen = false,
@@ -82,7 +82,7 @@ ConfigWindow configWindow       = {
 // display settings
 unsigned int configFiltering                      = 2; // 0 = Nearest, 1 = Bilinear, 2 = Trilinear
 bool         configShowFPS                        = false;
-bool         configUncappedFramerate              = false;
+bool         configUncappedFramerate              = true;
 unsigned int configFrameLimit                     = 60;
 unsigned int configInterpolationMode              = 1;
 unsigned int configDrawDistance                   = 4;
@@ -92,6 +92,7 @@ unsigned int configMusicVolume                    = MAX_VOLUME;
 unsigned int configSfxVolume                      = MAX_VOLUME;
 unsigned int configEnvVolume                      = MAX_VOLUME;
 bool         configFadeoutDistantSounds           = false;
+bool         configMuteFocusLoss                  = false;
 // control binds
 unsigned int configKeyA[MAX_BINDS]                = { 0x0026,     0x1000,     0x1103     };
 unsigned int configKeyB[MAX_BINDS]                = { 0x0033,     0x1001,     0x1101     };
@@ -207,6 +208,7 @@ static const struct ConfigOption options[] = {
     {.name = "sfx_volume",                     .type = CONFIG_TYPE_UINT, .uintValue = &configSfxVolume},
     {.name = "env_volume",                     .type = CONFIG_TYPE_UINT, .uintValue = &configEnvVolume},
     {.name = "fade_distant_sounds",            .type = CONFIG_TYPE_BOOL, .boolValue = &configFadeoutDistantSounds},
+    {.name = "mute_focus_loss",                .type = CONFIG_TYPE_BOOL, .boolValue = &configMuteFocusLoss},
     // control binds
     {.name = "key_a",                          .type = CONFIG_TYPE_BIND, .uintValue = configKeyA},
     {.name = "key_b",                          .type = CONFIG_TYPE_BIND, .uintValue = configKeyB},

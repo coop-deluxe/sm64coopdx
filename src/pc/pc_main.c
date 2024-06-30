@@ -218,10 +218,11 @@ void produce_interpolation_frames_and_delay(void) {
 }
 
 inline static void buffer_audio(void) {
+    bool shouldMute = configMuteFocusLoss && !WAPI.has_focus();
     const f32 masterMod = (f32)configMasterVolume / 127.0f * (f32)gLuaVolumeMaster / 127.0f;
-    set_sequence_player_volume(SEQ_PLAYER_LEVEL, (f32)configMusicVolume / 127.0f * (f32)gLuaVolumeLevel / 127.0f * masterMod);
-    set_sequence_player_volume(SEQ_PLAYER_SFX, (f32)configSfxVolume / 127.0f * (f32)gLuaVolumeSfx / 127.0f * masterMod);
-    set_sequence_player_volume(SEQ_PLAYER_ENV, (f32)configEnvVolume / 127.0f * (f32)gLuaVolumeEnv / 127.0f * masterMod);
+    set_sequence_player_volume(SEQ_PLAYER_LEVEL, shouldMute ? 0 : (f32)configMusicVolume / 127.0f * (f32)gLuaVolumeLevel / 127.0f * masterMod);
+    set_sequence_player_volume(SEQ_PLAYER_SFX,   shouldMute ? 0 : (f32)configSfxVolume / 127.0f * (f32)gLuaVolumeSfx / 127.0f * masterMod);
+    set_sequence_player_volume(SEQ_PLAYER_ENV,   shouldMute ? 0 : (f32)configEnvVolume / 127.0f * (f32)gLuaVolumeEnv / 127.0f * masterMod);
 
     int samplesLeft = audio_api->buffered();
     u32 numAudioSamples = samplesLeft < audio_api->get_desired_buffered() ? SAMPLES_HIGH : SAMPLES_LOW;

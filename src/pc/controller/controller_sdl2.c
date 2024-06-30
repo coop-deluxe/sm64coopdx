@@ -173,7 +173,7 @@ static void controller_sdl_read(OSContPad *pad) {
         return;
     }
 
-    if ((newcam_mouse == 1 || gFirstPersonCamera.enabled || gDjuiHudLockMouse) && gMenuMode == -1 && !gDjuiInMainMenu && !gDjuiChatBoxFocus && !gDjuiConsoleFocus) {
+    if ((newcam_mouse == 1 || gFirstPersonCamera.enabled || gDjuiHudLockMouse) && gMenuMode == -1 && !gDjuiInMainMenu && !gDjuiChatBoxFocus && !gDjuiConsoleFocus && WAPI.has_focus()) {
         SDL_SetRelativeMouseMode(SDL_TRUE);
     } else {
         SDL_SetRelativeMouseMode(SDL_FALSE);

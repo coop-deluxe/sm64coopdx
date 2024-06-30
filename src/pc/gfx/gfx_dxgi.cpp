@@ -704,6 +704,10 @@ static void gfx_dxgi_reset_window_title(void) {
     SetWindowTextA(dxgi.h_wnd, TITLE);
 }
 
+static bool gfx_dxgi_has_focus(void) {
+    return GetFocus() == dxgi.h_wnd;
+}
+
 HWND gfx_dxgi_get_h_wnd(void) {
     return dxgi.h_wnd;
 }
@@ -775,7 +779,8 @@ struct GfxWindowManagerAPI gfx_dxgi = {
     gfx_dxgi_delay,
     gfx_dxgi_get_max_msaa,
     gfx_dxgi_set_window_title,
-    gfx_dxgi_reset_window_title
+    gfx_dxgi_reset_window_title,
+    gfx_dxgi_has_focus
 };
 
 #endif
