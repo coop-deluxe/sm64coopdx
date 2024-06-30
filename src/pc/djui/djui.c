@@ -108,7 +108,7 @@ void djui_init_late(void) {
         gPanelLanguageOnStartup = true;
         djui_panel_language_create(NULL);
     }
-    if (true) { // strcmp(configLastVersion, get_version())) {
+    if (strcmp(configLastVersion, get_version())) {
         snprintf(configLastVersion, MAX_CONFIG_STRING, "%s", get_version());
         djui_panel_changelog_create(NULL);
     }

@@ -318,9 +318,9 @@ void* main_game_init(void* isThreaded) {
     enable_queued_dynos_packs();
     sync_objects_init_system();
 
-    // if (gCLIOpts.network != NT_SERVER) {
-    //     check_for_updates();
-    // }
+    if (gCLIOpts.network != NT_SERVER) {
+        check_for_updates();
+    }
 
     LOADING_SCREEN_MUTEX(loading_screen_set_segment_text("Loading ROM Assets"));
     rom_assets_load();
