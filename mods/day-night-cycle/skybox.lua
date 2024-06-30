@@ -1,38 +1,15 @@
-if SM64COOPDX_VERSION == nil then return end
-
-gVanillaSkyboxModels = {
-    [BACKGROUND_OCEAN_SKY] = E_MODEL_SKYBOX_OCEAN_SKY,
-    [BACKGROUND_FLAMING_SKY] = E_MODEL_SKYBOX_FLAMING_SKY,
-    [BACKGROUND_UNDERWATER_CITY] = E_MODEL_SKYBOX_UNDERWATER_CITY,
-    [BACKGROUND_BELOW_CLOUDS] = E_MODEL_SKYBOX_BELOW_CLOUDS,
-    [BACKGROUND_SNOW_MOUNTAINS] = E_MODEL_SKYBOX_SNOW_MOUNTAINS,
-    [BACKGROUND_DESERT] = E_MODEL_SKYBOX_DESERT,
-    [BACKGROUND_HAUNTED] = E_MODEL_SKYBOX_HAUNTED,
-    [BACKGROUND_GREEN_SKY] = E_MODEL_SKYBOX_GREEN_SKY,
-    [BACKGROUND_ABOVE_CLOUDS] = E_MODEL_SKYBOX_ABOVE_CLOUDS,
-    [BACKGROUND_PURPLE_SKY] = E_MODEL_SKYBOX_PURPLE_SKY
-}
-
 -- localize functions to improve performance
-local get_skybox,obj_set_model_extended,set_override_far,obj_mark_for_deletion,vec3f_to_object_pos,clampf,cur_obj_hide,cur_obj_unhide = get_skybox,obj_set_model_extended,set_override_far,obj_mark_for_deletion,vec3f_to_object_pos,clampf,cur_obj_hide,cur_obj_unhide
+local set_override_far,obj_mark_for_deletion,vec3f_to_object_pos,get_skybox,clampf = set_override_far,obj_mark_for_deletion,vec3f_to_object_pos,get_skybox,clampf
 
 --- @param o Object
 function bhv_skybox_init(o)
     o.header.gfx.skipInViewCheck = true
-
-    local skybox = get_skybox()
-    if o.oBehParams2ndByte == SKYBOX_DAY then
-        obj_set_model_extended(o, gVanillaSkyboxModels[skybox] or E_MODEL_SKYBOX_OCEAN_SKY)
-    elseif o.oBehParams2ndByte == SKYBOX_NIGHT then
-        obj_set_model_extended(o, if_then_else(skybox == BACKGROUND_BELOW_CLOUDS, E_MODEL_SKYBOX_BELOW_CLOUDS_NIGHT, E_MODEL_SKYBOX_NIGHT))
-    end
-
-    set_override_far(100000)
+    set_override_far(200000)
 end
 
 --- @param o Object
 function bhv_skybox_loop(o)
-    if not gGlobalSyncTable.dncEnabled then
+    if not is_dnc_enabled() then
         obj_mark_for_deletion(o)
         return
     end
@@ -44,36 +21,19 @@ function bhv_skybox_loop(o)
     -- do not rotate BITDW skybox
     if skybox == BACKGROUND_GREEN_SKY then return end
 
-    local minutes = (gGlobalSyncTable.time / MINUTE) % 24
+    local minutes = get_time_minutes()
 
-    if o.oBehParams2ndByte ~= SKYBOX_SUNSET then
-        o.oFaceAngleYaw = gGlobalSyncTable.time * 2
-    else
-        if minutes < 12 then
-            o.oFaceAngleYaw = 0
-        else
-            o.oFaceAngleYaw = 0x8000
-        end
-    end
-
+    o.oFaceAngleYaw = (minutes / 24) * 0x10000
 
     if o.oBehParams2ndByte == SKYBOX_DAY then
-        if minutes >= HOUR_SUNRISE_END and minutes <= HOUR_DAY_START then
-            o.oOpacity = lerp_round(0, 255, clampf((minutes - HOUR_SUNRISE_END) / HOUR_SUNSET_DURATION, 0, 1))
-        elseif minutes >= HOUR_SUNSET_START and minutes <= HOUR_SUNSET_END then
-            o.oOpacity = lerp_round(255, 0, clampf((minutes - HOUR_SUNSET_START) / HOUR_SUNSET_DURATION, 0, 1))
-        elseif minutes < HOUR_SUNRISE_END or minutes > HOUR_NIGHT_START then
-            o.oOpacity = 0
-        elseif minutes > HOUR_DAY_START and minutes < HOUR_SUNSET_START then
-            o.oOpacity = 255
-        end
+        o.oOpacity = 255
     elseif o.oBehParams2ndByte == SKYBOX_SUNSET then
         if minutes >= HOUR_SUNRISE_START and minutes <= HOUR_SUNRISE_END then
-            o.oOpacity = lerp_round(0, 255, clampf((minutes - HOUR_SUNRISE_START) / HOUR_SUNRISE_DURATION, 0, 1))
+            o.oOpacity = lerp_ceil(0, 255, clampf((minutes - HOUR_SUNRISE_START) / HOUR_SUNRISE_DURATION, 0, 1))
         elseif minutes >= HOUR_SUNRISE_END and minutes <= HOUR_DAY_START then
-            o.oOpacity = lerp_round(255, 0, clampf((minutes - HOUR_SUNRISE_END) / HOUR_SUNRISE_DURATION, 0, 1))
+            o.oOpacity = lerp_ceil(255, 0, clampf((minutes - HOUR_SUNRISE_END) / HOUR_SUNRISE_DURATION, 0, 1))
         elseif minutes >= HOUR_SUNSET_START and minutes <= HOUR_SUNSET_END then
-            o.oOpacity = lerp_round(0, 255, clampf((minutes - HOUR_SUNSET_START) / HOUR_SUNSET_DURATION, 0, 1))
+            o.oOpacity = lerp_ceil(0, 255, clampf((minutes - HOUR_SUNSET_START) / HOUR_SUNSET_DURATION, 0, 1))
         elseif minutes >= HOUR_SUNSET_END and minutes <= HOUR_NIGHT_START then
             o.oOpacity = 255
         else
@@ -81,25 +41,21 @@ function bhv_skybox_loop(o)
         end
 
         if minutes < 12 then
-            obj_set_model_extended(o, if_then_else(skybox == BACKGROUND_BELOW_CLOUDS, E_MODEL_SKYBOX_BELOW_CLOUDS_SUNRISE, E_MODEL_SKYBOX_SUNRISE))
+            o.oAnimState = if_then_else(skybox == BACKGROUND_BELOW_CLOUDS, BACKGROUND_BELOW_CLOUDS_SUNRISE, BACKGROUND_SUNRISE)
         else
-            obj_set_model_extended(o, if_then_else(skybox == BACKGROUND_BELOW_CLOUDS, E_MODEL_SKYBOX_BELOW_CLOUDS_SUNSET, E_MODEL_SKYBOX_SUNSET))
+            o.oAnimState = if_then_else(skybox == BACKGROUND_BELOW_CLOUDS, BACKGROUND_BELOW_CLOUDS_SUNSET, BACKGROUND_SUNSET)
         end
+
+        o.oFaceAngleYaw = o.oFaceAngleYaw - if_then_else(minutes < 12, 0x3000, 0x6000)
     elseif o.oBehParams2ndByte == SKYBOX_NIGHT then
         if minutes >= HOUR_SUNRISE_START and minutes <= HOUR_SUNRISE_END then
-            o.oOpacity = lerp_round(255, 0, clampf((minutes - HOUR_SUNRISE_START) / HOUR_SUNRISE_DURATION, 0, 1))
+            o.oOpacity = lerp_ceil(255, 0, clampf((minutes - HOUR_SUNRISE_START) / HOUR_SUNRISE_DURATION, 0, 1))
         elseif minutes >= HOUR_SUNSET_END and minutes <= HOUR_NIGHT_START then
-            o.oOpacity = lerp_round(0, 255, clampf((minutes - HOUR_SUNSET_END) / HOUR_SUNSET_DURATION, 0, 1))
+            o.oOpacity = lerp_ceil(0, 255, clampf((minutes - HOUR_SUNSET_END) / HOUR_SUNSET_DURATION, 0, 1))
         elseif minutes > HOUR_SUNRISE_END and minutes < HOUR_SUNSET_END then
             o.oOpacity = 0
         elseif minutes > HOUR_NIGHT_START or minutes < HOUR_SUNRISE_START then
             o.oOpacity = 255
         end
-    end
-
-    if o.oOpacity == 0 then
-        cur_obj_hide()
-    else
-        cur_obj_unhide()
     end
 end

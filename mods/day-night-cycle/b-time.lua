@@ -1,19 +1,18 @@
-function delete_at_dark() end
-if SM64COOPDX_VERSION == nil then return end
-
-gGlobalSyncTable.time = 0
-gGlobalSyncTable.timeScale = 1
-
 local sNightSequences = {}
 
 -- localize functions to improve performance
-local math_floor,network_is_server,djui_hud_is_pause_menu_created,smlua_audio_utils_replace_sequence,fade_volume_scale,set_background_music,obj_mark_for_deletion = math.floor,network_is_server,djui_hud_is_pause_menu_created,smlua_audio_utils_replace_sequence,fade_volume_scale,set_background_music,obj_mark_for_deletion
+local mod_storage_remove,mod_storage_load_bool,math_floor,mod_storage_save_number,mod_storage_load_number,type,error,network_is_moderator,network_is_server,string_format,djui_hud_is_pause_menu_created,smlua_audio_utils_replace_sequence,fade_volume_scale,set_background_music,obj_mark_for_deletion = mod_storage_remove,mod_storage_load_bool,math.floor,mod_storage_save_number,mod_storage_load_number,type,error,network_is_moderator,network_is_server,string.format,djui_hud_is_pause_menu_created,smlua_audio_utils_replace_sequence,fade_volume_scale,set_background_music,obj_mark_for_deletion
 
+-- purge legacy fields
 mod_storage_remove("ampm")
-use24h = mod_storage_load_bool("24h") or false
+mod_storage_remove("night-music")
+
+use24h = mod_storage_load_bool("24h")
 
 local savedInMenu = false
 local autoSaveTimer = 0
+--- @type boolean
+playNightMusic = if_then_else(mod_storage_load("night_music") == nil, true, mod_storage_load_bool("night_music"))
 playingNightMusic = false
 
 --- Returns the amount of days that have passed
@@ -22,6 +21,7 @@ function get_day_count()
 end
 
 function save_time()
+    if gNetworkPlayers[0].currActNum == 99 then return end
     mod_storage_save_number("time", gGlobalSyncTable.time)
     print("Saving time to 'day-night-cycle.sav'")
 end
@@ -34,14 +34,62 @@ function load_time()
     end
     return time
 end
-gGlobalSyncTable.time = load_time()
 
+--- Returns the time in frames
+function get_raw_time()
+    return gGlobalSyncTable.time
+end
+
+--- @param time integer
+--- Sets the time in frames
+function set_raw_time(time)
+    if type(time) ~= "number" then
+        error("set_raw_time: Parameter 'time' must be a number")
+        return
+    end
+    if not network_is_server() and not network_is_moderator() then return end
+
+    gGlobalSyncTable.time = time
+end
+
+--- Returns the amount of time that has passed in the day in minutes
+function get_time_minutes()
+    return (gGlobalSyncTable.time / MINUTE) % 24
+end
+
+--- Returns the time scale
+function get_time_scale()
+    return gGlobalSyncTable.timeScale
+end
+
+--- @param scale number
+--- Sets the time scale
+function set_time_scale(scale)
+    if type(scale) ~= "number" then
+        error("set_time_scale: Parameter 'scale' must be a number")
+        return
+    end
+    if not network_is_server() and not network_is_moderator() then return end
+
+    gGlobalSyncTable.timeScale = scale
+end
+
+--- @param time number
 --- @return string
 --- Returns the properly formatted time string
-function get_time_string()
-    local minutes = (gGlobalSyncTable.time / MINUTE) % 24
+function get_time_string(time)
+    if type(time) ~= "number" then
+        error("get_time_string: Parameter 'time' must be a number")
+        if use24h then
+            return "12:00 AM"
+        else
+            return "0:00"
+        end
+    end
+
+    local minutes = (time / MINUTE) % 24
     local formattedMinutes = math_floor(minutes)
-    local seconds = math_floor(gGlobalSyncTable.time / SECOND) % 60
+    local seconds = math_floor(time / SECOND) % 60
 
     if not use24h then
         if formattedMinutes == 0 then
@@ -51,12 +99,10 @@ function get_time_string()
         end
     end
 
-    return math_floor(formattedMinutes) .. ":" .. string.format("%02d", seconds) .. if_then_else(not use24h, if_then_else(minutes < 12, " AM", " PM"), "")
+    return string_format("%d:%02d%s", formattedMinutes, seconds, if_then_else(not use24h, if_then_else(minutes < 12, " AM", " PM"), ""))
 end
 
 function time_tick()
-    if not network_is_server() then return end
-
     gGlobalSyncTable.time = gGlobalSyncTable.time + gGlobalSyncTable.timeScale
 
     -- auto save every 30s
@@ -83,15 +129,26 @@ function night_music_register(sequenceId, m64Name)
 end
 
 function handle_night_music()
-    if not show_day_night_cycle() or gNetworkPlayers[0].currActNum == 99 or gMarioStates[0].area == nil then return end
-    local seq = sNightSequences[gMarioStates[0].area.musicParam2]
+    if gNetworkPlayers[0].currActNum == 99 or gMarioStates[0].area == nil then return end
+    local musicParam = gMarioStates[0].area.musicParam2
+
+    if not playNightMusic or not dayNightCycleApi.playNightMusic then
+        if playingNightMusic then
+            playingNightMusic = false
+            fade_volume_scale(SEQ_PLAYER_LEVEL, 127, 1)
+            set_background_music(SEQ_PLAYER_LEVEL, SEQUENCE_ARGS(4, musicParam), 0)
+        end
+        return
+    end
+
+    local seq = sNightSequences[musicParam]
     if seq == nil then return end
 
     fade_volume_scale(0, 127, 1)
 
-    local minutes = (gGlobalSyncTable.time / MINUTE) % 24
+    local minutes = get_time_minutes()
 
-    if minutes >= HOUR_SUNSET_END + 0.75 and minutes <= HOUR_NIGHT_START then
+    if minutes >= HOUR_SUNSET_END + 0.75 and minutes < HOUR_NIGHT_START then
         local threshold = 1 - (minutes - (HOUR_SUNSET_END + 0.75)) * 4  -- multiply by 4 because four quarters make a whole
         fade_volume_scale(SEQ_PLAYER_LEVEL, threshold * 127, 1)
     elseif minutes >= HOUR_SUNRISE_START + 0.75 and minutes <= HOUR_SUNRISE_END then
@@ -102,33 +159,25 @@ function handle_night_music()
     if (minutes >= HOUR_NIGHT_START or minutes < HOUR_SUNRISE_END) and not playingNightMusic then
         playingNightMusic = true
         fade_volume_scale(SEQ_PLAYER_LEVEL, 127, 1)
-        set_background_music(0, SEQUENCE_ARGS(4, seq), 450)
+        set_background_music(SEQ_PLAYER_LEVEL, SEQUENCE_ARGS(4, seq), 450)
     elseif minutes >= HOUR_SUNRISE_END and minutes < HOUR_NIGHT_START and playingNightMusic then
         playingNightMusic = false
-        fade_volume_scale(0, 127, 1)
-        set_background_music(0, SEQUENCE_ARGS(4, gMarioStates[0].area.musicParam2), 0)
+        fade_volume_scale(SEQ_PLAYER_LEVEL, 127, 1)
+        set_background_music(SEQ_PLAYER_LEVEL, SEQUENCE_ARGS(4, musicParam), 0)
     end
 end
 
---- @return number
---- Returns the time in frames
-function get_raw_time()
-    return gGlobalSyncTable.time
-end
-
---- @param time number
---- @return nil
---- Sets the time in frames
-function set_raw_time(time)
-    if type(time) ~= "number" then return end
-    gGlobalSyncTable.time = time
-end
-
---- @param o Object
-function delete_at_dark(o)
+--- @param obj Object
+function delete_at_dark(obj)
+    if obj == nil then
+        error("delete_at_dark: Parameter 'obj' must be an Object")
+        return
+    end
     local minutes = gGlobalSyncTable.time / MINUTE % 24
 
-    if minutes < HOUR_SUNRISE_START or minutes > HOUR_SUNSET_END then
-       obj_mark_for_deletion(o)
-    end
+    local delete = minutes < HOUR_SUNRISE_START or minutes > HOUR_SUNSET_END
+    overrideDelete = dnc_call_hook(DNC_HOOK_DELETE_AT_DARK, obj, delete)
+    if overrideDelete ~= nil and type(overrideDelete) == "boolean" then delete = overrideDelete end
+
+    if delete then obj_mark_for_deletion(obj) end
 end

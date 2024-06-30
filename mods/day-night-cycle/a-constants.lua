@@ -1,18 +1,25 @@
-if SM64COOPDX_VERSION == nil then
-    local first = false
-    hook_event(HOOK_ON_LEVEL_INIT, function()
-        if not first then
-            first = true
-            play_sound(SOUND_MENU_CAMERA_BUZZ, gMarioStates[0].marioObj.header.gfx.cameraToObject)
-            djui_chat_message_create("\\#ff7f7f\\Day Night Cycle is no longer supported with sm64ex-coop\nas it uses sm64coopdx exclusive Lua functionality.\n\\#dcdcdc\\To play this mod, try out sm64coopdx at\n\\#7f7fff\\https://sm64coopdx.com")
-        end
-    end)
-    return
-end
+-- version
+DNC_VERSION = "v2.1"
+
+-- skybox constants
+E_MODEL_SKYBOX = smlua_model_util_get_id("dnc_skybox_geo")
+
+SKYBOX_SCALE = 600
+SKYBOX_DAY = 0
+SKYBOX_SUNSET = 1
+SKYBOX_NIGHT = 2
+
+-- background constants
+BACKGROUND_NIGHT = 10
+BACKGROUND_SUNRISE = 11
+BACKGROUND_SUNSET = 12
+BACKGROUND_BELOW_CLOUDS_NIGHT = 13
+BACKGROUND_BELOW_CLOUDS_SUNRISE = 14
+BACKGROUND_BELOW_CLOUDS_SUNSET = 15
 
 -- time constants
-SECOND = 30
-MINUTE = SECOND * 60
+SECOND = 30 -- how many frames are in 1 second
+MINUTE = SECOND * 60 -- how many frames are in 1 minutes
 
 HOUR_SUNRISE_START = 4
 HOUR_SUNRISE_END = 5
@@ -31,40 +38,32 @@ REAL_MINUTE = 1 / 60
 DIR_DARK = 0.6
 DIR_BRIGHT = 1
 
--- color constants
-COLOR_NIGHT   = { r = 70,  g = 75,  b = 100 }
-COLOR_SUNRISE = { r = 255, g = 255, b = 200 }
-COLOR_DAY     = { r = 255, g = 255, b = 255 }
-COLOR_SUNSET  = { r = 255, g = 155, b = 100 }
+-- fog intensity constants
+FOG_INTENSITY_NORMAL = 1.0
+FOG_INTENSITY_DENSE = 1.02
 
-FOG_COLOR_NIGHT = { r = 30, g = 30, b = 50 }
+-- colors
+COLOR_NIGHT           = { r = 90,  g = 100, b = 130 }
+COLOR_AMBIENT_NIGHT   = { r = 60,  g = 70,  b = 110 }
+COLOR_SUNRISE         = { r = 255, g = 250, b = 150 }
+COLOR_AMBIENT_SUNRISE = { r = 200, g = 200, b = 255 }
+COLOR_DAY             = { r = 255, g = 255, b = 255 }
+COLOR_AMBIENT_DAY     = { r = 255, g = 255, b = 255 }
+COLOR_SUNSET          = { r = 255, g = 140, b = 80  }
+COLOR_AMBIENT_SUNSET  = { r = 255, g = 140, b = 160 }
+
+FOG_COLOR_NIGHT = { r = 5, g = 5, b = 10 }
 
 COLOR_DISPLAY_DARK   = { r = 48,  g = 90,  b = 200 }
 COLOR_DISPLAY_BRIGHT = { r = 255, g = 255, b = 80  }
 
--- skybox constants
-SKYBOX_SCALE = 200
-
-SKYBOX_DAY = 0
-SKYBOX_SUNSET = 1
-SKYBOX_NIGHT = 2
-
--- standard skyboxes
-E_MODEL_SKYBOX_OCEAN_SKY = smlua_model_util_get_id("skybox_ocean_sky_geo")
-E_MODEL_SKYBOX_FLAMING_SKY = smlua_model_util_get_id("skybox_flaming_sky_geo")
-E_MODEL_SKYBOX_UNDERWATER_CITY = smlua_model_util_get_id("skybox_underwater_city_geo")
-E_MODEL_SKYBOX_BELOW_CLOUDS = smlua_model_util_get_id("skybox_below_clouds_geo")
-E_MODEL_SKYBOX_SNOW_MOUNTAINS = smlua_model_util_get_id("skybox_snow_mountains_geo")
-E_MODEL_SKYBOX_DESERT = smlua_model_util_get_id("skybox_desert_geo")
-E_MODEL_SKYBOX_HAUNTED = smlua_model_util_get_id("skybox_haunted_geo")
-E_MODEL_SKYBOX_GREEN_SKY = smlua_model_util_get_id("skybox_green_sky_geo")
-E_MODEL_SKYBOX_ABOVE_CLOUDS = smlua_model_util_get_id("skybox_above_clouds_geo")
-E_MODEL_SKYBOX_PURPLE_SKY = smlua_model_util_get_id("skybox_purple_sky_geo")
-E_MODEL_SKYBOX_SUNRISE = smlua_model_util_get_id("skybox_sunrise_geo")
-E_MODEL_SKYBOX_SUNSET = smlua_model_util_get_id("skybox_sunset_geo")
-E_MODEL_SKYBOX_NIGHT = smlua_model_util_get_id("skybox_night_geo")
-
--- below clouds skyboxes
-E_MODEL_SKYBOX_BELOW_CLOUDS_NIGHT = smlua_model_util_get_id("skybox_below_clouds_night_geo")
-E_MODEL_SKYBOX_BELOW_CLOUDS_SUNRISE = smlua_model_util_get_id("skybox_below_clouds_sunrise_geo")
-E_MODEL_SKYBOX_BELOW_CLOUDS_SUNSET = smlua_model_util_get_id("skybox_below_clouds_sunset_geo")
+-- hook constants
+DNC_HOOK_SET_LIGHTING_COLOR = 0
+DNC_HOOK_SET_AMBIENT_LIGHTING_COLOR = 1
+DNC_HOOK_SET_LIGHTING_DIR = 2
+DNC_HOOK_SET_FOG_COLOR = 3
+DNC_HOOK_SET_FOG_INTENSITY = 4
+DNC_HOOK_SET_DISPLAY_TIME_COLOR = 5
+DNC_HOOK_SET_DISPLAY_TIME_POS = 6
+DNC_HOOK_DELETE_AT_DARK = 7
+DNC_HOOK_SET_TIME = 8
