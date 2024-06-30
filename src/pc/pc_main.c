@@ -318,7 +318,7 @@ void* main_game_init(void* isThreaded) {
     enable_queued_dynos_packs();
     sync_objects_init_system();
 
-    if (gCLIOpts.network != NT_SERVER) {
+    if (gCLIOpts.network != NT_SERVER && !gCLIOpts.skipUpdateCheck) {
         check_for_updates();
     }
 

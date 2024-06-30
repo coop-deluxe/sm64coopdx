@@ -26,6 +26,7 @@ static void print_help(void) {
     printf("--server PORT           Starts the game and creates a new server on PORT.\n");
     printf("--client IP PORT        Starts the game and joins an existing server.\n");
     printf("--playername PLAYERNAME Starts the game with a specific playername.\n");
+    printf("--skip-update-check     Skips the update check when loading the game.\n");
 }
 
 static inline int arg_string(const char *name, const char *value, char *target, int maxLength) {
@@ -80,6 +81,8 @@ bool parse_cli_opts(int argc, char* argv[]) {
             }
         } else if (!strcmp(argv[i], "--playername") && (i + 1) < argc) {
             arg_string("--playername", argv[++i], gCLIOpts.playerName, MAX_CONFIG_STRING);
+        } else if (!strcmp(argv[i], "--skip-update-check")) {
+            gCLIOpts.skipUpdateCheck = true;
         } else if (!strcmp(argv[i], "--help")) {
             print_help();
             return false;
