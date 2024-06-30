@@ -71,7 +71,8 @@ override_field_types = {
 override_field_mutable = {
     "NetworkPlayer": [
         "overrideModelIndex",
-        "overridePalette"
+        "overridePalette",
+        "overridePaletteIndex"
     ],
     "Animation": [
         "values",
@@ -88,6 +89,7 @@ override_field_invisible = {
 }
 
 override_field_deprecated = {
+    "NetworkPlayer": [ "paletteIndex", "overridePaletteIndex", "overridePaletteIndexLp" ]
 }
 
 override_field_immutable = {

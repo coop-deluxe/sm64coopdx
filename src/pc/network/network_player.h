@@ -57,6 +57,11 @@ struct NetworkPlayer {
 
     u16 rxSeqIds[MAX_RX_SEQ_IDS];
     u32 rxPacketHash[MAX_RX_SEQ_IDS];
+
+    // legacy fields to allow mods not to fully break (they don't do anything anymore)
+    u8 paletteIndex;
+    u8 overridePaletteIndex;
+    u8 overridePaletteIndexLp;
 };
 
 extern struct NetworkPlayer gNetworkPlayers[];

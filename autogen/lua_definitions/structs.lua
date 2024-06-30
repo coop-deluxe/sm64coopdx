@@ -1123,7 +1123,10 @@
 --- @field public onRxSeqId integer
 --- @field public overrideModelIndex integer
 --- @field public overridePalette PlayerPalette
+--- @field public overridePaletteIndex integer
+--- @field public overridePaletteIndexLp integer
 --- @field public palette PlayerPalette
+--- @field public paletteIndex integer
 --- @field public ping integer
 --- @field public type integer
 
