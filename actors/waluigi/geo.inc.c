@@ -120,8 +120,9 @@ const GeoLayout waluigi_geo_right_hand[] = {
 // 0x1700053C
 const GeoLayout waluigi_geo_body[] = {
    GEO_ANIMATED_PART(LAYER_OPAQUE, 0, 0, 0, NULL),
-   GEO_SCALE(0x00, 32768),
    GEO_OPEN_NODE(),
+      GEO_SCALE(0x00, 32768),
+      GEO_OPEN_NODE(),
       GEO_ANIMATED_PART(LAYER_OPAQUE, 0, 0, 0, waluigi_butt), // starts sharing solid color with mario_torso (blue)
       GEO_OPEN_NODE(),
          GEO_ASM(0, geo_move_mario_part_from_parent),
@@ -184,6 +185,7 @@ const GeoLayout waluigi_geo_body[] = {
             GEO_CLOSE_NODE(),
          GEO_CLOSE_NODE(),
       GEO_CLOSE_NODE(),
+   GEO_CLOSE_NODE(),
    GEO_CLOSE_NODE(),
    GEO_RETURN(),
 };
@@ -310,6 +312,8 @@ const GeoLayout waluigi_vanish_geo_right_hand[] = {
 const GeoLayout waluigi_vanish_geo_body[] = {
    GEO_ANIMATED_PART(LAYER_TRANSPARENT, 0, 0, 0, NULL),
    GEO_OPEN_NODE(),
+      GEO_SCALE(0x00, 32768),
+      GEO_OPEN_NODE(),
       GEO_ANIMATED_PART(LAYER_TRANSPARENT, 0, 0, 0, waluigi_butt),
       GEO_OPEN_NODE(),
          GEO_ASM(0, geo_move_mario_part_from_parent),
@@ -372,6 +376,7 @@ const GeoLayout waluigi_vanish_geo_body[] = {
             GEO_CLOSE_NODE(),
          GEO_CLOSE_NODE(),
       GEO_CLOSE_NODE(),
+   GEO_CLOSE_NODE(),
    GEO_CLOSE_NODE(),
    GEO_RETURN(),
 };
@@ -461,6 +466,8 @@ const GeoLayout waluigi_metal_geo_right_hand[] = {
 const GeoLayout waluigi_metal_geo_body[] = {
    GEO_ANIMATED_PART(LAYER_OPAQUE, 0, 0, 0, NULL),
    GEO_OPEN_NODE(),
+      GEO_SCALE(0x00, 32768),
+      GEO_OPEN_NODE(),
       GEO_ANIMATED_PART(LAYER_OPAQUE, 0, 0, 0, waluigi_metal_butt), // starts sharing metal texture with the dls below
       GEO_OPEN_NODE(),
          GEO_ASM(0, geo_move_mario_part_from_parent),
@@ -523,6 +530,7 @@ const GeoLayout waluigi_metal_geo_body[] = {
             GEO_CLOSE_NODE(),
          GEO_CLOSE_NODE(),
       GEO_CLOSE_NODE(),
+   GEO_CLOSE_NODE(),
    GEO_CLOSE_NODE(),
    GEO_RETURN(),
 };
@@ -612,6 +620,8 @@ const GeoLayout waluigi_metal_vanish_geo_right_hand[] = {
 const GeoLayout waluigi_metal_vanish_geo_body[] = {
    GEO_ANIMATED_PART(LAYER_TRANSPARENT, 0, 0, 0, NULL),
    GEO_OPEN_NODE(),
+      GEO_SCALE(0x00, 32768),
+      GEO_OPEN_NODE(),
       GEO_ANIMATED_PART(LAYER_TRANSPARENT, 0, 0, 0, waluigi_metal_butt),
       GEO_OPEN_NODE(),
          GEO_ASM(0, geo_move_mario_part_from_parent),
@@ -674,6 +684,7 @@ const GeoLayout waluigi_metal_vanish_geo_body[] = {
             GEO_CLOSE_NODE(),
          GEO_CLOSE_NODE(),
       GEO_CLOSE_NODE(),
+   GEO_CLOSE_NODE(),
    GEO_CLOSE_NODE(),
    GEO_RETURN(),
 };

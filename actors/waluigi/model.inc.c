@@ -1522,9 +1522,9 @@ static const Vtx waluigi_mouth_cap_on_dl_vertex[26] = {
     {{ {87, 59, 70}, 0, {1769, 103}, {249, 62, 110, 255} }},
     {{ {21, 81, 31}, 0, {1371, 773}, {245, 84, 94, 255} }},
     {{ {34, 104, 0}, 0, {1008, 644}, {14, 126, 0, 255} }},
+    {{ {20, 65, -40}, 0, {469, 794}, {204, 44, 149, 255} }},
     {{ {21, 81, -31}, 0, {645, 773}, {245, 84, 162, 255} }},
     {{ {63, 68, -64}, 0, {340, 322}, {242, 80, 158, 255} }},
-    {{ {20, 65, -40}, 0, {469, 794}, {204, 44, 149, 255} }},
 };
 
 static const Vtx waluigi_face_cap_dl_vertex[44] = {
@@ -1742,15 +1742,30 @@ const Gfx waluigi_hair_sideburn_cap_on_dl[] = {
 };
 
 const Gfx waluigi_mouth_cap_on_dl[] = {
-    gsSPVertex(waluigi_mouth_cap_on_dl_vertex + 0, 10, 0),
+    gsSPVertex(waluigi_mouth_cap_on_dl_vertex + 0, 16, 0),
     gsSP1Triangle(0, 1, 2, 0),
-    gsSP1Triangle(0, 2, 3, 0),
-    gsSP1Triangle(0, 3, 4, 0),
-    gsSP1Triangle(5, 0, 4, 0),
-    gsSP1Triangle(4, 6, 5, 0),
-    gsSP1Triangle(4, 7, 6, 0),
-    gsSP1Triangle(7, 8, 6, 0),
-    gsSP1Triangle(8, 9, 6, 0),
+    gsSP1Triangle(1, 0, 3, 0),
+    gsSP1Triangle(3, 0, 4, 0),
+    gsSP1Triangle(4, 0, 5, 0),
+    gsSP1Triangle(6, 4, 5, 0),
+    gsSP1Triangle(4, 6, 7, 0),
+    gsSP1Triangle(6, 8, 7, 0),
+    gsSP1Triangle(8, 9, 7, 0),
+    gsSP1Triangle(10, 7, 9, 0),
+    gsSP1Triangle(10, 9, 11, 0),
+    gsSP1Triangle(3, 10, 11, 0),
+    gsSP1Triangle(3, 11, 12, 0),
+    gsSP1Triangle(12, 11, 13, 0),
+    gsSP1Triangle(12, 13, 14, 0),
+    gsSP1Triangle(13, 15, 14, 0),
+    gsSPVertex(waluigi_mouth_cap_on_dl_vertex + 16, 10, 0),
+    gsSP1Triangle(0, 1, 2, 0),
+    gsSP1Triangle(1, 3, 2, 0),
+    gsSP1Triangle(4, 3, 1, 0),
+    gsSP1Triangle(3, 5, 2, 0),
+    gsSP1Triangle(5, 3, 6, 0),
+    gsSP1Triangle(7, 8, 9, 0),
+    gsSP1Triangle(8, 6, 9, 0),
     gsSPEndDisplayList(),
 };
 
