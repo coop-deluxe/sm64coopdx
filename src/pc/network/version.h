@@ -24,7 +24,7 @@
 #elif !defined(VERSION_US)
     #define GAME_NAME "sm64coopdx-intl"
 #else
-    #define GAME_NAME "sm64coopdx-TESTING"
+    #define GAME_NAME "sm64coopdx"
 #endif
 
 #define MAX_VERSION_LENGTH 32
