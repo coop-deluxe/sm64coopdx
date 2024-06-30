@@ -134,7 +134,6 @@ extern bool         configDjuiThemeCenter;
 extern unsigned int configDjuiThemeFont;
 extern unsigned int configDjuiScale;
 // other
-extern char         configLastVersion[MAX_CONFIG_STRING];
 extern unsigned int configRulesVersion;
 
 void enable_queued_mods(void);

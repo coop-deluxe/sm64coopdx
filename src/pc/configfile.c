@@ -183,7 +183,6 @@ bool         configDjuiThemeCenter                = true;
 unsigned int configDjuiThemeFont                  = FONT_NORMAL;
 unsigned int configDjuiScale                      = 0;
 // other
-char         configLastVersion[MAX_CONFIG_STRING] = "";
 unsigned int configRulesVersion                   = 0;
 
 static const struct ConfigOption options[] = {
@@ -308,7 +307,6 @@ static const struct ConfigOption options[] = {
     {.name = "djui_theme_font",                .type = CONFIG_TYPE_UINT,   .uintValue   = &configDjuiThemeFont},
     {.name = "djui_scale",                     .type = CONFIG_TYPE_UINT,   .uintValue   = &configDjuiScale},
     // other
-    {.name = "last_version",                   .type = CONFIG_TYPE_STRING, .stringValue = (char*)&configLastVersion, .maxStringLength = MAX_CONFIG_STRING},
     {.name = "rules_version",                  .type = CONFIG_TYPE_UINT,   .uintValue   = &configRulesVersion}
 };
 
@@ -686,8 +684,6 @@ NEXT_OPTION:
 
     if (configDjuiTheme >= DJUI_THEME_MAX) { configDjuiTheme = 0; }
     if (configDjuiScale >= 5) { configDjuiScale = 0; }
-
-    if (!strcmp(configLastVersion, "")) { snprintf(configLastVersion, MAX_CONFIG_STRING, "%s", get_version()); }
 
 #ifndef COOPNET
     configNetworkSystem = NS_SOCKET;

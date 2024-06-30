@@ -1,7 +1,6 @@
 #include "djui.h"
 #include "djui_panel.h"
 #include "djui_panel_menu.h"
-#include "djui_panel_changelog.h"
 #include "pc/lua/utils/smlua_misc_utils.h"
 
 static char sInfo[512];
@@ -22,11 +21,7 @@ More features, customization, and power to the Lua API allow modders and players
         djui_text_set_drop_shadow(text, 64, 64, 64, 100);
         djui_text_set_alignment(text, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
 
-        struct DjuiRect* rect1 = djui_rect_container_create(body, 64);
-        {
-            djui_button_left_create(&rect1->base, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
-            djui_button_right_create(&rect1->base, DLANG(INFORMATION, CHANGELOG), DJUI_BUTTON_STYLE_NORMAL, djui_panel_changelog_create);
-        }
+        djui_button_create(body, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
     }
 
     djui_panel_add(caller, panel, NULL);
