@@ -100,6 +100,7 @@ bool main_rom_handler(void) {
     return gRomIsValid;
 }
 
+#ifdef LOADING_SCREEN_SUPPORTED
 void rom_on_drop_file(const char *path) {
     static bool hasDroppedInvalidFile = false;
     if (strlen(path) > 0) {
@@ -109,4 +110,5 @@ void rom_on_drop_file(const char *path) {
         }
     }
 }
+#endif
 }

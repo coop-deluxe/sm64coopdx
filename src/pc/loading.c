@@ -1,8 +1,11 @@
+#include "loading.h"
+
+#ifdef LOADING_SCREEN_SUPPORTED
+
 #include "djui/djui.h"
 #include "pc/djui/djui_unicode.h"
 
 #include "pc_main.h"
-#include "loading.h"
 #include "pc/utils/misc.h"
 #include "pc/cliopts.h"
 #include "rom_checker.h"
@@ -19,12 +22,11 @@ struct LoadingScreen {
 };
 
 static struct LoadingScreen* sLoading = NULL;
+
 pthread_t gLoadingThreadId;
 pthread_mutex_t gLoadingThreadMutex = PTHREAD_MUTEX_INITIALIZER;
 
 bool gIsThreaded = false;
-
-#define RUN_THREADED if (gIsThreaded)
 
 void loading_screen_set_segment_text(const char* text) {
     snprintf(gCurrLoadingSegment.str, 256, text);
@@ -39,7 +41,7 @@ static void loading_screen_produce_one_frame(void) {
 }
 
 static bool loading_screen_on_render(struct DjuiBase* base) {
-    RUN_THREADED { pthread_mutex_lock(&gLoadingThreadMutex); }
+    if (gIsThreaded) { pthread_mutex_lock(&gLoadingThreadMutex); }
 
     u32 windowWidth, windowHeight;
     WAPI.get_dimensions(&windowWidth, &windowHeight);
@@ -76,7 +78,7 @@ static bool loading_screen_on_render(struct DjuiBase* base) {
 
     djui_base_compute(base);
 
-    RUN_THREADED { pthread_mutex_unlock(&gLoadingThreadMutex); }
+    if (gIsThreaded) { pthread_mutex_unlock(&gLoadingThreadMutex); }
 
     return true;
 }
@@ -87,7 +89,7 @@ static void loading_screen_destroy(struct DjuiBase* base) {
     sLoading = NULL;
 }
 
-void init_loading_screen(void) {
+static void init_loading_screen(void) {
     struct LoadingScreen* load = calloc(1, sizeof(struct LoadingScreen));
     struct DjuiBase* base = &load->base;
 
@@ -134,7 +136,10 @@ void init_loading_screen(void) {
 }
 
 void loading_screen_reset(void) {
-    djui_base_destroy(&sLoading->base);
+    if (sLoading) {
+        djui_base_destroy(&sLoading->base);
+        sLoading = NULL;
+    }
     djui_shutdown();
     alloc_display_list_reset();
     gDisplayListHead = NULL;
@@ -151,9 +156,6 @@ void render_loading_screen(void) {
     }
 
     pthread_join(gLoadingThreadId, NULL);
-    gIsThreaded = false;
-
-    loading_screen_reset();
 }
 
 void render_rom_setup_screen(void) {
@@ -165,3 +167,5 @@ void render_rom_setup_screen(void) {
         WAPI.main_loop(loading_screen_produce_one_frame);
     }
 }
+
+#endif

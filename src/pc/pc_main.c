@@ -308,9 +308,7 @@ void game_exit(void) {
     exit(0);
 }
 
-void* main_game_init(void* isThreaded) {
-    gIsThreaded = isThreaded != NULL;
-
+void* main_game_init(UNUSED void*) {
     // load language
     if (!djui_language_init(configLanguage)) { snprintf(configLanguage, MAX_CONFIG_STRING, "%s", ""); }
 
@@ -336,11 +334,6 @@ void* main_game_init(void* isThreaded) {
 
     if (gCLIOpts.fullscreen == 1) { configWindow.fullscreen = true; }
     else if (gCLIOpts.fullscreen == 2) { configWindow.fullscreen = false; }
-
-    if (!gGfxInited) {
-        gfx_init(&WAPI, &RAPI, TITLE);
-        WAPI.set_keyboard_callbacks(keyboard_on_key_down, keyboard_on_key_up, keyboard_on_all_keys_up, keyboard_on_text_input);
-    }
 
     audio_init();
     sound_init();
@@ -403,10 +396,12 @@ int main(int argc, char *argv[]) {
 #ifdef LOADING_SCREEN_SUPPORTED
     bool threadSuccess = false;
     if (!gCLIOpts.hideLoadingScreen && pthread_mutex_init(&gLoadingThreadMutex, NULL) == 0) {
-        if (pthread_create(&gLoadingThreadId, NULL, main_game_init, (void*) 1) == 0) {
+        gIsThreaded = true;
+        if (pthread_create(&gLoadingThreadId, NULL, main_game_init, NULL) == 0) {
             render_loading_screen(); // render the loading screen while the game is setup
             threadSuccess = true;
         }
+        gIsThreaded = false;
         pthread_mutex_destroy(&gLoadingThreadMutex);
     }
     if (!threadSuccess)
@@ -423,6 +418,10 @@ int main(int argc, char *argv[]) {
     if (!audio_api && audio_sdl.init()) { audio_api = &audio_sdl; }
 #endif
     if (!audio_api) { audio_api = &audio_null; }
+
+#ifdef LOADING_SCREEN_SUPPORTED
+    loading_screen_reset();
+#endif
 
     // initialize djui
     djui_init();
