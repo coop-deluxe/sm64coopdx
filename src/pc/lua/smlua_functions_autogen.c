@@ -14484,6 +14484,25 @@ int smlua_func_passes_pvp_interaction_checks(lua_State* L) {
     return 1;
 }
 
+int smlua_func_should_push_or_pull_door(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "should_push_or_pull_door", 2, top);
+        return 0;
+    }
+
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "should_push_or_pull_door"); return 0; }
+    struct Object* o = (struct Object*)smlua_to_cobject(L, 2, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "should_push_or_pull_door"); return 0; }
+
+    lua_pushinteger(L, should_push_or_pull_door(m, o));
+
+    return 1;
+}
+
 int smlua_func_take_damage_and_knock_back(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -33703,6 +33722,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "mario_stop_riding_object", smlua_func_mario_stop_riding_object);
     smlua_bind_function(L, "mario_throw_held_object", smlua_func_mario_throw_held_object);
     smlua_bind_function(L, "passes_pvp_interaction_checks", smlua_func_passes_pvp_interaction_checks);
+    smlua_bind_function(L, "should_push_or_pull_door", smlua_func_should_push_or_pull_door);
     smlua_bind_function(L, "take_damage_and_knock_back", smlua_func_take_damage_and_knock_back);
 
     // lag_compensation.h

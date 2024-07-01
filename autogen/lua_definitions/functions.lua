@@ -3800,6 +3800,13 @@ end
 --- @param m MarioState
 --- @param o Object
 --- @return integer
+function should_push_or_pull_door(m, o)
+    -- ...
+end
+
+--- @param m MarioState
+--- @param o Object
+--- @return integer
 function take_damage_and_knock_back(m, o)
     -- ...
 end

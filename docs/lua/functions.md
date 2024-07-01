@@ -884,6 +884,7 @@
    - [mario_stop_riding_object](functions-3.md#mario_stop_riding_object)
    - [mario_throw_held_object](functions-3.md#mario_throw_held_object)
    - [passes_pvp_interaction_checks](functions-3.md#passes_pvp_interaction_checks)
+   - [should_push_or_pull_door](functions-3.md#should_push_or_pull_door)
    - [take_damage_and_knock_back](functions-3.md#take_damage_and_knock_back)
 
 <br />
