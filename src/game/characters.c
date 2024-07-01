@@ -247,9 +247,6 @@ struct Character gCharacters[CT_MAX] = {
         // anim
         .animOffsetEnabled     = false,
 
-        // character anims
-        .animWalking =                          WALUIGI_ANIM_WALKING,
-
         // sounds
         .soundFreqScale        = 0.99f,
         .soundYahWahHoo        = SOUND_LUIGI_YAH_WAH_HOO,

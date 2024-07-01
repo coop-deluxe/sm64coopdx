@@ -5497,9 +5497,6 @@ MARIO_ANIM_FORWARD_SPINNING_FLIP = 207
 --- @type MarioAnimID
 MARIO_ANIM_TRIPLE_JUMP_FLY = 208
 
---- @type MarioAnimID
-WALUIGI_ANIM_WALKING = 209
-
 --- @class MarioCapGSCId
 
 --- @type MarioCapGSCId
