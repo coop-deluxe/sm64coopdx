@@ -6,9 +6,9 @@
 #include <ctype.h>
 
 #ifdef _WIN32
-    #include <windows.h>
-    #include <shlobj.h>
-    #include <shlwapi.h>
+#include <windows.h>
+#include <shlobj.h>
+#include <shlwapi.h>
 #endif
 
 #include "cliopts.h"

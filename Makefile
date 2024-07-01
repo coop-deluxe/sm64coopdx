@@ -753,6 +753,12 @@ else ifeq ($(findstring SDL,$(WINDOW_API)),SDL)
    endif
 endif
 
+ifeq ($(WINDOW_API),DUMMY)
+  ifeq ($(WINDOWS_BUILD),1)
+    BACKEND_LDFLAGS += -lole32 -luuid -lshlwapi
+  endif
+endif
+
 ifneq (,$(findstring SDL2,$(AUDIO_API)$(WINDOW_API)$(CONTROLLER_API)))
   SDL2_USED := 1
 endif

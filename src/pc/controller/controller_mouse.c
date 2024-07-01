@@ -1,16 +1,14 @@
 #include "controller_mouse.h"
 
 #ifdef WAPI_DXGI
-    #define WIN32_LEAN_AND_MEAN
-    #include <windows.h>
-    extern HWND gfx_dxgi_get_h_wnd(void);
-    static bool mouse_relative_prev_cursor_state;
-
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+extern HWND gfx_dxgi_get_h_wnd(void);
+static bool mouse_relative_prev_cursor_state;
 #elif defined(CAPI_SDL1)
-    #include <SDL/SDL.h>
-
+#include <SDL/SDL.h>
 #elif defined(CAPI_SDL2)
-    #include <SDL2/SDL.h>
+#include <SDL2/SDL.h>
 #endif
 
 bool mouse_init_ok;
@@ -39,10 +37,8 @@ void controller_mouse_read_window(void) {
         mouse_window_x = p.x;
         mouse_window_y = p.y;
     }
-
 #elif defined(CAPI_SDL1) || defined(CAPI_SDL2)
     mouse_window_buttons = SDL_GetMouseState(&mouse_window_x, &mouse_window_y);
-
 #endif
 }
 
@@ -81,7 +77,7 @@ void controller_mouse_enter_relative(void) {
     if (!mouse_relative_enabled) {
         mouse_relative_enabled = true;
 
-    #if defined(WAPI_DXGI)
+#if defined(WAPI_DXGI)
         CURSORINFO ci;
         ci.cbSize = sizeof(CURSORINFO);
         if (GetCursorInfo(&ci)) {
@@ -91,14 +87,11 @@ void controller_mouse_enter_relative(void) {
         }
 
         ShowCursor(FALSE);
-
-    #elif defined(CAPI_SDL1)
+#elif defined(CAPI_SDL1)
         SDL_WM_GrabInput(SDL_GRAB_ON);
-
-    #elif defined(CAPI_SDL2)
+#elif defined(CAPI_SDL2)
         SDL_SetRelativeMouseMode(SDL_TRUE);
-
-    #endif
+#endif
     }
 }
 
@@ -106,16 +99,13 @@ void controller_mouse_leave_relative(void) {
     if (mouse_relative_enabled) {
         mouse_relative_enabled = false;
 
-    #if defined(WAPI_DXGI)
+#if defined(WAPI_DXGI)
         ShowCursor(mouse_relative_prev_cursor_state);
-
-    #elif defined(CAPI_SDL1)
+#elif defined(CAPI_SDL1)
         SDL_WM_GrabInput(SDL_GRAB_OFF);
-
-    #elif defined(CAPI_SDL2)
+#elif defined(CAPI_SDL2)
         SDL_SetRelativeMouseMode(SDL_FALSE);
-
-    #endif
+#endif
     }
 }
 

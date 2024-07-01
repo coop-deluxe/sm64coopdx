@@ -2542,13 +2542,13 @@ void print_sound_mode_menu_strings(void) {
         } else {
             gDPSetEnvColor(gDisplayListHead++, 0, 0, 0, sTextBaseAlpha);
         }
-        #ifndef VERSION_JP
+#ifndef VERSION_JP
             // Mode names are centered correctly on US and Shindou
             textX = get_str_x_pos_from_center(mode * 74 + 87, textSoundModes[mode], 10.0f);
             print_generic_string(textX, 87, textSoundModes[mode]);
-        #else
+#else
             print_generic_string(mode * 74 + 67, 87, textSoundModes[mode]);
-        #endif
+#endif
     }
 #endif
 

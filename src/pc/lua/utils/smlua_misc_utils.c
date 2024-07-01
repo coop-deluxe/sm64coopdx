@@ -1,3 +1,4 @@
+#include <inttypes.h>
 #include "sm64.h"
 #include "types.h"
 
