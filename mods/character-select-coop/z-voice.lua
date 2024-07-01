@@ -85,7 +85,7 @@ local function custom_character_sound(m, sound)
     end
 
     -- play the sample
-    -- audio_sample_stop(sample) -- doesn't seem to do anything?
+    audio_sample_stop(sample)
     if sound == CHAR_SOUND_SNORING1 or sound == CHAR_SOUND_SNORING2 or sound == CHAR_SOUND_SNORING3 then
         audio_sample_play(sample, m.pos, 0.5)
     else
