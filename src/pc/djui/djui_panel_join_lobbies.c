@@ -152,7 +152,9 @@ void djui_panel_join_lobbies_create(struct DjuiBase* caller, const char* passwor
     djui_panel_join_lobby_description_create();
 
     struct DjuiBase* defaultBase = NULL;
-    struct DjuiThreePanel* panel = djui_panel_menu_create(private ? DLANG(LOBBIES, PRIVATE_LOBBIES) : DLANG(LOBBIES, PUBLIC_LOBBIES));
+    struct DjuiThreePanel* panel = djui_panel_menu_create(
+        private ? DLANG(LOBBIES, PRIVATE_LOBBIES) : DLANG(LOBBIES, PUBLIC_LOBBIES),
+        true);
     struct DjuiBase* body = djui_three_panel_get_body(panel);
     {
         sLobbyPaginated = djui_paginated_create(body, 10);

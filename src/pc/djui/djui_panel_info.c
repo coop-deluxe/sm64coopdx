@@ -6,7 +6,7 @@
 static char sInfo[512];
 
 void djui_panel_info_create(struct DjuiBase *caller) {
-    struct DjuiThreePanel *panel = djui_panel_menu_create(DLANG(INFORMATION, INFORMATION_TITLE));
+    struct DjuiThreePanel *panel = djui_panel_menu_create(DLANG(INFORMATION, INFORMATION_TITLE), false);
     struct DjuiBase *body = djui_three_panel_get_body(panel);
     {
         snprintf(sInfo, 512, "\

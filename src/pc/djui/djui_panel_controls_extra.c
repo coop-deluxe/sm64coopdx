@@ -6,7 +6,7 @@
 void djui_panel_controls_extra_create(struct DjuiBase* caller) {
     f32 bindBodyHeight = 28 * 12 + 1 * 10;
 
-    struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(CONTROLS, CONTROLS));
+    struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(CONTROLS, CONTROLS), false);
     struct DjuiBase* body = djui_three_panel_get_body(panel);
     {
         struct DjuiFlowLayout* bindBody = djui_flow_layout_create(body);

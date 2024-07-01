@@ -57,7 +57,7 @@ void djui_panel_host_message_create(struct DjuiBase* caller) {
 
     f32 textHeight = 32 * 0.8125f * warningLines + 8;
 
-    struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(HOST_MESSAGE, INFO_TITLE));
+    struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(HOST_MESSAGE, INFO_TITLE), false);
     struct DjuiBase* body = djui_three_panel_get_body(panel);
     {
         struct DjuiText* text1 = djui_text_create(body, warningMessage);

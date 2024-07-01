@@ -155,7 +155,7 @@ void djui_panel_join_direct_do_join(struct DjuiBase* caller) {
 
 void djui_panel_join_direct_create(struct DjuiBase* caller) {
     struct DjuiBase* defaultBase = NULL;
-    struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(JOIN, JOIN_TITLE));
+    struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(JOIN, JOIN_TITLE), false);
     struct DjuiBase* body = djui_three_panel_get_body(panel);
     {
         struct DjuiText* text1 = djui_text_create(body, DLANG(JOIN, JOIN_SOCKET));

@@ -19,7 +19,7 @@ static void djui_panel_rules_accept(struct DjuiBase* caller) {
 }
 
 void djui_panel_rules_create(struct DjuiBase* caller) {
-    struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(RULES, RULES_TITLE));
+    struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(RULES, RULES_TITLE), false);
     struct DjuiBase* body = djui_three_panel_get_body(panel);
     {
         snprintf(sRules, 512, "%s\n\

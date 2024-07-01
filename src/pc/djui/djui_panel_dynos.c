@@ -38,7 +38,7 @@ static void djui_panel_dynos_destroy(UNUSED struct DjuiBase* caller) {
 void djui_panel_dynos_create(struct DjuiBase* caller) {
     gDjuiInPlayerMenu = true;
     int packCount = dynos_pack_get_count();
-    struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(DYNOS, DYNOS));
+    struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(DYNOS, DYNOS), true);
     struct DjuiBase* body = djui_three_panel_get_body(panel);
 
     {

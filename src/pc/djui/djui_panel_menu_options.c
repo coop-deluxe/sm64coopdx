@@ -50,7 +50,7 @@ static void djui_panel_menu_options_djui_setting_change(UNUSED struct DjuiBase* 
 }
 
 void djui_panel_main_menu_create(struct DjuiBase* caller) {
-    struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(MENU_OPTIONS, MENU_TITLE));
+    struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(MENU_OPTIONS, MENU_TITLE), false);
     struct DjuiBase* body = djui_three_panel_get_body(panel);
 
     {

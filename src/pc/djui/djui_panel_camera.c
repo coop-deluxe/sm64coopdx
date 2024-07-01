@@ -12,7 +12,7 @@ static void djui_panel_camera_value_changed(UNUSED struct DjuiBase* caller) {
 }
 
 void djui_panel_camera_create(struct DjuiBase* caller) {
-    struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(CAMERA, CAMERA));
+    struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(CAMERA, CAMERA), false);
     struct DjuiBase* body = djui_three_panel_get_body(panel);
     {
         djui_checkbox_create(body, DLANG(CAMERA, FREE_CAMERA), &configEnableCamera, djui_panel_camera_value_changed);

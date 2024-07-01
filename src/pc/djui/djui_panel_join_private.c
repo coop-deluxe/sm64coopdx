@@ -17,7 +17,7 @@ static void djui_panel_join_private_lobbies(struct DjuiBase* caller) {
 
 void djui_panel_join_private_create(struct DjuiBase* caller) {
     struct DjuiBase* defaultBase = NULL;
-    struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(LOBBIES, PRIVATE_LOBBIES));
+    struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(LOBBIES, PRIVATE_LOBBIES), true);
     struct DjuiBase* body = djui_three_panel_get_body(panel);
     {
         struct DjuiText* text1 = djui_text_create(body, DLANG(LOBBIES, ENTER_PASSWORD));

@@ -23,7 +23,7 @@ static void djui_panel_compatibility_checkbox_on_value_change(UNUSED struct Djui
 
 #ifdef DEVELOPMENT
 void djui_panel_options_debug_create(struct DjuiBase* caller) {
-    struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(MISC, DEBUG_TITLE));
+    struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(MISC, DEBUG_TITLE), false);
     struct DjuiBase* body = djui_three_panel_get_body(panel);
 
     {
@@ -59,7 +59,7 @@ static void djui_panel_options_open_user_folder(UNUSED struct DjuiBase* caller) 
 }
 
 void djui_panel_misc_create(struct DjuiBase* caller) {
-    struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(MISC, MISC_TITLE));
+    struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(MISC, MISC_TITLE), false);
     struct DjuiBase* body = djui_three_panel_get_body(panel);
 
     djui_themes_init();
@@ -69,7 +69,7 @@ void djui_panel_misc_create(struct DjuiBase* caller) {
 #ifndef DEVELOPMENT
         djui_checkbox_create(body, DLANG(MISC, LUA_PROFILER), &configLuaProfiler, NULL);
 #endif
-        
+
         djui_button_create(body, DLANG(MISC, LANGUAGE), DJUI_BUTTON_STYLE_NORMAL, djui_panel_language_create);
         djui_button_create(body, DLANG(MISC, MENU_OPTIONS), DJUI_BUTTON_STYLE_NORMAL, djui_panel_main_menu_create);
         djui_button_create(body, DLANG(MISC, INFORMATION), DJUI_BUTTON_STYLE_NORMAL, djui_panel_info_create);

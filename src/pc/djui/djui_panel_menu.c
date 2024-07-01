@@ -46,19 +46,11 @@ void djui_panel_menu_back(UNUSED struct DjuiBase* base) {
     djui_panel_back();
 }
 
-struct DjuiThreePanel* djui_panel_menu_create(char* headerText) {
+struct DjuiThreePanel* djui_panel_menu_create(char* headerText, bool forcedLeftSide) {
     struct DjuiThreePanel* panel = djui_three_panel_create(&gDjuiRoot->base, 64, 0, 0);
     struct DjuiTheme* theme = gDjuiThemes[configDjuiTheme];
     struct DjuiThreePanelTheme three = theme->threePanels;
-    bool center = configDjuiThemeCenter &&
-        strcmp(headerText, DLANG(HOST_MODS, MODS)) &&
-        strcmp(headerText, DLANG(HOST_MODS, ROMHACKS)) &&
-        strcmp(headerText, DLANG(LOBBIES, PUBLIC_LOBBIES)) &&
-        strcmp(headerText, DLANG(LOBBIES, PRIVATE_LOBBIES)) &&
-        strcmp(headerText, DLANG(JOIN_MESSAGE, JOINING)) &&
-        strcmp(headerText, DLANG(PLAYER, PLAYER_TITLE)) &&
-        strcmp(headerText, DLANG(PLAYER, PALETTE)) &&
-        strcmp(headerText, DLANG(DYNOS, DYNOS));
+    bool center = !forcedLeftSide && configDjuiThemeCenter;
     f32 widthMultiplier = center ? DJUI_THEME_CENTERED_WIDTH : 1.0f;
     f32 heightMultiplier = center ? DJUI_THEME_CENTERED_HEIGHT : 1.0f;
 

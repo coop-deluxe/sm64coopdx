@@ -55,7 +55,7 @@ void djui_panel_pause_create(struct DjuiBase* caller) {
     if (gDjuiChatBoxFocus) { djui_chat_box_toggle(); }
 
     struct DjuiBase* defaultBase = NULL;
-    struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(PAUSE, PAUSE_TITLE));
+    struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(PAUSE, PAUSE_TITLE), false);
     struct DjuiBase* body = djui_three_panel_get_body(panel);
     {
         struct DjuiRect* rect1 = djui_rect_container_create(body, 64);

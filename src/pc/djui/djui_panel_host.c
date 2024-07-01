@@ -73,12 +73,12 @@ static void djui_panel_host_do_host(struct DjuiBase* caller) {
         djui_inputbox_select_all(sInputboxPort);
         return;
     }
-    
+
     // Doesn't let you host if the player limit is not good
     if (configAmountofPlayers < 1 || configAmountofPlayers > MAX_PLAYERS) {
         return;
     }
-    
+
     configHostPort = atoi(sInputboxPort->buffer);
 
     if (gNetworkType == NT_SERVER) {
@@ -99,9 +99,9 @@ static void djui_panel_host_do_host(struct DjuiBase* caller) {
 
 void djui_panel_host_create(struct DjuiBase* caller) {
     struct DjuiBase* defaultBase = NULL;
-    struct DjuiThreePanel* panel = djui_panel_menu_create((gNetworkType == NT_SERVER)
-            ? DLANG(HOST, SERVER_TITLE)
-            : DLANG(HOST, HOST_TITLE));
+    struct DjuiThreePanel* panel = djui_panel_menu_create(
+        (gNetworkType == NT_SERVER) ? DLANG(HOST, SERVER_TITLE) : DLANG(HOST, HOST_TITLE),
+        false);
     struct DjuiBase* body = djui_three_panel_get_body(panel);
     {
         char* nChoices[] = { DLANG(HOST, DIRECT_CONNECTION), DLANG(HOST, COOPNET) };
@@ -170,7 +170,7 @@ void djui_panel_host_create(struct DjuiBase* caller) {
                 }
             }
         }
-        
+
         struct DjuiRect* rect2 = djui_rect_container_create(body, 32);
         {
             struct DjuiText* text1 = djui_text_create(&rect2->base, DLANG(HOST, SAVE_SLOT));

@@ -75,7 +75,7 @@ static void djui_panel_language_destroy(UNUSED struct DjuiBase* caller) {
 }
 
 void djui_panel_language_create(struct DjuiBase* caller) {
-    struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(LANGUAGE, LANGUAGE));
+    struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(LANGUAGE, LANGUAGE), false);
     struct DjuiBase* body = djui_three_panel_get_body(panel);
     sLanguageChanged = false;
 

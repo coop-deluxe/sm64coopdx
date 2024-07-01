@@ -25,7 +25,7 @@ static void djui_panel_main_quit(struct DjuiBase* caller) {
 }
 
 void djui_panel_main_create(struct DjuiBase* caller) {
-    struct DjuiThreePanel* panel = djui_panel_menu_create("");
+    struct DjuiThreePanel* panel = djui_panel_menu_create("", false);
     {
         struct DjuiBase* body = djui_three_panel_get_body(panel);
         {

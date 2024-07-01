@@ -124,10 +124,9 @@ void djui_panel_host_mods_create(struct DjuiBase* caller) {
     mods_update_selectable();
     djui_panel_host_mods_description_create();
 
-    struct DjuiThreePanel* panel = djui_panel_menu_create(isRomHacks
-        ? DLANG(HOST_MODS, ROMHACKS)
-        : DLANG(HOST_MODS, MODS)
-    );
+    struct DjuiThreePanel* panel = djui_panel_menu_create(
+        isRomHacks ? DLANG(HOST_MODS, ROMHACKS) : DLANG(HOST_MODS, MODS),
+        true);
 
     struct DjuiBase* body = djui_three_panel_get_body(panel);
     {

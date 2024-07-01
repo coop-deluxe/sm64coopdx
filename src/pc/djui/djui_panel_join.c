@@ -21,7 +21,7 @@ void djui_panel_join_create(struct DjuiBase* caller) {
 #ifndef COOPNET
     djui_panel_join_direct_create(caller);
 #else
-    struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(JOIN, JOIN_TITLE));
+    struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(JOIN, JOIN_TITLE), false);
     struct DjuiBase* body = djui_three_panel_get_body(panel);
     {
         djui_button_create(body, DLANG(JOIN, PUBLIC_LOBBIES), DJUI_BUTTON_STYLE_NORMAL, djui_panel_join_public_lobbies);

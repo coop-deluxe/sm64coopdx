@@ -221,7 +221,7 @@ static void djui_panel_player_edit_palette_create(struct DjuiBase* caller) {
 
     char* sPartStrings[PLAYER_PART_MAX] = { DLANG(PLAYER, OVERALLS), DLANG(PLAYER, SHIRT), DLANG(PLAYER, GLOVES), DLANG(PLAYER, SHOES), DLANG(PLAYER, HAIR), DLANG(PLAYER, SKIN), DLANG(PLAYER, CAP), DLANG(PLAYER, EMBLEM) };
 
-    struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(PLAYER, PALETTE));
+    struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(PLAYER, PALETTE), true);
 
     // A bit of a gross hack to send out palette changes and update the palette preset selection box on unpause AND
     // pressing the Back button
@@ -395,7 +395,7 @@ void djui_panel_player_create(struct DjuiBase* caller) {
     djui_panel_player_update_camera_cutscene();
     gDjuiInPlayerMenu = true;
 
-    struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(PLAYER, PLAYER_TITLE));
+    struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(PLAYER, PLAYER_TITLE), true);
     struct DjuiBase* body = djui_three_panel_get_body(panel);
     {
         struct DjuiRect* rect1 = djui_rect_container_create(body, 32);
