@@ -59,6 +59,8 @@ HEADLESS ?= 0
 ICON ?= 1
 # Use .app (for macOS)
 USE_APP ?= 1
+# Make some small adjustments for handheld devices
+HANDHELD ?= 0
 
 # Various workarounds for weird toolchains
 NO_BZERO_BCOPY ?= 0
@@ -1029,6 +1031,12 @@ endif
 ifeq ($(ENHANCE_LEVEL_TEXTURES),1)
   CC_CHECK_CFLAGS += -DENHANCE_LEVEL_TEXTURES
   CFLAGS += -DENHANCE_LEVEL_TEXTURES
+endif
+
+# Check for handheld option
+ifeq ($(HANDHELD),1)
+  CC_CHECK_CFLAGS += -DHANDHELD
+  CFLAGS += -DHANDHELD
 endif
 
 # Check for no bzero/bcopy workaround option

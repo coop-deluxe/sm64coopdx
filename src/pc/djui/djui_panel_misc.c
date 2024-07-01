@@ -76,10 +76,12 @@ void djui_panel_misc_create(struct DjuiBase* caller) {
 #ifdef DEVELOPMENT
         djui_button_create(body, DLANG(MISC, DEBUG), DJUI_BUTTON_STYLE_NORMAL, djui_panel_options_debug_create);
 #endif
+#ifndef HANDHELD
 #if defined(_WIN32) || defined(_WIN64)
         djui_button_create(body, DLANG(OPTIONS, APPDATA), DJUI_BUTTON_STYLE_NORMAL, djui_panel_options_open_user_folder);
 #elif __linux__ || __APPLE__ || __MACH__
         djui_button_create(body, DLANG(OPTIONS, USER_FOLDER), DJUI_BUTTON_STYLE_NORMAL, djui_panel_options_open_user_folder);
+#endif
 #endif
         djui_button_create(body, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
     }
