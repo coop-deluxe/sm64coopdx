@@ -214,7 +214,7 @@ local function character_get_number_from_string(name)
 end
 
 ---@param m MarioState
-local function character_get_voice(m)
+function character_get_voice(m)
     return characterVoices[gPlayerSyncTable[m.playerIndex].modelId]
 end
 

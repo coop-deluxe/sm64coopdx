@@ -33,10 +33,10 @@ VOICETABLE_TOADETTE = {
     [CHAR_SOUND_MAMA_MIA] = "toadette_ooh.ogg",
     [CHAR_SOUND_DOH] = "toadette_oof.ogg",
     [CHAR_SOUND_HRMM] = "toadette_pickup.ogg",
-    [CHAR_SOUND_PANTING] = "toadette_pant",
-    [CHAR_SOUND_UH] = "toadette_oof_3.ogg",
-    [CHAR_SOUND_UH2] = "toadette_oof_4.ogg",
-    [CHAR_SOUND_UH2_2] = "toadette_oof_5.ogg"
+    [CHAR_SOUND_PANTING] = "toadette_pant.ogg",
+    [CHAR_SOUND_UH] = "toadette_oof2.ogg",
+    [CHAR_SOUND_UH2] = "toadette_oof2.ogg",
+    [CHAR_SOUND_UH2_2] = "toadette_oof2.ogg"
 }
 
 --MAKING VOICE CLIPS FOR ATM. USE PLACEHOLDER VOICE CLIPS!

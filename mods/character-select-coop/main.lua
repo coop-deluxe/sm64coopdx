@@ -48,6 +48,8 @@ characterTable = {
     },
 }
 
+gPlayerSyncTable[0].offset = 0
+
 characterCaps = {}
 characterCelebrationStar = {}
 characterColorPresets = {}
@@ -387,6 +389,14 @@ local menuActBlacklist = {
 }
 
 local faceAngle = 0
+local altOffsetActs = {
+    [ACT_CROUCH_SLIDE] = true,
+    [ACT_READING_AUTOMATIC_DIALOG] = true,
+    [ACT_DEATH_EXIT_LAND] = true,
+    [ACT_SLIDE_KICK] = false,
+    [ACT_SLIDE_KICK_SLIDE] = false,
+    [ACT_GROUND_POUND] = true,
+}
 
 --- @param m MarioState
 local function mario_update(m)
@@ -428,6 +438,13 @@ local function mario_update(m)
             gNetworkPlayers[0].overrideModelIndex = characterTable[1].forceChar
             currChar = 1
         end
+
+        gPlayerSyncTable[0].offset = characterTable[currChar].offset
+        --[[
+        for i = 0, MAX_PLAYERS-1 do
+            local m = gMarioStates[i]
+        end
+        ]]
 
         if menuAndTransition then
             camera_freeze()
@@ -476,29 +493,11 @@ local function mario_update(m)
             optionTable[i].optionBeingSet = false
         end
     end
-end
-
-local altOffsetActs = {
-    [ACT_CROUCH_SLIDE] = true,
-    [ACT_READING_AUTOMATIC_DIALOG] = true,
-    [ACT_DEATH_EXIT_LAND] = true,
-    [ACT_SLIDE_KICK] = false,
-    [ACT_SLIDE_KICK_SLIDE] = false,
-    [ACT_GROUND_POUND] = true,
-}
-
--- Vertical Offsets
-local function on_object_render(obj)
-    if get_id_from_behavior(obj.behavior) ~= id_bhvMario then
-        return
-    end
     
-    for i=0, MAX_PLAYERS-1 do
-        local m = gMarioStates[i]
-        if characterTable[currChar].offset ~= 0 then
-            if altOffsetActs[m.action] ~= false then
-                m.marioObj.header.gfx.pos.y = (altOffsetActs[m.action] and m.pos.y or m.marioObj.header.gfx.pos.y) + characterTable[currChar].offset
-            end
+    local offset = gPlayerSyncTable[m.playerIndex].offset
+    if offset ~= 0 and offset ~= nil then
+        if altOffsetActs[m.action] ~= false then
+            m.marioObj.header.gfx.pos.y = (altOffsetActs[m.action] and m.pos.y or m.marioObj.header.gfx.pos.y) + offset
         end
     end
 end
@@ -560,7 +559,6 @@ end
 
 hook_event(HOOK_MARIO_UPDATE, mario_update)
 hook_event(HOOK_OBJECT_SET_MODEL, set_model)
-hook_event(HOOK_ON_OBJECT_RENDER, on_object_render)
 
 ------------------
 -- Menu Handler --
@@ -1313,3 +1311,13 @@ local function chat_command(msg)
 end
 
 hook_chat_command("char-select", "- Opens the Character Select Menu", chat_command)
+
+--------------
+-- Mod Menu --
+--------------
+
+local function open_cs_menu()
+    menu = true
+end
+
+hook_mod_menu_button("Open Menu", open_cs_menu)
