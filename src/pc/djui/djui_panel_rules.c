@@ -9,7 +9,6 @@
 static char sRules[512];
 
 static void djui_panel_rules_deny(struct DjuiBase* caller) {
-    configRulesVersion = 0;
     djui_panel_menu_back(caller);
 }
 
@@ -57,7 +56,7 @@ DLANG(RULES, RULE_5));
 
             struct DjuiRect* rect = djui_rect_container_create(body, 64);
             {
-                djui_button_left_create(&rect->base, DLANG(MENU, NO), DJUI_BUTTON_STYLE_BACK, djui_panel_rules_deny);
+                djui_button_left_create(&rect->base, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_rules_deny);
                 djui_button_right_create(&rect->base, DLANG(MENU, YES), DJUI_BUTTON_STYLE_NORMAL, djui_panel_rules_accept);
             }
         } else {
