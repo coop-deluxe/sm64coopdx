@@ -1706,6 +1706,24 @@
 
 <br />
 
+## [skip_camera_interpolation](#skip_camera_interpolation)
+
+### Lua Example
+`skip_camera_interpolation()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void skip_camera_interpolation(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [soft_reset_camera](#soft_reset_camera)
 
 ### Lua Example
@@ -3161,6 +3179,26 @@
 
 <br />
 
+## [sound_get_level_intensity](#sound_get_level_intensity)
+
+### Lua Example
+`local numberValue = sound_get_level_intensity(distance)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| distance | `number` |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 sound_get_level_intensity(f32 distance);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [stop_background_music](#stop_background_music)
 
 ### Lua Example
@@ -3348,6 +3386,87 @@
 <br />
 
 
+## [create_dialog_box](#create_dialog_box)
+
+### Lua Example
+`create_dialog_box(dialog)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dialog | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void create_dialog_box(s16 dialog);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [create_dialog_box_with_response](#create_dialog_box_with_response)
+
+### Lua Example
+`create_dialog_box_with_response(dialog)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dialog | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void create_dialog_box_with_response(s16 dialog);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [create_dialog_box_with_var](#create_dialog_box_with_var)
+
+### Lua Example
+`create_dialog_box_with_var(dialog, dialogVar)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dialog | `integer` |
+| dialogVar | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void create_dialog_box_with_var(s16 dialog, s32 dialogVar);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [create_dialog_inverted_box](#create_dialog_inverted_box)
+
+### Lua Example
+`create_dialog_inverted_box(dialog)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dialog | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void create_dialog_inverted_box(s16 dialog);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [reset_dialog_override_color](#reset_dialog_override_color)
 
 ### Lua Example
@@ -3379,6 +3498,24 @@
 
 ### C Prototype
 `void reset_dialog_override_pos();`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [reset_dialog_render_state](#reset_dialog_render_state)
+
+### Lua Example
+`reset_dialog_render_state()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void reset_dialog_render_state(void);`
 
 [:arrow_up_small:](#)
 
@@ -3427,6 +3564,26 @@
 
 ### C Prototype
 `void set_dialog_override_pos(s16 x, s16 y);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_menu_mode](#set_menu_mode)
+
+### Lua Example
+`set_menu_mode(mode)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| mode | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_menu_mode(s16 mode);`
 
 [:arrow_up_small:](#)
 
@@ -3519,6 +3676,182 @@
 
 <br />
 
+## [interact_bbh_entrance](#interact_bbh_entrance)
+
+### Lua Example
+`local integerValue = interact_bbh_entrance(m, interactType, o)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| interactType | `integer` |
+| o | [Object](structs.md#Object) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 interact_bbh_entrance(struct MarioState *m, UNUSED u32 interactType, struct Object *o);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [interact_bounce_top](#interact_bounce_top)
+
+### Lua Example
+`local integerValue = interact_bounce_top(m, interactType, o)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| interactType | `integer` |
+| o | [Object](structs.md#Object) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 interact_bounce_top(struct MarioState *m, UNUSED u32 interactType, struct Object *o);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [interact_breakable](#interact_breakable)
+
+### Lua Example
+`local integerValue = interact_breakable(m, interactType, o)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| interactType | `integer` |
+| o | [Object](structs.md#Object) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 interact_breakable(struct MarioState *m, UNUSED u32 interactType, struct Object *o);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [interact_bully](#interact_bully)
+
+### Lua Example
+`local integerValue = interact_bully(m, interactType, o)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| interactType | `integer` |
+| o | [Object](structs.md#Object) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 interact_bully(struct MarioState *m, UNUSED u32 interactType, struct Object *o);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [interact_cannon_base](#interact_cannon_base)
+
+### Lua Example
+`local integerValue = interact_cannon_base(m, interactType, o)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| interactType | `integer` |
+| o | [Object](structs.md#Object) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 interact_cannon_base(struct MarioState *m, UNUSED u32 interactType, struct Object *o);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [interact_cap](#interact_cap)
+
+### Lua Example
+`local integerValue = interact_cap(m, interactType, o)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| interactType | `integer` |
+| o | [Object](structs.md#Object) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 interact_cap(struct MarioState *m, UNUSED u32 interactType, struct Object *o);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [interact_clam_or_bubba](#interact_clam_or_bubba)
+
+### Lua Example
+`local integerValue = interact_clam_or_bubba(m, interactType, o)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| interactType | `integer` |
+| o | [Object](structs.md#Object) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 interact_clam_or_bubba(struct MarioState *m, UNUSED u32 interactType, struct Object *o);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [interact_coin](#interact_coin)
+
+### Lua Example
+`local integerValue = interact_coin(m, interactType, o)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| interactType | `integer` |
+| o | [Object](structs.md#Object) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 interact_coin(struct MarioState *m, UNUSED u32 interactType, struct Object *o);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [interact_damage](#interact_damage)
 
 ### Lua Example
@@ -3536,6 +3869,468 @@
 
 ### C Prototype
 `u32 interact_damage(struct MarioState *m, UNUSED u32 interactType, struct Object *o);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [interact_door](#interact_door)
+
+### Lua Example
+`local integerValue = interact_door(m, interactType, o)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| interactType | `integer` |
+| o | [Object](structs.md#Object) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 interact_door(struct MarioState *m, UNUSED u32 interactType, struct Object *o);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [interact_flame](#interact_flame)
+
+### Lua Example
+`local integerValue = interact_flame(m, interactType, o)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| interactType | `integer` |
+| o | [Object](structs.md#Object) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 interact_flame(struct MarioState *m, UNUSED u32 interactType, struct Object *o);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [interact_grabbable](#interact_grabbable)
+
+### Lua Example
+`local integerValue = interact_grabbable(m, interactType, o)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| interactType | `integer` |
+| o | [Object](structs.md#Object) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 interact_grabbable(struct MarioState *m, u32 interactType, struct Object *o);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [interact_hit_from_below](#interact_hit_from_below)
+
+### Lua Example
+`local integerValue = interact_hit_from_below(m, interactType, o)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| interactType | `integer` |
+| o | [Object](structs.md#Object) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 interact_hit_from_below(struct MarioState *m, UNUSED u32 interactType, struct Object *o);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [interact_hoot](#interact_hoot)
+
+### Lua Example
+`local integerValue = interact_hoot(m, interactType, o)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| interactType | `integer` |
+| o | [Object](structs.md#Object) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 interact_hoot(struct MarioState *m, UNUSED u32 interactType, struct Object *o);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [interact_igloo_barrier](#interact_igloo_barrier)
+
+### Lua Example
+`local integerValue = interact_igloo_barrier(m, interactType, o)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| interactType | `integer` |
+| o | [Object](structs.md#Object) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 interact_igloo_barrier(struct MarioState *m, UNUSED u32 interactType, struct Object *o);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [interact_koopa_shell](#interact_koopa_shell)
+
+### Lua Example
+`local integerValue = interact_koopa_shell(m, interactType, o)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| interactType | `integer` |
+| o | [Object](structs.md#Object) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 interact_koopa_shell(struct MarioState *m, UNUSED u32 interactType, struct Object *o);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [interact_mr_blizzard](#interact_mr_blizzard)
+
+### Lua Example
+`local integerValue = interact_mr_blizzard(m, interactType, o)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| interactType | `integer` |
+| o | [Object](structs.md#Object) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 interact_mr_blizzard(struct MarioState *m, UNUSED u32 interactType, struct Object *o);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [interact_player](#interact_player)
+
+### Lua Example
+`local integerValue = interact_player(m, interactType, o)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| interactType | `integer` |
+| o | [Object](structs.md#Object) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 interact_player(struct MarioState* m, UNUSED u32 interactType, struct Object* o);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [interact_pole](#interact_pole)
+
+### Lua Example
+`local integerValue = interact_pole(m, interactType, o)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| interactType | `integer` |
+| o | [Object](structs.md#Object) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 interact_pole(struct MarioState *m, UNUSED u32 interactType, struct Object *o);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [interact_shock](#interact_shock)
+
+### Lua Example
+`local integerValue = interact_shock(m, interactType, o)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| interactType | `integer` |
+| o | [Object](structs.md#Object) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 interact_shock(struct MarioState *m, UNUSED u32 interactType, struct Object *o);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [interact_snufit_bullet](#interact_snufit_bullet)
+
+### Lua Example
+`local integerValue = interact_snufit_bullet(m, interactType, o)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| interactType | `integer` |
+| o | [Object](structs.md#Object) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 interact_snufit_bullet(struct MarioState *m, UNUSED u32 interactType, struct Object *o);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [interact_spiny_walking](#interact_spiny_walking)
+
+### Lua Example
+`local integerValue = interact_spiny_walking(m, interactType, o)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| interactType | `integer` |
+| o | [Object](structs.md#Object) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 interact_spiny_walking(struct MarioState *m, UNUSED u32 interactType, struct Object *o);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [interact_star_or_key](#interact_star_or_key)
+
+### Lua Example
+`local integerValue = interact_star_or_key(m, interactType, o)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| interactType | `integer` |
+| o | [Object](structs.md#Object) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 interact_star_or_key(struct MarioState *m, UNUSED u32 interactType, struct Object *o);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [interact_strong_wind](#interact_strong_wind)
+
+### Lua Example
+`local integerValue = interact_strong_wind(m, interactType, o)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| interactType | `integer` |
+| o | [Object](structs.md#Object) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 interact_strong_wind(struct MarioState *m, UNUSED u32 interactType, struct Object *o);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [interact_text](#interact_text)
+
+### Lua Example
+`local integerValue = interact_text(m, interactType, o)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| interactType | `integer` |
+| o | [Object](structs.md#Object) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 interact_text(struct MarioState *m, UNUSED u32 interactType, struct Object *o);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [interact_tornado](#interact_tornado)
+
+### Lua Example
+`local integerValue = interact_tornado(m, interactType, o)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| interactType | `integer` |
+| o | [Object](structs.md#Object) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 interact_tornado(struct MarioState *m, UNUSED u32 interactType, struct Object *o);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [interact_warp](#interact_warp)
+
+### Lua Example
+`local integerValue = interact_warp(m, interactType, o)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| interactType | `integer` |
+| o | [Object](structs.md#Object) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 interact_warp(struct MarioState *m, UNUSED u32 interactType, struct Object *o);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [interact_warp_door](#interact_warp_door)
+
+### Lua Example
+`local integerValue = interact_warp_door(m, interactType, o)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| interactType | `integer` |
+| o | [Object](structs.md#Object) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 interact_warp_door(struct MarioState *m, UNUSED u32 interactType, struct Object *o);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [interact_water_ring](#interact_water_ring)
+
+### Lua Example
+`local integerValue = interact_water_ring(m, interactType, o)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| interactType | `integer` |
+| o | [Object](structs.md#Object) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 interact_water_ring(struct MarioState *m, UNUSED u32 interactType, struct Object *o);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [interact_whirlpool](#interact_whirlpool)
+
+### Lua Example
+`local integerValue = interact_whirlpool(m, interactType, o)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| interactType | `integer` |
+| o | [Object](structs.md#Object) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 interact_whirlpool(struct MarioState *m, UNUSED u32 interactType, struct Object *o);`
 
 [:arrow_up_small:](#)
 
@@ -3786,6 +4581,27 @@
 
 <br />
 
+## [should_push_or_pull_door](#should_push_or_pull_door)
+
+### Lua Example
+`local integerValue = should_push_or_pull_door(m, o)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| o | [Object](structs.md#Object) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 should_push_or_pull_door(struct MarioState *m, struct Object *o);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [take_damage_and_knock_back](#take_damage_and_knock_back)
 
 ### Lua Example
@@ -4009,6 +4825,27 @@
 <br />
 
 
+## [fade_into_special_warp](#fade_into_special_warp)
+
+### Lua Example
+`fade_into_special_warp(arg, color)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| arg | `integer` |
+| color | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void fade_into_special_warp(u32 arg, u32 color);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [get_painting_warp_node](#get_painting_warp_node)
 
 ### Lua Example
@@ -4101,7 +4938,7 @@
 - `integer`
 
 ### C Prototype
-`s32 lvl_set_current_level(UNUSED s16 arg0, s32 levelNum);`
+`s32 lvl_set_current_level(UNUSED s16 arg0, s16 levelNum);`
 
 [:arrow_up_small:](#)
 
@@ -6159,24 +6996,6 @@
 
 <br />
 
-## [print_displaying_credits_entry](#print_displaying_credits_entry)
-
-### Lua Example
-`print_displaying_credits_entry()`
-
-### Parameters
-- None
-
-### Returns
-- None
-
-### C Prototype
-`void print_displaying_credits_entry(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
 ## [should_start_or_continue_dialog](#should_start_or_continue_dialog)
 
 ### Lua Example
@@ -7665,1040 +8484,6 @@
 
 ### C Prototype
 `void stop_and_set_height_to_floor(struct MarioState *);`
-
-[:arrow_up_small:](#)
-
-<br />
-
----
-# functions from math_util.h
-
-<br />
-
-
-## [anim_spline_init](#anim_spline_init)
-
-### Lua Example
-`anim_spline_init(m, keyFrames)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| keyFrames | `Pointer` <`Vec4s`> |
-
-### Returns
-- None
-
-### C Prototype
-`void anim_spline_init(struct MarioState* m, Vec4s *keyFrames);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [anim_spline_poll](#anim_spline_poll)
-
-### Lua Example
-`local integerValue = anim_spline_poll(m, result)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| result | [Vec3f](structs.md#Vec3f) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 anim_spline_poll(struct MarioState* m, Vec3f result);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [approach_f32](#approach_f32)
-
-### Lua Example
-`local numberValue = approach_f32(current, target, inc, dec)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| current | `number` |
-| target | `number` |
-| inc | `number` |
-| dec | `number` |
-
-### Returns
-- `number`
-
-### C Prototype
-`f32 approach_f32(f32 current, f32 target, f32 inc, f32 dec);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [approach_s32](#approach_s32)
-
-### Lua Example
-`local integerValue = approach_s32(current, target, inc, dec)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| current | `integer` |
-| target | `integer` |
-| inc | `integer` |
-| dec | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 approach_s32(s32 current, s32 target, s32 inc, s32 dec);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [find_vector_perpendicular_to_plane](#find_vector_perpendicular_to_plane)
-
-### Lua Example
-`local voidValue = find_vector_perpendicular_to_plane(dest, a, b, c)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | [Vec3f](structs.md#Vec3f) |
-| a | [Vec3f](structs.md#Vec3f) |
-| b | [Vec3f](structs.md#Vec3f) |
-| c | [Vec3f](structs.md#Vec3f) |
-
-### Returns
-- `void *`
-
-### C Prototype
-`void *find_vector_perpendicular_to_plane(Vec3f dest, Vec3f a, Vec3f b, Vec3f c);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [get_pos_from_transform_mtx](#get_pos_from_transform_mtx)
-
-### Lua Example
-`get_pos_from_transform_mtx(dest, objMtx, camMtx)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | [Vec3f](structs.md#Vec3f) |
-| objMtx | `Mat4` |
-| camMtx | `Mat4` |
-
-### Returns
-- None
-
-### C Prototype
-`void get_pos_from_transform_mtx(Vec3f dest, Mat4 objMtx, Mat4 camMtx);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [mtxf_align_terrain_normal](#mtxf_align_terrain_normal)
-
-### Lua Example
-`mtxf_align_terrain_normal(dest, upDir, pos, yaw)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | `Mat4` |
-| upDir | [Vec3f](structs.md#Vec3f) |
-| pos | [Vec3f](structs.md#Vec3f) |
-| yaw | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void mtxf_align_terrain_normal(Mat4 dest, Vec3f upDir, Vec3f pos, s16 yaw);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [mtxf_align_terrain_triangle](#mtxf_align_terrain_triangle)
-
-### Lua Example
-`mtxf_align_terrain_triangle(mtx, pos, yaw, radius)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| mtx | `Mat4` |
-| pos | [Vec3f](structs.md#Vec3f) |
-| yaw | `integer` |
-| radius | `number` |
-
-### Returns
-- None
-
-### C Prototype
-`void mtxf_align_terrain_triangle(Mat4 mtx, Vec3f pos, s16 yaw, f32 radius);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [mtxf_billboard](#mtxf_billboard)
-
-### Lua Example
-`mtxf_billboard(dest, mtx, position, angle)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | `Mat4` |
-| mtx | `Mat4` |
-| position | [Vec3f](structs.md#Vec3f) |
-| angle | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void mtxf_billboard(Mat4 dest, Mat4 mtx, Vec3f position, s16 angle);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [mtxf_copy](#mtxf_copy)
-
-### Lua Example
-`mtxf_copy(dest, src)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | `Mat4` |
-| src | `Mat4` |
-
-### Returns
-- None
-
-### C Prototype
-`void mtxf_copy(Mat4 dest, Mat4 src);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [mtxf_cylboard](#mtxf_cylboard)
-
-### Lua Example
-`mtxf_cylboard(dest, mtx, position, angle)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | `Mat4` |
-| mtx | `Mat4` |
-| position | [Vec3f](structs.md#Vec3f) |
-| angle | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void mtxf_cylboard(Mat4 dest, Mat4 mtx, Vec3f position, s16 angle);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [mtxf_identity](#mtxf_identity)
-
-### Lua Example
-`mtxf_identity(mtx)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| mtx | `Mat4` |
-
-### Returns
-- None
-
-### C Prototype
-`void mtxf_identity(Mat4 mtx);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [mtxf_inverse](#mtxf_inverse)
-
-### Lua Example
-`mtxf_inverse(dest, src)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | `Mat4` |
-| src | `Mat4` |
-
-### Returns
-- None
-
-### C Prototype
-`void mtxf_inverse(Mat4 dest, Mat4 src);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [mtxf_lookat](#mtxf_lookat)
-
-### Lua Example
-`mtxf_lookat(mtx, from, to, roll)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| mtx | `Mat4` |
-| from | [Vec3f](structs.md#Vec3f) |
-| to | [Vec3f](structs.md#Vec3f) |
-| roll | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void mtxf_lookat(Mat4 mtx, Vec3f from, Vec3f to, s16 roll);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [mtxf_mul](#mtxf_mul)
-
-### Lua Example
-`mtxf_mul(dest, a, b)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | `Mat4` |
-| a | `Mat4` |
-| b | `Mat4` |
-
-### Returns
-- None
-
-### C Prototype
-`void mtxf_mul(Mat4 dest, Mat4 a, Mat4 b);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [mtxf_mul_vec3s](#mtxf_mul_vec3s)
-
-### Lua Example
-`mtxf_mul_vec3s(mtx, b)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| mtx | `Mat4` |
-| b | [Vec3s](structs.md#Vec3s) |
-
-### Returns
-- None
-
-### C Prototype
-`void mtxf_mul_vec3s(Mat4 mtx, Vec3s b);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [mtxf_rotate_xy](#mtxf_rotate_xy)
-
-### Lua Example
-`mtxf_rotate_xy(mtx, angle)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| mtx | `Pointer` <`Mtx`> |
-| angle | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void mtxf_rotate_xy(Mtx *mtx, s16 angle);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [mtxf_rotate_xyz_and_translate](#mtxf_rotate_xyz_and_translate)
-
-### Lua Example
-`mtxf_rotate_xyz_and_translate(dest, b, c)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | `Mat4` |
-| b | [Vec3f](structs.md#Vec3f) |
-| c | [Vec3s](structs.md#Vec3s) |
-
-### Returns
-- None
-
-### C Prototype
-`void mtxf_rotate_xyz_and_translate(Mat4 dest, Vec3f b, Vec3s c);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [mtxf_rotate_zxy_and_translate](#mtxf_rotate_zxy_and_translate)
-
-### Lua Example
-`mtxf_rotate_zxy_and_translate(dest, translate, rotate)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | `Mat4` |
-| translate | [Vec3f](structs.md#Vec3f) |
-| rotate | [Vec3s](structs.md#Vec3s) |
-
-### Returns
-- None
-
-### C Prototype
-`void mtxf_rotate_zxy_and_translate(Mat4 dest, Vec3f translate, Vec3s rotate);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [mtxf_scale_vec3f](#mtxf_scale_vec3f)
-
-### Lua Example
-`mtxf_scale_vec3f(dest, mtx, s)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | `Mat4` |
-| mtx | `Mat4` |
-| s | [Vec3f](structs.md#Vec3f) |
-
-### Returns
-- None
-
-### C Prototype
-`void mtxf_scale_vec3f(Mat4 dest, Mat4 mtx, Vec3f s);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [mtxf_to_mtx](#mtxf_to_mtx)
-
-### Lua Example
-`mtxf_to_mtx(dest, src)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | `Pointer` <`Mtx`> |
-| src | `Mat4` |
-
-### Returns
-- None
-
-### C Prototype
-`void mtxf_to_mtx(Mtx *dest, Mat4 src);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [mtxf_translate](#mtxf_translate)
-
-### Lua Example
-`mtxf_translate(dest, b)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | `Mat4` |
-| b | [Vec3f](structs.md#Vec3f) |
-
-### Returns
-- None
-
-### C Prototype
-`void mtxf_translate(Mat4 dest, Vec3f b);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [not_zero](#not_zero)
-
-### Lua Example
-`local numberValue = not_zero(value, replacement)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| value | `number` |
-| replacement | `number` |
-
-### Returns
-- `number`
-
-### C Prototype
-`f32 not_zero(f32 value, f32 replacement);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [spline_get_weights](#spline_get_weights)
-
-### Lua Example
-`spline_get_weights(m, result, t, c)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| result | `Vec4f` |
-| t | `number` |
-| c | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void spline_get_weights(struct MarioState* m, Vec4f result, f32 t, UNUSED s32 c);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [vec3f_add](#vec3f_add)
-
-### Lua Example
-`local voidValue = vec3f_add(dest, a)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | [Vec3f](structs.md#Vec3f) |
-| a | [Vec3f](structs.md#Vec3f) |
-
-### Returns
-- `void *`
-
-### C Prototype
-`void *vec3f_add(Vec3f dest, Vec3f a);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [vec3f_combine](#vec3f_combine)
-
-### Lua Example
-`vec3f_combine(dest, vecA, vecB, sclA, sclB)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | [Vec3f](structs.md#Vec3f) |
-| vecA | [Vec3f](structs.md#Vec3f) |
-| vecB | [Vec3f](structs.md#Vec3f) |
-| sclA | `number` |
-| sclB | `number` |
-
-### Returns
-- None
-
-### C Prototype
-`void vec3f_combine(Vec3f dest, Vec3f vecA, Vec3f vecB, f32 sclA, f32 sclB);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [vec3f_copy](#vec3f_copy)
-
-### Lua Example
-`local voidValue = vec3f_copy(dest, src)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | [Vec3f](structs.md#Vec3f) |
-| src | [Vec3f](structs.md#Vec3f) |
-
-### Returns
-- `void *`
-
-### C Prototype
-`void *vec3f_copy(Vec3f dest, Vec3f src);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [vec3f_cross](#vec3f_cross)
-
-### Lua Example
-`local voidValue = vec3f_cross(dest, a, b)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | [Vec3f](structs.md#Vec3f) |
-| a | [Vec3f](structs.md#Vec3f) |
-| b | [Vec3f](structs.md#Vec3f) |
-
-### Returns
-- `void *`
-
-### C Prototype
-`void *vec3f_cross(Vec3f dest, Vec3f a, Vec3f b);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [vec3f_dif](#vec3f_dif)
-
-### Lua Example
-`local voidValue = vec3f_dif(dest, a, b)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | [Vec3f](structs.md#Vec3f) |
-| a | [Vec3f](structs.md#Vec3f) |
-| b | [Vec3f](structs.md#Vec3f) |
-
-### Returns
-- `void *`
-
-### C Prototype
-`void *vec3f_dif(Vec3f dest, Vec3f a, Vec3f b);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [vec3f_dist](#vec3f_dist)
-
-### Lua Example
-`local numberValue = vec3f_dist(v1, v2)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| v1 | [Vec3f](structs.md#Vec3f) |
-| v2 | [Vec3f](structs.md#Vec3f) |
-
-### Returns
-- `number`
-
-### C Prototype
-`f32 vec3f_dist(Vec3f v1, Vec3f v2);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [vec3f_dot](#vec3f_dot)
-
-### Lua Example
-`local numberValue = vec3f_dot(a, b)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| a | [Vec3f](structs.md#Vec3f) |
-| b | [Vec3f](structs.md#Vec3f) |
-
-### Returns
-- `number`
-
-### C Prototype
-`f32 vec3f_dot(Vec3f a, Vec3f b);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [vec3f_get_dist_and_angle](#vec3f_get_dist_and_angle)
-
-### Lua Example
-`vec3f_get_dist_and_angle(from, to, dist, pitch, yaw)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| from | [Vec3f](structs.md#Vec3f) |
-| to | [Vec3f](structs.md#Vec3f) |
-| dist | `Pointer` <`number`> |
-| pitch | `Pointer` <`integer`> |
-| yaw | `Pointer` <`integer`> |
-
-### Returns
-- None
-
-### C Prototype
-`void vec3f_get_dist_and_angle(Vec3f from, Vec3f to, f32 *dist, s16 *pitch, s16 *yaw);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [vec3f_length](#vec3f_length)
-
-### Lua Example
-`local numberValue = vec3f_length(a)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| a | [Vec3f](structs.md#Vec3f) |
-
-### Returns
-- `number`
-
-### C Prototype
-`f32 vec3f_length(Vec3f a);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [vec3f_mul](#vec3f_mul)
-
-### Lua Example
-`local voidValue = vec3f_mul(dest, a)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | [Vec3f](structs.md#Vec3f) |
-| a | `number` |
-
-### Returns
-- `void *`
-
-### C Prototype
-`void *vec3f_mul(Vec3f dest, f32 a);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [vec3f_normalize](#vec3f_normalize)
-
-### Lua Example
-`local voidValue = vec3f_normalize(dest)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | [Vec3f](structs.md#Vec3f) |
-
-### Returns
-- `void *`
-
-### C Prototype
-`void *vec3f_normalize(Vec3f dest);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [vec3f_project](#vec3f_project)
-
-### Lua Example
-`vec3f_project(vec, onto, out)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| vec | [Vec3f](structs.md#Vec3f) |
-| onto | [Vec3f](structs.md#Vec3f) |
-| out | [Vec3f](structs.md#Vec3f) |
-
-### Returns
-- None
-
-### C Prototype
-`void vec3f_project(Vec3f vec, Vec3f onto, Vec3f out);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [vec3f_rotate_zxy](#vec3f_rotate_zxy)
-
-### Lua Example
-`local voidValue = vec3f_rotate_zxy(v, rotate)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| v | [Vec3f](structs.md#Vec3f) |
-| rotate | [Vec3s](structs.md#Vec3s) |
-
-### Returns
-- `void *`
-
-### C Prototype
-`void *vec3f_rotate_zxy(Vec3f v, Vec3s rotate);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [vec3f_set](#vec3f_set)
-
-### Lua Example
-`local voidValue = vec3f_set(dest, x, y, z)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | [Vec3f](structs.md#Vec3f) |
-| x | `number` |
-| y | `number` |
-| z | `number` |
-
-### Returns
-- `void *`
-
-### C Prototype
-`void *vec3f_set(Vec3f dest, f32 x, f32 y, f32 z);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [vec3f_set_dist_and_angle](#vec3f_set_dist_and_angle)
-
-### Lua Example
-`vec3f_set_dist_and_angle(from, to, dist, pitch, yaw)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| from | [Vec3f](structs.md#Vec3f) |
-| to | [Vec3f](structs.md#Vec3f) |
-| dist | `number` |
-| pitch | `integer` |
-| yaw | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void vec3f_set_dist_and_angle(Vec3f from, Vec3f to, f32 dist, s16 pitch, s16 yaw);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [vec3f_sum](#vec3f_sum)
-
-### Lua Example
-`local voidValue = vec3f_sum(dest, a, b)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | [Vec3f](structs.md#Vec3f) |
-| a | [Vec3f](structs.md#Vec3f) |
-| b | [Vec3f](structs.md#Vec3f) |
-
-### Returns
-- `void *`
-
-### C Prototype
-`void *vec3f_sum(Vec3f dest, Vec3f a, Vec3f b);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [vec3f_to_vec3s](#vec3f_to_vec3s)
-
-### Lua Example
-`local voidValue = vec3f_to_vec3s(dest, a)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | [Vec3s](structs.md#Vec3s) |
-| a | [Vec3f](structs.md#Vec3f) |
-
-### Returns
-- `void *`
-
-### C Prototype
-`void *vec3f_to_vec3s(Vec3s dest, Vec3f a);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [vec3s_add](#vec3s_add)
-
-### Lua Example
-`local voidValue = vec3s_add(dest, a)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | [Vec3s](structs.md#Vec3s) |
-| a | [Vec3s](structs.md#Vec3s) |
-
-### Returns
-- `void *`
-
-### C Prototype
-`void *vec3s_add(Vec3s dest, Vec3s a);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [vec3s_copy](#vec3s_copy)
-
-### Lua Example
-`local voidValue = vec3s_copy(dest, src)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | [Vec3s](structs.md#Vec3s) |
-| src | [Vec3s](structs.md#Vec3s) |
-
-### Returns
-- `void *`
-
-### C Prototype
-`void *vec3s_copy(Vec3s dest, Vec3s src);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [vec3s_set](#vec3s_set)
-
-### Lua Example
-`local voidValue = vec3s_set(dest, x, y, z)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | [Vec3s](structs.md#Vec3s) |
-| x | `integer` |
-| y | `integer` |
-| z | `integer` |
-
-### Returns
-- `void *`
-
-### C Prototype
-`void *vec3s_set(Vec3s dest, s16 x, s16 y, s16 z);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [vec3s_sum](#vec3s_sum)
-
-### Lua Example
-`local voidValue = vec3s_sum(dest, a, b)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | [Vec3s](structs.md#Vec3s) |
-| a | [Vec3s](structs.md#Vec3s) |
-| b | [Vec3s](structs.md#Vec3s) |
-
-### Returns
-- `void *`
-
-### C Prototype
-`void *vec3s_sum(Vec3s dest, Vec3s a, Vec3s b);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [vec3s_to_vec3f](#vec3s_to_vec3f)
-
-### Lua Example
-`local voidValue = vec3s_to_vec3f(dest, a)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | [Vec3f](structs.md#Vec3f) |
-| a | [Vec3s](structs.md#Vec3s) |
-
-### Returns
-- `void *`
-
-### C Prototype
-`void *vec3s_to_vec3f(Vec3f dest, Vec3s a);`
-
-[:arrow_up_small:](#)
-
-<br />
-
----
-# functions from misc.h
-
-<br />
-
-
-## [update_all_mario_stars](#update_all_mario_stars)
-
-### Lua Example
-`update_all_mario_stars()`
-
-### Parameters
-- None
-
-### Returns
-- None
-
-### C Prototype
-`void update_all_mario_stars(void);`
 
 [:arrow_up_small:](#)
 

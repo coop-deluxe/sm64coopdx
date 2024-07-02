@@ -3526,6 +3526,24 @@
 
 <br />
 
+## [bhv_ferris_wheel_platform_init](#bhv_ferris_wheel_platform_init)
+
+### Lua Example
+`bhv_ferris_wheel_platform_init()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void bhv_ferris_wheel_platform_init(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [bhv_ferris_wheel_platform_update](#bhv_ferris_wheel_platform_update)
 
 ### Lua Example
@@ -10308,6 +10326,140 @@
 
 ### C Prototype
 `void vec3f_copy_2(Vec3f dest, Vec3f src);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
+# functions from behavior_script.h
+
+<br />
+
+
+## [draw_distance_scalar](#draw_distance_scalar)
+
+### Lua Example
+`local numberValue = draw_distance_scalar()`
+
+### Parameters
+- None
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 draw_distance_scalar(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_update_gfx_pos_and_angle](#obj_update_gfx_pos_and_angle)
+
+### Lua Example
+`obj_update_gfx_pos_and_angle(obj)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| obj | [Object](structs.md#Object) |
+
+### Returns
+- None
+
+### C Prototype
+`void obj_update_gfx_pos_and_angle(struct Object *obj);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [position_based_random_float_position](#position_based_random_float_position)
+
+### Lua Example
+`local numberValue = position_based_random_float_position()`
+
+### Parameters
+- None
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 position_based_random_float_position(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [position_based_random_u16](#position_based_random_u16)
+
+### Lua Example
+`local integerValue = position_based_random_u16()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u16 position_based_random_u16(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [random_float](#random_float)
+
+### Lua Example
+`local numberValue = random_float()`
+
+### Parameters
+- None
+
+### Returns
+- `number`
+
+### C Prototype
+`float random_float(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [random_sign](#random_sign)
+
+### Lua Example
+`local integerValue = random_sign()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 random_sign(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [random_u16](#random_u16)
+
+### Lua Example
+`local integerValue = random_u16()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u16 random_u16(void);`
 
 [:arrow_up_small:](#)
 

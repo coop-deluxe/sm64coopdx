@@ -15,7 +15,7 @@
 #include "pc/controller/controller_mouse.h"
 #include "pc/djui/djui.h"
 #include "pc/djui/djui_hud_utils.h"
-#include "pc/lua/utils/smlua_misc_utils.h"
+#include "pc/lua/utils/smlua_camera_utils.h"
 #include "pc/lua/smlua_hooks.h"
 
 #define CLAMP(_val, _min, _max) MAX(MIN((_val), _max), _min)
@@ -59,7 +59,7 @@ void set_first_person_enabled(bool enable) {
     gFirstPersonCamera.enabled = enable;
 }
 
-void first_person_camera_update(void) {
+static void first_person_camera_update(void) {
     struct MarioState *m = &gMarioStates[0];
     f32 sensX = 0.3f * camera_config_get_x_sensitivity();
     f32 sensY = 0.4f * camera_config_get_y_sensitivity();
@@ -77,10 +77,6 @@ void first_person_camera_update(void) {
         } else {
             gFirstPersonCamera.yaw += sensX * (invX * m->controller->extStickX - 1.5f * mouse_x);
         }
-
-        gDjuiHudLockMouse = true;
-    } else {
-        gDjuiHudLockMouse = false;
     }
 
     // fix yaw for some specific actions
@@ -181,8 +177,6 @@ void first_person_update(void) {
         }
 
         first_person_camera_update();
-    } else if (!camera_config_is_mouse_look_enabled()) {
-        gDjuiHudLockMouse = false;
     }
 }
 

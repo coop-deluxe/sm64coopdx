@@ -1,14 +1,14 @@
 #ifndef MODS_H
 #define MODS_H
 
-#include "PR/ultratypes.h"
-#include <types.h>
-#include "src/pc/platform.h"
+#include <PR/ultratypes.h>
+#include "types.h"
+#include "pc/platform.h"
 #include "mod.h"
 
 #define MAX_MOD_SIZE (35 * 1048576) // 35MB
 #define MOD_DIRECTORY "mods"
-#define TMP_DIRECTORY "tmp"
+#define TMP_DIRECTORY ".tmp"
 
 struct Mods {
     struct Mod** entries;

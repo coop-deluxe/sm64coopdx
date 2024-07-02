@@ -1,10 +1,6 @@
+#include "pc/rom_assets.h"
 // 0x0702AA30 - 0x0702AA70
-static const Vtx ttm_seg7_vertex_0702AA30[] = {
-    {{{  1024,   2048,      0}, 0, {   990,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{ -1023,   2048,      0}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{ -1023,      0,      0}, 0, {     0,    990}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{  1024,      0,      0}, 0, {   990,    990}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(ttm_seg7_vertex_0702AA30, 0x004d1910, 104662, 0x0002a948, 64);
 
 // 0x0702AA70 - 0x0702AAA8
 static const Gfx ttm_seg7_dl_0702AA70[] = {

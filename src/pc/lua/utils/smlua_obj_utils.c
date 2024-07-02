@@ -1,8 +1,8 @@
 #include "types.h"
 #include "object_constants.h"
 #include "object_fields.h"
-#include "src/game/object_helpers.h"
-#include "src/game/interaction.h"
+#include "game/object_helpers.h"
+#include "game/interaction.h"
 #include "engine/math_util.h"
 
 #include "pc/lua/smlua.h"
@@ -138,7 +138,7 @@ struct Object *obj_get_first_with_behavior_id(enum BehaviorId behaviorId) {
 }
 
 struct Object *obj_get_first_with_behavior_id_and_field_s32(enum BehaviorId behaviorId, s32 fieldIndex, s32 value) {
-    if (fieldIndex < 0 || fieldIndex >= 0x50) { return NULL; }
+    if (fieldIndex < 0 || fieldIndex >= OBJECT_NUM_FIELDS) { return NULL; }
     const BehaviorScript* behavior = get_behavior_from_id(behaviorId);
     u32 sanityDepth = 0;
     behavior = smlua_override_behavior(behavior);
@@ -155,7 +155,7 @@ struct Object *obj_get_first_with_behavior_id_and_field_s32(enum BehaviorId beha
 }
 
 struct Object *obj_get_first_with_behavior_id_and_field_f32(enum BehaviorId behaviorId, s32 fieldIndex, f32 value) {
-    if (fieldIndex < 0 || fieldIndex >= 0x50) { return NULL; }
+    if (fieldIndex < 0 || fieldIndex >= OBJECT_NUM_FIELDS) { return NULL; }
     const BehaviorScript* behavior = get_behavior_from_id(behaviorId);
     behavior = smlua_override_behavior(behavior);
     if (behavior) {
@@ -229,7 +229,7 @@ struct Object *obj_get_next_with_same_behavior_id(struct Object *o) {
 }
 
 struct Object *obj_get_next_with_same_behavior_id_and_field_s32(struct Object *o, s32 fieldIndex, s32 value) {
-    if (fieldIndex < 0 || fieldIndex >= 0x50) { return NULL; }
+    if (fieldIndex < 0 || fieldIndex >= OBJECT_NUM_FIELDS) { return NULL; }
     if (o) {
         for (struct Object *obj = obj_get_next(o); obj != NULL; obj = obj_get_next(obj)) {
             if (obj->behavior == o->behavior && obj->activeFlags != ACTIVE_FLAG_DEACTIVATED && obj->OBJECT_FIELD_S32(fieldIndex) == value) {
@@ -241,7 +241,7 @@ struct Object *obj_get_next_with_same_behavior_id_and_field_s32(struct Object *o
 }
 
 struct Object *obj_get_next_with_same_behavior_id_and_field_f32(struct Object *o, s32 fieldIndex, f32 value) {
-    if (fieldIndex < 0 || fieldIndex >= 0x50) { return NULL; }
+    if (fieldIndex < 0 || fieldIndex >= OBJECT_NUM_FIELDS) { return NULL; }
     if (o) {
         for (struct Object *obj = obj_get_next(o); obj != NULL; obj = obj_get_next(obj)) {
             if (obj->behavior == o->behavior && obj->activeFlags != ACTIVE_FLAG_DEACTIVATED && obj->OBJECT_FIELD_F32(fieldIndex) == value) {
@@ -258,6 +258,66 @@ struct Object *obj_get_collided_object(struct Object *o, s16 index) {
     }
     return NULL;
 }
+
+//
+// Object fields
+//
+
+u32 obj_get_field_u32(struct Object *o, s32 fieldIndex) {
+    if (o && fieldIndex >= 0 && fieldIndex < OBJECT_NUM_FIELDS) {
+        return o->OBJECT_FIELD_U32(fieldIndex);
+    }
+    return 0;
+}
+
+s32 obj_get_field_s32(struct Object *o, s32 fieldIndex) {
+    if (o && fieldIndex >= 0 && fieldIndex < OBJECT_NUM_FIELDS) {
+        return o->OBJECT_FIELD_S32(fieldIndex);
+    }
+    return 0;
+}
+
+f32 obj_get_field_f32(struct Object *o, s32 fieldIndex) {
+    if (o && fieldIndex >= 0 && fieldIndex < OBJECT_NUM_FIELDS) {
+        return o->OBJECT_FIELD_F32(fieldIndex);
+    }
+    return 0;
+}
+
+s16 obj_get_field_s16(struct Object *o, s32 fieldIndex, s32 fieldSubIndex) {
+    if (o && fieldIndex >= 0 && fieldIndex < OBJECT_NUM_FIELDS && fieldSubIndex >= 0 && fieldSubIndex < 2) {
+        return o->OBJECT_FIELD_S16(fieldIndex, fieldSubIndex);
+    }
+    return 0;
+}
+
+void obj_set_field_u32(struct Object *o, s32 fieldIndex, u32 value) {
+    if (o && fieldIndex >= 0 && fieldIndex < OBJECT_NUM_FIELDS) {
+        o->OBJECT_FIELD_U32(fieldIndex) = value;
+    }
+}
+
+void obj_set_field_s32(struct Object *o, s32 fieldIndex, s32 value) {
+    if (o && fieldIndex >= 0 && fieldIndex < OBJECT_NUM_FIELDS) {
+        o->OBJECT_FIELD_S32(fieldIndex) = value;
+    }
+}
+
+void obj_set_field_f32(struct Object *o, s32 fieldIndex, f32 value) {
+    if (o && fieldIndex >= 0 && fieldIndex < OBJECT_NUM_FIELDS) {
+        o->OBJECT_FIELD_F32(fieldIndex) = value;
+    }
+}
+
+void obj_set_field_s16(struct Object *o, s32 fieldIndex, s32 fieldSubIndex, s16 value) {
+    if (o && fieldIndex >= 0 && fieldIndex < OBJECT_NUM_FIELDS && fieldSubIndex >= 0 && fieldSubIndex < 2) {
+        o->OBJECT_FIELD_S16(fieldIndex, fieldSubIndex) = value;
+    }
+}
+
+//
+// Misc object helpers
+//
 
 struct SpawnParticlesInfo* obj_get_temp_spawn_particles_info(enum ModelExtendedId modelId) {
     static struct SpawnParticlesInfo sTmpSpi = { 0 };
@@ -413,7 +473,7 @@ void set_whirlpools(f32 x, f32 y, f32 z, s16 strength, s16 area, s32 index) {
 #ifdef DEVELOPMENT
 void obj_randomize(struct Object* o) {
     if (!o) { return; }
-    for (int i = 0; i < 80; i++) {
+    for (int i = 0; i < OBJECT_NUM_FIELDS; i++) {
         if (rand() % 10 < 5) {
             o->rawData.asU32[i] = rand() % 10;
         } else {

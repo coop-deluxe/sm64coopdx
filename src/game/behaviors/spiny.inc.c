@@ -7,7 +7,7 @@
 
 /**
  * Hitbox for spiny both while thrown and walking. The interaction type is
- * changed to INTERACT_UNKNOWN_08 while walking.
+ * changed to INTERACT_SPINY_WALKING while walking.
  */
 static struct ObjectHitbox sSpinyHitbox = {
     /* interactType:      */ INTERACT_MR_BLIZZARD,
@@ -158,7 +158,7 @@ static void spiny_act_walk(void) {
             // Don't allow mario to punch the spiny two frames in a row?
             o->oInteractType = INTERACT_MR_BLIZZARD;
         } else {
-            o->oInteractType = INTERACT_UNKNOWN_08;
+            o->oInteractType = INTERACT_SPINY_WALKING;
         }
     }
 }

@@ -173,22 +173,19 @@ Gfx *intro_backdrop_set_image(f32 x, f32 y, s8 index) {
     // table that points to either the "Super Mario 64" or "Game Over" tables
     static const u8 *const *textureTables[] = { mario_title_texture_table, game_over_texture_table };
 
-    Mtx *mtx;
-    Gfx *displayList;
-    Gfx *displayListIter;
-    const u8 *const *vIntroBgTable;
     s32 i;
-    mtx = alloc_display_list(sizeof(*mtx));
-    displayList = alloc_display_list(36 * sizeof(*displayList));
+    Mtx *mtx = alloc_display_list(sizeof(*mtx));
+    Gfx *displayList = alloc_display_list(36 * sizeof(*displayList));
     if (mtx == NULL || displayList == NULL) { return NULL; }
-    displayListIter = displayList;
-    vIntroBgTable = segmented_to_virtual(textureTables[index]);
+    Gfx *displayListIter = displayList;
+    if (index < 0 || index > 1) { index = 0; }
+    const u8 *const *vIntroBgTable = segmented_to_virtual(textureTables[index]);
     guTranslate(mtx, x, y, 0.0f);
     gSPMatrix(displayListIter++, mtx, G_MTX_MODELVIEW | G_MTX_LOAD | G_MTX_PUSH);
     gSPDisplayList(displayListIter++, &title_screen_bg_dl_0A000118);
     for (i = 0; i < 4; ++i) {
-        gDPLoadTextureBlock(displayListIter++, vIntroBgTable[i], G_IM_FMT_RGBA, G_IM_SIZ_16b, 80, 20, 0, 
-                            G_TX_CLAMP, G_TX_CLAMP, 7, 6, G_TX_NOLOD, G_TX_NOLOD)    
+        gDPLoadTextureBlock(displayListIter++, vIntroBgTable[i], G_IM_FMT_RGBA, G_IM_SIZ_16b, 80, 20, 0,
+                            G_TX_CLAMP, G_TX_CLAMP, 7, 6, G_TX_NOLOD, G_TX_NOLOD)
         gSPDisplayList(displayListIter++, introBackgroundDlRows[i]);
     }
     gSPPopMatrix(displayListIter++, G_MTX_MODELVIEW);
@@ -351,7 +348,7 @@ void intro_gen_face_texrect(Gfx **dlIter) {
 Gfx *intro_draw_face(u16 *image, s32 imageW, s32 imageH) {
     Gfx *dl;
     Gfx *dlIter;
-    
+
     // ex-alo change
     // extend number to 130 to fix rendering
     dl = alloc_display_list(130 * sizeof(Gfx));
@@ -364,7 +361,7 @@ Gfx *intro_draw_face(u16 *image, s32 imageW, s32 imageH) {
 
     gSPDisplayList(dlIter++, title_screen_bg_dl_0A0065E8);
 
-    gDPLoadTextureBlock(dlIter++, VIRTUAL_TO_PHYSICAL(image), G_IM_FMT_RGBA, G_IM_SIZ_16b, imageW, imageH, 0, 
+    gDPLoadTextureBlock(dlIter++, VIRTUAL_TO_PHYSICAL(image), G_IM_FMT_RGBA, G_IM_SIZ_16b, imageW, imageH, 0,
         G_TX_CLAMP | G_TX_NOMIRROR, G_TX_CLAMP | G_TX_NOMIRROR, 6, 6, G_TX_NOLOD, G_TX_NOLOD);
 
     intro_gen_face_texrect(&dlIter);
@@ -488,7 +485,7 @@ Gfx *geo_intro_rumble_pak_graphic(s32 state, struct GraphNode *node, UNUSED void
     dl = NULL;
     backgroundTileSix = 0;
 #endif
-    
+
     left = GFX_DIMENSIONS_RECT_FROM_RIGHT_EDGE(100);
 
     if (state != 1) {

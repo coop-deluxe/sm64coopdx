@@ -1,32 +1,20 @@
+#include "pc/rom_assets.h"
 // Water Waves
 
 // 0x04025318
-static const Vtx water_wave_seg4_vertex_04025318[] = {
-    {{{   -64,      0,     64}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xc8}}},
-    {{{    64,      0,     64}, 0, {   992,      0}, {0xff, 0xff, 0xff, 0xc8}}},
-    {{{    64,      0,    -64}, 0, {   992,    992}, {0xff, 0xff, 0xff, 0xc8}}},
-    {{{   -64,      0,    -64}, 0, {     0,    992}, {0xff, 0xff, 0xff, 0xc8}}},
-};
+ROM_ASSET_LOAD_VTX(water_wave_seg4_vertex_04025318, 0x00114750, 78432, 0x00025318, 64);
 
 // 0x04025358
-ALIGNED8 const Texture water_wave_seg4_texture_04025358[] = {
-#include "actors/water_wave/water_wave_0.ia16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(water_wave_seg4_texture_04025358, "actors/water_wave/water_wave_0.ia16.inc.c", 0x00114750, 78432, 0x00025358, 2048);
 
 // 0x04025B58
-ALIGNED8 const Texture water_wave_seg4_texture_04025B58[] = {
-#include "actors/water_wave/water_wave_1.ia16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(water_wave_seg4_texture_04025B58, "actors/water_wave/water_wave_1.ia16.inc.c", 0x00114750, 78432, 0x00025b58, 2048);
 
 // 0x04026358
-ALIGNED8 const Texture water_wave_seg4_texture_04026358[] = {
-#include "actors/water_wave/water_wave_2.ia16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(water_wave_seg4_texture_04026358, "actors/water_wave/water_wave_2.ia16.inc.c", 0x00114750, 78432, 0x00026358, 2048);
 
 // 0x04026B58
-ALIGNED8 const Texture water_wave_seg4_texture_04026B58[] = {
-#include "actors/water_wave/water_wave_3.ia16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(water_wave_seg4_texture_04026B58, "actors/water_wave/water_wave_3.ia16.inc.c", 0x00114750, 78432, 0x00026b58, 2048);
 
 // 0x04027358 - 0x040273A0
 const Gfx water_wave_seg4_dl_04027358[] = {

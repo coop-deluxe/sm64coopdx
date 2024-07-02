@@ -5,6 +5,11 @@
 #include "data/dynos.c.h"
 #include "pc/debuglog.h"
 #include "pc/loading.h"
+#include "pc/fs/fmem.h"
+
+#if defined(_WIN32) || defined(_WIN64)
+#include <windows.h>
+#endif
 
 #define MAX_SESSION_CHARS 7
 
@@ -45,7 +50,7 @@ u16 mods_get_enabled_count(void) {
         if (!gLocalMods.entries[i]->enabled) { continue; }
         enabled++;
     }
-    
+
     return enabled;
 }
 
@@ -113,7 +118,12 @@ bool mods_generate_remote_base_path(void) {
         LOG_ERROR("Failed to concat tmp path");
         return false;
     }
-    if (!fs_sys_dir_exists(tmpPath)) { fs_sys_mkdir(tmpPath); }
+    if (!fs_sys_dir_exists(tmpPath)) {
+        fs_sys_mkdir(tmpPath);
+#if defined(_WIN32) || defined(_WIN64)
+        SetFileAttributesA(tmpPath, FILE_ATTRIBUTE_HIDDEN);
+#endif
+    }
 
     // generate session
     char session[MAX_SESSION_CHARS + 1] = { 0 };
@@ -192,8 +202,8 @@ static u32 mods_count_directory(char* modsBasePath) {
     return pathCount;
 }
 
-static void mods_load(struct Mods* mods, char* modsBasePath, bool isUserModPath) {
-    if (gIsThreaded) { REFRESH_MUTEX(snprintf(gCurrLoadingSegment.str, 256, "Generating DynOS Packs In %s Mod Path:\n\\#808080\\%s", isUserModPath ? "User" : "Local", modsBasePath)); }
+static void mods_load(struct Mods* mods, char* modsBasePath, UNUSED bool isUserModPath) {
+    LOADING_SCREEN_MUTEX(snprintf(gCurrLoadingSegment.str, 256, "Generating DynOS Packs In %s Mod Path:\n\\#808080\\%s", isUserModPath ? "User" : "Local", modsBasePath));
 
     // generate bins
     dynos_generate_packs(modsBasePath);
@@ -208,7 +218,7 @@ static void mods_load(struct Mods* mods, char* modsBasePath, bool isUserModPath)
     normalize_path(modsBasePath);
 
     // check for existence
-    if (!is_directory(modsBasePath)) {
+    if (!fs_sys_dir_exists(modsBasePath)) {
         LOG_ERROR("Could not find directory '%s'", modsBasePath);
     }
 
@@ -221,9 +231,9 @@ static void mods_load(struct Mods* mods, char* modsBasePath, bool isUserModPath)
         LOG_ERROR("Could not open directory '%s'", modsBasePath);
         return;
     }
-    f32 count = (f32) mods_count_directory(modsBasePath);
+    UNUSED f32 count = (f32) mods_count_directory(modsBasePath);
 
-    if (gIsThreaded) { REFRESH_MUTEX(snprintf(gCurrLoadingSegment.str, 256, "Loading Mods In %s Mod Path:\n\\#808080\\%s", isUserModPath ? "User" : "Local", modsBasePath)); }
+    LOADING_SCREEN_MUTEX(snprintf(gCurrLoadingSegment.str, 256, "Loading Mods In %s Mod Path:\n\\#808080\\%s", isUserModPath ? "User" : "Local", modsBasePath));
 
     // iterate
     char path[SYS_MAX_PATH] = { 0 };
@@ -232,18 +242,18 @@ static void mods_load(struct Mods* mods, char* modsBasePath, bool isUserModPath)
         // sanity check / fill path[]
         if (!directory_sanity_check(dir, modsBasePath, path)) { continue; }
 
-        if (gIsThreaded) { REFRESH_MUTEX(snprintf(gCurrLoadingSegment.str, 256, "Loading Mod:\n\\#808080\\%s/%s", modsBasePath, dir->d_name)); }
+        LOADING_SCREEN_MUTEX(snprintf(gCurrLoadingSegment.str, 256, "Loading Mod:\n\\#808080\\%s/%s", modsBasePath, dir->d_name));
 
         // load the mod
         if (!mod_load(mods, modsBasePath, dir->d_name)) {
             break;
         }
 
-        if (gIsThreaded) { REFRESH_MUTEX(gCurrLoadingSegment.percentage = (f32) i / count); }
+        LOADING_SCREEN_MUTEX(gCurrLoadingSegment.percentage = (f32) i / count);
     }
 
     closedir(d);
-    if (gIsThreaded) { REFRESH_MUTEX(gCurrLoadingSegment.percentage = 1); }
+    LOADING_SCREEN_MUTEX(gCurrLoadingSegment.percentage = 1);
 }
 
 void mods_refresh_local(void) {
@@ -265,10 +275,8 @@ void mods_refresh_local(void) {
     // load mods
     if (hasUserPath) { mods_load(&gLocalMods, userModPath, true); }
 
-    const char* exePath = path_to_executable();
     char defaultModsPath[SYS_MAX_PATH] = { 0 };
-    path_get_folder((char*)exePath, defaultModsPath);
-    strncat(defaultModsPath, MOD_DIRECTORY, SYS_MAX_PATH-1);
+    snprintf(defaultModsPath, SYS_MAX_PATH, "%s/%s", sys_exe_path(), MOD_DIRECTORY);
     mods_load(&gLocalMods, defaultModsPath, false);
 
     // sort
@@ -297,7 +305,7 @@ void mods_enable(char* relativePath) {
 }
 
 void mods_init(void) {
-    if (gIsThreaded) { REFRESH_MUTEX(snprintf(gCurrLoadingSegment.str, 256, "Caching Mods")); }
+    LOADING_SCREEN_MUTEX(loading_screen_set_segment_text("Caching Mods"));
 
     // load mod cache
     mod_cache_load();
@@ -313,7 +321,8 @@ void mods_clear(struct Mods* mods) {
             for (int j = 0; j < mod->fileCount; j++) {
                 struct ModFile* file = &mod->files[j];
                 if (file->fp != NULL) {
-                    fclose(file->fp);
+                    f_close(file->fp);
+                    f_delete(file->fp);
                     file->fp = NULL;
                 }
             }
@@ -341,7 +350,7 @@ void mods_clear(struct Mods* mods) {
 void mods_shutdown(void) {
     mod_cache_save();
     mod_cache_shutdown();
-    mods_clear(&gRemoteMods);
     mods_clear(&gActiveMods);
+    mods_clear(&gRemoteMods);
     mods_clear(&gLocalMods);
 }

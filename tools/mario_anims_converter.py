@@ -9,6 +9,7 @@ items = []
 len_mapping = {}
 order_mapping = {}
 line_number_mapping = {}
+asset_loads = []
 
 def raise_error(filename, lineindex, msg):
     raise SyntaxError("Error in " + filename + ":" + str(line_number_mapping[lineindex] + 1) + ": " + msg)
@@ -51,11 +52,32 @@ def parse_array(filename, lines, lineindex, name, is_indices):
     lineindex += 1
     return lineindex
 
+def parse_asset(filename, lines, lineindex, name, is_indices):
+    global items
+    global asset_loads
+
+    line = lines[lineindex]
+
+    asset_params = line.split('(', 1)[-1].split(')', 1)[0].split(',')
+    value_len = int(asset_params[4]) // 2
+
+    items.append(("array", name, (is_indices, [ '0' ])))
+    len_mapping[name] = value_len
+    order_mapping[name] = len(items)
+
+    asset_loads.append(f'ROM_ASSET_LOAD_MARIO_ANIM({asset_params[0]}, gMarioAnims.{asset_params[0]}, {asset_params[1]}, {asset_params[2]}, {asset_params[3]}, {asset_params[4]});')
+    return lineindex + 1
+
 def parse_file(filename, lines):
     global num_headers
     lineindex = 0
     while lineindex < len(lines):
         line = lines[lineindex]
+
+        if line == '#include "pc/rom_assets.h"':
+            lineindex += 1
+            continue
+
         for prefix in ["static ", "const "]:
             if line.startswith(prefix):
                 line = line[len(prefix):]
@@ -64,13 +86,17 @@ def parse_file(filename, lines):
         is_struct = line.startswith("struct Animation ") and line.endswith("[] = {")
         is_indices = line.startswith("u16 ") and line.endswith("[] = {")
         is_values = line.startswith("s16 ") and line.endswith("[] = {")
-        if not is_struct and not is_indices and not is_values:
+        is_asset = line.startswith("ROM_ASSET_LOAD_ANIM(")
+        if not is_struct and not is_indices and not is_values and not is_asset:
             raise_error(filename, lineindex, "\"" + line + "\" does not follow the pattern \"static const struct Animation anim_x[] = {\", \"static const u16 anim_x_indices[] = {\" or \"static const s16 anim_x_values[] = {\"")
 
         if is_struct:
             name = lines[lineindex][len("struct Animation "):-6]
             lineindex = parse_struct(filename, lines, lineindex, name)
             num_headers += 1
+        elif is_asset:
+            name = lines[lineindex].split('(', 1)[-1].split(')')[0].split(',')[0]
+            lineindex = parse_asset(filename, lines, lineindex, name, is_indices)
         else:
             name = lines[lineindex][len("s16 "):-6]
             lineindex = parse_array(filename, lines, lineindex, name, is_indices)
@@ -128,8 +154,8 @@ try:
                 str(v4),
                 str(v5),
                 str(indices_len),
-                "(const s16 *)(offsetof(struct MarioAnimsObj, " + values + ") - " + offset_to_struct + ")",
-                "(const u16 *)(offsetof(struct MarioAnimsObj, " + indices + ") - " + offset_to_struct + ")",
+                "(u16 *)(offsetof(struct MarioAnimsObj, " + values + ") - " + offset_to_struct + ")",
+                "(u16 *)(offsetof(struct MarioAnimsObj, " + indices + ") - " + offset_to_struct + ")",
                 offset_to_end + " - " + offset_to_struct,
                 str(len_mapping[values]),
                 str(len_mapping[indices]),
@@ -137,20 +163,25 @@ try:
         else:
             is_indices, arr = obj
             type = "u16" if is_indices else "s16"
-            structdef.append("{} {}[{}];".format(type, name, len(arr)))
+            #structdef.append("{} {}[{}];".format(type, name, len(arr)))
+            structdef.append("{} {}[{}];".format(type, name, len_mapping[name]))
             structobj.append("{" + ",".join(arr) + "},")
 
     print("#include \"types.h\"")
     print("#include <stddef.h>")
+    print('#include "pc/rom_assets.h"')
     print("")
 
-    print("const struct MarioAnimsObj {")
+    print("struct MarioAnimsObj {")
     for s in structdef:
         print(s)
     print("} gMarioAnims = {")
     for s in structobj:
         print(s)
     print("};")
+
+    for asset in asset_loads:
+        print(asset)
 
 except Exception as e:
     note = "NOTE! The mario animation C files are not processed by a normal C compiler, but by the script in tools/mario_anims_converter.py. The format is much more strict than normal C, so please follow the syntax of existing files.\n"

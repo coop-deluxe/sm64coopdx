@@ -32,7 +32,6 @@ extern OSMesg D_80339CD4;
 extern struct VblankHandler gGameVblankHandler;
 extern uintptr_t gPhysicalFrameBuffers[3];
 extern uintptr_t gPhysicalZBuffer;
-extern void *D_80339CF0[MAX_PLAYERS];
 extern void *gDemoTargetAnim;
 extern struct SPTask *gGfxSPTask;
 extern Gfx *gDisplayListHead;

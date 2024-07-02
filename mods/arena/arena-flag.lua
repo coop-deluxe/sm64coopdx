@@ -1,5 +1,3 @@
-if SM64COOPDX_VERSION == nil then return end
-
 ARENA_FLAG_INVALID_GLOBAL = 0xFF
 ---
 

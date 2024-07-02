@@ -36,7 +36,7 @@ void djui_panel_do_host(bool reconnecting, bool playSound) {
     gChangeLevelTransition = gLevelValues.entryLevel;
 
     if (gMarioState->marioObj) vec3f_copy(gMarioState->marioObj->header.gfx.cameraToObject, gGlobalSoundSource);
-    if (playSound) { play_character_sound(gMarioState, CHAR_SOUND_OKEY_DOKEY); }
+    if (playSound) { gDelayedInitSound = CHAR_SOUND_OKEY_DOKEY; }
 
     play_transition(WARP_TRANSITION_FADE_INTO_STAR, 0x14, 0x00, 0x00, 0x00);
 }
@@ -57,7 +57,7 @@ void djui_panel_host_message_create(struct DjuiBase* caller) {
 
     f32 textHeight = 32 * 0.8125f * warningLines + 8;
 
-    struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(HOST_MESSAGE, INFO_TITLE));
+    struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(HOST_MESSAGE, INFO_TITLE), false);
     struct DjuiBase* body = djui_three_panel_get_body(panel);
     {
         struct DjuiText* text1 = djui_text_create(body, warningMessage);

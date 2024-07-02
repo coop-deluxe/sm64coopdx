@@ -39,6 +39,13 @@ struct GrowingPoolNode
     struct GrowingPoolNode* prev;
 };
 
+struct GrowingArray
+{
+    void **buffer;
+    u32 count;
+    u32 capacity;
+};
+
 struct MarioAnimation;
 struct Animation;
 
@@ -63,10 +70,15 @@ struct GrowingPool* growing_pool_init(struct GrowingPool* pool, u32 nodeSize);
 void* growing_pool_alloc(struct GrowingPool *pool, u32 size);
 void growing_pool_free_pool(struct GrowingPool *pool);
 
+struct GrowingArray *growing_array_init(struct GrowingArray *array, u32 capacity);
+void *growing_array_alloc(struct GrowingArray *array, u32 size);
+void growing_array_free(struct GrowingArray **array);
+void growing_array_debug_print(struct GrowingArray *array, const char *name, s32 x, s32 y);
+
 void alloc_display_list_reset(void);
 void *alloc_display_list(u32 size);
 
 void alloc_anim_dma_table(struct MarioAnimation* marioAnim, void *b, struct Animation *targetAnim);
-s32 load_patchable_table(struct MarioAnimation *a, u32 b);
+s32 load_patchable_table(struct MarioAnimation *a, u32 b, bool isAnim);
 
 #endif // MEMORY_H

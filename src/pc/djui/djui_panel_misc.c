@@ -11,6 +11,9 @@
 #ifdef DISCORD_SDK
 #include "pc/discord/discord.h"
 #endif
+#if defined(_WIN32) || defined(_WIN64)
+#include <windows.h>
+#endif
 
 static void djui_panel_compatibility_checkbox_on_value_change(UNUSED struct DjuiBase* caller) {
 #ifdef DISCORD_SDK
@@ -20,7 +23,7 @@ static void djui_panel_compatibility_checkbox_on_value_change(UNUSED struct Djui
 
 #ifdef DEVELOPMENT
 void djui_panel_options_debug_create(struct DjuiBase* caller) {
-    struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(MISC, DEBUG_TITLE));
+    struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(MISC, DEBUG_TITLE), false);
     struct DjuiBase* body = djui_three_panel_get_body(panel);
 
     {
@@ -38,26 +41,47 @@ void djui_panel_options_debug_create(struct DjuiBase* caller) {
 }
 #endif
 
+static void djui_panel_options_open_user_folder(UNUSED struct DjuiBase* caller) {
+#if defined(_WIN32) || defined(_WIN64)
+    // Windows
+    ShellExecuteA(NULL, "open", fs_get_write_path(""), NULL, NULL, SW_SHOWNORMAL);
+#elif __linux__
+    // Linux
+    char command[512];
+    snprintf(command, sizeof(command), "xdg-open \"%s\"", fs_get_write_path(""));
+    system(command);
+#elif __APPLE__
+    // macOS
+    char command[512];
+    snprintf(command, sizeof(command), "open \"%s\"", fs_get_write_path(""));
+    system(command);
+#endif
+}
+
 void djui_panel_misc_create(struct DjuiBase* caller) {
-    struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(MISC, MISC_TITLE));
+    struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(MISC, MISC_TITLE), false);
     struct DjuiBase* body = djui_three_panel_get_body(panel);
 
     djui_themes_init();
 
     {
         djui_checkbox_create(body, DLANG(MISC, DISABLE_POPUPS), &configDisablePopups, NULL);
-        if (gDjuiInMainMenu) {
-            djui_checkbox_create(body, DLANG(MISC, COOP_COMPATIBILITY), &configCoopCompatibility, djui_panel_compatibility_checkbox_on_value_change);
-        }
 #ifndef DEVELOPMENT
         djui_checkbox_create(body, DLANG(MISC, LUA_PROFILER), &configLuaProfiler, NULL);
 #endif
-        
+
         djui_button_create(body, DLANG(MISC, LANGUAGE), DJUI_BUTTON_STYLE_NORMAL, djui_panel_language_create);
         djui_button_create(body, DLANG(MISC, MENU_OPTIONS), DJUI_BUTTON_STYLE_NORMAL, djui_panel_main_menu_create);
         djui_button_create(body, DLANG(MISC, INFORMATION), DJUI_BUTTON_STYLE_NORMAL, djui_panel_info_create);
 #ifdef DEVELOPMENT
         djui_button_create(body, DLANG(MISC, DEBUG), DJUI_BUTTON_STYLE_NORMAL, djui_panel_options_debug_create);
+#endif
+#ifndef HANDHELD
+#if defined(_WIN32) || defined(_WIN64)
+        djui_button_create(body, DLANG(OPTIONS, APPDATA), DJUI_BUTTON_STYLE_NORMAL, djui_panel_options_open_user_folder);
+#elif __linux__ || __APPLE__ || __MACH__
+        djui_button_create(body, DLANG(OPTIONS, USER_FOLDER), DJUI_BUTTON_STYLE_NORMAL, djui_panel_options_open_user_folder);
+#endif
 #endif
         djui_button_create(body, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
     }

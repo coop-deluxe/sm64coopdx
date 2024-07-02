@@ -5,11 +5,11 @@
 #include "object_constants.h"
 #include "behavior_data.h"
 #include "behavior_table.h"
-#include "src/game/memory.h"
-#include "src/game/object_helpers.h"
-#include "src/game/obj_behaviors.h"
-#include "src/game/object_list_processor.h"
-#include "src/game/area.h"
+#include "game/memory.h"
+#include "game/object_helpers.h"
+#include "game/obj_behaviors.h"
+#include "game/object_list_processor.h"
+#include "game/area.h"
 #include "pc/lua/smlua_hooks.h"
 #include "pc/debuglog.h"
 #include "pc/utils/misc.h"
@@ -150,7 +150,7 @@ static void packet_write_object_full_sync(struct Packet* p, struct Object* o) {
     if (!so || !so->fullObjectSync) { return; }
 
     // write all of raw data
-    packet_write(p, o->rawData.asU32, sizeof(u32) * 80);
+    packet_write(p, o->rawData.asU32, sizeof(u32) * OBJECT_NUM_FIELDS);
 }
 
 static void packet_read_object_full_sync(struct Packet* p, struct Object* o) {
@@ -158,7 +158,7 @@ static void packet_read_object_full_sync(struct Packet* p, struct Object* o) {
     if (!so || !so->fullObjectSync) { return; }
 
     // read all of raw data
-    packet_read(p, o->rawData.asU32, sizeof(u32) * 80);
+    packet_read(p, o->rawData.asU32, sizeof(u32) * OBJECT_NUM_FIELDS);
 }
 
 // ----- standard fields ----- //

@@ -9,8 +9,6 @@
 - [characters.h](#charactersh)
     - [enum CharacterSound](#enum-CharacterSound)
     - [enum CharacterType](#enum-CharacterType)
-    - [enum PalettePreset](#enum-PalettePreset)
-    - [enum PlayerPart](#enum-PlayerPart)
 - [dialog_ids.h](#dialog_idsh)
     - [enum DialogId](#enum-DialogId)
 - [djui_console.h](#djui_consoleh)
@@ -55,6 +53,8 @@
 - [object_list_processor.h](#object_list_processorh)
     - [enum ObjectList](#enum-ObjectList)
 - [os_cont.h](#os_conth)
+- [player_palette.h](#player_paletteh)
+    - [enum PlayerPart](#enum-PlayerPart)
 - [save_file.h](#save_fileh)
     - [enum SaveFileIndex](#enum-SaveFileIndex)
 - [seq_ids.h](#seq_idsh)
@@ -63,6 +63,7 @@
 - [smlua_hooks.h](#smlua_hooksh)
     - [enum LuaActionHookType](#enum-LuaActionHookType)
     - [enum LuaHookedEventType](#enum-LuaHookedEventType)
+    - [enum LuaModMenuElementType](#enum-LuaModMenuElementType)
 - [smlua_misc_utils.h](#smlua_misc_utilsh)
     - [enum HudDisplayFlags](#enum-HudDisplayFlags)
     - [enum HudDisplayValue](#enum-HudDisplayValue)
@@ -777,6 +778,7 @@
 - CUTSCENE_KEY_DANCE
 - CUTSCENE_LOOP
 - CUTSCENE_NONPAINTING_DEATH
+- CUTSCENE_PALETTE_EDITOR
 - CUTSCENE_PREPARE_CANNON
 - CUTSCENE_QUICKSAND_DEATH
 - CUTSCENE_RACE_DIALOG
@@ -898,70 +900,6 @@
 | CT_WALUIGI | 3 |
 | CT_WARIO | 4 |
 | CT_MAX | 5 |
-
-### [enum PalettePreset](#PalettePreset)
-| Identifier | Value |
-| :--------- | :---- |
-| PALETTE_MARIO | 0 |
-| PALETTE_LUIGI | 1 |
-| PALETTE_TOAD | 2 |
-| PALETTE_WARIO | 3 |
-| PALETTE_WALUIGI | 4 |
-| PALETTE_TOADETTE | 5 |
-| PALETTE_YOSHI | 6 |
-| PALETTE_BUCKEN_BERRY | 7 |
-| PALETTE_ALA_GOLD | 8 |
-| PALETTE_FIRE_MARIO | 9 |
-| PALETTE_FIRE_LUIGI | 10 |
-| PALETTE_ICE_MARIO | 11 |
-| PALETTE_ICE_LUIGI | 12 |
-| PALETTE_TOADSWORTH | 13 |
-| PALETTE_PEACH | 14 |
-| PALETTE_DAISY | 15 |
-| PALETTE_WARIO_WOODS | 16 |
-| PALETTE_GB | 17 |
-| PALETTE_N64 | 18 |
-| PALETTE_SNES | 19 |
-| PALETTE_SWITCH | 20 |
-| PALETTE_CLOVER | 21 |
-| PALETTE_COBALT | 22 |
-| PALETTE_RUBY | 23 |
-| PALETTE_FURY | 24 |
-| PALETTE_HOT_PINK | 25 |
-| PALETTE_NICE_PINK | 26 |
-| PALETTE_SEAFOAM | 27 |
-| PALETTE_LILAC | 28 |
-| PALETTE_COPPER | 29 |
-| PALETTE_AZURE | 30 |
-| PALETTE_BURGUNDY | 31 |
-| PALETTE_MINT | 32 |
-| PALETTE_ORANGE | 33 |
-| PALETTE_ARCTIC | 34 |
-| PALETTE_BLACK | 35 |
-| PALETTE_BUBBLEGUM | 36 |
-| PALETTE_BUSY_BEE | 37 |
-| PALETTE_FORTRESS | 38 |
-| PALETTE_BLUEBERRY_PIE | 39 |
-| PALETTE_RASPBERRY | 40 |
-| PALETTE_COFFEE | 41 |
-| PALETTE_MARGIN | 42 |
-| PALETTE_PUMPKIN | 43 |
-| PALETTE_SOIL | 44 |
-| PALETTE_CREVASE | 45 |
-| PALETTE_PRESET_MAX | 46 |
-
-### [enum PlayerPart](#PlayerPart)
-| Identifier | Value |
-| :--------- | :---- |
-| PANTS | 0 |
-| SHIRT | 1 |
-| GLOVES | 2 |
-| SHOES | 3 |
-| HAIR | 4 |
-| SKIN | 5 |
-| CAP | 6 |
-| PLAYER_PART_MAX | 7 |
-| METAL | CAP |
 
 [:arrow_up_small:](#)
 
@@ -1320,6 +1258,7 @@
 - ATTACK_GROUND_POUND_OR_TWIRL
 - ATTACK_KICK_OR_TRIP
 - ATTACK_PUNCH
+- INTERACT_UNKNOWN_08
 - INT_ANY_ATTACK
 - INT_ATTACK_NOT_FROM_BELOW
 - INT_ATTACK_NOT_WEAK_FROM_ABOVE
@@ -1382,7 +1321,7 @@
 | INTERACT_CAP | (1 << 5) |
 | INTERACT_POLE | (1 << 6) |
 | INTERACT_KOOPA | (1 << 7) |
-| INTERACT_UNKNOWN_08 | (1 << 8) |
+| INTERACT_SPINY_WALKING | (1 << 8) |
 | INTERACT_BREAKABLE | (1 << 9) |
 | INTERACT_STRONG_WIND | (1 << 10) |
 | INTERACT_WARP_DOOR | (1 << 11) |
@@ -1489,6 +1428,9 @@
 - MARIO_SPAWN_UNKNOWN_02
 - MARIO_SPAWN_UNKNOWN_03
 - MARIO_SPAWN_UNKNOWN_27
+- PAINTING_WARP_INDEX_END
+- PAINTING_WARP_INDEX_FA
+- PAINTING_WARP_INDEX_START
 - PRESS_START_DEMO_TIMER
 - SPECIAL_WARP_CAKE
 - SPECIAL_WARP_GODDARD
@@ -2068,6 +2010,7 @@
 <br />
 
 ## [network_player.h](#network_player.h)
+- MAX_DESCRIPTION_STRING
 - MAX_RX_SEQ_IDS
 - NETWORK_PLAYER_PING_TIMEOUT
 - NETWORK_PLAYER_TIMEOUT
@@ -2816,6 +2759,27 @@
 
 <br />
 
+## [player_palette.h](#player_palette.h)
+- MAX_PRESET_PALETTES
+
+### [enum PlayerPart](#PlayerPart)
+| Identifier | Value |
+| :--------- | :---- |
+| PANTS | 0 |
+| SHIRT | 1 |
+| GLOVES | 2 |
+| SHOES | 3 |
+| HAIR | 4 |
+| SKIN | 5 |
+| CAP | 6 |
+| EMBLEM | 7 |
+| PLAYER_PART_MAX | 8 |
+| METAL | EMBLEM |
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [save_file.h](#save_file.h)
 - EEPROM_SIZE
 - NUM_SAVE_FILES
@@ -3142,6 +3106,7 @@
 - ACT_STOP_CROUCHING
 - ACT_SUFFOCATION
 - ACT_SWIMMING_END
+- ACT_TAKING_OFF_CAP
 - ACT_TELEPORT_FADE_IN
 - ACT_TELEPORT_FADE_OUT
 - ACT_THROWING
@@ -3325,10 +3290,23 @@
 | HOOK_ON_HUD_RENDER_BEHIND | 36 |
 | HOOK_ON_COLLIDE_LEVEL_BOUNDS | 37 |
 | HOOK_MIRROR_MARIO_RENDER | 38 |
-| HOOK_OVERRIDE_PHYS_STEP_DEFACTO_SPEED | 39 |
+| HOOK_MARIO_OVERRIDE_PHYS_STEP_DEFACTO_SPEED | 39 |
 | HOOK_ON_OBJECT_LOAD | 40 |
 | HOOK_ON_PLAY_SOUND | 41 |
-| HOOK_MAX | 42 |
+| HOOK_ON_SEQ_LOAD | 42 |
+| HOOK_ON_ATTACK_OBJECT | 43 |
+| HOOK_ON_LANGUAGE_CHANGED | 44 |
+| HOOK_ON_MODS_LOADED | 45 |
+| HOOK_MAX | 46 |
+
+### [enum LuaModMenuElementType](#LuaModMenuElementType)
+| Identifier | Value |
+| :--------- | :---- |
+| MOD_MENU_ELEMENT_BUTTON | 0 |
+| MOD_MENU_ELEMENT_CHECKBOX | 1 |
+| MOD_MENU_ELEMENT_SLIDER | 2 |
+| MOD_MENU_ELEMENT_INPUTBOX | 3 |
+| MOD_MENU_ELEMENT_MAX | 4 |
 
 [:arrow_up_small:](#)
 
@@ -4029,6 +4007,7 @@
 - SOUND_MARIO_HOOHOO
 - SOUND_MARIO_HRMM
 - SOUND_MARIO_IMA_TIRED
+- SOUND_MARIO_LETS_A_GO
 - SOUND_MARIO_MAMA_MIA
 - SOUND_MARIO_OKEY_DOKEY
 - SOUND_MARIO_ON_FIRE
@@ -4450,7 +4429,11 @@
 - COOP_OBJ_FLAG_NON_SYNC
 - GRAPH_NODE_GUARD
 - MAX_PLAYERS
+- OBJECT_CUSTOM_FIELDS_START
 - OBJECT_MAX_BHV_STACK
+- OBJECT_NUM_CUSTOM_FIELDS
+- OBJECT_NUM_FIELDS
+- OBJECT_NUM_REGULAR_FIELDS
 - PLAY_MODE_CHANGE_AREA
 - PLAY_MODE_CHANGE_LEVEL
 - PLAY_MODE_FRAME_ADVANCE
@@ -4478,7 +4461,6 @@
 <br />
 
 ## [version.h](#version.h)
-- MAX_LOCAL_VERSION_LENGTH
 - MAX_VERSION_LENGTH
 - MINOR_VERSION_NUMBER
 - PATCH_VERSION_NUMBER

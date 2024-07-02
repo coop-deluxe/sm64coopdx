@@ -1,7 +1,6 @@
 #include "djui.h"
 #include "djui_panel.h"
 #include "pc/controller/controller_mouse.h"
-#include "pc/controller/controller_sdl.h"
 #include "pc/gfx/gfx_window_manager_api.h"
 #include "pc/pc_main.h"
 
@@ -48,7 +47,7 @@ static void djui_cursor_base_hover_location(struct DjuiBase* base, f32* x, f32* 
 }
 
 void djui_cursor_input_controlled_center(struct DjuiBase* base) {
-    if (!sCursorMouseControlled) {
+    if (!sCursorMouseControlled && (!base || (base && base->interactable && base->interactable->enabled))) {
         sInputControlledBase = base;
         djui_cursor_set_visible(base != NULL);
     }
@@ -65,7 +64,7 @@ static f32 djui_cursor_base_distance(struct DjuiBase* base, f32 xScale, f32 ySca
 static void djui_cursor_move_check(s8 xDir, s8 yDir, struct DjuiBase** pick, struct DjuiBase* base) {
     if (!base->visible) { return; }
 
-    if (base->interactable != NULL) {
+    if (base->interactable != NULL && base->interactable->enabled) {
         f32 x1, y1, x2, y2;
         x1 = base->elem.x;
         y1 = base->elem.y;
@@ -118,7 +117,7 @@ void djui_cursor_update(void) {
     if (sMouseCursor == NULL) { return; }
     if (!djui_panel_is_active()) { return; }
 
-    controller_sdl_read_mouse_window();
+    controller_mouse_read_window();
 
     // check if mouse is in control again
     static bool sFirstUpdate = true;

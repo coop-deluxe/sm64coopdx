@@ -5,13 +5,13 @@
 - [Animation](#Animation)
 - [AnimationTable](#AnimationTable)
 - [Area](#Area)
-- [BassAudio](#BassAudio)
 - [BehaviorDialogs](#BehaviorDialogs)
 - [BehaviorTrajectories](#BehaviorTrajectories)
 - [BehaviorValues](#BehaviorValues)
 - [BullyCollisionData](#BullyCollisionData)
 - [Camera](#Camera)
 - [CameraFOVStatus](#CameraFOVStatus)
+- [CameraOverride](#CameraOverride)
 - [CameraStoredInfo](#CameraStoredInfo)
 - [CameraTrigger](#CameraTrigger)
 - [ChainSegment](#ChainSegment)
@@ -43,6 +43,8 @@
 - [MarioBodyState](#MarioBodyState)
 - [MarioState](#MarioState)
 - [Mod](#Mod)
+- [ModAudio](#ModAudio)
+- [ModAudioSampleCopies](#ModAudioSampleCopies)
 - [ModFile](#ModFile)
 - [ModeTransitionInfo](#ModeTransitionInfo)
 - [NametagsSettings](#NametagsSettings)
@@ -158,20 +160,6 @@
 | terrainData | `Pointer` <`integer`> | read-only |
 | terrainType | `integer` |  |
 | warpNodes | [ObjectWarpNode](structs.md#ObjectWarpNode) | read-only |
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [BassAudio](#BassAudio)
-
-| Field | Type | Access |
-| ----- | ---- | ------ |
-| file | [ModFile](structs.md#ModFile) | read-only |
-| handle | `integer` | read-only |
-| isStream | `boolean` | read-only |
-| loaded | `boolean` | read-only |
-| rawData | `string` | read-only |
 
 [:arrow_up_small:](#)
 
@@ -319,6 +307,7 @@
 | BowlingBallThiSmallSpeed | `number` |  |
 | BowlingBallTtmSpeed | `number` |  |
 | ChillBullyDeathPosY | `number` |  |
+| CourtyardBoosRequirement | `integer` |  |
 | GrateStarRequirement | `integer` |  |
 | InfiniteRenderDistance | `integer` |  |
 | KingBobombFVel | `number` |  |
@@ -378,6 +367,7 @@
 | mode | `integer` |  |
 | mtx | `Mat4` | read-only |
 | nextYaw | `integer` |  |
+| paletteEditorCap | `boolean` |  |
 | pos | [Vec3f](structs.md#Vec3f) | read-only |
 | unusedVec1 | [Vec3f](structs.md#Vec3f) | read-only |
 | yaw | `integer` |  |
@@ -398,6 +388,16 @@
 | shakePhase | `integer` |  |
 | shakeSpeed | `integer` |  |
 | unusedIsSleeping | `integer` |  |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [CameraOverride](#CameraOverride)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| override | `boolean` |  |
 
 [:arrow_up_small:](#)
 
@@ -1097,6 +1097,7 @@
 | areaIndex | `integer` |  |
 | cameraToObject | [Vec3f](structs.md#Vec3f) | read-only |
 | disableAutomaticShadowPos | `boolean` |  |
+| inited | `boolean` |  |
 | node | [GraphNode](structs.md#GraphNode) | read-only |
 | pos | [Vec3f](structs.md#Vec3f) | read-only |
 | prevAngle | [Vec3s](structs.md#Vec3s) | read-only |
@@ -1243,6 +1244,8 @@
 | hudCapTimer | `integer` |  |
 | hudRedCoinsRadar | `integer` |  |
 | hudSecretsRadar | `integer` |  |
+| infiniteStairsRequirement | `integer` |  |
+| jrbDarkenSkybox | `integer` |  |
 | maxCoins | `integer` |  |
 | maxLives | `integer` |  |
 | metalCapDuration | `integer` |  |
@@ -1355,6 +1358,7 @@
 | controller | [Controller](structs.md#Controller) | read-only |
 | curAnimOffset | `number` |  |
 | currentRoom | `integer` |  |
+| dialogId | `integer` | read-only |
 | doubleJumpTimer | `integer` |  |
 | faceAngle | [Vec3s](structs.md#Vec3s) | read-only |
 | fadeWarpOpacity | `integer` |  |
@@ -1427,10 +1431,10 @@
 | ----- | ---- | ------ |
 | basePath | `string` | read-only |
 | customBehaviorIndex | `integer` | read-only |
-| deluxe | `boolean` | read-only |
 | description | `string` | read-only |
 | enabled | `boolean` | read-only |
 | fileCount | `integer` | read-only |
+| ignoreScriptWarnings | `boolean` | read-only |
 | incompatible | `string` | read-only |
 | index | `integer` | read-only |
 | isDirectory | `boolean` | read-only |
@@ -1439,6 +1443,32 @@
 | relativePath | `string` | read-only |
 | renderBehindHud | `boolean` | read-only |
 | selectable | `boolean` | read-only |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [ModAudio](#ModAudio)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| baseVolume | `number` |  |
+| file | [ModFile](structs.md#ModFile) |  |
+| isStream | `boolean` |  |
+| loaded | `boolean` |  |
+| sampleCopiesTail | [ModAudioSampleCopies](structs.md#ModAudioSampleCopies) |  |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [ModAudioSampleCopies](#ModAudioSampleCopies)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| next | [ModAudioSampleCopies](structs.md#ModAudioSampleCopies) |  |
+| parent | [ModAudio](structs.md#ModAudio) |  |
+| prev | [ModAudioSampleCopies](structs.md#ModAudioSampleCopies) |  |
 
 [:arrow_up_small:](#)
 
@@ -1546,6 +1576,7 @@
 | hurtboxHeight | `number` |  |
 | hurtboxRadius | `number` |  |
 | numCollidedObjs | `integer` |  |
+| numSurfaces | `integer` | read-only |
 | parentObj | [Object](structs.md#Object) |  |
 | platform | [Object](structs.md#Object) |  |
 | prevObj | [Object](structs.md#Object) |  |
@@ -2507,6 +2538,7 @@
 | headlessServer | `integer` |  |
 | maxPlayers | `integer` |  |
 | nametags | `integer` |  |
+| pauseAnywhere | `integer` |  |
 | playerInteractions | [enum PlayerInteractions](constants.md#enum-PlayerInteractions) |  |
 | playerKnockbackStrength | `integer` |  |
 | skipIntro | `integer` |  |

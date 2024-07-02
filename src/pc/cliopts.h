@@ -24,8 +24,9 @@ struct CLIOptions {
     enum NetworkType network;
     unsigned int networkPort;
     char joinIp[IP_MAX_LEN];
-    char playerName[MAX_PLAYER_STRING];
+    char playerName[MAX_CONFIG_STRING];
     bool hideLoadingScreen;
+    bool skipUpdateCheck;
 };
 
 extern struct CLIOptions gCLIOpts;

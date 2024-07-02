@@ -49,13 +49,6 @@
 --- @field public terrainType integer
 --- @field public warpNodes ObjectWarpNode
 
---- @class BassAudio
---- @field public file ModFile
---- @field public handle integer
---- @field public isStream boolean
---- @field public loaded boolean
---- @field public rawData string
-
 --- @class BehaviorDialogs
 --- @field public BobombBuddyBob1Dialog DialogId
 --- @field public BobombBuddyBob2Dialog DialogId
@@ -181,6 +174,7 @@
 --- @field public BowlingBallThiSmallSpeed number
 --- @field public BowlingBallTtmSpeed number
 --- @field public ChillBullyDeathPosY number
+--- @field public CourtyardBoosRequirement integer
 --- @field public GrateStarRequirement integer
 --- @field public InfiniteRenderDistance integer
 --- @field public KingBobombFVel number
@@ -226,6 +220,7 @@
 --- @field public mode integer
 --- @field public mtx Mat4
 --- @field public nextYaw integer
+--- @field public paletteEditorCap boolean
 --- @field public pos Vec3f
 --- @field public unusedVec1 Vec3f
 --- @field public yaw integer
@@ -239,6 +234,9 @@
 --- @field public shakePhase integer
 --- @field public shakeSpeed integer
 --- @field public unusedIsSleeping integer
+
+--- @class CameraOverride
+--- @field public override boolean
 
 --- @class CameraStoredInfo
 --- @field public cannonYOffset number
@@ -800,6 +798,7 @@
 --- @field public areaIndex integer
 --- @field public cameraToObject Vec3f
 --- @field public disableAutomaticShadowPos boolean
+--- @field public inited boolean
 --- @field public node GraphNode
 --- @field public pos Vec3f
 --- @field public prevAngle Vec3s
@@ -904,6 +903,8 @@
 --- @field public hudCapTimer integer
 --- @field public hudRedCoinsRadar integer
 --- @field public hudSecretsRadar integer
+--- @field public infiniteStairsRequirement integer
+--- @field public jrbDarkenSkybox integer
 --- @field public maxCoins integer
 --- @field public maxLives integer
 --- @field public metalCapDuration integer
@@ -988,6 +989,7 @@
 --- @field public controller Controller
 --- @field public curAnimOffset number
 --- @field public currentRoom integer
+--- @field public dialogId integer
 --- @field public doubleJumpTimer integer
 --- @field public faceAngle Vec3s
 --- @field public fadeWarpOpacity integer
@@ -1053,10 +1055,10 @@
 --- @class Mod
 --- @field public basePath string
 --- @field public customBehaviorIndex integer
---- @field public deluxe boolean
 --- @field public description string
 --- @field public enabled boolean
 --- @field public fileCount integer
+--- @field public ignoreScriptWarnings boolean
 --- @field public incompatible string
 --- @field public index integer
 --- @field public isDirectory boolean
@@ -1065,6 +1067,18 @@
 --- @field public relativePath string
 --- @field public renderBehindHud boolean
 --- @field public selectable boolean
+
+--- @class ModAudio
+--- @field public baseVolume number
+--- @field public file ModFile
+--- @field public isStream boolean
+--- @field public loaded boolean
+--- @field public sampleCopiesTail ModAudioSampleCopies
+
+--- @class ModAudioSampleCopies
+--- @field public next ModAudioSampleCopies
+--- @field public parent ModAudio
+--- @field public prev ModAudioSampleCopies
 
 --- @class ModFile
 --- @field public cachedPath string
@@ -1140,6 +1154,7 @@
 --- @field public hurtboxHeight number
 --- @field public hurtboxRadius number
 --- @field public numCollidedObjs integer
+--- @field public numSurfaces integer
 --- @field public o1UpForceSpawn integer
 --- @field public o1UpHiddenUnkF4 integer
 --- @field public oAction integer
@@ -1997,12 +2012,12 @@
 --- @class ServerSettings
 --- @field public bouncyLevelBounds BouncyLevelBounds
 --- @field public bubbleDeath integer
---- @field public enableCheats integer
 --- @field public enablePlayerList integer
 --- @field public enablePlayersInLevelDisplay integer
 --- @field public headlessServer integer
 --- @field public maxPlayers integer
 --- @field public nametags integer
+--- @field public pauseAnywhere integer
 --- @field public playerInteractions PlayerInteractions
 --- @field public playerKnockbackStrength integer
 --- @field public skipIntro integer

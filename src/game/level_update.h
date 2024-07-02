@@ -74,6 +74,11 @@
 
 #define PRESS_START_DEMO_TIMER 800
 
+// From Surface 0xD3 to 0xFC
+#define PAINTING_WARP_INDEX_START 0x00 // Value greater than or equal to Surface 0xD3
+#define PAINTING_WARP_INDEX_FA 0x2A    // THI Huge Painting index left
+#define PAINTING_WARP_INDEX_END 0x2D   // Value less than Surface 0xFD
+
 struct CreditsEntry
 {
     /*0x00*/ u8 levelNum;
@@ -97,10 +102,11 @@ extern u8 unused3[4];
 
 extern s16 gChangeLevel;
 extern s16 gChangeActNum;
+extern s16 gDelayedInitSound;
 
 struct WarpDest {
     u8 type;
-    u8 levelNum;
+    s16 levelNum;
     u8 areaIdx;
     u8 nodeId;
     u32 arg;
@@ -144,8 +150,6 @@ extern bool gNeverEnteredCastle;
 extern u32 gControlTimerStartNat;
 extern u32 gControlTimerStopNat;
 
-extern bool gInPlayerMenu;
-
 enum HUDDisplayFlag {
     HUD_DISPLAY_FLAG_LIVES = 0x0001,
     HUD_DISPLAY_FLAG_COIN_COUNT = 0x0002,
@@ -175,8 +179,8 @@ void warp_special(s32 arg);
 void initiate_warp(s16 destLevel, s16 destArea, s16 destWarpNode, s32 arg3);
 
 s32 lvl_init_or_update(s16 initOrUpdate, UNUSED s32 unused);
-s32 lvl_init_from_save_file(UNUSED s16 arg0, s32 levelNum);
-s32 lvl_set_current_level(UNUSED s16 arg0, s32 levelNum);
+s32 lvl_init_from_save_file(UNUSED s16 arg0, s16 levelNum);
+s32 lvl_set_current_level(UNUSED s16 arg0, s16 levelNum);
 s32 lvl_play_the_end_screen_sound(UNUSED s16 arg0, UNUSED s32 arg1);
 void basic_update(UNUSED s16 *arg);
 

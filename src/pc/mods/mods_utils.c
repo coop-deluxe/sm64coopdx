@@ -25,16 +25,6 @@ void mods_size_enforce(struct Mods* mods) {
     }
 }
 
-void mods_deluxe_enforce(struct Mods* mods) {
-    for (int i = 0; i < mods->entryCount; i++) {
-        struct Mod* mod = mods->entries[i];
-        if (mod->deluxe && configCoopCompatibility) {
-            mod->enabled = false;
-            mod->selectable = false;
-        }
-    }
-}
-
 static bool mods_incompatible_match(struct Mod* a, struct Mod* b) {
     if (a->incompatible == NULL || b->incompatible == NULL) {
         return false;
@@ -89,7 +79,6 @@ void mods_update_selectable(void) {
     }
 
     mods_size_enforce(&gLocalMods);
-    mods_deluxe_enforce(&gLocalMods);
 }
 
 void mods_delete_folder(char* path) {
@@ -104,7 +93,7 @@ void mods_delete_folder(char* path) {
         if (!strcmp(dir->d_name, "..")) { continue; }
         if (!concat_path(fullPath, path, dir->d_name)) { continue; }
 
-        if (is_directory(fullPath)) {
+        if (fs_sys_dir_exists(fullPath)) {
             mods_delete_folder(fullPath);
         } else if (fs_sys_file_exists(fullPath)) {
             if (unlink(fullPath) == -1) {
@@ -171,7 +160,7 @@ bool mod_file_create_directories(struct Mod* mod, struct ModFile* modFile) {
 
 //////////////////////////////////////////////////////////////////////////////////////////
 
-bool str_ends_with(char* string, char* suffix) {
+bool str_ends_with(const char* string, const char* suffix) {
     if (string == NULL || suffix == NULL) { return false; }
 
     size_t stringLength = strlen(string);
@@ -179,7 +168,14 @@ bool str_ends_with(char* string, char* suffix) {
 
     if (suffixLength > stringLength) { return false; }
 
-    return !strcmp(&string[stringLength - suffixLength], suffix);
+#ifdef _WIN32
+    // Paths on Windows are case-insensitive and might have
+    // upper-case or mixed-case endings.
+    return (0 == _stricmp(&(string[stringLength - suffixLength]), suffix));
+#else
+    // Always expecting lower-case file paths and extensions
+    return (0 == strcmp(&(string[stringLength - suffixLength]), suffix));
+#endif
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -195,75 +191,6 @@ char* extract_lua_field(char* fieldName, char* buffer) {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-
-const char* path_to_executable(void) {
-    static char exePath[SYS_MAX_PATH] = { 0 };
-    if (exePath[0] != '\0') { return exePath; }
-
-#if defined(_WIN32) || defined(_WIN64)
-    HMODULE hModule = GetModuleHandle(NULL);
-    if (hModule == NULL) {
-        LOG_ERROR("unable to retrieve absolute windows path!");
-        return NULL;
-    }
-    GetModuleFileName(hModule, exePath, SYS_MAX_PATH-1);
-#elif defined(OSX_BUILD)
-    u32 bufsize = SYS_MAX_PATH-1;
-    if (_NSGetExecutablePath(exePath, &bufsize) != 0) {
-        LOG_ERROR("unable to retrieve absolute mac path!");
-        return NULL;
-    }
-#else
-    char procPath[SYS_MAX_PATH] = { 0 };
-    snprintf(procPath, SYS_MAX_PATH-1, "/proc/%d/exe", getpid());
-    s32 rc = readlink(procPath, exePath, SYS_MAX_PATH-1);
-    if (rc <= 0) {
-        LOG_ERROR("unable to retrieve absolute linux path!");
-        return NULL;
-    }
-#endif
-    return exePath;
-}
-
-bool path_is_portable_filename(char* string) {
-    char* s = string;
-    while (*s != '\0') {
-        char c = *s;
-
-        if (c < ' ' || c > '~') {
-            // outside of printable range
-            return false;
-        }
-
-        switch (c) {
-            // unallowed in filenames
-            case '/':
-            case '\\':
-            case '<':
-            case '>':
-            case ':':
-            case '"':
-            case '|':
-            case '?':
-            case '*':
-            return false;
-        }
-
-        s++;
-    }
-
-    return true;
-}
-
-bool path_exists(char* path) {
-    struct stat sb = { 0 };
-    return (stat(path, &sb) == 0);
-}
-
-bool is_directory(char* path) {
-    struct stat sb = { 0 };
-    return (stat(path, &sb) == 0 && S_ISDIR(sb.st_mode));
-}
 
 void normalize_path(char* path) {
     // replace slashes
@@ -309,7 +236,7 @@ void path_get_folder(char* path, char* outpath) {
 
 bool directory_sanity_check(struct dirent* dir, char* dirPath, char* outPath) {
     // skip non-portable filenames
-    if (!path_is_portable_filename(dir->d_name)) { return false; }
+    if (!fs_sys_filename_is_portable(dir->d_name)) { return false; }
 
     // skip anything that contains \ or /
     if (strchr(dir->d_name, '/') != NULL)  { return false; }
@@ -326,7 +253,7 @@ bool directory_sanity_check(struct dirent* dir, char* dirPath, char* outPath) {
     normalize_path(outPath);
 
     // sanity check
-    if (!path_exists(outPath)) {
+    if (!fs_sys_path_exists(outPath)) {
         LOG_ERROR("Path doesn't exist: '%s'", outPath);
         return false;
     }

@@ -36,9 +36,8 @@ int detect_player_hitbox_overlap(struct MarioState* local, struct MarioState* re
     f32 sp3C = aTorso[1] - a->hitboxDownOffset;
     f32 sp38 = bTorso[1] - b->hitboxDownOffset;
     f32 dx = aTorso[0] - bTorso[0];
-    UNUSED f32 sp30 = sp3C - sp38;
     f32 dz = aTorso[2] - bTorso[2];
-    f32 collisionRadius = (a->hitboxRadius + b->hitboxRadius) * (configCoopCompatibility ? 2.25f : 1.6f); // 1.5f before
+    f32 collisionRadius = (a->hitboxRadius + b->hitboxRadius) * 1.75f; // slightly increased from 1.5f for the sake of it
     f32 distance = sqrtf(dx * dx + dz * dz);
 
     if (collisionRadius * scale > distance) {
@@ -69,7 +68,6 @@ s32 detect_object_hitbox_overlap(struct Object *a, struct Object *b) {
     f32 sp3C = a->oPosY - a->hitboxDownOffset;
     f32 sp38 = b->oPosY - b->hitboxDownOffset;
     f32 dx = a->oPosX - b->oPosX;
-    UNUSED f32 sp30 = sp3C - sp38;
     f32 dz = a->oPosZ - b->oPosZ;
     f32 collisionRadius = a->hitboxRadius + b->hitboxRadius;
     f32 distance = sqrtf(dx * dx + dz * dz);
@@ -113,7 +111,6 @@ s32 detect_object_hurtbox_overlap(struct Object *a, struct Object *b) {
     f32 sp3C = a->oPosY - a->hitboxDownOffset;
     f32 sp38 = b->oPosY - b->hitboxDownOffset;
     f32 sp34 = a->oPosX - b->oPosX;
-    UNUSED f32 sp30 = sp3C - sp38;
     f32 sp2C = a->oPosZ - b->oPosZ;
     f32 sp28 = a->hurtboxRadius + b->hurtboxRadius;
     f32 sp24 = sqrtf(sp34 * sp34 + sp2C * sp2C);

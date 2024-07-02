@@ -1,25 +1,14 @@
+#include "pc/rom_assets.h"
 // White Particle Small
 
 // 0x04032700
-static const Vtx white_particle_small_vertex[] = {
-    {{{    -4,      0,      0}, 0, {     0,    960}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     4,      0,      0}, 0, {   960,    960}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     4,      8,      0}, 0, {   960,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    -4,      8,      0}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(white_particle_small_vertex, 0x00114750, 78432, 0x00032700, 64);
 
 // 0x04032740
-static const Vtx white_particle_small_unused_vertex[] = {
-    {{{    -4,      0,      0}, 0, {     0,    960}, {0xff, 0x00, 0x00, 0xff}}},
-    {{{     4,      0,      0}, 0, {   960,    960}, {0xff, 0x00, 0x00, 0xff}}},
-    {{{     4,      8,      0}, 0, {   960,      0}, {0xff, 0x00, 0x00, 0xff}}},
-    {{{    -4,      8,      0}, 0, {     0,      0}, {0xff, 0x00, 0x00, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(white_particle_small_unused_vertex, 0x00114750, 78432, 0x00032740, 64);
 
 // 0x04032780
-ALIGNED8 const Texture white_particle_small_texture[] = {
-#include "actors/white_particle_small/small_snow_particle.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(white_particle_small_texture, "actors/white_particle_small/small_snow_particle.rgba16.inc.c", 0x00114750, 78432, 0x00032780, 512);
 
 // 0x04032980 - 0x040329E0
 const Gfx white_particle_small_dl_begin[] = {

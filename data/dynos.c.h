@@ -5,7 +5,7 @@
 #include "dynos.h"
 #include "types.h"
 #include "engine/behavior_script.h"
-#include "src/game/moving_texture.h"
+#include "game/moving_texture.h"
 
 void *dynos_swap_cmd(void *cmd);
 
@@ -26,17 +26,15 @@ bool dynos_warp_to_castle(s32 aLevel);
 
 // -- dynos packs -- //
 void dynos_gfx_init(void);
-void dynos_packs_init(void);
 int dynos_pack_get_count(void);
 const char* dynos_pack_get_name(s32 index);
 bool dynos_pack_get_enabled(s32 index);
 void dynos_pack_set_enabled(s32 index, bool value);
 bool dynos_pack_get_exists(s32 index);
-void dynos_pack_init(void);
 void dynos_generate_packs(const char* directory);
 
 // -- geos -- //
-void dynos_actor_override(void** aSharedChild);
+void dynos_actor_override(struct Object* obj, void** aSharedChild);
 void dynos_add_actor_custom(const char *filePath, const char* geoName);
 const void* dynos_geolayout_get(const char *name);
 

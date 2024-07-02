@@ -8,11 +8,11 @@ extern "C" {
 #include "include/surface_terrains.h"
 #include "include/seq_ids.h"
 #include "level_commands.h"
-#include "src/game/level_update.h"
+#include "game/level_update.h"
 #include "include/dialog_ids.h"
 #include "levels/scripts.h"
 #include "levels/menu/header.h"
-#include "src/game/area.h"
+#include "game/area.h"
 }
 
 #define POINTER 0xD34DB33F

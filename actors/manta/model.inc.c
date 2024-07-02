@@ -1,3 +1,4 @@
+#include "pc/rom_assets.h"
 // Manta Ray
 
 // 0x05001758
@@ -19,60 +20,22 @@ static const Lights1 manta_lights_unused = gdSPDefLights1(
 );
 
 // 0x050017A0
-ALIGNED8 const Texture manta_seg5_texture_050017A0[] = {
-#include "actors/manta/manta_fin_corner.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(manta_seg5_texture_050017A0, "actors/manta/manta_fin_corner.rgba16.inc.c", 0x0013b910, 41727, 0x000017a0, 2048);
 
 // 0x05001FA0
-ALIGNED8 const Texture manta_seg5_texture_05001FA0[] = {
-#include "actors/manta/manta_gills.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(manta_seg5_texture_05001FA0, "actors/manta/manta_gills.rgba16.inc.c", 0x0013b910, 41727, 0x00001fa0, 4096);
 
 // 0x05002FA0
-ALIGNED8 const Texture manta_seg5_texture_05002FA0[] = {
-#include "actors/manta/manta_eye.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(manta_seg5_texture_05002FA0, "actors/manta/manta_eye.rgba16.inc.c", 0x0013b910, 41727, 0x00002fa0, 2048);
 
 // 0x050037A0
-ALIGNED8 const Texture manta_seg5_texture_050037A0[] = {
-#include "actors/manta/manta_fin_edge.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(manta_seg5_texture_050037A0, "actors/manta/manta_fin_edge.rgba16.inc.c", 0x0013b910, 41727, 0x000037a0, 4096);
 
 // 0x050047A0
-static const Vtx manta_seg5_vertex_050047A0[] = {
-    {{{    60,    -41,     -9}, 0, {   112,    436}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    51,      3,    -29}, 0, {   718,    778}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    60,      2,      2}, 0, {   836,    436}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    27,    -25,    -55}, 0, {   224,   1082}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    51,    -26,    -37}, 0, {   274,    802}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    12,    -59,    -29}, 0, {  -108,   1004}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    27,     15,    -44}, 0, {   766,   1082}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    51,      3,    -29}, 0, {   670,    802}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    12,     30,      3}, 0, {  1114,    962}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    51,    -26,    -37}, 0, {   208,    756}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    60,    -41,     -9}, 0, {    96,    416}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    12,    -59,    -29}, 0, {  -270,    708}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    51,    -26,    -37}, 0, {   224,    778}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    60,      2,      2}, 0, {   868,    416}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    51,      3,    -29}, 0, {   750,    756}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    12,     30,      3}, 0, {  1304,    626}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(manta_seg5_vertex_050047A0, 0x0013b910, 41727, 0x000047a0, 256);
 
 // 0x050048A0
-static const Vtx manta_seg5_vertex_050048A0[] = {
-    {{{   -23,    -42,      8}, 0, {   394,     38}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -48,    -24,    -36}, 0, {   286,    704}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    12,    -59,    -29}, 0, {   554,    584}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    27,    -25,    -55}, 0, {   622,    960}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -60,     27,    -28}, 0, {   232,    594}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -26,      9,     23}, 0, {   380,   -172}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    27,     15,    -44}, 0, {   622,    794}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    60,    -41,     -9}, 0, {   770,    280}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    33,    -47,     23}, 0, {   648,   -192}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    12,     30,      3}, 0, {   554,     98}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    33,     -6,     34}, 0, {   648,   -358}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    60,      2,      2}, 0, {   770,    102}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(manta_seg5_vertex_050048A0, 0x0013b910, 41727, 0x000048a0, 192);
 
 // 0x05004960 - 0x050049C8
 const Gfx manta_seg5_dl_05004960[] = {
@@ -107,7 +70,7 @@ const Gfx manta_seg5_dl_050049C8[] = {
 // 0x05004A70 - 0x05004AE8
 const Gfx manta_seg5_dl_05004A70[] = {
     gsDPPipeSync(),
-    gsDPSetCombineMode(G_CC_DECALRGB, G_CC_DECALRGB),
+    gsDPSetCombineMode(G_CC_MODULATERGB, G_CC_MODULATERGB),
     gsSPClearGeometryMode(G_LIGHTING),
     gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 0, 0, G_TX_LOADTILE, 0, G_TX_WRAP | G_TX_NOMIRROR, G_TX_NOMASK, G_TX_NOLOD, G_TX_WRAP | G_TX_NOMIRROR, G_TX_NOMASK, G_TX_NOLOD),
     gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON),
@@ -124,40 +87,10 @@ const Gfx manta_seg5_dl_05004A70[] = {
 };
 
 // 0x05004AE8
-static const Vtx manta_seg5_vertex_05004AE8[] = {
-    {{{    60,     -1,      2}, 0, {   836,    436}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    51,     -2,    -29}, 0, {   718,    778}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    60,     42,     -9}, 0, {   112,    436}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    12,     60,    -29}, 0, {  -108,   1004}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    51,     27,    -37}, 0, {   274,    802}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    27,     26,    -55}, 0, {   224,   1082}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    27,    -14,    -44}, 0, {   766,   1082}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    51,     -2,    -29}, 0, {   670,    802}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    12,    -29,      3}, 0, {  1114,    962}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    12,     60,    -29}, 0, {  -270,    708}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    60,     42,     -9}, 0, {    96,    416}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    51,     27,    -37}, 0, {   208,    756}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    51,     27,    -37}, 0, {   224,    778}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    12,    -29,      3}, 0, {  1304,    626}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    51,     -2,    -29}, 0, {   750,    756}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    60,     -1,      2}, 0, {   868,    416}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(manta_seg5_vertex_05004AE8, 0x0013b910, 41727, 0x00004ae8, 256);
 
 // 0x05004BE8
-static const Vtx manta_seg5_vertex_05004BE8[] = {
-    {{{    12,     60,    -29}, 0, {   554,    584}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    33,     48,     23}, 0, {   648,   -192}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    60,     42,     -9}, 0, {   770,    280}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -23,     43,      8}, 0, {   394,     38}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -48,     25,    -36}, 0, {   286,    704}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    27,     26,    -55}, 0, {   622,    960}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    27,    -14,    -44}, 0, {   622,    794}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -60,    -26,    -28}, 0, {   232,    594}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -26,     -8,     23}, 0, {   380,   -172}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    12,    -29,      3}, 0, {   554,     98}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    33,      7,     34}, 0, {   648,   -358}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    60,     -1,      2}, 0, {   770,    102}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(manta_seg5_vertex_05004BE8, 0x0013b910, 41727, 0x00004be8, 192);
 
 // 0x05004CA8 - 0x05004D10
 const Gfx manta_seg5_dl_05004CA8[] = {
@@ -192,7 +125,7 @@ const Gfx manta_seg5_dl_05004D10[] = {
 // 0x05004DB8 - 0x05004E30
 const Gfx manta_seg5_dl_05004DB8[] = {
     gsDPPipeSync(),
-    gsDPSetCombineMode(G_CC_DECALRGB, G_CC_DECALRGB),
+    gsDPSetCombineMode(G_CC_MODULATERGB, G_CC_MODULATERGB),
     gsSPClearGeometryMode(G_LIGHTING),
     gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 0, 0, G_TX_LOADTILE, 0, G_TX_WRAP | G_TX_NOMIRROR, G_TX_NOMASK, G_TX_NOLOD, G_TX_WRAP | G_TX_NOMIRROR, G_TX_NOMASK, G_TX_NOLOD),
     gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON),
@@ -209,11 +142,7 @@ const Gfx manta_seg5_dl_05004DB8[] = {
 };
 
 // 0x05004E30
-static const Vtx manta_seg5_vertex_05004E30[] = {
-    {{{    97,      0,     52}, 0, {   412,    534}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   135,      0,      0}, 0, {   432,    770}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   274,      0,      0}, 0, {  1244,    550}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(manta_seg5_vertex_05004E30, 0x0013b910, 41727, 0x00004e30, 48);
 
 // 0x05004E60 - 0x05004E90
 const Gfx manta_seg5_dl_05004E60[] = {
@@ -244,18 +173,7 @@ const Gfx manta_seg5_dl_05004E90[] = {
 };
 
 // 0x05004F00
-static const Vtx manta_seg5_vertex_05004F00[] = {
-    {{{   172,    -21,     42}, 0, {   862,   -544}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   184,    -11,      8}, 0, {   918,    -60}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   102,     18,      2}, 0, {   544,    108}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    92,    -11,      2}, 0, {   500,    116}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    92,     -1,    -23}, 0, {   500,    496}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   102,     -1,     32}, 0, {   544,   -330}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -15,    -31,     32}, 0, {     8,   -216}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -15,    -31,    -31}, 0, {     8,    718}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -15,     18,     32}, 0, {     8,   -216}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -15,     18,    -31}, 0, {     8,    718}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(manta_seg5_vertex_05004F00, 0x0013b910, 41727, 0x00004f00, 160);
 
 // 0x05004FA0 - 0x05005038
 const Gfx manta_seg5_dl_05004FA0[] = {
@@ -292,42 +210,13 @@ const Gfx manta_seg5_dl_05005038[] = {
 };
 
 // 0x050050A8
-static const Vtx manta_seg5_vertex_050050A8[] = {
-    {{{   -89,    -89,      0}, 0, {   376,    742}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,   -119,    -39}, 0, {     0,    626}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,   -159,      0}, 0, {     0,     40}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,   -119,    -39}, 0, {   990,    626}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   220,    -89,    -19}, 0, {   780,    948}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   220,   -123,      0}, 0, {   780,    656}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,   -159,      0}, 0, {   990,     40}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(manta_seg5_vertex_050050A8, 0x0013b910, 41727, 0x000050a8, 112);
 
 // 0x05005118
-static const Vtx manta_seg5_vertex_05005118[] = {
-    {{{   220,    -89,     20}, 0, {   812,    282}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   220,   -123,      0}, 0, {   812,    242}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   244,    -63,      0}, 0, {   840,    314}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,   -119,     30}, 0, {   552,    248}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,   -159,      0}, 0, {   552,    200}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -89,    -89,      0}, 0, {   448,    282}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -89,    140,      0}, 0, {   448,    556}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,    180,     30}, 0, {   552,    604}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,    350,      0}, 0, {   552,    806}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   220,    228,      0}, 0, {   812,    660}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(manta_seg5_vertex_05005118, 0x0013b910, 41727, 0x00005118, 160);
 
 // 0x050051B8
-static const Vtx manta_seg5_vertex_050051B8[] = {
-    {{{   244,    -63,      0}, 0, {     0,      0}, {0xc6, 0xee, 0xed, 0xff}}},
-    {{{   220,   -123,      0}, 0, {     0,      0}, {0xc6, 0xee, 0xed, 0xff}}},
-    {{{   220,    -89,    -19}, 0, {     0,      0}, {0xc6, 0xee, 0xed, 0xff}}},
-    {{{     0,   -119,    -39}, 0, {     0,      0}, {0xc6, 0xee, 0xed, 0xff}}},
-    {{{     0,    180,    -39}, 0, {     0,      0}, {0xc6, 0xee, 0xed, 0xff}}},
-    {{{   220,    228,      0}, 0, {     0,      0}, {0xc6, 0xee, 0xed, 0xff}}},
-    {{{   -89,    -89,      0}, 0, {     0,      0}, {0xc6, 0xee, 0xed, 0xff}}},
-    {{{   -89,    140,      0}, 0, {     0,      0}, {0xc6, 0xee, 0xed, 0xff}}},
-    {{{     0,    350,      0}, 0, {     0,      0}, {0xc6, 0xee, 0xed, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(manta_seg5_vertex_050051B8, 0x0013b910, 41727, 0x000051b8, 144);
 
 // 0x05005248 - 0x05005288
 const Gfx manta_seg5_dl_05005248[] = {
@@ -389,28 +278,10 @@ const Gfx manta_seg5_dl_05005358[] = {
 };
 
 // 0x050053F0
-static const Vtx manta_seg5_vertex_050053F0[] = {
-    {{{     0,    -89,     20}, 0, {   804,    296}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,    228,      0}, 0, {   804,    674}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -31,    -63,      0}, 0, {   768,    326}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,   -123,      0}, 0, {   804,    254}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   180,    -91,     10}, 0, {  1016,    292}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   180,   -111,      0}, 0, {  1016,    268}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   180,    120,      0}, 0, {  1016,    544}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   186,    -79,      0}, 0, {  1024,    306}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(manta_seg5_vertex_050053F0, 0x0013b910, 41727, 0x000053f0, 128);
 
 // 0x05005470
-static const Vtx manta_seg5_vertex_05005470[] = {
-    {{{     0,    -89,    -19}, 0, {     0,      0}, {0xc6, 0xee, 0xed, 0xff}}},
-    {{{   180,    120,      0}, 0, {     0,      0}, {0xc6, 0xee, 0xed, 0xff}}},
-    {{{   180,    -91,     -9}, 0, {     0,      0}, {0xc6, 0xee, 0xed, 0xff}}},
-    {{{     0,   -123,      0}, 0, {     0,      0}, {0xc6, 0xee, 0xed, 0xff}}},
-    {{{   180,   -111,      0}, 0, {     0,      0}, {0xc6, 0xee, 0xed, 0xff}}},
-    {{{   -31,    -63,      0}, 0, {     0,      0}, {0xc6, 0xee, 0xed, 0xff}}},
-    {{{     0,    228,      0}, 0, {     0,      0}, {0xc6, 0xee, 0xed, 0xff}}},
-    {{{   186,    -79,      0}, 0, {     0,      0}, {0xc6, 0xee, 0xed, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(manta_seg5_vertex_05005470, 0x0013b910, 41727, 0x00005470, 128);
 
 // 0x050054F0 - 0x05005558
 const Gfx manta_seg5_dl_050054F0[] = {
@@ -438,7 +309,7 @@ const Gfx manta_seg5_dl_05005558[] = {
 // 0x050055A8 - 0x05005620
 const Gfx manta_seg5_dl_050055A8[] = {
     gsDPPipeSync(),
-    gsDPSetCombineMode(G_CC_DECALRGB, G_CC_DECALRGB),
+    gsDPSetCombineMode(G_CC_MODULATERGB, G_CC_MODULATERGB),
     gsSPClearGeometryMode(G_LIGHTING),
     gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 0, 0, G_TX_LOADTILE, 0, G_TX_WRAP | G_TX_NOMIRROR, G_TX_NOMASK, G_TX_NOLOD, G_TX_WRAP | G_TX_NOMIRROR, G_TX_NOMASK, G_TX_NOLOD),
     gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON),
@@ -455,24 +326,10 @@ const Gfx manta_seg5_dl_050055A8[] = {
 };
 
 // 0x05005620
-static const Vtx manta_seg5_vertex_05005620[] = {
-    {{{   167,   -105,      0}, 0, {  1220,    280}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,    -89,     10}, 0, {  1024,    298}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,   -109,      0}, 0, {  1024,    274}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,    122,      0}, 0, {  1024,    550}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   180,    -17,      0}, 0, {  1236,    384}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    -7,    -77,      0}, 0, {  1012,    312}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(manta_seg5_vertex_05005620, 0x0013b910, 41727, 0x00005620, 96);
 
 // 0x05005680
-static const Vtx manta_seg5_vertex_05005680[] = {
-    {{{     0,    -89,     -9}, 0, {     0,      0}, {0xc6, 0xee, 0xed, 0xff}}},
-    {{{   180,    -17,      0}, 0, {     0,      0}, {0xc6, 0xee, 0xed, 0xff}}},
-    {{{   167,   -105,      0}, 0, {     0,      0}, {0xc6, 0xee, 0xed, 0xff}}},
-    {{{     0,   -109,      0}, 0, {     0,      0}, {0xc6, 0xee, 0xed, 0xff}}},
-    {{{    -7,    -77,      0}, 0, {     0,      0}, {0xc6, 0xee, 0xed, 0xff}}},
-    {{{     0,    122,      0}, 0, {     0,      0}, {0xc6, 0xee, 0xed, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(manta_seg5_vertex_05005680, 0x0013b910, 41727, 0x00005680, 96);
 
 // 0x050056E0 - 0x05005730
 const Gfx manta_seg5_dl_050056E0[] = {
@@ -515,18 +372,7 @@ const Gfx manta_seg5_dl_05005768[] = {
 };
 
 // 0x050057E0
-static const Vtx manta_seg5_vertex_050057E0[] = {
-    {{{   102,      2,     32}, 0, {   544,   -330}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    92,     12,      2}, 0, {   500,    116}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -15,     32,     32}, 0, {     8,   -216}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    92,      2,    -23}, 0, {   500,    496}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -15,     32,    -31}, 0, {     8,    718}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   184,     12,      8}, 0, {   918,    -60}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   172,     22,     42}, 0, {   862,   -544}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   102,    -17,      2}, 0, {   544,    108}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -15,    -17,     32}, 0, {     8,   -216}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -15,    -17,    -31}, 0, {     8,    718}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(manta_seg5_vertex_050057E0, 0x0013b910, 41727, 0x000057e0, 160);
 
 // 0x05005880 - 0x05005918
 const Gfx manta_seg5_dl_05005880[] = {
@@ -563,42 +409,13 @@ const Gfx manta_seg5_dl_05005918[] = {
 };
 
 // 0x05005988
-static const Vtx manta_seg5_vertex_05005988[] = {
-    {{{     0,    160,      0}, 0, {     0,     40}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,    120,    -39}, 0, {     0,    626}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -89,     90,      0}, 0, {   376,    742}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   220,    124,      0}, 0, {   780,    656}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   220,     90,    -19}, 0, {   780,    948}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,    120,    -39}, 0, {   990,    626}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,    160,      0}, 0, {   990,     40}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(manta_seg5_vertex_05005988, 0x0013b910, 41727, 0x00005988, 112);
 
 // 0x050059F8
-static const Vtx manta_seg5_vertex_050059F8[] = {
-    {{{   244,     64,      0}, 0, {   840,    314}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   220,    124,      0}, 0, {   812,    242}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   220,     90,     20}, 0, {   812,    282}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -89,   -139,      0}, 0, {   448,    556}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,    120,     30}, 0, {   552,    248}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -89,     90,      0}, 0, {   448,    282}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,    160,      0}, 0, {   552,    200}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,   -179,     30}, 0, {   552,    604}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,   -349,      0}, 0, {   552,    806}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   220,   -227,      0}, 0, {   812,    660}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(manta_seg5_vertex_050059F8, 0x0013b910, 41727, 0x000059f8, 160);
 
 // 0x05005A98
-static const Vtx manta_seg5_vertex_05005A98[] = {
-    {{{   220,   -227,      0}, 0, {     0,      0}, {0xc6, 0xee, 0xed, 0xff}}},
-    {{{   220,     90,    -19}, 0, {     0,      0}, {0xc6, 0xee, 0xed, 0xff}}},
-    {{{   244,     64,      0}, 0, {     0,      0}, {0xc6, 0xee, 0xed, 0xff}}},
-    {{{     0,   -349,      0}, 0, {     0,      0}, {0xc6, 0xee, 0xed, 0xff}}},
-    {{{     0,   -179,    -39}, 0, {     0,      0}, {0xc6, 0xee, 0xed, 0xff}}},
-    {{{     0,    120,    -39}, 0, {     0,      0}, {0xc6, 0xee, 0xed, 0xff}}},
-    {{{   -89,     90,      0}, 0, {     0,      0}, {0xc6, 0xee, 0xed, 0xff}}},
-    {{{   -89,   -139,      0}, 0, {     0,      0}, {0xc6, 0xee, 0xed, 0xff}}},
-    {{{   220,    124,      0}, 0, {     0,      0}, {0xc6, 0xee, 0xed, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(manta_seg5_vertex_05005A98, 0x0013b910, 41727, 0x00005a98, 144);
 
 // 0x05005B28 - 0x05005B68
 const Gfx manta_seg5_dl_05005B28[] = {
@@ -660,28 +477,10 @@ const Gfx manta_seg5_dl_05005C38[] = {
 };
 
 // 0x05005CD0
-static const Vtx manta_seg5_vertex_05005CD0[] = {
-    {{{   180,   -119,      0}, 0, {  1016,    538}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   180,     92,     10}, 0, {  1016,    286}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,     90,     20}, 0, {   804,    290}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -31,     64,      0}, 0, {   764,    320}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,   -227,      0}, 0, {   804,    668}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,    124,      0}, 0, {   804,    248}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   180,    112,      0}, 0, {  1016,    264}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   186,     80,      0}, 0, {  1024,    302}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(manta_seg5_vertex_05005CD0, 0x0013b910, 41727, 0x00005cd0, 128);
 
 // 0x05005D50
-static const Vtx manta_seg5_vertex_05005D50[] = {
-    {{{   180,     92,     -9}, 0, {     0,      0}, {0xc6, 0xee, 0xed, 0xff}}},
-    {{{   180,   -119,      0}, 0, {     0,      0}, {0xc6, 0xee, 0xed, 0xff}}},
-    {{{     0,     90,    -19}, 0, {     0,      0}, {0xc6, 0xee, 0xed, 0xff}}},
-    {{{   186,     80,      0}, 0, {     0,      0}, {0xc6, 0xee, 0xed, 0xff}}},
-    {{{   180,    112,      0}, 0, {     0,      0}, {0xc6, 0xee, 0xed, 0xff}}},
-    {{{     0,   -227,      0}, 0, {     0,      0}, {0xc6, 0xee, 0xed, 0xff}}},
-    {{{     0,    124,      0}, 0, {     0,      0}, {0xc6, 0xee, 0xed, 0xff}}},
-    {{{   -31,     64,      0}, 0, {     0,      0}, {0xc6, 0xee, 0xed, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(manta_seg5_vertex_05005D50, 0x0013b910, 41727, 0x00005d50, 128);
 
 // 0x05005DD0 - 0x05005E38
 const Gfx manta_seg5_dl_05005DD0[] = {
@@ -726,24 +525,10 @@ const Gfx manta_seg5_dl_05005E88[] = {
 };
 
 // 0x05005F00
-static const Vtx manta_seg5_vertex_05005F00[] = {
-    {{{     0,     90,     10}, 0, {  1024,    298}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,    110,      0}, 0, {  1024,    274}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    -7,     78,      0}, 0, {  1012,    312}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   167,    106,      0}, 0, {  1220,    280}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   180,     18,      0}, 0, {  1236,    384}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,   -121,      0}, 0, {  1024,    550}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(manta_seg5_vertex_05005F00, 0x0013b910, 41727, 0x00005f00, 96);
 
 // 0x05005F60
-static const Vtx manta_seg5_vertex_05005F60[] = {
-    {{{     0,     90,     -9}, 0, {     0,      0}, {0xc6, 0xee, 0xed, 0xff}}},
-    {{{   180,     18,      0}, 0, {     0,      0}, {0xc6, 0xee, 0xed, 0xff}}},
-    {{{     0,   -121,      0}, 0, {     0,      0}, {0xc6, 0xee, 0xed, 0xff}}},
-    {{{   167,    106,      0}, 0, {     0,      0}, {0xc6, 0xee, 0xed, 0xff}}},
-    {{{     0,    110,      0}, 0, {     0,      0}, {0xc6, 0xee, 0xed, 0xff}}},
-    {{{    -7,     78,      0}, 0, {     0,      0}, {0xc6, 0xee, 0xed, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(manta_seg5_vertex_05005F60, 0x0013b910, 41727, 0x00005f60, 96);
 
 // 0x05005FC0 - 0x05006010
 const Gfx manta_seg5_dl_05005FC0[] = {
@@ -786,93 +571,19 @@ const Gfx manta_seg5_dl_05006048[] = {
 };
 
 // 0x050060C0
-static const Vtx manta_seg5_vertex_050060C0[] = {
-    {{{   600,    220,      6}, 0, {     0,     36}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   560,    220,    -33}, 0, {     0,    718}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   532,    288,      6}, 0, {   178,    388}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   730,      0,    -43}, 0, {   480,    888}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   740,    120,     26}, 0, {   758,   -304}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   770,      0,     16}, 0, {   480,   -134}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   670,    130,    -53}, 0, {   780,   1056}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   740,   -119,     26}, 0, {   200,   -304}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   670,   -129,    -53}, 0, {   178,   1056}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   560,    220,    -33}, 0, {   990,    718}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   600,    220,      6}, 0, {   990,     36}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   600,   -219,      6}, 0, {     0,     36}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   560,   -219,    -33}, 0, {     0,    718}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   532,   -287,      6}, 0, {   178,    388}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(manta_seg5_vertex_050060C0, 0x0013b910, 41727, 0x000060c0, 224);
 
 // 0x050061A0
-static const Vtx manta_seg5_vertex_050061A0[] = {
-    {{{   260,   -219,    -33}, 0, {     0,   2324}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   220,      0,    -73}, 0, {  1092,   2532}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   504,      0,    -91}, 0, {  1092,   1048}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   560,   -219,    -33}, 0, {     0,    756}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   260,    220,    -33}, 0, {     0,   2324}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   560,    220,    -33}, 0, {     0,    756}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   560,   -219,    -33}, 0, {   -10,     48}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   504,      0,    -91}, 0, {  1212,    864}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   670,   -129,    -53}, 0, {   490,     16}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   670,   -129,    -53}, 0, {   532,      8}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   504,      0,    -91}, 0, {   990,    912}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   730,      0,    -43}, 0, {   990,    -72}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   670,    130,    -53}, 0, {   490,     16}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   560,    220,    -33}, 0, {   -10,     48}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   670,    130,    -53}, 0, {   532,      8}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(manta_seg5_vertex_050061A0, 0x0013b910, 41727, 0x000061a0, 240);
 
 // 0x05006290
-static const Vtx manta_seg5_vertex_05006290[] = {
-    {{{   740,    120,     26}, 0, {   144,     40}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   560,    220,     36}, 0, {    28,    254}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   500,      0,     56}, 0, {   288,    324}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   532,   -287,      6}, 0, {   628,    286}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   600,   -219,      6}, 0, {   548,    206}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   560,   -219,     36}, 0, {   548,    254}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   260,   -219,     36}, 0, {   548,    610}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   300,   -287,      6}, 0, {   628,    562}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   740,   -119,     26}, 0, {   428,     40}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   260,    220,     36}, 0, {    28,    610}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    20,   -109,      6}, 0, {   416,    894}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    90,   -219,      6}, 0, {   548,    812}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   770,      0,     16}, 0, {   288,      4}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   600,    220,      6}, 0, {    28,    206}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(manta_seg5_vertex_05006290, 0x0013b910, 41727, 0x00006290, 224);
 
 // 0x05006370
-static const Vtx manta_seg5_vertex_05006370[] = {
-    {{{   560,    220,     36}, 0, {   536,    250}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   600,    220,      6}, 0, {   536,    202}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   532,    288,      6}, 0, {   616,    284}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   260,    220,     36}, 0, {    28,    610}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    20,    120,     16}, 0, {   144,    894}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    20,   -109,      6}, 0, {   416,    894}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -39,      0,      6}, 0, {   288,    966}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    90,    220,      6}, 0, {    28,    812}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    90,    220,      6}, 0, {   536,    810}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   260,    220,     36}, 0, {   536,    608}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   300,    288,      6}, 0, {   616,    560}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(manta_seg5_vertex_05006370, 0x0013b910, 41727, 0x00006370, 176);
 
 // 0x05006420
-static const Vtx manta_seg5_vertex_05006420[] = {
-    {{{   300,    288,      6}, 0, {     0,      0}, {0xc6, 0xee, 0xed, 0xff}}},
-    {{{   260,    220,    -33}, 0, {     0,      0}, {0xc6, 0xee, 0xed, 0xff}}},
-    {{{    90,    220,      6}, 0, {     0,      0}, {0xc6, 0xee, 0xed, 0xff}}},
-    {{{    80,      0,    -40}, 0, {     0,      0}, {0xc6, 0xee, 0xed, 0xff}}},
-    {{{    90,   -219,      6}, 0, {     0,      0}, {0xc6, 0xee, 0xed, 0xff}}},
-    {{{    20,   -109,      6}, 0, {     0,      0}, {0xc6, 0xee, 0xed, 0xff}}},
-    {{{   260,   -219,    -33}, 0, {     0,      0}, {0xc6, 0xee, 0xed, 0xff}}},
-    {{{   300,   -287,      6}, 0, {     0,      0}, {0xc6, 0xee, 0xed, 0xff}}},
-    {{{   532,   -287,      6}, 0, {     0,      0}, {0xc6, 0xee, 0xed, 0xff}}},
-    {{{   560,   -219,    -33}, 0, {     0,      0}, {0xc6, 0xee, 0xed, 0xff}}},
-    {{{   220,      0,    -73}, 0, {     0,      0}, {0xc6, 0xee, 0xed, 0xff}}},
-    {{{   532,    288,      6}, 0, {     0,      0}, {0xc6, 0xee, 0xed, 0xff}}},
-    {{{   560,    220,    -33}, 0, {     0,      0}, {0xc6, 0xee, 0xed, 0xff}}},
-    {{{   -39,      0,      6}, 0, {     0,      0}, {0xc6, 0xee, 0xed, 0xff}}},
-    {{{    20,    120,     16}, 0, {     0,      0}, {0xc6, 0xee, 0xed, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(manta_seg5_vertex_05006420, 0x0013b910, 41727, 0x00006420, 240);
 
 // 0x05006510 - 0x05006588
 const Gfx manta_seg5_dl_05006510[] = {
@@ -939,7 +650,7 @@ const Gfx manta_seg5_dl_050066D0[] = {
 // 0x05006750 - 0x05006808
 const Gfx manta_seg5_dl_05006750[] = {
     gsDPPipeSync(),
-    gsDPSetCombineMode(G_CC_DECALRGB, G_CC_DECALRGB),
+    gsDPSetCombineMode(G_CC_MODULATERGB, G_CC_MODULATERGB),
     gsSPClearGeometryMode(G_LIGHTING),
     gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 0, 0, G_TX_LOADTILE, 0, G_TX_WRAP | G_TX_NOMIRROR, G_TX_NOMASK, G_TX_NOLOD, G_TX_WRAP | G_TX_NOMIRROR, G_TX_NOMASK, G_TX_NOLOD),
     gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON),
@@ -964,76 +675,22 @@ const Gfx manta_seg5_dl_05006750[] = {
 };
 
 // 0x05006808
-static const Vtx manta_seg5_vertex_05006808[] = {
-    {{{     0,     -5,     -3}, 0, {     0,      0}, {0xf3, 0x98, 0x46, 0x00}}},
-    {{{     0,      0,      4}, 0, {     0,      0}, {0xf6, 0x00, 0x7e, 0x00}}},
-    {{{    -4,      0,      2}, 0, {     0,      0}, {0xa9, 0x00, 0x5b, 0x00}}},
-    {{{   238,      0,      0}, 0, {     0,      0}, {0x01, 0x66, 0x4a, 0x00}}},
-    {{{     0,      5,     -3}, 0, {     0,      0}, {0xf3, 0x68, 0x46, 0x00}}},
-    {{{   238,      0,      0}, 0, {     0,      0}, {0x01, 0x9a, 0x4a, 0x00}}},
-};
+ROM_ASSET_LOAD_VTX(manta_seg5_vertex_05006808, 0x0013b910, 41727, 0x00006808, 96);
 
 // 0x05006868
-static const Vtx manta_seg5_vertex_05006868[] = {
-    {{{    -4,      0,      2}, 0, {     0,      0}, {0xa9, 0x00, 0x5b, 0x00}}},
-    {{{     0,      5,     -3}, 0, {     0,      0}, {0xf3, 0x68, 0x46, 0x00}}},
-    {{{     0,     -5,     -3}, 0, {     0,      0}, {0xf3, 0x98, 0x46, 0x00}}},
-    {{{     0,     -5,     -3}, 0, {     0,      0}, {0x01, 0x00, 0x81, 0x00}}},
-    {{{     0,      5,     -3}, 0, {     0,      0}, {0x01, 0x00, 0x81, 0x00}}},
-    {{{   238,      0,      0}, 0, {     0,      0}, {0x01, 0x00, 0x81, 0x00}}},
-};
+ROM_ASSET_LOAD_VTX(manta_seg5_vertex_05006868, 0x0013b910, 41727, 0x00006868, 96);
 
 // 0x050068C8
-static const Vtx manta_seg5_vertex_050068C8[] = {
-    {{{     0,     -8,     -5}, 0, {     0,      0}, {0xf1, 0x94, 0x3f, 0x00}}},
-    {{{     0,      0,      7}, 0, {     0,      0}, {0xf4, 0x00, 0x7e, 0x00}}},
-    {{{    -7,      0,      0}, 0, {     0,      0}, {0x84, 0x00, 0x18, 0x00}}},
-    {{{   236,     -5,     -3}, 0, {     0,      0}, {0x13, 0x8e, 0xcd, 0x00}}},
-    {{{   240,      0,      0}, 0, {     0,      0}, {0x7b, 0x00, 0x1b, 0x00}}},
-    {{{   236,      0,      4}, 0, {     0,      0}, {0x0f, 0x00, 0x7e, 0x00}}},
-    {{{   236,      5,     -3}, 0, {     0,      0}, {0x13, 0x72, 0xcd, 0x00}}},
-    {{{     0,      8,     -5}, 0, {     0,      0}, {0xf1, 0x6c, 0x3f, 0x00}}},
-};
+ROM_ASSET_LOAD_VTX(manta_seg5_vertex_050068C8, 0x0013b910, 41727, 0x000068c8, 128);
 
 // 0x05006948
-static const Vtx manta_seg5_vertex_05006948[] = {
-    {{{    -7,      0,      0}, 0, {     0,      0}, {0x84, 0x00, 0x18, 0x00}}},
-    {{{     0,      8,     -5}, 0, {     0,      0}, {0xf1, 0x6c, 0x3f, 0x00}}},
-    {{{     0,     -8,     -5}, 0, {     0,      0}, {0xf1, 0x94, 0x3f, 0x00}}},
-    {{{   236,      5,     -3}, 0, {     0,      0}, {0x13, 0x72, 0xcd, 0x00}}},
-    {{{   240,      0,      0}, 0, {     0,      0}, {0x7b, 0x00, 0x1b, 0x00}}},
-    {{{   236,     -5,     -3}, 0, {     0,      0}, {0x13, 0x8e, 0xcd, 0x00}}},
-    {{{     0,     -8,     -5}, 0, {     0,      0}, {0x01, 0x00, 0x81, 0x00}}},
-    {{{     0,      8,     -5}, 0, {     0,      0}, {0x01, 0x00, 0x81, 0x00}}},
-};
+ROM_ASSET_LOAD_VTX(manta_seg5_vertex_05006948, 0x0013b910, 41727, 0x00006948, 128);
 
 // 0x050069C8
-static const Vtx manta_seg5_vertex_050069C8[] = {
-    {{{     0,    -11,     -7}, 0, {     0,      0}, {0x95, 0xbf, 0xee, 0x00}}},
-    {{{     0,      0,     10}, 0, {     0,      0}, {0x9d, 0x00, 0x4f, 0x00}}},
-    {{{    -8,      0,      0}, 0, {     0,      0}, {0x83, 0x00, 0x13, 0x00}}},
-    {{{   168,     -8,     -5}, 0, {     0,      0}, {0x13, 0x8f, 0xcc, 0x00}}},
-    {{{   175,      0,      0}, 0, {     0,      0}, {0x7c, 0x00, 0x18, 0x00}}},
-    {{{   168,      0,      7}, 0, {     0,      0}, {0x10, 0x00, 0x7d, 0x00}}},
-    {{{   168,      8,     -5}, 0, {     0,      0}, {0x13, 0x71, 0xcc, 0x00}}},
-    {{{     0,     11,     -7}, 0, {     0,      0}, {0x95, 0x41, 0xee, 0x00}}},
-    {{{     0,      0,     10}, 0, {     0,      0}, {0x01, 0x97, 0x46, 0x00}}},
-    {{{     0,    -11,     -7}, 0, {     0,      0}, {0x01, 0x97, 0x46, 0x00}}},
-    {{{     0,     11,     -7}, 0, {     0,      0}, {0x01, 0x69, 0x46, 0x00}}},
-    {{{     0,      0,     10}, 0, {     0,      0}, {0x01, 0x69, 0x46, 0x00}}},
-};
+ROM_ASSET_LOAD_VTX(manta_seg5_vertex_050069C8, 0x0013b910, 41727, 0x000069c8, 192);
 
 // 0x05006A88
-static const Vtx manta_seg5_vertex_05006A88[] = {
-    {{{    -8,      0,      0}, 0, {     0,      0}, {0x83, 0x00, 0x13, 0x00}}},
-    {{{     0,     11,     -7}, 0, {     0,      0}, {0x95, 0x41, 0xee, 0x00}}},
-    {{{     0,    -11,     -7}, 0, {     0,      0}, {0x95, 0xbf, 0xee, 0x00}}},
-    {{{   168,      8,     -5}, 0, {     0,      0}, {0x13, 0x71, 0xcc, 0x00}}},
-    {{{   175,      0,      0}, 0, {     0,      0}, {0x7c, 0x00, 0x18, 0x00}}},
-    {{{   168,     -8,     -5}, 0, {     0,      0}, {0x13, 0x8f, 0xcc, 0x00}}},
-    {{{     0,    -11,     -7}, 0, {     0,      0}, {0x01, 0x00, 0x81, 0x00}}},
-    {{{     0,     11,     -7}, 0, {     0,      0}, {0x01, 0x00, 0x81, 0x00}}},
-};
+ROM_ASSET_LOAD_VTX(manta_seg5_vertex_05006A88, 0x0013b910, 41727, 0x00006a88, 128);
 
 // 0x05006B08 - 0x05006B70
 const Gfx manta_seg5_dl_05006B08[] = {

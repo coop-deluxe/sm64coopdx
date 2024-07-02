@@ -13,7 +13,6 @@
 
 #define MAX_LAUNCH_CMD (MAX_PATH + 12)
 
-#define APPLICATION_ID_COOP   752700005210390568
 #define APPLICATION_ID_COOPDX 1159627283506679839
 
 struct DiscordApplication app = { 0 };
@@ -95,7 +94,7 @@ static void on_current_user_update(UNUSED void* data) {
     if (configPlayerName[0] == '\0' && strlen(user.username) > 0) {
         char* cname = configPlayerName;
         char* dname = user.username;
-        for (int i = 0; i < MAX_PLAYER_STRING - 1; i++) {
+        for (int i = 0; i < MAX_CONFIG_STRING - 1; i++) {
             if (*dname >= '!' && *dname <= '~') {
                 *cname = *dname;
                 cname++;
@@ -128,7 +127,7 @@ static void discord_initialize(void) {
     // set up discord params
     struct DiscordCreateParams params = { 0 };
     DiscordCreateParamsSetDefault(&params);
-    params.client_id = configCoopCompatibility ? APPLICATION_ID_COOP : APPLICATION_ID_COOPDX; // you have to have activity status on if you don't want discord to prompt you to authorize on every boot
+    params.client_id = APPLICATION_ID_COOPDX;
     params.flags = DiscordCreateFlags_NoRequireDiscord;
     params.event_data = &app;
     params.user_events = discord_user_initialize();

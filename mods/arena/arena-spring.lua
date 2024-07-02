@@ -1,5 +1,3 @@
-if SM64COOPDX_VERSION == nil then return end
-
 define_custom_obj_fields({
     oArenaSpringSprung = 'u32',
 })

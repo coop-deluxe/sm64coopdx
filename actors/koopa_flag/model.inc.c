@@ -1,3 +1,4 @@
+#include "pc/rom_assets.h"
 // Koopa Flag
 
 // 0x06000000
@@ -19,9 +20,7 @@ static const Lights1 koopa_flag_seg6_lights_06000030 = gdSPDefLights1(
 );
 
 // 0x06000048
-ALIGNED8 const Texture koopa_flag_seg6_texture_06000048[] = {
-#include "actors/koopa_flag/koopa_flag_banner.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(koopa_flag_seg6_texture_06000048, "actors/koopa_flag/koopa_flag_banner.rgba16.inc.c", 0x001c4230, 80474, 0x00000048, 2048);
 
 // 0x06000848
 static const Lights1 koopa_flag_seg6_lights_06000848 = gdSPDefLights1(
@@ -36,27 +35,10 @@ static const Lights1 koopa_flag_seg6_lights_06000860 = gdSPDefLights1(
 );
 
 // 0x06000878
-static const Vtx koopa_flag_seg6_vertex_06000878[] = {
-    {{{  2800,    -18,     57}, 0, {     0,      0}, {0x5f, 0xe7, 0x4f, 0xff}}},
-    {{{  2800,    -59,      0}, 0, {     0,      0}, {0x2d, 0x8a, 0x00, 0xff}}},
-    {{{  2800,    -18,    -56}, 0, {     0,      0}, {0x4d, 0xe1, 0xa1, 0xff}}},
-    {{{  2800,     49,    -34}, 0, {     0,      0}, {0x4d, 0x51, 0xc5, 0xff}}},
-    {{{  2800,     49,     35}, 0, {     0,      0}, {0x2d, 0x60, 0x45, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(koopa_flag_seg6_vertex_06000878, 0x001c4230, 80474, 0x00000878, 80);
 
 // 0x060008C8
-static const Vtx koopa_flag_seg6_vertex_060008C8[] = {
-    {{{  2800,    -18,     57}, 0, {     0,      0}, {0x5f, 0xe7, 0x4f, 0xff}}},
-    {{{  2800,     49,     35}, 0, {     0,      0}, {0x2d, 0x60, 0x45, 0xff}}},
-    {{{     0,     19,     57}, 0, {     0,      0}, {0x00, 0x27, 0x78, 0xff}}},
-    {{{     0,    -48,     35}, 0, {     0,      0}, {0x00, 0x9a, 0x4a, 0xff}}},
-    {{{     0,     60,      0}, 0, {     0,      0}, {0x00, 0x7e, 0x00, 0xff}}},
-    {{{  2800,    -59,      0}, 0, {     0,      0}, {0x2d, 0x8a, 0x00, 0xff}}},
-    {{{     0,    -48,    -34}, 0, {     0,      0}, {0x00, 0x9a, 0xb6, 0xff}}},
-    {{{  2800,    -18,    -56}, 0, {     0,      0}, {0x4d, 0xe1, 0xa1, 0xff}}},
-    {{{     0,     19,    -56}, 0, {     0,      0}, {0x00, 0x27, 0x88, 0xff}}},
-    {{{  2800,     49,    -34}, 0, {     0,      0}, {0x4d, 0x51, 0xc5, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(koopa_flag_seg6_vertex_060008C8, 0x001c4230, 80474, 0x000008c8, 160);
 
 // 0x06000968 - 0x06000A08
 const Gfx koopa_flag_seg6_dl_06000968[] = {
@@ -87,20 +69,10 @@ const Gfx koopa_flag_seg6_dl_06000A08[] = {
 };
 
 // 0x06000A38
-static const Vtx koopa_flag_seg6_vertex_06000A38[] = {
-    {{{     0,      0,      0}, 0, {  -226,    510}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   460,      0,    540}, 0, {   224,   1318}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   460,      0,   -539}, 0, {   224,   -302}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(koopa_flag_seg6_vertex_06000A38, 0x001c4230, 80474, 0x00000a38, 48);
 
 // 0x06000A68
-static const Vtx koopa_flag_seg6_vertex_06000A68[] = {
-    {{{     0,      0,    720}, 0, {     0,      0}, {0xfd, 0xa8, 0x02, 0xff}}},
-    {{{   460,      0,    540}, 0, {     0,      0}, {0xfd, 0xa8, 0x02, 0xff}}},
-    {{{     0,      0,      0}, 0, {     0,      0}, {0xfd, 0xa8, 0x02, 0xff}}},
-    {{{   460,      0,   -539}, 0, {     0,      0}, {0xfd, 0xa8, 0x02, 0xff}}},
-    {{{     0,      0,   -719}, 0, {     0,      0}, {0xfd, 0xa8, 0x02, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(koopa_flag_seg6_vertex_06000A68, 0x001c4230, 80474, 0x00000a68, 80);
 
 // 0x06000AB8 - 0x06000AE8
 const Gfx koopa_flag_seg6_dl_06000AB8[] = {
@@ -139,12 +111,7 @@ const Gfx koopa_flag_seg6_dl_06000B08[] = {
 };
 
 // 0x06000B80
-static const Vtx koopa_flag_seg6_vertex_06000B80[] = {
-    {{{     0,      0,    540}, 0, {   224,   1318}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   460,      0,    360}, 0, {   676,   1048}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   460,      0,   -359}, 0, {   676,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,      0,   -539}, 0, {   224,   -302}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(koopa_flag_seg6_vertex_06000B80, 0x001c4230, 80474, 0x00000b80, 64);
 
 // 0x06000BC0 - 0x06000BF8
 const Gfx koopa_flag_seg6_dl_06000BC0[] = {
@@ -175,12 +142,7 @@ const Gfx koopa_flag_seg6_dl_06000BF8[] = {
 };
 
 // 0x06000C68
-static const Vtx koopa_flag_seg6_vertex_06000C68[] = {
-    {{{   344,      0,    224}, 0, {  1014,    846}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   344,      0,   -223}, 0, {  1014,    172}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,      0,    360}, 0, {   676,   1048}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,      0,   -359}, 0, {   676,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(koopa_flag_seg6_vertex_06000C68, 0x001c4230, 80474, 0x00000c68, 64);
 
 // 0x06000CA8 - 0x06000CE0
 const Gfx koopa_flag_seg6_dl_06000CA8[] = {
@@ -211,12 +173,7 @@ const Gfx koopa_flag_seg6_dl_06000CE0[] = {
 };
 
 // 0x06000D50
-static const Vtx koopa_flag_seg6_vertex_06000D50[] = {
-    {{{     0,      0,    224}, 0, {     0,      0}, {0xfd, 0xa8, 0x02, 0xff}}},
-    {{{   288,      0,    112}, 0, {     0,      0}, {0xfd, 0xa8, 0x02, 0xff}}},
-    {{{   288,      0,   -111}, 0, {     0,      0}, {0xfd, 0xa8, 0x02, 0xff}}},
-    {{{     0,      0,   -223}, 0, {     0,      0}, {0xfd, 0xa8, 0x02, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(koopa_flag_seg6_vertex_06000D50, 0x001c4230, 80474, 0x00000d50, 64);
 
 // 0x06000D90 - 0x06000DB0
 const Gfx koopa_flag_seg6_dl_06000D90[] = {
@@ -238,11 +195,7 @@ const Gfx koopa_flag_seg6_dl_06000DB0[] = {
 };
 
 // 0x06000DF0
-static const Vtx koopa_flag_seg6_vertex_06000DF0[] = {
-    {{{     0,      0,    112}, 0, {     0,      0}, {0xfd, 0xa8, 0x02, 0xff}}},
-    {{{   288,      0,      0}, 0, {     0,      0}, {0xfd, 0xa8, 0x02, 0xff}}},
-    {{{     0,      0,   -111}, 0, {     0,      0}, {0xfd, 0xa8, 0x02, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(koopa_flag_seg6_vertex_06000DF0, 0x001c4230, 80474, 0x00000df0, 48);
 
 // 0x06000E20 - 0x06000E38
 const Gfx koopa_flag_seg6_dl_06000E20[] = {

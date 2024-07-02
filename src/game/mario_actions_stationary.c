@@ -132,11 +132,11 @@ s32 act_idle(struct MarioState *m) {
         if (m->area && ((m->area->terrainType & TERRAIN_MASK) == TERRAIN_SNOW)) {
             return set_mario_action(m, ACT_SHIVERING, 0);
         } else {
-            if (!gDjuiInMainMenu) {
-                return set_mario_action(m, ACT_START_SLEEPING, 0);
-            } else {
+            if (gDjuiInMainMenu || gDjuiInPlayerMenu) {
                 m->actionState = 0;
                 m->actionTimer = 0;
+            } else {
+                return set_mario_action(m, ACT_START_SLEEPING, 0);
             }
         }
     }
@@ -208,6 +208,10 @@ s32 act_start_sleeping(struct MarioState *m) {
         return set_mario_action(m, ACT_IN_QUICKSAND, 0);
     }
 
+    if (m->playerIndex == 0 && gDjuiInPlayerMenu) {
+        return set_mario_action(m, ACT_IDLE, 0);
+    }
+
     if (m->actionState == 4) {
         return set_mario_action(m, ACT_SLEEPING, 0);
     }
@@ -274,7 +278,7 @@ s32 act_sleeping(struct MarioState *m) {
     if (!m) { return 0; }
     s32 animFrame;
     if (m->playerIndex == 0) {
-        if (m->input 
+        if (m->input
             & (INPUT_NONZERO_ANALOG | INPUT_A_PRESSED | INPUT_OFF_FLOOR | INPUT_ABOVE_SLIDE
                | INPUT_FIRST_PERSON | INPUT_UNKNOWN_10 | INPUT_B_PRESSED | INPUT_Z_PRESSED)) {
             return set_mario_action(m, ACT_WAKING_UP, m->actionState);
@@ -285,6 +289,10 @@ s32 act_sleeping(struct MarioState *m) {
         }
 
         if (m->pos[1] - find_floor_height_relative_polar(m, -0x8000, 60.0f) > 24.0f) {
+            return set_mario_action(m, ACT_WAKING_UP, m->actionState);
+        }
+
+        if (gDjuiInPlayerMenu) {
             return set_mario_action(m, ACT_WAKING_UP, m->actionState);
         }
     }

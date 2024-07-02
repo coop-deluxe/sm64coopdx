@@ -34,7 +34,7 @@
 #include "levels/wf/header.h"
 #include "levels/wmotr/header.h"
 
-#include "src/pc/pc_main.h"
+#include "pc/pc_main.h"
 
 extern Trajectory sThiHugeMetalBallTraj[];
 extern Trajectory sThiTinyMetalBallTraj[];
@@ -73,6 +73,7 @@ struct LevelValues gDefaultLevelValues = {
     .pssSlideStarTime                 = 630,
     .pssSlideStarIndex                = 1,
     .coinsRequiredForCoinStar         = 100,
+    .infiniteStairsRequirement        = 70,
     .wingCapDuration                  = 1800,
     .metalCapDuration                 = 600,
     .vanishCapDuration                = 600,
@@ -123,7 +124,8 @@ struct LevelValues gDefaultLevelValues = {
     .numCoinsToLife                   = 50,
     .wdwWaterLevelSpeed               = 10.0f,
     .useGlobalStarIds                 = FALSE,
-    .zoomOutCameraOnPause             = TRUE
+    .zoomOutCameraOnPause             = TRUE,
+    .jrbDarkenSkybox                  = TRUE
 };
 
 struct LevelValues gLevelValues = { 0 };
@@ -161,6 +163,7 @@ struct BehaviorValues gDefaultBehaviorValues = {
     .RespawnShellBoxes        = TRUE,
     .MultipleCapCollection    = FALSE,
     .InfiniteRenderDistance   = TRUE,
+    .CourtyardBoosRequirement = 12,
     .starsNeededForDialog     = { 1, 3, 8, 30, 50, 70 },
     .dialogs = {
         .BobombBuddyBob1Dialog         = DIALOG_004,

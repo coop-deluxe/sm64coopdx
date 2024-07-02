@@ -5,23 +5,15 @@
 #include <string.h>
 #include <ctype.h>
 
+#ifdef _WIN32
+#include <windows.h>
+#include <shlobj.h>
+#include <shlwapi.h>
+#endif
+
 #include "cliopts.h"
 #include "fs/fs.h"
 #include "configfile.h"
-
-/* NULL terminated list of platform specific read-only data paths */
-/* priority is top first */
-const char *sys_ropaths[] = {
-    ".", // working directory
-    "!", // executable directory
-#if defined(__linux__) || defined(__unix__)
-    // some common UNIX directories for read only stuff
-    "/usr/local/share/sm64pc",
-    "/usr/share/sm64pc",
-    "/opt/sm64pc",
-#endif
-    NULL,
-};
 
 /* these are not available on some platforms, so might as well */
 
@@ -90,73 +82,242 @@ void sys_fatal(const char *fmt, ...) {
     sys_fatal_impl(msg);
 }
 
-#ifdef HAVE_SDL2
+#ifdef _WIN32
+
+static bool sys_windows_pathname_is_portable(const wchar_t *name, size_t size)
+{
+    for (size_t i = 0; i < size; i++) {
+        wchar_t c = name[i];
+
+        // character outside the ASCII printable range
+        if ((c < L' ') || (c > L'~')) { return false; }
+
+        // characters unallowed in filenames
+        switch (c) {
+            // skipping ':', as it will appear with the drive specifier
+            case L'<': case L'>': case L'/': case L'\\':
+            case L'"': case L'|': case L'?': case L'*':
+                return false;
+        }
+    }
+    return true;
+}
+
+static wchar_t *sys_windows_pathname_get_delim(const wchar_t *name)
+{
+    const wchar_t *sep1 = wcschr(name, L'/');
+    const wchar_t *sep2 = wcschr(name, L'\\');
+
+    if (NULL == sep1) { return (wchar_t*)sep2; }
+    if (NULL == sep2) { return (wchar_t*)sep1; }
+
+    return (sep1 < sep2) ? (wchar_t*)sep1 : (wchar_t*)sep2;
+}
+
+bool sys_windows_short_path_from_wcs(char *destPath, size_t destSize, const wchar_t *wcsLongPath)
+{
+    wchar_t wcsShortPath[SYS_MAX_PATH]; // converted with WinAPI
+    wchar_t wcsPortablePath[SYS_MAX_PATH]; // non-unicode parts replaced back with long forms
+
+    // Convert the Long Path in Wide Format to the alternate short form.
+    // It will still point to already existing directory or file.
+    if (0 == GetShortPathNameW(wcsLongPath, wcsShortPath, SYS_MAX_PATH)) { return FALSE; }
+
+    // Scanning the paths side-by-side, to keep the portable (ASCII)
+    // parts of the absolute path unchanged (in the long form)
+    wcsPortablePath[0] = L'\0';
+    const wchar_t *longPart = wcsLongPath;
+    wchar_t *shortPart = wcsShortPath;
+
+    while (true) {
+        int longLength;
+        int shortLength;
+        const wchar_t *sourcePart;
+        int sourceLength;
+        int bufferLength;
+
+        const wchar_t *longDelim = sys_windows_pathname_get_delim(longPart);
+        wchar_t *shortDelim = sys_windows_pathname_get_delim(shortPart);
+
+        if (NULL == longDelim) {
+            longLength = wcslen(longPart); // final part of the scanned path
+        } else {
+            longLength = longDelim - longPart; // ptr diff measured in WCHARs
+        }
+
+        if (NULL == shortDelim) {
+            shortLength = wcslen(shortPart); // final part of the scanned path
+        } else {
+            shortLength = shortDelim - shortPart; // ptr diff measured in WCHARs
+        }
+
+        if (sys_windows_pathname_is_portable(longPart, longLength)) {
+            // take the original name (subdir or filename)
+            sourcePart = longPart;
+            sourceLength = longLength;
+        } else {
+            // take the converted alternate (short) name
+            sourcePart = shortPart;
+            sourceLength = shortLength;
+        }
+
+        // take into account the slash-or-backslash separator
+        if (L'\0' != sourcePart[sourceLength]) { sourceLength++; }
+
+        // how many WCHARs are still left in the buffer
+        bufferLength = (SYS_MAX_PATH - 1) - wcslen(wcsPortablePath);
+        if (sourceLength > bufferLength) { return false; }
+
+        wcsncat(wcsPortablePath, sourcePart, sourceLength);
+
+        // path end reached?
+        if ((NULL == longDelim) || (NULL == shortDelim)) { break; }
+
+        // compare the next name
+        longPart = longDelim + 1;
+        shortPart = shortDelim + 1;
+    }
+
+    // Short Path can be safely represented by the US-ASCII Charset.
+    return (WideCharToMultiByte(CP_ACP, 0, wcsPortablePath, (-1), destPath, destSize, NULL, NULL) > 0);
+}
+
+bool sys_windows_short_path_from_mbs(char *destPath, size_t destSize, const char *mbsLongPath)
+{
+    // Converting the absolute path in UTF-8 format (MultiByte String)
+    // to an alternate (portable) format usable on Windows.
+    // Assuming the given paths points to an already existing file or folder.
+
+    wchar_t wcsWidePath[SYS_MAX_PATH];
+
+    if (MultiByteToWideChar(CP_UTF8, 0, mbsLongPath, (-1), wcsWidePath, SYS_MAX_PATH) > 0)
+    {
+        return sys_windows_short_path_from_wcs(destPath, destSize, wcsWidePath);
+    }
+
+    return false;
+}
+
+const char *sys_user_path(void)
+{
+    static char shortPath[SYS_MAX_PATH] = { 0 };
+    if ('\0' != shortPath[0]) { return shortPath; }
+
+    WCHAR widePath[SYS_MAX_PATH];
+
+    // "%USERPROFILE%\AppData\Roaming"
+    WCHAR *wcsAppDataPath = NULL;
+    HRESULT res = SHGetKnownFolderPath(
+        &(FOLDERID_RoamingAppData),
+        (KF_FLAG_CREATE  | KF_FLAG_DONT_UNEXPAND),
+        NULL, &(wcsAppDataPath));
+
+    if (S_OK != res)
+    {
+        if (NULL != wcsAppDataPath) { CoTaskMemFree(wcsAppDataPath); }
+        return NULL;
+    }
+
+    LPCWSTR subdirs[] = { L"sm64coopdx", L"sm64ex-coop", L"sm64coopdx", NULL };
+
+    for (int i = 0; NULL != subdirs[i]; i++)
+    {
+        if (_snwprintf(widePath, SYS_MAX_PATH, L"%s\\%s", wcsAppDataPath, subdirs[i]) <= 0) { return NULL; }
+
+        // Directory already exists.
+        if (FALSE != PathIsDirectoryW(widePath))
+        {
+            // Directory is not empty, so choose this name.
+            if (FALSE == PathIsDirectoryEmptyW(widePath)) { break; }
+        }
+
+        // 'widePath' will hold the last checked subdir name.
+    }
+
+    // System resource can be safely released now.
+    if (NULL != wcsAppDataPath) { CoTaskMemFree(wcsAppDataPath); }
+
+    // Always try to create the directory pointed to by User Path,
+    // but ignore errors if the destination already exists.
+    if (FALSE == CreateDirectoryW(widePath, NULL))
+    {
+        if (ERROR_ALREADY_EXISTS != GetLastError()) { return NULL; }
+    }
+
+    return sys_windows_short_path_from_wcs(shortPath, SYS_MAX_PATH, widePath) ? shortPath : NULL;
+}
+
+const char *sys_exe_path(void)
+{
+    static char shortPath[SYS_MAX_PATH] = { 0 };
+    if ('\0' != shortPath[0]) { return shortPath; }
+
+    WCHAR widePath[SYS_MAX_PATH];
+    if (0 == GetModuleFileNameW(NULL, widePath, SYS_MAX_PATH)) { return NULL; }
+
+    WCHAR *lastBackslash = wcsrchr(widePath, L'\\');
+    if (NULL != lastBackslash) { *lastBackslash = L'\0'; }
+    else { return NULL; }
+
+    return sys_windows_short_path_from_wcs(shortPath, SYS_MAX_PATH, widePath) ? shortPath : NULL;
+}
+
+static void sys_fatal_impl(const char *msg) {
+    MessageBoxA(NULL, msg, "Fatal error", MB_ICONERROR);
+    fprintf(stderr, "FATAL ERROR:\n%s\n", msg);
+    fflush(stderr);
+    exit(1);
+}
+
+#elif defined(HAVE_SDL2)
 
 // we can just ask SDL for most of this shit if we have it
 #include <SDL2/SDL.h>
 
-// TEMPORARY: check the old save folder and copy contents to the new path
-// this will be removed after a while
-static inline bool copy_userdata(const char *userdir) {
-    char oldpath[SYS_MAX_PATH] = { 0 };
-    char path[SYS_MAX_PATH] = { 0 };
-
-    // check if a save already exists in the new folder
-    snprintf(path, sizeof(path), "%s/" SAVE_FILENAME, userdir);
-    if (fs_sys_file_exists(path)) return false;
-
-    // check if a save exists in the old folder ('pc' instead of 'ex')
-    strncpy(oldpath, path, sizeof(oldpath));
-    const unsigned int len = strlen(userdir);
-    oldpath[len - 2] = 'p'; oldpath[len - 1] = 'c';
-    if (!fs_sys_file_exists(oldpath)) return false;
-
-    printf("old save detected at '%s', copying to '%s'\n", oldpath, path);
-
-    bool ret = fs_sys_copy_file(oldpath, path);
-
-    // also try to copy the config
-    path[len] = oldpath[len] = 0;
-    strncat(path, "/" CONFIGFILE_DEFAULT, SYS_MAX_PATH - 1);
-    strncat(oldpath, "/" CONFIGFILE_DEFAULT, SYS_MAX_PATH - 1);
-    fs_sys_copy_file(oldpath, path);
-
-    return ret;
-}
-
 const char *sys_user_path(void) {
     static char path[SYS_MAX_PATH] = { 0 };
+    if ('\0' != path[0]) { return path; }
 
-    // get the new pref path from SDL
-    char *sdlpath = SDL_GetPrefPath("", "sm64ex-coop");
-    if (sdlpath) {
-        const unsigned int len = strlen(sdlpath);
-        strncpy(path, sdlpath, sizeof(path));
-        path[sizeof(path)-1] = 0;
+    char const *subdirs[] = { "sm64coopdx", "sm64ex-coop", "sm64coopdx", NULL };
 
-        SDL_free(sdlpath);
+    char *sdlPath = NULL;
+    for (int i = 0; NULL != subdirs[i]; i++)
+    {
+        if (sdlPath) {
+            // Previous dir likely just created with SDL_GetPrefPath.
+            fs_sys_rmdir(sdlPath);
+            SDL_free(sdlPath);
+        }
 
-        if (path[len-1] == '/' || path[len-1] == '\\')
-            path[len-1] = 0; // strip the trailing separator
+        sdlPath = SDL_GetPrefPath("", subdirs[i]);
 
-        if (!fs_sys_dir_exists(path) && !fs_sys_mkdir(path))
-            path[0] = 0; // somehow failed, we got no user path
-        else
-            copy_userdata(path); // TEMPORARY: try to copy old saves, if any
+        // Choose this directory if it already exists and is not empty.
+        if (sdlPath && !fs_sys_dir_is_empty(sdlPath)) { break; }
     }
+
+    if (NULL == sdlPath) { return NULL; }
+
+    strncpy(path, sdlPath, SYS_MAX_PATH - 1);
+    SDL_free(sdlPath);
+
+    // strip the trailing separator
+    const unsigned int len = strlen(path);
+    if (path[len-1] == '/' || path[len-1] == '\\') { path[len-1] = 0; }
 
     return path;
 }
 
 const char *sys_exe_path(void) {
     static char path[SYS_MAX_PATH] = { 0 };
-    char *sdlpath = SDL_GetBasePath();
-    if (sdlpath && sdlpath[0]) {
+    if ('\0' != path[0]) { return path; }
+
+    char *sdlPath = SDL_GetBasePath();
+    if (sdlPath && sdlPath[0]) {
         // use the SDL path if it exists
-        const unsigned int len = strlen(sdlpath);
-        strncpy(path, sdlpath, sizeof(path));
+        const unsigned int len = strlen(sdlPath);
+        snprintf(path, sizeof(path), "%s", sdlPath);
         path[sizeof(path)-1] = 0;
-        SDL_free(sdlpath);
+        SDL_free(sdlPath);
         if (path[len-1] == '/' || path[len-1] == '\\')
             path[len-1] = 0; // strip the trailing separator
     }

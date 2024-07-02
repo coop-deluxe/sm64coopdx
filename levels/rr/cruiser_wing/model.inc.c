@@ -1,10 +1,6 @@
+#include "pc/rom_assets.h"
 // 0x0701A608 - 0x0701A648
-static const Vtx rr_seg7_vertex_0701A608[] = {
-    {{{   227,      4,      5}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -79,      0,     -1}, 0, {     0,    990}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   214,   -397,    947}, 0, {  2012,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -93,   -402,    940}, 0, {  2012,    990}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(rr_seg7_vertex_0701A608, 0x00437870, 75979, 0x0001a440, 64);
 
 // 0x0701A648 - 0x0701A680
 static const Gfx rr_seg7_dl_0701A648[] = {

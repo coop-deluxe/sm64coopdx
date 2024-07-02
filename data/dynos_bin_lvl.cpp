@@ -6,11 +6,11 @@ extern "C" {
 #include "include/surface_terrains.h"
 #include "include/seq_ids.h"
 #include "level_commands.h"
-#include "src/game/level_update.h"
+#include "game/level_update.h"
 #include "include/dialog_ids.h"
 #include "levels/scripts.h"
 #include "levels/menu/header.h"
-#include "src/game/area.h"
+#include "game/area.h"
 }
 
 // Free data pointers, but keep nodes and tokens intact
@@ -687,8 +687,6 @@ static void ParseLevelScriptSymbol(GfxData* aGfxData, DataNode<LevelScript>* aNo
     lvl_symbol_3(MARIO, 2, 0, 0);
 
     // warps
-    lvl_symbol_5(WARP_NODE, 0, 0, 0);
-    lvl_symbol_5(PAINTING_WARP_NODE, 0, 0, 0);
     lvl_symbol_5(INSTANT_WARP, 0, 0, 0);
 
     // misc
@@ -816,13 +814,61 @@ static void ParseLevelScriptSymbol(GfxData* aGfxData, DataNode<LevelScript>* aNo
 
     // JUMP_AREA
     if (_Symbol == "JUMP_AREA") {
-        LevelScript _Arg0 = ParseLevelScriptSymbolArg(aGfxData, aNode, aTokenIndex);
-        LevelScript _Arg1 = ParseLevelScriptSymbolArg(aGfxData, aNode, aTokenIndex);
-        LevelScript _Arg2 = ParseLevelScriptSymbolArg(aGfxData, aNode, aTokenIndex);
+        LevelScript op = ParseLevelScriptSymbolArg(aGfxData, aNode, aTokenIndex);
+        LevelScript arg = ParseLevelScriptSymbolArg(aGfxData, aNode, aTokenIndex);
+        LevelScript target = ParseLevelScriptSymbolArg(aGfxData, aNode, aTokenIndex);
         aGfxData->mPointerList.Add(aHead + 2);
-        LevelScript _Ls[] = { JUMP_AREA_EXT(_Arg0, _Arg1, _Arg2) };
+        LevelScript _Ls[] = { JUMP_AREA_EXT(op, arg, target) };
         memcpy(aHead, _Ls, sizeof(_Ls));
         aHead += (sizeof(_Ls) / sizeof(_Ls[0]));
+        return;
+    }
+
+    // WARP_NODE
+    if (_Symbol == "WARP_NODE") {
+        u64 topTokenIndex = aTokenIndex;
+
+        bool foundLevel = true;
+        LevelScript id = ParseLevelScriptSymbolArg(aGfxData, aNode, aTokenIndex);
+        LevelScript destLevel = ParseLevelScriptSymbolArgInternal(aGfxData, aNode, aTokenIndex, &foundLevel);
+        LevelScript destArea = ParseLevelScriptSymbolArg(aGfxData, aNode, aTokenIndex);
+        LevelScript destNode = ParseLevelScriptSymbolArg(aGfxData, aNode, aTokenIndex);
+        LevelScript flags = ParseLevelScriptSymbolArg(aGfxData, aNode, aTokenIndex);
+
+        if (foundLevel) {
+            LevelScript _Ls[] = { WARP_NODE(id, destLevel, destArea, destNode, flags) };
+            memcpy(aHead, _Ls, sizeof(_Ls));
+            aHead += (sizeof(_Ls) / sizeof(_Ls[0]));
+        } else {
+            s16 destLevelIndex = DynOS_Lua_RememberVariable(aGfxData, aHead + 1, aNode->mTokens[topTokenIndex + 1]);
+            LevelScript _Ls[] = { WARP_NODE(id, destLevelIndex, destArea, destNode, flags) };
+            memcpy(aHead, _Ls, sizeof(_Ls));
+            aHead += (sizeof(_Ls) / sizeof(_Ls[0]));
+        }
+        return;
+    }
+
+    // PAINTING_WARP_NODE
+    if (_Symbol == "PAINTING_WARP_NODE") {
+        u64 topTokenIndex = aTokenIndex;
+
+        bool foundLevel = true;
+        LevelScript id = ParseLevelScriptSymbolArg(aGfxData, aNode, aTokenIndex);
+        LevelScript destLevel = ParseLevelScriptSymbolArgInternal(aGfxData, aNode, aTokenIndex, &foundLevel);
+        LevelScript destArea = ParseLevelScriptSymbolArg(aGfxData, aNode, aTokenIndex);
+        LevelScript destNode = ParseLevelScriptSymbolArg(aGfxData, aNode, aTokenIndex);
+        LevelScript flags = ParseLevelScriptSymbolArg(aGfxData, aNode, aTokenIndex);
+
+        if (foundLevel) {
+            LevelScript _Ls[] = { PAINTING_WARP_NODE(id, destLevel, destArea, destNode, flags) };
+            memcpy(aHead, _Ls, sizeof(_Ls));
+            aHead += (sizeof(_Ls) / sizeof(_Ls[0]));
+        } else {
+            s16 destLevelIndex = DynOS_Lua_RememberVariable(aGfxData, aHead + 1, aNode->mTokens[topTokenIndex + 1]);
+            LevelScript _Ls[] = { PAINTING_WARP_NODE(id, destLevelIndex, destArea, destNode, flags) };
+            memcpy(aHead, _Ls, sizeof(_Ls));
+            aHead += (sizeof(_Ls) / sizeof(_Ls[0]));
+        }
         return;
     }
 
@@ -1073,12 +1119,10 @@ static bool DynOS_Lvl_GeneratePack_Internal(const SysPath &aPackFolder, Array<Pa
         // If there is an existing binary file for this level, skip and go to the next level
         SysPath _LvlFilename = fstring("%s/%s.lvl", aPackFolder.c_str(), _LvlRootName.begin());
         if (fs_sys_file_exists(_LvlFilename.c_str())) {
-#ifdef DEVELOPMENT
             // Compress file to gain some space
             if (!DynOS_Bin_IsCompressed(_LvlFilename)) {
                 DynOS_Bin_Compress(_LvlFilename);
             }
-#endif
             continue;
         }
 
@@ -1096,8 +1140,8 @@ static bool DynOS_Lvl_GeneratePack_Internal(const SysPath &aPackFolder, Array<Pa
         _GfxData->mGeoNodeStack.Clear();
 
         // Parse data
-        PrintNoNewLine("%s.lvl: Model identifier: %X - Processing... ", _LvlRootName.begin(), _GfxData->mModelIdentifier);
-        PrintConsole("%s.lvl: Model identifier: %X - Processing... ", _LvlRootName.begin(), _GfxData->mModelIdentifier);
+        PrintNoNewLine("%s.lvl: Level identifier: %X - Processing... ", _LvlRootName.begin(), _GfxData->mModelIdentifier);
+        PrintConsole(CONSOLE_MESSAGE_INFO, "%s.lvl: Level identifier: %X - Processing... ", _LvlRootName.begin(), _GfxData->mModelIdentifier);
         DynOS_Lvl_Parse(_GfxData, _LvlRoot, true);
 
         // Force all of the movtexs, collisions, and trajectories into the compiled lvl
@@ -1186,7 +1230,7 @@ static void DynOS_Lvl_GeneratePack_Recursive(const SysPath &directory, GfxData *
 }
 
 void DynOS_Lvl_GeneratePack(const SysPath &aPackFolder) {
-    Print("Processing Levels: \"%s\"", aPackFolder.c_str());
+    Print("Processing levels: \"%s\"", aPackFolder.c_str());
     Array<Pair<u64, String>> _ActorsFolders;
 
     GfxData *_GfxData = New<GfxData>();
@@ -1201,15 +1245,12 @@ void DynOS_Lvl_GeneratePack(const SysPath &aPackFolder) {
             if (SysPath(_PackEnt->d_name) == ".") continue;
             if (SysPath(_PackEnt->d_name) == "..") continue;
 
-#ifdef DEVELOPMENT
             // Compress .lvl files to gain some space
-            // TODO: is this required anymore?
-            /*SysPath _Filename = fstring("%s/%s", aPackFolder.c_str(), _PackEnt->d_name);
+            SysPath _Filename = fstring("%s/%s", aPackFolder.c_str(), _PackEnt->d_name);
             if (SysPath(_PackEnt->d_name).find(".lvl") != SysPath::npos && !DynOS_Bin_IsCompressed(_Filename)) {
                 DynOS_Bin_Compress(_Filename);
                 continue;
-            }*/
-#endif
+            }
 
             // For each subfolder, read tokens from script.c
             SysPath _Folder = fstring("%s/%s", aPackFolder.c_str(), _PackEnt->d_name);

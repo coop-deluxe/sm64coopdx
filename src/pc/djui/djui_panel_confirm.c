@@ -1,10 +1,10 @@
 #include "djui.h"
 #include "djui_panel.h"
 #include "djui_panel_menu.h"
-#include "src/pc/utils/misc.h"
+#include "pc/utils/misc.h"
 
 void djui_panel_confirm_create(struct DjuiBase* caller, char* title, char* message, void (*on_yes_click)(struct DjuiBase*)) {
-    struct DjuiThreePanel* panel = djui_panel_menu_create(title);
+    struct DjuiThreePanel* panel = djui_panel_menu_create(title, false);
     struct DjuiBase* body = djui_three_panel_get_body(panel);
     {
         struct DjuiText* text = djui_text_create(body, message);

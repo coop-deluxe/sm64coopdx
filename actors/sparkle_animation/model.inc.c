@@ -1,37 +1,23 @@
+#include "pc/rom_assets.h"
 // Sparkles Animation
 
 // 0x04032A48
-static const Vtx sparkles_animation_seg4_vertex_04032A48[] = {
-    {{{   -32,      0,      0}, 0, {     0,    992}, {0xff, 0xff, 0x64, 0xff}}},
-    {{{    32,      0,      0}, 0, {   992,    992}, {0xff, 0xff, 0x64, 0xff}}},
-    {{{    32,     64,      0}, 0, {   992,      0}, {0xff, 0xff, 0x64, 0xff}}},
-    {{{   -32,     64,      0}, 0, {     0,      0}, {0xff, 0xff, 0x64, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(sparkles_animation_seg4_vertex_04032A48, 0x00114750, 78432, 0x00032a48, 64);
 
 // 0x04032A88
-ALIGNED8 const Texture sparkles_animation_seg4_texture_04032A88[] = {
-#include "actors/sparkle_animation/sparkle_animation_0.ia16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(sparkles_animation_seg4_texture_04032A88, "actors/sparkle_animation/sparkle_animation_0.ia16.inc.c", 0x00114750, 78432, 0x00032a88, 2048);
 
 // 0x04033288
-ALIGNED8 const Texture sparkles_animation_seg4_texture_04033288[] = {
-#include "actors/sparkle_animation/sparkle_animation_1.ia16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(sparkles_animation_seg4_texture_04033288, "actors/sparkle_animation/sparkle_animation_1.ia16.inc.c", 0x00114750, 78432, 0x00033288, 2048);
 
 // 0x04033A88
-ALIGNED8 const Texture sparkles_animation_seg4_texture_04033A88[] = {
-#include "actors/sparkle_animation/sparkle_animation_2.ia16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(sparkles_animation_seg4_texture_04033A88, "actors/sparkle_animation/sparkle_animation_2.ia16.inc.c", 0x00114750, 78432, 0x00033a88, 2048);
 
 // 0x04034288
-ALIGNED8 const Texture sparkles_animation_seg4_texture_04034288[] = {
-#include "actors/sparkle_animation/sparkle_animation_3.ia16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(sparkles_animation_seg4_texture_04034288, "actors/sparkle_animation/sparkle_animation_3.ia16.inc.c", 0x00114750, 78432, 0x00034288, 2048);
 
 // 0x04034A88
-ALIGNED8 const Texture sparkles_animation_seg4_texture_04034A88[] = {
-#include "actors/sparkle_animation/sparkle_animation_4.ia16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(sparkles_animation_seg4_texture_04034A88, "actors/sparkle_animation/sparkle_animation_4.ia16.inc.c", 0x00114750, 78432, 0x00034a88, 2048);
 
 // 0x04035288 - 0x04035300
 const Gfx sparkles_animation_seg4_dl_04035288[] = {

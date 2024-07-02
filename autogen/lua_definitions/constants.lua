@@ -2,6 +2,7 @@
 
 math.randomseed(get_time())
 
+
 --------------
 -- CObjects --
 --------------
@@ -93,6 +94,7 @@ _ReadOnlyTable = {
     __newindex = function (t,k,v)
     end
 }
+
 
 --------------------
 -- math functions --
@@ -312,6 +314,7 @@ function approach_s32(current, target, inc, dec)
     return current
 end
 
+
 -----------
 -- sound --
 -----------
@@ -394,11 +397,48 @@ COURSE_COUNT = 25
 --- @type integer
 COURSE_MIN = 1
 
+
+------------------------------
+-- player palette functions --
+------------------------------
+
+--- @param np NetworkPlayer
+--- @param part PlayerPart
+--- @return Color
+function network_player_get_palette_color(np, part)
+    local color = {
+        r = network_player_get_palette_color_channel(np, part, 0),
+        g = network_player_get_palette_color_channel(np, part, 1),
+        b = network_player_get_palette_color_channel(np, part, 2)
+    }
+    return color
+end
+
+--- @param np NetworkPlayer
+--- @param part PlayerPart
+--- @return Color
+function network_player_get_override_palette_color(np, part)
+    local color = {
+        r = network_player_get_override_palette_color_channel(np, part, 0),
+        g = network_player_get_override_palette_color_channel(np, part, 1),
+        b = network_player_get_override_palette_color_channel(np, part, 2)
+    }
+    return color
+end
+
+
 -----------------
 -- legacy font --
 -----------------
 
 FONT_TINY = -1
+
+
+----------------------
+-- legacy functions --
+----------------------
+
+function get_coop_compatibility_enabled() return false end
 
 --- @type integer
 INSTANT_WARP_INDEX_START = 0x00
@@ -2452,6 +2492,9 @@ CUTSCENE_LOOP = 0x7FFF
 CUTSCENE_NONPAINTING_DEATH = 170
 
 --- @type integer
+CUTSCENE_PALETTE_EDITOR = 182
+
+--- @type integer
 CUTSCENE_PREPARE_CANNON = 150
 
 --- @type integer
@@ -2765,178 +2808,6 @@ CT_WARIO = 4
 
 --- @type CharacterType
 CT_MAX = 5
-
---- @class PalettePreset
-
---- @type PalettePreset
-PALETTE_MARIO = 0
-
---- @type PalettePreset
-PALETTE_LUIGI = 1
-
---- @type PalettePreset
-PALETTE_TOAD = 2
-
---- @type PalettePreset
-PALETTE_WARIO = 3
-
---- @type PalettePreset
-PALETTE_WALUIGI = 4
-
---- @type PalettePreset
-PALETTE_TOADETTE = 5
-
---- @type PalettePreset
-PALETTE_YOSHI = 6
-
---- @type PalettePreset
-PALETTE_BUCKEN_BERRY = 7
-
---- @type PalettePreset
-PALETTE_ALA_GOLD = 8
-
---- @type PalettePreset
-PALETTE_FIRE_MARIO = 9
-
---- @type PalettePreset
-PALETTE_FIRE_LUIGI = 10
-
---- @type PalettePreset
-PALETTE_ICE_MARIO = 11
-
---- @type PalettePreset
-PALETTE_ICE_LUIGI = 12
-
---- @type PalettePreset
-PALETTE_TOADSWORTH = 13
-
---- @type PalettePreset
-PALETTE_PEACH = 14
-
---- @type PalettePreset
-PALETTE_DAISY = 15
-
---- @type PalettePreset
-PALETTE_WARIO_WOODS = 16
-
---- @type PalettePreset
-PALETTE_GB = 17
-
---- @type PalettePreset
-PALETTE_N64 = 18
-
---- @type PalettePreset
-PALETTE_SNES = 19
-
---- @type PalettePreset
-PALETTE_SWITCH = 20
-
---- @type PalettePreset
-PALETTE_CLOVER = 21
-
---- @type PalettePreset
-PALETTE_COBALT = 22
-
---- @type PalettePreset
-PALETTE_RUBY = 23
-
---- @type PalettePreset
-PALETTE_FURY = 24
-
---- @type PalettePreset
-PALETTE_HOT_PINK = 25
-
---- @type PalettePreset
-PALETTE_NICE_PINK = 26
-
---- @type PalettePreset
-PALETTE_SEAFOAM = 27
-
---- @type PalettePreset
-PALETTE_LILAC = 28
-
---- @type PalettePreset
-PALETTE_COPPER = 29
-
---- @type PalettePreset
-PALETTE_AZURE = 30
-
---- @type PalettePreset
-PALETTE_BURGUNDY = 31
-
---- @type PalettePreset
-PALETTE_MINT = 32
-
---- @type PalettePreset
-PALETTE_ORANGE = 33
-
---- @type PalettePreset
-PALETTE_ARCTIC = 34
-
---- @type PalettePreset
-PALETTE_BLACK = 35
-
---- @type PalettePreset
-PALETTE_BUBBLEGUM = 36
-
---- @type PalettePreset
-PALETTE_BUSY_BEE = 37
-
---- @type PalettePreset
-PALETTE_FORTRESS = 38
-
---- @type PalettePreset
-PALETTE_BLUEBERRY_PIE = 39
-
---- @type PalettePreset
-PALETTE_RASPBERRY = 40
-
---- @type PalettePreset
-PALETTE_COFFEE = 41
-
---- @type PalettePreset
-PALETTE_MARGIN = 42
-
---- @type PalettePreset
-PALETTE_PUMPKIN = 43
-
---- @type PalettePreset
-PALETTE_SOIL = 44
-
---- @type PalettePreset
-PALETTE_CREVASE = 45
-
---- @type PalettePreset
-PALETTE_PRESET_MAX = 46
-
---- @class PlayerPart
-
---- @type PlayerPart
-PANTS = 0
-
---- @type PlayerPart
-SHIRT = 1
-
---- @type PlayerPart
-GLOVES = 2
-
---- @type PlayerPart
-SHOES = 3
-
---- @type PlayerPart
-HAIR = 4
-
---- @type PlayerPart
-SKIN = 5
-
---- @type PlayerPart
-CAP = 6
-
---- @type PlayerPart
-PLAYER_PART_MAX = 7
-
---- @type PlayerPart
-METAL = CAP
 
 --- @class DialogId
 
@@ -3773,6 +3644,9 @@ ATTACK_KICK_OR_TRIP = 2
 ATTACK_PUNCH = 1
 
 --- @type integer
+INTERACT_UNKNOWN_08 = (1 << 8)
+
+--- @type integer
 INT_ANY_ATTACK = (INT_GROUND_POUND_OR_TWIRL | INT_PUNCH | INT_KICK | INT_TRIP | INT_SLIDE_KICK | INT_FAST_ATTACK_OR_SHELL | INT_HIT_FROM_ABOVE | INT_HIT_FROM_BELOW)
 
 --- @type integer
@@ -3939,7 +3813,7 @@ INTERACT_POLE = (1 << 6)
 INTERACT_KOOPA = (1 << 7)
 
 --- @type InteractionType
-INTERACT_UNKNOWN_08 = (1 << 8)
+INTERACT_SPINY_WALKING = (1 << 8)
 
 --- @type InteractionType
 INTERACT_BREAKABLE = (1 << 9)
@@ -4194,6 +4068,15 @@ MARIO_SPAWN_UNKNOWN_03 = 0x03
 
 --- @type integer
 MARIO_SPAWN_UNKNOWN_27 = 0x27
+
+--- @type integer
+PAINTING_WARP_INDEX_END = 0x2D
+
+--- @type integer
+PAINTING_WARP_INDEX_FA = 0x2A
+
+--- @type integer
+PAINTING_WARP_INDEX_START = 0x00
 
 --- @type integer
 PRESS_START_DEMO_TIMER = 800
@@ -5741,6 +5624,9 @@ PLAYER_INTERACTIONS_SOLID = 1
 
 --- @type PlayerInteractions
 PLAYER_INTERACTIONS_PVP = 2
+
+--- @type integer
+MAX_DESCRIPTION_STRING = 20
 
 --- @type integer
 MAX_RX_SEQ_IDS = 256
@@ -7862,6 +7748,41 @@ Y_BUTTON = CONT_Y
 Z_TRIG = CONT_G
 
 --- @type integer
+MAX_PRESET_PALETTES = 128
+
+--- @class PlayerPart
+
+--- @type PlayerPart
+PANTS = 0
+
+--- @type PlayerPart
+SHIRT = 1
+
+--- @type PlayerPart
+GLOVES = 2
+
+--- @type PlayerPart
+SHOES = 3
+
+--- @type PlayerPart
+HAIR = 4
+
+--- @type PlayerPart
+SKIN = 5
+
+--- @type PlayerPart
+CAP = 6
+
+--- @type PlayerPart
+EMBLEM = 7
+
+--- @type PlayerPart
+PLAYER_PART_MAX = 8
+
+--- @type PlayerPart
+METAL = EMBLEM
+
+--- @type integer
 EEPROM_SIZE = 0x200
 
 --- @type integer
@@ -8781,6 +8702,9 @@ ACT_SUFFOCATION = 0x00021314
 ACT_SWIMMING_END = 0x300024D1
 
 --- @type integer
+ACT_TAKING_OFF_CAP = 0x0000133E
+
+--- @type integer
 ACT_TELEPORT_FADE_IN = 0x00001337
 
 --- @type integer
@@ -9292,7 +9216,7 @@ HOOK_ON_COLLIDE_LEVEL_BOUNDS = 37
 HOOK_MIRROR_MARIO_RENDER = 38
 
 --- @type LuaHookedEventType
-HOOK_OVERRIDE_PHYS_STEP_DEFACTO_SPEED = 39
+HOOK_MARIO_OVERRIDE_PHYS_STEP_DEFACTO_SPEED = 39
 
 --- @type LuaHookedEventType
 HOOK_ON_OBJECT_LOAD = 40
@@ -9301,7 +9225,36 @@ HOOK_ON_OBJECT_LOAD = 40
 HOOK_ON_PLAY_SOUND = 41
 
 --- @type LuaHookedEventType
-HOOK_MAX = 42
+HOOK_ON_SEQ_LOAD = 42
+
+--- @type LuaHookedEventType
+HOOK_ON_ATTACK_OBJECT = 43
+
+--- @type LuaHookedEventType
+HOOK_ON_LANGUAGE_CHANGED = 44
+
+--- @type LuaHookedEventType
+HOOK_ON_MODS_LOADED = 45
+
+--- @type LuaHookedEventType
+HOOK_MAX = 46
+
+--- @class LuaModMenuElementType
+
+--- @type LuaModMenuElementType
+MOD_MENU_ELEMENT_BUTTON = 0
+
+--- @type LuaModMenuElementType
+MOD_MENU_ELEMENT_CHECKBOX = 1
+
+--- @type LuaModMenuElementType
+MOD_MENU_ELEMENT_SLIDER = 2
+
+--- @type LuaModMenuElementType
+MOD_MENU_ELEMENT_INPUTBOX = 3
+
+--- @type LuaModMenuElementType
+MOD_MENU_ELEMENT_MAX = 4
 
 --- @class HudDisplayFlags
 
@@ -11320,10 +11273,13 @@ SOUND_MARIO_HRMM = SOUND_ARG_LOAD(SOUND_BANK_MARIO_VOICE, 0x06, 0x80, SOUND_NO_P
 SOUND_MARIO_IMA_TIRED = SOUND_ARG_LOAD(SOUND_BANK_MARIO_VOICE, 0x37, 0x80, SOUND_NO_PRIORITY_LOSS | SOUND_DISCRETE)
 
 --- @type integer
+SOUND_MARIO_LETS_A_GO = SOUND_MENU_STAR_SOUND_LETS_A_GO
+
+--- @type integer
 SOUND_MARIO_MAMA_MIA = SOUND_ARG_LOAD(SOUND_BANK_MARIO_VOICE, 0x20, 0x80, SOUND_NO_PRIORITY_LOSS | SOUND_DISCRETE)
 
 --- @type integer
-SOUND_MARIO_OKEY_DOKEY = SOUND_ARG_LOAD(SOUND_BANK_MARIO_VOICE, 0x21, 0x00, 0)
+SOUND_MARIO_OKEY_DOKEY = SOUND_ARG_LOAD(SOUND_BANK_MARIO_VOICE, 0x21, 0x80, SOUND_NO_PRIORITY_LOSS | SOUND_DISCRETE)
 
 --- @type integer
 SOUND_MARIO_ON_FIRE = SOUND_ARG_LOAD(SOUND_BANK_MARIO_VOICE, 0x14, 0xA0, SOUND_NO_PRIORITY_LOSS | SOUND_DISCRETE)
@@ -12547,7 +12503,19 @@ GRAPH_NODE_GUARD = 0xAA
 MAX_PLAYERS = 16
 
 --- @type integer
+OBJECT_CUSTOM_FIELDS_START = (OBJECT_NUM_REGULAR_FIELDS)
+
+--- @type integer
 OBJECT_MAX_BHV_STACK = 16
+
+--- @type integer
+OBJECT_NUM_CUSTOM_FIELDS = 0x10
+
+--- @type integer
+OBJECT_NUM_FIELDS = (OBJECT_CUSTOM_FIELDS_START + OBJECT_NUM_CUSTOM_FIELDS)
+
+--- @type integer
+OBJECT_NUM_REGULAR_FIELDS = 0x50
 
 --- @type integer
 PLAY_MODE_CHANGE_AREA = 3
@@ -12593,22 +12561,19 @@ SPTASK_STATE_FINISHED = 3
 SPTASK_STATE_FINISHED_DP = 4
 
 --- @type integer
-MAX_LOCAL_VERSION_LENGTH = 36
-
---- @type integer
 MAX_VERSION_LENGTH = 32
 
 --- @type integer
-MINOR_VERSION_NUMBER = 1
+MINOR_VERSION_NUMBER = 0
 
 --- @type integer
 PATCH_VERSION_NUMBER = 0
 
 --- @type string
-SM64COOPDX_VERSION = "0.2"
+SM64COOPDX_VERSION = "v1.0"
 
 --- @type integer
-VERSION_NUMBER = 36
+VERSION_NUMBER = 37
 
 --- @type string
 VERSION_REGION = "JP"
@@ -12623,4 +12588,4 @@ VERSION_REGION = "SH"
 VERSION_REGION = "US"
 
 --- @type string
-VERSION_TEXT = "beta"
+VERSION_TEXT = "v"

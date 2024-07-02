@@ -10,6 +10,7 @@ struct DjuiPanel {
     struct DjuiPanel* parent;
     struct DjuiBase* defaultElementBase;
     bool temporary;
+    bool (*on_back)(struct DjuiBase*);
     void (*on_panel_destroy)(struct DjuiBase*);
 };
 

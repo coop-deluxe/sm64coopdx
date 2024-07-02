@@ -13,8 +13,8 @@ static void djui_selectionbox_update_style(struct DjuiBase* base) {
 
     if (!selectionbox->base.enabled) {
         struct DjuiSelectionbox* selectionbox = (struct DjuiSelectionbox*)base;
-        struct DjuiColor bc = djui_theme_shade_color(theme->interactables.defaultBorderColor);
-        struct DjuiColor rc = djui_theme_shade_color(theme->interactables.defaultRectColor);
+        struct DjuiColor bc = djui_theme_shade_color(theme->interactables.defaultBorderColor, 0.6f);
+        struct DjuiColor rc = djui_theme_shade_color(theme->interactables.defaultRectColor, 0.6f);
         struct DjuiColor tc = theme->interactables.textColor;
 
         djui_base_set_border_color(&selectionbox->rect->base, bc.r, bc.g, bc.b, bc.a);

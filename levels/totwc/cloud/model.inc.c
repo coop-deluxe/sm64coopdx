@@ -1,10 +1,6 @@
+#include "pc/rom_assets.h"
 // 0x07007930 - 0x07007970
-static const Vtx totwc_seg7_vertex_07007930[] = {
-    {{{  1024,    512,      0}, 0, {   990,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{ -1023,    512,      0}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{ -1023,   -511,      0}, 0, {     0,    990}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{  1024,   -511,      0}, 0, {   990,    990}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(totwc_seg7_vertex_07007930, 0x004bec30, 15051, 0x00007930, 64);
 
 // 0x07007970 - 0x070079A8
 static const Gfx totwc_seg7_dl_07007970[] = {

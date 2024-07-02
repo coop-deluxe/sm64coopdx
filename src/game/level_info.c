@@ -102,7 +102,7 @@ static char *sm64_to_ascii_char(char *strAscii, const u8 *str64) {
     return strAscii + 1;
 }
 
-static void convert_string_ascii_to_sm64(u8 *str64, const char *strAscii, bool menu) {
+void convert_string_ascii_to_sm64(u8 *str64, const char *strAscii, bool menu) {
     for (; *strAscii != 0; str64++) {
         strAscii = ascii_to_sm64_char(str64, strAscii, menu);
     }
@@ -160,7 +160,7 @@ static void decapitalize_string_sm64(u8 *str64) {
     }
 }
 
-void *get_course_name_table() {
+void *get_course_name_table(void) {
     void **courseNameTbl = segmented_to_virtual(seg2_course_name_table);
 
 #ifdef VERSION_EU
@@ -174,7 +174,7 @@ void *get_course_name_table() {
     return courseNameTbl;
 }
 
-void *get_act_name_table() {
+void *get_act_name_table(void) {
     void **actNameTbl = segmented_to_virtual(seg2_act_name_table);
 
 #ifdef VERSION_EU
@@ -261,7 +261,7 @@ const char *get_star_name_ascii(s16 courseNum, s16 starNum, s16 charCase) {
     static char output[256];
 
     s16 starIndex = starNum - 1;
-    if (starIndex >= 0 && starIndex < MAX_ACTS &&
+    if (starIndex >= 0 && starIndex < MAX_ACTS_AND_100_COINS &&
         courseNum >= 0 && courseNum < COURSE_END &&
         gReplacedActNameTable[courseNum]->actName && gReplacedActNameTable[courseNum]->actName[starIndex].modIndex != -1) {
         snprintf(output, 256, "%s", gReplacedActNameTable[courseNum]->actName[starIndex].name);

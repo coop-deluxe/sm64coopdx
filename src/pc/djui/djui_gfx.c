@@ -3,8 +3,8 @@
 #include "djui.h"
 #include "game/ingame_menu.h"
 #include "game/segment2.h"
-#include "src/pc/pc_main.h"
-#include "src/pc/gfx/gfx_window_manager_api.h"
+#include "pc/pc_main.h"
+#include "pc/gfx/gfx_window_manager_api.h"
 #include "gfx_dimensions.h"
 #include "djui_gfx.h"
 #include "pc/debuglog.h"
@@ -65,6 +65,7 @@ f32 djui_gfx_get_scale(void) {
         }
     }
 }
+
 /////////////////////////////////////////////
 
 static const Vtx vertex_djui_image[] = {

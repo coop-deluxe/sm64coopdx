@@ -1,6 +1,6 @@
 #include "djui.h"
-#include "src/pc/pc_main.h"
-#include "src/pc/gfx/gfx_window_manager_api.h"
+#include "pc/pc_main.h"
+#include "pc/gfx/gfx_window_manager_api.h"
 
 static bool djui_root_render(struct DjuiBase* base) {
     // grab window height

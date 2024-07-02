@@ -1,9 +1,9 @@
 #ifndef PACKET_H
 #define PACKET_H
 
-#include "PR/ultratypes.h"
+#include <PR/ultratypes.h>
 #include <time.h>
-#include <types.h>
+#include "types.h"
 #include <assert.h>
 #include <stdbool.h>
 
@@ -53,6 +53,7 @@ enum PacketType {
     PACKET_LEVEL_MACRO,
     PACKET_LEVEL_AREA_INFORM,
     PACKET_LEVEL_RESPAWN_INFO,
+    PACKET_CHANGE_WATER_LEVEL,
 
     PACKET_PLAYER_SETTINGS,
 
@@ -107,7 +108,7 @@ struct Packet {
     u16 orderedSeqId;
     u8 courseNum;
     u8 actNum;
-    u8 levelNum;
+    s16 levelNum;
     u8 areaIndex;
     u8 buffer[PACKET_LENGTH];
 };
@@ -331,6 +332,10 @@ void network_receive_level_area_inform(struct Packet* p);
 // packet_level_respawn_info.c
 void network_send_level_respawn_info(struct Object* o, u8 respawnInfoBits);
 void network_receive_level_respawn_info(struct Packet* p);
+
+// packet_change_water_level.c
+void network_send_change_water_level(u8 index, s16 height);
+void network_receive_change_water_level(struct Packet* p);
 
 // packet_debug_sync.c
 void network_send_debug_sync(void);

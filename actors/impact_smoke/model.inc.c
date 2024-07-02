@@ -1,26 +1,19 @@
+#include "pc/rom_assets.h"
 // Impact Smoke
 
 // TODO: These 64x64 textures are referenced as two different texture addresses in the DLs
 
 // 0x0605AA28
-ALIGNED8 const Texture impact_smoke_seg6_texture_0605AA28[] = {
-#include "actors/impact_smoke/impact_smoke_0.ia16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(impact_smoke_seg6_texture_0605AA28, "actors/impact_smoke/impact_smoke_0.ia16.inc.c", 0x00188440, 199722, 0x0005ab78, 8192);
 
 // 0x0605CA28
-ALIGNED8 const Texture impact_smoke_seg6_texture_0605CA28[] = {
-#include "actors/impact_smoke/impact_smoke_1.ia16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(impact_smoke_seg6_texture_0605CA28, "actors/impact_smoke/impact_smoke_1.ia16.inc.c", 0x00188440, 199722, 0x0005cb78, 8192);
 
 // 0x0605EA28
-ALIGNED8 const Texture impact_smoke_seg6_texture_0605EA28[] = {
-#include "actors/impact_smoke/impact_smoke_2.ia16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(impact_smoke_seg6_texture_0605EA28, "actors/impact_smoke/impact_smoke_2.ia16.inc.c", 0x00188440, 199722, 0x0005eb78, 8192);
 
 // 0x06060A28
-ALIGNED8 const Texture impact_smoke_seg6_texture_06060A28[] = {
-#include "actors/impact_smoke/impact_smoke_3.ia16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(impact_smoke_seg6_texture_06060A28, "actors/impact_smoke/impact_smoke_3.ia16.inc.c", 0x00188440, 199722, 0x00060b78, 8192);
 
 // 0x06062A28
 static const Vtx impact_smoke_seg6_vertex_06062A28[] = {

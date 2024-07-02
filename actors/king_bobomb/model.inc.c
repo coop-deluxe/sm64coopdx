@@ -1,3 +1,4 @@
+#include "pc/rom_assets.h"
 // King Bobomb
 
 // Unreferenced light group
@@ -31,62 +32,37 @@ UNUSED static const Lights1 king_bobomb_lights_unused5 = gdSPDefLights1(
 );
 
 // 0x05000078
-ALIGNED8 const Texture king_bobomb_seg5_texture_05000078[] = {
-#include "actors/king_bobomb/bob-omb_buddy_left_side_unused.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(king_bobomb_seg5_texture_05000078, "actors/king_bobomb/bob-omb_buddy_left_side_unused.rgba16.inc.c", 0x00134d20, 26785, 0x00000078, 4096);
 
 // 0x05001078
-ALIGNED8 const Texture king_bobomb_seg5_texture_05001078[] = {
-#include "actors/king_bobomb/bob-omb_buddy_right_side_unused.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(king_bobomb_seg5_texture_05001078, "actors/king_bobomb/bob-omb_buddy_right_side_unused.rgba16.inc.c", 0x00134d20, 26785, 0x00001078, 4096);
 
 // 0x05002078
-ALIGNED8 const Texture king_bobomb_seg5_texture_05002078[] = {
-#include "actors/king_bobomb/king_bob-omb_arm.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(king_bobomb_seg5_texture_05002078, "actors/king_bobomb/king_bob-omb_arm.rgba16.inc.c", 0x00134d20, 26785, 0x00002078, 2048);
 
 // 0x05002878
-ALIGNED8 const Texture king_bobomb_seg5_texture_05002878[] = {
-#include "actors/king_bobomb/king_bob-omb_body_unused.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(king_bobomb_seg5_texture_05002878, "actors/king_bobomb/king_bob-omb_body_unused.rgba16.inc.c", 0x00134d20, 26785, 0x00002878, 8192);
 
 // 0x05004878
-ALIGNED8 const Texture king_bobomb_seg5_texture_05004878[] = {
-#include "actors/king_bobomb/king_bob-omb_eyes.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(king_bobomb_seg5_texture_05004878, "actors/king_bobomb/king_bob-omb_eyes.rgba16.inc.c", 0x00134d20, 26785, 0x00004878, 4096);
 
 // 0x05005878
-ALIGNED8 const Texture king_bobomb_seg5_texture_05005878[] = {
-#include "actors/king_bobomb/king_bob-omb_hand.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(king_bobomb_seg5_texture_05005878, "actors/king_bobomb/king_bob-omb_hand.rgba16.inc.c", 0x0012a7e0, 32879, 0x00000040, 2048);
 
 // 0x05006078
-ALIGNED8 const Texture king_bobomb_seg5_texture_05006078[] = {
-#include "actors/king_bobomb/king_bob-omb_crown_rim.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(king_bobomb_seg5_texture_05006078, "actors/king_bobomb/king_bob-omb_crown_rim.rgba16.inc.c", 0x00134d20, 26785, 0x00006078, 1024);
 
 // 0x05006478
-ALIGNED8 const Texture king_bobomb_seg5_texture_05006478[] = {
-#include "actors/king_bobomb/bob-omb_buddy_body_unused.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(king_bobomb_seg5_texture_05006478, "actors/king_bobomb/bob-omb_buddy_body_unused.rgba16.inc.c", 0x00134d20, 26785, 0x00006478, 8192);
 
 // 0x05008478
-ALIGNED8 const Texture king_bobomb_seg5_texture_05008478[] = {
-#include "actors/king_bobomb/king_bob-omb_left_side.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(king_bobomb_seg5_texture_05008478, "actors/king_bobomb/king_bob-omb_left_side.rgba16.inc.c", 0x00134d20, 26785, 0x00008478, 4096);
 
 // 0x05009478
-ALIGNED8 const Texture king_bobomb_seg5_texture_05009478[] = {
-#include "actors/king_bobomb/king_bob-omb_right_side.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(king_bobomb_seg5_texture_05009478, "actors/king_bobomb/king_bob-omb_right_side.rgba16.inc.c", 0x00134d20, 26785, 0x00009478, 4096);
 
 // 0x0500A478
-static const Vtx king_bobomb_seg5_vertex_0500A478[] = {
-    {{{    23,     23,      0}, 0, {   990,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -22,     23,      0}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -22,    -22,      0}, 0, {     0,    990}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    23,    -22,      0}, 0, {   990,    990}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(king_bobomb_seg5_vertex_0500A478, 0x00134d20, 26785, 0x0000a478, 64);
 
 // 0x0500A4B8 - 0x0500A4F0
 const Gfx king_bobomb_seg5_dl_0500A4B8[] = {
@@ -117,12 +93,7 @@ const Gfx king_bobomb_seg5_dl_0500A4F0[] = {
 };
 
 // 0x0500A560
-static const Vtx king_bobomb_seg5_vertex_0500A560[] = {
-    {{{    26,     26,      0}, 0, {   990,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -25,     26,      0}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -25,    -25,      0}, 0, {     0,    990}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    26,    -25,      0}, 0, {   990,    990}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(king_bobomb_seg5_vertex_0500A560, 0x00134d20, 26785, 0x0000a560, 64);
 
 // 0x0500A5A0 - 0x0500A5D8
 const Gfx king_bobomb_seg5_dl_0500A5A0[] = {
@@ -153,12 +124,7 @@ const Gfx king_bobomb_seg5_dl_0500A5D8[] = {
 };
 
 // 0x0500A648
-static const Vtx king_bobomb_seg5_vertex_0500A648[] = {
-    {{{    49,     49,      0}, 0, {   990,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -48,     49,      0}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -48,    -48,      0}, 0, {     0,    990}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    49,    -48,      0}, 0, {   990,    990}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(king_bobomb_seg5_vertex_0500A648, 0x00134d20, 26785, 0x0000a648, 64);
 
 // 0x0500A688 - 0x0500A6C0
 const Gfx king_bobomb_seg5_dl_0500A688[] = {
@@ -189,12 +155,7 @@ const Gfx king_bobomb_seg5_dl_0500A6C0[] = {
 };
 
 // 0x0500A730
-static const Vtx king_bobomb_seg5_vertex_0500A730[] = {
-    {{{    23,     23,      0}, 0, {   990,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -22,     23,      0}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -22,    -22,      0}, 0, {     0,    990}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    23,    -22,      0}, 0, {   990,    990}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(king_bobomb_seg5_vertex_0500A730, 0x00134d20, 26785, 0x0000a478, 64);
 
 // 0x0500A770 - 0x0500A7A8
 const Gfx king_bobomb_seg5_dl_0500A770[] = {
@@ -225,12 +186,7 @@ const Gfx king_bobomb_seg5_dl_0500A7A8[] = {
 };
 
 // 0x0500A818
-static const Vtx king_bobomb_seg5_vertex_0500A818[] = {
-    {{{    26,     26,      0}, 0, {   990,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -25,     26,      0}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -25,    -25,      0}, 0, {     0,    990}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    26,    -25,      0}, 0, {   990,    990}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(king_bobomb_seg5_vertex_0500A818, 0x00134d20, 26785, 0x0000a560, 64);
 
 // 0x0500A858 - 0x0500A890
 const Gfx king_bobomb_seg5_dl_0500A858[] = {
@@ -261,12 +217,7 @@ const Gfx king_bobomb_seg5_dl_0500A890[] = {
 };
 
 // 0x0500A900
-static const Vtx king_bobomb_seg5_vertex_0500A900[] = {
-    {{{    49,     49,      0}, 0, {   990,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -48,     49,      0}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -48,    -48,      0}, 0, {     0,    990}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    49,    -48,      0}, 0, {   990,    990}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(king_bobomb_seg5_vertex_0500A900, 0x00134d20, 26785, 0x0000a648, 64);
 
 // 0x0500A940 - 0x0500A978
 const Gfx king_bobomb_seg5_dl_0500A940[] = {
@@ -303,40 +254,10 @@ static const Lights1 king_bobomb_seg5_lights_0500A9E8 = gdSPDefLights1(
 );
 
 // 0x0500AA00
-static const Vtx king_bobomb_seg5_vertex_0500AA00[] = {
-    {{{   -40,   -165,   -122}, 0, {     0,      0}, {0xcc, 0xd8, 0x94, 0xff}}},
-    {{{    80,     37,   -144}, 0, {     0,      0}, {0x68, 0x1b, 0xbe, 0xff}}},
-    {{{    80,   -165,   -144}, 0, {     0,      0}, {0x2d, 0xd3, 0x93, 0xff}}},
-    {{{   -14,     37,   -122}, 0, {     0,      0}, {0xb3, 0x29, 0xa5, 0xff}}},
-    {{{    80,    138,    -42}, 0, {     0,      0}, {0x37, 0x69, 0xd5, 0xff}}},
-    {{{    80,    138,    159}, 0, {     0,      0}, {0x36, 0x69, 0x2c, 0xff}}},
-    {{{    80,     37,    261}, 0, {     0,      0}, {0x54, 0x24, 0x57, 0xff}}},
-    {{{    80,   -266,    -42}, 0, {     0,      0}, {0x38, 0x98, 0xd4, 0xff}}},
-    {{{    80,   -266,    159}, 0, {     0,      0}, {0x5b, 0xaf, 0x21, 0xff}}},
-    {{{    80,   -165,    261}, 0, {     0,      0}, {0x2d, 0xd5, 0x6e, 0xff}}},
-    {{{     6,    138,    -31}, 0, {     0,      0}, {0xd6, 0x6e, 0xd3, 0xff}}},
-    {{{   -40,   -266,    148}, 0, {     0,      0}, {0xd4, 0x94, 0x30, 0xff}}},
-    {{{   -40,   -266,    -31}, 0, {     0,      0}, {0xb5, 0xa2, 0xdb, 0xff}}},
-    {{{   -40,   -165,    239}, 0, {     0,      0}, {0xb2, 0xe7, 0x60, 0xff}}},
-    {{{   -14,     37,    239}, 0, {     0,      0}, {0xcc, 0x31, 0x68, 0xff}}},
-    {{{     6,    138,    148}, 0, {     0,      0}, {0xbc, 0x65, 0x22, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(king_bobomb_seg5_vertex_0500AA00, 0x00134d20, 26785, 0x0000aa00, 256);
 
 // 0x0500AB00
-static const Vtx king_bobomb_seg5_vertex_0500AB00[] = {
-    {{{     6,    138,    148}, 0, {     0,      0}, {0xbc, 0x65, 0x22, 0xff}}},
-    {{{     6,    138,    -31}, 0, {     0,      0}, {0xd6, 0x6e, 0xd3, 0xff}}},
-    {{{   -75,     37,    -31}, 0, {     0,      0}, {0x8e, 0x31, 0xe9, 0xff}}},
-    {{{   -75,     37,    148}, 0, {     0,      0}, {0x90, 0x29, 0x2a, 0xff}}},
-    {{{   -14,     37,    239}, 0, {     0,      0}, {0xcc, 0x31, 0x68, 0xff}}},
-    {{{  -101,   -165,    -31}, 0, {     0,      0}, {0x8b, 0xef, 0xd4, 0xff}}},
-    {{{  -101,   -165,    148}, 0, {     0,      0}, {0x87, 0xe7, 0x18, 0xff}}},
-    {{{   -14,     37,   -122}, 0, {     0,      0}, {0xb3, 0x29, 0xa5, 0xff}}},
-    {{{   -40,   -165,    239}, 0, {     0,      0}, {0xb2, 0xe7, 0x60, 0xff}}},
-    {{{   -40,   -266,    148}, 0, {     0,      0}, {0xd4, 0x94, 0x30, 0xff}}},
-    {{{   -40,   -165,   -122}, 0, {     0,      0}, {0xcc, 0xd8, 0x94, 0xff}}},
-    {{{   -40,   -266,    -31}, 0, {     0,      0}, {0xb5, 0xa2, 0xdb, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(king_bobomb_seg5_vertex_0500AB00, 0x00134d20, 26785, 0x0000ab00, 192);
 
 // 0x0500ABC0 - 0x0500AD08
 const Gfx king_bobomb_seg5_dl_0500ABC0[] = {
@@ -382,41 +303,10 @@ static const Lights1 king_bobomb_seg5_lights_0500AD38 = gdSPDefLights1(
 );
 
 // 0x0500AD50
-static const Vtx king_bobomb_seg5_vertex_0500AD50[] = {
-    {{{     6,    138,   -147}, 0, {     0,      0}, {0xd6, 0x6e, 0xd3, 0xff}}},
-    {{{    80,     37,   -260}, 0, {     0,      0}, {0x68, 0x1b, 0xbe, 0xff}}},
-    {{{   -14,     37,   -238}, 0, {     0,      0}, {0xb3, 0x29, 0xa5, 0xff}}},
-    {{{    80,    138,   -158}, 0, {     0,      0}, {0x37, 0x69, 0xd5, 0xff}}},
-    {{{    80,   -165,   -260}, 0, {     0,      0}, {0x2d, 0xd3, 0x93, 0xff}}},
-    {{{   -40,   -165,   -238}, 0, {     0,      0}, {0xcc, 0xd8, 0x94, 0xff}}},
-    {{{    80,    138,     43}, 0, {     0,      0}, {0x36, 0x69, 0x2c, 0xff}}},
-    {{{    80,     37,    145}, 0, {     0,      0}, {0x54, 0x24, 0x57, 0xff}}},
-    {{{    80,   -266,   -158}, 0, {     0,      0}, {0x38, 0x98, 0xd4, 0xff}}},
-    {{{    80,   -266,     43}, 0, {     0,      0}, {0x5b, 0xaf, 0x21, 0xff}}},
-    {{{    80,   -165,    145}, 0, {     0,      0}, {0x2d, 0xd5, 0x6e, 0xff}}},
-    {{{   -40,   -266,   -147}, 0, {     0,      0}, {0xb5, 0xa2, 0xdb, 0xff}}},
-    {{{   -40,   -266,     32}, 0, {     0,      0}, {0xd4, 0x94, 0x30, 0xff}}},
-    {{{   -14,     37,    123}, 0, {     0,      0}, {0xcc, 0x31, 0x68, 0xff}}},
-    {{{   -40,   -165,    123}, 0, {     0,      0}, {0xb2, 0xe7, 0x60, 0xff}}},
-    {{{     6,    138,     32}, 0, {     0,      0}, {0xbc, 0x65, 0x22, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(king_bobomb_seg5_vertex_0500AD50, 0x00134d20, 26785, 0x0000ad50, 256);
 
 // 0x0500AE50
-static const Vtx king_bobomb_seg5_vertex_0500AE50[] = {
-    {{{   -75,     37,   -147}, 0, {     0,      0}, {0x8e, 0x31, 0xe9, 0xff}}},
-    {{{  -101,   -165,   -147}, 0, {     0,      0}, {0x8b, 0xef, 0xd4, 0xff}}},
-    {{{  -101,   -165,     32}, 0, {     0,      0}, {0x87, 0xe7, 0x18, 0xff}}},
-    {{{   -75,     37,     32}, 0, {     0,      0}, {0x90, 0x29, 0x2a, 0xff}}},
-    {{{   -14,     37,   -238}, 0, {     0,      0}, {0xb3, 0x29, 0xa5, 0xff}}},
-    {{{     6,    138,     32}, 0, {     0,      0}, {0xbc, 0x65, 0x22, 0xff}}},
-    {{{     6,    138,   -147}, 0, {     0,      0}, {0xd6, 0x6e, 0xd3, 0xff}}},
-    {{{   -14,     37,    123}, 0, {     0,      0}, {0xcc, 0x31, 0x68, 0xff}}},
-    {{{    80,    138,     43}, 0, {     0,      0}, {0x36, 0x69, 0x2c, 0xff}}},
-    {{{   -40,   -165,    123}, 0, {     0,      0}, {0xb2, 0xe7, 0x60, 0xff}}},
-    {{{   -40,   -266,     32}, 0, {     0,      0}, {0xd4, 0x94, 0x30, 0xff}}},
-    {{{   -40,   -165,   -238}, 0, {     0,      0}, {0xcc, 0xd8, 0x94, 0xff}}},
-    {{{   -40,   -266,   -147}, 0, {     0,      0}, {0xb5, 0xa2, 0xdb, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(king_bobomb_seg5_vertex_0500AE50, 0x00134d20, 26785, 0x0000ae50, 208);
 
 // 0x0500AF20 - 0x0500B068
 const Gfx king_bobomb_seg5_dl_0500AF20[] = {
@@ -457,20 +347,10 @@ const Gfx king_bobomb_seg5_dl_0500B068[] = {
 };
 
 // 0x0500B098
-static const Vtx king_bobomb_seg5_vertex_0500B098[] = {
-    {{{     0,    128,      0}, 0, {   990,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{  -127,   -127,      0}, 0, {     0,   2012}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,   -127,      0}, 0, {   990,   2012}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{  -127,    128,      0}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(king_bobomb_seg5_vertex_0500B098, 0x00134d20, 26785, 0x0000b098, 64);
 
 // 0x0500B0D8
-static const Vtx king_bobomb_seg5_vertex_0500B0D8[] = {
-    {{{   128,    128,      0}, 0, {   990,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,   -127,      0}, 0, {     0,   2012}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   128,   -127,      0}, 0, {   990,   2012}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,    128,      0}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(king_bobomb_seg5_vertex_0500B0D8, 0x00134d20, 26785, 0x0000b0d8, 64);
 
 // 0x0500B118 - 0x0500B150
 const Gfx king_bobomb_seg5_dl_0500B118[] = {
@@ -518,14 +398,7 @@ static const Lights1 king_bobomb_seg5_lights_0500B200 = gdSPDefLights1(
 );
 
 // 0x0500B218
-static const Vtx king_bobomb_seg5_vertex_0500B218[] = {
-    {{{   124,    159,    493}, 0, {     0,      0}, {0x00, 0x18, 0x7c, 0xff}}},
-    {{{  -103,    159,    493}, 0, {     0,    990}, {0x00, 0x18, 0x7c, 0xff}}},
-    {{{  -103,      0,    524}, 0, {   478,    990}, {0x00, 0x08, 0x7e, 0xff}}},
-    {{{   124,      0,    524}, 0, {   478,      0}, {0x00, 0xf8, 0x7e, 0xff}}},
-    {{{  -103,   -158,    493}, 0, {   990,    990}, {0x00, 0xe8, 0x7c, 0xff}}},
-    {{{   124,   -158,    493}, 0, {   990,      0}, {0x00, 0xe8, 0x7c, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(king_bobomb_seg5_vertex_0500B218, 0x00134d20, 26785, 0x0000b218, 96);
 
 // 0x0500B278 - 0x0500B2D0
 const Gfx king_bobomb_seg5_dl_0500B278[] = {
@@ -563,16 +436,7 @@ static const Lights1 king_bobomb_seg5_lights_0500B330 = gdSPDefLights1(
 );
 
 // 0x0500B348
-static const Vtx king_bobomb_seg5_vertex_0500B348[] = {
-    {{{  -189,     -1,    571}, 0, {     0,      0}, {0xdc, 0x19, 0x76, 0xff}}},
-    {{{  -379,    180,    438}, 0, {     0,      0}, {0xde, 0x2e, 0x70, 0xff}}},
-    {{{  -273,     -1,    548}, 0, {     0,      0}, {0xda, 0xed, 0x77, 0xff}}},
-    {{{  -379,   -183,    438}, 0, {     0,      0}, {0xd7, 0xd5, 0x6f, 0xff}}},
-    {{{  -281,   -365,    404}, 0, {     0,      0}, {0xd8, 0xd5, 0x70, 0xff}}},
-    {{{    24,   -436,    485}, 0, {     0,      0}, {0xdd, 0xd7, 0x72, 0xff}}},
-    {{{    24,    432,    485}, 0, {     0,      0}, {0xd9, 0x2a, 0x71, 0xff}}},
-    {{{  -281,    361,    404}, 0, {     0,      0}, {0xd9, 0x2a, 0x71, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(king_bobomb_seg5_vertex_0500B348, 0x00134d20, 26785, 0x0000b348, 128);
 
 // 0x0500B3C8 - 0x0500B418
 const Gfx king_bobomb_seg5_dl_0500B3C8[] = {
@@ -604,36 +468,10 @@ static const Lights1 king_bobomb_seg5_lights_0500B458 = gdSPDefLights1(
 );
 
 // 0x0500B470
-static const Vtx king_bobomb_seg5_vertex_0500B470[] = {
-    {{{   729,    304,    176}, 0, {   394,   -458}, {0xef, 0x6c, 0x3e, 0xff}}},
-    {{{   576,    296,      0}, 0, {     0,    234}, {0xfc, 0x7e, 0x00, 0xff}}},
-    {{{   416,    290,      0}, 0, {   -31,    962}, {0xe9, 0x7c, 0x00, 0xff}}},
-    {{{   416,    145,    252}, 0, {   820,    962}, {0xe9, 0x3e, 0x6c, 0xff}}},
-    {{{   576,    148,    257}, 0, {   820,    234}, {0xfc, 0x3f, 0x6d, 0xff}}},
-    {{{   729,      0,    352}, 0, {  1246,   -458}, {0xef, 0x00, 0x7d, 0xff}}},
-    {{{   416,   -144,    252}, 0, {  1671,    962}, {0xe9, 0xc2, 0x6c, 0xff}}},
-    {{{   729,    304,   -175}, 0, {  4652,   -458}, {0xee, 0x6c, 0xc2, 0xff}}},
-    {{{   415,    145,   -250}, 0, {  4226,    964}, {0xe9, 0x3e, 0x94, 0xff}}},
-    {{{   416,    290,      0}, 0, {  5079,    962}, {0xe9, 0x7c, 0x00, 0xff}}},
-    {{{   576,    296,      0}, 0, {  5078,    234}, {0xfc, 0x7e, 0x00, 0xff}}},
-    {{{   576,    148,   -256}, 0, {  4226,    234}, {0xfb, 0x3f, 0x93, 0xff}}},
-    {{{   729,      0,   -351}, 0, {  3800,   -458}, {0xee, 0x00, 0x83, 0xff}}},
-    {{{   415,   -144,   -250}, 0, {  3374,    964}, {0xe9, 0xc2, 0x94, 0xff}}},
-    {{{   576,   -147,   -256}, 0, {  3374,    234}, {0xfb, 0xc1, 0x93, 0xff}}},
-    {{{   729,   -304,   -175}, 0, {  2948,   -458}, {0xee, 0x94, 0xc2, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(king_bobomb_seg5_vertex_0500B470, 0x00134d20, 26785, 0x0000b470, 256);
 
 // 0x0500B570
-static const Vtx king_bobomb_seg5_vertex_0500B570[] = {
-    {{{   729,   -304,   -175}, 0, {  2948,   -458}, {0xee, 0x94, 0xc2, 0xff}}},
-    {{{   415,   -289,      0}, 0, {  2522,    964}, {0xe9, 0x84, 0x00, 0xff}}},
-    {{{   415,   -144,   -250}, 0, {  3374,    964}, {0xe9, 0xc2, 0x94, 0xff}}},
-    {{{   576,   -295,      0}, 0, {  2523,    234}, {0xfc, 0x82, 0x00, 0xff}}},
-    {{{   729,   -304,    176}, 0, {  2097,   -458}, {0xef, 0x94, 0x3e, 0xff}}},
-    {{{   416,   -144,    252}, 0, {  1671,    962}, {0xe9, 0xc2, 0x6c, 0xff}}},
-    {{{   576,   -147,    257}, 0, {  1671,    234}, {0xfc, 0xc1, 0x6d, 0xff}}},
-    {{{   729,      0,    352}, 0, {  1246,   -458}, {0xef, 0x00, 0x7d, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(king_bobomb_seg5_vertex_0500B570, 0x00134d20, 26785, 0x0000b570, 128);
 
 // 0x0500B5F0 - 0x0500B6C0
 const Gfx king_bobomb_seg5_dl_0500B5F0[] = {

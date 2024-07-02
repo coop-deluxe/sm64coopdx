@@ -1,32 +1,20 @@
+#include "pc/rom_assets.h"
 // Mr I (Iris)
 
 // 0x06002130
-static const Vtx mr_i_iris_seg6_vertex_06002130[] = {
-    {{{   -50,    -50,      0}, 0, {     0,    992}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    50,    -50,      0}, 0, {   992,    992}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    50,     50,      0}, 0, {   992,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -50,     50,      0}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(mr_i_iris_seg6_vertex_06002130, 0x001e7ee0, 40011, 0x00002130, 64);
 
 // 0x06002170
-ALIGNED8 const Texture mr_i_iris_seg6_texture_06002170[] = {
-#include "actors/mr_i_iris/mr_i_iris_open.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(mr_i_iris_seg6_texture_06002170, "actors/mr_i_iris/mr_i_iris_open.rgba16.inc.c", 0x001e7ee0, 40011, 0x00002170, 2048);
 
 // 0x06002970
-ALIGNED8 const Texture mr_i_iris_seg6_texture_06002970[] = {
-#include "actors/mr_i_iris/mr_i_iris_mostly_open.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(mr_i_iris_seg6_texture_06002970, "actors/mr_i_iris/mr_i_iris_mostly_open.rgba16.inc.c", 0x001e7ee0, 40011, 0x00002970, 2048);
 
 // 0x06003170
-ALIGNED8 const Texture mr_i_iris_seg6_texture_06003170[] = {
-#include "actors/mr_i_iris/mr_i_iris_mostly_closed.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(mr_i_iris_seg6_texture_06003170, "actors/mr_i_iris/mr_i_iris_mostly_closed.rgba16.inc.c", 0x001e7ee0, 40011, 0x00003170, 2048);
 
 // 0x06003970
-ALIGNED8 const Texture mr_i_iris_seg6_texture_06003970[] = {
-#include "actors/mr_i_iris/mr_i_iris_closed.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(mr_i_iris_seg6_texture_06003970, "actors/mr_i_iris/mr_i_iris_closed.rgba16.inc.c", 0x001e7ee0, 40011, 0x00003970, 2048);
 
 // 0x06004170 - 0x060041D8
 const Gfx mr_i_iris_seg6_dl_06004170[] = {

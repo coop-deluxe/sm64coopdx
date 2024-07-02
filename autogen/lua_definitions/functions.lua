@@ -21,2082 +21,1670 @@ function arc_to_goal_pos(a0, a1, yVel, gravity)
     -- ...
 end
 
---- @return nil
 function bhv_1up_common_init()
     -- ...
 end
 
---- @return nil
 function bhv_1up_hidden_in_pole_loop()
     -- ...
 end
 
---- @return nil
 function bhv_1up_hidden_in_pole_spawner_loop()
     -- ...
 end
 
---- @return nil
 function bhv_1up_hidden_in_pole_trigger_loop()
     -- ...
 end
 
---- @return nil
 function bhv_1up_hidden_loop()
     -- ...
 end
 
---- @return nil
 function bhv_1up_hidden_trigger_loop()
     -- ...
 end
 
---- @return nil
 function bhv_1up_init()
     -- ...
 end
 
---- @return nil
 function bhv_1up_jump_on_approach_loop()
     -- ...
 end
 
---- @return nil
 function bhv_1up_loop()
     -- ...
 end
 
---- @return nil
 function bhv_1up_running_away_loop()
     -- ...
 end
 
---- @return nil
 function bhv_1up_sliding_loop()
     -- ...
 end
 
---- @return nil
 function bhv_1up_trigger_init()
     -- ...
 end
 
---- @return nil
 function bhv_1up_walking_loop()
     -- ...
 end
 
---- @return nil
 function bhv_act_selector_init()
     -- ...
 end
 
---- @return nil
 function bhv_act_selector_loop()
     -- ...
 end
 
---- @return nil
 function bhv_act_selector_star_type_loop()
     -- ...
 end
 
---- @return nil
 function bhv_activated_back_and_forth_platform_init()
     -- ...
 end
 
---- @return nil
 function bhv_activated_back_and_forth_platform_update()
     -- ...
 end
 
---- @return nil
 function bhv_alpha_boo_key_loop()
     -- ...
 end
 
---- @return nil
 function bhv_ambient_sounds_init()
     -- ...
 end
 
---- @return nil
 function bhv_animated_texture_loop()
     -- ...
 end
 
---- @return nil
 function bhv_animates_on_floor_switch_press_init()
     -- ...
 end
 
---- @return nil
 function bhv_animates_on_floor_switch_press_loop()
     -- ...
 end
 
---- @return nil
 function bhv_arrow_lift_loop()
     -- ...
 end
 
---- @return nil
 function bhv_bbh_tilting_trap_platform_loop()
     -- ...
 end
 
---- @return nil
 function bhv_beta_boo_key_loop()
     -- ...
 end
 
---- @return nil
 function bhv_beta_bowser_anchor_loop()
     -- ...
 end
 
---- @return nil
 function bhv_beta_chest_bottom_init()
     -- ...
 end
 
---- @return nil
 function bhv_beta_chest_bottom_loop()
     -- ...
 end
 
---- @return nil
 function bhv_beta_chest_lid_loop()
     -- ...
 end
 
---- @return nil
 function bhv_beta_fish_splash_spawner_loop()
     -- ...
 end
 
---- @return nil
 function bhv_beta_holdable_object_init()
     -- ...
 end
 
---- @return nil
 function bhv_beta_holdable_object_loop()
     -- ...
 end
 
---- @return nil
 function bhv_beta_moving_flames_loop()
     -- ...
 end
 
---- @return nil
 function bhv_beta_moving_flames_spawn_loop()
     -- ...
 end
 
---- @return nil
 function bhv_beta_trampoline_spring_loop()
     -- ...
 end
 
---- @return nil
 function bhv_beta_trampoline_top_loop()
     -- ...
 end
 
---- @return nil
 function bhv_big_boo_loop()
     -- ...
 end
 
---- @return nil
 function bhv_big_boulder_generator_loop()
     -- ...
 end
 
---- @return nil
 function bhv_big_boulder_init()
     -- ...
 end
 
---- @return nil
 function bhv_big_boulder_loop()
     -- ...
 end
 
---- @return nil
 function bhv_big_bully_init()
     -- ...
 end
 
---- @return nil
 function bhv_big_bully_with_minions_init()
     -- ...
 end
 
---- @return nil
 function bhv_big_bully_with_minions_loop()
     -- ...
 end
 
---- @return nil
 function bhv_bird_update()
     -- ...
 end
 
---- @return nil
 function bhv_birds_sound_loop()
     -- ...
 end
 
---- @return nil
 function bhv_bitfs_sinking_cage_platform_loop()
     -- ...
 end
 
---- @return nil
 function bhv_bitfs_sinking_platform_loop()
     -- ...
 end
 
---- @return nil
 function bhv_black_smoke_bowser_loop()
     -- ...
 end
 
---- @return nil
 function bhv_black_smoke_mario_loop()
     -- ...
 end
 
---- @return nil
 function bhv_black_smoke_upward_loop()
     -- ...
 end
 
---- @return nil
 function bhv_blue_bowser_flame_init()
     -- ...
 end
 
---- @return nil
 function bhv_blue_bowser_flame_loop()
     -- ...
 end
 
---- @return nil
 function bhv_blue_coin_jumping_loop()
     -- ...
 end
 
---- @return nil
 function bhv_blue_coin_number_loop()
     -- ...
 end
 
---- @return nil
 function bhv_blue_coin_sliding_jumping_init()
     -- ...
 end
 
---- @return nil
 function bhv_blue_coin_sliding_loop()
     -- ...
 end
 
---- @return nil
 function bhv_blue_coin_switch_init()
     -- ...
 end
 
---- @return nil
 function bhv_blue_coin_switch_loop()
     -- ...
 end
 
---- @return nil
 function bhv_blue_fish_movement_loop()
     -- ...
 end
 
---- @return nil
 function bhv_blue_flames_group_loop()
     -- ...
 end
 
---- @return nil
 function bhv_bob_pit_bowling_ball_init()
     -- ...
 end
 
---- @return nil
 function bhv_bob_pit_bowling_ball_loop()
     -- ...
 end
 
---- @return nil
 function bhv_bobomb_anchor_mario_loop()
     -- ...
 end
 
---- @return nil
 function bhv_bobomb_buddy_init()
     -- ...
 end
 
---- @return nil
 function bhv_bobomb_buddy_loop()
     -- ...
 end
 
---- @return nil
 function bhv_bobomb_bully_death_smoke_init()
     -- ...
 end
 
---- @return nil
 function bhv_bobomb_explosion_bubble_init()
     -- ...
 end
 
---- @return nil
 function bhv_bobomb_explosion_bubble_loop()
     -- ...
 end
 
---- @return nil
 function bhv_bobomb_fuse_smoke_init()
     -- ...
 end
 
---- @return nil
 function bhv_bobomb_init()
     -- ...
 end
 
---- @return nil
 function bhv_bobomb_loop()
     -- ...
 end
 
---- @return nil
 function bhv_boo_boss_spawned_bridge_loop()
     -- ...
 end
 
---- @return nil
 function bhv_boo_cage_init()
     -- ...
 end
 
---- @return nil
 function bhv_boo_cage_loop()
     -- ...
 end
 
---- @return nil
 function bhv_boo_in_castle_loop()
     -- ...
 end
 
---- @return nil
 function bhv_boo_init()
     -- ...
 end
 
---- @return nil
 function bhv_boo_loop()
     -- ...
 end
 
---- @return nil
 function bhv_boo_with_cage_init()
     -- ...
 end
 
---- @return nil
 function bhv_boo_with_cage_loop()
     -- ...
 end
 
---- @return nil
 function bhv_book_switch_loop()
     -- ...
 end
 
---- @return nil
 function bhv_bookend_spawn_loop()
     -- ...
 end
 
---- @return nil
 function bhv_bouncing_fireball_flame_loop()
     -- ...
 end
 
---- @return nil
 function bhv_bouncing_fireball_loop()
     -- ...
 end
 
---- @return nil
 function bhv_bowling_ball_init()
     -- ...
 end
 
---- @return nil
 function bhv_bowling_ball_loop()
     -- ...
 end
 
---- @return nil
 function bhv_bowser_body_anchor_init()
     -- ...
 end
 
---- @return nil
 function bhv_bowser_body_anchor_loop()
     -- ...
 end
 
---- @return nil
 function bhv_bowser_bomb_explosion_loop()
     -- ...
 end
 
---- @return nil
 function bhv_bowser_bomb_loop()
     -- ...
 end
 
---- @return nil
 function bhv_bowser_bomb_smoke_loop()
     -- ...
 end
 
---- @return nil
 function bhv_bowser_course_red_coin_star_loop()
     -- ...
 end
 
---- @return nil
 function bhv_bowser_flame_spawn_loop()
     -- ...
 end
 
---- @return nil
 function bhv_bowser_init()
     -- ...
 end
 
---- @return nil
 function bhv_bowser_key_course_exit_loop()
     -- ...
 end
 
---- @return nil
 function bhv_bowser_key_init()
     -- ...
 end
 
---- @return nil
 function bhv_bowser_key_loop()
     -- ...
 end
 
---- @return nil
 function bhv_bowser_key_unlock_door_loop()
     -- ...
 end
 
---- @return nil
 function bhv_bowser_loop()
     -- ...
 end
 
---- @return nil
 function bhv_bowser_shock_wave_loop()
     -- ...
 end
 
---- @return nil
 function bhv_bowser_tail_anchor_init()
     -- ...
 end
 
---- @return nil
 function bhv_bowser_tail_anchor_loop()
     -- ...
 end
 
---- @return nil
 function bhv_bowsers_sub_loop()
     -- ...
 end
 
---- @return nil
 function bhv_breakable_box_loop()
     -- ...
 end
 
---- @return nil
 function bhv_breakable_box_small_init()
     -- ...
 end
 
---- @return nil
 function bhv_breakable_box_small_loop()
     -- ...
 end
 
---- @return nil
 function bhv_bub_loop()
     -- ...
 end
 
---- @return nil
 function bhv_bub_spawner_loop()
     -- ...
 end
 
---- @return nil
 function bhv_bubba_loop()
     -- ...
 end
 
---- @return nil
 function bhv_bubble_cannon_barrel_loop()
     -- ...
 end
 
---- @return nil
 function bhv_bubble_maybe_loop()
     -- ...
 end
 
---- @return nil
 function bhv_bubble_player_loop()
     -- ...
 end
 
---- @return nil
 function bhv_bubble_splash_init()
     -- ...
 end
 
---- @return nil
 function bhv_bubble_wave_init()
     -- ...
 end
 
---- @return nil
 function bhv_bullet_bill_init()
     -- ...
 end
 
---- @return nil
 function bhv_bullet_bill_loop()
     -- ...
 end
 
---- @return nil
 function bhv_bully_loop()
     -- ...
 end
 
---- @return nil
 function bhv_butterfly_init()
     -- ...
 end
 
---- @return nil
 function bhv_butterfly_loop()
     -- ...
 end
 
---- @return nil
 function bhv_camera_lakitu_init()
     -- ...
 end
 
---- @return nil
 function bhv_camera_lakitu_update()
     -- ...
 end
 
---- @return nil
 function bhv_cannon_barrel_loop()
     -- ...
 end
 
---- @return nil
 function bhv_cannon_base_loop()
     -- ...
 end
 
---- @return nil
 function bhv_cannon_base_unused_loop()
     -- ...
 end
 
---- @return nil
 function bhv_cannon_closed_init()
     -- ...
 end
 
---- @return nil
 function bhv_cannon_closed_loop()
     -- ...
 end
 
---- @return nil
 function bhv_cap_switch_loop()
     -- ...
 end
 
---- @return nil
 function bhv_castle_cannon_grate_init()
     -- ...
 end
 
---- @return nil
 function bhv_castle_flag_init()
     -- ...
 end
 
---- @return nil
 function bhv_castle_floor_trap_init()
     -- ...
 end
 
---- @return nil
 function bhv_castle_floor_trap_loop()
     -- ...
 end
 
---- @return nil
 function bhv_ccm_touched_star_spawn_loop()
     -- ...
 end
 
---- @return nil
 function bhv_celebration_star_init()
     -- ...
 end
 
---- @return nil
 function bhv_celebration_star_loop()
     -- ...
 end
 
---- @return nil
 function bhv_celebration_star_sparkle_loop()
     -- ...
 end
 
---- @return nil
 function bhv_chain_chomp_chain_part_update()
     -- ...
 end
 
---- @return nil
 function bhv_chain_chomp_gate_init()
     -- ...
 end
 
---- @return nil
 function bhv_chain_chomp_gate_update()
     -- ...
 end
 
---- @return nil
 function bhv_chain_chomp_update()
     -- ...
 end
 
---- @return nil
 function bhv_checkerboard_elevator_group_init()
     -- ...
 end
 
---- @return nil
 function bhv_checkerboard_elevator_group_loop()
     -- ...
 end
 
---- @return nil
 function bhv_checkerboard_platform_init()
     -- ...
 end
 
---- @return nil
 function bhv_checkerboard_platform_loop()
     -- ...
 end
 
---- @return nil
 function bhv_chuckya_anchor_mario_loop()
     -- ...
 end
 
---- @return nil
 function bhv_chuckya_loop()
     -- ...
 end
 
---- @return nil
 function bhv_circling_amp_init()
     -- ...
 end
 
---- @return nil
 function bhv_circling_amp_loop()
     -- ...
 end
 
---- @return nil
 function bhv_clam_loop()
     -- ...
 end
 
---- @return nil
 function bhv_cloud_part_update()
     -- ...
 end
 
---- @return nil
 function bhv_cloud_update()
     -- ...
 end
 
---- @return nil
 function bhv_coffin_loop()
     -- ...
 end
 
---- @return nil
 function bhv_coffin_spawner_loop()
     -- ...
 end
 
---- @return nil
 function bhv_coin_formation_init()
     -- ...
 end
 
---- @return nil
 function bhv_coin_formation_loop()
     -- ...
 end
 
---- @return nil
 function bhv_coin_formation_spawn_loop()
     -- ...
 end
 
---- @return nil
 function bhv_coin_init()
     -- ...
 end
 
---- @return nil
 function bhv_coin_inside_boo_loop()
     -- ...
 end
 
---- @return nil
 function bhv_coin_loop()
     -- ...
 end
 
---- @return nil
 function bhv_coin_sparkles_loop()
     -- ...
 end
 
---- @return nil
 function bhv_collect_star_init()
     -- ...
 end
 
---- @return nil
 function bhv_collect_star_loop()
     -- ...
 end
 
---- @return nil
 function bhv_controllable_platform_init()
     -- ...
 end
 
---- @return nil
 function bhv_controllable_platform_loop()
     -- ...
 end
 
---- @return nil
 function bhv_controllable_platform_sub_loop()
     -- ...
 end
 
---- @return nil
 function bhv_courtyard_boo_triplet_init()
     -- ...
 end
 
---- @return nil
 function bhv_ddd_moving_pole_loop()
     -- ...
 end
 
---- @return nil
 function bhv_ddd_pole_init()
     -- ...
 end
 
---- @return nil
 function bhv_ddd_pole_update()
     -- ...
 end
 
---- @return nil
 function bhv_ddd_warp_loop()
     -- ...
 end
 
---- @return nil
 function bhv_decorative_pendulum_init()
     -- ...
 end
 
---- @return nil
 function bhv_decorative_pendulum_loop()
     -- ...
 end
 
---- @return nil
 function bhv_donut_platform_spawner_update()
     -- ...
 end
 
---- @return nil
 function bhv_donut_platform_update()
     -- ...
 end
 
---- @return nil
 function bhv_door_init()
     -- ...
 end
 
---- @return nil
 function bhv_door_loop()
     -- ...
 end
 
---- @return nil
 function bhv_dorrie_update()
     -- ...
 end
 
---- @return nil
 function bhv_elevator_init()
     -- ...
 end
 
---- @return nil
 function bhv_elevator_loop()
     -- ...
 end
 
---- @return nil
 function bhv_end_birds_1_loop()
     -- ...
 end
 
---- @return nil
 function bhv_end_birds_2_loop()
     -- ...
 end
 
---- @return nil
 function bhv_enemy_lakitu_update()
     -- ...
 end
 
---- @return nil
 function bhv_exclamation_box_init()
     -- ...
 end
 
---- @return nil
 function bhv_exclamation_box_loop()
     -- ...
 end
 
---- @return nil
 function bhv_explosion_init()
     -- ...
 end
 
---- @return nil
 function bhv_explosion_loop()
     -- ...
 end
 
---- @return nil
 function bhv_eyerok_boss_init()
     -- ...
 end
 
---- @return nil
 function bhv_eyerok_boss_loop()
     -- ...
 end
 
---- @return nil
 function bhv_eyerok_hand_loop()
     -- ...
 end
 
---- @return nil
 function bhv_fading_warp_loop()
     -- ...
 end
 
---- @return nil
 function bhv_falling_bowser_platform_loop()
     -- ...
 end
 
---- @return nil
 function bhv_falling_pillar_hitbox_loop()
     -- ...
 end
 
---- @return nil
 function bhv_falling_pillar_init()
     -- ...
 end
 
---- @return nil
 function bhv_falling_pillar_loop()
     -- ...
 end
 
---- @return nil
 function bhv_ferris_wheel_axle_init()
     -- ...
 end
 
---- @return nil
+function bhv_ferris_wheel_platform_init()
+    -- ...
+end
+
 function bhv_ferris_wheel_platform_update()
     -- ...
 end
 
---- @return nil
 function bhv_fire_piranha_plant_init()
     -- ...
 end
 
---- @return nil
 function bhv_fire_piranha_plant_update()
     -- ...
 end
 
---- @return nil
 function bhv_fire_spitter_update()
     -- ...
 end
 
---- @return nil
 function bhv_fish_group_loop()
     -- ...
 end
 
---- @return nil
 function bhv_fish_loop()
     -- ...
 end
 
---- @return nil
 function bhv_fish_spawner_loop()
     -- ...
 end
 
---- @return nil
 function bhv_flame_bouncing_init()
     -- ...
 end
 
---- @return nil
 function bhv_flame_bouncing_loop()
     -- ...
 end
 
---- @return nil
 function bhv_flame_bowser_init()
     -- ...
 end
 
---- @return nil
 function bhv_flame_bowser_loop()
     -- ...
 end
 
---- @return nil
 function bhv_flame_floating_landing_init()
     -- ...
 end
 
---- @return nil
 function bhv_flame_floating_landing_loop()
     -- ...
 end
 
---- @return nil
 function bhv_flame_large_burning_out_init()
     -- ...
 end
 
---- @return nil
 function bhv_flame_mario_loop()
     -- ...
 end
 
---- @return nil
 function bhv_flame_moving_forward_growing_init()
     -- ...
 end
 
---- @return nil
 function bhv_flame_moving_forward_growing_loop()
     -- ...
 end
 
---- @return nil
 function bhv_flamethrower_flame_loop()
     -- ...
 end
 
---- @return nil
 function bhv_flamethrower_loop()
     -- ...
 end
 
---- @return nil
 function bhv_floating_platform_loop()
     -- ...
 end
 
---- @return nil
 function bhv_floor_trap_in_castle_loop()
     -- ...
 end
 
---- @return nil
 function bhv_fly_guy_flame_loop()
     -- ...
 end
 
---- @return nil
 function bhv_fly_guy_update()
     -- ...
 end
 
---- @return nil
 function bhv_flying_bookend_loop()
     -- ...
 end
 
---- @return nil
 function bhv_free_bowling_ball_init()
     -- ...
 end
 
---- @return nil
 function bhv_free_bowling_ball_loop()
     -- ...
 end
 
---- @return nil
 function bhv_generic_bowling_ball_spawner_init()
     -- ...
 end
 
---- @return nil
 function bhv_generic_bowling_ball_spawner_loop()
     -- ...
 end
 
---- @return nil
 function bhv_giant_pole_loop()
     -- ...
 end
 
---- @return nil
 function bhv_golden_coin_sparkles_loop()
     -- ...
 end
 
---- @return nil
 function bhv_goomba_init()
     -- ...
 end
 
---- @return nil
 function bhv_goomba_triplet_spawner_update()
     -- ...
 end
 
---- @return nil
 function bhv_goomba_update()
     -- ...
 end
 
---- @return nil
 function bhv_grand_star_init()
     -- ...
 end
 
---- @return nil
 function bhv_grand_star_loop()
     -- ...
 end
 
---- @return nil
 function bhv_grindel_thwomp_loop()
     -- ...
 end
 
---- @return nil
 function bhv_ground_sand_init()
     -- ...
 end
 
---- @return nil
 function bhv_ground_snow_init()
     -- ...
 end
 
---- @return nil
 function bhv_haunted_bookshelf_loop()
     -- ...
 end
 
---- @return nil
 function bhv_haunted_bookshelf_manager_loop()
     -- ...
 end
 
---- @return nil
 function bhv_haunted_chair_init()
     -- ...
 end
 
---- @return nil
 function bhv_haunted_chair_loop()
     -- ...
 end
 
---- @return nil
 function bhv_heave_ho_loop()
     -- ...
 end
 
---- @return nil
 function bhv_heave_ho_throw_mario_loop()
     -- ...
 end
 
---- @return nil
 function bhv_hidden_blue_coin_loop()
     -- ...
 end
 
---- @return nil
 function bhv_hidden_object_loop()
     -- ...
 end
 
---- @return nil
 function bhv_hidden_red_coin_star_init()
     -- ...
 end
 
---- @return nil
 function bhv_hidden_red_coin_star_loop()
     -- ...
 end
 
---- @return nil
 function bhv_hidden_star_init()
     -- ...
 end
 
---- @return nil
 function bhv_hidden_star_loop()
     -- ...
 end
 
---- @return nil
 function bhv_hidden_star_trigger_loop()
     -- ...
 end
 
---- @return nil
 function bhv_homing_amp_init()
     -- ...
 end
 
---- @return nil
 function bhv_homing_amp_loop()
     -- ...
 end
 
---- @return nil
 function bhv_hoot_init()
     -- ...
 end
 
---- @return nil
 function bhv_hoot_loop()
     -- ...
 end
 
---- @return nil
 function bhv_horizontal_grindel_init()
     -- ...
 end
 
---- @return nil
 function bhv_horizontal_grindel_update()
     -- ...
 end
 
---- @return nil
 function bhv_idle_water_wave_loop()
     -- ...
 end
 
---- @return nil
 function bhv_init_changing_water_level_loop()
     -- ...
 end
 
---- @return nil
 function bhv_intro_lakitu_loop()
     -- ...
 end
 
---- @return nil
 function bhv_intro_peach_loop()
     -- ...
 end
 
---- @return nil
 function bhv_intro_scene_loop()
     -- ...
 end
 
---- @return nil
 function bhv_invisible_objects_under_bridge_init()
     -- ...
 end
 
---- @return nil
 function bhv_invisible_objects_under_bridge_loop()
     -- ...
 end
 
---- @return nil
 function bhv_jet_stream_loop()
     -- ...
 end
 
---- @return nil
 function bhv_jet_stream_ring_spawner_loop()
     -- ...
 end
 
---- @return nil
 function bhv_jet_stream_water_ring_init()
     -- ...
 end
 
---- @return nil
 function bhv_jet_stream_water_ring_loop()
     -- ...
 end
 
---- @return nil
 function bhv_jrb_floating_box_loop()
     -- ...
 end
 
---- @return nil
 function bhv_jrb_sliding_box_loop()
     -- ...
 end
 
---- @return nil
 function bhv_jumping_box_loop()
     -- ...
 end
 
---- @return nil
 function bhv_kickable_board_loop()
     -- ...
 end
 
---- @return nil
 function bhv_king_bobomb_loop()
     -- ...
 end
 
---- @return nil
 function bhv_klepto_init()
     -- ...
 end
 
---- @return nil
 function bhv_klepto_update()
     -- ...
 end
 
---- @return nil
 function bhv_koopa_init()
     -- ...
 end
 
---- @return nil
 function bhv_koopa_race_endpoint_update()
     -- ...
 end
 
---- @return nil
 function bhv_koopa_shell_flame_loop()
     -- ...
 end
 
---- @return nil
 function bhv_koopa_shell_loop()
     -- ...
 end
 
---- @return nil
 function bhv_koopa_shell_underwater_loop()
     -- ...
 end
 
---- @return nil
 function bhv_koopa_update()
     -- ...
 end
 
---- @return nil
 function bhv_large_bomp_init()
     -- ...
 end
 
---- @return nil
 function bhv_large_bomp_loop()
     -- ...
 end
 
---- @return nil
 function bhv_lll_bowser_puzzle_loop()
     -- ...
 end
 
---- @return nil
 function bhv_lll_bowser_puzzle_piece_loop()
     -- ...
 end
 
---- @return nil
 function bhv_lll_drawbridge_loop()
     -- ...
 end
 
---- @return nil
 function bhv_lll_drawbridge_spawner_init()
     -- ...
 end
 
---- @return nil
 function bhv_lll_drawbridge_spawner_loop()
     -- ...
 end
 
---- @return nil
 function bhv_lll_floating_wood_bridge_loop()
     -- ...
 end
 
---- @return nil
 function bhv_lll_moving_octagonal_mesh_platform_loop()
     -- ...
 end
 
---- @return nil
 function bhv_lll_rolling_log_init()
     -- ...
 end
 
---- @return nil
 function bhv_lll_rotating_block_fire_bars_loop()
     -- ...
 end
 
---- @return nil
 function bhv_lll_rotating_hex_flame_loop()
     -- ...
 end
 
---- @return nil
 function bhv_lll_rotating_hexagonal_ring_loop()
     -- ...
 end
 
---- @return nil
 function bhv_lll_sinking_rectangular_platform_loop()
     -- ...
 end
 
---- @return nil
 function bhv_lll_sinking_rock_block_loop()
     -- ...
 end
 
---- @return nil
 function bhv_lll_sinking_square_platforms_loop()
     -- ...
 end
 
---- @return nil
 function bhv_lll_wood_piece_loop()
     -- ...
 end
 
---- @return nil
 function bhv_mad_piano_update()
     -- ...
 end
 
---- @return nil
 function bhv_manta_ray_init()
     -- ...
 end
 
---- @return nil
 function bhv_manta_ray_loop()
     -- ...
 end
 
---- @return nil
 function bhv_manta_ray_water_ring_init()
     -- ...
 end
 
---- @return nil
 function bhv_manta_ray_water_ring_loop()
     -- ...
 end
 
---- @return nil
 function bhv_menu_button_init()
     -- ...
 end
 
---- @return nil
 function bhv_menu_button_loop()
     -- ...
 end
 
---- @return nil
 function bhv_menu_button_manager_init()
     -- ...
 end
 
---- @return nil
 function bhv_menu_button_manager_loop()
     -- ...
 end
 
---- @return nil
 function bhv_merry_go_round_boo_manager_loop()
     -- ...
 end
 
---- @return nil
 function bhv_merry_go_round_loop()
     -- ...
 end
 
---- @return nil
 function bhv_metal_cap_init()
     -- ...
 end
 
---- @return nil
 function bhv_metal_cap_loop()
     -- ...
 end
 
---- @return nil
 function bhv_mips_init()
     -- ...
 end
 
---- @return nil
 function bhv_mips_loop()
     -- ...
 end
 
---- @return nil
 function bhv_moat_grills_loop()
     -- ...
 end
 
---- @return nil
 function bhv_moneybag_hidden_loop()
     -- ...
 end
 
---- @return nil
 function bhv_moneybag_init()
     -- ...
 end
 
---- @return nil
 function bhv_moneybag_loop()
     -- ...
 end
 
---- @return nil
 function bhv_monty_mole_hole_update()
     -- ...
 end
 
---- @return nil
 function bhv_monty_mole_init()
     -- ...
 end
 
---- @return nil
 function bhv_monty_mole_rock_update()
     -- ...
 end
 
---- @return nil
 function bhv_monty_mole_update()
     -- ...
 end
 
---- @return nil
 function bhv_moving_blue_coin_init()
     -- ...
 end
 
---- @return nil
 function bhv_moving_blue_coin_loop()
     -- ...
 end
 
---- @return nil
 function bhv_moving_yellow_coin_init()
     -- ...
 end
 
---- @return nil
 function bhv_moving_yellow_coin_loop()
     -- ...
 end
 
---- @return nil
 function bhv_mr_blizzard_init()
     -- ...
 end
 
---- @return nil
 function bhv_mr_blizzard_snowball()
     -- ...
 end
 
---- @return nil
 function bhv_mr_blizzard_update()
     -- ...
 end
 
---- @return nil
 function bhv_mr_i_body_loop()
     -- ...
 end
 
---- @return nil
 function bhv_mr_i_loop()
     -- ...
 end
 
---- @return nil
 function bhv_mr_i_particle_loop()
     -- ...
 end
 
---- @return nil
 function bhv_normal_cap_init()
     -- ...
 end
 
---- @return nil
 function bhv_normal_cap_loop()
     -- ...
 end
 
---- @return nil
 function bhv_object_bubble_init()
     -- ...
 end
 
---- @return nil
 function bhv_object_bubble_loop()
     -- ...
 end
 
---- @return nil
 function bhv_object_water_wave_init()
     -- ...
 end
 
---- @return nil
 function bhv_object_water_wave_loop()
     -- ...
 end
 
---- @return nil
 function bhv_openable_cage_door_loop()
     -- ...
 end
 
---- @return nil
 function bhv_openable_grill_loop()
     -- ...
 end
 
---- @return nil
 function bhv_orange_number_init()
     -- ...
 end
 
---- @return nil
 function bhv_orange_number_loop()
     -- ...
 end
 
---- @return nil
 function bhv_particle_init()
     -- ...
 end
 
---- @return nil
 function bhv_particle_loop()
     -- ...
 end
 
---- @return nil
 function bhv_penguin_race_finish_line_update()
     -- ...
 end
 
---- @return nil
 function bhv_penguin_race_shortcut_check_update()
     -- ...
 end
 
---- @return nil
 function bhv_piranha_particle_loop()
     -- ...
 end
 
---- @return nil
 function bhv_piranha_plant_bubble_loop()
     -- ...
 end
 
---- @return nil
 function bhv_piranha_plant_loop()
     -- ...
 end
 
---- @return nil
 function bhv_piranha_plant_waking_bubbles_loop()
     -- ...
 end
 
---- @return nil
 function bhv_platform_normals_init()
     -- ...
 end
 
---- @return nil
 function bhv_platform_on_track_init()
     -- ...
 end
 
---- @return nil
 function bhv_platform_on_track_update()
     -- ...
 end
 
---- @return nil
 function bhv_play_music_track_when_touched_loop()
     -- ...
 end
 
---- @return nil
 function bhv_pokey_body_part_update()
     -- ...
 end
 
---- @return nil
 function bhv_pokey_update()
     -- ...
 end
 
---- @return nil
 function bhv_pole_base_loop()
     -- ...
 end
 
---- @return nil
 function bhv_pole_init()
     -- ...
 end
 
---- @return nil
 function bhv_pound_tiny_star_particle_init()
     -- ...
 end
 
---- @return nil
 function bhv_pound_tiny_star_particle_loop()
     -- ...
 end
 
---- @return nil
 function bhv_pound_white_puffs_init()
     -- ...
 end
 
---- @return nil
 function bhv_punch_tiny_triangle_init()
     -- ...
 end
 
---- @return nil
 function bhv_punch_tiny_triangle_loop()
     -- ...
 end
 
---- @return nil
 function bhv_purple_switch_loop()
     -- ...
 end
 
---- @return nil
 function bhv_pushable_loop()
     -- ...
 end
 
---- @return nil
 function bhv_pyramid_elevator_init()
     -- ...
 end
 
---- @return nil
 function bhv_pyramid_elevator_loop()
     -- ...
 end
 
---- @return nil
 function bhv_pyramid_elevator_trajectory_marker_ball_loop()
     -- ...
 end
 
---- @return nil
 function bhv_pyramid_pillar_touch_detector_loop()
     -- ...
 end
 
---- @return nil
 function bhv_pyramid_top_fragment_init()
     -- ...
 end
 
---- @return nil
 function bhv_pyramid_top_fragment_loop()
     -- ...
 end
 
---- @return nil
 function bhv_pyramid_top_init()
     -- ...
 end
 
---- @return nil
 function bhv_pyramid_top_loop()
     -- ...
 end
 
---- @return nil
 function bhv_racing_penguin_init()
     -- ...
 end
 
---- @return nil
 function bhv_racing_penguin_update()
     -- ...
 end
 
---- @return nil
 function bhv_recovery_heart_loop()
     -- ...
 end
 
---- @return nil
 function bhv_red_coin_init()
     -- ...
 end
 
---- @return nil
 function bhv_red_coin_loop()
     -- ...
 end
 
---- @return nil
 function bhv_red_coin_star_marker_init()
     -- ...
 end
 
---- @return nil
 function bhv_respawner_loop()
     -- ...
 end
 
---- @return nil
 function bhv_rolling_log_loop()
     -- ...
 end
 
---- @return nil
 function bhv_rotating_clock_arm_loop()
     -- ...
 end
 
---- @return nil
 function bhv_rotating_exclamation_box_loop()
     -- ...
 end
 
---- @return nil
 function bhv_rotating_octagonal_plat_init()
     -- ...
 end
 
---- @return nil
 function bhv_rotating_octagonal_plat_loop()
     -- ...
 end
 
---- @return nil
 function bhv_rotating_platform_loop()
     -- ...
 end
 
---- @return nil
 function bhv_rr_cruiser_wing_init()
     -- ...
 end
 
---- @return nil
 function bhv_rr_cruiser_wing_loop()
     -- ...
 end
 
---- @return nil
 function bhv_rr_rotating_bridge_platform_loop()
     -- ...
 end
 
---- @return nil
 function bhv_sand_sound_loop()
     -- ...
 end
 
---- @return nil
 function bhv_scuttlebug_loop()
     -- ...
 end
 
---- @return nil
 function bhv_scuttlebug_spawn_loop()
     -- ...
 end
 
---- @return nil
 function bhv_seaweed_bundle_init()
     -- ...
 end
 
---- @return nil
 function bhv_seaweed_init()
     -- ...
 end
 
---- @return nil
 function bhv_seesaw_platform_init()
     -- ...
 end
 
---- @return nil
 function bhv_seesaw_platform_update()
     -- ...
 end
 
---- @return nil
 function bhv_shallow_water_splash_init()
     -- ...
 end
 
---- @return nil
 function bhv_ship_part_3_loop()
     -- ...
 end
 
---- @return nil
 function bhv_skeeter_update()
     -- ...
 end
 
---- @return nil
 function bhv_skeeter_wave_update()
     -- ...
 end
 
---- @return nil
 function bhv_sl_snowman_wind_loop()
     -- ...
 end
 
---- @return nil
 function bhv_sl_walking_penguin_loop()
     -- ...
 end
 
---- @return nil
 function bhv_sliding_plat_2_init()
     -- ...
 end
 
---- @return nil
 function bhv_sliding_plat_2_loop()
     -- ...
 end
 
---- @return nil
 function bhv_sliding_snow_mound_loop()
     -- ...
 end
 
---- @return nil
 function bhv_small_bomp_init()
     -- ...
 end
 
---- @return nil
 function bhv_small_bomp_loop()
     -- ...
 end
 
---- @return nil
 function bhv_small_bubbles_loop()
     -- ...
 end
 
---- @return nil
 function bhv_small_bully_init()
     -- ...
 end
 
---- @return nil
 function bhv_small_penguin_loop()
     -- ...
 end
 
---- @return nil
 function bhv_small_piranha_flame_loop()
     -- ...
 end
 
---- @return nil
 function bhv_small_water_wave_loop()
     -- ...
 end
 
---- @return nil
 function bhv_snow_leaf_particle_spawn_init()
     -- ...
 end
 
---- @return nil
 function bhv_snow_mound_spawn_loop()
     -- ...
 end
 
---- @return nil
 function bhv_snowmans_body_checkpoint_loop()
     -- ...
 end
 
---- @return nil
 function bhv_snowmans_bottom_init()
     -- ...
 end
 
---- @return nil
 function bhv_snowmans_bottom_loop()
     -- ...
 end
 
---- @return nil
 function bhv_snowmans_head_init()
     -- ...
 end
 
---- @return nil
 function bhv_snowmans_head_loop()
     -- ...
 end
 
---- @return nil
 function bhv_snufit_balls_loop()
     -- ...
 end
 
---- @return nil
 function bhv_snufit_loop()
     -- ...
 end
 
---- @return nil
 function bhv_sound_spawner_init()
     -- ...
 end
 
---- @return nil
 function bhv_sparkle_spawn_loop()
     -- ...
 end
@@ -2104,667 +1692,534 @@ end
 --- @param object Object
 --- @param params integer
 --- @param networkSendEvent integer
---- @return nil
 function bhv_spawn_star_no_level_exit(object, params, networkSendEvent)
     -- ...
 end
 
---- @return nil
 function bhv_spawned_star_init()
     -- ...
 end
 
---- @return nil
 function bhv_spawned_star_loop()
     -- ...
 end
 
---- @return nil
 function bhv_spindel_init()
     -- ...
 end
 
---- @return nil
 function bhv_spindel_loop()
     -- ...
 end
 
---- @return nil
 function bhv_spindrift_loop()
     -- ...
 end
 
---- @return nil
 function bhv_spiny_update()
     -- ...
 end
 
---- @return nil
 function bhv_squarish_path_moving_loop()
     -- ...
 end
 
---- @return nil
 function bhv_squarish_path_parent_init()
     -- ...
 end
 
---- @return nil
 function bhv_squarish_path_parent_loop()
     -- ...
 end
 
---- @return nil
 function bhv_squishable_platform_loop()
     -- ...
 end
 
---- @return nil
 function bhv_ssl_moving_pyramid_wall_init()
     -- ...
 end
 
---- @return nil
 function bhv_ssl_moving_pyramid_wall_loop()
     -- ...
 end
 
---- @return nil
 function bhv_star_door_loop()
     -- ...
 end
 
---- @return nil
 function bhv_star_door_loop_2()
     -- ...
 end
 
---- @return nil
 function bhv_star_key_collection_puff_spawner_loop()
     -- ...
 end
 
---- @return nil
 function bhv_star_number_loop()
     -- ...
 end
 
---- @return nil
 function bhv_star_spawn_init()
     -- ...
 end
 
---- @return nil
 function bhv_star_spawn_loop()
     -- ...
 end
 
---- @return nil
 function bhv_static_checkered_platform_loop()
     -- ...
 end
 
---- @return nil
 function bhv_strong_wind_particle_loop()
     -- ...
 end
 
---- @return nil
 function bhv_sunken_ship_part_loop()
     -- ...
 end
 
---- @return nil
 function bhv_sushi_shark_collision_loop()
     -- ...
 end
 
---- @return nil
 function bhv_sushi_shark_loop()
     -- ...
 end
 
---- @return nil
 function bhv_swing_platform_init()
     -- ...
 end
 
---- @return nil
 function bhv_swing_platform_update()
     -- ...
 end
 
---- @return nil
 function bhv_swoop_update()
     -- ...
 end
 
---- @return nil
 function bhv_tank_fish_group_loop()
     -- ...
 end
 
---- @return nil
 function bhv_temp_coin_loop()
     -- ...
 end
 
---- @return nil
 function bhv_thi_bowling_ball_spawner_loop()
     -- ...
 end
 
---- @return nil
 function bhv_thi_huge_island_top_loop()
     -- ...
 end
 
---- @return nil
 function bhv_thi_tiny_island_top_loop()
     -- ...
 end
 
---- @return nil
 function bhv_tilting_bowser_lava_platform_init()
     -- ...
 end
 
---- @return nil
 function bhv_tilting_inverted_pyramid_loop()
     -- ...
 end
 
---- @return nil
 function bhv_tiny_star_particles_init()
     -- ...
 end
 
---- @return nil
 function bhv_tower_door_loop()
     -- ...
 end
 
---- @return nil
 function bhv_tower_platform_group_init()
     -- ...
 end
 
---- @return nil
 function bhv_tower_platform_group_loop()
     -- ...
 end
 
---- @return nil
 function bhv_tox_box_loop()
     -- ...
 end
 
---- @return nil
 function bhv_track_ball_update()
     -- ...
 end
 
---- @return nil
 function bhv_treasure_chest_bottom_init()
     -- ...
 end
 
---- @return nil
 function bhv_treasure_chest_bottom_loop()
     -- ...
 end
 
---- @return nil
 function bhv_treasure_chest_init()
     -- ...
 end
 
---- @return nil
 function bhv_treasure_chest_jrb_init()
     -- ...
 end
 
---- @return nil
 function bhv_treasure_chest_jrb_loop()
     -- ...
 end
 
---- @return nil
 function bhv_treasure_chest_loop()
     -- ...
 end
 
---- @return nil
 function bhv_treasure_chest_ship_init()
     -- ...
 end
 
---- @return nil
 function bhv_treasure_chest_ship_loop()
     -- ...
 end
 
---- @return nil
 function bhv_treasure_chest_top_loop()
     -- ...
 end
 
---- @return nil
 function bhv_tree_snow_or_leaf_loop()
     -- ...
 end
 
---- @return nil
 function bhv_triplet_butterfly_update()
     -- ...
 end
 
---- @return nil
 function bhv_ttc_2d_rotator_init()
     -- ...
 end
 
---- @return nil
 function bhv_ttc_2d_rotator_update()
     -- ...
 end
 
---- @return nil
 function bhv_ttc_cog_init()
     -- ...
 end
 
---- @return nil
 function bhv_ttc_cog_update()
     -- ...
 end
 
---- @return nil
 function bhv_ttc_elevator_init()
     -- ...
 end
 
---- @return nil
 function bhv_ttc_elevator_update()
     -- ...
 end
 
---- @return nil
 function bhv_ttc_moving_bar_init()
     -- ...
 end
 
---- @return nil
 function bhv_ttc_moving_bar_update()
     -- ...
 end
 
---- @return nil
 function bhv_ttc_pendulum_init()
     -- ...
 end
 
---- @return nil
 function bhv_ttc_pendulum_update()
     -- ...
 end
 
---- @return nil
 function bhv_ttc_pit_block_init()
     -- ...
 end
 
---- @return nil
 function bhv_ttc_pit_block_update()
     -- ...
 end
 
---- @return nil
 function bhv_ttc_rotating_solid_init()
     -- ...
 end
 
---- @return nil
 function bhv_ttc_rotating_solid_update()
     -- ...
 end
 
---- @return nil
 function bhv_ttc_spinner_update()
     -- ...
 end
 
---- @return nil
 function bhv_ttc_treadmill_init()
     -- ...
 end
 
---- @return nil
 function bhv_ttc_treadmill_update()
     -- ...
 end
 
---- @return nil
 function bhv_ttm_rolling_log_init()
     -- ...
 end
 
---- @return nil
 function bhv_tumbling_bridge_loop()
     -- ...
 end
 
---- @return nil
 function bhv_tumbling_bridge_platform_loop()
     -- ...
 end
 
---- @return nil
 function bhv_tuxies_mother_loop()
     -- ...
 end
 
---- @return nil
 function bhv_tweester_loop()
     -- ...
 end
 
---- @return nil
 function bhv_tweester_sand_particle_loop()
     -- ...
 end
 
---- @return nil
 function bhv_ukiki_cage_loop()
     -- ...
 end
 
---- @return nil
 function bhv_ukiki_cage_star_loop()
     -- ...
 end
 
---- @return nil
 function bhv_ukiki_init()
     -- ...
 end
 
---- @return nil
 function bhv_ukiki_loop()
     -- ...
 end
 
---- @return nil
 function bhv_unagi_init()
     -- ...
 end
 
---- @return nil
 function bhv_unagi_loop()
     -- ...
 end
 
---- @return nil
 function bhv_unagi_subobject_loop()
     -- ...
 end
 
---- @return nil
 function bhv_unused_particle_spawn_loop()
     -- ...
 end
 
---- @return nil
 function bhv_unused_poundable_platform()
     -- ...
 end
 
---- @return nil
 function bhv_vanish_cap_init()
     -- ...
 end
 
---- @return nil
 function bhv_volcano_flames_loop()
     -- ...
 end
 
---- @return nil
 function bhv_volcano_sound_loop()
     -- ...
 end
 
---- @return nil
 function bhv_volcano_trap_loop()
     -- ...
 end
 
---- @return nil
 function bhv_wall_tiny_star_particle_loop()
     -- ...
 end
 
---- @return nil
 function bhv_warp_loop()
     -- ...
 end
 
---- @return nil
 function bhv_water_air_bubble_init()
     -- ...
 end
 
---- @return nil
 function bhv_water_air_bubble_loop()
     -- ...
 end
 
---- @return nil
 function bhv_water_bomb_cannon_loop()
     -- ...
 end
 
---- @return nil
 function bhv_water_bomb_shadow_update()
     -- ...
 end
 
---- @return nil
 function bhv_water_bomb_spawner_update()
     -- ...
 end
 
---- @return nil
 function bhv_water_bomb_update()
     -- ...
 end
 
---- @return nil
 function bhv_water_droplet_loop()
     -- ...
 end
 
---- @return nil
 function bhv_water_droplet_splash_init()
     -- ...
 end
 
---- @return nil
 function bhv_water_level_diamond_loop()
     -- ...
 end
 
---- @return nil
 function bhv_water_level_pillar_init()
     -- ...
 end
 
---- @return nil
 function bhv_water_level_pillar_loop()
     -- ...
 end
 
---- @return nil
 function bhv_water_mist_2_loop()
     -- ...
 end
 
---- @return nil
 function bhv_water_mist_loop()
     -- ...
 end
 
---- @return nil
 function bhv_water_mist_spawn_loop()
     -- ...
 end
 
---- @return nil
 function bhv_water_splash_spawn_droplets()
     -- ...
 end
 
---- @return nil
 function bhv_water_waves_init()
     -- ...
 end
 
---- @return nil
 function bhv_waterfall_sound_loop()
     -- ...
 end
 
---- @return nil
 function bhv_wave_trail_shrink()
     -- ...
 end
 
---- @return nil
 function bhv_wdw_express_elevator_loop()
     -- ...
 end
 
---- @return nil
 function bhv_wf_breakable_wall_loop()
     -- ...
 end
 
---- @return nil
 function bhv_wf_elevator_tower_platform_loop()
     -- ...
 end
 
---- @return nil
 function bhv_wf_rotating_wooden_platform_init()
     -- ...
 end
 
---- @return nil
 function bhv_wf_rotating_wooden_platform_loop()
     -- ...
 end
 
---- @return nil
 function bhv_wf_sliding_platform_init()
     -- ...
 end
 
---- @return nil
 function bhv_wf_sliding_platform_loop()
     -- ...
 end
 
---- @return nil
 function bhv_wf_sliding_tower_platform_loop()
     -- ...
 end
 
---- @return nil
 function bhv_wf_solid_tower_platform_loop()
     -- ...
 end
 
---- @return nil
 function bhv_whirlpool_init()
     -- ...
 end
 
---- @return nil
 function bhv_whirlpool_loop()
     -- ...
 end
 
---- @return nil
 function bhv_white_puff_1_loop()
     -- ...
 end
 
---- @return nil
 function bhv_white_puff_2_loop()
     -- ...
 end
 
---- @return nil
 function bhv_white_puff_exploding_loop()
     -- ...
 end
 
---- @return nil
 function bhv_white_puff_smoke_init()
     -- ...
 end
 
---- @return nil
 function bhv_whomp_loop()
     -- ...
 end
 
---- @return nil
 function bhv_wiggler_body_part_update()
     -- ...
 end
 
---- @return nil
 function bhv_wiggler_update()
     -- ...
 end
 
---- @return nil
 function bhv_wind_loop()
     -- ...
 end
 
---- @return nil
 function bhv_wing_cap_init()
     -- ...
 end
 
---- @return nil
 function bhv_wing_vanish_cap_loop()
     -- ...
 end
 
---- @return nil
 function bhv_wooden_post_update()
     -- ...
 end
 
---- @return nil
 function bhv_yellow_coin_init()
     -- ...
 end
 
---- @return nil
 function bhv_yellow_coin_loop()
     -- ...
 end
 
---- @return nil
 function bhv_yoshi_init()
     -- ...
 end
 
---- @return nil
 function bhv_yoshi_loop()
     -- ...
 end
@@ -2777,7 +2232,6 @@ function check_if_moving_over_floor(a0, a1)
 end
 
 --- @param flags integer
---- @return nil
 function clear_particle_flags(flags)
     -- ...
 end
@@ -2785,7 +2239,6 @@ end
 --- @param sp28 number
 --- @param sp2C number
 --- @param sp30 integer
---- @return nil
 function common_anchor_mario_behavior(sp28, sp2C, sp30)
     -- ...
 end
@@ -2795,7 +2248,6 @@ end
 --- @param relPosX number
 --- @param relPosY number
 --- @param relPosZ number
---- @return nil
 function cur_obj_spawn_strong_wind_particles(windSpread, scale, relPosX, relPosY, relPosZ)
     -- ...
 end
@@ -2805,13 +2257,11 @@ function mario_moving_fast_enough_to_make_piranha_plant_bite()
     -- ...
 end
 
---- @return nil
 function obj_set_secondary_camera_focus()
     -- ...
 end
 
 --- @param walk integer
---- @return nil
 function play_penguin_walking_sound(walk)
     -- ...
 end
@@ -2824,7 +2274,6 @@ function spawn_default_star(x, y, z)
     -- ...
 end
 
---- @return nil
 function spawn_mist_from_global()
     -- ...
 end
@@ -2832,7 +2281,6 @@ end
 --- @param count integer
 --- @param offsetY integer
 --- @param size number
---- @return nil
 function spawn_mist_particles_variable(count, offsetY, size)
     -- ...
 end
@@ -2853,7 +2301,6 @@ function spawn_red_coin_cutscene_star(x, y, z)
     -- ...
 end
 
---- @return nil
 function spawn_star_number()
     -- ...
 end
@@ -2862,14 +2309,12 @@ end
 --- @param triModel integer
 --- @param triSize number
 --- @param triAnimState integer
---- @return nil
 function spawn_triangle_break_particles(numTris, triModel, triSize, triAnimState)
     -- ...
 end
 
 --- @param pitch integer
 --- @param yaw integer
---- @return nil
 function spawn_wind_particles(pitch, yaw)
     -- ...
 end
@@ -2878,7 +2323,6 @@ end
 --- @param a1 number
 --- @param deltaPitch integer
 --- @param deltaRoll integer
---- @return nil
 function tox_box_move(forwardVel, a1, deltaPitch, deltaRoll)
     -- ...
 end
@@ -2889,15 +2333,48 @@ function update_angle_from_move_flags(angle)
     -- ...
 end
 
---- @return nil
 function uv_update_scroll()
     -- ...
 end
 
 --- @param dest Vec3f
 --- @param src Vec3f
---- @return nil
 function vec3f_copy_2(dest, src)
+    -- ...
+end
+
+--- @return number
+function draw_distance_scalar()
+    -- ...
+end
+
+--- @param obj Object
+function obj_update_gfx_pos_and_angle(obj)
+    -- ...
+end
+
+--- @return number
+function position_based_random_float_position()
+    -- ...
+end
+
+--- @return integer
+function position_based_random_u16()
+    -- ...
+end
+
+--- @return number
+function random_float()
+    -- ...
+end
+
+--- @return integer
+function random_sign()
+    -- ...
+end
+
+--- @return integer
+function random_u16()
     -- ...
 end
 
@@ -2934,7 +2411,6 @@ end
 --- @param c Camera
 --- @param goal number
 --- @param inc number
---- @return nil
 function approach_camera_height(c, goal, inc)
     -- ...
 end
@@ -2976,7 +2452,6 @@ end
 --- @param xMul number
 --- @param yMul number
 --- @param zMul number
---- @return nil
 function approach_vec3f_asymptotic(current, target, xMul, yMul, zMul)
     -- ...
 end
@@ -2999,7 +2474,6 @@ end
 --- @param to Vec3f
 --- @param pitch Pointer_integer
 --- @param yaw Pointer_integer
---- @return nil
 function calculate_angles(from, to, pitch, yaw)
     -- ...
 end
@@ -3055,12 +2529,10 @@ function camera_course_processing(c)
 end
 
 --- @param enable integer
---- @return nil
 function camera_set_use_course_specific_settings(enable)
     -- ...
 end
 
---- @return nil
 function center_rom_hack_camera()
     -- ...
 end
@@ -3116,7 +2588,6 @@ function cutscene_object_without_dialog(cutscene, o)
 end
 
 --- @param preset integer
---- @return nil
 function cutscene_set_fov_shake_preset(preset)
     -- ...
 end
@@ -3137,7 +2608,6 @@ function find_c_buttons_pressed(currentState, buttonsPressed, buttonsDown)
 end
 
 --- @param pg PlayerGeometry
---- @return nil
 function find_mario_floor_and_ceil(pg)
     -- ...
 end
@@ -3149,7 +2619,6 @@ function get_cutscene_from_mario_status(c)
 end
 
 --- @param c Camera
---- @return nil
 function handle_c_button_movement(c)
     -- ...
 end
@@ -3173,7 +2642,6 @@ function is_within_100_units_of_mario(posX, posY, posZ)
 end
 
 --- @param c Camera
---- @return nil
 function move_mario_head_c_up(c)
     -- ...
 end
@@ -3196,14 +2664,12 @@ end
 --- @param yawOff integer
 --- @param pitchDiv integer
 --- @param yawDiv integer
---- @return nil
 function obj_rotate_towards_point(o, point, pitchOff, yawOff, pitchDiv, yawDiv)
     -- ...
 end
 
 --- @param dst Vec3f
 --- @param o Object
---- @return nil
 function object_pos_to_vec3f(dst, o)
     -- ...
 end
@@ -3212,7 +2678,6 @@ end
 --- @param from Vec3f
 --- @param to Vec3f
 --- @param rotation Vec3s
---- @return nil
 function offset_rotated(dst, from, to, rotation)
     -- ...
 end
@@ -3224,53 +2689,43 @@ function offset_yaw_outward_radial(c, areaYaw)
     -- ...
 end
 
---- @return nil
 function play_camera_buzz_if_c_sideways()
     -- ...
 end
 
---- @return nil
 function play_camera_buzz_if_cbutton()
     -- ...
 end
 
---- @return nil
 function play_camera_buzz_if_cdown()
     -- ...
 end
 
 --- @param c Camera
---- @return nil
 function play_cutscene(c)
     -- ...
 end
 
---- @return nil
 function play_sound_button_change_blocked()
     -- ...
 end
 
---- @return nil
 function play_sound_cbutton_down()
     -- ...
 end
 
---- @return nil
 function play_sound_cbutton_side()
     -- ...
 end
 
---- @return nil
 function play_sound_cbutton_up()
     -- ...
 end
 
---- @return nil
 function play_sound_if_cam_switched_to_lakitu_or_mario()
     -- ...
 end
 
---- @return nil
 function play_sound_rbutton_changed()
     -- ...
 end
@@ -3286,26 +2741,22 @@ end
 --- @param xRange integer
 --- @param yRange integer
 --- @param zRange integer
---- @return nil
 function random_vec3s(dst, xRange, yRange, zRange)
     -- ...
 end
 
 --- @param c Camera
---- @return nil
 function reset_camera(c)
     -- ...
 end
 
 --- @param pos Vec3f
 --- @param lastGood Vec3f
---- @return nil
 function resolve_geometry_collisions(pos, lastGood)
     -- ...
 end
 
 --- @param enable integer
---- @return nil
 function rom_hack_cam_set_collisions(enable)
     -- ...
 end
@@ -3322,7 +2773,6 @@ end
 --- @param dst Vec3f
 --- @param src Vec3f
 --- @param yaw integer
---- @return nil
 function rotate_in_xz(dst, src, yaw)
     -- ...
 end
@@ -3330,7 +2780,6 @@ end
 --- @param dst Vec3f
 --- @param src Vec3f
 --- @param pitch integer
---- @return nil
 function rotate_in_yz(dst, src, pitch)
     -- ...
 end
@@ -3339,12 +2788,10 @@ end
 --- @param from Vec3f
 --- @param to Vec3f
 --- @param scale number
---- @return nil
 function scale_along_line(dest, from, to, scale)
     -- ...
 end
 
---- @return nil
 function select_mario_cam_mode()
     -- ...
 end
@@ -3358,7 +2805,6 @@ end
 --- @param c Camera
 --- @param mode integer
 --- @param frames integer
---- @return nil
 function set_camera_mode(c, mode, frames)
     -- ...
 end
@@ -3375,7 +2821,6 @@ end
 --- @param mag integer
 --- @param decay integer
 --- @param inc integer
---- @return nil
 function set_camera_pitch_shake(mag, decay, inc)
     -- ...
 end
@@ -3383,13 +2828,11 @@ end
 --- @param mag integer
 --- @param decay integer
 --- @param inc integer
---- @return nil
 function set_camera_roll_shake(mag, decay, inc)
     -- ...
 end
 
 --- @param shake integer
---- @return nil
 function set_camera_shake_from_hit(shake)
     -- ...
 end
@@ -3398,7 +2841,6 @@ end
 --- @param posX number
 --- @param posY number
 --- @param posZ number
---- @return nil
 function set_camera_shake_from_point(shake, posX, posY, posZ)
     -- ...
 end
@@ -3406,25 +2848,21 @@ end
 --- @param mag integer
 --- @param decay integer
 --- @param inc integer
---- @return nil
 function set_camera_yaw_shake(mag, decay, inc)
     -- ...
 end
 
 --- @param shake integer
---- @return nil
 function set_environmental_camera_shake(shake)
     -- ...
 end
 
 --- @param preset integer
---- @return nil
 function set_fixed_cam_axis_sa_lobby(preset)
     -- ...
 end
 
 --- @param func integer
---- @return nil
 function set_fov_function(func)
     -- ...
 end
@@ -3432,7 +2870,6 @@ end
 --- @param amplitude integer
 --- @param decay integer
 --- @param shakeSpeed integer
---- @return nil
 function set_fov_shake(amplitude, decay, shakeSpeed)
     -- ...
 end
@@ -3441,13 +2878,11 @@ end
 --- @param posX number
 --- @param posY number
 --- @param posZ number
---- @return nil
 function set_fov_shake_from_point_preset(preset, posX, posY, posZ)
     -- ...
 end
 
 --- @param mode integer
---- @return nil
 function set_handheld_shake(mode)
     -- ...
 end
@@ -3473,7 +2908,6 @@ end
 --- @param xMul number
 --- @param yMul number
 --- @param zMul number
---- @return nil
 function set_or_approach_vec3f_asymptotic(dst, goal, xMul, yMul, zMul)
     -- ...
 end
@@ -3485,47 +2919,44 @@ end
 --- @param posX number
 --- @param posY number
 --- @param posZ number
---- @return nil
 function set_pitch_shake_from_point(mag, decay, inc, maxDist, posX, posY, posZ)
     -- ...
 end
 
 --- @param pos Vec3f
 --- @param focus Vec3f
---- @return nil
 function shake_camera_handheld(pos, focus)
     -- ...
 end
 
 --- @param pos Vec3f
 --- @param focus Vec3f
---- @return nil
 function shake_camera_pitch(pos, focus)
     -- ...
 end
 
 --- @param roll Pointer_integer
---- @return nil
 function shake_camera_roll(roll)
     -- ...
 end
 
 --- @param pos Vec3f
 --- @param focus Vec3f
---- @return nil
 function shake_camera_yaw(pos, focus)
     -- ...
 end
 
+function skip_camera_interpolation()
+    -- ...
+end
+
 --- @param c Camera
---- @return nil
 function soft_reset_camera(c)
     -- ...
 end
 
 --- @param c Camera
 --- @param cutscene integer
---- @return nil
 function start_cutscene(c, cutscene)
     -- ...
 end
@@ -3538,7 +2969,6 @@ end
 
 --- @param c Camera
 --- @param frames integer
---- @return nil
 function transition_next_state(c, frames)
     -- ...
 end
@@ -3551,14 +2981,12 @@ end
 
 --- @param dst Vec3f
 --- @param src Vec3f
---- @return nil
 function vec3f_sub(dst, src)
     -- ...
 end
 
 --- @param o Object
 --- @param src Vec3f
---- @return nil
 function vec3f_to_object_pos(o, src)
     -- ...
 end
@@ -3566,7 +2994,6 @@ end
 --- @param displacementX number
 --- @param displacementY number
 --- @param displacementZ number
---- @return nil
 function warp_camera(displacementX, displacementY, displacementZ)
     -- ...
 end
@@ -3592,7 +3019,6 @@ end
 
 --- @param m MarioState
 --- @param characterSound CharacterSound
---- @return nil
 function play_character_sound(m, characterSound)
     -- ...
 end
@@ -3600,7 +3026,6 @@ end
 --- @param m MarioState
 --- @param characterSound CharacterSound
 --- @param flags integer
---- @return nil
 function play_character_sound_if_no_flag(m, characterSound, flags)
     -- ...
 end
@@ -3608,29 +3033,24 @@ end
 --- @param m MarioState
 --- @param characterSound CharacterSound
 --- @param offset integer
---- @return nil
 function play_character_sound_offset(m, characterSound, offset)
     -- ...
 end
 
 --- @param m MarioState
---- @return nil
 function update_character_anim_offset(m)
     -- ...
 end
 
 --- @param message string
---- @return nil
 function djui_chat_message_create(message)
     -- ...
 end
 
---- @return nil
 function djui_console_message_dequeue()
     -- ...
 end
 
---- @return nil
 function djui_console_toggle()
     -- ...
 end
@@ -3705,7 +3125,6 @@ end
 --- @param x number
 --- @param y number
 --- @param scale number
---- @return nil
 function djui_hud_print_text(message, x, y, scale)
     -- ...
 end
@@ -3717,7 +3136,6 @@ end
 --- @param x number
 --- @param y number
 --- @param scale number
---- @return nil
 function djui_hud_print_text_interpolated(message, prevX, prevY, prevScale, x, y, scale)
     -- ...
 end
@@ -3726,7 +3144,6 @@ end
 --- @param y number
 --- @param width number
 --- @param height number
---- @return nil
 function djui_hud_render_rect(x, y, width, height)
     -- ...
 end
@@ -3739,12 +3156,10 @@ end
 --- @param y number
 --- @param width number
 --- @param height number
---- @return nil
 function djui_hud_render_rect_interpolated(prevX, prevY, prevWidth, prevHeight, x, y, width, height)
     -- ...
 end
 
---- @return nil
 function djui_hud_reset_color()
     -- ...
 end
@@ -3753,31 +3168,26 @@ end
 --- @param g integer
 --- @param b integer
 --- @param a integer
---- @return nil
 function djui_hud_set_color(r, g, b, a)
     -- ...
 end
 
 --- @param filterType HudUtilsFilter
---- @return nil
 function djui_hud_set_filter(filterType)
     -- ...
 end
 
 --- @param fontType integer
---- @return nil
 function djui_hud_set_font(fontType)
     -- ...
 end
 
 --- @param locked boolean
---- @return nil
 function djui_hud_set_mouse_locked(locked)
     -- ...
 end
 
 --- @param resolutionType HudUtilsResolution
---- @return nil
 function djui_hud_set_resolution(resolutionType)
     -- ...
 end
@@ -3785,7 +3195,6 @@ end
 --- @param rotation integer
 --- @param pivotX number
 --- @param pivotY number
---- @return nil
 function djui_hud_set_rotation(rotation, pivotX, pivotY)
     -- ...
 end
@@ -3797,19 +3206,16 @@ function djui_hud_world_pos_to_screen_pos(pos, out)
     -- ...
 end
 
---- @return nil
 function djui_open_pause_menu()
     -- ...
 end
 
 --- @param message string
 --- @param lines integer
---- @return nil
 function djui_popup_create(message, lines)
     -- ...
 end
 
---- @return nil
 function drop_queued_background_music()
     -- ...
 end
@@ -3817,14 +3223,12 @@ end
 --- @param player integer
 --- @param targetScale integer
 --- @param fadeDuration integer
---- @return nil
 function fade_volume_scale(player, targetScale, fadeDuration)
     -- ...
 end
 
 --- @param arg0 integer
 --- @param fadeOut integer
---- @return nil
 function fadeout_background_music(arg0, fadeOut)
     -- ...
 end
@@ -3854,13 +3258,11 @@ function is_current_background_music_volume_lowered()
     -- ...
 end
 
---- @return nil
 function play_course_clear()
     -- ...
 end
 
 --- @param dialogID integer
---- @return nil
 function play_dialog_sound(dialogID)
     -- ...
 end
@@ -3868,28 +3270,23 @@ end
 --- @param player integer
 --- @param seqArgs integer
 --- @param fadeTimer integer
---- @return nil
 function play_music(player, seqArgs, fadeTimer)
     -- ...
 end
 
---- @return nil
 function play_peachs_jingle()
     -- ...
 end
 
 --- @param arg0 integer
---- @return nil
 function play_power_star_jingle(arg0)
     -- ...
 end
 
---- @return nil
 function play_puzzle_jingle()
     -- ...
 end
 
---- @return nil
 function play_race_fanfare()
     -- ...
 end
@@ -3898,14 +3295,12 @@ end
 --- @param bgMusicVolume integer
 --- @param volume integer
 --- @param fadeTimer integer
---- @return nil
 function play_secondary_music(seqId, bgMusicVolume, volume, fadeTimer)
     -- ...
 end
 
 --- @param soundBits integer
 --- @param pos Vec3f
---- @return nil
 function play_sound(soundBits, pos)
     -- ...
 end
@@ -3913,24 +3308,20 @@ end
 --- @param soundBits integer
 --- @param pos Vec3f
 --- @param freqScale number
---- @return nil
 function play_sound_with_freq_scale(soundBits, pos, freqScale)
     -- ...
 end
 
---- @return nil
 function play_star_fanfare()
     -- ...
 end
 
---- @return nil
 function play_toads_jingle()
     -- ...
 end
 
 --- @param player integer
 --- @param fadeDuration integer
---- @return nil
 function seq_player_fade_out(player, fadeDuration)
     -- ...
 end
@@ -3938,64 +3329,60 @@ end
 --- @param player integer
 --- @param fadeDuration integer
 --- @param percentage integer
---- @return nil
 function seq_player_lower_volume(player, fadeDuration, percentage)
     -- ...
 end
 
 --- @param player integer
 --- @param fadeDuration integer
---- @return nil
 function seq_player_unlower_volume(player, fadeDuration)
     -- ...
 end
 
 --- @param fadeOutTime integer
---- @return nil
 function set_audio_fadeout(fadeOutTime)
     -- ...
 end
 
 --- @param player integer
 --- @param bankMask integer
---- @return nil
 function sound_banks_disable(player, bankMask)
     -- ...
 end
 
 --- @param player integer
 --- @param bankMask integer
---- @return nil
 function sound_banks_enable(player, bankMask)
     -- ...
 end
 
+--- @param distance number
+--- @return number
+function sound_get_level_intensity(distance)
+    -- ...
+end
+
 --- @param seqId integer
---- @return nil
 function stop_background_music(seqId)
     -- ...
 end
 
 --- @param fadeTimer integer
---- @return nil
 function stop_secondary_music(fadeTimer)
     -- ...
 end
 
 --- @param soundBits integer
 --- @param pos Vec3f
---- @return nil
 function stop_sound(soundBits, pos)
     -- ...
 end
 
 --- @param pos Vec3f
---- @return nil
 function stop_sounds_from_source(pos)
     -- ...
 end
 
---- @return nil
 function stop_sounds_in_continuous_banks()
     -- ...
 end
@@ -4006,7 +3393,6 @@ function first_person_check_cancels(m)
     -- ...
 end
 
---- @return nil
 function first_person_reset()
     -- ...
 end
@@ -4017,18 +3403,40 @@ function get_first_person_enabled()
 end
 
 --- @param enable boolean
---- @return nil
 function set_first_person_enabled(enable)
     -- ...
 end
 
---- @return nil
+--- @param dialog integer
+function create_dialog_box(dialog)
+    -- ...
+end
+
+--- @param dialog integer
+function create_dialog_box_with_response(dialog)
+    -- ...
+end
+
+--- @param dialog integer
+--- @param dialogVar integer
+function create_dialog_box_with_var(dialog, dialogVar)
+    -- ...
+end
+
+--- @param dialog integer
+function create_dialog_inverted_box(dialog)
+    -- ...
+end
+
 function reset_dialog_override_color()
     -- ...
 end
 
---- @return nil
 function reset_dialog_override_pos()
+    -- ...
+end
+
+function reset_dialog_render_state()
     -- ...
 end
 
@@ -4040,20 +3448,22 @@ end
 --- @param textG integer
 --- @param textB integer
 --- @param textA integer
---- @return nil
 function set_dialog_override_color(bgR, bgG, bgB, bgA, textR, textG, textB, textA)
     -- ...
 end
 
 --- @param x integer
 --- @param y integer
---- @return nil
 function set_dialog_override_pos(x, y)
     -- ...
 end
 
+--- @param mode integer
+function set_menu_mode(mode)
+    -- ...
+end
+
 --- @param width integer
---- @return nil
 function set_min_dialog_width(width)
     -- ...
 end
@@ -4081,13 +3491,244 @@ end
 --- @param interactType integer
 --- @param o Object
 --- @return integer
+function interact_bbh_entrance(m, interactType, o)
+    -- ...
+end
+
+--- @param m MarioState
+--- @param interactType integer
+--- @param o Object
+--- @return integer
+function interact_bounce_top(m, interactType, o)
+    -- ...
+end
+
+--- @param m MarioState
+--- @param interactType integer
+--- @param o Object
+--- @return integer
+function interact_breakable(m, interactType, o)
+    -- ...
+end
+
+--- @param m MarioState
+--- @param interactType integer
+--- @param o Object
+--- @return integer
+function interact_bully(m, interactType, o)
+    -- ...
+end
+
+--- @param m MarioState
+--- @param interactType integer
+--- @param o Object
+--- @return integer
+function interact_cannon_base(m, interactType, o)
+    -- ...
+end
+
+--- @param m MarioState
+--- @param interactType integer
+--- @param o Object
+--- @return integer
+function interact_cap(m, interactType, o)
+    -- ...
+end
+
+--- @param m MarioState
+--- @param interactType integer
+--- @param o Object
+--- @return integer
+function interact_clam_or_bubba(m, interactType, o)
+    -- ...
+end
+
+--- @param m MarioState
+--- @param interactType integer
+--- @param o Object
+--- @return integer
+function interact_coin(m, interactType, o)
+    -- ...
+end
+
+--- @param m MarioState
+--- @param interactType integer
+--- @param o Object
+--- @return integer
 function interact_damage(m, interactType, o)
     -- ...
 end
 
 --- @param m MarioState
+--- @param interactType integer
+--- @param o Object
+--- @return integer
+function interact_door(m, interactType, o)
+    -- ...
+end
+
+--- @param m MarioState
+--- @param interactType integer
+--- @param o Object
+--- @return integer
+function interact_flame(m, interactType, o)
+    -- ...
+end
+
+--- @param m MarioState
+--- @param interactType integer
+--- @param o Object
+--- @return integer
+function interact_grabbable(m, interactType, o)
+    -- ...
+end
+
+--- @param m MarioState
+--- @param interactType integer
+--- @param o Object
+--- @return integer
+function interact_hit_from_below(m, interactType, o)
+    -- ...
+end
+
+--- @param m MarioState
+--- @param interactType integer
+--- @param o Object
+--- @return integer
+function interact_hoot(m, interactType, o)
+    -- ...
+end
+
+--- @param m MarioState
+--- @param interactType integer
+--- @param o Object
+--- @return integer
+function interact_igloo_barrier(m, interactType, o)
+    -- ...
+end
+
+--- @param m MarioState
+--- @param interactType integer
+--- @param o Object
+--- @return integer
+function interact_koopa_shell(m, interactType, o)
+    -- ...
+end
+
+--- @param m MarioState
+--- @param interactType integer
+--- @param o Object
+--- @return integer
+function interact_mr_blizzard(m, interactType, o)
+    -- ...
+end
+
+--- @param m MarioState
+--- @param interactType integer
+--- @param o Object
+--- @return integer
+function interact_player(m, interactType, o)
+    -- ...
+end
+
+--- @param m MarioState
+--- @param interactType integer
+--- @param o Object
+--- @return integer
+function interact_pole(m, interactType, o)
+    -- ...
+end
+
+--- @param m MarioState
+--- @param interactType integer
+--- @param o Object
+--- @return integer
+function interact_shock(m, interactType, o)
+    -- ...
+end
+
+--- @param m MarioState
+--- @param interactType integer
+--- @param o Object
+--- @return integer
+function interact_snufit_bullet(m, interactType, o)
+    -- ...
+end
+
+--- @param m MarioState
+--- @param interactType integer
+--- @param o Object
+--- @return integer
+function interact_spiny_walking(m, interactType, o)
+    -- ...
+end
+
+--- @param m MarioState
+--- @param interactType integer
+--- @param o Object
+--- @return integer
+function interact_star_or_key(m, interactType, o)
+    -- ...
+end
+
+--- @param m MarioState
+--- @param interactType integer
+--- @param o Object
+--- @return integer
+function interact_strong_wind(m, interactType, o)
+    -- ...
+end
+
+--- @param m MarioState
+--- @param interactType integer
+--- @param o Object
+--- @return integer
+function interact_text(m, interactType, o)
+    -- ...
+end
+
+--- @param m MarioState
+--- @param interactType integer
+--- @param o Object
+--- @return integer
+function interact_tornado(m, interactType, o)
+    -- ...
+end
+
+--- @param m MarioState
+--- @param interactType integer
+--- @param o Object
+--- @return integer
+function interact_warp(m, interactType, o)
+    -- ...
+end
+
+--- @param m MarioState
+--- @param interactType integer
+--- @param o Object
+--- @return integer
+function interact_warp_door(m, interactType, o)
+    -- ...
+end
+
+--- @param m MarioState
+--- @param interactType integer
+--- @param o Object
+--- @return integer
+function interact_water_ring(m, interactType, o)
+    -- ...
+end
+
+--- @param m MarioState
+--- @param interactType integer
+--- @param o Object
+--- @return integer
+function interact_whirlpool(m, interactType, o)
+    -- ...
+end
+
+--- @param m MarioState
 --- @param capSpeed number
---- @return nil
 function mario_blow_off_cap(m, capSpeed)
     -- ...
 end
@@ -4099,7 +3740,6 @@ function mario_check_object_grab(m)
 end
 
 --- @param m MarioState
---- @return nil
 function mario_drop_held_object(m)
     -- ...
 end
@@ -4112,7 +3752,6 @@ function mario_get_collided_object(m, interactType)
 end
 
 --- @param m MarioState
---- @return nil
 function mario_grab_used_object(m)
     -- ...
 end
@@ -4132,25 +3771,21 @@ function mario_obj_angle_to_object(m, o)
 end
 
 --- @param m MarioState
---- @return nil
 function mario_retrieve_cap(m)
     -- ...
 end
 
 --- @param m MarioState
---- @return nil
 function mario_stop_riding_and_holding(m)
     -- ...
 end
 
 --- @param m MarioState
---- @return nil
 function mario_stop_riding_object(m)
     -- ...
 end
 
 --- @param m MarioState
---- @return nil
 function mario_throw_held_object(m)
     -- ...
 end
@@ -4159,6 +3794,13 @@ end
 --- @param victim MarioState
 --- @return integer
 function passes_pvp_interaction_checks(attacker, victim)
+    -- ...
+end
+
+--- @param m MarioState
+--- @param o Object
+--- @return integer
+function should_push_or_pull_door(m, o)
     -- ...
 end
 
@@ -4235,13 +3877,18 @@ function area_create_warp_node(id, destLevel, destArea, destNode, checkpoint, o)
     -- ...
 end
 
+--- @param arg integer
+--- @param color integer
+function fade_into_special_warp(arg, color)
+    -- ...
+end
+
 --- @return WarpNode
 function get_painting_warp_node()
     -- ...
 end
 
 --- @param paintingIndex integer
---- @return nil
 function initiate_painting_warp(paintingIndex)
     -- ...
 end
@@ -4266,13 +3913,11 @@ function lvl_set_current_level(arg0, levelNum)
 end
 
 --- @param arg integer
---- @return nil
 function warp_special(arg)
     -- ...
 end
 
 --- @param m MarioState
---- @return nil
 function adjust_sound_for_speed(m)
     -- ...
 end
@@ -4342,7 +3987,6 @@ function hurt_and_set_mario_action(m, action, actionArg, hurtCounter)
 end
 
 --- @param m MarioState
---- @return nil
 function init_single_mario(m)
     -- ...
 end
@@ -4416,21 +4060,18 @@ function mario_is_crouching(m)
 end
 
 --- @param m MarioState
---- @return nil
 function mario_set_bubbled(m)
     -- ...
 end
 
 --- @param m MarioState
 --- @param speed number
---- @return nil
 function mario_set_forward_vel(m, speed)
     -- ...
 end
 
 --- @param m MarioState
 --- @param wcd WallCollisionData
---- @return nil
 function mario_update_wall(m, wcd)
     -- ...
 end
@@ -4438,41 +4079,35 @@ end
 --- @param m MarioState
 --- @param soundBits integer
 --- @param waveParticleType integer
---- @return nil
 function play_mario_action_sound(m, soundBits, waveParticleType)
     -- ...
 end
 
 --- @param m MarioState
 --- @param soundBits integer
---- @return nil
 function play_mario_heavy_landing_sound(m, soundBits)
     -- ...
 end
 
 --- @param m MarioState
 --- @param soundBits integer
---- @return nil
 function play_mario_heavy_landing_sound_once(m, soundBits)
     -- ...
 end
 
 --- @param m MarioState
---- @return nil
 function play_mario_jump_sound(m)
     -- ...
 end
 
 --- @param m MarioState
 --- @param soundBits integer
---- @return nil
 function play_mario_landing_sound(m, soundBits)
     -- ...
 end
 
 --- @param m MarioState
 --- @param soundBits integer
---- @return nil
 function play_mario_landing_sound_once(m, soundBits)
     -- ...
 end
@@ -4480,7 +4115,6 @@ end
 --- @param m MarioState
 --- @param primarySoundBits integer
 --- @param scondarySoundBits integer
---- @return nil
 function play_mario_sound(m, primarySoundBits, scondarySoundBits)
     -- ...
 end
@@ -4488,7 +4122,6 @@ end
 --- @param m MarioState
 --- @param soundBits integer
 --- @param waveParticleType integer
---- @return nil
 function play_sound_and_spawn_particles(m, soundBits, waveParticleType)
     -- ...
 end
@@ -4496,7 +4129,6 @@ end
 --- @param m MarioState
 --- @param soundBits integer
 --- @param flags integer
---- @return nil
 function play_sound_if_no_flag(m, soundBits, flags)
     -- ...
 end
@@ -4513,7 +4145,6 @@ end
 --- @param offset number
 --- @param radius number
 --- @param collisionData WallCollisionData
---- @return nil
 function resolve_and_return_wall_collisions_data(pos, offset, radius, collisionData)
     -- ...
 end
@@ -4526,7 +4157,6 @@ end
 
 --- @param m MarioState
 --- @param animFrame integer
---- @return nil
 function set_anim_to_frame(m, animFrame)
     -- ...
 end
@@ -4586,7 +4216,6 @@ end
 --- @param m MarioState
 --- @param flags integer
 --- @param clear integer
---- @return nil
 function set_mario_particle_flags(m, flags, clear)
     -- ...
 end
@@ -4594,13 +4223,11 @@ end
 --- @param m MarioState
 --- @param initialVelY number
 --- @param multiplier number
---- @return nil
 function set_mario_y_vel_based_on_fspeed(m, initialVelY, multiplier)
     -- ...
 end
 
 --- @param m MarioState
---- @return nil
 function set_steep_jump_action(m)
     -- ...
 end
@@ -4618,13 +4245,11 @@ function transition_submerged_to_walking(m)
 end
 
 --- @param m MarioState
---- @return nil
 function update_mario_pos_for_anim(m)
     -- ...
 end
 
 --- @param m MarioState
---- @return nil
 function update_mario_sound_and_camera(m)
     -- ...
 end
@@ -4699,7 +4324,6 @@ function mario_execute_airborne_action(m)
 end
 
 --- @param m MarioState
---- @return nil
 function play_far_fall_sound(m)
     -- ...
 end
@@ -4708,13 +4332,11 @@ end
 --- @param frame1 integer
 --- @param frame2 integer
 --- @param frame3 integer
---- @return nil
 function play_flip_sounds(m, frame1, frame2, frame3)
     -- ...
 end
 
 --- @param m MarioState
---- @return nil
 function play_knockback_sound(m)
     -- ...
 end
@@ -4726,43 +4348,36 @@ function should_get_stuck_in_ground(m)
 end
 
 --- @param m MarioState
---- @return nil
 function update_air_with_turn(m)
     -- ...
 end
 
 --- @param m MarioState
---- @return nil
 function update_air_without_turn(m)
     -- ...
 end
 
 --- @param m MarioState
---- @return nil
 function update_flying(m)
     -- ...
 end
 
 --- @param m MarioState
---- @return nil
 function update_flying_pitch(m)
     -- ...
 end
 
 --- @param m MarioState
---- @return nil
 function update_flying_yaw(m)
     -- ...
 end
 
 --- @param m MarioState
---- @return nil
 function update_lava_boost_or_twirling(m)
     -- ...
 end
 
 --- @param m MarioState
---- @return nil
 function add_tree_leaf_particles(m)
     -- ...
 end
@@ -4774,7 +4389,6 @@ function check_common_automatic_cancels(m)
 end
 
 --- @param m MarioState
---- @return nil
 function climb_up_ledge(m)
     -- ...
 end
@@ -4800,7 +4414,6 @@ end
 
 --- @param m MarioState
 --- @param b integer
---- @return nil
 function play_climbing_sounds(m, b)
     -- ...
 end
@@ -4819,7 +4432,6 @@ function update_hang_moving(m)
 end
 
 --- @param m MarioState
---- @return nil
 function update_hang_stationary(m)
     -- ...
 end
@@ -4827,23 +4439,19 @@ end
 --- @param m MarioState
 --- @param animation integer
 --- @param endAction integer
---- @return nil
 function update_ledge_climb(m, animation, endAction)
     -- ...
 end
 
 --- @param m MarioState
---- @return nil
 function update_ledge_climb_camera(m)
     -- ...
 end
 
---- @return nil
 function bhv_end_peach_loop()
     -- ...
 end
 
---- @return nil
 function bhv_end_toad_loop()
     -- ...
 end
@@ -4857,20 +4465,17 @@ function common_death_handler(m, animation, frameToDeathWarp)
 end
 
 --- @param m MarioState
---- @return nil
 function cutscene_put_cap_on(m)
     -- ...
 end
 
 --- @param m MarioState
---- @return nil
 function cutscene_take_cap_off(m)
     -- ...
 end
 
 --- @param m MarioState
 --- @param isInWater integer
---- @return nil
 function general_star_dance_handler(m, isInWater)
     -- ...
 end
@@ -4879,7 +4484,6 @@ end
 --- @param y integer
 --- @param z integer
 --- @param radius number
---- @return nil
 function generate_yellow_sparkles(x, y, z, radius)
     -- ...
 end
@@ -4897,7 +4501,6 @@ function get_star_collection_dialog(m)
 end
 
 --- @param m MarioState
---- @return nil
 function handle_save_menu(m)
     -- ...
 end
@@ -4923,11 +4526,6 @@ function mario_ready_to_speak(m)
     -- ...
 end
 
---- @return nil
-function print_displaying_credits_entry()
-    -- ...
-end
-
 --- @param m MarioState
 --- @param object Object
 --- @return integer
@@ -4941,13 +4539,11 @@ end
 --- @param target2 integer
 --- @param target3 integer
 --- @param endAction integer
---- @return nil
 function stuck_in_ground_handler(m, animation, unstuckFrame, target2, target3, endAction)
     -- ...
 end
 
 --- @param m MarioState
---- @return nil
 function align_with_floor(m)
     -- ...
 end
@@ -4959,19 +4555,16 @@ function analog_stick_held_back(m)
 end
 
 --- @param m MarioState
---- @return nil
 function anim_and_audio_for_heavy_walk(m)
     -- ...
 end
 
 --- @param m MarioState
---- @return nil
 function anim_and_audio_for_hold_walk(m)
     -- ...
 end
 
 --- @param m MarioState
---- @return nil
 function anim_and_audio_for_walk(m)
     -- ...
 end
@@ -4984,7 +4577,6 @@ function apply_landing_accel(m, frictionFactor)
 end
 
 --- @param m MarioState
---- @return nil
 function apply_slope_accel(m)
     -- ...
 end
@@ -5024,7 +4616,6 @@ function check_ground_dive_or_punch(m)
 end
 
 --- @param m MarioState
---- @return nil
 function check_ledge_climb_down(m)
     -- ...
 end
@@ -5051,7 +4642,6 @@ end
 --- @param endAction integer
 --- @param airAction integer
 --- @param animation integer
---- @return nil
 function common_slide_action(m, endAction, airAction, animation)
     -- ...
 end
@@ -5075,14 +4665,12 @@ end
 --- @param m MarioState
 --- @param frame1 integer
 --- @param frame2 integer
---- @return nil
 function play_step_sound(m, frame1, frame2)
     -- ...
 end
 
 --- @param m MarioState
 --- @param startPos Vec3f
---- @return nil
 function push_or_sidle_wall(m, startPos)
     -- ...
 end
@@ -5114,7 +4702,6 @@ end
 --- @param m MarioState
 --- @param fastAction integer
 --- @param slowAction integer
---- @return nil
 function slide_bonk(m, fastAction, slowAction)
     -- ...
 end
@@ -5129,14 +4716,12 @@ function stomach_slide_action(m, stopAction, airAction, animation)
 end
 
 --- @param m MarioState
---- @return nil
 function tilt_body_butt_slide(m)
     -- ...
 end
 
 --- @param m MarioState
 --- @param startYaw integer
---- @return nil
 function tilt_body_ground_shell(m, startYaw)
     -- ...
 end
@@ -5149,7 +4734,6 @@ end
 
 --- @param m MarioState
 --- @param startYaw integer
---- @return nil
 function tilt_body_walking(m, startYaw)
     -- ...
 end
@@ -5161,7 +4745,6 @@ function update_decelerating_speed(m)
 end
 
 --- @param m MarioState
---- @return nil
 function update_shell_speed(m)
     -- ...
 end
@@ -5176,13 +4759,11 @@ end
 --- @param m MarioState
 --- @param accel number
 --- @param lossFactor number
---- @return nil
 function update_sliding_angle(m, accel, lossFactor)
     -- ...
 end
 
 --- @param m MarioState
---- @return nil
 function update_walking_speed(m)
     -- ...
 end
@@ -5190,7 +4771,6 @@ end
 --- @param m MarioState
 --- @param animation integer
 --- @param endAction integer
---- @return nil
 function animated_stationary_ground_step(m, animation, endAction)
     -- ...
 end
@@ -5256,7 +4836,6 @@ end
 --- @param actionState integer
 --- @param animFrame integer
 --- @param sound integer
---- @return nil
 function play_anim_sound(m, actionState, animFrame, sound)
     -- ...
 end
@@ -5264,20 +4843,17 @@ end
 --- @param m MarioState
 --- @param animID integer
 --- @param action integer
---- @return nil
 function stopping_step(m, animID, action)
     -- ...
 end
 
 --- @param m MarioState
 --- @param step Vec3f
---- @return nil
 function apply_water_current(m, step)
     -- ...
 end
 
 --- @param m MarioState
---- @return nil
 function float_surface_gfx(m)
     -- ...
 end
@@ -5303,27 +4879,22 @@ end
 
 --- @param m MarioState
 --- @param particleFlag integer
---- @return nil
 function set_swimming_at_surface_particles(m, particleFlag)
     -- ...
 end
 
---- @return nil
 function bhv_toad_message_init()
     -- ...
 end
 
---- @return nil
 function bhv_toad_message_loop()
     -- ...
 end
 
---- @return nil
 function bhv_unlock_door_star_init()
     -- ...
 end
 
---- @return nil
 function bhv_unlock_door_star_loop()
     -- ...
 end
@@ -5340,14 +4911,12 @@ end
 --- @param yaw integer
 --- @param conversionRatio number
 --- @param radius number
---- @return nil
 function init_bully_collision_data(data, posX, posZ, forwardVel, yaw, conversionRatio, radius)
     -- ...
 end
 
 --- @param arg0 MarioState
 --- @param arg1 integer
---- @return nil
 function mario_bonk_reflection(arg0, arg1)
     -- ...
 end
@@ -5393,7 +4962,6 @@ function perform_ground_step(arg0)
 end
 
 --- @param m MarioState
---- @return nil
 function set_vel_from_pitch_and_yaw(m)
     -- ...
 end
@@ -5405,14 +4973,12 @@ function stationary_ground_step(arg0)
 end
 
 --- @param arg0 MarioState
---- @return nil
 function stop_and_set_height_to_floor(arg0)
     -- ...
 end
 
 --- @param m MarioState
 --- @param keyFrames Pointer_Vec4s
---- @return nil
 function anim_spline_init(m, keyFrames)
     -- ...
 end
@@ -5454,7 +5020,6 @@ end
 --- @param dest Vec3f
 --- @param objMtx Mat4
 --- @param camMtx Mat4
---- @return nil
 function get_pos_from_transform_mtx(dest, objMtx, camMtx)
     -- ...
 end
@@ -5463,7 +5028,6 @@ end
 --- @param upDir Vec3f
 --- @param pos Vec3f
 --- @param yaw integer
---- @return nil
 function mtxf_align_terrain_normal(dest, upDir, pos, yaw)
     -- ...
 end
@@ -5472,7 +5036,6 @@ end
 --- @param pos Vec3f
 --- @param yaw integer
 --- @param radius number
---- @return nil
 function mtxf_align_terrain_triangle(mtx, pos, yaw, radius)
     -- ...
 end
@@ -5481,14 +5044,12 @@ end
 --- @param mtx Mat4
 --- @param position Vec3f
 --- @param angle integer
---- @return nil
 function mtxf_billboard(dest, mtx, position, angle)
     -- ...
 end
 
 --- @param dest Mat4
 --- @param src Mat4
---- @return nil
 function mtxf_copy(dest, src)
     -- ...
 end
@@ -5497,20 +5058,17 @@ end
 --- @param mtx Mat4
 --- @param position Vec3f
 --- @param angle integer
---- @return nil
 function mtxf_cylboard(dest, mtx, position, angle)
     -- ...
 end
 
 --- @param mtx Mat4
---- @return nil
 function mtxf_identity(mtx)
     -- ...
 end
 
 --- @param dest Mat4
 --- @param src Mat4
---- @return nil
 function mtxf_inverse(dest, src)
     -- ...
 end
@@ -5519,7 +5077,6 @@ end
 --- @param from Vec3f
 --- @param to Vec3f
 --- @param roll integer
---- @return nil
 function mtxf_lookat(mtx, from, to, roll)
     -- ...
 end
@@ -5527,21 +5084,18 @@ end
 --- @param dest Mat4
 --- @param a Mat4
 --- @param b Mat4
---- @return nil
 function mtxf_mul(dest, a, b)
     -- ...
 end
 
 --- @param mtx Mat4
 --- @param b Vec3s
---- @return nil
 function mtxf_mul_vec3s(mtx, b)
     -- ...
 end
 
 --- @param mtx Pointer_Mtx
 --- @param angle integer
---- @return nil
 function mtxf_rotate_xy(mtx, angle)
     -- ...
 end
@@ -5549,7 +5103,6 @@ end
 --- @param dest Mat4
 --- @param b Vec3f
 --- @param c Vec3s
---- @return nil
 function mtxf_rotate_xyz_and_translate(dest, b, c)
     -- ...
 end
@@ -5557,7 +5110,6 @@ end
 --- @param dest Mat4
 --- @param translate Vec3f
 --- @param rotate Vec3s
---- @return nil
 function mtxf_rotate_zxy_and_translate(dest, translate, rotate)
     -- ...
 end
@@ -5565,21 +5117,18 @@ end
 --- @param dest Mat4
 --- @param mtx Mat4
 --- @param s Vec3f
---- @return nil
 function mtxf_scale_vec3f(dest, mtx, s)
     -- ...
 end
 
 --- @param dest Pointer_Mtx
 --- @param src Mat4
---- @return nil
 function mtxf_to_mtx(dest, src)
     -- ...
 end
 
 --- @param dest Mat4
 --- @param b Vec3f
---- @return nil
 function mtxf_translate(dest, b)
     -- ...
 end
@@ -5595,7 +5144,6 @@ end
 --- @param result Vec4f
 --- @param t number
 --- @param c integer
---- @return nil
 function spline_get_weights(m, result, t, c)
     -- ...
 end
@@ -5612,7 +5160,6 @@ end
 --- @param vecB Vec3f
 --- @param sclA number
 --- @param sclB number
---- @return nil
 function vec3f_combine(dest, vecA, vecB, sclA, sclB)
     -- ...
 end
@@ -5659,7 +5206,6 @@ end
 --- @param dist Pointer_number
 --- @param pitch Pointer_integer
 --- @param yaw Pointer_integer
---- @return nil
 function vec3f_get_dist_and_angle(from, to, dist, pitch, yaw)
     -- ...
 end
@@ -5686,7 +5232,6 @@ end
 --- @param vec Vec3f
 --- @param onto Vec3f
 --- @param out Vec3f
---- @return nil
 function vec3f_project(vec, onto, out)
     -- ...
 end
@@ -5712,7 +5257,6 @@ end
 --- @param dist number
 --- @param pitch integer
 --- @param yaw integer
---- @return nil
 function vec3f_set_dist_and_angle(from, to, dist, pitch, yaw)
     -- ...
 end
@@ -5770,7 +5314,6 @@ function vec3s_to_vec3f(dest, a)
     -- ...
 end
 
---- @return nil
 function update_all_mario_stars()
     -- ...
 end
@@ -5847,14 +5390,6 @@ function get_network_player_smallest_global()
     -- ...
 end
 
---- @param np NetworkPlayer
---- @param part PlayerPart
---- @param color Color
---- @return nil
-function network_player_color_to_palette(np, part, color)
-    -- ...
-end
-
 --- @return integer
 function network_player_connected_count()
     -- ...
@@ -5868,9 +5403,28 @@ end
 
 --- @param np NetworkPlayer
 --- @param part PlayerPart
---- @param out Color
---- @return nil
-function network_player_palette_to_color(np, part, out)
+--- @param index integer
+--- @return integer
+function network_player_get_override_palette_color_channel(np, part, index)
+    -- ...
+end
+
+--- @param np NetworkPlayer
+--- @param part PlayerPart
+--- @param index integer
+--- @return integer
+function network_player_get_palette_color_channel(np, part, index)
+    -- ...
+end
+
+--- @param np NetworkPlayer
+--- @return boolean
+function network_player_is_override_palette_same(np)
+    -- ...
+end
+
+--- @param np NetworkPlayer
+function network_player_reset_override_palette(np)
     -- ...
 end
 
@@ -5880,8 +5434,14 @@ end
 --- @param g integer
 --- @param b integer
 --- @param a integer
---- @return nil
 function network_player_set_description(np, description, r, g, b, a)
+    -- ...
+end
+
+--- @param np NetworkPlayer
+--- @param part PlayerPart
+--- @param color Color
+function network_player_set_override_palette_color(np, part, color)
     -- ...
 end
 
@@ -5928,7 +5488,6 @@ end
 --- @param objFloorY number
 --- @param objVelX number
 --- @param objVelZ number
---- @return nil
 function calc_new_obj_vel_and_pos_y(objFloor, objFloorY, objVelX, objVelZ)
     -- ...
 end
@@ -5938,14 +5497,12 @@ end
 --- @param objVelX number
 --- @param objVelZ number
 --- @param waterY number
---- @return nil
 function calc_new_obj_vel_and_pos_y_underwater(objFloor, floorY, objVelX, objVelZ, waterY)
     -- ...
 end
 
 --- @param objFriction Pointer_number
 --- @param floor_nY number
---- @return nil
 function calc_obj_friction(objFriction, floor_nY)
     -- ...
 end
@@ -6047,7 +5604,6 @@ end
 
 --- @param collisionFlags integer
 --- @param floor Surface
---- @return nil
 function obj_check_floor_death(collisionFlags, floor)
     -- ...
 end
@@ -6093,7 +5649,6 @@ function obj_lava_death()
 end
 
 --- @param obj Object
---- @return nil
 function obj_move_xyz_using_fvel_and_yaw(obj)
     -- ...
 end
@@ -6102,7 +5657,6 @@ end
 --- @param normalX number
 --- @param normalY number
 --- @param normalZ number
---- @return nil
 function obj_orient_graph(obj, normalX, normalY, normalZ)
     -- ...
 end
@@ -6112,7 +5666,6 @@ end
 --- @param homeY number
 --- @param homeZ number
 --- @param baseDisp integer
---- @return nil
 function obj_return_and_displace_home(obj, homeX, homeY, homeZ, baseDisp)
     -- ...
 end
@@ -6129,19 +5682,16 @@ end
 
 --- @param obj Object
 --- @param nCoins integer
---- @return nil
 function obj_spawn_yellow_coins(obj, nCoins)
     -- ...
 end
 
 --- @param waterY integer
 --- @param objY integer
---- @return nil
 function obj_splash(waterY, objY)
     -- ...
 end
 
---- @return nil
 function obj_update_pos_vel_xz()
     -- ...
 end
@@ -6158,12 +5708,10 @@ end
 
 --- @param obj Object
 --- @param dist integer
---- @return nil
 function set_object_visibility(obj, dist)
     -- ...
 end
 
---- @return nil
 function set_yoshi_as_not_dead()
     -- ...
 end
@@ -6172,7 +5720,6 @@ end
 --- @param relX integer
 --- @param relY integer
 --- @param relZ integer
---- @return nil
 function spawn_orange_number(behParam, relX, relY, relZ)
     -- ...
 end
@@ -6193,7 +5740,6 @@ end
 --- @param nZ number
 --- @param objYawX Pointer_number
 --- @param objYawZ Pointer_number
---- @return nil
 function turn_obj_away_from_surface(velX, velZ, nX, nY, nZ, objYawX, objYawZ)
     -- ...
 end
@@ -6220,7 +5766,6 @@ function cur_obj_init_anim_check_frame(arg0, arg1)
 end
 
 --- @param arg0 integer
---- @return nil
 function cur_obj_init_anim_extend(arg0)
     -- ...
 end
@@ -6241,19 +5786,16 @@ end
 
 --- @param arg0 number
 --- @param arg1 number
---- @return nil
 function cur_obj_spin_all_dimensions(arg0, arg1)
     -- ...
 end
 
 --- @param baseScale number
---- @return nil
 function obj_act_knockback(baseScale)
     -- ...
 end
 
 --- @param baseScale number
---- @return nil
 function obj_act_squished(baseScale)
     -- ...
 end
@@ -6272,7 +5814,6 @@ function obj_check_attacks(hitbox, attackedMarioAction)
 end
 
 --- @param speed number
---- @return nil
 function obj_compute_vel_from_move_pitch(speed)
     -- ...
 end
@@ -6282,7 +5823,6 @@ function obj_die_if_above_lava_and_health_non_positive()
     -- ...
 end
 
---- @return nil
 function obj_die_if_health_non_positive()
     -- ...
 end
@@ -6390,31 +5930,26 @@ end
 --- @param targetYaw integer
 --- @param maxRoll integer
 --- @param rollSpeed integer
---- @return nil
 function obj_roll_to_match_yaw_turn(targetYaw, maxRoll, rollSpeed)
     -- ...
 end
 
 --- @param targetYaw integer
 --- @param turnAmount integer
---- @return nil
 function obj_rotate_yaw_and_bounce_off_walls(targetYaw, turnAmount)
     -- ...
 end
 
 --- @param distFromHome number
---- @return nil
 function obj_set_dist_from_home(distFromHome)
     -- ...
 end
 
 --- @param attackType integer
---- @return nil
 function obj_set_knockback_action(attackType)
     -- ...
 end
 
---- @return nil
 function obj_set_squished_action()
     -- ...
 end
@@ -6452,7 +5987,6 @@ function obj_turn_pitch_toward_mario(m, targetOffsetY, turnAmount)
     -- ...
 end
 
---- @return nil
 function obj_unused_die()
     -- ...
 end
@@ -6461,7 +5995,6 @@ end
 --- @param baseCycleLength integer
 --- @param cycleLengthRange integer
 --- @param blinkLength integer
---- @return nil
 function obj_update_blinking(blinkTimer, baseCycleLength, cycleLengthRange, blinkLength)
     -- ...
 end
@@ -6494,7 +6027,6 @@ end
 --- @param x number
 --- @param y number
 --- @param z number
---- @return nil
 function platform_on_track_update_pos_or_spawn_ball(ballIndex, x, y, z)
     -- ...
 end
@@ -6517,7 +6049,6 @@ end
 --- @param threshold number
 --- @param distanceToPlayer Pointer_integer
 --- @param angleToPlayer Pointer_integer
---- @return nil
 function treat_far_home_as_mario(threshold, distanceToPlayer, angleToPlayer)
     -- ...
 end
@@ -6531,7 +6062,6 @@ end
 
 --- @param value Pointer_number
 --- @param dragStrength number
---- @return nil
 function apply_drag_to_value(value, dragStrength)
     -- ...
 end
@@ -6560,12 +6090,10 @@ function approach_s16_symmetric(value, target, increment)
     -- ...
 end
 
---- @return nil
 function bhv_dust_smoke_loop()
     -- ...
 end
 
---- @return nil
 function bhv_init_room()
     -- ...
 end
@@ -6577,7 +6105,6 @@ function bit_shift_left(a0)
 end
 
 --- @param segment ChainSegment
---- @return nil
 function chain_segment_init(segment)
     -- ...
 end
@@ -6590,7 +6117,6 @@ function clear_move_flag(bitSet, flag)
 end
 
 --- @param flags integer
---- @return nil
 function clear_time_stop_flags(flags)
     -- ...
 end
@@ -6609,7 +6135,6 @@ end
 --- @param a0 Mat4
 --- @param a1 Mat4
 --- @param a2 Mat4
---- @return nil
 function create_transformation_from_matrices(a0, a1, a2)
     -- ...
 end
@@ -6624,7 +6149,6 @@ function cur_obj_advance_looping_anim()
     -- ...
 end
 
---- @return nil
 function cur_obj_align_gfx_with_floor()
     -- ...
 end
@@ -6635,17 +6159,14 @@ function cur_obj_angle_to_home()
 end
 
 --- @param dragStrength number
---- @return nil
 function cur_obj_apply_drag_xz(dragStrength)
     -- ...
 end
 
---- @return nil
 function cur_obj_become_intangible()
     -- ...
 end
 
---- @return nil
 function cur_obj_become_tangible()
     -- ...
 end
@@ -6668,7 +6189,6 @@ function cur_obj_can_mario_activate_textbox_2(m, radius, height)
 end
 
 --- @param action integer
---- @return nil
 function cur_obj_change_action(action)
     -- ...
 end
@@ -6718,7 +6238,6 @@ function cur_obj_clear_interact_status_flag(flag)
     -- ...
 end
 
---- @return nil
 function cur_obj_compute_vel_xz()
     -- ...
 end
@@ -6736,18 +6255,15 @@ function cur_obj_detect_steep_floor(steepAngleDegrees)
     -- ...
 end
 
---- @return nil
 function cur_obj_disable()
     -- ...
 end
 
---- @return nil
 function cur_obj_disable_rendering()
     -- ...
 end
 
 --- @param obj Object
---- @return nil
 function cur_obj_disable_rendering_and_become_intangible(obj)
     -- ...
 end
@@ -6758,23 +6274,19 @@ function cur_obj_dist_to_nearest_object_with_behavior(behavior)
     -- ...
 end
 
---- @return nil
 function cur_obj_enable_rendering()
     -- ...
 end
 
---- @return nil
 function cur_obj_enable_rendering_2()
     -- ...
 end
 
 --- @param obj Object
---- @return nil
 function cur_obj_enable_rendering_and_become_tangible(obj)
     -- ...
 end
 
---- @return nil
 function cur_obj_enable_rendering_if_mario_in_room()
     -- ...
 end
@@ -6782,12 +6294,10 @@ end
 --- @param m MarioState
 --- @param dialogFlags integer
 --- @param dialogResult integer
---- @return nil
 function cur_obj_end_dialog(m, dialogFlags, dialogResult)
     -- ...
 end
 
---- @return nil
 function cur_obj_extend_animation_if_at_end()
     -- ...
 end
@@ -6819,12 +6329,10 @@ end
 
 --- @param target number
 --- @param increment number
---- @return nil
 function cur_obj_forward_vel_approach_upward(target, increment)
     -- ...
 end
 
---- @return nil
 function cur_obj_get_dropped()
     -- ...
 end
@@ -6832,7 +6340,6 @@ end
 --- @param forwardVel number
 --- @param velY number
 --- @param thrownAction integer
---- @return nil
 function cur_obj_get_thrown_or_placed(forwardVel, velY, thrownAction)
     -- ...
 end
@@ -6849,7 +6356,6 @@ function cur_obj_has_model(modelID)
     -- ...
 end
 
---- @return nil
 function cur_obj_hide()
     -- ...
 end
@@ -6860,20 +6366,17 @@ function cur_obj_hide_if_mario_far_away_y(distY)
     -- ...
 end
 
---- @return nil
 function cur_obj_if_hit_wall_bounce_away()
     -- ...
 end
 
 --- @param animIndex integer
---- @return nil
 function cur_obj_init_animation(animIndex)
     -- ...
 end
 
 --- @param animIndex integer
 --- @param animFrame integer
---- @return nil
 function cur_obj_init_animation_and_anim_frame(animIndex, animFrame)
     -- ...
 end
@@ -6885,20 +6388,17 @@ function cur_obj_init_animation_and_check_if_near_end(animIndex)
 end
 
 --- @param animIndex integer
---- @return nil
 function cur_obj_init_animation_and_extend_if_at_end(animIndex)
     -- ...
 end
 
 --- @param animIndex integer
 --- @param accel number
---- @return nil
 function cur_obj_init_animation_with_accel_and_sound(animIndex, accel)
     -- ...
 end
 
 --- @param animIndex integer
---- @return nil
 function cur_obj_init_animation_with_sound(animIndex)
     -- ...
 end
@@ -6941,13 +6441,11 @@ end
 
 --- @param forwardVel number
 --- @param velY number
---- @return nil
 function cur_obj_move_after_thrown_or_dropped(forwardVel, velY)
     -- ...
 end
 
 --- @param steepSlopeAngleDegrees integer
---- @return nil
 function cur_obj_move_standard(steepSlopeAngleDegrees)
     -- ...
 end
@@ -6960,27 +6458,22 @@ end
 
 --- @param gravity number
 --- @param bounciness number
---- @return nil
 function cur_obj_move_update_ground_air_flags(gravity, bounciness)
     -- ...
 end
 
---- @return nil
 function cur_obj_move_update_underwater_flags()
     -- ...
 end
 
---- @return nil
 function cur_obj_move_using_fvel_and_gravity()
     -- ...
 end
 
---- @return nil
 function cur_obj_move_using_vel()
     -- ...
 end
 
---- @return nil
 function cur_obj_move_using_vel_and_gravity()
     -- ...
 end
@@ -6992,7 +6485,6 @@ function cur_obj_move_xz(steepSlopeNormalY, careAboutEdgesAndSteepSlopes)
     -- ...
 end
 
---- @return nil
 function cur_obj_move_xz_using_fvel_and_yaw()
     -- ...
 end
@@ -7000,7 +6492,6 @@ end
 --- @param gravity number
 --- @param bounciness number
 --- @param buoyancy number
---- @return nil
 function cur_obj_move_y(gravity, bounciness, buoyancy)
     -- ...
 end
@@ -7012,7 +6503,6 @@ function cur_obj_move_y_and_get_water_level(gravity, buoyancy)
     -- ...
 end
 
---- @return nil
 function cur_obj_move_y_with_terminal_vel()
     -- ...
 end
@@ -7039,14 +6529,12 @@ function cur_obj_outside_home_square(halfLength)
 end
 
 --- @param radius number
---- @return nil
 function cur_obj_push_mario_away(radius)
     -- ...
 end
 
 --- @param radius number
 --- @param extentY number
---- @return nil
 function cur_obj_push_mario_away_from_cylinder(radius, extentY)
     -- ...
 end
@@ -7056,7 +6544,6 @@ function cur_obj_reflect_move_angle_off_wall()
     -- ...
 end
 
---- @return nil
 function cur_obj_reset_timer_and_subaction()
     -- ...
 end
@@ -7066,17 +6553,14 @@ function cur_obj_resolve_wall_collisions()
     -- ...
 end
 
---- @return nil
 function cur_obj_reverse_animation()
     -- ...
 end
 
---- @return nil
 function cur_obj_rotate_face_angle_using_vel()
     -- ...
 end
 
---- @return nil
 function cur_obj_rotate_move_angle_using_vel()
     -- ...
 end
@@ -7089,7 +6573,6 @@ function cur_obj_rotate_yaw_toward(target, increment)
 end
 
 --- @param scale number
---- @return nil
 function cur_obj_scale(scale)
     -- ...
 end
@@ -7098,23 +6581,19 @@ end
 --- @param a1 integer
 --- @param sp10 number
 --- @param sp14 number
---- @return nil
 function cur_obj_scale_over_time(a0, a1, sp10, sp14)
     -- ...
 end
 
 --- @param behavior Pointer_BehaviorScript
---- @return nil
 function cur_obj_set_behavior(behavior)
     -- ...
 end
 
---- @return nil
 function cur_obj_set_billboard_if_vanilla_cam()
     -- ...
 end
 
---- @return nil
 function cur_obj_set_face_angle_to_move_angle()
     -- ...
 end
@@ -7129,19 +6608,16 @@ end
 
 --- @param radius number
 --- @param height number
---- @return nil
 function cur_obj_set_hitbox_radius_and_height(radius, height)
     -- ...
 end
 
---- @return nil
 function cur_obj_set_home_once()
     -- ...
 end
 
 --- @param radius number
 --- @param height number
---- @return nil
 function cur_obj_set_hurtbox_radius_and_height(radius, height)
     -- ...
 end
@@ -7150,7 +6626,6 @@ end
 --- @param dleft number
 --- @param dy number
 --- @param dforward number
---- @return nil
 function cur_obj_set_pos_relative(other, dleft, dy, dforward)
     -- ...
 end
@@ -7158,27 +6633,22 @@ end
 --- @param dleft number
 --- @param dy number
 --- @param dforward number
---- @return nil
 function cur_obj_set_pos_relative_to_parent(dleft, dy, dforward)
     -- ...
 end
 
---- @return nil
 function cur_obj_set_pos_to_home()
     -- ...
 end
 
---- @return nil
 function cur_obj_set_pos_to_home_and_stop()
     -- ...
 end
 
---- @return nil
 function cur_obj_set_pos_to_home_with_debug()
     -- ...
 end
 
---- @return nil
 function cur_obj_set_pos_via_transform()
     -- ...
 end
@@ -7186,26 +6656,22 @@ end
 --- @param m MarioState
 --- @param f12 number
 --- @param f14 number
---- @return nil
 function cur_obj_set_vel_from_mario_vel(m, f12, f14)
     -- ...
 end
 
 --- @param sp18 number
 --- @param sp1C integer
---- @return nil
 function cur_obj_set_y_vel_and_animation(sp18, sp1C)
     -- ...
 end
 
 --- @param shake integer
---- @return nil
 function cur_obj_shake_screen(shake)
     -- ...
 end
 
 --- @param amount number
---- @return nil
 function cur_obj_shake_y(amount)
     -- ...
 end
@@ -7217,19 +6683,16 @@ function cur_obj_shake_y_until(cycles, amount)
     -- ...
 end
 
---- @return nil
 function cur_obj_spawn_loot_blue_coin()
     -- ...
 end
 
 --- @param m MarioState
---- @return nil
 function cur_obj_spawn_loot_coin_at_mario_pos(m)
     -- ...
 end
 
 --- @param info SpawnParticlesInfo
---- @return nil
 function cur_obj_spawn_particles(info)
     -- ...
 end
@@ -7238,31 +6701,26 @@ end
 --- @param targetY number
 --- @param targetZ number
 --- @param offsetY number
---- @return nil
 function cur_obj_spawn_star_at_y_offset(targetX, targetY, targetZ, offsetY)
     -- ...
 end
 
 --- @param obj Object
 --- @param cameraEvent integer
---- @return nil
 function cur_obj_start_cam_event(obj, cameraEvent)
     -- ...
 end
 
---- @return nil
 function cur_obj_unhide()
     -- ...
 end
 
 --- @param sp18 integer
 --- @param sp1C integer
---- @return nil
 function cur_obj_unrender_and_reset_state(sp18, sp1C)
     -- ...
 end
 
---- @return nil
 function cur_obj_unused_init_on_floor()
     -- ...
 end
@@ -7270,35 +6728,29 @@ end
 --- @param animFrame1 integer
 --- @param animFrame2 integer
 --- @param sound integer
---- @return nil
 function cur_obj_unused_play_footstep_sound(animFrame1, animFrame2, sound)
     -- ...
 end
 
 --- @param offsetY number
 --- @param radius number
---- @return nil
 function cur_obj_unused_resolve_wall_collisions(offsetY, radius)
     -- ...
 end
 
---- @return nil
 function cur_obj_update_floor()
     -- ...
 end
 
 --- @param steepSlopeDegrees integer
---- @return nil
 function cur_obj_update_floor_and_resolve_wall_collisions(steepSlopeDegrees)
     -- ...
 end
 
---- @return nil
 function cur_obj_update_floor_and_walls()
     -- ...
 end
 
---- @return nil
 function cur_obj_update_floor_height()
     -- ...
 end
@@ -7325,12 +6777,10 @@ function cur_obj_within_12k_bounds()
     -- ...
 end
 
---- @return nil
 function disable_time_stop()
     -- ...
 end
 
---- @return nil
 function disable_time_stop_including_mario()
     -- ...
 end
@@ -7351,17 +6801,14 @@ function dist_between_objects(obj1, obj2)
     -- ...
 end
 
---- @return nil
 function enable_time_stop()
     -- ...
 end
 
---- @return nil
 function enable_time_stop_if_alone()
     -- ...
 end
 
---- @return nil
 function enable_time_stop_including_mario()
     -- ...
 end
@@ -7429,7 +6876,6 @@ end
 --- @param m Mat4
 --- @param dst Vec3f
 --- @param v Vec3f
---- @return nil
 function linear_mtxf_mul_vec3f(m, dst, v)
     -- ...
 end
@@ -7437,7 +6883,6 @@ end
 --- @param m Mat4
 --- @param dst Vec3f
 --- @param v Vec3f
---- @return nil
 function linear_mtxf_transpose_mul_vec3f(m, dst, v)
     -- ...
 end
@@ -7464,7 +6909,6 @@ function mario_is_within_rectangle(minX, maxX, minZ, maxZ)
 end
 
 --- @param flag integer
---- @return nil
 function mario_set_flag(flag)
     -- ...
 end
@@ -7487,13 +6931,11 @@ end
 --- @param obj Object
 --- @param dst Mat4
 --- @param src Mat4
---- @return nil
 function obj_apply_scale_to_matrix(obj, dst, src)
     -- ...
 end
 
 --- @param obj Object
---- @return nil
 function obj_apply_scale_to_transform(obj)
     -- ...
 end
@@ -7505,13 +6947,11 @@ function obj_attack_collided_from_other_object(obj)
 end
 
 --- @param obj Object
---- @return nil
 function obj_become_tangible(obj)
     -- ...
 end
 
 --- @param obj Object
---- @return nil
 function obj_build_relative_transform(obj)
     -- ...
 end
@@ -7519,19 +6959,16 @@ end
 --- @param obj Object
 --- @param posIndex integer
 --- @param angleIndex integer
---- @return nil
 function obj_build_transform_from_pos_and_angle(obj, posIndex, angleIndex)
     -- ...
 end
 
 --- @param obj Object
---- @return nil
 function obj_build_transform_relative_to_parent(obj)
     -- ...
 end
 
 --- @param a0 Object
---- @return nil
 function obj_build_vel_from_transform(a0)
     -- ...
 end
@@ -7545,55 +6982,47 @@ end
 
 --- @param dst Object
 --- @param src Object
---- @return nil
 function obj_copy_angle(dst, src)
     -- ...
 end
 
 --- @param dst Object
 --- @param src Object
---- @return nil
 function obj_copy_behavior_params(dst, src)
     -- ...
 end
 
 --- @param dst Object
 --- @param src Object
---- @return nil
 function obj_copy_graph_y_offset(dst, src)
     -- ...
 end
 
 --- @param dst Object
 --- @param src Object
---- @return nil
 function obj_copy_pos(dst, src)
     -- ...
 end
 
 --- @param dst Object
 --- @param src Object
---- @return nil
 function obj_copy_pos_and_angle(dst, src)
     -- ...
 end
 
 --- @param dst Object
 --- @param src Object
---- @return nil
 function obj_copy_scale(dst, src)
     -- ...
 end
 
 --- @param obj Object
---- @return nil
 function obj_create_transform_from_self(obj)
     -- ...
 end
 
 --- @param sp18 number
 --- @param sp1C integer
---- @return nil
 function obj_explode_and_spawn_coins(sp18, sp1C)
     -- ...
 end
@@ -7607,7 +7036,6 @@ end
 
 --- @param obj Object
 --- @param animIndex integer
---- @return nil
 function obj_init_animation(obj, animIndex)
     -- ...
 end
@@ -7615,7 +7043,6 @@ end
 --- @param obj Object
 --- @param animIndex integer
 --- @param accel number
---- @return nil
 function obj_init_animation_with_accel_and_sound(obj, animIndex, accel)
     -- ...
 end
@@ -7623,7 +7050,6 @@ end
 --- @param obj Object
 --- @param animations AnimationTable
 --- @param animIndex integer
---- @return nil
 function obj_init_animation_with_sound(obj, animations, animIndex)
     -- ...
 end
@@ -7635,7 +7061,6 @@ function obj_is_hidden(obj)
 end
 
 --- @param obj Object
---- @return nil
 function obj_mark_for_deletion(obj)
     -- ...
 end
@@ -7649,7 +7074,6 @@ end
 
 --- @param obj Object
 --- @param scale number
---- @return nil
 function obj_scale(obj, scale)
     -- ...
 end
@@ -7657,7 +7081,6 @@ end
 --- @param obj Object
 --- @param rangeLength number
 --- @param minScale number
---- @return nil
 function obj_scale_random(obj, rangeLength, minScale)
     -- ...
 end
@@ -7666,7 +7089,6 @@ end
 --- @param xScale number
 --- @param yScale number
 --- @param zScale number
---- @return nil
 function obj_scale_xyz(obj, xScale, yScale, zScale)
     -- ...
 end
@@ -7675,34 +7097,22 @@ end
 --- @param pitch integer
 --- @param yaw integer
 --- @param roll integer
---- @return nil
 function obj_set_angle(obj, pitch, yaw, roll)
     -- ...
 end
 
 --- @param obj Object
 --- @param behavior Pointer_BehaviorScript
---- @return nil
 function obj_set_behavior(obj, behavior)
     -- ...
 end
 
 --- @param obj Object
---- @return nil
 function obj_set_billboard(obj)
     -- ...
 end
 
 --- @param obj Object
---- @param index integer
---- @param modelID integer
---- @return nil
-function obj_set_character_model(obj, index, modelID)
-    -- ...
-end
-
---- @param obj Object
---- @return nil
 function obj_set_cylboard(obj)
     -- ...
 end
@@ -7711,13 +7121,11 @@ end
 --- @param pitch integer
 --- @param yaw integer
 --- @param roll integer
---- @return nil
 function obj_set_face_angle(obj, pitch, yaw, roll)
     -- ...
 end
 
 --- @param obj Object
---- @return nil
 function obj_set_face_angle_to_move_angle(obj)
     -- ...
 end
@@ -7726,7 +7134,6 @@ end
 --- @param pitch integer
 --- @param yaw integer
 --- @param roll integer
---- @return nil
 function obj_set_gfx_angle(obj, pitch, yaw, roll)
     -- ...
 end
@@ -7735,20 +7142,17 @@ end
 --- @param x number
 --- @param y number
 --- @param z number
---- @return nil
 function obj_set_gfx_pos(obj, x, y, z)
     -- ...
 end
 
 --- @param obj1 Object
 --- @param obj2 Object
---- @return nil
 function obj_set_gfx_pos_at_obj_pos(obj1, obj2)
     -- ...
 end
 
 --- @param obj Object
---- @return nil
 function obj_set_gfx_pos_from_pos(obj)
     -- ...
 end
@@ -7757,21 +7161,18 @@ end
 --- @param x number
 --- @param y number
 --- @param z number
---- @return nil
 function obj_set_gfx_scale(obj, x, y, z)
     -- ...
 end
 
 --- @param obj Object
 --- @param heldBehavior Pointer_BehaviorScript
---- @return nil
 function obj_set_held_state(obj, heldBehavior)
     -- ...
 end
 
 --- @param obj Object
 --- @param hitbox ObjectHitbox
---- @return nil
 function obj_set_hitbox(obj, hitbox)
     -- ...
 end
@@ -7779,7 +7180,6 @@ end
 --- @param o Object
 --- @param radius number
 --- @param height number
---- @return nil
 function obj_set_hitbox_radius_and_height(o, radius, height)
     -- ...
 end
@@ -7787,7 +7187,6 @@ end
 --- @param o Object
 --- @param radius number
 --- @param height number
---- @return nil
 function obj_set_hurtbox_radius_and_height(o, radius, height)
     -- ...
 end
@@ -7796,7 +7195,6 @@ end
 --- @param pitch integer
 --- @param yaw integer
 --- @param roll integer
---- @return nil
 function obj_set_move_angle(obj, pitch, yaw, roll)
     -- ...
 end
@@ -7805,7 +7203,6 @@ end
 --- @param relX integer
 --- @param relY integer
 --- @param relZ integer
---- @return nil
 function obj_set_parent_relative_pos(obj, relX, relY, relZ)
     -- ...
 end
@@ -7814,7 +7211,6 @@ end
 --- @param x integer
 --- @param y integer
 --- @param z integer
---- @return nil
 function obj_set_pos(obj, x, y, z)
     -- ...
 end
@@ -7824,13 +7220,11 @@ end
 --- @param dleft number
 --- @param dy number
 --- @param dforward number
---- @return nil
 function obj_set_pos_relative(obj, other, dleft, dy, dforward)
     -- ...
 end
 
 --- @param obj Object
---- @return nil
 function obj_set_throw_matrix_from_transform(obj)
     -- ...
 end
@@ -7839,7 +7233,6 @@ end
 --- @param numCoins integer
 --- @param sp28 number
 --- @param posJitter integer
---- @return nil
 function obj_spawn_loot_blue_coins(obj, numCoins, sp28, posJitter)
     -- ...
 end
@@ -7850,7 +7243,6 @@ end
 --- @param coinBehavior Pointer_BehaviorScript
 --- @param posJitter integer
 --- @param model integer
---- @return nil
 function obj_spawn_loot_coins(obj, numCoins, sp30, coinBehavior, posJitter, model)
     -- ...
 end
@@ -7858,7 +7250,6 @@ end
 --- @param obj Object
 --- @param numCoins integer
 --- @param sp28 number
---- @return nil
 function obj_spawn_loot_yellow_coins(obj, numCoins, sp28)
     -- ...
 end
@@ -7866,21 +7257,18 @@ end
 --- @param obj Object
 --- @param posIndex integer
 --- @param localTranslateIndex integer
---- @return nil
 function obj_translate_local(obj, posIndex, localTranslateIndex)
     -- ...
 end
 
 --- @param obj Object
 --- @param rangeLength number
---- @return nil
 function obj_translate_xyz_random(obj, rangeLength)
     -- ...
 end
 
 --- @param obj Object
 --- @param rangeLength number
---- @return nil
 function obj_translate_xz_random(obj, rangeLength)
     -- ...
 end
@@ -7896,7 +7284,6 @@ end
 
 --- @param a0 Mat4
 --- @param a1 Object
---- @return nil
 function obj_update_pos_from_parent_transformation(a0, a1)
     -- ...
 end
@@ -7915,19 +7302,16 @@ end
 --- @param sp0 integer
 --- @param sp4 integer
 --- @param sp8 number
---- @return nil
 function set_mario_interact_hoot_if_in_range(sp0, sp4, sp8)
     -- ...
 end
 
 --- @param flags integer
---- @return nil
 function set_time_stop_flags(flags)
     -- ...
 end
 
 --- @param flags integer
---- @return nil
 function set_time_stop_flags_if_alone(flags)
     -- ...
 end
@@ -7938,18 +7322,15 @@ function signum_positive(x)
     -- ...
 end
 
---- @return nil
 function spawn_base_star_with_no_lvl_exit()
     -- ...
 end
 
---- @return nil
 function spawn_mist_particles()
     -- ...
 end
 
 --- @param sp18 integer
---- @return nil
 function spawn_mist_particles_with_sound(sp18)
     -- ...
 end
@@ -7970,26 +7351,22 @@ end
 
 --- @param sp0 integer
 --- @param sp4 integer
---- @return nil
 function stub_obj_helpers_3(sp0, sp4)
     -- ...
 end
 
---- @return nil
 function stub_obj_helpers_4()
     -- ...
 end
 
 --- @param obj Object
 --- @param bits integer
---- @return nil
 function set_object_respawn_info_bits(obj, bits)
     -- ...
 end
 
 --- @param a0 integer
 --- @param a1 integer
---- @return nil
 function queue_rumble_data(a0, a1)
     -- ...
 end
@@ -7997,7 +7374,6 @@ end
 --- @param m MarioState
 --- @param a0 integer
 --- @param a1 integer
---- @return nil
 function queue_rumble_data_mario(m, a0, a1)
     -- ...
 end
@@ -8005,38 +7381,37 @@ end
 --- @param object Object
 --- @param a0 integer
 --- @param a1 integer
---- @return nil
 function queue_rumble_data_object(object, a0, a1)
     -- ...
 end
 
 --- @param m MarioState
---- @return nil
 function reset_rumble_timers(m)
     -- ...
 end
 
 --- @param m MarioState
 --- @param a0 integer
---- @return nil
 function reset_rumble_timers_2(m, a0)
     -- ...
 end
 
 --- @param flags integer
---- @return nil
 function save_file_clear_flags(flags)
     -- ...
 end
 
 --- @param fileIndex integer
 --- @param forceSave integer
---- @return nil
 function save_file_do_save(fileIndex, forceSave)
     -- ...
 end
 
---- @return nil
+--- @param fileIndex integer
+function save_file_erase(fileIndex)
+    -- ...
+end
+
 function save_file_erase_current_backup_save()
     -- ...
 end
@@ -8100,7 +7475,6 @@ function save_file_is_cannon_unlocked(fileIndex, courseIndex)
 end
 
 --- @param load_all integer
---- @return nil
 function save_file_reload(load_all)
     -- ...
 end
@@ -8108,7 +7482,6 @@ end
 --- @param fileIndex integer
 --- @param courseIndex integer
 --- @param starFlagsToRemove integer
---- @return nil
 function save_file_remove_star_flags(fileIndex, courseIndex, starFlagsToRemove)
     -- ...
 end
@@ -8116,13 +7489,11 @@ end
 --- @param fileIndex integer
 --- @param courseIndex integer
 --- @param coinScore integer
---- @return nil
 function save_file_set_course_coin_score(fileIndex, courseIndex, coinScore)
     -- ...
 end
 
 --- @param flags integer
---- @return nil
 function save_file_set_flags(flags)
     -- ...
 end
@@ -8130,15 +7501,19 @@ end
 --- @param fileIndex integer
 --- @param courseIndex integer
 --- @param starFlags integer
---- @return nil
 function save_file_set_star_flags(fileIndex, courseIndex, starFlags)
     -- ...
 end
 
 --- @param fileIndex integer
 --- @param courseIndex integer
---- @return nil
 function touch_coin_score_age(fileIndex, courseIndex)
+    -- ...
+end
+
+--- @param index integer
+--- @return Animation
+function get_mario_vanilla_animation(index)
     -- ...
 end
 
@@ -8150,145 +7525,105 @@ end
 
 --- @param obj Object
 --- @param name string
---- @return nil
 function smlua_anim_util_set_animation(obj, name)
     -- ...
 end
 
---- @param audio BassAudio
---- @return nil
+--- @param audio ModAudio
 function audio_sample_destroy(audio)
     -- ...
 end
 
 --- @param filename string
---- @return BassAudio
+--- @return ModAudio
 function audio_sample_load(filename)
     -- ...
 end
 
---- @param audio BassAudio
+--- @param audio ModAudio
 --- @param position Vec3f
 --- @param volume number
---- @return nil
 function audio_sample_play(audio, position, volume)
     -- ...
 end
 
---- @param audio BassAudio
---- @return nil
+--- @param audio ModAudio
 function audio_sample_stop(audio)
     -- ...
 end
 
---- @param audio BassAudio
---- @return nil
+--- @param audio ModAudio
 function audio_stream_destroy(audio)
     -- ...
 end
 
---- @param audio BassAudio
+--- @param audio ModAudio
 --- @return number
 function audio_stream_get_frequency(audio)
     -- ...
 end
 
---- @param audio BassAudio
+--- @param audio ModAudio
 --- @return boolean
 function audio_stream_get_looping(audio)
     -- ...
 end
 
---- @param audio BassAudio
+--- @param audio ModAudio
 --- @return number
 function audio_stream_get_position(audio)
     -- ...
 end
 
---- @param audio BassAudio
---- @return number
-function audio_stream_get_tempo(audio)
-    -- ...
-end
-
---- @param audio BassAudio
+--- @param audio ModAudio
 --- @return number
 function audio_stream_get_volume(audio)
     -- ...
 end
 
 --- @param filename string
---- @return BassAudio
+--- @return ModAudio
 function audio_stream_load(filename)
     -- ...
 end
 
---- @param url string
---- @return BassAudio
-function audio_stream_load_url(url)
-    -- ...
-end
-
---- @param audio BassAudio
---- @return nil
+--- @param audio ModAudio
 function audio_stream_pause(audio)
     -- ...
 end
 
---- @param audio BassAudio
+--- @param audio ModAudio
 --- @param restart boolean
 --- @param volume number
---- @return nil
 function audio_stream_play(audio, restart, volume)
     -- ...
 end
 
---- @param audio BassAudio
+--- @param audio ModAudio
 --- @param freq number
---- @return nil
 function audio_stream_set_frequency(audio, freq)
     -- ...
 end
 
---- @param audio BassAudio
+--- @param audio ModAudio
 --- @param looping boolean
---- @return nil
 function audio_stream_set_looping(audio, looping)
     -- ...
 end
 
---- @param audio BassAudio
+--- @param audio ModAudio
 --- @param pos number
---- @return nil
 function audio_stream_set_position(audio, pos)
     -- ...
 end
 
---- @param audio BassAudio
---- @param initial_freq number
---- @param speed number
---- @param pitch boolean
---- @return nil
-function audio_stream_set_speed(audio, initial_freq, speed, pitch)
-    -- ...
-end
-
---- @param audio BassAudio
---- @param tempo number
---- @return nil
-function audio_stream_set_tempo(audio, tempo)
-    -- ...
-end
-
---- @param audio BassAudio
+--- @param audio ModAudio
 --- @param volume number
---- @return nil
 function audio_stream_set_volume(audio, volume)
     -- ...
 end
 
---- @param audio BassAudio
---- @return nil
+--- @param audio ModAudio
 function audio_stream_stop(audio)
     -- ...
 end
@@ -8297,13 +7632,148 @@ end
 --- @param bankId integer
 --- @param defaultVolume integer
 --- @param m64Name string
---- @return nil
 function smlua_audio_utils_replace_sequence(sequenceId, bankId, defaultVolume, m64Name)
     -- ...
 end
 
---- @return nil
 function smlua_audio_utils_reset_all()
+    -- ...
+end
+
+--- @param allow integer
+function camera_allow_toxic_gas_camera(allow)
+    -- ...
+end
+
+--- @param enable boolean
+function camera_config_enable_analog_cam(enable)
+    -- ...
+end
+
+--- @param enable boolean
+function camera_config_enable_free_cam(enable)
+    -- ...
+end
+
+--- @param enable boolean
+function camera_config_enable_mouse_look(enable)
+    -- ...
+end
+
+--- @return integer
+function camera_config_get_aggression()
+    -- ...
+end
+
+--- @return integer
+function camera_config_get_deceleration()
+    -- ...
+end
+
+--- @return integer
+function camera_config_get_pan_level()
+    -- ...
+end
+
+--- @return integer
+function camera_config_get_x_sensitivity()
+    -- ...
+end
+
+--- @return integer
+function camera_config_get_y_sensitivity()
+    -- ...
+end
+
+--- @param invert boolean
+function camera_config_invert_x(invert)
+    -- ...
+end
+
+--- @param invert boolean
+function camera_config_invert_y(invert)
+    -- ...
+end
+
+--- @return boolean
+function camera_config_is_analog_cam_enabled()
+    -- ...
+end
+
+--- @return boolean
+function camera_config_is_free_cam_enabled()
+    -- ...
+end
+
+--- @return boolean
+function camera_config_is_mouse_look_enabled()
+    -- ...
+end
+
+--- @return boolean
+function camera_config_is_x_inverted()
+    -- ...
+end
+
+--- @return boolean
+function camera_config_is_y_inverted()
+    -- ...
+end
+
+--- @param value integer
+function camera_config_set_aggression(value)
+    -- ...
+end
+
+--- @param value integer
+function camera_config_set_deceleration(value)
+    -- ...
+end
+
+--- @param value integer
+function camera_config_set_pan_level(value)
+    -- ...
+end
+
+--- @param value integer
+function camera_config_set_x_sensitivity(value)
+    -- ...
+end
+
+--- @param value integer
+function camera_config_set_y_sensitivity(value)
+    -- ...
+end
+
+function camera_freeze()
+    -- ...
+end
+
+--- @return boolean
+function camera_is_frozen()
+    -- ...
+end
+
+function camera_reset_overrides()
+    -- ...
+end
+
+--- @param allow integer
+function camera_romhack_allow_centering(allow)
+    -- ...
+end
+
+--- @param allow integer
+function camera_romhack_allow_dpad_usage(allow)
+    -- ...
+end
+
+--- @param rco RomhackCameraOverride
+function camera_set_romhack_override(rco)
+    -- ...
+end
+
+function camera_unfreeze()
     -- ...
 end
 
@@ -8323,19 +7793,15 @@ function collision_find_floor(x, y, z)
     -- ...
 end
 
---- @param startX number
---- @param startY number
---- @param startZ number
---- @param dirX number
---- @param dirY number
---- @param dirZ number
---- @return RayIntersectionInfo
-function collision_find_surface_on_ray(startX, startY, startZ, dirX, dirY, dirZ)
+--- @return WallCollisionData
+function collision_get_temp_wall_collision_data()
     -- ...
 end
 
---- @return WallCollisionData
-function collision_get_temp_wall_collision_data()
+--- @param wcd WallCollisionData
+--- @param index integer
+--- @return Surface
+function get_surface_from_wcd_index(wcd, index)
     -- ...
 end
 
@@ -8350,15 +7816,173 @@ function smlua_collision_util_get(name)
     -- ...
 end
 
+--- @param audio ModAudio
+--- @return number
+function audio_stream_get_tempo(audio)
+    -- ...
+end
+
+--- @param url string
+--- @return ModAudio
+function audio_stream_load_url(url)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- @param initial_freq number
+--- @param speed number
+--- @param pitch boolean
+function audio_stream_set_speed(audio, initial_freq, speed, pitch)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- @param tempo number
+function audio_stream_set_tempo(audio, tempo)
+    -- ...
+end
+
 --- @param enable boolean
---- @return nil
 function djui_hud_set_render_behind_hud(enable)
+    -- ...
+end
+
+--- @param index integer
+--- @return number
+function get_environment_region(index)
     -- ...
 end
 
 --- @param localIndex integer
 --- @return string
 function network_discord_id_from_local_index(localIndex)
+    -- ...
+end
+
+--- @param np NetworkPlayer
+--- @param part PlayerPart
+--- @param color Color
+function network_player_color_to_palette(np, part, color)
+    -- ...
+end
+
+--- @param np NetworkPlayer
+--- @param part PlayerPart
+--- @param out Color
+function network_player_palette_to_color(np, part, out)
+    -- ...
+end
+
+--- @param index integer
+--- @param value integer
+function set_environment_region(index, value)
+    -- ...
+end
+
+--- @param index integer
+--- @return integer
+function get_fog_color(index)
+    -- ...
+end
+
+--- @return number
+function get_fog_intensity()
+    -- ...
+end
+
+--- @param index integer
+--- @return integer
+function get_lighting_color(index)
+    -- ...
+end
+
+--- @param index integer
+--- @return integer
+function get_lighting_color_ambient(index)
+    -- ...
+end
+
+--- @param index integer
+--- @return number
+function get_lighting_dir(index)
+    -- ...
+end
+
+--- @return integer
+function get_skybox()
+    -- ...
+end
+
+--- @param index integer
+--- @return integer
+function get_skybox_color(index)
+    -- ...
+end
+
+--- @param index integer
+--- @return integer
+function get_vertex_color(index)
+    -- ...
+end
+
+--- @param index integer
+--- @param value integer
+function set_fog_color(index, value)
+    -- ...
+end
+
+--- @param intensity number
+function set_fog_intensity(intensity)
+    -- ...
+end
+
+--- @param index integer
+--- @param value integer
+function set_lighting_color(index, value)
+    -- ...
+end
+
+--- @param index integer
+--- @param value integer
+function set_lighting_color_ambient(index, value)
+    -- ...
+end
+
+--- @param index integer
+--- @param value number
+function set_lighting_dir(index, value)
+    -- ...
+end
+
+--- @param far number
+function set_override_far(far)
+    -- ...
+end
+
+--- @param fov number
+function set_override_fov(fov)
+    -- ...
+end
+
+--- @param near number
+function set_override_near(near)
+    -- ...
+end
+
+--- @param background integer
+function set_override_skybox(background)
+    -- ...
+end
+
+--- @param index integer
+--- @param value integer
+function set_skybox_color(index, value)
+    -- ...
+end
+
+--- @param index integer
+--- @param value integer
+function set_vertex_color(index, value)
     -- ...
 end
 
@@ -8382,7 +8006,6 @@ function level_register(scriptEntryName, courseNum, fullName, shortName, acousti
 end
 
 --- @param areaIndex integer
---- @return nil
 function smlua_level_util_change_area(areaIndex)
     -- ...
 end
@@ -8500,172 +8123,9 @@ function sqrf(x)
     -- ...
 end
 
---- @param index integer
---- @param name string
---- @param offset integer
---- @param size integer
---- @return nil
-function add_scroll_target(index, name, offset, size)
-    -- ...
-end
-
 --- @param actFlags integer
 --- @return integer
 function allocate_mario_action(actFlags)
-    -- ...
-end
-
---- @param allow integer
---- @return nil
-function camera_allow_toxic_gas_camera(allow)
-    -- ...
-end
-
---- @param enable boolean
---- @return nil
-function camera_config_enable_analog_cam(enable)
-    -- ...
-end
-
---- @param enable boolean
---- @return nil
-function camera_config_enable_free_cam(enable)
-    -- ...
-end
-
---- @param enable boolean
---- @return nil
-function camera_config_enable_mouse_look(enable)
-    -- ...
-end
-
---- @return integer
-function camera_config_get_aggression()
-    -- ...
-end
-
---- @return integer
-function camera_config_get_deceleration()
-    -- ...
-end
-
---- @return integer
-function camera_config_get_pan_level()
-    -- ...
-end
-
---- @return integer
-function camera_config_get_x_sensitivity()
-    -- ...
-end
-
---- @return integer
-function camera_config_get_y_sensitivity()
-    -- ...
-end
-
---- @param invert boolean
---- @return nil
-function camera_config_invert_x(invert)
-    -- ...
-end
-
---- @param invert boolean
---- @return nil
-function camera_config_invert_y(invert)
-    -- ...
-end
-
---- @return boolean
-function camera_config_is_analog_cam_enabled()
-    -- ...
-end
-
---- @return boolean
-function camera_config_is_free_cam_enabled()
-    -- ...
-end
-
---- @return boolean
-function camera_config_is_mouse_look_enabled()
-    -- ...
-end
-
---- @return boolean
-function camera_config_is_x_inverted()
-    -- ...
-end
-
---- @return boolean
-function camera_config_is_y_inverted()
-    -- ...
-end
-
---- @param value integer
---- @return nil
-function camera_config_set_aggression(value)
-    -- ...
-end
-
---- @param value integer
---- @return nil
-function camera_config_set_deceleration(value)
-    -- ...
-end
-
---- @param value integer
---- @return nil
-function camera_config_set_pan_level(value)
-    -- ...
-end
-
---- @param value integer
---- @return nil
-function camera_config_set_x_sensitivity(value)
-    -- ...
-end
-
---- @param value integer
---- @return nil
-function camera_config_set_y_sensitivity(value)
-    -- ...
-end
-
---- @return nil
-function camera_freeze()
-    -- ...
-end
-
---- @return boolean
-function camera_is_frozen()
-    -- ...
-end
-
---- @return nil
-function camera_reset_overrides()
-    -- ...
-end
-
---- @param allow integer
---- @return nil
-function camera_romhack_allow_centering(allow)
-    -- ...
-end
-
---- @param allow integer
---- @return nil
-function camera_romhack_allow_dpad_usage(allow)
-    -- ...
-end
-
---- @param rco RomhackCameraOverride
---- @return nil
-function camera_set_romhack_override(rco)
-    -- ...
-end
-
---- @return nil
-function camera_unfreeze()
     -- ...
 end
 
@@ -8682,30 +8142,32 @@ function deref_s32_pointer(pointer)
 end
 
 --- @return boolean
+function djui_is_playerlist_open()
+    -- ...
+end
+
+--- @return boolean
 function djui_is_popup_disabled()
+    -- ...
+end
+
+--- @return DjuiFontType
+function djui_menu_get_font()
     -- ...
 end
 
 --- @param message string
 --- @param lines integer
---- @return nil
 function djui_popup_create_global(message, lines)
     -- ...
 end
 
---- @return nil
 function djui_reset_popup_disabled_override()
     -- ...
 end
 
 --- @param value boolean
---- @return nil
 function djui_set_popup_disabled_override(value)
-    -- ...
-end
-
---- @return boolean
-function get_coop_compatibility_enabled()
     -- ...
 end
 
@@ -8730,24 +8192,12 @@ function get_dialog_id()
 end
 
 --- @return integer
-function get_envfx()
+function get_dialog_response()
     -- ...
 end
 
---- @param index integer
---- @return number
-function get_environment_region(index)
-    -- ...
-end
-
---- @param index integer
 --- @return integer
-function get_fog_color(index)
-    -- ...
-end
-
---- @return number
-function get_fog_intensity()
+function get_envfx()
     -- ...
 end
 
@@ -8797,15 +8247,8 @@ function get_last_star_or_key()
     -- ...
 end
 
---- @param index integer
---- @return integer
-function get_lighting_color(index)
-    -- ...
-end
-
---- @param index integer
---- @return number
-function get_lighting_dir(index)
+--- @return string
+function get_local_discord_id()
     -- ...
 end
 
@@ -8821,11 +8264,6 @@ end
 
 --- @return boolean
 function get_save_file_modified()
-    -- ...
-end
-
---- @return integer
-function get_skybox()
     -- ...
 end
 
@@ -8845,9 +8283,29 @@ function get_ttc_speed_setting()
     -- ...
 end
 
+--- @return number
+function get_volume_env()
+    -- ...
+end
+
+--- @return number
+function get_volume_level()
+    -- ...
+end
+
+--- @return number
+function get_volume_master()
+    -- ...
+end
+
+--- @return number
+function get_volume_sfx()
+    -- ...
+end
+
 --- @param index integer
 --- @return integer
-function get_vertex_color(index)
+function get_water_level(index)
     -- ...
 end
 
@@ -8862,7 +8320,6 @@ function hud_get_value(type)
     -- ...
 end
 
---- @return nil
 function hud_hide()
     -- ...
 end
@@ -8877,7 +8334,6 @@ end
 --- @param y number
 --- @param width number
 --- @param height number
---- @return nil
 function hud_render_power_meter(health, x, y, width, height)
     -- ...
 end
@@ -8891,25 +8347,21 @@ end
 --- @param y number
 --- @param width number
 --- @param height number
---- @return nil
 function hud_render_power_meter_interpolated(health, prevX, prevY, prevWidth, prevHeight, x, y, width, height)
     -- ...
 end
 
 --- @param value integer
---- @return nil
 function hud_set_flash(value)
     -- ...
 end
 
 --- @param type HudDisplayValue
 --- @param value integer
---- @return nil
 function hud_set_value(type, value)
     -- ...
 end
 
---- @return nil
 function hud_show()
     -- ...
 end
@@ -8928,7 +8380,6 @@ end
 --- @param level integer
 --- @param area integer
 --- @param type integer
---- @return nil
 function movtexqc_register(name, level, area, type)
     -- ...
 end
@@ -8938,12 +8389,10 @@ end
 --- @param red integer
 --- @param green integer
 --- @param blue integer
---- @return nil
 function play_transition(transType, time, red, green, blue)
     -- ...
 end
 
---- @return nil
 function reset_window_title()
     -- ...
 end
@@ -8954,126 +8403,79 @@ function save_file_get_using_backup_slot()
 end
 
 --- @param usingBackupSlot boolean
---- @return nil
 function save_file_set_using_backup_slot(usingBackupSlot)
     -- ...
 end
 
---- @param index integer
---- @param value integer
---- @return nil
-function set_environment_region(index, value)
-    -- ...
-end
-
---- @param index integer
---- @param value integer
---- @return nil
-function set_fog_color(index, value)
-    -- ...
-end
-
---- @param intensity number
---- @return nil
-function set_fog_intensity(intensity)
-    -- ...
-end
-
 --- @param value boolean
---- @return nil
 function set_got_file_coin_hi_score(value)
     -- ...
 end
 
 --- @param courseNum integer
---- @return nil
 function set_last_completed_course_num(courseNum)
     -- ...
 end
 
 --- @param starNum integer
---- @return nil
 function set_last_completed_star_num(starNum)
     -- ...
 end
 
 --- @param value integer
---- @return nil
 function set_last_star_or_key(value)
     -- ...
 end
 
---- @param index integer
---- @param value integer
---- @return nil
-function set_lighting_color(index, value)
-    -- ...
-end
-
---- @param index integer
---- @param value number
---- @return nil
-function set_lighting_dir(index, value)
-    -- ...
-end
-
 --- @param envfx integer
---- @return nil
 function set_override_envfx(envfx)
     -- ...
 end
 
---- @param far number
---- @return nil
-function set_override_far(far)
-    -- ...
-end
-
---- @param fov number
---- @return nil
-function set_override_fov(fov)
-    -- ...
-end
-
---- @param near number
---- @return nil
-function set_override_near(near)
-    -- ...
-end
-
---- @param background integer
---- @return nil
-function set_override_skybox(background)
-    -- ...
-end
-
 --- @param value boolean
---- @return nil
 function set_save_file_modified(value)
     -- ...
 end
 
 --- @param speed integer
---- @return nil
 function set_ttc_speed_setting(speed)
     -- ...
 end
 
+--- @param volume number
+function set_volume_env(volume)
+    -- ...
+end
+
+--- @param volume number
+function set_volume_level(volume)
+    -- ...
+end
+
+--- @param volume number
+function set_volume_master(volume)
+    -- ...
+end
+
+--- @param volume number
+function set_volume_sfx(volume)
+    -- ...
+end
+
 --- @param index integer
---- @param value integer
---- @return nil
-function set_vertex_color(index, value)
+--- @param height integer
+--- @param sync boolean
+function set_water_level(index, height, sync)
     -- ...
 end
 
 --- @param title string
---- @return nil
 function set_window_title(title)
     -- ...
 end
 
 --- @param name string
---- @return integer
+--- @return ModelExtendedId
 function smlua_model_util_get_id(name)
     -- ...
 end
@@ -9118,6 +8520,35 @@ end
 --- @param index integer
 --- @return Object
 function obj_get_collided_object(o, index)
+    -- ...
+end
+
+--- @param o Object
+--- @param fieldIndex integer
+--- @return number
+function obj_get_field_f32(o, fieldIndex)
+    -- ...
+end
+
+--- @param o Object
+--- @param fieldIndex integer
+--- @param fieldSubIndex integer
+--- @return integer
+function obj_get_field_s16(o, fieldIndex, fieldSubIndex)
+    -- ...
+end
+
+--- @param o Object
+--- @param fieldIndex integer
+--- @return integer
+function obj_get_field_s32(o, fieldIndex)
+    -- ...
+end
+
+--- @param o Object
+--- @param fieldIndex integer
+--- @return integer
+function obj_get_field_u32(o, fieldIndex)
     -- ...
 end
 
@@ -9262,14 +8693,41 @@ end
 --- @param dx number
 --- @param dy number
 --- @param dz number
---- @return nil
 function obj_move_xyz(o, dx, dy, dz)
     -- ...
 end
 
 --- @param o Object
+--- @param fieldIndex integer
+--- @param value number
+function obj_set_field_f32(o, fieldIndex, value)
+    -- ...
+end
+
+--- @param o Object
+--- @param fieldIndex integer
+--- @param fieldSubIndex integer
+--- @param value integer
+function obj_set_field_s16(o, fieldIndex, fieldSubIndex, value)
+    -- ...
+end
+
+--- @param o Object
+--- @param fieldIndex integer
+--- @param value integer
+function obj_set_field_s32(o, fieldIndex, value)
+    -- ...
+end
+
+--- @param o Object
+--- @param fieldIndex integer
+--- @param value integer
+function obj_set_field_u32(o, fieldIndex, value)
+    -- ...
+end
+
+--- @param o Object
 --- @param modelId ModelExtendedId
---- @return nil
 function obj_set_model_extended(o, modelId)
     -- ...
 end
@@ -9278,7 +8736,6 @@ end
 --- @param vx number
 --- @param vy number
 --- @param vz number
---- @return nil
 function obj_set_vel(o, vx, vy, vz)
     -- ...
 end
@@ -9289,7 +8746,6 @@ end
 --- @param strength integer
 --- @param area integer
 --- @param index integer
---- @return nil
 function set_whirlpools(x, y, z, strength, area, index)
     -- ...
 end
@@ -9333,20 +8789,17 @@ end
 --- @param courseNum integer
 --- @param actNum integer
 --- @param name string
---- @return nil
 function smlua_text_utils_act_name_replace(courseNum, actNum, name)
     -- ...
 end
 
 --- @param courseNum integer
 --- @param actNum integer
---- @return nil
 function smlua_text_utils_act_name_reset(courseNum, actNum)
     -- ...
 end
 
 --- @param name string
---- @return nil
 function smlua_text_utils_castle_secret_stars_replace(name)
     -- ...
 end
@@ -9359,7 +8812,6 @@ end
 --- @param act4 string
 --- @param act5 string
 --- @param act6 string
---- @return nil
 function smlua_text_utils_course_acts_replace(courseNum, courseName, act1, act2, act3, act4, act5, act6)
     -- ...
 end
@@ -9378,13 +8830,11 @@ end
 
 --- @param courseNum integer
 --- @param name string
---- @return nil
 function smlua_text_utils_course_name_replace(courseNum, name)
     -- ...
 end
 
 --- @param courseNum integer
---- @return nil
 function smlua_text_utils_course_name_reset(courseNum)
     -- ...
 end
@@ -9395,14 +8845,12 @@ end
 --- @param leftOffset integer
 --- @param width integer
 --- @param str string
---- @return nil
 function smlua_text_utils_dialog_replace(dialogId, unused, linesPerBox, leftOffset, width, str)
     -- ...
 end
 
 --- @param index integer
 --- @param text string
---- @return nil
 function smlua_text_utils_extra_text_replace(index, text)
     -- ...
 end
@@ -9414,84 +8862,69 @@ end
 
 --- @param courseNum integer
 --- @param courseName string
---- @return nil
 function smlua_text_utils_secret_star_replace(courseNum, courseName)
     -- ...
 end
 
---- @return nil
 function disable_background_sound()
     -- ...
 end
 
---- @return nil
 function enable_background_sound()
     -- ...
 end
 
---- @return nil
 function fadeout_cap_music()
     -- ...
 end
 
 --- @param fadeTimer integer
---- @return nil
 function fadeout_level_music(fadeTimer)
     -- ...
 end
 
 --- @param fadeOutTime integer
---- @return nil
 function fadeout_music(fadeOutTime)
     -- ...
 end
 
 --- @param a integer
---- @return nil
 function lower_background_noise(a)
     -- ...
 end
 
 --- @param seqArgs integer
---- @return nil
 function play_cap_music(seqArgs)
     -- ...
 end
 
 --- @param seqArgs integer
---- @return nil
 function play_cutscene_music(seqArgs)
     -- ...
 end
 
---- @return nil
 function play_infinite_stairs_music()
     -- ...
 end
 
 --- @param soundMenuFlags integer
---- @return nil
 function play_menu_sounds(soundMenuFlags)
     -- ...
 end
 
---- @return nil
 function play_painting_eject_sound()
     -- ...
 end
 
---- @return nil
 function play_shell_music()
     -- ...
 end
 
 --- @param a integer
---- @return nil
 function raise_background_noise(a)
     -- ...
 end
 
---- @return nil
 function reset_volume()
     -- ...
 end
@@ -9499,17 +8932,14 @@ end
 --- @param a integer
 --- @param seqArgs integer
 --- @param fadeTimer integer
---- @return nil
 function set_background_music(a, seqArgs, fadeTimer)
     -- ...
 end
 
---- @return nil
 function stop_cap_music()
     -- ...
 end
 
---- @return nil
 function stop_shell_music()
     -- ...
 end
@@ -9527,20 +8957,17 @@ function calc_dist_to_volume_range_2(distance)
 end
 
 --- @param soundMagic integer
---- @return nil
 function cur_obj_play_sound_1(soundMagic)
     -- ...
 end
 
 --- @param soundMagic integer
---- @return nil
 function cur_obj_play_sound_2(soundMagic)
     -- ...
 end
 
 --- @param soundStates SoundState
 --- @param maxSoundStates integer
---- @return nil
 function exec_anim_sound_state(soundStates, maxSoundStates)
     -- ...
 end
@@ -9581,12 +9008,10 @@ function find_water_level(x, z)
     -- ...
 end
 
---- @return nil
 function alloc_surface_pools()
     -- ...
 end
 
---- @return nil
 function clear_dynamic_surfaces()
     -- ...
 end
@@ -9601,13 +9026,18 @@ end
 --- @param data Pointer_integer
 --- @param surfaceRooms Pointer_integer
 --- @param macroObjects Pointer_integer
---- @return nil
 function load_area_terrain(index, data, surfaceRooms, macroObjects)
     -- ...
 end
 
---- @return nil
 function load_object_collision_model()
+    -- ...
+end
+
+--- @param o Object
+--- @param index integer
+--- @return Surface
+function obj_get_surface_from_index(o, index)
     -- ...
 end
 

@@ -1,5 +1,3 @@
-#include "src/game/envfx_snow.h"
-
 const GeoLayout error_model_geo[] = {
 	GEO_NODE_START(),
 	GEO_OPEN_NODE(),

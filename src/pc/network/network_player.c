@@ -15,6 +15,7 @@
 #ifdef DISCORD_SDK
 #include "pc/discord/discord.h"
 #endif
+#include "game/mario.h"
 
 struct NetworkPlayer gNetworkPlayers[MAX_PLAYERS] = { 0 };
 struct NetworkPlayer *gNetworkPlayerLocal = NULL;
@@ -22,7 +23,7 @@ struct NetworkPlayer *gNetworkPlayerServer = NULL;
 static char sDefaultPlayerName[] = "Player";
 
 void network_player_init(void) {
-    gNetworkPlayers[0].modelIndex = (configPlayerModel < CT_MAX) ? configPlayerModel : 0;
+    gNetworkPlayers[0].modelIndex = (configPlayerModel < CT_MAX) ? configPlayerModel : CT_MARIO;
     gNetworkPlayers[0].palette = configPlayerPalette;
     gNetworkPlayers[0].overrideModelIndex = gNetworkPlayers[0].modelIndex;
     gNetworkPlayers[0].overridePalette = gNetworkPlayers[0].palette;
@@ -39,7 +40,7 @@ void network_player_update_model(u8 localIndex) {
     m->character = &gCharacters[index];
 
     if (m->marioObj == NULL) { return; }
-    obj_set_character_model(m->marioObj, m->playerIndex, m->character->modelId);
+    obj_set_model(m->marioObj, m->character->modelId);
 }
 
 bool network_player_any_connected(void) {
@@ -127,28 +128,36 @@ struct NetworkPlayer *get_network_player_smallest_global(void) {
     return smallest;
 }
 
-void network_player_color_to_palette(struct NetworkPlayer *np, enum PlayerPart part, Color color) {
-    if (np == NULL || !(part < PLAYER_PART_MAX && part >= 0)) { return; }
+u8 network_player_get_palette_color_channel(struct NetworkPlayer *np, enum PlayerPart part, u8 index) {
+    if (np == NULL || part < 0 || part >= PLAYER_PART_MAX || index > 2) { return 0; }
 
-    np->palette.parts[part][0] = color[0];
-    np->palette.parts[part][1] = color[1];
-    np->palette.parts[part][2] = color[2];
+    return np->palette.parts[part][index];
+}
+
+u8 network_player_get_override_palette_color_channel(struct NetworkPlayer *np, enum PlayerPart part, u8 index) {
+    if (np == NULL || part < 0 || part >= PLAYER_PART_MAX || index > 2) { return 0; }
+
+    return np->overridePalette.parts[part][index];
+}
+
+void network_player_set_override_palette_color(struct NetworkPlayer *np, enum PlayerPart part, Color color) {
+    if (part < 0 || part >= PLAYER_PART_MAX) { return; }
+
+    np->overridePalette.parts[part][0] = color[0];
+    np->overridePalette.parts[part][1] = color[1];
+    np->overridePalette.parts[part][2] = color[2];
+}
+
+void network_player_reset_override_palette(struct NetworkPlayer *np) {
+    if (np == NULL) { return; }
+
     np->overridePalette = np->palette;
 }
 
-void network_player_palette_to_color(struct NetworkPlayer *np, enum PlayerPart part, Color out) {
-    if (np == NULL || !(part < PLAYER_PART_MAX && part >= 0)) {
-        if (np == NULL) { // output config palette instead if np is NULL
-            out[0] = configPlayerPalette.parts[part][0];
-            out[1] = configPlayerPalette.parts[part][1];
-            out[2] = configPlayerPalette.parts[part][2];
-        }
-        return;
-    }
+bool network_player_is_override_palette_same(struct NetworkPlayer *np) {
+    if (np == NULL) { return false; }
 
-    out[0] = np->palette.parts[part][0];
-    out[1] = np->palette.parts[part][1];
-    out[2] = np->palette.parts[part][2];
+    return memcmp(&np->palette, &np->overridePalette, sizeof(struct PlayerPalette)) == 0;
 }
 
 void network_player_update(void) {
@@ -250,7 +259,7 @@ u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex, u8 mode
         np->palette = *palette;
         network_player_update_model(localIndex);
 
-        snprintf(np->name, MAX_PLAYER_STRING, "%s", name);
+        snprintf(np->name, MAX_CONFIG_STRING, "%s", name);
         return localIndex;
     }
 
@@ -262,7 +271,7 @@ u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex, u8 mode
     np->type = type;
     np->localIndex = localIndex;
     np->globalIndex = globalIndex;
-    np->ping = configCoopCompatibility ? 600 : 50;
+    np->ping = 50;
     if ((type != NPT_LOCAL) && (gNetworkType == NT_SERVER || type == NPT_SERVER)) { gNetworkSystem->save_id(localIndex, 0); }
     network_player_set_description(np, NULL, 0, 0, 0, 0);
 
@@ -280,11 +289,7 @@ u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex, u8 mode
     np->overrideModelIndex = modelIndex;
     np->overridePalette = *palette;
 
-    np->paletteIndex           = USE_REAL_PALETTE_VAR;
-    np->overridePaletteIndex   = USE_REAL_PALETTE_VAR;
-    np->overridePaletteIndexLp = USE_REAL_PALETTE_VAR;
-
-    snprintf(np->name, MAX_PLAYER_STRING, "%s", name);
+    snprintf(np->name, MAX_CONFIG_STRING, "%s", name);
     network_player_update_model(localIndex);
 
     // clear networking fields
@@ -373,6 +378,9 @@ u8 network_player_disconnected(u8 globalIndex) {
 #ifdef DISCORD_SDK
         discord_activity_update();
 #endif
+
+        // reset mario state
+        init_mario_single_from_save_file(&gMarioStates[i], i);
 
         return i;
     }

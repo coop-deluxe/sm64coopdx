@@ -1,3 +1,4 @@
+#include "pc/rom_assets.h"
 // Checkerboard Platform
 
 // 0x0800C828
@@ -7,46 +8,16 @@ static const Lights1 checkerboard_platform_seg8_lights_0800C828 = gdSPDefLights1
 );
 
 // 0x0800C840
-ALIGNED8 const Texture checkerboard_platform_seg8_texture_0800C840[] = {
-#include "actors/checkerboard_platform/checkerboard_platform_side.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(checkerboard_platform_seg8_texture_0800C840, "actors/checkerboard_platform/checkerboard_platform_side.rgba16.inc.c", 0x001f2200, 59076, 0x0000c840, 1024);
 
 // 0x0800CC40
-ALIGNED8 const Texture checkerboard_platform_seg8_texture_0800CC40[] = {
-#include "actors/checkerboard_platform/checkerboard_platform.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(checkerboard_platform_seg8_texture_0800CC40, "actors/checkerboard_platform/checkerboard_platform.rgba16.inc.c", 0x001f2200, 59076, 0x0000cc40, 2048);
 
 // 0x0800D440
-static const Vtx checkerboard_platform_seg8_vertex_0800D440[] = {
-    {{{  -255,    -25,    154}, 0, {  1504,    480}, {0x81, 0x00, 0x00, 0xff}}},
-    {{{  -255,     26,    154}, 0, {  1504,      0}, {0x81, 0x00, 0x00, 0xff}}},
-    {{{  -255,     26,   -153}, 0, {     0,      0}, {0x81, 0x00, 0x00, 0xff}}},
-    {{{  -255,    -25,   -153}, 0, {     0,    480}, {0x81, 0x00, 0x00, 0xff}}},
-    {{{   256,    -25,   -153}, 0, {  1504,    480}, {0x7f, 0x00, 0x00, 0xff}}},
-    {{{   256,     26,    154}, 0, {     0,      0}, {0x7f, 0x00, 0x00, 0xff}}},
-    {{{   256,    -25,    154}, 0, {     0,    480}, {0x7f, 0x00, 0x00, 0xff}}},
-    {{{   256,     26,   -153}, 0, {  1504,      0}, {0x7f, 0x00, 0x00, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(checkerboard_platform_seg8_vertex_0800D440, 0x001f2200, 59076, 0x0000d440, 128);
 
 // 0x0800D4C0
-static const Vtx checkerboard_platform_seg8_vertex_0800D4C0[] = {
-    {{{   256,    -25,    154}, 0, {  2528,    992}, {0x00, 0x81, 0x00, 0xff}}},
-    {{{  -255,    -25,   -153}, 0, {     0,   -512}, {0x00, 0x81, 0x00, 0xff}}},
-    {{{   256,    -25,   -153}, 0, {  2528,   -512}, {0x00, 0x81, 0x00, 0xff}}},
-    {{{   256,     26,   -153}, 0, {  2528,   -512}, {0x00, 0x7f, 0x00, 0xff}}},
-    {{{  -255,     26,    154}, 0, {     0,    992}, {0x00, 0x7f, 0x00, 0xff}}},
-    {{{   256,     26,    154}, 0, {  2528,    992}, {0x00, 0x7f, 0x00, 0xff}}},
-    {{{  -255,     26,   -153}, 0, {     0,   -512}, {0x00, 0x7f, 0x00, 0xff}}},
-    {{{  -255,    -25,   -153}, 0, {  2528,    480}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{  -255,     26,   -153}, 0, {  2528,      0}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{   256,     26,   -153}, 0, {     0,      0}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{   256,    -25,   -153}, 0, {     0,    480}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{   256,    -25,    154}, 0, {  2528,    480}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{  -255,     26,    154}, 0, {     0,      0}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{  -255,    -25,    154}, 0, {     0,    480}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{   256,     26,    154}, 0, {  2528,      0}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{  -255,    -25,    154}, 0, {     0,    992}, {0x00, 0x81, 0x00, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(checkerboard_platform_seg8_vertex_0800D4C0, 0x001f2200, 59076, 0x0000d4c0, 256);
 
 // 0x0800D5C0 - 0x0800D618
 const Gfx checkerboard_platform_seg8_dl_0800D5C0[] = {

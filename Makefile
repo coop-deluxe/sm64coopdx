@@ -57,8 +57,10 @@ ASAN ?= 0
 HEADLESS ?= 0
 # Enable Game ICON
 ICON ?= 1
-# Use .app (mac only)
+# Use .app (for macOS)
 USE_APP ?= 1
+# Make some small adjustments for handheld devices
+HANDHELD ?= 0
 
 # Various workarounds for weird toolchains
 NO_BZERO_BCOPY ?= 0
@@ -66,9 +68,9 @@ NO_LDIV ?= 0
 
 # Backend selection
 
-# Renderers: GL, GL_LEGACY, D3D11, D3D12, DUMMY
+# Renderers: GL, GL_LEGACY, D3D11, DUMMY
 RENDER_API ?= GL
-# Window managers: SDL1, SDL2, DXGI (forced if D3D11 or D3D12 in RENDER_API), DUMMY (forced if RENDER_API is DUMMY)
+# Window managers: SDL1, SDL2, DXGI (forced if RENDER_API is D3D11), DUMMY (forced if RENDER_API is DUMMY)
 WINDOW_API ?= SDL2
 # Audio backends: SDL1, SDL2, DUMMY
 AUDIO_API ?= SDL2
@@ -107,6 +109,10 @@ endif
 
 ifeq ($(HOST_OS),Windows)
   WINDOWS_BUILD := 1
+endif
+
+ifeq ($(HOST_OS),Darwin)
+  OSX_BUILD := 1
 endif
 
 # MXE overrides
@@ -170,7 +176,7 @@ endif
 #   eu - builds the 1997 PAL version
 #   sh - builds the 1997 Japanese Shindou version, with rumble pak support
 VERSION ?= us
-$(eval $(call validate-option,VERSION,jp us eu sh))
+$(eval $(call validate-option,VERSION,us))
 
 # Graphics microcode used
 GRUCODE ?= f3dex2e
@@ -337,7 +343,7 @@ endif
 
 # Check backends
 
-ifneq (,$(filter $(RENDER_API),D3D11 D3D12))
+ifneq (,$(filter $(RENDER_API),D3D11))
   ifneq ($(WINDOWS_BUILD),1)
     $(error DirectX is only supported on Windows)
   endif
@@ -481,11 +487,11 @@ ACTOR_DIR      := actors
 LEVEL_DIRS     := $(patsubst levels/%,%,$(dir $(wildcard levels/*/header.h)))
 
 # Directories containing source files
-SRC_DIRS := src src/engine src/game src/audio src/bass_audio src/menu src/buffers actors levels bin data assets asm lib sound
+SRC_DIRS := src src/engine src/game src/audio src/menu src/buffers actors levels bin data assets asm lib sound
 BIN_DIRS := bin bin/$(VERSION)
 
 # PC files
-SRC_DIRS += src/pc src/pc/gfx src/pc/audio src/pc/controller src/pc/fs src/pc/fs/packtypes src/pc/mods src/dev src/pc/network src/pc/network/packets src/pc/network/socket src/pc/network/coopnet src/pc/utils src/pc/utils/miniz src/pc/djui src/pc/lua src/pc/lua/utils src/pc/os
+SRC_DIRS += src/pc src/pc/gfx src/pc/audio src/pc/controller src/pc/fs src/pc/fs/packtypes src/pc/mods src/pc/dev src/pc/network src/pc/network/packets src/pc/network/socket src/pc/network/coopnet src/pc/utils src/pc/utils/miniz src/pc/djui src/pc/lua src/pc/lua/utils src/pc/os
 
 ifeq ($(DISCORD_SDK),1)
   SRC_DIRS += src/pc/discord
@@ -512,9 +518,9 @@ GODDARD_C_FILES   := $(foreach dir,$(GODDARD_SRC_DIRS),$(wildcard $(dir)/*.c))
 ULTRA_S_FILES     := $(foreach dir,$(ULTRA_SRC_DIRS),$(wildcard $(dir)/*.s))
 GENERATED_C_FILES := $(BUILD_DIR)/assets/mario_anim_data.c $(BUILD_DIR)/assets/demo_data.c
 
-ifeq ($(TARGET_N64),0)
-  GENERATED_C_FILES += $(addprefix $(BUILD_DIR)/bin/,$(addsuffix _skybox.c,$(notdir $(basename $(wildcard textures/skyboxes/*.png)))))
-endif
+#ifeq ($(TARGET_N64),0)
+#  GENERATED_C_FILES += $(addprefix $(BUILD_DIR)/bin/,$(addsuffix _skybox.c,$(notdir $(basename $(wildcard textures/skyboxes/*.png)))))
+#endif
 
 # "If we're N64, use the above"
 ifeq ($(TARGET_N64),0)
@@ -584,29 +590,6 @@ ifeq ($(DISCORD_SDK), 1)
   endif
 endif
 
-BASS_LIBS :=
-ifeq ($(WINDOWS_BUILD),1)
-  ifeq ($(TARGET_BITS), 32)
-    BASS_LIBS := lib/bass/x86/bass.dll lib/bass/x86/bass_fx.dll
-  else
-    BASS_LIBS := lib/bass/bass.dll lib/bass/bass_fx.dll
-  endif
-else ifeq ($(OSX_BUILD),1)
-  # needs testing
-  # HACKY! Instead of figuring out all of the dynamic library linking madness...
-  # I copied the library and gave it two names.
-  # This really shouldn't be required, but I got tired of trying to do it the "right way"
-  BASS_LIBS := lib/bass/bass.dylib lib/bass/libbass.dylib lib/bass/bass_fx.dylib lib/bass/libbass_fx.dylib
-else ifeq ($(TARGET_RPI),1)
-	ifneq (,$(findstring aarch64,$(machine)))
-    BASS_LIBS := lib/bass/arm/aarch64/libbass.so lib/bass/arm/aarch64/libbass_fx.so
-  else
-    BASS_LIBS := lib/bass/arm/libbass.so lib/bass/arm/libbass_fx.so
-  endif
-else
-  BASS_LIBS := lib/bass/libbass.so lib/bass/libbass_fx.so
-endif
-
 LANG_DIR := lang
 
 # Remove old lang dir
@@ -616,6 +599,11 @@ MOD_DIR := mods
 
 # Remove old mod dir
 _ := $(shell $(PYTHON) $(TOOLS_DIR)/remove_built_in_mods.py)
+
+PALETTES_DIR := palettes
+
+# Remove old palettes dir
+_ := $(shell rm -rf ./$(BUILD_DIR)/$(PALETTES_DIR))
 
 # Automatic dependency files
 DEP_FILES := $(O_FILES:.o=.d) $(ULTRA_O_FILES:.o=.d) $(GODDARD_O_FILES:.o=.d) $(BUILD_DIR)/$(LD_SCRIPT).d
@@ -752,9 +740,6 @@ SDL2_USED := 0
 # for now, it's either SDL+GL or DXGI+DirectX, so choose based on WAPI
 ifeq ($(WINDOW_API),DXGI)
   DXBITS := `cat $(ENDIAN_BITWIDTH) | tr ' ' '\n' | tail -1`
-  ifeq ($(RENDER_API),D3D12)
-    BACKEND_CFLAGS += -Iinclude/dxsdk
-  endif
   BACKEND_LDFLAGS += -ld3dcompiler -ldxgi -ldxguid
   BACKEND_LDFLAGS += -lsetupapi -ldinput8 -luser32 -lgdi32 -limm32 -lole32 -loleaut32 -lshell32 -lwinmm -lversion -luuid -static
 else ifeq ($(findstring SDL,$(WINDOW_API)),SDL)
@@ -768,6 +753,12 @@ else ifeq ($(findstring SDL,$(WINDOW_API)),SDL)
   else
     BACKEND_LDFLAGS += -lGL
    endif
+endif
+
+ifeq ($(WINDOW_API),DUMMY)
+  ifeq ($(WINDOWS_BUILD),1)
+    BACKEND_LDFLAGS += -lole32 -luuid -lshlwapi
+  endif
 endif
 
 ifneq (,$(findstring SDL2,$(AUDIO_API)$(WINDOW_API)$(CONTROLLER_API)))
@@ -802,7 +793,7 @@ ifneq ($(SDL1_USED)$(SDL2_USED),00)
   endif
 
   ifeq ($(WINDOWS_BUILD),1)
-    BACKEND_LDFLAGS += `$(SDLCONFIG) --static-libs` -lsetupapi -luser32 -limm32 -lole32 -loleaut32 -lshell32 -lwinmm -lversion
+    BACKEND_LDFLAGS += `$(SDLCONFIG) --static-libs` -lsetupapi -luser32 -limm32 -lole32 -loleaut32 -lshell32 -lshlwapi -lwinmm -lversion
   else
     BACKEND_LDFLAGS += `$(SDLCONFIG) --libs`
   endif
@@ -868,8 +859,9 @@ else
   LDFLAGS := $(BITS) -march=$(TARGET_ARCH) -lm $(BACKEND_LDFLAGS) -no-pie -lpthread
 endif
 
+# used by crash handler and loading screen on linux
 ifeq ($(WINDOWS_BUILD),0)
-  LDFLAGS += -rdynamic
+  LDFLAGS += -rdynamic -ldl -pthread
 endif
 
 # icon
@@ -964,28 +956,22 @@ ifeq ($(COOPNET),1)
   endif
 endif
 
-# Network/Discord/Bass (ugh, needs cleanup)
+# Network/Discord (ugh, needs cleanup)
 ifeq ($(WINDOWS_BUILD),1)
   LDFLAGS += -L"ws2_32" -lwsock32
   ifeq ($(DISCORD_SDK),1)
-    LDFLAGS += -Wl,-Bdynamic -L./lib/discordsdk/ -L./lib/bass/ -ldiscord_game_sdk -lbass -lbass_fx -Wl,-Bstatic
-  else
-    LDFLAGS += -Wl,-Bdynamic -L./lib/bass/ -lbass -lbass_fx -Wl,-Bstatic
+    LDFLAGS += -Wl,-Bdynamic -L./lib/discordsdk/ -ldiscord_game_sdk -Wl,-Bstatic
   endif
 else
   ifeq ($(DISCORD_SDK),1)
-    LDFLAGS += -ldiscord_game_sdk -lbass -lbass_fx -Wl,-rpath . -Wl,-rpath lib/discordsdk -Wl,-rpath lib/bass
-  else
-    ifeq ($(TARGET_RPI),1)
-      LDFLAGS += -lbass -lbass_fx -Wl,-rpath . -Wl,-rpath lib/bass/arm
-    else
-      LDFLAGS += -lbass -lbass_fx -Wl,-rpath . -Wl,-rpath lib/bass
-    endif
+    LDFLAGS += -ldiscord_game_sdk -Wl,-rpath . -Wl,-rpath lib/discordsdk
   endif
 endif
 
 # Prevent a crash with -sopt
 export LANG := C
+
+LDFLAGS += -latomic
 
 #==============================================================================#
 # Extra CC Flags                                                               #
@@ -1045,6 +1031,12 @@ endif
 ifeq ($(ENHANCE_LEVEL_TEXTURES),1)
   CC_CHECK_CFLAGS += -DENHANCE_LEVEL_TEXTURES
   CFLAGS += -DENHANCE_LEVEL_TEXTURES
+endif
+
+# Check for handheld option
+ifeq ($(HANDHELD),1)
+  CC_CHECK_CFLAGS += -DHANDHELD
+  CFLAGS += -DHANDHELD
 endif
 
 # Check for no bzero/bcopy workaround option
@@ -1149,9 +1141,6 @@ $(BUILD_DIR)/$(RPC_LIBS):
 $(BUILD_DIR)/$(DISCORD_SDK_LIBS):
 	@$(CP) -f $(DISCORD_SDK_LIBS) $(BUILD_DIR)
 
-$(BUILD_DIR)/$(BASS_LIBS):
-	@$(CP) -f $(BASS_LIBS) $(BUILD_DIR)
-
 $(BUILD_DIR)/$(COOPNET_LIBS):
 	@$(CP) -f $(COOPNET_LIBS) $(BUILD_DIR)
 
@@ -1160,6 +1149,9 @@ $(BUILD_DIR)/$(LANG_DIR):
 
 $(BUILD_DIR)/$(MOD_DIR):
 	$(CP) -f -r $(MOD_DIR) $(BUILD_DIR)
+
+$(BUILD_DIR)/$(PALETTES_DIR):
+	@$(CP) -f -r $(PALETTES_DIR) $(BUILD_DIR)
 
 # Extra object file dependencies
 
@@ -1171,6 +1163,8 @@ endif
 
 $(BUILD_DIR)/src/game/characters.o:   $(SOUND_SAMPLE_TABLES)
 $(SOUND_BIN_DIR)/sound_data.o:        $(SOUND_BIN_DIR)/sound_data.ctl.inc.c $(SOUND_BIN_DIR)/sound_data.tbl.inc.c $(SOUND_BIN_DIR)/sequences.bin.inc.c $(SOUND_BIN_DIR)/bank_sets.inc.c
+$(SOUND_BIN_DIR)/samples_assets.o:    $(SOUND_BIN_DIR)/samples_offsets.inc.c
+$(SOUND_BIN_DIR)/sequences_assets.o:  $(SOUND_BIN_DIR)/sequences_offsets.inc.c
 $(BUILD_DIR)/levels/scripts.o:        $(BUILD_DIR)/include/level_headers.h
 
 ifeq ($(VERSION),sh)
@@ -1191,11 +1185,9 @@ ifeq ($(VERSION),eu)
   $(BUILD_DIR)/bin/eu/translation_en.o: $(BUILD_DIR)/text/us/define_text.inc.c
   $(BUILD_DIR)/bin/eu/translation_de.o: $(BUILD_DIR)/text/de/define_text.inc.c
   $(BUILD_DIR)/bin/eu/translation_fr.o: $(BUILD_DIR)/text/fr/define_text.inc.c
-  $(BUILD_DIR)/levels/menu/leveldata.o: $(BUILD_DIR)/include/text_strings.h
   $(BUILD_DIR)/levels/menu/leveldata.o: $(BUILD_DIR)/text/us/define_courses.inc.c
   $(BUILD_DIR)/levels/menu/leveldata.o: $(BUILD_DIR)/text/de/define_courses.inc.c
   $(BUILD_DIR)/levels/menu/leveldata.o: $(BUILD_DIR)/text/fr/define_courses.inc.c
-  $(BUILD_DIR)/src/game/level_info.o: $(BUILD_DIR)/include/text_strings.h
   $(BUILD_DIR)/src/game/level_info.o: $(BUILD_DIR)/text/us/define_courses.inc.c
   $(BUILD_DIR)/src/game/level_info.o: $(BUILD_DIR)/text/de/define_courses.inc.c
   $(BUILD_DIR)/src/game/level_info.o: $(BUILD_DIR)/text/fr/define_courses.inc.c
@@ -1216,13 +1208,6 @@ ALL_DIRS := $(BUILD_DIR) $(addprefix $(BUILD_DIR)/,$(SRC_DIRS) $(GODDARD_SRC_DIR
 
 # Make sure build directory exists before compiling anything
 DUMMY != mkdir -p $(ALL_DIRS)
-
-$(BUILD_DIR)/include/text_strings.h: $(BUILD_DIR)/include/text_menu_strings.h
-$(BUILD_DIR)/src/menu/file_select.o: $(BUILD_DIR)/include/text_strings.h
-$(BUILD_DIR)/src/menu/star_select.o: $(BUILD_DIR)/include/text_strings.h
-$(BUILD_DIR)/src/game/camera.o:      $(BUILD_DIR)/include/text_strings.h
-$(BUILD_DIR)/src/game/ingame_menu.o: $(BUILD_DIR)/include/text_strings.h
-
 
 #==============================================================================#
 # Texture Generation                                                           #
@@ -1295,8 +1280,6 @@ $(BUILD_DIR)/%.table: %.aiff
 	$(call print,Extracting codebook:,$<,$@)
 	$(V)$(AIFF_EXTRACT_CODEBOOK) $< >$@
 	$(call print,Piping:,$<,$@.inc.c)
-	$(V)hexdump -v -e '1/1 "0x%X,"' $< > $@.inc.c
-	$(V)echo >> $@.inc.c
 
 $(BUILD_DIR)/%.aifc: $(BUILD_DIR)/%.table %.aiff
 	$(call print,Encoding VADPCM:,$<,$@)
@@ -1321,6 +1304,12 @@ $(SOUND_BIN_DIR)/ctl_header: $(SOUND_BIN_DIR)/sound_data.ctl
 	@true
 
 $(SOUND_BIN_DIR)/tbl_header: $(SOUND_BIN_DIR)/sound_data.ctl
+	@true
+
+$(SOUND_BIN_DIR)/samples_offsets.inc.c: $(SOUND_BIN_DIR)/sound_data.ctl
+	@true
+
+$(SOUND_BIN_DIR)/sequences_offsets.inc.c: $(SOUND_BIN_DIR)/sound_data.ctl
 	@true
 
 $(SOUND_BIN_DIR)/sequences.bin: $(SOUND_BANK_FILES) sound/sequences.json $(SOUND_SEQUENCE_DIRS) $(SOUND_SEQUENCE_FILES) $(ENDIAN_BITWIDTH)
@@ -1359,12 +1348,6 @@ $(BUILD_DIR)/assets/demo_data.c: assets/demo_data.json $(wildcard assets/demos/*
 	$(V)$(PYTHON) $(TOOLS_DIR)/demo_data_converter.py assets/demo_data.json $(DEF_INC_CFLAGS) > $@
 
 # Encode in-game text strings
-$(BUILD_DIR)/include/text_strings.h: include/text_strings.h.in
-	$(call print,Encoding:,$<,$@)
-	$(V)$(TEXTCONV) charmap.txt $< $@
-$(BUILD_DIR)/include/text_menu_strings.h: include/text_menu_strings.h.in
-	$(call print,Encoding:,$<,$@)
-	$(V)$(TEXTCONV) charmap_menu.txt $< $@
 $(BUILD_DIR)/text/%/define_courses.inc.c: text/define_courses.inc.c text/%/courses.h
 	@$(PRINT) "$(GREEN)Preprocessing: $(BLUE)$@ $(NO_COL)\n"
 	$(V)$(CPP) $(PROF_FLAGS) $(CPPFLAGS) $< -o - -I text/$*/ | $(TEXTCONV) charmap.txt - $@
@@ -1515,7 +1498,7 @@ ifeq ($(TARGET_N64),1)
   $(BUILD_DIR)/$(TARGET).objdump: $(ELF)
 	$(OBJDUMP) -D $< > $@
 else
-  $(EXE): $(O_FILES) $(MIO0_FILES:.mio0=.o) $(ULTRA_O_FILES) $(GODDARD_O_FILES) $(BUILD_DIR)/$(RPC_LIBS) $(BUILD_DIR)/$(DISCORD_SDK_LIBS) $(BUILD_DIR)/$(BASS_LIBS) $(BUILD_DIR)/$(COOPNET_LIBS) $(BUILD_DIR)/$(LANG_DIR) $(BUILD_DIR)/$(MOD_DIR)
+  $(EXE): $(O_FILES) $(MIO0_FILES:.mio0=.o) $(ULTRA_O_FILES) $(GODDARD_O_FILES) $(BUILD_DIR)/$(RPC_LIBS) $(BUILD_DIR)/$(DISCORD_SDK_LIBS) $(BUILD_DIR)/$(COOPNET_LIBS) $(BUILD_DIR)/$(LANG_DIR) $(BUILD_DIR)/$(MOD_DIR) $(BUILD_DIR)/$(PALETTES_DIR)
 	@$(PRINT) "$(GREEN)Linking executable: $(BLUE)$@ $(NO_COL)\n"
 	$(V)$(LD) $(PROF_FLAGS) -L $(BUILD_DIR) -o $@ $(O_FILES) $(ULTRA_O_FILES) $(GODDARD_O_FILES) $(LDFLAGS)
 endif

@@ -448,7 +448,7 @@ void render_game(void) {
             djui_reset_hud_params();
             create_dl_ortho_matrix();
             djui_gfx_displaylist_begin();
-            if (!configCoopCompatibility && gServerSettings.nametags && !gDjuiInMainMenu) {
+            if (gServerSettings.nametags && !gDjuiInMainMenu) {
                 nametags_render();
             }
             smlua_call_event_on_hud_render_behind(djui_reset_hud_params);
@@ -498,12 +498,6 @@ void render_game(void) {
         } else {
             clear_frame_buffer(gWarpTransFBSetColor);
         }
-    }
-
-    if (use_forced_4by3()) {
-        gDPSetFillColor(gDisplayListHead++, GPACK_RGBA5551(0, 0, 0, 1));
-        gDPFillRectangle(gDisplayListHead++, GFX_DIMENSIONS_RECT_FROM_LEFT_EDGE(0), 0, 0, SCREEN_HEIGHT);
-        gDPFillRectangle(gDisplayListHead++, SCREEN_WIDTH, 0, GFX_DIMENSIONS_RECT_FROM_RIGHT_EDGE(0), SCREEN_HEIGHT);
     }
 
     D_8032CE74 = NULL;

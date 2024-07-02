@@ -1,3 +1,4 @@
+#include "pc/rom_assets.h"
 // Door
 
 // 0x03009CE0
@@ -13,138 +14,58 @@ static const Lights1 door_seg3_lights_03009CF8 = gdSPDefLights1(
 );
 
 // 0x03009D10
-ALIGNED8 const Texture door_seg3_texture_03009D10[] = {
-#include "actors/door/polished_wooden_door.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(door_seg3_texture_03009D10, "actors/door/polished_wooden_door.rgba16.inc.c", 0x00201410, 96653, 0x00009d10, 4096);
 
 // 0x0300AD10
-ALIGNED8 const Texture door_seg3_texture_0300AD10[] = {
-#include "actors/door/polished_wooden_door_overlay.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(door_seg3_texture_0300AD10, "actors/door/polished_wooden_door_overlay.rgba16.inc.c", 0x00201410, 96653, 0x0000ad10, 4096);
 
 // 0x0300BD10
-ALIGNED8 const Texture door_seg3_texture_0300BD10[] = {
-#include "actors/door/rough_wooden_door.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(door_seg3_texture_0300BD10, "actors/door/rough_wooden_door.rgba16.inc.c", 0x00201410, 96653, 0x0000bd10, 4096);
 
 // 0x0300CD10
-ALIGNED8 const Texture door_seg3_texture_0300CD10[] = {
-#include "actors/door/rough_wooden_door_overlay.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(door_seg3_texture_0300CD10, "actors/door/rough_wooden_door_overlay.rgba16.inc.c", 0x00201410, 96653, 0x0000cd10, 2048);
 
 // 0x0300D510
-ALIGNED8 const Texture door_seg3_texture_0300D510[] = {
-#include "actors/door/metal_door.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(door_seg3_texture_0300D510, "actors/door/metal_door.rgba16.inc.c", 0x00201410, 96653, 0x0000d510, 4096);
 
 // 0x0300E510
-ALIGNED8 const Texture door_seg3_texture_0300E510[] = {
-#include "actors/door/metal_door_overlay.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(door_seg3_texture_0300E510, "actors/door/metal_door_overlay.rgba16.inc.c", 0x00201410, 96653, 0x0000e510, 2048);
 
 // 0x0300ED10
-ALIGNED8 const Texture door_seg3_texture_0300ED10[] = {
-#include "actors/door/hmc_mural_door.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(door_seg3_texture_0300ED10, "actors/door/hmc_mural_door.rgba16.inc.c", 0x00201410, 96653, 0x0000ed10, 4096);
 
 // 0x0300FD10
-ALIGNED8 const Texture door_seg3_texture_0300FD10[] = {
-#include "actors/door/hmc_mural_door_overlay.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(door_seg3_texture_0300FD10, "actors/door/hmc_mural_door_overlay.rgba16.inc.c", 0x00201410, 96653, 0x0000fd10, 2048);
 
 // 0x03010510
-ALIGNED8 const Texture door_seg3_texture_03010510[] = {
-#include "actors/door/bbh_door.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(door_seg3_texture_03010510, "actors/door/bbh_door.rgba16.inc.c", 0x00201410, 96653, 0x00010510, 4096);
 
 // 0x03011510
-ALIGNED8 const Texture door_seg3_texture_03011510[] = {
-#include "actors/door/bbh_door_overlay.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(door_seg3_texture_03011510, "actors/door/bbh_door_overlay.rgba16.inc.c", 0x00201410, 96653, 0x00011510, 2048);
 
 // 0x03011D10
-ALIGNED8 const Texture door_seg3_texture_03011D10[] = {
-#include "actors/door/zero_star_door_sign.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(door_seg3_texture_03011D10, "actors/door/zero_star_door_sign.rgba16.inc.c", 0x00201410, 96653, 0x00011d10, 2048);
 
 // 0x03012510
-ALIGNED8 const Texture door_seg3_texture_03012510[] = {
-#include "actors/door/one_star_door_sign.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(door_seg3_texture_03012510, "actors/door/one_star_door_sign.rgba16.inc.c", 0x00201410, 96653, 0x00012510, 2048);
 
 // 0x03012D10
-ALIGNED8 const Texture door_seg3_texture_03012D10[] = {
-#include "actors/door/three_star_door_sign.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(door_seg3_texture_03012D10, "actors/door/three_star_door_sign.rgba16.inc.c", 0x00201410, 96653, 0x00012d10, 2048);
 
 // 0x03013510
-ALIGNED8 const Texture door_seg3_texture_03013510[] = {
-#include "actors/door/door_lock.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(door_seg3_texture_03013510, "actors/door/door_lock.rgba16.inc.c", 0x00201410, 96653, 0x00013510, 1024);
 
 // 0x03013910
-static const Vtx door_seg3_vertex_03013910[] = {
-    {{{   -12,      0,    -58}, 0, {     0,      0}, {0x81, 0x00, 0x00, 0xff}}},
-    {{{   -12,      0,     59}, 0, {   990,      0}, {0x81, 0x00, 0x00, 0xff}}},
-    {{{   -12,   1024,     59}, 0, {   990,   2012}, {0x81, 0x00, 0x00, 0xff}}},
-    {{{   -12,   1024,    -58}, 0, {   990,   2012}, {0x00, 0x7f, 0x00, 0xff}}},
-    {{{   -12,   1024,     59}, 0, {     0,   2012}, {0x00, 0x7f, 0x00, 0xff}}},
-    {{{   604,   1024,     59}, 0, {     0,      0}, {0x00, 0x7f, 0x00, 0xff}}},
-    {{{   604,   1024,    -58}, 0, {   990,      0}, {0x00, 0x7f, 0x00, 0xff}}},
-    {{{   604,      0,    -58}, 0, {     0,      0}, {0x00, 0x81, 0x00, 0xff}}},
-    {{{   -12,      0,     59}, 0, {   990,   2012}, {0x00, 0x81, 0x00, 0xff}}},
-    {{{   -12,      0,    -58}, 0, {     0,   2012}, {0x00, 0x81, 0x00, 0xff}}},
-    {{{   604,      0,     59}, 0, {   990,      0}, {0x00, 0x81, 0x00, 0xff}}},
-    {{{   604,      0,     59}, 0, {     0,      0}, {0x7f, 0x00, 0x00, 0xff}}},
-    {{{   604,      0,    -58}, 0, {   990,      0}, {0x7f, 0x00, 0x00, 0xff}}},
-    {{{   604,   1024,    -58}, 0, {   990,   2012}, {0x7f, 0x00, 0x00, 0xff}}},
-    {{{   604,   1024,     59}, 0, {     0,   2012}, {0x7f, 0x00, 0x00, 0xff}}},
-    {{{   -12,   1024,    -58}, 0, {     0,   2012}, {0x81, 0x00, 0x00, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(door_seg3_vertex_03013910, 0x00201410, 96653, 0x00013910, 256);
 
 // 0x03013A10
-static const Vtx door_seg3_vertex_03013A10[] = {
-    {{{   604,      0,    -58}, 0, {   974,   1820}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{   -12,      0,    -58}, 0, {     0,   1816}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{   -12,   1024,    -58}, 0, {     0,    124}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{   604,   1024,    -58}, 0, {   974,    128}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{   -12,      0,     59}, 0, {     0,   1816}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{   604,      0,     59}, 0, {   974,   1812}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{   604,   1024,     59}, 0, {   974,    132}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{   -12,   1024,     59}, 0, {     0,    140}, {0x00, 0x00, 0x7f, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(door_seg3_vertex_03013A10, 0x00201410, 96653, 0x00013a10, 128);
 
 // 0x03013A90
-static const Vtx door_seg3_vertex_03013A90[] = {
-    {{{   512,    512,    104}, 0, {     0,      0}, {0xff, 0x7e, 0x01, 0xff}}},
-    {{{   456,    432,    160}, 0, {     0,      0}, {0xa6, 0x1f, 0x53, 0xff}}},
-    {{{   512,    488,    160}, 0, {     0,      0}, {0x16, 0x49, 0x65, 0xff}}},
-    {{{   512,    372,    160}, 0, {     0,      0}, {0xe7, 0xba, 0x66, 0xff}}},
-    {{{   572,    432,    160}, 0, {     0,      0}, {0x5a, 0xe3, 0x53, 0xff}}},
-    {{{   596,    432,    104}, 0, {     0,      0}, {0x7e, 0x01, 0x01, 0xff}}},
-    {{{   512,    348,    104}, 0, {     0,      0}, {0xff, 0x82, 0x01, 0xff}}},
-    {{{   432,    432,    104}, 0, {     0,      0}, {0x82, 0x01, 0x01, 0xff}}},
-    {{{   512,    488,     44}, 0, {     0,      0}, {0xda, 0x70, 0xd4, 0xff}}},
-    {{{   456,    432,     44}, 0, {     0,      0}, {0x8f, 0xde, 0xd4, 0xff}}},
-    {{{   512,    372,     44}, 0, {     0,      0}, {0x24, 0x90, 0xd3, 0xff}}},
-    {{{   572,    432,     44}, 0, {     0,      0}, {0x6f, 0x28, 0xd3, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(door_seg3_vertex_03013A90, 0x00201410, 96653, 0x00013a90, 192);
 
 // 0x03013B50
-static const Vtx door_seg3_vertex_03013B50[] = {
-    {{{   512,    488,   -156}, 0, {     0,      0}, {0xe8, 0x48, 0x9b, 0xff}}},
-    {{{   512,    372,   -156}, 0, {     0,      0}, {0x17, 0xb9, 0x9a, 0xff}}},
-    {{{   456,    432,   -156}, 0, {     0,      0}, {0xa5, 0xe4, 0xae, 0xff}}},
-    {{{   432,    432,   -100}, 0, {     0,      0}, {0x82, 0x01, 0xff, 0xff}}},
-    {{{   512,    512,   -100}, 0, {     0,      0}, {0xff, 0x7e, 0xff, 0xff}}},
-    {{{   572,    432,   -156}, 0, {     0,      0}, {0x59, 0x20, 0xac, 0xff}}},
-    {{{   512,    348,   -100}, 0, {     0,      0}, {0xff, 0x82, 0xff, 0xff}}},
-    {{{   596,    432,   -100}, 0, {     0,      0}, {0x7e, 0x01, 0xff, 0xff}}},
-    {{{   572,    432,    -40}, 0, {     0,      0}, {0x70, 0xdc, 0x2d, 0xff}}},
-    {{{   512,    372,    -40}, 0, {     0,      0}, {0xd8, 0x91, 0x2d, 0xff}}},
-    {{{   456,    432,    -40}, 0, {     0,      0}, {0x90, 0x26, 0x2c, 0xff}}},
-    {{{   512,    488,    -40}, 0, {     0,      0}, {0x22, 0x71, 0x2c, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(door_seg3_vertex_03013B50, 0x00201410, 96653, 0x00013b50, 192);
 
 // 0x03013C10 - 0x03013CC8
 const Gfx door_seg3_dl_03013C10[] = {
@@ -241,28 +162,10 @@ const Gfx door_seg3_dl_03013EA8[] = {
 };
 
 // 0x03013F20
-static const Vtx door_seg3_vertex_03013F20[] = {
-    {{{   591,      0,    -58}, 0, {   976,   1808}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{    -8,   1010,    -58}, 0, {   -16,    148}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{   591,   1010,    -58}, 0, {   990,    140}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{    -8,      0,    -58}, 0, {   -30,   1812}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{    -8,      0,     59}, 0, {     0,   1816}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{   591,   1010,     59}, 0, {   974,    132}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{    -8,   1010,     59}, 0, {     0,    140}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{   591,      0,     59}, 0, {   974,   1812}, {0x00, 0x00, 0x7f, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(door_seg3_vertex_03013F20, 0x00201410, 96653, 0x00013f20, 128);
 
 // 0x03013FA0
-static const Vtx door_seg3_vertex_03013FA0[] = {
-    {{{   492,    468,   -152}, 0, {     0,      0}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{   546,    412,   -152}, 0, {     0,      0}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{   492,    357,   -152}, 0, {     0,      0}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{   437,    412,   -152}, 0, {     0,      0}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{   492,    468,    153}, 0, {     0,      0}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{   492,    357,    153}, 0, {     0,      0}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{   546,    412,    153}, 0, {     0,      0}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{   437,    412,    153}, 0, {     0,      0}, {0x00, 0x00, 0x7f, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(door_seg3_vertex_03013FA0, 0x00201410, 96653, 0x00013fa0, 128);
 
 // 0x03014020 - 0x03014100
 const Gfx door_seg3_dl_03014020[] = {
@@ -309,20 +212,10 @@ const Gfx door_seg3_dl_03014128[] = {
 };
 
 // 0x03014140
-static const Vtx door_seg3_vertex_03014140[] = {
-    {{{   441,    850,     64}, 0, {   992,      0}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{   141,    850,     64}, 0, {     0,      0}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{   141,    550,     64}, 0, {     0,    992}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{   441,    550,     64}, 0, {   992,    992}, {0x00, 0x00, 0x7f, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(door_seg3_vertex_03014140, 0x00201410, 96653, 0x00014140, 64);
 
 // 0x03014180
-static const Vtx door_seg3_vertex_03014180[] = {
-    {{{   441,    850,     59}, 0, {   992,      0}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{   141,    850,     59}, 0, {     0,      0}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{   141,    550,     59}, 0, {     0,    992}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{   441,    550,     59}, 0, {   992,    992}, {0x00, 0x00, 0x7f, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(door_seg3_vertex_03014180, 0x00201410, 96653, 0x00014180, 64);
 
 // 0x030141C0 - 0x03014218
 const Gfx door_seg3_dl_030141C0[] = {
@@ -410,28 +303,10 @@ const Gfx door_seg3_dl_03014340[] = {
 };
 
 // 0x03014370
-static const Vtx door_seg3_vertex_03014370[] = {
-    {{{   595,    916,     59}, 0, {   478,      0}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{   405,    544,     59}, 0, {     0,    992}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{   595,    544,     59}, 0, {   478,    992}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{   405,    916,     59}, 0, {     0,      0}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{   595,    544,    -58}, 0, {   478,    992}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{   405,    544,    -58}, 0, {     0,    992}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{   405,    916,    -58}, 0, {     0,      0}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{   595,    916,    -58}, 0, {   478,      0}, {0x00, 0x00, 0x81, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(door_seg3_vertex_03014370, 0x00201410, 96653, 0x00014370, 128);
 
 // 0x030143F0
-static const Vtx door_seg3_vertex_030143F0[] = {
-    {{{   595,    916,     64}, 0, {   480,      0}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{   405,    544,     64}, 0, {     0,    992}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{   595,    544,     64}, 0, {   480,    992}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{   405,    916,     64}, 0, {     0,      0}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{   595,    544,    -63}, 0, {   480,    992}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{   405,    544,    -63}, 0, {     0,    992}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{   405,    916,    -63}, 0, {     0,      0}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{   595,    916,    -63}, 0, {   480,      0}, {0x00, 0x00, 0x81, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(door_seg3_vertex_030143F0, 0x00201410, 96653, 0x000143f0, 128);
 
 // 0x03014470 - 0x030144E0
 const Gfx door_seg3_dl_03014470[] = {
@@ -477,71 +352,16 @@ const Gfx door_seg3_dl_03014540[] = {
 };
 
 // 0x03014558
-static const Vtx door_seg3_vertex_03014558[] = {
-    {{{    -8,   1000,    -58}, 0, {     0,     70}, {0x81, 0x00, 0x00, 0xff}}},
-    {{{    -8,      0,    -58}, 0, {     0,    936}, {0x81, 0x00, 0x00, 0xff}}},
-    {{{    -8,      0,     59}, 0, {   990,    936}, {0x81, 0x00, 0x00, 0xff}}},
-    {{{    -8,      0,    -58}, 0, {   990,    114}, {0x00, 0x81, 0x00, 0xff}}},
-    {{{   591,      0,    -58}, 0, {   990,    856}, {0x00, 0x81, 0x00, 0xff}}},
-    {{{   591,      0,     59}, 0, {     0,    856}, {0x00, 0x81, 0x00, 0xff}}},
-    {{{    -8,      0,     59}, 0, {     0,    114}, {0x00, 0x81, 0x00, 0xff}}},
-    {{{    -8,   1000,     59}, 0, {     0,    114}, {0x00, 0x7f, 0x00, 0xff}}},
-    {{{   591,   1000,    -58}, 0, {   990,    856}, {0x00, 0x7f, 0x00, 0xff}}},
-    {{{    -8,   1000,    -58}, 0, {   990,    114}, {0x00, 0x7f, 0x00, 0xff}}},
-    {{{   591,   1000,     59}, 0, {     0,    856}, {0x00, 0x7f, 0x00, 0xff}}},
-    {{{   591,   1000,     59}, 0, {   990,     70}, {0x7f, 0x00, 0x00, 0xff}}},
-    {{{   591,      0,     59}, 0, {   990,    936}, {0x7f, 0x00, 0x00, 0xff}}},
-    {{{   591,      0,    -58}, 0, {     0,    936}, {0x7f, 0x00, 0x00, 0xff}}},
-    {{{   591,   1000,    -58}, 0, {     0,     70}, {0x7f, 0x00, 0x00, 0xff}}},
-    {{{    -8,   1000,     59}, 0, {   990,     70}, {0x81, 0x00, 0x00, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(door_seg3_vertex_03014558, 0x00201410, 96653, 0x00014558, 256);
 
 // 0x03014658
-static const Vtx door_seg3_vertex_03014658[] = {
-    {{{    -8,      0,     59}, 0, {   990,   2012}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{   591,   1000,     59}, 0, {     0,      0}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{    -8,   1000,     59}, 0, {   990,      0}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{   591,      0,     59}, 0, {     0,   2012}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{   591,      0,    -58}, 0, {     0,   2012}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{    -8,      0,    -58}, 0, {   990,   2012}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{    -8,   1000,    -58}, 0, {   990,      0}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{   591,   1000,    -58}, 0, {     0,      0}, {0x00, 0x00, 0x81, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(door_seg3_vertex_03014658, 0x00201410, 96653, 0x00014658, 128);
 
 // 0x030146D8
-static const Vtx door_seg3_vertex_030146D8[] = {
-    {{{   492,    468,   -152}, 0, {     0,      0}, {0xe8, 0x47, 0x9a, 0xff}}},
-    {{{   414,    412,    -98}, 0, {     0,      0}, {0x82, 0x00, 0x00, 0xff}}},
-    {{{   492,    491,    -98}, 0, {     0,      0}, {0x00, 0x7e, 0x00, 0xff}}},
-    {{{   492,    468,    153}, 0, {     0,      0}, {0x18, 0x47, 0x66, 0xff}}},
-    {{{   492,    357,    153}, 0, {     0,      0}, {0xe9, 0xb8, 0x65, 0xff}}},
-    {{{   546,    412,    153}, 0, {     0,      0}, {0x5b, 0xe2, 0x53, 0xff}}},
-    {{{   437,    412,    153}, 0, {     0,      0}, {0xa5, 0x1d, 0x53, 0xff}}},
-    {{{   492,    491,     99}, 0, {     0,      0}, {0x00, 0x7e, 0x00, 0xff}}},
-    {{{   569,    412,     99}, 0, {     0,      0}, {0x7e, 0x00, 0x00, 0xff}}},
-    {{{   492,    334,     99}, 0, {     0,      0}, {0x00, 0x82, 0x00, 0xff}}},
-    {{{   414,    412,     99}, 0, {     0,      0}, {0x82, 0x00, 0x00, 0xff}}},
-    {{{   492,    468,     44}, 0, {     0,      0}, {0xdb, 0x6f, 0xd1, 0xff}}},
-    {{{   437,    412,     44}, 0, {     0,      0}, {0x91, 0xdb, 0xd2, 0xff}}},
-    {{{   492,    357,     44}, 0, {     0,      0}, {0x26, 0x91, 0xd2, 0xff}}},
-    {{{   546,    412,     44}, 0, {     0,      0}, {0x70, 0x24, 0xd2, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(door_seg3_vertex_030146D8, 0x00201410, 96653, 0x000146d8, 240);
 
 // 0x030147C8
-static const Vtx door_seg3_vertex_030147C8[] = {
-    {{{   492,    491,    -98}, 0, {     0,      0}, {0x00, 0x7e, 0x00, 0xff}}},
-    {{{   437,    412,    -43}, 0, {     0,      0}, {0x90, 0x24, 0x2e, 0xff}}},
-    {{{   492,    468,    -43}, 0, {     0,      0}, {0x26, 0x6f, 0x2f, 0xff}}},
-    {{{   492,    468,   -152}, 0, {     0,      0}, {0xe8, 0x47, 0x9a, 0xff}}},
-    {{{   546,    412,   -152}, 0, {     0,      0}, {0x5b, 0x1d, 0xae, 0xff}}},
-    {{{   492,    357,   -152}, 0, {     0,      0}, {0x18, 0xb9, 0x9b, 0xff}}},
-    {{{   437,    412,   -152}, 0, {     0,      0}, {0xa6, 0xe2, 0xad, 0xff}}},
-    {{{   414,    412,    -98}, 0, {     0,      0}, {0x82, 0x00, 0x00, 0xff}}},
-    {{{   569,    412,    -98}, 0, {     0,      0}, {0x7e, 0x00, 0x00, 0xff}}},
-    {{{   492,    334,    -98}, 0, {     0,      0}, {0x00, 0x82, 0x00, 0xff}}},
-    {{{   492,    357,    -43}, 0, {     0,      0}, {0xdb, 0x90, 0x2e, 0xff}}},
-    {{{   546,    412,    -43}, 0, {     0,      0}, {0x70, 0xdb, 0x2e, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(door_seg3_vertex_030147C8, 0x00201410, 96653, 0x000147c8, 192);
 
 // 0x03014888 - 0x030149C0
 const Gfx door_seg3_dl_03014888[] = {
@@ -730,28 +550,10 @@ const Gfx door_seg3_dl_03014D40[] = {
 };
 
 // 0x03014DF0
-static const Vtx door_seg3_vertex_03014DF0[] = {
-    {{{   591,      0,    -58}, 0, {     0,   2012}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{    -8,   1000,    -58}, 0, {   990,      0}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{   591,   1000,    -58}, 0, {     0,      0}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{    -8,      0,    -58}, 0, {   990,   2012}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{    -8,      0,     59}, 0, {   990,   2012}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{   591,   1000,     59}, 0, {     0,      0}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{    -8,   1000,     59}, 0, {   990,      0}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{   591,      0,     59}, 0, {     0,   2012}, {0x00, 0x00, 0x7f, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(door_seg3_vertex_03014DF0, 0x00201410, 96653, 0x00014df0, 128);
 
 // 0x03014E70
-static const Vtx door_seg3_vertex_03014E70[] = {
-    {{{   492,    468,    153}, 0, {     0,      0}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{   492,    357,    153}, 0, {     0,      0}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{   546,    412,    153}, 0, {     0,      0}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{   437,    412,    153}, 0, {     0,      0}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{   492,    468,   -152}, 0, {     0,      0}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{   546,    412,   -152}, 0, {     0,      0}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{   492,    357,   -152}, 0, {     0,      0}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{   437,    412,   -152}, 0, {     0,      0}, {0x00, 0x00, 0x81, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(door_seg3_vertex_03014E70, 0x00201410, 96653, 0x00014e70, 128);
 
 // 0x03014EF0 - 0x03014F30
 const Gfx door_seg3_dl_03014EF0[] = {

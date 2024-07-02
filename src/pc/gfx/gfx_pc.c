@@ -184,7 +184,7 @@ static f32 sDepthZMult = 1;
 static f32 sDepthZSub = 0;
 
 Vec3f gLightingDir;
-Color gLightingColor = { 255, 255, 255 };
+Color gLightingColor[2] = { { 255, 255, 255 }, { 255, 255, 255 } };
 Color gVertexColor = { 255, 255, 255 };
 Color gFogColor = { 255, 255, 255 };
 f32 gFogIntensity = 1;
@@ -216,6 +216,7 @@ static void gfx_update_loaded_texture(uint8_t tile_number, uint32_t size_bytes, 
 // forward declaration //
 ////////////////////////
 void ext_gfx_run_dl(Gfx* cmd);
+
 //////////////////////////////////
 
 static unsigned long get_time(void) {
@@ -366,7 +367,7 @@ void gfx_texture_cache_clear(void) {
 
 static bool gfx_texture_cache_lookup(int tile, struct TextureHashmapNode **n, const uint8_t *orig_addr, uint32_t fmt, uint32_t siz) {
     size_t hash = (uintptr_t)orig_addr;
-    #define CMPADDR(x, y) x == y
+#define CMPADDR(x, y) x == y
 
     hash = (hash >> HASH_SHIFT) & HASH_MASK;
 
@@ -415,6 +416,7 @@ static void import_texture_rgba32(int tile) {
 static void import_texture_rgba16(int tile) {
     tile = tile % RDP_TILES;
     if (!rdp.loaded_texture[tile].addr) { return; }
+    if (rdp.loaded_texture[tile].size_bytes * 2 > 8192) { return; }
     uint8_t rgba32_buf[8192];
 
     for (uint32_t i = 0; i < rdp.loaded_texture[tile].size_bytes / 2; i++) {
@@ -438,6 +440,7 @@ static void import_texture_rgba16(int tile) {
 static void import_texture_ia4(int tile) {
     tile = tile % RDP_TILES;
     if (!rdp.loaded_texture[tile].addr) { return; }
+    if (rdp.loaded_texture[tile].size_bytes * 8 > 32768) { return; }
     uint8_t rgba32_buf[32768];
 
     for (uint32_t i = 0; i < rdp.loaded_texture[tile].size_bytes * 2; i++) {
@@ -463,6 +466,7 @@ static void import_texture_ia4(int tile) {
 static void import_texture_ia8(int tile) {
     tile = tile % RDP_TILES;
     if (!rdp.loaded_texture[tile].addr) { return; }
+    if (rdp.loaded_texture[tile].size_bytes * 4 > 16384) { return; }
     uint8_t rgba32_buf[16384];
 
     for (uint32_t i = 0; i < rdp.loaded_texture[tile].size_bytes; i++) {
@@ -486,6 +490,7 @@ static void import_texture_ia8(int tile) {
 static void import_texture_ia16(int tile) {
     tile = tile % RDP_TILES;
     if (!rdp.loaded_texture[tile].addr) { return; }
+    if (rdp.loaded_texture[tile].size_bytes * 2 > 8192) { return; }
     uint8_t rgba32_buf[8192];
 
     for (uint32_t i = 0; i < rdp.loaded_texture[tile].size_bytes / 2; i++) {
@@ -509,6 +514,7 @@ static void import_texture_ia16(int tile) {
 static void import_texture_i4(int tile) {
     tile = tile % RDP_TILES;
     if (!rdp.loaded_texture[tile].addr) { return; }
+    if (rdp.loaded_texture[tile].size_bytes * 8 > 32768) { return; }
     uint8_t rgba32_buf[32768];
 
     for (uint32_t i = 0; i < rdp.loaded_texture[tile].size_bytes * 2; i++) {
@@ -529,6 +535,7 @@ static void import_texture_i4(int tile) {
 static void import_texture_i8(int tile) {
     tile = tile % RDP_TILES;
     if (!rdp.loaded_texture[tile].addr) { return; }
+    if (rdp.loaded_texture[tile].size_bytes * 4 > 16384) { return; }
     uint8_t rgba32_buf[16384];
 
     for (uint32_t i = 0; i < rdp.loaded_texture[tile].size_bytes; i++) {
@@ -548,6 +555,7 @@ static void import_texture_i8(int tile) {
 static void import_texture_ci4(int tile) {
     tile = tile % RDP_TILES;
     if (!rdp.loaded_texture[tile].addr) { return; }
+    if (rdp.loaded_texture[tile].size_bytes * 8 > 32768) { return; }
     uint8_t rgba32_buf[32768];
 
     for (uint32_t i = 0; i < rdp.loaded_texture[tile].size_bytes * 2; i++) {
@@ -573,6 +581,7 @@ static void import_texture_ci4(int tile) {
 static void import_texture_ci8(int tile) {
     tile = tile % RDP_TILES;
     if (!rdp.loaded_texture[tile].addr) { return; }
+    if (rdp.loaded_texture[tile].size_bytes * 4 > 16384) { return; }
     uint8_t rgba32_buf[16384];
 
     for (uint32_t i = 0; i < rdp.loaded_texture[tile].size_bytes; i++) {
@@ -783,9 +792,9 @@ static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, cons
                 rsp.lights_changed = false;
             }
 
-            int r = rsp.current_lights[rsp.current_num_lights - 1].col[0];
-            int g = rsp.current_lights[rsp.current_num_lights - 1].col[1];
-            int b = rsp.current_lights[rsp.current_num_lights - 1].col[2];
+            int r = rsp.current_lights[rsp.current_num_lights - 1].col[0] * gLightingColor[1][0] / 255.0f;
+            int g = rsp.current_lights[rsp.current_num_lights - 1].col[1] * gLightingColor[1][1] / 255.0f;
+            int b = rsp.current_lights[rsp.current_num_lights - 1].col[2] * gLightingColor[1][2] / 255.0f;
 
             for (int32_t i = 0; i < rsp.current_num_lights - 1; i++) {
                 float intensity = 0;
@@ -794,15 +803,12 @@ static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, cons
                 intensity += vn->n[2] * rsp.current_lights_coeffs[i][2];
                 intensity /= 127.0f;
                 if (intensity > 0.0f) {
-                    r += intensity * rsp.current_lights[i].col[0];
-                    g += intensity * rsp.current_lights[i].col[1];
-                    b += intensity * rsp.current_lights[i].col[2];
+                    r += intensity * rsp.current_lights[i].col[0] * gLightingColor[0][0] / 255.0f;
+                    g += intensity * rsp.current_lights[i].col[1] * gLightingColor[0][1] / 255.0f;
+                    b += intensity * rsp.current_lights[i].col[2] * gLightingColor[0][2] / 255.0f;
                 }
             }
 
-            r *= gLightingColor[0] / 255.0f;
-            g *= gLightingColor[1] / 255.0f;
-            b *= gLightingColor[2] / 255.0f;
             d->color.r = r > 255 ? 255 : r;
             d->color.g = g > 255 ? 255 : g;
             d->color.b = b > 255 ? 255 : b;
@@ -1856,6 +1862,7 @@ void gfx_shutdown(void) {
         if (gfx_wapi->shutdown) gfx_wapi->shutdown();
         gfx_wapi = NULL;
     }
+    gGfxInited = false;
 }
 
   /////////////////////////

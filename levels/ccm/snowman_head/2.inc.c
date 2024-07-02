@@ -1,22 +1,9 @@
+#include "pc/rom_assets.h"
 // 0x07013730 - 0x070137B0
-static const Vtx ccm_seg7_vertex_07013730[] = {
-    {{{   120,     40,    177}, 0, {   990,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    41,     40,    200}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   120,    -41,    176}, 0, {   990,    990}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    41,    -41,    198}, 0, {     0,    990}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{  -119,    -41,    176}, 0, {     0,    990}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -40,    -41,    198}, 0, {   990,    990}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -40,     40,    200}, 0, {   990,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{  -119,     40,    177}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(ccm_seg7_vertex_07013730, 0x00383950, 74560, 0x00013730, 128);
 
 // 0x070137B0 - 0x070137F0
-static const Vtx ccm_seg7_vertex_070137B0[] = {
-    {{{    51,    -68,    195}, 0, {   990,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -50,    -68,    195}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -50,   -118,    159}, 0, {     0,    990}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    51,   -118,    159}, 0, {   990,    990}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(ccm_seg7_vertex_070137B0, 0x00383950, 74560, 0x000137b0, 64);
 
 // 0x070137F0 - 0x07013838
 static const Gfx ccm_seg7_dl_070137F0[] = {

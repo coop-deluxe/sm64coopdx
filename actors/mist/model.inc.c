@@ -1,25 +1,14 @@
+#include "pc/rom_assets.h"
 // Mist
 
 // 0x03000000
-static const Vtx mist_seg3_vertex_03000000[] = {
-    {{{   -25,    -25,      0}, 0, {     0,    992}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    25,    -25,      0}, 0, {   992,    992}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    25,     25,      0}, 0, {   992,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -25,     25,      0}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(mist_seg3_vertex_03000000, 0x00201410, 96653, 0x00000000, 64);
 
 // 0x03000040
-static const Vtx mist_seg3_vertex_03000040[] = {
-    {{{   -25,    -25,      0}, 0, {     0,    992}, {0x22, 0x1a, 0x1c, 0xff}}},
-    {{{    25,    -25,      0}, 0, {   992,    992}, {0x22, 0x1a, 0x1c, 0xff}}},
-    {{{    25,     25,      0}, 0, {   992,      0}, {0x22, 0x1a, 0x1c, 0xff}}},
-    {{{   -25,     25,      0}, 0, {     0,      0}, {0x22, 0x1a, 0x1c, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(mist_seg3_vertex_03000040, 0x00201410, 96653, 0x00000040, 64);
 
 // 0x03000080
-ALIGNED8 const Texture mist_seg3_texture_03000080[] = {
-#include "actors/mist/mist.ia16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(mist_seg3_texture_03000080, "actors/mist/mist.ia16.inc.c", 0x00201410, 96653, 0x00000080, 2048);
 
 // 0x03000880 - 0x03000920
 const Gfx mist_seg3_dl_03000880[] = {

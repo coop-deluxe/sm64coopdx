@@ -1,6 +1,7 @@
 -- name: Personal Star Counter
+-- incompatible: gamemode
 -- description: See how many stars you've collected!\n\nCredits:\n\\#097419\\Mr.Needlemouse\\#FFFFFF\\ - Concept\nSunk\\#dcdcdc\\ - Creator\n\\#269A91\\Demnyx\\#dcdcdc\\ - Assistance\n\\#f296af\\PeachyPeach\\#dcdcdc\\ - Global functions
--- incompatible: gamemode arena
+-- pausable: true
 
 ------------------------------
 ----- Localize functions -----

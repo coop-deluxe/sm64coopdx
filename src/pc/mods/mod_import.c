@@ -1,5 +1,5 @@
 #include "PR/ultratypes.h"
-#include <types.h>
+#include "types.h"
 #include "pc/platform.h"
 #include "pc/utils/miniz/miniz.h"
 #include "pc/debuglog.h"
@@ -50,6 +50,54 @@ static bool mod_import_lua(char* src) {
     }
 
     LOG_INFO("Imported lua mod: '%s' -> '%s'", src, dst);
+
+    return true;
+}
+
+static bool mod_import_palette(char* src) {
+    const char* palettesDirectory = fs_get_write_path(PALETTES_DIRECTORY);
+    fs_sys_mkdir(palettesDirectory);
+
+    char dst[SYS_MAX_PATH] = { 0 };
+    if (!concat_path(dst, (char*)palettesDirectory, path_basename(src))) {
+        LOG_ERROR("Failed to concat path for palette ini import");
+        return false;
+    }
+
+    FILE* fin = fopen(src, "rb");
+    if (fin == NULL) {
+        LOG_ERROR("Failed to open src path for palette ini import");
+        return false;
+    }
+
+    FILE* fout = fopen(dst, "wb");
+    if (fout == NULL) {
+        LOG_ERROR("Failed to open dst path for palette ini import");
+        fclose(fin);
+        return false;
+    }
+
+    size_t rbytes;
+    size_t wbytes;
+    unsigned char buff[8192];
+    do {
+        rbytes = fread(buff, 1, sizeof(buff), fin);
+        if (rbytes > 0) {
+            wbytes = fwrite(buff, 1, rbytes, fout);
+        } else {
+            wbytes = 0;
+        }
+    } while ((rbytes > 0) && (rbytes == wbytes));
+
+    fclose(fout);
+    fclose(fin);
+
+    if (wbytes) {
+        LOG_ERROR("Write error on palette ini import");
+        return false;
+    }
+
+    LOG_INFO("Imported palette ini: '%s' -> '%s'", src, dst);
 
     return true;
 }
@@ -207,9 +255,10 @@ static bool mod_import_zip(char* path, bool* isLua, bool* isDynos) {
 bool mod_import_file(char* path) {
     bool isLua = false;
     bool isDynos = false;
+    bool isPalette = false;
     bool ret = false;
 
-    if (gNetworkType != NT_NONE) {
+    if (gNetworkType != NT_NONE && !str_ends_with(path, ".ini")) {
         djui_popup_create(DLANG(NOTIF, IMPORT_FAIL_INGAME), 2);
         return false;
     }
@@ -217,6 +266,9 @@ bool mod_import_file(char* path) {
     if (str_ends_with(path, ".lua") || str_ends_with(path, ".luac")) {
         isLua = true;
         ret = mod_import_lua(path);
+    } else if (str_ends_with(path, ".ini")) {
+        isPalette = true;
+        ret = mod_import_palette(path);
     } else if (str_ends_with(path, ".zip")) {
         ret = mod_import_zip(path, &isLua, &isDynos);
     }
@@ -231,8 +283,10 @@ bool mod_import_file(char* path) {
             djui_popup_create(msg, 2);
         } else if (isDynos) {
             dynos_gfx_init();
-            dynos_packs_init();
             djui_language_replace(DLANG(NOTIF, IMPORT_DYNOS_SUCCESS), msg, SYS_MAX_PATH, '@', basename);
+            djui_popup_create(msg, 2);
+        } else if (isPalette) {
+            djui_language_replace(DLANG(NOTIF, IMPORT_PALETTE_SUCCESS), msg, SYS_MAX_PATH, '@', basename);
             djui_popup_create(msg, 2);
         }
     } else {

@@ -1,10 +1,6 @@
+#include "pc/rom_assets.h"
 // 0x0700AF40 - 0x0700AF80
-static const Vtx wf_seg7_vertex_0700AF40[] = {
-    {{{  -818,    102,   -460}, 0, {   990,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{ -1228,    102,   -460}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{ -1228,    102,    -50}, 0, {     0,    990}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{  -818,    102,    -50}, 0, {   990,    990}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(wf_seg7_vertex_0700AF40, 0x00496090, 31162, 0x0000af40, 64);
 
 // 0x0700AF80 - 0x0700AFB8
 static const Gfx wf_seg7_dl_0700AF80[] = {

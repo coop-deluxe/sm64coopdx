@@ -6,6 +6,7 @@
 #include "djui_panel_host_settings.h"
 #include "djui_panel_host_save.h"
 #include "djui_panel_host_message.h"
+#include "djui_panel_rules.h"
 #include "game/save_file.h"
 #include "pc/network/network.h"
 #include "pc/utils/misc.h"
@@ -72,17 +73,23 @@ static void djui_panel_host_do_host(struct DjuiBase* caller) {
         djui_inputbox_select_all(sInputboxPort);
         return;
     }
-    
+
     // Doesn't let you host if the player limit is not good
     if (configAmountofPlayers < 1 || configAmountofPlayers > MAX_PLAYERS) {
         return;
     }
-    
+
     configHostPort = atoi(sInputboxPort->buffer);
 
     if (gNetworkType == NT_SERVER) {
         network_rehost_begin();
     } else if (configNetworkSystem == NS_COOPNET || configAmountofPlayers == 1) {
+#ifdef COOPNET
+        if (sInputboxPassword->buffer[0] == '\0' && configRulesVersion != RULES_VERSION && configAmountofPlayers > 1) {
+            djui_panel_rules_create(caller);
+            return;
+        }
+#endif
         network_reset_reconnect_and_rehost();
         djui_panel_do_host(false, true);
     } else {
@@ -92,9 +99,9 @@ static void djui_panel_host_do_host(struct DjuiBase* caller) {
 
 void djui_panel_host_create(struct DjuiBase* caller) {
     struct DjuiBase* defaultBase = NULL;
-    struct DjuiThreePanel* panel = djui_panel_menu_create((gNetworkType == NT_SERVER)
-            ? DLANG(HOST, SERVER_TITLE)
-            : DLANG(HOST, HOST_TITLE));
+    struct DjuiThreePanel* panel = djui_panel_menu_create(
+        (gNetworkType == NT_SERVER) ? DLANG(HOST, SERVER_TITLE) : DLANG(HOST, HOST_TITLE),
+        false);
     struct DjuiBase* body = djui_three_panel_get_body(panel);
     {
         char* nChoices[] = { DLANG(HOST, DIRECT_CONNECTION), DLANG(HOST, COOPNET) };
@@ -163,7 +170,7 @@ void djui_panel_host_create(struct DjuiBase* caller) {
                 }
             }
         }
-        
+
         struct DjuiRect* rect2 = djui_rect_container_create(body, 32);
         {
             struct DjuiText* text1 = djui_text_create(&rect2->base, DLANG(HOST, SAVE_SLOT));
@@ -173,8 +180,8 @@ void djui_panel_host_create(struct DjuiBase* caller) {
             djui_base_set_alignment(&text1->base, DJUI_HALIGN_LEFT, DJUI_VALIGN_TOP);
             djui_text_set_drop_shadow(text1, 64, 64, 64, 100);
 
-            char starString[32] = { 0 };
-            snprintf(starString, 32, "%c x%d", '~' + 1, save_file_get_total_star_count(configHostSaveSlot - 1, 0, 24));
+            char starString[64] = { 0 };
+            snprintf(starString, 64, "%c x%d - %s", '~' + 1, save_file_get_total_star_count(configHostSaveSlot - 1, 0, 24), configSaveNames[configHostSaveSlot - 1]);
             struct DjuiButton* button1 = djui_button_create(&rect2->base, starString, DJUI_BUTTON_STYLE_NORMAL, djui_panel_host_save_create);
             djui_base_set_size(&button1->base, 0.45f, 32);
             djui_base_set_alignment(&button1->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_TOP);

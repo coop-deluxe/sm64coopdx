@@ -43,7 +43,7 @@ static void djui_panel_host_player_text_change(struct DjuiBase* caller) {
 }
 
 void djui_panel_host_settings_create(struct DjuiBase* caller) {
-    struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(HOST_SETTINGS, SETTINGS));
+    struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(HOST_SETTINGS, SETTINGS), false);
     struct DjuiBase* body = djui_three_panel_get_body(panel);
     {
         char* iChoices[3] = { DLANG(HOST_SETTINGS, NONSOLID), DLANG(HOST_SETTINGS, SOLID), DLANG(HOST_SETTINGS, FRIENDLY_FIRE) };
@@ -58,14 +58,13 @@ void djui_panel_host_settings_create(struct DjuiBase* caller) {
         char* lChoices[3] = { DLANG(HOST_SETTINGS, LEAVE_LEVEL), DLANG(HOST_SETTINGS, STAY_IN_LEVEL), DLANG(HOST_SETTINGS, NONSTOP) };
         djui_selectionbox_create(body, DLANG(HOST_SETTINGS, ON_STAR_COLLECTION), lChoices, 3, &configStayInLevelAfterStar, NULL);
 
-        djui_checkbox_create(body, DLANG(HOST_SETTINGS, SKIP_INTRO_CUTSCENE), &configSkipIntro, NULL);
-        djui_checkbox_create(body, DLANG(HOST_SETTINGS, BUBBLE_ON_DEATH), &configBubbleDeath, NULL);
-        struct DjuiCheckbox* checkbox = djui_checkbox_create(body, DLANG(HOST_SETTINGS, NAMETAGS), &configNametags, NULL);
-        djui_base_set_enabled(&checkbox->base, !configCoopCompatibility);
-
         char* bChoices[3] = { DLANG(HOST_SETTINGS, BOUNCY_BOUNDS_OFF), DLANG(HOST_SETTINGS, BOUNCY_BOUNDS_ON), DLANG(HOST_SETTINGS, BOUNCY_BOUNDS_ON_CAP) };
-        struct DjuiSelectionbox* selectionbox = djui_selectionbox_create(body, DLANG(HOST_SETTINGS, BOUNCY_LEVEL_BOUNDS), bChoices, 3, &configBouncyLevelBounds, NULL);
-        djui_base_set_enabled(&selectionbox->base, !configCoopCompatibility);
+        djui_selectionbox_create(body, DLANG(HOST_SETTINGS, BOUNCY_LEVEL_BOUNDS), bChoices, 3, &configBouncyLevelBounds, NULL);
+
+        djui_checkbox_create(body, DLANG(HOST_SETTINGS, SKIP_INTRO_CUTSCENE), &configSkipIntro, NULL);
+        djui_checkbox_create(body, DLANG(HOST_SETTINGS, PAUSE_ANYWHERE), &configPauseAnywhere, NULL);
+        djui_checkbox_create(body, DLANG(HOST_SETTINGS, BUBBLE_ON_DEATH), &configBubbleDeath, NULL);
+        djui_checkbox_create(body, DLANG(HOST_SETTINGS, NAMETAGS), &configNametags, NULL);
 
         struct DjuiRect* rect1 = djui_rect_container_create(body, 32);
         {
@@ -86,7 +85,7 @@ void djui_panel_host_settings_create(struct DjuiBase* caller) {
             djui_interactable_hook_value_change(&inputbox1->base, djui_panel_host_player_text_change);
             sPlayerAmount = inputbox1;
         }
-        
+
         djui_button_create(body, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
     }
     djui_panel_add(caller, panel, NULL);

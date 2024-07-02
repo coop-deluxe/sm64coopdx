@@ -2,9 +2,9 @@
 #include "types.h"
 #include "geo_commands.h"
 
-#include "src/game/area.h"
-#include "src/engine/graph_node.h"
-#include "src/engine/level_script.h"
+#include "game/area.h"
+#include "engine/graph_node.h"
+#include "engine/level_script.h"
 
 // models
 #include "actors/common0.h"
@@ -493,7 +493,7 @@ u16 smlua_model_util_load(enum ModelExtendedId extId) {
     return (u16)id;
 }
 
-u32 smlua_model_util_get_id(const char* name) {
+enum ModelExtendedId smlua_model_util_get_id(const char* name) {
     // find geolayout
     const void* asset = dynos_geolayout_get(name);
     if (asset == NULL) {

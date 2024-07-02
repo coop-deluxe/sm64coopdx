@@ -6,6 +6,7 @@
 #include "pc/utils/misc.h"
 #include "pc/utils/md5.h"
 #include "pc/debuglog.h"
+#include "pc/fs/fmem.h"
 
 size_t mod_get_lua_size(struct Mod* mod) {
     if (!mod) { return 0; }
@@ -171,7 +172,8 @@ void mod_clear(struct Mod* mod) {
         for (int j = 0; j < mod->fileCount; j++) {
             struct ModFile* file = &mod->files[j];
             if (file->fp != NULL) {
-                fclose(file->fp);
+                f_close(file->fp);
+                f_delete(file->fp);
                 file->fp = NULL;
             }
             if (file->cachedPath != NULL) {
@@ -432,10 +434,10 @@ static void mod_extract_fields(struct Mod* mod) {
             if (snprintf(mod->description, MOD_DESCRIPTION_MAX_LENGTH, "%s", extracted) < 0) {
                 LOG_INFO("Truncated mod description field '%s'", mod->description);
             }
-        } else if (!mod->deluxe && (extracted = extract_lua_field("-- deluxe:", buffer))) {
-            mod->deluxe = !strcmp(extracted, "true");
         } else if (!mod->pausable && (extracted = extract_lua_field("-- pausable:", buffer))) {
             mod->pausable = !strcmp(extracted, "true");
+        } else if (!mod->ignoreScriptWarnings && (extracted = extract_lua_field("-- ignore-script-warnings:", buffer))) {
+            mod->ignoreScriptWarnings = !strcmp(extracted, "true");
         }
     }
 
@@ -452,18 +454,18 @@ bool mod_load(struct Mods* mods, char* basePath, char* modName) {
         return true;
     }
 
-    bool isDirectory = is_directory(fullPath);
+    bool isDirectory = fs_sys_dir_exists(fullPath);
 
     // make sure mod is valid
     if (str_ends_with(modName, ".lua")) {
         valid = true;
-    } else if (is_directory(fullPath)) {
+    } else if (fs_sys_dir_exists(fullPath)) {
         char tmpPath[SYS_MAX_PATH] = { 0 };
         if (!concat_path(tmpPath, fullPath, "main.lua")) {
             LOG_ERROR("Failed to concat path '%s' + '%s'", fullPath, "main.lua");
             return true;
         }
-        valid = path_exists(tmpPath);
+        valid = fs_sys_path_exists(tmpPath);
     }
 
     if (!valid) {

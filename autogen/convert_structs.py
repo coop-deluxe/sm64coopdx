@@ -6,27 +6,29 @@ from extract_object_fields import *
 from common import *
 
 in_files = [
-    'include/types.h',
-    'src/game/area.h',
-    'src/game/camera.h',
-    'src/game/characters.h',
-    'src/engine/surface_collision.h',
-    'src/pc/network/network_player.h',
-    'src/pc/djui/djui_hud_utils.h',
-    'src/game/object_helpers.h',
-    'src/game/mario_step.h',
-    'src/pc/lua/utils/smlua_anim_utils.h',
-    'src/pc/lua/utils/smlua_misc_utils.h',
-    'src/pc/lua/utils/smlua_collision_utils.h',
-    'src/pc/lua/utils/smlua_level_utils.h',
-    'src/game/spawn_sound.h',
-    'src/pc/network/network.h',
-    'src/game/hardcoded.h',
-    'src/pc/mods/mod.h',
-    'src/pc/lua/utils/smlua_audio_utils.h',
-    'src/game/paintings.h',
-    'src/pc/djui/djui_types.h',
-    'src/game/first_person_cam.h'
+    "include/types.h",
+    "src/game/area.h",
+    "src/game/camera.h",
+    "src/game/characters.h",
+    "src/engine/surface_collision.h",
+    "src/pc/network/network_player.h",
+    "src/pc/djui/djui_hud_utils.h",
+    "src/game/object_helpers.h",
+    "src/game/mario_step.h",
+    "src/pc/lua/utils/smlua_anim_utils.h",
+    "src/pc/lua/utils/smlua_misc_utils.h",
+    "src/pc/lua/utils/smlua_camera_utils.h",
+    "src/pc/lua/utils/smlua_collision_utils.h",
+    "src/pc/lua/utils/smlua_level_utils.h",
+    "src/game/spawn_sound.h",
+    "src/pc/network/network.h",
+    "src/game/hardcoded.h",
+    "src/pc/mods/mod.h",
+    "src/pc/lua/utils/smlua_audio_utils.h",
+    "src/game/paintings.h",
+    "src/pc/djui/djui_types.h",
+    "src/game/first_person_cam.h",
+    "src/game/player_palette.h"
 ]
 
 out_filename_c = 'src/pc/lua/smlua_cobject_autogen.c'
@@ -70,7 +72,7 @@ override_field_mutable = {
     "NetworkPlayer": [
         "overrideModelIndex",
         "overridePalette",
-        "overridePaletteIndex",
+        "overridePaletteIndex"
     ],
     "Animation": [
         "values",
@@ -83,28 +85,27 @@ override_field_invisible = {
     "MarioState": [ "visibleToEnemies" ],
     "NetworkPlayer": [ "gag", "moderator"],
     "GraphNode": [ "_guard1", "_guard2" ],
+    "Object": [ "firstSurface" ],
 }
 
 override_field_deprecated = {
-    "ServerSettings": [ "enableCheats" ],
     "NetworkPlayer": [ "paletteIndex", "overridePaletteIndex", "overridePaletteIndexLp" ]
 }
 
 override_field_immutable = {
-    "MarioState": [ "playerIndex", "controller", "marioObj", "marioBodyState", "statusForCamera", "area" ],
+    "MarioState": [ "playerIndex", "controller", "marioObj", "marioBodyState", "statusForCamera", "area", "dialogId" ],
     "MarioAnimation": [ "animDmaTable" ],
     "ObjectNode": [ "next", "prev" ],
     "Character": [ "*" ],
     "NetworkPlayer": [ "*" ],
     "TextureInfo": [ "*" ],
-    "Object": ["oSyncID", "coopFlags", "oChainChompSegments", "oWigglerSegments", "oHauntedChairUnk100", "oTTCTreadmillBigSurface", "oTTCTreadmillSmallSurface", "bhvStackIndex", "respawnInfoType" ],
+    "Object": ["oSyncID", "coopFlags", "oChainChompSegments", "oWigglerSegments", "oHauntedChairUnk100", "oTTCTreadmillBigSurface", "oTTCTreadmillSmallSurface", "bhvStackIndex", "respawnInfoType", "numSurfaces" ],
     "GlobalObjectAnimations": [ "*"],
     "SpawnParticlesInfo": [ "model" ],
     "MarioBodyState": [ "updateTorsoTime" ],
     "Area": [ "localAreaTimer", "nextSyncID", "unk04", "objectSpawnInfos", "paintingWarpNodes", "warpNodes" ],
     "Mod": [ "*" ],
     "ModFile": [ "*" ],
-    "BassAudio": [ "*" ],
     "Painting": [ "id", "imageCount", "textureType", "textureWidth", "textureHeight" ],
     "SpawnInfo": [ "syncID", "next", "unk18" ],
     "CustomLevelInfo": [ "next" ],
@@ -123,8 +124,9 @@ override_field_version_excludes = {
 }
 
 override_allowed_structs = {
-    "src/pc/network/network.h": [ 'ServerSettings', 'NametagsSettings' ],
-    "src/pc/djui/djui_types.h": [ 'DjuiColor' ],
+    "src/pc/network/network.h": [ "ServerSettings", "NametagsSettings" ],
+    "src/pc/djui/djui_types.h": [ "DjuiColor" ],
+    "src/game/player_palette.h": [ "PlayerPalette" ]
 }
 
 sLuaManuallyDefinedStructs = [{

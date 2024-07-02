@@ -221,7 +221,7 @@ static void *DynOS_Warp_UpdateWarp(void *aCmd, bool aIsLevelInitDone) {
             gMarioSpawnInfo->startPos[1] = _Warp[4];
             gMarioSpawnInfo->startPos[2] = _Warp[5] + (sDynosWarpSpawnType == MARIO_SPAWN_DOOR_WARP) * 300.0f * coss(_Warp[6]);
             gMarioSpawnInfo->startAngle[0] = 0;
-            gMarioSpawnInfo->startAngle[1] = _Warp[6] + (!configCoopCompatibility && gCurrLevelNum == LEVEL_CASTLE_GROUNDS && DynOS_Level_IsVanillaLevel(LEVEL_CASTLE_GROUNDS) ? 0x8000 : 0);
+            gMarioSpawnInfo->startAngle[1] = _Warp[6] + (gCurrLevelNum == LEVEL_CASTLE_GROUNDS && DynOS_Level_IsVanillaLevel(LEVEL_CASTLE_GROUNDS) ? 0x8000 : 0);
             gMarioSpawnInfo->startAngle[2] = 0;
             gMarioSpawnInfo->areaIndex = gCurrAreaIndex;
             init_mario();
@@ -393,7 +393,7 @@ static void *DynOS_Warp_UpdateExit(void *aCmd, bool aIsLevelInitDone) {
                 init_camera(gCurrentArea->camera);
             }
             sDelayedWarpOp = WARP_OP_NONE;
-            play_transition(WARP_TRANSITION_FADE_FROM_STAR, 15, 0x00, 0x00, 0x00);
+            play_transition(WARP_TRANSITION_FADE_FROM_STAR, 0x10, 0x00, 0x00, 0x00);
             play_sound(SOUND_MENU_MARIO_CASTLE_WARP, gGlobalSoundSource);
 
             // Set music

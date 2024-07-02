@@ -1,3 +1,4 @@
+#include "pc/rom_assets.h"
 // Mario Cap (Normal Cap, Metal, Winged, etc)
 
 // 0x0301CF08
@@ -24,128 +25,50 @@ static const Lights1 mario_cap_black_lights_group = gdSPDefLights1(
 );
 
 #include "actors/mario/mario_externs.h"
-#define mario_cap_texture_metal_shade        mario_texture_metal_shade
-#define mario_cap_texture_metal_light        mario_texture_metal_light
-#define mario_cap_texture_m_logo             mario_texture_m_logo
-#define mario_cap_texture_m_blend            mario_texture_m_blend
-#define mario_cap_texture_m_cap              mario_texture_m_cap
-#define mario_cap_texture_wings_half_1       mario_texture_wings_half_1
-#define mario_cap_texture_wings_half_2       mario_texture_wings_half_2
-#define mario_cap_texture_metal_wings_half_1 mario_texture_metal_wings_half_1
-#define mario_cap_texture_metal_wings_half_2 mario_texture_metal_wings_half_2
-#define mario_cap_texture_cap_inside         mario_texture_cap_inside
+#define mario_cap_texture_metal_shade              mario_texture_metal_shade
+#define mario_cap_texture_metal_light              mario_texture_metal_light
+#define mario_cap_texture_m_logo                   mario_texture_m_logo
+#define mario_cap_texture_m_blend                  mario_texture_m_blend
+#define mario_cap_texture_m_cap                    mario_texture_m_cap
+#define mario_cap_texture_wings_half_1             mario_texture_wings_half_1
+#define mario_cap_texture_wings_half_2             mario_texture_wings_half_2
+#define mario_cap_texture_metal_wings_half_1_shade mario_texture_metal_wings_half_1_shade
+#define mario_cap_texture_metal_wings_half_1_light mario_texture_metal_wings_half_1_light
+#define mario_cap_texture_metal_wings_half_2_shade mario_texture_metal_wings_half_2_shade
+#define mario_cap_texture_metal_wings_half_2_light mario_texture_metal_wings_half_2_light
 
 // 0x0301CF50
-ALIGNED8 const Texture mario_cap_seg3_texture_0301CF50[] = {
-#include "actors/mario_cap/mario_cap_metal.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(mario_cap_seg3_texture_0301CF50, "actors/mario_cap/mario_cap_metal.rgba16.inc.c", 0x00114750, 78432, 0x00000090, 4096);
 
 // 0x0301DF50
-ALIGNED8 const Texture mario_cap_seg3_texture_0301DF50[] = {
-#include "actors/mario_cap/mario_cap_logo.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(mario_cap_seg3_texture_0301DF50, "actors/mario_cap/mario_cap_logo.rgba16.inc.c", 0x00114750, 78432, 0x00001890, 2048);
 
 // 0x0301E750
-ALIGNED8 const Texture mario_cap_seg3_texture_0301E750[] = {
-#include "actors/mario_cap/mario_cap_wing.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(mario_cap_seg3_texture_0301E750, "actors/mario_cap/mario_cap_wing.rgba16.inc.c", 0x00114750, 78432, 0x00008090, 4096);
 
 // 0x0301F750
-ALIGNED8 const Texture mario_cap_seg3_texture_0301F750[] = {
-#include "actors/mario_cap/mario_cap_wing_tip.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(mario_cap_seg3_texture_0301F750, "actors/mario_cap/mario_cap_wing_tip.rgba16.inc.c", 0x00114750, 78432, 0x00009090, 4096);
 
 // 0x03020750
-ALIGNED8 const Texture mario_cap_seg3_texture_03020750[] = {
-#include "actors/mario_cap/mario_cap_metal_wing_unused.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(mario_cap_seg3_texture_03020750, "actors/mario_cap/mario_cap_metal_wing_unused.rgba16.inc.c", 0x00114750, 78432, 0x0000a090, 4096);
 
 // 0x03021750
-ALIGNED8 const Texture mario_cap_seg3_texture_03021750[] = {
-#include "actors/mario_cap/mario_cap_metal_wing_tip_unused.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(mario_cap_seg3_texture_03021750, "actors/mario_cap/mario_cap_metal_wing_tip_unused.rgba16.inc.c", 0x00114750, 78432, 0x0000b090, 4096);
 
 // 0x03022750
-static const Vtx mario_cap_seg3_vertex_03022750[] = {
-    {{{    33,     35,    118}, 0, {   728,    758}, {0x30, 0x26, 0x6e, 0xff}}},
-    {{{    96,     22,     45}, 0, {  1240,    876}, {0x48, 0xa4, 0x31, 0xff}}},
-    {{{    71,    101,    113}, 0, {  1028,    148}, {0x55, 0x16, 0x5b, 0xff}}},
-    {{{     0,    110,    143}, 0, {   460,     68}, {0x00, 0x34, 0x73, 0xff}}},
-    {{{   -31,     35,    118}, 0, {   206,    762}, {0xd0, 0x26, 0x6f, 0xff}}},
-    {{{   -70,    101,    113}, 0, {  -106,    158}, {0xab, 0x16, 0x5b, 0xff}}},
-    {{{   -95,     22,     46}, 0, {  -302,    890}, {0xa8, 0xb9, 0x38, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(mario_cap_seg3_vertex_03022750, 0x00114750, 78432, 0x0001bf50, 112);
 
 // 0x030227C0
-static const Vtx mario_cap_seg3_vertex_030227C0[] = {
-    {{{   -66,      2,    139}, 0, {     0,      0}, {0xb0, 0xbb, 0x45, 0xff}}},
-    {{{     0,      0,    163}, 0, {     0,      0}, {0x00, 0xba, 0x69, 0xff}}},
-    {{{   -31,     35,    118}, 0, {     0,      0}, {0xd0, 0x26, 0x6f, 0xff}}},
-    {{{   -32,     17,    109}, 0, {     0,      0}, {0x00, 0x83, 0xf0, 0xff}}},
-    {{{    33,     17,    109}, 0, {     0,      0}, {0xfb, 0x84, 0xea, 0xff}}},
-    {{{   -95,     22,     46}, 0, {     0,      0}, {0xa8, 0xb9, 0x38, 0xff}}},
-    {{{  -101,     10,     -7}, 0, {     0,      0}, {0xd8, 0x89, 0x11, 0xff}}},
-    {{{   -70,    101,    113}, 0, {     0,      0}, {0xab, 0x16, 0x5b, 0xff}}},
-    {{{  -135,     70,     23}, 0, {     0,      0}, {0x84, 0x15, 0x10, 0xff}}},
-    {{{  -125,     38,    -45}, 0, {     0,      0}, {0x8d, 0xec, 0xd1, 0xff}}},
-    {{{   -86,      1,    -60}, 0, {     0,      0}, {0xce, 0x8c, 0xf6, 0xff}}},
-    {{{   -41,    144,     64}, 0, {     0,      0}, {0xdc, 0x79, 0x00, 0xff}}},
-    {{{   -76,     84,    -60}, 0, {     0,      0}, {0xd5, 0x6e, 0xd3, 0xff}}},
-    {{{   136,     70,     22}, 0, {     0,      0}, {0x7b, 0x16, 0x10, 0xff}}},
-    {{{    71,    101,    113}, 0, {     0,      0}, {0x55, 0x16, 0x5b, 0xff}}},
-    {{{    96,     22,     45}, 0, {     0,      0}, {0x48, 0xa4, 0x31, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(mario_cap_seg3_vertex_030227C0, 0x00114750, 78432, 0x0001bfc0, 256);
 
 // 0x030228C0
-static const Vtx mario_cap_seg3_vertex_030228C0[] = {
-    {{{    42,    144,     64}, 0, {     0,      0}, {0x2b, 0x76, 0x0d, 0xff}}},
-    {{{   136,     70,     22}, 0, {     0,      0}, {0x7b, 0x16, 0x10, 0xff}}},
-    {{{    76,     84,    -60}, 0, {     0,      0}, {0x2a, 0x6c, 0xcf, 0xff}}},
-    {{{   103,     10,     -6}, 0, {     0,      0}, {0x42, 0x96, 0x12, 0xff}}},
-    {{{   126,     38,    -46}, 0, {     0,      0}, {0x73, 0xec, 0xd0, 0xff}}},
-    {{{    71,    101,    113}, 0, {     0,      0}, {0x55, 0x16, 0x5b, 0xff}}},
-    {{{    96,     22,     45}, 0, {     0,      0}, {0x48, 0xa4, 0x31, 0xff}}},
-    {{{    67,      2,    139}, 0, {     0,      0}, {0x50, 0xba, 0x44, 0xff}}},
-    {{{    33,     17,    109}, 0, {     0,      0}, {0xfb, 0x84, 0xea, 0xff}}},
-    {{{    33,     35,    118}, 0, {     0,      0}, {0x30, 0x26, 0x6e, 0xff}}},
-    {{{    86,      1,    -60}, 0, {     0,      0}, {0x20, 0x86, 0xfe, 0xff}}},
-    {{{     0,      0,    163}, 0, {     0,      0}, {0x00, 0xba, 0x69, 0xff}}},
-    {{{   -31,     35,    118}, 0, {     0,      0}, {0xd0, 0x26, 0x6f, 0xff}}},
-    {{{    53,      0,   -118}, 0, {     0,      0}, {0x2c, 0xb5, 0xa5, 0xff}}},
-    {{{    49,     62,   -139}, 0, {     0,      0}, {0x32, 0x49, 0xa6, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(mario_cap_seg3_vertex_030228C0, 0x00114750, 78432, 0x0001c0c0, 240);
 
 // 0x030229B0
-static const Vtx mario_cap_seg3_vertex_030229B0[] = {
-    {{{   -76,     84,    -60}, 0, {     0,      0}, {0xd5, 0x6e, 0xd3, 0xff}}},
-    {{{   -41,    144,     64}, 0, {     0,      0}, {0xdc, 0x79, 0x00, 0xff}}},
-    {{{    76,     84,    -60}, 0, {     0,      0}, {0x2a, 0x6c, 0xcf, 0xff}}},
-    {{{     0,    110,    143}, 0, {     0,      0}, {0x00, 0x34, 0x73, 0xff}}},
-    {{{    42,    144,     64}, 0, {     0,      0}, {0x2b, 0x76, 0x0d, 0xff}}},
-    {{{   -70,    101,    113}, 0, {     0,      0}, {0xab, 0x16, 0x5b, 0xff}}},
-    {{{    71,    101,    113}, 0, {     0,      0}, {0x55, 0x16, 0x5b, 0xff}}},
-    {{{    49,     62,   -139}, 0, {     0,      0}, {0x32, 0x49, 0xa6, 0xff}}},
-    {{{   126,     38,    -46}, 0, {     0,      0}, {0x73, 0xec, 0xd0, 0xff}}},
-    {{{   -52,      0,   -118}, 0, {     0,      0}, {0xd2, 0x9d, 0xc1, 0xff}}},
-    {{{   -49,     62,   -138}, 0, {     0,      0}, {0xce, 0x1a, 0x8f, 0xff}}},
-    {{{    53,      0,   -118}, 0, {     0,      0}, {0x2c, 0xb5, 0xa5, 0xff}}},
-    {{{  -125,     38,    -45}, 0, {     0,      0}, {0x8d, 0xec, 0xd1, 0xff}}},
-    {{{    86,      1,    -60}, 0, {     0,      0}, {0x20, 0x86, 0xfe, 0xff}}},
-    {{{   -86,      1,    -60}, 0, {     0,      0}, {0xce, 0x8c, 0xf6, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(mario_cap_seg3_vertex_030229B0, 0x00114750, 78432, 0x0001c1b0, 240);
 
 // 0x03022AA0
-static const Vtx mario_cap_seg3_vertex_03022AA0[] = {
-    {{{    86,      1,    -60}, 0, {     0,      0}, {0x20, 0x86, 0xfe, 0xff}}},
-    {{{   -86,      1,    -60}, 0, {     0,      0}, {0xce, 0x8c, 0xf6, 0xff}}},
-    {{{   -52,      0,   -118}, 0, {     0,      0}, {0xd2, 0x9d, 0xc1, 0xff}}},
-    {{{    33,     17,    109}, 0, {     0,      0}, {0xfb, 0x84, 0xea, 0xff}}},
-    {{{   -32,     17,    109}, 0, {     0,      0}, {0x00, 0x83, 0xf0, 0xff}}},
-    {{{  -101,     10,     -7}, 0, {     0,      0}, {0xd8, 0x89, 0x11, 0xff}}},
-    {{{    96,     22,     45}, 0, {     0,      0}, {0x48, 0xa4, 0x31, 0xff}}},
-    {{{   103,     10,     -6}, 0, {     0,      0}, {0x42, 0x96, 0x12, 0xff}}},
-    {{{    53,      0,   -118}, 0, {     0,      0}, {0x2c, 0xb5, 0xa5, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(mario_cap_seg3_vertex_03022AA0, 0x00114750, 78432, 0x0001c2a0, 144);
 
 // 0x03022B30 - 0x03022B68
 const Gfx mario_cap_seg3_dl_03022B30[] = {
@@ -197,16 +120,10 @@ const Gfx mario_cap_seg3_dl_03022CC8[] = {
 // 0x03022D10 - 0x03022D38
 const Gfx mario_cap_seg3_dl_03022D10[] = {
     gsSPDisplayList(mario_cap_seg3_dl_03022B68),
-    gsDPSetCombineMode(G_CC_MODULATERGBFADEA, G_CC_MODULATERGBFADEA),
-    gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 0, 0, G_TX_LOADTILE, 0, G_TX_WRAP | G_TX_NOMIRROR, G_TX_NOMASK, G_TX_NOLOD, G_TX_WRAP | G_TX_NOMIRROR, G_TX_NOMASK, G_TX_NOLOD),
-    gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON),
-    gsDPTileSync(),
-    gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 8, 0, G_TX_RENDERTILE, 0, G_TX_CLAMP, 5, G_TX_NOLOD, G_TX_CLAMP, 5, G_TX_NOLOD),
-    gsDPSetTileSize(0, 0, 0, (8 - 1) << G_TEXTURE_IMAGE_FRAC, (8 - 1) << G_TEXTURE_IMAGE_FRAC),
-    gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, mario_texture_cap_inside),
-    gsDPLoadSync(),
-    gsDPLoadBlock(G_TX_LOADTILE, 0, 0, 8 * 8 - 1, CALC_DXT(8, G_IM_SIZ_16b_BYTES)),
-    gsSPCopyLightsPlayerPart(CAP), //gsSPLight(&mario_cap_seg3_lights_0301CF08.a, 2),
+    gsDPSetCombineLERP(SHADE, 0, PRIMITIVE, 0, 0, 0, 0, ENVIRONMENT, SHADE, 0, PRIMITIVE, 0, 0, 0, 0, ENVIRONMENT),
+    gsSPTexture(65535, 65535, 0, 0, 1),
+    gsDPSetPrimColor(0, 0, 115, 115, 115, 255),
+    gsSPCopyLightsPlayerPart(CAP),
     gsSPDisplayList(mario_cap_seg3_dl_03022CC8),
     gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_OFF),
     gsDPPipeSync(),
@@ -271,6 +188,16 @@ const Gfx mario_cap_seg3_dl_03022ED8[] = {
     gsSPEndDisplayList(),
 };
 
+const Gfx mario_cap_seg3_dl_03022ED8_metal[] = {
+    gsDPPipeSync(),
+    gsSPClearGeometryMode(G_TEXTURE_GEN | G_CULL_BACK),
+    gsDPSetCombineLERP(TEXEL0, 0, SHADE, TEXEL1, TEXEL0, 0, ENVIRONMENT, 0, TEXEL0, 0, SHADE, TEXEL1, TEXEL0, 0, ENVIRONMENT, 0),
+    gsSPTexture(65535, 65535, 0, 0, 1),
+    gsSPLight(&mario_cap_black_lights_group.l, 1),
+    gsSPCopyLightEXT(2, 17),
+    gsSPEndDisplayList(),
+};
+
 // 0x03022F20 - 0x03022F48
 const Gfx mario_cap_seg3_dl_03022F20[] = {
     gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_OFF),
@@ -282,12 +209,10 @@ const Gfx mario_cap_seg3_dl_03022F20[] = {
 
 const Gfx mario_cap_m_logo_decal[] = {
     gsDPPipeSync(),
-    gsDPSetCombineLERP(TEXEL0, SHADE, TEXEL1, SHADE, TEXEL0, 0, ENVIRONMENT, 0, COMBINED, TEXEL0, PRIMITIVE, COMBINED, 0, 0, 0, COMBINED),
-    gsDPSetCycleType(G_CYC_2CYCLE),
+    gsDPSetCombineLERP(TEXEL0, SHADE, TEXEL1, SHADE, TEXEL0, 0, ENVIRONMENT, 0, TEXEL0, SHADE, TEXEL1, SHADE, TEXEL0, 0, ENVIRONMENT, 0),
     gsSPTexture(65535, 65535, 0, 0, 1),
-    gsDPSetPrimColor(0, 0, 127, 127, 127, 255),
     gsSPLight(&mario_cap_black_lights_group.l, 1),
-    gsSPCopyLightEXT(2, 5),
+    gsSPCopyLightEXT(2, 17),
     gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 1, mario_cap_texture_m_logo),
     gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 0, 0, 7, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0),
     gsDPLoadBlock(7, 0, 0, 1023, 256),
@@ -299,19 +224,21 @@ const Gfx mario_cap_m_logo_decal[] = {
     gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 8, 256, 1, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0),
     gsDPSetTileSize(1, 0, 0, 124, 124),
     gsSPDisplayList(mario_cap_seg3_dl_03022B30),
-    gsDPSetCycleType(G_CYC_1CYCLE),
     gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_OFF),
     gsDPPipeSync(),
-    gsDPSetCombineMode(G_CC_MODULATERGBFADEA, G_CC_MODULATERGBFADEA),
-    gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 0, 0, G_TX_LOADTILE, 0, G_TX_WRAP | G_TX_NOMIRROR, G_TX_NOMASK, G_TX_NOLOD, G_TX_WRAP | G_TX_NOMIRROR, G_TX_NOMASK, G_TX_NOLOD),
-    gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON),
-    gsDPTileSync(),
-    gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 8, 0, G_TX_RENDERTILE, 0, G_TX_CLAMP, 5, G_TX_NOLOD, G_TX_CLAMP, 5, G_TX_NOLOD),
-    gsDPSetTileSize(0, 0, 0, (32 - 1) << G_TEXTURE_IMAGE_FRAC, (32 - 1) << G_TEXTURE_IMAGE_FRAC),
-    gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, mario_cap_texture_m_cap),
-    gsDPLoadSync(),
-    gsDPLoadBlock(G_TX_LOADTILE, 0, 0, 32 * 32 - 1, CALC_DXT(32, G_IM_SIZ_16b_BYTES)),
+    gsDPSetCombineLERP(TEXEL0, SHADE, TEXEL0_ALPHA, SHADE, TEXEL1, 0, ENVIRONMENT, 0, TEXEL0, SHADE, TEXEL0_ALPHA, SHADE, TEXEL1, 0, ENVIRONMENT, 0),
+    gsSPTexture(65535, 65535, 0, 0, 1),
     gsSPCopyLightsPlayerPart(CAP),
+    gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 1, mario_cap_texture_m_logo),
+    gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 0, 0, 7, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0),
+    gsDPLoadBlock(7, 0, 0, 1023, 256),
+    gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 8, 0, 0, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0),
+    gsDPSetTileSize(0, 0, 0, 124, 124),
+    gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 1, mario_cap_texture_m_cap),
+    gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 0, 256, 6, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0),
+    gsDPLoadBlock(6, 0, 0, 1023, 256),
+    gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 8, 256, 1, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0),
+    gsDPSetTileSize(1, 0, 0, 124, 124),
     gsSPDisplayList(mario_cap_seg3_dl_03022B30),
     gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_OFF),
     gsDPPipeSync(),
@@ -334,22 +261,22 @@ const Gfx mario_cap_seg3_dl_03022F48[] = {
 
 // 0x03022FF8 - 0x030230B0
 const Gfx mario_cap_seg3_dl_03022FF8[] = {
-	gsDPPipeSync(),
-	gsDPSetCombineLERP(TEXEL0, 0, SHADE, TEXEL1, 0, 0, 0, ENVIRONMENT, TEXEL0, 0, SHADE, TEXEL1, 0, 0, 0, ENVIRONMENT),
-	gsSPSetGeometryMode(G_TEXTURE_GEN),
-	gsSPTexture(4032, 1984, 0, 0, 1),
+    gsDPPipeSync(),
+    gsDPSetCombineLERP(TEXEL0, 0, SHADE, TEXEL1, 0, 0, 0, ENVIRONMENT, TEXEL0, 0, SHADE, TEXEL1, 0, 0, 0, ENVIRONMENT),
+    gsSPSetGeometryMode(G_TEXTURE_GEN),
+    gsSPTexture(4032, 1984, 0, 0, 1),
     gsSPLight(&mario_cap_black_lights_group.l, 1),
-    gsSPCopyLightEXT(2, 15),
-	gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 1, mario_cap_texture_metal_shade),
-	gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 0, 0, 7, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0),
-	gsDPLoadBlock(7, 0, 0, 2047, 128),
-	gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 16, 0, 0, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0, G_TX_CLAMP | G_TX_NOMIRROR, 6, 0),
-	gsDPSetTileSize(0, 0, 0, 252, 124),
-	gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 1, mario_cap_texture_metal_light),
-	gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 0, 512, 6, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0),
-	gsDPLoadBlock(6, 0, 0, 2047, 128),
-	gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 16, 512, 1, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0, G_TX_CLAMP | G_TX_NOMIRROR, 6, 0),
-	gsDPSetTileSize(1, 0, 0, 252, 124),
+    gsSPCopyLightEXT(2, 17),
+    gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 1, mario_cap_texture_metal_shade),
+    gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 0, 0, 7, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0),
+    gsDPLoadBlock(7, 0, 0, 2047, 128),
+    gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 16, 0, 0, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0, G_TX_CLAMP | G_TX_NOMIRROR, 6, 0),
+    gsDPSetTileSize(0, 0, 0, 252, 124),
+    gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 1, mario_cap_texture_metal_light),
+    gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 0, 512, 6, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0),
+    gsDPLoadBlock(6, 0, 0, 2047, 128),
+    gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 16, 512, 1, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0, G_TX_CLAMP | G_TX_NOMIRROR, 6, 0),
+    gsDPSetTileSize(1, 0, 0, 252, 124),
     gsSPDisplayList(mario_cap_seg3_dl_03022B30),
     gsSPDisplayList(mario_cap_seg3_dl_03022B68),
     gsSPDisplayList(mario_cap_seg3_dl_03022CC8),
@@ -379,14 +306,28 @@ const Gfx mario_cap_seg3_dl_030230B0[] = {
 
 // 0x03023108 - 0x03023160
 const Gfx mario_cap_seg3_dl_03023108[] = {
-    gsSPDisplayList(mario_cap_seg3_dl_03022ED8),
-    gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, mario_cap_texture_metal_wings_half_1),
-    gsDPLoadSync(),
-    gsDPLoadBlock(G_TX_LOADTILE, 0, 0, 32 * 64 - 1, CALC_DXT(32, G_IM_SIZ_16b_BYTES)),
+    gsSPDisplayList(mario_cap_seg3_dl_03022ED8_metal),
+    gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 1, mario_cap_texture_metal_wings_half_1_shade),
+    gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 0, 0, 7, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0),
+    gsDPLoadBlock(7, 0, 0, 2047, 256),
+    gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 8, 0, 0, 0, G_TX_CLAMP | G_TX_NOMIRROR, 6, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0),
+    gsDPSetTileSize(0, 0, 0, 124, 252),
+    gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 1, mario_cap_texture_metal_wings_half_1_light),
+    gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 0, 512, 6, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0),
+    gsDPLoadBlock(6, 0, 0, 2047, 256),
+    gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 8, 512, 1, 0, G_TX_CLAMP | G_TX_NOMIRROR, 6, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0),
+    gsDPSetTileSize(1, 0, 0, 124, 252),
     gsSPDisplayList(mario_cap_seg3_dl_03022E78),
-    gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, mario_cap_texture_metal_wings_half_2),
-    gsDPLoadSync(),
-    gsDPLoadBlock(G_TX_LOADTILE, 0, 0, 32 * 64 - 1, CALC_DXT(32, G_IM_SIZ_16b_BYTES)),
+    gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 1, mario_cap_texture_metal_wings_half_2_shade),
+    gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 0, 0, 7, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0),
+    gsDPLoadBlock(7, 0, 0, 2047, 256),
+    gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 8, 0, 0, 0, G_TX_CLAMP | G_TX_NOMIRROR, 6, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0),
+    gsDPSetTileSize(0, 0, 0, 124, 252),
+    gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 1, mario_cap_texture_metal_wings_half_2_light),
+    gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 0, 512, 6, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0),
+    gsDPLoadBlock(6, 0, 0, 2047, 256),
+    gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 8, 512, 1, 0, G_TX_CLAMP | G_TX_NOMIRROR, 6, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0),
+    gsDPSetTileSize(1, 0, 0, 124, 252),
     gsSPDisplayList(mario_cap_seg3_dl_03022EA8),
     gsSPDisplayList(mario_cap_seg3_dl_03022F20),
     gsSPEndDisplayList(),
@@ -424,40 +365,53 @@ const Gfx mario_cap_seg3_dl_03023160[] = {
 
 // 0x03023298 - 0x030233D0
 const Gfx mario_cap_seg3_dl_03023298[] = {
-	gsDPPipeSync(),
-	gsDPSetCombineLERP(TEXEL0, 0, SHADE, TEXEL1, 0, 0, 0, ENVIRONMENT, TEXEL0, 0, SHADE, TEXEL1, 0, 0, 0, ENVIRONMENT),
-	gsSPSetGeometryMode(G_TEXTURE_GEN),
-	gsSPTexture(4032, 1984, 0, 0, 1),
+    gsDPPipeSync(),
+    gsDPSetCombineLERP(TEXEL0, 0, SHADE, TEXEL1, 0, 0, 0, ENVIRONMENT, TEXEL0, 0, SHADE, TEXEL1, 0, 0, 0, ENVIRONMENT),
+    gsSPSetGeometryMode(G_TEXTURE_GEN),
+    gsSPTexture(4032, 1984, 0, 0, 1),
     gsSPLight(&mario_cap_black_lights_group.l, 1),
-    gsSPCopyLightEXT(2, 15),
-	gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 1, mario_cap_texture_metal_shade),
-	gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 0, 0, 7, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0),
-	gsDPLoadBlock(7, 0, 0, 2047, 128),
-	gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 16, 0, 0, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0, G_TX_CLAMP | G_TX_NOMIRROR, 6, 0),
-	gsDPSetTileSize(0, 0, 0, 252, 124),
-	gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 1, mario_cap_texture_metal_light),
-	gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 0, 512, 6, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0),
-	gsDPLoadBlock(6, 0, 0, 2047, 128),
-	gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 16, 512, 1, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0, G_TX_CLAMP | G_TX_NOMIRROR, 6, 0),
-	gsDPSetTileSize(1, 0, 0, 252, 124),
+    gsSPCopyLightEXT(2, 17),
+    gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 1, mario_cap_texture_metal_shade),
+    gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 0, 0, 7, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0),
+    gsDPLoadBlock(7, 0, 0, 2047, 128),
+    gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 16, 0, 0, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0, G_TX_CLAMP | G_TX_NOMIRROR, 6, 0),
+    gsDPSetTileSize(0, 0, 0, 252, 124),
+    gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 1, mario_cap_texture_metal_light),
+    gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 0, 512, 6, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0),
+    gsDPLoadBlock(6, 0, 0, 2047, 128),
+    gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 16, 512, 1, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0, G_TX_CLAMP | G_TX_NOMIRROR, 6, 0),
+    gsDPSetTileSize(1, 0, 0, 252, 124),
     gsSPDisplayList(mario_cap_seg3_dl_03022B30),
     gsSPDisplayList(mario_cap_seg3_dl_03022B68),
     gsSPDisplayList(mario_cap_seg3_dl_03022CC8),
     gsSPTexture(0x0F80, 0x07C0, 0, G_TX_RENDERTILE, G_OFF),
     gsDPPipeSync(),
-    gsSPClearGeometryMode(G_TEXTURE_GEN | G_LIGHTING | G_CULL_BACK),
-    gsDPSetCombineMode(G_CC_DECALFADEA, G_CC_DECALFADEA),
-    gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON),
-    gsDPTileSync(),
-    gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 8, 0, G_TX_RENDERTILE, 0, G_TX_CLAMP, 6, G_TX_NOLOD, G_TX_CLAMP, 5, G_TX_NOLOD),
-    gsDPSetTileSize(0, 0, 0, (32 - 1) << G_TEXTURE_IMAGE_FRAC, (64 - 1) << G_TEXTURE_IMAGE_FRAC),
-    gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, mario_cap_texture_metal_wings_half_1),
-    gsDPLoadSync(),
-    gsDPLoadBlock(G_TX_LOADTILE, 0, 0, 32 * 64 - 1, CALC_DXT(32, G_IM_SIZ_16b_BYTES)),
+    gsSPClearGeometryMode(G_TEXTURE_GEN | G_CULL_BACK),
+    gsDPSetCombineLERP(TEXEL0, 0, SHADE, TEXEL1, TEXEL0, 0, ENVIRONMENT, 0, TEXEL0, 0, SHADE, TEXEL1, TEXEL0, 0, ENVIRONMENT, 0),
+    gsSPTexture(65535, 65535, 0, 0, 1),
+    gsSPLight(&mario_cap_black_lights_group.l, 1),
+    gsSPCopyLightEXT(2, 17),
+    gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 1, mario_cap_texture_metal_wings_half_1_shade),
+    gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 0, 0, 7, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0),
+    gsDPLoadBlock(7, 0, 0, 2047, 256),
+    gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 8, 0, 0, 0, G_TX_CLAMP | G_TX_NOMIRROR, 6, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0),
+    gsDPSetTileSize(0, 0, 0, 124, 252),
+    gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 1, mario_cap_texture_metal_wings_half_1_light),
+    gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 0, 512, 6, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0),
+    gsDPLoadBlock(6, 0, 0, 2047, 256),
+    gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 8, 512, 1, 0, G_TX_CLAMP | G_TX_NOMIRROR, 6, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0),
+    gsDPSetTileSize(1, 0, 0, 124, 252),
     gsSPDisplayList(mario_cap_seg3_dl_03022E78),
-    gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, mario_cap_texture_metal_wings_half_2),
-    gsDPLoadSync(),
-    gsDPLoadBlock(G_TX_LOADTILE, 0, 0, 32 * 64 - 1, CALC_DXT(32, G_IM_SIZ_16b_BYTES)),
+    gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 1, mario_cap_texture_metal_wings_half_2_shade),
+    gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 0, 0, 7, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0),
+    gsDPLoadBlock(7, 0, 0, 2047, 256),
+    gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 8, 0, 0, 0, G_TX_CLAMP | G_TX_NOMIRROR, 6, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0),
+    gsDPSetTileSize(0, 0, 0, 124, 252),
+    gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 1, mario_cap_texture_metal_wings_half_2_light),
+    gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 0, 512, 6, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0),
+    gsDPLoadBlock(6, 0, 0, 2047, 256),
+    gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 8, 512, 1, 0, G_TX_CLAMP | G_TX_NOMIRROR, 6, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0),
+    gsDPSetTileSize(1, 0, 0, 124, 252),
     gsSPDisplayList(mario_cap_seg3_dl_03022EA8),
     gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_OFF),
     gsDPPipeSync(),

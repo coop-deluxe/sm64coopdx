@@ -1,14 +1,11 @@
+#include "pc/rom_assets.h"
 // Moneybag
 
 // 0x060039B0
-ALIGNED8 const Texture moneybag_seg6_texture_060039B0[] = {
-#include "actors/moneybag/moneybag_mouth.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(moneybag_seg6_texture_060039B0, "actors/moneybag/moneybag_mouth.rgba16.inc.c", 0x001e51f0, 11160, 0x000039b0, 4096);
 
 // 0x060049B0
-ALIGNED8 const Texture moneybag_seg6_texture_060049B0[] = {
-#include "actors/moneybag/moneybag_eyes.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(moneybag_seg6_texture_060049B0, "actors/moneybag/moneybag_eyes.rgba16.inc.c", 0x001e51f0, 11160, 0x000049b0, 2048);
 
 // 0x060051B0
 static const Lights1 moneybag_seg6_lights_060051B0 = gdSPDefLights1(
@@ -23,30 +20,10 @@ static const Lights1 moneybag_seg6_lights_060051C8 = gdSPDefLights1(
 );
 
 // 0x060051E0
-static const Vtx moneybag_seg6_vertex_060051E0[] = {
-    {{{   226,      1,    300}, 0, {  1988,      0}, {0xcd, 0xf8, 0x73, 0xff}}},
-    {{{     0,      0,    200}, 0, {  2656,    358}, {0xac, 0xfb, 0x5e, 0xff}}},
-    {{{   278,   -190,    140}, 0, {   988,    390}, {0xd2, 0x96, 0x33, 0xff}}},
-    {{{   261,    194,   -174}, 0, {   824,    392}, {0xcc, 0x64, 0xc8, 0xff}}},
-    {{{   226,      1,   -299}, 0, {    -8,      0}, {0xcd, 0xf8, 0x8d, 0xff}}},
-    {{{     0,      0,   -199}, 0, {  -672,    312}, {0xac, 0xfb, 0xa2, 0xff}}},
-    {{{   261,    194,    175}, 0, {  1156,    392}, {0xcc, 0x64, 0x38, 0xff}}},
-    {{{     0,      0,    200}, 0, {  2656,    312}, {0xac, 0xfb, 0x5e, 0xff}}},
-    {{{     0,      0,   -199}, 0, {  -672,    358}, {0xac, 0xfb, 0xa2, 0xff}}},
-    {{{   278,   -190,   -139}, 0, {   992,    390}, {0xd2, 0x96, 0xcd, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(moneybag_seg6_vertex_060051E0, 0x001e51f0, 11160, 0x000051e0, 160);
 
 // 0x06005280
-static const Vtx moneybag_seg6_vertex_06005280[] = {
-    {{{     0,      0,    200}, 0, {     0,      0}, {0xac, 0xfb, 0x5e, 0xff}}},
-    {{{   -88,    -68,      0}, 0, {     0,      0}, {0x9f, 0xaf, 0x00, 0xff}}},
-    {{{   278,   -190,    140}, 0, {     0,      0}, {0xd2, 0x96, 0x33, 0xff}}},
-    {{{   -88,     71,      0}, 0, {     0,      0}, {0x9b, 0x4c, 0x00, 0xff}}},
-    {{{   261,    194,    175}, 0, {     0,      0}, {0xcc, 0x64, 0x38, 0xff}}},
-    {{{     0,      0,   -199}, 0, {     0,      0}, {0xac, 0xfb, 0xa2, 0xff}}},
-    {{{   278,   -190,   -139}, 0, {     0,      0}, {0xd2, 0x96, 0xcd, 0xff}}},
-    {{{   261,    194,   -174}, 0, {     0,      0}, {0xcc, 0x64, 0xc8, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(moneybag_seg6_vertex_06005280, 0x001e51f0, 11160, 0x00005280, 128);
 
 // 0x06005300 - 0x06005358
 const Gfx moneybag_seg6_dl_06005300[] = {
@@ -98,33 +75,10 @@ static const Lights1 moneybag_seg6_lights_06005428 = gdSPDefLights1(
 );
 
 // 0x06005440
-static const Vtx moneybag_seg6_vertex_06005440[] = {
-    {{{   418,     89,   -157}, 0, {   388,      0}, {0x46, 0x62, 0xdb, 0xff}}},
-    {{{   261,    194,    175}, 0, {  1604,    408}, {0x46, 0x62, 0x25, 0xff}}},
-    {{{   418,     89,    157}, 0, {  1540,      0}, {0x43, 0x5b, 0x39, 0xff}}},
-    {{{   418,     89,    157}, 0, {   684,      0}, {0x43, 0x5b, 0x39, 0xff}}},
-    {{{   261,    194,    175}, 0, {  1156,    392}, {0x46, 0x62, 0x25, 0xff}}},
-    {{{   226,      1,    300}, 0, {  1988,      0}, {0x34, 0xf9, 0x73, 0xff}}},
-    {{{   418,     89,   -157}, 0, {  1296,      0}, {0x46, 0x62, 0xdb, 0xff}}},
-    {{{   226,      1,   -299}, 0, {    -8,      0}, {0x33, 0xf9, 0x8d, 0xff}}},
-    {{{   261,    194,   -174}, 0, {   824,    392}, {0x43, 0x5b, 0xc7, 0xff}}},
-    {{{   418,    -85,   -157}, 0, {  1296,      0}, {0x28, 0xba, 0x9f, 0xff}}},
-    {{{   278,   -190,   -139}, 0, {   992,    390}, {0x46, 0x9d, 0xdd, 0xff}}},
-    {{{   278,   -190,    140}, 0, {   988,    390}, {0x40, 0xa1, 0x35, 0xff}}},
-    {{{   418,    -85,    157}, 0, {   684,      0}, {0x28, 0xba, 0x61, 0xff}}},
-    {{{   261,    194,   -174}, 0, {   324,    408}, {0x43, 0x5b, 0xc7, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(moneybag_seg6_vertex_06005440, 0x001e51f0, 11160, 0x00005440, 224);
 
 // 0x06005520
-static const Vtx moneybag_seg6_vertex_06005520[] = {
-    {{{   278,   -190,   -139}, 0, {  1512,    416}, {0x46, 0x9d, 0xdd, 0xff}}},
-    {{{   418,    -85,   -156}, 0, {  1588,      0}, {0x4c, 0x9b, 0x00, 0xff}}},
-    {{{   418,    -85,    158}, 0, {   248,      0}, {0x4c, 0x9b, 0x00, 0xff}}},
-    {{{   278,   -190,    140}, 0, {   320,    416}, {0x40, 0xa1, 0x35, 0xff}}},
-    {{{   238,    -15,    286}, 0, {  2336,    754}, {0x3e, 0xce, 0x62, 0xff}}},
-    {{{   272,     77,    312}, 0, {   124,   1062}, {0x3e, 0xce, 0x62, 0xff}}},
-    {{{   229,     73,    337}, 0, {   124,    436}, {0x3e, 0xce, 0x62, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(moneybag_seg6_vertex_06005520, 0x001e51f0, 11160, 0x00005520, 112);
 
 // 0x06005590 - 0x06005618
 const Gfx moneybag_seg6_dl_06005590[] = {
@@ -170,14 +124,7 @@ const Gfx moneybag_seg6_dl_06005688[] = {
 };
 
 // 0x060056A8
-static const Vtx moneybag_seg6_vertex_060056A8[] = {
-    {{{   356,    121,   -159}, 0, {   960,      4}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   356,   -128,    150}, 0, {    28,    918}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   356,   -128,   -149}, 0, {   930,    918}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   356,    121,    160}, 0, {    -2,      4}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   226,      1,    298}, 0, {  -414,    442}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   226,      1,   -297}, 0, {  1374,    442}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(moneybag_seg6_vertex_060056A8, 0x001e51f0, 11160, 0x000056a8, 96);
 
 // 0x06005708 - 0x06005750
 const Gfx moneybag_seg6_dl_06005708[] = {
@@ -233,34 +180,10 @@ UNUSED static const Lights1 moneybag_lights_unused3 = gdSPDefLights1(
 );
 
 // 0x06005820
-static const Vtx moneybag_seg6_vertex_06005820[] = {
-    {{{     0,      0,      0}, 0, {     0,      0}, {0x83, 0x11, 0x00, 0x00}}},
-    {{{   180,     90,      0}, 0, {     0,      0}, {0xc8, 0x71, 0x00, 0x00}}},
-    {{{   180,     40,    -80}, 0, {     0,      0}, {0xc8, 0x2a, 0x97, 0x00}}},
-    {{{   180,   -120,    -40}, 0, {     0,      0}, {0xbb, 0xb0, 0xbb, 0xff}}},
-    {{{   180,   -120,     40}, 0, {     0,      0}, {0xbb, 0xb0, 0x45, 0xff}}},
-    {{{   180,     90,      0}, 0, {     0,      0}, {0x7f, 0x00, 0x00, 0xff}}},
-    {{{   180,     40,     80}, 0, {     0,      0}, {0x7f, 0x00, 0x00, 0xff}}},
-    {{{   180,   -120,     40}, 0, {     0,      0}, {0x7f, 0x00, 0x00, 0xff}}},
-    {{{   180,   -120,    -40}, 0, {     0,      0}, {0x7f, 0x00, 0x00, 0xff}}},
-    {{{   180,     40,    -80}, 0, {     0,      0}, {0x7f, 0x00, 0x00, 0xff}}},
-    {{{   180,     40,     80}, 0, {     0,      0}, {0xc8, 0x2a, 0x69, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(moneybag_seg6_vertex_06005820, 0x001e51f0, 11160, 0x00005820, 176);
 
 // 0x060058D0
-static const Vtx moneybag_seg6_vertex_060058D0[] = {
-    {{{   180,     40,     80}, 0, {     0,      0}, {0xc8, 0x2a, 0x69, 0x00}}},
-    {{{   180,     90,      0}, 0, {     0,      0}, {0xc8, 0x71, 0x00, 0x00}}},
-    {{{     0,      0,      0}, 0, {     0,      0}, {0x83, 0x11, 0x00, 0x00}}},
-    {{{   180,   -120,    -40}, 0, {     0,      0}, {0xbb, 0xb0, 0xbb, 0xff}}},
-    {{{   180,   -120,     40}, 0, {     0,      0}, {0xbb, 0xb0, 0x45, 0xff}}},
-    {{{   180,   -120,    -40}, 0, {     0,      0}, {0x7f, 0x00, 0x00, 0xff}}},
-    {{{   180,     40,    -80}, 0, {     0,      0}, {0x7f, 0x00, 0x00, 0xff}}},
-    {{{   180,     90,      0}, 0, {     0,      0}, {0x7f, 0x00, 0x00, 0xff}}},
-    {{{   180,   -120,     40}, 0, {     0,      0}, {0x7f, 0x00, 0x00, 0xff}}},
-    {{{   180,     40,     80}, 0, {     0,      0}, {0x7f, 0x00, 0x00, 0xff}}},
-    {{{   180,     40,    -80}, 0, {     0,      0}, {0xc8, 0x2a, 0x97, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(moneybag_seg6_vertex_060058D0, 0x001e51f0, 11160, 0x000058d0, 176);
 
 // 0x06005980 - 0x060059F0
 const Gfx moneybag_seg6_dl_06005980[] = {

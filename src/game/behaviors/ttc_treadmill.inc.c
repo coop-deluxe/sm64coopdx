@@ -14,7 +14,7 @@ static Collision const *sTTCTreadmillCollisionModels[] = {
     ttc_seg7_collision_070153E0,
 };
 
-static s16 sTTCTreadmillSpeeds[] = {
+s16 gTTCTreadmillSpeeds[] = {
     /* TTC_SPEED_SLOW    */ 50,
     /* TTC_SPEED_FAST    */ 100,
     /* TTC_SPEED_RANDOM  */ 0,
@@ -30,7 +30,7 @@ void bhv_ttc_treadmill_init(void) {
     o->oTTCTreadmillBigSurface = segmented_to_virtual(ttc_movtex_tris_big_surface_treadmill);
     o->oTTCTreadmillSmallSurface = segmented_to_virtual(ttc_movtex_tris_small_surface_treadmill);
 
-    *o->oTTCTreadmillBigSurface = *o->oTTCTreadmillSmallSurface = sTTCTreadmillSpeeds[gTTCSpeedSetting];
+    *o->oTTCTreadmillBigSurface = *o->oTTCTreadmillSmallSurface = gTTCTreadmillSpeeds[gTTCSpeedSetting];
 
     sMasterTreadmill = NULL;
 

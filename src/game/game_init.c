@@ -20,8 +20,8 @@
 #include "segment2.h"
 #include "segment_symbols.h"
 #include "rng_position.h"
-#include "src/pc/djui/djui.h"
-#include "src/pc/djui/djui_panel_pause.h"
+#include "pc/djui/djui.h"
+#include "pc/djui/djui_panel_pause.h"
 #include "rumble_init.h"
 #include <prevent_bss_reordering.h>
 #include "bettercamera.h"
@@ -46,7 +46,6 @@ OSMesg D_80339CD4 = NULL;
 struct VblankHandler gGameVblankHandler = { 0 };
 uintptr_t gPhysicalFrameBuffers[3] = { 0 };
 uintptr_t gPhysicalZBuffer = 0;
-void *D_80339CF0[MAX_PLAYERS] = { 0 };
 void *gDemoTargetAnim = NULL;
 struct MarioAnimation D_80339D10[MAX_PLAYERS] = { 0 };
 struct MarioAnimation gDemo = { 0 };
@@ -169,10 +168,8 @@ void clear_viewport(Vp *viewport, s32 color) {
     s16 vpLrx = (viewport->vp.vtrans[0] + viewport->vp.vscale[0]) / 4 - 2;
     s16 vpLry = (viewport->vp.vtrans[1] + viewport->vp.vscale[1]) / 4 - 2;
 
-    if (!use_forced_4by3()) {
-        vpUlx = GFX_DIMENSIONS_RECT_FROM_LEFT_EDGE(vpUlx);
-        vpLrx = GFX_DIMENSIONS_RECT_FROM_RIGHT_EDGE(SCREEN_WIDTH - vpLrx);
-    }
+    vpUlx = GFX_DIMENSIONS_RECT_FROM_LEFT_EDGE(vpUlx);
+    vpLrx = GFX_DIMENSIONS_RECT_FROM_RIGHT_EDGE(SCREEN_WIDTH - vpLrx);
 
     gDPPipeSync(gDisplayListHead++);
 
@@ -555,11 +552,6 @@ void setup_game_memory(void) {
     gPhysicalFrameBuffers[0] = VIRTUAL_TO_PHYSICAL(gFrameBuffer0);
     gPhysicalFrameBuffers[1] = VIRTUAL_TO_PHYSICAL(gFrameBuffer1);
     gPhysicalFrameBuffers[2] = VIRTUAL_TO_PHYSICAL(gFrameBuffer2);
-    for (s32 i = 0; i < MAX_PLAYERS; i++) {
-        D_80339CF0[i] = calloc(1, 0x4000);
-        set_segment_base_addr(17, (void *)D_80339CF0[i]);
-        alloc_anim_dma_table(&D_80339D10[i], gMarioAnims, D_80339CF0[i]);
-    }
     gDemoTargetAnim = calloc(1, 2048);
     set_segment_base_addr(24, (void *) gDemoTargetAnim);
     alloc_anim_dma_table(&gDemo, gDemoInputs, gDemoTargetAnim);
@@ -587,6 +579,8 @@ void thread5_game_loop(UNUSED void *arg) {
 
     play_music(SEQ_PLAYER_SFX, SEQUENCE_ARGS(0, SEQ_SOUND_PLAYER), 0);
     set_sound_mode(save_file_get_sound_mode());
+
+    thread6_rumble_loop(NULL);
 
     gGlobalTimer++;
 }

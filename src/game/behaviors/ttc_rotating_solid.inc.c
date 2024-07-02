@@ -15,7 +15,7 @@ static void const *sTTCRotatingSolidCollisionModels[] = {
 /**
  * The number of frames to wait before rotating for the first time.
  */
-static u8 sTTCRotatingSolidInitialDelays[] = {
+u8 gTTCRotatingSolidInitialDelays[] = {
     /* TTC_SPEED_SLOW    */ 120,
     /* TTC_SPEED_FAST    */ 40,
     /* TTC_SPEED_RANDOM  */ 0,
@@ -32,7 +32,7 @@ void bhv_ttc_rotating_solid_init(void) {
 
     o->oTTCRotatingSolidNumSides = o->oBehParams2ndByte == TTC_ROTATING_SOLID_BP_CUBE ? 4 : 3;
 
-    o->oTTCRotatingSolidRotationDelay = sTTCRotatingSolidInitialDelays[gTTCSpeedSetting];
+    o->oTTCRotatingSolidRotationDelay = gTTCRotatingSolidInitialDelays[gTTCSpeedSetting];
 
     struct SyncObject* so = sync_object_init(o, 4000.0f);
     if (so) {

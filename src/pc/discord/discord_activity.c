@@ -93,10 +93,10 @@ static void discord_populate_details(char* buffer, int bufferLength) {
 void discord_activity_update(void) {
     sCurActivity.type = DiscordActivityType_Playing;
 
-    strncpy(sCurActivity.assets.large_image, "characters", 128);
-    strncpy(sCurActivity.assets.large_text, "sm64coopdx Characters", 128);
-    strncpy(sCurActivity.assets.small_image, "icon", 128);
-    strncpy(sCurActivity.assets.small_text, "sm64coopdx Icon", 128);
+    snprintf(sCurActivity.assets.large_image, 128, "characters");
+    snprintf(sCurActivity.assets.large_text, 128, "sm64coopdx Characters");
+    snprintf(sCurActivity.assets.small_image, 128, "icon");
+    snprintf(sCurActivity.assets.small_text, 128, "sm64coopdx Icon");
 
     if (gNetworkType != NT_NONE && gNetworkSystem) {
         gNetworkSystem->get_lobby_id(sCurActivity.party.id, 128);
@@ -110,7 +110,7 @@ void discord_activity_update(void) {
         sCurActivity.party.size.max_size = 1;
     }
 
-    if (sCurActivity.party.size.current_size > 1 || configAmountofPlayers == 1) {
+    if ((sCurActivity.party.size.current_size > 1 || configAmountofPlayers == 1) && !gDjuiInMainMenu) {
         strcpy(sCurActivity.state, "Playing!");
     } else if (gNetworkType == NT_SERVER) {
         strcpy(sCurActivity.state, "Waiting for players...");
@@ -120,12 +120,11 @@ void discord_activity_update(void) {
         if (sCurActivity.party.size.max_size < 1) { sCurActivity.party.size.max_size = 1; }
     }
 
-    char details[128] = { 0 };
-    discord_populate_details(details, 128);
+    // HACK: give the detail population more space than the Discord details can fit so it gets truncated without cutting off the largest strings
+    char details[256] = { 0 };
+    discord_populate_details(details, 256);
 
-    if (snprintf(sCurActivity.details, 128, "%s", details) < 0) {
-        LOG_INFO("truncating details");
-    }
+    snprintf(sCurActivity.details, 128, "%s", details);
 
     if (!app.activities) {
         LOG_INFO("no activities");

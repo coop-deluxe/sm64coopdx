@@ -1,16 +1,16 @@
 #include "djui.h"
 #include "djui_panel.h"
 #include "djui_unicode.h"
-#include "src/pc/utils/misc.h"
-#include "src/pc/configfile.h"
+#include "pc/utils/misc.h"
+#include "pc/configfile.h"
 
 #define RAINBOW_TEXT_LEN 255
 
 char* sRainbowColors[] = {
-    "\\#ff0800\\",
-    "\\#1be700\\",
-    "\\#00b3ff\\",
-    "\\#ffef00\\",
+    "\\#ff3030\\",
+    "\\#40e740\\",
+    "\\#40b0ff\\",
+    "\\#ffef40\\",
 };
 
 char sRainbowText[RAINBOW_TEXT_LEN + 1] = { 0 };
@@ -46,19 +46,11 @@ void djui_panel_menu_back(UNUSED struct DjuiBase* base) {
     djui_panel_back();
 }
 
-struct DjuiThreePanel* djui_panel_menu_create(char* headerText) {
+struct DjuiThreePanel* djui_panel_menu_create(char* headerText, bool forcedLeftSide) {
     struct DjuiThreePanel* panel = djui_three_panel_create(&gDjuiRoot->base, 64, 0, 0);
     struct DjuiTheme* theme = gDjuiThemes[configDjuiTheme];
     struct DjuiThreePanelTheme three = theme->threePanels;
-    bool center = configDjuiThemeCenter &&
-        strcmp(headerText, DLANG(HOST_MODS, MODS)) &&
-        strcmp(headerText, DLANG(HOST_MODS, ROMHACKS)) &&
-        strcmp(headerText, DLANG(LOBBIES, PUBLIC_LOBBIES)) &&
-        strcmp(headerText, DLANG(LOBBIES, PRIVATE_LOBBIES)) &&
-        strcmp(headerText, DLANG(JOIN_MESSAGE, JOINING)) &&
-        strcmp(headerText, DLANG(PLAYER, PLAYER_TITLE)) &&
-        strcmp(headerText, DLANG(PLAYER, PALETTE)) &&
-        strcmp(headerText, DLANG(DYNOS, DYNOS));
+    bool center = !forcedLeftSide && configDjuiThemeCenter;
     f32 widthMultiplier = center ? DJUI_THEME_CENTERED_WIDTH : 1.0f;
     f32 heightMultiplier = center ? DJUI_THEME_CENTERED_HEIGHT : 1.0f;
 
@@ -83,7 +75,7 @@ struct DjuiThreePanel* djui_panel_menu_create(char* headerText) {
         djui_base_set_location(&header->base, 0, DJUI_PANEL_HEADER_OFFSET);
         djui_text_set_alignment(header, DJUI_HALIGN_CENTER, DJUI_VALIGN_BOTTOM);
         djui_text_set_font(header, hudFontHeader ? gDjuiFonts[2] : gDjuiFonts[1]);
-        djui_text_set_font_scale(header, gDjuiFonts[1]->defaultFontScale * (hudFontHeader ? 0.7f : 1.0f));
+        djui_text_set_font_scale(header, gDjuiFonts[1]->defaultFontScale * (hudFontHeader ? 0.7f : 1.0f) * (strlen(headerText) > 15 ? 0.9f : 1.0f));
 
         struct DjuiFlowLayout* body = djui_flow_layout_create(&panel->base);
         djui_base_set_alignment(&body->base, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);

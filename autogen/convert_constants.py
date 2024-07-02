@@ -44,13 +44,15 @@ in_files = [
     "src/game/envfx_snow.h",
     "src/pc/mods/mod_storage.h",
     "src/game/first_person_cam.h",
-    "src/pc/djui/djui_console.h"
+    "src/pc/djui/djui_console.h",
+    "src/game/player_palette.h"
 ]
 
 exclude_constants = {
     "*": [ "^MAXCONTROLLERS$", "^AREA_[^T].*", "^AREA_T[HTO]", "^CONT_ERR.*", "^READ_MASK$", "^SIGN_RANGE$", ],
     "src/game/obj_behaviors.c": [ "^o$" ],
-    "src/pc/djui/djui_console.h": [ "CONSOLE_MAX_TMP_BUFFER" ]
+    "src/pc/djui/djui_console.h": [ "CONSOLE_MAX_TMP_BUFFER" ],
+    "src/pc/lua/smlua_hooks.h": [ "MAX_HOOKED_MOD_MENU_ELEMENTS" ]
 }
 
 include_constants = {
@@ -169,7 +171,7 @@ def process_define(filename, line):
         if p.startswith('0x'):
             continue
         p = re.sub(r'0x[a-fA-F0-9]+', '', p)
-        if re.search('[a-z]', p) != None and "VERSION_TEXT" not in line and "SM64COOPDX_VERSION" not in line:
+        if re.search(r'[a-z]', p) != None and "VERSION_TEXT" not in line and "SM64COOPDX_VERSION" not in line:
             if 'gCurrentObject' not in line and verbose:
                 print('UNRECOGNIZED DEFINE: ' + line)
             return None
@@ -259,7 +261,7 @@ def build_to_c(built_files):
     txt = 'char gSmluaConstants[] = ""\n'
     for line in lines:
         txt += '"%s\\n"\n' % line
-    txt += '"if get_coop_compatibility_enabled() then SM64COOPDX_VERSION = nil end";'
+    txt += ';'
     return txt
 
 ############################################################################

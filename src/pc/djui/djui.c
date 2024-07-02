@@ -5,7 +5,6 @@
 #include "djui_panel_pause.h"
 #include "djui_panel_join.h"
 #include "djui_panel_join_message.h"
-#include "djui_panel_changelog.h"
 #include "djui_fps_display.h"
 #include "../debuglog.h"
 #include "pc/cliopts.h"
@@ -19,28 +18,42 @@
 static Gfx* sSavedDisplayListHead = NULL;
 
 struct DjuiRoot* gDjuiRoot = NULL;
-static struct DjuiText* sDjuiPauseOptions = NULL;
+struct DjuiText* gDjuiPauseOptions = NULL;
 static struct DjuiText* sDjuiLuaError = NULL;
 static u32 sDjuiLuaErrorTimeout = 0;
 bool gDjuiInMainMenu = true;
+bool gDjuiInPlayerMenu = false;
 bool gDjuiDisabled = false;
+bool gDjuiShuttingDown = false;
 static bool sDjuiInited = false;
 
 bool sDjuiRendered60fps = false;
 
-void reset_djui_text(void);
+void djui_shutdown(void) {
+    gDjuiShuttingDown = true;
+    djui_panel_shutdown();
 
-void reset_djui(void) {
     sSavedDisplayListHead = NULL;
-    sDjuiPauseOptions = NULL;
+    if (gDjuiPauseOptions) djui_base_destroy(&gDjuiPauseOptions->base);
+    if (sDjuiLuaError) djui_base_destroy(&sDjuiLuaError->base);
+    gDjuiPauseOptions = NULL;
     sDjuiLuaError = NULL;
     sDjuiLuaErrorTimeout = 0;
-    if (gDjuiRoot) djui_base_destroy(&gDjuiRoot->base);
 
-    if (gDjuiConsole) djui_base_destroy(&gDjuiConsole->base);
+    if (gDjuiConsole) {
+        djui_base_destroy(&gDjuiConsole->base);
+        gDjuiConsole = NULL;
+    }
     extern u32 sDjuiConsoleMessages;
     sDjuiConsoleMessages = 0;
 
+    if (gDjuiRoot) {
+        djui_base_destroy(&gDjuiRoot->base);
+    }
+
+    djui_fps_display_destroy();
+
+    gDjuiShuttingDown = false;
     sDjuiInited = false;
 }
 
@@ -63,12 +76,12 @@ void patch_djui_interpolated(UNUSED f32 delta) {
 void djui_init(void) {
     gDjuiRoot = djui_root_create();
 
-    sDjuiPauseOptions = djui_text_create(&gDjuiRoot->base, DLANG(MISC, R_BUTTON));
-    djui_base_set_size_type(&sDjuiPauseOptions->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-    djui_base_set_size(&sDjuiPauseOptions->base, 1.0f, 32);
-    djui_base_set_location(&sDjuiPauseOptions->base, 0, 16);
-    djui_text_set_alignment(sDjuiPauseOptions, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
-    djui_base_set_visible(&sDjuiPauseOptions->base, false);
+    gDjuiPauseOptions = djui_text_create(&gDjuiRoot->base, DLANG(MISC, R_BUTTON));
+    djui_base_set_size_type(&gDjuiPauseOptions->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+    djui_base_set_size(&gDjuiPauseOptions->base, 1.0f, 32);
+    djui_base_set_location(&gDjuiPauseOptions->base, 0, 16);
+    djui_text_set_alignment(gDjuiPauseOptions, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
+    djui_base_set_visible(&gDjuiPauseOptions->base, false);
 
     sDjuiLuaError = djui_text_create(&gDjuiRoot->base, "");
     djui_base_set_size_type(&sDjuiLuaError->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
@@ -94,10 +107,6 @@ void djui_init_late(void) {
         gPanelLanguageOnStartup = true;
         djui_panel_language_create(NULL);
     }
-    if (strcmp(configLastVersion, SM64COOPDX_VERSION)) {
-        strncpy(configLastVersion, SM64COOPDX_VERSION, MAX_CONFIG_STRING);
-        djui_panel_changelog_create(NULL);
-    }
 
     // djui_panel_debug_create();
     djui_cursor_create();
@@ -111,8 +120,9 @@ void djui_connect_menu_open(void) {
     djui_panel_join_message_create(NULL);
 }
 
-void djui_lua_error(char* text) {
+void djui_lua_error(char* text, struct DjuiColor color) {
     if (!sDjuiLuaError) { return; }
+    djui_base_set_color(&sDjuiLuaError->base, color.r, color.g, color.b, color.a);
     djui_text_set_text(sDjuiLuaError, text);
     djui_base_set_visible(&sDjuiLuaError->base, true);
     sDjuiLuaErrorTimeout = 30 * 5;
@@ -141,8 +151,8 @@ void djui_render(void) {
     djui_panel_update();
     djui_popup_update();
 
-    djui_base_set_visible(&sDjuiPauseOptions->base, (sCurrPlayMode == PLAY_MODE_PAUSED));
-    djui_base_set_visible(&sDjuiPauseOptions->base, (sCurrPlayMode == PLAY_MODE_PAUSED) && !gDjuiPanelPauseCreated);
+    djui_base_set_visible(&gDjuiPauseOptions->base, (sCurrPlayMode == PLAY_MODE_PAUSED));
+    djui_base_set_visible(&gDjuiPauseOptions->base, (sCurrPlayMode == PLAY_MODE_PAUSED) && !gDjuiPanelPauseCreated);
     if (gDjuiRoot != NULL) {
         djui_base_render(&gDjuiRoot->base);
     }

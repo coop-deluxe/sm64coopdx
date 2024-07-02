@@ -1,17 +1,11 @@
+#include "pc/rom_assets.h"
 // Pebble
 
 // 0x0301C2C0
-static const Vtx pebble_seg3_vertex_0301C2C0[] = {
-    {{{   -15,    -15,      0}, 0, {     0,    992}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    15,    -15,      0}, 0, {   992,    992}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    15,     15,      0}, 0, {   992,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -15,     15,      0}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(pebble_seg3_vertex_0301C2C0, 0x00201410, 96653, 0x0001c2c0, 64);
 
 // 0x0301C300
-ALIGNED8 const Texture pebble_seg3_texture_0301C300[] = {
-#include "actors/pebble/pebble.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(pebble_seg3_texture_0301C300, "actors/pebble/pebble.rgba16.inc.c", 0x00201410, 96653, 0x0001c300, 2048);
 
 // 0x0301CB00 - 0x0301CB98
 const Gfx pebble_seg3_dl_0301CB00[] = {

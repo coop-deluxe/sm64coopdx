@@ -1,6 +1,6 @@
 // tree_particles.c.inc
 
-#include "src/game/envfx_snow.h"
+#include "game/envfx_snow.h"
 
 void bhv_tree_snow_or_leaf_loop(void) {
     cur_obj_update_floor_height();

@@ -10,7 +10,7 @@
 #include "pc/lua/utils/smlua_level_utils.h"
 #include "level_table.h"
 #ifdef DEVELOPMENT
-#include "dev/chat.h"
+#include "pc/dev/chat.h"
 #endif
 
 static enum ChatConfirmCommand sConfirming = CCC_NONE;

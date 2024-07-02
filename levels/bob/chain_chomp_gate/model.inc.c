@@ -1,10 +1,6 @@
+#include "pc/rom_assets.h"
 // 0x0700E3E0 - 0x0700E420
-static const Vtx bob_seg7_vertex_0700E3E0[] = {
-    {{{   512,      0,      0}, 0, { -7184,  -5142}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   512,    640,      0}, 0, { -7184,    990}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{  -511,    640,      0}, 0, {   990,    990}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{  -511,      0,      0}, 0, {   990,  -5142}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(bob_seg7_vertex_0700E3E0, 0x003fc2b0, 38830, 0x0000e3e0, 64);
 
 // 0x0700E420 - 0x0700E458
 static const Gfx bob_seg7_dl_0700E420[] = {

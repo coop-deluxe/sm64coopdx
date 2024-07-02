@@ -1,3 +1,4 @@
+#include "pc/rom_assets.h"
 // Quicksand Pit
 
 // 0x07004000 - 0x07004018
@@ -7,9 +8,7 @@ static const Lights1 ssl_lights_quicksand_pit = gdSPDefLights1(
 );
 
 // 0x07004018 - 0x07004818
-ALIGNED8 const Texture ssl_quicksand[] = {
-#include "levels/ssl/7.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(ssl_quicksand, "levels/ssl/7.rgba16.inc.c", 0x0032d070, 31409, 0x00008000, 2048);
 
 // 0x07004818 - 0x07004860
 const Gfx ssl_dl_quicksand_pit_begin[] = {
@@ -99,15 +98,7 @@ const Gfx ssl_dl_quicksand_pit[] = {
 };
 
 // 0x07004A70 - 0x07004AE0
-static const Vtx ssl_seg7_vertex_07004A70[] = {
-    {{{     0,   -204,      0}, 0, {     0,      0}, {0x00, 0x7f, 0x00, 0xff}}},
-    {{{  1024,      0,      0}, 0, {  2016,      0}, {0x00, 0x7f, 0x00, 0xff}}},
-    {{{   512,      0,   -886}, 0, {  2016,    992}, {0x00, 0x7f, 0x00, 0xff}}},
-    {{{  -511,      0,   -886}, 0, {  2016,   2016}, {0x00, 0x7f, 0x00, 0xff}}},
-    {{{ -1023,      0,      0}, 0, {  2016,   3040}, {0x00, 0x7f, 0x00, 0xff}}},
-    {{{  -511,      0,    887}, 0, {  2016,   2016}, {0x00, 0x7f, 0x00, 0xff}}},
-    {{{   512,      0,    887}, 0, {  2016,    992}, {0x00, 0x7f, 0x00, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(ssl_seg7_vertex_07004A70, 0x003e76b0, 82641, 0x00004a70, 112);
 
 // 0x07004AE0 - 0x07004BE0
 const Gfx ssl_dl_pyramid_quicksand_pit_static[] = {

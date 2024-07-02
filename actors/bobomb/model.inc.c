@@ -1,44 +1,26 @@
+#include "pc/rom_assets.h"
 // Bobomb
 
 // 0x0801DA60
-ALIGNED8 const Texture bobomb_seg8_texture_0801DA60[] = {
-#include "actors/bobomb/bob-omb_left_side.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(bobomb_seg8_texture_0801DA60, "actors/bobomb/bob-omb_left_side.rgba16.inc.c", 0x001f2200, 59076, 0x0001da60, 4096);
 
 // 0x0801EA60
-ALIGNED8 const Texture bobomb_seg8_texture_0801EA60[] = {
-#include "actors/bobomb/bob-omb_right_side.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(bobomb_seg8_texture_0801EA60, "actors/bobomb/bob-omb_right_side.rgba16.inc.c", 0x001f2200, 59076, 0x0001ea60, 4096);
 
 // 0x0801FA60
-ALIGNED8 const Texture bobomb_seg8_texture_0801FA60[] = {
-#include "actors/bobomb/bob-omb_buddy_left_side.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(bobomb_seg8_texture_0801FA60, "actors/bobomb/bob-omb_buddy_left_side.rgba16.inc.c", 0x00134d20, 26785, 0x00000078, 4096);
 
 // 0x08020A60
-ALIGNED8 const Texture bobomb_seg8_texture_08020A60[] = {
-#include "actors/bobomb/bob-omb_buddy_right_side.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(bobomb_seg8_texture_08020A60, "actors/bobomb/bob-omb_buddy_right_side.rgba16.inc.c", 0x00134d20, 26785, 0x00001078, 4096);
 
 // 0x08021A60
-ALIGNED8 const Texture bobomb_seg8_texture_08021A60[] = {
-#include "actors/bobomb/bob-omb_eyes.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(bobomb_seg8_texture_08021A60, "actors/bobomb/bob-omb_eyes.rgba16.inc.c", 0x00134d20, 26785, 0x00004878, 2048);
 
 // 0x08022260
-ALIGNED8 const Texture bobomb_seg8_texture_08022260[] = {
-#include "actors/bobomb/bob-omb_eyes_blink.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(bobomb_seg8_texture_08022260, "actors/bobomb/bob-omb_eyes_blink.rgba16.inc.c", 0x00134d20, 26785, 0x00005078, 2048);
 
 // 0x08022A60
-static const Vtx bobomb_seg8_vertex_08022A60[] = {
-    {{{   133,    -47,      0}, 0, {   480,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   133,     32,      0}, 0, {   480,    990}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   128,     32,     50}, 0, {   990,    990}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   128,    -47,    -49}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   128,    -47,     50}, 0, {   990,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   128,     32,    -49}, 0, {     0,    990}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(bobomb_seg8_vertex_08022A60, 0x001f2200, 59076, 0x00022a60, 96);
 
 // 0x08022AC0 - 0x08022B08
 const Gfx bobomb_seg8_dl_08022AC0[] = {
@@ -86,20 +68,10 @@ const Gfx bobomb_seg8_dl_08022B88[] = {
 };
 
 // 0x08022BB8
-static const Vtx bobomb_seg8_vertex_08022BB8[] = {
-    {{{     0,     49,      0}, 0, {   990,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -49,    -49,      0}, 0, {     0,   2012}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,    -49,      0}, 0, {   990,   2012}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -49,     49,      0}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(bobomb_seg8_vertex_08022BB8, 0x001f2200, 59076, 0x00022bb8, 64);
 
 // 0x08022BF8
-static const Vtx bobomb_seg8_vertex_08022BF8[] = {
-    {{{    49,     49,      0}, 0, {   990,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,    -49,      0}, 0, {     0,   2012}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    49,    -49,      0}, 0, {   990,   2012}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,     49,      0}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(bobomb_seg8_vertex_08022BF8, 0x001f2200, 59076, 0x00022bf8, 64);
 
 // 0x08022C38 - 0x08022CA0
 const Gfx bobomb_seg8_dl_08022C38[] = {
@@ -186,96 +158,22 @@ static const Lights1 bobomb_lights_unused = gdSPDefLights1(
 );
 
 // 0x08022E30
-static const Vtx bobomb_seg8_vertex_08022E30[] = {
-    {{{    27,    -26,    -31}, 0, {     0,      0}, {0xeb, 0x96, 0xbf, 0x00}}},
-    {{{   -36,      0,    -20}, 0, {     0,      0}, {0xb1, 0xd0, 0xaa, 0x00}}},
-    {{{    32,      0,    -41}, 0, {     0,      0}, {0xfc, 0xfb, 0x82, 0x00}}},
-    {{{    85,      0,    -32}, 0, {     0,      0}, {0x50, 0xf1, 0xa0, 0xff}}},
-    {{{    79,     28,    -20}, 0, {     0,      0}, {0x34, 0x62, 0xc4, 0xff}}},
-    {{{    79,     28,     15}, 0, {     0,      0}, {0x34, 0x62, 0x3c, 0xff}}},
-    {{{    85,      0,     27}, 0, {     0,      0}, {0x50, 0xf1, 0x60, 0xff}}},
-    {{{    33,     28,     29}, 0, {     0,      0}, {0xff, 0x69, 0x47, 0xff}}},
-    {{{   -29,     28,     12}, 0, {     0,      0}, {0xc8, 0x60, 0x3c, 0xff}}},
-    {{{   -36,      0,     16}, 0, {     0,      0}, {0xb1, 0xd0, 0x56, 0xff}}},
-    {{{    32,      0,     37}, 0, {     0,      0}, {0xfc, 0xfb, 0x7e, 0xff}}},
-    {{{    33,     28,    -34}, 0, {     0,      0}, {0xff, 0x69, 0xb9, 0xff}}},
-    {{{   -29,     28,    -16}, 0, {     0,      0}, {0xc8, 0x60, 0xc4, 0xff}}},
-    {{{    68,    -30,     16}, 0, {     0,      0}, {0x26, 0x95, 0x36, 0xff}}},
-    {{{    68,    -30,    -21}, 0, {     0,      0}, {0x26, 0x95, 0xca, 0xff}}},
-    {{{    27,    -26,     27}, 0, {     0,      0}, {0xeb, 0x96, 0x41, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(bobomb_seg8_vertex_08022E30, 0x001f2200, 59076, 0x00022e30, 256);
 
 // 0x08022F30
-static const Vtx bobomb_seg8_vertex_08022F30[] = {
-    {{{    27,    -26,    -31}, 0, {     0,      0}, {0xed, 0x90, 0xc8, 0xff}}},
-    {{{    27,    -26,     27}, 0, {     0,      0}, {0xf5, 0xa2, 0x53, 0x00}}},
-    {{{   -36,      0,     16}, 0, {     0,      0}, {0xa2, 0xf8, 0x54, 0x00}}},
-    {{{   -36,      0,    -20}, 0, {     0,      0}, {0xa9, 0xdd, 0xac, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(bobomb_seg8_vertex_08022F30, 0x001f2200, 59076, 0x00022f30, 64);
 
 // 0x08022F70
-static const Vtx bobomb_seg8_vertex_08022F70[] = {
-    {{{    32,      0,     41}, 0, {     0,      0}, {0xfc, 0xfb, 0x7e, 0x00}}},
-    {{{   -36,      0,     20}, 0, {     0,      0}, {0xb1, 0xd0, 0x56, 0x00}}},
-    {{{    27,    -26,     31}, 0, {     0,      0}, {0xeb, 0x96, 0x41, 0x00}}},
-    {{{    84,      0,    -27}, 0, {     0,      0}, {0x50, 0xf1, 0xa0, 0xff}}},
-    {{{    79,     28,    -15}, 0, {     0,      0}, {0x34, 0x62, 0xc4, 0xff}}},
-    {{{    79,     28,     20}, 0, {     0,      0}, {0x34, 0x62, 0x3c, 0xff}}},
-    {{{    84,      0,     32}, 0, {     0,      0}, {0x50, 0xf1, 0x60, 0xff}}},
-    {{{    32,      0,    -37}, 0, {     0,      0}, {0xfc, 0xfb, 0x82, 0xff}}},
-    {{{   -36,      0,    -16}, 0, {     0,      0}, {0xb1, 0xd0, 0xaa, 0xff}}},
-    {{{   -28,     28,    -12}, 0, {     0,      0}, {0xc8, 0x60, 0xc4, 0xff}}},
-    {{{    33,     28,    -29}, 0, {     0,      0}, {0xff, 0x69, 0xb9, 0xff}}},
-    {{{   -28,     28,     16}, 0, {     0,      0}, {0xc8, 0x60, 0x3c, 0xff}}},
-    {{{    33,     28,     33}, 0, {     0,      0}, {0xff, 0x69, 0x47, 0xff}}},
-    {{{    68,    -29,     21}, 0, {     0,      0}, {0x26, 0x95, 0x36, 0xff}}},
-    {{{    68,    -29,    -16}, 0, {     0,      0}, {0x26, 0x95, 0xca, 0xff}}},
-    {{{    27,    -26,    -27}, 0, {     0,      0}, {0xeb, 0x96, 0xbf, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(bobomb_seg8_vertex_08022F70, 0x001f2200, 59076, 0x00022f70, 256);
 
 // 0x08023070
-static const Vtx bobomb_seg8_vertex_08023070[] = {
-    {{{    27,    -26,    -27}, 0, {     0,      0}, {0xed, 0x90, 0xc8, 0xff}}},
-    {{{    27,    -26,     31}, 0, {     0,      0}, {0xf5, 0xa2, 0x53, 0x00}}},
-    {{{   -36,      0,     20}, 0, {     0,      0}, {0xa2, 0xf8, 0x54, 0x00}}},
-    {{{   -36,      0,    -16}, 0, {     0,      0}, {0xa9, 0xdd, 0xac, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(bobomb_seg8_vertex_08023070, 0x001f2200, 59076, 0x00023070, 64);
 
 // 0x080230B0
-static const Vtx bobomb_seg8_vertex_080230B0[] = {
-    {{{     0,   -100,     59}, 0, {     0,      0}, {0x00, 0xfe, 0x7f, 0x00}}},
-    {{{   -53,    -99,     28}, 0, {     0,      0}, {0xc1, 0xfe, 0x6d, 0x00}}},
-    {{{   -53,   -140,     27}, 0, {     0,      0}, {0xc1, 0xfe, 0x6d, 0x00}}},
-    {{{     0,   -141,     58}, 0, {     0,      0}, {0x00, 0xfe, 0x7f, 0xff}}},
-    {{{    53,    -99,     28}, 0, {     0,      0}, {0x3f, 0xfe, 0x6d, 0xff}}},
-    {{{    53,   -140,     27}, 0, {     0,      0}, {0x3f, 0xfe, 0x6d, 0xff}}},
-    {{{   -53,    -99,     28}, 0, {     0,      0}, {0x81, 0x00, 0x00, 0xff}}},
-    {{{   -53,    -98,    -32}, 0, {     0,      0}, {0x81, 0x00, 0x00, 0xff}}},
-    {{{   -53,   -139,    -33}, 0, {     0,      0}, {0x81, 0x00, 0x00, 0xff}}},
-    {{{   -53,   -140,     27}, 0, {     0,      0}, {0x81, 0x00, 0x00, 0xff}}},
-    {{{   -53,    -98,    -32}, 0, {     0,      0}, {0xc1, 0x02, 0x93, 0xff}}},
-    {{{     0,    -97,    -63}, 0, {     0,      0}, {0xc1, 0x02, 0x93, 0xff}}},
-    {{{     0,   -138,    -64}, 0, {     0,      0}, {0xc1, 0x02, 0x93, 0xff}}},
-    {{{   -53,   -139,    -33}, 0, {     0,      0}, {0xc1, 0x02, 0x93, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(bobomb_seg8_vertex_080230B0, 0x001f2200, 59076, 0x000230b0, 224);
 
 // 0x08023190
-static const Vtx bobomb_seg8_vertex_08023190[] = {
-    {{{    53,    -98,    -32}, 0, {     0,      0}, {0x7f, 0x00, 0x00, 0xff}}},
-    {{{    53,    -99,     28}, 0, {     0,      0}, {0x7f, 0x00, 0x00, 0x00}}},
-    {{{    53,   -140,     27}, 0, {     0,      0}, {0x7f, 0x00, 0x00, 0x00}}},
-    {{{    53,   -139,    -33}, 0, {     0,      0}, {0x7f, 0x00, 0x00, 0xff}}},
-    {{{     0,    -97,    -63}, 0, {     0,      0}, {0x3f, 0x02, 0x93, 0xff}}},
-    {{{    53,    -98,    -32}, 0, {     0,      0}, {0x3f, 0x02, 0x93, 0xff}}},
-    {{{    53,   -139,    -33}, 0, {     0,      0}, {0x3f, 0x02, 0x93, 0xff}}},
-    {{{     0,   -138,    -64}, 0, {     0,      0}, {0x3f, 0x02, 0x93, 0xff}}},
-    {{{     0,   -138,    -64}, 0, {     0,      0}, {0x00, 0x81, 0xfe, 0xff}}},
-    {{{    53,   -139,    -33}, 0, {     0,      0}, {0x00, 0x81, 0xfe, 0xff}}},
-    {{{    53,   -140,     27}, 0, {     0,      0}, {0x00, 0x81, 0xfe, 0xff}}},
-    {{{     0,   -141,     58}, 0, {     0,      0}, {0x00, 0x81, 0xfe, 0xff}}},
-    {{{   -53,   -140,     27}, 0, {     0,      0}, {0x00, 0x81, 0xfe, 0xff}}},
-    {{{   -53,   -139,    -33}, 0, {     0,      0}, {0x00, 0x81, 0xfe, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(bobomb_seg8_vertex_08023190, 0x001f2200, 59076, 0x00023190, 224);
 
 // 0x08023270 - 0x08023378
 const Gfx bobomb_seg8_dl_08023270[] = {

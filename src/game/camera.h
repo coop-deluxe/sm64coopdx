@@ -257,6 +257,7 @@ extern u8 gRomhackCameraAllowDpad;
 #define CUTSCENE_EXIT_WATERFALL       179
 #define CUTSCENE_EXIT_FALL_WMOTR      180
 #define CUTSCENE_ENTER_POOL           181
+#define CUTSCENE_PALETTE_EDITOR       182
 
 /**
  * Stop the cutscene.
@@ -575,6 +576,7 @@ struct Camera
     /// when paused. See zoom_out_if_paused_and_outside
     /*0x68*/ f32 areaCenY;
     /*????*/ Mat4 mtx;
+    /*????*/ bool paletteEditorCap;
 };
 
 /**
@@ -692,8 +694,7 @@ extern struct Object *gCutsceneFocus;
 extern struct Object *gSecondCameraFocus;
 extern u8 gRecentCutscene;
 
-// TODO: sort all of this extremely messy shit out after the split
-
+void skip_camera_interpolation(void);
 void set_camera_shake_from_hit(s16 shake);
 void set_environmental_camera_shake(s16 shake);
 void set_camera_shake_from_point(s16 shake, f32 posX, f32 posY, f32 posZ);

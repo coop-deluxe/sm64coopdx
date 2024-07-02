@@ -122,7 +122,7 @@ void bhv_courtyard_boo_triplet_init(void) {
     s32 i;
     struct Object *boo;
 
-    if (gHudDisplay.stars < 12) {
+    if (gHudDisplay.stars < gBehaviorValues.CourtyardBoosRequirement) {
         obj_mark_for_deletion(o);
     } else {
         for (i = 0; i < 3; i++) {
@@ -848,7 +848,7 @@ static void boo_with_cage_act_3(void) {
 void bhv_boo_with_cage_init(void) {
     struct Object* cage;
 
-    if (gHudDisplay.stars < 12) {
+    if (gHudDisplay.stars < gBehaviorValues.CourtyardBoosRequirement) {
         obj_mark_for_deletion(o);
     } else {
         cage = spawn_object(o, MODEL_HAUNTED_CAGE, bhvBooCage);
@@ -975,7 +975,7 @@ void bhv_boo_in_castle_loop(void) {
     if (o->oAction == 0) {
         cur_obj_hide();
 
-        if (gHudDisplay.stars < 12) {
+        if (gHudDisplay.stars < gBehaviorValues.CourtyardBoosRequirement) {
             obj_mark_for_deletion(o);
         }
 

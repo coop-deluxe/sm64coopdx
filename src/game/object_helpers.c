@@ -29,7 +29,7 @@
 #include "spawn_sound.h"
 #include "pc/network/network.h"
 #include "pc/lua/smlua_hooks.h"
-#include "pc/lua/utils/smlua_misc_utils.h"
+#include "pc/lua/utils/smlua_camera_utils.h"
 #include "first_person_cam.h"
 
 u8 (*gContinueDialogFunction)(void) = NULL;
@@ -75,7 +75,7 @@ Gfx *geo_update_layer_transparency(s32 callContext, struct GraphNode *node, UNUS
     dlStart = NULL;
 
     if (callContext == GEO_CONTEXT_RENDER) {
-        objectGraphNode = (struct Object *) gCurGraphNodeObject; // TODO: change this to object pointer?
+        objectGraphNode = (struct Object *) gCurGraphNodeObject;
         currentGraphNode = (struct GraphNodeGenerated *) node;
         sp2C = (struct GraphNodeGenerated *) node;
 
@@ -98,7 +98,9 @@ Gfx *geo_update_layer_transparency(s32 callContext, struct GraphNode *node, UNUS
                 0x100 | (currentGraphNode->fnNode.node.flags & 0xFF);
             }
 
-            objectGraphNode->oAnimState = 0;
+            if (currentGraphNode->parameter != 30) {
+                objectGraphNode->oAnimState = 0;
+            }
         } else {
             if (currentGraphNode->parameter == 20) {
                 currentGraphNode->fnNode.node.flags =
@@ -108,7 +110,9 @@ Gfx *geo_update_layer_transparency(s32 callContext, struct GraphNode *node, UNUS
                 0x500 | (currentGraphNode->fnNode.node.flags & 0xFF);
             }
 
-            objectGraphNode->oAnimState = 1;
+            if (currentGraphNode->parameter != 30) {
+                objectGraphNode->oAnimState = 1;
+            }
 
 #ifdef VERSION_JP
             if (currentGraphNode->parameter == 10) {
@@ -1151,6 +1155,8 @@ s32 count_unimportant_objects(void) {
 }
 
 s32 count_objects_with_behavior(const BehaviorScript *behavior) {
+    if (!behavior) { return 0; }
+    behavior = smlua_override_behavior(behavior);
     uintptr_t *behaviorAddr = segmented_to_virtual(behavior);
 
     u32 objList = get_object_list_from_behavior(behaviorAddr);
@@ -1437,15 +1443,7 @@ void cur_obj_set_model(s32 modelID) {
 
 void obj_set_model(struct Object* obj, s32 modelID) {
     obj->header.gfx.sharedChild = dynos_model_get_geo(modelID);
-    dynos_actor_override((void*)&obj->header.gfx.sharedChild);
-    smlua_call_event_hooks_object_model_param(HOOK_OBJECT_SET_MODEL, obj, modelID);
-}
-
-void obj_set_character_model(struct Object* obj, u16 index, s32 modelID) {
-    obj->header.gfx.sharedChild = dynos_model_get_geo(modelID);
-    if (configGlobalPlayerModels || index == 0) {
-        dynos_actor_override((void*)&obj->header.gfx.sharedChild);
-    }
+    dynos_actor_override(obj, (void*)&obj->header.gfx.sharedChild);
     smlua_call_event_hooks_object_model_param(HOOK_OBJECT_SET_MODEL, obj, modelID);
 }
 
@@ -1953,7 +1951,7 @@ void obj_set_cylboard(struct Object *obj) {
 
 void cur_obj_set_billboard_if_vanilla_cam(void) {
     if (!o) { return; }
-    if (camera_config_is_free_cam_enabled() || get_first_person_enabled()) {
+    if (get_first_person_enabled()) {
         o->header.gfx.node.flags &= ~GRAPH_RENDER_BILLBOARD;
         o->header.gfx.node.flags |= GRAPH_RENDER_CYLBOARD;
     } else {

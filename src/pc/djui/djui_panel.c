@@ -3,12 +3,11 @@
 #include "djui_panel_main.h"
 #include "djui_panel_pause.h"
 #include "djui_panel_join_message.h"
-#include "djui_panel_player.h"
-#include "src/pc/debuglog.h"
-#include "src/pc/utils/misc.h"
+#include "pc/debuglog.h"
+#include "pc/utils/misc.h"
 #include "sounds.h"
 #include "audio/external.h"
-#include "src/game/bettercamera.h"
+#include "game/bettercamera.h"
 
 static struct DjuiPanel* sPanelList = NULL;
 static struct DjuiPanel* sPanelRemoving = NULL;
@@ -18,7 +17,7 @@ bool djui_panel_is_active(void) {
     return (sPanelList != NULL);
 }
 
-struct DjuiBase* djui_panel_find_first_interactable(struct DjuiBaseChild* child) {
+static struct DjuiBase* djui_panel_find_first_interactable(struct DjuiBaseChild* child) {
     while (child) {
         if (child->base->interactable && child->base->interactable->enabled) {
             return child->base;
@@ -57,6 +56,7 @@ struct DjuiPanel* djui_panel_add(struct DjuiBase* caller, struct DjuiThreePanel*
     panel->parent = sPanelList;
     panel->base = panelBase;
     panel->defaultElementBase = defaultElementBase;
+    panel->on_back = threePanel->on_back;
     panel->on_panel_destroy = NULL;
     sPanelList = panel;
 
@@ -100,6 +100,13 @@ void djui_panel_back(void) {
         return;
     }
 
+    // call back hook, return true to cancel back
+    if (sPanelList->on_back) {
+        if (sPanelList->on_back(sPanelList->base)) {
+            return;
+        }
+    }
+
     // deselect cursor input
     djui_cursor_input_controlled_center(NULL);
 
@@ -122,7 +129,6 @@ void djui_panel_back(void) {
     play_sound(SOUND_MENU_CLICK_FILE_SELECT, gGlobalSoundSource);
 
     gDjuiPanelJoinMessageVisible = false;
-    gDjuiPanelPlayerCreated = false;
 }
 
 void djui_panel_update(void) {
@@ -179,6 +185,7 @@ void djui_panel_update(void) {
     }
 }
 
+extern bool gDjuiShuttingDown;
 void djui_panel_shutdown(void) {
     static bool sShuttingDown = false;
     if (sShuttingDown) { return; }
@@ -212,10 +219,12 @@ void djui_panel_shutdown(void) {
     gDjuiPanelMainCreated = false;
     gDjuiPanelPauseCreated = false;
     djui_cursor_set_visible(false);
-    configfile_save(configfile_name());
-    if (gDjuiInMainMenu) {
-        gDjuiInMainMenu = false;
-        newcam_init_settings();
+    if (!gDjuiShuttingDown) {
+        configfile_save(configfile_name());
+        if (gDjuiInMainMenu) {
+            gDjuiInMainMenu = false;
+            newcam_init_settings();
+        }
     }
     sShuttingDown = false;
 }

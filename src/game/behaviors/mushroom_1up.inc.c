@@ -20,7 +20,7 @@ void bhv_1up_interact(void) {
 }
 
 void bhv_1up_trigger_init(void) {
-    obj_set_model_extended(o, E_MODEL_NONE);
+    obj_set_model(o, MODEL_NONE);
     cur_obj_hide();
 }
 

@@ -317,7 +317,7 @@
 // README //
 
 /* When adding new level script commands,
-you have to add the commadn to dynos_bin_lvl_validate.cpp's
+you have to add the command to dynos_bin_lvl_validate.cpp's
 LvlCmd_Init(), and specify which params are pointers */
 
 // README //

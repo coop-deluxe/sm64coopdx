@@ -23,7 +23,7 @@
 #include "gfx_direct3d_common.h"
 
 extern "C" {
-    #include "src/pc/controller/controller_bind_mapping.h"
+    #include "pc/controller/controller_bind_mapping.h"
 }
 
 #define DECLARE_GFX_DXGI_FUNCTIONS

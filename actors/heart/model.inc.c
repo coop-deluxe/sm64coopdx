@@ -1,17 +1,11 @@
+#include "pc/rom_assets.h"
 // Heart
 
 // 0x0800D7A0
-static const Vtx heart_seg8_vertex_0800D7A0[] = {
-    {{{   -50,    -50,      0}, 0, {     0,    992}, {0xff, 0xff, 0xff, 0xb4}}},
-    {{{    50,    -50,      0}, 0, {   992,    992}, {0xff, 0xff, 0xff, 0xb4}}},
-    {{{    50,     50,      0}, 0, {   992,      0}, {0xff, 0xff, 0xff, 0xb4}}},
-    {{{   -50,     50,      0}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xb4}}},
-};
+ROM_ASSET_LOAD_VTX(heart_seg8_vertex_0800D7A0, 0x001f2200, 59076, 0x0000d7a0, 64);
 
 // 0x0800D7E0
-ALIGNED8 const Texture heart_seg8_texture_0800D7E0[] = {
-#include "actors/heart/spinning_heart.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(heart_seg8_texture_0800D7E0, "actors/heart/spinning_heart.rgba16.inc.c", 0x001f2200, 59076, 0x0000d7e0, 2048);
 
 // 0x0800DFE0 - 0x0800E078
 const Gfx heart_seg8_dl_0800DFE0[] = {

@@ -1,47 +1,29 @@
+#include "pc/rom_assets.h"
 // Walk Smoke
 
 // 0x0401DE60
-static const Vtx smoke_seg4_vertex_0401DE60[] = {
-    {{{   -32,      0,      0}, 0, {     0,    992}, {0xff, 0xff, 0xff, 0x64}}},
-    {{{    32,      0,      0}, 0, {   992,    992}, {0xff, 0xff, 0xff, 0x64}}},
-    {{{    32,     64,      0}, 0, {   992,      0}, {0xff, 0xff, 0xff, 0x64}}},
-    {{{   -32,     64,      0}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0x64}}},
-};
+ROM_ASSET_LOAD_VTX(smoke_seg4_vertex_0401DE60, 0x00114750, 78432, 0x0001de60, 64);
 
 // 0x0401DEA0
-ALIGNED8 const Texture smoke_seg4_texture_0401DEA0[] = {
-#include "actors/walk_smoke/walk_smoke_0.ia16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(smoke_seg4_texture_0401DEA0, "actors/walk_smoke/walk_smoke_0.ia16.inc.c", 0x00114750, 78432, 0x0001dea0, 2048);
 
 // 0x0401E6A0
-ALIGNED8 const Texture smoke_seg4_texture_0401E6A0[] = {
-#include "actors/walk_smoke/walk_smoke_1.ia16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(smoke_seg4_texture_0401E6A0, "actors/walk_smoke/walk_smoke_1.ia16.inc.c", 0x00114750, 78432, 0x0001e6a0, 2048);
 
 // 0x0401EEA0
-ALIGNED8 const Texture smoke_seg4_texture_0401EEA0[] = {
-#include "actors/walk_smoke/walk_smoke_2.ia16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(smoke_seg4_texture_0401EEA0, "actors/walk_smoke/walk_smoke_2.ia16.inc.c", 0x00114750, 78432, 0x0001eea0, 2048);
 
 // 0x0401F6A0
-ALIGNED8 const Texture smoke_seg4_texture_0401F6A0[] = {
-#include "actors/walk_smoke/walk_smoke_3.ia16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(smoke_seg4_texture_0401F6A0, "actors/walk_smoke/walk_smoke_3.ia16.inc.c", 0x00114750, 78432, 0x0001f6a0, 2048);
 
 // 0x0401FEA0
-ALIGNED8 const Texture smoke_seg4_texture_0401FEA0[] = {
-#include "actors/walk_smoke/walk_smoke_4.ia16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(smoke_seg4_texture_0401FEA0, "actors/walk_smoke/walk_smoke_4.ia16.inc.c", 0x00114750, 78432, 0x0001fea0, 2048);
 
 // 0x040206A0
-ALIGNED8 const Texture smoke_seg4_texture_040206A0[] = {
-#include "actors/walk_smoke/walk_smoke_5.ia16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(smoke_seg4_texture_040206A0, "actors/walk_smoke/walk_smoke_5.ia16.inc.c", 0x00114750, 78432, 0x000206a0, 2048);
 
 // 0x04020EA0
-ALIGNED8 const Texture smoke_seg4_texture_04020EA0[] = {
-#include "actors/walk_smoke/walk_smoke_6.ia16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(smoke_seg4_texture_04020EA0, "actors/walk_smoke/walk_smoke_6.ia16.inc.c", 0x00114750, 78432, 0x00020ea0, 2048);
 
 // 0x040216A0 - 0x04021718
 const Gfx smoke_seg4_dl_040216A0[] = {

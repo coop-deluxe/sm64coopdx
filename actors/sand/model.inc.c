@@ -1,17 +1,11 @@
+#include "pc/rom_assets.h"
 // Sand
 
 // 0x0302BA90
-static const Vtx sand_seg3_vertex_0302BA90[] = {
-    {{{    -8,     -8,      0}, 0, {     0,    480}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     8,     -8,      0}, 0, {   480,    480}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     8,      8,      0}, 0, {   480,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    -8,      8,      0}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(sand_seg3_vertex_0302BA90, 0x00201410, 96653, 0x0002ba90, 64);
 
 // 0x0302BAD0
-ALIGNED8 const Texture sand_seg3_texture_0302BAD0[] = {
-#include "actors/sand/sand_particle.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(sand_seg3_texture_0302BAD0, "actors/sand/sand_particle.rgba16.inc.c", 0x00201410, 96653, 0x0002bad0, 512);
 
 // 0x0302BCD0 - 0x0302BD60
 const Gfx sand_seg3_dl_0302BCD0[] = {

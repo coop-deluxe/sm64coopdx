@@ -1,22 +1,14 @@
+#include "pc/rom_assets.h"
 // Bubble
 
 // 0x0401CD20
-static const Vtx bubble_seg4_vertex_0401CD20[] = {
-    {{{   -16,      0,      0}, 0, {     0,    992}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    16,      0,      0}, 0, {   992,    992}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    16,     32,      0}, 0, {   992,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -16,     32,      0}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(bubble_seg4_vertex_0401CD20, 0x00114750, 78432, 0x0001cd20, 64);
 
 // 0x0401CD60
-ALIGNED8 const Texture bubble_seg4_texture_0401CD60[] = {
-#include "actors/bubble/bubble.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(bubble_seg4_texture_0401CD60, "actors/bubble/bubble.rgba16.inc.c", 0x00114750, 78432, 0x0001cd60, 2048);
 
 // 0x0401D560
-ALIGNED8 const Texture bubble_seg4_texture_0401D560[] = {
-#include "actors/bubble/mr_i_bubble.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(bubble_seg4_texture_0401D560, "actors/bubble/mr_i_bubble.rgba16.inc.c", 0x00114750, 78432, 0x0001d560, 2048);
 
 // 0x0401DD60 - 0x0401DDE0
 const Gfx bubble_seg4_dl_0401DD60[] = {

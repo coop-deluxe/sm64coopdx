@@ -9,11 +9,11 @@ extern "C" {
 #include "include/model_ids.h"
 #include "include/object_constants.h"
 #include "include/object_fields.h"
-#include "src/game/area.h"
-#include "src/game/object_list_processor.h"
-#include "src/game/interaction.h"
-#include "src/pc/lua/utils/smlua_anim_utils.h"
-#include "src/pc/lua/utils/smlua_collision_utils.h"
+#include "game/area.h"
+#include "game/object_list_processor.h"
+#include "game/interaction.h"
+#include "pc/lua/utils/smlua_anim_utils.h"
+#include "pc/lua/utils/smlua_collision_utils.h"
 
 // Models and Animations
 #include "actors/common0.h"
@@ -107,6 +107,7 @@ s64 DynOS_Bhv_ParseBehaviorIntegerScriptConstants(const String &_Arg, bool *foun
     bhv_constant(INTERACT_POLE);
     bhv_constant(INTERACT_KOOPA);
     bhv_constant(INTERACT_UNKNOWN_08);
+    bhv_constant(INTERACT_SPINY_WALKING);
     bhv_constant(INTERACT_BREAKABLE);
     bhv_constant(INTERACT_STRONG_WIND);
     bhv_constant(INTERACT_WARP_DOOR);
@@ -2494,7 +2495,7 @@ static DataNode<BehaviorScript> *DynOS_Bhv_Load(BinFile *aFile, GfxData *aGfxDat
         // We have nothing to return, So return NULL.
         return NULL;
     }
-    
+
     // Allocate our node.
     DataNode<BehaviorScript> *_Node = New<DataNode<BehaviorScript>>();
 
@@ -2518,7 +2519,7 @@ static DataNode<BehaviorScript> *DynOS_Bhv_Load(BinFile *aFile, GfxData *aGfxDat
         // We have nothing to return, So return NULL.
         return NULL;
     }
-    
+
     // If we have nothing in the .bhv file, It compiled incorrectly or is maliciously crafted.
     // We also check if the specified behavior size is valid for the file.
     u32 dataSize = aFile->Read<u32>();
@@ -2548,7 +2549,7 @@ static DataNode<BehaviorScript> *DynOS_Bhv_Load(BinFile *aFile, GfxData *aGfxDat
             _Node->mData[i] = (uintptr_t) _Value;
         }
     }
-    
+
     // Add it
     if (aGfxData != NULL) {
         aGfxData->mBehaviorScripts.Add(_Node);
@@ -2625,8 +2626,8 @@ static void DynOS_Bhv_Generate(const SysPath &aPackFolder, Array<Pair<u64, Strin
         _GfxData->mGeoNodeStack.Clear();
 
         // Parse data
-        PrintNoNewLine("%s.bhv: Model identifier: %X - Processing... ", _BhvRootName.begin(), _GfxData->mModelIdentifier);
-        PrintConsole("%s.bhv: Model identifier: %X - Processing... ", _BhvRootName.begin(), _GfxData->mModelIdentifier);
+        PrintNoNewLine("%s.bhv: Behavior identifier: %X - Processing... ", _BhvRootName.begin(), _GfxData->mModelIdentifier);
+        PrintConsole(CONSOLE_MESSAGE_INFO, "%s.bhv: Behavior identifier: %X - Processing... ", _BhvRootName.begin(), _GfxData->mModelIdentifier);
         DynOS_Bhv_Parse(_GfxData, _BhvNode, true);
 
         // Write if no error
@@ -2647,7 +2648,7 @@ static void DynOS_Bhv_Generate(const SysPath &aPackFolder, Array<Pair<u64, Strin
 }
 
 void DynOS_Bhv_GeneratePack(const SysPath &aPackFolder) {
-    Print("Processing Behaviors: \"%s\"", aPackFolder.c_str());
+    Print("Processing behaviors: \"%s\"", aPackFolder.c_str());
     Array<Pair<u64, String>> _BehaviorsFolders;
     GfxData *_GfxData = New<GfxData>();
 

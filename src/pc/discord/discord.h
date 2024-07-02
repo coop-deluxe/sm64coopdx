@@ -1,6 +1,6 @@
 #pragma once
 
-#include "PR/ultratypes.h"
+#include <PR/ultratypes.h>
 #include "discord_game_sdk.h"
 
 #ifdef _WIN32

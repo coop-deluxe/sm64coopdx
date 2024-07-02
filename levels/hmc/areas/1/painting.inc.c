@@ -1,3 +1,4 @@
+#include "pc/rom_assets.h"
 #include "game/paintings.h"
 
 // 0x070241B8 - 0x070241D0
@@ -15,20 +16,10 @@ static const Lights1 hmc_seg7_lights_070241D0 = {
 
 // Appears to lock 4 of the sides when shimmering and in use. Unused.
 // 0x070241E8 - 0x07024228
-static const Vtx hmc_seg7_vertex_070241E8[] = {
-    {{{     0,      0,      0}, 0, {   -32,    990}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{   614,      0,      0}, 0, {  6100,    990}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{   614,    614,      0}, 0, {  6100,  -5142}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{     0,    614,      0}, 0, {   -32,  -5142}, {0x00, 0x00, 0x7f, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(hmc_seg7_vertex_070241E8, 0x00396340, 232834, 0x00022558, 64);
 
 // 0x07024228 - 0x07024268
-static const Vtx hmc_seg7_vertex_07024228[] = {
-    {{{     0,      0,      0}, 0, {     0,      0}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{   614,      0,      0}, 0, {     0,      0}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{   614,    614,      0}, 0, {     0,      0}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{     0,    614,      0}, 0, {     0,      0}, {0x00, 0x00, 0x7f, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(hmc_seg7_vertex_07024228, 0x00396340, 232834, 0x00022598, 64);
 
 // Unused
 // 0x07024268 - 0x070242A0
@@ -501,9 +492,7 @@ UNUSED static const u64 hmc_unused_0 = 0;
 
 
 // 0x07024CE0 - 0x070254E0
-ALIGNED8 const Texture hmc_seg7_texture_07024CE0[] = {
-#include "levels/hmc/7.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(hmc_seg7_texture_07024CE0, "levels/hmc/7.rgba16.inc.c", 0x00396340, 232834, 0x00016800, 2048);
 
 // 0x070254E0 - 0x07025518
 static const Gfx hmc_seg7_painting_dl_070254E0[] = {

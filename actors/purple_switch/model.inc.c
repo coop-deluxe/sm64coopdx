@@ -1,3 +1,4 @@
+#include "pc/rom_assets.h"
 // Purple Switch
 
 // 0x0800C090
@@ -7,42 +8,16 @@ static const Lights1 purple_switch_seg8_lights_0800C090 = gdSPDefLights1(
 );
 
 // 0x0800C0A8
-ALIGNED8 const Texture purple_switch_seg8_texture_0800C0A8[] = {
-#include "actors/purple_switch/purple_switch_base.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(purple_switch_seg8_texture_0800C0A8, "actors/purple_switch/purple_switch_base.rgba16.inc.c", 0x001f2200, 59076, 0x0000c0a8, 128);
 
 // 0x0800C128
-ALIGNED8 const Texture purple_switch_seg8_texture_0800C128[] = {
-#include "actors/purple_switch/purple_switch_exclamation_point.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(purple_switch_seg8_texture_0800C128, "actors/purple_switch/purple_switch_exclamation_point.rgba16.inc.c", 0x001f2200, 59076, 0x0000c128, 1024);
 
 // 0x0800C528
-static const Vtx purple_switch_seg8_vertex_0800C528[] = {
-    {{{   102,      0,   -101}, 0, {     0,   -543}, {0x53, 0x5f, 0x00, 0xff}}},
-    {{{    61,     36,    -60}, 0, {  1326,   -287}, {0x53, 0x5f, 0x00, 0xff}}},
-    {{{    61,     36,     61}, 0, {  1326,    478}, {0x53, 0x5f, 0x00, 0xff}}},
-    {{{  -101,      0,   -101}, 0, {     0,    734}, {0x00, 0x5f, 0xad, 0xff}}},
-    {{{    61,     36,    -60}, 0, {  1326,   -287}, {0x00, 0x5f, 0xad, 0xff}}},
-    {{{   102,      0,   -101}, 0, {     0,   -543}, {0x00, 0x5f, 0xad, 0xff}}},
-    {{{   -60,     36,    -60}, 0, {  1326,    478}, {0x00, 0x5f, 0xad, 0xff}}},
-    {{{  -101,      0,    102}, 0, {     0,    734}, {0xad, 0x5f, 0x00, 0xff}}},
-    {{{   -60,     36,    -60}, 0, {  1326,   -287}, {0xad, 0x5f, 0x00, 0xff}}},
-    {{{  -101,      0,   -101}, 0, {     0,   -543}, {0xad, 0x5f, 0x00, 0xff}}},
-    {{{   -60,     36,     61}, 0, {  1326,    478}, {0xad, 0x5f, 0x00, 0xff}}},
-    {{{   102,      0,    102}, 0, {     0,   -543}, {0x00, 0x5f, 0x53, 0xff}}},
-    {{{    61,     36,     61}, 0, {  1326,   -287}, {0x00, 0x5f, 0x53, 0xff}}},
-    {{{   -60,     36,     61}, 0, {  1326,    478}, {0x00, 0x5f, 0x53, 0xff}}},
-    {{{  -101,      0,    102}, 0, {     0,    734}, {0x00, 0x5f, 0x53, 0xff}}},
-    {{{   102,      0,    102}, 0, {     0,    734}, {0x53, 0x5f, 0x00, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(purple_switch_seg8_vertex_0800C528, 0x001f2200, 59076, 0x0000c528, 256);
 
 // 0x0800C628
-static const Vtx purple_switch_seg8_vertex_0800C628[] = {
-    {{{    61,     36,    -60}, 0, {   607,   -134}, {0x00, 0x7f, 0x00, 0xff}}},
-    {{{   -60,     36,     61}, 0, {  -159,   1090}, {0x00, 0x7f, 0x00, 0xff}}},
-    {{{    61,     36,     61}, 0, {   607,   1090}, {0x00, 0x7f, 0x00, 0xff}}},
-    {{{   -60,     36,    -60}, 0, {  -159,   -134}, {0x00, 0x7f, 0x00, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(purple_switch_seg8_vertex_0800C628, 0x001f2200, 59076, 0x0000c628, 64);
 
 // 0x0800C668 - 0x0800C6E0
 const Gfx purple_switch_seg8_dl_0800C668[] = {

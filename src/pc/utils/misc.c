@@ -40,6 +40,7 @@ static void _clock_gettime(struct timespec* clock_time) {
 
 #ifdef DEVELOPMENT
     // give each instance a random offset for testing purposed
+    /*
     static s32 randomOffset1 = 0;
     static s32 randomOffset2 = 0;
     if (randomOffset1 == 0) {
@@ -50,6 +51,7 @@ static void _clock_gettime(struct timespec* clock_time) {
     }
     clock_time->tv_sec += randomOffset1;
     clock_time->tv_nsec += randomOffset2;
+    */
 #endif
 }
 

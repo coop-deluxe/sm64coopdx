@@ -7,7 +7,7 @@
 #include <ultra64.h>
 #include "macros.h"
 #include "pc/network/version.h"
-#include "src/pc/platform.h"
+#include "pc/platform.h"
 
 // Certain functions are marked as having return values, but do not
 // actually return a value. This causes undefined behavior, which we'd rather
@@ -18,8 +18,6 @@
 #else
     #define BAD_RETURN(cmd) cmd
 #endif
-
-#define OBJECT_MAX_BHV_STACK 16
 
 struct Controller
 {
@@ -102,8 +100,8 @@ struct Animation {
     /*0x06*/ s16 loopStart;
     /*0x08*/ s16 loopEnd;
     /*0x0A*/ s16 unusedBoneCount;
-    /*0x0C*/ const s16 *values;
-    /*0x10*/ const u16 *index;
+    /*0x0C*/ u16 *values;
+    /*0x10*/ u16 *index;
     /*0x14*/ u32 length; // only used with Mario animations to determine how much to load. 0 otherwise.
     /*????*/ u32 valuesLength;
     /*????*/ u32 indexLength;
@@ -176,6 +174,8 @@ struct GraphNodeObject
     /*0x54*/ Vec3f cameraToObject;
     u32 skipInterpolationTimestamp;
     bool skipInViewCheck;
+
+    bool inited;
 };
 
 struct ObjectNode
@@ -187,6 +187,12 @@ struct ObjectNode
 
 // NOTE: Since ObjectNode is the first member of Object, it is difficult to determine
 // whether some of these pointers point to ObjectNode or Object.
+
+#define OBJECT_MAX_BHV_STACK        16
+#define OBJECT_NUM_REGULAR_FIELDS   0x50
+#define OBJECT_NUM_CUSTOM_FIELDS    0x10
+#define OBJECT_CUSTOM_FIELDS_START  (OBJECT_NUM_REGULAR_FIELDS)
+#define OBJECT_NUM_FIELDS           (OBJECT_CUSTOM_FIELDS_START + OBJECT_NUM_CUSTOM_FIELDS)
 
 struct Object
 {
@@ -201,21 +207,21 @@ struct Object
     union
     {
         // Object fields. See object_fields.h.
-        u32 asU32[0x50];
-        s32 asS32[0x50];
-        s16 asS16[0x50][2];
-        f32 asF32[0x50];
+        u32 asU32[OBJECT_NUM_FIELDS];
+        s32 asS32[OBJECT_NUM_FIELDS];
+        s16 asS16[OBJECT_NUM_FIELDS][2];
+        f32 asF32[OBJECT_NUM_FIELDS];
     } rawData;
     union {
-        s16 *asS16P[0x50];
-        s32 *asS32P[0x50];
-        struct AnimationTable *asAnims[0x50];
-        struct Waypoint *asWaypoint[0x50];
-        struct ChainSegment *asChainSegment[0x50];
-        struct Object *asObject[0x50];
-        struct Surface *asSurface[0x50];
-        void *asVoidPtr[0x50];
-        const void *asConstVoidPtr[0x50];
+        s16 *asS16P[OBJECT_NUM_FIELDS];
+        s32 *asS32P[OBJECT_NUM_FIELDS];
+        struct AnimationTable *asAnims[OBJECT_NUM_FIELDS];
+        struct Waypoint *asWaypoint[OBJECT_NUM_FIELDS];
+        struct ChainSegment *asChainSegment[OBJECT_NUM_FIELDS];
+        struct Object *asObject[OBJECT_NUM_FIELDS];
+        struct Surface *asSurface[OBJECT_NUM_FIELDS];
+        void *asVoidPtr[OBJECT_NUM_FIELDS];
+        const void *asConstVoidPtr[OBJECT_NUM_FIELDS];
     } ptrData;
     /*0x1C8*/ u32 unused1;
     /*0x1CC*/ const BehaviorScript *curBhvCommand;
@@ -245,6 +251,8 @@ struct Object
     /*?????*/ u8 setHome;
     /*?????*/ u8 allowRemoteInteractions;
     /*?????*/ u8 ctx;
+    /*?????*/ u32 firstSurface;
+    /*?????*/ u32 numSurfaces;
 };
 
 struct ObjectHitbox
@@ -426,6 +434,7 @@ struct MarioState
     /*????*/ u32 cap;
     /*????*/ u8 bounceSquishTimer;
     /*????*/ u8 skipWarpInteractionsTimer;
+    /*????*/ s16 dialogId;
 };
 
 struct TextureInfo
@@ -450,7 +459,7 @@ struct TextureInfo
 #define COOP_OBJ_FLAG_NON_SYNC    (1 << 2)
 #define COOP_OBJ_FLAG_INITIALIZED (1 << 3)
 
-#include "src/game/characters.h"
+#include "game/characters.h"
 #include "data/dynos.c.h"
 
 #endif // _SM64_TYPES_H_

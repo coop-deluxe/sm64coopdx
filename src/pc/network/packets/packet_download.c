@@ -9,6 +9,7 @@
 #include "pc/djui/djui_panel_join_message.h"
 //#define DISABLE_MODULE_LOG 1
 #include "pc/debuglog.h"
+#include "pc/fs/fmem.h"
 
 #define CHUNK_SIZE 800
 #define OFFSET_COUNT 50
@@ -191,8 +192,8 @@ static void network_update_offset_groups(void) {
             for (u64 fileIndex = 0; fileIndex < mod->fileCount; fileIndex++) {
                 struct ModFile* modFile = &mod->files[fileIndex];
                 if (modFile->fp == NULL) { continue; }
-                fflush(modFile->fp);
-                fclose(modFile->fp);
+                f_flush(modFile->fp);
+                f_close(modFile->fp);
                 modFile->fp = NULL;
             }
             mod->enabled = true;
@@ -315,6 +316,18 @@ after_filled:;
     //LOG_INFO("Sent chunk: offset %llu, length %llu", requestOffset, chunkFill);
 }
 
+// Cache any mod that doesn't have "(wip)" or "[wip]" in its name (case-insensitive)
+static bool should_cache_mod(struct Mod *mod) {
+    char *modName = sys_strdup(mod->name);
+    sys_strlwr(modName);
+    bool shouldCache = (
+        !strstr(modName, "(wip)") &&
+        !strstr(modName, "[wip]")
+    );
+    free(modName);
+    return shouldCache;
+}
+
 static void open_mod_file(struct Mod* mod, struct ModFile* file) {
     if (file->fp != NULL) {
         return;
@@ -326,10 +339,13 @@ static void open_mod_file(struct Mod* mod, struct ModFile* file) {
         return;
     }
 
-    mod_file_create_directories(mod, file);
-
     file->wroteBytes = 0;
-    file->fp = fopen(fullPath, "wb");
+    if (should_cache_mod(mod)) {
+        mod_file_create_directories(mod, file);
+        file->fp = fopen(fullPath, "wb");
+    } else {
+        file->fp = f_open_w(fullPath);
+    }
     if (file->fp == NULL) {
         LOG_ERROR("unable to open for write: '%s' - '%s'", fullPath, strerror(errno));
         return;
@@ -430,14 +446,22 @@ after_group:;
                     LOG_ERROR("Failed to open file for download write: %s", modFile->cachedPath);
                     return;
                 }
-                fseek(modFile->fp, fileWriteOffset, SEEK_SET);
-                fwrite(&chunk[chunkPour], sizeof(u8), fileWriteLength, modFile->fp);
+                f_seek(modFile->fp, fileWriteOffset, SEEK_SET);
+                f_write(&chunk[chunkPour], sizeof(u8), fileWriteLength, modFile->fp);
                 modFile->wroteBytes += fileWriteLength;
 
                 if (modFile->wroteBytes >= modFile->size) {
-                    fflush(modFile->fp);
-                    fclose(modFile->fp);
+                    f_flush(modFile->fp);
+                    f_close(modFile->fp);
                     modFile->fp = NULL;
+
+                    // Write cachedPath here so the file doesn't end up in mod.cache
+                    if (!should_cache_mod(mod)) {
+                        char modFilePath[SYS_MAX_PATH] = { 0 };
+                        concat_path(modFilePath, mod->basePath, modFile->relativePath);
+                        normalize_path(modFilePath);
+                        modFile->cachedPath = strdup(modFilePath);
+                    }
                 }
 
                 wroteBytes += fileWriteLength;

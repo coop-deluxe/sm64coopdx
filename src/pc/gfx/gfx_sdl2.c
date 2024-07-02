@@ -6,6 +6,10 @@
 #define FOR_WINDOWS 0
 #endif
 
+#if defined(_WIN32) || defined(_WIN64)
+#include <windows.h>
+#endif
+
 #if FOR_WINDOWS
 #define GLEW_STATIC
 #include <GL/glew.h>
@@ -33,11 +37,12 @@
 #include "../configfile.h"
 #include "../cliopts.h"
 
-#include "src/pc/controller/controller_keyboard.h"
-#include "src/pc/controller/controller_sdl.h"
-#include "src/pc/controller/controller_bind_mapping.h"
+#include "pc/controller/controller_keyboard.h"
+#include "pc/controller/controller_sdl.h"
+#include "pc/controller/controller_bind_mapping.h"
 #include "pc/utils/misc.h"
 #include "pc/mods/mod_import.h"
+#include "pc/rom_checker.h"
 
 #ifndef GL_MAX_SAMPLES
 #define GL_MAX_SAMPLES 0x8D57
@@ -107,6 +112,10 @@ static void gfx_sdl_reset_dimension_and_pos(void) {
 }
 
 static void gfx_sdl_init(const char *window_title) {
+#if defined(_WIN32) || defined(_WIN64)
+    SetProcessDPIAware();
+#endif
+
     SDL_SetHint(SDL_HINT_VIDEO_X11_NET_WM_BYPASS_COMPOSITOR, "0");
     SDL_Init(SDL_INIT_VIDEO);
     SDL_StartTextInput();
@@ -114,16 +123,18 @@ static void gfx_sdl_init(const char *window_title) {
     if (configWindow.msaa > 0) {
         SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
         SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, configWindow.msaa);
+    } else {
+        SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 0);
     }
 
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
-    #ifdef USE_GLES
+#ifdef USE_GLES
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);  // These attributes allow for hardware acceleration on RPis.
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
-    #endif
+#endif
 
     int xpos = (configWindow.x == WAPI_WIN_CENTERPOS) ? SDL_WINDOWPOS_CENTERED : configWindow.x;
     int ypos = (configWindow.y == WAPI_WIN_CENTERPOS) ? SDL_WINDOWPOS_CENTERED : configWindow.y;
@@ -159,7 +170,7 @@ static void gfx_sdl_get_dimensions(uint32_t *width, uint32_t *height) {
 static void gfx_sdl_onkeydown(int scancode) {
     const Uint8 *state = SDL_GetKeyboardState(NULL);
 
-    if (state[SDL_SCANCODE_LALT] && state[SDL_SCANCODE_RETURN]) {
+    if ((state[SDL_SCANCODE_LALT] || state[SDL_SCANCODE_RALT]) && state[SDL_SCANCODE_RETURN]) {
         configWindow.fullscreen = !configWindow.fullscreen;
         configWindow.settings_changed = true;
         return;
@@ -175,7 +186,22 @@ static void gfx_sdl_onkeyup(int scancode) {
 }
 
 static void gfx_sdl_ondropfile(char* path) {
-    mod_import_file(path);
+#ifdef _WIN32
+    char portable_path[SYS_MAX_PATH];
+    if (sys_windows_short_path_from_mbs(portable_path, SYS_MAX_PATH, path)) {
+        if (!gRomIsValid) {
+            rom_on_drop_file(portable_path);
+        } else if (gGameInited) {
+            mod_import_file(portable_path);
+        }
+    }
+#else
+    if (!gRomIsValid) {
+        rom_on_drop_file(path);
+    } else if (gGameInited) {
+        mod_import_file(path);
+    }
+#endif
 }
 
 static void gfx_sdl_handle_events(void) {
@@ -272,6 +298,10 @@ static void gfx_sdl_shutdown(void) {
     }
 }
 
+static bool gfx_sdl_has_focus(void) {
+    return (SDL_GetWindowFlags(wnd) & SDL_WINDOW_INPUT_FOCUS);
+}
+
 static void gfx_sdl_start_text_input(void) { SDL_StartTextInput(); }
 static void gfx_sdl_stop_text_input(void) { SDL_StopTextInput(); }
 static char* gfx_sdl_get_clipboard_text(void) { return SDL_GetClipboardText(); }
@@ -297,7 +327,8 @@ struct GfxWindowManagerAPI gfx_sdl = {
     gfx_sdl_delay,
     gfx_sdl_get_max_msaa,
     gfx_sdl_set_window_title,
-    gfx_sdl_reset_window_title
+    gfx_sdl_reset_window_title,
+    gfx_sdl_has_focus
 };
 
 #endif // BACKEND_WM

@@ -1,10 +1,6 @@
+#include "pc/rom_assets.h"
 // 0x0700BC88 - 0x0700BCC8
-static const Vtx ssl_seg7_vertex_0700BC88[] = {
-    {{{ -6143,      0,  -4697}, 0, {   990,      0}, {0xff, 0xff, 0xff, 0xc8}}},
-    {{{ -5836,      0,  -4697}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xc8}}},
-    {{{ -5836,      0,  -5004}, 0, {     0,    990}, {0xff, 0xff, 0xff, 0xc8}}},
-    {{{ -6143,      0,  -5004}, 0, {   990,    990}, {0xff, 0xff, 0xff, 0xc8}}},
-};
+ROM_ASSET_LOAD_VTX(ssl_seg7_vertex_0700BC88, 0x003e76b0, 82641, 0x0000bc88, 64);
 
 // 0x0700BCC8 - 0x0700BD00
 static const Gfx ssl_seg7_dl_0700BCC8[] = {

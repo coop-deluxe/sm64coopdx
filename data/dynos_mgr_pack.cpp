@@ -89,7 +89,6 @@ s32 DynOS_Pack_GetCount() {
 void DynOS_Pack_SetEnabled(PackData* aPack, bool aEnabled) {
     if (aPack == NULL) { return; }
     aPack->mEnabled = aEnabled;
-    aPack->mEnabledSet = true;
 
     if (aEnabled && !aPack->mLoaded) {
         ScanPackBins(aPack);
@@ -165,7 +164,6 @@ PackData* DynOS_Pack_Add(const SysPath& aPath) {
     const PackData packData = {
         .mIndex = index,
         .mEnabled = false,
-        .mEnabledSet = false,
         .mPath = aPath,
         .mDisplayName = "",
         .mGfxData = {},
@@ -178,18 +176,7 @@ PackData* DynOS_Pack_Add(const SysPath& aPath) {
 
     _Pack->mDisplayName = displayName;
 
-    _Pack->mEnabled = false;
-    _Pack->mEnabledSet = false;
-
     return _Pack;
-}
-
-void DynOS_Pack_Init() {
-    for (auto& pack : DynosPacks()) {
-        if (!pack.mEnabledSet) {
-            DynOS_Pack_SetEnabled(&pack, pack.mEnabled);
-        }
-    }
 }
 
 Pair<const char *, GfxData *>* DynOS_Pack_GetActor(PackData* aPackData, const char* aActorName) {

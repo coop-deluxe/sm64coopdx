@@ -3,9 +3,9 @@
 #include "djui_panel_menu.h"
 #include "djui_panel_main.h"
 #include "djui_panel_join_message.h"
-#include "src/pc/network/network.h"
-#include "src/pc/utils/misc.h"
-#include "src/pc/configfile.h"
+#include "pc/network/network.h"
+#include "pc/utils/misc.h"
+#include "pc/configfile.h"
 
 #define DJUI_JOIN_MESSAGE_ELAPSE 60
 bool gDjuiPanelJoinMessageVisible = false;
@@ -54,7 +54,7 @@ void djui_panel_join_message_create(struct DjuiBase* caller) {
     // don't recreate panel if it's already visible
     if (gDjuiPanelJoinMessageVisible) { return; }
 
-    struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(JOIN_MESSAGE, JOINING));
+    struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(JOIN_MESSAGE, JOINING), true);
     struct DjuiBase* body = djui_three_panel_get_body(panel);
     {
         snprintf(gDownloadEstimate, 32, " ");

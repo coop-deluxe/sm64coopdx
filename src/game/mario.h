@@ -64,6 +64,7 @@ s32 execute_mario_action(UNUSED struct Object *o);
 s32 force_idle_state(struct MarioState* m);
 void init_single_mario(struct MarioState* m);
 void init_mario(void);
+void init_mario_single_from_save_file(struct MarioState* m, u16 index);
 void init_mario_from_save_file(void);
 void set_mario_particle_flags(struct MarioState* m, u32 flags, u8 clear);
 void mario_update_wall(struct MarioState* m, struct WallCollisionData* wcd);

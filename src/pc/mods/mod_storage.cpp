@@ -16,7 +16,7 @@ extern "C" {
 
 #define C_FIELD extern "C"
 
-void strdelete(char string[], char substr[]) {
+void strdelete(char* string, const char* substr) {
     // i is used to loop through the string
     u16 i = 0;
 
@@ -30,7 +30,7 @@ void strdelete(char string[], char substr[]) {
         if (strstr(&string[i], substr) == &string[i]) {
             // determine the string's new length after removing the substr occurrence
             string_length -= substr_length;
-            // shift forward the remaining characters in the string after the substr 
+            // shift forward the remaining characters in the string after the substr
             // occurrence by the length of substr, effectively removing it!
             for (u16 j = i; j < string_length; j++) {
                 string[j] = string[j + substr_length];
@@ -43,8 +43,9 @@ void strdelete(char string[], char substr[]) {
     string[i] = '\0';
 }
 
-bool char_valid(char* buffer) {
+bool char_valid(const char* buffer) {
     if (buffer[0] == '\0') { return false; }
+
     while (*buffer != '\0') {
         if ((*buffer >= 'a' && *buffer <= 'z') || (*buffer >= 'A' && *buffer <= 'Z') || (*buffer >= '0' && *buffer <= '9') || *buffer == '_' || *buffer == '.' || *buffer == '-') {
             buffer++;
@@ -52,13 +53,14 @@ bool char_valid(char* buffer) {
         }
         return false;
     }
+
     return true;
 }
 
 void mod_storage_get_filename(char* dest) {
-    const char* path = sys_user_path(); // get user path
-    snprintf(dest, SYS_MAX_PATH - 1, "%s/sav/%s", path, gLuaActiveMod->relativePath); // append sav folder
-    strdelete(dest, (char *)".lua"); // delete ".lua" from sav name
+    const char* path = fs_get_write_path(SAVE_DIRECTORY); // get user path
+    snprintf(dest, SYS_MAX_PATH - 1, "%s/%s", path, gLuaActiveMod->relativePath); // append sav folder
+    strdelete(dest, ".lua"); // delete ".lua" from sav name
     strcat(dest, SAVE_EXTENSION); // append SAVE_EXTENSION
     normalize_path(dest); // fix any out of place slashes
 }
@@ -66,21 +68,20 @@ void mod_storage_get_filename(char* dest) {
 C_FIELD bool mod_storage_save(const char* key, const char* value) {
     if (gLuaActiveMod == NULL) { return false; }
     if (strlen(key) > MAX_KEY_VALUE_LENGTH || strlen(value) > MAX_KEY_VALUE_LENGTH) { return false; }
-    if (!char_valid((char *)key) || !char_valid((char *)value)) { return false; }
+    if (!char_valid(key) || !char_valid(value)) { return false; }
 
-    char filename[SYS_MAX_PATH] = {0};
+    char filename[SYS_MAX_PATH] = { 0 };
     mod_storage_get_filename(filename);
 
     // ensure savPath exists
-    char savPath[SYS_MAX_PATH] = { 0 };
-    if (snprintf(savPath, SYS_MAX_PATH - 1, "%s", fs_get_write_path(SAVE_DIRECTORY)) < 0) { return false; }
+    const char* savPath = fs_get_write_path(SAVE_DIRECTORY);
     if (!fs_sys_dir_exists(savPath)) { fs_sys_mkdir(savPath); }
 
     mINI::INIFile file(filename);
     mINI::INIStructure ini;
     file.read(ini);
 
-    if (ini["storage"].size() + 1 > MAX_KEYS) { return false; }
+    if (ini["storage"].size() > MAX_KEYS) { return false; }
 
     ini["storage"][key] = value;
 
@@ -90,8 +91,17 @@ C_FIELD bool mod_storage_save(const char* key, const char* value) {
     return true;
 }
 
-C_FIELD bool mod_storage_save_number(const char* key, double value) {
-    return mod_storage_save(key, std::to_string(value).c_str());
+C_FIELD bool mod_storage_save_number(const char* key, f32 value) {
+    // Store string results in a temporary buffer
+    // this assumes mod_storage_load will only ever be called by Lua
+    static char str[MAX_KEY_VALUE_LENGTH];
+    if (floor(value) == value) {
+        snprintf(str, MAX_KEY_VALUE_LENGTH, "%d", (s64)value);
+    } else {
+        snprintf(str, MAX_KEY_VALUE_LENGTH, "%f", value);
+    }
+
+    return mod_storage_save(key, str);
 }
 
 C_FIELD bool mod_storage_save_bool(const char* key, bool value) {
@@ -101,25 +111,31 @@ C_FIELD bool mod_storage_save_bool(const char* key, bool value) {
 C_FIELD const char* mod_storage_load(const char* key) {
     if (gLuaActiveMod == NULL) { return NULL; }
     if (strlen(key) > MAX_KEY_VALUE_LENGTH) { return NULL; }
-    if (!char_valid((char *)key)) { return NULL; }
+    if (!char_valid(key)) { return NULL; }
 
-    char filename[SYS_MAX_PATH] = {0};
+    char filename[SYS_MAX_PATH] = { 0 };
     mod_storage_get_filename(filename);
-
-    if (!path_exists(filename)) { return NULL; }
+    if (!fs_sys_path_exists(filename)) { return NULL; }
 
     mINI::INIFile file(filename);
     mINI::INIStructure ini;
     file.read(ini);
 
-    return const_cast<char*>(ini["storage"][key].c_str());
+    std::string str = ini["storage"][key];
+    if (str.empty()) { return NULL; }
+
+    // Store string results in a temporary buffer
+    // this assumes mod_storage_load will only ever be called by Lua
+    static char value[MAX_KEY_VALUE_LENGTH];
+    snprintf(value, MAX_KEY_VALUE_LENGTH, "%s", str.c_str());
+    return value;
 }
 
-C_FIELD double mod_storage_load_number(const char* key) {
+C_FIELD f32 mod_storage_load_number(const char* key) {
     const char* value = mod_storage_load(key);
     if (value == NULL) { return 0; }
 
-    return std::strtod(value, nullptr);
+    return std::strtof(value, nullptr);
 }
 
 C_FIELD bool mod_storage_load_bool(const char* key) {
@@ -134,10 +150,9 @@ C_FIELD bool mod_storage_remove(const char* key) {
     if (strlen(key) > MAX_KEY_VALUE_LENGTH) { return false; }
     if (!char_valid((char *)key)) { return false; }
 
-    char filename[SYS_MAX_PATH] = {0};
+    char filename[SYS_MAX_PATH] = { 0 };
     mod_storage_get_filename(filename);
-
-    if (!path_exists(filename)) { return false; }
+    if (!fs_sys_path_exists(filename)) { return false; }
 
     mINI::INIFile file(filename);
     mINI::INIStructure ini;
@@ -155,10 +170,9 @@ C_FIELD bool mod_storage_remove(const char* key) {
 C_FIELD bool mod_storage_clear(void) {
     if (gLuaActiveMod == NULL) { return false; }
 
-    char filename[SYS_MAX_PATH] = {0};
+    char filename[SYS_MAX_PATH] = { 0 };
     mod_storage_get_filename(filename);
-
-    if (!path_exists(filename)) { return false; }
+    if (!fs_sys_path_exists(filename)) { return false; }
 
     mINI::INIFile file(filename);
     mINI::INIStructure ini;

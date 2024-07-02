@@ -1,3 +1,4 @@
+#include "pc/rom_assets.h"
 // Blue Coin Switch
 
 // 0x08000000
@@ -7,42 +8,16 @@ static const Lights1 blue_coin_switch_seg8_lights_08000000 = gdSPDefLights1(
 );
 
 // 0x08000018
-ALIGNED8 const Texture blue_coin_switch_seg8_texture_08000018[] = {
-#include "actors/blue_coin_switch/blue_coin_switch_side.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(blue_coin_switch_seg8_texture_08000018, "actors/blue_coin_switch/blue_coin_switch_side.rgba16.inc.c", 0x001f2200, 59076, 0x00000018, 1024);
 
 // 0x08000418
-ALIGNED8 const Texture blue_coin_switch_seg8_texture_08000418[] = {
-#include "actors/blue_coin_switch/blue_coin_switch_top.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(blue_coin_switch_seg8_texture_08000418, "actors/blue_coin_switch/blue_coin_switch_top.rgba16.inc.c", 0x001f2200, 59076, 0x00000418, 2048);
 
 // 0x08000C18
-static const Vtx blue_coin_switch_seg8_vertex_08000C18[] = {
-    {{{    26,      0,     26}, 0, {   990,    479}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{    26,     26,     26}, 0, {   990,      0}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{   -25,     26,     26}, 0, {     0,      0}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{   -25,      0,     26}, 0, {     0,    479}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{   -25,      0,    -25}, 0, {   990,    479}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{    26,     26,    -25}, 0, {     0,      0}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{    26,      0,    -25}, 0, {     0,    479}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{   -25,     26,    -25}, 0, {   990,      0}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{   -25,      0,     26}, 0, {   990,    479}, {0x81, 0x00, 0x00, 0xff}}},
-    {{{   -25,     26,    -25}, 0, {     0,      0}, {0x81, 0x00, 0x00, 0xff}}},
-    {{{   -25,      0,    -25}, 0, {     0,    479}, {0x81, 0x00, 0x00, 0xff}}},
-    {{{   -25,     26,     26}, 0, {   990,      0}, {0x81, 0x00, 0x00, 0xff}}},
-    {{{    26,      0,    -25}, 0, {   990,    479}, {0x7f, 0x00, 0x00, 0xff}}},
-    {{{    26,     26,    -25}, 0, {   990,      0}, {0x7f, 0x00, 0x00, 0xff}}},
-    {{{    26,     26,     26}, 0, {     0,      0}, {0x7f, 0x00, 0x00, 0xff}}},
-    {{{    26,      0,     26}, 0, {     0,    479}, {0x7f, 0x00, 0x00, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(blue_coin_switch_seg8_vertex_08000C18, 0x001f2200, 59076, 0x00000c18, 256);
 
 // 0x08000D18
-static const Vtx blue_coin_switch_seg8_vertex_08000D18[] = {
-    {{{    26,     26,    -25}, 0, {   990,      0}, {0x00, 0x7f, 0x00, 0xff}}},
-    {{{   -25,     26,     26}, 0, {     0,    990}, {0x00, 0x7f, 0x00, 0xff}}},
-    {{{    26,     26,     26}, 0, {   990,    990}, {0x00, 0x7f, 0x00, 0xff}}},
-    {{{   -25,     26,    -25}, 0, {     0,      0}, {0x00, 0x7f, 0x00, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(blue_coin_switch_seg8_vertex_08000D18, 0x001f2200, 59076, 0x00000d18, 64);
 
 // 0x08000D58 - 0x08000DD0
 const Gfx blue_coin_switch_seg8_dl_08000D58[] = {

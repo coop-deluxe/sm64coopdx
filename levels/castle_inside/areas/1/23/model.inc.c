@@ -1,3 +1,4 @@
+#include "pc/rom_assets.h"
 // 0x070382B0 - 0x070382C8
 static const Lights1 inside_castle_seg7_lights_070382B0 = gdSPDefLights1(
     0x5f, 0x5f, 0x5f,
@@ -5,12 +6,7 @@ static const Lights1 inside_castle_seg7_lights_070382B0 = gdSPDefLights1(
 );
 
 // 0x070382C8 - 0x07038308
-static const Vtx inside_castle_seg7_vertex_070382C8[] = {
-    {{{  1616,    512,  -1089}, 0, {     0,      0}, {0x59, 0x00, 0x5a, 0xff}}},
-    {{{  1616,    358,  -1089}, 0, {     0,    990}, {0x59, 0x00, 0x5a, 0xff}}},
-    {{{  1725,    358,  -1197}, 0, {   990,    990}, {0x59, 0x00, 0x5a, 0xff}}},
-    {{{  1725,    512,  -1197}, 0, {   990,      0}, {0x59, 0x00, 0x5a, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(inside_castle_seg7_vertex_070382C8, 0x00396340, 232834, 0x000382c8, 64);
 
 // 0x07038308 - 0x07038350
 static const Gfx inside_castle_seg7_dl_07038308[] = {

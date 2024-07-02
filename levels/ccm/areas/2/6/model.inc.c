@@ -1,10 +1,6 @@
+#include "pc/rom_assets.h"
 // 0x0701FDE8 - 0x0701FE28
-static const Vtx ccm_seg7_vertex_0701FDE8[] = {
-    {{{ -7592,  -5703,  -6819}, 0, {   990,    990}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{ -7592,  -5600,  -6716}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{ -7592,  -5703,  -6716}, 0, {     0,    990}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{ -7592,  -5600,  -6819}, 0, {   990,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(ccm_seg7_vertex_0701FDE8, 0x00383950, 74560, 0x0001fde8, 64);
 
 // 0x0701FE28 - 0x0701FE60
 static const Gfx ccm_seg7_dl_0701FE28[] = {

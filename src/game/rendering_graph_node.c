@@ -1212,6 +1212,13 @@ static void geo_process_object(struct Object *node) {
     // Sanity check our stack index, If we above or equal to our stack size. Return to prevent OOB\.
     if ((gMatStackIndex + 1) >= MATRIX_STACK_SIZE) { LOG_ERROR("Preventing attempt to exceed the maximum size %i for our matrix stack with size of %i.", MATRIX_STACK_SIZE - 1, gMatStackIndex); return; }
 
+    if (!node->header.gfx.inited) {
+        node->header.gfx.inited = true;
+        obj_update_gfx_pos_and_angle(node);
+        vec3f_copy(node->header.gfx.prevPos, node->header.gfx.pos);
+        vec3s_copy(node->header.gfx.prevAngle, node->header.gfx.angle);
+    }
+
     if (node->hookRender) {
         smlua_call_event_hooks_object_param(HOOK_ON_OBJECT_RENDER, node);
     }
@@ -1335,7 +1342,7 @@ static void geo_process_object(struct Object *node) {
         if (node->header.gfx.animInfo.curAnim != NULL) {
             dynos_gfx_swap_animations(node);
             geo_set_animation_globals(&node->header.gfx.animInfo, hasAnimation);
-            smlua_call_event_hooks_object_param(HOOK_ON_OBJECT_ANIM_UPDATE, node);
+            if (node->hookRender) smlua_call_event_hooks_object_param(HOOK_ON_OBJECT_ANIM_UPDATE, node);
             dynos_gfx_swap_animations(node);
         }
         if (obj_is_in_view(&node->header.gfx, gMatStack[gMatStackIndex])) {
@@ -1458,7 +1465,7 @@ void geo_process_held_object(struct GraphNodeHeldObject *node) {
         if (node->objNode->header.gfx.animInfo.curAnim != NULL) {
             dynos_gfx_swap_animations(node->objNode);
             geo_set_animation_globals(&node->objNode->header.gfx.animInfo, hasAnimation);
-            smlua_call_event_hooks_object_param(HOOK_ON_OBJECT_ANIM_UPDATE, node->objNode);
+            if (node->objNode->hookRender) smlua_call_event_hooks_object_param(HOOK_ON_OBJECT_ANIM_UPDATE, node->objNode);
             dynos_gfx_swap_animations(node->objNode);
         }
 

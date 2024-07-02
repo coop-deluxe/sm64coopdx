@@ -1,5 +1,5 @@
 #include "smlua.h"
-#include "src/pc/mods/mods.h"
+#include "pc/mods/mods.h"
 #include "audio/external.h"
 
 u8 gSmLuaConvertSuccess = false;

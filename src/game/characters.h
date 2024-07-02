@@ -1,74 +1,10 @@
 #ifndef CHARACTERS_H
 #define CHARACTERS_H
-#include "PR/ultratypes.h"
-#include "types.h"
+
+#include <PR/ultratypes.h>
 #include "pc/configfile.h"
 #include "mario_animation_ids.h"
 // NOTE: do not include any additional headers
-
-enum PalettePreset {
-    PALETTE_MARIO,
-    PALETTE_LUIGI,
-    PALETTE_TOAD,
-    PALETTE_WARIO,
-    PALETTE_WALUIGI,
-    PALETTE_TOADETTE,
-    PALETTE_YOSHI,
-    PALETTE_BUCKEN_BERRY,
-    PALETTE_ALA_GOLD,
-    PALETTE_FIRE_MARIO,
-    PALETTE_FIRE_LUIGI,
-    PALETTE_ICE_MARIO,
-    PALETTE_ICE_LUIGI,
-    PALETTE_TOADSWORTH,
-    PALETTE_PEACH,
-    PALETTE_DAISY,
-    PALETTE_WARIO_WOODS,
-    PALETTE_GB,
-    PALETTE_N64,
-    PALETTE_SNES,
-    PALETTE_SWITCH,
-    PALETTE_CLOVER,
-    PALETTE_COBALT,
-    PALETTE_RUBY,
-    PALETTE_FURY,
-    PALETTE_HOT_PINK,
-    PALETTE_NICE_PINK,
-    PALETTE_SEAFOAM,
-    PALETTE_LILAC,
-    PALETTE_COPPER,
-    PALETTE_AZURE,
-    PALETTE_BURGUNDY,
-    PALETTE_MINT,
-    PALETTE_ORANGE,
-    PALETTE_ARCTIC,
-    PALETTE_BLACK,
-    PALETTE_BUBBLEGUM,
-    PALETTE_BUSY_BEE,
-    PALETTE_FORTRESS,
-    PALETTE_BLUEBERRY_PIE,
-    PALETTE_RASPBERRY,
-    PALETTE_COFFEE,
-    PALETTE_MARGIN,
-    PALETTE_PUMPKIN,
-    PALETTE_SOIL,
-    PALETTE_CREVASE,
-    PALETTE_PRESET_MAX
-};
-
-enum PlayerPart {
-    PANTS, SHIRT, GLOVES, SHOES, HAIR, SKIN, CAP, PLAYER_PART_MAX, METAL = CAP
-};
-
-#pragma pack(1)
-struct PlayerPalette {
-    //rgb
-    u8 parts[PLAYER_PART_MAX][3];
-};
-#pragma pack()
-
-extern const struct PlayerPalette DEFAULT_MARIO_PALETTE;
-extern const struct PlayerPalette gPalettePresets[PALETTE_PRESET_MAX];
 
 enum CharacterType {
     CT_MARIO,

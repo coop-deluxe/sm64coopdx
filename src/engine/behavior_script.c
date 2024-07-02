@@ -1168,7 +1168,7 @@ static s32 bhv_cmd_spawn_obj_ext(void) {
 static s32 bhv_cmd_load_animations_ext(void) {
     //u8 field = BHV_CMD_GET_2ND_U8(0);
     
-    printf("LOAD_ANIMATIONS_EXT is not yet supported! Skipping behavior command.\n");
+    LOG_ERROR("LOAD_ANIMATIONS_EXT is not yet supported! Skipping behavior command.\n");
     
     //BehaviorScript *behavior = (BehaviorScript *)gCurrentObject->behavior;
 
@@ -1462,10 +1462,6 @@ u16 position_based_random_u16(void) {
 f32 position_based_random_float_position(void) {
     f32 rnd = position_based_random_u16();
     return rnd / (double)0x10000;
-}
-
-u8 cur_obj_is_last_nat_update_per_frame(void) {
-    return (gCurrentObject->areaTimer == (gNetworkAreaTimer - 1));
 }
 
 f32 draw_distance_scalar(void) {

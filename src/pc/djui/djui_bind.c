@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <string.h>
 #include "djui.h"
-#include "src/pc/controller/controller_api.h"
-#include "src/pc/controller/controller_bind_mapping.h"
+#include "pc/controller/controller_api.h"
+#include "pc/controller/controller_bind_mapping.h"
 #include "sounds.h"
 #include "audio/external.h"
 

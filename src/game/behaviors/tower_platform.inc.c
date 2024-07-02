@@ -102,7 +102,7 @@ void spawn_and_init_wf_platforms(s16 a, const BehaviorScript *bhv) {
     o->oPlatformSpawnerUnkF4++;
 
     if (platform != NULL) {
-        if (bhv == bhvWfSolidTowerPlatform || bhv == bhvWfSlidingTowerPlatform) {
+        if (bhv == smlua_override_behavior(bhvWfSolidTowerPlatform) || bhv == smlua_override_behavior(bhvWfSlidingTowerPlatform)) {
             u32 loopTime = 1 + (platform->oPlatformUnk110 / platform->oPlatformUnk10C);
             loopTime *= 2;
             loopTime += 1;

@@ -23,19 +23,22 @@
 #include "segment7.h"
 #include "seq_ids.h"
 #include "sm64.h"
-#include "text_strings.h"
 #include "types.h"
 #include "macros.h"
 #include "hardcoded.h"
 #include "pc/network/network.h"
 #include "pc/djui/djui.h"
-#include "src/pc/djui/djui_panel_pause.h"
+#include "pc/djui/djui_panel.h"
+#include "pc/djui/djui_panel_pause.h"
 #include "pc/utils/misc.h"
 #include "data/dynos_mgr_builtin_externs.h"
 #include "hud.h"
 #include "pc/lua/smlua_hooks.h"
 #include "game/camera.h"
 #include "level_info.h"
+#include "pc/lua/utils/smlua_text_utils.h"
+#include "pc/lua/utils/smlua_math_utils.h"
+#include "menu/ingame_text.h"
 
 u16 gDialogColorFadeTimer;
 s8 gLastDialogLineNum;
@@ -138,7 +141,7 @@ u8 gMenuHoldKeyIndex = 0;
 u8 gMenuHoldKeyTimer = 0;
 s32 gDialogResponse = 0;
 
-#if (defined(VERSION_JP) || defined(VERSION_SH) || defined(VERSION_EU))
+#if defined(VERSION_JP) || defined(VERSION_SH) || defined(VERSION_EU)
 #ifdef VERSION_EU
 #define CHCACHE_BUFLEN (8 * 8)  // EU only converts 8x8
 #else
@@ -1154,9 +1157,14 @@ void handle_special_dialog_text(s16 dialogID) { // dialog ID tables, in order
     }
 }
 
+static u8 sHookString[255];
+static bool sOverrideDialogString = false;
+void convert_string_ascii_to_sm64(u8 *str64, const char *strAscii, bool menu);
 void handle_dialog_hook(s16 dialogId) {
     bool open = false;
-    smlua_call_event_hooks_int_params_ret_bool(HOOK_ON_DIALOG, dialogId, &open);
+    const char *str = smlua_call_event_hooks_int_ret_bool_and_string(HOOK_ON_DIALOG, dialogId, &open);
+    sOverrideDialogString = str != NULL;
+    if (sOverrideDialogString) { convert_string_ascii_to_sm64(sHookString, str, false); }
     if (!open) {
         gDialogLineNum = 1;
         gDialogBoxState = DIALOG_STATE_CLOSING;
@@ -1519,7 +1527,7 @@ void handle_dialog_text_and_pages(s8 colorMode, struct DialogEntry *dialog, s8 l
 
     u8 strChar;
 
-    u8 *str = segmented_to_virtual(dialog->str);
+    u8 *str = sOverrideDialogString ? sHookString : segmented_to_virtual(dialog->str);
     s8 lineNum = 1;
 
     s8 totalLines;
@@ -1861,31 +1869,21 @@ void render_dialog_string_color(s8 linesPerBox) {
 
 s16 gMenuMode = -1;
 
-u8 gEndCutsceneStrEn0[] = { TEXT_FILE_MARIO_EXCLAMATION };
-u8 gEndCutsceneStrEn1[] = { TEXT_POWER_STARS_RESTORED };
-u8 gEndCutsceneStrEn2[] = { TEXT_THANKS_TO_YOU };
-u8 gEndCutsceneStrEn3[] = { TEXT_THANK_YOU_MARIO };
-u8 gEndCutsceneStrEn4[] = { TEXT_SOMETHING_SPECIAL };
-u8 gEndCutsceneStrEn5[] = { TEXT_LISTEN_EVERYBODY };
-u8 gEndCutsceneStrEn6[] = { TEXT_LETS_HAVE_CAKE };
-u8 gEndCutsceneStrEn7[] = { TEXT_FOR_MARIO };
-u8 gEndCutsceneStrEn8[] = { TEXT_FILE_MARIO_QUESTION };
-
 u8 *gEndCutsceneStringsEn[] = {
-    gEndCutsceneStrEn0,
-    gEndCutsceneStrEn1,
-    gEndCutsceneStrEn2,
-    gEndCutsceneStrEn3,
-    gEndCutsceneStrEn4,
-    gEndCutsceneStrEn5,
-    gEndCutsceneStrEn6,
-    gEndCutsceneStrEn7,
+    INGAME_TEXT_PTR(TEXT_FILE_MARIO_EXCLAMATION),
+    INGAME_TEXT_PTR(TEXT_POWER_STARS_RESTORED),
+    INGAME_TEXT_PTR(TEXT_THANKS_TO_YOU),
+    INGAME_TEXT_PTR(TEXT_THANK_YOU_MARIO),
+    INGAME_TEXT_PTR(TEXT_SOMETHING_SPECIAL),
+    INGAME_TEXT_PTR(TEXT_LISTEN_EVERYBODY),
+    INGAME_TEXT_PTR(TEXT_LETS_HAVE_CAKE),
+    INGAME_TEXT_PTR(TEXT_FOR_MARIO),
     // This [8] string is actually unused. In the cutscene handler, the developers do not
     // set the 8th one, but use the first string again at the very end, so Peach ends up
     // saying "Mario!" twice. It is likely that she was originally meant to say "Mario?" at
     // the end but the developers changed their mind, possibly because the line recorded
     // sounded more like an exclamation than a question.
-    gEndCutsceneStrEn8,
+    INGAME_TEXT_PTR(TEXT_FILE_MARIO_QUESTION),
     NULL
 };
 
@@ -2109,15 +2107,15 @@ void render_dialog_entries(void) {
     if (gLastDialogPageStrPos == -1 && gLastDialogResponse == 1) {
         render_dialog_triangle_choice();
     }
-    #ifdef VERSION_EU
-    #undef BORDER_HEIGHT
-    #define BORDER_HEIGHT 8
-    #endif
+#ifdef VERSION_EU
+#undef BORDER_HEIGHT
+#define BORDER_HEIGHT 8
+#endif
     gDPSetScissor(gDisplayListHead++, G_SC_NON_INTERLACE, 2, 2, SCREEN_WIDTH - BORDER_HEIGHT/2, SCREEN_HEIGHT - BORDER_HEIGHT/2);
-    #ifdef VERSION_EU
-    #undef BORDER_HEIGHT
-    #define BORDER_HEIGHT 1
-    #endif
+#ifdef VERSION_EU
+#undef BORDER_HEIGHT
+#define BORDER_HEIGHT 1
+#endif
     if (gLastDialogPageStrPos != -1 && gDialogBoxState == DIALOG_STATE_VERTICAL) {
         render_dialog_string_color(dialog->linesPerBox);
     }
@@ -2305,7 +2303,7 @@ void print_peach_letter_message(void) {
 #endif
     dialog = segmented_to_virtual(dialogTable[gDialogID]);
 
-    str = segmented_to_virtual(dialog->str);
+    str = sOverrideDialogString ? sHookString : segmented_to_virtual(dialog->str);
 
     create_dl_translation_matrix(MENU_MTX_PUSH, 97.0f, 118.0f, 0);
 
@@ -2396,7 +2394,7 @@ void change_dialog_camera_angle(void) {
 }
 
 void shade_screen(void) {
-    create_dl_translation_matrix(MENU_MTX_PUSH, gfx_dimensions_rect_from_left_edge(0), 240.0f, 0);
+    create_dl_translation_matrix(MENU_MTX_PUSH, GFX_DIMENSIONS_RECT_FROM_LEFT_EDGE(0), 240.0f, 0);
 
     // This is a bit weird. It reuses the dialog text box (width 130, height -80),
     // so scale to at least fit the screen.
@@ -2445,14 +2443,14 @@ void render_pause_red_coins(void) {
     if (gCurrentArea->numRedCoins == 8) {
         u8 collected = gCurrentArea->numRedCoins - count_objects_with_behavior(bhvRedCoin);
         for (s32 x = 0; x < collected; x++) {
-            print_animated_red_coin(gfx_dimensions_rect_from_right_edge(30) - x * 20, 16);
+            print_animated_red_coin(GFX_DIMENSIONS_RECT_FROM_RIGHT_EDGE(30) - x * 20, 16);
         }
         return;
     }
 
     if (gCurrentArea->numRedCoins > 0) {
         u8 collected = gCurrentArea->numRedCoins - count_objects_with_behavior(bhvRedCoin);
-        s16 x = gfx_dimensions_rect_from_left_edge(38);
+        s16 x = GFX_DIMENSIONS_RECT_FROM_LEFT_EDGE(38);
         print_animated_red_coin(x - 8, 20);
         gSPDisplayList(gDisplayListHead++, dl_rgba16_text_begin);
         gDPSetEnvColor(gDisplayListHead++, 255, 255, 255, gDialogTextAlpha);
@@ -2505,16 +2503,17 @@ void render_pause_my_score_coins(void) {
     };
 #define textMyScore textMyScore[gInGameLanguage]
 #else
-    u8 textCourse[] = { TEXT_COURSE };
-    u8 textMyScore[] = { TEXT_MY_SCORE };
+    INGAME_TEXT_COPY(textCourse, TEXT_COURSE);
+    INGAME_TEXT_COPY(textMyScore, TEXT_MY_SCORE);
 #endif
-    u8 textStar[] = { TEXT_STAR };
-    u8 textUnfilledStar[] = { TEXT_UNFILLED_STAR };
+    INGAME_TEXT_COPY(textStar, TEXT_STAR);
+    INGAME_TEXT_COPY(textUnfilledStar, TEXT_UNFILLED_STAR);
 
     u8 strCourseNum[4];
     u8 courseIndex = gCurrCourseNum - 1;
+    u8 starIndex = clamp(gDialogCourseActNum, 1, MAX_ACTS);
     u8 *courseName = (u8*) get_level_name_sm64(gCurrCourseNum, gCurrLevelNum, gCurrAreaIndex, 1);
-    u8 *actName = (u8*) get_star_name_sm64(gCurrCourseNum, gDialogCourseActNum, 1);
+    u8 *actName = (u8*) get_star_name_sm64(gCurrCourseNum, starIndex, 1);
     u8 starFlags;
 
     starFlags = save_file_get_star_flags(gCurrSaveFileNum - 1, gCurrCourseNum - 1);
@@ -2549,7 +2548,7 @@ void render_pause_my_score_coins(void) {
         print_generic_string(CRS_NUM_X1, 157, strCourseNum);
 #endif
 
-        if (starFlags & (1 << (gDialogCourseActNum - 1))) {
+        if (starFlags & (1 << (starIndex - 1))) {
             print_generic_string(TXT_STAR_X, 140, textStar);
         } else {
             print_generic_string(TXT_STAR_X, 140, textUnfilledStar);
@@ -2586,8 +2585,8 @@ void render_pause_my_score_coins(void) {
 #endif
 
 void render_pause_camera_options(s16 x, s16 y, s8 *index, s16 xIndex) {
-    u8 textLakituMario[] = { TEXT_LAKITU_MARIO };
-    u8 textLakituStop[] = { TEXT_LAKITU_STOP };
+    INGAME_TEXT_COPY(textLakituMario, TEXT_LAKITU_MARIO);
+    INGAME_TEXT_COPY(textLakituStop, TEXT_LAKITU_STOP);
 #ifdef VERSION_EU
     u8 textNormalUpClose[][20] = {
         { TEXT_NORMAL_UPCLOSE },
@@ -2602,8 +2601,8 @@ void render_pause_camera_options(s16 x, s16 y, s8 *index, s16 xIndex) {
 #define textNormalUpClose textNormalUpClose[gInGameLanguage]
 #define textNormalFixed   textNormalFixed[gInGameLanguage]
 #else
-    u8 textNormalUpClose[] = { TEXT_NORMAL_UPCLOSE };
-    u8 textNormalFixed[] = { TEXT_NORMAL_FIXED };
+    INGAME_TEXT_COPY(textNormalUpClose, TEXT_NORMAL_UPCLOSE);
+    INGAME_TEXT_COPY(textNormalFixed, TEXT_NORMAL_FIXED);
 #endif
 
     handle_menu_scrolling(MENU_SCROLL_HORIZONTAL, index, 1, 2);
@@ -2665,9 +2664,9 @@ void render_pause_course_options(s16 x, s16 y, s8 *index, s16 yIndex) {
 #define textExitCourse   textExitCourse[gInGameLanguage]
 #define textCameraAngleR textCameraAngleR[gInGameLanguage]
 #else
-    u8 textContinue[] = { TEXT_CONTINUE };
-    u8 textExitCourse[] = { TEXT_EXIT_COURSE };
-    u8 textCameraAngleR[] = { TEXT_CAMERA_ANGLE_R };
+    INGAME_TEXT_COPY(textContinue, TEXT_CONTINUE);
+    INGAME_TEXT_COPY(textExitCourse, TEXT_EXIT_COURSE);
+    INGAME_TEXT_COPY(textCameraAngleR, TEXT_CAMERA_ANGLE_R);
 #endif
 
     handle_menu_scrolling(MENU_SCROLL_VERTICAL, index, 1, 4);
@@ -2748,7 +2747,7 @@ void highlight_last_course_complete_stars(void) {
 }
 
 void print_hud_pause_colorful_str(void) {
-    u8 textPause[] = { TEXT_PAUSE };
+    INGAME_TEXT_COPY(textPause, TEXT_PAUSE);
 
     gSPDisplayList(gDisplayListHead++, dl_rgba16_text_begin);
     gDPSetEnvColor(gDisplayListHead++, 255, 255, 255, gDialogTextAlpha);
@@ -2768,7 +2767,7 @@ void render_pause_castle_course_stars(s16 x, s16 y, s16 fileNum, s16 courseNum) 
 
     u8 str[COURSE_STAGES_COUNT * 2];
 
-    u8 textStar[] = { TEXT_STAR };
+    INGAME_TEXT_COPY(textStar, TEXT_STAR);
 
     u8 starFlags = save_file_get_star_flags(fileNum, courseNum);
     u16 starCount = save_file_get_course_star_count(fileNum, courseNum);
@@ -2808,15 +2807,8 @@ void render_pause_castle_main_strings(s16 x, s16 y) {
     u8 textCoin[] = { TEXT_COIN };
     u8 textX[] = { TEXT_VARIABLE_X };
 #else
-    u8 textCoin[] = { TEXT_COIN_X };
+    INGAME_TEXT_COPY(textCoin, TEXT_COIN_X);
 #endif
-
-    u8 courseNum = gDialogLineNum + 1;
-    const u8 *courseName = (
-        gDialogLineNum == COURSE_STAGES_COUNT ?
-        ((const u8 **) get_course_name_table())[COURSE_MAX] : // Castle secret stars
-        get_level_name_sm64(courseNum, get_level_num_from_course_num(courseNum), 1, 1)
-    );
 
     u8 strVal[8];
     s16 starNum = gDialogLineNum;
@@ -2849,6 +2841,13 @@ void render_pause_castle_main_strings(s16 x, s16 y) {
     gSPDisplayList(gDisplayListHead++, dl_ia_text_begin);
     gDPSetEnvColor(gDisplayListHead++, 255, 255, 255, gDialogTextAlpha);
 
+    u8 courseNum = gDialogLineNum + 1;
+    const u8 *courseName = (
+        gDialogLineNum == COURSE_STAGES_COUNT ?
+        ((const u8 **) get_course_name_table())[COURSE_MAX] : // Castle secret stars
+        get_level_name_sm64(courseNum, get_level_num_from_course_num(courseNum), 1, 1)
+    );
+
     if (gDialogLineNum < COURSE_STAGES_COUNT) {
         render_pause_castle_course_stars(x, y, gCurrSaveFileNum - 1, gDialogLineNum);
         print_generic_string(x + 34, y - 5, textCoin);
@@ -2861,7 +2860,7 @@ void render_pause_castle_main_strings(s16 x, s16 y) {
         print_generic_string(x - 17, y + 30, courseName);
 #endif
     } else {
-        u8 textStarX[] = { TEXT_STAR_X };
+        INGAME_TEXT_COPY(textStarX, TEXT_STAR_X);
         print_generic_string(x + 40, y + 13, textStarX);
         int_to_str(save_file_get_total_star_count(gCurrSaveFileNum - 1, COURSE_BONUS_STAGES - 1, COURSE_MAX - 1), strVal);
         print_generic_string(x + 60, y + 13, strVal);
@@ -2970,7 +2969,7 @@ static void render_pause_castle_course_stars_extended(s16 x, s16 y) {
 
     // Render the 100 coins star next to the coin counter for main courses
     if (isMainCourse && (stars & 0x40)) {
-        const u8 textStar[] = { TEXT_STAR };
+        INGAME_TEXT_COPY(textStar, TEXT_STAR);
         print_generic_string(x + 89, y - 5, textStar);
     }
 
@@ -3020,7 +3019,7 @@ void render_pause_castle_main_strings_extended(s16 x, s16 y) {
 
     // Main courses (0-14)
     if (gDialogLineNum < COURSE_STAGES_COUNT) {
-        const u8 textCoin[] = { TEXT_COIN_X };
+        INGAME_TEXT_COPY(textCoin, TEXT_COIN_X);
         u8 textCoinCount[8];
         render_pause_castle_course_name(courseName, 160, y + 30);
         render_pause_castle_course_stars_extended(x + 20, y);
@@ -3037,7 +3036,7 @@ void render_pause_castle_main_strings_extended(s16 x, s16 y) {
 
     // Castle stars (25)
     else if (gDialogLineNum == INDEX_CASTLE_STARS) {
-        const u8 textStar[] = { TEXT_STAR_X };
+        INGAME_TEXT_COPY(textStar, TEXT_STAR_X);
         u8 textStarCount[8];
         render_pause_castle_course_name(courseName + 3, 160, y + 30);
         print_generic_string(x + 60, y + 13, textStar);
@@ -3111,18 +3110,26 @@ s16 render_pause_courses_and_castle(void) {
                  || gPlayer1Controller->buttonPressed & START_BUTTON)
 #endif
                 {
-                    level_set_transition(0, NULL);
-                    play_sound(SOUND_MENU_PAUSE_2, gGlobalSoundSource);
-                    gDialogBoxState = DIALOG_STATE_OPENING;
-                    gMenuMode = -1;
-
+                    bool allowExit = true;
                     if (gDialogLineNum == 2 || gDialogLineNum == 3) {
-                        num = gDialogLineNum;
-                    } else {
-                        num = 1;
+                        smlua_call_event_hooks_bool_param_ret_bool(HOOK_ON_PAUSE_EXIT, (gDialogLineNum == 3), &allowExit);
                     }
+                    if (allowExit) {
+                        level_set_transition(0, NULL);
+                        play_sound(SOUND_MENU_PAUSE_2, gGlobalSoundSource);
+                        gDialogBoxState = DIALOG_STATE_OPENING;
+                        gMenuMode = -1;
 
-                    return num;
+                        if (gDialogLineNum == 2 || gDialogLineNum == 3) {
+                            num = gDialogLineNum;
+                        } else {
+                            num = 1;
+                        }
+
+                        return num;
+                    } else {
+                        play_sound(SOUND_MENU_CAMERA_BUZZ | (0xFF << 8), gGlobalSoundSource);
+                    }
                 }
             }
             break;
@@ -3161,7 +3168,7 @@ s16 render_pause_courses_and_castle(void) {
         gDialogTextAlpha += 25;
     }
 
-    if (gDjuiPanelPauseCreated) { shade_screen(); }
+    if (gDjuiPanelPauseCreated && !gDjuiInPlayerMenu) { shade_screen(); }
     if (gPlayer1Controller->buttonPressed & R_TRIG) {
         djui_panel_pause_create(NULL);
     }
@@ -3199,8 +3206,8 @@ void print_hud_course_complete_string(s8 str) {
         { TEXT_HUD_CONGRATULATIONS_DE }
     };
 #else
-    u8 textHiScore[] = { TEXT_HUD_HI_SCORE };
-    u8 textCongratulations[] = { TEXT_HUD_CONGRATULATIONS };
+    INGAME_TEXT_COPY(textHiScore, TEXT_HUD_HI_SCORE);
+    INGAME_TEXT_COPY(textCongratulations, TEXT_HUD_CONGRATULATIONS);
 #endif
 
     u8 colorFade = sins(gDialogColorFadeTimer) * 50.0f + 200.0f;
@@ -3316,9 +3323,9 @@ void render_course_complete_lvl_info_and_hud_str(void) {
     u8 textSymStar[] = { GLYPH_STAR, GLYPH_SPACE };
 #define textCourse gTextCourseArr[gInGameLanguage]
 #else
-    u8 textCourse[] = { TEXT_COURSE };
-    UNUSED u8 textCatch[] = { TEXT_CATCH }; // unused in US
-    UNUSED u8 textClear[] = { TEXT_CLEAR };
+    INGAME_TEXT_COPY(textCourse, TEXT_COURSE);
+    INGAME_TEXT_COPY(textCatch, TEXT_CATCH); // unused in US
+    INGAME_TEXT_COPY(textClear, TEXT_CLEAR);
     u8 textSymStar[] = { GLYPH_STAR, GLYPH_SPACE };
 #endif
     u8 *name;
@@ -3442,10 +3449,10 @@ void render_save_confirmation(s16 x, s16 y, s8 *index, s16 sp6e)
 #define textContinueWithoutSave textContinueWithoutSaveArr[gInGameLanguage]
     s16 xOffset = get_str_x_pos_from_center(160, textContinueWithoutSaveArr[gInGameLanguage], 12.0f);
 #else
-    u8 textSaveAndContinue[] = { TEXT_SAVE_AND_CONTINUE };
+    INGAME_TEXT_COPY(textSaveAndContinue, TEXT_SAVE_AND_CONTINUE);
     //u8 textSaveAndQuit[] = { TEXT_SAVE_AND_QUIT };
     //u8 textSaveExitGame[] = { TEXT_SAVE_EXIT_GAME };
-    u8 textContinueWithoutSave[] = { TEXT_CONTINUE_WITHOUT_SAVING };
+    INGAME_TEXT_COPY(textContinueWithoutSave, TEXT_CONTINUE_WITHOUT_SAVING);
 #endif
 
     handle_menu_scrolling(MENU_SCROLL_VERTICAL, index, 1, 2); // decreased to '2' to prevent Exit Game
@@ -3587,4 +3594,9 @@ void set_dialog_override_color(u8 bgR, u8 bgG, u8 bgB, u8 bgA, u8 textR, u8 text
 
 void reset_dialog_override_color(void) {
     gOverrideDialogColor = 0;
+}
+
+void close_dialog_box(u8 state) {
+    if (state > DIALOG_STATE_CLOSING) { return; }
+    gDialogBoxState = state;
 }

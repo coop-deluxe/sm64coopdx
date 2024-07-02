@@ -7,8 +7,9 @@
 extern "C" {
 #include "engine/behavior_script.h"
 #include "engine/math_util.h"
-#include "src/game/moving_texture.h"
-#include "src/pc/djui/djui_console.h"
+#include "game/moving_texture.h"
+#include "pc/djui/djui_console.h"
+#include "pc/fs/fmem.h"
 }
 
 #define FUNCTION_CODE   (u32) 0x434E5546
@@ -95,16 +96,16 @@ public:
 
 public:
     static BinFile *OpenR(const char *aFilename) {
-        FILE *f = fopen(aFilename, "rb");
+        FILE *f = f_open_r(aFilename);
         if (f) {
-            fseek(f, 0, SEEK_END);
+            f_seek(f, 0, SEEK_END);
             BinFile *_BinFile = (BinFile *) calloc(1, sizeof(BinFile));
             _BinFile->mFilename = (const char *) memcpy(calloc(strlen(aFilename) + 1, 1), aFilename, strlen(aFilename));
             _BinFile->mReadOnly = true;
-            _BinFile->Grow(ftell(f));
-            rewind(f);
-            fread(_BinFile->mData, 1, _BinFile->mSize, f);
-            fclose(f);
+            _BinFile->Grow(f_tell(f));
+            f_rewind(f);
+            f_read(_BinFile->mData, 1, _BinFile->mSize, f);
+            f_close(f);
             return _BinFile;
         }
         return NULL;
@@ -510,7 +511,7 @@ struct AnimData : NoCopy {
     s16 mUnk06 = 0;
     s16 mUnk08 = 0;
     Pair<String, s16> mUnk0A;
-    Pair<String, Array<s16>> mValues;
+    Pair<String, Array<u16>> mValues;
     Pair<String, Array<u16>> mIndex;
     u32 mLength = 0;
 };
@@ -588,7 +589,6 @@ struct ActorGfx {
 struct PackData {
     s32 mIndex;
     bool mEnabled;
-    bool mEnabledSet;
     SysPath mPath;
     String mDisplayName;
     Array<Pair<const char *, GfxData *>> mGfxData;
@@ -734,10 +734,10 @@ void Print(const char *aFmt, Args... aArgs) {
 }
 
 template <typename... Args>
-void PrintConsole(const char *aFmt, Args... aArgs) {
+void PrintConsole(enum ConsoleMessageLevel level, const char *aFmt, Args... aArgs) {
     snprintf(gDjuiConsoleTmpBuffer, CONSOLE_MAX_TMP_BUFFER, aFmt, aArgs...);
     sys_swap_backslashes(gDjuiConsoleTmpBuffer);
-    djui_console_message_create(gDjuiConsoleTmpBuffer, CONSOLE_MESSAGE_INFO);
+    djui_console_message_create(gDjuiConsoleTmpBuffer, level);
 }
 
 template <typename... Args>
@@ -745,12 +745,12 @@ void PrintError(const char *aFmt, Args... aArgs) {
     printf(aFmt, aArgs...);
     printf("\r\n");
     fflush(stdout);
-    // PrintConsole(aFmt, CONSOLE_MESSAGE_ERROR, aArgs...);
+    PrintConsole(CONSOLE_MESSAGE_ERROR, aFmt, aArgs...);
 }
 #define PrintDataError(...) { \
     if (aGfxData->mErrorCount == 0) Print("  ERROR!"); \
     Print(__VA_ARGS__); \
-    PrintConsole(__VA_ARGS__); \
+    PrintConsole(CONSOLE_MESSAGE_ERROR, __VA_ARGS__); \
     aGfxData->mErrorCount++; \
 }
 
@@ -872,7 +872,6 @@ void DynOS_Pack_SetEnabled(PackData* aPack, bool aEnabled);
 PackData* DynOS_Pack_GetFromIndex(s32 aIndex);
 PackData* DynOS_Pack_GetFromPath(const SysPath& aPath);
 PackData* DynOS_Pack_Add(const SysPath& aPath);
-void DynOS_Pack_Init();
 Pair<const char *, GfxData *>* DynOS_Pack_GetActor(PackData* aPackData, const char* aActorName);
 void DynOS_Pack_AddActor(PackData* aPackData, const char* aActorName, GfxData* aGfxData);
 DataNode<TexData>* DynOS_Pack_GetTex(PackData* aPackData, const char* aTexName);
@@ -887,7 +886,7 @@ const void *DynOS_Actor_GetLayoutFromName(const char *aActorName);
 ActorGfx* DynOS_Actor_GetActorGfx(const GraphNode* aGraphNode);
 void DynOS_Actor_Valid(const void* aGeoref, ActorGfx& aActorGfx);
 void DynOS_Actor_Invalid(const void* aGeoref, s32 aPackIndex);
-void DynOS_Actor_Override(void** aSharedChild);
+void DynOS_Actor_Override(struct Object* obj, void** aSharedChild);
 void DynOS_Actor_Override_All(void);
 void DynOS_Actor_ModShutdown();
 

@@ -4,12 +4,13 @@
 #include "djui_panel_menu.h"
 #include "djui_panel_join_message.h"
 #include "djui_lobby_entry.h"
-#include "src/pc/network/network.h"
-#include "src/pc/network/socket/socket.h"
-#include "src/pc/network/coopnet/coopnet.h"
-#include "src/pc/utils/misc.h"
-#include "src/pc/configfile.h"
-#include "src/pc/debuglog.h"
+#include "djui_panel_rules.h"
+#include "pc/network/network.h"
+#include "pc/network/socket/socket.h"
+#include "pc/network/coopnet/coopnet.h"
+#include "pc/utils/misc.h"
+#include "pc/configfile.h"
+#include "pc/debuglog.h"
 #include "macros.h"
 
 #ifdef COOPNET
@@ -86,7 +87,7 @@ void djui_panel_join_query(uint64_t aLobbyId, UNUSED uint64_t aOwnerId, uint16_t
     snprintf(mode, 64, "%s", aMode);
 
     char version[MAX_VERSION_LENGTH] = { 0 };
-    snprintf(version, MAX_VERSION_LENGTH, "%s", get_version());
+    snprintf(version, MAX_VERSION_LENGTH, "%s", get_version_online());
     if (strcmp(version, aVersion) != 0) {
         snprintf(mode, 64, "\\#ff0000\\[%s]", aVersion);
     }
@@ -143,11 +144,17 @@ void djui_panel_join_lobbies_create(struct DjuiBase* caller, const char* passwor
     if (sPassword) { free(sPassword); sPassword = NULL; }
     sPassword = strdup(password);
     bool private = (strlen(password) > 0);
+    if (!private && configRulesVersion != RULES_VERSION) {
+        djui_panel_rules_create(caller);
+        return;
+    }
 
     djui_panel_join_lobby_description_create();
 
     struct DjuiBase* defaultBase = NULL;
-    struct DjuiThreePanel* panel = djui_panel_menu_create(private ? DLANG(LOBBIES, PRIVATE_LOBBIES) : DLANG(LOBBIES, PUBLIC_LOBBIES));
+    struct DjuiThreePanel* panel = djui_panel_menu_create(
+        private ? DLANG(LOBBIES, PRIVATE_LOBBIES) : DLANG(LOBBIES, PUBLIC_LOBBIES),
+        true);
     struct DjuiBase* body = djui_three_panel_get_body(panel);
     {
         sLobbyPaginated = djui_paginated_create(body, 10);
@@ -161,6 +168,8 @@ void djui_panel_join_lobbies_create(struct DjuiBase* caller, const char* passwor
             djui_base_set_size(&text->base, 1, 1);
             djui_text_set_alignment(text, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
         }
+
+        if (!private) { djui_button_create(body, DLANG(RULES, RULES), DJUI_BUTTON_STYLE_NORMAL, djui_panel_rules_create); }
 
         struct DjuiRect* rect2 = djui_rect_container_create(body, 64);
         {

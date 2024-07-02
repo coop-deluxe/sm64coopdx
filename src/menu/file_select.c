@@ -20,7 +20,7 @@
 #include "game/spawn_object.h"
 #include "game/rumble_init.h"
 #include "sm64.h"
-#include "text_strings.h"
+#include "menu/ingame_text.h"
 
 #include "eu_translation.h"
 
@@ -127,64 +127,68 @@ static s8 sOpenLangSettings = FALSE;
 #endif
 
 #ifndef VERSION_EU
-static unsigned char textReturn[] = { TEXT_RETURN };
+static unsigned char* textReturn = INGAME_TEXT_PTR(TEXT_RETURN);
 #else
 static unsigned char textReturn[][8] = {{ TEXT_RETURN }, { TEXT_RETURN_FR }, { TEXT_RETURN_DE }};
 #endif
 
 #ifndef VERSION_EU
-static unsigned char textViewScore[] = { TEXT_CHECK_SCORE };
+static unsigned char* textViewScore = INGAME_TEXT_PTR(TEXT_CHECK_SCORE);
 #else
 static unsigned char textViewScore[][12] = {{ TEXT_CHECK_SCORE }, {TEXT_CHECK_SCORE_FR}, {TEXT_CHECK_SCORE_DE}};
 #endif
 
 #ifndef VERSION_EU
-static unsigned char textCopyFileButton[] = { TEXT_COPY_FILE_BUTTON };
+static unsigned char* textCopyFileButton = INGAME_TEXT_PTR(TEXT_COPY_FILE_BUTTON);
 #else
 static unsigned char textCopyFileButton[][15] = {{ TEXT_COPY_FILE }, { TEXT_COPY_FILE_FR }, { TEXT_COPY_FILE_DE }};
 #endif
 
 #ifndef VERSION_EU
-static unsigned char textEraseFileButton[] = { TEXT_ERASE_FILE_BUTTON };
+static unsigned char* textEraseFileButton = INGAME_TEXT_PTR(TEXT_ERASE_FILE_BUTTON);
 #else
 static unsigned char textEraseFileButton[][16] = { {TEXT_ERASE_FILE}, {TEXT_ERASE_FILE_FR}, {TEXT_ERASE_FILE_DE} };
 #endif
 
 #ifndef VERSION_EU
-static unsigned char textSoundModes[][8] = { { TEXT_STEREO }, { TEXT_MONO }, { TEXT_HEADSET } };
+static unsigned char* textSoundModes[3] = {
+    INGAME_TEXT_PTR(TEXT_STEREO),
+    INGAME_TEXT_PTR(TEXT_MONO),
+    INGAME_TEXT_PTR(TEXT_HEADSET)
+};
 #endif
 
-static unsigned char textMarioA[] = { TEXT_FILE_MARIO_A };
-static unsigned char textMarioB[] = { TEXT_FILE_MARIO_B };
-static unsigned char textMarioC[] = { TEXT_FILE_MARIO_C };
-static unsigned char textMarioD[] = { TEXT_FILE_MARIO_D };
+static unsigned char* textMarioA = INGAME_TEXT_PTR(TEXT_FILE_MARIO_A);
+static unsigned char* textMarioB = INGAME_TEXT_PTR(TEXT_FILE_MARIO_B);
+static unsigned char* textMarioC = INGAME_TEXT_PTR(TEXT_FILE_MARIO_C);
+static unsigned char* textMarioD = INGAME_TEXT_PTR(TEXT_FILE_MARIO_D);
 
 #ifndef VERSION_EU
-static unsigned char textNew[] = { TEXT_NEW };
+static unsigned char* textNew = INGAME_TEXT_PTR(TEXT_NEW);
 static unsigned char starIcon[] = { GLYPH_STAR, GLYPH_SPACE };
 static unsigned char xIcon[] = { GLYPH_MULTIPLY, GLYPH_SPACE };
 #endif
 
 #ifndef VERSION_EU
-static unsigned char textSelectFile[] = { TEXT_SELECT_FILE };
+static unsigned char* textSelectFile = INGAME_TEXT_PTR(TEXT_SELECT_FILE);
 #else
 static unsigned char textSelectFile[][17] = {{ TEXT_SELECT_FILE }, { TEXT_SELECT_FILE_FR }, { TEXT_SELECT_FILE_DE }};
 #endif
 
 #ifndef VERSION_EU
-static unsigned char textScore[] = { TEXT_SCORE };
+static unsigned char* textScore = INGAME_TEXT_PTR(TEXT_SCORE);
 #else
 static unsigned char textScore[][9] = {{ TEXT_SCORE }, { TEXT_SCORE_FR }, { TEXT_SCORE_DE }};
 #endif
 
 #ifndef VERSION_EU
-static unsigned char textCopy[] = { TEXT_COPY };
+static unsigned char* textCopy = INGAME_TEXT_PTR(TEXT_COPY);
 #else
 static unsigned char textCopy[][9] = {{ TEXT_COPY }, { TEXT_COPY_FR }, { TEXT_COPY_DE }};
 #endif
 
 #ifndef VERSION_EU
-static unsigned char textErase[] = { TEXT_ERASE };
+static unsigned char* textErase = INGAME_TEXT_PTR(TEXT_ERASE);
 #else
 static unsigned char textErase[][8] = {{ TEXT_ERASE }, { TEXT_ERASE_FR }, { TEXT_ERASE_DE }};
 #endif
@@ -194,59 +198,59 @@ static unsigned char textOption[][9] = {{ TEXT_OPTION }, { TEXT_OPTION_FR }, { T
 #endif
 
 #ifndef VERSION_EU
-static unsigned char textCheckFile[] = { TEXT_CHECK_FILE };
+static unsigned char* textCheckFile = INGAME_TEXT_PTR(TEXT_CHECK_FILE);
 #else
 static unsigned char textCheckFile[][18] = {{ TEXT_CHECK_FILE }, { TEXT_CHECK_FILE_FR }, { TEXT_CHECK_FILE_DE }};
 #endif
 
 #ifndef VERSION_EU
-static unsigned char textNoSavedDataExists[] = { TEXT_NO_SAVED_DATA_EXISTS };
+static unsigned char* textNoSavedDataExists = INGAME_TEXT_PTR(TEXT_NO_SAVED_DATA_EXISTS);
 #else
 static unsigned char textNoSavedDataExists[][30] = {{ TEXT_NO_SAVED_DATA_EXISTS }, { TEXT_NO_SAVED_DATA_EXISTS_FR }, { TEXT_NO_SAVED_DATA_EXISTS_DE }};
 #endif
 
 #ifndef VERSION_EU
-static unsigned char textCopyFile[] = { TEXT_COPY_FILE };
+static unsigned char* textCopyFile = INGAME_TEXT_PTR(TEXT_COPY_FILE);
 #else
 static unsigned char textCopyFile[][16] = {{ TEXT_COPY_FILE_BUTTON }, { TEXT_COPY_FILE_BUTTON_FR }, { TEXT_COPY_FILE_BUTTON_DE }};
 #endif
 
 #ifndef VERSION_EU
-static unsigned char textCopyItToWhere[] = { TEXT_COPY_IT_TO_WHERE };
+static unsigned char* textCopyItToWhere = INGAME_TEXT_PTR(TEXT_COPY_IT_TO_WHERE);
 #else
 static unsigned char textCopyItToWhere[][18] = {{ TEXT_COPY_IT_TO_WHERE }, { TEXT_COPY_IT_TO_WHERE_FR }, { TEXT_COPY_IT_TO_WHERE_DE }};
 #endif
 
 #ifndef VERSION_EU
-static unsigned char textNoSavedDataExistsCopy[] = { TEXT_NO_SAVED_DATA_EXISTS };
+static unsigned char* textNoSavedDataExistsCopy = INGAME_TEXT_PTR(TEXT_NO_SAVED_DATA_EXISTS);
 #endif
 
 #ifndef VERSION_EU
-static unsigned char textCopyCompleted[] = { TEXT_COPYING_COMPLETED };
+static unsigned char* textCopyCompleted = INGAME_TEXT_PTR(TEXT_COPYING_COMPLETED);
 #else
 static unsigned char textCopyCompleted[][18] = {{ TEXT_COPYING_COMPLETED }, { TEXT_COPYING_COMPLETED_FR }, { TEXT_COPYING_COMPLETED_DE }};
 #endif
 
 #ifndef VERSION_EU
-static unsigned char textSavedDataExists[] = { TEXT_SAVED_DATA_EXISTS };
+static unsigned char* textSavedDataExists = INGAME_TEXT_PTR(TEXT_SAVED_DATA_EXISTS);
 #else
 static unsigned char textSavedDataExists[][20] = {{ TEXT_SAVED_DATA_EXISTS }, { TEXT_SAVED_DATA_EXISTS_FR }, { TEXT_SAVED_DATA_EXISTS_DE }};
 #endif
 
 #ifndef VERSION_EU
-static unsigned char textNoFileToCopyFrom[] = { TEXT_NO_FILE_TO_COPY_FROM };
+static unsigned char* textNoFileToCopyFrom = INGAME_TEXT_PTR(TEXT_NO_FILE_TO_COPY_FROM);
 #else
 static unsigned char textNoFileToCopyFrom[][21] = {{ TEXT_NO_FILE_TO_COPY_FROM }, { TEXT_NO_FILE_TO_COPY_FROM_FR }, { TEXT_NO_FILE_TO_COPY_FROM_DE }};
 #endif
 
 #ifndef VERSION_EU
-static unsigned char textYes[] = { TEXT_YES };
+static unsigned char* textYes = INGAME_TEXT_PTR(TEXT_YES);
 #else
 static unsigned char textYes[][4] = {{ TEXT_YES }, { TEXT_YES_FR }, { TEXT_YES_DE }};
 #endif
 
 #ifndef VERSION_EU
-static unsigned char textNo[] = { TEXT_NO };
+static unsigned char* textNo = INGAME_TEXT_PTR(TEXT_NO);
 #else
 static unsigned char textNo[][5] = {{ TEXT_NO }, { TEXT_NO_FR }, { TEXT_NO_DE }};
 #endif
@@ -2320,11 +2324,11 @@ void erase_menu_display_message(s8 messageID) {
 #endif
 
 #ifndef VERSION_EU
-    unsigned char textEraseFile[] = { TEXT_ERASE_FILE };
-    unsigned char textSure[] = { TEXT_SURE };
-    unsigned char textNoSavedDataExists[] = { TEXT_NO_SAVED_DATA_EXISTS };
-    unsigned char textMarioAJustErased[] = { TEXT_FILE_MARIO_A_JUST_ERASED };
-    unsigned char textSavedDataExists[] = { TEXT_SAVED_DATA_EXISTS };
+    INGAME_TEXT_COPY(textEraseFile, TEXT_ERASE_FILE);
+    INGAME_TEXT_COPY(textSure, TEXT_SURE);
+    INGAME_TEXT_COPY(textNoSavedDataExists, TEXT_NO_SAVED_DATA_EXISTS);
+    INGAME_TEXT_COPY(textMarioAJustErased, TEXT_FILE_MARIO_A_JUST_ERASED);
+    INGAME_TEXT_COPY(textSavedDataExists, TEXT_SAVED_DATA_EXISTS);
 #endif
 
     switch (messageID) {
@@ -2488,7 +2492,7 @@ void print_sound_mode_menu_strings(void) {
 #endif
 
 #ifndef VERSION_EU
-    unsigned char textSoundSelect[] = { TEXT_SOUND_SELECT };
+    INGAME_TEXT_COPY(textSoundSelect, TEXT_SOUND_SELECT);
 #endif
 
     // Print "SOUND SELECT" text
@@ -2538,13 +2542,13 @@ void print_sound_mode_menu_strings(void) {
         } else {
             gDPSetEnvColor(gDisplayListHead++, 0, 0, 0, sTextBaseAlpha);
         }
-        #ifndef VERSION_JP
+#ifndef VERSION_JP
             // Mode names are centered correctly on US and Shindou
             textX = get_str_x_pos_from_center(mode * 74 + 87, textSoundModes[mode], 10.0f);
             print_generic_string(textX, 87, textSoundModes[mode]);
-        #else
+#else
             print_generic_string(mode * 74 + 67, 87, textSoundModes[mode]);
-        #endif
+#endif
     }
 #endif
 
@@ -2556,13 +2560,12 @@ void print_sound_mode_menu_strings(void) {
     gSPDisplayList(gDisplayListHead++, dl_ia_text_end);
 }
 
-unsigned char textStarX[] = { TEXT_STAR_X };
-
 /**
  * Prints castle secret stars collected in a score menu save file.
  */
 void print_score_file_castle_secret_stars(s8 fileIndex, s16 x, s16 y) {
     unsigned char secretStarsText[20];
+    INGAME_TEXT_COPY(textStarX, TEXT_STAR_X);
     // Print "[star] x"
     print_menu_generic_string(x, y, textStarX);
     // Print number of castle secret stars
@@ -2591,17 +2594,20 @@ void print_score_file_castle_secret_stars(s8 fileIndex, s16 x, s16 y) {
 void print_score_file_course_coin_score(s8 fileIndex, s16 courseIndex, s16 x, s16 y) {
     unsigned char coinScoreText[20];
     u8 stars = save_file_get_star_flags(fileIndex, courseIndex);
-    unsigned char textCoinX[] = { TEXT_COIN_X };
-    unsigned char textStar[] = { TEXT_STAR };
+    INGAME_TEXT_COPY(textCoinX, TEXT_COIN_X);
+    INGAME_TEXT_COPY(textStar, TEXT_STAR);
 #if defined(VERSION_JP) || defined(VERSION_SH)
     #define LENGTH 5
 #else
     #define LENGTH 8
 #endif
-    unsigned char fileNames[][LENGTH] = {
-        { TEXT_4DASHES }, // huh?
-        { TEXT_SCORE_MARIO_A }, { TEXT_SCORE_MARIO_B }, { TEXT_SCORE_MARIO_C }, { TEXT_SCORE_MARIO_D },
-    };
+    unsigned char fileNames[5][LENGTH];
+    memcpy(fileNames[0], INGAME_TEXT_PTR(TEXT_4DASHES), TEXT_4DASHES_LENGTH);
+    memcpy(fileNames[1], INGAME_TEXT_PTR(TEXT_SCORE_MARIO_A), TEXT_SCORE_MARIO_A_LENGTH);
+    memcpy(fileNames[2], INGAME_TEXT_PTR(TEXT_SCORE_MARIO_B), TEXT_SCORE_MARIO_B_LENGTH);
+    memcpy(fileNames[3], INGAME_TEXT_PTR(TEXT_SCORE_MARIO_C), TEXT_SCORE_MARIO_C_LENGTH);
+    memcpy(fileNames[4], INGAME_TEXT_PTR(TEXT_SCORE_MARIO_D), TEXT_SCORE_MARIO_D_LENGTH);
+
 #undef LENGTH
     // MYSCORE
     if (sScoreFileCoinScoreMode == 0) {
@@ -2683,15 +2689,15 @@ void print_score_file_star_score(s8 fileIndex, s16 courseIndex, s16 x, s16 y) {
  */
 void print_save_file_scores(s8 fileIndex) {
 #ifndef VERSION_EU
-    unsigned char textMario[] = { TEXT_MARIO };
+    INGAME_TEXT_COPY(textMario, TEXT_MARIO);
 #ifdef VERSION_JP
     unsigned char textFileLetter[] = { TEXT_ZERO };
     void **levelNameTable = segmented_to_virtual(seg2_course_name_table);
 #endif
-    unsigned char textHiScore[] = { TEXT_HI_SCORE };
-    unsigned char textMyScore[] = { TEXT_MY_SCORE };
+    INGAME_TEXT_COPY(textHiScore, TEXT_HI_SCORE);
+    INGAME_TEXT_COPY(textMyScore, TEXT_MY_SCORE);
 #if defined(VERSION_US) || defined(VERSION_SH)
-    unsigned char textFileLetter[] = { TEXT_ZERO };
+    INGAME_TEXT_COPY(textFileLetter, TEXT_ZERO);
     void **levelNameTable = segmented_to_virtual(seg2_course_name_table);
 #endif
 #else

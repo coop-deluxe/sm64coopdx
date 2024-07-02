@@ -117,6 +117,7 @@ void packet_process(struct Packet* p) {
         case PACKET_LEVEL_MACRO:             network_receive_level_macro(p);             break;
         case PACKET_LEVEL_AREA_INFORM:       network_receive_level_area_inform(p);       break;
         case PACKET_LEVEL_RESPAWN_INFO:      network_receive_level_respawn_info(p);      break;
+        case PACKET_CHANGE_WATER_LEVEL:      network_receive_change_water_level(p);      break;
 
         case PACKET_PLAYER_SETTINGS:         network_receive_player_settings(p);         break;
 

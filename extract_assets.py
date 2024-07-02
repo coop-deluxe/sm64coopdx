@@ -89,6 +89,8 @@ def main():
     all_assets = []
     any_missing_assets = False
     for asset, data in asset_map.items():
+        if '.png' in asset:
+            continue
         if asset.startswith("@"):
             continue
         if os.path.isfile(asset):

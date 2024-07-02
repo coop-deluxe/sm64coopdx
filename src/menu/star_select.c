@@ -20,13 +20,13 @@
 #include "game/rumble_init.h"
 #include "sm64.h"
 #include "star_select.h"
-#include "text_strings.h"
 #include "prevent_bss_reordering.h"
 #include "pc/network/network.h"
 #include "engine/math_util.h"
 #include "game/print.h"
 #include "game/level_info.h"
 #include "game/hud.h"
+#include "menu/ingame_text.h"
 
 /**
  * @file star_select.c
@@ -276,9 +276,9 @@ void print_act_selector_strings(void) {
 #ifdef VERSION_EU
     unsigned char myScore[][10] = { {TEXT_MYSCORE}, {TEXT_MY_SCORE_FR}, {TEXT_MY_SCORE_DE} };
 #else
-    unsigned char myScore[] = { TEXT_MYSCORE };
+    INGAME_TEXT_COPY(myScore, TEXT_MYSCORE);
 #endif
-    unsigned char starNumbers[] = { TEXT_ZERO };
+    INGAME_TEXT_COPY(starNumbers, TEXT_ZERO);
 
     const u8 *currLevelName = get_level_name_sm64(gCurrCourseNum, gCurrLevelNum, gCurrAreaIndex, 1);
     const u8 *selectedActName = get_star_name_sm64(gCurrCourseNum, sSelectedActIndex + 1, 1);
@@ -469,6 +469,9 @@ s32 lvl_update_obj_and_load_act_button_actions(UNUSED s32 arg, UNUSED s32 unused
         sReceivedLoadedActNum = 0;
     }
 
+    // Cancel the act selector while on the main menu
+    if (gDjuiInMainMenu) { return 1; }
+
     area_update_objects();
     sActSelectorMenuTimer++;
     return sLoadedActNum;
@@ -479,7 +482,7 @@ void star_select_finish_selection(void) {
     play_sound(SOUND_MENU_STAR_SOUND, gGlobalSoundSource);
 #else
     if (gMarioState->marioObj) vec3f_copy(gMarioState->marioObj->header.gfx.cameraToObject, gGlobalSoundSource);
-    play_character_sound(gMarioState, CHAR_SOUND_LETS_A_GO);
+    gDelayedInitSound = CHAR_SOUND_LETS_A_GO;
     play_sound(SOUND_MENU_STAR_SOUND, gGlobalSoundSource);
 #endif
 #ifdef VERSION_SH

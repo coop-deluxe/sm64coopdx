@@ -29,6 +29,7 @@ struct GfxWindowManagerAPI {
     int  (*get_max_msaa)(void);
     void (*set_window_title)(const char* title);
     void (*reset_window_title)(void);
+    bool (*has_focus)(void);
 };
 
 #endif

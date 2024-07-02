@@ -1,12 +1,6 @@
+#include "pc/rom_assets.h"
 // 0x0700ECF0 - 0x0700ED50
-static const Vtx bitfs_seg7_vertex_0700ECF0[] = {
-    {{{     0,      0,   -306}, 0, {   334,    528}, {0xff, 0xff, 0x00, 0xff}}},
-    {{{  -278,      0,    283}, 0, {   362,    620}, {0xff, 0xff, 0x00, 0xff}}},
-    {{{    -7,      0,    135}, 0, {   336,    530}, {0xff, 0xff, 0x00, 0xff}}},
-    {{{   262,      0,    283}, 0, {   310,    440}, {0xff, 0xff, 0x00, 0xff}}},
-    {{{   326,      0,   -118}, 0, {   304,    420}, {0xff, 0xff, 0x00, 0xff}}},
-    {{{  -330,      0,   -118}, 0, {   366,    638}, {0xff, 0xff, 0x00, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(bitfs_seg7_vertex_0700ECF0, 0x004614d0, 37742, 0x0000ecf0, 96);
 
 // 0x0700ED50 - 0x0700ED90
 static const Gfx bitfs_seg7_dl_0700ED50[] = {

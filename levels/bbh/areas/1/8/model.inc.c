@@ -1,3 +1,4 @@
+#include "pc/rom_assets.h"
 // 0x0700B0D8 - 0x0700B0F0
 static const Lights1 bbh_seg7_lights_0700B0D8 = gdSPDefLights1(
     0x3f, 0x51, 0x66,
@@ -5,16 +6,7 @@ static const Lights1 bbh_seg7_lights_0700B0D8 = gdSPDefLights1(
 );
 
 // 0x0700B0F0 - 0x0700B170
-static const Vtx bbh_seg7_vertex_0700B0F0[] = {
-    {{{  2662,    614,   2550}, 0, {   990,      0}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{  3072,    205,   2550}, 0, {     0,    990}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{  2662,    205,   2550}, 0, {   990,    990}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{  3072,    614,   2550}, 0, {     0,      0}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{  2662,   1536,   2550}, 0, {   990,      0}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{  3072,   1126,   2550}, 0, {     0,    990}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{  2662,   1126,   2550}, 0, {   990,    990}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{  3072,   1536,   2550}, 0, {     0,      0}, {0x00, 0x00, 0x81, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(bbh_seg7_vertex_0700B0F0, 0x00371c40, 68724, 0x0000b0f0, 128);
 
 // 0x0700B170 - 0x0700B1C8
 static const Gfx bbh_seg7_dl_0700B170[] = {

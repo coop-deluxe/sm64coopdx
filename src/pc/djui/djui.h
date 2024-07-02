@@ -37,14 +37,16 @@
 #include "djui_paginated.h"
 
 extern struct DjuiRoot* gDjuiRoot;
+extern struct DjuiText* gDjuiPauseOptions;
 extern bool gDjuiInMainMenu;
+extern bool gDjuiInPlayerMenu;
 extern bool gDjuiDisabled;
 
 void djui_init(void);
 void djui_init_late(void);
 void djui_connect_menu_open(void);
-void djui_lua_error(char* text);
+void djui_lua_error(char* text, struct DjuiColor color);
 void djui_render(void);
 void djui_reset_hud_params(void);
 
-void reset_djui(void);
+void djui_shutdown(void);

@@ -400,7 +400,7 @@ Gfx* geo_switch_mario_eyes(s32 callContext, struct GraphNode* node, UNUSED Mat4*
 
     if (callContext == GEO_CONTEXT_RENDER) {
         if (bodyState->eyeState == 0) {
-            blinkFrame = ((switchCase->numCases * 32 + gAreaUpdateCounter) >> 1) & 0x1F;
+            blinkFrame = ((switchCase->numCases * 32 + (gAreaUpdateCounter + geo_get_processing_object_index() * 32)) >> 1) & 0x1F;
             if (blinkFrame < 7) {
                 switchCase->selectedCase = gMarioBlinkAnimation[blinkFrame];
             }
@@ -691,9 +691,7 @@ Gfx* geo_render_mirror_mario(s32 callContext, struct GraphNode* node, UNUSED Mat
                 if (mario && (((struct GraphNode*)&mario->header.gfx)->flags & GRAPH_RENDER_ACTIVE) && np->connected) {
                     // TODO: Is this a geo layout copy or a graph node copy?
                     gMirrorMario[i].sharedChild = mario->header.gfx.sharedChild;
-                    if (configGlobalPlayerModels || i == 0) {
-                        dynos_actor_override((void*)&gMirrorMario[i].sharedChild);
-                    }
+                    dynos_actor_override(mario, (void*)&gMirrorMario[i].sharedChild);
                     gMirrorMario[i].areaIndex = mario->header.gfx.areaIndex;
                     vec3s_copy(gMirrorMario[i].angle, mario->header.gfx.angle);
                     vec3f_copy(gMirrorMario[i].pos, mario->header.gfx.pos);
@@ -707,7 +705,6 @@ Gfx* geo_render_mirror_mario(s32 callContext, struct GraphNode* node, UNUSED Mat
                     gMirrorMario[i].pos[0] = mirroredX + MIRROR_X;
                     gMirrorMario[i].angle[1] = -gMirrorMario[i].angle[1];
                     gMirrorMario[i].scale[0] *= -1.0f;
-                    // TODO: does rendering the mirror room still crash?
                     gMirrorMario[i].node.flags |= GRAPH_RENDER_ACTIVE;
 
                     smlua_call_event_hooks_graph_node_object_and_int_param(HOOK_MIRROR_MARIO_RENDER, &gMirrorMario[i], i);

@@ -233,6 +233,9 @@ void unload_object(struct Object *obj) {
         smlua_call_event_hooks_object_param(HOOK_ON_SYNC_OBJECT_UNLOAD, obj);
     }
 
+    obj->firstSurface = 0;
+    obj->numSurfaces = 0;
+
     smlua_call_event_hooks_object_param(HOOK_ON_OBJECT_UNLOAD, obj);
 
     deallocate_object(&gFreeObjectList, &obj->header);
@@ -279,7 +282,7 @@ struct Object *allocate_object(struct ObjectNode *objList) {
     obj->collidedObjInteractTypes = 0;
     obj->numCollidedObjs = 0;
 
-    for (s32 i = 0; i < 0x50; i++) {
+    for (s32 i = 0; i < OBJECT_NUM_FIELDS; i++) {
         obj->rawData.asS32[i] = 0;
         obj->ptrData.asVoidPtr[i] = NULL;
     }
@@ -324,6 +327,7 @@ struct Object *allocate_object(struct ObjectNode *objList) {
     obj->header.gfx.angle[0] = 0;
     obj->header.gfx.angle[1] = 0;
     obj->header.gfx.angle[2] = 0;
+    obj->header.gfx.inited = false;
 
     obj->coopFlags = 0;
     obj->hookRender = 0;
@@ -336,6 +340,9 @@ struct Object *allocate_object(struct ObjectNode *objList) {
     obj->allowRemoteInteractions = FALSE;
 
     obj->usingObj = NULL;
+
+    obj->firstSurface = 0;
+    obj->numSurfaces = 0;
 
     return obj;
 }

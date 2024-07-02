@@ -8,7 +8,6 @@
 #include "pc/network/network.h"
 #include "pc/network/socket/socket.h"
 #include "pc/network/coopnet/coopnet.h"
-#include "pc/network/socket/domain_res.h"
 #include "pc/utils/misc.h"
 #include "pc/configfile.h"
 #include "pc/debuglog.h"
@@ -18,13 +17,6 @@
 #endif
 
 static struct DjuiInputbox* sInputboxIp = NULL;
-#ifndef COOPNET
-static void djui_panel_compatibility_checkbox_on_value_change(UNUSED struct DjuiBase* caller) {
-#ifdef DISCORD_SDK
-    gDiscordInitialized = false;
-#endif
-}
-#endif
 
 static bool djui_panel_join_direct_ip_parse_numbers(char** msg) {
     int num = 0;
@@ -163,7 +155,7 @@ void djui_panel_join_direct_do_join(struct DjuiBase* caller) {
 
 void djui_panel_join_direct_create(struct DjuiBase* caller) {
     struct DjuiBase* defaultBase = NULL;
-    struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(JOIN, JOIN_TITLE));
+    struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(JOIN, JOIN_TITLE), false);
     struct DjuiBase* body = djui_three_panel_get_body(panel);
     {
         struct DjuiText* text1 = djui_text_create(body, DLANG(JOIN, JOIN_SOCKET));
@@ -181,12 +173,6 @@ void djui_panel_join_direct_create(struct DjuiBase* caller) {
         djui_interactable_hook_value_change(&inputbox1->base, djui_panel_join_direct_ip_text_change);
         sInputboxIp = inputbox1;
         djui_panel_join_direct_ip_text_set(inputbox1);
-
-#ifndef COOPNET
-        if (gDjuiInMainMenu) {
-            djui_checkbox_create(body, DLANG(MISC, COOP_COMPATIBILITY), &configCoopCompatibility, djui_panel_compatibility_checkbox_on_value_change);
-        }
-#endif
 
         struct DjuiRect* rect2 = djui_rect_container_create(body, 64);
         {

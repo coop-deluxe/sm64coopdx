@@ -1,18 +1,23 @@
 #ifndef CONTROLLER_MOUSE_H
 #define CONTROLLER_MOUSE_H
 
-#include "controller_api.h"
+#include "controller_sdl.h"
+#include <stdbool.h>
 
-extern int mouse_x;
-extern int mouse_y;
+extern bool mouse_init_ok;
 
-extern int mouse_window_buttons;
-extern int mouse_window_x;
-extern int mouse_window_y;
+extern u32 mouse_buttons;
+extern s32 mouse_x;
+extern s32 mouse_y;
 
+extern u32 mouse_window_buttons;
+extern s32 mouse_window_x;
+extern s32 mouse_window_y;
 
-#define VK_BASE_MOUSE 0x2000
+void controller_mouse_read_window(void);
+void controller_mouse_read_relative(void);
 
-extern struct ControllerAPI controller_mouse;
+void controller_mouse_enter_relative(void);
+void controller_mouse_leave_relative(void);
 
 #endif

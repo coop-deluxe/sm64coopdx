@@ -1,13 +1,13 @@
 #include "djui.h"
 #include "djui_panel.h"
 #include "djui_panel_menu.h"
-#include "src/pc/utils/misc.h"
-#include "src/pc/configfile.h"
+#include "pc/utils/misc.h"
+#include "pc/configfile.h"
 #include "data/dynos.c.h"
 #include "pc/network/network.h"
 #include "djui_panel_main.h"
 #include "djui_panel_options.h"
-#include "djui_panel_player.h"
+#include "game/level_update.h"
 
 void djui_panel_dynos_create(struct DjuiBase* caller);
 
@@ -15,7 +15,7 @@ static void djui_panel_dynos_apply(struct DjuiBase* caller) {
     dynos_pack_set_enabled(caller->tag, caller->bTag);
 }
 
-static void djui_panel_dynos_global_player_models(UNUSED struct DjuiBase* caller) {
+static void djui_panel_dynos_local_player_model_only(UNUSED struct DjuiBase* caller) {
     for (s32 i = 0; i < MAX_PLAYERS; i++) {
         network_player_update_model(i);
     }
@@ -23,7 +23,6 @@ static void djui_panel_dynos_global_player_models(UNUSED struct DjuiBase* caller
 
 static void djui_panel_dynos_refresh(UNUSED struct DjuiBase* base) {
     dynos_gfx_init();
-    dynos_packs_init();
 
     djui_panel_shutdown();
     gDjuiInMainMenu = true;
@@ -32,9 +31,14 @@ static void djui_panel_dynos_refresh(UNUSED struct DjuiBase* base) {
     djui_panel_dynos_create(NULL);
 }
 
+static void djui_panel_dynos_destroy(UNUSED struct DjuiBase* caller) {
+    gDjuiInPlayerMenu = false;
+}
+
 void djui_panel_dynos_create(struct DjuiBase* caller) {
+    gDjuiInPlayerMenu = true;
     int packCount = dynos_pack_get_count();
-    struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(DYNOS, DYNOS));
+    struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(DYNOS, DYNOS), true);
     struct DjuiBase* body = djui_three_panel_get_body(panel);
 
     {
@@ -55,10 +59,10 @@ void djui_panel_dynos_create(struct DjuiBase* caller) {
 
         struct DjuiRect* space = djui_rect_create(body);
         djui_base_set_size_type(&space->base, DJUI_SVT_ABSOLUTE, DJUI_SVT_ABSOLUTE);
-        djui_base_set_size(&space->base, (DJUI_DEFAULT_PANEL_WIDTH * (configDjuiThemeCenter ? DJUI_THEME_CENTERED_WIDTH : 1)) - 32, 1);
-        djui_base_set_color(&space->base, 220, 220, 220, 255);
+        djui_base_set_size(&space->base, 0, 32);
+        djui_base_set_color(&space->base, 0, 0, 0, 0);
 
-        djui_checkbox_create(body, DLANG(DYNOS, GLOBAL_PLAYER_MODELS), &configGlobalPlayerModels, djui_panel_dynos_global_player_models);
+        djui_checkbox_create(body, DLANG(DYNOS, LOCAL_PLAYER_MODEL_ONLY), &configDynosLocalPlayerModelOnly, djui_panel_dynos_local_player_model_only);
         if (gNetworkType == NT_NONE) {
             struct DjuiRect* rect1 = djui_rect_container_create(body, 64);
             {
@@ -68,10 +72,8 @@ void djui_panel_dynos_create(struct DjuiBase* caller) {
         } else {
             djui_button_create(body, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
         }
-
-        panel->bodySize.value = paginated->base.height.value + 16 + 64 + 64;
     }
 
-    djui_panel_add(caller, panel, NULL);
-    gDjuiPanelPlayerCreated = true;
+    struct DjuiPanel* p = djui_panel_add(caller, panel, NULL);
+    p->on_panel_destroy = djui_panel_dynos_destroy;
 }

@@ -9,7 +9,6 @@ extern "C" {
 
 #include "gfx/gfx_opengl.h"
 #include "gfx/gfx_direct3d11.h"
-#include "gfx/gfx_direct3d12.h"
 
 #include "gfx/gfx_dxgi.h"
 #include "gfx/gfx_sdl.h"
@@ -28,9 +27,6 @@ extern "C" {
 #if defined(RAPI_D3D11)
 # define RAPI gfx_direct3d11_api
 # define RAPI_NAME "DirectX 11"
-#elif defined(RAPI_D3D12)
-# define RAPI gfx_direct3d12_api
-# define RAPI_NAME "DirectX 12"
 #elif defined(RAPI_GL) || defined(RAPI_GL_LEGACY)
 # define RAPI gfx_opengl_api
 # ifdef USE_GLES
@@ -58,9 +54,9 @@ extern "C" {
 #endif
 
 #ifdef GIT_HASH
-#define TITLE ({ char title[96] = ""; snprintf(title, 96, "sm64coopdx [%s]", GIT_HASH); title; })
+#define TITLE ({ char title[96] = ""; snprintf(title, 96, "%s %s, [%s]", GAME_NAME, get_version(), GIT_HASH); title; })
 #else
-#define TITLE ({ char title[96] = ""; snprintf(title, 96, "sm64coopdx v%s", SM64COOPDX_VERSION); title; })
+#define TITLE ({ char title[96] = ""; snprintf(title, 96, "%s %s", GAME_NAME, get_version()); title; })
 #endif
 
 #define AT_STARTUP __attribute__((constructor))
@@ -68,7 +64,13 @@ extern "C" {
 extern bool gGameInited;
 extern bool gGfxInited;
 
+extern u8 gLuaVolumeMaster;
+extern u8 gLuaVolumeLevel;
+extern u8 gLuaVolumeSfx;
+extern u8 gLuaVolumeEnv;
+
 extern struct GfxWindowManagerAPI* wm_api;
+void produce_one_dummy_frame(void (*callback)(), u8 clearColorR, u8 clearColorG, u8 clearColorB);
 void game_deinit(void);
 void game_exit(void);
 

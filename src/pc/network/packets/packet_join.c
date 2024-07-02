@@ -4,12 +4,12 @@
 #include "object_constants.h"
 #include "behavior_table.h"
 #include "course_table.h"
-#include "src/game/interaction.h"
-#include "src/engine/math_util.h"
-#include "src/game/save_file.h"
-#include "src/game/level_update.h"
-#include "src/game/hardcoded.h"
-#include "src/pc/fs/fs.h"
+#include "game/interaction.h"
+#include "engine/math_util.h"
+#include "game/save_file.h"
+#include "game/level_update.h"
+#include "game/hardcoded.h"
+#include "pc/fs/fs.h"
 #include "PR/os_eeprom.h"
 #include "pc/network/version.h"
 #include "pc/djui/djui.h"
@@ -31,7 +31,7 @@ static u8 eeprom[512] = { 0 };
 
 static u8   sJoinRequestPlayerModel;
 static struct PlayerPalette sJoinRequestPlayerPalette;
-static char sJoinRequestPlayerName[MAX_PLAYER_STRING];
+static char sJoinRequestPlayerName[MAX_CONFIG_STRING];
 bool gCurrentlyJoining = false;
 
 void network_send_join_request(void) {
@@ -48,7 +48,7 @@ void network_send_join_request(void) {
 
     packet_write(&p, &configPlayerModel,   sizeof(u8));
     packet_write(&p, &configPlayerPalette, sizeof(struct PlayerPalette));
-    packet_write(&p, &configPlayerName,    sizeof(u8) * MAX_PLAYER_STRING);
+    packet_write(&p, &configPlayerName,    sizeof(u8) * MAX_CONFIG_STRING);
 
     network_send_to((gNetworkPlayerServer != NULL) ? gNetworkPlayerServer->localIndex : 0, &p);
     LOG_INFO("sending join request");
@@ -63,11 +63,11 @@ void network_receive_join_request(struct Packet* p) {
         packet_read(p, &version, sizeof(u8) * MAX_VERSION_LENGTH);
         packet_read(p, &sJoinRequestPlayerModel,   sizeof(u8));
         packet_read(p, &sJoinRequestPlayerPalette, sizeof(struct PlayerPalette));
-        packet_read(p, &sJoinRequestPlayerName,    sizeof(u8) * MAX_PLAYER_STRING);
+        packet_read(p, &sJoinRequestPlayerName,    sizeof(u8) * MAX_CONFIG_STRING);
     } else {
         sJoinRequestPlayerModel = 0;
         sJoinRequestPlayerPalette = DEFAULT_MARIO_PALETTE;
-        snprintf(sJoinRequestPlayerName, MAX_PLAYER_STRING, "%s", "Player");
+        snprintf(sJoinRequestPlayerName, MAX_CONFIG_STRING, "%s", "Player");
     }
 
     network_send_join(p);
@@ -78,14 +78,17 @@ void network_send_join(struct Packet* joinRequestPacket) {
 
     // figure out id
     u8 globalIndex = joinRequestPacket->localIndex;
+    u8 connectedCount = 1;
     if (globalIndex == UNKNOWN_LOCAL_INDEX) {
         for (u32 i = 1; i < MAX_PLAYERS; i++) {
             if (!gNetworkPlayers[i].connected) {
                 globalIndex = i;
                 break;
+            } else {
+                connectedCount++;
             }
         }
-        if (globalIndex == UNKNOWN_LOCAL_INDEX) {
+        if (globalIndex == UNKNOWN_LOCAL_INDEX || connectedCount >= gServerSettings.maxPlayers) {
             network_send_kick(0, EKT_FULL_PARTY);
             return;
         }
@@ -111,15 +114,15 @@ void network_send_join(struct Packet* joinRequestPacket) {
     packet_write(&p, &globalIndex, sizeof(u8));
     packet_write(&p, &gCurrSaveFileNum, sizeof(s16));
     packet_write(&p, &gServerSettings.playerInteractions, sizeof(u8));
-    if (!configCoopCompatibility) { packet_write(&p, &gServerSettings.bouncyLevelBounds, sizeof(u8)); }
+    packet_write(&p, &gServerSettings.bouncyLevelBounds, sizeof(u8));
     packet_write(&p, &gServerSettings.playerKnockbackStrength, sizeof(u8));
     packet_write(&p, &gServerSettings.stayInLevelAfterStar, sizeof(u8));
     packet_write(&p, &gServerSettings.skipIntro, sizeof(u8));
-    packet_write(&p, &gServerSettings.enableCheats, sizeof(u8));
     packet_write(&p, &gServerSettings.bubbleDeath, sizeof(u8));
     packet_write(&p, &gServerSettings.headlessServer, sizeof(u8));
-    if (!configCoopCompatibility) { packet_write(&p, &gServerSettings.nametags, sizeof(u8)); }
+    packet_write(&p, &gServerSettings.nametags, sizeof(u8));
     packet_write(&p, &gServerSettings.maxPlayers, sizeof(u8));
+    packet_write(&p, &gServerSettings.pauseAnywhere, sizeof(u8));
     packet_write(&p, eeprom, sizeof(u8) * 512);
 
     network_send_to(globalIndex, &p);
@@ -163,23 +166,15 @@ void network_receive_join(struct Packet* p) {
     packet_read(p, &myGlobalIndex, sizeof(u8));
     packet_read(p, &gCurrSaveFileNum, sizeof(s16));
     packet_read(p, &gServerSettings.playerInteractions, sizeof(u8));
-    if (!configCoopCompatibility) {
-        packet_read(p, &gServerSettings.bouncyLevelBounds, sizeof(u8));
-    } else {
-        gServerSettings.bouncyLevelBounds = BOUNCY_LEVEL_BOUNDS_OFF;
-    }
+    packet_read(p, &gServerSettings.bouncyLevelBounds, sizeof(u8));
     packet_read(p, &gServerSettings.playerKnockbackStrength, sizeof(u8));
     packet_read(p, &gServerSettings.stayInLevelAfterStar, sizeof(u8));
     packet_read(p, &gServerSettings.skipIntro, sizeof(u8));
-    packet_read(p, &gServerSettings.enableCheats, sizeof(u8));
     packet_read(p, &gServerSettings.bubbleDeath, sizeof(u8));
     packet_read(p, &gServerSettings.headlessServer, sizeof(u8));
-    if (!configCoopCompatibility) {
-        packet_read(p, &gServerSettings.nametags, sizeof(u8));
-    } else {
-        gServerSettings.nametags = false;
-    }
+    packet_read(p, &gServerSettings.nametags, sizeof(u8));
     packet_read(p, &gServerSettings.maxPlayers, sizeof(u8));
+    packet_read(p, &gServerSettings.pauseAnywhere, sizeof(u8));
     packet_read(p, eeprom, sizeof(u8) * 512);
 
     network_player_connected(NPT_SERVER, 0, 0, &DEFAULT_MARIO_PALETTE, "Player");

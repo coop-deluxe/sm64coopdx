@@ -1,3 +1,4 @@
+#include "pc/rom_assets.h"
 // Clam Shell
 
 // Unreferenced light group
@@ -13,14 +14,10 @@ UNUSED static const Lights1 clam_shell_lights_unused2 = gdSPDefLights1(
 );
 
 // 0x05000030
-ALIGNED8 const Texture clam_shell_seg5_texture_05000030[] = {
-#include "actors/clam_shell/clam_shell.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(clam_shell_seg5_texture_05000030, "actors/clam_shell/clam_shell.rgba16.inc.c", 0x0013b910, 41727, 0x00000030, 2048);
 
 // 0x05000830
-ALIGNED8 const Texture clam_shell_seg5_texture_05000830[] = {
-#include "actors/clam_shell/clam_shell_mouth.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(clam_shell_seg5_texture_05000830, "actors/clam_shell/clam_shell_mouth.rgba16.inc.c", 0x0013b910, 41727, 0x00000830, 2048);
 
 // 0x05001030
 static const Lights1 clam_shell_seg5_lights_05001030 = gdSPDefLights1(
@@ -29,34 +26,10 @@ static const Lights1 clam_shell_seg5_lights_05001030 = gdSPDefLights1(
 );
 
 // 0x05001048
-static const Vtx clam_shell_seg5_vertex_05001048[] = {
-    {{{   728,   -261,      0}, 0, {   480,    566}, {0x00, 0x7e, 0xf5, 0xff}}},
-    {{{   -10,      2,   -131}, 0, {   580,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   404,    -50,   -528}, 0, {   886,    318}, {0xf5, 0x7e, 0x00, 0xff}}},
-    {{{   404,    -50,    529}, 0, {    72,    318}, {0x00, 0x7f, 0x00, 0xff}}},
-    {{{  1083,   -106,    435}, 0, {   144,    838}, {0xa8, 0xa8, 0x16, 0xff}}},
-    {{{   777,    -25,    658}, 0, {   -26,    604}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{  1087,   -154,      0}, 0, {   480,    842}, {0x38, 0x71, 0x00, 0xff}}},
-    {{{  1214,     19,      0}, 0, {   480,    940}, {0xa7, 0xa7, 0x00, 0xff}}},
-    {{{   -10,      2,    132}, 0, {   378,      0}, {0x00, 0x81, 0x00, 0xff}}},
-    {{{  1083,   -106,   -434}, 0, {   814,    838}, {0x31, 0x63, 0x3d, 0xff}}},
-    {{{   777,    -25,   -657}, 0, {   984,    604}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(clam_shell_seg5_vertex_05001048, 0x0013b910, 41727, 0x00001048, 176);
 
 // 0x050010F8
-static const Vtx clam_shell_seg5_vertex_050010F8[] = {
-    {{{  1087,   -154,      0}, 0, {   480,    816}, {0x38, 0x71, 0x00, 0xff}}},
-    {{{  1214,     19,      0}, 0, {   480,    906}, {0xa7, 0xa7, 0x00, 0xff}}},
-    {{{  1083,   -106,   -434}, 0, {   168,    814}, {0x31, 0x63, 0x3d, 0xff}}},
-    {{{   728,   -261,      0}, 0, {   480,    560}, {0x00, 0x7e, 0xf5, 0xff}}},
-    {{{   -10,      2,    132}, 0, {   574,     34}, {0x00, 0x81, 0x00, 0xff}}},
-    {{{   404,    -50,    529}, 0, {   856,    328}, {0x00, 0x7f, 0x00, 0xff}}},
-    {{{  1083,   -106,    435}, 0, {   790,    814}, {0xa8, 0xa8, 0x16, 0xff}}},
-    {{{   777,    -25,    658}, 0, {   948,    594}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   777,    -25,   -657}, 0, {    10,    594}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   404,    -50,   -528}, 0, {   102,    328}, {0xf5, 0x7e, 0x00, 0xff}}},
-    {{{   -10,      2,   -131}, 0, {   384,     34}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(clam_shell_seg5_vertex_050010F8, 0x0013b910, 41727, 0x000010f8, 176);
 
 // 0x050011A8 - 0x05001238
 const Gfx clam_shell_seg5_dl_050011A8[] = {
@@ -114,32 +87,10 @@ static const Lights1 clam_shell_seg5_lights_05001320 = gdSPDefLights1(
 );
 
 // 0x05001338
-static const Vtx clam_shell_seg5_vertex_05001338[] = {
-    {{{   260,      0,      0}, 0, {   480,    600}, {0xf5, 0x7e, 0x07, 0xff}}},
-    {{{  -531,     -1,    132}, 0, {   580,     -8}, {0x00, 0x81, 0x00, 0xff}}},
-    {{{  -124,    -74,    529}, 0, {   886,    304}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   692,    -45,      0}, 0, {   480,    932}, {0x81, 0x00, 0x00, 0xff}}},
-    {{{   556,   -160,   -434}, 0, {   144,    828}, {0x00, 0x81, 0x00, 0xff}}},
-    {{{   248,    -68,   -657}, 0, {   -26,    590}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{  -124,    -74,   -528}, 0, {    72,    304}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   248,    -68,    658}, 0, {   984,    590}, {0x0f, 0x7d, 0x0f, 0xff}}},
-    {{{   556,   -160,    435}, 0, {   814,    828}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{  -531,     -1,   -131}, 0, {   378,     -8}, {0x00, 0x81, 0x00, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(clam_shell_seg5_vertex_05001338, 0x0013b910, 41727, 0x00001338, 160);
 
 // 0x050013D8
-static const Vtx clam_shell_seg5_vertex_050013D8[] = {
-    {{{   556,   -160,    435}, 0, {   790,    796}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{   248,    -68,    658}, 0, {   948,    568}, {0x0f, 0x7d, 0x0f, 0xff}}},
-    {{{   260,      0,      0}, 0, {   480,    576}, {0xf5, 0x7e, 0x07, 0xff}}},
-    {{{   692,    -45,      0}, 0, {   480,    896}, {0x81, 0x00, 0x00, 0xff}}},
-    {{{   556,   -160,   -434}, 0, {   168,    796}, {0x00, 0x81, 0x00, 0xff}}},
-    {{{  -124,    -74,    529}, 0, {   856,    292}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{  -124,    -74,   -528}, 0, {   102,    292}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   248,    -68,   -657}, 0, {    10,    568}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{  -531,     -1,    132}, 0, {   574,     -8}, {0x00, 0x81, 0x00, 0xff}}},
-    {{{  -531,     -1,   -131}, 0, {   384,     -8}, {0x00, 0x81, 0x00, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(clam_shell_seg5_vertex_050013D8, 0x0013b910, 41727, 0x000013d8, 160);
 
 // 0x05001478 - 0x050014F8
 const Gfx clam_shell_seg5_dl_05001478[] = {

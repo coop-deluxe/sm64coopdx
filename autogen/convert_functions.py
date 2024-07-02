@@ -42,6 +42,8 @@ in_files = [
     "include/behavior_table.h",
     "src/pc/lua/utils/smlua_obj_utils.h",
     "src/pc/lua/utils/smlua_misc_utils.h",
+    "src/pc/lua/utils/smlua_camera_utils.h",
+    "src/pc/lua/utils/smlua_gfx_utils.h",
     "src/pc/lua/utils/smlua_collision_utils.h",
     "src/pc/lua/utils/smlua_math_utils.h",
     "src/pc/lua/utils/smlua_model_utils.h",
@@ -63,59 +65,62 @@ in_files = [
     "src/game/area.h",
     "src/engine/level_script.h",
     "src/game/ingame_menu.h",
-    "src/game/first_person_cam.h"
+    "src/game/first_person_cam.h",
+    "src/engine/behavior_script.h"
 ]
 
 override_allowed_functions = {
-    "src/audio/external.h":                 [ " play_", "fade", "current_background", "stop_", "sound_banks", "drop_queued_background_music" ],
+    "src/audio/external.h":                 [ " play_", "fade", "current_background", "stop_", "sound_banks", "drop_queued_background_music", "sound_get_level_intensity" ],
     "src/game/rumble_init.c":               [ "queue_rumble_", "reset_rumble_timers" ],
     "src/pc/djui/djui_popup.h" :            [ "create" ],
-    "src/game/save_file.h":                 [ "save_file_get_", "save_file_set_flags", "save_file_clear_flags", "save_file_reload", "save_file_erase_current_backup_save", "save_file_set_star_flags", "save_file_is_cannon_unlocked", "touch_coin_score_age", "save_file_set_course_coin_score", "save_file_do_save", "save_file_remove_star_flags" ],
+    "src/game/save_file.h":                 [ "save_file_get_", "save_file_set_flags", "save_file_clear_flags", "save_file_reload", "save_file_erase_current_backup_save", "save_file_set_star_flags", "save_file_is_cannon_unlocked", "touch_coin_score_age", "save_file_set_course_coin_score", "save_file_do_save", "save_file_remove_star_flags", "save_file_erase" ],
     "src/pc/lua/utils/smlua_model_utils.h": [ "smlua_model_util_get_id" ],
     "src/game/object_list_processor.h":     [ "set_object_respawn_info_bits" ],
     "src/game/mario_misc.h":                [ "bhv_toad.*", "bhv_unlock_door.*" ],
     "src/pc/utils/misc.h":                  [ "update_all_mario_stars" ],
-    "src/game/level_update.h":              [ "level_trigger_warp", "get_painting_warp_node", "initiate_painting_warp", "warp_special", "lvl_set_current_level", "level_control_timer_running" ],
+    "src/game/level_update.h":              [ "level_trigger_warp", "get_painting_warp_node", "initiate_painting_warp", "warp_special", "lvl_set_current_level", "level_control_timer_running", "fade_into_special_warp" ],
     "src/game/area.h":                      [ "area_get_warp_node" ],
     "src/engine/level_script.h":            [ "area_create_warp_node" ],
-    "src/game/ingame_menu.h":               [ "set_min_dialog_width", "set_dialog_override_pos", "reset_dialog_override_pos", "set_dialog_override_color", "reset_dialog_override_color" ]
+    "src/game/ingame_menu.h":               [ "set_min_dialog_width", "set_dialog_override_pos", "reset_dialog_override_pos", "set_dialog_override_color", "reset_dialog_override_color", "set_menu_mode", "create_dialog_box", "create_dialog_box_with_var", "create_dialog_inverted_box", "create_dialog_box_with_response", "reset_dialog_render_state", "close_dialog_box", ]
 }
 
 override_disallowed_functions = {
-    "src/audio/external.h":                 [ " func_" ],
-    "src/engine/math_util.h":               [ "atan2s", "atan2f", "vec3s_sub" ],
-    "src/engine/surface_load.h":            [ "alloc_surface_poools" ],
-    "src/engine/surface_collision.h":       [ " debug_", "f32_find_wall_collision" ],
-    "src/game/mario_actions_airborne.c":    [ "^[us]32 act_.*" ],
-    "src/game/mario_actions_automatic.c":   [ "^[us]32 act_.*" ],
-    "src/game/mario_actions_cutscene.c":    [ "^[us]32 act_.*", " geo_", "spawn_obj" ],
-    "src/game/mario_actions_moving.c":      [ "^[us]32 act_.*" ],
-    "src/game/mario_actions_object.c":      [ "^[us]32 act_.*" ],
-    "src/game/mario_actions_stationary.c":  [ "^[us]32 act_.*" ],
-    "src/game/mario_actions_submerged.c":   [ "^[us]32 act_.*" ],
-    "src/game/mario_step.h":                [ " stub_mario_step", "transfer_bully_speed" ],
-    "src/game/mario.h":                     [ " init_mario" ],
-    "src/pc/djui/djui_console.h":           [ " djui_console_create", "djui_console_message_create" ],
-    "src/pc/djui/djui_chat_message.h":      [ "create_from" ],
-    "src/game/interaction.h":               [ "process_interactions", "_handle_" ],
-    "src/game/sound_init.h":                [ "_loop_", "thread4_", "set_sound_mode" ],
-    "src/pc/network/network_utils.h":       [ "network_get_player_text_color[^_]" ],
-    "src/pc/network/network_player.h":      [ "_init", "_connected[^_]", "_shutdown", "_disconnected", "_update", "construct_player_popup" ],
-    "src/game/object_helpers.c":            [ "spawn_obj", "^bhv_", "abs[fi]", "^bit_shift", "_debug$", "^stub_", "_set_model", "cur_obj_set_direction_table", "cur_obj_progress_direction_table" ],
-    "src/game/obj_behaviors.c":             [ "debug_" ],
-    "src/game/obj_behaviors_2.c":           [ "wiggler_jumped_on_attack_handler", "huge_goomba_weakly_attacked" ],
-    "src/game/spawn_sound.c":               [ "spawner" ],
-    "src/game/level_info.h":                [ "_name_table" ],
-    "src/pc/lua/utils/smlua_obj_utils.h":   [ "spawn_object_remember_field" ],
-    "src/game/camera.h":                    [ "update_camera", "init_camera", "stub_camera", "^reset_camera", "move_point_along_spline" ],
-    "src/game/behavior_actions.h":          [ "bhv_dust_smoke_loop", "bhv_init_room" ],
-    "src/pc/lua/utils/smlua_audio_utils.h": [ "smlua_audio_utils_override", "audio_custom_shutdown"],
-    "src/pc/djui/djui_hud_utils.h":         [ "djui_hud_render_texture", "djui_hud_render_texture_raw", "djui_hud_render_texture_tile", "djui_hud_render_texture_tile_raw" ],
-    "src/pc/lua/utils/smlua_level_utils.h": [ "smlua_level_util_reset" ],
-    "src/pc/lua/utils/smlua_text_utils.h":  [ "smlua_text_utils_reset_all" ],
-    "src/pc/lua/utils/smlua_anim_utils.h":  [ "smlua_anim_util_reset", "smlua_anim_util_register_animation" ],
-    "src/pc/network/lag_compensation.h":    [ "lag_compensation_clear", "lag_compensation_store" ],
-    "src/game/first_person_cam.h":          [ "first_person_update" ]
+    "src/audio/external.h":                     [ " func_" ],
+    "src/engine/math_util.h":                   [ "atan2s", "atan2f", "vec3s_sub" ],
+    "src/engine/surface_load.h":                [ "alloc_surface_poools" ],
+    "src/engine/surface_collision.h":           [ " debug_", "f32_find_wall_collision" ],
+    "src/game/mario_actions_airborne.c":        [ "^[us]32 act_.*" ],
+    "src/game/mario_actions_automatic.c":       [ "^[us]32 act_.*" ],
+    "src/game/mario_actions_cutscene.c":        [ "^[us]32 act_.*", " geo_", "spawn_obj", "print_displaying_credits_entry" ],
+    "src/game/mario_actions_moving.c":          [ "^[us]32 act_.*" ],
+    "src/game/mario_actions_object.c":          [ "^[us]32 act_.*" ],
+    "src/game/mario_actions_stationary.c":      [ "^[us]32 act_.*" ],
+    "src/game/mario_actions_submerged.c":       [ "^[us]32 act_.*" ],
+    "src/game/mario_step.h":                    [ " stub_mario_step", "transfer_bully_speed" ],
+    "src/game/mario.h":                         [ " init_mario" ],
+    "src/pc/djui/djui_console.h":               [ " djui_console_create", "djui_console_message_create" ],
+    "src/pc/djui/djui_chat_message.h":          [ "create_from" ],
+    "src/game/interaction.h":                   [ "process_interaction", "_handle_" ],
+    "src/game/sound_init.h":                    [ "_loop_", "thread4_", "set_sound_mode" ],
+    "src/pc/network/network_utils.h":           [ "network_get_player_text_color[^_]" ],
+    "src/pc/network/network_player.h":          [ "_init", "_connected[^_]", "_shutdown", "_disconnected", "_update", "construct_player_popup" ],
+    "src/game/object_helpers.c":                [ "spawn_obj", "^bhv_", "abs[fi]", "^bit_shift", "_debug$", "^stub_", "_set_model", "cur_obj_set_direction_table", "cur_obj_progress_direction_table" ],
+    "src/game/obj_behaviors.c":                 [ "debug_" ],
+    "src/game/obj_behaviors_2.c":               [ "wiggler_jumped_on_attack_handler", "huge_goomba_weakly_attacked" ],
+    "src/game/spawn_sound.c":                   [ "spawner" ],
+    "src/game/level_info.h":                    [ "_name_table" ],
+    "src/pc/lua/utils/smlua_obj_utils.h":       [ "spawn_object_remember_field" ],
+    "src/game/camera.h":                        [ "update_camera", "init_camera", "stub_camera", "^reset_camera", "move_point_along_spline" ],
+    "src/game/behavior_actions.h":              [ "bhv_dust_smoke_loop", "bhv_init_room" ],
+    "src/pc/lua/utils/smlua_audio_utils.h":     [ "smlua_audio_utils_override", "audio_custom_shutdown", "smlua_audio_custom_init", "smlua_audio_custom_deinit", "audio_sample_destroy_pending_copies", "audio_custom_update_volume" ],
+    "src/pc/djui/djui_hud_utils.h":             [ "djui_hud_render_texture", "djui_hud_render_texture_raw", "djui_hud_render_texture_tile", "djui_hud_render_texture_tile_raw" ],
+    "src/pc/lua/utils/smlua_level_utils.h":     [ "smlua_level_util_reset" ],
+    "src/pc/lua/utils/smlua_text_utils.h":      [ "smlua_text_utils_init", "smlua_text_utils_shutdown", "smlua_text_utils_reset_all" ],
+    "src/pc/lua/utils/smlua_anim_utils.h":      [ "smlua_anim_util_reset", "smlua_anim_util_register_animation" ],
+    "src/pc/network/lag_compensation.h":        [ "lag_compensation_clear", "lag_compensation_store" ],
+    "src/game/first_person_cam.h":              [ "first_person_update" ],
+    "src/pc/lua/utils/smlua_collision_utils.h": [ "collision_find_surface_on_ray" ],
+    "src/engine/behavior_script.h":             [ "stub_behavior_script_2", "cur_obj_update" ]
 }
 
 override_hide_functions = {
@@ -308,6 +313,8 @@ manual_index_documentation = """
    - [smlua_anim_util_register_animation](#smlua_anim_util_register_animation)
    - [level_script_parse](#level_script_parse)
    - [log_to_console](#log_to_console)
+   - [add_scroll_target](#add_scroll_target)
+   - [collision_find_surface_on_ray](#collision_find_surface_on_ray)
 
 <br />
 
@@ -652,13 +659,64 @@ Logs a message to the in-game console.
 | Field | Type |
 | ----- | ---- |
 | message | `string` |
-| level | `ConsoleMessageLevel` |
+| level (optional) | `ConsoleMessageLevel` |
 
 ### Returns
 - None
 
 ### C Prototype
 `void log_to_console(const char* message, enum ConsoleMessageLevel level);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [add_scroll_target](#add_scroll_target)
+
+Registers a vertex buffer to be used for a scrolling texture. Should be used with `RM_Scroll_Texture` or `editor_Scroll_Texture`
+
+### Lua Example
+`add_scroll_target(0, "arena_rainbow_dl_StarRoad_mesh_layer_5_vtx_0")`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| index | `integer` |
+| name | `string` |
+
+### Returns
+- None
+
+### C Prototype
+`void dynos_add_scroll_target(u32 index, const char *name, u32 offset, u32 size);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [collision_find_surface_on_ray](#collision_find_surface_on_ray)
+
+Shoots a raycast from `startX`, `startY`, and `startZ` in the direction of `dirX`, `dirY`, and `dirZ`.
+
+### Lua Example
+`collision_find_surface_on_ray(0, 0, 0, 50, 100, 50)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| startX | `number` |
+| startY | `number` |
+| startZ | `number` |
+| dirX | `number` |
+| dirY | `number` |
+| dirZ | `number` |
+| precision (optional) | `number` |
+
+### Returns
+- [RayIntersectionInfo](structs.md#RayIntersectionInfo)
+
+### C Prototype
+`struct RayIntersectionInfo* collision_find_surface_on_ray(f32 startX, f32 startY, f32 startZ, f32 dirX, f32 dirY, f32 dirZ, f32 precision);`
 
 [:arrow_up_small:](#)
 
@@ -797,17 +855,26 @@ def build_function(function, do_extern):
         return 0;
     }\n\n""" % (len(function['params']), function['identifier'], len(function['params']))
 
+    is_interact_func = fid.startswith('interact_') and fname == 'interaction.h'
+
     i = 1
     for param in function['params']:
-        s += build_param(param, i)
-        s += '    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %%u for function \'%%s\'", %d, "%s"); return 0; }\n' % (i, fid)
+        if is_interact_func and param['identifier'] == 'interactType':
+            s += "    // interactType skipped so mods can't lie about what interaction it is\n"
+        else:
+            s += build_param(param, i)
+            s += '    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %%u for function \'%%s\'", %d, "%s"); return 0; }\n' % (i, fid)
         i += 1
     s += '\n'
 
     if do_extern:
         s += '    extern %s\n' % function['line']
 
-    s += build_call(function)
+    if is_interact_func:
+        # special case for interaction functions to call the hooks associated with interactions
+        s += "    lua_pushinteger(L, process_interaction(m, " + fid.upper() + ", o, " + fid + "));\n"
+    else:
+        s += build_call(function)
 
     i = 1
     for param in function['params']:
@@ -894,7 +961,7 @@ def process_function(fname, line):
 
     line = line.replace('UNUSED', '')
 
-    match = re.search('[a-zA-Z0-9_]+\(', line)
+    match = re.search(r'[a-zA-Z0-9_]+\(', line)
     function['type'] = normalize_type(line[0:match.span()[0]])
     function['identifier'] = match.group()[0:-1]
 
@@ -911,7 +978,7 @@ def process_function(fname, line):
                 param['type'] = normalize_type(param_str)
                 param['identifier'] = 'arg%d' % param_index
             else:
-                match = re.search('[a-zA-Z0-9_\[\]]+$', param_str)
+                match = re.search(r'[a-zA-Z0-9_\[\]]+$', param_str)
                 if match == None:
                     return None
                 param['type'] = normalize_type(param_str[0:match.span()[0]])
@@ -1227,7 +1294,8 @@ def def_function(function):
     if rtype.startswith('Pointer_') and rtype not in def_pointers:
         def_pointers.append(rtype)
 
-    s += '--- @return %s\n' % rtype
+    if rtype != "nil":
+        s += '--- @return %s\n' % rtype
     s += "function %s(%s)\n    -- ...\nend\n\n" % (fid, param_str)
 
     return s

@@ -1496,7 +1496,7 @@ static void update_game_sound(void) {
 #if defined(VERSION_EU) || defined(VERSION_SH)
                             queue_audio_cmd_f32(AUDIO_CMD_ARGS(AUDIO_CMD_VOLUME, SEQ_PLAYER_SFX, channelIndex, 0), 1);
                             queue_audio_cmd_s8(AUDIO_CMD_ARGS(AUDIO_CMD_NEW_PAN, SEQ_PLAYER_SFX, channelIndex, 0), 64);
-                            queue_audio_cmd_f32(AUDIO_CMD_ARGS(AUDIO_CMD_FREQ_SCALE, SEQ_PLAYER_SFX, channelIndex, 0), 
+                            queue_audio_cmd_f32(AUDIO_CMD_ARGS(AUDIO_CMD_FREQ_SCALE, SEQ_PLAYER_SFX, channelIndex, 0),
                                           get_sound_freq_scale(bank, soundIndex));
 #else
                             gSequencePlayers[SEQ_PLAYER_SFX].channels[channelIndex]->volume = 1.0f;
@@ -1744,16 +1744,16 @@ static void update_game_sound(void) {
                 gSequencePlayers[SEQ_PLAYER_SFX].channels[channelIndex]->freqScale *= sSoundBanks[bank][soundIndex].customFreqScale;
 #endif
             }
-            
+
             // Increment to the next channel that this bank owns
             channelIndex++;
         }
-        
+
         // Increment to the first channel index of the next bank
         // (In practice sUsedChannelsForSoundBank[i] = sMaxChannelsForSoundBank[i] = 1, so this
         // doesn't do anything)
         channelIndex += sMaxChannelsForSoundBank[bank] - sUsedChannelsForSoundBank[bank];
-        
+
     }
 }
 
@@ -2253,6 +2253,7 @@ void get_currently_playing_sound(u8 bank, u8 *numPlayingSounds, u8 *numSoundsInB
  * Called from threads: thread5_game_loop
  */
 void stop_sound(u32 soundBits, f32 *pos) {
+    pos = smlua_get_vec3f_for_play_sound(pos);
     u8 bank = (soundBits & SOUNDARGS_MASK_BANK) >> SOUNDARGS_SHIFT_BANK;
     if (bank >= SOUND_BANK_COUNT) { return; }
     u8 soundIndex = sSoundBanks[bank][0].next;
@@ -2440,7 +2441,7 @@ void play_music(u8 player, u16 seqArgs, u16 fadeTimer) {
     u8 priority = seqArgs >> 8;
     u8 i;
     u8 foundIndex = 0;
-    
+
     //LOG_DEBUG("Playing music with arguments: %d, 0x%X, %d, %d", player, seqId, priority, fadeTimer);
 
     // Except for the background music player, we don't support queued
@@ -2449,7 +2450,7 @@ void play_music(u8 player, u16 seqArgs, u16 fadeTimer) {
         seq_player_play_sequence(player, seqId, fadeTimer);
         return;
     }
-    
+
     // Abort if the queue is already full.
     if (sBackgroundMusicQueueSize == MAX_BACKGROUND_MUSIC_QUEUE_SIZE) {
         LOG_DEBUG("Background music queue reached max size! Ignoring request to queue sequence %d.", seqId);

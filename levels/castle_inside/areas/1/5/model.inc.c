@@ -1,21 +1,5 @@
-static const Vtx dl_castle_lobby_wing_cap_light_vertex_group[] = {
-    {{{ -1075,   1741,   -380}, 0, {  -360,    -62}, {0xff, 0xff, 0xff, 0x80}}},
-    {{{ -1125,    -50,    461}, 0, {   478,    990}, {0xff, 0xff, 0xff, 0x80}}},
-    {{{ -1279,    -50,    594}, 0, {   612,    990}, {0xff, 0xff, 0xff, 0x80}}},
-    {{{ -1075,   1741,   -130}, 0, {  -110,    -62}, {0xff, 0xff, 0xff, 0x80}}},
-    {{{  -921,    -50,    973}, 0, {   990,    990}, {0xff, 0xff, 0xff, 0x80}}},
-    {{{  -968,   1741,   -130}, 0, {  -110,    -62}, {0xff, 0xff, 0xff, 0x80}}},
-    {{{  -767,    -50,    819}, 0, {   836,    990}, {0xff, 0xff, 0xff, 0x80}}},
-    {{{  -896,   1741,   -201}, 0, {  -180,    -62}, {0xff, 0xff, 0xff, 0x80}}},
-    {{{ -1125,    -50,    973}, 0, {   990,    990}, {0xff, 0xff, 0xff, 0x80}}},
-    {{{  -767,    -50,    614}, 0, {   632,    990}, {0xff, 0xff, 0xff, 0x80}}},
-    {{{  -896,   1741,   -309}, 0, {  -288,    -62}, {0xff, 0xff, 0xff, 0x80}}},
-    {{{  -921,    -50,    461}, 0, {   478,    990}, {0xff, 0xff, 0xff, 0x80}}},
-    {{{  -968,   1741,   -380}, 0, {  -360,    -62}, {0xff, 0xff, 0xff, 0x80}}},
-    {{{ -1147,   1741,   -201}, 0, {  -180,    -62}, {0xff, 0xff, 0xff, 0x80}}},
-    {{{ -1147,   1741,   -309}, 0, {  -288,    -62}, {0xff, 0xff, 0xff, 0x80}}},
-    {{{ -1279,    -50,    819}, 0, {   836,    990}, {0xff, 0xff, 0xff, 0x80}}},
-};
+#include "pc/rom_assets.h"
+ROM_ASSET_LOAD_VTX(dl_castle_lobby_wing_cap_light_vertex_group, 0x00396340, 232834, 0x0002a6d8, 256);
 
 static const Gfx dl_castle_lobby_wing_cap_light_model[] = {
     gsDPSetTextureImage(G_IM_FMT_IA, G_IM_SIZ_16b, 1, texture_castle_light),

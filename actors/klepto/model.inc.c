@@ -1,3 +1,4 @@
+#include "pc/rom_assets.h"
 // Possible Removed Actor File
 
 // Bin ID? What is this?
@@ -6,29 +7,19 @@ UNUSED static const u64 klepto_unused_1 = 0;
 // Klepto
 
 // 0x05000008
-ALIGNED8 const Texture klepto_seg5_texture_05000008[] = {
-#include "actors/klepto/klepto_chest_tuft.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(klepto_seg5_texture_05000008, "actors/klepto/klepto_chest_tuft.rgba16.inc.c", 0x00145e90, 48337, 0x00000008, 2048);
 
 // 0x05000808
-ALIGNED8 const Texture klepto_seg5_texture_05000808[] = {
-#include "actors/klepto/klepto_eye.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(klepto_seg5_texture_05000808, "actors/klepto/klepto_eye.rgba16.inc.c", 0x00145e90, 48337, 0x00000808, 2048);
 
 // 0x05001008
-ALIGNED8 const Texture klepto_seg5_texture_05001008[] = {
-#include "actors/klepto/klepto_beak.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(klepto_seg5_texture_05001008, "actors/klepto/klepto_beak.rgba16.inc.c", 0x00145e90, 48337, 0x00001008, 4096);
 
 // 0x05002008
-ALIGNED8 const Texture klepto_seg5_texture_05002008[] = {
-#include "actors/klepto/klepto_wing.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(klepto_seg5_texture_05002008, "actors/klepto/klepto_wing.rgba16.inc.c", 0x00145e90, 48337, 0x00002008, 4096);
 
 // 0x05003008
-ALIGNED8 const Texture klepto_seg5_texture_05003008[] = {
-#include "actors/klepto/klepto_wing_flap.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(klepto_seg5_texture_05003008, "actors/klepto/klepto_wing_flap.rgba16.inc.c", 0x00145e90, 48337, 0x00003008, 2048);
 
 // 0x05003808
 static const Lights1 klepto_seg5_lights_05003808 = gdSPDefLights1(
@@ -43,55 +34,16 @@ static const Lights1 klepto_seg5_lights_05003820 = gdSPDefLights1(
 );
 
 // 0x05003838
-static const Vtx klepto_seg5_vertex_05003838[] = {
-    {{{    14,    -62,     52}, 0, {  1058,   -314}, {0x0e, 0xc0, 0x6c, 0xff}}},
-    {{{    65,    -69,      0}, 0, {    80,   -454}, {0x56, 0xa3, 0x00, 0xff}}},
-    {{{    76,    -43,      0}, 0, {   -36,    532}, {0x5b, 0xa9, 0x00, 0xff}}},
-    {{{    26,     -6,     56}, 0, {   942,   1784}, {0x0e, 0x06, 0x7e, 0xff}}},
-    {{{    14,    -62,    -51}, 0, {  1058,   -314}, {0x0e, 0xc0, 0x94, 0xff}}},
-    {{{    26,     -6,    -55}, 0, {   942,   1784}, {0x0e, 0x06, 0x82, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(klepto_seg5_vertex_05003838, 0x00145e90, 48337, 0x00003838, 96);
 
 // 0x05003898
-static const Vtx klepto_seg5_vertex_05003898[] = {
-    {{{   134,     -7,     32}, 0, {   496,   1112}, {0x1b, 0x59, 0x55, 0xff}}},
-    {{{   134,     -7,    -31}, 0, {   224,   1048}, {0x1a, 0x59, 0xab, 0xff}}},
-    {{{     0,     16,      0}, 0, {   454,   -308}, {0xf5, 0x7e, 0x00, 0xff}}},
-    {{{     0,     16,      0}, 0, {   480,   -328}, {0xf5, 0x7e, 0x00, 0xff}}},
-    {{{   134,     -7,    -31}, 0, {   684,   1248}, {0x1a, 0x59, 0xab, 0xff}}},
-    {{{    26,     -6,    -55}, 0, {   836,    324}, {0x0e, 0x06, 0x82, 0xff}}},
-    {{{    26,     -6,     56}, 0, {   836,    324}, {0x0e, 0x06, 0x7e, 0xff}}},
-    {{{   134,     -7,     32}, 0, {   684,   1248}, {0x1b, 0x59, 0x55, 0xff}}},
-    {{{   183,     18,      0}, 0, {   -34,   1968}, {0x72, 0x35, 0xff, 0xff}}},
-    {{{   134,     -7,     32}, 0, {   550,   1664}, {0x1b, 0x59, 0x55, 0xff}}},
-    {{{   158,    -40,      0}, 0, {   -34,   1564}, {0x36, 0x8e, 0x00, 0xff}}},
-    {{{    26,     -6,     56}, 0, {   982,    280}, {0x0e, 0x06, 0x7e, 0xff}}},
-    {{{    76,    -43,      0}, 0, {   -34,    256}, {0x5b, 0xa9, 0x00, 0xff}}},
-    {{{    26,     -6,    -55}, 0, {   982,    280}, {0x0e, 0x06, 0x82, 0xff}}},
-    {{{   134,     -7,    -31}, 0, {   550,   1664}, {0x1a, 0x59, 0xab, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(klepto_seg5_vertex_05003898, 0x00145e90, 48337, 0x00003898, 240);
 
 // 0x05003988
-static const Vtx klepto_seg5_vertex_05003988[] = {
-    {{{   134,     -7,    -31}, 0, {   558,   1256}, {0x1a, 0x59, 0xab, 0xff}}},
-    {{{   134,     -7,     32}, 0, {   318,   1032}, {0x1b, 0x59, 0x55, 0xff}}},
-    {{{   183,     18,      0}, 0, {   326,   1572}, {0x72, 0x35, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(klepto_seg5_vertex_05003988, 0x00145e90, 48337, 0x00003988, 48);
 
 // 0x050039B8
-static const Vtx klepto_seg5_vertex_050039B8[] = {
-    {{{    14,    -62,    -51}, 0, {     0,      0}, {0x0e, 0xc0, 0x94, 0xff}}},
-    {{{    65,    -69,      0}, 0, {     0,      0}, {0x56, 0xa3, 0x00, 0xff}}},
-    {{{    21,    -88,      0}, 0, {     0,      0}, {0xf8, 0x82, 0x00, 0xff}}},
-    {{{    14,    -62,     52}, 0, {     0,      0}, {0x0e, 0xc0, 0x6c, 0xff}}},
-    {{{   -42,     -8,     32}, 0, {     0,      0}, {0xa8, 0x2f, 0x4d, 0xff}}},
-    {{{   -32,    -61,     23}, 0, {     0,      0}, {0x9f, 0xb8, 0x25, 0xff}}},
-    {{{    26,     -6,     56}, 0, {     0,      0}, {0x0e, 0x06, 0x7e, 0xff}}},
-    {{{   -32,    -61,    -22}, 0, {     0,      0}, {0xac, 0xae, 0xd2, 0xff}}},
-    {{{   -42,     -8,    -31}, 0, {     0,      0}, {0x99, 0x21, 0xbf, 0xff}}},
-    {{{    26,     -6,    -55}, 0, {     0,      0}, {0x0e, 0x06, 0x82, 0xff}}},
-    {{{     0,     16,      0}, 0, {     0,      0}, {0xf5, 0x7e, 0x00, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(klepto_seg5_vertex_050039B8, 0x00145e90, 48337, 0x000039b8, 176);
 
 // 0x05003A68 - 0x05003AC0
 const Gfx klepto_seg5_dl_05003A68[] = {
@@ -165,17 +117,7 @@ static const Lights1 klepto_seg5_lights_05003C58 = gdSPDefLights1(
 );
 
 // 0x05003C70
-static const Vtx klepto_seg5_vertex_05003C70[] = {
-    {{{    65,    -11,    -11}, 0, {     0,      0}, {0x0d, 0xa7, 0xa7, 0xff}}},
-    {{{    65,    -11,     12}, 0, {     0,      0}, {0x0c, 0xa6, 0x58, 0xff}}},
-    {{{     6,    -19,      0}, 0, {     0,      0}, {0xd5, 0x89, 0xff, 0xff}}},
-    {{{     6,      1,    -20}, 0, {     0,      0}, {0xd5, 0x00, 0x89, 0xff}}},
-    {{{   -10,      1,      0}, 0, {     0,      0}, {0x82, 0x00, 0xff, 0xff}}},
-    {{{     6,      1,     21}, 0, {     0,      0}, {0xd4, 0x00, 0x76, 0xff}}},
-    {{{    65,     13,    -11}, 0, {     0,      0}, {0x0d, 0x59, 0xa7, 0xff}}},
-    {{{     6,     21,      0}, 0, {     0,      0}, {0xd5, 0x77, 0xff, 0xff}}},
-    {{{    65,     13,     12}, 0, {     0,      0}, {0x0c, 0x5a, 0x58, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(klepto_seg5_vertex_05003C70, 0x00145e90, 48337, 0x00003c70, 144);
 
 // 0x05003D00 - 0x05003D80
 const Gfx klepto_seg5_dl_05003D00[] = {
@@ -208,18 +150,7 @@ static const Lights1 klepto_seg5_lights_05003DB0 = gdSPDefLights1(
 );
 
 // 0x05003DC8
-static const Vtx klepto_seg5_vertex_05003DC8[] = {
-    {{{   -10,      0,      0}, 0, {   478,    974}, {0x82, 0xf2, 0x00, 0xff}}},
-    {{{    10,     24,    -20}, 0, {   186,    654}, {0xc1, 0x4b, 0xb1, 0xff}}},
-    {{{    17,    -23,    -20}, 0, {   186,    650}, {0xc2, 0xb5, 0xb0, 0xff}}},
-    {{{    44,    -40,      0}, 0, {   480,    314}, {0x29, 0x89, 0x00, 0xff}}},
-    {{{    17,    -23,     21}, 0, {   772,    650}, {0xc2, 0xb4, 0x4f, 0xff}}},
-    {{{    51,      7,    -33}, 0, {   -10,    134}, {0x32, 0x00, 0x8c, 0xff}}},
-    {{{    51,     35,      0}, 0, {   478,     84}, {0x39, 0x71, 0x00, 0xff}}},
-    {{{    72,     -9,      0}, 0, {   480,   -110}, {0x7e, 0xf6, 0x00, 0xff}}},
-    {{{    51,      7,     34}, 0, {   968,    134}, {0x33, 0x00, 0x74, 0xff}}},
-    {{{    10,     24,     21}, 0, {   772,    654}, {0xc0, 0x4b, 0x4e, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(klepto_seg5_vertex_05003DC8, 0x00145e90, 48337, 0x00003dc8, 160);
 
 // 0x05003E68 - 0x05003F20
 const Gfx klepto_seg5_dl_05003E68[] = {
@@ -263,20 +194,7 @@ static const Lights1 klepto_seg5_lights_05003F80 = gdSPDefLights1(
 );
 
 // 0x05003F98
-static const Vtx klepto_seg5_vertex_05003F98[] = {
-    {{{    54,     19,    -37}, 0, {     0,      0}, {0x38, 0x13, 0x91, 0xff}}},
-    {{{    86,     16,      0}, 0, {     0,      0}, {0x78, 0x27, 0xfc, 0xff}}},
-    {{{    76,    -14,      0}, 0, {     0,      0}, {0x67, 0xb7, 0xfd, 0xff}}},
-    {{{    54,     19,     43}, 0, {     0,      0}, {0x38, 0x12, 0x70, 0xff}}},
-    {{{    42,    -26,     26}, 0, {     0,      0}, {0x05, 0x9e, 0x50, 0xff}}},
-    {{{    42,    -26,    -25}, 0, {     0,      0}, {0x0a, 0xa2, 0xad, 0xff}}},
-    {{{    19,     17,    -33}, 0, {     0,      0}, {0xdc, 0x1a, 0x8a, 0xff}}},
-    {{{   -34,    -10,      0}, 0, {     0,      0}, {0x8b, 0xcf, 0x00, 0xff}}},
-    {{{    47,     50,      0}, 0, {     0,      0}, {0x04, 0x7e, 0xfe, 0xff}}},
-    {{{    19,     17,     34}, 0, {     0,      0}, {0xd6, 0x19, 0x74, 0xff}}},
-    {{{    -5,     25,     20}, 0, {     0,      0}, {0xb9, 0x57, 0x3a, 0xff}}},
-    {{{    -5,     25,    -19}, 0, {     0,      0}, {0xb9, 0x57, 0xc6, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(klepto_seg5_vertex_05003F98, 0x00145e90, 48337, 0x00003f98, 192);
 
 // 0x05004058 - 0x05004118
 const Gfx klepto_seg5_dl_05004058[] = {
@@ -313,12 +231,7 @@ static const Lights1 klepto_seg5_lights_05004148 = gdSPDefLights1(
 );
 
 // 0x05004160
-static const Vtx klepto_seg5_vertex_05004160[] = {
-    {{{     5,     -3,      0}, 0, {     0,    992}, {0x37, 0x8e, 0x00, 0xff}}},
-    {{{   -81,    -45,      0}, 0, {     0,      0}, {0x37, 0x8e, 0x00, 0xff}}},
-    {{{   -77,      2,    -47}, 0, {  1700,    224}, {0x2a, 0xaa, 0xae, 0xff}}},
-    {{{   -77,      2,     48}, 0, {  1700,    224}, {0x2a, 0xa9, 0x51, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(klepto_seg5_vertex_05004160, 0x00145e90, 48337, 0x00004160, 64);
 
 // 0x050041A0 - 0x050041E8
 const Gfx klepto_seg5_dl_050041A0[] = {
@@ -357,14 +270,7 @@ static const Lights1 klepto_seg5_lights_05004258 = gdSPDefLights1(
 );
 
 // 0x05004270
-static const Vtx klepto_seg5_vertex_05004270[] = {
-    {{{     9,     27,      3}, 0, {     0,      0}, {0xd5, 0x50, 0x57, 0xff}}},
-    {{{     0,      0,      0}, 0, {     0,      0}, {0x86, 0xe0, 0xfd, 0xff}}},
-    {{{    14,      9,      8}, 0, {     0,      0}, {0x01, 0xb1, 0x62, 0xff}}},
-    {{{     9,     27,     -3}, 0, {     0,      0}, {0xd6, 0x4d, 0xa5, 0xff}}},
-    {{{    69,      0,      0}, 0, {     0,      0}, {0x62, 0x50, 0xfd, 0xff}}},
-    {{{    14,      9,     -7}, 0, {     0,      0}, {0x03, 0xb0, 0x9f, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(klepto_seg5_vertex_05004270, 0x00145e90, 48337, 0x00004270, 96);
 
 // 0x050042D0 - 0x05004330
 const Gfx klepto_seg5_dl_050042D0[] = {
@@ -395,14 +301,7 @@ static const Lights1 klepto_seg5_lights_05004360 = gdSPDefLights1(
 );
 
 // 0x05004378
-static const Vtx klepto_seg5_vertex_05004378[] = {
-    {{{     9,     27,      3}, 0, {     0,      0}, {0xd5, 0x50, 0x57, 0xff}}},
-    {{{     0,      0,      0}, 0, {     0,      0}, {0x86, 0xe0, 0xfd, 0xff}}},
-    {{{    14,      9,      8}, 0, {     0,      0}, {0x01, 0xb1, 0x62, 0xff}}},
-    {{{     9,     27,     -3}, 0, {     0,      0}, {0xd6, 0x4d, 0xa5, 0xff}}},
-    {{{    69,      0,      0}, 0, {     0,      0}, {0x62, 0x50, 0xfd, 0xff}}},
-    {{{    14,      9,     -7}, 0, {     0,      0}, {0x03, 0xb0, 0x9f, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(klepto_seg5_vertex_05004378, 0x00145e90, 48337, 0x00004270, 96);
 
 // 0x050043D8 - 0x05004438
 const Gfx klepto_seg5_dl_050043D8[] = {
@@ -439,48 +338,13 @@ static const Lights1 klepto_seg5_lights_05004480 = gdSPDefLights1(
 );
 
 // 0x05004498
-static const Vtx klepto_seg5_vertex_05004498[] = {
-    {{{    38,      7,     24}, 0, {     0,      0}, {0x10, 0x7d, 0x00, 0xff}}},
-    {{{    24,    -12,     28}, 0, {     0,      0}, {0xb4, 0x24, 0x5e, 0xff}}},
-    {{{    43,    -19,     30}, 0, {     0,      0}, {0x50, 0xae, 0x35, 0xff}}},
-    {{{    48,      7,      0}, 0, {     0,      0}, {0x09, 0x7e, 0xfe, 0xff}}},
-    {{{    34,    -14,     -7}, 0, {     0,      0}, {0xf6, 0x1d, 0x85, 0xff}}},
-    {{{    34,    -14,      9}, 0, {     0,      0}, {0xf0, 0x1c, 0x7a, 0xff}}},
-    {{{    51,    -21,      1}, 0, {     0,      0}, {0x55, 0xa2, 0xfc, 0xff}}},
-    {{{    24,    -12,    -25}, 0, {     0,      0}, {0xb4, 0x24, 0xa2, 0xff}}},
-    {{{    38,      7,    -23}, 0, {     0,      0}, {0x08, 0x7e, 0x0a, 0xff}}},
-    {{{    44,    -19,    -28}, 0, {     0,      0}, {0x49, 0xaa, 0xc7, 0xff}}},
-    {{{    33,    -14,    -11}, 0, {     0,      0}, {0x34, 0x11, 0x72, 0xff}}},
-    {{{    33,    -13,     13}, 0, {     0,      0}, {0x35, 0x11, 0x8f, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(klepto_seg5_vertex_05004498, 0x00145e90, 48337, 0x00004498, 192);
 
 // 0x05004558
-static const Vtx klepto_seg5_vertex_05004558[] = {
-    {{{     7,     -1,      6}, 0, {     0,      0}, {0xac, 0x4a, 0xc6, 0xff}}},
-    {{{    33,    -13,     13}, 0, {     0,      0}, {0x35, 0x11, 0x8f, 0xff}}},
-    {{{    20,    -24,     16}, 0, {     0,      0}, {0xdd, 0x87, 0xf3, 0xff}}},
-    {{{    34,    -14,      9}, 0, {     0,      0}, {0xf0, 0x1c, 0x7a, 0xff}}},
-    {{{    24,    -25,      0}, 0, {     0,      0}, {0xd9, 0x88, 0xfa, 0xff}}},
-    {{{    51,    -21,      1}, 0, {     0,      0}, {0x55, 0xa2, 0xfc, 0xff}}},
-    {{{    34,    -14,     -7}, 0, {     0,      0}, {0xf6, 0x1d, 0x85, 0xff}}},
-    {{{     8,     -2,      0}, 0, {     0,      0}, {0xa6, 0x57, 0xf4, 0xff}}},
-    {{{    33,    -14,    -11}, 0, {     0,      0}, {0x34, 0x11, 0x72, 0xff}}},
-    {{{    20,    -24,    -14}, 0, {     0,      0}, {0xda, 0x88, 0x09, 0xff}}},
-    {{{    44,    -19,    -28}, 0, {     0,      0}, {0x49, 0xaa, 0xc7, 0xff}}},
-    {{{    24,    -12,    -25}, 0, {     0,      0}, {0xb4, 0x24, 0xa2, 0xff}}},
-    {{{     7,     -1,     -4}, 0, {     0,      0}, {0xaf, 0x4b, 0x3d, 0xff}}},
-    {{{    24,    -12,     28}, 0, {     0,      0}, {0xb4, 0x24, 0x5e, 0xff}}},
-    {{{    43,    -19,     30}, 0, {     0,      0}, {0x50, 0xae, 0x35, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(klepto_seg5_vertex_05004558, 0x00145e90, 48337, 0x00004558, 240);
 
 // 0x05004648
-static const Vtx klepto_seg5_vertex_05004648[] = {
-    {{{   -22,      7,      0}, 0, {     0,      0}, {0x9a, 0x4a, 0xf4, 0xff}}},
-    {{{     2,    -10,      0}, 0, {     0,      0}, {0xe8, 0x84, 0xfe, 0xff}}},
-    {{{    15,     -3,     17}, 0, {     0,      0}, {0x4b, 0x0d, 0x65, 0xff}}},
-    {{{    15,     -3,    -15}, 0, {     0,      0}, {0x48, 0x0e, 0x99, 0xff}}},
-    {{{     6,      5,      0}, 0, {     0,      0}, {0x25, 0x79, 0xfe, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(klepto_seg5_vertex_05004648, 0x00145e90, 48337, 0x00004648, 80);
 
 // 0x05004698 - 0x050047C8
 const Gfx klepto_seg5_dl_05004698[] = {
@@ -533,48 +397,13 @@ static const Lights1 klepto_seg5_lights_05004810 = gdSPDefLights1(
 );
 
 // 0x05004828
-static const Vtx klepto_seg5_vertex_05004828[] = {
-    {{{    38,      7,     24}, 0, {     0,      0}, {0x10, 0x7d, 0x00, 0xff}}},
-    {{{    24,    -12,     28}, 0, {     0,      0}, {0xb4, 0x24, 0x5e, 0xff}}},
-    {{{    43,    -19,     30}, 0, {     0,      0}, {0x50, 0xae, 0x35, 0xff}}},
-    {{{    48,      7,      0}, 0, {     0,      0}, {0x09, 0x7e, 0xfe, 0xff}}},
-    {{{    34,    -14,     -7}, 0, {     0,      0}, {0xf6, 0x1d, 0x85, 0xff}}},
-    {{{    34,    -14,      9}, 0, {     0,      0}, {0xf0, 0x1c, 0x7a, 0xff}}},
-    {{{    51,    -21,      1}, 0, {     0,      0}, {0x55, 0xa2, 0xfc, 0xff}}},
-    {{{    24,    -12,    -25}, 0, {     0,      0}, {0xb4, 0x24, 0xa2, 0xff}}},
-    {{{    38,      7,    -23}, 0, {     0,      0}, {0x08, 0x7e, 0x0a, 0xff}}},
-    {{{    44,    -19,    -28}, 0, {     0,      0}, {0x49, 0xaa, 0xc7, 0xff}}},
-    {{{    33,    -14,    -11}, 0, {     0,      0}, {0x34, 0x11, 0x72, 0xff}}},
-    {{{    33,    -13,     13}, 0, {     0,      0}, {0x35, 0x11, 0x8f, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(klepto_seg5_vertex_05004828, 0x00145e90, 48337, 0x00004498, 192);
 
 // 0x050048E8
-static const Vtx klepto_seg5_vertex_050048E8[] = {
-    {{{     7,     -1,      6}, 0, {     0,      0}, {0xac, 0x4a, 0xc6, 0xff}}},
-    {{{    33,    -13,     13}, 0, {     0,      0}, {0x35, 0x11, 0x8f, 0xff}}},
-    {{{    20,    -24,     16}, 0, {     0,      0}, {0xdd, 0x87, 0xf3, 0xff}}},
-    {{{    34,    -14,      9}, 0, {     0,      0}, {0xf0, 0x1c, 0x7a, 0xff}}},
-    {{{    24,    -25,      0}, 0, {     0,      0}, {0xd9, 0x88, 0xfa, 0xff}}},
-    {{{    51,    -21,      1}, 0, {     0,      0}, {0x55, 0xa2, 0xfc, 0xff}}},
-    {{{    34,    -14,     -7}, 0, {     0,      0}, {0xf6, 0x1d, 0x85, 0xff}}},
-    {{{     8,     -2,      0}, 0, {     0,      0}, {0xa6, 0x57, 0xf4, 0xff}}},
-    {{{    33,    -14,    -11}, 0, {     0,      0}, {0x34, 0x11, 0x72, 0xff}}},
-    {{{    20,    -24,    -14}, 0, {     0,      0}, {0xda, 0x88, 0x09, 0xff}}},
-    {{{    44,    -19,    -28}, 0, {     0,      0}, {0x49, 0xaa, 0xc7, 0xff}}},
-    {{{    24,    -12,    -25}, 0, {     0,      0}, {0xb4, 0x24, 0xa2, 0xff}}},
-    {{{     7,     -1,     -4}, 0, {     0,      0}, {0xaf, 0x4b, 0x3d, 0xff}}},
-    {{{    24,    -12,     28}, 0, {     0,      0}, {0xb4, 0x24, 0x5e, 0xff}}},
-    {{{    43,    -19,     30}, 0, {     0,      0}, {0x50, 0xae, 0x35, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(klepto_seg5_vertex_050048E8, 0x00145e90, 48337, 0x00004558, 240);
 
 // 0x050049D8
-static const Vtx klepto_seg5_vertex_050049D8[] = {
-    {{{   -22,      7,      0}, 0, {     0,      0}, {0x9a, 0x4a, 0xf4, 0xff}}},
-    {{{     2,    -10,      0}, 0, {     0,      0}, {0xe8, 0x84, 0xfe, 0xff}}},
-    {{{    15,     -3,     17}, 0, {     0,      0}, {0x4b, 0x0d, 0x65, 0xff}}},
-    {{{    15,     -3,    -15}, 0, {     0,      0}, {0x48, 0x0e, 0x99, 0xff}}},
-    {{{     6,      5,      0}, 0, {     0,      0}, {0x25, 0x79, 0xfe, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(klepto_seg5_vertex_050049D8, 0x00145e90, 48337, 0x00004648, 80);
 
 // 0x05004A28 - 0x05004B58
 const Gfx klepto_seg5_dl_05004A28[] = {
@@ -621,12 +450,7 @@ static const Lights1 klepto_seg5_lights_05004B88 = gdSPDefLights1(
 );
 
 // 0x05004BA0
-static const Vtx klepto_seg5_vertex_05004BA0[] = {
-    {{{    -2,    -13,      0}, 0, {  1992,    528}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{    -2,     14,      0}, 0, {  1992,    272}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{    34,     24,      0}, 0, {  1640,    176}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{    34,    -33,      0}, 0, {  1640,    722}, {0x00, 0x00, 0x81, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(klepto_seg5_vertex_05004BA0, 0x00145e90, 48337, 0x00004ba0, 64);
 
 // 0x05004BE0 - 0x05004C28
 const Gfx klepto_seg5_dl_05004BE0[] = {
@@ -665,12 +489,7 @@ static const Lights1 klepto_seg5_lights_05004C98 = gdSPDefLights1(
 );
 
 // 0x05004CB0
-static const Vtx klepto_seg5_vertex_05004CB0[] = {
-    {{{    34,    -33,      0}, 0, {  1640,    722}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{    34,     24,      0}, 0, {  1640,    176}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{    -2,    -13,      0}, 0, {  1992,    528}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{    -2,     14,      0}, 0, {  1992,    272}, {0x00, 0x00, 0x7f, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(klepto_seg5_vertex_05004CB0, 0x00145e90, 48337, 0x00004cb0, 64);
 
 // 0x05004CF0 - 0x05004D38
 const Gfx klepto_seg5_dl_05004CF0[] = {
@@ -709,12 +528,7 @@ static const Lights1 klepto_seg5_lights_05004DA8 = gdSPDefLights1(
 );
 
 // 0x05004DC0
-static const Vtx klepto_seg5_vertex_05004DC0[] = {
-    {{{     0,    -33,      0}, 0, {  1640,    716}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{     0,     24,      0}, 0, {  1640,    172}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{    79,     34,      0}, 0, {   904,     76}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{    79,    -58,      0}, 0, {   904,    940}, {0x00, 0x00, 0x81, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(klepto_seg5_vertex_05004DC0, 0x00145e90, 48337, 0x00004dc0, 64);
 
 // 0x05004E00 - 0x05004E48
 const Gfx klepto_seg5_dl_05004E00[] = {
@@ -753,12 +567,7 @@ static const Lights1 klepto_seg5_lights_05004EB8 = gdSPDefLights1(
 );
 
 // 0x05004ED0
-static const Vtx klepto_seg5_vertex_05004ED0[] = {
-    {{{    79,    -58,      0}, 0, {   904,    940}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{    79,     34,      0}, 0, {   904,     76}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{     0,    -33,      0}, 0, {  1640,    716}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{     0,     24,      0}, 0, {  1640,    172}, {0x00, 0x00, 0x7f, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(klepto_seg5_vertex_05004ED0, 0x00145e90, 48337, 0x00004ed0, 64);
 
 // 0x05004F10 - 0x05004F58
 const Gfx klepto_seg5_dl_05004F10[] = {
@@ -797,12 +606,7 @@ static const Lights1 klepto_seg5_lights_05004FC8 = gdSPDefLights1(
 );
 
 // 0x05004FE0
-static const Vtx klepto_seg5_vertex_05004FE0[] = {
-    {{{     0,    -58,      0}, 0, {   904,    942}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{     0,     34,      0}, 0, {   904,     78}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{   108,     52,      0}, 0, {   -96,    -86}, {0x00, 0x00, 0x81, 0xff}}},
-    {{{    65,    -68,      0}, 0, {   296,   1036}, {0x00, 0x00, 0x81, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(klepto_seg5_vertex_05004FE0, 0x00145e90, 48337, 0x00004fe0, 64);
 
 // 0x05005020 - 0x05005068
 const Gfx klepto_seg5_dl_05005020[] = {
@@ -841,12 +645,7 @@ static const Lights1 klepto_seg5_lights_050050D8 = gdSPDefLights1(
 );
 
 // 0x050050F0
-static const Vtx klepto_seg5_vertex_050050F0[] = {
-    {{{    65,    -68,      0}, 0, {   296,   1036}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{   108,     52,      0}, 0, {   -96,    -86}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{     0,    -58,      0}, 0, {   904,    942}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{     0,     34,      0}, 0, {   904,     78}, {0x00, 0x00, 0x7f, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(klepto_seg5_vertex_050050F0, 0x00145e90, 48337, 0x000050f0, 64);
 
 // 0x05005130 - 0x05005178
 const Gfx klepto_seg5_dl_05005130[] = {

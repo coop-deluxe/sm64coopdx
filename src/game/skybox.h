@@ -6,6 +6,7 @@
 
 extern s8 gReadOnlyBackground;
 extern s8 gOverrideBackground;
+extern Color gSkyboxColor;
 
 extern Texture* gCustomSkyboxPtrList[];
 

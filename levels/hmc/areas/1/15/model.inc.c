@@ -1,10 +1,6 @@
+#include "pc/rom_assets.h"
 // 0x07014B88 - 0x07014BC8
-static const Vtx hmc_seg7_vertex_07014B88[] = {
-    {{{  3021,    922,   -296}, 0, {   990,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{  2407,    922,   -296}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{  2407,    307,   -296}, 0, {     0,   2012}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{  3021,    307,   -296}, 0, {   990,   2012}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(hmc_seg7_vertex_07014B88, 0x003d0dc0, 89137, 0x00014b88, 64);
 
 // 0x07014BC8 - 0x07014C00
 static const Gfx hmc_seg7_dl_07014BC8[] = {

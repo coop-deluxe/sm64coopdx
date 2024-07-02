@@ -491,6 +491,7 @@ void bhv_chain_chomp_update(void) {
 void bhv_wooden_post_update(void) {
     if (!sync_object_is_initialized(o->oSyncID)) {
         sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
+        sync_object_init_field(o, &o->oBehParams);
         sync_object_init_field(o, &o->oWoodenPostMarioPounding);
         sync_object_init_field(o, &o->oWoodenPostOffsetY);
         sync_object_init_field(o, &o->oWoodenPostSpeedY);
@@ -543,6 +544,7 @@ void bhv_wooden_post_update(void) {
             if (absi(o->oWoodenPostTotalMarioAngle) > 0x30000 && o->oTimer < 200) {
                 obj_spawn_loot_yellow_coins(o, 5, 20.0f);
                 set_object_respawn_info_bits(o, 1);
+                o->oBehParams = WOODEN_POST_BP_NO_COINS_MASK;
                 network_send_object(o);
             }
         }

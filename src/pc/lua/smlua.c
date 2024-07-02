@@ -9,6 +9,7 @@
 #include "pc/lua/utils/smlua_level_utils.h"
 #include "pc/lua/utils/smlua_anim_utils.h"
 #include "pc/djui/djui.h"
+#include "pc/fs/fmem.h"
 
 lua_State* gLuaState = NULL;
 u8 gLuaInitializingScript = 0;
@@ -22,8 +23,20 @@ void smlua_mod_error(void) {
     if (mod == NULL) { mod = gLuaLastHookMod; }
     if (mod == NULL) { return; }
     char txt[255] = { 0 };
-    snprintf(txt, 254, "'%s' has script errors!", mod->name);
-    djui_lua_error(txt);
+    snprintf(txt, 254, "'%s\\#ff0000\\' has script errors!", mod->name);
+    static const struct DjuiColor color = { 255, 0, 0, 255 };
+    djui_lua_error(txt, color);
+}
+
+void smlua_mod_warning(void) {
+    struct Mod* mod = gLuaActiveMod;
+    if (mod == NULL) { mod = gLuaLastHookMod; }
+    if (mod == NULL) { return; }
+    if (mod->ignoreScriptWarnings) { return; }
+    char txt[255] = { 0 };
+    snprintf(txt, 254, "'%s\\#ffe600\\' has script warnings!", mod->name);
+    static const struct DjuiColor color = { 255, 230, 0, 255 };
+    djui_lua_error(txt, color);
 }
 
 int smlua_error_handler(lua_State* L) {
@@ -69,28 +82,30 @@ void smlua_exec_str(const char* str) {
 #define LUA_BOM_19 0x4077280000000000llu
 
 static bool smlua_check_binary_header(struct ModFile *file) {
-    FILE *f = fopen(file->cachedPath, "rb");
+    FILE *f = f_open_r(file->cachedPath);
     if (f) {
 
         // Read signature
-        char signature[sizeof(LUA_SIGNATURE)] = {0};
-        if (fread(signature, 1, sizeof(LUA_SIGNATURE) - 1, f) != sizeof(LUA_SIGNATURE) - 1) {
+        char signature[sizeof(LUA_SIGNATURE)] = { 0 };
+        if (f_read(signature, 1, sizeof(LUA_SIGNATURE) - 1, f) != sizeof(LUA_SIGNATURE) - 1) {
             LOG_LUA("Failed to load lua script '%s': File too short.", file->cachedPath);
-            fclose(f);
+            f_close(f);
+            f_delete(f);
             return false;
         }
 
         // Check signature
         if (strcmp(signature, LUA_SIGNATURE) != 0) {
-            fclose(f);
+            f_close(f);
             return true; // Not a binary lua
         }
 
         // Read version number
         u8 version;
-        if (fread(&version, 1, 1, f) != 1) {
+        if (f_read(&version, 1, 1, f) != 1) {
             LOG_LUA("Failed to load lua script '%s': File too short.", file->cachedPath);
-            fclose(f);
+            f_close(f);
+            f_delete(f);
             return false;
         }
 
@@ -98,15 +113,17 @@ static bool smlua_check_binary_header(struct ModFile *file) {
         u8 expectedVersion = strtoul(LUA_VERSION_MAJOR LUA_VERSION_MINOR, NULL, 16);
         if (version != expectedVersion) {
             LOG_LUA("Failed to load lua script '%s': Lua versions don't match (%X, expected %X).", file->cachedPath, version, expectedVersion);
-            fclose(f);
+            f_close(f);
+            f_delete(f);
             return false;
         }
 
         // Read the rest of the header
         u8 header[28];
-        if (fread(header, 1, 28, f) != 28) {
+        if (f_read(header, 1, 28, f) != 28) {
             LOG_LUA("Failed to load lua script '%s': File too short.", file->cachedPath);
-            fclose(f);
+            f_close(f);
+            f_delete(f);
             return false;
         }
 
@@ -117,12 +134,14 @@ static bool smlua_check_binary_header(struct ModFile *file) {
         u64 bom19 = *((u64 *) (header + 20));
         if (bom11 != LUA_BOM_11) {
             LOG_ERROR("Failed to load lua script '%s': BOM at offset 0x11 don't match (%016llX, expected %016llX).", file->cachedPath, bom11, LUA_BOM_11);
-            fclose(f);
+            f_close(f);
+            f_delete(f);
             return false;
         }
         if (bom19 != LUA_BOM_19) {
             LOG_ERROR("Failed to load lua script '%s': BOM at offset 0x19 don't match (%016llX, expected %016llX).", file->cachedPath, bom19, LUA_BOM_19);
-            fclose(f);
+            f_close(f);
+            f_delete(f);
             return false;
         }
 
@@ -134,33 +153,37 @@ static bool smlua_check_binary_header(struct ModFile *file) {
         u8 sizeOfLuaNumber = header[11];
         if (sizeOfCInteger != sizeof(int)) {
             LOG_ERROR("Failed to load lua script '%s': sizes of C Integer don't match (%d, expected %llu).", file->cachedPath, sizeOfCInteger, (long long unsigned)sizeof(int));
-            fclose(f);
+            f_close(f);
+            f_delete(f);
             return false;
         }
         if (sizeOfCPointer != sizeof(void *)) { // 4 for 32-bit architectures, 8 for 64-bit
             LOG_ERROR("Failed to load lua script '%s': sizes of C Pointer don't match (%d, expected %llu).", file->cachedPath, sizeOfCPointer, (long long unsigned)sizeof(void *));
-            fclose(f);
+            f_close(f);
+            f_delete(f);
             return false;
         }
         if (sizeOfCFloat != sizeof(float)) {
             LOG_ERROR("Failed to load lua script '%s': sizes of C Float don't match (%d, expected %llu).", file->cachedPath, sizeOfCFloat, (long long unsigned)sizeof(float));
-            fclose(f);
+            f_close(f);
+            f_delete(f);
             return false;
         }
         if (sizeOfLuaInteger != sizeof(LUA_INTEGER)) {
             LOG_ERROR("Failed to load lua script '%s': sizes of Lua Integer don't match (%d, expected %llu).", file->cachedPath, sizeOfLuaInteger, (long long unsigned)sizeof(LUA_INTEGER));
-            fclose(f);
+            f_close(f);
+            f_delete(f);
             return false;
         }
         if (sizeOfLuaNumber != sizeof(LUA_NUMBER)) {
             LOG_ERROR("Failed to load lua script '%s': sizes of Lua Number don't match (%d, expected %llu).", file->cachedPath, sizeOfLuaNumber, (long long unsigned)sizeof(LUA_NUMBER));
-            fclose(f);
+            f_close(f);
+            f_delete(f);
             return false;
         }
 
         // All's good
-        LOG_INFO("Loading lua script '%s'", file->cachedPath);
-        fclose(f);
+        f_close(f);
         return true;
     }
     LOG_LUA("Failed to load lua script '%s': File not found.", file->cachedPath);
@@ -178,12 +201,39 @@ static void smlua_load_script(struct Mod* mod, struct ModFile* file, u16 remoteI
     gLuaInitializingScript = 1;
     LOG_INFO("Loading lua script '%s'", file->cachedPath);
 
-    if (luaL_loadfile(L, file->cachedPath) != LUA_OK) { // only run on success
-        LOG_LUA("Failed to load lua script '%s'.", file->cachedPath);
-        LOG_LUA("%s", smlua_to_string(L, lua_gettop(L)));
+    FILE *f = f_open_r(file->cachedPath);
+    if (!f) {
+        LOG_LUA("Failed to load lua script '%s': File not found.", file->cachedPath);
         gLuaInitializingScript = 0;
         return;
     }
+
+    f_seek(f, 0, SEEK_END);
+    size_t length = f_tell(f);
+    void *buffer = calloc(length + 1, 1);
+    if (!buffer) {
+        LOG_LUA("Failed to load lua script '%s': Cannot allocate buffer.", file->cachedPath);
+        gLuaInitializingScript = 0;
+        return;
+    }
+
+    f_rewind(f);
+    if (f_read(buffer, 1, length, f) < length) {
+        LOG_LUA("Failed to load lua script '%s': Unexpected early end of file.", file->cachedPath);
+        gLuaInitializingScript = 0;
+        return;
+    }
+    f_close(f);
+    f_delete(f);
+
+    if (luaL_loadbuffer(L, buffer, length, file->cachedPath) != LUA_OK) { // only run on success
+        LOG_LUA("Failed to load lua script '%s'.", file->cachedPath);
+        LOG_LUA("%s", smlua_to_string(L, lua_gettop(L)));
+        gLuaInitializingScript = 0;
+        free(buffer);
+        return;
+    }
+    free(buffer);
 
     // check if this is the first time this mod has been loaded
     lua_getfield(L, LUA_REGISTRYINDEX, mod->relativePath);
@@ -283,11 +333,15 @@ void smlua_init(void) {
         gLuaActiveMod = NULL;
         gLuaLoadingMod = NULL;
     }
+
+    smlua_call_event_hooks(HOOK_ON_MODS_LOADED);
 }
 
 void smlua_update(void) {
     lua_State* L = gLuaState;
     if (L == NULL) { return; }
+
+    audio_sample_destroy_pending_copies();
 
     smlua_call_event_hooks(HOOK_UPDATE);
     // Collect our garbage after calling our hooks.

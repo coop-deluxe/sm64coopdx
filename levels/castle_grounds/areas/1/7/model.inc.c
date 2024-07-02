@@ -1,14 +1,6 @@
+#include "pc/rom_assets.h"
 // 0x0700BAB8 - 0x0700BB38
-static const Vtx castle_grounds_seg7_vertex_0700BAB8[] = {
-    {{{ -3532,  -1330,  -6069}, 0, {   990,    990}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{ -4044,  -1330,  -5557}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{ -3532,  -1330,  -5557}, 0, {     0,    990}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{ -4044,  -1330,  -6069}, 0, {   990,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{ -3225,   -562,  -2178}, 0, {   990,    990}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{ -3532,   -562,  -2178}, 0, {   990,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{ -3225,   -562,  -1871}, 0, {     0,    990}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{ -3532,   -562,  -1871}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(castle_grounds_seg7_vertex_0700BAB8, 0x0044abc0, 39442, 0x0000bab8, 128);
 
 // 0x0700BB38 - 0x0700BB80
 static const Gfx castle_grounds_seg7_dl_0700BB38[] = {

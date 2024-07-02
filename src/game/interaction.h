@@ -5,6 +5,8 @@
 
 #include "types.h"
 
+#define INTERACT_UNKNOWN_08 (1 <<  8)
+
 enum InteractionType {
     INTERACT_HOOT           = /* 0x00000001 */ (1 <<  0),
     INTERACT_GRABBABLE      = /* 0x00000002 */ (1 <<  1),
@@ -14,7 +16,7 @@ enum InteractionType {
     INTERACT_CAP            = /* 0x00000020 */ (1 <<  5),
     INTERACT_POLE           = /* 0x00000040 */ (1 <<  6),
     INTERACT_KOOPA          = /* 0x00000080 */ (1 <<  7),
-    INTERACT_UNKNOWN_08     = /* 0x00000100 */ (1 <<  8),
+    INTERACT_SPINY_WALKING  = /* 0x00000100 */ (1 <<  8),
     INTERACT_BREAKABLE      = /* 0x00000200 */ (1 <<  9),
     INTERACT_STRONG_WIND    = /* 0x00000400 */ (1 << 10),
     INTERACT_WARP_DOOR      = /* 0x00000800 */ (1 << 11),
@@ -119,6 +121,37 @@ enum InteractionFlag {
 extern s16 gInteractionInvulnerable;
 extern u8 gPssSlideStarted;
 
+u32 interact_coin(struct MarioState *m, UNUSED u32 interactType, struct Object *o);
+u32 interact_water_ring(struct MarioState *m, UNUSED u32 interactType, struct Object *o);
+u32 interact_star_or_key(struct MarioState *m, UNUSED u32 interactType, struct Object *o);
+u32 interact_bbh_entrance(struct MarioState *m, UNUSED u32 interactType, struct Object *o);
+u32 interact_warp(struct MarioState *m, UNUSED u32 interactType, struct Object *o);
+u32 interact_warp_door(struct MarioState *m, UNUSED u32 interactType, struct Object *o);
+u32 interact_door(struct MarioState *m, UNUSED u32 interactType, struct Object *o);
+u32 interact_cannon_base(struct MarioState *m, UNUSED u32 interactType, struct Object *o);
+u32 interact_player(struct MarioState* m, UNUSED u32 interactType, struct Object* o);
+u32 interact_igloo_barrier(struct MarioState *m, UNUSED u32 interactType, struct Object *o);
+u32 interact_tornado(struct MarioState *m, UNUSED u32 interactType, struct Object *o);
+u32 interact_whirlpool(struct MarioState *m, UNUSED u32 interactType, struct Object *o);
+u32 interact_strong_wind(struct MarioState *m, UNUSED u32 interactType, struct Object *o);
+u32 interact_flame(struct MarioState *m, UNUSED u32 interactType, struct Object *o);
+u32 interact_snufit_bullet(struct MarioState *m, UNUSED u32 interactType, struct Object *o);
+u32 interact_clam_or_bubba(struct MarioState *m, UNUSED u32 interactType, struct Object *o);
+u32 interact_bully(struct MarioState *m, UNUSED u32 interactType, struct Object *o);
+u32 interact_shock(struct MarioState *m, UNUSED u32 interactType, struct Object *o);
+u32 interact_mr_blizzard(struct MarioState *m, UNUSED u32 interactType, struct Object *o);
+u32 interact_hit_from_below(struct MarioState *m, UNUSED u32 interactType, struct Object *o);
+u32 interact_bounce_top(struct MarioState *m, UNUSED u32 interactType, struct Object *o);
+u32 interact_spiny_walking(struct MarioState *m, UNUSED u32 interactType, struct Object *o);
+u32 interact_damage(struct MarioState *m, UNUSED u32 interactType, struct Object *o);
+u32 interact_breakable(struct MarioState *m, UNUSED u32 interactType, struct Object *o);
+u32 interact_koopa_shell(struct MarioState *m, UNUSED u32 interactType, struct Object *o);
+u32 interact_pole(struct MarioState *m, UNUSED u32 interactType, struct Object *o);
+u32 interact_hoot(struct MarioState *m, UNUSED u32 interactType, struct Object *o);
+u32 interact_cap(struct MarioState *m, UNUSED u32 interactType, struct Object *o);
+u32 interact_grabbable(struct MarioState *m, u32 interactType, struct Object *o);
+u32 interact_text(struct MarioState *m, UNUSED u32 interactType, struct Object *o);
+
 s16 mario_obj_angle_to_object(struct MarioState *m, struct Object *o);
 void mario_stop_riding_object(struct MarioState *m);
 void mario_grab_used_object(struct MarioState *m);
@@ -135,8 +168,9 @@ u32 get_door_save_file_flag(struct Object *door);
 void mario_process_interactions(struct MarioState *m);
 void mario_handle_special_floors(struct MarioState *m);
 u8 passes_pvp_interaction_checks(struct MarioState* attacker, struct MarioState* victim);
+u32 should_push_or_pull_door(struct MarioState *m, struct Object *o);
 u32 take_damage_and_knock_back(struct MarioState *m, struct Object *o);
-u32 interact_damage(struct MarioState *m, UNUSED u32 interactType, struct Object *o);
 u32 determine_interaction(struct MarioState *m, struct Object *o);
+u32 process_interaction(struct MarioState *m, u32 interactType, struct Object *o, u32 (*interact_function)(struct MarioState *, u32 interactType, struct Object *));
 
 #endif // INTERACTION_H

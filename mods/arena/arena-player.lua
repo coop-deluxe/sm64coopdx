@@ -1,5 +1,3 @@
-if SM64COOPDX_VERSION == nil then return end
-
 ------------
 -- tables --
 ------------
@@ -404,9 +402,6 @@ function mario_local_update(m)
         end
     end
 
-    -- check for ladder
-    mario_check_for_ladder(m)
-
     e.prevHurtCounter = m.hurtCounter
 end
 
@@ -414,6 +409,7 @@ function mario_update(m)
     local e  = gMarioStateExtras[m.playerIndex]
     local s  = gPlayerSyncTable[m.playerIndex]
     local np = gNetworkPlayers[m.playerIndex]
+    if not np.connected then return end
 
     -- increase knockback animations
     local animInfo = nil
@@ -449,11 +445,25 @@ function mario_update(m)
 
     -- update palette
     if s.team == 1 then
-        np.overridePaletteIndex = PALETTE_RUBY
+        network_player_set_override_palette_color(np, PANTS, { r = 225, g = 5, b = 49 })
+        network_player_set_override_palette_color(np, SHIRT, { r = 40, g = 10, b = 10 })
+        network_player_set_override_palette_color(np, GLOVES, network_player_get_palette_color(np, GLOVES))
+        network_player_set_override_palette_color(np, SHOES, network_player_get_palette_color(np, SHOES))
+        network_player_set_override_palette_color(np, HAIR, network_player_get_palette_color(np, HAIR))
+        network_player_set_override_palette_color(np, SKIN, network_player_get_palette_color(np, SKIN))
+        network_player_set_override_palette_color(np, CAP, { r = 40, g = 10, b = 10 })
+        network_player_set_override_palette_color(np, EMBLEM, network_player_get_palette_color(np, EMBLEM))
     elseif s.team == 2 then
-        np.overridePaletteIndex = PALETTE_COBALT
+        network_player_set_override_palette_color(np, PANTS, { r = 63, g = 63, b = 255 })
+        network_player_set_override_palette_color(np, SHIRT, { r = 10, g = 10, b = 40 })
+        network_player_set_override_palette_color(np, GLOVES, network_player_get_palette_color(np, GLOVES))
+        network_player_set_override_palette_color(np, SHOES, network_player_get_palette_color(np, SHOES))
+        network_player_set_override_palette_color(np, HAIR, network_player_get_palette_color(np, HAIR))
+        network_player_set_override_palette_color(np, SKIN, network_player_get_palette_color(np, SKIN))
+        network_player_set_override_palette_color(np, CAP, { r = 10, g = 10, b = 40 })
+        network_player_set_override_palette_color(np, EMBLEM, network_player_get_palette_color(np, EMBLEM))
     else
-        np.overridePaletteIndex = np.paletteIndex
+        network_player_reset_override_palette(np)
     end
 
     -- set metal

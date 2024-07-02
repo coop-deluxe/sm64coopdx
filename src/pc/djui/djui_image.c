@@ -1,6 +1,6 @@
 #include "djui.h"
 #include "game/segment2.h"
-#include "src/pc/network/network.h"
+#include "pc/network/network.h"
 
   ////////////////
  // properties //

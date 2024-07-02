@@ -4,6 +4,7 @@
 #include "debuglog.h"
 #include "game/print.h"
 #include "game/hud.h"
+#include "gfx_dimensions.h"
 
 static u32 sCtxDepth[CTX_MAX] = { 0 };
 
@@ -90,7 +91,7 @@ void ctx_profiler_update_counters(void) {
             if ((c < '0' || c > '9') && (c < 'A' || c > 'Z')) c = ' ';
             text[j] = c;
         }
-        print_text(gfx_dimensions_rect_from_left_edge(4), y, text);
+        print_text(GFX_DIMENSIONS_RECT_FROM_LEFT_EDGE(4), y, text);
         y -= 18;
     }
 }

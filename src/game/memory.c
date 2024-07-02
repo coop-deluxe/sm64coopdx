@@ -2,6 +2,7 @@
 #include <string.h>
 
 #include "memory.h"
+#include "print.h"
 #include "pc/debuglog.h"
 
 #define ALIGN16(val) (((val) + 0xF) & ~0xF)
@@ -181,6 +182,63 @@ void growing_pool_free_pool(struct GrowingPool *pool) {
 }
 
   ///////////////////
+ // growing array //
+///////////////////
+
+struct GrowingArray *growing_array_init(struct GrowingArray *array, u32 capacity) {
+    growing_array_free(&array);
+    array = calloc(1, sizeof(struct GrowingArray));
+    array->buffer = calloc(capacity, sizeof(void *));
+    array->capacity = capacity;
+    array->count = 0;
+    return array;
+}
+
+void *growing_array_alloc(struct GrowingArray *array, u32 size) {
+    if (array && array->buffer) {
+
+        // Increase capacity if needed
+        while (array->count >= array->capacity) {
+            u32 newCapacity = array->capacity * 2;
+            void **newBuffer = calloc(newCapacity, sizeof(void *));
+            memcpy(newBuffer, array->buffer, array->capacity * sizeof(void *));
+            free(array->buffer);
+            array->buffer = newBuffer;
+            array->capacity = newCapacity;
+        }
+
+        // Alloc element if needed
+        void **elem = &array->buffer[array->count++];
+        if (!*elem) {
+            *elem = malloc(size);
+        }
+        memset(*elem, 0, size);
+        return *elem;
+    }
+    return NULL;
+}
+
+void growing_array_free(struct GrowingArray **array) {
+    if (*array) {
+        for (u32 i = 0; i != (*array)->capacity; ++i) {
+            if ((*array)->buffer[i]) {
+                free((*array)->buffer[i]);
+            }
+        }
+        free((*array)->buffer);
+        free(*array);
+        *array = NULL;
+    }
+}
+
+void growing_array_debug_print(struct GrowingArray *array, const char *name, s32 x, s32 y) {
+    char text[256];
+    u32 allocated = 0; for (u32 i = 0; i != array->capacity; ++i) { allocated += (array->buffer[i] != NULL); }
+    snprintf(text, 256, "%-12s %5u/%5u/%5u", name, array->count, allocated, array->capacity);
+    print_text(x, y, text);
+}
+
+  ///////////////////
  // display lists //
 ///////////////////
 
@@ -240,19 +298,37 @@ void alloc_anim_dma_table(struct MarioAnimation* marioAnim, void* srcAddr, struc
     marioAnim->targetAnim = targetAnim;
 }
 
-s32 load_patchable_table(struct MarioAnimation *a, u32 index) {
-    struct MarioAnimDmaRelatedThing *sp20 = a->animDmaTable;
+s32 load_patchable_table(struct MarioAnimation *a, u32 index, bool isAnim) {
+    if (isAnim) {
+        static struct MarioAnimDmaRelatedThing *marioAnims = (struct MarioAnimDmaRelatedThing *) gMarioAnims;
+        if (index < marioAnims->count) {
+            u8* addr = gMarioAnims + marioAnims->anim[index].offset;
 
-    if (index < sp20->count) {
-        u8* addr = sp20->srcAddr + sp20->anim[index].offset;
-        u32 size = sp20->anim[index].size;
+            if (a->currentAnimAddr != addr) {
+                a->targetAnim = (struct Animation *) addr;
+                a->currentAnimAddr = addr;
 
-        if (a->targetAnim && a->currentAnimAddr != addr) {
-            memcpy(a->targetAnim, addr, size);
-            a->currentAnimAddr = addr;
-            return TRUE;
+                if ((uintptr_t) a->targetAnim->values < (uintptr_t) a->targetAnim) {
+                    a->targetAnim->values = (void *) VIRTUAL_TO_PHYSICAL((u8 *) a->targetAnim + (uintptr_t) a->targetAnim->values);
+                }
+                if ((uintptr_t) a->targetAnim->index < (uintptr_t) a->targetAnim) {
+                    a->targetAnim->index = (void *) VIRTUAL_TO_PHYSICAL((u8 *) a->targetAnim + (uintptr_t) a->targetAnim->index);
+                }
+            }
         }
+    } else {
+        struct MarioAnimDmaRelatedThing *sp20 = a->animDmaTable;
+        if (index < sp20->count) {
+            u8* addr = sp20->srcAddr + sp20->anim[index].offset;
+            u32 size = sp20->anim[index].size;
 
+            if (a->targetAnim && a->currentAnimAddr != addr) {
+                memcpy(a->targetAnim, addr, size);
+                a->currentAnimAddr = addr;
+                return TRUE;
+            }
+        }
     }
+
     return FALSE;
 }

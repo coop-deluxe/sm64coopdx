@@ -7,6 +7,7 @@ extern "C" {
 #include "game/level_update.h"
 #include "game/object_list_processor.h"
 #include "pc/configfile.h"
+#include "pc/lua/smlua_hooks.h"
 }
 
 // Static maps/arrays
@@ -148,7 +149,7 @@ void DynOS_Actor_Invalid(const void* aGeoref, s32 aPackIndex) {
     _ValidActors.erase(aGeoref);
 }
 
-void DynOS_Actor_Override(void** aSharedChild) {
+void DynOS_Actor_Override(struct Object* obj, void** aSharedChild) {
     if ((aSharedChild == NULL) || (*aSharedChild == NULL)) { return; }
 
     const void* georef = (*(GraphNode**)aSharedChild)->georef;
@@ -156,6 +157,19 @@ void DynOS_Actor_Override(void** aSharedChild) {
 
     auto& _ValidActors = DynosValidActors();
     if (_ValidActors.count(georef) == 0) { return; }
+
+    // Check if the behavior uses a character specific model
+    if (obj && (obj->behavior == smlua_override_behavior(bhvMario) ||
+            obj->behavior == smlua_override_behavior(bhvNormalCap) ||
+            obj->behavior == smlua_override_behavior(bhvWingCap) ||
+            obj->behavior == smlua_override_behavior(bhvMetalCap) ||
+            obj->behavior == smlua_override_behavior(bhvVanishCap))) {
+        struct NetworkPlayer* np = network_player_from_global_index(obj->globalPlayerIndex);
+        if (np && np->localIndex > 0 && configDynosLocalPlayerModelOnly) {
+            return;
+        }
+    }
+
 
     *aSharedChild = (void*)_ValidActors[georef].mGraphNode;
 }
@@ -171,7 +185,7 @@ void DynOS_Actor_Override_All(void) {
                 u32 id = 0;
                 _Object->header.gfx.sharedChild = DynOS_Model_LoadGeo(&id, MODEL_POOL_PERMANENT, georef, true);
             }
-            DynOS_Actor_Override((void**)&_Object->header.gfx.sharedChild);
+            DynOS_Actor_Override(_Object, (void**)&_Object->header.gfx.sharedChild);
         }
     }
 }

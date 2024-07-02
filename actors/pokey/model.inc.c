@@ -1,22 +1,14 @@
+#include "pc/rom_assets.h"
 // Pokey
 
 // 0x05011710
-static const Vtx pokey_seg5_vertex_05011710[] = {
-    {{{    26,     26,      0}, 0, {   990,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -25,     26,      0}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -25,    -25,      0}, 0, {     0,    990}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    26,    -25,      0}, 0, {   990,    990}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(pokey_seg5_vertex_05011710, 0x00134d20, 26785, 0x0000a560, 64);
 
 // 0x05011750
-ALIGNED8 const Texture pokey_seg5_texture_05011750[] = {
-#include "actors/pokey/pokey_face.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(pokey_seg5_texture_05011750, "actors/pokey/pokey_face.rgba16.inc.c", 0x00145e90, 48337, 0x00011750, 2048);
 
 // 0x05011F50
-ALIGNED8 const Texture pokey_seg5_texture_05011F50[] = {
-#include "actors/pokey/pokey_face_blink.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(pokey_seg5_texture_05011F50, "actors/pokey/pokey_face_blink.rgba16.inc.c", 0x00145e90, 48337, 0x00011f50, 2048);
 
 // 0x05012750 - 0x05012798
 const Gfx pokey_seg5_dl_05012750[] = {
@@ -63,17 +55,10 @@ const Gfx pokey_seg5_dl_05012808[] = {
 };
 
 // 0x05012838
-static const Vtx pokey_seg5_vertex_05012838[] = {
-    {{{    26,     26,      0}, 0, {   990,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -25,     26,      0}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -25,    -25,      0}, 0, {     0,    990}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    26,    -25,      0}, 0, {   990,    990}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(pokey_seg5_vertex_05012838, 0x00134d20, 26785, 0x0000a560, 64);
 
 // 0x05012878
-ALIGNED8 const Texture pokey_seg5_texture_05012878[] = {
-#include "actors/pokey/pokey_body.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(pokey_seg5_texture_05012878, "actors/pokey/pokey_body.rgba16.inc.c", 0x00145e90, 48337, 0x00012878, 2048);
 
 // 0x05013078 - 0x050130B0
 const Gfx pokey_seg5_dl_05013078[] = {

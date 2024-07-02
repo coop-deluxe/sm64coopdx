@@ -24,6 +24,8 @@
    - [smlua_anim_util_register_animation](#smlua_anim_util_register_animation)
    - [level_script_parse](#level_script_parse)
    - [log_to_console](#log_to_console)
+   - [add_scroll_target](#add_scroll_target)
+   - [collision_find_surface_on_ray](#collision_find_surface_on_ray)
 
 <br />
 
@@ -229,6 +231,7 @@
    - [bhv_falling_pillar_init](functions-2.md#bhv_falling_pillar_init)
    - [bhv_falling_pillar_loop](functions-2.md#bhv_falling_pillar_loop)
    - [bhv_ferris_wheel_axle_init](functions-2.md#bhv_ferris_wheel_axle_init)
+   - [bhv_ferris_wheel_platform_init](functions-2.md#bhv_ferris_wheel_platform_init)
    - [bhv_ferris_wheel_platform_update](functions-2.md#bhv_ferris_wheel_platform_update)
    - [bhv_fire_piranha_plant_init](functions-2.md#bhv_fire_piranha_plant_init)
    - [bhv_fire_piranha_plant_update](functions-2.md#bhv_fire_piranha_plant_update)
@@ -606,6 +609,17 @@
 
 <br />
 
+- behavior_script.h
+   - [draw_distance_scalar](functions-2.md#draw_distance_scalar)
+   - [obj_update_gfx_pos_and_angle](functions-2.md#obj_update_gfx_pos_and_angle)
+   - [position_based_random_float_position](functions-2.md#position_based_random_float_position)
+   - [position_based_random_u16](functions-2.md#position_based_random_u16)
+   - [random_float](functions-2.md#random_float)
+   - [random_sign](functions-2.md#random_sign)
+   - [random_u16](functions-2.md#random_u16)
+
+<br />
+
 - behavior_table.h
    - [get_behavior_from_id](functions-2.md#get_behavior_from_id)
    - [get_behavior_name_from_id](functions-2.md#get_behavior_name_from_id)
@@ -696,6 +710,7 @@
    - [shake_camera_pitch](functions-3.md#shake_camera_pitch)
    - [shake_camera_roll](functions-3.md#shake_camera_roll)
    - [shake_camera_yaw](functions-3.md#shake_camera_yaw)
+   - [skip_camera_interpolation](functions-3.md#skip_camera_interpolation)
    - [soft_reset_camera](functions-3.md#soft_reset_camera)
    - [start_cutscene](functions-3.md#start_cutscene)
    - [start_object_cutscene_without_focus](functions-3.md#start_object_cutscene_without_focus)
@@ -791,6 +806,7 @@
    - [set_audio_fadeout](functions-3.md#set_audio_fadeout)
    - [sound_banks_disable](functions-3.md#sound_banks_disable)
    - [sound_banks_enable](functions-3.md#sound_banks_enable)
+   - [sound_get_level_intensity](functions-3.md#sound_get_level_intensity)
    - [stop_background_music](functions-3.md#stop_background_music)
    - [stop_secondary_music](functions-3.md#stop_secondary_music)
    - [stop_sound](functions-3.md#stop_sound)
@@ -808,10 +824,16 @@
 <br />
 
 - ingame_menu.h
+   - [create_dialog_box](functions-3.md#create_dialog_box)
+   - [create_dialog_box_with_response](functions-3.md#create_dialog_box_with_response)
+   - [create_dialog_box_with_var](functions-3.md#create_dialog_box_with_var)
+   - [create_dialog_inverted_box](functions-3.md#create_dialog_inverted_box)
    - [reset_dialog_override_color](functions-3.md#reset_dialog_override_color)
    - [reset_dialog_override_pos](functions-3.md#reset_dialog_override_pos)
+   - [reset_dialog_render_state](functions-3.md#reset_dialog_render_state)
    - [set_dialog_override_color](functions-3.md#set_dialog_override_color)
    - [set_dialog_override_pos](functions-3.md#set_dialog_override_pos)
+   - [set_menu_mode](functions-3.md#set_menu_mode)
    - [set_min_dialog_width](functions-3.md#set_min_dialog_width)
 
 <br />
@@ -820,7 +842,36 @@
    - [determine_interaction](functions-3.md#determine_interaction)
    - [does_mario_have_normal_cap_on_head](functions-3.md#does_mario_have_normal_cap_on_head)
    - [get_door_save_file_flag](functions-3.md#get_door_save_file_flag)
+   - [interact_bbh_entrance](functions-3.md#interact_bbh_entrance)
+   - [interact_bounce_top](functions-3.md#interact_bounce_top)
+   - [interact_breakable](functions-3.md#interact_breakable)
+   - [interact_bully](functions-3.md#interact_bully)
+   - [interact_cannon_base](functions-3.md#interact_cannon_base)
+   - [interact_cap](functions-3.md#interact_cap)
+   - [interact_clam_or_bubba](functions-3.md#interact_clam_or_bubba)
+   - [interact_coin](functions-3.md#interact_coin)
    - [interact_damage](functions-3.md#interact_damage)
+   - [interact_door](functions-3.md#interact_door)
+   - [interact_flame](functions-3.md#interact_flame)
+   - [interact_grabbable](functions-3.md#interact_grabbable)
+   - [interact_hit_from_below](functions-3.md#interact_hit_from_below)
+   - [interact_hoot](functions-3.md#interact_hoot)
+   - [interact_igloo_barrier](functions-3.md#interact_igloo_barrier)
+   - [interact_koopa_shell](functions-3.md#interact_koopa_shell)
+   - [interact_mr_blizzard](functions-3.md#interact_mr_blizzard)
+   - [interact_player](functions-3.md#interact_player)
+   - [interact_pole](functions-3.md#interact_pole)
+   - [interact_shock](functions-3.md#interact_shock)
+   - [interact_snufit_bullet](functions-3.md#interact_snufit_bullet)
+   - [interact_spiny_walking](functions-3.md#interact_spiny_walking)
+   - [interact_star_or_key](functions-3.md#interact_star_or_key)
+   - [interact_strong_wind](functions-3.md#interact_strong_wind)
+   - [interact_text](functions-3.md#interact_text)
+   - [interact_tornado](functions-3.md#interact_tornado)
+   - [interact_warp](functions-3.md#interact_warp)
+   - [interact_warp_door](functions-3.md#interact_warp_door)
+   - [interact_water_ring](functions-3.md#interact_water_ring)
+   - [interact_whirlpool](functions-3.md#interact_whirlpool)
    - [mario_blow_off_cap](functions-3.md#mario_blow_off_cap)
    - [mario_check_object_grab](functions-3.md#mario_check_object_grab)
    - [mario_drop_held_object](functions-3.md#mario_drop_held_object)
@@ -833,6 +884,7 @@
    - [mario_stop_riding_object](functions-3.md#mario_stop_riding_object)
    - [mario_throw_held_object](functions-3.md#mario_throw_held_object)
    - [passes_pvp_interaction_checks](functions-3.md#passes_pvp_interaction_checks)
+   - [should_push_or_pull_door](functions-3.md#should_push_or_pull_door)
    - [take_damage_and_knock_back](functions-3.md#take_damage_and_knock_back)
 
 <br />
@@ -858,6 +910,7 @@
 <br />
 
 - level_update.h
+   - [fade_into_special_warp](functions-3.md#fade_into_special_warp)
    - [get_painting_warp_node](functions-3.md#get_painting_warp_node)
    - [initiate_painting_warp](functions-3.md#initiate_painting_warp)
    - [level_control_timer_running](functions-3.md#level_control_timer_running)
@@ -977,7 +1030,6 @@
    - [launch_mario_until_land](functions-3.md#launch_mario_until_land)
    - [mario_execute_cutscene_action](functions-3.md#mario_execute_cutscene_action)
    - [mario_ready_to_speak](functions-3.md#mario_ready_to_speak)
-   - [print_displaying_credits_entry](functions-3.md#print_displaying_credits_entry)
    - [should_start_or_continue_dialog](functions-3.md#should_start_or_continue_dialog)
    - [stuck_in_ground_handler](functions-3.md#stuck_in_ground_handler)
 
@@ -1076,57 +1128,57 @@
 <br />
 
 - math_util.h
-   - [anim_spline_init](functions-3.md#anim_spline_init)
-   - [anim_spline_poll](functions-3.md#anim_spline_poll)
-   - [approach_f32](functions-3.md#approach_f32)
-   - [approach_s32](functions-3.md#approach_s32)
-   - [find_vector_perpendicular_to_plane](functions-3.md#find_vector_perpendicular_to_plane)
-   - [get_pos_from_transform_mtx](functions-3.md#get_pos_from_transform_mtx)
-   - [mtxf_align_terrain_normal](functions-3.md#mtxf_align_terrain_normal)
-   - [mtxf_align_terrain_triangle](functions-3.md#mtxf_align_terrain_triangle)
-   - [mtxf_billboard](functions-3.md#mtxf_billboard)
-   - [mtxf_copy](functions-3.md#mtxf_copy)
-   - [mtxf_cylboard](functions-3.md#mtxf_cylboard)
-   - [mtxf_identity](functions-3.md#mtxf_identity)
-   - [mtxf_inverse](functions-3.md#mtxf_inverse)
-   - [mtxf_lookat](functions-3.md#mtxf_lookat)
-   - [mtxf_mul](functions-3.md#mtxf_mul)
-   - [mtxf_mul_vec3s](functions-3.md#mtxf_mul_vec3s)
-   - [mtxf_rotate_xy](functions-3.md#mtxf_rotate_xy)
-   - [mtxf_rotate_xyz_and_translate](functions-3.md#mtxf_rotate_xyz_and_translate)
-   - [mtxf_rotate_zxy_and_translate](functions-3.md#mtxf_rotate_zxy_and_translate)
-   - [mtxf_scale_vec3f](functions-3.md#mtxf_scale_vec3f)
-   - [mtxf_to_mtx](functions-3.md#mtxf_to_mtx)
-   - [mtxf_translate](functions-3.md#mtxf_translate)
-   - [not_zero](functions-3.md#not_zero)
-   - [spline_get_weights](functions-3.md#spline_get_weights)
-   - [vec3f_add](functions-3.md#vec3f_add)
-   - [vec3f_combine](functions-3.md#vec3f_combine)
-   - [vec3f_copy](functions-3.md#vec3f_copy)
-   - [vec3f_cross](functions-3.md#vec3f_cross)
-   - [vec3f_dif](functions-3.md#vec3f_dif)
-   - [vec3f_dist](functions-3.md#vec3f_dist)
-   - [vec3f_dot](functions-3.md#vec3f_dot)
-   - [vec3f_get_dist_and_angle](functions-3.md#vec3f_get_dist_and_angle)
-   - [vec3f_length](functions-3.md#vec3f_length)
-   - [vec3f_mul](functions-3.md#vec3f_mul)
-   - [vec3f_normalize](functions-3.md#vec3f_normalize)
-   - [vec3f_project](functions-3.md#vec3f_project)
-   - [vec3f_rotate_zxy](functions-3.md#vec3f_rotate_zxy)
-   - [vec3f_set](functions-3.md#vec3f_set)
-   - [vec3f_set_dist_and_angle](functions-3.md#vec3f_set_dist_and_angle)
-   - [vec3f_sum](functions-3.md#vec3f_sum)
-   - [vec3f_to_vec3s](functions-3.md#vec3f_to_vec3s)
-   - [vec3s_add](functions-3.md#vec3s_add)
-   - [vec3s_copy](functions-3.md#vec3s_copy)
-   - [vec3s_set](functions-3.md#vec3s_set)
-   - [vec3s_sum](functions-3.md#vec3s_sum)
-   - [vec3s_to_vec3f](functions-3.md#vec3s_to_vec3f)
+   - [anim_spline_init](functions-4.md#anim_spline_init)
+   - [anim_spline_poll](functions-4.md#anim_spline_poll)
+   - [approach_f32](functions-4.md#approach_f32)
+   - [approach_s32](functions-4.md#approach_s32)
+   - [find_vector_perpendicular_to_plane](functions-4.md#find_vector_perpendicular_to_plane)
+   - [get_pos_from_transform_mtx](functions-4.md#get_pos_from_transform_mtx)
+   - [mtxf_align_terrain_normal](functions-4.md#mtxf_align_terrain_normal)
+   - [mtxf_align_terrain_triangle](functions-4.md#mtxf_align_terrain_triangle)
+   - [mtxf_billboard](functions-4.md#mtxf_billboard)
+   - [mtxf_copy](functions-4.md#mtxf_copy)
+   - [mtxf_cylboard](functions-4.md#mtxf_cylboard)
+   - [mtxf_identity](functions-4.md#mtxf_identity)
+   - [mtxf_inverse](functions-4.md#mtxf_inverse)
+   - [mtxf_lookat](functions-4.md#mtxf_lookat)
+   - [mtxf_mul](functions-4.md#mtxf_mul)
+   - [mtxf_mul_vec3s](functions-4.md#mtxf_mul_vec3s)
+   - [mtxf_rotate_xy](functions-4.md#mtxf_rotate_xy)
+   - [mtxf_rotate_xyz_and_translate](functions-4.md#mtxf_rotate_xyz_and_translate)
+   - [mtxf_rotate_zxy_and_translate](functions-4.md#mtxf_rotate_zxy_and_translate)
+   - [mtxf_scale_vec3f](functions-4.md#mtxf_scale_vec3f)
+   - [mtxf_to_mtx](functions-4.md#mtxf_to_mtx)
+   - [mtxf_translate](functions-4.md#mtxf_translate)
+   - [not_zero](functions-4.md#not_zero)
+   - [spline_get_weights](functions-4.md#spline_get_weights)
+   - [vec3f_add](functions-4.md#vec3f_add)
+   - [vec3f_combine](functions-4.md#vec3f_combine)
+   - [vec3f_copy](functions-4.md#vec3f_copy)
+   - [vec3f_cross](functions-4.md#vec3f_cross)
+   - [vec3f_dif](functions-4.md#vec3f_dif)
+   - [vec3f_dist](functions-4.md#vec3f_dist)
+   - [vec3f_dot](functions-4.md#vec3f_dot)
+   - [vec3f_get_dist_and_angle](functions-4.md#vec3f_get_dist_and_angle)
+   - [vec3f_length](functions-4.md#vec3f_length)
+   - [vec3f_mul](functions-4.md#vec3f_mul)
+   - [vec3f_normalize](functions-4.md#vec3f_normalize)
+   - [vec3f_project](functions-4.md#vec3f_project)
+   - [vec3f_rotate_zxy](functions-4.md#vec3f_rotate_zxy)
+   - [vec3f_set](functions-4.md#vec3f_set)
+   - [vec3f_set_dist_and_angle](functions-4.md#vec3f_set_dist_and_angle)
+   - [vec3f_sum](functions-4.md#vec3f_sum)
+   - [vec3f_to_vec3s](functions-4.md#vec3f_to_vec3s)
+   - [vec3s_add](functions-4.md#vec3s_add)
+   - [vec3s_copy](functions-4.md#vec3s_copy)
+   - [vec3s_set](functions-4.md#vec3s_set)
+   - [vec3s_sum](functions-4.md#vec3s_sum)
+   - [vec3s_to_vec3f](functions-4.md#vec3s_to_vec3f)
 
 <br />
 
 - misc.h
-   - [update_all_mario_stars](functions-3.md#update_all_mario_stars)
+   - [update_all_mario_stars](functions-4.md#update_all_mario_stars)
 
 <br />
 
@@ -1146,11 +1198,14 @@
    - [get_network_player_from_area](functions-4.md#get_network_player_from_area)
    - [get_network_player_from_level](functions-4.md#get_network_player_from_level)
    - [get_network_player_smallest_global](functions-4.md#get_network_player_smallest_global)
-   - [network_player_color_to_palette](functions-4.md#network_player_color_to_palette)
    - [network_player_connected_count](functions-4.md#network_player_connected_count)
    - [network_player_from_global_index](functions-4.md#network_player_from_global_index)
-   - [network_player_palette_to_color](functions-4.md#network_player_palette_to_color)
+   - [network_player_get_override_palette_color_channel](functions-4.md#network_player_get_override_palette_color_channel)
+   - [network_player_get_palette_color_channel](functions-4.md#network_player_get_palette_color_channel)
+   - [network_player_is_override_palette_same](functions-4.md#network_player_is_override_palette_same)
+   - [network_player_reset_override_palette](functions-4.md#network_player_reset_override_palette)
    - [network_player_set_description](functions-4.md#network_player_set_description)
+   - [network_player_set_override_palette_color](functions-4.md#network_player_set_override_palette_color)
 
 <br />
 
@@ -1444,7 +1499,6 @@
    - [obj_set_angle](functions-4.md#obj_set_angle)
    - [obj_set_behavior](functions-4.md#obj_set_behavior)
    - [obj_set_billboard](functions-4.md#obj_set_billboard)
-   - [obj_set_character_model](functions-4.md#obj_set_character_model)
    - [obj_set_cylboard](functions-4.md#obj_set_cylboard)
    - [obj_set_face_angle](functions-4.md#obj_set_face_angle)
    - [obj_set_face_angle_to_move_angle](functions-4.md#obj_set_face_angle_to_move_angle)
@@ -1503,6 +1557,7 @@
 - save_file.h
    - [save_file_clear_flags](functions-4.md#save_file_clear_flags)
    - [save_file_do_save](functions-4.md#save_file_do_save)
+   - [save_file_erase](functions-4.md#save_file_erase)
    - [save_file_erase_current_backup_save](functions-4.md#save_file_erase_current_backup_save)
    - [save_file_get_cap_pos](functions-4.md#save_file_get_cap_pos)
    - [save_file_get_course_coin_score](functions-4.md#save_file_get_course_coin_score)
@@ -1523,83 +1578,36 @@
 <br />
 
 - smlua_anim_utils.h
+   - [get_mario_vanilla_animation](functions-4.md#get_mario_vanilla_animation)
    - [smlua_anim_util_get_current_animation_name](functions-4.md#smlua_anim_util_get_current_animation_name)
    - [smlua_anim_util_set_animation](functions-4.md#smlua_anim_util_set_animation)
 
 <br />
 
 - smlua_audio_utils.h
-   - [audio_sample_destroy](functions-4.md#audio_sample_destroy)
-   - [audio_sample_load](functions-4.md#audio_sample_load)
-   - [audio_sample_play](functions-4.md#audio_sample_play)
-   - [audio_sample_stop](functions-4.md#audio_sample_stop)
-   - [audio_stream_destroy](functions-4.md#audio_stream_destroy)
-   - [audio_stream_get_frequency](functions-4.md#audio_stream_get_frequency)
-   - [audio_stream_get_looping](functions-4.md#audio_stream_get_looping)
-   - [audio_stream_get_position](functions-4.md#audio_stream_get_position)
-   - [audio_stream_get_tempo](functions-4.md#audio_stream_get_tempo)
-   - [audio_stream_get_volume](functions-4.md#audio_stream_get_volume)
-   - [audio_stream_load](functions-4.md#audio_stream_load)
-   - [audio_stream_load_url](functions-4.md#audio_stream_load_url)
-   - [audio_stream_pause](functions-4.md#audio_stream_pause)
-   - [audio_stream_play](functions-4.md#audio_stream_play)
-   - [audio_stream_set_frequency](functions-4.md#audio_stream_set_frequency)
-   - [audio_stream_set_looping](functions-4.md#audio_stream_set_looping)
-   - [audio_stream_set_position](functions-4.md#audio_stream_set_position)
-   - [audio_stream_set_speed](functions-4.md#audio_stream_set_speed)
-   - [audio_stream_set_tempo](functions-4.md#audio_stream_set_tempo)
-   - [audio_stream_set_volume](functions-4.md#audio_stream_set_volume)
-   - [audio_stream_stop](functions-4.md#audio_stream_stop)
-   - [smlua_audio_utils_replace_sequence](functions-4.md#smlua_audio_utils_replace_sequence)
-   - [smlua_audio_utils_reset_all](functions-4.md#smlua_audio_utils_reset_all)
+   - [audio_sample_destroy](functions-5.md#audio_sample_destroy)
+   - [audio_sample_load](functions-5.md#audio_sample_load)
+   - [audio_sample_play](functions-5.md#audio_sample_play)
+   - [audio_sample_stop](functions-5.md#audio_sample_stop)
+   - [audio_stream_destroy](functions-5.md#audio_stream_destroy)
+   - [audio_stream_get_frequency](functions-5.md#audio_stream_get_frequency)
+   - [audio_stream_get_looping](functions-5.md#audio_stream_get_looping)
+   - [audio_stream_get_position](functions-5.md#audio_stream_get_position)
+   - [audio_stream_get_volume](functions-5.md#audio_stream_get_volume)
+   - [audio_stream_load](functions-5.md#audio_stream_load)
+   - [audio_stream_pause](functions-5.md#audio_stream_pause)
+   - [audio_stream_play](functions-5.md#audio_stream_play)
+   - [audio_stream_set_frequency](functions-5.md#audio_stream_set_frequency)
+   - [audio_stream_set_looping](functions-5.md#audio_stream_set_looping)
+   - [audio_stream_set_position](functions-5.md#audio_stream_set_position)
+   - [audio_stream_set_volume](functions-5.md#audio_stream_set_volume)
+   - [audio_stream_stop](functions-5.md#audio_stream_stop)
+   - [smlua_audio_utils_replace_sequence](functions-5.md#smlua_audio_utils_replace_sequence)
+   - [smlua_audio_utils_reset_all](functions-5.md#smlua_audio_utils_reset_all)
 
 <br />
 
-- smlua_collision_utils.h
-   - [collision_find_ceil](functions-4.md#collision_find_ceil)
-   - [collision_find_floor](functions-4.md#collision_find_floor)
-   - [collision_find_surface_on_ray](functions-4.md#collision_find_surface_on_ray)
-   - [collision_get_temp_wall_collision_data](functions-4.md#collision_get_temp_wall_collision_data)
-   - [get_water_surface_pseudo_floor](functions-4.md#get_water_surface_pseudo_floor)
-   - [smlua_collision_util_get](functions-4.md#smlua_collision_util_get)
-
-<br />
-
-- smlua_deprecated.h
-
-<br />
-
-- smlua_level_utils.h
-   - [level_is_vanilla_level](functions-4.md#level_is_vanilla_level)
-   - [level_register](functions-4.md#level_register)
-   - [smlua_level_util_change_area](functions-4.md#smlua_level_util_change_area)
-   - [smlua_level_util_get_info](functions-4.md#smlua_level_util_get_info)
-   - [smlua_level_util_get_info_from_course_num](functions-4.md#smlua_level_util_get_info_from_course_num)
-   - [smlua_level_util_get_info_from_short_name](functions-4.md#smlua_level_util_get_info_from_short_name)
-   - [warp_exit_level](functions-4.md#warp_exit_level)
-   - [warp_restart_level](functions-4.md#warp_restart_level)
-   - [warp_to_castle](functions-4.md#warp_to_castle)
-   - [warp_to_level](functions-4.md#warp_to_level)
-   - [warp_to_start_level](functions-4.md#warp_to_start_level)
-   - [warp_to_warpnode](functions-4.md#warp_to_warpnode)
-
-<br />
-
-- smlua_math_utils.h
-   - [clamp](functions-4.md#clamp)
-   - [clampf](functions-4.md#clampf)
-   - [max](functions-4.md#max)
-   - [maxf](functions-4.md#maxf)
-   - [min](functions-4.md#min)
-   - [minf](functions-4.md#minf)
-   - [sqr](functions-4.md#sqr)
-   - [sqrf](functions-4.md#sqrf)
-
-<br />
-
-- smlua_misc_utils.h
-   - [add_scroll_target](functions-5.md#add_scroll_target)
-   - [allocate_mario_action](functions-5.md#allocate_mario_action)
+- smlua_camera_utils.h
    - [camera_allow_toxic_gas_camera](functions-5.md#camera_allow_toxic_gas_camera)
    - [camera_config_enable_analog_cam](functions-5.md#camera_config_enable_analog_cam)
    - [camera_config_enable_free_cam](functions-5.md#camera_config_enable_free_cam)
@@ -1628,21 +1636,90 @@
    - [camera_romhack_allow_dpad_usage](functions-5.md#camera_romhack_allow_dpad_usage)
    - [camera_set_romhack_override](functions-5.md#camera_set_romhack_override)
    - [camera_unfreeze](functions-5.md#camera_unfreeze)
+
+<br />
+
+- smlua_collision_utils.h
+   - [collision_find_ceil](functions-5.md#collision_find_ceil)
+   - [collision_find_floor](functions-5.md#collision_find_floor)
+   - [collision_get_temp_wall_collision_data](functions-5.md#collision_get_temp_wall_collision_data)
+   - [get_surface_from_wcd_index](functions-5.md#get_surface_from_wcd_index)
+   - [get_water_surface_pseudo_floor](functions-5.md#get_water_surface_pseudo_floor)
+   - [smlua_collision_util_get](functions-5.md#smlua_collision_util_get)
+
+<br />
+
+- smlua_deprecated.h
+
+<br />
+
+- smlua_gfx_utils.h
+   - [get_fog_color](functions-5.md#get_fog_color)
+   - [get_fog_intensity](functions-5.md#get_fog_intensity)
+   - [get_lighting_color](functions-5.md#get_lighting_color)
+   - [get_lighting_color_ambient](functions-5.md#get_lighting_color_ambient)
+   - [get_lighting_dir](functions-5.md#get_lighting_dir)
+   - [get_skybox](functions-5.md#get_skybox)
+   - [get_skybox_color](functions-5.md#get_skybox_color)
+   - [get_vertex_color](functions-5.md#get_vertex_color)
+   - [set_fog_color](functions-5.md#set_fog_color)
+   - [set_fog_intensity](functions-5.md#set_fog_intensity)
+   - [set_lighting_color](functions-5.md#set_lighting_color)
+   - [set_lighting_color_ambient](functions-5.md#set_lighting_color_ambient)
+   - [set_lighting_dir](functions-5.md#set_lighting_dir)
+   - [set_override_far](functions-5.md#set_override_far)
+   - [set_override_fov](functions-5.md#set_override_fov)
+   - [set_override_near](functions-5.md#set_override_near)
+   - [set_override_skybox](functions-5.md#set_override_skybox)
+   - [set_skybox_color](functions-5.md#set_skybox_color)
+   - [set_vertex_color](functions-5.md#set_vertex_color)
+
+<br />
+
+- smlua_level_utils.h
+   - [level_is_vanilla_level](functions-5.md#level_is_vanilla_level)
+   - [level_register](functions-5.md#level_register)
+   - [smlua_level_util_change_area](functions-5.md#smlua_level_util_change_area)
+   - [smlua_level_util_get_info](functions-5.md#smlua_level_util_get_info)
+   - [smlua_level_util_get_info_from_course_num](functions-5.md#smlua_level_util_get_info_from_course_num)
+   - [smlua_level_util_get_info_from_short_name](functions-5.md#smlua_level_util_get_info_from_short_name)
+   - [warp_exit_level](functions-5.md#warp_exit_level)
+   - [warp_restart_level](functions-5.md#warp_restart_level)
+   - [warp_to_castle](functions-5.md#warp_to_castle)
+   - [warp_to_level](functions-5.md#warp_to_level)
+   - [warp_to_start_level](functions-5.md#warp_to_start_level)
+   - [warp_to_warpnode](functions-5.md#warp_to_warpnode)
+
+<br />
+
+- smlua_math_utils.h
+   - [clamp](functions-5.md#clamp)
+   - [clampf](functions-5.md#clampf)
+   - [max](functions-5.md#max)
+   - [maxf](functions-5.md#maxf)
+   - [min](functions-5.md#min)
+   - [minf](functions-5.md#minf)
+   - [sqr](functions-5.md#sqr)
+   - [sqrf](functions-5.md#sqrf)
+
+<br />
+
+- smlua_misc_utils.h
+   - [allocate_mario_action](functions-5.md#allocate_mario_action)
    - [course_is_main_course](functions-5.md#course_is_main_course)
    - [deref_s32_pointer](functions-5.md#deref_s32_pointer)
+   - [djui_is_playerlist_open](functions-5.md#djui_is_playerlist_open)
    - [djui_is_popup_disabled](functions-5.md#djui_is_popup_disabled)
+   - [djui_menu_get_font](functions-5.md#djui_menu_get_font)
    - [djui_popup_create_global](functions-5.md#djui_popup_create_global)
    - [djui_reset_popup_disabled_override](functions-5.md#djui_reset_popup_disabled_override)
    - [djui_set_popup_disabled_override](functions-5.md#djui_set_popup_disabled_override)
-   - [get_coop_compatibility_enabled](functions-5.md#get_coop_compatibility_enabled)
    - [get_current_save_file_num](functions-5.md#get_current_save_file_num)
    - [get_date_and_time](functions-5.md#get_date_and_time)
    - [get_dialog_box_state](functions-5.md#get_dialog_box_state)
    - [get_dialog_id](functions-5.md#get_dialog_id)
+   - [get_dialog_response](functions-5.md#get_dialog_response)
    - [get_envfx](functions-5.md#get_envfx)
-   - [get_environment_region](functions-5.md#get_environment_region)
-   - [get_fog_color](functions-5.md#get_fog_color)
-   - [get_fog_intensity](functions-5.md#get_fog_intensity)
    - [get_global_timer](functions-5.md#get_global_timer)
    - [get_got_file_coin_hi_score](functions-5.md#get_got_file_coin_hi_score)
    - [get_hand_foot_pos_x](functions-5.md#get_hand_foot_pos_x)
@@ -1651,16 +1728,18 @@
    - [get_last_completed_course_num](functions-5.md#get_last_completed_course_num)
    - [get_last_completed_star_num](functions-5.md#get_last_completed_star_num)
    - [get_last_star_or_key](functions-5.md#get_last_star_or_key)
-   - [get_lighting_color](functions-5.md#get_lighting_color)
-   - [get_lighting_dir](functions-5.md#get_lighting_dir)
+   - [get_local_discord_id](functions-5.md#get_local_discord_id)
    - [get_network_area_timer](functions-5.md#get_network_area_timer)
    - [get_os_name](functions-5.md#get_os_name)
    - [get_save_file_modified](functions-5.md#get_save_file_modified)
-   - [get_skybox](functions-5.md#get_skybox)
    - [get_temp_s32_pointer](functions-5.md#get_temp_s32_pointer)
    - [get_time](functions-5.md#get_time)
    - [get_ttc_speed_setting](functions-5.md#get_ttc_speed_setting)
-   - [get_vertex_color](functions-5.md#get_vertex_color)
+   - [get_volume_env](functions-5.md#get_volume_env)
+   - [get_volume_level](functions-5.md#get_volume_level)
+   - [get_volume_master](functions-5.md#get_volume_master)
+   - [get_volume_sfx](functions-5.md#get_volume_sfx)
+   - [get_water_level](functions-5.md#get_water_level)
    - [hud_get_flash](functions-5.md#hud_get_flash)
    - [hud_get_value](functions-5.md#hud_get_value)
    - [hud_hide](functions-5.md#hud_hide)
@@ -1677,23 +1756,18 @@
    - [reset_window_title](functions-5.md#reset_window_title)
    - [save_file_get_using_backup_slot](functions-5.md#save_file_get_using_backup_slot)
    - [save_file_set_using_backup_slot](functions-5.md#save_file_set_using_backup_slot)
-   - [set_environment_region](functions-5.md#set_environment_region)
-   - [set_fog_color](functions-5.md#set_fog_color)
-   - [set_fog_intensity](functions-5.md#set_fog_intensity)
    - [set_got_file_coin_hi_score](functions-5.md#set_got_file_coin_hi_score)
    - [set_last_completed_course_num](functions-5.md#set_last_completed_course_num)
    - [set_last_completed_star_num](functions-5.md#set_last_completed_star_num)
    - [set_last_star_or_key](functions-5.md#set_last_star_or_key)
-   - [set_lighting_color](functions-5.md#set_lighting_color)
-   - [set_lighting_dir](functions-5.md#set_lighting_dir)
    - [set_override_envfx](functions-5.md#set_override_envfx)
-   - [set_override_far](functions-5.md#set_override_far)
-   - [set_override_fov](functions-5.md#set_override_fov)
-   - [set_override_near](functions-5.md#set_override_near)
-   - [set_override_skybox](functions-5.md#set_override_skybox)
    - [set_save_file_modified](functions-5.md#set_save_file_modified)
    - [set_ttc_speed_setting](functions-5.md#set_ttc_speed_setting)
-   - [set_vertex_color](functions-5.md#set_vertex_color)
+   - [set_volume_env](functions-5.md#set_volume_env)
+   - [set_volume_level](functions-5.md#set_volume_level)
+   - [set_volume_master](functions-5.md#set_volume_master)
+   - [set_volume_sfx](functions-5.md#set_volume_sfx)
+   - [set_water_level](functions-5.md#set_water_level)
    - [set_window_title](functions-5.md#set_window_title)
 
 <br />
@@ -1710,6 +1784,10 @@
    - [obj_check_overlap_with_hitbox_params](functions-5.md#obj_check_overlap_with_hitbox_params)
    - [obj_count_objects_with_behavior_id](functions-5.md#obj_count_objects_with_behavior_id)
    - [obj_get_collided_object](functions-5.md#obj_get_collided_object)
+   - [obj_get_field_f32](functions-5.md#obj_get_field_f32)
+   - [obj_get_field_s16](functions-5.md#obj_get_field_s16)
+   - [obj_get_field_s32](functions-5.md#obj_get_field_s32)
+   - [obj_get_field_u32](functions-5.md#obj_get_field_u32)
    - [obj_get_first](functions-5.md#obj_get_first)
    - [obj_get_first_with_behavior_id](functions-5.md#obj_get_first_with_behavior_id)
    - [obj_get_first_with_behavior_id_and_field_f32](functions-5.md#obj_get_first_with_behavior_id_and_field_f32)
@@ -1732,6 +1810,10 @@
    - [obj_is_secret](functions-5.md#obj_is_secret)
    - [obj_is_valid_for_interaction](functions-5.md#obj_is_valid_for_interaction)
    - [obj_move_xyz](functions-5.md#obj_move_xyz)
+   - [obj_set_field_f32](functions-5.md#obj_set_field_f32)
+   - [obj_set_field_s16](functions-5.md#obj_set_field_s16)
+   - [obj_set_field_s32](functions-5.md#obj_set_field_s32)
+   - [obj_set_field_u32](functions-5.md#obj_set_field_u32)
    - [obj_set_model_extended](functions-5.md#obj_set_model_extended)
    - [obj_set_vel](functions-5.md#obj_set_vel)
    - [set_whirlpools](functions-5.md#set_whirlpools)
@@ -1803,6 +1885,7 @@
    - [get_area_terrain_size](functions-5.md#get_area_terrain_size)
    - [load_area_terrain](functions-5.md#load_area_terrain)
    - [load_object_collision_model](functions-5.md#load_object_collision_model)
+   - [obj_get_surface_from_index](functions-5.md#obj_get_surface_from_index)
 
 <br />
 
@@ -2146,13 +2229,64 @@ Logs a message to the in-game console.
 | Field | Type |
 | ----- | ---- |
 | message | `string` |
-| level | `ConsoleMessageLevel` |
+| level (optional) | `ConsoleMessageLevel` |
 
 ### Returns
 - None
 
 ### C Prototype
 `void log_to_console(const char* message, enum ConsoleMessageLevel level);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [add_scroll_target](#add_scroll_target)
+
+Registers a vertex buffer to be used for a scrolling texture. Should be used with `RM_Scroll_Texture` or `editor_Scroll_Texture`
+
+### Lua Example
+`add_scroll_target(0, "arena_rainbow_dl_StarRoad_mesh_layer_5_vtx_0")`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| index | `integer` |
+| name | `string` |
+
+### Returns
+- None
+
+### C Prototype
+`void dynos_add_scroll_target(u32 index, const char *name, u32 offset, u32 size);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [collision_find_surface_on_ray](#collision_find_surface_on_ray)
+
+Shoots a raycast from `startX`, `startY`, and `startZ` in the direction of `dirX`, `dirY`, and `dirZ`.
+
+### Lua Example
+`collision_find_surface_on_ray(0, 0, 0, 50, 100, 50)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| startX | `number` |
+| startY | `number` |
+| startZ | `number` |
+| dirX | `number` |
+| dirY | `number` |
+| dirZ | `number` |
+| precision (optional) | `number` |
+
+### Returns
+- [RayIntersectionInfo](structs.md#RayIntersectionInfo)
+
+### C Prototype
+`struct RayIntersectionInfo* collision_find_surface_on_ray(f32 startX, f32 startY, f32 startZ, f32 dirX, f32 dirY, f32 dirZ, f32 precision);`
 
 [:arrow_up_small:](#)
 

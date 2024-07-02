@@ -152,7 +152,7 @@ s32 osEepromLongWrite(UNUSED OSMesgQueue *mq, u8 address, u8 *buffer, int nbytes
         return 0;
     }
 
-    u8 content[512] = {0};
+    u8 content[512] = { 0 };
     if (address != 0 || nbytes != 512) {
         osEepromLongRead(mq, 0, content, 512);
     }

@@ -1,5 +1,6 @@
 math.randomseed(get_time())
 
+
 --------------
 -- CObjects --
 --------------
@@ -91,6 +92,7 @@ _ReadOnlyTable = {
     __newindex = function (t,k,v)
     end
 }
+
 
 --------------------
 -- math functions --
@@ -310,6 +312,7 @@ function approach_s32(current, target, inc, dec)
     return current
 end
 
+
 -----------
 -- sound --
 -----------
@@ -392,8 +395,45 @@ COURSE_COUNT = 25
 --- @type integer
 COURSE_MIN = 1
 
+
+------------------------------
+-- player palette functions --
+------------------------------
+
+--- @param np NetworkPlayer
+--- @param part PlayerPart
+--- @return Color
+function network_player_get_palette_color(np, part)
+    local color = {
+        r = network_player_get_palette_color_channel(np, part, 0),
+        g = network_player_get_palette_color_channel(np, part, 1),
+        b = network_player_get_palette_color_channel(np, part, 2)
+    }
+    return color
+end
+
+--- @param np NetworkPlayer
+--- @param part PlayerPart
+--- @return Color
+function network_player_get_override_palette_color(np, part)
+    local color = {
+        r = network_player_get_override_palette_color_channel(np, part, 0),
+        g = network_player_get_override_palette_color_channel(np, part, 1),
+        b = network_player_get_override_palette_color_channel(np, part, 2)
+    }
+    return color
+end
+
+
 -----------------
 -- legacy font --
 -----------------
 
 FONT_TINY = -1
+
+
+----------------------
+-- legacy functions --
+----------------------
+
+function get_coop_compatibility_enabled() return false end

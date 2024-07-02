@@ -6,53 +6,405 @@
 
 
 ---
-# functions from smlua_misc_utils.h
+# functions from smlua_audio_utils.h
 
 <br />
 
 
-## [add_scroll_target](#add_scroll_target)
+## [audio_sample_destroy](#audio_sample_destroy)
 
 ### Lua Example
-`add_scroll_target(index, name, offset, size)`
+`audio_sample_destroy(audio)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| index | `integer` |
-| name | `string` |
-| offset | `integer` |
-| size | `integer` |
+| audio | [ModAudio](structs.md#ModAudio) |
 
 ### Returns
 - None
 
 ### C Prototype
-`void add_scroll_target(u32 index, const char* name, u32 offset, u32 size);`
+`void audio_sample_destroy(struct ModAudio* audio);`
 
 [:arrow_up_small:](#)
 
 <br />
 
-## [allocate_mario_action](#allocate_mario_action)
+## [audio_sample_load](#audio_sample_load)
 
 ### Lua Example
-`local integerValue = allocate_mario_action(actFlags)`
+`local ModAudioValue = audio_sample_load(filename)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| actFlags | `integer` |
+| filename | `string` |
 
 ### Returns
-- `integer`
+[ModAudio](structs.md#ModAudio)
 
 ### C Prototype
-`u32 allocate_mario_action(u32 actFlags);`
+`struct ModAudio* audio_sample_load(const char* filename);`
 
 [:arrow_up_small:](#)
 
 <br />
+
+## [audio_sample_play](#audio_sample_play)
+
+### Lua Example
+`audio_sample_play(audio, position, volume)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+| position | [Vec3f](structs.md#Vec3f) |
+| volume | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void audio_sample_play(struct ModAudio* audio, Vec3f position, f32 volume);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_sample_stop](#audio_sample_stop)
+
+### Lua Example
+`audio_sample_stop(audio)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+
+### Returns
+- None
+
+### C Prototype
+`void audio_sample_stop(struct ModAudio* audio);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_stream_destroy](#audio_stream_destroy)
+
+### Lua Example
+`audio_stream_destroy(audio)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+
+### Returns
+- None
+
+### C Prototype
+`void audio_stream_destroy(struct ModAudio* audio);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_stream_get_frequency](#audio_stream_get_frequency)
+
+### Lua Example
+`local numberValue = audio_stream_get_frequency(audio)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 audio_stream_get_frequency(struct ModAudio* audio);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_stream_get_looping](#audio_stream_get_looping)
+
+### Lua Example
+`local booleanValue = audio_stream_get_looping(audio)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool audio_stream_get_looping(struct ModAudio* audio);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_stream_get_position](#audio_stream_get_position)
+
+### Lua Example
+`local numberValue = audio_stream_get_position(audio)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 audio_stream_get_position(struct ModAudio* audio);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_stream_get_volume](#audio_stream_get_volume)
+
+### Lua Example
+`local numberValue = audio_stream_get_volume(audio)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 audio_stream_get_volume(struct ModAudio* audio);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_stream_load](#audio_stream_load)
+
+### Lua Example
+`local ModAudioValue = audio_stream_load(filename)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| filename | `string` |
+
+### Returns
+[ModAudio](structs.md#ModAudio)
+
+### C Prototype
+`struct ModAudio* audio_stream_load(const char* filename);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_stream_pause](#audio_stream_pause)
+
+### Lua Example
+`audio_stream_pause(audio)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+
+### Returns
+- None
+
+### C Prototype
+`void audio_stream_pause(struct ModAudio* audio);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_stream_play](#audio_stream_play)
+
+### Lua Example
+`audio_stream_play(audio, restart, volume)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+| restart | `boolean` |
+| volume | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void audio_stream_play(struct ModAudio* audio, bool restart, f32 volume);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_stream_set_frequency](#audio_stream_set_frequency)
+
+### Lua Example
+`audio_stream_set_frequency(audio, freq)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+| freq | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void audio_stream_set_frequency(struct ModAudio* audio, f32 freq);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_stream_set_looping](#audio_stream_set_looping)
+
+### Lua Example
+`audio_stream_set_looping(audio, looping)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+| looping | `boolean` |
+
+### Returns
+- None
+
+### C Prototype
+`void audio_stream_set_looping(struct ModAudio* audio, bool looping);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_stream_set_position](#audio_stream_set_position)
+
+### Lua Example
+`audio_stream_set_position(audio, pos)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+| pos | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void audio_stream_set_position(struct ModAudio* audio, f32 pos);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_stream_set_volume](#audio_stream_set_volume)
+
+### Lua Example
+`audio_stream_set_volume(audio, volume)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+| volume | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void audio_stream_set_volume(struct ModAudio* audio, f32 volume);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_stream_stop](#audio_stream_stop)
+
+### Lua Example
+`audio_stream_stop(audio)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+
+### Returns
+- None
+
+### C Prototype
+`void audio_stream_stop(struct ModAudio* audio);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [smlua_audio_utils_replace_sequence](#smlua_audio_utils_replace_sequence)
+
+### Lua Example
+`smlua_audio_utils_replace_sequence(sequenceId, bankId, defaultVolume, m64Name)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| sequenceId | `integer` |
+| bankId | `integer` |
+| defaultVolume | `integer` |
+| m64Name | `string` |
+
+### Returns
+- None
+
+### C Prototype
+`void smlua_audio_utils_replace_sequence(u8 sequenceId, u8 bankId, u8 defaultVolume, const char* m64Name);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [smlua_audio_utils_reset_all](#smlua_audio_utils_reset_all)
+
+### Lua Example
+`smlua_audio_utils_reset_all()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void smlua_audio_utils_reset_all(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
+# functions from smlua_camera_utils.h
+
+<br />
+
 
 ## [camera_allow_toxic_gas_camera](#camera_allow_toxic_gas_camera)
 
@@ -586,6 +938,981 @@
 
 <br />
 
+---
+# functions from smlua_collision_utils.h
+
+<br />
+
+
+## [collision_find_ceil](#collision_find_ceil)
+
+### Lua Example
+`local SurfaceValue = collision_find_ceil(x, y, z)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| x | `number` |
+| y | `number` |
+| z | `number` |
+
+### Returns
+[Surface](structs.md#Surface)
+
+### C Prototype
+`struct Surface* collision_find_ceil(f32 x, f32 y, f32 z);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [collision_find_floor](#collision_find_floor)
+
+### Lua Example
+`local SurfaceValue = collision_find_floor(x, y, z)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| x | `number` |
+| y | `number` |
+| z | `number` |
+
+### Returns
+[Surface](structs.md#Surface)
+
+### C Prototype
+`struct Surface* collision_find_floor(f32 x, f32 y, f32 z);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [collision_get_temp_wall_collision_data](#collision_get_temp_wall_collision_data)
+
+### Lua Example
+`local WallCollisionDataValue = collision_get_temp_wall_collision_data()`
+
+### Parameters
+- None
+
+### Returns
+[WallCollisionData](structs.md#WallCollisionData)
+
+### C Prototype
+`struct WallCollisionData* collision_get_temp_wall_collision_data(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_surface_from_wcd_index](#get_surface_from_wcd_index)
+
+### Lua Example
+`local SurfaceValue = get_surface_from_wcd_index(wcd, index)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| wcd | [WallCollisionData](structs.md#WallCollisionData) |
+| index | `integer` |
+
+### Returns
+[Surface](structs.md#Surface)
+
+### C Prototype
+`struct Surface* get_surface_from_wcd_index(struct WallCollisionData* wcd, s8 index);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_water_surface_pseudo_floor](#get_water_surface_pseudo_floor)
+
+### Lua Example
+`local SurfaceValue = get_water_surface_pseudo_floor()`
+
+### Parameters
+- None
+
+### Returns
+[Surface](structs.md#Surface)
+
+### C Prototype
+`struct Surface* get_water_surface_pseudo_floor(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [smlua_collision_util_get](#smlua_collision_util_get)
+
+### Lua Example
+`local PointerValue = smlua_collision_util_get(name)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| name | `string` |
+
+### Returns
+- `Pointer` <`Collision`>
+
+### C Prototype
+`Collision* smlua_collision_util_get(const char* name);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
+# functions from smlua_deprecated.h
+
+<br />
+
+
+---
+# functions from smlua_gfx_utils.h
+
+<br />
+
+
+## [get_fog_color](#get_fog_color)
+
+### Lua Example
+`local integerValue = get_fog_color(index)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| index | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u8 get_fog_color(u8 index);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_fog_intensity](#get_fog_intensity)
+
+### Lua Example
+`local numberValue = get_fog_intensity()`
+
+### Parameters
+- None
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 get_fog_intensity(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_lighting_color](#get_lighting_color)
+
+### Lua Example
+`local integerValue = get_lighting_color(index)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| index | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u8 get_lighting_color(u8 index);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_lighting_color_ambient](#get_lighting_color_ambient)
+
+### Lua Example
+`local integerValue = get_lighting_color_ambient(index)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| index | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u8 get_lighting_color_ambient(u8 index);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_lighting_dir](#get_lighting_dir)
+
+### Lua Example
+`local numberValue = get_lighting_dir(index)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| index | `integer` |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 get_lighting_dir(u8 index);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_skybox](#get_skybox)
+
+### Lua Example
+`local integerValue = get_skybox()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`s8 get_skybox(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_skybox_color](#get_skybox_color)
+
+### Lua Example
+`local integerValue = get_skybox_color(index)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| index | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u8 get_skybox_color(u8 index);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_vertex_color](#get_vertex_color)
+
+### Lua Example
+`local integerValue = get_vertex_color(index)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| index | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u8 get_vertex_color(u8 index);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_fog_color](#set_fog_color)
+
+### Lua Example
+`set_fog_color(index, value)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| index | `integer` |
+| value | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_fog_color(u8 index, u8 value);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_fog_intensity](#set_fog_intensity)
+
+### Lua Example
+`set_fog_intensity(intensity)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| intensity | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_fog_intensity(f32 intensity);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_lighting_color](#set_lighting_color)
+
+### Lua Example
+`set_lighting_color(index, value)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| index | `integer` |
+| value | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_lighting_color(u8 index, u8 value);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_lighting_color_ambient](#set_lighting_color_ambient)
+
+### Lua Example
+`set_lighting_color_ambient(index, value)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| index | `integer` |
+| value | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_lighting_color_ambient(u8 index, u8 value);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_lighting_dir](#set_lighting_dir)
+
+### Lua Example
+`set_lighting_dir(index, value)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| index | `integer` |
+| value | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_lighting_dir(u8 index, f32 value);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_override_far](#set_override_far)
+
+### Lua Example
+`set_override_far(far)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| far | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_override_far(f32 far);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_override_fov](#set_override_fov)
+
+### Lua Example
+`set_override_fov(fov)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| fov | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_override_fov(f32 fov);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_override_near](#set_override_near)
+
+### Lua Example
+`set_override_near(near)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| near | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_override_near(f32 near);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_override_skybox](#set_override_skybox)
+
+### Lua Example
+`set_override_skybox(background)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| background | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_override_skybox(s8 background);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_skybox_color](#set_skybox_color)
+
+### Lua Example
+`set_skybox_color(index, value)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| index | `integer` |
+| value | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_skybox_color(u8 index, u8 value);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_vertex_color](#set_vertex_color)
+
+### Lua Example
+`set_vertex_color(index, value)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| index | `integer` |
+| value | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_vertex_color(u8 index, u8 value);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
+# functions from smlua_level_utils.h
+
+<br />
+
+
+## [level_is_vanilla_level](#level_is_vanilla_level)
+
+### Lua Example
+`local booleanValue = level_is_vanilla_level(levelNum)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| levelNum | `integer` |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool level_is_vanilla_level(s16 levelNum);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [level_register](#level_register)
+
+### Lua Example
+`local integerValue = level_register(scriptEntryName, courseNum, fullName, shortName, acousticReach, echoLevel1, echoLevel2, echoLevel3)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| scriptEntryName | `string` |
+| courseNum | `integer` |
+| fullName | `string` |
+| shortName | `string` |
+| acousticReach | `integer` |
+| echoLevel1 | `integer` |
+| echoLevel2 | `integer` |
+| echoLevel3 | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s16 level_register(const char* scriptEntryName, s16 courseNum, const char* fullName, const char* shortName, u32 acousticReach, u32 echoLevel1, u32 echoLevel2, u32 echoLevel3);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [smlua_level_util_change_area](#smlua_level_util_change_area)
+
+### Lua Example
+`smlua_level_util_change_area(areaIndex)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| areaIndex | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void smlua_level_util_change_area(s32 areaIndex);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [smlua_level_util_get_info](#smlua_level_util_get_info)
+
+### Lua Example
+`local CustomLevelInfoValue = smlua_level_util_get_info(levelNum)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| levelNum | `integer` |
+
+### Returns
+[CustomLevelInfo](structs.md#CustomLevelInfo)
+
+### C Prototype
+`struct CustomLevelInfo* smlua_level_util_get_info(s16 levelNum);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [smlua_level_util_get_info_from_course_num](#smlua_level_util_get_info_from_course_num)
+
+### Lua Example
+`local CustomLevelInfoValue = smlua_level_util_get_info_from_course_num(courseNum)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| courseNum | `integer` |
+
+### Returns
+[CustomLevelInfo](structs.md#CustomLevelInfo)
+
+### C Prototype
+`struct CustomLevelInfo* smlua_level_util_get_info_from_course_num(u8 courseNum);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [smlua_level_util_get_info_from_short_name](#smlua_level_util_get_info_from_short_name)
+
+### Lua Example
+`local CustomLevelInfoValue = smlua_level_util_get_info_from_short_name(shortName)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| shortName | `string` |
+
+### Returns
+[CustomLevelInfo](structs.md#CustomLevelInfo)
+
+### C Prototype
+`struct CustomLevelInfo* smlua_level_util_get_info_from_short_name(const char* shortName);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [warp_exit_level](#warp_exit_level)
+
+### Lua Example
+`local booleanValue = warp_exit_level(aDelay)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| aDelay | `integer` |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool warp_exit_level(s32 aDelay);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [warp_restart_level](#warp_restart_level)
+
+### Lua Example
+`local booleanValue = warp_restart_level()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool warp_restart_level(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [warp_to_castle](#warp_to_castle)
+
+### Lua Example
+`local booleanValue = warp_to_castle(aLevel)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| aLevel | `integer` |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool warp_to_castle(s32 aLevel);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [warp_to_level](#warp_to_level)
+
+### Lua Example
+`local booleanValue = warp_to_level(aLevel, aArea, aAct)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| aLevel | `integer` |
+| aArea | `integer` |
+| aAct | `integer` |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool warp_to_level(s32 aLevel, s32 aArea, s32 aAct);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [warp_to_start_level](#warp_to_start_level)
+
+### Lua Example
+`local booleanValue = warp_to_start_level()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool warp_to_start_level(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [warp_to_warpnode](#warp_to_warpnode)
+
+### Lua Example
+`local booleanValue = warp_to_warpnode(aLevel, aArea, aAct, aWarpId)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| aLevel | `integer` |
+| aArea | `integer` |
+| aAct | `integer` |
+| aWarpId | `integer` |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool warp_to_warpnode(s32 aLevel, s32 aArea, s32 aAct, s32 aWarpId);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
+# functions from smlua_math_utils.h
+
+<br />
+
+
+## [clamp](#clamp)
+
+### Lua Example
+`local integerValue = clamp(a, b, c)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| a | `integer` |
+| b | `integer` |
+| c | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 clamp(s32 a, s32 b, s32 c);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [clampf](#clampf)
+
+### Lua Example
+`local numberValue = clampf(a, b, c)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| a | `number` |
+| b | `number` |
+| c | `number` |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 clampf(f32 a, f32 b, f32 c);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [max](#max)
+
+### Lua Example
+`local integerValue = max(a, b)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| a | `integer` |
+| b | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 max(s32 a, s32 b);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [maxf](#maxf)
+
+### Lua Example
+`local numberValue = maxf(a, b)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| a | `number` |
+| b | `number` |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 maxf(f32 a, f32 b);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [min](#min)
+
+### Lua Example
+`local integerValue = min(a, b)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| a | `integer` |
+| b | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 min(s32 a, s32 b);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [minf](#minf)
+
+### Lua Example
+`local numberValue = minf(a, b)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| a | `number` |
+| b | `number` |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 minf(f32 a, f32 b);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [sqr](#sqr)
+
+### Lua Example
+`local integerValue = sqr(x)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| x | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 sqr(s32 x);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [sqrf](#sqrf)
+
+### Lua Example
+`local numberValue = sqrf(x)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| x | `number` |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 sqrf(f32 x);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
+# functions from smlua_misc_utils.h
+
+<br />
+
+
+## [allocate_mario_action](#allocate_mario_action)
+
+### Lua Example
+`local integerValue = allocate_mario_action(actFlags)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| actFlags | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 allocate_mario_action(u32 actFlags);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [course_is_main_course](#course_is_main_course)
 
 ### Lua Example
@@ -626,6 +1953,24 @@
 
 <br />
 
+## [djui_is_playerlist_open](#djui_is_playerlist_open)
+
+### Lua Example
+`local booleanValue = djui_is_playerlist_open()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool djui_is_playerlist_open(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [djui_is_popup_disabled](#djui_is_popup_disabled)
 
 ### Lua Example
@@ -639,6 +1984,24 @@
 
 ### C Prototype
 `bool djui_is_popup_disabled(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [djui_menu_get_font](#djui_menu_get_font)
+
+### Lua Example
+`local enumValue = djui_menu_get_font()`
+
+### Parameters
+- None
+
+### Returns
+[enum DjuiFontType](constants.md#enum-DjuiFontType)
+
+### C Prototype
+`enum DjuiFontType djui_menu_get_font(void);`
 
 [:arrow_up_small:](#)
 
@@ -698,24 +2061,6 @@
 
 ### C Prototype
 `void djui_set_popup_disabled_override(bool value);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [get_coop_compatibility_enabled](#get_coop_compatibility_enabled)
-
-### Lua Example
-`local booleanValue = get_coop_compatibility_enabled()`
-
-### Parameters
-- None
-
-### Returns
-- `boolean`
-
-### C Prototype
-`bool get_coop_compatibility_enabled(void);`
 
 [:arrow_up_small:](#)
 
@@ -793,6 +2138,24 @@
 
 <br />
 
+## [get_dialog_response](#get_dialog_response)
+
+### Lua Example
+`local integerValue = get_dialog_response()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 get_dialog_response(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [get_envfx](#get_envfx)
 
 ### Lua Example
@@ -806,64 +2169,6 @@
 
 ### C Prototype
 `u16 get_envfx(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [get_environment_region](#get_environment_region)
-
-### Lua Example
-`local numberValue = get_environment_region(index)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| index | `integer` |
-
-### Returns
-- `number`
-
-### C Prototype
-`f32 get_environment_region(u8 index);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [get_fog_color](#get_fog_color)
-
-### Lua Example
-`local integerValue = get_fog_color(index)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| index | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`u8 get_fog_color(u8 index);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [get_fog_intensity](#get_fog_intensity)
-
-### Lua Example
-`local numberValue = get_fog_intensity()`
-
-### Parameters
-- None
-
-### Returns
-- `number`
-
-### C Prototype
-`f32 get_fog_intensity(void);`
 
 [:arrow_up_small:](#)
 
@@ -1022,41 +2327,19 @@
 
 <br />
 
-## [get_lighting_color](#get_lighting_color)
+## [get_local_discord_id](#get_local_discord_id)
 
 ### Lua Example
-`local integerValue = get_lighting_color(index)`
+`local stringValue = get_local_discord_id()`
 
 ### Parameters
-| Field | Type |
-| ----- | ---- |
-| index | `integer` |
+- None
 
 ### Returns
-- `integer`
+- `string`
 
 ### C Prototype
-`u8 get_lighting_color(u8 index);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [get_lighting_dir](#get_lighting_dir)
-
-### Lua Example
-`local numberValue = get_lighting_dir(index)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| index | `integer` |
-
-### Returns
-- `number`
-
-### C Prototype
-`f32 get_lighting_dir(u8 index);`
+`const char* get_local_discord_id(void);`
 
 [:arrow_up_small:](#)
 
@@ -1111,24 +2394,6 @@
 
 ### C Prototype
 `bool get_save_file_modified(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [get_skybox](#get_skybox)
-
-### Lua Example
-`local integerValue = get_skybox()`
-
-### Parameters
-- None
-
-### Returns
-- `integer`
-
-### C Prototype
-`s8 get_skybox(void);`
 
 [:arrow_up_small:](#)
 
@@ -1190,10 +2455,82 @@
 
 <br />
 
-## [get_vertex_color](#get_vertex_color)
+## [get_volume_env](#get_volume_env)
 
 ### Lua Example
-`local integerValue = get_vertex_color(index)`
+`local numberValue = get_volume_env()`
+
+### Parameters
+- None
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 get_volume_env(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_volume_level](#get_volume_level)
+
+### Lua Example
+`local numberValue = get_volume_level()`
+
+### Parameters
+- None
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 get_volume_level(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_volume_master](#get_volume_master)
+
+### Lua Example
+`local numberValue = get_volume_master()`
+
+### Parameters
+- None
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 get_volume_master(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_volume_sfx](#get_volume_sfx)
+
+### Lua Example
+`local numberValue = get_volume_sfx()`
+
+### Parameters
+- None
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 get_volume_sfx(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_water_level](#get_water_level)
+
+### Lua Example
+`local integerValue = get_water_level(index)`
 
 ### Parameters
 | Field | Type |
@@ -1204,7 +2541,7 @@
 - `integer`
 
 ### C Prototype
-`u8 get_vertex_color(u8 index);`
+`s16 get_water_level(u8 index);`
 
 [:arrow_up_small:](#)
 
@@ -1534,68 +2871,6 @@
 
 <br />
 
-## [set_environment_region](#set_environment_region)
-
-### Lua Example
-`set_environment_region(index, value)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| index | `integer` |
-| value | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void set_environment_region(u8 index, s32 value);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [set_fog_color](#set_fog_color)
-
-### Lua Example
-`set_fog_color(index, value)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| index | `integer` |
-| value | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void set_fog_color(u8 index, u8 value);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [set_fog_intensity](#set_fog_intensity)
-
-### Lua Example
-`set_fog_intensity(intensity)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| intensity | `number` |
-
-### Returns
-- None
-
-### C Prototype
-`void set_fog_intensity(f32 intensity);`
-
-[:arrow_up_small:](#)
-
-<br />
-
 ## [set_got_file_coin_hi_score](#set_got_file_coin_hi_score)
 
 ### Lua Example
@@ -1676,48 +2951,6 @@
 
 <br />
 
-## [set_lighting_color](#set_lighting_color)
-
-### Lua Example
-`set_lighting_color(index, value)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| index | `integer` |
-| value | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void set_lighting_color(u8 index, u8 value);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [set_lighting_dir](#set_lighting_dir)
-
-### Lua Example
-`set_lighting_dir(index, value)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| index | `integer` |
-| value | `number` |
-
-### Returns
-- None
-
-### C Prototype
-`void set_lighting_dir(u8 index, f32 value);`
-
-[:arrow_up_small:](#)
-
-<br />
-
 ## [set_override_envfx](#set_override_envfx)
 
 ### Lua Example
@@ -1733,86 +2966,6 @@
 
 ### C Prototype
 `void set_override_envfx(s32 envfx);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [set_override_far](#set_override_far)
-
-### Lua Example
-`set_override_far(far)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| far | `number` |
-
-### Returns
-- None
-
-### C Prototype
-`void set_override_far(f32 far);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [set_override_fov](#set_override_fov)
-
-### Lua Example
-`set_override_fov(fov)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| fov | `number` |
-
-### Returns
-- None
-
-### C Prototype
-`void set_override_fov(f32 fov);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [set_override_near](#set_override_near)
-
-### Lua Example
-`set_override_near(near)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| near | `number` |
-
-### Returns
-- None
-
-### C Prototype
-`void set_override_near(f32 near);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [set_override_skybox](#set_override_skybox)
-
-### Lua Example
-`set_override_skybox(background)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| background | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void set_override_skybox(s8 background);`
 
 [:arrow_up_small:](#)
 
@@ -1858,22 +3011,103 @@
 
 <br />
 
-## [set_vertex_color](#set_vertex_color)
+## [set_volume_env](#set_volume_env)
 
 ### Lua Example
-`set_vertex_color(index, value)`
+`set_volume_env(volume)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| index | `integer` |
-| value | `integer` |
+| volume | `number` |
 
 ### Returns
 - None
 
 ### C Prototype
-`void set_vertex_color(u8 index, u8 value);`
+`void set_volume_env(f32 volume);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_volume_level](#set_volume_level)
+
+### Lua Example
+`set_volume_level(volume)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| volume | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_volume_level(f32 volume);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_volume_master](#set_volume_master)
+
+### Lua Example
+`set_volume_master(volume)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| volume | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_volume_master(f32 volume);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_volume_sfx](#set_volume_sfx)
+
+### Lua Example
+`set_volume_sfx(volume)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| volume | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_volume_sfx(f32 volume);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_water_level](#set_water_level)
+
+### Lua Example
+`set_water_level(index, height, sync)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| index | `integer` |
+| height | `integer` |
+| sync | `boolean` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_water_level(u8 index, s16 height, bool sync);`
 
 [:arrow_up_small:](#)
 
@@ -1908,7 +3142,7 @@
 ## [smlua_model_util_get_id](#smlua_model_util_get_id)
 
 ### Lua Example
-`local integerValue = smlua_model_util_get_id(name)`
+`local enumValue = smlua_model_util_get_id(name)`
 
 ### Parameters
 | Field | Type |
@@ -1916,10 +3150,10 @@
 | name | `string` |
 
 ### Returns
-- `integer`
+[enum ModelExtendedId](constants.md#enum-ModelExtendedId)
 
 ### C Prototype
-`u32 smlua_model_util_get_id(const char* name);`
+`enum ModelExtendedId smlua_model_util_get_id(const char* name);`
 
 [:arrow_up_small:](#)
 
@@ -2052,6 +3286,91 @@
 
 ### C Prototype
 `struct Object *obj_get_collided_object(struct Object *o, s16 index);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_get_field_f32](#obj_get_field_f32)
+
+### Lua Example
+`local numberValue = obj_get_field_f32(o, fieldIndex)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| o | [Object](structs.md#Object) |
+| fieldIndex | `integer` |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 obj_get_field_f32(struct Object *o, s32 fieldIndex);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_get_field_s16](#obj_get_field_s16)
+
+### Lua Example
+`local integerValue = obj_get_field_s16(o, fieldIndex, fieldSubIndex)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| o | [Object](structs.md#Object) |
+| fieldIndex | `integer` |
+| fieldSubIndex | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s16 obj_get_field_s16(struct Object *o, s32 fieldIndex, s32 fieldSubIndex);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_get_field_s32](#obj_get_field_s32)
+
+### Lua Example
+`local integerValue = obj_get_field_s32(o, fieldIndex)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| o | [Object](structs.md#Object) |
+| fieldIndex | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 obj_get_field_s32(struct Object *o, s32 fieldIndex);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_get_field_u32](#obj_get_field_u32)
+
+### Lua Example
+`local integerValue = obj_get_field_u32(o, fieldIndex)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| o | [Object](structs.md#Object) |
+| fieldIndex | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 obj_get_field_u32(struct Object *o, s32 fieldIndex);`
 
 [:arrow_up_small:](#)
 
@@ -2506,6 +3825,95 @@
 
 ### C Prototype
 `void obj_move_xyz(struct Object *o, f32 dx, f32 dy, f32 dz);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_set_field_f32](#obj_set_field_f32)
+
+### Lua Example
+`obj_set_field_f32(o, fieldIndex, value)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| o | [Object](structs.md#Object) |
+| fieldIndex | `integer` |
+| value | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void obj_set_field_f32(struct Object *o, s32 fieldIndex, f32 value);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_set_field_s16](#obj_set_field_s16)
+
+### Lua Example
+`obj_set_field_s16(o, fieldIndex, fieldSubIndex, value)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| o | [Object](structs.md#Object) |
+| fieldIndex | `integer` |
+| fieldSubIndex | `integer` |
+| value | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void obj_set_field_s16(struct Object *o, s32 fieldIndex, s32 fieldSubIndex, s16 value);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_set_field_s32](#obj_set_field_s32)
+
+### Lua Example
+`obj_set_field_s32(o, fieldIndex, value)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| o | [Object](structs.md#Object) |
+| fieldIndex | `integer` |
+| value | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void obj_set_field_s32(struct Object *o, s32 fieldIndex, s32 value);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_set_field_u32](#obj_set_field_u32)
+
+### Lua Example
+`obj_set_field_u32(o, fieldIndex, value)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| o | [Object](structs.md#Object) |
+| fieldIndex | `integer` |
+| value | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void obj_set_field_u32(struct Object *o, s32 fieldIndex, u32 value);`
 
 [:arrow_up_small:](#)
 
@@ -3581,6 +4989,27 @@
 
 ### C Prototype
 `void load_object_collision_model(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_get_surface_from_index](#obj_get_surface_from_index)
+
+### Lua Example
+`local SurfaceValue = obj_get_surface_from_index(o, index)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| o | [Object](structs.md#Object) |
+| index | `integer` |
+
+### Returns
+[Surface](structs.md#Surface)
+
+### C Prototype
+`struct Surface *obj_get_surface_from_index(struct Object *o, u32 index);`
 
 [:arrow_up_small:](#)
 

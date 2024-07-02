@@ -39,6 +39,7 @@
 #include "../configfile.h"
 #include "gfx_cc.h"
 #include "gfx_rendering_api.h"
+#include "gfx_pc.h"
 
 #define TEX_CACHE_STEP 512
 
@@ -49,10 +50,11 @@ struct ShaderProgram {
     bool used_textures[2];
     uint8_t num_floats;
     GLint attrib_locations[7];
-    GLint uniform_locations[5];
+    GLint uniform_locations[7];
     uint8_t attrib_sizes[7];
     uint8_t num_attribs;
     bool used_noise;
+    bool used_lightmap;
 };
 
 struct GLTexture {
@@ -92,8 +94,9 @@ static void gfx_opengl_vertex_array_set_attribs(struct ShaderProgram *prg) {
 }
 
 static inline void gfx_opengl_set_shader_uniforms(struct ShaderProgram *prg) {
-    if (prg->used_noise)
-        glUniform1f(prg->uniform_locations[4], (float)frame_count);
+    if (prg->used_noise) { glUniform1f(prg->uniform_locations[4], (float)frame_count); }
+    if (prg->used_lightmap) { glUniform3f(prg->uniform_locations[5], gVertexColor[0] / 255.0f, gVertexColor[1] / 255.0f, gVertexColor[2] / 255.0f); }
+    glUniform1i(prg->uniform_locations[6], configFiltering);
 }
 
 static inline void gfx_opengl_set_texture_uniforms(struct ShaderProgram *prg, const int tile) {
@@ -339,34 +342,27 @@ static struct ShaderProgram *gfx_opengl_create_and_load_new_shader(struct ColorC
 
     // 3 point texture filtering
     // Original author: ArthurCarvalho
-    // Slightly modified GLSL implementation by twinaphex, mupen64plus-libretro project.
-
+    // Modified GLSL implementation by twinaphex, mupen64plus-libretro project.
     if (ccf.used_textures[0] || ccf.used_textures[1]) {
-        if (configFiltering == 2) {
-            append_line(fs_buf, &fs_len, "#define TEX_OFFSET(off) texture2D(tex, texCoord - (off)/texSize)");
-            append_line(fs_buf, &fs_len, "vec4 filter3point(in sampler2D tex, in vec2 texCoord, in vec2 texSize) {");
-            append_line(fs_buf, &fs_len, "  vec2 offset = fract(texCoord*texSize - vec2(0.5));");
-            append_line(fs_buf, &fs_len, "  offset -= step(1.0, offset.x + offset.y);");
-            append_line(fs_buf, &fs_len, "  vec4 c0 = TEX_OFFSET(offset);");
-            append_line(fs_buf, &fs_len, "  vec4 c1 = TEX_OFFSET(vec2(offset.x - sign(offset.x), offset.y));");
-            append_line(fs_buf, &fs_len, "  vec4 c2 = TEX_OFFSET(vec2(offset.x, offset.y - sign(offset.y)));");
-            append_line(fs_buf, &fs_len, "  return c0 + abs(offset.x)*(c1-c0) + abs(offset.y)*(c2-c0);");
-            append_line(fs_buf, &fs_len, "}");
-            append_line(fs_buf, &fs_len, "vec4 sampleTex(in sampler2D tex, in vec2 uv, in vec2 texSize, in bool dofilter) {");
-            append_line(fs_buf, &fs_len, "if (dofilter)");
-            append_line(fs_buf, &fs_len, "return filter3point(tex, uv, texSize);");
-            append_line(fs_buf, &fs_len, "else");
-            append_line(fs_buf, &fs_len, "return texture2D(tex, uv);");
-            append_line(fs_buf, &fs_len, "}");
-        } else {
-            append_line(fs_buf, &fs_len, "vec4 sampleTex(in sampler2D tex, in vec2 uv, in vec2 texSize, in bool dofilter) {");
-            append_line(fs_buf, &fs_len, "return texture2D(tex, uv);");
-            append_line(fs_buf, &fs_len, "}");
-        }
+        append_line(fs_buf, &fs_len, "#define TEX_OFFSET(off) texture2D(tex, texCoord - (off)/texSize)");
+        append_line(fs_buf, &fs_len, "vec4 filter3point(in sampler2D tex, in vec2 texCoord, in vec2 texSize) {");
+        append_line(fs_buf, &fs_len, "    vec2 offset = fract(texCoord*texSize - vec2(0.5));");
+        append_line(fs_buf, &fs_len, "    offset -= step(1.0, offset.x + offset.y);");
+        append_line(fs_buf, &fs_len, "    vec4 c0 = TEX_OFFSET(offset);");
+        append_line(fs_buf, &fs_len, "    vec4 c1 = TEX_OFFSET(vec2(offset.x - sign(offset.x), offset.y));");
+        append_line(fs_buf, &fs_len, "    vec4 c2 = TEX_OFFSET(vec2(offset.x, offset.y - sign(offset.y)));");
+        append_line(fs_buf, &fs_len, "    return c0 + abs(offset.x)*(c1-c0) + abs(offset.y)*(c2-c0);");
+        append_line(fs_buf, &fs_len, "}");
+        append_line(fs_buf, &fs_len, "vec4 sampleTex(in sampler2D tex, in vec2 uv, in vec2 texSize, in bool dofilter, in int filter) {");
+        append_line(fs_buf, &fs_len, "    if (dofilter && filter == 2)");
+        append_line(fs_buf, &fs_len, "        return filter3point(tex, uv, texSize);");
+        append_line(fs_buf, &fs_len, "    else");
+        append_line(fs_buf, &fs_len, "        return texture2D(tex, uv);");
+        append_line(fs_buf, &fs_len, "}");
     }
 
     if ((opt_alpha && opt_dither) || ccf.do_noise) {
-        append_line(fs_buf, &fs_len, "uniform float frame_count;");
+        append_line(fs_buf, &fs_len, "uniform float uFrameCount;");
 
         append_line(fs_buf, &fs_len, "float random(in vec3 value) {");
         append_line(fs_buf, &fs_len, "    float random = dot(sin(value), vec3(12.9898, 78.233, 37.719));");
@@ -374,21 +370,28 @@ static struct ShaderProgram *gfx_opengl_create_and_load_new_shader(struct ColorC
         append_line(fs_buf, &fs_len, "}");
     }
 
+    if (opt_light_map) {
+        append_line(fs_buf, &fs_len, "uniform vec3 uLightmapColor;");
+    }
+
+    append_line(fs_buf, &fs_len, "uniform int uFilter;");
+
     append_line(fs_buf, &fs_len, "void main() {");
 
     if ((opt_alpha && opt_dither) || ccf.do_noise) {
-        append_line(fs_buf, &fs_len, "float noise = floor(random(floor(vec3(gl_FragCoord.xy, frame_count))) + 0.5);");
+        append_line(fs_buf, &fs_len, "float noise = floor(random(floor(vec3(gl_FragCoord.xy, uFrameCount))) + 0.5);");
     }
 
     if (ccf.used_textures[0]) {
-        append_line(fs_buf, &fs_len, "vec4 texVal0 = sampleTex(uTex0, vTexCoord, uTex0Size, uTex0Filter);");
+        append_line(fs_buf, &fs_len, "vec4 texVal0 = sampleTex(uTex0, vTexCoord, uTex0Size, uTex0Filter, uFilter);");
     }
     if (ccf.used_textures[1]) {
-        if (cc->cm.light_map) {
-            append_line(fs_buf, &fs_len, "vec4 texVal1 = sampleTex(uTex1, vLightMap, uTex1Size, uTex1Filter);");
-            append_line(fs_buf, &fs_len, "texVal1.rgb = texVal1.rgb * texVal1.rgb  + texVal1.rgb;");
+        if (opt_light_map) {
+            append_line(fs_buf, &fs_len, "vec4 texVal1 = sampleTex(uTex1, vLightMap, uTex1Size, uTex1Filter, uFilter);");
+            append_line(fs_buf, &fs_len, "texVal0.rgb *= uLightmapColor.rgb;");
+            append_line(fs_buf, &fs_len, "texVal1.rgb = texVal1.rgb * texVal1.rgb + texVal1.rgb;");
         } else {
-            append_line(fs_buf, &fs_len, "vec4 texVal1 = sampleTex(uTex1, vTexCoord, uTex1Size, uTex1Filter);");
+            append_line(fs_buf, &fs_len, "vec4 texVal1 = sampleTex(uTex1, vTexCoord, uTex1Size, uTex1Filter, uFilter);");
         }
     }
 
@@ -542,11 +545,20 @@ static struct ShaderProgram *gfx_opengl_create_and_load_new_shader(struct ColorC
     }
 
     if ((opt_alpha && opt_dither) || ccf.do_noise) {
-        prg->uniform_locations[4] = glGetUniformLocation(shader_program, "frame_count");
+        prg->uniform_locations[4] = glGetUniformLocation(shader_program, "uFrameCount");
         prg->used_noise = true;
     } else {
         prg->used_noise = false;
     }
+
+    if (opt_light_map) {
+        prg->uniform_locations[5] = glGetUniformLocation(shader_program, "uLightmapColor");
+        prg->used_lightmap = true;
+    } else {
+        prg->used_lightmap = false;
+    }
+    
+    prg->uniform_locations[6] = glGetUniformLocation(shader_program, "uFilter");
 
     return prg;
 }

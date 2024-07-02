@@ -18,7 +18,7 @@
 
 #pragma pack(1)
 struct PacketPlayerData {
-    u32 rawData[80];
+    u32 rawData[OBJECT_NUM_REGULAR_FIELDS];
 
     s16 cRawStickX;
     s16 cRawStickY;
@@ -73,6 +73,8 @@ struct PacketPlayerData {
     u8 levelSyncValid;
     u8 areaSyncValid;
     u8 knockbackTimer;
+
+    s16 dialogId;
 };
 #pragma pack()
 
@@ -86,7 +88,7 @@ static void read_packet_data(struct PacketPlayerData* data, struct MarioState* m
 
     u8 customFlags     = SET_BIT((m->freeze > 0), 0);
 
-    memcpy(data->rawData, m->marioObj->rawData.asU32, sizeof(u32) * 80);
+    memcpy(data->rawData, m->marioObj->rawData.asU32, sizeof(u32) * OBJECT_NUM_REGULAR_FIELDS);
     data->nodeFlags    = m->marioObj->header.gfx.node.flags;
 
     data->cRawStickX     = m->controller->rawStickX;
@@ -142,13 +144,15 @@ static void read_packet_data(struct PacketPlayerData* data, struct MarioState* m
     data->levelSyncValid = np->currLevelSyncValid;
 
     data->knockbackTimer = m->knockbackTimer;
+
+    data->dialogId = get_dialog_id();
 }
 
 static void write_packet_data(struct PacketPlayerData* data, struct MarioState* m,
                               u8* customFlags, u32* heldSyncID, u32* heldBySyncID,
                               u32* riddenSyncID, u32* interactSyncID, u32* usedSyncID,
                               u32* platformSyncID) {
-    memcpy(m->marioObj->rawData.asU32, data->rawData, sizeof(u32) * 80);
+    memcpy(m->marioObj->rawData.asU32, data->rawData, sizeof(u32) * OBJECT_NUM_REGULAR_FIELDS);
     m->marioObj->header.gfx.node.flags = data->nodeFlags;
 
     m->controller->rawStickX     = data->cRawStickX;
@@ -206,6 +210,8 @@ static void write_packet_data(struct PacketPlayerData* data, struct MarioState* 
     }
 
     m->knockbackTimer = data->knockbackTimer;
+
+    m->dialogId = data->dialogId;
 }
 
 void network_send_player(u8 localIndex) {

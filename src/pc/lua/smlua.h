@@ -22,6 +22,7 @@
 
 #define LOG_LUA(...)  { if (!gSmLuaSuppressErrors) { printf("[LUA] "), printf(__VA_ARGS__), printf("\n"), smlua_mod_error(), snprintf(gDjuiConsoleTmpBuffer, CONSOLE_MAX_TMP_BUFFER, __VA_ARGS__), sys_swap_backslashes(gDjuiConsoleTmpBuffer), djui_console_message_create(gDjuiConsoleTmpBuffer, CONSOLE_MESSAGE_ERROR); } }
 #define LOG_LUA_LINE(...)  { if (!gSmLuaSuppressErrors) { printf("[LUA] "), printf(__VA_ARGS__), printf("\n"), smlua_mod_error(); snprintf(gDjuiConsoleTmpBuffer, CONSOLE_MAX_TMP_BUFFER, __VA_ARGS__), sys_swap_backslashes(gDjuiConsoleTmpBuffer), djui_console_message_create(gDjuiConsoleTmpBuffer, CONSOLE_MESSAGE_ERROR), smlua_logline(); } }
+#define LOG_LUA_LINE_WARNING(...)  { smlua_mod_warning(); snprintf(gDjuiConsoleTmpBuffer, CONSOLE_MAX_TMP_BUFFER, __VA_ARGS__), sys_swap_backslashes(gDjuiConsoleTmpBuffer), djui_console_message_create(gDjuiConsoleTmpBuffer, CONSOLE_MESSAGE_WARNING); }
 
 #ifdef DEVELOPMENT
 #define LUA_STACK_CHECK_BEGIN() int __LUA_STACK_TOP = lua_gettop(gLuaState)
@@ -39,6 +40,7 @@ extern struct Mod* gLuaActiveMod;
 extern struct Mod* gLuaLastHookMod;
 
 void smlua_mod_error(void);
+void smlua_mod_warning(void);
 int smlua_error_handler(UNUSED lua_State* L);
 int smlua_pcall(lua_State* L, int nargs, int nresults, int errfunc);
 void smlua_exec_file(const char* path);

@@ -1,3 +1,4 @@
+#include <inttypes.h>
 #include "sm64.h"
 #include "types.h"
 
@@ -18,11 +19,18 @@
 #include "game/level_update.h"
 #include "pc/djui/djui_console.h"
 #include "pc/djui/djui_hud_utils.h"
+#include "pc/djui/djui_panel_playerlist.h"
 #include "game/skybox.h"
 #include "pc/gfx/gfx_pc.h"
 #include "include/course_table.h"
 #include "game/level_geo.h"
 #include "game/first_person_cam.h"
+#include "pc/lua/utils/smlua_math_utils.h"
+#include "pc/lua/utils/smlua_audio_utils.h"
+
+#ifdef DISCORD_SDK
+#include "pc/discord/discord.h"
+#endif
 
 static struct DateTime sDateTime;
 
@@ -77,6 +85,14 @@ void djui_set_popup_disabled_override(bool value) {
 void djui_reset_popup_disabled_override(void) {
     // disable override
     sAllowDjuiPopupOverride.override = false;
+}
+
+bool djui_is_playerlist_open(void) {
+    return gDjuiPlayerList->base.visible;
+}
+
+enum DjuiFontType djui_menu_get_font(void) {
+    return configDjuiThemeFont == 0 ? FONT_NORMAL : FONT_ALIASED;
 }
 
 ///
@@ -246,165 +262,6 @@ void hud_set_flash(s8 value) {
 
 ///
 
-struct CameraOverride {
-    unsigned int value;
-    bool override;
-};
-
-struct CameraOverride sOverrideCameraXSens   = { 0 };
-struct CameraOverride sOverrideCameraYSens   = { 0 };
-struct CameraOverride sOverrideCameraAggr    = { 0 };
-struct CameraOverride sOverrideCameraPan     = { 0 };
-struct CameraOverride sOverrideCameraDegrade = { 0 };
-struct CameraOverride sOverrideCameraInvertX = { 0 };
-struct CameraOverride sOverrideCameraInvertY = { 0 };
-struct CameraOverride sOverrideEnableCamera  = { 0 };
-struct CameraOverride sOverrideCameraAnalog  = { 0 };
-struct CameraOverride sOverrideCameraMouse   = { 0 };
-
-void camera_reset_overrides(void) {
-    sOverrideCameraXSens.override = false;
-    sOverrideCameraYSens.override = false;
-    sOverrideCameraAggr.override = false;
-    sOverrideCameraPan.override = false;
-    sOverrideCameraDegrade.override = false;
-    sOverrideCameraInvertX.override = false;
-    sOverrideCameraInvertY.override = false;
-    sOverrideEnableCamera.override = false;
-    sOverrideCameraAnalog.override = false;
-    sOverrideCameraMouse.override = false;
-}
-
-void camera_freeze(void) {
-    gOverrideFreezeCamera = TRUE;
-}
-
-void camera_unfreeze(void) {
-    gOverrideFreezeCamera = FALSE;
-}
-
-bool camera_is_frozen(void) {
-    return gOverrideFreezeCamera;
-}
-
-void camera_set_romhack_override(enum RomhackCameraOverride rco) {
-    gOverrideRomhackCamera = rco;
-}
-
-void camera_romhack_allow_centering(u8 allow) {
-    gRomhackCameraAllowCentering = allow;
-}
-
-void camera_allow_toxic_gas_camera(u8 allow) {
-    gOverrideAllowToxicGasCamera = allow;
-}
-
-void camera_romhack_allow_dpad_usage(u8 allow) {
-    gRomhackCameraAllowDpad = allow;
-}
-
-bool camera_config_is_free_cam_enabled(void) {
-    return sOverrideEnableCamera.override ? sOverrideEnableCamera.value : configEnableCamera;
-}
-
-bool camera_config_is_analog_cam_enabled(void) {
-    return sOverrideCameraAnalog.override ? sOverrideCameraAnalog.value : configCameraAnalog;
-}
-
-bool camera_config_is_mouse_look_enabled(void) {
-    return sOverrideCameraMouse.override ? sOverrideCameraMouse.value : configCameraMouse;
-}
-
-bool camera_config_is_x_inverted(void) {
-    return sOverrideCameraInvertX.override ? sOverrideCameraInvertX.value : configCameraInvertX;
-}
-
-bool camera_config_is_y_inverted(void) {
-    return sOverrideCameraInvertY.override ? sOverrideCameraInvertY.value : configCameraInvertY;
-}
-
-u32 camera_config_get_x_sensitivity(void) {
-    return sOverrideCameraXSens.override ? sOverrideCameraXSens.value : configCameraXSens;
-}
-
-u32 camera_config_get_y_sensitivity(void) {
-    return sOverrideCameraYSens.override ? sOverrideCameraYSens.value : configCameraYSens;
-}
-
-u32 camera_config_get_aggression(void) {
-    return sOverrideCameraAggr.override ? sOverrideCameraAggr.value : configCameraAggr;
-}
-
-u32 camera_config_get_pan_level(void) {
-    return sOverrideCameraPan.override ? sOverrideCameraPan.value : configCameraPan;
-}
-
-u32 camera_config_get_deceleration(void) {
-    return sOverrideCameraDegrade.override ? sOverrideCameraDegrade.value : configCameraDegrade;
-}
-
-void camera_config_enable_free_cam(bool enable) {
-    sOverrideEnableCamera.value = enable;
-    sOverrideEnableCamera.override = true;
-    newcam_init_settings();
-}
-
-void camera_config_enable_analog_cam(bool enable) {
-    sOverrideCameraAnalog.value = enable;
-    sOverrideCameraAnalog.override = true;
-    newcam_init_settings();
-}
-
-void camera_config_enable_mouse_look(bool enable) {
-    sOverrideCameraMouse.value = enable;
-    sOverrideCameraMouse.override = true;
-    newcam_init_settings();
-}
-
-void camera_config_invert_x(bool invert) {
-    sOverrideCameraInvertX.value = invert;
-    sOverrideCameraInvertX.override = true;
-    newcam_init_settings();
-}
-
-void camera_config_invert_y(bool invert) {
-    sOverrideCameraInvertY.value = invert;
-    sOverrideCameraInvertY.override = true;
-    newcam_init_settings();
-}
-
-void camera_config_set_x_sensitivity(u32 value) {
-    sOverrideCameraXSens.value = MIN(MAX(value, 1), 100);
-    sOverrideCameraXSens.override = true;
-    newcam_init_settings();
-}
-
-void camera_config_set_y_sensitivity(u32 value) {
-    sOverrideCameraYSens.value = MIN(MAX(value, 1), 100);
-    sOverrideCameraYSens.override = true;
-    newcam_init_settings();
-}
-
-void camera_config_set_aggression(u32 value) {
-    sOverrideCameraAggr.value = MIN(MAX(value, 0), 100);
-    sOverrideCameraAggr.override = true;
-    newcam_init_settings();
-}
-
-void camera_config_set_pan_level(u32 value) {
-    sOverrideCameraPan.value = MIN(MAX(value, 0), 100);
-    sOverrideCameraPan.override = true;
-    newcam_init_settings();
-}
-
-void camera_config_set_deceleration(u32 value) {
-    sOverrideCameraDegrade.value = MIN(MAX(value, 0), 100);
-    sOverrideCameraDegrade.override = true;
-    newcam_init_settings();
-}
-
-///
-
 extern s16 gMenuMode;
 bool is_game_paused(void) {
     return gMenuMode != -1;
@@ -472,107 +329,27 @@ void movtexqc_register(const char* name, s16 level, s16 area, s16 type) {
 
 ///
 
-f32 get_environment_region(u8 index) {
-    s32 idx = 6 * index;
-    if (gEnvironmentRegions != NULL && index > 0 && index <= gEnvironmentRegions[0] && gEnvironmentRegionsLength > idx) {
-        return gEnvironmentRegions[idx];
+s16 get_water_level(u8 index) {
+    u8 id = 6 * (index + 1);
+    if (gEnvironmentRegions && index < gEnvironmentRegions[0] && gEnvironmentRegionsLength > id) {
+        return gEnvironmentRegions[id];
     }
     return gLevelValues.floorLowerLimit;
 }
 
-void set_environment_region(u8 index, s32 value) {
-    s32 idx = 6 * index;
-    if (gEnvironmentRegions != NULL && index > 0 && index <= gEnvironmentRegions[0] && gEnvironmentRegionsLength > idx) {
-        gEnvironmentRegions[idx] = value;
+void set_water_level(u8 index, s16 height, bool sync) {
+    if (sync && (!gNetworkPlayerLocal || !gNetworkPlayerLocal->currAreaSyncValid)) { return; }
+
+    u8 id = 6 * (index + 1);
+    if (gEnvironmentRegions && index < gEnvironmentRegions[0] && gEnvironmentRegionsLength > id) {
+        if (gEnvironmentRegions[id] == height) {
+            return;
+        }
+        if (sync) {
+            network_send_change_water_level(id, height);
+        }
+        gEnvironmentRegions[id] = height;
     }
-}
-
-///
-
-void set_override_fov(f32 fov) {
-    gOverrideFOV = fov;
-}
-
-///
-
-void set_override_near(f32 near) {
-    gOverrideNear = near;
-}
-
-///
-
-void set_override_far(f32 far) {
-    gOverrideFar = far;
-}
-
-///
-
-void add_scroll_target(u32 index, const char* name, u32 offset, u32 size) {
-    dynos_add_scroll_target(index, name, offset, size);
-}
-
-///
-
-f32 get_lighting_dir(u8 index) {
-    if (index > 2) { return 0; }
-    return gLightingDir[index];
-}
-
-void set_lighting_dir(u8 index, f32 value) {
-    if (index > 2) { return; }
-    gLightingDir[index] = value;
-}
-
-u8 get_lighting_color(u8 index) {
-    if (index > 2) { return 0; }
-    return gLightingColor[index];
-}
-
-void set_lighting_color(u8 index, u8 value) {
-    if (index > 2) { return; }
-    gLightingColor[index] = value;
-}
-
-///
-
-u8 get_vertex_color(u8 index) {
-    if (index > 2) { return 0; }
-    return gVertexColor[index];
-}
-
-void set_vertex_color(u8 index, u8 value) {
-    if (index > 2) { return; }
-    gVertexColor[index] = value;
-}
-
-///
-
-u8 get_fog_color(u8 index) {
-    if (index > 2) { return 0; }
-    return gFogColor[index];
-}
-
-void set_fog_color(u8 index, u8 value) {
-    if (index > 2) { return; }
-    gFogColor[index] = value;
-}
-
-f32 get_fog_intensity(void) {
-    return gFogIntensity;
-}
-
-void set_fog_intensity(f32 intensity) {
-    gFogIntensity = intensity;
-}
-
-///
-
-s8 get_skybox(void) {
-    return gReadOnlyBackground;
-}
-
-void set_override_skybox(s8 background) {
-    gOverrideBackground = background;
 }
 
 ///
@@ -629,8 +406,58 @@ u32 get_global_timer(void) {
 
 ///
 
-bool get_coop_compatibility_enabled(void) {
-    return configCoopCompatibility;
+s32 get_dialog_response(void) {
+    return gDialogResponse;
+}
+
+///
+
+const char* get_local_discord_id(void) {
+#ifdef DISCORD_SDK
+    static char sDiscordId[64] = "";
+    snprintf(sDiscordId, 64, "%" PRIu64 "", (uint64_t)discord_get_user_id());
+    return sDiscordId;
+#else
+    return NULL;
+#endif
+}
+
+///
+
+f32 get_volume_master(void) {
+    return gLuaVolumeMaster;
+}
+
+f32 get_volume_level(void) {
+    return gLuaVolumeLevel;
+}
+
+f32 get_volume_sfx(void) {
+    return gLuaVolumeSfx;
+}
+
+f32 get_volume_env(void) {
+    return gLuaVolumeEnv;
+}
+
+void set_volume_master(f32 volume) {
+    gLuaVolumeMaster = MIN(volume, 127);
+    audio_custom_update_volume();
+}
+
+void set_volume_level(f32 volume) {
+    gLuaVolumeLevel = MIN(volume, 127);
+    audio_custom_update_volume();
+}
+
+void set_volume_sfx(f32 volume) {
+    gLuaVolumeSfx = MIN(volume, 127);
+    audio_custom_update_volume();
+}
+
+void set_volume_env(f32 volume) {
+    gLuaVolumeEnv = MIN(volume, 127);
+    audio_custom_update_volume();
 }
 
 ///

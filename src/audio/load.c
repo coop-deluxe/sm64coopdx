@@ -12,6 +12,7 @@
 #include "pc/platform.h"
 #include "pc/fs/fs.h"
 #include "pc/lua/utils/smlua_audio_utils.h"
+#include "pc/lua/smlua_hooks.h"
 
 #define ALIGN16(val) (((val) + 0xF) & ~0xF)
 
@@ -1552,6 +1553,13 @@ void preload_sequence(u32 seqId, u8 preloadMask) {
 void load_sequence_internal(u32 player, u32 seqId, s32 loadAsync);
 
 void load_sequence(u32 player, u32 seqId, s32 loadAsync) {
+    u8 returnValue = 0;
+
+    smlua_call_event_hooks_on_seq_load(HOOK_ON_SEQ_LOAD, player, seqId, loadAsync, &returnValue);
+    if (returnValue != 0) {
+        seqId = returnValue;
+    }
+
     if (!loadAsync) {
         gAudioLoadLock = AUDIO_LOCK_LOADING;
     }
@@ -1842,7 +1850,7 @@ void audio_init() {
     }
 
 #ifdef VERSION_EU
-    // We want the refresh rate to be 60 FPS on PC. 
+    // We want the refresh rate to be 60 FPS on PC.
     // We shouldn't need to worry about PAL specfic computers anymore.
     D_EU_802298D0 = 16.713f;
     gRefreshRate = 60;
@@ -1854,14 +1862,6 @@ void audio_init() {
     gRefreshRate = 60;
     func_sh_802f6a9c();
 #endif
-#endif
-
-#ifdef TARGET_N64
-    eu_stubbed_printf_3("Clear Workarea %x -%x size %x \n",
-        (uintptr_t) &gAudioGlobalsStartMarker,
-        (uintptr_t) &gAudioGlobalsEndMarker,
-        (uintptr_t) &gAudioGlobalsEndMarker - (uintptr_t) &gAudioGlobalsStartMarker
-    );
 #endif
 
     eu_stubbed_printf_1("AudioHeap is %x\n", gAudioHeapSize);

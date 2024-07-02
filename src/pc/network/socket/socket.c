@@ -1,5 +1,4 @@
 #include "socket.h"
-#include "domain_res.h"
 #include <stdio.h>
 #include "pc/configfile.h"
 #include "pc/debuglog.h"
@@ -7,6 +6,19 @@
 
 static SOCKET sCurSocket = INVALID_SOCKET;
 static struct sockaddr_in sAddr[MAX_PLAYERS] = { 0 };
+
+char gGetHostName[MAX_CONFIG_STRING] = "";
+
+void resolve_domain(void) {
+    struct hostent *remoteHost = gethostbyname(configJoinIp);
+    if (remoteHost && remoteHost->h_addrtype == AF_INET) {
+        struct in_addr addr;
+        for (int i = 0; remoteHost->h_addr_list[i] != 0; i++) {
+            memcpy(&addr, remoteHost->h_addr_list[i], sizeof(struct in_addr));
+            snprintf(configJoinIp, MAX_CONFIG_STRING, "%s", inet_ntoa(addr));
+        }
+    }
+}
 
 static int socket_bind(SOCKET socket, unsigned int port) {
     struct sockaddr_in rxAddr;
@@ -90,7 +102,7 @@ static bool ns_socket_initialize(enum NetworkType networkType, UNUSED bool recon
         // save the port to send to
         sAddr[0].sin_family = AF_INET;
         sAddr[0].sin_port = htons(port);
-        domain_resolution();
+        resolve_domain();
         sAddr[0].sin_addr.s_addr = inet_addr(configJoinIp);
         LOG_INFO("connecting to %s %u", configJoinIp, port);
         snprintf(configJoinIp, MAX_CONFIG_STRING, "%s", gGetHostName);

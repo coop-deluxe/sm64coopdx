@@ -1,3 +1,4 @@
+#include "pc/rom_assets.h"
 // 0x0700CA68 - 0x0700CA80
 static const Lights1 sl_seg7_lights_0700CA68 = gdSPDefLights1(
     0x7f, 0x7f, 0x7f,
@@ -5,16 +6,7 @@ static const Lights1 sl_seg7_lights_0700CA68 = gdSPDefLights1(
 );
 
 // 0x0700CA80 - 0x0700CB00
-static const Vtx sl_seg7_vertex_0700CA80[] = {
-    {{{   410,      0,   1126}, 0, {   786,    990}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{  2048,    614,   1126}, 0, {  2420,   -236}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{   410,    614,   1126}, 0, {   786,   -236}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{  2048,      0,   1126}, 0, {  2420,    990}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{ -2047,    614,   1126}, 0, { -1666,   -236}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{  -409,      0,   1126}, 0, {     0,    990}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{  -409,    614,   1126}, 0, {     0,   -236}, {0x00, 0x00, 0x7f, 0xff}}},
-    {{{ -2047,      0,   1126}, 0, { -1666,    990}, {0x00, 0x00, 0x7f, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(sl_seg7_vertex_0700CA80, 0x00405fb0, 34952, 0x0000ca80, 128);
 
 // 0x0700CB00 - 0x0700CB58
 static const Gfx sl_seg7_dl_0700CB00[] = {

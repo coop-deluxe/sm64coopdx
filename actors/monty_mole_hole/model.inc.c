@@ -1,17 +1,11 @@
+#include "pc/rom_assets.h"
 // Monty Mole Hole
 
 // 0x05000000
-static const Vtx monty_mole_hole_seg5_vertex_05000000[] = {
-    {{{   -40,      0,    -40}, 0, {     0,    992}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -40,      0,     40}, 0, {   992,    992}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    40,      0,     40}, 0, {   992,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    40,      0,    -40}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(monty_mole_hole_seg5_vertex_05000000, 0x001521d0, 57608, 0x00000000, 64);
 
 // 0x05000040
-ALIGNED8 const Texture monty_mole_hole_seg5_texture_05000040[] = {
-#include "actors/monty_mole_hole/monty_mole_hole.ia16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(monty_mole_hole_seg5_texture_05000040, "actors/monty_mole_hole/monty_mole_hole.ia16.inc.c", 0x001521d0, 57608, 0x00000040, 2048);
 
 // 0x05000840 - 0x050008D8
 const Gfx monty_mole_hole_seg5_dl_05000840[] = {

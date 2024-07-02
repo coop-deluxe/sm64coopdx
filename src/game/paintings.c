@@ -19,7 +19,7 @@
 #include "pc/utils/misc.h"
 #include "obj_behaviors.h"
 #include "level_update.h"
-#include "src/pc/network/network_player.h"
+#include "pc/network/network_player.h"
 #include "print.h"
 #include "hardcoded.h"
 

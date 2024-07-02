@@ -1,9 +1,6 @@
 -- name: Arena
--- description: A arena-shooter inspired game mode with custom weapons and levels.\nSeven gamemodes in one, three custom stages, five weapons.
--- incompatible: gamemode arena light
--- deluxe: true
-
-if SM64COOPDX_VERSION == nil then return end
+-- description: An arena-shooter inspired game mode with custom weapons and levels.\nSeven gamemodes in one, three custom stages, and five weapons.
+-- incompatible: gamemode arena
 
 GAME_STATE_ACTIVE   = 1
 GAME_STATE_INACTIVE = 2
@@ -50,6 +47,9 @@ local gGameLevels = {
 _G.Arena = {
     add_level = function (levelNum, levelName)
         table.insert(gGameLevels, { level = levelNum, name = levelName })
+    end,
+    get_player_team = function (localIndex)
+        return gPlayerSyncTable[localIndex].team
     end
 }
 

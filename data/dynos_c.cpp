@@ -1,6 +1,6 @@
 #include "dynos.cpp.h"
 extern "C" {
-#include "src/game/moving_texture.h"
+#include "game/moving_texture.h"
 #include "game/hardcoded.h"
 
 void *dynos_swap_cmd(void *cmd) {
@@ -66,10 +66,6 @@ void dynos_gfx_init(void) {
     DynOS_Gfx_Init();
 }
 
-void dynos_packs_init(void) {
-    DynOS_Pack_Init();
-}
-
 int dynos_pack_get_count(void) {
     return DynOS_Pack_GetCount();
 }
@@ -105,18 +101,14 @@ bool dynos_pack_get_exists(s32 index) {
     return false;
 }
 
-void dynos_pack_init(void) {
-    DynOS_Pack_Init();
-}
-
 void dynos_generate_packs(const char* directory) {
     DynOS_Gfx_GeneratePacks(directory);
 }
 
 // -- geos -- //
 
-void dynos_actor_override(void** aSharedChild) {
-    DynOS_Actor_Override(aSharedChild);
+void dynos_actor_override(struct Object* obj, void** aSharedChild) {
+    DynOS_Actor_Override(obj, aSharedChild);
 }
 
 void dynos_add_actor_custom(const char *filePath, const char* geoName) {

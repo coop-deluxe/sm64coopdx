@@ -1,3 +1,4 @@
+#include "pc/rom_assets.h"
 // Star
 
 // 0x0302A6D8
@@ -7,30 +8,13 @@ static const Lights1 star_seg3_lights_0302A6D8 = gdSPDefLights1(
 );
 
 // 0x0302A6F0
-ALIGNED8 const Texture star_seg3_texture_0302A6F0[] = {
-#include "actors/star/star_surface.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(star_seg3_texture_0302A6F0, "actors/star/star_surface.rgba16.inc.c", 0x00201410, 96653, 0x0002a6f0, 2048);
 
 // 0x0302AEF0
-ALIGNED8 const Texture star_seg3_texture_0302AEF0[] = {
-#include "actors/star/star_eye.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(star_seg3_texture_0302AEF0, "actors/star/star_eye.rgba16.inc.c", 0x00180bb0, 29674, 0x00007a30, 2048);
 
 // 0x0302B6F0
-static const Vtx star_seg3_vertex_0302B6F0[] = {
-    {{{     0,      8,    -89}, 0, {     0,      0}, {0x00, 0x07, 0x82, 0xff}}},
-    {{{   190,   -201,      0}, 0, {     0,      0}, {0x55, 0xa3, 0x00, 0xff}}},
-    {{{     0,   -129,      0}, 0, {     0,      0}, {0x00, 0x82, 0x00, 0xff}}},
-    {{{   146,    -42,      0}, 0, {     0,      0}, {0x7c, 0xe7, 0x00, 0xff}}},
-    {{{     0,      8,     90}, 0, {     0,      0}, {0x00, 0x07, 0x7e, 0xff}}},
-    {{{   257,     84,      0}, 0, {     0,      0}, {0x68, 0x47, 0x00, 0xff}}},
-    {{{  -145,    -42,      0}, 0, {     0,      0}, {0x84, 0xe7, 0x00, 0xff}}},
-    {{{  -189,   -201,      0}, 0, {     0,      0}, {0xaa, 0xa3, 0x00, 0xff}}},
-    {{{  -256,     84,      0}, 0, {     0,      0}, {0x97, 0x47, 0x00, 0xff}}},
-    {{{     0,    246,      0}, 0, {     0,      0}, {0x00, 0x7e, 0x00, 0xff}}},
-    {{{    96,     99,      0}, 0, {     0,      0}, {0x3d, 0x6f, 0x00, 0xff}}},
-    {{{   -95,     99,      0}, 0, {     0,      0}, {0xc3, 0x6f, 0x00, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(star_seg3_vertex_0302B6F0, 0x00201410, 96653, 0x0002b6f0, 192);
 
 // 0x0302B7B0 - 0x0302B870
 const Gfx star_seg3_dl_0302B7B0[] = {
@@ -74,18 +58,7 @@ static const Lights1 star_seg3_lights_0302B908 = gdSPDefLights1(
 );
 
 // 0x0302B920
-static const Vtx star_seg3_vertex_0302B920[] = {
-    {{{    67,     86,     63}, 0, {   990,      0}, {0x18, 0x15, 0x7a, 0xff}}},
-    {{{     0,    -27,     96}, 0, {     0,    990}, {0x18, 0x15, 0x7a, 0xff}}},
-    {{{    67,    -29,     83}, 0, {   990,    990}, {0x18, 0x15, 0x7a, 0xff}}},
-    {{{     0,     89,     76}, 0, {     0,      0}, {0x18, 0x15, 0x7a, 0xff}}},
-    {{{     0,     89,     76}, 0, {   990,      0}, {0xe8, 0x15, 0x7a, 0xff}}},
-    {{{   -66,    -29,     83}, 0, {     0,    990}, {0xe8, 0x15, 0x7a, 0xff}}},
-    {{{     0,    -27,     96}, 0, {   990,    990}, {0xe8, 0x15, 0x7a, 0xff}}},
-    {{{     0,     89,     76}, 0, {   990,      0}, {0xe7, 0x15, 0x7a, 0xff}}},
-    {{{   -66,     86,     63}, 0, {     0,      0}, {0xe7, 0x15, 0x7a, 0xff}}},
-    {{{   -66,    -29,     83}, 0, {     0,    990}, {0xe7, 0x15, 0x7a, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(star_seg3_vertex_0302B920, 0x00201410, 96653, 0x0002b920, 160);
 
 // 0x0302B9C0 - 0x0302BA18
 const Gfx star_seg3_dl_0302B9C0[] = {

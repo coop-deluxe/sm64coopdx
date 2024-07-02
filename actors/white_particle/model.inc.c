@@ -1,17 +1,11 @@
+#include "pc/rom_assets.h"
 // White Particle
 
 // 0x0302C660
-static const Vtx white_particle_vertex[] = {
-    {{{   -15,    -15,      0}, 0, {     0,    480}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    15,    -15,      0}, 0, {   480,    480}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    15,     15,      0}, 0, {   480,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -15,     15,      0}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(white_particle_vertex, 0x00201410, 96653, 0x0002c660, 64);
 
 // 0x0302C6A0
-ALIGNED8 const Texture white_particle_texture[] = {
-#include "actors/white_particle/snow_particle.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(white_particle_texture, "actors/white_particle/snow_particle.rgba16.inc.c", 0x00201410, 96653, 0x0002c6a0, 512);
 
 // 0x0302C8A0 - 0x0302C938
 const Gfx white_particle_dl[] = {

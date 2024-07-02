@@ -486,6 +486,7 @@ void bhv_track_ball_update(void);
 void bhv_seesaw_platform_init(void);
 void bhv_seesaw_platform_update(void);
 void bhv_ferris_wheel_axle_init(void);
+void bhv_ferris_wheel_platform_init(void);
 void bhv_ferris_wheel_platform_update(void);
 void bhv_water_bomb_spawner_update(void);
 void bhv_water_bomb_update(void);

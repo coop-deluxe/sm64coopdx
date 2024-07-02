@@ -15,8 +15,9 @@
 struct StateExtras {
     Vec3f prevPos;
     f32 prevScale;
+    bool inited;
 };
-struct StateExtras sStateExtras[MAX_PLAYERS];
+static struct StateExtras sStateExtras[MAX_PLAYERS];
 
 void name_without_hex(char* input) {
     s32 i, j;
@@ -28,7 +29,7 @@ void name_without_hex(char* input) {
             input[j++] = input[i]; // it just works
         }
     }
-    
+
     input[j] = '\0';
 }
 
@@ -43,13 +44,14 @@ void djui_hud_print_outlined_text_interpolated(const char* text, f32 prevX, f32 
     djui_hud_print_text_interpolated(text, prevX,              prevY - prevOffset, prevScale, x,          y - offset, scale);
     djui_hud_print_text_interpolated(text, prevX,              prevY + prevOffset, prevScale, x,          y + offset, scale);
     // render text
-    djui_hud_set_color(r, g, b, 255);
+    djui_hud_set_color(r, g, b, a);
     djui_hud_print_text_interpolated(text, prevX, prevY, prevScale, x, y, scale);
     djui_hud_set_color(255, 255, 255, 255);
 }
 
 void nametags_render(void) {
-    if ((!gNametagsSettings.showSelfTag && network_player_connected_count() == 1) ||
+    if (gNetworkType == NT_NONE ||
+        (!gNametagsSettings.showSelfTag && network_player_connected_count() == 1) ||
         !gNetworkPlayerLocal->currAreaSyncValid ||
         find_object_with_behavior(bhvActSelector) != NULL) {
         return;
@@ -62,14 +64,26 @@ void nametags_render(void) {
         struct MarioState* m = &gMarioStates[i];
         if (!is_player_active(m)) { continue; }
         struct NetworkPlayer* np = &gNetworkPlayers[i];
+        if (!np->currAreaSyncValid) { continue; }
+
+        switch (m->action) {
+            case ACT_START_CROUCHING:
+            case ACT_CROUCHING:
+            case ACT_STOP_CROUCHING:
+            case ACT_START_CRAWLING:
+            case ACT_CRAWLING:
+            case ACT_STOP_CRAWLING:
+            case ACT_IN_CANNON:
+            case ACT_DISAPPEARED:
+            continue;
+        }
+
         Vec3f pos;
         Vec3f out;
         vec3f_copy(pos, m->marioObj->header.gfx.pos);
         pos[1] = m->pos[1] + 210;
 
         if (djui_hud_world_pos_to_screen_pos(pos, out) &&
-            m->marioBodyState->updateTorsoTime == gMarioStates[0].marioBodyState->updateTorsoTime &&
-            m->action != ACT_IN_CANNON &&
             (i != 0 || (i == 0 && m->action != ACT_FIRST_PERSON))) {
             f32 scale = NAMETAG_MAX_SCALE;
             f32 dist = vec3f_dist(gLakituState.pos, m->pos);
@@ -78,23 +92,24 @@ void nametags_render(void) {
                 scale = clampf(1 - scale, 0, NAMETAG_MAX_SCALE);
             }
 
-            char name[MAX_PLAYER_STRING + 1];
-            strncpy(name, np->name, MAX_PLAYER_STRING + 1);
+            char name[MAX_CONFIG_STRING];
+            snprintf(name, MAX_CONFIG_STRING, "%s", np->name);
             name_without_hex(name);
             Color color = {
-                np->palette.parts[SHIRT][0],
-                np->palette.parts[SHIRT][1],
-                np->palette.parts[SHIRT][2]
+                np->overridePalette.parts[EMBLEM][0],
+                np->overridePalette.parts[EMBLEM][1],
+                np->overridePalette.parts[EMBLEM][2]
             };
             f32 measure = djui_hud_measure_text(name) * scale * 0.5f;
-            f32 alpha = m->action == ACT_START_CROUCHING ||
-                m->action == ACT_CROUCHING ||
-                m->action == ACT_STOP_CROUCHING ||
-                m->action == ACT_START_CRAWLING ||
-                m->action == ACT_CRAWLING ||
-                m->action == ACT_STOP_CRAWLING ? 100 : 255;
+
+            u8 alpha = i == 0 ? 255 : MIN(np->fadeOpacity << 3, 255);
 
             struct StateExtras* e = &sStateExtras[i];
+            if (!e->inited) {
+                vec3f_copy(e->prevPos, out);
+                e->prevScale = scale;
+                e->inited = true;
+            }
             djui_hud_print_outlined_text_interpolated(name, e->prevPos[0] - measure, e->prevPos[1], e->prevScale, out[0] - measure, out[1], scale, color[0], color[1], color[2], alpha, 0.25);
 
             if (i != 0 && gNametagsSettings.showHealth) {
@@ -110,5 +125,11 @@ void nametags_render(void) {
             vec3f_copy(e->prevPos, out);
             e->prevScale = scale;
         }
+    }
+}
+
+void nametags_reset(void) {
+    for (u8 i = 0; i < MAX_PLAYERS; i++) {
+        sStateExtras[i].inited = false;
     }
 }

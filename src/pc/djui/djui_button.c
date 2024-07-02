@@ -6,30 +6,30 @@ static void djui_button_update_style(struct DjuiBase* base) {
     struct DjuiTheme* theme = gDjuiThemes[configDjuiTheme];
 
     if (!button->base.enabled) {
-        struct DjuiColor bc = button->style ? djui_theme_shade_color(theme->interactables.defaultBorderColor) : theme->interactables.defaultBorderColor;
-        struct DjuiColor rc = button->style ? djui_theme_shade_color(theme->interactables.defaultRectColor) : theme->interactables.defaultRectColor;
-        
+        struct DjuiColor bc = djui_theme_shade_color(theme->interactables.defaultBorderColor, button->style ? 0.3f : 0.6f);
+        struct DjuiColor rc = djui_theme_shade_color(theme->interactables.defaultRectColor, button->style ? 0.3f : 0.6f);
+
         djui_base_set_border_color(base, bc.r, bc.g, bc.b, bc.a);
         djui_base_set_color(&button->rect->base, rc.r, rc.g, rc.b, rc.a);
         djui_base_set_location(&button->text->base, 0.0f, 0.0f);
     } else if (gDjuiCursorDownOn == base) {
         struct DjuiColor bc = theme->interactables.cursorDownBorderColor;
         struct DjuiColor rc = theme->interactables.cursorDownRectColor;
-        
+
         djui_base_set_border_color(base, bc.r, bc.g, bc.b, bc.a);
         djui_base_set_color(&button->rect->base, rc.r, rc.g, rc.b, rc.a);
         djui_base_set_location(&button->text->base, 1.0f, 1.0f);
     } else if (gDjuiHovered == base) {
         struct DjuiColor bc = theme->interactables.hoveredBorderColor;
         struct DjuiColor rc = theme->interactables.hoveredRectColor;
-        
+
         djui_base_set_border_color(base, bc.r, bc.g, bc.b, bc.a);
         djui_base_set_color(&button->rect->base, rc.r, rc.g, rc.b, rc.a);
         djui_base_set_location(&button->text->base, -1.0f, -1.0f);
     } else {
-        struct DjuiColor bc = button->style ? djui_theme_shade_color(theme->interactables.defaultBorderColor) : theme->interactables.defaultBorderColor;
-        struct DjuiColor rc = button->style ? djui_theme_shade_color(theme->interactables.defaultRectColor) : theme->interactables.defaultRectColor;
-        
+        struct DjuiColor bc = button->style ? djui_theme_shade_color(theme->interactables.defaultBorderColor, 0.6f) : theme->interactables.defaultBorderColor;
+        struct DjuiColor rc = button->style ? djui_theme_shade_color(theme->interactables.defaultRectColor, 0.6f) : theme->interactables.defaultRectColor;
+
         djui_base_set_border_color(base, bc.r, bc.g, bc.b, bc.a);
         djui_base_set_color(&button->rect->base, rc.r, rc.g, rc.b, rc.a);
         djui_base_set_location(&button->text->base, 0.0f, 0.0f);
@@ -63,7 +63,7 @@ struct DjuiButton* djui_button_create(struct DjuiBase* parent, const char* messa
 
     struct DjuiText* text = djui_text_create(&rect->base, message);
     struct DjuiColor color = gDjuiThemes[configDjuiTheme]->interactables.textColor;
-    
+
     djui_base_set_size_type(&text->base, DJUI_SVT_RELATIVE, DJUI_SVT_RELATIVE);
     djui_base_set_size(&text->base, 1.0f, 1.0f);
     djui_base_set_color(&text->base, color.r, color.g, color.b, color.a);

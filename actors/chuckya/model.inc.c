@@ -1,3 +1,4 @@
+#include "pc/rom_assets.h"
 // Chuckya
 
 // Unreferenced light group
@@ -43,40 +44,22 @@ UNUSED static const Lights1 chuckya_lights_unused7 = gdSPDefLights1(
 );
 
 // 0x08006778
-ALIGNED8 const Texture chuckya_seg8_texture_08006778[] = {
-#include "actors/chuckya/chuckya_eyes.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(chuckya_seg8_texture_08006778, "actors/chuckya/chuckya_eyes.rgba16.inc.c", 0x001f2200, 59076, 0x00006778, 4096);
 
 // 0x08007778
-ALIGNED8 const Texture chuckya_seg8_texture_08007778[] = {
-#include "actors/chuckya/chuckya_hand_antenna.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(chuckya_seg8_texture_08007778, "actors/chuckya/chuckya_hand_antenna.rgba16.inc.c", 0x001f2200, 59076, 0x00007778, 2048);
 
 // 0x08007F78
-ALIGNED8 const Texture chuckya_seg8_texture_08007F78[] = {
-#include "actors/chuckya/chuckya_body_arm_left_side.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(chuckya_seg8_texture_08007F78, "actors/chuckya/chuckya_body_arm_left_side.rgba16.inc.c", 0x001f2200, 59076, 0x00007f78, 4096);
 
 // 0x08008F78
-ALIGNED8 const Texture chuckya_seg8_texture_08008F78[] = {
-#include "actors/chuckya/chuckya_body_arm_right_side.rgba16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(chuckya_seg8_texture_08008F78, "actors/chuckya/chuckya_body_arm_right_side.rgba16.inc.c", 0x001f2200, 59076, 0x00008f78, 4096);
 
 // 0x08009F78
-static const Vtx chuckya_seg8_vertex_08009F78[] = {
-    {{{     0,     56,      0}, 0, {   990,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -56,    -56,      0}, 0, {     0,   2012}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,    -56,      0}, 0, {   990,   2012}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -56,     56,      0}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(chuckya_seg8_vertex_08009F78, 0x001f2200, 59076, 0x00009f78, 64);
 
 // 0x08009FB8
-static const Vtx chuckya_seg8_vertex_08009FB8[] = {
-    {{{    56,     56,      0}, 0, {   990,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,    -56,      0}, 0, {     0,   2012}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    56,    -56,      0}, 0, {   990,   2012}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,     56,      0}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(chuckya_seg8_vertex_08009FB8, 0x001f2200, 59076, 0x00009fb8, 64);
 
 // 0x08009FF8 - 0x0800A030
 const Gfx chuckya_seg8_dl_08009FF8[] = {
@@ -118,20 +101,10 @@ const Gfx chuckya_seg8_dl_0800A068[] = {
 };
 
 // 0x0800A0E0
-static const Vtx chuckya_seg8_vertex_0800A0E0[] = {
-    {{{     0,     13,      0}, 0, {   990,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -13,    -13,      0}, 0, {     0,   2012}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,    -13,      0}, 0, {   990,   2012}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -13,     13,      0}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(chuckya_seg8_vertex_0800A0E0, 0x001f2200, 59076, 0x0000a0e0, 64);
 
 // 0x0800A120
-static const Vtx chuckya_seg8_vertex_0800A120[] = {
-    {{{    13,     13,      0}, 0, {   990,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,    -13,      0}, 0, {     0,   2012}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    13,    -13,      0}, 0, {   990,   2012}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,     13,      0}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(chuckya_seg8_vertex_0800A120, 0x001f2200, 59076, 0x0000a120, 64);
 
 // 0x0800A160 - 0x0800A198
 const Gfx chuckya_seg8_dl_0800A160[] = {
@@ -173,20 +146,10 @@ const Gfx chuckya_seg8_dl_0800A1D0[] = {
 };
 
 // 0x0800A248
-static const Vtx chuckya_seg8_vertex_0800A248[] = {
-    {{{     0,     13,      0}, 0, {   990,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -13,    -13,      0}, 0, {     0,   2012}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,    -13,      0}, 0, {   990,   2012}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -13,     13,      0}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(chuckya_seg8_vertex_0800A248, 0x001f2200, 59076, 0x0000a0e0, 64);
 
 // 0x0800A288
-static const Vtx chuckya_seg8_vertex_0800A288[] = {
-    {{{    13,     13,      0}, 0, {   990,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,    -13,      0}, 0, {     0,   2012}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    13,    -13,      0}, 0, {   990,   2012}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,     13,      0}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(chuckya_seg8_vertex_0800A288, 0x001f2200, 59076, 0x0000a120, 64);
 
 // 0x0800A2C8 - 0x0800A300
 const Gfx chuckya_seg8_dl_0800A2C8[] = {
@@ -228,12 +191,7 @@ const Gfx chuckya_seg8_dl_0800A338[] = {
 };
 
 // 0x0800A3B0
-static const Vtx chuckya_seg8_vertex_0800A3B0[] = {
-    {{{    23,     23,      0}, 0, {   990,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -22,     23,      0}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -22,    -22,      0}, 0, {     0,    990}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    23,    -22,      0}, 0, {   990,    990}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(chuckya_seg8_vertex_0800A3B0, 0x00134d20, 26785, 0x0000a478, 64);
 
 // 0x0800A3F0 - 0x0800A428
 const Gfx chuckya_seg8_dl_0800A3F0[] = {
@@ -264,12 +222,7 @@ const Gfx chuckya_seg8_dl_0800A428[] = {
 };
 
 // 0x0800A498
-static const Vtx chuckya_seg8_vertex_0800A498[] = {
-    {{{    23,     23,      0}, 0, {   990,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -22,     23,      0}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -22,    -22,      0}, 0, {     0,    990}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    23,    -22,      0}, 0, {   990,    990}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(chuckya_seg8_vertex_0800A498, 0x00134d20, 26785, 0x0000a478, 64);
 
 // 0x0800A4D8 - 0x0800A510
 const Gfx chuckya_seg8_dl_0800A4D8[] = {
@@ -300,12 +253,7 @@ const Gfx chuckya_seg8_dl_0800A510[] = {
 };
 
 // 0x0800A580
-static const Vtx chuckya_seg8_vertex_0800A580[] = {
-    {{{    25,     25,      0}, 0, {   990,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -25,     25,      0}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{   -25,    -25,      0}, 0, {     0,    990}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    25,    -25,      0}, 0, {   990,    990}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(chuckya_seg8_vertex_0800A580, 0x001f2200, 59076, 0x0000a580, 64);
 
 // 0x0800A5C0 - 0x0800A5F8
 const Gfx chuckya_seg8_dl_0800A5C0[] = {
@@ -342,16 +290,7 @@ static const Lights1 chuckya_seg8_lights_0800A668 = gdSPDefLights1(
 );
 
 // 0x0800A680
-static const Vtx chuckya_seg8_vertex_0800A680[] = {
-    {{{    33,    237,      0}, 0, {   480,   1016}, {0x40, 0x65, 0x28, 0xff}}},
-    {{{    27,    198,    107}, 0, {  1012,    932}, {0x40, 0x65, 0x28, 0xff}}},
-    {{{   196,    134,      0}, 0, {   480,    -66}, {0x40, 0x65, 0x28, 0xff}}},
-    {{{   163,    112,    107}, 0, {  1012,     22}, {0x40, 0x65, 0x28, 0xff}}},
-    {{{   196,    134,      0}, 0, {   480,    -66}, {0x40, 0x65, 0xd7, 0xff}}},
-    {{{    27,    198,   -106}, 0, {   -52,    928}, {0x40, 0x65, 0xd7, 0xff}}},
-    {{{    33,    237,      0}, 0, {   480,   1016}, {0x40, 0x65, 0xd7, 0xff}}},
-    {{{   163,    112,   -106}, 0, {   -52,     20}, {0x40, 0x65, 0xd7, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(chuckya_seg8_vertex_0800A680, 0x001f2200, 59076, 0x0000a680, 128);
 
 // 0x0800A700 - 0x0800A758
 const Gfx chuckya_seg8_dl_0800A700[] = {
@@ -391,17 +330,7 @@ static const Lights1 chuckya_seg8_lights_0800A7C8 = gdSPDefLights1(
 );
 
 // 0x0800A7E0
-static const Vtx chuckya_seg8_vertex_0800A7E0[] = {
-    {{{    87,     41,    -41}, 0, {     0,      0}, {0xb8, 0x49, 0xb7, 0xff}}},
-    {{{    87,      0,    -58}, 0, {     0,      0}, {0xb8, 0x00, 0x98, 0xff}}},
-    {{{     3,     -1,      0}, 0, {     0,      0}, {0x82, 0x00, 0x00, 0xff}}},
-    {{{    87,     58,      0}, 0, {     0,      0}, {0xb8, 0x67, 0x00, 0xff}}},
-    {{{    87,    -42,    -41}, 0, {     0,      0}, {0xb8, 0xb6, 0xb7, 0xff}}},
-    {{{    87,    -42,     42}, 0, {     0,      0}, {0xb8, 0xb6, 0x49, 0xff}}},
-    {{{    87,      0,     59}, 0, {     0,      0}, {0xb8, 0x00, 0x67, 0xff}}},
-    {{{    87,     41,     42}, 0, {     0,      0}, {0xb7, 0x49, 0x48, 0xff}}},
-    {{{    88,    -59,      0}, 0, {     0,      0}, {0xb9, 0x98, 0x00, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(chuckya_seg8_vertex_0800A7E0, 0x001f2200, 59076, 0x0000a7e0, 144);
 
 // 0x0800A870 - 0x0800A8D0
 const Gfx chuckya_seg8_dl_0800A870[] = {
@@ -430,13 +359,7 @@ static const Lights1 chuckya_seg8_lights_0800A8F0 = gdSPDefLights1(
 );
 
 // 0x0800A908
-static const Vtx chuckya_seg8_vertex_0800A908[] = {
-    {{{    -9,      2,      0}, 0, {     0,      0}, {0x82, 0xfd, 0x00, 0xff}}},
-    {{{    79,     26,      0}, 0, {     0,      0}, {0xdf, 0x7a, 0x00, 0xff}}},
-    {{{    79,      1,    -33}, 0, {     0,      0}, {0xd4, 0xff, 0x8a, 0xff}}},
-    {{{    80,    -23,      0}, 0, {     0,      0}, {0xde, 0x86, 0x00, 0xff}}},
-    {{{    79,      1,     33}, 0, {     0,      0}, {0xd4, 0xff, 0x76, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(chuckya_seg8_vertex_0800A908, 0x001f2200, 59076, 0x0000a908, 80);
 
 // 0x0800A958 - 0x0800A998
 const Gfx chuckya_seg8_dl_0800A958[] = {
@@ -463,38 +386,10 @@ static const Lights1 chuckya_seg8_lights_0800A9B8 = gdSPDefLights1(
 );
 
 // 0x0800A9D0
-static const Vtx chuckya_seg8_vertex_0800A9D0[] = {
-    {{{   -99,   -129,    130}, 0, {     0,      0}, {0x24, 0xa9, 0x54, 0xff}}},
-    {{{  -135,   -173,    100}, 0, {     0,      0}, {0x24, 0xa9, 0x54, 0xff}}},
-    {{{   -55,   -236,      0}, 0, {     0,      0}, {0x24, 0xa9, 0x54, 0xff}}},
-    {{{  -135,   -173,    100}, 0, {     0,      0}, {0xa3, 0x11, 0x54, 0xff}}},
-    {{{  -202,    -49,      0}, 0, {     0,      0}, {0xa3, 0x11, 0x54, 0xff}}},
-    {{{  -213,   -113,      1}, 0, {     0,      0}, {0xa3, 0x11, 0x54, 0xff}}},
-    {{{  -135,   -173,    100}, 0, {     0,      0}, {0xa4, 0x12, 0x54, 0xff}}},
-    {{{   -99,   -129,    130}, 0, {     0,      0}, {0xa4, 0x12, 0x54, 0xff}}},
-    {{{  -202,    -49,      0}, 0, {     0,      0}, {0xa4, 0x12, 0x54, 0xff}}},
-    {{{  -135,   -173,    100}, 0, {     0,      0}, {0xb2, 0x9d, 0x00, 0xff}}},
-    {{{  -132,   -175,   -100}, 0, {     0,      0}, {0xb2, 0x9d, 0x00, 0xff}}},
-    {{{   -55,   -236,      0}, 0, {     0,      0}, {0xb2, 0x9d, 0x00, 0xff}}},
-    {{{  -135,   -173,    100}, 0, {     0,      0}, {0xb3, 0x9c, 0x00, 0xff}}},
-    {{{  -213,   -113,      1}, 0, {     0,      0}, {0xb3, 0x9c, 0x00, 0xff}}},
-    {{{  -132,   -175,   -100}, 0, {     0,      0}, {0xb3, 0x9c, 0x00, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(chuckya_seg8_vertex_0800A9D0, 0x001f2200, 59076, 0x0000a9d0, 240);
 
 // 0x0800AAC0
-static const Vtx chuckya_seg8_vertex_0800AAC0[] = {
-    {{{  -213,   -113,      1}, 0, {     0,      0}, {0xa3, 0x0e, 0xac, 0xff}}},
-    {{{  -202,    -49,      0}, 0, {     0,      0}, {0xa3, 0x0e, 0xac, 0xff}}},
-    {{{   -98,   -130,   -130}, 0, {     0,      0}, {0xa3, 0x0e, 0xac, 0xff}}},
-    {{{  -132,   -175,   -100}, 0, {     0,      0}, {0xa3, 0x0e, 0xac, 0xff}}},
-    {{{   -99,   -129,    130}, 0, {     0,      0}, {0x25, 0xa9, 0x54, 0xff}}},
-    {{{   -55,   -236,      0}, 0, {     0,      0}, {0x25, 0xa9, 0x54, 0xff}}},
-    {{{     3,   -210,      1}, 0, {     0,      0}, {0x25, 0xa9, 0x54, 0xff}}},
-    {{{  -132,   -175,   -100}, 0, {     0,      0}, {0x28, 0xaa, 0xad, 0xff}}},
-    {{{     3,   -210,      1}, 0, {     0,      0}, {0x28, 0xaa, 0xad, 0xff}}},
-    {{{   -55,   -236,      0}, 0, {     0,      0}, {0x28, 0xaa, 0xad, 0xff}}},
-    {{{   -98,   -130,   -130}, 0, {     0,      0}, {0x28, 0xaa, 0xad, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(chuckya_seg8_vertex_0800AAC0, 0x001f2200, 59076, 0x0000aac0, 176);
 
 // 0x0800AB70 - 0x0800ABE8
 const Gfx chuckya_seg8_dl_0800AB70[] = {

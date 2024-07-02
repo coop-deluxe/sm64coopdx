@@ -1,30 +1,17 @@
+#include "pc/rom_assets.h"
 // Impact Ring
 
 // 0x0601C9D0
-static const Vtx impact_ring_seg6_vertex_0601C9D0[] = {
-    {{{     0,      0,     -5}, 0, {   992,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    -5,      0,      5}, 0, {     0,   2016}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,      0,      5}, 0, {   992,   2016}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{    -5,      0,     -5}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(impact_ring_seg6_vertex_0601C9D0, 0x00188440, 199722, 0x0001c9d0, 64);
 
 // 0x0601CA10
-static const Vtx impact_ring_seg6_vertex_0601CA10[] = {
-    {{{     5,      0,     -5}, 0, {   992,      0}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,      0,      5}, 0, {     0,   2016}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     5,      0,      5}, 0, {   992,   2016}, {0xff, 0xff, 0xff, 0xff}}},
-    {{{     0,      0,     -5}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
-};
+ROM_ASSET_LOAD_VTX(impact_ring_seg6_vertex_0601CA10, 0x00188440, 199722, 0x0001ca10, 64);
 
 // 0x0601CA50
-ALIGNED8 const Texture impact_ring_seg6_texture_0601CA50[] = {
-#include "actors/impact_ring/impact_ring_left_side.ia16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(impact_ring_seg6_texture_0601CA50, "actors/impact_ring/impact_ring_left_side.ia16.inc.c", 0x00188440, 199722, 0x0001ca50, 4096);
 
 // 0x0601DA50
-ALIGNED8 const Texture impact_ring_seg6_texture_0601DA50[] = {
-#include "actors/impact_ring/impact_ring_right_side.ia16.inc.c"
-};
+ROM_ASSET_LOAD_TEXTURE(impact_ring_seg6_texture_0601DA50, "actors/impact_ring/impact_ring_right_side.ia16.inc.c", 0x00188440, 199722, 0x0001da50, 4096);
 
 // 0x0601EA50 - 0x0601EA88
 const Gfx impact_ring_seg6_dl_0601EA50[] = {
