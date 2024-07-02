@@ -668,7 +668,12 @@ ifeq ($(WINDOWS_BUILD),1) # fixes compilation in MXE on Linux and WSL
   OBJCOPY := objcopy
   OBJDUMP := $(CROSS)objdump
 else ifeq ($(OSX_BUILD),1)
-  CPP := cpp-9 -P
+  OSX_GCC_VER = $(shell find `brew --prefix`/bin/gcc* | grep -oE '[[:digit:]]+' | sort -n | uniq | tail -1)
+  # if we couldn't find a gcc ver, default to 9
+  ifeq ($(OSX_GCC_VER),)
+    OSX_GCC_VER = 9
+  endif
+  CPP := cpp-$(OSX_GCC_VER) -P
   OBJDUMP := i686-w64-mingw32-objdump
   OBJCOPY := i686-w64-mingw32-objcopy
 else ifeq ($(TARGET_N64),0) # Linux & other builds
@@ -749,7 +754,7 @@ else ifeq ($(findstring SDL,$(WINDOW_API)),SDL)
     BACKEND_LDFLAGS += -lGLESv2
   else ifeq ($(OSX_BUILD),1)
     BACKEND_LDFLAGS += -framework OpenGL `pkg-config --libs glew`
-    EXTRA_CPP_FLAGS += -stdlib=libc++ -std=c++0x
+    EXTRA_CPP_FLAGS += -stdlib=libc++ -std=c++17
   else
     BACKEND_LDFLAGS += -lGL
    endif
@@ -971,7 +976,9 @@ endif
 # Prevent a crash with -sopt
 export LANG := C
 
-LDFLAGS += -latomic
+ifeq ($(OSX_BUILD),0)
+  LDFLAGS += -latomic
+endif
 
 #==============================================================================#
 # Extra CC Flags                                                               #

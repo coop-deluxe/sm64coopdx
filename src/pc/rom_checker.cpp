@@ -2,6 +2,7 @@
 #include <iostream>
 #include <vector>
 #include <filesystem>
+#include <sstream>
 
 #if defined(_WIN32) || defined(_WIN64)
 #include <windows.h>
