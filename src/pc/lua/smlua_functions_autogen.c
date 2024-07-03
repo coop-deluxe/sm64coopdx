@@ -29146,23 +29146,6 @@ int smlua_func_djui_hud_set_render_behind_hud(lua_State* L) {
     return 1;
 }
 
-int smlua_func_get_environment_region(lua_State* L) {
-    if (L == NULL) { return 0; }
-
-    int top = lua_gettop(L);
-    if (top != 1) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "get_environment_region", 1, top);
-        return 0;
-    }
-
-    u8 index = smlua_to_integer(L, 1);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "get_environment_region"); return 0; }
-
-    lua_pushnumber(L, get_environment_region(index));
-
-    return 1;
-}
-
 int smlua_func_network_discord_id_from_local_index(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -29234,25 +29217,6 @@ int smlua_func_network_player_palette_to_color(lua_State* L) {
     smlua_push_integer_field(3, "r", out[0]);
     smlua_push_integer_field(3, "g", out[1]);
     smlua_push_integer_field(3, "b", out[2]);
-
-    return 1;
-}
-
-int smlua_func_set_environment_region(lua_State* L) {
-    if (L == NULL) { return 0; }
-
-    int top = lua_gettop(L);
-    if (top != 2) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "set_environment_region", 2, top);
-        return 0;
-    }
-
-    u8 index = smlua_to_integer(L, 1);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "set_environment_region"); return 0; }
-    s32 value = smlua_to_integer(L, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "set_environment_region"); return 0; }
-
-    set_environment_region(index, value);
 
     return 1;
 }
@@ -30217,6 +30181,23 @@ int smlua_func_get_envfx(UNUSED lua_State* L) {
     return 1;
 }
 
+int smlua_func_get_environment_region(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "get_environment_region", 1, top);
+        return 0;
+    }
+
+    u8 index = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "get_environment_region"); return 0; }
+
+    lua_pushnumber(L, get_environment_region(index));
+
+    return 1;
+}
+
 int smlua_func_get_global_timer(UNUSED lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -30825,6 +30806,25 @@ int smlua_func_save_file_set_using_backup_slot(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "save_file_set_using_backup_slot"); return 0; }
 
     save_file_set_using_backup_slot(usingBackupSlot);
+
+    return 1;
+}
+
+int smlua_func_set_environment_region(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "set_environment_region", 2, top);
+        return 0;
+    }
+
+    u8 index = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "set_environment_region"); return 0; }
+    s32 value = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "set_environment_region"); return 0; }
+
+    set_environment_region(index, value);
 
     return 1;
 }
@@ -34448,11 +34448,9 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "audio_stream_set_speed", smlua_func_audio_stream_set_speed);
     smlua_bind_function(L, "audio_stream_set_tempo", smlua_func_audio_stream_set_tempo);
     smlua_bind_function(L, "djui_hud_set_render_behind_hud", smlua_func_djui_hud_set_render_behind_hud);
-    smlua_bind_function(L, "get_environment_region", smlua_func_get_environment_region);
     smlua_bind_function(L, "network_discord_id_from_local_index", smlua_func_network_discord_id_from_local_index);
     smlua_bind_function(L, "network_player_color_to_palette", smlua_func_network_player_color_to_palette);
     smlua_bind_function(L, "network_player_palette_to_color", smlua_func_network_player_palette_to_color);
-    smlua_bind_function(L, "set_environment_region", smlua_func_set_environment_region);
 
     // smlua_gfx_utils.h
     smlua_bind_function(L, "get_fog_color", smlua_func_get_fog_color);
@@ -34515,6 +34513,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "get_dialog_id", smlua_func_get_dialog_id);
     smlua_bind_function(L, "get_dialog_response", smlua_func_get_dialog_response);
     smlua_bind_function(L, "get_envfx", smlua_func_get_envfx);
+    smlua_bind_function(L, "get_environment_region", smlua_func_get_environment_region);
     smlua_bind_function(L, "get_global_timer", smlua_func_get_global_timer);
     smlua_bind_function(L, "get_got_file_coin_hi_score", smlua_func_get_got_file_coin_hi_score);
     smlua_bind_function(L, "get_hand_foot_pos_x", smlua_func_get_hand_foot_pos_x);
@@ -34551,6 +34550,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "reset_window_title", smlua_func_reset_window_title);
     smlua_bind_function(L, "save_file_get_using_backup_slot", smlua_func_save_file_get_using_backup_slot);
     smlua_bind_function(L, "save_file_set_using_backup_slot", smlua_func_save_file_set_using_backup_slot);
+    smlua_bind_function(L, "set_environment_region", smlua_func_set_environment_region);
     smlua_bind_function(L, "set_got_file_coin_hi_score", smlua_func_set_got_file_coin_hi_score);
     smlua_bind_function(L, "set_last_completed_course_num", smlua_func_set_last_completed_course_num);
     smlua_bind_function(L, "set_last_completed_star_num", smlua_func_set_last_completed_star_num);

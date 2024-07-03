@@ -121,6 +121,9 @@ void set_volume_level(f32 volume);
 void set_volume_sfx(f32 volume);
 void set_volume_env(f32 volume);
 
+f32 get_environment_region(u8 index);
+void set_environment_region(u8 index, s32 value);
+
 void set_window_title(const char* title);
 void reset_window_title(void);
 

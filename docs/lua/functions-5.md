@@ -2174,6 +2174,26 @@
 
 <br />
 
+## [get_environment_region](#get_environment_region)
+
+### Lua Example
+`local numberValue = get_environment_region(index)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| index | `integer` |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 get_environment_region(u8 index);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [get_global_timer](#get_global_timer)
 
 ### Lua Example
@@ -2866,6 +2886,27 @@
 
 ### C Prototype
 `void save_file_set_using_backup_slot(bool usingBackupSlot);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_environment_region](#set_environment_region)
+
+### Lua Example
+`set_environment_region(index, value)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| index | `integer` |
+| value | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_environment_region(u8 index, s32 value);`
 
 [:arrow_up_small:](#)
 

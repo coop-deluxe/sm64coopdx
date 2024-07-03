@@ -43,23 +43,6 @@ void audio_stream_set_speed(UNUSED struct ModAudio* audio, UNUSED f32 initial_fr
     LOG_LUA_LINE_WARNING("[LUA] audio_stream_set_speed() is deprecated! There may be a replacement for this function in the future.");
 }
 
-f32 get_environment_region(u8 index) {
-    LOG_LUA_LINE_WARNING("[LUA] get_environment_region() is deprecated! Use get_water_level() instead.");
-    s32 idx = 6 * index;
-    if (gEnvironmentRegions != NULL && index > 0 && index <= gEnvironmentRegions[0] && gEnvironmentRegionsLength > idx) {
-        return gEnvironmentRegions[idx];
-    }
-    return gLevelValues.floorLowerLimit;
-}
-
-void set_environment_region(u8 index, s32 value) {
-    LOG_LUA_LINE_WARNING("[LUA] get_environment_region() is deprecated! Use set_water_level() instead.");
-    s32 idx = 6 * index;
-    if (gEnvironmentRegions != NULL && index > 0 && index <= gEnvironmentRegions[0] && gEnvironmentRegionsLength > idx) {
-        gEnvironmentRegions[idx] = value;
-    }
-}
-
 void network_player_color_to_palette(struct NetworkPlayer *np, enum PlayerPart part, Color color) {
     LOG_LUA_LINE_WARNING("[LUA] network_player_color_to_palette() is deprecated! Use network_player_set_override_palette_color() instead.");
     if (np == NULL || !(part < PLAYER_PART_MAX && part >= 0)) { return; }
