@@ -9,6 +9,7 @@
 #include "pc/lua/smlua.h"
 #include "pc/lua/utils/smlua_text_utils.h"
 #include "game/memory.h"
+#include "audio/data.h"
 #include "audio/external.h"
 
 #include "network/network.h"
@@ -24,6 +25,7 @@
 #include "loading.h"
 #include "cliopts.h"
 #include "configfile.h"
+#include "thread.h"
 #include "controller/controller_api.h"
 #include "controller/controller_keyboard.h"
 #include "fs/fs.h"
@@ -217,6 +219,10 @@ void produce_interpolation_frames_and_delay(void) {
     gRenderingInterpolated = false;
 }
 
+// It's just better to have this off the stack, Because the size isn't small.
+// It also may help static analysis and bug catching.
+static s16 sAudioBuffer[SAMPLES_HIGH * 2 * 2] = { 0 };
+
 inline static void buffer_audio(void) {
     bool shouldMute = configMuteFocusLoss && !WAPI.has_focus();
     const f32 masterMod = (f32)configMasterVolume / 127.0f * (f32)gLuaVolumeMaster / 127.0f;
@@ -226,11 +232,37 @@ inline static void buffer_audio(void) {
 
     int samplesLeft = audio_api->buffered();
     u32 numAudioSamples = samplesLeft < audio_api->get_desired_buffered() ? SAMPLES_HIGH : SAMPLES_LOW;
-    s16 audioBuffer[SAMPLES_HIGH * 2 * 2];
     for (s32 i = 0; i < 2; i++) {
-        create_next_audio_buffer(audioBuffer + i * (numAudioSamples * 2), numAudioSamples);
+        create_next_audio_buffer(sAudioBuffer + i * (numAudioSamples * 2), numAudioSamples);
     }
-    audio_api->play((u8 *)audioBuffer, 2 * numAudioSamples * 4);
+    audio_api->play((u8 *)sAudioBuffer, 2 * numAudioSamples * 4);
+}
+
+void *audio_thread(void *arg) {
+    // As long as we have an audio api and that we're threaded, Loop.
+    while (audio_api) {
+        f64 curTime = clock_elapsed_f64();
+        
+        // Buffer the audio.
+        lock_mutex(&gAudioThread);
+        buffer_audio();
+        unlock_mutex(&gAudioThread);
+        
+        // Delay till the next frame for smooth audio at the correct speed.
+        // delay
+        f64 targetDelta = 1.0 / (f64)FRAMERATE;
+        f64 now = clock_elapsed_f64();
+        f64 actualDelta = now - curTime;
+        if (actualDelta < targetDelta) {
+            f64 delay = ((targetDelta - actualDelta) * 1000.0);
+            WAPI.delay((u32)delay);
+        }
+    }
+    
+    // Exit the thread if our loop breaks.
+    exit_thread();
+    
+    return NULL;
 }
 
 void produce_one_frame(void) {
@@ -241,8 +273,11 @@ void produce_one_frame(void) {
     CTX_EXTENT(CTX_GAME_LOOP, game_loop_one_iteration);
 
     CTX_EXTENT(CTX_SMLUA, smlua_update);
-
-    CTX_EXTENT(CTX_AUDIO, buffer_audio);
+    
+    // If we aren't threaded
+    if (gAudioThread.state == INVALID) {
+        CTX_EXTENT(CTX_AUDIO, buffer_audio);
+    }
 
     CTX_EXTENT(CTX_RENDER, produce_interpolation_frames_and_delay);
 }
@@ -395,14 +430,14 @@ int main(int argc, char *argv[]) {
     // start the thread for setting up the game
 #ifdef LOADING_SCREEN_SUPPORTED
     bool threadSuccess = false;
-    if (!gCLIOpts.hideLoadingScreen && pthread_mutex_init(&gLoadingThreadMutex, NULL) == 0) {
+    if (!gCLIOpts.hideLoadingScreen && pthread_mutex_init(&gLoadingThread.mutex, NULL) == 0) {
         gIsThreaded = true;
-        if (pthread_create(&gLoadingThreadId, NULL, main_game_init, NULL) == 0) {
+        if (pthread_create(&gLoadingThread.thread, NULL, main_game_init, NULL) == 0) {
             render_loading_screen(); // render the loading screen while the game is setup
             threadSuccess = true;
         }
         gIsThreaded = false;
-        pthread_mutex_destroy(&gLoadingThreadMutex);
+        pthread_mutex_destroy(&gLoadingThread.mutex);
     }
     if (!threadSuccess)
 #endif
@@ -418,6 +453,14 @@ int main(int argc, char *argv[]) {
     if (!audio_api && audio_sdl.init()) { audio_api = &audio_sdl; }
 #endif
     if (!audio_api) { audio_api = &audio_null; }
+    
+    // Initialize the audio thread if possible.
+    int err = init_thread_handle(&gAudioThread, audio_thread, NULL, NULL, 0);
+    // If there was no error initializing the thread, Detach it so it runs on it's own.
+    if (err == 0) {
+        gIsThreaded = TRUE;
+        detach_thread(&gAudioThread);
+    }
 
 #ifdef LOADING_SCREEN_SUPPORTED
     loading_screen_reset();

@@ -58,31 +58,35 @@ void sequence_channel_process_sound(struct SequenceChannel *seqChannel, s32 reca
 }
 #else
 static void sequence_channel_process_sound(struct SequenceChannel *seqChannel) {
+    if (seqChannel == NULL) { return; }
+    
+    struct SequencePlayer *seqPlayer = seqChannel->seqPlayer;
+    if (seqPlayer == NULL) { return; }
+    
     f32 channelVolume;
     f32 panLayerWeight;
     f32 panFromChannel;
-    s32 i;
 
     // Rom-hacks audio fix
     // Force the BGM sequence channels to follow the BGM sequence player mute behavior
     // Make the audio completely silent if MUTE_BEHAVIOR_STOP_SCRIPT or MUTE_BEHAVIOR_STOP_NOTES is set
-    if (seqChannel->seqPlayer == &gSequencePlayers[0]) {
-        seqChannel->muteBehavior = seqChannel->seqPlayer->muteBehavior;
-        if (seqChannel->seqPlayer->muted && (seqChannel->muteBehavior & (MUTE_BEHAVIOR_STOP_SCRIPT | MUTE_BEHAVIOR_STOP_NOTES)) != 0) {
-            seqChannel->seqPlayer->muteVolumeScale = 0.f;
+    if (seqPlayer == &gSequencePlayers[0]) {
+        seqChannel->muteBehavior = seqPlayer->muteBehavior;
+        if (seqPlayer->muted && (seqChannel->muteBehavior & (MUTE_BEHAVIOR_STOP_SCRIPT | MUTE_BEHAVIOR_STOP_NOTES)) != 0) {
+            seqPlayer->muteVolumeScale = 0.f;
         }
     }
 
     channelVolume = seqChannel->volume * seqChannel->volumeScale *
-        seqChannel->seqPlayer->fadeVolume * seqChannel->seqPlayer->volumeScale;
-    if (seqChannel->seqPlayer->muted && (seqChannel->muteBehavior & MUTE_BEHAVIOR_SOFTEN) != 0) {
-        channelVolume *= seqChannel->seqPlayer->muteVolumeScale;
+        seqPlayer->fadeVolume * seqPlayer->volumeScale;
+    if (seqPlayer->muted && (seqChannel->muteBehavior & MUTE_BEHAVIOR_SOFTEN) != 0) {
+        channelVolume *= seqPlayer->muteVolumeScale;
     }
 
     panFromChannel = seqChannel->pan * seqChannel->panChannelWeight;
     panLayerWeight = US_FLOAT(1.0) - seqChannel->panChannelWeight;
 
-    for (i = 0; i < 4; i++) {
+    for (s32 i = 0; i < 4; i++) {
         struct SequenceChannelLayer *layer = seqChannel->layers[i];
         if (layer != NULL && layer->enabled && layer->note != NULL) {
             layer->noteFreqScale = layer->freqScale * seqChannel->freqScale;
