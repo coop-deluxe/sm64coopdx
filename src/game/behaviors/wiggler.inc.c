@@ -441,6 +441,8 @@ void bhv_wiggler_on_received_pre(UNUSED u8 localIndex) {
 }
 
 void bhv_wiggler_on_received_post(UNUSED u8 localIndex) {
+    if (o == NULL) { return; }
+
     Vec3f posDiff = { 0 };
     posDiff[0] = o->oPosX - wigglerPrePos[0];
     posDiff[1] = o->oPosY - wigglerPrePos[1];
