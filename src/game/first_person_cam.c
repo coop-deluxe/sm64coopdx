@@ -55,7 +55,6 @@ bool get_first_person_enabled(void) {
 }
 
 void set_first_person_enabled(bool enable) {
-    if (gFirstPersonCamera.enabled && !enable) { gFOVState.fov = 45.0f; }
     gFirstPersonCamera.enabled = enable;
 }
 
@@ -66,7 +65,7 @@ static void first_person_camera_update(void) {
     s16 invX = camera_config_is_x_inverted() ? 1 : -1;
     s16 invY = camera_config_is_y_inverted() ? 1 : -1;
 
-    if (gMenuMode == -1 && !gDjuiChatBoxFocus && !gDjuiConsoleFocus) {
+    if (mouse_relative_enabled) {
         // update pitch
         gFirstPersonCamera.pitch -= sensY * (invY * m->controller->extStickY - 1.5f * mouse_y);
         gFirstPersonCamera.pitch = CLAMP(gFirstPersonCamera.pitch, -0x3F00, 0x3F00);
@@ -139,8 +138,6 @@ static void first_person_camera_update(void) {
     gLakituState.focHSpeed = 0;
     gLakituState.focVSpeed = 0;
     vec3s_set(gLakituState.shakeMagnitude, 0, 0, 0);
-
-    gFOVState.fov = gFirstPersonCamera.fov;
 }
 
 void first_person_update(void) {

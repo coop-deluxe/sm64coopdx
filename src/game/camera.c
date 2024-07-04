@@ -3648,7 +3648,7 @@ void zoom_out_if_paused_and_outside(struct GraphNodeCamera *camera) {
         areaMaskIndex = 0;
         areaBit = 0;
     }
-    if (gCameraMovementFlags & CAM_MOVE_PAUSE_SCREEN && !gDjuiInPlayerMenu) {
+    if (gCameraMovementFlags & CAM_MOVE_PAUSE_SCREEN && !gDjuiInPlayerMenu && !get_first_person_enabled()) {
         if (sFramesPaused >= 2) {
             if (sZoomOutAreaMasks[areaMaskIndex] & areaBit) {
 

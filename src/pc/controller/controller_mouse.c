@@ -21,7 +21,7 @@ u32 mouse_window_buttons;
 s32 mouse_window_x;
 s32 mouse_window_y;
 
-static bool mouse_relative_enabled;
+bool mouse_relative_enabled;
 
 void controller_mouse_read_window(void) {
     if (!mouse_init_ok) { return; }
