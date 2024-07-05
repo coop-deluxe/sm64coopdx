@@ -1520,8 +1520,10 @@ APP_CONTENTS_DIR = $(APP_DIR)/Contents
 APP_MACOS_DIR = $(APP_CONTENTS_DIR)/MacOS
 APP_RESOURCES_DIR = $(APP_CONTENTS_DIR)/Resources
 
-GLEW_LIB := $(shell find `brew --prefix`/Cellar/glew | grep libGLEW.2.2.0 | sort -n | uniq)
-SDL2_LIB := $(shell find `brew --prefix`/Cellar/sdl2 | grep libSDL2- | sort -n | uniq)
+ifeq ($(OSX_BUILD),1)
+  GLEW_LIB := $(shell find `brew --prefix`/Cellar/glew | grep libGLEW.2.2.0 | sort -n | uniq)
+  SDL2_LIB := $(shell find `brew --prefix`/Cellar/sdl2 | grep libSDL2- | sort -n | uniq)
+endif
 
 all:
 	@if [ "$(USE_APP)" = "0" ]; then \
