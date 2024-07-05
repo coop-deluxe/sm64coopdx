@@ -640,9 +640,9 @@ else ifeq ($(COMPILER),gcc)
   CC      := $(CROSS)gcc
   CXX     := $(CROSS)g++
   ifeq ($(OSX_BUILD),0)
-	EXTRA_CFLAGS += -Wno-unused-result -Wno-format-truncation
+	  EXTRA_CFLAGS += -Wno-unused-result -Wno-format-truncation
   else
-	EXTRA_CFLAGS += -Wno-unused-result
+	  EXTRA_CFLAGS += -Wno-unused-result -mmacosx-version-min=14
   endif
 else ifeq ($(COMPILER),clang)
   CC      := clang
@@ -753,8 +753,8 @@ else ifeq ($(findstring SDL,$(WINDOW_API)),SDL)
   else ifeq ($(TARGET_RPI),1)
     BACKEND_LDFLAGS += -lGLESv2
   else ifeq ($(OSX_BUILD),1)
-    BACKEND_LDFLAGS += -framework OpenGL `pkg-config --libs glew`
-    EXTRA_CPP_FLAGS += -stdlib=libc++ -std=c++17
+    BACKEND_LDFLAGS += -framework OpenGL `pkg-config --libs glew` -mmacosx-version-min=14
+    EXTRA_CPP_FLAGS += -stdlib=libc++ -std=c++17 -mmacosx-version-min=14
   else
     BACKEND_LDFLAGS += -lGL
    endif
@@ -1518,6 +1518,10 @@ endif
 APP_DIR = ./sm64coopdx.app
 APP_CONTENTS_DIR = $(APP_DIR)/Contents
 APP_MACOS_DIR = $(APP_CONTENTS_DIR)/MacOS
+APP_RESOURCES_DIR = $(APP_CONTENTS_DIR)/Resources
+
+GLEW_LIB := $(shell find `brew --prefix`/Cellar/glew | grep libGLEW.2.2.0 | sort -n | uniq)
+SDL2_LIB := $(shell find `brew --prefix`/Cellar/sdl2 | grep libSDL2- | sort -n | uniq)
 
 all:
 	@if [ "$(USE_APP)" = "0" ]; then \
@@ -1527,10 +1531,25 @@ all:
 		rm -rf $(APP_DIR); \
 		rm -rf build/us_pc/sm64coopdx.app; \
 		mkdir -p $(APP_MACOS_DIR); \
-		mkdir -p $(APP_CONTENTS_DIR)/Resources; \
+		mkdir -p $(APP_RESOURCES_DIR); \
 		mv build/us_pc/sm64coopdx $(APP_MACOS_DIR)/sm64coopdx; \
-		cp -r build/us_pc/* $(APP_MACOS_DIR); \
-		cp res/icon.icns $(APP_CONTENTS_DIR)/Resources/icon.icns; \
+    cp -r build/us_pc/mods $(APP_RESOURCES_DIR); \
+    cp -r build/us_pc/lang $(APP_RESOURCES_DIR); \
+    cp -r build/us_pc/dynos $(APP_RESOURCES_DIR); \
+    cp -r build/us_pc/palettes $(APP_RESOURCES_DIR); \
+		cp build/us_pc/discord_game_sdk.dylib $(APP_MACOS_DIR); \
+    cp build/us_pc/libdiscord_game_sdk.dylib $(APP_MACOS_DIR); \
+    cp build/us_pc/libcoopnet.dylib $(APP_MACOS_DIR); \
+    cp build/us_pc/libjuice.1.2.2.dylib $(APP_MACOS_DIR); \
+    cp $(SDL2_LIB) $(APP_MACOS_DIR)/libSDL2.dylib; \
+    install_name_tool -change /opt/homebrew/opt/sdl2/lib/libSDL2-2.0.0.dylib @executable_path/libSDL2.dylib $(APP_MACOS_DIR)/sm64coopdx; > /dev/null 2>&1 \
+		install_name_tool -id @executable_path/libSDL2.dylib $(APP_MACOS_DIR)/libSDL2.dylib; > /dev/null 2>&1 \
+    codesign --force --deep --sign - $(APP_MACOS_DIR)/libSDL2.dylib; \
+    cp $(GLEW_LIB) $(APP_MACOS_DIR)/libGLEW.dylib; \
+    install_name_tool -change /opt/homebrew/opt/glew/lib/libGLEW.2.2.dylib @executable_path/libGLEW.dylib $(APP_MACOS_DIR)/sm64coopdx; > /dev/null 2>&1 \
+		install_name_tool -id @executable_path/libGLEW.dylib $(APP_MACOS_DIR)/libGLEW.dylib; > /dev/null 2>&1 \
+    codesign --force --deep --sign - $(APP_MACOS_DIR)/libGLEW.dylib; \
+		cp res/icon.icns $(APP_RESOURCES_DIR)/icon.icns; \
 		echo "APPL????" > $(APP_CONTENTS_DIR)/PkgInfo; \
 		echo '<?xml version="1.0" encoding="UTF-8"?>' > $(APP_CONTENTS_DIR)/Info.plist; \
 		echo '<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">' >> $(APP_CONTENTS_DIR)/Info.plist; \
