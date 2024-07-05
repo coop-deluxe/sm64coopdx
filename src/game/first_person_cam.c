@@ -37,10 +37,11 @@ bool first_person_check_cancels(struct MarioState *m) {
     if (m->action == ACT_FIRST_PERSON || m->action == ACT_IN_CANNON || m->action == ACT_READING_NPC_DIALOG || m->action == ACT_DISAPPEARED || m->action == ACT_FLYING) {
         return true;
     }
+    if (find_object_with_behavior(smlua_override_behavior(bhvActSelector)) != NULL) { return true; }
 
     if (gLuaLoadingMod != NULL) { return false; }
 
-    struct Object *bowser = find_object_with_behavior(bhvBowser);
+    struct Object *bowser = find_object_with_behavior(smlua_override_behavior(bhvBowser));
     if ((gCurrLevelNum == LEVEL_BOWSER_1 || gCurrLevelNum == LEVEL_BOWSER_2 || gCurrLevelNum == LEVEL_BOWSER_3) &&
         bowser != NULL &&
         (bowser->oAction == 5 || bowser->oAction == 6)) {
