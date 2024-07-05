@@ -544,7 +544,7 @@ struct DjuiChatBox* djui_chat_box_create(void) {
     cfBase->abandonAfterChildRenderFail = true;
     chatBox->chatFlow = chatFlow;
 
-    struct DjuiInputbox* chatInput = djui_inputbox_create(base, 200);
+    struct DjuiInputbox* chatInput = djui_inputbox_create(base, MAX_MSG_LENGTH);
     struct DjuiBase* ciBase = &chatInput->base;
     djui_base_set_size_type(ciBase, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
     djui_base_set_size(ciBase, 1.0f, 32);
