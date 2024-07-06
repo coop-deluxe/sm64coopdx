@@ -11,7 +11,7 @@
 #define MUTEX_UNLOCK(handle) if (handle.state != INVALID) { unlock_mutex(&handle); }
 
 // Types
-enum ThreadState : uint8_t {
+enum ThreadState {
     INVALID = 0,
     STOPPED = 1,
     IDLE = 2,
