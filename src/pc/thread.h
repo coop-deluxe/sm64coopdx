@@ -6,11 +6,7 @@
 #include "cliopts.h"
 #include "types.h"
 
-// Externs
-extern bool gIsThreaded;
-
 // Macros
-#define RUN_THREADED if (gIsThreaded)
 #define MUTEX_LOCK(handle) if (handle.state != INVALID) { lock_mutex(&handle); }
 #define MUTEX_UNLOCK(handle) if (handle.state != INVALID) { unlock_mutex(&handle); }
 

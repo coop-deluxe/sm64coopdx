@@ -431,12 +431,10 @@ int main(int argc, char *argv[]) {
 #ifdef LOADING_SCREEN_SUPPORTED
     bool threadSuccess = false;
     if (!gCLIOpts.hideLoadingScreen && pthread_mutex_init(&gLoadingThread.mutex, NULL) == 0) {
-        gIsThreaded = true;
         if (pthread_create(&gLoadingThread.thread, NULL, main_game_init, NULL) == 0) {
             render_loading_screen(); // render the loading screen while the game is setup
             threadSuccess = true;
         }
-        gIsThreaded = false;
         pthread_mutex_destroy(&gLoadingThread.mutex);
     }
     if (!threadSuccess)
@@ -458,7 +456,6 @@ int main(int argc, char *argv[]) {
     int err = init_thread_handle(&gAudioThread, audio_thread, NULL, NULL, 0);
     // If there was no error initializing the thread, Detach it so it runs on it's own.
     if (err == 0) {
-        gIsThreaded = TRUE;
         detach_thread(&gAudioThread);
     }
 

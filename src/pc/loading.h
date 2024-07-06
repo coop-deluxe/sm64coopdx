@@ -18,7 +18,7 @@ struct LoadingSegment {
 extern struct LoadingSegment gCurrLoadingSegment;
 
 #define LOADING_SCREEN_MUTEX(...) \
-    if (!gCLIOpts.hideLoadingScreen && gIsThreaded) { \
+    if (!gCLIOpts.hideLoadingScreen && gLoadingThread.state != INVALID) { \
         pthread_mutex_lock(&gLoadingThread.mutex); \
         __VA_ARGS__; \
         pthread_mutex_unlock(&gLoadingThread.mutex); \

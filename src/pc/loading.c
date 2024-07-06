@@ -38,7 +38,7 @@ static void loading_screen_produce_one_frame(void) {
 }
 
 static bool loading_screen_on_render(struct DjuiBase* base) {
-    RUN_THREADED { pthread_mutex_lock(&gLoadingThread.mutex); }
+    MUTEX_LOCK(gLoadingThread);
 
     u32 windowWidth, windowHeight;
     WAPI.get_dimensions(&windowWidth, &windowHeight);
@@ -75,7 +75,7 @@ static bool loading_screen_on_render(struct DjuiBase* base) {
 
     djui_base_compute(base);
 
-    RUN_THREADED { pthread_mutex_unlock(&gLoadingThread.mutex); }
+    MUTEX_UNLOCK(gLoadingThread);
 
     return true;
 }

@@ -3,8 +3,6 @@
 #include <assert.h>
 #include <string.h>
 
-bool gIsThreaded = false;
-
 int init_thread_handle(struct ThreadHandle *handle, void *(*entry)(void *), void *arg, void *sp, size_t sp_size) {
     int err1 = init_thread(handle, entry, arg, sp, sp_size);
     int err2 = init_mutex(handle);
