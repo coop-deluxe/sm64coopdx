@@ -30,7 +30,7 @@ int init_thread(struct ThreadHandle *handle, void *(*entry)(void *), void *arg, 
     // Setup our thread and create it.
     pthread_attr_t thattr = { 0 };
     
-    // Get default attributes for a new thread.
+    // Initialize default attributes for a new thread.
     int err = pthread_attr_init(&thattr);
     assert(err == 0);
     
