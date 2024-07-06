@@ -238,7 +238,7 @@ inline static void buffer_audio(void) {
     audio_api->play((u8 *)sAudioBuffer, 2 * numAudioSamples * 4);
 }
 
-void *audio_thread(void *arg) {
+void *audio_thread(UNUSED void *arg) {
     // As long as we have an audio api and that we're threaded, Loop.
     while (audio_api) {
         f64 curTime = clock_elapsed_f64();
@@ -430,8 +430,8 @@ int main(int argc, char *argv[]) {
     // start the thread for setting up the game
 #ifdef LOADING_SCREEN_SUPPORTED
     bool threadSuccess = false;
-    if (!gCLIOpts.hideLoadingScreen && pthread_mutex_init(&gLoadingThread.mutex, NULL) == 0) {
-        if (pthread_create(&gLoadingThread.thread, NULL, main_game_init, NULL) == 0) {
+    if (!gCLIOpts.hideLoadingScreen) {
+        if (init_thread_handle(&gLoadingThread, main_game_init, NULL, NULL, 0) == 0) {
             render_loading_screen(); // render the loading screen while the game is setup
             threadSuccess = true;
         }

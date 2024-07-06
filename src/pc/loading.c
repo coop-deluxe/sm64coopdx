@@ -152,7 +152,7 @@ void render_loading_screen(void) {
         WAPI.main_loop(loading_screen_produce_one_frame);
     }
 
-    pthread_join(gLoadingThread.thread, NULL);
+    start_thread(gLoadingThread);
 }
 
 void render_rom_setup_screen(void) {
