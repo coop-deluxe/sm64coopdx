@@ -53,7 +53,7 @@ int init_thread(struct ThreadHandle *handle, void *(*entry)(void *), void *arg, 
     err = pthread_attr_destroy(&thattr);
     assert(err == 0);
     
-    handle->state = IDLE;
+    handle->state = RUNNING;
     
     return ret;
 }
@@ -61,16 +61,12 @@ int init_thread(struct ThreadHandle *handle, void *(*entry)(void *), void *arg, 
 int join_thread(struct ThreadHandle *handle) {
     assert(handle != NULL);
     
-    handle->state = RUNNING;
-    
     // Join the thread and wait for it to finish.
     return pthread_join(handle->thread, NULL);
 }
 
 int detach_thread(struct ThreadHandle *handle) {
     assert(handle != NULL);
-    
-    handle->state = RUNNING;
     
     // Detach the thread, it will no longer be joinable afterwards.
     return pthread_detach(handle->thread);

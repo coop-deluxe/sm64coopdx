@@ -14,8 +14,7 @@
 enum ThreadState {
     INVALID = 0,
     STOPPED = 1,
-    IDLE = 2,
-    RUNNING = 4
+    RUNNING = 2
 };
 
 struct ThreadHandle {
