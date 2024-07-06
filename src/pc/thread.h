@@ -31,15 +31,16 @@ void cleanup_thread_handle(struct ThreadHandle *handle);
 
 //// Thread
 int init_thread(struct ThreadHandle *handle, void *(*entry)(void *), void *arg, void *sp, size_t sp_size);
-void start_thread(struct ThreadHandle *handle);
-void detach_thread(struct ThreadHandle *handle);
+int join_thread(struct ThreadHandle *handle);
+int detach_thread(struct ThreadHandle *handle);
 void exit_thread();
 int stop_thread(struct ThreadHandle *handle);
 
 //// Mutex
 int init_mutex(struct ThreadHandle *handle);
 int destroy_mutex(struct ThreadHandle *handle);
-void lock_mutex(struct ThreadHandle *handle);
-void unlock_mutex(struct ThreadHandle *handle);
+int lock_mutex(struct ThreadHandle *handle);
+int trylock_mutex(struct ThreadHandle *handle);
+int unlock_mutex(struct ThreadHandle *handle);
 
 #endif // THREADING_H

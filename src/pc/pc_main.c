@@ -434,8 +434,8 @@ int main(int argc, char *argv[]) {
         if (init_thread_handle(&gLoadingThread, main_game_init, NULL, NULL, 0) == 0) {
             render_loading_screen(); // render the loading screen while the game is setup
             threadSuccess = true;
+            destroy_mutex(&gLoadingThread);
         }
-        pthread_mutex_destroy(&gLoadingThread.mutex);
     }
     if (!threadSuccess)
 #endif
@@ -453,11 +453,7 @@ int main(int argc, char *argv[]) {
     if (!audio_api) { audio_api = &audio_null; }
     
     // Initialize the audio thread if possible.
-    int err = init_thread_handle(&gAudioThread, audio_thread, NULL, NULL, 0);
-    // If there was no error initializing the thread, Detach it so it runs on it's own.
-    if (err == 0) {
-        detach_thread(&gAudioThread);
-    }
+    init_thread_handle(&gAudioThread, audio_thread, NULL, NULL, 0);
 
 #ifdef LOADING_SCREEN_SUPPORTED
     loading_screen_reset();

@@ -4,10 +4,10 @@
 #include <string.h>
 
 int init_thread_handle(struct ThreadHandle *handle, void *(*entry)(void *), void *arg, void *sp, size_t sp_size) {
-    int err1 = init_thread(handle, entry, arg, sp, sp_size);
-    int err2 = init_mutex(handle);
+    int err1 = init_mutex(handle);
+    int err2 = init_thread(handle, entry, arg, sp, sp_size);
     
-    return (err1 == 0 && err2 == 0);
+    return (err1 != 0 || err2 != 0);
 }
 
 void free_thread_handle(struct ThreadHandle *handle) {
@@ -30,8 +30,12 @@ int init_thread(struct ThreadHandle *handle, void *(*entry)(void *), void *arg, 
     // Setup our thread and create it.
     pthread_attr_t thattr = { 0 };
     
-    // Create and setup our thread attributes.
+    // Get default attributes for a new thread.
     int err = pthread_attr_init(&thattr);
+    assert(err == 0);
+    
+    // By default, We want the thread to be joinable.
+    err = pthread_attr_setdetachstate(&thattr, PTHREAD_CREATE_JOINABLE);
     assert(err == 0);
     
     // Set the stack if we have one specified, Otherwise we don't care.
@@ -54,26 +58,27 @@ int init_thread(struct ThreadHandle *handle, void *(*entry)(void *), void *arg, 
     return ret;
 }
 
-void start_thread(struct ThreadHandle *handle) {
+int join_thread(struct ThreadHandle *handle) {
     assert(handle != NULL);
     
     handle->state = RUNNING;
     
     // Join the thread and wait for it to finish.
-    pthread_join(handle->thread, NULL);
+    return pthread_join(handle->thread, NULL);
 }
 
-void detach_thread(struct ThreadHandle *handle) {
+int detach_thread(struct ThreadHandle *handle) {
     assert(handle != NULL);
     
     handle->state = RUNNING;
     
-    // Detach the thread and run it alongside the main thread.
-    pthread_detach(handle->thread);
+    // Detach the thread, it will no longer be joinable afterwards.
+    return pthread_detach(handle->thread);
 }
 
+// Call from inside the thread you wish to
+// terminate.
 void exit_thread() {
-    // Call from inside the thread.
     pthread_exit(NULL);
 }
 
@@ -112,14 +117,20 @@ int destroy_mutex(struct ThreadHandle *handle) {
     return pthread_mutex_destroy(&handle->mutex);
 }
 
-void lock_mutex(struct ThreadHandle *handle) {
+int lock_mutex(struct ThreadHandle *handle) {
     assert(handle != NULL);
     
-    pthread_mutex_lock(&handle->mutex);
+    return pthread_mutex_lock(&handle->mutex);
 }
 
-void unlock_mutex(struct ThreadHandle *handle) {
+int trylock_mutex(struct ThreadHandle *handle) {
     assert(handle != NULL);
     
-    pthread_mutex_unlock(&handle->mutex);
+    return pthread_mutex_trylock(&handle->mutex);
+}
+
+int unlock_mutex(struct ThreadHandle *handle) {
+    assert(handle != NULL);
+    
+    return pthread_mutex_unlock(&handle->mutex);
 }

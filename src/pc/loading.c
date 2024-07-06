@@ -2,6 +2,8 @@
 
 #ifdef LOADING_SCREEN_SUPPORTED
 
+#include <assert.h>
+
 #include "djui/djui.h"
 #include "pc/djui/djui_unicode.h"
 
@@ -152,7 +154,8 @@ void render_loading_screen(void) {
         WAPI.main_loop(loading_screen_produce_one_frame);
     }
 
-    start_thread(gLoadingThread);
+    int err = join_thread(&gLoadingThread);
+    assert(err == 0);
 }
 
 void render_rom_setup_screen(void) {
