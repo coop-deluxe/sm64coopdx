@@ -162,7 +162,7 @@ bool network_init(enum NetworkType inNetworkType, bool reconnecting) {
 
         dynos_behavior_hook_all_custom_behaviors();
 
-        network_player_connected(NPT_LOCAL, 0, configPlayerModel, &configPlayerPalette, configPlayerName);
+        network_player_connected(NPT_LOCAL, 0, configPlayerModel, &configPlayerPalette, configPlayerName, get_local_discord_id());
         extern u8* gOverrideEeprom;
         gOverrideEeprom = NULL;
 

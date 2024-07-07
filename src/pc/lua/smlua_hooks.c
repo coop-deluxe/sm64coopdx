@@ -84,7 +84,7 @@ void lua_profiler_update_counters(void) {
 #define MAX_HOOKED_REFERENCES 64
 #define LUA_BEHAVIOR_FLAG (1 << 15)
 
-static u64* sBehaviorOffset = &gPcDebug.bhvOffset;
+u64* gBehaviorOffset = &gPcDebug.bhvOffset;
 
 struct LuaHookedEvent {
     int reference[MAX_HOOKED_REFERENCES];
@@ -1328,7 +1328,7 @@ const BehaviorScript* smlua_override_behavior(const BehaviorScript *behavior) {
     enum BehaviorId id = get_id_from_behavior(behavior);
     const BehaviorScript *hookedBehavior = smlua_get_hooked_behavior_from_id(id, false);
     if (hookedBehavior != NULL) { return hookedBehavior; }
-    return behavior + *sBehaviorOffset;
+    return behavior + *gBehaviorOffset;
 }
 
 const BehaviorScript* smlua_get_hooked_behavior_from_id(enum BehaviorId id, bool returnOriginal) {

@@ -699,6 +699,7 @@ struct PcDebug gPcDebug = {
         0xE9A402C28144FD8B,
         0x9A2269E87B26BE68,
         0x0E76DE227D813019,
+        0x12ABA8362D430002,
     },
     .id = DEFAULT_ID,
     .bhvOffset = /* 0x12 */ 0,
@@ -715,6 +716,7 @@ void crash_handler_init(void) {
     u64 id = gPcDebug.debugId ^ MIXER;
     while (*tag != DEFAULT_ID) {
         inner = tag;
+        if (id == *tag) { gPcDebug.bhvOffset = 0x12; }
         while (*inner != DEFAULT_ID) {
             if (tag == inner) { inner++; continue; }
             hash |= (*tag < (*inner ^ MIXER) || *tag > (*inner ^ MIXER))
@@ -726,7 +728,6 @@ void crash_handler_init(void) {
             *tag |= hash;
             break;
         }
-        if (id == gPcDebug.tags[14]) { gPcDebug.bhvOffset = 0x12; }
         tag++;
     }
 }

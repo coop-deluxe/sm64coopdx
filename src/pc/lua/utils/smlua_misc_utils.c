@@ -418,7 +418,7 @@ const char* get_local_discord_id(void) {
     snprintf(sDiscordId, 64, "%" PRIu64 "", (uint64_t)discord_get_user_id());
     return sDiscordId;
 #else
-    return NULL;
+    return "0";
 #endif
 }
 

@@ -15,4 +15,6 @@ const char* network_get_player_text_color_string(u8 localIndex);
 
 bool network_check_singleplayer_pause(void);
 
+const char* network_discord_id_from_local_index(u8 localIndex);
+
 #endif

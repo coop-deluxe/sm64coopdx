@@ -8,9 +8,6 @@
 #include "pc/utils/misc.h"
 #include "pc/configfile.h"
 #include "game/hardcoded.h"
-#ifdef DISCORD_SDK
-#include "pc/discord/discord.h"
-#endif
 #if defined(_WIN32) || defined(_WIN64)
 #include <windows.h>
 #endif

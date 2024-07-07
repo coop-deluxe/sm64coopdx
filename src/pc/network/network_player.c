@@ -21,6 +21,7 @@ struct NetworkPlayer gNetworkPlayers[MAX_PLAYERS] = { 0 };
 struct NetworkPlayer *gNetworkPlayerLocal = NULL;
 struct NetworkPlayer *gNetworkPlayerServer = NULL;
 static char sDefaultPlayerName[] = "Player";
+static char sDefaultDiscordId[] = "0";
 
 void network_player_init(void) {
     gNetworkPlayers[0].modelIndex = (configPlayerModel < CT_MAX) ? configPlayerModel : CT_MARIO;
@@ -225,7 +226,7 @@ void network_player_update(void) {
 }
 
 extern bool gCurrentlyJoining;
-u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex, u8 modelIndex, const struct PlayerPalette* palette, const char *name) {
+u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex, u8 modelIndex, const struct PlayerPalette* palette, const char* name, const char* discordId) {
     // translate globalIndex to localIndex
     u8 localIndex = globalIndex;
     if (gNetworkType == NT_SERVER) {
@@ -244,6 +245,9 @@ u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex, u8 mode
     // ensure that a name is given
     if (name[0] == '\0') {
         name = sDefaultPlayerName;
+    }
+    if (discordId[0] == '\0') {
+        discordId = sDefaultDiscordId;
     }
     if (modelIndex >= CT_MAX) { modelIndex = 0; }
 
@@ -291,6 +295,8 @@ u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex, u8 mode
 
     snprintf(np->name, MAX_CONFIG_STRING, "%s", name);
     network_player_update_model(localIndex);
+
+    snprintf(np->discordId, 64, "%s", discordId);
 
     // clear networking fields
     np->lastReceived = clock_elapsed();

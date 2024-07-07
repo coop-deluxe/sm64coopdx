@@ -1,23 +1,8 @@
 #include <inttypes.h>
 #include "types.h"
-#ifdef DISCORD_SDK
-#include "pc/discord/discord.h"
-#endif
 #include "pc/lua/smlua.h"
 #include "game/hardcoded.h"
 #include "game/object_list_processor.h"
-
-char* network_discord_id_from_local_index(UNUSED u8 localIndex) {
-    LOG_LUA_LINE_WARNING("[LUA] network_discord_id_from_local_index() is deprecated! Please use get_local_discord_id() instead.");
-#ifdef DISCORD_SDK
-    static char sDiscordId[64] = "";
-    if (localIndex == 0) {
-        snprintf(sDiscordId, 64, "%" PRIu64 "", (uint64_t)discord_get_user_id());
-        return sDiscordId;
-    }
-#endif
-    return NULL;
-}
 
 void djui_hud_set_render_behind_hud(bool enable) {
     LOG_LUA_LINE_WARNING("[LUA] djui_hud_set_render_behind_hud() is deprecated! Please use HOOK_ON_HUD_RENDER_BEHIND instead.");

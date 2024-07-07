@@ -56,3 +56,8 @@ extern s16 gMenuMode;
 bool network_check_singleplayer_pause(void) {
     return gMenuMode != -1 && network_player_connected_count() == 1 && mods_get_all_pausable() && !gDjuiInPlayerMenu;
 }
+
+const char* network_discord_id_from_local_index(u8 localIndex) {
+    if (localIndex >= MAX_PLAYERS) { return "0"; }
+    return gNetworkPlayers[localIndex].discordId;
+}
