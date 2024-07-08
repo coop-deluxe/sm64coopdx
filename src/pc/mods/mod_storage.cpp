@@ -16,7 +16,7 @@ extern "C" {
 
 #define C_FIELD extern "C"
 
-void strdelete(char* string, const char* substr) {
+static void strdelete(char* string, const char* substr) {
     // i is used to loop through the string
     u16 i = 0;
 

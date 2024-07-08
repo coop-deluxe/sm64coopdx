@@ -14,6 +14,8 @@ extern u32 mouse_window_buttons;
 extern s32 mouse_window_x;
 extern s32 mouse_window_y;
 
+extern bool mouse_relative_enabled;
+
 void controller_mouse_read_window(void);
 void controller_mouse_read_relative(void);
 

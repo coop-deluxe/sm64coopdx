@@ -133,7 +133,11 @@ static bool djui_panel_player_edit_palette_preset_name_valid(char* buffer) {
     if (buffer[0] == '\0') { return false; }
     char* c = buffer;
     while (*c != '\0') {
+#if defined(_WIN32) || defined(_WIN64)
+        if (*c == '/' || *c == '\\' || *c == ':' || *c == '<' || *c == '>' || *c == '"' || *c == '|' || *c == '?' || *c == '*') { return false; }
+#else
         if (*c == '/' || *c == '\\') { return false; }
+#endif
         if (!djui_unicode_valid_char(c)) { return false; }
         c = djui_unicode_next_char(c);
     }

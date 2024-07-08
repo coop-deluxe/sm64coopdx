@@ -1,6 +1,5 @@
 -- name: [CS] Extra Characters
 -- description: [CS] Extra Characters\nBy Coop Deluxe Team\n\nThis Character Select pack adds other characters from the Mario series!
--- pausable: true
 
 if not _G.charSelectExists then return end
 

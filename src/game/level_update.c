@@ -248,17 +248,18 @@ u16 level_control_timer(s32 timerOp) {
 }
 
 u32 pressed_pause(void) {
-    u32 dialogActive = get_dialog_id() >= 0;
-    u32 intangible = (gMarioState->action & ACT_FLAG_INTANGIBLE) != 0;
-    u32 firstPerson = gMarioState->action == ACT_FIRST_PERSON;
+    if (gServerSettings.pauseAnywhere) {
+        if (get_dialog_id() < 0 && !gWarpTransition.isActive && sDelayedWarpOp == WARP_OP_NONE) {
+            return gPlayer1Controller->buttonPressed & START_BUTTON;
+        }
+    } else {
+        u32 dialogActive = get_dialog_id() >= 0;
+        u32 intangible = (gMarioState->action & ACT_FLAG_INTANGIBLE) != 0;
+        u32 firstPerson = gMarioState->action == ACT_FIRST_PERSON;
 
-    if (!intangible && !dialogActive && !firstPerson && !gWarpTransition.isActive && sDelayedWarpOp == WARP_OP_NONE
-        && (gPlayer1Controller->buttonPressed & START_BUTTON)) {
-        return TRUE;
-    }
-
-    if (gServerSettings.pauseAnywhere && get_dialog_id() < 0) {
-        return gPlayer1Controller->buttonPressed & START_BUTTON;
+        if (!intangible && !dialogActive && !firstPerson && !gWarpTransition.isActive && sDelayedWarpOp == WARP_OP_NONE) {
+            return (gPlayer1Controller->buttonPressed & START_BUTTON);
+        }
     }
 
     return FALSE;
@@ -271,7 +272,7 @@ void set_play_mode(s16 playMode) {
 
 void warp_special(s32 arg) {
     if (arg != 0 && arg != SPECIAL_WARP_CAKE && arg != SPECIAL_WARP_GODDARD && arg != SPECIAL_WARP_GODDARD_GAMEOVER && arg != SPECIAL_WARP_TITLE && arg != SPECIAL_WARP_LEVEL_SELECT) {
-        LOG_ERROR("Invalid parameter value for warp_special: Expected SPECIAL_WARP_CAKE, SPECIAL_WARP_GODDARD, SPECIAL_WARP_GODDARD_GAMEOVER, SPECIAL_WARP_TITLE, or SPECIAL_WARP_LEVEL_SELECT");
+        LOG_ERROR("Invalid parameter value for warp_special: Expected 0, SPECIAL_WARP_CAKE, SPECIAL_WARP_GODDARD, SPECIAL_WARP_GODDARD_GAMEOVER, SPECIAL_WARP_TITLE, or SPECIAL_WARP_LEVEL_SELECT");
         return;
     }
 
@@ -1492,11 +1493,11 @@ void update_menu_level(void) {
     stop_cap_music();
     if (!configMenuSound || configMenuStaffRoll || curLevel == LEVEL_CASTLE_GROUNDS) {
         reset_volume();
-        disable_background_sound();
+        sound_banks_disable(SEQ_PLAYER_SFX, SOUND_BANKS_BACKGROUND);
         set_background_music(0, SEQ_MENU_TITLE_SCREEN, 0);
     } else {
         reset_volume();
-        disable_background_sound();
+        sound_banks_disable(SEQ_PLAYER_SFX, SOUND_BANKS_BACKGROUND);
         set_background_music(gCurrentArea->musicParam, gCurrentArea->musicParam2, 0);
     }
 

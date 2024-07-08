@@ -113,7 +113,7 @@ void djui_panel_host_save_create(struct DjuiBase* caller) {
                 djui_base_set_size(&button2->base, 0.19f, 32);
                 djui_base_set_alignment(&button2->base, DJUI_HALIGN_CENTER, DJUI_VALIGN_TOP);
                 djui_base_set_location(&button2->base, configDjuiThemeCenter ? 127 : button1->rect->base.width.value + 98, 0);
-                djui_base_set_enabled(&button2->base, gDjuiInMainMenu);
+                djui_base_set_enabled(&button2->base, gDjuiInMainMenu || gCurrSaveFileNum - 1 != i);
 
                 struct DjuiButton* button3 = djui_button_create(&rect1->base, DLANG(HOST_SAVE, EDIT), DJUI_BUTTON_STYLE_NORMAL, djui_panel_host_save_edit);
                 button3->base.tag = i;

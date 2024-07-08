@@ -404,6 +404,7 @@ static void mod_extract_fields(struct Mod* mod) {
     mod->name = NULL;
     mod->incompatible = NULL;
     mod->description = NULL;
+    mod->pausable = true;
 
     // read line-by-line
     #define BUFFER_SIZE MAX(MAX(MOD_NAME_MAX_LENGTH, MOD_INCOMPATIBLE_MAX_LENGTH), MOD_DESCRIPTION_MAX_LENGTH)

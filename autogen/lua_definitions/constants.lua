@@ -7780,7 +7780,7 @@ EMBLEM = 7
 PLAYER_PART_MAX = 8
 
 --- @type PlayerPart
-METAL = EMBLEM
+METAL = CAP
 
 --- @type integer
 EEPROM_SIZE = 0x200

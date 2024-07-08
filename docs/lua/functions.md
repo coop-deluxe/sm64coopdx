@@ -1211,6 +1211,7 @@
 
 - network_utils.h
    - [network_check_singleplayer_pause](functions-4.md#network_check_singleplayer_pause)
+   - [network_discord_id_from_local_index](functions-4.md#network_discord_id_from_local_index)
    - [network_get_player_text_color_string](functions-4.md#network_get_player_text_color_string)
    - [network_global_index_from_local](functions-4.md#network_global_index_from_local)
    - [network_is_moderator](functions-4.md#network_is_moderator)
@@ -1720,6 +1721,7 @@
    - [get_dialog_id](functions-5.md#get_dialog_id)
    - [get_dialog_response](functions-5.md#get_dialog_response)
    - [get_envfx](functions-5.md#get_envfx)
+   - [get_environment_region](functions-5.md#get_environment_region)
    - [get_global_timer](functions-5.md#get_global_timer)
    - [get_got_file_coin_hi_score](functions-5.md#get_got_file_coin_hi_score)
    - [get_hand_foot_pos_x](functions-5.md#get_hand_foot_pos_x)
@@ -1756,6 +1758,7 @@
    - [reset_window_title](functions-5.md#reset_window_title)
    - [save_file_get_using_backup_slot](functions-5.md#save_file_get_using_backup_slot)
    - [save_file_set_using_backup_slot](functions-5.md#save_file_set_using_backup_slot)
+   - [set_environment_region](functions-5.md#set_environment_region)
    - [set_got_file_coin_hi_score](functions-5.md#set_got_file_coin_hi_score)
    - [set_last_completed_course_num](functions-5.md#set_last_completed_course_num)
    - [set_last_completed_star_num](functions-5.md#set_last_completed_star_num)

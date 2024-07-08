@@ -2774,7 +2774,7 @@
 | CAP | 6 |
 | EMBLEM | 7 |
 | PLAYER_PART_MAX | 8 |
-| METAL | EMBLEM |
+| METAL | CAP |
 
 [:arrow_up_small:](#)
 

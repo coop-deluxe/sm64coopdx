@@ -81,9 +81,9 @@ override_field_mutable = {
 }
 
 override_field_invisible = {
-    "Mod": [ "files" ],
+    "Mod": [ "files", "showedScriptWarning" ],
     "MarioState": [ "visibleToEnemies" ],
-    "NetworkPlayer": [ "gag", "moderator"],
+    "NetworkPlayer": [ "gag", "moderator", "discordId" ],
     "GraphNode": [ "_guard1", "_guard2" ],
     "Object": [ "firstSurface" ],
 }

@@ -1,7 +1,6 @@
 -- name: Cheats
 -- incompatible: cheats
 -- description: Cheats\nA mod that adds a bunch of cheats to the mod menu, accessible through the pause menu.
--- pausable: true
 
 -- localize functions to improve performance
 local math_floor,smlua_text_utils_get_language,table_insert,approach_s32,set_mario_action,get_network_area_timer = math.floor,smlua_text_utils_get_language,table.insert,approach_s32,set_mario_action,get_network_area_timer

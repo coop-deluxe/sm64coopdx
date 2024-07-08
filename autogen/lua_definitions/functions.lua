@@ -5452,6 +5452,12 @@ end
 
 --- @param localIndex integer
 --- @return string
+function network_discord_id_from_local_index(localIndex)
+    -- ...
+end
+
+--- @param localIndex integer
+--- @return string
 function network_get_player_text_color_string(localIndex)
     -- ...
 end
@@ -7847,18 +7853,6 @@ function djui_hud_set_render_behind_hud(enable)
     -- ...
 end
 
---- @param index integer
---- @return number
-function get_environment_region(index)
-    -- ...
-end
-
---- @param localIndex integer
---- @return string
-function network_discord_id_from_local_index(localIndex)
-    -- ...
-end
-
 --- @param np NetworkPlayer
 --- @param part PlayerPart
 --- @param color Color
@@ -7870,12 +7864,6 @@ end
 --- @param part PlayerPart
 --- @param out Color
 function network_player_palette_to_color(np, part, out)
-    -- ...
-end
-
---- @param index integer
---- @param value integer
-function set_environment_region(index, value)
     -- ...
 end
 
@@ -8201,6 +8189,12 @@ function get_envfx()
     -- ...
 end
 
+--- @param index integer
+--- @return number
+function get_environment_region(index)
+    -- ...
+end
+
 --- @return integer
 function get_global_timer()
     -- ...
@@ -8404,6 +8398,12 @@ end
 
 --- @param usingBackupSlot boolean
 function save_file_set_using_backup_slot(usingBackupSlot)
+    -- ...
+end
+
+--- @param index integer
+--- @param value integer
+function set_environment_region(index, value)
     -- ...
 end
 
