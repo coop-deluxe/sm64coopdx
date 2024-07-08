@@ -7,7 +7,7 @@ Feel free to report bugs or contribute to the project.
 ## Initial Goal (Accomplished)
 Create a mod for the PC port where multiple people can play together online.
 
-Unlike previous multiplayer projects, this one synchronizes enemies and events. This allows players interact with the same world at the same time.
+Unlike previous multiplayer projects, this one synchronizes enemies and events. This allows players to interact with the same world at the same time.
 
 Interestingly enough though, the goal of the project has slowly evolved over time from simply just making a Super Mario 64 multiplayer mod to constantly maintaining and improving the project (notably the Lua API.)
 
