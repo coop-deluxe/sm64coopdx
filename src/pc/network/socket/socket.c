@@ -11,7 +11,7 @@ char gGetHostName[MAX_CONFIG_STRING] = "";
 
 void resolve_domain(void) {
     struct hostent *remoteHost = gethostbyname(configJoinIp);
-    if (remoteHost && remoteHost->h_addrtype == AF_INET) {
+    if (remoteHost && (remoteHost->h_addrtype == AF_INET || remoteHost->h_addrtype == AF_INET6)) {
         struct in_addr addr;
         for (int i = 0; remoteHost->h_addr_list[i] != 0; i++) {
             memcpy(&addr, remoteHost->h_addr_list[i], sizeof(struct in_addr));
@@ -22,7 +22,7 @@ void resolve_domain(void) {
 
 static int socket_bind(SOCKET socket, unsigned int port) {
     struct sockaddr_in rxAddr;
-    rxAddr.sin_family = AF_INET;
+    rxAddr.sin_family = AF_INET6;
     rxAddr.sin_port = htons(port);
     rxAddr.sin_addr.s_addr = htonl(INADDR_ANY);
 
@@ -100,7 +100,7 @@ static bool ns_socket_initialize(enum NetworkType networkType, UNUSED bool recon
         LOG_INFO("bound to port %u", port);
     } else {
         // save the port to send to
-        sAddr[0].sin_family = AF_INET;
+        sAddr[0].sin_family = AF_INET6;
         sAddr[0].sin_port = htons(port);
         resolve_domain();
         sAddr[0].sin_addr.s_addr = inet_addr(configJoinIp);
