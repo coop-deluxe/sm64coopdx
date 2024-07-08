@@ -44,9 +44,10 @@ if not os.path.exists(out_dir):
 for i in range(tile_count):
     x_t = i % 8
     y_t = i // 8
+    separator = "\\" if os.name == "nt" else "/"
     in_img.crop((
             img_width * x_t // 8,
             img_height * y_t // 8,
             int(img_width * x_t // 8 + img_width * tile_len_ratio),
             int(img_height * y_t // 8 + img_height * tile_len_ratio)
-        )).save(f"{out_dir}\\{os.path.basename(in_fn_id).split('.')[0]}.{f'{i:02}'}.rgba16.png", "PNG", optimize=True)
+        )).save(f"{out_dir}{separator}{os.path.basename(in_fn_id).split('.')[0]}.{f'{i:02}'}.rgba16.png", "PNG", optimize=True)
