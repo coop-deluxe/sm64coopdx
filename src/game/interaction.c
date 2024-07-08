@@ -1372,6 +1372,11 @@ u8 passes_pvp_interaction_checks(struct MarioState* attacker, struct MarioState*
 }
 
 u32 interact_player(struct MarioState* m, UNUSED u32 interactType, struct Object* o) {
+    // don't touch each other on level load
+    if (gCurrentArea == NULL || gCurrentArea->localAreaTimer < 60) {
+        return FALSE;
+    }
+
     if (!m || !o) { return FALSE; }
     if (!is_player_active(m)) { return FALSE; }
     if (gServerSettings.playerInteractions == PLAYER_INTERACTIONS_NONE) { return FALSE; }
@@ -1399,11 +1404,6 @@ u32 interact_player(struct MarioState* m, UNUSED u32 interactType, struct Object
 
     // don't do further interactions if we've hopped on top
     if (resolve_player_collision(m, m2)) {
-        return FALSE;
-    }
-
-    // don't touch each other on level load
-    if (gCurrentArea == NULL || gCurrentArea->localAreaTimer < 60) {
         return FALSE;
     }
 
