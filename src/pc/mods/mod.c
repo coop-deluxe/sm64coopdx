@@ -405,6 +405,7 @@ static void mod_extract_fields(struct Mod* mod) {
     mod->incompatible = NULL;
     mod->description = NULL;
     mod->pausable = true;
+    mod->ignoreScriptWarnings = false;
 
     // read line-by-line
     #define BUFFER_SIZE MAX(MAX(MOD_NAME_MAX_LENGTH, MOD_INCOMPATIBLE_MAX_LENGTH), MOD_DESCRIPTION_MAX_LENGTH)
@@ -435,9 +436,9 @@ static void mod_extract_fields(struct Mod* mod) {
             if (snprintf(mod->description, MOD_DESCRIPTION_MAX_LENGTH, "%s", extracted) < 0) {
                 LOG_INFO("Truncated mod description field '%s'", mod->description);
             }
-        } else if (!mod->pausable && (extracted = extract_lua_field("-- pausable:", buffer))) {
+        } else if ((extracted = extract_lua_field("-- pausable:", buffer))) {
             mod->pausable = !strcmp(extracted, "true");
-        } else if (!mod->ignoreScriptWarnings && (extracted = extract_lua_field("-- ignore-script-warnings:", buffer))) {
+        } else if ((extracted = extract_lua_field("-- ignore-script-warnings:", buffer))) {
             mod->ignoreScriptWarnings = !strcmp(extracted, "true");
         }
     }
