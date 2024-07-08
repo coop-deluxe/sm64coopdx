@@ -176,7 +176,7 @@ bool ns_coopnet_is_connected(void) {
 
 static void coopnet_populate_description(void) {
     char* buffer = sCoopNetDescription;
-    int bufferLength = 512;
+    int bufferLength = 1024;
     // get version
     const char* version = get_version_online();
     int versionLength = strlen(version);

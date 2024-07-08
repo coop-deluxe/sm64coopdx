@@ -121,8 +121,8 @@ void discord_activity_update(void) {
     }
 
     // HACK: give the detail population more space than the Discord details can fit so it gets truncated without cutting off the largest strings
-    char details[256] = { 0 };
-    discord_populate_details(details, 256);
+    char details[512] = { 0 };
+    discord_populate_details(details, 512);
 
     snprintf(sCurActivity.details, 128, "%s", details);
 

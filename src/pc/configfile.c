@@ -169,9 +169,9 @@ unsigned int configMenuLevel                      = 0;
 bool         configMenuSound                      = false;
 bool         configMenuRandom                     = false;
 bool         configMenuDemos                      = false;
-bool         configDynosLocalPlayerModelOnly      = false;
 bool         configDisablePopups                  = false;
 char         configLanguage[MAX_CONFIG_STRING]    = "";
+bool         configDynosLocalPlayerModelOnly      = false;
 // CoopNet settings
 char         configCoopNetIp[MAX_CONFIG_STRING]   = DEFAULT_COOPNET_IP;
 unsigned int configCoopNetPort                    = DEFAULT_COOPNET_PORT;
