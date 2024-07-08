@@ -1643,6 +1643,8 @@ void update_menu_level(void) {
     // reset input
     gMarioState->input = 0;
     gMarioState->intendedMag = 0;
+    gMarioState->controller->buttonDown = 0;
+    gMarioState->controller->buttonPressed = 0;
     gMarioState->controller->rawStickX = 0;
     gMarioState->controller->rawStickY = 0;
     gMarioState->controller->stickX = 0;
