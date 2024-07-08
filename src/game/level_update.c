@@ -1790,7 +1790,7 @@ s32 init_level(void) {
                                 set_mario_action(gMarioState, ACT_IDLE, 0);
                             }
                         }
-                    } else if (skipIntro || save_file_exists(gCurrSaveFileNum - 1)) {
+                    } else if (skipIntro || save_file_exists(gCurrSaveFileNum - 1) || gDjuiInMainMenu) {
                         set_mario_action(gMarioState, ACT_IDLE, 0);
                     } else {
                         set_mario_action(gMarioState, ACT_INTRO_CUTSCENE, 0);
