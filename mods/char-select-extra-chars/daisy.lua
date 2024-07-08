@@ -192,7 +192,7 @@ function daisy_update(m)
         smlua_anim_util_set_animation(m.marioObj, anim)
     end
 
-    if (m.input & INPUT_A_PRESSED) ~= 0 and m.vel.y < 10 and (
+    if (m.input & INPUT_A_PRESSED) ~= 0 and m.vel.y < 10 and m.prevAction ~= ACT_DAISY_JUMP and (
        m.action == ACT_JUMP or
        m.action == ACT_DOUBLE_JUMP or
        m.action == ACT_TRIPLE_JUMP or
