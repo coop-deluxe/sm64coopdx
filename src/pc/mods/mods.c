@@ -174,6 +174,21 @@ void mods_activate(struct Mods* mods) {
     mod_cache_save();
 }
 
+static char* mods_remove_color_codes(const char* str) {
+    char* result = strdup(str);
+    char* startColor;
+    while ((startColor = strstr(result, "\\#"))) {
+        char* endColor = strstr(startColor + 2, "\\");
+        if (endColor) {
+            memmove(startColor, endColor + 1, strlen(endColor + 1) + 1);
+        } else {
+            *startColor = '\0';
+            break;
+        }
+    }
+    return result;
+}
+
 static void mods_sort(struct Mods* mods) {
     if (mods->entryCount <= 1) {
         return;
@@ -184,11 +199,15 @@ static void mods_sort(struct Mods* mods) {
         struct Mod* mod = mods->entries[i];
         for (s32 j = 0; j < i; ++j) {
             struct Mod* mod2 = mods->entries[j];
-            if (strcmp(mod->name, mod2->name) < 0) {
+            char* name = mods_remove_color_codes(mod->name);
+            char* name2 = mods_remove_color_codes(mod2->name);
+            if (strcmp(name, name2) < 0) {
                 mods->entries[i] = mod2;
                 mods->entries[j] = mod;
                 mod = mods->entries[i];
             }
+            free(name);
+            free(name2);
         }
     }
 }

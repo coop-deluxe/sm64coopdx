@@ -53,6 +53,39 @@ static u8 read_value(const char* data) {
     return MIN(strtol(data, NULL, 0), 255);
 }
 
+static void player_palettes_sort_characters(void) {
+    struct PresetPalette charPresetPalettes[MAX_PRESET_PALETTES] = { 0 };
+    u8 charPresetPaletteCount = 0;
+
+    // copy character palettes first
+    for (int c = 0; c < CT_MAX; c++) { // heh, c++
+        for (int i = 0; i < gPresetPaletteCount; i++) {
+            if (!strcmp(gPresetPalettes[i].name, gCharacters[c].name)) {
+                charPresetPalettes[charPresetPaletteCount++] = gPresetPalettes[i];
+            }
+        }
+    }
+
+    // copy remaining palettes
+    for (int i = 0; i < gPresetPaletteCount; i++) {
+        bool isCharPalette = false;
+        for (int c = 0; c < CT_MAX; c++) { // heh, c++
+            if (!strcmp(gPresetPalettes[i].name, gCharacters[c].name)) {
+                isCharPalette = true;
+                break;
+            }
+        }
+        if (!isCharPalette) {
+            charPresetPalettes[charPresetPaletteCount++] = gPresetPalettes[i];
+        }
+    }
+
+    // finally, write to gPresetPalettes
+    for (int i = 0; i < gPresetPaletteCount; i++) {
+        gPresetPalettes[i] = charPresetPalettes[i];
+    }
+}
+
 void player_palettes_read(const char* palettesPath, bool appendPalettes) {
     // construct lang path
     char lpath[SYS_MAX_PATH] = "";
@@ -116,36 +149,7 @@ void player_palettes_read(const char* palettesPath, bool appendPalettes) {
 
     // this should mean we are in the exe path's palette dir
     if (appendPalettes) {
-        struct PresetPalette characterPresetPalettes[MAX_PRESET_PALETTES] = { 0 };
-        u8 characterPresetPaletteCount = 0;
-
-        // copy character palettes first
-        for (int c = 0; c < CT_MAX; c++) { // heh, c++
-            for (int i = 0; i < gPresetPaletteCount; i++) {
-                if (!strcmp(gPresetPalettes[i].name, gCharacters[c].name)) {
-                    characterPresetPalettes[characterPresetPaletteCount++] = gPresetPalettes[i];
-                }
-            }
-        }
-
-        // copy remaining palettes
-        for (int i = 0; i < gPresetPaletteCount; i++) {
-            bool isCharacterPalette = false;
-            for (int c = 0; c < CT_MAX; c++) { // heh, c++
-                if (!strcmp(gPresetPalettes[i].name, gCharacters[c].name)) {
-                    isCharacterPalette = true;
-                    break;
-                }
-            }
-            if (!isCharacterPalette) {
-                characterPresetPalettes[characterPresetPaletteCount++] = gPresetPalettes[i];
-            }
-        }
-
-        // finally, write to gPresetPalettes
-        for (int i = 0; i < gPresetPaletteCount; i++) {
-            gPresetPalettes[i] = characterPresetPalettes[i];
-        }
+        player_palettes_sort_characters();
     }
 }
 

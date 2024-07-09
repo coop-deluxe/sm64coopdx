@@ -1750,10 +1750,11 @@ char* remove_color_codes(const char* str) {
     char* result = strdup(str);
     char* startColor;
     while ((startColor = strstr(result, "\\#"))) {
-        char* endColor = strstr(startColor, "\\");
+        char* endColor = strstr(startColor + 2, "\\");
         if (endColor) {
-            memmove(startColor, endColor + 1, strlen(endColor));
+            memmove(startColor, endColor + 1, strlen(endColor + 1) + 1);
         } else {
+            *startColor = '\0';
             break;
         }
     }
