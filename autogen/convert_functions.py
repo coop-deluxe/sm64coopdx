@@ -124,7 +124,8 @@ override_disallowed_functions = {
 }
 
 override_hide_functions = {
-    "smlua_deprecated.h" : [ ".*" ],
+    "smlua_deprecated.h": [ ".*" ],
+    "network_player.h": [ "network_player_get_palette_color_channel", "network_player_get_override_palette_color_channel" ]
 }
 
 override_function_version_excludes = {

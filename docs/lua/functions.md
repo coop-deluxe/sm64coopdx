@@ -1201,8 +1201,6 @@
    - [get_network_player_smallest_global](functions-4.md#get_network_player_smallest_global)
    - [network_player_connected_count](functions-4.md#network_player_connected_count)
    - [network_player_from_global_index](functions-4.md#network_player_from_global_index)
-   - [network_player_get_override_palette_color_channel](functions-4.md#network_player_get_override_palette_color_channel)
-   - [network_player_get_palette_color_channel](functions-4.md#network_player_get_palette_color_channel)
    - [network_player_is_override_palette_same](functions-4.md#network_player_is_override_palette_same)
    - [network_player_reset_override_palette](functions-4.md#network_player_reset_override_palette)
    - [network_player_set_description](functions-4.md#network_player_set_description)

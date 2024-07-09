@@ -430,10 +430,3 @@ end
 -----------------
 
 FONT_TINY = -1
-
-
-----------------------
--- legacy functions --
-----------------------
-
-function get_coop_compatibility_enabled() return false end

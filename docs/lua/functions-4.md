@@ -1313,50 +1313,6 @@
 
 <br />
 
-## [network_player_get_override_palette_color_channel](#network_player_get_override_palette_color_channel)
-
-### Lua Example
-`local integerValue = network_player_get_override_palette_color_channel(np, part, index)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| np | [NetworkPlayer](structs.md#NetworkPlayer) |
-| part | [enum PlayerPart](constants.md#enum-PlayerPart) |
-| index | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`u8 network_player_get_override_palette_color_channel(struct NetworkPlayer *np, enum PlayerPart part, u8 index);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [network_player_get_palette_color_channel](#network_player_get_palette_color_channel)
-
-### Lua Example
-`local integerValue = network_player_get_palette_color_channel(np, part, index)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| np | [NetworkPlayer](structs.md#NetworkPlayer) |
-| part | [enum PlayerPart](constants.md#enum-PlayerPart) |
-| index | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`u8 network_player_get_palette_color_channel(struct NetworkPlayer *np, enum PlayerPart part, u8 index);`
-
-[:arrow_up_small:](#)
-
-<br />
-
 ## [network_player_is_override_palette_same](#network_player_is_override_palette_same)
 
 ### Lua Example

@@ -355,7 +355,6 @@ local function update_cheat(index, value)
     end
 end
 
-
 local sReadonlyMetatable = {
     __index = function(table, key)
         return rawget(table, key)
