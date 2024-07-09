@@ -3676,6 +3676,26 @@
 
 <br />
 
+## [get_mario_cap_flag](#get_mario_cap_flag)
+
+### Lua Example
+`local integerValue = get_mario_cap_flag(capObject)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| capObject | [Object](structs.md#Object) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 get_mario_cap_flag(struct Object *capObject);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [interact_bbh_entrance](#interact_bbh_entrance)
 
 ### Lua Example

@@ -3487,6 +3487,12 @@ function get_door_save_file_flag(door)
     -- ...
 end
 
+--- @param capObject Object
+--- @return integer
+function get_mario_cap_flag(capObject)
+    -- ...
+end
+
 --- @param m MarioState
 --- @param interactType integer
 --- @param o Object

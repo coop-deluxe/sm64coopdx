@@ -13670,6 +13670,23 @@ int smlua_func_get_door_save_file_flag(lua_State* L) {
     return 1;
 }
 
+int smlua_func_get_mario_cap_flag(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "get_mario_cap_flag", 1, top);
+        return 0;
+    }
+
+    struct Object* capObject = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "get_mario_cap_flag"); return 0; }
+
+    lua_pushinteger(L, get_mario_cap_flag(capObject));
+
+    return 1;
+}
+
 int smlua_func_interact_bbh_entrance(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -33680,6 +33697,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "determine_interaction", smlua_func_determine_interaction);
     smlua_bind_function(L, "does_mario_have_normal_cap_on_head", smlua_func_does_mario_have_normal_cap_on_head);
     smlua_bind_function(L, "get_door_save_file_flag", smlua_func_get_door_save_file_flag);
+    smlua_bind_function(L, "get_mario_cap_flag", smlua_func_get_mario_cap_flag);
     smlua_bind_function(L, "interact_bbh_entrance", smlua_func_interact_bbh_entrance);
     smlua_bind_function(L, "interact_bounce_top", smlua_func_interact_bounce_top);
     smlua_bind_function(L, "interact_breakable", smlua_func_interact_breakable);

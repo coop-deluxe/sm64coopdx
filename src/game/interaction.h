@@ -170,6 +170,7 @@ void mario_handle_special_floors(struct MarioState *m);
 u8 passes_pvp_interaction_checks(struct MarioState* attacker, struct MarioState* victim);
 u32 should_push_or_pull_door(struct MarioState *m, struct Object *o);
 u32 take_damage_and_knock_back(struct MarioState *m, struct Object *o);
+u32 get_mario_cap_flag(struct Object *capObject);
 u32 determine_interaction(struct MarioState *m, struct Object *o);
 u32 process_interaction(struct MarioState *m, u32 interactType, struct Object *o, u32 (*interact_function)(struct MarioState *, u32 interactType, struct Object *));
 
