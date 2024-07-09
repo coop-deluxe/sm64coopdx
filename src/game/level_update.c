@@ -1498,7 +1498,9 @@ void update_menu_level(void) {
     } else {
         reset_volume();
         sound_banks_disable(SEQ_PLAYER_SFX, SOUND_BANKS_BACKGROUND);
-        set_background_music(gCurrentArea->musicParam, gCurrentArea->musicParam2, 0);
+        if (gCurrentArea != NULL) {
+            set_background_music(gCurrentArea->musicParam, gCurrentArea->musicParam2, 0);
+        }
     }
 
     if (configMenuStaffRoll) {
