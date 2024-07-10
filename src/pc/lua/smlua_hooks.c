@@ -2236,6 +2236,7 @@ void smlua_call_mod_menu_element_hook(struct LuaHookedModMenuElement* hooked, in
             lua_pushstring(L, hooked->stringValue);
             break;
         case MOD_MENU_ELEMENT_MAX:
+            break;
     }
 
     // call the callback
