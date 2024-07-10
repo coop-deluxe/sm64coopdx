@@ -11,6 +11,7 @@
 #include "pc/utils/misc.h"
 
 struct DjuiThreePanel* gDjuiPlayerList = NULL;
+bool gAttemptingToOpenPlayerlist = false;
 
 static struct DjuiFlowLayout* djuiRow[MAX_PLAYERS] = { 0 };
 static struct DjuiImage* djuiImages[MAX_PLAYERS] = { 0 };

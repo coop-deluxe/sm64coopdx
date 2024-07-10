@@ -235,15 +235,18 @@ bool djui_interactable_on_key_down(int scancode) {
         }
     }
 
-    if ((gDjuiPlayerList != NULL || gDjuiModList != NULL) && gServerSettings.enablePlayerList) {
+    if ((gDjuiPlayerList != NULL || gDjuiModList != NULL)) {
         for (int i = 0; i < MAX_BINDS; i++) {
             if (scancode == (int)configKeyPlayerList[i] && !gDjuiInMainMenu && gNetworkType != NT_NONE) {
-                if (gDjuiPlayerList != NULL) {
-                    djui_base_set_visible(&gDjuiPlayerList->base, true);
+                if (gServerSettings.enablePlayerList) {
+                    if (gDjuiPlayerList != NULL) {
+                        djui_base_set_visible(&gDjuiPlayerList->base, true);
+                    }
+                    if (gDjuiModList != NULL) {
+                        djui_base_set_visible(&gDjuiModList->base, true);
+                    }
                 }
-                if (gDjuiModList != NULL) {
-                    djui_base_set_visible(&gDjuiModList->base, true);
-                }
+                gAttemptingToOpenPlayerlist = true;
                 break;
             }
             if (gDjuiPlayerList->base.visible) {
@@ -295,6 +298,7 @@ void djui_interactable_on_key_up(int scancode) {
                 if (gDjuiModList != NULL) {
                     djui_base_set_visible(&gDjuiModList->base, false);
                 }
+                gAttemptingToOpenPlayerlist = false;
                 break;
             }
         }

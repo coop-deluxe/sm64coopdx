@@ -91,6 +91,10 @@ bool djui_is_playerlist_open(void) {
     return gDjuiPlayerList->base.visible;
 }
 
+bool djui_attempting_to_open_playerlist(void) {
+    return gAttemptingToOpenPlayerlist;
+}
+
 enum DjuiFontType djui_menu_get_font(void) {
     return configDjuiThemeFont == 0 ? FONT_NORMAL : FONT_ALIASED;
 }
