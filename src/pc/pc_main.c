@@ -308,7 +308,7 @@ void game_exit(void) {
     exit(0);
 }
 
-void* main_game_init(UNUSED void*) {
+void* main_game_init(UNUSED void* dummy) {
     // load language
     if (!djui_language_init(configLanguage)) { snprintf(configLanguage, MAX_CONFIG_STRING, "%s", ""); }
 
