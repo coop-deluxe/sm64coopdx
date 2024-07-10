@@ -4,7 +4,7 @@
 #include "pc/utils/misc.h"
 #include "pc/configfile.h"
 
-#define RAINBOW_TEXT_LEN 255
+#define RAINBOW_TEXT_LEN 300
 
 char* sRainbowColors[] = {
     "\\#ff3030\\",
