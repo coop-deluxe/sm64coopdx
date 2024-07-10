@@ -13,12 +13,14 @@
 #include "pc/discord/discord.h"
 #endif
 
+#ifdef COOPNET
+
 // ! Temporary, show this build of coop as sm64ex-coop
 // to let other players know the update is out
 #undef GAME_NAME
 #define GAME_NAME "sm64ex-coop"
 
-#ifdef COOPNET
+#define MAX_COOPNET_DESCRIPTION_LENGTH 1024
 
 uint64_t gCoopNetDesiredLobby = 0;
 char gCoopNetPassword[64] = "";

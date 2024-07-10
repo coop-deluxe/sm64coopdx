@@ -433,13 +433,6 @@ end
 
 FONT_TINY = -1
 
-
-----------------------
--- legacy functions --
-----------------------
-
-function get_coop_compatibility_enabled() return false end
-
 --- @type integer
 INSTANT_WARP_INDEX_START = 0x00
 
@@ -12564,13 +12557,13 @@ SPTASK_STATE_FINISHED_DP = 4
 MAX_VERSION_LENGTH = 32
 
 --- @type integer
-MINOR_VERSION_NUMBER = 0
+MINOR_VERSION_NUMBER = 1
 
 --- @type integer
 PATCH_VERSION_NUMBER = 0
 
 --- @type string
-SM64COOPDX_VERSION = "v1.0"
+SM64COOPDX_VERSION = "v1.0.1"
 
 --- @type integer
 VERSION_NUMBER = 37
