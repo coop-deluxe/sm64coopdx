@@ -2,7 +2,7 @@ if not _G.charSelectExists then return end
 
 local E_MODEL_YOSHI_PLAYER = smlua_model_util_get_id("yoshi_player_geo")
 
-local TEX_YOSHI = get_texture_info("yoshi-icon")
+local TEX_YOSHI = get_texture_info("yoshi_icon")
 
 VOICETABLE_YOSHI = {
     [CHAR_SOUND_ATTACKED] = "yoshi_Hurt_Take_2.ogg",
