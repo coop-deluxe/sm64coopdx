@@ -22,7 +22,11 @@ void resolve_domain(void) {
 
 static int socket_bind(SOCKET socket, unsigned int port) {
     struct sockaddr_in rxAddr;
+#if defined(_WIN32) || defined(_WIN64)
     rxAddr.sin_family = AF_INET6;
+#else
+    rxAddr.sin_family = AF_INET;
+#endif
     rxAddr.sin_port = htons(port);
     rxAddr.sin_addr.s_addr = htonl(INADDR_ANY);
 
@@ -72,7 +76,6 @@ static int socket_receive(SOCKET socket, struct sockaddr_in* rxAddr, u8* buffer,
 }
 
 static bool ns_socket_initialize(enum NetworkType networkType, UNUSED bool reconnecting) {
-
     // sanity check port
     unsigned int port = (networkType == NT_CLIENT) ? configJoinPort : configHostPort;
     if (port == 0) { port = DEFAULT_PORT; }
@@ -100,7 +103,12 @@ static bool ns_socket_initialize(enum NetworkType networkType, UNUSED bool recon
         LOG_INFO("bound to port %u", port);
     } else {
         // save the port to send to
+#if defined(_WIN32) || defined(_WIN64)
         sAddr[0].sin_family = AF_INET6;
+#else
+        sAddr[0].sin_family = AF_INET;
+#endif
+        
         sAddr[0].sin_port = htons(port);
         resolve_domain();
         sAddr[0].sin_addr.s_addr = inet_addr(configJoinIp);
