@@ -16,9 +16,17 @@ const char* get_version(void) {
 
 const char* get_version_online(void) {
 #if defined(VERSION_US)
-    snprintf(sOnlineVersionString, MAX_VERSION_LENGTH, "%s%d", VERSION_TEXT, VERSION_NUMBER);
+    if (MINOR_VERSION_NUMBER > 0) {
+        snprintf(sOnlineVersionString, MAX_VERSION_LENGTH, "%s%d.%d", VERSION_TEXT, VERSION_NUMBER, MINOR_VERSION_NUMBER);
+    } else {
+        snprintf(sOnlineVersionString, MAX_VERSION_LENGTH, "%s%d", VERSION_TEXT, VERSION_NUMBER);
+    }
 #else
-    snprintf(sOnlineVersionString, MAX_VERSION_LENGTH, "%s%d %s", VERSION_TEXT, VERSION_NUMBER, VERSION_REGION);
+    if (MINOR_VERSION_NUMBER > 0) {
+        snprintf(sOnlineVersionString, MAX_VERSION_LENGTH, "%s%d.%d %s", VERSION_TEXT, VERSION_NUMBER, MINOR_VERSION_NUMBER, VERSION_REGION);
+    } else {
+        snprintf(sOnlineVersionString, MAX_VERSION_LENGTH, "%s%d %s", VERSION_TEXT, VERSION_NUMBER, VERSION_REGION);
+    }
 #endif
     return sOnlineVersionString;
 }
