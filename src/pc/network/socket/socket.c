@@ -54,7 +54,7 @@ void resolve_domain(struct sockaddr_in6 *addr) {
                 ipv6_mapped_addr.s6_addr[10] = 0xff;
                 ipv6_mapped_addr.s6_addr[11] = 0xff;
                 // then copy the IPv4 address to the end of the IPv6 address. The address is now properly formed.
-                memcpy(&ipv6_mapped_addr.s6_addr[12], &p->sin_addr, sizeof(&p->sin_addr));
+                memcpy(&ipv6_mapped_addr.s6_addr[12], &p->sin_addr, sizeof(p->sin_addr));
                 // copy address to sockaddr_in6 struct
                 memcpy(&addr->sin6_addr, &ipv6_mapped_addr, sizeof(struct in6_addr));
 
@@ -65,9 +65,9 @@ void resolve_domain(struct sockaddr_in6 *addr) {
                 return;
             }
         }
+    } else {
+        LOG_ERROR("getaddrinfo() failed with error code %i: %s", error, gai_strerror(error));
     }
-
-    LOG_INFO("%i", error);
 }
 
 static int socket_bind(SOCKET socket, unsigned int port) {
@@ -178,6 +178,8 @@ static bool ns_socket_initialize(enum NetworkType networkType, UNUSED bool recon
     // kick off first packet
     if (networkType == NT_CLIENT) {
         char joinText[128] = { 0 };
+        LOG_INFO("IP: %s", configJoinIp);
+        LOG_INFO("PORT: %d", configJoinPort);
         snprintf(joinText, 63, "%s %d", configJoinIp, configJoinPort);
         djui_connect_menu_open();
 
