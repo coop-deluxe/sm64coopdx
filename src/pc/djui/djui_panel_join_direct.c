@@ -104,7 +104,7 @@ static void djui_panel_join_direct_ip_text_set_new(void) {
     }
 
     // copy original buffer for storing to gGetHostName
-    //memcpy(&orig_buffer, &buffer, 256);
+    memcpy(&orig_ip, &buffer, 256);
 
     bool afterSpacer = false;
     bool is_ipv6 = false;
@@ -131,6 +131,7 @@ static void djui_panel_join_direct_ip_text_set_new(void) {
             // Check if it reached end of address "]:", or a space as a fail safe.
             if ((buffer[i] == ']') || buffer[i] == ' ') {
                 afterSpacer = true;
+                memset(&orig_ip, 0, 256);
                 memcpy(&orig_ip[1], &buffer, i+1);
                 buffer[i] = '\0';
                 orig_ip[0] = '[';

@@ -24,6 +24,17 @@ void resolve_domain(struct sockaddr_in6 *addr) {
     memset(&hints, 0, sizeof(hints));
     hints.ai_socktype = SOCK_DGRAM; // only find UDP sockets.
 
+    // sanity check: remove square brackets from configJoinIp. getaddrinfo doesn't like those, at least on Linux.
+    if (configJoinIp[0] == '[') {
+        LOG_INFO("sanity check: found opening square bracket on configJoinIp, removing it.");
+        for (int i = 0; i < MAX_CONFIG_STRING; i++) {
+            if (configJoinIp[i] == ']') {
+                configJoinIp[i] = '\0';
+                memcpy(&configJoinIp, &configJoinIp[1], MAX_CONFIG_STRING-1);
+            }
+        }
+    }
+
     // Get host addresses
     error = getaddrinfo(configJoinIp, NULL, &hints, &result);
 
