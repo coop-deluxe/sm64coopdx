@@ -850,6 +850,7 @@
 | centerL | `boolean` |  |
 | crouch | `number` |  |
 | enabled | `boolean` | read-only |
+| forcePitch | `boolean` |  |
 | forceRoll | `boolean` |  |
 | fov | `number` |  |
 | offset | [Vec3f](structs.md#Vec3f) | read-only |

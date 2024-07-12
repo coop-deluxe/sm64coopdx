@@ -11,6 +11,7 @@
 struct FirstPersonCamera {
     bool enabled;
     bool forceRoll;
+    bool forcePitch;
     bool centerL;
     s16 pitch;
     s16 yaw;

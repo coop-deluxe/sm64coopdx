@@ -593,6 +593,7 @@
 --- @field public centerL boolean
 --- @field public crouch number
 --- @field public enabled boolean
+--- @field public forcePitch boolean
 --- @field public forceRoll boolean
 --- @field public fov number
 --- @field public offset Vec3f
