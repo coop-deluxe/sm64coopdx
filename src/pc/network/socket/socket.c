@@ -5,7 +5,6 @@
 #include "pc/djui/djui.h"
 
 static SOCKET sCurSocket = INVALID_SOCKET;
-// convert to
 static struct sockaddr_in6 sAddr[MAX_PLAYERS] = { 0 };
 struct addrinfo hints;
 struct addrinfo *result, *i;
@@ -22,7 +21,7 @@ void resolve_domain(struct sockaddr_in6 *addr) {
 
     // set hints
     memset(&hints, 0, sizeof(hints));
-    hints.ai_socktype = SOCK_DGRAM; // only find UDP sockets.
+    hints.ai_socktype = SOCK_DGRAM;
 
     // sanity check: remove square brackets from configJoinIp. getaddrinfo doesn't like those, at least on Linux.
     if (configJoinIp[0] == '[') {
@@ -47,10 +46,9 @@ void resolve_domain(struct sockaddr_in6 *addr) {
             // IPv6 address:
             if (i->ai_addr->sa_family == AF_INET6) {
                 struct sockaddr_in6 *p = (struct sockaddr_in6 *)i->ai_addr;
-                // LOG_INFO("%s [port %d]\n", inet_ntop(AF_INET6, &p->sin6_addr, str, sizeof(str)), ntohs(p->sin6_port));
                 // copy address to sockaddr_in6 struct
                 memcpy(&addr->sin6_addr, &p->sin6_addr, sizeof(struct in6_addr));
-                // set and print new join IP
+                // set new join IP for config file
                 snprintf(configJoinIp, MAX_CONFIG_STRING, "%s", inet_ntop(AF_INET6, &p->sin6_addr, str, sizeof(str)));
                 // Free results from memory and return
                 freeaddrinfo(result);
@@ -69,7 +67,7 @@ void resolve_domain(struct sockaddr_in6 *addr) {
                 // copy address to sockaddr_in6 struct
                 memcpy(&addr->sin6_addr, &ipv6_mapped_addr, sizeof(struct in6_addr));
 
-                // set and print new join IP
+                // set new join IP for config file
                 snprintf(configJoinIp, MAX_CONFIG_STRING, "%s", inet_ntop(AF_INET6, &ipv6_mapped_addr, str, sizeof(str)));
                 // Free results from memory and return
                 freeaddrinfo(result);
@@ -82,11 +80,6 @@ void resolve_domain(struct sockaddr_in6 *addr) {
 }
 
 static int socket_bind(SOCKET socket, unsigned int port) {
-    // struct sockaddr_in rxAddr;
-    // rxAddr.sin_family = AF_INET;
-    // rxAddr.sin_port = htons(port);
-    // rxAddr.sin_addr.s_addr = htonl(INADDR_ANY);
-
     struct sockaddr_in6 rxAddr;
     rxAddr.sin6_family = AF_INET6;
     rxAddr.sin6_port = htons(port);
@@ -114,13 +107,9 @@ static int socket_send(SOCKET socket, struct sockaddr_in6* addr, u8* buffer, u16
 
 static int socket_receive(SOCKET socket, struct sockaddr_in6* rxAddr, u8* buffer, u16 bufferLength, u16* receiveLength, u8* localIndex) {
     *receiveLength = 0;
-    //char str[INET6_ADDRSTRLEN];
 
     RX_ADDR_SIZE_TYPE rxAddrSize = sizeof(struct sockaddr_in6);
     int rc = recvfrom(socket, (char*)buffer, bufferLength, 0, (struct sockaddr*)rxAddr, &rxAddrSize);
-
-    //struct sockaddr_in6 *p = (struct sockaddr_in6 *)rxAddr->sin6_addr;
-    //printf("recv from %s\n", inet_ntop(AF_INET6, &rxAddr->sin6_addr, str, sizeof(str)));
 
     for (int i = 1; i < MAX_PLAYERS; i++) {
         if (memcmp(rxAddr, &sAddr[i], sizeof(struct sockaddr_in6)) == 0) {
@@ -142,7 +131,6 @@ static int socket_receive(SOCKET socket, struct sockaddr_in6* rxAddr, u8* buffer
 }
 
 static bool ns_socket_initialize(enum NetworkType networkType, UNUSED bool reconnecting) {
-
     // sanity check port
     unsigned int port = (networkType == NT_CLIENT) ? configJoinPort : configHostPort;
     if (port == 0) { port = DEFAULT_PORT; }
@@ -171,11 +159,8 @@ static bool ns_socket_initialize(enum NetworkType networkType, UNUSED bool recon
             return false; 
         }
         LOG_INFO("bound to port %u", port);
-    } else {
-        // NT_CLIENT
+    } else if (networkType == NT_CLIENT) {
         struct sockaddr_in6 addr;
-
-
         // save the port to send to
         sAddr[0].sin6_family = AF_INET6;
         sAddr[0].sin6_port = htons(port);
@@ -183,14 +168,11 @@ static bool ns_socket_initialize(enum NetworkType networkType, UNUSED bool recon
         resolve_domain(&addr);
         sAddr[0].sin6_addr = addr.sin6_addr;
         LOG_INFO("connecting to %s, port %u", configJoinIp, port);
+        // copy hostname to be saved to config file
         snprintf(configJoinIp, MAX_CONFIG_STRING, "%s", gGetHostName);
-    }
 
-    // kick off first packet
-    if (networkType == NT_CLIENT) {
+        // kick off first packet
         char joinText[128] = { 0 };
-        LOG_INFO("IP: %s", configJoinIp);
-        LOG_INFO("PORT: %d", configJoinPort);
         snprintf(joinText, 63, "%s %d", configJoinIp, configJoinPort);
         djui_connect_menu_open();
 
