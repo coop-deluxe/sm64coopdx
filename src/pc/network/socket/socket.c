@@ -27,9 +27,11 @@ void resolve_domain(struct sockaddr_in6 *addr) {
     if (configJoinIp[0] == '[') {
         LOG_INFO("sanity check: found opening square bracket on configJoinIp, removing it.");
         for (int i = 0; i < MAX_CONFIG_STRING; i++) {
+            if (configJoinIp[i] == '\0') { break; }
             if (configJoinIp[i] == ']') {
                 configJoinIp[i] = '\0';
                 memcpy(&configJoinIp, &configJoinIp[1], MAX_CONFIG_STRING-1);
+                break;
             }
         }
     }
@@ -81,6 +83,8 @@ void resolve_domain(struct sockaddr_in6 *addr) {
 
 static int socket_bind(SOCKET socket, unsigned int port) {
     struct sockaddr_in6 rxAddr;
+    // Clean struct to prevent rare cases of binding errors due to garbage data in that memory location. This just happened to me randomly on Windows and left me very confused.
+    memset(&rxAddr, 0, sizeof(struct sockaddr_in6));
     rxAddr.sin6_family = AF_INET6;
     rxAddr.sin6_port = htons(port);
     rxAddr.sin6_addr = in6addr_any;
@@ -151,7 +155,6 @@ static bool ns_socket_initialize(enum NetworkType networkType, UNUSED bool recon
             LOG_ERROR("setsockopt(SO_REUSEPORT) failed");
         }
 #endif
-
         // bind the socket to any address and the specified port.
         int rc = socket_bind(sCurSocket, port);
         if (rc != NO_ERROR) { 
@@ -161,6 +164,8 @@ static bool ns_socket_initialize(enum NetworkType networkType, UNUSED bool recon
         LOG_INFO("bound to port %u", port);
     } else if (networkType == NT_CLIENT) {
         struct sockaddr_in6 addr;
+        // set and clean struct to prevent garbage data
+        memset(&addr, 0, sizeof(struct sockaddr_in6));
         // save the port to send to
         sAddr[0].sin6_family = AF_INET6;
         sAddr[0].sin6_port = htons(port);
