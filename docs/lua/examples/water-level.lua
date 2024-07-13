@@ -1,7 +1,7 @@
 -- name: Water Height Changer
 -- description: Use /waterset and /waterget to manipulate water height.
 
-function on_get_command(msg)
+local function on_get_command(msg)
     if not network_is_server() then
         djui_chat_message_create("You need to be the host!")
         return true
@@ -12,7 +12,7 @@ function on_get_command(msg)
     return true
 end
 
-function on_set_command(msg)
+local function on_set_command(msg)
     if not network_is_server() then
         djui_chat_message_create("You need to be the host!")
         return true
