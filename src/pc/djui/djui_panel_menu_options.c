@@ -14,7 +14,6 @@
 #include "seq_ids.h"
 
 static struct DjuiSelectionbox* sLevelBox = NULL;
-static struct DjuiSelectionbox* sSoundBox = NULL;
 static struct DjuiCheckbox* sRandomStageCheckbox = NULL;
 static struct DjuiCheckbox* sVanillaDemosCheckbox = NULL;
 
@@ -140,8 +139,7 @@ void djui_panel_main_menu_create(struct DjuiBase* caller) {
             struct DjuiSelectionbox* selectionbox1 = djui_selectionbox_create(body, DLANG(MENU_OPTIONS, LEVEL), levelChoices, 18, &configMenuLevel, NULL);
             djui_base_set_enabled(&selectionbox1->base, !(configMenuRandom || configMenuStaffRoll));
             sLevelBox = selectionbox1;
-            struct DjuiSelectionbox* selectionbox2 = djui_selectionbox_create(body, DLANG(MENU_OPTIONS, MUSIC), soundChoices, numSounds, &configMenuSound, NULL);
-            sSoundBox = selectionbox2;
+            djui_selectionbox_create(body, DLANG(MENU_OPTIONS, MUSIC), soundChoices, numSounds, &configMenuSound, NULL);
             djui_checkbox_create(body, DLANG(MENU_OPTIONS, STAFF_ROLL), &configMenuStaffRoll, djui_panel_staff_roll);
             struct DjuiCheckbox* checkbox2 = djui_checkbox_create(body, DLANG(MENU_OPTIONS, RANDOM_STAGE), &configMenuRandom, djui_panel_level_menu);
             djui_base_set_enabled(&checkbox2->base, !configMenuStaffRoll);
