@@ -27,7 +27,7 @@
 static enum HudUtilsResolution sResolution = RESOLUTION_DJUI;
 static enum HudUtilsFilter sFilter = FILTER_NEAREST;
 static enum DjuiFontType sFont = FONT_NORMAL;
-static struct HudUtilsRotation sRotation = { 0, 0, 0 };
+static struct HudUtilsRotation sRotation = { 0, 0, 0, 0, 0, 0 };
 static struct DjuiColor sColor = { 255, 255, 255, 255 };
 static struct DjuiColor sRefColor = { 255, 255, 255, 255 };
 static bool sLegacy = false;
@@ -101,6 +101,7 @@ struct InterpHud {
     f32 width;
     f32 height;
     enum HudUtilsResolution resolution;
+    struct HudUtilsRotation rotation;
 };
 static struct InterpHud sInterpHuds[MAX_INTERP_HUD] = { 0 };
 static u16 sInterpHudCount = 0;
@@ -114,6 +115,7 @@ void patch_djui_hud(f32 delta) {
     f32 savedZ = gDjuiHudUtilsZ;
     Gfx* savedHeadPos = gDisplayListHead;
     enum HudUtilsResolution savedResolution = sResolution;
+    struct HudUtilsRotation savedRotation = sRotation;
     for (u16 i = 0; i < sInterpHudCount; i++) {
         struct InterpHud* interp = &sInterpHuds[i];
         f32 x = delta_interpolate_f32(interp->prevX, interp->x, delta);
@@ -121,6 +123,7 @@ void patch_djui_hud(f32 delta) {
         f32 scaleW = delta_interpolate_f32(interp->prevScaleW, interp->scaleW, delta);
         f32 scaleH = delta_interpolate_f32(interp->prevScaleH, interp->scaleH, delta);
         sResolution = interp->resolution;
+        sRotation = interp->rotation;
 
         gDjuiHudUtilsZ = interp->z;
         gDisplayListHead = interp->headPos;
@@ -131,14 +134,29 @@ void patch_djui_hud(f32 delta) {
         djui_hud_position_translate(&translatedX, &translatedY);
         create_dl_translation_matrix(DJUI_MTX_PUSH, translatedX, translatedY, gDjuiHudUtilsZ);
 
-        // translate scale
-        f32 translatedW = scaleW;
-        f32 translatedH = scaleH;
-        djui_hud_size_translate(&translatedW);
-        djui_hud_size_translate(&translatedH);
+       // rotate
+       f32 translatedW = scaleW;
+       f32 translatedH = scaleH;
+       s32 rotation = delta_interpolate_s32(sRotation.rotation-sRotation.rotationDiff, sRotation.rotation, delta);
+       f32 pivotX = delta_interpolate_f32(sRotation.prevPivotX, sRotation.pivotX, delta);
+       f32 pivotY = delta_interpolate_f32(sRotation.prevPivotY, sRotation.pivotY, delta);
+       djui_hud_size_translate(&translatedW);
+       djui_hud_size_translate(&translatedH);
+       if (sRotation.rotationDiff != 0 || sRotation.rotation != 0) {
+           f32 pivotTranslationX = translatedW * pivotX;
+           f32 pivotTranslationY = translatedH * pivotY;
+           create_dl_translation_matrix(DJUI_MTX_NOPUSH, +pivotTranslationX, -pivotTranslationY, 0);
+           create_dl_rotation_matrix(DJUI_MTX_NOPUSH, rotation, 0, 0, 1);
+           create_dl_translation_matrix(DJUI_MTX_NOPUSH, -pivotTranslationX, +pivotTranslationY, 0);
+       }
+
+        // scale
+     // djui_hud_size_translate(&translatedW);
+     // djui_hud_size_translate(&translatedH);
         create_dl_scale_matrix(DJUI_MTX_NOPUSH, interp->width * translatedW, interp->height * translatedH, 1.0f);
     }
     sResolution = savedResolution;
+    sRotation = savedRotation;
     gDisplayListHead = savedHeadPos;
     gDjuiHudUtilsZ = savedZ;
 }
@@ -209,6 +227,18 @@ struct HudUtilsRotation* djui_hud_get_rotation(void) {
 }
 
 void djui_hud_set_rotation(s16 rotation, f32 pivotX, f32 pivotY) {
+    sRotation.rotationDiff = 0;
+    sRotation.prevPivotX = pivotX;
+    sRotation.prevPivotY = pivotY;
+    sRotation.rotation = (rotation * 180.f) / 0x8000;
+    sRotation.pivotX = pivotX;
+    sRotation.pivotY = pivotY;
+}
+
+void djui_hud_set_rotation_interpolated(s32 prevRotation, f32 prevPivotX, f32 prevPivotY, s32 rotation, f32 pivotX, f32 pivotY) {
+    sRotation.rotationDiff = ((rotation - prevRotation) * 180.f) / 0x8000;
+    sRotation.prevPivotX = prevPivotX;
+    sRotation.prevPivotY = prevPivotY;
     sRotation.rotation = (rotation * 180.f) / 0x8000;
     sRotation.pivotX = pivotX;
     sRotation.pivotY = pivotY;
@@ -386,6 +416,8 @@ void djui_hud_print_text_interpolated(const char* message, f32 prevX, f32 prevY,
     interp->height = font->defaultFontScale;
     interp->z = savedZ;
     interp->resolution = sResolution;
+    interp->rotation = sRotation;
+    
 }
 
 static inline bool is_power_of_two(u32 n) {
@@ -493,6 +525,7 @@ void djui_hud_render_texture_interpolated(struct TextureInfo* texInfo, f32 prevX
     interp->height = texInfo->height;
     interp->z = savedZ;
     interp->resolution = sResolution;
+    interp->rotation = sRotation;
 }
 
 void djui_hud_render_texture_tile_interpolated(struct TextureInfo* texInfo, f32 prevX, f32 prevY, f32 prevScaleW, f32 prevScaleH, f32 x, f32 y, f32 scaleW, f32 scaleH, u32 tileX, u32 tileY, u32 tileW, u32 tileH) {
@@ -516,6 +549,7 @@ void djui_hud_render_texture_tile_interpolated(struct TextureInfo* texInfo, f32 
     interp->height = texInfo->height;
     interp->z = savedZ;
     interp->resolution = sResolution;
+    interp->rotation = sRotation;
 }
 
 void djui_hud_render_rect(f32 x, f32 y, f32 width, f32 height) {
@@ -571,6 +605,7 @@ void djui_hud_render_rect_interpolated(f32 prevX, f32 prevY, f32 prevWidth, f32 
     interp->height = 1;
     interp->z = savedZ;
     interp->resolution = sResolution;
+    interp->rotation = sRotation;
 }
 
 static void hud_rotate_and_translate_vec3f(Vec3f vec, Mat4* mtx, Vec3f out) {
