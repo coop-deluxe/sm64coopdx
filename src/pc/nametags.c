@@ -96,9 +96,9 @@ void nametags_render(void) {
             snprintf(name, MAX_CONFIG_STRING, "%s", np->name);
             name_without_hex(name);
             Color color = {
-                np->overridePalette.parts[EMBLEM][0],
-                np->overridePalette.parts[EMBLEM][1],
-                np->overridePalette.parts[EMBLEM][2]
+                np->overridePalette.parts[CAP][0],
+                np->overridePalette.parts[CAP][1],
+                np->overridePalette.parts[CAP][2]
             };
             f32 measure = djui_hud_measure_text(name) * scale * 0.5f;
 
