@@ -59,6 +59,13 @@ HEADLESS ?= 0
 ICON ?= 1
 # Use .app (for macOS)
 USE_APP ?= 1
+# Minimum macOS Version
+# If our arch is arm, set to macOS 14
+ifeq ($(shell arch),arm64)
+  MIN_MACOS_VERSION ?= 14
+else
+  MIN_MACOS_VERSION ?= 10.15
+endif
 # Make some small adjustments for handheld devices
 HANDHELD ?= 0
 
@@ -642,7 +649,7 @@ else ifeq ($(COMPILER),gcc)
   ifeq ($(OSX_BUILD),0)
 	  EXTRA_CFLAGS += -Wno-unused-result -Wno-format-truncation
   else
-	  EXTRA_CFLAGS += -Wno-unused-result -mmacosx-version-min=14
+	  EXTRA_CFLAGS += -Wno-unused-result -mmacosx-version-min=$(MIN_MACOS_VERSION)
   endif
 else ifeq ($(COMPILER),clang)
   CC      := clang
@@ -753,8 +760,8 @@ else ifeq ($(findstring SDL,$(WINDOW_API)),SDL)
   else ifeq ($(TARGET_RPI),1)
     BACKEND_LDFLAGS += -lGLESv2
   else ifeq ($(OSX_BUILD),1)
-    BACKEND_LDFLAGS += -framework OpenGL `pkg-config --libs glew` -mmacosx-version-min=14
-    EXTRA_CPP_FLAGS += -stdlib=libc++ -std=c++17 -mmacosx-version-min=14
+    BACKEND_LDFLAGS += -framework OpenGL `pkg-config --libs glew` -mmacosx-version-min=$(MIN_MACOS_VERSION)
+    EXTRA_CPP_FLAGS += -stdlib=libc++ -std=c++17 -mmacosx-version-min=$(MIN_MACOS_VERSION)
   else
     BACKEND_LDFLAGS += -lGL
    endif
