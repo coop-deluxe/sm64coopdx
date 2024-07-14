@@ -1500,7 +1500,9 @@ void update_menu_level(void) {
         if (configMenuStaffRoll) {
             configMenuSound = 0;
         }
-        if (gCurrentArea != NULL) {
+        if (curLevel == LEVEL_CASTLE_GROUNDS) {
+            set_background_music(0, SEQ_MENU_FILE_SELECT, 0);
+        } else if (gCurrentArea != NULL) {
             set_background_music(gCurrentArea->musicParam, gCurrentArea->musicParam2, 0);
         }
     } else {
