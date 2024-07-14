@@ -1493,7 +1493,6 @@ void update_menu_level(void) {
 
     // figure out music
     stop_cap_music();
-
     reset_volume();
     sound_banks_disable(SEQ_PLAYER_SFX, SOUND_BANKS_BACKGROUND);
     if (gMainMenuSounds[configMenuSound].sound == STAGE_MUSIC) {
