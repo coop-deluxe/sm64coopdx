@@ -50,11 +50,16 @@ static void djui_panel_level_menu(UNUSED struct DjuiBase* caller) {
 static void djui_panel_staff_roll(UNUSED struct DjuiBase* caller) {
     // update level
     djui_panel_level_menu(NULL);
-    // change menu sound and recreate the panel if conditions are met
+    // change menu sound
     if (configMenuStaffRoll && gMainMenuSounds[configMenuSound].sound == STAGE_MUSIC) {
         configMenuSound = 0;
     }
-    // re-create panel
+    // restart djui back to this menu
+    djui_panel_shutdown();
+    gDjuiInMainMenu = true;
+    djui_panel_main_create(NULL);
+    djui_panel_options_create(NULL);
+    djui_panel_misc_create(NULL);
     djui_panel_main_menu_create(NULL);
 }
 
