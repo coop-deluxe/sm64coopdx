@@ -134,25 +134,23 @@ void patch_djui_hud(f32 delta) {
         djui_hud_position_translate(&translatedX, &translatedY);
         create_dl_translation_matrix(DJUI_MTX_PUSH, translatedX, translatedY, gDjuiHudUtilsZ);
 
-       // rotate
-       f32 translatedW = scaleW;
-       f32 translatedH = scaleH;
-       s32 rotation = delta_interpolate_s32(sRotation.rotation - sRotation.rotationDiff, sRotation.rotation, delta);
-       f32 pivotX = delta_interpolate_f32(sRotation.prevPivotX, sRotation.pivotX, delta);
-       f32 pivotY = delta_interpolate_f32(sRotation.prevPivotY, sRotation.pivotY, delta);
-       djui_hud_size_translate(&translatedW);
-       djui_hud_size_translate(&translatedH);
-       if (sRotation.rotationDiff != 0 || sRotation.rotation != 0) {
-           f32 pivotTranslationX = translatedW * pivotX;
-           f32 pivotTranslationY = translatedH * pivotY;
-           create_dl_translation_matrix(DJUI_MTX_NOPUSH, +pivotTranslationX, -pivotTranslationY, 0);
-           create_dl_rotation_matrix(DJUI_MTX_NOPUSH, rotation, 0, 0, 1);
-           create_dl_translation_matrix(DJUI_MTX_NOPUSH, -pivotTranslationX, +pivotTranslationY, 0);
-       }
+        // rotate
+        f32 translatedW = scaleW;
+        f32 translatedH = scaleH;
+        s32 rotation = delta_interpolate_s32(sRotation.rotation - sRotation.rotationDiff, sRotation.rotation, delta);
+        f32 pivotX = delta_interpolate_f32(sRotation.prevPivotX, sRotation.pivotX, delta);
+        f32 pivotY = delta_interpolate_f32(sRotation.prevPivotY, sRotation.pivotY, delta);
+        djui_hud_size_translate(&translatedW);
+        djui_hud_size_translate(&translatedH);
+        if (sRotation.rotationDiff != 0 || sRotation.rotation != 0) {
+            f32 pivotTranslationX = translatedW * pivotX;
+            f32 pivotTranslationY = translatedH * pivotY;
+            create_dl_translation_matrix(DJUI_MTX_NOPUSH, +pivotTranslationX, -pivotTranslationY, 0);
+            create_dl_rotation_matrix(DJUI_MTX_NOPUSH, rotation, 0, 0, 1);
+            create_dl_translation_matrix(DJUI_MTX_NOPUSH, -pivotTranslationX, +pivotTranslationY, 0);
+        }
 
         // scale
-     // djui_hud_size_translate(&translatedW);
-     // djui_hud_size_translate(&translatedH);
         create_dl_scale_matrix(DJUI_MTX_NOPUSH, interp->width * translatedW, interp->height * translatedH, 1.0f);
     }
     sResolution = savedResolution;
