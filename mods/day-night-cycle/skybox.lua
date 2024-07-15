@@ -2,13 +2,13 @@
 local set_override_far,obj_mark_for_deletion,vec3f_to_object_pos,get_skybox,clampf = set_override_far,obj_mark_for_deletion,vec3f_to_object_pos,get_skybox,clampf
 
 --- @param o Object
-function bhv_skybox_init(o)
+function bhv_dnc_skybox_init(o)
     o.header.gfx.skipInViewCheck = true
     set_override_far(200000)
 end
 
 --- @param o Object
-function bhv_skybox_loop(o)
+function bhv_dnc_skybox_loop(o)
     if not is_dnc_enabled() then
         obj_mark_for_deletion(o)
         return

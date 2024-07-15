@@ -75,7 +75,6 @@ function set_time_scale(scale)
 end
 
 --- @param time number
---- @return string
 --- Returns the properly formatted time string
 function get_time_string(time)
     if type(time) ~= "number" then
@@ -122,17 +121,34 @@ function time_tick()
     end
 end
 
+--- @param sequenceId SeqId
+--- @param m64Name string
+--- Registers a custom sequence as night music
 function night_music_register(sequenceId, m64Name)
+    if type(sequenceId) ~= "number" or math_floor(sequenceId) ~= sequenceId or sequenceId < 0 or sequenceId >= SEQ_COUNT then
+        error("night_music_register: Parameter 'sequenceId' must be a SeqId")
+        return
+    end
+    if type(m64Name) ~= "string" then
+        error("night_music_register: Parameter 'm64Name' must be a string")
+        return
+    end
+
     local id = SEQ_COUNT + sequenceId
-    smlua_audio_utils_replace_sequence(id, 20, 127, m64Name)
+    smlua_audio_utils_replace_sequence(id, 42, 80, m64Name)
     sNightSequences[sequenceId] = id
 end
 
-function handle_night_music()
+--- Returns whether or not night music should be played
+function should_play_night_music()
+    return is_dnc_enabled() and show_day_night_cycle() and playNightMusic and dayNightCycleApi.playNightMusic
+end
+
+function update_night_music()
     if gNetworkPlayers[0].currActNum == 99 or gMarioStates[0].area == nil then return end
     local musicParam = gMarioStates[0].area.musicParam2
 
-    if not playNightMusic or not dayNightCycleApi.playNightMusic then
+    if not should_play_night_music() then
         if playingNightMusic then
             playingNightMusic = false
             fade_volume_scale(SEQ_PLAYER_LEVEL, 127, 1)
@@ -168,6 +184,7 @@ function handle_night_music()
 end
 
 --- @param obj Object
+--- Function to delete an object if it's dark out, meant to be used in behaviors
 function delete_at_dark(obj)
     if obj == nil then
         error("delete_at_dark: Parameter 'obj' must be an Object")
