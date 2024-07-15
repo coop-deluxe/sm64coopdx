@@ -137,7 +137,7 @@ void patch_djui_hud(f32 delta) {
        // rotate
        f32 translatedW = scaleW;
        f32 translatedH = scaleH;
-       s32 rotation = delta_interpolate_s32(sRotation.rotation-sRotation.rotationDiff, sRotation.rotation, delta);
+       s32 rotation = delta_interpolate_s32(sRotation.rotation - sRotation.rotationDiff, sRotation.rotation, delta);
        f32 pivotX = delta_interpolate_f32(sRotation.prevPivotX, sRotation.pivotX, delta);
        f32 pivotY = delta_interpolate_f32(sRotation.prevPivotY, sRotation.pivotY, delta);
        djui_hud_size_translate(&translatedW);
