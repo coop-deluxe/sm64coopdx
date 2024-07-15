@@ -9230,7 +9230,10 @@ HOOK_ON_LANGUAGE_CHANGED = 44
 HOOK_ON_MODS_LOADED = 45
 
 --- @type LuaHookedEventType
-HOOK_MAX = 46
+HOOK_ON_NAMETAGS_RENDER = 46
+
+--- @type LuaHookedEventType
+HOOK_MAX = 47
 
 --- @class LuaModMenuElementType
 

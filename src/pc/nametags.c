@@ -8,6 +8,7 @@
 #include "game/camera.h"
 #include "pc/lua/utils/smlua_math_utils.h"
 #include "pc/lua/utils/smlua_misc_utils.h"
+#include "pc/lua/smlua_hooks.h"
 
 #define NAMETAG_MAX_SCALE 0.32f
 #define NAMETAG_DIST 7000.0f
@@ -93,8 +94,14 @@ void nametags_render(void) {
             }
 
             char name[MAX_CONFIG_STRING];
-            snprintf(name, MAX_CONFIG_STRING, "%s", np->name);
-            name_without_hex(name);
+            char* hookedString = NULL;
+            smlua_call_event_hooks_int_params_ret_string(HOOK_ON_NAMETAGS_RENDER, i, &hookedString);
+            if (hookedString) {
+                snprintf(name, MAX_CONFIG_STRING, "%s", hookedString);
+            } else {
+                snprintf(name, MAX_CONFIG_STRING, "%s", np->name);
+                name_without_hex(name);
+            }
             Color color = {
                 np->overridePalette.parts[CAP][0],
                 np->overridePalette.parts[CAP][1],
