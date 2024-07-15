@@ -1,5 +1,5 @@
 -- version
-DNC_VERSION = "v2.2"
+DNC_VERSION = "v2.2.1"
 
 -- skybox constants
 E_MODEL_DNC_SKYBOX = smlua_model_util_get_id("dnc_skybox_geo")
