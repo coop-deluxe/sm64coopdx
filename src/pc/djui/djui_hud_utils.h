@@ -24,8 +24,8 @@ enum DjuiFontType {
 };
 
 struct HudUtilsRotation {
-    s32 rotation;
-    s32 rotationDiff;
+    f32 rotation;
+    f32 rotationDiff;
     f32 prevPivotX;
     f32 prevPivotY;
     f32 pivotX;

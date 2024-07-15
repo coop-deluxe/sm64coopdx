@@ -948,8 +948,8 @@ static struct LuaObjectField sHudUtilsRotationFields[LUA_HUD_UTILS_ROTATION_FIEL
     { "pivotY",       LVT_F32, offsetof(struct HudUtilsRotation, pivotY),       false, LOT_NONE },
     { "prevPivotX",   LVT_F32, offsetof(struct HudUtilsRotation, prevPivotX),   false, LOT_NONE },
     { "prevPivotY",   LVT_F32, offsetof(struct HudUtilsRotation, prevPivotY),   false, LOT_NONE },
-    { "rotation",     LVT_S32, offsetof(struct HudUtilsRotation, rotation),     false, LOT_NONE },
-    { "rotationDiff", LVT_S32, offsetof(struct HudUtilsRotation, rotationDiff), false, LOT_NONE },
+    { "rotation",     LVT_F32, offsetof(struct HudUtilsRotation, rotation),     false, LOT_NONE },
+    { "rotationDiff", LVT_F32, offsetof(struct HudUtilsRotation, rotationDiff), false, LOT_NONE },
 };
 
 #define LUA_INSTANT_WARP_FIELD_COUNT 3
