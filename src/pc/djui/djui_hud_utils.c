@@ -415,7 +415,6 @@ void djui_hud_print_text_interpolated(const char* message, f32 prevX, f32 prevY,
     interp->z = savedZ;
     interp->resolution = sResolution;
     interp->rotation = sRotation;
-    
 }
 
 static inline bool is_power_of_two(u32 n) {
