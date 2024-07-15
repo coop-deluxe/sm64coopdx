@@ -24,6 +24,7 @@ struct ScrollTarget *get_scroll_targets(u32 id, u16 size, u16 offset) {
         if ((!scroll->hasOffset && offset > 0) || size < scroll->size) {
             if (scroll->hasOffset) { return NULL; }
             if (size > scroll->size) { size = scroll->size; } // Don't use an invalid size
+            if (size + offset >= scroll->size) { return NULL; } // If the offset is invalid, Abort.
             scroll->hasOffset = true;
             Vtx* *newVtx = calloc(size, sizeof(Vtx*));
             if (!newVtx) { return NULL; }
