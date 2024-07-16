@@ -283,6 +283,7 @@ static void djui_base_render_border(struct DjuiBase* base) {
 ////////////
 
 bool djui_base_render(struct DjuiBase* base) {
+    if (base == NULL) { return false; }
     if (!base->visible) { return false; }
 
     if (base->on_render_pre != NULL) {
