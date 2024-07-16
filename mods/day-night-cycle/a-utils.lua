@@ -113,6 +113,7 @@ function table_clone(table)
     return clone
 end
 
+--- Checks common conditions that make HUD rendering out of place
 function check_common_hud_render_cancels()
     local action = gMarioStates[0].action
     return obj_get_first_with_behavior_id(id_bhvActSelector) ~= nil or

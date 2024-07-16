@@ -471,6 +471,7 @@ void audio_sample_destroy_pending_copies(void) {
         pthread_mutex_lock(&sSampleCopyMutex);
         for (struct ModAudioSampleCopies *node = sSampleCopiesPendingUninitTail; node;) {
             struct ModAudioSampleCopies *prev = node->prev;
+            ma_sound_stop(&node->sound);
             ma_sound_uninit(&node->sound);
             free(node);
             node = prev;
@@ -484,6 +485,7 @@ static void audio_sample_destroy_copies(struct ModAudio* audio) {
     pthread_mutex_lock(&sSampleCopyMutex);
     for (struct ModAudioSampleCopies* node = audio->sampleCopiesTail; node;) {
         struct ModAudioSampleCopies* prev = node->prev;
+        ma_sound_stop(&node->sound);
         ma_sound_uninit(&node->sound);
         free(node);
         node = prev;
@@ -504,6 +506,7 @@ void audio_sample_destroy(struct ModAudio* audio) {
     if (audio->sampleCopiesTail) {
         audio_sample_destroy_copies(audio);
     }
+    ma_sound_stop(&audio->sound);
     ma_sound_uninit(&audio->sound);
     dynamic_pool_free(sModAudioPool, audio);
 }

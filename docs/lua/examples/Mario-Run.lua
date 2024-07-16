@@ -1,23 +1,16 @@
 -- name: Mario RUN!
 -- description: Mario is constantly running.
 
-Threshold = 50 --set Threshold to 50
+local speedThreshold = 50
 
-function mario_update(m)
-    --Prevent mario from ideling
-    if m.action == ACT_IDLE then --If idle
-        set_mario_action(m, ACT_WALKING, 0) --Make Mario walk
+local function mario_update(m)
+    --Prevent mario from crouching or idling
+    if m.action == ACT_IDLE or m.action == ACT_CROUCHING then
+        set_mario_action(m, ACT_WALKING, 0)
     end
 
-    --Crouching doesnt apply vel so prevent that
-    if m.action == ACT_CROUCHING then --If crouching
-        set_mario_action(m, ACT_WALKING, 0) --Make Mario walk
-    end
-
-    --Speed floor
-    if (m.forwardVel > Threshold) and (m.forwardVel < Threshold) then --If Mario isn't moveing fast enough
-        m.forwardVel = Threshold --set forwards velocity to whatevet the threashold is set to
-    end
+    -- Ensures that Mario moves at a speed greater than or equal to speedThreshold
+    m.forwardVel = math.max(m.forwardVel,speedThreshold)
 end
 
 -- hooks --

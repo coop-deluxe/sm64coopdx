@@ -3349,8 +3349,10 @@ void update_camera(struct Camera *c) {
 
     // Make sure the palette editor cutscene is properly reset
     struct MarioState *m = gMarioState;
-    if (c->paletteEditorCap && c->cutscene != CUTSCENE_PALETTE_EDITOR && !(m->flags & MARIO_CAP_ON_HEAD) && m->action != ACT_PUTTING_ON_CAP) {
-        cutscene_put_cap_on(m);
+    if (c->paletteEditorCap && c->cutscene != CUTSCENE_PALETTE_EDITOR && m->action != ACT_PUTTING_ON_CAP) {
+        if (!(m->flags & MARIO_CAP_ON_HEAD)) {
+            cutscene_put_cap_on(m);
+        }
         c->paletteEditorCap = false;
     }
 }
@@ -10860,8 +10862,15 @@ void cutscene_palette_editor(struct Camera *c) {
 
     if (!gDjuiInPlayerMenu) {
         if (c->paletteEditorCap) {
-            if (m->action == ACT_IDLE && !(m->flags & MARIO_CAP_ON_HEAD)) {
-                set_mario_action(m, ACT_PUTTING_ON_CAP, 0);
+            if (m->flags & MARIO_CAP_ON_HEAD) {
+                gCamera->paletteEditorCap = false;
+            } else {
+                if (m->action == ACT_IDLE) {
+                    set_mario_action(m, ACT_PUTTING_ON_CAP, 0);
+                } else {
+                    cutscene_put_cap_on(m);
+                    gCamera->paletteEditorCap = false;
+                }
             }
         }
         gCutsceneTimer = CUTSCENE_STOP;

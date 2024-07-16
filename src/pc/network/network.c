@@ -33,6 +33,7 @@
 #include "game/ingame_menu.h"
 #include "game/first_person_cam.h"
 #include "game/envfx_snow.h"
+#include "engine/math_util.h"
 
 #ifdef DISCORD_SDK
 #include "pc/discord/discord.h"
@@ -721,7 +722,11 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
     cnt->extStickY = 0;
 
     gFirstPersonCamera.enabled = false;
+    gFirstPersonCamera.forceRoll = false;
+    gFirstPersonCamera.forcePitch = false;
+    gFirstPersonCamera.centerL = true;
     gFirstPersonCamera.fov = FIRST_PERSON_DEFAULT_FOV;
+    vec3f_set(gFirstPersonCamera.offset, 0, 0, 0);
     first_person_reset();
 
     extern void save_file_load_all(UNUSED u8 reload);
