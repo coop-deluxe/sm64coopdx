@@ -10,6 +10,7 @@
 #include "pc/mods/mods_utils.h"
 #include "djui_panel_main.h"
 #include "djui_panel_host.h"
+#include "djui_panel_host_mods.h"
 #include "djui_panel_pause.h"
 
 #define DJUI_MOD_PANEL_WIDTH (410.0f + (16 * 2.0f))
@@ -17,8 +18,15 @@
 static struct DjuiFlowLayout* sModLayout = NULL;
 static struct DjuiThreePanel* sDescriptionPanel = NULL;
 static struct DjuiText* sTooltip = NULL;
+unsigned int selectedCategory = 0;
 static bool sWarned = false;
-static bool sRomHacks = false;
+
+struct ModCategory sCategories[] = {
+    { "MISC", NULL }, // null means any mod that doesn't contain the incompatible/category tags above
+    { "ROMHACKS", "romhack" },
+    { "GAMEMODES", "gamemode" },
+    { "MOVESETS", "moveset" },
+};
 
 void djui_panel_host_mods_create(struct DjuiBase* caller);
 
@@ -119,27 +127,58 @@ static void djui_panel_host_mods_destroy(struct DjuiBase* base) {
     sTooltip = NULL;
 }
 
-void djui_panel_host_mods_create(struct DjuiBase* caller) {
-    if (caller != NULL) {
-        sRomHacks = caller->tag != 0;
+void djui_panel_on_categories_change(UNUSED struct DjuiBase* caller) {
+    if (gDjuiInMainMenu) {
+        djui_panel_shutdown();
+        gDjuiInMainMenu = true;
+        djui_panel_main_create(NULL);
+        djui_panel_host_create(NULL);
+        djui_panel_host_mods_create(NULL);
+    } else {
+        djui_panel_shutdown();
+        djui_panel_pause_create(NULL);
+        djui_panel_host_create(NULL);
+        djui_panel_host_mods_create(NULL);
     }
+}
+
+void djui_panel_host_mods_create(struct DjuiBase* caller) {
 
     mods_update_selectable();
     djui_panel_host_mods_description_create();
 
-    struct DjuiThreePanel* panel = djui_panel_menu_create(
-        sRomHacks ? DLANG(HOST_MODS, ROMHACKS) : DLANG(HOST_MODS, MODS),
-        true);
+    struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(HOST_MODS, MODS), true);
 
     struct DjuiBase* body = djui_three_panel_get_body(panel);
     {
+        // copy category choices from sCategories
+        int numCategories = sizeof(sCategories) / sizeof(sCategories[0]);
+        char* categoryChoices[sizeof(sCategories)];
+
+        // loop thru all sounds names, and add those to the categoryChoices string array
+        for (int i = 0; i < numCategories; i++) {
+            categoryChoices[i] = djui_language_get("HOST_MOD_CATEGORIES", sCategories[i].langKey);
+        }
+        djui_selectionbox_create(body, DLANG(HOST_MODS, CATEGORIES), categoryChoices, numCategories, &selectedCategory, djui_panel_on_categories_change);
         struct DjuiPaginated* paginated = djui_paginated_create(body, 8);
         sModLayout = paginated->layout;
         struct DjuiBase* layoutBase = &paginated->layout->base;
         for (int i = 0; i < gLocalMods.entryCount; i++) {
             struct Mod* mod = gLocalMods.entries[i];
-            if (sRomHacks != (mod->incompatible && strstr(mod->incompatible, "romhack"))) {
+            char* category = mod->category;
+            if (!category) { category = mod->incompatible; }
+            if (sCategories[selectedCategory].category && (!category || !strstr(category, sCategories[selectedCategory].category))) {
                 continue;
+            } else if (!sCategories[selectedCategory].category) {
+                bool doContinue = false;
+                for (int i = 0; i < numCategories; i++) {
+                    if (sCategories[i].category && (category && strstr(category, sCategories[i].category))) {
+                        doContinue = true;
+                        break;
+                    }
+                }
+
+                if (doContinue) { continue; }
             }
             struct DjuiCheckbox* checkbox = djui_checkbox_create(layoutBase, mod->name, &mod->enabled, djui_mod_checkbox_on_value_change);
             checkbox->base.tag = i;
@@ -158,7 +197,7 @@ void djui_panel_host_mods_create(struct DjuiBase* caller) {
             djui_button_create(body, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
         }
 
-        panel->bodySize.value = paginated->base.height.value + 16 + 64;
+        panel->bodySize.value = paginated->base.height.value + 64 + 64;
     }
 
     panel->base.destroy = djui_panel_host_mods_destroy;

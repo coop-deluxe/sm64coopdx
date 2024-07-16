@@ -182,12 +182,7 @@ void djui_panel_host_create(struct DjuiBase* caller) {
         }
 
         djui_button_create(body, DLANG(HOST, SETTINGS), DJUI_BUTTON_STYLE_NORMAL, djui_panel_host_settings_create);
-
-        struct DjuiButton* button2 = djui_button_create(body, DLANG(HOST, MODS), DJUI_BUTTON_STYLE_NORMAL, djui_panel_host_mods_create);
-        button2->base.tag = 0;
-
-        struct DjuiButton* button3 = djui_button_create(body, DLANG(HOST, ROMHACKS), DJUI_BUTTON_STYLE_NORMAL, djui_panel_host_mods_create);
-        button3->base.tag = 1;
+        djui_button_create(body, DLANG(HOST, MODS), DJUI_BUTTON_STYLE_NORMAL, djui_panel_host_mods_create);
 
         struct DjuiRect* rect3 = djui_rect_container_create(body, 64);
         {

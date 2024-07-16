@@ -403,6 +403,7 @@ static void mod_extract_fields(struct Mod* mod) {
     // default to null
     mod->name = NULL;
     mod->incompatible = NULL;
+    mod->category = NULL;
     mod->description = NULL;
     mod->pausable = true;
     mod->ignoreScriptWarnings = false;
@@ -430,6 +431,11 @@ static void mod_extract_fields(struct Mod* mod) {
             mod->incompatible = calloc(MOD_INCOMPATIBLE_MAX_LENGTH + 1, sizeof(char));
             if (snprintf(mod->incompatible, MOD_INCOMPATIBLE_MAX_LENGTH, "%s", extracted) < 0) {
                 LOG_INFO("Truncated mod incompatible field '%s'", mod->incompatible);
+            }
+        } else if (mod->category == NULL && (extracted = extract_lua_field("-- category:", buffer))) {
+            mod->category = calloc(MOD_CATEGORY_MAX_LENGTH + 1, sizeof(char));
+            if (snprintf(mod->category, MOD_CATEGORY_MAX_LENGTH, "%s", extracted) < 0) {
+                LOG_INFO("Truncated mod category field '%s'", mod->category);
             }
         } else if (mod->description == NULL && (extracted = extract_lua_field("-- description:", buffer))) {
             mod->description = calloc(MOD_DESCRIPTION_MAX_LENGTH + 1, sizeof(char));
