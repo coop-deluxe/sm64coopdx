@@ -1,7 +1,5 @@
 -- This file is an example of how to render to the screen
 
-local rainbow = 0
-
 local function test_text()
     -- set text and scale
     local text = "This is example text in the bottom right."
@@ -29,15 +27,17 @@ local function test_text()
 end
 
 local function test_texture()
-    -- render to N64's screen space
+    -- render to the N64's screen space
     djui_hud_set_resolution(RESOLUTION_N64)
 
-    -- get player's character texture
-    local tex = gMarioStates[0].character.hudHeadTexture
+    local tex = gTextures.star
 
     -- color and render
     djui_hud_set_color(255, 0, 255, 255)
     djui_hud_render_texture(tex, 256, 64, 1, 1)
+
+    -- render texture, but cut in half
+    djui_hud_render_texture_tile(tex, 256, 84, 2, 1, 0, 0, 8, 16)
 end
 
 local function test_rect()
@@ -77,34 +77,19 @@ local function test_rect()
     djui_hud_render_rect(x, y, w, h)
 end
 
-
-local function test_mouse()
-    -- render to native screen space (recommended for this)
-    djui_hud_set_resolution(RESOLUTION_DJUI)
-
-    -- get mouse position
-    local mouseX = djui_hud_get_mouse_x()
-    local mouseY = djui_hud_get_mouse_y()
-
-    local scale = 4
-
-    -- set color and render
-    djui_hud_set_color(255, 255, 255, 255)
-    djui_hud_render_texture(gTextures.arrow_up, mouseX, mouseY, scale, scale)
-end
-
 local function test_rainbow_text()
     -- this function is incredibly silly
     -- don't do anything like this
-    local res = RESOLUTION_DJUI
     local text = "HELLO WORLD"
     local scale = 3
 
-    djui_hud_set_resolution(res)
+    local gt = get_global_timer()
+
+    djui_hud_set_resolution(RESOLUTION_DJUI)
     djui_hud_set_font(FONT_NORMAL)
 
     for i=0,255 do
-        j = rainbow / 50
+        j = gt / 50
         local r = math.sin(0.00 + i / 15 + j) * 127 + 127
         local g = math.sin(0.33 + i / 33 + j) * 127 + 127
         local b = math.sin(0.66 + i / 77 + j) * 127 + 127
@@ -118,7 +103,6 @@ local function test_rainbow_text()
         djui_hud_set_color(r, g, b, i)
         djui_hud_print_text(text, x, y, scale)
     end
-    rainbow = rainbow + 1
 end
 
 local function test_rotation()
@@ -149,10 +133,14 @@ end
 local function test_filtering()
     local scale = 1
 
-    -- render to N64's screen space with the MENU font
+    -- reset rotation from earlier
+    djui_hud_set_rotation(0, 0, 0)
+    
+    -- render to the N64's screen space with the HUD font
     djui_hud_set_resolution(RESOLUTION_N64)
     djui_hud_set_font(FONT_HUD)
-    djui_hud_set_color(255, 255, 255, 255)
+
+    djui_hud_reset_color()
 
     -- get height of screen and text
     local screenHeight = djui_hud_get_screen_height()
@@ -164,7 +152,7 @@ local function test_filtering()
     djui_hud_set_filter(FILTER_NEAREST)
     djui_hud_print_text("NEAREST", 0, y, scale)
 
-    -- adjust position 
+    -- adjust position
     y = y - height
 
     -- set filtering and render
@@ -173,36 +161,58 @@ local function test_filtering()
 end
 
 local function test_world_to_screen()
-    -- render to N64's screen space (recommended for this)
+    -- render to the N64's screen space (recommended for this)
     djui_hud_set_resolution(RESOLUTION_N64)
 
-    -- reset rotation and filtering from earlier
-    djui_hud_set_rotation(0, 0, 0)
+    -- reset filtering from earlier
     djui_hud_set_filter(FILTER_NEAREST)
 
+    -- project to mario's position
     local out = {x = 0, y = 0, z = 0}
     djui_hud_world_pos_to_screen_pos(gMarioStates[0].pos,out)
 
     -- get player's character texture
     local tex = gMarioStates[0].character.hudHeadTexture
 
-    djui_hud_set_color(255, 255, 255, 255)
+    djui_hud_reset_color()
     djui_hud_render_texture(tex, out.x, out.y, 1, 1)
 end
 
+local function test_mouse()
+    -- render to native screen space (recommended for this)
+    djui_hud_set_resolution(RESOLUTION_DJUI)
 
+    djui_hud_reset_color()
+
+    -- get mouse position
+    local mouseX = djui_hud_get_mouse_x()
+    local mouseY = djui_hud_get_mouse_y()
+    local scale = 4
+
+    djui_hud_render_texture(gTextures.arrow_up, mouseX, mouseY, scale, scale)
+end
+
+local function test_pow_meter()
+    djui_hud_set_resolution(RESOLUTION_N64)
+
+    local hp = gMarioStates[0].health
+    hud_render_power_meter(hp,16,128,24,24) -- health value ranges from 255 (0xFF in hex) to 2176 (0x880 in hex)
+end
+
+-- HOOK_ON_HUD_RENDER renders above SM64's hud
 local function on_hud_render()
     test_text()
     test_rect()
     test_texture()
-    test_mouse()
     test_rainbow_text()
     test_rotation()
     test_filtering()
     test_world_to_screen()
+    test_pow_meter()
+    test_mouse()
 end
 
--- HOOK_ON_HUD_RENDER_BEHIND will render behind SM64's hud
+-- HOOK_ON_HUD_RENDER_BEHIND renders behind SM64's hud
 local function on_hud_render_behind()
 
     local scale = 0.5
@@ -220,5 +230,6 @@ local function on_hud_render_behind()
     djui_hud_print_text(text, x, 22, scale)
 end
 
+-- hooks --
 hook_event(HOOK_ON_HUD_RENDER, on_hud_render)
 hook_event(HOOK_ON_HUD_RENDER_BEHIND, on_hud_render_behind)

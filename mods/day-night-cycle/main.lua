@@ -1,7 +1,6 @@
 -- name: Day Night Cycle DX
 -- incompatible: light day-night-cycle
--- description: Day Night Cycle DX v2.1\nBy \\#ec7731\\Agent X\n\n\\#dcdcdc\\This mod adds a fully featured day & night cycle system with night, sunrise, day and sunset to sm64coopdx. It includes an API and hook system for interfacing with several components of the mod externally. This mod was originally made for sm64ex-coop but has been practically rewritten for sm64coopdx.\n\nDays last 24 minutes and with the /time command, you can get/set the time or change your settings.\n\nThere is also now a new menu in the pause menu for Day Night Cycle DX!\n\nSpecial thanks to \\#00ffff\\AngelicMiracles\\#dcdcdc\\ for the sunset, sunrise and night time skyboxes.\nSpecial thanks to \\#344ee1\\eros71\\#dcdcdc\\ for salvaging\nthe mod files.
--- pausable: true
+-- description: Day Night Cycle DX v2.2.1\nBy \\#ec7731\\Agent X\n\n\\#dcdcdc\\This mod adds a fully featured day & night cycle system with night, sunrise, day and sunset to sm64coopdx. It includes an API and hook system for interfacing with several components of the mod externally. This mod was originally made for sm64ex-coop but has been practically rewritten for sm64coopdx.\n\nDays last 24 minutes and with the /time command, you can get/set the time or change your settings.\n\nThere is also now a new menu in the pause menu for Day Night Cycle DX!\n\nSpecial thanks to \\#e06de4\\MaiskX3\\#dcdcdc\\ for the night time music.\nSpecial thanks to \\#00ffff\\AngelicMiracles\\#dcdcdc\\ for the sunset, sunrise and night time skyboxes.\nSpecial thanks to \\#344ee1\\eros71\\#dcdcdc\\ for salvaging\nthe mod files.
 
 --- @class Vec2f
 --- @field public x number
@@ -71,28 +70,32 @@ function show_day_night_cycle()
         or in_vanilla_level(LEVEL_DDD) or in_vanilla_level(LEVEL_THI) or (in_vanilla_level(LEVEL_CASTLE) and gNetworkPlayers[0].currAreaIndex ~= 3) or in_vanilla_level(LEVEL_WDW)
 end
 
+local function reset_lighting()
+    set_lighting_dir(1, 0)
+    set_lighting_dir(2, 0)
+    set_lighting_color(0, 255)
+    set_lighting_color(1, 255)
+    set_lighting_color(2, 255)
+    set_vertex_color(0, 255)
+    set_vertex_color(1, 255)
+    set_vertex_color(2, 255)
+    set_fog_color(0, 255)
+    set_fog_color(1, 255)
+    set_fog_color(2, 255)
+    set_fog_intensity(1)
+end
+
 local function update()
     if not is_dnc_enabled() then
-        set_lighting_dir(1, 0)
-        set_lighting_dir(2, 0)
-        set_lighting_color(0, 255)
-        set_lighting_color(1, 255)
-        set_lighting_color(2, 255)
-        set_vertex_color(0, 255)
-        set_vertex_color(1, 255)
-        set_vertex_color(2, 255)
-        set_fog_color(0, 255)
-        set_fog_color(1, 255)
-        set_fog_color(2, 255)
-        set_fog_intensity(1)
-
+        reset_lighting()
         return
     end
 
     if network_check_singleplayer_pause() then return end
+    if network_player_connected_count() == 1 and obj_get_first_with_behavior_id(id_bhvActSelector) ~= nil then return end
 
     if network_is_server() then time_tick() end
-    if not init then handle_night_music() end
+    if not init then update_night_music() end
 
     -- spawn skyboxes
     local skybox = get_skybox()
@@ -110,7 +113,7 @@ local function update()
 
                 spawn_non_sync_object(
                     bhvDNCSkybox,
-                    E_MODEL_SKYBOX,
+                    E_MODEL_DNC_SKYBOX,
                     0, 0, 0,
                     --- @param o Object
                     function(o)
@@ -124,7 +127,7 @@ local function update()
             -- spawn static skybox
             spawn_non_sync_object(
                 bhvDNCSkybox,
-                E_MODEL_SKYBOX,
+                E_MODEL_DNC_SKYBOX,
                 0, 0, 0,
                 --- @param o Object
                 function(o)
@@ -174,7 +177,7 @@ local function update()
             ambientColor = COLOR_AMBIENT_DAY
         end
         local overrideAmbientColor = dnc_call_hook(DNC_HOOK_SET_AMBIENT_LIGHTING_COLOR, table_clone(ambientColor))
-        if overrideAmbientColor ~= nil and type(overrideColor) == "table" then ambientColor = overrideColor end
+        if overrideAmbientColor ~= nil and type(overrideColor) == "table" then ambientColor = overrideAmbientColor end
 
         -- calculate fog color
         local fogColor = COLOR_DAY
@@ -244,18 +247,7 @@ local function update()
         set_fog_color(2, fogColor.b)
         set_fog_intensity(intensity)
     else
-        set_lighting_dir(1, 0)
-        set_lighting_dir(2, 0)
-        set_lighting_color(0, 255)
-        set_lighting_color(1, 255)
-        set_lighting_color(2, 255)
-        set_vertex_color(0, 255)
-        set_vertex_color(1, 255)
-        set_vertex_color(2, 255)
-        set_fog_color(0, 255)
-        set_fog_color(1, 255)
-        set_fog_color(2, 255)
-        set_fog_intensity(1)
+        reset_lighting()
     end
 
     init = false
@@ -271,7 +263,7 @@ local function on_hud_render_behind()
     local scale = 0.5
     local text = get_time_string(gGlobalSyncTable.time)
 
-    local hidden = hud_is_hidden()
+    local hidden = hud_is_hidden() or (hud_get_value(HUD_DISPLAY_FLAGS) & HUD_DISPLAY_FLAG_LIVES) == 0
     local x = if_then_else(hidden, (djui_hud_get_screen_width() * 0.5) - (djui_hud_measure_text(text) * (0.5 * scale)), 24)
     local y = if_then_else(hidden, (djui_hud_get_screen_height() - 20), 32)
     local overridePos = dnc_call_hook(DNC_HOOK_SET_DISPLAY_TIME_POS, { x = x, y = y })
@@ -414,7 +406,6 @@ local function on_sync_command()
     gGlobalSyncTable.timeScale = REAL_MINUTE
 
    save_time()
-   mod_storage_save_number("scale", REAL_MINUTE)
 end
 
 local function on_music_command()
@@ -510,7 +501,6 @@ local function on_subtract_hour()
     save_time()
 end
 
-
 local sReadonlyMetatable = {
     __index = function(table, key)
         return rawget(table, key)
@@ -536,6 +526,8 @@ _G.dayNightCycleApi = {
     get_time_string = get_time_string,
     delete_at_dark = delete_at_dark,
     show_day_night_cycle = show_day_night_cycle,
+    should_play_night_music = should_play_night_music,
+    night_music_register = night_music_register,
     dnc_hook_event = dnc_hook_event,
     constants = {
         SECOND = SECOND,
@@ -634,7 +626,7 @@ if network_is_server() then
     hook_mod_menu_checkbox("Enable Day Night Cycle", gGlobalSyncTable.dncEnabled, on_set_dnc_enabled)
     hook_mod_menu_checkbox("24 Hour Time", use24h, on_set_24h_time)
     hook_mod_menu_checkbox("Night Time Music", playNightMusic, on_set_night_time_music)
-    hook_mod_menu_slider("Time Scale: " .. math_tointeger(gGlobalSyncTable.timeScale), gGlobalSyncTable.timeScale, 0, 20, on_set_time_scale)
+    hook_mod_menu_slider("Time Scale: " .. gGlobalSyncTable.timeScale, gGlobalSyncTable.timeScale, 0, 20, on_set_time_scale)
     hook_mod_menu_button("Add 1 In-Game Hour", on_add_hour)
     hook_mod_menu_button("Subtract 1 In-Game Hour", on_subtract_hour)
 end

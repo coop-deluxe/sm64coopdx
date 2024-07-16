@@ -1,8 +1,8 @@
 -- version
-DNC_VERSION = "v2.1"
+DNC_VERSION = "v2.2.1"
 
 -- skybox constants
-E_MODEL_SKYBOX = smlua_model_util_get_id("dnc_skybox_geo")
+E_MODEL_DNC_SKYBOX = smlua_model_util_get_id("dnc_skybox_geo")
 
 SKYBOX_SCALE = 600
 SKYBOX_DAY = 0
@@ -19,7 +19,7 @@ BACKGROUND_BELOW_CLOUDS_SUNSET = 15
 
 -- time constants
 SECOND = 30 -- how many frames are in 1 second
-MINUTE = SECOND * 60 -- how many frames are in 1 minutes
+MINUTE = SECOND * 60 -- how many frames are in 1 minute
 
 HOUR_SUNRISE_START = 4
 HOUR_SUNRISE_END = 5
