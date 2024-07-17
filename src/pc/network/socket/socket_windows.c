@@ -13,7 +13,7 @@ SOCKET socket_initialize(void) {
     }
 
     // initialize socket
-    SOCKET sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+    SOCKET sock = socket(AF_INET6, SOCK_DGRAM, IPPROTO_UDP);
     if (sock == INVALID_SOCKET) {
         LOG_ERROR("socket failed with error %d", SOCKET_LAST_ERROR);
         return INVALID_SOCKET;
