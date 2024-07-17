@@ -196,6 +196,8 @@ void bhv_normal_cap_init(void) {
 }
 
 void normal_cap_set_save_flags(void) {
+    if (o->oBehParams - 1 != 0) { return; }
+
     save_file_clear_flags(SAVE_FLAG_CAP_ON_GROUND);
 
     switch (gCurrCourseNum) {
