@@ -699,6 +699,7 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
     camera_set_use_course_specific_settings(true);
     free_vtx_scroll_targets();
     gMarioStates[0].cap = 0;
+    gMarioStates[0].input = 0;
     extern s16 gTTCSpeedSetting;
     gTTCSpeedSetting = 0;
     gOverrideDialogPos = 0;
