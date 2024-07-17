@@ -66,6 +66,8 @@ ifeq ($(shell arch),arm64)
 else
   MIN_MACOS_VERSION ?= 10.15
 endif
+# Homebrew Prefix
+BREW_PREFIX ?= $(shell brew --prefix)
 # Make some small adjustments for handheld devices
 HANDHELD ?= 0
 
@@ -675,7 +677,7 @@ ifeq ($(WINDOWS_BUILD),1) # fixes compilation in MXE on Linux and WSL
   OBJCOPY := objcopy
   OBJDUMP := $(CROSS)objdump
 else ifeq ($(OSX_BUILD),1)
-  OSX_GCC_VER = $(shell find `brew --prefix`/bin/gcc* | grep -oE '[[:digit:]]+' | sort -n | uniq | tail -1)
+  OSX_GCC_VER = $(shell find $(BREW_PREFIX)/bin/gcc* | grep -oE '[[:digit:]]+' | sort -n | uniq | tail -1)
   # if we couldn't find a gcc ver, default to 9
   ifeq ($(OSX_GCC_VER),)
     OSX_GCC_VER = 9
@@ -1527,9 +1529,10 @@ APP_CONTENTS_DIR = $(APP_DIR)/Contents
 APP_MACOS_DIR = $(APP_CONTENTS_DIR)/MacOS
 APP_RESOURCES_DIR = $(APP_CONTENTS_DIR)/Resources
 
+
 ifeq ($(OSX_BUILD),1)
-  GLEW_LIB := $(shell find `brew --prefix`/Cellar/glew | grep libGLEW.2.2.0 | sort -n | uniq)
-  SDL2_LIB := $(shell find `brew --prefix`/Cellar/sdl2 | grep libSDL2- | sort -n | uniq)
+  GLEW_LIB := $(shell find $(BREW_PREFIX)/Cellar/glew | grep libGLEW.2.2.0 | sort -n | uniq)
+  SDL2_LIB := $(shell find $(BREW_PREFIX)/Cellar/sdl2 | grep libSDL2- | sort -n | uniq)
 endif
 
 all:
@@ -1551,11 +1554,11 @@ all:
     cp build/us_pc/libcoopnet.dylib $(APP_MACOS_DIR); \
     cp build/us_pc/libjuice.1.2.2.dylib $(APP_MACOS_DIR); \
     cp $(SDL2_LIB) $(APP_MACOS_DIR)/libSDL2.dylib; \
-    install_name_tool -change /opt/homebrew/opt/sdl2/lib/libSDL2-2.0.0.dylib @executable_path/libSDL2.dylib $(APP_MACOS_DIR)/sm64coopdx; > /dev/null 2>&1 \
+    install_name_tool -change $(BREW_PREFIX)/opt/sdl2/lib/libSDL2-2.0.0.dylib @executable_path/libSDL2.dylib $(APP_MACOS_DIR)/sm64coopdx; > /dev/null 2>&1 \
 		install_name_tool -id @executable_path/libSDL2.dylib $(APP_MACOS_DIR)/libSDL2.dylib; > /dev/null 2>&1 \
     codesign --force --deep --sign - $(APP_MACOS_DIR)/libSDL2.dylib; \
     cp $(GLEW_LIB) $(APP_MACOS_DIR)/libGLEW.dylib; \
-    install_name_tool -change /opt/homebrew/opt/glew/lib/libGLEW.2.2.dylib @executable_path/libGLEW.dylib $(APP_MACOS_DIR)/sm64coopdx; > /dev/null 2>&1 \
+    install_name_tool -change $(BREW_PREFIX)/opt/glew/lib/libGLEW.2.2.dylib @executable_path/libGLEW.dylib $(APP_MACOS_DIR)/sm64coopdx; > /dev/null 2>&1 \
 		install_name_tool -id @executable_path/libGLEW.dylib $(APP_MACOS_DIR)/libGLEW.dylib; > /dev/null 2>&1 \
     codesign --force --deep --sign - $(APP_MACOS_DIR)/libGLEW.dylib; \
 		cp res/icon.icns $(APP_RESOURCES_DIR)/icon.icns; \
