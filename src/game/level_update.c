@@ -1493,11 +1493,11 @@ void update_menu_level(void) {
     stop_cap_music();
     if (!configMenuSound || configMenuStaffRoll || curLevel == LEVEL_CASTLE_GROUNDS) {
         reset_volume();
-        sound_banks_disable(SEQ_PLAYER_SFX, SOUND_BANKS_BACKGROUND);
+        disable_background_sound();
         set_background_music(0, SEQ_MENU_TITLE_SCREEN, 0);
     } else {
         reset_volume();
-        sound_banks_disable(SEQ_PLAYER_SFX, SOUND_BANKS_BACKGROUND);
+        disable_background_sound();
         if (gCurrentArea != NULL) {
             set_background_music(gCurrentArea->musicParam, gCurrentArea->musicParam2, 0);
         }
