@@ -25,6 +25,8 @@ static struct DjuiInputbox* sPalettePresetNameTextBox = NULL;
 
 static struct DjuiRect *sColorRect = NULL;
 
+struct DjuiText* gDjuiPaletteToggle = NULL;
+
 void djui_panel_player_create(struct DjuiBase* caller);
 
   ////////////////////////
@@ -307,6 +309,14 @@ static void djui_panel_player_edit_palette_create(struct DjuiBase* caller) {
         }
 
         djui_button_create(body, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
+
+        {
+            struct DjuiText *text = djui_text_create(body, DLANG(PLAYER, CAP_TOGGLE));
+            djui_text_set_alignment(text, DJUI_HALIGN_CENTER, DJUI_VALIGN_TOP);
+            djui_base_set_size_type(&text->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+            djui_base_set_size(&text->base, 1.0f, 64);
+            gDjuiPaletteToggle = text;
+        }
     }
 
     djui_panel_add(caller, panel, NULL);
@@ -458,6 +468,7 @@ void djui_panel_player_create(struct DjuiBase* caller) {
             djui_text_set_alignment(text, DJUI_HALIGN_CENTER, DJUI_VALIGN_TOP);
             djui_base_set_size_type(&text->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
             djui_base_set_size(&text->base, 1.0f, 64);
+            gDjuiPaletteToggle = text;
         }
     }
 

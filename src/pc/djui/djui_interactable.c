@@ -406,10 +406,14 @@ void djui_interactable_update(void) {
         u16 mainButtons = PAD_BUTTON_A | PAD_BUTTON_B;
         if ((mouseButtons & MOUSE_BUTTON_1) && !(sLastMouseButtons && MOUSE_BUTTON_1) && !djui_cursor_inside_base(gInteractableFocus)) {
             // clicked outside of focused
-            djui_interactable_set_input_focus(NULL);
+            if (!gDjuiChatBoxFocus && gInteractableFocus != &gDjuiChatBox->chatInput->base) {
+                djui_interactable_set_input_focus(NULL);
+            }
         } else if ((padButtons & mainButtons) && !(sLastInteractablePad.button & mainButtons)) {
             // pressed main face button
-            djui_interactable_set_input_focus(NULL);
+            if (!gDjuiChatBoxFocus && gInteractableFocus != &gDjuiChatBox->chatInput->base) {
+                djui_interactable_set_input_focus(NULL);
+            }
         } else {
             djui_interactable_on_focus(gInteractableFocus);
         }

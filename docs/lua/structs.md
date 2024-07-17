@@ -1456,9 +1456,8 @@
 | ----- | ---- | ------ |
 | baseVolume | `number` |  |
 | file | [ModFile](structs.md#ModFile) |  |
-| isStream | `boolean` |  |
-| loaded | `boolean` |  |
-| sampleCopiesTail | [ModAudioSampleCopies](structs.md#ModAudioSampleCopies) |  |
+| isStream | `boolean` | read-only |
+| loaded | `boolean` | read-only |
 
 [:arrow_up_small:](#)
 
