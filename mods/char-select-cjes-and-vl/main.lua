@@ -1,5 +1,5 @@
--- name: [CS] \\#00ff00\\VL-Tone & Cjes Luigi
--- description: [CS] VL-Tone & Cjes Luigi\nBy Coop Deluxe Team\n\nnThis Character Select pack adds VL-Tone Luigi and Cjes Luigi, who was originally the model for luigi in earlier versions of sm64ex-coop.
+-- name: [CS] VL-Tone & Cjes Luigi
+-- description: [CS] VL-Tone & Cjes Luigi\nBy Coop Deluxe Team\n\nThis Character Select pack adds VL-Tone Luigi and Cjes Luigi, who was originally the model for luigi in earlier versions of sm64ex-coop.
 
 if not _G.charSelectExists then
     local first = false
