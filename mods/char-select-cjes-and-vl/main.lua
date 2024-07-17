@@ -18,7 +18,7 @@ local E_MODEL_CJES = smlua_model_util_get_id("cjes_geo")
 
 local TEXT_MOD_NAME = "VL-Tone & Cjes Luigi"
 
-local TEX_LUIGI = get_texture_info("luigi-icon")
+local TEX_LUIGI = get_texture_info("luigi_icon")
 
 local PALETTE_VL =  {
     [PANTS]  = {r = 0x20, g = 0x14, b = 0x7c}, -- 20147C
