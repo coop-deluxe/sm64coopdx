@@ -125,7 +125,7 @@ local function custom_character_snore(m)
     local animFrame = m.marioObj.header.gfx.animInfo.animFrame
     if snoreTable ~= nil and #snoreTable >= 2 then
         if animFrame == 2 and m.actionTimer < SLEEP_TALK_START then
-            play_custom_character_sound(m, snoreTable[2])
+            custom_character_sound(m, snoreTable[2])
         elseif animFrame == 25 then
             if #snoreTable >= 3 then
                 m.actionTimer = m.actionTimer + 1
