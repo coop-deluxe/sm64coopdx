@@ -11,7 +11,6 @@ struct addrinfo *result, *i;
 
 char gGetHostName[MAX_CONFIG_STRING] = "";
 
-
 // Resolves a hostname to an IP address. Current limitation: It still only gets the first address it sees and returns.
 // getaddrinfo() is smart enough to prioritize IPv4 if the user is not in an IPv6 enabled network, so this shouldn't be a problem for now.
 // TODO: Store all found addresses somewhere and make the game try to connect to each of them if one fails.
@@ -90,6 +89,7 @@ static int socket_bind(SOCKET socket, unsigned int port) {
     rxAddr.sin6_addr = in6addr_any;
 
     int rc = bind(socket, (SOCKADDR *)&rxAddr, sizeof(rxAddr));
+
     if (rc != 0) {
         LOG_ERROR("bind failed with error %d", SOCKET_LAST_ERROR);
     }

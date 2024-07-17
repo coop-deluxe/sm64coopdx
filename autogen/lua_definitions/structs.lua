@@ -595,6 +595,7 @@
 --- @field public enabled boolean
 --- @field public forcePitch boolean
 --- @field public forceRoll boolean
+--- @field public forceYaw boolean
 --- @field public fov number
 --- @field public offset Vec3f
 --- @field public pitch integer
@@ -1074,7 +1075,6 @@
 --- @field public file ModFile
 --- @field public isStream boolean
 --- @field public loaded boolean
---- @field public sampleCopiesTail ModAudioSampleCopies
 
 --- @class ModAudioSampleCopies
 --- @field public next ModAudioSampleCopies

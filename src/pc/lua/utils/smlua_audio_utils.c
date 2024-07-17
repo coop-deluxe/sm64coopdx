@@ -178,8 +178,8 @@ static struct ModAudio* find_mod_audio(struct ModFile* file) {
 }
 
 static bool audio_sanity_check(struct ModAudio* audio, bool isStream, const char* action) {
-    if (audio == NULL) {
-        LOG_LUA_LINE("Tried to %s unloaded audio stream", action);
+    if (audio == NULL || !audio->loaded) {
+        LOG_LUA_LINE("Tried to %s unloaded audio %s", action, audio->isStream ? "stream" : "sample");
         return false;
     }
     if (isStream && !audio->isStream) {
@@ -283,28 +283,26 @@ struct ModAudio* audio_load_internal(const char* filename, bool isStream) {
     f_delete(f);
 
     // decode the audio buffer
-    // note: buffer and decoder are not freed after a successful call, because ma_decoder_init_memory() does not make copies of them
-    ma_decoder *decoder = calloc(1, sizeof(ma_decoder));
-    ma_result result = ma_decoder_init_memory(buffer, size, NULL, decoder);
+    ma_result result = ma_decoder_init_memory(buffer, size, NULL, &audio->decoder);
     if (result != MA_SUCCESS) {
-        free(decoder);
         free(buffer);
         LOG_ERROR("failed to load audio file '%s': failed to decode raw audio: %d", filename, result);
         return NULL;
     }
 
     result = ma_sound_init_from_data_source(
-        &sModAudioEngine, decoder,
+        &sModAudioEngine, &audio->decoder,
         isStream ? MA_SOUND_STREAM_FLAGS : MA_SOUND_SAMPLE_FLAGS,
         NULL, &audio->sound
     );
     if (result != MA_SUCCESS) {
-        free(decoder);
         free(buffer);
         LOG_ERROR("failed to load audio file '%s': %d", filename, result);
         return NULL;
     }
 
+    audio->buffer = buffer;
+    audio->bufferSize = size;
     audio->isStream = isStream;
     audio->loaded = true;
     return audio;
@@ -320,7 +318,7 @@ void audio_stream_destroy(struct ModAudio* audio) {
     }
 
     ma_sound_uninit(&audio->sound);
-    dynamic_pool_free(sModAudioPool, audio);
+    audio->loaded = false;
 }
 
 void audio_stream_play(struct ModAudio* audio, bool restart, f32 volume) {
@@ -437,7 +435,7 @@ void audio_stream_set_volume(struct ModAudio* audio, f32 volume) {
 // Use mutexes to be sure we don't try to delete the same memory at the same time
 #include <pthread.h>
 static pthread_mutex_t sSampleCopyMutex = PTHREAD_MUTEX_INITIALIZER;
-static struct ModAudioSampleCopies *sSampleCopiesPendingUninitTail = NULL;
+static struct ModAudioSampleCopies *sSampleCopyFreeTail = NULL;
 
 // Called whenever a sample copy finishes playback (called from the miniaudio thread)
 // removes the copy from it's linked list, and adds it to the pending list
@@ -448,48 +446,45 @@ static void audio_sample_copy_end_callback(void* userData, UNUSED ma_sound* soun
     if (copy->next) { copy->next->prev = copy->prev; }
     if (copy->prev) { copy->prev->next = copy->next; }
     if (!copy->next && !copy->prev) {
-        copy->parent->sampleCopiesTail = NULL; // Clear the pointer to this copy
+        // This is the last copy of this sample, clear the pointer to it
+        copy->parent->sampleCopiesTail = NULL;
     }
     copy->next = NULL;
     copy->prev = NULL;
 
     // add copy to list
-    if (!sSampleCopiesPendingUninitTail) {
-        sSampleCopiesPendingUninitTail = copy;
-    } else {
-        copy->prev = sSampleCopiesPendingUninitTail;
-        sSampleCopiesPendingUninitTail->next = copy;
-        sSampleCopiesPendingUninitTail = copy;
+    if (sSampleCopyFreeTail) {
+        copy->prev = sSampleCopyFreeTail;
+        sSampleCopyFreeTail->next = copy;
     }
+    sSampleCopyFreeTail = copy;
+
     pthread_mutex_unlock(&sSampleCopyMutex);
+}
+
+void audio_destroy_copies(struct ModAudioSampleCopies* node) {
+    while (node) {
+        struct ModAudioSampleCopies* prev = node->prev;
+        ma_sound_uninit(&node->sound);
+        free(node);
+        node = prev;
+    }
 }
 
 // Called every frame in the main thread from smlua_update()
 // Frees all audio sample copies that are in the pending list
 void audio_sample_destroy_pending_copies(void) {
-    if (sSampleCopiesPendingUninitTail) {
+    if (sSampleCopyFreeTail) {
         pthread_mutex_lock(&sSampleCopyMutex);
-        for (struct ModAudioSampleCopies *node = sSampleCopiesPendingUninitTail; node;) {
-            struct ModAudioSampleCopies *prev = node->prev;
-            ma_sound_stop(&node->sound);
-            ma_sound_uninit(&node->sound);
-            free(node);
-            node = prev;
-        }
-        sSampleCopiesPendingUninitTail = NULL;
+        audio_destroy_copies(sSampleCopyFreeTail);
+        sSampleCopyFreeTail = NULL;
         pthread_mutex_unlock(&sSampleCopyMutex);
     }
 }
 
 static void audio_sample_destroy_copies(struct ModAudio* audio) {
     pthread_mutex_lock(&sSampleCopyMutex);
-    for (struct ModAudioSampleCopies* node = audio->sampleCopiesTail; node;) {
-        struct ModAudioSampleCopies* prev = node->prev;
-        ma_sound_stop(&node->sound);
-        ma_sound_uninit(&node->sound);
-        free(node);
-        node = prev;
-    }
+    audio_destroy_copies(audio->sampleCopiesTail);
     audio->sampleCopiesTail = NULL;
     pthread_mutex_unlock(&sSampleCopyMutex);
 }
@@ -508,7 +503,7 @@ void audio_sample_destroy(struct ModAudio* audio) {
     }
     ma_sound_stop(&audio->sound);
     ma_sound_uninit(&audio->sound);
-    dynamic_pool_free(sModAudioPool, audio);
+    audio->loaded = false;
 }
 
 void audio_sample_stop(struct ModAudio* audio) {
@@ -530,18 +525,21 @@ void audio_sample_play(struct ModAudio* audio, Vec3f position, f32 volume) {
     ma_sound *sound = &audio->sound;
     if (ma_sound_is_playing(sound)) {
         struct ModAudioSampleCopies* copy = calloc(1, sizeof(struct ModAudioSampleCopies));
-        ma_sound_init_copy(&sModAudioEngine, sound, MA_SOUND_SAMPLE_FLAGS, NULL, &copy->sound);
+        ma_result result = ma_decoder_init_memory(audio->buffer, audio->bufferSize, NULL, &copy->decoder);
+        if (result != MA_SUCCESS) { return; }
+        result = ma_sound_init_from_data_source(&sModAudioEngine, &copy->decoder, MA_SOUND_SAMPLE_FLAGS, NULL, &copy->sound);
+        if (result != MA_SUCCESS) { return; }
+        ma_sound_set_end_callback(&copy->sound, audio_sample_copy_end_callback, copy);
         copy->parent = audio;
 
-        if (!audio->sampleCopiesTail) {
-            audio->sampleCopiesTail = copy;
-        } else {
+        // Add to list
+        if (audio->sampleCopiesTail) {
             copy->prev = audio->sampleCopiesTail;
             audio->sampleCopiesTail->next = copy;
-            audio->sampleCopiesTail = copy;
         }
+        audio->sampleCopiesTail = copy;
+
         sound = &copy->sound;
-        ma_sound_set_end_callback(sound, audio_sample_copy_end_callback, copy);
     }
 
     f32 dist = 0;
@@ -590,9 +588,16 @@ void audio_custom_shutdown(void) {
         struct DynamicPoolNode* prev = node->prev;
         struct ModAudio* audio = node->ptr;
         if (audio->isStream) {
-            audio_stream_destroy(audio);
+            if (audio->loaded) { ma_sound_uninit(&audio->sound); }
+            dynamic_pool_free(sModAudioPool, audio);
         } else {
-            audio_sample_destroy(audio);
+            if (audio->loaded) {
+                if (audio->sampleCopiesTail) {
+                    audio_sample_destroy_copies(audio);
+                }
+                ma_sound_uninit(&audio->sound);
+            }
+            dynamic_pool_free(sModAudioPool, audio);
         }
         node = prev;
     }

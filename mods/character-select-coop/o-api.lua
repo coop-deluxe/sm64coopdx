@@ -343,6 +343,11 @@ _G.charSelect = {
     character_get_life_icon = life_icon_from_local_index, -- Function located in n-hud.lua
     character_get_star_icon = star_icon_from_local_index, -- Function located in n-hud.lua
 
+    -- Hud Element Functions --
+    hud_hide_element = hud_hide_element,
+    hud_show_element = hud_show_element,
+    hud_get_element = hud_get_element,
+
     -- Menu Functions --
     header_set_texture = header_set_texture, -- Function located in main.lua
     version_get = version_get,
