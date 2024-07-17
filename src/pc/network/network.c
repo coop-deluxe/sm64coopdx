@@ -699,6 +699,7 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
     camera_set_use_course_specific_settings(true);
     free_vtx_scroll_targets();
     gMarioStates[0].cap = 0;
+    gMarioStates[0].input = 0;
     extern s16 gTTCSpeedSetting;
     gTTCSpeedSetting = 0;
     gOverrideDialogPos = 0;
@@ -722,8 +723,9 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
     cnt->extStickY = 0;
 
     gFirstPersonCamera.enabled = false;
-    gFirstPersonCamera.forceRoll = false;
     gFirstPersonCamera.forcePitch = false;
+    gFirstPersonCamera.forceYaw = false;
+    gFirstPersonCamera.forceRoll = true;
     gFirstPersonCamera.centerL = true;
     gFirstPersonCamera.fov = FIRST_PERSON_DEFAULT_FOV;
     vec3f_set(gFirstPersonCamera.offset, 0, 0, 0);

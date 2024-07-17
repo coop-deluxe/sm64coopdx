@@ -12,6 +12,35 @@ local defaultIcons = {
     [CT_WARIO] = gTextures.wario_head
 }
 
+local sHudElements = {
+    [HUD_DISPLAY_FLAG_LIVES] = true,
+    [HUD_DISPLAY_FLAG_STAR_COUNT] = true,
+    [HUD_DISPLAY_FLAG_CAMERA] = true
+}
+
+---Hides the specified custom hud element
+---@param hudElement HUDDisplayFlag
+function hud_hide_element(hudElement)
+    if sHudElements[hudElement] == nil then return false end
+    sHudElements[hudElement] = false
+    return true
+end
+
+---Shows the specified custom hud element
+---@param hudElement HUDDisplayFlag
+function hud_show_element(hudElement)
+    if sHudElements[hudElement] == nil then return false end
+    sHudElements[hudElement] = true
+    return true
+end
+
+---Gets the specified custom hud element's state
+---@param hudElement HUDDisplayFlag
+function hud_get_element(hudElement)
+    if sHudElements[hudElement] == nil then return false end
+    return sHudElements[hudElement]
+end
+
 local MATH_DIVIDE_16 = 1/16
 
 -- Localize Functions to improve performence
@@ -82,6 +111,8 @@ end
 local function render_hud_mario_lives()
     hud_set_value(HUD_DISPLAY_FLAGS, hud_get_value(HUD_DISPLAY_FLAGS) & ~HUD_DISPLAY_FLAG_LIVES)
 
+    if not hud_get_element(HUD_DISPLAY_FLAG_LIVES) then return end
+
     local x = 22
     local y = 15 -- SCREEN_HEIGHT - 209 - 16
     local lifeIcon = characterTable[currChar].lifeIcon
@@ -98,7 +129,8 @@ end
 local function render_hud_stars()
     hud_set_value(HUD_DISPLAY_FLAGS, hud_get_value(HUD_DISPLAY_FLAGS) & ~HUD_DISPLAY_FLAG_STAR_COUNT)
 
-    if IS_COOPDX and hud_get_flash ~= nil then
+    if not hud_get_element(HUD_DISPLAY_FLAG_STAR_COUNT) then return end
+    if hud_get_flash ~= nil then
         -- prevent star count from flashing outside of castle
         if gNetworkPlayers[0].currCourseNum ~= COURSE_NONE then hud_set_flash(0) end
 
@@ -126,9 +158,11 @@ local function render_hud_stars()
 end
 
 local function render_hud_camera_status()
-    if not IS_COOPDX or not HUD_DISPLAY_CAMERA_STATUS then return end
+    if not HUD_DISPLAY_CAMERA_STATUS then return end
 
     hud_set_value(HUD_DISPLAY_FLAGS, hud_get_value(HUD_DISPLAY_FLAGS) & ~HUD_DISPLAY_FLAG_CAMERA)
+
+    if not hud_get_element(HUD_DISPLAY_FLAG_CAMERA) then return end
 
     local x = djui_hud_get_screen_width() - 54
     local y = 205
@@ -165,23 +199,19 @@ local function render_hud_camera_status()
     })
 end
 
+-- Act Select Hud --
 local function render_act_select_hud()
-    local course = gNetworkPlayers[0].currCourseNum
+
+    local course, starBhvCount, sVisibleStars -- Localizing variables
+
+    course = gNetworkPlayers[0].currCourseNum
     if gServerSettings.enablePlayersInLevelDisplay == 0 or course == 0 or obj_get_first_with_behavior_id(id_bhvActSelector) == nil then return end
-    local stars = save_file_get_star_flags(get_current_save_file_num() - 1, course - 1)
-    local maxStar = 0
-    local wasLastActBeat = true -- True by default to account for 0 stars collected not needing an offset
 
-    for i = 5, 0, -1 do
-        if stars & 2 ^ i ~= 0 then
-            maxStar = i
-            wasLastActBeat = stars & 2^(i-1) ~= 0
-            break
-        end
-    end
+    starBhvCount = count_objects_with_behavior(get_behavior_from_id(id_bhvActSelectorStarType))
+    sVisibleStars = starBhvCount < 7 and starBhvCount or 6
 
-    for a = 1, maxStar + 1 do
-        local x = (139 - (maxStar - (wasLastActBeat and 1 or 0) - (maxStar < 5 and 0 or 1) - (maxStar < 1 and 1 or 0)) * 17 + (a - (wasLastActBeat and 1 or 0)) * 34) + (djui_hud_get_screen_width()/2) - 176
+    for a = 1, sVisibleStars do
+        local x = (139 - sVisibleStars * 17 + a * 34) + (djui_hud_get_screen_width() / 2) - 160 + 0.5
         for j = 1, MAX_PLAYERS - 1 do -- 0 is not needed due to the due to the fact that you are never supposed to see yourself in the act
             local np = gNetworkPlayers[j]
             if np and np.connected and np.currCourseNum == course and np.currActNum == a then
@@ -222,7 +252,6 @@ local function on_hud_render()
         render_act_select_hud()
     end
 end
-
 
 hook_event(HOOK_ON_HUD_RENDER_BEHIND, on_hud_render_behind)
 hook_event(HOOK_ON_HUD_RENDER, on_hud_render)

@@ -298,7 +298,7 @@ static const struct ConfigOption options[] = {
     {.name = "coop_menu_level",                .type = CONFIG_TYPE_UINT,   .uintValue   = &configMenuLevel},
     {.name = "coop_menu_sound",                .type = CONFIG_TYPE_UINT,   .uintValue   = &configMenuSound},
     {.name = "coop_menu_random",               .type = CONFIG_TYPE_BOOL,   .boolValue   = &configMenuRandom},
-    {.name = "coop_menu_demos",                .type = CONFIG_TYPE_BOOL,   .boolValue   = &configMenuDemos},
+    // {.name = "coop_menu_demos",                .type = CONFIG_TYPE_BOOL,   .boolValue   = &configMenuDemos},
     {.name = "disable_popups",                 .type = CONFIG_TYPE_BOOL,   .boolValue   = &configDisablePopups},
     {.name = "language",                       .type = CONFIG_TYPE_STRING, .stringValue = (char*)&configLanguage, .maxStringLength = MAX_CONFIG_STRING},
     {.name = "dynos_local_player_model_only",  .type = CONFIG_TYPE_BOOL,   .boolValue   = &configDynosLocalPlayerModelOnly},

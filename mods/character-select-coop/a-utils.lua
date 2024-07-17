@@ -4,7 +4,7 @@ if VERSION_NUMBER < 37 then
     return 0
 end
 
-MOD_VERSION = "1.9"
+MOD_VERSION = "1.9.1"
 
 ommActive = false
 for i in pairs(gActiveMods) do

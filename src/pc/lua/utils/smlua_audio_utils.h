@@ -13,6 +13,7 @@ void smlua_audio_utils_replace_sequence(u8 sequenceId, u8 bankId, u8 defaultVolu
 
 struct ModAudioSampleCopies {
     ma_sound sound;
+    ma_decoder decoder;
     struct ModAudioSampleCopies *next;
     struct ModAudioSampleCopies *prev;
     struct ModAudio *parent;
@@ -21,6 +22,9 @@ struct ModAudioSampleCopies {
 struct ModAudio {
     struct ModFile* file;
     ma_sound sound;
+    ma_decoder decoder;
+    void *buffer;
+    u32 bufferSize;
     struct ModAudioSampleCopies* sampleCopiesTail;
     bool isStream;
     f32 baseVolume;

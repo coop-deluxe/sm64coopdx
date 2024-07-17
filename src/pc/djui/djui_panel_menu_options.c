@@ -15,7 +15,7 @@
 
 static struct DjuiSelectionbox* sLevelBox = NULL;
 static struct DjuiCheckbox* sRandomStageCheckbox = NULL;
-static struct DjuiCheckbox* sVanillaDemosCheckbox = NULL;
+// static struct DjuiCheckbox* sVanillaDemosCheckbox = NULL;
 
 struct MainMenuSounds gMainMenuSounds[] = {
     { "Title Screen", SEQ_MENU_TITLE_SCREEN },
@@ -39,7 +39,7 @@ void djui_panel_main_menu_create(struct DjuiBase* caller);
 static void djui_panel_level_menu(UNUSED struct DjuiBase* caller) {
     djui_base_set_enabled(&sLevelBox->base, !(configMenuRandom || configMenuStaffRoll));
     djui_base_set_enabled(&sRandomStageCheckbox->base, !configMenuStaffRoll);
-    djui_base_set_enabled(&sVanillaDemosCheckbox->base, !configMenuStaffRoll);
+    // djui_base_set_enabled(&sVanillaDemosCheckbox->base, !configMenuStaffRoll);
     if (configMenuStaffRoll) {
         warp_credits();
         level_trigger_warp(gMarioState, WARP_OP_CREDITS_NEXT);
@@ -144,9 +144,9 @@ void djui_panel_main_menu_create(struct DjuiBase* caller) {
             struct DjuiCheckbox* checkbox2 = djui_checkbox_create(body, DLANG(MENU_OPTIONS, RANDOM_STAGE), &configMenuRandom, djui_panel_level_menu);
             djui_base_set_enabled(&checkbox2->base, !configMenuStaffRoll);
             sRandomStageCheckbox = checkbox2;
-            struct DjuiCheckbox* checkbox3 = djui_checkbox_create(body, DLANG(MENU_OPTIONS, PLAY_VANILLA_DEMOS), &configMenuDemos, stop_demo);
-            djui_base_set_enabled(&checkbox3->base, !configMenuStaffRoll);
-            sVanillaDemosCheckbox = checkbox3;
+            // struct DjuiCheckbox* checkbox3 = djui_checkbox_create(body, DLANG(MENU_OPTIONS, PLAY_VANILLA_DEMOS), &configMenuDemos, stop_demo);
+            // djui_base_set_enabled(&checkbox3->base, !configMenuStaffRoll);
+            // sVanillaDemosCheckbox = checkbox3;
         }
 
         djui_button_create(body, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);

@@ -1,5 +1,5 @@
--- name: [CS] \\#00ff00\\VL-Tone & Cjes Luigi
--- description: [CS] VL-Tone & Cjes Luigi\nBy Coop Deluxe Team\n\nnThis Character Select pack adds VL-Tone Luigi and Cjes Luigi, who was originally the model for luigi in earlier versions of sm64ex-coop.
+-- name: [CS] VL-Tone & Cjes Luigi
+-- description: [CS] VL-Tone & Cjes Luigi\nBy Coop Deluxe Team\n\nThis Character Select pack adds VL-Tone Luigi and Cjes Luigi, who was originally the model for luigi in earlier versions of sm64ex-coop.
 
 if not _G.charSelectExists then
     local first = false
@@ -18,7 +18,7 @@ local E_MODEL_CJES = smlua_model_util_get_id("cjes_geo")
 
 local TEXT_MOD_NAME = "VL-Tone & Cjes Luigi"
 
-local TEX_LUIGI = get_texture_info("luigi-icon")
+local TEX_LUIGI = get_texture_info("luigi_icon")
 
 local PALETTE_VL =  {
     [PANTS]  = {r = 0x20, g = 0x14, b = 0x7c}, -- 20147C

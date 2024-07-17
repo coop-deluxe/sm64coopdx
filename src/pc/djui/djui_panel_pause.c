@@ -52,6 +52,7 @@ static void djui_panel_pause_quit(struct DjuiBase* caller) {
 }
 
 void djui_panel_pause_create(struct DjuiBase* caller) {
+    if (gDjuiPanelPauseCreated) { return; }
     if (gDjuiChatBoxFocus) { djui_chat_box_toggle(); }
 
     struct DjuiBase* defaultBase = NULL;
