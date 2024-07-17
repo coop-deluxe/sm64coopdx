@@ -1073,7 +1073,6 @@
 --- @field public file ModFile
 --- @field public isStream boolean
 --- @field public loaded boolean
---- @field public sampleCopiesTail ModAudioSampleCopies
 
 --- @class ModAudioSampleCopies
 --- @field public next ModAudioSampleCopies

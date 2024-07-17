@@ -86,6 +86,7 @@ override_field_invisible = {
     "NetworkPlayer": [ "gag", "moderator"],
     "GraphNode": [ "_guard1", "_guard2" ],
     "Object": [ "firstSurface" ],
+    "ModAudio": [ "sound", "decoder", "buffer", "bufferSize", "sampleCopiesTail" ],
 }
 
 override_field_deprecated = {
@@ -116,6 +117,7 @@ override_field_immutable = {
     "AnimationTable": [ "count" ],
     "Controller": [ "controllerData", "statusData" ],
     "FirstPersonCamera": [ "enabled" ],
+    "ModAudio": [ "isStream", "loaded" ],
 }
 
 override_field_version_excludes = {

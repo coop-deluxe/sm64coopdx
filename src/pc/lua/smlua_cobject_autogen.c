@@ -1201,22 +1201,21 @@ static struct LuaObjectField sModFields[LUA_MOD_FIELD_COUNT] = {
 //  { "size",                 LVT_???,      offsetof(struct Mod, size),                 true, LOT_???  }, <--- UNIMPLEMENTED
 };
 
-#define LUA_MOD_AUDIO_FIELD_COUNT 5
+#define LUA_MOD_AUDIO_FIELD_COUNT 4
 static struct LuaObjectField sModAudioFields[LUA_MOD_AUDIO_FIELD_COUNT] = {
-    { "baseVolume",       LVT_F32,       offsetof(struct ModAudio, baseVolume),       false, LOT_NONE                 },
-    { "file",             LVT_COBJECT_P, offsetof(struct ModAudio, file),             false, LOT_MODFILE              },
-    { "isStream",         LVT_BOOL,      offsetof(struct ModAudio, isStream),         false, LOT_NONE                 },
-    { "loaded",           LVT_BOOL,      offsetof(struct ModAudio, loaded),           false, LOT_NONE                 },
-    { "sampleCopiesTail", LVT_COBJECT_P, offsetof(struct ModAudio, sampleCopiesTail), false, LOT_MODAUDIOSAMPLECOPIES },
-//  { "sound",            LVT_???,       offsetof(struct ModAudio, sound),            false, LOT_???                  }, <--- UNIMPLEMENTED
+    { "baseVolume", LVT_F32,       offsetof(struct ModAudio, baseVolume), false, LOT_NONE    },
+    { "file",       LVT_COBJECT_P, offsetof(struct ModAudio, file),       false, LOT_MODFILE },
+    { "isStream",   LVT_BOOL,      offsetof(struct ModAudio, isStream),   true,  LOT_NONE    },
+    { "loaded",     LVT_BOOL,      offsetof(struct ModAudio, loaded),     true,  LOT_NONE    },
 };
 
 #define LUA_MOD_AUDIO_SAMPLE_COPIES_FIELD_COUNT 3
 static struct LuaObjectField sModAudioSampleCopiesFields[LUA_MOD_AUDIO_SAMPLE_COPIES_FIELD_COUNT] = {
-    { "next",   LVT_COBJECT_P, offsetof(struct ModAudioSampleCopies, next),   false, LOT_MODAUDIOSAMPLECOPIES },
-    { "parent", LVT_COBJECT_P, offsetof(struct ModAudioSampleCopies, parent), false, LOT_MODAUDIO             },
-    { "prev",   LVT_COBJECT_P, offsetof(struct ModAudioSampleCopies, prev),   false, LOT_MODAUDIOSAMPLECOPIES },
-//  { "sound",  LVT_???,       offsetof(struct ModAudioSampleCopies, sound),  false, LOT_???                  }, <--- UNIMPLEMENTED
+//  { "decoder", LVT_???,       offsetof(struct ModAudioSampleCopies, decoder), false, LOT_???                  }, <--- UNIMPLEMENTED
+    { "next",    LVT_COBJECT_P, offsetof(struct ModAudioSampleCopies, next),    false, LOT_MODAUDIOSAMPLECOPIES },
+    { "parent",  LVT_COBJECT_P, offsetof(struct ModAudioSampleCopies, parent),  false, LOT_MODAUDIO             },
+    { "prev",    LVT_COBJECT_P, offsetof(struct ModAudioSampleCopies, prev),    false, LOT_MODAUDIOSAMPLECOPIES },
+//  { "sound",   LVT_???,       offsetof(struct ModAudioSampleCopies, sound),   false, LOT_???                  }, <--- UNIMPLEMENTED
 };
 
 #define LUA_MOD_FILE_FIELD_COUNT 3
