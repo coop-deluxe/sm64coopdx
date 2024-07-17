@@ -722,8 +722,9 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
     cnt->extStickY = 0;
 
     gFirstPersonCamera.enabled = false;
-    gFirstPersonCamera.forceRoll = false;
     gFirstPersonCamera.forcePitch = false;
+    gFirstPersonCamera.forceYaw = false;
+    gFirstPersonCamera.forceRoll = true;
     gFirstPersonCamera.centerL = true;
     gFirstPersonCamera.fov = FIRST_PERSON_DEFAULT_FOV;
     vec3f_set(gFirstPersonCamera.offset, 0, 0, 0);
