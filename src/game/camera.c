@@ -3349,9 +3349,13 @@ void update_camera(struct Camera *c) {
 
     // Make sure the palette editor cutscene is properly reset
     struct MarioState *m = gMarioState;
-    if (c->paletteEditorCap && c->cutscene != CUTSCENE_PALETTE_EDITOR && !(m->flags & MARIO_CAP_ON_HEAD) && m->action != ACT_PUTTING_ON_CAP) {
-        cutscene_put_cap_on(m);
-        c->paletteEditorCap = false;
+    if (c->paletteEditorCap) {
+        if (m->flags & MARIO_CAP_ON_HEAD) {
+            c->paletteEditorCap = false;
+        } else if (c->cutscene != CUTSCENE_PALETTE_EDITOR && m->action != ACT_PUTTING_ON_CAP) {
+            cutscene_put_cap_on(m);
+            c->paletteEditorCap = false;
+        }
     }
 }
 
@@ -10854,6 +10858,7 @@ BAD_RETURN(s32) cutscene_door_mode(struct Camera *c) {
 }
 
 // coop specific
+extern struct DjuiText* gDjuiPaletteToggle;
 void cutscene_palette_editor(struct Camera *c) {
     if (!c) { return; }
     struct MarioState* m = gMarioState;
@@ -10870,28 +10875,29 @@ void cutscene_palette_editor(struct Camera *c) {
         return;
     }
 
+    // Press the Z bind to toggle cap
     static bool pressed = false;
     if (gInteractablePad.button & PAD_BUTTON_Z) {
-        if (!pressed && m->action != ACT_TAKING_OFF_CAP && m->action != ACT_PUTTING_ON_CAP) {
+        if (!pressed && m->action == ACT_IDLE) {
             if (m->flags & MARIO_CAP_ON_HEAD) {
-                if (m->action == ACT_IDLE) {
-                    set_mario_action(m, ACT_TAKING_OFF_CAP, 1); // Add palette editor action arg
-                } else {
-                    cutscene_take_cap_off(m);
-                    gCamera->paletteEditorCap = true;
-                }
+                set_mario_action(m, ACT_TAKING_OFF_CAP, 1); // Add palette editor action arg
             } else {
-                if (m->action == ACT_IDLE) {
-                    set_mario_action(m, ACT_PUTTING_ON_CAP, 0);
-                } else {
-                    cutscene_put_cap_on(m);
-                    gCamera->paletteEditorCap = false;
-                }
+                set_mario_action(m, ACT_PUTTING_ON_CAP, 0);
             }
         }
         pressed = true;
     } else {
         pressed = false;
+    }
+
+    // Hide text if it is not possible to toggle cap
+    if (gDjuiPaletteToggle) {
+        djui_base_set_visible(
+            &gDjuiPaletteToggle->base,
+            m->action == ACT_IDLE ||
+            m->action == ACT_TAKING_OFF_CAP ||
+            m->action == ACT_PUTTING_ON_CAP
+        );
     }
 
     c->pos[0] = m->pos[0] + (0x200 * sins(m->faceAngle[1]));

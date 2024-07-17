@@ -1895,12 +1895,10 @@ s32 act_taking_off_cap(struct MarioState *m) {
             cutscene_take_cap_off(m);
             if (m->actionArg == 1) { gCamera->paletteEditorCap = true; }
             break;
-        default:
-            if (animFrame >= 30 || gCamera->cutscene != CUTSCENE_PALETTE_EDITOR) {
-                set_mario_action(m, ACT_IDLE, 0);
-                disable_time_stop();
-            }
-            break;
+    }
+    if (animFrame >= 30 || gCamera->cutscene != CUTSCENE_PALETTE_EDITOR) {
+        set_mario_action(m, ACT_IDLE, 0);
+        disable_time_stop();
     }
 
     stationary_ground_step(m);
