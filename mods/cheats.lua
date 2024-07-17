@@ -349,7 +349,7 @@ end
 --- @param value boolean
 local function update_cheat(index, value)
     for i, cheat in ipairs(sCheats) do
-        if i - 1 == index then
+        if i == index then
             gPlayerSyncTable[0][cheat.codename] = value
         end
     end
