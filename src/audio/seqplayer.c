@@ -3039,3 +3039,26 @@ void init_sequence_players(void) {
     }
 }
 
+void sequence_player_set_tempo(u8 player, u16 tempo) {
+    gSequencePlayers[player].tempo = tempo;
+}
+
+void sequence_player_set_tempoAcc(u8 player, u16 tempoAcc) {
+    gSequencePlayers[player].tempoAcc = tempoAcc;
+}
+
+void sequence_player_set_transposition(u8 player, u16 transposition) {
+    gSequencePlayers[player].transposition = transposition;
+}
+
+u16 sequence_player_get_tempo(u8 player) {
+    return gSequencePlayers[player].tempo;
+}
+
+u16 sequence_player_get_tempoAcc(u8 player) {
+    return gSequencePlayers[player].tempoAcc;
+}
+
+u16 sequence_player_get_transposition(u8 player) {
+    return gSequencePlayers[player].transposition;
+}

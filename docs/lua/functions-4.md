@@ -8392,6 +8392,135 @@
 <br />
 
 ---
+# functions from seqplayer.h
+
+<br />
+
+
+## [sequence_player_get_tempo](#sequence_player_get_tempo)
+
+### Lua Example
+`local integerValue = sequence_player_get_tempo(player)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| player | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u16 sequence_player_get_tempo(u8 player);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [sequence_player_get_tempoAcc](#sequence_player_get_tempoAcc)
+
+### Lua Example
+`local integerValue = sequence_player_get_tempoAcc(player)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| player | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u16 sequence_player_get_tempoAcc(u8 player);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [sequence_player_get_transposition](#sequence_player_get_transposition)
+
+### Lua Example
+`local integerValue = sequence_player_get_transposition(player)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| player | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u16 sequence_player_get_transposition(u8 player);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [sequence_player_set_tempo](#sequence_player_set_tempo)
+
+### Lua Example
+`sequence_player_set_tempo(player, tempo)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| player | `integer` |
+| tempo | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void sequence_player_set_tempo(u8 player, u16 tempo);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [sequence_player_set_tempoAcc](#sequence_player_set_tempoAcc)
+
+### Lua Example
+`sequence_player_set_tempoAcc(player, tempoAcc)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| player | `integer` |
+| tempoAcc | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void sequence_player_set_tempoAcc(u8 player, u16 tempoAcc);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [sequence_player_set_transposition](#sequence_player_set_transposition)
+
+### Lua Example
+`sequence_player_set_transposition(player, transposition)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| player | `integer` |
+| transposition | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void sequence_player_set_transposition(u8 player, u16 transposition);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
 # functions from smlua_anim_utils.h
 
 <br />

@@ -66,7 +66,8 @@ in_files = [
     "src/engine/level_script.h",
     "src/game/ingame_menu.h",
     "src/game/first_person_cam.h",
-    "src/engine/behavior_script.h"
+    "src/engine/behavior_script.h",
+    "src/audio/seqplayer.h"
 ]
 
 override_allowed_functions = {
@@ -81,7 +82,8 @@ override_allowed_functions = {
     "src/game/level_update.h":              [ "level_trigger_warp", "get_painting_warp_node", "initiate_painting_warp", "warp_special", "lvl_set_current_level", "level_control_timer_running", "fade_into_special_warp" ],
     "src/game/area.h":                      [ "area_get_warp_node" ],
     "src/engine/level_script.h":            [ "area_create_warp_node" ],
-    "src/game/ingame_menu.h":               [ "set_min_dialog_width", "set_dialog_override_pos", "reset_dialog_override_pos", "set_dialog_override_color", "reset_dialog_override_color", "set_menu_mode", "create_dialog_box", "create_dialog_box_with_var", "create_dialog_inverted_box", "create_dialog_box_with_response", "reset_dialog_render_state", "close_dialog_box", ]
+    "src/game/ingame_menu.h":               [ "set_min_dialog_width", "set_dialog_override_pos", "reset_dialog_override_pos", "set_dialog_override_color", "reset_dialog_override_color", "set_menu_mode", "create_dialog_box", "create_dialog_box_with_var", "create_dialog_inverted_box", "create_dialog_box_with_response", "reset_dialog_render_state", "close_dialog_box", ],
+    "src/audio/seqplayer.h":                [ "sequence_player_set_tempo", "sequence_player_set_tempoAcc", "sequence_player_set_transposition", "sequence_player_get_tempo", "sequence_player_get_tempoAcc", "sequence_player_get_transposition" ]
 }
 
 override_disallowed_functions = {
