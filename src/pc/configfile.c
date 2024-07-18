@@ -6,6 +6,7 @@
 #include <assert.h>
 #include <ctype.h>
 
+#include "pc_main.h"
 #include "platform.h"
 #include "configfile.h"
 #include "cliopts.h"
@@ -682,6 +683,8 @@ NEXT_OPTION:
     }
 
     fs_close(file);
+
+    if ((int)configWindow.msaa > WAPI.get_max_msaa()) { configWindow.msaa = WAPI.get_max_msaa(); }
 
     if (configFrameLimit < 30)   { configFrameLimit = 30; }
     if (configFrameLimit > 3000) { configFrameLimit = 3000; }
