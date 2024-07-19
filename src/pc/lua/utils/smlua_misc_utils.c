@@ -20,6 +20,7 @@
 #include "pc/djui/djui_console.h"
 #include "pc/djui/djui_hud_utils.h"
 #include "pc/djui/djui_panel_playerlist.h"
+#include "pc/djui/djui_panel_pause.h"
 #include "game/skybox.h"
 #include "pc/gfx/gfx_pc.h"
 #include "include/course_table.h"
@@ -264,7 +265,7 @@ void hud_set_flash(s8 value) {
 
 extern s16 gMenuMode;
 bool is_game_paused(void) {
-    return gMenuMode != -1;
+    return gMenuMode != -1 || gDjuiPanelPauseCreated;
 }
 
 ///
