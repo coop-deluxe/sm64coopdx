@@ -14,6 +14,8 @@
 #include "djui_panel_pause.h"
 
 #define DJUI_MOD_PANEL_WIDTH (410.0f + (16 * 2.0f))
+#define MOD_CATEGORY_ALL "MOD_CATEGORY_ALL"
+#define MOD_CATEGORY_MISC "MOD_CATEGORY_MISC"
 
 static struct DjuiFlowLayout* sModLayout = NULL;
 static struct DjuiThreePanel* sDescriptionPanel = NULL;
@@ -22,10 +24,11 @@ unsigned int selectedCategory = 0;
 static bool sWarned = false;
 
 struct ModCategory sCategories[] = {
-    { "MISC", NULL }, // null means any mod that doesn't contain the incompatible/category tags above
+    { "ALL", MOD_CATEGORY_ALL },
     { "ROMHACKS", "romhack" },
     { "GAMEMODES", "gamemode" },
     { "MOVESETS", "moveset" },
+    { "MISC", MOD_CATEGORY_MISC },
 };
 
 void djui_panel_host_mods_create(struct DjuiBase* caller);
@@ -155,7 +158,7 @@ void djui_panel_host_mods_create(struct DjuiBase* caller) {
         int numCategories = sizeof(sCategories) / sizeof(sCategories[0]);
         char* categoryChoices[sizeof(sCategories)];
 
-        // loop thru all sounds names, and add those to the categoryChoices string array
+        // loop thru all categories names, and add those to the categoryChoices string array
         for (int i = 0; i < numCategories; i++) {
             categoryChoices[i] = djui_language_get("HOST_MOD_CATEGORIES", sCategories[i].langKey);
         }
@@ -167,12 +170,12 @@ void djui_panel_host_mods_create(struct DjuiBase* caller) {
             struct Mod* mod = gLocalMods.entries[i];
             char* category = mod->category;
             if (!category) { category = mod->incompatible; }
-            if (sCategories[selectedCategory].category && (!category || !strstr(category, sCategories[selectedCategory].category))) {
+            if (!strstr(sCategories[selectedCategory].category, MOD_CATEGORY_ALL) && !strstr(sCategories[selectedCategory].category, MOD_CATEGORY_MISC) && (!category || !strstr(category, sCategories[selectedCategory].category))) {
                 continue;
-            } else if (!sCategories[selectedCategory].category) {
+            } else if (!strstr(sCategories[selectedCategory].category, MOD_CATEGORY_ALL) && strstr(sCategories[selectedCategory].category, MOD_CATEGORY_MISC)) {
                 bool doContinue = false;
                 for (int i = 0; i < numCategories; i++) {
-                    if (sCategories[i].category && (category && strstr(category, sCategories[i].category))) {
+                    if (strstr(sCategories[selectedCategory].category, MOD_CATEGORY_MISC) && (category && strstr(category, sCategories[i].category))) {
                         doContinue = true;
                         break;
                     }
