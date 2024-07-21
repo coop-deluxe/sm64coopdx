@@ -1577,6 +1577,16 @@
 
 <br />
 
+- seqplayer.h
+   - [sequence_player_get_tempo](functions-4.md#sequence_player_get_tempo)
+   - [sequence_player_get_tempo_acc](functions-4.md#sequence_player_get_tempo_acc)
+   - [sequence_player_get_transposition](functions-4.md#sequence_player_get_transposition)
+   - [sequence_player_set_tempo](functions-4.md#sequence_player_set_tempo)
+   - [sequence_player_set_tempo_acc](functions-4.md#sequence_player_set_tempo_acc)
+   - [sequence_player_set_transposition](functions-4.md#sequence_player_set_transposition)
+
+<br />
+
 - smlua_anim_utils.h
    - [get_mario_vanilla_animation](functions-4.md#get_mario_vanilla_animation)
    - [smlua_anim_util_get_current_animation_name](functions-4.md#smlua_anim_util_get_current_animation_name)

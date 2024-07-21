@@ -7523,6 +7523,42 @@ function touch_coin_score_age(fileIndex, courseIndex)
     -- ...
 end
 
+--- @param player integer
+--- @return integer
+function sequence_player_get_tempo(player)
+    -- ...
+end
+
+--- @param player integer
+--- @return integer
+function sequence_player_get_tempo_acc(player)
+    -- ...
+end
+
+--- @param player integer
+--- @return integer
+function sequence_player_get_transposition(player)
+    -- ...
+end
+
+--- @param player integer
+--- @param tempo integer
+function sequence_player_set_tempo(player, tempo)
+    -- ...
+end
+
+--- @param player integer
+--- @param tempoAcc integer
+function sequence_player_set_tempo_acc(player, tempoAcc)
+    -- ...
+end
+
+--- @param player integer
+--- @param transposition integer
+function sequence_player_set_transposition(player, transposition)
+    -- ...
+end
+
 --- @param index integer
 --- @return Animation
 function get_mario_vanilla_animation(index)
