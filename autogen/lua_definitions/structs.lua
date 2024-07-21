@@ -838,7 +838,10 @@
 --- @class HudUtilsRotation
 --- @field public pivotX number
 --- @field public pivotY number
+--- @field public prevPivotX number
+--- @field public prevPivotY number
 --- @field public rotation number
+--- @field public rotationDiff number
 
 --- @class InstantWarp
 --- @field public area integer

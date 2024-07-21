@@ -3199,6 +3199,16 @@ function djui_hud_set_rotation(rotation, pivotX, pivotY)
     -- ...
 end
 
+--- @param prevRotation integer
+--- @param prevPivotX number
+--- @param prevPivotY number
+--- @param rotation integer
+--- @param pivotX number
+--- @param pivotY number
+function djui_hud_set_rotation_interpolated(prevRotation, prevPivotX, prevPivotY, rotation, pivotX, pivotY)
+    -- ...
+end
+
 --- @param pos Vec3f
 --- @param out Vec3f
 --- @return boolean
