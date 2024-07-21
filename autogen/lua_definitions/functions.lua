@@ -7531,7 +7531,7 @@ end
 
 --- @param player integer
 --- @return integer
-function sequence_player_get_tempoAcc(player)
+function sequence_player_get_tempo_acc(player)
     -- ...
 end
 
@@ -7549,7 +7549,7 @@ end
 
 --- @param player integer
 --- @param tempoAcc integer
-function sequence_player_set_tempoAcc(player, tempoAcc)
+function sequence_player_set_tempo_acc(player, tempoAcc)
     -- ...
 end
 

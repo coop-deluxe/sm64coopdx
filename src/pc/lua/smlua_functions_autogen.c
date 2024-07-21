@@ -28129,19 +28129,19 @@ int smlua_func_sequence_player_get_tempo(lua_State* L) {
     return 1;
 }
 
-int smlua_func_sequence_player_get_tempoAcc(lua_State* L) {
+int smlua_func_sequence_player_get_tempo_acc(lua_State* L) {
     if (L == NULL) { return 0; }
 
     int top = lua_gettop(L);
     if (top != 1) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "sequence_player_get_tempoAcc", 1, top);
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "sequence_player_get_tempo_acc", 1, top);
         return 0;
     }
 
     u8 player = smlua_to_integer(L, 1);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "sequence_player_get_tempoAcc"); return 0; }
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "sequence_player_get_tempo_acc"); return 0; }
 
-    lua_pushinteger(L, sequence_player_get_tempoAcc(player));
+    lua_pushinteger(L, sequence_player_get_tempo_acc(player));
 
     return 1;
 }
@@ -28182,21 +28182,21 @@ int smlua_func_sequence_player_set_tempo(lua_State* L) {
     return 1;
 }
 
-int smlua_func_sequence_player_set_tempoAcc(lua_State* L) {
+int smlua_func_sequence_player_set_tempo_acc(lua_State* L) {
     if (L == NULL) { return 0; }
 
     int top = lua_gettop(L);
     if (top != 2) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "sequence_player_set_tempoAcc", 2, top);
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "sequence_player_set_tempo_acc", 2, top);
         return 0;
     }
 
     u8 player = smlua_to_integer(L, 1);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "sequence_player_set_tempoAcc"); return 0; }
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "sequence_player_set_tempo_acc"); return 0; }
     u16 tempoAcc = smlua_to_integer(L, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "sequence_player_set_tempoAcc"); return 0; }
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "sequence_player_set_tempo_acc"); return 0; }
 
-    sequence_player_set_tempoAcc(player, tempoAcc);
+    sequence_player_set_tempo_acc(player, tempoAcc);
 
     return 1;
 }
@@ -34512,10 +34512,10 @@ void smlua_bind_functions_autogen(void) {
 
     // seqplayer.h
     smlua_bind_function(L, "sequence_player_get_tempo", smlua_func_sequence_player_get_tempo);
-    smlua_bind_function(L, "sequence_player_get_tempoAcc", smlua_func_sequence_player_get_tempoAcc);
+    smlua_bind_function(L, "sequence_player_get_tempo_acc", smlua_func_sequence_player_get_tempo_acc);
     smlua_bind_function(L, "sequence_player_get_transposition", smlua_func_sequence_player_get_transposition);
     smlua_bind_function(L, "sequence_player_set_tempo", smlua_func_sequence_player_set_tempo);
-    smlua_bind_function(L, "sequence_player_set_tempoAcc", smlua_func_sequence_player_set_tempoAcc);
+    smlua_bind_function(L, "sequence_player_set_tempo_acc", smlua_func_sequence_player_set_tempo_acc);
     smlua_bind_function(L, "sequence_player_set_transposition", smlua_func_sequence_player_set_transposition);
 
     // smlua_anim_utils.h

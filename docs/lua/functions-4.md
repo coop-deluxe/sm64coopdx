@@ -8417,10 +8417,10 @@
 
 <br />
 
-## [sequence_player_get_tempoAcc](#sequence_player_get_tempoAcc)
+## [sequence_player_get_tempo_acc](#sequence_player_get_tempo_acc)
 
 ### Lua Example
-`local integerValue = sequence_player_get_tempoAcc(player)`
+`local integerValue = sequence_player_get_tempo_acc(player)`
 
 ### Parameters
 | Field | Type |
@@ -8431,7 +8431,7 @@
 - `integer`
 
 ### C Prototype
-`u16 sequence_player_get_tempoAcc(u8 player);`
+`u16 sequence_player_get_tempo_acc(u8 player);`
 
 [:arrow_up_small:](#)
 
@@ -8478,10 +8478,10 @@
 
 <br />
 
-## [sequence_player_set_tempoAcc](#sequence_player_set_tempoAcc)
+## [sequence_player_set_tempo_acc](#sequence_player_set_tempo_acc)
 
 ### Lua Example
-`sequence_player_set_tempoAcc(player, tempoAcc)`
+`sequence_player_set_tempo_acc(player, tempoAcc)`
 
 ### Parameters
 | Field | Type |
@@ -8493,7 +8493,7 @@
 - None
 
 ### C Prototype
-`void sequence_player_set_tempoAcc(u8 player, u16 tempoAcc);`
+`void sequence_player_set_tempo_acc(u8 player, u16 tempoAcc);`
 
 [:arrow_up_small:](#)
 

@@ -1579,10 +1579,10 @@
 
 - seqplayer.h
    - [sequence_player_get_tempo](functions-4.md#sequence_player_get_tempo)
-   - [sequence_player_get_tempoAcc](functions-4.md#sequence_player_get_tempoAcc)
+   - [sequence_player_get_tempo_acc](functions-4.md#sequence_player_get_tempo_acc)
    - [sequence_player_get_transposition](functions-4.md#sequence_player_get_transposition)
    - [sequence_player_set_tempo](functions-4.md#sequence_player_set_tempo)
-   - [sequence_player_set_tempoAcc](functions-4.md#sequence_player_set_tempoAcc)
+   - [sequence_player_set_tempo_acc](functions-4.md#sequence_player_set_tempo_acc)
    - [sequence_player_set_transposition](functions-4.md#sequence_player_set_transposition)
 
 <br />

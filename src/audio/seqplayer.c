@@ -3043,7 +3043,7 @@ void sequence_player_set_tempo(u8 player, u16 tempo) {
     gSequencePlayers[player].tempo = tempo;
 }
 
-void sequence_player_set_tempoAcc(u8 player, u16 tempoAcc) {
+void sequence_player_set_tempo_acc(u8 player, u16 tempoAcc) {
     gSequencePlayers[player].tempoAcc = tempoAcc;
 }
 
@@ -3055,7 +3055,7 @@ u16 sequence_player_get_tempo(u8 player) {
     return gSequencePlayers[player].tempo;
 }
 
-u16 sequence_player_get_tempoAcc(u8 player) {
+u16 sequence_player_get_tempo_acc(u8 player) {
     return gSequencePlayers[player].tempoAcc;
 }
 
