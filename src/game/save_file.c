@@ -427,26 +427,24 @@ void save_file_erase(s32 fileIndex) {
     save_file_do_save(fileIndex, TRUE);
 }
 
-void save_file_reload(u8 load_all) {
+void save_file_reload(u8 loadAll) {
     gSaveFileModified = TRUE;
     update_all_mario_stars();
 
-    if (load_all == TRUE) {
+    if (loadAll) {
         save_file_load_all(TRUE);
-        save_file_do_save(gCurrSaveFileNum-1, TRUE);
+        save_file_do_save(gCurrSaveFileNum - 1, TRUE);
         update_all_mario_stars();
     }
 }
 
 void save_file_erase_current_backup_save(void) {
     if (INVALID_FILE_INDEX(gCurrSaveFileNum-1)) { return; }
-    if (network_is_server()) {
-        bzero(&gSaveBuffer.files[gCurrSaveFileNum-1][1], sizeof(gSaveBuffer.files[gCurrSaveFileNum-1][1]));
+    if (gNetworkType != NT_SERVER) { return; }
 
-        save_file_reload(FALSE);
-
-        save_file_do_save(gCurrSaveFileNum-1, TRUE);
-    }
+    bzero(&gSaveBuffer.files[gCurrSaveFileNum - 1][1], sizeof(gSaveBuffer.files[gCurrSaveFileNum - 1][1]));
+    save_file_reload(FALSE);
+    save_file_do_save(gCurrSaveFileNum - 1, TRUE);
 }
 
 //! Needs to be s32 to match on -O2, despite no return value.
