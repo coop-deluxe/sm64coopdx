@@ -3343,13 +3343,16 @@ FONT_HUD = 2
 FONT_ALIASED = 3
 
 --- @type DjuiFontType
-FONT_CUSTOM_HUD = 4
+FONT_EXCOOP = 4
 
 --- @type DjuiFontType
-FONT_RECOLOR_HUD = 5
+FONT_CUSTOM_HUD = 5
 
 --- @type DjuiFontType
-FONT_COUNT = 6
+FONT_RECOLOR_HUD = 6
+
+--- @type DjuiFontType
+FONT_COUNT = 7
 
 --- @class HudUtilsFilter
 
