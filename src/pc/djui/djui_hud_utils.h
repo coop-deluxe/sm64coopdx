@@ -18,6 +18,7 @@ enum DjuiFontType {
     FONT_MENU,
     FONT_HUD,
     FONT_ALIASED,
+	FONT_EXCOOP,
     FONT_CUSTOM_HUD,
     FONT_RECOLOR_HUD,
     FONT_COUNT,
