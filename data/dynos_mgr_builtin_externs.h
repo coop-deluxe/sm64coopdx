@@ -1540,6 +1540,7 @@ extern ALIGNED8 const Texture texture_menu_course_upper[];
 extern ALIGNED8 const Texture texture_menu_course_lower[];
 extern ALIGNED8 const Texture texture_font_normal[];
 extern ALIGNED8 const Texture texture_font_aliased[];
+extern ALIGNED8 const Texture texture_font_excoop[];
 extern ALIGNED8 const Texture texture_font_title[];
 extern ALIGNED8 const Texture texture_font_hud[];
 extern ALIGNED8 const Texture texture_font_hud_recolor[];
