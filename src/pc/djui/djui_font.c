@@ -265,7 +265,7 @@ const struct DjuiFont* gDjuiFonts[] = {
     &sDjuiFontTitle,
     &sDjuiFontHud,
     &sDjuiFontAliased,
-	&sDjuiFontExCoop,
+    &sDjuiFontExCoop,
     &sDjuiFontCustomHud,
     &sDjuiFontCustomHudRecolor
 };
