@@ -55,7 +55,7 @@
 #define RATIO_Y (gfx_current_dimensions.height / (2.0f * HALF_SCREEN_HEIGHT))
 
 #define MAX_BUFFERED 256
-#define MAX_LIGHTS 18
+#define MAX_LIGHTS 19
 #define MAX_VERTICES 64
 
 # define MAX_CACHED_TEXTURES 4096 // for preloading purposes
