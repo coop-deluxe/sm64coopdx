@@ -357,7 +357,7 @@ Gfx mat_toad_cap_metal[] = {
     gsSPGeometryMode(0, G_TEXTURE_GEN),
     gsSPTexture(4032, 1984, 0, 0, 1),
     gsSPLight(&toad_cap_black_lights_group.l, 1),
-    gsSPCopyLightEXT(2, 15),
+    gsSPCopyLightEXT(2, 19),
     gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 1, toad_cap_texture_metal_shade),
     gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 0, 0, 7, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0),
     gsDPLoadBlock(7, 0, 0, 2047, 128),

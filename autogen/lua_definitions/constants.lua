@@ -7770,10 +7770,10 @@ CAP = 6
 EMBLEM = 7
 
 --- @type PlayerPart
-PLAYER_PART_MAX = 8
+METAL = 8
 
 --- @type PlayerPart
-METAL = CAP
+PLAYER_PART_MAX = 9
 
 --- @type integer
 EEPROM_SIZE = 0x200

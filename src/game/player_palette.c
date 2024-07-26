@@ -131,7 +131,8 @@ void player_palettes_read(const char* palettesPath, bool appendPalettes) {
             { read_value(ini_get(sPalette, "PALETTE", "HAIR_R")), read_value(ini_get(sPalette, "PALETTE", "HAIR_G")), read_value(ini_get(sPalette, "PALETTE", "HAIR_B")) },
             { read_value(ini_get(sPalette, "PALETTE", "SKIN_R")), read_value(ini_get(sPalette, "PALETTE", "SKIN_G")), read_value(ini_get(sPalette, "PALETTE", "SKIN_B")) },
             { read_value(ini_get(sPalette, "PALETTE", "CAP_R")), read_value(ini_get(sPalette, "PALETTE", "CAP_G")), read_value(ini_get(sPalette, "PALETTE", "CAP_B")) },
-            { read_value(ini_get(sPalette, "PALETTE", "EMBLEM_R")), read_value(ini_get(sPalette, "PALETTE", "EMBLEM_G")), read_value(ini_get(sPalette, "PALETTE", "EMBLEM_B")) }
+            { read_value(ini_get(sPalette, "PALETTE", "EMBLEM_R")), read_value(ini_get(sPalette, "PALETTE", "EMBLEM_G")), read_value(ini_get(sPalette, "PALETTE", "EMBLEM_B")) },
+            { read_value(ini_get(sPalette, "PALETTE", "METAL_R")), read_value(ini_get(sPalette, "PALETTE", "METAL_G")), read_value(ini_get(sPalette, "PALETTE", "METAL_B")) }
         }};
         // free
         ini_free(sPalette);
@@ -186,7 +187,10 @@ CAP_G = %d\n\
 CAP_B = %d\n\
 EMBLEM_R = %d\n\
 EMBLEM_G = %d\n\
-EMBLEM_B = %d\n",
+EMBLEM_B = %d\n\
+METAL_R = %d\n\
+METAL_G = %d\n\
+METAL_B = %d\n",
     configPlayerPalette.parts[PANTS][0],
     configPlayerPalette.parts[PANTS][1],
     configPlayerPalette.parts[PANTS][2],
@@ -210,7 +214,10 @@ EMBLEM_B = %d\n",
     configPlayerPalette.parts[CAP][2],
     configPlayerPalette.parts[EMBLEM][0],
     configPlayerPalette.parts[EMBLEM][1],
-    configPlayerPalette.parts[EMBLEM][2]);
+    configPlayerPalette.parts[EMBLEM][2],
+    configPlayerPalette.parts[METAL][0],
+    configPlayerPalette.parts[METAL][1],
+    configPlayerPalette.parts[METAL][2]);
     fclose(file);
 }
 

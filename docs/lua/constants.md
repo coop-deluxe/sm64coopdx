@@ -2773,8 +2773,8 @@
 | SKIN | 5 |
 | CAP | 6 |
 | EMBLEM | 7 |
-| PLAYER_PART_MAX | 8 |
-| METAL | CAP |
+| METAL | 8 |
+| PLAYER_PART_MAX | 9 |
 
 [:arrow_up_small:](#)
 

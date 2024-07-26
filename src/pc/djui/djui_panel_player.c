@@ -225,7 +225,7 @@ static void djui_panel_player_edit_palette_destroy(struct DjuiBase* caller) {
 static void djui_panel_player_edit_palette_create(struct DjuiBase* caller) {
     gDjuiInPlayerMenu = true;
 
-    char* sPartStrings[PLAYER_PART_MAX] = { DLANG(PLAYER, OVERALLS), DLANG(PLAYER, SHIRT), DLANG(PLAYER, GLOVES), DLANG(PLAYER, SHOES), DLANG(PLAYER, HAIR), DLANG(PLAYER, SKIN), DLANG(PLAYER, CAP), DLANG(PLAYER, EMBLEM) };
+    char* sPartStrings[PLAYER_PART_MAX] = { DLANG(PLAYER, OVERALLS), DLANG(PLAYER, SHIRT), DLANG(PLAYER, GLOVES), DLANG(PLAYER, SHOES), DLANG(PLAYER, HAIR), DLANG(PLAYER, SKIN), DLANG(PLAYER, CAP), DLANG(PLAYER, EMBLEM), DLANG(PLAYER, METAL) };
 
     struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(PLAYER, PALETTE), true);
 
