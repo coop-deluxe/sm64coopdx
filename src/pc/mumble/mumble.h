@@ -2,7 +2,6 @@
 #define MUMBLE_H
 
 #include <stdint.h>
-
 #include <wchar.h>
 
 struct LinkedMem {

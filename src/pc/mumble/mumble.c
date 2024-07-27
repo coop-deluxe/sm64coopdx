@@ -1,4 +1,5 @@
 // adapted from https://www.mumble.info/documentation/developer/positional-audio/link-plugin/
+
 #include "mumble.h"
 
 #include "engine/math_util.h"
@@ -8,8 +9,6 @@
 #include "game/area.h"
 
 #include "pc/configfile.h"
-
-
 
 #ifdef _WIN32
 	#include <windows.h>
@@ -27,7 +26,6 @@ void mumble_init(void) {
 	HANDLE hMapObject = OpenFileMappingW(FILE_MAP_ALL_ACCESS, FALSE, L"MumbleLink");
 	if (hMapObject == NULL)
 		return;
-
 
 	lm = (struct LinkedMem *) MapViewOfFile(hMapObject, FILE_MAP_ALL_ACCESS, 0, 0, sizeof(struct LinkedMem));
 	if (lm == NULL) {
