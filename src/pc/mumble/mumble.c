@@ -83,15 +83,16 @@ void mumble_update(void) {
 	lm->fAvatarPosition[2] = gMarioState->pos[2] / 100;
 
     // mumble expects a unit vector so we need to convert the face angle
+    // it also seems to have x and z inverted
     Vec3f faceVector;
     faceVector[0] = coss(gMarioState->faceAngle[0]) * sins(gMarioState->faceAngle[1]);
     faceVector[1] = sins(gMarioState->faceAngle[0]);
     faceVector[2] = coss(gMarioState->faceAngle[0]) * coss(gMarioState->faceAngle[1]);
     vec3f_normalize(faceVector);
 
-	lm->fAvatarFront[0] = faceVector[0];
+	lm->fAvatarFront[0] = -faceVector[0];
 	lm->fAvatarFront[1] = faceVector[1];
-	lm->fAvatarFront[2] = faceVector[2];
+	lm->fAvatarFront[2] = -faceVector[2];
 
 	// camera position
 	lm->fCameraPosition[0] = gLakituState.pos[0] / 100;
@@ -103,9 +104,9 @@ void mumble_update(void) {
     vec3f_dif(normal, gLakituState.focus, gLakituState.pos);
     vec3f_normalize(normal);
 
-	lm->fCameraFront[0] = normal[0];
+	lm->fCameraFront[0] = -normal[0];
 	lm->fCameraFront[1] = normal[1];
-	lm->fCameraFront[2] = normal[2];
+	lm->fCameraFront[2] = -normal[2];
 
     // players with the same context can hear eachother, and is a concat of:
     // level, area, and room
