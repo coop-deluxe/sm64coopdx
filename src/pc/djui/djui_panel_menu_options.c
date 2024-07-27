@@ -44,7 +44,7 @@ static void djui_panel_menu_options_djui_setting_change(UNUSED struct DjuiBase* 
         djui_panel_misc_create(NULL);
         djui_panel_main_menu_create(NULL);
 
-        djui_text_set_font(gDjuiPauseOptions, gDjuiFonts[configDjuiThemeFont == 0 ? FONT_NORMAL : FONT_ALIASED]);
+        djui_text_set_font(gDjuiPauseOptions, gDjuiFonts[configDjuiThemeFont == 1 ? FONT_ALIASED : FONT_ALIASED ? configDjuiThemeFont == 0 ? FONT_NORMAL : FONT_NORMAL ? configDjuiThemeFont == 2 : FONT_EXCOOP : FONT_EXCOOP]);
         djui_text_set_text(gDjuiPauseOptions, DLANG(MISC, R_BUTTON));
     }
 }
@@ -64,8 +64,8 @@ void djui_panel_main_menu_create(struct DjuiBase* caller) {
         djui_selectionbox_create(body, DLANG(DJUI_THEMES, DJUI_THEME), themeChoices, DJUI_THEME_MAX, &configDjuiTheme, djui_panel_menu_options_djui_setting_change);
         char* djuiScaleChoices[5] = {DLANG(DJUI_THEMES, AUTO), "x0.5", "x0.85", "x1.0", "x1.5"};
         djui_selectionbox_create(body, DLANG(DJUI_THEMES, DJUI_SCALE), djuiScaleChoices, 5, &configDjuiScale, djui_panel_menu_options_djui_setting_change);
-        char* djuiFontChoices[2] = {DLANG(DJUI_THEMES, FONT_NORMAL), DLANG(DJUI_THEMES, FONT_ALIASED)};
-        djui_selectionbox_create(body, DLANG(DJUI_THEMES, DJUI_FONT), djuiFontChoices, 2, &configDjuiThemeFont, djui_panel_menu_options_djui_setting_change);
+        char* djuiFontChoices[3] = {DLANG(DJUI_THEMES, FONT_NORMAL), DLANG(DJUI_THEMES, FONT_ALIASED), DLANG(DJUI_THEMES, FONT_EXCOOP)};
+        djui_selectionbox_create(body, DLANG(DJUI_THEMES, DJUI_FONT), djuiFontChoices, 3, &configDjuiThemeFont, djui_panel_menu_options_djui_setting_change);
 
         if (gDjuiInMainMenu) {
             char* levelChoices[18] = {

@@ -37,7 +37,7 @@ static bool djui_chat_message_render(struct DjuiBase* base) {
         djui_base_set_size(base, chatMessage->messageWidth, chatMessage->base.height.value);
     }
 
-    djui_text_set_font(chatMessage->message, gDjuiFonts[configDjuiThemeFont == 0 ? FONT_NORMAL : FONT_ALIASED]);
+    djui_text_set_font(chatMessage->message, gDjuiFonts[configDjuiThemeFont == 1 ? FONT_ALIASED : FONT_ALIASED ? configDjuiThemeFont == 0 ? FONT_NORMAL : FONT_NORMAL ? configDjuiThemeFont == 2 : FONT_EXCOOP : FONT_EXCOOP]);
 
     djui_rect_render(base);
     return true;
