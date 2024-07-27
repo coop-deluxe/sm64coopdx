@@ -9,6 +9,7 @@
 #include "game/area.h"
 
 #include "pc/configfile.h"
+#include "pc/djui/djui.h"
 
 #ifdef _WIN32
 	#include <windows.h>
@@ -19,6 +20,8 @@
 #endif // _WIN32
 
 struct LinkedMem *lm = NULL;
+
+extern bool gIsDemoActive;
 
 void mumble_init(void) {
 
@@ -71,6 +74,12 @@ void mumble_update(void) {
 
 	lm->uiTick++;
 
+    if (gDjuiInMainMenu)
+    {
+        mumble_update_menu();
+        return;
+    }
+
     // The hitbox is 160.0 for standing and 100.0 for crouching
     // Also subtract a bit to go from top of the head to the middle
     float headHeight = gMarioState->marioObj->hitboxHeight - 60;
@@ -122,4 +131,25 @@ void mumble_update(void) {
     char context[20];
     snprintf(context, 20, "%d-%d-%d", gCurrLevelNum, gCurrAreaIndex, gMarioState->currentRoom);
     memcpy(lm->context, (unsigned char *) context, 20);
+}
+
+void mumble_update_menu() {
+
+	lm->fAvatarPosition[0] = 0.0f;
+	lm->fAvatarPosition[1] = 0.0f;
+	lm->fAvatarPosition[2] = 1.0f;
+
+	lm->fAvatarFront[0] = 0.0f;
+	lm->fAvatarFront[1] = 0.0f;
+	lm->fAvatarFront[2] = 1.0f;
+
+	lm->fCameraPosition[0] = 0.0f;
+	lm->fCameraPosition[1] = 0.0f;
+	lm->fCameraPosition[2] = 0.0f;
+
+	lm->fCameraFront[0] = 0.0f;
+	lm->fCameraFront[1] = 0.0f;
+	lm->fCameraFront[2] = 1.0f;
+
+    memcpy(lm->context, "mainmenu\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00", 20);
 }

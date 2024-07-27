@@ -26,5 +26,6 @@ struct LinkedMem {
 
 void mumble_init(void);
 void mumble_update(void);
+void mumble_update_menu(void);
 
 #endif /* MUMBLE_H */
