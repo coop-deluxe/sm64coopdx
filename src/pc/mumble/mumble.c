@@ -83,44 +83,45 @@ void mumble_update(void) {
 	lm->fAvatarPosition[2] = gMarioState->pos[2] / 100;
 
     // mumble expects a unit vector so we need to convert the face angle
-    // it also seems to have x and z inverted
     Vec3f faceVector;
     faceVector[0] = coss(gMarioState->faceAngle[0]) * sins(gMarioState->faceAngle[1]);
     faceVector[1] = sins(gMarioState->faceAngle[0]);
     faceVector[2] = coss(gMarioState->faceAngle[0]) * coss(gMarioState->faceAngle[1]);
     vec3f_normalize(faceVector);
 
-	lm->fAvatarFront[0] = -faceVector[0];
-	lm->fAvatarFront[1] = faceVector[1];
-	lm->fAvatarFront[2] = -faceVector[2];
+    // mumble also seems to have x and z inverted
+    lm->fAvatarFront[0] = -faceVector[0];
+    lm->fAvatarFront[1] = faceVector[1];
+    lm->fAvatarFront[2] = -faceVector[2];
 
-	// camera position
-	lm->fCameraPosition[0] = gLakituState.pos[0] / 100;
-	lm->fCameraPosition[1] = gLakituState.pos[1] / 100;
-	lm->fCameraPosition[2] = gLakituState.pos[2] / 100;
+    // the actual camera can move too far away, and players will be louder near
+    // the camera, which can be diorienting, so we use the player pos instead.
+	lm->fCameraPosition[0] = gMarioState->pos[0] / 100;
+	lm->fCameraPosition[1] = (gMarioState->pos[1] + headHeight) / 100;
+	lm->fCameraPosition[2] = gMarioState->pos[2] / 100;
 
-    // get the unit vector direction of the camera
+    // still use the direction of the camera, so make it into a unit vector
     Vec3f normal;
     vec3f_dif(normal, gLakituState.focus, gLakituState.pos);
     vec3f_normalize(normal);
 
-	lm->fCameraFront[0] = -normal[0];
-	lm->fCameraFront[1] = normal[1];
-	lm->fCameraFront[2] = -normal[2];
+    lm->fCameraFront[0] = -normal[0];
+    lm->fCameraFront[1] = normal[1];
+    lm->fCameraFront[2] = -normal[2];
 
     // players with the same context can hear eachother, and is a concat of:
     // level, area, and room
     //
     // some rooms are just small areas around doors which is a bit annoying as
     // audio will cut out for players standing close to them or walking between,
-    // but I haven't found a good way to detect such rooms. It is better than 
+    // but I haven't found a good way to detect such rooms. It is better than
     // hearing through walls though, so a minor inconvience for now.
-    // 
+    //
     // I might go through manually map levels and rooms which are not 'rooms' to
     // and skip over them here as a work around if there is nothing better.
     // JR - 2024-Jul-27
 
     char context[20];
     snprintf(context, 20, "%d-%d-%d", gCurrLevelNum, gCurrAreaIndex, gMarioState->currentRoom);
-    memcpy(lm->context, (unsigned char*)context, 20);
+    memcpy(lm->context, (unsigned char *) context, 20);
 }
