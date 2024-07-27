@@ -25,7 +25,7 @@ struct LinkedMem {
 	wchar_t description[2048];
 };
 
-void initMumble(void);
-void updateMumble(void);
+void mumble_init(void);
+void mumble_update(void);
 
 #endif /* MUMBLE_H */

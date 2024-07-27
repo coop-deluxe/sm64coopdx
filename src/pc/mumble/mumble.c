@@ -21,7 +21,7 @@
 
 struct LinkedMem *lm = NULL;
 
-void initMumble(void) {
+void mumble_init(void) {
 
 #ifdef _WIN32
 	HANDLE hMapObject = OpenFileMappingW(FILE_MAP_ALL_ACCESS, FALSE, L"MumbleLink");
@@ -65,7 +65,7 @@ void initMumble(void) {
     lm->context_len = 20;
 }
 
-void updateMumble(void) {
+void mumble_update(void) {
 
 	if (! lm) {
 		return;
