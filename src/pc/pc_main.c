@@ -59,6 +59,8 @@
 #include "pc/discord/discord.h"
 #endif
 
+#include "pc/mumble/mumble.h"
+
 #if defined(_WIN32) || defined(_WIN64)
 #include <windows.h>
 #endif
@@ -459,6 +461,8 @@ int main(int argc, char *argv[]) {
         network_init(NT_NONE, false);
     }
 
+    initMumble();
+
     // main loop
     while (true) {
         debug_context_reset();
@@ -467,6 +471,7 @@ int main(int argc, char *argv[]) {
 #ifdef DISCORD_SDK
         discord_update();
 #endif
+        updateMumble();
 #ifdef DEBUG
         fflush(stdout);
         fflush(stderr);
