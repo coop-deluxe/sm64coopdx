@@ -10,11 +10,13 @@
 #include "pc/configfile.h"
 
 
+
 #ifdef _WIN32
 	#include <windows.h>
 #else
 	#include <sys/mman.h>
 	#include <fcntl.h> /* For O_* constants */
+	#include <libc.h>
 #endif // _WIN32
 
 struct LinkedMem *lm = NULL;
@@ -43,7 +45,7 @@ void initMumble(void) {
 		return;
 	}
 
-	lm = (LinkedMem *)(mmap(NULL, sizeof(struct LinkedMem), PROT_READ | PROT_WRITE, MAP_SHARED, shmfd,0));
+	lm = (struct LinkedMem *)(mmap(NULL, sizeof(struct LinkedMem), PROT_READ | PROT_WRITE, MAP_SHARED, shmfd,0));
 
 	if (lm == (void *)(-1)) {
 		lm = NULL;

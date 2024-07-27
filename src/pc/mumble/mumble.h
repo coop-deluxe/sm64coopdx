@@ -3,6 +3,8 @@
 
 #include <stdint.h>
 
+#include <wchar.h>
+
 struct LinkedMem {
 
 	uint32_t uiVersion;
