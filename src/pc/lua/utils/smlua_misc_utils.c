@@ -92,7 +92,7 @@ bool djui_is_playerlist_open(void) {
 }
 
 enum DjuiFontType djui_menu_get_font(void) {
-    return configDjuiThemeFont == 0 ? FONT_NORMAL : FONT_ALIASED;
+    return configDjuiThemeFont == 1 ? FONT_ALIASED : FONT_ALIASED ? configDjuiThemeFont == 0 ? FONT_NORMAL : FONT_NORMAL ? configDjuiThemeFont == 2 : FONT_EXCOOP : FONT_EXCOOP;
 }
 
 ///

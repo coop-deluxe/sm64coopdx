@@ -79,7 +79,7 @@ void djui_inputbox_hook_escape_press(struct DjuiInputbox* inputbox, void (*on_es
 
 static u16 djui_inputbox_get_cursor_index(struct DjuiInputbox* inputbox) {
     struct DjuiBaseRect*   comp = &inputbox->base.comp;
-    const struct DjuiFont* font = gDjuiFonts[configDjuiThemeFont == 0 ? FONT_NORMAL : FONT_ALIASED];
+    const struct DjuiFont* font = gDjuiFonts[configDjuiThemeFont == 1 ? FONT_ALIASED : FONT_ALIASED ? configDjuiThemeFont == 0 ? FONT_NORMAL : FONT_NORMAL ? configDjuiThemeFont == 2 : FONT_EXCOOP : FONT_EXCOOP];
 
     f32 cX = (gCursorX - (comp->x + inputbox->viewX)) / font->defaultFontScale;
     f32 x = 0;
@@ -401,7 +401,7 @@ void djui_inputbox_on_text_input(struct DjuiBase *base, char* text) {
 
 static void djui_inputbox_render_char(struct DjuiInputbox* inputbox, char* c, f32* drawX, f32* additionalShift) {
     struct DjuiBaseRect*   comp = &inputbox->base.comp;
-    const struct DjuiFont* font = gDjuiFonts[configDjuiThemeFont == 0 ? FONT_NORMAL : FONT_ALIASED];
+    const struct DjuiFont* font = gDjuiFonts[configDjuiThemeFont == 1 ? FONT_ALIASED : FONT_ALIASED ? configDjuiThemeFont == 0 ? FONT_NORMAL : FONT_NORMAL ? configDjuiThemeFont == 2 : FONT_EXCOOP : FONT_EXCOOP];
     f32 dX = comp->x + *drawX;
     f32 dY = comp->y;
     f32 dW = font->charWidth  * font->defaultFontScale;
@@ -423,7 +423,7 @@ static void djui_inputbox_render_char(struct DjuiInputbox* inputbox, char* c, f3
 }
 
 static void djui_inputbox_render_selection(struct DjuiInputbox* inputbox) {
-    const struct DjuiFont* font = gDjuiFonts[configDjuiThemeFont == 0 ? FONT_NORMAL : FONT_ALIASED];
+    const struct DjuiFont* font = gDjuiFonts[configDjuiThemeFont == 1 ? FONT_ALIASED : FONT_ALIASED ? configDjuiThemeFont == 0 ? FONT_NORMAL : FONT_NORMAL ? configDjuiThemeFont == 2 : FONT_EXCOOP : FONT_EXCOOP];
 
     // make selection well formed
     u16 selection[2] = { 0 };
@@ -488,7 +488,7 @@ static void djui_inputbox_render_selection(struct DjuiInputbox* inputbox) {
 }
 
 static void djui_inputbox_keep_selection_in_view(struct DjuiInputbox* inputbox) {
-    const struct DjuiFont* font = gDjuiFonts[configDjuiThemeFont == 0 ? FONT_NORMAL : FONT_ALIASED];
+    const struct DjuiFont* font = gDjuiFonts[configDjuiThemeFont == 1 ? FONT_ALIASED : FONT_ALIASED ? configDjuiThemeFont == 0 ? FONT_NORMAL : FONT_NORMAL ? configDjuiThemeFont == 2 : FONT_EXCOOP : FONT_EXCOOP];
 
     // calculate where our cursor is
     f32 cursorX = inputbox->viewX;
@@ -511,7 +511,7 @@ static void djui_inputbox_keep_selection_in_view(struct DjuiInputbox* inputbox) 
 static bool djui_inputbox_render(struct DjuiBase* base) {
     struct DjuiInputbox* inputbox = (struct DjuiInputbox*)base;
     struct DjuiBaseRect* comp     = &base->comp;
-    const struct DjuiFont* font   = gDjuiFonts[configDjuiThemeFont == 0 ? FONT_NORMAL : FONT_ALIASED];
+    const struct DjuiFont* font   = gDjuiFonts[configDjuiThemeFont == 1 ? FONT_ALIASED : FONT_ALIASED ? configDjuiThemeFont == 0 ? FONT_NORMAL : FONT_NORMAL ? configDjuiThemeFont == 2 : FONT_EXCOOP : FONT_EXCOOP];
     djui_rect_render(base);
 
     // Shift the text away from the left side a tad
