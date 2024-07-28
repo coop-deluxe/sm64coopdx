@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include <wchar.h>
+#include <stdbool.h>
 
 struct LinkedMem {
 
@@ -27,5 +28,7 @@ struct LinkedMem {
 void mumble_init(void);
 void mumble_update(void);
 void mumble_update_menu(void);
+
+bool should_update_context(void);
 
 #endif /* MUMBLE_H */

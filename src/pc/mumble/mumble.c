@@ -11,6 +11,8 @@
 #include "pc/configfile.h"
 #include "pc/djui/djui.h"
 
+#include <stdbool.h>
+
 #ifdef _WIN32
 	#include <windows.h>
 #else
@@ -22,6 +24,9 @@
 struct LinkedMem *lm = NULL;
 
 extern bool gIsDemoActive;
+
+s16 sPrevCheckLevel;
+s16 sPrevCheckArea;
 
 void mumble_init(void) {
 
@@ -117,20 +122,12 @@ void mumble_update(void) {
     lm->fCameraFront[2] = -normal[2];
 
     // players with the same context can hear eachother, and is a concat of:
-    // level, area, and room
-    //
-    // some rooms are just small areas around doors which is a bit annoying as
-    // audio will cut out for players standing close to them or walking between,
-    // but I haven't found a good way to detect such rooms. It is better than
-    // hearing through walls though, so a minor inconvience for now.
-    //
-    // I might go through manually map levels and rooms which are not 'rooms' to
-    // and skip over them here as a work around if there is nothing better.
-    // JR - 2024-Jul-27
-
-    char context[20];
-    snprintf(context, 20, "%d-%d-%d", gCurrLevelNum, gCurrAreaIndex, gMarioState->currentRoom);
-    memcpy(lm->context, (unsigned char *) context, 20);
+    // level, area, and room. 
+	if (should_update_context()) {
+		char context[20];
+		snprintf(context, 20, "%d-%d-%d", gCurrLevelNum, gCurrAreaIndex, gMarioState->currentRoom);
+		memcpy(lm->context, (unsigned char *) context, 20);
+	}
 }
 
 void mumble_update_menu() {
@@ -152,4 +149,51 @@ void mumble_update_menu() {
 	lm->fCameraFront[2] = 1.0f;
 
     memcpy(lm->context, "mainmenu\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00", 20);
+}
+
+bool should_update_context() {
+
+	// room 0 is an object like an elevator on hmc, but ALSO the only room
+	// for levels without rooms. So we only want to ignore room zero if we 
+	// haven't changed maps at the same time 
+
+	if (gMarioState->currentRoom == 0 && gCurrLevelNum == sPrevCheckLevel && gCurrAreaIndex == sPrevCheckArea) {
+		return false;
+	}
+
+	sPrevCheckLevel = gCurrLevelNum;
+	sPrevCheckArea = gCurrAreaIndex;
+	
+    // some rooms are just small areas around doors which is a bit annoying as
+    // audio will cut out for players standing close to them or walking between.
+    // There only seem to be a few, so I've mapped them below
+	// JR - 2024-Jul-28
+
+	// castle interior
+	if (gCurrLevelNum == LEVEL_CASTLE) {
+		// main floor
+		if (gCurrAreaIndex == 1) {
+			return  gMarioState->currentRoom < 10;
+		}
+		// upstairs
+		if (gCurrAreaIndex == 2) {
+			return gMarioState->currentRoom < 7;
+		}
+		// basement
+		if (gCurrAreaIndex == 3) {
+			return gMarioState->currentRoom < 6;
+		}
+	}
+
+	// big boos haunt
+	if (gCurrLevelNum == LEVEL_BBH) {
+		return gMarioState->currentRoom < 14;
+	}
+	
+	// hazy maze cave
+	if (gCurrLevelNum == LEVEL_HMC) {
+		return gMarioState->currentRoom < 9;
+	}
+
+	return true;
 }
