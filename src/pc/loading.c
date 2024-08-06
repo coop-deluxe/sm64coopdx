@@ -61,7 +61,11 @@ static bool loading_screen_on_render(struct DjuiBase* base) {
     djui_base_set_size(base, windowWidth, windowHeight);
 
     // splash logo
-    djui_base_set_location(&sLoading->splashImage->base, 0, loadingDescY1 - sLoading->splashImage->base.height.value);
+    if (configExCoopTheme) {
+        djui_base_set_location(&sLoading->splashText->base, 0, loadingDescY1 - sLoading->splashText->base.height.value);
+    } else {
+        djui_base_set_location(&sLoading->splashImage->base, 0, loadingDescY1 - sLoading->splashImage->base.height.value);
+    }
 
     {
         // loading text description
