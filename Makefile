@@ -66,8 +66,6 @@ ifeq ($(shell arch),arm64)
 else
   MIN_MACOS_VERSION ?= 10.15
 endif
-# Homebrew Prefix
-BREW_PREFIX ?= $(shell brew --prefix)
 # Make some small adjustments for handheld devices
 HANDHELD ?= 0
 
@@ -122,6 +120,10 @@ endif
 
 ifeq ($(HOST_OS),Darwin)
   OSX_BUILD := 1
+
+  ifndef BREW_PREFIX
+    BREW_PREFIX := $(shell brew --prefix)
+  endif
 endif
 
 # MXE overrides
