@@ -691,13 +691,13 @@ void DynOS_Col_Generate(const SysPath &aPackFolder, Array<Pair<u64, String>> _Ac
         // If there is an existing binary file for this collision, skip and go to the next actor
         SysPath _ColFilename = fstring("%s/%s.col", aPackFolder.c_str(), _ColRootName.begin());
         if (fs_sys_file_exists(_ColFilename.c_str())) {
-#ifdef DEVELOPMENT
+
             // Compress file to gain some space
-            if (!DynOS_Bin_IsCompressed(_ColFilename)) {
+            if (configCompressOnStartup && !DynOS_Bin_IsCompressed(_ColFilename)) {
                 DynOS_Bin_Compress(_ColFilename);
             }
+
             continue;
-#endif
         }
 
         // Init

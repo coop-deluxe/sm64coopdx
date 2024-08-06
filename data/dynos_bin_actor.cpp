@@ -149,12 +149,12 @@ static void DynOS_Actor_Generate(const SysPath &aPackFolder, Array<Pair<u64, Str
         // If there is an existing binary file for this layout, skip and go to the next actor
         SysPath _BinFilename = fstring("%s/%s.bin", aPackFolder.c_str(), _GeoRootName.begin());
         if (fs_sys_file_exists(_BinFilename.c_str())) {
-#ifdef DEVELOPMENT
+
             // Compress file to gain some space
-            if (!DynOS_Bin_IsCompressed(_BinFilename)) {
+            if (configCompressOnStartup && !DynOS_Bin_IsCompressed(_BinFilename)) {
                 DynOS_Bin_Compress(_BinFilename);
             }
-#endif
+
             return;
         }
     }
@@ -260,14 +260,14 @@ void DynOS_Actor_GeneratePack(const SysPath &aPackFolder) {
             if (SysPath(_PackEnt->d_name) == ".") continue;
             if (SysPath(_PackEnt->d_name) == "..") continue;
 
-#ifdef DEVELOPMENT
             // Compress .bin files to gain some space
-            SysPath _Filename = fstring("%s/%s", aPackFolder.c_str(), _PackEnt->d_name);
-            if (SysPath(_PackEnt->d_name).find(".bin") != SysPath::npos && !DynOS_Bin_IsCompressed(_Filename)) {
-                DynOS_Bin_Compress(_Filename);
-                continue;
+            if (configCompressOnStartup) {
+                SysPath _Filename = fstring("%s/%s", aPackFolder.c_str(), _PackEnt->d_name);
+                if (SysPath(_PackEnt->d_name).find(".bin") != SysPath::npos && !DynOS_Bin_IsCompressed(_Filename)) {
+                    DynOS_Bin_Compress(_Filename);
+                    continue;
+                }
             }
-#endif
 
             // For each subfolder, read tokens from model.inc.c and geo.inc.c
             SysPath _Folder = fstring("%s/%s", aPackFolder.c_str(), _PackEnt->d_name);
