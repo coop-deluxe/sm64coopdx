@@ -20,7 +20,7 @@ static void djui_font_normal_render_char(char* c) {
 }
 
 static f32 djui_font_normal_char_width(char* c) {
-    if (*c == ' ') { return 0.30f; }
+    if (*c == ' ') { return configExCoopTheme ? 6 / 32.0f : 0.30f; }
     extern const f32 font_normal_widths[];
     return djui_unicode_get_sprite_width(c, font_normal_widths, 32.0f);
 }
@@ -62,7 +62,7 @@ static f32 djui_font_title_char_width(char* text) {
     if (c == ' ') { return 0.30f; }
     c = djui_unicode_get_base_char(text);
     extern const f32 font_title_widths[];
-    return font_title_widths[(u8)c - '!'] * 1.1f;
+    return font_title_widths[(u8)c - '!'] * (configExCoopTheme ? 1.0f : 1.1f);
 }
 
 static const struct DjuiFont sDjuiFontTitle = {

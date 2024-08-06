@@ -17,6 +17,7 @@ struct LoadingSegment gCurrLoadingSegment = { "", 0 };
 struct LoadingScreen {
     struct DjuiBase base;
     struct DjuiImage* splashImage;
+    struct DjuiText* splashText;
     struct DjuiText* loadingDesc;
     struct DjuiProgressBar *loadingBar;
 };
@@ -102,8 +103,21 @@ static void init_loading_screen(void) {
 
     djui_base_init(NULL, base, loading_screen_on_render, loading_screen_destroy);
 
-    {
-        // splash image
+    // splash text (easter egg)
+    if (configExCoopTheme) {
+        struct DjuiText* splashDjuiText = djui_text_create(base, "\\#ff0800\\SM\\#1be700\\64\\#00b3ff\\EX\n\\#ffef00\\COOP");
+        djui_base_set_location_type(&splashDjuiText->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+        djui_base_set_location(&splashDjuiText->base, 0, 0);
+        djui_text_set_font(splashDjuiText, gDjuiFonts[1]);
+        djui_text_set_font_scale(splashDjuiText, gDjuiFonts[1]->defaultFontScale);
+        djui_text_set_alignment(splashDjuiText, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
+        djui_base_set_size_type(&splashDjuiText->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+        djui_base_set_size(&splashDjuiText->base, 1.0f, gDjuiFonts[1]->defaultFontScale * 3.0f);
+
+        load->splashText = splashDjuiText;
+
+    // splash image
+    } else {
         struct DjuiImage* splashImage = djui_image_create(base, texture_coopdx_logo, 2048, 1024, 32);
         djui_base_set_location_type(&splashImage->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
         djui_base_set_alignment(&splashImage->base, DJUI_HALIGN_CENTER, DJUI_VALIGN_TOP);
