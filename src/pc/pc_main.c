@@ -343,7 +343,6 @@ void* main_game_init(UNUSED void* dummy) {
 
     audio_init();
     sound_init();
-    smlua_audio_custom_init();
     network_player_init();
 
     gGameInited = true;

@@ -406,7 +406,7 @@ static int smlua__get_field(lua_State* L) {
     }
 
     if (!smlua_cobject_allowlist_contains(lot, pointer)) {
-        LOG_LUA_LINE("_get_field received a pointer not in allow list. '%u', '%llu", lot, (u64)pointer);
+        LOG_LUA_LINE("_get_field received a pointer not in allow list. '%u', '%llu'", lot, (u64)pointer);
         return 0;
     }
 
@@ -495,7 +495,7 @@ static int smlua__set_field(lua_State* L) {
     }
 
     if (!smlua_cobject_allowlist_contains(lot, pointer)) {
-        LOG_LUA_LINE("_set_field received a pointer not in allow list. '%u', '%llu", lot, (u64)pointer);
+        LOG_LUA_LINE("_set_field received a pointer not in allow list. '%u', '%llu'", lot, (u64)pointer);
         return 0;
     }
 

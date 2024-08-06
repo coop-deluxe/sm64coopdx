@@ -166,6 +166,15 @@ void smlua_audio_utils_replace_sequence(u8 sequenceId, u8 bankId, u8 defaultVolu
 static ma_engine sModAudioEngine;
 static struct DynamicPool *sModAudioPool;
 
+static void smlua_audio_custom_init(void) {
+    sModAudioPool = dynamic_pool_init();
+
+    ma_result result = ma_engine_init(NULL, &sModAudioEngine);
+    if (result != MA_SUCCESS) {
+        LOG_ERROR("failed to init Miniaudio: %d", result);
+    }
+}
+
 static struct ModAudio* find_mod_audio(struct ModFile* file) {
     struct DynamicPoolNode* node = sModAudioPool->tail;
     while (node) {
@@ -194,6 +203,8 @@ static bool audio_sanity_check(struct ModAudio* audio, bool isStream, const char
 }
 
 struct ModAudio* audio_load_internal(const char* filename, bool isStream) {
+    if (!sModAudioPool) { smlua_audio_custom_init(); }
+
     // check file type
     bool validFileType = false;
     const char* fileTypes[] = { ".mp3", ".aiff", ".ogg", NULL };
@@ -602,15 +613,6 @@ void audio_custom_shutdown(void) {
         node = prev;
     }
     dynamic_pool_free_pool(sModAudioPool);
-}
-
-void smlua_audio_custom_init(void) {
-    sModAudioPool = dynamic_pool_init();
-
-    ma_result result = ma_engine_init(NULL, &sModAudioEngine);
-    if (result != MA_SUCCESS) {
-        LOG_ERROR("failed to init Miniaudio: %d", result);
-    }
 }
 
 void smlua_audio_custom_deinit(void) {
