@@ -252,7 +252,10 @@ static void mods_load(struct Mods* mods, char* modsBasePath, UNUSED bool isUserM
     }
     UNUSED f32 count = (f32) mods_count_directory(modsBasePath);
 
-    LOADING_SCREEN_MUTEX(snprintf(gCurrLoadingSegment.str, 256, "Loading Mods In %s Mod Path:\n\\#808080\\%s", isUserModPath ? "User" : "Local", modsBasePath));
+    LOADING_SCREEN_MUTEX(
+        loading_screen_reset_progress_bar();
+        snprintf(gCurrLoadingSegment.str, 256, "Loading Mods In %s Mod Path:\n\\#808080\\%s", isUserModPath ? "User" : "Local", modsBasePath);
+    );
 
     // iterate
     char path[SYS_MAX_PATH] = { 0 };
@@ -276,6 +279,7 @@ static void mods_load(struct Mods* mods, char* modsBasePath, UNUSED bool isUserM
 }
 
 void mods_refresh_local(void) {
+    LOADING_SCREEN_MUTEX(loading_screen_set_segment_text("Refreshing Mod Cache"));
     mods_local_store_enabled();
 
     // figure out user path
@@ -324,7 +328,6 @@ void mods_enable(char* relativePath) {
 }
 
 void mods_init(void) {
-    LOADING_SCREEN_MUTEX(loading_screen_set_segment_text("Caching Mods"));
 
     // load mod cache
     mod_cache_load();
