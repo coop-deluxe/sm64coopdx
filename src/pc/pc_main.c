@@ -6,6 +6,8 @@
 
 #include "sm64.h"
 
+#include "gfx/gfx_rt64.h"
+
 #include "pc/lua/smlua.h"
 #include "pc/lua/utils/smlua_text_utils.h"
 #include "game/memory.h"
@@ -103,19 +105,6 @@ void game_loop_one_iteration(void);
 
 void dispatch_audio_sptask(UNUSED struct SPTask *spTask) {}
 void set_vblank_handler(UNUSED s32 index, UNUSED struct VblankHandler *handler, UNUSED OSMesgQueue *queue, UNUSED OSMesg *msg) {}
-
-void send_display_list(struct SPTask *spTask) {
-    if (!gGameInited) { return; }
-    gfx_run((Gfx *)spTask->task.t.data_ptr);
-}
-
-#ifdef VERSION_EU
-#define SAMPLES_HIGH 560 // gAudioBufferParameters.maxAiBufferLength
-#define SAMPLES_LOW 528 // gAudioBufferParameters.minAiBufferLength
-#else
-#define SAMPLES_HIGH 544
-#define SAMPLES_LOW 528
-#endif
 
 extern void patch_mtx_before(void);
 extern void patch_screen_transition_before(void);
@@ -239,6 +228,27 @@ inline static void buffer_audio(void) {
     audio_api->play((u8 *)audioBuffer, 2 * numAudioSamples * 4);
 }
 
+void send_display_list(struct SPTask *spTask) {
+    if (!inited) return;
+
+#ifndef RAPI_RT64
+    if (!config60FPS)
+#endif
+    {
+        patch_interpolations();
+    }
+
+    gfx_run((Gfx *)spTask->task.t.data_ptr);
+}
+
+#ifdef VERSION_EU
+#define SAMPLES_HIGH 656
+#define SAMPLES_LOW 640
+#else
+#define SAMPLES_HIGH 544
+#define SAMPLES_LOW 528
+#endif
+
 void produce_one_frame(void) {
     CTX_EXTENT(CTX_NETWORK, network_update);
 
@@ -283,6 +293,15 @@ void produce_one_dummy_frame(void (*callback)(), u8 clearColorR, u8 clearColorG,
     gfx_run((Gfx*) gGfxSPTask->task.t.data_ptr); // send_display_list
     display_and_vsync();
     gfx_end_frame();
+
+#ifndef RAPI_RT64
+    if (config60FPS) {
+        gfx_start_frame();
+        patch_interpolations();
+        send_display_list(gGfxSPTask);
+        gfx_end_frame();
+    }
+#endif
 }
 
 void audio_shutdown(void) {

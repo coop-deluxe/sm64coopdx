@@ -135,6 +135,21 @@ extern unsigned int configDjuiThemeFont;
 extern unsigned int configDjuiScale;
 // other
 extern unsigned int configRulesVersion;
+// RT64
+#ifdef RAPI_RT64
+extern unsigned int configRT64TargetFPS;
+extern unsigned int configRT64ResScale;
+extern unsigned int configRT64MaxLights;
+extern unsigned int configRT64MotionBlurStrength;
+extern unsigned int configRT64UpscalerSharpness;
+extern bool         configRT64SphereLights;
+extern bool         configRT64GI;
+extern unsigned int configRT64DlssMode;
+extern unsigned int configRT64Upscaler;
+extern unsigned int configRT64UpscalerMode;
+extern bool         configRT64Denoiser;
+extern bool         configRT64StaticMeshCache;
+#endif
 
 void enable_queued_mods(void);
 void enable_queued_dynos_packs(void);

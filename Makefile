@@ -71,6 +71,9 @@ BREW_PREFIX ?= $(shell brew --prefix)
 # Make some small adjustments for handheld devices
 HANDHELD ?= 0
 
+# Enable Expermental Transparency for GL
+TRANSPARENCY_GL ?= 0
+
 # Various workarounds for weird toolchains
 NO_BZERO_BCOPY ?= 0
 NO_LDIV ?= 0
@@ -620,6 +623,11 @@ DEP_FILES := $(O_FILES:.o=.d) $(ULTRA_O_FILES:.o=.d) $(GODDARD_O_FILES:.o=.d) $(
 # Segment elf files
 SEG_FILES := $(SEGMENT_ELF_FILES) $(ACTOR_ELF_FILES) $(LEVEL_ELF_FILES)
 
+# RT64 configuration files
+ifeq ($(RENDER_API),RT64)
+include Makefile_rt64
+endif
+
 # Files with GLOBAL_ASM blocks
 ifeq ($(NON_MATCHING),0)
   ifeq ($(VERSION),sh)
@@ -1086,6 +1094,7 @@ TEXTCONV              := $(TOOLS_DIR)/textconv
 AIFF_EXTRACT_CODEBOOK := $(TOOLS_DIR)/aiff_extract_codebook
 VADPCM_ENC            := $(TOOLS_DIR)/vadpcm_enc
 EXTRACT_DATA_FOR_MIO  := $(TOOLS_DIR)/extract_data_for_mio
+R96_TEXTURE_CONVERT   = $(PYTHON) $(TOOLS_DIR)/texture_converter.py
 SKYCONV               := $(TOOLS_DIR)/skyconv
 
 # Use the system installed armips if available. Otherwise use the one provided with this repository.
@@ -1127,7 +1136,7 @@ endef
 
 #all: $(ROM)
 all: $(EXE)
-
+all: $(R96_TEXTURE_CONVERT)
 ifeq ($(WINDOWS_BUILD),1)
 exemap: $(EXE)
 	$(V)$(OBJDUMP) -t $(EXE) > $(BUILD_DIR)/coop.map

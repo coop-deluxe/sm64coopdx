@@ -6,6 +6,7 @@
 
 #include "types.h"
 #include "game/memory.h"
+#include "pc/gfx/gfx_pc.h"
 #undef near
 #undef far
 
@@ -130,6 +131,9 @@ struct DisplayListNode
     void *displayList;
     struct DisplayListNode *next;
     u8 usingCamSpace;
+#ifdef GFX_ENABLE_GRAPH_NODE_MODS
+    GraphNodeGfxInfo gfxInfo;
+#endif
 };
 
 /** GraphNode that manages the 8 top-level display lists that will be drawn

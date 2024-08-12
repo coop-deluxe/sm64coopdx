@@ -6,6 +6,8 @@
 
 #include <ultra64.h>
 #include "macros.h"
+#include "pc/gfx/gfx_rendering_api.h"
+#include "data/dynos.c.h"
 #include "pc/network/version.h"
 #include "pc/platform.h"
 
@@ -128,6 +130,9 @@ struct GraphNode
     struct GraphNode *parent;
     struct GraphNode *children;
     const void *georef;
+#ifdef GFX_SEPARATE_PROJECTIONS
+    u32 uid;
+#endif
     u8 extraFlags;
 };
 
