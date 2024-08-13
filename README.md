@@ -1,4 +1,4 @@
-#sm64coopdx_rt64
+# sm64coopdx_rt64
 Fork of [coop-deluxe/sm64coopdx](https://github.com/coop-deluxe/sm64coopdx) that adds support for raytracing/RTX using [RT64](https://github.com/DarioSamo/sm64rt-legacy-renderer), a hardware-accelerated real-time path tracer.
 
 ## Building
@@ -8,7 +8,8 @@ For building instructions, please refer to the [sm64ex wiki](https://github.com/
 ## More Infos
 - https://github.com/DarioSamo/sm64rt
 - https://github.com/Render96/Render96ex/tree/tester_rt64alpha
-  
+
+
 ![sm64coopdx Logo](textures/segment2/custom_coopdx_logo.rgba32.png)
 
 sm64coopdx is an online multiplayer project for the Super Mario 64 PC port that synchronizes all entities and every level for multiple players. The project was started by the Coop Deluxe Team. The purpose is to actively maintain and improve, but also continue sm64ex-coop, created by djoslin0. More features, customization, and power to the Lua API allow modders and players to enjoy Super Mario 64 more than ever!
@@ -24,5 +25,3 @@ Interestingly enough though, the goal of the project has slowly evolved over tim
 
 ## Lua
 sm64coopdx is moddable via Lua, similar to Roblox and Garry's Mod's Lua APIs. To get started, click [here](docs/lua/lua.md) to see the Lua documentation.
-
-## Additional Informations
