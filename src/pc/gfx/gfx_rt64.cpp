@@ -2,10 +2,6 @@
 
 #if defined(_WIN32) || defined(_WIN64)
 
-#if !defined(EXTERNAL_DATA) && !defined(DYNOS)
-#error "RT64 requires EXTERNAL_DATA to be enabled."
-#endif
-
 extern "C" {
 #	include "../configfile.h"
 #	include "../../game/area.h"

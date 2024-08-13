@@ -752,64 +752,6 @@ static void import_texture_ci8(int tile) {
     gfx_rapi->upload_texture(rgba32_buf, width, height);
 }
 
-#ifdef GFX_SEPARATE_SKYBOX
-
-#define MAX_SKYBOX_COUNT 10
-#define MAX_SKYBOX_EXTENSIONS 2
-
-#define SKYBOX_DIR FS_TEXTUREDIR "/textures/skyboxes/"
-
-const char *skybox_base_paths[MAX_SKYBOX_COUNT] = {
-    SKYBOX_DIR "water",
-    SKYBOX_DIR "bitfs",
-    SKYBOX_DIR "wdw",
-    SKYBOX_DIR "cloud_floor",
-    SKYBOX_DIR "ccm",
-    SKYBOX_DIR "ssl",
-    SKYBOX_DIR "bbh",
-    SKYBOX_DIR "bidw",
-    SKYBOX_DIR "clouds",
-    SKYBOX_DIR "bits"
-};
-
-const char *skybox_extensions[MAX_SKYBOX_EXTENSIONS] = {
-    "dds",
-    "png"
-};
-
-struct {
-    uint32_t textures[MAX_SKYBOX_COUNT];
-} skybox;
-
-void gfx_preload_skybox(uint8_t skybox_id) {
-    const char *skyboxBasePath = skybox_base_paths[skybox_id];
-    skybox.textures[skybox_id] = gfx_rapi->new_texture(skyboxBasePath);
-    gfx_rapi->select_texture(0, skybox.textures[skybox_id]);
-
-    // Search for the different file extensions the skybox texture could have.
-    char skyboxPath[64];
-    for (int e = 0; e < MAX_SKYBOX_EXTENSIONS; e++) {
-        snprintf(skyboxPath, 64, "%s.rgba16.%s", skyboxBasePath, skybox_extensions[e]);
-        if (fs_is_file(skyboxPath)) {
-            load_texture(skyboxPath);
-            break;
-        }
-    }
-}
-
-void gfx_init_skybox() {
-    // Preload all the skyboxes so there's no stutter when loading the levels.
-    for (int i = 0; i < MAX_SKYBOX_COUNT; i++) {
-        gfx_preload_skybox(i);
-    }
-}
-
-void gfx_set_skybox(uint8_t skybox_id, float diffuse_color[3]) {
-    gfx_rapi->set_skybox(skybox.textures[skybox_id], diffuse_color);
-}
-
-#endif
-
 static void import_texture(int tile) {
     tile = tile % RDP_TILES;
     extern s32 dynos_tex_import(void **output, void *ptr, s32 tile, void *grapi, void **hashmap, void *pool, s32 *poolpos, s32 poolsize);
@@ -1295,7 +1237,6 @@ static void OPTIMIZE_O3 gfx_sp_tri1(uint8_t vtx1_idx, uint8_t vtx2_idx, uint8_t 
     cm->use_2cycle   = (rdp.other_mode_h & (3U << G_MDSFT_CYCLETYPE)) == G_CYC_2CYCLE;
     cm->use_fog      = (rdp.other_mode_l >> 30)                       == G_BL_CLR_FOG;
     cm->light_map    = (rsp.geometry_mode & G_LIGHT_MAP_EXT)          == G_LIGHT_MAP_EXT;
-	bool use_coverage = (rdp.other_mode_l & G_AC_COVERAGE) == G_AC_COVERAGE;
 
 #if defined (RAPI_GL) && defined(TRANSPARENCY_GL)
 	glDisable(GL_SAMPLE_ALPHA_TO_COVERAGE);
@@ -2178,10 +2119,6 @@ void gfx_init(struct GfxWindowManagerAPI *wapi, struct GfxRenderingAPI *rapi, co
     gfx_rapi->init();
 
     gfx_cc_precomp();
-
-#ifdef GFX_SEPARATE_SKYBOX
-    gfx_init_skybox();
-#endif
 
     gGfxInited = true;
 }

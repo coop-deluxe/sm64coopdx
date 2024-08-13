@@ -8,6 +8,17 @@
 
 #include "../platform.h"
 
+// FS_BASEDIR is usually defined in the build script
+#ifndef FS_BASEDIR
+# define FS_BASEDIR "res"
+#endif
+
+#ifndef FS_BASEPACK_PREFIX
+# define FS_BASEPACK_PREFIX "base"
+#endif
+
+#define FS_TEXTUREDIR "gfx"
+#define FS_SOUNDDIR "sound"
 #define SAVE_FILENAME "sm64_save_file.bin"
 
 extern char fs_writepath[];

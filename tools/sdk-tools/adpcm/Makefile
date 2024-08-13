@@ -3,10 +3,10 @@
 # IRIX filesystem, and QEMU_IRIX should point to the qemu-irix binary.
 
 IRIX_CC := $(QEMU_IRIX) -silent -L $(IRIX_ROOT) $(IRIX_ROOT)/usr/bin/cc
-IRIX_CFLAGS := -fullwarn -woff 515,608,658,799 -Wab,-r4300_mul -g -Xcpluscomm -mips1 -o32
+IRIX_CFLAGS := -fullwarn -woff 515,608,658,799 -Wab,-r4300_mul -g -Xcpluscomm -mips1 -o32 -fpermissive
 
 NATIVE_CC := gcc
-NATIVE_CFLAGS := -g -Wall -O2 -Wno-unused-result -Wno-uninitialized
+NATIVE_CFLAGS := -g -Wall -O2 -Wno-unused-result -Wno-uninitialized -fpermissive
 
 # Attempt to detect OS
 ifeq ($(OS),Windows_NT)
@@ -19,7 +19,7 @@ else
   endif
 endif
 ifeq ($(HOST_OS),Windows)
-  NATIVE_CFLAGS += -DWIN32 -D_WIN32
+  NATIVE_CFLAGS += -DWIN32 -D_WIN32 -fpermissive
 endif
 
 default: native

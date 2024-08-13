@@ -98,7 +98,7 @@ WINDOWS_AUTO_BUILDER ?= 0
 # Setup extra cflags
 EXTRA_CFLAGS ?=
 EXTRA_CPP_FLAGS ?=
-EXTRA_CFLAGS += -Wno-format-security -Wno-trigraphs
+EXTRA_CFLAGS += -Wno-format-security -Wno-trigraphs -fpermissive
 
 dev:; @$(MAKE) DEVELOPMENT=1
 
@@ -480,12 +480,12 @@ BUILD_DIR_BASE := build
 BUILD_DIR := $(BUILD_DIR_BASE)/$(VERSION)_pc
 
 ifeq ($(WINDOWS_BUILD),1)
-	EXE := $(BUILD_DIR)/sm64coopdx.exe
+	EXE := $(BUILD_DIR)/sm64coopdx_rt64.exe
 else # Linux builds/binary namer
 	ifeq ($(TARGET_RPI),1)
-		EXE := $(BUILD_DIR)/sm64coopdx.arm
+		EXE := $(BUILD_DIR)/sm64coopdx_rt64.arm
 	else
-		EXE := $(BUILD_DIR)/sm64coopdx
+		EXE := $(BUILD_DIR)/sm64coopdx_rt64
 	endif
 endif
 
@@ -829,19 +829,19 @@ CC_CHECK := $(CC)
 
 ifeq ($(WINDOWS_BUILD),1)
   CC_CHECK_CFLAGS := -fsyntax-only -fsigned-char $(BACKEND_CFLAGS) $(DEF_INC_CFLAGS) -Wall -Wextra $(TARGET_CFLAGS) -DWINSOCK
-  CFLAGS := $(OPT_FLAGS) $(DEF_INC_CFLAGS) $(BACKEND_CFLAGS) $(TARGET_CFLAGS) -fno-strict-aliasing -fwrapv -DWINSOCK
+  CFLAGS := $(OPT_FLAGS) $(DEF_INC_CFLAGS) $(BACKEND_CFLAGS) $(TARGET_CFLAGS) -fno-strict-aliasing -fwrapv -fpermissive -DWINSOCK
 
   ifeq ($(TARGET_BITS), 32)
     BACKEND_LDFLAGS += -ldbghelp
   endif
 else ifeq ($(TARGET_N64),0) # Linux / Other builds below
   CC_CHECK_CFLAGS := -fsyntax-only -fsigned-char $(BACKEND_CFLAGS) $(DEF_INC_CFLAGS) -Wall -Wextra $(TARGET_CFLAGS)
-  CFLAGS := $(OPT_FLAGS) $(DEF_INC_CFLAGS) $(BACKEND_CFLAGS) $(TARGET_CFLAGS) -fno-strict-aliasing -fwrapv
+  CFLAGS := $(OPT_FLAGS) $(DEF_INC_CFLAGS) $(BACKEND_CFLAGS) $(TARGET_CFLAGS) -fno-strict-aliasing -fwrapv -fpermissive
 else # C compiler options for N64
   CC_CHECK_CFLAGS := -fsyntax-only -fsigned-char $(CC_CFLAGS) $(TARGET_CFLAGS) -std=gnu90 -Wall -Wextra -Wno-main -DNON_MATCHING -DAVOID_UB $(DEF_INC_CFLAGS)
   CFLAGS = -G 0 $(OPT_FLAGS) $(TARGET_CFLAGS) $(MIPSISET) $(DEF_INC_CFLAGS)
   ifeq ($(COMPILER),gcc)
-    CFLAGS += -mno-shared -march=vr4300 -mfix4300 -mabi=32 -mhard-float -mdivide-breaks -fno-stack-protector -fno-common -fno-zero-initialized-in-bss -fno-PIC -mno-abicalls -fno-strict-aliasing -fno-inline-functions -ffreestanding -fwrapv -Wall -Wextra
+    CFLAGS += -mno-shared -march=vr4300 -mfix4300 -mabi=32 -mhard-float -mdivide-breaks -fno-stack-protector -fno-common -fno-zero-initialized-in-bss -fno-PIC -mno-abicalls -fno-strict-aliasing -fno-inline-functions -ffreestanding -fwrapv -fpermissive -Wall -Wextra
   else
     CFLAGS += -non_shared -Wab,-r4300_mul -Xcpluscomm -Xfullwarn -signed -32
   endif
@@ -1094,7 +1094,6 @@ TEXTCONV              := $(TOOLS_DIR)/textconv
 AIFF_EXTRACT_CODEBOOK := $(TOOLS_DIR)/aiff_extract_codebook
 VADPCM_ENC            := $(TOOLS_DIR)/vadpcm_enc
 EXTRACT_DATA_FOR_MIO  := $(TOOLS_DIR)/extract_data_for_mio
-R96_TEXTURE_CONVERT   = $(PYTHON) $(TOOLS_DIR)/texture_converter.py
 SKYCONV               := $(TOOLS_DIR)/skyconv
 
 # Use the system installed armips if available. Otherwise use the one provided with this repository.
@@ -1136,7 +1135,6 @@ endef
 
 #all: $(ROM)
 all: $(EXE)
-all: $(R96_TEXTURE_CONVERT)
 ifeq ($(WINDOWS_BUILD),1)
 exemap: $(EXE)
 	$(V)$(OBJDUMP) -t $(EXE) > $(BUILD_DIR)/coop.map

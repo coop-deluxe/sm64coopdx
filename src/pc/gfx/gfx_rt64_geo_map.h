@@ -197,8 +197,6 @@ inline void gfx_rt64_init_geo_layout_maps(std::unordered_map<void *, std::string
     FILL_GEO_MAPS(yellow_sphere_geo);
     FILL_GEO_MAPS(yoshi_geo);
     FILL_GEO_MAPS(yoshi_egg_geo);
-    FILL_GEO_MAPS(intro_geo_00035C);
-    FILL_GEO_MAPS(intro_geo_0003B8);
 #ifdef OMM_VERSION
     FILL_GEO_MAPS(omm_geo_metal_sparkle);
     FILL_GEO_MAPS(omm_geo_vanish_mist);

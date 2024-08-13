@@ -327,7 +327,7 @@ static const struct ConfigOption options[] = {
     {.name = "djui_theme_font",                .type = CONFIG_TYPE_UINT,   .uintValue   = &configDjuiThemeFont},
     {.name = "djui_scale",                     .type = CONFIG_TYPE_UINT,   .uintValue   = &configDjuiScale},
     // other
-    {.name = "rules_version",                  .type = CONFIG_TYPE_UINT,   .uintValue   = &configRulesVersion}
+    {.name = "rules_version",                  .type = CONFIG_TYPE_UINT,   .uintValue   = &configRulesVersion},
     // RT64
     #ifdef RAPI_RT64
     {.name = "rt64_target_fps",                .type = CONFIG_TYPE_UINT, .uintValue = &configRT64TargetFPS},

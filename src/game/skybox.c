@@ -375,7 +375,7 @@ Gfx *create_skybox_facing_camera(s8 player, s8 background, f32 fov,
     skyboxColor[0] = chosenColor[0] / 255.0f;
     skyboxColor[1] = chosenColor[1] / 255.0f;
     skyboxColor[2] = chosenColor[2] / 255.0f;
-    gfx_set_skybox(background, skyboxColor);
+    // [TODO: FIX THE ERROR AND RE-ADD THIS CODE LINE]: gfx_set_skybox(background, skyboxColor);
     return NULL;
 #endif
 }

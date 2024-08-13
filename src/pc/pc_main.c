@@ -106,6 +106,19 @@ void game_loop_one_iteration(void);
 void dispatch_audio_sptask(UNUSED struct SPTask *spTask) {}
 void set_vblank_handler(UNUSED s32 index, UNUSED struct VblankHandler *handler, UNUSED OSMesgQueue *queue, UNUSED OSMesg *msg) {}
 
+void send_display_list(struct SPTask *spTask) {
+    if (!gGameInited) { return; }
+    gfx_run((Gfx *)spTask->task.t.data_ptr);
+}
+
+#ifdef VERSION_EU
+#define SAMPLES_HIGH 656
+#define SAMPLES_LOW 640
+#else
+#define SAMPLES_HIGH 544
+#define SAMPLES_LOW 528
+#endif
+
 extern void patch_mtx_before(void);
 extern void patch_screen_transition_before(void);
 extern void patch_title_screen_before(void);
@@ -227,27 +240,6 @@ inline static void buffer_audio(void) {
     }
     audio_api->play((u8 *)audioBuffer, 2 * numAudioSamples * 4);
 }
-
-void send_display_list(struct SPTask *spTask) {
-    if (!inited) return;
-
-#ifndef RAPI_RT64
-    if (!config60FPS)
-#endif
-    {
-        patch_interpolations();
-    }
-
-    gfx_run((Gfx *)spTask->task.t.data_ptr);
-}
-
-#ifdef VERSION_EU
-#define SAMPLES_HIGH 656
-#define SAMPLES_LOW 640
-#else
-#define SAMPLES_HIGH 544
-#define SAMPLES_LOW 528
-#endif
 
 void produce_one_frame(void) {
     CTX_EXTENT(CTX_NETWORK, network_update);
