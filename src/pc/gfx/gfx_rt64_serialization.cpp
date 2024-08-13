@@ -8,7 +8,7 @@
 #include <fstream>
 #include <iomanip>
 #include <string>
-#include <windows.h> // Für GetModuleFileNameW und andere Windows-Funktionen
+#include <windows.h>
 
 #include "json/json.hpp"
 
@@ -18,7 +18,6 @@ extern "C" {
 #	include "../fs/fs.h"
 }
 
-// Neue Implementierung mit anderem Namen
 inline std::string getExecutablePath() {
     char buffer[MAX_PATH];
     GetModuleFileNameA(NULL, buffer, MAX_PATH);
@@ -26,12 +25,10 @@ inline std::string getExecutablePath() {
     return std::string(buffer).substr(0, pos + 1);
 }
 
-// Funktion, um den vollständigen Pfad zu erhalten
 inline std::string getFullPath(const std::string &filename) {
     return getExecutablePath() + filename;
 }
 
-// Ersetzen der Makros durch const std::string-Variablen
 const std::string LEVEL_LIGHTS_FILENAME = getFullPath("rt64/level_lights.json");
 const std::string GEO_LAYOUT_MODS_FILENAME = getFullPath("rt64/geo_layout_mods.json");
 const std::string TEXTURE_MODS_FILENAME = getFullPath("rt64/texture_mods.json");
