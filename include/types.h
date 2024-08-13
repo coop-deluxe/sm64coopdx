@@ -7,7 +7,6 @@
 #include <ultra64.h>
 #include "macros.h"
 #include "pc/gfx/gfx_rendering_api.h"
-#include "data/dynos.c.h"
 #include "pc/network/version.h"
 #include "pc/platform.h"
 

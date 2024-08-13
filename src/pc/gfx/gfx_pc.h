@@ -32,6 +32,8 @@ void gfx_end_frame(void);
 void gfx_shutdown(void);
 void gfx_pc_precomp_shader(uint32_t rgb1, uint32_t alpha1, uint32_t rgb2, uint32_t alpha2, uint32_t flags);
 
+void gfx_set_skybox(uint8_t skybox_id, float diffuse_color[3]);
+
 #ifdef GFX_SEPARATE_PROJECTIONS
 #include <stdbool.h>
 void gfx_set_camera_perspective(float fov_degrees, float near_dist, float far_dist, bool can_interpolate);

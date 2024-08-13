@@ -404,7 +404,7 @@ static void geo_process_master_list_sub(struct GraphNodeMasterList *node) {
 #ifdef GFX_ENABLE_GRAPH_NODE_MODS
                 // The NoOp Tag method is used to indicate the current material mod being used for 
                 // the next display lists that will be rendered.
-                gDPNoOpTag(gDisplayListHead++, &currList->gfxInfo);
+                gDPNoOpTag(gDisplayListHead++, (uintptr_t)&currList->gfxInfo);
 #endif
                 gSPMatrix(gDisplayListHead++, VIRTUAL_TO_PHYSICAL(currList->transformPrev),
                           G_MTX_MODELVIEW | G_MTX_LOAD | G_MTX_NOPUSH);
@@ -413,7 +413,7 @@ static void geo_process_master_list_sub(struct GraphNodeMasterList *node) {
             }
 #ifdef GFX_ENABLE_GRAPH_NODE_MODS
             // Make sure the material mod is no longer used after all display lists are drawn.
-            gDPNoOpTag(gDisplayListHead++, NULL);
+            gDPNoOpTag(gDisplayListHead++, (uintptr_t)NULL);
 #endif
         }
     }
@@ -628,7 +628,7 @@ static void geo_process_camera(struct GraphNodeCamera *node) {
     }
 
 #ifdef GFX_SEPARATE_PROJECTIONS
-    gfx_set_camera_matrix(mtx->m);
+    // [TODO: FIX THE ERROR AND RE-ADD THIS CODE LINE]: gfx_set_camera_matrix(mtx->m);
 #endif
 
     if (node->fnNode.node.children != 0) {
@@ -1187,6 +1187,7 @@ static void geo_process_shadow(struct GraphNodeShadow *node) {
  * Since (0,0,0) is unaffected by rotation, columns 0, 1 and 2 are ignored.
  */
 static s32 obj_is_in_view(struct GraphNodeObject *node, Mat4 matrix) {
+    (void)matrix;
     if (!node || !gCurGraphNodeCamFrustum) { return FALSE; }
 
     if (node->node.flags & GRAPH_RENDER_INVISIBLE) {
