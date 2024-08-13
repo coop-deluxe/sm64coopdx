@@ -7,6 +7,8 @@
 
 #include <fstream>
 #include <iomanip>
+#include <string>
+#include <windows.h> // Für GetModuleFileNameW und andere Windows-Funktionen
 
 #include "json/json.hpp"
 
@@ -16,9 +18,23 @@ extern "C" {
 #	include "../fs/fs.h"
 }
 
-#define LEVEL_LIGHTS_FILENAME			FS_BASEDIR "/rt64/level_lights.json"
-#define GEO_LAYOUT_MODS_FILENAME		FS_BASEDIR "/rt64/geo_layout_mods.json"
-#define TEXTURE_MODS_FILENAME			FS_BASEDIR "/rt64/texture_mods.json"
+// Neue Implementierung mit anderem Namen
+inline std::string getExecutablePath() {
+    char buffer[MAX_PATH];
+    GetModuleFileNameA(NULL, buffer, MAX_PATH);
+    std::string::size_type pos = std::string(buffer).find_last_of("\\/");
+    return std::string(buffer).substr(0, pos + 1);
+}
+
+// Funktion, um den vollständigen Pfad zu erhalten
+inline std::string getFullPath(const std::string &filename) {
+    return getExecutablePath() + filename;
+}
+
+// Ersetzen der Makros durch const std::string-Variablen
+const std::string LEVEL_LIGHTS_FILENAME = getFullPath("rt64/level_lights.json");
+const std::string GEO_LAYOUT_MODS_FILENAME = getFullPath("rt64/geo_layout_mods.json");
+const std::string TEXTURE_MODS_FILENAME = getFullPath("rt64/texture_mods.json");
 
 RT64_VECTOR3 gfx_rt64_load_vector3(const json &jobject, const std::string &key, RT64_VECTOR3 def = { 0.0f, 0.0f, 0.0f }) {
 	auto it = jobject.find(key);
@@ -201,7 +217,7 @@ void gfx_rt64_load_level_lights() {
 		}
 	}
 	else {
-		fprintf(stderr, "Unable to load " LEVEL_LIGHTS_FILENAME ". Using default lighting.\n");
+		fprintf(stderr, "Unable to load %s. Using default lighting.\n", LEVEL_LIGHTS_FILENAME.c_str());
 	}
 }
 
@@ -235,14 +251,14 @@ void gfx_rt64_save_level_lights() {
 		o << std::setw(4) << jroot << std::endl;
 
 		if (o.bad()) {
-			fprintf(stderr, "Error when saving " LEVEL_LIGHTS_FILENAME ".\n");
+			fprintf(stderr, "Error when saving %s.\n", LEVEL_LIGHTS_FILENAME.c_str());
 		}
 		else {
-			fprintf(stderr, "Saved " LEVEL_LIGHTS_FILENAME ".\n");
+			fprintf(stderr, "Saved %s.\n", LEVEL_LIGHTS_FILENAME.c_str());
 		}
 	}
 	else {
-		fprintf(stderr, "Unable to save " LEVEL_LIGHTS_FILENAME ".\n");
+		fprintf(stderr, "Unable to save %s.\n", LEVEL_LIGHTS_FILENAME.c_str());
 	}
 }
 
@@ -411,12 +427,12 @@ void gfx_rt64_load_geo_layout_mods() {
 				RT64.geoLayoutMods[geoLayout] = recordedMod;
 			}
 			else {
-				fprintf(stderr, "Error when loading " GEO_LAYOUT_MODS_FILENAME ". Geo layout %s is not recognized.\n", geoName.c_str());
+				fprintf(stderr, "Error when loading %s. Geo layout %s is not recognized.\n", GEO_LAYOUT_MODS_FILENAME.c_str(), geoName.c_str());
 			}
 		}
 	}
 	else {
-		fprintf(stderr, "Unable to load " GEO_LAYOUT_MODS_FILENAME ".\n");
+		fprintf(stderr, "Unable to load %s.\n", GEO_LAYOUT_MODS_FILENAME.c_str());
 	}
 }
 
@@ -464,14 +480,14 @@ void gfx_rt64_save_geo_layout_mods() {
 		o << std::setw(4) << jroot << std::endl;
 		
 		if (o.bad()) {
-			fprintf(stderr, "Error when saving " GEO_LAYOUT_MODS_FILENAME ".\n");
+			fprintf(stderr, "Error when saving %s.\n", GEO_LAYOUT_MODS_FILENAME.c_str());
 		}
 		else {
-			fprintf(stderr, "Saved " GEO_LAYOUT_MODS_FILENAME ".\n");
+			fprintf(stderr, "Saved %s.\n", GEO_LAYOUT_MODS_FILENAME.c_str());
 		}
 	}
 	else {
-		fprintf(stderr, "Unable to save " GEO_LAYOUT_MODS_FILENAME ".\n");
+		fprintf(stderr, "Unable to save %s.\n", GEO_LAYOUT_MODS_FILENAME.c_str());
 	}
 }
 
@@ -535,7 +551,7 @@ void gfx_rt64_load_texture_mods() {
 		}
 	}
 	else {
-		fprintf(stderr, "Unable to load " TEXTURE_MODS_FILENAME ".\n");
+		fprintf(stderr, "Unable to load %s.\n", TEXTURE_MODS_FILENAME.c_str());
 	}
 }
 
@@ -584,14 +600,14 @@ void gfx_rt64_save_texture_mods() {
 		o << std::setw(4) << jroot << std::endl;
 		
 		if (o.bad()) {
-			fprintf(stderr, "Error when saving " TEXTURE_MODS_FILENAME ".\n");
+			fprintf(stderr, "Error when saving %s.\n", TEXTURE_MODS_FILENAME.c_str());
 		}
 		else {
-			fprintf(stderr, "Saved " TEXTURE_MODS_FILENAME ".\n");
+			fprintf(stderr, "Saved %s.\n", TEXTURE_MODS_FILENAME.c_str());
 		}
 	}
 	else {
-		fprintf(stderr, "Unable to save " TEXTURE_MODS_FILENAME ".\n");
+		fprintf(stderr, "Unable to save %s.\n", TEXTURE_MODS_FILENAME.c_str());
 	}
 }
 
