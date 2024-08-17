@@ -19,7 +19,7 @@
 #ifdef REQUIRE_SEMICOLONS_AFTER_GBI_COMMANDS
 /* OoT style, semicolons required after using macros, cleaner code. If modding
 SM64, will have to fix a few places the codebase omits the semicolons. */
-#define _DW(macro) do {macro} while (0)
+#define _DW(macro) while(0) {macro}
 #else
 /* SM64 style, semicolons optional, uglier code, will produce tens of thousands
 of warnings if you use -Wpedantic. */
