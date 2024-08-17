@@ -5,6 +5,7 @@
  */
 
 #include <PR/mbi.h>
+#include "gbi_extension.h"
 
 #ifndef F3DEX3_H
 #define F3DEX3_H
@@ -1070,6 +1071,18 @@ typedef union {
     Vtx_t  v;   /** Use this one for colors  */
     Vtx_tn n;   /** Use this one for normals */
     long long int force_structure_alignment;
+    #ifdef F3DEX_GBI_2E
+    #define gSPCopyLightEXT(pkt, dst, src) \
+        gCopyMemEXT((pkt),G_COPYMEM,G_MV_LIGHT,(dst)*24+24,(src)*24+24,sizeof(Light))
+    #define gsSPCopyLightEXT(dst, src) \
+        gsCopyMemEXT(     G_COPYMEM,G_MV_LIGHT,(dst)*24+24,(src)*24+24,sizeof(Light))
+    #define gSPCopyLightsPlayerPart(pkt, part) \
+        gSPCopyLightEXT((pkt), 1, ((2 * ((part) + 1)) + 1)); \
+        gSPCopyLightEXT((pkt), 2, ((2 * ((part) + 1)) + 2));
+    #define gsSPCopyLightsPlayerPart(part) \
+        gsSPCopyLightEXT(1, ((2 * ((part) + 1)) + 1)), \
+        gsSPCopyLightEXT(2, ((2 * ((part) + 1)) + 2))
+    #endif
 } Vtx;
 
 typedef struct {
