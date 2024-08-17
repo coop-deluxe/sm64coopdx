@@ -344,7 +344,7 @@ else ifeq ($(GRUCODE), f3dzex) # Fast3DZEX (2.0J / Animal Forest - Dōbutsu no M
   DEFINES += F3DZEX_GBI_2=1 F3DEX_GBI_2=1 F3DEX_GBI_SHARED=1
 else ifeq ($(GRUCODE), f3dex3) # Fast3DEX3
   $(warning Fast3DEX3 is experimental. Try at your own risk.)
-  DEFINES +=  F3DEX_GBI_2E=1 F3DEX_GBI_SHARED=1
+  DEFINES +=   F3DEX_GBI_3=1 F3DEX_GBI_SHARED=1
 endif
 
 # Check for certain target types.

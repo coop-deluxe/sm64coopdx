@@ -14,6 +14,8 @@
 #define F3DEX_GBI_PL 1
 #define F3DEX_GBI_3  1
 
+#define REQUIRE_SEMICOLONS_AFTER_GBI_COMMANDS  0
+
 #ifdef REQUIRE_SEMICOLONS_AFTER_GBI_COMMANDS
 /* OoT style, semicolons required after using macros, cleaner code. If modding
 SM64, will have to fix a few places the codebase omits the semicolons. */
@@ -1071,7 +1073,7 @@ typedef union {
     Vtx_t  v;   /** Use this one for colors  */
     Vtx_tn n;   /** Use this one for normals */
     long long int force_structure_alignment;
-    #ifdef F3DEX_GBI_2E
+    #ifdef F3DEX_GBI_SHARED
     #define gSPCopyLightEXT(pkt, dst, src) \
         gCopyMemEXT((pkt),G_COPYMEM,G_MV_LIGHT,(dst)*24+24,(src)*24+24,sizeof(Light))
     #define gsSPCopyLightEXT(dst, src) \
