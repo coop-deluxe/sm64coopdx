@@ -287,7 +287,7 @@ void create_dl_ortho_matrix(void) {
     // Should produce G_RDPHALF_1 in Fast3D
     gSPPerspNormalize(gDisplayListHead++, 0xFFFF);
 
-    gSPMatrix(gDisplayListHead++, VIRTUAL_TO_PHYSICAL(matrix), G_MTX_PROJECTION | G_MTX_MUL | G_MTX_NOPUSH)
+    gSPMatrix(gDisplayListHead++, VIRTUAL_TO_PHYSICAL(matrix), G_MTX_PROJECTION | G_MTX_MUL | G_MTX_NOPUSH);
 }
 
 #if defined(VERSION_JP) || defined(VERSION_SH)
@@ -1316,7 +1316,7 @@ void change_and_flash_dialog_text_color_lines(s8 colorMode, s8 lineNum) {
         }
     }
     if (gOverrideDialogColor) {
-        gDPSetEnvColor(gDisplayListHead++, gDialogTextColorR, gDialogTextColorG, gDialogTextColorB, gDialogTextColorA)
+        gDPSetEnvColor(gDisplayListHead++, gDialogTextColorR, gDialogTextColorG, gDialogTextColorB, gDialogTextColorA);
     }
 }
 
