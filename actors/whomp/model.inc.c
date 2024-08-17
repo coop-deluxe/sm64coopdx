@@ -18,10 +18,6 @@ ROM_ASSET_LOAD_TEXTURE(whomp_seg6_texture_0601E360, "actors/whomp/whomp_hand.rgb
 ROM_ASSET_LOAD_TEXTURE(whomp_seg6_texture_0601EB60, "actors/whomp/whomp_surface.rgba16.inc.c", 0x001c4230, 80474, 0x0001eb60, 2048);
 
 // 0x0601F360
-static const Lights1 whomp_seg6_lights_0601F360 = gdSPDefLights1(
-    0x4c, 0x4c, 0x4c,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x0601F378
 ROM_ASSET_LOAD_VTX(whomp_seg6_vertex_0601F378, 0x001c4230, 80474, 0x0001f378, 256);
@@ -91,10 +87,6 @@ const Gfx whomp_seg6_dl_0601F5E0[] = {
 };
 
 // 0x0601F678
-static const Lights1 whomp_seg6_lights_0601F678 = gdSPDefLights1(
-    0x4c, 0x4c, 0x4c,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x0601F690
 ROM_ASSET_LOAD_VTX(whomp_seg6_vertex_0601F690, 0x001c4230, 80474, 0x0001f690, 240);
@@ -137,10 +129,6 @@ const Gfx whomp_seg6_dl_0601F880[] = {
 };
 
 // 0x0601F8E0
-static const Lights1 whomp_seg6_lights_0601F8E0 = gdSPDefLights1(
-    0x4c, 0x4c, 0x4c,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x0601F8F8
 ROM_ASSET_LOAD_VTX(whomp_seg6_vertex_0601F8F8, 0x001c4230, 80474, 0x0001f8f8, 240);
@@ -245,10 +233,6 @@ const Gfx whomp_seg6_dl_0601FCA8[] = {
 };
 
 // 0x0601FD18
-static const Lights1 whomp_seg6_lights_0601FD18 = gdSPDefLights1(
-    0x4c, 0x4c, 0x4c,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x0601FD30
 ROM_ASSET_LOAD_VTX(whomp_seg6_vertex_0601FD30, 0x001c4230, 80474, 0x0001fd30, 224);
@@ -287,10 +271,6 @@ const Gfx whomp_seg6_dl_0601FEA8[] = {
 };
 
 // 0x0601FF08
-static const Lights1 whomp_seg6_lights_0601FF08 = gdSPDefLights1(
-    0x4c, 0x4c, 0x4c,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x0601FF20
 ROM_ASSET_LOAD_VTX(whomp_seg6_vertex_0601FF20, 0x001c4230, 80474, 0x0001ff20, 128);

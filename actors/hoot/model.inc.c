@@ -2,76 +2,28 @@
 // Hoot
 
 // 0x05000900
-static const Lights1 hoot_seg5_lights_05000900 = gdSPDefLights1(
-    0x30, 0x1b, 0x0f,
-    0xc0, 0x6e, 0x3d, 0x28, 0x28, 0x28
-);
 
 // Unreferenced light group
-UNUSED static const Lights1 hoot_lights_unused1 = gdSPDefLights1(
-    0x37, 0x27, 0x0b,
-    0xdd, 0x9d, 0x2d, 0x28, 0x28, 0x28
-);
 
 // 0x05000930
-static const Lights1 hoot_seg5_lights_05000930 = gdSPDefLights1(
-    0x36, 0x26, 0x11,
-    0xdb, 0x99, 0x46, 0x28, 0x28, 0x28
-);
 
 // 0x05000948
-static const Lights1 hoot_seg5_lights_05000948 = gdSPDefLights1(
-    0x06, 0x06, 0x06,
-    0x19, 0x19, 0x19, 0x28, 0x28, 0x28
-);
 
 // 0x05000960
-static const Lights1 hoot_seg5_lights_05000960 = gdSPDefLights1(
-    0x1d, 0x0a, 0x05,
-    0x77, 0x2a, 0x16, 0x28, 0x28, 0x28
-);
 
 // 0x05000978
-static const Lights1 hoot_seg5_lights_05000978 = gdSPDefLights1(
-    0x06, 0x06, 0x06,
-    0x19, 0x19, 0x19, 0x28, 0x28, 0x28
-);
 
 // Unreferenced light group
-UNUSED static const Lights1 hoot_lights_unused2 = gdSPDefLights1(
-    0x39, 0x27, 0x0a,
-    0xe6, 0x9d, 0x29, 0x28, 0x28, 0x28
-);
 
 // Unreferenced light group
-UNUSED static const Lights1 hoot_lights_unused3 = gdSPDefLights1(
-    0x1d, 0x06, 0x3b,
-    0x75, 0x18, 0xef, 0x28, 0x28, 0x28
-);
 
 // Unreferenced light group
-UNUSED static const Lights1 hoot_lights_unused4 = gdSPDefLights1(
-    0x3a, 0x29, 0x09,
-    0xeb, 0xa6, 0x27, 0x28, 0x28, 0x28
-);
 
 // 0x050009D8
-static const Lights1 hoot_seg5_lights_050009D8 = gdSPDefLights1(
-    0x18, 0x07, 0x03,
-    0x63, 0x1e, 0x0f, 0x28, 0x28, 0x28
-);
 
 // 0x050009F0
-static const Lights1 hoot_seg5_lights_050009F0 = gdSPDefLights1(
-    0x3f, 0x3a, 0x09,
-    0xfe, 0xea, 0x26, 0x28, 0x28, 0x28
-);
 
 // 0x05000A08
-static const Lights1 hoot_seg5_lights_05000A08 = gdSPDefLights1(
-    0x13, 0x0d, 0x0b,
-    0x4d, 0x35, 0x2e, 0x28, 0x28, 0x28
-);
 
 // 0x05000A20
 ROM_ASSET_LOAD_TEXTURE(hoot_seg5_texture_05000A20, "actors/hoot/hoot_eyes.rgba16.inc.c", 0x0012a7e0, 32879, 0x00000a20, 2048);
@@ -183,10 +135,6 @@ const Gfx hoot_seg5_dl_05001DF0[] = {
 };
 
 // 0x05001E38
-static const Lights1 hoot_seg5_lights_05001E38 = gdSPDefLights1(
-    0x3f, 0x3f, 0x3f,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x05001E50
 ROM_ASSET_LOAD_TEXTURE(hoot_seg5_texture_05001E50, "actors/hoot/hoot_wing.rgba16.inc.c", 0x0012a7e0, 32879, 0x00001e50, 2048);
@@ -235,10 +183,6 @@ const Gfx hoot_seg5_dl_05002F10[] = {
 };
 
 // 0x05002F60
-static const Lights1 hoot_seg5_lights_05002F60 = gdSPDefLights1(
-    0x3f, 0x3f, 0x3f,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // //! The vertex macro which calls this has too large of a size.
 // 0x05002F78
@@ -281,10 +225,6 @@ const Gfx hoot_seg5_dl_05003038[] = {
 };
 
 // 0x05003088
-static const Lights1 hoot_seg5_lights_05003088 = gdSPDefLights1(
-    0x3f, 0x3f, 0x3f,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // //! The vertex macro which calls this has too large of a size.
 // 0x050030A0
@@ -327,10 +267,6 @@ const Gfx hoot_seg5_dl_05003160[] = {
 };
 
 // 0x050031B0
-static const Lights1 hoot_seg5_lights_050031B0 = gdSPDefLights1(
-    0x3f, 0x3f, 0x3f,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // //! The vertex macro which calls this has too large of a size.
 // 0x050031C8
@@ -373,10 +309,6 @@ const Gfx hoot_seg5_dl_05003288[] = {
 };
 
 // 0x050032D8
-static const Lights1 hoot_seg5_lights_050032D8 = gdSPDefLights1(
-    0x3f, 0x3f, 0x3f,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // //! The vertex macro which calls this has too large of a size.
 // 0x050032F0
@@ -419,10 +351,6 @@ const Gfx hoot_seg5_dl_050033B0[] = {
 };
 
 // 0x05003400
-static const Lights1 hoot_seg5_lights_05003400 = gdSPDefLights1(
-    0x3f, 0x3f, 0x3f,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // //! The vertex macro which calls this has too large of a size.
 // 0x05003418
@@ -465,10 +393,6 @@ const Gfx hoot_seg5_dl_050034D8[] = {
 };
 
 // 0x05003528
-static const Lights1 hoot_seg5_lights_05003528 = gdSPDefLights1(
-    0x3f, 0x3f, 0x3f,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // //! The vertex macro which calls this has too large of a size.
 // 0x05003540
@@ -511,10 +435,6 @@ const Gfx hoot_seg5_dl_05003600[] = {
 };
 
 // 0x05003650
-static const Lights1 hoot_seg5_lights_05003650 = gdSPDefLights1(
-    0x3f, 0x3f, 0x3f,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // //! The vertex macro which calls this has too large of a size.
 // 0x05003668

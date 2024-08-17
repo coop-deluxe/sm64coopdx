@@ -2,16 +2,8 @@
 // Clam Shell
 
 // Unreferenced light group
-UNUSED static const Lights1 clam_shell_lights_unused1 = gdSPDefLights1(
-    0x1b, 0x23, 0x30,
-    0x6d, 0x8f, 0xc3, 0x28, 0x28, 0x28
-);
 
 // Unreferenced light group
-UNUSED static const Lights1 clam_shell_lights_unused2 = gdSPDefLights1(
-    0x18, 0x28, 0x38,
-    0x60, 0xa2, 0xe2, 0x28, 0x28, 0x28
-);
 
 // 0x05000030
 ROM_ASSET_LOAD_TEXTURE(clam_shell_seg5_texture_05000030, "actors/clam_shell/clam_shell.rgba16.inc.c", 0x0013b910, 41727, 0x00000030, 2048);
@@ -20,10 +12,6 @@ ROM_ASSET_LOAD_TEXTURE(clam_shell_seg5_texture_05000030, "actors/clam_shell/clam
 ROM_ASSET_LOAD_TEXTURE(clam_shell_seg5_texture_05000830, "actors/clam_shell/clam_shell_mouth.rgba16.inc.c", 0x0013b910, 41727, 0x00000830, 2048);
 
 // 0x05001030
-static const Lights1 clam_shell_seg5_lights_05001030 = gdSPDefLights1(
-    0x66, 0x66, 0x66,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x05001048
 ROM_ASSET_LOAD_VTX(clam_shell_seg5_vertex_05001048, 0x0013b910, 41727, 0x00001048, 176);
@@ -81,10 +69,6 @@ const Gfx clam_shell_seg5_dl_050012B8[] = {
 };
 
 // 0x05001320
-static const Lights1 clam_shell_seg5_lights_05001320 = gdSPDefLights1(
-    0x66, 0x66, 0x66,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x05001338
 ROM_ASSET_LOAD_VTX(clam_shell_seg5_vertex_05001338, 0x0013b910, 41727, 0x00001338, 160);

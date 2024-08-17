@@ -2,10 +2,6 @@
 // Cannon Lid
 
 // 0x08004040
-static const Lights1 cannon_lid_seg8_lights_08004040 = gdSPDefLights1(
-    0x3f, 0x3f, 0x3f,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x08004058
 ROM_ASSET_LOAD_TEXTURE(cannon_lid_seg8_texture_08004058, "actors/cannon_lid/cannon_lid.rgba16.inc.c", 0x001f2200, 59076, 0x00004058, 2048);

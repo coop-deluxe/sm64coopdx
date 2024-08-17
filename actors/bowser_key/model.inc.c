@@ -2,10 +2,6 @@
 // Bowser Key
 
 // 0x030156E0, ambient color brown - light color orange
-static const Lights1 bowser_key_lights = gdSPDefLights1(
-    0x3f, 0x2c, 0x00,
-    0xff, 0xb2, 0x00, 0x28, 0x28, 0x28
-);
 
 ALIGNED8 const Texture bowser_key_left_texture[] = {
 #include "actors/bowser_key/bowser_key_left.rgba16.inc.c"

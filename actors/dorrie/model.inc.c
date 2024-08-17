@@ -11,10 +11,6 @@ ROM_ASSET_LOAD_TEXTURE(dorrie_seg6_texture_06009DA0, "actors/dorrie/dorrie_skin.
 ROM_ASSET_LOAD_TEXTURE(dorrie_seg6_texture_0600ADA0, "actors/dorrie/dorrie_tongue.rgba16.inc.c", 0x001c4230, 80474, 0x000223d0, 2048);
 
 // 0x0600B5A0
-static const Lights1 dorrie_seg6_lights_0600B5A0 = gdSPDefLights1(
-    0x7f, 0x7f, 0x7f,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x0600B5B8
 ROM_ASSET_LOAD_VTX(dorrie_seg6_vertex_0600B5B8, 0x001e7ee0, 40011, 0x0000b5b8, 96);
@@ -107,10 +103,6 @@ const Gfx dorrie_seg6_dl_0600BAF8[] = {
 };
 
 // 0x0600BBC0
-static const Lights1 dorrie_seg6_lights_0600BBC0 = gdSPDefLights1(
-    0x7f, 0x7f, 0x7f,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x0600BBD8
 ROM_ASSET_LOAD_VTX(dorrie_seg6_vertex_0600BBD8, 0x001e7ee0, 40011, 0x0000bbd8, 192);
@@ -194,10 +186,6 @@ const Gfx dorrie_seg6_dl_0600C030[] = {
 };
 
 // 0x0600C0F8
-static const Lights1 dorrie_seg6_lights_0600C0F8 = gdSPDefLights1(
-    0x7f, 0x7f, 0x7f,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x0600C110
 ROM_ASSET_LOAD_VTX(dorrie_seg6_vertex_0600C110, 0x001e7ee0, 40011, 0x0000c110, 256);
@@ -261,10 +249,6 @@ const Gfx dorrie_seg6_dl_0600C468[] = {
 };
 
 // 0x0600C510
-static const Lights1 dorrie_seg6_lights_0600C510 = gdSPDefLights1(
-    0x7f, 0x7f, 0x7f,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x0600C528
 ROM_ASSET_LOAD_VTX(dorrie_seg6_vertex_0600C528, 0x001e7ee0, 40011, 0x0000c528, 256);
@@ -332,10 +316,6 @@ const Gfx dorrie_seg6_dl_0600C8B8[] = {
 };
 
 // 0x0600C960
-static const Lights1 dorrie_seg6_lights_0600C960 = gdSPDefLights1(
-    0x7f, 0x7f, 0x7f,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x0600C978
 ROM_ASSET_LOAD_VTX(dorrie_seg6_vertex_0600C978, 0x001e7ee0, 40011, 0x0000c978, 240);
@@ -419,10 +399,6 @@ const Gfx dorrie_seg6_dl_0600CFD0[] = {
 };
 
 // 0x0600D078
-static const Lights1 dorrie_seg6_lights_0600D078 = gdSPDefLights1(
-    0x7f, 0x7f, 0x7f,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x0600D090
 ROM_ASSET_LOAD_VTX(dorrie_seg6_vertex_0600D090, 0x001e7ee0, 40011, 0x0000d090, 240);
@@ -488,10 +464,6 @@ const Gfx dorrie_seg6_dl_0600D440[] = {
 };
 
 // 0x0600D4E8
-static const Lights1 dorrie_seg6_lights_0600D4E8 = gdSPDefLights1(
-    0x7f, 0x7f, 0x7f,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x0600D500
 ROM_ASSET_LOAD_VTX(dorrie_seg6_vertex_0600D500, 0x001e7ee0, 40011, 0x0000d500, 240);
@@ -545,10 +517,6 @@ const Gfx dorrie_seg6_dl_0600D6D8[] = {
 };
 
 // 0x0600D780
-static const Lights1 dorrie_seg6_lights_0600D780 = gdSPDefLights1(
-    0x7f, 0x7f, 0x7f,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x0600D798
 ROM_ASSET_LOAD_VTX(dorrie_seg6_vertex_0600D798, 0x001e7ee0, 40011, 0x0000d798, 128);
@@ -596,10 +564,6 @@ const Gfx dorrie_seg6_dl_0600D8B0[] = {
 };
 
 // 0x0600D958
-static const Lights1 dorrie_seg6_lights_0600D958 = gdSPDefLights1(
-    0x7f, 0x7f, 0x7f,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x0600D970
 ROM_ASSET_LOAD_VTX(dorrie_seg6_vertex_0600D970, 0x001e7ee0, 40011, 0x0000d970, 128);
@@ -647,10 +611,6 @@ const Gfx dorrie_seg6_dl_0600DA88[] = {
 };
 
 // 0x0600DB30
-static const Lights1 dorrie_seg6_lights_0600DB30 = gdSPDefLights1(
-    0x7f, 0x7f, 0x7f,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x0600DB48
 ROM_ASSET_LOAD_VTX(dorrie_seg6_vertex_0600DB48, 0x001e7ee0, 40011, 0x0000db48, 128);
@@ -698,10 +658,6 @@ const Gfx dorrie_seg6_dl_0600DC60[] = {
 };
 
 // 0x0600DD08
-static const Lights1 dorrie_seg6_lights_0600DD08 = gdSPDefLights1(
-    0x7f, 0x7f, 0x7f,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x0600DD20
 ROM_ASSET_LOAD_VTX(dorrie_seg6_vertex_0600DD20, 0x001e7ee0, 40011, 0x0000dd20, 128);

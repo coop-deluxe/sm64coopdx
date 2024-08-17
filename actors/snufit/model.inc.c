@@ -14,16 +14,8 @@ ROM_ASSET_LOAD_TEXTURE(snufit_seg6_texture_060080E0, "actors/snufit/snufit_mask_
 ROM_ASSET_LOAD_TEXTURE(snufit_seg6_texture_060084E0, "actors/snufit/snufit_mouth.rgba16.inc.c", 0x001e7ee0, 40011, 0x000084e0, 2048);
 
 // 0x06008CE0
-static const Lights1 snufit_seg6_lights_06008CE0 = gdSPDefLights1(
-    0x47, 0x47, 0x47,
-    0xb2, 0xb2, 0xb2, 0x28, 0x28, 0x28
-);
 
 // 0x06008CF8
-static const Lights1 snufit_seg6_lights_06008CF8 = gdSPDefLights1(
-    0x66, 0x66, 0x66,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x06008D10
 ROM_ASSET_LOAD_VTX(snufit_seg6_vertex_06008D10, 0x001e7ee0, 40011, 0x00008d10, 224);
@@ -133,10 +125,6 @@ const Gfx snufit_seg6_dl_06009498[] = {
 };
 
 // 0x06009530
-static const Lights1 snufit_seg6_lights_06009530 = gdSPDefLights1(
-    0x66, 0x66, 0x66,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x06009548
 ROM_ASSET_LOAD_VTX(snufit_seg6_vertex_06009548, 0x001e7ee0, 40011, 0x00009548, 192);
@@ -193,10 +181,6 @@ const Gfx snufit_seg6_dl_06009748[] = {
 };
 
 // 0x060097C8
-static const Lights1 snufit_seg6_lights_060097C8 = gdSPDefLights1(
-    0x66, 0x66, 0x66,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x060097E0
 ROM_ASSET_LOAD_VTX(snufit_seg6_vertex_060097E0, 0x001e7ee0, 40011, 0x000097e0, 192);
@@ -266,10 +250,6 @@ const Gfx snufit_seg6_dl_06009A10[] = {
 };
 
 // 0x06009A80
-static const Lights1 snufit_seg6_lights_06009A80 = gdSPDefLights1(
-    0x65, 0x08, 0x08,
-    0xfe, 0x14, 0x14, 0x28, 0x28, 0x28
-);
 
 // 0x06009A98
 ROM_ASSET_LOAD_VTX(snufit_seg6_vertex_06009A98, 0x001e7ee0, 40011, 0x00009a98, 128);

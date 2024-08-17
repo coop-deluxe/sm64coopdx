@@ -2,22 +2,10 @@
 // Chain Chomp
 
 // 0x06021388
-UNUSED static const Lights1 chain_chomp_lights_unused1 = gdSPDefLights1(
-    0x3f, 0x3f, 0x3f,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x060213A0
-UNUSED static const Lights1 chain_chomp_lights_unused2 = gdSPDefLights1(
-    0x03, 0x03, 0x05,
-    0x0d, 0x0f, 0x16, 0x28, 0x28, 0x28
-);
 
 // 0x060213B8
-UNUSED static const Lights1 chain_chomp_lights_unused3 = gdSPDefLights1(
-    0x25, 0x00, 0x00,
-    0x96, 0x00, 0x00, 0x28, 0x28, 0x28
-);
 
 // 0x060213D0
 ROM_ASSET_LOAD_TEXTURE(chain_chomp_seg6_texture_060213D0, "actors/chain_chomp/chain_chomp_bright_shine.rgba16.inc.c", 0x001c4230, 80474, 0x000213d0, 2048);
@@ -213,10 +201,6 @@ const Gfx chain_chomp_seg6_dl_06024940[] = {
 };
 
 // 0x060249D0
-static const Lights1 chain_chomp_seg6_lights_060249D0 = gdSPDefLights1(
-    0x66, 0x66, 0x66,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x060249E8
 ROM_ASSET_LOAD_VTX(chain_chomp_seg6_vertex_060249E8, 0x001c4230, 80474, 0x000249e8, 192);

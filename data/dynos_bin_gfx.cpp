@@ -320,9 +320,9 @@ s64 DynOS_Gfx_ParseGfxConstants(const String& _Arg, bool* found) {
     gfx_constant(TEX_EDGE);
 
     // MW constants
-    gfx_constant(G_MW_MATRIX);
+    gfx_constant(G_MW_FX);
     gfx_constant(G_MW_NUMLIGHT);
-    gfx_constant(G_MW_CLIP);
+    //gfx_constant(G_MW_CLIP);
     gfx_constant(G_MW_SEGMENT);
     gfx_constant(G_MW_FOG);
     gfx_constant(G_MW_LIGHTCOL);

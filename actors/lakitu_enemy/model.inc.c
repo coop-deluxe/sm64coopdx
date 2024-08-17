@@ -2,22 +2,10 @@
 // Lakitu Enemy
 
 // Unreferenced light group
-UNUSED static const Lights1 lakitu_enemy_lights_unused1 = gdSPDefLights1(
-    0x33, 0x1f, 0x0c,
-    0xcc, 0x7f, 0x33, 0x28, 0x28, 0x28
-);
 
 // 0x0500ECB0
-static const Lights1 lakitu_enemy_seg5_lights_0500ECB0 = gdSPDefLights1(
-    0x29, 0x13, 0x06,
-    0xa5, 0x4f, 0x1b, 0x28, 0x28, 0x28
-);
 
 // Unreferenced light group
-UNUSED static const Lights1 lakitu_enemy_lights_unused2 = gdSPDefLights1(
-    0x0d, 0x2c, 0x0b,
-    0x34, 0xb2, 0x2c, 0x28, 0x28, 0x28
-);
 
 // Unreferenced texture
 // 0x0500ECE0
@@ -36,16 +24,8 @@ ROM_ASSET_LOAD_TEXTURE(lakitu_enemy_seg5_texture_050114E0, "actors/lakitu_enemy/
 ROM_ASSET_LOAD_TEXTURE(lakitu_enemy_seg5_texture_05011CE0, "actors/lakitu_enemy/lakitu_enemy_frown.rgba16.inc.c", 0x00180bb0, 29674, 0x00011ce0, 2048);
 
 // 0x050124E0
-static const Lights1 lakitu_enemy_seg5_lights_050124E0 = gdSPDefLights1(
-    0x7f, 0x7f, 0x7f,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x050124F8
-static const Lights1 lakitu_enemy_seg5_lights_050124F8 = gdSPDefLights1(
-    0x79, 0x55, 0x00,
-    0xf2, 0xab, 0x00, 0x28, 0x28, 0x28
-);
 
 // 0x05012510
 ROM_ASSET_LOAD_VTX(lakitu_enemy_seg5_vertex_05012510, 0x00180bb0, 29674, 0x00012510, 256);
@@ -115,10 +95,6 @@ const Gfx lakitu_enemy_seg5_dl_05012910[] = {
 };
 
 // 0x05012978
-static const Lights1 lakitu_enemy_seg5_lights_05012978 = gdSPDefLights1(
-    0x7f, 0x7f, 0x7f,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x05012990
 ROM_ASSET_LOAD_VTX(lakitu_enemy_seg5_vertex_05012990, 0x00180bb0, 29674, 0x00012990, 256);
@@ -206,10 +182,6 @@ const Gfx lakitu_enemy_seg5_dl_05013160[] = {
 };
 
 // 0x050131C0
-static const Lights1 lakitu_enemy_seg5_lights_050131C0 = gdSPDefLights1(
-    0x7f, 0x7f, 0x7f,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x050131D8
 ROM_ASSET_LOAD_VTX(lakitu_enemy_seg5_vertex_050131D8, 0x00180bb0, 29674, 0x000131d8, 192);
@@ -266,10 +238,6 @@ const Gfx lakitu_enemy_seg5_dl_05013378[] = {
 };
 
 // 0x050133A0
-static const Lights1 lakitu_enemy_seg5_lights_050133A0 = gdSPDefLights1(
-    0x79, 0x55, 0x00,
-    0xf2, 0xab, 0x00, 0x28, 0x28, 0x28
-);
 
 // 0x050133B8
 ROM_ASSET_LOAD_VTX(lakitu_enemy_seg5_vertex_050133B8, 0x00180bb0, 29674, 0x000133b8, 240);
@@ -296,10 +264,6 @@ const Gfx lakitu_enemy_seg5_dl_050134A8[] = {
 };
 
 // 0x05013598
-static const Lights1 lakitu_enemy_seg5_lights_05013598 = gdSPDefLights1(
-    0x79, 0x55, 0x00,
-    0xf2, 0xab, 0x00, 0x28, 0x28, 0x28
-);
 
 // 0x050135B0
 ROM_ASSET_LOAD_VTX(lakitu_enemy_seg5_vertex_050135B0, 0x00180bb0, 29674, 0x000135b0, 240);

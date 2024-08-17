@@ -25,22 +25,10 @@ ROM_ASSET_LOAD_TEXTURE(bubba_seg5_texture_05001C08, "actors/bubba/bubba_fins.rgb
 ROM_ASSET_LOAD_TEXTURE(bubba_seg5_texture_05002408, "actors/bubba/bubba_scales.rgba16.inc.c", 0x00180bb0, 29674, 0x00002408, 8192);
 
 // 0x05004408
-static const Lights1 bubba_seg5_lights_05004408 = gdSPDefLights1(
-    0x48, 0x31, 0x2a,
-    0xf1, 0xa6, 0x8c, 0x28, 0x28, 0x28
-);
 
 // 0x05004420
-static const Lights1 bubba_seg5_lights_05004420 = gdSPDefLights1(
-    0x4c, 0x4c, 0x4c,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x05004438
-static const Lights1 bubba_seg5_lights_05004438 = gdSPDefLights1(
-    0x10, 0x07, 0x08,
-    0x36, 0x1a, 0x1c, 0x28, 0x28, 0x28
-);
 
 // 0x05004450
 ROM_ASSET_LOAD_VTX(bubba_seg5_vertex_05004450, 0x00180bb0, 29674, 0x00004450, 112);
@@ -203,22 +191,10 @@ const Gfx bubba_seg5_dl_05004E80[] = {
 };
 
 // 0x05004F30
-static const Lights1 bubba_seg5_lights_05004F30 = gdSPDefLights1(
-    0x48, 0x31, 0x2a,
-    0xf1, 0xa6, 0x8c, 0x28, 0x28, 0x28
-);
 
 // 0x05004F48
-static const Lights1 bubba_seg5_lights_05004F50 = gdSPDefLights1(
-    0x4c, 0x4c, 0x4c,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x05004F60
-static const Lights1 bubba_seg5_lights_05004F60 = gdSPDefLights1(
-    0x0a, 0x07, 0x08,
-    0x22, 0x1a, 0x1c, 0x28, 0x28, 0x28
-);
 
 // 0x05004F78
 ROM_ASSET_LOAD_VTX(bubba_seg5_vertex_05004F78, 0x00180bb0, 29674, 0x00004f78, 112);

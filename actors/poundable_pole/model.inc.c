@@ -2,10 +2,6 @@
 // Poundable Pole
 
 // 0x06001038
-static const Lights1 poundable_pole_seg6_lights_06001038 = gdSPDefLights1(
-    0x7f, 0x7f, 0x7f,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x06001050
 ROM_ASSET_LOAD_TEXTURE(poundable_pole_seg6_texture_06001050, "actors/poundable_pole/poundable_pole_top.rgba16.inc.c", 0x001c4230, 80474, 0x00001050, 2048);

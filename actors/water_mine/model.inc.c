@@ -2,10 +2,6 @@
 // Water Mine (unused)
 
 // 0x0600A4E0
-static const Lights1 water_mine_seg6_lights_0600A4E0 = gdSPDefLights1(
-    0x3f, 0x3f, 0x3f,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x0600A4F8
 ROM_ASSET_LOAD_TEXTURE(water_mine_seg6_texture_0600A4F8, "actors/water_mine/water_mine_left_side_unused.rgba16.inc.c", 0x00188440, 199722, 0x00057c10, 4096);

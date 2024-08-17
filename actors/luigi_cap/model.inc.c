@@ -1,10 +1,6 @@
 #include "pc/rom_assets.h"
 // Mario Cap (Normal Cap, Metal, Winged, etc)
 
-static const Lights1 luigi_cap_black_lights_group = gdSPDefLights1(
-    0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x28, 0x28, 0x28
-);
 
 #include "actors/mario/mario_externs.h"
 #include "actors/luigi/luigi_externs.h"

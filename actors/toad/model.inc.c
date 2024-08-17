@@ -2,10 +2,6 @@
 // Toad
 
 // 0x06005908
-static const Lights1 toad_seg6_lights_06005908 = gdSPDefLights1(
-    0x7f, 0x7f, 0x7f,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x06005920
 ROM_ASSET_LOAD_TEXTURE(toad_seg6_texture_06005920, "actors/toad/toad_face.rgba16.inc.c", 0x001d8310, 51422, 0x00005920, 2048);
@@ -178,10 +174,6 @@ const Gfx toad_seg6_us_dl_06007788[] = {
 #endif
 
 // 0x06007788
-static const Lights1 toad_seg6_lights_06007788 = gdSPDefLights1(
-    0x21, 0x13, 0x5a,
-    0x42, 0x27, 0xb5, 0x28, 0x28, 0x28
-);
 
 // 0x060077A0
 ROM_ASSET_LOAD_VTX(toad_seg6_vertex_060077A0, 0x001d8310, 51422, 0x00007820, 256);
@@ -233,16 +225,8 @@ const Gfx toad_seg6_us_dl_06007B00[] = {
 #endif
 
 // 0x06007A80
-static const Lights1 toad_seg6_lights_06007A80 = gdSPDefLights1(
-    0x7f, 0x7f, 0x7f,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x06007A98
-static const Lights1 toad_seg6_lights_06007A98 = gdSPDefLights1(
-    0x7f, 0x6a, 0x50,
-    0xfe, 0xd5, 0xa1, 0x28, 0x28, 0x28
-);
 
 // 0x06007AB0
 ROM_ASSET_LOAD_VTX(toad_seg6_vertex_06007AB0, 0x001d8310, 51422, 0x00007b58, 224);
@@ -298,10 +282,6 @@ const Gfx toad_seg6_dl_06007EB0[] = {
 };
 
 // 0x06007ED8
-static const Lights1 toad_seg6_lights_06007ED8 = gdSPDefLights1(
-    0x7f, 0x6a, 0x50,
-    0xfe, 0xd5, 0xa1, 0x28, 0x28, 0x28
-);
 
 // 0x06007EF0
 ROM_ASSET_LOAD_VTX(toad_seg6_vertex_06007EF0, 0x001d8310, 51422, 0x00007f98, 256);
@@ -345,10 +325,6 @@ const Gfx toad_seg6_dl_060081F8[] = {
 };
 
 // 0x06008220
-static const Lights1 toad_seg6_lights_06008220 = gdSPDefLights1(
-    0x7f, 0x6a, 0x50,
-    0xfe, 0xd5, 0xa1, 0x28, 0x28, 0x28
-);
 
 // 0x06008238
 ROM_ASSET_LOAD_VTX(toad_seg6_vertex_06008238, 0x001d8310, 51422, 0x000082e0, 256);
@@ -411,10 +387,6 @@ const Gfx toad_seg6_us_dl_06008608[] = {
 #endif
 
 // 0x06008560
-static const Lights1 toad_seg6_lights_06008560 = gdSPDefLights1(
-    0x34, 0x20, 0x0d,
-    0x68, 0x40, 0x1b, 0x28, 0x28, 0x28
-);
 
 // 0x06008578
 ROM_ASSET_LOAD_VTX(toad_seg6_vertex_06008578, 0x001d8310, 51422, 0x00008668, 256);
@@ -460,10 +432,6 @@ const Gfx toad_seg6_dl_06008890[] = {
 };
 
 // 0x060088B8
-static const Lights1 toad_seg6_lights_060088B8 = gdSPDefLights1(
-    0x34, 0x20, 0x0d,
-    0x68, 0x40, 0x1b, 0x28, 0x28, 0x28
-);
 
 // 0x060088D0
 ROM_ASSET_LOAD_VTX(toad_seg6_vertex_060088D0, 0x001d8310, 51422, 0x000089c0, 256);

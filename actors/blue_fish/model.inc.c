@@ -2,10 +2,6 @@
 // Blue Fish
 
 // 0x0301B5C8
-static const Lights1 blue_fish_seg3_lights_0301B5C8 = gdSPDefLights1(
-    0x3f, 0x3f, 0x3f,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x0301B5E0
 ROM_ASSET_LOAD_TEXTURE(blue_fish_seg3_texture_0301B5E0, "actors/blue_fish/blue_fish.rgba16.inc.c", 0x00201410, 96653, 0x0001b5e0, 2048);

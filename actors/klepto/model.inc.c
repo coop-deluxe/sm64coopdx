@@ -22,16 +22,8 @@ ROM_ASSET_LOAD_TEXTURE(klepto_seg5_texture_05002008, "actors/klepto/klepto_wing.
 ROM_ASSET_LOAD_TEXTURE(klepto_seg5_texture_05003008, "actors/klepto/klepto_wing_flap.rgba16.inc.c", 0x00145e90, 48337, 0x00003008, 2048);
 
 // 0x05003808
-static const Lights1 klepto_seg5_lights_05003808 = gdSPDefLights1(
-    0x3f, 0x3f, 0x3f,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x05003820
-static const Lights1 klepto_seg5_lights_05003820 = gdSPDefLights1(
-    0x3f, 0x1d, 0x08,
-    0xff, 0x75, 0x21, 0x28, 0x28, 0x28
-);
 
 // 0x05003838
 ROM_ASSET_LOAD_VTX(klepto_seg5_vertex_05003838, 0x00145e90, 48337, 0x00003838, 96);
@@ -111,10 +103,6 @@ const Gfx klepto_seg5_dl_05003BD0[] = {
 };
 
 // 0x05003C58
-static const Lights1 klepto_seg5_lights_05003C58 = gdSPDefLights1(
-    0x3f, 0x1d, 0x08,
-    0xff, 0x75, 0x21, 0x28, 0x28, 0x28
-);
 
 // 0x05003C70
 ROM_ASSET_LOAD_VTX(klepto_seg5_vertex_05003C70, 0x00145e90, 48337, 0x00003c70, 144);
@@ -144,10 +132,6 @@ const Gfx klepto_seg5_dl_05003D80[] = {
 };
 
 // 0x05003DB0
-static const Lights1 klepto_seg5_lights_05003DB0 = gdSPDefLights1(
-    0x3f, 0x3f, 0x3f,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x05003DC8
 ROM_ASSET_LOAD_VTX(klepto_seg5_vertex_05003DC8, 0x00145e90, 48337, 0x00003dc8, 160);
@@ -188,10 +172,6 @@ const Gfx klepto_seg5_dl_05003F20[] = {
 };
 
 // 0x05003F80
-static const Lights1 klepto_seg5_lights_05003F80 = gdSPDefLights1(
-    0x07, 0x01, 0x01,
-    0x1e, 0x05, 0x04, 0x28, 0x28, 0x28
-);
 
 // 0x05003F98
 ROM_ASSET_LOAD_VTX(klepto_seg5_vertex_05003F98, 0x00145e90, 48337, 0x00003f98, 192);
@@ -225,10 +205,6 @@ const Gfx klepto_seg5_dl_05004118[] = {
 };
 
 // 0x05004148
-static const Lights1 klepto_seg5_lights_05004148 = gdSPDefLights1(
-    0x3f, 0x3f, 0x3f,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x05004160
 ROM_ASSET_LOAD_VTX(klepto_seg5_vertex_05004160, 0x00145e90, 48337, 0x00004160, 64);
@@ -264,10 +240,6 @@ const Gfx klepto_seg5_dl_050041E8[] = {
 };
 
 // 0x05004258
-static const Lights1 klepto_seg5_lights_05004258 = gdSPDefLights1(
-    0x3f, 0x1d, 0x08,
-    0xff, 0x75, 0x21, 0x28, 0x28, 0x28
-);
 
 // 0x05004270
 ROM_ASSET_LOAD_VTX(klepto_seg5_vertex_05004270, 0x00145e90, 48337, 0x00004270, 96);
@@ -295,10 +267,6 @@ const Gfx klepto_seg5_dl_05004330[] = {
 };
 
 // 0x05004360
-static const Lights1 klepto_seg5_lights_05004360 = gdSPDefLights1(
-    0x3f, 0x1d, 0x08,
-    0xff, 0x75, 0x21, 0x28, 0x28, 0x28
-);
 
 // 0x05004378
 ROM_ASSET_LOAD_VTX(klepto_seg5_vertex_05004378, 0x00145e90, 48337, 0x00004270, 96);
@@ -326,16 +294,8 @@ const Gfx klepto_seg5_dl_05004438[] = {
 };
 
 // 0x05004468
-static const Lights1 klepto_seg5_lights_05004468 = gdSPDefLights1(
-    0x02, 0x00, 0x00,
-    0x08, 0x00, 0x00, 0x28, 0x28, 0x28
-);
 
 // 0x05004480
-static const Lights1 klepto_seg5_lights_05004480 = gdSPDefLights1(
-    0x3f, 0x1d, 0x08,
-    0xff, 0x75, 0x21, 0x28, 0x28, 0x28
-);
 
 // 0x05004498
 ROM_ASSET_LOAD_VTX(klepto_seg5_vertex_05004498, 0x00145e90, 48337, 0x00004498, 192);
@@ -385,16 +345,8 @@ const Gfx klepto_seg5_dl_050047C8[] = {
 };
 
 // 0x050047F8
-static const Lights1 klepto_seg5_lights_050047F8 = gdSPDefLights1(
-    0x02, 0x00, 0x00,
-    0x08, 0x00, 0x00, 0x28, 0x28, 0x28
-);
 
 // 0x05004810
-static const Lights1 klepto_seg5_lights_05004810 = gdSPDefLights1(
-    0x3f, 0x1d, 0x08,
-    0xff, 0x75, 0x21, 0x28, 0x28, 0x28
-);
 
 // 0x05004828
 ROM_ASSET_LOAD_VTX(klepto_seg5_vertex_05004828, 0x00145e90, 48337, 0x00004498, 192);
@@ -444,10 +396,6 @@ const Gfx klepto_seg5_dl_05004B58[] = {
 };
 
 // 0x05004B88
-static const Lights1 klepto_seg5_lights_05004B88 = gdSPDefLights1(
-    0x3f, 0x3f, 0x3f,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x05004BA0
 ROM_ASSET_LOAD_VTX(klepto_seg5_vertex_05004BA0, 0x00145e90, 48337, 0x00004ba0, 64);
@@ -483,10 +431,6 @@ const Gfx klepto_seg5_dl_05004C28[] = {
 };
 
 // 0x05004C98
-static const Lights1 klepto_seg5_lights_05004C98 = gdSPDefLights1(
-    0x3f, 0x3f, 0x3f,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x05004CB0
 ROM_ASSET_LOAD_VTX(klepto_seg5_vertex_05004CB0, 0x00145e90, 48337, 0x00004cb0, 64);
@@ -522,10 +466,6 @@ const Gfx klepto_seg5_dl_05004D38[] = {
 };
 
 // 0x05004DA8
-static const Lights1 klepto_seg5_lights_05004DA8 = gdSPDefLights1(
-    0x3f, 0x3f, 0x3f,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x05004DC0
 ROM_ASSET_LOAD_VTX(klepto_seg5_vertex_05004DC0, 0x00145e90, 48337, 0x00004dc0, 64);
@@ -561,10 +501,6 @@ const Gfx klepto_seg5_dl_05004E48[] = {
 };
 
 // 0x05004EB8
-static const Lights1 klepto_seg5_lights_05004EB8 = gdSPDefLights1(
-    0x3f, 0x3f, 0x3f,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x05004ED0
 ROM_ASSET_LOAD_VTX(klepto_seg5_vertex_05004ED0, 0x00145e90, 48337, 0x00004ed0, 64);
@@ -600,10 +536,6 @@ const Gfx klepto_seg5_dl_05004F58[] = {
 };
 
 // 0x05004FC8
-static const Lights1 klepto_seg5_lights_05004FC8 = gdSPDefLights1(
-    0x3f, 0x3f, 0x3f,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x05004FE0
 ROM_ASSET_LOAD_VTX(klepto_seg5_vertex_05004FE0, 0x00145e90, 48337, 0x00004fe0, 64);
@@ -639,10 +571,6 @@ const Gfx klepto_seg5_dl_05005068[] = {
 };
 
 // 0x050050D8
-static const Lights1 klepto_seg5_lights_050050D8 = gdSPDefLights1(
-    0x3f, 0x3f, 0x3f,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x050050F0
 ROM_ASSET_LOAD_VTX(klepto_seg5_vertex_050050F0, 0x00145e90, 48337, 0x000050f0, 64);

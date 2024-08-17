@@ -1,7 +1,3 @@
-static const Lights1 toad_cap_black_lights_group = gdSPDefLights1(
-    0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x28, 0x28, 0x28
-);
 
 #include "actors/mario/mario_externs.h"
 #include "actors/toad_player/toad_player_externs.h"

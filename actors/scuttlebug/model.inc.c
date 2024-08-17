@@ -2,16 +2,8 @@
 // Scuttlebug
 
 // Unreferenced light group
-UNUSED static const Lights1 scuttlebug_lights_unused1 = gdSPDefLights1(
-    0x2c, 0x00, 0x00,
-    0xb2, 0x00, 0x00, 0x28, 0x28, 0x28
-);
 
 // Unreferenced light group
-UNUSED static const Lights1 scuttlebug_lights_unused2 = gdSPDefLights1(
-    0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x28, 0x28, 0x28
-);
 
 // 0x06010108
 ROM_ASSET_LOAD_TEXTURE(scuttlebug_seg6_texture_06010108, "actors/scuttlebug/scuttlebug_eye.rgba16.inc.c", 0x001e7ee0, 40011, 0x00010108, 2048);
@@ -198,10 +190,6 @@ const Gfx scuttlebug_seg6_dl_06013DA0[] = {
 };
 
 // 0x06013E10
-static const Lights1 scuttlebug_seg6_lights_06013E10 = gdSPDefLights1(
-    0x33, 0x22, 0x01,
-    0xcf, 0x89, 0x06, 0x28, 0x28, 0x28
-);
 
 // 0x06013E28
 ROM_ASSET_LOAD_VTX(scuttlebug_seg6_vertex_06013E28, 0x001e7ee0, 40011, 0x00013e28, 256);
@@ -305,10 +293,6 @@ const Gfx scuttlebug_seg6_dl_06014270[] = {
 };
 
 // 0x060142E0
-static const Lights1 scuttlebug_seg6_lights_060142E0 = gdSPDefLights1(
-    0x26, 0x05, 0x05,
-    0x99, 0x16, 0x16, 0x28, 0x28, 0x28
-);
 
 // 0x060142F8
 ROM_ASSET_LOAD_VTX(scuttlebug_seg6_vertex_060142F8, 0x001e7ee0, 40011, 0x000142f8, 64);

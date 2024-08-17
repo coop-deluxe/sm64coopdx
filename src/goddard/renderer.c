@@ -1811,21 +1811,21 @@ void gd_dl_lookat(struct ObjCamera *cam, f32 arg1, f32 arg2, f32 arg3, f32 arg4,
     lookat->l[1].l.dir[1] = LOOKAT_PACK(cam->unkE8[1][1]);
     lookat->l[1].l.dir[2] = LOOKAT_PACK(cam->unkE8[2][1]);
 
-    lookat->l[0].l.col[0] = 0;
-    lookat->l[0].l.col[1] = 0;
-    lookat->l[0].l.col[2] = 0;
-    lookat->l[0].l.pad1 = 0;
-    lookat->l[0].l.colc[0] = 0;
-    lookat->l[0].l.colc[1] = 0;
-    lookat->l[0].l.colc[2] = 0;
+    // lookat->l[0].l.col[0] = 0;
+    // lookat->l[0].l.col[1] = 0;
+    // lookat->l[0].l.col[2] = 0;
+    lookat->l[0].l.type = 0;
+    // lookat->l[0].l.colc[0] = 0;
+    // lookat->l[0].l.colc[1] = 0;
+    // lookat->l[0].l.colc[2] = 0;
     lookat->l[0].l.pad2 = 0;
-    lookat->l[1].l.col[0] = 0;
-    lookat->l[1].l.col[1] = 0x80;
-    lookat->l[1].l.col[2] = 0;
-    lookat->l[1].l.pad1 = 0;
-    lookat->l[1].l.colc[0] = 0;
-    lookat->l[1].l.colc[1] = 0x80;
-    lookat->l[1].l.colc[2] = 0;
+    // lookat->l[1].l.col[0] = 0;
+    // lookat->l[1].l.col[1] = 0x80;
+    // lookat->l[1].l.col[2] = 0;
+    lookat->l[1].l.type = 0;
+    // lookat->l[1].l.colc[0] = 0;
+    // lookat->l[1].l.colc[1] = 0x80;
+    // lookat->l[1].l.colc[2] = 0;
     lookat->l[1].l.pad2 = 0;
 
     lookat = &D_801BE790[0];
@@ -1837,21 +1837,21 @@ void gd_dl_lookat(struct ObjCamera *cam, f32 arg1, f32 arg2, f32 arg3, f32 arg4,
     lookat->l[1].l.dir[1] = 1;
     lookat->l[1].l.dir[2] = 0;
 
-    lookat->l[0].l.col[0] = 0;
-    lookat->l[0].l.col[1] = 0;
-    lookat->l[0].l.col[2] = 0;
-    lookat->l[0].l.pad1 = 0;
-    lookat->l[0].l.colc[0] = 0;
-    lookat->l[0].l.colc[1] = 0;
-    lookat->l[0].l.colc[2] = 0;
+    // lookat->l[0].l.col[0] = 0;
+    // lookat->l[0].l.col[1] = 0;
+    // lookat->l[0].l.col[2] = 0;
+    lookat->l[0].l.type = 0;
+    // lookat->l[0].l.colc[0] = 0;
+    // lookat->l[0].l.colc[1] = 0;
+    // lookat->l[0].l.colc[2] = 0;
     lookat->l[0].l.pad2 = 0;
-    lookat->l[1].l.col[0] = 0;
-    lookat->l[1].l.col[1] = 0x80;
-    lookat->l[1].l.col[2] = 0;
-    lookat->l[1].l.pad1 = 0;
-    lookat->l[1].l.colc[0] = 0;
-    lookat->l[1].l.colc[1] = 0x80;
-    lookat->l[1].l.colc[2] = 0;
+    // lookat->l[1].l.col[0] = 0;
+    // lookat->l[1].l.col[1] = 0x80;
+    // lookat->l[1].l.col[2] = 0;
+    lookat->l[1].l.type = 0;
+    // lookat->l[1].l.colc[0] = 0;
+    // lookat->l[1].l.colc[1] = 0x80;
+    // lookat->l[1].l.colc[2] = 0;
     lookat->l[1].l.pad2 = 0;
 
     gSPLookAt(next_gfx(), osVirtualToPhysical(&D_801BE7D0[gGdFrameBufNum]));
@@ -2111,21 +2111,21 @@ s32 gd_dl_material_lighting(s32 id, struct GdColour *colour, s32 material) {
             gddl_is_loading_stub_dl(FALSE);
             gddl_is_loading_shine_dl(FALSE);
 
-            DL_CURRENT_LIGHT(sCurrentGdDl).a.l.col[0] = colour->r * 255.0f;
-            DL_CURRENT_LIGHT(sCurrentGdDl).a.l.col[1] = colour->g * 255.0f;
-            DL_CURRENT_LIGHT(sCurrentGdDl).a.l.col[2] = colour->b * 255.0f;
+            // DL_CURRENT_LIGHT(sCurrentGdDl).a.l.col[0] = colour->r * 255.0f;
+            // DL_CURRENT_LIGHT(sCurrentGdDl).a.l.col[1] = colour->g * 255.0f;
+            // DL_CURRENT_LIGHT(sCurrentGdDl).a.l.col[2] = colour->b * 255.0f;
 
-            DL_CURRENT_LIGHT(sCurrentGdDl).a.l.colc[0] = DL_CURRENT_LIGHT(sCurrentGdDl).a.l.col[0];
-            DL_CURRENT_LIGHT(sCurrentGdDl).a.l.colc[1] = DL_CURRENT_LIGHT(sCurrentGdDl).a.l.col[1];
-            DL_CURRENT_LIGHT(sCurrentGdDl).a.l.colc[2] = DL_CURRENT_LIGHT(sCurrentGdDl).a.l.col[2];
-            // 801A0D04
-            DL_CURRENT_LIGHT(sCurrentGdDl).l[0].l.col[0] = 0;
-            DL_CURRENT_LIGHT(sCurrentGdDl).l[0].l.col[1] = 0;
-            DL_CURRENT_LIGHT(sCurrentGdDl).l[0].l.col[2] = 0;
+            // DL_CURRENT_LIGHT(sCurrentGdDl).a.l.colc[0] = DL_CURRENT_LIGHT(sCurrentGdDl).a.l.col[0];
+            // DL_CURRENT_LIGHT(sCurrentGdDl).a.l.colc[1] = DL_CURRENT_LIGHT(sCurrentGdDl).a.l.col[1];
+            // DL_CURRENT_LIGHT(sCurrentGdDl).a.l.colc[2] = DL_CURRENT_LIGHT(sCurrentGdDl).a.l.col[2];
+            // // 801A0D04
+            // DL_CURRENT_LIGHT(sCurrentGdDl).l[0].l.col[0] = 0;
+            // DL_CURRENT_LIGHT(sCurrentGdDl).l[0].l.col[1] = 0;
+            // DL_CURRENT_LIGHT(sCurrentGdDl).l[0].l.col[2] = 0;
 
-            DL_CURRENT_LIGHT(sCurrentGdDl).l[0].l.colc[0] = 0;
-            DL_CURRENT_LIGHT(sCurrentGdDl).l[0].l.colc[1] = 0;
-            DL_CURRENT_LIGHT(sCurrentGdDl).l[0].l.colc[2] = 0;
+            // DL_CURRENT_LIGHT(sCurrentGdDl).l[0].l.colc[0] = 0;
+            // DL_CURRENT_LIGHT(sCurrentGdDl).l[0].l.colc[1] = 0;
+            // DL_CURRENT_LIGHT(sCurrentGdDl).l[0].l.colc[2] = 0;
 
             gSPNumLights(next_gfx(), NUMLIGHTS_1);
             gSPLight(next_gfx(), osVirtualToPhysical(&DL_CURRENT_LIGHT(sCurrentGdDl).l), LIGHT_1);
@@ -2142,13 +2142,13 @@ s32 gd_dl_material_lighting(s32 id, struct GdColour *colour, s32 material) {
     scaledColours[1] = (s32)(colour->g * sAmbScaleColour.g * 255.0f);
     scaledColours[2] = (s32)(colour->b * sAmbScaleColour.b * 255.0f);
     // 801A0FE4
-    DL_CURRENT_LIGHT(sCurrentGdDl).a.l.col[0] = scaledColours[0];
-    DL_CURRENT_LIGHT(sCurrentGdDl).a.l.col[1] = scaledColours[1];
-    DL_CURRENT_LIGHT(sCurrentGdDl).a.l.col[2] = scaledColours[2];
+    // DL_CURRENT_LIGHT(sCurrentGdDl).a.l.col[0] = scaledColours[0];
+    // DL_CURRENT_LIGHT(sCurrentGdDl).a.l.col[1] = scaledColours[1];
+    // DL_CURRENT_LIGHT(sCurrentGdDl).a.l.col[2] = scaledColours[2];
     // 801A1068
-    DL_CURRENT_LIGHT(sCurrentGdDl).a.l.colc[0] = scaledColours[0];
-    DL_CURRENT_LIGHT(sCurrentGdDl).a.l.colc[1] = scaledColours[1];
-    DL_CURRENT_LIGHT(sCurrentGdDl).a.l.colc[2] = scaledColours[2];
+    // DL_CURRENT_LIGHT(sCurrentGdDl).a.l.colc[0] = scaledColours[0];
+    // DL_CURRENT_LIGHT(sCurrentGdDl).a.l.colc[1] = scaledColours[1];
+    // DL_CURRENT_LIGHT(sCurrentGdDl).a.l.colc[2] = scaledColours[2];
     // 801A10EC
     gSPNumLights(next_gfx(), numLights);
     for (i = 0; i < numLights; i++) { // L801A1134
@@ -2156,12 +2156,12 @@ s32 gd_dl_material_lighting(s32 id, struct GdColour *colour, s32 material) {
         scaledColours[1] = colour->g * sLightScaleColours[i].g * 255.0f;
         scaledColours[2] = colour->b * sLightScaleColours[i].b * 255.0f;
         // 801A1260
-        DL_CURRENT_LIGHT(sCurrentGdDl).l[i].l.col[0] = scaledColours[0];
-        DL_CURRENT_LIGHT(sCurrentGdDl).l[i].l.col[1] = scaledColours[1];
-        DL_CURRENT_LIGHT(sCurrentGdDl).l[i].l.col[2] = scaledColours[2];
-        DL_CURRENT_LIGHT(sCurrentGdDl).l[i].l.colc[0] = scaledColours[0];
-        DL_CURRENT_LIGHT(sCurrentGdDl).l[i].l.colc[1] = scaledColours[1];
-        DL_CURRENT_LIGHT(sCurrentGdDl).l[i].l.colc[2] = scaledColours[2];
+        // DL_CURRENT_LIGHT(sCurrentGdDl).l[i].l.col[0] = scaledColours[0];
+        // DL_CURRENT_LIGHT(sCurrentGdDl).l[i].l.col[1] = scaledColours[1];
+        // DL_CURRENT_LIGHT(sCurrentGdDl).l[i].l.col[2] = scaledColours[2];
+        // DL_CURRENT_LIGHT(sCurrentGdDl).l[i].l.colc[0] = scaledColours[0];
+        // DL_CURRENT_LIGHT(sCurrentGdDl).l[i].l.colc[1] = scaledColours[1];
+        // DL_CURRENT_LIGHT(sCurrentGdDl).l[i].l.colc[2] = scaledColours[2];
 
         // 801A13B0
         lightDir[0] = (s8)sLightDirections[i].x;

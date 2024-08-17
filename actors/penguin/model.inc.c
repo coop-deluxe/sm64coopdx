@@ -2,28 +2,12 @@
 // Penguin
 
 // 0x05002D80
-static const Lights1 penguin_seg5_lights_05002D80 = gdSPDefLights1(
-    0x06, 0x06, 0x39,
-    0x0f, 0x0f, 0x90, 0x28, 0x28, 0x28
-);
 
 // 0x05002D98
-static const Lights1 penguin_seg5_lights_05002D98 = gdSPDefLights1(
-    0x52, 0x34, 0x0a,
-    0xce, 0x84, 0x1a, 0x28, 0x28, 0x28
-);
 
 // 0x05002DB0
-static const Lights1 penguin_seg5_lights_05002DB0 = gdSPDefLights1(
-    0x59, 0x42, 0x14,
-    0xdf, 0xa7, 0x34, 0x28, 0x28, 0x28
-);
 
 // 0x05002DC8
-static const Lights1 penguin_seg5_lights_05002DC8 = gdSPDefLights1(
-    0x66, 0x66, 0x65,
-    0xff, 0xff, 0xfd, 0x28, 0x28, 0x28
-);
 
 // 0x05002DE0
 ROM_ASSET_LOAD_TEXTURE(penguin_seg5_texture_05002DE0, "actors/penguin/penguin_eye_open.rgba16.inc.c", 0x00160670, 20585, 0x00002de0, 2048);
@@ -44,22 +28,10 @@ ROM_ASSET_LOAD_TEXTURE(penguin_seg5_texture_05004DE0, "actors/penguin/penguin_ey
 ROM_ASSET_LOAD_TEXTURE(penguin_seg5_texture_050055E0, "actors/penguin/penguin_beak.rgba16.inc.c", 0x00160670, 20585, 0x000055e0, 2048);
 
 // 0x05005DE0
-static const Lights1 penguin_seg5_lights_05005DE0 = gdSPDefLights1(
-    0x04, 0x0f, 0x41,
-    0x0b, 0x26, 0xa4, 0x28, 0x28, 0x28
-);
 
 // 0x05005DF8
-static const Lights1 penguin_seg5_lights_05005DF8 = gdSPDefLights1(
-    0x66, 0x66, 0x66,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x05005E10
-static const Lights1 penguin_seg5_lights_05005E10 = gdSPDefLights1(
-    0x60, 0x55, 0x0b,
-    0xf2, 0xd5, 0x1c, 0x28, 0x28, 0x28
-);
 
 // 0x05005E28
 ROM_ASSET_LOAD_VTX(penguin_seg5_vertex_05005E28, 0x00160670, 20585, 0x00005e28, 128);

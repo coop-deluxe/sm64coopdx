@@ -2,40 +2,16 @@
 // Monty Mole
 
 // Unreferenced light group
-UNUSED static const Lights1 monty_mole_lights_unused1 = gdSPDefLights1(
-    0x3f, 0x3f, 0x3f,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // Unreferenced light group
-UNUSED static const Lights1 monty_mole_lights_unused2 = gdSPDefLights1(
-    0x30, 0x1f, 0x00,
-    0xc3, 0x7e, 0x00, 0x28, 0x28, 0x28
-);
 
 // Unreferenced light group
-UNUSED static const Lights1 monty_mole_lights_unused3 = gdSPDefLights1(
-    0x05, 0x04, 0x05,
-    0x16, 0x13, 0x14, 0x28, 0x28, 0x28
-);
 
 // Unreferenced light group
-UNUSED static const Lights1 monty_mole_lights_unused4 = gdSPDefLights1(
-    0x07, 0x08, 0x07,
-    0x1f, 0x20, 0x1f, 0x28, 0x28, 0x28
-);
 
 // Unreferenced light group
-UNUSED static const Lights1 monty_mole_lights_unused5 = gdSPDefLights1(
-    0x14, 0x0b, 0x0a,
-    0x53, 0x2e, 0x28, 0x28, 0x28, 0x28
-);
 
 // Unreferenced light group
-UNUSED static const Lights1 monty_mole_lights_unused6 = gdSPDefLights1(
-    0x3f, 0x3f, 0x3f,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x05000970
 ROM_ASSET_LOAD_TEXTURE(monty_mole_seg5_texture_05000970, "actors/monty_mole/monty_mole_cheek.rgba16.inc.c", 0x001521d0, 57608, 0x00000970, 2048);
@@ -53,10 +29,6 @@ ROM_ASSET_LOAD_TEXTURE(monty_mole_seg5_texture_05002170, "actors/monty_mole/mont
 ROM_ASSET_LOAD_TEXTURE(monty_mole_seg5_texture_05002970, "actors/monty_mole/monty_mole_claw.rgba16.inc.c", 0x001521d0, 57608, 0x00002970, 2048);
 
 // 0x05003170
-static const Lights1 monty_mole_seg5_lights_05003170 = gdSPDefLights1(
-    0x7f, 0x7f, 0x7f,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x05003188
 ROM_ASSET_LOAD_VTX(monty_mole_seg5_vertex_05003188, 0x001521d0, 57608, 0x00003188, 128);
@@ -95,10 +67,6 @@ const Gfx monty_mole_seg5_dl_050032A0[] = {
 };
 
 // 0x05003300
-static const Lights1 monty_mole_seg5_lights_05003300 = gdSPDefLights1(
-    0x7f, 0x7f, 0x7f,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x05003318
 ROM_ASSET_LOAD_VTX(monty_mole_seg5_vertex_05003318, 0x001521d0, 57608, 0x00003318, 160);
@@ -155,10 +123,6 @@ const Gfx monty_mole_seg5_dl_05003518[] = {
 };
 
 // 0x05003598
-static const Lights1 monty_mole_seg5_lights_05003598 = gdSPDefLights1(
-    0x7f, 0x7f, 0x7f,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x050035B0
 ROM_ASSET_LOAD_VTX(monty_mole_seg5_vertex_050035B0, 0x001521d0, 57608, 0x000035b0, 192);
@@ -216,10 +180,6 @@ const Gfx monty_mole_seg5_dl_05003820[] = {
 };
 
 // 0x050038A0
-static const Lights1 monty_mole_seg5_lights_050038A0 = gdSPDefLights1(
-    0x7f, 0x7f, 0x7f,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x050038B8
 ROM_ASSET_LOAD_VTX(monty_mole_seg5_vertex_050038B8, 0x001521d0, 57608, 0x000038b8, 128);
@@ -258,10 +218,6 @@ const Gfx monty_mole_seg5_dl_050039D0[] = {
 };
 
 // 0x05003A30
-static const Lights1 monty_mole_seg5_lights_05003A30 = gdSPDefLights1(
-    0x7f, 0x7f, 0x7f,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x05003A48
 ROM_ASSET_LOAD_VTX(monty_mole_seg5_vertex_05003A48, 0x001521d0, 57608, 0x00003a48, 160);
@@ -318,10 +274,6 @@ const Gfx monty_mole_seg5_dl_05003C48[] = {
 };
 
 // 0x05003CC8
-static const Lights1 monty_mole_seg5_lights_05003CC8 = gdSPDefLights1(
-    0x7f, 0x7f, 0x7f,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x05003CE0
 ROM_ASSET_LOAD_VTX(monty_mole_seg5_vertex_05003CE0, 0x001521d0, 57608, 0x00003ce0, 192);
@@ -379,10 +331,6 @@ const Gfx monty_mole_seg5_dl_05003F50[] = {
 };
 
 // 0x05003FD0
-static const Lights1 monty_mole_seg5_lights_05003FD0 = gdSPDefLights1(
-    0x7f, 0x7f, 0x7f,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x05003FE8
 ROM_ASSET_LOAD_VTX(monty_mole_seg5_vertex_05003FE8, 0x001521d0, 57608, 0x00003fe8, 208);
@@ -458,10 +406,6 @@ const Gfx monty_mole_seg5_dl_050044B0[] = {
 };
 
 // 0x05004518
-static const Lights1 monty_mole_seg5_lights_05004518 = gdSPDefLights1(
-    0x7f, 0x7f, 0x7f,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x05004530
 ROM_ASSET_LOAD_VTX(monty_mole_seg5_vertex_05004530, 0x001521d0, 57608, 0x00004530, 96);
@@ -572,10 +516,6 @@ const Gfx monty_mole_seg5_dl_05004C00[] = {
 };
 
 // 0x05004C90
-static const Lights1 monty_mole_seg5_lights_05004C90 = gdSPDefLights1(
-    0x7f, 0x7f, 0x7f,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x05004CA8
 ROM_ASSET_LOAD_VTX(monty_mole_seg5_vertex_05004CA8, 0x001521d0, 57608, 0x00004ca8, 64);

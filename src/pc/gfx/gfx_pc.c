@@ -792,9 +792,9 @@ static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, cons
                 rsp.lights_changed = false;
             }
 
-            int r = rsp.current_lights[rsp.current_num_lights - 1].col[0] * gLightingColor[1][0] / 255.0f;
-            int g = rsp.current_lights[rsp.current_num_lights - 1].col[1] * gLightingColor[1][1] / 255.0f;
-            int b = rsp.current_lights[rsp.current_num_lights - 1].col[2] * gLightingColor[1][2] / 255.0f;
+            // int r = rsp.current_lights[rsp.current_num_lights - 1].col[0] * gLightingColor[1][0] / 255.0f;
+            // int g = rsp.current_lights[rsp.current_num_lights - 1].col[1] * gLightingColor[1][1] / 255.0f;
+            // int b = rsp.current_lights[rsp.current_num_lights - 1].col[2] * gLightingColor[1][2] / 255.0f;
 
             for (int32_t i = 0; i < rsp.current_num_lights - 1; i++) {
                 float intensity = 0;
@@ -803,9 +803,9 @@ static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, cons
                 intensity += vn->n[2] * rsp.current_lights_coeffs[i][2];
                 intensity /= 127.0f;
                 if (intensity > 0.0f) {
-                    r += intensity * rsp.current_lights[i].col[0] * gLightingColor[0][0] / 255.0f;
-                    g += intensity * rsp.current_lights[i].col[1] * gLightingColor[0][1] / 255.0f;
-                    b += intensity * rsp.current_lights[i].col[2] * gLightingColor[0][2] / 255.0f;
+                    // r += intensity * rsp.current_lights[i].col[0] * gLightingColor[0][0] / 255.0f;
+                    // g += intensity * rsp.current_lights[i].col[1] * gLightingColor[0][1] / 255.0f;
+                    // b += intensity * rsp.current_lights[i].col[2] * gLightingColor[0][2] / 255.0f;
                 }
             }
 
@@ -1159,11 +1159,11 @@ static void gfx_sp_movemem(uint8_t index, uint16_t offset, const void* data) {
             gfx_calc_and_set_viewport((const Vp_t *) data);
             break;
 #if 0
-        case G_MV_LOOKATY:
-        case G_MV_LOOKATX:
-            memcpy(rsp.current_lookat + (index - G_MV_LOOKATY) / 2, data, sizeof(Light_t));
-            //rsp.lights_changed = 1;
-            break;
+        //case G_MV_LOOKATY:
+        // case G_MV_LOOKATX:
+        //     memcpy(rsp.current_lookat + (index - G_MV_LOOKATY) / 2, data, sizeof(Light_t));
+        //     //rsp.lights_changed = 1;
+        //     break;
 #endif
 #ifdef F3DEX_GBI_2
         case G_MV_LIGHT: {

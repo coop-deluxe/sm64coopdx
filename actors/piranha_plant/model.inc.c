@@ -2,22 +2,10 @@
 // Piranha Plant
 
 // 0x060113B0
-static const Lights1 piranha_plant_seg6_lights_060113B0 = gdSPDefLights1(
-    0x3f, 0x3f, 0x3f,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x060113C8
-static const Lights1 piranha_plant_seg6_lights_060113C8 = gdSPDefLights1(
-    0x0a, 0x2b, 0x02,
-    0x2b, 0xae, 0x0a, 0x28, 0x28, 0x28
-);
 
 // 0x060113E0
-static const Lights1 piranha_plant_seg6_lights_060113E0 = gdSPDefLights1(
-    0x3f, 0x00, 0x00,
-    0xff, 0x00, 0x00, 0x28, 0x28, 0x28
-);
 
 // 0x060113F8
 ROM_ASSET_LOAD_TEXTURE(piranha_plant_seg6_texture_060113F8, "actors/piranha_plant/piranha_plant_tongue.rgba16.inc.c", 0x00188440, 199722, 0x00024438, 4096);

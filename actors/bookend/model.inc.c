@@ -2,28 +2,12 @@
 // Bookend
 
 // Unreferenced light group
-UNUSED static const Lights1 bookend_lights_unused1 = gdSPDefLights1(
-    0x3f, 0x3f, 0x3f,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // Unreferenced light group
-UNUSED static const Lights1 bookend_lights_unused2 = gdSPDefLights1(
-    0x03, 0x19, 0x09,
-    0x0c, 0x66, 0x26, 0x28, 0x28, 0x28
-);
 
 // Unreferenced light group
-UNUSED static const Lights1 bookend_lights_unused3 = gdSPDefLights1(
-    0x3f, 0x3f, 0x3f,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // Unreferenced light group
-UNUSED static const Lights1 bookend_lights_unused4 = gdSPDefLights1(
-    0x3f, 0x00, 0x00,
-    0xff, 0x00, 0x00, 0x28, 0x28, 0x28
-);
 
 // 0x05000060
 ROM_ASSET_LOAD_TEXTURE(bookend_seg5_texture_05000060, "actors/bookend/bookend_spine.rgba16.inc.c", 0x00166c60, 26968, 0x00000060, 1024);
@@ -41,10 +25,6 @@ ROM_ASSET_LOAD_TEXTURE(bookend_seg5_texture_05000C60, "actors/bookend/bookend_pa
 ROM_ASSET_LOAD_TEXTURE(bookend_seg5_texture_05001060, "actors/bookend/bookend_cover.rgba16.inc.c", 0x00166c60, 26968, 0x00001060, 2048);
 
 // 0x05001860
-static const Lights1 bookend_seg5_lights_05001860 = gdSPDefLights1(
-    0x66, 0x66, 0x66,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x05001878
 ROM_ASSET_LOAD_VTX(bookend_seg5_vertex_05001878, 0x00166c60, 26968, 0x00001878, 64);
@@ -97,10 +77,6 @@ const Gfx bookend_seg5_dl_05001978[] = {
 };
 
 // 0x05001A08
-static const Lights1 bookend_seg5_lights_05001A08 = gdSPDefLights1(
-    0x66, 0x66, 0x66,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x05001A20
 ROM_ASSET_LOAD_VTX(bookend_seg5_vertex_05001A20, 0x00166c60, 26968, 0x00001a20, 64);
@@ -153,10 +129,6 @@ const Gfx bookend_seg5_dl_05001B20[] = {
 };
 
 // 0x05001BB0
-static const Lights1 bookend_seg5_lights_05001BB0 = gdSPDefLights1(
-    0x66, 0x66, 0x66,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x05001BC8
 ROM_ASSET_LOAD_VTX(bookend_seg5_vertex_05001BC8, 0x00166c60, 26968, 0x00001bc8, 64);
@@ -208,10 +180,6 @@ const Gfx bookend_seg5_dl_05001D68[] = {
 };
 
 // 0x05001DE0
-static const Lights1 bookend_seg5_lights_05001DE0 = gdSPDefLights1(
-    0x66, 0x66, 0x66,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x05001DF8
 ROM_ASSET_LOAD_VTX(bookend_seg5_vertex_05001DF8, 0x00166c60, 26968, 0x00001df8, 64);
@@ -263,10 +231,6 @@ const Gfx bookend_seg5_dl_05001F98[] = {
 };
 
 // 0x05002010
-static const Lights1 bookend_seg5_lights_05002010 = gdSPDefLights1(
-    0x66, 0x66, 0x66,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x05002028
 ROM_ASSET_LOAD_VTX(bookend_seg5_vertex_05002028, 0x00166c60, 26968, 0x00002028, 192);
@@ -303,10 +267,6 @@ const Gfx bookend_seg5_dl_05002140[] = {
 };
 
 // 0x050021B0
-static const Lights1 bookend_seg5_lights_050021B0 = gdSPDefLights1(
-    0x66, 0x66, 0x66,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x050021C8
 ROM_ASSET_LOAD_VTX(bookend_seg5_vertex_050021C8, 0x00166c60, 26968, 0x000021c8, 192);

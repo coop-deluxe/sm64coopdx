@@ -2,28 +2,12 @@
 // Koopa Shell
 
 // 0x08026388
-static const Lights1 koopa_shell_seg8_lights_08026388 = gdSPDefLights1(
-    0x11, 0x33, 0x06,
-    0x45, 0xcd, 0x1a, 0x28, 0x28, 0x28
-);
 
 // 0x080263A0
-static const Lights1 koopa_shell_seg8_lights_080263A0 = gdSPDefLights1(
-    0x39, 0x0a, 0x07,
-    0xe4, 0x29, 0x1d, 0x28, 0x28, 0x28
-);
 
 // 0x080263B8
-static const Lights1 koopa_shell_seg8_lights_080263B8 = gdSPDefLights1(
-    0x21, 0x30, 0x39,
-    0x84, 0xc3, 0xe5, 0x28, 0x28, 0x28
-);
 
 // 0x080263D0
-static const Lights1 koopa_shell_seg8_lights_080263D0 = gdSPDefLights1(
-    0x3e, 0x3f, 0x3e,
-    0xfa, 0xff, 0xf8, 0x28, 0x28, 0x28
-);
 
 // 0x080263E8
 ROM_ASSET_LOAD_VTX(koopa_shell_seg8_vertex_080263E8, 0x001f2200, 59076, 0x000263e8, 240);
@@ -172,16 +156,8 @@ const Gfx koopa_shell_seg8_dl_08027420[] = {
 };
 
 // 0x08027470
-static const Lights1 koopa_shell_seg8_lights_08027470 = gdSPDefLights1(
-    0x3f, 0x3f, 0x3f,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x08027488
-static const Lights1 koopa_shell_seg8_lights_08027488 = gdSPDefLights1(
-    0x38, 0x2b, 0x00,
-    0xe0, 0xae, 0x00, 0x28, 0x28, 0x28
-);
 
 // 0x080274A0
 ROM_ASSET_LOAD_TEXTURE(koopa_shell_seg8_texture_080274A0, "actors/koopa_shell/koopa_shell_front.rgba16.inc.c", 0x001c4230, 80474, 0x00002648, 2048);

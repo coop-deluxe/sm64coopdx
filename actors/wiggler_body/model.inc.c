@@ -23,22 +23,10 @@ ROM_ASSET_LOAD_TEXTURE(wiggler_seg5_texture_05009230, "actors/wiggler/wiggler_no
 ROM_ASSET_LOAD_TEXTURE(wiggler_seg5_texture_0500A230, "actors/wiggler/wiggler_nose_right_side.rgba16.inc.c", 0x00180bb0, 29674, 0x0000a230, 4096);
 
 // 0x0500B230
-static const Lights1 wiggler_seg5_lights_0500B230 = gdSPDefLights1(
-    0x37, 0x00, 0x00,
-    0xdf, 0x00, 0x00, 0x28, 0x28, 0x28
-);
 
 // 0x0500B248
-static const Lights1 wiggler_seg5_lights_0500B248 = gdSPDefLights1(
-    0x39, 0x11, 0x00,
-    0xe7, 0x47, 0x00, 0x28, 0x28, 0x28
-);
 
 // Unreferenced light group
-UNUSED static const Lights1 wiggler_body_lights_unused = gdSPDefLights1(
-    0x3a, 0x22, 0x05,
-    0xea, 0x8b, 0x16, 0x28, 0x28, 0x28
-);
 
 // 0x0500B278
 ROM_ASSET_LOAD_VTX(wiggler_seg5_vertex_0500B278, 0x00180bb0, 29674, 0x0000b278, 256);

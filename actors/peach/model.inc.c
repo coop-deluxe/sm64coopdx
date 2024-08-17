@@ -2,16 +2,8 @@
 // Peach
 
 // 0x050009F8
-static const Lights1 peach_seg5_lights_050009F8 = gdSPDefLights1(
-    0x7f, 0x7f, 0x7f,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x05000A10
-static const Lights1 peach_seg5_lights_05000A10 = gdSPDefLights1(
-    0x7f, 0x5f, 0x0c,
-    0xff, 0xbf, 0x18, 0x28, 0x28, 0x28
-);
 
 // 0x05000A28
 ROM_ASSET_LOAD_TEXTURE(peach_seg5_texture_05000A28, "actors/peach/peach_eye_open.rgba16.inc.c", 0x0016d870, 76997, 0x00000a28, 2048);
@@ -379,10 +371,6 @@ const Gfx peach_seg5_dl_05005F48[] = {
 };
 
 // 0x05005FA0
-static const Lights1 peach_seg5_lights_05005FA0 = gdSPDefLights1(
-    0x7f, 0x7f, 0x7f,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x05005FB8
 ROM_ASSET_LOAD_VTX(peach_seg5_vertex_05005FB8, 0x0016d870, 76997, 0x00005fb8, 160);
@@ -419,16 +407,8 @@ const Gfx peach_seg5_dl_050060E0[] = {
 };
 
 // 0x05006138
-static const Lights1 peach_seg5_lights_05006138 = gdSPDefLights1(
-    0x7f, 0x7f, 0x7f,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x05006150
-static const Lights1 peach_seg5_lights_05006150 = gdSPDefLights1(
-    0x6c, 0x54, 0x5f,
-    0xd9, 0xa9, 0xbe, 0x28, 0x28, 0x28
-);
 
 // 0x05006168
 ROM_ASSET_LOAD_VTX(peach_seg5_vertex_05006168, 0x0016d870, 76997, 0x00006168, 128);
@@ -543,10 +523,6 @@ const Gfx peach_seg5_dl_05006A18[] = {
 };
 
 // 0x05006A90
-static const Lights1 peach_seg5_lights_05006A90 = gdSPDefLights1(
-    0x7f, 0x7f, 0x7f,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x05006AA8
 ROM_ASSET_LOAD_VTX(peach_seg5_vertex_05006AA8, 0x0016d870, 76997, 0x00006aa8, 256);
@@ -648,10 +624,6 @@ const Gfx peach_seg5_us_dl_05007288[] = {
 #endif
 
 // 0x05007288
-static const Lights1 peach_seg5_lights_05007288 = gdSPDefLights1(
-    0x7f, 0x5f, 0x0c,
-    0xff, 0xbf, 0x18, 0x28, 0x28, 0x28
-);
 
 // 0x050072A0
 ROM_ASSET_LOAD_VTX(peach_seg5_vertex_050072A0, 0x0016d870, 76997, 0x00007300, 224);
@@ -733,10 +705,6 @@ const Gfx peach_seg5_dl_05007AB8[] = {
 };
 
 // 0x05007AE0
-static const Lights1 peach_seg5_lights_05007AE0 = gdSPDefLights1(
-    0x7f, 0x7f, 0x7f,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x05007AF8
 ROM_ASSET_LOAD_VTX(peach_seg5_vertex_05007AF8, 0x0016d870, 76997, 0x00007b58, 240);
@@ -791,10 +759,6 @@ const Gfx peach_seg5_dl_05007E58[] = {
 };
 
 // 0x05007EB0
-static const Lights1 peach_seg5_lights_05007EB0 = gdSPDefLights1(
-    0x7f, 0x7f, 0x7f,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x05007EC8
 ROM_ASSET_LOAD_VTX(peach_seg5_vertex_05007EC8, 0x0016d870, 76997, 0x00007f28, 240);
@@ -850,10 +814,6 @@ const Gfx peach_seg5_dl_05008228[] = {
 };
 
 // 0x05008280
-static const Lights1 peach_seg5_lights_05008280 = gdSPDefLights1(
-    0x7f, 0x7f, 0x7f,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x05008298
 ROM_ASSET_LOAD_VTX(peach_seg5_vertex_05008298, 0x0016d870, 76997, 0x000082f8, 192);
@@ -912,10 +872,6 @@ const Gfx peach_seg5_dl_05008560[] = {
 };
 
 // 0x050085D0
-static const Lights1 peach_seg5_lights_050085D0 = gdSPDefLights1(
-    0x7f, 0x7f, 0x7f,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x050085E8
 ROM_ASSET_LOAD_VTX(peach_seg5_vertex_050085E8, 0x0016d870, 76997, 0x00008648, 224);
@@ -951,10 +907,6 @@ const Gfx peach_seg5_dl_050087A8[] = {
 };
 
 // 0x050087D0
-static const Lights1 peach_seg5_lights_050087D0 = gdSPDefLights1(
-    0x7f, 0x7f, 0x7f,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x050087E8
 ROM_ASSET_LOAD_VTX(peach_seg5_vertex_050087E8, 0x0016d870, 76997, 0x00008848, 192);
@@ -1013,10 +965,6 @@ const Gfx peach_seg5_dl_05008AB0[] = {
 };
 
 // 0x05008B20
-static const Lights1 peach_seg5_lights_05008B20 = gdSPDefLights1(
-    0x7f, 0x7f, 0x7f,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x05008B38
 ROM_ASSET_LOAD_VTX(peach_seg5_vertex_05008B38, 0x0016d870, 76997, 0x00008b98, 224);
@@ -1051,10 +999,6 @@ const Gfx peach_seg5_dl_05008CF8[] = {
 };
 
 // 0x05008D20
-static const Lights1 peach_seg5_lights_05008D20 = gdSPDefLights1(
-    0x0b, 0x1a, 0x67,
-    0x16, 0x35, 0xce, 0x28, 0x28, 0x28
-);
 
 // 0x05008D38
 ROM_ASSET_LOAD_VTX(peach_seg5_vertex_05008D38, 0x0016d870, 76997, 0x00008d98, 256);
@@ -1090,10 +1034,6 @@ const Gfx peach_seg5_dl_05008F20[] = {
 };
 
 // 0x05008F48
-static const Lights1 peach_seg5_lights_05008F48 = gdSPDefLights1(
-    0x0b, 0x1a, 0x67,
-    0x16, 0x35, 0xce, 0x28, 0x28, 0x28
-);
 
 // 0x05008F60
 ROM_ASSET_LOAD_VTX(peach_seg5_vertex_05008F60, 0x0016d870, 76997, 0x00008fc0, 256);
@@ -1129,10 +1069,6 @@ const Gfx peach_seg5_dl_05009148[] = {
 };
 
 // 0x05009170
-static const Lights1 peach_seg5_lights_05009170 = gdSPDefLights1(
-    0x7f, 0x7f, 0x7f,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x05009188
 ROM_ASSET_LOAD_VTX(peach_seg5_vertex_05009188, 0x0016d870, 76997, 0x000091e8, 256);
@@ -1181,10 +1117,6 @@ const Gfx peach_seg5_dl_05009500[] = {
 };
 
 // 0x05009528
-static const Lights1 peach_seg5_lights_05009528 = gdSPDefLights1(
-    0x7f, 0x7f, 0x7f,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x05009540
 ROM_ASSET_LOAD_VTX(peach_seg5_vertex_05009540, 0x0016d870, 76997, 0x000095a0, 256);
@@ -1237,10 +1169,6 @@ const Gfx peach_seg5_dl_05009940[] = {
 };
 
 // 0x05009968
-static const Lights1 peach_seg5_lights_05009968 = gdSPDefLights1(
-    0x7f, 0x7f, 0x7f,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x05009980
 ROM_ASSET_LOAD_VTX(peach_seg5_vertex_05009980, 0x0016d870, 76997, 0x000099e0, 240);

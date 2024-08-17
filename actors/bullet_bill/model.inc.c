@@ -2,10 +2,6 @@
 // Bullet Bill
 
 // 0x0500BA90
-static const Lights1 bullet_bill_seg5_lights_0500BA90 = gdSPDefLights1(
-    0x06, 0x07, 0x14,
-    0x19, 0x1c, 0x52, 0x28, 0x28, 0x28
-);
 
 // 0x0500BAA8
 ROM_ASSET_LOAD_TEXTURE(bullet_bill_seg5_texture_0500BAA8, "actors/bullet_bill/bullet_bill_eye.rgba16.inc.c", 0x0012a7e0, 32879, 0x0000baa8, 4096);

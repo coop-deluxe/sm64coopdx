@@ -2,16 +2,8 @@
 // Bub
 
 // 0x0600E278
-static const Lights1 bub_seg6_lights_0600E280 = gdSPDefLights1(
-    0x3f, 0x3f, 0x3f,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x0600E290
-static const Lights1 bub_seg6_lights_0600E290 = gdSPDefLights1(
-    0x3f, 0x1d, 0x25,
-    0xff, 0x75, 0x94, 0x28, 0x28, 0x28
-);
 
 // 0x0600E2A8
 ROM_ASSET_LOAD_TEXTURE(bub_seg6_texture_0600E2A8, "actors/bub/bub_eye_border.rgba16.inc.c", 0x00180bb0, 29674, 0x00001408, 2048);

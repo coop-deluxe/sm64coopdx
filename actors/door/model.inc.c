@@ -2,16 +2,8 @@
 // Door
 
 // 0x03009CE0
-static const Lights1 door_seg3_lights_03009CE0 = gdSPDefLights1(
-    0x3f, 0x3f, 0x3f,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x03009CF8
-static const Lights1 door_seg3_lights_03009CF8 = gdSPDefLights1(
-    0x3f, 0x3f, 0x00,
-    0xff, 0xff, 0x00, 0x28, 0x28, 0x28
-);
 
 // 0x03009D10
 ROM_ASSET_LOAD_TEXTURE(door_seg3_texture_03009D10, "actors/door/polished_wooden_door.rgba16.inc.c", 0x00201410, 96653, 0x00009d10, 4096);

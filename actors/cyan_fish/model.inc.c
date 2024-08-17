@@ -7,10 +7,6 @@ UNUSED static const u64 cyan_fish_unused_1 = 0;
 // 0x0600D468
 ROM_ASSET_LOAD_TEXTURE(cyan_fish_seg6_texture_0600D468, "actors/cyan_fish/cyan_fish.rgba16.inc.c", 0x001b9cc0, 41188, 0x0000d468, 2048);
 
-static const Lights1 cyan_fish_seg6_lights_0600DC68 = gdSPDefLights1(
-    0x7f, 0x7f, 0x7f,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x0600DC80
 ROM_ASSET_LOAD_VTX(cyan_fish_seg6_vertex_0600DC80, 0x001b9cc0, 41188, 0x0000dc80, 160);
@@ -51,10 +47,6 @@ const Gfx cyan_fish_seg6_dl_0600DDD8[] = {
 };
 
 // 0x0600DE38
-static const Lights1 cyan_fish_seg6_lights_0600DE38 = gdSPDefLights1(
-    0x7f, 0x7f, 0x7f,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x0600DE50
 ROM_ASSET_LOAD_VTX(cyan_fish_seg6_vertex_0600DE50, 0x001b9cc0, 41188, 0x0000de50, 64);
@@ -90,10 +82,6 @@ const Gfx cyan_fish_seg6_dl_0600DED8[] = {
 };
 
 // 0x0600DF48
-static const Lights1 cyan_fish_seg6_lights_0600DF48 = gdSPDefLights1(
-    0x7f, 0x7f, 0x7f,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x0600DF60
 ROM_ASSET_LOAD_VTX(cyan_fish_seg6_vertex_0600DF60, 0x001b9cc0, 41188, 0x0000df60, 96);

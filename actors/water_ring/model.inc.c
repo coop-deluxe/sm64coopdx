@@ -2,10 +2,6 @@
 // Water Ring
 
 // 0x06012368
-static const Lights1 water_ring_seg6_lights_06012368 = gdSPDefLights1(
-    0x3f, 0x3f, 0x3f,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x06012380
 ROM_ASSET_LOAD_TEXTURE(water_ring_seg6_texture_06012380, "actors/water_ring/water_ring.rgba16.inc.c", 0x001b9cc0, 41188, 0x00012380, 4096);

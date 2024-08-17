@@ -2,10 +2,6 @@
 // Water Bubble
 
 // 0x0500FE68
-static const Lights1 water_bubble_seg5_lights_0500FE68 = gdSPDefLights1(
-    0xbf, 0xbf, 0xbf,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x0500FE80
 ROM_ASSET_LOAD_TEXTURE(water_bubble_seg5_texture_0500FE80, "actors/water_bubble/water_bubble.rgba16.inc.c", 0x00134d20, 26785, 0x0000fe80, 2048);

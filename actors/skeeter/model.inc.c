@@ -2,40 +2,16 @@
 // Skeeter
 
 // Unreferenced light group
-UNUSED static const Lights1 skeeter_lights_unused1 = gdSPDefLights1(
-    0x3f, 0x20, 0x02,
-    0xfc, 0x80, 0x08, 0x28, 0x28, 0x28
-);
 
 // Unreferenced light group
-UNUSED static const Lights1 skeeter_lights_unused2 = gdSPDefLights1(
-    0x05, 0x05, 0x02,
-    0x15, 0x15, 0x08, 0x28, 0x28, 0x28
-);
 
 // Unreferenced light group
-UNUSED static const Lights1 skeeter_lights_unused3 = gdSPDefLights1(
-    0x03, 0x10, 0x29,
-    0x0e, 0x40, 0xa4, 0x28, 0x28, 0x28
-);
 
 // Unreferenced light group
-UNUSED static const Lights1 skeeter_lights_unused4 = gdSPDefLights1(
-    0x3b, 0x3a, 0x36,
-    0xef, 0xea, 0xd9, 0x28, 0x28, 0x28
-);
 
 // Unreferenced light group
-UNUSED static const Lights1 skeeter_lights_unused5 = gdSPDefLights1(
-    0x33, 0x0c, 0x00,
-    0xcf, 0x32, 0x00, 0x28, 0x28, 0x28
-);
 
 // Unreferenced light group
-UNUSED static const Lights1 skeeter_lights_unused6 = gdSPDefLights1(
-    0x10, 0x29, 0x20,
-    0x42, 0xa5, 0x81, 0x28, 0x28, 0x28
-);
 
 // 0x06000090
 ROM_ASSET_LOAD_TEXTURE(skeeter_seg6_texture_06000090, "actors/skeeter/skeeter_eye.rgba16.inc.c", 0x001b9cc0, 41188, 0x00000090, 2048);
@@ -199,10 +175,6 @@ const Gfx skeeter_seg6_dl_06000D78[] = {
 };
 
 // 0x06000DE8
-static const Lights1 skeeter_seg6_lights_06000DE8 = gdSPDefLights1(
-    0x7f, 0x55, 0x00,
-    0xff, 0xaa, 0x00, 0x28, 0x28, 0x28
-);
 
 // 0x06000E00
 ROM_ASSET_LOAD_VTX(skeeter_seg6_vertex_06000E00, 0x001b9cc0, 41188, 0x00000e00, 96);

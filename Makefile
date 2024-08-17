@@ -188,7 +188,7 @@ VERSION ?= us
 $(eval $(call validate-option,VERSION,us))
 
 # Graphics microcode used
-GRUCODE ?= f3dex2e
+GRUCODE ?= f3dex3
 
 ifeq      ($(VERSION),jp)
   DEFINES   += VERSION_JP=1
@@ -207,6 +207,9 @@ else ifeq ($(VERSION),sh)
   #GRUCODE   ?= f3d_new
   VERSION_JP_US  ?= false
 endif
+
+# FIXLIGHTS - converts light objects to light color commands for assets, needed for vanilla-style lighting
+FIXLIGHTS ?= 1
 
 # Determine our optimization level.
 # Optimization Levels 0 through 5 optimize for speed,
@@ -323,7 +326,8 @@ TARGET := sm64.$(VERSION)
 #   f3dex2  -
 #   f3dex2e - default for PC Port
 #   f3dzex  - newer, experimental microcode used in Animal Crossing
-$(eval $(call validate-option,GRUCODE,f3d_old f3dex f3dex2 f3dex2e f3d_new f3dzex))
+#   f3dex3  - even newer, f3dex2 modification by Sauraen, public domain
+$(eval $(call validate-option,GRUCODE,f3d_old f3dex f3dex2 f3dex2e f3d_new f3dzex f3dex3))
 
 ifeq      ($(GRUCODE),f3d_old)
   DEFINES += F3D_OLD=1
@@ -335,8 +339,11 @@ else ifeq ($(GRUCODE), f3dex2) # Fast3DEX2
   DEFINES += F3DEX_GBI_2=1 F3DEX_GBI_SHARED=1
 else ifeq ($(GRUCODE), f3dex2e) # Fast3DEX2 Extended (PC default)
   DEFINES += F3DEX_GBI_2E=1 F3DEX_GBI_SHARED=1
-else ifeq ($(GRUCODE),f3dzex) # Fast3DZEX (2.0J / Animal Forest - Dōbutsu no Mori)
+else ifeq ($(GRUCODE), f3dzex) # Fast3DZEX (2.0J / Animal Forest - Dōbutsu no Mori)
   $(warning Fast3DZEX is experimental. Try at your own risk.)
+  DEFINES += F3DZEX_GBI_2=1 F3DEX_GBI_2=1 F3DEX_GBI_SHARED=1
+else ifeq ($(GRUCODE), f3dex3) # Fast3DEX3
+  $(warning Fast3DEX3 is experimental. Try at your own risk.)
   DEFINES += F3DZEX_GBI_2=1 F3DEX_GBI_2=1 F3DEX_GBI_SHARED=1
 endif
 
@@ -1087,6 +1094,7 @@ AIFF_EXTRACT_CODEBOOK := $(TOOLS_DIR)/aiff_extract_codebook
 VADPCM_ENC            := $(TOOLS_DIR)/vadpcm_enc
 EXTRACT_DATA_FOR_MIO  := $(TOOLS_DIR)/extract_data_for_mio
 SKYCONV               := $(TOOLS_DIR)/skyconv
+FIXLIGHTS_PY := $(TOOLS_DIR)/fixlights.py
 
 # Use the system installed armips if available. Otherwise use the one provided with this repository.
 ifneq (,$(call find-command,armips))
@@ -1399,6 +1407,14 @@ $(BUILD_DIR)/%.o: %.cpp
 	$(V)$(CXX) $(PROF_FLAGS) -c $(EXTRA_CPP_FLAGS) $(EXTRA_CPP_INCLUDES) $(CFLAGS) -o $@ $<
 
 # Compile C code
+ifeq ($(FIXLIGHTS),1)
+# This must not be run multiple times at once, so we run it ahead of time rather than in a rule
+#DUMMY != $(FIXLIGHTS_PY) actors
+# Modify the leveldata build rule to fix lights for any files in that level's folder
+$(BUILD_DIR)/levels/%/leveldata.o: levels/%/leveldata.c
+	$(V)$(FIXLIGHTS_PY) $(dir $<)
+	$(V)$(CC) -c $(CFLAGS) -MMD -MF $(BUILD_DIR)/$*.d  -o $@ $<
+endif
 $(BUILD_DIR)/%.o: %.c
 	$(call print,Compiling:,$<,$@)
 	$(V)$(CC_CHECK) $(PROF_FLAGS) $(CC_CHECK_CFLAGS) -MMD -MP -MT $@ -MF $(BUILD_DIR)/$*.d $<

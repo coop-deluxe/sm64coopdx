@@ -2,40 +2,16 @@
 // Goomba
 
 // Unreferenced light group
-UNUSED static const Lights1 goomba_lights_unused1 = gdSPDefLights1(
-    0x3f, 0x3f, 0x3f,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // Unreferenced light group
-UNUSED static const Lights1 goomba_lights_unused2 = gdSPDefLights1(
-    0x2c, 0x2c, 0x2c,
-    0xb2, 0xb2, 0xb2, 0x28, 0x28, 0x28
-);
 
 // 0x080194D0
-static const Lights1 goomba_seg8_lights_080194D0 = gdSPDefLights1(
-    0x15, 0x0b, 0x04,
-    0x54, 0x2e, 0x10, 0x28, 0x28, 0x28
-);
 
 // 0x080194E8
-static const Lights1 goomba_seg8_lights_080194E8 = gdSPDefLights1(
-    0x18, 0x0d, 0x04,
-    0x61, 0x34, 0x13, 0x28, 0x28, 0x28
-);
 
 // 0x08019500
-static const Lights1 goomba_seg8_lights_08019500 = gdSPDefLights1(
-    0x1d, 0x10, 0x08,
-    0x77, 0x42, 0x20, 0x28, 0x28, 0x28
-);
 
 // 0x08019518
-static const Lights1 goomba_seg8_lights_08019518 = gdSPDefLights1(
-    0x37, 0x2d, 0x13,
-    0xde, 0xb4, 0x4e, 0x28, 0x28, 0x28
-);
 
 // 0x08019530
 ROM_ASSET_LOAD_TEXTURE(goomba_seg8_texture_08019530, "actors/goomba/goomba_body.rgba16.inc.c", 0x001f2200, 59076, 0x00019530, 2048);
@@ -47,10 +23,6 @@ ROM_ASSET_LOAD_TEXTURE(goomba_seg8_texture_08019D30, "actors/goomba/goomba_face.
 ROM_ASSET_LOAD_TEXTURE(goomba_seg8_texture_0801A530, "actors/goomba/goomba_face_blink.rgba16.inc.c", 0x001f2200, 59076, 0x0001a530, 2048);
 
 // 0x0801AD30
-static const Lights1 goomba_seg8_lights_0801AD30 = gdSPDefLights1(
-    0x7f, 0x7f, 0x7f,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x0801AD48
 ROM_ASSET_LOAD_VTX(goomba_seg8_vertex_0801AD48, 0x001f2200, 59076, 0x0001ad48, 240);

@@ -2,10 +2,6 @@
 // Checkerboard Platform
 
 // 0x0800C828
-static const Lights1 checkerboard_platform_seg8_lights_0800C828 = gdSPDefLights1(
-    0x3f, 0x3f, 0x3f,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x0800C840
 ROM_ASSET_LOAD_TEXTURE(checkerboard_platform_seg8_texture_0800C840, "actors/checkerboard_platform/checkerboard_platform_side.rgba16.inc.c", 0x001f2200, 59076, 0x0000c840, 1024);

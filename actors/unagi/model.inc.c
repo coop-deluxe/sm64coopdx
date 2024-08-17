@@ -2,52 +2,20 @@
 // Unagi (Eel)
 
 // Unreferenced light group
-UNUSED static const Lights1 unagi_lights_unused1 = gdSPDefLights1(
-    0x2c, 0x25, 0x00,
-    0xb2, 0x94, 0x00, 0x28, 0x28, 0x28
-);
 
 // Unreferenced light group
-UNUSED static const Lights1 unagi_lights_unused2 = gdSPDefLights1(
-    0x35, 0x00, 0x00,
-    0xd5, 0x00, 0x00, 0x28, 0x28, 0x28
-);
 
 // Unreferenced light group
-UNUSED static const Lights1 unagi_lights_unused3 = gdSPDefLights1(
-    0x37, 0x00, 0x00,
-    0xdd, 0x00, 0x00, 0x28, 0x28, 0x28
-);
 
 // Unreferenced light group
-UNUSED static const Lights1 unagi_lights_unused4 = gdSPDefLights1(
-    0x3f, 0x3f, 0x3f,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // Unreferenced light group
-UNUSED static const Lights1 unagi_lights_unused5 = gdSPDefLights1(
-    0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x28, 0x28, 0x28
-);
 
 // Unreferenced light group
-UNUSED static const Lights1 unagi_lights_unused6 = gdSPDefLights1(
-    0x34, 0x00, 0x00,
-    0xd2, 0x00, 0x00, 0x28, 0x28, 0x28
-);
 
 // Unreferenced light group
-UNUSED static const Lights1 unagi_lights_unused7 = gdSPDefLights1(
-    0x34, 0x00, 0x00,
-    0xd3, 0x00, 0x00, 0x28, 0x28, 0x28
-);
 
 // Unreferenced light group
-UNUSED static const Lights1 unagi_lights_unused8 = gdSPDefLights1(
-    0x3f, 0x3f, 0x3f,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x0500AF20
 ROM_ASSET_LOAD_TEXTURE(unagi_seg5_texture_0500AF20, "actors/unagi/unagi_body.rgba16.inc.c", 0x0013b910, 41727, 0x0000af20, 2048);

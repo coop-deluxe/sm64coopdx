@@ -155,10 +155,7 @@ struct GraphNodeCamera *gCurGraphNodeCamera = NULL;
 struct GraphNodeObject *gCurGraphNodeObject = NULL;
 struct GraphNodeHeldObject *gCurGraphNodeHeldObject = NULL;
 u16 gAreaUpdateCounter = 0;
-
-#ifdef F3DEX_GBI_2
-LookAt lookAt;
-#endif
+LookAt* gCurLookAt;
 
 static struct GraphNodePerspective *sPerspectiveNode = NULL;
 static Gfx* sPerspectivePos   = NULL;
@@ -369,7 +366,7 @@ static void geo_process_master_list_sub(struct GraphNodeMasterList *node) {
     // changes below.
 #ifdef F3DEX_GBI_2
     Mtx lMtx;
-    guLookAtReflect(&lMtx, &lookAt, 0, 0, 0, /* eye */ 0, 0, 1, /* at */ 1, 0, 0 /* up */);
+    guLookAtReflect(&lMtx, gCurLookAt, 0, 0, 0, /* eye */ 0, 0, 1, /* at */ 1, 0, 0 /* up */);
 #endif
 
     if (enableZBuffer != 0) {
@@ -409,9 +406,6 @@ static void geo_process_master_list_sub(struct GraphNodeMasterList *node) {
  */
 static void geo_append_display_list(void *displayList, s16 layer) {
 
-#ifdef F3DEX_GBI_2
-    gSPLookAt(gDisplayListHead++, &lookAt);
-#endif
     if (gCurGraphNodeMasterList != 0) {
         struct DisplayListNode *listNode = growing_pool_alloc(gDisplayListHeap, sizeof(struct DisplayListNode));
 
@@ -494,7 +488,8 @@ static void geo_process_perspective(struct GraphNodePerspective *node) {
     sPerspectiveMtx = mtx;
     sPerspectivePos = gDisplayListHead;
     sPerspectiveAspect = aspect;
-
+    
+    guPerspective(mtx, &perspNorm, node->fov, sPerspectiveAspect, node->near, node->far, 1.0f);
     gSPPerspNormalize(gDisplayListHead++, perspNorm);
     gSPMatrix(gDisplayListHead++, VIRTUAL_TO_PHYSICAL(mtx), G_MTX_PROJECTION | G_MTX_LOAD | G_MTX_NOPUSH);
 
@@ -1410,7 +1405,7 @@ void geo_process_held_object(struct GraphNodeHeldObject *node) {
     if ((gMatStackIndex + 1) >= MATRIX_STACK_SIZE) { LOG_ERROR("Preventing attempt to exceed the maximum size %i for our matrix stack with size of %i.", MATRIX_STACK_SIZE - 1, gMatStackIndex); return; }
 
 #ifdef F3DEX_GBI_2
-    gSPLookAt(gDisplayListHead++, &lookAt);
+    gSPLookAt(gDisplayListHead++, gCurLookAt);
 #endif
 
     if (node->fnNode.func != NULL) {

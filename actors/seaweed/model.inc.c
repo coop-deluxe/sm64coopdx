@@ -2,10 +2,6 @@
 // Seaweed
 
 // 0x06007DF8
-static const Lights1 seaweed_seg6_lights_06007DF8 = gdSPDefLights1(
-    0x3f, 0x3f, 0x3f,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x06007E10
 ROM_ASSET_LOAD_TEXTURE(seaweed_seg6_texture_06007E10, "actors/seaweed/seaweed_tip.rgba16.inc.c", 0x001b9cc0, 41188, 0x00007e10, 2048);

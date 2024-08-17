@@ -2,10 +2,6 @@
 // Tree
 
 // 0x0302DE10
-static const Lights1 tree_seg3_lights_0302DE10 = gdSPDefLights1(
-    0x3f, 0x3f, 0x3f,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x0302DE28
 ROM_ASSET_LOAD_TEXTURE(tree_seg3_texture_0302DE28, "actors/tree/tree_left_side.rgba16.inc.c", 0x00201410, 96653, 0x0002de28, 4096);

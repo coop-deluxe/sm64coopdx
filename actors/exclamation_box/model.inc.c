@@ -2,10 +2,6 @@
 // Exclamation Box
 
 // 0x08012E10
-static const Lights1 exclamation_box_seg8_lights_08012E10 = gdSPDefLights1(
-    0x3f, 0x3f, 0x3f,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x08012E28
 ROM_ASSET_LOAD_TEXTURE(exclamation_box_seg8_texture_08012E28, "actors/exclamation_box/vanish_cap_box_front.rgba16.inc.c", 0x001f2200, 59076, 0x00012e28, 2048);

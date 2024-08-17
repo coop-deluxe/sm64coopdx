@@ -2,22 +2,10 @@
 // Manta Ray
 
 // 0x05001758
-static const Lights1 manta_seg5_lights_05001758 = gdSPDefLights1(
-    0x31, 0x3b, 0x3b,
-    0xc6, 0xee, 0xed, 0x28, 0x28, 0x28
-);
 
 // 0x05001770
-static const Lights1 manta_seg5_lights_05001770 = gdSPDefLights1(
-    0x00, 0x16, 0x18,
-    0x03, 0x5b, 0x63, 0x28, 0x28, 0x28
-);
 
 // Unreferenced light group
-static const Lights1 manta_lights_unused = gdSPDefLights1(
-    0x3f, 0x3f, 0x35,
-    0xff, 0xff, 0xd7, 0x28, 0x28, 0x28
-);
 
 // 0x050017A0
 ROM_ASSET_LOAD_TEXTURE(manta_seg5_texture_050017A0, "actors/manta/manta_fin_corner.rgba16.inc.c", 0x0013b910, 41727, 0x000017a0, 2048);
