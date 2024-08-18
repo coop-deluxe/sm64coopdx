@@ -14,7 +14,7 @@
 #define MAX_SAVE_NAME_STRING 32
 
 #define DEFAULT_PORT 7777
-#define DEFAULT_COOPNET_IP "coop.burritobot.net"
+#define DEFAULT_COOPNET_IP "net.coop64.us"
 #define DEFAULT_COOPNET_PORT 34197
 
 typedef struct {
