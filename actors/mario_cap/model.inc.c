@@ -390,7 +390,7 @@ const Gfx mario_cap_seg3_dl_03023298[] = {
     gsDPSetCombineLERP(TEXEL0, 0, SHADE, TEXEL1, TEXEL0, 0, ENVIRONMENT, 0, TEXEL0, 0, SHADE, TEXEL1, TEXEL0, 0, ENVIRONMENT, 0),
     gsSPTexture(65535, 65535, 0, 0, 1),
     gsSPLight(&mario_cap_black_lights_group.l, 1),
-    gsSPCopyLightEXT(2, 18),
+    gsSPCopyLightEXT(2, 19),
     gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 1, mario_cap_texture_metal_wings_half_1_shade),
     gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 0, 0, 7, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0),
     gsDPLoadBlock(7, 0, 0, 2047, 256),
