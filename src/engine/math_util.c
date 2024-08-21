@@ -2,6 +2,7 @@
 
 #include "sm64.h"
 #include "engine/graph_node.h"
+#include "include/libc/math.h"
 #include "math_util.h"
 #include "surface_collision.h"
 

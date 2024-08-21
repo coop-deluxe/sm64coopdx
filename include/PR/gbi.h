@@ -5,6 +5,7 @@
  */
 
 #include <PR/mbi.h>
+#include <PR/ultratypes.h>
 #include "gbi_extension.h"
 
 #ifndef F3DEX3_H
@@ -13,6 +14,8 @@
 #define F3DEX_GBI_2  1
 #define F3DEX_GBI_PL 1
 #define F3DEX_GBI_3  1
+
+#define GBI_FLOATS 1
 
 #ifdef REQUIRE_SEMICOLONS_AFTER_GBI_COMMANDS
 /* OoT style, semicolons required after using macros, cleaner code. If modding
@@ -105,6 +108,9 @@ of warnings if you use -Wpedantic. */
 #define G_TRIFAN            0x09
 #define G_LIGHTTORDP        0x0A
 #define G_RELSEGMENT        0x0B
+
+/* Commands needed specfically for Co-Op */
+#define G_COPYMEM		    0xD2
 
 /* names differ between F3DEX2 and F3DZEX */
 #define G_BRANCH_Z G_BRANCH_WZ
@@ -1047,7 +1053,11 @@ longer a multiple of 8 (DMA word). This was not used in any command anyway. */
  * Vertex (set up for use with colors)
  */
 typedef struct {
-    short          ob[3];   /** x, y, z */
+#ifndef GBI_FLOATS
+	short          ob[3];   /** x, y, z */
+#else
+	float          ob[3];   /** x, y, z */
+#endif
     unsigned short flag;    /** Holds packed normals, or unused */
     short          tc[2];   /** texture coord */
     unsigned char  cn[4];   /** color & alpha */
@@ -1057,7 +1067,11 @@ typedef struct {
  * @copydetails Vtx_t
  */
 typedef struct {
-    short          ob[3];   /** x, y, z */
+#ifndef GBI_FLOATS
+	short          ob[3];   /** x, y, z */
+#else
+	float          ob[3];   /** x, y, z */
+#endif
     unsigned short flag;    /** Packed normals are not used when normals are in colors */
     short          tc[2];   /** texture coord */
     signed char    n[3];    /** normal */
@@ -1071,18 +1085,6 @@ typedef union {
     Vtx_t  v;   /** Use this one for colors  */
     Vtx_tn n;   /** Use this one for normals */
     long long int force_structure_alignment;
-    #ifdef F3DEX_GBI_SHARED
-    #define gSPCopyLightEXT(pkt, dst, src) \
-        gCopyMemEXT((pkt),G_COPYMEM,G_MV_LIGHT,(dst)*24+24,(src)*24+24,sizeof(Light))
-    #define gsSPCopyLightEXT(dst, src) \
-        gsCopyMemEXT(     G_COPYMEM,G_MV_LIGHT,(dst)*24+24,(src)*24+24,sizeof(Light))
-    #define gSPCopyLightsPlayerPart(pkt, part) \
-        gSPCopyLightEXT((pkt), 1, ((2 * ((part) + 1)) + 1)); \
-        gSPCopyLightEXT((pkt), 2, ((2 * ((part) + 1)) + 2));
-    #define gsSPCopyLightsPlayerPart(part) \
-        gsSPCopyLightEXT(1, ((2 * ((part) + 1)) + 1)), \
-        gsSPCopyLightEXT(2, ((2 * ((part) + 1)) + 2))
-    #endif
 } Vtx;
 
 typedef struct {
@@ -1103,6 +1105,7 @@ typedef struct {
     unsigned char v[3];
 } Tri;
 
+#ifndef GBI_FLOATS
 /**
  * 4x4 matrix, fixed point s15.16 format.
  * First 8 words are integer portion of the 4x4 matrix
@@ -1117,6 +1120,12 @@ typedef union {
     };
     long long int force_structure_alignment;
 } Mtx;
+#else
+typedef float Mtx_t[4][4];
+typedef struct {
+    Mtx_t   m;
+} Mtx;
+#endif
 
 #define IPART(x) (((s32)((x) * 0x10000) >> 16) & 0xFFFF)
 #define FPART(x)  ((s32)((x) * 0x10000) & 0xFFFF)
@@ -1722,7 +1731,7 @@ typedef struct {
     int          cmd : 8;
     unsigned int par : 8;
     unsigned int len : 16;
-    unsigned int addr;
+    uintptr_t addr;
 } Gdma;
 
 /**
@@ -1733,7 +1742,7 @@ typedef struct {
     unsigned int len : 8;
     unsigned int ofs : 8;
     unsigned int par : 8;
-    unsigned int addr;
+    uintptr_t addr;
 } Gdma2;
 
 /**
@@ -1973,23 +1982,29 @@ typedef struct {
     unsigned int  len  : 8; /* n */
     unsigned int  pad2 : 4;
     unsigned char par;      /* v0 */
-    unsigned int  addr;
+    uintptr_t  addr;
 } Gvtx;
 
 /**
  * Generic Gfx Packet
  */
 typedef struct {
-    unsigned int w0;
-    unsigned int w1;
+	uintptr_t w0;
+	uintptr_t w1;
 } Gwords;
 
 /**
  * This union is the fundamental type of the display list.
  * It is, by law, exactly 64 bits in size.
+ *
+ * (Edit: except on 64-bit, where it is exactly 128 bit. On little-endian or
+ * 64-bit systems, only the 'words' member may be accessed; the rest of the
+ * structs don't have matching layouts for now.)
  */
 typedef union {
     Gwords          words;
+
+#if !defined(F3D_OLD) && IS_BIG_ENDIAN && !IS_64_BIT
     Gnoop           noop;
     Gdma            dma;
     Gdma2           dma2;
@@ -2015,6 +2030,8 @@ typedef union {
     Gsettilesize    settilesize;
     Gloadtlut       loadtlut;
     Gsetprimdepth   setprimdepth;
+#endif
+
     long long int force_structure_alignment;
 } Gfx;
 
@@ -2081,6 +2098,23 @@ _DW({                                                   \
     _SHIFTL((idx),            0, 8)),   \
     (uintptr_t)(adrs)                \
 }
+
+
+#ifdef F3DEX_GBI_SHARED
+#define	gCopyMemEXT(pkt, c, idx, dst, src, len)				\
+{									\
+	Gfx *_g = (Gfx *)(pkt);						\
+	_g->words.w0 = (_SHIFTL((c),24,8)|_SHIFTL((src)/8,16,8)|	\
+			_SHIFTL((dst)/8,8,8)|_SHIFTL((idx),0,8));	\
+	_g->words.w1 = (uintptr_t)(((len)-1)/8);				\
+}
+#define	gsCopyMemEXT(c, idx, dst, src, len)					\
+{{									\
+	(_SHIFTL((c),24,8)|_SHIFTL((src)/8,16,8)|	\
+	 _SHIFTL((dst)/8,8,8)|_SHIFTL((idx),0,8)),			\
+	(uintptr_t)(((len)-1)/8)						\
+}}
+#endif
 
 #define gSPNoOp(pkt)    gDma0p(pkt, G_SPNOOP, 0, 0)
 #define gsSPNoOp()      gsDma0p(    G_SPNOOP, 0, 0)
@@ -2239,7 +2273,7 @@ _DW({                                               \
    (_SHIFTL(G_VTX,      24, 8) |    \
     _SHIFTL((n),        12, 8) |    \
     _SHIFTL((v0) + (n),  1, 7)),    \
-    (uintptr_t)(v)               \
+    (uintptr_t)(v)                  \
 }
 
 #define gSPViewport(pkt, v) \
@@ -3315,6 +3349,25 @@ _DW({                                               \
  */
 #define gsSPLight(l, n) \
     gsDma2p(      G_MOVEMEM, (l), sizeof(Light), G_MV_LIGHT, _LIGHT_TO_OFFSET(n))
+/*
+ * EXTENDED COMMAND
+ * Copy one light's parameters to the other.
+ */
+#ifdef F3DEX_GBI_SHARED
+#define gSPCopyLightEXT(pkt, dst, src) \
+    gCopyMemEXT((pkt), G_COPYMEM, G_MV_LIGHT, (dst)*24+24, (src)*24+24, sizeof(Light))
+    
+#define gsSPCopyLightEXT(dst, src) \
+    gsCopyMemEXT(      G_COPYMEM, G_MV_LIGHT, (dst)*24+24, (src)*24+24, sizeof(Light))
+    
+#define gSPCopyLightsPlayerPart(pkt, part) \
+    gSPCopyLightEXT((pkt), 1, ((2 * ((part) + 1)) + 1)); \
+    gSPCopyLightEXT((pkt), 2, ((2 * ((part) + 1)) + 2));
+    
+#define gsSPCopyLightsPlayerPart(part) \
+    gsSPCopyLightEXT(1, ((2 * ((part) + 1)) + 1)), \
+    gsSPCopyLightEXT(2, ((2 * ((part) + 1)) + 2))
+#endif
 
 /**
  * l should point to an Ambient struct.
@@ -3755,7 +3808,7 @@ _DW({                                               \
     _SHIFTL(fmt,         21,  3) |          \
     _SHIFTL(siz,         19,  2) |          \
     _SHIFTL((width) - 1,  0, 12)),          \
-    (uintptr_t)(i)                       \
+    (uintptr_t)(i)                          \
 }
 
 #define gDPSetColorImage(pkt, f, s, w, i)   gSetImage(pkt, G_SETCIMG, f, s, w, i)

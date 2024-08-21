@@ -5,6 +5,7 @@
 #include "geo_misc.h"
 #include "gfx_dimensions.h"
 #include "level_update.h"
+#include "include/libc/math.h"
 #include "memory.h"
 #include "save_file.h"
 #include "segment2.h"

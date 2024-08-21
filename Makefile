@@ -95,7 +95,7 @@ WINDOWS_AUTO_BUILDER ?= 0
 # Setup extra cflags
 EXTRA_CFLAGS ?=
 EXTRA_CPP_FLAGS ?=
-EXTRA_CFLAGS += -Wno-format-security -Wno-trigraphs
+EXTRA_CFLAGS += -Wno-missing-braces -Wno-format-security -Wno-trigraphs
 
 dev:; @$(MAKE) DEVELOPMENT=1
 
@@ -209,7 +209,7 @@ else ifeq ($(VERSION),sh)
 endif
 
 # FIXLIGHTS - converts light objects to light color commands for assets, needed for vanilla-style lighting
-FIXLIGHTS ?= 1
+FIXLIGHTS ?= 0
 
 # Determine our optimization level.
 # Optimization Levels 0 through 5 optimize for speed,
@@ -827,15 +827,15 @@ DEF_INC_CFLAGS := $(foreach i,$(INCLUDE_DIRS),-I$(i)) $(C_DEFINES)
 CC_CHECK := $(CC)
 
 ifeq ($(WINDOWS_BUILD),1)
-  CC_CHECK_CFLAGS := -fsyntax-only -fsigned-char $(BACKEND_CFLAGS) $(DEF_INC_CFLAGS) -Wall -Wextra $(TARGET_CFLAGS) -DWINSOCK
-  CFLAGS := $(OPT_FLAGS) $(DEF_INC_CFLAGS) $(BACKEND_CFLAGS) $(TARGET_CFLAGS) -fno-strict-aliasing -fwrapv -DWINSOCK
+  CC_CHECK_CFLAGS := -std=c99 -fsyntax-only -fsigned-char $(BACKEND_CFLAGS) $(DEF_INC_CFLAGS) -Wall -Wextra $(TARGET_CFLAGS) -DWINSOCK
+  CFLAGS := -std=c99 $(OPT_FLAGS) $(DEF_INC_CFLAGS) $(BACKEND_CFLAGS) $(TARGET_CFLAGS) -fno-strict-aliasing -fwrapv -DWINSOCK
 
   ifeq ($(TARGET_BITS), 32)
     BACKEND_LDFLAGS += -ldbghelp
   endif
 else ifeq ($(TARGET_N64),0) # Linux / Other builds below
-  CC_CHECK_CFLAGS := -fsyntax-only -fsigned-char $(BACKEND_CFLAGS) $(DEF_INC_CFLAGS) -Wall -Wextra $(TARGET_CFLAGS)
-  CFLAGS := $(OPT_FLAGS) $(DEF_INC_CFLAGS) $(BACKEND_CFLAGS) $(TARGET_CFLAGS) -fno-strict-aliasing -fwrapv
+  CC_CHECK_CFLAGS := -std=c99 -fsyntax-only -fsigned-char $(BACKEND_CFLAGS) $(DEF_INC_CFLAGS) -Wall -Wextra $(TARGET_CFLAGS)
+  CFLAGS := -std=c99 $(OPT_FLAGS) $(DEF_INC_CFLAGS) $(BACKEND_CFLAGS) $(TARGET_CFLAGS) -fno-strict-aliasing -fwrapv
 else # C compiler options for N64
   CC_CHECK_CFLAGS := -fsyntax-only -fsigned-char $(CC_CFLAGS) $(TARGET_CFLAGS) -std=gnu90 -Wall -Wextra -Wno-main -DNON_MATCHING -DAVOID_UB $(DEF_INC_CFLAGS)
   CFLAGS = -G 0 $(OPT_FLAGS) $(TARGET_CFLAGS) $(MIPSISET) $(DEF_INC_CFLAGS)
