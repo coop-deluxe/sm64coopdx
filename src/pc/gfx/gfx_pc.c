@@ -809,9 +809,9 @@ static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, cons
                 }
             }
 
-            d->color.r = r > 255 ? 255 : r;
-            d->color.g = g > 255 ? 255 : g;
-            d->color.b = b > 255 ? 255 : b;
+            //d->color.r = r > 255 ? 255 : r;
+            //d->color.g = g > 255 ? 255 : g;
+            //d->color.b = b > 255 ? 255 : b;
 
             if (rsp.geometry_mode & G_TEXTURE_GEN) {
                 float dotx = 0, doty = 0;
