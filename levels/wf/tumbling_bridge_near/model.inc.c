@@ -1,9 +1,5 @@
 #include "pc/rom_assets.h"
 // 0x0700DE98 - 0x0700DEB0
-static const Lights1 wf_seg7_lights_0700DE98 = gdSPDefLights1(
-    0x66, 0x66, 0x66,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x0700DEB0 - 0x0700DFA0
 ROM_ASSET_LOAD_VTX(wf_seg7_vertex_0700DEB0, 0x00496090, 31162, 0x0000deb0, 240);

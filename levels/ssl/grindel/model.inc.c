@@ -1,9 +1,5 @@
 #include "pc/rom_assets.h"
 // 0x07021E50 - 0x07021E68
-static const Lights1 ssl_seg7_lights_07021E50 = gdSPDefLights1(
-    0x7f, 0x7f, 0x7f,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x07021E68 - 0x07021EE8
 ROM_ASSET_LOAD_VTX(ssl_seg7_vertex_07021E68, 0x003e76b0, 82641, 0x00021e68, 128);

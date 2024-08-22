@@ -1,9 +1,5 @@
 #include "pc/rom_assets.h"
 // 0x07043C38 - 0x07043C50
-static const Lights1 inside_castle_seg7_lights_07043C38 = gdSPDefLights1(
-    0x5f, 0x5f, 0x5f,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x07043C50 - 0x07043C90
 ROM_ASSET_LOAD_VTX(inside_castle_seg7_vertex_07043C50, 0x00396340, 232834, 0x00043c50, 64);

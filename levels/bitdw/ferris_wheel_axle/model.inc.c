@@ -1,9 +1,5 @@
 #include "pc/rom_assets.h"
 // 0x0700B4F0 - 0x0700B508
-static const Lights1 bitdw_seg7_lights_0700B4F0 = gdSPDefLights1(
-    0x39, 0x6f, 0x5d,
-    0x79, 0xeb, 0xc5, 0x28, 0x28, 0x28
-);
 
 // 0x0700B508 - 0x0700B5F8
 ROM_ASSET_LOAD_VTX(bitdw_seg7_vertex_0700B508, 0x00454e00, 29021, 0x0000b508, 240);

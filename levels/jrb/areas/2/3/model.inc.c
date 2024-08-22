@@ -1,9 +1,5 @@
 #include "pc/rom_assets.h"
 // 0x0700FEB8 - 0x0700FED0
-static const Lights1 jrb_seg7_lights_0700FEB8 = gdSPDefLights1(
-    0x50, 0x66, 0x58,
-    0xc8, 0xff, 0xdc, 0x28, 0x28, 0x28
-);
 
 // 0x0700FED0 - 0x0700FFC0
 ROM_ASSET_LOAD_VTX(jrb_seg7_vertex_0700FED0, 0x0041a760, 37817, 0x0000fed0, 240);

@@ -1,9 +1,5 @@
 #include "pc/rom_assets.h"
 // 0x07022B48 - 0x07022B60
-static const Lights1 hmc_seg7_lights_07022B48 = gdSPDefLights1(
-    0x79, 0x79, 0x79,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x07022B60 - 0x07022C60
 ROM_ASSET_LOAD_VTX(hmc_seg7_vertex_07022B60, 0x003d0dc0, 89137, 0x00022b60, 256);

@@ -2,10 +2,6 @@
 // Quicksand Pit
 
 // 0x07004000 - 0x07004018
-static const Lights1 ssl_lights_quicksand_pit = gdSPDefLights1(
-    0x3f, 0x3f, 0x3f,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
 
 // 0x07004018 - 0x07004818
 ROM_ASSET_LOAD_TEXTURE(ssl_quicksand, "levels/ssl/7.rgba16.inc.c", 0x0032d070, 31409, 0x00008000, 2048);
