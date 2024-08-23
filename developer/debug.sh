@@ -8,10 +8,10 @@ else
 fi
 
 # find file
-FILE=./build/us_pc/sm64.us.f3dex2e.exe
+FILE=./build/us_pc/sm64coopdx_rt64.exe
 WINPTY=winpty
 if [ ! -f "$FILE" ]; then
-    FILE=./build/us_pc/sm64.us.f3dex2e
+    FILE=./build/us_pc/sm64coopdx_rt64.exe
     WINPTY=
 fi
 

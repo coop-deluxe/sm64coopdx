@@ -2045,7 +2045,8 @@ void gfx_rt64_render_thread() {
 			RT64.GPUFrameIndex = -1;
 		}
 
-		if (curFrameIndex >= 0) {
+		if (curFrameIndex >= 0) {			
+			printf(" [1] ");
 			// Run any necessary preprocessing.
 			preprocessStart = gfx_rt64_profile_marker();
 			gfx_rt64_render_thread_preprocess_frames(&RT64.frames[curFrameIndex], &RT64.frames[prevFrameIndex]);
@@ -2056,9 +2057,12 @@ void gfx_rt64_render_thread() {
 			// Draw as many frames as the target framerate indicates.
 			const unsigned int framesPerUpdate = renderTargetFPS / 30;
 			const float weightPerFrame = 1.0f / framesPerUpdate;
+			printf(" [2] ");
 			for (int f = 0; f < framesPerUpdate; f++) {
+				printf(" [3] ");
 				// Print to the inspector the previous time it took to draw a frame.
 				if ((RT64.renderInspector != nullptr) && RT64.renderInspectorActive) {
+					printf(" [4] ");
 					const std::lock_guard<std::mutex> lock(RT64.renderInspectorMutex);
 					char preprocessTimeMsg[64], renderDeltaTimeMsg[64];
 					sprintf(preprocessTimeMsg, "RENDER PREPROCESS: %.3f ms\n", preprocessTimeMs);
@@ -2067,9 +2071,11 @@ void gfx_rt64_render_thread() {
 					RT64.lib.PrintMessageInspector(RT64.renderInspector, preprocessTimeMsg);
 					RT64.lib.PrintMessageInspector(RT64.renderInspector, renderDeltaTimeMsg);
 					for (const std::string &message : RT64.renderInspectorMessages) {
+						printf(" [5] ");
 						RT64.lib.PrintMessageInspector(RT64.renderInspector, message.c_str());
 					}
 
+					printf(" [6] ");
 					{
 						const std::lock_guard<std::mutex> lightingLock(RT64.levelAreaLightingMutex);
 						const std::lock_guard<std::mutex> pickLock(RT64.pickTextureMutex);
@@ -2083,9 +2089,10 @@ void gfx_rt64_render_thread() {
 						RT64_LIGHT *lights = RT64.levelAreaLighting[levelIndex][areaIndex].lights;
 						int *lightCount = &RT64.levelAreaLighting[levelIndex][areaIndex].lightCount;
 						RT64.lib.SetLightsInspector(RT64.renderInspector, lights, lightCount, MAX_LEVEL_LIGHTS);
-
+						printf(" [7] ");
 						// Inspect the current picked material.
 						if (RT64.pickTextureHash > 0) {
+							printf(" [8] ");
 							const std::lock_guard<std::mutex> texModsLock(RT64.texModsMutex);
 							auto texNameIt = RT64.texNameMap.find(RT64.pickTextureHash);
 							const std::string textureName = (texNameIt != RT64.texNameMap.end()) ? texNameIt->second : std::string();
@@ -2101,10 +2108,13 @@ void gfx_rt64_render_thread() {
 							}
 
 							RT64.lib.SetMaterialInspector(RT64.renderInspector, texMod->materialMod, textureName.c_str());
+							printf(" [9] ");
 						}
+						printf(" [A] ");
 					}
+					printf(" [B] ");
 				}
-
+				printf(" [C] ");
 				// Draw the frame and measure the time right before and right after.
 				frameStart = gfx_rt64_profile_marker();
 				gfx_rt64_render_thread_draw_frame(&RT64.frames[curFrameIndex], &RT64.frames[prevFrameIndex], (f + 1) * weightPerFrame, targetDeltaTimeMs * (1 + framesSkipped));
@@ -2121,13 +2131,15 @@ void gfx_rt64_render_thread() {
 				else {
 					framesSkipped = 0;
 				}
+				printf(" [D] ");
 			}
-
+			printf(" [E] ");
 			// Clear the barrier.
 			{
 				const std::lock_guard<std::mutex> lock(RT64.renderFrameIndexMutex);
 				RT64.BarrierFrameIndex = -1;
 			}
+			printf(" [F] ");
 		}
 	}
 }
