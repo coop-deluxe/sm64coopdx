@@ -16,9 +16,9 @@ extern "C" {
 #include "gfx/gfx_dummy.h"
 
 #if defined(RAPI_RT64)
+# define RAPI_NAME "RT64"
 # define WAPI gfx_rt64_wapi
 # define RAPI gfx_rt64_rapi
-# define RAPI_NAME "RT64"
 #else
 # if defined(WAPI_SDL1) || defined(WAPI_SDL2)
 #  define WAPI gfx_sdl

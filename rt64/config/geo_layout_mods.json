@@ -362,16 +362,6 @@
             "name": "idle_water_wave_geo"
         },
         {
-            "interpolationEnabled": false,
-            "materialMod": null,
-            "name": "intro_geo_00035C"
-        },
-        {
-            "interpolationEnabled": false,
-            "materialMod": null,
-            "name": "intro_geo_0003B8"
-        },
-        {
             "materialMod": null,
             "name": "invisible_bowser_accessory_geo"
         },

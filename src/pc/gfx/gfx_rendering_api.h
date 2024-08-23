@@ -2,6 +2,7 @@
 #define GFX_RENDERING_API_H
 
 #include "gfx_rendering_api_config.h"
+
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
@@ -16,16 +17,9 @@ struct GfxRenderingAPI {
     struct ShaderProgram *(*create_and_load_new_shader)(struct ColorCombiner* cc);
     struct ShaderProgram *(*lookup_shader)(struct ColorCombiner* cc);
     void (*shader_get_info)(struct ShaderProgram *prg, uint8_t *num_inputs, bool used_textures[2]);
-#ifndef GFX_REQUIRE_TEXTURE_NAME
     uint32_t (*new_texture)(void);
-#else
-    uint32_t (*new_texture)(const char *name);
-#endif
     void (*select_texture)(int tile, uint32_t texture_id);
     void (*upload_texture)(const uint8_t *rgba32_buf, int width, int height);
-#ifdef GFX_UPLOAD_TEXTURE_FILE
-    void (*upload_texture_file)(const char *file_path, const uint8_t *file_buf, uint64_t file_buf_size);
-#endif
     void (*set_sampler_parameters)(int sampler, bool linear_filter, uint32_t cms, uint32_t cmt);
     void (*set_depth_test)(bool depth_test);
     void (*set_depth_mask)(bool z_upd);
@@ -46,9 +40,6 @@ struct GfxRenderingAPI {
 #endif
 #ifdef GFX_ENABLE_GRAPH_NODE_MODS
     void (*set_graph_node_mod)(void *graph_node_mod);
-#endif
-#ifdef GFX_SEPARATE_SKYBOX
-    void (*set_skybox)(uint32_t texture_id, float diffuse_color[3]);
 #endif
     void (*init)(void);
     void (*on_resize)(void);

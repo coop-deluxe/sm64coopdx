@@ -252,7 +252,7 @@ typedef struct {
     float prev_model_matrix[4][4];
     float offset_matrix[4][4];
 } Matrices;
-
+    
 static struct {
     bool model_matrix_used;
     bool is_ortho;
@@ -534,11 +534,7 @@ static bool gfx_texture_cache_lookup(int tile, struct TextureHashmapNode **n, co
     if (!node) { return false; }
     *node = &gfx_texture_cache.pool[gfx_texture_cache.pool_pos++];
     if ((*node)->texture_addr == NULL) {
-#ifdef GFX_REQUIRE_TEXTURE_NAME
-        (*node)->texture_id = gfx_rapi->new_texture((const char *)(orig_addr));
-#else
         (*node)->texture_id = gfx_rapi->new_texture();
-#endif
     }
     gfx_rapi->select_texture(tile, (*node)->texture_id);
     gfx_rapi->set_sampler_parameters(tile, false, 0, 0);
@@ -1005,6 +1001,11 @@ static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, cons
         short V = v->tc[1] * rsp.texture_scaling_factor.t >> 16;
 
         if (rsp.geometry_mode & G_LIGHTING) {
+#ifdef GFX_OUTPUT_NORMALS_TO_VBO
+            d->nx = vn->n[0] / 127.0f;
+            d->ny = vn->n[1] / 127.0f;
+            d->nz = vn->n[2] / 127.0f;
+#endif
             if (rsp.lights_changed) {
                 bool applyLightingDir = !(rsp.geometry_mode & G_TEXTURE_GEN);
                 for (int32_t i = 0; i < rsp.current_num_lights - 1; i++) {
@@ -1127,7 +1128,9 @@ static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, cons
 #endif
         }
 
+#ifndef GFX_SEPARATE_FOG
         d->color.a = v->cn[3];
+#endif
     }
 }
 
@@ -1237,6 +1240,7 @@ static void OPTIMIZE_O3 gfx_sp_tri1(uint8_t vtx1_idx, uint8_t vtx2_idx, uint8_t 
     cm->use_2cycle   = (rdp.other_mode_h & (3U << G_MDSFT_CYCLETYPE)) == G_CYC_2CYCLE;
     cm->use_fog      = (rdp.other_mode_l >> 30)                       == G_BL_CLR_FOG;
     cm->light_map    = (rsp.geometry_mode & G_LIGHT_MAP_EXT)          == G_LIGHT_MAP_EXT;
+	bool use_coverage = (rdp.other_mode_l & G_AC_COVERAGE)             == G_AC_COVERAGE;
 
 #if defined (RAPI_GL) && defined(TRANSPARENCY_GL)
 	glDisable(GL_SAMPLE_ALPHA_TO_COVERAGE);
@@ -1248,7 +1252,6 @@ static void OPTIMIZE_O3 gfx_sp_tri1(uint8_t vtx1_idx, uint8_t vtx2_idx, uint8_t 
 		glEnable(GL_SAMPLE_ALPHA_TO_ONE);
 	}
 #endif
-
     if (cm->texture_edge) {
         cm->use_alpha = true;
     }
@@ -1300,12 +1303,18 @@ static void OPTIMIZE_O3 gfx_sp_tri1(uint8_t vtx1_idx, uint8_t vtx2_idx, uint8_t 
         }
     }
 
+#ifdef GFX_SEPARATE_FOG
+    if (cm->use_fog) {
+        gfx_rapi->set_fog(rdp.fog_color.r, rdp.fog_color.g, rdp.fog_color.b, rsp.fog_mul, rsp.fog_offset);
+    }
+#endif
+
     bool use_texture = used_textures[0] || used_textures[1];
     uint32_t tex_width = (rdp.texture_tile.lrs - rdp.texture_tile.uls + 4) / 4;
     uint32_t tex_height = (rdp.texture_tile.lrt - rdp.texture_tile.ult + 4) / 4;
 
 #ifndef GFX_SEPARATE_PROJECTIONS
-    bool z_is_from_0_to_1 = gfx_rapi->z_is_from_0_to_1();    
+    bool z_is_from_0_to_1 = gfx_rapi->z_is_from_0_to_1();
 #else
     bool z_is_from_0_to_1 = separate_projections.is_ortho && gfx_rapi->z_is_from_0_to_1();
 #endif
@@ -1325,6 +1334,7 @@ static void OPTIMIZE_O3 gfx_sp_tri1(uint8_t vtx1_idx, uint8_t vtx2_idx, uint8_t 
         buf_vbo[buf_vbo_len++] = v_arr[i]->ny;
         buf_vbo[buf_vbo_len++] = v_arr[i]->nz;
 #endif
+
         if (use_texture) {
             float u = (v_arr[i]->u - rdp.texture_tile.uls * 8) / 32.0f;
             float v = (v_arr[i]->v - rdp.texture_tile.ult * 8) / 32.0f;
@@ -1688,6 +1698,7 @@ static void gfx_draw_rectangle(int32_t ulx, int32_t uly, int32_t lrx, int32_t lr
 #ifdef GFX_SEPARATE_PROJECTIONS
     separate_projections.is_ortho = true;
 #endif
+
     uint32_t saved_other_mode_h = rdp.other_mode_h;
     uint32_t cycle_type = (rdp.other_mode_h & (3U << G_MDSFT_CYCLETYPE));
 
@@ -2127,7 +2138,7 @@ struct GfxRenderingAPI *gfx_get_current_rendering_api(void) {
     return gfx_rapi;
 }
 
-void gfx_start_frame() {
+void gfx_start_frame(void) {
     if (gGfxPcResetTex1 > 0) {
         gGfxPcResetTex1--;
         rdp.loaded_texture[1].addr = NULL;

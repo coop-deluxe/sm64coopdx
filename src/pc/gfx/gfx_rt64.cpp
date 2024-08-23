@@ -164,7 +164,7 @@ static void gfx_rt64_rapi_shader_get_info(struct ShaderProgram *prg, uint8_t *nu
     used_textures[1] = prg->usedTextures[1];
 }
 
-RT64_SHADER *gfx_rt64_render_thread_load_shader_variant(const char *type, ShaderProgram *shaderProgram, bool raytrace, int filter, int hAddr, int vAddr, bool normalMap, bool specularMap) {
+RT64_SHADER *gfx_rt64_render_thread_load_shader_variant(ShaderProgram *shaderProgram, bool raytrace, int filter, int hAddr, int vAddr, bool normalMap, bool specularMap) {
 	uint16_t variantKey = shaderVariantKey(raytrace, filter, hAddr, vAddr, normalMap, specularMap);
 	if (shaderProgram->shaderVariantMap[variantKey] == nullptr) {
 		int flags = raytrace ? RT64_SHADER_RAYTRACE_ENABLED : RT64_SHADER_RASTER_ENABLED;
@@ -179,97 +179,97 @@ RT64_SHADER *gfx_rt64_render_thread_load_shader_variant(const char *type, Shader
 		shaderProgram->shaderVariantMap[variantKey] = RT64.lib.CreateShader(RT64.device, shaderProgram->shaderId, filter, hAddr, vAddr, flags);
 
 		// Print shader discovery to reduce stutters when playing through the game.
-		printf("gfx_rt64_render_thread_preload_shader(%s, 0x%X, %d, %d, %d, %d, %s, %s);\n", type, shaderProgram->shaderId, raytrace, filter, hAddr, vAddr, normalMap ? "true" : "false", specularMap ? "true" : "false");
+		printf("gfx_rt64_render_thread_preload_shader(0x%X, %d, %d, %d, %d, %s, %s);\n", shaderProgram->shaderId, raytrace, filter, hAddr, vAddr, normalMap ? "true" : "false", specularMap ? "true" : "false");
 	}
 
 	return shaderProgram->shaderVariantMap[variantKey];
 }
 
-void gfx_rt64_render_thread_preload_shader(const char *type, unsigned int shader_id, bool raytrace, int filter, int hAddr, int vAddr, bool normalMap, bool specularMap) {	
+void gfx_rt64_render_thread_preload_shader(unsigned int shader_id, bool raytrace, int filter, int hAddr, int vAddr, bool normalMap, bool specularMap) {
 	ShaderProgram *shaderProgram = gfx_rt64_rapi_lookup_shader(shader_id);
 	if (shaderProgram == nullptr) {
 		shaderProgram = gfx_rt64_rapi_create_and_load_new_shader(shader_id);
 	}
 
-	gfx_rt64_render_thread_load_shader_variant(type, shaderProgram, raytrace, filter, hAddr, vAddr, normalMap, specularMap);
+	gfx_rt64_render_thread_load_shader_variant(shaderProgram, raytrace, filter, hAddr, vAddr, normalMap, specularMap);
 };
 
 void gfx_rt64_render_thread_preload_shaders() {
-	gfx_rt64_render_thread_preload_shader("normal", 0x45, 1, 1, 0, 0, true, false);
-	gfx_rt64_render_thread_preload_shader("normal", 0x45, 1, 1, 2, 2, true, false);
-	gfx_rt64_render_thread_preload_shader("normal", 0x45, 1, 1, 0, 0, false, false);
-	gfx_rt64_render_thread_preload_shader("normal", 0x45, 1, 1, 2, 2, false, false);
-	gfx_rt64_render_thread_preload_shader("normal", 0x45, 1, 1, 0, 2, false, false);
-	gfx_rt64_render_thread_preload_shader("normal", 0x45, 1, 1, 2, 0, false, false);
-	gfx_rt64_render_thread_preload_shader("normal", 0x200, 0, 0, 0, 0, false, false);
-	gfx_rt64_render_thread_preload_shader("normal", 0x200, 1, 0, 0, 0, false, false);
-	gfx_rt64_render_thread_preload_shader("normal", 0x38D, 1, 1, 2, 2, false, false);
-	gfx_rt64_render_thread_preload_shader("normal", 0x38D, 1, 1, 0, 0, false, false);
-	gfx_rt64_render_thread_preload_shader("normal", 0x551, 1, 1, 0, 0, false, false);
-	gfx_rt64_render_thread_preload_shader("normal", 0xA00, 0, 1, 2, 2, false, false);
-	gfx_rt64_render_thread_preload_shader("normal", 0xA00, 1, 1, 0, 0, false, false);
-	gfx_rt64_render_thread_preload_shader("normal", 0xA00, 1, 1, 2, 2, false, false);
-	gfx_rt64_render_thread_preload_shader("normal", 0xA00, 1, 1, 0, 0, true, false);
-	gfx_rt64_render_thread_preload_shader("normal", 0x1045045, 1, 1, 2, 2, true, false);
-	gfx_rt64_render_thread_preload_shader("normal", 0x1045045, 1, 1, 2, 2, false, false);
-	gfx_rt64_render_thread_preload_shader("normal", 0x1045045, 1, 1, 1, 1, false, false);
-	gfx_rt64_render_thread_preload_shader("normal", 0x1045045, 1, 1, 2, 0, false, false);
-	gfx_rt64_render_thread_preload_shader("normal", 0x1045045, 1, 1, 0, 0, false, false);
-	gfx_rt64_render_thread_preload_shader("normal", 0x1045045, 0, 0, 2, 2, false, false);
-	gfx_rt64_render_thread_preload_shader("normal", 0x1045045, 0, 0, 0, 0, false, false);
-	gfx_rt64_render_thread_preload_shader("normal", 0x1045045, 1, 1, 0, 0, true, false);
-	gfx_rt64_render_thread_preload_shader("normal", 0x1045045, 1, 1, 0, 2, false, false);
-	gfx_rt64_render_thread_preload_shader("normal", 0x1045A00, 0, 1, 0, 0, false, false);
-	gfx_rt64_render_thread_preload_shader("normal", 0x1045A00, 1, 1, 2, 2, false, false);
-	gfx_rt64_render_thread_preload_shader("normal", 0x1081081, 0, 0, 0, 0, false, false);
-	gfx_rt64_render_thread_preload_shader("normal", 0x1200045, 1, 1, 2, 2, false, false);
-	gfx_rt64_render_thread_preload_shader("normal", 0x1200045, 0, 1, 2, 2, false, false);
-	gfx_rt64_render_thread_preload_shader("normal", 0x1200200, 0, 0, 0, 0, false, false);
-	gfx_rt64_render_thread_preload_shader("normal", 0x1200200, 1, 0, 0, 0, false, false);
-	gfx_rt64_render_thread_preload_shader("normal", 0x1200A00, 1, 1, 2, 2, false, false);
-	gfx_rt64_render_thread_preload_shader("normal", 0x1200A00, 0, 1, 2, 2, false, false);
-	gfx_rt64_render_thread_preload_shader("normal", 0x1200A00, 1, 1, 0, 0, true, false);
-	gfx_rt64_render_thread_preload_shader("normal", 0x120038D, 1, 1, 2, 2, false, false);
-	gfx_rt64_render_thread_preload_shader("normal", 0x1200A00, 1, 1, 0, 0, false, false);
-	gfx_rt64_render_thread_preload_shader("normal", 0x1A00045, 0, 1, 1, 1, false, false);
-	gfx_rt64_render_thread_preload_shader("normal", 0x1A00045, 0, 1, 2, 2, false, false);
-	gfx_rt64_render_thread_preload_shader("normal", 0x1A00A00, 0, 0, 2, 2, false, false);
-	gfx_rt64_render_thread_preload_shader("normal", 0x1A00A6F, 1, 1, 2, 2, false, false);
-	gfx_rt64_render_thread_preload_shader("normal", 0x3200045, 1, 1, 0, 2, false, false);
-	gfx_rt64_render_thread_preload_shader("normal", 0x3200045, 1, 1, 2, 2, false, false);
-	gfx_rt64_render_thread_preload_shader("normal", 0x3200045, 1, 1, 0, 0, false, false);
-	gfx_rt64_render_thread_preload_shader("normal", 0x3200045, 1, 1, 2, 0, false, false);
-	gfx_rt64_render_thread_preload_shader("normal", 0x3200200, 1, 0, 0, 0, false, false);
-	gfx_rt64_render_thread_preload_shader("normal", 0x3200A00, 1, 1, 2, 2, false, false);
-	gfx_rt64_render_thread_preload_shader("normal", 0x3200A00, 1, 1, 0, 0, true, false);
-	gfx_rt64_render_thread_preload_shader("normal", 0x5045045, 1, 1, 0, 0, false, false);
-	gfx_rt64_render_thread_preload_shader("normal", 0x5045045, 1, 1, 0, 2, false, false);
-	gfx_rt64_render_thread_preload_shader("normal", 0x5045045, 1, 1, 2, 2, false, false);
-	gfx_rt64_render_thread_preload_shader("normal", 0x5045045, 1, 1, 1, 1, false, false);
-	gfx_rt64_render_thread_preload_shader("normal", 0x5045045, 0, 1, 2, 2, false, false);
-	gfx_rt64_render_thread_preload_shader("normal", 0x5045045, 1, 1, 2, 2, true, false);
-	gfx_rt64_render_thread_preload_shader("normal", 0x5045045, 1, 1, 0, 0, true, false);
-	gfx_rt64_render_thread_preload_shader("normal", 0x5200200, 1, 0, 0, 0, false, false);
-	gfx_rt64_render_thread_preload_shader("normal", 0x5200045, 1, 1, 0, 0, false, false);
-	gfx_rt64_render_thread_preload_shader("normal", 0x5200A00, 1, 1, 0, 0, true, false);
-	gfx_rt64_render_thread_preload_shader("normal", 0x5200A00, 1, 1, 0, 0, false, false);
-	gfx_rt64_render_thread_preload_shader("normal", 0x5A00A00, 1, 1, 2, 0, false, false);
-	gfx_rt64_render_thread_preload_shader("normal", 0x5A00A00, 0, 1, 0, 0, false, false);
-	gfx_rt64_render_thread_preload_shader("normal", 0x5A00A00, 1, 1, 2, 2, false, false);
-	gfx_rt64_render_thread_preload_shader("normal", 0x5A00A00, 1, 1, 0, 0, false, false);
-	gfx_rt64_render_thread_preload_shader("normal", 0x5A00A00, 0, 0, 2, 2, false, false);
-	gfx_rt64_render_thread_preload_shader("normal", 0x5A00A00, 1, 1, 0, 2, false, false);
-	gfx_rt64_render_thread_preload_shader("normal", 0x7A00A00, 1, 1, 0, 0, false, false);
-	gfx_rt64_render_thread_preload_shader("normal", 0x7A00A00, 1, 1, 0, 2, false, false);
-	gfx_rt64_render_thread_preload_shader("normal", 0x7A00A00, 1, 1, 2, 2, false, false);
-	gfx_rt64_render_thread_preload_shader("normal", 0x1200045, 1, 1, 0, 0, false, false);
-	gfx_rt64_render_thread_preload_shader("normal", 0x1141045, 1, 1, 2, 2, false, false);
-	gfx_rt64_render_thread_preload_shader("normal", 0x1200045, 1, 1, 0, 2, false, false);
-	gfx_rt64_render_thread_preload_shader("normal", 0x3200A00, 1, 1, 0, 0, false, false);
-	gfx_rt64_render_thread_preload_shader("normal", 0x9200200, 1, 0, 0, 0, false, false);
-	gfx_rt64_render_thread_preload_shader("normal", 0x920038D, 1, 1, 2, 2, false, false);
-	gfx_rt64_render_thread_preload_shader("normal", 0x9200A00, 1, 1, 0, 0, false, false);
-	gfx_rt64_render_thread_preload_shader("normal", 0x9200045, 1, 1, 0, 0, false, false);
+	gfx_rt64_render_thread_preload_shader(0x45, 1, 1, 0, 0, true, false);
+	gfx_rt64_render_thread_preload_shader(0x45, 1, 1, 2, 2, true, false);
+	gfx_rt64_render_thread_preload_shader(0x45, 1, 1, 0, 0, false, false);
+	gfx_rt64_render_thread_preload_shader(0x45, 1, 1, 2, 2, false, false);
+	gfx_rt64_render_thread_preload_shader(0x45, 1, 1, 0, 2, false, false);
+	gfx_rt64_render_thread_preload_shader(0x45, 1, 1, 2, 0, false, false);
+	gfx_rt64_render_thread_preload_shader(0x200, 0, 0, 0, 0, false, false);
+	gfx_rt64_render_thread_preload_shader(0x200, 1, 0, 0, 0, false, false);
+	gfx_rt64_render_thread_preload_shader(0x38D, 1, 1, 2, 2, false, false);
+	gfx_rt64_render_thread_preload_shader(0x38D, 1, 1, 0, 0, false, false);
+	gfx_rt64_render_thread_preload_shader(0x551, 1, 1, 0, 0, false, false);
+	gfx_rt64_render_thread_preload_shader(0xA00, 0, 1, 2, 2, false, false);
+	gfx_rt64_render_thread_preload_shader(0xA00, 1, 1, 0, 0, false, false);
+	gfx_rt64_render_thread_preload_shader(0xA00, 1, 1, 2, 2, false, false);
+	gfx_rt64_render_thread_preload_shader(0xA00, 1, 1, 0, 0, true, false);
+	gfx_rt64_render_thread_preload_shader(0x1045045, 1, 1, 2, 2, true, false);
+	gfx_rt64_render_thread_preload_shader(0x1045045, 1, 1, 2, 2, false, false);
+	gfx_rt64_render_thread_preload_shader(0x1045045, 1, 1, 1, 1, false, false);
+	gfx_rt64_render_thread_preload_shader(0x1045045, 1, 1, 2, 0, false, false);
+	gfx_rt64_render_thread_preload_shader(0x1045045, 1, 1, 0, 0, false, false);
+	gfx_rt64_render_thread_preload_shader(0x1045045, 0, 0, 2, 2, false, false);
+	gfx_rt64_render_thread_preload_shader(0x1045045, 0, 0, 0, 0, false, false);
+	gfx_rt64_render_thread_preload_shader(0x1045045, 1, 1, 0, 0, true, false);
+	gfx_rt64_render_thread_preload_shader(0x1045045, 1, 1, 0, 2, false, false);
+	gfx_rt64_render_thread_preload_shader(0x1045A00, 0, 1, 0, 0, false, false);
+	gfx_rt64_render_thread_preload_shader(0x1045A00, 1, 1, 2, 2, false, false);
+	gfx_rt64_render_thread_preload_shader(0x1081081, 0, 0, 0, 0, false, false);
+	gfx_rt64_render_thread_preload_shader(0x1200045, 1, 1, 2, 2, false, false);
+	gfx_rt64_render_thread_preload_shader(0x1200045, 0, 1, 2, 2, false, false);
+	gfx_rt64_render_thread_preload_shader(0x1200200, 0, 0, 0, 0, false, false);
+	gfx_rt64_render_thread_preload_shader(0x1200200, 1, 0, 0, 0, false, false);
+	gfx_rt64_render_thread_preload_shader(0x1200A00, 1, 1, 2, 2, false, false);
+	gfx_rt64_render_thread_preload_shader(0x1200A00, 0, 1, 2, 2, false, false);
+	gfx_rt64_render_thread_preload_shader(0x1200A00, 1, 1, 0, 0, true, false);
+	gfx_rt64_render_thread_preload_shader(0x120038D, 1, 1, 2, 2, false, false);
+	gfx_rt64_render_thread_preload_shader(0x1200A00, 1, 1, 0, 0, false, false);
+	gfx_rt64_render_thread_preload_shader(0x1A00045, 0, 1, 1, 1, false, false);
+	gfx_rt64_render_thread_preload_shader(0x1A00045, 0, 1, 2, 2, false, false);
+	gfx_rt64_render_thread_preload_shader(0x1A00A00, 0, 0, 2, 2, false, false);
+	gfx_rt64_render_thread_preload_shader(0x1A00A6F, 1, 1, 2, 2, false, false);
+	gfx_rt64_render_thread_preload_shader(0x3200045, 1, 1, 0, 2, false, false);
+	gfx_rt64_render_thread_preload_shader(0x3200045, 1, 1, 2, 2, false, false);
+	gfx_rt64_render_thread_preload_shader(0x3200045, 1, 1, 0, 0, false, false);
+	gfx_rt64_render_thread_preload_shader(0x3200045, 1, 1, 2, 0, false, false);
+	gfx_rt64_render_thread_preload_shader(0x3200200, 1, 0, 0, 0, false, false);
+	gfx_rt64_render_thread_preload_shader(0x3200A00, 1, 1, 2, 2, false, false);
+	gfx_rt64_render_thread_preload_shader(0x3200A00, 1, 1, 0, 0, true, false);
+	gfx_rt64_render_thread_preload_shader(0x5045045, 1, 1, 0, 0, false, false);
+	gfx_rt64_render_thread_preload_shader(0x5045045, 1, 1, 0, 2, false, false);
+	gfx_rt64_render_thread_preload_shader(0x5045045, 1, 1, 2, 2, false, false);
+	gfx_rt64_render_thread_preload_shader(0x5045045, 1, 1, 1, 1, false, false);
+	gfx_rt64_render_thread_preload_shader(0x5045045, 0, 1, 2, 2, false, false);
+	gfx_rt64_render_thread_preload_shader(0x5045045, 1, 1, 2, 2, true, false);
+	gfx_rt64_render_thread_preload_shader(0x5045045, 1, 1, 0, 0, true, false);
+	gfx_rt64_render_thread_preload_shader(0x5200200, 1, 0, 0, 0, false, false);
+	gfx_rt64_render_thread_preload_shader(0x5200045, 1, 1, 0, 0, false, false);
+	gfx_rt64_render_thread_preload_shader(0x5200A00, 1, 1, 0, 0, true, false);
+	gfx_rt64_render_thread_preload_shader(0x5200A00, 1, 1, 0, 0, false, false);
+	gfx_rt64_render_thread_preload_shader(0x5A00A00, 1, 1, 2, 0, false, false);
+	gfx_rt64_render_thread_preload_shader(0x5A00A00, 0, 1, 0, 0, false, false);
+	gfx_rt64_render_thread_preload_shader(0x5A00A00, 1, 1, 2, 2, false, false);
+	gfx_rt64_render_thread_preload_shader(0x5A00A00, 1, 1, 0, 0, false, false);
+	gfx_rt64_render_thread_preload_shader(0x5A00A00, 0, 0, 2, 2, false, false);
+	gfx_rt64_render_thread_preload_shader(0x5A00A00, 1, 1, 0, 2, false, false);
+	gfx_rt64_render_thread_preload_shader(0x7A00A00, 1, 1, 0, 0, false, false);
+	gfx_rt64_render_thread_preload_shader(0x7A00A00, 1, 1, 0, 2, false, false);
+	gfx_rt64_render_thread_preload_shader(0x7A00A00, 1, 1, 2, 2, false, false);
+	gfx_rt64_render_thread_preload_shader(0x1200045, 1, 1, 0, 0, false, false);
+	gfx_rt64_render_thread_preload_shader(0x1141045, 1, 1, 2, 2, false, false);
+	gfx_rt64_render_thread_preload_shader(0x1200045, 1, 1, 0, 2, false, false);
+	gfx_rt64_render_thread_preload_shader(0x3200A00, 1, 1, 0, 0, false, false);
+	gfx_rt64_render_thread_preload_shader(0x9200200, 1, 0, 0, 0, false, false);
+	gfx_rt64_render_thread_preload_shader(0x920038D, 1, 1, 2, 2, false, false);
+	gfx_rt64_render_thread_preload_shader(0x9200A00, 1, 1, 0, 0, false, false);
+	gfx_rt64_render_thread_preload_shader(0x9200045, 1, 1, 0, 0, false, false);
 }
 
 int gfx_rt64_get_level_index() {
@@ -1700,7 +1700,7 @@ inline void gfx_rt64_render_thread_draw_display_list(uint32_t uid, GameFrame *cu
 
 		// Assign the shader to the instance. Create if necessary.
 		const auto &shader = curInstance.shader;
-		instDesc.shader = gfx_rt64_render_thread_load_shader_variant("unknown", shader.program, shader.raytrace, shader.filter, shader.hAddr, shader.vAddr, shader.normalMap, shader.specularMap);
+		instDesc.shader = gfx_rt64_render_thread_load_shader_variant(shader.program, shader.raytrace, shader.filter, shader.hAddr, shader.vAddr, shader.normalMap, shader.specularMap);
 
 		// Detect sudden transformation changes and skip interpolation if necessary.
 		const float MinDot = sqrt(2.0f) / -2.0f;
@@ -2155,7 +2155,6 @@ struct GfxRenderingAPI gfx_rt64_rapi = {
     gfx_rt64_rapi_new_texture,
     gfx_rt64_rapi_select_texture,
     gfx_rt64_rapi_upload_texture,
-    gfx_rt64_rapi_upload_texture_file,
     gfx_rt64_rapi_set_sampler_parameters,
     gfx_rt64_rapi_set_depth_test,
     gfx_rt64_rapi_set_depth_mask,
@@ -2169,7 +2168,6 @@ struct GfxRenderingAPI gfx_rt64_rapi = {
 	gfx_rt64_rapi_draw_triangles_ortho,
     gfx_rt64_rapi_draw_triangles_persp,
 	gfx_rt64_rapi_set_graph_node_mod,
-	gfx_rt64_rapi_set_skybox,
     gfx_rt64_rapi_init,
 	gfx_rt64_rapi_on_resize,
     gfx_rt64_rapi_start_frame,

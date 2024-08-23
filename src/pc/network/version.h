@@ -20,11 +20,11 @@
 #endif
 
 #ifdef DEVELOPMENT
-    #define GAME_NAME "sm64coopdx-dev"
+    #define GAME_NAME "sm64coopdx_rt64-dev"
 #elif !defined(VERSION_US)
-    #define GAME_NAME "sm64coopdx-intl"
+    #define GAME_NAME "sm64coopdx_rt64-intl"
 #else
-    #define GAME_NAME "sm64coopdx"
+    #define GAME_NAME "sm64coopdx_rt64"
 #endif
 
 #define MAX_VERSION_LENGTH 32

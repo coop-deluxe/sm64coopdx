@@ -688,6 +688,16 @@
 #define	G_AC_THRESHOLD		(1 << G_MDSFT_ALPHACOMPARE)
 #define	G_AC_DITHER		(3 << G_MDSFT_ALPHACOMPARE)
 
+#if defined (RAPI_GL) && !defined(TRANSPARENCY_GL)
+    #define	G_AC_COVERAGE		(0 << G_MDSFT_ALPHACOMPARE)
+#endif
+#if !defined (RAPI_GL)
+    #define	G_AC_COVERAGE		(0 << G_MDSFT_ALPHACOMPARE)
+#endif
+#if defined (RAPI_GL) && defined(TRANSPARENCY_GL)
+    #define	G_AC_COVERAGE		(5 << G_MDSFT_ALPHACOMPARE)
+#endif
+
 /* G_SETOTHERMODE_L gSetDepthSource */
 #define	G_ZS_PIXEL		(0 << G_MDSFT_ZSRCSEL)
 #define	G_ZS_PRIM		(1 << G_MDSFT_ZSRCSEL)
@@ -4555,7 +4565,7 @@ typedef union {
 	Gfx *_g = (Gfx *)(pkt);						\
 									\
 	_g->words.w0 = _SHIFTL(cmd, 24, 8);				\
-	_g->words.w1 = (param);						\
+	_g->words.w1 = (uintptr_t)(param);						\
 }
 
 #define gsDPParam(cmd, param)						\

@@ -13,7 +13,7 @@
 struct CLIOptions gCLIOpts;
 
 static void print_help(void) {
-    printf("sm64coopdx\n");
+    printf("sm64coopdx_rt64\n");
 #if defined(_WIN32) || defined(_WIN64)
     printf("--console               Enables the Windows console.\n");
 #endif

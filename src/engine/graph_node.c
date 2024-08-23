@@ -8,10 +8,8 @@
 #include "game/rendering_graph_node.h"
 #include "game/area.h"
 #include "geo_layout.h"
-
 #include "include/geo_commands.h"
 #include "pc/debuglog.h"
-
 #include "pc/gfx/gfx_pc.h"
 
 #ifdef GFX_SEPARATE_PROJECTIONS
@@ -42,7 +40,6 @@ void init_scene_graph_node_links(struct GraphNode *graphNode, s32 type) {
     graphNode->next = graphNode;
     graphNode->parent = NULL;
     graphNode->children = NULL;
-    graphNode->georef = NULL;
 #ifdef GFX_SEPARATE_PROJECTIONS
     if ((gCurGraphNodeSwitchCount > 0) && (gCurGraphNodeSwitchIndex[gCurGraphNodeSwitchCount - 1] == gCurGraphNodeIndex)) {
         gCurGraphNodeUID = gCurGraphNodeSwitchUID[gCurGraphNodeSwitchCount - 1];
@@ -50,6 +47,7 @@ void init_scene_graph_node_links(struct GraphNode *graphNode, s32 type) {
 
     graphNode->uid = gCurGraphNodeUID++;
 #endif
+    graphNode->georef = NULL;
     graphNode->_guard1 = GRAPH_NODE_GUARD;
     graphNode->_guard2 = GRAPH_NODE_GUARD;
 }

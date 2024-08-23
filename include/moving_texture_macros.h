@@ -12,7 +12,6 @@
 #define TEX_QUICKSAND_SSL        5
 #define TEX_PYRAMID_SAND_SSL     6
 #define TEX_YELLOW_TRI_TTC       7
-#define TEXTURE_SSL_FOG          8
 
 // Moving Texture rotations
 #define ROTATE_CLOCKWISE         0

@@ -2225,7 +2225,7 @@ Parses a level script and passes area index, behavior data, macro behavior IDs a
 Logs a message to the in-game console.
 
 ### Lua Example
-`log_to_console("sm64coopdx FTW", CONSOLE_MESSAGE_INFO)`
+`log_to_console("sm64coopdx_rt64 FTW", CONSOLE_MESSAGE_INFO)`
 
 ### Parameters
 | Field | Type |

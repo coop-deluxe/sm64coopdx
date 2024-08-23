@@ -481,6 +481,11 @@
     #define KOOPA_BP_KOOPA_THE_QUICK_THI (KOOPA_BP_KOOPA_THE_QUICK_BASE + KOOPA_THE_QUICK_THI_INDEX)
     #define KOOPA_BP_TINY 4
 
+    /* oAnimState */
+    #define KOOPA_ANIM_STATE_EYE_OPEN 0
+    #define KOOPA_ANIM_STATE_EYE_CLOSED 1
+    #define KOOPA_ANIM_STATE_EYE_HURT 2
+    
 /* Pokey */
     /* oAction */
     #define POKEY_ACT_UNINITIALIZED 0

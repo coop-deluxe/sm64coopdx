@@ -37,7 +37,7 @@ characterTable = {
     [1] = {
         name = "Default",
         saveName = "Default",
-        description = {"The vanilla cast for sm64coopdx!", "", "These Characters are swappable", "via the default Options Menu"},
+        description = {"The vanilla cast for sm64coopdx_rt64!", "", "These Characters are swappable", "via the default Options Menu"},
         credit = "Nintendo / Coop Team",
         color = {r = 255, g = 50, b = 50},
         model = nil,
@@ -580,7 +580,7 @@ local inputStallToButton = 10
 --Basic Menu Text
 local TEXT_OPTIONS_HEADER = "Menu Options"
 local TEXT_OPTIONS_HEADER_API = "API Options"
-local TEXT_VERSION = "Version: " .. MOD_VERSION .. " | sm64coopdx"
+local TEXT_VERSION = "Version: " .. MOD_VERSION .. " | sm64coopdx_rt64"
 local TEXT_RATIO_UNSUPPORTED = "Your Current Aspect-Ratio isn't Supported!"
 local TEXT_DESCRIPTION = "Character Description:"
 local TEXT_PREF_SAVE = "Press A to Set as Preferred Character"

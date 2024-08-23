@@ -6,8 +6,6 @@
 
 #include "sm64.h"
 
-#include "gfx/gfx_rt64.h"
-
 #include "pc/lua/smlua.h"
 #include "pc/lua/utils/smlua_text_utils.h"
 #include "game/memory.h"
@@ -112,8 +110,8 @@ void send_display_list(struct SPTask *spTask) {
 }
 
 #ifdef VERSION_EU
-#define SAMPLES_HIGH 656
-#define SAMPLES_LOW 640
+#define SAMPLES_HIGH 560 // gAudioBufferParameters.maxAiBufferLength
+#define SAMPLES_LOW 528 // gAudioBufferParameters.minAiBufferLength
 #else
 #define SAMPLES_HIGH 544
 #define SAMPLES_LOW 528
@@ -285,15 +283,6 @@ void produce_one_dummy_frame(void (*callback)(), u8 clearColorR, u8 clearColorG,
     gfx_run((Gfx*) gGfxSPTask->task.t.data_ptr); // send_display_list
     display_and_vsync();
     gfx_end_frame();
-
-#ifndef RAPI_RT64
-    if (config60FPS) {
-        gfx_start_frame();
-        patch_interpolations();
-        send_display_list(gGfxSPTask);
-        gfx_end_frame();
-    }
-#endif
 }
 
 void audio_shutdown(void) {

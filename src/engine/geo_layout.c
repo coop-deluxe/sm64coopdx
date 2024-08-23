@@ -363,7 +363,7 @@ void geo_layout_cmd_node_switch_case(void) {
     register_scene_graph_node(&graphNode->fnNode.node);
 
     gGeoLayoutCommand += 0x08 << CMD_SIZE_SHIFT;
-
+    
 #ifdef GFX_SEPARATE_PROJECTIONS
     gCurGraphNodeSwitchUID[gCurGraphNodeSwitchCount] = gCurGraphNodeUID;
     gCurGraphNodeSwitchIndex[gCurGraphNodeSwitchCount] = gCurGraphNodeIndex + 1;
@@ -825,7 +825,7 @@ struct GraphNode *process_geo_layout(struct DynamicPool *pool, void *segptr) {
     gGeoLayoutReturnIndex = 2; // stack index is often copied here?
 
     gGeoLayoutCommand = segmented_to_virtual(segptr);
-
+    
 #ifdef GFX_ENABLE_GRAPH_NODE_MODS
     gCurGeoLayout = gGeoLayoutCommand;
 #endif

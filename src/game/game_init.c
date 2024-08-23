@@ -1,6 +1,7 @@
 #include <ultra64.h>
 
 #include "sm64.h"
+#include "data/dynos.c.h"
 #include "gfx_dimensions.h"
 #include "audio/external.h"
 #include "buffers/buffers.h"

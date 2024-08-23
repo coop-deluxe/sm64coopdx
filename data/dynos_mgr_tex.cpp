@@ -263,7 +263,7 @@ static bool DynOS_Tex_Cache(THN **aOutput, DataNode<TexData> *aNode, s32 aTile, 
     // Add new texture to cache
     (*_Node) = &aPool[(*aPoolPos)++];
     if (!(*_Node)->mAddr) {
-        (*_Node)->mTexId = aGfxRApi->new_texture((const char*)(*_Node)->mAddr);
+        (*_Node)->mTexId = aGfxRApi->new_texture();
     }
     aGfxRApi->select_texture(aTile, (*_Node)->mTexId);
     aGfxRApi->set_sampler_parameters(aTile, false, 0, 0);

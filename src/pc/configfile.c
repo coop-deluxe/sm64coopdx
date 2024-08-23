@@ -163,6 +163,19 @@ unsigned int configStayInLevelAfterStar           = 0;
 bool         configNametags                       = true;
 unsigned int configBouncyLevelBounds              = 0;
 bool         configSkipIntro                      = 0;
+#ifdef RAPI_RT64
+unsigned int configRT64TargetFPS                  = 60;
+unsigned int configRT64ResScale                   = 100;
+unsigned int configRT64MaxLights                  = 6;
+unsigned int configRT64MotionBlurStrength         = 0;
+unsigned int configRT64UpscalerSharpness          = 0;
+bool         configRT64SphereLights               = false;
+bool         configRT64GI                         = false;
+unsigned int configRT64Upscaler                   = 1;
+unsigned int configRT64UpscalerMode               = 0;
+bool         configRT64Denoiser                   = false;
+bool         configRT64StaticMeshCache            = true;
+#endif
 bool         configPauseAnywhere                  = false;
 bool         configMenuStaffRoll                  = false;
 unsigned int configMenuLevel                      = 0;
@@ -188,20 +201,6 @@ unsigned int configDjuiThemeFont                  = FONT_NORMAL;
 unsigned int configDjuiScale                      = 0;
 // other
 unsigned int configRulesVersion                   = 0;
-// RT64
-#ifdef RAPI_RT64
-unsigned int configRT64TargetFPS = 30;
-unsigned int configRT64ResScale = 100;
-unsigned int configRT64MaxLights = 6;
-unsigned int configRT64MotionBlurStrength = 0;
-unsigned int configRT64UpscalerSharpness = 0;
-bool         configRT64SphereLights = false;
-bool         configRT64GI = false;
-unsigned int configRT64Upscaler = 1;
-unsigned int configRT64UpscalerMode = 0;
-bool         configRT64Denoiser = false;
-bool         configRT64StaticMeshCache = true;
-#endif
 
 static const struct ConfigOption options[] = {
     // window settings
@@ -307,6 +306,19 @@ static const struct ConfigOption options[] = {
     {.name = "coop_nametags",                  .type = CONFIG_TYPE_BOOL,   .boolValue   = &configNametags},
     {.name = "coop_bouncy_bounds",             .type = CONFIG_TYPE_UINT,   .uintValue   = &configBouncyLevelBounds},
     {.name = "skip_intro",                     .type = CONFIG_TYPE_BOOL,   .boolValue   = &configSkipIntro},
+    #ifdef RAPI_RT64
+    {.name = "rt64_target_fps",                .type = CONFIG_TYPE_UINT,   .uintValue   = &configRT64TargetFPS},
+    {.name = "rt64_res_scale",                 .type = CONFIG_TYPE_UINT,   .uintValue   = &configRT64ResScale},
+    {.name = "rt64_max_lights",                .type = CONFIG_TYPE_UINT,   .uintValue   = &configRT64MaxLights},
+    {.name = "rt64_sphere_lights",             .type = CONFIG_TYPE_BOOL,   .boolValue   = &configRT64SphereLights},
+    {.name = "rt64_gi",                        .type = CONFIG_TYPE_BOOL,   .boolValue   = &configRT64GI},
+    {.name = "rt64_upscaler",                  .type = CONFIG_TYPE_UINT,   .uintValue   = &configRT64Upscaler},
+    {.name = "rt64_upscaler_mode_common",      .type = CONFIG_TYPE_UINT,   .uintValue   = &configRT64UpscalerMode},
+    {.name = "rt64_upscaler_sharpness",        .type = CONFIG_TYPE_UINT,   .uintValue   = &configRT64UpscalerSharpness},
+    {.name = "rt64_denoiser",                  .type = CONFIG_TYPE_BOOL,   .boolValue   = &configRT64Denoiser},
+    {.name = "rt64_static_mesh_cache",         .type = CONFIG_TYPE_BOOL,   .boolValue   = &configRT64StaticMeshCache},
+    {.name = "rt64_motion_blur_strength",      .type = CONFIG_TYPE_UINT,   .uintValue   = &configRT64MotionBlurStrength},
+    #endif
     {.name = "pause_anywhere",                 .type = CONFIG_TYPE_BOOL,   .boolValue   = &configPauseAnywhere},
     {.name = "coop_menu_staff_roll",           .type = CONFIG_TYPE_BOOL,   .boolValue   = &configMenuStaffRoll},
     {.name = "coop_menu_level",                .type = CONFIG_TYPE_UINT,   .uintValue   = &configMenuLevel},
@@ -327,21 +339,7 @@ static const struct ConfigOption options[] = {
     {.name = "djui_theme_font",                .type = CONFIG_TYPE_UINT,   .uintValue   = &configDjuiThemeFont},
     {.name = "djui_scale",                     .type = CONFIG_TYPE_UINT,   .uintValue   = &configDjuiScale},
     // other
-    {.name = "rules_version",                  .type = CONFIG_TYPE_UINT,   .uintValue   = &configRulesVersion},
-    // RT64
-    #ifdef RAPI_RT64
-    {.name = "rt64_target_fps",                .type = CONFIG_TYPE_UINT, .uintValue = &configRT64TargetFPS},
-    {.name = "rt64_res_scale",                 .type = CONFIG_TYPE_UINT, .uintValue = &configRT64ResScale},
-    {.name = "rt64_max_lights",                .type = CONFIG_TYPE_UINT, .uintValue = &configRT64MaxLights},
-    {.name = "rt64_sphere_lights",             .type = CONFIG_TYPE_BOOL, .boolValue = &configRT64SphereLights},
-    {.name = "rt64_gi",                        .type = CONFIG_TYPE_BOOL, .boolValue = &configRT64GI},
-    {.name = "rt64_upscaler",                  .type = CONFIG_TYPE_UINT, .uintValue = &configRT64Upscaler},
-    {.name = "rt64_upscaler_mode_common",      .type = CONFIG_TYPE_UINT, .uintValue = &configRT64UpscalerMode},
-    {.name = "rt64_upscaler_sharpness",        .type = CONFIG_TYPE_UINT, .uintValue = &configRT64UpscalerSharpness},
-    {.name = "rt64_denoiser",                  .type = CONFIG_TYPE_BOOL, .boolValue = &configRT64Denoiser},
-    {.name = "rt64_static_mesh_cache",         .type = CONFIG_TYPE_BOOL, .boolValue = &configRT64StaticMeshCache},
-    {.name = "rt64_motion_blur_strength",      .type = CONFIG_TYPE_UINT, .uintValue = &configRT64MotionBlurStrength},
-    #endif
+    {.name = "rules_version",                  .type = CONFIG_TYPE_UINT,   .uintValue   = &configRulesVersion}
 };
 
 // FunctionConfigOption functions

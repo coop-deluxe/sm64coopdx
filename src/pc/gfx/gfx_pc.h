@@ -26,13 +26,10 @@ extern "C" {
 
 void gfx_init(struct GfxWindowManagerAPI *wapi, struct GfxRenderingAPI *rapi, const char *window_title);
 struct GfxRenderingAPI *gfx_get_current_rendering_api(void);
-void gfx_start_frame();
+void gfx_start_frame(void);
 void gfx_run(Gfx *commands);
 void gfx_end_frame(void);
 void gfx_shutdown(void);
-void gfx_pc_precomp_shader(uint32_t rgb1, uint32_t alpha1, uint32_t rgb2, uint32_t alpha2, uint32_t flags);
-
-void gfx_set_skybox(uint8_t skybox_id, float diffuse_color[3]);
 
 #ifdef GFX_SEPARATE_PROJECTIONS
 #include <stdbool.h>
@@ -49,6 +46,8 @@ typedef struct {
 void gfx_register_layout_graph_node(void *geo_layout, void *graph_node);
 void *gfx_build_graph_node_mod(void *graph_node, float modelview_matrix[4][4], uint32_t uid);
 #endif
+
+void gfx_pc_precomp_shader(uint32_t rgb1, uint32_t alpha1, uint32_t rgb2, uint32_t alpha2, uint32_t flags);
 
 #ifdef __cplusplus
 }

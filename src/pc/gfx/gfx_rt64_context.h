@@ -20,7 +20,6 @@
 #include <PR/gbi.h>
 
 #include <Windows.h>
-#include "game/area.h"
 
 #define MAX_GEO_LAYOUT_STACK_SIZE		32
 #define CACHED_MESH_REQUIRED_FRAMES		5
@@ -28,6 +27,7 @@
 #define MAX_LIGHTS						512
 #define MAX_LEVEL_LIGHTS				128
 #define MAX_LEVELS						40
+#define MAX_AREAS						3
 #define MAX_MOUSE_BUTTONS				5
 #define MAX_RENDER_FRAMES				4
 

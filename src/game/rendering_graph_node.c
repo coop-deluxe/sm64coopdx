@@ -404,7 +404,7 @@ static void geo_process_master_list_sub(struct GraphNodeMasterList *node) {
 #ifdef GFX_ENABLE_GRAPH_NODE_MODS
                 // The NoOp Tag method is used to indicate the current material mod being used for 
                 // the next display lists that will be rendered.
-                gDPNoOpTag(gDisplayListHead++, (uintptr_t)&currList->gfxInfo);
+                gDPNoOpTag(gDisplayListHead++, &currList->gfxInfo);
 #endif
                 gSPMatrix(gDisplayListHead++, VIRTUAL_TO_PHYSICAL(currList->transformPrev),
                           G_MTX_MODELVIEW | G_MTX_LOAD | G_MTX_NOPUSH);
@@ -413,7 +413,7 @@ static void geo_process_master_list_sub(struct GraphNodeMasterList *node) {
             }
 #ifdef GFX_ENABLE_GRAPH_NODE_MODS
             // Make sure the material mod is no longer used after all display lists are drawn.
-            gDPNoOpTag(gDisplayListHead++, (uintptr_t)NULL);
+            gDPNoOpTag(gDisplayListHead++, NULL);
 #endif
         }
     }
@@ -442,7 +442,6 @@ static void geo_append_display_list(void *displayList, s16 layer) {
 #ifdef GFX_ENABLE_GRAPH_NODE_MODS
         listNode->gfxInfo.graphNodeMod = gCurGraphNodeMod;
 #endif
-
         listNode->transform = gMatStackFixed[gMatStackIndex];
         listNode->transformPrev = gMatStackPrevFixed[gMatStackIndex];
         listNode->displayList = displayList;
@@ -513,14 +512,13 @@ static void geo_process_perspective(struct GraphNodePerspective *node) {
     f32 aspect = (f32) gCurGraphNodeRoot->width / divisor;
 #endif
 
+#ifdef GFX_SEPARATE_PROJECTIONS
+    gfx_set_camera_perspective(node->fov, node->near, node->far, gGlobalTimer != gLakituState.skipCameraInterpolationTimestamp);
+#endif
+
     gProjectionVanillaNearValue = node->near;
     gProjectionVanillaFarValue = node->far;
     f32 near = MIN(node->near, gProjectionMaxNearValue);
-
-    #ifdef GFX_SEPARATE_PROJECTIONS
-        gfx_set_camera_perspective(node->fov, node->near, node->far, gGlobalTimer != gLakituState.skipCameraInterpolationTimestamp);
-    #endif
-
     guPerspective(mtx, &perspNorm, not_zero(node->prevFov, gOverrideFOV), aspect, get_first_person_enabled() ? 1 : not_zero(near, gOverrideNear), not_zero(node->far, gOverrideFar), 1.0f);
 
     sPerspectiveNode = node;
@@ -627,9 +625,6 @@ static void geo_process_camera(struct GraphNodeCamera *node) {
         mtxf_copy(gCamera->mtx, gMatStack[gMatStackIndex]);
     }
 
-#ifdef GFX_SEPARATE_PROJECTIONS
-    // [TODO: FIX THE ERROR AND RE-ADD THIS CODE LINE]: gfx_set_camera_matrix(mtx->m);
-#endif
 
     if (node->fnNode.node.children != 0) {
         gCurGraphNodeCamera = node;
@@ -1187,7 +1182,6 @@ static void geo_process_shadow(struct GraphNodeShadow *node) {
  * Since (0,0,0) is unaffected by rotation, columns 0, 1 and 2 are ignored.
  */
 static s32 obj_is_in_view(struct GraphNodeObject *node, Mat4 matrix) {
-    (void)matrix;
     if (!node || !gCurGraphNodeCamFrustum) { return FALSE; }
 
     if (node->node.flags & GRAPH_RENDER_INVISIBLE) {
