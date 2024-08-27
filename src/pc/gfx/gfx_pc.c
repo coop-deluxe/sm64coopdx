@@ -86,7 +86,9 @@ struct LoadedVertex {
     float u, v;
     struct RGBA color;
     uint8_t fog_z;
+#ifndef GFX_SEPARATE_PROJECTIONS
     uint8_t clip_rej;
+#endif
 };
 
 struct TextureHashmapNode {
@@ -245,7 +247,7 @@ typedef struct {
     float prev_model_matrix[4][4];
     float offset_matrix[4][4];
 } Matrices;
-    
+
 static struct {
     bool model_matrix_used;
     bool is_ortho;
@@ -1296,7 +1298,7 @@ static void OPTIMIZE_O3 gfx_sp_tri1(uint8_t vtx1_idx, uint8_t vtx2_idx, uint8_t 
     uint32_t tex_height = (rdp.texture_tile.lrt - rdp.texture_tile.ult + 4) / 4;
 
 #ifndef GFX_SEPARATE_PROJECTIONS
-    bool z_is_from_0_to_1 = gfx_rapi->z_is_from_0_to_1();
+    bool z_is_from_0_to_1 = gfx_rapi->z_is_from_0_to_1();    
 #else
     bool z_is_from_0_to_1 = separate_projections.is_ortho && gfx_rapi->z_is_from_0_to_1();
 #endif

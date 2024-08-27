@@ -672,7 +672,9 @@ struct LakituState
     /*0xB8*/ u32 lastFrameAction;
     /*0xBC*/ s16 unused;
 
+#ifdef GFX_SEPARATE_PROJECTIONS
     u32 skipCameraInterpolationTimestamp;
+#endif
 };
 
 // bss order hack to not affect BSS order. if possible, remove me, but it will be hard to match otherwise

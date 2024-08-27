@@ -176,7 +176,9 @@ struct GraphNodeObject
     u32 prevThrowMatrixTimestamp;
     Mat4 *throwMatrixPrev;
     /*0x54*/ Vec3f cameraToObject;
+#ifdef GFX_SEPARATE_PROJECTIONS
     u32 skipInterpolationTimestamp;
+#endif
     bool skipInViewCheck;
 
     bool inited;
