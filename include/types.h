@@ -6,6 +6,7 @@
 
 #include <ultra64.h>
 #include "macros.h"
+#include "pc/gfx/gfx_rendering_api.h"
 #include "pc/network/version.h"
 #include "pc/platform.h"
 
@@ -127,6 +128,9 @@ struct GraphNode
     u8 _guard2;
     struct GraphNode *parent;
     struct GraphNode *children;
+#ifdef GFX_SEPARATE_PROJECTIONS
+    u32 uid;
+#endif
     const void *georef;
     u8 extraFlags;
 };

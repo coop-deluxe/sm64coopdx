@@ -477,12 +477,12 @@ BUILD_DIR_BASE := build
 BUILD_DIR := $(BUILD_DIR_BASE)/$(VERSION)_pc
 
 ifeq ($(WINDOWS_BUILD),1)
-	EXE := $(BUILD_DIR)/sm64coopdx.exe
+	EXE := $(BUILD_DIR)/sm64coopdx_rt64.exe
 else # Linux builds/binary namer
 	ifeq ($(TARGET_RPI),1)
-		EXE := $(BUILD_DIR)/sm64coopdx.arm
+		EXE := $(BUILD_DIR)/sm64coopdx_rt64.arm
 	else
-		EXE := $(BUILD_DIR)/sm64coopdx
+		EXE := $(BUILD_DIR)/sm64coopdx_rt64
 	endif
 endif
 
@@ -619,6 +619,11 @@ DEP_FILES := $(O_FILES:.o=.d) $(ULTRA_O_FILES:.o=.d) $(GODDARD_O_FILES:.o=.d) $(
 
 # Segment elf files
 SEG_FILES := $(SEGMENT_ELF_FILES) $(ACTOR_ELF_FILES) $(LEVEL_ELF_FILES)
+
+# RT64 configuration files
+ifeq ($(RENDER_API),RT64)
+include Makefile_rt64
+endif
 
 # Files with GLOBAL_ASM blocks
 ifeq ($(NON_MATCHING),0)
@@ -1524,7 +1529,7 @@ endif
 # with no prerequisites, .SECONDARY causes no intermediate target to be removed
 .SECONDARY:
 
-APP_DIR = ./sm64coopdx.app
+APP_DIR = ./sm64coopdx_rt64.app
 APP_CONTENTS_DIR = $(APP_DIR)/Contents
 APP_MACOS_DIR = $(APP_CONTENTS_DIR)/MacOS
 APP_RESOURCES_DIR = $(APP_CONTENTS_DIR)/Resources
@@ -1537,14 +1542,14 @@ endif
 
 all:
 	@if [ "$(USE_APP)" = "0" ]; then \
-		rm -rf build/us_pc/sm64coopdx.app; \
+		rm -rf build/us_pc/sm64coopdx_rt64.app; \
   else \
-		$(PRINT) "$(GREEN)Creating App Bundle: $(BLUE)build/us_pc/sm64coopdx.app\n"; \
+		$(PRINT) "$(GREEN)Creating App Bundle: $(BLUE)build/us_pc/sm64coopdx_rt64.app\n"; \
 		rm -rf $(APP_DIR); \
-		rm -rf build/us_pc/sm64coopdx.app; \
+		rm -rf build/us_pc/sm64coopdx_rt64.app; \
 		mkdir -p $(APP_MACOS_DIR); \
 		mkdir -p $(APP_RESOURCES_DIR); \
-		mv build/us_pc/sm64coopdx $(APP_MACOS_DIR)/sm64coopdx; \
+		mv build/us_pc/sm64coopdx_rt64 $(APP_MACOS_DIR)/sm64coopdx_rt64; \
     cp -r build/us_pc/mods $(APP_RESOURCES_DIR); \
     cp -r build/us_pc/lang $(APP_RESOURCES_DIR); \
     cp -r build/us_pc/dynos $(APP_RESOURCES_DIR); \
@@ -1554,11 +1559,11 @@ all:
     cp build/us_pc/libcoopnet.dylib $(APP_MACOS_DIR); \
     cp build/us_pc/libjuice.1.2.2.dylib $(APP_MACOS_DIR); \
     cp $(SDL2_LIB) $(APP_MACOS_DIR)/libSDL2.dylib; \
-    install_name_tool -change $(BREW_PREFIX)/opt/sdl2/lib/libSDL2-2.0.0.dylib @executable_path/libSDL2.dylib $(APP_MACOS_DIR)/sm64coopdx; > /dev/null 2>&1 \
+    install_name_tool -change $(BREW_PREFIX)/opt/sdl2/lib/libSDL2-2.0.0.dylib @executable_path/libSDL2.dylib $(APP_MACOS_DIR)/sm64coopdx_rt64; > /dev/null 2>&1 \
 		install_name_tool -id @executable_path/libSDL2.dylib $(APP_MACOS_DIR)/libSDL2.dylib; > /dev/null 2>&1 \
     codesign --force --deep --sign - $(APP_MACOS_DIR)/libSDL2.dylib; \
     cp $(GLEW_LIB) $(APP_MACOS_DIR)/libGLEW.dylib; \
-    install_name_tool -change $(BREW_PREFIX)/opt/glew/lib/libGLEW.2.2.dylib @executable_path/libGLEW.dylib $(APP_MACOS_DIR)/sm64coopdx; > /dev/null 2>&1 \
+    install_name_tool -change $(BREW_PREFIX)/opt/glew/lib/libGLEW.2.2.dylib @executable_path/libGLEW.dylib $(APP_MACOS_DIR)/sm64coopdx_rt64; > /dev/null 2>&1 \
 		install_name_tool -id @executable_path/libGLEW.dylib $(APP_MACOS_DIR)/libGLEW.dylib; > /dev/null 2>&1 \
     codesign --force --deep --sign - $(APP_MACOS_DIR)/libGLEW.dylib; \
 		cp res/icon.icns $(APP_RESOURCES_DIR)/icon.icns; \
@@ -1568,17 +1573,17 @@ all:
 		echo '<plist version="1.0">' >> $(APP_CONTENTS_DIR)/Info.plist; \
 		echo '<dict>' >> $(APP_CONTENTS_DIR)/Info.plist; \
 		echo '    <key>CFBundleExecutable</key>' >> $(APP_CONTENTS_DIR)/Info.plist; \
-		echo '    <string>sm64coopdx</string>' >> $(APP_CONTENTS_DIR)/Info.plist; \
+		echo '    <string>sm64coopdx_rt64</string>' >> $(APP_CONTENTS_DIR)/Info.plist; \
 		echo '    <key>CFBundleIconFile</key>' >> $(APP_CONTENTS_DIR)/Info.plist; \
 		echo '    <string>icon</string>' >> $(APP_CONTENTS_DIR)/Info.plist; \
 		echo '    <key>CFBundleIconName</key>' >> $(APP_CONTENTS_DIR)/Info.plist; \
 		echo '    <string>AppIcon</string>' >> $(APP_CONTENTS_DIR)/Info.plist; \
 		echo '    <key>CFBundleDisplayName</key>' >> $(APP_CONTENTS_DIR)/Info.plist; \
-		echo '    <string>sm64coopdx</string>' >> $(APP_CONTENTS_DIR)/Info.plist; \
+		echo '    <string>sm64coopdx_rt64</string>' >> $(APP_CONTENTS_DIR)/Info.plist; \
 		echo '    <!-- Add other keys and values here -->' >> $(APP_CONTENTS_DIR)/Info.plist; \
 		echo '</dict>' >> $(APP_CONTENTS_DIR)/Info.plist; \
 		echo '</plist>' >> $(APP_CONTENTS_DIR)/Info.plist; \
-		chmod +x $(APP_MACOS_DIR)/sm64coopdx; \
+		chmod +x $(APP_MACOS_DIR)/sm64coopdx_rt64; \
 		mv $(APP_DIR) build/us_pc/; \
   fi
 
