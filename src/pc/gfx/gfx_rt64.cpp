@@ -835,48 +835,6 @@ static void gfx_rt64_rapi_upload_texture(const uint8_t *rgba32_buf, int width, i
 	RT64.textureUploadQueueMutex.unlock();
 }
 
-static void gfx_rt64_rapi_upload_texture_file(const char *file_path, const uint8_t *file_buf, uint64_t file_buf_size) {
-	uint32_t textureKey = RT64.currentTextureIds[RT64.currentTile];
-	UploadTexture uploadTexture;
-	uploadTexture.hash = RT64.textures[textureKey].hash;
-	uploadTexture.key = textureKey;
-
-	RT64_TEXTURE_DESC &texDesc = uploadTexture.desc;
-
-	// Use special case for loading DDS directly.
-	if (strstr(file_path, ".dds") || strstr(file_path, ".DDS")) {
-		texDesc.byteCount = (int)(file_buf_size);
-		texDesc.bytes = malloc(texDesc.byteCount);
-		memcpy(texDesc.bytes, file_buf, texDesc.byteCount);
-		texDesc.width =  texDesc.height = texDesc.rowPitch = -1;
-		texDesc.format = RT64_TEXTURE_FORMAT_DDS;
-
-		RT64.textureUploadQueueMutex.lock();
-		RT64.textureUploadQueue.push(uploadTexture);
-		RT64.textureUploadQueueMutex.unlock();
-	}
-	// Use stb image to load the file from memory instead if possible.
-	else {
-		int width, height;
-		stbi_uc *data = stbi_load_from_memory(file_buf, file_buf_size, &width, &height, NULL, 4);
-        if (data != nullptr) {
-			texDesc.bytes = data;
-			texDesc.width = width;
-			texDesc.height = height;
-			texDesc.rowPitch = texDesc.width * 4;
-			texDesc.byteCount = texDesc.height * texDesc.rowPitch;
-			texDesc.format = RT64_TEXTURE_FORMAT_RGBA8;
-			
-            RT64.textureUploadQueueMutex.lock();
-			RT64.textureUploadQueue.push(uploadTexture);
-			RT64.textureUploadQueueMutex.unlock();
-		}
-		else {
-			fprintf(stderr, "stb_image was unable to load the texture file.\n");
-		}
-	}
-}
-
 static void gfx_rt64_rapi_set_sampler_parameters(int tile, bool linear_filter, uint32_t cms, uint32_t cmt) {
 	uint32_t textureKey = RT64.currentTextureIds[tile];
 	auto &recordedTexture = RT64.textures[textureKey];
@@ -2214,7 +2172,6 @@ struct GfxRenderingAPI gfx_rt64_rapi = {
     gfx_rt64_rapi_new_texture,
     gfx_rt64_rapi_select_texture,
     gfx_rt64_rapi_upload_texture,
-    gfx_rt64_rapi_upload_texture_file,
     gfx_rt64_rapi_set_sampler_parameters,
     gfx_rt64_rapi_set_depth_test,
     gfx_rt64_rapi_set_depth_mask,

@@ -1131,7 +1131,6 @@ static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, cons
 
 static void OPTIMIZE_O3 gfx_sp_tri1(uint8_t vtx1_idx, uint8_t vtx2_idx, uint8_t vtx3_idx) {
 #ifdef GFX_SEPARATE_PROJECTIONS
-    uint8_t swap = 0;
     switch (rsp.geometry_mode & G_CULL_BOTH) {
         // Ignore this call entirely.
         case G_CULL_BOTH:

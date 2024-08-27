@@ -20,9 +20,6 @@ struct GfxRenderingAPI {
     uint32_t (*new_texture)(void);
     void (*select_texture)(int tile, uint32_t texture_id);
     void (*upload_texture)(const uint8_t *rgba32_buf, int width, int height);
-#ifdef GFX_UPLOAD_TEXTURE_FILE
-    void (*upload_texture_file)(const char *file_path, const uint8_t *file_buf, uint64_t file_buf_size);
-#endif
     void (*set_sampler_parameters)(int sampler, bool linear_filter, uint32_t cms, uint32_t cmt);
     void (*set_depth_test)(bool depth_test);
     void (*set_depth_mask)(bool z_upd);

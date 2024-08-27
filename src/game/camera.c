@@ -505,7 +505,7 @@ extern u8 sDanceCutsceneIndexTable[][4];
 extern u8 sZoomOutAreaMasks[];
 
 #ifdef GFX_SEPARATE_PROJECTIONS
-static void skip_camera_interpolation(void) {
+void skip_camera_interpolation(void) {
     gLakituState.skipCameraInterpolationTimestamp = gGlobalTimer;
 }
 #endif
