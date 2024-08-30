@@ -1,19 +1,6 @@
 #include "pc/rom_assets.h"
 #include "game/paintings.h"
 
-// 0x070241B8 - 0x070241D0
-static const Lights1 hmc_seg7_lights_070241B8 = gdSPDefLights1(
-    0x50, 0x50, 0x50,
-    0xff, 0xff, 0xff, 0x32, 0x32, 0x32
-);
-
-// 0x070241D0 - 0x070241E8
-// No gdSPDefLights1 macro defined because of odd different light value (0xff and 0xfa)
-static const Lights1 hmc_seg7_lights_070241D0 = {
-    {{  {0x40, 0x40, 0x80}, 0, {0x40, 0x40, 0x80}, 0} },
-    {{{ {0x64, 0x64, 0xff}, 0, {0x64, 0x64, 0xfa}, 0, {0x28, 0x28, 0x28},0} }} 
-};
-
 // Appears to lock 4 of the sides when shimmering and in use. Unused.
 // 0x070241E8 - 0x07024228
 ROM_ASSET_LOAD_VTX(hmc_seg7_vertex_070241E8, 0x00396340, 232834, 0x00022558, 64);
@@ -26,8 +13,6 @@ ROM_ASSET_LOAD_VTX(hmc_seg7_vertex_07024228, 0x00396340, 232834, 0x00022598, 64)
 const Gfx hmc_seg7_dl_07024268[] = {
     gsDPPipeSync(),
     gsDPSetCombineMode(G_CC_MODULATERGB, G_CC_MODULATERGB),
-    gsSPLight(&hmc_seg7_lights_070241B8.l, 1),
-    gsSPLight(&hmc_seg7_lights_070241B8.a, 2),
     gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON),
     gsSPVertex(hmc_seg7_vertex_070241E8, 4, 0),
     gsSPEndDisplayList(),
@@ -497,8 +482,6 @@ ROM_ASSET_LOAD_TEXTURE(hmc_seg7_texture_07024CE0, "levels/hmc/7.rgba16.inc.c", 0
 // 0x070254E0 - 0x07025518
 static const Gfx hmc_seg7_painting_dl_070254E0[] = {
     gsDPPipeSync(),
-    gsSPLight(&hmc_seg7_lights_070241D0.l, 1),
-    gsSPLight(&hmc_seg7_lights_070241D0.a, 2),
     gsSPVertex(hmc_seg7_vertex_07024228, 4, 0),
     gsSP2Triangles( 0,  1,  2, 0x0,  0,  2,  3, 0x0),
     gsSPEndDisplayList(),
