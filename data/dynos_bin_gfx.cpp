@@ -237,7 +237,6 @@ s64 DynOS_Gfx_ParseGfxConstants(const String& _Arg, bool* found) {
     gfx_constant(G_MDSFT_ZSRCSEL);
     gfx_constant(G_MDSFT_RENDERMODE);
     gfx_constant(G_MDSFT_BLENDER);
-    gfx_constant(G_MDSFT_BLENDMASK);
     gfx_constant(G_MDSFT_ALPHADITHER);
     gfx_constant(G_MDSFT_RGBDITHER);
     gfx_constant(G_MDSFT_COMBKEY);
@@ -278,7 +277,6 @@ s64 DynOS_Gfx_ParseGfxConstants(const String& _Arg, bool* found) {
     gfx_constant(G_CD_BAYER);
     gfx_constant(G_CD_NOISE);
     gfx_constant(G_CD_DISABLE);
-    gfx_constant(G_CD_ENABLE);
     gfx_constant(G_AD_PATTERN);
     gfx_constant(G_AD_NOTPATTERN);
     gfx_constant(G_AD_NOISE);
@@ -802,8 +800,6 @@ static void ParseGfxSymbol(GfxData* aGfxData, DataNode<Gfx>* aNode, Gfx*& aHead,
     gfx_symbol_2(gsDPSetPrimDepth, false);
     gfx_symbol_4(gsDPSetBlendColor);
 
-    gfx_symbol_2(gsSPCopyLightEXT, false);
-    gfx_symbol_1(gsSPCopyLightsPlayerPart, false);
     gfx_symbol_2(gsSPFogFactor, false);
     gfx_symbol_1(gsDPSetTextureLOD, false);
     gfx_symbol_3(gsMoveWd, false);
@@ -865,7 +861,6 @@ static void ParseGfxSymbol(GfxData* aGfxData, DataNode<Gfx>* aNode, Gfx*& aHead,
         Lights0 *_Light = (Lights0 *) ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
         gSPNumLights(aHead++, NUMLIGHTS_0);
         aGfxData->mPointerList.Add(aHead);
-        gSPLight(aHead++, &_Light->l[0], 1);
         aGfxData->mPointerList.Add(aHead);
         gSPLight(aHead++, &_Light->a, 2);
         return;

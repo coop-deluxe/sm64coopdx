@@ -61,19 +61,19 @@ void guLookAtReflectF(float mf[4][4], LookAt *l, float xEye, float yEye, float z
     // l->l[0].l.col[0] = 0x00;
     // l->l[0].l.col[1] = 0x00;
     // l->l[0].l.col[2] = 0x00;
-    l->l[0].l.type = 0x00;
+    //l->l[0].l.type = 0x00;
     // l->l[0].l.colc[0] = 0x00;
     // l->l[0].l.colc[1] = 0x00;
     // l->l[0].l.colc[2] = 0x00;
-    l->l[0].l.pad2 = 0x00;
+    //l->l[0].l.pad2 = 0x00;
     // l->l[1].l.col[0] = 0x00;
     // l->l[1].l.col[1] = 0x80;
     // l->l[1].l.col[2] = 0x00;
-    l->l[1].l.type = 0x00;
+    //l->l[1].l.type = 0x00;
     // l->l[1].l.colc[0] = 0x00;
     // l->l[1].l.colc[1] = 0x80;
     // l->l[1].l.colc[2] = 0x00;
-    l->l[1].l.pad2 = 0x00;
+    //l->l[1].l.pad2 = 0x00;
 
     mf[0][0] = xRight;
     mf[1][0] = yRight;

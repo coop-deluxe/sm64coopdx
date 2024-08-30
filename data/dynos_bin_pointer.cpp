@@ -23,9 +23,6 @@ static PointerData GetDataFromPointer(const void* aPtr, GfxData* aGfxData) {
 
     // Light0s
     for (auto& _Node : aGfxData->mLight0s) {
-        if (&_Node->mData->l[0] == aPtr) { // Light *, not Lights1 *
-            return { _Node->mName, 1 };
-        }
         if (&_Node->mData->a == aPtr) { // Ambient *, not Lights1 *
             return { _Node->mName, 2 };
         }
@@ -259,9 +256,6 @@ static void *GetPointerFromData(GfxData *aGfxData, const String &aPtrName, u32 a
     // Light0s
     for (auto& _Node : aGfxData->mLight0s) {
         if (_Node->mName == aPtrName) {
-            if (aPtrData == 1) {
-                return (void *) &_Node->mData->l[0];
-            }
             if (aPtrData == 2) {
                 return (void *) &_Node->mData->a;
             }

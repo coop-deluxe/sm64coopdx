@@ -1160,7 +1160,7 @@ void gdm_setup(void) {
     sUpdateMarioScene = FALSE;
     sCarGdDlNum = 0;
     osViSetSpecialFeatures(OS_VI_GAMMA_OFF);
-    osCreateMesgQueue(&sGdDMAQueue, sGdMesgBuf, ARRAY_COUNT(sGdMesgBuf));
+    //osCreateMesgQueue(&sGdDMAQueue, sGdMesgBuf, ARRAY_COUNT(sGdMesgBuf));
     gd_init();
     load_shapes2();
     reset_cur_dl_indices();
@@ -1814,19 +1814,19 @@ void gd_dl_lookat(struct ObjCamera *cam, f32 arg1, f32 arg2, f32 arg3, f32 arg4,
     // lookat->l[0].l.col[0] = 0;
     // lookat->l[0].l.col[1] = 0;
     // lookat->l[0].l.col[2] = 0;
-    lookat->l[0].l.type = 0;
+    //lookat->l[0].l.type = 0;
     // lookat->l[0].l.colc[0] = 0;
     // lookat->l[0].l.colc[1] = 0;
     // lookat->l[0].l.colc[2] = 0;
-    lookat->l[0].l.pad2 = 0;
+    //lookat->l[0].l.pad2 = 0;
     // lookat->l[1].l.col[0] = 0;
     // lookat->l[1].l.col[1] = 0x80;
     // lookat->l[1].l.col[2] = 0;
-    lookat->l[1].l.type = 0;
+    //lookat->l[1].l.type = 0;
     // lookat->l[1].l.colc[0] = 0;
     // lookat->l[1].l.colc[1] = 0x80;
     // lookat->l[1].l.colc[2] = 0;
-    lookat->l[1].l.pad2 = 0;
+    //lookat->l[1].l.pad2 = 0;
 
     lookat = &D_801BE790[0];
     lookat->l[0].l.dir[0] = 1;
@@ -1840,19 +1840,19 @@ void gd_dl_lookat(struct ObjCamera *cam, f32 arg1, f32 arg2, f32 arg3, f32 arg4,
     // lookat->l[0].l.col[0] = 0;
     // lookat->l[0].l.col[1] = 0;
     // lookat->l[0].l.col[2] = 0;
-    lookat->l[0].l.type = 0;
+    //lookat->l[0].l.type = 0;
     // lookat->l[0].l.colc[0] = 0;
     // lookat->l[0].l.colc[1] = 0;
     // lookat->l[0].l.colc[2] = 0;
-    lookat->l[0].l.pad2 = 0;
+    //lookat->l[0].l.pad2 = 0;
     // lookat->l[1].l.col[0] = 0;
     // lookat->l[1].l.col[1] = 0x80;
     // lookat->l[1].l.col[2] = 0;
-    lookat->l[1].l.type = 0;
+    //lookat->l[1].l.type = 0;
     // lookat->l[1].l.colc[0] = 0;
     // lookat->l[1].l.colc[1] = 0x80;
     // lookat->l[1].l.colc[2] = 0;
-    lookat->l[1].l.pad2 = 0;
+    //lookat->l[1].l.pad2 = 0;
 
     gSPLookAt(next_gfx(), osVirtualToPhysical(&D_801BE7D0[gGdFrameBufNum]));
     next_mtx();
@@ -1966,12 +1966,12 @@ void gd_dl_flush_vertices(void) {
 /**
  * Unused - called by func_801A520C
  */
-static void func_801A01EC(void) {
+/*static void func_801A01EC(void) {
     if (D_801BE8B0.validCount >= D_801BE8B0.msgCount) {
         osRecvMesg(&D_801BE8B0, &sGdDMACompleteMsg, OS_MESG_BLOCK);
     }
     osRecvMesg(&D_801BE8B0, &sGdDMACompleteMsg, OS_MESG_BLOCK);
-}
+}*/
 
 /**
  * Unused - called by func_801A520C
@@ -2772,10 +2772,10 @@ void gd_init_controllers(void) {
     OSContPad *p1cont = &sPrevFrameCont[0]; // 1c
     u32 i;                                  // 18
 
-    osCreateMesgQueue(&D_801BE830, D_801BE848, ARRAY_COUNT(D_801BE848));
-    osSetEventMesg(OS_EVENT_SI, &D_801BE830, (OSMesg) OS_MESG_SI_COMPLETE);
-    osContInit(&D_801BE830, &D_801BAEA0, D_801BAE60);
-    osContStartReadData(&D_801BE830);
+    //osCreateMesgQueue(&D_801BE830, D_801BE848, ARRAY_COUNT(D_801BE848));
+    //osSetEventMesg(OS_EVENT_SI, &D_801BE830, (OSMesg) OS_MESG_SI_COMPLETE);
+    //osContInit(&D_801BE830, &D_801BAEA0, D_801BAE60);
+    //osContStartReadData(&D_801BE830);
 
     for (i = 0; i < sizeof(OSContPad); i++) {
         ((u8 *) p1cont)[i] = 0;
@@ -2900,11 +2900,11 @@ void *load_texture_from_file(const char *file, s32 fmt, s32 size, u32 arg3, u32 
 }
 
 /* 252F88 -> 252FAC */
-void Unknown801A47B8(struct ObjView *v) {
+/*void Unknown801A47B8(struct ObjView *v) {
     if (v->flags & VIEW_SAVE_TO_GLOBAL) {
         D_801BE994 = v;
     }
-}
+}*/
 
 void stub_renderer_7(void) {
 }
@@ -3134,7 +3134,7 @@ void func_801A520C(void) {
     stop_timer("1frame");
     sTracked1FrameTime = get_scaled_timer_total("1frame");
     split_timer("cpu");
-    func_801A01EC();
+    //func_801A01EC();
 }
 
 /**
