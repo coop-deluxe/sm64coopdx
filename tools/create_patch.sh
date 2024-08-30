@@ -11,7 +11,7 @@ then
 fi
 
 # Make sure this is a git repository
-if [ ! -d .git ]
+if [ ! -d .git ] && [ ! -f .git ]
 then
     echo 'Error: The current directory is not a Git repository.'
     exit 1
