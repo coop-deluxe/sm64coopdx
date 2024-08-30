@@ -27,7 +27,7 @@ movtexqc_register('wmotr_1_Movtex_0',            LEVEL_WMOTR,            1, 0)
 -- extra levels --
 ------------------
 
-LEVEL_ZERO_LIFE = level_register('level_zerolife_entry', COURSE_NONE, 'ZERO LIFE', 'zl', 28000, 0x28, 0x28, 0x28)
+LEVEL_ZERO_LIFE = level_register('level_zerolife_entry', COURSE_NONE, 'ZERO LIFE', 'zl', 28000, 0x49, 0x49, 0x49)
 
 ---------------------------
 -- force server settings --

@@ -30,8 +30,8 @@ LEVEL_ARENA_PILLARS   = level_register('level_arena_pillars_entry',   COURSE_NON
 LEVEL_ARENA_FORTS     = level_register('level_arena_forts_entry',     COURSE_NONE, 'Forts',     'forts',     28000, 0x08, 0x08, 0x08)
 LEVEL_ARENA_CITADEL   = level_register('level_arena_citadel_entry',   COURSE_NONE, 'Citadel',   'citadel',   28000, 0x08, 0x08, 0x08)
 LEVEL_ARENA_SPIRE     = level_register('level_arena_spire_entry',     COURSE_NONE, 'Spire',     'spire',     28000, 0x08, 0x08, 0x08)
-LEVEL_ARENA_RAINBOW   = level_register('level_arena_rainbow_entry',   COURSE_NONE, 'Rainbow',   'rainbow',   28000, 0x28, 0x28, 0x28)
-LEVEL_ARENA_CITY      = level_register('level_arena_city_entry',      COURSE_NONE, 'City',      'city',      28000, 0x28, 0x28, 0x28)
+LEVEL_ARENA_RAINBOW   = level_register('level_arena_rainbow_entry',   COURSE_NONE, 'Rainbow',   'rainbow',   28000, 0x49, 0x49, 0x49)
+LEVEL_ARENA_CITY      = level_register('level_arena_city_entry',      COURSE_NONE, 'City',      'city',      28000, 0x49, 0x49, 0x49)
 
 local gGameLevels = {
     { level = LEVEL_ARENA_ORIGIN,    name = 'Origin'    },
