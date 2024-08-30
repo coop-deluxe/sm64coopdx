@@ -2,6 +2,10 @@
 // Blue Coin Switch
 
 // 0x08000000
+static const Lights1 blue_coin_switch_seg8_lights_08000000 = gdSPDefLights1(
+    0x7f, 0x7f, 0x7f,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // 0x08000018
 ROM_ASSET_LOAD_TEXTURE(blue_coin_switch_seg8_texture_08000018, "actors/blue_coin_switch/blue_coin_switch_side.rgba16.inc.c", 0x001f2200, 59076, 0x00000018, 1024);

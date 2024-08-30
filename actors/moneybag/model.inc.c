@@ -8,8 +8,16 @@ ROM_ASSET_LOAD_TEXTURE(moneybag_seg6_texture_060039B0, "actors/moneybag/moneybag
 ROM_ASSET_LOAD_TEXTURE(moneybag_seg6_texture_060049B0, "actors/moneybag/moneybag_eyes.rgba16.inc.c", 0x001e51f0, 11160, 0x000049b0, 2048);
 
 // 0x060051B0
+static const Lights1 moneybag_seg6_lights_060051B0 = gdSPDefLights1(
+    0x7f, 0x7f, 0x7f,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // 0x060051C8
+static const Lights1 moneybag_seg6_lights_060051C8 = gdSPDefLights1(
+    0x00, 0x3f, 0x23,
+    0x00, 0x7f, 0x47, 0x28, 0x28, 0x28
+);
 
 // 0x060051E0
 ROM_ASSET_LOAD_VTX(moneybag_seg6_vertex_060051E0, 0x001e51f0, 11160, 0x000051e0, 160);
@@ -61,6 +69,10 @@ const Gfx moneybag_seg6_dl_060053B8[] = {
 };
 
 // 0x06005428
+static const Lights1 moneybag_seg6_lights_06005428 = gdSPDefLights1(
+    0x7f, 0x7f, 0x7f,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // 0x06005440
 ROM_ASSET_LOAD_VTX(moneybag_seg6_vertex_06005440, 0x001e51f0, 11160, 0x00005440, 224);
@@ -144,12 +156,28 @@ const Gfx moneybag_seg6_dl_06005750[] = {
 };
 
 // Unreferenced light group
+UNUSED static const Lights1 moneybag_lights_unused1 = gdSPDefLights1(
+    0x0c, 0x20, 0x06,
+    0x30, 0x83, 0x1a, 0x28, 0x28, 0x28
+);
 
 // Unreferenced light group
+UNUSED static const Lights1 moneybag_lights_unused2 = gdSPDefLights1(
+    0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x28, 0x28, 0x28
+);
 
 // 0x060057F0
+static const Lights1 moneybag_seg6_lights_060057F0 = gdSPDefLights1(
+    0x3f, 0x3f, 0x00,
+    0xff, 0xff, 0x00, 0x28, 0x28, 0x28
+);
 
 // Unreferenced light group
+UNUSED static const Lights1 moneybag_lights_unused3 = gdSPDefLights1(
+    0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x28, 0x28, 0x28
+);
 
 // 0x06005820
 ROM_ASSET_LOAD_VTX(moneybag_seg6_vertex_06005820, 0x001e51f0, 11160, 0x00005820, 176);

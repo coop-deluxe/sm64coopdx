@@ -2,6 +2,10 @@
 // Breakable Box
 
 // 0x08011A78
+static const Lights1 breakable_box_seg8_lights_08011A80 = gdSPDefLights1(
+    0x3f, 0x3f, 0x3f,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // 0x08011A90
 ROM_ASSET_LOAD_TEXTURE(breakable_box_seg8_texture_08011A90, "actors/breakable_box/crazy_box_surface.rgba16.inc.c", 0x001f2200, 59076, 0x00011a90, 2048);

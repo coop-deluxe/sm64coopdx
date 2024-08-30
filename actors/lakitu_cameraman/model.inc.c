@@ -20,8 +20,16 @@ ROM_ASSET_LOAD_TEXTURE(lakitu_seg6_texture_06003000, "actors/lakitu_cameraman/la
 ROM_ASSET_LOAD_TEXTURE(lakitu_seg6_texture_06003800, "actors/lakitu_cameraman/lakitu_camera_lens.rgba16.inc.c", 0x001d8310, 51422, 0x00003800, 512);
 
 // 0x06003A00
+static const Lights1 lakitu_seg6_lights_06003A00 = gdSPDefLights1(
+    0x7f, 0x7f, 0x7f,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // 0x06003A18
+static const Lights1 lakitu_seg6_lights_06003A18 = gdSPDefLights1(
+    0x79, 0x55, 0x00,
+    0xf2, 0xab, 0x00, 0x28, 0x28, 0x28
+);
 
 // 0x06003A30
 ROM_ASSET_LOAD_VTX(lakitu_seg6_vertex_06003A30, 0x00180bb0, 29674, 0x00012510, 256);
@@ -91,6 +99,10 @@ const Gfx lakitu_seg6_dl_06003E30[] = {
 };
 
 // 0x06003E98
+static const Lights1 lakitu_seg6_lights_06003E98 = gdSPDefLights1(
+    0x7f, 0x7f, 0x7f,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // 0x06003EB0
 ROM_ASSET_LOAD_VTX(lakitu_seg6_vertex_06003EB0, 0x00180bb0, 29674, 0x00012990, 256);
@@ -178,6 +190,10 @@ const Gfx lakitu_seg6_dl_06004680[] = {
 };
 
 // 0x060046E0
+static const Lights1 lakitu_seg6_lights_060046E0 = gdSPDefLights1(
+    0x79, 0x55, 0x00,
+    0xf2, 0xab, 0x00, 0x28, 0x28, 0x28
+);
 
 // 0x060046F8
 ROM_ASSET_LOAD_VTX(lakitu_seg6_vertex_060046F8, 0x00180bb0, 29674, 0x000135b0, 240);
@@ -204,6 +220,10 @@ const Gfx lakitu_seg6_dl_060047E8[] = {
 };
 
 // 0x060048D8
+static const Lights1 lakitu_seg6_lights_060048D8 = gdSPDefLights1(
+    0x79, 0x55, 0x00,
+    0xf2, 0xab, 0x00, 0x28, 0x28, 0x28
+);
 
 // 0x060048F0
 ROM_ASSET_LOAD_VTX(lakitu_seg6_vertex_060048F0, 0x00180bb0, 29674, 0x000133b8, 240);
@@ -230,6 +250,10 @@ const Gfx lakitu_seg6_dl_060049E0[] = {
 };
 
 // 0x06004AD0
+static const Lights1 lakitu_seg6_lights_06004AD0 = gdSPDefLights1(
+    0x7f, 0x7f, 0x7f,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // 0x06004AE8
 ROM_ASSET_LOAD_VTX(lakitu_seg6_vertex_06004AE8, 0x00180bb0, 29674, 0x000131d8, 192);
@@ -286,12 +310,28 @@ const Gfx lakitu_seg6_dl_06004C88[] = {
 };
 
 // 0x06004CB0
+static const Lights1 lakitu_seg6_lights_06004CB0 = gdSPDefLights1(
+    0x7f, 0x7f, 0x7f,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // 0x06004CC8
+static const Lights1 lakitu_seg6_lights_06004CC8 = gdSPDefLights1(
+    0x0c, 0x0c, 0x0c,
+    0x19, 0x19, 0x19, 0x28, 0x28, 0x28
+);
 
 // 0x06004CE0
+static const Lights1 lakitu_seg6_lights_06004CE0 = gdSPDefLights1(
+    0x19, 0x22, 0x20,
+    0x32, 0x44, 0x40, 0x28, 0x28, 0x28
+);
 
 // 0x06004CF8
+static const Lights1 lakitu_seg6_lights_06004CF8 = gdSPDefLights1(
+    0x18, 0x18, 0x18,
+    0x30, 0x30, 0x30, 0x28, 0x28, 0x28
+);
 
 // 0x06004D10
 ROM_ASSET_LOAD_VTX(lakitu_seg6_vertex_06004D10, 0x001d8310, 51422, 0x00004d10, 64);
@@ -378,16 +418,40 @@ const Gfx lakitu_seg6_dl_06005360[] = {
 };
 
 // Unreferenced light group
+UNUSED static const Lights1 lakitu_cameraman_lights_unused1 = gdSPDefLights1(
+    0x33, 0x1f, 0x0c,
+    0xcc, 0x7f, 0x33, 0x28, 0x28, 0x28
+);
 
 // 0x060053F0
+static const Lights1 lakitu_seg6_lights_060053F0 = gdSPDefLights1(
+    0x29, 0x13, 0x06,
+    0xa5, 0x4f, 0x1b, 0x28, 0x28, 0x28
+);
 
 // Unreferenced light group
+UNUSED static const Lights1 lakitu_cameraman_lights_unused2 = gdSPDefLights1(
+    0x06, 0x06, 0x06,
+    0x19, 0x19, 0x19, 0x28, 0x28, 0x28
+);
 
 // Unreferenced light group
+UNUSED static const Lights1 lakitu_cameraman_lights_unused3 = gdSPDefLights1(
+    0x2c, 0x2c, 0x2c,
+    0xb2, 0xb2, 0xb2, 0x28, 0x28, 0x28
+);
 
 // 0x06005438
+static const Lights1 lakitu_seg6_lights_06005438 = gdSPDefLights1(
+    0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x28, 0x28, 0x28
+);
 
 // Unreferenced light group
+UNUSED static const Lights1 lakitu_cameraman_lights_unused4 = gdSPDefLights1(
+    0x0d, 0x2c, 0x0b,
+    0x34, 0xb2, 0x2c, 0x28, 0x28, 0x28
+);
 
 // 0x06005468
 ROM_ASSET_LOAD_VTX(lakitu_seg6_vertex_06005468, 0x00180bb0, 29674, 0x00013790, 208);

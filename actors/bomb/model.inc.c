@@ -2,6 +2,10 @@
 // Bomb
 
 // 0x06057AA8
+static const Lights1 bomb_seg6_lights_06057AA8 = gdSPDefLights1(
+    0x3f, 0x3f, 0x3f,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // 0x06057AC0
 ROM_ASSET_LOAD_TEXTURE(bomb_seg6_texture_06057AC0, "actors/bomb/bomb_left_side.rgba16.inc.c", 0x00188440, 199722, 0x00057c10, 4096);

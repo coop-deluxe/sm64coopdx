@@ -138,6 +138,10 @@ const Gfx amp_seg8_dl_08002E58[] = {
 };
 
 // 0x08002EC8
+static const Lights1 amp_seg8_lights_08002EC8 = gdSPDefLights1(
+    0x33, 0x3f, 0x00,
+    0xcf, 0xff, 0x00, 0x28, 0x28, 0x28
+);
 
 // //! Another malformed entry: Vertex interpreted as light
 // 0x08002EE0

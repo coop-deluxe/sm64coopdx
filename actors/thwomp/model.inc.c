@@ -2,6 +2,10 @@
 // Thwomp
 
 // 0x050098E8
+static const Lights1 thwomp_seg5_lights_050098E8 = gdSPDefLights1(
+    0x4c, 0x4c, 0x4c,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // 0x05009900
 ROM_ASSET_LOAD_TEXTURE(thwomp_seg5_texture_05009900, "actors/thwomp/thwomp_face.rgba16.inc.c", 0x0012a7e0, 32879, 0x00009900, 4096);

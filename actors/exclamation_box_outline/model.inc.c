@@ -2,12 +2,28 @@
 // Exclamation Box Outline
 
 // 0x08024CB8
+static const Lights1 exclamation_box_outline_seg8_lights_08024CB8 = gdSPDefLights1(
+    0x7f, 0x00, 0x00,
+    0xff, 0x00, 0x00, 0x28, 0x28, 0x28
+);
 
 // 0x08024CD0
+static const Lights1 exclamation_box_outline_seg8_lights_08024CD0 = gdSPDefLights1(
+    0x00, 0x7f, 0x00,
+    0x00, 0xff, 0x00, 0x28, 0x28, 0x28
+);
 
 // 0x08024CE8
+static const Lights1 exclamation_box_outline_seg8_lights_08024CE8 = gdSPDefLights1(
+    0x00, 0x00, 0x7f,
+    0x00, 0x00, 0xff, 0x28, 0x28, 0x28
+);
 
 // 0x08024D00
+static const Lights1 exclamation_box_outline_seg8_lights_08024D00 = gdSPDefLights1(
+    0x7f, 0x6a, 0x00,
+    0xff, 0xd4, 0x00, 0x28, 0x28, 0x28
+);
 
 // 0x08024D18
 ROM_ASSET_LOAD_VTX(exclamation_box_outline_seg8_vertex_08024D18, 0x001f2200, 59076, 0x00024d18, 240);
@@ -124,6 +140,10 @@ const Gfx exclamation_box_outline_seg8_dl_080259F8[] = {
 };
 
 // 0x08025A68
+static const Lights1 exclamation_box_outline_seg8_lights_08025A68 = gdSPDefLights1(
+    0x7f, 0x7f, 0x7f,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // 0x08025A80
 ROM_ASSET_LOAD_TEXTURE(exclamation_box_outline_seg8_texture_08025A80, "actors/exclamation_box_outline/exclamation_point.rgba16.inc.c", 0x001f2200, 59076, 0x00025a80, 1024);

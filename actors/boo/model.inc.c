@@ -2,6 +2,10 @@
 // Boo
 
 // 0x05009B28
+static const Lights1 boo_seg5_lights_05009B28 = gdSPDefLights1(
+    0x97, 0x9a, 0xff,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // 0x05009B40
 ROM_ASSET_LOAD_TEXTURE(boo_seg5_texture_05009B40, "actors/boo/boo_eyes.rgba16.inc.c", 0x00166c60, 26968, 0x00009b40, 4096);

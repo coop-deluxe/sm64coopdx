@@ -1,6 +1,10 @@
 #include "pc/rom_assets.h"
 // waluigi Cap (Normal Cap, Metal, Winged, etc)
 
+static const Lights1 waluigi_cap_black_lights_group = gdSPDefLights1(
+    0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x28, 0x28, 0x28
+);
 
 #include "actors/mario/mario_externs.h"
 #include "actors/waluigi/waluigi_externs.h"

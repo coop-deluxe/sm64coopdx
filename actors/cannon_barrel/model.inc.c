@@ -2,8 +2,16 @@
 // Cannon Barrel
 
 // 0x08005878
+static const Lights1 cannon_barrel_seg8_lights_08005878 = gdSPDefLights1(
+    0x4c, 0x4c, 0x4c,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // 0x08005890
+static const Lights1 cannon_barrel_seg8_lights_08005890 = gdSPDefLights1(
+    0x00, 0x00, 0x0f,
+    0x00, 0x00, 0x32, 0x28, 0x28, 0x28
+);
 
 // 0x080058A8
 ROM_ASSET_LOAD_TEXTURE(cannon_barrel_seg8_texture_080058A8, "actors/cannon_barrel/cannon_barrel.rgba16.inc.c", 0x001f2200, 59076, 0x000058a8, 2048);

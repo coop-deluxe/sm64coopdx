@@ -2,18 +2,46 @@
 // Chuckya
 
 // Unreferenced light group
+UNUSED static const Lights1 chuckya_lights_unused1 = gdSPDefLights1(
+    0x26, 0x00, 0x27,
+    0x9a, 0x00, 0x9c, 0x28, 0x28, 0x28
+);
 
 // Unreferenced light group
+UNUSED static const Lights1 chuckya_lights_unused2 = gdSPDefLights1(
+    0x3f, 0x3f, 0x3f,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // Unreferenced light group
+UNUSED static const Lights1 chuckya_lights_unused3 = gdSPDefLights1(
+    0x3f, 0x00, 0x00,
+    0xff, 0x00, 0x00, 0x28, 0x28, 0x28
+);
 
 // Unreferenced light group
+UNUSED static const Lights1 chuckya_lights_unused4 = gdSPDefLights1(
+    0x0e, 0x0e, 0x0e,
+    0x39, 0x39, 0x39, 0x28, 0x28, 0x28
+);
 
 // Unreferenced light group
+UNUSED static const Lights1 chuckya_lights_unused5 = gdSPDefLights1(
+    0x39, 0x20, 0x00,
+    0xe4, 0x83, 0x00, 0x28, 0x28, 0x28
+);
 
 // Unreferenced light group
+UNUSED static const Lights1 chuckya_lights_unused6 = gdSPDefLights1(
+    0x3f, 0x27, 0x00,
+    0xff, 0x9e, 0x00, 0x28, 0x28, 0x28
+);
 
 // Unreferenced light group
+UNUSED static const Lights1 chuckya_lights_unused7 = gdSPDefLights1(
+    0x15, 0x14, 0x16,
+    0x57, 0x53, 0x58, 0x28, 0x28, 0x28
+);
 
 // 0x08006778
 ROM_ASSET_LOAD_TEXTURE(chuckya_seg8_texture_08006778, "actors/chuckya/chuckya_eyes.rgba16.inc.c", 0x001f2200, 59076, 0x00006778, 4096);
@@ -256,6 +284,10 @@ const Gfx chuckya_seg8_dl_0800A5F8[] = {
 };
 
 // 0x0800A668
+static const Lights1 chuckya_seg8_lights_0800A668 = gdSPDefLights1(
+    0x66, 0x66, 0x66,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // 0x0800A680
 ROM_ASSET_LOAD_VTX(chuckya_seg8_vertex_0800A680, 0x001f2200, 59076, 0x0000a680, 128);
@@ -292,6 +324,10 @@ const Gfx chuckya_seg8_dl_0800A758[] = {
 };
 
 // 0x0800A7C8
+static const Lights1 chuckya_seg8_lights_0800A7C8 = gdSPDefLights1(
+    0x29, 0x29, 0x29,
+    0x89, 0x89, 0x8a, 0x28, 0x28, 0x28
+);
 
 // 0x0800A7E0
 ROM_ASSET_LOAD_VTX(chuckya_seg8_vertex_0800A7E0, 0x001f2200, 59076, 0x0000a7e0, 144);
@@ -317,6 +353,10 @@ const Gfx chuckya_seg8_dl_0800A8D0[] = {
 };
 
 // 0x0800A8F0
+static const Lights1 chuckya_seg8_lights_0800A8F0 = gdSPDefLights1(
+    0x4c, 0x4c, 0x00,
+    0xff, 0xff, 0x00, 0x28, 0x28, 0x28
+);
 
 // 0x0800A908
 ROM_ASSET_LOAD_VTX(chuckya_seg8_vertex_0800A908, 0x001f2200, 59076, 0x0000a908, 80);
@@ -340,6 +380,10 @@ const Gfx chuckya_seg8_dl_0800A998[] = {
 };
 
 // 0x0800A9B8
+static const Lights1 chuckya_seg8_lights_0800A9B8 = gdSPDefLights1(
+    0x0c, 0x0c, 0x0c,
+    0x32, 0x32, 0x32, 0x28, 0x28, 0x28
+);
 
 // 0x0800A9D0
 ROM_ASSET_LOAD_VTX(chuckya_seg8_vertex_0800A9D0, 0x001f2200, 59076, 0x0000a9d0, 240);

@@ -1,5 +1,9 @@
 #include "pc/rom_assets.h"
 // 0x07015F78 - 0x07015F90
+static const Lights1 ttc_lights_surface_treadmill = gdSPDefLights1(
+    0x3f, 0x3f, 0x3f,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // 0x07015F90 - 0x07016790
 ROM_ASSET_LOAD_TEXTURE(ttc_yellow_triangle, "levels/ttc/2.rgba16.inc.c", 0x0042cf20, 42199, 0x00015f90, 2048);

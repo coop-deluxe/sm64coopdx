@@ -2,18 +2,46 @@
 // Heave Ho
 
 // Unreferenced light group
+static const Lights1 heave_ho_lights_unused1 = gdSPDefLights1(
+    0x2c, 0x2c, 0x2c,
+    0xb2, 0xb2, 0xb2, 0x28, 0x28, 0x28
+);
 
 // Unreferenced light group
+static const Lights1 heave_ho_lights_unused2 = gdSPDefLights1(
+    0x3f, 0x38, 0x00,
+    0xff, 0xe3, 0x00, 0x28, 0x28, 0x28
+);
 
 // Unreferenced light group
+static const Lights1 heave_ho_lights_unused3 = gdSPDefLights1(
+    0x3f, 0x00, 0x00,
+    0xff, 0x00, 0x00, 0x28, 0x28, 0x28
+);
 
 // 0x0500E968
+static const Lights1 heave_ho_seg5_lights_0500E968 = gdSPDefLights1(
+    0x14, 0x14, 0x15,
+    0x50, 0x50, 0x54, 0x28, 0x28, 0x28
+);
 
 // 0x0500E980
+static const Lights1 heave_ho_seg5_lights_0500E980 = gdSPDefLights1(
+    0x73, 0x3f, 0x32,
+    0xff, 0xe0, 0x85, 0x28, 0x28, 0x28
+);
 
 // Unreferenced light group
+static const Lights1 heave_ho_lights_unused4 = gdSPDefLights1(
+    0x3b, 0x38, 0x21,
+    0xec, 0xe3, 0x84, 0x28, 0x28, 0x28
+);
 
 // Unreferenced light group
+static const Lights1 heave_ho_lights_unused5 = gdSPDefLights1(
+    0x32, 0x32, 0x32,
+    0xc8, 0xc8, 0xc8, 0x28, 0x28, 0x28
+);
 
 // 0x0500E9C8
 ROM_ASSET_LOAD_TEXTURE(heave_ho_seg5_texture_0500E9C8, "actors/heave_ho/heave-ho_face.rgba16.inc.c", 0x0012a7e0, 32879, 0x0000e9c8, 2048);
@@ -34,8 +62,16 @@ ROM_ASSET_LOAD_TEXTURE(heave_ho_seg5_texture_050111C8, "actors/heave_ho/heave-ho
 ROM_ASSET_LOAD_TEXTURE(heave_ho_seg5_texture_050113C8, "actors/heave_ho/heave-ho_turnkey.rgba16.inc.c", 0x0012a7e0, 32879, 0x000113c8, 2048);
 
 // 0x05011BC8
+static const Lights1 heave_ho_seg5_lights_05011BC8 = gdSPDefLights1(
+    0x7f, 0x7f, 0x7f,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // 0x05011BE0
+static const Lights1 heave_ho_seg5_lights_05011BE0 = gdSPDefLights1(
+    0x40, 0x00, 0x0d,
+    0x81, 0x01, 0x1a, 0x28, 0x28, 0x28
+);
 
 // 0x05011BF8
 ROM_ASSET_LOAD_VTX(heave_ho_seg5_vertex_05011BF8, 0x0012a7e0, 32879, 0x00011bf8, 64);
@@ -117,8 +153,16 @@ const Gfx heave_ho_seg5_dl_05011EC0[] = {
 };
 
 // 0x05011F50
+static const Lights1 heave_ho_seg5_lights_05011F50 = gdSPDefLights1(
+    0x7f, 0x7f, 0x7f,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // 0x05011F68
+static const Lights1 heave_ho_seg5_lights_05011F68 = gdSPDefLights1(
+    0x4c, 0x00, 0x16,
+    0x99, 0x00, 0x2d, 0x28, 0x28, 0x28
+);
 
 // 0x05011F80
 ROM_ASSET_LOAD_VTX(heave_ho_seg5_vertex_05011F80, 0x0012a7e0, 32879, 0x00011f80, 176);
@@ -169,8 +213,16 @@ const Gfx heave_ho_seg5_dl_05012148[] = {
 };
 
 // 0x050121B0
+static const Lights1 heave_ho_seg5_lights_050121B0 = gdSPDefLights1(
+    0x7f, 0x7f, 0x7f,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // 0x050121C8
+static const Lights1 heave_ho_seg5_lights_050121C8 = gdSPDefLights1(
+    0x4c, 0x00, 0x16,
+    0x99, 0x00, 0x2d, 0x28, 0x28, 0x28
+);
 
 // 0x050121E0
 ROM_ASSET_LOAD_VTX(heave_ho_seg5_vertex_050121E0, 0x0012a7e0, 32879, 0x000121e0, 176);
@@ -221,8 +273,16 @@ const Gfx heave_ho_seg5_dl_050123A8[] = {
 };
 
 // 0x05012410
+static const Lights1 heave_ho_seg5_lights_05012410 = gdSPDefLights1(
+    0x7f, 0x7f, 0x7f,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // 0x05012428
+static const Lights1 heave_ho_seg5_lights_05012428 = gdSPDefLights1(
+    0x5d, 0x6d, 0x65,
+    0xbb, 0xda, 0xcb, 0x28, 0x28, 0x28
+);
 
 // 0x05012440
 ROM_ASSET_LOAD_VTX(heave_ho_seg5_vertex_05012440, 0x0012a7e0, 32879, 0x00012440, 64);
@@ -304,6 +364,10 @@ const Gfx heave_ho_seg5_dl_050126E8[] = {
 };
 
 // 0x05012758
+static const Lights1 heave_ho_seg5_lights_05012758 = gdSPDefLights1(
+    0x93, 0x73, 0x7c,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // 0x05012770
 ROM_ASSET_LOAD_VTX(heave_ho_seg5_vertex_05012770, 0x0012a7e0, 32879, 0x00012770, 64);

@@ -2,6 +2,10 @@
 // Star
 
 // 0x0302A6D8
+static const Lights1 star_seg3_lights_0302A6D8 = gdSPDefLights1(
+    0x3f, 0x3f, 0x3f,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // 0x0302A6F0
 ROM_ASSET_LOAD_TEXTURE(star_seg3_texture_0302A6F0, "actors/star/star_surface.rgba16.inc.c", 0x00201410, 96653, 0x0002a6f0, 2048);
@@ -48,6 +52,10 @@ const Gfx star_seg3_dl_0302B870[] = {
 };
 
 // 0x0302B908
+static const Lights1 star_seg3_lights_0302B908 = gdSPDefLights1(
+    0x3f, 0x3f, 0x3f,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // 0x0302B920
 ROM_ASSET_LOAD_VTX(star_seg3_vertex_0302B920, 0x00201410, 96653, 0x0002b920, 160);

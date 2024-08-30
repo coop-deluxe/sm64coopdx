@@ -2,12 +2,28 @@
 // Mad Piano
 
 // Unreferenced light group
+UNUSED static const Lights1 mad_piano_lights_unused1 = gdSPDefLights1(
+    0x05, 0x04, 0x08,
+    0x14, 0x13, 0x20, 0x28, 0x28, 0x28
+);
 
 // Unreferenced light group
+UNUSED static const Lights1 mad_piano_lights_unused2 = gdSPDefLights1(
+    0x3f, 0x3f, 0x3f,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // Unreferenced light group
+UNUSED static const Lights1 mad_piano_lights_unused3 = gdSPDefLights1(
+    0x2c, 0x2c, 0x2c,
+    0xb2, 0xb2, 0xb2, 0x28, 0x28, 0x28
+);
 
 // Unreferenced light group
+UNUSED static const Lights1 mad_piano_lights_unused4 = gdSPDefLights1(
+    0x30, 0x00, 0x00,
+    0xc3, 0x00, 0x00, 0x28, 0x28, 0x28
+);
 
 // 0x05006AF0
 ROM_ASSET_LOAD_TEXTURE(mad_piano_seg5_texture_05006AF0, "actors/mad_piano/mad_piano_tooth.rgba16.inc.c", 0x00166c60, 26968, 0x00006af0, 2048);
@@ -28,6 +44,10 @@ ROM_ASSET_LOAD_TEXTURE(mad_piano_seg5_texture_05007EF0, "actors/mad_piano/mad_pi
 ROM_ASSET_LOAD_TEXTURE(mad_piano_seg5_texture_050082F0, "actors/mad_piano/mad_piano_keys_edge.rgba16.inc.c", 0x00166c60, 26968, 0x000082f0, 1024);
 
 // 0x050086F0
+static const Lights1 mad_piano_seg5_lights_050086F0 = gdSPDefLights1(
+    0x4c, 0x4c, 0x4c,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // 0x05008708
 ROM_ASSET_LOAD_VTX(mad_piano_seg5_vertex_05008708, 0x00166c60, 26968, 0x00008708, 160);
@@ -105,12 +125,28 @@ const Gfx mad_piano_seg5_dl_05008CB0[] = {
 };
 
 // 0x05008D40
+static const Lights1 mad_piano_seg5_lights_05008D40 = gdSPDefLights1(
+    0x3d, 0x3d, 0x3d,
+    0xcc, 0xcc, 0xcc, 0x28, 0x28, 0x28
+);
 
 // 0x05008D58
+static const Lights1 mad_piano_seg5_lights_05008D58 = gdSPDefLights1(
+    0x4c, 0x4c, 0x4c,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // 0x05008D70
+static const Lights1 mad_piano_seg5_lights_05008D70 = gdSPDefLights1(
+    0x26, 0x26, 0x26,
+    0x7f, 0x7f, 0x7f, 0x28, 0x28, 0x28
+);
 
 // 0x05008D88
+static const Lights1 mad_piano_seg5_lights_05008D88 = gdSPDefLights1(
+    0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x28, 0x28, 0x28
+);
 
 // 0x05008DA0
 ROM_ASSET_LOAD_VTX(mad_piano_seg5_vertex_05008DA0, 0x00166c60, 26968, 0x00008da0, 208);

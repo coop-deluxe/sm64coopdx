@@ -4,6 +4,10 @@
 // This actor file requires including actor bookend because of bookend_seg5_texture_05000C60
 
 // 0x05002558
+static const Lights1 book_seg5_lights_05002558 = gdSPDefLights1(
+    0x7f, 0x7f, 0x7f,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // 0x05002570
 ROM_ASSET_LOAD_TEXTURE(book_seg5_texture_05002570, "actors/book/book_cover.rgba16.inc.c", 0x00166c60, 26968, 0x00001060, 2048);

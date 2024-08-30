@@ -2,6 +2,10 @@
 #include "game/paintings.h"
 
 // 0x070122F0 - 0x07012308
+static const Lights1 ttm_seg7_lights_070122F0 = gdSPDefLights1(
+    0x50, 0x50, 0x50,
+    0xff, 0xff, 0xff, 0x32, 0x32, 0x32
+);
 
 // 0x07012308 - 0x07012388
 ROM_ASSET_LOAD_VTX(ttm_seg7_vertex_07012308, 0x00396340, 232834, 0x00021818, 128);

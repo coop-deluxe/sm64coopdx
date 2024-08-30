@@ -5,12 +5,28 @@
 UNUSED static const u64 snowman_unused_1 = 1;
 
 // Unreferenced light group
+UNUSED static const Lights1 snowman_lights_unused1 = gdSPDefLights1(
+    0x0d, 0x0c, 0x28,
+    0x35, 0x32, 0xa2, 0x28, 0x28, 0x28
+);
 
 // Unreferenced light group
+UNUSED static const Lights1 snowman_lights_unused2 = gdSPDefLights1(
+    0x3f, 0x00, 0x00,
+    0xff, 0x00, 0x00, 0x28, 0x28, 0x28
+);
 
 // Unreferenced light group
+UNUSED static const Lights1 snowman_lights_unused3 = gdSPDefLights1(
+    0x08, 0x07, 0x04,
+    0x23, 0x1c, 0x12, 0x28, 0x28, 0x28
+);
 
 // Unreferenced light group
+UNUSED static const Lights1 snowman_lights_unused4 = gdSPDefLights1(
+    0x03, 0x03, 0x02,
+    0x0e, 0x0d, 0x0b, 0x28, 0x28, 0x28
+);
 
 // 0x05008C70
 ROM_ASSET_LOAD_TEXTURE(snowman_seg5_texture_05008C70, "actors/snowman/mr_blizzard_mitten.rgba16.inc.c", 0x00160670, 20585, 0x00008c70, 2048);
@@ -28,6 +44,10 @@ ROM_ASSET_LOAD_TEXTURE(snowman_seg5_texture_0500B470, "actors/snowman/mr_blizzar
 ROM_ASSET_LOAD_TEXTURE(snowman_seg5_texture_0500BC70, "actors/snowman/mr_blizzard_mouth.rgba16.inc.c", 0x00160670, 20585, 0x0000bc70, 2048);
 
 // 0x0500C470
+static const Lights1 snowman_seg5_lights_0500C470 = gdSPDefLights1(
+    0x1c, 0x0f, 0x07,
+    0x38, 0x1e, 0x0e, 0x28, 0x28, 0x28
+);
 
 // 0x0500C488
 ROM_ASSET_LOAD_VTX(snowman_seg5_vertex_0500C488, 0x00160670, 20585, 0x0000c488, 64);
@@ -130,6 +150,10 @@ const Gfx snowman_seg5_dl_0500C760[] = {
 };
 
 // 0x0500C7D0
+static const Lights1 snowman_seg5_lights_0500C7D0 = gdSPDefLights1(
+    0x7f, 0x7f, 0x7f,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // 0x0500C7E8
 ROM_ASSET_LOAD_VTX(snowman_seg5_vertex_0500C7E8, 0x00160670, 20585, 0x0000c7e8, 256);

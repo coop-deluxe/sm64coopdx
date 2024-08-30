@@ -2,6 +2,10 @@
 // Warp Pipe
 
 // 0x030079E8
+static const Lights1 warp_pipe_seg3_lights_030079E8 = gdSPDefLights1(
+    0x3f, 0x3f, 0x3f,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // 0x03007A00
 ROM_ASSET_LOAD_VTX(warp_pipe_seg3_vertex_03007A00, 0x00201410, 96653, 0x00007a00, 240);
@@ -71,8 +75,16 @@ const Gfx warp_pipe_seg3_dl_03008F98[] = {
 };
 
 // 0x03008FF8
+static const Lights1 warp_pipe_seg3_lights_03008FF8 = gdSPDefLights1(
+    0x3f, 0x3f, 0x3f,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // 0x03009010
+static const Lights1 warp_pipe_seg3_lights_03009010 = gdSPDefLights1(
+    0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x28, 0x28, 0x28
+);
 
 // 0x03009028
 ROM_ASSET_LOAD_VTX(warp_pipe_seg3_vertex_03009028, 0x00201410, 96653, 0x00009028, 256);

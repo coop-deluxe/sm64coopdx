@@ -5,6 +5,10 @@
 ROM_ASSET_LOAD_TEXTURE(tornado_seg5_texture_05013128, "actors/tornado/tornado.ia16.inc.c", 0x0013b910, 41727, 0x00012848, 4096);
 
 // 0x05014128
+static const Lights1 tornado_seg5_lights_05014128 = gdSPDefLights1(
+    0x3b, 0x34, 0x23,
+    0xee, 0xd0, 0x8d, 0x28, 0x28, 0x28
+);
 
 // 0x05014140
 ROM_ASSET_LOAD_VTX(tornado_seg5_vertex_05014140, 0x00145e90, 48337, 0x00014140, 224);

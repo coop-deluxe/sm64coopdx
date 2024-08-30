@@ -2,6 +2,10 @@
 // Eyerok
 
 // Unreferenced light group
+UNUSED static const Lights1 eyerok_lights_unused = gdSPDefLights1(
+    0x3f, 0x2a, 0x16,
+    0xff, 0xa9, 0x5b, 0x28, 0x28, 0x28
+);
 
 // 0x05008D40
 ROM_ASSET_LOAD_TEXTURE(eyerok_seg5_texture_05008D40, "actors/eyerok/eyerok_bricks.rgba16.inc.c", 0x00145e90, 48337, 0x00008d40, 2048);
@@ -19,6 +23,10 @@ ROM_ASSET_LOAD_TEXTURE(eyerok_seg5_texture_0500A540, "actors/eyerok/eyerok_eye_m
 ROM_ASSET_LOAD_TEXTURE(eyerok_seg5_texture_0500AD40, "actors/eyerok/eyerok_eye_closed.rgba16.inc.c", 0x00145e90, 48337, 0x0000ad40, 2048);
 
 // 0x0500B540
+static const Lights1 eyerok_seg5_lights_0500B540 = gdSPDefLights1(
+    0x7f, 0x7f, 0x7f,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // 0x0500B558
 ROM_ASSET_LOAD_VTX(eyerok_seg5_vertex_0500B558, 0x00145e90, 48337, 0x0000b558, 240);
@@ -63,6 +71,10 @@ const Gfx eyerok_seg5_dl_0500B748[] = {
 };
 
 // 0x0500B7B8
+static const Lights1 eyerok_seg5_lights_0500B7B8 = gdSPDefLights1(
+    0x7f, 0x7f, 0x7f,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // 0x0500B7D0
 ROM_ASSET_LOAD_VTX(eyerok_seg5_vertex_0500B7D0, 0x00145e90, 48337, 0x0000b7d0, 240);
@@ -107,6 +119,10 @@ const Gfx eyerok_seg5_dl_0500B9C0[] = {
 };
 
 // 0x0500BA30
+static const Lights1 eyerok_seg5_lights_0500BA30 = gdSPDefLights1(
+    0x7f, 0x7f, 0x7f,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // 0x0500BA48
 ROM_ASSET_LOAD_VTX(eyerok_seg5_vertex_0500BA48, 0x00145e90, 48337, 0x0000ba48, 240);
@@ -152,6 +168,10 @@ const Gfx eyerok_seg5_dl_0500BC88[] = {
 };
 
 // 0x0500BCF8
+static const Lights1 eyerok_seg5_lights_0500BCF8 = gdSPDefLights1(
+    0x7f, 0x7f, 0x7f,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // 0x0500BD10
 ROM_ASSET_LOAD_VTX(eyerok_seg5_vertex_0500BD10, 0x00145e90, 48337, 0x0000bd10, 240);
@@ -196,6 +216,10 @@ const Gfx eyerok_seg5_dl_0500BF00[] = {
 };
 
 // 0x0500BF70
+static const Lights1 eyerok_seg5_lights_0500BF70 = gdSPDefLights1(
+    0x7f, 0x7f, 0x7f,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // 0x0500BF88
 ROM_ASSET_LOAD_VTX(eyerok_seg5_vertex_0500BF88, 0x00145e90, 48337, 0x0000bf88, 256);
@@ -234,6 +258,10 @@ const Gfx eyerok_seg5_dl_0500C100[] = {
 };
 
 // 0x0500C170
+static const Lights1 eyerok_seg5_lights_0500C170 = gdSPDefLights1(
+    0x7f, 0x7f, 0x7f,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // 0x0500C188
 ROM_ASSET_LOAD_VTX(eyerok_seg5_vertex_0500C188, 0x00145e90, 48337, 0x0000c188, 240);
@@ -278,6 +306,10 @@ const Gfx eyerok_seg5_dl_0500C378[] = {
 };
 
 // 0x0500C3E8
+static const Lights1 eyerok_seg5_lights_0500C3E8 = gdSPDefLights1(
+    0x7f, 0x7f, 0x7f,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // 0x0500C400
 ROM_ASSET_LOAD_VTX(eyerok_seg5_vertex_0500C400, 0x00145e90, 48337, 0x0000c400, 240);
@@ -323,6 +355,10 @@ const Gfx eyerok_seg5_dl_0500C640[] = {
 };
 
 // 0x0500C6B0
+static const Lights1 eyerok_seg5_lights_0500C6B0 = gdSPDefLights1(
+    0x7f, 0x7f, 0x7f,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // 0x0500C6C8
 ROM_ASSET_LOAD_VTX(eyerok_seg5_vertex_0500C6C8, 0x00145e90, 48337, 0x0000c6c8, 240);

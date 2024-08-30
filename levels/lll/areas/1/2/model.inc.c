@@ -1,5 +1,9 @@
 #include "pc/rom_assets.h"
 // 0x07013620 - 0x07013638
+static const Lights1 lll_seg7_lights_07013620 = gdSPDefLights1(
+    0x3f, 0x3f, 0x3f,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // 0x07013638 - 0x07013738
 ROM_ASSET_LOAD_VTX(lll_seg7_vertex_07013638, 0x004784a0, 83204, 0x00013638, 256);

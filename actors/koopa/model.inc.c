@@ -3,20 +3,52 @@
 
 
 // Unreferenced light group
+UNUSED static const Lights1 koopa_lights_unused1 = gdSPDefLights1(
+    0x7f, 0x7f, 0x7f,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // 0x060025A0
+static const Lights1 koopa_seg6_lights_060025A0 = gdSPDefLights1(
+    0x00, 0x59, 0x00,
+    0x00, 0xb2, 0x00, 0x28, 0x28, 0x28
+);
 
 // 0x060025B8
+static const Lights1 koopa_seg6_lights_060025B8 = gdSPDefLights1(
+    0x70, 0x57, 0x00,
+    0xe0, 0xae, 0x00, 0x28, 0x28, 0x28
+);
 
 // 0x060025D0
+static const Lights1 koopa_seg6_lights_060025D0 = gdSPDefLights1(
+    0x7f, 0x7f, 0x7f,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // Unreferenced light group
+UNUSED static const Lights1 koopa_lights_unused2 = gdSPDefLights1(
+    0x59, 0x59, 0x59,
+    0xb2, 0xb2, 0xb2, 0x28, 0x28, 0x28
+);
 
 // 0x06002600
+static const Lights1 koopa_seg6_lights_06002600 = gdSPDefLights1(
+    0x00, 0x54, 0x00,
+    0x00, 0xa9, 0x00, 0x28, 0x28, 0x28
+);
 
 // 0x06002618
+static const Lights1 koopa_seg6_lights_06002618 = gdSPDefLights1(
+    0x59, 0x59, 0x59,
+    0xb2, 0xb2, 0xb2, 0x28, 0x28, 0x28
+);
 
 // 0x06002630
+static const Lights1 koopa_seg6_lights_06002630 = gdSPDefLights1(
+    0x7f, 0x7f, 0x7f,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // //! There is a malformed light entry here pointing to this texture + 0x18.
 //     It results in the koopa actor 'wearing' what appears to be pink shorts
@@ -50,8 +82,16 @@ ROM_ASSET_LOAD_TEXTURE(koopa_seg6_texture_06005648, "actors/koopa/koopa_eye_bord
 ROM_ASSET_LOAD_TEXTURE(koopa_seg6_texture_06005E48, "actors/koopa/koopa_nostrils.rgba16.inc.c", 0x001c4230, 80474, 0x00005e48, 4096);
 
 // 0x06006E48
+static const Lights1 koopa_seg6_lights_06006E48 = gdSPDefLights1(
+    0x7f, 0x7f, 0x7f,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // 0x06006E60
+static const Lights1 koopa_seg6_lights_06006E60 = gdSPDefLights1(
+    0x67, 0x0b, 0x1a,
+    0xce, 0x16, 0x35, 0x28, 0x28, 0x28
+);
 
 // 0x06006E78
 ROM_ASSET_LOAD_VTX(koopa_seg6_vertex_06006E78, 0x001c4230, 80474, 0x00006e78, 144);
@@ -230,8 +270,16 @@ const Gfx koopa_seg6_dl_06007B20[] = {
 };
 
 // 0x06007B48
+static const Lights1 koopa_seg6_lights_06007B48 = gdSPDefLights1(
+    0x7f, 0x7f, 0x7f,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // 0x06007B60
+static const Lights1 koopa_seg6_lights_06007B60 = gdSPDefLights1(
+    0x70, 0x57, 0x00,
+    0xe0, 0xae, 0x00, 0x28, 0x28, 0x28
+);
 
 // 0x06007B78
 ROM_ASSET_LOAD_VTX(koopa_seg6_vertex_06007B78, 0x001c4230, 80474, 0x00007b78, 160);
@@ -335,8 +383,16 @@ const Gfx koopa_seg6_dl_06008250[] = {
 };
 
 // 0x060082C0
+static const Lights1 koopa_seg6_lights_060082C0 = gdSPDefLights1(
+    0x7f, 0x7f, 0x7f,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // 0x060082D8
+static const Lights1 koopa_seg6_lights_060082D8 = gdSPDefLights1(
+    0x00, 0x64, 0x00,
+    0x00, 0xc8, 0x00, 0x28, 0x28, 0x28
+);
 
 // 0x060082F0
 ROM_ASSET_LOAD_VTX(koopa_seg6_vertex_060082F0, 0x001c4230, 80474, 0x000082f0, 256);
@@ -412,8 +468,16 @@ const Gfx koopa_seg6_dl_060086D0[] = {
 };
 
 // 0x06008740
+static const Lights1 koopa_seg6_lights_06008740 = gdSPDefLights1(
+    0x7f, 0x7f, 0x7f,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // 0x06008758
+static const Lights1 koopa_seg6_lights_06008758 = gdSPDefLights1(
+    0x00, 0x64, 0x00,
+    0x00, 0xc8, 0x00, 0x28, 0x28, 0x28
+);
 
 // 0x06008770
 ROM_ASSET_LOAD_VTX(koopa_seg6_vertex_06008770, 0x001c4230, 80474, 0x00008770, 256);

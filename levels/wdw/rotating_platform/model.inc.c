@@ -1,5 +1,9 @@
 #include "pc/rom_assets.h"
 // 0x07013EB8 - 0x07013ED0
+static const Lights1 wdw_seg7_lights_07013EB8 = gdSPDefLights1(
+    0x99, 0x99, 0x99,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // 0x07013ED0 - 0x07013FC0
 ROM_ASSET_LOAD_VTX(wdw_seg7_vertex_07013ED0, 0x0040ed70, 45590, 0x00013ed0, 240);

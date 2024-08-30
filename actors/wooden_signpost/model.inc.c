@@ -2,6 +2,10 @@
 // Signpost
 
 // 0x0302C940
+static const Lights1 wooden_signpost_seg3_lights_0302C940 = gdSPDefLights1(
+    0x7f, 0x7f, 0x7f,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // 0x0302C958
 ROM_ASSET_LOAD_VTX(wooden_signpost_seg3_vertex_0302C958, 0x00201410, 96653, 0x0002c958, 112);
@@ -45,6 +49,10 @@ const Gfx wooden_signpost_seg3_dl_0302DA48[] = {
 };
 
 // 0x0302DAA8
+static const Lights1 wooden_signpost_seg3_lights_0302DAA8 = gdSPDefLights1(
+    0x7f, 0x7f, 0x7f,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // 0x0302DAC0
 ROM_ASSET_LOAD_VTX(wooden_signpost_seg3_vertex_0302DAC0, 0x00201410, 96653, 0x0002dac0, 256);

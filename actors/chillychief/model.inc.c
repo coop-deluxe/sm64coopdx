@@ -2,12 +2,28 @@
 // Chilly Chief (Chill Bully)
 
 // 0x06000000
+static const Lights1 chilly_chief_seg6_lights_06000000 = gdSPDefLights1(
+    0x00, 0x38, 0x00,
+    0x00, 0xe3, 0x00, 0x28, 0x28, 0x28
+);
 
 // 0x06000018
+static const Lights1 chilly_chief_seg6_lights_06000018 = gdSPDefLights1(
+    0x00, 0x3f, 0x00,
+    0x00, 0xff, 0x00, 0x28, 0x28, 0x28
+);
 
 // 0x06000030
+static const Lights1 chilly_chief_seg6_lights_06000030 = gdSPDefLights1(
+    0x3f, 0x29, 0x00,
+    0xff, 0xa5, 0x00, 0x28, 0x28, 0x28
+);
 
 // Unreferenced light group
+UNUSED static const Lights1 chillychief_lights_unused = gdSPDefLights1(
+    0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x28, 0x28, 0x28
+);
 
 // 0x06000060
 ROM_ASSET_LOAD_TEXTURE(chilly_chief_seg6_texture_06000060, "actors/chillychief/chill_bully_left_side.rgba16.inc.c", 0x001e51f0, 11160, 0x00000060, 4096);

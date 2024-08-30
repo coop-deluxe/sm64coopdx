@@ -2,6 +2,10 @@
 // Chair
 
 // Unreferenced light group
+UNUSED static const Lights1 chair_lights_unused = gdSPDefLights1(
+    0x19, 0x0d, 0x06,
+    0x64, 0x36, 0x1a, 0x28, 0x28, 0x28
+);
 
 // 0x05003060
 ROM_ASSET_LOAD_TEXTURE(chair_seg5_texture_05003060, "actors/chair/chair_front.rgba16.inc.c", 0x00166c60, 26968, 0x00003060, 2048);
@@ -17,6 +21,10 @@ ROM_ASSET_LOAD_TEXTURE(chair_seg5_texture_05004060, "actors/chair/chair_bottom.r
 ROM_ASSET_LOAD_TEXTURE(chair_seg5_texture_05004460, "actors/chair/chair_surface_unused.rgba16.inc.c", 0x00166c60, 26968, 0x00004460, 2048);
 
 // 0x05004C60
+static const Lights1 chair_seg5_lights_05004C60 = gdSPDefLights1(
+    0x47, 0x47, 0x47,
+    0xb2, 0xb2, 0xb2, 0x28, 0x28, 0x28
+);
 
 // 0x05004C78
 ROM_ASSET_LOAD_VTX(chair_seg5_vertex_05004C78, 0x00166c60, 26968, 0x00004c78, 256);
@@ -62,6 +70,10 @@ const Gfx chair_seg5_dl_05004EE8[] = {
 };
 
 // 0x05004F58
+static const Lights1 chair_seg5_lights_05004F58 = gdSPDefLights1(
+    0x47, 0x47, 0x47,
+    0xb2, 0xb2, 0xb2, 0x28, 0x28, 0x28
+);
 
 // 0x05004F70
 ROM_ASSET_LOAD_VTX(chair_seg5_vertex_05004F70, 0x00166c60, 26968, 0x00004f70, 256);
@@ -106,6 +118,10 @@ const Gfx chair_seg5_dl_05005190[] = {
 };
 
 // 0x05005200
+static const Lights1 chair_seg5_lights_05005200 = gdSPDefLights1(
+    0x47, 0x47, 0x47,
+    0xb2, 0xb2, 0xb2, 0x28, 0x28, 0x28
+);
 
 // 0x05005218
 ROM_ASSET_LOAD_VTX(chair_seg5_vertex_05005218, 0x00166c60, 26968, 0x00005218, 240);
@@ -150,6 +166,10 @@ const Gfx chair_seg5_dl_05005408[] = {
 };
 
 // 0x05005478
+static const Lights1 chair_seg5_lights_05005478 = gdSPDefLights1(
+    0x47, 0x47, 0x47,
+    0xb2, 0xb2, 0xb2, 0x28, 0x28, 0x28
+);
 
 // 0x05005490
 ROM_ASSET_LOAD_VTX(chair_seg5_vertex_05005490, 0x00166c60, 26968, 0x00005490, 240);

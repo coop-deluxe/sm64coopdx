@@ -2,8 +2,16 @@
 // Cannon Base
 
 // 0x08004988
+static const Lights1 cannon_base_seg8_lights_08004988 = gdSPDefLights1(
+    0x4c, 0x4c, 0x4c,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // 0x080049A0
+static const Lights1 cannon_base_seg8_lights_080049A0 = gdSPDefLights1(
+    0x0e, 0x10, 0x4c,
+    0x30, 0x37, 0xff, 0x28, 0x28, 0x28
+);
 
 // 0x080049B8
 ROM_ASSET_LOAD_TEXTURE(cannon_base_seg8_texture_080049B8, "actors/cannon_base/cannon_base.rgba16.inc.c", 0x001f2200, 59076, 0x000049b8, 2048);

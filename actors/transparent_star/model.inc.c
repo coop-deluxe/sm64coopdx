@@ -2,6 +2,10 @@
 // Transparent Star
 
 // 0x0302C488
+static const Lights1 transparent_star_seg3_lights_0302C488 = gdSPDefLights1(
+    0x03, 0x05, 0x17,
+    0x1e, 0x32, 0xe6, 0x28, 0x28, 0x28
+);
 
 // 0x0302C4A0
 ROM_ASSET_LOAD_VTX(transparent_star_seg3_vertex_0302C4A0, 0x00201410, 96653, 0x0002b6f0, 192);

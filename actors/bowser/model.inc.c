@@ -91,10 +91,22 @@ ROM_ASSET_LOAD_TEXTURE(bowser_seg6_texture_06036C38, "actors/bowser/bowser_eye_r
 ROM_ASSET_LOAD_TEXTURE(bowser_seg6_texture_06037C38, "actors/bowser/bowser_eye_far_left_1.rgba16.inc.c", 0x00188440, 199722, 0x00031c38, 4096);
 
 // 0x06038C38
+static const Lights1 bowser_seg6_lights_06038C38 = gdSPDefLights1(
+    0x3f, 0x3f, 0x3f,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // Unreferenced light group
+UNUSED static const Lights1 bowser_lights_unused1 = gdSPDefLights1(
+    0x33, 0x31, 0x00,
+    0xce, 0xc7, 0x00, 0x28, 0x28, 0x28
+);
 
 // Unreferenced light group
+UNUSED static const Lights1 bowser_lights_unused2 = gdSPDefLights1(
+    0x34, 0x34, 0x00,
+    0xd2, 0xd2, 0x00, 0x28, 0x28, 0x28
+);
 
 // 0x06038C80
 ROM_ASSET_LOAD_VTX(bowser_seg6_vertex_06038C80, 0x00188440, 199722, 0x00038c80, 256);

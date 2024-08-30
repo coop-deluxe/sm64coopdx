@@ -2,6 +2,10 @@
 // Metal Box
 
 // 0x08023980
+static const Lights1 metal_box_seg8_lights_08023980 = gdSPDefLights1(
+    0x7f, 0x7f, 0x7f,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // 0x08023998
 ROM_ASSET_LOAD_TEXTURE(metal_box_seg8_texture_08023998, "actors/metal_box/metal_box_side.rgba16.inc.c", 0x001f2200, 59076, 0x00023998, 4096);

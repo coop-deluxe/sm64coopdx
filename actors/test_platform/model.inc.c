@@ -2,6 +2,10 @@
 // Test Platform (small tiny platform 1/4th the size of a box. Probably used in early modeling tests?)
 
 // 0x08026008
+static const Lights1 unknown_seg8_lights_08026008 = gdSPDefLights1(
+    0x32, 0x32, 0x07,
+    0xc8, 0xc8, 0x1e, 0x28, 0x28, 0x28
+);
 
 // 0x08026020
 ROM_ASSET_LOAD_VTX(unknown_seg8_vertex_08026020, 0x001f2200, 59076, 0x00026020, 240);

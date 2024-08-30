@@ -14,18 +14,46 @@ ROM_ASSET_LOAD_TEXTURE(flyguy_seg8_texture_0800F088, "actors/flyguy/flyguy_face.
 ROM_ASSET_LOAD_TEXTURE(flyguy_seg8_texture_0800F888, "actors/flyguy/flyguy_propeller.ia16.inc.c", 0x001f2200, 59076, 0x0000f888, 2048);
 
 // Unreferenced light group
+UNUSED static const Lights1 flyguy_lights_unused1 = gdSPDefLights1(
+    0x3f, 0x3f, 0x3f,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // 0x080100A0
+static const Lights1 flyguy_seg8_lights_080100A0 = gdSPDefLights1(
+    0x00, 0x1f, 0x33,
+    0x02, 0x7f, 0xcc, 0x28, 0x28, 0x28
+);
 
 // 0x080100B8
+static const Lights1 flyguy_seg8_lights_080100B8 = gdSPDefLights1(
+    0x3f, 0x32, 0x08,
+    0xff, 0xc8, 0x23, 0x28, 0x28, 0x28
+);
 
 // Unreferenced light group
+UNUSED static const Lights1 flyguy_lights_unused2 = gdSPDefLights1(
+    0x3a, 0x2f, 0x04,
+    0xe8, 0xbd, 0x13, 0x28, 0x28, 0x28
+);
 
 // Unreferenced light group
+UNUSED static const Lights1 flyguy_lights_unused3 = gdSPDefLights1(
+    0x2c, 0x00, 0x00,
+    0xb2, 0x00, 0x00, 0x28, 0x28, 0x28
+);
 
 // Unreferenced light group
+UNUSED static const Lights1 flyguy_lights_unused4 = gdSPDefLights1(
+    0x3f, 0x3f, 0x3f,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // Unreferenced light group
+UNUSED static const Lights1 flyguy_lights_unused5 = gdSPDefLights1(
+    0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x28, 0x28, 0x28
+);
 
 // 0x08010130
 ROM_ASSET_LOAD_VTX(flyguy_seg8_vertex_08010130, 0x001f2200, 59076, 0x00010130, 256);
@@ -120,6 +148,10 @@ const Gfx flyguy_seg8_dl_08010A90[] = {
 };
 
 // 0x08010AE0
+static const Lights1 flyguy_seg8_lights_08010AE0 = gdSPDefLights1(
+    0x7f, 0x7f, 0x7f,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // 0x08010AF8
 ROM_ASSET_LOAD_VTX(flyguy_seg8_vertex_08010AF8, 0x001f2200, 59076, 0x00010af8, 64);
@@ -155,10 +187,22 @@ const Gfx flyguy_seg8_dl_08010B80[] = {
 };
 
 // 0x08010BF0
+static const Lights1 flyguy_seg8_lights_08010BF0 = gdSPDefLights1(
+    0x7f, 0x7f, 0x7f,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // 0x08010C08
+static const Lights1 flyguy_seg8_lights_08010C08 = gdSPDefLights1(
+    0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x28, 0x28, 0x28
+);
 
 // 0x08010C20
+static const Lights1 flyguy_seg8_lights_08010C20 = gdSPDefLights1(
+    0x62, 0x00, 0x13,
+    0xc4, 0x00, 0x26, 0x28, 0x28, 0x28
+);
 
 // 0x08010C38
 ROM_ASSET_LOAD_VTX(flyguy_seg8_vertex_08010C38, 0x001f2200, 59076, 0x00010c38, 144);

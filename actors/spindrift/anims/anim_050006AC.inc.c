@@ -130,6 +130,10 @@ const Gfx spindrift_seg5_dl_05002900[] = {
 };
 
 // 0x05002970
+static const Lights1 spindrift_seg5_lights_05002970 = gdSPDefLights1(
+    0x7f, 0x7f, 0x7f,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // 0x05002988
 ROM_ASSET_LOAD_VTX(spindrift_seg5_vertex_05002988, 0x00160670, 20585, 0x00002988, 64);
@@ -165,6 +169,10 @@ const Gfx spindrift_seg5_dl_05002A20[] = {
 };
 
 // 0x05002A80
+static const Lights1 spindrift_seg5_lights_05002A80 = gdSPDefLights1(
+    0x7f, 0x7f, 0x7f,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // 0x05002A98
 ROM_ASSET_LOAD_VTX(spindrift_seg5_vertex_05002A98, 0x00160670, 20585, 0x00002a98, 64);
@@ -200,6 +208,10 @@ const Gfx spindrift_seg5_dl_05002B30[] = {
 };
 
 // 0x05002B90
+static const Lights1 spindrift_seg5_lights_05002B90 = gdSPDefLights1(
+    0x7f, 0x7f, 0x7f,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // 0x05002BA8
 ROM_ASSET_LOAD_VTX(spindrift_seg5_vertex_05002BA8, 0x00160670, 20585, 0x00002ba8, 240);

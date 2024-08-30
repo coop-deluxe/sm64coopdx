@@ -2,10 +2,22 @@
 // Ukiki
 
 // Unreferenced light group
+UNUSED static const Lights1 ukiki_lights_unused1 = gdSPDefLights1(
+    0x1d, 0x12, 0x07,
+    0x77, 0x48, 0x1f, 0x28, 0x28, 0x28
+);
 
 // Unreferenced light group
+UNUSED static const Lights1 ukiki_lights_unused2 = gdSPDefLights1(
+    0x39, 0x24, 0x18,
+    0xe7, 0x93, 0x61, 0x28, 0x28, 0x28
+);
 
 // 0x05007BA0
+static const Lights1 ukiki_seg5_lights_05007BA0 = gdSPDefLights1(
+    0x39, 0x24, 0x18,
+    0xe7, 0x93, 0x61, 0x28, 0x28, 0x28
+);
 
 // The hell?
 UNUSED static const u64 ukiki_unused_1 = 1;
@@ -23,8 +35,16 @@ ROM_ASSET_LOAD_TEXTURE(ukiki_seg5_texture_05009BC0, "actors/ukiki/ukiki_butt.rgb
 ROM_ASSET_LOAD_TEXTURE(ukiki_seg5_texture_0500A3C0, "actors/ukiki/ukiki_fur.rgba16.inc.c", 0x001521d0, 57608, 0x0000a3c0, 2048);
 
 // 0x0500ABC0
+static const Lights1 ukiki_seg5_lights_0500ABC0 = gdSPDefLights1(
+    0x7f, 0x7f, 0x7f,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // 0x0500ABD8
+static const Lights1 ukiki_seg5_lights_0500ABD8 = gdSPDefLights1(
+    0x77, 0x66, 0x45,
+    0xee, 0xcd, 0x8a, 0x28, 0x28, 0x28
+);
 
 // 0x0500ABF0
 ROM_ASSET_LOAD_VTX(ukiki_seg5_vertex_0500ABF0, 0x001521d0, 57608, 0x0000abf0, 256);
@@ -132,6 +152,10 @@ const Gfx ukiki_seg5_dl_0500B310[] = {
 };
 
 // 0x0500B338
+static const Lights1 ukiki_seg5_lights_0500B338 = gdSPDefLights1(
+    0x7f, 0x7f, 0x7f,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // 0x0500B350
 ROM_ASSET_LOAD_VTX(ukiki_seg5_vertex_0500B350, 0x001521d0, 57608, 0x0000b350, 240);
@@ -207,6 +231,10 @@ const Gfx ukiki_seg5_dl_0500B820[] = {
 };
 
 // 0x0500B888
+static const Lights1 ukiki_seg5_lights_0500B888 = gdSPDefLights1(
+    0x7f, 0x7f, 0x7f,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // 0x0500B8A0
 ROM_ASSET_LOAD_VTX(ukiki_seg5_vertex_0500B8A0, 0x001521d0, 57608, 0x0000b8a0, 128);
@@ -242,6 +270,10 @@ const Gfx ukiki_seg5_dl_0500B988[] = {
 };
 
 // 0x0500B9E8
+static const Lights1 ukiki_seg5_lights_0500B9E8 = gdSPDefLights1(
+    0x7f, 0x7f, 0x7f,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // 0x0500BA00
 ROM_ASSET_LOAD_VTX(ukiki_seg5_vertex_0500BA00, 0x001521d0, 57608, 0x0000ba00, 144);
@@ -280,6 +312,10 @@ const Gfx ukiki_seg5_dl_0500BB28[] = {
 };
 
 // 0x0500BB88
+static const Lights1 ukiki_seg5_lights_0500BB88 = gdSPDefLights1(
+    0x7f, 0x7f, 0x7f,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // 0x0500BBA0
 ROM_ASSET_LOAD_VTX(ukiki_seg5_vertex_0500BBA0, 0x001521d0, 57608, 0x0000bba0, 112);
@@ -315,6 +351,10 @@ const Gfx ukiki_seg5_dl_0500BC78[] = {
 };
 
 // 0x0500BCD8
+static const Lights1 ukiki_seg5_lights_0500BCD8 = gdSPDefLights1(
+    0x7f, 0x7f, 0x7f,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // 0x0500BCF0
 ROM_ASSET_LOAD_VTX(ukiki_seg5_vertex_0500BCF0, 0x001521d0, 57608, 0x0000bcf0, 176);
@@ -353,6 +393,10 @@ const Gfx ukiki_seg5_dl_0500BE38[] = {
 };
 
 // 0x0500BE98
+static const Lights1 ukiki_seg5_lights_0500BE98 = gdSPDefLights1(
+    0x7f, 0x7f, 0x7f,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // 0x0500BEB0
 ROM_ASSET_LOAD_VTX(ukiki_seg5_vertex_0500BEB0, 0x001521d0, 57608, 0x0000beb0, 176);
@@ -391,6 +435,10 @@ const Gfx ukiki_seg5_dl_0500BFF8[] = {
 };
 
 // 0x0500C058
+static const Lights1 ukiki_seg5_lights_0500C058 = gdSPDefLights1(
+    0x7f, 0x7f, 0x7f,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // 0x0500C070
 ROM_ASSET_LOAD_VTX(ukiki_seg5_vertex_0500C070, 0x001521d0, 57608, 0x0000c070, 176);
@@ -429,6 +477,10 @@ const Gfx ukiki_seg5_dl_0500C1B8[] = {
 };
 
 // 0x0500C218
+static const Lights1 ukiki_seg5_lights_0500C218 = gdSPDefLights1(
+    0x7f, 0x7f, 0x7f,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // 0x0500C230
 ROM_ASSET_LOAD_VTX(ukiki_seg5_vertex_0500C230, 0x001521d0, 57608, 0x0000c230, 160);
@@ -467,6 +519,10 @@ const Gfx ukiki_seg5_dl_0500C368[] = {
 };
 
 // 0x0500C3C8
+static const Lights1 ukiki_seg5_lights_0500C3C8 = gdSPDefLights1(
+    0x7f, 0x7f, 0x7f,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // 0x0500C3E0
 ROM_ASSET_LOAD_VTX(ukiki_seg5_vertex_0500C3E0, 0x001521d0, 57608, 0x0000c3e0, 176);
@@ -505,6 +561,10 @@ const Gfx ukiki_seg5_dl_0500C528[] = {
 };
 
 // 0x0500C588
+static const Lights1 ukiki_seg5_lights_0500C588 = gdSPDefLights1(
+    0x7f, 0x7f, 0x7f,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // 0x0500C5A0
 ROM_ASSET_LOAD_VTX(ukiki_seg5_vertex_0500C5A0, 0x001521d0, 57608, 0x0000c5a0, 176);
@@ -543,6 +603,10 @@ const Gfx ukiki_seg5_dl_0500C6E8[] = {
 };
 
 // 0x0500C748
+static const Lights1 ukiki_seg5_lights_0500C748 = gdSPDefLights1(
+    0x7f, 0x7f, 0x7f,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // 0x0500C760
 ROM_ASSET_LOAD_VTX(ukiki_seg5_vertex_0500C760, 0x001521d0, 57608, 0x0000c760, 160);
@@ -581,6 +645,10 @@ const Gfx ukiki_seg5_dl_0500C898[] = {
 };
 
 // 0x0500C8F8
+static const Lights1 ukiki_seg5_lights_0500C8F8 = gdSPDefLights1(
+    0x7f, 0x7f, 0x7f,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // 0x0500C910
 ROM_ASSET_LOAD_VTX(ukiki_seg5_vertex_0500C910, 0x001521d0, 57608, 0x0000c910, 160);

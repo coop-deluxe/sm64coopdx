@@ -2,6 +2,10 @@
 // Boo (Castle)
 
 // 0x06015658
+static const Lights1 boo_castle_seg6_lights_06015658 = gdSPDefLights1(
+    0x97, 0x9a, 0xff,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // 0x06015670
 ROM_ASSET_LOAD_TEXTURE(boo_castle_seg6_texture_06015670, "actors/boo_castle/bbh_boo_eyes.rgba16.inc.c", 0x00166c60, 26968, 0x00009b40, 4096);

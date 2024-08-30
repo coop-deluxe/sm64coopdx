@@ -2,6 +2,10 @@
 // Treasure Chest
 
 // 0x06013F90
+static const Lights1 treasure_chest_seg6_lights_06013F90 = gdSPDefLights1(
+    0x3f, 0x3f, 0x3f,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // 0x06013FA8
 ROM_ASSET_LOAD_TEXTURE(treasure_chest_seg6_texture_06013FA8, "actors/treasure_chest/treasure_chest_lock.rgba16.inc.c", 0x001b9cc0, 41188, 0x00013fa8, 2048);

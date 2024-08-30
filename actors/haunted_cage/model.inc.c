@@ -2,8 +2,16 @@
 // Haunted Cage
 
 // 0x0500C258
+static const Lights1 haunted_cage_seg5_lights_0500C258 = gdSPDefLights1(
+    0x39, 0x0c, 0x0e,
+    0x90, 0x1e, 0x25, 0x28, 0x28, 0x28
+);
 
 // 0x0500C270
+static const Lights1 haunted_cage_seg5_lights_0500C270 = gdSPDefLights1(
+    0x47, 0x47, 0x47,
+    0xb2, 0xb2, 0xb2, 0x28, 0x28, 0x28
+);
 
 // 0x0500C288
 ROM_ASSET_LOAD_TEXTURE(haunted_cage_seg5_texture_0500C288, "actors/haunted_cage/bbh_cage_floor.rgba16.inc.c", 0x00166c60, 26968, 0x0000c288, 2048);
@@ -166,6 +174,10 @@ const Gfx haunted_cage_seg5_dl_0500F7D8[] = {
 };
 
 // 0x0500F888
+static const Lights1 haunted_cage_seg5_lights_0500F888 = gdSPDefLights1(
+    0x66, 0x66, 0x66,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // 0x0500F8A0
 ROM_ASSET_LOAD_VTX(haunted_cage_seg5_vertex_0500F8A0, 0x00166c60, 26968, 0x0000f8a0, 240);
@@ -219,6 +231,10 @@ const Gfx haunted_cage_seg5_dl_0500FC28[] = {
 };
 
 // 0x0500FC98
+static const Lights1 haunted_cage_seg5_lights_0500FC98 = gdSPDefLights1(
+    0x2c, 0x2c, 0x2c,
+    0xb2, 0xb2, 0xb2, 0x28, 0x28, 0x28
+);
 
 // 0x0500FCB0
 ROM_ASSET_LOAD_VTX(haunted_cage_seg5_vertex_0500FCB0, 0x00166c60, 26968, 0x0000fcb0, 240);

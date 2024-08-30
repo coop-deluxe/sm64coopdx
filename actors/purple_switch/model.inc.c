@@ -2,6 +2,10 @@
 // Purple Switch
 
 // 0x0800C090
+static const Lights1 purple_switch_seg8_lights_0800C090 = gdSPDefLights1(
+    0x3f, 0x3f, 0x3f,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // 0x0800C0A8
 ROM_ASSET_LOAD_TEXTURE(purple_switch_seg8_texture_0800C0A8, "actors/purple_switch/purple_switch_base.rgba16.inc.c", 0x001f2200, 59076, 0x0000c0a8, 128);

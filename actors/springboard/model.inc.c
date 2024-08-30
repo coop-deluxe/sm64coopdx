@@ -2,6 +2,10 @@
 // Springboard (unused)
 
 // 0x05000000
+static const Lights1 springboard_seg5_lights_05000000 = gdSPDefLights1(
+    0x3f, 0x3f, 0x3f,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // 0x05000018
 ROM_ASSET_LOAD_TEXTURE(springboard_seg5_texture_05000018, "actors/springboard/springboard_top_unused.rgba16.inc.c", 0x00165a50, 4471, 0x00000018, 2048);

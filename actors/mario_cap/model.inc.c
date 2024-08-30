@@ -2,11 +2,27 @@
 // Mario Cap (Normal Cap, Metal, Winged, etc)
 
 // 0x0301CF08
+static const Lights1 mario_cap_seg3_lights_0301CF08 = gdSPDefLights1(
+    0x39, 0x03, 0x00,
+    0x73, 0x06, 0x00, 0x28, 0x28, 0x28
+);
 
 // 0x0301CF20
+static const Lights1 mario_cap_seg3_lights_0301CF20 = gdSPDefLights1(
+    0x7f, 0x7f, 0x7f,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // 0x0301CF38
+static const Lights1 mario_cap_seg3_lights_0301CF38 = gdSPDefLights1(
+    0x7f, 0x00, 0x00,
+    0xff, 0x00, 0x00, 0x28, 0x28, 0x28
+);
 
+static const Lights1 mario_cap_black_lights_group = gdSPDefLights1(
+    0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x28, 0x28, 0x28
+);
 
 #include "actors/mario/mario_externs.h"
 #define mario_cap_texture_metal_shade              mario_texture_metal_shade

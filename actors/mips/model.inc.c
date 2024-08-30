@@ -5,8 +5,16 @@
 ROM_ASSET_LOAD_TEXTURE(mips_seg6_texture_0600FB80, "actors/mips/mips_eyes.rgba16.inc.c", 0x001d8310, 51422, 0x0000fc70, 2048);
 
 // 0x06010380
+static const Lights1 mips_seg6_lights_06010380 = gdSPDefLights1(
+    0x66, 0x66, 0x66,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // 0x06010398
+static const Lights1 mips_seg6_lights_06010398 = gdSPDefLights1(
+    0x0f, 0x0d, 0x04,
+    0x27, 0x21, 0x0b, 0x28, 0x28, 0x28
+);
 
 // 0x060103B0
 ROM_ASSET_LOAD_VTX(mips_seg6_vertex_060103B0, 0x001d8310, 51422, 0x000104a0, 256);
@@ -82,6 +90,10 @@ const Gfx mips_seg6_dl_060107B8[] = {
 };
 
 // 0x06010820
+static const Lights1 mips_seg6_lights_06010820 = gdSPDefLights1(
+    0x66, 0x66, 0x66,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // 0x06010838
 ROM_ASSET_LOAD_VTX(mips_seg6_vertex_06010838, 0x001d8310, 51422, 0x00010928, 240);
@@ -145,8 +157,16 @@ const Gfx mips_seg6_dl_06010C40[] = {
 };
 
 // 0x06010CA0
+static const Lights1 mips_seg6_lights_06010CA0 = gdSPDefLights1(
+    0x3c, 0x3c, 0x00,
+    0x96, 0x96, 0x00, 0x28, 0x28, 0x28
+);
 
 // 0x06010CB8
+static const Lights1 mips_seg6_lights_06010CB8 = gdSPDefLights1(
+    0x66, 0x66, 0x66,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // 0x06010CD0
 ROM_ASSET_LOAD_VTX(mips_seg6_vertex_06010CD0, 0x001d8310, 51422, 0x00010dc0, 96);
@@ -191,10 +211,22 @@ const Gfx mips_seg6_dl_06010E60[] = {
 };
 
 // 0x06010EC0
+static const Lights1 mips_seg6_lights_06010EC0 = gdSPDefLights1(
+    0x3c, 0x3c, 0x00,
+    0x96, 0x96, 0x00, 0x28, 0x28, 0x28
+);
 
 // 0x06010ED8
+static const Lights1 mips_seg6_lights_06010ED8 = gdSPDefLights1(
+    0x35, 0x38, 0x00,
+    0x85, 0x8e, 0x00, 0x28, 0x28, 0x28
+);
 
 // 0x06010EF0
+static const Lights1 mips_seg6_lights_06010EF0 = gdSPDefLights1(
+    0x66, 0x66, 0x66,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // 0x06010F08
 ROM_ASSET_LOAD_VTX(mips_seg6_vertex_06010F08, 0x001d8310, 51422, 0x00010ff8, 80);
@@ -245,8 +277,16 @@ const Gfx mips_seg6_dl_060110B0[] = {
 };
 
 // 0x06011110
+static const Lights1 mips_seg6_lights_06011110 = gdSPDefLights1(
+    0x3c, 0x3c, 0x00,
+    0x96, 0x96, 0x00, 0x28, 0x28, 0x28
+);
 
 // 0x06011128
+static const Lights1 mips_seg6_lights_06011128 = gdSPDefLights1(
+    0x66, 0x66, 0x66,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // 0x06011140
 ROM_ASSET_LOAD_VTX(mips_seg6_vertex_06011140, 0x001d8310, 51422, 0x00011230, 96);
@@ -293,8 +333,16 @@ const Gfx mips_seg6_dl_06011310[] = {
 };
 
 // 0x06011370
+static const Lights1 mips_seg6_lights_06011370 = gdSPDefLights1(
+    0x3c, 0x3c, 0x00,
+    0x96, 0x96, 0x00, 0x28, 0x28, 0x28
+);
 
 // 0x06011388
+static const Lights1 mips_seg6_lights_06011388 = gdSPDefLights1(
+    0x66, 0x66, 0x66,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // 0x060113A0
 ROM_ASSET_LOAD_VTX(mips_seg6_vertex_060113A0, 0x001d8310, 51422, 0x00011490, 80);
@@ -340,8 +388,16 @@ const Gfx mips_seg6_dl_06011520[] = {
 };
 
 // 0x06011580
+static const Lights1 mips_seg6_lights_06011580 = gdSPDefLights1(
+    0x3c, 0x3c, 0x00,
+    0x96, 0x96, 0x00, 0x28, 0x28, 0x28
+);
 
 // 0x06011598
+static const Lights1 mips_seg6_lights_06011598 = gdSPDefLights1(
+    0x66, 0x66, 0x66,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // 0x060115B0
 ROM_ASSET_LOAD_VTX(mips_seg6_vertex_060115B0, 0x001d8310, 51422, 0x000116a0, 96);
@@ -388,8 +444,16 @@ const Gfx mips_seg6_dl_06011780[] = {
 };
 
 // 0x060117E0
+static const Lights1 mips_seg6_lights_060117E0 = gdSPDefLights1(
+    0x3c, 0x3c, 0x00,
+    0x96, 0x96, 0x00, 0x28, 0x28, 0x28
+);
 
 // 0x060117F8
+static const Lights1 mips_seg6_lights_060117F8 = gdSPDefLights1(
+    0x66, 0x66, 0x66,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // 0x06011810
 ROM_ASSET_LOAD_VTX(mips_seg6_vertex_06011810, 0x001d8310, 51422, 0x00011900, 80);
@@ -435,8 +499,16 @@ const Gfx mips_seg6_dl_06011990[] = {
 };
 
 // 0x060119F0
+static const Lights1 mips_seg6_lights_060119F0 = gdSPDefLights1(
+    0x3c, 0x3c, 0x00,
+    0x96, 0x96, 0x00, 0x28, 0x28, 0x28
+);
 
 // 0x06011A08
+static const Lights1 mips_seg6_lights_06011A08 = gdSPDefLights1(
+    0x66, 0x66, 0x66,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // 0x06011A20
 ROM_ASSET_LOAD_VTX(mips_seg6_vertex_06011A20, 0x001d8310, 51422, 0x00011b10, 96);
@@ -481,8 +553,16 @@ const Gfx mips_seg6_dl_06011BB0[] = {
 };
 
 // 0x06011C10
+static const Lights1 mips_seg6_lights_06011C10 = gdSPDefLights1(
+    0x3c, 0x3c, 0x00,
+    0x96, 0x96, 0x00, 0x28, 0x28, 0x28
+);
 
 // 0x06011C28
+static const Lights1 mips_seg6_lights_06011C28 = gdSPDefLights1(
+    0x66, 0x66, 0x66,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // 0x06011C40
 ROM_ASSET_LOAD_VTX(mips_seg6_vertex_06011C40, 0x001d8310, 51422, 0x00011d30, 96);
@@ -526,6 +606,10 @@ const Gfx mips_seg6_dl_06011DB0[] = {
 };
 
 // 0x06011E10
+static const Lights1 mips_seg6_lights_06011E10 = gdSPDefLights1(
+    0x34, 0x2c, 0x0f,
+    0x82, 0x6e, 0x26, 0x28, 0x28, 0x28
+);
 
 // 0x06011E28
 ROM_ASSET_LOAD_VTX(mips_seg6_vertex_06011E28, 0x001d8310, 51422, 0x00011f18, 96);
@@ -550,6 +634,10 @@ const Gfx mips_seg6_dl_06011ED8[] = {
 };
 
 // 0x06011EF8
+static const Lights1 mips_seg6_lights_06011EF8 = gdSPDefLights1(
+    0x34, 0x2c, 0x0f,
+    0x82, 0x6e, 0x26, 0x28, 0x28, 0x28
+);
 
 // 0x06011F10
 ROM_ASSET_LOAD_VTX(mips_seg6_vertex_06011F10, 0x001d8310, 51422, 0x00012000, 96);

@@ -2,8 +2,16 @@
 // Swoop
 
 // Unreferenced light group
+UNUSED static const Lights1 swoop_lights_unused1 = gdSPDefLights1(
+    0x0a, 0x00, 0x25,
+    0x2a, 0x00, 0x95, 0x28, 0x28, 0x28
+);
 
 // Unreferenced light group
+UNUSED static const Lights1 swoop_lights_unused2 = gdSPDefLights1(
+    0x3f, 0x3f, 0x3f,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // 0x06004270
 ROM_ASSET_LOAD_TEXTURE(swoop_seg6_texture_06004270, "actors/swoop/swoop_body.rgba16.inc.c", 0x001e7ee0, 40011, 0x00004270, 2048);
@@ -18,6 +26,10 @@ ROM_ASSET_LOAD_TEXTURE(swoop_seg6_texture_06005270, "actors/swoop/swoop_nose.rgb
 ROM_ASSET_LOAD_TEXTURE(swoop_seg6_texture_06005A70, "actors/swoop/swoop_wing.rgba16.inc.c", 0x001e7ee0, 40011, 0x00005a70, 2048);
 
 // 0x06006270
+static const Lights1 swoop_seg6_lights_06006270 = gdSPDefLights1(
+    0x79, 0x79, 0x79,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // 0x06006288
 ROM_ASSET_LOAD_VTX(swoop_seg6_vertex_06006288, 0x001e7ee0, 40011, 0x00006288, 224);
@@ -140,6 +152,10 @@ const Gfx swoop_seg6_dl_06006880[] = {
 };
 
 // 0x06006938
+static const Lights1 swoop_seg6_lights_06006938 = gdSPDefLights1(
+    0x79, 0x79, 0x79,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
 
 // 0x06006950
 ROM_ASSET_LOAD_VTX(swoop_seg6_vertex_06006950, 0x001e7ee0, 40011, 0x00006950, 128);
