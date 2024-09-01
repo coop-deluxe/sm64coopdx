@@ -4,8 +4,6 @@ E_MODEL_PEACH_PLAYER = smlua_model_util_get_id("peach_player_geo")
 
 local TEX_PEACH = get_texture_info("peach_player_icon")
 
-ACT_PEACH_FLOAT = allocate_mario_action(ACT_GROUP_AIRBORNE | ACT_FLAG_ALLOW_VERTICAL_WIND_ACTION | ACT_FLAG_MOVING)
-
 VOICETABLE_PEACH = {
     [CHAR_SOUND_ATTACKED] = "peach_attacked.ogg",
     [CHAR_SOUND_COUGHING1] = "peach_coughing1.ogg",
@@ -151,61 +149,8 @@ local PALETTE_PEACH = {
     [EMBLEM] = { r = 0x00, g = 0x82, b = 0xFF }
 }
 
-CT_PEACH = _G.charSelect.character_add("Princess Peach", "The ruler of the Mushroom Kingdom, always ready to help Mario in his adventures and save her kingdom from the evil clutches of King Bowser! Voiced by SuperKirbyLover", "Melzinoff & SuperKirbyLover", {r = 239, g = 128, b = 177}, E_MODEL_PEACH_PLAYER, CT_MARIO, TEX_PEACH)
--- _G.charSelect.character_add_caps(E_MODEL_PEACH, capPEACH)
-_G.charSelect.character_add_voice(E_MODEL_PEACH_PLAYER, VOICETABLE_PEACH)
-_G.charSelect.character_add_palette_preset(E_MODEL_PEACH_PLAYER, PALETTE_PEACH)
-
---- @param m MarioState
-local function act_peach_float(m)
-    -- apply movement when using action
-    common_air_action_step(m, ACT_JUMP_LAND, CHAR_ANIM_BEND_KNESS_RIDING_SHELL, AIR_STEP_NONE)
-
-    -- setup when action starts (horizontal speed and voiceline)
-    if m.actionTimer == 0 then
-        if m.forwardVel > 20 then
-            mario_set_forward_vel(m, 20)
-        end
-        play_character_sound(m, CHAR_SOUND_HELLO)
-    end
-
-    -- block all y movement when using the move
-    m.vel.y = 0
-    set_mario_particle_flags(m, PARTICLE_SPARKLES, 0)
-
-    -- avoid issue with flying and then make the hover end after 2 secs or when stopping holding the button
-    if m.prevAction ~= ACT_TRIPLE_JUMP and (m.flags & MARIO_WING_CAP) ~= 0 then
-        if m.actionTimer >= 50 or (m.controller.buttonDown & A_BUTTON) == 0 then
-            set_mario_action(m, ACT_FREEFALL, 0)
-        end
-    else
-        if m.actionTimer >= 50 or (m.controller.buttonDown & A_BUTTON) == 0 then
-            set_mario_action(m, ACT_FREEFALL, 0)
-        end
-    end
-
-    -- increment the action timer to make the hover stop
-    m.actionTimer = m.actionTimer + 1
-end
-
---- @param m MarioState
-function peach_update(m)
-    -- patch in custom animations
-    local anim = ANIMTABLE_PEACH[m.marioObj.header.gfx.animInfo.animID]
-    if anim ~= nil then
-        smlua_anim_util_set_animation(m.marioObj, anim)
-    end
-
-    if (m.input & INPUT_A_DOWN) ~= 0 and m.vel.y < -15 and m.prevAction ~= ACT_PEACH_FLOAT and (
-       m.action == ACT_JUMP or
-       m.action == ACT_DOUBLE_JUMP or
-       m.action == ACT_TRIPLE_JUMP or
-       m.action == ACT_LONG_JUMP or
-       m.action == ACT_BACKFLIP or
-       m.action == ACT_SIDE_FLIP or
-       m.action == ACT_WALL_KICK_AIR) then
-        set_mario_action(m, ACT_PEACH_FLOAT, 0)
-    end
-end
-
-hook_mario_action(ACT_PEACH_FLOAT, act_peach_float)
+_G.CT_PEACH = charSelect.character_add("Princess Peach", "The ruler of the Mushroom Kingdom, always ready to help Mario in his adventures and save her kingdom from the evil clutches of King Bowser! Voiced by SuperKirbyLover", "Melzinoff & SuperKirbyLover", {r = 239, g = 128, b = 177}, E_MODEL_PEACH_PLAYER, CT_MARIO, TEX_PEACH)
+-- charSelect.character_add_caps(E_MODEL_PEACH, capPEACH)
+charSelect.character_add_voice(E_MODEL_PEACH_PLAYER, VOICETABLE_PEACH)
+charSelect.character_add_palette_preset(E_MODEL_PEACH_PLAYER, PALETTE_PEACH)
+character_add_animations(CT_PEACH, ANIMTABLE_PEACH)

@@ -1,5 +1,3 @@
-if SM64COOPDX_VERSION == nil then return end
-
 -- localize functions to improve performance
 local string_format,table_insert,math_floor,math_ceil,level_is_vanilla_level,djui_hud_get_color,djui_hud_set_color,djui_hud_print_text,type,obj_get_first_with_behavior_id = string.format,table.insert,math.floor,math.ceil,level_is_vanilla_level,djui_hud_get_color,djui_hud_set_color,djui_hud_print_text,type,obj_get_first_with_behavior_id
 

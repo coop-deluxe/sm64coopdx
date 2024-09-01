@@ -34,3 +34,20 @@ function active_player(m)
     end
     return true
 end
+
+animTables = {}
+
+--- @param charNum integer
+--- @param animTable table
+--- Adds custom animations to a character
+function character_add_animations(charNum, animTable)
+    animTables[charNum] = animTable
+end
+
+
+--- @param charNum integer
+--- @return table
+--- Gets a character's custom animations
+function character_get_animations(charNum)
+    return animTables[charNum]
+end
