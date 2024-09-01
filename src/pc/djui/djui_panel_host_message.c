@@ -47,11 +47,10 @@ void djui_panel_host_message_do_host(UNUSED struct DjuiBase* caller) {
 }
 
 void djui_panel_host_message_create(struct DjuiBase* caller) {
-    f32 warningLines = 0;
     char* warningMessage = NULL;
     bool hideHostButton = false;
 
-    warningLines = 7;
+    f32 warningLines = 8;
     warningMessage = calloc(512, sizeof(char));
     snprintf(warningMessage, 512, DLANG(HOST_MESSAGE, WARN_SOCKET), configHostPort);
 
