@@ -96,7 +96,7 @@ C_FIELD bool mod_storage_save_number(const char* key, f32 value) {
     // this assumes mod_storage_load will only ever be called by Lua
     static char str[MAX_KEY_VALUE_LENGTH];
     if (floor(value) == value) {
-        snprintf(str, MAX_KEY_VALUE_LENGTH, "%d", (s64)value);
+        snprintf(str, MAX_KEY_VALUE_LENGTH, "%lld", (s64)value);
     } else {
         snprintf(str, MAX_KEY_VALUE_LENGTH, "%f", value);
     }
