@@ -12559,11 +12559,8 @@ MAX_VERSION_LENGTH = 32
 --- @type integer
 MINOR_VERSION_NUMBER = 2
 
---- @type integer
-PATCH_VERSION_NUMBER = 0
-
 --- @type string
-SM64COOPDX_VERSION = "v1.0.2"
+SM64COOPDX_VERSION = "v1.0.3"
 
 --- @type integer
 VERSION_NUMBER = 37

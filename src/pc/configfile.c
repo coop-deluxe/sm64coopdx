@@ -56,8 +56,6 @@ struct FunctionConfigOption {
 /*
  *Config options and default values
  */
-
-static_assert(NUM_SAVE_FILES == 4); // update this if more save slots are added
 char configSaveNames[4][MAX_SAVE_NAME_STRING] = {
     "SM64",
     "SM64",
