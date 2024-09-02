@@ -3199,6 +3199,16 @@ function djui_hud_set_rotation(rotation, pivotX, pivotY)
     -- ...
 end
 
+--- @param prevRotation integer
+--- @param prevPivotX number
+--- @param prevPivotY number
+--- @param rotation integer
+--- @param pivotX number
+--- @param pivotY number
+function djui_hud_set_rotation_interpolated(prevRotation, prevPivotX, prevPivotY, rotation, pivotX, pivotY)
+    -- ...
+end
+
 --- @param pos Vec3f
 --- @param out Vec3f
 --- @return boolean
@@ -7520,6 +7530,42 @@ end
 --- @param fileIndex integer
 --- @param courseIndex integer
 function touch_coin_score_age(fileIndex, courseIndex)
+    -- ...
+end
+
+--- @param player integer
+--- @return integer
+function sequence_player_get_tempo(player)
+    -- ...
+end
+
+--- @param player integer
+--- @return integer
+function sequence_player_get_tempo_acc(player)
+    -- ...
+end
+
+--- @param player integer
+--- @return integer
+function sequence_player_get_transposition(player)
+    -- ...
+end
+
+--- @param player integer
+--- @param tempo integer
+function sequence_player_set_tempo(player, tempo)
+    -- ...
+end
+
+--- @param player integer
+--- @param tempoAcc integer
+function sequence_player_set_tempo_acc(player, tempoAcc)
+    -- ...
+end
+
+--- @param player integer
+--- @param transposition integer
+function sequence_player_set_transposition(player, transposition)
     -- ...
 end
 

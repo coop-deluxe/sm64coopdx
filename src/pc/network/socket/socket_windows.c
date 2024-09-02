@@ -13,7 +13,7 @@ SOCKET socket_initialize(void) {
     }
 
     // initialize socket
-    SOCKET sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+    SOCKET sock = socket(AF_INET6, SOCK_DGRAM, IPPROTO_UDP);
     if (sock == INVALID_SOCKET) {
         LOG_ERROR("socket failed with error %d", SOCKET_LAST_ERROR);
         return INVALID_SOCKET;
@@ -26,6 +26,13 @@ SOCKET socket_initialize(void) {
         LOG_ERROR("ioctlsocket failed with error: %d", rc);
         return INVALID_SOCKET;
     }
+
+    // set dual-stack socket mode
+    int v6only = 0;
+    if (setsockopt(sock, IPPROTO_IPV6, IPV6_V6ONLY, (void *)&v6only, sizeof(v6only)) < 0) {
+        LOG_ERROR("setsockopt(IPV6_V6ONLY) failed.");
+        return INVALID_SOCKET;
+    };
 
 #if MAX_PLAYERS > 4
     // on windows, the send buffer for the socket needs to be increased

@@ -1158,7 +1158,10 @@
 | ----- | ---- | ------ |
 | pivotX | `number` |  |
 | pivotY | `number` |  |
+| prevPivotX | `number` |  |
+| prevPivotY | `number` |  |
 | rotation | `number` |  |
+| rotationDiff | `number` |  |
 
 [:arrow_up_small:](#)
 

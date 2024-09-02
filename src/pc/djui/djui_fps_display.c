@@ -1,5 +1,5 @@
 #include "djui.h"
-#include "../pc_main.h"
+#include "pc/pc_main.h"
 
 struct DjuiFpsDisplay {
     struct DjuiText *text;
@@ -9,7 +9,7 @@ struct DjuiFpsDisplay {
 struct DjuiFpsDisplay *sFpsDisplay = NULL;
 
 void djui_fps_display_update(u16 fps) {
-    if (configShowFPS) {
+    if (configShowFPS && sFpsDisplay != NULL) {
         char fpsText[30] = "";
         snprintf(fpsText, 30, "\\#dcdcdc\\FPS: \\#ffffff\\%d", fps);
         djui_text_set_text(sFpsDisplay->text, fpsText);
@@ -17,7 +17,7 @@ void djui_fps_display_update(u16 fps) {
 }
 
 void djui_fps_display_render(void) {
-    if (configShowFPS) {
+    if (configShowFPS && sFpsDisplay != NULL) {
         djui_rect_render(&sFpsDisplay->base);
         djui_base_render(&sFpsDisplay->base);
     }
