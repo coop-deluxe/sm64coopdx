@@ -406,6 +406,12 @@ static void newcam_rotate_button(void) {
 }
 
 static void newcam_zoom_button(void) {
+    if (gDjuiInMainMenu) {
+        newcam_distance = 750;
+        newcam_distance_target = 750;
+        return;
+    }
+    
     //Smoothly move the camera to the new spot.
     if (newcam_distance > newcam_distance_target) {
         newcam_distance -= 250;
@@ -623,6 +629,12 @@ static void newcam_collision(void) {
 }
 
 static void newcam_set_pan(void) {
+    if (gDjuiInMainMenu) {
+        newcam_pan_x = 0;
+        newcam_pan_z = 0;
+        return;
+    }
+
     //Apply panning values based on Mario's direction.
     if (gMarioStates[0].action != ACT_HOLDING_BOWSER && gMarioStates[0].action != ACT_SLEEPING && gMarioStates[0].action != ACT_START_SLEEPING) {
         approach_f32_asymptotic_bool(&newcam_pan_x, lengthdir_x((160*newcam_panlevel)/100, -gMarioStates[0].faceAngle[1]-0x4000), 0.05);

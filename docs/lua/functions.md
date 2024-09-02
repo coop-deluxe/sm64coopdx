@@ -769,6 +769,7 @@
    - [djui_hud_set_mouse_locked](functions-3.md#djui_hud_set_mouse_locked)
    - [djui_hud_set_resolution](functions-3.md#djui_hud_set_resolution)
    - [djui_hud_set_rotation](functions-3.md#djui_hud_set_rotation)
+   - [djui_hud_set_rotation_interpolated](functions-3.md#djui_hud_set_rotation_interpolated)
    - [djui_hud_world_pos_to_screen_pos](functions-3.md#djui_hud_world_pos_to_screen_pos)
    - [djui_open_pause_menu](functions-3.md#djui_open_pause_menu)
 
@@ -1574,6 +1575,16 @@
    - [save_file_set_flags](functions-4.md#save_file_set_flags)
    - [save_file_set_star_flags](functions-4.md#save_file_set_star_flags)
    - [touch_coin_score_age](functions-4.md#touch_coin_score_age)
+
+<br />
+
+- seqplayer.h
+   - [sequence_player_get_tempo](functions-4.md#sequence_player_get_tempo)
+   - [sequence_player_get_tempo_acc](functions-4.md#sequence_player_get_tempo_acc)
+   - [sequence_player_get_transposition](functions-4.md#sequence_player_get_transposition)
+   - [sequence_player_set_tempo](functions-4.md#sequence_player_set_tempo)
+   - [sequence_player_set_tempo_acc](functions-4.md#sequence_player_set_tempo_acc)
+   - [sequence_player_set_transposition](functions-4.md#sequence_player_set_transposition)
 
 <br />
 

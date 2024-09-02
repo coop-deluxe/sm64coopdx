@@ -3,6 +3,7 @@
 #include "djui_panel.h"
 #include "djui_panel_menu.h"
 #include "djui_panel_confirm.h"
+#include "game/level_update.h"
 #include "game/save_file.h"
 #include "pc/configfile.h"
 
@@ -76,6 +77,7 @@ static void djui_panel_host_save_button_click(struct DjuiBase* caller) {
 
 static void djui_panel_host_save_erase_yes(struct DjuiBase* caller) {
     save_file_erase(sButtonTag);
+    play_character_sound(gMarioState, CHAR_SOUND_WAAAOOOW);
     djui_panel_host_save_update_button(sSaveButtons[sButtonTag], sButtonTag);
     djui_panel_menu_back(caller);
 }

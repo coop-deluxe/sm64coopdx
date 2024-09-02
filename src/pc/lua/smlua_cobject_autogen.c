@@ -943,11 +943,14 @@ static struct LuaObjectField sHandheldShakePointFields[LUA_HANDHELD_SHAKE_POINT_
     { "point", LVT_COBJECT, offsetof(struct HandheldShakePoint, point), true,  LOT_VEC3S },
 };
 
-#define LUA_HUD_UTILS_ROTATION_FIELD_COUNT 3
+#define LUA_HUD_UTILS_ROTATION_FIELD_COUNT 6
 static struct LuaObjectField sHudUtilsRotationFields[LUA_HUD_UTILS_ROTATION_FIELD_COUNT] = {
-    { "pivotX",   LVT_F32, offsetof(struct HudUtilsRotation, pivotX),   false, LOT_NONE },
-    { "pivotY",   LVT_F32, offsetof(struct HudUtilsRotation, pivotY),   false, LOT_NONE },
-    { "rotation", LVT_F32, offsetof(struct HudUtilsRotation, rotation), false, LOT_NONE },
+    { "pivotX",       LVT_F32, offsetof(struct HudUtilsRotation, pivotX),       false, LOT_NONE },
+    { "pivotY",       LVT_F32, offsetof(struct HudUtilsRotation, pivotY),       false, LOT_NONE },
+    { "prevPivotX",   LVT_F32, offsetof(struct HudUtilsRotation, prevPivotX),   false, LOT_NONE },
+    { "prevPivotY",   LVT_F32, offsetof(struct HudUtilsRotation, prevPivotY),   false, LOT_NONE },
+    { "rotation",     LVT_F32, offsetof(struct HudUtilsRotation, rotation),     false, LOT_NONE },
+    { "rotationDiff", LVT_F32, offsetof(struct HudUtilsRotation, rotationDiff), false, LOT_NONE },
 };
 
 #define LUA_INSTANT_WARP_FIELD_COUNT 3
