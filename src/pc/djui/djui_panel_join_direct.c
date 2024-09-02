@@ -98,25 +98,70 @@ static void djui_panel_join_direct_ip_text_change(struct DjuiBase* caller) {
 
 static void djui_panel_join_direct_ip_text_set_new(void) {
     char buffer[256] = { 0 };
+    char orig_ip[256] = { 0 };
     if (snprintf(buffer, 256, "%s", sInputboxIp->buffer) < 0) {
         LOG_INFO("truncating IP");
     }
 
+    // copy original buffer for storing to gGetHostName
+    memcpy(&orig_ip, &buffer, 256);
+
     bool afterSpacer = false;
+    bool is_ipv6 = false;
     int port = 0;
+
+    // check if address starts with [ (meaning it's a direct IPv6 address. 
+    // This is needed because we need to know when to get the port number. Example: [2001:db8::1000]:7777
+    // If this character is not in the first character in the buffer, it will be treated as an IPv4 address or hostname.
+    if (buffer[0] == '[') {
+        memcpy(&buffer, &buffer[1], 255);
+        is_ipv6 = true;
+    }
+
+    if (is_ipv6) {
+        LOG_INFO("Detected direct IPv6 address");
+    } else {
+        LOG_INFO("Detected direct IPv4 address or hostname");
+    }
+
+    // this needs cleaning
     for (int i = 0; i < 256; i++) {
-        if (buffer[i] == ' ' || buffer[i] == ':') {
-            buffer[i] = '\0';
-            afterSpacer = true;
-        } else if (buffer[i] == '\0') {
-            break;
-        } else if (afterSpacer && buffer[i] >= '0' && buffer[i] <= '9') {
-            port *= 10;
-            port += buffer[i] - '0';
+        // Direct IPv6 address
+        if (is_ipv6 == true) {
+            // Check if it reached end of address "]:", or a space as a fail safe.
+            if ((buffer[i] == ']') || buffer[i] == ' ') {
+                afterSpacer = true;
+                memset(&orig_ip, 0, 256);
+                memcpy(&orig_ip[1], &buffer, i+1);
+                buffer[i] = '\0';
+                orig_ip[0] = '[';
+                // skip over the port separator
+                if (buffer[i+1] == ':') {
+                    i += 1;
+                }
+            } else if (buffer[i] == '\0') {
+                break;
+            } else if (afterSpacer && buffer[i] >= '0' && buffer[i] <= '9') {
+                port *= 10;
+                port += buffer[i] - '0';
+            }
+        } else {
+            // Direct IPv4 address or hostname
+            // Check if it reached end of address ":", or a space as a fail safe.
+            if (buffer[i] == ' ' || buffer[i] == ':') {
+                afterSpacer = true;
+                buffer[i] = '\0';
+                memcpy(&orig_ip, &buffer, i+1);
+            } else if (buffer[i] == '\0') {
+                break;
+            } else if (afterSpacer && buffer[i] >= '0' && buffer[i] <= '9') {
+                port *= 10;
+                port += buffer[i] - '0';
+            }
         }
     }
 
-    snprintf(gGetHostName, MAX_CONFIG_STRING, "%s", buffer);
+    snprintf(gGetHostName, MAX_CONFIG_STRING, "%s", orig_ip);
     if (snprintf(configJoinIp, MAX_CONFIG_STRING, "%s", buffer) < 0) {
         LOG_INFO("truncating IP");
     }

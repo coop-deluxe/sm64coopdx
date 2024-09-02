@@ -511,6 +511,17 @@ local sCapBhvs = {
 
 --- @param o Object
 --- @param model integer
+local BowserKey = false
+local function on_star_or_key_grab(m, o, type)
+    if type == INTERACT_STAR_OR_KEY then
+        if get_id_from_behavior(o.behavior) == id_bhvBowserKey then
+            BowserKey = true
+        else
+            BowserKey = false
+        end
+    end
+end
+
 function set_model(o, model)
     if optionTable[optionTableRef.localModels].toggle == 0 then return end
     if obj_has_behavior_id(o, id_bhvMario) ~= 0 then
@@ -523,7 +534,7 @@ function set_model(o, model)
     if obj_has_behavior_id(o, id_bhvCelebrationStar) ~= 0 and o.parentObj ~= nil then
         local i = network_local_index_from_global(o.parentObj.globalPlayerIndex)
         local starModel = characterCelebrationStar[gPlayerSyncTable[i].modelId]
-        if gPlayerSyncTable[i].modelId ~= nil and starModel ~= nil and obj_has_model_extended(o, starModel) == 0 then
+        if gPlayerSyncTable[i].modelId ~= nil and starModel ~= nil and obj_has_model_extended(o, starModel) == 0 and not BowserKey then
             obj_set_model_extended(o, starModel)
         end
         return
@@ -559,6 +570,7 @@ function set_model(o, model)
 end
 
 hook_event(HOOK_MARIO_UPDATE, mario_update)
+hook_event(HOOK_ON_INTERACT, on_star_or_key_grab)
 hook_event(HOOK_OBJECT_SET_MODEL, set_model)
 
 ------------------

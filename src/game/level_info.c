@@ -230,6 +230,10 @@ const char *get_level_name_ascii(s16 courseNum, s16 levelNum, s16 areaIndex, s16
             }
         }
 
+        else if (courseNum == LEVEL_ENDING) { // LEVEL_ENDING has the same course number as the level number
+            snprintf(output, 256, "Ending");
+        }
+
         // Default
         else {
             snprintf(output, 256, "Peach's Castle");

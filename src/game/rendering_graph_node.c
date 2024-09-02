@@ -1156,7 +1156,7 @@ static s32 obj_is_in_view(struct GraphNodeObject *node, Mat4 matrix) {
     // visibly pop in or out at the edge of the screen.
     //
     // Half of the fov in in-game angle units instead of degrees.
-    s16 halfFov = (get_first_person_enabled() ? gFirstPersonCamera.fov : not_zero(gCurGraphNodeCamFrustum->fov, gOverrideFOV) / 2.0f + 1.0f) * 32768.0f / 180.0f + 0.5f;
+    s16 halfFov = ((get_first_person_enabled() ? gFirstPersonCamera.fov : not_zero(gCurGraphNodeCamFrustum->fov, gOverrideFOV)) / 2.0f + 1.0f) * 32768.0f / 180.0f + 0.5f;
 
     f32 divisor = coss(halfFov);
     if (divisor == 0) { divisor = 1; }

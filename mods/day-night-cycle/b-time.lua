@@ -9,8 +9,6 @@ mod_storage_remove("night-music")
 
 use24h = mod_storage_load_bool("24h")
 
-local savedInMenu = false
-local autoSaveTimer = 0
 --- @type boolean
 playNightMusic = if_then_else(mod_storage_load("night_music") == nil, true, mod_storage_load_bool("night_music"))
 playingNightMusic = false
@@ -103,22 +101,6 @@ end
 
 function time_tick()
     gGlobalSyncTable.time = gGlobalSyncTable.time + gGlobalSyncTable.timeScale
-
-    -- auto save every 30s
-    autoSaveTimer = (autoSaveTimer + 1) % (SECOND * 30)
-    if autoSaveTimer == 0 then
-        save_time()
-    end
-
-    -- save when paused
-    if djui_hud_is_pause_menu_created() then
-        if not savedInMenu then
-            save_time()
-            savedInMenu = true
-        end
-    else
-        savedInMenu = false
-    end
 end
 
 --- @param sequenceId SeqId

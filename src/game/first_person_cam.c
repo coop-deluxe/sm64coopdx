@@ -69,18 +69,28 @@ static void first_person_camera_update(void) {
     s16 invY = camera_config_is_y_inverted() ? 1 : -1;
 
     if (mouse_relative_enabled) {
+        // hack: make c buttons work for moving the camera
+        s16 extStickX = m->controller->extStickX;
+        s16 extStickY = m->controller->extStickY;
+        if (extStickX == 0) {
+            extStickX = (CLAMP(m->controller->buttonDown & R_CBUTTONS, 0, 1) - CLAMP(m->controller->buttonDown & L_CBUTTONS, 0, 1)) * 32;
+        }
+        if (extStickY == 0) {
+            extStickY = (CLAMP(m->controller->buttonDown & U_CBUTTONS, 0, 1) - CLAMP(m->controller->buttonDown & D_CBUTTONS, 0, 1)) * 24;
+        }
+
         // update pitch
         if (!gFirstPersonCamera.forcePitch) {
-            gFirstPersonCamera.pitch -= sensY * (invY * m->controller->extStickY - 1.5f * mouse_y);
+            gFirstPersonCamera.pitch -= sensY * (invY * extStickY - 1.5f * mouse_y);
             gFirstPersonCamera.pitch = CLAMP(gFirstPersonCamera.pitch, -0x3F00, 0x3F00);
         }
 
         // update yaw
         if (!gFirstPersonCamera.forceYaw) {
-            if (m->controller->buttonPressed & L_TRIG && gFirstPersonCamera.centerL) {
+            if (m->controller->buttonDown & L_TRIG && gFirstPersonCamera.centerL) {
                 gFirstPersonCamera.yaw = m->faceAngle[1] + 0x8000;
             } else {
-                gFirstPersonCamera.yaw += sensX * (invX * m->controller->extStickX - 1.5f * mouse_x);
+                gFirstPersonCamera.yaw += sensX * (invX * extStickX - 1.5f * mouse_x);
             }
         }
     }

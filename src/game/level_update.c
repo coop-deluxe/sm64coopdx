@@ -41,6 +41,8 @@
 #include "pc/configfile.h"
 #include "pc/network/network.h"
 #include "pc/djui/djui.h"
+// used for getting gMainMenuSounds
+#include "pc/djui/djui_panel_menu_options.h"
 #include "pc/lua/smlua_hooks.h"
 #include "pc/mods/mods.h"
 #include "pc/nametags.h"
@@ -1491,16 +1493,20 @@ void update_menu_level(void) {
 
     // figure out music
     stop_cap_music();
-    if (!configMenuSound || configMenuStaffRoll || curLevel == LEVEL_CASTLE_GROUNDS) {
-        reset_volume();
-        disable_background_sound();
-        set_background_music(0, SEQ_MENU_TITLE_SCREEN, 0);
-    } else {
-        reset_volume();
-        disable_background_sound();
-        if (gCurrentArea != NULL) {
+    reset_volume();
+    disable_background_sound();
+    if (gMainMenuSounds[configMenuSound].sound == STAGE_MUSIC) {
+        // if staff roll is on, set configMenuSound to Title Screen sequence, or 0
+        if (configMenuStaffRoll) {
+            configMenuSound = 0;
+        }
+        if (curLevel == LEVEL_CASTLE_GROUNDS) {
+            set_background_music(0, SEQ_MENU_FILE_SELECT, 0);
+        } else if (gCurrentArea != NULL) {
             set_background_music(gCurrentArea->musicParam, gCurrentArea->musicParam2, 0);
         }
+    } else {
+        set_background_music(0, gMainMenuSounds[configMenuSound].sound, 0);
     }
 
     if (configMenuStaffRoll) {

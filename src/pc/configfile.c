@@ -6,7 +6,6 @@
 #include <assert.h>
 #include <ctype.h>
 
-#include "pc_main.h"
 #include "platform.h"
 #include "configfile.h"
 #include "cliopts.h"
@@ -57,8 +56,6 @@ struct FunctionConfigOption {
 /*
  *Config options and default values
  */
-
-static_assert(NUM_SAVE_FILES == 4); // update this if more save slots are added
 char configSaveNames[4][MAX_SAVE_NAME_STRING] = {
     "SM64",
     "SM64",
@@ -167,7 +164,7 @@ bool         configSkipIntro                      = 0;
 bool         configPauseAnywhere                  = false;
 bool         configMenuStaffRoll                  = false;
 unsigned int configMenuLevel                      = 0;
-bool         configMenuSound                      = false;
+unsigned int configMenuSound                      = 0;
 bool         configMenuRandom                     = false;
 bool         configMenuDemos                      = false;
 bool         configDisablePopups                  = false;
@@ -301,7 +298,7 @@ static const struct ConfigOption options[] = {
     {.name = "pause_anywhere",                 .type = CONFIG_TYPE_BOOL,   .boolValue   = &configPauseAnywhere},
     {.name = "coop_menu_staff_roll",           .type = CONFIG_TYPE_BOOL,   .boolValue   = &configMenuStaffRoll},
     {.name = "coop_menu_level",                .type = CONFIG_TYPE_UINT,   .uintValue   = &configMenuLevel},
-    {.name = "coop_menu_sound",                .type = CONFIG_TYPE_BOOL,   .boolValue   = &configMenuSound},
+    {.name = "coop_menu_sound",                .type = CONFIG_TYPE_UINT,   .uintValue   = &configMenuSound},
     {.name = "coop_menu_random",               .type = CONFIG_TYPE_BOOL,   .boolValue   = &configMenuRandom},
     // {.name = "coop_menu_demos",                .type = CONFIG_TYPE_BOOL,   .boolValue   = &configMenuDemos},
     {.name = "disable_popups",                 .type = CONFIG_TYPE_BOOL,   .boolValue   = &configDisablePopups},
@@ -716,8 +713,6 @@ NEXT_OPTION:
     }
 
     fs_close(file);
-
-    if ((int)configWindow.msaa > WAPI.get_max_msaa()) { configWindow.msaa = WAPI.get_max_msaa(); }
 
     if (configFrameLimit < 30)   { configFrameLimit = 30; }
     if (configFrameLimit > 3000) { configFrameLimit = 3000; }
