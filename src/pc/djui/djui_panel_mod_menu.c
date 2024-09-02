@@ -88,6 +88,7 @@ static void djui_panel_mod_menu_mod_create_element(struct DjuiBase* parent, int 
             break;
         }
         case MOD_MENU_ELEMENT_MAX:
+            break;
     }
 }
 
