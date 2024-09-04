@@ -1055,7 +1055,7 @@ static const struct BuiltinTexInfo sDynosBuiltinTexs[] = {
     define_builtin_tex(mario_texture_metal_light, "actors/mario/custom_mario_metal_light.rgba16.png", 64, 32, 16),
     define_builtin_tex(mario_texture_yellow_button, "actors/mario/mario_overalls_button.rgba16.png", 32, 32, 16),
     define_builtin_tex(mario_texture_m_logo, "actors/mario/custom_mario_logo.rgba16.png", 32, 32, 16),
-    define_builtin_tex(mario_texture_m_blend, "actors/mario/custom_mario_m_blend.rgba16.png", 32, 32, 16),
+    define_builtin_tex(mario_texture_m_blend, "actors/mario/custom_mario_logo_blend.rgba16.png", 32, 32, 16),
     define_builtin_tex(mario_texture_m_cap, "actors/mario/custom_mario_cap.rgba16.png", 32, 32, 16),
     define_builtin_tex(mario_texture_hair_sideburn, "actors/mario/custom_mario_sideburn.rgba16.png", 32, 32, 16),
     define_builtin_tex(mario_texture_add_sideburn, "actors/mario/custom_mario_sideburn_add.rgba16.png", 32, 32, 16),
