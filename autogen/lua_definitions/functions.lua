@@ -7808,6 +7808,11 @@ function camera_freeze()
 end
 
 --- @return boolean
+function camera_get_checking_surfaces()
+    -- ...
+end
+
+--- @return boolean
 function camera_is_frozen()
     -- ...
 end
@@ -7823,6 +7828,11 @@ end
 
 --- @param allow integer
 function camera_romhack_allow_dpad_usage(allow)
+    -- ...
+end
+
+--- @param value boolean
+function camera_set_checking_surfaces(value)
     -- ...
 end
 

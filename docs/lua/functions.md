@@ -1641,10 +1641,12 @@
    - [camera_config_set_x_sensitivity](functions-5.md#camera_config_set_x_sensitivity)
    - [camera_config_set_y_sensitivity](functions-5.md#camera_config_set_y_sensitivity)
    - [camera_freeze](functions-5.md#camera_freeze)
+   - [camera_get_checking_surfaces](functions-5.md#camera_get_checking_surfaces)
    - [camera_is_frozen](functions-5.md#camera_is_frozen)
    - [camera_reset_overrides](functions-5.md#camera_reset_overrides)
    - [camera_romhack_allow_centering](functions-5.md#camera_romhack_allow_centering)
    - [camera_romhack_allow_dpad_usage](functions-5.md#camera_romhack_allow_dpad_usage)
+   - [camera_set_checking_surfaces](functions-5.md#camera_set_checking_surfaces)
    - [camera_set_romhack_override](functions-5.md#camera_set_romhack_override)
    - [camera_unfreeze](functions-5.md#camera_unfreeze)
 

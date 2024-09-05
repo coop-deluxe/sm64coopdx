@@ -1,5 +1,6 @@
 #include "smlua.h"
 #include "pc/mods/mods.h"
+#include "pc/mods/mods_utils.h"
 #include "audio/external.h"
 
 u8 gSmLuaConvertSuccess = false;
@@ -775,7 +776,7 @@ void smlua_logline(void) {
     while (lua_getstack(L, level, &info)) {
         lua_getinfo(L, "nSl", &info);
         LOG_LUA("    [%d] %s:%d -- %s [%s]",
-            level, info.short_src, info.currentline,
+            level, path_basename((char *) info.source), info.currentline,
             (info.name ? info.name : "<unknown>"), info.what);
         ++level;
     }

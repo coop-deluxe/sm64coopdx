@@ -1,5 +1,6 @@
 #include "smlua_camera_utils.h"
 #include "game/bettercamera.h"
+#include "game/object_list_processor.h"
 
 static struct CameraOverride sOverrideCameraXSens   = { 0 };
 static struct CameraOverride sOverrideCameraYSens   = { 0 };
@@ -151,4 +152,12 @@ void camera_config_set_deceleration(u32 value) {
     sOverrideCameraDegrade.value = MIN(MAX(value, 0), 100);
     sOverrideCameraDegrade.override = true;
     newcam_init_settings();
+}
+
+bool camera_get_checking_surfaces(void) {
+    return gCheckingSurfaceCollisionsForCamera;
+}
+
+void camera_set_checking_surfaces(bool value) {
+    gCheckingSurfaceCollisionsForCamera = value;
 }

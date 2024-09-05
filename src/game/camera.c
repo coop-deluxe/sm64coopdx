@@ -3085,7 +3085,7 @@ void update_lakitu(struct Camera *c) {
             distToFloor = find_floor(gLakituState.pos[0],
                                      gLakituState.pos[1] + 20.0f,
                                      gLakituState.pos[2], &floor);
-            gCheckingSurfaceCollisionsForCamera = false;
+            gCheckingSurfaceCollisionsForCamera = FALSE;
             if (distToFloor != gLevelValues.floorLowerLimit) {
                 if (gLakituState.pos[1] < (distToFloor += 100.0f)) {
                     gLakituState.pos[1] = distToFloor;
