@@ -1719,6 +1719,7 @@
    - [allocate_mario_action](functions-5.md#allocate_mario_action)
    - [course_is_main_course](functions-5.md#course_is_main_course)
    - [deref_s32_pointer](functions-5.md#deref_s32_pointer)
+   - [djui_attempting_to_open_playerlist](functions-5.md#djui_attempting_to_open_playerlist)
    - [djui_is_playerlist_open](functions-5.md#djui_is_playerlist_open)
    - [djui_is_popup_disabled](functions-5.md#djui_is_popup_disabled)
    - [djui_menu_get_font](functions-5.md#djui_menu_get_font)

@@ -1953,6 +1953,24 @@
 
 <br />
 
+## [djui_attempting_to_open_playerlist](#djui_attempting_to_open_playerlist)
+
+### Lua Example
+`local booleanValue = djui_attempting_to_open_playerlist()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool djui_attempting_to_open_playerlist(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [djui_is_playerlist_open](#djui_is_playerlist_open)
 
 ### Lua Example

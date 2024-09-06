@@ -8182,6 +8182,11 @@ function deref_s32_pointer(pointer)
 end
 
 --- @return boolean
+function djui_attempting_to_open_playerlist()
+    -- ...
+end
+
+--- @return boolean
 function djui_is_playerlist_open()
     -- ...
 end

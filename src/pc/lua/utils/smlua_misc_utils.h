@@ -50,6 +50,7 @@ bool djui_is_popup_disabled(void);
 void djui_set_popup_disabled_override(bool value);
 void djui_reset_popup_disabled_override(void);
 bool djui_is_playerlist_open(void);
+bool djui_attempting_to_open_playerlist(void);
 enum DjuiFontType djui_menu_get_font(void);
 
 s8 get_dialog_box_state(void);
