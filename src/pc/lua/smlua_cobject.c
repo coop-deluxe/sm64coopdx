@@ -552,10 +552,9 @@ static int smlua_cpointer_get(lua_State* L) {
         return 1;
     }
 
-    lua_pushnil(L);
-    return 1;
+    return 0;
 }
-static int smlua_cpointer_set(UNUSED lua_State* L) { return 1; }
+static int smlua_cpointer_set(UNUSED lua_State* L) { return 0; }
 
   //////////
  // bind //
