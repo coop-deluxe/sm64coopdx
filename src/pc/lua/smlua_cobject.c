@@ -538,10 +538,6 @@ int smlua__eq(lua_State *L) {
     return 1;
 }
 
-  //////////
- // bind //
-//////////
-
 static int smlua_cpointer_get(lua_State* L) {
     CPointer *cptr = lua_touserdata(L, 1);
     const char *key = smlua_to_string(L, 2);
@@ -552,7 +548,7 @@ static int smlua_cpointer_get(lua_State* L) {
         return 1;
     }
     if (strcmp(key, "_lot") == 0) {
-        lua_pushinteger(L, cptr->lot);
+        lua_pushinteger(L, cptr->lvt);
         return 1;
     }
 
@@ -561,34 +557,32 @@ static int smlua_cpointer_get(lua_State* L) {
 }
 static int smlua_cpointer_set(UNUSED lua_State* L) { return 1; }
 
+  //////////
+ // bind //
+//////////
+
 void smlua_cobject_init_globals(void) {
     lua_State* L = gLuaState;
 
-    {
-        luaL_newmetatable(L, "CObject");
-        luaL_Reg cObjectMethods[] = {
-            { "__index",    smlua__get_field },
-            { "__newindex", smlua__set_field },
-            { "__eq",       smlua__eq },
-            { NULL, NULL }
-        };
-        luaL_setfuncs(L, cObjectMethods, 0);
-
-        lua_pop(L, 1);
-    }
-
-    {
-        luaL_newmetatable(L, "CPointer");
-        luaL_Reg cPointerMethods[] = {
-            { "__index",    smlua_cpointer_get },
-            { "__newindex", smlua_cpointer_set },
-            { "__eq",       smlua__eq },
-            { NULL, NULL }
-        };
-        luaL_setfuncs(L, cPointerMethods, 0);
-
-        lua_pop(L, 1);
-    }
+    // Create metatables
+    luaL_newmetatable(L, "CObject");
+    luaL_Reg cObjectMethods[] = {
+        { "__index",    smlua__get_field },
+        { "__newindex", smlua__set_field },
+        { "__eq",       smlua__eq },
+        { NULL, NULL }
+    };
+    luaL_setfuncs(L, cObjectMethods, 0);
+    lua_pop(L, 1);
+    luaL_newmetatable(L, "CPointer");
+    luaL_Reg cPointerMethods[] = {
+        { "__index",    smlua_cpointer_get },
+        { "__newindex", smlua_cpointer_set },
+        { "__eq",       smlua__eq },
+        { NULL, NULL }
+    };
+    luaL_setfuncs(L, cPointerMethods, 0);
+    lua_pop(L, 1);
 
 #define EXPOSE_GLOBAL_ARRAY(lot, ptr, iterator) \
     { \
