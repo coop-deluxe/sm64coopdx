@@ -187,8 +187,8 @@ static struct ModAudio* find_mod_audio(struct ModFile* file) {
 }
 
 static bool audio_sanity_check(struct ModAudio* audio, bool isStream, const char* action) {
-    if (audio == NULL || !audio->loaded) {
-        LOG_LUA_LINE("Tried to %s unloaded audio %s", action, audio->isStream ? "stream" : "sample");
+    if (!audio || !audio->loaded) {
+        LOG_LUA_LINE("Tried to %s unloaded audio %s", action, audio ? (audio->isStream ? "stream" : "sample") : "(NULL)");
         return false;
     }
     if (isStream && !audio->isStream) {

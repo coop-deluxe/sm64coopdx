@@ -551,7 +551,9 @@ int smlua__eq(lua_State *L) {
 
 int smlua__gc(lua_State *L) {
     CObject *cobj = lua_touserdata(L, 1);
-    smlua_pointer_user_data_delete((u64)(intptr_t) cobj->pointer);
+    if (!cobj->freed) {
+        smlua_pointer_user_data_delete((u64)(intptr_t) cobj->pointer);
+    }
     return 0;
 }
 
