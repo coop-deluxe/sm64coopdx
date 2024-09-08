@@ -1,4 +1,5 @@
 #include "smlua.h"
+#include "smlua_cobject_map.h"
 #include "pc/mods/mods.h"
 #include "audio/external.h"
 
@@ -376,8 +377,6 @@ void smlua_push_pointer(lua_State* L, u16 lvt, void* p) {
     cpointer->freed = false;
     luaL_getmetatable(L, "CPointer");
     lua_setmetatable(L, -2);
-
-    smlua_pointer_user_data_add((u64)(intptr_t) p, (CObject *) cpointer);
 }
 
 void smlua_push_integer_field(int index, const char* name, lua_Integer val) {
