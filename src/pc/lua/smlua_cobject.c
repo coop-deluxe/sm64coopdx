@@ -10,6 +10,7 @@
 #include "object_fields.h"
 #include "pc/djui/djui_hud_utils.h"
 #include "pc/lua/smlua.h"
+#include "pc/lua/smlua_cobject_map.h"
 #include "pc/lua/utils/smlua_anim_utils.h"
 #include "pc/lua/utils/smlua_collision_utils.h"
 #include "pc/lua/utils/smlua_obj_utils.h"
@@ -397,6 +398,11 @@ static int smlua__get_field(lua_State* L) {
         return 1;
     }
 
+    if (cobj->freed) {
+        LOG_LUA_LINE("_get_field on freed object");
+        return 0;
+    }
+
     struct LuaObjectField* data = smlua_get_object_field(lot, key);
     if (data == NULL) {
         data = smlua_get_custom_field(L, lot, 2);
@@ -462,6 +468,11 @@ static int smlua__set_field(lua_State* L) {
     enum LuaObjectType lot = cobj->lot;
     u64 pointer = (u64)(intptr_t) cobj->pointer;
     const char *key = smlua_to_string(L, 2);
+
+    if (cobj->freed) {
+        LOG_LUA_LINE("_set_field on freed object");
+        return 0;
+    }
 
     struct LuaObjectField* data = smlua_get_object_field(lot, key);
     if (data == NULL) {
@@ -538,6 +549,12 @@ int smlua__eq(lua_State *L) {
     return 1;
 }
 
+int smlua__gc(lua_State *L) {
+    CObject *cobj = lua_touserdata(L, 1);
+    smlua_pointer_user_data_delete((u64)(intptr_t) cobj->pointer);
+    return 0;
+}
+
 static int smlua_cpointer_get(lua_State* L) {
     CPointer *cptr = lua_touserdata(L, 1);
     const char *key = smlua_to_string(L, 2);
@@ -569,6 +586,7 @@ void smlua_cobject_init_globals(void) {
         { "__index",    smlua__get_field },
         { "__newindex", smlua__set_field },
         { "__eq",       smlua__eq },
+        { "__gc",       smlua__gc },
         { NULL, NULL }
     };
     luaL_setfuncs(L, cObjectMethods, 0);

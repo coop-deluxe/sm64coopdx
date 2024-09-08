@@ -68,11 +68,13 @@ struct LuaObjectTable {
 typedef struct {
     void *pointer;
     u16 lot;
+    bool freed;
 } CObject;
 
 typedef struct {
     void *pointer;
     u16 lvt;
+    bool freed;
 } CPointer;
 
 bool smlua_valid_lot(u16 lot);

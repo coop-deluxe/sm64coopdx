@@ -357,8 +357,11 @@ void smlua_push_object(lua_State* L, u16 lot, void* p) {
     CObject *cobject = lua_newuserdata(L, sizeof(CObject));
     cobject->pointer = p;
     cobject->lot = lot;
+    cobject->freed = false;
     luaL_getmetatable(L, "CObject");
     lua_setmetatable(L, -2);
+
+    smlua_pointer_user_data_add((u64)(intptr_t) p, cobject);
 }
 
 void smlua_push_pointer(lua_State* L, u16 lvt, void* p) {
@@ -370,8 +373,11 @@ void smlua_push_pointer(lua_State* L, u16 lvt, void* p) {
     CPointer *cpointer = lua_newuserdata(L, sizeof(CPointer));
     cpointer->pointer = p;
     cpointer->lvt = lvt;
+    cpointer->freed = false;
     luaL_getmetatable(L, "CPointer");
     lua_setmetatable(L, -2);
+
+    smlua_pointer_user_data_add((u64)(intptr_t) p, (CObject *) cpointer);
 }
 
 void smlua_push_integer_field(int index, const char* name, lua_Integer val) {
@@ -720,4 +726,17 @@ void smlua_logline(void) {
             (info.name ? info.name : "<unknown>"), info.what);
         ++level;
     }
+}
+
+// If an object is freed that Lua has a CObject to,
+// Lua is able to use-after-free that pointer
+void smlua_free(void *ptr) {
+    if (ptr && gLuaState) {
+        CObject *obj = smlua_pointer_user_data_get((u64)(intptr_t) ptr);
+        if (obj) {
+            obj->freed = true;
+            smlua_pointer_user_data_delete((u64)(intptr_t) ptr);
+        }
+    }
+    free(ptr);
 }
