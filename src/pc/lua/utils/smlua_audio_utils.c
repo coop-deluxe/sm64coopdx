@@ -598,18 +598,13 @@ void audio_custom_shutdown(void) {
     while (node) {
         struct DynamicPoolNode* prev = node->prev;
         struct ModAudio* audio = node->ptr;
-        if (audio->isStream) {
-            if (audio->loaded) { ma_sound_uninit(&audio->sound); }
-            dynamic_pool_free(sModAudioPool, audio);
-        } else {
-            if (audio->loaded) {
-                if (audio->sampleCopiesTail) {
-                    audio_sample_destroy_copies(audio);
-                }
-                ma_sound_uninit(&audio->sound);
+        if (audio->loaded) {
+            if (!audio->isStream && audio->sampleCopiesTail) {
+                audio_sample_destroy_copies(audio);
             }
-            dynamic_pool_free(sModAudioPool, audio);
+            ma_sound_uninit(&audio->sound);
         }
+        dynamic_pool_free(sModAudioPool, audio);
         node = prev;
     }
     dynamic_pool_free_pool(sModAudioPool);
