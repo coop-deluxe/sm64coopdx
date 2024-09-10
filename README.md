@@ -14,8 +14,23 @@ Interestingly enough though, the goal of the project has slowly evolved over tim
 ## Lua
 sm64coopdx is moddable via Lua, similar to Roblox and Garry's Mod's Lua APIs. To get started, click [here](docs/lua/lua.md) to see the Lua documentation.
 
+## Errors on run?
+On Linux, did you get that dreaded "GLIBCXX_2.something.something" or something similar?
+Please compile it from source. Instructions below.
+
+Missing GLIBCXX_3? Ah, easy. Here's how to solve it:
+<details>
+  <summary>Command (only tested in Ubuntu 20.04)</summary>
+
+ ```bash
+sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
+sudo apt update
+sudo apt install gcc-11 libstdc++6 -y
+```
+</details>
+
 ## How to compile
-The pre-built executables should work for anyone, but if for some reason you have issues with compilation, this is how to do it:
+The pre-built executables should work for anyone, but if for some reason you have issues with the pre-built executables in Linux, this is how to do it:
 - Open a terminal
 - Run the following commands:
 ```bash
@@ -39,9 +54,9 @@ g++  -L build/us_pc -o build/us_pc/sm64coopdx build/us_pc/src/engine/surface_col
 ```bash
 sudo apt update; sudo apt install binutils-mips-linux-gnu bsdmainutils build-essential libcapstone-dev pkgconf python3 libz-dev libcurl4-openssl-dev
 ```
+
+Now try compiling yet again.
 </details>
-
-
 
 
 
