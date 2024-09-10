@@ -14,6 +14,9 @@ Interestingly enough though, the goal of the project has slowly evolved over tim
 ## Lua
 sm64coopdx is moddable via Lua, similar to Roblox and Garry's Mod's Lua APIs. To get started, click [here](docs/lua/lua.md) to see the Lua documentation.
 
+## Notes
+sm64coopdx is a continuation of sm64ex-coop. If you're looking for that version (now unmaintained), click [here](https://github.com/djoslin0/sm64ex-coop).
+
 ## Errors on run?
 On Linux, did you get that dreaded "GLIBCXX_2.something.something" or something similar?
 Please compile it from source. Instructions below.
