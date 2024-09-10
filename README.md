@@ -24,3 +24,6 @@ For 32bit compilation you will need to apend `TARGET_BITS 32` so you can compile
 
 ## Android port
 There is currently no android port.
+
+### Discord 
+[Public Invite](https://discord.gg/TJVKHS4)
