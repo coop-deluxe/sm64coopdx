@@ -13,3 +13,7 @@ Interestingly enough though, the goal of the project has slowly evolved over tim
 
 ## Lua
 sm64coopdx is moddable via Lua, similar to Roblox and Garry's Mod's Lua APIs. To get started, click [here](docs/lua/lua.md) to see the Lua documentation.
+
+## Compilation
+You will only need to compile the game if you need to set [build flags](https://github.com/coop-deluxe/sm64coopdx/wiki/Build-Flags).
+### 32bit 
