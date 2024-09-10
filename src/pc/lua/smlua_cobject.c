@@ -552,7 +552,11 @@ int smlua__eq(lua_State *L) {
 int smlua__gc(lua_State *L) {
     CObject *cobj = lua_touserdata(L, 1);
     if (!cobj->freed) {
-        smlua_pointer_user_data_delete((u64)(intptr_t) cobj->pointer);
+        switch (cobj->lot) {
+            case LOT_SURFACE: {
+                smlua_pointer_user_data_delete((u64)(intptr_t) cobj->pointer);
+            }
+        }
     }
     return 0;
 }

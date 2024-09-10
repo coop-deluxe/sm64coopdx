@@ -362,7 +362,11 @@ void smlua_push_object(lua_State* L, u16 lot, void* p) {
     luaL_getmetatable(L, "CObject");
     lua_setmetatable(L, -2);
 
-    smlua_pointer_user_data_add((u64)(intptr_t) p, cobject);
+    switch (lot) {
+        case LOT_SURFACE: {
+            smlua_pointer_user_data_add((u64)(intptr_t) p, cobject);
+        }
+    }
 }
 
 void smlua_push_pointer(lua_State* L, u16 lvt, void* p) {
