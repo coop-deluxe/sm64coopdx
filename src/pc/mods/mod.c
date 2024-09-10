@@ -193,6 +193,11 @@ void mod_clear(struct Mod* mod) {
         mod->incompatible = NULL;
     }
 
+    if (mod->category != NULL) {
+        free(mod->category);
+        mod->category = NULL;
+    }
+
     if (mod->description != NULL) {
         free(mod->description);
         mod->description = NULL;
