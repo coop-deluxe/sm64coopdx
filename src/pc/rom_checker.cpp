@@ -1,8 +1,9 @@
 #include <fstream>
 #include <iostream>
 #include <vector>
-#include <filesystem>
+#include <experimental/filesystem>
 #include <sstream>
+#include <iomanip>
 
 #if defined(_WIN32) || defined(_WIN64)
 #include <windows.h>
@@ -17,7 +18,7 @@ extern "C" {
 #include "fs/fs.h"
 }
 
-namespace fs = std::filesystem;
+namespace fs = std::experimental::filesystem;
 
 bool gRomIsValid = false;
 char gRomFilename[SYS_MAX_PATH] = "";
@@ -63,10 +64,10 @@ static bool is_rom_valid(const std::string romPath) {
             std::string destPath = fs_get_write_path("") + std::string("baserom.") + md5->localizationName + ".z64";
 
             // Copy the rom to the user path
-            if (romPath != destPath && !std::filesystem::exists(std::filesystem::path(destPath))) {
-                std::filesystem::copy_file(
-                    std::filesystem::path(romPath),
-                    std::filesystem::path(destPath)
+            if (romPath != destPath && !std::experimental::filesystem::exists(std::experimental::filesystem::path(destPath))) {
+                std::experimental::filesystem::copy_file(
+                    std::experimental::filesystem::path(romPath),
+                    std::experimental::filesystem::path(destPath)
                 );
             }
 
@@ -81,7 +82,7 @@ static bool is_rom_valid(const std::string romPath) {
 }
 
 inline static bool scan_path_for_rom(const char *dir) {
-    for (const auto &entry: std::filesystem::directory_iterator(dir)) {
+    for (const auto &entry: std::experimental::filesystem::directory_iterator(dir)) {
         std::string path = entry.path().generic_string();
         if (str_ends_with(path.c_str(), ".z64")) {
             if (is_rom_valid(path)) { return true; }
