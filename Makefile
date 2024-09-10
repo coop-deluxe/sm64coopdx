@@ -14,6 +14,9 @@ DEFINES :=
 
 # These options can either be set by building with 'make SETTING=value'.
 # 'make clean' may be required first.
+CXXFLAGS := -std=c++17
+BACKEND_LDFLAGS = -L/lib/x86_64-linux-gnu -lstdc++fs -lrt -v
+CXX = g++
 
 # Build debug version
 DEBUG ?= 0
@@ -1327,7 +1330,7 @@ $(SOUND_BIN_DIR)/tbl_header: $(SOUND_BIN_DIR)/sound_data.ctl
 $(SOUND_BIN_DIR)/samples_offsets.inc.c: $(SOUND_BIN_DIR)/sound_data.ctl
 	@true
 
-$(SOUND_BIN_DIR)/sequences_offsets.inc.c: $(SOUND_BIN_DIR)/sound_data.ctl
+$(SOUND_BIN_DIR)/sequences_offsets.inc.c: $(SOUND_BIN_DIR)/sequences.bin
 	@true
 
 $(SOUND_BIN_DIR)/sequences.bin: $(SOUND_BANK_FILES) sound/sequences.json $(SOUND_SEQUENCE_DIRS) $(SOUND_SEQUENCE_FILES) $(ENDIAN_BITWIDTH)
