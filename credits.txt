@@ -25,6 +25,9 @@ sm64coopdx Contributors:
     LunarCryptikVEVO
     Squishy6094
     DayMario64
+    Emeraldloc
+    Isaac0-dev
+    Blockyyy
 
 sm64ex-coop Developers:
     Agent X
