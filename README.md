@@ -20,10 +20,10 @@ sm64coopdx is moddable via Lua, similar to Roblox and Garry's Mod's Lua APIs. To
 ## Compilation
 You will only need to compile the game if you want to set [build flags](https://github.com/coop-deluxe/sm64coopdx/wiki/Build-Flags).
 ### 32bit 
-For 32bit compilation you will need to apend `TARGET_BITS 32` so you can compile it in 32bits. There is no guarantee that it will work/work correctly. 
+For 32bit compilation you will need to append `TARGET_BITS 32` so you can compile it in 32bits. There is no guarantee that it will work/work correctly. 
 
 ## Android port
 There is currently no android port.
 
 ### Discord 
-[Public Invite](https://discord.gg/TJVKHS4)
+[Public Invite](https://discord.gg/eXhpSRhCyM)
