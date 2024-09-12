@@ -6,6 +6,7 @@ struct DjuiThreePanel {
     struct DjuiScreenValue minHeaderSize;
     struct DjuiScreenValue bodySize;
     struct DjuiScreenValue minFooterSize;
+    bool temporary;
     bool (*on_back)(struct DjuiBase*);
 };
 

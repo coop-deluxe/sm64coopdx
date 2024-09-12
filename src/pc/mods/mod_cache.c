@@ -9,6 +9,7 @@
 #include "mods_utils.h"
 #include "pc/utils/md5.h"
 #include "pc/lua/smlua_hooks.h"
+#include "pc/loading.h"
 
 #define MOD_CACHE_FILENAME "mod.cache"
 #define MOD_CACHE_VERSION 7
@@ -32,7 +33,7 @@ void mod_cache_shutdown(void) {
     LOG_INFO("Shutting down mod cache.");
     while (sModCacheHead) {
         mod_cache_remove_node(sModCacheHead, NULL);
-    }    
+    }
 }
 
 void mod_cache_md5(const char* inPath, u8* outDataPath) {
@@ -255,6 +256,8 @@ void mod_cache_update(struct Mod* mod, struct ModFile* file) {
 }
 
 void mod_cache_load(void) {
+    LOADING_SCREEN_MUTEX(loading_screen_set_segment_text("Loading Mod Cache"));
+
     mod_cache_shutdown();
     LOG_INFO("Loading mod cache");
 

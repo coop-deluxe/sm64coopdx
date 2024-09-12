@@ -824,6 +824,24 @@
 
 <br />
 
+## [camera_get_checking_surfaces](#camera_get_checking_surfaces)
+
+### Lua Example
+`local booleanValue = camera_get_checking_surfaces()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool camera_get_checking_surfaces(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [camera_is_frozen](#camera_is_frozen)
 
 ### Lua Example
@@ -895,6 +913,26 @@
 
 ### C Prototype
 `void camera_romhack_allow_dpad_usage(u8 allow);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_set_checking_surfaces](#camera_set_checking_surfaces)
+
+### Lua Example
+`camera_set_checking_surfaces(value)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| value | `boolean` |
+
+### Returns
+- None
+
+### C Prototype
+`void camera_set_checking_surfaces(bool value);`
 
 [:arrow_up_small:](#)
 

@@ -29015,6 +29015,21 @@ int smlua_func_camera_freeze(UNUSED lua_State* L) {
     return 1;
 }
 
+int smlua_func_camera_get_checking_surfaces(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "camera_get_checking_surfaces", 0, top);
+        return 0;
+    }
+
+
+    lua_pushboolean(L, camera_get_checking_surfaces());
+
+    return 1;
+}
+
 int smlua_func_camera_is_frozen(UNUSED lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -29075,6 +29090,23 @@ int smlua_func_camera_romhack_allow_dpad_usage(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "camera_romhack_allow_dpad_usage"); return 0; }
 
     camera_romhack_allow_dpad_usage(allow);
+
+    return 1;
+}
+
+int smlua_func_camera_set_checking_surfaces(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "camera_set_checking_surfaces", 1, top);
+        return 0;
+    }
+
+    bool value = smlua_to_boolean(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "camera_set_checking_surfaces"); return 0; }
+
+    camera_set_checking_surfaces(value);
 
     return 1;
 }
@@ -34610,10 +34642,12 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "camera_config_set_x_sensitivity", smlua_func_camera_config_set_x_sensitivity);
     smlua_bind_function(L, "camera_config_set_y_sensitivity", smlua_func_camera_config_set_y_sensitivity);
     smlua_bind_function(L, "camera_freeze", smlua_func_camera_freeze);
+    smlua_bind_function(L, "camera_get_checking_surfaces", smlua_func_camera_get_checking_surfaces);
     smlua_bind_function(L, "camera_is_frozen", smlua_func_camera_is_frozen);
     smlua_bind_function(L, "camera_reset_overrides", smlua_func_camera_reset_overrides);
     smlua_bind_function(L, "camera_romhack_allow_centering", smlua_func_camera_romhack_allow_centering);
     smlua_bind_function(L, "camera_romhack_allow_dpad_usage", smlua_func_camera_romhack_allow_dpad_usage);
+    smlua_bind_function(L, "camera_set_checking_surfaces", smlua_func_camera_set_checking_surfaces);
     smlua_bind_function(L, "camera_set_romhack_override", smlua_func_camera_set_romhack_override);
     smlua_bind_function(L, "camera_unfreeze", smlua_func_camera_unfreeze);
 

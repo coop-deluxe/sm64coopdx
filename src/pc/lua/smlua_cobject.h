@@ -65,6 +65,18 @@ struct LuaObjectTable {
     u16 fieldCount;
 };
 
+typedef struct {
+    void *pointer;
+    u16 lot;
+    bool freed;
+} CObject;
+
+typedef struct {
+    void *pointer;
+    u16 lvt;
+    bool freed;
+} CPointer;
+
 bool smlua_valid_lot(u16 lot);
 bool smlua_valid_lvt(u16 lvt);
 struct LuaObjectField* smlua_get_object_field_from_ot(struct LuaObjectTable* ot, const char* key);

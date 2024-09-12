@@ -55,7 +55,6 @@ void audio_custom_update_volume(void);
 
 void audio_custom_shutdown(void);
 
-void smlua_audio_custom_init(void);
 void smlua_audio_custom_deinit(void);
 
 #endif

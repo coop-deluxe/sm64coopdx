@@ -251,7 +251,7 @@ u16 level_control_timer(s32 timerOp) {
 
 u32 pressed_pause(void) {
     if (gServerSettings.pauseAnywhere) {
-        if (get_dialog_id() < 0 && !gWarpTransition.isActive && sDelayedWarpOp == WARP_OP_NONE) {
+        if (get_dialog_id() < 0) {
             return gPlayer1Controller->buttonPressed & START_BUTTON;
         }
     } else {
