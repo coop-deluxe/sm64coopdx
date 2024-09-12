@@ -3297,7 +3297,8 @@
 | HOOK_ON_ATTACK_OBJECT | 43 |
 | HOOK_ON_LANGUAGE_CHANGED | 44 |
 | HOOK_ON_MODS_LOADED | 45 |
-| HOOK_MAX | 46 |
+| HOOK_ON_NAMETAGS_RENDER | 46 |
+| HOOK_MAX | 47 |
 
 ### [enum LuaModMenuElementType](#LuaModMenuElementType)
 | Identifier | Value |

@@ -16,6 +16,7 @@
 #include "pc/chat_commands.h"
 #include "pc/pc_main.h"
 #include "pc/djui/djui_panel.h"
+#include "pc/configfile.h"
 
 #include "../mods/mods.h"
 #include "game/print.h"
@@ -682,6 +683,36 @@ void smlua_call_event_hooks_int_params_ret_int(enum LuaHookedEventType hookType,
         // output the return value
         if (lua_type(L, -1) == LUA_TNUMBER) {
             *returnValue = smlua_to_integer(L, -1);
+            lua_settop(L, prevTop);
+            return;
+        } else {
+            lua_settop(L, prevTop);
+        }
+    }
+}
+
+void smlua_call_event_hooks_int_params_ret_string(enum LuaHookedEventType hookType, s32 param, char** returnValue) {
+    lua_State* L = gLuaState;
+    if (L == NULL) { return; }
+    struct LuaHookedEvent* hook = &sHookedEvents[hookType];
+    for (int i = 0; i < hook->count; i++) {
+        s32 prevTop = lua_gettop(L);
+
+        // push the callback onto the stack
+        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
+
+        // push params
+        lua_pushinteger(L, param);
+
+        // call the callback
+        if (0 != smlua_call_hook(L, 1, 1, 0, hook->mod[i])) {
+            LOG_LUA("Failed to call the callback: %u", hookType);
+            continue;
+        }
+
+        // output the return value
+        if (lua_type(L, -1) == LUA_TSTRING) {
+            *returnValue = (char *)smlua_to_string(L, -1);
             lua_settop(L, prevTop);
             return;
         } else {
