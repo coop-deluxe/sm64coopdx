@@ -8,9 +8,9 @@ else
 fi
 
 # find file
-FILE=./build/us_pc/sm64coopdx.exe
+FILE=./build/us_pc/sm64coopdx_rt64.exe
 if [ ! -f "$FILE" ]; then
-    FILE=./build/us_pc/sm64coopdx
+    FILE=./build/us_pc/sm64coopdx_rt64
 fi
 
 $FILE &

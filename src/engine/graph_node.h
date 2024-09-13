@@ -6,6 +6,8 @@
 
 #include "types.h"
 #include "game/memory.h"
+#include "pc/gfx/gfx_pc.h"
+
 #undef near
 #undef far
 
@@ -129,6 +131,9 @@ struct DisplayListNode
     Mtx *transformPrev;
     void *displayList;
     struct DisplayListNode *next;
+#ifdef GFX_ENABLE_GRAPH_NODE_MODS
+    GraphNodeGfxInfo gfxInfo;
+#endif
     u8 usingCamSpace;
 };
 

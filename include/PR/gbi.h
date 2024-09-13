@@ -4555,7 +4555,7 @@ typedef union {
 	Gfx *_g = (Gfx *)(pkt);						\
 									\
 	_g->words.w0 = _SHIFTL(cmd, 24, 8);				\
-	_g->words.w1 = (param);						\
+	_g->words.w1 = (uintptr_t)(param);						\
 }
 
 #define gsDPParam(cmd, param)						\

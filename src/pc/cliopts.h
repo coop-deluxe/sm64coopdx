@@ -19,6 +19,7 @@ struct CLIOptions {
 #endif
     char savePath[SYS_MAX_PATH];
     char configFile[SYS_MAX_PATH];
+    unsigned int SyncFrames;
     unsigned int fullscreen;
     bool skipIntro;
     enum NetworkType network;

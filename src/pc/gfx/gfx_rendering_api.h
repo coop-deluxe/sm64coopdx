@@ -1,6 +1,8 @@
 #ifndef GFX_RENDERING_API_H
 #define GFX_RENDERING_API_H
 
+#include "gfx_rendering_api_config.h"
+
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
@@ -25,7 +27,20 @@ struct GfxRenderingAPI {
     void (*set_viewport)(int x, int y, int width, int height);
     void (*set_scissor)(int x, int y, int width, int height);
     void (*set_use_alpha)(bool use_alpha);
+#ifdef GFX_SEPARATE_FOG
+    void (*set_fog)(uint8_t fog_r, uint8_t fog_g, uint8_t fog_b, int16_t fog_mul, int16_t fog_offset);
+#endif
+#ifndef GFX_SEPARATE_PROJECTIONS
     void (*draw_triangles)(float buf_vbo[], size_t buf_vbo_len, size_t buf_vbo_num_tris);
+#else
+    void (*set_camera_perspective)(float fov_degrees, float near_dist, float far_dist, bool can_interpolate);
+    void (*set_camera_matrix)(float matrix[4][4]);
+    void (*draw_triangles_ortho)(float buf_vbo[], size_t buf_vbo_len, size_t buf_vbo_num_tris, bool double_sided, uint32_t uid);
+    void (*draw_triangles_persp)(float buf_vbo[], size_t buf_vbo_len, size_t buf_vbo_num_tris, float transform_affine[4][4], bool double_sided, uint32_t uid);
+#endif
+#ifdef GFX_ENABLE_GRAPH_NODE_MODS
+    void (*set_graph_node_mod)(void *graph_node_mod);
+#endif
     void (*init)(void);
     void (*on_resize)(void);
     void (*start_frame)(void);
