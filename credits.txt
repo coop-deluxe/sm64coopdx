@@ -1,3 +1,6 @@
+Pre-installed mods credit:
+*placeholder*
+
 sm64coopdx Developers:
     Agent X
     AngelicMiracles
@@ -24,6 +27,9 @@ sm64coopdx Contributors:
     Jinjo
     LunarCryptikVEVO
     Squishy6094
+    Emeraldloc
+    Isaac0-dev
+    Blockyyy
 
 sm64ex-coop Developers:
     Agent X
