@@ -10,6 +10,7 @@
 #include "levels/hmc/header.h"
 #include "levels/ttm/header.h"
 #include "mario.h"
+#include "include/libc/math.h"
 #include "memory.h"
 #include "moving_texture.h"
 #include "object_list_processor.h"

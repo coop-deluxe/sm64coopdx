@@ -11,6 +11,7 @@
 #include "game/area.h"
 #include "game/level_update.h"
 #include "game/save_file.h"
+#include "include/libc/math.h"
 #include "engine/math_util.h"
 #include "pc/configfile.h"
 

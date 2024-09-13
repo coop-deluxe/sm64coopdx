@@ -1,3 +1,4 @@
+#include <string.h>
 #include <ultra64.h>
 #include <stdio.h>
 

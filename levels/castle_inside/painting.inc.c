@@ -528,20 +528,6 @@ static const PaintingData *const inside_castle_seg7_painting_texture_maps_070225
 
 UNUSED static const u64 castle_inside_unused_0 = 0x0;
 
-
-// 0x07022528 - 0x07022540
-static const Lights1 inside_castle_seg7_lights_07022528 = gdSPDefLights1(
-    0x50, 0x50, 0x50,
-    0xff, 0xff, 0xff, 0x32, 0x32, 0x32
-);
-
-// 0x07022540 - 0x07022558
-// No gdSPDefLights1 macro defined because of odd different light value (0xff and 0xfa)
-static const Lights1 inside_castle_seg7_lights_07022540 = {
-    {{  {0x40, 0x40, 0x80}, 0, {0x40, 0x40, 0x80}, 0} },
-    {{{ {0x64, 0x64, 0xff}, 0, {0x64, 0x64, 0xfa}, 0, {0x28, 0x28, 0x28},0} }} 
-};
-
 // 0x07022558 - 0x07022598
 ROM_ASSET_LOAD_VTX(inside_castle_seg7_vertex_07022558, 0x00396340, 232834, 0x00022558, 64);
 
@@ -553,8 +539,6 @@ ROM_ASSET_LOAD_VTX(inside_castle_seg7_vertex_07022598, 0x00396340, 232834, 0x000
 const Gfx inside_castle_seg7_dl_070225D8[] = {
     gsDPPipeSync(),
     gsDPSetCombineMode(G_CC_MODULATERGB, G_CC_MODULATERGB),
-    gsSPLight(&inside_castle_seg7_lights_07022528.l, 1),
-    gsSPLight(&inside_castle_seg7_lights_07022528.a, 2),
     gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON),
     gsSPVertex(inside_castle_seg7_vertex_07022558, 4, 0),
     gsSPEndDisplayList(),
@@ -1242,8 +1226,6 @@ const Gfx inside_castle_seg7_dl_07023520[] = {
 // 0x07023580 - 0x070235B8
 static const Gfx inside_castle_seg7_painting_dl_07023580[] = {
     gsDPPipeSync(),
-    gsSPLight(&inside_castle_seg7_lights_07022540.l, 1),
-    gsSPLight(&inside_castle_seg7_lights_07022540.a, 2),
     gsSPVertex(inside_castle_seg7_vertex_07022598, 4, 0),
     gsSP1Triangle( 0,  1,  2, 0x0),
     gsSP1Triangle( 0,  2,  3, 0x0),

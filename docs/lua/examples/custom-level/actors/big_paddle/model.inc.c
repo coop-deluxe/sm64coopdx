@@ -1,6 +1,6 @@
 Lights1 big_paddle_f3d_material_lights = gdSPDefLights1(
 	0x7F, 0x7F, 0x7F,
-	0xFE, 0xFE, 0xFE, 0x28, 0x28, 0x28);
+	0xFE, 0xFE, 0xFE, 0x49, 0x49, 0x49);
 
 Gfx big_paddle_custom_box_surface_rgba16_ci4_aligner[] = {gsSPEndDisplayList()};
 u8 big_paddle_custom_box_surface_rgba16_ci4[] = {

@@ -22,6 +22,7 @@
 #include "game/first_person_cam.h"
 #include "pc/lua/smlua.h"
 
+#include "include/libc/math.h"
 #include "engine/math_util.h"
 
 static enum HudUtilsResolution sResolution = RESOLUTION_DJUI;
