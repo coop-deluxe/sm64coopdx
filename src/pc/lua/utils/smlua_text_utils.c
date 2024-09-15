@@ -22,8 +22,6 @@ static bool sReplacedActName[(COURSE_RR+2)*6] = { 0 };
 
 #define INVALID_COURSE_NUM(courseNum) (smlua_level_util_get_info_from_course_num(courseNum) == NULL && !COURSE_IS_VALID_COURSE(courseNum))
 
-void convert_string_sm64_to_ascii(char *strAscii, const u8 *str64);
-
 struct CourseName *gReplacedActNameTable[COURSE_END];
 
 static bool sSmluaTextUtilsInited = false;
@@ -160,8 +158,45 @@ void smlua_text_utils_reset_all(void) {
     }
 }
 
+struct DialogEntry* smlua_text_utils_dialog_get(enum DialogId dialogId) {
+    if (dialogId >= DIALOG_COUNT) {
+        LOG_LUA("smlua_text_utils_dialog_get: Invalid dialogId: %d, expected 1-%d", dialogId, DIALOG_COUNT);
+        return NULL;
+    }
+    
+    void **dialogTable = NULL;
+    
+    #ifdef VERSION_EU
+        switch (gInGameLanguage) {
+            case LANGUAGE_ENGLISH:
+                dialogTable = segmented_to_virtual(dialog_table_eu_en);
+                break;
+            case LANGUAGE_FRENCH:
+                dialogTable = segmented_to_virtual(dialog_table_eu_fr);
+                break;
+            case LANGUAGE_GERMAN:
+                dialogTable = segmented_to_virtual(dialog_table_eu_de);
+                break;
+        }
+    #else
+        dialogTable = segmented_to_virtual(seg2_dialog_table);
+    #endif
+    
+    struct DialogEntry *dialog = segmented_to_virtual(dialogTable[dialogId]);
+    
+    return dialog;
+}
+
 void smlua_text_utils_dialog_replace(enum DialogId dialogId, UNUSED u32 unused, s8 linesPerBox, s16 leftOffset, s16 width, const char* str) {
-    if (dialogId >= DIALOG_COUNT) { return; }
+    if (dialogId >= DIALOG_COUNT) { 
+        LOG_LUA("smlua_text_utils_dialog_replace: Invalid dialogId: %d, expected 1-%d", dialogId, DIALOG_COUNT);
+        return;
+    }
+
+    if (strlen(str) > DIALOG_MAXIMUM_LENGTH) {     
+        LOG_LUA("smlua_text_utils_dialog_replace: Dialog string too long, max length is %d", DIALOG_MAXIMUM_LENGTH);
+        return;
+    }
 
     void **dialogTable = NULL;
 
