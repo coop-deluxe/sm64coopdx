@@ -15,6 +15,7 @@
 #include "include/macro_presets.h"
 #include "utils/smlua_anim_utils.h"
 #include "utils/smlua_collision_utils.h"
+#include "utils/smlua_text_utils.h"
 
 bool smlua_functions_valid_param_count(lua_State* L, int expected) {
     int top = lua_gettop(L);
@@ -814,6 +815,58 @@ int smlua_func_log_to_console(lua_State* L) {
     return 1;
 }
 
+  /////////////
+ // dialogs //
+/////////////
+
+int smlua_func_smlua_text_utils_dialog_get(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "smlua_text_utils_dialog_get", 1, top);
+        return 0;
+    }
+
+    int dialogId = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "smlua_text_utils_dialog_get"); return 0; }
+
+    struct DialogEntry *dialog = smlua_text_utils_dialog_get(dialogId);
+
+    if (!dialog) { return 0; }
+
+    static char output[DIALOG_MAXIMUM_LENGTH];
+    convert_string_sm64_to_ascii(output, segmented_to_virtual(dialog->str));
+
+    lua_newtable(L);
+
+    lua_pushstring(L, "str");
+    lua_pushstring(L, output);
+    lua_settable(L, -3);
+
+    lua_pushstring(L, "dialogId");
+    lua_pushinteger(L, dialogId);
+    lua_settable(L, -3);
+
+    lua_pushstring(L, "unused");
+    lua_pushinteger(L, dialog->unused);
+    lua_settable(L, -3);
+
+    lua_pushstring(L, "linesPerBox");
+    lua_pushinteger(L, dialog->linesPerBox);
+    lua_settable(L, -3);
+
+    lua_pushstring(L, "leftOffset");
+    lua_pushinteger(L, dialog->leftOffset);
+    lua_settable(L, -3);
+
+    lua_pushstring(L, "width");
+    lua_pushinteger(L, dialog->width);
+    lua_settable(L, -3);
+
+    return 1;
+}
+
   ////////////////////
  // scroll targets //
 ////////////////////
@@ -902,4 +955,5 @@ void smlua_bind_functions(void) {
     smlua_bind_function(L, "log_to_console", smlua_func_log_to_console);
     smlua_bind_function(L, "add_scroll_target", smlua_func_add_scroll_target);
     smlua_bind_function(L, "collision_find_surface_on_ray", smlua_func_collision_find_surface_on_ray);
+    smlua_bind_function(L, "smlua_text_utils_dialog_get", smlua_func_smlua_text_utils_dialog_get);
 }
