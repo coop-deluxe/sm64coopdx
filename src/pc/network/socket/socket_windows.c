@@ -26,14 +26,13 @@ SOCKET socket_initialize(void) {
         LOG_ERROR("ioctlsocket failed with error: %d", rc);
         return INVALID_SOCKET;
     }
-    
-    // Make sure our socket is dual-stack. So we can use both IPv4 and IPv6.
-    int opt = 0;
-    rc = setsockopt(sock, IPPROTO_IPV6, IPV6_V6ONLY, (void *)&opt, sizeof(opt));
-    if (rc != NO_ERROR) {
-        LOG_ERROR("setsockopt(IPV6_V6ONLY) failed with error: %d", rc);
+
+    // set dual-stack socket mode
+    int v6only = 0;
+    if (setsockopt(sock, IPPROTO_IPV6, IPV6_V6ONLY, (void *)&v6only, sizeof(v6only)) < 0) {
+        LOG_ERROR("setsockopt(IPV6_V6ONLY) failed.");
         return INVALID_SOCKET;
-    }
+    };
 
 #if MAX_PLAYERS > 4
     // on windows, the send buffer for the socket needs to be increased

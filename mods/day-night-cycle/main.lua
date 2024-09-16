@@ -1,6 +1,6 @@
 -- name: Day Night Cycle DX
 -- incompatible: light day-night-cycle
--- description: Day Night Cycle DX v2.2.1\nBy \\#ec7731\\Agent X\n\n\\#dcdcdc\\This mod adds a fully featured day & night cycle system with night, sunrise, day and sunset to sm64coopdx. It includes an API and hook system for interfacing with several components of the mod externally. This mod was originally made for sm64ex-coop but has been practically rewritten for sm64coopdx.\n\nDays last 24 minutes and with the /time command, you can get/set the time or change your settings.\n\nThere is also now a new menu in the pause menu for Day Night Cycle DX!\n\nSpecial thanks to \\#e06de4\\MaiskX3\\#dcdcdc\\ for the night time music.\nSpecial thanks to \\#00ffff\\AngelicMiracles\\#dcdcdc\\ for the sunset, sunrise and night time skyboxes.\nSpecial thanks to \\#344ee1\\eros71\\#dcdcdc\\ for salvaging\nthe mod files.
+-- description: Day Night Cycle DX v2.2.2\nBy \\#ec7731\\Agent X\n\n\\#dcdcdc\\This mod adds a fully featured day & night cycle system with night, sunrise, day and sunset to sm64coopdx. It includes an API and hook system for interfacing with several components of the mod externally. This mod was originally made for sm64ex-coop but has been practically rewritten for sm64coopdx.\n\nDays last 24 minutes and with the /time command, you can get/set the time or change your settings.\n\nThere is also now a new menu in the pause menu for Day Night Cycle DX!\n\nSpecial thanks to \\#e06de4\\MaiskX3\\#dcdcdc\\ for the night time music.\nSpecial thanks to \\#00ffff\\AngelicMiracles\\#dcdcdc\\ for the sunset, sunrise and night time skyboxes.\nSpecial thanks to \\#344ee1\\eros71\\#dcdcdc\\ for salvaging\nthe mod files.
 
 --- @class Vec2f
 --- @field public x number
@@ -11,9 +11,10 @@ gGlobalSyncTable.time = if_then_else(network_is_server(), load_time(), HOUR_DAY_
 gGlobalSyncTable.timeScale = tonumber(mod_storage_load("scale")) or 1.0
 
 local init = true
+local timeModifier = 0
 
 -- localize functions to improve performance
-local type,math_floor,error,table_insert,get_skybox,set_lighting_dir,set_lighting_color,set_vertex_color,set_fog_color,set_fog_intensity,network_check_singleplayer_pause,network_is_server,obj_get_first_with_behavior_id,spawn_non_sync_object,obj_scale,clampf,set_lighting_color_ambient,djui_hud_set_resolution,djui_hud_set_font,hud_is_hidden,djui_hud_get_screen_width,djui_hud_measure_text,djui_hud_get_screen_height,djui_hud_set_color,djui_chat_message_create,tonumber,string_format,mod_storage_save_number,mod_storage_save_bool,get_date_and_time,math_tointeger = type,math.floor,error,table.insert,get_skybox,set_lighting_dir,set_lighting_color,set_vertex_color,set_fog_color,set_fog_intensity,network_check_singleplayer_pause,network_is_server,obj_get_first_with_behavior_id,spawn_non_sync_object,obj_scale,clampf,set_lighting_color_ambient,djui_hud_set_resolution,djui_hud_set_font,hud_is_hidden,djui_hud_get_screen_width,djui_hud_measure_text,djui_hud_get_screen_height,djui_hud_set_color,djui_chat_message_create,tonumber,string.format,mod_storage_save_number,mod_storage_save_bool,get_date_and_time,math.tointeger
+local type,math_floor,error,table_insert,get_skybox,set_lighting_dir,set_lighting_color,set_vertex_color,set_fog_color,set_fog_intensity,network_check_singleplayer_pause,network_player_connected_count,obj_get_first_with_behavior_id,network_is_server,spawn_non_sync_object,obj_scale,clampf,set_lighting_color_ambient,djui_hud_set_resolution,djui_hud_set_font,hud_get_value,hud_is_hidden,djui_hud_get_screen_width,djui_hud_measure_text,djui_hud_get_screen_height,djui_hud_set_color,play_sound,djui_chat_message_create,tonumber,string_format,mod_storage_save_number,mod_storage_save_bool,get_date_and_time = type,math.floor,error,table.insert,get_skybox,set_lighting_dir,set_lighting_color,set_vertex_color,set_fog_color,set_fog_intensity,network_check_singleplayer_pause,network_player_connected_count,obj_get_first_with_behavior_id,network_is_server,spawn_non_sync_object,obj_scale,clampf,set_lighting_color_ambient,djui_hud_set_resolution,djui_hud_set_font,hud_get_value,hud_is_hidden,djui_hud_get_screen_width,djui_hud_measure_text,djui_hud_get_screen_height,djui_hud_set_color,play_sound,djui_chat_message_create,tonumber,string.format,mod_storage_save_number,mod_storage_save_bool,get_date_and_time
 
 local sDncHooks = {
     [DNC_HOOK_SET_LIGHTING_COLOR] = {},
@@ -24,7 +25,8 @@ local sDncHooks = {
     [DNC_HOOK_SET_DISPLAY_TIME_COLOR] = {},
     [DNC_HOOK_SET_DISPLAY_TIME_POS] = {},
     [DNC_HOOK_DELETE_AT_DARK] = {},
-    [DNC_HOOK_SET_TIME] = {}
+    [DNC_HOOK_SET_TIME] = {},
+    [DNC_HOOK_SET_SKYBOX_MODEL] = {}
 }
 
 --- @param hookEventType integer
@@ -111,9 +113,13 @@ local function update()
                     thisSkybox = if_then_else(skybox == BACKGROUND_BELOW_CLOUDS, BACKGROUND_BELOW_CLOUDS_NIGHT, BACKGROUND_NIGHT)
                 end
 
+                local model = E_MODEL_DNC_SKYBOX
+                local overrideModel = dnc_call_hook(DNC_HOOK_SET_SKYBOX_MODEL, i, thisSkybox)
+                if overrideModel ~= nil and type(overrideModel) == "number" then model = overrideModel end
+
                 spawn_non_sync_object(
                     bhvDNCSkybox,
-                    E_MODEL_DNC_SKYBOX,
+                    model,
                     0, 0, 0,
                     --- @param o Object
                     function(o)
@@ -326,6 +332,12 @@ end
 
 --- @param msg string
 local function on_set_command(msg)
+    if _G.dayNightCycleApi.lockTime then
+        play_sound(SOUND_MENU_CAMERA_BUZZ, gGlobalSoundSource)
+        djui_chat_message_create("\\#ffa0a0\\[Day Night Cycle] The Day Night Cycle settings have been locked by another mod.")
+        return true
+    end
+
     if msg == "" then
         djui_chat_message_create("/time \\#00ffff\\set\\#ffff00\\ [TIME]\\#dcdcdc\\ to set the time")
         return true
@@ -360,10 +372,16 @@ end
 
 --- @param msg string
 local function on_add_command(msg)
+    if _G.dayNightCycleApi.lockTime then
+        play_sound(SOUND_MENU_CAMERA_BUZZ, gGlobalSoundSource)
+        djui_chat_message_create("\\#ffa0a0\\[Day Night Cycle] The Day Night Cycle settings have been locked by another mod.")
+        return true
+    end
+
     local amount = tonumber(msg)
     if amount == nil then
         djui_chat_message_create("/time \\#00ffff\\add\\#ffff00\\ [AMOUNT]\\#dcdcdc\\ to add to the time")
-        return
+        return true
     end
     local oldTime = gGlobalSyncTable.time
     gGlobalSyncTable.time = gGlobalSyncTable.time + (amount * SECOND)
@@ -376,10 +394,16 @@ end
 
 --- @param msg string
 local function on_scale_command(msg)
+    if _G.dayNightCycleApi.lockTime then
+        play_sound(SOUND_MENU_CAMERA_BUZZ, gGlobalSoundSource)
+        djui_chat_message_create("\\#ffa0a0\\[Day Night Cycle] The Day Night Cycle settings have been locked by another mod.")
+        return true
+    end
+
     local scale = tonumber(msg)
     if scale == nil then
         djui_chat_message_create("/time \\#00ffff\\scale\\#ffff00\\ [SCALE]\\#dcdcdc\\ to scale the rate at which time passes")
-        return
+        return true
     end
     gGlobalSyncTable.timeScale = scale
     mod_storage_save_number("scale", scale)
@@ -399,6 +423,12 @@ local function on_24h_command()
 end
 
 local function on_sync_command()
+    if _G.dayNightCycleApi.lockTime then
+        play_sound(SOUND_MENU_CAMERA_BUZZ, gGlobalSoundSource)
+        djui_chat_message_create("\\#ffa0a0\\[Day Night Cycle] The Day Night Cycle settings have been locked by another mod.")
+        return true
+    end
+
     djui_chat_message_create("[Day Night Cycle] Attempting to sync in-game time with real world time...")
 
     local dateTime = get_date_and_time()
@@ -409,6 +439,12 @@ local function on_sync_command()
 end
 
 local function on_music_command()
+    if _G.dayNightCycleApi.lockTime then
+        play_sound(SOUND_MENU_CAMERA_BUZZ, gGlobalSoundSource)
+        djui_chat_message_create("\\#ffa0a0\\[Day Night Cycle] The Day Night Cycle settings have been locked by another mod.")
+        return true
+    end
+
     playNightMusic = not playNightMusic
     mod_storage_save_bool("night-music", playNightMusic)
     djui_chat_message_create("[Day Night Cycle] Night music status: " .. on_or_off(playNightMusic))
@@ -463,6 +499,11 @@ end
 
 --- @param value boolean
 local function on_set_dnc_enabled(_, value)
+    if _G.dayNightCycleApi.lockTime then
+        play_sound(SOUND_MENU_CAMERA_BUZZ, gGlobalSoundSource)
+        return
+    end
+
     gGlobalSyncTable.dncEnabled = value
 end
 
@@ -474,31 +515,63 @@ end
 
 --- @param value boolean
 local function on_set_night_time_music(_, value)
+    if _G.dayNightCycleApi.lockTime then
+        play_sound(SOUND_MENU_CAMERA_BUZZ, gGlobalSoundSource)
+        djui_chat_message_create("\\#ffa0a0\\[Day Night Cycle] The Day Night Cycle settings have been locked by another mod.")
+        return
+    end
+
     playNightMusic = value
     mod_storage_save_bool("night_music", value)
 end
 
 --- @param value integer
 local function on_set_time_scale(index, value)
+    if _G.dayNightCycleApi.lockTime then
+        play_sound(SOUND_MENU_CAMERA_BUZZ, gGlobalSoundSource)
+        djui_chat_message_create("\\#ffa0a0\\[Day Night Cycle] The Day Night Cycle settings have been locked by another mod.")
+        return
+    end
+
     gGlobalSyncTable.timeScale = value
     mod_storage_save_number("scale", value)
     update_mod_menu_element_name(index, "Time Scale: " .. value)
 end
 
+--- @param value string
+local function on_set_time_modifier(_, value)
+    if _G.dayNightCycleApi.lockTime then
+        play_sound(SOUND_MENU_CAMERA_BUZZ, gGlobalSoundSource)
+        djui_chat_message_create("\\#ffa0a0\\[Day Night Cycle] The Day Night Cycle settings have been locked by another mod.")
+        return
+    end
+
+    local number = tonumber(value)
+    timeModifier = number or 0
+end
+
 local function on_add_hour()
+    if _G.dayNightCycleApi.lockTime then
+        play_sound(SOUND_MENU_CAMERA_BUZZ, gGlobalSoundSource)
+        djui_chat_message_create("\\#ffa0a0\\[Day Night Cycle] The Day Night Cycle settings have been locked by another mod.")
+        return
+    end
+
     local oldTime = gGlobalSyncTable.time
-    gGlobalSyncTable.time = gGlobalSyncTable.time + (60 * SECOND)
+    gGlobalSyncTable.time = gGlobalSyncTable.time + timeModifier * SECOND
     dnc_call_hook(DNC_HOOK_SET_TIME, oldTime, gGlobalSyncTable.time)
 
     save_time()
 end
 
-local function on_subtract_hour()
-    local oldTime = gGlobalSyncTable.time
-    gGlobalSyncTable.time = gGlobalSyncTable.time - (60 * SECOND)
-    dnc_call_hook(DNC_HOOK_SET_TIME, oldTime, gGlobalSyncTable.time)
+local function on_set_time()
+    if _G.dayNightCycleApi.lockTime then
+        play_sound(SOUND_MENU_CAMERA_BUZZ, gGlobalSoundSource)
+        djui_chat_message_create("\\#ffa0a0\\[Day Night Cycle] The Day Night Cycle settings have been locked by another mod.")
+        return
+    end
 
-    save_time()
+    gGlobalSyncTable.time = timeModifier * SECOND
 end
 
 local sReadonlyMetatable = {
@@ -507,15 +580,16 @@ local sReadonlyMetatable = {
     end,
 
     __newindex = function()
-        error("attempt to update a read-only table", 2)
+        error("Attempt to update a read-only table", 2)
     end
 }
 
 _G.dayNightCycleApi = {
-    version = DNC_VERSION,
-    enabled = true,
-    displayTime = true,
-    playNightMusic = true,
+    version = DNC_VERSION, -- The version of the mod
+    enabled = true, -- Whether or not the day night cycle is enabled
+    lockTime = false, -- Whether or not the player should be prevented from changing the time
+    displayTime = true, -- Whether or not to display the time on the HUD
+    playNightMusic = true, -- Whether or not to play the night time music
     is_dnc_enabled = is_dnc_enabled,
     get_day_count = get_day_count,
     get_raw_time = get_raw_time,
@@ -530,6 +604,11 @@ _G.dayNightCycleApi = {
     night_music_register = night_music_register,
     dnc_hook_event = dnc_hook_event,
     constants = {
+        DNC_VERSION_MAJOR = DNC_VERSION_MAJOR,
+        DNC_VERSION_MINOR = DNC_VERSION_MINOR,
+        DNC_VERSION_PATCH = DNC_VERSION_PATCH,
+        DNC_VERSION = DNC_VERSION,
+
         SECOND = SECOND,
         MINUTE = MINUTE,
 
@@ -604,7 +683,11 @@ _G.dayNightCycleApi = {
         -- * Called whenever `/time set` or `/time add` is ran
         -- * Parameters: `number` oldTime, `number` newTime
         -- * Return: nil
-        DNC_HOOK_SET_TIME = DNC_HOOK_SET_TIME
+        DNC_HOOK_SET_TIME = DNC_HOOK_SET_TIME,
+        -- * Called when the skyboxes are spawned in. Index 0 is day, index 1 is sunset, and index 2 is night.
+        -- * Parameters: `integer` index, `integer` skybox
+        -- * Return `ModelExtendedId`
+        DNC_HOOK_SET_SKYBOX_MODEL = DNC_HOOK_SET_SKYBOX_MODEL
     }
 }
 setmetatable(_G.dayNightCycleApi, sReadonlyMetatable)
@@ -615,18 +698,21 @@ night_music_register(SEQ_LEVEL_HOT, "06_level_hot")
 night_music_register(SEQ_LEVEL_SNOW, "08_level_snow")
 
 hook_event(HOOK_UPDATE, update)
-hook_event(HOOK_ON_HUD_RENDER_BEHIND, on_hud_render_behind)
 hook_event(HOOK_ON_LEVEL_INIT, on_level_init)
 hook_event(HOOK_ON_WARP, on_warp)
 hook_event(HOOK_ON_EXIT, on_exit)
+hook_event(HOOK_ON_HUD_RENDER_BEHIND, on_hud_render_behind)
 
 hook_chat_command("time", "\\#00ffff\\[set|add|scale|query|24h|sync|music]\\#dcdcdc\\ - The command handle for Day Night Cycle DX \\#7f7f7f\\(leave blank to toggle Day Night Cycle on or off)", on_time_command)
 
+hook_mod_menu_checkbox("24 Hour Time", use24h, on_set_24h_time)
+hook_mod_menu_checkbox("Night Time Music", playNightMusic, on_set_night_time_music)
+
 if network_is_server() then
     hook_mod_menu_checkbox("Enable Day Night Cycle", gGlobalSyncTable.dncEnabled, on_set_dnc_enabled)
-    hook_mod_menu_checkbox("24 Hour Time", use24h, on_set_24h_time)
-    hook_mod_menu_checkbox("Night Time Music", playNightMusic, on_set_night_time_music)
     hook_mod_menu_slider("Time Scale: " .. gGlobalSyncTable.timeScale, gGlobalSyncTable.timeScale, 0, 20, on_set_time_scale)
-    hook_mod_menu_button("Add 1 In-Game Hour", on_add_hour)
-    hook_mod_menu_button("Subtract 1 In-Game Hour", on_subtract_hour)
+    hook_mod_menu_inputbox("Time Modifier", "0", 8, on_set_time_modifier)
+    hook_mod_menu_button("Add To Time", on_add_hour)
+    hook_mod_menu_button("Set Time", on_set_time)
+    hook_mod_menu_button("Query Time", on_query_command)
 end

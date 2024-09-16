@@ -1,5 +1,6 @@
 -- name: Character Select
--- description:\\#ffff33\\---- Character Select Coop v1.9 ----\n\n\\#dcdcdc\\A Library / API made to make adding and using Custom Characters as simple as possible!\nUse\\#ffff33\\ /char-select\\#dcdcdc\\ to get started!\n\nCreated by:\\#008800\\ Squishy6094\n\\#dcdcdc\\Concepts by:\\#4496f5\\ AngelicMiracles\n\n\\#AAAAFF\\Updates can be found on\nCharacter Select's Github:\n\\#6666FF\\Squishy6094/character-select-coop
+-- description:\\#ffff33\\--- Character Select Coop v1.9.1 ---\n\n\\#dcdcdc\\A Library / API made to make adding and using Custom Characters as simple as possible!\nUse\\#ffff33\\ /char-select\\#dcdcdc\\ to get started!\n\nCreated by:\\#008800\\ Squishy6094\n\\#dcdcdc\\Concepts by:\\#4496f5\\ AngelicMiracles\n\n\\#AAAAFF\\Updates can be found on\nCharacter Select's Github:\n\\#6666FF\\Squishy6094/character-select-coop
+-- pausable: false
 
 if incompatibleClient then return 0 end
 
@@ -510,6 +511,17 @@ local sCapBhvs = {
 
 --- @param o Object
 --- @param model integer
+local BowserKey = false
+local function on_star_or_key_grab(m, o, type)
+    if type == INTERACT_STAR_OR_KEY then
+        if get_id_from_behavior(o.behavior) == id_bhvBowserKey then
+            BowserKey = true
+        else
+            BowserKey = false
+        end
+    end
+end
+
 function set_model(o, model)
     if optionTable[optionTableRef.localModels].toggle == 0 then return end
     if obj_has_behavior_id(o, id_bhvMario) ~= 0 then
@@ -522,7 +534,7 @@ function set_model(o, model)
     if obj_has_behavior_id(o, id_bhvCelebrationStar) ~= 0 and o.parentObj ~= nil then
         local i = network_local_index_from_global(o.parentObj.globalPlayerIndex)
         local starModel = characterCelebrationStar[gPlayerSyncTable[i].modelId]
-        if gPlayerSyncTable[i].modelId ~= nil and starModel ~= nil and obj_has_model_extended(o, starModel) == 0 then
+        if gPlayerSyncTable[i].modelId ~= nil and starModel ~= nil and obj_has_model_extended(o, starModel) == 0 and not BowserKey then
             obj_set_model_extended(o, starModel)
         end
         return
@@ -558,6 +570,7 @@ function set_model(o, model)
 end
 
 hook_event(HOOK_MARIO_UPDATE, mario_update)
+hook_event(HOOK_ON_INTERACT, on_star_or_key_grab)
 hook_event(HOOK_OBJECT_SET_MODEL, set_model)
 
 ------------------
@@ -1311,13 +1324,3 @@ local function chat_command(msg)
 end
 
 hook_chat_command("char-select", "- Opens the Character Select Menu", chat_command)
-
---------------
--- Mod Menu --
---------------
-
-local function open_cs_menu()
-    menu = true
-end
-
-hook_mod_menu_button("Open Menu", open_cs_menu)

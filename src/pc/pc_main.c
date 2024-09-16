@@ -59,6 +59,8 @@
 #include "pc/discord/discord.h"
 #endif
 
+#include "pc/mumble/mumble.h"
+
 #if defined(_WIN32) || defined(_WIN64)
 #include <windows.h>
 #endif
@@ -175,23 +177,29 @@ void produce_interpolation_frames_and_delay(void) {
 
     gRenderingInterpolated = true;
 
+    // sanity check target time to deal with hangs and such
+    if (fabs(sFrameTargetTime - curTime) > 1) { sFrameTargetTime = curTime - 0.01f; }
+
     // interpolate and render
     while ((curTime = clock_elapsed_f64()) < sFrameTargetTime) {
         gfx_start_frame();
-        f32 delta = (!configUncappedFramerate && configFrameLimit == FRAMERATE) ? 1 : MAX(MIN((curTime - sFrameTimeStart) / (sFrameTargetTime - sFrameTimeStart), 1), 0);
+        f32 delta = ((!configUncappedFramerate && configFrameLimit == FRAMERATE)
+            ? 1.0f
+            : MAX(MIN((curTime - sFrameTimeStart) / (sFrameTargetTime - sFrameTimeStart), 1.0f), 0.0f)
+        );
         gRenderingDelta = delta;
         if (!gSkipInterpolationTitleScreen) { patch_interpolations(delta); }
         send_display_list(gGfxSPTask);
         gfx_end_frame();
 
         // delay
-        if (!configUncappedFramerate && !configWindow.vsync) {
+        if (!configUncappedFramerate) {
             f64 targetDelta = 1.0 / (f64) configFrameLimit;
             f64 now = clock_elapsed_f64();
             f64 actualDelta = now - curTime;
             if (actualDelta < targetDelta) {
                 f64 delay = ((targetDelta - actualDelta) * 1000.0);
-                if (delay > 0) { WAPI.delay((u32) delay * 0.9); }
+                if (delay > 0.0f) { WAPI.delay((u32) delay); }
             }
         }
 
@@ -453,6 +461,8 @@ int main(int argc, char *argv[]) {
         network_init(NT_NONE, false);
     }
 
+    mumble_init();
+
     // main loop
     while (true) {
         debug_context_reset();
@@ -461,6 +471,7 @@ int main(int argc, char *argv[]) {
 #ifdef DISCORD_SDK
         discord_update();
 #endif
+        mumble_update();
 #ifdef DEBUG
         fflush(stdout);
         fflush(stderr);

@@ -3,7 +3,7 @@
 #include "djui_panel_menu.h"
 #include "pc/lua/utils/smlua_misc_utils.h"
 
-static char sInfo[512];
+static char sInfo[512] = { 0 };
 
 void djui_panel_info_create(struct DjuiBase *caller) {
     struct DjuiThreePanel *panel = djui_panel_menu_create(DLANG(INFORMATION, INFORMATION_TITLE), false);

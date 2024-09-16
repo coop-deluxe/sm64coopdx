@@ -676,13 +676,14 @@ static struct LuaObjectField sDjuiColorFields[LUA_DJUI_COLOR_FIELD_COUNT] = {
     { "r", LVT_U8, offsetof(struct DjuiColor, r), false, LOT_NONE },
 };
 
-#define LUA_FIRST_PERSON_CAMERA_FIELD_COUNT 9
+#define LUA_FIRST_PERSON_CAMERA_FIELD_COUNT 10
 static struct LuaObjectField sFirstPersonCameraFields[LUA_FIRST_PERSON_CAMERA_FIELD_COUNT] = {
     { "centerL",    LVT_BOOL,    offsetof(struct FirstPersonCamera, centerL),    false, LOT_NONE  },
     { "crouch",     LVT_F32,     offsetof(struct FirstPersonCamera, crouch),     false, LOT_NONE  },
     { "enabled",    LVT_BOOL,    offsetof(struct FirstPersonCamera, enabled),    true,  LOT_NONE  },
     { "forcePitch", LVT_BOOL,    offsetof(struct FirstPersonCamera, forcePitch), false, LOT_NONE  },
     { "forceRoll",  LVT_BOOL,    offsetof(struct FirstPersonCamera, forceRoll),  false, LOT_NONE  },
+    { "forceYaw",   LVT_BOOL,    offsetof(struct FirstPersonCamera, forceYaw),   false, LOT_NONE  },
     { "fov",        LVT_F32,     offsetof(struct FirstPersonCamera, fov),        false, LOT_NONE  },
     { "offset",     LVT_COBJECT, offsetof(struct FirstPersonCamera, offset),     true,  LOT_VEC3F },
     { "pitch",      LVT_S16,     offsetof(struct FirstPersonCamera, pitch),      false, LOT_NONE  },
@@ -942,11 +943,14 @@ static struct LuaObjectField sHandheldShakePointFields[LUA_HANDHELD_SHAKE_POINT_
     { "point", LVT_COBJECT, offsetof(struct HandheldShakePoint, point), true,  LOT_VEC3S },
 };
 
-#define LUA_HUD_UTILS_ROTATION_FIELD_COUNT 3
+#define LUA_HUD_UTILS_ROTATION_FIELD_COUNT 6
 static struct LuaObjectField sHudUtilsRotationFields[LUA_HUD_UTILS_ROTATION_FIELD_COUNT] = {
-    { "pivotX",   LVT_F32, offsetof(struct HudUtilsRotation, pivotX),   false, LOT_NONE },
-    { "pivotY",   LVT_F32, offsetof(struct HudUtilsRotation, pivotY),   false, LOT_NONE },
-    { "rotation", LVT_F32, offsetof(struct HudUtilsRotation, rotation), false, LOT_NONE },
+    { "pivotX",       LVT_F32, offsetof(struct HudUtilsRotation, pivotX),       false, LOT_NONE },
+    { "pivotY",       LVT_F32, offsetof(struct HudUtilsRotation, pivotY),       false, LOT_NONE },
+    { "prevPivotX",   LVT_F32, offsetof(struct HudUtilsRotation, prevPivotX),   false, LOT_NONE },
+    { "prevPivotY",   LVT_F32, offsetof(struct HudUtilsRotation, prevPivotY),   false, LOT_NONE },
+    { "rotation",     LVT_F32, offsetof(struct HudUtilsRotation, rotation),     false, LOT_NONE },
+    { "rotationDiff", LVT_F32, offsetof(struct HudUtilsRotation, rotationDiff), false, LOT_NONE },
 };
 
 #define LUA_INSTANT_WARP_FIELD_COUNT 3
@@ -1202,22 +1206,21 @@ static struct LuaObjectField sModFields[LUA_MOD_FIELD_COUNT] = {
 //  { "size",                 LVT_???,      offsetof(struct Mod, size),                 true, LOT_???  }, <--- UNIMPLEMENTED
 };
 
-#define LUA_MOD_AUDIO_FIELD_COUNT 5
+#define LUA_MOD_AUDIO_FIELD_COUNT 4
 static struct LuaObjectField sModAudioFields[LUA_MOD_AUDIO_FIELD_COUNT] = {
-    { "baseVolume",       LVT_F32,       offsetof(struct ModAudio, baseVolume),       false, LOT_NONE                 },
-    { "file",             LVT_COBJECT_P, offsetof(struct ModAudio, file),             false, LOT_MODFILE              },
-    { "isStream",         LVT_BOOL,      offsetof(struct ModAudio, isStream),         false, LOT_NONE                 },
-    { "loaded",           LVT_BOOL,      offsetof(struct ModAudio, loaded),           false, LOT_NONE                 },
-    { "sampleCopiesTail", LVT_COBJECT_P, offsetof(struct ModAudio, sampleCopiesTail), false, LOT_MODAUDIOSAMPLECOPIES },
-//  { "sound",            LVT_???,       offsetof(struct ModAudio, sound),            false, LOT_???                  }, <--- UNIMPLEMENTED
+    { "baseVolume", LVT_F32,       offsetof(struct ModAudio, baseVolume), false, LOT_NONE    },
+    { "file",       LVT_COBJECT_P, offsetof(struct ModAudio, file),       false, LOT_MODFILE },
+    { "isStream",   LVT_BOOL,      offsetof(struct ModAudio, isStream),   true,  LOT_NONE    },
+    { "loaded",     LVT_BOOL,      offsetof(struct ModAudio, loaded),     true,  LOT_NONE    },
 };
 
 #define LUA_MOD_AUDIO_SAMPLE_COPIES_FIELD_COUNT 3
 static struct LuaObjectField sModAudioSampleCopiesFields[LUA_MOD_AUDIO_SAMPLE_COPIES_FIELD_COUNT] = {
-    { "next",   LVT_COBJECT_P, offsetof(struct ModAudioSampleCopies, next),   false, LOT_MODAUDIOSAMPLECOPIES },
-    { "parent", LVT_COBJECT_P, offsetof(struct ModAudioSampleCopies, parent), false, LOT_MODAUDIO             },
-    { "prev",   LVT_COBJECT_P, offsetof(struct ModAudioSampleCopies, prev),   false, LOT_MODAUDIOSAMPLECOPIES },
-//  { "sound",  LVT_???,       offsetof(struct ModAudioSampleCopies, sound),  false, LOT_???                  }, <--- UNIMPLEMENTED
+//  { "decoder", LVT_???,       offsetof(struct ModAudioSampleCopies, decoder), false, LOT_???                  }, <--- UNIMPLEMENTED
+    { "next",    LVT_COBJECT_P, offsetof(struct ModAudioSampleCopies, next),    false, LOT_MODAUDIOSAMPLECOPIES },
+    { "parent",  LVT_COBJECT_P, offsetof(struct ModAudioSampleCopies, parent),  false, LOT_MODAUDIO             },
+    { "prev",    LVT_COBJECT_P, offsetof(struct ModAudioSampleCopies, prev),    false, LOT_MODAUDIOSAMPLECOPIES },
+//  { "sound",   LVT_???,       offsetof(struct ModAudioSampleCopies, sound),   false, LOT_???                  }, <--- UNIMPLEMENTED
 };
 
 #define LUA_MOD_FILE_FIELD_COUNT 3

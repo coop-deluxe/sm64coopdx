@@ -25,6 +25,9 @@ enum DjuiFontType {
 
 struct HudUtilsRotation {
     f32 rotation;
+    f32 rotationDiff;
+    f32 prevPivotX;
+    f32 prevPivotY;
     f32 pivotX;
     f32 pivotY;
 };
@@ -61,6 +64,7 @@ void djui_hud_set_color(u8 r, u8 g, u8 b, u8 a);
 void djui_hud_reset_color(void);
 struct HudUtilsRotation* djui_hud_get_rotation(void);
 void djui_hud_set_rotation(s16 rotation, f32 pivotX, f32 pivotY);
+void djui_hud_set_rotation_interpolated(s32 prevRotation, f32 prevPivotX, f32 prevPivotY, s32 rotation, f32 pivotX, f32 pivotY);
 
 u32 djui_hud_get_screen_width(void);
 u32 djui_hud_get_screen_height(void);

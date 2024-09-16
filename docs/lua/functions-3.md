@@ -2594,6 +2594,31 @@
 
 <br />
 
+## [djui_hud_set_rotation_interpolated](#djui_hud_set_rotation_interpolated)
+
+### Lua Example
+`djui_hud_set_rotation_interpolated(prevRotation, prevPivotX, prevPivotY, rotation, pivotX, pivotY)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| prevRotation | `integer` |
+| prevPivotX | `number` |
+| prevPivotY | `number` |
+| rotation | `integer` |
+| pivotX | `number` |
+| pivotY | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void djui_hud_set_rotation_interpolated(s32 prevRotation, f32 prevPivotX, f32 prevPivotY, s32 rotation, f32 pivotX, f32 pivotY);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [djui_hud_world_pos_to_screen_pos](#djui_hud_world_pos_to_screen_pos)
 
 ### Lua Example
