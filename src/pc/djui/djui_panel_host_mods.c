@@ -28,6 +28,7 @@ struct ModCategory sCategories[] = {
     { "ROMHACKS", "romhack" },
     { "GAMEMODES", "gamemode" },
     { "MOVESETS", "moveset" },
+    { "CHARACTER_SELECT", "cs" },
     { "MISC", MOD_CATEGORY_MISC },
 };
 
