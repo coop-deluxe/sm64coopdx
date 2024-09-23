@@ -4,12 +4,12 @@
 
 static void* sPointers = NULL;
 
-void smlua_pointer_user_data_init(void) {
-    smlua_pointer_user_data_shutdown();
-}
-
 void smlua_pointer_user_data_shutdown(void) {
     hmap_clear(sPointers);
+}
+
+void smlua_pointer_user_data_init(void) {
+    smlua_pointer_user_data_shutdown();
 }
 
 void smlua_pointer_user_data_add(u64 pointer, CObject *obj) {
