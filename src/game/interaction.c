@@ -88,7 +88,6 @@ static u32 sBackwardKnockbackActions[][3] = {
 };
 
 static u8 sDisplayingDoorText = FALSE;
-static u8 sCanInteractDoor = TRUE;
 static u8 sJustTeleported = FALSE;
 u8 gPssSlideStarted = FALSE;
 extern u8 gLastCollectedStarOrKey;
@@ -1048,7 +1047,7 @@ u32 interact_warp(struct MarioState *m, UNUSED u32 interactType, struct Object *
 u32 display_door_dialog(struct MarioState *m, u32 actionArg) {
     if (!m) { return FALSE; }
     if (m != &gMarioStates[0]) { return FALSE; }
-    return sCanInteractDoor ? set_mario_action(m, ACT_READING_AUTOMATIC_DIALOG, actionArg) : FALSE;
+    return (!sDisplayingDoorText) ? set_mario_action(m, ACT_READING_AUTOMATIC_DIALOG, actionArg) : FALSE;
 }
 
 u8 prevent_interact_door(struct MarioState* m, struct Object* o) {
@@ -1082,7 +1081,6 @@ u32 interact_warp_door(struct MarioState *m, UNUSED u32 interactType, struct Obj
             if (!(saveFlags & SAVE_FLAG_HAVE_KEY_2)) {
                 if (display_door_dialog(m, (saveFlags & SAVE_FLAG_HAVE_KEY_1) ? gBehaviorValues.dialogs.KeyDoor1HaveDialog : gBehaviorValues.dialogs.KeyDoor1DontHaveDialog)) {
                     sDisplayingDoorText = TRUE;
-                    sCanInteractDoor = FALSE;
                 }
                 return FALSE;
             }
@@ -1094,7 +1092,6 @@ u32 interact_warp_door(struct MarioState *m, UNUSED u32 interactType, struct Obj
             if (!(saveFlags & SAVE_FLAG_HAVE_KEY_1)) {
                 if (display_door_dialog(m, (saveFlags & SAVE_FLAG_HAVE_KEY_2) ? gBehaviorValues.dialogs.KeyDoor2HaveDialog : gBehaviorValues.dialogs.KeyDoor2DontHaveDialog)) {
                     sDisplayingDoorText = TRUE;
-                    sCanInteractDoor = FALSE;
                 }
                 return FALSE;
             }
@@ -1225,16 +1222,8 @@ u32 interact_door(struct MarioState *m, UNUSED u32 interactType, struct Object *
 
             text += requiredNumStars - numStars;
 
-            if ((requiredNumStars == 70) || display_door_dialog(m, text)) {
-                if (requiredNumStars == 70) {
-                    m->interactObj = o;
-                    m->usedObj = o;
-                    set_mario_action(m, ACT_ENTERING_STAR_DOOR, should_push_or_pull_door(m, o));
-                }
-                sDisplayingDoorText = TRUE;
-                sCanInteractDoor = FALSE;
-                return TRUE;
-            }
+            sDisplayingDoorText = TRUE;
+            return set_mario_action(m, ACT_READING_AUTOMATIC_DIALOG, text);
         }
     } else if (m->action == ACT_IDLE && sDisplayingDoorText == TRUE && requiredNumStars == 70) {
         m->interactObj = o;
@@ -2322,16 +2311,18 @@ void mario_process_interactions(struct MarioState *m) {
     check_kick_or_punch_wall(m);
     m->flags &= ~MARIO_PUNCHING & ~MARIO_KICKING & ~MARIO_TRIPPING;
 
-    if (!(m->marioObj->collidedObjInteractTypes & (INTERACT_WARP_DOOR | INTERACT_DOOR))) {
-        sDisplayingDoorText = FALSE;
-        sCanInteractDoor = TRUE;
-    }
-    if (!(m->marioObj->collidedObjInteractTypes & INTERACT_WARP)) {
-        if (m == &gMarioStates[0]) {
-            // limit to only local mario
-            sJustTeleported = FALSE;
+    // limit to only local mario
+    if (m == &gMarioStates[0]) {
+        if (!(m->marioObj->collidedObjInteractTypes & (INTERACT_WARP_DOOR | INTERACT_DOOR))) {
+            sDisplayingDoorText = FALSE;
+        }
+        if (!(m->marioObj->collidedObjInteractTypes & INTERACT_WARP)) {
+            if (m == &gMarioStates[0]) {
+                sJustTeleported = FALSE;
+            }
         }
     }
+    
 }
 
 void check_death_barrier(struct MarioState *m) {
