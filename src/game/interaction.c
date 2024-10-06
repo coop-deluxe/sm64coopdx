@@ -1328,10 +1328,12 @@ static u8 resolve_player_collision(struct MarioState* m, struct MarioState* m2) 
 }
 
 u8 determine_player_damage_value(u32 interaction) {
-    if (interaction & INT_GROUND_POUND_OR_TWIRL) { return 3; }
+    if (interaction & INT_GROUND_POUND) { return 4; }
+    if (interaction & (INT_TWIRL | INT_PUNCH | INT_TRIP)) { return 3; }
     if (interaction & INT_KICK) { return 2; }
-    if (interaction & INT_ATTACK_SLIDE) { return 1; }
-    return 2;
+    if (interaction & INT_SLIDE_KICK) { return 2; }
+    if (interaction & INT_FAST_ATTACK_OR_SHELL) { return 1; }
+    return 1;
 }
 
 u8 player_is_sliding(struct MarioState* m) {
