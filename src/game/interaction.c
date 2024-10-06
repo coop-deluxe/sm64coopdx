@@ -672,7 +672,8 @@ u32 determine_knockback_action(struct MarioState *m, UNUSED s32 arg) {
             if (!is_player_active(m2)) { continue; }
             if (m2->marioObj == NULL) { continue; }
             if (m2->marioObj != m->interactObj) { continue; }
-            if (m2->action == ACT_JUMP_KICK) { scaler = 2; }
+            if (m2->action == ACT_JUMP_KICK) { scaler = 2.0f; }
+            if (m2->action == ACT_DIVE) { scaler += fabs(m2->forwardVel * 0.01); }
             if (m2->flags & MARIO_METAL_CAP) { scaler *= 1.25f; }
             break;
         }
