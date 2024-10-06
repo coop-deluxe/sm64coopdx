@@ -272,6 +272,7 @@ void smlua_text_utils_act_name_reset(s16 courseNum, u8 actNum) {
 
 void smlua_text_utils_secret_star_replace(s16 courseNum, const char* courseName) {
     if (courseNum <= COURSE_RR || courseNum > COURSE_COUNT) { return; }
+    /*
     s16 courseOffset = courseNum - 1;
 
     void **courseNameTbl = get_course_name_table();
@@ -282,6 +283,11 @@ void smlua_text_utils_secret_star_replace(s16 courseNum, const char* courseName)
 
     courseNameTbl[courseOffset] = smlua_text_utils_convert(courseName);
     sReplacedCourseName[courseOffset] = true;
+    */
+
+    struct CourseName* courseActNames = gReplacedActNameTable[courseNum];
+    snprintf(courseActNames->name, 256, "%s", courseName + 3);
+    courseActNames->modIndex = gLuaActiveMod->index;
 }
 
 void smlua_text_utils_castle_secret_stars_replace(const char* name) {
