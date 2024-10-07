@@ -2122,6 +2122,26 @@
 
 <br />
 
+## [get_coopnet_id](#get_coopnet_id)
+
+### Lua Example
+`local stringValue = get_coopnet_id(localIndex)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| localIndex | `integer` |
+
+### Returns
+- `string`
+
+### C Prototype
+`const char* get_coopnet_id(s8 localIndex);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [get_current_save_file_num](#get_current_save_file_num)
 
 ### Lua Example
@@ -2398,24 +2418,6 @@
 
 ### C Prototype
 `s32 get_last_star_or_key(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [get_local_coopnet_id](#get_local_coopnet_id)
-
-### Lua Example
-`local stringValue = get_local_coopnet_id()`
-
-### Parameters
-- None
-
-### Returns
-- `string`
-
-### C Prototype
-`const char* get_local_coopnet_id(void);`
 
 [:arrow_up_small:](#)
 

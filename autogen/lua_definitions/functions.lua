@@ -8226,6 +8226,12 @@ function djui_set_popup_disabled_override(value)
     -- ...
 end
 
+--- @param localIndex integer
+--- @return string
+function get_coopnet_id(localIndex)
+    -- ...
+end
+
 --- @return integer
 function get_current_save_file_num()
     -- ...
@@ -8305,11 +8311,6 @@ end
 
 --- @return integer
 function get_last_star_or_key()
-    -- ...
-end
-
---- @return string
-function get_local_coopnet_id()
     -- ...
 end
 

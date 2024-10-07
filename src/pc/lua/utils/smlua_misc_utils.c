@@ -426,8 +426,11 @@ const char* get_local_discord_id(void) {
 #endif
 }
 
-const char* get_local_coopnet_id(void) {
-    struct NetworkPlayer* np = &gNetworkPlayers[0];
+const char* get_coopnet_id(s8 localIndex) {
+    if (!gNetworkSystem) { return "-1"; }
+    if (localIndex < 0 || localIndex > MAX_PLAYERS - 1) { return "-1"; }
+    struct NetworkPlayer* np = &gNetworkPlayers[localIndex];
+    if (np == NULL || !np->connected) { return "-1"; }
     return gNetworkSystem->get_id_str(np->localIndex);
 }
 
