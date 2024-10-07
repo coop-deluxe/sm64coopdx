@@ -1679,7 +1679,7 @@ s32 common_ground_knockback_action(struct MarioState *m, s32 animation, s32 arg2
             }
         }
     } else {
-        m->knockbackTimer = 10;
+        m->knockbackTimer = PVP_ATTACK_KNOCKBACK_TIMER_MAX;
     }
 
     animFrame = set_character_animation(m, animation);

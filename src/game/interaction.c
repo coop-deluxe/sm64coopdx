@@ -666,13 +666,15 @@ u32 determine_knockback_action(struct MarioState *m, UNUSED s32 arg) {
     // set knockback very high when dealing with player attacks
     if (m->interactObj != NULL && (m->interactObj->oInteractType & INTERACT_PLAYER) && terrainIndex != 2) {
         f32 scaler = 1;
+        s8 hasBeenPunched = FALSE;
         for (s32 i = 0; i < MAX_PLAYERS; i++) {
             struct MarioState* m2 = &gMarioStates[i];
             if (!is_player_active(m2)) { continue; }
             if (m2->marioObj == NULL) { continue; }
             if (m2->marioObj != m->interactObj) { continue; }
             if (m2->action == ACT_JUMP_KICK) { scaler = 2.0f; }
-            if (m2->action == ACT_DIVE) { scaler += fabs(m2->forwardVel * 0.01); }
+            else if (m2->action == ACT_DIVE) { scaler = 1 + fabs(m2->forwardVel * 0.01f); }
+            else if (m2->action == ACT_PUNCHING || m2->action == ACT_MOVE_PUNCHING) { hasBeenPunched = TRUE; }
             if (m2->flags & MARIO_METAL_CAP) { scaler *= 1.25f; }
             break;
         }
@@ -690,7 +692,7 @@ u32 determine_knockback_action(struct MarioState *m, UNUSED s32 arg) {
         m->vel[2] = -mag * coss(m->interactObj->oFaceAngleYaw);
         m->slideVelX = m->vel[0];
         m->slideVelZ = m->vel[2];
-        m->knockbackTimer = 10;
+        m->knockbackTimer = hasBeenPunched ? 9 : PVP_ATTACK_KNOCKBACK_TIMER_MAX;
 
         m->faceAngle[1] = m->interactObj->oFaceAngleYaw + (sign == 1.0f ? 0 : 0x8000);
     }
@@ -824,8 +826,8 @@ u32 take_damage_and_knock_back(struct MarioState *m, struct Object *o) {
         }
 
         update_mario_sound_and_camera(m);
-        return drop_and_set_mario_action(m, determine_knockback_action(m, o->oDamageOrCoinValue),
-                                         damage);
+        u32 action = determine_knockback_action(m, o->oDamageOrCoinValue);
+        return drop_and_set_mario_action(m, action, (m->knockbackTimer == PVP_ATTACK_KNOCKBACK_TIMER_MAX) ? damage : 0);
     }
 
     return FALSE;
@@ -1317,10 +1319,8 @@ static u8 resolve_player_collision(struct MarioState* m, struct MarioState* m2) 
 }
 
 u8 determine_player_damage_value(u32 interaction) {
-    if (interaction & INT_GROUND_POUND) { return 4; }
-    if (interaction & (INT_TWIRL | INT_PUNCH | INT_TRIP)) { return 3; }
-    if (interaction & INT_KICK) { return 2; }
-    if (interaction & INT_SLIDE_KICK) { return 2; }
+    if (interaction & INT_GROUND_POUND_OR_TWIRL) { return 3; }
+    if (interaction & (INT_KICK | INT_SLIDE_KICK | INT_TRIP)) { return 2; }
     return 1;
 }
 

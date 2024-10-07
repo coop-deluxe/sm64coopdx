@@ -99,6 +99,8 @@ enum InteractionFlag {
 #define ATTACK_FAST_ATTACK           5
 #define ATTACK_FROM_BELOW            6
 
+#define PVP_ATTACK_KNOCKBACK_TIMER_MAX 10
+
 #define INT_STATUS_ATTACK_MASK 0x000000FF
 
 #define INT_STATUS_HOOT_GRABBED_BY_MARIO (1 <<  0) /* 0x00000001 */
