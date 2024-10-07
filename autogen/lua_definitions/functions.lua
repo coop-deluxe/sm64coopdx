@@ -8309,6 +8309,11 @@ function get_last_star_or_key()
 end
 
 --- @return string
+function get_local_coopnet_id()
+    -- ...
+end
+
+--- @return string
 function get_local_discord_id()
     -- ...
 end

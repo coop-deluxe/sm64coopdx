@@ -1743,6 +1743,7 @@
    - [get_last_completed_course_num](functions-5.md#get_last_completed_course_num)
    - [get_last_completed_star_num](functions-5.md#get_last_completed_star_num)
    - [get_last_star_or_key](functions-5.md#get_last_star_or_key)
+   - [get_local_coopnet_id](functions-5.md#get_local_coopnet_id)
    - [get_local_discord_id](functions-5.md#get_local_discord_id)
    - [get_network_area_timer](functions-5.md#get_network_area_timer)
    - [get_os_name](functions-5.md#get_os_name)

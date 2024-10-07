@@ -2403,6 +2403,24 @@
 
 <br />
 
+## [get_local_coopnet_id](#get_local_coopnet_id)
+
+### Lua Example
+`local stringValue = get_local_coopnet_id()`
+
+### Parameters
+- None
+
+### Returns
+- `string`
+
+### C Prototype
+`const char* get_local_coopnet_id(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [get_local_discord_id](#get_local_discord_id)
 
 ### Lua Example

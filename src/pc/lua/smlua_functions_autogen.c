@@ -30534,6 +30534,21 @@ int smlua_func_get_last_star_or_key(UNUSED lua_State* L) {
     return 1;
 }
 
+int smlua_func_get_local_coopnet_id(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "get_local_coopnet_id", 0, top);
+        return 0;
+    }
+
+
+    lua_pushstring(L, get_local_coopnet_id());
+
+    return 1;
+}
+
 int smlua_func_get_local_discord_id(UNUSED lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -34739,6 +34754,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "get_last_completed_course_num", smlua_func_get_last_completed_course_num);
     smlua_bind_function(L, "get_last_completed_star_num", smlua_func_get_last_completed_star_num);
     smlua_bind_function(L, "get_last_star_or_key", smlua_func_get_last_star_or_key);
+    smlua_bind_function(L, "get_local_coopnet_id", smlua_func_get_local_coopnet_id);
     smlua_bind_function(L, "get_local_discord_id", smlua_func_get_local_discord_id);
     smlua_bind_function(L, "get_network_area_timer", smlua_func_get_network_area_timer);
     smlua_bind_function(L, "get_os_name", smlua_func_get_os_name);

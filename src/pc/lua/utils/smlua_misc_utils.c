@@ -426,6 +426,11 @@ const char* get_local_discord_id(void) {
 #endif
 }
 
+const char* get_local_coopnet_id(void) {
+    struct NetworkPlayer* np = &gNetworkPlayers[0];
+    return gNetworkSystem->get_id_str(np->localIndex);
+}
+
 ///
 
 f32 get_volume_master(void) {
