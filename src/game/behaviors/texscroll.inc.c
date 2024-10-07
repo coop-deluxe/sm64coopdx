@@ -70,17 +70,14 @@ static inline void shift_UV_NORMAL(struct ScrollTarget *scroll, u16 vertcount, s
         verts[0]->n.flag++;
     } else {
         if (bhv < SCROLL_UV_X) {
-            u8 bhvIndex = MIN(bhv, 2);
             for (i = 0; i < vertcount; i++) {
-                verts[i]->n.ob[bhvIndex] = scroll->interpF32[i];
+                scroll->prevF32[i] = scroll->interpF32[i];
             }
         } else {
-            u8 bhvIndex = MIN(bhv-SCROLL_UV_X, 1);
             for (i = 0; i < vertcount; i++) {
-                verts[i]->n.tc[bhvIndex] = scroll->interpS16[i];
+                scroll->prevS16[i] = scroll->interpS16[i];
             }
         }
-        scroll->needInterp = false;
     }
 }
 
