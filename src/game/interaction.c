@@ -158,7 +158,7 @@ u32 determine_interaction(struct MarioState *m, struct Object *o) {
     }
 
     if (interaction == 0 && action & ACT_FLAG_ATTACKING) {
-        u32 flags = (o->oInteractType & INTERACT_PLAYER) ? (MARIO_PUNCHING | MARIO_KICKING) : (MARIO_PUNCHING | MARIO_KICKING | MARIO_TRIPPING);
+        u32 flags = (MARIO_PUNCHING | MARIO_KICKING | MARIO_TRIPPING);
         if (m->flags & flags) {
             s16 dYawToObject = mario_obj_angle_to_object(m, o) - m->faceAngle[1];
 
