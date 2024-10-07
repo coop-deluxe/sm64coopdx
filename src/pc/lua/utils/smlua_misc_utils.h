@@ -112,6 +112,7 @@ u32 get_global_timer(void);
 s32 get_dialog_response(void);
 
 const char* get_local_discord_id(void);
+const char* get_coopnet_id(s8 localIndex);
 
 f32 get_volume_master(void);
 f32 get_volume_level(void);

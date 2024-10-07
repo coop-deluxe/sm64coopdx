@@ -157,7 +157,7 @@ u32 determine_interaction(struct MarioState *m, struct Object *o) {
     }
 
     if (interaction == 0 && action & ACT_FLAG_ATTACKING) {
-        u32 flags = (o->oInteractType & INTERACT_PLAYER) ? (MARIO_PUNCHING | MARIO_KICKING) : (MARIO_PUNCHING | MARIO_KICKING | MARIO_TRIPPING);
+        u32 flags = (MARIO_PUNCHING | MARIO_KICKING | MARIO_TRIPPING);
         if (m->flags & flags) {
             s16 dYawToObject = mario_obj_angle_to_object(m, o) - m->faceAngle[1];
 
@@ -671,7 +671,8 @@ u32 determine_knockback_action(struct MarioState *m, UNUSED s32 arg) {
             if (!is_player_active(m2)) { continue; }
             if (m2->marioObj == NULL) { continue; }
             if (m2->marioObj != m->interactObj) { continue; }
-            if (m2->action == ACT_JUMP_KICK) { scaler = 2; }
+            if (m2->action == ACT_JUMP_KICK) { scaler = 2.0f; }
+            if (m2->action == ACT_DIVE) { scaler += fabs(m2->forwardVel * 0.01); }
             if (m2->flags & MARIO_METAL_CAP) { scaler *= 1.25f; }
             break;
         }
@@ -1316,10 +1317,11 @@ static u8 resolve_player_collision(struct MarioState* m, struct MarioState* m2) 
 }
 
 u8 determine_player_damage_value(u32 interaction) {
-    if (interaction & INT_GROUND_POUND_OR_TWIRL) { return 3; }
+    if (interaction & INT_GROUND_POUND) { return 4; }
+    if (interaction & (INT_TWIRL | INT_PUNCH | INT_TRIP)) { return 3; }
     if (interaction & INT_KICK) { return 2; }
-    if (interaction & INT_ATTACK_SLIDE) { return 1; }
-    return 2;
+    if (interaction & INT_SLIDE_KICK) { return 2; }
+    return 1;
 }
 
 u8 player_is_sliding(struct MarioState* m) {

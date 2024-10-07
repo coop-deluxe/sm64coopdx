@@ -30295,6 +30295,23 @@ int smlua_func_djui_set_popup_disabled_override(lua_State* L) {
     return 1;
 }
 
+int smlua_func_get_coopnet_id(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "get_coopnet_id", 1, top);
+        return 0;
+    }
+
+    s8 localIndex = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "get_coopnet_id"); return 0; }
+
+    lua_pushstring(L, get_coopnet_id(localIndex));
+
+    return 1;
+}
+
 int smlua_func_get_current_save_file_num(UNUSED lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -34724,6 +34741,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "djui_popup_create_global", smlua_func_djui_popup_create_global);
     smlua_bind_function(L, "djui_reset_popup_disabled_override", smlua_func_djui_reset_popup_disabled_override);
     smlua_bind_function(L, "djui_set_popup_disabled_override", smlua_func_djui_set_popup_disabled_override);
+    smlua_bind_function(L, "get_coopnet_id", smlua_func_get_coopnet_id);
     smlua_bind_function(L, "get_current_save_file_num", smlua_func_get_current_save_file_num);
     smlua_bind_function(L, "get_date_and_time", smlua_func_get_date_and_time);
     smlua_bind_function(L, "get_dialog_box_state", smlua_func_get_dialog_box_state);
