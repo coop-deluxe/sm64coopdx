@@ -122,6 +122,10 @@ void piranha_plant_act_woken_up(void) {
      */
     o->oDamageOrCoinValue = 3;
 #endif
+    // The piranha plant still normally has the larger hitbox up to this point
+    cur_obj_set_hitbox_radius_and_height(250.0f, 200.0f);
+    cur_obj_set_hurtbox_radius_and_height(150.0f, 100.0f);
+
     if (o->oTimer == 0)
         stop_secondary_music(50);
 
