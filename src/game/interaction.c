@@ -2317,12 +2317,9 @@ void mario_process_interactions(struct MarioState *m) {
             sDisplayingDoorText = FALSE;
         }
         if (!(m->marioObj->collidedObjInteractTypes & INTERACT_WARP)) {
-            if (m == &gMarioStates[0]) {
-                sJustTeleported = FALSE;
-            }
+            sJustTeleported = FALSE;
         }
     }
-    
 }
 
 void check_death_barrier(struct MarioState *m) {
