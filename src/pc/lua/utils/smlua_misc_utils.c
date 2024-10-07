@@ -27,6 +27,7 @@
 #include "game/first_person_cam.h"
 #include "pc/lua/utils/smlua_math_utils.h"
 #include "pc/lua/utils/smlua_audio_utils.h"
+#include "pc/network/socket/socket.h"
 
 #ifdef DISCORD_SDK
 #include "pc/discord/discord.h"
@@ -427,7 +428,7 @@ const char* get_local_discord_id(void) {
 }
 
 const char* get_coopnet_id(s8 localIndex) {
-    if (!gNetworkSystem) { return "-1"; }
+    if (!gNetworkSystem || gNetworkSystem == &gNetworkSystemSocket) { return "-1"; }
     if (localIndex < 0 || localIndex > MAX_PLAYERS - 1) { return "-1"; }
     struct NetworkPlayer* np = &gNetworkPlayers[localIndex];
     if (np == NULL || !np->connected) { return "-1"; }

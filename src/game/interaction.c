@@ -1332,7 +1332,6 @@ u8 determine_player_damage_value(u32 interaction) {
     if (interaction & (INT_TWIRL | INT_PUNCH | INT_TRIP)) { return 3; }
     if (interaction & INT_KICK) { return 2; }
     if (interaction & INT_SLIDE_KICK) { return 2; }
-    if (interaction & INT_FAST_ATTACK_OR_SHELL) { return 1; }
     return 1;
 }
 
