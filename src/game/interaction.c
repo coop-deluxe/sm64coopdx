@@ -692,7 +692,7 @@ u32 determine_knockback_action(struct MarioState *m, UNUSED s32 arg) {
         m->vel[2] = -mag * coss(m->interactObj->oFaceAngleYaw);
         m->slideVelX = m->vel[0];
         m->slideVelZ = m->vel[2];
-        m->knockbackTimer = hasBeenPunched ? 9 : PVP_ATTACK_KNOCKBACK_TIMER_MAX;
+        m->knockbackTimer = hasBeenPunched ? PVP_ATTACK_KNOCKBACK_TIMER_OVERRIDE : PVP_ATTACK_KNOCKBACK_TIMER_DEFAULT;
 
         m->faceAngle[1] = m->interactObj->oFaceAngleYaw + (sign == 1.0f ? 0 : 0x8000);
     }
@@ -827,7 +827,7 @@ u32 take_damage_and_knock_back(struct MarioState *m, struct Object *o) {
 
         update_mario_sound_and_camera(m);
         u32 action = determine_knockback_action(m, o->oDamageOrCoinValue);
-        return drop_and_set_mario_action(m, action, (m->knockbackTimer == PVP_ATTACK_KNOCKBACK_TIMER_MAX) ? damage : 0);
+        return drop_and_set_mario_action(m, action, (m->knockbackTimer == PVP_ATTACK_KNOCKBACK_TIMER_DEFAULT) ? damage : PVP_ATTACK_OVERRIDE_VANILLA_INVINCIBILITY);
     }
 
     return FALSE;
@@ -1450,8 +1450,8 @@ u32 interact_player_pvp(struct MarioState* attacker, struct MarioState* victim) 
     // determine if slide attack should be ignored
     if ((interaction & INT_ATTACK_SLIDE) || player_is_sliding(cVictim)) {
         // determine the difference in velocities
-        Vec3f velDiff;
-        vec3f_dif(velDiff, attacker->vel, cVictim->vel);
+        //Vec3f velDiff;
+        //vec3f_dif(velDiff, attacker->vel, cVictim->vel);
 
         if (attacker->action == ACT_SLIDE_KICK_SLIDE || attacker->action == ACT_SLIDE_KICK) {
             // if the difference vectors are not different enough, do not attack

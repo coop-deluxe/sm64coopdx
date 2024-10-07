@@ -1161,7 +1161,7 @@ u32 common_air_knockback_step(struct MarioState *m, u32 landAction, u32 hardFall
             mario_set_forward_vel(m, speed);
         }
     } else {
-        m->knockbackTimer = PVP_ATTACK_KNOCKBACK_TIMER_MAX;
+        m->knockbackTimer = PVP_ATTACK_KNOCKBACK_TIMER_DEFAULT;
     }
 
     stepResult = perform_air_step(m, 0);
