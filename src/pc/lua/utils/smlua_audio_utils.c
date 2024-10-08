@@ -579,6 +579,7 @@ void audio_sample_play(struct ModAudio* audio, Vec3f position, f32 volume) {
 }
 
 void audio_custom_update_volume(void) {
+    if (!sModAudioPool) { return; }
     struct DynamicPoolNode* node = sModAudioPool->tail;
     while (node) {
         struct DynamicPoolNode* prev = node->prev;
