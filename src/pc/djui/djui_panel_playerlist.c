@@ -9,6 +9,7 @@
 #include "pc/configfile.h"
 #include "pc/network/network.h"
 #include "pc/utils/misc.h"
+#include "pc/network/ban_list.h"
 
 struct DjuiThreePanel* gDjuiPlayerList = NULL;
 bool gAttemptingToOpenPlayerlist = false;
@@ -20,13 +21,104 @@ static struct DjuiText* djuiTextDescriptions[MAX_PLAYERS] = { 0 };
 static struct DjuiText* djuiTextLocations[MAX_PLAYERS] = { 0 };
 static struct DjuiText* djuiTextAct[MAX_PLAYERS] = { 0 };
 
+static struct DjuiRect* bkButtons[MAX_PLAYERS] = { 0 };
+static struct DjuiButton* bkLeftButtons[MAX_PLAYERS] = { 0 };
+static struct DjuiButton* bkRightButtons[MAX_PLAYERS] = { 0 };
+
+u8 bki = 0;
+struct NetworkPlayer *bknp;
+
 const u8 sPlayerListSize = 16;
 u8 sPageIndex = 0;
-static u8 sPlayer = 0; // all player slots always exist this switches their visibility on and off if they're connected or not
+
+static u8 bkState = 0;
+
+void ban_kick_buttons_show(u8 i, struct NetworkPlayer *np) {
+    djui_base_set_visible(&bkButtons[i]->base, true);
+    
+    djui_base_set_visible(&djuiTextDescriptions[i]->base, false);
+    djui_base_set_visible(&djuiTextLocations[i]->base, false);
+    djui_base_set_visible(&djuiTextAct[i]->base, false);
+
+    bknp = np;
+    bki = i;
+    printf("show #%u\n", i);
+}
+
+void ban_kick_buttons_hide(u8 i) {
+    djui_base_set_visible(&bkButtons[i]->base, false);
+    djui_text_set_text(bkLeftButtons[i]->text, "Kick");
+    djui_text_set_text(bkRightButtons[i]->text, "Ban");
+    
+    djui_base_set_visible(&djuiTextDescriptions[i]->base, true);
+    djui_base_set_visible(&djuiTextLocations[i]->base, true);
+    djui_base_set_visible(&djuiTextAct[i]->base, true);
+
+    bkState = NONE;
+    printf("hide #%u\n", i);
+}
+
+void ban_kick_buttons_action(u8 lr) {
+    if (!bkState) {
+        bkState = lr;
+
+        struct DjuiText *text = ((BK_LEFT) ? bkLeftButtons[bki] : bkRightButtons[bki])->text;
+        djui_text_set_text(text, "\\#ffa0a0\\Confirm?");
+        if (BK_RIGHT) djui_text_set_text(bkLeftButtons[bki]->text, "Perm Ban");
+        return;
+    }
+    switch (bkState) {
+        case KICK:
+            if (gNetworkType == NT_SERVER) {
+                network_send_kick(bknp->localIndex, EKT_KICKED);
+                network_player_disconnected(bknp->localIndex);
+            } else {
+                network_send_chat_command(bknp->globalIndex, CCC_KICK);
+            }
+            ban_kick_buttons_hide(bki);
+            break;
+        case BAN:
+            if (BK_RIGHT) {
+                if (gNetworkType == NT_SERVER) {
+                    network_send_kick(bknp->localIndex, EKT_BANNED);
+                    ban_list_add(gNetworkSystem->get_id_str(bknp->localIndex), false);
+                    network_player_disconnected(bknp->localIndex);
+                } else {
+                    network_send_chat_command(bknp->globalIndex, CCC_BAN);
+                }
+                ban_kick_buttons_hide(bki);
+            } else {
+                bkState = PERM_BAN;
+
+                djui_text_set_text(bkLeftButtons[bki]->text, "\\#ffa0a0\\Confirm?");
+                djui_text_set_text(bkRightButtons[bki]->text, "Go Back");
+            }
+            break;
+        case PERM_BAN:
+            if (BK_LEFT) {
+                network_send_kick(bknp->localIndex, EKT_BANNED);
+                ban_list_add(gNetworkSystem->get_id_str(bknp->localIndex), true);
+                network_player_disconnected(bknp->localIndex);
+                ban_kick_buttons_hide(bki);
+            } else {
+                bkState = NONE;
+
+                djui_text_set_text(bkLeftButtons[bki]->text, "Kick");
+                djui_text_set_text(bkRightButtons[bki]->text, "Ban");
+            }
+            break;
+    }
+}
+
+void left_button_click() { ban_kick_buttons_action(1); };
+void right_button_click() { ban_kick_buttons_action(2); };
 
 static void playerlist_update_row(u8 i, struct NetworkPlayer *np) {
     u8 charIndex = np->overrideModelIndex;
+    static u8 sPlayer;
     char sActNum[7];
+
+    if (!np->localIndex) sPlayer = 0;
     if (np->currActNum != 99 && np->currActNum != 0) {
         snprintf(sActNum, 7, "# %d", np->currActNum);
     } else if (np->currActNum == 0) {
@@ -46,6 +138,14 @@ static void playerlist_update_row(u8 i, struct NetworkPlayer *np) {
     }
 
     djui_base_set_visible(&djuiRow[i]->base, visible);
+    
+    if (np->localIndex && np->globalIndex // don't ban/kick yourself or the host
+       && (gNetworkType == NT_SERVER || gNetworkPlayerLocal->moderator) // privilege check
+       && visible) { // skip if hidden
+        if (djui_cursor_inside_base(&djuiRow[i]->base)) {
+            ban_kick_buttons_show(i, np);
+        } else if (bkButtons[i]->base.visible) ban_kick_buttons_hide(i);
+    }
 
     u8* rgb = network_get_player_text_color(np->localIndex);
     djui_base_set_color(&djuiTextNames[i]->base, rgb[0], rgb[1], rgb[2], 255);
@@ -66,12 +166,10 @@ void djui_panel_playerlist_on_render_pre(UNUSED struct DjuiBase* base, UNUSED bo
     }
 
     s32 j = 0;
-    sPlayer = 0;
 
     for (s32 i = 0; i < MAX_PLAYERS; i++) {
         struct NetworkPlayer *np = &gNetworkPlayers[i];
-        if (!np->connected) { continue; }
-        playerlist_update_row(j++, np);
+        if (np->connected) playerlist_update_row(j++, np);
     }
 
     while (j < MAX_PLAYERS) {
@@ -137,5 +235,15 @@ void djui_panel_playerlist_create(UNUSED struct DjuiBase* caller) {
         djui_base_set_color(&t5->base, t, t, t, 255);
         djui_text_set_alignment(t5, DJUI_HALIGN_RIGHT, DJUI_VALIGN_TOP);
         djuiTextAct[i] = t5;
+        
+        struct DjuiRect* t6 = djui_rect_container_create(&row->base, 32);
+        struct DjuiButton* l = djui_button_left_create(&t6->base, "Kick", DJUI_BUTTON_STYLE_NORMAL, left_button_click);
+        struct DjuiButton* r = djui_button_right_create(&t6->base, "Ban", DJUI_BUTTON_STYLE_NORMAL, right_button_click);
+        l->base.height.value = 32.f;
+        r->base.height.value = 32.f;
+        djui_base_set_visible(&t6->base, false);
+        bkButtons[i] = t6;
+        bkLeftButtons[i] = l;
+        bkRightButtons[i] = r;
     }
 }

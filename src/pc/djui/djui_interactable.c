@@ -237,10 +237,11 @@ bool djui_interactable_on_key_down(int scancode) {
 
     if ((gDjuiPlayerList != NULL || gDjuiModList != NULL)) {
         for (int i = 0; i < MAX_BINDS; i++) {
-            if (scancode == (int)configKeyPlayerList[i] && !gDjuiInMainMenu && gNetworkType != NT_NONE) {
+            if (scancode == (int)configKeyPlayerList[i] && !gDjuiInMainMenu && !gDjuiPanelPauseCreated && gNetworkType != NT_NONE) {
                 if (gServerSettings.enablePlayerList) {
                     if (gDjuiPlayerList != NULL) {
                         djui_base_set_visible(&gDjuiPlayerList->base, true);
+                        djui_cursor_set_visible(true);
                     }
                     if (gDjuiModList != NULL) {
                         djui_base_set_visible(&gDjuiModList->base, true);
@@ -294,6 +295,7 @@ void djui_interactable_on_key_up(int scancode) {
             if (scancode == (int)configKeyPlayerList[i]) {
                 if (gDjuiPlayerList != NULL) {
                     djui_base_set_visible(&gDjuiPlayerList->base, false);
+                    djui_cursor_set_visible(true);
                 }
                 if (gDjuiModList != NULL) {
                     djui_base_set_visible(&gDjuiModList->base, false);
