@@ -241,7 +241,7 @@ bool djui_interactable_on_key_down(int scancode) {
                 if (gServerSettings.enablePlayerList) {
                     if (gDjuiPlayerList != NULL) {
                         djui_base_set_visible(&gDjuiPlayerList->base, true);
-                        djui_cursor_set_visible(true);
+                        if (!gDjuiPanelPauseCreated) djui_cursor_set_visible(true);
                     }
                     if (gDjuiModList != NULL) {
                         djui_base_set_visible(&gDjuiModList->base, true);
@@ -295,7 +295,7 @@ void djui_interactable_on_key_up(int scancode) {
             if (scancode == (int)configKeyPlayerList[i]) {
                 if (gDjuiPlayerList != NULL) {
                     djui_base_set_visible(&gDjuiPlayerList->base, false);
-                    djui_cursor_set_visible(true);
+                    if (!gDjuiPanelPauseCreated) djui_cursor_set_visible(false);
                 }
                 if (gDjuiModList != NULL) {
                     djui_base_set_visible(&gDjuiModList->base, false);
