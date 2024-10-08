@@ -1474,6 +1474,9 @@ u32 interact_player_pvp(struct MarioState* attacker, struct MarioState* victim) 
         // not moving down yet?
         if (attacker->actionState == 0) { return FALSE; }
         victim->bounceSquishTimer = max(victim->bounceSquishTimer, 20);
+    } else if ((attacker->action == ACT_FORWARD_ROLLOUT || attacker->action == ACT_BACKWARD_ROLLOUT) &&
+                attacker->actionState == 1) {
+        return FALSE;
     }
 
     if (victim->playerIndex == 0) {
