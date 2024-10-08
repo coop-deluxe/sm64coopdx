@@ -1319,8 +1319,8 @@ static u8 resolve_player_collision(struct MarioState* m, struct MarioState* m2) 
 }
 
 u8 determine_player_damage_value(u32 interaction) {
-    if (interaction & INT_GROUND_POUND_OR_TWIRL) { return 3; }
-    if (interaction & (INT_KICK | INT_SLIDE_KICK | INT_TRIP)) { return 2; }
+    if (interaction & (INT_GROUND_POUND | INT_TRIP)) { return 3; }
+    if (interaction & (INT_KICK | INT_SLIDE_KICK | INT_TWIRL)) { return 2; }
     return 1;
 }
 
