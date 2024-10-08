@@ -1352,7 +1352,9 @@ u8 passes_pvp_interaction_checks(struct MarioState* attacker, struct MarioState*
                           || attacker->action == ACT_LONG_JUMP || attacker->action == ACT_SIDE_FLIP
                           || attacker->action == ACT_BACKFLIP || attacker->action == ACT_TRIPLE_JUMP
                           || attacker->action == ACT_WALL_KICK_AIR || attacker->action == ACT_WATER_JUMP
-                          || attacker->action == ACT_STEEP_JUMP || attacker->action == ACT_HOLD_JUMP);
+                          || attacker->action == ACT_STEEP_JUMP || attacker->action == ACT_HOLD_JUMP
+                          || attacker->action == ACT_FREEFALL || attacker->action == ACT_LEDGE_GRAB
+                          || attacker->action == ACT_FORWARD_ROLLOUT || attacker->action == ACT_BACKWARD_ROLLOUT);
     u8 isVictimIntangible = (victim->action & ACT_FLAG_INTANGIBLE);
     u8 isVictimGroundPounding = (victim->action == ACT_GROUND_POUND) && (victim->actionState != 0);
     if (victim->knockbackTimer != 0) {
