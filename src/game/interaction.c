@@ -672,9 +672,9 @@ u32 determine_knockback_action(struct MarioState *m, UNUSED s32 arg) {
             if (!is_player_active(m2)) { continue; }
             if (m2->marioObj == NULL) { continue; }
             if (m2->marioObj != m->interactObj) { continue; }
-            if (m2->action == ACT_JUMP_KICK) { scaler = 2.0f; }
+            if (m2->flags & MARIO_KICKING) { scaler = 2.0f; }
             else if (m2->action == ACT_DIVE) { scaler = 1 + fabs(m2->forwardVel * 0.01f); }
-            else if (m2->action == ACT_PUNCHING || m2->action == ACT_MOVE_PUNCHING) { hasBeenPunched = TRUE; }
+            else if ((m2->flags & MARIO_PUNCHING)) { scaler = 0.2; hasBeenPunched = TRUE; }
             if (m2->flags & MARIO_METAL_CAP) { scaler *= 1.25f; }
             break;
         }
@@ -692,7 +692,7 @@ u32 determine_knockback_action(struct MarioState *m, UNUSED s32 arg) {
         m->vel[2] = -mag * coss(m->interactObj->oFaceAngleYaw);
         m->slideVelX = m->vel[0];
         m->slideVelZ = m->vel[2];
-        m->knockbackTimer = hasBeenPunched ? PVP_ATTACK_KNOCKBACK_TIMER_OVERRIDE : PVP_ATTACK_KNOCKBACK_TIMER_DEFAULT;
+        m->knockbackTimer = hasBeenPunched ? PVP_ATTACK_KNOCKBACK_TIMER_OVERRIDE + 1 : PVP_ATTACK_KNOCKBACK_TIMER_DEFAULT;
 
         m->faceAngle[1] = m->interactObj->oFaceAngleYaw + (sign == 1.0f ? 0 : 0x8000);
     }
@@ -826,8 +826,7 @@ u32 take_damage_and_knock_back(struct MarioState *m, struct Object *o) {
         }
 
         update_mario_sound_and_camera(m);
-        u32 action = determine_knockback_action(m, o->oDamageOrCoinValue);
-        return drop_and_set_mario_action(m, action, (m->knockbackTimer == PVP_ATTACK_KNOCKBACK_TIMER_DEFAULT) ? damage : PVP_ATTACK_OVERRIDE_VANILLA_INVINCIBILITY);
+        return drop_and_set_mario_action(m, determine_knockback_action(m, o->oDamageOrCoinValue), damage);
     }
 
     return FALSE;
@@ -1355,8 +1354,12 @@ u8 passes_pvp_interaction_checks(struct MarioState* attacker, struct MarioState*
                           || attacker->action == ACT_STEEP_JUMP || attacker->action == ACT_HOLD_JUMP);
     u8 isVictimIntangible = (victim->action & ACT_FLAG_INTANGIBLE);
     u8 isVictimGroundPounding = (victim->action == ACT_GROUND_POUND) && (victim->actionState != 0);
-    if (victim->knockbackTimer > 0) {
+    if (victim->knockbackTimer != 0) {
         return false;
+    }
+    if ((attacker->action == ACT_PUNCHING || attacker->action == ACT_MOVE_PUNCHING) &&
+        (victim->action == ACT_SOFT_BACKWARD_GROUND_KB || victim->action == ACT_SOFT_FORWARD_GROUND_KB)) {
+        return true;
     }
 
     return (!isInvulnerable && !isIgnoredAttack && !isAttackerInvulnerable && !isVictimIntangible && !isVictimGroundPounding);
@@ -1491,7 +1494,9 @@ u32 interact_player_pvp(struct MarioState* attacker, struct MarioState* victim) 
 
     victim->invincTimer = max(victim->invincTimer, 3);
     take_damage_and_knock_back(victim, attacker->marioObj);
-    bounce_back_from_attack(attacker, interaction);
+    if (!(attacker->flags & MARIO_PUNCHING)) {
+        bounce_back_from_attack(attacker, interaction);
+    }
     victim->interactObj = NULL;
 
     smlua_call_event_hooks_mario_params(HOOK_ON_PVP_ATTACK, attacker, victim, interaction);

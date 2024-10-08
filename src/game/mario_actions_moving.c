@@ -1678,6 +1678,8 @@ s32 common_ground_knockback_action(struct MarioState *m, s32 animation, s32 arg2
                 m->forwardVel = -32.0f;
             }
         }
+    } else if (m->knockbackTimer < 0) {
+        // do nothing
     } else {
         m->knockbackTimer = PVP_ATTACK_KNOCKBACK_TIMER_DEFAULT;
     }
@@ -1701,9 +1703,7 @@ s32 common_ground_knockback_action(struct MarioState *m, s32 animation, s32 arg2
         if (m->health < 0x100) {
             set_mario_action(m, ACT_STANDING_DEATH, 0);
         } else {
-            if (arg4 == PVP_ATTACK_OVERRIDE_VANILLA_INVINCIBILITY) { // Make being punched have reduced invincibility frames
-                m->invincTimer = 12;
-            } else if (arg4 > 0) {
+            if (arg4 > 0) {
                 m->invincTimer = 30;
             }
             set_mario_action(m, ACT_IDLE, 0);
