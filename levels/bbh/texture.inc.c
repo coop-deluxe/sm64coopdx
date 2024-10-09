@@ -1,0 +1,21 @@
+#include "pc/rom_assets.h"
+// 0x07000000 - 0x07001000
+ROM_ASSET_LOAD_TEXTURE(bbh_seg7_texture_07000000, "levels/bbh/0.rgba16.inc.c", 0x00371c40, 68724, 0x00000000, 4096);
+
+// 0x07001000 - 0x07001800
+ROM_ASSET_LOAD_TEXTURE(bbh_seg7_texture_07001000, "levels/bbh/1.rgba16.inc.c", 0x00371c40, 68724, 0x00001000, 2048);
+
+// 0x07001800 - 0x07002000
+ROM_ASSET_LOAD_TEXTURE(bbh_seg7_texture_07001800, "levels/bbh/2.rgba16.inc.c", 0x00371c40, 68724, 0x00001800, 2048);
+
+// 0x07002000 - 0x07003000
+ROM_ASSET_LOAD_TEXTURE(bbh_seg7_texture_07002000, "levels/bbh/3.rgba16.inc.c", 0x00371c40, 68724, 0x00002000, 4096);
+
+// 0x07003000 - 0x07003400
+ROM_ASSET_LOAD_TEXTURE(bbh_seg7_texture_07003000, "levels/bbh/4.rgba16.inc.c", 0x00371c40, 68724, 0x00003000, 1024);
+
+// 0x07003400 - 0x07004400
+ROM_ASSET_LOAD_TEXTURE(bbh_seg7_texture_07003400, "levels/bbh/5.rgba16.inc.c", 0x00371c40, 68724, 0x00003400, 4096);
+
+// 0x07004400 - 0x07004800
+ROM_ASSET_LOAD_TEXTURE(bbh_seg7_texture_07004400, "levels/bbh/6.rgba16.inc.c", 0x00371c40, 68724, 0x00004400, 1024);

@@ -1,0 +1,3 @@
+#include "pc/rom_assets.h"
+// 0x070295F8 - 0x0702967C
+ROM_ASSET_LOAD_COLLISION(rr_seg7_collision_070295F8, 0x00437870, 75979, 0x00029410, 132);

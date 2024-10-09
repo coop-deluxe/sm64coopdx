@@ -1,0 +1,189 @@
+{
+    "date": "1996-02-14",
+    "sample_bank": "sfx_custom_wario",
+    "envelopes": {
+        "envelope0": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ]
+    },
+    "instruments": {
+        "inst0": {
+            "release_rate": 208,
+            "envelope": "envelope0",
+            "sound": "00_wario_jump_hoo"
+        },
+        "inst1": {
+            "release_rate": 208,
+            "envelope": "envelope0",
+            "sound": "01_wario_jump_wah"
+        },
+        "inst2": {
+            "release_rate": 208,
+            "envelope": "envelope0",
+            "sound": "02_wario_yah"
+        },
+        "inst3": {
+            "release_rate": 208,
+            "envelope": "envelope0",
+            "sound": "03_wario_haha"
+        },
+        "inst4": {
+            "release_rate": 208,
+            "envelope": "envelope0",
+            "sound": "04_wario_yahoo"
+        },
+        "inst5": {
+            "release_rate": 208,
+            "envelope": "envelope0",
+            "sound": "05_wario_uh"
+        },
+        "inst6": {
+            "release_rate": 208,
+            "envelope": "envelope0",
+            "sound": "06_wario_hrmm"
+        },
+        "inst7": {
+            "release_rate": 208,
+            "envelope": "envelope0",
+            "sound": "07_wario_wah2"
+        },
+        "inst8": {
+            "release_rate": 208,
+            "envelope": "envelope0",
+            "sound": "08_wario_whoa"
+        },
+        "inst9": {
+            "release_rate": 208,
+            "envelope": "envelope0",
+            "sound": "09_wario_eeuh"
+        },
+        "inst10": {
+            "release_rate": 208,
+            "envelope": "envelope0",
+            "sound": "0A_wario_attacked"
+        },
+        "inst11": {
+            "release_rate": 208,
+            "envelope": "envelope0",
+            "sound": "0B_wario_ooof"
+        },
+        "inst12": {
+            "release_rate": 208,
+            "envelope": "envelope0",
+            "sound": "0C_wario_here_we_go"
+        },
+        "inst13": {
+            "release_rate": 208,
+            "envelope": "envelope0",
+            "sound": "0D_wario_yawning"
+        },
+        "inst14": {
+            "release_rate": 208,
+            "envelope": "envelope0",
+            "sound": "0E_wario_snoring1"
+        },
+        "inst15": {
+            "release_rate": 208,
+            "envelope": "envelope0",
+            "sound": "0F_wario_snoring2"
+        },
+        "inst16": {
+            "ifdef": ["VERSION_US", "VERSION_EU"],
+            "release_rate": 208,
+            "envelope": "envelope0",
+            "sound": "10_wario_doh"
+        },
+        "inst17": {
+            "ifdef": ["VERSION_US", "VERSION_EU"],
+            "release_rate": 208,
+            "envelope": "envelope0",
+            "sound": "11_wario_game_over"
+        },
+        "inst18": {
+            "ifdef": ["VERSION_US", "VERSION_EU"],
+            "release_rate": 208,
+            "envelope": "envelope0",
+            "sound": "12_wario_hello"
+        },
+        "inst19": {
+            "ifdef": ["VERSION_US", "VERSION_EU"],
+            "release_rate": 208,
+            "envelope": "envelope0",
+            "sound": "13_wario_press_start_to_play"
+        },
+        "inst20": {
+            "ifdef": ["VERSION_US", "VERSION_EU"],
+            "release_rate": 208,
+            "envelope": "envelope0",
+            "sound": "14_wario_twirl_bounce"
+        },
+        "inst21": {
+            "ifdef": ["VERSION_US", "VERSION_EU"],
+            "release_rate": 208,
+            "envelope": "envelope0",
+            "sound": "15_wario_snoring3"
+        },
+        "inst22": {
+            "ifdef": ["VERSION_US", "VERSION_EU"],
+            "release_rate": 208,
+            "envelope": "envelope0",
+            "sound": "16_wario_so_longa_bowser"
+        },
+        "inst23": {
+            "ifdef": ["VERSION_US", "VERSION_EU"],
+            "release_rate": 208,
+            "envelope": "envelope0",
+            "sound": "17_wario_ima_tired"
+        },
+        "inst24": {
+            "ifdef": ["VERSION_US", "VERSION_EU"],
+            "release_rate": 208,
+            "envelope": "envelope0",
+            "sound": "18_wario_waha"
+        },
+        "inst25": {
+            "ifdef": ["VERSION_US", "VERSION_EU"],
+            "release_rate": 208,
+            "envelope": "envelope0",
+            "sound": "19_wario_yippee"
+        },
+        "inst26": {
+            "ifdef": ["VERSION_US", "VERSION_EU"],
+            "release_rate": 208,
+            "envelope": "envelope0",
+            "sound": "1A_wario_lets_a_go"
+        }
+    },
+    "instrument_list": [
+        "inst0",
+        "inst1",
+        "inst2",
+        "inst3",
+        "inst4",
+        "inst5",
+        "inst6",
+        "inst7",
+        "inst8",
+        "inst9",
+        "inst10",
+        "inst11",
+        "inst12",
+        "inst13",
+        "inst14",
+        "inst15",
+        "inst16",
+        "inst17",
+        "inst18",
+        "inst19",
+        "inst20",
+        "inst21",
+        "inst22",
+        "inst23",
+        "inst24",
+        "inst25",
+        "inst26"
+    ]
+}

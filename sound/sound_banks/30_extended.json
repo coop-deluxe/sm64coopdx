@@ -1,0 +1,2721 @@
+{
+    "date": "1996-03-19",
+    "sample_bank": "extended",
+    "envelopes": {
+        "envelope0": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope1": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope2": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope3": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope4": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope5": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope6": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope7": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope8": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope9": [
+            [2, 32700],
+            [205, 1651],
+            [211, 0],
+            "hang"
+        ],
+        "envelope10": [
+            [2, 32700],
+            [205, 1651],
+            [211, 0],
+            "hang"
+        ],
+        "envelope11": [
+            [2, 32700],
+            [205, 1651],
+            [211, 0],
+            "hang"
+        ],
+        "envelope12": [
+            [2, 32700],
+            [205, 1651],
+            [211, 0],
+            "hang"
+        ],
+        "envelope13": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope14": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope15": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope16": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope17": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope18": [
+            [2, 32700],
+            [55, 32700],
+            [127, 0],
+            "hang"
+        ],
+        "envelope19": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope20": [
+            [2, 32700],
+            [103, 24112],
+            [409, 0],
+            "hang"
+        ],
+        "envelope21": [
+            [2, 32700],
+            [130, 4954],
+            [523, 0],
+            "hang"
+        ],
+        "envelope22": [
+            [2, 32700],
+            [130, 4954],
+            [523, 0],
+            "hang"
+        ],
+        "envelope23": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope24": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope25": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope26": [
+            [2, 32700],
+            [205, 0],
+            [1, 0],
+            "hang"
+        ],
+        "envelope27": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope28": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope29": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope30": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope31": [
+            [2, 32700],
+            [55, 32700],
+            [127, 0],
+            "hang"
+        ],
+        "envelope32": [
+            [6, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope33": [
+            [6, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope34": [
+            [6, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope35": [
+            [2, 32700],
+            [136, 0],
+            [32700, 0],
+            "hang"
+        ],
+        "envelope36": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope37": [
+            [6, 32700],
+            [298, 0],
+            [1, 0],
+            "hang"
+        ],
+        "envelope38": [
+            [3, 32700],
+            [298, 0],
+            [1, 0],
+            "hang"
+        ],
+        "envelope39": [
+            [2, 32700],
+            [187, 0],
+            [32700, 0],
+            "hang"
+        ],
+        "envelope40": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope41": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope42": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope43": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope44": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope45": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope46": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope47": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope48": [
+            [6, 32700],
+            [298, 0],
+            [1, 0],
+            "hang"
+        ],
+        "envelope49": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope50": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope51": [
+            [2, 32700],
+            [55, 32700],
+            [127, 0],
+            "hang"
+        ],
+        "envelope52": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope53": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope54": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope55": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope56": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope57": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope58": [
+            [2, 32700],
+            [55, 32700],
+            [127, 0],
+            "hang"
+        ],
+        "envelope59": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope60": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope61": [
+            [6, 32700],
+            [298, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope62": [
+            [6, 32700],
+            [298, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope63": [
+            [6, 32700],
+            [298, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope64": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope65": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope66": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope67": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope68": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope69": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope70": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope71": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope72": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope73": [
+            [2, 32700],
+            [202, 0],
+            [1, 0],
+            "hang"
+        ],
+        "envelope74": [
+            [2, 32700],
+            [82, 0],
+            [1, 0],
+            "hang"
+        ],
+        "envelope75": [
+            [6, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope76": [
+            [6, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope77": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope78": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope79": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope80": [
+            [2, 32700],
+            [55, 32700],
+            [127, 0],
+            "hang"
+        ],
+        "envelope81": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope82": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope83": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope84": [
+            [2, 32700],
+            [145, 7597],
+            [343, 0],
+            "hang"
+        ],
+        "envelope85": [
+            [2, 32700],
+            [154, 7597],
+            [295, 0],
+            "hang"
+        ],
+        "envelope86": [
+            [2, 32700],
+            [145, 8257],
+            [325, 0],
+            "hang"
+        ],
+        "envelope87": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope88": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope89": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope90": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope91": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope92": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope93": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope94": [
+            [2, 32700],
+            [205, 19818],
+            [535, 0],
+            "hang"
+        ],
+        "envelope95": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope96": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope97": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope98": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope99": [
+            [2, 32700],
+            [55, 32700],
+            [127, 0],
+            "hang"
+        ],
+        "envelope100": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope101": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope102": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope103": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope104": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope105": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope106": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope107": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope108": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope109": [
+            [6, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope110": [
+            [6, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope111": [
+            [6, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope112": [
+            [6, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope113": [
+            [6, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope114": [
+            [6, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope115": [
+            [6, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope116": [
+            [6, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope117": [
+            [6, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope118": [
+            [6, 32700],
+            [298, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope119": [
+            [6, 32700],
+            [298, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope120": [
+            [6, 32700],
+            [298, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope121": [
+            [6, 32700],
+            [298, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope122": [
+            [6, 32700],
+            [298, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope123": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope124": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope125": [
+            [2, 32700],
+            [205, 18167],
+            [205, 0],
+            "hang"
+        ],
+        "envelope126": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope127": [
+            [2, 32700],
+            [205, 18167],
+            [205, 0],
+            "hang"
+        ],
+        "envelope128": [
+            [2, 32700],
+            [205, 0],
+            [1, 0],
+            "hang"
+        ],
+        "envelope129": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope130": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope131": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope132": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope133": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope134": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope135": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope136": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope137": [
+            [6, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope138": [
+            [6, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope139": [
+            [6, 32700],
+            [298, 0],
+            [1, 0],
+            "hang"
+        ],
+        "envelope140": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope141": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope142": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope143": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope144": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope145": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope146": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope147": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope148": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope149": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope150": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope151": [
+            [2, 32700],
+            [55, 32700],
+            [127, 0],
+            "hang"
+        ],
+        "envelope152": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope153": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope154": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope155": [
+            [6, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope156": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope157": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope158": [
+            [2, 32700],
+            [187, 0],
+            [32700, 0],
+            "hang"
+        ],
+        "envelope159": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope160": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope161": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope162": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope163": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope164": [
+            [2, 32700],
+            [55, 32700],
+            [127, 0],
+            "hang"
+        ],
+        "envelope165": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope166": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope167": [
+            [6, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope168": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope169": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope170": [
+            [6, 32700],
+            [298, 0],
+            [1, 0],
+            "hang"
+        ],
+        "envelope171": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope172": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope173": [
+            [2, 32700],
+            [205, 19818],
+            [535, 0],
+            "hang"
+        ],
+        "envelope174": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope175": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope176": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope177": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope178": [
+            [6, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope179": [
+            [6, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope180": [
+            [6, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope181": [
+            [6, 32700],
+            [298, 0],
+            [1, 0],
+            "hang"
+        ],
+        "envelope182": [
+            [3, 32700],
+            [298, 0],
+            [1, 0],
+            "hang"
+        ],
+        "envelope183": [
+            [2, 32700],
+            [202, 0],
+            [1, 0],
+            "hang"
+        ],
+        "envelope184": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope185": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope186": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope187": [
+            [26, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope188": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope189": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope190": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope191": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope192": [
+            [6, 32700],
+            [298, 0],
+            [1, 0],
+            "hang"
+        ],
+        "envelope193": [
+            [2, 32700],
+            [205, 0],
+            [1, 0],
+            "hang"
+        ],
+        "envelope194": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope195": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope196": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope197": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope198": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope199": [
+            [6, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope200": [
+            [2, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ],
+        "envelope201": [
+            [2, 32700],
+            [205, 0],
+            [1, 0],
+            "hang"
+        ],
+        "envelope202": [
+            [3, 32700],
+            [298, 0],
+            [1, 0],
+            "hang"
+        ],
+        "envelope203": [
+            [11, 32700],
+            [1, 32700],
+            [32700, 29430],
+            "hang"
+        ]
+    },
+    "instruments": {
+        "inst0": {
+            "release_rate": 19,
+            "normal_range_lo": 29,
+            "normal_range_hi": 63,
+            "envelope": "envelope0",
+            "sound_lo": "3B_banjo_2",
+            "sound": "3C_acoustic_guitar",
+            "sound_hi": "3D"
+        },
+        "inst1": {
+            "release_rate": 208,
+            "envelope": "envelope1",
+            "sound": "2E_accordion"
+        },
+        "inst2": {
+            "release_rate": 208,
+            "envelope": "envelope2",
+            "sound": "2E_accordion"
+        },
+        "inst3": {
+            "release_rate": 208,
+            "envelope": "envelope3",
+            "sound": "16_french_horns"
+        },
+        "inst4": {
+            "release_rate": 208,
+            "envelope": "envelope4",
+            "sound": "16_french_horns"
+        },
+        "inst5": {
+            "release_rate": 10,
+            "normal_range_lo": 24,
+            "envelope": "envelope5",
+            "sound_lo": "0E_hihat_closed",
+            "sound": "0F_hihat_open"
+        },
+        "inst6": {
+            "release_rate": 208,
+            "envelope": "envelope6",
+            "sound": "2F_sleigh_bells"
+        },
+        "inst7": {
+            "release_rate": 19,
+            "normal_range_lo": 29,
+            "normal_range_hi": 63,
+            "envelope": "envelope7",
+            "sound_lo": "3B_banjo_2",
+            "sound": "3C_acoustic_guitar",
+            "sound_hi": "3D"
+        },
+        "inst8": {
+            "release_rate": 24,
+            "normal_range_lo": 29,
+            "normal_range_hi": 61,
+            "envelope": "envelope8",
+            "sound_lo": "3B_banjo_2",
+            "sound": "3C_acoustic_guitar",
+            "sound_hi": "3D"
+        },
+        "inst9": {
+            "release_rate": 38,
+            "normal_range_lo": 29,
+            "normal_range_hi": 61,
+            "envelope": "envelope9",
+            "sound_lo": "3B_banjo_2",
+            "sound": "3C_acoustic_guitar",
+            "sound_hi": "3D"
+        },
+        "inst10": {
+            "release_rate": 38,
+            "normal_range_lo": 29,
+            "normal_range_hi": 61,
+            "envelope": "envelope10",
+            "sound_lo": "3B_banjo_2",
+            "sound": "3C_acoustic_guitar",
+            "sound_hi": "3D"
+        },
+        "inst11": {
+            "release_rate": 38,
+            "normal_range_lo": 29,
+            "normal_range_hi": 61,
+            "envelope": "envelope11",
+            "sound_lo": "3B_banjo_2",
+            "sound": "3C_acoustic_guitar",
+            "sound_hi": "3D"
+        },
+        "inst12": {
+            "release_rate": 38,
+            "normal_range_lo": 29,
+            "normal_range_hi": 61,
+            "envelope": "envelope12",
+            "sound_lo": "3B_banjo_2",
+            "sound": "3C_acoustic_guitar",
+            "sound_hi": "3D"
+        },
+        "inst13": {
+            "release_rate": 208,
+            "envelope": "envelope13",
+            "sound": "21_sine_bass"
+        },
+        "inst14": {
+            "release_rate": 114,
+            "envelope": "envelope14",
+            "sound": "34_alto_flute"
+        },
+        "inst15": {
+            "release_rate": 208,
+            "envelope": "envelope15",
+            "sound": "34_alto_flute"
+        },
+        "inst16": {
+            "release_rate": 208,
+            "envelope": "envelope6",
+            "sound": "21_sine_bass"
+        },
+        "percussion": [
+            {"release_rate": 10, "pan": 62, "envelope": "envelope16", "sound": {"sample": "06_kick_drum_1", "tuning": 0.210224}},
+            {"release_rate": 10, "pan": 62, "envelope": "envelope16", "sound": {"sample": "06_kick_drum_1", "tuning": 0.2227245}},
+            {"release_rate": 10, "pan": 62, "envelope": "envelope16", "sound": {"sample": "06_kick_drum_1", "tuning": 0.2359685}},
+            {"release_rate": 10, "pan": 62, "envelope": "envelope16", "sound": {"sample": "06_kick_drum_1", "tuning": 0.25}},
+            {"release_rate": 10, "pan": 62, "envelope": "envelope16", "sound": {"sample": "06_kick_drum_1", "tuning": 0.264866}},
+            {"release_rate": 10, "pan": 62, "envelope": "envelope16", "sound": {"sample": "06_kick_drum_1", "tuning": 0.2806155}},
+            {"release_rate": 10, "pan": 62, "envelope": "envelope16", "sound": {"sample": "06_kick_drum_1", "tuning": 0.297302}},
+            {"release_rate": 10, "pan": 62, "envelope": "envelope16", "sound": {"sample": "06_kick_drum_1", "tuning": 0.3149805}},
+            {"release_rate": 10, "pan": 62, "envelope": "envelope16", "sound": {"sample": "06_kick_drum_1", "tuning": 0.33371}},
+            {"release_rate": 10, "pan": 62, "envelope": "envelope16", "sound": {"sample": "06_kick_drum_1", "tuning": 0.3535535}},
+            {"release_rate": 10, "pan": 62, "envelope": "envelope16", "sound": {"sample": "06_kick_drum_1", "tuning": 0.374577}},
+            {"release_rate": 10, "pan": 62, "envelope": "envelope16", "sound": {"sample": "06_kick_drum_1", "tuning": 0.3968505}},
+            {"release_rate": 10, "pan": 62, "envelope": "envelope16", "sound": {"sample": "06_kick_drum_1", "tuning": 0.4204485}},
+            {"release_rate": 10, "pan": 62, "envelope": "envelope16", "sound": {"sample": "06_kick_drum_1", "tuning": 0.4454495}},
+            {"release_rate": 10, "pan": 62, "envelope": "envelope16", "sound": {"sample": "06_kick_drum_1", "tuning": 0.4719375}},
+            {"release_rate": 10, "pan": 62, "envelope": "envelope16", "sound": {"sample": "06_kick_drum_1", "tuning": 0.5}},
+            {"release_rate": 10, "pan": 57, "envelope": "envelope16", "sound": "07_rimshot"},
+            {"release_rate": 10, "pan": 65, "envelope": "envelope16", "sound": {"sample": "08", "tuning": 1.1905508}},
+            {"release_rate": 10, "pan": 66, "envelope": "envelope16", "sound": {"sample": "08", "tuning": 0.8418465}},
+            {"release_rate": 10, "pan": 66, "envelope": "envelope16", "sound": {"sample": "08", "tuning": 0.8919052}},
+            {"release_rate": 10, "pan": 6, "envelope": "envelope16", "sound": {"sample": "09", "tuning": 0.471937}},
+            {"release_rate": 10, "pan": 6, "envelope": "envelope16", "sound": {"sample": "09", "tuning": 0.5}},
+            {"release_rate": 10, "pan": 27, "envelope": "envelope16", "sound": {"sample": "09", "tuning": 0.66742}},
+            {"release_rate": 10, "pan": 27, "envelope": "envelope16", "sound": {"sample": "09", "tuning": 0.707107}},
+            {"release_rate": 10, "pan": 45, "envelope": "envelope16", "sound": {"sample": "09", "tuning": 0.793701}},
+            {"release_rate": 10, "pan": 45, "envelope": "envelope16", "sound": {"sample": "09", "tuning": 0.840897}},
+            {"release_rate": 10, "pan": 53, "envelope": "envelope16", "sound": {"sample": "09", "tuning": 1.0}},
+            {"release_rate": 10, "pan": 53, "envelope": "envelope16", "sound": {"sample": "09", "tuning": 1.059463}},
+            {"release_rate": 10, "pan": 83, "envelope": "envelope16", "sound": {"sample": "09", "tuning": 1.189207}},
+            {"release_rate": 10, "pan": 83, "envelope": "envelope16", "sound": {"sample": "09", "tuning": 1.259921}},
+            {"release_rate": 10, "pan": 83, "envelope": "envelope16", "sound": {"sample": "09", "tuning": 1.33484}},
+            {"release_rate": 10, "pan": 83, "envelope": "envelope16", "sound": {"sample": "09", "tuning": 1.414214}},
+            {"release_rate": 10, "pan": 83, "envelope": "envelope16", "sound": {"sample": "09", "tuning": 1.498307}},
+            {"release_rate": 10, "pan": 35, "envelope": "envelope16", "sound": {"sample": "0A_tambourine", "tuning": 1.189207}},
+            {"release_rate": 10, "pan": 35, "envelope": "envelope16", "sound": {"sample": "0A_tambourine", "tuning": 1.259921}},
+            {"release_rate": 10, "pan": 35, "envelope": "envelope16", "sound": {"sample": "0A_tambourine", "tuning": 1.33484}},
+            {"release_rate": 10, "pan": 35, "envelope": "envelope16", "sound": {"sample": "0A_tambourine", "tuning": 1.414214}},
+            {"release_rate": 10, "pan": 35, "envelope": "envelope16", "sound": {"sample": "0A_tambourine", "tuning": 1.498307}},
+            {"release_rate": 10, "pan": 35, "envelope": "envelope16", "sound": {"sample": "0A_tambourine", "tuning": 1.587401}},
+            {"release_rate": 10, "pan": 35, "envelope": "envelope16", "sound": {"sample": "0A_tambourine", "tuning": 1.681793}},
+            {"release_rate": 10, "pan": 35, "envelope": "envelope16", "sound": {"sample": "0A_tambourine", "tuning": 1.781798}},
+            {"release_rate": 10, "pan": 54, "envelope": "envelope16", "sound": {"sample": "0B", "tuning": 0.5469096}},
+            {"release_rate": 10, "pan": 54, "envelope": "envelope16", "sound": {"sample": "0B", "tuning": 0.5794306}},
+            {"release_rate": 10, "pan": 54, "envelope": "envelope16", "sound": {"sample": "0B", "tuning": 0.61388505}},
+            {"release_rate": 10, "pan": 54, "envelope": "envelope16", "sound": {"sample": "0B", "tuning": 0.65038884}},
+            {"release_rate": 10, "pan": 54, "envelope": "envelope16", "sound": {"sample": "0B", "tuning": 0.6890625}},
+            {"release_rate": 10, "pan": 54, "envelope": "envelope16", "sound": {"sample": "0B", "tuning": 0.7300362}},
+            {"release_rate": 10, "pan": 54, "envelope": "envelope16", "sound": {"sample": "0B", "tuning": 0.77344644}},
+            {"release_rate": 10, "pan": 54, "envelope": "envelope16", "sound": {"sample": "0B", "tuning": 0.81943786}},
+            {"release_rate": 10, "pan": 70, "envelope": "envelope16", "sound": {"sample": "0B", "tuning": 1.5468929}},
+            {"release_rate": 10, "pan": 70, "envelope": "envelope16", "sound": {"sample": "0B", "tuning": 1.6388757}},
+            {"release_rate": 10, "pan": 82, "envelope": "envelope16", "sound": {"sample": "0C_conga_stick", "tuning": 0.793701}},
+            {"release_rate": 10, "pan": 82, "envelope": "envelope16", "sound": {"sample": "0C_conga_stick", "tuning": 0.840897}},
+            {"release_rate": 10, "pan": 82, "envelope": "envelope16", "sound": {"sample": "0C_conga_stick", "tuning": 0.890899}},
+            {"release_rate": 10, "pan": 82, "envelope": "envelope16", "sound": {"sample": "0C_conga_stick", "tuning": 0.943875}},
+            {"release_rate": 10, "pan": 82, "envelope": "envelope16", "sound": {"sample": "0C_conga_stick", "tuning": 1.0}},
+            {"release_rate": 10, "pan": 82, "envelope": "envelope16", "sound": {"sample": "0C_conga_stick", "tuning": 1.059463}},
+            {"release_rate": 10, "pan": 82, "envelope": "envelope16", "sound": {"sample": "0C_conga_stick", "tuning": 1.122462}},
+            {"release_rate": 10, "pan": 82, "envelope": "envelope16", "sound": {"sample": "0C_conga_stick", "tuning": 1.189207}},
+            {"release_rate": 10, "pan": 82, "envelope": "envelope16", "sound": {"sample": "0C_conga_stick", "tuning": 1.259921}},
+            {"release_rate": 10, "pan": 82, "envelope": "envelope16", "sound": {"sample": "0C_conga_stick", "tuning": 1.33484}},
+            {"release_rate": 10, "pan": 82, "envelope": "envelope16", "sound": {"sample": "0C_conga_stick", "tuning": 1.414214}},
+            {"release_rate": 10, "pan": 82, "envelope": "envelope16", "sound": {"sample": "0C_conga_stick", "tuning": 1.498307}},
+            {"release_rate": 10, "pan": 128, "envelope": "envelope16", "sound": "0D_clave"}
+        ],
+        "inst17": {
+            "release_rate": 10,
+            "normal_range_lo": 28,
+            "normal_range_hi": 28,
+            "envelope": "envelope17",
+            "sound_lo": "10_cymbal_bell",
+            "sound": "11_splash_cymbal",
+            "sound_hi": "10_cymbal_bell"
+        },
+        "inst18": {
+            "release_rate": 10,
+            "normal_range_lo": 18,
+            "envelope": "envelope18",
+            "sound_lo": "12_snare_drum_1",
+            "sound": "13_snare_drum_2"
+        },
+        "inst19": {
+            "release_rate": 208,
+            "normal_range_lo": 60,
+            "normal_range_hi": 60,
+            "envelope": "envelope19",
+            "sound_lo": "1E_closed_triangle",
+            "sound": "1F_open_triangle",
+            "sound_hi": "20_cabasa"
+        },
+        "inst20": {
+            "release_rate": 10,
+            "envelope": "envelope20",
+            "sound": "42_vibraphone"
+        },
+        "inst21": {
+            "release_rate": 100,
+            "normal_range_lo": 41,
+            "envelope": "envelope21",
+            "sound_lo": "00",
+            "sound": "01_banjo_1"
+        },
+        "inst22": {
+            "release_rate": 100,
+            "normal_range_lo": 41,
+            "envelope": "envelope22",
+            "sound_lo": "00",
+            "sound": "01_banjo_1"
+        },
+        "inst23": {
+            "release_rate": 180,
+            "envelope": "envelope23",
+            "sound": "02"
+        },
+        "inst24": {
+            "release_rate": 208,
+            "envelope": "envelope24",
+            "sound": "02"
+        },
+        "inst25": {
+            "release_rate": 76,
+            "envelope": "envelope25",
+            "sound": "03_human_whistle"
+        },
+        "inst26": {
+            "release_rate": 53,
+            "envelope": "envelope26",
+            "sound": "04_bright_piano"
+        },
+        "inst27": {
+            "release_rate": 208,
+            "envelope": "envelope27",
+            "sound": "05_acoustic_bass"
+        },
+        "inst28": {
+            "release_rate": 53,
+            "envelope": "envelope5",
+            "sound": "04_bright_piano"
+        },
+        "inst29": {
+            "release_rate": 10,
+            "normal_range_lo": 24,
+            "envelope": "envelope29",
+            "sound_lo": "0E_hihat_closed",
+            "sound": "0F_hihat_open"
+        },
+        "inst30": {
+            "release_rate": 10,
+            "normal_range_lo": 28,
+            "normal_range_hi": 28,
+            "envelope": "envelope30",
+            "sound_lo": "10_cymbal_bell",
+            "sound": "11_splash_cymbal",
+            "sound_hi": "10_cymbal_bell"
+        },
+        "inst31": {
+            "release_rate": 10,
+            "normal_range_lo": 18,
+            "envelope": "envelope31",
+            "sound_lo": "12_snare_drum_1",
+            "sound": "13_snare_drum_2"
+        },
+        "inst32": {
+            "release_rate": 15,
+            "normal_range_lo": 27,
+            "normal_range_hi": 46,
+            "envelope": "envelope32",
+            "sound_lo": "23_strings_1",
+            "sound": "24_strings_2",
+            "sound_hi": "25_strings_3"
+        },
+        "inst33": {
+            "release_rate": 15,
+            "normal_range_lo": 27,
+            "normal_range_hi": 46,
+            "envelope": "envelope33",
+            "sound_lo": "23_strings_1",
+            "sound": "24_strings_2",
+            "sound_hi": "25_strings_3"
+        },
+        "inst34": {
+            "release_rate": 15,
+            "normal_range_lo": 27,
+            "normal_range_hi": 46,
+            "envelope": "envelope34",
+            "sound_lo": "23_strings_1",
+            "sound": "24_strings_2",
+            "sound_hi": "25_strings_3"
+        },
+        "inst35": {
+            "release_rate": 43,
+            "normal_range_hi": 47,
+            "envelope": "envelope35",
+            "sound": "46_pizzicato_strings_1",
+            "sound_hi": "47_pizzicato_strings_2"
+        },
+        "inst36": {
+            "release_rate": 119,
+            "envelope": "envelope36",
+            "sound": "2D_trombone"
+        },
+        "inst37": {
+            "release_rate": 10,
+            "envelope": "envelope37",
+            "sound": "26_crystal_rhodes"
+        },
+        "inst38": {
+            "release_rate": 10,
+            "envelope": "envelope38",
+            "sound": "26_crystal_rhodes"
+        },
+        "inst39": {
+            "release_rate": 100,
+            "normal_range_lo": 55,
+            "normal_range_hi": 56,
+            "envelope": "envelope39",
+            "sound_lo": "2A",
+            "sound": "2B",
+            "sound_hi": "2C"
+        },
+        "inst40": {
+            "release_rate": 10,
+            "envelope": "envelope40",
+            "sound": "22_boys_choir"
+        },
+        "inst41": {
+            "release_rate": 90,
+            "envelope": "envelope41",
+            "sound": "28_sitar_1"
+        },
+        "inst42": {
+            "release_rate": 10,
+            "envelope": "envelope42",
+            "sound": "39_sitar_2"
+        },
+        "inst43": {
+            "release_rate": 67,
+            "envelope": "envelope43",
+            "sound": "17_trumpet"
+        },
+        "inst44": {
+            "release_rate": 119,
+            "envelope": "envelope44",
+            "sound": "2D_trombone"
+        },
+        "inst45": {
+            "release_rate": 208,
+            "envelope": "envelope45",
+            "sound": "16_french_horns"
+        },
+        "inst46": {
+            "release_rate": 24,
+            "normal_range_lo": 42,
+            "envelope": "envelope46",
+            "sound_lo": "14_strings_5",
+            "sound": "15_strings_4"
+        },
+        "inst47": {
+            "release_rate": 208,
+            "envelope": "envelope47",
+            "sound": "19_brass"
+        },
+        "inst48": {
+            "release_rate": 10,
+            "envelope": "envelope48",
+            "sound": "26_crystal_rhodes"
+        },
+        "inst49": {
+            "release_rate": 10,
+            "envelope": "envelope49",
+            "sound": "18_timpani"
+        },
+        "inst50": {
+            "release_rate": 10,
+            "normal_range_lo": 28,
+            "normal_range_hi": 28,
+            "envelope": "envelope50",
+            "sound_lo": "10_cymbal_bell",
+            "sound": "11_splash_cymbal",
+            "sound_hi": "10_cymbal_bell"
+        },
+        "inst51": {
+            "release_rate": 10,
+            "normal_range_lo": 18,
+            "envelope": "envelope51",
+            "sound_lo": "12_snare_drum_1",
+            "sound": "13_snare_drum_2"
+        },
+        "inst52": {
+            "release_rate": 24,
+            "normal_range_lo": 42,
+            "envelope": "envelope52",
+            "sound_lo": "14_strings_5",
+            "sound": "15_strings_4"
+        },
+        "inst53": {
+            "release_rate": 24,
+            "normal_range_lo": 42,
+            "envelope": "envelope53",
+            "sound_lo": "14_strings_5",
+            "sound": "15_strings_4"
+        },
+        "inst54": {
+            "release_rate": 208,
+            "envelope": "envelope54",
+            "sound": "16_french_horns"
+        },
+        "inst55": {
+            "release_rate": 67,
+            "envelope": "envelope55",
+            "sound": "17_trumpet"
+        },
+        "inst56": {
+            "release_rate": 24,
+            "normal_range_lo": 42,
+            "envelope": "envelope56",
+            "sound_lo": "14_strings_5",
+            "sound": "15_strings_4"
+        },
+        "inst57": {
+            "release_rate": 10,
+            "envelope": "envelope57",
+            "sound": "18_timpani"
+        },
+        "inst58": {
+            "release_rate": 10,
+            "normal_range_lo": 18,
+            "envelope": "envelope58",
+            "sound_lo": "12_snare_drum_1",
+            "sound": "13_snare_drum_2"
+        },
+        "inst60": {
+            "release_rate": 10,
+            "normal_range_lo": 28,
+            "normal_range_hi": 28,
+            "envelope": "envelope60",
+            "sound_lo": "10_cymbal_bell",
+            "sound": "11_splash_cymbal",
+            "sound_hi": "10_cymbal_bell"
+        },
+        "inst61": {
+            "release_rate": 119,
+            "envelope": "envelope61",
+            "sound": "3A_music_box"
+        },
+        "inst62": {
+            "release_rate": 119,
+            "envelope": "envelope62",
+            "sound": "3A_music_box"
+        },
+        "inst63": {
+            "release_rate": 119,
+            "envelope": "envelope63",
+            "sound": "3A_music_box"
+        },
+        "inst64": {
+            "release_rate": 24,
+            "normal_range_lo": 42,
+            "envelope": "envelope64",
+            "sound_lo": "14_strings_5",
+            "sound": "15_strings_4"
+        },
+        "inst65": {
+            "release_rate": 24,
+            "normal_range_lo": 42,
+            "envelope": "envelope65",
+            "sound_lo": "14_strings_5",
+            "sound": "15_strings_4"
+        },
+        "inst66": {
+            "release_rate": 24,
+            "normal_range_lo": 42,
+            "envelope": "envelope66",
+            "sound_lo": "14_strings_5",
+            "sound": "15_strings_4"
+        },
+        "inst67": {
+            "release_rate": 19,
+            "normal_range_hi": 50,
+            "envelope": "envelope67",
+            "sound": {"ifdef": ["VERSION_SH"], "then": "34b_organ", "else": "00_organ_1"},
+            "sound_hi": {"ifdef": ["VERSION_SH"], "then": "34c_organ_lq", "else": "01_organ_1_lq"}
+        },
+        "inst68": {
+            "release_rate": 19,
+            "normal_range_hi": 50,
+            "envelope": "envelope68",
+            "sound": {"ifdef": ["VERSION_SH"], "then": "34b_organ", "else": "00_organ_1"},
+            "sound_hi": {"ifdef": ["VERSION_SH"], "then": "34c_organ_lq", "else": "01_organ_1_lq"}
+        },
+        "inst69": {
+            "release_rate": 19,
+            "normal_range_hi": 50,
+            "envelope": "envelope69",
+            "sound": {"ifdef": ["VERSION_SH"], "then": "34b_organ", "else": "00_organ_1"},
+            "sound_hi": {"ifdef": ["VERSION_SH"], "then": "34c_organ_lq", "else": "01_organ_1_lq"}
+        },
+        "inst70": {
+            "release_rate": 19,
+            "normal_range_hi": 50,
+            "envelope": "envelope70",
+            "sound": {"ifdef": ["VERSION_SH"], "then": "34b_organ", "else": "00_organ_1"},
+            "sound_hi": {"ifdef": ["VERSION_SH"], "then": "34c_organ_lq", "else": "01_organ_1_lq"}
+        },
+        "inst71": {
+            "release_rate": 19,
+            "normal_range_hi": 50,
+            "envelope": "envelope71",
+            "sound": {"ifdef": ["VERSION_SH"], "then": "34b_organ", "else": "00_organ_1"},
+            "sound_hi": {"ifdef": ["VERSION_SH"], "then": "34c_organ_lq", "else": "01_organ_1_lq"}
+        },
+        "inst72": {
+            "release_rate": 10,
+            "envelope": "envelope72",
+            "sound": {"ifdef": ["VERSION_SH"], "then": "22_boys_choir", "else": "02_boys_choir"}
+        },
+        "inst73": {
+            "release_rate": 255,
+            "envelope": "envelope73",
+            "sound": "27_harpsichord"
+        },
+        "inst74": {
+            "release_rate": 255,
+            "envelope": "envelope74",
+            "sound": "27_harpsichord"
+        },
+        "inst75": {
+            "release_rate": 15,
+            "normal_range_lo": 27,
+            "normal_range_hi": 46,
+            "envelope": "envelope75",
+            "sound_lo": "23_strings_1",
+            "sound": "24_strings_2",
+            "sound_hi": "25_strings_3"
+        },
+        "inst76": {
+            "release_rate": 15,
+            "normal_range_lo": 27,
+            "normal_range_hi": 46,
+            "envelope": "envelope76",
+            "sound_lo": "23_strings_1",
+            "sound": "24_strings_2",
+            "sound_hi": "25_strings_3"
+        },
+        "inst77": {
+            "release_rate": 208,
+            "envelope": "envelope77",
+            "sound": "2E_accordion"
+        },
+        "inst78": {
+            "release_rate": 208,
+            "envelope": "envelope78",
+            "sound": "2E_accordion"
+        },
+        "inst79": {
+            "release_rate": 208,
+            "envelope": "envelope79",
+            "sound": "2F_sleigh_bells"
+        },
+        "inst80": {
+            "release_rate": 10,
+            "normal_range_lo": 18,
+            "envelope": "envelope80",
+            "sound_lo": "12_snare_drum_1",
+            "sound": "13_snare_drum_2"
+        },
+        "inst81": {
+            "release_rate": 10,
+            "envelope": "envelope81",
+            "sound": "3E_monk_choir"
+        },
+        "inst82": {
+            "release_rate": 10,
+            "envelope": "envelope82",
+            "sound": "3E_monk_choir"
+        },
+        "inst83": {
+            "release_rate": 208,
+            "envelope": "envelope83",
+            "sound": "3F"
+        },
+        "inst84": {
+            "release_rate": 10,
+            "envelope": "envelope84",
+            "sound": "40_bell"
+        },
+        "inst85": {
+            "release_rate": 10,
+            "envelope": "envelope85",
+            "sound": "40_bell"
+        },
+        "inst86": {
+            "release_rate": 10,
+            "envelope": "envelope86",
+            "sound": "40_bell"
+        },
+        "inst87": {
+            "release_rate": 10,
+            "normal_range_lo": 19,
+            "normal_range_hi": 19,
+            "envelope": "envelope87",
+            "sound_lo": "38_electric_kick_drum",
+            "sound": {"sample": "08", "tuning": 2.121321},
+            "sound_hi": "38_electric_kick_drum"
+        },
+        "inst88": {
+            "release_rate": 208,
+            "envelope": "envelope88",
+            "sound": "21_sine_bass"
+        },
+        "inst89": {
+            "release_rate": 208,
+            "envelope": "envelope89",
+            "sound": "35_gospel_organ"
+        },
+        "inst90": {
+            "release_rate": 10,
+            "envelope": "envelope90",
+            "sound": "48_steel_drum"
+        },
+        "inst91": {
+            "release_rate": 208,
+            "envelope": "envelope91",
+            "sound": "19_brass"
+        },
+        "inst92": {
+            "release_rate": 208,
+            "envelope": "envelope92",
+            "sound": "1A_slap_bass"
+        },
+        "inst93": {
+            "release_rate": 128,
+            "envelope": "envelope93",
+            "sound": "1B_organ_2"
+        },
+        "inst94": {
+            "release_rate": 208,
+            "envelope": "envelope94",
+            "sound": "1C"
+        },
+        "inst96": {
+            "release_rate": 10,
+            "normal_range_lo": 24,
+            "envelope": "envelope96",
+            "sound_lo": "0E_hihat_closed",
+            "sound": "0F_hihat_open"
+        },
+        "inst97": {
+            "release_rate": 10,
+            "normal_range_lo": 28,
+            "normal_range_hi": 28,
+            "envelope": "envelope97",
+            "sound_lo": "10_cymbal_bell",
+            "sound": "11_splash_cymbal",
+            "sound_hi": "10_cymbal_bell"
+        },
+        "inst98": {
+            "release_rate": 10,
+            "normal_range_lo": 18,
+            "envelope": "envelope98",
+            "sound_lo": "12_snare_drum_1",
+            "sound": "13_snare_drum_2"
+        },
+        "inst99": {
+            "release_rate": 208,
+            "normal_range_lo": 60,
+            "normal_range_hi": 60,
+            "envelope": "envelope99",
+            "sound_lo": "1E_closed_triangle",
+            "sound": "1F_open_triangle",
+            "sound_hi": "20_cabasa"
+        },
+        "inst100": {
+            "release_rate": 10,
+            "envelope": "envelope100",
+            "sound": "30_rarefaction-lahna"
+        },
+        "inst101": {
+            "release_rate": 208,
+            "envelope": "envelope101",
+            "sound": "31_rarefaction-convolution"
+        },
+        "inst102": {
+            "release_rate": 208,
+            "envelope": "envelope102",
+            "sound": "31_rarefaction-convolution"
+        },
+        "inst103": {
+            "release_rate": 10,
+            "normal_range_lo": 14,
+            "normal_range_hi": 15,
+            "envelope": "envelope103",
+            "sound_lo": {"sample": "32_metal_rimshot", "tuning": 2.244924},
+            "sound": "33_kick_drum_2",
+            "sound_hi": {"sample": "32_metal_rimshot", "tuning": 2.828428}
+        },
+        "inst104": {
+            "release_rate": 10,
+            "normal_range_lo": 24,
+            "envelope": "envelope104",
+            "sound_lo": "0E_hihat_closed",
+            "sound": "0F_hihat_open"
+        },
+        "inst105": {
+            "release_rate": 10,
+            "normal_range_lo": 28,
+            "normal_range_hi": 28,
+            "envelope": "envelope105",
+            "sound_lo": "10_cymbal_bell",
+            "sound": "11_splash_cymbal",
+            "sound_hi": "10_cymbal_bell"
+        },
+        "inst106": {
+            "release_rate": 208,
+            "envelope": "envelope106",
+            "sound": "29_orchestra_hit"
+        },
+        "inst107": {
+            "release_rate": 114,
+            "envelope": "envelope107",
+            "sound": "34_alto_flute"
+        },
+        "inst108": {
+            "release_rate": 15,
+            "normal_range_lo": 27,
+            "normal_range_hi": 46,
+            "envelope": "envelope108",
+            "sound_lo": "23_strings_1",
+            "sound": "24_strings_2",
+            "sound_hi": "25_strings_3"
+        },
+        "inst109": {
+            "release_rate": 15,
+            "normal_range_lo": 27,
+            "normal_range_hi": 46,
+            "envelope": "envelope109",
+            "sound_lo": "23_strings_1",
+            "sound": "24_strings_2",
+            "sound_hi": "25_strings_3"
+        },
+        "inst110": {
+            "release_rate": 15,
+            "normal_range_lo": 27,
+            "normal_range_hi": 46,
+            "envelope": "envelope110",
+            "sound_lo": "23_strings_1",
+            "sound": "24_strings_2",
+            "sound_hi": "25_strings_3"
+        },
+        "inst111": {
+            "release_rate": 208,
+            "envelope": "envelope111",
+            "sound": "21_sine_bass"
+        },
+        "inst113": {
+            "release_rate": 10,
+            "normal_range_lo": 24,
+            "envelope": "envelope113",
+            "sound_lo": "0E_hihat_closed",
+            "sound": "0F_hihat_open"
+        },
+        "inst114": {
+            "release_rate": 10,
+            "normal_range_lo": 28,
+            "normal_range_hi": 28,
+            "envelope": "envelope114",
+            "sound_lo": "10_cymbal_bell",
+            "sound": "11_splash_cymbal",
+            "sound_hi": "10_cymbal_bell"
+        },
+        "inst115": {
+            "release_rate": 10,
+            "envelope": "envelope115",
+            "sound": "26_crystal_rhodes"
+        },
+        "inst116": {
+            "release_rate": 10,
+            "envelope": "envelope116",
+            "sound": "26_crystal_rhodes"
+        },
+        "inst118": {
+            "release_rate": 119,
+            "envelope": "envelope0",
+            "sound": {"ifdef": ["VERSION_SH"], "then": "3A_music_box", "else": "00_music_box"}
+        },
+        "inst119": {
+            "release_rate": 119,
+            "envelope": "envelope1",
+            "sound": {"ifdef": ["VERSION_SH"], "then": "3A_music_box", "else": "00_music_box"}
+        },
+        "inst120": {
+            "release_rate": 119,
+            "envelope": "envelope2",
+            "sound": {"ifdef": ["VERSION_SH"], "then": "3A_music_box", "else": "00_music_box"}
+        },
+        "inst121": {
+            "release_rate": 119,
+            "envelope": "envelope3",
+            "sound": {"ifdef": ["VERSION_SH"], "then": "3A_music_box", "else": "00_music_box"}
+        },
+        "inst122": {
+            "release_rate": 119,
+            "envelope": "envelope4",
+            "sound": {"ifdef": ["VERSION_SH"], "then": "3A_music_box", "else": "00_music_box"}
+        },
+        "inst123": {
+            "release_rate": 34,
+            "envelope": "envelope123",
+            "sound": "1D"
+        },
+        "inst124": {
+            "release_rate": 208,
+            "normal_range_lo": 60,
+            "normal_range_hi": 60,
+            "envelope": "envelope124",
+            "sound_lo": "1E_closed_triangle",
+            "sound": "1F_open_triangle",
+            "sound_hi": "20_cabasa"
+        },
+        "inst125": {
+            "release_rate": 10,
+            "envelope": "envelope125",
+            "sound": "21_sine_bass"
+        },
+        "inst126": {
+            "release_rate": 208,
+            "envelope": "envelope126",
+            "sound": "1A_slap_bass"
+        },
+        "inst127": {
+            "release_rate": 114,
+            "envelope": "envelope127",
+            "sound": "21_sine_bass"
+        },
+        "inst128": {
+            "release_rate": 53,
+            "envelope": "envelope128",
+            "sound": "04_bright_piano"
+        },
+        "inst129": {
+            "release_rate": 208,
+            "envelope": "envelope129",
+            "sound": "1D"
+        },
+        "inst130": {
+            "release_rate": 10,
+            "envelope": "envelope130",
+            "sound": "22_boys_choir"
+        },
+        "inst131": {
+            "release_rate": 10,
+            "envelope": "envelope131",
+            "sound": "22_boys_choir"
+        },
+        "inst133": {
+            "release_rate": 208,
+            "envelope": "envelope133",
+            "sound": {"ifdef": ["VERSION_SH"], "then": "45b_la", "else": "00_la"}
+        },
+        "inst134": {
+            "release_rate": 208,
+            "envelope": "envelope134",
+            "sound": {"ifdef": ["VERSION_SH"], "then": "45b_la", "else": "00_la"}
+        },
+        "inst135": {
+            "release_rate": 19,
+            "normal_range_lo": 29,
+            "normal_range_hi": 63,
+            "envelope": "envelope135",
+            "sound_lo": "3B_banjo_2",
+            "sound": "3C_acoustic_guitar",
+            "sound_hi": "3D"
+        },
+        "inst136": {
+            "release_rate": 208,
+            "envelope": "envelope136",
+            "sound": "05_acoustic_bass"
+        },
+        "inst137": {
+            "release_rate": 15,
+            "normal_range_lo": 27,
+            "normal_range_hi": 46,
+            "envelope": "envelope137",
+            "sound_lo": "23_strings_1",
+            "sound": "24_strings_2",
+            "sound_hi": "25_strings_3"
+        },
+        "inst138": {
+            "release_rate": 15,
+            "normal_range_lo": 27,
+            "normal_range_hi": 46,
+            "envelope": "envelope138",
+            "sound_lo": "23_strings_1",
+            "sound": "24_strings_2",
+            "sound_hi": "25_strings_3"
+        },
+        "inst139": {
+            "release_rate": 10,
+            "envelope": "envelope139",
+            "sound": "26_crystal_rhodes"
+        },
+        "inst141": {
+            "release_rate": 10,
+            "normal_range_lo": 24,
+            "envelope": "envelope141",
+            "sound_lo": "0E_hihat_closed",
+            "sound": "0F_hihat_open"
+        },
+        "inst142": {
+            "release_rate": 10,
+            "normal_range_lo": 28,
+            "normal_range_hi": 28,
+            "envelope": "envelope142",
+            "sound_lo": "10_cymbal_bell",
+            "sound": "11_splash_cymbal",
+            "sound_hi": "10_cymbal_bell"
+        },
+        "inst143": {
+            "release_rate": 208,
+            "normal_range_lo": 60,
+            "normal_range_hi": 60,
+            "envelope": "envelope143",
+            "sound_lo": "1E_closed_triangle",
+            "sound": "1F_open_triangle",
+            "sound_hi": "20_cabasa"
+        },
+        "inst144": {
+            "release_rate": 208,
+            "envelope": "envelope144",
+            "sound": "35_gospel_organ"
+        },
+        "inst145": {
+            "release_rate": 208,
+            "envelope": "envelope145",
+            "sound": "36_sawtooth_synth"
+        },
+        "inst146": {
+            "release_rate": 208,
+            "envelope": "envelope146",
+            "sound": "37_square_synth"
+        },
+        "inst147": {
+            "release_rate": 208,
+            "envelope": "envelope147",
+            "sound": "29_orchestra_hit"
+        },
+        "inst149": {
+            "release_rate": 10,
+            "normal_range_lo": 24,
+            "envelope": "envelope149",
+            "sound_lo": "0E_hihat_closed",
+            "sound": "0F_hihat_open"
+        },
+        "inst150": {
+            "release_rate": 208,
+            "normal_range_lo": 60,
+            "normal_range_hi": 60,
+            "envelope": "envelope150",
+            "sound_lo": "1E_closed_triangle",
+            "sound": "1F_open_triangle",
+            "sound_hi": "20_cabasa"
+        },
+        "inst151": {
+            "release_rate": 10,
+            "normal_range_lo": 18,
+            "envelope": "envelope151",
+            "sound_lo": "12_snare_drum_1",
+            "sound": "13_snare_drum_2"
+        },
+        "inst152": {
+            "release_rate": 10,
+            "normal_range_lo": 19,
+            "normal_range_hi": 19,
+            "envelope": "envelope152",
+            "sound_lo": "38_electric_kick_drum",
+            "sound": {"sample": "08", "tuning": 2.121321},
+            "sound_hi": "38_electric_kick_drum"
+        },
+        "inst153": {
+            "release_rate": 10,
+            "envelope": "envelope153",
+            "sound": "22_boys_choir"
+        },
+        "inst154": {
+            "release_rate": 208,
+            "envelope": "envelope154",
+            "sound": "19_brass"
+        },
+        "inst155": {
+            "release_rate": 15,
+            "normal_range_lo": 27,
+            "normal_range_hi": 46,
+            "envelope": "envelope155",
+            "sound_lo": "23_strings_1",
+            "sound": "24_strings_2",
+            "sound_hi": "25_strings_3"
+        },
+        "inst156": {
+            "release_rate": 90,
+            "envelope": "envelope156",
+            "sound": "28_sitar_1"
+        },
+        "inst157": {
+            "release_rate": 208,
+            "envelope": "envelope157",
+            "sound": "29_orchestra_hit"
+        },
+        "inst158": {
+            "release_rate": 100,
+            "normal_range_lo": 55,
+            "normal_range_hi": 56,
+            "envelope": "envelope158",
+            "sound_lo": "2A",
+            "sound": "2B",
+            "sound_hi": "2C"
+        },
+        "inst159": {
+            "release_rate": 208,
+            "envelope": "envelope159",
+            "sound": "19_brass"
+        },
+        "inst160": {
+            "release_rate": 10,
+            "envelope": "envelope160",
+            "sound": "22_boys_choir"
+        },
+        "inst162": {
+            "release_rate": 10,
+            "normal_range_lo": 28,
+            "normal_range_hi": 28,
+            "envelope": "envelope162",
+            "sound_lo": "10_cymbal_bell",
+            "sound": "11_splash_cymbal",
+            "sound_hi": "10_cymbal_bell"
+        },
+        "inst163": {
+            "release_rate": 10,
+            "envelope": "envelope163",
+            "sound": "18_timpani"
+        },
+        "inst164": {
+            "release_rate": 10,
+            "normal_range_lo": 18,
+            "envelope": "envelope164",
+            "sound_lo": "12_snare_drum_1",
+            "sound": "13_snare_drum_2"
+        },
+        "inst165": {
+            "release_rate": 208,
+            "envelope": "envelope165",
+            "sound": "16_french_horns"
+        },
+        "inst166": {
+            "release_rate": 208,
+            "envelope": "envelope166",
+            "sound": "16_french_horns"
+        },
+        "inst167": {
+            "release_rate": 15,
+            "normal_range_lo": 27,
+            "normal_range_hi": 46,
+            "envelope": "envelope167",
+            "sound_lo": "23_strings_1",
+            "sound": "24_strings_2",
+            "sound_hi": "25_strings_3"
+        },
+        "inst168": {
+            "release_rate": 208,
+            "envelope": "envelope168",
+            "sound": "2E_accordion"
+        },
+        "inst169": {
+            "release_rate": 208,
+            "envelope": "envelope169",
+            "sound": "2E_accordion"
+        },
+        "inst170": {
+            "release_rate": 10,
+            "envelope": "envelope170",
+            "sound": "26_crystal_rhodes"
+        },
+        "inst171": {
+            "release_rate": 208,
+            "envelope": "envelope171",
+            "sound": "19_brass"
+        },
+        "inst172": {
+            "release_rate": 208,
+            "envelope": "envelope172",
+            "sound": "1A_slap_bass"
+        },
+        "inst173": {
+            "release_rate": 128,
+            "envelope": "envelope173",
+            "sound": "1B_organ_2"
+        },
+        "inst174": {
+            "release_rate": 208,
+            "envelope": "envelope174",
+            "sound": "1C"
+        },
+        "inst176": {
+            "release_rate": 10,
+            "normal_range_lo": 24,
+            "envelope": "envelope176",
+            "sound_lo": "0E_hihat_closed",
+            "sound": "0F_hihat_open"
+        },
+        "inst177": {
+            "release_rate": 10,
+            "normal_range_lo": 28,
+            "normal_range_hi": 28,
+            "envelope": "envelope177",
+            "sound_lo": "10_cymbal_bell",
+            "sound": "11_splash_cymbal",
+            "sound_hi": "10_cymbal_bell"
+        },
+        "inst178": {
+            "release_rate": 15,
+            "normal_range_lo": 27,
+            "normal_range_hi": 46,
+            "envelope": "envelope178",
+            "sound_lo": "23_strings_1",
+            "sound": "24_strings_2",
+            "sound_hi": "25_strings_3"
+        },
+        "inst179": {
+            "release_rate": 15,
+            "normal_range_lo": 27,
+            "normal_range_hi": 46,
+            "envelope": "envelope179",
+            "sound_lo": "23_strings_1",
+            "sound": "24_strings_2",
+            "sound_hi": "25_strings_3"
+        },
+        "inst180": {
+            "release_rate": 15,
+            "normal_range_lo": 27,
+            "normal_range_hi": 46,
+            "envelope": "envelope180",
+            "sound_lo": "23_strings_1",
+            "sound": "24_strings_2",
+            "sound_hi": "25_strings_3"
+        },
+        "inst181": {
+            "release_rate": 10,
+            "envelope": "envelope181",
+            "sound": "26_crystal_rhodes"
+        },
+        "inst182": {
+            "release_rate": 10,
+            "envelope": "envelope182",
+            "sound": "26_crystal_rhodes"
+        },
+        "inst183": {
+            "release_rate": 255,
+            "envelope": "envelope183",
+            "sound": "27_harpsichord"
+        },
+        "inst184": {
+            "release_rate": 43,
+            "envelope": "envelope184",
+            "sound": "41_pan_flute"
+        },
+        "inst185": {
+            "release_rate": 24,
+            "normal_range_lo": 42,
+            "envelope": "envelope185",
+            "sound_lo": "14_strings_5",
+            "sound": "15_strings_4"
+        },
+        "inst187": {
+            "release_rate": 43,
+            "envelope": "envelope187",
+            "sound": "41_pan_flute"
+        },
+        "inst188": {
+            "release_rate": 10,
+            "envelope": "envelope188",
+            "sound": "22_boys_choir"
+        },
+        "inst189": {
+            "release_rate": 19,
+            "envelope": "envelope189",
+            "sound": "43_harmonica"
+        },
+        "inst190": {
+            "release_rate": 208,
+            "envelope": "envelope190",
+            "sound": "1A_slap_bass"
+        },
+        "inst191": {
+            "release_rate": 208,
+            "envelope": "envelope191",
+            "sound": "1C"
+        },
+        "inst192": {
+            "release_rate": 10,
+            "envelope": "envelope192",
+            "sound": "26_crystal_rhodes"
+        },
+        "inst193": {
+            "release_rate": 34,
+            "envelope": "envelope193",
+            "sound": "44_grand_piano"
+        },
+        "inst194": {
+            "release_rate": 53,
+            "normal_range_hi": 50,
+            "envelope": "envelope194",
+            "sound": "16_french_horns",
+            "sound_hi": "45_french_horns_lq"
+        },
+        "inst195": {
+            "release_rate": 10,
+            "normal_range_lo": 24,
+            "envelope": "envelope195",
+            "sound_lo": "0E_hihat_closed",
+            "sound": "0F_hihat_open"
+        },
+        "inst196": {
+            "release_rate": 10,
+            "normal_range_lo": 28,
+            "normal_range_hi": 28,
+            "envelope": "envelope196",
+            "sound_lo": "10_cymbal_bell",
+            "sound": "11_splash_cymbal",
+            "sound_hi": "10_cymbal_bell"
+        },
+        "inst197": {
+            "release_rate": 208,
+            "normal_range_lo": 60,
+            "normal_range_hi": 60,
+            "envelope": "envelope197",
+            "sound_lo": "1E_closed_triangle",
+            "sound": "1F_open_triangle",
+            "sound_hi": "20_cabasa"
+        },
+        "inst198": {
+            "release_rate": 43,
+            "envelope": "envelope198",
+            "sound": "41_pan_flute"
+        },
+        "inst199": {
+            "release_rate": 15,
+            "normal_range_lo": 27,
+            "normal_range_hi": 46,
+            "envelope": "envelope199",
+            "sound_lo": "23_strings_1",
+            "sound": "24_strings_2",
+            "sound_hi": "25_strings_3"
+        },
+        "inst201": {
+            "release_rate": 10,
+            "envelope": "envelope201",
+            "sound": "44_grand_piano"
+        },
+        "inst202": {
+            "release_rate": 10,
+            "envelope": "envelope202",
+            "sound": "26_crystal_rhodes"
+        },
+        "inst203": {
+            "release_rate": 34,
+            "envelope": "envelope203",
+            "sound": "43_harmonica"
+        }
+    },
+    "instrument_list": [
+        "inst0",
+        "inst1",
+        "inst2",
+        "inst3",
+        "inst4",
+        "inst5",
+        "inst6",
+        "inst7",
+        "inst8",
+        "inst9",
+        "inst10",
+        "inst11",
+        "inst12",
+        "inst13",
+        "inst14",
+        "inst15",
+        "inst16",
+        "inst17",
+        "inst18",
+        "inst19",
+        "inst20",
+        "inst21",
+        "inst22",
+        "inst23",
+        "inst24",
+        "inst25",
+        "inst26",
+        "inst27",
+        "inst28",
+        "inst29",
+        "inst30",
+        "inst31",
+        "inst32",
+        "inst33",
+        "inst34",
+        "inst35",
+        "inst36",
+        "inst37",
+        "inst38",
+        "inst39",
+        "inst40",
+        "inst41",
+        "inst42",
+        "inst43",
+        "inst44",
+        "inst45",
+        "inst46",
+        "inst47",
+        "inst48",
+        "inst49",
+        "inst50",
+        "inst51",
+        "inst52",
+        "inst53",
+        "inst54",
+        "inst55",
+        "inst56",
+        "inst57",
+        "inst58",
+        null,
+        "inst60",
+        "inst61",
+        "inst62",
+        "inst63",
+        "inst64",
+        "inst65",
+        "inst66",
+        "inst67",
+        "inst68",
+        "inst69",
+        "inst70",
+        "inst71",
+        "inst72",
+        "inst73",
+        "inst74",
+        "inst75",
+        "inst76",
+        "inst77",
+        "inst78",
+        "inst79",
+        "inst80",
+        "inst81",
+        "inst82",
+        "inst83",
+        "inst84",
+        "inst85",
+        "inst86",
+        "inst87",
+        "inst88",
+        "inst89",
+        "inst90",
+        "inst91",
+        "inst92",
+        "inst93",
+        "inst94",
+        null,
+        "inst96",
+        "inst97",
+        "inst98",
+        "inst99",
+        "inst100",
+        "inst101",
+        "inst102",
+        "inst103",
+        "inst104",
+        "inst105",
+        "inst106",
+        "inst107",
+        "inst108",
+        "inst109",
+        "inst110",
+        "inst111",
+        null,
+        "inst113",
+        "inst114",
+        "inst115",
+        "inst116",
+        null,
+        "inst118",
+        "inst119",
+        "inst120",
+        "inst121",
+        "inst122",
+        "inst123",
+        "inst124",
+        "inst125",
+        "inst126",
+        "inst127",
+        "inst128",
+        "inst129",
+        "inst130",
+        "inst131",
+        null,
+        "inst133",
+        "inst134",
+        "inst135",
+        "inst136",
+        "inst137",
+        "inst138",
+        "inst139",
+        null,
+        "inst141",
+        "inst142",
+        "inst143",
+        "inst144",
+        "inst145",
+        "inst146",
+        "inst147",
+        null,
+        "inst149",
+        "inst150",
+        "inst151",
+        "inst152",
+        "inst153",
+        "inst154",
+        "inst155",
+        "inst156",
+        "inst157",
+        "inst158",
+        "inst159",
+        "inst160",
+        null,
+        "inst162",
+        "inst163",
+        "inst164",
+        "inst165",
+        "inst166",
+        "inst167",
+        "inst168",
+        "inst169",
+        "inst170",
+        "inst171",
+        "inst172",
+        "inst173",
+        "inst174",
+        null,
+        "inst176",
+        "inst177",
+        "inst178",
+        "inst179",
+        "inst180",
+        "inst181",
+        "inst182",
+        "inst183",
+        "inst184",
+        "inst185",
+        null,
+        "inst187",
+        "inst188",
+        "inst189",
+        "inst190",
+        "inst191",
+        "inst192",
+        "inst193",
+        "inst194",
+        "inst195",
+        "inst196",
+        "inst197",
+        "inst198",
+        "inst199",
+        null,
+        "inst201",
+        "inst202",
+        "inst203"
+    ]
+}

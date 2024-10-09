@@ -1,0 +1,83 @@
+sm64coopdx Developers:
+    Agent X
+    AngelicMiracles
+    FluffaMario
+    Isaac0-dev
+    theclashingfritz
+    PeachyPeach
+
+sm64coopdx Contributors:
+    Ale64
+    ArcticJaguar725
+    Cooliokid 956
+    crapbass
+    djoslin0 (Rom asset extractor)
+    Dominicentek
+    eros71
+    iZePlayz
+    kermeet
+    Sharen
+    eeliottheking
+    Flower35
+    Melzinoff
+    Skeltan
+    Jinjo
+    LunarCryptikVEVO
+    Squishy6094
+
+sm64ex-coop Developers:
+    Agent X
+    djoslin0
+    fgsfds
+    FluffaLuigi
+    Isaac0-dev
+    kebabstorm
+    MegaMech
+    PeachyPeach
+    theclashingfritz
+
+sm64ex-coop Contributors:
+    AloXado320
+    Altiami
+    Amy54Desu
+    anzz1
+    Avery
+    binary
+    Cameron Hall
+    camthesaxman
+    charity
+    Cjes
+    DorfDork
+    Draco
+    enigma9o7
+    eros71
+    Filipianosol
+    GammaTendonNine
+    gunvalk
+    iZePlayz
+    jkcoxson
+    Llennpie
+    LuigiNoodle
+    mjcox24
+    PoltixeTheDerg
+    s4ys
+    sm64rise
+    snuffysasa
+    SonicDarkYT
+    steven.
+    SunlitSpace542
+    Super Keeberghrh
+    TheGag96
+    Victor Diego Alejandro Diaz Urbaneja
+
+Sounds:
+    Andrat          : Luigi voice lines
+    Dark the Eagle  : Wario voice lines
+    Ninten_King_64  : Toad voice lines
+    Melissa Mekrose : Toadette voice lines
+    SuperKirbylover : Peach voice lines
+    MorphiGalaxi    : Daisy voice lines
+
+The custom models, levels, textures, animations, and warps use DynOS. DynOS was created by PeachyPeach.
+
+sm64coopdx was built on top of sm64ex-coop, which was built on top of sm64ex, which was built on top of the sm64 decomp project.

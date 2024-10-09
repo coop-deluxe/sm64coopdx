@@ -1,0 +1,8 @@
+#include "pc/rom_assets.h"
+// Thwomp
+
+// 0x0500B7D0 - 0x0500B92C
+ROM_ASSET_LOAD_COLLISION(thwomp_seg5_collision_0500B7D0, 0x0012a7e0, 32879, 0x0000b7d0, 348);
+
+// 0x0500B92C - 0x0500BA88
+ROM_ASSET_LOAD_COLLISION(thwomp_seg5_collision_0500B92C, 0x0012a7e0, 32879, 0x0000b7d0, 348);

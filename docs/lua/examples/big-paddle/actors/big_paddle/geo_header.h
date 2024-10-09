@@ -1,0 +1,10 @@
+extern const GeoLayout big_paddle_geo[];
+extern Lights1 big_paddle_f3d_material_lights;
+extern u8 big_paddle_custom_box_surface_rgba16_ci4[];
+extern u8 big_paddle_custom_box_surface_rgba16_ci4_pal_rgba16[];
+extern Vtx big_paddle_paddle_mesh_layer_1_vtx_0[76];
+extern Gfx big_paddle_paddle_mesh_layer_1_tri_0[];
+extern Gfx mat_big_paddle_f3d_material[];
+extern Gfx mat_revert_big_paddle_f3d_material[];
+extern Gfx big_paddle_paddle_mesh_layer_1[];
+extern Gfx big_paddle_material_revert_render_settings[];

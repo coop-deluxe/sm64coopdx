@@ -1,0 +1,2 @@
+-- name: [CS] Extra Characters
+-- description: [CS] \\#fc03df\\Ext\\#ffc342\\ra \\#00ff00\\Chara\\#d60f6f\\cters\n\\#dcdcdc\\By Coop Deluxe Team\n\n\\#dcdcdc\\This Character Select pack adds other characters from the Mario series!\n\n\\#ff6868\\Model Credits:\n\\\#dcdcdc\\FluffaMario\nAngelicMiracles "Yuyake"\nMelzinoff\nThatGurlTilly\n\n\\#00ff00\\Voice Actors:\n\\#dcdcdc\\MelissaMekrose\nSuperKirbyLover\nMorphiGalaxi\nAngelicMiracles "Yuyake"\nRihannaDeleon\n\n\\#ff6868\\Requires \\00ff00\\Character Select \\#ff6868\\enabled!
