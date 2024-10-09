@@ -1465,15 +1465,14 @@ u32 interact_player_pvp(struct MarioState* attacker, struct MarioState* victim) 
         if (attacker->action == ACT_SLIDE_KICK_SLIDE || attacker->action == ACT_SLIDE_KICK) {
             // if the difference vectors are not different enough, do not attack
             if (vec3f_length(attacker->vel) < 15) { return FALSE; }
-        } else if (attacker->action != ACT_JUMP_KICK && cVictim->action == ACT_DIVE) {
-            // do nothing, which means that it will always be possible to hit a dive
         } else {
             // if the difference vectors are not different enough, do not attack
             if (vec3f_length(attacker->vel) < 40) { return FALSE; }
         }
 
         // if the victim is going faster, do not attack
-        if (cVictim->action != ACT_DIVE && vec3f_length(cVictim->vel) > vec3f_length(attacker->vel)) { return FALSE; }
+        // However if the victim is diving and the attacker is slidekicking, do not check speed
+        if (!(attacker->action == ACT_SLIDE_KICK && cVictim->action == ACT_DIVE) && vec3f_length(cVictim->vel) > vec3f_length(attacker->vel)) { return FALSE; }
     }
 
     // determine if ground pound should be ignored
