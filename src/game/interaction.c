@@ -1357,6 +1357,7 @@ u8 passes_pvp_interaction_checks(struct MarioState* attacker, struct MarioState*
                           || attacker->action == ACT_FORWARD_ROLLOUT || attacker->action == ACT_BACKWARD_ROLLOUT);
     u8 isVictimIntangible = (victim->action & ACT_FLAG_INTANGIBLE);
     u8 isVictimGroundPounding = (victim->action == ACT_GROUND_POUND) && (victim->actionState != 0);
+    u8 isVictimInRolloutFlip = (victim->action == ACT_FORWARD_ROLLOUT || victim->action == ACT_BACKWARD_ROLLOUT) && (victim->actionState == 1);
     if (victim->knockbackTimer != 0) {
         return false;
     }
@@ -1365,7 +1366,7 @@ u8 passes_pvp_interaction_checks(struct MarioState* attacker, struct MarioState*
         return true;
     }
 
-    return (!isInvulnerable && !isIgnoredAttack && !isAttackerInvulnerable && !isVictimIntangible && !isVictimGroundPounding);
+    return (!isInvulnerable && !isIgnoredAttack && !isAttackerInvulnerable && !isVictimIntangible && !isVictimGroundPounding && !isVictimInRolloutFlip);
 }
 
 u32 interact_player(struct MarioState* m, UNUSED u32 interactType, struct Object* o) {
@@ -1464,13 +1465,15 @@ u32 interact_player_pvp(struct MarioState* attacker, struct MarioState* victim) 
         if (attacker->action == ACT_SLIDE_KICK_SLIDE || attacker->action == ACT_SLIDE_KICK) {
             // if the difference vectors are not different enough, do not attack
             if (vec3f_length(attacker->vel) < 15) { return FALSE; }
+        } else if (attacker->action != ACT_JUMP_KICK && cVictim->action == ACT_DIVE) {
+            // do nothing, which means that it will always be possible to hit a dive
         } else {
             // if the difference vectors are not different enough, do not attack
             if (vec3f_length(attacker->vel) < 40) { return FALSE; }
         }
 
         // if the victim is going faster, do not attack
-        if (vec3f_length(cVictim->vel) > vec3f_length(attacker->vel)) { return FALSE; }
+        if (cVictim->action != ACT_DIVE && vec3f_length(cVictim->vel) > vec3f_length(attacker->vel)) { return FALSE; }
     }
 
     // determine if ground pound should be ignored
@@ -1478,11 +1481,6 @@ u32 interact_player_pvp(struct MarioState* attacker, struct MarioState* victim) 
         // not moving down yet?
         if (attacker->actionState == 0) { return FALSE; }
         victim->bounceSquishTimer = max(victim->bounceSquishTimer, 20);
-    }
-    // Make rollouts unable to be attacked during the flip
-    if ((cVictim->action == ACT_FORWARD_ROLLOUT || cVictim->action == ACT_BACKWARD_ROLLOUT) &&
-                cVictim->actionState == 1) {
-        return FALSE;
     }
 
     if (victim->playerIndex == 0) {
