@@ -114,7 +114,7 @@ void exclamation_box_spawn_contents(struct ExclamationBoxContent *content, u8 it
         return;
     }
 
-    while (content->id != 99) {
+    for (u8 i = 0; i < gExclamationBoxSize; i++) {
         if (itemId == content->id) {
             s32 model = exclamation_replace_model(marioState, smlua_model_util_load(content->model));
 

@@ -383,3 +383,13 @@ end
 function collision_find_surface_on_ray(startX, startY, startZ, dirX, dirY, dirZ, precision)
     -- ...
 end
+
+--- @param contents ExclamationBoxContent[]
+function set_exclamation_box(contents)
+    -- ...
+end
+
+--- @return ExclamationBoxContent[]
+function get_exclamation_box()
+    -- ...
+end

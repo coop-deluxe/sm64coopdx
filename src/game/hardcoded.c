@@ -302,11 +302,15 @@ struct ExclamationBoxContent sDefaultExclamationBoxContents[] = {
     { 11, 0, 2, E_MODEL_STAR, id_bhvSpawnedStar },
     { 12, 0, 3, E_MODEL_STAR, id_bhvSpawnedStar },
     { 13, 0, 4, E_MODEL_STAR, id_bhvSpawnedStar },
-    { 14, 0, 5, E_MODEL_STAR, id_bhvSpawnedStar },
-    { 99, 0, 0, 0, 0 }
+    { 14, 0, 5, E_MODEL_STAR, id_bhvSpawnedStar }
 };
 
-struct ExclamationBoxContent* gExclamationBoxContents = { 0 };
+// Hack: Create 2 arrays: one that is constantly default and one that can be changed
+struct ExclamationBoxContent sDummyContents[15];
+
+struct ExclamationBoxContent* gExclamationBoxContents = sDummyContents;
+
+u8 gExclamationBoxSize = 15;
 
   //////////////
  // Painting //
@@ -357,7 +361,10 @@ AT_STARTUP void hardcoded_reset_default_values(void) {
     memcpy(&sl_painting, &default_sl_painting, sizeof(struct Painting));
     memcpy(&thi_huge_painting, &default_thi_huge_painting, sizeof(struct Painting));
     memcpy(&ttm_slide_painting, &default_ttm_slide_painting, sizeof(struct Painting));
+    memcpy(sDummyContents, sDefaultExclamationBoxContents, sizeof(struct ExclamationBoxContent) * 15);
+
+    gExclamationBoxContents = sDummyContents;
+    gExclamationBoxSize = 15;
 
     gPaintingValues = gDefaultPaintingValues;
-    gExclamationBoxContents = sDefaultExclamationBoxContents;
 }

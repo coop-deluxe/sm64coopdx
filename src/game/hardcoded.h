@@ -277,6 +277,7 @@ struct ExclamationBoxContent {
 };
 
 extern struct ExclamationBoxContent* gExclamationBoxContents;
+extern u8 gExclamationBoxSize;
 
   //////////////
  // Painting //
