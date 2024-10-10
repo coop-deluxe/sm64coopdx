@@ -16,12 +16,8 @@
 
 float smoothstep(float edge0, float edge1, float x) {
     float t = (x - edge0) / (edge1 - edge0);
-    if (t < 0) {
-        t = 0;
-    }
-    if (t > 1) {
-        t = 1;
-    }
+    if (t < 0) { t = 0; }
+    if (t > 1) { t = 1; }
     return t * t * (3.0 - 2.0 * t);
 }
 
@@ -32,7 +28,7 @@ void update_all_mario_stars(void) {
     }
 }
 
-static void _clock_gettime(struct timespec *clock_time) {
+static void _clock_gettime(struct timespec* clock_time) {
 #if !defined _POSIX_MONOTONIC_CLOCK || _POSIX_MONOTONIC_CLOCK < 0
     clock_gettime(CLOCK_REALTIME, clock_time);
 #elif _POSIX_MONOTONIC_CLOCK > 0
@@ -65,14 +61,14 @@ static u64 clock_elapsed_ns(void) {
     if (!sClockInitialized) {
         struct timespec clock_start;
         _clock_gettime(&clock_start);
-        clock_start_ns = ((u64) clock_start.tv_sec) * 1000000000 + ((u64) clock_start.tv_nsec);
+        clock_start_ns = ((u64)clock_start.tv_sec) * 1000000000 + ((u64)clock_start.tv_nsec);
         sClockInitialized = true;
     }
 
     struct timespec clock_current;
     _clock_gettime(&clock_current);
 
-    u64 clock_current_ns = ((u64) clock_current.tv_sec) * 1000000000 + ((u64) clock_current.tv_nsec);
+    u64 clock_current_ns = ((u64)clock_current.tv_sec) * 1000000000 + ((u64)clock_current.tv_nsec);
     return (clock_current_ns - clock_start_ns);
 }
 
@@ -88,24 +84,20 @@ u32 clock_elapsed_ticks(void) {
     return (clock_elapsed_ns() * 3 / 100000000);
 }
 
-void file_get_line(char *buffer, size_t maxLength, FILE *fp) {
-    char *initial = buffer;
+void file_get_line(char* buffer, size_t maxLength, FILE* fp) {
+    char* initial = buffer;
 
     char c = fgetc(fp);
     while (!feof(fp) && c != '\n') {
         // make sure it's printable
-        if (c < ' ' || c > '~') {
-            goto next_get;
-        }
+        if (c < ' ' || c > '~') { goto next_get; }
 
         // parse new line escape code
         if (c == '\\') {
             c = fgetc(fp);
-            if (feof(fp)) {
-                break;
-            }
+            if (feof(fp)) { break; }
             if (c == 'n') {
-                if ((size_t) (buffer - initial) < (maxLength - 1)) {
+                if ((size_t)(buffer - initial) < (maxLength - 1)) {
                     *buffer++ = '\n';
                 }
                 goto next_get;
@@ -113,16 +105,14 @@ void file_get_line(char *buffer, size_t maxLength, FILE *fp) {
         }
 
         // found new line
-        if (c == '\n') {
-            break;
-        }
+        if (c == '\n') { break; }
 
         // append to buffer
-        if ((size_t) (buffer - initial) < (maxLength - 1)) {
+        if ((size_t)(buffer - initial) < (maxLength - 1)) {
             *buffer++ = c;
         }
 
-    next_get:
+next_get:
         c = fgetc(fp);
     }
 
@@ -130,6 +120,7 @@ void file_get_line(char *buffer, size_t maxLength, FILE *fp) {
 }
 
 /////////////////
+
 f32 delta_interpolate_f32(f32 start, f32 end, f32 delta) {
     return start * (1.0f - delta) + end * delta;
 }
@@ -152,14 +143,14 @@ void delta_interpolate_vec3s(Vec3s res, Vec3s a, Vec3s b, f32 delta) {
     res[2] = ((a[2] * antiDelta) + (b[2] * delta));
 }
 
-void delta_interpolate_normal(s8 *res, s8 *a, s8 *b, f32 delta) {
+void delta_interpolate_normal(s8* res, s8* a, s8* b, f32 delta) {
     f32 antiDelta = 1.0f - delta;
     res[0] = ((a[0] * antiDelta) + (b[0] * delta));
     res[1] = ((a[1] * antiDelta) + (b[1] * delta));
     res[2] = ((a[2] * antiDelta) + (b[2] * delta));
 }
 
-void delta_interpolate_rgba(u8 *res, u8 *a, u8 *b, f32 delta) {
+void delta_interpolate_rgba(u8* res, u8* a, u8* b, f32 delta) {
     f32 antiDelta = 1.0f - delta;
     res[0] = ((a[0] * antiDelta) + (b[0] * delta));
     res[1] = ((a[1] * antiDelta) + (b[1] * delta));
@@ -185,14 +176,21 @@ static void rot_mat_to_rot_quat(Vec4f q, Vec3f a[3]) {
 
     // find the coefficient with greatest magnitude
     // NaN checks are because of possible square root of negative number in get_quat_compo_abs
-    int maxCompoMagCase =
-        float_ge_with_nan_check(q[0], q[1])   ? float_ge_with_nan_check(q[0], q[2])
-                                                    ? float_ge_with_nan_check(q[0], q[3]) ? 0 : 3
-                                                : float_ge_with_nan_check(q[2], q[3]) ? 2
-                                                                                      : 3
-        : float_ge_with_nan_check(q[1], q[2]) ? float_ge_with_nan_check(q[1], q[3]) ? 1 : 3
-        : float_ge_with_nan_check(q[2], q[3]) ? 2
-                                              : 3;
+    int maxCompoMagCase = float_ge_with_nan_check(q[0], q[1])
+        ? float_ge_with_nan_check(q[0], q[2])
+            ? float_ge_with_nan_check(q[0], q[3])
+                ? 0
+                : 3
+            : float_ge_with_nan_check(q[2], q[3])
+                ? 2
+                : 3
+        : float_ge_with_nan_check(q[1], q[2])
+            ? float_ge_with_nan_check(q[1], q[3])
+                ? 1
+                : 3
+            : float_ge_with_nan_check(q[2], q[3])
+                ? 2
+                : 3;
 
     // adjust signs of coefficients; base on greatest magnitude to improve float accuracy
     f32 divFactor = 0;
@@ -313,7 +311,7 @@ inline static f32 unmat_unscale_shear(f32 shear, f32 scale) {
 //
 // tranfs is returned as follows:
 // scale(x, y, z), shear(xy, xz, zy), rotation(a, b, c, d), translation(x, y, z)
-OPTIMIZE_O3 static void unmatrix(Mtx *mat, f32 tranfs[13]) {
+OPTIMIZE_O3 static void unmatrix(Mtx * mat, f32 tranfs[13]) {
     int i = 0;
     Vec3f axisVecs[3] = { 0 };
     Vec3f yzCross = { 0 };
@@ -414,7 +412,7 @@ OPTIMIZE_O3 static void unmatrix(Mtx *mat, f32 tranfs[13]) {
 
 // builds a transformation matrix from a decomposed sequence from unmatrix
 // see unmatrix for what tranfs means
-static void rematrix(Mtx *mat, f32 tranfs[13]) {
+static void rematrix(Mtx * mat, f32 tranfs[13]) {
     int i;
     Vec3f rotAxes[3] = { 0 };
     Mat4 rotMat = { 0 };
@@ -460,7 +458,7 @@ static void rematrix(Mtx *mat, f32 tranfs[13]) {
     }
 }
 
-inline static void delta_interpolate_mtx_accurate(Mtx *out, Mtx *a, Mtx *b, f32 delta) {
+inline static void delta_interpolate_mtx_accurate(Mtx* out, Mtx* a, Mtx* b, f32 delta) {
     int i = 0;
     f32 matTranfsA[13] = { 0 };
     f32 matTranfsB[13] = { 0 };
@@ -483,9 +481,9 @@ inline static void delta_interpolate_mtx_accurate(Mtx *out, Mtx *a, Mtx *b, f32 
     rematrix(out, matTranfsB);
 }
 
-void delta_interpolate_mtx(Mtx *out, Mtx *a, Mtx *b, f32 delta) {
+void delta_interpolate_mtx(Mtx* out, Mtx* a, Mtx* b, f32 delta) {
     // HACK: Limit accurate interpolation to 64-bit builds
-    if (sizeof(void *) > 4) {
+    if (sizeof(void*) > 4) {
         if (configInterpolationMode) {
             delta_interpolate_mtx_accurate(out, a, b, delta);
             return;
@@ -501,28 +499,16 @@ void delta_interpolate_mtx(Mtx *out, Mtx *a, Mtx *b, f32 delta) {
     }
 }
 
-void detect_and_skip_mtx_interpolation(Mtx **mtxPrev, Mtx **mtx) {
+void detect_and_skip_mtx_interpolation(Mtx** mtxPrev, Mtx** mtx) {
     // if the matrix has changed "too much", then skip interpolation
     const f32 minDot = sqrt(2.0f) / -3.0f;
-    Vec3f prevX;
-    vec3f_copy(prevX, (f32 *) (*mtxPrev)->m[0]);
-    vec3f_normalize(prevX);
-    Vec3f prevY;
-    vec3f_copy(prevY, (f32 *) (*mtxPrev)->m[1]);
-    vec3f_normalize(prevY);
-    Vec3f prevZ;
-    vec3f_copy(prevZ, (f32 *) (*mtxPrev)->m[2]);
-    vec3f_normalize(prevZ);
+    Vec3f prevX; vec3f_copy(prevX, (f32*)(*mtxPrev)->m[0]); vec3f_normalize(prevX);
+    Vec3f prevY; vec3f_copy(prevY, (f32*)(*mtxPrev)->m[1]); vec3f_normalize(prevY);
+    Vec3f prevZ; vec3f_copy(prevZ, (f32*)(*mtxPrev)->m[2]); vec3f_normalize(prevZ);
 
-    Vec3f nextX;
-    vec3f_copy(nextX, (f32 *) (*mtx)->m[0]);
-    vec3f_normalize(nextX);
-    Vec3f nextY;
-    vec3f_copy(nextY, (f32 *) (*mtx)->m[1]);
-    vec3f_normalize(nextY);
-    Vec3f nextZ;
-    vec3f_copy(nextZ, (f32 *) (*mtx)->m[2]);
-    vec3f_normalize(nextZ);
+    Vec3f nextX; vec3f_copy(nextX, (f32*)(*mtx)->m[0]); vec3f_normalize(nextX);
+    Vec3f nextY; vec3f_copy(nextY, (f32*)(*mtx)->m[1]); vec3f_normalize(nextY);
+    Vec3f nextZ; vec3f_copy(nextZ, (f32*)(*mtx)->m[2]); vec3f_normalize(nextZ);
 
     f32 dotX = vec3f_dot(prevX, nextX);
     f32 dotY = vec3f_dot(prevY, nextY);
@@ -533,13 +519,10 @@ void detect_and_skip_mtx_interpolation(Mtx **mtxPrev, Mtx **mtx) {
     }
 }
 
-void str_seperator_concat(char *output_buffer, int buffer_size, char **strings, int num_strings,
-                          char *seperator) {
+void str_seperator_concat(char *output_buffer, int buffer_size, char** strings, int num_strings, char* seperator) {
     // empty buffer
     memset(output_buffer, 0, buffer_size);
-    if (num_strings <= 0) {
-        return;
-    }
+    if (num_strings <= 0) { return; }
 
     // Calculate the total length of all strings
     int string_length[num_strings];
@@ -555,15 +538,13 @@ void str_seperator_concat(char *output_buffer, int buffer_size, char **strings, 
     if (seperators_length + 8 < buffer_size) {
         // Shorten the largest string over and over until we fit
         while (total_length + seperators_length >= buffer_size) {
-            int *largest = NULL;
+            int* largest = NULL;
             for (int i = 0; i < num_strings; i++) {
                 if (largest == NULL || string_length[i] >= *largest) {
                     largest = &string_length[i];
                 }
             }
-            if (largest == NULL || *largest == 0) {
-                break;
-            }
+            if (largest == NULL || *largest == 0) { break; }
             *largest = *largest - 1;
             total_length--;
         }
@@ -574,18 +555,14 @@ void str_seperator_concat(char *output_buffer, int buffer_size, char **strings, 
     for (int i = 0; i < num_strings; i++) {
         // Concat string
         int amount = MIN(buffer_size - buffer_index, string_length[i] + 1);
-        if (amount <= 0) {
-            break;
-        }
+        if (amount <= 0) { break; }
         snprintf(&output_buffer[buffer_index], amount, "%s", strings[i]);
         buffer_index += string_length[i];
 
         // Concat seperator
         if (i != (num_strings - 1)) {
             int amount = MIN(buffer_size - buffer_index, seperator_length + 1);
-            if (amount <= 0) {
-                break;
-            }
+            if (amount <= 0) { break; }
             snprintf(&output_buffer[buffer_index], amount, "%s", seperator);
             buffer_index += seperator_length;
         }
