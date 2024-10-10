@@ -184,13 +184,15 @@ void *vec3f_normalize(Vec3f dest) {
 }
 
 /// Get length of vector 'a'
-f32 vec3f_length(Vec3f a) {
-    return sqrtf(a[0] * a[0] + a[1] * a[1] + a[2] * a[2]);
+f32 vec3f_length(Vec3f a)
+{
+	return sqrtf(a[0] * a[0] + a[1] * a[1] + a[2] * a[2]);
 }
 
 /// Get dot product of vectors 'a' and 'b'
-f32 vec3f_dot(Vec3f a, Vec3f b) {
-    return a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+f32 vec3f_dot(Vec3f a, Vec3f b)
+{
+	return a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
 }
 
 /// takes respective scales of vecA and vecB, and sums them
@@ -208,7 +210,7 @@ void vec3f_combine(Vec3f dest, Vec3f vecA, Vec3f vecB, f32 sclA, f32 sclB) {
  */
 void *vec3f_rotate_zxy(Vec3f dest, Vec3s rotate) {
     Vec3f v = { dest[0], dest[1], dest[2] };
-
+    
     f32 sx = sins(rotate[0]);
     f32 cx = coss(rotate[0]);
 
@@ -217,7 +219,7 @@ void *vec3f_rotate_zxy(Vec3f dest, Vec3s rotate) {
 
     f32 sz = sins(rotate[2]);
     f32 cz = coss(rotate[2]);
-
+    
     f32 sysz = (sy * sz);
     f32 cycz = (cy * cz);
     f32 cysz = (cy * sz);
@@ -226,7 +228,7 @@ void *vec3f_rotate_zxy(Vec3f dest, Vec3s rotate) {
     dest[0] = v[0] * ((sysz * sx) + cycz) + v[1] * ((sycz * sx) - cysz) + v[2] * (cx * sy);
     dest[1] = v[0] * (cx * sz) + v[1] * (cx * cz) + v[2] * -sx;
     dest[2] = v[0] * ((cysz * sx) - sycz) + v[1] * ((cycz * sx) + sysz) + v[2] * (cx * cy);
-
+    
     return dest;
 }
 
@@ -252,12 +254,10 @@ void mtxf_identity(Mat4 mtx) {
     // These loops must be one line to match on -O2
 
     // initialize everything except the first and last cells to 0
-    for (dest = (f32 *) mtx + 1, i = 0; i < 14; dest++, i++)
-        *dest = 0;
+    for (dest = (f32 *) mtx + 1, i = 0; i < 14; dest++, i++) *dest = 0;
 
     // initialize the diagonal cells to 1
-    for (dest = (f32 *) mtx, i = 0; i < 4; dest += 5, i++)
-        *dest = 1;
+    for (dest = (f32 *) mtx, i = 0; i < 4; dest += 5, i++) *dest = 1;
 }
 
 /**
@@ -733,10 +733,14 @@ void mtxf_inverse(register Mat4 dest, register Mat4 src) {
     Mat4 buf;
 
     // calculating the determinant has been reduced since the check is removed
-    det_1 = 1.0f
-            / (src[0][0] * src[1][1] * src[2][2] + src[0][1] * src[1][2] * src[2][0]
-               + src[0][2] * src[1][0] * src[2][1] - src[0][2] * src[1][1] * src[2][0]
-               - src[0][1] * src[1][0] * src[2][2] - src[0][0] * src[1][2] * src[2][1]);
+    det_1 = 1.0f / (
+          src[0][0] * src[1][1] * src[2][2]
+        + src[0][1] * src[1][2] * src[2][0]
+        + src[0][2] * src[1][0] * src[2][1]
+        - src[0][2] * src[1][1] * src[2][0]
+        - src[0][1] * src[1][0] * src[2][2]
+        - src[0][0] * src[1][2] * src[2][1]
+    );
 
     // inverse of axis vectors (adj(A) / det(A))
     buf[0][0] = (src[1][1] * src[2][2] - src[1][2] * src[2][1]) * det_1;
@@ -857,10 +861,8 @@ static u16 atan2_lookup(f32 y, f32 x) {
     if (x == 0) {
         ret = gArctanTable[0];
     } else {
-        s32 index = (s32) (y / x * 1024 + 0.5f);
-        if (index >= 0x401 || index < 0) {
-            index = 0;
-        }
+        s32 index = (s32)(y / x * 1024 + 0.5f);
+        if (index >= 0x401 || index < 0) { index = 0; }
         ret = gArctanTable[index];
     }
     return ret;
@@ -945,10 +947,8 @@ f32 atan2f(f32 y, f32 x) {
  * [0, 0, 0, 0, 1, 2, ... n-1, n, n, n, n]
  * TODO: verify the classification of the spline / figure out how polynomials were computed
  */
-void spline_get_weights(struct MarioState *m, Vec4f result, f32 t, UNUSED s32 c) {
-    if (!m) {
-        return;
-    }
+void spline_get_weights(struct MarioState* m, Vec4f result, f32 t, UNUSED s32 c) {
+    if (!m) { return; }
     f32 tinv = 1 - t;
     f32 tinv2 = tinv * tinv;
     f32 tinv3 = tinv2 * tinv;
@@ -997,10 +997,8 @@ void spline_get_weights(struct MarioState *m, Vec4f result, f32 t, UNUSED s32 c)
  * The array should end with three entries with s=0 (infinite keyframe duration).
  * That's because the spline has a 3rd degree polynomial, so it looks 3 points ahead.
  */
-void anim_spline_init(struct MarioState *m, Vec4s *keyFrames) {
-    if (!m) {
-        return;
-    }
+void anim_spline_init(struct MarioState* m, Vec4s *keyFrames) {
+    if (!m) { return; }
     m->splineKeyframe = keyFrames;
     m->splineKeyframeFraction = 0;
     m->splineState = 1;
@@ -1011,10 +1009,8 @@ void anim_spline_init(struct MarioState *m, Vec4s *keyFrames) {
  * anim_spline_init should be called before polling for vectors.
  * Returns TRUE when the last point is reached, FALSE otherwise.
  */
-s32 anim_spline_poll(struct MarioState *m, Vec3f result) {
-    if (!m) {
-        return 0;
-    }
+s32 anim_spline_poll(struct MarioState* m, Vec3f result) {
+    if (!m) { return 0; }
     Vec4f weights = { 0 };
     s32 i;
     s32 hasEnded = FALSE;
@@ -1022,9 +1018,7 @@ s32 anim_spline_poll(struct MarioState *m, Vec3f result) {
     vec3f_copy(result, gVec3fZero);
     spline_get_weights(m, weights, m->splineKeyframeFraction, m->splineState);
 
-    if (m->splineKeyframe == NULL) {
-        return FALSE;
-    }
+    if (m->splineKeyframe == NULL) { return FALSE; }
 
     for (i = 0; i < 4; i++) {
         result[0] += weights[i] * m->splineKeyframe[i][1];
