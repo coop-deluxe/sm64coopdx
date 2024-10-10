@@ -267,7 +267,11 @@ int smlua_func_set_exclamation_box_contents(lua_State* L) {
         if (!(confirm.unused)) { exclamationBoxNewContents[exclamationBoxIndex].unused = 0; }
         if (!(confirm.firstByte)) { exclamationBoxNewContents[exclamationBoxIndex].firstByte = 0; }
 
-        exclamationBoxIndex++;
+        if (++exclamationBoxIndex == 255) {
+            // Immediately exit if at risk for out of bounds array access.
+            lua_pop(L, 1);
+            break;
+        }
         lua_pop(L, 1); // Pop subtable
     }
 
