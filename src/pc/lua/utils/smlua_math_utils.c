@@ -29,21 +29,13 @@ f32 fast_hypot(f32 a, f32 b) {
 }
 
 s32 clamp(s32 a, s32 b, s32 c) {
-    if (a < b) {
-        return b;
-    }
-    if (a > c) {
-        return c;
-    }
+    if (a < b) { return b; }
+    if (a > c) { return c; }
     return a;
 }
 
 f32 clampf(f32 a, f32 b, f32 c) {
-    if (a < b) {
-        return b;
-    }
-    if (a > c) {
-        return c;
-    }
+    if (a < b) { return b; }
+    if (a > c) { return c; }
     return a;
 }
