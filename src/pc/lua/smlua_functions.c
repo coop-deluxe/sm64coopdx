@@ -221,7 +221,7 @@ struct ConfirmedComponents {
     bool behavior;
 };
 
-int smlua_func_set_exclamation_box(lua_State* L) {
+int smlua_func_set_exclamation_box_contents(lua_State* L) {
     if (!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
     if (lua_type(L, 1) != LUA_TTABLE) {
@@ -277,7 +277,7 @@ int smlua_func_set_exclamation_box(lua_State* L) {
     return 1;
 }
 
-int smlua_func_get_exclamation_box(lua_State* L) {
+int smlua_func_get_exclamation_box_contents(lua_State* L) {
     if (!smlua_functions_valid_param_count(L, 0)) { return 0; }
 
     lua_newtable(L); // Index 1
@@ -991,8 +991,8 @@ void smlua_bind_functions(void) {
     smlua_bind_function(L, "reset_level", smlua_func_reset_level);
     smlua_bind_function(L, "network_send", smlua_func_network_send);
     smlua_bind_function(L, "network_send_to", smlua_func_network_send_to);
-    smlua_bind_function(L, "set_exclamation_box", smlua_func_set_exclamation_box);
-    smlua_bind_function(L, "get_exclamation_box", smlua_func_get_exclamation_box);
+    smlua_bind_function(L, "set_exclamation_box_contents", smlua_func_set_exclamation_box_contents);
+    smlua_bind_function(L, "get_exclamation_box_contents", smlua_func_get_exclamation_box_contents);
     smlua_bind_function(L, "get_texture_info", smlua_func_get_texture_info);
     smlua_bind_function(L, "djui_hud_render_texture", smlua_func_djui_hud_render_texture);
     smlua_bind_function(L, "djui_hud_render_texture_tile", smlua_func_djui_hud_render_texture_tile);
