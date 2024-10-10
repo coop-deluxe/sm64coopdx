@@ -1801,31 +1801,30 @@
 
 <br />
 
-## [max](#max)
+## [degrees_to_sm64](#degrees_to_sm64)
 
 ### Lua Example
-`local integerValue = max(a, b)`
+`local integerValue = degrees_to_sm64(degrees_angle)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| a | `integer` |
-| b | `integer` |
+| degrees_angle | `number` |
 
 ### Returns
 - `integer`
 
 ### C Prototype
-`s32 max(s32 a, s32 b);`
+`s16 degrees_to_sm64(f32 degrees_angle);`
 
 [:arrow_up_small:](#)
 
 <br />
 
-## [maxf](#maxf)
+## [fast_hypot](#fast_hypot)
 
 ### Lua Example
-`local numberValue = maxf(a, b)`
+`local numberValue = fast_hypot(a, b)`
 
 ### Parameters
 | Field | Type |
@@ -1837,89 +1836,67 @@
 - `number`
 
 ### C Prototype
-`f32 maxf(f32 a, f32 b);`
+`f32 fast_hypot(f32 a, f32 b);`
 
 [:arrow_up_small:](#)
 
 <br />
 
-## [min](#min)
+## [radians_to_sm64](#radians_to_sm64)
 
 ### Lua Example
-`local integerValue = min(a, b)`
+`local integerValue = radians_to_sm64(radians_angle)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| a | `integer` |
-| b | `integer` |
+| radians_angle | `number` |
 
 ### Returns
 - `integer`
 
 ### C Prototype
-`s32 min(s32 a, s32 b);`
+`s16 radians_to_sm64(f32 radians_angle);`
 
 [:arrow_up_small:](#)
 
 <br />
 
-## [minf](#minf)
+## [sm64_to_degrees](#sm64_to_degrees)
 
 ### Lua Example
-`local numberValue = minf(a, b)`
+`local numberValue = sm64_to_degrees(sm64_angle)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| a | `number` |
-| b | `number` |
+| sm64_angle | `integer` |
 
 ### Returns
 - `number`
 
 ### C Prototype
-`f32 minf(f32 a, f32 b);`
+`f32 sm64_to_degrees(s16 sm64_angle);`
 
 [:arrow_up_small:](#)
 
 <br />
 
-## [sqr](#sqr)
+## [sm64_to_radians](#sm64_to_radians)
 
 ### Lua Example
-`local integerValue = sqr(x)`
+`local numberValue = sm64_to_radians(sm64_angle)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| x | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 sqr(s32 x);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [sqrf](#sqrf)
-
-### Lua Example
-`local numberValue = sqrf(x)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| x | `number` |
+| sm64_angle | `integer` |
 
 ### Returns
 - `number`
 
 ### C Prototype
-`f32 sqrf(f32 x);`
+`f32 sm64_to_radians(s16 sm64_angle);`
 
 [:arrow_up_small:](#)
 

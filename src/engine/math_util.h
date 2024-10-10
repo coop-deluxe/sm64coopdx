@@ -24,21 +24,33 @@ extern f32 gSineTable[];
 extern f32 gCosineTable[];
 #endif
 
-#define sins(x) gSineTable[(u16) (x) >> 4]
-#define coss(x) gCosineTable[(u16) (x) >> 4]
+// Inline Function prototypes
+f32 minf(f32 a, f32 b);
+s16 min(s16 a, s16 b);
+f32 maxf(f32 a, f32 b);
+s16 max(s16 a, s16 b);
+f32 sqrf(f32 x);
+s16 sqr(s16 x);
+f32 sins(s16 sm64_angle);
+f32 coss(s16 sm64_angle);
 
-#if defined(min)
-#undef min
-#endif
+#define min(a, b) _Generic((a), \
+    s16: min, \
+    f32: minf, \
+    default: minf \
+)(a, b)
 
-#if defined(max)
-#undef max
-#endif
+#define max(a, b) _Generic((a), \
+    s16: max, \
+    f32: maxf, \
+    default: maxf \
+)(a, b)
 
-#define min(a, b) ((a) <= (b) ? (a) : (b))
-#define max(a, b) ((a) > (b) ? (a) : (b))
-
-#define sqr(x) ((x) * (x))
+#define sqr(x) _Generic((x), \
+    s16: sqr, \
+    f32: sqrf, \
+    default: sqrf \
+)(x)
 
 #define absx(x) ((x) < 0 ? -(x) : (x))
 

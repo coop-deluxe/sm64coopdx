@@ -196,25 +196,6 @@ end
 -- functions --
 ---------------
 
---- @param t number Angle
---- @return number
-function sins(t)
-    -- ...
-end
-
---- @param t number Angle
---- @return number
-function coss(t)
-    -- ...
-end
-
---- @param y number
---- @param x number
---- @return integer
-function atan2s(y, x)
-    -- ...
-end
-
 --- @param objFieldTable table<any, "u32"|"s32"|"f32">
 --- Keys must start with `o` and values must be `"u32"`, `"s32"`, or `"f32"`
 function define_custom_obj_fields(objFieldTable)
