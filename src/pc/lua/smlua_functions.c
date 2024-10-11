@@ -220,11 +220,16 @@ int smlua_func_set_exclamation_box_contents(lua_State* L) {
         return 0;
     }
 
-    struct ExclamationBoxContent exclamationBoxNewContents[255];
+    struct ExclamationBoxContent exclamationBoxNewContents[EXCLAMATION_BOX_MAX_SIZE];
 
     u8 exclamationBoxIndex = 0;
     lua_pushnil(L); // Initial pop
     while (lua_next(L, 1)) /* Main table index */ {
+        if (lua_type(L, 3) != LUA_TTABLE) {
+            LOG_LUA_LINE("set_exclamation_box: Subtable is not a table (Subtable %u)", exclamationBoxIndex);
+            return 0;
+        }
+
         lua_pushnil(L); // Subtable initial pop
         bool confirm[] = { false, false, false, false, false }; /* id, unused, firstByte, model, behavior */
         while (lua_next(L, 3)) /* Subtable index */ {
@@ -261,7 +266,7 @@ int smlua_func_set_exclamation_box_contents(lua_State* L) {
         if (!(confirm[1])) { exclamationBoxNewContents[exclamationBoxIndex].unused = 0; }
         if (!(confirm[2])) { exclamationBoxNewContents[exclamationBoxIndex].firstByte = 0; }
 
-        if (++exclamationBoxIndex == 255) {
+        if (++exclamationBoxIndex == EXCLAMATION_BOX_MAX_SIZE) { // There is an edge case where the 254th element will warn even though it works just fine
             // Immediately exit if at risk for out of bounds array access.
             lua_pop(L, 1);
             LOG_LUA_LINE_WARNING("set_exclamation_box: Too many items have been set for the exclamation box. Some content spawns may be lost.");

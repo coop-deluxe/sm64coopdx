@@ -305,8 +305,9 @@ struct ExclamationBoxContent sDefaultExclamationBoxContents[] = {
     { 14, 0, 5, E_MODEL_STAR, id_bhvSpawnedStar }
 };
 
-// Hack: Create 2 arrays: one that is constantly default and one that can be changed
-struct ExclamationBoxContent sDummyContents[15];
+// Hack: Create 2 arrays: one that is constantly default and one that can be changed.
+
+struct ExclamationBoxContent sDummyContents[EXCLAMATION_BOX_MAX_SIZE];
 
 struct ExclamationBoxContent* gExclamationBoxContents = sDummyContents;
 
