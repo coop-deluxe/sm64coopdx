@@ -3707,6 +3707,9 @@ INT_TWIRL = (1 << 8)
 --- @type InteractionFlag
 INT_GROUND_POUND_OR_TWIRL = (INT_GROUND_POUND | INT_TWIRL)
 
+--- @type InteractionFlag
+INT_LUA = (1 << 31)
+
 --- @class InteractionType
 
 --- @type InteractionType
