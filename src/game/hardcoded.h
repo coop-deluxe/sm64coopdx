@@ -268,7 +268,7 @@ struct BehaviorValues {
 
 extern struct BehaviorValues gBehaviorValues;
 
-#define EXCLAMATION_BOX_MAX_SIZE 255
+#define EXCLAMATION_BOX_MAX_SIZE 99
 
 struct ExclamationBoxContent {
     u8 id;
