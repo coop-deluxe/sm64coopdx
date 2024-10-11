@@ -270,6 +270,7 @@ int smlua_func_set_exclamation_box_contents(lua_State* L) {
         if (++exclamationBoxIndex == 255) {
             // Immediately exit if at risk for out of bounds array access.
             lua_pop(L, 1);
+            LOG_LUA_LINE_WARNING("[LUA] Too many items have been set for the exclamation box. Some content spawns may be lost.");
             break;
         }
         lua_pop(L, 1); // Pop subtable
