@@ -212,15 +212,6 @@ int smlua_func_network_send_to(lua_State* L) {
     return 1;
 }
 
-// There must be a better way to check for lost important components
-struct ConfirmedComponents {
-    bool id;
-    bool unused;
-    bool firstByte;
-    bool model;
-    bool behavior;
-};
-
 int smlua_func_set_exclamation_box_contents(lua_State* L) {
     if (!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
@@ -235,7 +226,7 @@ int smlua_func_set_exclamation_box_contents(lua_State* L) {
     lua_pushnil(L); // Initial pop
     while (lua_next(L, 1)) /* Main table index */ {
         lua_pushnil(L); // Subtable initial pop
-        struct ConfirmedComponents confirm = {.id = false, .unused = false, .firstByte = false, .model = false, .behavior = false};
+        bool confirm[] = { false, false, false, false, false }; /* id, unused, firstByte, model, behavior */
         while (lua_next(L, 3)) /* Subtable index */ {
             // key is index -2, value is index -1
             const char* key = smlua_to_string(L, -2);
@@ -251,21 +242,21 @@ int smlua_func_set_exclamation_box_contents(lua_State* L) {
             }
 
             // Fill fields
-            if (strcmp(key, "id") == 0) { exclamationBoxNewContents[exclamationBoxIndex].id = value; confirm.id = true; }
-            else if (strcmp(key, "unused") == 0) { exclamationBoxNewContents[exclamationBoxIndex].unused = value; confirm.unused = true; }
-            else if (strcmp(key, "firstByte") == 0) { exclamationBoxNewContents[exclamationBoxIndex].firstByte = value; confirm.firstByte = true; }
-            else if (strcmp(key, "model") == 0) { exclamationBoxNewContents[exclamationBoxIndex].model = value; confirm.model = true; }
-            else if (strcmp(key, "behavior") == 0) { exclamationBoxNewContents[exclamationBoxIndex].behavior = value; confirm.behavior = true; }
+            if (strcmp(key, "id") == 0) { exclamationBoxNewContents[exclamationBoxIndex].id = value; confirm[0] = true; }
+            else if (strcmp(key, "unused") == 0) { exclamationBoxNewContents[exclamationBoxIndex].unused = value; confirm[1] = true; }
+            else if (strcmp(key, "firstByte") == 0) { exclamationBoxNewContents[exclamationBoxIndex].firstByte = value; confirm[2] = true; }
+            else if (strcmp(key, "model") == 0) { exclamationBoxNewContents[exclamationBoxIndex].model = value; confirm[3] = true; }
+            else if (strcmp(key, "behavior") == 0) { exclamationBoxNewContents[exclamationBoxIndex].behavior = value; confirm[4] = true; }
 
             lua_pop(L, 1); // Pop value
         }
         // Check if the fields have been filled
-        if (!(confirm.id) || !(confirm.model) || !(confirm.behavior)) {
+        if (!(confirm[0]) || !(confirm[3]) || !(confirm[4])) {
             LOG_LUA("set_exclamation_box: A critical component of a content (id, model, or behavior) has not been set (Subtable %d)", exclamationBoxIndex);
             return 0;
         }
-        if (!(confirm.unused)) { exclamationBoxNewContents[exclamationBoxIndex].unused = 0; }
-        if (!(confirm.firstByte)) { exclamationBoxNewContents[exclamationBoxIndex].firstByte = 0; }
+        if (!(confirm[1])) { exclamationBoxNewContents[exclamationBoxIndex].unused = 0; }
+        if (!(confirm[2])) { exclamationBoxNewContents[exclamationBoxIndex].firstByte = 0; }
 
         if (++exclamationBoxIndex == 255) {
             // Immediately exit if at risk for out of bounds array access.
