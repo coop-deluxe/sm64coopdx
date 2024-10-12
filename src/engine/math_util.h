@@ -35,21 +35,18 @@ f32 sins(s16 sm64_angle);
 f32 coss(s16 sm64_angle);
 
 #define min(a, b) _Generic((a), \
-    s16: min, \
     f32: minf, \
-    default: minf \
+    default: min \
 )(a, b)
 
 #define max(a, b) _Generic((a), \
-    s16: max, \
     f32: maxf, \
-    default: maxf \
+    default: max \
 )(a, b)
 
 #define sqr(x) _Generic((x), \
-    s16: sqr, \
     f32: sqrf, \
-    default: sqrf \
+    default: sqr \
 )(x)
 
 #define absx(x) ((x) < 0 ? -(x) : (x))
