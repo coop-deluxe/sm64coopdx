@@ -674,8 +674,8 @@ u32 determine_knockback_action(struct MarioState *m, UNUSED s32 arg) {
             if (m2->marioObj != m->interactObj) { continue; }
             // Redundent check in case the kicking flag somehow gets missed
             if (m2->action == ACT_JUMP_KICK || m2->flags & MARIO_KICKING) { scaler = 1.85f; }
-            else if (m2->action == ACT_DIVE) { scaler = 1 + fabs(m2->forwardVel * 0.01f); }
-            else if ((m2->flags & MARIO_PUNCHING)) { scaler = 0.2f; hasBeenPunched = TRUE; }
+            else if (m2->action == ACT_DIVE) { scaler = 1 + fabs(m2->forwardVel * 0.005f); }
+            else if ((m2->flags & MARIO_PUNCHING)) { scaler = 0.18f; hasBeenPunched = TRUE; }
             if (m2->flags & MARIO_METAL_CAP) { scaler *= 1.25f; }
             break;
         }
