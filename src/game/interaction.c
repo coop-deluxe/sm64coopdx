@@ -1457,7 +1457,8 @@ u32 interact_player_pvp(struct MarioState* attacker, struct MarioState* victim) 
     }
 
     // determine if slide attack should be ignored
-    if ((interaction & INT_ATTACK_SLIDE) || player_is_sliding(cVictim)) {
+    // Ground pounds will always be able to hit
+    if (((interaction & INT_ATTACK_SLIDE) || player_is_sliding(cVictim)) && attacker->action != ACT_GROUND_POUND) {
         // determine the difference in velocities
         //Vec3f velDiff;
         //vec3f_dif(velDiff, attacker->vel, cVictim->vel);
