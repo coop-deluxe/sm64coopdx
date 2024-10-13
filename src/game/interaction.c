@@ -1472,7 +1472,6 @@ u32 interact_player_pvp(struct MarioState* attacker, struct MarioState* victim) 
 
         // if the victim is going faster, do not attack
         // However if the victim is diving and the attacker is slidekicking, do not check speed
-        if (attacker->action == ACT_DIVE && cVictim->action == ACT_SLIDE_KICK) { return FALSE; } // Make slidekicks immune to dives altogether
         if (!(attacker->action == ACT_SLIDE_KICK && cVictim->action == ACT_DIVE) && vec3f_length(cVictim->vel) > vec3f_length(attacker->vel)) { return FALSE; }
     }
 
