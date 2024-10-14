@@ -49,7 +49,18 @@ f32 coss(s16 sm64_angle);
     default: sqr \
 )(x)
 
+#if defined(__clang__) || defined(__GNUC__)
+
+#define absx(x) _Generic((x), \
+    f32: __builtin_fabsf(x), \
+    default: __builtin_abs(x) \
+)
+
+#else
+
 #define absx(x) ((x) < 0 ? -(x) : (x))
+
+#endif
 
 #include "../../include/libc/stdlib.h"
 
