@@ -25,7 +25,7 @@ inline f32 maxf(f32 a, f32 b) {
 
 #else
 
-// Fallback to the original implementation for other iDO
+// Fallback to the original implementation for iDO
 inline f32 minf(f32 a, f32 b) {
     return (a <= b) ? a : b;
 }
