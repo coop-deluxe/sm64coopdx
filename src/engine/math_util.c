@@ -19,16 +19,8 @@ inline f32 minf(f32 a, f32 b) {
     return __builtin_fminf(a, b);
 }
 
-inline s16 (min)(s16 a, s16 b) {
-    return __builtin_fmin(a, b);
-}
-
 inline f32 maxf(f32 a, f32 b) {
     return __builtin_fmaxf(a, b);
-}
-
-inline s16 (max)(s16 a, s16 b) {
-    return __builtin_fmax(a, b);
 }
 
 #else
@@ -38,21 +30,21 @@ inline f32 minf(f32 a, f32 b) {
     return (a <= b) ? a : b;
 }
 
-inline s16 (min)(s16 a, s16 b) {
-    return (a <= b) ? a : b;
-}
-
 inline f32 maxf(f32 a, f32 b) {
     return (a > b) ? a : b;
+}
+
+#endif
+
+// The sqr, min, max, and trig functions do not have/need built-ins, so it's safe to leave them as is
+inline s16 (min)(s16 a, s16 b) {
+    return (a <= b) ? a : b;
 }
 
 inline s16 (max)(s16 a, s16 b) {
     return (a > b) ? a : b;
 }
 
-#endif
-
-// The sqr and trig lookup functions do not have/need built-ins, so it's safe to leave them as is
 inline f32 sqrf(f32 x) {
     return x * x;
 }
