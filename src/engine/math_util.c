@@ -822,7 +822,7 @@ f32 approach_f32(f32 current, f32 target, f32 inc, f32 dec) {
  * Helper function for atan2s. Does a look up of the arctangent of y/x assuming
  * the resulting angle is in range [0, 0x2000] (1/8 of a circle).
  */
-static inline u16 atan2_lookup(f32 y, f32 x) {
+static u16 atan2_lookup(f32 y, f32 x) {
     s16 idx = (s16)(y / x * 1024.0f + 0.5f);
     idx = (idx >= 0 && idx < 0x401) ? idx : 0;
     return gArctanTable[idx];
