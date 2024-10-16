@@ -744,52 +744,85 @@ static int parse_arguments(int argc, char *argv[], graphics_config *config)
       if (argv[i][0] == '-') {
          switch (argv[i][1]) {
             case 'c':
-               if (++i >= argc) return 0;
+               if (++i >= argc) {
+                   ERROR("Not enough arguments after 'c'\n");
+                   return 0;
+               }
                if (!parse_format(&config->pal_format, argv[i])) {
+                  ERROR("Error parsing 'c' format");
                   return 0;
                }
                break;
             case 'e':
-               if (++i >= argc) return 0;
+               if (++i >= argc) {
+                   ERROR("Not enough arguments after 'e'\n");
+                   return 0;
+               }
                config->bin_filename = argv[i];
                config->mode = MODE_EXPORT;
                break;
             case 'f':
-               if (++i >= argc) return 0;
+               if (++i >= argc) {
+                   ERROR("Not enough arguments after 'f'\n");
+                   return 0;
+               }
                if (!parse_format(&config->format, argv[i])) {
+                   ERROR("Error parsing format after 'f'");
                   return 0;
                }
                break;
             case 'g':
-               if (++i >= argc) return 0;
+               if (++i >= argc) {
+                   ERROR("Not enough arguments after 'g'\n");
+                   return 0;
+               }
                config->img_filename = argv[i];
                break;
             case 'h':
-               if (++i >= argc) return 0;
+               if (++i >= argc) {
+                   ERROR("Not enough arguments after 'h'\n");
+                   return 0;
+               }
                config->height = strtoul(argv[i], NULL, 0);
                break;
             case 'i':
-               if (++i >= argc) return 0;
+               if (++i >= argc) {
+                   ERROR("Not enough arguments after 'i'\n");
+                   return 0;
+               }
                config->bin_filename = argv[i];
                config->mode = MODE_IMPORT;
                break;
             case 'o':
-               if (++i >= argc) return 0;
+               if (++i >= argc) {
+                   ERROR("Not enough arguments after 'o'\n");
+                   return 0;
+               }
                config->bin_offset = strtoul(argv[i], NULL, 0);
                config->bin_truncate = 0;
                break;
             case 'p':
-               if (++i >= argc) return 0;
+               if (++i >= argc) {
+                   ERROR("Not enough arguments after 'p'\n");
+                   return 0;
+               }
                config->pal_filename = argv[i];
                break;
             case 'P':
-               if (++i >= argc) return 0;
+               if (++i >= argc) {
+                   ERROR("Not enough arguments after 'P'\n");
+                   return 0;
+               }
                config->pal_offset = strtoul(argv[i], NULL, 0);
                config->pal_truncate = 0;
                break;
             case 's':
-               if (++i >= argc) return 0;
+               if (++i >= argc) {
+                   ERROR("Not enough arguments after 's'\n");
+                   return 0;
+               }
                if (!parse_encoding(&config->encoding, argv[i])) {
+                  ERROR("Error parsing 's' encoding\n");
                   return 0;
                }
                break;
@@ -801,14 +834,19 @@ static int parse_arguments(int argc, char *argv[], graphics_config *config)
                exit(0);
                break;
             case 'w':
-               if (++i >= argc) return 0;
+               if (++i >= argc) {
+                   ERROR("Not enough arguments after 'w'\n");
+                   return 0;
+               }
                config->width = strtoul(argv[i], NULL, 0);
                break;
             default:
+               ERROR("Error parsing arguments (default)\n");
                return 0;
                break;
          }
       } else {
+         ERROR("Error parsing arguments (else case)\n");
          return 0;
       }
    }
@@ -819,11 +857,13 @@ static int parse_arguments(int argc, char *argv[], graphics_config *config)
 static int valid_config(const graphics_config *config)
 {
    if (!config->bin_filename || !config->img_filename) {
+      ERROR("Invalid bin filename or img filename\n");
       return 0;
    }
    if (config->format.format == IMG_FORMAT_CI) {
       if (!config->pal_filename || (config->pal_format.depth != 16) ||
          (config->pal_format.format != IMG_FORMAT_RGBA && config->pal_format.format != IMG_FORMAT_IA)) {
+          ERROR("Invalid format issue\n");
          return 0;
       }
    }
@@ -844,6 +884,12 @@ int main(int argc, char *argv[])
 
    int valid = parse_arguments(argc, argv, &config);
    if (!valid || !valid_config(&config)) {
+      if (!valid){
+         ERROR("Invalid arguments were given\n");
+      }
+      else {
+         ERROR("The config is invalid\n");
+      }
       print_usage();
       exit(EXIT_FAILURE);
    }
