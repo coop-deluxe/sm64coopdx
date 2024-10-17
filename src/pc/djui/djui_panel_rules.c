@@ -21,16 +21,7 @@ void djui_panel_rules_create(struct DjuiBase* caller) {
     struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(RULES, RULES_TITLE), false);
     struct DjuiBase* body = djui_three_panel_get_body(panel);
     {
-        snprintf(sRules, 512, "%s\n\
-%s\n\
-%s\n\
-%s\n\
-%s",
-DLANG(RULES, RULE_1),
-DLANG(RULES, RULE_2),
-DLANG(RULES, RULE_3),
-DLANG(RULES, RULE_4),
-DLANG(RULES, RULE_5));
+        snprintf(sRules, 512, "%s\n%s\n%s\n%s\n%s", DLANG(RULES, RULE_1), DLANG(RULES, RULE_2), DLANG(RULES, RULE_3), DLANG(RULES, RULE_4), DLANG(RULES, RULE_5));
 
         struct DjuiText* text1 = djui_text_create(body, sRules);
         djui_base_set_location(&text1->base, 0, 0);
@@ -65,6 +56,7 @@ DLANG(RULES, RULE_5));
 
     }
 
+    panel->temporary = true;
     djui_panel_add(caller, panel, NULL);
 }
 #endif

@@ -40,4 +40,7 @@ void camera_config_set_aggression(u32 value);
 void camera_config_set_pan_level(u32 value);
 void camera_config_set_deceleration(u32 value);
 
+bool camera_get_checking_surfaces(void);
+void camera_set_checking_surfaces(bool value);
+
 #endif

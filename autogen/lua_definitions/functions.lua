@@ -7808,6 +7808,11 @@ function camera_freeze()
 end
 
 --- @return boolean
+function camera_get_checking_surfaces()
+    -- ...
+end
+
+--- @return boolean
 function camera_is_frozen()
     -- ...
 end
@@ -7823,6 +7828,11 @@ end
 
 --- @param allow integer
 function camera_romhack_allow_dpad_usage(allow)
+    -- ...
+end
+
+--- @param value boolean
+function camera_set_checking_surfaces(value)
     -- ...
 end
 
@@ -8182,6 +8192,11 @@ function deref_s32_pointer(pointer)
 end
 
 --- @return boolean
+function djui_attempting_to_open_playerlist()
+    -- ...
+end
+
+--- @return boolean
 function djui_is_playerlist_open()
     -- ...
 end
@@ -8208,6 +8223,12 @@ end
 
 --- @param value boolean
 function djui_set_popup_disabled_override(value)
+    -- ...
+end
+
+--- @param localIndex integer
+--- @return string
+function get_coopnet_id(localIndex)
     -- ...
 end
 

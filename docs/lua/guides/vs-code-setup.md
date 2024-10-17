@@ -28,7 +28,7 @@ Setting up Visual Studio Code will allow you to have all of the modern benefits 
 
 ---
 
-5. Add a new item containing the location of `<your repro>/autogen/lua_definitions`
+5. Add a new item containing the location of `<your repo>/autogen/lua_definitions`
 
 ![lua-definitions](https://user-images.githubusercontent.com/12403224/158046824-1894318a-7ce9-41ef-bacc-17f95fa05f31.png)
 

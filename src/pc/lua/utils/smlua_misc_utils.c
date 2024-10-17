@@ -32,6 +32,10 @@
 #include "pc/discord/discord.h"
 #endif
 
+#ifdef COOPNET
+#include "pc/network/coopnet/coopnet.h"
+#endif
+
 static struct DateTime sDateTime;
 
 ///
@@ -89,6 +93,10 @@ void djui_reset_popup_disabled_override(void) {
 
 bool djui_is_playerlist_open(void) {
     return gDjuiPlayerList->base.visible;
+}
+
+bool djui_attempting_to_open_playerlist(void) {
+    return gAttemptingToOpenPlayerlist;
 }
 
 enum DjuiFontType djui_menu_get_font(void) {
@@ -419,6 +427,18 @@ const char* get_local_discord_id(void) {
     return sDiscordId;
 #else
     return "0";
+#endif
+}
+
+const char* get_coopnet_id(UNUSED s8 localIndex) {
+#ifdef COOPNET
+    if (!gNetworkSystem || gNetworkSystem != &gNetworkSystemCoopNet) { return "-1"; }
+    if (localIndex < 0 || localIndex >= MAX_PLAYERS) { return "-1"; }
+    struct NetworkPlayer* np = &gNetworkPlayers[localIndex];
+    if (np == NULL || !np->connected) { return "-1"; }
+    return gNetworkSystem->get_id_str(np->localIndex);
+#else
+    return "-1";
 #endif
 }
 

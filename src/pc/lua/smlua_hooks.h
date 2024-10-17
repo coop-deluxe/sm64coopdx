@@ -57,6 +57,7 @@ enum LuaHookedEventType {
     HOOK_ON_ATTACK_OBJECT,
     HOOK_ON_LANGUAGE_CHANGED,
     HOOK_ON_MODS_LOADED,
+    HOOK_ON_NAMETAGS_RENDER,
     HOOK_MAX,
 };
 
@@ -107,6 +108,7 @@ static const char* LuaHookedEventTypeName[] = {
     "HOOK_ON_ATTACK_OBJECT",
     "HOOK_ON_LANGUAGE_CHANGED",
     "HOOK_ON_MODS_LOADED",
+    "HOOK_ON_NAMETAGS_RENDER",
     "HOOK_MAX"
 };
 
@@ -170,6 +172,7 @@ bool smlua_call_event_hooks_ret_int(enum LuaHookedEventType hookType, s32* retur
 void smlua_call_event_hooks_set_camera_mode_params(enum LuaHookedEventType hookType, struct Camera *c, s16 mode, s16 frames, bool* returnValue);
 void smlua_call_event_hooks_int_params_ret_bool(enum LuaHookedEventType hookType, s16 param, bool* returnValue);
 void smlua_call_event_hooks_int_params_ret_int(enum LuaHookedEventType hookType, s32 param, s32* returnValue);
+void smlua_call_event_hooks_int_params_ret_string(enum LuaHookedEventType hookType, s32 param, char** returnValue);
 void smlua_call_event_hooks_value_param(enum LuaHookedEventType hookType, int modIndex, int valueIndex);
 void smlua_call_event_hooks_on_play_sound(enum LuaHookedEventType hookType, s32 soundBits, f32* pos, s32* returnValue);
 void smlua_call_event_hooks_use_act_select(enum LuaHookedEventType hookType, int value, bool* foundHook, bool* returnValue);

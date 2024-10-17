@@ -1309,6 +1309,7 @@
 | INT_HIT_FROM_BELOW | (1 << 7) |
 | INT_TWIRL | (1 << 8) |
 | INT_GROUND_POUND_OR_TWIRL | (INT_GROUND_POUND | INT_TWIRL) |
+| INT_LUA | (1 << 31) |
 
 ### [enum InteractionType](#InteractionType)
 | Identifier | Value |
@@ -3297,7 +3298,8 @@
 | HOOK_ON_ATTACK_OBJECT | 43 |
 | HOOK_ON_LANGUAGE_CHANGED | 44 |
 | HOOK_ON_MODS_LOADED | 45 |
-| HOOK_MAX | 46 |
+| HOOK_ON_NAMETAGS_RENDER | 46 |
+| HOOK_MAX | 47 |
 
 ### [enum LuaModMenuElementType](#LuaModMenuElementType)
 | Identifier | Value |

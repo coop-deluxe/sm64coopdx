@@ -1119,12 +1119,12 @@ static bool DynOS_Lvl_GeneratePack_Internal(const SysPath &aPackFolder, Array<Pa
         // If there is an existing binary file for this level, skip and go to the next level
         SysPath _LvlFilename = fstring("%s/%s.lvl", aPackFolder.c_str(), _LvlRootName.begin());
         if (fs_sys_file_exists(_LvlFilename.c_str())) {
-#ifdef DEVELOPMENT
+
             // Compress file to gain some space
-            if (!DynOS_Bin_IsCompressed(_LvlFilename)) {
+            if (configCompressOnStartup && !DynOS_Bin_IsCompressed(_LvlFilename)) {
                 DynOS_Bin_Compress(_LvlFilename);
             }
-#endif
+
             continue;
         }
 
@@ -1247,15 +1247,14 @@ void DynOS_Lvl_GeneratePack(const SysPath &aPackFolder) {
             if (SysPath(_PackEnt->d_name) == ".") continue;
             if (SysPath(_PackEnt->d_name) == "..") continue;
 
-#ifdef DEVELOPMENT
             // Compress .lvl files to gain some space
-            // TODO: is this required anymore?
-            /*SysPath _Filename = fstring("%s/%s", aPackFolder.c_str(), _PackEnt->d_name);
-            if (SysPath(_PackEnt->d_name).find(".lvl") != SysPath::npos && !DynOS_Bin_IsCompressed(_Filename)) {
-                DynOS_Bin_Compress(_Filename);
-                continue;
-            }*/
-#endif
+            if (configCompressOnStartup) {
+                SysPath _Filename = fstring("%s/%s", aPackFolder.c_str(), _PackEnt->d_name);
+                if (SysPath(_PackEnt->d_name).find(".lvl") != SysPath::npos && !DynOS_Bin_IsCompressed(_Filename)) {
+                    DynOS_Bin_Compress(_Filename);
+                    continue;
+                }
+            }
 
             // For each subfolder, read tokens from script.c
             SysPath _Folder = fstring("%s/%s", aPackFolder.c_str(), _PackEnt->d_name);

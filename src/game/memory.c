@@ -4,6 +4,7 @@
 #include "memory.h"
 #include "print.h"
 #include "pc/debuglog.h"
+#include "pc/lua/smlua.h"
 
 #define ALIGN16(val) (((val) + 0xF) & ~0xF)
 
@@ -222,7 +223,7 @@ void growing_array_free(struct GrowingArray **array) {
     if (*array) {
         for (u32 i = 0; i != (*array)->capacity; ++i) {
             if ((*array)->buffer[i]) {
-                free((*array)->buffer[i]);
+                smlua_free((*array)->buffer[i]);
             }
         }
         free((*array)->buffer);

@@ -29015,6 +29015,21 @@ int smlua_func_camera_freeze(UNUSED lua_State* L) {
     return 1;
 }
 
+int smlua_func_camera_get_checking_surfaces(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "camera_get_checking_surfaces", 0, top);
+        return 0;
+    }
+
+
+    lua_pushboolean(L, camera_get_checking_surfaces());
+
+    return 1;
+}
+
 int smlua_func_camera_is_frozen(UNUSED lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -29075,6 +29090,23 @@ int smlua_func_camera_romhack_allow_dpad_usage(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "camera_romhack_allow_dpad_usage"); return 0; }
 
     camera_romhack_allow_dpad_usage(allow);
+
+    return 1;
+}
+
+int smlua_func_camera_set_checking_surfaces(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "camera_set_checking_surfaces", 1, top);
+        return 0;
+    }
+
+    bool value = smlua_to_boolean(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "camera_set_checking_surfaces"); return 0; }
+
+    camera_set_checking_surfaces(value);
 
     return 1;
 }
@@ -30152,6 +30184,21 @@ int smlua_func_deref_s32_pointer(lua_State* L) {
     return 1;
 }
 
+int smlua_func_djui_attempting_to_open_playerlist(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "djui_attempting_to_open_playerlist", 0, top);
+        return 0;
+    }
+
+
+    lua_pushboolean(L, djui_attempting_to_open_playerlist());
+
+    return 1;
+}
+
 int smlua_func_djui_is_playerlist_open(UNUSED lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -30244,6 +30291,23 @@ int smlua_func_djui_set_popup_disabled_override(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "djui_set_popup_disabled_override"); return 0; }
 
     djui_set_popup_disabled_override(value);
+
+    return 1;
+}
+
+int smlua_func_get_coopnet_id(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "get_coopnet_id", 1, top);
+        return 0;
+    }
+
+    s8 localIndex = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "get_coopnet_id"); return 0; }
+
+    lua_pushstring(L, get_coopnet_id(localIndex));
 
     return 1;
 }
@@ -34595,10 +34659,12 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "camera_config_set_x_sensitivity", smlua_func_camera_config_set_x_sensitivity);
     smlua_bind_function(L, "camera_config_set_y_sensitivity", smlua_func_camera_config_set_y_sensitivity);
     smlua_bind_function(L, "camera_freeze", smlua_func_camera_freeze);
+    smlua_bind_function(L, "camera_get_checking_surfaces", smlua_func_camera_get_checking_surfaces);
     smlua_bind_function(L, "camera_is_frozen", smlua_func_camera_is_frozen);
     smlua_bind_function(L, "camera_reset_overrides", smlua_func_camera_reset_overrides);
     smlua_bind_function(L, "camera_romhack_allow_centering", smlua_func_camera_romhack_allow_centering);
     smlua_bind_function(L, "camera_romhack_allow_dpad_usage", smlua_func_camera_romhack_allow_dpad_usage);
+    smlua_bind_function(L, "camera_set_checking_surfaces", smlua_func_camera_set_checking_surfaces);
     smlua_bind_function(L, "camera_set_romhack_override", smlua_func_camera_set_romhack_override);
     smlua_bind_function(L, "camera_unfreeze", smlua_func_camera_unfreeze);
 
@@ -34668,12 +34734,14 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "allocate_mario_action", smlua_func_allocate_mario_action);
     smlua_bind_function(L, "course_is_main_course", smlua_func_course_is_main_course);
     smlua_bind_function(L, "deref_s32_pointer", smlua_func_deref_s32_pointer);
+    smlua_bind_function(L, "djui_attempting_to_open_playerlist", smlua_func_djui_attempting_to_open_playerlist);
     smlua_bind_function(L, "djui_is_playerlist_open", smlua_func_djui_is_playerlist_open);
     smlua_bind_function(L, "djui_is_popup_disabled", smlua_func_djui_is_popup_disabled);
     smlua_bind_function(L, "djui_menu_get_font", smlua_func_djui_menu_get_font);
     smlua_bind_function(L, "djui_popup_create_global", smlua_func_djui_popup_create_global);
     smlua_bind_function(L, "djui_reset_popup_disabled_override", smlua_func_djui_reset_popup_disabled_override);
     smlua_bind_function(L, "djui_set_popup_disabled_override", smlua_func_djui_set_popup_disabled_override);
+    smlua_bind_function(L, "get_coopnet_id", smlua_func_get_coopnet_id);
     smlua_bind_function(L, "get_current_save_file_num", smlua_func_get_current_save_file_num);
     smlua_bind_function(L, "get_date_and_time", smlua_func_get_date_and_time);
     smlua_bind_function(L, "get_dialog_box_state", smlua_func_get_dialog_box_state);

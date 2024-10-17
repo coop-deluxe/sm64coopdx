@@ -32,6 +32,7 @@ extern pthread_mutex_t gLoadingThreadMutex;
 extern bool gIsThreaded;
 
 void loading_screen_set_segment_text(const char* text);
+void loading_screen_reset_progress_bar(void);
 void render_loading_screen(void);
 void loading_screen_reset(void);
 void render_rom_setup_screen(void);

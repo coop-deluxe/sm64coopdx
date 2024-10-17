@@ -1,8 +1,13 @@
 #include "dynos.cpp.h"
+extern "C" {
 #include "pc/loading.h"
+}
 
 void DynOS_Gfx_GeneratePacks(const char* directory) {
-    LOADING_SCREEN_MUTEX(snprintf(gCurrLoadingSegment.str, 256, "Generating DynOS Packs In Path:\n\\#808080\\%s", directory));
+    LOADING_SCREEN_MUTEX(
+        loading_screen_reset_progress_bar();
+        snprintf(gCurrLoadingSegment.str, 256, "Generating DynOS Packs In Path:\n\\#808080\\%s", directory);
+    );
 
     DIR *modsDir = opendir(directory);
     if (!modsDir) { return; }

@@ -140,7 +140,7 @@ void patch_scroll_targets_before(void) {
     }
 }
 
-#define SHORT_RANGE 32767
+#define SHORT_RANGE 0x7FFF
 
 void patch_scroll_targets_interpolated(f32 delta) {
     f32 antiDelta = 1.0f - delta;

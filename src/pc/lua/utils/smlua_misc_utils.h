@@ -50,6 +50,7 @@ bool djui_is_popup_disabled(void);
 void djui_set_popup_disabled_override(bool value);
 void djui_reset_popup_disabled_override(void);
 bool djui_is_playerlist_open(void);
+bool djui_attempting_to_open_playerlist(void);
 enum DjuiFontType djui_menu_get_font(void);
 
 s8 get_dialog_box_state(void);
@@ -111,6 +112,7 @@ u32 get_global_timer(void);
 s32 get_dialog_response(void);
 
 const char* get_local_discord_id(void);
+const char* get_coopnet_id(s8 localIndex);
 
 f32 get_volume_master(void);
 f32 get_volume_level(void);
