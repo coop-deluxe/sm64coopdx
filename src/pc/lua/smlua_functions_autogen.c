@@ -30199,21 +30199,21 @@ int smlua_func_degrees_to_sm64(lua_State* L) {
     return 1;
 }
 
-int smlua_func_fast_hypot(lua_State* L) {
+int smlua_func_hypotf(lua_State* L) {
     if (L == NULL) { return 0; }
 
     int top = lua_gettop(L);
     if (top != 2) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "fast_hypot", 2, top);
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "hypotf", 2, top);
         return 0;
     }
 
     f32 a = smlua_to_number(L, 1);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "fast_hypot"); return 0; }
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "hypotf"); return 0; }
     f32 b = smlua_to_number(L, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "fast_hypot"); return 0; }
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "hypotf"); return 0; }
 
-    lua_pushnumber(L, fast_hypot(a, b));
+    lua_pushnumber(L, hypotf(a, b));
 
     return 1;
 }
@@ -34873,7 +34873,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "clamp", smlua_func_clamp);
     smlua_bind_function(L, "clampf", smlua_func_clampf);
     smlua_bind_function(L, "degrees_to_sm64", smlua_func_degrees_to_sm64);
-    smlua_bind_function(L, "fast_hypot", smlua_func_fast_hypot);
+    smlua_bind_function(L, "hypotf", smlua_func_hypotf);
     smlua_bind_function(L, "radians_to_sm64", smlua_func_radians_to_sm64);
     smlua_bind_function(L, "sm64_to_degrees", smlua_func_sm64_to_degrees);
     smlua_bind_function(L, "sm64_to_radians", smlua_func_sm64_to_radians);

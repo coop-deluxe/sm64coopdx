@@ -1821,10 +1821,10 @@
 
 <br />
 
-## [fast_hypot](#fast_hypot)
+## [hypotf](#hypotf)
 
 ### Lua Example
-`local numberValue = fast_hypot(a, b)`
+`local numberValue = hypotf(a, b)`
 
 ### Parameters
 | Field | Type |
@@ -1836,7 +1836,7 @@
 - `number`
 
 ### C Prototype
-`f32 fast_hypot(f32 a, f32 b);`
+`f32 hypotf(f32 a, f32 b);`
 
 [:arrow_up_small:](#)
 

@@ -52,9 +52,10 @@ f32 coss(s16 sm64Angle);
 #if defined(__clang__) || defined(__GNUC__)
 
 #define absx(x) _Generic((x), \
-    f32: __builtin_fabsf(x), \
-    default: __builtin_abs(x) \
-)
+    f32: __builtin_fabsf, \
+    double: __builtin_fabs, \
+    default: __builtin_abs \
+)(x)
 
 #else
 

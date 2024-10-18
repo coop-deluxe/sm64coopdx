@@ -1718,7 +1718,7 @@
    - [clamp](functions-5.md#clamp)
    - [clampf](functions-5.md#clampf)
    - [degrees_to_sm64](functions-5.md#degrees_to_sm64)
-   - [fast_hypot](functions-5.md#fast_hypot)
+   - [hypotf](functions-5.md#hypotf)
    - [radians_to_sm64](functions-5.md#radians_to_sm64)
    - [sm64_to_degrees](functions-5.md#sm64_to_degrees)
    - [sm64_to_radians](functions-5.md#sm64_to_radians)

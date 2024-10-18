@@ -8201,7 +8201,7 @@ end
 --- @param a number
 --- @param b number
 --- @return number
-function fast_hypot(a, b)
+function hypotf(a, b)
     -- ...
 end
 
