@@ -537,6 +537,7 @@
 --- @class Controller
 --- @field public buttonDown integer
 --- @field public buttonPressed integer
+--- @field public buttonReleased integer
 --- @field public extStickX integer
 --- @field public extStickY integer
 --- @field public port integer
