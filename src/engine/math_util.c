@@ -303,7 +303,8 @@ void mtxf_lookat(Mat4 mtx, Vec3f from, Vec3f to, s16 roll) {
     mtx[2][2] = forward[2];
     mtx[3][2] = -(from[0] * forward[0] + from[1] * forward[1] + from[2] * forward[2]);
 
-    mtx[0][3] = mtx[1][3] = mtx[2][3] = mtx[3][3] = 0.0f;
+    mtx[0][3] = mtx[1][3] = mtx[2][3] = 0.0f;
+    mtx[3][3] = 1.0f;
 }
 
 /**
