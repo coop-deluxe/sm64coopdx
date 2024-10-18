@@ -245,9 +245,9 @@ void mtxf_translate(Mat4 dest, Vec3f b) {
  */
 void mtxf_lookat(Mat4 mtx, Vec3f from, Vec3f to, s16 roll) {
     Vec3f forward, right, up;
-    float sinRoll, cosRoll;
-    float dx, dz, xzDist;
-    float invLength;
+    f32 sinRoll, cosRoll;
+    f32 dx, dz, xzDist;
+    f32 invLength;
 
     forward[0] = from[0] - to[0];
     forward[1] = from[1] - to[1];
@@ -303,10 +303,7 @@ void mtxf_lookat(Mat4 mtx, Vec3f from, Vec3f to, s16 roll) {
     mtx[2][2] = forward[2];
     mtx[3][2] = -(from[0] * forward[0] + from[1] * forward[1] + from[2] * forward[2]);
 
-    mtx[0][3] = 0.0f;
-    mtx[1][3] = 0.0f;
-    mtx[2][3] = 0.0f;
-    mtx[3][3] = 1.0f;
+    mtx[0][3] = mtx[1][3] = mtx[2][3] = mtx[3][3] = 0.0f;
 }
 
 /**
