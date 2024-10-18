@@ -24,6 +24,14 @@ extern f32 gSineTable[];
 extern f32 gCosineTable[];
 #endif
 
+#if defined(min)
+#undef min
+#endif
+
+#if defined(max)
+#undef max
+#endif
+
 // Inline Function prototypes
 f32 minf(f32 a, f32 b);
 s16 min(s16 a, s16 b);
