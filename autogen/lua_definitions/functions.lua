@@ -5024,6 +5024,19 @@ function approach_s32(current, target, inc, dec)
     -- ...
 end
 
+--- @param y number
+--- @param x number
+--- @return integer
+function atan2s(y, x)
+    -- ...
+end
+
+--- @param sm64Angle integer
+--- @return number
+function coss(sm64Angle)
+    -- ...
+end
+
 --- @param dest Vec3f
 --- @param a Vec3f
 --- @param b Vec3f
@@ -5037,6 +5050,34 @@ end
 --- @param objMtx Mat4
 --- @param camMtx Mat4
 function get_pos_from_transform_mtx(dest, objMtx, camMtx)
+    -- ...
+end
+
+--- @param a integer
+--- @param b integer
+--- @return integer
+function max(a, b)
+    -- ...
+end
+
+--- @param a number
+--- @param b number
+--- @return number
+function maxf(a, b)
+    -- ...
+end
+
+--- @param a integer
+--- @param b integer
+--- @return integer
+function min(a, b)
+    -- ...
+end
+
+--- @param a number
+--- @param b number
+--- @return number
+function minf(a, b)
     -- ...
 end
 
@@ -5156,11 +5197,29 @@ function not_zero(value, replacement)
     -- ...
 end
 
+--- @param sm64Angle integer
+--- @return number
+function sins(sm64Angle)
+    -- ...
+end
+
 --- @param m MarioState
 --- @param result Vec4f
 --- @param t number
 --- @param c integer
 function spline_get_weights(m, result, t, c)
+    -- ...
+end
+
+--- @param x integer
+--- @return integer
+function sqr(x)
+    -- ...
+end
+
+--- @param x number
+--- @return number
+function sqrf(x)
     -- ...
 end
 
@@ -8133,43 +8192,34 @@ function clampf(a, b, c)
     -- ...
 end
 
---- @param a integer
---- @param b integer
+--- @param degreesAngle number
 --- @return integer
-function max(a, b)
+function degrees_to_sm64(degreesAngle)
     -- ...
 end
 
 --- @param a number
 --- @param b number
 --- @return number
-function maxf(a, b)
+function fast_hypot(a, b)
     -- ...
 end
 
---- @param a integer
---- @param b integer
+--- @param radiansAngle number
 --- @return integer
-function min(a, b)
+function radians_to_sm64(radiansAngle)
     -- ...
 end
 
---- @param a number
---- @param b number
+--- @param sm64Angle integer
 --- @return number
-function minf(a, b)
+function sm64_to_degrees(sm64Angle)
     -- ...
 end
 
---- @param x integer
---- @return integer
-function sqr(x)
-    -- ...
-end
-
---- @param x number
+--- @param sm64Angle integer
 --- @return number
-function sqrf(x)
+function sm64_to_radians(sm64Angle)
     -- ...
 end
 

@@ -12,6 +12,55 @@
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wreturn-local-addr"
 
+#if defined(__clang__) || defined(__GNUC__)
+
+// Use built-in functions when using Clang or GCC
+inline f32 minf(f32 a, f32 b) {
+    return __builtin_fminf(a, b);
+}
+
+inline f32 maxf(f32 a, f32 b) {
+    return __builtin_fmaxf(a, b);
+}
+
+#else
+
+// Fallback to the original implementation for iDO
+inline f32 minf(f32 a, f32 b) {
+    return (a <= b) ? a : b;
+}
+
+inline f32 maxf(f32 a, f32 b) {
+    return (a > b) ? a : b;
+}
+
+#endif
+
+// The sqr, min, max, and trig functions do not have/need built-ins, so it's safe to leave them as is
+inline s16 (min)(s16 a, s16 b) {
+    return (a <= b) ? a : b;
+}
+
+inline s16 (max)(s16 a, s16 b) {
+    return (a > b) ? a : b;
+}
+
+inline f32 sqrf(f32 x) {
+    return x * x;
+}
+
+inline s16 (sqr)(s16 x) {
+    return x * x;
+}
+
+inline f32 sins(s16 sm64Angle) {
+    return gSineTable[(u16) (sm64Angle) >> 4];
+}
+
+inline f32 coss(s16 sm64Angle) {
+    return gCosineTable[(u16) (sm64Angle) >> 4];
+}
+
 /// Copy vector 'src' to 'dest'
 void *vec3f_copy(Vec3f dest, Vec3f src) {
     dest[0] = src[0];
