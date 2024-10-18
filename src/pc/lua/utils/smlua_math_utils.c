@@ -17,7 +17,7 @@ s16 degrees_to_sm64(f32 degreesAngle) {
     return degreesAngle * 0x8000 / 180.0f;
 }
 
-f32 hypotf(f32 a, f32 b) {
+f32 fast_hypot(f32 a, f32 b) {
     return sqrtf(a * a + b * b);
 }
 
