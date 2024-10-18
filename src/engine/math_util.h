@@ -31,8 +31,8 @@ f32 maxf(f32 a, f32 b);
 s16 max(s16 a, s16 b);
 f32 sqrf(f32 x);
 s16 sqr(s16 x);
-f32 sins(s16 sm64_angle);
-f32 coss(s16 sm64_angle);
+f32 sins(s16 sm64Angle);
+f32 coss(s16 sm64Angle);
 
 #define min(a, b) _Generic((a), \
     f32: minf, \

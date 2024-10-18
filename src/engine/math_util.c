@@ -53,12 +53,12 @@ inline s16 (sqr)(s16 x) {
     return x * x;
 }
 
-inline f32 sins(s16 sm64_angle) {
-    return gSineTable[(u16) (sm64_angle) >> 4];
+inline f32 sins(s16 sm64Angle) {
+    return gSineTable[(u16) (sm64Angle) >> 4];
 }
 
-inline f32 coss(s16 sm64_angle) {
-    return gCosineTable[(u16) (sm64_angle) >> 4];
+inline f32 coss(s16 sm64Angle) {
+    return gCosineTable[(u16) (sm64Angle) >> 4];
 }
 
 /// Copy vector 'src' to 'dest'

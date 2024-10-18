@@ -123,18 +123,18 @@
 ## [coss](#coss)
 
 ### Lua Example
-`local numberValue = coss(sm64_angle)`
+`local numberValue = coss(sm64Angle)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| sm64_angle | `integer` |
+| sm64Angle | `integer` |
 
 ### Returns
 - `number`
 
 ### C Prototype
-`f32 coss(s16 sm64_angle);`
+`f32 coss(s16 sm64Angle);`
 
 [:arrow_up_small:](#)
 
@@ -642,18 +642,18 @@
 ## [sins](#sins)
 
 ### Lua Example
-`local numberValue = sins(sm64_angle)`
+`local numberValue = sins(sm64Angle)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| sm64_angle | `integer` |
+| sm64Angle | `integer` |
 
 ### Returns
 - `number`
 
 ### C Prototype
-`f32 sins(s16 sm64_angle);`
+`f32 sins(s16 sm64Angle);`
 
 [:arrow_up_small:](#)
 

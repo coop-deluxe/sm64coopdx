@@ -18390,10 +18390,10 @@ int smlua_func_coss(lua_State* L) {
         return 0;
     }
 
-    s16 sm64_angle = smlua_to_integer(L, 1);
+    s16 sm64Angle = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "coss"); return 0; }
 
-    lua_pushnumber(L, coss(sm64_angle));
+    lua_pushnumber(L, coss(sm64Angle));
 
     return 1;
 }
@@ -19844,10 +19844,10 @@ int smlua_func_sins(lua_State* L) {
         return 0;
     }
 
-    s16 sm64_angle = smlua_to_integer(L, 1);
+    s16 sm64Angle = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "sins"); return 0; }
 
-    lua_pushnumber(L, sins(sm64_angle));
+    lua_pushnumber(L, sins(sm64Angle));
 
     return 1;
 }
@@ -30191,10 +30191,10 @@ int smlua_func_degrees_to_sm64(lua_State* L) {
         return 0;
     }
 
-    f32 degrees_angle = smlua_to_number(L, 1);
+    f32 degreesAngle = smlua_to_number(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "degrees_to_sm64"); return 0; }
 
-    lua_pushinteger(L, degrees_to_sm64(degrees_angle));
+    lua_pushinteger(L, degrees_to_sm64(degreesAngle));
 
     return 1;
 }
@@ -30227,10 +30227,10 @@ int smlua_func_radians_to_sm64(lua_State* L) {
         return 0;
     }
 
-    f32 radians_angle = smlua_to_number(L, 1);
+    f32 radiansAngle = smlua_to_number(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "radians_to_sm64"); return 0; }
 
-    lua_pushinteger(L, radians_to_sm64(radians_angle));
+    lua_pushinteger(L, radians_to_sm64(radiansAngle));
 
     return 1;
 }
@@ -30244,10 +30244,10 @@ int smlua_func_sm64_to_degrees(lua_State* L) {
         return 0;
     }
 
-    s16 sm64_angle = smlua_to_integer(L, 1);
+    s16 sm64Angle = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "sm64_to_degrees"); return 0; }
 
-    lua_pushnumber(L, sm64_to_degrees(sm64_angle));
+    lua_pushnumber(L, sm64_to_degrees(sm64Angle));
 
     return 1;
 }
@@ -30261,10 +30261,10 @@ int smlua_func_sm64_to_radians(lua_State* L) {
         return 0;
     }
 
-    s16 sm64_angle = smlua_to_integer(L, 1);
+    s16 sm64Angle = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "sm64_to_radians"); return 0; }
 
-    lua_pushnumber(L, sm64_to_radians(sm64_angle));
+    lua_pushnumber(L, sm64_to_radians(sm64Angle));
 
     return 1;
 }

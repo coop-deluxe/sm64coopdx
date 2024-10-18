@@ -1804,18 +1804,18 @@
 ## [degrees_to_sm64](#degrees_to_sm64)
 
 ### Lua Example
-`local integerValue = degrees_to_sm64(degrees_angle)`
+`local integerValue = degrees_to_sm64(degreesAngle)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| degrees_angle | `number` |
+| degreesAngle | `number` |
 
 ### Returns
 - `integer`
 
 ### C Prototype
-`s16 degrees_to_sm64(f32 degrees_angle);`
+`s16 degrees_to_sm64(f32 degreesAngle);`
 
 [:arrow_up_small:](#)
 
@@ -1845,18 +1845,18 @@
 ## [radians_to_sm64](#radians_to_sm64)
 
 ### Lua Example
-`local integerValue = radians_to_sm64(radians_angle)`
+`local integerValue = radians_to_sm64(radiansAngle)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| radians_angle | `number` |
+| radiansAngle | `number` |
 
 ### Returns
 - `integer`
 
 ### C Prototype
-`s16 radians_to_sm64(f32 radians_angle);`
+`s16 radians_to_sm64(f32 radiansAngle);`
 
 [:arrow_up_small:](#)
 
@@ -1865,18 +1865,18 @@
 ## [sm64_to_degrees](#sm64_to_degrees)
 
 ### Lua Example
-`local numberValue = sm64_to_degrees(sm64_angle)`
+`local numberValue = sm64_to_degrees(sm64Angle)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| sm64_angle | `integer` |
+| sm64Angle | `integer` |
 
 ### Returns
 - `number`
 
 ### C Prototype
-`f32 sm64_to_degrees(s16 sm64_angle);`
+`f32 sm64_to_degrees(s16 sm64Angle);`
 
 [:arrow_up_small:](#)
 
@@ -1885,18 +1885,18 @@
 ## [sm64_to_radians](#sm64_to_radians)
 
 ### Lua Example
-`local numberValue = sm64_to_radians(sm64_angle)`
+`local numberValue = sm64_to_radians(sm64Angle)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| sm64_angle | `integer` |
+| sm64Angle | `integer` |
 
 ### Returns
 - `number`
 
 ### C Prototype
-`f32 sm64_to_radians(s16 sm64_angle);`
+`f32 sm64_to_radians(s16 sm64Angle);`
 
 [:arrow_up_small:](#)
 

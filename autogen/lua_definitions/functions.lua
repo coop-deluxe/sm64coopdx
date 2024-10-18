@@ -5031,9 +5031,9 @@ function atan2s(y, x)
     -- ...
 end
 
---- @param sm64_angle integer
+--- @param sm64Angle integer
 --- @return number
-function coss(sm64_angle)
+function coss(sm64Angle)
     -- ...
 end
 
@@ -5197,9 +5197,9 @@ function not_zero(value, replacement)
     -- ...
 end
 
---- @param sm64_angle integer
+--- @param sm64Angle integer
 --- @return number
-function sins(sm64_angle)
+function sins(sm64Angle)
     -- ...
 end
 
@@ -8192,9 +8192,9 @@ function clampf(a, b, c)
     -- ...
 end
 
---- @param degrees_angle number
+--- @param degreesAngle number
 --- @return integer
-function degrees_to_sm64(degrees_angle)
+function degrees_to_sm64(degreesAngle)
     -- ...
 end
 
@@ -8205,21 +8205,21 @@ function fast_hypot(a, b)
     -- ...
 end
 
---- @param radians_angle number
+--- @param radiansAngle number
 --- @return integer
-function radians_to_sm64(radians_angle)
+function radians_to_sm64(radiansAngle)
     -- ...
 end
 
---- @param sm64_angle integer
+--- @param sm64Angle integer
 --- @return number
-function sm64_to_degrees(sm64_angle)
+function sm64_to_degrees(sm64Angle)
     -- ...
 end
 
---- @param sm64_angle integer
+--- @param sm64Angle integer
 --- @return number
-function sm64_to_radians(sm64_angle)
+function sm64_to_radians(sm64Angle)
     -- ...
 end
 

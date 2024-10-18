@@ -1,20 +1,20 @@
 #include "sm64.h"
 #include "types.h"
 
-f32 sm64_to_radians(s16 sm64_angle) {
-    return sm64_angle * M_PI / 0x8000;
+f32 sm64_to_radians(s16 sm64Angle) {
+    return sm64Angle * M_PI / 0x8000;
 }
 
-s16 radians_to_sm64(f32 radians_angle) {
-    return radians_angle * 0x8000 / M_PI;
+s16 radians_to_sm64(f32 radiansAngle) {
+    return radiansAngle * 0x8000 / M_PI;
 }
 
-f32 sm64_to_degrees(s16 sm64_angle) {
-    return sm64_angle * 180.0f / 0x8000;
+f32 sm64_to_degrees(s16 sm64Angle) {
+    return sm64Angle * 180.0f / 0x8000;
 }
 
-s16 degrees_to_sm64(f32 degrees_angle) {
-    return degrees_angle * 0x8000 / 180.0f;
+s16 degrees_to_sm64(f32 degreesAngle) {
+    return degreesAngle * 0x8000 / 180.0f;
 }
 
 f32 fast_hypot(f32 a, f32 b) {
