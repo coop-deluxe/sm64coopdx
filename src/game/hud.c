@@ -666,18 +666,5 @@ void render_hud(void) {
         if (hudDisplayFlags & HUD_DISPLAY_FLAG_TIMER && showHud) {
             render_hud_timer();
         }
-
-        extern bool configLuaProfiler;
-        if (configLuaProfiler) {
-            extern void lua_profiler_update_counters();
-            lua_profiler_update_counters();
-        }
-#ifdef DEVELOPMENT
-        extern bool configCtxProfiler;
-        if (configCtxProfiler) {
-            extern void ctx_profiler_update_counters();
-            ctx_profiler_update_counters();
-        }
-#endif
     }
 }
