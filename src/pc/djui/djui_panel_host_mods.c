@@ -24,6 +24,7 @@ unsigned int selectedCategory = 0;
 static bool sWarned = false;
 
 struct ModCategory sCategories[] = {
+    // lang key, mod category
     { "ALL", MOD_CATEGORY_ALL },
     { "ROMHACKS", "romhack" },
     { "GAMEMODES", "gamemode" },
