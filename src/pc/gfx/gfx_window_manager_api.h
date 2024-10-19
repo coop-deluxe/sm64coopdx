@@ -7,6 +7,8 @@
 // special value for window position that signifies centered position
 #define WAPI_WIN_CENTERPOS 0xFFFFFFFF
 
+#define WAPI_CLIPBOARD_BUFSIZ 1024
+
 typedef bool (*kb_callback_t)(int code);
 
 struct GfxWindowManagerAPI {
@@ -23,7 +25,7 @@ struct GfxWindowManagerAPI {
     void (*start_text_input)(void);
     void (*stop_text_input)(void);
     char* (*get_clipboard_text)(void);
-    void (*set_clipboard_text)(char*);
+    void (*set_clipboard_text)(const char*);
     void (*set_cursor_visible)(bool);
     void (*delay)(unsigned int ms);
     int  (*get_max_msaa)(void);
