@@ -719,6 +719,7 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
     cnt->stickMag = 0;
     cnt->buttonDown = 0;
     cnt->buttonPressed = 0;
+    cnt->buttonReleased = 0;
     cnt->extStickX = 0;
     cnt->extStickY = 0;
 

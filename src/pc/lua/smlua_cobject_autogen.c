@@ -604,10 +604,11 @@ static struct LuaObjectField sCharacterFields[LUA_CHARACTER_FIELD_COUNT] = {
     { "type",                               LVT_S32,      offsetof(struct Character, type),                               true, LOT_NONE        },
 };
 
-#define LUA_CONTROLLER_FIELD_COUNT 10
+#define LUA_CONTROLLER_FIELD_COUNT 11
 static struct LuaObjectField sControllerFields[LUA_CONTROLLER_FIELD_COUNT] = {
     { "buttonDown",     LVT_U16, offsetof(struct Controller, buttonDown),     false, LOT_NONE },
     { "buttonPressed",  LVT_U16, offsetof(struct Controller, buttonPressed),  false, LOT_NONE },
+    { "buttonReleased", LVT_U16, offsetof(struct Controller, buttonReleased), false, LOT_NONE },
 //  { "controllerData", LVT_???, offsetof(struct Controller, controllerData), true,  LOT_???  }, <--- UNIMPLEMENTED
     { "extStickX",      LVT_S16, offsetof(struct Controller, extStickX),      false, LOT_NONE },
     { "extStickY",      LVT_S16, offsetof(struct Controller, extStickY),      false, LOT_NONE },
