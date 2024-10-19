@@ -92,16 +92,16 @@ static void read_packet_data(struct PacketPlayerData* data, struct MarioState* m
     memcpy(data->rawData, m->marioObj->rawData.asU32, sizeof(u32) * OBJECT_NUM_REGULAR_FIELDS);
     data->nodeFlags    = m->marioObj->header.gfx.node.flags;
 
-    data->cRawStickX     = m->controller->rawStickX;
-    data->cRawStickY     = m->controller->rawStickY;
-    data->cStickX        = m->controller->stickX;
-    data->cStickY        = m->controller->stickY;
-    data->cStickMag      = m->controller->stickMag;
-    data->cButtonDown    = m->controller->buttonDown;
-    data->cButtonPressed = m->controller->buttonPressed;
+    data->cRawStickX      = m->controller->rawStickX;
+    data->cRawStickY      = m->controller->rawStickY;
+    data->cStickX         = m->controller->stickX;
+    data->cStickY         = m->controller->stickY;
+    data->cStickMag       = m->controller->stickMag;
+    data->cButtonDown     = m->controller->buttonDown;
+    data->cButtonPressed  = m->controller->buttonPressed;
     data->cButtonReleased = m->controller->buttonReleased;
-    data->cExtStickX     = m->controller->extStickX;
-    data->cExtStickY     = m->controller->extStickY;
+    data->cExtStickX      = m->controller->extStickX;
+    data->cExtStickY      = m->controller->extStickY;
 
     data->input           = m->input;
     data->flags           = m->flags;
@@ -157,16 +157,16 @@ static void write_packet_data(struct PacketPlayerData* data, struct MarioState* 
     memcpy(m->marioObj->rawData.asU32, data->rawData, sizeof(u32) * OBJECT_NUM_REGULAR_FIELDS);
     m->marioObj->header.gfx.node.flags = data->nodeFlags;
 
-    m->controller->rawStickX     = data->cRawStickX;
-    m->controller->rawStickY     = data->cRawStickY;
-    m->controller->stickX        = data->cStickX;
-    m->controller->stickY        = data->cStickY;
-    m->controller->stickMag      = data->cStickMag;
-    m->controller->buttonDown    = data->cButtonDown;
-    m->controller->buttonPressed = data->cButtonPressed;
+    m->controller->rawStickX      = data->cRawStickX;
+    m->controller->rawStickY      = data->cRawStickY;
+    m->controller->stickX         = data->cStickX;
+    m->controller->stickY         = data->cStickY;
+    m->controller->stickMag       = data->cStickMag;
+    m->controller->buttonDown     = data->cButtonDown;
+    m->controller->buttonPressed  = data->cButtonPressed;
     m->controller->buttonReleased = data->cButtonReleased;
-    m->controller->extStickX     = data->cExtStickX;
-    m->controller->extStickY     = data->cExtStickY;
+    m->controller->extStickX      = data->cExtStickX;
+    m->controller->extStickY      = data->cExtStickY;
 
     m->input           = data->input;
     m->flags           = data->flags;
@@ -437,7 +437,7 @@ void network_update_player(void) {
         || (sLastPlayerAction    != m->action)
         || (sLastButtonDown      != m->controller->buttonDown)
         || (sLastButtonPressed   != m->controller->buttonPressed)
-        || (sLastButtonReleased   != m->controller->buttonReleased)
+        || (sLastButtonReleased  != m->controller->buttonReleased)
         || (sLastPlayerParticles != m->particleFlags)
         || (stickDist          > 5.0f);
 
