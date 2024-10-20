@@ -1,5 +1,6 @@
 -- name: [CS] VL-Tone & Cjes Luigi
 -- description: [CS] \\#00ff00\\VL-Tone \\#dcdcdc\\& \\#00ff00\\Cjes Luigi\n\\#dcdcdc\\By: Coop Deluxe Team\n\nReturn of TWO nostalgic Luigi's dating back to the 2000s!\n\n\\#00ff00\\Model Credits:\n\\#dcdcdc\\VL-Tone\nCJes\n\n\\#00ff00\\Model Porting:\n\\#dcdcdc\\AngelicMiracles "Yuyake"\nFluffaMario\nSonicDark
+-- category: cs
 
 -- localize functions to improve performance
 local table_insert,play_sound,djui_hud_get_screen_width,maxf,math_sin,djui_hud_set_color,djui_hud_set_font,string_format,djui_hud_measure_text,djui_hud_print_text,djui_hud_set_resolution,min,math_min,math_max,djui_hud_set_rotation,djui_hud_render_rect = table.insert,play_sound,djui_hud_get_screen_width,maxf,math.sin,djui_hud_set_color,djui_hud_set_font,string.format,djui_hud_measure_text,djui_hud_print_text,djui_hud_set_resolution,min,math.min,math.max,djui_hud_set_rotation,djui_hud_render_rect
