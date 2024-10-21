@@ -2170,6 +2170,24 @@
 
 <br />
 
+## [djui_hud_get_fov_coeff](#djui_hud_get_fov_coeff)
+
+### Lua Example
+`local numberValue = djui_hud_get_fov_coeff()`
+
+### Parameters
+- None
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 djui_hud_get_fov_coeff();`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [djui_hud_get_mouse_x](#djui_hud_get_mouse_x)
 
 ### Lua Example

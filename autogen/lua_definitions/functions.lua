@@ -3071,6 +3071,11 @@ function djui_hud_get_font()
 end
 
 --- @return number
+function djui_hud_get_fov_coeff()
+    -- ...
+end
+
+--- @return number
 function djui_hud_get_mouse_x()
     -- ...
 end

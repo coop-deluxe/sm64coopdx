@@ -748,6 +748,7 @@
    - [djui_hud_get_color](functions-3.md#djui_hud_get_color)
    - [djui_hud_get_filter](functions-3.md#djui_hud_get_filter)
    - [djui_hud_get_font](functions-3.md#djui_hud_get_font)
+   - [djui_hud_get_fov_coeff](functions-3.md#djui_hud_get_fov_coeff)
    - [djui_hud_get_mouse_x](functions-3.md#djui_hud_get_mouse_x)
    - [djui_hud_get_mouse_y](functions-3.md#djui_hud_get_mouse_y)
    - [djui_hud_get_raw_mouse_x](functions-3.md#djui_hud_get_raw_mouse_x)
