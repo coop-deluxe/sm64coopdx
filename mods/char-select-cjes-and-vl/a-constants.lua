@@ -4,7 +4,7 @@ if not _G.charSelectExists then
         if not first then
             first = true
             play_sound(SOUND_MENU_CAMERA_BUZZ, gGlobalSoundSource)
-            djui_chat_message_create("\\#ffffa0\\Extra Characters requires Character Select to be enabled.\nPlease rehost with it enabled.")
+            djui_chat_message_create("\\#ffffa0\\[CS] VL-Tone & Cjes Luigi requires Character Select to be enabled.\nPlease rehost with it enabled.")
         end
     end)
     return
