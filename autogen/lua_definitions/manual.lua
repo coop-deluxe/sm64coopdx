@@ -192,6 +192,30 @@ function update_mod_menu_element_name(index, name)
     -- ...
 end
 
+--- @param index integer The index of the element in the order in which they were hooked
+--- @param value boolean The boolean value to change to
+--- Updates a mod menu checkbox element's boolean value
+--- - NOTE: `index` is zero-indexed
+function update_mod_menu_element_checkbox(index, value)
+    -- ...
+end
+
+--- @param index integer The index of the element in the order in which they were hooked
+--- @param value number The number value to change to
+--- Updates a mod menu slider element's numerical value
+--- - NOTE: `index` is zero-indexed
+function update_mod_menu_element_slider(index, value)
+    -- ...
+end
+
+--- @param index integer The index of the element in the order in which they were hooked
+--- @param value string The text to change to
+--- Updates a mod menu inputbox element's string value
+--- - NOTE: `index` is zero-indexed
+function update_mod_menu_element_inputbox(index, value)
+    -- ...
+end
+
 ---------------
 -- functions --
 ---------------
