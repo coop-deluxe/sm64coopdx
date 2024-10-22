@@ -12295,6 +12295,21 @@ int smlua_func_djui_hud_get_font(UNUSED lua_State* L) {
     return 1;
 }
 
+int smlua_func_djui_hud_get_fov_coeff(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "djui_hud_get_fov_coeff", 0, top);
+        return 0;
+    }
+
+
+    lua_pushnumber(L, djui_hud_get_fov_coeff());
+
+    return 1;
+}
+
 int smlua_func_djui_hud_get_mouse_x(UNUSED lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -12753,6 +12768,21 @@ int smlua_func_djui_open_pause_menu(UNUSED lua_State* L) {
 
 
     djui_open_pause_menu();
+
+    return 1;
+}
+
+int smlua_func_get_current_fov(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "get_current_fov", 0, top);
+        return 0;
+    }
+
+
+    lua_pushnumber(L, get_current_fov());
 
     return 1;
 }
@@ -33957,6 +33987,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "djui_hud_get_color", smlua_func_djui_hud_get_color);
     smlua_bind_function(L, "djui_hud_get_filter", smlua_func_djui_hud_get_filter);
     smlua_bind_function(L, "djui_hud_get_font", smlua_func_djui_hud_get_font);
+    smlua_bind_function(L, "djui_hud_get_fov_coeff", smlua_func_djui_hud_get_fov_coeff);
     smlua_bind_function(L, "djui_hud_get_mouse_x", smlua_func_djui_hud_get_mouse_x);
     smlua_bind_function(L, "djui_hud_get_mouse_y", smlua_func_djui_hud_get_mouse_y);
     smlua_bind_function(L, "djui_hud_get_raw_mouse_x", smlua_func_djui_hud_get_raw_mouse_x);
@@ -33981,6 +34012,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "djui_hud_set_rotation_interpolated", smlua_func_djui_hud_set_rotation_interpolated);
     smlua_bind_function(L, "djui_hud_world_pos_to_screen_pos", smlua_func_djui_hud_world_pos_to_screen_pos);
     smlua_bind_function(L, "djui_open_pause_menu", smlua_func_djui_open_pause_menu);
+    smlua_bind_function(L, "get_current_fov", smlua_func_get_current_fov);
 
     // djui_popup.h
     smlua_bind_function(L, "djui_popup_create", smlua_func_djui_popup_create);

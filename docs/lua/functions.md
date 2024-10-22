@@ -748,6 +748,7 @@
    - [djui_hud_get_color](functions-3.md#djui_hud_get_color)
    - [djui_hud_get_filter](functions-3.md#djui_hud_get_filter)
    - [djui_hud_get_font](functions-3.md#djui_hud_get_font)
+   - [djui_hud_get_fov_coeff](functions-3.md#djui_hud_get_fov_coeff)
    - [djui_hud_get_mouse_x](functions-3.md#djui_hud_get_mouse_x)
    - [djui_hud_get_mouse_y](functions-3.md#djui_hud_get_mouse_y)
    - [djui_hud_get_raw_mouse_x](functions-3.md#djui_hud_get_raw_mouse_x)
@@ -772,6 +773,7 @@
    - [djui_hud_set_rotation_interpolated](functions-3.md#djui_hud_set_rotation_interpolated)
    - [djui_hud_world_pos_to_screen_pos](functions-3.md#djui_hud_world_pos_to_screen_pos)
    - [djui_open_pause_menu](functions-3.md#djui_open_pause_menu)
+   - [get_current_fov](functions-3.md#get_current_fov)
 
 <br />
 

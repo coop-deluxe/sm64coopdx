@@ -3071,6 +3071,11 @@ function djui_hud_get_font()
 end
 
 --- @return number
+function djui_hud_get_fov_coeff()
+    -- ...
+end
+
+--- @return number
 function djui_hud_get_mouse_x()
     -- ...
 end
@@ -3217,6 +3222,11 @@ function djui_hud_world_pos_to_screen_pos(pos, out)
 end
 
 function djui_open_pause_menu()
+    -- ...
+end
+
+--- @return number
+function get_current_fov()
     -- ...
 end
 
