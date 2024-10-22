@@ -134,6 +134,11 @@ void djui_lua_error(char* text, struct DjuiColor color) {
     sDjuiLuaErrorTimeout = 30 * 5;
 }
 
+void djui_lua_error_clear(void) {
+    sDjuiLuaErrorTimeout = 0;
+    djui_base_set_visible(&sDjuiLuaError->base, false);
+}
+
 void djui_reset_hud_params(void) {
     djui_hud_set_resolution(RESOLUTION_DJUI);
     djui_hud_set_font(FONT_NORMAL);

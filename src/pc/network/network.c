@@ -749,6 +749,7 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
         gDjuiInMainMenu = true;
         djui_panel_main_create(NULL);
     }
+    djui_lua_error_clear();
 
 #ifdef DISCORD_SDK
     discord_activity_update();
