@@ -2180,6 +2180,81 @@ int smlua_update_mod_menu_element_name(lua_State* L) {
     return 1;
 }
 
+int smlua_update_mod_menu_element_checkbox(lua_State* L) {
+    if (L == NULL) { return 0; }
+    if (!smlua_functions_valid_param_count(L, 2)) { return 0; }
+
+    int index = smlua_to_integer(L, 1);
+    if (index >= gHookedModMenuElementsCount || !gSmLuaConvertSuccess) {
+        LOG_LUA_LINE("Update mod menu element: tried to update invalid element");
+        return 0;
+    }
+
+    if (gHookedModMenuElements[index].element != MOD_MENU_ELEMENT_CHECKBOX) {
+        LOG_LUA_LINE("Update mod menu element: element is not a checkbox.");
+        return 0;
+    }
+
+    bool boolValue = smlua_to_boolean(L, 2);
+    if (!gSmLuaConvertSuccess) {
+        LOG_LUA_LINE("Update mod menu element: tried to update invalid element");
+        return 0;
+    }
+
+    gHookedModMenuElements[index].boolValue = boolValue;
+    return 1;
+}
+
+int smlua_update_mod_menu_element_slider(lua_State* L) {
+    if (L == NULL) { return 0; }
+    if (!smlua_functions_valid_param_count(L, 2)) { return 0; }
+
+    int index = smlua_to_integer(L, 1);
+    if (index >= gHookedModMenuElementsCount || !gSmLuaConvertSuccess) {
+        LOG_LUA_LINE("Update mod menu element: tried to update invalid element");
+        return 0;
+    }
+
+    if (gHookedModMenuElements[index].element != MOD_MENU_ELEMENT_SLIDER) {
+        LOG_LUA_LINE("Update mod menu element: element is not a slider.");
+        return 0;
+    }
+
+    u32 uintValue = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) {
+        LOG_LUA_LINE("Update mod menu element: tried to update invalid element");
+        return 0;
+    }
+
+    gHookedModMenuElements[index].uintValue = uintValue;
+    return 1;
+}
+
+int smlua_update_mod_menu_element_inputbox(lua_State* L) {
+    if (L == NULL) { return 0; }
+    if (!smlua_functions_valid_param_count(L, 2)) { return 0; }
+
+    int index = smlua_to_integer(L, 1);
+    if (index >= gHookedModMenuElementsCount || !gSmLuaConvertSuccess) {
+        LOG_LUA_LINE("Update mod menu element: tried to update invalid element");
+        return 0;
+    }
+
+    if (gHookedModMenuElements[index].element != MOD_MENU_ELEMENT_INPUTBOX) {
+        LOG_LUA_LINE("Update mod menu element: element is not an inputbox.");
+        return 0;
+    }
+
+    const char* stringValue = smlua_to_string(L, 2);
+    if (stringValue == NULL || strlen(stringValue) == 0 || !gSmLuaConvertSuccess) {
+        LOG_LUA_LINE("Update mod menu element: tried to update invalid element string");
+        return 0;
+    }
+
+    snprintf(gHookedModMenuElements[index].stringValue, gHookedModMenuElements[index].length, "%s", stringValue);
+    return 1;
+}
+
 void smlua_call_mod_menu_element_hook(struct LuaHookedModMenuElement* hooked, int index) {
     lua_State* L = gLuaState;
     if (L == NULL) { return; }
@@ -2310,4 +2385,7 @@ void smlua_bind_hooks(void) {
     smlua_bind_function(L, "hook_mod_menu_inputbox", smlua_hook_mod_menu_inputbox);
     smlua_bind_function(L, "update_chat_command_description", smlua_update_chat_command_description);
     smlua_bind_function(L, "update_mod_menu_element_name", smlua_update_mod_menu_element_name);
+    smlua_bind_function(L, "update_mod_menu_element_checkbox", smlua_update_mod_menu_element_checkbox);
+    smlua_bind_function(L, "update_mod_menu_element_slider", smlua_update_mod_menu_element_slider);
+    smlua_bind_function(L, "update_mod_menu_element_inputbox", smlua_update_mod_menu_element_inputbox);
 }
