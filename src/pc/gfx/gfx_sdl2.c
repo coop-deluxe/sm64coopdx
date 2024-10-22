@@ -304,8 +304,19 @@ static bool gfx_sdl_has_focus(void) {
 
 static void gfx_sdl_start_text_input(void) { SDL_StartTextInput(); }
 static void gfx_sdl_stop_text_input(void) { SDL_StopTextInput(); }
-static char* gfx_sdl_get_clipboard_text(void) { return SDL_GetClipboardText(); }
-static void gfx_sdl_set_clipboard_text(char* text) { SDL_SetClipboardText(text); }
+
+static char* gfx_sdl_get_clipboard_text(void) {
+    static char clipboard_buf[WAPI_CLIPBOARD_BUFSIZ];
+
+    char* text = SDL_GetClipboardText();
+    strncpy(clipboard_buf, text, WAPI_CLIPBOARD_BUFSIZ - 1);
+    SDL_free(text);
+
+    clipboard_buf[WAPI_CLIPBOARD_BUFSIZ - 1] = '\0';
+    return clipboard_buf;
+}
+
+static void gfx_sdl_set_clipboard_text(const char* text) { SDL_SetClipboardText(text); }
 static void gfx_sdl_set_cursor_visible(bool visible) { SDL_ShowCursor(visible ? SDL_ENABLE : SDL_DISABLE); }
 
 struct GfxWindowManagerAPI gfx_sdl = {

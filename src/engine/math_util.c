@@ -12,6 +12,55 @@
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wreturn-local-addr"
 
+#if defined(__clang__) || defined(__GNUC__)
+
+// Use built-in functions when using Clang or GCC
+inline f32 minf(f32 a, f32 b) {
+    return __builtin_fminf(a, b);
+}
+
+inline f32 maxf(f32 a, f32 b) {
+    return __builtin_fmaxf(a, b);
+}
+
+#else
+
+// Fallback to the original implementation for iDO
+inline f32 minf(f32 a, f32 b) {
+    return (a <= b) ? a : b;
+}
+
+inline f32 maxf(f32 a, f32 b) {
+    return (a > b) ? a : b;
+}
+
+#endif
+
+// The sqr, min, max, and trig functions do not have/need built-ins, so it's safe to leave them as is
+inline s16 (min)(s16 a, s16 b) {
+    return (a <= b) ? a : b;
+}
+
+inline s16 (max)(s16 a, s16 b) {
+    return (a > b) ? a : b;
+}
+
+inline f32 sqrf(f32 x) {
+    return x * x;
+}
+
+inline s16 (sqr)(s16 x) {
+    return x * x;
+}
+
+inline f32 sins(s16 sm64Angle) {
+    return gSineTable[(u16) (sm64Angle) >> 4];
+}
+
+inline f32 coss(s16 sm64Angle) {
+    return gCosineTable[(u16) (sm64Angle) >> 4];
+}
+
 /// Copy vector 'src' to 'dest'
 void *vec3f_copy(Vec3f dest, Vec3f src) {
     dest[0] = src[0];
@@ -823,58 +872,36 @@ f32 approach_f32(f32 current, f32 target, f32 inc, f32 dec) {
  * the resulting angle is in range [0, 0x2000] (1/8 of a circle).
  */
 static u16 atan2_lookup(f32 y, f32 x) {
-    u16 ret;
-
-    if (x == 0) {
-        ret = gArctanTable[0];
-    } else {
-        s32 index = (s32)(y / x * 1024 + 0.5f);
-        if (index >= 0x401 || index < 0) { index = 0; }
-        ret = gArctanTable[index];
-    }
-    return ret;
+    s16 idx = (s16)(y / x * 1024.0f + 0.5f);
+    idx = (idx >= 0 && idx < 0x401) ? idx : 0;
+    return gArctanTable[idx];
 }
 
 /**
  * Compute the angle from (0, 0) to (x, y) as a s16. Given that terrain is in
  * the xz-plane, this is commonly called with (z, x) to get a yaw angle.
  */
-s16 atan2s(f32 y, f32 x) {
-    u16 ret;
+inline s16 atan2s(f32 y, f32 x) {
+    // Extract sign bits: 1 if negative, 0 otherwise
+    u8 signx = (x < 0.0f);
+    u8 signy = (y < 0.0f);
 
-    if (x >= 0) {
-        if (y >= 0) {
-            if (y >= x) {
-                ret = atan2_lookup(x, y);
-            } else {
-                ret = 0x4000 - atan2_lookup(y, x);
-            }
-        } else {
-            y = -y;
-            if (y < x) {
-                ret = 0x4000 + atan2_lookup(y, x);
-            } else {
-                ret = 0x8000 - atan2_lookup(x, y);
-            }
-        }
-    } else {
-        x = -x;
-        if (y < 0) {
-            y = -y;
-            if (y >= x) {
-                ret = 0x8000 + atan2_lookup(x, y);
-            } else {
-                ret = 0xC000 - atan2_lookup(y, x);
-            }
-        } else {
-            if (y < x) {
-                ret = 0xC000 + atan2_lookup(y, x);
-            } else {
-                ret = -atan2_lookup(x, y);
-            }
-        }
-    }
-    return ret;
+    // Take absolute values
+    f32 absx = absx(x);
+    f32 absy = absx(y);
+
+    // Compute the angle in the first octant
+    u16 angle = atan2_lookup(min(absx, absy), max(absy, absx));
+
+    // Create an index based on the signs and swap status
+    u8 idx = ((absy > absx) << 2) | (signx << 1) | signy;
+
+    // Combined lookup tables for offsets and sign multipliers
+    static const s16 offsets[] = {0x4000, 0x4000, 0xC000, 0xC000, 0x0000, 0x8000, 0x0000, 0x8000};
+    static const s8 signs[] = {-1,  1,  1, -1, 1, -1, -1,  1};
+
+    // Ensure the result fits into 16 bits via an explicit cast on angle
+    return (offsets[idx] + (signs[idx] * (s16)angle)) & 0xFFFF;
 }
 
 /**

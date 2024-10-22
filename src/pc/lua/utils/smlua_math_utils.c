@@ -1,28 +1,24 @@
 #include "sm64.h"
 #include "types.h"
 
-s32 min(s32 a, s32 b) {
-    return ((a) <= (b) ? (a) : (b));
+f32 sm64_to_radians(s16 sm64Angle) {
+    return sm64Angle * M_PI / 0x8000;
 }
 
-f32 minf(f32 a, f32 b) {
-    return ((a) <= (b) ? (a) : (b));
+s16 radians_to_sm64(f32 radiansAngle) {
+    return radiansAngle * 0x8000 / M_PI;
 }
 
-s32 max(s32 a, s32 b) {
-    return ((a) > (b) ? (a) : (b));
+f32 sm64_to_degrees(s16 sm64Angle) {
+    return sm64Angle * 180.0f / 0x8000;
 }
 
-f32 maxf(f32 a, f32 b) {
-    return ((a) > (b) ? (a) : (b));
+s16 degrees_to_sm64(f32 degreesAngle) {
+    return degreesAngle * 0x8000 / 180.0f;
 }
 
-s32 sqr(s32 x) {
-    return x * x;
-}
-
-f32 sqrf(f32 x) {
-    return x * x;
+f32 hypotf(f32 a, f32 b) {
+    return sqrtf(a * a + b * b);
 }
 
 s32 clamp(s32 a, s32 b, s32 c) {

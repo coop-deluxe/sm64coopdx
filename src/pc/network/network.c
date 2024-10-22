@@ -719,6 +719,7 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
     cnt->stickMag = 0;
     cnt->buttonDown = 0;
     cnt->buttonPressed = 0;
+    cnt->buttonReleased = 0;
     cnt->extStickX = 0;
     cnt->extStickY = 0;
 
@@ -748,6 +749,7 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
         gDjuiInMainMenu = true;
         djui_panel_main_create(NULL);
     }
+    djui_lua_error_clear();
 
 #ifdef DISCORD_SDK
     discord_activity_update();

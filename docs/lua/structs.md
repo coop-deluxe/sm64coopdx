@@ -746,6 +746,7 @@
 | ----- | ---- | ------ |
 | buttonDown | `integer` |  |
 | buttonPressed | `integer` |  |
+| buttonReleased | `integer` |  |
 | extStickX | `integer` |  |
 | extStickY | `integer` |  |
 | port | `integer` |  |

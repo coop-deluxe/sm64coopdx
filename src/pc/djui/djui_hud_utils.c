@@ -614,6 +614,19 @@ static void hud_rotate_and_translate_vec3f(Vec3f vec, Mat4* mtx, Vec3f out) {
     out[2] += (*mtx)[3][2];
 }
 
+f32 get_current_fov() {
+    return get_first_person_enabled() ? gFirstPersonCamera.fov : not_zero(gFOVState.fov, gOverrideFOV) + gFOVState.fovOffset;
+}
+
+f32 djui_hud_get_fov_coeff() {
+    // fov of 45.0 is the default fov
+    f32 fov = get_current_fov();
+    f32 fovDefault = tanf(45.f * ((f32)M_PI / 360.0f));
+    f32 fovCurrent = tanf(fov * ((f32)M_PI / 360.0f));
+
+    return (fovDefault / fovCurrent) * 1.13f;
+}
+
 bool djui_hud_world_pos_to_screen_pos(Vec3f pos, Vec3f out) {
     if (!gCamera) { return false; }
     hud_rotate_and_translate_vec3f(pos, &gCamera->mtx, out);
@@ -624,15 +637,10 @@ bool djui_hud_world_pos_to_screen_pos(Vec3f pos, Vec3f out) {
     out[0] *= 256.0f / -out[2];
     out[1] *= 256.0f / out[2];
 
-    // fov of 45.0 is the default fov
-    f32 fov = get_first_person_enabled() ? gFirstPersonCamera.fov : not_zero(45.0f, gOverrideFOV);
-    f32 fovDefault = tanf(fov * ((f32)M_PI / 360.0f));
-    f32 fovCurrent = tanf((fov + gFOVState.fovOffset) * ((f32)M_PI / 360.0f));
+    f32 fovCoeff = djui_hud_get_fov_coeff();
 
-    f32 fovDifference = (fovDefault / fovCurrent) * 1.13f;
-
-    out[0] *= fovDifference;
-    out[1] *= fovDifference;
+    out[0] *= fovCoeff;
+    out[1] *= fovCoeff;
 
     out[0] += djui_hud_get_screen_width()  / 2.0f;
     out[1] += djui_hud_get_screen_height() / 2.0f;
