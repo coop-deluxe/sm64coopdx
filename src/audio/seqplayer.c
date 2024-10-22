@@ -350,6 +350,9 @@ void sequence_player_disable_channels_extended(struct SequencePlayer* seqPlayer,
 
 void sequence_player_disable_all_channels(struct SequencePlayer *seqPlayer) {
     if (!seqPlayer) { return; }
+    
+    MUTEX_LOCK(gAudioThread);
+    
     eu_stubbed_printf_0("SUBTRACK DIM\n");
     for (u32 i = 0; i < CHANNELS_MAX; i++) {
         struct SequenceChannel *seqChannel = seqPlayer->channels[i];
@@ -368,11 +371,16 @@ void sequence_player_disable_all_channels(struct SequencePlayer *seqPlayer) {
             seqPlayer->channels[i] = &gSequenceChannelNone;
         }
     }
+    
+    MUTEX_UNLOCK(gAudioThread);
 }
 
 void sequence_channel_enable(struct SequencePlayer *seqPlayer, u8 channelIndex, void *script) {
     if (!seqPlayer) { return; }
     if (channelIndex >= CHANNELS_MAX) { return; }
+    
+    MUTEX_LOCK(gAudioThread);
+    
     struct SequenceChannel *seqChannel = seqPlayer->channels[channelIndex];
     s32 i;
     if (IS_SEQUENCE_CHANNEL_VALID(seqChannel) == FALSE) {
@@ -404,10 +412,14 @@ void sequence_channel_enable(struct SequencePlayer *seqPlayer, u8 channelIndex, 
         
         LOG_DEBUG("Enabled sequence channel %d with script entry of %p", channelIndex, script);
     }
+    
+    MUTEX_UNLOCK(gAudioThread);
 }
 
 void sequence_player_disable(struct SequencePlayer *seqPlayer) {
     if (!seqPlayer) { return; }
+    MUTEX_LOCK(gAudioThread);
+    
     LOG_DEBUG("Disabling sequence player %p", seqPlayer);
     
     sequence_player_disable_all_channels(seqPlayer);
@@ -451,6 +463,8 @@ void sequence_player_disable(struct SequencePlayer *seqPlayer) {
         gBankLoadedPool.temporary.nextSide = 0;
     }
 #endif
+
+    MUTEX_UNLOCK(gAudioThread);
 }
 
 /**
@@ -1659,7 +1673,7 @@ void sequence_channel_process_script(struct SequenceChannel *seqChannel) {
     }
 
     seqPlayer = seqChannel->seqPlayer;
-    if (seqPlayer->muted && (seqChannel->muteBehavior & MUTE_BEHAVIOR_STOP_SCRIPT) != 0) {
+    if (seqPlayer == NULL || (seqPlayer->muted && (seqChannel->muteBehavior & MUTE_BEHAVIOR_STOP_SCRIPT) != 0)) {
         return;
     }
 

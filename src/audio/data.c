@@ -2,11 +2,14 @@
 
 #include "data.h"
 #include "effects.h"
+#include "src/pc/thread.h"
 
 extern struct OSMesgQueue OSMesgQueue0;
 extern struct OSMesgQueue OSMesgQueue1;
 extern struct OSMesgQueue OSMesgQueue2;
 extern struct OSMesgQueue OSMesgQueue3;
+
+struct ThreadHandle gAudioThread = { 0 };
 
 #ifdef VERSION_EU
 struct ReverbSettingsEU sReverbSettings[] = {

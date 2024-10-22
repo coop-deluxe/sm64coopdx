@@ -1,6 +1,7 @@
 #include <ultra64.h>
 
 #include "area.h"
+#include "audio/data.h"
 #include "audio/external.h"
 #include "engine/graph_node.h"
 #include "engine/math_util.h"
@@ -87,6 +88,8 @@ void reset_volume(void) {
  * Called from threads: thread5_game_loop
  */
 void lower_background_noise(s32 a) {
+    MUTEX_LOCK(gAudioThread);
+    
     switch (a) {
         case 1:
             set_audio_muted(TRUE);
@@ -96,12 +99,16 @@ void lower_background_noise(s32 a) {
             break;
     }
     sVolumeLoweredState |= a;
+  
+    MUTEX_UNLOCK(gAudioThread);
 }
 
 /**
  * Called from threads: thread5_game_loop
  */
 void raise_background_noise(s32 a) {
+    MUTEX_LOCK(gAudioThread);
+    
     switch (a) {
         case 1:
             set_audio_muted(FALSE);
@@ -111,26 +118,36 @@ void raise_background_noise(s32 a) {
             break;
     }
     sVolumeLoweredState &= ~a;
+  
+    MUTEX_UNLOCK(gAudioThread);
 }
 
 /**
  * Called from threads: thread5_game_loop
  */
 void disable_background_sound(void) {
+    MUTEX_LOCK(gAudioThread);
+  
     if (!sBackgroundMusicDisabled) {
         sBackgroundMusicDisabled = TRUE;
         sound_banks_disable(SEQ_PLAYER_SFX, SOUND_BANKS_BACKGROUND);
     }
+    
+    MUTEX_UNLOCK(gAudioThread);
 }
 
 /**
  * Called from threads: thread5_game_loop
  */
 void enable_background_sound(void) {
+    MUTEX_LOCK(gAudioThread);
+      
     if (sBackgroundMusicDisabled) {
         sBackgroundMusicDisabled = FALSE;
         sound_banks_enable(SEQ_PLAYER_SFX, SOUND_BANKS_BACKGROUND);
     }
+    
+    MUTEX_UNLOCK(gAudioThread);
 }
 
 /**
@@ -139,9 +156,13 @@ void enable_background_sound(void) {
  * Called from threads: thread5_game_loop
  */
 void set_sound_mode(u16 soundMode) {
+    MUTEX_LOCK(gAudioThread);
+    
     if (soundMode < 3) {
         audio_set_sound_mode(sSoundMenuModeToSoundMode[soundMode]);
     }
+    
+    MUTEX_UNLOCK(gAudioThread);
 }
 
 /**
@@ -241,20 +262,28 @@ void set_background_music(u16 a, u16 seqArgs, s16 fadeTimer) {
  * Called from threads: thread3_main, thread5_game_loop
  */
 void fadeout_music(s16 fadeOutTime) {
+    MUTEX_LOCK(gAudioThread);
+    
     set_audio_fadeout(fadeOutTime);
     sCurrentMusic = MUSIC_NONE;
     sCurrentShellMusic = MUSIC_NONE;
     sCurrentCapMusic = MUSIC_NONE;
+    
+    MUTEX_UNLOCK(gAudioThread);
 }
 
 /**
  * Called from threads: thread5_game_loop
  */
 void fadeout_level_music(s16 fadeTimer) {
+    MUTEX_LOCK(gAudioThread);
+    
     seq_player_fade_out(SEQ_PLAYER_LEVEL, fadeTimer);
     sCurrentMusic = MUSIC_NONE;
     sCurrentShellMusic = MUSIC_NONE;
     sCurrentCapMusic = MUSIC_NONE;
+    
+    MUTEX_UNLOCK(gAudioThread);
 }
 
 /**
