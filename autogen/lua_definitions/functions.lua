@@ -3225,6 +3225,11 @@ function djui_open_pause_menu()
     -- ...
 end
 
+--- @return number
+function get_current_fov()
+    -- ...
+end
+
 --- @param message string
 --- @param lines integer
 function djui_popup_create(message, lines)

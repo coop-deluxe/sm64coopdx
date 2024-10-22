@@ -2676,6 +2676,24 @@
 
 <br />
 
+## [get_current_fov](#get_current_fov)
+
+### Lua Example
+`local numberValue = get_current_fov()`
+
+### Parameters
+- None
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 get_current_fov();`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ---
 # functions from djui_popup.h
 

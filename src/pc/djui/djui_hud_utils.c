@@ -614,9 +614,13 @@ static void hud_rotate_and_translate_vec3f(Vec3f vec, Mat4* mtx, Vec3f out) {
     out[2] += (*mtx)[3][2];
 }
 
+f32 get_current_fov() {
+    return get_first_person_enabled() ? gFirstPersonCamera.fov : not_zero(gFOVState.fov, gOverrideFOV) + gFOVState.fovOffset;
+}
+
 f32 djui_hud_get_fov_coeff() {
     // fov of 45.0 is the default fov
-    f32 fov = get_first_person_enabled() ? gFirstPersonCamera.fov : not_zero(gFOVState.fov, gOverrideFOV) + gFOVState.fovOffset;
+    f32 fov = get_current_fov();
     f32 fovDefault = tanf(45.f * ((f32)M_PI / 360.0f));
     f32 fovCurrent = tanf(fov * ((f32)M_PI / 360.0f));
 

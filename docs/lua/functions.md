@@ -773,6 +773,7 @@
    - [djui_hud_set_rotation_interpolated](functions-3.md#djui_hud_set_rotation_interpolated)
    - [djui_hud_world_pos_to_screen_pos](functions-3.md#djui_hud_world_pos_to_screen_pos)
    - [djui_open_pause_menu](functions-3.md#djui_open_pause_menu)
+   - [get_current_fov](functions-3.md#get_current_fov)
 
 <br />
 
