@@ -59,6 +59,7 @@ bool debug_context_within(enum DebugContext ctx) {
     return sCtxDepth[ctx] > 0;
 }
 
+#ifdef DEVELOPMENT
 void debug_context_set_time(enum DebugContext ctx, f64 time) {
     if (ctx >= CTX_MAX) { return; }
     sCtxTime[ctx] = time;
@@ -68,3 +69,4 @@ f64 debug_context_get_time(enum DebugContext ctx) {
     if (ctx >= CTX_MAX) { return 0.0; }
     return sCtxTime[ctx];
 }
+#endif
