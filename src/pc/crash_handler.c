@@ -457,8 +457,8 @@ static void crash_handler(const int signalNum, siginfo_t *info, UNUSED ucontext_
 
         // Load symbols
         char filename[256] = { 0 };
-        const char *exe_path = sys_exe_path();
-        if (NULL != exe_path) {
+        const char *exe_path = sys_exe_path_dir();
+        if (exe_path[0] != '\0') {
             snprintf(filename, 256, "%s/%s", exe_path, "coop.map");
         } else {
             snprintf(filename, 256, "%s", "coop.map");
