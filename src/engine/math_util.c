@@ -261,7 +261,7 @@ void mtxf_lookat(Mat4 mtx, Vec3f from, Vec3f to, s16 roll) {
     dz = to[2] - from[2];
     xzDist = dx * dx + dz * dz;
     if (xzDist != 0.0f) {
-        invLength = 1.0f / sqrtf(xzDist);
+        invLength = -1.0f / sqrtf(xzDist);
         dx *= invLength;
         dz *= invLength;
     } else {
