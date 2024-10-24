@@ -1240,8 +1240,15 @@ $(BUILD_DIR)/%: %.png
 	$(V)$(N64GRAPHICS) -s raw -i $@ -g $< -f $(lastword $(subst ., ,$@))
 
 $(BUILD_DIR)/%.inc.c: %.png
-	$(call print,Converting:,$<,$@)
-	$(V)$(N64GRAPHICS) -s $(TEXTURE_ENCODING) -i $@ -g $< -f $(lastword ,$(subst ., ,$(basename $<)))
+	$(call print,Converting(inc.c):,$<,$@)
+	# If the texture filename does not identify its format (e.g. with a .i8)
+	# then dont pass the -f argument to n64graphics
+	@if echo "$(basename $<)" | grep -q "\."; then \
+		$(V)$(N64GRAPHICS) -i $@ -g $< -f $(lastword ,$(subst ., ,$(basename $<))) -s $(TEXTURE_ENCODING); \
+	else \
+		$(V)$(N64GRAPHICS) -i $@ -g $< -s $(TEXTURE_ENCODING); \
+	fi
+	
 
 # Color Index CI8
 $(BUILD_DIR)/%.ci8: %.ci8.png
