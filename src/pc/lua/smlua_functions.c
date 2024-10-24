@@ -15,6 +15,7 @@
 #include "include/macro_presets.h"
 #include "utils/smlua_anim_utils.h"
 #include "utils/smlua_collision_utils.h"
+#include "game/hardcoded.h"
 
 bool smlua_functions_valid_param_count(lua_State* L, int expected) {
     int top = lua_gettop(L);
@@ -176,6 +177,110 @@ int smlua_func_network_send(lua_State* L) {
 int smlua_func_network_send_to(lua_State* L) {
     if (!smlua_functions_valid_param_count(L, 3)) { return 0; }
     network_send_lua_custom(false);
+    return 1;
+}
+
+int smlua_func_set_exclamation_box_contents(lua_State* L) {
+    if (!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    if (lua_type(L, 1) != LUA_TTABLE) {
+        LOG_LUA_LINE("Invalid type passed to set_exclamation_box(): %u", lua_type(L, -1));
+        return 0;
+    }
+
+    struct ExclamationBoxContent exclamationBoxNewContents[EXCLAMATION_BOX_MAX_SIZE];
+
+    u8 exclamationBoxIndex = 0;
+    lua_pushnil(L); // Initial pop
+    while (lua_next(L, 1)) /* Main table index */ {
+        if (lua_type(L, 3) != LUA_TTABLE) {
+            LOG_LUA_LINE("set_exclamation_box: Subtable is not a table (Subtable %u)", exclamationBoxIndex);
+            return 0;
+        }
+
+        lua_pushnil(L); // Subtable initial pop
+        bool confirm[] = { false, false, false, false, false }; /* id, unused, firstByte, model, behavior */
+        while (lua_next(L, 3)) /* Subtable index */ {
+            // key is index -2, value is index -1
+            const char* key = smlua_to_string(L, -2);
+            if (!gSmLuaConvertSuccess) {
+                LOG_LUA("set_exclamation_box: Failed to convert subtable key");
+                return 0;
+            }
+
+            s32 value = smlua_to_integer(L, -1);
+            if (!gSmLuaConvertSuccess) {
+                LOG_LUA("set_exclamation_box: Failed to convert subtable value");
+                return 0;
+            }
+
+            // Fill fields
+            if (strcmp(key, "id") == 0) { exclamationBoxNewContents[exclamationBoxIndex].id = value; confirm[0] = true; }
+            else if (strcmp(key, "unused") == 0) { exclamationBoxNewContents[exclamationBoxIndex].unused = value; confirm[1] = true; }
+            else if (strcmp(key, "firstByte") == 0) { exclamationBoxNewContents[exclamationBoxIndex].firstByte = value; confirm[2] = true; }
+            else if (strcmp(key, "model") == 0) { exclamationBoxNewContents[exclamationBoxIndex].model = value; confirm[3] = true; }
+            else if (strcmp(key, "behavior") == 0) { exclamationBoxNewContents[exclamationBoxIndex].behavior = value; confirm[4] = true; }
+            else {
+                LOG_LUA_LINE_WARNING("set_exclamation_box: Invalid key passed (Subtable %d)", exclamationBoxIndex);
+            }
+
+            lua_pop(L, 1); // Pop value
+        }
+        // Check if the fields have been filled
+        if (!(confirm[0]) || !(confirm[3]) || !(confirm[4])) {
+            LOG_LUA("set_exclamation_box: A critical component of a content (id, model, or behavior) has not been set (Subtable %d)", exclamationBoxIndex);
+            return 0;
+        }
+        if (!(confirm[1])) { exclamationBoxNewContents[exclamationBoxIndex].unused = 0; }
+        if (!(confirm[2])) { exclamationBoxNewContents[exclamationBoxIndex].firstByte = 0; }
+
+        if (++exclamationBoxIndex == EXCLAMATION_BOX_MAX_SIZE) { // There is an edge case where the 254th element will warn even though it works just fine
+            // Immediately exit if at risk for out of bounds array access.
+            lua_pop(L, 1);
+            LOG_LUA_LINE_WARNING("set_exclamation_box: Too many items have been set for the exclamation box. Some content spawns may be lost.");
+            break;
+        }
+        lua_pop(L, 1); // Pop subtable
+    }
+
+    memcpy(gExclamationBoxContents, exclamationBoxNewContents, sizeof(struct ExclamationBoxContent) * exclamationBoxIndex);
+    gExclamationBoxSize = exclamationBoxIndex;
+
+    return 1;
+}
+
+int smlua_func_get_exclamation_box_contents(lua_State* L) {
+    if (!smlua_functions_valid_param_count(L, 0)) { return 0; }
+
+    lua_newtable(L); // Index 1
+
+    for (u8 i = 0; i < gExclamationBoxSize; i++) {
+        lua_pushinteger(L, i); // Index 2
+        lua_newtable(L); // Index 3
+
+        lua_pushstring(L, "id");
+        lua_pushinteger(L, gExclamationBoxContents[i].id);
+        lua_settable(L, -3);
+
+        lua_pushstring(L, "unused");
+        lua_pushinteger(L, gExclamationBoxContents[i].unused);
+        lua_settable(L, -3);
+
+        lua_pushstring(L, "firstByte");
+        lua_pushinteger(L, gExclamationBoxContents[i].firstByte);
+        lua_settable(L, -3);
+
+        lua_pushstring(L, "model");
+        lua_pushinteger(L, gExclamationBoxContents[i].model);
+        lua_settable(L, -3);
+
+        lua_pushstring(L, "behavior");
+        lua_pushinteger(L, gExclamationBoxContents[i].behavior);
+        lua_settable(L, -3);
+
+        lua_settable(L, 1); // Insert the subtable into the main table
+    }
+
     return 1;
 }
 
@@ -855,6 +960,8 @@ void smlua_bind_functions(void) {
     smlua_bind_function(L, "reset_level", smlua_func_reset_level);
     smlua_bind_function(L, "network_send", smlua_func_network_send);
     smlua_bind_function(L, "network_send_to", smlua_func_network_send_to);
+    smlua_bind_function(L, "set_exclamation_box_contents", smlua_func_set_exclamation_box_contents);
+    smlua_bind_function(L, "get_exclamation_box_contents", smlua_func_get_exclamation_box_contents);
     smlua_bind_function(L, "get_texture_info", smlua_func_get_texture_info);
     smlua_bind_function(L, "djui_hud_render_texture", smlua_func_djui_hud_render_texture);
     smlua_bind_function(L, "djui_hud_render_texture_tile", smlua_func_djui_hud_render_texture_tile);

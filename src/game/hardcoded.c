@@ -287,6 +287,32 @@ struct BehaviorValues gDefaultBehaviorValues = {
 
 struct BehaviorValues gBehaviorValues = { 0 };
 
+struct ExclamationBoxContent sDefaultExclamationBoxContents[] = {
+    { 0, 0, 0, E_MODEL_MARIOS_WING_CAP, id_bhvWingCap },
+    { 1, 0, 0, E_MODEL_MARIOS_METAL_CAP, id_bhvMetalCap },
+    { 2, 0, 0, E_MODEL_MARIOS_CAP, id_bhvVanishCap },
+    { 3, 0, 0, E_MODEL_KOOPA_SHELL, id_bhvKoopaShell },
+    { 4, 0, 0, E_MODEL_YELLOW_COIN, id_bhvSingleCoinGetsSpawned },
+    { 5, 0, 0, E_MODEL_NONE, id_bhvThreeCoinsSpawn },
+    { 6, 0, 0, E_MODEL_NONE, id_bhvTenCoinsSpawn },
+    { 7, 0, 0, E_MODEL_1UP, id_bhv1upWalking },
+    { 8, 0, 0, E_MODEL_STAR, id_bhvSpawnedStar },
+    { 9, 0, 0, E_MODEL_1UP, id_bhv1upRunningAway },
+    { 10, 0, 1, E_MODEL_STAR, id_bhvSpawnedStar },
+    { 11, 0, 2, E_MODEL_STAR, id_bhvSpawnedStar },
+    { 12, 0, 3, E_MODEL_STAR, id_bhvSpawnedStar },
+    { 13, 0, 4, E_MODEL_STAR, id_bhvSpawnedStar },
+    { 14, 0, 5, E_MODEL_STAR, id_bhvSpawnedStar }
+};
+
+// Hack: Create 2 arrays: one that is constantly default and one that can be changed.
+
+struct ExclamationBoxContent sDummyContents[EXCLAMATION_BOX_MAX_SIZE];
+
+struct ExclamationBoxContent* gExclamationBoxContents = sDummyContents;
+
+u8 gExclamationBoxSize = 15;
+
   //////////////
  // Painting //
 //////////////
@@ -336,6 +362,10 @@ AT_STARTUP void hardcoded_reset_default_values(void) {
     memcpy(&sl_painting, &default_sl_painting, sizeof(struct Painting));
     memcpy(&thi_huge_painting, &default_thi_huge_painting, sizeof(struct Painting));
     memcpy(&ttm_slide_painting, &default_ttm_slide_painting, sizeof(struct Painting));
+    memcpy(sDummyContents, sDefaultExclamationBoxContents, sizeof(struct ExclamationBoxContent) * 15);
+
+    gExclamationBoxContents = sDummyContents;
+    gExclamationBoxSize = 15;
 
     gPaintingValues = gDefaultPaintingValues;
 }
