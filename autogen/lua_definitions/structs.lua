@@ -1126,6 +1126,7 @@
 --- @field public modelIndex integer
 --- @field public name string
 --- @field public onRxSeqId integer
+--- @field public overrideLocation string
 --- @field public overrideModelIndex integer
 --- @field public overridePalette PlayerPalette
 --- @field public overridePaletteIndex integer

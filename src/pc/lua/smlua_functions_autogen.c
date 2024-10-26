@@ -21120,6 +21120,25 @@ int smlua_func_network_player_set_description(lua_State* L) {
     return 1;
 }
 
+int smlua_func_network_player_set_override_location(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "network_player_set_override_location", 2, top);
+        return 0;
+    }
+
+    struct NetworkPlayer* np = (struct NetworkPlayer*)smlua_to_cobject(L, 1, LOT_NETWORKPLAYER);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "network_player_set_override_location"); return 0; }
+    const char* location = smlua_to_string(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "network_player_set_override_location"); return 0; }
+
+    network_player_set_override_location(np, location);
+
+    return 1;
+}
+
 int smlua_func_network_player_set_override_palette_color(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -34416,6 +34435,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "network_player_is_override_palette_same", smlua_func_network_player_is_override_palette_same);
     smlua_bind_function(L, "network_player_reset_override_palette", smlua_func_network_player_reset_override_palette);
     smlua_bind_function(L, "network_player_set_description", smlua_func_network_player_set_description);
+    smlua_bind_function(L, "network_player_set_override_location", smlua_func_network_player_set_override_location);
     smlua_bind_function(L, "network_player_set_override_palette_color", smlua_func_network_player_set_override_palette_color);
 
     // network_utils.h
