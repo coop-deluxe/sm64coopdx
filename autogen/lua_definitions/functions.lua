@@ -5524,6 +5524,12 @@ function network_player_set_description(np, description, r, g, b, a)
 end
 
 --- @param np NetworkPlayer
+--- @param location string
+function network_player_set_override_location(np, location)
+    -- ...
+end
+
+--- @param np NetworkPlayer
 --- @param part PlayerPart
 --- @param color Color
 function network_player_set_override_palette_color(np, part, color)
