@@ -679,6 +679,9 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
     gVertexColor[0] = 255;
     gVertexColor[1] = 255;
     gVertexColor[2] = 255;
+    gSkyboxColor[0] = 255;
+    gSkyboxColor[1] = 255;
+    gSkyboxColor[2] = 255;
     gFogColor[0] = 255;
     gFogColor[1] = 255;
     gFogColor[2] = 255;
