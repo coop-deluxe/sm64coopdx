@@ -1,7 +1,7 @@
 #include <stdio.h>
 #ifdef HAVE_SDL2
 #include <SDL2/SDL.h>
-#else 
+#else
 #ifdef HAVE_SDL
 
 #include <SDL/SDL.h>
@@ -145,7 +145,7 @@ const char* translate_bind_to_name(int bind) {
     if (sc == 0) { return name; }
 
 #ifdef HAVE_SDL2
-    const char* sname = SDL_GetScancodeName(sc);
+    const char* sname = SDL_GetKeyName(SDL_GetKeyFromScancode(sc));
     if (strlen(sname) <= 9) { return sname; }
 
     char* space = strchr(sname, ' ');
