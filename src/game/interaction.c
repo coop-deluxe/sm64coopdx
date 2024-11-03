@@ -157,7 +157,7 @@ u32 determine_interaction(struct MarioState *m, struct Object *o) {
     }
 
     if (interaction == 0 && action & ACT_FLAG_ATTACKING) {
-        u32 flags = (MARIO_PUNCHING | MARIO_KICKING | MARIO_TRIPPING);
+        u32 flags = (MARIO_PUNCHING | MARIO_KICKING) | (gServerSettings.pvpType == PLAYER_PVP_REVAMPED ? MARIO_TRIPPING : 0);
         if ((action == ACT_PUNCHING || action == ACT_MOVE_PUNCHING || action == ACT_JUMP_KICK) ||
             (m->flags & flags && interaction & INT_LUA)) {
             s16 dYawToObject = mario_obj_angle_to_object(m, o) - m->faceAngle[1];
@@ -669,18 +669,20 @@ u32 determine_knockback_action(struct MarioState *m, UNUSED s32 arg) {
     if (m->interactObj != NULL && (m->interactObj->oInteractType & INTERACT_PLAYER) && terrainIndex != 2) {
         f32 scaler = 1;
         s8 hasBeenPunched = FALSE;
+#define IF_REVAMPED_PVP(Is, IsNot) gServerSettings.pvpType == PLAYER_PVP_REVAMPED ? (Is) : (IsNot);
         for (s32 i = 0; i < MAX_PLAYERS; i++) {
             struct MarioState* m2 = &gMarioStates[i];
             if (!is_player_active(m2)) { continue; }
             if (m2->marioObj == NULL) { continue; }
             if (m2->marioObj != m->interactObj) { continue; }
             // Redundent check in case the kicking flag somehow gets missed
-            if (m2->action == ACT_JUMP_KICK || m2->flags & MARIO_KICKING) { scaler = 1.85f; }
-            else if (m2->action == ACT_DIVE) { scaler = 1 + fabs(m2->forwardVel * 0.005f); }
-            else if ((m2->flags & MARIO_PUNCHING)) { scaler = 0.18f; hasBeenPunched = TRUE; }
+            if (m2->action == ACT_JUMP_KICK || m2->flags & MARIO_KICKING) { scaler = IF_REVAMPED_PVP(1.85f, 2.0f); }
+            else if (m2->action == ACT_DIVE) { scaler = 1 + IF_REVAMPED_PVP(m2->forwardVel * 0.005f, 0); }
+            else if ((m2->flags & MARIO_PUNCHING)) { scaler = IF_REVAMPED_PVP(0.18f, 1.0f); hasBeenPunched = gServerSettings.pvpType == PLAYER_PVP_REVAMPED; }
             if (m2->flags & MARIO_METAL_CAP) { scaler *= 1.25f; }
             break;
         }
+
         if (m->flags & MARIO_METAL_CAP) {
             scaler *= 0.5f;
             if (scaler < 1) { scaler = 1; }
@@ -695,8 +697,8 @@ u32 determine_knockback_action(struct MarioState *m, UNUSED s32 arg) {
         m->vel[2] = -mag * coss(m->interactObj->oFaceAngleYaw);
         m->slideVelX = m->vel[0];
         m->slideVelZ = m->vel[2];
-        m->knockbackTimer = hasBeenPunched ? PVP_ATTACK_KNOCKBACK_TIMER_OVERRIDE + 1 : PVP_ATTACK_KNOCKBACK_TIMER_DEFAULT;
-
+        m->knockbackTimer = hasBeenPunched ? PVP_ATTACK_KNOCKBACK_TIMER_OVERRIDE : PVP_ATTACK_KNOCKBACK_TIMER_DEFAULT;
+#undef IF_REVAMPED_PVP
         m->faceAngle[1] = m->interactObj->oFaceAngleYaw + (sign == 1.0f ? 0 : 0x8000);
     }
 
@@ -1321,9 +1323,16 @@ static u8 resolve_player_collision(struct MarioState* m, struct MarioState* m2) 
 }
 
 u8 determine_player_damage_value(u32 interaction) {
-    if (interaction & INT_GROUND_POUND) { return 3; }
-    if (interaction & (INT_KICK | INT_SLIDE_KICK | INT_TRIP | INT_TWIRL)) { return 2; }
-    return 1;
+    if (gServerSettings.pvpType == PLAYER_PVP_REVAMPED) {
+        if (interaction & INT_GROUND_POUND) { return 3; }
+        if (interaction & (INT_KICK | INT_SLIDE_KICK | INT_TRIP | INT_TWIRL)) { return 2; }
+        return 1;
+    } else {
+        if (interaction & INT_GROUND_POUND_OR_TWIRL) { return 3; }
+        if (interaction & INT_KICK) { return 2; }
+        if (interaction & INT_ATTACK_SLIDE) { return 1; }
+        return 2;
+    }
 }
 
 u8 player_is_sliding(struct MarioState* m) {
@@ -1363,7 +1372,8 @@ u8 passes_pvp_interaction_checks(struct MarioState* attacker, struct MarioState*
     if (victim->knockbackTimer != 0) {
         return false;
     }
-    if ((attacker->action == ACT_PUNCHING || attacker->action == ACT_MOVE_PUNCHING) &&
+    if (gServerSettings.pvpType == PLAYER_PVP_REVAMPED &&
+        (attacker->action == ACT_PUNCHING || attacker->action == ACT_MOVE_PUNCHING) &&
         (victim->action == ACT_SOFT_BACKWARD_GROUND_KB || victim->action == ACT_SOFT_FORWARD_GROUND_KB)) {
         return true;
     }
@@ -1460,10 +1470,13 @@ u32 interact_player_pvp(struct MarioState* attacker, struct MarioState* victim) 
 
     // determine if slide attack should be ignored
     // Ground pounds will always be able to hit
-    if (((interaction & INT_ATTACK_SLIDE) || player_is_sliding(cVictim)) && attacker->action != ACT_GROUND_POUND) {
+    if ((interaction & INT_ATTACK_SLIDE) || player_is_sliding(cVictim)) {
         // determine the difference in velocities
         //Vec3f velDiff;
         //vec3f_dif(velDiff, attacker->vel, cVictim->vel);
+        if (gServerSettings.pvpType == PLAYER_PVP_REVAMPED && attacker->action == ACT_GROUND_POUND) {
+            goto ignoreSlideCheck;
+        }
 
         if (attacker->action == ACT_SLIDE_KICK_SLIDE || attacker->action == ACT_SLIDE_KICK) {
             // if the difference vectors are not different enough, do not attack
@@ -1475,8 +1488,15 @@ u32 interact_player_pvp(struct MarioState* attacker, struct MarioState* victim) 
 
         // if the victim is going faster, do not attack
         // However if the victim is diving and the attacker is slidekicking, do not check speed
-        if (!(attacker->action == ACT_SLIDE_KICK && cVictim->action == ACT_DIVE) && vec3f_length(cVictim->vel) > vec3f_length(attacker->vel)) { return FALSE; }
+        if (vec3f_length(cVictim->vel) > vec3f_length(attacker->vel)) {
+            if (gServerSettings.pvpType == PLAYER_PVP_REVAMPED && (attacker->action == ACT_SLIDE_KICK && cVictim->action == ACT_DIVE)) {
+                // do nothing, meaning don't exit
+            } else {
+                return FALSE;
+            }
+        }
     }
+ignoreSlideCheck:
 
     // determine if ground pound should be ignored
     if (attacker->action == ACT_GROUND_POUND) {
@@ -1504,7 +1524,7 @@ u32 interact_player_pvp(struct MarioState* attacker, struct MarioState* victim) 
 
     victim->invincTimer = max(victim->invincTimer, 3);
     take_damage_and_knock_back(victim, attacker->marioObj);
-    if (!(attacker->flags & MARIO_PUNCHING)) {
+    if (gServerSettings.pvpType != PLAYER_PVP_REVAMPED || !(attacker->flags & MARIO_PUNCHING)) {
         bounce_back_from_attack(attacker, interaction);
     }
     victim->interactObj = NULL;
