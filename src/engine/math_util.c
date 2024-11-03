@@ -12,6 +12,55 @@
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wreturn-local-addr"
 
+#if defined(__clang__) || defined(__GNUC__)
+
+// Use built-in functions when using Clang or GCC
+inline f32 minf(f32 a, f32 b) {
+    return __builtin_fminf(a, b);
+}
+
+inline f32 maxf(f32 a, f32 b) {
+    return __builtin_fmaxf(a, b);
+}
+
+#else
+
+// Fallback to the original implementation for iDO
+inline f32 minf(f32 a, f32 b) {
+    return (a <= b) ? a : b;
+}
+
+inline f32 maxf(f32 a, f32 b) {
+    return (a > b) ? a : b;
+}
+
+#endif
+
+// The sqr, min, max, and trig functions do not have/need built-ins, so it's safe to leave them as is
+inline s16 (min)(s16 a, s16 b) {
+    return (a <= b) ? a : b;
+}
+
+inline s16 (max)(s16 a, s16 b) {
+    return (a > b) ? a : b;
+}
+
+inline f32 sqrf(f32 x) {
+    return x * x;
+}
+
+inline s16 (sqr)(s16 x) {
+    return x * x;
+}
+
+inline f32 sins(s16 sm64Angle) {
+    return gSineTable[(u16) (sm64Angle) >> 4];
+}
+
+inline f32 coss(s16 sm64Angle) {
+    return gCosineTable[(u16) (sm64Angle) >> 4];
+}
+
 /// Copy vector 'src' to 'dest'
 void *vec3f_copy(Vec3f dest, Vec3f src) {
     dest[0] = src[0];
@@ -244,77 +293,67 @@ void mtxf_translate(Mat4 dest, Vec3f b) {
  * angle allows a bank rotation of the camera.
  */
 void mtxf_lookat(Mat4 mtx, Vec3f from, Vec3f to, s16 roll) {
-    register f32 invLength;
-    f32 dx;
-    f32 dz;
-    f32 xColY;
-    f32 yColY;
-    f32 zColY;
-    f32 xColZ;
-    f32 yColZ;
-    f32 zColZ;
-    f32 xColX;
-    f32 yColX;
-    f32 zColX;
+    Vec3f forward, right, up;
+    f32 sinRoll, cosRoll;
+    f32 dx, dz, xzDist;
+    f32 invLength;
+
+    forward[0] = from[0] - to[0];
+    forward[1] = from[1] - to[1];
+    forward[2] = from[2] - to[2];
+    invLength = 1.0f / sqrtf(forward[0] * forward[0] + forward[1] * forward[1] + forward[2] * forward[2]);
+    forward[0] *= invLength;
+    forward[1] *= invLength;
+    forward[2] *= invLength;
 
     dx = to[0] - from[0];
     dz = to[2] - from[2];
+    xzDist = dx * dx + dz * dz;
+    if (xzDist != 0.0f) {
+        invLength = -1.0f / sqrtf(xzDist);
+        dx *= invLength;
+        dz *= invLength;
+    } else {
+        dx = dz = 0.0f;
+    }
+	
+    sinRoll = sins(roll);
+    cosRoll = coss(roll);
 
-    invLength = -1.0 / sqrtf(dx * dx + dz * dz);
-    dx *= invLength;
-    dz *= invLength;
+    up[0] = sinRoll * dz;
+    up[1] = cosRoll;
+    up[2] = -sinRoll * dx;
 
-    yColY = coss(roll);
-    xColY = sins(roll) * dz;
-    zColY = -sins(roll) * dx;
+    right[0] = up[1] * forward[2] - up[2] * forward[1];
+    right[1] = up[2] * forward[0] - up[0] * forward[2];
+    right[2] = up[0] * forward[1] - up[1] * forward[0];
 
-    xColZ = to[0] - from[0];
-    yColZ = to[1] - from[1];
-    zColZ = to[2] - from[2];
+    invLength = 1.0f / sqrtf(right[0] * right[0] + right[1] * right[1] + right[2] * right[2]);
+    right[0] *= invLength;
+    right[1] *= invLength;
+    right[2] *= invLength;
 
-    invLength = -1.0 / sqrtf(xColZ * xColZ + yColZ * yColZ + zColZ * zColZ);
-    xColZ *= invLength;
-    yColZ *= invLength;
-    zColZ *= invLength;
+    up[0] = forward[1] * right[2] - forward[2] * right[1];
+    up[1] = forward[2] * right[0] - forward[0] * right[2];
+    up[2] = forward[0] * right[1] - forward[1] * right[0];
+	
+    mtx[0][0] = right[0];
+    mtx[1][0] = right[1];
+    mtx[2][0] = right[2];
+    mtx[3][0] = -(from[0] * right[0] + from[1] * right[1] + from[2] * right[2]);
 
-    xColX = yColY * zColZ - zColY * yColZ;
-    yColX = zColY * xColZ - xColY * zColZ;
-    zColX = xColY * yColZ - yColY * xColZ;
+    mtx[0][1] = up[0];
+    mtx[1][1] = up[1];
+    mtx[2][1] = up[2];
+    mtx[3][1] = -(from[0] * up[0] + from[1] * up[1] + from[2] * up[2]);
 
-    invLength = 1.0 / sqrtf(xColX * xColX + yColX * yColX + zColX * zColX);
+    mtx[0][2] = forward[0];
+    mtx[1][2] = forward[1];
+    mtx[2][2] = forward[2];
+    mtx[3][2] = -(from[0] * forward[0] + from[1] * forward[1] + from[2] * forward[2]);
 
-    xColX *= invLength;
-    yColX *= invLength;
-    zColX *= invLength;
-
-    xColY = yColZ * zColX - zColZ * yColX;
-    yColY = zColZ * xColX - xColZ * zColX;
-    zColY = xColZ * yColX - yColZ * xColX;
-
-    invLength = 1.0 / sqrtf(xColY * xColY + yColY * yColY + zColY * zColY);
-    xColY *= invLength;
-    yColY *= invLength;
-    zColY *= invLength;
-
-    mtx[0][0] = xColX;
-    mtx[1][0] = yColX;
-    mtx[2][0] = zColX;
-    mtx[3][0] = -(from[0] * xColX + from[1] * yColX + from[2] * zColX);
-
-    mtx[0][1] = xColY;
-    mtx[1][1] = yColY;
-    mtx[2][1] = zColY;
-    mtx[3][1] = -(from[0] * xColY + from[1] * yColY + from[2] * zColY);
-
-    mtx[0][2] = xColZ;
-    mtx[1][2] = yColZ;
-    mtx[2][2] = zColZ;
-    mtx[3][2] = -(from[0] * xColZ + from[1] * yColZ + from[2] * zColZ);
-
-    mtx[0][3] = 0;
-    mtx[1][3] = 0;
-    mtx[2][3] = 0;
-    mtx[3][3] = 1;
+    mtx[0][3] = mtx[1][3] = mtx[2][3] = 0.0f;
+    mtx[3][3] = 1.0f;
 }
 
 /**
@@ -823,58 +862,36 @@ f32 approach_f32(f32 current, f32 target, f32 inc, f32 dec) {
  * the resulting angle is in range [0, 0x2000] (1/8 of a circle).
  */
 static u16 atan2_lookup(f32 y, f32 x) {
-    u16 ret;
-
-    if (x == 0) {
-        ret = gArctanTable[0];
-    } else {
-        s32 index = (s32)(y / x * 1024 + 0.5f);
-        if (index >= 0x401 || index < 0) { index = 0; }
-        ret = gArctanTable[index];
-    }
-    return ret;
+    s16 idx = (s16)(y / x * 1024.0f + 0.5f);
+    idx = (idx >= 0 && idx < 0x401) ? idx : 0;
+    return gArctanTable[idx];
 }
 
 /**
  * Compute the angle from (0, 0) to (x, y) as a s16. Given that terrain is in
  * the xz-plane, this is commonly called with (z, x) to get a yaw angle.
  */
-s16 atan2s(f32 y, f32 x) {
-    u16 ret;
+inline s16 atan2s(f32 y, f32 x) {
+    // Extract sign bits: 1 if negative, 0 otherwise
+    u8 signx = (x < 0.0f);
+    u8 signy = (y < 0.0f);
 
-    if (x >= 0) {
-        if (y >= 0) {
-            if (y >= x) {
-                ret = atan2_lookup(x, y);
-            } else {
-                ret = 0x4000 - atan2_lookup(y, x);
-            }
-        } else {
-            y = -y;
-            if (y < x) {
-                ret = 0x4000 + atan2_lookup(y, x);
-            } else {
-                ret = 0x8000 - atan2_lookup(x, y);
-            }
-        }
-    } else {
-        x = -x;
-        if (y < 0) {
-            y = -y;
-            if (y >= x) {
-                ret = 0x8000 + atan2_lookup(x, y);
-            } else {
-                ret = 0xC000 - atan2_lookup(y, x);
-            }
-        } else {
-            if (y < x) {
-                ret = 0xC000 + atan2_lookup(y, x);
-            } else {
-                ret = -atan2_lookup(x, y);
-            }
-        }
-    }
-    return ret;
+    // Take absolute values
+    f32 absx = absx(x);
+    f32 absy = absx(y);
+
+    // Compute the angle in the first octant
+    u16 angle = atan2_lookup(min(absx, absy), max(absy, absx));
+
+    // Create an index based on the signs and swap status
+    u8 idx = ((absy > absx) << 2) | (signx << 1) | signy;
+
+    // Combined lookup tables for offsets and sign multipliers
+    static const s16 offsets[] = {0x4000, 0x4000, 0xC000, 0xC000, 0x0000, 0x8000, 0x0000, 0x8000};
+    static const s8 signs[] = {-1,  1,  1, -1, 1, -1, -1,  1};
+
+    // Ensure the result fits into 16 bits via an explicit cast on angle
+    return (offsets[idx] + (signs[idx] * (s16)angle)) & 0xFFFF;
 }
 
 /**

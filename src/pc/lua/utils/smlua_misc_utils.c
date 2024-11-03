@@ -27,10 +27,13 @@
 #include "game/first_person_cam.h"
 #include "pc/lua/utils/smlua_math_utils.h"
 #include "pc/lua/utils/smlua_audio_utils.h"
-#include "pc/network/socket/socket.h"
 
 #ifdef DISCORD_SDK
 #include "pc/discord/discord.h"
+#endif
+
+#ifdef COOPNET
+#include "pc/network/coopnet/coopnet.h"
 #endif
 
 static struct DateTime sDateTime;
@@ -427,12 +430,16 @@ const char* get_local_discord_id(void) {
 #endif
 }
 
-const char* get_coopnet_id(s8 localIndex) {
-    if (!gNetworkSystem || gNetworkSystem == &gNetworkSystemSocket) { return "-1"; }
-    if (localIndex < 0 || localIndex > MAX_PLAYERS - 1) { return "-1"; }
+const char* get_coopnet_id(UNUSED s8 localIndex) {
+#ifdef COOPNET
+    if (!gNetworkSystem || gNetworkSystem != &gNetworkSystemCoopNet) { return "-1"; }
+    if (localIndex < 0 || localIndex >= MAX_PLAYERS) { return "-1"; }
     struct NetworkPlayer* np = &gNetworkPlayers[localIndex];
     if (np == NULL || !np->connected) { return "-1"; }
     return gNetworkSystem->get_id_str(np->localIndex);
+#else
+    return "-1";
+#endif
 }
 
 ///

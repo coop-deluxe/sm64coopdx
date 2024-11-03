@@ -158,7 +158,8 @@ u32 determine_interaction(struct MarioState *m, struct Object *o) {
 
     if (interaction == 0 && action & ACT_FLAG_ATTACKING) {
         u32 flags = (MARIO_PUNCHING | MARIO_KICKING | MARIO_TRIPPING);
-        if (m->flags & flags) {
+        if ((action == ACT_PUNCHING || action == ACT_MOVE_PUNCHING || action == ACT_JUMP_KICK) ||
+            (m->flags & flags && interaction & INT_LUA)) {
             s16 dYawToObject = mario_obj_angle_to_object(m, o) - m->faceAngle[1];
 
             if (m->flags & MARIO_PUNCHING) {
@@ -236,6 +237,7 @@ u32 determine_interaction(struct MarioState *m, struct Object *o) {
 u32 attack_object(struct MarioState* m, struct Object *o, s32 interaction) {
     if (!o) { return 0; }
     u32 attackType = 0;
+    interaction &= ~INT_LUA;
 
     switch (interaction) {
         case INT_GROUND_POUND:
@@ -1881,7 +1883,7 @@ u32 interact_breakable(struct MarioState *m, UNUSED u32 interactType, struct Obj
 
         m->interactObj = o;
 
-        switch (interaction) {
+        switch (interaction & ~INT_LUA) {
             case INT_HIT_FROM_ABOVE:
                 bounce_off_object(m, o, 30.0f); //! Not in the 0x8F mask
                 break;
@@ -1913,7 +1915,7 @@ u32 interact_koopa_shell(struct MarioState *m, UNUSED u32 interactType, struct O
     if (!(m->action & ACT_FLAG_RIDING_SHELL)) {
         u32 interaction = determine_interaction(m, o);
 
-        if (interaction == INT_HIT_FROM_ABOVE || m->action == ACT_WALKING
+        if (interaction & INT_HIT_FROM_ABOVE || m->action == ACT_WALKING
             || m->action == ACT_HOLD_WALKING) {
             m->interactObj = o;
             m->usedObj = o;

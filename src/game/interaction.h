@@ -53,6 +53,7 @@ enum InteractionFlag {
     INT_HIT_FROM_BELOW        = /* 0x00000080 */ (1 << 7),
     INT_TWIRL                 = /* 0x00000100 */ (1 << 8),
     INT_GROUND_POUND_OR_TWIRL = (INT_GROUND_POUND | INT_TWIRL),
+    INT_LUA                   = /* 0x10000000 */ (1 << 31) ,
 };
 
 #define INT_ATTACK_NOT_FROM_BELOW       (INT_GROUND_POUND_OR_TWIRL | INT_PUNCH | INT_KICK | INT_TRIP | INT_SLIDE_KICK | INT_FAST_ATTACK_OR_SHELL | INT_HIT_FROM_ABOVE)

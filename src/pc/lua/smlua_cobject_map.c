@@ -12,7 +12,7 @@ void smlua_pointer_user_data_init(void) {
     smlua_pointer_user_data_shutdown();
 }
 
-void smlua_pointer_user_data_add(u64 pointer, CObject *obj) {
+void smlua_pointer_user_data_add(uintptr_t pointer, CObject *obj) {
     if (pointer == 0) { return; }
 
     if (!sPointers) {
@@ -24,12 +24,12 @@ void smlua_pointer_user_data_add(u64 pointer, CObject *obj) {
     }
 }
 
-void smlua_pointer_user_data_delete(u64 pointer) {
+void smlua_pointer_user_data_delete(uintptr_t pointer) {
     if (pointer == 0) { return; }
     hmap_del(sPointers, pointer);
 }
 
-CObject *smlua_pointer_user_data_get(u64 pointer) {
+CObject *smlua_pointer_user_data_get(uintptr_t pointer) {
     if (pointer == 0) { return NULL; }
     return hmap_get(sPointers, pointer);
 }

@@ -364,7 +364,7 @@ void smlua_push_object(lua_State* L, u16 lot, void* p) {
 
     switch (lot) {
         case LOT_SURFACE: {
-            smlua_pointer_user_data_add((u64)(intptr_t) p, cobject);
+            smlua_pointer_user_data_add((uintptr_t) p, cobject);
         }
     }
 }
@@ -735,10 +735,10 @@ void smlua_logline(void) {
 // Lua is able to use-after-free that pointer
 void smlua_free(void *ptr) {
     if (ptr && gLuaState) {
-        CObject *obj = smlua_pointer_user_data_get((u64)(intptr_t) ptr);
+        CObject *obj = smlua_pointer_user_data_get((uintptr_t) ptr);
         if (obj) {
             obj->freed = true;
-            smlua_pointer_user_data_delete((u64)(intptr_t) ptr);
+            smlua_pointer_user_data_delete((uintptr_t) ptr);
         }
     }
     free(ptr);

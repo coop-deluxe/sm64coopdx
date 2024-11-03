@@ -3716,6 +3716,9 @@ INT_TWIRL = (1 << 8)
 --- @type InteractionFlag
 INT_GROUND_POUND_OR_TWIRL = (INT_GROUND_POUND | INT_TWIRL)
 
+--- @type InteractionFlag
+INT_LUA = (1 << 31)
+
 --- @class InteractionType
 
 --- @type InteractionType
@@ -5508,7 +5511,7 @@ MARIO_HAND_RIGHT_OPEN = 5
 MAX_KEYS = 512
 
 --- @type integer
-MAX_KEY_VALUE_LENGTH = 256
+MAX_KEY_VALUE_LENGTH = 512
 
 --- @type integer
 PACKET_LENGTH = 3000
@@ -12497,10 +12500,10 @@ SPTASK_STATE_FINISHED_DP = 4
 MAX_VERSION_LENGTH = 32
 
 --- @type integer
-MINOR_VERSION_NUMBER = 2
+MINOR_VERSION_NUMBER = 3
 
 --- @type string
-SM64COOPDX_VERSION = "v1.0.3"
+SM64COOPDX_VERSION = "v1.0.4"
 
 --- @type integer
 VERSION_NUMBER = 37

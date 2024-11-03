@@ -390,7 +390,7 @@ static int smlua__get_field(lua_State* L) {
 
     // Legacy support
     if (strcmp(key, "_pointer") == 0) {
-        lua_pushinteger(L, (u64)(intptr_t) cobj->pointer);
+        lua_pushinteger(L, pointer);
         return 1;
     }
     if (strcmp(key, "_lot") == 0) {
@@ -554,7 +554,7 @@ int smlua__gc(lua_State *L) {
     if (!cobj->freed) {
         switch (cobj->lot) {
             case LOT_SURFACE: {
-                smlua_pointer_user_data_delete((u64)(intptr_t) cobj->pointer);
+                smlua_pointer_user_data_delete((uintptr_t) cobj->pointer);
             }
         }
     }
