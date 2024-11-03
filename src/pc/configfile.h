@@ -123,6 +123,7 @@ extern bool         configMenuDemos;
 extern bool         configDisablePopups;
 extern char         configLanguage[MAX_CONFIG_STRING];
 extern bool         configDynosLocalPlayerModelOnly;
+extern unsigned int configPvpMode;
 // CoopNet settings
 extern char         configCoopNetIp[MAX_CONFIG_STRING];
 extern unsigned int configCoopNetPort;
