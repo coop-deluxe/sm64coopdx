@@ -2026,6 +2026,7 @@
 --- @field public pauseAnywhere integer
 --- @field public playerInteractions PlayerInteractions
 --- @field public playerKnockbackStrength integer
+--- @field public pvpType PvpType
 --- @field public skipIntro integer
 --- @field public stayInLevelAfterStar integer
 

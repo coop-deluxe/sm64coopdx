@@ -45,6 +45,7 @@
     - [enum BouncyLevelBounds](#enum-BouncyLevelBounds)
     - [enum NetworkSystemType](#enum-NetworkSystemType)
     - [enum PlayerInteractions](#enum-PlayerInteractions)
+    - [enum PvpType](#enum-PvpType)
 - [network_player.h](#network_playerh)
     - [enum NetworkPlayerType](#enum-NetworkPlayerType)
 - [obj_behaviors.c](#obj_behaviorsc)
@@ -2008,6 +2009,12 @@
 | PLAYER_INTERACTIONS_NONE | 0 |
 | PLAYER_INTERACTIONS_SOLID | 1 |
 | PLAYER_INTERACTIONS_PVP | 2 |
+
+### [enum PvpType](#PvpType)
+| Identifier | Value |
+| :--------- | :---- |
+| PLAYER_PVP_CLASSIC | 0 |
+| PLAYER_PVP_REVAMPED | 1 |
 
 [:arrow_up_small:](#)
 

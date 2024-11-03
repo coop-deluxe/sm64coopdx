@@ -131,6 +131,7 @@ bool network_init(enum NetworkType inNetworkType, bool reconnecting) {
     gServerSettings.nametags = configNametags;
     gServerSettings.maxPlayers = configAmountofPlayers;
     gServerSettings.pauseAnywhere = configPauseAnywhere;
+    gServerSettings.pvpType = configPvpMode;
 #if defined(RAPI_DUMMY) || defined(WAPI_DUMMY)
     gServerSettings.headlessServer = (inNetworkType == NT_SERVER);
 #else

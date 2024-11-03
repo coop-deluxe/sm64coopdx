@@ -157,9 +157,9 @@ u32 determine_interaction(struct MarioState *m, struct Object *o) {
     }
 
     if (interaction == 0 && action & ACT_FLAG_ATTACKING) {
-        u32 flags = (MARIO_PUNCHING | MARIO_KICKING) | (gServerSettings.pvpType == PLAYER_PVP_REVAMPED ? MARIO_TRIPPING : 0);
+        u32 flags = (MARIO_PUNCHING | MARIO_KICKING | MARIO_TRIPPING);
         if ((action == ACT_PUNCHING || action == ACT_MOVE_PUNCHING || action == ACT_JUMP_KICK) ||
-            (m->flags & flags && interaction & INT_LUA)) {
+            ((m->flags & flags) && (interaction & INT_LUA))) {
             s16 dYawToObject = mario_obj_angle_to_object(m, o) - m->faceAngle[1];
 
             if (m->flags & MARIO_PUNCHING) {
@@ -1372,10 +1372,13 @@ u8 passes_pvp_interaction_checks(struct MarioState* attacker, struct MarioState*
     if (victim->knockbackTimer != 0) {
         return false;
     }
+
     if (gServerSettings.pvpType == PLAYER_PVP_REVAMPED &&
         (attacker->action == ACT_PUNCHING || attacker->action == ACT_MOVE_PUNCHING) &&
         (victim->action == ACT_SOFT_BACKWARD_GROUND_KB || victim->action == ACT_SOFT_FORWARD_GROUND_KB)) {
         return true;
+    } else if (attacker->flags & MARIO_TRIPPING) {
+        return false;
     }
 
     return (!isInvulnerable && !isIgnoredAttack && !isAttackerInvulnerable && !isVictimIntangible && !isVictimGroundPounding && !isVictimInRolloutFlip);

@@ -2547,6 +2547,7 @@
 | pauseAnywhere | `integer` |  |
 | playerInteractions | [enum PlayerInteractions](constants.md#enum-PlayerInteractions) |  |
 | playerKnockbackStrength | `integer` |  |
+| pvpType | [enum PvpType](constants.md#enum-PvpType) |  |
 | skipIntro | `integer` |  |
 | stayInLevelAfterStar | `integer` |  |
 
