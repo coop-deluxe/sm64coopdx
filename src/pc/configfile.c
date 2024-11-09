@@ -20,7 +20,6 @@
 #include "debuglog.h"
 #include "djui/djui_hud_utils.h"
 #include "game/save_file.h"
-#include "game/level_update.h"
 
 #define ARRAY_LEN(arr) (sizeof(arr) / sizeof(arr[0]))
 
@@ -57,8 +56,6 @@ struct FunctionConfigOption {
 /*
  *Config options and default values
  */
-
-static_assert(NUM_SAVE_FILES == 4); // update this if more save slots are added
 char configSaveNames[4][MAX_SAVE_NAME_STRING] = {
     "SM64",
     "SM64",
@@ -72,7 +69,7 @@ ConfigWindow configWindow       = {
     .y = WAPI_WIN_CENTERPOS,
     .w = DESIRED_SCREEN_WIDTH,
     .h = DESIRED_SCREEN_HEIGHT,
-    .vsync = 0,
+    .vsync = 1,
     .reset = false,
     .fullscreen = false,
     .exiting_fullscreen = false,
@@ -83,7 +80,7 @@ ConfigWindow configWindow       = {
 // display settings
 unsigned int configFiltering                      = 2; // 0 = Nearest, 1 = Bilinear, 2 = Trilinear
 bool         configShowFPS                        = false;
-bool         configUncappedFramerate              = false;
+bool         configUncappedFramerate              = true;
 unsigned int configFrameLimit                     = 60;
 unsigned int configInterpolationMode              = 1;
 unsigned int configDrawDistance                   = 4;
@@ -93,6 +90,7 @@ unsigned int configMusicVolume                    = MAX_VOLUME;
 unsigned int configSfxVolume                      = MAX_VOLUME;
 unsigned int configEnvVolume                      = MAX_VOLUME;
 bool         configFadeoutDistantSounds           = false;
+bool         configMuteFocusLoss                  = false;
 // control binds
 unsigned int configKeyA[MAX_BINDS]                = { 0x0026,     0x1000,     0x1103     };
 unsigned int configKeyB[MAX_BINDS]                = { 0x0033,     0x1001,     0x1101     };
@@ -125,6 +123,7 @@ unsigned int configRumbleStrength                 = 50;
 unsigned int configGamepadNumber                  = 0;
 bool         configBackgroundGamepad              = true;
 bool         configDisableGamepads                = false;
+bool         configUseStandardKeyBindingsChat     = false;
 // free camera settings
 bool         configEnableCamera                   = false;
 bool         configCameraAnalog                   = false;
@@ -149,7 +148,7 @@ char         configPlayerName[MAX_CONFIG_STRING]  = "";
 unsigned int configPlayerModel                    = 0;
 struct PlayerPalette configPlayerPalette          = { { { 0x00, 0x00, 0xff }, { 0xff, 0x00, 0x00 }, { 0xff, 0xff, 0xff }, { 0x72, 0x1c, 0x0e }, { 0x73, 0x06, 0x00 }, { 0xfe, 0xc1, 0x79 }, { 0xff, 0x00, 0x00 }, { 0xff, 0x00, 0x00 } } };
 // coop settings
-unsigned int configAmountofPlayers                = 16;
+unsigned int configAmountofPlayers                = MAX_PLAYERS;
 bool         configBubbleDeath                    = true;
 unsigned int configHostPort                       = DEFAULT_PORT;
 unsigned int configHostSaveSlot                   = 1;
@@ -163,23 +162,34 @@ bool         configNametags                       = true;
 unsigned int configBouncyLevelBounds              = 0;
 bool         configSkipIntro                      = 0;
 bool         configPauseAnywhere                  = false;
+bool         configMenuStaffRoll                  = false;
 unsigned int configMenuLevel                      = 0;
-bool         configMenuSound                      = false;
+unsigned int configMenuSound                      = 0;
 bool         configMenuRandom                     = false;
 bool         configMenuDemos                      = false;
-bool         configGlobalPlayerModels             = true;
 bool         configDisablePopups                  = false;
-bool         configUseStandardKeyBindingsChat     = false;
 char         configLanguage[MAX_CONFIG_STRING]    = "";
+bool         configDynosLocalPlayerModelOnly      = false;
+// CoopNet settings
 char         configCoopNetIp[MAX_CONFIG_STRING]   = DEFAULT_COOPNET_IP;
 unsigned int configCoopNetPort                    = DEFAULT_COOPNET_PORT;
 char         configPassword[MAX_CONFIG_STRING]    = "";
 char         configDestId[MAX_CONFIG_STRING]      = "0";
+// DJUI settings
 unsigned int configDjuiTheme                      = DJUI_THEME_DARK;
+#ifdef HANDHELD
+bool         configDjuiThemeCenter                = false;
+#else
 bool         configDjuiThemeCenter                = true;
+#endif
 unsigned int configDjuiThemeFont                  = FONT_NORMAL;
 unsigned int configDjuiScale                      = 0;
-char         configLastVersion[MAX_CONFIG_STRING] = "";
+// other
+unsigned int configRulesVersion                   = 0;
+bool         configCompressOnStartup              = false;
+
+// secrets
+bool configExCoopTheme = false;
 
 static const struct ConfigOption options[] = {
     // window settings
@@ -203,6 +213,7 @@ static const struct ConfigOption options[] = {
     {.name = "sfx_volume",                     .type = CONFIG_TYPE_UINT, .uintValue = &configSfxVolume},
     {.name = "env_volume",                     .type = CONFIG_TYPE_UINT, .uintValue = &configEnvVolume},
     {.name = "fade_distant_sounds",            .type = CONFIG_TYPE_BOOL, .boolValue = &configFadeoutDistantSounds},
+    {.name = "mute_focus_loss",                .type = CONFIG_TYPE_BOOL, .boolValue = &configMuteFocusLoss},
     // control binds
     {.name = "key_a",                          .type = CONFIG_TYPE_BIND, .uintValue = configKeyA},
     {.name = "key_b",                          .type = CONFIG_TYPE_BIND, .uintValue = configKeyB},
@@ -234,7 +245,10 @@ static const struct ConfigOption options[] = {
     {.name = "rumble_strength",                .type = CONFIG_TYPE_UINT, .uintValue = &configRumbleStrength},
     {.name = "gamepad_number",                 .type = CONFIG_TYPE_UINT, .uintValue = &configGamepadNumber},
     {.name = "background_gamepad",             .type = CONFIG_TYPE_UINT, .boolValue = &configBackgroundGamepad},
+#ifndef HANDHELD
     {.name = "disable_gamepads",               .type = CONFIG_TYPE_BOOL, .boolValue = &configDisableGamepads},
+#endif
+    {.name = "use_standard_key_bindings_chat", .type = CONFIG_TYPE_BOOL, .boolValue = &configUseStandardKeyBindingsChat},
     // free camera settings
     {.name = "bettercam_enable",               .type = CONFIG_TYPE_BOOL, .boolValue = &configEnableCamera},
     {.name = "bettercam_analog",               .type = CONFIG_TYPE_BOOL, .boolValue = &configCameraAnalog},
@@ -282,14 +296,14 @@ static const struct ConfigOption options[] = {
     {.name = "coop_bouncy_bounds",             .type = CONFIG_TYPE_UINT,   .uintValue   = &configBouncyLevelBounds},
     {.name = "skip_intro",                     .type = CONFIG_TYPE_BOOL,   .boolValue   = &configSkipIntro},
     {.name = "pause_anywhere",                 .type = CONFIG_TYPE_BOOL,   .boolValue   = &configPauseAnywhere},
+    {.name = "coop_menu_staff_roll",           .type = CONFIG_TYPE_BOOL,   .boolValue   = &configMenuStaffRoll},
     {.name = "coop_menu_level",                .type = CONFIG_TYPE_UINT,   .uintValue   = &configMenuLevel},
-    {.name = "coop_menu_sound",                .type = CONFIG_TYPE_BOOL,   .boolValue   = &configMenuSound},
+    {.name = "coop_menu_sound",                .type = CONFIG_TYPE_UINT,   .uintValue   = &configMenuSound},
     {.name = "coop_menu_random",               .type = CONFIG_TYPE_BOOL,   .boolValue   = &configMenuRandom},
-    {.name = "coop_menu_demos",                .type = CONFIG_TYPE_BOOL,   .boolValue   = &configMenuDemos},
-    {.name = "coop_global_player_models",      .type = CONFIG_TYPE_BOOL,   .boolValue   = &configGlobalPlayerModels},
+    // {.name = "coop_menu_demos",                .type = CONFIG_TYPE_BOOL,   .boolValue   = &configMenuDemos},
     {.name = "disable_popups",                 .type = CONFIG_TYPE_BOOL,   .boolValue   = &configDisablePopups},
-    {.name = "use_standard_key_bindings_chat", .type = CONFIG_TYPE_BOOL,   .boolValue   = &configUseStandardKeyBindingsChat},
     {.name = "language",                       .type = CONFIG_TYPE_STRING, .stringValue = (char*)&configLanguage, .maxStringLength = MAX_CONFIG_STRING},
+    {.name = "dynos_local_player_model_only",  .type = CONFIG_TYPE_BOOL,   .boolValue   = &configDynosLocalPlayerModelOnly},
     // CoopNet settings
     {.name = "coopnet_ip",                     .type = CONFIG_TYPE_STRING, .stringValue = (char*)&configCoopNetIp, .maxStringLength = MAX_CONFIG_STRING},
     {.name = "coopnet_port",                   .type = CONFIG_TYPE_UINT,   .uintValue   = &configCoopNetPort},
@@ -301,7 +315,27 @@ static const struct ConfigOption options[] = {
     {.name = "djui_theme_font",                .type = CONFIG_TYPE_UINT,   .uintValue   = &configDjuiThemeFont},
     {.name = "djui_scale",                     .type = CONFIG_TYPE_UINT,   .uintValue   = &configDjuiScale},
     // other
-    {.name = "last_version",                   .type = CONFIG_TYPE_STRING, .stringValue = (char*)&configLastVersion, .maxStringLength = MAX_CONFIG_STRING}
+    {.name = "rules_version",                  .type = CONFIG_TYPE_UINT,   .uintValue   = &configRulesVersion},
+    {.name = "compress_on_startup",            .type = CONFIG_TYPE_BOOL,   .boolValue   = &configCompressOnStartup},
+};
+
+struct SecretConfigOption {
+    const char *name;
+    enum ConfigOptionType type;
+    union {
+        bool *boolValue;
+        unsigned int *uintValue;
+        float* floatValue;
+        char* stringValue;
+        u64* u64Value;
+        u8 (*colorValue)[3];
+    };
+    int maxStringLength;
+    bool inConfig;
+};
+
+static struct SecretConfigOption secret_options[] = {
+    {.name = "ex_coop_theme", .type = CONFIG_TYPE_BOOL, .boolValue = &configExCoopTheme},
 };
 
 // FunctionConfigOption functions
@@ -609,6 +643,15 @@ static void configfile_load_internal(const char *filename, bool* error) {
                     }
                 }
 
+                // secret options
+                for (unsigned int i = 0; i < ARRAY_LEN(secret_options); i++) {
+                    if (strcmp(tokens[0], secret_options[i].name) == 0) {
+                        secret_options[i].inConfig = true;
+                        option = (const struct ConfigOption *) &secret_options[i];
+                        break;
+                    }
+                }
+
                 if (option == NULL) {
 #ifdef DEVELOPMENT
                     printf("unknown option '%s'\n", tokens[0]);
@@ -679,8 +722,6 @@ NEXT_OPTION:
     if (configDjuiTheme >= DJUI_THEME_MAX) { configDjuiTheme = 0; }
     if (configDjuiScale >= 5) { configDjuiScale = 0; }
 
-    if (!strcmp(configLastVersion, "")) { snprintf(configLastVersion, MAX_CONFIG_STRING, "%s", get_version()); }
-
 #ifndef COOPNET
     configNetworkSystem = NS_SOCKET;
 #endif
@@ -700,6 +741,42 @@ void configfile_load(void) {
 #endif
 }
 
+static void configfile_save_option(FILE *file, const struct ConfigOption *option, bool isSecret) {
+    if (isSecret) {
+        const struct SecretConfigOption *secret_option = (const struct SecretConfigOption *) option;
+        if (!secret_option->inConfig) { return; }
+    }
+    switch (option->type) {
+        case CONFIG_TYPE_BOOL:
+            fprintf(file, "%s %s\n", option->name, *option->boolValue ? "true" : "false");
+            break;
+        case CONFIG_TYPE_UINT:
+            fprintf(file, "%s %u\n", option->name, *option->uintValue);
+            break;
+        case CONFIG_TYPE_FLOAT:
+            fprintf(file, "%s %f\n", option->name, *option->floatValue);
+            break;
+        case CONFIG_TYPE_BIND:
+            fprintf(file, "%s ", option->name);
+            for (int i = 0; i < MAX_BINDS; ++i)
+                fprintf(file, "%04x ", option->uintValue[i]);
+            fprintf(file, "\n");
+            break;
+        case CONFIG_TYPE_STRING:
+            fprintf(file, "%s %s\n", option->name, option->stringValue);
+            break;
+        case CONFIG_TYPE_U64:
+            fprintf(file, "%s %llu\n", option->name, *option->u64Value);
+            break;
+        case CONFIG_TYPE_COLOR:
+            fprintf(file, "%s %02x %02x %02x\n", option->name, (*option->colorValue)[0], (*option->colorValue)[1], (*option->colorValue)[2]);
+            break;
+        default:
+            LOG_ERROR("Configfile wrote bad type '%d': %s", (int)option->type, option->name);
+            break;
+    }
+}
+
 // Writes the config file to 'filename'
 void configfile_save(const char *filename) {
     FILE *file;
@@ -714,36 +791,12 @@ void configfile_save(const char *filename) {
 
     for (unsigned int i = 0; i < ARRAY_LEN(options); i++) {
         const struct ConfigOption *option = &options[i];
+        configfile_save_option(file, option, false);
+    }
 
-        switch (option->type) {
-            case CONFIG_TYPE_BOOL:
-                fprintf(file, "%s %s\n", option->name, *option->boolValue ? "true" : "false");
-                break;
-            case CONFIG_TYPE_UINT:
-                fprintf(file, "%s %u\n", option->name, *option->uintValue);
-                break;
-            case CONFIG_TYPE_FLOAT:
-                fprintf(file, "%s %f\n", option->name, *option->floatValue);
-                break;
-            case CONFIG_TYPE_BIND:
-                fprintf(file, "%s ", option->name);
-                for (int i = 0; i < MAX_BINDS; ++i)
-                    fprintf(file, "%04x ", option->uintValue[i]);
-                fprintf(file, "\n");
-                break;
-            case CONFIG_TYPE_STRING:
-                fprintf(file, "%s %s\n", option->name, option->stringValue);
-                break;
-            case CONFIG_TYPE_U64:
-                fprintf(file, "%s %llu\n", option->name, *option->u64Value);
-                break;
-            case CONFIG_TYPE_COLOR:
-                fprintf(file, "%s %02x %02x %02x\n", option->name, (*option->colorValue)[0], (*option->colorValue)[1], (*option->colorValue)[2]);
-                break;
-            default:
-                LOG_ERROR("Configfile wrote bad type '%d': %s", (int)option->type, option->name);
-                break;
-        }
+    for (unsigned int i = 0; i < ARRAY_LEN(secret_options); i++) {
+        const struct ConfigOption *option = (const struct ConfigOption *) &secret_options[i];
+        configfile_save_option(file, option, true);
     }
 
     // save function options

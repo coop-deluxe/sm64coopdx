@@ -9,12 +9,13 @@
 #define SCANCODE_ESCAPE          1
 #define SCANCODE_BACKSPACE      14
 #define SCANCODE_ENTER          28
+#define SCANCODE_SHIFT_LEFT     42
 #ifdef __APPLE__
     #define SCANCODE_CONTROL_LEFT   91
 #else
     #define SCANCODE_CONTROL_LEFT   29
 #endif
-#define SCANCODE_SHIFT_LEFT     42
+#define SCANCODE_ALT_LEFT       56
 #define SCANCODE_A              30
 #define SCANCODE_X              45
 #define SCANCODE_C              46
@@ -25,6 +26,7 @@
 #else
     #define SCANCODE_CONTROL_RIGHT 285
 #endif
+#define SCANCODE_ALT_RIGHT     312
 #define SCANCODE_HOME          327
 #define SCANCODE_LEFT          331
 #define SCANCODE_RIGHT         333

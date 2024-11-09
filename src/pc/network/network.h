@@ -3,7 +3,7 @@
 
 #include <PR/ultratypes.h>
 #include <time.h>
-#include <types.h>
+#include "types.h"
 #include <assert.h>
 #include "network_player.h"
 #include "network_utils.h"
@@ -75,7 +75,6 @@ struct ServerSettings {
     u8 playerKnockbackStrength;
     u8 stayInLevelAfterStar;
     u8 skipIntro;
-    u8 enableCheats;
     u8 bubbleDeath;
     u8 enablePlayersInLevelDisplay;
     u8 enablePlayerList;

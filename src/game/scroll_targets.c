@@ -1,4 +1,5 @@
 #include "scroll_targets.h"
+#include "pc/lua/utils/smlua_math_utils.h"
 
 static struct ScrollTarget *sScrollTargets = NULL;
 
@@ -21,7 +22,9 @@ struct ScrollTarget *get_scroll_targets(u32 id, u16 size, u16 offset) {
 
         // If we need to, realloc the block of vertices
         if ((!scroll->hasOffset && offset > 0) || size < scroll->size) {
+            if (scroll->hasOffset) { return NULL; }
             if (size > scroll->size) { size = scroll->size; } // Don't use an invalid size
+            if (size + offset >= scroll->size) { return NULL; } // If the offset is invalid, Abort.
             scroll->hasOffset = true;
             Vtx* *newVtx = calloc(size, sizeof(Vtx*));
             if (!newVtx) { return NULL; }
@@ -137,6 +140,8 @@ void patch_scroll_targets_before(void) {
     }
 }
 
+#define SHORT_RANGE 0x7FFF
+
 void patch_scroll_targets_interpolated(f32 delta) {
     f32 antiDelta = 1.0f - delta;
     struct ScrollTarget *scroll = sScrollTargets;
@@ -152,7 +157,7 @@ void patch_scroll_targets_interpolated(f32 delta) {
             } else {
                 u8 bhvIndex = MIN(scroll->bhv-SCROLL_UV_X, 1);
                 for (u16 k = 0; k < scroll->size; k++) {
-                    verts[k]->n.tc[bhvIndex] = (int) scroll->prevS16[k] * antiDelta + scroll->interpS16[k] * delta;
+                    verts[k]->n.tc[bhvIndex] = clampf(scroll->prevS16[k] * antiDelta + scroll->interpS16[k] * delta, -SHORT_RANGE, SHORT_RANGE);
                 }
             }
         }

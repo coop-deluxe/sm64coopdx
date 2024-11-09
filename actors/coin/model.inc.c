@@ -50,7 +50,7 @@ const Gfx coin_seg3_dl_03007800[] = {
     gsDPPipeSync(),
     gsDPSetTextureImage(G_IM_FMT_IA, G_IM_SIZ_16b, 1, coin_seg3_texture_03005780),
     gsSPDisplayList(coin_seg3_dl_03007780),
-    gsSPVertexNonGlobal(coin_seg3_vertex_030056C0, 4, 0),
+    gsSPVertex(coin_seg3_vertex_030056C0, 4, 0),
     gsSPBranchList(coin_seg3_dl_030077D0),
 };
 
@@ -59,7 +59,7 @@ const Gfx coin_seg3_dl_03007828[] = {
     gsDPPipeSync(),
     gsDPSetTextureImage(G_IM_FMT_IA, G_IM_SIZ_16b, 1, coin_seg3_texture_03005F80),
     gsSPDisplayList(coin_seg3_dl_03007780),
-    gsSPVertexNonGlobal(coin_seg3_vertex_030056C0, 4, 0),
+    gsSPVertex(coin_seg3_vertex_030056C0, 4, 0),
     gsSPBranchList(coin_seg3_dl_030077D0),
 };
 
@@ -68,7 +68,7 @@ const Gfx coin_seg3_dl_03007850[] = {
     gsDPPipeSync(),
     gsDPSetTextureImage(G_IM_FMT_IA, G_IM_SIZ_16b, 1, coin_seg3_texture_03006780),
     gsSPDisplayList(coin_seg3_dl_03007780),
-    gsSPVertexNonGlobal(coin_seg3_vertex_030056C0, 4, 0),
+    gsSPVertex(coin_seg3_vertex_030056C0, 4, 0),
     gsSPBranchList(coin_seg3_dl_030077D0),
 };
 
@@ -77,7 +77,7 @@ const Gfx coin_seg3_dl_03007878[] = {
     gsDPPipeSync(),
     gsDPSetTextureImage(G_IM_FMT_IA, G_IM_SIZ_16b, 1, coin_seg3_texture_03006F80),
     gsSPDisplayList(coin_seg3_dl_03007780),
-    gsSPVertexNonGlobal(coin_seg3_vertex_030056C0, 4, 0),
+    gsSPVertex(coin_seg3_vertex_030056C0, 4, 0),
     gsSPBranchList(coin_seg3_dl_030077D0),
 };
 
@@ -86,7 +86,7 @@ const Gfx coin_seg3_dl_030078A0[] = {
     gsDPPipeSync(),
     gsDPSetTextureImage(G_IM_FMT_IA, G_IM_SIZ_16b, 1, coin_seg3_texture_03005780),
     gsSPDisplayList(coin_seg3_dl_03007780),
-    gsSPVertexNonGlobal(coin_seg3_vertex_03005700, 4, 0),
+    gsSPVertex(coin_seg3_vertex_03005700, 4, 0),
     gsSPBranchList(coin_seg3_dl_030077D0),
 };
 
@@ -95,7 +95,7 @@ const Gfx coin_seg3_dl_030078C8[] = {
     gsDPPipeSync(),
     gsDPSetTextureImage(G_IM_FMT_IA, G_IM_SIZ_16b, 1, coin_seg3_texture_03005F80),
     gsSPDisplayList(coin_seg3_dl_03007780),
-    gsSPVertexNonGlobal(coin_seg3_vertex_03005700, 4, 0),
+    gsSPVertex(coin_seg3_vertex_03005700, 4, 0),
     gsSPBranchList(coin_seg3_dl_030077D0),
 };
 
@@ -104,7 +104,7 @@ const Gfx coin_seg3_dl_030078F0[] = {
     gsDPPipeSync(),
     gsDPSetTextureImage(G_IM_FMT_IA, G_IM_SIZ_16b, 1, coin_seg3_texture_03006780),
     gsSPDisplayList(coin_seg3_dl_03007780),
-    gsSPVertexNonGlobal(coin_seg3_vertex_03005700, 4, 0),
+    gsSPVertex(coin_seg3_vertex_03005700, 4, 0),
     gsSPBranchList(coin_seg3_dl_030077D0),
 };
 
@@ -113,7 +113,7 @@ const Gfx coin_seg3_dl_03007918[] = {
     gsDPPipeSync(),
     gsDPSetTextureImage(G_IM_FMT_IA, G_IM_SIZ_16b, 1, coin_seg3_texture_03006F80),
     gsSPDisplayList(coin_seg3_dl_03007780),
-    gsSPVertexNonGlobal(coin_seg3_vertex_03005700, 4, 0),
+    gsSPVertex(coin_seg3_vertex_03005700, 4, 0),
     gsSPBranchList(coin_seg3_dl_030077D0),
 };
 
@@ -122,7 +122,7 @@ const Gfx coin_seg3_dl_03007940[] = {
     gsDPPipeSync(),
     gsDPSetTextureImage(G_IM_FMT_IA, G_IM_SIZ_16b, 1, coin_seg3_texture_03005780),
     gsSPDisplayList(coin_seg3_dl_03007780),
-    gsSPVertexNonGlobal(coin_seg3_vertex_03005740, 4, 0),
+    gsSPVertex(coin_seg3_vertex_03005740, 4, 0),
     gsSPBranchList(coin_seg3_dl_030077D0),
 };
 
@@ -131,7 +131,7 @@ const Gfx coin_seg3_dl_03007968[] = {
     gsDPPipeSync(),
     gsDPSetTextureImage(G_IM_FMT_IA, G_IM_SIZ_16b, 1, coin_seg3_texture_03005F80),
     gsSPDisplayList(coin_seg3_dl_03007780),
-    gsSPVertexNonGlobal(coin_seg3_vertex_03005740, 4, 0),
+    gsSPVertex(coin_seg3_vertex_03005740, 4, 0),
     gsSPBranchList(coin_seg3_dl_030077D0),
 };
 
@@ -140,7 +140,7 @@ const Gfx coin_seg3_dl_03007990[] = {
     gsDPPipeSync(),
     gsDPSetTextureImage(G_IM_FMT_IA, G_IM_SIZ_16b, 1, coin_seg3_texture_03006780),
     gsSPDisplayList(coin_seg3_dl_03007780),
-    gsSPVertexNonGlobal(coin_seg3_vertex_03005740, 4, 0),
+    gsSPVertex(coin_seg3_vertex_03005740, 4, 0),
     gsSPBranchList(coin_seg3_dl_030077D0),
 };
 
@@ -149,6 +149,6 @@ const Gfx coin_seg3_dl_030079B8[] = {
     gsDPPipeSync(),
     gsDPSetTextureImage(G_IM_FMT_IA, G_IM_SIZ_16b, 1, coin_seg3_texture_03006F80),
     gsSPDisplayList(coin_seg3_dl_03007780),
-    gsSPVertexNonGlobal(coin_seg3_vertex_03005740, 4, 0),
+    gsSPVertex(coin_seg3_vertex_03005740, 4, 0),
     gsSPBranchList(coin_seg3_dl_030077D0),
 };

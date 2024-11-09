@@ -114,6 +114,7 @@ sound_ref .sound_toad_wah2
   sound_ref .sound_toad_snoring3
   sound_ref .sound_toad_so_longa_bowser
   sound_ref .sound_toad_ima_tired
+  sound_ref .sound_toad_lets_a_go
 .endif
 
 .sound_toad_jump_hoo:
@@ -630,5 +631,15 @@ layer_jump .layer_toad_C4E
 
   .layer_toad_F08:
   layer_note1 39, 0x96, 127
+  layer_end
+
+  .sound_toad_lets_a_go:
+  chan_setbank 15
+  chan_setinstr 26
+  chan_setlayer 0, .layer_toad_311D
+  chan_end
+
+  .layer_toad_311D:
+  layer_note1 39, 0x5A, 127
   layer_end
 .endif

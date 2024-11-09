@@ -307,6 +307,7 @@
 | BowlingBallThiSmallSpeed | `number` |  |
 | BowlingBallTtmSpeed | `number` |  |
 | ChillBullyDeathPosY | `number` |  |
+| CourtyardBoosRequirement | `integer` |  |
 | GrateStarRequirement | `integer` |  |
 | InfiniteRenderDistance | `integer` |  |
 | KingBobombFVel | `number` |  |
@@ -849,7 +850,9 @@
 | centerL | `boolean` |  |
 | crouch | `number` |  |
 | enabled | `boolean` | read-only |
+| forcePitch | `boolean` |  |
 | forceRoll | `boolean` |  |
+| forceYaw | `boolean` |  |
 | fov | `number` |  |
 | offset | [Vec3f](structs.md#Vec3f) | read-only |
 | pitch | `integer` |  |
@@ -1155,7 +1158,10 @@
 | ----- | ---- | ------ |
 | pivotX | `number` |  |
 | pivotY | `number` |  |
+| prevPivotX | `number` |  |
+| prevPivotY | `number` |  |
 | rotation | `number` |  |
+| rotationDiff | `number` |  |
 
 [:arrow_up_small:](#)
 
@@ -1243,6 +1249,8 @@
 | hudCapTimer | `integer` |  |
 | hudRedCoinsRadar | `integer` |  |
 | hudSecretsRadar | `integer` |  |
+| infiniteStairsRequirement | `integer` |  |
+| jrbDarkenSkybox | `integer` |  |
 | maxCoins | `integer` |  |
 | maxLives | `integer` |  |
 | metalCapDuration | `integer` |  |
@@ -1451,8 +1459,8 @@
 | ----- | ---- | ------ |
 | baseVolume | `number` |  |
 | file | [ModFile](structs.md#ModFile) |  |
-| isStream | `boolean` |  |
-| sampleCopiesTail | [ModAudioSampleCopies](structs.md#ModAudioSampleCopies) |  |
+| isStream | `boolean` | read-only |
+| loaded | `boolean` | read-only |
 
 [:arrow_up_small:](#)
 

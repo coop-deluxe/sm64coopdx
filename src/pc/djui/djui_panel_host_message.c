@@ -47,17 +47,16 @@ void djui_panel_host_message_do_host(UNUSED struct DjuiBase* caller) {
 }
 
 void djui_panel_host_message_create(struct DjuiBase* caller) {
-    f32 warningLines = 0;
     char* warningMessage = NULL;
     bool hideHostButton = false;
 
-    warningLines = 5;
-    warningMessage = calloc(256, sizeof(char));
-    snprintf(warningMessage, 256, DLANG(HOST_MESSAGE, WARN_SOCKET), configHostPort);
+    f32 warningLines = 8;
+    warningMessage = calloc(512, sizeof(char));
+    snprintf(warningMessage, 512, DLANG(HOST_MESSAGE, WARN_SOCKET), configHostPort);
 
     f32 textHeight = 32 * 0.8125f * warningLines + 8;
 
-    struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(HOST_MESSAGE, INFO_TITLE));
+    struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(HOST_MESSAGE, INFO_TITLE), false);
     struct DjuiBase* body = djui_three_panel_get_body(panel);
     {
         struct DjuiText* text1 = djui_text_create(body, warningMessage);

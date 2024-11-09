@@ -1,13 +1,12 @@
 #ifndef VERSION_H
 #define VERSION_H
 
-#define SM64COOPDX_VERSION "v1.0"
+#define SM64COOPDX_VERSION "v1.0.3"
 
-// sm64ex-coop version, for mod compatibility
+// internal version
 #define VERSION_TEXT "v"
 #define VERSION_NUMBER 37
-#define MINOR_VERSION_NUMBER 0
-#define PATCH_VERSION_NUMBER 0
+#define MINOR_VERSION_NUMBER 2
 
 #if defined(VERSION_JP)
     #define VERSION_REGION "JP"
@@ -30,5 +29,6 @@
 #define MAX_VERSION_LENGTH 32
 
 const char* get_version(void);
+const char* get_version_online(void);
 
 #endif

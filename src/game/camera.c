@@ -504,7 +504,7 @@ CameraTransition sModeTransitions[] = {
 extern u8 sDanceCutsceneIndexTable[][4];
 extern u8 sZoomOutAreaMasks[];
 
-static void skip_camera_interpolation(void) {
+void skip_camera_interpolation(void) {
     gLakituState.skipCameraInterpolationTimestamp = gGlobalTimer;
     extern s32 gCamSkipInterp;
     gCamSkipInterp = 1;
@@ -3085,7 +3085,7 @@ void update_lakitu(struct Camera *c) {
             distToFloor = find_floor(gLakituState.pos[0],
                                      gLakituState.pos[1] + 20.0f,
                                      gLakituState.pos[2], &floor);
-            gCheckingSurfaceCollisionsForCamera = false;
+            gCheckingSurfaceCollisionsForCamera = FALSE;
             if (distToFloor != gLevelValues.floorLowerLimit) {
                 if (gLakituState.pos[1] < (distToFloor += 100.0f)) {
                     gLakituState.pos[1] = distToFloor;
@@ -3349,9 +3349,13 @@ void update_camera(struct Camera *c) {
 
     // Make sure the palette editor cutscene is properly reset
     struct MarioState *m = gMarioState;
-    if (c->paletteEditorCap && c->cutscene != CUTSCENE_PALETTE_EDITOR && !(m->flags & MARIO_CAP_ON_HEAD) && m->action != ACT_PUTTING_ON_CAP) {
-        cutscene_put_cap_on(m);
-        c->paletteEditorCap = false;
+    if (c->paletteEditorCap) {
+        if (m->flags & MARIO_CAP_ON_HEAD) {
+            c->paletteEditorCap = false;
+        } else if (c->cutscene != CUTSCENE_PALETTE_EDITOR && m->action != ACT_PUTTING_ON_CAP) {
+            cutscene_put_cap_on(m);
+            c->paletteEditorCap = false;
+        }
     }
 }
 
@@ -3648,7 +3652,7 @@ void zoom_out_if_paused_and_outside(struct GraphNodeCamera *camera) {
         areaMaskIndex = 0;
         areaBit = 0;
     }
-    if (gCameraMovementFlags & CAM_MOVE_PAUSE_SCREEN && !gInPlayerMenu) {
+    if (gCameraMovementFlags & CAM_MOVE_PAUSE_SCREEN && !gDjuiInPlayerMenu && !get_first_person_enabled()) {
         if (sFramesPaused >= 2) {
             if (sZoomOutAreaMasks[areaMaskIndex] & areaBit) {
 
@@ -10785,12 +10789,6 @@ BAD_RETURN(s32) cutscene_door_move_behind_mario(struct Camera *c) {
     vec3s_set(sCutsceneVars[0].angle, 0, sMarioCamState->faceAngle[1] + doorRotation, 0);
     vec3f_set(camOffset, 0.f, 125.f, 250.f);
 
-    if (doorRotation == 0) { //! useless code
-        camOffset[0] = 0.f;
-    } else {
-        camOffset[0] = 0.f;
-    }
-
     offset_rotated(c->pos, sMarioCamState->pos, camOffset, sCutsceneVars[0].angle);
     skip_camera_interpolation();
 }
@@ -10860,31 +10858,15 @@ BAD_RETURN(s32) cutscene_door_mode(struct Camera *c) {
 }
 
 // coop specific
+extern struct DjuiText* gDjuiPaletteToggle;
 void cutscene_palette_editor(struct Camera *c) {
     if (!c) { return; }
     struct MarioState* m = gMarioState;
 
-    if (!gInPlayerMenu) {
+    if (!gDjuiInPlayerMenu) {
         if (c->paletteEditorCap) {
-            if (m->action == ACT_IDLE && !(m->flags & MARIO_CAP_ON_HEAD)) {
-                set_mario_action(m, ACT_PUTTING_ON_CAP, 0);
-            }
-        }
-        gCutsceneTimer = CUTSCENE_STOP;
-        c->cutscene = 0;
-        return;
-    }
-
-    static bool pressed = false;
-    if (gInteractablePad.button & PAD_BUTTON_Z) {
-        if (!pressed && m->action != ACT_TAKING_OFF_CAP && m->action != ACT_PUTTING_ON_CAP) {
             if (m->flags & MARIO_CAP_ON_HEAD) {
-                if (m->action == ACT_IDLE) {
-                    set_mario_action(m, ACT_TAKING_OFF_CAP, 0);
-                } else {
-                    cutscene_take_cap_off(m);
-                    gCamera->paletteEditorCap = true;
-                }
+                gCamera->paletteEditorCap = false;
             } else {
                 if (m->action == ACT_IDLE) {
                     set_mario_action(m, ACT_PUTTING_ON_CAP, 0);
@@ -10894,9 +10876,35 @@ void cutscene_palette_editor(struct Camera *c) {
                 }
             }
         }
+        gCutsceneTimer = CUTSCENE_STOP;
+        c->cutscene = 0;
+        skip_camera_interpolation();
+        return;
+    }
+
+    // Press the Z bind to toggle cap
+    static bool pressed = false;
+    if (gInteractablePad.button & PAD_BUTTON_Z) {
+        if (!pressed && m->action == ACT_IDLE) {
+            if (m->flags & MARIO_CAP_ON_HEAD) {
+                set_mario_action(m, ACT_TAKING_OFF_CAP, 1); // Add palette editor action arg
+            } else {
+                set_mario_action(m, ACT_PUTTING_ON_CAP, 0);
+            }
+        }
         pressed = true;
     } else {
         pressed = false;
+    }
+
+    // Hide text if it is not possible to toggle cap
+    if (gDjuiPaletteToggle) {
+        djui_base_set_visible(
+            &gDjuiPaletteToggle->base,
+            m->action == ACT_IDLE ||
+            m->action == ACT_TAKING_OFF_CAP ||
+            m->action == ACT_PUTTING_ON_CAP
+        );
     }
 
     c->pos[0] = m->pos[0] + (0x200 * sins(m->faceAngle[1]));
@@ -12291,9 +12299,9 @@ void mode_rom_hack_camera(struct Camera *c) {
         if (gMarioStates[0].controller->buttonPressed & U_JPAD) {
             sRomHackYaw = DEGREES(180 + 90) - gMarioStates[0].faceAngle[1];
         } else if (gMarioStates[0].controller->buttonDown & L_JPAD) {
-            sRomHackYaw -= DEGREES(1) * (camera_config_is_x_inverted() ? -1 : 1);
+            sRomHackYaw -= DEGREES(0.5) * (camera_config_is_x_inverted() ? -1 : 1);
         } else if (gMarioStates[0].controller->buttonDown & R_JPAD) {
-            sRomHackYaw += DEGREES(1) * (camera_config_is_x_inverted() ? -1 : 1);
+            sRomHackYaw += DEGREES(0.5) * (camera_config_is_x_inverted() ? -1 : 1);
         } else if (gMarioStates[0].controller->buttonPressed & D_JPAD) {
             sRomHackYaw = snap_to_45_degrees(sRomHackYaw);
         }

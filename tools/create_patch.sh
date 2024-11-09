@@ -10,15 +10,9 @@ then
     exit 1
 fi
 
-# Make sure this is a git repository
-if [ ! -d .git ]
-then
-    echo 'Error: The current directory is not a Git repository.'
-    exit 1
-fi
-
 # 'git diff' is stupid and doesn't show new untracked files, so we must add them first.
-git add .
+# Also make sure this is a valid git repository, throw an error otherwise ( || exit 1 )
+git add . || exit 1
 # Generate the patch.
 git diff -p --staged > "$1"
 # Undo the 'git add'. 

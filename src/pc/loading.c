@@ -1,8 +1,11 @@
+#include "loading.h"
+
+#ifdef LOADING_SCREEN_SUPPORTED
+
 #include "djui/djui.h"
 #include "pc/djui/djui_unicode.h"
 
 #include "pc_main.h"
-#include "loading.h"
 #include "pc/utils/misc.h"
 #include "pc/cliopts.h"
 #include "rom_checker.h"
@@ -14,20 +17,24 @@ struct LoadingSegment gCurrLoadingSegment = { "", 0 };
 struct LoadingScreen {
     struct DjuiBase base;
     struct DjuiImage* splashImage;
+    struct DjuiText* splashText;
     struct DjuiText* loadingDesc;
     struct DjuiProgressBar *loadingBar;
 };
 
 static struct LoadingScreen* sLoading = NULL;
+
 pthread_t gLoadingThreadId;
 pthread_mutex_t gLoadingThreadMutex = PTHREAD_MUTEX_INITIALIZER;
 
 bool gIsThreaded = false;
 
-#define RUN_THREADED if (gIsThreaded)
-
-void loading_screen_set_segment_text(const char *text) {
+void loading_screen_set_segment_text(const char* text) {
     snprintf(gCurrLoadingSegment.str, 256, text);
+}
+
+void loading_screen_reset_progress_bar(void) {
+    sLoading->loadingBar->smoothValue = 0;
 }
 
 static void loading_screen_produce_frame_callback(void) {
@@ -35,11 +42,11 @@ static void loading_screen_produce_frame_callback(void) {
 }
 
 static void loading_screen_produce_one_frame(void) {
-    produce_one_dummy_frame(loading_screen_produce_frame_callback);
+    produce_one_dummy_frame(loading_screen_produce_frame_callback, 0x00, 0x00, 0x00);
 }
 
 static bool loading_screen_on_render(struct DjuiBase* base) {
-    RUN_THREADED { pthread_mutex_lock(&gLoadingThreadMutex); }
+    if (gIsThreaded) { pthread_mutex_lock(&gLoadingThreadMutex); }
 
     u32 windowWidth, windowHeight;
     WAPI.get_dimensions(&windowWidth, &windowHeight);
@@ -54,7 +61,11 @@ static bool loading_screen_on_render(struct DjuiBase* base) {
     djui_base_set_size(base, windowWidth, windowHeight);
 
     // splash logo
-    djui_base_set_location(&sLoading->splashImage->base, 0, loadingDescY1 - (sLoading->splashImage->base.height.value));
+    if (configExCoopTheme) {
+        djui_base_set_location(&sLoading->splashText->base, 0, loadingDescY1 - sLoading->splashText->base.height.value);
+    } else {
+        djui_base_set_location(&sLoading->splashImage->base, 0, loadingDescY1 - sLoading->splashImage->base.height.value);
+    }
 
     {
         // loading text description
@@ -79,7 +90,7 @@ static bool loading_screen_on_render(struct DjuiBase* base) {
 
     djui_base_compute(base);
 
-    RUN_THREADED { pthread_mutex_unlock(&gLoadingThreadMutex); }
+    if (gIsThreaded) { pthread_mutex_unlock(&gLoadingThreadMutex); }
 
     return true;
 }
@@ -90,18 +101,32 @@ static void loading_screen_destroy(struct DjuiBase* base) {
     sLoading = NULL;
 }
 
-void init_loading_screen(void) {
+static void init_loading_screen(void) {
     struct LoadingScreen* load = calloc(1, sizeof(struct LoadingScreen));
     struct DjuiBase* base = &load->base;
 
     djui_base_init(NULL, base, loading_screen_on_render, loading_screen_destroy);
 
-    {
-        // splash image
+    // splash text (easter egg)
+    if (configExCoopTheme) {
+        struct DjuiText* splashDjuiText = djui_text_create(base, "\\#ff0800\\SM\\#1be700\\64\\#00b3ff\\EX\n\\#ffef00\\COOP");
+        djui_base_set_location_type(&splashDjuiText->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+        djui_base_set_location(&splashDjuiText->base, 0, 0);
+        djui_text_set_font(splashDjuiText, gDjuiFonts[1]);
+        djui_text_set_font_scale(splashDjuiText, gDjuiFonts[1]->defaultFontScale);
+        djui_text_set_alignment(splashDjuiText, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
+        djui_base_set_size_type(&splashDjuiText->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+        djui_base_set_size(&splashDjuiText->base, 1.0f, gDjuiFonts[1]->defaultFontScale * 3.0f);
+
+        load->splashText = splashDjuiText;
+
+    // splash image
+    } else {
         struct DjuiImage* splashImage = djui_image_create(base, texture_coopdx_logo, 2048, 1024, 32);
         djui_base_set_location_type(&splashImage->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
         djui_base_set_alignment(&splashImage->base, DJUI_HALIGN_CENTER, DJUI_VALIGN_TOP);
-        djui_base_set_size(&splashImage->base, 740.0f, 364.0f);
+        djui_base_set_location(&splashImage->base, 0, -100);
+        djui_base_set_size(&splashImage->base, 512, 256);
 
         load->splashImage = splashImage;
     }
@@ -114,10 +139,10 @@ void init_loading_screen(void) {
 
         djui_base_set_size_type(&text->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
         djui_base_set_size(&text->base, 1.0f, gDjuiFonts[0]->defaultFontScale * 3.0f);
-        djui_base_set_color(&text->base, 200, 200, 200, 255);
+        djui_base_set_color(&text->base, 220, 220, 220, 255);
         djui_text_set_alignment(text, DJUI_HALIGN_CENTER, DJUI_VALIGN_TOP);
         djui_text_set_font(text, gDjuiFonts[0]);
-        djui_text_set_font_scale(text, gDjuiFonts[0]->defaultFontScale * 1);
+        djui_text_set_font_scale(text, gDjuiFonts[0]->defaultFontScale);
 
         load->loadingDesc = text;
     }
@@ -129,6 +154,8 @@ void init_loading_screen(void) {
         djui_base_set_location(&progressBar->base, 0, 0);
         djui_base_set_visible(&progressBar->base, false);
         progressBar->base.width.value = 0.5;
+        progressBar->smoothenHigh = 0.75f;
+        progressBar->smoothenLow = 0.25f;
 
         load->loadingBar = progressBar;
     }
@@ -137,7 +164,10 @@ void init_loading_screen(void) {
 }
 
 void loading_screen_reset(void) {
-    djui_base_destroy(&sLoading->base);
+    if (sLoading) {
+        djui_base_destroy(&sLoading->base);
+        sLoading = NULL;
+    }
     djui_shutdown();
     alloc_display_list_reset();
     gDisplayListHead = NULL;
@@ -154,9 +184,6 @@ void render_loading_screen(void) {
     }
 
     pthread_join(gLoadingThreadId, NULL);
-    gIsThreaded = false;
-
-    loading_screen_reset();
 }
 
 void render_rom_setup_screen(void) {
@@ -168,3 +195,5 @@ void render_rom_setup_screen(void) {
         WAPI.main_loop(loading_screen_produce_one_frame);
     }
 }
+
+#endif

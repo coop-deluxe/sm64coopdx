@@ -1,5 +1,10 @@
-MOD_VERSION = "1.7"
-IS_COOPDX = get_coop_compatibility_enabled ~= nil
+if VERSION_NUMBER < 37 then
+    djui_popup_create("\n\\#FFAAAA\\Character Select requires\n CoopDX v1 or higher use!\n\nYou can find CoopDX here:\n\\#6666FF\\https://sm64coopdx.com", 5)
+    incompatibleClient = true
+    return 0
+end
+
+MOD_VERSION = "1.9.2"
 
 ommActive = false
 for i in pairs(gActiveMods) do
@@ -102,4 +107,18 @@ end
 
 allowMenu = {}
 
-renderInMenuTable = {}
+renderInMenuTable = {
+    front = {},
+    back = {},
+}
+
+queueStorageFailsafe = false
+
+charBeingSet = false
+
+stopPalettes = false
+for i in pairs(gActiveMods) do
+    if (gActiveMods[i].incompatible ~= nil and gActiveMods[i].incompatible:find("gamemode")) and not (gActiveMods[i].name:find("Personal Star Counter")) then
+        stopPalettes = true
+    end
+end

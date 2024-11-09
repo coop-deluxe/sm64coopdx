@@ -9,6 +9,7 @@ extern const Gfx luigi_cap_seg3_dl_03022D10[];
 extern const Gfx luigi_cap_seg3_dl_03022E78[];
 extern const Gfx luigi_cap_seg3_dl_03022EA8[];
 extern const Gfx luigi_cap_seg3_dl_03022ED8[];
+extern const Gfx luigi_cap_seg3_dl_03022ED8_metal[];
 extern const Gfx luigi_cap_seg3_dl_03022F20[];
 extern const Gfx luigi_cap_l_logo_decal[];
 extern const Gfx luigi_cap_seg3_dl_03022F48[];

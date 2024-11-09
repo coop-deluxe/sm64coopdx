@@ -16,6 +16,7 @@
 #include "pc/chat_commands.h"
 #include "pc/pc_main.h"
 #include "pc/djui/djui_panel.h"
+#include "pc/configfile.h"
 
 #include "../mods/mods.h"
 #include "game/print.h"
@@ -84,7 +85,7 @@ void lua_profiler_update_counters(void) {
 #define MAX_HOOKED_REFERENCES 64
 #define LUA_BEHAVIOR_FLAG (1 << 15)
 
-static u64* sBehaviorOffset = &gPcDebug.bhvOffset;
+u64* gBehaviorOffset = &gPcDebug.bhvOffset;
 
 struct LuaHookedEvent {
     int reference[MAX_HOOKED_REFERENCES];
@@ -141,7 +142,7 @@ int smlua_hook_event(lua_State* L) {
 
     int ref = luaL_ref(L, LUA_REGISTRYINDEX);
     if (ref == -1) {
-        LOG_LUA_LINE("tried to hook undefined function to '%s'", LuaHookedEventTypeName[hookType]);
+        LOG_LUA_LINE("Tried to hook undefined function to '%s'", LuaHookedEventTypeName[hookType]);
         return 0;
     }
 
@@ -690,6 +691,36 @@ void smlua_call_event_hooks_int_params_ret_int(enum LuaHookedEventType hookType,
     }
 }
 
+void smlua_call_event_hooks_int_params_ret_string(enum LuaHookedEventType hookType, s32 param, char** returnValue) {
+    lua_State* L = gLuaState;
+    if (L == NULL) { return; }
+    struct LuaHookedEvent* hook = &sHookedEvents[hookType];
+    for (int i = 0; i < hook->count; i++) {
+        s32 prevTop = lua_gettop(L);
+
+        // push the callback onto the stack
+        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
+
+        // push params
+        lua_pushinteger(L, param);
+
+        // call the callback
+        if (0 != smlua_call_hook(L, 1, 1, 0, hook->mod[i])) {
+            LOG_LUA("Failed to call the callback: %u", hookType);
+            continue;
+        }
+
+        // output the return value
+        if (lua_type(L, -1) == LUA_TSTRING) {
+            *returnValue = (char *)smlua_to_string(L, -1);
+            lua_settop(L, prevTop);
+            return;
+        } else {
+            lua_settop(L, prevTop);
+        }
+    }
+}
+
 void smlua_call_event_hooks_value_param(enum LuaHookedEventType hookType, int modIndex, int valueIndex) {
     lua_State* L = gLuaState;
     if (L == NULL) { return; }
@@ -1186,6 +1217,7 @@ int smlua_hook_mario_action(lua_State* L) {
     lua_Integer interactionType = 0;
     if (paramCount >= 3) {
         interactionType = smlua_to_integer(L, 3);
+        interactionType |= (1 << 31); /* INT_LUA */
         if (!gSmLuaConvertSuccess) {
             LOG_LUA_LINE("Hook Action: tried to hook invalid interactionType: %lld, %u", interactionType, gSmLuaConvertSuccess);
             return 0;
@@ -1328,7 +1360,7 @@ const BehaviorScript* smlua_override_behavior(const BehaviorScript *behavior) {
     enum BehaviorId id = get_id_from_behavior(behavior);
     const BehaviorScript *hookedBehavior = smlua_get_hooked_behavior_from_id(id, false);
     if (hookedBehavior != NULL) { return hookedBehavior; }
-    return behavior + *sBehaviorOffset;
+    return behavior + *gBehaviorOffset;
 }
 
 const BehaviorScript* smlua_get_hooked_behavior_from_id(enum BehaviorId id, bool returnOriginal) {
@@ -1750,10 +1782,11 @@ char* remove_color_codes(const char* str) {
     char* result = strdup(str);
     char* startColor;
     while ((startColor = strstr(result, "\\#"))) {
-        char* endColor = strstr(startColor, "\\");
+        char* endColor = strstr(startColor + 2, "\\");
         if (endColor) {
-            memmove(startColor, endColor + 1, strlen(endColor));
+            memmove(startColor, endColor + 1, strlen(endColor + 1) + 1);
         } else {
+            *startColor = '\0';
             break;
         }
     }
@@ -1813,35 +1846,49 @@ char** smlua_get_chat_player_list(void) {
     return sortedPlayers;
 }
 
-
 char** smlua_get_chat_maincommands_list(void) {
 #if defined(DEVELOPMENT)
-    char* additionalCmds[] = {"players", "kick", "ban", "permban", "moderator", "confirm", "help", "?", "warp", "lua", "luaf"};
-    s32 additionalCmdsCount = 11;
+    s32 defaultCmdsCount = 11;
+    static char* defaultCmds[] = {"players", "kick", "ban", "permban", "moderator", "help", "?", "warp", "lua", "luaf", NULL};
 #else
-    char* additionalCmds[] = {"players", "kick", "ban", "permban", "moderator", "confirm", "help", "?"};
-    s32 additionalCmdsCount = 8;
+    s32 defaultCmdsCount = 8;
+    static char* defaultCmds[] = {"players", "kick", "ban", "permban", "moderator", "help", "?", NULL};
 #endif
-
-    char** commands = (char**) malloc((sHookedChatCommandsCount + additionalCmdsCount + 1) * sizeof(char*));
-
+    s32 defaultCmdsCountNew = 0;
+    for (s32 i = 0; i < defaultCmdsCount; i++) {
+        if (defaultCmds[i] != NULL) {
+            defaultCmdsCountNew++;
+        } else if (gServerSettings.nametags && defaultCmds[i] == NULL) {
+            defaultCmds[i] = "nametags";
+            defaultCmdsCountNew++;
+            break;
+        }
+    }
+    char** commands = (char**) malloc((sHookedChatCommandsCount + defaultCmdsCountNew + 1) * sizeof(char*));
     for (s32 i = 0; i < sHookedChatCommandsCount; i++) {
         struct LuaHookedChatCommand* hook = &sHookedChatCommands[i];
         commands[i] = strdup(hook->command);
     }
-
-    for (s32 i = 0; i < additionalCmdsCount; i++) {
-        commands[sHookedChatCommandsCount + i] = strdup(additionalCmds[i]);
+    for (s32 i = 0; i < defaultCmdsCount; i++) {
+        if (defaultCmds[i] != NULL) {
+            commands[sHookedChatCommandsCount + i] = strdup(defaultCmds[i]);
+        }
     }
-
-    commands[sHookedChatCommandsCount + additionalCmdsCount] = NULL;
-
-    qsort(commands, sHookedChatCommandsCount + additionalCmdsCount, sizeof(char*), sort_alphabetically);
-
+    commands[sHookedChatCommandsCount + defaultCmdsCountNew] = NULL;
+    qsort(commands, sHookedChatCommandsCount + defaultCmdsCountNew, sizeof(char*), sort_alphabetically);
     return commands;
 }
 
 char** smlua_get_chat_subcommands_list(const char* maincommand) {
+    if (gServerSettings.nametags && strcmp(maincommand, "nametags") == 0) {
+        s32 count = 2;
+        char** subcommands = (char**) malloc((count + 1) * sizeof(char*));
+        subcommands[0] = strdup("show-tag");
+        subcommands[1] = strdup("show-health");
+        subcommands[2] = NULL;
+        return subcommands;
+    }
+
     for (s32 i = 0; i < sHookedChatCommandsCount; i++) {
         struct LuaHookedChatCommand* hook = &sHookedChatCommands[i];
         if (strcmp(hook->command, maincommand) == 0) {
@@ -1996,11 +2043,6 @@ int smlua_hook_mod_menu_button(lua_State* L) {
     if (L == NULL) { return 0; }
     if (!smlua_functions_valid_param_count(L, 2)) { return 0; }
 
-    if (gLuaLoadingMod == NULL) {
-        LOG_LUA_LINE("hook_mod_menu_button() can only be called on load.");
-        return 0;
-    }
-
     if (gHookedModMenuElementsCount >= MAX_HOOKED_MOD_MENU_ELEMENTS) {
         LOG_LUA_LINE("Hooked mod menu element exceeded maximum references!");
         return 0;
@@ -2037,11 +2079,6 @@ int smlua_hook_mod_menu_button(lua_State* L) {
 int smlua_hook_mod_menu_checkbox(lua_State* L) {
     if (L == NULL) { return 0; }
     if (!smlua_functions_valid_param_count(L, 3)) { return 0; }
-
-    if (gLuaLoadingMod == NULL) {
-        LOG_LUA_LINE("hook_mod_menu_checkbox() can only be called on load.");
-        return 0;
-    }
 
     if (gHookedModMenuElementsCount >= MAX_HOOKED_MOD_MENU_ELEMENTS) {
         LOG_LUA_LINE("Hooked mod menu element exceeded maximum references!");
@@ -2085,11 +2122,6 @@ int smlua_hook_mod_menu_checkbox(lua_State* L) {
 int smlua_hook_mod_menu_slider(lua_State* L) {
     if (L == NULL) { return 0; }
     if (!smlua_functions_valid_param_count(L, 5)) { return 0; }
-
-    if (gLuaLoadingMod == NULL) {
-        LOG_LUA_LINE("hook_mod_menu_slider() can only be called on load.");
-        return 0;
-    }
 
     if (gHookedModMenuElementsCount >= MAX_HOOKED_MOD_MENU_ELEMENTS) {
         LOG_LUA_LINE("Hooked mod menu element exceeded maximum references!");
@@ -2145,11 +2177,6 @@ int smlua_hook_mod_menu_slider(lua_State* L) {
 int smlua_hook_mod_menu_inputbox(lua_State* L) {
     if (L == NULL) { return 0; }
     if (!smlua_functions_valid_param_count(L, 4)) { return 0; }
-
-    if (gLuaLoadingMod == NULL) {
-        LOG_LUA_LINE("hook_mod_menu_inputbox() can only be called on load.");
-        return 0;
-    }
 
     if (gHookedModMenuElementsCount >= MAX_HOOKED_MOD_MENU_ELEMENTS) {
         LOG_LUA_LINE("Hooked mod menu element exceeded maximum references!");
@@ -2241,6 +2268,7 @@ void smlua_call_mod_menu_element_hook(struct LuaHookedModMenuElement* hooked, in
             lua_pushstring(L, hooked->stringValue);
             break;
         case MOD_MENU_ELEMENT_MAX:
+            break;
     }
 
     // call the callback

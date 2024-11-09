@@ -9,7 +9,7 @@
 #include "engine/surface_collision.h"
 #include "pc/configfile.h"
 #include "pc/controller/controller_mouse.h"
-#include "pc/lua/utils/smlua_misc_utils.h"
+#include "pc/lua/utils/smlua_camera_utils.h"
 
 #if defined(__MINGW32__) && !defined(__MINGW64_VERSION_MAJOR) 
 //quick and dirty fix for some older MinGW.org mingwrt
@@ -290,18 +290,18 @@ static void newcam_rotate_button(void) {
     if ((newcam_modeflags & NC_FLAG_8D || newcam_modeflags & NC_FLAG_4D) && newcam_modeflags & NC_FLAG_XTURN) {
         //8 directional camera rotation input for buttons.
         if ((gPlayer1Controller->buttonPressed & L_CBUTTONS) && newcam_analogue == 0) {
-            #ifndef nosound
+#ifndef nosound
             play_sound(SOUND_MENU_CAMERA_TURN, gGlobalSoundSource);
-            #endif
+#endif
             if (newcam_modeflags & NC_FLAG_8D)
                 newcam_yaw_target = newcam_yaw_target+(ivrt(0)*0x2000);
             else
                 newcam_yaw_target = newcam_yaw_target+(ivrt(0)*0x4000);
             newcam_centering = 1;
         } else if ((gPlayer1Controller->buttonPressed & R_CBUTTONS) && newcam_analogue == 0) {
-            #ifndef nosound
+#ifndef nosound
             play_sound(SOUND_MENU_CAMERA_TURN, gGlobalSoundSource);
-            #endif
+#endif
             if (newcam_modeflags & NC_FLAG_8D)
                 newcam_yaw_target = newcam_yaw_target-(ivrt(0)*0x2000);
             else
@@ -315,11 +315,11 @@ static void newcam_rotate_button(void) {
         } else if ((gPlayer1Controller->buttonDown & R_CBUTTONS) && newcam_analogue == 0) {
             newcam_yaw_acc = newcam_adjust_value(newcam_yaw_acc, accel, 100);
         } else if (!newcam_analogue) {
-            #ifdef noaccel
+#ifdef noaccel
             newcam_yaw_acc = 0;
-            #else
+#else
             newcam_yaw_acc -= (newcam_yaw_acc*((f32)newcam_degrade/100));
-            #endif
+#endif
         }
     }
 
@@ -328,11 +328,11 @@ static void newcam_rotate_button(void) {
     } else if (gPlayer1Controller->buttonDown & D_CBUTTONS && newcam_modeflags & NC_FLAG_YTURN && newcam_analogue == 0) {
         newcam_tilt_acc = newcam_adjust_value(newcam_tilt_acc, -accel, -100);
     } else if (!newcam_analogue) {
-        #ifdef noaccel
+#ifdef noaccel
         newcam_tilt_acc = 0;
-        #else
+#else
         newcam_tilt_acc -= (newcam_tilt_acc*((f32)newcam_degrade/100));
-        #endif
+#endif
     }
 
     newcam_framessincec[0] ++;
@@ -341,9 +341,9 @@ static void newcam_rotate_button(void) {
         if (newcam_framessincec[0] < 6) {
             newcam_yaw_target = newcam_yaw+(ivrt(0)*0x3000);
             newcam_centering = 1;
-            #ifndef nosound
+#ifndef nosound
             play_sound(SOUND_MENU_CAMERA_TURN, gGlobalSoundSource);
-            #endif
+#endif
         }
         newcam_framessincec[0] = 0;
     }
@@ -351,9 +351,9 @@ static void newcam_rotate_button(void) {
         if (newcam_framessincec[1] < 6) {
             newcam_yaw_target = newcam_yaw-(ivrt(0)*0x3000);
             newcam_centering = 1;
-            #ifndef nosound
+#ifndef nosound
             play_sound(SOUND_MENU_CAMERA_TURN, gGlobalSoundSource);
-            #endif
+#endif
         }
         newcam_framessincec[1] = 0;
     }
@@ -370,9 +370,9 @@ static void newcam_rotate_button(void) {
                 if (newcam_cstick_down == 0) {
                     newcam_cstick_down = 1;
                     newcam_centering = 1;
-                    #ifndef nosound
+#ifndef nosound
                     play_sound(SOUND_MENU_CAMERA_TURN, gGlobalSoundSource);
-                    #endif
+#endif
                     if (newcam_stick2[0] > 20) {
                         if (newcam_modeflags & NC_FLAG_8D)
                             newcam_yaw_target = newcam_yaw_target+(ivrt(0)*0x2000);
@@ -406,6 +406,12 @@ static void newcam_rotate_button(void) {
 }
 
 static void newcam_zoom_button(void) {
+    if (gDjuiInMainMenu) {
+        newcam_distance = 750;
+        newcam_distance_target = 750;
+        return;
+    }
+    
     //Smoothly move the camera to the new spot.
     if (newcam_distance > newcam_distance_target) {
         newcam_distance -= 250;
@@ -424,9 +430,9 @@ static void newcam_zoom_button(void) {
         newcam_centering = 1;
     } else if (gPlayer1Controller->buttonPressed & R_TRIG && newcam_modeflags & NC_FLAG_XTURN) {
         //Each time the player presses R, but NOT L the camera zooms out more, until it hits the limit and resets back to close view.
-        #ifndef nosound
+#ifndef nosound
         play_sound(SOUND_MENU_CLICK_CHANGE_VIEW, gGlobalSoundSource);
-        #endif
+#endif
 
         if (newcam_distance_target == newcam_distance_values[0])
             newcam_distance_target = newcam_distance_values[1];
@@ -623,6 +629,12 @@ static void newcam_collision(void) {
 }
 
 static void newcam_set_pan(void) {
+    if (gDjuiInMainMenu) {
+        newcam_pan_x = 0;
+        newcam_pan_z = 0;
+        return;
+    }
+
     //Apply panning values based on Mario's direction.
     if (gMarioStates[0].action != ACT_HOLDING_BOWSER && gMarioStates[0].action != ACT_SLEEPING && gMarioStates[0].action != ACT_START_SLEEPING) {
         approach_f32_asymptotic_bool(&newcam_pan_x, lengthdir_x((160*newcam_panlevel)/100, -gMarioStates[0].faceAngle[1]-0x4000), 0.05);
@@ -796,7 +808,7 @@ void newcam_loop(struct Camera *c) {
     newcam_fade_target_closeup();
 
     //Just some visual information on the values of the camera. utilises ifdef because it's better at runtime.
-    #ifdef NEWCAM_DEBUG
+#ifdef NEWCAM_DEBUG
     newcam_diagnostics();
-    #endif // NEWCAM_DEBUG
+#endif // NEWCAM_DEBUG
 }

@@ -13,25 +13,18 @@
 #include "pc/discord/discord.h"
 #endif
 
+#ifdef COOPNET
+
 // ! Temporary, show this build of coop as sm64ex-coop
 // to let other players know the update is out
 #undef GAME_NAME
 #define GAME_NAME "sm64ex-coop"
-static char sVersionString[MAX_VERSION_LENGTH] = { 0 };
-const char* get_version_online(void) {
-#if defined(VERSION_US)
-    snprintf(sVersionString, MAX_VERSION_LENGTH, "%s%d", VERSION_TEXT, VERSION_NUMBER);
-#else
-    snprintf(sVersionString, MAX_VERSION_LENGTH, "%s%d %s", VERSION_TEXT, VERSION_NUMBER, VERSION_REGION);
-#endif
-    return sVersionString;
-}
 
-#ifdef COOPNET
+#define MAX_COOPNET_DESCRIPTION_LENGTH 1024
 
 uint64_t gCoopNetDesiredLobby = 0;
 char gCoopNetPassword[64] = "";
-char sCoopNetDescription[512] = "";
+char sCoopNetDescription[MAX_COOPNET_DESCRIPTION_LENGTH] = "";
 
 static uint64_t sLocalLobbyId = 0;
 static uint64_t sLocalLobbyOwnerId = 0;
@@ -185,7 +178,7 @@ bool ns_coopnet_is_connected(void) {
 
 static void coopnet_populate_description(void) {
     char* buffer = sCoopNetDescription;
-    int bufferLength = 512;
+    int bufferLength = MAX_COOPNET_DESCRIPTION_LENGTH;
     // get version
     const char* version = get_version_online();
     int versionLength = strlen(version);

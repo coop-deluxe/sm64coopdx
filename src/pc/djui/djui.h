@@ -37,7 +37,9 @@
 #include "djui_paginated.h"
 
 extern struct DjuiRoot* gDjuiRoot;
+extern struct DjuiText* gDjuiPauseOptions;
 extern bool gDjuiInMainMenu;
+extern bool gDjuiInPlayerMenu;
 extern bool gDjuiDisabled;
 
 void djui_init(void);

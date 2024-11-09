@@ -1,3 +1,4 @@
+#include <ctype.h>
 #include "djui.h"
 #include "djui_panel.h"
 #include "djui_panel_menu.h"
@@ -51,19 +52,22 @@ static void djui_panel_mod_menu_mod_inputbox(struct DjuiBase* caller) {
 static void djui_panel_mod_menu_mod_create_element(struct DjuiBase* parent, int i) {
     struct LuaHookedModMenuElement* hooked = &gHookedModMenuElements[i];
     switch (hooked->element) {
-        case MOD_MENU_ELEMENT_BUTTON:
+        case MOD_MENU_ELEMENT_BUTTON: {
             struct DjuiButton* button = djui_button_create(parent, hooked->name, DJUI_BUTTON_STYLE_NORMAL, djui_panel_mod_menu_mod_button);
             button->base.tag = i;
             break;
-        case MOD_MENU_ELEMENT_CHECKBOX:
+        }
+        case MOD_MENU_ELEMENT_CHECKBOX: {
             struct DjuiCheckbox* checkbox = djui_checkbox_create(parent, hooked->name, &hooked->boolValue, djui_panel_mod_menu_mod_checkbox);
             checkbox->base.tag = i;
             break;
-        case MOD_MENU_ELEMENT_SLIDER:
+        }
+        case MOD_MENU_ELEMENT_SLIDER: {
             struct DjuiSlider* slider = djui_slider_create(parent, hooked->name, &hooked->uintValue, hooked->sliderMin, hooked->sliderMax, djui_panel_mod_menu_mod_slider);
             slider->base.tag = i;
             break;
-        case MOD_MENU_ELEMENT_INPUTBOX:
+        }
+        case MOD_MENU_ELEMENT_INPUTBOX: {
             struct DjuiRect* rect = djui_rect_container_create(parent, 32);
             {
                 struct DjuiText* text1 = djui_text_create(&rect->base, hooked->name);
@@ -82,7 +86,10 @@ static void djui_panel_mod_menu_mod_create_element(struct DjuiBase* parent, int 
                 inputbox->base.tag = i;
             }
             break;
-        case MOD_MENU_ELEMENT_MAX:
+        }
+        case MOD_MENU_ELEMENT_MAX: {
+            break;
+        }
     }
 }
 
@@ -95,17 +102,22 @@ void djui_panel_mod_menu_mod_create(struct DjuiBase* caller) {
     }
     if (mod == NULL) { return; }
 
-    struct DjuiThreePanel* panel = djui_panel_menu_create(to_uppercase(mod->name));
+    struct DjuiThreePanel* panel = djui_panel_menu_create(to_uppercase(mod->name), false);
     struct DjuiBase* body = djui_three_panel_get_body(panel);
     {
         struct DjuiPaginated* paginated = djui_paginated_create(body, 8);
         struct DjuiBase* layoutBase = &paginated->layout->base;
+        s32 count = 0;
         for (int i = 0; i < gHookedModMenuElementsCount; i++) {
             if (gHookedModMenuElements[i].mod == mod) {
                 djui_panel_mod_menu_mod_create_element(layoutBase, i);
+                count++;
             }
         }
         djui_paginated_calculate_height(paginated);
+        if (count == 8) {
+            djui_base_set_size(layoutBase, layoutBase->width.value, layoutBase->height.value + 16);
+        }
 
         djui_button_create(body, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
     }
@@ -114,7 +126,7 @@ void djui_panel_mod_menu_mod_create(struct DjuiBase* caller) {
 }
 
 void djui_panel_mod_menu_create(struct DjuiBase* caller) {
-    struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(PAUSE, MOD_MENU_TITLE));
+    struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(PAUSE, MOD_MENU_TITLE), false);
     struct DjuiBase* body = djui_three_panel_get_body(panel);
     {
         struct DjuiPaginated* paginated = djui_paginated_create(body, 8);
@@ -135,8 +147,7 @@ void djui_panel_mod_menu_create(struct DjuiBase* caller) {
 
             struct DjuiButton* button = djui_button_create(layoutBase, hooked->mod->name, DJUI_BUTTON_STYLE_NORMAL, djui_panel_mod_menu_mod_create);
             button->base.tag = hooked->mod->index;
-            addedMods[modCount] = hooked->mod;
-            modCount++;
+            addedMods[modCount++] = hooked->mod;
         }
         djui_paginated_calculate_height(paginated);
 

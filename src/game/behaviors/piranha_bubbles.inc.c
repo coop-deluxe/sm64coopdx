@@ -32,6 +32,9 @@ void bhv_piranha_plant_bubble_loop(void) {
     f32 scale = 0;
     s32 i;
     s32 frame = parent->header.gfx.animInfo.animFrame;
+    if (frame < 0) {
+        frame = 0;
+    }
     // TODO: rename lastFrame if it is inaccurate
     if (parent->header.gfx.animInfo.curAnim == NULL) { return; }
     s32 lastFrame = parent->header.gfx.animInfo.curAnim->loopEnd - 2;

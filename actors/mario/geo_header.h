@@ -98,6 +98,7 @@ extern const Gfx mario_right_hand_cap_wings_half_1_dl[];
 extern const Gfx mario_right_hand_cap_wings_half_2_dl[];
 extern const Gfx mario_right_hand_cap_wings_intial_dl[];
 extern const Gfx mario_right_hand_cap_wings_transparent_intial_dl[];
+extern const Gfx mario_right_hand_cap_metal_wings_intial_dl[];
 extern const Gfx mario_right_hand_cap_wings_end_dl[];
 extern const Gfx mario_right_hand_cap[];
 extern const Gfx mario_right_hand_cap_wings[];

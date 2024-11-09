@@ -1,3 +1,4 @@
+#include <stdio.h>
 #ifdef HAVE_SDL2
 #include <SDL2/SDL.h>
 #else 

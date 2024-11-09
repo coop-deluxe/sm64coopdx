@@ -4,6 +4,7 @@ sm64coopdx Developers:
     FluffaMario
     Isaac0-dev
     theclashingfritz
+    PeachyPeach
 
 sm64coopdx Contributors:
     Ale64
@@ -17,6 +18,12 @@ sm64coopdx Contributors:
     kermeet
     Sharen
     eeliottheking
+    Flower35
+    Melzinoff
+    Skeltan
+    Jinjo
+    LunarCryptikVEVO
+    Squishy6094
 
 sm64ex-coop Developers:
     Agent X
@@ -64,9 +71,12 @@ sm64ex-coop Contributors:
     Victor Diego Alejandro Diaz Urbaneja
 
 Sounds:
-    Andrat         : Luigi voice lines
-    Dark the Eagle : Wario voice lines
-    Ninten_King_64 : Toad voice lines
+    Andrat          : Luigi voice lines
+    Dark the Eagle  : Wario voice lines
+    Ninten_King_64  : Toad voice lines
+    Melissa Mekrose : Toadette voice lines
+    SuperKirbylover : Peach voice lines
+    MorphiGalaxi    : Daisy voice lines
 
 The custom models, levels, textures, animations, and warps use DynOS. DynOS was created by PeachyPeach.
 

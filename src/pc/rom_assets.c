@@ -100,6 +100,7 @@ static inline bool rom_asset_override_vertex_colors(void* ptr) {
     extern Vtx bbh_seg7_vertex_070077B0[];
     extern Vtx lll_seg7_vertex_07013830[];
     extern Vtx ttc_seg7_vertex_0700B238[];
+    extern Vtx dirt_seg3_vertex_0302BDC8[];
     return ptr == hoot_seg5_vertex_05002E50 ||
            ptr == hoot_seg5_vertex_05002F78 ||
            ptr == hoot_seg5_vertex_050030A0 ||
@@ -114,7 +115,8 @@ static inline bool rom_asset_override_vertex_colors(void* ptr) {
            ptr == bbh_seg7_vertex_070076C0 ||
            ptr == bbh_seg7_vertex_070077B0 ||
            ptr == lll_seg7_vertex_07013830 ||
-           ptr == ttc_seg7_vertex_0700B238;
+           ptr == ttc_seg7_vertex_0700B238 ||
+           ptr == dirt_seg3_vertex_0302BDC8;
 }
 
 static void rom_asset_load_vtx(struct RomAsset* asset) {

@@ -51,7 +51,8 @@ in_files = [
 exclude_constants = {
     "*": [ "^MAXCONTROLLERS$", "^AREA_[^T].*", "^AREA_T[HTO]", "^CONT_ERR.*", "^READ_MASK$", "^SIGN_RANGE$", ],
     "src/game/obj_behaviors.c": [ "^o$" ],
-    "src/pc/djui/djui_console.h": [ "CONSOLE_MAX_TMP_BUFFER" ]
+    "src/pc/djui/djui_console.h": [ "CONSOLE_MAX_TMP_BUFFER" ],
+    "src/pc/lua/smlua_hooks.h": [ "MAX_HOOKED_MOD_MENU_ELEMENTS" ]
 }
 
 include_constants = {

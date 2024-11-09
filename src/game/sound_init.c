@@ -4,6 +4,7 @@
 #include "audio/external.h"
 #include "engine/graph_node.h"
 #include "engine/math_util.h"
+#include "hardcoded.h"
 #include "level_table.h"
 #include "level_update.h"
 #include "main.h"
@@ -24,8 +25,8 @@ static OSMesgQueue sSoundMesgQueue;
 static OSMesg sSoundMesgBuf[1];
 static struct VblankHandler sSoundVblankHandler;
 
-static u8 D_8032C6C0 = 0;
-static u8 D_8032C6C4 = 0;
+static u8 sVolumeLoweredState = 0;
+static u8 sBackgroundMusicDisabled = FALSE;
 static u16 sCurrentMusic = MUSIC_NONE;
 static u16 sCurrentShellMusic = MUSIC_NONE;
 static u16 sCurrentCapMusic = MUSIC_NONE;
@@ -79,7 +80,7 @@ void play_menu_sounds_extra(s32 a, void *b);
  * Called from threads: thread5_game_loop
  */
 void reset_volume(void) {
-    D_8032C6C0 = 0;
+    sVolumeLoweredState = 0;
 }
 
 /**
@@ -94,7 +95,7 @@ void lower_background_noise(s32 a) {
             seq_player_lower_volume(SEQ_PLAYER_LEVEL, 60, 40);
             break;
     }
-    D_8032C6C0 |= a;
+    sVolumeLoweredState |= a;
 }
 
 /**
@@ -109,15 +110,15 @@ void raise_background_noise(s32 a) {
             seq_player_unlower_volume(SEQ_PLAYER_LEVEL, 60);
             break;
     }
-    D_8032C6C0 &= ~a;
+    sVolumeLoweredState &= ~a;
 }
 
 /**
  * Called from threads: thread5_game_loop
  */
 void disable_background_sound(void) {
-    if (D_8032C6C4 == 0) {
-        D_8032C6C4 = 1;
+    if (!sBackgroundMusicDisabled) {
+        sBackgroundMusicDisabled = TRUE;
         sound_banks_disable(SEQ_PLAYER_SFX, SOUND_BANKS_BACKGROUND);
     }
 }
@@ -126,8 +127,8 @@ void disable_background_sound(void) {
  * Called from threads: thread5_game_loop
  */
 void enable_background_sound(void) {
-    if (D_8032C6C4 == 1) {
-        D_8032C6C4 = 0;
+    if (sBackgroundMusicDisabled) {
+        sBackgroundMusicDisabled = FALSE;
         sound_banks_enable(SEQ_PLAYER_SFX, SOUND_BANKS_BACKGROUND);
     }
 }
@@ -200,8 +201,7 @@ void play_painting_eject_sound(void) {
 void play_infinite_stairs_music(void) {
     u8 shouldPlay = FALSE;
 
-    /* Infinite stairs? */
-    if (gCurrLevelNum == LEVEL_CASTLE && gCurrAreaIndex == 2 && gMarioState->numStars < 70) {
+    if (gCurrLevelNum == LEVEL_CASTLE && gCurrAreaIndex == 2 && gMarioState->numStars < gLevelValues.infiniteStairsRequirement) {
         if (gMarioState->floor != NULL && gMarioState->floor->room == 6) {
             if (gMarioState->pos[2] < 2540.0f) {
                 shouldPlay = TRUE;

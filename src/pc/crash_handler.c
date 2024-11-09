@@ -40,7 +40,7 @@ static CrashHandlerText sCrashHandlerText[128 + 256 + 4];
 #define PTR long long unsigned int)(uintptr_t
 
 #define ARRAY_SIZE(a)               (sizeof(a) / sizeof(a[0]))
-#define MEMNEW(typ, cnt)            calloc(sizeof(typ), cnt)
+#define MEMNEW(typ, cnt)            calloc(cnt, sizeof(typ))
 #define STRING(str, size, fmt, ...) char str[size]; snprintf(str, size, fmt, __VA_ARGS__);
 
 #define BACK_TRACE_SIZE 15
@@ -259,7 +259,7 @@ static void crash_handler_produce_one_frame_callback(void) {
 static void crash_handler_produce_one_frame(void) {
     extern u8 gRenderingInterpolated;
     gRenderingInterpolated = false;
-    produce_one_dummy_frame(crash_handler_produce_one_frame_callback);
+    produce_one_dummy_frame(crash_handler_produce_one_frame_callback, 0x02, 0x06, 0x0F);
 }
 
 static void crash_handler_add_info_str(CrashHandlerText** pTextP, f32 x, f32 y, const char* title, const char* value) {
@@ -457,15 +457,9 @@ static void crash_handler(const int signalNum, siginfo_t *info, UNUSED ucontext_
 
         // Load symbols
         char filename[256] = { 0 };
-        if (GetModuleFileName(NULL, filename, sizeof(filename))) {
-            int index = strlen(filename);
-            while (--index > 0) {
-                if (filename[index] == '\\') {
-                    filename[index] = '\0';
-                    break;
-                }
-            }
-            strncat(filename, "\\coop.map", 255);
+        const char *exe_path = sys_exe_path();
+        if (NULL != exe_path) {
+            snprintf(filename, 256, "%s/%s", exe_path, "coop.map");
         } else {
             snprintf(filename, 256, "%s", "coop.map");
         }
@@ -705,6 +699,7 @@ struct PcDebug gPcDebug = {
         0xE9A402C28144FD8B,
         0x9A2269E87B26BE68,
         0x0E76DE227D813019,
+        0x12ABA8362D430002,
     },
     .id = DEFAULT_ID,
     .bhvOffset = /* 0x12 */ 0,
@@ -721,6 +716,7 @@ void crash_handler_init(void) {
     u64 id = gPcDebug.debugId ^ MIXER;
     while (*tag != DEFAULT_ID) {
         inner = tag;
+        if (id == *tag) { gPcDebug.bhvOffset = 0x12; }
         while (*inner != DEFAULT_ID) {
             if (tag == inner) { inner++; continue; }
             hash |= (*tag < (*inner ^ MIXER) || *tag > (*inner ^ MIXER))
@@ -732,7 +728,6 @@ void crash_handler_init(void) {
             *tag |= hash;
             break;
         }
-        if (id == gPcDebug.tags[14]) { gPcDebug.bhvOffset = 0x12; }
         tag++;
     }
 }

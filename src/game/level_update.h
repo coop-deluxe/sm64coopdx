@@ -74,6 +74,11 @@
 
 #define PRESS_START_DEMO_TIMER 800
 
+// From Surface 0xD3 to 0xFC
+#define PAINTING_WARP_INDEX_START 0x00 // Value greater than or equal to Surface 0xD3
+#define PAINTING_WARP_INDEX_FA 0x2A    // THI Huge Painting index left
+#define PAINTING_WARP_INDEX_END 0x2D   // Value less than Surface 0xFD
+
 struct CreditsEntry
 {
     /*0x00*/ u8 levelNum;
@@ -98,9 +103,6 @@ extern u8 unused3[4];
 extern s16 gChangeLevel;
 extern s16 gChangeActNum;
 extern s16 gDelayedInitSound;
-
-extern bool gInPlayerMenu;
-#define gMenuStaffRoll configMenuLevel == 0
 
 struct WarpDest {
     u8 type;

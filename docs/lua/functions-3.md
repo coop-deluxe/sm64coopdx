@@ -1706,6 +1706,24 @@
 
 <br />
 
+## [skip_camera_interpolation](#skip_camera_interpolation)
+
+### Lua Example
+`skip_camera_interpolation()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void skip_camera_interpolation(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [soft_reset_camera](#soft_reset_camera)
 
 ### Lua Example
@@ -2576,6 +2594,31 @@
 
 <br />
 
+## [djui_hud_set_rotation_interpolated](#djui_hud_set_rotation_interpolated)
+
+### Lua Example
+`djui_hud_set_rotation_interpolated(prevRotation, prevPivotX, prevPivotY, rotation, pivotX, pivotY)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| prevRotation | `integer` |
+| prevPivotX | `number` |
+| prevPivotY | `number` |
+| rotation | `integer` |
+| pivotX | `number` |
+| pivotY | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void djui_hud_set_rotation_interpolated(s32 prevRotation, f32 prevPivotX, f32 prevPivotY, s32 rotation, f32 pivotX, f32 pivotY);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [djui_hud_world_pos_to_screen_pos](#djui_hud_world_pos_to_screen_pos)
 
 ### Lua Example
@@ -3161,6 +3204,26 @@
 
 <br />
 
+## [sound_get_level_intensity](#sound_get_level_intensity)
+
+### Lua Example
+`local numberValue = sound_get_level_intensity(distance)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| distance | `number` |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 sound_get_level_intensity(f32 distance);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [stop_background_music](#stop_background_music)
 
 ### Lua Example
@@ -3633,6 +3696,26 @@
 
 ### C Prototype
 `u32 get_door_save_file_flag(struct Object *door);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_mario_cap_flag](#get_mario_cap_flag)
+
+### Lua Example
+`local integerValue = get_mario_cap_flag(capObject)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| capObject | [Object](structs.md#Object) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 get_mario_cap_flag(struct Object *capObject);`
 
 [:arrow_up_small:](#)
 
@@ -4538,6 +4621,27 @@
 
 ### C Prototype
 `u8 passes_pvp_interaction_checks(struct MarioState* attacker, struct MarioState* victim);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [should_push_or_pull_door](#should_push_or_pull_door)
+
+### Lua Example
+`local integerValue = should_push_or_pull_door(m, o)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| o | [Object](structs.md#Object) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 should_push_or_pull_door(struct MarioState *m, struct Object *o);`
 
 [:arrow_up_small:](#)
 

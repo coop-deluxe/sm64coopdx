@@ -205,6 +205,10 @@ static void gfx_sdl_shutdown(void) {
         SDL_Quit();
 }
 
+static bool gfx_sdl_has_focus(void) {
+    return SDL_GetAppState() & SDL_APPINPUTFOCUS;
+}
+
 static void gfx_sdl_start_text_input(void) { return; }
 static void gfx_sdl_stop_text_input(void) { return; }
 static char* gfx_sdl_get_clipboard_text(void) { return NULL; }
@@ -230,7 +234,8 @@ struct GfxWindowManagerAPI gfx_sdl = {
     gfx_sdl_delay,
     gfx_sdl_get_max_msaa,
     gfx_sdl_set_window_title,
-    gfx_sdl_reset_window_title
+    gfx_sdl_reset_window_title,
+    gfx_sdl_has_focus
 };
 
 #endif // BACKEND_WM

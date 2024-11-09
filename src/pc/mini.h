@@ -94,8 +94,6 @@
 #include <sys/stat.h>
 #include <cctype>
 
-#define MINI_CASE_SENSITIVE
-
 namespace mINI
 {
 	namespace INIStringUtil
@@ -106,14 +104,6 @@ namespace mINI
 			str.erase(str.find_last_not_of(whitespaceDelimiters) + 1);
 			str.erase(0, str.find_first_not_of(whitespaceDelimiters));
 		}
-#ifndef MINI_CASE_SENSITIVE
-		inline void toLower(std::string& str)
-		{
-			std::transform(str.begin(), str.end(), str.begin(), [](const char c) {
-				return static_cast<char>(std::tolower(c));
-			});
-		}
-#endif
 		inline void replace(std::string& str, std::string const& a, std::string const& b)
 		{
 			if (!a.empty())
@@ -173,9 +163,6 @@ namespace mINI
 		T& operator[](std::string key)
 		{
 			INIStringUtil::trim(key);
-#ifndef MINI_CASE_SENSITIVE
-			INIStringUtil::toLower(key);
-#endif
 			auto it = dataIndexMap.find(key);
 			bool hasIt = (it != dataIndexMap.end());
 			std::size_t index = (hasIt) ? it->second : setEmpty(key);
@@ -184,9 +171,6 @@ namespace mINI
 		T get(std::string key) const
 		{
 			INIStringUtil::trim(key);
-#ifndef MINI_CASE_SENSITIVE
-			INIStringUtil::toLower(key);
-#endif
 			auto it = dataIndexMap.find(key);
 			if (it == dataIndexMap.end())
 			{
@@ -197,17 +181,11 @@ namespace mINI
 		bool has(std::string key) const
 		{
 			INIStringUtil::trim(key);
-#ifndef MINI_CASE_SENSITIVE
-			INIStringUtil::toLower(key);
-#endif
 			return (dataIndexMap.count(key) == 1);
 		}
 		void set(std::string key, T obj)
 		{
 			INIStringUtil::trim(key);
-#ifndef MINI_CASE_SENSITIVE
-			INIStringUtil::toLower(key);
-#endif
 			auto it = dataIndexMap.find(key);
 			if (it != dataIndexMap.end())
 			{
@@ -231,9 +209,6 @@ namespace mINI
 		bool remove(std::string key)
 		{
 			INIStringUtil::trim(key);
-#ifndef MINI_CASE_SENSITIVE
-			INIStringUtil::toLower(key);
-#endif
 			auto it = dataIndexMap.find(key);
 			if (it != dataIndexMap.end())
 			{

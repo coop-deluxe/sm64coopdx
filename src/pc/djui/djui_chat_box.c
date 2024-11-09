@@ -12,7 +12,7 @@ bool gDjuiChatBoxFocus = false;
 static bool sDjuiChatBoxClearText = false;
 
 #define MAX_HISTORY_SIZE 256
-#define MAX_MSG_LENGTH 201
+#define MAX_MSG_LENGTH 501
 
 typedef struct {
     s32 initialized;
@@ -129,7 +129,7 @@ static void djui_chat_box_input_enter(struct DjuiInputbox* chatInput) {
     if (strlen(chatInput->buffer) != 0) {
         sent_history_add_message(&sentHistory, chatInput->buffer);
         if (chatInput->buffer[0] == '/') {
-            if (strcmp(chatInput->buffer, "/help") == 0 || strcmp(chatInput->buffer, "/?") == 0 || (!configUseStandardKeyBindingsChat && strcmp(chatInput->buffer, "/")) == 0) {
+            if (strcmp(chatInput->buffer, "/help") == 0 || strcmp(chatInput->buffer, "/?") == 0) {
                 display_chat_commands();
             } else if (!exec_chat_command(chatInput->buffer)) {
                 char extendedUnknownCommandMessage[MAX_MSG_LENGTH];
@@ -544,7 +544,7 @@ struct DjuiChatBox* djui_chat_box_create(void) {
     cfBase->abandonAfterChildRenderFail = true;
     chatBox->chatFlow = chatFlow;
 
-    struct DjuiInputbox* chatInput = djui_inputbox_create(base, 200);
+    struct DjuiInputbox* chatInput = djui_inputbox_create(base, MAX_MSG_LENGTH);
     struct DjuiBase* ciBase = &chatInput->base;
     djui_base_set_size_type(ciBase, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
     djui_base_set_size(ciBase, 1.0f, 32);

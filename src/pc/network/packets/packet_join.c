@@ -25,6 +25,7 @@
 #include "pc/mods/mods.h"
 #include "pc/lua/smlua.h"
 #include "pc/configfile.h"
+#include "pc/lua/utils/smlua_misc_utils.h"
 
 extern u8* gOverrideEeprom;
 static u8 eeprom[512] = { 0 };
@@ -32,6 +33,7 @@ static u8 eeprom[512] = { 0 };
 static u8   sJoinRequestPlayerModel;
 static struct PlayerPalette sJoinRequestPlayerPalette;
 static char sJoinRequestPlayerName[MAX_CONFIG_STRING];
+static char sJoinRequestDiscordId[64];
 bool gCurrentlyJoining = false;
 
 void network_send_join_request(void) {
@@ -78,14 +80,17 @@ void network_send_join(struct Packet* joinRequestPacket) {
 
     // figure out id
     u8 globalIndex = joinRequestPacket->localIndex;
+    u8 connectedCount = 1;
     if (globalIndex == UNKNOWN_LOCAL_INDEX) {
         for (u32 i = 1; i < MAX_PLAYERS; i++) {
             if (!gNetworkPlayers[i].connected) {
                 globalIndex = i;
                 break;
+            } else {
+                connectedCount++;
             }
         }
-        if (globalIndex == UNKNOWN_LOCAL_INDEX) {
+        if (globalIndex == UNKNOWN_LOCAL_INDEX || connectedCount >= gServerSettings.maxPlayers) {
             network_send_kick(0, EKT_FULL_PARTY);
             return;
         }
@@ -93,7 +98,7 @@ void network_send_join(struct Packet* joinRequestPacket) {
     LOG_INFO("chose globalIndex: %d", globalIndex);
 
     // do connection event
-    network_player_connected(NPT_CLIENT, globalIndex, sJoinRequestPlayerModel, &sJoinRequestPlayerPalette, sJoinRequestPlayerName);
+    network_player_connected(NPT_CLIENT, globalIndex, sJoinRequestPlayerModel, &sJoinRequestPlayerPalette, sJoinRequestPlayerName, sJoinRequestDiscordId);
 
     fs_file_t* fp = fs_open(SAVE_FILENAME);
     if (fp != NULL) {
@@ -115,7 +120,6 @@ void network_send_join(struct Packet* joinRequestPacket) {
     packet_write(&p, &gServerSettings.playerKnockbackStrength, sizeof(u8));
     packet_write(&p, &gServerSettings.stayInLevelAfterStar, sizeof(u8));
     packet_write(&p, &gServerSettings.skipIntro, sizeof(u8));
-    packet_write(&p, &gServerSettings.enableCheats, sizeof(u8));
     packet_write(&p, &gServerSettings.bubbleDeath, sizeof(u8));
     packet_write(&p, &gServerSettings.headlessServer, sizeof(u8));
     packet_write(&p, &gServerSettings.nametags, sizeof(u8));
@@ -168,7 +172,6 @@ void network_receive_join(struct Packet* p) {
     packet_read(p, &gServerSettings.playerKnockbackStrength, sizeof(u8));
     packet_read(p, &gServerSettings.stayInLevelAfterStar, sizeof(u8));
     packet_read(p, &gServerSettings.skipIntro, sizeof(u8));
-    packet_read(p, &gServerSettings.enableCheats, sizeof(u8));
     packet_read(p, &gServerSettings.bubbleDeath, sizeof(u8));
     packet_read(p, &gServerSettings.headlessServer, sizeof(u8));
     packet_read(p, &gServerSettings.nametags, sizeof(u8));
@@ -176,8 +179,8 @@ void network_receive_join(struct Packet* p) {
     packet_read(p, &gServerSettings.pauseAnywhere, sizeof(u8));
     packet_read(p, eeprom, sizeof(u8) * 512);
 
-    network_player_connected(NPT_SERVER, 0, 0, &DEFAULT_MARIO_PALETTE, "Player");
-    network_player_connected(NPT_LOCAL, myGlobalIndex, configPlayerModel, &configPlayerPalette, configPlayerName);
+    network_player_connected(NPT_SERVER, 0, 0, &DEFAULT_MARIO_PALETTE, "Player", "0");
+    network_player_connected(NPT_LOCAL, myGlobalIndex, configPlayerModel, &configPlayerPalette, configPlayerName, get_local_discord_id());
     djui_chat_box_create();
 
     save_file_load_all(TRUE);

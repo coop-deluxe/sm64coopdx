@@ -17,11 +17,13 @@
 #include "pc/lua/smlua.h"
 #include "pc/lua/utils/smlua_model_utils.h"
 #include "pc/lua/utils/smlua_misc_utils.h"
+#include "pc/lua/utils/smlua_camera_utils.h"
 #include "pc/mods/mods.h"
 #include "pc/crash_handler.h"
 #include "pc/debuglog.h"
 #include "pc/pc_main.h"
 #include "pc/gfx/gfx_pc.h"
+#include "pc/fs/fmem.h"
 #include "game/camera.h"
 #include "game/skybox.h"
 #include "game/object_list_processor.h"
@@ -30,6 +32,8 @@
 #include "menu/intro_geo.h"
 #include "game/ingame_menu.h"
 #include "game/first_person_cam.h"
+#include "game/envfx_snow.h"
+#include "engine/math_util.h"
 
 #ifdef DISCORD_SDK
 #include "pc/discord/discord.h"
@@ -73,7 +77,6 @@ struct ServerSettings gServerSettings = {
     .bouncyLevelBounds = BOUNCY_LEVEL_BOUNDS_OFF,
     .playerKnockbackStrength = 25,
     .skipIntro = FALSE,
-    .enableCheats = FALSE,
     .bubbleDeath = TRUE,
     .enablePlayersInLevelDisplay = TRUE,
     .enablePlayerList = TRUE,
@@ -121,7 +124,6 @@ bool network_init(enum NetworkType inNetworkType, bool reconnecting) {
     gServerSettings.playerKnockbackStrength = configPlayerKnockbackStrength;
     gServerSettings.stayInLevelAfterStar = configStayInLevelAfterStar;
     gServerSettings.skipIntro = gCLIOpts.skipIntro ? TRUE : configSkipIntro;
-    gServerSettings.enableCheats = 0;
     gServerSettings.bubbleDeath = configBubbleDeath;
     gServerSettings.enablePlayersInLevelDisplay = TRUE;
     gServerSettings.enablePlayerList = TRUE;
@@ -161,7 +163,7 @@ bool network_init(enum NetworkType inNetworkType, bool reconnecting) {
 
         dynos_behavior_hook_all_custom_behaviors();
 
-        network_player_connected(NPT_LOCAL, 0, configPlayerModel, &configPlayerPalette, configPlayerName);
+        network_player_connected(NPT_LOCAL, 0, configPlayerModel, &configPlayerPalette, configPlayerName, get_local_discord_id());
         extern u8* gOverrideEeprom;
         gOverrideEeprom = NULL;
 
@@ -668,9 +670,12 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
     gLightingDir[0] = 0;
     gLightingDir[1] = 0;
     gLightingDir[2] = 0;
-    gLightingColor[0] = 255;
-    gLightingColor[1] = 255;
-    gLightingColor[2] = 255;
+    gLightingColor[0][0] = 255;
+    gLightingColor[0][1] = 255;
+    gLightingColor[0][2] = 255;
+    gLightingColor[1][0] = 255;
+    gLightingColor[1][1] = 255;
+    gLightingColor[1][2] = 255;
     gVertexColor[0] = 255;
     gVertexColor[1] = 255;
     gVertexColor[2] = 255;
@@ -679,7 +684,7 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
     gFogColor[2] = 255;
     gFogIntensity = 1;
     gOverrideBackground = -1;
-    gOverrideEnvFx = -1;
+    gOverrideEnvFx = ENVFX_MODE_NO_OVERRIDE;
     gRomhackCameraAllowCentering = TRUE;
     gOverrideAllowToxicGasCamera = FALSE;
     gRomhackCameraAllowDpad = FALSE;
@@ -694,16 +699,17 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
     camera_set_use_course_specific_settings(true);
     free_vtx_scroll_targets();
     gMarioStates[0].cap = 0;
+    gMarioStates[0].input = 0;
     extern s16 gTTCSpeedSetting;
     gTTCSpeedSetting = 0;
     gOverrideDialogPos = 0;
     gOverrideDialogColor = 0;
     gDialogMinWidth = 0;
     gOverrideAllowToxicGasCamera = FALSE;
-    gLuaVolumeMaster = 1.0f;
-    gLuaVolumeLevel = 1.0f;
-    gLuaVolumeSfx = 1.0f;
-    gLuaVolumeEnv = 1.0f;
+    gLuaVolumeMaster = 127;
+    gLuaVolumeLevel = 127;
+    gLuaVolumeSfx = 127;
+    gLuaVolumeEnv = 127;
 
     struct Controller* cnt = gPlayer1Controller;
     cnt->rawStickX = 0;
@@ -717,13 +723,19 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
     cnt->extStickY = 0;
 
     gFirstPersonCamera.enabled = false;
+    gFirstPersonCamera.forcePitch = false;
+    gFirstPersonCamera.forceYaw = false;
+    gFirstPersonCamera.forceRoll = true;
+    gFirstPersonCamera.centerL = true;
     gFirstPersonCamera.fov = FIRST_PERSON_DEFAULT_FOV;
+    vec3f_set(gFirstPersonCamera.offset, 0, 0, 0);
     first_person_reset();
 
     extern void save_file_load_all(UNUSED u8 reload);
     save_file_load_all(TRUE);
     extern void save_file_set_using_backup_slot(bool usingBackupSlot);
     save_file_set_using_backup_slot(false);
+    f_shutdown();
 
     extern s16 gMenuMode;
     gMenuMode = -1;

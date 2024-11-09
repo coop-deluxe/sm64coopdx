@@ -17,6 +17,7 @@ in_files = [
     "src/game/mario_step.h",
     "src/pc/lua/utils/smlua_anim_utils.h",
     "src/pc/lua/utils/smlua_misc_utils.h",
+    "src/pc/lua/utils/smlua_camera_utils.h",
     "src/pc/lua/utils/smlua_collision_utils.h",
     "src/pc/lua/utils/smlua_level_utils.h",
     "src/game/spawn_sound.h",
@@ -71,7 +72,7 @@ override_field_mutable = {
     "NetworkPlayer": [
         "overrideModelIndex",
         "overridePalette",
-        "overridePaletteIndex",
+        "overridePaletteIndex"
     ],
     "Animation": [
         "values",
@@ -80,15 +81,15 @@ override_field_mutable = {
 }
 
 override_field_invisible = {
-    "Mod": [ "files" ],
+    "Mod": [ "files", "showedScriptWarning" ],
     "MarioState": [ "visibleToEnemies" ],
-    "NetworkPlayer": [ "gag", "moderator"],
+    "NetworkPlayer": [ "gag", "moderator", "discordId" ],
     "GraphNode": [ "_guard1", "_guard2" ],
     "Object": [ "firstSurface" ],
+    "ModAudio": [ "sound", "decoder", "buffer", "bufferSize", "sampleCopiesTail" ],
 }
 
 override_field_deprecated = {
-    "ServerSettings": [ "enableCheats" ],
     "NetworkPlayer": [ "paletteIndex", "overridePaletteIndex", "overridePaletteIndexLp" ]
 }
 
@@ -116,6 +117,7 @@ override_field_immutable = {
     "AnimationTable": [ "count" ],
     "Controller": [ "controllerData", "statusData" ],
     "FirstPersonCamera": [ "enabled" ],
+    "ModAudio": [ "isStream", "loaded" ],
 }
 
 override_field_version_excludes = {

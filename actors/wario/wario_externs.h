@@ -1,5 +1,7 @@
 extern ALIGNED8 const Texture wario_texture_white_button[];
 extern ALIGNED8 const Texture wario_texture_w_logo[];
+extern ALIGNED8 const Texture wario_texture_w_blend[];
+extern ALIGNED8 const Texture wario_texture_w_cap[];
 extern ALIGNED8 const Texture wario_texture_hair_sideburn[];
 extern ALIGNED8 const Texture wario_texture_add_sideburn[];
 extern ALIGNED8 const Texture wario_texture_skin_sideburn[];

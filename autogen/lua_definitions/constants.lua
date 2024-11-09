@@ -2,78 +2,6 @@
 
 math.randomseed(get_time())
 
-
---------------
--- CObjects --
---------------
-
-_CObjectPool = {}
-
-_CObject = {
-    __index = function (t,k)
-        return _get_field(t['_lot'], t['_pointer'], k, t)
-    end,
-    __newindex = function (t,k,v)
-        _set_field(t['_lot'], t['_pointer'], k, v, t)
-    end,
-    __tostring = function(t)
-        return 'CObject: ' .. t['_lot'] .. ', [' .. string.format('0x%08X', t['_pointer']) .. ']'
-    end,
-    __eq = function (a, b)
-        return a['_pointer'] == b['_pointer'] and a['_lot'] == b['_lot'] and a['_pointer'] ~= nil and a['_lot'] ~= nil
-    end
-}
-
-function _NewCObject(lot, pointer)
-    if _CObjectPool[lot] == nil then
-        _CObjectPool[lot] = {}
-    end
-
-    if _CObjectPool[lot][pointer] == nil then
-        local obj = {}
-        rawset(obj, '_pointer', pointer)
-        rawset(obj, '_lot', lot)
-        setmetatable(obj, _CObject)
-        _CObjectPool[lot][pointer] = obj
-        return obj
-    end
-
-    return _CObjectPool[lot][pointer]
-end
-
-local _CPointerPool = {}
-
-_CPointer = {
-    __index = function (t,k)
-        return nil
-    end,
-    __newindex = function (t,k,v)
-    end,
-    __tostring = function(t)
-        return 'CPointer: ' .. t['_lvt'] .. ', [' .. string.format('0x%08X', t['_pointer']) .. ']'
-    end,
-    __eq = function (a, b)
-        return a['_pointer'] == b['_pointer'] and a['_pointer'] ~= nil and a['_lvt'] ~= nil
-    end
-}
-
-function _NewCPointer(lvt, pointer)
-    if _CPointerPool[lvt] == nil then
-        _CPointerPool[lvt] = {}
-    end
-
-    if _CPointerPool[lvt][pointer] == nil then
-        local obj = {}
-        rawset(obj, '_pointer', pointer)
-        rawset(obj, '_lvt', lvt)
-        setmetatable(obj, _CPointer)
-        _CPointerPool[lvt][pointer] = obj
-        return obj
-    end
-
-    return _CPointerPool[lvt][pointer]
-end
-
 _SyncTable = {
     __index = function (t,k)
         local _table = rawget(t, '_table')
@@ -432,13 +360,6 @@ end
 -----------------
 
 FONT_TINY = -1
-
-
-----------------------
--- legacy functions --
-----------------------
-
-function get_coop_compatibility_enabled() return false end
 
 --- @type integer
 INSTANT_WARP_INDEX_START = 0x00
@@ -3786,6 +3707,9 @@ INT_TWIRL = (1 << 8)
 --- @type InteractionFlag
 INT_GROUND_POUND_OR_TWIRL = (INT_GROUND_POUND | INT_TWIRL)
 
+--- @type InteractionFlag
+INT_LUA = (1 << 31)
+
 --- @class InteractionType
 
 --- @type InteractionType
@@ -4068,6 +3992,15 @@ MARIO_SPAWN_UNKNOWN_03 = 0x03
 
 --- @type integer
 MARIO_SPAWN_UNKNOWN_27 = 0x27
+
+--- @type integer
+PAINTING_WARP_INDEX_END = 0x2D
+
+--- @type integer
+PAINTING_WARP_INDEX_FA = 0x2A
+
+--- @type integer
+PAINTING_WARP_INDEX_START = 0x00
 
 --- @type integer
 PRESS_START_DEMO_TIMER = 800
@@ -5487,12 +5420,6 @@ MARIO_ANIM_FORWARD_SPINNING_FLIP = 207
 
 --- @type MarioAnimID
 MARIO_ANIM_TRIPLE_JUMP_FLY = 208
-
---- @type MarioAnimID
-WALUIGI_ANIM_WALKING = 209
-
---- @type MarioAnimID
-WALUIGI_ANIM_RUNNING = 210
 
 --- @class MarioCapGSCId
 
@@ -9249,7 +9176,7 @@ HOOK_ON_COLLIDE_LEVEL_BOUNDS = 37
 HOOK_MIRROR_MARIO_RENDER = 38
 
 --- @type LuaHookedEventType
-HOOK_OVERRIDE_PHYS_STEP_DEFACTO_SPEED = 39
+HOOK_MARIO_OVERRIDE_PHYS_STEP_DEFACTO_SPEED = 39
 
 --- @type LuaHookedEventType
 HOOK_ON_OBJECT_LOAD = 40
@@ -9267,7 +9194,13 @@ HOOK_ON_ATTACK_OBJECT = 43
 HOOK_ON_LANGUAGE_CHANGED = 44
 
 --- @type LuaHookedEventType
-HOOK_MAX = 45
+HOOK_ON_MODS_LOADED = 45
+
+--- @type LuaHookedEventType
+HOOK_ON_NAMETAGS_RENDER = 46
+
+--- @type LuaHookedEventType
+HOOK_MAX = 47
 
 --- @class LuaModMenuElementType
 
@@ -12594,13 +12527,10 @@ SPTASK_STATE_FINISHED_DP = 4
 MAX_VERSION_LENGTH = 32
 
 --- @type integer
-MINOR_VERSION_NUMBER = 0
-
---- @type integer
-PATCH_VERSION_NUMBER = 0
+MINOR_VERSION_NUMBER = 2
 
 --- @type string
-SM64COOPDX_VERSION = "v1.0"
+SM64COOPDX_VERSION = "v1.0.3"
 
 --- @type integer
 VERSION_NUMBER = 37

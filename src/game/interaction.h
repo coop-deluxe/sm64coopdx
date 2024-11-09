@@ -53,6 +53,7 @@ enum InteractionFlag {
     INT_HIT_FROM_BELOW        = /* 0x00000080 */ (1 << 7),
     INT_TWIRL                 = /* 0x00000100 */ (1 << 8),
     INT_GROUND_POUND_OR_TWIRL = (INT_GROUND_POUND | INT_TWIRL),
+    INT_LUA                   = /* 0x10000000 */ (1 << 31) ,
 };
 
 #define INT_ATTACK_NOT_FROM_BELOW       (INT_GROUND_POUND_OR_TWIRL | INT_PUNCH | INT_KICK | INT_TRIP | INT_SLIDE_KICK | INT_FAST_ATTACK_OR_SHELL | INT_HIT_FROM_ABOVE)
@@ -168,7 +169,9 @@ u32 get_door_save_file_flag(struct Object *door);
 void mario_process_interactions(struct MarioState *m);
 void mario_handle_special_floors(struct MarioState *m);
 u8 passes_pvp_interaction_checks(struct MarioState* attacker, struct MarioState* victim);
+u32 should_push_or_pull_door(struct MarioState *m, struct Object *o);
 u32 take_damage_and_knock_back(struct MarioState *m, struct Object *o);
+u32 get_mario_cap_flag(struct Object *capObject);
 u32 determine_interaction(struct MarioState *m, struct Object *o);
 u32 process_interaction(struct MarioState *m, u32 interactType, struct Object *o, u32 (*interact_function)(struct MarioState *, u32 interactType, struct Object *));
 

@@ -51,6 +51,11 @@ bool fs_init(const char *writepath) {
     printf("FS: writepath set to `%s`\n", fs_writepath);
 #endif
 
+    // we shall not progress any further if the path is inaccessible
+    if (('\0' == fs_writepath[0]) || !fs_sys_dir_exists(fs_writepath)) {
+        sys_fatal("Could not access the User Preferences directory.");
+    }
+
     fs_mount(fs_writepath);
 
     return true;
@@ -244,11 +249,13 @@ const char *fs_get_write_path(const char *vpath) {
     return path;
 }
 
-const char *fs_convert_path(char *buf, const size_t bufsiz, const char *path)  {
+const char *fs_convert_path(char *buf, const size_t bufsiz, const char *path) {
+    if (NULL == path) { return ""; }
+
     // ! means "executable directory"
     if (path[0] == '!') {
-        if (snprintf(buf, bufsiz, "%s%s", sys_exe_path(), path + 1) < 0) { 
-            return NULL;
+        if (snprintf(buf, bufsiz, "%s%s", sys_exe_path(), path + 1) < 0) {
+            return "";
         }
     } else {
         strncpy(buf, path, bufsiz);
@@ -262,7 +269,32 @@ const char *fs_convert_path(char *buf, const size_t bufsiz, const char *path)  {
     return buf;
 }
 
+bool fs_sys_filename_is_portable(char const *filename) {
+    char c;
+    while (0 != (c = *(filename++))) {
+
+        if (c < ' ' || c > '~') {
+            // character outside of printable range
+            return false;
+        }
+
+        switch (c) {
+            // characters unallowed in filenames
+            case '/': case '\\': case '<': case '>':
+            case ':': case '"': case '|': case '?': case '*':
+                return false;
+        }
+    }
+
+    return true;
+}
+
 /* these operate on the real file system */
+
+bool fs_sys_path_exists(const char *name) {
+    struct stat st;
+    return (stat(name, &st) == 0);
+}
 
 bool fs_sys_file_exists(const char *name) {
     struct stat st;
@@ -286,7 +318,7 @@ bool fs_sys_dir_is_empty(const char *name) {
     bool ret = true;
     while ((ent = readdir(dir)) != NULL) {
         // skip "." and ".."
-        if (ent->d_name[0] == '.' && (ent->d_name[1] == '\0' || 
+        if (ent->d_name[0] == '.' && (ent->d_name[1] == '\0' ||
            (ent->d_name[1] == '.' && ent->d_name[2] == '\0'))) {
             continue;
         }
@@ -340,36 +372,17 @@ bool fs_sys_walk(const char *base, walk_fn_t walk, void *user, const bool recur)
 }
 
 bool fs_sys_mkdir(const char *name) {
-    #ifdef _WIN32
+#ifdef _WIN32
     return _mkdir(name) == 0;
-    #else
+#else
     return mkdir(name, 0777) == 0;
-    #endif
+#endif
 }
 
-bool fs_sys_copy_file(const char *oldname, const char *newname) {
-    uint8_t buf[2048];
-
-    FILE *fin = fopen(oldname, "rb");
-    if (!fin) return false;
-
-    FILE *fout = fopen(newname, "wb");
-    if (!fout) {
-        fclose(fin);
-        return false;
-    }
-
-    bool ret = true;
-    size_t rx;
-    while ((rx = fread(buf, 1, sizeof(buf), fin)) > 0) {
-        if (!fwrite(buf, rx, 1, fout)) {
-            ret = false;
-            break;
-        }
-    }
-
-    fclose(fout);
-    fclose(fin);
-
-    return ret;
+bool fs_sys_rmdir(const char *name) {
+#ifdef _WIN32
+    return _rmdir(name) == 0;
+#else
+    return rmdir(name) == 0;
+#endif
 }

@@ -29,7 +29,7 @@
 #include "spawn_sound.h"
 #include "pc/network/network.h"
 #include "pc/lua/smlua_hooks.h"
-#include "pc/lua/utils/smlua_misc_utils.h"
+#include "pc/lua/utils/smlua_camera_utils.h"
 #include "first_person_cam.h"
 
 u8 (*gContinueDialogFunction)(void) = NULL;
@@ -75,7 +75,7 @@ Gfx *geo_update_layer_transparency(s32 callContext, struct GraphNode *node, UNUS
     dlStart = NULL;
 
     if (callContext == GEO_CONTEXT_RENDER) {
-        objectGraphNode = (struct Object *) gCurGraphNodeObject; // TODO: change this to object pointer?
+        objectGraphNode = (struct Object *) gCurGraphNodeObject;
         currentGraphNode = (struct GraphNodeGenerated *) node;
         sp2C = (struct GraphNodeGenerated *) node;
 
@@ -98,7 +98,9 @@ Gfx *geo_update_layer_transparency(s32 callContext, struct GraphNode *node, UNUS
                 0x100 | (currentGraphNode->fnNode.node.flags & 0xFF);
             }
 
-            objectGraphNode->oAnimState = 0;
+            if (currentGraphNode->parameter != 30) {
+                objectGraphNode->oAnimState = 0;
+            }
         } else {
             if (currentGraphNode->parameter == 20) {
                 currentGraphNode->fnNode.node.flags =
@@ -108,7 +110,9 @@ Gfx *geo_update_layer_transparency(s32 callContext, struct GraphNode *node, UNUS
                 0x500 | (currentGraphNode->fnNode.node.flags & 0xFF);
             }
 
-            objectGraphNode->oAnimState = 1;
+            if (currentGraphNode->parameter != 30) {
+                objectGraphNode->oAnimState = 1;
+            }
 
 #ifdef VERSION_JP
             if (currentGraphNode->parameter == 10) {
@@ -1151,6 +1155,8 @@ s32 count_unimportant_objects(void) {
 }
 
 s32 count_objects_with_behavior(const BehaviorScript *behavior) {
+    if (!behavior) { return 0; }
+    behavior = smlua_override_behavior(behavior);
     uintptr_t *behaviorAddr = segmented_to_virtual(behavior);
 
     u32 objList = get_object_list_from_behavior(behaviorAddr);
@@ -2629,7 +2635,8 @@ s32 cur_obj_is_mario_ground_pounding_platform(void) {
         if (!is_player_active(&gMarioStates[i])) { continue; }
         if (!gMarioStates[i].marioObj) { continue; }
         if (gMarioStates[i].marioObj->platform == o) {
-            if ((determine_interaction(&gMarioStates[i], o) & INT_GROUND_POUND) || (gMarioStates[i].action == ACT_GROUND_POUND_LAND)) {
+            u32 interaction = determine_interaction(&gMarioStates[i], o);
+            if ((gMarioStates[i].action == ACT_GROUND_POUND_LAND) || (interaction & INT_GROUND_POUND && interaction & INT_LUA)) {
                 return TRUE;
             }
         }

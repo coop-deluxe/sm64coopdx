@@ -130,11 +130,11 @@ static void gfx_sdl_init(const char *window_title) {
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
-    #ifdef USE_GLES
+#ifdef USE_GLES
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);  // These attributes allow for hardware acceleration on RPis.
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
-    #endif
+#endif
 
     int xpos = (configWindow.x == WAPI_WIN_CENTERPOS) ? SDL_WINDOWPOS_CENTERED : configWindow.x;
     int ypos = (configWindow.y == WAPI_WIN_CENTERPOS) ? SDL_WINDOWPOS_CENTERED : configWindow.y;
@@ -186,13 +186,22 @@ static void gfx_sdl_onkeyup(int scancode) {
 }
 
 static void gfx_sdl_ondropfile(char* path) {
+#ifdef _WIN32
+    char portable_path[SYS_MAX_PATH];
+    if (sys_windows_short_path_from_mbs(portable_path, SYS_MAX_PATH, path)) {
+        if (!gRomIsValid) {
+            rom_on_drop_file(portable_path);
+        } else if (gGameInited) {
+            mod_import_file(portable_path);
+        }
+    }
+#else
     if (!gRomIsValid) {
         rom_on_drop_file(path);
-        return;
-    }
-    if (gGameInited) {
+    } else if (gGameInited) {
         mod_import_file(path);
     }
+#endif
 }
 
 static void gfx_sdl_handle_events(void) {
@@ -289,6 +298,10 @@ static void gfx_sdl_shutdown(void) {
     }
 }
 
+static bool gfx_sdl_has_focus(void) {
+    return (SDL_GetWindowFlags(wnd) & SDL_WINDOW_INPUT_FOCUS);
+}
+
 static void gfx_sdl_start_text_input(void) { SDL_StartTextInput(); }
 static void gfx_sdl_stop_text_input(void) { SDL_StopTextInput(); }
 static char* gfx_sdl_get_clipboard_text(void) { return SDL_GetClipboardText(); }
@@ -314,7 +327,8 @@ struct GfxWindowManagerAPI gfx_sdl = {
     gfx_sdl_delay,
     gfx_sdl_get_max_msaa,
     gfx_sdl_set_window_title,
-    gfx_sdl_reset_window_title
+    gfx_sdl_reset_window_title,
+    gfx_sdl_has_focus
 };
 
 #endif // BACKEND_WM

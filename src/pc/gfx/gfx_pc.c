@@ -55,7 +55,7 @@
 #define RATIO_Y (gfx_current_dimensions.height / (2.0f * HALF_SCREEN_HEIGHT))
 
 #define MAX_BUFFERED 256
-#define MAX_LIGHTS 16
+#define MAX_LIGHTS 18
 #define MAX_VERTICES 64
 
 # define MAX_CACHED_TEXTURES 4096 // for preloading purposes
@@ -184,7 +184,7 @@ static f32 sDepthZMult = 1;
 static f32 sDepthZSub = 0;
 
 Vec3f gLightingDir;
-Color gLightingColor = { 255, 255, 255 };
+Color gLightingColor[2] = { { 255, 255, 255 }, { 255, 255, 255 } };
 Color gVertexColor = { 255, 255, 255 };
 Color gFogColor = { 255, 255, 255 };
 f32 gFogIntensity = 1;
@@ -792,9 +792,9 @@ static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, cons
                 rsp.lights_changed = false;
             }
 
-            int r = rsp.current_lights[rsp.current_num_lights - 1].col[0];
-            int g = rsp.current_lights[rsp.current_num_lights - 1].col[1];
-            int b = rsp.current_lights[rsp.current_num_lights - 1].col[2];
+            int r = rsp.current_lights[rsp.current_num_lights - 1].col[0] * gLightingColor[1][0] / 255.0f;
+            int g = rsp.current_lights[rsp.current_num_lights - 1].col[1] * gLightingColor[1][1] / 255.0f;
+            int b = rsp.current_lights[rsp.current_num_lights - 1].col[2] * gLightingColor[1][2] / 255.0f;
 
             for (int32_t i = 0; i < rsp.current_num_lights - 1; i++) {
                 float intensity = 0;
@@ -803,15 +803,12 @@ static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, cons
                 intensity += vn->n[2] * rsp.current_lights_coeffs[i][2];
                 intensity /= 127.0f;
                 if (intensity > 0.0f) {
-                    r += intensity * rsp.current_lights[i].col[0];
-                    g += intensity * rsp.current_lights[i].col[1];
-                    b += intensity * rsp.current_lights[i].col[2];
+                    r += intensity * rsp.current_lights[i].col[0] * gLightingColor[0][0] / 255.0f;
+                    g += intensity * rsp.current_lights[i].col[1] * gLightingColor[0][1] / 255.0f;
+                    b += intensity * rsp.current_lights[i].col[2] * gLightingColor[0][2] / 255.0f;
                 }
             }
 
-            r *= gLightingColor[0] / 255.0f;
-            g *= gLightingColor[1] / 255.0f;
-            b *= gLightingColor[2] / 255.0f;
             d->color.r = r > 255 ? 255 : r;
             d->color.g = g > 255 ? 255 : g;
             d->color.b = b > 255 ? 255 : b;

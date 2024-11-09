@@ -52,7 +52,7 @@ static void djui_panel_display_msaa_change(UNUSED struct DjuiBase* caller) {
 }
 
 void djui_panel_display_create(struct DjuiBase* caller) {
-    struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(DISPLAY, DISPLAY));
+    struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(DISPLAY, DISPLAY), false);
     struct DjuiBase* body = djui_three_panel_get_body(panel);
     struct DjuiSelectionbox* msaa = NULL;
 

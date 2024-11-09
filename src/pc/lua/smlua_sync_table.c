@@ -44,7 +44,7 @@ static bool smlua_sync_table_unwind(int syncTableIndex, int keyIndex) {
     // get key
     sUnwoundLnts[sUnwoundLntsCount++] = smlua_to_lnt(L, keyIndex);
     if (!gSmLuaConvertSuccess) {
-        LOG_LUA_LINE("attempted to unwind sync table with invalid key type");
+        LOG_LUA_LINE("Attempted to unwind sync table with invalid key type");
         return false;
     }
 
@@ -55,7 +55,7 @@ static bool smlua_sync_table_unwind(int syncTableIndex, int keyIndex) {
     while (true) {
         // make sure we remain within limits
         if (sUnwoundLntsCount >= MAX_UNWOUND_LNT) {
-            LOG_LUA_LINE("attempted to unwind sync table past its limit");
+            LOG_LUA_LINE("Attempted to unwind sync table past its limit");
             return false;
         }
 
@@ -76,7 +76,7 @@ static bool smlua_sync_table_unwind(int syncTableIndex, int keyIndex) {
 
         lua_pop(L, 1); // pop _name value
         if (!gSmLuaConvertSuccess) {
-            LOG_LUA_LINE("attempted to unwind sync table with invalid parent");
+            LOG_LUA_LINE("Attempted to unwind sync table with invalid parent");
             lua_pop(L, 1); // pop iterative _parent
             return false;
         }
@@ -90,7 +90,7 @@ static bool smlua_sync_table_unwind(int syncTableIndex, int keyIndex) {
         // validate parent type
         if (parentType != LUA_TTABLE) {
             if (parentType != LUA_TNIL) {
-                LOG_LUA_LINE("attempted to unwind sync table into an invalid parent");
+                LOG_LUA_LINE("Attempted to unwind sync table into an invalid parent");
                 return false;
             }
             break;
@@ -106,7 +106,7 @@ static bool smlua_sync_table_unwind(int syncTableIndex, int keyIndex) {
     }
 
     if (unwoundSize >= MAX_UNWOUND_SIZE) {
-        LOG_LUA_LINE("attempted to unwind sync table with too long of a key/parent length");
+        LOG_LUA_LINE("Attempted to unwind sync table with too long of a key/parent length");
         return false;
     }
 

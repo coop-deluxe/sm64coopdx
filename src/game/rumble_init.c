@@ -5,6 +5,7 @@
 #include "main.h"
 #include "rumble_init.h"
 #include "object_helpers.h"
+#include "pc/djui/djui.h"
 
 s8 D_SH_8031D8F8[0x60];
 
@@ -135,7 +136,7 @@ static void update_rumble_data_queue(void) {
 }
 
 void queue_rumble_data(s16 a0, s16 a1) {
-    if (gCurrDemoInput != NULL) {
+    if (gCurrDemoInput != NULL || gDjuiInMainMenu) {
         return;
     }
 

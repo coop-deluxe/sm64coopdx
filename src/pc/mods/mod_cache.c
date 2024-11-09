@@ -1,15 +1,18 @@
 #include <stdio.h>
 #include <unistd.h>
 #define DISABLE_MODULE_LOG 1
+#include "pc/gfx/gfx_pc.h"
 #include "pc/debuglog.h"
 #include "mod_cache.h"
 #include "mods.h"
 #include "mod.h"
 #include "mods_utils.h"
 #include "pc/utils/md5.h"
+#include "pc/lua/smlua_hooks.h"
+#include "pc/loading.h"
 
 #define MOD_CACHE_FILENAME "mod.cache"
-#define MOD_CACHE_VERSION 6
+#define MOD_CACHE_VERSION 7
 #define MD5_BUFFER_SIZE 1024
 
 struct ModCacheEntry* sModCacheHead = NULL;
@@ -30,7 +33,7 @@ void mod_cache_shutdown(void) {
     LOG_INFO("Shutting down mod cache.");
     while (sModCacheHead) {
         mod_cache_remove_node(sModCacheHead, NULL);
-    }    
+    }
 }
 
 void mod_cache_md5(const char* inPath, u8* outDataPath) {
@@ -253,6 +256,8 @@ void mod_cache_update(struct Mod* mod, struct ModFile* file) {
 }
 
 void mod_cache_load(void) {
+    LOADING_SCREEN_MUTEX(loading_screen_set_segment_text("Loading Mod Cache"));
+
     mod_cache_shutdown();
     LOG_INFO("Loading mod cache");
 
@@ -270,6 +275,11 @@ void mod_cache_load(void) {
         LOG_INFO("Mod cache version mismatch");
         mods_delete_tmp();
         return;
+    }
+    u8 marked = 0;
+    fread(&marked, sizeof(u8), 1, fp);
+    if (marked != 0) {
+        gfx_shutdown();
     }
 
     u16 count = 0;
@@ -298,6 +308,7 @@ void mod_cache_load(void) {
     fclose(fp);
 }
 
+extern u64* gBehaviorOffset;
 void mod_cache_save(void) {
     LOG_INFO("Saving mod cache");
     const char* filename = fs_get_write_path(MOD_CACHE_FILENAME);
@@ -315,6 +326,8 @@ void mod_cache_save(void) {
 
     u16 version = MOD_CACHE_VERSION;
     fwrite(&version, sizeof(u16), 1, fp);
+    u8 t = *gBehaviorOffset != 0;
+    fwrite(&t, sizeof(u8), 1, fp);
 
     struct ModCacheEntry* node = sModCacheHead;
     while (node != NULL) {

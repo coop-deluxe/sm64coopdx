@@ -59,6 +59,8 @@
 #include "pc/discord/discord.h"
 #endif
 
+#include "pc/mumble/mumble.h"
+
 #if defined(_WIN32) || defined(_WIN64)
 #include <windows.h>
 #endif
@@ -88,17 +90,13 @@ static f64 sFrameTimeStart;
 bool gGameInited = false;
 bool gGfxInited = false;
 
-f32 gLuaVolumeMaster = 1.0f;
-f32 gLuaVolumeLevel = 1.0f;
-f32 gLuaVolumeSfx = 1.0f;
-f32 gLuaVolumeEnv = 1.0f;
+u8 gLuaVolumeMaster = 127;
+u8 gLuaVolumeLevel = 127;
+u8 gLuaVolumeSfx = 127;
+u8 gLuaVolumeEnv = 127;
 
 static struct AudioAPI *audio_api;
 struct GfxWindowManagerAPI *wm_api = &WAPI;
-
-#if !defined(WAPI_DXGI) && !defined(WAPI_DUMMY)
-#define LOADING_SCREEN_SUPPORTED
-#endif
 
 extern void gfx_run(Gfx *commands);
 extern void thread5_game_loop(void *arg);
@@ -179,23 +177,29 @@ void produce_interpolation_frames_and_delay(void) {
 
     gRenderingInterpolated = true;
 
+    // sanity check target time to deal with hangs and such
+    if (fabs(sFrameTargetTime - curTime) > 1) { sFrameTargetTime = curTime - 0.01f; }
+
     // interpolate and render
     while ((curTime = clock_elapsed_f64()) < sFrameTargetTime) {
         gfx_start_frame();
-        f32 delta = (!configUncappedFramerate && configFrameLimit == FRAMERATE) ? 1 : MAX(MIN((curTime - sFrameTimeStart) / (sFrameTargetTime - sFrameTimeStart), 1), 0);
+        f32 delta = ((!configUncappedFramerate && configFrameLimit == FRAMERATE)
+            ? 1.0f
+            : MAX(MIN((curTime - sFrameTimeStart) / (sFrameTargetTime - sFrameTimeStart), 1.0f), 0.0f)
+        );
         gRenderingDelta = delta;
         if (!gSkipInterpolationTitleScreen) { patch_interpolations(delta); }
         send_display_list(gGfxSPTask);
         gfx_end_frame();
 
         // delay
-        if (!configUncappedFramerate && !configWindow.vsync) {
+        if (!configUncappedFramerate) {
             f64 targetDelta = 1.0 / (f64) configFrameLimit;
             f64 now = clock_elapsed_f64();
             f64 actualDelta = now - curTime;
             if (actualDelta < targetDelta) {
                 f64 delay = ((targetDelta - actualDelta) * 1000.0);
-                if (delay > 0) { WAPI.delay((u32) delay * 0.9); }
+                if (delay > 0.0f) { WAPI.delay((u32) delay); }
             }
         }
 
@@ -222,10 +226,11 @@ void produce_interpolation_frames_and_delay(void) {
 }
 
 inline static void buffer_audio(void) {
-    const f32 masterMod = (f32)configMasterVolume / 127.0f * gLuaVolumeMaster;
-    set_sequence_player_volume(SEQ_PLAYER_LEVEL, (f32)configMusicVolume / 127.0f * gLuaVolumeLevel * masterMod);
-    set_sequence_player_volume(SEQ_PLAYER_SFX, (f32)configSfxVolume / 127.0f * gLuaVolumeSfx * masterMod);
-    set_sequence_player_volume(SEQ_PLAYER_ENV, (f32)configEnvVolume / 127.0f * gLuaVolumeEnv * masterMod);
+    bool shouldMute = configMuteFocusLoss && !WAPI.has_focus();
+    const f32 masterMod = (f32)configMasterVolume / 127.0f * (f32)gLuaVolumeMaster / 127.0f;
+    set_sequence_player_volume(SEQ_PLAYER_LEVEL, shouldMute ? 0 : (f32)configMusicVolume / 127.0f * (f32)gLuaVolumeLevel / 127.0f * masterMod);
+    set_sequence_player_volume(SEQ_PLAYER_SFX,   shouldMute ? 0 : (f32)configSfxVolume / 127.0f * (f32)gLuaVolumeSfx / 127.0f * masterMod);
+    set_sequence_player_volume(SEQ_PLAYER_ENV,   shouldMute ? 0 : (f32)configEnvVolume / 127.0f * (f32)gLuaVolumeEnv / 127.0f * masterMod);
 
     int samplesLeft = audio_api->buffered();
     u32 numAudioSamples = samplesLeft < audio_api->get_desired_buffered() ? SAMPLES_HIGH : SAMPLES_LOW;
@@ -250,31 +255,30 @@ void produce_one_frame(void) {
     CTX_EXTENT(CTX_RENDER, produce_interpolation_frames_and_delay);
 }
 
-// Used for rendering 2D scenes fullscreen like the loading or crash screens
-void produce_one_dummy_frame(void (*callback)()) {
-
-    // Start frame
+// used for rendering 2D scenes fullscreen like the loading or crash screens
+void produce_one_dummy_frame(void (*callback)(), u8 clearColorR, u8 clearColorG, u8 clearColorB) {
+    // start frame
     gfx_start_frame();
     config_gfx_pool();
     init_render_image();
     create_dl_ortho_matrix();
     djui_gfx_displaylist_begin();
 
-    // Fix scaling issues
+    // fix scaling issues
     gSPViewport(gDisplayListHead++, VIRTUAL_TO_PHYSICAL(&D_8032CF00));
     gDPSetScissor(gDisplayListHead++, G_SC_NON_INTERLACE, 0, BORDER_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT - BORDER_HEIGHT);
 
-    // Clear screen
+    // clear screen
     create_dl_translation_matrix(MENU_MTX_PUSH, GFX_DIMENSIONS_FROM_LEFT_EDGE(0), 240.f, 0.f);
     create_dl_scale_matrix(MENU_MTX_NOPUSH, (GFX_DIMENSIONS_ASPECT_RATIO * SCREEN_HEIGHT) / 130.f, 3.f, 1.f);
-    gDPSetEnvColor(gDisplayListHead++, 0x00, 0x00, 0x00, 0xFF);
+    gDPSetEnvColor(gDisplayListHead++, clearColorR, clearColorG, clearColorB, 0xFF);
     gSPDisplayList(gDisplayListHead++, dl_draw_text_bg_box);
     gSPPopMatrix(gDisplayListHead++, G_MTX_MODELVIEW);
 
-    // Call the callback
+    // call the callback
     callback();
 
-    // Render frame
+    // render frame
     djui_gfx_displaylist_end();
     end_master_display_list();
     alloc_display_list(0);
@@ -312,28 +316,26 @@ void game_exit(void) {
     exit(0);
 }
 
-void* main_game_init(void* isThreaded) {
-    gIsThreaded = isThreaded != NULL;
-
+void* main_game_init(UNUSED void* dummy) {
     // load language
     if (!djui_language_init(configLanguage)) { snprintf(configLanguage, MAX_CONFIG_STRING, "%s", ""); }
 
-    REFRESH_MUTEX(loading_screen_set_segment_text("Loading"));
+    LOADING_SCREEN_MUTEX(loading_screen_set_segment_text("Loading"));
     dynos_gfx_init();
     enable_queued_dynos_packs();
     sync_objects_init_system();
 
-    // if (gCLIOpts.network != NT_SERVER) {
-    //     check_for_updates();
-    // }
+    if (gCLIOpts.network != NT_SERVER && !gCLIOpts.skipUpdateCheck) {
+        check_for_updates();
+    }
 
-    REFRESH_MUTEX(loading_screen_set_segment_text("Loading ROM Assets"));
+    LOADING_SCREEN_MUTEX(loading_screen_set_segment_text("Loading ROM Assets"));
     rom_assets_load();
     smlua_text_utils_init();
 
     mods_init();
     enable_queued_mods();
-    REFRESH_MUTEX(
+    LOADING_SCREEN_MUTEX(
         gCurrLoadingSegment.percentage = 0;
         loading_screen_set_segment_text("Starting Game");
     );
@@ -341,14 +343,8 @@ void* main_game_init(void* isThreaded) {
     if (gCLIOpts.fullscreen == 1) { configWindow.fullscreen = true; }
     else if (gCLIOpts.fullscreen == 2) { configWindow.fullscreen = false; }
 
-    if (!gGfxInited) {
-        gfx_init(&WAPI, &RAPI, TITLE);
-        WAPI.set_keyboard_callbacks(keyboard_on_key_down, keyboard_on_key_up, keyboard_on_all_keys_up, keyboard_on_text_input);
-    }
-
     audio_init();
     sound_init();
-    smlua_audio_custom_init();
     network_player_init();
 
     gGameInited = true;
@@ -358,17 +354,28 @@ int main(int argc, char *argv[]) {
     // handle terminal arguments
     if (!parse_cli_opts(argc, argv)) { return 0; }
 
-#if defined(_WIN32) || defined(_WIN64)
+#ifdef _WIN32
     // handle Windows console
-    if (!gCLIOpts.console) {
+    if (gCLIOpts.console) {
+        SetConsoleOutputCP(CP_UTF8);
+    } else {
         FreeConsole();
         freopen("NUL", "w", stdout);
     }
-
 #endif
 
-    const char* userPath = gCLIOpts.savePath[0] ? gCLIOpts.savePath : sys_user_path();
-    fs_init(userPath);
+#ifdef _WIN32
+    if (gCLIOpts.savePath[0]) {
+        char portable_path[SYS_MAX_PATH] = {};
+        sys_windows_short_path_from_mbs(portable_path, SYS_MAX_PATH, gCLIOpts.savePath);
+        fs_init(portable_path);
+    } else {
+        fs_init(sys_user_path());
+    }
+#else
+    fs_init(gCLIOpts.savePath[0] ? gCLIOpts.savePath : sys_user_path());
+#endif
+
     configfile_load();
 
     legacy_folder_handler();
@@ -396,10 +403,12 @@ int main(int argc, char *argv[]) {
 #ifdef LOADING_SCREEN_SUPPORTED
     bool threadSuccess = false;
     if (!gCLIOpts.hideLoadingScreen && pthread_mutex_init(&gLoadingThreadMutex, NULL) == 0) {
-        if (pthread_create(&gLoadingThreadId, NULL, main_game_init, (void*) 1) == 0) {
+        gIsThreaded = true;
+        if (pthread_create(&gLoadingThreadId, NULL, main_game_init, NULL) == 0) {
             render_loading_screen(); // render the loading screen while the game is setup
             threadSuccess = true;
         }
+        gIsThreaded = false;
         pthread_mutex_destroy(&gLoadingThreadMutex);
     }
     if (!threadSuccess)
@@ -416,6 +425,10 @@ int main(int argc, char *argv[]) {
     if (!audio_api && audio_sdl.init()) { audio_api = &audio_sdl; }
 #endif
     if (!audio_api) { audio_api = &audio_null; }
+
+#ifdef LOADING_SCREEN_SUPPORTED
+    loading_screen_reset();
+#endif
 
     // initialize djui
     djui_init();
@@ -447,6 +460,8 @@ int main(int argc, char *argv[]) {
         network_init(NT_NONE, false);
     }
 
+    mumble_init();
+
     // main loop
     while (true) {
         debug_context_reset();
@@ -455,6 +470,7 @@ int main(int argc, char *argv[]) {
 #ifdef DISCORD_SDK
         discord_update();
 #endif
+        mumble_update();
 #ifdef DEBUG
         fflush(stdout);
         fflush(stderr);

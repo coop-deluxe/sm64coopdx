@@ -26,6 +26,7 @@ struct CLIOptions {
     char joinIp[IP_MAX_LEN];
     char playerName[MAX_CONFIG_STRING];
     bool hideLoadingScreen;
+    bool skipUpdateCheck;
 };
 
 extern struct CLIOptions gCLIOpts;

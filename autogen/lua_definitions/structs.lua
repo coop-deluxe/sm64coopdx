@@ -174,6 +174,7 @@
 --- @field public BowlingBallThiSmallSpeed number
 --- @field public BowlingBallTtmSpeed number
 --- @field public ChillBullyDeathPosY number
+--- @field public CourtyardBoosRequirement integer
 --- @field public GrateStarRequirement integer
 --- @field public InfiniteRenderDistance integer
 --- @field public KingBobombFVel number
@@ -592,7 +593,9 @@
 --- @field public centerL boolean
 --- @field public crouch number
 --- @field public enabled boolean
+--- @field public forcePitch boolean
 --- @field public forceRoll boolean
+--- @field public forceYaw boolean
 --- @field public fov number
 --- @field public offset Vec3f
 --- @field public pitch integer
@@ -835,7 +838,10 @@
 --- @class HudUtilsRotation
 --- @field public pivotX number
 --- @field public pivotY number
+--- @field public prevPivotX number
+--- @field public prevPivotY number
 --- @field public rotation number
+--- @field public rotationDiff number
 
 --- @class InstantWarp
 --- @field public area integer
@@ -902,6 +908,8 @@
 --- @field public hudCapTimer integer
 --- @field public hudRedCoinsRadar integer
 --- @field public hudSecretsRadar integer
+--- @field public infiniteStairsRequirement integer
+--- @field public jrbDarkenSkybox integer
 --- @field public maxCoins integer
 --- @field public maxLives integer
 --- @field public metalCapDuration integer
@@ -1069,7 +1077,7 @@
 --- @field public baseVolume number
 --- @field public file ModFile
 --- @field public isStream boolean
---- @field public sampleCopiesTail ModAudioSampleCopies
+--- @field public loaded boolean
 
 --- @class ModAudioSampleCopies
 --- @field public next ModAudioSampleCopies
@@ -2008,7 +2016,6 @@
 --- @class ServerSettings
 --- @field public bouncyLevelBounds BouncyLevelBounds
 --- @field public bubbleDeath integer
---- @field public enableCheats integer
 --- @field public enablePlayerList integer
 --- @field public enablePlayersInLevelDisplay integer
 --- @field public headlessServer integer

@@ -15,7 +15,7 @@ static void djui_panel_dynos_apply(struct DjuiBase* caller) {
     dynos_pack_set_enabled(caller->tag, caller->bTag);
 }
 
-static void djui_panel_dynos_global_player_models(UNUSED struct DjuiBase* caller) {
+static void djui_panel_dynos_local_player_model_only(UNUSED struct DjuiBase* caller) {
     for (s32 i = 0; i < MAX_PLAYERS; i++) {
         network_player_update_model(i);
     }
@@ -32,13 +32,13 @@ static void djui_panel_dynos_refresh(UNUSED struct DjuiBase* base) {
 }
 
 static void djui_panel_dynos_destroy(UNUSED struct DjuiBase* caller) {
-    gInPlayerMenu = false;
+    gDjuiInPlayerMenu = false;
 }
 
 void djui_panel_dynos_create(struct DjuiBase* caller) {
-    gInPlayerMenu = true;
+    gDjuiInPlayerMenu = true;
     int packCount = dynos_pack_get_count();
-    struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(DYNOS, DYNOS));
+    struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(DYNOS, DYNOS), true);
     struct DjuiBase* body = djui_three_panel_get_body(panel);
 
     {
@@ -62,7 +62,7 @@ void djui_panel_dynos_create(struct DjuiBase* caller) {
         djui_base_set_size(&space->base, 0, 32);
         djui_base_set_color(&space->base, 0, 0, 0, 0);
 
-        djui_checkbox_create(body, DLANG(DYNOS, GLOBAL_PLAYER_MODELS), &configGlobalPlayerModels, djui_panel_dynos_global_player_models);
+        djui_checkbox_create(body, DLANG(DYNOS, LOCAL_PLAYER_MODEL_ONLY), &configDynosLocalPlayerModelOnly, djui_panel_dynos_local_player_model_only);
         if (gNetworkType == NT_NONE) {
             struct DjuiRect* rect1 = djui_rect_container_create(body, 64);
             {

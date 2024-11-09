@@ -2,12 +2,12 @@
 #define MOD_H
 
 #include <PR/ultratypes.h>
-#include <types.h>
+#include "types.h"
 #include "pc/platform.h"
 
 #define MOD_NAME_MAX_LENGTH 64
 #define MOD_INCOMPATIBLE_MAX_LENGTH 256
-#define MOD_DESCRIPTION_MAX_LENGTH 700
+#define MOD_DESCRIPTION_MAX_LENGTH 800
 
 struct Mods;
 
@@ -36,6 +36,7 @@ struct Mod {
     bool renderBehindHud;
     bool pausable;
     bool ignoreScriptWarnings;
+    bool showedScriptWarning;
     size_t size;
     u8 customBehaviorIndex;
 };

@@ -2107,15 +2107,15 @@ void render_dialog_entries(void) {
     if (gLastDialogPageStrPos == -1 && gLastDialogResponse == 1) {
         render_dialog_triangle_choice();
     }
-    #ifdef VERSION_EU
-    #undef BORDER_HEIGHT
-    #define BORDER_HEIGHT 8
-    #endif
+#ifdef VERSION_EU
+#undef BORDER_HEIGHT
+#define BORDER_HEIGHT 8
+#endif
     gDPSetScissor(gDisplayListHead++, G_SC_NON_INTERLACE, 2, 2, SCREEN_WIDTH - BORDER_HEIGHT/2, SCREEN_HEIGHT - BORDER_HEIGHT/2);
-    #ifdef VERSION_EU
-    #undef BORDER_HEIGHT
-    #define BORDER_HEIGHT 1
-    #endif
+#ifdef VERSION_EU
+#undef BORDER_HEIGHT
+#define BORDER_HEIGHT 1
+#endif
     if (gLastDialogPageStrPos != -1 && gDialogBoxState == DIALOG_STATE_VERTICAL) {
         render_dialog_string_color(dialog->linesPerBox);
     }
@@ -2810,13 +2810,6 @@ void render_pause_castle_main_strings(s16 x, s16 y) {
     INGAME_TEXT_COPY(textCoin, TEXT_COIN_X);
 #endif
 
-    u8 courseNum = gDialogLineNum + 1;
-    const u8 *courseName = (
-        gDialogLineNum == COURSE_STAGES_COUNT ?
-        ((const u8 **) get_course_name_table())[COURSE_MAX] : // Castle secret stars
-        get_level_name_sm64(courseNum, get_level_num_from_course_num(courseNum), 1, 1)
-    );
-
     u8 strVal[8];
     s16 starNum = gDialogLineNum;
 
@@ -2847,6 +2840,13 @@ void render_pause_castle_main_strings(s16 x, s16 y) {
 
     gSPDisplayList(gDisplayListHead++, dl_ia_text_begin);
     gDPSetEnvColor(gDisplayListHead++, 255, 255, 255, gDialogTextAlpha);
+
+    u8 courseNum = gDialogLineNum + 1;
+    const u8 *courseName = (
+        gDialogLineNum == COURSE_STAGES_COUNT ?
+        ((const u8 **) get_course_name_table())[COURSE_MAX] : // Castle secret stars
+        get_level_name_sm64(courseNum, get_level_num_from_course_num(courseNum), 1, 1)
+    );
 
     if (gDialogLineNum < COURSE_STAGES_COUNT) {
         render_pause_castle_course_stars(x, y, gCurrSaveFileNum - 1, gDialogLineNum);
@@ -3110,18 +3110,26 @@ s16 render_pause_courses_and_castle(void) {
                  || gPlayer1Controller->buttonPressed & START_BUTTON)
 #endif
                 {
-                    level_set_transition(0, NULL);
-                    play_sound(SOUND_MENU_PAUSE_2, gGlobalSoundSource);
-                    gDialogBoxState = DIALOG_STATE_OPENING;
-                    gMenuMode = -1;
-
+                    bool allowExit = true;
                     if (gDialogLineNum == 2 || gDialogLineNum == 3) {
-                        num = gDialogLineNum;
-                    } else {
-                        num = 1;
+                        smlua_call_event_hooks_bool_param_ret_bool(HOOK_ON_PAUSE_EXIT, (gDialogLineNum == 3), &allowExit);
                     }
+                    if (allowExit) {
+                        level_set_transition(0, NULL);
+                        play_sound(SOUND_MENU_PAUSE_2, gGlobalSoundSource);
+                        gDialogBoxState = DIALOG_STATE_OPENING;
+                        gMenuMode = -1;
 
-                    return num;
+                        if (gDialogLineNum == 2 || gDialogLineNum == 3) {
+                            num = gDialogLineNum;
+                        } else {
+                            num = 1;
+                        }
+
+                        return num;
+                    } else {
+                        play_sound(SOUND_MENU_CAMERA_BUZZ | (0xFF << 8), gGlobalSoundSource);
+                    }
                 }
             }
             break;
@@ -3160,7 +3168,7 @@ s16 render_pause_courses_and_castle(void) {
         gDialogTextAlpha += 25;
     }
 
-    if (gDjuiPanelPauseCreated && !gInPlayerMenu) { shade_screen(); }
+    if (gDjuiPanelPauseCreated && !gDjuiInPlayerMenu) { shade_screen(); }
     if (gPlayer1Controller->buttonPressed & R_TRIG) {
         djui_panel_pause_create(NULL);
     }

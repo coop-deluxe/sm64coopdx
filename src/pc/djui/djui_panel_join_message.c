@@ -54,7 +54,7 @@ void djui_panel_join_message_create(struct DjuiBase* caller) {
     // don't recreate panel if it's already visible
     if (gDjuiPanelJoinMessageVisible) { return; }
 
-    struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(JOIN_MESSAGE, JOINING));
+    struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(JOIN_MESSAGE, JOINING), true);
     struct DjuiBase* body = djui_three_panel_get_body(panel);
     {
         snprintf(gDownloadEstimate, 32, " ");

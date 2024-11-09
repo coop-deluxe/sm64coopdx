@@ -3,7 +3,6 @@
 #include "pc/ini.h"
 #include "pc/mods/mods.h"
 #include "pc/mods/mods_utils.h"
-#include "pc/os/os.h"
 #include "player_palette.h"
 
 const struct PlayerPalette DEFAULT_MARIO_PALETTE =
@@ -54,6 +53,39 @@ static u8 read_value(const char* data) {
     return MIN(strtol(data, NULL, 0), 255);
 }
 
+static void player_palettes_sort_characters(void) {
+    struct PresetPalette charPresetPalettes[MAX_PRESET_PALETTES] = { 0 };
+    u8 charPresetPaletteCount = 0;
+
+    // copy character palettes first
+    for (int c = 0; c < CT_MAX; c++) { // heh, c++
+        for (int i = 0; i < gPresetPaletteCount; i++) {
+            if (!strcmp(gPresetPalettes[i].name, gCharacters[c].name)) {
+                charPresetPalettes[charPresetPaletteCount++] = gPresetPalettes[i];
+            }
+        }
+    }
+
+    // copy remaining palettes
+    for (int i = 0; i < gPresetPaletteCount; i++) {
+        bool isCharPalette = false;
+        for (int c = 0; c < CT_MAX; c++) { // heh, c++
+            if (!strcmp(gPresetPalettes[i].name, gCharacters[c].name)) {
+                isCharPalette = true;
+                break;
+            }
+        }
+        if (!isCharPalette) {
+            charPresetPalettes[charPresetPaletteCount++] = gPresetPalettes[i];
+        }
+    }
+
+    // finally, write to gPresetPalettes
+    for (int i = 0; i < gPresetPaletteCount; i++) {
+        gPresetPalettes[i] = charPresetPalettes[i];
+    }
+}
+
 void player_palettes_read(const char* palettesPath, bool appendPalettes) {
     // construct lang path
     char lpath[SYS_MAX_PATH] = "";
@@ -64,17 +96,17 @@ void player_palettes_read(const char* palettesPath, bool appendPalettes) {
     }
 
     // open directory
-    os_dirent* dir = NULL;
+    struct dirent* dir = NULL;
 
-    OS_DIR* d = os_opendir(lpath);
+    DIR* d = opendir(lpath);
     if (!d) { return; }
 
     // iterate
     char path[SYS_MAX_PATH] = { 0 };
-    while ((dir = os_readdir(d)) != NULL) {
+    while ((dir = readdir(d)) != NULL) {
         // sanity check / fill path[]
-        //if (!directory_sanity_check(dir, lpath, path)) { continue; }
-        snprintf(path, SYS_MAX_PATH, "%s", os_get_dir_name(dir));
+        if (!directory_sanity_check(dir, lpath, path)) { continue; }
+        snprintf(path, SYS_MAX_PATH, "%s", dir->d_name);
 
         // strip the name before the .
         char* c = path;
@@ -113,7 +145,12 @@ void player_palettes_read(const char* palettesPath, bool appendPalettes) {
         if (gPresetPaletteCount >= MAX_PRESET_PALETTES) { break; }
     }
 
-    os_closedir(d);
+    closedir(d);
+
+    // this should mean we are in the exe path's palette dir
+    if (appendPalettes) {
+        player_palettes_sort_characters();
+    }
 }
 
 void player_palette_export(char* name) {

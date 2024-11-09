@@ -58,6 +58,8 @@ struct NetworkPlayer {
     u16 rxSeqIds[MAX_RX_SEQ_IDS];
     u32 rxPacketHash[MAX_RX_SEQ_IDS];
 
+    char discordId[64];
+
     // legacy fields to allow mods not to fully break (they don't do anything anymore)
     u8 paletteIndex;
     u8 overridePaletteIndex;
@@ -82,12 +84,12 @@ struct NetworkPlayer* get_network_player_smallest_global(void);
 u8 network_player_get_palette_color_channel(struct NetworkPlayer *np, enum PlayerPart part, u8 index);
 u8 network_player_get_override_palette_color_channel(struct NetworkPlayer *np, enum PlayerPart part, u8 index);
 void network_player_set_override_palette_color(struct NetworkPlayer *np, enum PlayerPart part, Color color);
-void network_player_reset_override_palette_color(struct NetworkPlayer *np);
+void network_player_reset_override_palette(struct NetworkPlayer *np);
 bool network_player_is_override_palette_same(struct NetworkPlayer *np);
 
 void network_player_update(void);
 
-u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex, u8 modelIndex, const struct PlayerPalette* playerPalette, const char* name);
+u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex, u8 modelIndex, const struct PlayerPalette* playerPalette, const char* name, const char* discordId);
 u8 network_player_disconnected(u8 globalIndex);
 void construct_player_popup(struct NetworkPlayer* np, char* msg, const char* level);
 

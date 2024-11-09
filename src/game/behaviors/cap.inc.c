@@ -196,6 +196,8 @@ void bhv_normal_cap_init(void) {
 }
 
 void normal_cap_set_save_flags(void) {
+    if (o->oBehParams - 1 != 0) { return; }
+
     save_file_clear_flags(SAVE_FLAG_CAP_ON_GROUND);
 
     switch (gCurrCourseNum) {
@@ -250,6 +252,8 @@ void bhv_normal_cap_loop(void) {
 
     if (cap_set_hitbox() == 1)
         save_file_clear_flags(SAVE_FLAG_CAP_ON_GROUND);
+
+    obj_set_model(o, gMarioStates[network_local_index_from_global(o->globalPlayerIndex)].character->capModelId);
 }
 
 void bhv_vanish_cap_init(void) {

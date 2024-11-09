@@ -797,6 +797,10 @@ function bhv_ferris_wheel_axle_init()
     -- ...
 end
 
+function bhv_ferris_wheel_platform_init()
+    -- ...
+end
+
 function bhv_ferris_wheel_platform_update()
     -- ...
 end
@@ -2339,6 +2343,41 @@ function vec3f_copy_2(dest, src)
     -- ...
 end
 
+--- @return number
+function draw_distance_scalar()
+    -- ...
+end
+
+--- @param obj Object
+function obj_update_gfx_pos_and_angle(obj)
+    -- ...
+end
+
+--- @return number
+function position_based_random_float_position()
+    -- ...
+end
+
+--- @return integer
+function position_based_random_u16()
+    -- ...
+end
+
+--- @return number
+function random_float()
+    -- ...
+end
+
+--- @return integer
+function random_sign()
+    -- ...
+end
+
+--- @return integer
+function random_u16()
+    -- ...
+end
+
 --- @param id BehaviorId
 --- @return Pointer_BehaviorScript
 function get_behavior_from_id(id)
@@ -2907,6 +2946,10 @@ function shake_camera_yaw(pos, focus)
     -- ...
 end
 
+function skip_camera_interpolation()
+    -- ...
+end
+
 --- @param c Camera
 function soft_reset_camera(c)
     -- ...
@@ -3156,6 +3199,16 @@ function djui_hud_set_rotation(rotation, pivotX, pivotY)
     -- ...
 end
 
+--- @param prevRotation integer
+--- @param prevPivotX number
+--- @param prevPivotY number
+--- @param rotation integer
+--- @param pivotX number
+--- @param pivotY number
+function djui_hud_set_rotation_interpolated(prevRotation, prevPivotX, prevPivotY, rotation, pivotX, pivotY)
+    -- ...
+end
+
 --- @param pos Vec3f
 --- @param out Vec3f
 --- @return boolean
@@ -3313,6 +3366,12 @@ function sound_banks_enable(player, bankMask)
     -- ...
 end
 
+--- @param distance number
+--- @return number
+function sound_get_level_intensity(distance)
+    -- ...
+end
+
 --- @param seqId integer
 function stop_background_music(seqId)
     -- ...
@@ -3435,6 +3494,12 @@ end
 --- @param door Object
 --- @return integer
 function get_door_save_file_flag(door)
+    -- ...
+end
+
+--- @param capObject Object
+--- @return integer
+function get_mario_cap_flag(capObject)
     -- ...
 end
 
@@ -3745,6 +3810,13 @@ end
 --- @param victim MarioState
 --- @return integer
 function passes_pvp_interaction_checks(attacker, victim)
+    -- ...
+end
+
+--- @param m MarioState
+--- @param o Object
+--- @return integer
+function should_push_or_pull_door(m, o)
     -- ...
 end
 
@@ -4961,6 +5033,19 @@ function approach_s32(current, target, inc, dec)
     -- ...
 end
 
+--- @param y number
+--- @param x number
+--- @return integer
+function atan2s(y, x)
+    -- ...
+end
+
+--- @param sm64Angle integer
+--- @return number
+function coss(sm64Angle)
+    -- ...
+end
+
 --- @param dest Vec3f
 --- @param a Vec3f
 --- @param b Vec3f
@@ -4974,6 +5059,34 @@ end
 --- @param objMtx Mat4
 --- @param camMtx Mat4
 function get_pos_from_transform_mtx(dest, objMtx, camMtx)
+    -- ...
+end
+
+--- @param a integer
+--- @param b integer
+--- @return integer
+function max(a, b)
+    -- ...
+end
+
+--- @param a number
+--- @param b number
+--- @return number
+function maxf(a, b)
+    -- ...
+end
+
+--- @param a integer
+--- @param b integer
+--- @return integer
+function min(a, b)
+    -- ...
+end
+
+--- @param a number
+--- @param b number
+--- @return number
+function minf(a, b)
     -- ...
 end
 
@@ -5093,11 +5206,29 @@ function not_zero(value, replacement)
     -- ...
 end
 
+--- @param sm64Angle integer
+--- @return number
+function sins(sm64Angle)
+    -- ...
+end
+
 --- @param m MarioState
 --- @param result Vec4f
 --- @param t number
 --- @param c integer
 function spline_get_weights(m, result, t, c)
+    -- ...
+end
+
+--- @param x integer
+--- @return integer
+function sqr(x)
+    -- ...
+end
+
+--- @param x number
+--- @return number
+function sqrf(x)
     -- ...
 end
 
@@ -5377,7 +5508,7 @@ function network_player_is_override_palette_same(np)
 end
 
 --- @param np NetworkPlayer
-function network_player_reset_override_palette_color(np)
+function network_player_reset_override_palette(np)
     -- ...
 end
 
@@ -5400,6 +5531,12 @@ end
 
 --- @return boolean
 function network_check_singleplayer_pause()
+    -- ...
+end
+
+--- @param localIndex integer
+--- @return string
+function network_discord_id_from_local_index(localIndex)
     -- ...
 end
 
@@ -7360,6 +7497,11 @@ function save_file_do_save(fileIndex, forceSave)
     -- ...
 end
 
+--- @param fileIndex integer
+function save_file_erase(fileIndex)
+    -- ...
+end
+
 function save_file_erase_current_backup_save()
     -- ...
 end
@@ -7456,6 +7598,42 @@ end
 --- @param fileIndex integer
 --- @param courseIndex integer
 function touch_coin_score_age(fileIndex, courseIndex)
+    -- ...
+end
+
+--- @param player integer
+--- @return integer
+function sequence_player_get_tempo(player)
+    -- ...
+end
+
+--- @param player integer
+--- @return integer
+function sequence_player_get_tempo_acc(player)
+    -- ...
+end
+
+--- @param player integer
+--- @return integer
+function sequence_player_get_transposition(player)
+    -- ...
+end
+
+--- @param player integer
+--- @param tempo integer
+function sequence_player_set_tempo(player, tempo)
+    -- ...
+end
+
+--- @param player integer
+--- @param tempoAcc integer
+function sequence_player_set_tempo_acc(player, tempoAcc)
+    -- ...
+end
+
+--- @param player integer
+--- @param transposition integer
+function sequence_player_set_transposition(player, transposition)
     -- ...
 end
 
@@ -7588,255 +7766,6 @@ function smlua_audio_utils_reset_all()
     -- ...
 end
 
---- @param x number
---- @param y number
---- @param z number
---- @return Surface
-function collision_find_ceil(x, y, z)
-    -- ...
-end
-
---- @param x number
---- @param y number
---- @param z number
---- @return Surface
-function collision_find_floor(x, y, z)
-    -- ...
-end
-
---- @param startX number
---- @param startY number
---- @param startZ number
---- @param dirX number
---- @param dirY number
---- @param dirZ number
---- @return RayIntersectionInfo
-function collision_find_surface_on_ray(startX, startY, startZ, dirX, dirY, dirZ)
-    -- ...
-end
-
---- @return WallCollisionData
-function collision_get_temp_wall_collision_data()
-    -- ...
-end
-
---- @return Surface
-function get_water_surface_pseudo_floor()
-    -- ...
-end
-
---- @param name string
---- @return Pointer_Collision
-function smlua_collision_util_get(name)
-    -- ...
-end
-
---- @param audio ModAudio
---- @return number
-function audio_stream_get_tempo(audio)
-    -- ...
-end
-
---- @param url string
---- @return ModAudio
-function audio_stream_load_url(url)
-    -- ...
-end
-
---- @param audio ModAudio
---- @param initial_freq number
---- @param speed number
---- @param pitch boolean
-function audio_stream_set_speed(audio, initial_freq, speed, pitch)
-    -- ...
-end
-
---- @param audio ModAudio
---- @param tempo number
-function audio_stream_set_tempo(audio, tempo)
-    -- ...
-end
-
---- @param enable boolean
-function djui_hud_set_render_behind_hud(enable)
-    -- ...
-end
-
---- @param index integer
---- @return number
-function get_environment_region(index)
-    -- ...
-end
-
---- @param localIndex integer
---- @return string
-function network_discord_id_from_local_index(localIndex)
-    -- ...
-end
-
---- @param np NetworkPlayer
---- @param part PlayerPart
---- @param color Color
-function network_player_color_to_palette(np, part, color)
-    -- ...
-end
-
---- @param np NetworkPlayer
---- @param part PlayerPart
---- @param out Color
-function network_player_palette_to_color(np, part, out)
-    -- ...
-end
-
---- @param index integer
---- @param value integer
-function set_environment_region(index, value)
-    -- ...
-end
-
---- @param levelNum integer
---- @return boolean
-function level_is_vanilla_level(levelNum)
-    -- ...
-end
-
---- @param scriptEntryName string
---- @param courseNum integer
---- @param fullName string
---- @param shortName string
---- @param acousticReach integer
---- @param echoLevel1 integer
---- @param echoLevel2 integer
---- @param echoLevel3 integer
---- @return integer
-function level_register(scriptEntryName, courseNum, fullName, shortName, acousticReach, echoLevel1, echoLevel2, echoLevel3)
-    -- ...
-end
-
---- @param areaIndex integer
-function smlua_level_util_change_area(areaIndex)
-    -- ...
-end
-
---- @param levelNum integer
---- @return CustomLevelInfo
-function smlua_level_util_get_info(levelNum)
-    -- ...
-end
-
---- @param courseNum integer
---- @return CustomLevelInfo
-function smlua_level_util_get_info_from_course_num(courseNum)
-    -- ...
-end
-
---- @param shortName string
---- @return CustomLevelInfo
-function smlua_level_util_get_info_from_short_name(shortName)
-    -- ...
-end
-
---- @param aDelay integer
---- @return boolean
-function warp_exit_level(aDelay)
-    -- ...
-end
-
---- @return boolean
-function warp_restart_level()
-    -- ...
-end
-
---- @param aLevel integer
---- @return boolean
-function warp_to_castle(aLevel)
-    -- ...
-end
-
---- @param aLevel integer
---- @param aArea integer
---- @param aAct integer
---- @return boolean
-function warp_to_level(aLevel, aArea, aAct)
-    -- ...
-end
-
---- @return boolean
-function warp_to_start_level()
-    -- ...
-end
-
---- @param aLevel integer
---- @param aArea integer
---- @param aAct integer
---- @param aWarpId integer
---- @return boolean
-function warp_to_warpnode(aLevel, aArea, aAct, aWarpId)
-    -- ...
-end
-
---- @param a integer
---- @param b integer
---- @param c integer
---- @return integer
-function clamp(a, b, c)
-    -- ...
-end
-
---- @param a number
---- @param b number
---- @param c number
---- @return number
-function clampf(a, b, c)
-    -- ...
-end
-
---- @param a integer
---- @param b integer
---- @return integer
-function max(a, b)
-    -- ...
-end
-
---- @param a number
---- @param b number
---- @return number
-function maxf(a, b)
-    -- ...
-end
-
---- @param a integer
---- @param b integer
---- @return integer
-function min(a, b)
-    -- ...
-end
-
---- @param a number
---- @param b number
---- @return number
-function minf(a, b)
-    -- ...
-end
-
---- @param x integer
---- @return integer
-function sqr(x)
-    -- ...
-end
-
---- @param x number
---- @return number
-function sqrf(x)
-    -- ...
-end
-
---- @param actFlags integer
---- @return integer
-function allocate_mario_action(actFlags)
-    -- ...
-end
-
 --- @param allow integer
 function camera_allow_toxic_gas_camera(allow)
     -- ...
@@ -7947,6 +7876,11 @@ function camera_freeze()
 end
 
 --- @return boolean
+function camera_get_checking_surfaces()
+    -- ...
+end
+
+--- @return boolean
 function camera_is_frozen()
     -- ...
 end
@@ -7965,12 +7899,342 @@ function camera_romhack_allow_dpad_usage(allow)
     -- ...
 end
 
+--- @param value boolean
+function camera_set_checking_surfaces(value)
+    -- ...
+end
+
 --- @param rco RomhackCameraOverride
 function camera_set_romhack_override(rco)
     -- ...
 end
 
 function camera_unfreeze()
+    -- ...
+end
+
+--- @param x number
+--- @param y number
+--- @param z number
+--- @return Surface
+function collision_find_ceil(x, y, z)
+    -- ...
+end
+
+--- @param x number
+--- @param y number
+--- @param z number
+--- @return Surface
+function collision_find_floor(x, y, z)
+    -- ...
+end
+
+--- @return WallCollisionData
+function collision_get_temp_wall_collision_data()
+    -- ...
+end
+
+--- @param wcd WallCollisionData
+--- @param index integer
+--- @return Surface
+function get_surface_from_wcd_index(wcd, index)
+    -- ...
+end
+
+--- @return Surface
+function get_water_surface_pseudo_floor()
+    -- ...
+end
+
+--- @param name string
+--- @return Pointer_Collision
+function smlua_collision_util_get(name)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- @return number
+function audio_stream_get_tempo(audio)
+    -- ...
+end
+
+--- @param url string
+--- @return ModAudio
+function audio_stream_load_url(url)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- @param initial_freq number
+--- @param speed number
+--- @param pitch boolean
+function audio_stream_set_speed(audio, initial_freq, speed, pitch)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- @param tempo number
+function audio_stream_set_tempo(audio, tempo)
+    -- ...
+end
+
+--- @param enable boolean
+function djui_hud_set_render_behind_hud(enable)
+    -- ...
+end
+
+--- @param np NetworkPlayer
+--- @param part PlayerPart
+--- @param color Color
+function network_player_color_to_palette(np, part, color)
+    -- ...
+end
+
+--- @param np NetworkPlayer
+--- @param part PlayerPart
+--- @param out Color
+function network_player_palette_to_color(np, part, out)
+    -- ...
+end
+
+--- @param index integer
+--- @return integer
+function get_fog_color(index)
+    -- ...
+end
+
+--- @return number
+function get_fog_intensity()
+    -- ...
+end
+
+--- @param index integer
+--- @return integer
+function get_lighting_color(index)
+    -- ...
+end
+
+--- @param index integer
+--- @return integer
+function get_lighting_color_ambient(index)
+    -- ...
+end
+
+--- @param index integer
+--- @return number
+function get_lighting_dir(index)
+    -- ...
+end
+
+--- @return integer
+function get_skybox()
+    -- ...
+end
+
+--- @param index integer
+--- @return integer
+function get_skybox_color(index)
+    -- ...
+end
+
+--- @param index integer
+--- @return integer
+function get_vertex_color(index)
+    -- ...
+end
+
+--- @param index integer
+--- @param value integer
+function set_fog_color(index, value)
+    -- ...
+end
+
+--- @param intensity number
+function set_fog_intensity(intensity)
+    -- ...
+end
+
+--- @param index integer
+--- @param value integer
+function set_lighting_color(index, value)
+    -- ...
+end
+
+--- @param index integer
+--- @param value integer
+function set_lighting_color_ambient(index, value)
+    -- ...
+end
+
+--- @param index integer
+--- @param value number
+function set_lighting_dir(index, value)
+    -- ...
+end
+
+--- @param far number
+function set_override_far(far)
+    -- ...
+end
+
+--- @param fov number
+function set_override_fov(fov)
+    -- ...
+end
+
+--- @param near number
+function set_override_near(near)
+    -- ...
+end
+
+--- @param background integer
+function set_override_skybox(background)
+    -- ...
+end
+
+--- @param index integer
+--- @param value integer
+function set_skybox_color(index, value)
+    -- ...
+end
+
+--- @param index integer
+--- @param value integer
+function set_vertex_color(index, value)
+    -- ...
+end
+
+--- @param levelNum integer
+--- @return boolean
+function level_is_vanilla_level(levelNum)
+    -- ...
+end
+
+--- @param scriptEntryName string
+--- @param courseNum integer
+--- @param fullName string
+--- @param shortName string
+--- @param acousticReach integer
+--- @param echoLevel1 integer
+--- @param echoLevel2 integer
+--- @param echoLevel3 integer
+--- @return integer
+function level_register(scriptEntryName, courseNum, fullName, shortName, acousticReach, echoLevel1, echoLevel2, echoLevel3)
+    -- ...
+end
+
+--- @param areaIndex integer
+function smlua_level_util_change_area(areaIndex)
+    -- ...
+end
+
+--- @param levelNum integer
+--- @return CustomLevelInfo
+function smlua_level_util_get_info(levelNum)
+    -- ...
+end
+
+--- @param courseNum integer
+--- @return CustomLevelInfo
+function smlua_level_util_get_info_from_course_num(courseNum)
+    -- ...
+end
+
+--- @param shortName string
+--- @return CustomLevelInfo
+function smlua_level_util_get_info_from_short_name(shortName)
+    -- ...
+end
+
+--- @param aDelay integer
+--- @return boolean
+function warp_exit_level(aDelay)
+    -- ...
+end
+
+--- @return boolean
+function warp_restart_level()
+    -- ...
+end
+
+--- @param aLevel integer
+--- @return boolean
+function warp_to_castle(aLevel)
+    -- ...
+end
+
+--- @param aLevel integer
+--- @param aArea integer
+--- @param aAct integer
+--- @return boolean
+function warp_to_level(aLevel, aArea, aAct)
+    -- ...
+end
+
+--- @return boolean
+function warp_to_start_level()
+    -- ...
+end
+
+--- @param aLevel integer
+--- @param aArea integer
+--- @param aAct integer
+--- @param aWarpId integer
+--- @return boolean
+function warp_to_warpnode(aLevel, aArea, aAct, aWarpId)
+    -- ...
+end
+
+--- @param a integer
+--- @param b integer
+--- @param c integer
+--- @return integer
+function clamp(a, b, c)
+    -- ...
+end
+
+--- @param a number
+--- @param b number
+--- @param c number
+--- @return number
+function clampf(a, b, c)
+    -- ...
+end
+
+--- @param degreesAngle number
+--- @return integer
+function degrees_to_sm64(degreesAngle)
+    -- ...
+end
+
+--- @param a number
+--- @param b number
+--- @return number
+function hypotf(a, b)
+    -- ...
+end
+
+--- @param radiansAngle number
+--- @return integer
+function radians_to_sm64(radiansAngle)
+    -- ...
+end
+
+--- @param sm64Angle integer
+--- @return number
+function sm64_to_degrees(sm64Angle)
+    -- ...
+end
+
+--- @param sm64Angle integer
+--- @return number
+function sm64_to_radians(sm64Angle)
+    -- ...
+end
+
+--- @param actFlags integer
+--- @return integer
+function allocate_mario_action(actFlags)
     -- ...
 end
 
@@ -7987,12 +8251,22 @@ function deref_s32_pointer(pointer)
 end
 
 --- @return boolean
+function djui_attempting_to_open_playerlist()
+    -- ...
+end
+
+--- @return boolean
 function djui_is_playerlist_open()
     -- ...
 end
 
 --- @return boolean
 function djui_is_popup_disabled()
+    -- ...
+end
+
+--- @return DjuiFontType
+function djui_menu_get_font()
     -- ...
 end
 
@@ -8008,6 +8282,12 @@ end
 
 --- @param value boolean
 function djui_set_popup_disabled_override(value)
+    -- ...
+end
+
+--- @param localIndex integer
+--- @return string
+function get_coopnet_id(localIndex)
     -- ...
 end
 
@@ -8042,13 +8322,8 @@ function get_envfx()
 end
 
 --- @param index integer
---- @return integer
-function get_fog_color(index)
-    -- ...
-end
-
 --- @return number
-function get_fog_intensity()
+function get_environment_region(index)
     -- ...
 end
 
@@ -8098,18 +8373,6 @@ function get_last_star_or_key()
     -- ...
 end
 
---- @param index integer
---- @return integer
-function get_lighting_color(index)
-    -- ...
-end
-
---- @param index integer
---- @return number
-function get_lighting_dir(index)
-    -- ...
-end
-
 --- @return string
 function get_local_discord_id()
     -- ...
@@ -8130,11 +8393,6 @@ function get_save_file_modified()
     -- ...
 end
 
---- @return integer
-function get_skybox()
-    -- ...
-end
-
 --- @param initialValue integer
 --- @return Pointer_integer
 function get_temp_s32_pointer(initialValue)
@@ -8148,12 +8406,6 @@ end
 
 --- @return integer
 function get_ttc_speed_setting()
-    -- ...
-end
-
---- @param index integer
---- @return integer
-function get_vertex_color(index)
     -- ...
 end
 
@@ -8283,12 +8535,7 @@ end
 
 --- @param index integer
 --- @param value integer
-function set_fog_color(index, value)
-    -- ...
-end
-
---- @param intensity number
-function set_fog_intensity(intensity)
+function set_environment_region(index, value)
     -- ...
 end
 
@@ -8312,40 +8559,8 @@ function set_last_star_or_key(value)
     -- ...
 end
 
---- @param index integer
---- @param value integer
-function set_lighting_color(index, value)
-    -- ...
-end
-
---- @param index integer
---- @param value number
-function set_lighting_dir(index, value)
-    -- ...
-end
-
 --- @param envfx integer
 function set_override_envfx(envfx)
-    -- ...
-end
-
---- @param far number
-function set_override_far(far)
-    -- ...
-end
-
---- @param fov number
-function set_override_fov(fov)
-    -- ...
-end
-
---- @param near number
-function set_override_near(near)
-    -- ...
-end
-
---- @param background integer
-function set_override_skybox(background)
     -- ...
 end
 
@@ -8356,12 +8571,6 @@ end
 
 --- @param speed integer
 function set_ttc_speed_setting(speed)
-    -- ...
-end
-
---- @param index integer
---- @param value integer
-function set_vertex_color(index, value)
     -- ...
 end
 

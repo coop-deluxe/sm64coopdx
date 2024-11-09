@@ -463,7 +463,7 @@ function mario_update(m)
         network_player_set_override_palette_color(np, CAP, { r = 10, g = 10, b = 40 })
         network_player_set_override_palette_color(np, EMBLEM, network_player_get_palette_color(np, EMBLEM))
     else
-        network_player_reset_override_palette_color(np)
+        network_player_reset_override_palette(np)
     end
 
     -- set metal

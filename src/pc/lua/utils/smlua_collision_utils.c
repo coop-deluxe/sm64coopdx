@@ -157,11 +157,11 @@ struct GlobalObjectCollisionData gGlobalObjectCollisionData = {
     .wooden_signpost_seg3_collision_0302DD80         = (Collision*) wooden_signpost_seg3_collision_0302DD80,
 };
 
-struct RayIntersectionInfo* collision_find_surface_on_ray(f32 startX, f32 startY, f32 startZ, f32 dirX, f32 dirY, f32 dirZ) {
+struct RayIntersectionInfo* collision_find_surface_on_ray(f32 startX, f32 startY, f32 startZ, f32 dirX, f32 dirY, f32 dirZ, f32 precision) {
     static struct RayIntersectionInfo info = { 0 };
     Vec3f orig = { startX, startY, startZ };
     Vec3f dir = { dirX, dirY, dirZ };
-    find_surface_on_ray(orig, dir, &info.surface, info.hitPos, 3.0f);
+    find_surface_on_ray(orig, dir, &info.surface, info.hitPos, precision);
     return &info;
 }
 
@@ -189,4 +189,9 @@ struct WallCollisionData* collision_get_temp_wall_collision_data(void) {
     static struct WallCollisionData sTmpWcd = { 0 };
     memset(&sTmpWcd, 0, sizeof(struct WallCollisionData));
     return &sTmpWcd;
+}
+
+struct Surface* get_surface_from_wcd_index(struct WallCollisionData* wcd, s8 index) {
+    if (index < 0 || index >= 4) { return NULL; }
+    return wcd->walls[index];
 }

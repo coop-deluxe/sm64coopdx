@@ -45,7 +45,7 @@ COOPNET ?= 1
 # Enable docker build workarounds
 DOCKERBUILD ?= 0
 # Sets your optimization level for building.
-# A choose is chosen by default for you.
+# A choice is made by default for you.
 OPT_LEVEL ?= -1
 # Enable compiling with more debug info.
 DEBUG_INFO_LEVEL ?= 2
@@ -59,6 +59,15 @@ HEADLESS ?= 0
 ICON ?= 1
 # Use .app (for macOS)
 USE_APP ?= 1
+# Minimum macOS Version
+# If our arch is arm, set to macOS 14
+ifeq ($(shell arch),arm64)
+  MIN_MACOS_VERSION ?= 14
+else
+  MIN_MACOS_VERSION ?= 10.15
+endif
+# Make some small adjustments for handheld devices
+HANDHELD ?= 0
 
 # Various workarounds for weird toolchains
 NO_BZERO_BCOPY ?= 0
@@ -111,6 +120,10 @@ endif
 
 ifeq ($(HOST_OS),Darwin)
   OSX_BUILD := 1
+
+  ifndef BREW_PREFIX
+    BREW_PREFIX := $(shell brew --prefix)
+  endif
 endif
 
 # MXE overrides
@@ -495,6 +508,8 @@ ifeq ($(DISCORD_SDK),1)
   SRC_DIRS += src/pc/discord
 endif
 
+SRC_DIRS += src/pc/mumble
+
 ULTRA_SRC_DIRS := lib/src lib/src/math lib/asm lib/data
 ULTRA_BIN_DIRS := lib/bin
 
@@ -638,9 +653,9 @@ else ifeq ($(COMPILER),gcc)
   CC      := $(CROSS)gcc
   CXX     := $(CROSS)g++
   ifeq ($(OSX_BUILD),0)
-	EXTRA_CFLAGS += -Wno-unused-result -Wno-format-truncation
+	  EXTRA_CFLAGS += -Wno-unused-result -Wno-format-truncation
   else
-	EXTRA_CFLAGS += -Wno-unused-result
+	  EXTRA_CFLAGS += -Wno-unused-result -mmacosx-version-min=$(MIN_MACOS_VERSION)
   endif
 else ifeq ($(COMPILER),clang)
   CC      := clang
@@ -666,7 +681,12 @@ ifeq ($(WINDOWS_BUILD),1) # fixes compilation in MXE on Linux and WSL
   OBJCOPY := objcopy
   OBJDUMP := $(CROSS)objdump
 else ifeq ($(OSX_BUILD),1)
-  CPP := cpp-9 -P
+  OSX_GCC_VER = $(shell find $(BREW_PREFIX)/bin/gcc* | grep -oE '[[:digit:]]+' | sort -n | uniq | tail -1)
+  # if we couldn't find a gcc ver, default to 9
+  ifeq ($(OSX_GCC_VER),)
+    OSX_GCC_VER = 9
+  endif
+  CPP := cpp-$(OSX_GCC_VER) -P
   OBJDUMP := i686-w64-mingw32-objdump
   OBJCOPY := i686-w64-mingw32-objcopy
 else ifeq ($(TARGET_N64),0) # Linux & other builds
@@ -746,11 +766,17 @@ else ifeq ($(findstring SDL,$(WINDOW_API)),SDL)
   else ifeq ($(TARGET_RPI),1)
     BACKEND_LDFLAGS += -lGLESv2
   else ifeq ($(OSX_BUILD),1)
-    BACKEND_LDFLAGS += -framework OpenGL `pkg-config --libs glew`
-    EXTRA_CPP_FLAGS += -stdlib=libc++ -std=c++0x
+    BACKEND_LDFLAGS += -framework OpenGL `pkg-config --libs glew` -mmacosx-version-min=$(MIN_MACOS_VERSION)
+    EXTRA_CPP_FLAGS += -stdlib=libc++ -std=c++17 -mmacosx-version-min=$(MIN_MACOS_VERSION)
   else
     BACKEND_LDFLAGS += -lGL
    endif
+endif
+
+ifeq ($(WINDOW_API),DUMMY)
+  ifeq ($(WINDOWS_BUILD),1)
+    BACKEND_LDFLAGS += -lole32 -luuid -lshlwapi
+  endif
 endif
 
 ifneq (,$(findstring SDL2,$(AUDIO_API)$(WINDOW_API)$(CONTROLLER_API)))
@@ -785,7 +811,7 @@ ifneq ($(SDL1_USED)$(SDL2_USED),00)
   endif
 
   ifeq ($(WINDOWS_BUILD),1)
-    BACKEND_LDFLAGS += `$(SDLCONFIG) --static-libs` -lsetupapi -luser32 -limm32 -lole32 -loleaut32 -lshell32 -lwinmm -lversion
+    BACKEND_LDFLAGS += `$(SDLCONFIG) --static-libs` -lsetupapi -luser32 -limm32 -lole32 -loleaut32 -lshell32 -lshlwapi -lwinmm -lversion
   else
     BACKEND_LDFLAGS += `$(SDLCONFIG) --libs`
   endif
@@ -963,7 +989,9 @@ endif
 # Prevent a crash with -sopt
 export LANG := C
 
-LDFLAGS += -latomic
+ifeq ($(OSX_BUILD),0)
+  LDFLAGS += -latomic
+endif
 
 #==============================================================================#
 # Extra CC Flags                                                               #
@@ -1023,6 +1051,12 @@ endif
 ifeq ($(ENHANCE_LEVEL_TEXTURES),1)
   CC_CHECK_CFLAGS += -DENHANCE_LEVEL_TEXTURES
   CFLAGS += -DENHANCE_LEVEL_TEXTURES
+endif
+
+# Check for handheld option
+ifeq ($(HANDHELD),1)
+  CC_CHECK_CFLAGS += -DHANDHELD
+  CFLAGS += -DHANDHELD
 endif
 
 # Check for no bzero/bcopy workaround option
@@ -1295,9 +1329,6 @@ $(SOUND_BIN_DIR)/tbl_header: $(SOUND_BIN_DIR)/sound_data.ctl
 $(SOUND_BIN_DIR)/samples_offsets.inc.c: $(SOUND_BIN_DIR)/sound_data.ctl
 	@true
 
-$(SOUND_BIN_DIR)/sequences_offsets.inc.c: $(SOUND_BIN_DIR)/sound_data.ctl
-	@true
-
 $(SOUND_BIN_DIR)/sequences.bin: $(SOUND_BANK_FILES) sound/sequences.json $(SOUND_SEQUENCE_DIRS) $(SOUND_SEQUENCE_FILES) $(ENDIAN_BITWIDTH)
 	@$(PRINT) "$(GREEN)Generating:  $(BLUE)$@ $(NO_COL)\n"
 	$(V)$(PYTHON) $(TOOLS_DIR)/assemble_sound.py --sequences $@ $(SOUND_BIN_DIR)/sequences_header $(SOUND_BIN_DIR)/bank_sets sound/sound_banks/ sound/sequences.json $(SOUND_SEQUENCE_FILES) $(C_DEFINES) $$(cat $(ENDIAN_BITWIDTH))
@@ -1306,6 +1337,9 @@ $(SOUND_BIN_DIR)/bank_sets: $(SOUND_BIN_DIR)/sequences.bin
 	@true
 
 $(SOUND_BIN_DIR)/sequences_header: $(SOUND_BIN_DIR)/sequences.bin
+	@true
+
+$(SOUND_BIN_DIR)/sequences_offsets.inc.c: $(SOUND_BIN_DIR)/sequences.bin
 	@true
 
 $(SOUND_BIN_DIR)/%.m64: $(SOUND_BIN_DIR)/%.o
@@ -1497,6 +1531,13 @@ endif
 APP_DIR = ./sm64coopdx.app
 APP_CONTENTS_DIR = $(APP_DIR)/Contents
 APP_MACOS_DIR = $(APP_CONTENTS_DIR)/MacOS
+APP_RESOURCES_DIR = $(APP_CONTENTS_DIR)/Resources
+
+
+ifeq ($(OSX_BUILD),1)
+  GLEW_LIB := $(shell find $(BREW_PREFIX)/Cellar/glew | grep libGLEW.2.2.0 | sort -n | uniq)
+  SDL2_LIB := $(shell find $(BREW_PREFIX)/Cellar/sdl2 | grep libSDL2- | sort -n | uniq)
+endif
 
 all:
 	@if [ "$(USE_APP)" = "0" ]; then \
@@ -1506,10 +1547,25 @@ all:
 		rm -rf $(APP_DIR); \
 		rm -rf build/us_pc/sm64coopdx.app; \
 		mkdir -p $(APP_MACOS_DIR); \
-		mkdir -p $(APP_CONTENTS_DIR)/Resources; \
+		mkdir -p $(APP_RESOURCES_DIR); \
 		mv build/us_pc/sm64coopdx $(APP_MACOS_DIR)/sm64coopdx; \
-		cp -r build/us_pc/* $(APP_MACOS_DIR); \
-		cp res/icon.icns $(APP_CONTENTS_DIR)/Resources/icon.icns; \
+    cp -r build/us_pc/mods $(APP_RESOURCES_DIR); \
+    cp -r build/us_pc/lang $(APP_RESOURCES_DIR); \
+    cp -r build/us_pc/dynos $(APP_RESOURCES_DIR); \
+    cp -r build/us_pc/palettes $(APP_RESOURCES_DIR); \
+		cp build/us_pc/discord_game_sdk.dylib $(APP_MACOS_DIR); \
+    cp build/us_pc/libdiscord_game_sdk.dylib $(APP_MACOS_DIR); \
+    cp build/us_pc/libcoopnet.dylib $(APP_MACOS_DIR); \
+    cp build/us_pc/libjuice.1.2.2.dylib $(APP_MACOS_DIR); \
+    cp $(SDL2_LIB) $(APP_MACOS_DIR)/libSDL2.dylib; \
+    install_name_tool -change $(BREW_PREFIX)/opt/sdl2/lib/libSDL2-2.0.0.dylib @executable_path/libSDL2.dylib $(APP_MACOS_DIR)/sm64coopdx; > /dev/null 2>&1 \
+		install_name_tool -id @executable_path/libSDL2.dylib $(APP_MACOS_DIR)/libSDL2.dylib; > /dev/null 2>&1 \
+    codesign --force --deep --sign - $(APP_MACOS_DIR)/libSDL2.dylib; \
+    cp $(GLEW_LIB) $(APP_MACOS_DIR)/libGLEW.dylib; \
+    install_name_tool -change $(BREW_PREFIX)/opt/glew/lib/libGLEW.2.2.dylib @executable_path/libGLEW.dylib $(APP_MACOS_DIR)/sm64coopdx; > /dev/null 2>&1 \
+		install_name_tool -id @executable_path/libGLEW.dylib $(APP_MACOS_DIR)/libGLEW.dylib; > /dev/null 2>&1 \
+    codesign --force --deep --sign - $(APP_MACOS_DIR)/libGLEW.dylib; \
+		cp res/icon.icns $(APP_RESOURCES_DIR)/icon.icns; \
 		echo "APPL????" > $(APP_CONTENTS_DIR)/PkgInfo; \
 		echo '<?xml version="1.0" encoding="UTF-8"?>' > $(APP_CONTENTS_DIR)/Info.plist; \
 		echo '<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">' >> $(APP_CONTENTS_DIR)/Info.plist; \

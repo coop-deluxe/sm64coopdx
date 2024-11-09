@@ -4,8 +4,7 @@
 
 /**
  * @file config.h
- * A catch-all file for configuring various bugfixes and other settings
- * (maybe eventually) in SM64
+ * A catch-all file for configuring various bugfixes and other settings in SM64
  */
 
 // Bug Fixes

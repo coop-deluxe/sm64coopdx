@@ -239,7 +239,7 @@ static char* djui_text_render_line_parse_escape(char* c1, char* c2) {
             sSavedR = (r << 4) | r;
             sSavedG = (g << 4) | g;
             sSavedB = (b << 4) | b;
-        } else if (colorPieces == 4) {
+        /*} else if (colorPieces == 4) {
             u32 r = (color >> 12) & 0xF;
             u32 g = (color >> 8) & 0xF;
             u32 b = (color >> 4) & 0xF;
@@ -247,17 +247,17 @@ static char* djui_text_render_line_parse_escape(char* c1, char* c2) {
             sSavedR = (r << 4) | r;
             sSavedG = (g << 4) | g;
             sSavedB = (b << 4) | b;
-            sSavedA = (a << 4) | a;
+            sSavedA = (a << 4) | a;*/
         } else if (colorPieces == 6) {
             sSavedR = ((color >> 16) & 0xFF);
             sSavedG = ((color >>  8) & 0xFF);
             sSavedB = ((color >>  0) & 0xFF);
-        } else if (colorPieces == 8) {
+        }/*else if (colorPieces == 8) {
             sSavedR = ((color >> 24) & 0xFF);
             sSavedG = ((color >> 16) & 0xFF);
             sSavedB = ((color >>  8) & 0xFF);
             sSavedA = ((color >>  0) & 0xFF);
-        }
+        }*/
         gDPSetEnvColor(gDisplayListHead++, sSavedR, sSavedG, sSavedB, sSavedA);
     }
 

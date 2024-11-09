@@ -1,5 +1,4 @@
 -- name: Faster Swimming
--- incompatible:
 -- description: Everyone swims faster.
 
 function mario_before_phys_step(m)

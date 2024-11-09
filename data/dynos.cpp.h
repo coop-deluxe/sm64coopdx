@@ -9,6 +9,7 @@ extern "C" {
 #include "engine/math_util.h"
 #include "game/moving_texture.h"
 #include "pc/djui/djui_console.h"
+#include "pc/fs/fmem.h"
 }
 
 #define FUNCTION_CODE   (u32) 0x434E5546
@@ -95,16 +96,16 @@ public:
 
 public:
     static BinFile *OpenR(const char *aFilename) {
-        FILE *f = fopen(aFilename, "rb");
+        FILE *f = f_open_r(aFilename);
         if (f) {
-            fseek(f, 0, SEEK_END);
+            f_seek(f, 0, SEEK_END);
             BinFile *_BinFile = (BinFile *) calloc(1, sizeof(BinFile));
             _BinFile->mFilename = (const char *) memcpy(calloc(strlen(aFilename) + 1, 1), aFilename, strlen(aFilename));
             _BinFile->mReadOnly = true;
-            _BinFile->Grow(ftell(f));
-            rewind(f);
-            fread(_BinFile->mData, 1, _BinFile->mSize, f);
-            fclose(f);
+            _BinFile->Grow(f_tell(f));
+            f_rewind(f);
+            f_read(_BinFile->mData, 1, _BinFile->mSize, f);
+            f_close(f);
             return _BinFile;
         }
         return NULL;
@@ -744,7 +745,7 @@ void PrintError(const char *aFmt, Args... aArgs) {
     printf(aFmt, aArgs...);
     printf("\r\n");
     fflush(stdout);
-    // PrintConsole(aFmt, CONSOLE_MESSAGE_ERROR, aArgs...);
+    PrintConsole(CONSOLE_MESSAGE_ERROR, aFmt, aArgs...);
 }
 #define PrintDataError(...) { \
     if (aGfxData->mErrorCount == 0) Print("  ERROR!"); \

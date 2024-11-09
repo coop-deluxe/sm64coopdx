@@ -1,4 +1,3 @@
-extern ALIGNED8 const Texture mario_texture_metal[];
 extern ALIGNED8 const Texture mario_texture_metal_shade[];
 extern ALIGNED8 const Texture mario_texture_metal_light[];
 extern ALIGNED8 const Texture mario_texture_yellow_button[];
@@ -19,6 +18,7 @@ extern ALIGNED8 const Texture mario_texture_eyes_down[];
 extern ALIGNED8 const Texture mario_texture_eyes_dead[];
 extern ALIGNED8 const Texture mario_texture_wings_half_1[];
 extern ALIGNED8 const Texture mario_texture_wings_half_2[];
-extern ALIGNED8 const Texture mario_texture_metal_wings_half_1[];
-extern ALIGNED8 const Texture mario_texture_metal_wings_half_2[];
-extern ALIGNED8 const Texture mario_texture_cap_inside[];
+extern ALIGNED8 const Texture mario_texture_metal_wings_half_1_shade[];
+extern ALIGNED8 const Texture mario_texture_metal_wings_half_1_light[];
+extern ALIGNED8 const Texture mario_texture_metal_wings_half_2_shade[];
+extern ALIGNED8 const Texture mario_texture_metal_wings_half_2_light[];

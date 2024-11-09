@@ -18,6 +18,7 @@ static struct DjuiFlowLayout* sModLayout = NULL;
 static struct DjuiThreePanel* sDescriptionPanel = NULL;
 static struct DjuiText* sTooltip = NULL;
 static bool sWarned = false;
+static bool sRomHacks = false;
 
 void djui_panel_host_mods_create(struct DjuiBase* caller);
 
@@ -119,15 +120,16 @@ static void djui_panel_host_mods_destroy(struct DjuiBase* base) {
 }
 
 void djui_panel_host_mods_create(struct DjuiBase* caller) {
-    bool isRomHacks = caller != NULL ? caller->tag != 0 : false;
+    if (caller != NULL) {
+        sRomHacks = caller->tag != 0;
+    }
 
     mods_update_selectable();
     djui_panel_host_mods_description_create();
 
-    struct DjuiThreePanel* panel = djui_panel_menu_create(isRomHacks
-        ? DLANG(HOST_MODS, ROMHACKS)
-        : DLANG(HOST_MODS, MODS)
-    );
+    struct DjuiThreePanel* panel = djui_panel_menu_create(
+        sRomHacks ? DLANG(HOST_MODS, ROMHACKS) : DLANG(HOST_MODS, MODS),
+        true);
 
     struct DjuiBase* body = djui_three_panel_get_body(panel);
     {
@@ -136,7 +138,7 @@ void djui_panel_host_mods_create(struct DjuiBase* caller) {
         struct DjuiBase* layoutBase = &paginated->layout->base;
         for (int i = 0; i < gLocalMods.entryCount; i++) {
             struct Mod* mod = gLocalMods.entries[i];
-            if (isRomHacks != (mod->incompatible && strstr(mod->incompatible, "romhack"))) {
+            if (sRomHacks != (mod->incompatible && strstr(mod->incompatible, "romhack"))) {
                 continue;
             }
             struct DjuiCheckbox* checkbox = djui_checkbox_create(layoutBase, mod->name, &mod->enabled, djui_mod_checkbox_on_value_change);

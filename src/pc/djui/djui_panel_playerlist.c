@@ -11,6 +11,7 @@
 #include "pc/utils/misc.h"
 
 struct DjuiThreePanel* gDjuiPlayerList = NULL;
+bool gAttemptingToOpenPlayerlist = false;
 
 static struct DjuiFlowLayout* djuiRow[MAX_PLAYERS] = { 0 };
 static struct DjuiImage* djuiImages[MAX_PLAYERS] = { 0 };
@@ -82,7 +83,7 @@ void djui_panel_playerlist_on_render_pre(UNUSED struct DjuiBase* base, UNUSED bo
 void djui_panel_playerlist_create(UNUSED struct DjuiBase* caller) {
     f32 bodyHeight = (sPlayerListSize * 32) + (sPlayerListSize - 1) * 4;
 
-    struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(PLAYER_LIST, PLAYERS));
+    struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(PLAYER_LIST, PLAYERS), false);
     djui_three_panel_set_body_size(panel, bodyHeight);
     gDjuiPlayerList = panel;
     panel->base.on_render_pre = djui_panel_playerlist_on_render_pre;

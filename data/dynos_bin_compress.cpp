@@ -17,7 +17,7 @@ static inline void DynOS_Bin_Compress_Init() {
 }
 
 static inline void DynOS_Bin_Compress_Close() {
-    if (sFile) fclose(sFile);
+    if (sFile) f_close(sFile);
     sFile = NULL;
 }
 
@@ -159,14 +159,14 @@ BinFile *DynOS_Bin_Decompress(const SysPath &aFilename) {
 
     // Open input file
     if (!DynOS_Bin_Compress_Check(
-        (sFile = fopen(aFilename.c_str(), "rb")) != NULL,
+        (sFile = f_open_r(aFilename.c_str())) != NULL,
         __FUNCTION__, aFilename.c_str(), "Cannot open file"
     )) return NULL;
 
     // Read magic
     u64 _Magic = 0;
     if (!DynOS_Bin_Compress_Check(
-        fread(&_Magic, sizeof(u64), 1, sFile) == 1,
+        f_read(&_Magic, sizeof(u64), 1, sFile) == 1,
         __FUNCTION__, aFilename.c_str(), "Cannot read magic"
     )) return NULL;
 
@@ -180,20 +180,20 @@ BinFile *DynOS_Bin_Decompress(const SysPath &aFilename) {
 
     // Read expected uncompressed file size
     if (!DynOS_Bin_Compress_Check(
-        fread(&sLengthUncompressed, sizeof(u64), 1, sFile) == 1,
+        f_read(&sLengthUncompressed, sizeof(u64), 1, sFile) == 1,
         __FUNCTION__, aFilename.c_str(), "Cannot read uncompressed file size"
     )) return NULL;
 
     // Retrieve file length
     if (!DynOS_Bin_Compress_Check(
-        fseek(sFile, 0, SEEK_END) == 0,
+        f_seek(sFile, 0, SEEK_END) == 0,
         __FUNCTION__, aFilename.c_str(), "Cannot retrieve file length"
     )) return NULL;
 
     // Check file length
     u64 _LengthHeader = (u64) (sizeof(u64) + sizeof(u64));
     if (!DynOS_Bin_Compress_Check(
-        (sLengthCompressed = (u64) ftell(sFile)) >= _LengthHeader,
+        (sLengthCompressed = (u64) f_tell(sFile)) >= _LengthHeader,
         __FUNCTION__, aFilename.c_str(), "Empty file"
     )) return NULL;
 
@@ -201,11 +201,11 @@ BinFile *DynOS_Bin_Decompress(const SysPath &aFilename) {
     if (!DynOS_Bin_Compress_Check(
         (sBufferCompressed = (u8 *) calloc(sLengthCompressed - _LengthHeader, sizeof(u8))) != NULL,
         __FUNCTION__, aFilename.c_str(), "Cannot allocate memory for decompression"
-    )) return NULL; else fseek(sFile, _LengthHeader, SEEK_SET);
+    )) return NULL; else f_seek(sFile, _LengthHeader, SEEK_SET);
 
     // Read input data
     if (!DynOS_Bin_Compress_Check(
-        fread(sBufferCompressed, sizeof(u8), sLengthCompressed - _LengthHeader, sFile) == sLengthCompressed - _LengthHeader,
+        f_read(sBufferCompressed, sizeof(u8), sLengthCompressed - _LengthHeader, sFile) == sLengthCompressed - _LengthHeader,
         __FUNCTION__, aFilename.c_str(), "Cannot read compressed data"
     )) return NULL; else DynOS_Bin_Compress_Close();
 

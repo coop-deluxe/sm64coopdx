@@ -43,7 +43,7 @@ static void djui_panel_host_player_text_change(struct DjuiBase* caller) {
 }
 
 void djui_panel_host_settings_create(struct DjuiBase* caller) {
-    struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(HOST_SETTINGS, SETTINGS));
+    struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(HOST_SETTINGS, SETTINGS), false);
     struct DjuiBase* body = djui_three_panel_get_body(panel);
     {
         char* iChoices[3] = { DLANG(HOST_SETTINGS, NONSOLID), DLANG(HOST_SETTINGS, SOLID), DLANG(HOST_SETTINGS, FRIENDLY_FIRE) };

@@ -12,17 +12,10 @@
 
 // moved these from sdl controller implementations
 
-int mouse_x;
-int mouse_y;
-
-int mouse_window_buttons;
-int mouse_window_x;
-int mouse_window_y;
-
 static struct ControllerAPI *controller_implementations[] = {
-    #if defined(CAPI_SDL2) || defined(CAPI_SDL1)
+#if defined(CAPI_SDL2) || defined(CAPI_SDL1)
     &controller_sdl,
-    #endif
+#endif
     &controller_keyboard,
 };
 

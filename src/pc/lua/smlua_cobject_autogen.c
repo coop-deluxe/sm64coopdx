@@ -12,6 +12,7 @@
 #include "src/game/mario_step.h"
 #include "src/pc/lua/utils/smlua_anim_utils.h"
 #include "src/pc/lua/utils/smlua_misc_utils.h"
+#include "src/pc/lua/utils/smlua_camera_utils.h"
 #include "src/pc/lua/utils/smlua_collision_utils.h"
 #include "src/pc/lua/utils/smlua_level_utils.h"
 #include "src/game/spawn_sound.h"
@@ -210,7 +211,7 @@ static struct LuaObjectField sBehaviorTrajectoriesFields[LUA_BEHAVIOR_TRAJECTORI
     { "UnagiTrajectory",               LVT_TRAJECTORY_P, offsetof(struct BehaviorTrajectories, UnagiTrajectory),               false, LOT_POINTER },
 };
 
-#define LUA_BEHAVIOR_VALUES_FIELD_COUNT 31
+#define LUA_BEHAVIOR_VALUES_FIELD_COUNT 32
 static struct LuaObjectField sBehaviorValuesFields[LUA_BEHAVIOR_VALUES_FIELD_COUNT] = {
     { "BowlingBallBob2Speed",     LVT_F32,     offsetof(struct BehaviorValues, BowlingBallBob2Speed),     false, LOT_NONE                 },
     { "BowlingBallBobSpeed",      LVT_F32,     offsetof(struct BehaviorValues, BowlingBallBobSpeed),      false, LOT_NONE                 },
@@ -218,6 +219,7 @@ static struct LuaObjectField sBehaviorValuesFields[LUA_BEHAVIOR_VALUES_FIELD_COU
     { "BowlingBallThiSmallSpeed", LVT_F32,     offsetof(struct BehaviorValues, BowlingBallThiSmallSpeed), false, LOT_NONE                 },
     { "BowlingBallTtmSpeed",      LVT_F32,     offsetof(struct BehaviorValues, BowlingBallTtmSpeed),      false, LOT_NONE                 },
     { "ChillBullyDeathPosY",      LVT_F32,     offsetof(struct BehaviorValues, ChillBullyDeathPosY),      false, LOT_NONE                 },
+    { "CourtyardBoosRequirement", LVT_S16,     offsetof(struct BehaviorValues, CourtyardBoosRequirement), false, LOT_NONE                 },
     { "GrateStarRequirement",     LVT_U16,     offsetof(struct BehaviorValues, GrateStarRequirement),     false, LOT_NONE                 },
     { "InfiniteRenderDistance",   LVT_U8,      offsetof(struct BehaviorValues, InfiniteRenderDistance),   false, LOT_NONE                 },
     { "KingBobombFVel",           LVT_F32,     offsetof(struct BehaviorValues, KingBobombFVel),           false, LOT_NONE                 },
@@ -674,16 +676,18 @@ static struct LuaObjectField sDjuiColorFields[LUA_DJUI_COLOR_FIELD_COUNT] = {
     { "r", LVT_U8, offsetof(struct DjuiColor, r), false, LOT_NONE },
 };
 
-#define LUA_FIRST_PERSON_CAMERA_FIELD_COUNT 8
+#define LUA_FIRST_PERSON_CAMERA_FIELD_COUNT 10
 static struct LuaObjectField sFirstPersonCameraFields[LUA_FIRST_PERSON_CAMERA_FIELD_COUNT] = {
-    { "centerL",   LVT_BOOL,    offsetof(struct FirstPersonCamera, centerL),   false, LOT_NONE  },
-    { "crouch",    LVT_F32,     offsetof(struct FirstPersonCamera, crouch),    false, LOT_NONE  },
-    { "enabled",   LVT_BOOL,    offsetof(struct FirstPersonCamera, enabled),   true,  LOT_NONE  },
-    { "forceRoll", LVT_BOOL,    offsetof(struct FirstPersonCamera, forceRoll), false, LOT_NONE  },
-    { "fov",       LVT_F32,     offsetof(struct FirstPersonCamera, fov),       false, LOT_NONE  },
-    { "offset",    LVT_COBJECT, offsetof(struct FirstPersonCamera, offset),    true,  LOT_VEC3F },
-    { "pitch",     LVT_S16,     offsetof(struct FirstPersonCamera, pitch),     false, LOT_NONE  },
-    { "yaw",       LVT_S16,     offsetof(struct FirstPersonCamera, yaw),       false, LOT_NONE  },
+    { "centerL",    LVT_BOOL,    offsetof(struct FirstPersonCamera, centerL),    false, LOT_NONE  },
+    { "crouch",     LVT_F32,     offsetof(struct FirstPersonCamera, crouch),     false, LOT_NONE  },
+    { "enabled",    LVT_BOOL,    offsetof(struct FirstPersonCamera, enabled),    true,  LOT_NONE  },
+    { "forcePitch", LVT_BOOL,    offsetof(struct FirstPersonCamera, forcePitch), false, LOT_NONE  },
+    { "forceRoll",  LVT_BOOL,    offsetof(struct FirstPersonCamera, forceRoll),  false, LOT_NONE  },
+    { "forceYaw",   LVT_BOOL,    offsetof(struct FirstPersonCamera, forceYaw),   false, LOT_NONE  },
+    { "fov",        LVT_F32,     offsetof(struct FirstPersonCamera, fov),        false, LOT_NONE  },
+    { "offset",     LVT_COBJECT, offsetof(struct FirstPersonCamera, offset),     true,  LOT_VEC3F },
+    { "pitch",      LVT_S16,     offsetof(struct FirstPersonCamera, pitch),      false, LOT_NONE  },
+    { "yaw",        LVT_S16,     offsetof(struct FirstPersonCamera, yaw),        false, LOT_NONE  },
 };
 
 #define LUA_FLOOR_GEOMETRY_FIELD_COUNT 4
@@ -939,11 +943,14 @@ static struct LuaObjectField sHandheldShakePointFields[LUA_HANDHELD_SHAKE_POINT_
     { "point", LVT_COBJECT, offsetof(struct HandheldShakePoint, point), true,  LOT_VEC3S },
 };
 
-#define LUA_HUD_UTILS_ROTATION_FIELD_COUNT 3
+#define LUA_HUD_UTILS_ROTATION_FIELD_COUNT 6
 static struct LuaObjectField sHudUtilsRotationFields[LUA_HUD_UTILS_ROTATION_FIELD_COUNT] = {
-    { "pivotX",   LVT_F32, offsetof(struct HudUtilsRotation, pivotX),   false, LOT_NONE },
-    { "pivotY",   LVT_F32, offsetof(struct HudUtilsRotation, pivotY),   false, LOT_NONE },
-    { "rotation", LVT_F32, offsetof(struct HudUtilsRotation, rotation), false, LOT_NONE },
+    { "pivotX",       LVT_F32, offsetof(struct HudUtilsRotation, pivotX),       false, LOT_NONE },
+    { "pivotY",       LVT_F32, offsetof(struct HudUtilsRotation, pivotY),       false, LOT_NONE },
+    { "prevPivotX",   LVT_F32, offsetof(struct HudUtilsRotation, prevPivotX),   false, LOT_NONE },
+    { "prevPivotY",   LVT_F32, offsetof(struct HudUtilsRotation, prevPivotY),   false, LOT_NONE },
+    { "rotation",     LVT_F32, offsetof(struct HudUtilsRotation, rotation),     false, LOT_NONE },
+    { "rotationDiff", LVT_F32, offsetof(struct HudUtilsRotation, rotationDiff), false, LOT_NONE },
 };
 
 #define LUA_INSTANT_WARP_FIELD_COUNT 3
@@ -995,7 +1002,7 @@ static struct LuaObjectField sLakituStateFields[LUA_LAKITU_STATE_FIELD_COUNT] = 
     { "yaw",                              LVT_S16,     offsetof(struct LakituState, yaw),                              false, LOT_NONE  },
 };
 
-#define LUA_LEVEL_VALUES_FIELD_COUNT 49
+#define LUA_LEVEL_VALUES_FIELD_COUNT 51
 static struct LuaObjectField sLevelValuesFields[LUA_LEVEL_VALUES_FIELD_COUNT] = {
     { "bubbleOnDeathBarrierInCapStages",  LVT_U8,      offsetof(struct LevelValues, bubbleOnDeathBarrierInCapStages),  false, LOT_NONE          },
     { "cellHeightLimit",                  LVT_S16,     offsetof(struct LevelValues, cellHeightLimit),                  false, LOT_NONE          },
@@ -1019,6 +1026,8 @@ static struct LuaObjectField sLevelValuesFields[LUA_LEVEL_VALUES_FIELD_COUNT] = 
     { "hudCapTimer",                      LVT_U8,      offsetof(struct LevelValues, hudCapTimer),                      false, LOT_NONE          },
     { "hudRedCoinsRadar",                 LVT_U8,      offsetof(struct LevelValues, hudRedCoinsRadar),                 false, LOT_NONE          },
     { "hudSecretsRadar",                  LVT_U8,      offsetof(struct LevelValues, hudSecretsRadar),                  false, LOT_NONE          },
+    { "infiniteStairsRequirement",        LVT_S16,     offsetof(struct LevelValues, infiniteStairsRequirement),        false, LOT_NONE          },
+    { "jrbDarkenSkybox",                  LVT_U8,      offsetof(struct LevelValues, jrbDarkenSkybox),                  false, LOT_NONE          },
     { "maxCoins",                         LVT_U16,     offsetof(struct LevelValues, maxCoins),                         false, LOT_NONE          },
     { "maxLives",                         LVT_U16,     offsetof(struct LevelValues, maxLives),                         false, LOT_NONE          },
     { "metalCapDuration",                 LVT_U16,     offsetof(struct LevelValues, metalCapDuration),                 false, LOT_NONE          },
@@ -1199,19 +1208,19 @@ static struct LuaObjectField sModFields[LUA_MOD_FIELD_COUNT] = {
 
 #define LUA_MOD_AUDIO_FIELD_COUNT 4
 static struct LuaObjectField sModAudioFields[LUA_MOD_AUDIO_FIELD_COUNT] = {
-    { "baseVolume",       LVT_F32,       offsetof(struct ModAudio, baseVolume),       false, LOT_NONE                 },
-    { "file",             LVT_COBJECT_P, offsetof(struct ModAudio, file),             false, LOT_MODFILE              },
-    { "isStream",         LVT_BOOL,      offsetof(struct ModAudio, isStream),         false, LOT_NONE                 },
-    { "sampleCopiesTail", LVT_COBJECT_P, offsetof(struct ModAudio, sampleCopiesTail), false, LOT_MODAUDIOSAMPLECOPIES },
-//  { "sound",            LVT_???,       offsetof(struct ModAudio, sound),            false, LOT_???                  }, <--- UNIMPLEMENTED
+    { "baseVolume", LVT_F32,       offsetof(struct ModAudio, baseVolume), false, LOT_NONE    },
+    { "file",       LVT_COBJECT_P, offsetof(struct ModAudio, file),       false, LOT_MODFILE },
+    { "isStream",   LVT_BOOL,      offsetof(struct ModAudio, isStream),   true,  LOT_NONE    },
+    { "loaded",     LVT_BOOL,      offsetof(struct ModAudio, loaded),     true,  LOT_NONE    },
 };
 
 #define LUA_MOD_AUDIO_SAMPLE_COPIES_FIELD_COUNT 3
 static struct LuaObjectField sModAudioSampleCopiesFields[LUA_MOD_AUDIO_SAMPLE_COPIES_FIELD_COUNT] = {
-    { "next",   LVT_COBJECT_P, offsetof(struct ModAudioSampleCopies, next),   false, LOT_MODAUDIOSAMPLECOPIES },
-    { "parent", LVT_COBJECT_P, offsetof(struct ModAudioSampleCopies, parent), false, LOT_MODAUDIO             },
-    { "prev",   LVT_COBJECT_P, offsetof(struct ModAudioSampleCopies, prev),   false, LOT_MODAUDIOSAMPLECOPIES },
-//  { "sound",  LVT_???,       offsetof(struct ModAudioSampleCopies, sound),  false, LOT_???                  }, <--- UNIMPLEMENTED
+//  { "decoder", LVT_???,       offsetof(struct ModAudioSampleCopies, decoder), false, LOT_???                  }, <--- UNIMPLEMENTED
+    { "next",    LVT_COBJECT_P, offsetof(struct ModAudioSampleCopies, next),    false, LOT_MODAUDIOSAMPLECOPIES },
+    { "parent",  LVT_COBJECT_P, offsetof(struct ModAudioSampleCopies, parent),  false, LOT_MODAUDIO             },
+    { "prev",    LVT_COBJECT_P, offsetof(struct ModAudioSampleCopies, prev),    false, LOT_MODAUDIOSAMPLECOPIES },
+//  { "sound",   LVT_???,       offsetof(struct ModAudioSampleCopies, sound),   false, LOT_???                  }, <--- UNIMPLEMENTED
 };
 
 #define LUA_MOD_FILE_FIELD_COUNT 3
@@ -2206,11 +2215,10 @@ static struct LuaObjectField sRayIntersectionInfoFields[LUA_RAY_INTERSECTION_INF
     { "surface", LVT_COBJECT_P, offsetof(struct RayIntersectionInfo, surface), false, LOT_SURFACE },
 };
 
-#define LUA_SERVER_SETTINGS_FIELD_COUNT 13
+#define LUA_SERVER_SETTINGS_FIELD_COUNT 12
 static struct LuaObjectField sServerSettingsFields[LUA_SERVER_SETTINGS_FIELD_COUNT] = {
     { "bouncyLevelBounds",           LVT_S32, offsetof(struct ServerSettings, bouncyLevelBounds),           false, LOT_NONE },
     { "bubbleDeath",                 LVT_U8,  offsetof(struct ServerSettings, bubbleDeath),                 false, LOT_NONE },
-    { "enableCheats",                LVT_U8,  offsetof(struct ServerSettings, enableCheats),                false, LOT_NONE },
     { "enablePlayerList",            LVT_U8,  offsetof(struct ServerSettings, enablePlayerList),            false, LOT_NONE },
     { "enablePlayersInLevelDisplay", LVT_U8,  offsetof(struct ServerSettings, enablePlayersInLevelDisplay), false, LOT_NONE },
     { "headlessServer",              LVT_U8,  offsetof(struct ServerSettings, headlessServer),              false, LOT_NONE },
