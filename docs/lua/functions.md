@@ -748,6 +748,7 @@
    - [djui_hud_get_color](functions-3.md#djui_hud_get_color)
    - [djui_hud_get_filter](functions-3.md#djui_hud_get_filter)
    - [djui_hud_get_font](functions-3.md#djui_hud_get_font)
+   - [djui_hud_get_fov_coeff](functions-3.md#djui_hud_get_fov_coeff)
    - [djui_hud_get_mouse_x](functions-3.md#djui_hud_get_mouse_x)
    - [djui_hud_get_mouse_y](functions-3.md#djui_hud_get_mouse_y)
    - [djui_hud_get_raw_mouse_x](functions-3.md#djui_hud_get_raw_mouse_x)
@@ -772,6 +773,7 @@
    - [djui_hud_set_rotation_interpolated](functions-3.md#djui_hud_set_rotation_interpolated)
    - [djui_hud_world_pos_to_screen_pos](functions-3.md#djui_hud_world_pos_to_screen_pos)
    - [djui_open_pause_menu](functions-3.md#djui_open_pause_menu)
+   - [get_current_fov](functions-3.md#get_current_fov)
 
 <br />
 
@@ -1215,6 +1217,7 @@
    - [network_player_is_override_palette_same](functions-4.md#network_player_is_override_palette_same)
    - [network_player_reset_override_palette](functions-4.md#network_player_reset_override_palette)
    - [network_player_set_description](functions-4.md#network_player_set_description)
+   - [network_player_set_override_location](functions-4.md#network_player_set_override_location)
    - [network_player_set_override_palette_color](functions-4.md#network_player_set_override_palette_color)
 
 <br />

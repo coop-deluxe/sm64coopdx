@@ -3071,6 +3071,11 @@ function djui_hud_get_font()
 end
 
 --- @return number
+function djui_hud_get_fov_coeff()
+    -- ...
+end
+
+--- @return number
 function djui_hud_get_mouse_x()
     -- ...
 end
@@ -3217,6 +3222,11 @@ function djui_hud_world_pos_to_screen_pos(pos, out)
 end
 
 function djui_open_pause_menu()
+    -- ...
+end
+
+--- @return number
+function get_current_fov()
     -- ...
 end
 
@@ -5519,6 +5529,12 @@ end
 --- @param b integer
 --- @param a integer
 function network_player_set_description(np, description, r, g, b, a)
+    -- ...
+end
+
+--- @param np NetworkPlayer
+--- @param location string
+function network_player_set_override_location(np, location)
     -- ...
 end
 

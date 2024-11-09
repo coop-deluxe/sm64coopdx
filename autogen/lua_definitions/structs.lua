@@ -537,6 +537,7 @@
 --- @class Controller
 --- @field public buttonDown integer
 --- @field public buttonPressed integer
+--- @field public buttonReleased integer
 --- @field public extStickX integer
 --- @field public extStickY integer
 --- @field public port integer
@@ -1125,6 +1126,7 @@
 --- @field public modelIndex integer
 --- @field public name string
 --- @field public onRxSeqId integer
+--- @field public overrideLocation string
 --- @field public overrideModelIndex integer
 --- @field public overridePalette PlayerPalette
 --- @field public overridePaletteIndex integer

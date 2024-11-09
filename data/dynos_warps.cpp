@@ -176,6 +176,7 @@ static void *DynOS_Warp_UpdateWarp(void *aCmd, bool aIsLevelInitDone) {
         gMarioState->numCoins = 0;
         gMarioState->input = 0;
         gMarioState->controller->buttonPressed = 0;
+        gMarioState->controller->buttonReleased = 0;
         gHudDisplay.coins = 0;
 
         // Set up new level values
@@ -337,6 +338,7 @@ static void *DynOS_Warp_UpdateExit(void *aCmd, bool aIsLevelInitDone) {
         gMarioState->numCoins = 0;
         gMarioState->input = 0;
         gMarioState->controller->buttonPressed = 0;
+        gMarioState->controller->buttonReleased = 0;
         gHudDisplay.coins = 0;
 
         // Set up new level values

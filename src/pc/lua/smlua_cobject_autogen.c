@@ -604,10 +604,11 @@ static struct LuaObjectField sCharacterFields[LUA_CHARACTER_FIELD_COUNT] = {
     { "type",                               LVT_S32,      offsetof(struct Character, type),                               true, LOT_NONE        },
 };
 
-#define LUA_CONTROLLER_FIELD_COUNT 10
+#define LUA_CONTROLLER_FIELD_COUNT 11
 static struct LuaObjectField sControllerFields[LUA_CONTROLLER_FIELD_COUNT] = {
     { "buttonDown",     LVT_U16, offsetof(struct Controller, buttonDown),     false, LOT_NONE },
     { "buttonPressed",  LVT_U16, offsetof(struct Controller, buttonPressed),  false, LOT_NONE },
+    { "buttonReleased", LVT_U16, offsetof(struct Controller, buttonReleased), false, LOT_NONE },
 //  { "controllerData", LVT_???, offsetof(struct Controller, controllerData), true,  LOT_???  }, <--- UNIMPLEMENTED
     { "extStickX",      LVT_S16, offsetof(struct Controller, extStickX),      false, LOT_NONE },
     { "extStickY",      LVT_S16, offsetof(struct Controller, extStickY),      false, LOT_NONE },
@@ -1249,7 +1250,7 @@ static struct LuaObjectField sNametagsSettingsFields[LUA_NAMETAGS_SETTINGS_FIELD
     { "showSelfTag", LVT_BOOL, offsetof(struct NametagsSettings, showSelfTag), false, LOT_NONE },
 };
 
-#define LUA_NETWORK_PLAYER_FIELD_COUNT 31
+#define LUA_NETWORK_PLAYER_FIELD_COUNT 32
 static struct LuaObjectField sNetworkPlayerFields[LUA_NETWORK_PLAYER_FIELD_COUNT] = {
     { "connected",              LVT_BOOL,    offsetof(struct NetworkPlayer, connected),              true,  LOT_NONE          },
     { "currActNum",             LVT_S16,     offsetof(struct NetworkPlayer, currActNum),             true,  LOT_NONE          },
@@ -1274,6 +1275,7 @@ static struct LuaObjectField sNetworkPlayerFields[LUA_NETWORK_PLAYER_FIELD_COUNT
     { "modelIndex",             LVT_U8,      offsetof(struct NetworkPlayer, modelIndex),             true,  LOT_NONE          },
     { "name",                   LVT_STRING,  offsetof(struct NetworkPlayer, name),                   true,  LOT_NONE          },
     { "onRxSeqId",              LVT_U8,      offsetof(struct NetworkPlayer, onRxSeqId),              true,  LOT_NONE          },
+    { "overrideLocation",       LVT_STRING,  offsetof(struct NetworkPlayer, overrideLocation),       true,  LOT_NONE          },
     { "overrideModelIndex",     LVT_U8,      offsetof(struct NetworkPlayer, overrideModelIndex),     false, LOT_NONE          },
     { "overridePalette",        LVT_COBJECT, offsetof(struct NetworkPlayer, overridePalette),        false, LOT_PLAYERPALETTE },
     { "overridePaletteIndex",   LVT_U8,      offsetof(struct NetworkPlayer, overridePaletteIndex),   false, LOT_NONE          },
