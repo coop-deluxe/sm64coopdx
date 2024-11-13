@@ -12337,6 +12337,22 @@ void mode_rom_hack_camera(struct Camera *c) {
     pos[1] = mPos[1] + desiredHeight;
     pos[2] = mPos[2] + sins(sRomHackYaw) * desiredDist;
 
+    // Move camera down for hangable ceilings
+    if (sMarioCamState->action & ACT_FLAG_HANGING) {
+        f32 marioCeilHeight = sMarioGeometry.currCeilHeight;
+        f32 marioFloorHeight = sMarioGeometry.currFloorHeight;
+
+        if (marioFloorHeight < marioCeilHeight - 400.f) {
+            marioFloorHeight = marioCeilHeight - 400.f;
+        }
+
+        f32 goalHeight = marioFloorHeight + (marioCeilHeight - marioFloorHeight) * 0.4f;
+
+        if (pos[1] - 400 > goalHeight) {
+            pos[1] -= 400;
+        }
+    }
+
     if (rom_hack_cam_can_see_mario(pos)) {
         // we can see mario, no need to adjust
         c->pos[0] = pos[0];

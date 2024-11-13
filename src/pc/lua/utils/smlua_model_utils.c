@@ -53,7 +53,7 @@
 #include "levels/ttm/header.h"
 
 #include "smlua_model_utils.h"
-#include "pc/debuglog.h"
+#include "pc/lua/smlua.h"
 
 struct ModelUtilsInfo {
     enum ModelExtendedId extId;
@@ -463,8 +463,8 @@ struct ModelUtilsInfo sModels[E_MODEL_MAX] = {
 };
 
 #define MAX_CUSTOM_MODELS 256
-struct ModelUtilsInfo sCustomModels[MAX_CUSTOM_MODELS] = { 0 };
 static u16 sCustomModelsCount = 0;
+struct ModelUtilsInfo sCustomModels[MAX_CUSTOM_MODELS] = { 0 };
 
 void smlua_model_util_clear(void) {
     sCustomModelsCount = 0;
@@ -497,7 +497,7 @@ enum ModelExtendedId smlua_model_util_get_id(const char* name) {
     // find geolayout
     const void* asset = dynos_geolayout_get(name);
     if (asset == NULL) {
-        LOG_ERROR("Failed to find model: %s - %u", name, E_MODEL_ERROR_MODEL);
+        LOG_LUA_LINE("Could not find model: '%s'", name);
         return E_MODEL_ERROR_MODEL;
     }
 
@@ -515,6 +515,11 @@ enum ModelExtendedId smlua_model_util_get_id(const char* name) {
         if (m->asset == asset) {
             return m->extId;
         }
+    }
+
+    if (sCustomModelsCount >= MAX_CUSTOM_MODELS) {
+        LOG_LUA("Failed to get model: '%s' (too many custom models!)", name);
+        return E_MODEL_ERROR_MODEL;
     }
 
     // allocate custom model

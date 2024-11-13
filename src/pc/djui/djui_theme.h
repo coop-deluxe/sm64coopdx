@@ -1,8 +1,8 @@
 #pragma once
 #include "djui.h"
 
-#define DJUI_THEME_CENTERED_WIDTH 1.25f
-#define DJUI_THEME_CENTERED_HEIGHT 0.88f
+#define DJUI_THEME_CENTERED_WIDTH 1.3f
+#define DJUI_THEME_CENTERED_HEIGHT 0.9f
 
 enum DjuiThemeType {
     DJUI_THEME_LIGHT,
