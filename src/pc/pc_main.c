@@ -351,6 +351,7 @@ void* main_game_init(UNUSED void* dummy) {
     audio_init();
     sound_init();
     network_player_init();
+    mumble_init();
 
     gGameInited = true;
 }
@@ -464,8 +465,6 @@ int main(int argc, char *argv[]) {
     } else {
         network_init(NT_NONE, false);
     }
-
-    mumble_init();
 
     // main loop
     while (true) {
