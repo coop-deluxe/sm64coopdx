@@ -768,14 +768,6 @@ static float gfx_adjust_x_for_aspect_ratio(float x) {
 }
 
 static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, const Vtx *vertices, bool luaVertexColor) {
-    float globalLightCached[2][3];
-    if (rsp.geometry_mode & G_LIGHTING) {
-        for (int i = 0; i < 2; i++) {
-            for (int j = 0; j < 3; j++)
-                globalLightCached[i][j] = gLightingColor[i][j] / 255.0f;
-        }
-    }
-
 #ifdef __SSE__
     __m128 mat0 = _mm_load_ps(rsp.MP_matrix[0]);
     __m128 mat1 = _mm_load_ps(rsp.MP_matrix[1]);
@@ -811,6 +803,11 @@ static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, cons
         short V = v->tc[1] * rsp.texture_scaling_factor.t >> 16;
 
         if (rsp.geometry_mode & G_LIGHTING) {
+            float globalLightCached[2][3] = {
+                {gLightingColor[0][0] / 255.0f, gLightingColor[0][1] / 255.0f, gLightingColor[0][2] / 255.0f},
+                {gLightingColor[1][0] / 255.0f, gLightingColor[1][1] / 255.0f, gLightingColor[1][2] / 255.0f},
+            };
+
             if (rsp.lights_changed) {
                 bool applyLightingDir = !(rsp.geometry_mode & G_TEXTURE_GEN);
                 for (int32_t i = 0; i < rsp.current_num_lights - 1; i++) {
