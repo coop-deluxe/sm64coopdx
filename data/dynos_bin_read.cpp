@@ -36,14 +36,18 @@ char *DynOS_Read_Buffer(FILE* aFile, GfxData* aGfxData) {
         aGfxData->mModelIdentifier = (u32) _Length;
     }
 
-    // Remove comments
+    char *_OrigFileBuffer = New<char>(_Length + 1);
+    char *pOrigFileBuffer = _OrigFileBuffer;
     rewind(aFile);
+    _OrigFileBuffer[fread(_OrigFileBuffer, 1, _Length, aFile)] = 0;
+
+    // Remove comments
     char *_FileBuffer = New<char>(_Length + 1);
     char *pFileBuffer = _FileBuffer;
     char _Previous = 0;
     char _Current = 0;
     s32 _CommentType = 0;
-    while (fread(&_Current, 1, 1, aFile)) {
+    while ((_Current = *pOrigFileBuffer++)) {
         if (_CommentType == COMMENT_NONE) {
             if (_Current == '/') {
                 _CommentType = COMMENT_START;
@@ -79,6 +83,7 @@ char *DynOS_Read_Buffer(FILE* aFile, GfxData* aGfxData) {
         _Previous = _Current;
     }
     *(pFileBuffer++) = 0;
+    Delete(_OrigFileBuffer);
 
     // Remove ifdef blocks
     // Doesn't support nested blocks
