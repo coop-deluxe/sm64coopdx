@@ -908,20 +908,21 @@ void pan_ahead_of_player(struct Camera *c) {
 }
 
 s16 find_in_bounds_yaw_wdw_bob_thi(UNUSED Vec3f pos, UNUSED Vec3f origin, s16 yaw) {
-    // switch (gCurrLevelArea) {
-    //     case AREA_WDW_MAIN:
-    //         yaw = clamp_positions_and_find_yaw(pos, origin, 4508.f, -3739.f, 4508.f, -3739.f);
-    //         break;
-    //     case AREA_BOB:
-    //         yaw = clamp_positions_and_find_yaw(pos, origin, 8000.f, -8000.f, 7050.f, -8000.f);
-    //         break;
-    //     case AREA_THI_HUGE:
-    //         yaw = clamp_positions_and_find_yaw(pos, origin, 8192.f, -8192.f, 8192.f, -8192.f);
-    //         break;
-    //     case AREA_THI_TINY:
-    //         yaw = clamp_positions_and_find_yaw(pos, origin, 2458.f, -2458.f, 2458.f, -2458.f);
-    //         break;
-    // }
+    if (!gCameraUseCourseSpecificSettings) { return yaw; }
+    switch (gCurrLevelArea) {
+        case AREA_WDW_MAIN:
+            yaw = clamp_positions_and_find_yaw(pos, origin, 4508.f, -3739.f, 4508.f, -3739.f);
+            break;
+        case AREA_BOB:
+            yaw = clamp_positions_and_find_yaw(pos, origin, 8000.f, -8000.f, 7050.f, -8000.f);
+            break;
+        case AREA_THI_HUGE:
+            yaw = clamp_positions_and_find_yaw(pos, origin, 8192.f, -8192.f, 8192.f, -8192.f);
+            break;
+        case AREA_THI_TINY:
+            yaw = clamp_positions_and_find_yaw(pos, origin, 2458.f, -2458.f, 2458.f, -2458.f);
+            break;
+    }
     return yaw;
 }
 
@@ -1926,14 +1927,18 @@ s32 update_behind_mario_camera(struct Camera *c, Vec3f focus, Vec3f pos) {
         dist = 300.f;
     }
     vec3f_set_dist_and_angle(focus, pos, dist, pitch, yaw);
-    if (gCurrLevelArea == AREA_WDW_MAIN) {
-        yaw = clamp_positions_and_find_yaw(pos, focus, 4508.f, -3739.f, 4508.f, -3739.f);
-    }
-    if (gCurrLevelArea == AREA_THI_HUGE) {
-        yaw = clamp_positions_and_find_yaw(pos, focus, 8192.f, -8192.f, 8192.f, -8192.f);
-    }
-    if (gCurrLevelArea == AREA_THI_TINY) {
-        yaw = clamp_positions_and_find_yaw(pos, focus, 2458.f, -2458.f, 2458.f, -2458.f);
+
+    if (!gCameraUseCourseSpecificSettings) { return yaw; }
+    switch (gCurrLevelArea) {
+        case AREA_WDW_MAIN:
+            yaw = clamp_positions_and_find_yaw(pos, focus, 4508.f, -3739.f, 4508.f, -3739.f);
+            break;
+        case AREA_THI_HUGE:
+            yaw = clamp_positions_and_find_yaw(pos, focus, 8192.f, -8192.f, 8192.f, -8192.f);
+            break;
+        case AREA_THI_TINY:
+            yaw = clamp_positions_and_find_yaw(pos, focus, 2458.f, -2458.f, 2458.f, -2458.f);
+            break;
     }
 
     return yaw;
@@ -2425,7 +2430,7 @@ s16 update_default_camera(struct Camera *c) {
             c->pos[1] = ceilHeight;
         }
     }
-    if (gCurrLevelArea == AREA_WDW_TOWN) {
+    if (gCameraUseCourseSpecificSettings && gCurrLevelArea == AREA_WDW_TOWN) {
         yaw = clamp_positions_and_find_yaw(c->pos, c->focus, 2254.f, -3789.f, 3790.f, -2253.f);
     }
     return yaw;
@@ -12331,6 +12336,22 @@ void mode_rom_hack_camera(struct Camera *c) {
     pos[0] = mPos[0] + coss(sRomHackYaw) * desiredDist;
     pos[1] = mPos[1] + desiredHeight;
     pos[2] = mPos[2] + sins(sRomHackYaw) * desiredDist;
+
+    // Move camera down for hangable ceilings
+    if (sMarioCamState->action & ACT_FLAG_HANGING) {
+        f32 marioCeilHeight = sMarioGeometry.currCeilHeight;
+        f32 marioFloorHeight = sMarioGeometry.currFloorHeight;
+
+        if (marioFloorHeight < marioCeilHeight - 400.f) {
+            marioFloorHeight = marioCeilHeight - 400.f;
+        }
+
+        f32 goalHeight = marioFloorHeight + (marioCeilHeight - marioFloorHeight) * 0.4f;
+
+        if (pos[1] - 400 > goalHeight) {
+            pos[1] -= 400;
+        }
+    }
 
     if (rom_hack_cam_can_see_mario(pos)) {
         // we can see mario, no need to adjust

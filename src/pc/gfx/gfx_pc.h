@@ -9,6 +9,7 @@ struct GfxWindowManagerAPI;
 struct GfxDimensions {
     uint32_t width, height;
     float aspect_ratio;
+    float x_adjust_ratio;
 };
 
 extern struct GfxDimensions gfx_current_dimensions;

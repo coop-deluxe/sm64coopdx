@@ -389,7 +389,7 @@ u8 should_start_or_continue_dialog(struct MarioState* m, struct Object* object) 
 // 0 = not in dialog
 // 1 = starting dialog
 // 2 = speaking
-s32 set_mario_npc_dialog(struct MarioState* m, s32 actionArg, UNUSED u8 (*inContinueDialogFunction)(void)) {
+s32 set_mario_npc_dialog(struct MarioState* m, s32 actionArg, u8 (*inContinueDialogFunction)(void)) {
     if (!m) { return 0; }
 
     s32 dialogState = 0;

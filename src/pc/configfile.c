@@ -724,6 +724,12 @@ NEXT_OPTION:
     if (configDjuiTheme >= DJUI_THEME_MAX) { configDjuiTheme = 0; }
     if (configDjuiScale >= 5) { configDjuiScale = 0; }
 
+    if (configExCoopTheme) {
+        configDjuiTheme = DJUI_THEME_LIGHT;
+        configDjuiThemeCenter = false;
+        configDjuiThemeFont = 1;
+    }
+
 #ifndef COOPNET
     configNetworkSystem = NS_SOCKET;
 #endif

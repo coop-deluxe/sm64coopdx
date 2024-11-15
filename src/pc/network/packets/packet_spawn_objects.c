@@ -159,6 +159,8 @@ void network_receive_spawn_objects(struct Packet* p) {
             name = gNetworkPlayers[p->localIndex].name;
         }
 
+        const char *bhvName = get_behavior_name_from_id(data.behaviorId);
+
         // Don't overwrite existing sync objects
         {
             u32 syncID = data.rawData[0x04]; // o->oSyncID
@@ -167,15 +169,15 @@ void network_receive_spawn_objects(struct Packet* p) {
                 if (so->o->behavior == get_behavior_from_id(data.behaviorId)) {
                     LOG_ERROR("recieved duplicate sync object with id %d from %s (%s)", syncID, name, id);
                 } else {
-                    LOG_ERROR("recieved duplicate sync object with id %d with different behavior %s from %s (%s)", syncID, get_behavior_name_from_id(data.behaviorId), name, id);
+                    LOG_ERROR("recieved duplicate sync object with id %d with different behavior %s from %s (%s)", syncID, bhvName, name, id);
                 }
                 continue;
             }
         }
 
-        LOG_INFO("rx spawn object %s from %s (%s)", get_behavior_name_from_id(data.behaviorId), name, id);
-        LOG_CONSOLE("rx spawn object %s from %s\\#dcdcdc\\ (%s)", get_behavior_name_from_id(data.behaviorId), name, id);
-        snprintf(gLastRemoteBhv, 256, "%s %s (%s)", get_behavior_name_from_id(data.behaviorId), name, id);
+        LOG_INFO("rx spawn object %s from %s (%s)", bhvName, name, id);
+        LOG_CONSOLE("rx spawn object %s from %s\\#dcdcdc\\ (%s)", bhvName, name, id);
+        snprintf(gLastRemoteBhv, 256, "%s %s (%s)", bhvName, name, id);
 
         struct Object* parentObj = NULL;
         if (data.parentId == (u32)-1) {
