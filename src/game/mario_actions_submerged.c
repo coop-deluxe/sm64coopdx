@@ -11,6 +11,7 @@
 #include "interaction.h"
 #include "mario.h"
 #include "mario_step.h"
+#include "mario_step_new.h"
 #include "camera.h"
 #include "audio/external.h"
 #include "behavior_data.h"
@@ -21,6 +22,7 @@
 #include "pc/network/network.h"
 #include "pc/lua/smlua.h"
 #include "pc/lua/smlua_hooks.h"
+#include "game/hardcoded.h"
 
 #define MIN_SWIM_STRENGTH 160
 #define MIN_SWIM_SPEED 16.0f
@@ -208,8 +210,12 @@ u32 perform_water_step(struct MarioState *m) {
         nextPos[1] = m->waterLevel - 80;
         m->vel[1] = 0.0f;
     }
-
-    stepResult = perform_water_full_step(m, nextPos);
+    
+    if (gBehaviorValues.MarioRaycastSteps) {
+        stepResult = PerformStep(m, nextPos, STEP_NO_GRAVITY);
+    } else {
+        stepResult = perform_water_full_step(m, nextPos);
+    }
 
     vec3f_copy(marioObj->header.gfx.pos, m->pos);
     vec3s_set(marioObj->header.gfx.angle, -m->faceAngle[0], m->faceAngle[1], m->faceAngle[2]);

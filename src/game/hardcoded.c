@@ -158,6 +158,7 @@ struct BehaviorValues gDefaultBehaviorValues = {
     .BowlingBallThiSmallSpeed = 10.0f,
     .GrateStarRequirement     = 120,
     .ChillBullyDeathPosY      = 1030.0f,
+    .MarioRaycastSteps        = FALSE,
     .ShowStarMilestones       = TRUE,
     .ShowStarDialog           = TRUE,
     .RespawnShellBoxes        = TRUE,

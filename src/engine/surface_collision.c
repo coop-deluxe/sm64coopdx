@@ -1230,9 +1230,38 @@ void find_surface_on_ray_list(struct SurfaceNode *list, Vec3f orig, Vec3f dir, f
         if (list->surface->lowerY > top || list->surface->upperY < bottom)
             continue;
 
-        // Reject no-cam collision surfaces
-        if (gCheckingSurfaceCollisionsForCamera && (list->surface->flags & SURFACE_FLAG_NO_CAM_COLLISION))
-            continue;
+        // Determine if checking for the camera or not.
+        if (gCheckingSurfaceCollisionsForCamera) {
+            // Reject no-cam collision surfaces
+            if (list->surface->flags & SURFACE_FLAG_NO_CAM_COLLISION) {
+                continue;
+            }
+        } else {
+            // Ignore camera only surfaces.
+            if (list->surface->type == SURFACE_CAMERA_BOUNDARY || list->surface->type == SURFACE_RAYCAST) {
+                continue;
+            }
+            
+            // If an object can pass through a vanish cap wall, pass through.
+            if (list->surface->type == SURFACE_VANISH_CAP_WALLS) {
+                // If an object can pass through a vanish cap wall, pass through.
+                if (gCurrentObject != NULL
+                    && (gCurrentObject->activeFlags & ACTIVE_FLAG_MOVE_THROUGH_GRATE)) {
+                    continue;
+                }
+
+                // If Mario has a vanish cap, pass through the vanish cap wall.
+                u8 passThroughWall = FALSE;
+                for (s32 i = 0; i < MAX_PLAYERS; i++) {
+                    if (gCurrentObject != NULL && gCurrentObject == gMarioStates[i].marioObj
+                        && (gMarioStates[i].flags & MARIO_VANISH_CAP)) {
+                        passThroughWall = TRUE;
+                        break;
+                    }
+                }
+                if (passThroughWall) { continue; }
+            }
+        }
 
         // Check intersection between the ray and this surface
         if ((hit = ray_surface_intersect(orig, dir, dir_length, list->surface, chk_hit_pos, &length)) != 0)

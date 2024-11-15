@@ -3,14 +3,25 @@
 
 #include <PR/ultratypes.h>
 
+#include "sm64.h"
+#include "engine/math_util.h"
+#include "engine/surface_collision.h"
 #include "types.h"
 
-#define WALLMAXNORMAL 0.08f
+// Strict - cos(72.49 deg) 0.30087224993
+// Lax - cos(76.65 deg) 0.23089890826
+#define WALLMAXNORMAL 0.30f
+
+// Negative Y displacement added to make Mario snap to the nearest floor.
 #define FLOOR_SNAP_OFFSET 78
 
-// how tall mario is for the purpose of collision
-#define MARIOWIDENESS (FLOOR_SNAP_OFFSET * 2.f - 1.f)
-#define MARIOHEIGHT (FLOOR_SNAP_OFFSET * 2.f - 1.f)
+// When grounded, what the angle difference between the wall and Mario's head needs to be for wall collision to occur
+// i.e. the angle below which Mario bonks and above which he slides along the wall
+#define MAX_ANGLE_DIFF_FOR_WALL_COLLISION_ON_GROUND DEGREES(60)
+
+// When airborne, what the angle difference between the wall and Mario's head needs to be for wall collision to occur
+// Tends to be larger as you can't mantle a wall while airborne
+#define MAX_ANGLE_DIFF_FOR_WALL_COLLISION_IN_AIR DEGREES(135)
 
 // Movedata lets us pass by struct to reduce arg passing overhead
 struct MoveData {

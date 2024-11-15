@@ -359,61 +359,61 @@ s32 perform_ground_step(struct MarioState *m) {
     s32 returnValue = 0;
     if (smlua_call_event_hooks_mario_param_and_int_ret_int(HOOK_BEFORE_PHYS_STEP, m, STEP_TYPE_GROUND, &returnValue)) return returnValue;
     
-    /*
-    for (s32 i = 0; i < 4; i++) {
+    if (gBehaviorValues.MarioRaycastSteps) {
         Vec3f step = { 0 };
         if (m->floor) {
             f32 floorNormal;
             if (!smlua_call_event_hooks_mario_param_ret_float(HOOK_MARIO_OVERRIDE_PHYS_STEP_DEFACTO_SPEED, m, &floorNormal)) {
                 floorNormal = m->floor->normal.y;
             }
-            step[0] = floorNormal * (m->vel[0] / 4.0f);
-            step[2] = floorNormal * (m->vel[2] / 4.0f);
+            step[0] = floorNormal * m->vel[0];
+            step[2] = floorNormal * m->vel[2];
         }
-
+        
         intendedPos[0] = m->pos[0] + step[0];
         intendedPos[1] = m->pos[1];
         intendedPos[2] = m->pos[2] + step[2];
-
+        
         vec3f_normalize(step);
 
         vec3f_copy(gFindWallDirection, step);
 
         gFindWallDirectionActive = true;
-        stepResult = perform_ground_quarter_step(m, intendedPos);
+        stepResult = PerformStep(m, intendedPos, STEP_SNAP_TO_FLOOR);
         gFindWallDirectionActive = false;
+    } else {
+        for (s32 i = 0; i < 4; i++) {
+            Vec3f step = { 0 };
+            if (m->floor) {
+                f32 floorNormal;
+                if (!smlua_call_event_hooks_mario_param_ret_float(HOOK_MARIO_OVERRIDE_PHYS_STEP_DEFACTO_SPEED, m, &floorNormal)) {
+                    floorNormal = m->floor->normal.y;
+                }
+                step[0] = floorNormal * (m->vel[0] / 4.0f);
+                step[2] = floorNormal * (m->vel[2] / 4.0f);
+            }
 
-        if (stepResult == GROUND_STEP_LEFT_GROUND || stepResult == GROUND_STEP_HIT_WALL_STOP_QSTEPS) {
-            break;
+            intendedPos[0] = m->pos[0] + step[0];
+            intendedPos[1] = m->pos[1];
+            intendedPos[2] = m->pos[2] + step[2];
+
+            vec3f_normalize(step);
+
+            vec3f_copy(gFindWallDirection, step);
+
+            gFindWallDirectionActive = true;
+            stepResult = perform_ground_quarter_step(m, intendedPos);
+            gFindWallDirectionActive = false;
+
+            if (stepResult == GROUND_STEP_LEFT_GROUND || stepResult == GROUND_STEP_HIT_WALL_STOP_QSTEPS) {
+                break;
+            }
+        }
+        
+        if (stepResult == GROUND_STEP_HIT_WALL_CONTINUE_QSTEPS) {
+            stepResult = GROUND_STEP_HIT_WALL;
         }
     }
-    
-    if (stepResult == GROUND_STEP_HIT_WALL_CONTINUE_QSTEPS) {
-        stepResult = GROUND_STEP_HIT_WALL;
-    }
-    */
-    
-    Vec3f step = { 0 };
-    if (m->floor) {
-        f32 floorNormal;
-        if (!smlua_call_event_hooks_mario_param_ret_float(HOOK_MARIO_OVERRIDE_PHYS_STEP_DEFACTO_SPEED, m, &floorNormal)) {
-            floorNormal = m->floor->normal.y;
-        }
-        step[0] = floorNormal * m->vel[0];
-        step[2] = floorNormal * m->vel[2];
-    }
-    
-    intendedPos[0] = m->pos[0] + step[0];
-    intendedPos[1] = m->pos[1];
-    intendedPos[2] = m->pos[2] + step[2];
-    
-    vec3f_normalize(step);
-
-    vec3f_copy(gFindWallDirection, step);
-
-    gFindWallDirectionActive = true;
-    stepResult = PerformStep(m, intendedPos, STEP_SNAP_TO_FLOOR);
-    gFindWallDirectionActive = false;
 
     m->terrainSoundAddend = mario_get_terrain_sound_addend(m);
     vec3f_copy(m->marioObj->header.gfx.pos, m->pos);
@@ -756,12 +756,11 @@ s32 perform_air_step(struct MarioState *m, u32 stepArg) {
 
     m->wall = NULL;
     
-    /*
-    for (s32 i = 0; i < 4; i++) {
+    if (gBehaviorValues.MarioRaycastSteps) {
         Vec3f step = {
-            m->vel[0] / 4.0f,
-            m->vel[1] / 4.0f,
-            m->vel[2] / 4.0f,
+            m->vel[0],
+            m->vel[1],
+            m->vel[2],
         };
 
         intendedPos[0] = m->pos[0] + step[0];
@@ -773,40 +772,41 @@ s32 perform_air_step(struct MarioState *m, u32 stepArg) {
 
         gFindWallDirectionActive = true;
         gFindWallDirectionAirborne = true;
-        stepResult = perform_air_quarter_step(m, intendedPos, stepArg);
+        stepResult = PerformStep(m, intendedPos, stepArg);
         gFindWallDirectionAirborne = false;
         gFindWallDirectionActive = false;
+    } else {
+        for (s32 i = 0; i < 4; i++) {
+            Vec3f step = {
+                m->vel[0] / 4.0f,
+                m->vel[1] / 4.0f,
+                m->vel[2] / 4.0f,
+            };
 
-        //! On one qf, hit OOB/ceil/wall to store the 2 return value, and continue
-        // getting 0s until your last qf. Graze a wall on your last qf, and it will
-        // return the stored 2 with a sharply angled reference wall. (some gwks)
+            intendedPos[0] = m->pos[0] + step[0];
+            intendedPos[1] = m->pos[1] + step[1];
+            intendedPos[2] = m->pos[2] + step[2];
 
-        if (stepResult == AIR_STEP_LANDED || stepResult == AIR_STEP_GRABBED_LEDGE
-            || stepResult == AIR_STEP_GRABBED_CEILING
-            || stepResult == AIR_STEP_HIT_LAVA_WALL) {
-            break;
+            vec3f_normalize(step);
+            vec3f_copy(gFindWallDirection, step);
+
+            gFindWallDirectionActive = true;
+            gFindWallDirectionAirborne = true;
+            stepResult = perform_air_quarter_step(m, intendedPos, stepArg);
+            gFindWallDirectionAirborne = false;
+            gFindWallDirectionActive = false;
+
+            //! On one qf, hit OOB/ceil/wall to store the 2 return value, and continue
+            // getting 0s until your last qf. Graze a wall on your last qf, and it will
+            // return the stored 2 with a sharply angled reference wall. (some gwks)
+
+            if (stepResult == AIR_STEP_LANDED || stepResult == AIR_STEP_GRABBED_LEDGE
+                || stepResult == AIR_STEP_GRABBED_CEILING
+                || stepResult == AIR_STEP_HIT_LAVA_WALL) {
+                break;
+            }
         }
     }
-    */
-    
-    Vec3f step = {
-        m->vel[0],
-        m->vel[1],
-        m->vel[2],
-    };
-
-    intendedPos[0] = m->pos[0] + step[0];
-    intendedPos[1] = m->pos[1] + step[1];
-    intendedPos[2] = m->pos[2] + step[2];
-
-    vec3f_normalize(step);
-    vec3f_copy(gFindWallDirection, step);
-
-    gFindWallDirectionActive = true;
-    gFindWallDirectionAirborne = true;
-    stepResult = PerformStep(m, intendedPos, stepArg);
-    gFindWallDirectionAirborne = false;
-    gFindWallDirectionActive = false;
 
     if (m->vel[1] >= 0.0f) {
         m->peakHeight = m->pos[1];

@@ -3252,7 +3252,6 @@
 <br />
 
 ## [smlua_hooks.h](#smlua_hooks.h)
-- MAX_HOOKED_MOD_MENU_ELEMENTS
 
 ### [enum LuaActionHookType](#LuaActionHookType)
 | Identifier | Value |

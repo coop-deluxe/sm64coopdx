@@ -253,6 +253,7 @@ struct BehaviorValues {
     f32 BowlingBallThiSmallSpeed;
     u16 GrateStarRequirement;
     f32 ChillBullyDeathPosY;
+    u8  MarioRaycastSteps;
     u8  ShowStarMilestones;
     u8  ShowStarDialog;
     u8  RespawnShellBoxes;
