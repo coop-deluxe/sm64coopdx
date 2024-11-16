@@ -204,18 +204,22 @@ void mod_clear(struct Mod* mod) {
     }
 
     mod->fileCount = 0;
+    mod->fileCapacity = 0;
     mod->size = 0;
     free(mod);
 }
 
 static struct ModFile* mod_allocate_file(struct Mod* mod, char* relativePath) {
     // actual allocation
-    u16 fileIndex = mod->fileCount++;
-    mod->files = realloc(mod->files, sizeof(struct ModFile) * mod->fileCount);
-    if (mod->files == NULL) {
-        LOG_ERROR("Failed to allocate file: '%s'", relativePath);
-        return NULL;
+    if (mod->fileCount == mod->fileCapacity) {
+        mod->fileCapacity = (mod->fileCapacity == 0) ? 16 : (mod->fileCapacity * 2);
+        mod->files = realloc(mod->files, sizeof(struct ModFile) * mod->fileCapacity);
+        if (mod->files == NULL) {
+            LOG_ERROR("Failed to allocate file: '%s'", relativePath);
+            return NULL;
+        }
     }
+    u16 fileIndex = mod->fileCount++;
 
     // clear memory
     struct ModFile* file = &mod->files[fileIndex];
