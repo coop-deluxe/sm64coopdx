@@ -122,12 +122,12 @@ s16 newcam_saved_defmode = -1;
 extern bool gDjuiInMainMenu;
 
 ///This is called at every level initialisation.
-void newcam_init(struct Camera *c, u8 softResetted) {
+void newcam_init(struct Camera *c, u8 isSoftReset) {
     newcam_tilt = 1500;
     newcam_yaw = -c->yaw+0x4000; //Mario and the camera's yaw have this offset between them.
     newcam_mode = NC_MODE_NORMAL;
     ///This here will dictate what modes the camera will start in at the beginning of a level. Below are some examples.
-    if (!softResetted) {
+    if (!isSoftReset) {
         switch (gCurrLevelNum) {
             case LEVEL_BITDW: newcam_yaw = 0x4000; /*newcam_mode = NC_MODE_8D;*/ newcam_tilt = 4000; break;
             case LEVEL_BITFS: newcam_yaw = 0x4000; /*newcam_mode = NC_MODE_8D;*/ newcam_tilt = 4000; break;

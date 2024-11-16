@@ -3449,7 +3449,6 @@ void reset_camera(struct Camera *c) {
 
     if (gFirstPersonCamera.enabled) {
         gFirstPersonCamera.yaw = gMarioStates[0].faceAngle[1] + 0x8000;
-        set_mario_action(&gMarioStates[0], ACT_IDLE, 0);
     }
 }
 
@@ -3634,9 +3633,7 @@ void init_camera(struct Camera *c) {
     newcam_init(c, sSoftResettingCamera);
     newcam_init_settings();
 
-    if (sSoftResettingCamera) {
-        sSoftResettingCamera = FALSE;
-    }
+    sSoftResettingCamera = FALSE;
 }
 
 /**
