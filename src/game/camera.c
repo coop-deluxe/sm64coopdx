@@ -3506,103 +3506,106 @@ void init_camera(struct Camera *c) {
     marioOffset[2] = 400.f;
 
     // Set the camera's starting position or start a cutscene for certain levels
-    switch (gCurrLevelNum) {
-        case LEVEL_BOWSER_1:
+    if (!sSoftResettingCamera) {
+        switch (gCurrLevelNum) {
+            case LEVEL_BOWSER_1:
 #ifndef VERSION_JP
-            if (gCurrDemoInput == NULL) {
+                if (gCurrDemoInput == NULL) {
+                    // Make sure Bowser is in a state that we'd start speaking to him in.
+                    obj = find_object_with_behavior(bhvBowser);
+                    if (obj != NULL && obj->oAction != 5) { break; }
+
+                    start_cutscene(c, CUTSCENE_ENTER_BOWSER_ARENA);
+                } else if (gSecondCameraFocus != NULL) {
+                    gSecondCameraFocus->oBowserUnk88 = 2;
+                }
+#else
                 // Make sure Bowser is in a state that we'd start speaking to him in.
                 obj = find_object_with_behavior(bhvBowser);
                 if (obj != NULL && obj->oAction != 5) { break; }
 
                 start_cutscene(c, CUTSCENE_ENTER_BOWSER_ARENA);
-            } else if (gSecondCameraFocus != NULL) {
-                gSecondCameraFocus->oBowserUnk88 = 2;
-            }
-#else
-            // Make sure Bowser is in a state that we'd start speaking to him in.
-            obj = find_object_with_behavior(bhvBowser);
-            if (obj != NULL && obj->oAction != 5) { break; }
-
-            start_cutscene(c, CUTSCENE_ENTER_BOWSER_ARENA);
 #endif
-            break;
-        case LEVEL_BOWSER_2:
-            // Make sure Bowser is in a state that we'd start speaking to him in.
-            obj = find_object_with_behavior(bhvBowser);
-            if (obj != NULL && obj->oAction != 5) { break; }
+                break;
+            case LEVEL_BOWSER_2:
+                // Make sure Bowser is in a state that we'd start speaking to him in.
+                obj = find_object_with_behavior(bhvBowser);
+                if (obj != NULL && obj->oAction != 5) { break; }
 
-            start_cutscene(c, CUTSCENE_ENTER_BOWSER_ARENA);
-            break;
-        case LEVEL_BOWSER_3:
-            // Make sure Bowser is in a state that we'd start speaking to him in.
-            obj = find_object_with_behavior(bhvBowser);
-            if (obj != NULL && obj->oAction != 5) { break; }
+                start_cutscene(c, CUTSCENE_ENTER_BOWSER_ARENA);
+                break;
+            case LEVEL_BOWSER_3:
+                // Make sure Bowser is in a state that we'd start speaking to him in.
+                obj = find_object_with_behavior(bhvBowser);
+                if (obj != NULL && obj->oAction != 5) { break; }
 
-            start_cutscene(c, CUTSCENE_ENTER_BOWSER_ARENA);
-            break;
+                start_cutscene(c, CUTSCENE_ENTER_BOWSER_ARENA);
+                break;
 
-        //! Hardcoded position checks determine which cutscene to play when Mario enters castle grounds.
-        case LEVEL_CASTLE_GROUNDS:
-            if (is_within_100_units_of_mario(-1328.f, 260.f, 4664.f) != 1) {
-                marioOffset[0] = -400.f;
-                marioOffset[2] = -800.f;
-            }
-            if (is_within_100_units_of_mario(-6901.f, 2376.f, -6509.f) == 1) {
-                start_cutscene(c, CUTSCENE_EXIT_WATERFALL);
-            }
-            if (is_within_100_units_of_mario(5408.f, 4500.f, 3637.f) == 1) {
-                start_cutscene(c, CUTSCENE_EXIT_FALL_WMOTR);
-            }
-            gLakituState.mode = CAMERA_MODE_FREE_ROAM;
-            break;
-        case LEVEL_SA:
-            marioOffset[2] = 200.f;
-            break;
-        case LEVEL_CASTLE_COURTYARD:
-            marioOffset[2] = -300.f;
-            break;
-        case LEVEL_LLL:
-            gCameraMovementFlags |= CAM_MOVE_ZOOMED_OUT;
-            break;
-        case LEVEL_CASTLE:
-            marioOffset[2] = 150.f;
-            break;
-        case LEVEL_RR:
-            vec3f_set(sFixedModeBasePosition, -2985.f, 478.f, -5568.f);
-            break;
-    }
-    if ((c->mode == CAMERA_MODE_8_DIRECTIONS) || c->mode == CAMERA_MODE_ROM_HACK) {
-        gCameraMovementFlags |= CAM_MOVE_ZOOMED_OUT;
-    }
-    switch (gCurrLevelArea) {
-        case AREA_SSL_EYEROK:
-            vec3f_set(marioOffset, 0.f, 500.f, -100.f);
-            break;
-        case AREA_CCM_SLIDE:
-            marioOffset[2] = -300.f;
-            break;
-        case AREA_THI_WIGGLER:
-            marioOffset[2] = -300.f;
-            break;
-        case AREA_SL_IGLOO:
-            marioOffset[2] = -300.f;
-            break;
-        case AREA_SL_OUTSIDE:
-            if (is_within_100_units_of_mario(257.f, 2150.f, 1399.f) == 1) {
+            //! Hardcoded position checks determine which cutscene to play when Mario enters castle grounds.
+            case LEVEL_CASTLE_GROUNDS:
+                if (is_within_100_units_of_mario(-1328.f, 260.f, 4664.f) != 1) {
+                    marioOffset[0] = -400.f;
+                    marioOffset[2] = -800.f;
+                }
+                if (is_within_100_units_of_mario(-6901.f, 2376.f, -6509.f) == 1) {
+                    start_cutscene(c, CUTSCENE_EXIT_WATERFALL);
+                }
+                if (is_within_100_units_of_mario(5408.f, 4500.f, 3637.f) == 1) {
+                    start_cutscene(c, CUTSCENE_EXIT_FALL_WMOTR);
+                }
+                gLakituState.mode = CAMERA_MODE_FREE_ROAM;
+                break;
+            case LEVEL_SA:
+                marioOffset[2] = 200.f;
+                break;
+            case LEVEL_CASTLE_COURTYARD:
                 marioOffset[2] = -300.f;
-            }
-            break;
-        case AREA_CCM_OUTSIDE:
+                break;
+            case LEVEL_LLL:
+                gCameraMovementFlags |= CAM_MOVE_ZOOMED_OUT;
+                break;
+            case LEVEL_CASTLE:
+                marioOffset[2] = 150.f;
+                break;
+            case LEVEL_RR:
+                vec3f_set(sFixedModeBasePosition, -2985.f, 478.f, -5568.f);
+                break;
+        }
+
+        if ((c->mode == CAMERA_MODE_8_DIRECTIONS) || c->mode == CAMERA_MODE_ROM_HACK) {
             gCameraMovementFlags |= CAM_MOVE_ZOOMED_OUT;
-            break;
-        case AREA_TTM_OUTSIDE:
-            gLakituState.mode = CAMERA_MODE_RADIAL;
-            break;
+        }
+
+        switch (gCurrLevelArea) {
+            case AREA_SSL_EYEROK:
+                vec3f_set(marioOffset, 0.f, 500.f, -100.f);
+                break;
+            case AREA_CCM_SLIDE:
+                marioOffset[2] = -300.f;
+                break;
+            case AREA_THI_WIGGLER:
+                marioOffset[2] = -300.f;
+                break;
+            case AREA_SL_IGLOO:
+                marioOffset[2] = -300.f;
+                break;
+            case AREA_SL_OUTSIDE:
+                if (is_within_100_units_of_mario(257.f, 2150.f, 1399.f) == 1) {
+                    marioOffset[2] = -300.f;
+                }
+                break;
+            case AREA_CCM_OUTSIDE:
+                gCameraMovementFlags |= CAM_MOVE_ZOOMED_OUT;
+                break;
+            case AREA_TTM_OUTSIDE:
+                gLakituState.mode = CAMERA_MODE_RADIAL;
+                break;
+        }
     }
 
     if (sSoftResettingCamera) {
         c->cutscene = 0;
-        sSoftResettingCamera = FALSE;
     } else {
         // Set the camera pos to marioOffset (relative to Mario), added to Mario's position
         offset_rotated(c->pos, sMarioCamState->pos, marioOffset, sMarioCamState->faceAngle);
@@ -3627,8 +3630,10 @@ void init_camera(struct Camera *c) {
     c->yaw = gLakituState.yaw;
     c->nextYaw = gLakituState.yaw;
 
-    newcam_init(c, 0);
+    newcam_init(c, sSoftResettingCamera);
     newcam_init_settings();
+
+    sSoftResettingCamera = FALSE;
 }
 
 /**
