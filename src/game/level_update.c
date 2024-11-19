@@ -1121,7 +1121,7 @@ void update_hud_values(void) {
                             play_sound(SOUND_GENERAL_COLLECT_1UP, gGlobalSoundSource);
                         }
                     } else {
-                        if (gHudDisplay.coins % gLevelValues.numCoinsToLife == 0 && gHudDisplay.coins > 0) {
+                        if (gLevelValues.numCoinsToLife != 0 && gHudDisplay.coins % gLevelValues.numCoinsToLife == 0 && gHudDisplay.coins > 0) {
                             gMarioState->numLives++;
                             play_sound(SOUND_GENERAL_COLLECT_1UP, gGlobalSoundSource);
                         }
