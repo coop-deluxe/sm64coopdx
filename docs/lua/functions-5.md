@@ -1083,6 +1083,26 @@
 
 <br />
 
+## [smlua_collision_util_find_surface_types](#smlua_collision_util_find_surface_types)
+
+### Lua Example
+`smlua_collision_util_find_surface_types(data)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| data | `Pointer` <`Collision`> |
+
+### Returns
+- None
+
+### C Prototype
+`void smlua_collision_util_find_surface_types(Collision* data);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [smlua_collision_util_get](#smlua_collision_util_get)
 
 ### Lua Example
@@ -1098,6 +1118,45 @@
 
 ### C Prototype
 `Collision* smlua_collision_util_get(const char* name);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [smlua_collision_util_get_current_terrain_collision](#smlua_collision_util_get_current_terrain_collision)
+
+### Lua Example
+`local PointerValue = smlua_collision_util_get_current_terrain_collision()`
+
+### Parameters
+- None
+
+### Returns
+- `Pointer` <`Collision`>
+
+### C Prototype
+`Collision* smlua_collision_util_get_current_terrain_collision(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [smlua_collision_util_get_level_collision](#smlua_collision_util_get_level_collision)
+
+### Lua Example
+`local PointerValue = smlua_collision_util_get_level_collision(level, area)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| level | `integer` |
+| area | `integer` |
+
+### Returns
+- `Pointer` <`Collision`>
+
+### C Prototype
+`Collision *smlua_collision_util_get_level_collision(u32 level, u16 area);`
 
 [:arrow_up_small:](#)
 

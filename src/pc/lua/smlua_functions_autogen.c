@@ -29450,6 +29450,23 @@ int smlua_func_get_water_surface_pseudo_floor(UNUSED lua_State* L) {
     return 1;
 }
 
+int smlua_func_smlua_collision_util_find_surface_types(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "smlua_collision_util_find_surface_types", 1, top);
+        return 0;
+    }
+
+    Collision* data = (Collision*)smlua_to_cpointer(L, 1, LVT_COLLISION_P);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "smlua_collision_util_find_surface_types"); return 0; }
+
+    smlua_collision_util_find_surface_types(data);
+
+    return 1;
+}
+
 int smlua_func_smlua_collision_util_get(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -29463,6 +29480,40 @@ int smlua_func_smlua_collision_util_get(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "smlua_collision_util_get"); return 0; }
 
     smlua_push_pointer(L, LVT_COLLISION_P, (void*)smlua_collision_util_get(name));
+
+    return 1;
+}
+
+int smlua_func_smlua_collision_util_get_current_terrain_collision(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "smlua_collision_util_get_current_terrain_collision", 0, top);
+        return 0;
+    }
+
+
+    smlua_push_pointer(L, LVT_COLLISION_P, (void*)smlua_collision_util_get_current_terrain_collision());
+
+    return 1;
+}
+
+int smlua_func_smlua_collision_util_get_level_collision(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "smlua_collision_util_get_level_collision", 2, top);
+        return 0;
+    }
+
+    u32 level = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "smlua_collision_util_get_level_collision"); return 0; }
+    u16 area = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "smlua_collision_util_get_level_collision"); return 0; }
+
+    smlua_push_pointer(L, LVT_COLLISION_P, (void*)smlua_collision_util_get_level_collision(level, area));
 
     return 1;
 }
@@ -34875,7 +34926,10 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "collision_get_temp_wall_collision_data", smlua_func_collision_get_temp_wall_collision_data);
     smlua_bind_function(L, "get_surface_from_wcd_index", smlua_func_get_surface_from_wcd_index);
     smlua_bind_function(L, "get_water_surface_pseudo_floor", smlua_func_get_water_surface_pseudo_floor);
+    smlua_bind_function(L, "smlua_collision_util_find_surface_types", smlua_func_smlua_collision_util_find_surface_types);
     smlua_bind_function(L, "smlua_collision_util_get", smlua_func_smlua_collision_util_get);
+    smlua_bind_function(L, "smlua_collision_util_get_current_terrain_collision", smlua_func_smlua_collision_util_get_current_terrain_collision);
+    smlua_bind_function(L, "smlua_collision_util_get_level_collision", smlua_func_smlua_collision_util_get_level_collision);
 
     // smlua_deprecated.h
     smlua_bind_function(L, "audio_stream_get_tempo", smlua_func_audio_stream_get_tempo);

@@ -1670,7 +1670,10 @@
    - [collision_get_temp_wall_collision_data](functions-5.md#collision_get_temp_wall_collision_data)
    - [get_surface_from_wcd_index](functions-5.md#get_surface_from_wcd_index)
    - [get_water_surface_pseudo_floor](functions-5.md#get_water_surface_pseudo_floor)
+   - [smlua_collision_util_find_surface_types](functions-5.md#smlua_collision_util_find_surface_types)
    - [smlua_collision_util_get](functions-5.md#smlua_collision_util_get)
+   - [smlua_collision_util_get_current_terrain_collision](functions-5.md#smlua_collision_util_get_current_terrain_collision)
+   - [smlua_collision_util_get_level_collision](functions-5.md#smlua_collision_util_get_level_collision)
 
 <br />
 

@@ -64,6 +64,7 @@ void dynos_level_parse_script(const void *script, s32 (*aPreprocessFunction)(u8,
 void* dynos_level_get_script(s32 level);
 s32 dynos_level_get_mod_index(s32 level);
 bool dynos_level_is_vanilla_level(s32 level);
+Collision *dynos_level_get_collision(u32 level, u16 area);
 
 // -- behaviors -- //
 void dynos_add_behavior(s32 modIndex, const char *filePath, const char *behaviorName);

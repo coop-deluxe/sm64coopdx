@@ -3,6 +3,8 @@
 #include "engine/surface_collision.h"
 #include "include/surface_terrains.h"
 #include "game/mario_step.h"
+#include "game/area.h"
+#include "engine/surface_load.h"
 
 #include "pc/lua/smlua.h"
 #include "smlua_collision_utils.h"
@@ -194,4 +196,44 @@ struct WallCollisionData* collision_get_temp_wall_collision_data(void) {
 struct Surface* get_surface_from_wcd_index(struct WallCollisionData* wcd, s8 index) {
     if (index < 0 || index >= 4) { return NULL; }
     return wcd->walls[index];
+}
+
+Collision *smlua_collision_util_get_current_terrain_collision(void) {
+    if (gCurrentArea && gCurrentArea->terrainData) {
+        return (Collision*) gCurrentArea->terrainData;
+    }
+    return NULL;
+}
+
+Collision *smlua_collision_util_get_level_collision(u32 level, u16 area) {
+    return dynos_level_get_collision(level, area);
+}
+
+void smlua_collision_util_find_surface_types(Collision* data) {
+    lua_State* L = gLuaState;
+
+    if (data && *data++ == COL_INIT()) {
+        lua_newtable(L);
+        s32 t = lua_gettop(gLuaState);
+
+        // Skip collision vertices
+        s32 numVertices = *data++;
+        data += 3 * numVertices;
+
+        // Process surface types
+        for (u16 i = 0; true; ++i) {
+            s16 surfaceType = *data++;
+            if (surfaceType == COL_TRI_STOP()) { break; }
+            s32 numTriangles = *data++;
+            data += (3 + surface_has_force(surfaceType)) * numTriangles;
+
+            lua_pushinteger(L, i);
+            lua_pushinteger(L, surfaceType);
+            lua_settable(L, t);
+        }
+        return;
+    }
+
+    // Couldn't find anything
+    lua_pushnil(L);
 }

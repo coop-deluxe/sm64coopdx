@@ -7953,9 +7953,26 @@ function get_water_surface_pseudo_floor()
     -- ...
 end
 
+--- @param data Pointer_Collision
+function smlua_collision_util_find_surface_types(data)
+    -- ...
+end
+
 --- @param name string
 --- @return Pointer_Collision
 function smlua_collision_util_get(name)
+    -- ...
+end
+
+--- @return Pointer_Collision
+function smlua_collision_util_get_current_terrain_collision()
+    -- ...
+end
+
+--- @param level integer
+--- @param area integer
+--- @return Pointer_Collision
+function smlua_collision_util_get_level_collision(level, area)
     -- ...
 end
 

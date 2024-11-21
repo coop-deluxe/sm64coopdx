@@ -35,5 +35,6 @@ void load_area_terrain(s16 index, s16 *data, s8 *surfaceRooms, s16 *macroObjects
 void clear_dynamic_surfaces(void);
 void load_object_collision_model(void);
 struct Surface *obj_get_surface_from_index(struct Object *o, u32 index);
+bool surface_has_force(s16 surfaceType);
 
 #endif // SURFACE_LOAD_H
