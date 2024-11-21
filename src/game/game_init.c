@@ -476,8 +476,8 @@ void read_controller_inputs(void) {
             controller->rawStickY = controller->controllerData->stick_y;
             controller->extStickX = controller->controllerData->ext_stick_x;
             controller->extStickY = controller->controllerData->ext_stick_y;
-            controller->buttonPressed = controller->controllerData->button
-                                        & (controller->controllerData->button ^ controller->buttonDown);
+            controller->buttonPressed = (~controller->buttonDown & controller->controllerData->button);
+            controller->buttonReleased = (~controller->controllerData->button & controller->buttonDown);
             // 0.5x A presses are a good meme
             controller->buttonDown = controller->controllerData->button;
             adjust_analog_stick(controller);
@@ -488,6 +488,7 @@ void read_controller_inputs(void) {
             controller->extStickX = 0;
             controller->extStickY = 0;
             controller->buttonPressed = 0;
+            controller->buttonReleased = 0;
             controller->buttonDown = 0;
             controller->stickX = 0;
             controller->stickY = 0;
@@ -505,6 +506,7 @@ void read_controller_inputs(void) {
     gPlayer3Controller->stickY = gPlayer1Controller->stickY;
     gPlayer3Controller->stickMag = gPlayer1Controller->stickMag;
     gPlayer3Controller->buttonPressed = gPlayer1Controller->buttonPressed;
+    gPlayer3Controller->buttonReleased = gPlayer1Controller->buttonReleased;
     gPlayer3Controller->buttonDown = gPlayer1Controller->buttonDown;*/
 }
 

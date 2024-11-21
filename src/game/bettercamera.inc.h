@@ -122,26 +122,28 @@ s16 newcam_saved_defmode = -1;
 extern bool gDjuiInMainMenu;
 
 ///This is called at every level initialisation.
-void newcam_init(struct Camera *c, UNUSED u8 dv) {
+void newcam_init(struct Camera *c, u8 isSoftReset) {
     newcam_tilt = 1500;
     newcam_yaw = -c->yaw+0x4000; //Mario and the camera's yaw have this offset between them.
     newcam_mode = NC_MODE_NORMAL;
     ///This here will dictate what modes the camera will start in at the beginning of a level. Below are some examples.
-    switch (gCurrLevelNum) {
-        case LEVEL_BITDW: newcam_yaw = 0x4000; /*newcam_mode = NC_MODE_8D;*/ newcam_tilt = 4000; break;
-        case LEVEL_BITFS: newcam_yaw = 0x4000; /*newcam_mode = NC_MODE_8D;*/ newcam_tilt = 4000; break;
-        case LEVEL_BITS: newcam_yaw = 0x4000; /*newcam_mode = NC_MODE_8D;*/ newcam_tilt = 4000; break;
-        case LEVEL_WF: newcam_yaw = 0x4000; newcam_tilt = 2000; break;
-        case LEVEL_RR: newcam_yaw = 0x6000; newcam_tilt = 2000; break;
-        case LEVEL_CCM: if (gCurrAreaIndex == 1) {newcam_yaw = -0x4000; newcam_tilt = 2000; } else newcam_mode = NC_MODE_SLIDE; break;
-        case LEVEL_WDW: newcam_yaw = 0x2000; newcam_tilt = 3000; break;
-        case 27: newcam_mode = NC_MODE_SLIDE; break;
-        case LEVEL_TTM: if (gCurrAreaIndex == 2) newcam_mode = NC_MODE_SLIDE; break;
-    }
+    if (!isSoftReset) {
+        switch (gCurrLevelNum) {
+            case LEVEL_BITDW: newcam_yaw = 0x4000; /*newcam_mode = NC_MODE_8D;*/ newcam_tilt = 4000; break;
+            case LEVEL_BITFS: newcam_yaw = 0x4000; /*newcam_mode = NC_MODE_8D;*/ newcam_tilt = 4000; break;
+            case LEVEL_BITS: newcam_yaw = 0x4000; /*newcam_mode = NC_MODE_8D;*/ newcam_tilt = 4000; break;
+            case LEVEL_WF: newcam_yaw = 0x4000; newcam_tilt = 2000; break;
+            case LEVEL_RR: newcam_yaw = 0x6000; newcam_tilt = 2000; break;
+            case LEVEL_CCM: if (gCurrAreaIndex == 1) {newcam_yaw = -0x4000; newcam_tilt = 2000; } else newcam_mode = NC_MODE_SLIDE; break;
+            case LEVEL_WDW: newcam_yaw = 0x2000; newcam_tilt = 3000; break;
+            case 27: newcam_mode = NC_MODE_SLIDE; break;
+            case LEVEL_TTM: if (gCurrAreaIndex == 2) newcam_mode = NC_MODE_SLIDE; break;
+        }
 
-    // clear these out when entering a new level to prevent "camera mode buffering"
-    newcam_saved_defmode = -1;
-    newcam_saved_mode = -1;
+        // clear these out when entering a new level to prevent "camera mode buffering"
+        newcam_saved_defmode = -1;
+        newcam_saved_mode = -1;
+    }
 
     // this will be set in init_settings() if enabled
     newcam_active = 0;

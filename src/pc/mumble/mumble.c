@@ -18,7 +18,7 @@
 #else
 	#include <sys/mman.h>
 	#include <fcntl.h> /* For O_* constants */
-	#include <libc.h>
+	#include <unistd.h>
 #endif // _WIN32
 
 struct LinkedMem *lm = NULL;

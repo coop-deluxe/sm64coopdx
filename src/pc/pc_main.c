@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <math.h>
 #include <time.h>
 #include <unistd.h>
 
@@ -43,7 +44,9 @@
 #include "pc/djui/djui_unicode.h"
 #include "pc/djui/djui_panel.h"
 #include "pc/djui/djui_panel_modlist.h"
+#include "pc/djui/djui_ctx_display.h"
 #include "pc/djui/djui_fps_display.h"
+#include "pc/djui/djui_lua_profiler.h"
 #include "pc/debuglog.h"
 #include "pc/utils/misc.h"
 
@@ -182,28 +185,30 @@ void produce_interpolation_frames_and_delay(void) {
 
     // interpolate and render
     while ((curTime = clock_elapsed_f64()) < sFrameTargetTime) {
-        gfx_start_frame();
         f32 delta = ((!configUncappedFramerate && configFrameLimit == FRAMERATE)
             ? 1.0f
             : MAX(MIN((curTime - sFrameTimeStart) / (sFrameTargetTime - sFrameTimeStart), 1.0f), 0.0f)
         );
         gRenderingDelta = delta;
+        
+        gfx_start_frame();
         if (!gSkipInterpolationTitleScreen) { patch_interpolations(delta); }
         send_display_list(gGfxSPTask);
         gfx_end_frame();
-
-        // delay
-        if (!configUncappedFramerate) {
-            f64 targetDelta = 1.0 / (f64) configFrameLimit;
-            f64 now = clock_elapsed_f64();
-            f64 actualDelta = now - curTime;
-            if (actualDelta < targetDelta) {
-                f64 delay = ((targetDelta - actualDelta) * 1000.0);
-                if (delay > 0.0f) { WAPI.delay((u32) delay); }
-            }
-        }
-
+        
         frames++;
+
+        if (configUncappedFramerate) { continue; }
+        
+        // Delay if our framerate is capped.
+        f64 targetDelta = 1.0 / (f64) configFrameLimit;
+        f64 now = clock_elapsed_f64();
+        f64 actualDelta = now - curTime;
+        if (actualDelta >= targetDelta) { continue; }
+        f64 delay = ((targetDelta - actualDelta) * 1000.0) - 1.0;
+        if (delay > 0.0f) {
+            WAPI.delay((u32)delay);
+        }
     }
 
     static u64 sFramesSinceFpsUpdate = 0;
@@ -345,8 +350,8 @@ void* main_game_init(UNUSED void* dummy) {
 
     audio_init();
     sound_init();
-    smlua_audio_custom_init();
     network_player_init();
+    mumble_init();
 
     gGameInited = true;
 }
@@ -461,12 +466,10 @@ int main(int argc, char *argv[]) {
         network_init(NT_NONE, false);
     }
 
-    mumble_init();
-
     // main loop
     while (true) {
         debug_context_reset();
-        CTX_BEGIN(CTX_FRAME);
+        CTX_BEGIN(CTX_TOTAL);
         WAPI.main_loop(produce_one_frame);
 #ifdef DISCORD_SDK
         discord_update();
@@ -476,7 +479,12 @@ int main(int argc, char *argv[]) {
         fflush(stdout);
         fflush(stderr);
 #endif
-        CTX_END(CTX_FRAME);
+        CTX_END(CTX_TOTAL);
+        
+#ifdef DEVELOPMENT
+        djui_ctx_display_update();
+#endif
+        djui_lua_profiler_update();
     }
 
     return 0;

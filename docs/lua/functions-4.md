@@ -99,6 +99,47 @@
 
 <br />
 
+## [atan2s](#atan2s)
+
+### Lua Example
+`local integerValue = atan2s(y, x)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| y | `number` |
+| x | `number` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s16 atan2s(f32 y, f32 x);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [coss](#coss)
+
+### Lua Example
+`local numberValue = coss(sm64Angle)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| sm64Angle | `integer` |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 coss(s16 sm64Angle);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [find_vector_perpendicular_to_plane](#find_vector_perpendicular_to_plane)
 
 ### Lua Example
@@ -139,6 +180,90 @@
 
 ### C Prototype
 `void get_pos_from_transform_mtx(Vec3f dest, Mat4 objMtx, Mat4 camMtx);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [max](#max)
+
+### Lua Example
+`local integerValue = max(a, b)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| a | `integer` |
+| b | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s16 max(s16 a, s16 b);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [maxf](#maxf)
+
+### Lua Example
+`local numberValue = maxf(a, b)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| a | `number` |
+| b | `number` |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 maxf(f32 a, f32 b);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [min](#min)
+
+### Lua Example
+`local integerValue = min(a, b)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| a | `integer` |
+| b | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s16 min(s16 a, s16 b);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [minf](#minf)
+
+### Lua Example
+`local numberValue = minf(a, b)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| a | `number` |
+| b | `number` |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 minf(f32 a, f32 b);`
 
 [:arrow_up_small:](#)
 
@@ -514,6 +639,26 @@
 
 <br />
 
+## [sins](#sins)
+
+### Lua Example
+`local numberValue = sins(sm64Angle)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| sm64Angle | `integer` |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 sins(s16 sm64Angle);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [spline_get_weights](#spline_get_weights)
 
 ### Lua Example
@@ -532,6 +677,46 @@
 
 ### C Prototype
 `void spline_get_weights(struct MarioState* m, Vec4f result, f32 t, UNUSED s32 c);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [sqr](#sqr)
+
+### Lua Example
+`local integerValue = sqr(x)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| x | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s16 sqr(s16 x);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [sqrf](#sqrf)
+
+### Lua Example
+`local numberValue = sqrf(x)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| x | `number` |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 sqrf(f32 x);`
 
 [:arrow_up_small:](#)
 
@@ -1373,6 +1558,27 @@
 
 ### C Prototype
 `void network_player_set_description(struct NetworkPlayer* np, const char* description, u8 r, u8 g, u8 b, u8 a);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [network_player_set_override_location](#network_player_set_override_location)
+
+### Lua Example
+`network_player_set_override_location(np, location)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| np | [NetworkPlayer](structs.md#NetworkPlayer) |
+| location | `string` |
+
+### Returns
+- None
+
+### C Prototype
+`void network_player_set_override_location(struct NetworkPlayer *np, const char *location);`
 
 [:arrow_up_small:](#)
 

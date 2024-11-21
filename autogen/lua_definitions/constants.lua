@@ -2,78 +2,6 @@
 
 math.randomseed(get_time())
 
-
---------------
--- CObjects --
---------------
-
-_CObjectPool = {}
-
-_CObject = {
-    __index = function (t,k)
-        return _get_field(t['_lot'], t['_pointer'], k, t)
-    end,
-    __newindex = function (t,k,v)
-        _set_field(t['_lot'], t['_pointer'], k, v, t)
-    end,
-    __tostring = function(t)
-        return 'CObject: ' .. t['_lot'] .. ', [' .. string.format('0x%08X', t['_pointer']) .. ']'
-    end,
-    __eq = function (a, b)
-        return a['_pointer'] == b['_pointer'] and a['_lot'] == b['_lot'] and a['_pointer'] ~= nil and a['_lot'] ~= nil
-    end
-}
-
-function _NewCObject(lot, pointer)
-    if _CObjectPool[lot] == nil then
-        _CObjectPool[lot] = {}
-    end
-
-    if _CObjectPool[lot][pointer] == nil then
-        local obj = {}
-        rawset(obj, '_pointer', pointer)
-        rawset(obj, '_lot', lot)
-        setmetatable(obj, _CObject)
-        _CObjectPool[lot][pointer] = obj
-        return obj
-    end
-
-    return _CObjectPool[lot][pointer]
-end
-
-local _CPointerPool = {}
-
-_CPointer = {
-    __index = function (t,k)
-        return nil
-    end,
-    __newindex = function (t,k,v)
-    end,
-    __tostring = function(t)
-        return 'CPointer: ' .. t['_lvt'] .. ', [' .. string.format('0x%08X', t['_pointer']) .. ']'
-    end,
-    __eq = function (a, b)
-        return a['_pointer'] == b['_pointer'] and a['_pointer'] ~= nil and a['_lvt'] ~= nil
-    end
-}
-
-function _NewCPointer(lvt, pointer)
-    if _CPointerPool[lvt] == nil then
-        _CPointerPool[lvt] = {}
-    end
-
-    if _CPointerPool[lvt][pointer] == nil then
-        local obj = {}
-        rawset(obj, '_pointer', pointer)
-        rawset(obj, '_lvt', lvt)
-        setmetatable(obj, _CPointer)
-        _CPointerPool[lvt][pointer] = obj
-        return obj
-    end
-
-    return _CPointerPool[lvt][pointer]
-end
-
 _SyncTable = {
     __index = function (t,k)
         local _table = rawget(t, '_table')
@@ -3779,6 +3707,9 @@ INT_TWIRL = (1 << 8)
 --- @type InteractionFlag
 INT_GROUND_POUND_OR_TWIRL = (INT_GROUND_POUND | INT_TWIRL)
 
+--- @type InteractionFlag
+INT_LUA = (1 << 31)
+
 --- @class InteractionType
 
 --- @type InteractionType
@@ -5571,7 +5502,7 @@ MARIO_HAND_RIGHT_OPEN = 5
 MAX_KEYS = 512
 
 --- @type integer
-MAX_KEY_VALUE_LENGTH = 256
+MAX_KEY_VALUE_LENGTH = 512
 
 --- @type integer
 PACKET_LENGTH = 3000
@@ -9230,7 +9161,10 @@ HOOK_ON_LANGUAGE_CHANGED = 44
 HOOK_ON_MODS_LOADED = 45
 
 --- @type LuaHookedEventType
-HOOK_MAX = 46
+HOOK_ON_NAMETAGS_RENDER = 46
+
+--- @type LuaHookedEventType
+HOOK_MAX = 47
 
 --- @class LuaModMenuElementType
 
@@ -12557,10 +12491,10 @@ SPTASK_STATE_FINISHED_DP = 4
 MAX_VERSION_LENGTH = 32
 
 --- @type integer
-MINOR_VERSION_NUMBER = 2
+MINOR_VERSION_NUMBER = 3
 
 --- @type string
-SM64COOPDX_VERSION = "v1.0.3"
+SM64COOPDX_VERSION = "v1.0.4"
 
 --- @type integer
 VERSION_NUMBER = 37

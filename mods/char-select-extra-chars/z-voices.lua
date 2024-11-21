@@ -3,11 +3,19 @@
 
 if not _G.charSelectExists then return end
 
+local voiceTables = {
+    [VOICETABLE_TOADETTE] = true,
+    [VOICETABLE_YOSHI]    = true,
+    [VOICETABLE_PEACH]    = true,
+    [VOICETABLE_DAISY]    = true,
+    [VOICETABLE_BIRDO]    = true
+}
+
 --- @param m MarioState
 local function mario_update(m)
     if is_player_active(m) == 0 then return end
     local voiceTable = charSelect.character_get_voice(m)
-    if voiceTable then
+    if voiceTables[voiceTable] then
         return charSelect.voice.snore(m)
     end
 end
@@ -16,7 +24,7 @@ end
 --- @param sound CharacterSound
 local function character_sound(m, sound)
     local voiceTable = charSelect.character_get_voice(m)
-    if voiceTable then
+    if voiceTables[voiceTable] then
         return charSelect.voice.sound(m, sound)
     end
 end

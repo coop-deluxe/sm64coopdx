@@ -3071,6 +3071,11 @@ function djui_hud_get_font()
 end
 
 --- @return number
+function djui_hud_get_fov_coeff()
+    -- ...
+end
+
+--- @return number
 function djui_hud_get_mouse_x()
     -- ...
 end
@@ -3217,6 +3222,11 @@ function djui_hud_world_pos_to_screen_pos(pos, out)
 end
 
 function djui_open_pause_menu()
+    -- ...
+end
+
+--- @return number
+function get_current_fov()
     -- ...
 end
 
@@ -5024,6 +5034,19 @@ function approach_s32(current, target, inc, dec)
     -- ...
 end
 
+--- @param y number
+--- @param x number
+--- @return integer
+function atan2s(y, x)
+    -- ...
+end
+
+--- @param sm64Angle integer
+--- @return number
+function coss(sm64Angle)
+    -- ...
+end
+
 --- @param dest Vec3f
 --- @param a Vec3f
 --- @param b Vec3f
@@ -5037,6 +5060,34 @@ end
 --- @param objMtx Mat4
 --- @param camMtx Mat4
 function get_pos_from_transform_mtx(dest, objMtx, camMtx)
+    -- ...
+end
+
+--- @param a integer
+--- @param b integer
+--- @return integer
+function max(a, b)
+    -- ...
+end
+
+--- @param a number
+--- @param b number
+--- @return number
+function maxf(a, b)
+    -- ...
+end
+
+--- @param a integer
+--- @param b integer
+--- @return integer
+function min(a, b)
+    -- ...
+end
+
+--- @param a number
+--- @param b number
+--- @return number
+function minf(a, b)
     -- ...
 end
 
@@ -5156,11 +5207,29 @@ function not_zero(value, replacement)
     -- ...
 end
 
+--- @param sm64Angle integer
+--- @return number
+function sins(sm64Angle)
+    -- ...
+end
+
 --- @param m MarioState
 --- @param result Vec4f
 --- @param t number
 --- @param c integer
 function spline_get_weights(m, result, t, c)
+    -- ...
+end
+
+--- @param x integer
+--- @return integer
+function sqr(x)
+    -- ...
+end
+
+--- @param x number
+--- @return number
+function sqrf(x)
     -- ...
 end
 
@@ -5451,6 +5520,12 @@ end
 --- @param b integer
 --- @param a integer
 function network_player_set_description(np, description, r, g, b, a)
+    -- ...
+end
+
+--- @param np NetworkPlayer
+--- @param location string
+function network_player_set_override_location(np, location)
     -- ...
 end
 
@@ -7808,6 +7883,11 @@ function camera_freeze()
 end
 
 --- @return boolean
+function camera_get_checking_surfaces()
+    -- ...
+end
+
+--- @return boolean
 function camera_is_frozen()
     -- ...
 end
@@ -7823,6 +7903,11 @@ end
 
 --- @param allow integer
 function camera_romhack_allow_dpad_usage(allow)
+    -- ...
+end
+
+--- @param value boolean
+function camera_set_checking_surfaces(value)
     -- ...
 end
 
@@ -8123,43 +8208,34 @@ function clampf(a, b, c)
     -- ...
 end
 
---- @param a integer
---- @param b integer
+--- @param degreesAngle number
 --- @return integer
-function max(a, b)
+function degrees_to_sm64(degreesAngle)
     -- ...
 end
 
 --- @param a number
 --- @param b number
 --- @return number
-function maxf(a, b)
+function hypotf(a, b)
     -- ...
 end
 
---- @param a integer
---- @param b integer
+--- @param radiansAngle number
 --- @return integer
-function min(a, b)
+function radians_to_sm64(radiansAngle)
     -- ...
 end
 
---- @param a number
---- @param b number
+--- @param sm64Angle integer
 --- @return number
-function minf(a, b)
+function sm64_to_degrees(sm64Angle)
     -- ...
 end
 
---- @param x integer
---- @return integer
-function sqr(x)
-    -- ...
-end
-
---- @param x number
+--- @param sm64Angle integer
 --- @return number
-function sqrf(x)
+function sm64_to_radians(sm64Angle)
     -- ...
 end
 
@@ -8178,6 +8254,11 @@ end
 --- @param pointer Pointer_integer
 --- @return integer
 function deref_s32_pointer(pointer)
+    -- ...
+end
+
+--- @return boolean
+function djui_attempting_to_open_playerlist()
     -- ...
 end
 
@@ -8208,6 +8289,12 @@ end
 
 --- @param value boolean
 function djui_set_popup_disabled_override(value)
+    -- ...
+end
+
+--- @param localIndex integer
+--- @return string
+function get_coopnet_id(localIndex)
     -- ...
 end
 

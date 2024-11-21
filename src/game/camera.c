@@ -36,6 +36,7 @@
 #include "pc/lua/smlua_hooks.h"
 #include "pc/djui/djui.h"
 #include "first_person_cam.h"
+#include "rendering_graph_node.h"
 
 #define CBUTTON_MASK (U_CBUTTONS | D_CBUTTONS | L_CBUTTONS | R_CBUTTONS)
 
@@ -907,20 +908,21 @@ void pan_ahead_of_player(struct Camera *c) {
 }
 
 s16 find_in_bounds_yaw_wdw_bob_thi(UNUSED Vec3f pos, UNUSED Vec3f origin, s16 yaw) {
-    // switch (gCurrLevelArea) {
-    //     case AREA_WDW_MAIN:
-    //         yaw = clamp_positions_and_find_yaw(pos, origin, 4508.f, -3739.f, 4508.f, -3739.f);
-    //         break;
-    //     case AREA_BOB:
-    //         yaw = clamp_positions_and_find_yaw(pos, origin, 8000.f, -8000.f, 7050.f, -8000.f);
-    //         break;
-    //     case AREA_THI_HUGE:
-    //         yaw = clamp_positions_and_find_yaw(pos, origin, 8192.f, -8192.f, 8192.f, -8192.f);
-    //         break;
-    //     case AREA_THI_TINY:
-    //         yaw = clamp_positions_and_find_yaw(pos, origin, 2458.f, -2458.f, 2458.f, -2458.f);
-    //         break;
-    // }
+    if (!gCameraUseCourseSpecificSettings) { return yaw; }
+    switch (gCurrLevelArea) {
+        case AREA_WDW_MAIN:
+            yaw = clamp_positions_and_find_yaw(pos, origin, 4508.f, -3739.f, 4508.f, -3739.f);
+            break;
+        case AREA_BOB:
+            yaw = clamp_positions_and_find_yaw(pos, origin, 8000.f, -8000.f, 7050.f, -8000.f);
+            break;
+        case AREA_THI_HUGE:
+            yaw = clamp_positions_and_find_yaw(pos, origin, 8192.f, -8192.f, 8192.f, -8192.f);
+            break;
+        case AREA_THI_TINY:
+            yaw = clamp_positions_and_find_yaw(pos, origin, 2458.f, -2458.f, 2458.f, -2458.f);
+            break;
+    }
     return yaw;
 }
 
@@ -1925,14 +1927,18 @@ s32 update_behind_mario_camera(struct Camera *c, Vec3f focus, Vec3f pos) {
         dist = 300.f;
     }
     vec3f_set_dist_and_angle(focus, pos, dist, pitch, yaw);
-    if (gCurrLevelArea == AREA_WDW_MAIN) {
-        yaw = clamp_positions_and_find_yaw(pos, focus, 4508.f, -3739.f, 4508.f, -3739.f);
-    }
-    if (gCurrLevelArea == AREA_THI_HUGE) {
-        yaw = clamp_positions_and_find_yaw(pos, focus, 8192.f, -8192.f, 8192.f, -8192.f);
-    }
-    if (gCurrLevelArea == AREA_THI_TINY) {
-        yaw = clamp_positions_and_find_yaw(pos, focus, 2458.f, -2458.f, 2458.f, -2458.f);
+
+    if (!gCameraUseCourseSpecificSettings) { return yaw; }
+    switch (gCurrLevelArea) {
+        case AREA_WDW_MAIN:
+            yaw = clamp_positions_and_find_yaw(pos, focus, 4508.f, -3739.f, 4508.f, -3739.f);
+            break;
+        case AREA_THI_HUGE:
+            yaw = clamp_positions_and_find_yaw(pos, focus, 8192.f, -8192.f, 8192.f, -8192.f);
+            break;
+        case AREA_THI_TINY:
+            yaw = clamp_positions_and_find_yaw(pos, focus, 2458.f, -2458.f, 2458.f, -2458.f);
+            break;
     }
 
     return yaw;
@@ -2424,7 +2430,7 @@ s16 update_default_camera(struct Camera *c) {
             c->pos[1] = ceilHeight;
         }
     }
-    if (gCurrLevelArea == AREA_WDW_TOWN) {
+    if (gCameraUseCourseSpecificSettings && gCurrLevelArea == AREA_WDW_TOWN) {
         yaw = clamp_positions_and_find_yaw(c->pos, c->focus, 2254.f, -3789.f, 3790.f, -2253.f);
     }
     return yaw;
@@ -3085,7 +3091,7 @@ void update_lakitu(struct Camera *c) {
             distToFloor = find_floor(gLakituState.pos[0],
                                      gLakituState.pos[1] + 20.0f,
                                      gLakituState.pos[2], &floor);
-            gCheckingSurfaceCollisionsForCamera = false;
+            gCheckingSurfaceCollisionsForCamera = FALSE;
             if (distToFloor != gLevelValues.floorLowerLimit) {
                 if (gLakituState.pos[1] < (distToFloor += 100.0f)) {
                     gLakituState.pos[1] = distToFloor;
@@ -3500,103 +3506,106 @@ void init_camera(struct Camera *c) {
     marioOffset[2] = 400.f;
 
     // Set the camera's starting position or start a cutscene for certain levels
-    switch (gCurrLevelNum) {
-        case LEVEL_BOWSER_1:
+    if (!sSoftResettingCamera) {
+        switch (gCurrLevelNum) {
+            case LEVEL_BOWSER_1:
 #ifndef VERSION_JP
-            if (gCurrDemoInput == NULL) {
+                if (gCurrDemoInput == NULL) {
+                    // Make sure Bowser is in a state that we'd start speaking to him in.
+                    obj = find_object_with_behavior(bhvBowser);
+                    if (obj != NULL && obj->oAction != 5) { break; }
+
+                    start_cutscene(c, CUTSCENE_ENTER_BOWSER_ARENA);
+                } else if (gSecondCameraFocus != NULL) {
+                    gSecondCameraFocus->oBowserUnk88 = 2;
+                }
+#else
                 // Make sure Bowser is in a state that we'd start speaking to him in.
                 obj = find_object_with_behavior(bhvBowser);
                 if (obj != NULL && obj->oAction != 5) { break; }
 
                 start_cutscene(c, CUTSCENE_ENTER_BOWSER_ARENA);
-            } else if (gSecondCameraFocus != NULL) {
-                gSecondCameraFocus->oBowserUnk88 = 2;
-            }
-#else
-            // Make sure Bowser is in a state that we'd start speaking to him in.
-            obj = find_object_with_behavior(bhvBowser);
-            if (obj != NULL && obj->oAction != 5) { break; }
-
-            start_cutscene(c, CUTSCENE_ENTER_BOWSER_ARENA);
 #endif
-            break;
-        case LEVEL_BOWSER_2:
-            // Make sure Bowser is in a state that we'd start speaking to him in.
-            obj = find_object_with_behavior(bhvBowser);
-            if (obj != NULL && obj->oAction != 5) { break; }
+                break;
+            case LEVEL_BOWSER_2:
+                // Make sure Bowser is in a state that we'd start speaking to him in.
+                obj = find_object_with_behavior(bhvBowser);
+                if (obj != NULL && obj->oAction != 5) { break; }
 
-            start_cutscene(c, CUTSCENE_ENTER_BOWSER_ARENA);
-            break;
-        case LEVEL_BOWSER_3:
-            // Make sure Bowser is in a state that we'd start speaking to him in.
-            obj = find_object_with_behavior(bhvBowser);
-            if (obj != NULL && obj->oAction != 5) { break; }
+                start_cutscene(c, CUTSCENE_ENTER_BOWSER_ARENA);
+                break;
+            case LEVEL_BOWSER_3:
+                // Make sure Bowser is in a state that we'd start speaking to him in.
+                obj = find_object_with_behavior(bhvBowser);
+                if (obj != NULL && obj->oAction != 5) { break; }
 
-            start_cutscene(c, CUTSCENE_ENTER_BOWSER_ARENA);
-            break;
+                start_cutscene(c, CUTSCENE_ENTER_BOWSER_ARENA);
+                break;
 
-        //! Hardcoded position checks determine which cutscene to play when Mario enters castle grounds.
-        case LEVEL_CASTLE_GROUNDS:
-            if (is_within_100_units_of_mario(-1328.f, 260.f, 4664.f) != 1) {
-                marioOffset[0] = -400.f;
-                marioOffset[2] = -800.f;
-            }
-            if (is_within_100_units_of_mario(-6901.f, 2376.f, -6509.f) == 1) {
-                start_cutscene(c, CUTSCENE_EXIT_WATERFALL);
-            }
-            if (is_within_100_units_of_mario(5408.f, 4500.f, 3637.f) == 1) {
-                start_cutscene(c, CUTSCENE_EXIT_FALL_WMOTR);
-            }
-            gLakituState.mode = CAMERA_MODE_FREE_ROAM;
-            break;
-        case LEVEL_SA:
-            marioOffset[2] = 200.f;
-            break;
-        case LEVEL_CASTLE_COURTYARD:
-            marioOffset[2] = -300.f;
-            break;
-        case LEVEL_LLL:
-            gCameraMovementFlags |= CAM_MOVE_ZOOMED_OUT;
-            break;
-        case LEVEL_CASTLE:
-            marioOffset[2] = 150.f;
-            break;
-        case LEVEL_RR:
-            vec3f_set(sFixedModeBasePosition, -2985.f, 478.f, -5568.f);
-            break;
-    }
-    if ((c->mode == CAMERA_MODE_8_DIRECTIONS) || c->mode == CAMERA_MODE_ROM_HACK) {
-        gCameraMovementFlags |= CAM_MOVE_ZOOMED_OUT;
-    }
-    switch (gCurrLevelArea) {
-        case AREA_SSL_EYEROK:
-            vec3f_set(marioOffset, 0.f, 500.f, -100.f);
-            break;
-        case AREA_CCM_SLIDE:
-            marioOffset[2] = -300.f;
-            break;
-        case AREA_THI_WIGGLER:
-            marioOffset[2] = -300.f;
-            break;
-        case AREA_SL_IGLOO:
-            marioOffset[2] = -300.f;
-            break;
-        case AREA_SL_OUTSIDE:
-            if (is_within_100_units_of_mario(257.f, 2150.f, 1399.f) == 1) {
+            //! Hardcoded position checks determine which cutscene to play when Mario enters castle grounds.
+            case LEVEL_CASTLE_GROUNDS:
+                if (is_within_100_units_of_mario(-1328.f, 260.f, 4664.f) != 1) {
+                    marioOffset[0] = -400.f;
+                    marioOffset[2] = -800.f;
+                }
+                if (is_within_100_units_of_mario(-6901.f, 2376.f, -6509.f) == 1) {
+                    start_cutscene(c, CUTSCENE_EXIT_WATERFALL);
+                }
+                if (is_within_100_units_of_mario(5408.f, 4500.f, 3637.f) == 1) {
+                    start_cutscene(c, CUTSCENE_EXIT_FALL_WMOTR);
+                }
+                gLakituState.mode = CAMERA_MODE_FREE_ROAM;
+                break;
+            case LEVEL_SA:
+                marioOffset[2] = 200.f;
+                break;
+            case LEVEL_CASTLE_COURTYARD:
                 marioOffset[2] = -300.f;
-            }
-            break;
-        case AREA_CCM_OUTSIDE:
+                break;
+            case LEVEL_LLL:
+                gCameraMovementFlags |= CAM_MOVE_ZOOMED_OUT;
+                break;
+            case LEVEL_CASTLE:
+                marioOffset[2] = 150.f;
+                break;
+            case LEVEL_RR:
+                vec3f_set(sFixedModeBasePosition, -2985.f, 478.f, -5568.f);
+                break;
+        }
+
+        if ((c->mode == CAMERA_MODE_8_DIRECTIONS) || c->mode == CAMERA_MODE_ROM_HACK) {
             gCameraMovementFlags |= CAM_MOVE_ZOOMED_OUT;
-            break;
-        case AREA_TTM_OUTSIDE:
-            gLakituState.mode = CAMERA_MODE_RADIAL;
-            break;
+        }
+
+        switch (gCurrLevelArea) {
+            case AREA_SSL_EYEROK:
+                vec3f_set(marioOffset, 0.f, 500.f, -100.f);
+                break;
+            case AREA_CCM_SLIDE:
+                marioOffset[2] = -300.f;
+                break;
+            case AREA_THI_WIGGLER:
+                marioOffset[2] = -300.f;
+                break;
+            case AREA_SL_IGLOO:
+                marioOffset[2] = -300.f;
+                break;
+            case AREA_SL_OUTSIDE:
+                if (is_within_100_units_of_mario(257.f, 2150.f, 1399.f) == 1) {
+                    marioOffset[2] = -300.f;
+                }
+                break;
+            case AREA_CCM_OUTSIDE:
+                gCameraMovementFlags |= CAM_MOVE_ZOOMED_OUT;
+                break;
+            case AREA_TTM_OUTSIDE:
+                gLakituState.mode = CAMERA_MODE_RADIAL;
+                break;
+        }
     }
 
     if (sSoftResettingCamera) {
         c->cutscene = 0;
-        sSoftResettingCamera = FALSE;
     } else {
         // Set the camera pos to marioOffset (relative to Mario), added to Mario's position
         offset_rotated(c->pos, sMarioCamState->pos, marioOffset, sMarioCamState->faceAngle);
@@ -3621,8 +3630,10 @@ void init_camera(struct Camera *c) {
     c->yaw = gLakituState.yaw;
     c->nextYaw = gLakituState.yaw;
 
-    newcam_init(c, 0);
+    newcam_init(c, sSoftResettingCamera);
     newcam_init_settings();
+
+    sSoftResettingCamera = FALSE;
 }
 
 /**
@@ -12027,7 +12038,7 @@ Gfx *geo_camera_fov(s32 callContext, struct GraphNode *g, UNUSED void *context) 
         }
     }
 
-    perspective->fov = gFOVState.fov;
+    perspective->fov = get_first_person_enabled() ? gFirstPersonCamera.fov : not_zero(gFOVState.fov, gOverrideFOV);
     shake_camera_fov(perspective);
     return NULL;
 }
@@ -12299,9 +12310,9 @@ void mode_rom_hack_camera(struct Camera *c) {
         if (gMarioStates[0].controller->buttonPressed & U_JPAD) {
             sRomHackYaw = DEGREES(180 + 90) - gMarioStates[0].faceAngle[1];
         } else if (gMarioStates[0].controller->buttonDown & L_JPAD) {
-            sRomHackYaw -= DEGREES(1) * (camera_config_is_x_inverted() ? -1 : 1);
+            sRomHackYaw -= DEGREES(0.5) * (camera_config_is_x_inverted() ? -1 : 1);
         } else if (gMarioStates[0].controller->buttonDown & R_JPAD) {
-            sRomHackYaw += DEGREES(1) * (camera_config_is_x_inverted() ? -1 : 1);
+            sRomHackYaw += DEGREES(0.5) * (camera_config_is_x_inverted() ? -1 : 1);
         } else if (gMarioStates[0].controller->buttonPressed & D_JPAD) {
             sRomHackYaw = snap_to_45_degrees(sRomHackYaw);
         }
@@ -12330,6 +12341,22 @@ void mode_rom_hack_camera(struct Camera *c) {
     pos[0] = mPos[0] + coss(sRomHackYaw) * desiredDist;
     pos[1] = mPos[1] + desiredHeight;
     pos[2] = mPos[2] + sins(sRomHackYaw) * desiredDist;
+
+    // Move camera down for hangable ceilings
+    if (sMarioCamState->action & ACT_FLAG_HANGING) {
+        f32 marioCeilHeight = sMarioGeometry.currCeilHeight;
+        f32 marioFloorHeight = sMarioGeometry.currFloorHeight;
+
+        if (marioFloorHeight < marioCeilHeight - 400.f) {
+            marioFloorHeight = marioCeilHeight - 400.f;
+        }
+
+        f32 goalHeight = marioFloorHeight + (marioCeilHeight - marioFloorHeight) * 0.4f;
+
+        if (pos[1] - 400 > goalHeight) {
+            pos[1] -= 400;
+        }
+    }
 
     if (rom_hack_cam_can_see_mario(pos)) {
         // we can see mario, no need to adjust

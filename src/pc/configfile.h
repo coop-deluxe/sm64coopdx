@@ -135,6 +135,10 @@ extern unsigned int configDjuiThemeFont;
 extern unsigned int configDjuiScale;
 // other
 extern unsigned int configRulesVersion;
+extern bool         configCompressOnStartup;
+
+// secrets
+extern bool configExCoopTheme;
 
 void enable_queued_mods(void);
 void enable_queued_dynos_packs(void);

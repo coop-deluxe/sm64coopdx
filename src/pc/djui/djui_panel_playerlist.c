@@ -11,6 +11,7 @@
 #include "pc/utils/misc.h"
 
 struct DjuiThreePanel* gDjuiPlayerList = NULL;
+bool gAttemptingToOpenPlayerlist = false;
 
 static struct DjuiFlowLayout* djuiRow[MAX_PLAYERS] = { 0 };
 static struct DjuiImage* djuiImages[MAX_PLAYERS] = { 0 };
@@ -53,7 +54,11 @@ static void playerlist_update_row(u8 i, struct NetworkPlayer *np) {
     djui_base_set_color(&djuiTextDescriptions[i]->base, np->descriptionR, np->descriptionG, np->descriptionB, np->descriptionA);
     djui_text_set_text(djuiTextDescriptions[i], np->description);
 
-    djui_text_set_text(djuiTextLocations[i], get_level_name(np->currCourseNum, np->currLevelNum, np->currAreaIndex));
+    djui_text_set_text(djuiTextLocations[i],
+        np->overrideLocation[0] == '\0'
+          ? get_level_name(np->currCourseNum, np->currLevelNum, np->currAreaIndex)
+          : np->overrideLocation
+    );
     djui_text_set_text(djuiTextAct[i], sActNum);
 }
 

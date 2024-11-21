@@ -2,7 +2,7 @@
 
 void djui_progress_bar_render_pre(struct DjuiBase* base, UNUSED bool* unused) {
     struct DjuiProgressBar* progress = (struct DjuiProgressBar*)base;
-    progress->smoothValue = progress->smoothValue * 0.95f + *progress->value * 0.05f;
+    progress->smoothValue = progress->smoothValue * progress->smoothenHigh + *progress->value * progress->smoothenLow;
     float min = progress->min;
     float max = progress->max;
     djui_base_set_size(&progress->rectValue->base, ((f32)progress->smoothValue - min) / ((f32)max - min), 1.0f);
@@ -13,7 +13,7 @@ void djui_progress_bar_render_pre_infinite(struct DjuiBase* base, UNUSED bool* u
     float min = progress->min;
     float max = progress->max;
 
-    progress->smoothValue = progress->smoothValue * 0.95f + *progress->value * 0.05f;
+    progress->smoothValue = progress->smoothValue * progress->smoothenHigh + *progress->value * progress->smoothenLow;
     float modValue = progress->smoothValue - ((int)progress->smoothValue);
     float x = (modValue - min - 0.25f) / (max - min - 0.25f);
     float w = 0.25f;
@@ -43,6 +43,8 @@ struct DjuiProgressBar* djui_progress_bar_create(struct DjuiBase* parent, float*
     progress->smoothValue = *value;
     progress->min = min;
     progress->max = max;
+    progress->smoothenHigh = 0.95f;
+    progress->smoothenLow = 0.05f;
 
     djui_base_init(parent, base, NULL, djui_progress_bar_destroy);
     djui_base_set_size_type(base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);

@@ -122,6 +122,7 @@ void piranha_plant_act_woken_up(void) {
      */
     o->oDamageOrCoinValue = 3;
 #endif
+
     if (o->oTimer == 0)
         stop_secondary_music(50);
 
@@ -270,6 +271,9 @@ void piranha_plant_act_biting(void) {
 
     cur_obj_init_animation_with_sound(0);
 
+    cur_obj_set_hitbox_radius_and_height(150.0f, 100.0f);
+    cur_obj_set_hurtbox_radius_and_height(150.0f, 100.0f);
+
     // Play a bite sound effect on certain frames.
     if (is_item_in_array(frame, sPiranhaPlantBiteSoundFrames)) {
         cur_obj_play_sound_2(SOUND_OBJ2_PIRANHA_PLANT_BITE);
@@ -367,9 +371,6 @@ void bhv_piranha_plant_loop(void) {
         sync_object_init_field(o, &o->oPiranhaPlantSleepMusicState);
         sync_object_init_field(o, &o->oTimer);
     }
-
-    cur_obj_set_hitbox_radius_and_height(150.0f, 100.0f);
-    cur_obj_set_hurtbox_radius_and_height(150.0f, 100.0f);
 
     CUR_OBJ_CALL_ACTION_FUNCTION(TablePiranhaPlantActions);
     // In WF, hide all Piranha Plants once high enough up.

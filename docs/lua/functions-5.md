@@ -824,6 +824,24 @@
 
 <br />
 
+## [camera_get_checking_surfaces](#camera_get_checking_surfaces)
+
+### Lua Example
+`local booleanValue = camera_get_checking_surfaces()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool camera_get_checking_surfaces(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [camera_is_frozen](#camera_is_frozen)
 
 ### Lua Example
@@ -895,6 +913,26 @@
 
 ### C Prototype
 `void camera_romhack_allow_dpad_usage(u8 allow);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_set_checking_surfaces](#camera_set_checking_surfaces)
+
+### Lua Example
+`camera_set_checking_surfaces(value)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| value | `boolean` |
+
+### Returns
+- None
+
+### C Prototype
+`void camera_set_checking_surfaces(bool value);`
 
 [:arrow_up_small:](#)
 
@@ -1763,31 +1801,30 @@
 
 <br />
 
-## [max](#max)
+## [degrees_to_sm64](#degrees_to_sm64)
 
 ### Lua Example
-`local integerValue = max(a, b)`
+`local integerValue = degrees_to_sm64(degreesAngle)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| a | `integer` |
-| b | `integer` |
+| degreesAngle | `number` |
 
 ### Returns
 - `integer`
 
 ### C Prototype
-`s32 max(s32 a, s32 b);`
+`s16 degrees_to_sm64(f32 degreesAngle);`
 
 [:arrow_up_small:](#)
 
 <br />
 
-## [maxf](#maxf)
+## [hypotf](#hypotf)
 
 ### Lua Example
-`local numberValue = maxf(a, b)`
+`local numberValue = hypotf(a, b)`
 
 ### Parameters
 | Field | Type |
@@ -1799,89 +1836,67 @@
 - `number`
 
 ### C Prototype
-`f32 maxf(f32 a, f32 b);`
+`f32 hypotf(f32 a, f32 b);`
 
 [:arrow_up_small:](#)
 
 <br />
 
-## [min](#min)
+## [radians_to_sm64](#radians_to_sm64)
 
 ### Lua Example
-`local integerValue = min(a, b)`
+`local integerValue = radians_to_sm64(radiansAngle)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| a | `integer` |
-| b | `integer` |
+| radiansAngle | `number` |
 
 ### Returns
 - `integer`
 
 ### C Prototype
-`s32 min(s32 a, s32 b);`
+`s16 radians_to_sm64(f32 radiansAngle);`
 
 [:arrow_up_small:](#)
 
 <br />
 
-## [minf](#minf)
+## [sm64_to_degrees](#sm64_to_degrees)
 
 ### Lua Example
-`local numberValue = minf(a, b)`
+`local numberValue = sm64_to_degrees(sm64Angle)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| a | `number` |
-| b | `number` |
+| sm64Angle | `integer` |
 
 ### Returns
 - `number`
 
 ### C Prototype
-`f32 minf(f32 a, f32 b);`
+`f32 sm64_to_degrees(s16 sm64Angle);`
 
 [:arrow_up_small:](#)
 
 <br />
 
-## [sqr](#sqr)
+## [sm64_to_radians](#sm64_to_radians)
 
 ### Lua Example
-`local integerValue = sqr(x)`
+`local numberValue = sm64_to_radians(sm64Angle)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| x | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 sqr(s32 x);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [sqrf](#sqrf)
-
-### Lua Example
-`local numberValue = sqrf(x)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| x | `number` |
+| sm64Angle | `integer` |
 
 ### Returns
 - `number`
 
 ### C Prototype
-`f32 sqrf(f32 x);`
+`f32 sm64_to_radians(s16 sm64Angle);`
 
 [:arrow_up_small:](#)
 
@@ -1948,6 +1963,24 @@
 
 ### C Prototype
 `s32 deref_s32_pointer(s32* pointer);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [djui_attempting_to_open_playerlist](#djui_attempting_to_open_playerlist)
+
+### Lua Example
+`local booleanValue = djui_attempting_to_open_playerlist()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool djui_attempting_to_open_playerlist(void);`
 
 [:arrow_up_small:](#)
 
@@ -2061,6 +2094,26 @@
 
 ### C Prototype
 `void djui_set_popup_disabled_override(bool value);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_coopnet_id](#get_coopnet_id)
+
+### Lua Example
+`local stringValue = get_coopnet_id(localIndex)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| localIndex | `integer` |
+
+### Returns
+- `string`
+
+### C Prototype
+`const char* get_coopnet_id(s8 localIndex);`
 
 [:arrow_up_small:](#)
 

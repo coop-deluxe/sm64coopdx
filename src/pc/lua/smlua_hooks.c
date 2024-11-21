@@ -15,71 +15,13 @@
 #include "pc/network/socket/socket.h"
 #include "pc/chat_commands.h"
 #include "pc/pc_main.h"
+#include "pc/djui/djui_lua_profiler.h"
 #include "pc/djui/djui_panel.h"
+#include "pc/configfile.h"
 
 #include "../mods/mods.h"
 #include "game/print.h"
 #include "gfx_dimensions.h"
-
-#define MAX_PROFILED_MODS 16
-#define REFRESH_RATE 15
-
-static struct {
-    f64 start;
-    f64 end;
-    f64 sum;
-    f64 disp;
-} sLuaProfilerCounters[MAX_PROFILED_MODS];
-
-static void lua_profiler_start_counter(UNUSED struct Mod *mod) {
-#ifndef WAPI_DUMMY
-    for (s32 i = 0; i != MIN(MAX_PROFILED_MODS, gActiveMods.entryCount); ++i) {
-        if (gActiveMods.entries[i] == mod) {
-            f64 freq = SDL_GetPerformanceFrequency();
-            f64 curr = SDL_GetPerformanceCounter();
-            sLuaProfilerCounters[i].start = curr / freq;
-            return;
-        }
-    }
-#endif
-}
-
-static void lua_profiler_stop_counter(UNUSED struct Mod *mod) {
-#ifndef WAPI_DUMMY
-    for (s32 i = 0; i != MIN(MAX_PROFILED_MODS, gActiveMods.entryCount); ++i) {
-        if (gActiveMods.entries[i] == mod) {
-            f64 freq = SDL_GetPerformanceFrequency();
-            f64 curr = SDL_GetPerformanceCounter();
-            sLuaProfilerCounters[i].end = curr / freq;
-            sLuaProfilerCounters[i].sum += sLuaProfilerCounters[i].end - sLuaProfilerCounters[i].start;
-            return;
-        }
-    }
-#endif
-}
-
-void lua_profiler_update_counters(void) {
-    if (gGlobalTimer % REFRESH_RATE == 0) {
-        for (s32 i = 0; i != MIN(MAX_PROFILED_MODS, gActiveMods.entryCount); ++i) {
-            sLuaProfilerCounters[i].disp = sLuaProfilerCounters[i].sum / (f64) REFRESH_RATE;
-            sLuaProfilerCounters[i].sum = 0;
-        }
-    }
-    for (s32 i = 0, y = SCREEN_HEIGHT - 60; i != MIN(MAX_PROFILED_MODS, gActiveMods.entryCount); ++i, y -= 18) {
-        const char *modName = gActiveMods.entries[i]->relativePath;
-        s32 modCounterUs = (s32) (sLuaProfilerCounters[i].disp * 1000000.0);
-        char text[256];
-        snprintf(text, 256, "             %05d", modCounterUs);
-        memcpy(text, modName, MIN(12, strlen(modName) - (gActiveMods.entries[i]->isDirectory ? 0 : 4)));
-        for (s32 j = 0; j != 12; ++j) {
-            char c = text[j];
-            if (c >= 'a' && c <= 'z') c -= ('a' - 'A');
-            if ((c < '0' || c > '9') && (c < 'A' || c > 'Z')) c = ' ';
-            text[j] = c;
-        }
-        print_text(GFX_DIMENSIONS_RECT_FROM_LEFT_EDGE(4), y, text);
-    }
-}
 
 #define MAX_HOOKED_REFERENCES 64
 #define LUA_BEHAVIOR_FLAG (1 << 15)
@@ -101,18 +43,13 @@ int smlua_call_hook(lua_State* L, int nargs, int nresults, int errfunc, struct M
     gLuaActiveMod = activeMod;
     gLuaLastHookMod = activeMod;
 
-    extern bool configLuaProfiler;
-    if (configLuaProfiler) {
-        lua_profiler_start_counter(activeMod);
-    }
+    lua_profiler_start_counter(activeMod);
 
     CTX_BEGIN(CTX_HOOK);
     int rc = smlua_pcall(L, nargs, nresults, errfunc);
     CTX_END(CTX_HOOK);
 
-    if (configLuaProfiler) {
-        lua_profiler_stop_counter(activeMod);
-    }
+    lua_profiler_stop_counter(activeMod);
 
     gLuaActiveMod = prev;
     return rc;
@@ -690,6 +627,36 @@ void smlua_call_event_hooks_int_params_ret_int(enum LuaHookedEventType hookType,
     }
 }
 
+void smlua_call_event_hooks_int_params_ret_string(enum LuaHookedEventType hookType, s32 param, char** returnValue) {
+    lua_State* L = gLuaState;
+    if (L == NULL) { return; }
+    struct LuaHookedEvent* hook = &sHookedEvents[hookType];
+    for (int i = 0; i < hook->count; i++) {
+        s32 prevTop = lua_gettop(L);
+
+        // push the callback onto the stack
+        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
+
+        // push params
+        lua_pushinteger(L, param);
+
+        // call the callback
+        if (0 != smlua_call_hook(L, 1, 1, 0, hook->mod[i])) {
+            LOG_LUA("Failed to call the callback: %u", hookType);
+            continue;
+        }
+
+        // output the return value
+        if (lua_type(L, -1) == LUA_TSTRING) {
+            *returnValue = (char *)smlua_to_string(L, -1);
+            lua_settop(L, prevTop);
+            return;
+        } else {
+            lua_settop(L, prevTop);
+        }
+    }
+}
+
 void smlua_call_event_hooks_value_param(enum LuaHookedEventType hookType, int modIndex, int valueIndex) {
     lua_State* L = gLuaState;
     if (L == NULL) { return; }
@@ -1186,6 +1153,7 @@ int smlua_hook_mario_action(lua_State* L) {
     lua_Integer interactionType = 0;
     if (paramCount >= 3) {
         interactionType = smlua_to_integer(L, 3);
+        interactionType |= (1 << 31); /* INT_LUA */
         if (!gSmLuaConvertSuccess) {
             LOG_LUA_LINE("Hook Action: tried to hook invalid interactionType: %lld, %u", interactionType, gSmLuaConvertSuccess);
             return 0;
@@ -2212,6 +2180,81 @@ int smlua_update_mod_menu_element_name(lua_State* L) {
     return 1;
 }
 
+int smlua_update_mod_menu_element_checkbox(lua_State* L) {
+    if (L == NULL) { return 0; }
+    if (!smlua_functions_valid_param_count(L, 2)) { return 0; }
+
+    int index = smlua_to_integer(L, 1);
+    if (index >= gHookedModMenuElementsCount || !gSmLuaConvertSuccess) {
+        LOG_LUA_LINE("Update mod menu element: tried to update invalid element");
+        return 0;
+    }
+
+    if (gHookedModMenuElements[index].element != MOD_MENU_ELEMENT_CHECKBOX) {
+        LOG_LUA_LINE("Update mod menu element: element is not a checkbox.");
+        return 0;
+    }
+
+    bool boolValue = smlua_to_boolean(L, 2);
+    if (!gSmLuaConvertSuccess) {
+        LOG_LUA_LINE("Update mod menu element: tried to update invalid element");
+        return 0;
+    }
+
+    gHookedModMenuElements[index].boolValue = boolValue;
+    return 1;
+}
+
+int smlua_update_mod_menu_element_slider(lua_State* L) {
+    if (L == NULL) { return 0; }
+    if (!smlua_functions_valid_param_count(L, 2)) { return 0; }
+
+    int index = smlua_to_integer(L, 1);
+    if (index >= gHookedModMenuElementsCount || !gSmLuaConvertSuccess) {
+        LOG_LUA_LINE("Update mod menu element: tried to update invalid element");
+        return 0;
+    }
+
+    if (gHookedModMenuElements[index].element != MOD_MENU_ELEMENT_SLIDER) {
+        LOG_LUA_LINE("Update mod menu element: element is not a slider.");
+        return 0;
+    }
+
+    u32 uintValue = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) {
+        LOG_LUA_LINE("Update mod menu element: tried to update invalid element");
+        return 0;
+    }
+
+    gHookedModMenuElements[index].uintValue = uintValue;
+    return 1;
+}
+
+int smlua_update_mod_menu_element_inputbox(lua_State* L) {
+    if (L == NULL) { return 0; }
+    if (!smlua_functions_valid_param_count(L, 2)) { return 0; }
+
+    int index = smlua_to_integer(L, 1);
+    if (index >= gHookedModMenuElementsCount || !gSmLuaConvertSuccess) {
+        LOG_LUA_LINE("Update mod menu element: tried to update invalid element");
+        return 0;
+    }
+
+    if (gHookedModMenuElements[index].element != MOD_MENU_ELEMENT_INPUTBOX) {
+        LOG_LUA_LINE("Update mod menu element: element is not an inputbox.");
+        return 0;
+    }
+
+    const char* stringValue = smlua_to_string(L, 2);
+    if (stringValue == NULL || strlen(stringValue) == 0 || !gSmLuaConvertSuccess) {
+        LOG_LUA_LINE("Update mod menu element: tried to update invalid element string");
+        return 0;
+    }
+
+    snprintf(gHookedModMenuElements[index].stringValue, gHookedModMenuElements[index].length, "%s", stringValue);
+    return 1;
+}
+
 void smlua_call_mod_menu_element_hook(struct LuaHookedModMenuElement* hooked, int index) {
     lua_State* L = gLuaState;
     if (L == NULL) { return; }
@@ -2342,4 +2385,7 @@ void smlua_bind_hooks(void) {
     smlua_bind_function(L, "hook_mod_menu_inputbox", smlua_hook_mod_menu_inputbox);
     smlua_bind_function(L, "update_chat_command_description", smlua_update_chat_command_description);
     smlua_bind_function(L, "update_mod_menu_element_name", smlua_update_mod_menu_element_name);
+    smlua_bind_function(L, "update_mod_menu_element_checkbox", smlua_update_mod_menu_element_checkbox);
+    smlua_bind_function(L, "update_mod_menu_element_slider", smlua_update_mod_menu_element_slider);
+    smlua_bind_function(L, "update_mod_menu_element_inputbox", smlua_update_mod_menu_element_inputbox);
 }

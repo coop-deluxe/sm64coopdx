@@ -6,6 +6,10 @@
 #include <stdbool.h>
 #include <assert.h>
 
+#ifdef __SSE__
+#include <xmmintrin.h>
+#endif
+
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb/stb_image.h>
 
@@ -106,8 +110,8 @@ static struct RSP {
     float modelview_matrix_stack[11][4][4];
     uint8_t modelview_matrix_stack_size;
 
-    float MP_matrix[4][4];
-    float P_matrix[4][4];
+    ALIGNED16 float MP_matrix[4][4];
+    ALIGNED16 float P_matrix[4][4];
 
     Light_t current_lights[MAX_LIGHTS + 1];
     float current_lights_coeffs[MAX_LIGHTS][3];
@@ -760,19 +764,46 @@ static void gfx_sp_pop_matrix(uint32_t count) {
 }
 
 static float gfx_adjust_x_for_aspect_ratio(float x) {
-    return x * (4.0f / 3.0f) / ((float)gfx_current_dimensions.width / (float)gfx_current_dimensions.height);
+    return x * gfx_current_dimensions.x_adjust_ratio;
 }
 
 static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, const Vtx *vertices, bool luaVertexColor) {
+    float globalLightCached[2][3];
+    if (rsp.geometry_mode & G_LIGHTING) {
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 3; j++)
+                globalLightCached[i][j] = gLightingColor[i][j] / 255.0f;
+        }
+    }
+
+#ifdef __SSE__
+    __m128 mat0 = _mm_load_ps(rsp.MP_matrix[0]);
+    __m128 mat1 = _mm_load_ps(rsp.MP_matrix[1]);
+    __m128 mat2 = _mm_load_ps(rsp.MP_matrix[2]);
+    __m128 mat3 = _mm_load_ps(rsp.MP_matrix[3]);
+#endif
+
     for (size_t i = 0; i < n_vertices; i++, dest_index++) {
         const Vtx_t *v = &vertices[i].v;
         const Vtx_tn *vn = &vertices[i].n;
         struct LoadedVertex *d = &rsp.loaded_vertices[dest_index];
 
+#ifdef __SSE__
+        __m128 ob0 = _mm_set1_ps(v->ob[0]);
+        __m128 ob1 = _mm_set1_ps(v->ob[1]);
+        __m128 ob2 = _mm_set1_ps(v->ob[2]);
+
+        __m128 pos = _mm_add_ps(_mm_add_ps(_mm_add_ps(_mm_mul_ps(ob0, mat0), _mm_mul_ps(ob1, mat1)), _mm_mul_ps(ob2, mat2)), mat3);
+        float x = pos[0];
+        float y = pos[1];
+        float z = pos[2];
+        float w = pos[3];
+#else
         float x = v->ob[0] * rsp.MP_matrix[0][0] + v->ob[1] * rsp.MP_matrix[1][0] + v->ob[2] * rsp.MP_matrix[2][0] + rsp.MP_matrix[3][0];
         float y = v->ob[0] * rsp.MP_matrix[0][1] + v->ob[1] * rsp.MP_matrix[1][1] + v->ob[2] * rsp.MP_matrix[2][1] + rsp.MP_matrix[3][1];
         float z = v->ob[0] * rsp.MP_matrix[0][2] + v->ob[1] * rsp.MP_matrix[1][2] + v->ob[2] * rsp.MP_matrix[2][2] + rsp.MP_matrix[3][2];
         float w = v->ob[0] * rsp.MP_matrix[0][3] + v->ob[1] * rsp.MP_matrix[1][3] + v->ob[2] * rsp.MP_matrix[2][3] + rsp.MP_matrix[3][3];
+#endif
 
         x = gfx_adjust_x_for_aspect_ratio(x);
 
@@ -792,9 +823,9 @@ static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, cons
                 rsp.lights_changed = false;
             }
 
-            int r = rsp.current_lights[rsp.current_num_lights - 1].col[0] * gLightingColor[1][0] / 255.0f;
-            int g = rsp.current_lights[rsp.current_num_lights - 1].col[1] * gLightingColor[1][1] / 255.0f;
-            int b = rsp.current_lights[rsp.current_num_lights - 1].col[2] * gLightingColor[1][2] / 255.0f;
+            float r = rsp.current_lights[rsp.current_num_lights - 1].col[0] * globalLightCached[1][0];
+            float g = rsp.current_lights[rsp.current_num_lights - 1].col[1] * globalLightCached[1][1];
+            float b = rsp.current_lights[rsp.current_num_lights - 1].col[2] * globalLightCached[1][2];
 
             for (int32_t i = 0; i < rsp.current_num_lights - 1; i++) {
                 float intensity = 0;
@@ -803,15 +834,15 @@ static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, cons
                 intensity += vn->n[2] * rsp.current_lights_coeffs[i][2];
                 intensity /= 127.0f;
                 if (intensity > 0.0f) {
-                    r += intensity * rsp.current_lights[i].col[0] * gLightingColor[0][0] / 255.0f;
-                    g += intensity * rsp.current_lights[i].col[1] * gLightingColor[0][1] / 255.0f;
-                    b += intensity * rsp.current_lights[i].col[2] * gLightingColor[0][2] / 255.0f;
+                    r += intensity * rsp.current_lights[i].col[0] * globalLightCached[0][0];
+                    g += intensity * rsp.current_lights[i].col[1] * globalLightCached[0][1];
+                    b += intensity * rsp.current_lights[i].col[2] * globalLightCached[0][2];
                 }
             }
 
-            d->color.r = r > 255 ? 255 : r;
-            d->color.g = g > 255 ? 255 : g;
-            d->color.b = b > 255 ? 255 : b;
+            d->color.r = r > 255.0f ? 255 : (uint8_t)r;
+            d->color.g = g > 255.0f ? 255 : (uint8_t)g;
+            d->color.b = b > 255.0f ? 255 : (uint8_t)b;
 
             if (rsp.geometry_mode & G_TEXTURE_GEN) {
                 float dotx = 0, doty = 0;
@@ -1823,6 +1854,7 @@ void gfx_start_frame(void) {
         gfx_current_dimensions.height = 1;
     }
     gfx_current_dimensions.aspect_ratio = ((float)gfx_current_dimensions.width / (float)gfx_current_dimensions.height);
+    gfx_current_dimensions.x_adjust_ratio = (4.0f / 3.0f) / gfx_current_dimensions.aspect_ratio;
 }
 
 void gfx_run(Gfx *commands) {

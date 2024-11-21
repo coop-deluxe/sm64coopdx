@@ -58,6 +58,7 @@ struct DjuiPanel* djui_panel_add(struct DjuiBase* caller, struct DjuiThreePanel*
     panel->defaultElementBase = defaultElementBase;
     panel->on_back = threePanel->on_back;
     panel->on_panel_destroy = NULL;
+    panel->temporary = threePanel->temporary;
     sPanelList = panel;
 
     // find better defaultElementBase
@@ -118,6 +119,7 @@ void djui_panel_back(void) {
 
     // set the previous active
     sPanelList = sPanelList->parent;
+    if (sPanelList->temporary) { sPanelList = sPanelList->parent; }
 
     // reset move amount
     sMoveAmount = 0;

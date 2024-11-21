@@ -9,30 +9,32 @@
 #include "mods_utils.h"
 #include "pc/utils/md5.h"
 #include "pc/lua/smlua_hooks.h"
+#include "pc/loading.h"
 
 #define MOD_CACHE_FILENAME "mod.cache"
 #define MOD_CACHE_VERSION 7
 #define MD5_BUFFER_SIZE 1024
 
-struct ModCacheEntry* sModCacheHead = NULL;
+static struct ModCacheEntry* sModCacheEntries = NULL;
+static size_t sModCacheLength = 0;
+static size_t sModLengthCapacity = 0;
 
-static void mod_cache_remove_node(struct ModCacheEntry* node, struct ModCacheEntry* parent) {
-    if (node == NULL) { return; }
-    if (node == sModCacheHead) { sModCacheHead = node->next; }
-    if (parent != NULL) { parent->next = node->next; }
-    //LOG_INFO("Removing node: %s", node->path);
+static void mod_cache_remove_node(struct ModCacheEntry* node) {
     if (node->path) {
         free(node->path);
         node->path = NULL;
     }
-    free(node);
+    if (node != &sModCacheEntries[sModCacheLength - 1])
+        memcpy(node, &sModCacheEntries[sModCacheLength - 1], sizeof(struct ModCacheEntry));
+    sModCacheLength--;
 }
 
 void mod_cache_shutdown(void) {
     LOG_INFO("Shutting down mod cache.");
-    while (sModCacheHead) {
-        mod_cache_remove_node(sModCacheHead, NULL);
-    }    
+    sModCacheLength = 0;
+    sModLengthCapacity = 0;
+    free(sModCacheEntries);
+    sModCacheEntries = NULL;
 }
 
 void mod_cache_md5(const char* inPath, u8* outDataPath) {
@@ -76,6 +78,15 @@ void mod_cache_md5(const char* inPath, u8* outDataPath) {
     MD5_Final(outDataPath, &ctx);
 }
 
+static u64 mod_cache_fnv1a(const char* str) {
+    u64 hash = 0xCBF29CE484222325;
+    while (*str) {
+        hash *= 0x100000001B3;
+        hash ^= *str++;
+    }
+    return hash;
+}
+
 static bool mod_cache_is_valid(struct ModCacheEntry* node) {
     if (node == NULL || node->path == NULL || strlen(node->path) == 0) {
         return false;
@@ -87,42 +98,37 @@ static bool mod_cache_is_valid(struct ModCacheEntry* node) {
 
 struct ModCacheEntry* mod_cache_get_from_hash(u8* dataHash) {
     if (dataHash == NULL) { return NULL; }
-    struct ModCacheEntry* node = sModCacheHead;
-    struct ModCacheEntry* prev = NULL;
-    while (node != NULL) {
-        struct ModCacheEntry* next = node->next;
+    for (size_t i = 0; i < sModCacheLength;) {
+        struct ModCacheEntry* node = &sModCacheEntries[i];
         if (!memcmp(node->dataHash, dataHash, 16)) {
             if (mod_cache_is_valid(node)) {
                 return node;
             } else {
-                mod_cache_remove_node(node, prev);
-                node = prev;
+                mod_cache_remove_node(node);
+                continue;
             }
         }
-        prev = node;
-        node = next;
+        i++;
     }
     return NULL;
 }
 
 struct ModCacheEntry* mod_cache_get_from_path(const char* path, bool validate) {
     if (path == NULL || strlen(path) == 0) { return NULL; }
-    struct ModCacheEntry* node = sModCacheHead;
-    struct ModCacheEntry* prev = NULL;
-    while (node != NULL) {
-        struct ModCacheEntry* next = node->next;
-        if (!strcmp(node->path, path)) {
+    u64 pathHash = mod_cache_fnv1a(path);
+    for (size_t i = 0; i < sModCacheLength;) {
+        struct ModCacheEntry* node = &sModCacheEntries[i];
+        if (node->pathHash == pathHash && !strcmp(node->path, path)) {
             if (!validate) {
                 return node;
             } else if (mod_cache_is_valid(node)) {
                 return node;
             } else {
-                mod_cache_remove_node(node, prev);
-                node = prev;
+                mod_cache_remove_node(node);
+                continue;
             }
         }
-        prev = node;
-        node = next;
+        i++;
     }
     return NULL;
 }
@@ -142,6 +148,7 @@ void mod_cache_add_internal(u8* dataHash, u64 lastLoaded, char* inPath) {
         return;
     }
     normalize_path((char*)path);
+    u64 pathHash = mod_cache_fnv1a(path);
 
     bool foundNonZero = false;
     for (u8 i = 0; i < 16; i++) {
@@ -156,43 +163,34 @@ void mod_cache_add_internal(u8* dataHash, u64 lastLoaded, char* inPath) {
         return;
     }
 
-    struct ModCacheEntry* node = calloc(1, sizeof(struct ModCacheEntry));
-    memcpy(node->dataHash, dataHash, sizeof(u8) * 16);
-    if (lastLoaded == 0) { lastLoaded = clock(); }
-    node->lastLoaded = lastLoaded;
-    node->path = (char*)path;
-    node->next = NULL;
-
-    if (sModCacheHead == NULL) {
-        sModCacheHead = node;
-        LOG_INFO("Added head: %s", node->path);
-        return;
+    if (sModCacheEntries == NULL) {
+        sModLengthCapacity = 16;
+        sModCacheLength = 0;
+        sModCacheEntries = calloc(sModLengthCapacity, sizeof(struct ModCacheEntry));
+    } else if (sModCacheLength == sModLengthCapacity) {
+        sModLengthCapacity *= 2;
+        sModCacheEntries = realloc(sModCacheEntries, sizeof(struct ModCacheEntry) * sModLengthCapacity);
     }
 
-    struct ModCacheEntry* n = sModCacheHead;
-    struct ModCacheEntry* prev = NULL;
-    while (n != NULL) {
-        struct ModCacheEntry* next = n->next;
+    struct ModCacheEntry node = {};
+    memcpy(node.dataHash, dataHash, sizeof(u8) * 16);
+    if (lastLoaded == 0) { lastLoaded = clock(); }
+    node.lastLoaded = lastLoaded;
+    node.path = (char*)path;
+    node.pathHash = pathHash;
 
-        // found end of list, add it
-        if (next == NULL) {
-            LOG_INFO("Added node: %s", node->path);
-            if (n != node) { n->next = node; }
-            return;
-        }
+    for (size_t i = 0; i < sModCacheLength;) {
+        struct ModCacheEntry* n = &sModCacheEntries[i];
 
         // found old hash, remove it
-        if (!strcmp(n->path, path)) {
+        if (n->pathHash == pathHash && !strcmp(n->path, path)) {
             LOG_INFO("Removing old node: %s", node->path);
-            mod_cache_remove_node(n, prev);
+            mod_cache_remove_node(n);
         } else {
-            prev = n;
+            i++;
         }
-
-        n = next;
     }
-
-    LOG_ERROR("Did not add node for some reason?");
+    memcpy(&sModCacheEntries[sModCacheLength++], &node, sizeof(node));
 }
 
 void mod_cache_add(struct Mod* mod, struct ModFile* file, bool useFilePath) {
@@ -255,6 +253,8 @@ void mod_cache_update(struct Mod* mod, struct ModFile* file) {
 }
 
 void mod_cache_load(void) {
+    LOADING_SCREEN_MUTEX(loading_screen_set_segment_text("Loading Mod Cache"));
+
     mod_cache_shutdown();
     LOG_INFO("Loading mod cache");
 
@@ -326,19 +326,16 @@ void mod_cache_save(void) {
     u8 t = *gBehaviorOffset != 0;
     fwrite(&t, sizeof(u8), 1, fp);
 
-    struct ModCacheEntry* node = sModCacheHead;
-    while (node != NULL) {
-        struct ModCacheEntry* next = node->next;
-        if (node->path == NULL) { goto iterate; }
+    for (size_t i = 0; i < sModCacheLength; i++) {
+        struct ModCacheEntry* node = &sModCacheEntries[i];
+        if (node->path == NULL) { continue; }
         u16 pathLen = strlen(node->path);
-        if (pathLen == 0) { goto iterate; }
+        if (pathLen == 0) { continue; }
 
         fwrite(node->dataHash, sizeof(u8), 16, fp);
         fwrite(&node->lastLoaded, sizeof(u64), 1, fp);
         fwrite(&pathLen, sizeof(u16), 1, fp);
         fwrite(node->path, sizeof(u8), pathLen + 1, fp);
-iterate:
-        node = next;
     }
 
     fclose(fp);

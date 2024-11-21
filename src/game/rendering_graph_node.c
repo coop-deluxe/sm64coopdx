@@ -237,7 +237,7 @@ void patch_mtx_interpolated(f32 delta) {
         u16 perspNorm;
         f32 fovInterpolated = delta_interpolate_f32(sPerspectiveNode->prevFov, sPerspectiveNode->fov, delta);
         f32 near = MIN(sPerspectiveNode->near, gProjectionMaxNearValue);
-        guPerspective(sPerspectiveMtx, &perspNorm, get_first_person_enabled() ? gFirstPersonCamera.fov : not_zero(fovInterpolated, gOverrideFOV), sPerspectiveAspect, get_first_person_enabled() ? 1 : not_zero(near, gOverrideNear), not_zero(sPerspectiveNode->far, gOverrideFar), 1.0f);
+        guPerspective(sPerspectiveMtx, &perspNorm, fovInterpolated, sPerspectiveAspect, get_first_person_enabled() ? 1 : not_zero(near, gOverrideNear), not_zero(sPerspectiveNode->far, gOverrideFar), 1.0f);
         gSPMatrix(sPerspectivePos, VIRTUAL_TO_PHYSICAL(sPerspectiveNode), G_MTX_PROJECTION | G_MTX_LOAD | G_MTX_NOPUSH);
     }
 
@@ -488,7 +488,7 @@ static void geo_process_perspective(struct GraphNodePerspective *node) {
     gProjectionVanillaNearValue = node->near;
     gProjectionVanillaFarValue = node->far;
     f32 near = MIN(node->near, gProjectionMaxNearValue);
-    guPerspective(mtx, &perspNorm, not_zero(node->prevFov, gOverrideFOV), aspect, get_first_person_enabled() ? 1 : not_zero(near, gOverrideNear), not_zero(node->far, gOverrideFar), 1.0f);
+    guPerspective(mtx, &perspNorm, node->prevFov, aspect, get_first_person_enabled() ? 1 : not_zero(near, gOverrideNear), not_zero(node->far, gOverrideFar), 1.0f);
 
     sPerspectiveNode = node;
     sPerspectiveMtx = mtx;
@@ -616,7 +616,7 @@ static void geo_process_translation_rotation(struct GraphNodeTranslationRotation
     Mat4 mtxf;
     Vec3f translation;
 
-    // Sanity check our stack index, If we above or equal to our stack size. Return to prevent OOB\.
+    // Sanity check our stack index, If we above or equal to our stack size. Return to prevent OOB.
     if ((gMatStackIndex + 1) >= MATRIX_STACK_SIZE) { LOG_ERROR("Preventing attempt to exceed the maximum size %i for our matrix stack with size of %i.", MATRIX_STACK_SIZE - 1, gMatStackIndex); return; }
 
     vec3s_to_vec3f(translation, node->translation);
@@ -1156,7 +1156,7 @@ static s32 obj_is_in_view(struct GraphNodeObject *node, Mat4 matrix) {
     // visibly pop in or out at the edge of the screen.
     //
     // Half of the fov in in-game angle units instead of degrees.
-    s16 halfFov = ((get_first_person_enabled() ? gFirstPersonCamera.fov : not_zero(gCurGraphNodeCamFrustum->fov, gOverrideFOV)) / 2.0f + 1.0f) * 32768.0f / 180.0f + 0.5f;
+    s16 halfFov = (gCurGraphNodeCamFrustum->fov / 2.0f + 1.0f) * 32768.0f / 180.0f + 0.5f;
 
     f32 divisor = coss(halfFov);
     if (divisor == 0) { divisor = 1; }

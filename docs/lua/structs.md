@@ -745,6 +745,7 @@
 | ----- | ---- | ------ |
 | buttonDown | `integer` |  |
 | buttonPressed | `integer` |  |
+| buttonReleased | `integer` |  |
 | extStickX | `integer` |  |
 | extStickY | `integer` |  |
 | port | `integer` |  |
@@ -1543,6 +1544,7 @@
 | modelIndex | `integer` | read-only |
 | name | `string` | read-only |
 | onRxSeqId | `integer` | read-only |
+| overrideLocation | `string` | read-only |
 | overrideModelIndex | `integer` |  |
 | overridePalette | [PlayerPalette](structs.md#PlayerPalette) |  |
 | palette | [PlayerPalette](structs.md#PlayerPalette) | read-only |

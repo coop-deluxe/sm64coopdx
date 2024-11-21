@@ -166,6 +166,15 @@ void smlua_audio_utils_replace_sequence(u8 sequenceId, u8 bankId, u8 defaultVolu
 static ma_engine sModAudioEngine;
 static struct DynamicPool *sModAudioPool;
 
+static void smlua_audio_custom_init(void) {
+    sModAudioPool = dynamic_pool_init();
+
+    ma_result result = ma_engine_init(NULL, &sModAudioEngine);
+    if (result != MA_SUCCESS) {
+        LOG_ERROR("failed to init Miniaudio: %d", result);
+    }
+}
+
 static struct ModAudio* find_mod_audio(struct ModFile* file) {
     struct DynamicPoolNode* node = sModAudioPool->tail;
     while (node) {
@@ -178,8 +187,8 @@ static struct ModAudio* find_mod_audio(struct ModFile* file) {
 }
 
 static bool audio_sanity_check(struct ModAudio* audio, bool isStream, const char* action) {
-    if (audio == NULL || !audio->loaded) {
-        LOG_LUA_LINE("Tried to %s unloaded audio %s", action, audio->isStream ? "stream" : "sample");
+    if (!audio || !audio->loaded) {
+        LOG_LUA_LINE("Tried to %s unloaded audio %s", action, audio ? (audio->isStream ? "stream" : "sample") : "(NULL)");
         return false;
     }
     if (isStream && !audio->isStream) {
@@ -194,6 +203,8 @@ static bool audio_sanity_check(struct ModAudio* audio, bool isStream, const char
 }
 
 struct ModAudio* audio_load_internal(const char* filename, bool isStream) {
+    if (!sModAudioPool) { smlua_audio_custom_init(); }
+
     // check file type
     bool validFileType = false;
     const char* fileTypes[] = { ".mp3", ".aiff", ".ogg", NULL };
@@ -568,6 +579,7 @@ void audio_sample_play(struct ModAudio* audio, Vec3f position, f32 volume) {
 }
 
 void audio_custom_update_volume(void) {
+    if (!sModAudioPool) { return; }
     struct DynamicPoolNode* node = sModAudioPool->tail;
     while (node) {
         struct DynamicPoolNode* prev = node->prev;
@@ -587,30 +599,16 @@ void audio_custom_shutdown(void) {
     while (node) {
         struct DynamicPoolNode* prev = node->prev;
         struct ModAudio* audio = node->ptr;
-        if (audio->isStream) {
-            if (audio->loaded) { ma_sound_uninit(&audio->sound); }
-            dynamic_pool_free(sModAudioPool, audio);
-        } else {
-            if (audio->loaded) {
-                if (audio->sampleCopiesTail) {
-                    audio_sample_destroy_copies(audio);
-                }
-                ma_sound_uninit(&audio->sound);
+        if (audio->loaded) {
+            if (!audio->isStream && audio->sampleCopiesTail) {
+                audio_sample_destroy_copies(audio);
             }
-            dynamic_pool_free(sModAudioPool, audio);
+            ma_sound_uninit(&audio->sound);
         }
+        dynamic_pool_free(sModAudioPool, audio);
         node = prev;
     }
     dynamic_pool_free_pool(sModAudioPool);
-}
-
-void smlua_audio_custom_init(void) {
-    sModAudioPool = dynamic_pool_init();
-
-    ma_result result = ma_engine_init(NULL, &sModAudioEngine);
-    if (result != MA_SUCCESS) {
-        LOG_ERROR("failed to init Miniaudio: %d", result);
-    }
 }
 
 void smlua_audio_custom_deinit(void) {

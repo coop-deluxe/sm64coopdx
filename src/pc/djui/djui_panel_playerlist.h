@@ -2,6 +2,7 @@
 #include "djui.h"
 
 extern struct DjuiThreePanel* gDjuiPlayerList;
+extern bool gAttemptingToOpenPlayerlist;
 
 extern const u8 sPlayerListSize;
 extern u8 sPageIndex;

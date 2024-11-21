@@ -251,7 +251,7 @@ u16 level_control_timer(s32 timerOp) {
 
 u32 pressed_pause(void) {
     if (gServerSettings.pauseAnywhere) {
-        if (get_dialog_id() < 0 && !gWarpTransition.isActive && sDelayedWarpOp == WARP_OP_NONE) {
+        if (get_dialog_id() < 0) {
             return gPlayer1Controller->buttonPressed & START_BUTTON;
         }
     } else {
@@ -1121,7 +1121,7 @@ void update_hud_values(void) {
                             play_sound(SOUND_GENERAL_COLLECT_1UP, gGlobalSoundSource);
                         }
                     } else {
-                        if (gHudDisplay.coins % gLevelValues.numCoinsToLife == 0 && gHudDisplay.coins > 0) {
+                        if (gLevelValues.numCoinsToLife != 0 && gHudDisplay.coins % gLevelValues.numCoinsToLife == 0 && gHudDisplay.coins > 0) {
                             gMarioState->numLives++;
                             play_sound(SOUND_GENERAL_COLLECT_1UP, gGlobalSoundSource);
                         }

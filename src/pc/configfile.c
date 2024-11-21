@@ -186,6 +186,10 @@ unsigned int configDjuiThemeFont                  = FONT_NORMAL;
 unsigned int configDjuiScale                      = 0;
 // other
 unsigned int configRulesVersion                   = 0;
+bool         configCompressOnStartup              = false;
+
+// secrets
+bool configExCoopTheme = false;
 
 static const struct ConfigOption options[] = {
     // window settings
@@ -311,7 +315,27 @@ static const struct ConfigOption options[] = {
     {.name = "djui_theme_font",                .type = CONFIG_TYPE_UINT,   .uintValue   = &configDjuiThemeFont},
     {.name = "djui_scale",                     .type = CONFIG_TYPE_UINT,   .uintValue   = &configDjuiScale},
     // other
-    {.name = "rules_version",                  .type = CONFIG_TYPE_UINT,   .uintValue   = &configRulesVersion}
+    {.name = "rules_version",                  .type = CONFIG_TYPE_UINT,   .uintValue   = &configRulesVersion},
+    {.name = "compress_on_startup",            .type = CONFIG_TYPE_BOOL,   .boolValue   = &configCompressOnStartup},
+};
+
+struct SecretConfigOption {
+    const char *name;
+    enum ConfigOptionType type;
+    union {
+        bool *boolValue;
+        unsigned int *uintValue;
+        float* floatValue;
+        char* stringValue;
+        u64* u64Value;
+        u8 (*colorValue)[3];
+    };
+    int maxStringLength;
+    bool inConfig;
+};
+
+static struct SecretConfigOption secret_options[] = {
+    {.name = "ex_coop_theme", .type = CONFIG_TYPE_BOOL, .boolValue = &configExCoopTheme},
 };
 
 // FunctionConfigOption functions
@@ -619,6 +643,15 @@ static void configfile_load_internal(const char *filename, bool* error) {
                     }
                 }
 
+                // secret options
+                for (unsigned int i = 0; i < ARRAY_LEN(secret_options); i++) {
+                    if (strcmp(tokens[0], secret_options[i].name) == 0) {
+                        secret_options[i].inConfig = true;
+                        option = (const struct ConfigOption *) &secret_options[i];
+                        break;
+                    }
+                }
+
                 if (option == NULL) {
 #ifdef DEVELOPMENT
                     printf("unknown option '%s'\n", tokens[0]);
@@ -689,6 +722,12 @@ NEXT_OPTION:
     if (configDjuiTheme >= DJUI_THEME_MAX) { configDjuiTheme = 0; }
     if (configDjuiScale >= 5) { configDjuiScale = 0; }
 
+    if (configExCoopTheme) {
+        configDjuiTheme = DJUI_THEME_LIGHT;
+        configDjuiThemeCenter = false;
+        configDjuiThemeFont = 1;
+    }
+
 #ifndef COOPNET
     configNetworkSystem = NS_SOCKET;
 #endif
@@ -708,6 +747,42 @@ void configfile_load(void) {
 #endif
 }
 
+static void configfile_save_option(FILE *file, const struct ConfigOption *option, bool isSecret) {
+    if (isSecret) {
+        const struct SecretConfigOption *secret_option = (const struct SecretConfigOption *) option;
+        if (!secret_option->inConfig) { return; }
+    }
+    switch (option->type) {
+        case CONFIG_TYPE_BOOL:
+            fprintf(file, "%s %s\n", option->name, *option->boolValue ? "true" : "false");
+            break;
+        case CONFIG_TYPE_UINT:
+            fprintf(file, "%s %u\n", option->name, *option->uintValue);
+            break;
+        case CONFIG_TYPE_FLOAT:
+            fprintf(file, "%s %f\n", option->name, *option->floatValue);
+            break;
+        case CONFIG_TYPE_BIND:
+            fprintf(file, "%s ", option->name);
+            for (int i = 0; i < MAX_BINDS; ++i)
+                fprintf(file, "%04x ", option->uintValue[i]);
+            fprintf(file, "\n");
+            break;
+        case CONFIG_TYPE_STRING:
+            fprintf(file, "%s %s\n", option->name, option->stringValue);
+            break;
+        case CONFIG_TYPE_U64:
+            fprintf(file, "%s %llu\n", option->name, *option->u64Value);
+            break;
+        case CONFIG_TYPE_COLOR:
+            fprintf(file, "%s %02x %02x %02x\n", option->name, (*option->colorValue)[0], (*option->colorValue)[1], (*option->colorValue)[2]);
+            break;
+        default:
+            LOG_ERROR("Configfile wrote bad type '%d': %s", (int)option->type, option->name);
+            break;
+    }
+}
+
 // Writes the config file to 'filename'
 void configfile_save(const char *filename) {
     FILE *file;
@@ -722,36 +797,12 @@ void configfile_save(const char *filename) {
 
     for (unsigned int i = 0; i < ARRAY_LEN(options); i++) {
         const struct ConfigOption *option = &options[i];
+        configfile_save_option(file, option, false);
+    }
 
-        switch (option->type) {
-            case CONFIG_TYPE_BOOL:
-                fprintf(file, "%s %s\n", option->name, *option->boolValue ? "true" : "false");
-                break;
-            case CONFIG_TYPE_UINT:
-                fprintf(file, "%s %u\n", option->name, *option->uintValue);
-                break;
-            case CONFIG_TYPE_FLOAT:
-                fprintf(file, "%s %f\n", option->name, *option->floatValue);
-                break;
-            case CONFIG_TYPE_BIND:
-                fprintf(file, "%s ", option->name);
-                for (int i = 0; i < MAX_BINDS; ++i)
-                    fprintf(file, "%04x ", option->uintValue[i]);
-                fprintf(file, "\n");
-                break;
-            case CONFIG_TYPE_STRING:
-                fprintf(file, "%s %s\n", option->name, option->stringValue);
-                break;
-            case CONFIG_TYPE_U64:
-                fprintf(file, "%s %llu\n", option->name, *option->u64Value);
-                break;
-            case CONFIG_TYPE_COLOR:
-                fprintf(file, "%s %02x %02x %02x\n", option->name, (*option->colorValue)[0], (*option->colorValue)[1], (*option->colorValue)[2]);
-                break;
-            default:
-                LOG_ERROR("Configfile wrote bad type '%d': %s", (int)option->type, option->name);
-                break;
-        }
+    for (unsigned int i = 0; i < ARRAY_LEN(secret_options); i++) {
+        const struct ConfigOption *option = (const struct ConfigOption *) &secret_options[i];
+        configfile_save_option(file, option, true);
     }
 
     // save function options
