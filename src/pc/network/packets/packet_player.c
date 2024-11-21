@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stddef.h>
 #include "../network.h"
 #include "object_fields.h"
 #include "object_constants.h"
@@ -244,6 +245,18 @@ void network_receive_player(struct Packet* p) {
     struct MarioState* m = &gMarioStates[np->localIndex];
     if (m == NULL || m->marioObj == NULL) { return; }
 
+    if (gNetworkType == NT_SERVER && *((u32*)(p->buffer + p->cursor + offsetof(struct PacketPlayerData, action))) == ACT_DEBUG_FREE_MOVE) {
+#ifdef DEVELOPMENT
+        if (m->action != ACT_DEBUG_FREE_MOVE) {
+            construct_player_popup(np, DLANG(NOTIF, DEBUG_FLY), NULL);
+        }
+#else
+        network_send_kick(np->localIndex, EKT_KICKED);
+        network_player_disconnected(np->localIndex);
+        return;
+#endif
+    }
+
     // prevent receiving player from other area
     bool levelAreaMismatch = ((gNetworkPlayerLocal == NULL)
         || np->currCourseNum != gNetworkPlayerLocal->currCourseNum
@@ -394,19 +407,6 @@ void network_receive_player(struct Packet* p) {
 
     // Player's position is valid since it's updated and in the same area as the local player
     np->currPositionValid = true;
-
-#ifndef DEVELOPMENT
-    if (gNetworkType == NT_SERVER) {
-        if (m->action == ACT_DEBUG_FREE_MOVE) {
-            network_send_kick(np->localIndex, EKT_CLOSE_CONNECTION);
-            network_player_disconnected(np->localIndex);
-        }
-    }
-#else
-    if (m->action == ACT_DEBUG_FREE_MOVE && oldData.action != ACT_DEBUG_FREE_MOVE) {
-        construct_player_popup(np, DLANG(NOTIF, DEBUG_FLY), NULL);
-    }
-#endif
 
     if (np->currLevelNum == LEVEL_BOWSER_3 && m->action == ACT_JUMBO_STAR_CUTSCENE && gMarioStates[0].action != ACT_JUMBO_STAR_CUTSCENE) {
         set_mario_action((struct MarioState*) &gMarioStates[0], ACT_JUMBO_STAR_CUTSCENE, 0);

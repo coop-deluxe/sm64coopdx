@@ -1064,6 +1064,7 @@
 --- @field public customBehaviorIndex integer
 --- @field public description string
 --- @field public enabled boolean
+--- @field public fileCapacity integer
 --- @field public fileCount integer
 --- @field public ignoreScriptWarnings boolean
 --- @field public incompatible string
