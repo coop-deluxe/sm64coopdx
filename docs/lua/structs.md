@@ -1439,6 +1439,7 @@
 | customBehaviorIndex | `integer` | read-only |
 | description | `string` | read-only |
 | enabled | `boolean` | read-only |
+| fileCapacity | `integer` | read-only |
 | fileCount | `integer` | read-only |
 | ignoreScriptWarnings | `boolean` | read-only |
 | incompatible | `string` | read-only |
