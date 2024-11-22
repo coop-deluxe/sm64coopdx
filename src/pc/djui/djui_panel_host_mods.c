@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include "djui.h"
 #include "djui_panel.h"
 #include "djui_panel_menu.h"
@@ -56,16 +58,33 @@ static void djui_panel_host_mods_description_create(void) {
 }
 
 static void djui_mod_checkbox_on_hover(struct DjuiBase* base) {
-    char* description = "";
+    char* description = NULL;
     if (base->tag >= 0 && base->tag < gLocalMods.entryCount) {
         struct Mod* mod = gLocalMods.entries[base->tag];
-        char* d = mod->description;
-        if (d != NULL) {
-            description = mod->description;
+        if (mod != NULL && mod->description != NULL) {
+            size_t size = strlen(mod->relativePath) + strlen(mod->description) + 128;
+            description = malloc(size);
+            if (description != NULL) {
+                if (mod->isDirectory) {
+                    snprintf(description, size,
+                        "\\#ff8000\\Folder: \\#ffff00\\%s \\#ff2000\\(%u files)\n\n\n\\#ffffff\\%s",
+                        mod->relativePath, (unsigned int)mod->fileCount, mod->description);
+                } else {
+                    snprintf(description, size,
+                        "\\#ff8000\\File: \\#ffff00\\%s\n\n\n\\#ffffff\\%s", 
+                        mod->relativePath, mod->description);
+                }
+                djui_text_set_text(sTooltip, description);
+                free(description);
+            } else {
+                djui_text_set_text(sTooltip, mod->description);
+            }
+            return;
         }
     }
-    djui_text_set_text(sTooltip, description);
+    djui_text_set_text(sTooltip, "");
 }
+
 
 static void djui_mod_checkbox_on_hover_end(UNUSED struct DjuiBase* base) {
     djui_text_set_text(sTooltip, "");
