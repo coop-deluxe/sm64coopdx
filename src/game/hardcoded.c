@@ -47,6 +47,7 @@ struct LevelValues gDefaultLevelValues = {
     .fixCollisionBugs                 = FALSE,
     .fixCollisionBugsRoundedCorners   = TRUE,
     .fixCollisionBugsFalseLedgeGrab   = TRUE,
+    .fixCollisionBugsClipLedgeGrabs   = TRUE,
     .fixCollisionBugsGroundPoundBonks = TRUE,
     .fixCollisionBugsPickBestWall     = TRUE,
     .fixVanishFloors                  = FALSE,

@@ -28,9 +28,23 @@
 // Co-Op Additions:
 // 1. Smart Ledge Grabs - No longer can grab through floors.
 
-u32 CheckLedgeGrab(struct MarioState *m, Vec3f intendedPos, Vec3f nextPos) {
-    if (!m || m->vel[1] > 0.0f) { 
-        return FALSE; 
+#define hdot(x1, x2, z1, z2) ((x1 * x2) + (z1 * z2))
+#define hdot_surf(surf, vec) hdot((surf)->normal.x, (vec)[0], (surf)->normal.z, (vec)[2])
+
+u32 CheckLedgeGrab(struct MarioState *m, struct Surface *prevWall, struct Surface *wall, Vec3f intendedPos, Vec3f nextPos) {
+    struct Surface *ledgeWall = wall;
+    
+    if (!m || m->vel[1] > 0 || wall == NULL) {
+        return FALSE;
+    }
+    
+    if (prevWall == NULL) {
+        prevWall = wall;
+    } else {
+        // Return the already grabbed wall if Mario is moving into it more than the newly tested wall.
+        if (hdot_surf(prevWall, m->vel) < hdot_surf(wall, m->vel)) {
+            ledgeWall = prevWall;
+        }
     }
 
     f32 displacementX = nextPos[0] - intendedPos[0];
@@ -38,46 +52,59 @@ u32 CheckLedgeGrab(struct MarioState *m, Vec3f intendedPos, Vec3f nextPos) {
 
     // Only ledge grab if the wall displaced Mario in the opposite direction of
     // his velocity.
-    if (displacementX * m->vel[0] + displacementZ * m->vel[2] > 0.0f) {
+    if (hdot(displacementX, m->vel[0], displacementZ, m->vel[2]) > 0.0f) {
         return FALSE;
     }
 
+    //! Since the search for floors starts at y + m->marioObj->hitboxHeight (160.0f), we will sometimes grab
+    // a higher ledge than expected (glitchy ledge grab)
     struct Surface *ledgeFloor = NULL;
     Vec3f ledgePos;
-    ledgePos[0] = nextPos[0] - m->wall->normal.x * 60.0f;
-    ledgePos[2] = nextPos[2] - m->wall->normal.z * 60.0f;
+    ledgePos[0] = nextPos[0] - ledgeWall->normal.x * 60.0f;
+    ledgePos[2] = nextPos[2] - ledgeWall->normal.z * 60.0f;
     ledgePos[1] = find_floor(ledgePos[0], nextPos[1] + m->marioObj->hitboxHeight, ledgePos[2], &ledgeFloor);
 
-    if (!ledgeFloor || ledgePos[1] - nextPos[1] <= 100.0f) {
-        return FALSE; 
-    }
-    
-    if (gLevelValues.fixCollisionBugs && gLevelValues.fixCollisionBugsFalseLedgeGrab) {
-        // fix false ledge grabs
-        if (ledgeFloor->normal.y < 0.90630779f) {
-            return FALSE;
+    if (!ledgeFloor) { return FALSE; }
+
+    if (gLevelValues.fixCollisionBugs) {
+        if (gLevelValues.fixCollisionBugsFalseLedgeGrab) {
+            // fix false ledge grabs
+            if (!ledgeFloor || ledgeFloor->normal.y < 0.90630779f) {
+                return FALSE;
+            }
+        }
+        
+        if (gLevelValues.fixCollisionBugsClipLedgeGrabs) {
+            if (ledgePos[1] - nextPos[1] <= 80.0f - m->vel[1]) {
+                return FALSE;
+            }
+            
+            // We'll cast a ray from the top of our height to the ledge grab position.
+            // If we hit a surface. We aren't allowed to ledge grab.
+            struct Surface *hitSurface = NULL;
+            Vec3f HitPos;
+
+            nextPos[1] += m->marioObj->hitboxHeight;
+            find_surface_on_ray(nextPos, ledgePos, &hitSurface, HitPos, 8.f);
+            nextPos[1] -= m->marioObj->hitboxHeight;
+
+            // Don't grab the ledge if collision was found, and it's not the wall we wish to grab.
+            if (hitSurface && hitSurface != m->wall) { return FALSE; }
         }
     }
-    
-    // We'll cast a ray from the top of our height to the ledge grab position.
-    // If we hit a surface. We aren't allowed to ledge grab.
-    struct Surface *hitSurface = NULL;
-    Vec3f HitPos;
-    
-    nextPos[1] += m->marioObj->hitboxHeight;
-    find_surface_on_ray(nextPos, ledgePos, &hitSurface, HitPos, 8.f);
-    nextPos[1] -= m->marioObj->hitboxHeight;
 
-    // Don't grab the ledge if collision was found, and it's not the wall we wish to grab.
-    if (hitSurface && hitSurface != m->wall) { return FALSE; }
+    if (ledgePos[1] - nextPos[1] <= 100.0f) {
+        return FALSE;
+    }
 
     vec3f_copy(m->pos, ledgePos);
     m->floor = ledgeFloor;
     m->floorHeight = ledgePos[1];
+
     m->floorAngle = atan2s(ledgeFloor->normal.z, ledgeFloor->normal.x);
 
     m->faceAngle[0] = 0;
-    m->faceAngle[1] = atan2s(m->wall->normal.z, m->wall->normal.x) + 0x8000;
+    m->faceAngle[1] = atan2s(ledgeWall->normal.z, ledgeWall->normal.x) + 0x8000;
     return TRUE;
 }
 
@@ -121,14 +148,11 @@ void CheckMoveEndPosition(struct MarioState *m, struct MoveData *MoveResult) {
     // Don't clip if no collision was found.
     if (MoveResult->HitSurface == NULL) { return; }
     
-    //LOG_DEBUG("%f", (MoveResult->HitSurface)->normal.y);
-    
-    /*
     // Check for around ~cos(72.49 deg), If we as steep or any steeper.
     // We want to reject movement up/into the slope.
     if (absf((MoveResult->HitSurface)->normal.y) <= WALLMAXNORMAL) {
         const f32 DistanceMoved = sqrtf(sqr(HitPos[0] - MoveResult->IntendedPos[0]) +
-                                        sqr(HitPos[1] - - MoveResult->MarioHeight / 2 - MoveResult->IntendedPos[1]) +
+                                        sqr(HitPos[1] - MoveResult->MarioHeight / 2 - MoveResult->IntendedPos[1]) +
                                         sqr(HitPos[2] - MoveResult->IntendedPos[2]));
 
         // Move back either by as wide as Mario is or the whole distance, Whatever is less.
@@ -137,10 +161,7 @@ void CheckMoveEndPosition(struct MarioState *m, struct MoveData *MoveResult) {
         MoveResult->IntendedPos[0] = HitPos[0] - MoveVector[0] * MoveBackScale;
         MoveResult->IntendedPos[1] = HitPos[1] - MoveVector[1] * MoveBackScale - MoveResult->MarioHeight / 2;
         MoveResult->IntendedPos[2] = HitPos[2] - MoveVector[2] * MoveBackScale;
-    }
-    */
-    
-    if ((MoveResult->HitSurface)->normal.y < 0.f) {
+    } else if ((MoveResult->HitSurface)->normal.y < 0.f) {
         // Let the binary search find a good position towards Mario's direction.
         MoveResult->IntendedPos[0] = HitPos[0] + MoveResult->HitSurface->normal.x;
         MoveResult->IntendedPos[1] = HitPos[1] + MoveResult->HitSurface->normal.y - MoveResult->MarioHeight / 2;
@@ -251,16 +272,17 @@ s32 FinishMove(struct MarioState *m, struct MoveData *MoveResult) {
     }
 
     for (u8 i = 0; i < MoveResult->WallCDs.numWalls; i++) {
+        struct Surface *prevWall = m->wall;
         m->wall = MoveResult->WallCDs.walls[i];
 
         if (m->wall->type == SURFACE_BURNING) {
             return STEP_HIT_LAVA;
         }
 
-        if (MoveResult->StepArgs & STEP_CHECK_LEDGE_GRAB && CheckLedgeGrab(m, MoveResult->GoalPos, MoveResult->IntendedPos)) {
+        if (MoveResult->StepArgs & STEP_CHECK_LEDGE_GRAB && CheckLedgeGrab(m, prevWall, m->wall, MoveResult->GoalPos, MoveResult->IntendedPos)) {
             return STEP_GRAB_LEDGE;
         }
-
+        
         u16 WallAngleMaxDiff = MoveResult->StepArgs & STEP_SNAP_TO_FLOOR 
                                     ? 0x8000 - MAX_ANGLE_DIFF_FOR_WALL_COLLISION_ON_GROUND 
                                     : 0x8000 - MAX_ANGLE_DIFF_FOR_WALL_COLLISION_IN_AIR;

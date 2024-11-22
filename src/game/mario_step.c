@@ -423,18 +423,12 @@ s32 perform_ground_step(struct MarioState *m) {
 }
 
 u32 check_ledge_grab(struct MarioState *m, struct Surface *wall, Vec3f intendedPos, Vec3f nextPos) {
-    if (!m) { return 0; }
-    struct Surface *ledgeFloor;
-    Vec3f ledgePos;
-    f32 displacementX;
-    f32 displacementZ;
-
-    if (m->vel[1] > 0) {
+    if (!m || m->vel[1] > 0 || wall == NULL) {
         return FALSE;
     }
 
-    displacementX = nextPos[0] - intendedPos[0];
-    displacementZ = nextPos[2] - intendedPos[2];
+    f32 displacementX = nextPos[0] - intendedPos[0];
+    f32 displacementZ = nextPos[2] - intendedPos[2];
 
     // Only ledge grab if the wall displaced Mario in the opposite direction of
     // his velocity.
@@ -444,16 +438,26 @@ u32 check_ledge_grab(struct MarioState *m, struct Surface *wall, Vec3f intendedP
 
     //! Since the search for floors starts at y + m->marioObj->hitboxHeight (160.0f), we will sometimes grab
     // a higher ledge than expected (glitchy ledge grab)
+    struct Surface *ledgeFloor = NULL;
+    Vec3f ledgePos;
     ledgePos[0] = nextPos[0] - wall->normal.x * 60.0f;
     ledgePos[2] = nextPos[2] - wall->normal.z * 60.0f;
     ledgePos[1] = find_floor(ledgePos[0], nextPos[1] + m->marioObj->hitboxHeight, ledgePos[2], &ledgeFloor);
 
     if (!ledgeFloor) { return FALSE; }
 
-    if (gLevelValues.fixCollisionBugs && gLevelValues.fixCollisionBugsFalseLedgeGrab) {
-        // fix false ledge grabs
-        if (!ledgeFloor || ledgeFloor->normal.y < 0.90630779f) {
-            return FALSE;
+    if (gLevelValues.fixCollisionBugs) {
+        if (gLevelValues.fixCollisionBugsFalseLedgeGrab) {
+            // fix false ledge grabs
+            if (!ledgeFloor || ledgeFloor->normal.y < 0.90630779f) {
+                return FALSE;
+            }
+        }
+        
+        if (gLevelValues.fixCollisionBugsClipLedgeGrabs) {
+            if (ledgePos[1] - nextPos[1] <= 80.0f - m->vel[1]) {
+                return FALSE;
+            }
         }
     }
 

@@ -43,6 +43,7 @@ struct LevelValues {
     u8 fixCollisionBugs;
     u8 fixCollisionBugsRoundedCorners;
     u8 fixCollisionBugsFalseLedgeGrab;
+    u8 fixCollisionBugsClipLedgeGrabs;
     u8 fixCollisionBugsGroundPoundBonks;
     u8 fixCollisionBugsPickBestWall;
     u8 fixVanishFloors;
