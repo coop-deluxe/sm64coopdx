@@ -9164,7 +9164,10 @@ HOOK_ON_MODS_LOADED = 45
 HOOK_ON_NAMETAGS_RENDER = 46
 
 --- @type LuaHookedEventType
-HOOK_MAX = 47
+HOOK_ALLOW_WARP_POPUP = 47
+
+--- @type LuaHookedEventType
+HOOK_MAX = 48
 
 --- @class LuaModMenuElementType
 

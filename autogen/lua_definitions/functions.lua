@@ -9197,6 +9197,12 @@ function obj_get_surface_from_index(o, index)
     -- ...
 end
 
+--- @param surfaceType integer
+--- @return boolean
+function surface_has_force(surfaceType)
+    -- ...
+end
+
 --- @class Pointer_integer
 --- @class Pointer_BehaviorScript
 --- @class Pointer_number

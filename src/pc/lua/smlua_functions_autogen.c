@@ -33335,6 +33335,23 @@ int smlua_func_obj_get_surface_from_index(lua_State* L) {
     return 1;
 }
 
+int smlua_func_surface_has_force(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "surface_has_force", 1, top);
+        return 0;
+    }
+
+    s16 surfaceType = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "surface_has_force"); return 0; }
+
+    lua_pushboolean(L, surface_has_force(surfaceType));
+
+    return 1;
+}
+
 
 
 void smlua_bind_functions_autogen(void) {
@@ -35160,5 +35177,6 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "load_area_terrain", smlua_func_load_area_terrain);
     smlua_bind_function(L, "load_object_collision_model", smlua_func_load_object_collision_model);
     smlua_bind_function(L, "obj_get_surface_from_index", smlua_func_obj_get_surface_from_index);
+    smlua_bind_function(L, "surface_has_force", smlua_func_surface_has_force);
 
 }

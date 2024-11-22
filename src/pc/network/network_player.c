@@ -426,7 +426,11 @@ void network_player_update_course_level(struct NetworkPlayer* np, s16 courseNum,
     // display popup
     bool inCredits = (np->currActNum == 99);
 
-    if (np->currCourseNum != courseNum && np->localIndex != 0 && !inCredits) {
+    // check hook
+    bool allow = true;
+    smlua_call_event_hooks_mario_param_ret_bool(HOOK_ALLOW_WARP_POPUP, &gMarioStates[0], &allow);
+
+    if (np->currCourseNum != courseNum && np->localIndex != 0 && !inCredits && allow) {
         bool matchingLocal = (np->currCourseNum == gNetworkPlayerLocal->currCourseNum) && (np->currActNum == gNetworkPlayerLocal->currActNum);
 
         if (matchingLocal && gNetworkPlayerLocal->currCourseNum != 0) {
