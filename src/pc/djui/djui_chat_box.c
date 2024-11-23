@@ -123,6 +123,51 @@ static void djui_chat_box_set_focus_style(void) {
     djui_base_set_color(&gDjuiChatBox->chatFlow->base, 0, 0, 0, gDjuiChatBoxFocus ? 128 : 0);
 }
 
+static void replace_color_codes(const char* input, char* output, size_t outputSize) {
+    static const struct {
+        const char* code;
+        const char* replacement;
+    } colorTable[] = {
+        {"&0", "\\#000\\"}, {"&1", "\\#00A\\"}, {"&2", "\\#0A0\\"}, {"&3", "\\#0AA\\"},
+        {"&4", "\\#A00\\"}, {"&5", "\\#A0A\\"}, {"&6", "\\#FA0\\"}, {"&7", "\\#AAA\\"},
+        {"&8", "\\#555\\"}, {"&9", "\\#55F\\"}, {"&a", "\\#5F5\\"}, {"&b", "\\#5FF\\"},
+        {"&c", "\\#F55\\"}, {"&d", "\\#F5F\\"}, {"&e", "\\#FF5\\"}, {"&f", "\\#FFF\\"},
+        {"&A", "\\#5F5\\"}, {"&B", "\\#5FF\\"}, {"&C", "\\#F55\\"}, {"&D", "\\#F5F\\"},
+        {"&E", "\\#FF5\\"}, {"&F", "\\#FFF\\"}, {"&r", "\\#FFF\\"}, {"&R", "\\#FFF\\"},
+    };
+    size_t inputLen = strlen(input);
+    size_t outputPos = 0;
+
+    for (size_t i = 0; i < inputLen; i++) {
+        if (input[i] == '&') {
+            int matched = 0;
+            for (size_t j = 0; j < sizeof(colorTable) / sizeof(colorTable[0]); j++) {
+                size_t codeLen = strlen(colorTable[j].code);
+                if (strncmp(&input[i], colorTable[j].code, codeLen) == 0) {
+                    size_t replacementLen = strlen(colorTable[j].replacement);
+                    if (outputPos + replacementLen < outputSize - 1) {
+                        strcpy(&output[outputPos], colorTable[j].replacement);
+                        outputPos += replacementLen;
+                    }
+                    i += codeLen - 1;
+                    matched = 1;
+                    break;
+                }
+            }
+            if (!matched) {
+                if (outputPos < outputSize - 1) {
+                    output[outputPos++] = input[i];
+                }
+            }
+        } else {
+            if (outputPos < outputSize - 1) {
+                output[outputPos++] = input[i];
+            }
+        }
+    }
+    output[outputPos] = '\0';
+}
+
 static void djui_chat_box_input_enter(struct DjuiInputbox* chatInput) {
     djui_interactable_set_input_focus(NULL);
 
@@ -137,8 +182,10 @@ static void djui_chat_box_input_enter(struct DjuiInputbox* chatInput) {
                 djui_chat_message_create(extendedUnknownCommandMessage);
             }
         } else {
-            djui_chat_message_create_from(gNetworkPlayerLocal->globalIndex, chatInput->buffer);
-            network_send_chat(chatInput->buffer, gNetworkPlayerLocal->globalIndex);
+            char replacedBuffer[MAX_MSG_LENGTH];
+            replace_color_codes(chatInput->buffer, replacedBuffer, sizeof(replacedBuffer));
+            djui_chat_message_create_from(gNetworkPlayerLocal->globalIndex, replacedBuffer);
+            network_send_chat(replacedBuffer, gNetworkPlayerLocal->globalIndex);
         }
     }
 
