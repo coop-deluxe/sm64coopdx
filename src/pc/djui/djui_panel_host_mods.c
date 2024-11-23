@@ -57,26 +57,18 @@ static void djui_panel_host_mods_description_create(void) {
     sDescriptionPanel = panel;
 }
 
-#include <string.h>
-#include <stdlib.h>
-#include <stdio.h>
-
 static void djui_mod_checkbox_on_hover(struct DjuiBase* base) {
     char* description = NULL;
     if (base->tag >= 0 && base->tag < gLocalMods.entryCount) {
         struct Mod* mod = gLocalMods.entries[base->tag];
         if (mod != NULL && mod->description != NULL) {
             size_t size = strlen(mod->relativePath) + strlen(mod->description) + 128;
-
             char* processedIncompatible = NULL;
             if (mod->incompatible != NULL && strlen(mod->incompatible) > 0) {
                 size_t spaces = 0;
                 for (const char* c = mod->incompatible; *c != '\0'; ++c) {
-                    if (*c == ' ') {
-                        spaces++;
-                    }
+                    if (*c == ' ') { spaces++; }
                 }
-
                 size_t extraLengthPerSpace = strlen("\\#0000ff\\, \\#00ffff\\") - 1;
                 size_t processedSize = strlen(mod->incompatible) + spaces * extraLengthPerSpace + 1;
                 processedIncompatible = malloc(processedSize);
@@ -93,10 +85,8 @@ static void djui_mod_checkbox_on_hover(struct DjuiBase* base) {
                     }
                     *dest = '\0';
                 }
-
                 size += strlen("\\#00ff00\\Incompatible: \\#00ffff\\") + strlen(processedIncompatible);
             }
-
             description = malloc(size);
             if (description != NULL) {
                 if (mod->isDirectory) {
@@ -130,24 +120,17 @@ static void djui_mod_checkbox_on_hover(struct DjuiBase* base) {
                             mod->description);
                     }
                 }
-
                 djui_text_set_text(sTooltip, description);
                 free(description);
             } else {
                 djui_text_set_text(sTooltip, mod->description);
             }
-
-            if (processedIncompatible != NULL) {
-                free(processedIncompatible);
-            }
-
+            if (processedIncompatible != NULL) { free(processedIncompatible); }
             return;
         }
     }
     djui_text_set_text(sTooltip, "");
 }
-
-
 
 static void djui_mod_checkbox_on_hover_end(UNUSED struct DjuiBase* base) {
     djui_text_set_text(sTooltip, "");
