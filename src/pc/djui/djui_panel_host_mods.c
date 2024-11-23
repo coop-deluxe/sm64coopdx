@@ -63,17 +63,34 @@ static void djui_mod_checkbox_on_hover(struct DjuiBase* base) {
         struct Mod* mod = gLocalMods.entries[base->tag];
         if (mod != NULL && mod->description != NULL) {
             size_t size = strlen(mod->relativePath) + strlen(mod->description) + 128;
+            if (mod->incompatible != NULL) {
+                size += strlen(mod->incompatible) + 50; // Additional space for incompatibility line
+            }
+
             description = malloc(size);
             if (description != NULL) {
+                char incompatibleLine[128] = "";
+                if (mod->incompatible) {
+                    snprintf(incompatibleLine, sizeof(incompatibleLine),
+                        "\n\\#00ffff\\Incompatible: \\#0000ff\\%s", mod->incompatible);
+                }
+
                 if (mod->isDirectory) {
                     snprintf(description, size,
-                        "\\#ff8000\\Folder: \\#ffff00\\%s \\#ff2000\\(%u files)\n\n\n\\#ffffff\\%s",
-                        mod->relativePath, (unsigned int)mod->fileCount, mod->description);
+                        "\\#ff8000\\Folder: \\#ffff00\\%s \\#ff2000\\(%u file%s)%s\n\n\n\\#ffffff\\%s",
+                        mod->relativePath,
+                        (unsigned int)mod->fileCount,
+                        (unsigned int)mod->fileCount == 1 ? "" : "s",
+                        incompatibleLine,
+                        mod->description);
                 } else {
                     snprintf(description, size,
-                        "\\#ff8000\\File: \\#ffff00\\%s\n\n\n\\#ffffff\\%s", 
-                        mod->relativePath, mod->description);
+                        "\\#ff8000\\File: \\#ffff00\\%s%s\n\n\n\\#ffffff\\%s",
+                        mod->relativePath,
+                        incompatibleLine,
+                        mod->description);
                 }
+
                 djui_text_set_text(sTooltip, description);
                 free(description);
             } else {
