@@ -7,6 +7,8 @@
 #include "djui_panel_misc.h"
 #include "djui_panel_pause.h"
 #include "djui_panel_menu_options.h"
+#include "djui_panel_modlist.h"
+#include "djui_panel_playerlist.h"
 #include "djui_hud_utils.h"
 #include "pc/utils/misc.h"
 #include "pc/configfile.h"
@@ -66,12 +68,16 @@ static void djui_panel_menu_options_djui_setting_change(UNUSED struct DjuiBase* 
     if (gDjuiInMainMenu) {
         djui_panel_shutdown();
         gDjuiInMainMenu = true;
+        djui_panel_playerlist_create(NULL);
+        djui_panel_modlist_create(NULL);
         djui_panel_main_create(NULL);
         djui_panel_options_create(NULL);
         djui_panel_misc_create(NULL);
         djui_panel_main_menu_create(NULL);
     } else if (gDjuiPanelPauseCreated) {
         djui_panel_shutdown();
+        djui_panel_playerlist_create(NULL);
+        djui_panel_modlist_create(NULL);
         djui_panel_pause_create(NULL);
         djui_panel_options_create(NULL);
         djui_panel_misc_create(NULL);
