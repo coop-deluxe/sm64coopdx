@@ -8294,6 +8294,11 @@ function djui_menu_get_font()
     -- ...
 end
 
+--- @return DjuiTheme
+function djui_menu_get_theme()
+    -- ...
+end
+
 --- @param message string
 --- @param lines integer
 function djui_popup_create_global(message, lines)

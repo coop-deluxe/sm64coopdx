@@ -52,6 +52,7 @@ void djui_reset_popup_disabled_override(void);
 bool djui_is_playerlist_open(void);
 bool djui_attempting_to_open_playerlist(void);
 enum DjuiFontType djui_menu_get_font(void);
+struct DjuiTheme* djui_menu_get_theme(void);
 
 s8 get_dialog_box_state(void);
 s16 get_dialog_id(void);

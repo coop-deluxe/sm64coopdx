@@ -590,6 +590,29 @@
 --- @field public g integer
 --- @field public r integer
 
+--- @class DjuiInteractableTheme
+--- @field public cursorDownBorderColor DjuiColor
+--- @field public cursorDownRectColor DjuiColor
+--- @field public defaultBorderColor DjuiColor
+--- @field public defaultRectColor DjuiColor
+--- @field public hoveredBorderColor DjuiColor
+--- @field public hoveredRectColor DjuiColor
+--- @field public textColor DjuiColor
+
+--- @class DjuiPanelTheme
+--- @field public hudFontHeader boolean
+
+--- @class DjuiTheme
+--- @field public id string
+--- @field public interactables DjuiInteractableTheme
+--- @field public name string
+--- @field public panels DjuiPanelTheme
+--- @field public threePanels DjuiThreePanelTheme
+
+--- @class DjuiThreePanelTheme
+--- @field public borderColor DjuiColor
+--- @field public rectColor DjuiColor
+
 --- @class FirstPersonCamera
 --- @field public centerL boolean
 --- @field public crouch number

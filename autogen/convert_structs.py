@@ -13,6 +13,7 @@ in_files = [
     "src/engine/surface_collision.h",
     "src/pc/network/network_player.h",
     "src/pc/djui/djui_hud_utils.h",
+    "src/pc/djui/djui_theme.h",
     "src/game/object_helpers.h",
     "src/game/mario_step.h",
     "src/pc/lua/utils/smlua_anim_utils.h",
