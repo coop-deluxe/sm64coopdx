@@ -1469,6 +1469,7 @@
    - [find_unimportant_object](functions-4.md#find_unimportant_object)
    - [geo_offset_klepto_debug](functions-4.md#geo_offset_klepto_debug)
    - [get_object_list_from_behavior](functions-4.md#get_object_list_from_behavior)
+   - [get_room_at_pos](functions-4.md#get_room_at_pos)
    - [get_trajectory_length](functions-4.md#get_trajectory_length)
    - [increment_velocity_toward_range](functions-4.md#increment_velocity_toward_range)
    - [is_item_in_array](functions-4.md#is_item_in_array)
@@ -1540,6 +1541,7 @@
    - [player_performed_grab_escape_action](functions-4.md#player_performed_grab_escape_action)
    - [random_f32_around_zero](functions-4.md#random_f32_around_zero)
    - [set_mario_interact_hoot_if_in_range](functions-4.md#set_mario_interact_hoot_if_in_range)
+   - [set_room_override](functions-4.md#set_room_override)
    - [set_time_stop_flags](functions-4.md#set_time_stop_flags)
    - [set_time_stop_flags_if_alone](functions-4.md#set_time_stop_flags_if_alone)
    - [signum_positive](functions-4.md#signum_positive)
@@ -1917,6 +1919,7 @@
    - [load_area_terrain](functions-5.md#load_area_terrain)
    - [load_object_collision_model](functions-5.md#load_object_collision_model)
    - [obj_get_surface_from_index](functions-5.md#obj_get_surface_from_index)
+   - [surface_has_force](functions-5.md#surface_has_force)
 
 <br />
 

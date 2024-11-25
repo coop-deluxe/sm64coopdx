@@ -25989,6 +25989,28 @@ int smlua_func_get_object_list_from_behavior(lua_State* L) {
     return 1;
 }
 
+int smlua_func_get_room_at_pos(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 3) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "get_room_at_pos", 3, top);
+        return 0;
+    }
+
+    f32 x = smlua_to_number(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "get_room_at_pos"); return 0; }
+    f32 y = smlua_to_number(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "get_room_at_pos"); return 0; }
+    f32 z = smlua_to_number(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "get_room_at_pos"); return 0; }
+
+    extern s16 get_room_at_pos(f32 x, f32 y, f32 z);
+    lua_pushinteger(L, get_room_at_pos(x, y, z));
+
+    return 1;
+}
+
 int smlua_func_get_trajectory_length(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -27677,6 +27699,24 @@ int smlua_func_set_mario_interact_hoot_if_in_range(lua_State* L) {
 
     extern void set_mario_interact_hoot_if_in_range(UNUSED s32 sp0, UNUSED s32 sp4, f32 sp8);
     set_mario_interact_hoot_if_in_range(sp0, sp4, sp8);
+
+    return 1;
+}
+
+int smlua_func_set_room_override(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "set_room_override", 1, top);
+        return 0;
+    }
+
+    s16 room = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "set_room_override"); return 0; }
+
+    extern void set_room_override(s16 room);
+    set_room_override(room);
 
     return 1;
 }
@@ -33335,6 +33375,23 @@ int smlua_func_obj_get_surface_from_index(lua_State* L) {
     return 1;
 }
 
+int smlua_func_surface_has_force(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "surface_has_force", 1, top);
+        return 0;
+    }
+
+    s16 surfaceType = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "surface_has_force"); return 0; }
+
+    lua_pushboolean(L, surface_has_force(surfaceType));
+
+    return 1;
+}
+
 
 
 void smlua_bind_functions_autogen(void) {
@@ -34740,6 +34797,7 @@ void smlua_bind_functions_autogen(void) {
     //smlua_bind_function(L, "geo_update_layer_transparency", smlua_func_geo_update_layer_transparency); <--- UNIMPLEMENTED
     //smlua_bind_function(L, "geo_update_projectile_pos_from_parent", smlua_func_geo_update_projectile_pos_from_parent); <--- UNIMPLEMENTED
     smlua_bind_function(L, "get_object_list_from_behavior", smlua_func_get_object_list_from_behavior);
+    smlua_bind_function(L, "get_room_at_pos", smlua_func_get_room_at_pos);
     smlua_bind_function(L, "get_trajectory_length", smlua_func_get_trajectory_length);
     smlua_bind_function(L, "increment_velocity_toward_range", smlua_func_increment_velocity_toward_range);
     smlua_bind_function(L, "is_item_in_array", smlua_func_is_item_in_array);
@@ -34812,6 +34870,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "player_performed_grab_escape_action", smlua_func_player_performed_grab_escape_action);
     smlua_bind_function(L, "random_f32_around_zero", smlua_func_random_f32_around_zero);
     smlua_bind_function(L, "set_mario_interact_hoot_if_in_range", smlua_func_set_mario_interact_hoot_if_in_range);
+    smlua_bind_function(L, "set_room_override", smlua_func_set_room_override);
     smlua_bind_function(L, "set_time_stop_flags", smlua_func_set_time_stop_flags);
     smlua_bind_function(L, "set_time_stop_flags_if_alone", smlua_func_set_time_stop_flags_if_alone);
     smlua_bind_function(L, "signum_positive", smlua_func_signum_positive);
@@ -35160,5 +35219,6 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "load_area_terrain", smlua_func_load_area_terrain);
     smlua_bind_function(L, "load_object_collision_model", smlua_func_load_object_collision_model);
     smlua_bind_function(L, "obj_get_surface_from_index", smlua_func_obj_get_surface_from_index);
+    smlua_bind_function(L, "surface_has_force", smlua_func_surface_has_force);
 
 }

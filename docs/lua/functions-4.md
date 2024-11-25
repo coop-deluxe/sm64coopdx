@@ -6353,6 +6353,28 @@
 
 <br />
 
+## [get_room_at_pos](#get_room_at_pos)
+
+### Lua Example
+`local integerValue = get_room_at_pos(x, y, z)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| x | `number` |
+| y | `number` |
+| z | `number` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s16 get_room_at_pos(f32 x, f32 y, f32 z);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [get_trajectory_length](#get_trajectory_length)
 
 ### Lua Example
@@ -7862,6 +7884,26 @@
 
 ### C Prototype
 `void set_mario_interact_hoot_if_in_range(UNUSED s32 sp0, UNUSED s32 sp4, f32 sp8);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_room_override](#set_room_override)
+
+### Lua Example
+`set_room_override(room)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| room | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_room_override(s16 room);`
 
 [:arrow_up_small:](#)
 

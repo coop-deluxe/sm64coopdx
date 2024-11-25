@@ -6935,6 +6935,14 @@ function get_object_list_from_behavior(behavior)
     -- ...
 end
 
+--- @param x number
+--- @param y number
+--- @param z number
+--- @return integer
+function get_room_at_pos(x, y, z)
+    -- ...
+end
+
 --- @param trajectory Pointer_Trajectory
 --- @return integer
 function get_trajectory_length(trajectory)
@@ -7400,6 +7408,11 @@ end
 --- @param sp4 integer
 --- @param sp8 number
 function set_mario_interact_hoot_if_in_range(sp0, sp4, sp8)
+    -- ...
+end
+
+--- @param room integer
+function set_room_override(room)
     -- ...
 end
 
@@ -9194,6 +9207,12 @@ end
 --- @param index integer
 --- @return Surface
 function obj_get_surface_from_index(o, index)
+    -- ...
+end
+
+--- @param surfaceType integer
+--- @return boolean
+function surface_has_force(surfaceType)
     -- ...
 end
 
