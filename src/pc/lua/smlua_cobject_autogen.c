@@ -707,6 +707,7 @@ static struct LuaObjectField sDjuiThemeFields[LUA_DJUI_THEME_FIELD_COUNT] = {
 static struct LuaObjectField sDjuiThreePanelThemeFields[LUA_DJUI_THREE_PANEL_THEME_FIELD_COUNT] = {
     { "borderColor", LVT_COBJECT, offsetof(struct DjuiThreePanelTheme, borderColor), true, LOT_DJUICOLOR },
     { "rectColor",   LVT_COBJECT, offsetof(struct DjuiThreePanelTheme, rectColor),   true, LOT_DJUICOLOR },
+};
 
 #define LUA_EXCLAMATION_BOX_CONTENT_FIELD_COUNT 5
 static struct LuaObjectField sExclamationBoxContentFields[LUA_EXCLAMATION_BOX_CONTENT_FIELD_COUNT] = {
