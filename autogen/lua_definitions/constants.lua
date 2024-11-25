@@ -3675,6 +3675,15 @@ INT_SUBTYPE_STAR_DOOR = 0x00000020
 --- @type integer
 INT_SUBTYPE_TWIRL_BOUNCE = 0x00000080
 
+--- @type integer
+PVP_ATTACK_KNOCKBACK_TIMER_DEFAULT = 10
+
+--- @type integer
+PVP_ATTACK_KNOCKBACK_TIMER_OVERRIDE = -5
+
+--- @type integer
+PVP_ATTACK_OVERRIDE_VANILLA_INVINCIBILITY = 0x0000FFFF
+
 --- @class InteractionFlag
 
 --- @type InteractionFlag
@@ -5548,6 +5557,14 @@ PLAYER_INTERACTIONS_SOLID = 1
 
 --- @type PlayerInteractions
 PLAYER_INTERACTIONS_PVP = 2
+
+--- @class PvpType
+
+--- @type PvpType
+PLAYER_PVP_CLASSIC = 0
+
+--- @type PvpType
+PLAYER_PVP_REVAMPED = 1
 
 --- @type integer
 MAX_DESCRIPTION_STRING = 20

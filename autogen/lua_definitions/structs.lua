@@ -613,6 +613,13 @@
 --- @field public borderColor DjuiColor
 --- @field public rectColor DjuiColor
 
+--- @class ExclamationBoxContent
+--- @field public behavior BehaviorId
+--- @field public firstByte integer
+--- @field public id integer
+--- @field public model ModelExtendedId
+--- @field public unused integer
+
 --- @class FirstPersonCamera
 --- @field public centerL boolean
 --- @field public crouch number
@@ -2050,6 +2057,7 @@
 --- @field public pauseAnywhere integer
 --- @field public playerInteractions PlayerInteractions
 --- @field public playerKnockbackStrength integer
+--- @field public pvpType PvpType
 --- @field public skipIntro integer
 --- @field public stayInLevelAfterStar integer
 

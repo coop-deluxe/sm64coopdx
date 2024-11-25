@@ -29,6 +29,5 @@
 #define MAX_VERSION_LENGTH 32
 
 const char* get_version(void);
-const char* get_version_online(void);
 
 #endif

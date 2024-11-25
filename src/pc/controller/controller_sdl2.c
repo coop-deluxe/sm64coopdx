@@ -108,6 +108,11 @@ static void controller_sdl_init(void) {
         return;
     }
 
+#ifdef WAPI_DXGI
+    extern void WIN_UpdateKeymap(void);
+    WIN_UpdateKeymap();
+#endif
+
     haptics_enabled = (SDL_InitSubSystem(SDL_INIT_HAPTIC) == 0);
 
     // try loading an external gamecontroller mapping file

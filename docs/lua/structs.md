@@ -28,6 +28,7 @@
 - [DjuiPanelTheme](#DjuiPanelTheme)
 - [DjuiTheme](#DjuiTheme)
 - [DjuiThreePanelTheme](#DjuiThreePanelTheme)
+- [ExclamationBoxContent](#ExclamationBoxContent)
 - [FirstPersonCamera](#FirstPersonCamera)
 - [FloorGeometry](#FloorGeometry)
 - [GlobalObjectAnimations](#GlobalObjectAnimations)
@@ -894,6 +895,16 @@
 | ----- | ---- | ------ |
 | borderColor | [DjuiColor](structs.md#DjuiColor) | read-only |
 | rectColor | [DjuiColor](structs.md#DjuiColor) | read-only |
+=======
+## [ExclamationBoxContent](#ExclamationBoxContent)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| behavior | [enum BehaviorId](constants.md#enum-BehaviorId) |  |
+| firstByte | `integer` |  |
+| id | `integer` |  |
+| model | [enum ModelExtendedId](constants.md#enum-ModelExtendedId) |  |
+| unused | `integer` |  |
 
 [:arrow_up_small:](#)
 
@@ -2603,6 +2614,7 @@
 | pauseAnywhere | `integer` |  |
 | playerInteractions | [enum PlayerInteractions](constants.md#enum-PlayerInteractions) |  |
 | playerKnockbackStrength | `integer` |  |
+| pvpType | [enum PvpType](constants.md#enum-PvpType) |  |
 | skipIntro | `integer` |  |
 | stayInLevelAfterStar | `integer` |  |
 

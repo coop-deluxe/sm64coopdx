@@ -723,7 +723,7 @@ void smlua_call_event_hooks_on_play_sound(enum LuaHookedEventType hookType, s32 
     }
 }
 
-void smlua_call_event_hooks_on_seq_load(enum LuaHookedEventType hookType, u32 player, u32 seqId, s32 loadAsync, u8* returnValue) {
+void smlua_call_event_hooks_on_seq_load(enum LuaHookedEventType hookType, u32 player, u32 seqId, s32 loadAsync, s16* returnValue) {
     lua_State* L = gLuaState;
     if (L == NULL) { return; }
     struct LuaHookedEvent* hook = &sHookedEvents[hookType];
