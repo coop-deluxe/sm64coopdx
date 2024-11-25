@@ -677,6 +677,15 @@ static struct LuaObjectField sDjuiColorFields[LUA_DJUI_COLOR_FIELD_COUNT] = {
     { "r", LVT_U8, offsetof(struct DjuiColor, r), false, LOT_NONE },
 };
 
+#define LUA_EXCLAMATION_BOX_CONTENT_FIELD_COUNT 5
+static struct LuaObjectField sExclamationBoxContentFields[LUA_EXCLAMATION_BOX_CONTENT_FIELD_COUNT] = {
+    { "behavior",  LVT_S32, offsetof(struct ExclamationBoxContent, behavior),  false, LOT_NONE },
+    { "firstByte", LVT_U8,  offsetof(struct ExclamationBoxContent, firstByte), false, LOT_NONE },
+    { "id",        LVT_U8,  offsetof(struct ExclamationBoxContent, id),        false, LOT_NONE },
+    { "model",     LVT_S32, offsetof(struct ExclamationBoxContent, model),     false, LOT_NONE },
+    { "unused",    LVT_U8,  offsetof(struct ExclamationBoxContent, unused),    false, LOT_NONE },
+};
+
 #define LUA_FIRST_PERSON_CAMERA_FIELD_COUNT 10
 static struct LuaObjectField sFirstPersonCameraFields[LUA_FIRST_PERSON_CAMERA_FIELD_COUNT] = {
     { "centerL",    LVT_BOOL,    offsetof(struct FirstPersonCamera, centerL),    false, LOT_NONE  },
@@ -2460,6 +2469,7 @@ struct LuaObjectTable sLuaObjectAutogenTable[LOT_AUTOGEN_MAX - LOT_AUTOGEN_MIN] 
     { LOT_CUTSCENEVARIABLE,          sCutsceneVariableFields,          LUA_CUTSCENE_VARIABLE_FIELD_COUNT            },
     { LOT_DATETIME,                  sDateTimeFields,                  LUA_DATE_TIME_FIELD_COUNT                    },
     { LOT_DJUICOLOR,                 sDjuiColorFields,                 LUA_DJUI_COLOR_FIELD_COUNT                   },
+    { LOT_EXCLAMATIONBOXCONTENT,     sExclamationBoxContentFields,     LUA_EXCLAMATION_BOX_CONTENT_FIELD_COUNT      },
     { LOT_FIRSTPERSONCAMERA,         sFirstPersonCameraFields,         LUA_FIRST_PERSON_CAMERA_FIELD_COUNT          },
     { LOT_FLOORGEOMETRY,             sFloorGeometryFields,             LUA_FLOOR_GEOMETRY_FIELD_COUNT               },
     { LOT_GLOBALOBJECTANIMATIONS,    sGlobalObjectAnimationsFields,    LUA_GLOBAL_OBJECT_ANIMATIONS_FIELD_COUNT     },

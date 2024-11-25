@@ -590,6 +590,13 @@
 --- @field public g integer
 --- @field public r integer
 
+--- @class ExclamationBoxContent
+--- @field public behavior BehaviorId
+--- @field public firstByte integer
+--- @field public id integer
+--- @field public model ModelExtendedId
+--- @field public unused integer
+
 --- @class FirstPersonCamera
 --- @field public centerL boolean
 --- @field public crouch number

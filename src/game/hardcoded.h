@@ -5,6 +5,8 @@
 #include "dialog_ids.h"
 #include "seq_ids.h"
 #include "paintings.h"
+#include "pc/lua/utils/smlua_model_utils.h"
+#include "include/behavior_table.h"
 
   ////////////
  // Levels //
@@ -265,6 +267,19 @@ struct BehaviorValues {
 };
 
 extern struct BehaviorValues gBehaviorValues;
+
+#define EXCLAMATION_BOX_MAX_SIZE 99
+
+struct ExclamationBoxContent {
+    u8 id;
+    u8 unused;
+    u8 firstByte;
+    enum ModelExtendedId model;
+    enum BehaviorId behavior;
+};
+
+extern struct ExclamationBoxContent* gExclamationBoxContents;
+extern u8 gExclamationBoxSize;
 
   //////////////
  // Painting //

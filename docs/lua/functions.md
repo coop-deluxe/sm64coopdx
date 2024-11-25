@@ -2323,6 +2323,86 @@ Shoots a raycast from `startX`, `startY`, and `startZ` in the direction of `dirX
 
 <br />
 
+## [set_exclamation_box_contents](#set_exclamation_box_contents)
+
+Sets the contents that the exclamation box spawns. A single content has 5 keys: `id`, `unused`, `firstByte`, `model`, and `behavior`.
+* `id`: Required; what value the box's oBehParams2ndByte needs to be to spawn this object.
+* `unused`: Optional; unused by vanilla.
+* `firstByte`: Optional; Overrides the 1st byte given to the spawned object.
+* `model`: Required; The model that the object will spawn with. Uses `ModelExtendedId`.
+* `behavior`: Required; The behavior ID that the object will spawn with. Uses `BehaviorId`.
+
+### Lua Example
+```lua
+set_exclamation_box_contents({
+   {id = 0, unused = 0, firstByte = 0, model = E_MODEL_GOOMBA, behavior = id_bhvGoomba}, -- Uses both optional fields
+   {id = 1, unused = 0, model = E_MODEL_KOOPA_WITH_SHELL, behavior = id_bhvKoopa}, -- Only uses `unused` optional field
+   {id = 2, firsteByte = model = E_MODEL_BLACK_BOBOMB, behavior = id_bhvBobomb}, -- Only uses `firstByte` optional field
+   {id = 3, model = E_MODEL_BOO, behavior = id_bhvBoo}, -- Uses no optional fields
+})
+```
+
+### Parameters
+There exists only 1 parameter to this function which is the main table. However, each subtable has 5 different keys that could be accessed.
+| Field | Type |
+| ----- | ---- |
+| id | `integer` |
+| unused (Optional) | `integer` |
+| firstByte (Optional) | `integer` |
+| model | [ModelExtendedId](#ModelExtendedId) |
+| behavior | [BehaviorId](#BehaviorId) |
+
+### Returns
+- None
+
+### C Prototype
+N/A
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_exclamation_box_contents](#get_exclamation_box_contents)
+
+Gets the contents that the exclamation box spawns. A single content has 5 keys: `id`, `unused`, `firstByte`, `model`, and `behavior`.
+* `id`: Required; what value the box's oBehParams2ndByte needs to be to spawn this object.
+* `unused`: Optional; unused by vanilla.
+* `firstByte`: Optional; Overrides the 1st byte given to the spawned object.
+* `model`: Required; The model that the object will spawn with. Uses `ModelExtendedId`.
+* `behavior`: Required; The behavior ID that the object will spawn with. Uses `BehaviorId`.
+
+### Lua Example
+```lua
+local contents = get_exclamation_box_contents()
+for index, content in pairs(contents) do -- Enter the main table
+   djui_chat_message_create("Table index " .. index) -- Print the current table index
+      for key, value in pairs(content) do
+         djui_chat_message_create(key .. ": " .. value) -- Print a key-value pair within this subtable
+      end
+   djui_chat_message_create("---------------------------------") -- Separator
+end
+```
+
+### Parameters
+- N/A
+
+### Returns
+The function itself does not return every key/value pair. Instead it returns the main table which holds all the subtables that hold each key/value pair.
+| Field | Type |
+| ----- | ---- |
+| id | `integer` |
+| unused (Optional) | `integer` |
+| firstByte (Optional) | `integer` |
+| model | [ModelExtendedId](#ModelExtendedId) |
+| behavior | [BehaviorId](#BehaviorId) |
+
+### C Prototype
+N/A
+
+[:arrow_up_small:](#)
+
+<br />
+
 
 ---
 # functions from area.h

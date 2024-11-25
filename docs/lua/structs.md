@@ -24,6 +24,7 @@
 - [CutsceneVariable](#CutsceneVariable)
 - [DateTime](#DateTime)
 - [DjuiColor](#DjuiColor)
+- [ExclamationBoxContent](#ExclamationBoxContent)
 - [FirstPersonCamera](#FirstPersonCamera)
 - [FloorGeometry](#FloorGeometry)
 - [GlobalObjectAnimations](#GlobalObjectAnimations)
@@ -839,6 +840,20 @@
 | b | `integer` |  |
 | g | `integer` |  |
 | r | `integer` |  |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [ExclamationBoxContent](#ExclamationBoxContent)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| behavior | [enum BehaviorId](constants.md#enum-BehaviorId) |  |
+| firstByte | `integer` |  |
+| id | `integer` |  |
+| model | [enum ModelExtendedId](constants.md#enum-ModelExtendedId) |  |
+| unused | `integer` |  |
 
 [:arrow_up_small:](#)
 
