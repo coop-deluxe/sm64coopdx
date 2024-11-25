@@ -1478,28 +1478,27 @@ u32 interact_player_pvp(struct MarioState* attacker, struct MarioState* victim) 
         //Vec3f velDiff;
         //vec3f_dif(velDiff, attacker->vel, cVictim->vel);
         if (gServerSettings.pvpType == PLAYER_PVP_REVAMPED && attacker->action == ACT_GROUND_POUND) {
-            goto ignoreSlideCheck;
-        }
-
-        if (attacker->action == ACT_SLIDE_KICK_SLIDE || attacker->action == ACT_SLIDE_KICK) {
-            // if the difference vectors are not different enough, do not attack
-            if (vec3f_length(attacker->vel) < 15) { return FALSE; }
+            // do nothing
         } else {
-            // if the difference vectors are not different enough, do not attack
-            if (vec3f_length(attacker->vel) < 40) { return FALSE; }
-        }
-
-        // if the victim is going faster, do not attack
-        // However if the victim is diving and the attacker is slidekicking, do not check speed
-        if (vec3f_length(cVictim->vel) > vec3f_length(attacker->vel)) {
-            if (gServerSettings.pvpType == PLAYER_PVP_REVAMPED && (attacker->action == ACT_SLIDE_KICK && cVictim->action == ACT_DIVE)) {
-                // do nothing, meaning don't exit
+            if (attacker->action == ACT_SLIDE_KICK_SLIDE || attacker->action == ACT_SLIDE_KICK) {
+                // if the difference vectors are not different enough, do not attack
+                if (vec3f_length(attacker->vel) < 15) { return FALSE; }
             } else {
-                return FALSE;
+                // if the difference vectors are not different enough, do not attack
+                if (vec3f_length(attacker->vel) < 40) { return FALSE; }
+            }
+
+            // if the victim is going faster, do not attack
+            // However if the victim is diving and the attacker is slidekicking, do not check speed
+            if (vec3f_length(cVictim->vel) > vec3f_length(attacker->vel)) {
+                if (gServerSettings.pvpType == PLAYER_PVP_REVAMPED && (attacker->action == ACT_SLIDE_KICK && cVictim->action == ACT_DIVE)) {
+                    // do nothing, meaning don't exit
+                } else {
+                    return FALSE;
+                }
             }
         }
     }
-ignoreSlideCheck:
 
     // determine if ground pound should be ignored
     if (attacker->action == ACT_GROUND_POUND) {
