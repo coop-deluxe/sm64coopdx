@@ -8,6 +8,7 @@
 #include "src/engine/surface_collision.h"
 #include "src/pc/network/network_player.h"
 #include "src/pc/djui/djui_hud_utils.h"
+#include "src/pc/djui/djui_theme.h"
 #include "src/game/object_helpers.h"
 #include "src/game/mario_step.h"
 #include "src/pc/lua/utils/smlua_anim_utils.h"
@@ -675,6 +676,37 @@ static struct LuaObjectField sDjuiColorFields[LUA_DJUI_COLOR_FIELD_COUNT] = {
     { "b", LVT_U8, offsetof(struct DjuiColor, b), false, LOT_NONE },
     { "g", LVT_U8, offsetof(struct DjuiColor, g), false, LOT_NONE },
     { "r", LVT_U8, offsetof(struct DjuiColor, r), false, LOT_NONE },
+};
+
+#define LUA_DJUI_INTERACTABLE_THEME_FIELD_COUNT 7
+static struct LuaObjectField sDjuiInteractableThemeFields[LUA_DJUI_INTERACTABLE_THEME_FIELD_COUNT] = {
+    { "cursorDownBorderColor", LVT_COBJECT, offsetof(struct DjuiInteractableTheme, cursorDownBorderColor), true, LOT_DJUICOLOR },
+    { "cursorDownRectColor",   LVT_COBJECT, offsetof(struct DjuiInteractableTheme, cursorDownRectColor),   true, LOT_DJUICOLOR },
+    { "defaultBorderColor",    LVT_COBJECT, offsetof(struct DjuiInteractableTheme, defaultBorderColor),    true, LOT_DJUICOLOR },
+    { "defaultRectColor",      LVT_COBJECT, offsetof(struct DjuiInteractableTheme, defaultRectColor),      true, LOT_DJUICOLOR },
+    { "hoveredBorderColor",    LVT_COBJECT, offsetof(struct DjuiInteractableTheme, hoveredBorderColor),    true, LOT_DJUICOLOR },
+    { "hoveredRectColor",      LVT_COBJECT, offsetof(struct DjuiInteractableTheme, hoveredRectColor),      true, LOT_DJUICOLOR },
+    { "textColor",             LVT_COBJECT, offsetof(struct DjuiInteractableTheme, textColor),             true, LOT_DJUICOLOR },
+};
+
+#define LUA_DJUI_PANEL_THEME_FIELD_COUNT 1
+static struct LuaObjectField sDjuiPanelThemeFields[LUA_DJUI_PANEL_THEME_FIELD_COUNT] = {
+    { "hudFontHeader", LVT_BOOL, offsetof(struct DjuiPanelTheme, hudFontHeader), false, LOT_NONE },
+};
+
+#define LUA_DJUI_THEME_FIELD_COUNT 5
+static struct LuaObjectField sDjuiThemeFields[LUA_DJUI_THEME_FIELD_COUNT] = {
+    { "id",            LVT_STRING_P, offsetof(struct DjuiTheme, id),            true, LOT_NONE                  },
+    { "interactables", LVT_COBJECT,  offsetof(struct DjuiTheme, interactables), true, LOT_DJUIINTERACTABLETHEME },
+    { "name",          LVT_STRING_P, offsetof(struct DjuiTheme, name),          true, LOT_NONE                  },
+    { "panels",        LVT_COBJECT,  offsetof(struct DjuiTheme, panels),        true, LOT_DJUIPANELTHEME        },
+    { "threePanels",   LVT_COBJECT,  offsetof(struct DjuiTheme, threePanels),   true, LOT_DJUITHREEPANELTHEME   },
+};
+
+#define LUA_DJUI_THREE_PANEL_THEME_FIELD_COUNT 2
+static struct LuaObjectField sDjuiThreePanelThemeFields[LUA_DJUI_THREE_PANEL_THEME_FIELD_COUNT] = {
+    { "borderColor", LVT_COBJECT, offsetof(struct DjuiThreePanelTheme, borderColor), true, LOT_DJUICOLOR },
+    { "rectColor",   LVT_COBJECT, offsetof(struct DjuiThreePanelTheme, rectColor),   true, LOT_DJUICOLOR },
 };
 
 #define LUA_EXCLAMATION_BOX_CONTENT_FIELD_COUNT 5
@@ -2470,6 +2502,10 @@ struct LuaObjectTable sLuaObjectAutogenTable[LOT_AUTOGEN_MAX - LOT_AUTOGEN_MIN] 
     { LOT_CUTSCENEVARIABLE,          sCutsceneVariableFields,          LUA_CUTSCENE_VARIABLE_FIELD_COUNT            },
     { LOT_DATETIME,                  sDateTimeFields,                  LUA_DATE_TIME_FIELD_COUNT                    },
     { LOT_DJUICOLOR,                 sDjuiColorFields,                 LUA_DJUI_COLOR_FIELD_COUNT                   },
+    { LOT_DJUIINTERACTABLETHEME,     sDjuiInteractableThemeFields,     LUA_DJUI_INTERACTABLE_THEME_FIELD_COUNT      },
+    { LOT_DJUIPANELTHEME,            sDjuiPanelThemeFields,            LUA_DJUI_PANEL_THEME_FIELD_COUNT             },
+    { LOT_DJUITHEME,                 sDjuiThemeFields,                 LUA_DJUI_THEME_FIELD_COUNT                   },
+    { LOT_DJUITHREEPANELTHEME,       sDjuiThreePanelThemeFields,       LUA_DJUI_THREE_PANEL_THEME_FIELD_COUNT       },
     { LOT_EXCLAMATIONBOXCONTENT,     sExclamationBoxContentFields,     LUA_EXCLAMATION_BOX_CONTENT_FIELD_COUNT      },
     { LOT_FIRSTPERSONCAMERA,         sFirstPersonCameraFields,         LUA_FIRST_PERSON_CAMERA_FIELD_COUNT          },
     { LOT_FLOORGEOMETRY,             sFloorGeometryFields,             LUA_FLOOR_GEOMETRY_FIELD_COUNT               },

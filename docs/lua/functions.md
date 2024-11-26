@@ -1739,6 +1739,7 @@
    - [djui_is_playerlist_open](functions-5.md#djui_is_playerlist_open)
    - [djui_is_popup_disabled](functions-5.md#djui_is_popup_disabled)
    - [djui_menu_get_font](functions-5.md#djui_menu_get_font)
+   - [djui_menu_get_theme](functions-5.md#djui_menu_get_theme)
    - [djui_popup_create_global](functions-5.md#djui_popup_create_global)
    - [djui_reset_popup_disabled_override](functions-5.md#djui_reset_popup_disabled_override)
    - [djui_set_popup_disabled_override](functions-5.md#djui_set_popup_disabled_override)
@@ -1917,6 +1918,7 @@
    - [load_area_terrain](functions-5.md#load_area_terrain)
    - [load_object_collision_model](functions-5.md#load_object_collision_model)
    - [obj_get_surface_from_index](functions-5.md#obj_get_surface_from_index)
+   - [surface_has_force](functions-5.md#surface_has_force)
 
 <br />
 

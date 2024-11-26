@@ -2099,6 +2099,24 @@
 
 <br />
 
+## [djui_menu_get_theme](#djui_menu_get_theme)
+
+### Lua Example
+`local DjuiThemeValue = djui_menu_get_theme()`
+
+### Parameters
+- None
+
+### Returns
+[DjuiTheme](structs.md#DjuiTheme)
+
+### C Prototype
+`struct DjuiTheme* djui_menu_get_theme(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [djui_popup_create_global](#djui_popup_create_global)
 
 ### Lua Example
@@ -5163,6 +5181,26 @@
 
 ### C Prototype
 `struct Surface *obj_get_surface_from_index(struct Object *o, u32 index);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [surface_has_force](#surface_has_force)
+
+### Lua Example
+`local booleanValue = surface_has_force(surfaceType)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| surfaceType | `integer` |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool surface_has_force(s16 surfaceType);`
 
 [:arrow_up_small:](#)
 
