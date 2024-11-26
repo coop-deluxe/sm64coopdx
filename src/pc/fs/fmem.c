@@ -93,7 +93,7 @@ size_t f_read(void *dst, size_t size, size_t count, FILE *f) {
     file_t *file = f_get_file_from_handle(f);
     if (!file) return fread(dst, size, count, f);
     if (file->pos >= file->size) return 0;
-    count = min(count, ((file->size - file->pos) / size));
+    count = MIN(count, ((file->size - file->pos) / size));
     memcpy(dst, file->data + file->pos, count * size);
     file->pos += count * size;
     return count;
