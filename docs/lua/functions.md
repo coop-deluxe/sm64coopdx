@@ -1918,7 +1918,6 @@
    - [load_area_terrain](functions-5.md#load_area_terrain)
    - [load_object_collision_model](functions-5.md#load_object_collision_model)
    - [obj_get_surface_from_index](functions-5.md#obj_get_surface_from_index)
-   - [surface_has_force](functions-5.md#surface_has_force)
 
 <br />
 
