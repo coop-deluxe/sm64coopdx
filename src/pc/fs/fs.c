@@ -11,6 +11,7 @@
 #include <ctype.h>
 #ifdef _WIN32
 #include <direct.h>
+#include <fileapi.h>
 #endif
 
 #include "macros.h"
@@ -292,18 +293,32 @@ bool fs_sys_filename_is_portable(char const *filename) {
 /* these operate on the real file system */
 
 bool fs_sys_path_exists(const char *name) {
+#ifdef _WIN32
+    return GetFileAttributesA(name) != INVALID_FILE_ATTRIBUTES;
+#else
     struct stat st;
     return (stat(name, &st) == 0);
+#endif
 }
 
 bool fs_sys_file_exists(const char *name) {
+#ifdef _WIN32
+    DWORD attribs = GetFileAttributesA(name);
+    return attribs != INVALID_FILE_ATTRIBUTES && !(attribs & FILE_ATTRIBUTE_DIRECTORY);
+#else
     struct stat st;
     return (stat(name, &st) == 0 && S_ISREG(st.st_mode));
+#endif
 }
 
 bool fs_sys_dir_exists(const char *name) {
+#ifdef _WIN32
+    DWORD attribs = GetFileAttributesA(name);
+    return attribs != INVALID_FILE_ATTRIBUTES && (attribs & FILE_ATTRIBUTE_DIRECTORY);
+#else
     struct stat st;
     return (stat(name, &st) == 0 && S_ISDIR(st.st_mode));
+#endif
 }
 
 bool fs_sys_dir_is_empty(const char *name) {

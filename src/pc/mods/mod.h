@@ -30,6 +30,7 @@ struct Mod {
     struct ModFile* files;
     s32 index;
     u16 fileCount;
+    u16 fileCapacity;
     bool isDirectory;
     bool enabled;
     bool selectable;

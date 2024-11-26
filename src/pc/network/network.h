@@ -69,9 +69,15 @@ enum BouncyLevelBounds {
     BOUNCY_LEVEL_BOUNDS_ON_CAP,
 };
 
+enum PvpType {
+    PLAYER_PVP_CLASSIC,
+    PLAYER_PVP_REVAMPED
+};
+
 struct ServerSettings {
     enum PlayerInteractions playerInteractions;
     enum BouncyLevelBounds bouncyLevelBounds;
+    enum PvpType pvpType;
     u8 playerKnockbackStrength;
     u8 stayInLevelAfterStar;
     u8 skipIntro;

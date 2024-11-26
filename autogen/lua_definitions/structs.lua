@@ -537,6 +537,7 @@
 --- @class Controller
 --- @field public buttonDown integer
 --- @field public buttonPressed integer
+--- @field public buttonReleased integer
 --- @field public extStickX integer
 --- @field public extStickY integer
 --- @field public port integer
@@ -588,6 +589,13 @@
 --- @field public b integer
 --- @field public g integer
 --- @field public r integer
+
+--- @class ExclamationBoxContent
+--- @field public behavior BehaviorId
+--- @field public firstByte integer
+--- @field public id integer
+--- @field public model ModelExtendedId
+--- @field public unused integer
 
 --- @class FirstPersonCamera
 --- @field public centerL boolean
@@ -1062,6 +1070,7 @@
 --- @field public customBehaviorIndex integer
 --- @field public description string
 --- @field public enabled boolean
+--- @field public fileCapacity integer
 --- @field public fileCount integer
 --- @field public ignoreScriptWarnings boolean
 --- @field public incompatible string
@@ -1125,6 +1134,7 @@
 --- @field public modelIndex integer
 --- @field public name string
 --- @field public onRxSeqId integer
+--- @field public overrideLocation string
 --- @field public overrideModelIndex integer
 --- @field public overridePalette PlayerPalette
 --- @field public overridePaletteIndex integer
@@ -2024,6 +2034,7 @@
 --- @field public pauseAnywhere integer
 --- @field public playerInteractions PlayerInteractions
 --- @field public playerKnockbackStrength integer
+--- @field public pvpType PvpType
 --- @field public skipIntro integer
 --- @field public stayInLevelAfterStar integer
 

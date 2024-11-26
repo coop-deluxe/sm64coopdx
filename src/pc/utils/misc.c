@@ -121,18 +121,6 @@ next_get:
 
 /////////////////
 
-static f32 sm64_to_radians(f32 val) {
-    return val * M_PI / 0x8000;
-}
-
-static f32 radians_to_sm64(f32 val) {
-    return val * 0x8000 / M_PI;
-}
-
-static f32 asins(f32 val) {
-    return radians_to_sm64(asin(sm64_to_radians(val)));
-}
-
 f32 delta_interpolate_f32(f32 start, f32 end, f32 delta) {
     return start * (1.0f - delta) + end * delta;
 }

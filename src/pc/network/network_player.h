@@ -52,6 +52,8 @@ struct NetworkPlayer {
     u8 descriptionB;
     u8 descriptionA;
 
+    char overrideLocation[256];
+
     u8 overrideModelIndex;
     struct PlayerPalette overridePalette;
 
@@ -75,6 +77,7 @@ void network_player_update_model(u8 localIndex);
 bool network_player_any_connected(void);
 u8 network_player_connected_count(void);
 void network_player_set_description(struct NetworkPlayer* np, const char* description, u8 r, u8 g, u8 b, u8 a);
+void network_player_set_override_location(struct NetworkPlayer *np, const char *location);
 
 struct NetworkPlayer* network_player_from_global_index(u8 globalIndex);
 struct NetworkPlayer* get_network_player_from_level(s16 courseNum, s16 actNum, s16 levelNum);

@@ -74,6 +74,16 @@ void network_player_set_description(struct NetworkPlayer *np, const char *descri
     np->descriptionA = a;
 }
 
+void network_player_set_override_location(struct NetworkPlayer *np, const char *location) {
+    if (np == NULL) { return; }
+
+    if (location != NULL) {
+        snprintf(np->overrideLocation, 256, "%s", location);
+    } else {
+        np->overrideLocation[0] = '\0';
+    }
+}
+
 struct NetworkPlayer *network_player_from_global_index(u8 globalIndex) {
     for (s32 i = 0; i < MAX_PLAYERS; i++) {
         if (!gNetworkPlayers[i].connected) { continue; }

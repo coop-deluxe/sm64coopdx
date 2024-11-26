@@ -210,6 +210,10 @@ bool dynos_level_is_vanilla_level(s32 level) {
     return DynOS_Level_IsVanillaLevel(level);
 }
 
+Collision *dynos_level_get_collision(u32 level, u16 area) {
+    return DynOS_Level_GetCollision(level, area);
+}
+
 // -- Behaviors -- //
 
 void dynos_add_behavior(s32 modIndex, const char *filePath, const char *behaviorName) {

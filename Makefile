@@ -989,6 +989,12 @@ else
   endif
 endif
 
+IS_DEV_OR_DEBUG := $(or $(filter 1,$(DEVELOPMENT)),$(filter 1,$(DEBUG)))
+ifeq ($(IS_DEV_OR_DEBUG),0)
+  CFLAGS += -fno-ident -fno-common -fno-asynchronous-unwind-tables -ffile-prefix-map=$(PWD)=. -D__DATE__="\"\"" -D__TIME__="\"\"" -Wno-builtin-macro-redefined
+  LDFLAGS += -Wl,--build-id=none -Wl,--no-randomize-sections
+endif
+
 # Prevent a crash with -sopt
 export LANG := C
 

@@ -1398,7 +1398,6 @@ static const void* sDynosBuiltinFuncs[] = {
     define_builtin(geo_movtex_draw_water_regions_ext),
     define_builtin(lvl_init_or_update),
     define_builtin(geo_choose_area_ext),
-    define_builtin(geo_mario_cap_display_list),
 
     // Behaviors
     define_builtin(bhv_cap_switch_loop),
@@ -1976,6 +1975,7 @@ static const void* sDynosBuiltinFuncs[] = {
     define_builtin(bhv_star_number_loop),
     define_builtin(spawn_star_number),
     define_builtin(bhv_ferris_wheel_platform_init),
+    define_builtin(geo_mario_cap_display_list),
 };
 
 const void* DynOS_Builtin_Func_GetFromName(const char* aDataName) {

@@ -2,8 +2,6 @@
 #include "utils/misc.h"
 #include "debug_context.h"
 #include "debuglog.h"
-#include "game/print.h"
-#include "game/hud.h"
 #include "gfx_dimensions.h"
 
 static u32 sCtxDepth[CTX_MAX] = { 0 };
@@ -15,20 +13,6 @@ static f64 sCtxTime[CTX_MAX] = { 0 };
 #define MAX_TIME_STACK 16
 static f64 sCtxStartTimeStack[MAX_TIME_STACK] = { 0 };
 static u32 sCtxStackIndex = 0;
-
-static char* sDebugContextNames[] = {
-    "NONE",
-    "FRAME",
-    "NET",
-    "INTERP",
-    "GAME",
-    "SMLUA",
-    "AUDIO",
-    "RENDER",
-    "LEVEL",
-    "HOOK",
-    "MAX",
-};
 
 #endif
 
@@ -71,29 +55,18 @@ void debug_context_reset(void) {
 }
 
 bool debug_context_within(enum DebugContext ctx) {
-    if (ctx > CTX_MAX) { return false; }
+    if (ctx >= CTX_MAX) { return false; }
     return sCtxDepth[ctx] > 0;
 }
 
 #ifdef DEVELOPMENT
-
-void ctx_profiler_update_counters(void) {
-    s32 y = SCREEN_HEIGHT - 60;
-    for (s32 i = 1; i < CTX_MAX; i++) {
-        const char *name = sDebugContextNames[i];
-        s32 counterUs = (s32) (sCtxTime[i] * 1000000.0);
-        char text[256];
-        snprintf(text, 256, "             %05d", counterUs);
-        memcpy(text, name, MIN(12, strlen(name)));
-        for (s32 j = 0; j != 12; ++j) {
-            char c = text[j];
-            if (c >= 'a' && c <= 'z') c -= ('a' - 'A');
-            if ((c < '0' || c > '9') && (c < 'A' || c > 'Z')) c = ' ';
-            text[j] = c;
-        }
-        print_text(GFX_DIMENSIONS_RECT_FROM_LEFT_EDGE(4), y, text);
-        y -= 18;
-    }
+void debug_context_set_time(enum DebugContext ctx, f64 time) {
+    if (ctx >= CTX_MAX) { return; }
+    sCtxTime[ctx] = time;
 }
 
+f64 debug_context_get_time(enum DebugContext ctx) {
+    if (ctx >= CTX_MAX) { return 0.0; }
+    return sCtxTime[ctx];
+}
 #endif

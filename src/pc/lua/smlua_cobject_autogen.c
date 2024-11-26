@@ -604,10 +604,11 @@ static struct LuaObjectField sCharacterFields[LUA_CHARACTER_FIELD_COUNT] = {
     { "type",                               LVT_S32,      offsetof(struct Character, type),                               true, LOT_NONE        },
 };
 
-#define LUA_CONTROLLER_FIELD_COUNT 10
+#define LUA_CONTROLLER_FIELD_COUNT 11
 static struct LuaObjectField sControllerFields[LUA_CONTROLLER_FIELD_COUNT] = {
     { "buttonDown",     LVT_U16, offsetof(struct Controller, buttonDown),     false, LOT_NONE },
     { "buttonPressed",  LVT_U16, offsetof(struct Controller, buttonPressed),  false, LOT_NONE },
+    { "buttonReleased", LVT_U16, offsetof(struct Controller, buttonReleased), false, LOT_NONE },
 //  { "controllerData", LVT_???, offsetof(struct Controller, controllerData), true,  LOT_???  }, <--- UNIMPLEMENTED
     { "extStickX",      LVT_S16, offsetof(struct Controller, extStickX),      false, LOT_NONE },
     { "extStickY",      LVT_S16, offsetof(struct Controller, extStickY),      false, LOT_NONE },
@@ -674,6 +675,15 @@ static struct LuaObjectField sDjuiColorFields[LUA_DJUI_COLOR_FIELD_COUNT] = {
     { "b", LVT_U8, offsetof(struct DjuiColor, b), false, LOT_NONE },
     { "g", LVT_U8, offsetof(struct DjuiColor, g), false, LOT_NONE },
     { "r", LVT_U8, offsetof(struct DjuiColor, r), false, LOT_NONE },
+};
+
+#define LUA_EXCLAMATION_BOX_CONTENT_FIELD_COUNT 5
+static struct LuaObjectField sExclamationBoxContentFields[LUA_EXCLAMATION_BOX_CONTENT_FIELD_COUNT] = {
+    { "behavior",  LVT_S32, offsetof(struct ExclamationBoxContent, behavior),  false, LOT_NONE },
+    { "firstByte", LVT_U8,  offsetof(struct ExclamationBoxContent, firstByte), false, LOT_NONE },
+    { "id",        LVT_U8,  offsetof(struct ExclamationBoxContent, id),        false, LOT_NONE },
+    { "model",     LVT_S32, offsetof(struct ExclamationBoxContent, model),     false, LOT_NONE },
+    { "unused",    LVT_U8,  offsetof(struct ExclamationBoxContent, unused),    false, LOT_NONE },
 };
 
 #define LUA_FIRST_PERSON_CAMERA_FIELD_COUNT 10
@@ -1146,7 +1156,7 @@ static struct LuaObjectField sMarioStateFields[LUA_MARIO_STATE_FIELD_COUNT] = {
     { "interactObj",               LVT_COBJECT_P, offsetof(struct MarioState, interactObj),               false, LOT_OBJECT            },
     { "invincTimer",               LVT_S16,       offsetof(struct MarioState, invincTimer),               false, LOT_NONE              },
     { "isSnoring",                 LVT_U8,        offsetof(struct MarioState, isSnoring),                 false, LOT_NONE              },
-    { "knockbackTimer",            LVT_U8,        offsetof(struct MarioState, knockbackTimer),            false, LOT_NONE              },
+    { "knockbackTimer",            LVT_S8,        offsetof(struct MarioState, knockbackTimer),            false, LOT_NONE              },
     { "marioBodyState",            LVT_COBJECT_P, offsetof(struct MarioState, marioBodyState),            true,  LOT_MARIOBODYSTATE    },
     { "marioObj",                  LVT_COBJECT_P, offsetof(struct MarioState, marioObj),                  true,  LOT_OBJECT            },
     { "minimumBoneY",              LVT_F32,       offsetof(struct MarioState, minimumBoneY),              false, LOT_NONE              },
@@ -1187,12 +1197,13 @@ static struct LuaObjectField sMarioStateFields[LUA_MARIO_STATE_FIELD_COUNT] = {
     { "waterLevel",                LVT_S16,       offsetof(struct MarioState, waterLevel),                false, LOT_NONE              },
 };
 
-#define LUA_MOD_FIELD_COUNT 14
+#define LUA_MOD_FIELD_COUNT 15
 static struct LuaObjectField sModFields[LUA_MOD_FIELD_COUNT] = {
     { "basePath",             LVT_STRING,   offsetof(struct Mod, basePath),             true, LOT_NONE },
     { "customBehaviorIndex",  LVT_U8,       offsetof(struct Mod, customBehaviorIndex),  true, LOT_NONE },
     { "description",          LVT_STRING_P, offsetof(struct Mod, description),          true, LOT_NONE },
     { "enabled",              LVT_BOOL,     offsetof(struct Mod, enabled),              true, LOT_NONE },
+    { "fileCapacity",         LVT_U16,      offsetof(struct Mod, fileCapacity),         true, LOT_NONE },
     { "fileCount",            LVT_U16,      offsetof(struct Mod, fileCount),            true, LOT_NONE },
     { "ignoreScriptWarnings", LVT_BOOL,     offsetof(struct Mod, ignoreScriptWarnings), true, LOT_NONE },
     { "incompatible",         LVT_STRING_P, offsetof(struct Mod, incompatible),         true, LOT_NONE },
@@ -1249,7 +1260,7 @@ static struct LuaObjectField sNametagsSettingsFields[LUA_NAMETAGS_SETTINGS_FIELD
     { "showSelfTag", LVT_BOOL, offsetof(struct NametagsSettings, showSelfTag), false, LOT_NONE },
 };
 
-#define LUA_NETWORK_PLAYER_FIELD_COUNT 31
+#define LUA_NETWORK_PLAYER_FIELD_COUNT 32
 static struct LuaObjectField sNetworkPlayerFields[LUA_NETWORK_PLAYER_FIELD_COUNT] = {
     { "connected",              LVT_BOOL,    offsetof(struct NetworkPlayer, connected),              true,  LOT_NONE          },
     { "currActNum",             LVT_S16,     offsetof(struct NetworkPlayer, currActNum),             true,  LOT_NONE          },
@@ -1274,6 +1285,7 @@ static struct LuaObjectField sNetworkPlayerFields[LUA_NETWORK_PLAYER_FIELD_COUNT
     { "modelIndex",             LVT_U8,      offsetof(struct NetworkPlayer, modelIndex),             true,  LOT_NONE          },
     { "name",                   LVT_STRING,  offsetof(struct NetworkPlayer, name),                   true,  LOT_NONE          },
     { "onRxSeqId",              LVT_U8,      offsetof(struct NetworkPlayer, onRxSeqId),              true,  LOT_NONE          },
+    { "overrideLocation",       LVT_STRING,  offsetof(struct NetworkPlayer, overrideLocation),       true,  LOT_NONE          },
     { "overrideModelIndex",     LVT_U8,      offsetof(struct NetworkPlayer, overrideModelIndex),     false, LOT_NONE          },
     { "overridePalette",        LVT_COBJECT, offsetof(struct NetworkPlayer, overridePalette),        false, LOT_PLAYERPALETTE },
     { "overridePaletteIndex",   LVT_U8,      offsetof(struct NetworkPlayer, overridePaletteIndex),   false, LOT_NONE          },
@@ -2215,7 +2227,7 @@ static struct LuaObjectField sRayIntersectionInfoFields[LUA_RAY_INTERSECTION_INF
     { "surface", LVT_COBJECT_P, offsetof(struct RayIntersectionInfo, surface), false, LOT_SURFACE },
 };
 
-#define LUA_SERVER_SETTINGS_FIELD_COUNT 12
+#define LUA_SERVER_SETTINGS_FIELD_COUNT 13
 static struct LuaObjectField sServerSettingsFields[LUA_SERVER_SETTINGS_FIELD_COUNT] = {
     { "bouncyLevelBounds",           LVT_S32, offsetof(struct ServerSettings, bouncyLevelBounds),           false, LOT_NONE },
     { "bubbleDeath",                 LVT_U8,  offsetof(struct ServerSettings, bubbleDeath),                 false, LOT_NONE },
@@ -2227,6 +2239,7 @@ static struct LuaObjectField sServerSettingsFields[LUA_SERVER_SETTINGS_FIELD_COU
     { "pauseAnywhere",               LVT_U8,  offsetof(struct ServerSettings, pauseAnywhere),               false, LOT_NONE },
     { "playerInteractions",          LVT_S32, offsetof(struct ServerSettings, playerInteractions),          false, LOT_NONE },
     { "playerKnockbackStrength",     LVT_U8,  offsetof(struct ServerSettings, playerKnockbackStrength),     false, LOT_NONE },
+    { "pvpType",                     LVT_S32, offsetof(struct ServerSettings, pvpType),                     false, LOT_NONE },
     { "skipIntro",                   LVT_U8,  offsetof(struct ServerSettings, skipIntro),                   false, LOT_NONE },
     { "stayInLevelAfterStar",        LVT_U8,  offsetof(struct ServerSettings, stayInLevelAfterStar),        false, LOT_NONE },
 };
@@ -2457,6 +2470,7 @@ struct LuaObjectTable sLuaObjectAutogenTable[LOT_AUTOGEN_MAX - LOT_AUTOGEN_MIN] 
     { LOT_CUTSCENEVARIABLE,          sCutsceneVariableFields,          LUA_CUTSCENE_VARIABLE_FIELD_COUNT            },
     { LOT_DATETIME,                  sDateTimeFields,                  LUA_DATE_TIME_FIELD_COUNT                    },
     { LOT_DJUICOLOR,                 sDjuiColorFields,                 LUA_DJUI_COLOR_FIELD_COUNT                   },
+    { LOT_EXCLAMATIONBOXCONTENT,     sExclamationBoxContentFields,     LUA_EXCLAMATION_BOX_CONTENT_FIELD_COUNT      },
     { LOT_FIRSTPERSONCAMERA,         sFirstPersonCameraFields,         LUA_FIRST_PERSON_CAMERA_FIELD_COUNT          },
     { LOT_FLOORGEOMETRY,             sFloorGeometryFields,             LUA_FLOOR_GEOMETRY_FIELD_COUNT               },
     { LOT_GLOBALOBJECTANIMATIONS,    sGlobalObjectAnimationsFields,    LUA_GLOBAL_OBJECT_ANIMATIONS_FIELD_COUNT     },

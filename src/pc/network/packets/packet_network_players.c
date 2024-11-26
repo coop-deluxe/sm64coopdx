@@ -110,6 +110,8 @@ void network_receive_network_players(struct Packet *p) {
         packet_read(p, &playerName,     sizeof(u8) * MAX_CONFIG_STRING);
         packet_read(p, &discordId,      sizeof(u8) * 64);
 
+        if (globalIndex >= MAX_PLAYERS) { continue; }
+
         u8 localIndex = network_player_connected(npType, globalIndex, modelIndex, &palette, playerName, discordId);
         LOG_INFO("received network player [%d == %d] (%d)", globalIndex, npType, localIndex);
         if (localIndex != UNKNOWN_GLOBAL_INDEX) {

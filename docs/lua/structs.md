@@ -24,6 +24,7 @@
 - [CutsceneVariable](#CutsceneVariable)
 - [DateTime](#DateTime)
 - [DjuiColor](#DjuiColor)
+- [ExclamationBoxContent](#ExclamationBoxContent)
 - [FirstPersonCamera](#FirstPersonCamera)
 - [FloorGeometry](#FloorGeometry)
 - [GlobalObjectAnimations](#GlobalObjectAnimations)
@@ -745,6 +746,7 @@
 | ----- | ---- | ------ |
 | buttonDown | `integer` |  |
 | buttonPressed | `integer` |  |
+| buttonReleased | `integer` |  |
 | extStickX | `integer` |  |
 | extStickY | `integer` |  |
 | port | `integer` |  |
@@ -838,6 +840,20 @@
 | b | `integer` |  |
 | g | `integer` |  |
 | r | `integer` |  |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [ExclamationBoxContent](#ExclamationBoxContent)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| behavior | [enum BehaviorId](constants.md#enum-BehaviorId) |  |
+| firstByte | `integer` |  |
+| id | `integer` |  |
+| model | [enum ModelExtendedId](constants.md#enum-ModelExtendedId) |  |
+| unused | `integer` |  |
 
 [:arrow_up_small:](#)
 
@@ -1438,6 +1454,7 @@
 | customBehaviorIndex | `integer` | read-only |
 | description | `string` | read-only |
 | enabled | `boolean` | read-only |
+| fileCapacity | `integer` | read-only |
 | fileCount | `integer` | read-only |
 | ignoreScriptWarnings | `boolean` | read-only |
 | incompatible | `string` | read-only |
@@ -1543,6 +1560,7 @@
 | modelIndex | `integer` | read-only |
 | name | `string` | read-only |
 | onRxSeqId | `integer` | read-only |
+| overrideLocation | `string` | read-only |
 | overrideModelIndex | `integer` |  |
 | overridePalette | [PlayerPalette](structs.md#PlayerPalette) |  |
 | palette | [PlayerPalette](structs.md#PlayerPalette) | read-only |
@@ -2545,6 +2563,7 @@
 | pauseAnywhere | `integer` |  |
 | playerInteractions | [enum PlayerInteractions](constants.md#enum-PlayerInteractions) |  |
 | playerKnockbackStrength | `integer` |  |
+| pvpType | [enum PvpType](constants.md#enum-PvpType) |  |
 | skipIntro | `integer` |  |
 | stayInLevelAfterStar | `integer` |  |
 

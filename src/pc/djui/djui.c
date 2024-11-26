@@ -5,7 +5,9 @@
 #include "djui_panel_pause.h"
 #include "djui_panel_join.h"
 #include "djui_panel_join_message.h"
+#include "djui_ctx_display.h"
 #include "djui_fps_display.h"
+#include "djui_lua_profiler.h"
 #include "../debuglog.h"
 #include "pc/cliopts.h"
 #include "game/level_update.h"
@@ -52,6 +54,8 @@ void djui_shutdown(void) {
     }
 
     djui_fps_display_destroy();
+    djui_ctx_display_destroy();
+    djui_lua_profiler_destroy();
 
     gDjuiShuttingDown = false;
     sDjuiInited = false;
@@ -97,6 +101,8 @@ void djui_init(void) {
     djui_console_create();
 
     djui_fps_display_create();
+    djui_ctx_display_create();
+    djui_lua_profiler_create();
 
     sDjuiInited = true;
 }
@@ -126,6 +132,11 @@ void djui_lua_error(char* text, struct DjuiColor color) {
     djui_text_set_text(sDjuiLuaError, text);
     djui_base_set_visible(&sDjuiLuaError->base, true);
     sDjuiLuaErrorTimeout = 30 * 5;
+}
+
+void djui_lua_error_clear(void) {
+    sDjuiLuaErrorTimeout = 0;
+    djui_base_set_visible(&sDjuiLuaError->base, false);
 }
 
 void djui_reset_hud_params(void) {
@@ -158,6 +169,8 @@ void djui_render(void) {
     }
 
     djui_fps_display_render();
+    djui_ctx_display_render();
+    djui_lua_profiler_render();
 
     if (sDjuiLuaErrorTimeout > 0) {
         sDjuiLuaErrorTimeout--;

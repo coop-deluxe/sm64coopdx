@@ -192,28 +192,33 @@ function update_mod_menu_element_name(index, name)
     -- ...
 end
 
+--- @param index integer The index of the element in the order in which they were hooked
+--- @param value boolean The boolean value to change to
+--- Updates a mod menu checkbox element's boolean value
+--- - NOTE: `index` is zero-indexed
+function update_mod_menu_element_checkbox(index, value)
+    -- ...
+end
+
+--- @param index integer The index of the element in the order in which they were hooked
+--- @param value number The number value to change to
+--- Updates a mod menu slider element's numerical value
+--- - NOTE: `index` is zero-indexed
+function update_mod_menu_element_slider(index, value)
+    -- ...
+end
+
+--- @param index integer The index of the element in the order in which they were hooked
+--- @param value string The text to change to
+--- Updates a mod menu inputbox element's string value
+--- - NOTE: `index` is zero-indexed
+function update_mod_menu_element_inputbox(index, value)
+    -- ...
+end
+
 ---------------
 -- functions --
 ---------------
-
---- @param t number Angle
---- @return number
-function sins(t)
-    -- ...
-end
-
---- @param t number Angle
---- @return number
-function coss(t)
-    -- ...
-end
-
---- @param y number
---- @param x number
---- @return integer
-function atan2s(y, x)
-    -- ...
-end
 
 --- @param objFieldTable table<any, "u32"|"s32"|"f32">
 --- Keys must start with `o` and values must be `"u32"`, `"s32"`, or `"f32"`
@@ -381,5 +386,29 @@ end
 --- @return RayIntersectionInfo
 --- Shoots a raycast from `startX`, `startY`, and `startZ` in the direction of `dirX`, `dirY`, and `dirZ`
 function collision_find_surface_on_ray(startX, startY, startZ, dirX, dirY, dirZ, precision)
+    -- ...
+end
+
+--- @param contents ExclamationBoxContent[]
+--- Sets the contents that the exclamation box spawns.
+--- A single content has 5 keys: `id`, `unused`, `firstByte`, `model`, and `behavior`.
+--- * `id`: Required; what value the box's oBehParams2ndByte needs to be to spawn this object.
+--- * `unused`: Optional; unused by vanilla.
+--- * `firstByte`: Optional; Overrides the 1st byte given to the spawned object.
+--- * `model`: Required; The model that the object will spawn with. Uses `ModelExtendedId`.
+--- * `behavior`: Required; The behavior ID that the object will spawn with. Uses `BehaviorId`.
+function set_exclamation_box_contents(contents)
+    -- ...
+end
+
+--- @return ExclamationBoxContent[]
+--- Gets the contents that the exclamation box spawns.
+--- A single content has 5 keys: `id`, `unused`, `firstByte`, `model`, and `behavior`.
+--- * `id`: Required; what value the box's oBehParams2ndByte needs to be to spawn this object.
+--- * `unused`: Optional; unused by vanilla.
+--- * `firstByte`: Optional; Overrides the 1st byte given to the spawned object.
+--- * `model`: Required; The model that the object will spawn with. Uses `ModelExtendedId`.
+--- * `behavior`: Required; The behavior ID that the object will spawn with. Uses `BehaviorId`.
+function get_exclamation_box_contents()
     -- ...
 end

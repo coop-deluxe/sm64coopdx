@@ -1160,8 +1160,10 @@ u32 common_air_knockback_step(struct MarioState *m, u32 landAction, u32 hardFall
         if (m->interactObj == NULL || !(m->interactObj->oInteractType & INTERACT_PLAYER)) {
             mario_set_forward_vel(m, speed);
         }
+    } else if (m->knockbackTimer < 0) {
+        // do nothing
     } else {
-        m->knockbackTimer = 10;
+        m->knockbackTimer = PVP_ATTACK_KNOCKBACK_TIMER_DEFAULT;
     }
 
     stepResult = perform_air_step(m, 0);

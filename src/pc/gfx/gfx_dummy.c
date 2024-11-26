@@ -113,7 +113,7 @@ static void gfx_dummy_wm_start_text_input(void) {
 static void gfx_dummy_wm_stop_text_input(void) {
 }
 
-static void gfx_dummy_wm_set_clipboard_text(UNUSED char* text) {
+static void gfx_dummy_wm_set_clipboard_text(UNUSED const char* text) {
 }
 
 static void gfx_dummy_wm_set_cursor_visible(UNUSED bool visible) {

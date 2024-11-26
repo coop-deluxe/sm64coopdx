@@ -748,6 +748,7 @@
    - [djui_hud_get_color](functions-3.md#djui_hud_get_color)
    - [djui_hud_get_filter](functions-3.md#djui_hud_get_filter)
    - [djui_hud_get_font](functions-3.md#djui_hud_get_font)
+   - [djui_hud_get_fov_coeff](functions-3.md#djui_hud_get_fov_coeff)
    - [djui_hud_get_mouse_x](functions-3.md#djui_hud_get_mouse_x)
    - [djui_hud_get_mouse_y](functions-3.md#djui_hud_get_mouse_y)
    - [djui_hud_get_raw_mouse_x](functions-3.md#djui_hud_get_raw_mouse_x)
@@ -772,6 +773,7 @@
    - [djui_hud_set_rotation_interpolated](functions-3.md#djui_hud_set_rotation_interpolated)
    - [djui_hud_world_pos_to_screen_pos](functions-3.md#djui_hud_world_pos_to_screen_pos)
    - [djui_open_pause_menu](functions-3.md#djui_open_pause_menu)
+   - [get_current_fov](functions-3.md#get_current_fov)
 
 <br />
 
@@ -1134,8 +1136,14 @@
    - [anim_spline_poll](functions-4.md#anim_spline_poll)
    - [approach_f32](functions-4.md#approach_f32)
    - [approach_s32](functions-4.md#approach_s32)
+   - [atan2s](functions-4.md#atan2s)
+   - [coss](functions-4.md#coss)
    - [find_vector_perpendicular_to_plane](functions-4.md#find_vector_perpendicular_to_plane)
    - [get_pos_from_transform_mtx](functions-4.md#get_pos_from_transform_mtx)
+   - [max](functions-4.md#max)
+   - [maxf](functions-4.md#maxf)
+   - [min](functions-4.md#min)
+   - [minf](functions-4.md#minf)
    - [mtxf_align_terrain_normal](functions-4.md#mtxf_align_terrain_normal)
    - [mtxf_align_terrain_triangle](functions-4.md#mtxf_align_terrain_triangle)
    - [mtxf_billboard](functions-4.md#mtxf_billboard)
@@ -1153,7 +1161,10 @@
    - [mtxf_to_mtx](functions-4.md#mtxf_to_mtx)
    - [mtxf_translate](functions-4.md#mtxf_translate)
    - [not_zero](functions-4.md#not_zero)
+   - [sins](functions-4.md#sins)
    - [spline_get_weights](functions-4.md#spline_get_weights)
+   - [sqr](functions-4.md#sqr)
+   - [sqrf](functions-4.md#sqrf)
    - [vec3f_add](functions-4.md#vec3f_add)
    - [vec3f_combine](functions-4.md#vec3f_combine)
    - [vec3f_copy](functions-4.md#vec3f_copy)
@@ -1205,6 +1216,7 @@
    - [network_player_is_override_palette_same](functions-4.md#network_player_is_override_palette_same)
    - [network_player_reset_override_palette](functions-4.md#network_player_reset_override_palette)
    - [network_player_set_description](functions-4.md#network_player_set_description)
+   - [network_player_set_override_location](functions-4.md#network_player_set_override_location)
    - [network_player_set_override_palette_color](functions-4.md#network_player_set_override_palette_color)
 
 <br />
@@ -1658,7 +1670,10 @@
    - [collision_get_temp_wall_collision_data](functions-5.md#collision_get_temp_wall_collision_data)
    - [get_surface_from_wcd_index](functions-5.md#get_surface_from_wcd_index)
    - [get_water_surface_pseudo_floor](functions-5.md#get_water_surface_pseudo_floor)
+   - [smlua_collision_util_find_surface_types](functions-5.md#smlua_collision_util_find_surface_types)
    - [smlua_collision_util_get](functions-5.md#smlua_collision_util_get)
+   - [smlua_collision_util_get_current_terrain_collision](functions-5.md#smlua_collision_util_get_current_terrain_collision)
+   - [smlua_collision_util_get_level_collision](functions-5.md#smlua_collision_util_get_level_collision)
 
 <br />
 
@@ -1708,12 +1723,11 @@
 - smlua_math_utils.h
    - [clamp](functions-5.md#clamp)
    - [clampf](functions-5.md#clampf)
-   - [max](functions-5.md#max)
-   - [maxf](functions-5.md#maxf)
-   - [min](functions-5.md#min)
-   - [minf](functions-5.md#minf)
-   - [sqr](functions-5.md#sqr)
-   - [sqrf](functions-5.md#sqrf)
+   - [degrees_to_sm64](functions-5.md#degrees_to_sm64)
+   - [hypotf](functions-5.md#hypotf)
+   - [radians_to_sm64](functions-5.md#radians_to_sm64)
+   - [sm64_to_degrees](functions-5.md#sm64_to_degrees)
+   - [sm64_to_radians](functions-5.md#sm64_to_radians)
 
 <br />
 
@@ -2304,6 +2318,86 @@ Shoots a raycast from `startX`, `startY`, and `startZ` in the direction of `dirX
 
 ### C Prototype
 `struct RayIntersectionInfo* collision_find_surface_on_ray(f32 startX, f32 startY, f32 startZ, f32 dirX, f32 dirY, f32 dirZ, f32 precision);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_exclamation_box_contents](#set_exclamation_box_contents)
+
+Sets the contents that the exclamation box spawns. A single content has 5 keys: `id`, `unused`, `firstByte`, `model`, and `behavior`.
+* `id`: Required; what value the box's oBehParams2ndByte needs to be to spawn this object.
+* `unused`: Optional; unused by vanilla.
+* `firstByte`: Optional; Overrides the 1st byte given to the spawned object.
+* `model`: Required; The model that the object will spawn with. Uses `ModelExtendedId`.
+* `behavior`: Required; The behavior ID that the object will spawn with. Uses `BehaviorId`.
+
+### Lua Example
+```lua
+set_exclamation_box_contents({
+   {id = 0, unused = 0, firstByte = 0, model = E_MODEL_GOOMBA, behavior = id_bhvGoomba}, -- Uses both optional fields
+   {id = 1, unused = 0, model = E_MODEL_KOOPA_WITH_SHELL, behavior = id_bhvKoopa}, -- Only uses `unused` optional field
+   {id = 2, firsteByte = model = E_MODEL_BLACK_BOBOMB, behavior = id_bhvBobomb}, -- Only uses `firstByte` optional field
+   {id = 3, model = E_MODEL_BOO, behavior = id_bhvBoo}, -- Uses no optional fields
+})
+```
+
+### Parameters
+There exists only 1 parameter to this function which is the main table. However, each subtable has 5 different keys that could be accessed.
+| Field | Type |
+| ----- | ---- |
+| id | `integer` |
+| unused (Optional) | `integer` |
+| firstByte (Optional) | `integer` |
+| model | [ModelExtendedId](#ModelExtendedId) |
+| behavior | [BehaviorId](#BehaviorId) |
+
+### Returns
+- None
+
+### C Prototype
+N/A
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_exclamation_box_contents](#get_exclamation_box_contents)
+
+Gets the contents that the exclamation box spawns. A single content has 5 keys: `id`, `unused`, `firstByte`, `model`, and `behavior`.
+* `id`: Required; what value the box's oBehParams2ndByte needs to be to spawn this object.
+* `unused`: Optional; unused by vanilla.
+* `firstByte`: Optional; Overrides the 1st byte given to the spawned object.
+* `model`: Required; The model that the object will spawn with. Uses `ModelExtendedId`.
+* `behavior`: Required; The behavior ID that the object will spawn with. Uses `BehaviorId`.
+
+### Lua Example
+```lua
+local contents = get_exclamation_box_contents()
+for index, content in pairs(contents) do -- Enter the main table
+   djui_chat_message_create("Table index " .. index) -- Print the current table index
+      for key, value in pairs(content) do
+         djui_chat_message_create(key .. ": " .. value) -- Print a key-value pair within this subtable
+      end
+   djui_chat_message_create("---------------------------------") -- Separator
+end
+```
+
+### Parameters
+- N/A
+
+### Returns
+The function itself does not return every key/value pair. Instead it returns the main table which holds all the subtables that hold each key/value pair.
+| Field | Type |
+| ----- | ---- |
+| id | `integer` |
+| unused (Optional) | `integer` |
+| firstByte (Optional) | `integer` |
+| model | [ModelExtendedId](#ModelExtendedId) |
+| behavior | [BehaviorId](#BehaviorId) |
+
+### C Prototype
+N/A
 
 [:arrow_up_small:](#)
 

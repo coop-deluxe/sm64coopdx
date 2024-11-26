@@ -84,6 +84,7 @@ struct ServerSettings gServerSettings = {
     .nametags = TRUE,
     .maxPlayers = MAX_PLAYERS,
     .pauseAnywhere = FALSE,
+    .pvpType = PLAYER_PVP_CLASSIC,
 };
 
 struct NametagsSettings gNametagsSettings = {
@@ -130,6 +131,7 @@ bool network_init(enum NetworkType inNetworkType, bool reconnecting) {
     gServerSettings.nametags = configNametags;
     gServerSettings.maxPlayers = configAmountofPlayers;
     gServerSettings.pauseAnywhere = configPauseAnywhere;
+    gServerSettings.pvpType = configPvpMode;
 #if defined(RAPI_DUMMY) || defined(WAPI_DUMMY)
     gServerSettings.headlessServer = (inNetworkType == NT_SERVER);
 #else
@@ -679,6 +681,9 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
     gVertexColor[0] = 255;
     gVertexColor[1] = 255;
     gVertexColor[2] = 255;
+    gSkyboxColor[0] = 255;
+    gSkyboxColor[1] = 255;
+    gSkyboxColor[2] = 255;
     gFogColor[0] = 255;
     gFogColor[1] = 255;
     gFogColor[2] = 255;
@@ -719,6 +724,7 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
     cnt->stickMag = 0;
     cnt->buttonDown = 0;
     cnt->buttonPressed = 0;
+    cnt->buttonReleased = 0;
     cnt->extStickX = 0;
     cnt->extStickY = 0;
 
@@ -748,6 +754,7 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
         gDjuiInMainMenu = true;
         djui_panel_main_create(NULL);
     }
+    djui_lua_error_clear();
 
 #ifdef DISCORD_SDK
     discord_activity_update();
