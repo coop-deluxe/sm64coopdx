@@ -23,17 +23,49 @@ s32 mouse_window_y;
 
 bool mouse_relative_enabled;
 
+#ifdef WAPI_DXGI
+u32 mouse_relative_buttons_held_on_focus;
+u32 mouse_window_buttons_held_on_focus;
+bool mouse_dxgi_prev_focus;
+
+static u32 controller_mouse_dxgi_button_state(u32* mouse_held, bool has_focus) {
+    u32 mouse =
+        ((GetKeyState(VK_LBUTTON) < 0) ? (1 << 0) : 0) |
+        ((GetKeyState(VK_MBUTTON) < 0) ? (1 << 1) : 0) |
+        ((GetKeyState(VK_RBUTTON) < 0) ? (1 << 2) : 0);
+
+    bool prev_focus = mouse_dxgi_prev_focus;
+    mouse_dxgi_prev_focus = has_focus;
+
+    // Ignore mouse clicks when game window doesn't have focus.
+    if (!has_focus) { return 0; }
+    if (mouse_held == NULL) { return mouse; }
+
+    // Window just received input focus, ignore any held down mouse buttons.
+    if (!prev_focus && has_focus) {
+        *mouse_held = mouse;
+        return 0;
+    }
+
+    // Wait for a mouse button held down (e.g. while clicking on the window)
+    // to be released and pressed again.
+    *mouse_held = (*mouse_held) & mouse;
+    return ~(*mouse_held) & mouse;
+}
+#endif // WAPI_DXGI
+
 void controller_mouse_read_window(void) {
     if (!mouse_init_ok) { return; }
 
 #if defined(WAPI_DXGI)
-    mouse_window_buttons =
-        (GetAsyncKeyState(VK_LBUTTON) ? (1 << 0) : 0) |
-        (GetAsyncKeyState(VK_MBUTTON) ? (1 << 1) : 0) |
-        (GetAsyncKeyState(VK_RBUTTON) ? (1 << 2) : 0);
+    HWND game_window = gfx_dxgi_get_h_wnd();
+
+    mouse_window_buttons = controller_mouse_dxgi_button_state(
+        &mouse_window_buttons_held_on_focus,
+        GetFocus() == game_window);
 
     POINT p;
-    if (GetCursorPos(&p) && ScreenToClient(gfx_dxgi_get_h_wnd(), &p)) {
+    if (GetCursorPos(&p) && ScreenToClient(game_window, &p)) {
         mouse_window_x = p.x;
         mouse_window_y = p.y;
     }
@@ -46,16 +78,18 @@ void controller_mouse_read_relative(void) {
     if (!mouse_init_ok) { return; }
 
 #if defined(WAPI_DXGI)
-    mouse_buttons =
-        (GetAsyncKeyState(VK_LBUTTON) ? (1 << 0) : 0) |
-        (GetAsyncKeyState(VK_MBUTTON) ? (1 << 1) : 0) |
-        (GetAsyncKeyState(VK_RBUTTON) ? (1 << 2) : 0);
+    HWND game_window = gfx_dxgi_get_h_wnd();
+
+    // Always get the buttons state, regardless if the relative mode is enabled.
+    mouse_buttons = controller_mouse_dxgi_button_state(
+        &mouse_relative_buttons_held_on_focus,
+        GetFocus() == game_window);
 
     if (mouse_relative_enabled) {
         static POINT p0;
         POINT p1;
         RECT rect;
-        if (GetWindowRect(gfx_dxgi_get_h_wnd(), &rect) && GetCursorPos(&p1)) {
+        if (GetWindowRect(game_window, &rect) && GetCursorPos(&p1)) {
             mouse_x = p1.x - p0.x;
             mouse_y = p1.y - p0.y;
 
