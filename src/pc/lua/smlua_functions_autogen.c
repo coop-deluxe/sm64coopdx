@@ -15,6 +15,7 @@
 #include "src/pc/network/network_utils.h"
 #include "src/pc/djui/djui_console.h"
 #include "src/pc/djui/djui_chat_message.h"
+#include "src/pc/djui/djui_language.h"
 #include "src/game/interaction.h"
 #include "src/game/level_info.h"
 #include "src/game/save_file.h"
@@ -12783,6 +12784,29 @@ int smlua_func_get_current_fov(UNUSED lua_State* L) {
 
 
     lua_pushnumber(L, get_current_fov());
+
+    return 1;
+}
+
+  /////////////////////
+ // djui_language.h //
+/////////////////////
+
+int smlua_func_djui_language_get(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "djui_language_get", 2, top);
+        return 0;
+    }
+
+    const char* section = smlua_to_string(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "djui_language_get"); return 0; }
+    const char* key = smlua_to_string(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "djui_language_get"); return 0; }
+
+    lua_pushstring(L, djui_language_get(section, key));
 
     return 1;
 }
@@ -34098,6 +34122,9 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "djui_hud_world_pos_to_screen_pos", smlua_func_djui_hud_world_pos_to_screen_pos);
     smlua_bind_function(L, "djui_open_pause_menu", smlua_func_djui_open_pause_menu);
     smlua_bind_function(L, "get_current_fov", smlua_func_get_current_fov);
+
+    // djui_language.h
+    smlua_bind_function(L, "djui_language_get", smlua_func_djui_language_get);
 
     // djui_popup.h
     smlua_bind_function(L, "djui_popup_create", smlua_func_djui_popup_create);

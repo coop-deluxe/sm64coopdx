@@ -895,7 +895,11 @@
 | ----- | ---- | ------ |
 | borderColor | [DjuiColor](structs.md#DjuiColor) | read-only |
 | rectColor | [DjuiColor](structs.md#DjuiColor) | read-only |
-=======
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [ExclamationBoxContent](#ExclamationBoxContent)
 
 | Field | Type | Access |
@@ -1502,6 +1506,7 @@
 | Field | Type | Access |
 | ----- | ---- | ------ |
 | basePath | `string` | read-only |
+| category | `string` | read-only |
 | customBehaviorIndex | `integer` | read-only |
 | description | `string` | read-only |
 | enabled | `boolean` | read-only |

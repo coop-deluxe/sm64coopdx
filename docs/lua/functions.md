@@ -777,6 +777,11 @@
 
 <br />
 
+- djui_language.h
+   - [djui_language_get](functions-3.md#djui_language_get)
+
+<br />
+
 - djui_popup.h
    - [djui_popup_create](functions-3.md#djui_popup_create)
 
