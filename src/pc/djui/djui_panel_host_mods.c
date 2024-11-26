@@ -14,24 +14,27 @@
 #include "djui_panel_pause.h"
 
 #define DJUI_MOD_PANEL_WIDTH (410.0f + (16 * 2.0f))
-#define MOD_CATEGORY_ALL "MOD_CATEGORY_ALL"
-#define MOD_CATEGORY_MISC "MOD_CATEGORY_MISC"
+#define MOD_CATEGORY_ALL 0
+#define MOD_CATEGORY_MISC 1
+#define MOD_CATEGORY_START 2
 
 static struct DjuiFlowLayout* sModLayout = NULL;
 static struct DjuiThreePanel* sDescriptionPanel = NULL;
 static struct DjuiText* sTooltip = NULL;
-unsigned int selectedCategory = 0;
+static struct DjuiPaginated* sModPaginated = NULL;
+unsigned int selectedCategory = MOD_CATEGORY_ALL;
 static bool sWarned = false;
 
 struct ModCategory sCategories[] = {
     // lang key, mod category
-    { "ALL", MOD_CATEGORY_ALL },
+    { "ALL", NULL },
+    { "MISC", NULL },
     { "ROMHACKS", "romhack" },
     { "GAMEMODES", "gamemode" },
     { "MOVESETS", "moveset" },
     { "CHARACTER_SELECT", "cs" },
-    { "MISC", MOD_CATEGORY_MISC },
 };
+static const int numCategories = sizeof(sCategories) / sizeof(sCategories[0]);
 
 void djui_panel_host_mods_create(struct DjuiBase* caller);
 
@@ -110,16 +113,6 @@ static void djui_mod_checkbox_on_value_change(UNUSED struct DjuiBase* base) {
     }
 }
 
-static void djui_panel_menu_refresh(UNUSED struct DjuiBase* base) {
-    mods_refresh_local();
-
-    djui_panel_shutdown();
-    gDjuiInMainMenu = true;
-    djui_panel_main_create(NULL);
-    djui_panel_host_create(NULL);
-    djui_panel_host_mods_create(NULL);
-}
-
 static void djui_panel_host_mods_destroy(struct DjuiBase* base) {
     struct DjuiThreePanel* threePanel = (struct DjuiThreePanel*)base;
     free(threePanel);
@@ -132,19 +125,58 @@ static void djui_panel_host_mods_destroy(struct DjuiBase* base) {
     sTooltip = NULL;
 }
 
-void djui_panel_on_categories_change(UNUSED struct DjuiBase* caller) {
-    if (gDjuiInMainMenu) {
-        djui_panel_shutdown();
-        gDjuiInMainMenu = true;
-        djui_panel_main_create(NULL);
-        djui_panel_host_create(NULL);
-        djui_panel_host_mods_create(NULL);
-    } else {
-        djui_panel_shutdown();
-        djui_panel_pause_create(NULL);
-        djui_panel_host_create(NULL);
-        djui_panel_host_mods_create(NULL);
+void djui_panel_host_mods_add_mods(struct DjuiBase* layoutBase) {
+    bool foundAny = false;
+    for (int i = 0; i < gLocalMods.entryCount; i++) {
+        struct Mod* mod = gLocalMods.entries[i];
+        char* category = mod->category != NULL ? mod->category : mod->incompatible;
+        switch (selectedCategory) {
+            case MOD_CATEGORY_ALL: { break; }
+            case MOD_CATEGORY_MISC: {
+                bool doContinue = false;
+                if (category) {
+                    for (int i = MOD_CATEGORY_START; i < numCategories; i++) {
+                        if (strstr(category, sCategories[i].category)) {
+                            doContinue = true;
+                            break;
+                        }
+                    }
+                }
+                if (doContinue) { continue; }
+                break;
+            }
+            default: {
+                if (!category || !strstr(category, sCategories[selectedCategory].category)) {
+                    continue;
+                }
+                break;
+            }
+        }
+        struct DjuiCheckbox* checkbox = djui_checkbox_create(layoutBase, mod->name, &mod->enabled, djui_mod_checkbox_on_value_change);
+        checkbox->base.tag = i;
+        djui_base_set_enabled(&checkbox->base, mod->selectable);
+        djui_interactable_hook_hover(&checkbox->base, djui_mod_checkbox_on_hover, djui_mod_checkbox_on_hover_end);
+        foundAny = true;
     }
+    if (!foundAny) {
+        struct DjuiText* text = djui_text_create(layoutBase, DLANG(HOST_MODS, NO_MODS_FOUND));
+        djui_base_set_size_type(&text->base, DJUI_SVT_RELATIVE, DJUI_SVT_RELATIVE);
+        djui_base_set_size(&text->base, 1, 1);
+        djui_text_set_alignment(text, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
+        djui_text_set_drop_shadow(text, 64, 64, 64, 100);
+    }
+}
+
+static void djui_panel_on_categories_change(UNUSED struct DjuiBase* caller) {
+    djui_base_destroy_children(&sModLayout->base);
+    djui_panel_host_mods_add_mods(&sModLayout->base);
+    djui_paginated_calculate_height(sModPaginated);
+}
+
+static void djui_panel_menu_refresh(UNUSED struct DjuiBase* base) {
+    mods_refresh_local();
+    mods_update_selectable();
+    djui_panel_on_categories_change(NULL);
 }
 
 void djui_panel_host_mods_create(struct DjuiBase* caller) {
@@ -157,7 +189,6 @@ void djui_panel_host_mods_create(struct DjuiBase* caller) {
     struct DjuiBase* body = djui_three_panel_get_body(panel);
     {
         // copy category choices from sCategories
-        int numCategories = sizeof(sCategories) / sizeof(sCategories[0]);
         char* categoryChoices[sizeof(sCategories)];
 
         // loop thru all categories names, and add those to the categoryChoices string array
@@ -166,31 +197,11 @@ void djui_panel_host_mods_create(struct DjuiBase* caller) {
         }
         djui_selectionbox_create(body, DLANG(HOST_MODS, CATEGORIES), categoryChoices, numCategories, &selectedCategory, djui_panel_on_categories_change);
         struct DjuiPaginated* paginated = djui_paginated_create(body, 8);
+        paginated->showMaxCount = true;
         sModLayout = paginated->layout;
-        struct DjuiBase* layoutBase = &paginated->layout->base;
-        for (int i = 0; i < gLocalMods.entryCount; i++) {
-            struct Mod* mod = gLocalMods.entries[i];
-            char* category = mod->category;
-            if (!category) { category = mod->incompatible; }
-            if (!strstr(sCategories[selectedCategory].category, MOD_CATEGORY_ALL) && !strstr(sCategories[selectedCategory].category, MOD_CATEGORY_MISC) && (!category || !strstr(category, sCategories[selectedCategory].category))) {
-                continue;
-            } else if (!strstr(sCategories[selectedCategory].category, MOD_CATEGORY_ALL) && strstr(sCategories[selectedCategory].category, MOD_CATEGORY_MISC)) {
-                bool doContinue = false;
-                for (int i = 0; i < numCategories; i++) {
-                    if (strstr(sCategories[selectedCategory].category, MOD_CATEGORY_MISC) && (category && strstr(category, sCategories[i].category))) {
-                        doContinue = true;
-                        break;
-                    }
-                }
-
-                if (doContinue) { continue; }
-            }
-            struct DjuiCheckbox* checkbox = djui_checkbox_create(layoutBase, mod->name, &mod->enabled, djui_mod_checkbox_on_value_change);
-            checkbox->base.tag = i;
-            djui_base_set_enabled(&checkbox->base, mod->selectable);
-            djui_interactable_hook_hover(&checkbox->base, djui_mod_checkbox_on_hover, djui_mod_checkbox_on_hover_end);
-        }
+        djui_panel_host_mods_add_mods(&paginated->layout->base);
         djui_paginated_calculate_height(paginated);
+        sModPaginated = paginated;
 
         if (gNetworkType == NT_NONE) {
             struct DjuiRect* rect1 = djui_rect_container_create(body, 64);

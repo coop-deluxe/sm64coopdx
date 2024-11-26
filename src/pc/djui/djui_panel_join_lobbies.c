@@ -107,7 +107,7 @@ void djui_panel_join_query_finish(void) {
     djui_base_set_enabled(&sRefreshButton->base, true);
 
     if (sLobbyLayout->base.child == NULL) {
-        struct DjuiText* text = djui_text_create(&sLobbyLayout->base, DLANG(LOBBIES, NONE_FOUND));
+        struct DjuiText* text = djui_text_create(&sLobbyLayout->base, DLANG(LOBBIES, NO_LOBBIES_FOUND));
         djui_base_set_size_type(&text->base, DJUI_SVT_RELATIVE, DJUI_SVT_RELATIVE);
         djui_base_set_size(&text->base, 1, 1);
         djui_text_set_alignment(text, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
