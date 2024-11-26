@@ -7,8 +7,8 @@
 #include "types.h"
 
 // Macros
-#define MUTEX_LOCK(handle) if (handle.state != INVALID) { lock_mutex(&handle); }
-#define MUTEX_UNLOCK(handle) if (handle.state != INVALID) { unlock_mutex(&handle); }
+#define MUTEX_LOCK(handle) if (handle.state == RUNNING) { lock_mutex(&handle); }
+#define MUTEX_UNLOCK(handle) if (handle.state == RUNNING) { unlock_mutex(&handle); }
 
 // Types
 enum ThreadState {
