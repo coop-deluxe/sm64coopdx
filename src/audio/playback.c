@@ -1369,10 +1369,13 @@ void reclaim_notes(void) {
     struct Note *note;
     s32 i;
     s32 cond;
+    
+    MUTEX_LOCK(gAudioThread);
 
     for (i = 0; i < gMaxSimultaneousNotes; i++) {
         note = &gNotes[i];
-        if (note->parentLayer != NO_LAYER) {
+        if (note == NULL) { continue; }
+        if (note->parentLayer != NULL && note->parentLayer != NO_LAYER) {
             cond = FALSE;
             if (!note->parentLayer->enabled && note->priority >= NOTE_PRIORITY_MIN) {
                 cond = TRUE;
@@ -1400,6 +1403,8 @@ void reclaim_notes(void) {
             }
         }
     }
+    
+    MUTEX_UNLOCK(gAudioThread);
 }
 #endif
 

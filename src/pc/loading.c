@@ -2,6 +2,8 @@
 
 #ifdef LOADING_SCREEN_SUPPORTED
 
+#include <assert.h>
+
 #include "djui/djui.h"
 #include "pc/djui/djui_unicode.h"
 
@@ -24,10 +26,7 @@ struct LoadingScreen {
 
 static struct LoadingScreen* sLoading = NULL;
 
-pthread_t gLoadingThreadId;
-pthread_mutex_t gLoadingThreadMutex = PTHREAD_MUTEX_INITIALIZER;
-
-bool gIsThreaded = false;
+struct ThreadHandle gLoadingThread = { 0 };
 
 void loading_screen_set_segment_text(const char* text) {
     snprintf(gCurrLoadingSegment.str, 256, text);
@@ -46,7 +45,7 @@ static void loading_screen_produce_one_frame(void) {
 }
 
 static bool loading_screen_on_render(struct DjuiBase* base) {
-    if (gIsThreaded) { pthread_mutex_lock(&gLoadingThreadMutex); }
+    MUTEX_LOCK(gLoadingThread);
 
     u32 windowWidth, windowHeight;
     WAPI.get_dimensions(&windowWidth, &windowHeight);
@@ -90,7 +89,7 @@ static bool loading_screen_on_render(struct DjuiBase* base) {
 
     djui_base_compute(base);
 
-    if (gIsThreaded) { pthread_mutex_unlock(&gLoadingThreadMutex); }
+    MUTEX_UNLOCK(gLoadingThread);
 
     return true;
 }
@@ -183,7 +182,8 @@ void render_loading_screen(void) {
         WAPI.main_loop(loading_screen_produce_one_frame);
     }
 
-    pthread_join(gLoadingThreadId, NULL);
+    int err = join_thread(&gLoadingThread);
+    assert(err == 0);
 }
 
 void render_rom_setup_screen(void) {
