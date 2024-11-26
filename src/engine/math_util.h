@@ -42,19 +42,23 @@ s16 sqr(s16 x);
 f32 sins(s16 sm64Angle);
 f32 coss(s16 sm64Angle);
 
+// Generic macros help the inline functions be noted in autodoc while retaining original functionality
 #define min(a, b) _Generic((a), \
     f32: minf, \
-    default: min \
+    s16: min, \
+    default: (a < b ? a : b) \
 )(a, b)
 
 #define max(a, b) _Generic((a), \
     f32: maxf, \
-    default: max \
+    s16: max, \
+    default: (a > b ? a : b) \
 )(a, b)
 
 #define sqr(x) _Generic((x), \
     f32: sqrf, \
-    default: sqr \
+    s16: sqr, \
+    default: (x*x) \
 )(x)
 
 #if defined(__clang__) || defined(__GNUC__)
