@@ -4,7 +4,9 @@
 #include "djui_panel_main.h"
 #include "djui_panel_options.h"
 #include "djui_panel_misc.h"
+#include "djui_panel_modlist.h"
 #include "djui_panel_pause.h"
+#include "djui_panel_playerlist.h"
 #include "pc/debuglog.h"
 #include "pc/utils/misc.h"
 #include "pc/configfile.h"
@@ -53,15 +55,21 @@ static void djui_panel_language_destroy(UNUSED struct DjuiBase* caller) {
         if (gPanelLanguageOnStartup) {
             djui_panel_shutdown();
             gDjuiInMainMenu = true;
+            djui_panel_playerlist_create(NULL);
+            djui_panel_modlist_create(NULL);
             djui_panel_main_create(NULL);
         } else if (gDjuiInMainMenu) {
             djui_panel_shutdown();
             gDjuiInMainMenu = true;
+            djui_panel_playerlist_create(NULL);
+            djui_panel_modlist_create(NULL);
             djui_panel_main_create(NULL);
             djui_panel_options_create(NULL);
             djui_panel_misc_create(NULL);
         } else if (gDjuiPanelPauseCreated) {
             djui_panel_shutdown();
+            djui_panel_playerlist_create(NULL);
+            djui_panel_modlist_create(NULL);
             djui_panel_pause_create(NULL);
             djui_panel_options_create(NULL);
             djui_panel_misc_create(NULL);
