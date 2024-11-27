@@ -26,6 +26,7 @@ static void print_help(void) {
     printf("--server PORT           Starts the game and creates a new server on PORT.\n");
     printf("--client IP PORT        Starts the game and joins an existing server.\n");
     printf("--playername PLAYERNAME Starts the game with a specific playername.\n");
+    printf("--skip-update-check     Skips the update check when loading the game.\n");
     printf("--performance           Disables all game rendering except the HUD and UI.\n");
 }
 
