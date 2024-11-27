@@ -170,8 +170,12 @@ void bhv_star_spawn_loop(void) {
             }
 
             struct SyncObject* so = sync_object_get(o->oSyncID);
-            so->owned = sync_object_should_own(so->id);
-            if (so->owned) { network_send_object(o); }
+            if (so) {
+                so->owned = sync_object_should_own(so->id);
+                if (so->owned) { network_send_object(o); }
+            } else {
+                network_send_object(o);
+            }
             break;
     }
     spawn_star_number();
