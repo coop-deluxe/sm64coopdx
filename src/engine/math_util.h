@@ -35,59 +35,35 @@ extern f32 gCosineTable[];
 // Inline Function prototypes
 #if defined(__clang__) || defined(__GNUC__)
 
-// Use built-in functions when using Clang or GCC
-static inline f32 minf(f32 a, f32 b) { return __builtin_fminf(a, b); }
-static inline f32 maxf(f32 a, f32 b) { return __builtin_fmaxf(a, b); }
-#else
+// These macros allow for type safe comparisons that expand without recursion in complex calls, also will use the faster fminf for f32 values
+#define min(a, b) ({ \
+    __typeof__(a) _a = (a); \
+    __typeof__(b) _b = (b); \
+    _Generic((_a), \
+        f32: _Generic((_b), \
+            f32: __builtin_fminf(_a, _b), \
+            default: (_a) < (_b) ? (_a) : (_b) \
+        ), \
+        default: (_a) < (_b) ? (_a) : (_b) \
+    ); \
+})
 
-// Fallback to the original implementation for iDO
-static inline f32 minf(f32 a, f32 b) { return (a <= b) ? a : b; }
-static inline f32 maxf(f32 a, f32 b) { return (a > b) ? a : b; }
-#endif
+#define max(a, b) ({ \
+    __typeof__(a) _a = (a); \
+    __typeof__(b) _b = (b); \
+    _Generic((_a), \
+        f32: _Generic((_b), \
+            f32: __builtin_fmaxf(a, b), \
+            default: (_a) > (_b) ? (_a) : (_b) \
+        ), \
+        default: (_a) > (_b) ? (_a) : (_b) \
+    ); \
+})
 
-static inline f32 sqrf(f32 x) { return x * x; }
-
-f32 sins(s16 sm64Angle);
-f32 coss(s16 sm64Angle);
-
-#define DEFINE_FOR_TYPE(t) \
-    static inline t min_##t(t a, t b) { return (a < b) ? a : b; } \
-    static inline t max_##t(t a, t b) { return (a > b) ? a : b; } \
-    static inline t sqr_##t(t x) { return x * x; }
-DEFINE_FOR_TYPE(s16);
-DEFINE_FOR_TYPE(s32);
-DEFINE_FOR_TYPE(u8);
-DEFINE_FOR_TYPE(size_t);
-
-// These macros intentionally don't have a default.
-// If you get an error saying that a type is not compatible,
-// it must be added within this file.
-
-#define min(a, b) _Generic((a), \
-    f32: minf, \
-    s16: min_s16, \
-    s32: min_s32, \
-    u8: min_u8, \
-    size_t: min_size_t \
-)(a, b)
-
-#define max(a, b) _Generic((a), \
-    f32: maxf, \
-    s16: max_s16, \
-    s32: max_s32, \
-    u8: max_u8, \
-    size_t: max_size_t \
-)(a, b)
-
-#define sqr(x) _Generic((x), \
-    f32: sqrf, \
-    s16: sqr_s16, \
-    s32: sqr_s32, \
-    u8: sqr_u8, \
-    size_t: sqr_size_t \
-)(x)
-
-#if defined(__clang__) || defined(__GNUC__)
+#define sqr(x) ({ \
+    __typeof__(x) _x = (x); \
+    _x * _x; \
+})
 
 #define absx(x) _Generic((x), \
     f32: __builtin_fabsf, \
@@ -97,9 +73,16 @@ DEFINE_FOR_TYPE(size_t);
 
 #else
 
+// Fallback to the original implementation for iDO
+#define min(a,b) (a < b ? a : b)
+#define max(a,b) (a > b ? a : b)
 #define absx(x) ((x) < 0 ? -(x) : (x))
 
 #endif
+
+static inline f32 sqrf(f32 x) { return x * x; }
+f32 sins(s16 sm64Angle);
+f32 coss(s16 sm64Angle);
 
 #include "../../include/libc/stdlib.h"
 

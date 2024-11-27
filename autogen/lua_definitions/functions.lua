@@ -5063,34 +5063,6 @@ function get_pos_from_transform_mtx(dest, objMtx, camMtx)
     -- ...
 end
 
---- @param a integer
---- @param b integer
---- @return integer
-function max(a, b)
-    -- ...
-end
-
---- @param a number
---- @param b number
---- @return number
-function maxf(a, b)
-    -- ...
-end
-
---- @param a integer
---- @param b integer
---- @return integer
-function min(a, b)
-    -- ...
-end
-
---- @param a number
---- @param b number
---- @return number
-function minf(a, b)
-    -- ...
-end
-
 --- @param dest Mat4
 --- @param upDir Vec3f
 --- @param pos Vec3f
@@ -5218,18 +5190,6 @@ end
 --- @param t number
 --- @param c integer
 function spline_get_weights(m, result, t, c)
-    -- ...
-end
-
---- @param x integer
---- @return integer
-function sqr(x)
-    -- ...
-end
-
---- @param x number
---- @return number
-function sqrf(x)
     -- ...
 end
 
@@ -8238,6 +8198,34 @@ function hypotf(a, b)
     -- ...
 end
 
+--- @param a integer
+--- @param b integer
+--- @return integer
+function max(a, b)
+    -- ...
+end
+
+--- @param a number
+--- @param b number
+--- @return number
+function maxf(a, b)
+    -- ...
+end
+
+--- @param a integer
+--- @param b integer
+--- @return integer
+function min(a, b)
+    -- ...
+end
+
+--- @param a number
+--- @param b number
+--- @return number
+function minf(a, b)
+    -- ...
+end
+
 --- @param radiansAngle number
 --- @return integer
 function radians_to_sm64(radiansAngle)
@@ -8253,6 +8241,18 @@ end
 --- @param sm64Angle integer
 --- @return number
 function sm64_to_radians(sm64Angle)
+    -- ...
+end
+
+--- @param x integer
+--- @return integer
+function sqr(x)
+    -- ...
+end
+
+--- @param x number
+--- @return number
+function sqrf(x)
     -- ...
 end
 
@@ -9199,6 +9199,12 @@ end
 --- @param index integer
 --- @return Surface
 function obj_get_surface_from_index(o, index)
+    -- ...
+end
+
+--- @param surfaceType integer
+--- @return boolean
+function surface_has_force(surfaceType)
     -- ...
 end
 

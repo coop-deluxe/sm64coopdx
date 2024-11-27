@@ -18580,82 +18580,6 @@ int smlua_func_get_pos_from_transform_mtx(lua_State* L) {
     return 1;
 }
 
-int smlua_func_max(lua_State* L) {
-    if (L == NULL) { return 0; }
-
-    int top = lua_gettop(L);
-    if (top != 2) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "max", 2, top);
-        return 0;
-    }
-
-    s16 a = smlua_to_integer(L, 1);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "max"); return 0; }
-    s16 b = smlua_to_integer(L, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "max"); return 0; }
-
-    lua_pushinteger(L, max(a, b));
-
-    return 1;
-}
-
-int smlua_func_maxf(lua_State* L) {
-    if (L == NULL) { return 0; }
-
-    int top = lua_gettop(L);
-    if (top != 2) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "maxf", 2, top);
-        return 0;
-    }
-
-    f32 a = smlua_to_number(L, 1);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "maxf"); return 0; }
-    f32 b = smlua_to_number(L, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "maxf"); return 0; }
-
-    lua_pushnumber(L, maxf(a, b));
-
-    return 1;
-}
-
-int smlua_func_min(lua_State* L) {
-    if (L == NULL) { return 0; }
-
-    int top = lua_gettop(L);
-    if (top != 2) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "min", 2, top);
-        return 0;
-    }
-
-    s16 a = smlua_to_integer(L, 1);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "min"); return 0; }
-    s16 b = smlua_to_integer(L, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "min"); return 0; }
-
-    lua_pushinteger(L, min(a, b));
-
-    return 1;
-}
-
-int smlua_func_minf(lua_State* L) {
-    if (L == NULL) { return 0; }
-
-    int top = lua_gettop(L);
-    if (top != 2) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "minf", 2, top);
-        return 0;
-    }
-
-    f32 a = smlua_to_number(L, 1);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "minf"); return 0; }
-    f32 b = smlua_to_number(L, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "minf"); return 0; }
-
-    lua_pushnumber(L, minf(a, b));
-
-    return 1;
-}
-
 int smlua_func_mtxf_align_terrain_normal(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -19911,40 +19835,6 @@ int smlua_func_spline_get_weights(lua_State* L) {
     smlua_push_number_field(2, "y", result[1]);
     smlua_push_number_field(2, "z", result[2]);
     smlua_push_number_field(2, "w", result[3]);
-
-    return 1;
-}
-
-int smlua_func_sqr(lua_State* L) {
-    if (L == NULL) { return 0; }
-
-    int top = lua_gettop(L);
-    if (top != 1) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "sqr", 1, top);
-        return 0;
-    }
-
-    s16 x = smlua_to_integer(L, 1);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "sqr"); return 0; }
-
-    lua_pushinteger(L, sqr(x));
-
-    return 1;
-}
-
-int smlua_func_sqrf(lua_State* L) {
-    if (L == NULL) { return 0; }
-
-    int top = lua_gettop(L);
-    if (top != 1) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "sqrf", 1, top);
-        return 0;
-    }
-
-    f32 x = smlua_to_number(L, 1);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "sqrf"); return 0; }
-
-    lua_pushnumber(L, sqrf(x));
 
     return 1;
 }
@@ -30318,6 +30208,82 @@ int smlua_func_hypotf(lua_State* L) {
     return 1;
 }
 
+int smlua_func_max(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "max", 2, top);
+        return 0;
+    }
+
+    s32 a = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "max"); return 0; }
+    s32 b = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "max"); return 0; }
+
+    lua_pushinteger(L, max(a, b));
+
+    return 1;
+}
+
+int smlua_func_maxf(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "maxf", 2, top);
+        return 0;
+    }
+
+    f32 a = smlua_to_number(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "maxf"); return 0; }
+    f32 b = smlua_to_number(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "maxf"); return 0; }
+
+    lua_pushnumber(L, maxf(a, b));
+
+    return 1;
+}
+
+int smlua_func_min(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "min", 2, top);
+        return 0;
+    }
+
+    s32 a = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "min"); return 0; }
+    s32 b = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "min"); return 0; }
+
+    lua_pushinteger(L, min(a, b));
+
+    return 1;
+}
+
+int smlua_func_minf(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "minf", 2, top);
+        return 0;
+    }
+
+    f32 a = smlua_to_number(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "minf"); return 0; }
+    f32 b = smlua_to_number(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "minf"); return 0; }
+
+    lua_pushnumber(L, minf(a, b));
+
+    return 1;
+}
+
 int smlua_func_radians_to_sm64(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -30365,6 +30331,40 @@ int smlua_func_sm64_to_radians(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "sm64_to_radians"); return 0; }
 
     lua_pushnumber(L, sm64_to_radians(sm64Angle));
+
+    return 1;
+}
+
+int smlua_func_sqr(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "sqr", 1, top);
+        return 0;
+    }
+
+    s32 x = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "sqr"); return 0; }
+
+    lua_pushinteger(L, sqr(x));
+
+    return 1;
+}
+
+int smlua_func_sqrf(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "sqrf", 1, top);
+        return 0;
+    }
+
+    f32 x = smlua_to_number(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "sqrf"); return 0; }
+
+    lua_pushnumber(L, sqrf(x));
 
     return 1;
 }
@@ -33350,6 +33350,23 @@ int smlua_func_obj_get_surface_from_index(lua_State* L) {
     return 1;
 }
 
+int smlua_func_surface_has_force(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "surface_has_force", 1, top);
+        return 0;
+    }
+
+    s16 surfaceType = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "surface_has_force"); return 0; }
+
+    lua_pushboolean(L, surface_has_force(surfaceType));
+
+    return 1;
+}
+
 
 
 void smlua_bind_functions_autogen(void) {
@@ -34429,10 +34446,6 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "coss", smlua_func_coss);
     smlua_bind_function(L, "find_vector_perpendicular_to_plane", smlua_func_find_vector_perpendicular_to_plane);
     smlua_bind_function(L, "get_pos_from_transform_mtx", smlua_func_get_pos_from_transform_mtx);
-    smlua_bind_function(L, "max", smlua_func_max);
-    smlua_bind_function(L, "maxf", smlua_func_maxf);
-    smlua_bind_function(L, "min", smlua_func_min);
-    smlua_bind_function(L, "minf", smlua_func_minf);
     smlua_bind_function(L, "mtxf_align_terrain_normal", smlua_func_mtxf_align_terrain_normal);
     smlua_bind_function(L, "mtxf_align_terrain_triangle", smlua_func_mtxf_align_terrain_triangle);
     smlua_bind_function(L, "mtxf_billboard", smlua_func_mtxf_billboard);
@@ -34452,8 +34465,6 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "not_zero", smlua_func_not_zero);
     smlua_bind_function(L, "sins", smlua_func_sins);
     smlua_bind_function(L, "spline_get_weights", smlua_func_spline_get_weights);
-    smlua_bind_function(L, "sqr", smlua_func_sqr);
-    smlua_bind_function(L, "sqrf", smlua_func_sqrf);
     smlua_bind_function(L, "vec3f_add", smlua_func_vec3f_add);
     smlua_bind_function(L, "vec3f_combine", smlua_func_vec3f_combine);
     smlua_bind_function(L, "vec3f_copy", smlua_func_vec3f_copy);
@@ -34995,9 +35006,15 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "clampf", smlua_func_clampf);
     smlua_bind_function(L, "degrees_to_sm64", smlua_func_degrees_to_sm64);
     smlua_bind_function(L, "hypotf", smlua_func_hypotf);
+    smlua_bind_function(L, "max", smlua_func_max);
+    smlua_bind_function(L, "maxf", smlua_func_maxf);
+    smlua_bind_function(L, "min", smlua_func_min);
+    smlua_bind_function(L, "minf", smlua_func_minf);
     smlua_bind_function(L, "radians_to_sm64", smlua_func_radians_to_sm64);
     smlua_bind_function(L, "sm64_to_degrees", smlua_func_sm64_to_degrees);
     smlua_bind_function(L, "sm64_to_radians", smlua_func_sm64_to_radians);
+    smlua_bind_function(L, "sqr", smlua_func_sqr);
+    smlua_bind_function(L, "sqrf", smlua_func_sqrf);
 
     // smlua_misc_utils.h
     smlua_bind_function(L, "allocate_mario_action", smlua_func_allocate_mario_action);
@@ -35176,5 +35193,6 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "load_area_terrain", smlua_func_load_area_terrain);
     smlua_bind_function(L, "load_object_collision_model", smlua_func_load_object_collision_model);
     smlua_bind_function(L, "obj_get_surface_from_index", smlua_func_obj_get_surface_from_index);
+    smlua_bind_function(L, "surface_has_force", smlua_func_surface_has_force);
 
 }
