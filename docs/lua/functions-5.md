@@ -1901,6 +1901,90 @@
 
 <br />
 
+## [max](#max)
+
+### Lua Example
+`local integerValue = max(a, b)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| a | `integer` |
+| b | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 max(s32 a, s32 b);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [maxf](#maxf)
+
+### Lua Example
+`local numberValue = maxf(a, b)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| a | `number` |
+| b | `number` |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 maxf(f32 a, f32 b);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [min](#min)
+
+### Lua Example
+`local integerValue = min(a, b)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| a | `integer` |
+| b | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 min(s32 a, s32 b);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [minf](#minf)
+
+### Lua Example
+`local numberValue = minf(a, b)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| a | `number` |
+| b | `number` |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 minf(f32 a, f32 b);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [radians_to_sm64](#radians_to_sm64)
 
 ### Lua Example
@@ -1956,6 +2040,46 @@
 
 ### C Prototype
 `f32 sm64_to_radians(s16 sm64Angle);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [sqr](#sqr)
+
+### Lua Example
+`local integerValue = sqr(x)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| x | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 sqr(s32 x);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [sqrf](#sqrf)
+
+### Lua Example
+`local numberValue = sqrf(x)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| x | `number` |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 sqrf(f32 x);`
 
 [:arrow_up_small:](#)
 
