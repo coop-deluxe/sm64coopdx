@@ -108,6 +108,10 @@ struct DjuiTheme* djui_menu_get_theme(void) {
     return gDjuiThemes[configDjuiTheme];
 }
 
+bool djui_menu_get_excoop_theme(void) {
+    return configExCoopTheme;
+}
+
 ///
 
 extern s8 gDialogBoxState;

@@ -8289,6 +8289,11 @@ function djui_is_popup_disabled()
     -- ...
 end
 
+--- @return boolean
+function djui_menu_get_excoop_theme()
+    -- ...
+end
+
 --- @return DjuiFontType
 function djui_menu_get_font()
     -- ...

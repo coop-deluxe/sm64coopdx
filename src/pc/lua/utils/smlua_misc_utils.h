@@ -53,6 +53,7 @@ bool djui_is_playerlist_open(void);
 bool djui_attempting_to_open_playerlist(void);
 enum DjuiFontType djui_menu_get_font(void);
 struct DjuiTheme* djui_menu_get_theme(void);
+bool djui_menu_get_excoop_theme(void);
 
 s8 get_dialog_box_state(void);
 s16 get_dialog_id(void);
