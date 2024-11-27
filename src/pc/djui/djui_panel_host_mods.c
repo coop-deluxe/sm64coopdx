@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include "djui.h"
 #include "djui_panel.h"
 #include "djui_panel_menu.h"
@@ -76,15 +78,78 @@ static void djui_panel_host_mods_description_create(void) {
 }
 
 static void djui_mod_checkbox_on_hover(struct DjuiBase* base) {
-    char* description = "";
+    char* description = NULL;
     if (base->tag >= 0 && base->tag < gLocalMods.entryCount) {
         struct Mod* mod = gLocalMods.entries[base->tag];
-        char* d = mod->description;
-        if (d != NULL) {
-            description = mod->description;
+        if (mod != NULL && mod->description != NULL) {
+            size_t size = strlen(mod->relativePath) + strlen(mod->description) + 128;
+            char* processedIncompatible = NULL;
+            if (mod->incompatible != NULL && strlen(mod->incompatible) > 0) {
+                size_t spaces = 0;
+                for (const char* c = mod->incompatible; *c != '\0'; ++c) {
+                    if (*c == ' ') { spaces++; }
+                }
+                size_t extraLengthPerSpace = strlen("\\#0000ff\\, \\#00ffff\\") - 1;
+                size_t processedSize = strlen(mod->incompatible) + spaces * extraLengthPerSpace + 1;
+                processedIncompatible = malloc(processedSize);
+                if (processedIncompatible != NULL) {
+                    char* dest = processedIncompatible;
+                    for (const char* src = mod->incompatible; *src != '\0'; ++src) {
+                        if (*src == ' ') {
+                            strcpy(dest, "\\#0000ff\\, \\#00ffff\\");
+                            dest += strlen("\\#0000ff\\, \\#00ffff\\");
+                        } else {
+                            *dest = *src;
+                            dest++;
+                        }
+                    }
+                    *dest = '\0';
+                }
+                size += strlen("\\#00ff00\\Incompatible: \\#00ffff\\") + strlen(processedIncompatible);
+            }
+            description = malloc(size);
+            if (description != NULL) {
+                if (mod->isDirectory) {
+                    if (processedIncompatible) {
+                        snprintf(description, size,
+                            "\\#ffff00\\Folder: \\#ff00ff\\%s \\#ff0000\\(%u file%s)\n\\#00ff00\\Incompatible: \\#00ffff\\%s\n\n\n\\#ffffff\\%s",
+                            mod->relativePath,
+                            (unsigned int)mod->fileCount,
+                            (unsigned int)mod->fileCount == 1 ? "" : "s",
+                            processedIncompatible,
+                            mod->description);
+                    } else {
+                        snprintf(description, size,
+                            "\\#ffff00\\Folder: \\#ff00ff\\%s \\#ff0000\\(%u file%s)\n\n\n\\#ffffff\\%s",
+                            mod->relativePath,
+                            (unsigned int)mod->fileCount,
+                            (unsigned int)mod->fileCount == 1 ? "" : "s",
+                            mod->description);
+                    }
+                } else {
+                    if (processedIncompatible) {
+                        snprintf(description, size,
+                            "\\#ffff00\\File: \\#ff00ff\\%s\n\\#00ff00\\Incompatible: \\#00ffff\\%s\n\n\n\\#ffffff\\%s",
+                            mod->relativePath,
+                            processedIncompatible,
+                            mod->description);
+                    } else {
+                        snprintf(description, size,
+                            "\\#ffff00\\File: \\#ff00ff\\%s\n\n\n\\#ffffff\\%s",
+                            mod->relativePath,
+                            mod->description);
+                    }
+                }
+                djui_text_set_text(sTooltip, description);
+                free(description);
+            } else {
+                djui_text_set_text(sTooltip, mod->description);
+            }
+            if (processedIncompatible != NULL) { free(processedIncompatible); }
+            return;
         }
     }
-    djui_text_set_text(sTooltip, description);
+    djui_text_set_text(sTooltip, "");
 }
 
 static void djui_mod_checkbox_on_hover_end(UNUSED struct DjuiBase* base) {
