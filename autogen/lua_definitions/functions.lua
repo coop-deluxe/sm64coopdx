@@ -3230,6 +3230,13 @@ function get_current_fov()
     -- ...
 end
 
+--- @param section string
+--- @param key string
+--- @return string
+function djui_language_get(section, key)
+    -- ...
+end
+
 --- @param message string
 --- @param lines integer
 function djui_popup_create(message, lines)
