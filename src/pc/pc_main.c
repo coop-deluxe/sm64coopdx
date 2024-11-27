@@ -487,9 +487,13 @@ int main(int argc, char *argv[]) {
         snprintf(configJoinIp, MAX_CONFIG_STRING, "%s", gCLIOpts.joinIp);
         configJoinPort = gCLIOpts.networkPort;
         network_init(NT_CLIENT, false);
-    } else if (gCLIOpts.network == NT_SERVER) {
-        configNetworkSystem = NS_SOCKET;
-        configHostPort = gCLIOpts.networkPort;
+    } else if (gCLIOpts.network == NT_SERVER || gCLIOpts.network == NT_COOPNET) {
+        if (gCLIOpts.network == NT_SERVER) {
+            configNetworkSystem = NS_SOCKET;
+            configHostPort = gCLIOpts.networkPort;
+        } else {
+            configNetworkSystem = NS_COOPNET;
+        }
 
         // horrible, hacky fix for mods that access marioObj straight away
         // best fix: host with the standard main menu method
