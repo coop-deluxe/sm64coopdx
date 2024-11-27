@@ -192,16 +192,16 @@ void produce_interpolation_frames_and_delay(void) {
             : MAX(MIN((curTime - sFrameTimeStart) / (sFrameTargetTime - sFrameTimeStart), 1.0f), 0.0f)
         );
         gRenderingDelta = delta;
-        
+
         gfx_start_frame();
         if (!gSkipInterpolationTitleScreen) { patch_interpolations(delta); }
         send_display_list(gGfxSPTask);
         gfx_end_frame();
-        
+
         frames++;
 
         if (configUncappedFramerate) { continue; }
-        
+
         // Delay if our framerate is capped.
         f64 targetDelta = 1.0 / (f64) configFrameLimit;
         f64 now = clock_elapsed_f64();
@@ -255,12 +255,12 @@ void *audio_thread(UNUSED void *arg) {
     // As long as we have an audio api and that we're threaded, Loop.
     while (audio_api) {
         f64 curTime = clock_elapsed_f64();
-        
+
         // Buffer the audio.
         lock_mutex(&gAudioThread);
         buffer_audio();
         unlock_mutex(&gAudioThread);
-        
+
         // Delay till the next frame for smooth audio at the correct speed.
         // delay
         f64 targetDelta = 1.0 / (f64)FRAMERATE;
@@ -271,10 +271,10 @@ void *audio_thread(UNUSED void *arg) {
             WAPI.delay((u32)delay);
         }
     }
-    
+
     // Exit the thread if our loop breaks.
     exit_thread();
-    
+
     return NULL;
 }
 
@@ -286,7 +286,7 @@ void produce_one_frame(void) {
     CTX_EXTENT(CTX_GAME_LOOP, game_loop_one_iteration);
 
     CTX_EXTENT(CTX_SMLUA, smlua_update);
-    
+
     // If we aren't threaded
     if (gAudioThread.state == INVALID) {
         CTX_EXTENT(CTX_AUDIO, buffer_audio);
@@ -464,9 +464,9 @@ int main(int argc, char *argv[]) {
     if (!audio_api && audio_sdl.init()) { audio_api = &audio_sdl; }
 #endif
     if (!audio_api) { audio_api = &audio_null; }
-    
+
     // Initialize the audio thread if possible.
-    init_thread_handle(&gAudioThread, audio_thread, NULL, NULL, 0);
+    // init_thread_handle(&gAudioThread, audio_thread, NULL, NULL, 0);
 
 #ifdef LOADING_SCREEN_SUPPORTED
     loading_screen_reset();
@@ -516,7 +516,7 @@ int main(int argc, char *argv[]) {
         fflush(stderr);
 #endif
         CTX_END(CTX_TOTAL);
-        
+
 #ifdef DEVELOPMENT
         djui_ctx_display_update();
 #endif
