@@ -5310,6 +5310,26 @@
 
 <br />
 
+## [surface_has_force](#surface_has_force)
+
+### Lua Example
+`local booleanValue = surface_has_force(surfaceType)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| surfaceType | `integer` |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool surface_has_force(s16 surfaceType);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ---
 
 [< prev](functions-4.md) | [1](functions.md) | [2](functions-2.md) | [3](functions-3.md) | [4](functions-4.md) | 5]

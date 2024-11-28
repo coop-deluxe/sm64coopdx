@@ -7370,6 +7370,11 @@ function set_mario_interact_hoot_if_in_range(sp0, sp4, sp8)
     -- ...
 end
 
+--- @param room integer
+function set_room_override(room)
+    -- ...
+end
+
 --- @param flags integer
 function set_time_stop_flags(flags)
     -- ...

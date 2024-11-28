@@ -27595,6 +27595,24 @@ int smlua_func_set_mario_interact_hoot_if_in_range(lua_State* L) {
     return 1;
 }
 
+int smlua_func_set_room_override(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "set_room_override", 1, top);
+        return 0;
+    }
+
+    s16 room = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "set_room_override"); return 0; }
+
+    extern void set_room_override(s16 room);
+    set_room_override(room);
+
+    return 1;
+}
+
 int smlua_func_set_time_stop_flags(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -34865,6 +34883,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "player_performed_grab_escape_action", smlua_func_player_performed_grab_escape_action);
     smlua_bind_function(L, "random_f32_around_zero", smlua_func_random_f32_around_zero);
     smlua_bind_function(L, "set_mario_interact_hoot_if_in_range", smlua_func_set_mario_interact_hoot_if_in_range);
+    smlua_bind_function(L, "set_room_override", smlua_func_set_room_override);
     smlua_bind_function(L, "set_time_stop_flags", smlua_func_set_time_stop_flags);
     smlua_bind_function(L, "set_time_stop_flags_if_alone", smlua_func_set_time_stop_flags_if_alone);
     smlua_bind_function(L, "signum_positive", smlua_func_signum_positive);

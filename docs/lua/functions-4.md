@@ -7743,6 +7743,26 @@
 
 <br />
 
+## [set_room_override](#set_room_override)
+
+### Lua Example
+`set_room_override(room)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| room | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_room_override(s16 room);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [set_time_stop_flags](#set_time_stop_flags)
 
 ### Lua Example
