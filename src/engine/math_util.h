@@ -33,31 +33,37 @@ extern f32 gCosineTable[];
 #endif
 
 // Inline Function prototypes
-f32 minf(f32 a, f32 b);
-s16 min(s16 a, s16 b);
-f32 maxf(f32 a, f32 b);
-s16 max(s16 a, s16 b);
-f32 sqrf(f32 x);
-s16 sqr(s16 x);
-f32 sins(s16 sm64Angle);
-f32 coss(s16 sm64Angle);
-
-#define min(a, b) _Generic((a), \
-    f32: minf, \
-    default: min \
-)(a, b)
-
-#define max(a, b) _Generic((a), \
-    f32: maxf, \
-    default: max \
-)(a, b)
-
-#define sqr(x) _Generic((x), \
-    f32: sqrf, \
-    default: sqr \
-)(x)
-
 #if defined(__clang__) || defined(__GNUC__)
+
+// These macros allow for type safe comparisons that expand without recursion in complex calls, also will use the faster fminf for f32 values
+#define min(a, b) ({ \
+    __typeof__(a) _a = (a); \
+    __typeof__(b) _b = (b); \
+    _Generic((_a), \
+        f32: _Generic((_b), \
+            f32: __builtin_fminf(_a, _b), \
+            default: (_a) < (_b) ? (_a) : (_b) \
+        ), \
+        default: (_a) < (_b) ? (_a) : (_b) \
+    ); \
+})
+
+#define max(a, b) ({ \
+    __typeof__(a) _a = (a); \
+    __typeof__(b) _b = (b); \
+    _Generic((_a), \
+        f32: _Generic((_b), \
+            f32: __builtin_fmaxf(a, b), \
+            default: (_a) > (_b) ? (_a) : (_b) \
+        ), \
+        default: (_a) > (_b) ? (_a) : (_b) \
+    ); \
+})
+
+#define sqr(x) ({ \
+    __typeof__(x) _x = (x); \
+    _x * _x; \
+})
 
 #define absx(x) _Generic((x), \
     f32: __builtin_fabsf, \
@@ -67,9 +73,16 @@ f32 coss(s16 sm64Angle);
 
 #else
 
+// Fallback to the original implementation for iDO
+#define min(a,b) (a < b ? a : b)
+#define max(a,b) (a > b ? a : b)
 #define absx(x) ((x) < 0 ? -(x) : (x))
 
 #endif
+
+static inline f32 sqrf(f32 x) { return x * x; }
+f32 sins(s16 sm64Angle);
+f32 coss(s16 sm64Angle);
 
 #include "../../include/libc/stdlib.h"
 

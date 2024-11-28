@@ -1,6 +1,8 @@
 #pragma once
 #include "djui.h"
 
+#define MAX_CHAT_MSG_LENGTH 500
+
 struct DjuiChatMessage {
     struct DjuiBase base;
     struct DjuiText* message;

@@ -12,30 +12,29 @@ bool gDjuiChatBoxFocus = false;
 static bool sDjuiChatBoxClearText = false;
 
 #define MAX_HISTORY_SIZE 256
-#define MAX_MSG_LENGTH 501
 
 typedef struct {
     s32 initialized;
     s32 size;
-    char messages[MAX_HISTORY_SIZE][MAX_MSG_LENGTH];
+    char messages[MAX_HISTORY_SIZE][MAX_CHAT_MSG_LENGTH];
     s32 currentIndex;
-    char currentMessage[MAX_MSG_LENGTH];
+    char currentMessage[MAX_CHAT_MSG_LENGTH];
 } ArrayList;
 
 ArrayList sentHistory;
 
 static s32 sCommandsTabCompletionIndex = -1;
-static char sCommandsTabCompletionOriginalText[MAX_MSG_LENGTH];
+static char sCommandsTabCompletionOriginalText[MAX_CHAT_MSG_LENGTH];
 static s32 sPlayersTabCompletionIndex = -1;
-static char sPlayersTabCompletionOriginalText[MAX_MSG_LENGTH];
+static char sPlayersTabCompletionOriginalText[MAX_CHAT_MSG_LENGTH];
 
 void reset_tab_completion_commands(void) {
     sCommandsTabCompletionIndex = -1;
-    snprintf(sCommandsTabCompletionOriginalText, MAX_MSG_LENGTH, "%s", "");
+    snprintf(sCommandsTabCompletionOriginalText, MAX_CHAT_MSG_LENGTH, "%s", "");
 }
 void reset_tab_completion_players(void) {
     sPlayersTabCompletionIndex = -1;
-    snprintf(sPlayersTabCompletionOriginalText, MAX_MSG_LENGTH, "%s", "");
+    snprintf(sPlayersTabCompletionOriginalText, MAX_CHAT_MSG_LENGTH, "%s", "");
 }
 void reset_tab_completion_all(void) {
     reset_tab_completion_commands();
@@ -47,7 +46,7 @@ void sent_history_init(ArrayList *arrayList) {
         arrayList->size = 0;
         arrayList->initialized = 1;
         arrayList->currentIndex = -1;
-        snprintf(arrayList->currentMessage, MAX_MSG_LENGTH, "%s", "");
+        snprintf(arrayList->currentMessage, MAX_CHAT_MSG_LENGTH, "%s", "");
     }
 }
 
@@ -56,19 +55,19 @@ void sent_history_add_message(ArrayList *arrayList, const char *newMessage) {
 
     if (arrayList->size == MAX_HISTORY_SIZE) {
         for (s32 i = 1; i < MAX_HISTORY_SIZE; i++) {
-            snprintf(arrayList->messages[i-1], MAX_MSG_LENGTH, "%s", arrayList->messages[i]);
+            snprintf(arrayList->messages[i-1], MAX_CHAT_MSG_LENGTH, "%s", arrayList->messages[i]);
         }
         arrayList->size--;
     }
 
-    snprintf(arrayList->messages[arrayList->size], MAX_MSG_LENGTH, "%s", newMessage);
-    arrayList->messages[arrayList->size][MAX_MSG_LENGTH - 1] = '\0';
+    snprintf(arrayList->messages[arrayList->size], MAX_CHAT_MSG_LENGTH, "%s", newMessage);
+    arrayList->messages[arrayList->size][MAX_CHAT_MSG_LENGTH - 1] = '\0';
     arrayList->size++;
 }
 
 void sent_history_update_current_message(ArrayList *arrayList, const char *message) {
     if (arrayList->currentIndex == -1) {
-        snprintf(arrayList->currentMessage, MAX_MSG_LENGTH, "%s", message);
+        snprintf(arrayList->currentMessage, MAX_CHAT_MSG_LENGTH, "%s", message);
     }
 }
 
@@ -93,7 +92,7 @@ void sent_history_navigate(ArrayList *arrayList, bool navigateUp) {
 }
 
 void sent_history_reset_navigation(ArrayList *arrayList) {
-    snprintf(arrayList->currentMessage, MAX_MSG_LENGTH, "%s", "");
+    snprintf(arrayList->currentMessage, MAX_CHAT_MSG_LENGTH, "%s", "");
     arrayList->currentIndex = -1;
 }
 
@@ -132,7 +131,7 @@ static void djui_chat_box_input_enter(struct DjuiInputbox* chatInput) {
             if (strcmp(chatInput->buffer, "/help") == 0 || strcmp(chatInput->buffer, "/?") == 0) {
                 display_chat_commands();
             } else if (!exec_chat_command(chatInput->buffer)) {
-                char extendedUnknownCommandMessage[MAX_MSG_LENGTH];
+                char extendedUnknownCommandMessage[MAX_CHAT_MSG_LENGTH];
                 snprintf(extendedUnknownCommandMessage, sizeof(extendedUnknownCommandMessage), "%s (/help)", DLANG(CHAT, UNRECOGNIZED));
                 djui_chat_message_create(extendedUnknownCommandMessage);
             }
@@ -188,8 +187,8 @@ static bool complete_subcommand(const char* mainCommand, const char* subCommandP
         for (s32 i = 0; subcommands[i] != NULL; i++) {
             if (strncmp(subcommands[i], subCommandPrefix, strlen(subCommandPrefix)) == 0) {
                 if (currentIndex == sCommandsTabCompletionIndex) {
-                    char completion[MAX_MSG_LENGTH];
-                    snprintf(completion, MAX_MSG_LENGTH, "/%s %s", mainCommand, subcommands[i]);
+                    char completion[MAX_CHAT_MSG_LENGTH];
+                    snprintf(completion, MAX_CHAT_MSG_LENGTH, "/%s %s", mainCommand, subcommands[i]);
                     djui_inputbox_set_text(gDjuiChatBox->chatInput, completion);
                     djui_inputbox_move_cursor_to_end(gDjuiChatBox->chatInput);
                     completionSuccess = true;
@@ -209,13 +208,13 @@ static bool complete_subcommand(const char* mainCommand, const char* subCommandP
 }
 
 typedef struct {
-    char word[MAX_MSG_LENGTH];
+    char word[MAX_CHAT_MSG_LENGTH];
     s32 index;
 } CurrentWordInfo;
 
 CurrentWordInfo get_current_word_info(char* buffer, s32 position) {
     CurrentWordInfo info;
-    memset(info.word, 0, MAX_MSG_LENGTH);
+    memset(info.word, 0, MAX_CHAT_MSG_LENGTH);
     info.index = -1;
 
     s32 currentWordStart = position;
@@ -230,8 +229,8 @@ CurrentWordInfo get_current_word_info(char* buffer, s32 position) {
     }
 
     s32 wordLength = currentWordEnd - currentWordStart;
-    if (wordLength > MAX_MSG_LENGTH - 1) {
-        wordLength = MAX_MSG_LENGTH - 1;
+    if (wordLength > MAX_CHAT_MSG_LENGTH - 1) {
+        wordLength = MAX_CHAT_MSG_LENGTH - 1;
     }
 
     snprintf(info.word, wordLength + 1, "%.*s", wordLength, &buffer[currentWordStart]);
@@ -256,8 +255,8 @@ void djui_inputbox_replace_current_word(struct DjuiInputbox* inputbox, char* tex
     while (currentWordStart > 0 && inputbox->buffer[currentWordStart - 1] != ' ') { currentWordStart--; }
     while (inputbox->buffer[currentWordEnd] != '\0' && inputbox->buffer[currentWordEnd] != ' ') { currentWordEnd++; }
 
-    char newBuffer[MAX_MSG_LENGTH];
-    snprintf(newBuffer, MAX_MSG_LENGTH, "%.*s%s%s", currentWordStart, inputbox->buffer, text, &inputbox->buffer[currentWordEnd]);
+    char newBuffer[MAX_CHAT_MSG_LENGTH];
+    snprintf(newBuffer, MAX_CHAT_MSG_LENGTH, "%.*s%s%s", currentWordStart, inputbox->buffer, text, &inputbox->buffer[currentWordEnd]);
 
     djui_inputbox_set_text(inputbox, newBuffer);
     djui_inputbox_move_cursor_to_position(inputbox, currentWordStart + strlen(text));
@@ -320,7 +319,7 @@ static void handle_tab_completion(void) {
             }
         } else {
             if (sCommandsTabCompletionIndex == -1) {
-                snprintf(sCommandsTabCompletionOriginalText, MAX_MSG_LENGTH, "%s", gDjuiChatBox->chatInput->buffer);
+                snprintf(sCommandsTabCompletionOriginalText, MAX_CHAT_MSG_LENGTH, "%s", gDjuiChatBox->chatInput->buffer);
             }
             
             char* bufferWithoutSlash = sCommandsTabCompletionOriginalText + 1;
@@ -340,8 +339,8 @@ static void handle_tab_completion(void) {
                 for (s32 i = 0; commands[i] != NULL; i++) {
                     if (strncmp(commands[i], bufferWithoutSlash, strlen(bufferWithoutSlash)) == 0) {
                         if (currentIndex == sCommandsTabCompletionIndex) {
-                            char completion[MAX_MSG_LENGTH];
-                            snprintf(completion, MAX_MSG_LENGTH, "/%s", commands[i]);
+                            char completion[MAX_CHAT_MSG_LENGTH];
+                            snprintf(completion, MAX_CHAT_MSG_LENGTH, "/%s", commands[i]);
                             djui_inputbox_set_text(gDjuiChatBox->chatInput, completion);
                             djui_inputbox_move_cursor_to_end(gDjuiChatBox->chatInput);
                             alreadyTabCompleted = true;
@@ -392,7 +391,7 @@ static void handle_tab_completion(void) {
         CurrentWordInfo wordInfo = get_current_word_info(gDjuiChatBox->chatInput->buffer, gDjuiChatBox->chatInput->selection[0]);
         if (wordInfo.index != -1) {
             if (sPlayersTabCompletionIndex == -1) {
-                snprintf(sPlayersTabCompletionOriginalText, MAX_MSG_LENGTH, "%s", wordInfo.word);
+                snprintf(sPlayersTabCompletionOriginalText, MAX_CHAT_MSG_LENGTH, "%s", wordInfo.word);
             }
             if (!complete_player_name(sPlayersTabCompletionOriginalText)) {
                 reset_tab_completion_players();
@@ -414,8 +413,8 @@ static bool djui_chat_box_input_on_key_down(struct DjuiBase* base, int scancode)
     bool canScrollDown = (*yValue < 0);
     f32 pageAmount = gDjuiChatBox->chatContainer->base.elem.height * 3.0f / 4.0f;
 
-    char previousText[MAX_MSG_LENGTH];
-    snprintf(previousText, MAX_MSG_LENGTH, "%s", gDjuiChatBox->chatInput->buffer);
+    char previousText[MAX_CHAT_MSG_LENGTH];
+    snprintf(previousText, MAX_CHAT_MSG_LENGTH, "%s", gDjuiChatBox->chatInput->buffer);
 
     switch (scancode) {
         case SCANCODE_UP:
@@ -492,7 +491,7 @@ static bool djui_chat_box_input_on_key_down(struct DjuiBase* base, int scancode)
 
 static void djui_chat_box_input_on_text_input(struct DjuiBase *base, char* text) {
     size_t expectedIndex = strlen(gDjuiChatBox->chatInput->buffer);
-    bool isTextDifferent = (expectedIndex >= MAX_MSG_LENGTH) || (gDjuiChatBox->chatInput->buffer[expectedIndex] != text[0]);
+    bool isTextDifferent = (expectedIndex >= MAX_CHAT_MSG_LENGTH) || (gDjuiChatBox->chatInput->buffer[expectedIndex] != text[0]);
     djui_inputbox_on_text_input(base, text);
     if (isTextDifferent) {
         reset_tab_completion_all();
@@ -544,7 +543,7 @@ struct DjuiChatBox* djui_chat_box_create(void) {
     cfBase->abandonAfterChildRenderFail = true;
     chatBox->chatFlow = chatFlow;
 
-    struct DjuiInputbox* chatInput = djui_inputbox_create(base, MAX_MSG_LENGTH);
+    struct DjuiInputbox* chatInput = djui_inputbox_create(base, MAX_CHAT_MSG_LENGTH);
     struct DjuiBase* ciBase = &chatInput->base;
     djui_base_set_size_type(ciBase, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
     djui_base_set_size(ciBase, 1.0f, 32);

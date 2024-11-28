@@ -40,7 +40,7 @@ void network_player_update_model(u8 localIndex) {
     if (index >= CT_MAX) { index = 0; }
     m->character = &gCharacters[index];
 
-    if (m->marioObj == NULL) { return; }
+    if (m->marioObj == NULL || m->marioObj->behavior != smlua_override_behavior(bhvMario)) { return; }
     obj_set_model(m->marioObj, m->character->modelId);
 }
 
@@ -340,7 +340,9 @@ u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex, u8 mode
     smlua_call_event_hooks_mario_param(HOOK_ON_PLAYER_CONNECTED, &gMarioStates[localIndex]);
 
 #ifdef DISCORD_SDK
-    discord_activity_update();
+    if (gDiscordInitialized) {
+        discord_activity_update();
+    }
 #endif
 
     return localIndex;
@@ -392,7 +394,9 @@ u8 network_player_disconnected(u8 globalIndex) {
         memset(np, 0, sizeof(struct NetworkPlayer));
 
 #ifdef DISCORD_SDK
-        discord_activity_update();
+        if (gDiscordInitialized) {
+            discord_activity_update();
+        }
 #endif
 
         // reset mario state

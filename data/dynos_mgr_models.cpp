@@ -29,14 +29,15 @@ static std::map<void*, struct ModelInfo> sAssetMap[MODEL_POOL_MAX];
 static std::map<u32, std::vector<struct ModelInfo>> sIdMap;
 static std::map<u32, u32> sOverwriteMap;
 
-static u32 find_empty_id() {
-    u32 id = VANILLA_ID_END + 1;
+static u32 find_empty_id(bool aIsPermanent) {
+    u32 id = aIsPermanent ? 9999 : VANILLA_ID_END + 1;
+    s8 dir = aIsPermanent ? -1 : 1;
     while (true) {
-        if (id != 0) {
+        if (id != 9999) {
             if (sIdMap.count(id) == 0)  { return id; }
             if (sIdMap[id].size() == 0) { return id; }
         }
-        id++;
+        id += dir;
     }
 }
 
@@ -106,7 +107,7 @@ struct GraphNode* DynOS_Model_LoadCommon(u32* aId, enum ModelPool aModelPool, vo
     if (!node) { return NULL; }
 
     // figure out id
-    if (!*aId) { *aId = find_empty_id(); }
+    if (!*aId) { *aId = find_empty_id(aModelPool == MODEL_POOL_PERMANENT); }
 
     // create model info
     struct ModelInfo info = {

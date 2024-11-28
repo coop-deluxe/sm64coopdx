@@ -12,9 +12,6 @@
 #include "pc/configfile.h"
 #include "pc/debuglog.h"
 #include "macros.h"
-#ifdef DISCORD_SDK
-#include "pc/discord/discord.h"
-#endif
 
 static struct DjuiInputbox* sInputboxIp = NULL;
 

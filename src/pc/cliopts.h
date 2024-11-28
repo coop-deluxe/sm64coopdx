@@ -27,6 +27,7 @@ struct CLIOptions {
     char playerName[MAX_CONFIG_STRING];
     bool hideLoadingScreen;
     bool skipUpdateCheck;
+    bool noDiscord;
 };
 
 extern struct CLIOptions gCLIOpts;
