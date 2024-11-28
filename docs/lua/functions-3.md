@@ -2722,6 +2722,32 @@
 <br />
 
 ---
+# functions from djui_panel_menu.c
+
+<br />
+
+
+## [djui_menu_get_rainbow_string_color](#djui_menu_get_rainbow_string_color)
+
+### Lua Example
+`local stringValue = djui_menu_get_rainbow_string_color(color)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| color | `integer` |
+
+### Returns
+- `string`
+
+### C Prototype
+`char* djui_menu_get_rainbow_string_color(int color);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
 # functions from djui_popup.h
 
 <br />

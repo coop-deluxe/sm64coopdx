@@ -12811,6 +12811,28 @@ int smlua_func_djui_language_get(lua_State* L) {
     return 1;
 }
 
+  ///////////////////////
+ // djui_panel_menu.c //
+///////////////////////
+
+int smlua_func_djui_menu_get_rainbow_string_color(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "djui_menu_get_rainbow_string_color", 1, top);
+        return 0;
+    }
+
+    int color = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "djui_menu_get_rainbow_string_color"); return 0; }
+
+    extern char* djui_menu_get_rainbow_string_color(int color);
+    lua_pushstring(L, djui_menu_get_rainbow_string_color(color));
+
+    return 1;
+}
+
   //////////////////
  // djui_popup.h //
 //////////////////
@@ -34142,6 +34164,9 @@ void smlua_bind_functions_autogen(void) {
 
     // djui_language.h
     smlua_bind_function(L, "djui_language_get", smlua_func_djui_language_get);
+
+    // djui_panel_menu.c
+    smlua_bind_function(L, "djui_menu_get_rainbow_string_color", smlua_func_djui_menu_get_rainbow_string_color);
 
     // djui_popup.h
     smlua_bind_function(L, "djui_popup_create", smlua_func_djui_popup_create);

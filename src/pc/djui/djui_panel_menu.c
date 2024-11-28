@@ -49,6 +49,11 @@ static void generate_rainbow_text(char* text) {
     }
 }
 
+char* djui_menu_get_rainbow_string_color(int color) {
+    int i = (color >= 0 && color <= 3) ? color : 0;
+    return configExCoopTheme ? sExCoopRainbowColors[i] : sRainbowColors[i];
+}
+
 void djui_panel_menu_back(UNUSED struct DjuiBase* base) {
     djui_panel_back();
 }
