@@ -191,20 +191,6 @@ void set_room_override(s16 room) {
     gRoomOverride = room;
 }
 
-s16 get_room_at_pos(f32 x, f32 y, f32 z) {
-    struct Surface *surface = NULL;
-
-    gFindFloorIncludeSurfaceIntangible = TRUE;
-
-    find_floor(x, y, z, &surface);
-
-    if (surface != NULL) {
-        return surface->room;
-    } else {
-        return 0;
-    }
-}
-
 //! @bug Same issue as geo_switch_anim_state.
 #ifdef AVOID_UB
 Gfx *geo_switch_area(s32 callContext, struct GraphNode *node, UNUSED void *context) {

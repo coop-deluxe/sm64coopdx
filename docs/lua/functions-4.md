@@ -6353,28 +6353,6 @@
 
 <br />
 
-## [get_room_at_pos](#get_room_at_pos)
-
-### Lua Example
-`local integerValue = get_room_at_pos(x, y, z)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| x | `number` |
-| y | `number` |
-| z | `number` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s16 get_room_at_pos(f32 x, f32 y, f32 z);`
-
-[:arrow_up_small:](#)
-
-<br />
-
 ## [get_trajectory_length](#get_trajectory_length)
 
 ### Lua Example

@@ -6935,14 +6935,6 @@ function get_object_list_from_behavior(behavior)
     -- ...
 end
 
---- @param x number
---- @param y number
---- @param z number
---- @return integer
-function get_room_at_pos(x, y, z)
-    -- ...
-end
-
 --- @param trajectory Pointer_Trajectory
 --- @return integer
 function get_trajectory_length(trajectory)

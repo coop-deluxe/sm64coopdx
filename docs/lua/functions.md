@@ -1469,7 +1469,6 @@
    - [find_unimportant_object](functions-4.md#find_unimportant_object)
    - [geo_offset_klepto_debug](functions-4.md#geo_offset_klepto_debug)
    - [get_object_list_from_behavior](functions-4.md#get_object_list_from_behavior)
-   - [get_room_at_pos](functions-4.md#get_room_at_pos)
    - [get_trajectory_length](functions-4.md#get_trajectory_length)
    - [increment_velocity_toward_range](functions-4.md#increment_velocity_toward_range)
    - [is_item_in_array](functions-4.md#is_item_in_array)

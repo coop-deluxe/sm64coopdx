@@ -25989,28 +25989,6 @@ int smlua_func_get_object_list_from_behavior(lua_State* L) {
     return 1;
 }
 
-int smlua_func_get_room_at_pos(lua_State* L) {
-    if (L == NULL) { return 0; }
-
-    int top = lua_gettop(L);
-    if (top != 3) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "get_room_at_pos", 3, top);
-        return 0;
-    }
-
-    f32 x = smlua_to_number(L, 1);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "get_room_at_pos"); return 0; }
-    f32 y = smlua_to_number(L, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "get_room_at_pos"); return 0; }
-    f32 z = smlua_to_number(L, 3);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "get_room_at_pos"); return 0; }
-
-    extern s16 get_room_at_pos(f32 x, f32 y, f32 z);
-    lua_pushinteger(L, get_room_at_pos(x, y, z));
-
-    return 1;
-}
-
 int smlua_func_get_trajectory_length(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -34797,7 +34775,6 @@ void smlua_bind_functions_autogen(void) {
     //smlua_bind_function(L, "geo_update_layer_transparency", smlua_func_geo_update_layer_transparency); <--- UNIMPLEMENTED
     //smlua_bind_function(L, "geo_update_projectile_pos_from_parent", smlua_func_geo_update_projectile_pos_from_parent); <--- UNIMPLEMENTED
     smlua_bind_function(L, "get_object_list_from_behavior", smlua_func_get_object_list_from_behavior);
-    smlua_bind_function(L, "get_room_at_pos", smlua_func_get_room_at_pos);
     smlua_bind_function(L, "get_trajectory_length", smlua_func_get_trajectory_length);
     smlua_bind_function(L, "increment_velocity_toward_range", smlua_func_increment_velocity_toward_range);
     smlua_bind_function(L, "is_item_in_array", smlua_func_is_item_in_array);
