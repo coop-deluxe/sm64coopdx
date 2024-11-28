@@ -7,9 +7,6 @@
 #include "pc/network/network.h"
 #include "pc/utils/misc.h"
 #include "pc/update_checker.h"
-#ifdef DISCORD_SDK
-#include "pc/discord/discord.h"
-#endif
 
 #ifdef COOPNET
 static void djui_panel_join_public_lobbies(struct DjuiBase* caller) {

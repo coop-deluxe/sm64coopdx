@@ -180,7 +180,9 @@ bool network_init(enum NetworkType inNetworkType, bool reconnecting) {
     configfile_save(configfile_name());
 
 #ifdef DISCORD_SDK
-    discord_activity_update();
+    if (gDiscordInitialized) {
+        discord_activity_update();
+    }
 #endif
 
     LOG_INFO("initialized");
@@ -757,7 +759,9 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
     djui_lua_error_clear();
 
 #ifdef DISCORD_SDK
-    discord_activity_update();
+    if (gDiscordInitialized) {
+        discord_activity_update();
+    }
 #endif
     packet_ordered_clear_all();
 

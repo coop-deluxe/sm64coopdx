@@ -427,9 +427,13 @@ s32 get_dialog_response(void) {
 
 const char* get_local_discord_id(void) {
 #ifdef DISCORD_SDK
-    static char sDiscordId[64] = "";
-    snprintf(sDiscordId, 64, "%" PRIu64 "", (uint64_t)discord_get_user_id());
-    return sDiscordId;
+    if (gDiscordInitialized) {
+        static char sDiscordId[64] = "";
+        snprintf(sDiscordId, 64, "%" PRIu64 "", (uint64_t)discord_get_user_id());
+        return sDiscordId;
+    } else {
+        return "0";
+    }
 #else
     return "0";
 #endif

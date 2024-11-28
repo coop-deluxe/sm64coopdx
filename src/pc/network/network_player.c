@@ -340,7 +340,9 @@ u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex, u8 mode
     smlua_call_event_hooks_mario_param(HOOK_ON_PLAYER_CONNECTED, &gMarioStates[localIndex]);
 
 #ifdef DISCORD_SDK
-    discord_activity_update();
+    if (gDiscordInitialized) {
+        discord_activity_update();
+    }
 #endif
 
     return localIndex;
@@ -392,7 +394,9 @@ u8 network_player_disconnected(u8 globalIndex) {
         memset(np, 0, sizeof(struct NetworkPlayer));
 
 #ifdef DISCORD_SDK
-        discord_activity_update();
+        if (gDiscordInitialized) {
+            discord_activity_update();
+        }
 #endif
 
         // reset mario state
