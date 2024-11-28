@@ -34,6 +34,7 @@ extern ConfigWindow configWindow;
 extern unsigned int configFiltering;
 extern bool         configShowFPS;
 extern bool         configUncappedFramerate;
+extern bool         configNoRenderFocusLoss;
 extern unsigned int configFrameLimit;
 extern unsigned int configInterpolationMode;
 extern unsigned int configDrawDistance;
