@@ -5192,24 +5192,6 @@
 <br />
 
 
-## [alloc_surface_pools](#alloc_surface_pools)
-
-### Lua Example
-`alloc_surface_pools()`
-
-### Parameters
-- None
-
-### Returns
-- None
-
-### C Prototype
-`void alloc_surface_pools(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
 ## [clear_dynamic_surfaces](#clear_dynamic_surfaces)
 
 ### Lua Example

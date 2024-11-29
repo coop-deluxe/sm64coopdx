@@ -1918,7 +1918,6 @@
 <br />
 
 - surface_load.h
-   - [alloc_surface_pools](functions-5.md#alloc_surface_pools)
    - [clear_dynamic_surfaces](functions-5.md#clear_dynamic_surfaces)
    - [get_area_terrain_size](functions-5.md#get_area_terrain_size)
    - [load_area_terrain](functions-5.md#load_area_terrain)

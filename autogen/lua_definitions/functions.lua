@@ -9181,10 +9181,6 @@ function find_water_level(x, z)
     -- ...
 end
 
-function alloc_surface_pools()
-    -- ...
-end
-
 function clear_dynamic_surfaces()
     -- ...
 end

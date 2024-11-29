@@ -91,7 +91,7 @@ override_allowed_functions = {
 override_disallowed_functions = {
     "src/audio/external.h":                     [ " func_" ],
     "src/engine/math_util.h":                   [ "atan2f", "vec3s_sub" ],
-    "src/engine/surface_load.h":                [ "alloc_surface_poools", "surface_has_force" ],
+    "src/engine/surface_load.h":                [ "alloc_surface_pools" ],
     "src/engine/surface_collision.h":           [ " debug_", "f32_find_wall_collision" ],
     "src/game/mario_actions_airborne.c":        [ "^[us]32 act_.*" ],
     "src/game/mario_actions_automatic.c":       [ "^[us]32 act_.*" ],
