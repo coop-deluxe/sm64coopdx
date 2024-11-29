@@ -250,6 +250,7 @@ bool DynOS_Level_IsVanillaLevel(s32 aLevel) {
 Collision *DynOS_Level_GetCollision(u32 aLevel, u16 aArea) {
     if (aLevel >= LEVEL_COUNT) return NULL;
     if (aArea >= MAX_AREAS) return NULL;
+    DynOS_Level_Init();
     return sDynosLevelCollision[aLevel][aArea];
 }
 
