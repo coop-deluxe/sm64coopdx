@@ -23,6 +23,7 @@ static struct DjuiFlowLayout* sModLayout = NULL;
 static struct DjuiThreePanel* sDescriptionPanel = NULL;
 static struct DjuiText* sTooltip = NULL;
 static struct DjuiPaginated* sModPaginated = NULL;
+static struct DjuiButton* sBackButton = NULL;
 static struct DjuiButton* sRefreshButton = NULL;
 unsigned int selectedCategory = MOD_CATEGORY_ALL;
 static bool sWarned = false;
@@ -172,6 +173,7 @@ void djui_panel_host_mods_add_mods(struct DjuiBase* layoutBase) {
 }
 
 static void djui_panel_on_categories_change(UNUSED struct DjuiBase* caller) {
+    if (gModRefreshThread.state == RUNNING) { return; }
     djui_base_destroy_children(&sModLayout->base);
     djui_panel_host_mods_add_mods(&sModLayout->base);
     djui_paginated_calculate_height(sModPaginated);
@@ -188,6 +190,8 @@ static void* threaded_mod_refresh(void*) {
 
     djui_text_set_text(sRefreshButton->text, DLANG(LOBBIES, REFRESH));
     djui_base_set_enabled(&sRefreshButton->base, true);
+    djui_base_set_enabled(&sBackButton->base, true);
+    gDjuiPanelDisableBack = false;
 
     return NULL;
 }
@@ -197,6 +201,8 @@ static void djui_panel_menu_refresh(UNUSED struct DjuiBase* base) {
     if (init_thread_handle(&gModRefreshThread, threaded_mod_refresh, NULL, NULL, 0) == 0) {
         djui_text_set_text(sRefreshButton->text, DLANG(LOBBIES, REFRESHING));
         djui_base_set_enabled(&sRefreshButton->base, false);
+        djui_base_set_enabled(&sBackButton->base, false);
+        gDjuiPanelDisableBack = true;
     } else {
         threaded_mod_refresh(NULL);
     }
@@ -229,7 +235,7 @@ void djui_panel_host_mods_create(struct DjuiBase* caller) {
         if (gNetworkType == NT_NONE) {
             struct DjuiRect* rect1 = djui_rect_container_create(body, 64);
             {
-                djui_button_left_create(&rect1->base, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
+                sBackButton = djui_button_left_create(&rect1->base, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
                 sRefreshButton = djui_button_right_create(&rect1->base, DLANG(LOBBIES, REFRESH), DJUI_BUTTON_STYLE_NORMAL, djui_panel_menu_refresh);
             }
         } else {
