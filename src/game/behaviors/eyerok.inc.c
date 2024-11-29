@@ -123,11 +123,13 @@ static u8 eyerok_boss_act_show_intro_text_continue_dialog(void) {
 }
 
 static void eyerok_boss_act_show_intro_text(void) {
-    struct MarioState* marioState = nearest_mario_state_to_object(o);
+    // todo: get dialog working properly again
+    /*struct MarioState* marioState = nearest_mario_state_to_object(o);
     if (should_start_or_continue_dialog(marioState, o) && cur_obj_update_dialog_with_cutscene(&gMarioStates[0], 2, 0, CUTSCENE_DIALOG, gBehaviorValues.dialogs.EyerokIntroDialog, eyerok_boss_act_show_intro_text_continue_dialog)) {
         o->oAction = EYEROK_BOSS_ACT_FIGHT;
         network_send_object_reliability(o, TRUE);
-    }
+    }*/
+    o->oAction = EYEROK_BOSS_ACT_FIGHT;
 }
 
 static void eyerok_boss_act_fight(void) {

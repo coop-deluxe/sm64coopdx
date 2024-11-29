@@ -669,7 +669,7 @@ u32 determine_knockback_action(struct MarioState *m, UNUSED s32 arg) {
     if (m->interactObj != NULL && (m->interactObj->oInteractType & INTERACT_PLAYER) && terrainIndex != 2) {
         f32 scaler = 1;
         s8 hasBeenPunched = FALSE;
-#define IF_REVAMPED_PVP(Is, IsNot) gServerSettings.pvpType == PLAYER_PVP_REVAMPED ? (Is) : (IsNot);
+#define IF_REVAMPED_PVP(is, isNot) gServerSettings.pvpType == PLAYER_PVP_REVAMPED ? (is) : (isNot);
         for (s32 i = 0; i < MAX_PLAYERS; i++) {
             struct MarioState* m2 = &gMarioStates[i];
             if (!is_player_active(m2)) { continue; }
