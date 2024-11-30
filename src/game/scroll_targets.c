@@ -1,7 +1,8 @@
 #include "scroll_targets.h"
 #include "pc/lua/utils/smlua_math_utils.h"
+#include "data/dynos_cmap.cpp.h"
 
-static struct ScrollTarget *sScrollTargets = NULL;
+static void *sScrollTargets = NULL;
 
 /*
  * Gets the scroll targets identified by the given id
@@ -9,15 +10,7 @@ static struct ScrollTarget *sScrollTargets = NULL;
  * Returns NULL if not found.
  */
 struct ScrollTarget *get_scroll_targets(u32 id, u16 size, u16 offset) {
-    struct ScrollTarget *scroll = sScrollTargets;
-
-    while (scroll) {
-        if (scroll->id == id) {
-            break;
-        }
-        scroll = scroll->next;
-    }
-
+    struct ScrollTarget *scroll = hmap_get(sScrollTargets, id);
     if (scroll) {
 
         // If we need to, realloc the block of vertices
@@ -50,16 +43,12 @@ struct ScrollTarget *get_scroll_targets(u32 id, u16 size, u16 offset) {
  * isn't any scroll targets.
  */
 struct ScrollTarget* find_or_create_scroll_targets(u32 id, bool hasOffset) {
-    struct ScrollTarget *scroll = sScrollTargets;
-    struct ScrollTarget *lastScroll = NULL;
+    struct ScrollTarget *scroll = NULL;
 
-    while (scroll) {
-        if (scroll->id == id) {
-            break;
-        }
-
-        lastScroll = scroll;
-        scroll = scroll->next;
+    if (sScrollTargets == NULL) {
+        sScrollTargets = hmap_create(true);
+    } else {
+        scroll = hmap_get(sScrollTargets, id);
     }
 
     if (scroll == NULL) {
@@ -67,13 +56,8 @@ struct ScrollTarget* find_or_create_scroll_targets(u32 id, bool hasOffset) {
         scroll->id = id;
         scroll->size = 0;
         scroll->vertices = NULL;
-        scroll->next = NULL;
         scroll->hasOffset = hasOffset;
-        if (lastScroll) {
-            lastScroll->next = scroll;
-        } else {
-            sScrollTargets = scroll;
-        }
+        hmap_put(sScrollTargets, id, scroll);
     }
 
     return scroll;
@@ -114,29 +98,21 @@ void add_vtx_scroll_target(u32 id, Vtx *vtx, u32 size, bool hasOffset) {
  *     add_vtx_scroll_targets(id, vtx, size)
  */
 void free_vtx_scroll_targets(void) {
-    struct ScrollTarget* scroll = sScrollTargets;
-    struct ScrollTarget* nextScroll;
-
-    while (scroll) {
-        nextScroll = scroll->next;
+    for (struct ScrollTarget* scroll = hmap_begin(sScrollTargets); scroll != NULL; scroll = hmap_next(sScrollTargets)) {
         free(scroll->interpF32);
         free(scroll->prevF32);
         free(scroll->interpS16);
         free(scroll->prevS16);
         free(scroll->vertices);
         free(scroll);
-        scroll = nextScroll;
     }
-
+    hmap_destroy(sScrollTargets);
     sScrollTargets = NULL;
 }
 
 void patch_scroll_targets_before(void) {
-    struct ScrollTarget *scroll = sScrollTargets;
-
-    while (scroll) {
+    for (struct ScrollTarget* scroll = hmap_begin(sScrollTargets); scroll != NULL; scroll = hmap_next(sScrollTargets)) {
         scroll->needInterp = false;
-        scroll = scroll->next;
     }
 }
 
@@ -144,9 +120,8 @@ void patch_scroll_targets_before(void) {
 
 void patch_scroll_targets_interpolated(f32 delta) {
     f32 antiDelta = 1.0f - delta;
-    struct ScrollTarget *scroll = sScrollTargets;
 
-    while (scroll) {
+    for (struct ScrollTarget* scroll = hmap_begin(sScrollTargets); scroll != NULL; scroll = hmap_next(sScrollTargets)) {
         if (scroll->needInterp) {
             Vtx* *verts = scroll->vertices;
             if (scroll->bhv < SCROLL_UV_X) {
@@ -161,7 +136,5 @@ void patch_scroll_targets_interpolated(f32 delta) {
                 }
             }
         }
-
-        scroll = scroll->next;
     }
 }
