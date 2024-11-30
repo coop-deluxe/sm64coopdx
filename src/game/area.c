@@ -438,7 +438,7 @@ void play_transition_after_delay(s16 transType, s16 time, u8 red, u8 green, u8 b
 void render_game(void) {
     dynos_update_gfx();
     if (gCurrentArea != NULL && !gWarpTransition.pauseRendering) {
-        if (WAPI.has_focus() || !configNoRenderFocusLoss) {
+        if (WAPI.has_focus() || configRenderWhenUnfocused == 0) {
             geo_process_root(gCurrentArea->unk04, D_8032CE74, D_8032CE78, gFBSetColor);
         }
         

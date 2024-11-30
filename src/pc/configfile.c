@@ -81,7 +81,7 @@ ConfigWindow configWindow       = {
 unsigned int configFiltering                      = 2; // 0 = Nearest, 1 = Bilinear, 2 = Trilinear
 bool         configShowFPS                        = false;
 bool         configUncappedFramerate              = true;
-bool         configNoRenderFocusLoss              = false;
+unsigned int configRenderWhenUnfocused            = 0; // 0 = Everything, 1 = HUD and UI, 2 = Nothing
 unsigned int configFrameLimit                     = 60;
 unsigned int configInterpolationMode              = 1;
 unsigned int configDrawDistance                   = 4;
@@ -206,7 +206,7 @@ static const struct ConfigOption options[] = {
     {.name = "texture_filtering",              .type = CONFIG_TYPE_UINT, .uintValue = &configFiltering},
     {.name = "show_fps",                       .type = CONFIG_TYPE_BOOL, .boolValue = &configShowFPS},
     {.name = "uncapped_framerate",             .type = CONFIG_TYPE_BOOL, .boolValue = &configUncappedFramerate},
-    {.name = "norender_focus_loss",            .type = CONFIG_TYPE_BOOL, .boolValue = &configNoRenderFocusLoss},
+    {.name = "render_when_unfocused",          .type = CONFIG_TYPE_UINT, .uintValue = &configRenderWhenUnfocused},
     {.name = "frame_limit",                    .type = CONFIG_TYPE_UINT, .uintValue = &configFrameLimit},
     {.name = "interpolation_mode",             .type = CONFIG_TYPE_UINT, .uintValue = &configInterpolationMode},
     {.name = "coop_draw_distance",             .type = CONFIG_TYPE_UINT, .uintValue = &configDrawDistance},

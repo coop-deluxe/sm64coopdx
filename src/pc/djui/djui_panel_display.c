@@ -64,7 +64,8 @@ void djui_panel_display_create(struct DjuiBase* caller) {
         djui_checkbox_create(body, DLANG(DISPLAY, SHOW_FPS), &configShowFPS, NULL);
         djui_checkbox_create(body, DLANG(DISPLAY, VSYNC), &configWindow.vsync, djui_panel_display_apply);
         djui_checkbox_create(body, DLANG(DISPLAY, UNCAPPED_FRAMERATE), &configUncappedFramerate, djui_panel_display_uncapped_change);
-        djui_checkbox_create(body, DLANG(DISPLAY, NORENDER_FOCUS_LOSS), &configNoRenderFocusLoss, NULL);
+        char* renderChoicesUnfocused[3] = { DLANG(DISPLAY, RENDER_EVERYTHING), DLANG(DISPLAY, RENDER_HUD_AND_UI), DLANG(DISPLAY, RENDER_NOTHING) };
+        djui_selectionbox_create(body, DLANG(DISPLAY, RENDER_WHEN_UNFOCUSED), renderChoicesUnfocused, 3, &configRenderWhenUnfocused, NULL);
 
         struct DjuiRect* rect1 = djui_rect_container_create(body, 32);
         {
