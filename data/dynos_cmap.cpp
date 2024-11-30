@@ -12,21 +12,20 @@ enum class MapType {
 // Ordered maps can be iterated by key order
 // Unordered maps have the fastest lookup times (also called a hash map)
 
-template <typename Key, typename Value>
 class HMap {
 public:
     HMap(MapType type = MapType::Ordered) : mMapType(type) {
         switch (mMapType) {
             case MapType::Ordered:
-                mOrderedMap = std::make_unique<std::map<Key, Value>>();
+                mOrderedMap = std::make_unique<std::map<int64_t, void*>>();
                 break;
             case MapType::Unordered:
-                mUnorderedMap = std::make_unique<std::unordered_map<Key, Value>>();
+                mUnorderedMap = std::make_unique<std::unordered_map<int64_t, void*>>();
                 break;
         }
     }
 
-    Value get(Key key) {
+    void* get(int64_t key) {
         switch (mMapType) {
             case MapType::Ordered:
                 if (mOrderedMap->count(key)) {
@@ -42,20 +41,18 @@ public:
         return nullptr;
     }
 
-    void put(Key key, Value value) {
+    void put(int64_t key, void* value) {
         switch (mMapType) {
             case MapType::Ordered:
-                if (mOrderedMap->count(key)) { mOrderedMap->erase(key); }
-                mOrderedMap->insert({key, value});
+                mOrderedMap->insert_or_assign(key, value);
                 break;
             case MapType::Unordered:
-                if (mUnorderedMap->count(key)) { mUnorderedMap->erase(key); }
-                mUnorderedMap->insert({key, value});
+                mUnorderedMap->insert_or_assign(key, value);
                 break;
         }
     }
 
-    void erase(Key key) {
+    void erase(int64_t key) {
         switch (mMapType) {
             case MapType::Ordered:
                 mOrderedMap->erase(key);
@@ -126,62 +123,62 @@ public:
 private:
     MapType mMapType;
 
-    std::unique_ptr<std::map<Key, Value>> mOrderedMap;
-    typename std::map<Key, Value>::iterator mOrderedIterator;
+    std::unique_ptr<std::map<int64_t, void*>> mOrderedMap;
+    typename std::map<int64_t, void*>::iterator mOrderedIterator;
 
-    std::unique_ptr<std::unordered_map<Key, Value>> mUnorderedMap;
-    typename std::unordered_map<Key, Value>::iterator mUnorderedIterator;
+    std::unique_ptr<std::unordered_map<int64_t, void*>> mUnorderedMap;
+    typename std::unordered_map<int64_t, void*>::iterator mUnorderedIterator;
 };
 
 extern "C" {
 void* hmap_create(MapType type) {
-    return new HMap<int64_t, void*>(type);
+    return new HMap(type);
 }
 
 void* hmap_get(void* map, int64_t key) {
     if (!map) { return NULL; }
-    HMap<int64_t, void*>* hmap = reinterpret_cast<HMap<int64_t, void*>*>(map);
+    HMap* hmap = reinterpret_cast<HMap*>(map);
     return hmap->get(key);
 }
 
 void hmap_put(void* map, int64_t key, void* value) {
     if (!map) { return; }
-    HMap<int64_t, void*>* hmap = reinterpret_cast<HMap<int64_t, void*>*>(map);
+    HMap* hmap = reinterpret_cast<HMap*>(map);
     hmap->put(key, value);
 }
 
 void hmap_del(void* map, int64_t key) {
     if (!map) { return; }
-    HMap<int64_t, void*>* hmap = reinterpret_cast<HMap<int64_t, void*>*>(map);
+    HMap* hmap = reinterpret_cast<HMap*>(map);
     hmap->erase(key);
 }
 
 void hmap_clear(void* map) {
     if (!map) { return; }
-    HMap<int64_t, void*>* hmap = reinterpret_cast<HMap<int64_t, void*>*>(map);
+    HMap* hmap = reinterpret_cast<HMap*>(map);
     hmap->clear();
 }
 
 void hmap_destroy(void* map) {
     if (!map) { return; }
-    delete reinterpret_cast<HMap<int64_t, void*>*>(map);
+    delete reinterpret_cast<HMap*>(map);
 }
 
 size_t hmap_len(void* map) {
     if (!map) { return 0; }
-    HMap<int64_t, void*>* hmap = reinterpret_cast<HMap<int64_t, void*>*>(map);
+    HMap* hmap = reinterpret_cast<HMap*>(map);
     return hmap->size();
 }
 
 void* hmap_begin(void* map) {
     if (!map) { return NULL; }
-    HMap<int64_t, void*>* hmap = reinterpret_cast<HMap<int64_t, void*>*>(map);
+    HMap* hmap = reinterpret_cast<HMap*>(map);
     return hmap->begin();
 }
 
 void* hmap_next(void* map) {
     if (!map) { return NULL; }
-    HMap<int64_t, void*>* hmap = reinterpret_cast<HMap<int64_t, void*>*>(map);
+    HMap* hmap = reinterpret_cast<HMap*>(map);
     return hmap->next();
 }
 }
