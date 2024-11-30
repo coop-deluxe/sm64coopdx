@@ -14,7 +14,6 @@
 #include "pc/debug_context.h"
 
 static void* sSoMap = NULL;
-static void* sSoIter = NULL;
 
 #define FORGET_TIMEOUT 10
 
@@ -33,8 +32,7 @@ static bool sFreeingAll = false;
 ////////////
 
 void sync_objects_init_system(void) {
-    sSoMap = hmap_create();
-    sSoIter = hmap_iter(sSoMap);
+    sSoMap = hmap_create(true);
 }
 
 static bool sync_objects_forget_list_contains(struct SyncObject* so) {
@@ -254,11 +252,11 @@ struct SyncObject* sync_object_get(u32 syncId) {
 }
 
 struct SyncObject* sync_object_get_first(void) {
-    return hmap_begin(sSoIter);
+    return hmap_begin(sSoMap);
 }
 
 struct SyncObject* sync_object_get_next(void) {
-    return hmap_next(sSoIter);
+    return hmap_next(sSoMap);
 }
 
 struct Object* sync_object_get_object(u32 syncId) {

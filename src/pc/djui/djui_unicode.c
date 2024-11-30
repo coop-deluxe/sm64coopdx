@@ -199,7 +199,6 @@ struct SmCodeGlyph sSmCodeDuplicateGlyphs[] = {
 };
 
 static void* sCharMap = NULL;
-static void* sCharIter = NULL;
 
 static s32 count_bytes_for_char(char* text) {
     s32 bytes = 0;
@@ -229,8 +228,7 @@ static u64 convert_unicode_char_to_u64(char* text) {
 }
 
 void djui_unicode_init(void) {
-    sCharMap = hmap_create();
-    sCharIter = hmap_iter(sCharMap);
+    sCharMap = hmap_create(true);
 
     size_t glyphCount = sizeof(sSmCodeGlyphs) / sizeof(sSmCodeGlyphs[0]);
     for (size_t i = 0; i < glyphCount; i++) {
