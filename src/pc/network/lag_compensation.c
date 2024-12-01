@@ -6,7 +6,6 @@
 #include "behavior_table.h"
 #include "model_ids.h"
 
-#define MAX_LOCAL_STATE_HISTORY 30
 struct StateHistory {
     struct MarioState m;
     struct Object marioObj;
@@ -56,4 +55,12 @@ struct MarioState* lag_compensation_get_local_state(struct NetworkPlayer* otherN
     index = index % MAX_LOCAL_STATE_HISTORY;
 
     return &sLocalStateHistory[index].m;
+}
+
+bool lag_compensation_get_local_state_ready(void) {
+    return sLocalStateHistoryReady;
+}
+
+u32 lag_compensation_get_local_state_index(void) {
+    return sLocalStateHistoryIndex;
 }

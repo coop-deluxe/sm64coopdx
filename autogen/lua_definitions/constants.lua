@@ -3818,6 +3818,9 @@ INTERACT_IGLOO_BARRIER = (1 << 30)
 INTERACT_PLAYER = (1 << 31)
 
 --- @type integer
+MAX_LOCAL_STATE_HISTORY = 30
+
+--- @type integer
 WARP_CHECKPOINT = 0x80
 
 --- @type integer

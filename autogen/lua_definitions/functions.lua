@@ -3850,6 +3850,20 @@ function lag_compensation_get_local_state(otherNp)
     -- ...
 end
 
+--- @return integer
+function lag_compensation_get_local_state_index()
+    -- ...
+end
+
+--- @return boolean
+function lag_compensation_get_local_state_ready()
+    -- ...
+end
+
+function lag_compensation_store()
+    -- ...
+end
+
 --- @param courseNum integer
 --- @param levelNum integer
 --- @param areaIndex integer

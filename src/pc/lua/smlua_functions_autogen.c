@@ -14642,6 +14642,51 @@ int smlua_func_lag_compensation_get_local_state(lua_State* L) {
     return 1;
 }
 
+int smlua_func_lag_compensation_get_local_state_index(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "lag_compensation_get_local_state_index", 0, top);
+        return 0;
+    }
+
+
+    lua_pushinteger(L, lag_compensation_get_local_state_index());
+
+    return 1;
+}
+
+int smlua_func_lag_compensation_get_local_state_ready(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "lag_compensation_get_local_state_ready", 0, top);
+        return 0;
+    }
+
+
+    lua_pushboolean(L, lag_compensation_get_local_state_ready());
+
+    return 1;
+}
+
+int smlua_func_lag_compensation_store(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "lag_compensation_store", 0, top);
+        return 0;
+    }
+
+
+    lag_compensation_store();
+
+    return 1;
+}
+
   //////////////////
  // level_info.h //
 //////////////////
@@ -34254,6 +34299,9 @@ void smlua_bind_functions_autogen(void) {
 
     // lag_compensation.h
     smlua_bind_function(L, "lag_compensation_get_local_state", smlua_func_lag_compensation_get_local_state);
+    smlua_bind_function(L, "lag_compensation_get_local_state_index", smlua_func_lag_compensation_get_local_state_index);
+    smlua_bind_function(L, "lag_compensation_get_local_state_ready", smlua_func_lag_compensation_get_local_state_ready);
+    smlua_bind_function(L, "lag_compensation_store", smlua_func_lag_compensation_store);
 
     // level_info.h
     smlua_bind_function(L, "get_level_name", smlua_func_get_level_name);

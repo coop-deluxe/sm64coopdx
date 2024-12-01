@@ -4757,6 +4757,60 @@
 
 <br />
 
+## [lag_compensation_get_local_state_index](#lag_compensation_get_local_state_index)
+
+### Lua Example
+`local integerValue = lag_compensation_get_local_state_index()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 lag_compensation_get_local_state_index(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [lag_compensation_get_local_state_ready](#lag_compensation_get_local_state_ready)
+
+### Lua Example
+`local booleanValue = lag_compensation_get_local_state_ready()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool lag_compensation_get_local_state_ready(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [lag_compensation_store](#lag_compensation_store)
+
+### Lua Example
+`lag_compensation_store()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void lag_compensation_store(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ---
 # functions from level_info.h
 
