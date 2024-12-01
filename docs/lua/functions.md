@@ -1921,7 +1921,6 @@
 <br />
 
 - surface_load.h
-   - [clear_dynamic_surfaces](functions-5.md#clear_dynamic_surfaces)
    - [get_area_terrain_size](functions-5.md#get_area_terrain_size)
    - [load_area_terrain](functions-5.md#load_area_terrain)
    - [load_object_collision_model](functions-5.md#load_object_collision_model)

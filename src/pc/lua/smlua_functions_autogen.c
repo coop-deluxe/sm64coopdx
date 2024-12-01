@@ -33333,21 +33333,6 @@ int smlua_func_find_water_level(lua_State* L) {
  // surface_load.h //
 ////////////////////
 
-int smlua_func_clear_dynamic_surfaces(UNUSED lua_State* L) {
-    if (L == NULL) { return 0; }
-
-    int top = lua_gettop(L);
-    if (top != 0) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "clear_dynamic_surfaces", 0, top);
-        return 0;
-    }
-
-
-    clear_dynamic_surfaces();
-
-    return 1;
-}
-
 int smlua_func_get_area_terrain_size(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -35266,7 +35251,6 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "find_water_level", smlua_func_find_water_level);
 
     // surface_load.h
-    smlua_bind_function(L, "clear_dynamic_surfaces", smlua_func_clear_dynamic_surfaces);
     smlua_bind_function(L, "get_area_terrain_size", smlua_func_get_area_terrain_size);
     smlua_bind_function(L, "load_area_terrain", smlua_func_load_area_terrain);
     smlua_bind_function(L, "load_object_collision_model", smlua_func_load_object_collision_model);

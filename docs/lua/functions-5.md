@@ -5192,24 +5192,6 @@
 <br />
 
 
-## [clear_dynamic_surfaces](#clear_dynamic_surfaces)
-
-### Lua Example
-`clear_dynamic_surfaces()`
-
-### Parameters
-- None
-
-### Returns
-- None
-
-### C Prototype
-`void clear_dynamic_surfaces(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
 ## [get_area_terrain_size](#get_area_terrain_size)
 
 ### Lua Example

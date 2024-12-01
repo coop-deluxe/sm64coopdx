@@ -9195,10 +9195,6 @@ function find_water_level(x, z)
     -- ...
 end
 
-function clear_dynamic_surfaces()
-    -- ...
-end
-
 --- @param data Pointer_integer
 --- @return integer
 function get_area_terrain_size(data)
