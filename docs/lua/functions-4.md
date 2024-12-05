@@ -1124,6 +1124,26 @@
 
 <br />
 
+## [mod_storage_exists](#mod_storage_exists)
+
+### Lua Example
+`local booleanValue = mod_storage_exists(key)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| key | `string` |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool mod_storage_exists(const char* key);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [mod_storage_load](#mod_storage_load)
 
 ### Lua Example

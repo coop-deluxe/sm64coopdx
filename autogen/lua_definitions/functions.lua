@@ -5390,6 +5390,12 @@ function mod_storage_clear()
 end
 
 --- @param key string
+--- @return boolean
+function mod_storage_exists(key)
+    -- ...
+end
+
+--- @param key string
 --- @return string
 function mod_storage_load(key)
     -- ...
