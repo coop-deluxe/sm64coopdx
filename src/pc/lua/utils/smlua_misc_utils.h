@@ -127,6 +127,8 @@ void set_volume_env(f32 volume);
 f32 get_environment_region(u8 index);
 void set_environment_region(u8 index, s32 value);
 
+bool mod_file_exists(const char* filename);
+
 void set_window_title(const char* title);
 void reset_window_title(void);
 

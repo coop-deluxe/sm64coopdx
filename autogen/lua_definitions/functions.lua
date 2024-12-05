@@ -8563,6 +8563,12 @@ function is_transition_playing()
     -- ...
 end
 
+--- @param filename string
+--- @return boolean
+function mod_file_exists(filename)
+    -- ...
+end
+
 --- @param name string
 --- @param level integer
 --- @param area integer

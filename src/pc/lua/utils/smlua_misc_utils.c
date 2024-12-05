@@ -508,6 +508,19 @@ void set_environment_region(u8 index, s32 value) {
 
 ///
 
+bool mod_file_exists(const char* filename) {
+    if (gLuaActiveMod == NULL) { return false; }
+
+    for (s32 i = 0; i < gLuaActiveMod->fileCount; i++) {
+        struct ModFile* file = &gLuaActiveMod->files[i];
+        return !strcmp(file->relativePath, filename);
+    }
+
+    return false;
+}
+
+///
+
 void set_window_title(const char* title) {
     WAPI.set_window_title(title);
 }

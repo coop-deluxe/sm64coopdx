@@ -3042,6 +3042,26 @@
 
 <br />
 
+## [mod_file_exists](#mod_file_exists)
+
+### Lua Example
+`local booleanValue = mod_file_exists(filename)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| filename | `string` |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool mod_file_exists(const char* filename);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [movtexqc_register](#movtexqc_register)
 
 ### Lua Example

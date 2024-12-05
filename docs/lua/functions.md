@@ -1792,6 +1792,7 @@
    - [hud_show](functions-5.md#hud_show)
    - [is_game_paused](functions-5.md#is_game_paused)
    - [is_transition_playing](functions-5.md#is_transition_playing)
+   - [mod_file_exists](functions-5.md#mod_file_exists)
    - [movtexqc_register](functions-5.md#movtexqc_register)
    - [play_transition](functions-5.md#play_transition)
    - [reset_window_title](functions-5.md#reset_window_title)

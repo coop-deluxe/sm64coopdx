@@ -31295,6 +31295,23 @@ int smlua_func_is_transition_playing(UNUSED lua_State* L) {
     return 1;
 }
 
+int smlua_func_mod_file_exists(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "mod_file_exists", 1, top);
+        return 0;
+    }
+
+    const char* filename = smlua_to_string(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mod_file_exists"); return 0; }
+
+    lua_pushboolean(L, mod_file_exists(filename));
+
+    return 1;
+}
+
 int smlua_func_movtexqc_register(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -35149,6 +35166,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "hud_show", smlua_func_hud_show);
     smlua_bind_function(L, "is_game_paused", smlua_func_is_game_paused);
     smlua_bind_function(L, "is_transition_playing", smlua_func_is_transition_playing);
+    smlua_bind_function(L, "mod_file_exists", smlua_func_mod_file_exists);
     smlua_bind_function(L, "movtexqc_register", smlua_func_movtexqc_register);
     smlua_bind_function(L, "play_transition", smlua_func_play_transition);
     smlua_bind_function(L, "reset_window_title", smlua_func_reset_window_title);
