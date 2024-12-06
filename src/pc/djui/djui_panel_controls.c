@@ -25,21 +25,34 @@ void djui_panel_controls_create(struct DjuiBase* caller) {
         djui_checkbox_create(body, DLANG(MISC, USE_STANDARD_KEY_BINDINGS_CHAT), &configUseStandardKeyBindingsChat, NULL);
 
 #ifdef HAVE_SDL2
-        int numJoys = SDL_NumJoysticks();
-        if (numJoys == 0) { numJoys = 1; }
-        if (numJoys > 10) { numJoys = 10; }
-        int strSize = numJoys * 2;
-        char* gamepadChoices[numJoys];
-        char gamepadChoicesLong[strSize];
-        for (int i = 0; i < numJoys; i++) {
-            int index = i * 2;
-            if (i > 9) {
-                index += (i - 9);
-            }
-            sprintf(&gamepadChoicesLong[index], "%d", i);
-            gamepadChoices[i] = &gamepadChoicesLong[index];
+    int numJoys = SDL_NumJoysticks();
+    if (numJoys == 0) { numJoys = 1; }
+    if (numJoys > 10) { numJoys = 10; }
+    char* gamepadChoices[numJoys];
+    for (int i = 0; i < numJoys; i++) {
+        const char* joystickName = SDL_JoystickNameForIndex(i);
+        if (joystickName == NULL) {
+        joystickName = "Unknown";
         }
-        djui_selectionbox_create(body, DLANG(CONTROLS, GAMEPAD), gamepadChoices, numJoys, &configGamepadNumber, NULL);
+        gamepadChoices[i] = strdup(joystickName);
+    }
+    djui_selectionbox_create(body, DLANG(CONTROLS, GAMEPAD), gamepadChoices, numJoys, &configGamepadNumber, NULL);
+    for (int i = 0; i < numJoys; i++) {
+        free(gamepadChoices[i]);
+    }
+    // Check for repeated names and append a number if necessary
+    for (int i = 0; i < numJoys; i++) {
+        int count = 1;
+        for (int j = 0; j < i; j++) {
+            if (strcmp(gamepadChoices[i], gamepadChoices[j]) == 0) {
+                count++;
+                char newName[256];
+                snprintf(newName, sizeof(newName), "%s (%d)", gamepadChoices[i], count);
+                free(gamepadChoices[i]);
+                gamepadChoices[i] = strdup(newName);
+            }
+        }
+    }
 #endif
 
         djui_slider_create(body, DLANG(CONTROLS, DEADZONE), &configStickDeadzone, 0, 100, djui_panel_controls_value_change);
