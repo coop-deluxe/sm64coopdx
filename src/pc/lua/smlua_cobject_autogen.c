@@ -212,7 +212,7 @@ static struct LuaObjectField sBehaviorTrajectoriesFields[LUA_BEHAVIOR_TRAJECTORI
     { "UnagiTrajectory",               LVT_TRAJECTORY_P, offsetof(struct BehaviorTrajectories, UnagiTrajectory),               false, LOT_POINTER },
 };
 
-#define LUA_BEHAVIOR_VALUES_FIELD_COUNT 32
+#define LUA_BEHAVIOR_VALUES_FIELD_COUNT 33
 static struct LuaObjectField sBehaviorValuesFields[LUA_BEHAVIOR_VALUES_FIELD_COUNT] = {
     { "BowlingBallBob2Speed",     LVT_F32,     offsetof(struct BehaviorValues, BowlingBallBob2Speed),     false, LOT_NONE                 },
     { "BowlingBallBobSpeed",      LVT_F32,     offsetof(struct BehaviorValues, BowlingBallBobSpeed),      false, LOT_NONE                 },
@@ -230,6 +230,7 @@ static struct LuaObjectField sBehaviorValuesFields[LUA_BEHAVIOR_VALUES_FIELD_COU
     { "KoopaBobAgility",          LVT_F32,     offsetof(struct BehaviorValues, KoopaBobAgility),          false, LOT_NONE                 },
     { "KoopaCatchupAgility",      LVT_F32,     offsetof(struct BehaviorValues, KoopaCatchupAgility),      false, LOT_NONE                 },
     { "KoopaThiAgility",          LVT_F32,     offsetof(struct BehaviorValues, KoopaThiAgility),          false, LOT_NONE                 },
+    { "MarioRaycastSteps",        LVT_U8,      offsetof(struct BehaviorValues, MarioRaycastSteps),        false, LOT_NONE                 },
     { "MipsStar1Requirement",     LVT_S16,     offsetof(struct BehaviorValues, MipsStar1Requirement),     false, LOT_NONE                 },
     { "MipsStar2Requirement",     LVT_S16,     offsetof(struct BehaviorValues, MipsStar2Requirement),     false, LOT_NONE                 },
     { "MultipleCapCollection",    LVT_U8,      offsetof(struct BehaviorValues, MultipleCapCollection),    false, LOT_NONE                 },

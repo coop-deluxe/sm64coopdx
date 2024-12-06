@@ -4946,6 +4946,15 @@ function bhv_unlock_door_star_loop()
     -- ...
 end
 
+--- @param m MarioState
+--- @param wall Surface
+--- @param intendedPos Vec3f
+--- @param nextPos Vec3f
+--- @return integer
+function check_ledge_grab(m, wall, intendedPos, nextPos)
+    -- ...
+end
+
 --- @return number
 function get_additive_y_vel_for_jumps()
     -- ...

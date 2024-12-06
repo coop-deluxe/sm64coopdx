@@ -184,6 +184,7 @@
 --- @field public KoopaBobAgility number
 --- @field public KoopaCatchupAgility number
 --- @field public KoopaThiAgility number
+--- @field public MarioRaycastSteps integer
 --- @field public MipsStar1Requirement integer
 --- @field public MipsStar2Requirement integer
 --- @field public MultipleCapCollection integer

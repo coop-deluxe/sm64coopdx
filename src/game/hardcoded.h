@@ -45,6 +45,7 @@ struct LevelValues {
     u8 fixCollisionBugs;
     u8 fixCollisionBugsRoundedCorners;
     u8 fixCollisionBugsFalseLedgeGrab;
+    u8 fixCollisionBugsClipLedgeGrabs;
     u8 fixCollisionBugsGroundPoundBonks;
     u8 fixCollisionBugsPickBestWall;
     u8 fixVanishFloors;
@@ -255,6 +256,7 @@ struct BehaviorValues {
     f32 BowlingBallThiSmallSpeed;
     u16 GrateStarRequirement;
     f32 ChillBullyDeathPosY;
+    u8  MarioRaycastSteps;
     u8  ShowStarMilestones;
     u8  ShowStarDialog;
     u8  RespawnShellBoxes;

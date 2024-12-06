@@ -778,19 +778,16 @@ s32 mario_floor_is_steep(struct MarioState *m) {
     if (!mario_facing_downhill(m, FALSE)) {
         switch (mario_get_floor_class(m)) {
             case SURFACE_VERY_SLIPPERY:
-                normY = 0.9659258f; // ~cos(15 deg)
+                normY = 0.9659258f; // ~cos(15 deg) or ~sin(75 deg)
                 break;
 
             case SURFACE_SLIPPERY:
-                normY = 0.9396926f; // ~cos(20 deg)
-                break;
-
-            default:
-                normY = 0.8660254f; // ~cos(30 deg)
+                normY = 0.9396926f; // ~cos(20 deg) or ~sin(70 deg)
                 break;
 
             case SURFACE_NOT_SLIPPERY:
-                normY = 0.8660254f; // ~cos(30 deg)
+            default:
+                normY = 0.8660254f; // ~cos(30 deg) or ~sin(60 deg)
                 break;
         }
 

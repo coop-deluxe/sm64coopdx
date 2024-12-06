@@ -177,7 +177,6 @@ static s32 find_wall_collisions_from_list(struct SurfaceNode *surfaceNode,
             if (!gFindWallDirectionActive && vec3f_dot(norm, cNorm) < 0) { continue; }
 
         } else {
-
             offset = surf->normal.x * x + surf->normal.y * y + surf->normal.z * z + surf->originOffset;
 
             if (offset < -radius || offset > radius) {
@@ -877,6 +876,86 @@ f32 find_floor(f32 xPos, f32 yPos, f32 zPos, struct Surface **pfloor) {
     return height;
 }
 
+/**
+ * Find the highest floor under a given position and return the height.
+ */
+f32 find_floor_air(f32 xPos, f32 yPos, f32 zPos, f32 velocity, struct Surface **pfloor) {
+    s16 cellZ, cellX;
+
+    struct Surface *floor, *dynamicFloor;
+    struct SurfaceNode *surfaceList;
+
+    f32 height = gLevelValues.floorLowerLimit;// + 9000.0f;
+    f32 dynamicHeight = gLevelValues.floorLowerLimit;// + 9000.0f;
+
+    //! (Parallel Universes) Because position is casted to an s16, reaching higher
+    // float locations  can return floors despite them not existing there.
+    //(Dynamic floors will unload due to the range.)
+    s16 x = (s16) xPos;
+    s16 y = (s16) yPos;
+    s16 z = (s16) zPos;
+
+    *pfloor = NULL;
+
+#if EXTENDED_BOUNDS_MODE != 3
+    if (x <= -LEVEL_BOUNDARY_MAX || x >= LEVEL_BOUNDARY_MAX) {
+        return height;
+    }
+    if (z <= -LEVEL_BOUNDARY_MAX || z >= LEVEL_BOUNDARY_MAX) {
+        return height;
+    }
+#endif
+
+    // Each level is split into cells to limit load, find the appropriate cell.
+    cellX = ((x + LEVEL_BOUNDARY_MAX) / CELL_SIZE) & NUM_CELLS_INDEX;
+    cellZ = ((z + LEVEL_BOUNDARY_MAX) / CELL_SIZE) & NUM_CELLS_INDEX;
+
+    // Check for surfaces belonging to objects.
+    surfaceList = gDynamicSurfacePartition[cellZ][cellX][SPATIAL_PARTITION_FLOORS].next;
+    if (velocity < 10.f) {
+        dynamicFloor = find_floor_from_list(surfaceList, x, y, z, &dynamicHeight);
+    } else {
+        dynamicFloor = 0;
+    }
+
+    // Check for surfaces that are a part of level geometry.
+    surfaceList = gStaticSurfacePartition[cellZ][cellX][SPATIAL_PARTITION_FLOORS].next;
+    floor = find_floor_from_list(surfaceList, x, y, z, &height);
+
+    // To prevent the Merry-Go-Round room from loading when Mario passes above the hole that leads
+    // there, SURFACE_INTANGIBLE is used. This prevent the wrong room from loading, but can also allow
+    // Mario to pass through.
+    if (!gFindFloorIncludeSurfaceIntangible) {
+        //! (BBH Crash) Most NULL checking is done by checking the height of the floor returned
+        //  instead of checking directly for a NULL floor. If this check returns a NULL floor
+        //  (happens when there is no floor under the SURFACE_INTANGIBLE floor) but returns the height
+        //  of the SURFACE_INTANGIBLE floor instead of the typical -11000 returned for a NULL floor.
+        if (floor != NULL && floor->type == SURFACE_INTANGIBLE) {
+            floor = find_floor_from_list(surfaceList, x, (s32)(height - 200.0f), z, &height);
+        }
+    } else {
+        // To prevent accidentally leaving the floor tangible, stop checking for it.
+        gFindFloorIncludeSurfaceIntangible = FALSE;
+    }
+
+    // If a floor was missed, increment the debug counter.
+    if (floor == NULL) {
+        gNumFindFloorMisses += 1;
+    }
+
+    if (dynamicHeight > height) {
+        floor = dynamicFloor;
+        height = dynamicHeight;
+    }
+
+    *pfloor = floor;
+
+    // Increment the debug tracker.
+    gNumCalls.floor += 1;
+
+    return height;
+}
+
 /**************************************************
  *               ENVIRONMENTAL BOXES              *
  **************************************************/
@@ -1151,9 +1230,38 @@ void find_surface_on_ray_list(struct SurfaceNode *list, Vec3f orig, Vec3f dir, f
         if (list->surface->lowerY > top || list->surface->upperY < bottom)
             continue;
 
-        // Reject no-cam collision surfaces
-        if (gCheckingSurfaceCollisionsForCamera && (list->surface->flags & SURFACE_FLAG_NO_CAM_COLLISION))
-            continue;
+        // Determine if checking for the camera or not.
+        if (gCheckingSurfaceCollisionsForCamera) {
+            // Reject no-cam collision surfaces
+            if (list->surface->flags & SURFACE_FLAG_NO_CAM_COLLISION) {
+                continue;
+            }
+        } else {
+            // Ignore camera only surfaces.
+            if (list->surface->type == SURFACE_CAMERA_BOUNDARY || list->surface->type == SURFACE_RAYCAST) {
+                continue;
+            }
+            
+            // If an object can pass through a vanish cap wall, pass through.
+            if (list->surface->type == SURFACE_VANISH_CAP_WALLS) {
+                // If an object can pass through a vanish cap wall, pass through.
+                if (gCurrentObject != NULL
+                    && (gCurrentObject->activeFlags & ACTIVE_FLAG_MOVE_THROUGH_GRATE)) {
+                    continue;
+                }
+
+                // If Mario has a vanish cap, pass through the vanish cap wall.
+                u8 passThroughWall = FALSE;
+                for (s32 i = 0; i < MAX_PLAYERS; i++) {
+                    if (gCurrentObject != NULL && gCurrentObject == gMarioStates[i].marioObj
+                        && (gMarioStates[i].flags & MARIO_VANISH_CAP)) {
+                        passThroughWall = TRUE;
+                        break;
+                    }
+                }
+                if (passThroughWall) { continue; }
+            }
+        }
 
         // Check intersection between the ray and this surface
         if ((hit = ray_surface_intersect(orig, dir, dir_length, list->surface, chk_hit_pos, &length)) != 0)
@@ -1190,7 +1298,8 @@ void find_surface_on_ray_cell(s16 cellX, s16 cellZ, Vec3f orig, Vec3f normalized
     }
 }
 
-void find_surface_on_ray(Vec3f orig, Vec3f dir, struct Surface **hit_surface, Vec3f hit_pos, f32 precision) {
+void find_surface_on_ray(Vec3f orig, Vec3f dir, struct Surface **hit_surface, Vec3f hit_pos, f32 precision)
+{
     f32 max_length;
     s16 cellZ, cellX;
     f32 fCellZ, fCellX;

@@ -322,6 +322,7 @@
 | KoopaBobAgility | `number` |  |
 | KoopaCatchupAgility | `number` |  |
 | KoopaThiAgility | `number` |  |
+| MarioRaycastSteps | `integer` |  |
 | MipsStar1Requirement | `integer` |  |
 | MipsStar2Requirement | `integer` |  |
 | MultipleCapCollection | `integer` |  |
