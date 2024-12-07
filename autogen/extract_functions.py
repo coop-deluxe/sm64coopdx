@@ -18,12 +18,10 @@ replacements = {
 
 def extract_functions(filename):
     with open(filename) as file:
-        lines = file.readlines()
+        raw_lines = file.readlines()
 
     # combine lines
-    txt = ''
-    for line in lines:
-        txt += line
+    txt = ''.join(raw_lines)
 
     # convert multi-line stuff
     txt = txt.replace('\r', ' ')
@@ -96,25 +94,69 @@ def extract_functions(filename):
     # cull obvious non-functions, statics, and externs
     tmp = txt
     txt = ''
+    functions = []
+    descriptions = {}
+
+    # use raw lines to find descriptions for identified functions
     for line in tmp.splitlines():
         line = line.strip()
-        if '(' not in line:
+        if '(' not in line or ')' not in line or '=' in line:
             continue
-        if ')' not in line:
+        if line.startswith('static ') or line.startswith('extern '):
             continue
-        if '=' in line:
-            continue
-        #if '{' not in line:
-        #    continue
-        if line.startswith('static '):
-            continue
-        if line.startswith('extern '):
-            continue
-        txt += line + '\n'
+
+        # add function
+        functions.append(line)
+
+        # look for a description above the function in raw lines
+        function_without_semicolon = line.rstrip(';')
+        for i, raw_line in enumerate(raw_lines):
+            if function_without_semicolon in raw_line:
+                # found the function in raw_lines, now look above for |descriptionEnd|
+                # We'll scan upwards until we find |descriptionEnd| and then keep going until |description| is found.
+                description_end_line_index = None
+                for j in range(i - 1, -1, -1):
+                    if '|descriptionEnd|' in raw_lines[j]:
+                        description_end_line_index = j
+                        break
+
+                if description_end_line_index is not None:
+                    # Now collect lines upwards until |description| is found, or we hit the top
+                    description_lines = []
+                    found_description_start = False
+                    for k in range(description_end_line_index, -1, -1):
+                        if '|description|' in raw_lines[k]:
+                            # Found the start marker
+                            # Extract text after |description| marker on this line
+                            start_match = re.search(r'\|description\|(.*)$', raw_lines[k])
+                            if start_match:
+                                # Insert this line's text at the start
+                                description_lines.insert(0, start_match.group(1).strip())
+                            found_description_start = True
+                            break
+                        else:
+                            # These lines are part of the description block
+                            description_lines.insert(0, raw_lines[k].strip())
+
+                    if found_description_start and description_lines:
+                        # Combine all lines, remove trailing |descriptionEnd| and normalize whitespace
+                        combined_description = ' '.join(description_lines)
+                        combined_description = re.sub(r'\|\s*descriptionEnd\s*\|.*', '', combined_description).strip()
+                        # Normalize whitespace
+                        combined_description = re.sub(r'\s+', ' ', combined_description).strip()
+                        descriptions[line] = combined_description
+
+                break
 
     # normalize function ending
-    txt = txt.replace(' {', ';')
-    return txt
+    txt = '\n'.join(functions).replace(' {', ';')
+    return txt, descriptions
 
 if __name__ == "__main__":
-    print(extract_functions(sys.argv[1]))
+    functions, descriptions = extract_functions(sys.argv[1])
+    print(f"Functions:\n{functions}\n")
+    print("Descriptions:")
+    for func, desc in descriptions.items():
+        print(f"Function: {func}")
+        print(f"  Description: {desc}\n")
+
