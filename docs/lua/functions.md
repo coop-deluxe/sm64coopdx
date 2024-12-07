@@ -2423,6 +2423,9 @@ N/A
 
 ## [area_get_warp_node](#area_get_warp_node)
 
+### Description
+Finds a warp node in the current area by its ID. The warp node must exist in the list of warp nodes for the current area. Useful for locating a specific warp point in the level, such as teleportation zones or connections to other areas.
+
 ### Lua Example
 `local ObjectWarpNodeValue = area_get_warp_node(id)`
 
@@ -2442,6 +2445,9 @@ N/A
 <br />
 
 ## [area_get_warp_node_from_params](#area_get_warp_node_from_params)
+
+### Description
+Finds a warp node in the current area using parameters from the provided object. The object's behavior parameters are used to determine the warp node ID. Useful for associating an object (like a door or warp pipe) with its corresponding warp node in the area.
 
 ### Lua Example
 `local ObjectWarpNodeValue = area_get_warp_node_from_params(o)`
