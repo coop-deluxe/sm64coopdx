@@ -52,7 +52,11 @@ void djui_panel_controls_create(struct DjuiBase* caller) {
                     // Then we can append the number so it fits in the slot
 
                     // Should we look into making scrolling text for this?
-                    snprintf(newName, sizeof(newName), "%.9s... (%d)", gamepadChoices[i], count);
+                    if (strlen(gamepadChoices[i]) > 9) {
+                        snprintf(newName, sizeof(newName), "%.9s... (%d)", gamepadChoices[i], count);
+                    } else {
+                        snprintf(newName, sizeof(newName), "%s (%d)", gamepadChoices[i], count);
+                    }
                     
                     // Remove the old string and replace it with the new one
                     free(gamepadChoices[i]);
