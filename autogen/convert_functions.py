@@ -1248,6 +1248,10 @@ def doc_function(fname, function):
     rtype, rlink = translate_type_to_lua(function['type'])
     param_str = ', '.join([x['identifier'] for x in function['params']])
 
+    if description != "":
+        s += '\n### Description\n'
+        s +=  f'{description}\n'
+
     s += "\n### Lua Example\n"
     if rtype != None:
         s += "`local %sValue = %s(%s)`\n" % (rtype.replace('`', '').split(' ')[0], fid, param_str)
@@ -1288,10 +1292,6 @@ def doc_function(fname, function):
 
     s += '\n### C Prototype\n'
     s += '`%s`\n' % function['line'].strip()
-    
-    if description != "":
-        s += '\n### Description\n'
-        s +=  f'{description}\n'
 
     s += '\n[:arrow_up_small:](#)\n\n<br />\n'
 

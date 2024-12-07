@@ -1766,6 +1766,9 @@
 
 ## [get_fog_color](#get_fog_color)
 
+### Description
+Gets a value of the global fog color
+
 ### Lua Example
 `local integerValue = get_fog_color(index)`
 
@@ -1780,14 +1783,14 @@
 ### C Prototype
 `u8 get_fog_color(u8 index);`
 
-### Description
-Gets a value of the global fog color
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [get_fog_intensity](#get_fog_intensity)
+
+### Description
+Gets the intensity of the fog
 
 ### Lua Example
 `local numberValue = get_fog_intensity()`
@@ -1801,14 +1804,14 @@ Gets a value of the global fog color
 ### C Prototype
 `f32 get_fog_intensity(void);`
 
-### Description
-Gets the intensity of the fog
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [get_lighting_color](#get_lighting_color)
+
+### Description
+Gets a value of the global lighting color
 
 ### Lua Example
 `local integerValue = get_lighting_color(index)`
@@ -1824,14 +1827,14 @@ Gets the intensity of the fog
 ### C Prototype
 `u8 get_lighting_color(u8 index);`
 
-### Description
-Gets a value of the global lighting color
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [get_lighting_color_ambient](#get_lighting_color_ambient)
+
+### Description
+Gets a value of the global ambient lighting color
 
 ### Lua Example
 `local integerValue = get_lighting_color_ambient(index)`
@@ -1847,14 +1850,14 @@ Gets a value of the global lighting color
 ### C Prototype
 `u8 get_lighting_color_ambient(u8 index);`
 
-### Description
-Gets a value of the global ambient lighting color
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [get_lighting_dir](#get_lighting_dir)
+
+### Description
+Gets a value of the global lighting direction
 
 ### Lua Example
 `local numberValue = get_lighting_dir(index)`
@@ -1870,14 +1873,14 @@ Gets a value of the global ambient lighting color
 ### C Prototype
 `f32 get_lighting_dir(u8 index);`
 
-### Description
-Gets a value of the global lighting direction
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [get_skybox](#get_skybox)
+
+### Description
+Gets the current skybox
 
 ### Lua Example
 `local integerValue = get_skybox()`
@@ -1891,14 +1894,14 @@ Gets a value of the global lighting direction
 ### C Prototype
 `s8 get_skybox(void);`
 
-### Description
-Gets the current skybox
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [get_skybox_color](#get_skybox_color)
+
+### Description
+Gets a value of the global skybox color
 
 ### Lua Example
 `local integerValue = get_skybox_color(index)`
@@ -1914,14 +1917,14 @@ Gets the current skybox
 ### C Prototype
 `u8 get_skybox_color(u8 index);`
 
-### Description
-Gets a value of the global skybox color
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [get_vertex_color](#get_vertex_color)
+
+### Description
+Gets a value of the global vertex shading color
 
 ### Lua Example
 `local integerValue = get_vertex_color(index)`
@@ -1937,14 +1940,14 @@ Gets a value of the global skybox color
 ### C Prototype
 `u8 get_vertex_color(u8 index);`
 
-### Description
-Gets a value of the global vertex shading color
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [set_fog_color](#set_fog_color)
+
+### Description
+Sets a value of the global fog color
 
 ### Lua Example
 `set_fog_color(index, value)`
@@ -1961,14 +1964,14 @@ Gets a value of the global vertex shading color
 ### C Prototype
 `void set_fog_color(u8 index, u8 value);`
 
-### Description
-Sets a value of the global fog color
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [set_fog_intensity](#set_fog_intensity)
+
+### Description
+Sets the intensity of the fog (this value scales very quickly, 1.0 to 1.1 is a desirable range)
 
 ### Lua Example
 `set_fog_intensity(intensity)`
@@ -1984,14 +1987,14 @@ Sets a value of the global fog color
 ### C Prototype
 `void set_fog_intensity(f32 intensity);`
 
-### Description
-Sets the intensity of the fog (this value scales very quickly, 1.0 to 1.1 is a desirable range)
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [set_lighting_color](#set_lighting_color)
+
+### Description
+Sets a value of the global lighting color
 
 ### Lua Example
 `set_lighting_color(index, value)`
@@ -2008,14 +2011,14 @@ Sets the intensity of the fog (this value scales very quickly, 1.0 to 1.1 is a d
 ### C Prototype
 `void set_lighting_color(u8 index, u8 value);`
 
-### Description
-Sets a value of the global lighting color
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [set_lighting_color_ambient](#set_lighting_color_ambient)
+
+### Description
+Sets a value of the global lighting color (run this after `set_lighting_color` for the ambient color to not be overriden)
 
 ### Lua Example
 `set_lighting_color_ambient(index, value)`
@@ -2032,14 +2035,14 @@ Sets a value of the global lighting color
 ### C Prototype
 `void set_lighting_color_ambient(u8 index, u8 value);`
 
-### Description
-Sets a value of the global lighting color (run this after `set_lighting_color` for the ambient color to not be overriden)
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [set_lighting_dir](#set_lighting_dir)
+
+### Description
+Sets a value of the global lighting direction
 
 ### Lua Example
 `set_lighting_dir(index, value)`
@@ -2056,14 +2059,14 @@ Sets a value of the global lighting color (run this after `set_lighting_color` f
 ### C Prototype
 `void set_lighting_dir(u8 index, f32 value);`
 
-### Description
-Sets a value of the global lighting direction
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [set_override_far](#set_override_far)
+
+### Description
+Sets the override far plane
 
 ### Lua Example
 `set_override_far(far)`
@@ -2079,14 +2082,14 @@ Sets a value of the global lighting direction
 ### C Prototype
 `void set_override_far(f32 far);`
 
-### Description
-Sets the override far plane
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [set_override_fov](#set_override_fov)
+
+### Description
+Sets the override FOV
 
 ### Lua Example
 `set_override_fov(fov)`
@@ -2102,14 +2105,14 @@ Sets the override far plane
 ### C Prototype
 `void set_override_fov(f32 fov);`
 
-### Description
-Sets the override FOV
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [set_override_near](#set_override_near)
+
+### Description
+Sets the override near plane
 
 ### Lua Example
 `set_override_near(near)`
@@ -2125,14 +2128,14 @@ Sets the override FOV
 ### C Prototype
 `void set_override_near(f32 near);`
 
-### Description
-Sets the override near plane
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [set_override_skybox](#set_override_skybox)
+
+### Description
+Sets the override skybox
 
 ### Lua Example
 `set_override_skybox(background)`
@@ -2148,14 +2151,14 @@ Sets the override near plane
 ### C Prototype
 `void set_override_skybox(s8 background);`
 
-### Description
-Sets the override skybox
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [set_skybox_color](#set_skybox_color)
+
+### Description
+Sets a value of the global skybox color
 
 ### Lua Example
 `set_skybox_color(index, value)`
@@ -2172,14 +2175,14 @@ Sets the override skybox
 ### C Prototype
 `void set_skybox_color(u8 index, u8 value);`
 
-### Description
-Sets a value of the global skybox color
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [set_vertex_color](#set_vertex_color)
+
+### Description
+Sets a value of the global vertex shading color
 
 ### Lua Example
 `set_vertex_color(index, value)`
@@ -2195,9 +2198,6 @@ Sets a value of the global skybox color
 
 ### C Prototype
 `void set_vertex_color(u8 index, u8 value);`
-
-### Description
-Sets a value of the global vertex shading color
 
 [:arrow_up_small:](#)
 
@@ -2465,6 +2465,9 @@ Sets a value of the global vertex shading color
 
 ## [clamp](#clamp)
 
+### Description
+Clamps a signed 32-bit integer `a` between bounds `b` (minimum) and `c` (maximum)
+
 ### Lua Example
 `local integerValue = clamp(a, b, c)`
 
@@ -2481,14 +2484,14 @@ Sets a value of the global vertex shading color
 ### C Prototype
 `s32 clamp(s32 a, s32 b, s32 c);`
 
-### Description
-Clamps a signed 32-bit integer `a` between bounds `b` (minimum) and `c` (maximum)
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [clampf](#clampf)
+
+### Description
+Clamps a floating-point number `a` between bounds `b` (minimum) and `c` (maximum)
 
 ### Lua Example
 `local numberValue = clampf(a, b, c)`
@@ -2506,14 +2509,14 @@ Clamps a signed 32-bit integer `a` between bounds `b` (minimum) and `c` (maximum
 ### C Prototype
 `f32 clampf(f32 a, f32 b, f32 c);`
 
-### Description
-Clamps a floating-point number `a` between bounds `b` (minimum) and `c` (maximum)
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [degrees_to_sm64](#degrees_to_sm64)
+
+### Description
+Converts an angle from degrees to SM64 format
 
 ### Lua Example
 `local integerValue = degrees_to_sm64(degreesAngle)`
@@ -2529,14 +2532,14 @@ Clamps a floating-point number `a` between bounds `b` (minimum) and `c` (maximum
 ### C Prototype
 `s16 degrees_to_sm64(f32 degreesAngle);`
 
-### Description
-Converts an angle from degrees to SM64 format
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [hypotf](#hypotf)
+
+### Description
+Computes the hypotenuse of a right triangle given sides `a` and `b` using the Pythagorean theorem
 
 ### Lua Example
 `local numberValue = hypotf(a, b)`
@@ -2553,14 +2556,14 @@ Converts an angle from degrees to SM64 format
 ### C Prototype
 `f32 hypotf(f32 a, f32 b);`
 
-### Description
-Computes the hypotenuse of a right triangle given sides `a` and `b` using the Pythagorean theorem
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [max](#max)
+
+### Description
+Finds the maximum of two signed 32-bit integers
 
 ### Lua Example
 `local integerValue = max(a, b)`
@@ -2577,14 +2580,14 @@ Computes the hypotenuse of a right triangle given sides `a` and `b` using the Py
 ### C Prototype
 `s32 max(s32 a, s32 b);`
 
-### Description
-Finds the maximum of two signed 32-bit integers
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [maxf](#maxf)
+
+### Description
+Finds the maximum of two floating-point numbers
 
 ### Lua Example
 `local numberValue = maxf(a, b)`
@@ -2601,14 +2604,14 @@ Finds the maximum of two signed 32-bit integers
 ### C Prototype
 `f32 maxf(f32 a, f32 b);`
 
-### Description
-Finds the maximum of two floating-point numbers
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [min](#min)
+
+### Description
+Finds the minimum of two signed 32-bit integers
 
 ### Lua Example
 `local integerValue = min(a, b)`
@@ -2625,14 +2628,14 @@ Finds the maximum of two floating-point numbers
 ### C Prototype
 `s32 min(s32 a, s32 b);`
 
-### Description
-Finds the minimum of two signed 32-bit integers
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [minf](#minf)
+
+### Description
+Finds the minimum of two floating-point numbers
 
 ### Lua Example
 `local numberValue = minf(a, b)`
@@ -2649,14 +2652,14 @@ Finds the minimum of two signed 32-bit integers
 ### C Prototype
 `f32 minf(f32 a, f32 b);`
 
-### Description
-Finds the minimum of two floating-point numbers
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [radians_to_sm64](#radians_to_sm64)
+
+### Description
+Converts an angle from radians to SM64 format
 
 ### Lua Example
 `local integerValue = radians_to_sm64(radiansAngle)`
@@ -2672,14 +2675,14 @@ Finds the minimum of two floating-point numbers
 ### C Prototype
 `s16 radians_to_sm64(f32 radiansAngle);`
 
-### Description
-Converts an angle from radians to SM64 format
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [sm64_to_degrees](#sm64_to_degrees)
+
+### Description
+Converts an angle from SM64 format to degrees
 
 ### Lua Example
 `local numberValue = sm64_to_degrees(sm64Angle)`
@@ -2695,14 +2698,14 @@ Converts an angle from radians to SM64 format
 ### C Prototype
 `f32 sm64_to_degrees(s16 sm64Angle);`
 
-### Description
-Converts an angle from SM64 format to degrees
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [sm64_to_radians](#sm64_to_radians)
+
+### Description
+Converts an angle from SM64 format to radians
 
 ### Lua Example
 `local numberValue = sm64_to_radians(sm64Angle)`
@@ -2718,14 +2721,14 @@ Converts an angle from SM64 format to degrees
 ### C Prototype
 `f32 sm64_to_radians(s16 sm64Angle);`
 
-### Description
-Converts an angle from SM64 format to radians
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [sqr](#sqr)
+
+### Description
+Computes the square of a signed 32-bit integer
 
 ### Lua Example
 `local integerValue = sqr(x)`
@@ -2741,14 +2744,14 @@ Converts an angle from SM64 format to radians
 ### C Prototype
 `s32 sqr(s32 x);`
 
-### Description
-Computes the square of a signed 32-bit integer
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [sqrf](#sqrf)
+
+### Description
+Computes the square of a floating-point number
 
 ### Lua Example
 `local numberValue = sqrf(x)`
@@ -2764,9 +2767,6 @@ Computes the square of a signed 32-bit integer
 ### C Prototype
 `f32 sqrf(f32 x);`
 
-### Description
-Computes the square of a floating-point number
-
 [:arrow_up_small:](#)
 
 <br />
@@ -2778,6 +2778,9 @@ Computes the square of a floating-point number
 
 
 ## [allocate_mario_action](#allocate_mario_action)
+
+### Description
+Allocates an action ID with bitwise flags
 
 ### Lua Example
 `local integerValue = allocate_mario_action(actFlags)`
@@ -2793,14 +2796,14 @@ Computes the square of a floating-point number
 ### C Prototype
 `u32 allocate_mario_action(u32 actFlags);`
 
-### Description
-Allocates an action ID with bitwise flags
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [course_is_main_course](#course_is_main_course)
+
+### Description
+Checks if a course is a main course and not the castle or secret levels
 
 ### Lua Example
 `local booleanValue = course_is_main_course(courseNum)`
@@ -2816,14 +2819,14 @@ Allocates an action ID with bitwise flags
 ### C Prototype
 `bool course_is_main_course(u16 courseNum);`
 
-### Description
-Checks if a course is a main course and not the castle or secret levels
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [deref_s32_pointer](#deref_s32_pointer)
+
+### Description
+Gets the 32-bit integer value from the pointer
 
 ### Lua Example
 `local integerValue = deref_s32_pointer(pointer)`
@@ -2839,14 +2842,14 @@ Checks if a course is a main course and not the castle or secret levels
 ### C Prototype
 `s32 deref_s32_pointer(s32* pointer);`
 
-### Description
-Gets the 32-bit integer value from the pointer
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [djui_attempting_to_open_playerlist](#djui_attempting_to_open_playerlist)
+
+### Description
+Checks if the DJUI playerlist is attempting to be opened
 
 ### Lua Example
 `local booleanValue = djui_attempting_to_open_playerlist()`
@@ -2860,14 +2863,14 @@ Gets the 32-bit integer value from the pointer
 ### C Prototype
 `bool djui_attempting_to_open_playerlist(void);`
 
-### Description
-Checks if the DJUI playerlist is attempting to be opened
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [djui_is_playerlist_open](#djui_is_playerlist_open)
+
+### Description
+Checks if the DJUI playerlist is open
 
 ### Lua Example
 `local booleanValue = djui_is_playerlist_open()`
@@ -2881,14 +2884,14 @@ Checks if the DJUI playerlist is attempting to be opened
 ### C Prototype
 `bool djui_is_playerlist_open(void);`
 
-### Description
-Checks if the DJUI playerlist is open
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [djui_is_popup_disabled](#djui_is_popup_disabled)
+
+### Description
+Returns if popups are disabled
 
 ### Lua Example
 `local booleanValue = djui_is_popup_disabled()`
@@ -2902,14 +2905,14 @@ Checks if the DJUI playerlist is open
 ### C Prototype
 `bool djui_is_popup_disabled(void);`
 
-### Description
-Returns if popups are disabled
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [djui_menu_get_font](#djui_menu_get_font)
+
+### Description
+Gets the DJUI menu font
 
 ### Lua Example
 `local enumValue = djui_menu_get_font()`
@@ -2923,14 +2926,14 @@ Returns if popups are disabled
 ### C Prototype
 `enum DjuiFontType djui_menu_get_font(void);`
 
-### Description
-Gets the DJUI menu font
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [djui_menu_get_theme](#djui_menu_get_theme)
+
+### Description
+Gets the DJUI menu theme
 
 ### Lua Example
 `local DjuiThemeValue = djui_menu_get_theme()`
@@ -2944,14 +2947,14 @@ Gets the DJUI menu font
 ### C Prototype
 `struct DjuiTheme* djui_menu_get_theme(void);`
 
-### Description
-Gets the DJUI menu theme
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [djui_popup_create_global](#djui_popup_create_global)
+
+### Description
+Creates a DJUI popup that is broadcasted to every client
 
 ### Lua Example
 `djui_popup_create_global(message, lines)`
@@ -2968,14 +2971,14 @@ Gets the DJUI menu theme
 ### C Prototype
 `void djui_popup_create_global(const char* message, int lines);`
 
-### Description
-Creates a DJUI popup that is broadcasted to every client
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [djui_reset_popup_disabled_override](#djui_reset_popup_disabled_override)
+
+### Description
+Resets if popups are disabled
 
 ### Lua Example
 `djui_reset_popup_disabled_override()`
@@ -2989,14 +2992,14 @@ Creates a DJUI popup that is broadcasted to every client
 ### C Prototype
 `void djui_reset_popup_disabled_override(void);`
 
-### Description
-Resets if popups are disabled
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [djui_set_popup_disabled_override](#djui_set_popup_disabled_override)
+
+### Description
+Sets if popups are disabled
 
 ### Lua Example
 `djui_set_popup_disabled_override(value)`
@@ -3012,14 +3015,14 @@ Resets if popups are disabled
 ### C Prototype
 `void djui_set_popup_disabled_override(bool value);`
 
-### Description
-Sets if popups are disabled
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [get_coopnet_id](#get_coopnet_id)
+
+### Description
+Gets the CoopNet ID of a player if CoopNet is being used and the player is connected, otherwise "-1" is returned
 
 ### Lua Example
 `local stringValue = get_coopnet_id(localIndex)`
@@ -3035,14 +3038,14 @@ Sets if popups are disabled
 ### C Prototype
 `const char* get_coopnet_id(s8 localIndex);`
 
-### Description
-Gets the CoopNet ID of a player if CoopNet is being used and the player is connected, otherwise "-1" is returned
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [get_current_save_file_num](#get_current_save_file_num)
+
+### Description
+Gets the current save file number (1-indexed)
 
 ### Lua Example
 `local integerValue = get_current_save_file_num()`
@@ -3056,14 +3059,14 @@ Gets the CoopNet ID of a player if CoopNet is being used and the player is conne
 ### C Prototype
 `s16 get_current_save_file_num(void);`
 
-### Description
-Gets the current save file number (1-indexed)
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [get_date_and_time](#get_date_and_time)
+
+### Description
+Gets the system clock's date and time
 
 ### Lua Example
 `local DateTimeValue = get_date_and_time()`
@@ -3077,14 +3080,14 @@ Gets the current save file number (1-indexed)
 ### C Prototype
 `struct DateTime* get_date_and_time(void);`
 
-### Description
-Gets the system clock's date and time
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [get_dialog_box_state](#get_dialog_box_state)
+
+### Description
+Gets the current state of the dialog box
 
 ### Lua Example
 `local integerValue = get_dialog_box_state()`
@@ -3098,14 +3101,14 @@ Gets the system clock's date and time
 ### C Prototype
 `s8 get_dialog_box_state(void);`
 
-### Description
-Gets the current state of the dialog box
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [get_dialog_id](#get_dialog_id)
+
+### Description
+Gets the current dialog box ID
 
 ### Lua Example
 `local integerValue = get_dialog_id()`
@@ -3119,14 +3122,14 @@ Gets the current state of the dialog box
 ### C Prototype
 `s16 get_dialog_id(void);`
 
-### Description
-Gets the current dialog box ID
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [get_dialog_response](#get_dialog_response)
+
+### Description
+Gets the choice selected inside of a dialog box (0-1)
 
 ### Lua Example
 `local integerValue = get_dialog_response()`
@@ -3140,14 +3143,14 @@ Gets the current dialog box ID
 ### C Prototype
 `s32 get_dialog_response(void);`
 
-### Description
-Gets the choice selected inside of a dialog box (0-1)
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [get_envfx](#get_envfx)
+
+### Description
+Gets the non overridden environment effect (e.g. snow)
 
 ### Lua Example
 `local integerValue = get_envfx()`
@@ -3161,14 +3164,14 @@ Gets the choice selected inside of a dialog box (0-1)
 ### C Prototype
 `u16 get_envfx(void);`
 
-### Description
-Gets the non overridden environment effect (e.g. snow)
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [get_environment_region](#get_environment_region)
+
+### Description
+Gets an environment region (gas/water boxes) height value
 
 ### Lua Example
 `local numberValue = get_environment_region(index)`
@@ -3184,14 +3187,14 @@ Gets the non overridden environment effect (e.g. snow)
 ### C Prototype
 `f32 get_environment_region(u8 index);`
 
-### Description
-Gets an environment region (gas/water boxes) height value
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [get_global_timer](#get_global_timer)
+
+### Description
+Gets the global timer that has been ticking at 30 frames per second since game boot
 
 ### Lua Example
 `local integerValue = get_global_timer()`
@@ -3205,14 +3208,14 @@ Gets an environment region (gas/water boxes) height value
 ### C Prototype
 `u32 get_global_timer(void);`
 
-### Description
-Gets the global timer that has been ticking at 30 frames per second since game boot
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [get_got_file_coin_hi_score](#get_got_file_coin_hi_score)
+
+### Description
+Checks if the save file's coin "HI SCORE" was obtained with the last star or key collection
 
 ### Lua Example
 `local booleanValue = get_got_file_coin_hi_score()`
@@ -3226,14 +3229,14 @@ Gets the global timer that has been ticking at 30 frames per second since game b
 ### C Prototype
 `bool get_got_file_coin_hi_score(void);`
 
-### Description
-Checks if the save file's coin "HI SCORE" was obtained with the last star or key collection
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [get_hand_foot_pos_x](#get_hand_foot_pos_x)
+
+### Description
+Gets the X coordinate of Mario's hand (0-1) or foot (2-3) but it is important to note that the positions are not updated off-screen
 
 ### Lua Example
 `local numberValue = get_hand_foot_pos_x(m, index)`
@@ -3250,14 +3253,14 @@ Checks if the save file's coin "HI SCORE" was obtained with the last star or key
 ### C Prototype
 `f32 get_hand_foot_pos_x(struct MarioState* m, u8 index);`
 
-### Description
-Gets the X coordinate of Mario's hand (0-1) or foot (2-3) but it is important to note that the positions are not updated off-screen
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [get_hand_foot_pos_y](#get_hand_foot_pos_y)
+
+### Description
+Gets the Y coordinate of Mario's hand (0-1) or foot (2-3) but it is important to note that the positions are not updated off-screen
 
 ### Lua Example
 `local numberValue = get_hand_foot_pos_y(m, index)`
@@ -3274,14 +3277,14 @@ Gets the X coordinate of Mario's hand (0-1) or foot (2-3) but it is important to
 ### C Prototype
 `f32 get_hand_foot_pos_y(struct MarioState* m, u8 index);`
 
-### Description
-Gets the Y coordinate of Mario's hand (0-1) or foot (2-3) but it is important to note that the positions are not updated off-screen
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [get_hand_foot_pos_z](#get_hand_foot_pos_z)
+
+### Description
+Gets the Z coordinate of Mario's hand (0-1) or foot (2-3) but it is important to note that the positions are not updated off-screen
 
 ### Lua Example
 `local numberValue = get_hand_foot_pos_z(m, index)`
@@ -3298,14 +3301,14 @@ Gets the Y coordinate of Mario's hand (0-1) or foot (2-3) but it is important to
 ### C Prototype
 `f32 get_hand_foot_pos_z(struct MarioState* m, u8 index);`
 
-### Description
-Gets the Z coordinate of Mario's hand (0-1) or foot (2-3) but it is important to note that the positions are not updated off-screen
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [get_last_completed_course_num](#get_last_completed_course_num)
+
+### Description
+Gets the last course a star or key was collected in
 
 ### Lua Example
 `local integerValue = get_last_completed_course_num()`
@@ -3319,14 +3322,14 @@ Gets the Z coordinate of Mario's hand (0-1) or foot (2-3) but it is important to
 ### C Prototype
 `u8 get_last_completed_course_num(void);`
 
-### Description
-Gets the last course a star or key was collected in
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [get_last_completed_star_num](#get_last_completed_star_num)
+
+### Description
+Gets the last collected star's number (1-7)
 
 ### Lua Example
 `local integerValue = get_last_completed_star_num()`
@@ -3340,14 +3343,14 @@ Gets the last course a star or key was collected in
 ### C Prototype
 `u8 get_last_completed_star_num(void);`
 
-### Description
-Gets the last collected star's number (1-7)
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [get_last_star_or_key](#get_last_star_or_key)
+
+### Description
+Gets if the last objective collected was a star (0) or a key (1)
 
 ### Lua Example
 `local integerValue = get_last_star_or_key()`
@@ -3361,14 +3364,14 @@ Gets the last collected star's number (1-7)
 ### C Prototype
 `u8 get_last_star_or_key(void);`
 
-### Description
-Gets if the last objective collected was a star (0) or a key (1)
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [get_local_discord_id](#get_local_discord_id)
+
+### Description
+Gets the local discord ID if it isn't disabled, otherwise "0" is returned
 
 ### Lua Example
 `local stringValue = get_local_discord_id()`
@@ -3382,14 +3385,14 @@ Gets if the last objective collected was a star (0) or a key (1)
 ### C Prototype
 `const char* get_local_discord_id(void);`
 
-### Description
-Gets the local discord ID if it isn't disabled, otherwise "0" is returned
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [get_network_area_timer](#get_network_area_timer)
+
+### Description
+Gets the current area's networked timer
 
 ### Lua Example
 `local integerValue = get_network_area_timer()`
@@ -3403,14 +3406,14 @@ Gets the local discord ID if it isn't disabled, otherwise "0" is returned
 ### C Prototype
 `u32 get_network_area_timer(void);`
 
-### Description
-Gets the current area's networked timer
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [get_os_name](#get_os_name)
+
+### Description
+Gets the name of the operating system the game is running on
 
 ### Lua Example
 `local stringValue = get_os_name()`
@@ -3424,14 +3427,14 @@ Gets the current area's networked timer
 ### C Prototype
 `const char* get_os_name(void);`
 
-### Description
-Gets the name of the operating system the game is running on
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [get_save_file_modified](#get_save_file_modified)
+
+### Description
+Checks if the save file has been modified without saving
 
 ### Lua Example
 `local booleanValue = get_save_file_modified()`
@@ -3445,14 +3448,14 @@ Gets the name of the operating system the game is running on
 ### C Prototype
 `bool get_save_file_modified(void);`
 
-### Description
-Checks if the save file has been modified without saving
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [get_temp_s32_pointer](#get_temp_s32_pointer)
+
+### Description
+Returns a temporary 32-bit integer pointer
 
 ### Lua Example
 `local PointerValue = get_temp_s32_pointer(initialValue)`
@@ -3468,14 +3471,14 @@ Checks if the save file has been modified without saving
 ### C Prototype
 `s32* get_temp_s32_pointer(s32 initialValue);`
 
-### Description
-Returns a temporary 32-bit integer pointer
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [get_time](#get_time)
+
+### Description
+Gets the Unix Timestamp
 
 ### Lua Example
 `local integerValue = get_time()`
@@ -3489,14 +3492,14 @@ Returns a temporary 32-bit integer pointer
 ### C Prototype
 `s64 get_time(void);`
 
-### Description
-Gets the Unix Timestamp
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [get_ttc_speed_setting](#get_ttc_speed_setting)
+
+### Description
+Gets TTC's speed setting
 
 ### Lua Example
 `local integerValue = get_ttc_speed_setting()`
@@ -3510,14 +3513,14 @@ Gets the Unix Timestamp
 ### C Prototype
 `s16 get_ttc_speed_setting(void);`
 
-### Description
-Gets TTC's speed setting
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [get_volume_env](#get_volume_env)
+
+### Description
+Gets the volume level of environment sounds effects
 
 ### Lua Example
 `local numberValue = get_volume_env()`
@@ -3531,14 +3534,14 @@ Gets TTC's speed setting
 ### C Prototype
 `f32 get_volume_env(void);`
 
-### Description
-Gets the volume level of environment sounds effects
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [get_volume_level](#get_volume_level)
+
+### Description
+Gets the volume level of music
 
 ### Lua Example
 `local numberValue = get_volume_level()`
@@ -3552,14 +3555,14 @@ Gets the volume level of environment sounds effects
 ### C Prototype
 `f32 get_volume_level(void);`
 
-### Description
-Gets the volume level of music
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [get_volume_master](#get_volume_master)
+
+### Description
+Gets the master volume level
 
 ### Lua Example
 `local numberValue = get_volume_master()`
@@ -3573,14 +3576,14 @@ Gets the volume level of music
 ### C Prototype
 `f32 get_volume_master(void);`
 
-### Description
-Gets the master volume level
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [get_volume_sfx](#get_volume_sfx)
+
+### Description
+Gets the volume level of sound effects
 
 ### Lua Example
 `local numberValue = get_volume_sfx()`
@@ -3594,14 +3597,14 @@ Gets the master volume level
 ### C Prototype
 `f32 get_volume_sfx(void);`
 
-### Description
-Gets the volume level of sound effects
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [get_water_level](#get_water_level)
+
+### Description
+Gets the water level in an area
 
 ### Lua Example
 `local integerValue = get_water_level(index)`
@@ -3617,14 +3620,14 @@ Gets the volume level of sound effects
 ### C Prototype
 `s16 get_water_level(u8 index);`
 
-### Description
-Gets the water level in an area
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [hud_get_flash](#hud_get_flash)
+
+### Description
+Gets if the star counter on the HUD should flash
 
 ### Lua Example
 `local integerValue = hud_get_flash()`
@@ -3637,9 +3640,6 @@ Gets the water level in an area
 
 ### C Prototype
 `s8 hud_get_flash(void);`
-
-### Description
-Gets if the star counter on the HUD should flash
 
 [:arrow_up_small:](#)
 
@@ -3667,6 +3667,9 @@ Gets if the star counter on the HUD should flash
 
 ## [hud_hide](#hud_hide)
 
+### Description
+Hides the HUD
+
 ### Lua Example
 `hud_hide()`
 
@@ -3679,14 +3682,14 @@ Gets if the star counter on the HUD should flash
 ### C Prototype
 `void hud_hide(void);`
 
-### Description
-Hides the HUD
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [hud_is_hidden](#hud_is_hidden)
+
+### Description
+Checks if the HUD is hidden
 
 ### Lua Example
 `local booleanValue = hud_is_hidden()`
@@ -3700,14 +3703,14 @@ Hides the HUD
 ### C Prototype
 `bool hud_is_hidden(void);`
 
-### Description
-Checks if the HUD is hidden
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [hud_render_power_meter](#hud_render_power_meter)
+
+### Description
+Renders a power meter on the HUD
 
 ### Lua Example
 `hud_render_power_meter(health, x, y, width, height)`
@@ -3727,14 +3730,14 @@ Checks if the HUD is hidden
 ### C Prototype
 `void hud_render_power_meter(s32 health, f32 x, f32 y, f32 width, f32 height);`
 
-### Description
-Renders a power meter on the HUD
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [hud_render_power_meter_interpolated](#hud_render_power_meter_interpolated)
+
+### Description
+Renders an interpolated power meter on the HUD
 
 ### Lua Example
 `hud_render_power_meter_interpolated(health, prevX, prevY, prevWidth, prevHeight, x, y, width, height)`
@@ -3758,14 +3761,14 @@ Renders a power meter on the HUD
 ### C Prototype
 `void hud_render_power_meter_interpolated(s32 health, f32 prevX, f32 prevY, f32 prevWidth, f32 prevHeight, f32 x, f32 y, f32 width, f32 height);`
 
-### Description
-Renders an interpolated power meter on the HUD
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [hud_set_flash](#hud_set_flash)
+
+### Description
+Sets if the star counter on the HUD should flash
 
 ### Lua Example
 `hud_set_flash(value)`
@@ -3781,14 +3784,14 @@ Renders an interpolated power meter on the HUD
 ### C Prototype
 `void hud_set_flash(s8 value);`
 
-### Description
-Sets if the star counter on the HUD should flash
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [hud_set_value](#hud_set_value)
+
+### Description
+Sets a HUD display value
 
 ### Lua Example
 `hud_set_value(type, value)`
@@ -3805,14 +3808,14 @@ Sets if the star counter on the HUD should flash
 ### C Prototype
 `void hud_set_value(enum HudDisplayValue type, s32 value);`
 
-### Description
-Sets a HUD display value
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [hud_show](#hud_show)
+
+### Description
+Shows the HUD
 
 ### Lua Example
 `hud_show()`
@@ -3826,14 +3829,14 @@ Sets a HUD display value
 ### C Prototype
 `void hud_show(void);`
 
-### Description
-Shows the HUD
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [is_game_paused](#is_game_paused)
+
+### Description
+Checks if the game is paused
 
 ### Lua Example
 `local booleanValue = is_game_paused()`
@@ -3847,14 +3850,14 @@ Shows the HUD
 ### C Prototype
 `bool is_game_paused(void);`
 
-### Description
-Checks if the game is paused
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [is_transition_playing](#is_transition_playing)
+
+### Description
+Checks if a screen transition is playing
 
 ### Lua Example
 `local booleanValue = is_transition_playing()`
@@ -3868,14 +3871,14 @@ Checks if the game is paused
 ### C Prototype
 `bool is_transition_playing(void);`
 
-### Description
-Checks if a screen transition is playing
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [mod_file_exists](#mod_file_exists)
+
+### Description
+Checks if a file exists inside of a mod
 
 ### Lua Example
 `local booleanValue = mod_file_exists(filename)`
@@ -3891,14 +3894,14 @@ Checks if a screen transition is playing
 ### C Prototype
 `bool mod_file_exists(const char* filename);`
 
-### Description
-Checks if a file exists inside of a mod
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [movtexqc_register](#movtexqc_register)
+
+### Description
+Registers a custom moving texture entry (used for vanilla water boxes)
 
 ### Lua Example
 `movtexqc_register(name, level, area, type)`
@@ -3917,14 +3920,14 @@ Checks if a file exists inside of a mod
 ### C Prototype
 `void movtexqc_register(const char* name, s16 level, s16 area, s16 type);`
 
-### Description
-Registers a custom moving texture entry (used for vanilla water boxes)
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [play_transition](#play_transition)
+
+### Description
+Plays a screen transition
 
 ### Lua Example
 `play_transition(transType, time, red, green, blue)`
@@ -3944,14 +3947,14 @@ Registers a custom moving texture entry (used for vanilla water boxes)
 ### C Prototype
 `void play_transition(s16 transType, s16 time, u8 red, u8 green, u8 blue);`
 
-### Description
-Plays a screen transition
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [reset_window_title](#reset_window_title)
+
+### Description
+Resets the window title
 
 ### Lua Example
 `reset_window_title()`
@@ -3965,14 +3968,14 @@ Plays a screen transition
 ### C Prototype
 `void reset_window_title(void);`
 
-### Description
-Resets the window title
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [save_file_get_using_backup_slot](#save_file_get_using_backup_slot)
+
+### Description
+Checks if the save file is using its backup slot
 
 ### Lua Example
 `local booleanValue = save_file_get_using_backup_slot()`
@@ -3986,14 +3989,14 @@ Resets the window title
 ### C Prototype
 `bool save_file_get_using_backup_slot(void);`
 
-### Description
-Checks if the save file is using its backup slot
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [save_file_set_using_backup_slot](#save_file_set_using_backup_slot)
+
+### Description
+Sets if the save file should use its backup slot
 
 ### Lua Example
 `save_file_set_using_backup_slot(usingBackupSlot)`
@@ -4009,14 +4012,14 @@ Checks if the save file is using its backup slot
 ### C Prototype
 `void save_file_set_using_backup_slot(bool usingBackupSlot);`
 
-### Description
-Sets if the save file should use its backup slot
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [set_environment_region](#set_environment_region)
+
+### Description
+Sets an environment region (gas/water boxes) height value
 
 ### Lua Example
 `set_environment_region(index, value)`
@@ -4033,14 +4036,14 @@ Sets if the save file should use its backup slot
 ### C Prototype
 `void set_environment_region(u8 index, s32 value);`
 
-### Description
-Sets an environment region (gas/water boxes) height value
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [set_got_file_coin_hi_score](#set_got_file_coin_hi_score)
+
+### Description
+Sets if the save file's coin "HI SCORE" was obtained with the last star or key collection
 
 ### Lua Example
 `set_got_file_coin_hi_score(value)`
@@ -4056,14 +4059,14 @@ Sets an environment region (gas/water boxes) height value
 ### C Prototype
 `void set_got_file_coin_hi_score(bool value);`
 
-### Description
-Sets if the save file's coin "HI SCORE" was obtained with the last star or key collection
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [set_last_completed_course_num](#set_last_completed_course_num)
+
+### Description
+Sets the last course a star or key was collected in
 
 ### Lua Example
 `set_last_completed_course_num(courseNum)`
@@ -4079,14 +4082,14 @@ Sets if the save file's coin "HI SCORE" was obtained with the last star or key c
 ### C Prototype
 `void set_last_completed_course_num(u8 courseNum);`
 
-### Description
-Sets the last course a star or key was collected in
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [set_last_completed_star_num](#set_last_completed_star_num)
+
+### Description
+Sets the last collected star's number (1-7)
 
 ### Lua Example
 `set_last_completed_star_num(starNum)`
@@ -4102,14 +4105,14 @@ Sets the last course a star or key was collected in
 ### C Prototype
 `void set_last_completed_star_num(u8 starNum);`
 
-### Description
-Sets the last collected star's number (1-7)
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [set_last_star_or_key](#set_last_star_or_key)
+
+### Description
+Sets if the last objective collected was a star (0) or a key (1)
 
 ### Lua Example
 `set_last_star_or_key(value)`
@@ -4125,14 +4128,14 @@ Sets the last collected star's number (1-7)
 ### C Prototype
 `void set_last_star_or_key(u8 value);`
 
-### Description
-Sets if the last objective collected was a star (0) or a key (1)
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [set_override_envfx](#set_override_envfx)
+
+### Description
+Sets the override environment effect (e.g. snow)
 
 ### Lua Example
 `set_override_envfx(envfx)`
@@ -4148,14 +4151,14 @@ Sets if the last objective collected was a star (0) or a key (1)
 ### C Prototype
 `void set_override_envfx(s32 envfx);`
 
-### Description
-Sets the override environment effect (e.g. snow)
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [set_save_file_modified](#set_save_file_modified)
+
+### Description
+Sets if the save file has been modified without saving
 
 ### Lua Example
 `set_save_file_modified(value)`
@@ -4171,14 +4174,14 @@ Sets the override environment effect (e.g. snow)
 ### C Prototype
 `void set_save_file_modified(bool value);`
 
-### Description
-Sets if the save file has been modified without saving
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [set_ttc_speed_setting](#set_ttc_speed_setting)
+
+### Description
+Sets TTC's speed setting (TTC_SPEED_*)
 
 ### Lua Example
 `set_ttc_speed_setting(speed)`
@@ -4194,14 +4197,14 @@ Sets if the save file has been modified without saving
 ### C Prototype
 `void set_ttc_speed_setting(s16 speed);`
 
-### Description
-Sets TTC's speed setting (TTC_SPEED_*)
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [set_volume_env](#set_volume_env)
+
+### Description
+Sets the volume level of environment sounds effects
 
 ### Lua Example
 `set_volume_env(volume)`
@@ -4217,14 +4220,14 @@ Sets TTC's speed setting (TTC_SPEED_*)
 ### C Prototype
 `void set_volume_env(f32 volume);`
 
-### Description
-Sets the volume level of environment sounds effects
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [set_volume_level](#set_volume_level)
+
+### Description
+Sets the volume level of music
 
 ### Lua Example
 `set_volume_level(volume)`
@@ -4240,14 +4243,14 @@ Sets the volume level of environment sounds effects
 ### C Prototype
 `void set_volume_level(f32 volume);`
 
-### Description
-Sets the volume level of music
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [set_volume_master](#set_volume_master)
+
+### Description
+Sets the master volume level
 
 ### Lua Example
 `set_volume_master(volume)`
@@ -4263,14 +4266,14 @@ Sets the volume level of music
 ### C Prototype
 `void set_volume_master(f32 volume);`
 
-### Description
-Sets the master volume level
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [set_volume_sfx](#set_volume_sfx)
+
+### Description
+Sets the volume level of sound effects
 
 ### Lua Example
 `set_volume_sfx(volume)`
@@ -4286,14 +4289,14 @@ Sets the master volume level
 ### C Prototype
 `void set_volume_sfx(f32 volume);`
 
-### Description
-Sets the volume level of sound effects
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [set_water_level](#set_water_level)
+
+### Description
+Sets the water level in an area
 
 ### Lua Example
 `set_water_level(index, height, sync)`
@@ -4311,14 +4314,14 @@ Sets the volume level of sound effects
 ### C Prototype
 `void set_water_level(u8 index, s16 height, bool sync);`
 
-### Description
-Sets the water level in an area
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [set_window_title](#set_window_title)
+
+### Description
+Sets the window title to a custom title
 
 ### Lua Example
 `set_window_title(title)`
@@ -4333,9 +4336,6 @@ Sets the water level in an area
 
 ### C Prototype
 `void set_window_title(const char* title);`
-
-### Description
-Sets the window title to a custom title
 
 [:arrow_up_small:](#)
 
