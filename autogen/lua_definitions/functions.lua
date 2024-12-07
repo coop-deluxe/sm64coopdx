@@ -8351,110 +8351,131 @@ end
 
 --- @param actFlags integer
 --- @return integer
+--- Allocates an action ID with bitwise flags
 function allocate_mario_action(actFlags)
     -- ...
 end
 
 --- @param courseNum integer
 --- @return boolean
+--- Checks if a course is a main course and not the castle or secret levels
 function course_is_main_course(courseNum)
     -- ...
 end
 
 --- @param pointer Pointer_integer
 --- @return integer
+--- Gets the 32-bit integer value from the pointer
 function deref_s32_pointer(pointer)
     -- ...
 end
 
 --- @return boolean
+--- Checks if the DJUI playerlist is attempting to be opened
 function djui_attempting_to_open_playerlist()
     -- ...
 end
 
 --- @return boolean
+--- Checks if the DJUI playerlist is open
 function djui_is_playerlist_open()
     -- ...
 end
 
 --- @return boolean
+--- Returns if popups are disabled
 function djui_is_popup_disabled()
     -- ...
 end
 
 --- @return DjuiFontType
+--- Gets the DJUI menu font
 function djui_menu_get_font()
     -- ...
 end
 
 --- @return DjuiTheme
+--- Gets the DJUI menu theme
 function djui_menu_get_theme()
     -- ...
 end
 
 --- @param message string
 --- @param lines integer
+--- Creates a DJUI popup that is broadcasted to every client
 function djui_popup_create_global(message, lines)
     -- ...
 end
 
+--- Resets if popups are disabled
 function djui_reset_popup_disabled_override()
     -- ...
 end
 
 --- @param value boolean
+--- Sets if popups are disabled
 function djui_set_popup_disabled_override(value)
     -- ...
 end
 
 --- @param localIndex integer
 --- @return string
+--- Gets the CoopNet ID of a player if CoopNet is being used and the player is connected, otherwise "-1" is returned
 function get_coopnet_id(localIndex)
     -- ...
 end
 
 --- @return integer
+--- Gets the current save file number (1-indexed)
 function get_current_save_file_num()
     -- ...
 end
 
 --- @return DateTime
+--- Gets the system clock's date and time
 function get_date_and_time()
     -- ...
 end
 
 --- @return integer
+--- Gets the current state of the dialog box
 function get_dialog_box_state()
     -- ...
 end
 
 --- @return integer
+--- Gets the current dialog box ID
 function get_dialog_id()
     -- ...
 end
 
 --- @return integer
+--- Gets the choice selected inside of a dialog box (0-1)
 function get_dialog_response()
     -- ...
 end
 
 --- @return integer
+--- Gets the non overridden environment effect (e.g. snow)
 function get_envfx()
     -- ...
 end
 
 --- @param index integer
 --- @return number
+--- Gets an environment region (gas/water boxes) height value
 function get_environment_region(index)
     -- ...
 end
 
 --- @return integer
+--- Gets the global timer that has been ticking at 30 frames per second since game boot
 function get_global_timer()
     -- ...
 end
 
 --- @return boolean
+--- Checks if the save file's coin "HI SCORE" was obtained with the last star or key collection
 function get_got_file_coin_hi_score()
     -- ...
 end
@@ -8462,6 +8483,7 @@ end
 --- @param m MarioState
 --- @param index integer
 --- @return number
+--- Gets the X coordinate of Mario's hand (0-1) or foot (2-3) but it is important to note that the positions are not updated off-screen
 function get_hand_foot_pos_x(m, index)
     -- ...
 end
@@ -8469,6 +8491,7 @@ end
 --- @param m MarioState
 --- @param index integer
 --- @return number
+--- Gets the Y coordinate of Mario's hand (0-1) or foot (2-3) but it is important to note that the positions are not updated off-screen
 function get_hand_foot_pos_y(m, index)
     -- ...
 end
@@ -8476,88 +8499,105 @@ end
 --- @param m MarioState
 --- @param index integer
 --- @return number
+--- Gets the Z coordinate of Mario's hand (0-1) or foot (2-3) but it is important to note that the positions are not updated off-screen
 function get_hand_foot_pos_z(m, index)
     -- ...
 end
 
 --- @return integer
+--- Gets the last course a star or key was collected in
 function get_last_completed_course_num()
     -- ...
 end
 
 --- @return integer
+--- Gets the last collected star's number (1-7)
 function get_last_completed_star_num()
     -- ...
 end
 
 --- @return integer
+--- Gets if the last objective collected was a star (0) or a key (1)
 function get_last_star_or_key()
     -- ...
 end
 
 --- @return string
+--- Gets the local discord ID if it isn't disabled, otherwise "0" is returned
 function get_local_discord_id()
     -- ...
 end
 
 --- @return integer
+--- Gets the current area's networked timer
 function get_network_area_timer()
     -- ...
 end
 
 --- @return string
+--- Gets the name of the operating system the game is running on
 function get_os_name()
     -- ...
 end
 
 --- @return boolean
+--- Checks if the save file has been modified without saving
 function get_save_file_modified()
     -- ...
 end
 
 --- @param initialValue integer
 --- @return Pointer_integer
+--- Returns a temporary 32-bit integer pointer
 function get_temp_s32_pointer(initialValue)
     -- ...
 end
 
 --- @return integer
+--- Gets the Unix Timestamp
 function get_time()
     -- ...
 end
 
 --- @return integer
+--- Gets TTC's speed setting
 function get_ttc_speed_setting()
     -- ...
 end
 
 --- @return number
+--- Gets the volume level of environment sounds effects
 function get_volume_env()
     -- ...
 end
 
 --- @return number
+--- Gets the volume level of music
 function get_volume_level()
     -- ...
 end
 
 --- @return number
+--- Gets the master volume level
 function get_volume_master()
     -- ...
 end
 
 --- @return number
+--- Gets the volume level of sound effects
 function get_volume_sfx()
     -- ...
 end
 
 --- @param index integer
 --- @return integer
+--- Gets the water level in an area
 function get_water_level(index)
     -- ...
 end
 
 --- @return integer
+--- Gets if the star counter on the HUD should flash
 function hud_get_flash()
     -- ...
 end
@@ -8568,11 +8608,13 @@ function hud_get_value(type)
     -- ...
 end
 
+--- Hides the HUD
 function hud_hide()
     -- ...
 end
 
 --- @return boolean
+--- Checks if the HUD is hidden
 function hud_is_hidden()
     -- ...
 end
@@ -8582,6 +8624,7 @@ end
 --- @param y number
 --- @param width number
 --- @param height number
+--- Renders a power meter on the HUD
 function hud_render_power_meter(health, x, y, width, height)
     -- ...
 end
@@ -8595,37 +8638,44 @@ end
 --- @param y number
 --- @param width number
 --- @param height number
+--- Renders an interpolated power meter on the HUD
 function hud_render_power_meter_interpolated(health, prevX, prevY, prevWidth, prevHeight, x, y, width, height)
     -- ...
 end
 
 --- @param value integer
+--- Sets if the star counter on the HUD should flash
 function hud_set_flash(value)
     -- ...
 end
 
 --- @param type HudDisplayValue
 --- @param value integer
+--- Sets a HUD display value
 function hud_set_value(type, value)
     -- ...
 end
 
+--- Shows the HUD
 function hud_show()
     -- ...
 end
 
 --- @return boolean
+--- Checks if the game is paused
 function is_game_paused()
     -- ...
 end
 
 --- @return boolean
+--- Checks if a screen transition is playing
 function is_transition_playing()
     -- ...
 end
 
 --- @param filename string
 --- @return boolean
+--- Checks if a file exists inside of a mod
 function mod_file_exists(filename)
     -- ...
 end
@@ -8634,6 +8684,7 @@ end
 --- @param level integer
 --- @param area integer
 --- @param type integer
+--- Registers a custom moving texture entry (used for vanilla water boxes)
 function movtexqc_register(name, level, area, type)
     -- ...
 end
@@ -8643,81 +8694,97 @@ end
 --- @param red integer
 --- @param green integer
 --- @param blue integer
+--- Plays a screen transition
 function play_transition(transType, time, red, green, blue)
     -- ...
 end
 
+--- Resets the window title
 function reset_window_title()
     -- ...
 end
 
 --- @return boolean
+--- Checks if the save file is using its backup slot
 function save_file_get_using_backup_slot()
     -- ...
 end
 
 --- @param usingBackupSlot boolean
+--- Sets if the save file should use its backup slot
 function save_file_set_using_backup_slot(usingBackupSlot)
     -- ...
 end
 
 --- @param index integer
 --- @param value integer
+--- Sets an environment region (gas/water boxes) height value
 function set_environment_region(index, value)
     -- ...
 end
 
 --- @param value boolean
+--- Sets if the save file's coin "HI SCORE" was obtained with the last star or key collection
 function set_got_file_coin_hi_score(value)
     -- ...
 end
 
 --- @param courseNum integer
+--- Sets the last course a star or key was collected in
 function set_last_completed_course_num(courseNum)
     -- ...
 end
 
 --- @param starNum integer
+--- Sets the last collected star's number (1-7)
 function set_last_completed_star_num(starNum)
     -- ...
 end
 
 --- @param value integer
+--- Sets if the last objective collected was a star (0) or a key (1)
 function set_last_star_or_key(value)
     -- ...
 end
 
 --- @param envfx integer
+--- Sets the override environment effect (e.g. snow)
 function set_override_envfx(envfx)
     -- ...
 end
 
 --- @param value boolean
+--- Sets if the save file has been modified without saving
 function set_save_file_modified(value)
     -- ...
 end
 
 --- @param speed integer
+--- Sets TTC's speed setting (TTC_SPEED_*)
 function set_ttc_speed_setting(speed)
     -- ...
 end
 
 --- @param volume number
+--- Sets the volume level of environment sounds effects
 function set_volume_env(volume)
     -- ...
 end
 
 --- @param volume number
+--- Sets the volume level of music
 function set_volume_level(volume)
     -- ...
 end
 
 --- @param volume number
+--- Sets the master volume level
 function set_volume_master(volume)
     -- ...
 end
 
 --- @param volume number
+--- Sets the volume level of sound effects
 function set_volume_sfx(volume)
     -- ...
 end
@@ -8725,11 +8792,13 @@ end
 --- @param index integer
 --- @param height integer
 --- @param sync boolean
+--- Sets the water level in an area
 function set_water_level(index, height, sync)
     -- ...
 end
 
 --- @param title string
+--- Sets the window title to a custom title
 function set_window_title(title)
     -- ...
 end

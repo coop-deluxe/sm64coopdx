@@ -118,7 +118,7 @@ s8 get_dialog_box_state(void) {
 ///
 
 extern u8 gLastCollectedStarOrKey;
-s32 get_last_star_or_key(void) {
+u8 get_last_star_or_key(void) {
     return gLastCollectedStarOrKey;
 }
 
@@ -150,7 +150,7 @@ bool get_got_file_coin_hi_score(void) {
 }
 
 void set_got_file_coin_hi_score(bool value) {
-    gGotFileCoinHiScore = value ? TRUE : FALSE;
+    gGotFileCoinHiScore = value;
 }
 
 extern s8 gSaveFileModified;
@@ -159,7 +159,7 @@ bool get_save_file_modified(void) {
 }
 
 void set_save_file_modified(bool value) {
-    gSaveFileModified = value ? TRUE : FALSE;
+    gSaveFileModified = value;
 }
 
 ///

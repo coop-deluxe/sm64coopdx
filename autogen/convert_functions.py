@@ -1,5 +1,6 @@
 import os
 import re
+import math
 from extract_functions import *
 from common import *
 
@@ -812,6 +813,7 @@ N/A
 ############################################################################
 
 total_functions = 0
+total_doc_functions = 0
 header_h = ""
 
 def reject_line(line):
@@ -978,6 +980,9 @@ def build_function(function, do_extern):
     else:
         global total_functions
         total_functions += 1
+        if function['description'] != "":
+            global total_doc_functions
+            total_doc_functions += 1
 
     return s + "\n"
 
@@ -1427,13 +1432,16 @@ def main():
     with open(filename, 'w', newline='\n') as out:
         out.write(gen)
 
-    print('REJECTS:\n%s' % rejects)
+    if rejects != "":
+        print(f"REJECTS:\n{rejects}")
 
     doc_files(processed_files)
     def_files(processed_files)
 
     global total_functions
-    print('Total functions: ' + str(total_functions))
+    print(f"Total functions: {total_functions}")
+    global total_doc_functions
+    print(f"Total documented functions: {total_doc_functions} ({round((total_doc_functions / total_functions) * 100, 2)}%)")
 
     if len(sys.argv) >= 2 and sys.argv[1] == 'fuzz':
         output_fuzz_file()

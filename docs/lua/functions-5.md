@@ -2736,6 +2736,9 @@ Computes the square of a floating-point number
 ### C Prototype
 `u32 allocate_mario_action(u32 actFlags);`
 
+### Description
+Allocates an action ID with bitwise flags
+
 [:arrow_up_small:](#)
 
 <br />
@@ -2755,6 +2758,9 @@ Computes the square of a floating-point number
 
 ### C Prototype
 `bool course_is_main_course(u16 courseNum);`
+
+### Description
+Checks if a course is a main course and not the castle or secret levels
 
 [:arrow_up_small:](#)
 
@@ -2776,6 +2782,9 @@ Computes the square of a floating-point number
 ### C Prototype
 `s32 deref_s32_pointer(s32* pointer);`
 
+### Description
+Gets the 32-bit integer value from the pointer
+
 [:arrow_up_small:](#)
 
 <br />
@@ -2793,6 +2802,9 @@ Computes the square of a floating-point number
 
 ### C Prototype
 `bool djui_attempting_to_open_playerlist(void);`
+
+### Description
+Checks if the DJUI playerlist is attempting to be opened
 
 [:arrow_up_small:](#)
 
@@ -2812,6 +2824,9 @@ Computes the square of a floating-point number
 ### C Prototype
 `bool djui_is_playerlist_open(void);`
 
+### Description
+Checks if the DJUI playerlist is open
+
 [:arrow_up_small:](#)
 
 <br />
@@ -2829,6 +2844,9 @@ Computes the square of a floating-point number
 
 ### C Prototype
 `bool djui_is_popup_disabled(void);`
+
+### Description
+Returns if popups are disabled
 
 [:arrow_up_small:](#)
 
@@ -2848,6 +2866,9 @@ Computes the square of a floating-point number
 ### C Prototype
 `enum DjuiFontType djui_menu_get_font(void);`
 
+### Description
+Gets the DJUI menu font
+
 [:arrow_up_small:](#)
 
 <br />
@@ -2865,6 +2886,9 @@ Computes the square of a floating-point number
 
 ### C Prototype
 `struct DjuiTheme* djui_menu_get_theme(void);`
+
+### Description
+Gets the DJUI menu theme
 
 [:arrow_up_small:](#)
 
@@ -2887,6 +2911,9 @@ Computes the square of a floating-point number
 ### C Prototype
 `void djui_popup_create_global(const char* message, int lines);`
 
+### Description
+Creates a DJUI popup that is broadcasted to every client
+
 [:arrow_up_small:](#)
 
 <br />
@@ -2904,6 +2931,9 @@ Computes the square of a floating-point number
 
 ### C Prototype
 `void djui_reset_popup_disabled_override(void);`
+
+### Description
+Resets if popups are disabled
 
 [:arrow_up_small:](#)
 
@@ -2925,6 +2955,9 @@ Computes the square of a floating-point number
 ### C Prototype
 `void djui_set_popup_disabled_override(bool value);`
 
+### Description
+Sets if popups are disabled
+
 [:arrow_up_small:](#)
 
 <br />
@@ -2945,6 +2978,9 @@ Computes the square of a floating-point number
 ### C Prototype
 `const char* get_coopnet_id(s8 localIndex);`
 
+### Description
+Gets the CoopNet ID of a player if CoopNet is being used and the player is connected, otherwise "-1" is returned
+
 [:arrow_up_small:](#)
 
 <br />
@@ -2962,6 +2998,9 @@ Computes the square of a floating-point number
 
 ### C Prototype
 `s16 get_current_save_file_num(void);`
+
+### Description
+Gets the current save file number (1-indexed)
 
 [:arrow_up_small:](#)
 
@@ -2981,6 +3020,9 @@ Computes the square of a floating-point number
 ### C Prototype
 `struct DateTime* get_date_and_time(void);`
 
+### Description
+Gets the system clock's date and time
+
 [:arrow_up_small:](#)
 
 <br />
@@ -2998,6 +3040,9 @@ Computes the square of a floating-point number
 
 ### C Prototype
 `s8 get_dialog_box_state(void);`
+
+### Description
+Gets the current state of the dialog box
 
 [:arrow_up_small:](#)
 
@@ -3017,6 +3062,9 @@ Computes the square of a floating-point number
 ### C Prototype
 `s16 get_dialog_id(void);`
 
+### Description
+Gets the current dialog box ID
+
 [:arrow_up_small:](#)
 
 <br />
@@ -3035,6 +3083,9 @@ Computes the square of a floating-point number
 ### C Prototype
 `s32 get_dialog_response(void);`
 
+### Description
+Gets the choice selected inside of a dialog box (0-1)
+
 [:arrow_up_small:](#)
 
 <br />
@@ -3052,6 +3103,9 @@ Computes the square of a floating-point number
 
 ### C Prototype
 `u16 get_envfx(void);`
+
+### Description
+Gets the non overridden environment effect (e.g. snow)
 
 [:arrow_up_small:](#)
 
@@ -3073,6 +3127,9 @@ Computes the square of a floating-point number
 ### C Prototype
 `f32 get_environment_region(u8 index);`
 
+### Description
+Gets an environment region (gas/water boxes) height value
+
 [:arrow_up_small:](#)
 
 <br />
@@ -3091,6 +3148,9 @@ Computes the square of a floating-point number
 ### C Prototype
 `u32 get_global_timer(void);`
 
+### Description
+Gets the global timer that has been ticking at 30 frames per second since game boot
+
 [:arrow_up_small:](#)
 
 <br />
@@ -3108,6 +3168,9 @@ Computes the square of a floating-point number
 
 ### C Prototype
 `bool get_got_file_coin_hi_score(void);`
+
+### Description
+Checks if the save file's coin "HI SCORE" was obtained with the last star or key collection
 
 [:arrow_up_small:](#)
 
@@ -3130,6 +3193,9 @@ Computes the square of a floating-point number
 ### C Prototype
 `f32 get_hand_foot_pos_x(struct MarioState* m, u8 index);`
 
+### Description
+Gets the X coordinate of Mario's hand (0-1) or foot (2-3) but it is important to note that the positions are not updated off-screen
+
 [:arrow_up_small:](#)
 
 <br />
@@ -3150,6 +3216,9 @@ Computes the square of a floating-point number
 
 ### C Prototype
 `f32 get_hand_foot_pos_y(struct MarioState* m, u8 index);`
+
+### Description
+Gets the Y coordinate of Mario's hand (0-1) or foot (2-3) but it is important to note that the positions are not updated off-screen
 
 [:arrow_up_small:](#)
 
@@ -3172,6 +3241,9 @@ Computes the square of a floating-point number
 ### C Prototype
 `f32 get_hand_foot_pos_z(struct MarioState* m, u8 index);`
 
+### Description
+Gets the Z coordinate of Mario's hand (0-1) or foot (2-3) but it is important to note that the positions are not updated off-screen
+
 [:arrow_up_small:](#)
 
 <br />
@@ -3189,6 +3261,9 @@ Computes the square of a floating-point number
 
 ### C Prototype
 `u8 get_last_completed_course_num(void);`
+
+### Description
+Gets the last course a star or key was collected in
 
 [:arrow_up_small:](#)
 
@@ -3208,6 +3283,9 @@ Computes the square of a floating-point number
 ### C Prototype
 `u8 get_last_completed_star_num(void);`
 
+### Description
+Gets the last collected star's number (1-7)
+
 [:arrow_up_small:](#)
 
 <br />
@@ -3224,7 +3302,10 @@ Computes the square of a floating-point number
 - `integer`
 
 ### C Prototype
-`s32 get_last_star_or_key(void);`
+`u8 get_last_star_or_key(void);`
+
+### Description
+Gets if the last objective collected was a star (0) or a key (1)
 
 [:arrow_up_small:](#)
 
@@ -3244,6 +3325,9 @@ Computes the square of a floating-point number
 ### C Prototype
 `const char* get_local_discord_id(void);`
 
+### Description
+Gets the local discord ID if it isn't disabled, otherwise "0" is returned
+
 [:arrow_up_small:](#)
 
 <br />
@@ -3261,6 +3345,9 @@ Computes the square of a floating-point number
 
 ### C Prototype
 `u32 get_network_area_timer(void);`
+
+### Description
+Gets the current area's networked timer
 
 [:arrow_up_small:](#)
 
@@ -3280,6 +3367,9 @@ Computes the square of a floating-point number
 ### C Prototype
 `const char* get_os_name(void);`
 
+### Description
+Gets the name of the operating system the game is running on
+
 [:arrow_up_small:](#)
 
 <br />
@@ -3297,6 +3387,9 @@ Computes the square of a floating-point number
 
 ### C Prototype
 `bool get_save_file_modified(void);`
+
+### Description
+Checks if the save file has been modified without saving
 
 [:arrow_up_small:](#)
 
@@ -3318,6 +3411,9 @@ Computes the square of a floating-point number
 ### C Prototype
 `s32* get_temp_s32_pointer(s32 initialValue);`
 
+### Description
+Returns a temporary 32-bit integer pointer
+
 [:arrow_up_small:](#)
 
 <br />
@@ -3335,6 +3431,9 @@ Computes the square of a floating-point number
 
 ### C Prototype
 `s64 get_time(void);`
+
+### Description
+Gets the Unix Timestamp
 
 [:arrow_up_small:](#)
 
@@ -3354,6 +3453,9 @@ Computes the square of a floating-point number
 ### C Prototype
 `s16 get_ttc_speed_setting(void);`
 
+### Description
+Gets TTC's speed setting
+
 [:arrow_up_small:](#)
 
 <br />
@@ -3371,6 +3473,9 @@ Computes the square of a floating-point number
 
 ### C Prototype
 `f32 get_volume_env(void);`
+
+### Description
+Gets the volume level of environment sounds effects
 
 [:arrow_up_small:](#)
 
@@ -3390,6 +3495,9 @@ Computes the square of a floating-point number
 ### C Prototype
 `f32 get_volume_level(void);`
 
+### Description
+Gets the volume level of music
+
 [:arrow_up_small:](#)
 
 <br />
@@ -3408,6 +3516,9 @@ Computes the square of a floating-point number
 ### C Prototype
 `f32 get_volume_master(void);`
 
+### Description
+Gets the master volume level
+
 [:arrow_up_small:](#)
 
 <br />
@@ -3425,6 +3536,9 @@ Computes the square of a floating-point number
 
 ### C Prototype
 `f32 get_volume_sfx(void);`
+
+### Description
+Gets the volume level of sound effects
 
 [:arrow_up_small:](#)
 
@@ -3446,6 +3560,9 @@ Computes the square of a floating-point number
 ### C Prototype
 `s16 get_water_level(u8 index);`
 
+### Description
+Gets the water level in an area
+
 [:arrow_up_small:](#)
 
 <br />
@@ -3463,6 +3580,9 @@ Computes the square of a floating-point number
 
 ### C Prototype
 `s8 hud_get_flash(void);`
+
+### Description
+Gets if the star counter on the HUD should flash
 
 [:arrow_up_small:](#)
 
@@ -3502,6 +3622,9 @@ Computes the square of a floating-point number
 ### C Prototype
 `void hud_hide(void);`
 
+### Description
+Hides the HUD
+
 [:arrow_up_small:](#)
 
 <br />
@@ -3519,6 +3642,9 @@ Computes the square of a floating-point number
 
 ### C Prototype
 `bool hud_is_hidden(void);`
+
+### Description
+Checks if the HUD is hidden
 
 [:arrow_up_small:](#)
 
@@ -3543,6 +3669,9 @@ Computes the square of a floating-point number
 
 ### C Prototype
 `void hud_render_power_meter(s32 health, f32 x, f32 y, f32 width, f32 height);`
+
+### Description
+Renders a power meter on the HUD
 
 [:arrow_up_small:](#)
 
@@ -3572,6 +3701,9 @@ Computes the square of a floating-point number
 ### C Prototype
 `void hud_render_power_meter_interpolated(s32 health, f32 prevX, f32 prevY, f32 prevWidth, f32 prevHeight, f32 x, f32 y, f32 width, f32 height);`
 
+### Description
+Renders an interpolated power meter on the HUD
+
 [:arrow_up_small:](#)
 
 <br />
@@ -3591,6 +3723,9 @@ Computes the square of a floating-point number
 
 ### C Prototype
 `void hud_set_flash(s8 value);`
+
+### Description
+Sets if the star counter on the HUD should flash
 
 [:arrow_up_small:](#)
 
@@ -3613,6 +3748,9 @@ Computes the square of a floating-point number
 ### C Prototype
 `void hud_set_value(enum HudDisplayValue type, s32 value);`
 
+### Description
+Sets a HUD display value
+
 [:arrow_up_small:](#)
 
 <br />
@@ -3630,6 +3768,9 @@ Computes the square of a floating-point number
 
 ### C Prototype
 `void hud_show(void);`
+
+### Description
+Shows the HUD
 
 [:arrow_up_small:](#)
 
@@ -3649,6 +3790,9 @@ Computes the square of a floating-point number
 ### C Prototype
 `bool is_game_paused(void);`
 
+### Description
+Checks if the game is paused
+
 [:arrow_up_small:](#)
 
 <br />
@@ -3666,6 +3810,9 @@ Computes the square of a floating-point number
 
 ### C Prototype
 `bool is_transition_playing(void);`
+
+### Description
+Checks if a screen transition is playing
 
 [:arrow_up_small:](#)
 
@@ -3686,6 +3833,9 @@ Computes the square of a floating-point number
 
 ### C Prototype
 `bool mod_file_exists(const char* filename);`
+
+### Description
+Checks if a file exists inside of a mod
 
 [:arrow_up_small:](#)
 
@@ -3709,6 +3859,9 @@ Computes the square of a floating-point number
 
 ### C Prototype
 `void movtexqc_register(const char* name, s16 level, s16 area, s16 type);`
+
+### Description
+Registers a custom moving texture entry (used for vanilla water boxes)
 
 [:arrow_up_small:](#)
 
@@ -3734,6 +3887,9 @@ Computes the square of a floating-point number
 ### C Prototype
 `void play_transition(s16 transType, s16 time, u8 red, u8 green, u8 blue);`
 
+### Description
+Plays a screen transition
+
 [:arrow_up_small:](#)
 
 <br />
@@ -3752,6 +3908,9 @@ Computes the square of a floating-point number
 ### C Prototype
 `void reset_window_title(void);`
 
+### Description
+Resets the window title
+
 [:arrow_up_small:](#)
 
 <br />
@@ -3769,6 +3928,9 @@ Computes the square of a floating-point number
 
 ### C Prototype
 `bool save_file_get_using_backup_slot(void);`
+
+### Description
+Checks if the save file is using its backup slot
 
 [:arrow_up_small:](#)
 
@@ -3789,6 +3951,9 @@ Computes the square of a floating-point number
 
 ### C Prototype
 `void save_file_set_using_backup_slot(bool usingBackupSlot);`
+
+### Description
+Sets if the save file should use its backup slot
 
 [:arrow_up_small:](#)
 
@@ -3811,6 +3976,9 @@ Computes the square of a floating-point number
 ### C Prototype
 `void set_environment_region(u8 index, s32 value);`
 
+### Description
+Sets an environment region (gas/water boxes) height value
+
 [:arrow_up_small:](#)
 
 <br />
@@ -3830,6 +3998,9 @@ Computes the square of a floating-point number
 
 ### C Prototype
 `void set_got_file_coin_hi_score(bool value);`
+
+### Description
+Sets if the save file's coin "HI SCORE" was obtained with the last star or key collection
 
 [:arrow_up_small:](#)
 
@@ -3851,6 +4022,9 @@ Computes the square of a floating-point number
 ### C Prototype
 `void set_last_completed_course_num(u8 courseNum);`
 
+### Description
+Sets the last course a star or key was collected in
+
 [:arrow_up_small:](#)
 
 <br />
@@ -3870,6 +4044,9 @@ Computes the square of a floating-point number
 
 ### C Prototype
 `void set_last_completed_star_num(u8 starNum);`
+
+### Description
+Sets the last collected star's number (1-7)
 
 [:arrow_up_small:](#)
 
@@ -3891,6 +4068,9 @@ Computes the square of a floating-point number
 ### C Prototype
 `void set_last_star_or_key(u8 value);`
 
+### Description
+Sets if the last objective collected was a star (0) or a key (1)
+
 [:arrow_up_small:](#)
 
 <br />
@@ -3910,6 +4090,9 @@ Computes the square of a floating-point number
 
 ### C Prototype
 `void set_override_envfx(s32 envfx);`
+
+### Description
+Sets the override environment effect (e.g. snow)
 
 [:arrow_up_small:](#)
 
@@ -3931,6 +4114,9 @@ Computes the square of a floating-point number
 ### C Prototype
 `void set_save_file_modified(bool value);`
 
+### Description
+Sets if the save file has been modified without saving
+
 [:arrow_up_small:](#)
 
 <br />
@@ -3950,6 +4136,9 @@ Computes the square of a floating-point number
 
 ### C Prototype
 `void set_ttc_speed_setting(s16 speed);`
+
+### Description
+Sets TTC's speed setting (TTC_SPEED_*)
 
 [:arrow_up_small:](#)
 
@@ -3971,6 +4160,9 @@ Computes the square of a floating-point number
 ### C Prototype
 `void set_volume_env(f32 volume);`
 
+### Description
+Sets the volume level of environment sounds effects
+
 [:arrow_up_small:](#)
 
 <br />
@@ -3990,6 +4182,9 @@ Computes the square of a floating-point number
 
 ### C Prototype
 `void set_volume_level(f32 volume);`
+
+### Description
+Sets the volume level of music
 
 [:arrow_up_small:](#)
 
@@ -4011,6 +4206,9 @@ Computes the square of a floating-point number
 ### C Prototype
 `void set_volume_master(f32 volume);`
 
+### Description
+Sets the master volume level
+
 [:arrow_up_small:](#)
 
 <br />
@@ -4030,6 +4228,9 @@ Computes the square of a floating-point number
 
 ### C Prototype
 `void set_volume_sfx(f32 volume);`
+
+### Description
+Sets the volume level of sound effects
 
 [:arrow_up_small:](#)
 
@@ -4053,6 +4254,9 @@ Computes the square of a floating-point number
 ### C Prototype
 `void set_water_level(u8 index, s16 height, bool sync);`
 
+### Description
+Sets the water level in an area
+
 [:arrow_up_small:](#)
 
 <br />
@@ -4072,6 +4276,9 @@ Computes the square of a floating-point number
 
 ### C Prototype
 `void set_window_title(const char* title);`
+
+### Description
+Sets the window title to a custom title
 
 [:arrow_up_small:](#)
 
