@@ -2,8 +2,284 @@
 
 ---
 
-[< prev](functions-2.md) | [1](functions.md) | [2](functions-2.md) | 3 | [4](functions-4.md) | [5](functions-5.md) | [next >](functions-4.md)]
+[< prev](functions-2.md) | [1](functions.md) | [2](functions-2.md) | 3 | [4](functions-4.md) | [5](functions-5.md) | [6](functions-6.md) | [next >](functions-4.md)]
 
+
+---
+# functions from behavior_script.h
+
+<br />
+
+
+## [draw_distance_scalar](#draw_distance_scalar)
+
+### Lua Example
+`local numberValue = draw_distance_scalar()`
+
+### Parameters
+- None
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 draw_distance_scalar(void);`
+
+### Description
+No description available.
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_update_gfx_pos_and_angle](#obj_update_gfx_pos_and_angle)
+
+### Lua Example
+`obj_update_gfx_pos_and_angle(obj)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| obj | [Object](structs.md#Object) |
+
+### Returns
+- None
+
+### C Prototype
+`void obj_update_gfx_pos_and_angle(struct Object *obj);`
+
+### Description
+No description available.
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [position_based_random_float_position](#position_based_random_float_position)
+
+### Lua Example
+`local numberValue = position_based_random_float_position()`
+
+### Parameters
+- None
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 position_based_random_float_position(void);`
+
+### Description
+No description available.
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [position_based_random_u16](#position_based_random_u16)
+
+### Lua Example
+`local integerValue = position_based_random_u16()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u16 position_based_random_u16(void);`
+
+### Description
+No description available.
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [random_float](#random_float)
+
+### Lua Example
+`local numberValue = random_float()`
+
+### Parameters
+- None
+
+### Returns
+- `number`
+
+### C Prototype
+`float random_float(void);`
+
+### Description
+No description available.
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [random_sign](#random_sign)
+
+### Lua Example
+`local integerValue = random_sign()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 random_sign(void);`
+
+### Description
+No description available.
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [random_u16](#random_u16)
+
+### Lua Example
+`local integerValue = random_u16()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u16 random_u16(void);`
+
+### Description
+No description available.
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
+# functions from behavior_table.h
+
+<br />
+
+
+## [get_behavior_from_id](#get_behavior_from_id)
+
+### Lua Example
+`local PointerValue = get_behavior_from_id(id)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| id | [enum BehaviorId](constants.md#enum-BehaviorId) |
+
+### Returns
+- `Pointer` <`BehaviorScript`>
+
+### C Prototype
+`const BehaviorScript* get_behavior_from_id(enum BehaviorId id);`
+
+### Description
+No description available.
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_behavior_name_from_id](#get_behavior_name_from_id)
+
+### Lua Example
+`local stringValue = get_behavior_name_from_id(id)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| id | [enum BehaviorId](constants.md#enum-BehaviorId) |
+
+### Returns
+- `string`
+
+### C Prototype
+`const char* get_behavior_name_from_id(enum BehaviorId id);`
+
+### Description
+No description available.
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_id_from_behavior](#get_id_from_behavior)
+
+### Lua Example
+`local enumValue = get_id_from_behavior(behavior)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| behavior | `Pointer` <`BehaviorScript`> |
+
+### Returns
+[enum BehaviorId](constants.md#enum-BehaviorId)
+
+### C Prototype
+`enum BehaviorId get_id_from_behavior(const BehaviorScript* behavior);`
+
+### Description
+No description available.
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_id_from_behavior_name](#get_id_from_behavior_name)
+
+### Lua Example
+`local enumValue = get_id_from_behavior_name(name)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| name | `string` |
+
+### Returns
+[enum BehaviorId](constants.md#enum-BehaviorId)
+
+### C Prototype
+`enum BehaviorId get_id_from_behavior_name(const char* name);`
+
+### Description
+No description available.
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_id_from_vanilla_behavior](#get_id_from_vanilla_behavior)
+
+### Lua Example
+`local enumValue = get_id_from_vanilla_behavior(behavior)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| behavior | `Pointer` <`BehaviorScript`> |
+
+### Returns
+[enum BehaviorId](constants.md#enum-BehaviorId)
+
+### C Prototype
+`enum BehaviorId get_id_from_vanilla_behavior(const BehaviorScript* behavior);`
+
+### Description
+No description available.
+
+[:arrow_up_small:](#)
+
+<br />
 
 ---
 # functions from camera.h
@@ -29,6 +305,9 @@
 ### C Prototype
 `void approach_camera_height(struct Camera *c, f32 goal, f32 inc);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -50,6 +329,9 @@
 
 ### C Prototype
 `f32 approach_f32_asymptotic(f32 current, f32 target, f32 multiplier);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -73,6 +355,9 @@
 ### C Prototype
 `s32 approach_f32_asymptotic_bool(f32 *current, f32 target, f32 multiplier);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -95,6 +380,9 @@
 ### C Prototype
 `s32 approach_s16_asymptotic(s16 current, s16 target, s16 divisor);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -116,6 +404,9 @@
 
 ### C Prototype
 `s32 approach_s16_asymptotic_bool(s16 *current, s16 target, s16 divisor);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -141,6 +432,9 @@
 ### C Prototype
 `void approach_vec3f_asymptotic(Vec3f current, Vec3f target, f32 xMul, f32 yMul, f32 zMul);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -162,6 +456,9 @@
 ### C Prototype
 `f32 calc_abs_dist(Vec3f a, Vec3f b);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -182,6 +479,9 @@
 
 ### C Prototype
 `f32 calc_hor_dist(Vec3f a, Vec3f b);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -206,6 +506,9 @@
 ### C Prototype
 `void calculate_angles(Vec3f from, Vec3f to, s16 *pitch, s16 *yaw);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -226,6 +529,9 @@
 
 ### C Prototype
 `s16 calculate_pitch(Vec3f from, Vec3f to);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -248,6 +554,9 @@
 ### C Prototype
 `s16 calculate_yaw(Vec3f from, Vec3f to);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -267,6 +576,9 @@
 
 ### C Prototype
 `s32 cam_select_alt_mode(s32 angle);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -290,6 +602,9 @@
 ### C Prototype
 `f32 camera_approach_f32_symmetric(f32 value, f32 target, f32 increment);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -311,6 +626,9 @@
 
 ### C Prototype
 `s32 camera_approach_f32_symmetric_bool(f32 *current, f32 target, f32 increment);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -334,6 +652,9 @@
 ### C Prototype
 `s32 camera_approach_s16_symmetric_bool(s16 *current, s16 target, s16 increment);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -353,6 +674,9 @@
 
 ### C Prototype
 `s16 camera_course_processing(struct Camera *c);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -374,6 +698,9 @@
 ### C Prototype
 `void camera_set_use_course_specific_settings(u8 enable);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -391,6 +718,9 @@
 
 ### C Prototype
 `void center_rom_hack_camera(void);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -414,6 +744,9 @@
 
 ### C Prototype
 `s32 clamp_pitch(Vec3f from, Vec3f to, s16 maxPitch, s16 minPitch);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -440,6 +773,9 @@
 ### C Prototype
 `s32 clamp_positions_and_find_yaw(Vec3f pos, Vec3f origin, f32 xMax, f32 xMin, f32 zMax, f32 zMin);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -462,6 +798,9 @@
 ### C Prototype
 `s32 collide_with_walls(Vec3f pos, f32 offsetY, f32 radius);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -482,6 +821,9 @@
 
 ### C Prototype
 `s16 cutscene_object(u8 cutscene, struct Object *o);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -505,6 +847,9 @@
 ### C Prototype
 `s16 cutscene_object_with_dialog(u8 cutscene, struct Object *o, s16 dialogID);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -526,6 +871,9 @@
 ### C Prototype
 `s16 cutscene_object_without_dialog(u8 cutscene, struct Object *o);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -545,6 +893,9 @@
 
 ### C Prototype
 `void cutscene_set_fov_shake_preset(u8 preset);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -566,6 +917,9 @@
 
 ### C Prototype
 `s32 cutscene_spawn_obj(u32 obj, s16 frame);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -589,6 +943,9 @@
 ### C Prototype
 `s32 find_c_buttons_pressed(u16 currentState, u16 buttonsPressed, u16 buttonsDown);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -608,6 +965,9 @@
 
 ### C Prototype
 `void find_mario_floor_and_ceil(struct PlayerGeometry *pg);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -629,6 +989,9 @@
 ### C Prototype
 `u8 get_cutscene_from_mario_status(struct Camera *c);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -648,6 +1011,9 @@
 
 ### C Prototype
 `void handle_c_button_movement(struct Camera *c);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -673,6 +1039,9 @@
 ### C Prototype
 `s32 is_range_behind_surface(Vec3f from, Vec3f to, struct Surface *surf, s16 range, s16 surfType);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -695,6 +1064,9 @@
 ### C Prototype
 `s32 is_within_100_units_of_mario(f32 posX, f32 posY, f32 posZ);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -714,6 +1086,9 @@
 
 ### C Prototype
 `void move_mario_head_c_up(UNUSED struct Camera *c);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -741,6 +1116,9 @@
 ### C Prototype
 `s16 next_lakitu_state(Vec3f newPos, Vec3f newFoc, Vec3f curPos, Vec3f curFoc, Vec3f oldPos, Vec3f oldFoc, s16 yaw);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -766,6 +1144,9 @@
 ### C Prototype
 `void obj_rotate_towards_point(struct Object *o, Vec3f point, s16 pitchOff, s16 yawOff, s16 pitchDiv, s16 yawDiv);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -786,6 +1167,9 @@
 
 ### C Prototype
 `void object_pos_to_vec3f(Vec3f dst, struct Object *o);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -810,6 +1194,9 @@
 ### C Prototype
 `void offset_rotated(Vec3f dst, Vec3f from, Vec3f to, Vec3s rotation);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -831,6 +1218,9 @@
 ### C Prototype
 `s32 offset_yaw_outward_radial(struct Camera *c, s16 areaYaw);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -848,6 +1238,9 @@
 
 ### C Prototype
 `void play_camera_buzz_if_c_sideways(void);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -867,6 +1260,9 @@
 ### C Prototype
 `void play_camera_buzz_if_cbutton(void);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -884,6 +1280,9 @@
 
 ### C Prototype
 `void play_camera_buzz_if_cdown(void);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -905,6 +1304,9 @@
 ### C Prototype
 `void play_cutscene(struct Camera *c);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -922,6 +1324,9 @@
 
 ### C Prototype
 `void play_sound_button_change_blocked(void);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -941,6 +1346,9 @@
 ### C Prototype
 `void play_sound_cbutton_down(void);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -958,6 +1366,9 @@
 
 ### C Prototype
 `void play_sound_cbutton_side(void);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -977,6 +1388,9 @@
 ### C Prototype
 `void play_sound_cbutton_up(void);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -995,6 +1409,9 @@
 ### C Prototype
 `void play_sound_if_cam_switched_to_lakitu_or_mario(void);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -1012,6 +1429,9 @@
 
 ### C Prototype
 `void play_sound_rbutton_changed(void);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -1033,6 +1453,9 @@
 
 ### C Prototype
 `s32 radial_camera_input(struct Camera *c, UNUSED f32 unused);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -1057,6 +1480,9 @@
 ### C Prototype
 `void random_vec3s(Vec3s dst, s16 xRange, s16 yRange, s16 zRange);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -1076,6 +1502,9 @@
 
 ### C Prototype
 `void reset_camera(struct Camera *c);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -1098,6 +1527,9 @@
 ### C Prototype
 `void resolve_geometry_collisions(Vec3f pos, UNUSED Vec3f lastGood);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -1117,6 +1549,9 @@
 
 ### C Prototype
 `void rom_hack_cam_set_collisions(u8 enable);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -1141,6 +1576,9 @@
 ### C Prototype
 `s32 rotate_camera_around_walls(struct Camera *c, Vec3f cPos, s16 *avoidYaw, s16 yawRange);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -1163,6 +1601,9 @@
 ### C Prototype
 `void rotate_in_xz(Vec3f dst, Vec3f src, s16 yaw);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -1184,6 +1625,9 @@
 
 ### C Prototype
 `void rotate_in_yz(Vec3f dst, Vec3f src, s16 pitch);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -1208,6 +1652,9 @@
 ### C Prototype
 `void scale_along_line(Vec3f dest, Vec3f from, Vec3f to, f32 scale);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -1225,6 +1672,9 @@
 
 ### C Prototype
 `void select_mario_cam_mode(void);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -1245,6 +1695,9 @@
 
 ### C Prototype
 `s32 set_cam_angle(s32 mode);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -1267,6 +1720,9 @@
 
 ### C Prototype
 `void set_camera_mode(struct Camera *c, s16 mode, s16 frames);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -1291,6 +1747,9 @@
 ### C Prototype
 `s32 set_camera_mode_fixed(struct Camera* c, s16 x, s16 y, s16 z);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -1312,6 +1771,9 @@
 
 ### C Prototype
 `void set_camera_pitch_shake(s16 mag, s16 decay, s16 inc);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -1335,6 +1797,9 @@
 ### C Prototype
 `void set_camera_roll_shake(s16 mag, s16 decay, s16 inc);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -1354,6 +1819,9 @@
 
 ### C Prototype
 `void set_camera_shake_from_hit(s16 shake);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -1378,6 +1846,9 @@
 ### C Prototype
 `void set_camera_shake_from_point(s16 shake, f32 posX, f32 posY, f32 posZ);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -1400,6 +1871,9 @@
 ### C Prototype
 `void set_camera_yaw_shake(s16 mag, s16 decay, s16 inc);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -1419,6 +1893,9 @@
 
 ### C Prototype
 `void set_environmental_camera_shake(s16 shake);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -1440,6 +1917,9 @@
 ### C Prototype
 `void set_fixed_cam_axis_sa_lobby(UNUSED s16 preset);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -1459,6 +1939,9 @@
 
 ### C Prototype
 `void set_fov_function(u8 func);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -1481,6 +1964,9 @@
 
 ### C Prototype
 `void set_fov_shake(s16 amplitude, s16 decay, s16 shakeSpeed);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -1505,6 +1991,9 @@
 ### C Prototype
 `void set_fov_shake_from_point_preset(u8 preset, f32 posX, f32 posY, f32 posZ);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -1524,6 +2013,9 @@
 
 ### C Prototype
 `void set_handheld_shake(u8 mode);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -1547,6 +2039,9 @@
 ### C Prototype
 `s32 set_or_approach_f32_asymptotic(f32 *dst, f32 goal, f32 scale);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -1568,6 +2063,9 @@
 
 ### C Prototype
 `s32 set_or_approach_s16_symmetric(s16 *current, s16 target, s16 increment);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -1592,6 +2090,9 @@
 
 ### C Prototype
 `void set_or_approach_vec3f_asymptotic(Vec3f dst, Vec3f goal, f32 xMul, f32 yMul, f32 zMul);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -1619,6 +2120,9 @@
 ### C Prototype
 `void set_pitch_shake_from_point(s16 mag, s16 decay, s16 inc, f32 maxDist, f32 posX, f32 posY, f32 posZ);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -1639,6 +2143,9 @@
 
 ### C Prototype
 `void shake_camera_handheld(Vec3f pos, Vec3f focus);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -1661,6 +2168,9 @@
 ### C Prototype
 `void shake_camera_pitch(Vec3f pos, Vec3f focus);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -1680,6 +2190,9 @@
 
 ### C Prototype
 `void shake_camera_roll(s16 *roll);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -1702,6 +2215,9 @@
 ### C Prototype
 `void shake_camera_yaw(Vec3f pos, Vec3f focus);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -1719,6 +2235,9 @@
 
 ### C Prototype
 `void skip_camera_interpolation(void);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -1739,6 +2258,9 @@
 
 ### C Prototype
 `void soft_reset_camera(struct Camera* c);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -1761,6 +2283,9 @@
 ### C Prototype
 `void start_cutscene(struct Camera *c, u8 cutscene);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -1780,6 +2305,9 @@
 
 ### C Prototype
 `u8 start_object_cutscene_without_focus(u8 cutscene);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -1802,6 +2330,9 @@
 ### C Prototype
 `void transition_next_state(UNUSED struct Camera *c, s16 frames);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -1821,6 +2352,9 @@
 
 ### C Prototype
 `s32 trigger_cutscene_dialog(s32 trigger);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -1843,6 +2377,9 @@
 ### C Prototype
 `void vec3f_sub(Vec3f dst, Vec3f src);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -1863,6 +2400,9 @@
 
 ### C Prototype
 `void vec3f_to_object_pos(struct Object *o, Vec3f src);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -1885,6 +2425,9 @@
 
 ### C Prototype
 `void warp_camera(f32 displacementX, f32 displacementY, f32 displacementZ);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -1912,6 +2455,9 @@
 ### C Prototype
 `struct Character* get_character(struct MarioState* m);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -1933,6 +2479,9 @@
 ### C Prototype
 `s32 get_character_anim(struct MarioState* m, enum CharacterAnimID characterAnim);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -1952,6 +2501,9 @@
 
 ### C Prototype
 `f32 get_character_anim_offset(struct MarioState* m);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -1973,6 +2525,9 @@
 
 ### C Prototype
 `void play_character_sound(struct MarioState* m, enum CharacterSound characterSound);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -1996,6 +2551,9 @@
 ### C Prototype
 `void play_character_sound_if_no_flag(struct MarioState* m, enum CharacterSound characterSound, u32 flags);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -2018,6 +2576,9 @@
 ### C Prototype
 `void play_character_sound_offset(struct MarioState* m, enum CharacterSound characterSound, u32 offset);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -2037,6 +2598,9 @@
 
 ### C Prototype
 `void update_character_anim_offset(struct MarioState* m);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -2064,6 +2628,9 @@
 ### C Prototype
 `void djui_chat_message_create(const char* message);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -2088,6 +2655,9 @@
 ### C Prototype
 `void djui_console_message_dequeue(void);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -2105,6 +2675,9 @@
 
 ### C Prototype
 `void djui_console_toggle(void);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -2130,6 +2703,9 @@
 ### C Prototype
 `struct DjuiColor* djui_hud_get_color(void);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -2147,6 +2723,9 @@
 
 ### C Prototype
 `u8 djui_hud_get_filter(void);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -2166,6 +2745,9 @@
 ### C Prototype
 `u8 djui_hud_get_font(void);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -2183,6 +2765,9 @@
 
 ### C Prototype
 `f32 djui_hud_get_fov_coeff();`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -2202,6 +2787,9 @@
 ### C Prototype
 `f32 djui_hud_get_mouse_x(void);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -2219,6 +2807,9 @@
 
 ### C Prototype
 `f32 djui_hud_get_mouse_y(void);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -2238,6 +2829,9 @@
 ### C Prototype
 `f32 djui_hud_get_raw_mouse_x(void);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -2255,6 +2849,9 @@
 
 ### C Prototype
 `f32 djui_hud_get_raw_mouse_y(void);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -2274,6 +2871,9 @@
 ### C Prototype
 `u8 djui_hud_get_resolution(void);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -2291,6 +2891,9 @@
 
 ### C Prototype
 `struct HudUtilsRotation* djui_hud_get_rotation(void);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -2310,6 +2913,9 @@
 ### C Prototype
 `u32 djui_hud_get_screen_height(void);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -2328,6 +2934,9 @@
 ### C Prototype
 `u32 djui_hud_get_screen_width(void);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -2345,6 +2954,9 @@
 
 ### C Prototype
 `bool djui_hud_is_pause_menu_created(void);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -2365,6 +2977,9 @@
 
 ### C Prototype
 `f32 djui_hud_measure_text(const char* message);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -2388,6 +3003,9 @@
 
 ### C Prototype
 `void djui_hud_print_text(const char* message, f32 x, f32 y, f32 scale);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -2415,6 +3033,9 @@
 ### C Prototype
 `void djui_hud_print_text_interpolated(const char* message, f32 prevX, f32 prevY, f32 prevScale, f32 x, f32 y, f32 scale);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -2437,6 +3058,9 @@
 
 ### C Prototype
 `void djui_hud_render_rect(f32 x, f32 y, f32 width, f32 height);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -2465,6 +3089,9 @@
 ### C Prototype
 `void djui_hud_render_rect_interpolated(f32 prevX, f32 prevY, f32 prevWidth, f32 prevHeight, f32 x, f32 y, f32 width, f32 height);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -2482,6 +3109,9 @@
 
 ### C Prototype
 `void djui_hud_reset_color(void);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -2506,6 +3136,9 @@
 ### C Prototype
 `void djui_hud_set_color(u8 r, u8 g, u8 b, u8 a);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -2525,6 +3158,9 @@
 
 ### C Prototype
 `void djui_hud_set_filter(enum HudUtilsFilter filterType);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -2546,6 +3182,9 @@
 ### C Prototype
 `void djui_hud_set_font(s8 fontType);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -2566,6 +3205,9 @@
 ### C Prototype
 `void djui_hud_set_mouse_locked(bool locked);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -2585,6 +3227,9 @@
 
 ### C Prototype
 `void djui_hud_set_resolution(enum HudUtilsResolution resolutionType);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -2607,6 +3252,9 @@
 
 ### C Prototype
 `void djui_hud_set_rotation(s16 rotation, f32 pivotX, f32 pivotY);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -2633,6 +3281,9 @@
 ### C Prototype
 `void djui_hud_set_rotation_interpolated(s32 prevRotation, f32 prevPivotX, f32 prevPivotY, s32 rotation, f32 pivotX, f32 pivotY);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -2654,6 +3305,9 @@
 ### C Prototype
 `bool djui_hud_world_pos_to_screen_pos(Vec3f pos, Vec3f out);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -2672,6 +3326,9 @@
 ### C Prototype
 `void djui_open_pause_menu(void);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -2689,6 +3346,9 @@
 
 ### C Prototype
 `f32 get_current_fov();`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -2717,6 +3377,9 @@
 ### C Prototype
 `char* djui_language_get(const char *section, const char *key);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -2744,6 +3407,9 @@
 ### C Prototype
 `void djui_popup_create(const char* message, int lines);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -2768,6 +3434,9 @@
 ### C Prototype
 `void drop_queued_background_music(void);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -2790,6 +3459,9 @@
 ### C Prototype
 `void fade_volume_scale(u8 player, u8 targetScale, u16 fadeDuration);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -2811,6 +3483,9 @@
 ### C Prototype
 `void fadeout_background_music(u16 arg0, u16 fadeOut);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -2828,6 +3503,9 @@
 
 ### C Prototype
 `u16 get_current_background_music(void);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -2847,6 +3525,9 @@
 ### C Prototype
 `u8 get_current_background_music_default_volume(void);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -2864,6 +3545,9 @@
 
 ### C Prototype
 `u8 get_current_background_music_max_target_volume(void);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -2883,6 +3567,9 @@
 ### C Prototype
 `u8 get_current_background_music_target_volume(void);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -2901,6 +3588,9 @@
 ### C Prototype
 `u8 is_current_background_music_volume_lowered(void);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -2918,6 +3608,9 @@
 
 ### C Prototype
 `void play_course_clear(void);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -2938,6 +3631,9 @@
 
 ### C Prototype
 `void play_dialog_sound(u8 dialogID);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -2961,6 +3657,9 @@
 ### C Prototype
 `void play_music(u8 player, u16 seqArgs, u16 fadeTimer);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -2978,6 +3677,9 @@
 
 ### C Prototype
 `void play_peachs_jingle(void);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -2999,6 +3701,9 @@
 ### C Prototype
 `void play_power_star_jingle(u8 arg0);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -3017,6 +3722,9 @@
 ### C Prototype
 `void play_puzzle_jingle(void);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -3034,6 +3742,9 @@
 
 ### C Prototype
 `void play_race_fanfare(void);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -3058,6 +3769,9 @@
 ### C Prototype
 `void play_secondary_music(u8 seqId, u8 bgMusicVolume, u8 volume, u16 fadeTimer);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -3078,6 +3792,9 @@
 
 ### C Prototype
 `void play_sound(s32 soundBits, f32 *pos);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -3101,6 +3818,9 @@
 ### C Prototype
 `void play_sound_with_freq_scale(s32 soundBits, f32* pos, f32 freqScale);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -3119,6 +3839,9 @@
 ### C Prototype
 `void play_star_fanfare(void);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -3136,6 +3859,9 @@
 
 ### C Prototype
 `void play_toads_jingle(void);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -3157,6 +3883,9 @@
 
 ### C Prototype
 `void seq_player_fade_out(u8 player, u16 fadeDuration);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -3180,6 +3909,9 @@
 ### C Prototype
 `void seq_player_lower_volume(u8 player, u16 fadeDuration, u8 percentage);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -3201,6 +3933,9 @@
 ### C Prototype
 `void seq_player_unlower_volume(u8 player, u16 fadeDuration);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -3220,6 +3955,9 @@
 
 ### C Prototype
 `void set_audio_fadeout(u16 fadeOutTime);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -3242,6 +3980,9 @@
 ### C Prototype
 `void sound_banks_disable(u8 player, u16 bankMask);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -3263,6 +4004,9 @@
 ### C Prototype
 `void sound_banks_enable(u8 player, u16 bankMask);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -3282,6 +4026,9 @@
 
 ### C Prototype
 `f32 sound_get_level_intensity(f32 distance);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -3303,6 +4050,9 @@
 ### C Prototype
 `void stop_background_music(u16 seqId);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -3322,6 +4072,9 @@
 
 ### C Prototype
 `void stop_secondary_music(u16 fadeTimer);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -3344,6 +4097,9 @@
 ### C Prototype
 `void stop_sound(u32 soundBits, f32 *pos);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -3364,6 +4120,9 @@
 ### C Prototype
 `void stop_sounds_from_source(f32 *pos);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -3381,6 +4140,9 @@
 
 ### C Prototype
 `void stop_sounds_in_continuous_banks(void);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -3408,6 +4170,9 @@
 ### C Prototype
 `bool first_person_check_cancels(struct MarioState *m);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -3426,6 +4191,9 @@
 ### C Prototype
 `void first_person_reset(void);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -3443,6 +4211,9 @@
 
 ### C Prototype
 `bool get_first_person_enabled(void);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -3463,6 +4234,9 @@
 
 ### C Prototype
 `void set_first_person_enabled(bool enable);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -3490,6 +4264,9 @@
 ### C Prototype
 `void create_dialog_box(s16 dialog);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -3509,6 +4286,9 @@
 
 ### C Prototype
 `void create_dialog_box_with_response(s16 dialog);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -3531,6 +4311,9 @@
 ### C Prototype
 `void create_dialog_box_with_var(s16 dialog, s32 dialogVar);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -3551,6 +4334,9 @@
 ### C Prototype
 `void create_dialog_inverted_box(s16 dialog);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -3568,6 +4354,9 @@
 
 ### C Prototype
 `void reset_dialog_override_color();`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -3587,6 +4376,9 @@
 ### C Prototype
 `void reset_dialog_override_pos();`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -3604,6 +4396,9 @@
 
 ### C Prototype
 `void reset_dialog_render_state(void);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -3632,6 +4427,9 @@
 ### C Prototype
 `void set_dialog_override_color(u8 bgR, u8 bgG, u8 bgB, u8 bgA, u8 textR, u8 textG, u8 textB, u8 textA);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -3653,6 +4451,9 @@
 ### C Prototype
 `void set_dialog_override_pos(s16 x, s16 y);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -3673,6 +4474,9 @@
 ### C Prototype
 `void set_menu_mode(s16 mode);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -3692,6 +4496,9 @@
 
 ### C Prototype
 `void set_min_dialog_width(s16 width);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -3720,6 +4527,9 @@
 ### C Prototype
 `u32 determine_interaction(struct MarioState *m, struct Object *o);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -3739,6 +4549,9 @@
 
 ### C Prototype
 `u32 does_mario_have_normal_cap_on_head(struct MarioState *m);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -3760,6 +4573,9 @@
 ### C Prototype
 `u32 get_door_save_file_flag(struct Object *door);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -3779,6 +4595,9 @@
 
 ### C Prototype
 `u32 get_mario_cap_flag(struct Object *capObject);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -3802,6 +4621,9 @@
 ### C Prototype
 `u32 interact_bbh_entrance(struct MarioState *m, UNUSED u32 interactType, struct Object *o);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -3823,6 +4645,9 @@
 
 ### C Prototype
 `u32 interact_bounce_top(struct MarioState *m, UNUSED u32 interactType, struct Object *o);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -3846,6 +4671,9 @@
 ### C Prototype
 `u32 interact_breakable(struct MarioState *m, UNUSED u32 interactType, struct Object *o);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -3867,6 +4695,9 @@
 
 ### C Prototype
 `u32 interact_bully(struct MarioState *m, UNUSED u32 interactType, struct Object *o);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -3890,6 +4721,9 @@
 ### C Prototype
 `u32 interact_cannon_base(struct MarioState *m, UNUSED u32 interactType, struct Object *o);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -3911,6 +4745,9 @@
 
 ### C Prototype
 `u32 interact_cap(struct MarioState *m, UNUSED u32 interactType, struct Object *o);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -3934,6 +4771,9 @@
 ### C Prototype
 `u32 interact_clam_or_bubba(struct MarioState *m, UNUSED u32 interactType, struct Object *o);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -3955,6 +4795,9 @@
 
 ### C Prototype
 `u32 interact_coin(struct MarioState *m, UNUSED u32 interactType, struct Object *o);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -3978,6 +4821,9 @@
 ### C Prototype
 `u32 interact_damage(struct MarioState *m, UNUSED u32 interactType, struct Object *o);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -3999,6 +4845,9 @@
 
 ### C Prototype
 `u32 interact_door(struct MarioState *m, UNUSED u32 interactType, struct Object *o);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -4022,6 +4871,9 @@
 ### C Prototype
 `u32 interact_flame(struct MarioState *m, UNUSED u32 interactType, struct Object *o);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -4043,6 +4895,9 @@
 
 ### C Prototype
 `u32 interact_grabbable(struct MarioState *m, u32 interactType, struct Object *o);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -4066,6 +4921,9 @@
 ### C Prototype
 `u32 interact_hit_from_below(struct MarioState *m, UNUSED u32 interactType, struct Object *o);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -4087,6 +4945,9 @@
 
 ### C Prototype
 `u32 interact_hoot(struct MarioState *m, UNUSED u32 interactType, struct Object *o);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -4110,6 +4971,9 @@
 ### C Prototype
 `u32 interact_igloo_barrier(struct MarioState *m, UNUSED u32 interactType, struct Object *o);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -4131,6 +4995,9 @@
 
 ### C Prototype
 `u32 interact_koopa_shell(struct MarioState *m, UNUSED u32 interactType, struct Object *o);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -4154,6 +5021,9 @@
 ### C Prototype
 `u32 interact_mr_blizzard(struct MarioState *m, UNUSED u32 interactType, struct Object *o);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -4175,6 +5045,9 @@
 
 ### C Prototype
 `u32 interact_player(struct MarioState* m, UNUSED u32 interactType, struct Object* o);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -4198,6 +5071,9 @@
 ### C Prototype
 `u32 interact_pole(struct MarioState *m, UNUSED u32 interactType, struct Object *o);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -4219,6 +5095,9 @@
 
 ### C Prototype
 `u32 interact_shock(struct MarioState *m, UNUSED u32 interactType, struct Object *o);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -4242,6 +5121,9 @@
 ### C Prototype
 `u32 interact_snufit_bullet(struct MarioState *m, UNUSED u32 interactType, struct Object *o);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -4263,6 +5145,9 @@
 
 ### C Prototype
 `u32 interact_spiny_walking(struct MarioState *m, UNUSED u32 interactType, struct Object *o);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -4286,6 +5171,9 @@
 ### C Prototype
 `u32 interact_star_or_key(struct MarioState *m, UNUSED u32 interactType, struct Object *o);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -4307,6 +5195,9 @@
 
 ### C Prototype
 `u32 interact_strong_wind(struct MarioState *m, UNUSED u32 interactType, struct Object *o);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -4330,6 +5221,9 @@
 ### C Prototype
 `u32 interact_text(struct MarioState *m, UNUSED u32 interactType, struct Object *o);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -4351,6 +5245,9 @@
 
 ### C Prototype
 `u32 interact_tornado(struct MarioState *m, UNUSED u32 interactType, struct Object *o);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -4374,6 +5271,9 @@
 ### C Prototype
 `u32 interact_warp(struct MarioState *m, UNUSED u32 interactType, struct Object *o);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -4395,6 +5295,9 @@
 
 ### C Prototype
 `u32 interact_warp_door(struct MarioState *m, UNUSED u32 interactType, struct Object *o);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -4418,6 +5321,9 @@
 ### C Prototype
 `u32 interact_water_ring(struct MarioState *m, UNUSED u32 interactType, struct Object *o);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -4440,6 +5346,9 @@
 ### C Prototype
 `u32 interact_whirlpool(struct MarioState *m, UNUSED u32 interactType, struct Object *o);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -4461,6 +5370,9 @@
 ### C Prototype
 `void mario_blow_off_cap(struct MarioState *m, f32 capSpeed);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -4481,6 +5393,9 @@
 ### C Prototype
 `u32 mario_check_object_grab(struct MarioState *m);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -4500,6 +5415,9 @@
 
 ### C Prototype
 `void mario_drop_held_object(struct MarioState *m);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -4522,6 +5440,9 @@
 ### C Prototype
 `struct Object *mario_get_collided_object(struct MarioState *m, u32 interactType);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -4541,6 +5462,9 @@
 
 ### C Prototype
 `void mario_grab_used_object(struct MarioState *m);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -4563,6 +5487,9 @@
 ### C Prototype
 `u32 mario_lose_cap_to_enemy(struct MarioState* m, u32 arg);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -4584,6 +5511,9 @@
 ### C Prototype
 `s16 mario_obj_angle_to_object(struct MarioState *m, struct Object *o);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -4603,6 +5533,9 @@
 
 ### C Prototype
 `void mario_retrieve_cap(struct MarioState* m);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -4624,6 +5557,9 @@
 ### C Prototype
 `void mario_stop_riding_and_holding(struct MarioState *m);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -4644,6 +5580,9 @@
 ### C Prototype
 `void mario_stop_riding_object(struct MarioState *m);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -4663,6 +5602,9 @@
 
 ### C Prototype
 `void mario_throw_held_object(struct MarioState *m);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -4685,6 +5627,9 @@
 ### C Prototype
 `u8 passes_pvp_interaction_checks(struct MarioState* attacker, struct MarioState* victim);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -4706,6 +5651,9 @@
 ### C Prototype
 `u32 should_push_or_pull_door(struct MarioState *m, struct Object *o);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -4726,6 +5674,9 @@
 
 ### C Prototype
 `u32 take_damage_and_knock_back(struct MarioState *m, struct Object *o);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -4753,6 +5704,9 @@
 ### C Prototype
 `struct MarioState* lag_compensation_get_local_state(struct NetworkPlayer* otherNp);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -4770,6 +5724,9 @@
 
 ### C Prototype
 `u32 lag_compensation_get_local_state_index(void);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -4789,6 +5746,9 @@
 ### C Prototype
 `bool lag_compensation_get_local_state_ready(void);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -4806,6 +5766,9 @@
 
 ### C Prototype
 `void lag_compensation_store(void);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -4835,6 +5798,9 @@
 ### C Prototype
 `const char *get_level_name(s16 courseNum, s16 levelNum, s16 areaIndex);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -4857,6 +5823,9 @@
 
 ### C Prototype
 `const char *get_level_name_ascii(s16 courseNum, s16 levelNum, s16 areaIndex, s16 charCase);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -4881,6 +5850,9 @@
 ### C Prototype
 `const u8 *get_level_name_sm64(s16 courseNum, s16 levelNum, s16 areaIndex, s16 charCase);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -4901,6 +5873,9 @@
 
 ### C Prototype
 `const char *get_star_name(s16 courseNum, s16 starNum);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -4924,6 +5899,9 @@
 ### C Prototype
 `const char *get_star_name_ascii(s16 courseNum, s16 starNum, s16 charCase);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -4945,6 +5923,9 @@
 
 ### C Prototype
 `const u8 *get_star_name_sm64(s16 courseNum, s16 starNum, s16 charCase);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -4977,6 +5958,9 @@
 ### C Prototype
 `struct ObjectWarpNode *area_create_warp_node(u8 id, u8 destLevel, u8 destArea, u8 destNode, u8 checkpoint, struct Object *o);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -5004,6 +5988,9 @@
 ### C Prototype
 `void fade_into_special_warp(u32 arg, u32 color);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -5021,6 +6008,9 @@
 
 ### C Prototype
 `struct WarpNode *get_painting_warp_node(void);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -5042,6 +6032,9 @@
 ### C Prototype
 `void initiate_painting_warp(s16 paintingIndex);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -5059,6 +6052,9 @@
 
 ### C Prototype
 `u8 level_control_timer_running(void);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -5081,6 +6077,9 @@
 ### C Prototype
 `s16 level_trigger_warp(struct MarioState *m, s32 warpOp);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -5102,6 +6101,9 @@
 ### C Prototype
 `s32 lvl_set_current_level(UNUSED s16 arg0, s16 levelNum);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -5121,6 +6123,9 @@
 
 ### C Prototype
 `void warp_special(s32 arg);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -5148,6 +6153,9 @@
 ### C Prototype
 `void adjust_sound_for_speed(struct MarioState *m);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -5168,6 +6176,9 @@
 ### C Prototype
 `s32 check_common_action_exits(struct MarioState *m);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -5187,6 +6198,9 @@
 
 ### C Prototype
 `s32 check_common_hold_action_exits(struct MarioState *m);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -5210,6 +6224,9 @@
 ### C Prototype
 `s32 drop_and_set_mario_action(struct MarioState *m, u32 action, u32 actionArg);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -5229,6 +6246,9 @@
 
 ### C Prototype
 `s32 execute_mario_action(UNUSED struct Object *o);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -5252,6 +6272,9 @@
 ### C Prototype
 `f32 find_floor_height_relative_polar(struct MarioState *m, s16 angleFromMario, f32 distFromMario);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -5272,6 +6295,9 @@
 
 ### C Prototype
 `s16 find_floor_slope(struct MarioState *m, s16 yawOffset);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -5295,6 +6321,9 @@
 ### C Prototype
 `s16 find_mario_anim_flags_and_translation(struct Object *o, s32 yaw, Vec3s translation);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -5314,6 +6343,9 @@
 
 ### C Prototype
 `s32 force_idle_state(struct MarioState* m);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -5338,6 +6370,9 @@
 ### C Prototype
 `s32 hurt_and_set_mario_action(struct MarioState *m, u32 action, u32 actionArg, s16 hurtCounter);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -5357,6 +6392,9 @@
 
 ### C Prototype
 `void init_single_mario(struct MarioState* m);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -5378,6 +6416,9 @@
 ### C Prototype
 `s32 is_anim_at_end(struct MarioState *m);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -5397,6 +6438,9 @@
 
 ### C Prototype
 `s32 is_anim_past_end(struct MarioState *m);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -5419,6 +6463,9 @@
 ### C Prototype
 `s32 is_anim_past_frame(struct MarioState *m, s16 animFrame);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -5438,6 +6485,9 @@
 
 ### C Prototype
 `bool mario_can_bubble(struct MarioState* m);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -5460,6 +6510,9 @@
 ### C Prototype
 `s32 mario_facing_downhill(struct MarioState *m, s32 turnYaw);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -5479,6 +6532,9 @@
 
 ### C Prototype
 `u32 mario_floor_is_slippery(struct MarioState *m);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -5500,6 +6556,9 @@
 ### C Prototype
 `s32 mario_floor_is_slope(struct MarioState *m);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -5519,6 +6578,9 @@
 
 ### C Prototype
 `s32 mario_floor_is_steep(struct MarioState *m);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -5540,6 +6602,9 @@
 ### C Prototype
 `s32 mario_get_floor_class(struct MarioState *m);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -5559,6 +6624,9 @@
 
 ### C Prototype
 `u32 mario_get_terrain_sound_addend(struct MarioState *m);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -5580,6 +6648,9 @@
 ### C Prototype
 `bool mario_is_crouching(struct MarioState *m);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -5599,6 +6670,9 @@
 
 ### C Prototype
 `void mario_set_bubbled(struct MarioState* m);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -5621,6 +6695,9 @@
 ### C Prototype
 `void mario_set_forward_vel(struct MarioState *m, f32 speed);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -5641,6 +6718,9 @@
 
 ### C Prototype
 `void mario_update_wall(struct MarioState* m, struct WallCollisionData* wcd);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -5664,6 +6744,9 @@
 ### C Prototype
 `void play_mario_action_sound(struct MarioState *m, u32 soundBits, u32 waveParticleType);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -5684,6 +6767,9 @@
 
 ### C Prototype
 `void play_mario_heavy_landing_sound(struct MarioState *m, u32 soundBits);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -5706,6 +6792,9 @@
 ### C Prototype
 `void play_mario_heavy_landing_sound_once(struct MarioState *m, u32 soundBits);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -5725,6 +6814,9 @@
 
 ### C Prototype
 `void play_mario_jump_sound(struct MarioState *m);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -5747,6 +6839,9 @@
 ### C Prototype
 `void play_mario_landing_sound(struct MarioState *m, u32 soundBits);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -5767,6 +6862,9 @@
 
 ### C Prototype
 `void play_mario_landing_sound_once(struct MarioState *m, u32 soundBits);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -5790,6 +6888,9 @@
 ### C Prototype
 `void play_mario_sound(struct MarioState *m, s32 primarySoundBits, s32 scondarySoundBits);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -5811,6 +6912,9 @@
 
 ### C Prototype
 `void play_sound_and_spawn_particles(struct MarioState *m, u32 soundBits, u32 waveParticleType);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -5834,6 +6938,9 @@
 ### C Prototype
 `void play_sound_if_no_flag(struct MarioState *m, u32 soundBits, u32 flags);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -5855,6 +6962,9 @@
 
 ### C Prototype
 `struct Surface *resolve_and_return_wall_collisions(Vec3f pos, f32 offset, f32 radius);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -5879,6 +6989,9 @@
 ### C Prototype
 `void resolve_and_return_wall_collisions_data(Vec3f pos, f32 offset, f32 radius, struct WallCollisionData* collisionData);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -5898,6 +7011,9 @@
 
 ### C Prototype
 `s16 return_mario_anim_y_translation(struct MarioState *m);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -5919,6 +7035,9 @@
 
 ### C Prototype
 `void set_anim_to_frame(struct MarioState *m, s16 animFrame);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -5942,6 +7061,9 @@
 ### C Prototype
 `s16 set_character_anim_with_accel(struct MarioState *m, s32 targetAnimID, s32 accel);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -5963,6 +7085,9 @@
 ### C Prototype
 `s16 set_character_animation(struct MarioState *m, s32 targetAnimID);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -5982,6 +7107,9 @@
 
 ### C Prototype
 `s32 set_jump_from_landing(struct MarioState *m);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -6005,6 +7133,9 @@
 ### C Prototype
 `s32 set_jumping_action(struct MarioState *m, u32 action, u32 actionArg);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -6026,6 +7157,9 @@
 
 ### C Prototype
 `u32 set_mario_action(struct MarioState *m, u32 action, u32 actionArg);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -6049,6 +7183,9 @@
 ### C Prototype
 `s16 set_mario_anim_with_accel(struct MarioState *m, s32 targetAnimID, s32 accel);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -6069,6 +7206,9 @@
 
 ### C Prototype
 `s16 set_mario_animation(struct MarioState *m, s32 targetAnimID);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -6092,6 +7232,9 @@
 ### C Prototype
 `void set_mario_particle_flags(struct MarioState* m, u32 flags, u8 clear);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -6114,6 +7257,9 @@
 ### C Prototype
 `void set_mario_y_vel_based_on_fspeed(struct MarioState *m, f32 initialVelY, f32 multiplier);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -6133,6 +7279,9 @@
 
 ### C Prototype
 `void set_steep_jump_action(struct MarioState *m);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -6154,6 +7303,9 @@
 ### C Prototype
 `s32 set_water_plunge_action(struct MarioState *m);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -6173,6 +7325,9 @@
 
 ### C Prototype
 `s32 transition_submerged_to_walking(struct MarioState *m);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -6194,6 +7349,9 @@
 ### C Prototype
 `void update_mario_pos_for_anim(struct MarioState *m);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -6213,6 +7371,9 @@
 
 ### C Prototype
 `void update_mario_sound_and_camera(struct MarioState *m);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -6240,6 +7401,9 @@
 ### C Prototype
 `s32 check_common_airborne_cancels(struct MarioState *m);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -6260,6 +7424,9 @@
 
 ### C Prototype
 `s32 check_fall_damage(struct MarioState *m, u32 hardFallAction);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -6282,6 +7449,9 @@
 ### C Prototype
 `s32 check_fall_damage_or_get_stuck(struct MarioState *m, u32 hardFallAction);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -6301,6 +7471,9 @@
 
 ### C Prototype
 `s32 check_horizontal_wind(struct MarioState *m);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -6322,6 +7495,9 @@
 ### C Prototype
 `s32 check_kick_or_dive_in_air(struct MarioState *m);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -6341,6 +7517,9 @@
 
 ### C Prototype
 `s32 check_wall_kick(struct MarioState *m);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -6364,6 +7543,9 @@
 
 ### C Prototype
 `u32 common_air_action_step(struct MarioState *m, u32 landAction, s32 animation, u32 stepArg);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -6389,6 +7571,9 @@
 ### C Prototype
 `u32 common_air_knockback_step(struct MarioState *m, u32 landAction, u32 hardFallAction, s32 animation, f32 speed);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -6408,6 +7593,9 @@
 
 ### C Prototype
 `s32 lava_boost_on_wall(struct MarioState *m);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -6429,6 +7617,9 @@
 ### C Prototype
 `s32 mario_execute_airborne_action(struct MarioState *m);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -6448,6 +7639,9 @@
 
 ### C Prototype
 `void play_far_fall_sound(struct MarioState *m);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -6472,6 +7666,9 @@
 ### C Prototype
 `void play_flip_sounds(struct MarioState *m, s16 frame1, s16 frame2, s16 frame3);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -6491,6 +7688,9 @@
 
 ### C Prototype
 `void play_knockback_sound(struct MarioState *m);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -6512,6 +7712,9 @@
 ### C Prototype
 `s32 should_get_stuck_in_ground(struct MarioState *m);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -6531,6 +7734,9 @@
 
 ### C Prototype
 `void update_air_with_turn(struct MarioState *m);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -6552,6 +7758,9 @@
 ### C Prototype
 `void update_air_without_turn(struct MarioState *m);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -6571,6 +7780,9 @@
 
 ### C Prototype
 `void update_flying(struct MarioState *m);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -6592,6 +7804,9 @@
 ### C Prototype
 `void update_flying_pitch(struct MarioState *m);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -6612,6 +7827,9 @@
 ### C Prototype
 `void update_flying_yaw(struct MarioState *m);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -6631,6 +7849,9 @@
 
 ### C Prototype
 `void update_lava_boost_or_twirling(struct MarioState *m);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -6658,6 +7879,9 @@
 ### C Prototype
 `void add_tree_leaf_particles(struct MarioState *m);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -6677,6 +7901,9 @@
 
 ### C Prototype
 `s32 check_common_automatic_cancels(struct MarioState *m);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -6698,6 +7925,9 @@
 ### C Prototype
 `void climb_up_ledge(struct MarioState *m);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -6718,6 +7948,9 @@
 ### C Prototype
 `s32 let_go_of_ledge(struct MarioState *m);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -6737,6 +7970,9 @@
 
 ### C Prototype
 `s32 mario_execute_automatic_action(struct MarioState *m);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -6759,6 +7995,9 @@
 ### C Prototype
 `s32 perform_hanging_step(struct MarioState *m, Vec3f nextPos);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -6779,6 +8018,9 @@
 
 ### C Prototype
 `void play_climbing_sounds(struct MarioState *m, s32 b);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -6801,6 +8043,9 @@
 ### C Prototype
 `s32 set_pole_position(struct MarioState *m, f32 offsetY);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -6821,6 +8066,9 @@
 ### C Prototype
 `s32 update_hang_moving(struct MarioState *m);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -6840,6 +8088,9 @@
 
 ### C Prototype
 `void update_hang_stationary(struct MarioState *m);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -6863,6 +8114,9 @@
 ### C Prototype
 `void update_ledge_climb(struct MarioState *m, s32 animation, u32 endAction);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -6882,6 +8136,9 @@
 
 ### C Prototype
 `void update_ledge_climb_camera(struct MarioState *m);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -6907,6 +8164,9 @@
 ### C Prototype
 `void bhv_end_peach_loop(void);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -6924,6 +8184,9 @@
 
 ### C Prototype
 `void bhv_end_toad_loop(void);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -6947,6 +8210,9 @@
 ### C Prototype
 `s32 common_death_handler(struct MarioState *m, s32 animation, s32 frameToDeathWarp);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -6966,6 +8232,9 @@
 
 ### C Prototype
 `void cutscene_put_cap_on(struct MarioState *m);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -6987,6 +8256,9 @@
 ### C Prototype
 `void cutscene_take_cap_off(struct MarioState *m);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -7007,6 +8279,9 @@
 
 ### C Prototype
 `void general_star_dance_handler(struct MarioState *m, s32 isInWater);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -7031,6 +8306,9 @@
 ### C Prototype
 `void generate_yellow_sparkles(s16 x, s16 y, s16 z, f32 radius);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -7050,6 +8328,9 @@
 
 ### C Prototype
 `s32 get_credits_str_width(char *str);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -7071,6 +8352,9 @@
 ### C Prototype
 `s32 get_star_collection_dialog(struct MarioState *m);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -7090,6 +8374,9 @@
 
 ### C Prototype
 `void handle_save_menu(struct MarioState *m);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -7114,6 +8401,9 @@
 ### C Prototype
 `s32 launch_mario_until_land(struct MarioState *m, s32 endAction, s32 animation, f32 forwardVel);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -7133,6 +8423,9 @@
 
 ### C Prototype
 `s32 mario_execute_cutscene_action(struct MarioState *m);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -7154,6 +8447,9 @@
 ### C Prototype
 `s32 mario_ready_to_speak(struct MarioState* m);`
 
+### Description
+No description available.
+
 [:arrow_up_small:](#)
 
 <br />
@@ -7174,6 +8470,9 @@
 
 ### C Prototype
 `u8 should_start_or_continue_dialog(struct MarioState* m, struct Object* object);`
+
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
@@ -7200,1457 +8499,13 @@
 ### C Prototype
 `void stuck_in_ground_handler(struct MarioState *m, s32 animation, s32 unstuckFrame, s32 target2, s32 target3, s32 endAction);`
 
-[:arrow_up_small:](#)
-
-<br />
-
----
-# functions from mario_actions_moving.c
-
-<br />
-
-
-## [align_with_floor](#align_with_floor)
-
-### Lua Example
-`align_with_floor(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- None
-
-### C Prototype
-`void align_with_floor(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [analog_stick_held_back](#analog_stick_held_back)
-
-### Lua Example
-`local integerValue = analog_stick_held_back(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 analog_stick_held_back(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [anim_and_audio_for_heavy_walk](#anim_and_audio_for_heavy_walk)
-
-### Lua Example
-`anim_and_audio_for_heavy_walk(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- None
-
-### C Prototype
-`void anim_and_audio_for_heavy_walk(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [anim_and_audio_for_hold_walk](#anim_and_audio_for_hold_walk)
-
-### Lua Example
-`anim_and_audio_for_hold_walk(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- None
-
-### C Prototype
-`void anim_and_audio_for_hold_walk(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [anim_and_audio_for_walk](#anim_and_audio_for_walk)
-
-### Lua Example
-`anim_and_audio_for_walk(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- None
-
-### C Prototype
-`void anim_and_audio_for_walk(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [apply_landing_accel](#apply_landing_accel)
-
-### Lua Example
-`local integerValue = apply_landing_accel(m, frictionFactor)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| frictionFactor | `number` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 apply_landing_accel(struct MarioState *m, f32 frictionFactor);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [apply_slope_accel](#apply_slope_accel)
-
-### Lua Example
-`apply_slope_accel(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- None
-
-### C Prototype
-`void apply_slope_accel(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [apply_slope_decel](#apply_slope_decel)
-
-### Lua Example
-`local integerValue = apply_slope_decel(m, decelCoef)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| decelCoef | `number` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 apply_slope_decel(struct MarioState *m, f32 decelCoef);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [begin_braking_action](#begin_braking_action)
-
-### Lua Example
-`local integerValue = begin_braking_action(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 begin_braking_action(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [begin_walking_action](#begin_walking_action)
-
-### Lua Example
-`local integerValue = begin_walking_action(m, forwardVel, action, actionArg)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| forwardVel | `number` |
-| action | `integer` |
-| actionArg | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 begin_walking_action(struct MarioState *m, f32 forwardVel, u32 action, u32 actionArg);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [check_common_moving_cancels](#check_common_moving_cancels)
-
-### Lua Example
-`local integerValue = check_common_moving_cancels(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 check_common_moving_cancels(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [check_ground_dive_or_punch](#check_ground_dive_or_punch)
-
-### Lua Example
-`local integerValue = check_ground_dive_or_punch(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 check_ground_dive_or_punch(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [check_ledge_climb_down](#check_ledge_climb_down)
-
-### Lua Example
-`check_ledge_climb_down(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- None
-
-### C Prototype
-`void check_ledge_climb_down(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [common_ground_knockback_action](#common_ground_knockback_action)
-
-### Lua Example
-`local integerValue = common_ground_knockback_action(m, animation, arg2, arg3, arg4)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| animation | `integer` |
-| arg2 | `integer` |
-| arg3 | `integer` |
-| arg4 | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 common_ground_knockback_action(struct MarioState *m, s32 animation, s32 arg2, s32 arg3, s32 arg4);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [common_landing_action](#common_landing_action)
-
-### Lua Example
-`local integerValue = common_landing_action(m, animation, airAction)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| animation | `integer` |
-| airAction | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`u32 common_landing_action(struct MarioState *m, s16 animation, u32 airAction);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [common_slide_action](#common_slide_action)
-
-### Lua Example
-`common_slide_action(m, endAction, airAction, animation)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| endAction | `integer` |
-| airAction | `integer` |
-| animation | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void common_slide_action(struct MarioState *m, u32 endAction, u32 airAction, s32 animation);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [common_slide_action_with_jump](#common_slide_action_with_jump)
-
-### Lua Example
-`local integerValue = common_slide_action_with_jump(m, stopAction, jumpAction, airAction, animation)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| stopAction | `integer` |
-| jumpAction | `integer` |
-| airAction | `integer` |
-| animation | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 common_slide_action_with_jump(struct MarioState *m, u32 stopAction, u32 jumpAction, u32 airAction, s32 animation);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [mario_execute_moving_action](#mario_execute_moving_action)
-
-### Lua Example
-`local integerValue = mario_execute_moving_action(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 mario_execute_moving_action(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [play_step_sound](#play_step_sound)
-
-### Lua Example
-`play_step_sound(m, frame1, frame2)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| frame1 | `integer` |
-| frame2 | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void play_step_sound(struct MarioState *m, s16 frame1, s16 frame2);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [push_or_sidle_wall](#push_or_sidle_wall)
-
-### Lua Example
-`push_or_sidle_wall(m, startPos)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| startPos | [Vec3f](structs.md#Vec3f) |
-
-### Returns
-- None
-
-### C Prototype
-`void push_or_sidle_wall(struct MarioState *m, Vec3f startPos);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [quicksand_jump_land_action](#quicksand_jump_land_action)
-
-### Lua Example
-`local integerValue = quicksand_jump_land_action(m, animation1, animation2, endAction, airAction)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| animation1 | `integer` |
-| animation2 | `integer` |
-| endAction | `integer` |
-| airAction | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 quicksand_jump_land_action(struct MarioState *m, s32 animation1, s32 animation2, u32 endAction, u32 airAction);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [set_triple_jump_action](#set_triple_jump_action)
-
-### Lua Example
-`local integerValue = set_triple_jump_action(m, action, actionArg)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| action | `integer` |
-| actionArg | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 set_triple_jump_action(struct MarioState *m, UNUSED u32 action, UNUSED u32 actionArg);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [should_begin_sliding](#should_begin_sliding)
-
-### Lua Example
-`local integerValue = should_begin_sliding(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 should_begin_sliding(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [slide_bonk](#slide_bonk)
-
-### Lua Example
-`slide_bonk(m, fastAction, slowAction)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| fastAction | `integer` |
-| slowAction | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void slide_bonk(struct MarioState *m, u32 fastAction, u32 slowAction);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [stomach_slide_action](#stomach_slide_action)
-
-### Lua Example
-`local integerValue = stomach_slide_action(m, stopAction, airAction, animation)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| stopAction | `integer` |
-| airAction | `integer` |
-| animation | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 stomach_slide_action(struct MarioState *m, u32 stopAction, u32 airAction, s32 animation);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [tilt_body_butt_slide](#tilt_body_butt_slide)
-
-### Lua Example
-`tilt_body_butt_slide(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- None
-
-### C Prototype
-`void tilt_body_butt_slide(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [tilt_body_ground_shell](#tilt_body_ground_shell)
-
-### Lua Example
-`tilt_body_ground_shell(m, startYaw)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| startYaw | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void tilt_body_ground_shell(struct MarioState *m, s16 startYaw);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [tilt_body_running](#tilt_body_running)
-
-### Lua Example
-`local integerValue = tilt_body_running(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s16 tilt_body_running(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [tilt_body_walking](#tilt_body_walking)
-
-### Lua Example
-`tilt_body_walking(m, startYaw)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| startYaw | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void tilt_body_walking(struct MarioState *m, s16 startYaw);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [update_decelerating_speed](#update_decelerating_speed)
-
-### Lua Example
-`local integerValue = update_decelerating_speed(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 update_decelerating_speed(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [update_shell_speed](#update_shell_speed)
-
-### Lua Example
-`update_shell_speed(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- None
-
-### C Prototype
-`void update_shell_speed(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [update_sliding](#update_sliding)
-
-### Lua Example
-`local integerValue = update_sliding(m, stopSpeed)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| stopSpeed | `number` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 update_sliding(struct MarioState *m, f32 stopSpeed);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [update_sliding_angle](#update_sliding_angle)
-
-### Lua Example
-`update_sliding_angle(m, accel, lossFactor)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| accel | `number` |
-| lossFactor | `number` |
-
-### Returns
-- None
-
-### C Prototype
-`void update_sliding_angle(struct MarioState *m, f32 accel, f32 lossFactor);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [update_walking_speed](#update_walking_speed)
-
-### Lua Example
-`update_walking_speed(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- None
-
-### C Prototype
-`void update_walking_speed(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
----
-# functions from mario_actions_object.c
-
-<br />
-
-
-## [animated_stationary_ground_step](#animated_stationary_ground_step)
-
-### Lua Example
-`animated_stationary_ground_step(m, animation, endAction)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| animation | `integer` |
-| endAction | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void animated_stationary_ground_step(struct MarioState *m, s32 animation, u32 endAction);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [check_common_object_cancels](#check_common_object_cancels)
-
-### Lua Example
-`local integerValue = check_common_object_cancels(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 check_common_object_cancels(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [mario_execute_object_action](#mario_execute_object_action)
-
-### Lua Example
-`local integerValue = mario_execute_object_action(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 mario_execute_object_action(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [mario_update_punch_sequence](#mario_update_punch_sequence)
-
-### Lua Example
-`local integerValue = mario_update_punch_sequence(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 mario_update_punch_sequence(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
----
-# functions from mario_actions_stationary.c
-
-<br />
-
-
-## [check_common_hold_idle_cancels](#check_common_hold_idle_cancels)
-
-### Lua Example
-`local integerValue = check_common_hold_idle_cancels(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 check_common_hold_idle_cancels(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [check_common_idle_cancels](#check_common_idle_cancels)
-
-### Lua Example
-`local integerValue = check_common_idle_cancels(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 check_common_idle_cancels(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [check_common_landing_cancels](#check_common_landing_cancels)
-
-### Lua Example
-`local integerValue = check_common_landing_cancels(m, action)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| action | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 check_common_landing_cancels(struct MarioState *m, u32 action);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [check_common_stationary_cancels](#check_common_stationary_cancels)
-
-### Lua Example
-`local integerValue = check_common_stationary_cancels(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 check_common_stationary_cancels(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [landing_step](#landing_step)
-
-### Lua Example
-`local integerValue = landing_step(m, arg1, action)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| arg1 | `integer` |
-| action | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 landing_step(struct MarioState *m, s32 arg1, u32 action);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [mario_execute_stationary_action](#mario_execute_stationary_action)
-
-### Lua Example
-`local integerValue = mario_execute_stationary_action(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 mario_execute_stationary_action(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [play_anim_sound](#play_anim_sound)
-
-### Lua Example
-`play_anim_sound(m, actionState, animFrame, sound)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| actionState | `integer` |
-| animFrame | `integer` |
-| sound | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void play_anim_sound(struct MarioState *m, u32 actionState, s32 animFrame, u32 sound);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [stopping_step](#stopping_step)
-
-### Lua Example
-`stopping_step(m, animID, action)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| animID | `integer` |
-| action | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void stopping_step(struct MarioState *m, s32 animID, u32 action);`
-
-[:arrow_up_small:](#)
-
-<br />
-
----
-# functions from mario_actions_submerged.c
-
-<br />
-
-
-## [apply_water_current](#apply_water_current)
-
-### Lua Example
-`apply_water_current(m, step)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| step | [Vec3f](structs.md#Vec3f) |
-
-### Returns
-- None
-
-### C Prototype
-`void apply_water_current(struct MarioState *m, Vec3f step);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [float_surface_gfx](#float_surface_gfx)
-
-### Lua Example
-`float_surface_gfx(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- None
-
-### C Prototype
-`void float_surface_gfx(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [mario_execute_submerged_action](#mario_execute_submerged_action)
-
-### Lua Example
-`local integerValue = mario_execute_submerged_action(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 mario_execute_submerged_action(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [perform_water_full_step](#perform_water_full_step)
-
-### Lua Example
-`local integerValue = perform_water_full_step(m, nextPos)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| nextPos | [Vec3f](structs.md#Vec3f) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`u32 perform_water_full_step(struct MarioState *m, Vec3f nextPos);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [perform_water_step](#perform_water_step)
-
-### Lua Example
-`local integerValue = perform_water_step(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`u32 perform_water_step(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [set_swimming_at_surface_particles](#set_swimming_at_surface_particles)
-
-### Lua Example
-`set_swimming_at_surface_particles(m, particleFlag)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| particleFlag | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void set_swimming_at_surface_particles(struct MarioState *m, u32 particleFlag);`
-
-[:arrow_up_small:](#)
-
-<br />
-
----
-# functions from mario_misc.h
-
-<br />
-
-
-## [bhv_toad_message_init](#bhv_toad_message_init)
-
-### Lua Example
-`bhv_toad_message_init()`
-
-### Parameters
-- None
-
-### Returns
-- None
-
-### C Prototype
-`void bhv_toad_message_init(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [bhv_toad_message_loop](#bhv_toad_message_loop)
-
-### Lua Example
-`bhv_toad_message_loop()`
-
-### Parameters
-- None
-
-### Returns
-- None
-
-### C Prototype
-`void bhv_toad_message_loop(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [bhv_unlock_door_star_init](#bhv_unlock_door_star_init)
-
-### Lua Example
-`bhv_unlock_door_star_init()`
-
-### Parameters
-- None
-
-### Returns
-- None
-
-### C Prototype
-`void bhv_unlock_door_star_init(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [bhv_unlock_door_star_loop](#bhv_unlock_door_star_loop)
-
-### Lua Example
-`bhv_unlock_door_star_loop()`
-
-### Parameters
-- None
-
-### Returns
-- None
-
-### C Prototype
-`void bhv_unlock_door_star_loop(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
----
-# functions from mario_step.h
-
-<br />
-
-
-## [get_additive_y_vel_for_jumps](#get_additive_y_vel_for_jumps)
-
-### Lua Example
-`local numberValue = get_additive_y_vel_for_jumps()`
-
-### Parameters
-- None
-
-### Returns
-- `number`
-
-### C Prototype
-`f32 get_additive_y_vel_for_jumps(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [init_bully_collision_data](#init_bully_collision_data)
-
-### Lua Example
-`init_bully_collision_data(data, posX, posZ, forwardVel, yaw, conversionRatio, radius)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| data | [BullyCollisionData](structs.md#BullyCollisionData) |
-| posX | `number` |
-| posZ | `number` |
-| forwardVel | `number` |
-| yaw | `integer` |
-| conversionRatio | `number` |
-| radius | `number` |
-
-### Returns
-- None
-
-### C Prototype
-`void init_bully_collision_data(struct BullyCollisionData *data, f32 posX, f32 posZ, f32 forwardVel, s16 yaw, f32 conversionRatio, f32 radius);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [mario_bonk_reflection](#mario_bonk_reflection)
-
-### Lua Example
-`mario_bonk_reflection(arg0, arg1)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| arg0 | [MarioState](structs.md#MarioState) |
-| arg1 | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void mario_bonk_reflection(struct MarioState *, u32);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [mario_push_off_steep_floor](#mario_push_off_steep_floor)
-
-### Lua Example
-`local integerValue = mario_push_off_steep_floor(arg0, arg1, arg2)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| arg0 | [MarioState](structs.md#MarioState) |
-| arg1 | `integer` |
-| arg2 | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`u32 mario_push_off_steep_floor(struct MarioState *, u32, u32);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [mario_update_moving_sand](#mario_update_moving_sand)
-
-### Lua Example
-`local integerValue = mario_update_moving_sand(arg0)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| arg0 | [MarioState](structs.md#MarioState) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`u32 mario_update_moving_sand(struct MarioState *);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [mario_update_quicksand](#mario_update_quicksand)
-
-### Lua Example
-`local integerValue = mario_update_quicksand(arg0, arg1)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| arg0 | [MarioState](structs.md#MarioState) |
-| arg1 | `number` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`u32 mario_update_quicksand(struct MarioState *, f32);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [mario_update_windy_ground](#mario_update_windy_ground)
-
-### Lua Example
-`local integerValue = mario_update_windy_ground(arg0)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| arg0 | [MarioState](structs.md#MarioState) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`u32 mario_update_windy_ground(struct MarioState *);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [perform_air_step](#perform_air_step)
-
-### Lua Example
-`local integerValue = perform_air_step(arg0, arg1)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| arg0 | [MarioState](structs.md#MarioState) |
-| arg1 | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 perform_air_step(struct MarioState *, u32);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [perform_ground_step](#perform_ground_step)
-
-### Lua Example
-`local integerValue = perform_ground_step(arg0)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| arg0 | [MarioState](structs.md#MarioState) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 perform_ground_step(struct MarioState *);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [set_vel_from_pitch_and_yaw](#set_vel_from_pitch_and_yaw)
-
-### Lua Example
-`set_vel_from_pitch_and_yaw(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- None
-
-### C Prototype
-`void set_vel_from_pitch_and_yaw(struct MarioState* m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [stationary_ground_step](#stationary_ground_step)
-
-### Lua Example
-`local integerValue = stationary_ground_step(arg0)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| arg0 | [MarioState](structs.md#MarioState) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 stationary_ground_step(struct MarioState *);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [stop_and_set_height_to_floor](#stop_and_set_height_to_floor)
-
-### Lua Example
-`stop_and_set_height_to_floor(arg0)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| arg0 | [MarioState](structs.md#MarioState) |
-
-### Returns
-- None
-
-### C Prototype
-`void stop_and_set_height_to_floor(struct MarioState *);`
+### Description
+No description available.
 
 [:arrow_up_small:](#)
 
 <br />
 ---
 
-[< prev](functions-2.md) | [1](functions.md) | [2](functions-2.md) | 3 | [4](functions-4.md) | [5](functions-5.md) | [next >](functions-4.md)]
+[< prev](functions-2.md) | [1](functions.md) | [2](functions-2.md) | 3 | [4](functions-4.md) | [5](functions-5.md) | [6](functions-6.md) | [next >](functions-4.md)]
 

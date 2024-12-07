@@ -1024,7 +1024,7 @@ def build_includes():
 
 ############################################################################
 
-def process_function(fname, line):
+def process_function(fname, line, description):
     if fname in override_allowed_functions:
         found_match = False
         for pattern in override_allowed_functions[fname]:
@@ -1043,6 +1043,7 @@ def process_function(fname, line):
 
     line = line.strip()
     function['line'] = line
+    function['description'] = description  # use the specific description passed in
 
     line = line.replace('UNUSED', '')
 
@@ -1086,18 +1087,19 @@ def process_function(fname, line):
 
     return function
 
-def process_functions(fname, file_str):
+def process_functions(fname, file_str, extracted_descriptions):
     functions = []
     for line in file_str.splitlines():
         if reject_line(line):
             global rejects
             rejects += line + '\n'
             continue
-        fn = process_function(fname, line)
+        line = line.strip()
+        description = extracted_descriptions.get(line, "No description available.")
+        fn = process_function(fname, line, description)
         if fn == None:
             continue
         functions.append(fn)
-
     functions = sorted(functions, key=lambda d: d['identifier'])
     return functions
 
@@ -1106,8 +1108,8 @@ def process_file(fname):
     processed_file['filename'] = fname.replace('\\', '/').split('/')[-1]
     processed_file['extern'] = fname.endswith('.c')
 
-    extracted_str = extract_functions(fname)
-    processed_file['functions'] = process_functions(fname, extracted_str)
+    extracted_str, extracted_descriptions = extract_functions(fname)
+    processed_file['functions'] = process_functions(fname, extracted_str, extracted_descriptions)
 
     return processed_file
 
@@ -1236,6 +1238,8 @@ def doc_function(fname, function):
     fid = function['identifier']
     s = '\n## [%s](#%s)\n' % (fid, fid)
 
+    description = function.get('description', "No description available.")
+
     rtype, rlink = translate_type_to_lua(function['type'])
     param_str = ', '.join([x['identifier'] for x in function['params']])
 
@@ -1279,6 +1283,9 @@ def doc_function(fname, function):
 
     s += '\n### C Prototype\n'
     s += '`%s`\n' % function['line'].strip()
+    
+    s += '\n### Description\n'
+    s +=  f'{description}\n'
 
     s += '\n[:arrow_up_small:](#)\n\n<br />\n'
 
