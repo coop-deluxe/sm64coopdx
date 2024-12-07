@@ -158,5 +158,5 @@ if __name__ == "__main__":
     print("Descriptions:")
     for func, desc in descriptions.items():
         print(f"Function: {func}")
-        print(f"  Description: {desc}\n")
+        print(f"    Description: {desc}\n")
 

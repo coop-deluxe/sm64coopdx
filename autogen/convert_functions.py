@@ -1095,7 +1095,7 @@ def process_functions(fname, file_str, extracted_descriptions):
             rejects += line + '\n'
             continue
         line = line.strip()
-        description = extracted_descriptions.get(line, "No description available.")
+        description = extracted_descriptions.get(line, "")
         fn = process_function(fname, line, description)
         if fn == None:
             continue
@@ -1238,7 +1238,7 @@ def doc_function(fname, function):
     fid = function['identifier']
     s = '\n## [%s](#%s)\n' % (fid, fid)
 
-    description = function.get('description', "No description available.")
+    description = function.get('description', "")
 
     rtype, rlink = translate_type_to_lua(function['type'])
     param_str = ', '.join([x['identifier'] for x in function['params']])
@@ -1284,8 +1284,9 @@ def doc_function(fname, function):
     s += '\n### C Prototype\n'
     s += '`%s`\n' % function['line'].strip()
     
-    s += '\n### Description\n'
-    s +=  f'{description}\n'
+    if description != "":
+        s += '\n### Description\n'
+        s +=  f'{description}\n'
 
     s += '\n[:arrow_up_small:](#)\n\n<br />\n'
 
@@ -1388,6 +1389,8 @@ def def_function(function):
 
     if rtype != "nil":
         s += '--- @return %s\n' % rtype
+    if function['description'] != "":
+        s += "--- %s\n" % (function['description'])
     s += "function %s(%s)\n    -- ...\nend\n\n" % (fid, param_str)
 
     return s
