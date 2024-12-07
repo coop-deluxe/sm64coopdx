@@ -48,7 +48,7 @@ void djui_panel_controls_create(struct DjuiBase* caller) {
                     count++;
                     char newName[256];
                     
-                    // If the name is bigger than 12 characters, we need to truncate it first
+                    // If the name is bigger than 9 characters, we need to truncate it first
                     // Then we can append the number so it fits in the slot
 
                     // Should we look into making scrolling text for this?
