@@ -1780,6 +1780,9 @@
 ### C Prototype
 `u8 get_fog_color(u8 index);`
 
+### Description
+Gets a value of the global fog color
+
 [:arrow_up_small:](#)
 
 <br />
@@ -1797,6 +1800,9 @@
 
 ### C Prototype
 `f32 get_fog_intensity(void);`
+
+### Description
+Gets the intensity of the fog
 
 [:arrow_up_small:](#)
 
@@ -1818,6 +1824,9 @@
 ### C Prototype
 `u8 get_lighting_color(u8 index);`
 
+### Description
+Gets a value of the global lighting color
+
 [:arrow_up_small:](#)
 
 <br />
@@ -1837,6 +1846,9 @@
 
 ### C Prototype
 `u8 get_lighting_color_ambient(u8 index);`
+
+### Description
+Gets a value of the global ambient lighting color
 
 [:arrow_up_small:](#)
 
@@ -1858,6 +1870,9 @@
 ### C Prototype
 `f32 get_lighting_dir(u8 index);`
 
+### Description
+Gets a value of the global lighting direction
+
 [:arrow_up_small:](#)
 
 <br />
@@ -1875,6 +1890,9 @@
 
 ### C Prototype
 `s8 get_skybox(void);`
+
+### Description
+Gets the current skybox
 
 [:arrow_up_small:](#)
 
@@ -1896,6 +1914,9 @@
 ### C Prototype
 `u8 get_skybox_color(u8 index);`
 
+### Description
+Gets a value of the global skybox color
+
 [:arrow_up_small:](#)
 
 <br />
@@ -1915,6 +1936,9 @@
 
 ### C Prototype
 `u8 get_vertex_color(u8 index);`
+
+### Description
+Gets a value of the global vertex shading color
 
 [:arrow_up_small:](#)
 
@@ -1937,6 +1961,9 @@
 ### C Prototype
 `void set_fog_color(u8 index, u8 value);`
 
+### Description
+Sets a value of the global fog color
+
 [:arrow_up_small:](#)
 
 <br />
@@ -1956,6 +1983,9 @@
 
 ### C Prototype
 `void set_fog_intensity(f32 intensity);`
+
+### Description
+Sets the intensity of the fog (this value scales very quickly, 1.0 to 1.1 is a desirable range)
 
 [:arrow_up_small:](#)
 
@@ -1978,6 +2008,9 @@
 ### C Prototype
 `void set_lighting_color(u8 index, u8 value);`
 
+### Description
+Sets a value of the global lighting color
+
 [:arrow_up_small:](#)
 
 <br />
@@ -1998,6 +2031,9 @@
 
 ### C Prototype
 `void set_lighting_color_ambient(u8 index, u8 value);`
+
+### Description
+Sets a value of the global lighting color (run this after `set_lighting_color` for the ambient color to not be overriden)
 
 [:arrow_up_small:](#)
 
@@ -2020,6 +2056,9 @@
 ### C Prototype
 `void set_lighting_dir(u8 index, f32 value);`
 
+### Description
+Sets a value of the global lighting direction
+
 [:arrow_up_small:](#)
 
 <br />
@@ -2039,6 +2078,9 @@
 
 ### C Prototype
 `void set_override_far(f32 far);`
+
+### Description
+Sets the override far plane
 
 [:arrow_up_small:](#)
 
@@ -2060,6 +2102,9 @@
 ### C Prototype
 `void set_override_fov(f32 fov);`
 
+### Description
+Sets the override FOV
+
 [:arrow_up_small:](#)
 
 <br />
@@ -2080,6 +2125,9 @@
 ### C Prototype
 `void set_override_near(f32 near);`
 
+### Description
+Sets the override near plane
+
 [:arrow_up_small:](#)
 
 <br />
@@ -2099,6 +2147,9 @@
 
 ### C Prototype
 `void set_override_skybox(s8 background);`
+
+### Description
+Sets the override skybox
 
 [:arrow_up_small:](#)
 
@@ -2121,6 +2172,9 @@
 ### C Prototype
 `void set_skybox_color(u8 index, u8 value);`
 
+### Description
+Sets a value of the global skybox color
+
 [:arrow_up_small:](#)
 
 <br />
@@ -2141,6 +2195,9 @@
 
 ### C Prototype
 `void set_vertex_color(u8 index, u8 value);`
+
+### Description
+Sets a value of the global vertex shading color
 
 [:arrow_up_small:](#)
 

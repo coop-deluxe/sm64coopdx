@@ -8063,107 +8063,126 @@ end
 
 --- @param index integer
 --- @return integer
+--- Gets a value of the global fog color
 function get_fog_color(index)
     -- ...
 end
 
 --- @return number
+--- Gets the intensity of the fog
 function get_fog_intensity()
     -- ...
 end
 
 --- @param index integer
 --- @return integer
+--- Gets a value of the global lighting color
 function get_lighting_color(index)
     -- ...
 end
 
 --- @param index integer
 --- @return integer
+--- Gets a value of the global ambient lighting color
 function get_lighting_color_ambient(index)
     -- ...
 end
 
 --- @param index integer
 --- @return number
+--- Gets a value of the global lighting direction
 function get_lighting_dir(index)
     -- ...
 end
 
 --- @return integer
+--- Gets the current skybox
 function get_skybox()
     -- ...
 end
 
 --- @param index integer
 --- @return integer
+--- Gets a value of the global skybox color
 function get_skybox_color(index)
     -- ...
 end
 
 --- @param index integer
 --- @return integer
+--- Gets a value of the global vertex shading color
 function get_vertex_color(index)
     -- ...
 end
 
 --- @param index integer
 --- @param value integer
+--- Sets a value of the global fog color
 function set_fog_color(index, value)
     -- ...
 end
 
 --- @param intensity number
+--- Sets the intensity of the fog (this value scales very quickly, 1.0 to 1.1 is a desirable range)
 function set_fog_intensity(intensity)
     -- ...
 end
 
 --- @param index integer
 --- @param value integer
+--- Sets a value of the global lighting color
 function set_lighting_color(index, value)
     -- ...
 end
 
 --- @param index integer
 --- @param value integer
+--- Sets a value of the global lighting color (run this after `set_lighting_color` for the ambient color to not be overriden)
 function set_lighting_color_ambient(index, value)
     -- ...
 end
 
 --- @param index integer
 --- @param value number
+--- Sets a value of the global lighting direction
 function set_lighting_dir(index, value)
     -- ...
 end
 
 --- @param far number
+--- Sets the override far plane
 function set_override_far(far)
     -- ...
 end
 
 --- @param fov number
+--- Sets the override FOV
 function set_override_fov(fov)
     -- ...
 end
 
 --- @param near number
+--- Sets the override near plane
 function set_override_near(near)
     -- ...
 end
 
 --- @param background integer
+--- Sets the override skybox
 function set_override_skybox(background)
     -- ...
 end
 
 --- @param index integer
 --- @param value integer
+--- Sets a value of the global skybox color
 function set_skybox_color(index, value)
     -- ...
 end
 
 --- @param index integer
 --- @param value integer
+--- Sets a value of the global vertex shading color
 function set_vertex_color(index, value)
     -- ...
 end
