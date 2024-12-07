@@ -3007,18 +3007,21 @@ end
 --- @param m MarioState
 --- @param characterAnim CharacterAnimID
 --- @return integer
+--- Gets the animation ID to use for a specific character and animation combination. The ID is based on `characterAnim` and the character currently controlled by Mario (`m`). Useful for determining which animation to play for actions like walking, jumping, or idle states
 function get_character_anim(m, characterAnim)
     -- ...
 end
 
 --- @param m MarioState
 --- @return number
+--- Calculates the animation offset for Mario's current animation. The offset is determined by the type of animation being played (e.g., hand, feet, or torso movement). Useful for smoothly syncing Mario's model height or positional adjustments during animations
 function get_character_anim_offset(m)
     -- ...
 end
 
 --- @param m MarioState
 --- @param characterSound CharacterSound
+--- Plays a character-specific sound based on the given `characterSound` value. The sound is tied to Mario's current state (`m`). Useful for triggering sound effects for actions like jumping or interacting with the environment
 function play_character_sound(m, characterSound)
     -- ...
 end
@@ -3026,6 +3029,7 @@ end
 --- @param m MarioState
 --- @param characterSound CharacterSound
 --- @param flags integer
+--- Plays a character-specific sound only if certain flags are not set. This ensures that sounds are not repeated unnecessarily. The sound is based on `characterSound`, and the flags are checked using `flags`. Useful for avoiding duplicate sound effects in rapid succession or conditional actions
 function play_character_sound_if_no_flag(m, characterSound, flags)
     -- ...
 end
@@ -3033,11 +3037,13 @@ end
 --- @param m MarioState
 --- @param characterSound CharacterSound
 --- @param offset integer
+--- Plays a character-specific sound with an additional `offset`, allowing variations or delays in the sound effect. Uses Mario's current state (`m`). Useful for adding dynamic sound effects or syncing sounds to specific animations or events
 function play_character_sound_offset(m, characterSound, offset)
     -- ...
 end
 
 --- @param m MarioState
+--- Updates Mario's current animation offset. This adjusts Mario's position based on the calculated offset to ensure animations appear smooth and natural. Useful for keeping Mario's animations visually aligned, particularly when transitioning between animations
 function update_character_anim_offset(m)
     -- ...
 end

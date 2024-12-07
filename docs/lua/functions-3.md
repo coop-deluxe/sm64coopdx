@@ -2,7 +2,7 @@
 
 ---
 
-[< prev](functions-2.md) | [1](functions.md) | [2](functions-2.md) | 3 | [4](functions-4.md) | [5](functions-5.md) | [next >](functions-4.md)]
+[< prev](functions-2.md) | [1](functions.md) | [2](functions-2.md) | 3 | [4](functions-4.md) | [5](functions-5.md) | [6](functions-6.md) | [next >](functions-4.md)]
 
 
 ---
@@ -1918,6 +1918,9 @@
 
 ## [get_character_anim](#get_character_anim)
 
+### Description
+Gets the animation ID to use for a specific character and animation combination. The ID is based on `characterAnim` and the character currently controlled by Mario (`m`). Useful for determining which animation to play for actions like walking, jumping, or idle states
+
 ### Lua Example
 `local integerValue = get_character_anim(m, characterAnim)`
 
@@ -1939,6 +1942,9 @@
 
 ## [get_character_anim_offset](#get_character_anim_offset)
 
+### Description
+Calculates the animation offset for Mario's current animation. The offset is determined by the type of animation being played (e.g., hand, feet, or torso movement). Useful for smoothly syncing Mario's model height or positional adjustments during animations
+
 ### Lua Example
 `local numberValue = get_character_anim_offset(m)`
 
@@ -1958,6 +1964,9 @@
 <br />
 
 ## [play_character_sound](#play_character_sound)
+
+### Description
+Plays a character-specific sound based on the given `characterSound` value. The sound is tied to Mario's current state (`m`). Useful for triggering sound effects for actions like jumping or interacting with the environment
 
 ### Lua Example
 `play_character_sound(m, characterSound)`
@@ -1979,6 +1988,9 @@
 <br />
 
 ## [play_character_sound_if_no_flag](#play_character_sound_if_no_flag)
+
+### Description
+Plays a character-specific sound only if certain flags are not set. This ensures that sounds are not repeated unnecessarily. The sound is based on `characterSound`, and the flags are checked using `flags`. Useful for avoiding duplicate sound effects in rapid succession or conditional actions
 
 ### Lua Example
 `play_character_sound_if_no_flag(m, characterSound, flags)`
@@ -2002,6 +2014,9 @@
 
 ## [play_character_sound_offset](#play_character_sound_offset)
 
+### Description
+Plays a character-specific sound with an additional `offset`, allowing variations or delays in the sound effect. Uses Mario's current state (`m`). Useful for adding dynamic sound effects or syncing sounds to specific animations or events
+
 ### Lua Example
 `play_character_sound_offset(m, characterSound, offset)`
 
@@ -2023,6 +2038,9 @@
 <br />
 
 ## [update_character_anim_offset](#update_character_anim_offset)
+
+### Description
+Updates Mario's current animation offset. This adjusts Mario's position based on the calculated offset to ensure animations appear smooth and natural. Useful for keeping Mario's animations visually aligned, particularly when transitioning between animations
 
 ### Lua Example
 `update_character_anim_offset(m)`
@@ -8395,262 +8413,7 @@
 [:arrow_up_small:](#)
 
 <br />
-
----
-# functions from mario_step.h
-
-<br />
-
-
-## [get_additive_y_vel_for_jumps](#get_additive_y_vel_for_jumps)
-
-### Lua Example
-`local numberValue = get_additive_y_vel_for_jumps()`
-
-### Parameters
-- None
-
-### Returns
-- `number`
-
-### C Prototype
-`f32 get_additive_y_vel_for_jumps(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [init_bully_collision_data](#init_bully_collision_data)
-
-### Lua Example
-`init_bully_collision_data(data, posX, posZ, forwardVel, yaw, conversionRatio, radius)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| data | [BullyCollisionData](structs.md#BullyCollisionData) |
-| posX | `number` |
-| posZ | `number` |
-| forwardVel | `number` |
-| yaw | `integer` |
-| conversionRatio | `number` |
-| radius | `number` |
-
-### Returns
-- None
-
-### C Prototype
-`void init_bully_collision_data(struct BullyCollisionData *data, f32 posX, f32 posZ, f32 forwardVel, s16 yaw, f32 conversionRatio, f32 radius);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [mario_bonk_reflection](#mario_bonk_reflection)
-
-### Lua Example
-`mario_bonk_reflection(arg0, arg1)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| arg0 | [MarioState](structs.md#MarioState) |
-| arg1 | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void mario_bonk_reflection(struct MarioState *, u32);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [mario_push_off_steep_floor](#mario_push_off_steep_floor)
-
-### Lua Example
-`local integerValue = mario_push_off_steep_floor(arg0, arg1, arg2)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| arg0 | [MarioState](structs.md#MarioState) |
-| arg1 | `integer` |
-| arg2 | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`u32 mario_push_off_steep_floor(struct MarioState *, u32, u32);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [mario_update_moving_sand](#mario_update_moving_sand)
-
-### Lua Example
-`local integerValue = mario_update_moving_sand(arg0)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| arg0 | [MarioState](structs.md#MarioState) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`u32 mario_update_moving_sand(struct MarioState *);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [mario_update_quicksand](#mario_update_quicksand)
-
-### Lua Example
-`local integerValue = mario_update_quicksand(arg0, arg1)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| arg0 | [MarioState](structs.md#MarioState) |
-| arg1 | `number` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`u32 mario_update_quicksand(struct MarioState *, f32);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [mario_update_windy_ground](#mario_update_windy_ground)
-
-### Lua Example
-`local integerValue = mario_update_windy_ground(arg0)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| arg0 | [MarioState](structs.md#MarioState) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`u32 mario_update_windy_ground(struct MarioState *);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [perform_air_step](#perform_air_step)
-
-### Lua Example
-`local integerValue = perform_air_step(arg0, arg1)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| arg0 | [MarioState](structs.md#MarioState) |
-| arg1 | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 perform_air_step(struct MarioState *, u32);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [perform_ground_step](#perform_ground_step)
-
-### Lua Example
-`local integerValue = perform_ground_step(arg0)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| arg0 | [MarioState](structs.md#MarioState) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 perform_ground_step(struct MarioState *);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [set_vel_from_pitch_and_yaw](#set_vel_from_pitch_and_yaw)
-
-### Lua Example
-`set_vel_from_pitch_and_yaw(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- None
-
-### C Prototype
-`void set_vel_from_pitch_and_yaw(struct MarioState* m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [stationary_ground_step](#stationary_ground_step)
-
-### Lua Example
-`local integerValue = stationary_ground_step(arg0)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| arg0 | [MarioState](structs.md#MarioState) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 stationary_ground_step(struct MarioState *);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [stop_and_set_height_to_floor](#stop_and_set_height_to_floor)
-
-### Lua Example
-`stop_and_set_height_to_floor(arg0)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| arg0 | [MarioState](structs.md#MarioState) |
-
-### Returns
-- None
-
-### C Prototype
-`void stop_and_set_height_to_floor(struct MarioState *);`
-
-[:arrow_up_small:](#)
-
-<br />
 ---
 
-[< prev](functions-2.md) | [1](functions.md) | [2](functions-2.md) | 3 | [4](functions-4.md) | [5](functions-5.md) | [next >](functions-4.md)]
+[< prev](functions-2.md) | [1](functions.md) | [2](functions-2.md) | 3 | [4](functions-4.md) | [5](functions-5.md) | [6](functions-6.md) | [next >](functions-4.md)]
 
