@@ -2940,19 +2940,19 @@ function position_based_random_u16()
 end
 
 --- @return number
---- Generates a psuedo random float between 0.0 and 1.0
+--- Generates a pseudo random float between 0.0 and 1.0
 function random_float()
     -- ...
 end
 
 --- @return integer
---- Returns either 1 or -1 with a psuedo 50:50 chance
+--- Returns either 1 or -1 with a pseudo 50:50 chance
 function random_sign()
     -- ...
 end
 
 --- @return integer
---- Generates a psuedo random integer between 0 and 65535
+--- Generates a pseudo random integer between 0 and 65535
 function random_u16()
     -- ...
 end

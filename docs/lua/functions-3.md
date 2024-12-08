@@ -100,7 +100,7 @@ Sets the current object's position to random integers between 0 and 65536
 ## [random_float](#random_float)
 
 ### Description
-Generates a psuedo random float between 0.0 and 1.0
+Generates a pseudo random float between 0.0 and 1.0
 
 ### Lua Example
 `local numberValue = random_float()`
@@ -121,7 +121,7 @@ Generates a psuedo random float between 0.0 and 1.0
 ## [random_sign](#random_sign)
 
 ### Description
-Returns either 1 or -1 with a psuedo 50:50 chance
+Returns either 1 or -1 with a pseudo 50:50 chance
 
 ### Lua Example
 `local integerValue = random_sign()`
@@ -142,7 +142,7 @@ Returns either 1 or -1 with a psuedo 50:50 chance
 ## [random_u16](#random_u16)
 
 ### Description
-Generates a psuedo random integer between 0 and 65535
+Generates a pseudo random integer between 0 and 65535
 
 ### Lua Example
 `local integerValue = random_u16()`

@@ -19,11 +19,11 @@
 
 #define obj_and_int(object, offset, value) object->OBJECT_FIELD_S32(offset) &= (s32)(value)
 
-/* |description|Generates a psuedo random integer between 0 and 65535|descriptionEnd| */
+/* |description|Generates a pseudo random integer between 0 and 65535|descriptionEnd| */
 u16 random_u16(void);
-/* |description|Generates a psuedo random float between 0.0 and 1.0|descriptionEnd| */
+/* |description|Generates a pseudo random float between 0.0 and 1.0|descriptionEnd| */
 float random_float(void);
-/* |description|Returns either 1 or -1 with a psuedo 50:50 chance|descriptionEnd| */
+/* |description|Returns either 1 or -1 with a pseudo 50:50 chance|descriptionEnd| */
 s32 random_sign(void);
 
 void stub_behavior_script_2(void);
