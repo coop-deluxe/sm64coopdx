@@ -4469,20 +4469,24 @@ end
 
 --- @param otherNp NetworkPlayer
 --- @return MarioState
+--- Gets the local Mario's state stored in lag compensation history
 function lag_compensation_get_local_state(otherNp)
     -- ...
 end
 
 --- @return integer
+--- Gets the local Mario's state index
 function lag_compensation_get_local_state_index()
     -- ...
 end
 
 --- @return boolean
+--- Checks if lag compensation history is ready
 function lag_compensation_get_local_state_ready()
     -- ...
 end
 
+--- Stores the local Mario's current state in lag compensation history
 function lag_compensation_store()
     -- ...
 end

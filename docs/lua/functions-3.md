@@ -5126,6 +5126,9 @@ Sets if first person is enabled
 
 ## [lag_compensation_get_local_state](#lag_compensation_get_local_state)
 
+### Description
+Gets the local Mario's state stored in lag compensation history
+
 ### Lua Example
 `local MarioStateValue = lag_compensation_get_local_state(otherNp)`
 
@@ -5146,6 +5149,9 @@ Sets if first person is enabled
 
 ## [lag_compensation_get_local_state_index](#lag_compensation_get_local_state_index)
 
+### Description
+Gets the local Mario's state index
+
 ### Lua Example
 `local integerValue = lag_compensation_get_local_state_index()`
 
@@ -5164,6 +5170,9 @@ Sets if first person is enabled
 
 ## [lag_compensation_get_local_state_ready](#lag_compensation_get_local_state_ready)
 
+### Description
+Checks if lag compensation history is ready
+
 ### Lua Example
 `local booleanValue = lag_compensation_get_local_state_ready()`
 
@@ -5181,6 +5190,9 @@ Sets if first person is enabled
 <br />
 
 ## [lag_compensation_store](#lag_compensation_store)
+
+### Description
+Stores the local Mario's current state in lag compensation history
 
 ### Lua Example
 `lag_compensation_store()`
