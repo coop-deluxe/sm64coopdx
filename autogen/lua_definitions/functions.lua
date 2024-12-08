@@ -2916,66 +2916,78 @@ function vec3f_copy_2(dest, src)
 end
 
 --- @return number
+--- Gets the draw distance scalar
 function draw_distance_scalar()
     -- ...
 end
 
 --- @param obj Object
+--- Updates an object's graphical position and angle
 function obj_update_gfx_pos_and_angle(obj)
     -- ...
 end
 
 --- @return number
+--- Sets the current object's position to random floats between 0.0 and 1.0
 function position_based_random_float_position()
     -- ...
 end
 
 --- @return integer
+--- Sets the current object's position to random integers between 0 and 65536
 function position_based_random_u16()
     -- ...
 end
 
 --- @return number
+--- Generates a psuedo random float between 0.0 and 1.0
 function random_float()
     -- ...
 end
 
 --- @return integer
+--- Returns either 1 or -1 with a psuedo 50:50 chance
 function random_sign()
     -- ...
 end
 
 --- @return integer
+--- Generates a psuedo random integer between 0 and 65535
 function random_u16()
     -- ...
 end
 
 --- @param id BehaviorId
 --- @return Pointer_BehaviorScript
+--- Gets a behavior script from a behavior ID
 function get_behavior_from_id(id)
     -- ...
 end
 
 --- @param id BehaviorId
 --- @return string
+--- Gets a behavior name from a behavior ID (bhvMyGreatMODCustom004)
 function get_behavior_name_from_id(id)
     -- ...
 end
 
 --- @param behavior Pointer_BehaviorScript
 --- @return BehaviorId
+--- Gets a behavior ID from a behavior script
 function get_id_from_behavior(behavior)
     -- ...
 end
 
 --- @param name string
 --- @return BehaviorId
+--- gets a behavior ID from a behavior name
 function get_id_from_behavior_name(name)
     -- ...
 end
 
 --- @param behavior Pointer_BehaviorScript
 --- @return BehaviorId
+--- Gets a behavior ID from only vanilla behavior scripts
 function get_id_from_vanilla_behavior(behavior)
     -- ...
 end

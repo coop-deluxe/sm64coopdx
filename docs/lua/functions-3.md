@@ -13,6 +13,9 @@
 
 ## [draw_distance_scalar](#draw_distance_scalar)
 
+### Description
+Gets the draw distance scalar
+
 ### Lua Example
 `local numberValue = draw_distance_scalar()`
 
@@ -30,6 +33,9 @@
 <br />
 
 ## [obj_update_gfx_pos_and_angle](#obj_update_gfx_pos_and_angle)
+
+### Description
+Updates an object's graphical position and angle
 
 ### Lua Example
 `obj_update_gfx_pos_and_angle(obj)`
@@ -51,6 +57,9 @@
 
 ## [position_based_random_float_position](#position_based_random_float_position)
 
+### Description
+Sets the current object's position to random floats between 0.0 and 1.0
+
 ### Lua Example
 `local numberValue = position_based_random_float_position()`
 
@@ -68,6 +77,9 @@
 <br />
 
 ## [position_based_random_u16](#position_based_random_u16)
+
+### Description
+Sets the current object's position to random integers between 0 and 65536
 
 ### Lua Example
 `local integerValue = position_based_random_u16()`
@@ -87,6 +99,9 @@
 
 ## [random_float](#random_float)
 
+### Description
+Generates a psuedo random float between 0.0 and 1.0
+
 ### Lua Example
 `local numberValue = random_float()`
 
@@ -105,6 +120,9 @@
 
 ## [random_sign](#random_sign)
 
+### Description
+Returns either 1 or -1 with a psuedo 50:50 chance
+
 ### Lua Example
 `local integerValue = random_sign()`
 
@@ -122,6 +140,9 @@
 <br />
 
 ## [random_u16](#random_u16)
+
+### Description
+Generates a psuedo random integer between 0 and 65535
 
 ### Lua Example
 `local integerValue = random_u16()`
@@ -147,6 +168,9 @@
 
 ## [get_behavior_from_id](#get_behavior_from_id)
 
+### Description
+Gets a behavior script from a behavior ID
+
 ### Lua Example
 `local PointerValue = get_behavior_from_id(id)`
 
@@ -166,6 +190,9 @@
 <br />
 
 ## [get_behavior_name_from_id](#get_behavior_name_from_id)
+
+### Description
+Gets a behavior name from a behavior ID (bhvMyGreatMODCustom004)
 
 ### Lua Example
 `local stringValue = get_behavior_name_from_id(id)`
@@ -187,6 +214,9 @@
 
 ## [get_id_from_behavior](#get_id_from_behavior)
 
+### Description
+Gets a behavior ID from a behavior script
+
 ### Lua Example
 `local enumValue = get_id_from_behavior(behavior)`
 
@@ -207,6 +237,9 @@
 
 ## [get_id_from_behavior_name](#get_id_from_behavior_name)
 
+### Description
+gets a behavior ID from a behavior name
+
 ### Lua Example
 `local enumValue = get_id_from_behavior_name(name)`
 
@@ -226,6 +259,9 @@
 <br />
 
 ## [get_id_from_vanilla_behavior](#get_id_from_vanilla_behavior)
+
+### Description
+Gets a behavior ID from only vanilla behavior scripts
 
 ### Lua Example
 `local enumValue = get_id_from_vanilla_behavior(behavior)`
