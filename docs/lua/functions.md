@@ -781,6 +781,11 @@
 
 <br />
 
+- djui_panel_menu.c
+   - [djui_menu_get_rainbow_string_color](functions-3.md#djui_menu_get_rainbow_string_color)
+
+<br />
+
 - djui_popup.h
    - [djui_popup_create](functions-3.md#djui_popup_create)
 
