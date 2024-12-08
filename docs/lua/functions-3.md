@@ -2068,6 +2068,9 @@ Updates Mario's current animation offset. This adjusts Mario's position based on
 
 ## [djui_chat_message_create](#djui_chat_message_create)
 
+### Description
+Creates a `message` in the game's chat box
+
 ### Lua Example
 `djui_chat_message_create(message)`
 
@@ -2092,25 +2095,10 @@ Updates Mario's current animation offset. This adjusts Mario's position based on
 <br />
 
 
-## [djui_console_message_dequeue](#djui_console_message_dequeue)
-
-### Lua Example
-`djui_console_message_dequeue()`
-
-### Parameters
-- None
-
-### Returns
-- None
-
-### C Prototype
-`void djui_console_message_dequeue(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
 ## [djui_console_toggle](#djui_console_toggle)
+
+### Description
+Toggles the visibility of the DJUI console
 
 ### Lua Example
 `djui_console_toggle()`
@@ -2136,6 +2124,9 @@ Updates Mario's current animation offset. This adjusts Mario's position based on
 
 ## [djui_hud_get_color](#djui_hud_get_color)
 
+### Description
+Gets the current DJUI HUD color
+
 ### Lua Example
 `local DjuiColorValue = djui_hud_get_color()`
 
@@ -2153,6 +2144,9 @@ Updates Mario's current animation offset. This adjusts Mario's position based on
 <br />
 
 ## [djui_hud_get_filter](#djui_hud_get_filter)
+
+### Description
+Gets the current DJUI HUD texture filter
 
 ### Lua Example
 `local integerValue = djui_hud_get_filter()`
@@ -2172,6 +2166,9 @@ Updates Mario's current animation offset. This adjusts Mario's position based on
 
 ## [djui_hud_get_font](#djui_hud_get_font)
 
+### Description
+Gets the current DJUI HUD font
+
 ### Lua Example
 `local integerValue = djui_hud_get_font()`
 
@@ -2189,6 +2186,9 @@ Updates Mario's current animation offset. This adjusts Mario's position based on
 <br />
 
 ## [djui_hud_get_fov_coeff](#djui_hud_get_fov_coeff)
+
+### Description
+Gets the camera FOV coefficient
 
 ### Lua Example
 `local numberValue = djui_hud_get_fov_coeff()`
@@ -2208,6 +2208,9 @@ Updates Mario's current animation offset. This adjusts Mario's position based on
 
 ## [djui_hud_get_mouse_x](#djui_hud_get_mouse_x)
 
+### Description
+Returns the x coordinate of the mouse relative to the window
+
 ### Lua Example
 `local numberValue = djui_hud_get_mouse_x()`
 
@@ -2225,6 +2228,9 @@ Updates Mario's current animation offset. This adjusts Mario's position based on
 <br />
 
 ## [djui_hud_get_mouse_y](#djui_hud_get_mouse_y)
+
+### Description
+Returns the y coordinate of the mouse relative to the window
 
 ### Lua Example
 `local numberValue = djui_hud_get_mouse_y()`
@@ -2244,6 +2250,9 @@ Updates Mario's current animation offset. This adjusts Mario's position based on
 
 ## [djui_hud_get_raw_mouse_x](#djui_hud_get_raw_mouse_x)
 
+### Description
+Returns the x coordinate of the mouse relative to the screen
+
 ### Lua Example
 `local numberValue = djui_hud_get_raw_mouse_x()`
 
@@ -2261,6 +2270,9 @@ Updates Mario's current animation offset. This adjusts Mario's position based on
 <br />
 
 ## [djui_hud_get_raw_mouse_y](#djui_hud_get_raw_mouse_y)
+
+### Description
+Returns the y coordinate of the mouse relative to the screen
 
 ### Lua Example
 `local numberValue = djui_hud_get_raw_mouse_y()`
@@ -2280,6 +2292,9 @@ Updates Mario's current animation offset. This adjusts Mario's position based on
 
 ## [djui_hud_get_resolution](#djui_hud_get_resolution)
 
+### Description
+Gets the current DJUI HUD resolution
+
 ### Lua Example
 `local integerValue = djui_hud_get_resolution()`
 
@@ -2297,6 +2312,9 @@ Updates Mario's current animation offset. This adjusts Mario's position based on
 <br />
 
 ## [djui_hud_get_rotation](#djui_hud_get_rotation)
+
+### Description
+Gets the current DJUI HUD rotation
 
 ### Lua Example
 `local HudUtilsRotationValue = djui_hud_get_rotation()`
@@ -2316,6 +2334,9 @@ Updates Mario's current animation offset. This adjusts Mario's position based on
 
 ## [djui_hud_get_screen_height](#djui_hud_get_screen_height)
 
+### Description
+Gets the screen height in the current DJUI HUD resolution
+
 ### Lua Example
 `local integerValue = djui_hud_get_screen_height()`
 
@@ -2333,6 +2354,9 @@ Updates Mario's current animation offset. This adjusts Mario's position based on
 <br />
 
 ## [djui_hud_get_screen_width](#djui_hud_get_screen_width)
+
+### Description
+Gets the screen width in the current DJUI HUD resolution
 
 ### Lua Example
 `local integerValue = djui_hud_get_screen_width()`
@@ -2352,6 +2376,9 @@ Updates Mario's current animation offset. This adjusts Mario's position based on
 
 ## [djui_hud_is_pause_menu_created](#djui_hud_is_pause_menu_created)
 
+### Description
+Checks if the DJUI pause menu is created
+
 ### Lua Example
 `local booleanValue = djui_hud_is_pause_menu_created()`
 
@@ -2369,6 +2396,9 @@ Updates Mario's current animation offset. This adjusts Mario's position based on
 <br />
 
 ## [djui_hud_measure_text](#djui_hud_measure_text)
+
+### Description
+Measures the length of `message` in the current font
 
 ### Lua Example
 `local numberValue = djui_hud_measure_text(message)`
@@ -2389,6 +2419,9 @@ Updates Mario's current animation offset. This adjusts Mario's position based on
 <br />
 
 ## [djui_hud_print_text](#djui_hud_print_text)
+
+### Description
+Prints DJUI HUD text onto the screen
 
 ### Lua Example
 `djui_hud_print_text(message, x, y, scale)`
@@ -2412,6 +2445,9 @@ Updates Mario's current animation offset. This adjusts Mario's position based on
 <br />
 
 ## [djui_hud_print_text_interpolated](#djui_hud_print_text_interpolated)
+
+### Description
+Prints interpolated DJUI HUD text onto the screen
 
 ### Lua Example
 `djui_hud_print_text_interpolated(message, prevX, prevY, prevScale, x, y, scale)`
@@ -2439,6 +2475,9 @@ Updates Mario's current animation offset. This adjusts Mario's position based on
 
 ## [djui_hud_render_rect](#djui_hud_render_rect)
 
+### Description
+Renders a DJUI HUD rect onto the screen
+
 ### Lua Example
 `djui_hud_render_rect(x, y, width, height)`
 
@@ -2461,6 +2500,9 @@ Updates Mario's current animation offset. This adjusts Mario's position based on
 <br />
 
 ## [djui_hud_render_rect_interpolated](#djui_hud_render_rect_interpolated)
+
+### Description
+Renders an interpolated DJUI HUD rect onto the screen
 
 ### Lua Example
 `djui_hud_render_rect_interpolated(prevX, prevY, prevWidth, prevHeight, x, y, width, height)`
@@ -2489,6 +2531,9 @@ Updates Mario's current animation offset. This adjusts Mario's position based on
 
 ## [djui_hud_reset_color](#djui_hud_reset_color)
 
+### Description
+Resets the current DJUI HUD color
+
 ### Lua Example
 `djui_hud_reset_color()`
 
@@ -2506,6 +2551,9 @@ Updates Mario's current animation offset. This adjusts Mario's position based on
 <br />
 
 ## [djui_hud_set_color](#djui_hud_set_color)
+
+### Description
+Sets the current DJUI HUD color
 
 ### Lua Example
 `djui_hud_set_color(r, g, b, a)`
@@ -2530,6 +2578,9 @@ Updates Mario's current animation offset. This adjusts Mario's position based on
 
 ## [djui_hud_set_filter](#djui_hud_set_filter)
 
+### Description
+Sets the current DJUI HUD texture filter
+
 ### Lua Example
 `djui_hud_set_filter(filterType)`
 
@@ -2549,6 +2600,9 @@ Updates Mario's current animation offset. This adjusts Mario's position based on
 <br />
 
 ## [djui_hud_set_font](#djui_hud_set_font)
+
+### Description
+Sets the current DJUI HUD font
 
 ### Lua Example
 `djui_hud_set_font(fontType)`
@@ -2570,6 +2624,9 @@ Updates Mario's current animation offset. This adjusts Mario's position based on
 
 ## [djui_hud_set_mouse_locked](#djui_hud_set_mouse_locked)
 
+### Description
+Sets if the cursor is hidden and constrainted to the window
+
 ### Lua Example
 `djui_hud_set_mouse_locked(locked)`
 
@@ -2590,6 +2647,9 @@ Updates Mario's current animation offset. This adjusts Mario's position based on
 
 ## [djui_hud_set_resolution](#djui_hud_set_resolution)
 
+### Description
+Sets the current DJUI HUD resolution
+
 ### Lua Example
 `djui_hud_set_resolution(resolutionType)`
 
@@ -2609,6 +2669,9 @@ Updates Mario's current animation offset. This adjusts Mario's position based on
 <br />
 
 ## [djui_hud_set_rotation](#djui_hud_set_rotation)
+
+### Description
+Sets the current DJUI HUD rotation
 
 ### Lua Example
 `djui_hud_set_rotation(rotation, pivotX, pivotY)`
@@ -2631,6 +2694,9 @@ Updates Mario's current animation offset. This adjusts Mario's position based on
 <br />
 
 ## [djui_hud_set_rotation_interpolated](#djui_hud_set_rotation_interpolated)
+
+### Description
+Sets the current DJUI HUD rotation interpolated
 
 ### Lua Example
 `djui_hud_set_rotation_interpolated(prevRotation, prevPivotX, prevPivotY, rotation, pivotX, pivotY)`
@@ -2657,6 +2723,9 @@ Updates Mario's current animation offset. This adjusts Mario's position based on
 
 ## [djui_hud_world_pos_to_screen_pos](#djui_hud_world_pos_to_screen_pos)
 
+### Description
+Converts a world position to screen position
+
 ### Lua Example
 `local booleanValue = djui_hud_world_pos_to_screen_pos(pos, out)`
 
@@ -2678,6 +2747,9 @@ Updates Mario's current animation offset. This adjusts Mario's position based on
 
 ## [djui_open_pause_menu](#djui_open_pause_menu)
 
+### Description
+Opens the DJUI pause menu
+
 ### Lua Example
 `djui_open_pause_menu()`
 
@@ -2695,6 +2767,9 @@ Updates Mario's current animation offset. This adjusts Mario's position based on
 <br />
 
 ## [get_current_fov](#get_current_fov)
+
+### Description
+Gets the current camera FOV
 
 ### Lua Example
 `local numberValue = get_current_fov()`
@@ -2719,6 +2794,9 @@ Updates Mario's current animation offset. This adjusts Mario's position based on
 
 
 ## [djui_language_get](#djui_language_get)
+
+### Description
+Gets a language `key` from a `section`
 
 ### Lua Example
 `local stringValue = djui_language_get(section, key)`
@@ -2746,6 +2824,9 @@ Updates Mario's current animation offset. This adjusts Mario's position based on
 
 
 ## [djui_popup_create](#djui_popup_create)
+
+### Description
+Creates a popup that says `message` and has `lines`
 
 ### Lua Example
 `djui_popup_create(message, lines)`
@@ -3412,6 +3493,9 @@ Updates Mario's current animation offset. This adjusts Mario's position based on
 
 ## [first_person_check_cancels](#first_person_check_cancels)
 
+### Description
+Checks common cancels for first person
+
 ### Lua Example
 `local booleanValue = first_person_check_cancels(m)`
 
@@ -3432,6 +3516,9 @@ Updates Mario's current animation offset. This adjusts Mario's position based on
 
 ## [first_person_reset](#first_person_reset)
 
+### Description
+Resets first person
+
 ### Lua Example
 `first_person_reset()`
 
@@ -3450,6 +3537,9 @@ Updates Mario's current animation offset. This adjusts Mario's position based on
 
 ## [get_first_person_enabled](#get_first_person_enabled)
 
+### Description
+Checks if first person is enabled
+
 ### Lua Example
 `local booleanValue = get_first_person_enabled()`
 
@@ -3467,6 +3557,9 @@ Updates Mario's current animation offset. This adjusts Mario's position based on
 <br />
 
 ## [set_first_person_enabled](#set_first_person_enabled)
+
+### Description
+Sets if first person is enabled
 
 ### Lua Example
 `set_first_person_enabled(enable)`
@@ -4837,6 +4930,9 @@ Updates Mario's current animation offset. This adjusts Mario's position based on
 
 ## [get_level_name](#get_level_name)
 
+### Description
+Returns the name of the level corresponding to `courseNum`, `levelNum` and `areaIndex` as a decapitalized ASCII (human readable) string
+
 ### Lua Example
 `local stringValue = get_level_name(courseNum, levelNum, areaIndex)`
 
@@ -4858,6 +4954,9 @@ Updates Mario's current animation offset. This adjusts Mario's position based on
 <br />
 
 ## [get_level_name_ascii](#get_level_name_ascii)
+
+### Description
+Returns the name of the level corresponding to `courseNum`, `levelNum` and `areaIndex` as an ASCII (human readable) string. Set `charCase` to 1 to capitalize or -1 to decapitalize the returned string
 
 ### Lua Example
 `local stringValue = get_level_name_ascii(courseNum, levelNum, areaIndex, charCase)`
@@ -4905,6 +5004,9 @@ Updates Mario's current animation offset. This adjusts Mario's position based on
 
 ## [get_star_name](#get_star_name)
 
+### Description
+Returns the name of the star corresponding to `courseNum` and `starNum` as a decapitalized ASCII (human readable) string
+
 ### Lua Example
 `local stringValue = get_star_name(courseNum, starNum)`
 
@@ -4925,6 +5027,9 @@ Updates Mario's current animation offset. This adjusts Mario's position based on
 <br />
 
 ## [get_star_name_ascii](#get_star_name_ascii)
+
+### Description
+Returns the name of the star corresponding to `courseNum` and `starNum` as an ASCII (human readable) string. Set `charCase` to 1 to capitalize or -1 to decapitalize the returned string
 
 ### Lua Example
 `local stringValue = get_star_name_ascii(courseNum, starNum, charCase)`
@@ -4975,6 +5080,9 @@ Updates Mario's current animation offset. This adjusts Mario's position based on
 
 
 ## [area_create_warp_node](#area_create_warp_node)
+
+### Description
+Creates a warp node in the current level and area with id `id` that goes to the warp node `destNode` in level `destLevel` and area `destArea`, and attach it to the object `o`. To work properly, object `o` must be able to trigger a warp (for example, with interact type set to `INTERACT_WARP`.) `checkpoint` should be set only to WARP_NO_CHECKPOINT (0x00) or WARP_CHECKPOINT (0x80.) If `checkpoint` is set to `0x80`, Mario will warp directly to this node if he enters the level again (after a death for example)
 
 ### Lua Example
 `local ObjectWarpNodeValue = area_create_warp_node(id, destLevel, destArea, destNode, checkpoint, o)`

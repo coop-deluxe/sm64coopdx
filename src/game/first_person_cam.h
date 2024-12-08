@@ -23,12 +23,16 @@ struct FirstPersonCamera {
 
 extern struct FirstPersonCamera gFirstPersonCamera;
 
+/* |description|Checks common cancels for first person|descriptionEnd| */
 bool first_person_check_cancels(struct MarioState *m);
 
+/* |description|Checks if first person is enabled|descriptionEnd| */
 bool get_first_person_enabled(void);
+/* |description|Sets if first person is enabled|descriptionEnd| */
 void set_first_person_enabled(bool enable);
 
 void first_person_update(void);
+/* |description|Resets first person|descriptionEnd| */
 void first_person_reset(void);
 
 #endif // FIRST_PERSON_CAM_H

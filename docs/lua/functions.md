@@ -739,7 +739,6 @@
 <br />
 
 - djui_console.h
-   - [djui_console_message_dequeue](functions-3.md#djui_console_message_dequeue)
    - [djui_console_toggle](functions-3.md#djui_console_toggle)
 
 <br />

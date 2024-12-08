@@ -3051,85 +3051,97 @@ function update_character_anim_offset(m)
 end
 
 --- @param message string
+--- Creates a `message` in the game's chat box
 function djui_chat_message_create(message)
     -- ...
 end
 
-function djui_console_message_dequeue()
-    -- ...
-end
-
+--- Toggles the visibility of the DJUI console
 function djui_console_toggle()
     -- ...
 end
 
 --- @return DjuiColor
+--- Gets the current DJUI HUD color
 function djui_hud_get_color()
     -- ...
 end
 
 --- @return integer
+--- Gets the current DJUI HUD texture filter
 function djui_hud_get_filter()
     -- ...
 end
 
 --- @return integer
+--- Gets the current DJUI HUD font
 function djui_hud_get_font()
     -- ...
 end
 
 --- @return number
+--- Gets the camera FOV coefficient
 function djui_hud_get_fov_coeff()
     -- ...
 end
 
 --- @return number
+--- Returns the x coordinate of the mouse relative to the window
 function djui_hud_get_mouse_x()
     -- ...
 end
 
 --- @return number
+--- Returns the y coordinate of the mouse relative to the window
 function djui_hud_get_mouse_y()
     -- ...
 end
 
 --- @return number
+--- Returns the x coordinate of the mouse relative to the screen
 function djui_hud_get_raw_mouse_x()
     -- ...
 end
 
 --- @return number
+--- Returns the y coordinate of the mouse relative to the screen
 function djui_hud_get_raw_mouse_y()
     -- ...
 end
 
 --- @return integer
+--- Gets the current DJUI HUD resolution
 function djui_hud_get_resolution()
     -- ...
 end
 
 --- @return HudUtilsRotation
+--- Gets the current DJUI HUD rotation
 function djui_hud_get_rotation()
     -- ...
 end
 
 --- @return integer
+--- Gets the screen height in the current DJUI HUD resolution
 function djui_hud_get_screen_height()
     -- ...
 end
 
 --- @return integer
+--- Gets the screen width in the current DJUI HUD resolution
 function djui_hud_get_screen_width()
     -- ...
 end
 
 --- @return boolean
+--- Checks if the DJUI pause menu is created
 function djui_hud_is_pause_menu_created()
     -- ...
 end
 
 --- @param message string
 --- @return number
+--- Measures the length of `message` in the current font
 function djui_hud_measure_text(message)
     -- ...
 end
@@ -3138,6 +3150,7 @@ end
 --- @param x number
 --- @param y number
 --- @param scale number
+--- Prints DJUI HUD text onto the screen
 function djui_hud_print_text(message, x, y, scale)
     -- ...
 end
@@ -3149,6 +3162,7 @@ end
 --- @param x number
 --- @param y number
 --- @param scale number
+--- Prints interpolated DJUI HUD text onto the screen
 function djui_hud_print_text_interpolated(message, prevX, prevY, prevScale, x, y, scale)
     -- ...
 end
@@ -3157,6 +3171,7 @@ end
 --- @param y number
 --- @param width number
 --- @param height number
+--- Renders a DJUI HUD rect onto the screen
 function djui_hud_render_rect(x, y, width, height)
     -- ...
 end
@@ -3169,10 +3184,12 @@ end
 --- @param y number
 --- @param width number
 --- @param height number
+--- Renders an interpolated DJUI HUD rect onto the screen
 function djui_hud_render_rect_interpolated(prevX, prevY, prevWidth, prevHeight, x, y, width, height)
     -- ...
 end
 
+--- Resets the current DJUI HUD color
 function djui_hud_reset_color()
     -- ...
 end
@@ -3181,26 +3198,31 @@ end
 --- @param g integer
 --- @param b integer
 --- @param a integer
+--- Sets the current DJUI HUD color
 function djui_hud_set_color(r, g, b, a)
     -- ...
 end
 
 --- @param filterType HudUtilsFilter
+--- Sets the current DJUI HUD texture filter
 function djui_hud_set_filter(filterType)
     -- ...
 end
 
 --- @param fontType integer
+--- Sets the current DJUI HUD font
 function djui_hud_set_font(fontType)
     -- ...
 end
 
 --- @param locked boolean
+--- Sets if the cursor is hidden and constrainted to the window
 function djui_hud_set_mouse_locked(locked)
     -- ...
 end
 
 --- @param resolutionType HudUtilsResolution
+--- Sets the current DJUI HUD resolution
 function djui_hud_set_resolution(resolutionType)
     -- ...
 end
@@ -3208,6 +3230,7 @@ end
 --- @param rotation integer
 --- @param pivotX number
 --- @param pivotY number
+--- Sets the current DJUI HUD rotation
 function djui_hud_set_rotation(rotation, pivotX, pivotY)
     -- ...
 end
@@ -3218,6 +3241,7 @@ end
 --- @param rotation integer
 --- @param pivotX number
 --- @param pivotY number
+--- Sets the current DJUI HUD rotation interpolated
 function djui_hud_set_rotation_interpolated(prevRotation, prevPivotX, prevPivotY, rotation, pivotX, pivotY)
     -- ...
 end
@@ -3225,15 +3249,18 @@ end
 --- @param pos Vec3f
 --- @param out Vec3f
 --- @return boolean
+--- Converts a world position to screen position
 function djui_hud_world_pos_to_screen_pos(pos, out)
     -- ...
 end
 
+--- Opens the DJUI pause menu
 function djui_open_pause_menu()
     -- ...
 end
 
 --- @return number
+--- Gets the current camera FOV
 function get_current_fov()
     -- ...
 end
@@ -3241,12 +3268,14 @@ end
 --- @param section string
 --- @param key string
 --- @return string
+--- Gets a language `key` from a `section`
 function djui_language_get(section, key)
     -- ...
 end
 
 --- @param message string
 --- @param lines integer
+--- Creates a popup that says `message` and has `lines`
 function djui_popup_create(message, lines)
     -- ...
 end
@@ -3424,20 +3453,24 @@ end
 
 --- @param m MarioState
 --- @return boolean
+--- Checks common cancels for first person
 function first_person_check_cancels(m)
     -- ...
 end
 
+--- Resets first person
 function first_person_reset()
     -- ...
 end
 
 --- @return boolean
+--- Checks if first person is enabled
 function get_first_person_enabled()
     -- ...
 end
 
 --- @param enable boolean
+--- Sets if first person is enabled
 function set_first_person_enabled(enable)
     -- ...
 end
@@ -3876,6 +3909,7 @@ end
 --- @param levelNum integer
 --- @param areaIndex integer
 --- @return string
+--- Returns the name of the level corresponding to `courseNum`, `levelNum` and `areaIndex` as a decapitalized ASCII (human readable) string
 function get_level_name(courseNum, levelNum, areaIndex)
     -- ...
 end
@@ -3885,6 +3919,7 @@ end
 --- @param areaIndex integer
 --- @param charCase integer
 --- @return string
+--- Returns the name of the level corresponding to `courseNum`, `levelNum` and `areaIndex` as an ASCII (human readable) string. Set `charCase` to 1 to capitalize or -1 to decapitalize the returned string
 function get_level_name_ascii(courseNum, levelNum, areaIndex, charCase)
     -- ...
 end
@@ -3901,6 +3936,7 @@ end
 --- @param courseNum integer
 --- @param starNum integer
 --- @return string
+--- Returns the name of the star corresponding to `courseNum` and `starNum` as a decapitalized ASCII (human readable) string
 function get_star_name(courseNum, starNum)
     -- ...
 end
@@ -3909,6 +3945,7 @@ end
 --- @param starNum integer
 --- @param charCase integer
 --- @return string
+--- Returns the name of the star corresponding to `courseNum` and `starNum` as an ASCII (human readable) string. Set `charCase` to 1 to capitalize or -1 to decapitalize the returned string
 function get_star_name_ascii(courseNum, starNum, charCase)
     -- ...
 end
@@ -3928,6 +3965,7 @@ end
 --- @param checkpoint integer
 --- @param o Object
 --- @return ObjectWarpNode
+--- Creates a warp node in the current level and area with id `id` that goes to the warp node `destNode` in level `destLevel` and area `destArea`, and attach it to the object `o`. To work properly, object `o` must be able to trigger a warp (for example, with interact type set to `INTERACT_WARP`.) `checkpoint` should be set only to WARP_NO_CHECKPOINT (0x00) or WARP_CHECKPOINT (0x80.) If `checkpoint` is set to `0x80`, Mario will warp directly to this node if he enters the level again (after a death for example)
 function area_create_warp_node(id, destLevel, destArea, destNode, checkpoint, o)
     -- ...
 end

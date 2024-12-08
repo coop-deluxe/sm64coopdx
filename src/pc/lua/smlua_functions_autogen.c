@@ -12217,21 +12217,6 @@ int smlua_func_djui_chat_message_create(lua_State* L) {
  // djui_console.h //
 ////////////////////
 
-int smlua_func_djui_console_message_dequeue(UNUSED lua_State* L) {
-    if (L == NULL) { return 0; }
-
-    int top = lua_gettop(L);
-    if (top != 0) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "djui_console_message_dequeue", 0, top);
-        return 0;
-    }
-
-
-    djui_console_message_dequeue();
-
-    return 1;
-}
-
 int smlua_func_djui_console_toggle(UNUSED lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -34156,7 +34141,6 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "djui_chat_message_create", smlua_func_djui_chat_message_create);
 
     // djui_console.h
-    smlua_bind_function(L, "djui_console_message_dequeue", smlua_func_djui_console_message_dequeue);
     smlua_bind_function(L, "djui_console_toggle", smlua_func_djui_console_toggle);
 
     // djui_hud_utils.h
