@@ -3552,6 +3552,9 @@ Replaces the secret star course name of `courseNum` with `courseName`
 
 ## [load_object_collision_model](#load_object_collision_model)
 
+### Description
+Loads the object's collision data into dynamic collision. You must run this every frame in your object's behavior loop for it to have collision
+
 ### Lua Example
 `load_object_collision_model()`
 
@@ -3569,6 +3572,9 @@ Replaces the secret star course name of `courseNum` with `courseName`
 <br />
 
 ## [obj_get_surface_from_index](#obj_get_surface_from_index)
+
+### Description
+Gets a surface corresponding to `index` from the surface pool buffer
 
 ### Lua Example
 `local SurfaceValue = obj_get_surface_from_index(o, index)`

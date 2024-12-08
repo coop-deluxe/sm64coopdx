@@ -6060,41 +6060,48 @@ function vec3s_to_vec3f(dest, a)
     -- ...
 end
 
+--- Updates every Mario state's star count with the save file total star count
 function update_all_mario_stars()
     -- ...
 end
 
 --- @return boolean
+--- Clears the mod's data from mod storage
 function mod_storage_clear()
     -- ...
 end
 
 --- @param key string
 --- @return boolean
+--- Checks if a `key` is in mod storage
 function mod_storage_exists(key)
     -- ...
 end
 
 --- @param key string
 --- @return string
+--- Loads a string `value` from a `key` in mod storage
 function mod_storage_load(key)
     -- ...
 end
 
 --- @param key string
 --- @return boolean
+--- Loads a bool `value` from a `key` in mod storage
 function mod_storage_load_bool(key)
     -- ...
 end
 
 --- @param key string
 --- @return number
+--- Loads a float `value` from a `key` in mod storage
 function mod_storage_load_number(key)
     -- ...
 end
 
 --- @param key string
 --- @return boolean
+--- Removes a `key` from mod storage
 function mod_storage_remove(key)
     -- ...
 end
@@ -6102,6 +6109,7 @@ end
 --- @param key string
 --- @param value string
 --- @return boolean
+--- Saves a `key` corresponding to a string `value` to mod storage
 function mod_storage_save(key, value)
     -- ...
 end
@@ -6109,6 +6117,7 @@ end
 --- @param key string
 --- @param value boolean
 --- @return boolean
+--- Saves a `key` corresponding to a bool `value` to mod storage
 function mod_storage_save_bool(key, value)
     -- ...
 end
@@ -6116,6 +6125,7 @@ end
 --- @param key string
 --- @param value number
 --- @return boolean
+--- Saves a `key` corresponding to a float `value` to mod storage
 function mod_storage_save_number(key, value)
     -- ...
 end
@@ -10130,6 +10140,7 @@ function load_area_terrain(index, data, surfaceRooms, macroObjects)
     -- ...
 end
 
+--- Loads the object's collision data into dynamic collision. You must run this every frame in your object's behavior loop for it to have collision
 function load_object_collision_model()
     -- ...
 end
@@ -10137,6 +10148,7 @@ end
 --- @param o Object
 --- @param index integer
 --- @return Surface
+--- Gets a surface corresponding to `index` from the surface pool buffer
 function obj_get_surface_from_index(o, index)
     -- ...
 end
