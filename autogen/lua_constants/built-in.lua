@@ -331,6 +331,7 @@ COURSE_MIN = 1
 --- @param np NetworkPlayer
 --- @param part PlayerPart
 --- @return Color
+--- Gets the palette color of `part` on `np`
 function network_player_get_palette_color(np, part)
     local color = {
         r = network_player_get_palette_color_channel(np, part, 0),
@@ -343,6 +344,7 @@ end
 --- @param np NetworkPlayer
 --- @param part PlayerPart
 --- @return Color
+--- Gets the override palette color of `part` on `np`
 function network_player_get_override_palette_color(np, part)
     local color = {
         r = network_player_get_override_palette_color_channel(np, part, 0),

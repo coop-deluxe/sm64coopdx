@@ -42,9 +42,9 @@ struct DateTime {
 /* |description|Gets the current area's networked timer|descriptionEnd| */
 u32 get_network_area_timer(void);
 
-/* |description|Returns a temporary 32-bit integer pointer|descriptionEnd| */
+/* |description|Returns a temporary signed 32-bit integer pointer with its value set to `initialValue`|descriptionEnd| */
 s32* get_temp_s32_pointer(s32 initialValue);
-/* |description|Gets the 32-bit integer value from the pointer|descriptionEnd| */
+/* |description|Gets the signed 32-bit integer value from `pointer`|descriptionEnd| */
 s32 deref_s32_pointer(s32* pointer);
 
 /* |description|Creates a DJUI popup that is broadcasted to every client|descriptionEnd| */
@@ -117,11 +117,17 @@ bool is_transition_playing(void);
 /* |description|Allocates an action ID with bitwise flags|descriptionEnd| */
 u32 allocate_mario_action(u32 actFlags);
 
-/* |description|Gets the X coordinate of Mario's hand (0-1) or foot (2-3) but it is important to note that the positions are not updated off-screen|descriptionEnd| */
+/* |description|
+Gets the X coordinate of Mario's hand (0-1) or foot (2-3)
+but it is important to note that the positions are not updated off-screen|descriptionEnd| */
 f32 get_hand_foot_pos_x(struct MarioState* m, u8 index);
-/* |description|Gets the Y coordinate of Mario's hand (0-1) or foot (2-3) but it is important to note that the positions are not updated off-screen|descriptionEnd| */
+/* |description|
+Gets the Y coordinate of Mario's hand (0-1) or foot (2-3)
+but It is important to note that the positions are not updated off-screen|descriptionEnd| */
 f32 get_hand_foot_pos_y(struct MarioState* m, u8 index);
-/* |description|Gets the Z coordinate of Mario's hand (0-1) or foot (2-3) but it is important to note that the positions are not updated off-screen|descriptionEnd| */
+/* |description|
+Gets the Z coordinate of Mario's hand (0-1) or foot (2-3)
+but it is important to note that the positions are not updated off-screen|descriptionEnd| */
 f32 get_hand_foot_pos_z(struct MarioState* m, u8 index);
 
 /* |description|Gets the current save file number (1-indexed)|descriptionEnd| */
@@ -167,7 +173,7 @@ s32 get_dialog_response(void);
 
 /* |description|Gets the local discord ID if it isn't disabled, otherwise "0" is returned|descriptionEnd| */
 const char* get_local_discord_id(void);
-/* |description|Gets the CoopNet ID of a player if CoopNet is being used and the player is connected, otherwise "-1" is returned|descriptionEnd| */
+/* |description|Gets the CoopNet ID of a player with `localIndex` if CoopNet is being used and the player is connected, otherwise "-1" is returned|descriptionEnd| */
 const char* get_coopnet_id(s8 localIndex);
 
 /* |description|Gets the master volume level|descriptionEnd| */

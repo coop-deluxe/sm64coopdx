@@ -161,14 +161,14 @@ u32 get_mario_spawn_type(struct Object *o);
 
 /* |description|
 Finds a warp node in the current area by its ID. The warp node must exist in the list of warp nodes for the current area.
-Useful for locating a specific warp point in the level, such as teleportation zones or connections to other areas.
+Useful for locating a specific warp point in the level, such as teleportation zones or connections to other areas
 |descriptionEnd| */
 struct ObjectWarpNode *area_get_warp_node(u8 id);
 struct ObjectWarpNode *area_get_any_warp_node(void);
 
 /* |description|
 Finds a warp node in the current area using parameters from the provided object. The object's behavior parameters are used to determine the warp node ID.
-Useful for associating an object (like a door or warp pipe) with its corresponding warp node in the area.
+Useful for associating an object (like a door or warp pipe) with its corresponding warp node in the area
 |descriptionEnd| */
 struct ObjectWarpNode *area_get_warp_node_from_params(struct Object *o);
 void clear_areas(void);

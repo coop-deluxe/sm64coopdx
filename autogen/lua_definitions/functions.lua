@@ -2,14 +2,14 @@
 
 --- @param id integer
 --- @return ObjectWarpNode
---- Finds a warp node in the current area by its ID. The warp node must exist in the list of warp nodes for the current area. Useful for locating a specific warp point in the level, such as teleportation zones or connections to other areas.
+--- Finds a warp node in the current area by its ID. The warp node must exist in the list of warp nodes for the current area. Useful for locating a specific warp point in the level, such as teleportation zones or connections to other areas
 function area_get_warp_node(id)
     -- ...
 end
 
 --- @param o Object
 --- @return ObjectWarpNode
---- Finds a warp node in the current area using parameters from the provided object. The object's behavior parameters are used to determine the warp node ID. Useful for associating an object (like a door or warp pipe) with its corresponding warp node in the area.
+--- Finds a warp node in the current area using parameters from the provided object. The object's behavior parameters are used to determine the warp node ID. Useful for associating an object (like a door or warp pipe) with its corresponding warp node in the area
 function area_get_warp_node_from_params(o)
     -- ...
 end
@@ -7694,29 +7694,34 @@ end
 
 --- @param index integer
 --- @return Animation
+--- Gets a vanilla mario Animation with `index`
 function get_mario_vanilla_animation(index)
     -- ...
 end
 
 --- @param obj Object
 --- @return string
+--- Gets the name of the current animation playing on `obj`, returns `nil` if there's no name
 function smlua_anim_util_get_current_animation_name(obj)
     -- ...
 end
 
 --- @param obj Object
 --- @param name string
+--- Sets the animation of `obj` to the animation `name` corresponds to
 function smlua_anim_util_set_animation(obj, name)
     -- ...
 end
 
 --- @param audio ModAudio
+--- Destroys an `audio` sample
 function audio_sample_destroy(audio)
     -- ...
 end
 
 --- @param filename string
 --- @return ModAudio
+--- Loads an `audio` sample
 function audio_sample_load(filename)
     -- ...
 end
@@ -7724,51 +7729,60 @@ end
 --- @param audio ModAudio
 --- @param position Vec3f
 --- @param volume number
+--- Plays an `audio` sample at `position` with `volume`
 function audio_sample_play(audio, position, volume)
     -- ...
 end
 
 --- @param audio ModAudio
+--- Stops an `audio` sample
 function audio_sample_stop(audio)
     -- ...
 end
 
 --- @param audio ModAudio
+--- Destroys an `audio` stream
 function audio_stream_destroy(audio)
     -- ...
 end
 
 --- @param audio ModAudio
 --- @return number
+--- Gets the frequency of an `audio` stream
 function audio_stream_get_frequency(audio)
     -- ...
 end
 
 --- @param audio ModAudio
 --- @return boolean
+--- Gets if an `audio` stream is looping or not
 function audio_stream_get_looping(audio)
     -- ...
 end
 
 --- @param audio ModAudio
 --- @return number
+--- Gets the position of an `audio` stream
 function audio_stream_get_position(audio)
     -- ...
 end
 
 --- @param audio ModAudio
 --- @return number
+--- Gets the volume of an `audio` stream
 function audio_stream_get_volume(audio)
     -- ...
 end
 
 --- @param filename string
 --- @return ModAudio
+--- Loads an `audio` stream by `filename` (with extension)
 function audio_stream_load(filename)
     -- ...
 end
 
 --- @param audio ModAudio
+--- Pauses an `audio` stream
 function audio_stream_pause(audio)
     -- ...
 end
@@ -7776,35 +7790,41 @@ end
 --- @param audio ModAudio
 --- @param restart boolean
 --- @param volume number
+--- Plays an `audio` stream with `volume`. `restart` sets the elapsed time back to 0.
 function audio_stream_play(audio, restart, volume)
     -- ...
 end
 
 --- @param audio ModAudio
 --- @param freq number
+--- Sets the frequency of an `audio` stream
 function audio_stream_set_frequency(audio, freq)
     -- ...
 end
 
 --- @param audio ModAudio
 --- @param looping boolean
+--- Sets if an `audio` stream is looping or not
 function audio_stream_set_looping(audio, looping)
     -- ...
 end
 
 --- @param audio ModAudio
 --- @param pos number
+--- Sets the position of an `audio` stream
 function audio_stream_set_position(audio, pos)
     -- ...
 end
 
 --- @param audio ModAudio
 --- @param volume number
+--- Sets the volume of an `audio` stream
 function audio_stream_set_volume(audio, volume)
     -- ...
 end
 
 --- @param audio ModAudio
+--- Stops an `audio` stream
 function audio_stream_stop(audio)
     -- ...
 end
@@ -7822,21 +7842,25 @@ function smlua_audio_utils_reset_all()
 end
 
 --- @param allow integer
+--- Sets if the romhack camera should fly above poison gas
 function camera_allow_toxic_gas_camera(allow)
     -- ...
 end
 
 --- @param enable boolean
+--- Overrides if Analog Camera is enabled
 function camera_config_enable_analog_cam(enable)
     -- ...
 end
 
 --- @param enable boolean
+--- Overrides if Free Camera is enabled
 function camera_config_enable_free_cam(enable)
     -- ...
 end
 
 --- @param enable boolean
+--- Overrides if camera mouse look is enabled
 function camera_config_enable_mouse_look(enable)
     -- ...
 end
@@ -7867,103 +7891,124 @@ function camera_config_get_y_sensitivity()
 end
 
 --- @param invert boolean
+--- Overrides if camera X is inverted
 function camera_config_invert_x(invert)
     -- ...
 end
 
 --- @param invert boolean
+--- Overrides if camera Y is inverted
 function camera_config_invert_y(invert)
     -- ...
 end
 
 --- @return boolean
+--- Checks if Analog Camera is enabled
 function camera_config_is_analog_cam_enabled()
     -- ...
 end
 
 --- @return boolean
+--- Checks if Free Camera is enabled
 function camera_config_is_free_cam_enabled()
     -- ...
 end
 
 --- @return boolean
+--- Checks if Mouse Look is enabled
 function camera_config_is_mouse_look_enabled()
     -- ...
 end
 
 --- @return boolean
+--- Checks if camera X is inverted
 function camera_config_is_x_inverted()
     -- ...
 end
 
 --- @return boolean
+--- Checks if camera Y is inverted
 function camera_config_is_y_inverted()
     -- ...
 end
 
 --- @param value integer
+--- Overrides camera aggression
 function camera_config_set_aggression(value)
     -- ...
 end
 
 --- @param value integer
+--- Overrides camera deceleration
 function camera_config_set_deceleration(value)
     -- ...
 end
 
 --- @param value integer
+--- Overrides camera pan level
 function camera_config_set_pan_level(value)
     -- ...
 end
 
 --- @param value integer
+--- Overrides camera X sensitivity
 function camera_config_set_x_sensitivity(value)
     -- ...
 end
 
 --- @param value integer
+--- Overrides camera Y sensitivity
 function camera_config_set_y_sensitivity(value)
     -- ...
 end
 
+--- Freezes the camera by not updating it
 function camera_freeze()
     -- ...
 end
 
 --- @return boolean
+--- Checks if the camera should account for surfaces
 function camera_get_checking_surfaces()
     -- ...
 end
 
 --- @return boolean
+--- Checks if the camera is frozen
 function camera_is_frozen()
     -- ...
 end
 
+--- Resets camera config overrides
 function camera_reset_overrides()
     -- ...
 end
 
 --- @param allow integer
+--- Sets if the romhack camera should allow centering
 function camera_romhack_allow_centering(allow)
     -- ...
 end
 
 --- @param allow integer
+--- Sets if the romhack camera should allow D-Pad movement
 function camera_romhack_allow_dpad_usage(allow)
     -- ...
 end
 
 --- @param value boolean
+--- Sets if the camera should account for surfaces
 function camera_set_checking_surfaces(value)
     -- ...
 end
 
 --- @param rco RomhackCameraOverride
+--- Sets the romhack camera override status
 function camera_set_romhack_override(rco)
     -- ...
 end
 
+--- Unfreezes the camera
 function camera_unfreeze()
     -- ...
 end
@@ -7972,6 +8017,7 @@ end
 --- @param y number
 --- @param z number
 --- @return Surface
+--- Finds a potential ceiling at the given `x`, `y`, and `z` values
 function collision_find_ceil(x, y, z)
     -- ...
 end
@@ -7980,11 +8026,13 @@ end
 --- @param y number
 --- @param z number
 --- @return Surface
+--- Finds a potential floor at the given `x`, `y`, and `z` values
 function collision_find_floor(x, y, z)
     -- ...
 end
 
 --- @return WallCollisionData
+--- Returns a temporary wall collision data pointer
 function collision_get_temp_wall_collision_data()
     -- ...
 end
@@ -7992,27 +8040,32 @@ end
 --- @param wcd WallCollisionData
 --- @param index integer
 --- @return Surface
+--- Gets the surface corresponding to `index` from `wcd`
 function get_surface_from_wcd_index(wcd, index)
     -- ...
 end
 
 --- @return Surface
+--- Finds a potential ceiling at the given `x`, `y`, and `z` values
 function get_water_surface_pseudo_floor()
     -- ...
 end
 
 --- @param data Pointer_Collision
+--- Gets a table of the surface types from `data`
 function smlua_collision_util_find_surface_types(data)
     -- ...
 end
 
 --- @param name string
 --- @return Pointer_Collision
+--- Gets the `Collision` with `name`
 function smlua_collision_util_get(name)
     -- ...
 end
 
 --- @return Pointer_Collision
+--- Gets the current level terrain collision
 function smlua_collision_util_get_current_terrain_collision()
     -- ...
 end
@@ -8020,51 +8073,58 @@ end
 --- @param level integer
 --- @param area integer
 --- @return Pointer_Collision
+--- Gets the `level` terrain collision from `area`
 function smlua_collision_util_get_level_collision(level, area)
     -- ...
 end
 
+--- @deprecated
 --- @param audio ModAudio
 --- @return number
+--- [DEPRECATED: There may be a replacement for this function in the future]
 function audio_stream_get_tempo(audio)
     -- ...
 end
 
---- @param url string
---- @return ModAudio
-function audio_stream_load_url(url)
-    -- ...
-end
-
+--- @deprecated
 --- @param audio ModAudio
 --- @param initial_freq number
 --- @param speed number
 --- @param pitch boolean
+--- [DEPRECATED: There may be a replacement for this function in the future]
 function audio_stream_set_speed(audio, initial_freq, speed, pitch)
     -- ...
 end
 
+--- @deprecated
 --- @param audio ModAudio
 --- @param tempo number
+--- [DEPRECATED: There may be a replacement for this function in the future]
 function audio_stream_set_tempo(audio, tempo)
     -- ...
 end
 
+--- @deprecated
 --- @param enable boolean
+--- [DEPRECATED: Use `HOOK_ON_HUD_RENDER_BEHIND` instead] Sets if DJUI should render behind the vanilla HUD
 function djui_hud_set_render_behind_hud(enable)
     -- ...
 end
 
+--- @deprecated
 --- @param np NetworkPlayer
 --- @param part PlayerPart
 --- @param color Color
+--- [DEPRECATED: Use `network_player_set_override_palette_color` instead]
 function network_player_color_to_palette(np, part, color)
     -- ...
 end
 
+--- @deprecated
 --- @param np NetworkPlayer
 --- @param part PlayerPart
 --- @param out Color
+--- [DEPRECATED: Use `network_player_get_palette_color` or `network_player_get_override_palette_color` instead]
 function network_player_palette_to_color(np, part, out)
     -- ...
 end
@@ -8197,6 +8257,7 @@ end
 
 --- @param levelNum integer
 --- @return boolean
+--- Checks if `levelNum` is a vanilla level
 function level_is_vanilla_level(levelNum)
     -- ...
 end
@@ -8210,46 +8271,54 @@ end
 --- @param echoLevel2 integer
 --- @param echoLevel3 integer
 --- @return integer
+--- Registers a fully custom level. Level ID begins at 50
 function level_register(scriptEntryName, courseNum, fullName, shortName, acousticReach, echoLevel1, echoLevel2, echoLevel3)
     -- ...
 end
 
 --- @param areaIndex integer
+--- Instantly changes the current area to `areaIndex`
 function smlua_level_util_change_area(areaIndex)
     -- ...
 end
 
 --- @param levelNum integer
 --- @return CustomLevelInfo
+--- Gets information on a custom level from `levelNum`
 function smlua_level_util_get_info(levelNum)
     -- ...
 end
 
 --- @param courseNum integer
 --- @return CustomLevelInfo
+--- Gets information on a custom level from `courseNum`
 function smlua_level_util_get_info_from_course_num(courseNum)
     -- ...
 end
 
 --- @param shortName string
 --- @return CustomLevelInfo
+--- Gets information on a custom level from `shortName`
 function smlua_level_util_get_info_from_short_name(shortName)
     -- ...
 end
 
 --- @param aDelay integer
 --- @return boolean
+--- Exits the current level after `aDelay`
 function warp_exit_level(aDelay)
     -- ...
 end
 
 --- @return boolean
+--- Restarts the current level
 function warp_restart_level()
     -- ...
 end
 
 --- @param aLevel integer
 --- @return boolean
+--- Warps back to the castle from `aLevel`
 function warp_to_castle(aLevel)
     -- ...
 end
@@ -8258,11 +8327,13 @@ end
 --- @param aArea integer
 --- @param aAct integer
 --- @return boolean
+--- Warps to `aArea` of `aLevel` in `aAct`
 function warp_to_level(aLevel, aArea, aAct)
     -- ...
 end
 
 --- @return boolean
+--- Warps to the start level (Castle Grounds by default)
 function warp_to_start_level()
     -- ...
 end
@@ -8272,6 +8343,7 @@ end
 --- @param aAct integer
 --- @param aWarpId integer
 --- @return boolean
+--- Warps to `aWarpId` of `aArea` in `aLevel` during `aAct`
 function warp_to_warpnode(aLevel, aArea, aAct, aWarpId)
     -- ...
 end
@@ -8392,7 +8464,7 @@ end
 
 --- @param pointer Pointer_integer
 --- @return integer
---- Gets the 32-bit integer value from the pointer
+--- Gets the signed 32-bit integer value from `pointer`
 function deref_s32_pointer(pointer)
     -- ...
 end
@@ -8447,7 +8519,7 @@ end
 
 --- @param localIndex integer
 --- @return string
---- Gets the CoopNet ID of a player if CoopNet is being used and the player is connected, otherwise "-1" is returned
+--- Gets the CoopNet ID of a player with `localIndex` if CoopNet is being used and the player is connected, otherwise "-1" is returned
 function get_coopnet_id(localIndex)
     -- ...
 end
@@ -8518,7 +8590,7 @@ end
 --- @param m MarioState
 --- @param index integer
 --- @return number
---- Gets the Y coordinate of Mario's hand (0-1) or foot (2-3) but it is important to note that the positions are not updated off-screen
+--- Gets the Y coordinate of Mario's hand (0-1) or foot (2-3) but It is important to note that the positions are not updated off-screen
 function get_hand_foot_pos_y(m, index)
     -- ...
 end
@@ -8575,7 +8647,7 @@ end
 
 --- @param initialValue integer
 --- @return Pointer_integer
---- Returns a temporary 32-bit integer pointer
+--- Returns a temporary signed 32-bit integer pointer with its value set to `initialValue`
 function get_temp_s32_pointer(initialValue)
     -- ...
 end
@@ -8832,17 +8904,20 @@ end
 
 --- @param name string
 --- @return ModelExtendedId
+--- Gets the extended model ID for the `name` of a `GeoLayout`
 function smlua_model_util_get_id(name)
     -- ...
 end
 
 --- @return ObjectHitbox
+--- Returns a temporary object hitbox pointer
 function get_temp_object_hitbox()
     -- ...
 end
 
 --- @param name string
 --- @return Pointer_Trajectory
+--- Gets a trajectory by `name`
 function get_trajectory(name)
     -- ...
 end
@@ -8850,6 +8925,7 @@ end
 --- @param o1 Object
 --- @param o2 Object
 --- @return boolean
+--- Checks if `o1`'s hitbox is colliding with `o2`'s hitbox
 function obj_check_hitbox_overlap(o1, o2)
     -- ...
 end
@@ -8862,12 +8938,14 @@ end
 --- @param r number
 --- @param d number
 --- @return boolean
+--- Checks if `o`'s hitbox is colliding with the parameters of a hitbox
 function obj_check_overlap_with_hitbox_params(o, x, y, z, h, r, d)
     -- ...
 end
 
 --- @param behaviorId BehaviorId
 --- @return integer
+--- Counts every object with `behaviorId`
 function obj_count_objects_with_behavior_id(behaviorId)
     -- ...
 end
@@ -8875,6 +8953,7 @@ end
 --- @param o Object
 --- @param index integer
 --- @return Object
+--- Gets the corresponding collided object to an index from `o`
 function obj_get_collided_object(o, index)
     -- ...
 end
@@ -8882,6 +8961,7 @@ end
 --- @param o Object
 --- @param fieldIndex integer
 --- @return number
+--- Sets the float value from the field corresponding to `fieldIndex`
 function obj_get_field_f32(o, fieldIndex)
     -- ...
 end
@@ -8890,6 +8970,7 @@ end
 --- @param fieldIndex integer
 --- @param fieldSubIndex integer
 --- @return integer
+--- Gets the signed 32-bit integer value from the sub field corresponding to `fieldSubIndex` from the field corresponding to `fieldIndex`
 function obj_get_field_s16(o, fieldIndex, fieldSubIndex)
     -- ...
 end
@@ -8897,6 +8978,7 @@ end
 --- @param o Object
 --- @param fieldIndex integer
 --- @return integer
+--- Gets the signed 32-bit integer value from the field corresponding to `fieldIndex`
 function obj_get_field_s32(o, fieldIndex)
     -- ...
 end
@@ -8904,18 +8986,21 @@ end
 --- @param o Object
 --- @param fieldIndex integer
 --- @return integer
+--- Gets the unsigned 32-bit integer value from the field corresponding to `fieldIndex`
 function obj_get_field_u32(o, fieldIndex)
     -- ...
 end
 
 --- @param objList ObjectList
 --- @return Object
+--- Gets the first object in an object list
 function obj_get_first(objList)
     -- ...
 end
 
 --- @param behaviorId BehaviorId
 --- @return Object
+--- Gets the first object loaded with `behaviorId`
 function obj_get_first_with_behavior_id(behaviorId)
     -- ...
 end
@@ -8924,6 +9009,7 @@ end
 --- @param fieldIndex integer
 --- @param value number
 --- @return Object
+--- Gets the first object loaded with `behaviorId` and object float field (look in `object_fields.h` to get the index of a field)
 function obj_get_first_with_behavior_id_and_field_f32(behaviorId, fieldIndex, value)
     -- ...
 end
@@ -8932,6 +9018,7 @@ end
 --- @param fieldIndex integer
 --- @param value integer
 --- @return Object
+--- Gets the first object loaded with `behaviorId` and object signed 32-bit integer field (look in `object_fields.h` to get the index of a field)
 function obj_get_first_with_behavior_id_and_field_s32(behaviorId, fieldIndex, value)
     -- ...
 end
@@ -8939,18 +9026,21 @@ end
 --- @param o Object
 --- @param behaviorId BehaviorId
 --- @return Object
+--- Gets the nearest object with `behaviorId` to `o`
 function obj_get_nearest_object_with_behavior_id(o, behaviorId)
     -- ...
 end
 
 --- @param o Object
 --- @return Object
+--- Gets the next object in an object list
 function obj_get_next(o)
     -- ...
 end
 
 --- @param o Object
 --- @return Object
+--- Gets the next object loaded with the same behavior ID
 function obj_get_next_with_same_behavior_id(o)
     -- ...
 end
@@ -8959,6 +9049,7 @@ end
 --- @param fieldIndex integer
 --- @param value number
 --- @return Object
+--- Gets the next object loaded with the same behavior ID and object float field (look in `object_fields.h` to get the index of a field)
 function obj_get_next_with_same_behavior_id_and_field_f32(o, fieldIndex, value)
     -- ...
 end
@@ -8967,12 +9058,14 @@ end
 --- @param fieldIndex integer
 --- @param value integer
 --- @return Object
+--- Gets the next object loaded with the same behavior ID and object signed 32-bit integer field (look in `object_fields.h` to get the index of a field)
 function obj_get_next_with_same_behavior_id_and_field_s32(o, fieldIndex, value)
     -- ...
 end
 
 --- @param modelId ModelExtendedId
 --- @return SpawnParticlesInfo
+--- Returns a temporary particle spawn info pointer with its model loaded in from `modelId`
 function obj_get_temp_spawn_particles_info(modelId)
     -- ...
 end
@@ -8980,6 +9073,7 @@ end
 --- @param o Object
 --- @param behaviorId BehaviorId
 --- @return integer
+--- Checks if an object has `behaviorId`
 function obj_has_behavior_id(o, behaviorId)
     -- ...
 end
@@ -8987,60 +9081,70 @@ end
 --- @param o Object
 --- @param modelId ModelExtendedId
 --- @return integer
+--- Checks if an object's model is equal to `modelId`
 function obj_has_model_extended(o, modelId)
     -- ...
 end
 
 --- @param o Object
 --- @return boolean
+--- Checks if `o` is attackable
 function obj_is_attackable(o)
     -- ...
 end
 
 --- @param o Object
 --- @return boolean
+--- Checks if `o` is breakable
 function obj_is_breakable_object(o)
     -- ...
 end
 
 --- @param o Object
 --- @return boolean
+--- Checks if `o` is a Bully
 function obj_is_bully(o)
     -- ...
 end
 
 --- @param o Object
 --- @return boolean
+--- Checks if `o` is a coin
 function obj_is_coin(o)
     -- ...
 end
 
 --- @param o Object
 --- @return boolean
+--- Checks if `o` is an exclamation box
 function obj_is_exclamation_box(o)
     -- ...
 end
 
 --- @param o Object
 --- @return boolean
+--- Checks if `o` is grabbable
 function obj_is_grabbable(o)
     -- ...
 end
 
 --- @param o Object
 --- @return boolean
+--- Checks if `o` is a 1-Up Mushroom
 function obj_is_mushroom_1up(o)
     -- ...
 end
 
 --- @param o Object
 --- @return boolean
+--- Checks if `o` is a secret
 function obj_is_secret(o)
     -- ...
 end
 
 --- @param o Object
 --- @return boolean
+--- Checks if `o` is activated, tangible, and interactible
 function obj_is_valid_for_interaction(o)
     -- ...
 end
@@ -9049,6 +9153,7 @@ end
 --- @param dx number
 --- @param dy number
 --- @param dz number
+--- Moves the object in the direction of `dx`, `dy`, and `dz`
 function obj_move_xyz(o, dx, dy, dz)
     -- ...
 end
@@ -9056,6 +9161,7 @@ end
 --- @param o Object
 --- @param fieldIndex integer
 --- @param value number
+--- Sets the float value from the field corresponding to `fieldIndex`
 function obj_set_field_f32(o, fieldIndex, value)
     -- ...
 end
@@ -9064,6 +9170,7 @@ end
 --- @param fieldIndex integer
 --- @param fieldSubIndex integer
 --- @param value integer
+--- Sets the signed 32-bit integer value from the sub field corresponding to `fieldSubIndex` from the field corresponding to `fieldIndex`
 function obj_set_field_s16(o, fieldIndex, fieldSubIndex, value)
     -- ...
 end
@@ -9071,6 +9178,7 @@ end
 --- @param o Object
 --- @param fieldIndex integer
 --- @param value integer
+--- Sets the signed 32-bit integer value from the field corresponding to `fieldIndex`
 function obj_set_field_s32(o, fieldIndex, value)
     -- ...
 end
@@ -9078,12 +9186,14 @@ end
 --- @param o Object
 --- @param fieldIndex integer
 --- @param value integer
+--- Sets the unsigned 32-bit integer value from the field corresponding to `fieldIndex`
 function obj_set_field_u32(o, fieldIndex, value)
     -- ...
 end
 
 --- @param o Object
 --- @param modelId ModelExtendedId
+--- Sets an object's model to `modelId`
 function obj_set_model_extended(o, modelId)
     -- ...
 end
@@ -9092,6 +9202,7 @@ end
 --- @param vx number
 --- @param vy number
 --- @param vz number
+--- Sets an object's velocity to `vx`, `vy`, and `vz`
 function obj_set_vel(o, vx, vy, vz)
     -- ...
 end
@@ -9102,6 +9213,7 @@ end
 --- @param strength integer
 --- @param area integer
 --- @param index integer
+--- Sets the parameters of one of the two whirlpools (0-indexed) in an area
 function set_whirlpools(x, y, z, strength, area, index)
     -- ...
 end
@@ -9113,6 +9225,7 @@ end
 --- @param z number
 --- @param objSetupFunction function
 --- @return Object
+--- Spawns a synchronized object in at `x`, `y`, and `z` as a child object of the local Mario with his rotation. You can change the fields of the object in `objSetupFunction`
 function spawn_non_sync_object(behaviorId, modelId, x, y, z, objSetupFunction)
     -- ...
 end
@@ -9124,6 +9237,7 @@ end
 --- @param z number
 --- @param objSetupFunction function
 --- @return Object
+--- Spawns a synchronized object in at `x`, `y`, and `z` as a child object of the local Mario with his rotation. You can change the fields of the object in `objSetupFunction`
 function spawn_sync_object(behaviorId, modelId, x, y, z, objSetupFunction)
     -- ...
 end
@@ -9131,6 +9245,7 @@ end
 --- @param courseNum integer
 --- @param actNum integer
 --- @return string
+--- Gets the act name of `actNum` in `courseNum`
 function smlua_text_utils_act_name_get(courseNum, actNum)
     -- ...
 end
@@ -9138,6 +9253,7 @@ end
 --- @param courseNum integer
 --- @param actNum integer
 --- @return integer
+--- Gets the index of the mod that replaced the act name of `actNum` in `courseNum`
 function smlua_text_utils_act_name_mod_index(courseNum, actNum)
     -- ...
 end
@@ -9145,17 +9261,20 @@ end
 --- @param courseNum integer
 --- @param actNum integer
 --- @param name string
+--- Replaces the act name of `actNum` in `courseNum` with `name`
 function smlua_text_utils_act_name_replace(courseNum, actNum, name)
     -- ...
 end
 
 --- @param courseNum integer
 --- @param actNum integer
+--- Resets the act name of `actNum` in `courseNum`
 function smlua_text_utils_act_name_reset(courseNum, actNum)
     -- ...
 end
 
 --- @param name string
+--- Replaces the castle secret stars text with `name`
 function smlua_text_utils_castle_secret_stars_replace(name)
     -- ...
 end
@@ -9168,29 +9287,34 @@ end
 --- @param act4 string
 --- @param act5 string
 --- @param act6 string
+--- Replaces the act names of `courseNum`
 function smlua_text_utils_course_acts_replace(courseNum, courseName, act1, act2, act3, act4, act5, act6)
     -- ...
 end
 
 --- @param courseNum integer
 --- @return string
+--- Gets the name of `courseNum`
 function smlua_text_utils_course_name_get(courseNum)
     -- ...
 end
 
 --- @param courseNum integer
 --- @return integer
+--- Gets the index of the mod that replaced the name of `courseNum`
 function smlua_text_utils_course_name_mod_index(courseNum)
     -- ...
 end
 
 --- @param courseNum integer
 --- @param name string
+--- Replaces the name of `courseNum` with `name`
 function smlua_text_utils_course_name_replace(courseNum, name)
     -- ...
 end
 
 --- @param courseNum integer
+--- Resets the name of `courseNum`
 function smlua_text_utils_course_name_reset(courseNum)
     -- ...
 end
@@ -9201,23 +9325,27 @@ end
 --- @param leftOffset integer
 --- @param width integer
 --- @param str string
+--- Replaces `dialogId` with a custom one
 function smlua_text_utils_dialog_replace(dialogId, unused, linesPerBox, leftOffset, width, str)
     -- ...
 end
 
 --- @param index integer
 --- @param text string
+--- Replace extra text (e.g. one of the castle's secret stars) with `text`
 function smlua_text_utils_extra_text_replace(index, text)
     -- ...
 end
 
 --- @return string
+--- Gets the current language
 function smlua_text_utils_get_language()
     -- ...
 end
 
 --- @param courseNum integer
 --- @param courseName string
+--- Replaces the secret star course name of `courseNum` with `courseName`
 function smlua_text_utils_secret_star_replace(courseNum, courseName)
     -- ...
 end

@@ -6,12 +6,1614 @@
 
 
 ---
+# functions from smlua_misc_utils.h
+
+<br />
+
+
+## [allocate_mario_action](#allocate_mario_action)
+
+### Description
+Allocates an action ID with bitwise flags
+
+### Lua Example
+`local integerValue = allocate_mario_action(actFlags)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| actFlags | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 allocate_mario_action(u32 actFlags);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [course_is_main_course](#course_is_main_course)
+
+### Description
+Checks if a course is a main course and not the castle or secret levels
+
+### Lua Example
+`local booleanValue = course_is_main_course(courseNum)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| courseNum | `integer` |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool course_is_main_course(u16 courseNum);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [deref_s32_pointer](#deref_s32_pointer)
+
+### Description
+Gets the signed 32-bit integer value from `pointer`
+
+### Lua Example
+`local integerValue = deref_s32_pointer(pointer)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| pointer | `Pointer` <`integer`> |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 deref_s32_pointer(s32* pointer);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [djui_attempting_to_open_playerlist](#djui_attempting_to_open_playerlist)
+
+### Description
+Checks if the DJUI playerlist is attempting to be opened
+
+### Lua Example
+`local booleanValue = djui_attempting_to_open_playerlist()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool djui_attempting_to_open_playerlist(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [djui_is_playerlist_open](#djui_is_playerlist_open)
+
+### Description
+Checks if the DJUI playerlist is open
+
+### Lua Example
+`local booleanValue = djui_is_playerlist_open()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool djui_is_playerlist_open(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [djui_is_popup_disabled](#djui_is_popup_disabled)
+
+### Description
+Returns if popups are disabled
+
+### Lua Example
+`local booleanValue = djui_is_popup_disabled()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool djui_is_popup_disabled(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [djui_menu_get_font](#djui_menu_get_font)
+
+### Description
+Gets the DJUI menu font
+
+### Lua Example
+`local enumValue = djui_menu_get_font()`
+
+### Parameters
+- None
+
+### Returns
+[enum DjuiFontType](constants.md#enum-DjuiFontType)
+
+### C Prototype
+`enum DjuiFontType djui_menu_get_font(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [djui_menu_get_theme](#djui_menu_get_theme)
+
+### Description
+Gets the DJUI menu theme
+
+### Lua Example
+`local DjuiThemeValue = djui_menu_get_theme()`
+
+### Parameters
+- None
+
+### Returns
+[DjuiTheme](structs.md#DjuiTheme)
+
+### C Prototype
+`struct DjuiTheme* djui_menu_get_theme(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [djui_popup_create_global](#djui_popup_create_global)
+
+### Description
+Creates a DJUI popup that is broadcasted to every client
+
+### Lua Example
+`djui_popup_create_global(message, lines)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| message | `string` |
+| lines | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void djui_popup_create_global(const char* message, int lines);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [djui_reset_popup_disabled_override](#djui_reset_popup_disabled_override)
+
+### Description
+Resets if popups are disabled
+
+### Lua Example
+`djui_reset_popup_disabled_override()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void djui_reset_popup_disabled_override(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [djui_set_popup_disabled_override](#djui_set_popup_disabled_override)
+
+### Description
+Sets if popups are disabled
+
+### Lua Example
+`djui_set_popup_disabled_override(value)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| value | `boolean` |
+
+### Returns
+- None
+
+### C Prototype
+`void djui_set_popup_disabled_override(bool value);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_coopnet_id](#get_coopnet_id)
+
+### Description
+Gets the CoopNet ID of a player with `localIndex` if CoopNet is being used and the player is connected, otherwise "-1" is returned
+
+### Lua Example
+`local stringValue = get_coopnet_id(localIndex)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| localIndex | `integer` |
+
+### Returns
+- `string`
+
+### C Prototype
+`const char* get_coopnet_id(s8 localIndex);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_current_save_file_num](#get_current_save_file_num)
+
+### Description
+Gets the current save file number (1-indexed)
+
+### Lua Example
+`local integerValue = get_current_save_file_num()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`s16 get_current_save_file_num(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_date_and_time](#get_date_and_time)
+
+### Description
+Gets the system clock's date and time
+
+### Lua Example
+`local DateTimeValue = get_date_and_time()`
+
+### Parameters
+- None
+
+### Returns
+[DateTime](structs.md#DateTime)
+
+### C Prototype
+`struct DateTime* get_date_and_time(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_dialog_box_state](#get_dialog_box_state)
+
+### Description
+Gets the current state of the dialog box
+
+### Lua Example
+`local integerValue = get_dialog_box_state()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`s8 get_dialog_box_state(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_dialog_id](#get_dialog_id)
+
+### Description
+Gets the current dialog box ID
+
+### Lua Example
+`local integerValue = get_dialog_id()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`s16 get_dialog_id(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_dialog_response](#get_dialog_response)
+
+### Description
+Gets the choice selected inside of a dialog box (0-1)
+
+### Lua Example
+`local integerValue = get_dialog_response()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 get_dialog_response(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_envfx](#get_envfx)
+
+### Description
+Gets the non overridden environment effect (e.g. snow)
+
+### Lua Example
+`local integerValue = get_envfx()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u16 get_envfx(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_environment_region](#get_environment_region)
+
+### Description
+Gets an environment region (gas/water boxes) height value
+
+### Lua Example
+`local numberValue = get_environment_region(index)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| index | `integer` |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 get_environment_region(u8 index);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_global_timer](#get_global_timer)
+
+### Description
+Gets the global timer that has been ticking at 30 frames per second since game boot
+
+### Lua Example
+`local integerValue = get_global_timer()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 get_global_timer(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_got_file_coin_hi_score](#get_got_file_coin_hi_score)
+
+### Description
+Checks if the save file's coin "HI SCORE" was obtained with the last star or key collection
+
+### Lua Example
+`local booleanValue = get_got_file_coin_hi_score()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool get_got_file_coin_hi_score(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_hand_foot_pos_x](#get_hand_foot_pos_x)
+
+### Description
+Gets the X coordinate of Mario's hand (0-1) or foot (2-3) but it is important to note that the positions are not updated off-screen
+
+### Lua Example
+`local numberValue = get_hand_foot_pos_x(m, index)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| index | `integer` |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 get_hand_foot_pos_x(struct MarioState* m, u8 index);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_hand_foot_pos_y](#get_hand_foot_pos_y)
+
+### Description
+Gets the Y coordinate of Mario's hand (0-1) or foot (2-3) but It is important to note that the positions are not updated off-screen
+
+### Lua Example
+`local numberValue = get_hand_foot_pos_y(m, index)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| index | `integer` |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 get_hand_foot_pos_y(struct MarioState* m, u8 index);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_hand_foot_pos_z](#get_hand_foot_pos_z)
+
+### Description
+Gets the Z coordinate of Mario's hand (0-1) or foot (2-3) but it is important to note that the positions are not updated off-screen
+
+### Lua Example
+`local numberValue = get_hand_foot_pos_z(m, index)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| index | `integer` |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 get_hand_foot_pos_z(struct MarioState* m, u8 index);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_last_completed_course_num](#get_last_completed_course_num)
+
+### Description
+Gets the last course a star or key was collected in
+
+### Lua Example
+`local integerValue = get_last_completed_course_num()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u8 get_last_completed_course_num(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_last_completed_star_num](#get_last_completed_star_num)
+
+### Description
+Gets the last collected star's number (1-7)
+
+### Lua Example
+`local integerValue = get_last_completed_star_num()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u8 get_last_completed_star_num(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_last_star_or_key](#get_last_star_or_key)
+
+### Description
+Gets if the last objective collected was a star (0) or a key (1)
+
+### Lua Example
+`local integerValue = get_last_star_or_key()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u8 get_last_star_or_key(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_local_discord_id](#get_local_discord_id)
+
+### Description
+Gets the local discord ID if it isn't disabled, otherwise "0" is returned
+
+### Lua Example
+`local stringValue = get_local_discord_id()`
+
+### Parameters
+- None
+
+### Returns
+- `string`
+
+### C Prototype
+`const char* get_local_discord_id(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_network_area_timer](#get_network_area_timer)
+
+### Description
+Gets the current area's networked timer
+
+### Lua Example
+`local integerValue = get_network_area_timer()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 get_network_area_timer(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_os_name](#get_os_name)
+
+### Description
+Gets the name of the operating system the game is running on
+
+### Lua Example
+`local stringValue = get_os_name()`
+
+### Parameters
+- None
+
+### Returns
+- `string`
+
+### C Prototype
+`const char* get_os_name(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_save_file_modified](#get_save_file_modified)
+
+### Description
+Checks if the save file has been modified without saving
+
+### Lua Example
+`local booleanValue = get_save_file_modified()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool get_save_file_modified(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_temp_s32_pointer](#get_temp_s32_pointer)
+
+### Description
+Returns a temporary signed 32-bit integer pointer with its value set to `initialValue`
+
+### Lua Example
+`local PointerValue = get_temp_s32_pointer(initialValue)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| initialValue | `integer` |
+
+### Returns
+- `Pointer` <`integer`>
+
+### C Prototype
+`s32* get_temp_s32_pointer(s32 initialValue);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_time](#get_time)
+
+### Description
+Gets the Unix Timestamp
+
+### Lua Example
+`local integerValue = get_time()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`s64 get_time(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_ttc_speed_setting](#get_ttc_speed_setting)
+
+### Description
+Gets TTC's speed setting
+
+### Lua Example
+`local integerValue = get_ttc_speed_setting()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`s16 get_ttc_speed_setting(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_volume_env](#get_volume_env)
+
+### Description
+Gets the volume level of environment sounds effects
+
+### Lua Example
+`local numberValue = get_volume_env()`
+
+### Parameters
+- None
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 get_volume_env(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_volume_level](#get_volume_level)
+
+### Description
+Gets the volume level of music
+
+### Lua Example
+`local numberValue = get_volume_level()`
+
+### Parameters
+- None
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 get_volume_level(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_volume_master](#get_volume_master)
+
+### Description
+Gets the master volume level
+
+### Lua Example
+`local numberValue = get_volume_master()`
+
+### Parameters
+- None
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 get_volume_master(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_volume_sfx](#get_volume_sfx)
+
+### Description
+Gets the volume level of sound effects
+
+### Lua Example
+`local numberValue = get_volume_sfx()`
+
+### Parameters
+- None
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 get_volume_sfx(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_water_level](#get_water_level)
+
+### Description
+Gets the water level in an area
+
+### Lua Example
+`local integerValue = get_water_level(index)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| index | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s16 get_water_level(u8 index);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [hud_get_flash](#hud_get_flash)
+
+### Description
+Gets if the star counter on the HUD should flash
+
+### Lua Example
+`local integerValue = hud_get_flash()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`s8 hud_get_flash(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [hud_get_value](#hud_get_value)
+
+### Lua Example
+`local integerValue = hud_get_value(type)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| type | [enum HudDisplayValue](constants.md#enum-HudDisplayValue) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 hud_get_value(enum HudDisplayValue type);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [hud_hide](#hud_hide)
+
+### Description
+Hides the HUD
+
+### Lua Example
+`hud_hide()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void hud_hide(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [hud_is_hidden](#hud_is_hidden)
+
+### Description
+Checks if the HUD is hidden
+
+### Lua Example
+`local booleanValue = hud_is_hidden()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool hud_is_hidden(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [hud_render_power_meter](#hud_render_power_meter)
+
+### Description
+Renders a power meter on the HUD
+
+### Lua Example
+`hud_render_power_meter(health, x, y, width, height)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| health | `integer` |
+| x | `number` |
+| y | `number` |
+| width | `number` |
+| height | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void hud_render_power_meter(s32 health, f32 x, f32 y, f32 width, f32 height);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [hud_render_power_meter_interpolated](#hud_render_power_meter_interpolated)
+
+### Description
+Renders an interpolated power meter on the HUD
+
+### Lua Example
+`hud_render_power_meter_interpolated(health, prevX, prevY, prevWidth, prevHeight, x, y, width, height)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| health | `integer` |
+| prevX | `number` |
+| prevY | `number` |
+| prevWidth | `number` |
+| prevHeight | `number` |
+| x | `number` |
+| y | `number` |
+| width | `number` |
+| height | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void hud_render_power_meter_interpolated(s32 health, f32 prevX, f32 prevY, f32 prevWidth, f32 prevHeight, f32 x, f32 y, f32 width, f32 height);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [hud_set_flash](#hud_set_flash)
+
+### Description
+Sets if the star counter on the HUD should flash
+
+### Lua Example
+`hud_set_flash(value)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| value | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void hud_set_flash(s8 value);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [hud_set_value](#hud_set_value)
+
+### Description
+Sets a HUD display value
+
+### Lua Example
+`hud_set_value(type, value)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| type | [enum HudDisplayValue](constants.md#enum-HudDisplayValue) |
+| value | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void hud_set_value(enum HudDisplayValue type, s32 value);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [hud_show](#hud_show)
+
+### Description
+Shows the HUD
+
+### Lua Example
+`hud_show()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void hud_show(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [is_game_paused](#is_game_paused)
+
+### Description
+Checks if the game is paused
+
+### Lua Example
+`local booleanValue = is_game_paused()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool is_game_paused(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [is_transition_playing](#is_transition_playing)
+
+### Description
+Checks if a screen transition is playing
+
+### Lua Example
+`local booleanValue = is_transition_playing()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool is_transition_playing(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mod_file_exists](#mod_file_exists)
+
+### Description
+Checks if a file exists inside of a mod
+
+### Lua Example
+`local booleanValue = mod_file_exists(filename)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| filename | `string` |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool mod_file_exists(const char* filename);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [movtexqc_register](#movtexqc_register)
+
+### Description
+Registers a custom moving texture entry (used for vanilla water boxes)
+
+### Lua Example
+`movtexqc_register(name, level, area, type)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| name | `string` |
+| level | `integer` |
+| area | `integer` |
+| type | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void movtexqc_register(const char* name, s16 level, s16 area, s16 type);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [play_transition](#play_transition)
+
+### Description
+Plays a screen transition
+
+### Lua Example
+`play_transition(transType, time, red, green, blue)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| transType | `integer` |
+| time | `integer` |
+| red | `integer` |
+| green | `integer` |
+| blue | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void play_transition(s16 transType, s16 time, u8 red, u8 green, u8 blue);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [reset_window_title](#reset_window_title)
+
+### Description
+Resets the window title
+
+### Lua Example
+`reset_window_title()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void reset_window_title(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [save_file_get_using_backup_slot](#save_file_get_using_backup_slot)
+
+### Description
+Checks if the save file is using its backup slot
+
+### Lua Example
+`local booleanValue = save_file_get_using_backup_slot()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool save_file_get_using_backup_slot(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [save_file_set_using_backup_slot](#save_file_set_using_backup_slot)
+
+### Description
+Sets if the save file should use its backup slot
+
+### Lua Example
+`save_file_set_using_backup_slot(usingBackupSlot)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| usingBackupSlot | `boolean` |
+
+### Returns
+- None
+
+### C Prototype
+`void save_file_set_using_backup_slot(bool usingBackupSlot);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_environment_region](#set_environment_region)
+
+### Description
+Sets an environment region (gas/water boxes) height value
+
+### Lua Example
+`set_environment_region(index, value)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| index | `integer` |
+| value | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_environment_region(u8 index, s32 value);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_got_file_coin_hi_score](#set_got_file_coin_hi_score)
+
+### Description
+Sets if the save file's coin "HI SCORE" was obtained with the last star or key collection
+
+### Lua Example
+`set_got_file_coin_hi_score(value)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| value | `boolean` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_got_file_coin_hi_score(bool value);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_last_completed_course_num](#set_last_completed_course_num)
+
+### Description
+Sets the last course a star or key was collected in
+
+### Lua Example
+`set_last_completed_course_num(courseNum)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| courseNum | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_last_completed_course_num(u8 courseNum);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_last_completed_star_num](#set_last_completed_star_num)
+
+### Description
+Sets the last collected star's number (1-7)
+
+### Lua Example
+`set_last_completed_star_num(starNum)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| starNum | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_last_completed_star_num(u8 starNum);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_last_star_or_key](#set_last_star_or_key)
+
+### Description
+Sets if the last objective collected was a star (0) or a key (1)
+
+### Lua Example
+`set_last_star_or_key(value)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| value | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_last_star_or_key(u8 value);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_override_envfx](#set_override_envfx)
+
+### Description
+Sets the override environment effect (e.g. snow)
+
+### Lua Example
+`set_override_envfx(envfx)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| envfx | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_override_envfx(s32 envfx);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_save_file_modified](#set_save_file_modified)
+
+### Description
+Sets if the save file has been modified without saving
+
+### Lua Example
+`set_save_file_modified(value)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| value | `boolean` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_save_file_modified(bool value);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_ttc_speed_setting](#set_ttc_speed_setting)
+
+### Description
+Sets TTC's speed setting (TTC_SPEED_*)
+
+### Lua Example
+`set_ttc_speed_setting(speed)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| speed | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_ttc_speed_setting(s16 speed);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_volume_env](#set_volume_env)
+
+### Description
+Sets the volume level of environment sounds effects
+
+### Lua Example
+`set_volume_env(volume)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| volume | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_volume_env(f32 volume);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_volume_level](#set_volume_level)
+
+### Description
+Sets the volume level of music
+
+### Lua Example
+`set_volume_level(volume)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| volume | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_volume_level(f32 volume);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_volume_master](#set_volume_master)
+
+### Description
+Sets the master volume level
+
+### Lua Example
+`set_volume_master(volume)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| volume | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_volume_master(f32 volume);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_volume_sfx](#set_volume_sfx)
+
+### Description
+Sets the volume level of sound effects
+
+### Lua Example
+`set_volume_sfx(volume)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| volume | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_volume_sfx(f32 volume);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_water_level](#set_water_level)
+
+### Description
+Sets the water level in an area
+
+### Lua Example
+`set_water_level(index, height, sync)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| index | `integer` |
+| height | `integer` |
+| sync | `boolean` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_water_level(u8 index, s16 height, bool sync);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_window_title](#set_window_title)
+
+### Description
+Sets the window title to a custom title
+
+### Lua Example
+`set_window_title(title)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| title | `string` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_window_title(const char* title);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
+# functions from smlua_model_utils.h
+
+<br />
+
+
+## [smlua_model_util_get_id](#smlua_model_util_get_id)
+
+### Description
+Gets the extended model ID for the `name` of a `GeoLayout`
+
+### Lua Example
+`local enumValue = smlua_model_util_get_id(name)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| name | `string` |
+
+### Returns
+[enum ModelExtendedId](constants.md#enum-ModelExtendedId)
+
+### C Prototype
+`enum ModelExtendedId smlua_model_util_get_id(const char* name);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
 # functions from smlua_obj_utils.h
 
 <br />
 
 
 ## [get_temp_object_hitbox](#get_temp_object_hitbox)
+
+### Description
+Returns a temporary object hitbox pointer
 
 ### Lua Example
 `local ObjectHitboxValue = get_temp_object_hitbox()`
@@ -30,6 +1632,9 @@
 <br />
 
 ## [get_trajectory](#get_trajectory)
+
+### Description
+Gets a trajectory by `name`
 
 ### Lua Example
 `local PointerValue = get_trajectory(name)`
@@ -51,6 +1656,9 @@
 
 ## [obj_check_hitbox_overlap](#obj_check_hitbox_overlap)
 
+### Description
+Checks if `o1`'s hitbox is colliding with `o2`'s hitbox
+
 ### Lua Example
 `local booleanValue = obj_check_hitbox_overlap(o1, o2)`
 
@@ -71,6 +1679,9 @@
 <br />
 
 ## [obj_check_overlap_with_hitbox_params](#obj_check_overlap_with_hitbox_params)
+
+### Description
+Checks if `o`'s hitbox is colliding with the parameters of a hitbox
 
 ### Lua Example
 `local booleanValue = obj_check_overlap_with_hitbox_params(o, x, y, z, h, r, d)`
@@ -98,6 +1709,9 @@
 
 ## [obj_count_objects_with_behavior_id](#obj_count_objects_with_behavior_id)
 
+### Description
+Counts every object with `behaviorId`
+
 ### Lua Example
 `local integerValue = obj_count_objects_with_behavior_id(behaviorId)`
 
@@ -117,6 +1731,9 @@
 <br />
 
 ## [obj_get_collided_object](#obj_get_collided_object)
+
+### Description
+Gets the corresponding collided object to an index from `o`
 
 ### Lua Example
 `local ObjectValue = obj_get_collided_object(o, index)`
@@ -139,6 +1756,9 @@
 
 ## [obj_get_field_f32](#obj_get_field_f32)
 
+### Description
+Sets the float value from the field corresponding to `fieldIndex`
+
 ### Lua Example
 `local numberValue = obj_get_field_f32(o, fieldIndex)`
 
@@ -159,6 +1779,9 @@
 <br />
 
 ## [obj_get_field_s16](#obj_get_field_s16)
+
+### Description
+Gets the signed 32-bit integer value from the sub field corresponding to `fieldSubIndex` from the field corresponding to `fieldIndex`
 
 ### Lua Example
 `local integerValue = obj_get_field_s16(o, fieldIndex, fieldSubIndex)`
@@ -182,6 +1805,9 @@
 
 ## [obj_get_field_s32](#obj_get_field_s32)
 
+### Description
+Gets the signed 32-bit integer value from the field corresponding to `fieldIndex`
+
 ### Lua Example
 `local integerValue = obj_get_field_s32(o, fieldIndex)`
 
@@ -202,6 +1828,9 @@
 <br />
 
 ## [obj_get_field_u32](#obj_get_field_u32)
+
+### Description
+Gets the unsigned 32-bit integer value from the field corresponding to `fieldIndex`
 
 ### Lua Example
 `local integerValue = obj_get_field_u32(o, fieldIndex)`
@@ -224,6 +1853,9 @@
 
 ## [obj_get_first](#obj_get_first)
 
+### Description
+Gets the first object in an object list
+
 ### Lua Example
 `local ObjectValue = obj_get_first(objList)`
 
@@ -244,6 +1876,9 @@
 
 ## [obj_get_first_with_behavior_id](#obj_get_first_with_behavior_id)
 
+### Description
+Gets the first object loaded with `behaviorId`
+
 ### Lua Example
 `local ObjectValue = obj_get_first_with_behavior_id(behaviorId)`
 
@@ -263,6 +1898,9 @@
 <br />
 
 ## [obj_get_first_with_behavior_id_and_field_f32](#obj_get_first_with_behavior_id_and_field_f32)
+
+### Description
+Gets the first object loaded with `behaviorId` and object float field (look in `object_fields.h` to get the index of a field)
 
 ### Lua Example
 `local ObjectValue = obj_get_first_with_behavior_id_and_field_f32(behaviorId, fieldIndex, value)`
@@ -286,6 +1924,9 @@
 
 ## [obj_get_first_with_behavior_id_and_field_s32](#obj_get_first_with_behavior_id_and_field_s32)
 
+### Description
+Gets the first object loaded with `behaviorId` and object signed 32-bit integer field (look in `object_fields.h` to get the index of a field)
+
 ### Lua Example
 `local ObjectValue = obj_get_first_with_behavior_id_and_field_s32(behaviorId, fieldIndex, value)`
 
@@ -308,6 +1949,9 @@
 
 ## [obj_get_nearest_object_with_behavior_id](#obj_get_nearest_object_with_behavior_id)
 
+### Description
+Gets the nearest object with `behaviorId` to `o`
+
 ### Lua Example
 `local ObjectValue = obj_get_nearest_object_with_behavior_id(o, behaviorId)`
 
@@ -329,6 +1973,9 @@
 
 ## [obj_get_next](#obj_get_next)
 
+### Description
+Gets the next object in an object list
+
 ### Lua Example
 `local ObjectValue = obj_get_next(o)`
 
@@ -349,6 +1996,9 @@
 
 ## [obj_get_next_with_same_behavior_id](#obj_get_next_with_same_behavior_id)
 
+### Description
+Gets the next object loaded with the same behavior ID
+
 ### Lua Example
 `local ObjectValue = obj_get_next_with_same_behavior_id(o)`
 
@@ -368,6 +2018,9 @@
 <br />
 
 ## [obj_get_next_with_same_behavior_id_and_field_f32](#obj_get_next_with_same_behavior_id_and_field_f32)
+
+### Description
+Gets the next object loaded with the same behavior ID and object float field (look in `object_fields.h` to get the index of a field)
 
 ### Lua Example
 `local ObjectValue = obj_get_next_with_same_behavior_id_and_field_f32(o, fieldIndex, value)`
@@ -391,6 +2044,9 @@
 
 ## [obj_get_next_with_same_behavior_id_and_field_s32](#obj_get_next_with_same_behavior_id_and_field_s32)
 
+### Description
+Gets the next object loaded with the same behavior ID and object signed 32-bit integer field (look in `object_fields.h` to get the index of a field)
+
 ### Lua Example
 `local ObjectValue = obj_get_next_with_same_behavior_id_and_field_s32(o, fieldIndex, value)`
 
@@ -413,6 +2069,9 @@
 
 ## [obj_get_temp_spawn_particles_info](#obj_get_temp_spawn_particles_info)
 
+### Description
+Returns a temporary particle spawn info pointer with its model loaded in from `modelId`
+
 ### Lua Example
 `local SpawnParticlesInfoValue = obj_get_temp_spawn_particles_info(modelId)`
 
@@ -432,6 +2091,9 @@
 <br />
 
 ## [obj_has_behavior_id](#obj_has_behavior_id)
+
+### Description
+Checks if an object has `behaviorId`
 
 ### Lua Example
 `local integerValue = obj_has_behavior_id(o, behaviorId)`
@@ -454,6 +2116,9 @@
 
 ## [obj_has_model_extended](#obj_has_model_extended)
 
+### Description
+Checks if an object's model is equal to `modelId`
+
 ### Lua Example
 `local integerValue = obj_has_model_extended(o, modelId)`
 
@@ -475,6 +2140,9 @@
 
 ## [obj_is_attackable](#obj_is_attackable)
 
+### Description
+Checks if `o` is attackable
+
 ### Lua Example
 `local booleanValue = obj_is_attackable(o)`
 
@@ -494,6 +2162,9 @@
 <br />
 
 ## [obj_is_breakable_object](#obj_is_breakable_object)
+
+### Description
+Checks if `o` is breakable
 
 ### Lua Example
 `local booleanValue = obj_is_breakable_object(o)`
@@ -515,6 +2186,9 @@
 
 ## [obj_is_bully](#obj_is_bully)
 
+### Description
+Checks if `o` is a Bully
+
 ### Lua Example
 `local booleanValue = obj_is_bully(o)`
 
@@ -534,6 +2208,9 @@
 <br />
 
 ## [obj_is_coin](#obj_is_coin)
+
+### Description
+Checks if `o` is a coin
 
 ### Lua Example
 `local booleanValue = obj_is_coin(o)`
@@ -555,6 +2232,9 @@
 
 ## [obj_is_exclamation_box](#obj_is_exclamation_box)
 
+### Description
+Checks if `o` is an exclamation box
+
 ### Lua Example
 `local booleanValue = obj_is_exclamation_box(o)`
 
@@ -575,6 +2255,9 @@
 
 ## [obj_is_grabbable](#obj_is_grabbable)
 
+### Description
+Checks if `o` is grabbable
+
 ### Lua Example
 `local booleanValue = obj_is_grabbable(o)`
 
@@ -587,13 +2270,16 @@
 - `boolean`
 
 ### C Prototype
-`bool obj_is_grabbable(struct Object *o) ;`
+`bool obj_is_grabbable(struct Object *o);`
 
 [:arrow_up_small:](#)
 
 <br />
 
 ## [obj_is_mushroom_1up](#obj_is_mushroom_1up)
+
+### Description
+Checks if `o` is a 1-Up Mushroom
 
 ### Lua Example
 `local booleanValue = obj_is_mushroom_1up(o)`
@@ -615,6 +2301,9 @@
 
 ## [obj_is_secret](#obj_is_secret)
 
+### Description
+Checks if `o` is a secret
+
 ### Lua Example
 `local booleanValue = obj_is_secret(o)`
 
@@ -635,6 +2324,9 @@
 
 ## [obj_is_valid_for_interaction](#obj_is_valid_for_interaction)
 
+### Description
+Checks if `o` is activated, tangible, and interactible
+
 ### Lua Example
 `local booleanValue = obj_is_valid_for_interaction(o)`
 
@@ -654,6 +2346,9 @@
 <br />
 
 ## [obj_move_xyz](#obj_move_xyz)
+
+### Description
+Moves the object in the direction of `dx`, `dy`, and `dz`
 
 ### Lua Example
 `obj_move_xyz(o, dx, dy, dz)`
@@ -678,6 +2373,9 @@
 
 ## [obj_set_field_f32](#obj_set_field_f32)
 
+### Description
+Sets the float value from the field corresponding to `fieldIndex`
+
 ### Lua Example
 `obj_set_field_f32(o, fieldIndex, value)`
 
@@ -699,6 +2397,9 @@
 <br />
 
 ## [obj_set_field_s16](#obj_set_field_s16)
+
+### Description
+Sets the signed 32-bit integer value from the sub field corresponding to `fieldSubIndex` from the field corresponding to `fieldIndex`
 
 ### Lua Example
 `obj_set_field_s16(o, fieldIndex, fieldSubIndex, value)`
@@ -723,6 +2424,9 @@
 
 ## [obj_set_field_s32](#obj_set_field_s32)
 
+### Description
+Sets the signed 32-bit integer value from the field corresponding to `fieldIndex`
+
 ### Lua Example
 `obj_set_field_s32(o, fieldIndex, value)`
 
@@ -744,6 +2448,9 @@
 <br />
 
 ## [obj_set_field_u32](#obj_set_field_u32)
+
+### Description
+Sets the unsigned 32-bit integer value from the field corresponding to `fieldIndex`
 
 ### Lua Example
 `obj_set_field_u32(o, fieldIndex, value)`
@@ -767,6 +2474,9 @@
 
 ## [obj_set_model_extended](#obj_set_model_extended)
 
+### Description
+Sets an object's model to `modelId`
+
 ### Lua Example
 `obj_set_model_extended(o, modelId)`
 
@@ -787,6 +2497,9 @@
 <br />
 
 ## [obj_set_vel](#obj_set_vel)
+
+### Description
+Sets an object's velocity to `vx`, `vy`, and `vz`
 
 ### Lua Example
 `obj_set_vel(o, vx, vy, vz)`
@@ -810,6 +2523,9 @@
 <br />
 
 ## [set_whirlpools](#set_whirlpools)
+
+### Description
+Sets the parameters of one of the two whirlpools (0-indexed) in an area
 
 ### Lua Example
 `set_whirlpools(x, y, z, strength, area, index)`
@@ -836,6 +2552,9 @@
 
 ## [spawn_non_sync_object](#spawn_non_sync_object)
 
+### Description
+Spawns a synchronized object in at `x`, `y`, and `z` as a child object of the local Mario with his rotation. You can change the fields of the object in `objSetupFunction`
+
 ### Lua Example
 `local ObjectValue = spawn_non_sync_object(behaviorId, modelId, x, y, z, objSetupFunction)`
 
@@ -860,6 +2579,9 @@
 <br />
 
 ## [spawn_sync_object](#spawn_sync_object)
+
+### Description
+Spawns a synchronized object in at `x`, `y`, and `z` as a child object of the local Mario with his rotation. You can change the fields of the object in `objSetupFunction`
 
 ### Lua Example
 `local ObjectValue = spawn_sync_object(behaviorId, modelId, x, y, z, objSetupFunction)`
@@ -892,6 +2614,9 @@
 
 ## [smlua_text_utils_act_name_get](#smlua_text_utils_act_name_get)
 
+### Description
+Gets the act name of `actNum` in `courseNum`
+
 ### Lua Example
 `local stringValue = smlua_text_utils_act_name_get(courseNum, actNum)`
 
@@ -913,6 +2638,9 @@
 
 ## [smlua_text_utils_act_name_mod_index](#smlua_text_utils_act_name_mod_index)
 
+### Description
+Gets the index of the mod that replaced the act name of `actNum` in `courseNum`
+
 ### Lua Example
 `local integerValue = smlua_text_utils_act_name_mod_index(courseNum, actNum)`
 
@@ -933,6 +2661,9 @@
 <br />
 
 ## [smlua_text_utils_act_name_replace](#smlua_text_utils_act_name_replace)
+
+### Description
+Replaces the act name of `actNum` in `courseNum` with `name`
 
 ### Lua Example
 `smlua_text_utils_act_name_replace(courseNum, actNum, name)`
@@ -956,6 +2687,9 @@
 
 ## [smlua_text_utils_act_name_reset](#smlua_text_utils_act_name_reset)
 
+### Description
+Resets the act name of `actNum` in `courseNum`
+
 ### Lua Example
 `smlua_text_utils_act_name_reset(courseNum, actNum)`
 
@@ -977,6 +2711,9 @@
 
 ## [smlua_text_utils_castle_secret_stars_replace](#smlua_text_utils_castle_secret_stars_replace)
 
+### Description
+Replaces the castle secret stars text with `name`
+
 ### Lua Example
 `smlua_text_utils_castle_secret_stars_replace(name)`
 
@@ -996,6 +2733,9 @@
 <br />
 
 ## [smlua_text_utils_course_acts_replace](#smlua_text_utils_course_acts_replace)
+
+### Description
+Replaces the act names of `courseNum`
 
 ### Lua Example
 `smlua_text_utils_course_acts_replace(courseNum, courseName, act1, act2, act3, act4, act5, act6)`
@@ -1024,6 +2764,9 @@
 
 ## [smlua_text_utils_course_name_get](#smlua_text_utils_course_name_get)
 
+### Description
+Gets the name of `courseNum`
+
 ### Lua Example
 `local stringValue = smlua_text_utils_course_name_get(courseNum)`
 
@@ -1044,6 +2787,9 @@
 
 ## [smlua_text_utils_course_name_mod_index](#smlua_text_utils_course_name_mod_index)
 
+### Description
+Gets the index of the mod that replaced the name of `courseNum`
+
 ### Lua Example
 `local integerValue = smlua_text_utils_course_name_mod_index(courseNum)`
 
@@ -1063,6 +2809,9 @@
 <br />
 
 ## [smlua_text_utils_course_name_replace](#smlua_text_utils_course_name_replace)
+
+### Description
+Replaces the name of `courseNum` with `name`
 
 ### Lua Example
 `smlua_text_utils_course_name_replace(courseNum, name)`
@@ -1085,6 +2834,9 @@
 
 ## [smlua_text_utils_course_name_reset](#smlua_text_utils_course_name_reset)
 
+### Description
+Resets the name of `courseNum`
+
 ### Lua Example
 `smlua_text_utils_course_name_reset(courseNum)`
 
@@ -1104,6 +2856,9 @@
 <br />
 
 ## [smlua_text_utils_dialog_replace](#smlua_text_utils_dialog_replace)
+
+### Description
+Replaces `dialogId` with a custom one
 
 ### Lua Example
 `smlua_text_utils_dialog_replace(dialogId, unused, linesPerBox, leftOffset, width, str)`
@@ -1130,6 +2885,9 @@
 
 ## [smlua_text_utils_extra_text_replace](#smlua_text_utils_extra_text_replace)
 
+### Description
+Replace extra text (e.g. one of the castle's secret stars) with `text`
+
 ### Lua Example
 `smlua_text_utils_extra_text_replace(index, text)`
 
@@ -1151,6 +2909,9 @@
 
 ## [smlua_text_utils_get_language](#smlua_text_utils_get_language)
 
+### Description
+Gets the current language
+
 ### Lua Example
 `local stringValue = smlua_text_utils_get_language()`
 
@@ -1168,6 +2929,9 @@
 <br />
 
 ## [smlua_text_utils_secret_star_replace](#smlua_text_utils_secret_star_replace)
+
+### Description
+Replaces the secret star course name of `courseNum` with `courseName`
 
 ### Lua Example
 `smlua_text_utils_secret_star_replace(courseNum, courseName)`

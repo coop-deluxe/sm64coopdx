@@ -10,11 +10,6 @@ void djui_hud_set_render_behind_hud(bool enable) {
     gLuaActiveMod->renderBehindHud = enable;
 }
 
-struct ModAudio* audio_stream_load_url(UNUSED const char* url) {
-    LOG_LUA_LINE_WARNING("[LUA] audio_stream_load_url() is deprecated! There is no replacement for this function.");
-    return NULL;
-}
-
 f32 audio_stream_get_tempo(UNUSED struct ModAudio* audio) {
     LOG_LUA_LINE_WARNING("[LUA] audio_stream_get_tempo() is deprecated! There may be a replacement for this function in the future.");
     return 1;

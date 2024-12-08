@@ -1377,6 +1377,9 @@ def def_function(function):
     if rtype == None:
         rtype = 'nil'
 
+    if function['description'].startswith("[DEPRECATED"):
+        s += "--- @deprecated\n"
+
     for param in function['params']:
         pid = param['identifier']
         ptype = param['type']
