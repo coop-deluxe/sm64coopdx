@@ -610,22 +610,22 @@
 <br />
 
 - behavior_script.h
-   - [draw_distance_scalar](functions-2.md#draw_distance_scalar)
-   - [obj_update_gfx_pos_and_angle](functions-2.md#obj_update_gfx_pos_and_angle)
-   - [position_based_random_float_position](functions-2.md#position_based_random_float_position)
-   - [position_based_random_u16](functions-2.md#position_based_random_u16)
-   - [random_float](functions-2.md#random_float)
-   - [random_sign](functions-2.md#random_sign)
-   - [random_u16](functions-2.md#random_u16)
+   - [draw_distance_scalar](functions-3.md#draw_distance_scalar)
+   - [obj_update_gfx_pos_and_angle](functions-3.md#obj_update_gfx_pos_and_angle)
+   - [position_based_random_float_position](functions-3.md#position_based_random_float_position)
+   - [position_based_random_u16](functions-3.md#position_based_random_u16)
+   - [random_float](functions-3.md#random_float)
+   - [random_sign](functions-3.md#random_sign)
+   - [random_u16](functions-3.md#random_u16)
 
 <br />
 
 - behavior_table.h
-   - [get_behavior_from_id](functions-2.md#get_behavior_from_id)
-   - [get_behavior_name_from_id](functions-2.md#get_behavior_name_from_id)
-   - [get_id_from_behavior](functions-2.md#get_id_from_behavior)
-   - [get_id_from_behavior_name](functions-2.md#get_id_from_behavior_name)
-   - [get_id_from_vanilla_behavior](functions-2.md#get_id_from_vanilla_behavior)
+   - [get_behavior_from_id](functions-3.md#get_behavior_from_id)
+   - [get_behavior_name_from_id](functions-3.md#get_behavior_name_from_id)
+   - [get_id_from_behavior](functions-3.md#get_id_from_behavior)
+   - [get_id_from_behavior_name](functions-3.md#get_id_from_behavior_name)
+   - [get_id_from_vanilla_behavior](functions-3.md#get_id_from_vanilla_behavior)
 
 <br />
 
@@ -1093,32 +1093,32 @@
 <br />
 
 - mario_actions_stationary.c
-   - [check_common_hold_idle_cancels](functions-3.md#check_common_hold_idle_cancels)
-   - [check_common_idle_cancels](functions-3.md#check_common_idle_cancels)
-   - [check_common_landing_cancels](functions-3.md#check_common_landing_cancels)
-   - [check_common_stationary_cancels](functions-3.md#check_common_stationary_cancels)
-   - [landing_step](functions-3.md#landing_step)
-   - [mario_execute_stationary_action](functions-3.md#mario_execute_stationary_action)
-   - [play_anim_sound](functions-3.md#play_anim_sound)
-   - [stopping_step](functions-3.md#stopping_step)
+   - [check_common_hold_idle_cancels](functions-4.md#check_common_hold_idle_cancels)
+   - [check_common_idle_cancels](functions-4.md#check_common_idle_cancels)
+   - [check_common_landing_cancels](functions-4.md#check_common_landing_cancels)
+   - [check_common_stationary_cancels](functions-4.md#check_common_stationary_cancels)
+   - [landing_step](functions-4.md#landing_step)
+   - [mario_execute_stationary_action](functions-4.md#mario_execute_stationary_action)
+   - [play_anim_sound](functions-4.md#play_anim_sound)
+   - [stopping_step](functions-4.md#stopping_step)
 
 <br />
 
 - mario_actions_submerged.c
-   - [apply_water_current](functions-3.md#apply_water_current)
-   - [float_surface_gfx](functions-3.md#float_surface_gfx)
-   - [mario_execute_submerged_action](functions-3.md#mario_execute_submerged_action)
-   - [perform_water_full_step](functions-3.md#perform_water_full_step)
-   - [perform_water_step](functions-3.md#perform_water_step)
-   - [set_swimming_at_surface_particles](functions-3.md#set_swimming_at_surface_particles)
+   - [apply_water_current](functions-4.md#apply_water_current)
+   - [float_surface_gfx](functions-4.md#float_surface_gfx)
+   - [mario_execute_submerged_action](functions-4.md#mario_execute_submerged_action)
+   - [perform_water_full_step](functions-4.md#perform_water_full_step)
+   - [perform_water_step](functions-4.md#perform_water_step)
+   - [set_swimming_at_surface_particles](functions-4.md#set_swimming_at_surface_particles)
 
 <br />
 
 - mario_misc.h
-   - [bhv_toad_message_init](functions-3.md#bhv_toad_message_init)
-   - [bhv_toad_message_loop](functions-3.md#bhv_toad_message_loop)
-   - [bhv_unlock_door_star_init](functions-3.md#bhv_unlock_door_star_init)
-   - [bhv_unlock_door_star_loop](functions-3.md#bhv_unlock_door_star_loop)
+   - [bhv_toad_message_init](functions-4.md#bhv_toad_message_init)
+   - [bhv_toad_message_loop](functions-4.md#bhv_toad_message_loop)
+   - [bhv_unlock_door_star_init](functions-4.md#bhv_unlock_door_star_init)
+   - [bhv_unlock_door_star_loop](functions-4.md#bhv_unlock_door_star_loop)
 
 <br />
 

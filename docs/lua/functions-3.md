@@ -6,6 +6,246 @@
 
 
 ---
+# functions from behavior_script.h
+
+<br />
+
+
+## [draw_distance_scalar](#draw_distance_scalar)
+
+### Lua Example
+`local numberValue = draw_distance_scalar()`
+
+### Parameters
+- None
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 draw_distance_scalar(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_update_gfx_pos_and_angle](#obj_update_gfx_pos_and_angle)
+
+### Lua Example
+`obj_update_gfx_pos_and_angle(obj)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| obj | [Object](structs.md#Object) |
+
+### Returns
+- None
+
+### C Prototype
+`void obj_update_gfx_pos_and_angle(struct Object *obj);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [position_based_random_float_position](#position_based_random_float_position)
+
+### Lua Example
+`local numberValue = position_based_random_float_position()`
+
+### Parameters
+- None
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 position_based_random_float_position(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [position_based_random_u16](#position_based_random_u16)
+
+### Lua Example
+`local integerValue = position_based_random_u16()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u16 position_based_random_u16(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [random_float](#random_float)
+
+### Lua Example
+`local numberValue = random_float()`
+
+### Parameters
+- None
+
+### Returns
+- `number`
+
+### C Prototype
+`float random_float(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [random_sign](#random_sign)
+
+### Lua Example
+`local integerValue = random_sign()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 random_sign(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [random_u16](#random_u16)
+
+### Lua Example
+`local integerValue = random_u16()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u16 random_u16(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
+# functions from behavior_table.h
+
+<br />
+
+
+## [get_behavior_from_id](#get_behavior_from_id)
+
+### Lua Example
+`local PointerValue = get_behavior_from_id(id)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| id | [enum BehaviorId](constants.md#enum-BehaviorId) |
+
+### Returns
+- `Pointer` <`BehaviorScript`>
+
+### C Prototype
+`const BehaviorScript* get_behavior_from_id(enum BehaviorId id);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_behavior_name_from_id](#get_behavior_name_from_id)
+
+### Lua Example
+`local stringValue = get_behavior_name_from_id(id)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| id | [enum BehaviorId](constants.md#enum-BehaviorId) |
+
+### Returns
+- `string`
+
+### C Prototype
+`const char* get_behavior_name_from_id(enum BehaviorId id);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_id_from_behavior](#get_id_from_behavior)
+
+### Lua Example
+`local enumValue = get_id_from_behavior(behavior)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| behavior | `Pointer` <`BehaviorScript`> |
+
+### Returns
+[enum BehaviorId](constants.md#enum-BehaviorId)
+
+### C Prototype
+`enum BehaviorId get_id_from_behavior(const BehaviorScript* behavior);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_id_from_behavior_name](#get_id_from_behavior_name)
+
+### Lua Example
+`local enumValue = get_id_from_behavior_name(name)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| name | `string` |
+
+### Returns
+[enum BehaviorId](constants.md#enum-BehaviorId)
+
+### C Prototype
+`enum BehaviorId get_id_from_behavior_name(const char* name);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_id_from_vanilla_behavior](#get_id_from_vanilla_behavior)
+
+### Lua Example
+`local enumValue = get_id_from_vanilla_behavior(behavior)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| behavior | `Pointer` <`BehaviorScript`> |
+
+### Returns
+[enum BehaviorId](constants.md#enum-BehaviorId)
+
+### C Prototype
+`enum BehaviorId get_id_from_vanilla_behavior(const BehaviorScript* behavior);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
 # functions from camera.h
 
 <br />
@@ -8136,387 +8376,6 @@ Creates a warp node in the current level and area with id `id` that goes to the 
 
 ### C Prototype
 `s32 mario_update_punch_sequence(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
----
-# functions from mario_actions_stationary.c
-
-<br />
-
-
-## [check_common_hold_idle_cancels](#check_common_hold_idle_cancels)
-
-### Lua Example
-`local integerValue = check_common_hold_idle_cancels(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 check_common_hold_idle_cancels(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [check_common_idle_cancels](#check_common_idle_cancels)
-
-### Lua Example
-`local integerValue = check_common_idle_cancels(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 check_common_idle_cancels(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [check_common_landing_cancels](#check_common_landing_cancels)
-
-### Lua Example
-`local integerValue = check_common_landing_cancels(m, action)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| action | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 check_common_landing_cancels(struct MarioState *m, u32 action);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [check_common_stationary_cancels](#check_common_stationary_cancels)
-
-### Lua Example
-`local integerValue = check_common_stationary_cancels(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 check_common_stationary_cancels(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [landing_step](#landing_step)
-
-### Lua Example
-`local integerValue = landing_step(m, arg1, action)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| arg1 | `integer` |
-| action | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 landing_step(struct MarioState *m, s32 arg1, u32 action);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [mario_execute_stationary_action](#mario_execute_stationary_action)
-
-### Lua Example
-`local integerValue = mario_execute_stationary_action(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 mario_execute_stationary_action(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [play_anim_sound](#play_anim_sound)
-
-### Lua Example
-`play_anim_sound(m, actionState, animFrame, sound)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| actionState | `integer` |
-| animFrame | `integer` |
-| sound | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void play_anim_sound(struct MarioState *m, u32 actionState, s32 animFrame, u32 sound);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [stopping_step](#stopping_step)
-
-### Lua Example
-`stopping_step(m, animID, action)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| animID | `integer` |
-| action | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void stopping_step(struct MarioState *m, s32 animID, u32 action);`
-
-[:arrow_up_small:](#)
-
-<br />
-
----
-# functions from mario_actions_submerged.c
-
-<br />
-
-
-## [apply_water_current](#apply_water_current)
-
-### Lua Example
-`apply_water_current(m, step)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| step | [Vec3f](structs.md#Vec3f) |
-
-### Returns
-- None
-
-### C Prototype
-`void apply_water_current(struct MarioState *m, Vec3f step);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [float_surface_gfx](#float_surface_gfx)
-
-### Lua Example
-`float_surface_gfx(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- None
-
-### C Prototype
-`void float_surface_gfx(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [mario_execute_submerged_action](#mario_execute_submerged_action)
-
-### Lua Example
-`local integerValue = mario_execute_submerged_action(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 mario_execute_submerged_action(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [perform_water_full_step](#perform_water_full_step)
-
-### Lua Example
-`local integerValue = perform_water_full_step(m, nextPos)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| nextPos | [Vec3f](structs.md#Vec3f) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`u32 perform_water_full_step(struct MarioState *m, Vec3f nextPos);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [perform_water_step](#perform_water_step)
-
-### Lua Example
-`local integerValue = perform_water_step(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`u32 perform_water_step(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [set_swimming_at_surface_particles](#set_swimming_at_surface_particles)
-
-### Lua Example
-`set_swimming_at_surface_particles(m, particleFlag)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| particleFlag | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void set_swimming_at_surface_particles(struct MarioState *m, u32 particleFlag);`
-
-[:arrow_up_small:](#)
-
-<br />
-
----
-# functions from mario_misc.h
-
-<br />
-
-
-## [bhv_toad_message_init](#bhv_toad_message_init)
-
-### Lua Example
-`bhv_toad_message_init()`
-
-### Parameters
-- None
-
-### Returns
-- None
-
-### C Prototype
-`void bhv_toad_message_init(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [bhv_toad_message_loop](#bhv_toad_message_loop)
-
-### Lua Example
-`bhv_toad_message_loop()`
-
-### Parameters
-- None
-
-### Returns
-- None
-
-### C Prototype
-`void bhv_toad_message_loop(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [bhv_unlock_door_star_init](#bhv_unlock_door_star_init)
-
-### Lua Example
-`bhv_unlock_door_star_init()`
-
-### Parameters
-- None
-
-### Returns
-- None
-
-### C Prototype
-`void bhv_unlock_door_star_init(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [bhv_unlock_door_star_loop](#bhv_unlock_door_star_loop)
-
-### Lua Example
-`bhv_unlock_door_star_loop()`
-
-### Parameters
-- None
-
-### Returns
-- None
-
-### C Prototype
-`void bhv_unlock_door_star_loop(void);`
 
 [:arrow_up_small:](#)
 

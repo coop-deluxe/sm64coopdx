@@ -102,31 +102,31 @@ int smlua_func_arc_to_goal_pos(lua_State* L) {
     }
 
 
-    f32* a0 = smlua_get_vec3f_from_buffer();
-    a0[0] = smlua_get_number_field(1, "x");
-    a0[1] = smlua_get_number_field(1, "y");
-    a0[2] = smlua_get_number_field(1, "z");
+    f32* goal = smlua_get_vec3f_from_buffer();
+    goal[0] = smlua_get_number_field(1, "x");
+    goal[1] = smlua_get_number_field(1, "y");
+    goal[2] = smlua_get_number_field(1, "z");
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "arc_to_goal_pos"); return 0; }
 
-    f32* a1 = smlua_get_vec3f_from_buffer();
-    a1[0] = smlua_get_number_field(2, "x");
-    a1[1] = smlua_get_number_field(2, "y");
-    a1[2] = smlua_get_number_field(2, "z");
+    f32* pos = smlua_get_vec3f_from_buffer();
+    pos[0] = smlua_get_number_field(2, "x");
+    pos[1] = smlua_get_number_field(2, "y");
+    pos[2] = smlua_get_number_field(2, "z");
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "arc_to_goal_pos"); return 0; }
     f32 yVel = smlua_to_number(L, 3);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "arc_to_goal_pos"); return 0; }
     f32 gravity = smlua_to_number(L, 4);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "arc_to_goal_pos"); return 0; }
 
-    lua_pushinteger(L, arc_to_goal_pos(a0, a1, yVel, gravity));
+    lua_pushinteger(L, arc_to_goal_pos(goal, pos, yVel, gravity));
 
-    smlua_push_number_field(1, "x", a0[0]);
-    smlua_push_number_field(1, "y", a0[1]);
-    smlua_push_number_field(1, "z", a0[2]);
+    smlua_push_number_field(1, "x", goal[0]);
+    smlua_push_number_field(1, "y", goal[1]);
+    smlua_push_number_field(1, "z", goal[2]);
 
-    smlua_push_number_field(2, "x", a1[0]);
-    smlua_push_number_field(2, "y", a1[1]);
-    smlua_push_number_field(2, "z", a1[2]);
+    smlua_push_number_field(2, "x", pos[0]);
+    smlua_push_number_field(2, "y", pos[1]);
+    smlua_push_number_field(2, "z", pos[2]);
 
     return 1;
 }

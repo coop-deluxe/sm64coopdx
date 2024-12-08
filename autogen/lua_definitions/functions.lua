@@ -14,1679 +14,2097 @@ function area_get_warp_node_from_params(o)
     -- ...
 end
 
---- @param a0 Vec3f
---- @param a1 Vec3f
+--- @param goal Vec3f
+--- @param pos Vec3f
 --- @param yVel number
 --- @param gravity number
 --- @return integer
-function arc_to_goal_pos(a0, a1, yVel, gravity)
+--- Calculates the time it takes for the current object to follow an arc from `pos` to `goal`
+function arc_to_goal_pos(goal, pos, yVel, gravity)
     -- ...
 end
 
+--- Behavior init function for common 1-Up
 function bhv_1up_common_init()
     -- ...
 end
 
+--- Behavior loop function for hidden 1-Up in pole (Green Demon)
 function bhv_1up_hidden_in_pole_loop()
     -- ...
 end
 
+--- Behavior loop function for 1-Up hidden in pole spawner
 function bhv_1up_hidden_in_pole_spawner_loop()
     -- ...
 end
 
+--- Behavior loop function for 1-Up hidden in pole trigger
 function bhv_1up_hidden_in_pole_trigger_loop()
     -- ...
 end
 
+--- Behavior loop function for hidden 1-Up
 function bhv_1up_hidden_loop()
     -- ...
 end
 
+--- Behavior loop function for hidden 1-Up trigger
 function bhv_1up_hidden_trigger_loop()
     -- ...
 end
 
+--- Behavior init function for 1-Up
 function bhv_1up_init()
     -- ...
 end
 
+--- Behavior loop function for jump on approach 1-Up
 function bhv_1up_jump_on_approach_loop()
     -- ...
 end
 
+--- Behavior loop function for 1-Up
 function bhv_1up_loop()
     -- ...
 end
 
+--- Behavior loop function for running away 1-Up
 function bhv_1up_running_away_loop()
     -- ...
 end
 
+--- Behavior loop function for sliding 1-Up
 function bhv_1up_sliding_loop()
     -- ...
 end
 
+--- Behavior init function for 1-Up trigger
 function bhv_1up_trigger_init()
     -- ...
 end
 
+--- Behavior loop function for walking 1-Up
 function bhv_1up_walking_loop()
     -- ...
 end
 
+--- Behavior init function for Act Selector
 function bhv_act_selector_init()
     -- ...
 end
 
+--- Behavior loop function for Act Selector
 function bhv_act_selector_loop()
     -- ...
 end
 
+--- Behavior loop function for Act Selector star type
 function bhv_act_selector_star_type_loop()
     -- ...
 end
 
+--- Behavior init function for activated back and forth platform in Bowser courses
 function bhv_activated_back_and_forth_platform_init()
     -- ...
 end
 
+--- Behavior loop function for activated back and forth platform in Bowser courses
 function bhv_activated_back_and_forth_platform_update()
     -- ...
 end
 
+--- Behavior loop function for alpha boo key
 function bhv_alpha_boo_key_loop()
     -- ...
 end
 
+--- Behavior init function for ambient sounds
 function bhv_ambient_sounds_init()
     -- ...
 end
 
+--- Behavior loop function for animated texture
 function bhv_animated_texture_loop()
     -- ...
 end
 
+--- Behavior init function for animates on floor switch press in Rainbow Ride and Bowser courses
 function bhv_animates_on_floor_switch_press_init()
     -- ...
 end
 
+--- Behavior loop function for animates on floor switch press in Rainbow Ride and Bowser courses
 function bhv_animates_on_floor_switch_press_loop()
     -- ...
 end
 
+--- Behavior loop function for Wet Dry World arrow lift
 function bhv_arrow_lift_loop()
     -- ...
 end
 
+--- Behavior loop function for Big Boo's Haunt tilting trap platform
 function bhv_bbh_tilting_trap_platform_loop()
     -- ...
 end
 
+--- Behavior loop function for beta boo key
 function bhv_beta_boo_key_loop()
     -- ...
 end
 
+--- Behavior loop function for beta Bowser anchor
 function bhv_beta_bowser_anchor_loop()
     -- ...
 end
 
+--- Behavior init function for beta chest bottom
 function bhv_beta_chest_bottom_init()
     -- ...
 end
 
+--- Behavior loop function for beta chest bottom
 function bhv_beta_chest_bottom_loop()
     -- ...
 end
 
+--- Behavior loop function for beta chest lid
 function bhv_beta_chest_lid_loop()
     -- ...
 end
 
+--- Behavior loop function for beta fish splash spawner
 function bhv_beta_fish_splash_spawner_loop()
     -- ...
 end
 
+--- Behavior init function for beta holdable object
 function bhv_beta_holdable_object_init()
     -- ...
 end
 
+--- Behavior loop function for beta holdable object
 function bhv_beta_holdable_object_loop()
     -- ...
 end
 
+--- Behavior loop function for beta moving flames
 function bhv_beta_moving_flames_loop()
     -- ...
 end
 
+--- Behavior loop function for beta moving flames spawn
 function bhv_beta_moving_flames_spawn_loop()
     -- ...
 end
 
+--- Behavior loop function for beta trampoline spring
 function bhv_beta_trampoline_spring_loop()
     -- ...
 end
 
+--- Behavior loop function for beta trampoline top
 function bhv_beta_trampoline_top_loop()
     -- ...
 end
 
+--- Behavior loop function for Big Boo
 function bhv_big_boo_loop()
     -- ...
 end
 
+--- Behavior loop function for big boulder generator
 function bhv_big_boulder_generator_loop()
     -- ...
 end
 
+--- Behavior init function for big boulder
 function bhv_big_boulder_init()
     -- ...
 end
 
+--- Behavior loop function for big boulder
 function bhv_big_boulder_loop()
     -- ...
 end
 
+--- Behavior init function for Big Bully
 function bhv_big_bully_init()
     -- ...
 end
 
+--- Behavior init function for Big Bully with minions
 function bhv_big_bully_with_minions_init()
     -- ...
 end
 
+--- Behavior loop function for Big Bully with minions
 function bhv_big_bully_with_minions_loop()
     -- ...
 end
 
+--- Behavior loop function for bird
 function bhv_bird_update()
     -- ...
 end
 
+--- Behavior loop function for birds sound
 function bhv_birds_sound_loop()
     -- ...
 end
 
+--- Behavior loop function for Bowser in the Fire Sea sinking cage platform
 function bhv_bitfs_sinking_cage_platform_loop()
     -- ...
 end
 
+--- Behavior loop function for Bowser in the Fire Sea sinking platform
 function bhv_bitfs_sinking_platform_loop()
     -- ...
 end
 
+--- Behavior loop function for black smoke Bowser
 function bhv_black_smoke_bowser_loop()
     -- ...
 end
 
+--- Behavior loop function for black smoke Mario
 function bhv_black_smoke_mario_loop()
     -- ...
 end
 
+--- Behavior loop function for black smoke upward
 function bhv_black_smoke_upward_loop()
     -- ...
 end
 
+--- Behavior init function for Blue Bowser flame
 function bhv_blue_bowser_flame_init()
     -- ...
 end
 
+--- Behavior loop function for Blue Bowser flame
 function bhv_blue_bowser_flame_loop()
     -- ...
 end
 
+--- Behavior loop function for Blue Coin jumping
 function bhv_blue_coin_jumping_loop()
     -- ...
 end
 
+--- Behavior loop function for Blue Coin number
 function bhv_blue_coin_number_loop()
     -- ...
 end
 
+--- Behavior init function for Blue Coin sliding jumping
 function bhv_blue_coin_sliding_jumping_init()
     -- ...
 end
 
+--- Behavior loop function for Blue Coin sliding
 function bhv_blue_coin_sliding_loop()
     -- ...
 end
 
+--- Behavior init function for Blue Coin switch
 function bhv_blue_coin_switch_init()
     -- ...
 end
 
+--- Behavior loop function for Blue Coin switch
 function bhv_blue_coin_switch_loop()
     -- ...
 end
 
+--- Behavior loop function for blue fish movement
 function bhv_blue_fish_movement_loop()
     -- ...
 end
 
+--- Behavior loop function for blue flames group
 function bhv_blue_flames_group_loop()
     -- ...
 end
 
+--- Behavior init function for Bob-omb Battlefield pit bowling ball
 function bhv_bob_pit_bowling_ball_init()
     -- ...
 end
 
+--- Behavior loop function for Bob-omb Battlefield pit bowling ball
 function bhv_bob_pit_bowling_ball_loop()
     -- ...
 end
 
+--- Behavior loop function for Bob-omb anchor mario
 function bhv_bobomb_anchor_mario_loop()
     -- ...
 end
 
+--- Behavior init function for Bob-omb buddy
 function bhv_bobomb_buddy_init()
     -- ...
 end
 
+--- Behavior loop function for Bob-omb buddy
 function bhv_bobomb_buddy_loop()
     -- ...
 end
 
+--- Behavior init function for Bob-omb and Bully death smoke
 function bhv_bobomb_bully_death_smoke_init()
     -- ...
 end
 
+--- Behavior init function for Bob-omb explosion bubble
 function bhv_bobomb_explosion_bubble_init()
     -- ...
 end
 
+--- Behavior loop function for Bob-omb explosion bubble
 function bhv_bobomb_explosion_bubble_loop()
     -- ...
 end
 
+--- Behavior init function for Bob-omb fuse smoke
 function bhv_bobomb_fuse_smoke_init()
     -- ...
 end
 
+--- Behavior init function for Bob-omb
 function bhv_bobomb_init()
     -- ...
 end
 
+--- Behavior loop function for Bob-omb
 function bhv_bobomb_loop()
     -- ...
 end
 
+--- Behavior loop function for Boo boss spawned bridge
 function bhv_boo_boss_spawned_bridge_loop()
     -- ...
 end
 
+--- Behavior init function for Boo cage
 function bhv_boo_cage_init()
     -- ...
 end
 
+--- Behavior loop function for Boo cage
 function bhv_boo_cage_loop()
     -- ...
 end
 
+--- Behavior loop function for the Boo inside the Castle
 function bhv_boo_in_castle_loop()
     -- ...
 end
 
+--- Behavior init function for Boo
 function bhv_boo_init()
     -- ...
 end
 
+--- Behavior loop function for Boo
 function bhv_boo_loop()
     -- ...
 end
 
+--- Behavior init function for Boo with cage
 function bhv_boo_with_cage_init()
     -- ...
 end
 
+--- Behavior loop function for Boo with cage
 function bhv_boo_with_cage_loop()
     -- ...
 end
 
+--- Behavior loop function for Book switch
 function bhv_book_switch_loop()
     -- ...
 end
 
+--- Behavior loop function for Bookend spawn
 function bhv_bookend_spawn_loop()
     -- ...
 end
 
+--- Behavior loop function for bouncing fireball flame
 function bhv_bouncing_fireball_flame_loop()
     -- ...
 end
 
+--- Behavior loop function for bouncing fireball
 function bhv_bouncing_fireball_loop()
     -- ...
 end
 
+--- Behavior init function for bowling ball
 function bhv_bowling_ball_init()
     -- ...
 end
 
+--- Behavior loop function for bowling ball
 function bhv_bowling_ball_loop()
     -- ...
 end
 
+--- Behavior init function for Bowser body anchor
 function bhv_bowser_body_anchor_init()
     -- ...
 end
 
+--- Behavior loop function for Bowser body anchor
 function bhv_bowser_body_anchor_loop()
     -- ...
 end
 
+--- Behavior loop function for Bowser bomb explosion
 function bhv_bowser_bomb_explosion_loop()
     -- ...
 end
 
+--- Behavior loop function for Bowser bomb
 function bhv_bowser_bomb_loop()
     -- ...
 end
 
+--- Behavior loop function for Bowser bomb smoke
 function bhv_bowser_bomb_smoke_loop()
     -- ...
 end
 
+--- Behavior loop function for Bowser course Red Coin Star
 function bhv_bowser_course_red_coin_star_loop()
     -- ...
 end
 
+--- Behavior loop function for Bowser flame spawn
 function bhv_bowser_flame_spawn_loop()
     -- ...
 end
 
+--- Behavior init function for Bowser
 function bhv_bowser_init()
     -- ...
 end
 
+--- Behavior loop function for Bowser key course exit
 function bhv_bowser_key_course_exit_loop()
     -- ...
 end
 
+--- Behavior init function for Bowser key
 function bhv_bowser_key_init()
     -- ...
 end
 
+--- Behavior loop function for Bowser key
 function bhv_bowser_key_loop()
     -- ...
 end
 
+--- Behavior loop function for Bowser key unlock door
 function bhv_bowser_key_unlock_door_loop()
     -- ...
 end
 
+--- Behavior loop function for Bowser
 function bhv_bowser_loop()
     -- ...
 end
 
+--- Behavior loop function for Bowser shock wave
 function bhv_bowser_shock_wave_loop()
     -- ...
 end
 
+--- Behavior init function for Bowser tail anchor
 function bhv_bowser_tail_anchor_init()
     -- ...
 end
 
+--- Behavior loop function for Bowser tail anchor
 function bhv_bowser_tail_anchor_loop()
     -- ...
 end
 
+--- Behavior loop function for Bowser's submarine
 function bhv_bowsers_sub_loop()
     -- ...
 end
 
+--- Behavior loop function for breakable box
 function bhv_breakable_box_loop()
     -- ...
 end
 
+--- Behavior init function for small breakable box
 function bhv_breakable_box_small_init()
     -- ...
 end
 
+--- Behavior loop function for small breakable box
 function bhv_breakable_box_small_loop()
     -- ...
 end
 
+--- Behavior loop function for Bub
 function bhv_bub_loop()
     -- ...
 end
 
+--- Behavior loop function for Bub spawner
 function bhv_bub_spawner_loop()
     -- ...
 end
 
+--- Behavior loop function for Bubba
 function bhv_bubba_loop()
     -- ...
 end
 
+--- Behavior loop function for bubble cannon barrel
 function bhv_bubble_cannon_barrel_loop()
     -- ...
 end
 
+--- Behavior loop function for bubble maybe
 function bhv_bubble_maybe_loop()
     -- ...
 end
 
+--- Behavior loop function for bubble player
 function bhv_bubble_player_loop()
     -- ...
 end
 
+--- Behavior init function for bubble splash
 function bhv_bubble_splash_init()
     -- ...
 end
 
+--- Behavior init function for bubble wave
 function bhv_bubble_wave_init()
     -- ...
 end
 
+--- Behavior init function for Bullet Bill
 function bhv_bullet_bill_init()
     -- ...
 end
 
+--- Behavior loop function for Bullet Bill
 function bhv_bullet_bill_loop()
     -- ...
 end
 
+--- Behavior loop function for Bully
 function bhv_bully_loop()
     -- ...
 end
 
+--- Behavior init function for Butterfly
 function bhv_butterfly_init()
     -- ...
 end
 
+--- Behavior loop function for Butterfly
 function bhv_butterfly_loop()
     -- ...
 end
 
+--- Behavior init function for Camera Lakitu
 function bhv_camera_lakitu_init()
     -- ...
 end
 
+--- Behavior loop function for Camera Lakitu
 function bhv_camera_lakitu_update()
     -- ...
 end
 
+--- Behavior loop function for cannon barrel
 function bhv_cannon_barrel_loop()
     -- ...
 end
 
+--- Behavior loop function for cannon base
 function bhv_cannon_base_loop()
     -- ...
 end
 
+--- Behavior loop function for cannon base unused
 function bhv_cannon_base_unused_loop()
     -- ...
 end
 
+--- Behavior init function for cannon closed
 function bhv_cannon_closed_init()
     -- ...
 end
 
+--- Behavior loop function for cannon closed
 function bhv_cannon_closed_loop()
     -- ...
 end
 
+--- Behavior loop function for Cap Switch
 function bhv_cap_switch_loop()
     -- ...
 end
 
+--- Behavior init function for Castle cannon grate
 function bhv_castle_cannon_grate_init()
     -- ...
 end
 
+--- Behavior init function for castle flag
 function bhv_castle_flag_init()
     -- ...
 end
 
+--- Behavior init function for Bowser in the Dark World floor trap manager
 function bhv_castle_floor_trap_init()
     -- ...
 end
 
+--- Behavior loop function for Bowser in the Dark World floor trap manager
 function bhv_castle_floor_trap_loop()
     -- ...
 end
 
+--- Behavior loop function for Cool, Cool Mountain touched Star spawn
 function bhv_ccm_touched_star_spawn_loop()
     -- ...
 end
 
+--- Behavior init function for Celebration Star
 function bhv_celebration_star_init()
     -- ...
 end
 
+--- Behavior loop function for Celebration Star
 function bhv_celebration_star_loop()
     -- ...
 end
 
+--- Behavior loop function for Celebration Star sparkle
 function bhv_celebration_star_sparkle_loop()
     -- ...
 end
 
+--- Behavior loop function for Chain Chomp chain part
 function bhv_chain_chomp_chain_part_update()
     -- ...
 end
 
+--- Behavior init function for Chain Chomp gate
 function bhv_chain_chomp_gate_init()
     -- ...
 end
 
+--- Behavior loop function for Chain Chomp gate
 function bhv_chain_chomp_gate_update()
     -- ...
 end
 
+--- Behavior loop function for Chain Chomp
 function bhv_chain_chomp_update()
     -- ...
 end
 
+--- Behavior init function for checkerboard elevator group
 function bhv_checkerboard_elevator_group_init()
     -- ...
 end
 
+--- Behavior loop function for checkerboard elevator group
 function bhv_checkerboard_elevator_group_loop()
     -- ...
 end
 
+--- Behavior init function for checkerboard platform
 function bhv_checkerboard_platform_init()
     -- ...
 end
 
+--- Behavior loop function for checkerboard platform
 function bhv_checkerboard_platform_loop()
     -- ...
 end
 
+--- Behavior loop function for Chuckya mario anchor
 function bhv_chuckya_anchor_mario_loop()
     -- ...
 end
 
+--- Behavior loop function for Chuckya
 function bhv_chuckya_loop()
     -- ...
 end
 
+--- Behavior init function for Circling Amp
 function bhv_circling_amp_init()
     -- ...
 end
 
+--- Behavior loop function for Circling Amp
 function bhv_circling_amp_loop()
     -- ...
 end
 
+--- Behavior loop function for Clam
 function bhv_clam_loop()
     -- ...
 end
 
+--- Behavior loop function for cloud part
 function bhv_cloud_part_update()
     -- ...
 end
 
+--- Behavior loop function for cloud
 function bhv_cloud_update()
     -- ...
 end
 
+--- Behavior loop function for coffin
 function bhv_coffin_loop()
     -- ...
 end
 
+--- Behavior loop function for coffin spawner
 function bhv_coffin_spawner_loop()
     -- ...
 end
 
+--- Behavior init function for Coin formation
 function bhv_coin_formation_init()
     -- ...
 end
 
+--- Behavior loop function for Coin formation
 function bhv_coin_formation_loop()
     -- ...
 end
 
+--- Behavior loop function for Coin formation spawn
 function bhv_coin_formation_spawn_loop()
     -- ...
 end
 
+--- Behavior init function for Coin
 function bhv_coin_init()
     -- ...
 end
 
+--- Behavior loop function for Coin inside Boo
 function bhv_coin_inside_boo_loop()
     -- ...
 end
 
+--- Behavior loop function for Coin
 function bhv_coin_loop()
     -- ...
 end
 
+--- Behavior loop function for Coin sparkles
 function bhv_coin_sparkles_loop()
     -- ...
 end
 
+--- Behavior init function for collectable Star
 function bhv_collect_star_init()
     -- ...
 end
 
+--- Behavior loop function for collectable Star
 function bhv_collect_star_loop()
     -- ...
 end
 
+--- Behavior init function for controllable platform
 function bhv_controllable_platform_init()
     -- ...
 end
 
+--- Behavior loop function for controllable platform
 function bhv_controllable_platform_loop()
     -- ...
 end
 
+--- Behavior loop function for controllable sub platform
 function bhv_controllable_platform_sub_loop()
     -- ...
 end
 
+--- Behavior init function for Courtyard Boo triplet
 function bhv_courtyard_boo_triplet_init()
     -- ...
 end
 
+--- Behavior loop function for Dire Dire Docks moving pole
 function bhv_ddd_moving_pole_loop()
     -- ...
 end
 
+--- Behavior init function for Dire Dire Docks pole
 function bhv_ddd_pole_init()
     -- ...
 end
 
+--- Behavior loop function for Dire Dire Docks pole
 function bhv_ddd_pole_update()
     -- ...
 end
 
+--- Behavior loop function for Castle Basement Dire Dire Docks warp collision
 function bhv_ddd_warp_loop()
     -- ...
 end
 
+--- Behavior init function for decorative pendulum
 function bhv_decorative_pendulum_init()
     -- ...
 end
 
+--- Behavior loop function for decorative pendulum
 function bhv_decorative_pendulum_loop()
     -- ...
 end
 
+--- Behavior loop function for donut platform spawner
 function bhv_donut_platform_spawner_update()
     -- ...
 end
 
+--- Behavior loop function for donut platform
 function bhv_donut_platform_update()
     -- ...
 end
 
+--- Behavior init function for door
 function bhv_door_init()
     -- ...
 end
 
+--- Behavior loop function for door
 function bhv_door_loop()
     -- ...
 end
 
+--- Behavior loop function for Dorrie
 function bhv_dorrie_update()
     -- ...
 end
 
+--- Behavior init function for elevator
 function bhv_elevator_init()
     -- ...
 end
 
+--- Behavior loop function for elevator
 function bhv_elevator_loop()
     -- ...
 end
 
+--- Behavior loop function for first end birds
 function bhv_end_birds_1_loop()
     -- ...
 end
 
+--- Behavior loop function for second end birds
 function bhv_end_birds_2_loop()
     -- ...
 end
 
+--- Behavior loop function for Enemy Lakitu
 function bhv_enemy_lakitu_update()
     -- ...
 end
 
+--- Behavior init function for Exclamation Box
 function bhv_exclamation_box_init()
     -- ...
 end
 
+--- Behavior loop function for Exclamation Box
 function bhv_exclamation_box_loop()
     -- ...
 end
 
+--- Behavior init function for explosion
 function bhv_explosion_init()
     -- ...
 end
 
+--- Behavior loop function for explosion
 function bhv_explosion_loop()
     -- ...
 end
 
+--- Behavior init function for Eyerok boss
 function bhv_eyerok_boss_init()
     -- ...
 end
 
+--- Behavior loop function for Eyerok boss
 function bhv_eyerok_boss_loop()
     -- ...
 end
 
+--- Behavior loop function for Eyerok hand
 function bhv_eyerok_hand_loop()
     -- ...
 end
 
+--- Behavior loop function for fading warp
 function bhv_fading_warp_loop()
     -- ...
 end
 
+--- Behavior loop function for falling Bowser in the Sky arena platform
 function bhv_falling_bowser_platform_loop()
     -- ...
 end
 
+--- Behavior loop function for Jolly Roger Bay falling pillar hitbox
 function bhv_falling_pillar_hitbox_loop()
     -- ...
 end
 
+--- Behavior init function for Jolly Roger Bay falling pillar
 function bhv_falling_pillar_init()
     -- ...
 end
 
+--- Behavior loop function for Jolly Roger Bay falling pillar
 function bhv_falling_pillar_loop()
     -- ...
 end
 
+--- Behavior init function for ferris wheel axle
 function bhv_ferris_wheel_axle_init()
     -- ...
 end
 
+--- Behavior init function for ferris wheel platform
 function bhv_ferris_wheel_platform_init()
     -- ...
 end
 
+--- Behavior loop function for ferris wheel platform
 function bhv_ferris_wheel_platform_update()
     -- ...
 end
 
+--- Behavior init function for Fire Piranha Plant
 function bhv_fire_piranha_plant_init()
     -- ...
 end
 
+--- Behavior loop function for Fire Piranha Plant
 function bhv_fire_piranha_plant_update()
     -- ...
 end
 
+--- Behavior loop function for Fire spitter
 function bhv_fire_spitter_update()
     -- ...
 end
 
+--- Behavior loop function for fish group
 function bhv_fish_group_loop()
     -- ...
 end
 
+--- Behavior loop function for fish
 function bhv_fish_loop()
     -- ...
 end
 
+--- Behavior loop function for fish spawner
 function bhv_fish_spawner_loop()
     -- ...
 end
 
+--- Behavior init function for flame bouncing
 function bhv_flame_bouncing_init()
     -- ...
 end
 
+--- Behavior loop function for flame bouncing
 function bhv_flame_bouncing_loop()
     -- ...
 end
 
+--- Behavior init function for Bowser flame
 function bhv_flame_bowser_init()
     -- ...
 end
 
+--- Behavior loop function for Bowser flame
 function bhv_flame_bowser_loop()
     -- ...
 end
 
+--- Behavior init function for flame floating landing
 function bhv_flame_floating_landing_init()
     -- ...
 end
 
+--- Behavior loop function for flame floating landing
 function bhv_flame_floating_landing_loop()
     -- ...
 end
 
+--- Behavior init function for large flame burning out
 function bhv_flame_large_burning_out_init()
     -- ...
 end
 
+--- Behavior loop function for flame Mario
 function bhv_flame_mario_loop()
     -- ...
 end
 
+--- Behavior init function for flame moving forward growing
 function bhv_flame_moving_forward_growing_init()
     -- ...
 end
 
+--- Behavior loop function for flame moving forward growing
 function bhv_flame_moving_forward_growing_loop()
     -- ...
 end
 
+--- Behavior loop function for flamethrower flame
 function bhv_flamethrower_flame_loop()
     -- ...
 end
 
+--- Behavior loop function for flamethrower
 function bhv_flamethrower_loop()
     -- ...
 end
 
+--- Behavior loop function for floating platform
 function bhv_floating_platform_loop()
     -- ...
 end
 
+--- Behavior loop function for Bowser in the Dark World floor trap
 function bhv_floor_trap_in_castle_loop()
     -- ...
 end
 
+--- Behavior loop function for Fly Guy flame
 function bhv_fly_guy_flame_loop()
     -- ...
 end
 
+--- Behavior loop function for Fly Guy
 function bhv_fly_guy_update()
     -- ...
 end
 
+--- Behavior loop function for flying bookend
 function bhv_flying_bookend_loop()
     -- ...
 end
 
+--- Behavior init function for free bowling ball
 function bhv_free_bowling_ball_init()
     -- ...
 end
 
+--- Behavior loop function for free bowling ball
 function bhv_free_bowling_ball_loop()
     -- ...
 end
 
+--- Behavior init function for generic bowling ball spawner
 function bhv_generic_bowling_ball_spawner_init()
     -- ...
 end
 
+--- Behavior loop function for generic bowling ball spawner
 function bhv_generic_bowling_ball_spawner_loop()
     -- ...
 end
 
+--- Behavior loop function for giant pole
 function bhv_giant_pole_loop()
     -- ...
 end
 
+--- Behavior loop function for golden Coin sparkles
 function bhv_golden_coin_sparkles_loop()
     -- ...
 end
 
+--- Behavior init function for Goomba
 function bhv_goomba_init()
     -- ...
 end
 
+--- Behavior loop function for Goomba triplet spawner
 function bhv_goomba_triplet_spawner_update()
     -- ...
 end
 
+--- Behavior loop function for Goomba
 function bhv_goomba_update()
     -- ...
 end
 
+--- Behavior init function for Grand Star
 function bhv_grand_star_init()
     -- ...
 end
 
+--- Behavior loop function for Grand Star
 function bhv_grand_star_loop()
     -- ...
 end
 
+--- Behavior loop function for Grindel and Thwomp
 function bhv_grindel_thwomp_loop()
     -- ...
 end
 
+--- Behavior init function for ground sand
 function bhv_ground_sand_init()
     -- ...
 end
 
+--- Behavior init function for ground snow
 function bhv_ground_snow_init()
     -- ...
 end
 
+--- Behavior loop function for Big Boo's Haunt haunted bookshelf
 function bhv_haunted_bookshelf_loop()
     -- ...
 end
 
+--- Behavior loop function for haunted bookshelf manager
 function bhv_haunted_bookshelf_manager_loop()
     -- ...
 end
 
+--- Behavior init function for Haunted Chair
 function bhv_haunted_chair_init()
     -- ...
 end
 
+--- Behavior loop function for Haunted Chair
 function bhv_haunted_chair_loop()
     -- ...
 end
 
+--- Behavior loop function for Heave ho
 function bhv_heave_ho_loop()
     -- ...
 end
 
+--- Behavior loop function for Heave ho throwing Mario
 function bhv_heave_ho_throw_mario_loop()
     -- ...
 end
 
+--- Behavior loop function for hidden Blue Coin
 function bhv_hidden_blue_coin_loop()
     -- ...
 end
 
+--- Behavior loop function for Wet Dry World hidden breakable box
 function bhv_hidden_object_loop()
     -- ...
 end
 
+--- Behavior init function for Hidden Red Coin Star
 function bhv_hidden_red_coin_star_init()
     -- ...
 end
 
+--- Behavior loop function for Hidden Red Coin Star
 function bhv_hidden_red_coin_star_loop()
     -- ...
 end
 
+--- Behavior init function for Secret Star
 function bhv_hidden_star_init()
     -- ...
 end
 
+--- Behavior loop function for Secret Star
 function bhv_hidden_star_loop()
     -- ...
 end
 
+--- Behavior loop function for Secrets
 function bhv_hidden_star_trigger_loop()
     -- ...
 end
 
+--- Behavior init function for Homing Amp
 function bhv_homing_amp_init()
     -- ...
 end
 
+--- Behavior loop function for Homing Amp
 function bhv_homing_amp_loop()
     -- ...
 end
 
+--- Behavior init function for Hoot
 function bhv_hoot_init()
     -- ...
 end
 
+--- Behavior loop function for Hoot
 function bhv_hoot_loop()
     -- ...
 end
 
+--- Behavior init function for horizontal Grindel
 function bhv_horizontal_grindel_init()
     -- ...
 end
 
+--- Behavior loop function for horizontal Grindel
 function bhv_horizontal_grindel_update()
     -- ...
 end
 
+--- Behavior loop function for idle water wave
 function bhv_idle_water_wave_loop()
     -- ...
 end
 
+--- Behavior init function for changing water level, called when Wet Dry World is loaded
 function bhv_init_changing_water_level_loop()
     -- ...
 end
 
+--- Behavior loop function for intro Lakitu
 function bhv_intro_lakitu_loop()
     -- ...
 end
 
+--- Behavior loop function for intro Peach
 function bhv_intro_peach_loop()
     -- ...
 end
 
+--- Behavior loop function for intro scene
 function bhv_intro_scene_loop()
     -- ...
 end
 
+--- Behavior init function for invisible objects under the Castle bridge
 function bhv_invisible_objects_under_bridge_init()
     -- ...
 end
 
+--- Behavior loop function for Invisible objects under the Castle bridge
 function bhv_invisible_objects_under_bridge_loop()
     -- ...
 end
 
+--- Behavior loop function for jet stream
 function bhv_jet_stream_loop()
     -- ...
 end
 
+--- Behavior loop function for jet stream ring spawner
 function bhv_jet_stream_ring_spawner_loop()
     -- ...
 end
 
+--- Behavior init function for jet stream water ring
 function bhv_jet_stream_water_ring_init()
     -- ...
 end
 
+--- Behavior loop function for jet stream water ring
 function bhv_jet_stream_water_ring_loop()
     -- ...
 end
 
+--- Behavior loop function for Jolly Roger Bay floating box
 function bhv_jrb_floating_box_loop()
     -- ...
 end
 
+--- Behavior loop function for Jolly Roger Bay sliding box
 function bhv_jrb_sliding_box_loop()
     -- ...
 end
 
+--- Behavior loop function for jumping box
 function bhv_jumping_box_loop()
     -- ...
 end
 
+--- Behavior loop function for Whomp's Fortress kickable board
 function bhv_kickable_board_loop()
     -- ...
 end
 
+--- Behavior loop function for King Bob-omb
 function bhv_king_bobomb_loop()
     -- ...
 end
 
+--- Behavior init function for Klepto
 function bhv_klepto_init()
     -- ...
 end
 
+--- Behavior loop function for Klepto
 function bhv_klepto_update()
     -- ...
 end
 
+--- Behavior init function for Koopa
 function bhv_koopa_init()
     -- ...
 end
 
+--- Behavior loop function for Koopa race endpoint
 function bhv_koopa_race_endpoint_update()
     -- ...
 end
 
+--- Behavior loop function for Koopa Shell flame
 function bhv_koopa_shell_flame_loop()
     -- ...
 end
 
+--- Behavior loop function for Koopa Shell
 function bhv_koopa_shell_loop()
     -- ...
 end
 
+--- Behavior loop function for Koopa Shell underwater
 function bhv_koopa_shell_underwater_loop()
     -- ...
 end
 
+--- Behavior loop function for Koopa
 function bhv_koopa_update()
     -- ...
 end
 
+--- Behavior init function for Large Bomp (Whomp's Fortress moving wall with eyes)
 function bhv_large_bomp_init()
     -- ...
 end
 
+--- Behavior loop function for Large Bomp (Whomp's Fortress moving wall with eyes)
 function bhv_large_bomp_loop()
     -- ...
 end
 
+--- Behavior loop function for Lethal Lava Land bowser puzzle
 function bhv_lll_bowser_puzzle_loop()
     -- ...
 end
 
+--- Behavior loop function for Lethal Lava Land bowser puzzle piece
 function bhv_lll_bowser_puzzle_piece_loop()
     -- ...
 end
 
+--- Behavior loop function for Lethal Lava Land drawbridge
 function bhv_lll_drawbridge_loop()
     -- ...
 end
 
+--- Behavior init function for Lethal Lava Land drawbridge spawner
 function bhv_lll_drawbridge_spawner_init()
     -- ...
 end
 
+--- Behavior loop function for Lethal Lava Land drawbridge spawner
 function bhv_lll_drawbridge_spawner_loop()
     -- ...
 end
 
+--- Behavior loop function for Lethal Lava Land floating wood bridge
 function bhv_lll_floating_wood_bridge_loop()
     -- ...
 end
 
+--- Behavior loop function for Lethal Lava Land moving octagonal mesh platform
 function bhv_lll_moving_octagonal_mesh_platform_loop()
     -- ...
 end
 
+--- Behavior init function for Lethal Lava Land rolling log
 function bhv_lll_rolling_log_init()
     -- ...
 end
 
+--- Behavior loop function for Lethal Lava Land rotating block fire bars
 function bhv_lll_rotating_block_fire_bars_loop()
     -- ...
 end
 
+--- Behavior loop function for Lethal Lava Land rotating hex flame
 function bhv_lll_rotating_hex_flame_loop()
     -- ...
 end
 
+--- Behavior loop function for Lethal Lava Land rotating hexagonal ring
 function bhv_lll_rotating_hexagonal_ring_loop()
     -- ...
 end
 
+--- Behavior loop function for Lethal Lava Land sinking rectangular platform
 function bhv_lll_sinking_rectangular_platform_loop()
     -- ...
 end
 
+--- Behavior loop function for Lethal Lava Land sinking rock block
 function bhv_lll_sinking_rock_block_loop()
     -- ...
 end
 
+--- Behavior loop function for Lethal Lava Land sinking square platforms
 function bhv_lll_sinking_square_platforms_loop()
     -- ...
 end
 
+--- Behavior loop function for Lethal Lava Land wood piece
 function bhv_lll_wood_piece_loop()
     -- ...
 end
 
+--- Behavior loop function for Mad Piano
 function bhv_mad_piano_update()
     -- ...
 end
 
+--- Behavior init function for Manta Ray
 function bhv_manta_ray_init()
     -- ...
 end
 
+--- Behavior loop function for Manta Ray
 function bhv_manta_ray_loop()
     -- ...
 end
 
+--- Behavior init function for Manta Ray water ring
 function bhv_manta_ray_water_ring_init()
     -- ...
 end
 
+--- Behavior loop function for Manta Ray water ring
 function bhv_manta_ray_water_ring_loop()
     -- ...
 end
 
+--- Behavior init function for File Select button
 function bhv_menu_button_init()
     -- ...
 end
 
+--- Behavior loop function for File Select button
 function bhv_menu_button_loop()
     -- ...
 end
 
+--- Behavior init function for File Select button manager
 function bhv_menu_button_manager_init()
     -- ...
 end
 
+--- Behavior loop function for File Select button manager
 function bhv_menu_button_manager_loop()
     -- ...
 end
 
+--- Behavior loop function for Merry Go Round Boo manager
 function bhv_merry_go_round_boo_manager_loop()
     -- ...
 end
 
+--- Behavior loop function for Big Boo's Haunt Merry Go Round
 function bhv_merry_go_round_loop()
     -- ...
 end
 
+--- Behavior init function for Metal Cap
 function bhv_metal_cap_init()
     -- ...
 end
 
+--- Behavior loop function for Metal Cap
 function bhv_metal_cap_loop()
     -- ...
 end
 
+--- Behavior init function for Mips
 function bhv_mips_init()
     -- ...
 end
 
+--- Behavior loop function for Mips
 function bhv_mips_loop()
     -- ...
 end
 
+--- Behavior loop function for moat grills
 function bhv_moat_grills_loop()
     -- ...
 end
 
+--- Behavior loop function for Moneybag hidden
 function bhv_moneybag_hidden_loop()
     -- ...
 end
 
+--- Behavior init function for Moneybag
 function bhv_moneybag_init()
     -- ...
 end
 
+--- Behavior loop function for Moneybag
 function bhv_moneybag_loop()
     -- ...
 end
 
+--- Behavior loop function for Monty Mole hole
 function bhv_monty_mole_hole_update()
     -- ...
 end
 
+--- Behavior init function for Monty Mole
 function bhv_monty_mole_init()
     -- ...
 end
 
+--- Behavior loop function for Monty Mole rock
 function bhv_monty_mole_rock_update()
     -- ...
 end
 
+--- Behavior loop function for Monty Mole
 function bhv_monty_mole_update()
     -- ...
 end
 
+--- Behavior init function for moving Blue Coin
 function bhv_moving_blue_coin_init()
     -- ...
 end
 
+--- Behavior loop function for moving Blue Coin
 function bhv_moving_blue_coin_loop()
     -- ...
 end
 
+--- Behavior init function for moving Yellow Coin
 function bhv_moving_yellow_coin_init()
     -- ...
 end
 
+--- Behavior loop function for moving Yellow Coin
 function bhv_moving_yellow_coin_loop()
     -- ...
 end
 
+--- Behavior init function for Mr. Blizzard
 function bhv_mr_blizzard_init()
     -- ...
 end
 
+--- Behavior loop function for Mr. Blizzard's snowball
 function bhv_mr_blizzard_snowball()
     -- ...
 end
 
+--- Behavior loop function for Mr. Blizzard
 function bhv_mr_blizzard_update()
     -- ...
 end
 
+--- Behavior loop function for Mr. I body
 function bhv_mr_i_body_loop()
     -- ...
 end
 
+--- Behavior loop function for Mr. I
 function bhv_mr_i_loop()
     -- ...
 end
 
+--- Behavior loop function for Mr. I particle
 function bhv_mr_i_particle_loop()
     -- ...
 end
 
+--- Behavior init function for Normal Cap
 function bhv_normal_cap_init()
     -- ...
 end
 
+--- Behavior loop function for Normal Cap
 function bhv_normal_cap_loop()
     -- ...
 end
 
+--- Behavior init function for bubble object
 function bhv_object_bubble_init()
     -- ...
 end
 
+--- Behavior loop function for bubble object
 function bhv_object_bubble_loop()
     -- ...
 end
 
+--- Behavior init function for water wave object
 function bhv_object_water_wave_init()
     -- ...
 end
 
+--- Behavior loop function for water wave object
 function bhv_object_water_wave_loop()
     -- ...
 end
 
+--- Behavior loop function for openable cage door
 function bhv_openable_cage_door_loop()
     -- ...
 end
 
+--- Behavior loop function for openable grill
 function bhv_openable_grill_loop()
     -- ...
 end
 
+--- Behavior init function for orange number
 function bhv_orange_number_init()
     -- ...
 end
 
+--- Behavior loop function for orange number
 function bhv_orange_number_loop()
     -- ...
 end
 
+--- Behavior init function for particle
 function bhv_particle_init()
     -- ...
 end
 
+--- Behavior loop function for particle
 function bhv_particle_loop()
     -- ...
 end
 
+--- Behavior loop function for Penguin race finish line
 function bhv_penguin_race_finish_line_update()
     -- ...
 end
 
+--- Behavior loop function for Penguin race shortcut check
 function bhv_penguin_race_shortcut_check_update()
     -- ...
 end
 
+--- Behavior loop function for Piranha particle
 function bhv_piranha_particle_loop()
     -- ...
 end
 
+--- Behavior loop function for Piranha Plant bubble
 function bhv_piranha_plant_bubble_loop()
     -- ...
 end
 
+--- Behavior loop function for Piranha Plant
 function bhv_piranha_plant_loop()
     -- ...
 end
 
+--- Behavior loop function for Piranha Plant waking bubbles
 function bhv_piranha_plant_waking_bubbles_loop()
     -- ...
 end
 
+--- Behavior init function for Bowser in the Dark World, Lethal Lava Land, and Bowser in the Fire Sea platform normals
 function bhv_platform_normals_init()
     -- ...
 end
 
+--- Behavior init function for platform on track
 function bhv_platform_on_track_init()
     -- ...
 end
 
+--- Behavior loop function for platform on track
 function bhv_platform_on_track_update()
     -- ...
 end
 
+--- Behavior loop function for playing a jingle when in a 200 unit radius
 function bhv_play_music_track_when_touched_loop()
     -- ...
 end
 
+--- Behavior loop function for Pokey body part
 function bhv_pokey_body_part_update()
     -- ...
 end
 
+--- Behavior loop function for Pokey
 function bhv_pokey_update()
     -- ...
 end
 
+--- Behavior loop function for pole base
 function bhv_pole_base_loop()
     -- ...
 end
 
+--- Behavior init function for pole
 function bhv_pole_init()
     -- ...
 end
 
+--- Behavior init function for tiny pound star particle
 function bhv_pound_tiny_star_particle_init()
     -- ...
 end
 
+--- Behavior loop function for tiny pound star particle
 function bhv_pound_tiny_star_particle_loop()
     -- ...
 end
 
+--- Behavior init function for pound white puffs
 function bhv_pound_white_puffs_init()
     -- ...
 end
 
+--- Behavior init function for tiny punch triangle
 function bhv_punch_tiny_triangle_init()
     -- ...
 end
 
+--- Behavior loop function for tiny punch triangle
 function bhv_punch_tiny_triangle_loop()
     -- ...
 end
 
+--- Behavior loop function for Purple Switch
 function bhv_purple_switch_loop()
     -- ...
 end
 
+--- Behavior loop function for pushable metal box
 function bhv_pushable_loop()
     -- ...
 end
 
+--- Behavior init function for Pyramid elevator
 function bhv_pyramid_elevator_init()
     -- ...
 end
 
+--- Behavior loop function for Pyramid elevator
 function bhv_pyramid_elevator_loop()
     -- ...
 end
 
+--- Behavior loop function for Pyramid elevator trajectory marker ball
 function bhv_pyramid_elevator_trajectory_marker_ball_loop()
     -- ...
 end
 
+--- Behavior loop function for Pyramid pillar touch detector
 function bhv_pyramid_pillar_touch_detector_loop()
     -- ...
 end
 
+--- Behavior init function for Pyramid top fragment
 function bhv_pyramid_top_fragment_init()
     -- ...
 end
 
+--- Behavior loop function for Pyramid top fragment
 function bhv_pyramid_top_fragment_loop()
     -- ...
 end
 
+--- Behavior init function for Pyramid top
 function bhv_pyramid_top_init()
     -- ...
 end
 
+--- Behavior loop function for Pyramid top
 function bhv_pyramid_top_loop()
     -- ...
 end
 
+--- Behavior init function for Racing Penguin
 function bhv_racing_penguin_init()
     -- ...
 end
 
+--- Behavior loop function for Racing Penguin
 function bhv_racing_penguin_update()
     -- ...
 end
 
+--- Behavior loop function for Recovery Heart
 function bhv_recovery_heart_loop()
     -- ...
 end
 
+--- Behavior init function for Red Coin
 function bhv_red_coin_init()
     -- ...
 end
 
+--- Behavior loop function for Red Coin
 function bhv_red_coin_loop()
     -- ...
 end
 
+--- Behavior init function for Red Coin Star marker
 function bhv_red_coin_star_marker_init()
     -- ...
 end
 
+--- Behavior loop function for respawner
 function bhv_respawner_loop()
     -- ...
 end
 
+--- Behavior loop function for rolling log
 function bhv_rolling_log_loop()
     -- ...
 end
 
+--- Behavior loop function for rotating clock arm
 function bhv_rotating_clock_arm_loop()
     -- ...
 end
 
+--- Behavior loop function for rotating exclamation mark
 function bhv_rotating_exclamation_box_loop()
     -- ...
 end
 
+--- Behavior init function for Rotating octagonal platform in Rainbow Ride and Bowser in the Sky
 function bhv_rotating_octagonal_plat_init()
     -- ...
 end
 
+--- Behavior loop function for Rotating octagonal platform in Rainbow Ride and Bowser in the Sky
 function bhv_rotating_octagonal_plat_loop()
     -- ...
 end
 
+--- Behavior loop function for rotating platform
 function bhv_rotating_platform_loop()
     -- ...
 end
 
+--- Behavior init function for Rainbow Ride cruiser wing
 function bhv_rr_cruiser_wing_init()
     -- ...
 end
 
+--- Behavior loop function for Rainbow Ride cruiser wing
 function bhv_rr_cruiser_wing_loop()
     -- ...
 end
 
+--- Behavior loop function for Rainbow Ride rotating bridge platform
 function bhv_rr_rotating_bridge_platform_loop()
     -- ...
 end
 
+--- Behavior loop function for sand sound
 function bhv_sand_sound_loop()
     -- ...
 end
 
+--- Behavior loop function for Scuttlebug
 function bhv_scuttlebug_loop()
     -- ...
 end
 
+--- Behavior loop function for Scuttlebug spawner
 function bhv_scuttlebug_spawn_loop()
     -- ...
 end
 
+--- Behavior init function for seaweed bundle
 function bhv_seaweed_bundle_init()
     -- ...
 end
 
+--- Behavior init function for seaweed
 function bhv_seaweed_init()
     -- ...
 end
 
+--- Behavior init function for seesaw platform
 function bhv_seesaw_platform_init()
     -- ...
 end
 
+--- Behavior loop function for seesaw platform
 function bhv_seesaw_platform_update()
     -- ...
 end
 
+--- Behavior init function for shallow water splash
 function bhv_shallow_water_splash_init()
     -- ...
 end
 
+--- Behavior loop function for Jolly Roger Bay ship part 3
 function bhv_ship_part_3_loop()
     -- ...
 end
 
+--- Behavior loop function for Skeeter
 function bhv_skeeter_update()
     -- ...
 end
 
+--- Behavior loop function for Skeeter wave
 function bhv_skeeter_wave_update()
     -- ...
 end
 
+--- Behavior loop function for Snowman's Land snowman wind
 function bhv_sl_snowman_wind_loop()
     -- ...
 end
 
+--- Behavior loop function for Snowman's Land walking penguin
 function bhv_sl_walking_penguin_loop()
     -- ...
 end
 
+--- Behavior init function for sliding platform 2 in Rainbow Ride and Bowser courses
 function bhv_sliding_plat_2_init()
     -- ...
 end
 
+--- Behavior loop function for sliding platform 2 in Rainbow Ride and Bowser courses
 function bhv_sliding_plat_2_loop()
     -- ...
 end
 
+--- Behavior loop function for sliding snow mound
 function bhv_sliding_snow_mound_loop()
     -- ...
 end
 
+--- Behavior init function for Small Bomp (Whomp's Fortress moving wall with eyes)
 function bhv_small_bomp_init()
     -- ...
 end
 
+--- Behavior loop function for Small Bomp (Whomp's Fortress moving wall with eyes)
 function bhv_small_bomp_loop()
     -- ...
 end
 
+--- Behavior loop function for small bubbles
 function bhv_small_bubbles_loop()
     -- ...
 end
 
+--- Behavior init function for Small Bully
 function bhv_small_bully_init()
     -- ...
 end
 
+--- Behavior loop function for small penguin
 function bhv_small_penguin_loop()
     -- ...
 end
 
+--- Behavior loop function for Small Piranha flame
 function bhv_small_piranha_flame_loop()
     -- ...
 end
 
+--- Behavior loop function for small water wave
 function bhv_small_water_wave_loop()
     -- ...
 end
 
+--- Behavior init function for snow leaf particle spawn
 function bhv_snow_leaf_particle_spawn_init()
     -- ...
 end
 
+--- Behavior loop function for snow mound spawn
 function bhv_snow_mound_spawn_loop()
     -- ...
 end
 
+--- Behavior loop function for Snowman's body checkpoint
 function bhv_snowmans_body_checkpoint_loop()
     -- ...
 end
 
+--- Behavior init function for Snowman's bottom
 function bhv_snowmans_bottom_init()
     -- ...
 end
 
+--- Behavior loop function for Snowman's bottom
 function bhv_snowmans_bottom_loop()
     -- ...
 end
 
+--- Behavior init function for Snowman's head
 function bhv_snowmans_head_init()
     -- ...
 end
 
+--- Behavior loop function for Snowman's head
 function bhv_snowmans_head_loop()
     -- ...
 end
 
+--- Behavior loop function for Snufit balls
 function bhv_snufit_balls_loop()
     -- ...
 end
 
+--- Behavior loop function for Snufit
 function bhv_snufit_loop()
     -- ...
 end
 
+--- Behavior init function for sound spawner
 function bhv_sound_spawner_init()
     -- ...
 end
 
+--- Behavior loop function for sparkle spawner
 function bhv_sparkle_spawn_loop()
     -- ...
 end
@@ -1694,534 +2112,667 @@ end
 --- @param object Object
 --- @param params integer
 --- @param networkSendEvent integer
+--- Spawns a Star parented to `object` that won't make Mario exit the level with an ID corresponding to `params`' first byte
 function bhv_spawn_star_no_level_exit(object, params, networkSendEvent)
     -- ...
 end
 
+--- Behavior init function for spawned star
 function bhv_spawned_star_init()
     -- ...
 end
 
+--- Behavior loop function for Spawned star
 function bhv_spawned_star_loop()
     -- ...
 end
 
+--- Behavior init function for Spindel
 function bhv_spindel_init()
     -- ...
 end
 
+--- Behavior loop function for Spindel
 function bhv_spindel_loop()
     -- ...
 end
 
+--- Behavior loop function for Spindrift
 function bhv_spindrift_loop()
     -- ...
 end
 
+--- Behavior loop function for Spiny
 function bhv_spiny_update()
     -- ...
 end
 
+--- Behavior loop function for Bowser in the Dark World squarish path moving
 function bhv_squarish_path_moving_loop()
     -- ...
 end
 
+--- Behavior init function for Bowser in the Dark World squarish path parent
 function bhv_squarish_path_parent_init()
     -- ...
 end
 
+--- Behavior loop function for Bowser in the Dark World Ssuarish path parent
 function bhv_squarish_path_parent_loop()
     -- ...
 end
 
+--- Behavior loop function for squishable platform
 function bhv_squishable_platform_loop()
     -- ...
 end
 
+--- Behavior init function for Ssl moving pyramid wall
 function bhv_ssl_moving_pyramid_wall_init()
     -- ...
 end
 
+--- Behavior loop function for Ssl moving pyramid wall
 function bhv_ssl_moving_pyramid_wall_loop()
     -- ...
 end
 
+--- Behavior loop function for Star Door
 function bhv_star_door_loop()
     -- ...
 end
 
+--- Behavior loop function for Star Door
 function bhv_star_door_loop_2()
     -- ...
 end
 
+--- Behavior loop function for Star and key collection puff spawner
 function bhv_star_key_collection_puff_spawner_loop()
     -- ...
 end
 
+--- Behavior loop function for Star number
 function bhv_star_number_loop()
     -- ...
 end
 
+--- Behavior init function for Star spawn
 function bhv_star_spawn_init()
     -- ...
 end
 
+--- Behavior loop function for Star spawn
 function bhv_star_spawn_loop()
     -- ...
 end
 
+--- Behavior loop function for static checkered platform
 function bhv_static_checkered_platform_loop()
     -- ...
 end
 
+--- Behavior loop function for strong wind particle
 function bhv_strong_wind_particle_loop()
     -- ...
 end
 
+--- Behavior loop function for Jolly Roger Bay sunken ship part
 function bhv_sunken_ship_part_loop()
     -- ...
 end
 
+--- Behavior loop function for Sushi Shark collision
 function bhv_sushi_shark_collision_loop()
     -- ...
 end
 
+--- Behavior loop function for Sushi Shark
 function bhv_sushi_shark_loop()
     -- ...
 end
 
+--- Behavior init function for swing platform
 function bhv_swing_platform_init()
     -- ...
 end
 
+--- Behavior loop function for swing platform
 function bhv_swing_platform_update()
     -- ...
 end
 
+--- Behavior loop function for Swoop
 function bhv_swoop_update()
     -- ...
 end
 
+--- Behavior loop function for tank fish group
 function bhv_tank_fish_group_loop()
     -- ...
 end
 
+--- Behavior loop function for despawning Coin
 function bhv_temp_coin_loop()
     -- ...
 end
 
+--- Behavior loop function for Tiny Huge Island bowling ball spawner
 function bhv_thi_bowling_ball_spawner_loop()
     -- ...
 end
 
+--- Behavior loop function for Tiny Huge Island huge island top
 function bhv_thi_huge_island_top_loop()
     -- ...
 end
 
+--- Behavior loop function for Tiny Huge Island tiny island top
 function bhv_thi_tiny_island_top_loop()
     -- ...
 end
 
+--- Behavior init function for tilting Bowser in the Fire Sea arena platform
 function bhv_tilting_bowser_lava_platform_init()
     -- ...
 end
 
+--- Behavior loop function for Lethal Lava Land and Bowser in the Fire Sea tilting inverted pyramid
 function bhv_tilting_inverted_pyramid_loop()
     -- ...
 end
 
+--- Behavior init function for tiny Star particles
 function bhv_tiny_star_particles_init()
     -- ...
 end
 
+--- Behavior loop function for Whomp's Fortress tower door
 function bhv_tower_door_loop()
     -- ...
 end
 
+--- Behavior init function for Whomp's Fortress tower platform group
 function bhv_tower_platform_group_init()
     -- ...
 end
 
+--- Behavior loop function for Whomp's Fortress tower platform group
 function bhv_tower_platform_group_loop()
     -- ...
 end
 
+--- Behavior loop function for Tox Box
 function bhv_tox_box_loop()
     -- ...
 end
 
+--- Behavior loop function for track ball
 function bhv_track_ball_update()
     -- ...
 end
 
+--- Behavior init function for treasure chest bottom
 function bhv_treasure_chest_bottom_init()
     -- ...
 end
 
+--- Behavior loop function for treasure chest bottom
 function bhv_treasure_chest_bottom_loop()
     -- ...
 end
 
+--- Behavior init function for treasure chest
 function bhv_treasure_chest_init()
     -- ...
 end
 
+--- Behavior init function for treasure chest jrb
 function bhv_treasure_chest_jrb_init()
     -- ...
 end
 
+--- Behavior loop function for treasure chest jrb
 function bhv_treasure_chest_jrb_loop()
     -- ...
 end
 
+--- Behavior loop function for treasure chest
 function bhv_treasure_chest_loop()
     -- ...
 end
 
+--- Behavior init function for treasure chest ship
 function bhv_treasure_chest_ship_init()
     -- ...
 end
 
+--- Behavior loop function for treasure chest ship
 function bhv_treasure_chest_ship_loop()
     -- ...
 end
 
+--- Behavior loop function for treasure chest top
 function bhv_treasure_chest_top_loop()
     -- ...
 end
 
+--- Behavior loop function for tree snow or leaf particle
 function bhv_tree_snow_or_leaf_loop()
     -- ...
 end
 
+--- Behavior loop function for a triplet of butterflies
 function bhv_triplet_butterfly_update()
     -- ...
 end
 
+--- Behavior init function for Tick Tock Clock 2D rotator
 function bhv_ttc_2d_rotator_init()
     -- ...
 end
 
+--- Behavior loop function for Tick Tock Clock 2D rotator
 function bhv_ttc_2d_rotator_update()
     -- ...
 end
 
+--- Behavior init function for Tick Tock Clock cog
 function bhv_ttc_cog_init()
     -- ...
 end
 
+--- Behavior loop function for Tick Tock Clock cog
 function bhv_ttc_cog_update()
     -- ...
 end
 
+--- Behavior init function for Tick Tock Clock elevator
 function bhv_ttc_elevator_init()
     -- ...
 end
 
+--- Behavior loop function for Tick Tock Clock elevator
 function bhv_ttc_elevator_update()
     -- ...
 end
 
+--- Behavior init function for Tick Tock Clock moving bar
 function bhv_ttc_moving_bar_init()
     -- ...
 end
 
+--- Behavior loop function for Tick Tock Clock moving bar
 function bhv_ttc_moving_bar_update()
     -- ...
 end
 
+--- Behavior init function for Tick Tock Clock pendulum
 function bhv_ttc_pendulum_init()
     -- ...
 end
 
+--- Behavior loop function for Tick Tock Clock pendulum
 function bhv_ttc_pendulum_update()
     -- ...
 end
 
+--- Behavior init function for Tick Tock Clock pit block
 function bhv_ttc_pit_block_init()
     -- ...
 end
 
+--- Behavior loop function for Tick Tock Clock pit block
 function bhv_ttc_pit_block_update()
     -- ...
 end
 
+--- Behavior init function for Tick Tock Clock rotating solid
 function bhv_ttc_rotating_solid_init()
     -- ...
 end
 
+--- Behavior loop function for Tick Tock Clock rotating solid
 function bhv_ttc_rotating_solid_update()
     -- ...
 end
 
+--- Behavior loop function for Tick Tock Clock spinner
 function bhv_ttc_spinner_update()
     -- ...
 end
 
+--- Behavior init function for Tick Tock Clock treadmill
 function bhv_ttc_treadmill_init()
     -- ...
 end
 
+--- Behavior loop function for Tick Tock Clock treadmill
 function bhv_ttc_treadmill_update()
     -- ...
 end
 
+--- Behavior init function for Tall, Tall Mountain rolling log
 function bhv_ttm_rolling_log_init()
     -- ...
 end
 
+--- Behavior loop function for tumbling bridge
 function bhv_tumbling_bridge_loop()
     -- ...
 end
 
+--- Behavior loop function for tumbling bridge platform
 function bhv_tumbling_bridge_platform_loop()
     -- ...
 end
 
+--- Behavior loop function for Tuxie's mother
 function bhv_tuxies_mother_loop()
     -- ...
 end
 
+--- Behavior loop function for Tweester
 function bhv_tweester_loop()
     -- ...
 end
 
+--- Behavior loop function for Tweester sand particle
 function bhv_tweester_sand_particle_loop()
     -- ...
 end
 
+--- Behavior loop function for Ukiki cage
 function bhv_ukiki_cage_loop()
     -- ...
 end
 
+--- Behavior loop function for Ukiki cage Star
 function bhv_ukiki_cage_star_loop()
     -- ...
 end
 
+--- Behavior init function for Ukiki
 function bhv_ukiki_init()
     -- ...
 end
 
+--- Behavior loop function for Ukiki
 function bhv_ukiki_loop()
     -- ...
 end
 
+--- Behavior init function for Unagi
 function bhv_unagi_init()
     -- ...
 end
 
+--- Behavior loop function for Unagi
 function bhv_unagi_loop()
     -- ...
 end
 
+--- Behavior loop function for Unagi subobject
 function bhv_unagi_subobject_loop()
     -- ...
 end
 
+--- Behavior loop function for unused particle spawn
 function bhv_unused_particle_spawn_loop()
     -- ...
 end
 
+--- Behavior loop function for unused poundable platform
 function bhv_unused_poundable_platform()
     -- ...
 end
 
+--- Behavior init function for Vanish Cap
 function bhv_vanish_cap_init()
     -- ...
 end
 
+--- Behavior loop function for Volcano flames
 function bhv_volcano_flames_loop()
     -- ...
 end
 
+--- Behavior loop function for volcano sound
 function bhv_volcano_sound_loop()
     -- ...
 end
 
+--- Behavior loop function for volcano trap
 function bhv_volcano_trap_loop()
     -- ...
 end
 
+--- Behavior loop function for tiny wall star particle
 function bhv_wall_tiny_star_particle_loop()
     -- ...
 end
 
+--- Behavior loop function for warp
 function bhv_warp_loop()
     -- ...
 end
 
+--- Behavior init function for water air bubble
 function bhv_water_air_bubble_init()
     -- ...
 end
 
+--- Behavior loop function for water air bubble
 function bhv_water_air_bubble_loop()
     -- ...
 end
 
+--- Behavior loop function for water bomb cannon
 function bhv_water_bomb_cannon_loop()
     -- ...
 end
 
+--- Behavior loop function for water bomb shadow
 function bhv_water_bomb_shadow_update()
     -- ...
 end
 
+--- Behavior loop function for water bomb spawner
 function bhv_water_bomb_spawner_update()
     -- ...
 end
 
+--- Behavior loop function for water bomb
 function bhv_water_bomb_update()
     -- ...
 end
 
+--- Behavior loop function for water droplet
 function bhv_water_droplet_loop()
     -- ...
 end
 
+--- Behavior init function for water droplet splash
 function bhv_water_droplet_splash_init()
     -- ...
 end
 
+--- Behavior loop function for Wet Dry World water level diamond
 function bhv_water_level_diamond_loop()
     -- ...
 end
 
+--- Behavior init function for Castle Basement water level pillar
 function bhv_water_level_pillar_init()
     -- ...
 end
 
+--- Behavior loop function for Castle Basement water level pillar
 function bhv_water_level_pillar_loop()
     -- ...
 end
 
+--- Behavior loop function for water mist 2
 function bhv_water_mist_2_loop()
     -- ...
 end
 
+--- Behavior loop function for water mist
 function bhv_water_mist_loop()
     -- ...
 end
 
+--- Behavior loop function for water mist spawn
 function bhv_water_mist_spawn_loop()
     -- ...
 end
 
+--- Behavior init function for spawning water splash droplets
 function bhv_water_splash_spawn_droplets()
     -- ...
 end
 
+--- Behavior init function for water waves
 function bhv_water_waves_init()
     -- ...
 end
 
+--- Behavior loop function for waterfall sound
 function bhv_waterfall_sound_loop()
     -- ...
 end
 
+--- Behavior loop function for shrinking water trail
 function bhv_wave_trail_shrink()
     -- ...
 end
 
+--- Behavior loop function for Wet Dry World express elevator
 function bhv_wdw_express_elevator_loop()
     -- ...
 end
 
+--- Behavior loop function for Whomp's Fortress breakable wall
 function bhv_wf_breakable_wall_loop()
     -- ...
 end
 
+--- Behavior loop function for Whomp's Fortress elevator tower platform
 function bhv_wf_elevator_tower_platform_loop()
     -- ...
 end
 
+--- Behavior init function for Whomp's Fortress rotating wooden platform
 function bhv_wf_rotating_wooden_platform_init()
     -- ...
 end
 
+--- Behavior loop function for Whomp's Fortress rotating wooden platform
 function bhv_wf_rotating_wooden_platform_loop()
     -- ...
 end
 
+--- Behavior init function for Whomp's Fortress sliding platform
 function bhv_wf_sliding_platform_init()
     -- ...
 end
 
+--- Behavior loop function for Whomp's Fortress sliding platform
 function bhv_wf_sliding_platform_loop()
     -- ...
 end
 
+--- Behavior loop function for Whomp's Fortress sliding tower platform
 function bhv_wf_sliding_tower_platform_loop()
     -- ...
 end
 
+--- Behavior loop function for Whomp's Fortress solid tower platform
 function bhv_wf_solid_tower_platform_loop()
     -- ...
 end
 
+--- Behavior init function for whirlpool
 function bhv_whirlpool_init()
     -- ...
 end
 
+--- Behavior loop function for whirlpool
 function bhv_whirlpool_loop()
     -- ...
 end
 
+--- Behavior loop function for white puff 1
 function bhv_white_puff_1_loop()
     -- ...
 end
 
+--- Behavior loop function for white puff 2
 function bhv_white_puff_2_loop()
     -- ...
 end
 
+--- Behavior loop function for white puff exploding
 function bhv_white_puff_exploding_loop()
     -- ...
 end
 
+--- Behavior init function for White puff smoke
 function bhv_white_puff_smoke_init()
     -- ...
 end
 
+--- Behavior loop function for Whomp
 function bhv_whomp_loop()
     -- ...
 end
 
+--- Behavior loop function for Wiggler body part
 function bhv_wiggler_body_part_update()
     -- ...
 end
 
+--- Behavior loop function for Wiggler
 function bhv_wiggler_update()
     -- ...
 end
 
+--- Behavior loop function for wind
 function bhv_wind_loop()
     -- ...
 end
 
+--- Behavior init function for Wing Cap
 function bhv_wing_cap_init()
     -- ...
 end
 
+--- Behavior loop function for Wing and Vanish caps
 function bhv_wing_vanish_cap_loop()
     -- ...
 end
 
+--- Behavior loop function for ground poundable wooden post
 function bhv_wooden_post_update()
     -- ...
 end
 
+--- Behavior init function for Yellow Coin
 function bhv_yellow_coin_init()
     -- ...
 end
 
+--- Behavior loop function for Yellow Coin
 function bhv_yellow_coin_loop()
     -- ...
 end
 
+--- Behavior init function for Yoshi
 function bhv_yoshi_init()
     -- ...
 end
 
+--- Behavior loop function for Yoshi
 function bhv_yoshi_loop()
     -- ...
 end
@@ -2229,11 +2780,13 @@ end
 --- @param a0 number
 --- @param a1 number
 --- @return integer
+--- Checks if the current object is moving `a1` units over a floor and within a threshold of `a0`
 function check_if_moving_over_floor(a0, a1)
     -- ...
 end
 
 --- @param flags integer
+--- Clears the particle flags of the current object
 function clear_particle_flags(flags)
     -- ...
 end
@@ -2241,6 +2794,7 @@ end
 --- @param sp28 number
 --- @param sp2C number
 --- @param sp30 integer
+--- Common behavior for when Mario's anchoring when grabbed
 function common_anchor_mario_behavior(sp28, sp2C, sp30)
     -- ...
 end
@@ -2250,20 +2804,24 @@ end
 --- @param relPosX number
 --- @param relPosY number
 --- @param relPosZ number
+--- Spawns strong wind particles relative to the current object
 function cur_obj_spawn_strong_wind_particles(windSpread, scale, relPosX, relPosY, relPosZ)
     -- ...
 end
 
 --- @return integer
+--- Checks if Mario is moving fast enough to make Piranha Plant bite. This one is a mouthful
 function mario_moving_fast_enough_to_make_piranha_plant_bite()
     -- ...
 end
 
+--- Sets the secondary camera focus
 function obj_set_secondary_camera_focus()
     -- ...
 end
 
 --- @param walk integer
+--- Plays the penguin walking sound
 function play_penguin_walking_sound(walk)
     -- ...
 end
@@ -2272,10 +2830,12 @@ end
 --- @param y number
 --- @param z number
 --- @return Object
+--- Spawns a Star with an ID corresponding to the current object's first behavior parameter byte
 function spawn_default_star(x, y, z)
     -- ...
 end
 
+--- Spawns mist particles around the current object
 function spawn_mist_from_global()
     -- ...
 end
@@ -2283,6 +2843,7 @@ end
 --- @param count integer
 --- @param offsetY integer
 --- @param size number
+--- Spawns mist particles around the current object
 function spawn_mist_particles_variable(count, offsetY, size)
     -- ...
 end
@@ -2291,6 +2852,7 @@ end
 --- @param y number
 --- @param z number
 --- @return Object
+--- Spawns a Star that won't make Mario exit the level with an ID corresponding to the current object's first behavior parameter byte
 function spawn_no_exit_star(x, y, z)
     -- ...
 end
@@ -2299,10 +2861,12 @@ end
 --- @param y number
 --- @param z number
 --- @return Object
+--- Spawns a Red Coin cutscene star with an ID corresponding to the current object's first behavior parameter byte
 function spawn_red_coin_cutscene_star(x, y, z)
     -- ...
 end
 
+--- Spawns a star number
 function spawn_star_number()
     -- ...
 end
@@ -2311,12 +2875,14 @@ end
 --- @param triModel integer
 --- @param triSize number
 --- @param triAnimState integer
+--- Spawns triangle break particles around the current object
 function spawn_triangle_break_particles(numTris, triModel, triSize, triAnimState)
     -- ...
 end
 
 --- @param pitch integer
 --- @param yaw integer
+--- Spawns wind particles around the current object
 function spawn_wind_particles(pitch, yaw)
     -- ...
 end
@@ -2325,22 +2891,26 @@ end
 --- @param a1 number
 --- @param deltaPitch integer
 --- @param deltaRoll integer
+--- Moves Tox Box
 function tox_box_move(forwardVel, a1, deltaPitch, deltaRoll)
     -- ...
 end
 
 --- @param angle Pointer_integer
 --- @return integer
+--- Updates the current object's angle from its move flags
 function update_angle_from_move_flags(angle)
     -- ...
 end
 
+--- Behavior loop function for UV texture scrolling
 function uv_update_scroll()
     -- ...
 end
 
 --- @param dest Vec3f
 --- @param src Vec3f
+--- Duplicate of vec3f_copy except without bad return
 function vec3f_copy_2(dest, src)
     -- ...
 end
