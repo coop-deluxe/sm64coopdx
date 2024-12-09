@@ -53,7 +53,7 @@ f32 find_ceil(f32 posX, f32 posY, f32 posZ, struct Surface **pceil);
 
 /* |description|
 Finds the height of the highest ceiling above a given position (x, y, z). 
-If no ceiling is found, returns the default height limit of `gLevelValues.cellHeightLimit` (20000 by default)
+If no ceiling is found, returns the default height limit of `gLevelValues.cellHeightLimit`(20000 by default)
 |descriptionEnd| */
 f32 find_ceil_height(f32 x, f32 y, f32 z);
 f32 find_floor_height_and_data(f32 xPos, f32 yPos, f32 zPos, struct FloorGeometry **floorGeo);
