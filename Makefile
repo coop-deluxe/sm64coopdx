@@ -949,9 +949,9 @@ COOPNET_LIBS :=
 ifeq ($(COOPNET),1)
   ifeq ($(WINDOWS_BUILD),1)
     ifeq ($(TARGET_BITS), 32)
-      LDFLAGS += -Llib/coopnet/win32 -l:libcoopnet.a -l:libjuice.a -lbcrypt -lws2_32 -liphlpapi
+      LDFLAGS += -Llib/coopnet/win32 -l:libcoopnet.a -l:libjuice.a -lbcrypt -liphlpapi
     else
-      LDFLAGS += -Llib/coopnet/win64 -l:libcoopnet.a -l:libjuice.a -lbcrypt -lws2_32 -liphlpapi
+      LDFLAGS += -Llib/coopnet/win64 -l:libcoopnet.a -l:libjuice.a -lbcrypt -liphlpapi
     endif
   else ifeq ($(OSX_BUILD),1)
     ifeq ($(shell uname -m),arm64)
@@ -976,7 +976,7 @@ endif
 
 # Network/Discord (ugh, needs cleanup)
 ifeq ($(WINDOWS_BUILD),1)
-  LDFLAGS += -L"ws2_32" -lwsock32
+  LDFLAGS += -lws2_32 -lwsock32
   ifeq ($(DISCORD_SDK),1)
     LDFLAGS += -Wl,-Bdynamic -L./lib/discordsdk/ -ldiscord_game_sdk -Wl,-Bstatic
   endif
