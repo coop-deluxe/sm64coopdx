@@ -3397,6 +3397,9 @@ Replaces the secret star course name of `courseNum` with `courseName`
 
 ## [find_ceil_height](#find_ceil_height)
 
+### Description
+Finds the height of the highest ceiling above a given position (x, y, z). If no ceiling is found, returns the default height limit of `gLevelValues.cellHeightLimit`(20000 by default)
+
 ### Lua Example
 `local numberValue = find_ceil_height(x, y, z)`
 
@@ -3418,6 +3421,9 @@ Replaces the secret star course name of `courseNum` with `courseName`
 <br />
 
 ## [find_floor_height](#find_floor_height)
+
+### Description
+Finds the height of the highest floor below a given position (x, y, z). If no floor is found, returns the default floor height of `gLevelValues.floorLowerLimit`(-11000 by default)
 
 ### Lua Example
 `local numberValue = find_floor_height(x, y, z)`
@@ -3441,6 +3447,9 @@ Replaces the secret star course name of `courseNum` with `courseName`
 
 ## [find_poison_gas_level](#find_poison_gas_level)
 
+### Description
+Finds the height of the poison gas at a given position (x, z), if the position is within a gas region. If no gas is found, returns the default height of `gLevelValues.floorLowerLimit`(-11000 by default)
+
 ### Lua Example
 `local numberValue = find_poison_gas_level(x, z)`
 
@@ -3462,6 +3471,9 @@ Replaces the secret star course name of `courseNum` with `courseName`
 
 ## [find_wall_collisions](#find_wall_collisions)
 
+### Description
+Detects wall collisions at a given position and adjusts the position based on the walls found. Returns the number of wall collisions detected.
+
 ### Lua Example
 `local integerValue = find_wall_collisions(colData)`
 
@@ -3481,6 +3493,9 @@ Replaces the secret star course name of `courseNum` with `courseName`
 <br />
 
 ## [find_water_level](#find_water_level)
+
+### Description
+Finds the height of water at a given position (x, z), if the position is within a water region. If no water is found, returns the default height of `gLevelValues.floorLowerLimit`(-11000 by default)
 
 ### Lua Example
 `local numberValue = find_water_level(x, z)`

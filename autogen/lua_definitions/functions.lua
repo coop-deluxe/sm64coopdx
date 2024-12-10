@@ -10094,6 +10094,7 @@ end
 --- @param y number
 --- @param z number
 --- @return number
+--- Finds the height of the highest ceiling above a given position (x, y, z). If no ceiling is found, returns the default height limit of `gLevelValues.cellHeightLimit`(20000 by default)
 function find_ceil_height(x, y, z)
     -- ...
 end
@@ -10102,6 +10103,7 @@ end
 --- @param y number
 --- @param z number
 --- @return number
+--- Finds the height of the highest floor below a given position (x, y, z). If no floor is found, returns the default floor height of `gLevelValues.floorLowerLimit`(-11000 by default)
 function find_floor_height(x, y, z)
     -- ...
 end
@@ -10109,12 +10111,14 @@ end
 --- @param x number
 --- @param z number
 --- @return number
+--- Finds the height of the poison gas at a given position (x, z), if the position is within a gas region. If no gas is found, returns the default height of `gLevelValues.floorLowerLimit`(-11000 by default)
 function find_poison_gas_level(x, z)
     -- ...
 end
 
 --- @param colData WallCollisionData
 --- @return integer
+--- Detects wall collisions at a given position and adjusts the position based on the walls found. Returns the number of wall collisions detected.
 function find_wall_collisions(colData)
     -- ...
 end
@@ -10122,6 +10126,7 @@ end
 --- @param x number
 --- @param z number
 --- @return number
+--- Finds the height of water at a given position (x, z), if the position is within a water region. If no water is found, returns the default height of `gLevelValues.floorLowerLimit`(-11000 by default)
 function find_water_level(x, z)
     -- ...
 end
