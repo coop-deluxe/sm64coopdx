@@ -12339,7 +12339,7 @@ void mode_rom_hack_camera(struct Camera *c) {
     f32 desiredHeight = sRomHackZoom ? 300 : 450;
     f32* mPos = &gMarioStates[0].pos[0];
     pos[0] = mPos[0] + coss(sRomHackYaw) * desiredDist;
-    pos[1] =  pos[1] + desiredHeight;
+    pos[1] = mPos[1] + desiredHeight;
     pos[2] = mPos[2] + sins(sRomHackYaw) * desiredDist;
 
     // Move camera down for hangable ceilings
