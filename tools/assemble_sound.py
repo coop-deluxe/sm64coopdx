@@ -754,7 +754,7 @@ def serialize_seqfile(
             out_offsets_filename = out_filename.replace('sound_data.tbl', 'samples_offsets.inc.c')
             with open(out_offsets_filename, "w") as f:
                 for fname in asset_offsets:
-                    macro_name = 'SAMPLE_' + fname.split('/samples/')[-1].replace('/', '_').replace('.', '_').replace('-', '_')
+                    macro_name = 'SAMPLE_' + fname.split('/samples/')[-1].replace('/', '_').replace('.', '_').replace('-', '_').replace("\\","_")
                     f.write(f'#define {macro_name} {hex(asset_offsets[fname] + data_start)} // {fname}\n')
 
         if out_filename.endswith('sequences.bin'):

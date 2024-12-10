@@ -68,7 +68,11 @@ bool parse_cli_opts(int argc, char* argv[]) {
             gCLIOpts.fullscreen = 2;
         } else if (!strcmp(argv[i], "--skip-intro")) {
             gCLIOpts.skipIntro = true;
-        } else if (!strcmp(argv[i], "--server") && (i + 1) < argc) {
+        } else if (!strcmp(argv[i], "--network") && (i + 1) < argc) {
+            arg_uint("--network <type>", argv[++i], &gCLIOpts.netSystemType);
+        } else if (!strcmp(argv[i], "--maxplayers") && (i + 1) < argc) {
+            arg_uint("--maxplayers <number>", argv[++i], &gCLIOpts.maxPlayers);
+		} else if (!strcmp(argv[i], "--server") && (i + 1) < argc) {
             gCLIOpts.network = NT_SERVER;
             arg_uint("--server <port>", argv[++i], &gCLIOpts.networkPort);
         } else if (!strcmp(argv[i], "--client") && (((i + 1) < argc) || (i + 2) < argc)) {
@@ -81,6 +85,12 @@ bool parse_cli_opts(int argc, char* argv[]) {
             }
         } else if (!strcmp(argv[i], "--playername") && (i + 1) < argc) {
             arg_string("--playername", argv[++i], gCLIOpts.playerName, MAX_CONFIG_STRING);
+		} else if (!strcmp(argv[i],"--servername") && (i + 1) < argc) {
+			arg_string("--servername", argv[++i], gCLIOpts.coopnetName, MAX_CONFIG_STRING);
+		} else if (!strcmp(argv[i],"--serverdesc") && (i + 1) < argc) {
+			arg_string("--serverdesc", argv[++i], gCLIOpts.coopnetDesc, 1024);
+		} else if (!strcmp(argv[i],"--serverpass") && (i + 1) < argc) {
+			arg_string("--serverpass", argv[++i], gCLIOpts.coopnetPass, 64);
         } else if (!strcmp(argv[i], "--skip-update-check")) {
             gCLIOpts.skipUpdateCheck = true;
         } else if (!strcmp(argv[i], "--help")) {

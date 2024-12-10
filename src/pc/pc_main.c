@@ -246,14 +246,19 @@ inline static void buffer_audio(void) {
     audio_api->play((u8 *)audioBuffer, 2 * numAudioSamples * 4);
 }
 
+#include <pthread.h>
+pthread_mutex_t luaMutex = PTHREAD_MUTEX_INITIALIZER;
+
 void produce_one_frame(void) {
     CTX_EXTENT(CTX_NETWORK, network_update);
 
     CTX_EXTENT(CTX_INTERP, patch_interpolations_before);
 
     CTX_EXTENT(CTX_GAME_LOOP, game_loop_one_iteration);
-
+	
+	pthread_mutex_lock(&luaMutex);
     CTX_EXTENT(CTX_SMLUA, smlua_update);
+	pthread_mutex_unlock(&luaMutex);
 
     CTX_EXTENT(CTX_AUDIO, buffer_audio);
 
@@ -356,6 +361,37 @@ void* main_game_init(UNUSED void* dummy) {
     gGameInited = true;
 }
 
+//used with console only
+pthread_t mainLoopThread;
+
+void* mainLoopFunc(UNUSED void* dummy) {
+	while (true) {
+		debug_context_reset();
+        CTX_BEGIN(CTX_TOTAL);
+        WAPI.main_loop(produce_one_frame);
+#ifdef DISCORD_SDK
+        discord_update();
+#endif
+        mumble_update();
+#ifdef DEBUG
+        fflush(stdout);
+        fflush(stderr);
+#endif
+        CTX_END(CTX_TOTAL);
+        
+#ifdef DEVELOPMENT
+        djui_ctx_display_update();
+#endif
+        djui_lua_profiler_update();
+	}
+}
+
+#ifdef _WIN32
+#define clrscr() system("cls")
+#else
+#define clrscr() system("clear")
+#endif
+
 int main(int argc, char *argv[]) {
     // handle terminal arguments
     if (!parse_cli_opts(argc, argv)) { return 0; }
@@ -452,8 +488,15 @@ int main(int argc, char *argv[]) {
         configJoinPort = gCLIOpts.networkPort;
         network_init(NT_CLIENT, false);
     } else if (gCLIOpts.network == NT_SERVER) {
-        configNetworkSystem = NS_SOCKET;
+        //configNetworkSystem = NS_SOCKET;
+		configNetworkSystem = gCLIOpts.netSystemType;
         configHostPort = gCLIOpts.networkPort;
+		
+		if (gCLIOpts.maxPlayers > 0)
+			configAmountofPlayers = gCLIOpts.maxPlayers;
+		
+		if (strlen(gCLIOpts.coopnetPass) > 0)
+			snprintf(configPassword,64,"%s",gCLIOpts.coopnetPass);
 
         // horrible, hacky fix for mods that access marioObj straight away
         // best fix: host with the standard main menu method
@@ -467,25 +510,60 @@ int main(int argc, char *argv[]) {
     }
 
     // main loop
-    while (true) {
-        debug_context_reset();
-        CTX_BEGIN(CTX_TOTAL);
-        WAPI.main_loop(produce_one_frame);
-#ifdef DISCORD_SDK
-        discord_update();
-#endif
-        mumble_update();
-#ifdef DEBUG
-        fflush(stdout);
-        fflush(stderr);
-#endif
-        CTX_END(CTX_TOTAL);
-        
-#ifdef DEVELOPMENT
-        djui_ctx_display_update();
-#endif
-        djui_lua_profiler_update();
-    }
+	if (gCLIOpts.console && gCLIOpts.network == NT_SERVER) {
+		pthread_create(&mainLoopThread, NULL, mainLoopFunc, NULL);
+		char input[256];
+		while (true) {
+			//read console input
+			fgets(input,256,stdin);
+			input[strcspn(input, "\n")] = '\0';
+			
+			if (strlen(input) > 1) {
+				if (!strcmp(input,"stop")) {
+					printf("Server shutting down...");
+					network_shutdown(true,true,false,false);
+					break;
+				}
+				/*else if (!strcmp(input,"restart")) {
+					printf("Restarting...");
+					network_reset_reconnect_and_rehost();
+					network_shutdown(false, false, false, true);
+					static struct Object sHackyObject = { 0 };
+					gMarioStates[0].marioObj = &sHackyObject;
+					network_init(NT_SERVER,true);
+				}*/
+				else if (!memcmp(input,"clear",5)) {
+					clrscr();
+					continue;
+				}
+				else if (!memcmp(input,"say ",4) && strlen(input) > 4) {
+					network_send_chat(&input[4], gNetworkPlayerLocal->globalIndex);
+					continue;
+				}
+				else if (!memcmp(input,"luaf ",5) && strlen(input) > 5) {
+					pthread_mutex_lock(&luaMutex);
+					smlua_exec_file(&input[5]);
+					pthread_mutex_unlock(&luaMutex);
+					continue;
+				}
+				else if (!memcmp(input,"lua ",4) && strlen(input) > 4) {
+					pthread_mutex_lock(&luaMutex);
+					smlua_exec_str(&input[4]);
+					pthread_mutex_unlock(&luaMutex);
+					continue;
+				}
+				
+				//try chat commands
+				pthread_mutex_lock(&luaMutex);
+				extern bool exec_chat_command(char* command);
+				exec_chat_command(input);
+				pthread_mutex_unlock(&luaMutex);
+			}
+		}
+	}
+	else {
+		mainLoopFunc(NULL);
+	}
 
     return 0;
 }

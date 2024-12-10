@@ -381,6 +381,11 @@ endif
 
 ifeq ($(HEADLESS),1)
   $(info Compiling headless)
+  
+  DEFINES += RAPI_DUMMY=1
+  DEFINES += WAPI_DUMMY=1
+  DEFINES += NO_AUDIO=1
+  
   RENDER_API := DUMMY
   WINDOW_API := DUMMY
   AUDIO_API := DUMMY
@@ -438,7 +443,7 @@ TOOLS_DIR := tools
 # on tools and assets, and we use directory globs further down
 # in the makefile that we want should cover assets.)
 
-PYTHON := python3
+PYTHON := py
 
 ifeq ($(filter clean distclean print-%,$(MAKECMDGOALS)),)
 
@@ -477,6 +482,10 @@ _ := $(shell $(PYTHON) $(TOOLS_DIR)/copy_extended_sounds.py)
 BUILD_DIR_BASE := build
 # BUILD_DIR is the location where all build artifacts are placed
 BUILD_DIR := $(BUILD_DIR_BASE)/$(VERSION)_pc
+
+ifeq ($(HEADLESS),1)
+BUILD_DIR := $(BUILD_DIR_BASE)/$(VERSION)_headless
+endif
 
 ifeq ($(WINDOWS_BUILD),1)
 	EXE := $(BUILD_DIR)/sm64coopdx.exe

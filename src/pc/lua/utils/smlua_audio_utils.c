@@ -168,11 +168,13 @@ static struct DynamicPool *sModAudioPool;
 
 static void smlua_audio_custom_init(void) {
     sModAudioPool = dynamic_pool_init();
-
-    ma_result result = ma_engine_init(NULL, &sModAudioEngine);
+	
+	#ifndef NO_AUDIO
+	ma_result result = ma_engine_init(NULL, &sModAudioEngine);
     if (result != MA_SUCCESS) {
         LOG_ERROR("failed to init Miniaudio: %d", result);
     }
+	#endif
 }
 
 static struct ModAudio* find_mod_audio(struct ModFile* file) {
@@ -187,6 +189,9 @@ static struct ModAudio* find_mod_audio(struct ModFile* file) {
 }
 
 static bool audio_sanity_check(struct ModAudio* audio, bool isStream, const char* action) {
+	#ifdef NO_AUDIO
+	return false;
+	#endif
     if (!audio || !audio->loaded) {
         LOG_LUA_LINE("Tried to %s unloaded audio %s", action, audio ? (audio->isStream ? "stream" : "sample") : "(NULL)");
         return false;
@@ -265,6 +270,7 @@ struct ModAudio* audio_load_internal(const char* filename, bool isStream) {
     audio->file = modFile;
 
     // load audio
+	#ifndef NO_AUDIO
     FILE *f = f_open_r(modFile->cachedPath);
     if (!f) {
         LOG_ERROR("failed to load audio file '%s': file not found", filename);
@@ -311,11 +317,12 @@ struct ModAudio* audio_load_internal(const char* filename, bool isStream) {
         LOG_ERROR("failed to load audio file '%s': %d", filename, result);
         return NULL;
     }
-
     audio->buffer = buffer;
     audio->bufferSize = size;
     audio->isStream = isStream;
     audio->loaded = true;
+	#endif
+
     return audio;
 }
 

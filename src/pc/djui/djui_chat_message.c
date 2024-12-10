@@ -66,10 +66,19 @@ void djui_chat_message_create_from(u8 globalIndex, const char* message) {
     snprintf(chatMsg, 256, "%s%s\\#dcdcdc\\: %s", playerColorString, (np != NULL) ? np->name : "Player", message);
 
     play_sound((globalIndex == gNetworkPlayerLocal->globalIndex) ? SOUND_MENU_MESSAGE_DISAPPEAR : SOUND_MENU_MESSAGE_APPEAR, gGlobalSoundSource);
-    djui_chat_message_create(chatMsg);
+    
+	#if defined(RAPI_DUMMY) || defined(WAPI_DUMMY)
+	if (gCLIOpts.console) return;
+	#endif
+	
+	djui_chat_message_create(chatMsg);
 }
 
 void djui_chat_message_create(const char* message) {
+	#if defined(RAPI_DUMMY) || defined(WAPI_DUMMY)
+	if (gCLIOpts.console) printf("%s\n",message);
+	#endif
+	
     if (gDjuiChatBox == NULL || gDjuiChatBox->chatFlow == NULL) { return; }
     struct DjuiChatMessage* chatMessage = calloc(1, sizeof(struct DjuiChatMessage));
     struct DjuiBase* base = &chatMessage->base;

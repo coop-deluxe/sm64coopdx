@@ -17,6 +17,8 @@
 #define DEFAULT_COOPNET_IP "net.coop64.us"
 #define DEFAULT_COOPNET_PORT 34197
 
+#define DEVELOPMENT
+
 typedef struct {
     unsigned int x, y, w, h;
     bool vsync;

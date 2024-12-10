@@ -174,7 +174,7 @@ def main():
         if mio0 == "@sound":
             rom = roms[lang]
             args = [
-                "python3",
+                "py",
                 "tools/disassemble_sound.py",
                 "baserom." + lang + ".z64",
             ]

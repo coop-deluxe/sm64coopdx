@@ -22,9 +22,14 @@ struct CLIOptions {
     unsigned int fullscreen;
     bool skipIntro;
     enum NetworkType network;
+	unsigned int netSystemType;
     unsigned int networkPort;
+    unsigned int maxPlayers;
     char joinIp[IP_MAX_LEN];
     char playerName[MAX_CONFIG_STRING];
+    char coopnetName[MAX_CONFIG_STRING];
+    char coopnetDesc[1024];
+	char coopnetPass[64];
     bool hideLoadingScreen;
     bool skipUpdateCheck;
 };

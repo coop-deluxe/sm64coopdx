@@ -103,6 +103,7 @@ void network_receive_chat(struct Packet* p) {
     if (gNetworkSystem && gNetworkSystem->get_id_str && np->connected && strlen(np->name) > 0) {
         LOG_CONSOLE("[%s] %s: %s", gNetworkSystem->get_id_str(np->localIndex), np->name, remoteMessage);
         LOG_INFO("[%s] %s: %s", gNetworkSystem->get_id_str(np->localIndex), np->name, remoteMessage);
+		printf("[%s]: %s\n", np->name, remoteMessage);
     } else {
         LOG_INFO("rx chat: %s", remoteMessage);
     }

@@ -135,7 +135,7 @@ void discord_activity_update(void) {
         LOG_INFO("no update_activity");
         return;
     }
-
+	
     app.activities->update_activity(app.activities, &sCurActivity, NULL, on_activity_update_callback);
     LOG_INFO("set activity");
 }
