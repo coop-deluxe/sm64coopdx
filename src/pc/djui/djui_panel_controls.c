@@ -28,18 +28,50 @@ void djui_panel_controls_create(struct DjuiBase* caller) {
         int numJoys = SDL_NumJoysticks();
         if (numJoys == 0) { numJoys = 1; }
         if (numJoys > 10) { numJoys = 10; }
-        int strSize = numJoys * 2;
+
         char* gamepadChoices[numJoys];
-        char gamepadChoicesLong[strSize];
+
+        // Get the names of all connected gamepads, if none is provided, use "Unknown"
         for (int i = 0; i < numJoys; i++) {
-            int index = i * 2;
-            if (i > 9) {
-                index += (i - 9);
+            const char* joystickName = SDL_JoystickNameForIndex(i);
+            if (joystickName == NULL) {
+                joystickName = "Unknown";
             }
-            sprintf(&gamepadChoicesLong[index], "%d", i);
-            gamepadChoices[i] = &gamepadChoicesLong[index];
+            gamepadChoices[i] = strdup(joystickName);
         }
+
+        // Check for repeated names and append a number if necessary
+        for (int i = 0; i < numJoys; i++) {
+            int count = 1;
+            for (int j = 0; j < i; j++) {
+                if (strcmp(gamepadChoices[i], gamepadChoices[j]) == 0) {
+                    count++;
+                    char newName[256];
+                    
+                    // If the name is bigger than 9 characters, we need to truncate it first
+                    // Then we can append the number so it fits in the slot
+
+                    // Should we look into making scrolling text for this?
+                    if (strlen(gamepadChoices[i]) > 9) {
+                        snprintf(newName, sizeof(newName), "%.9s... (%d)", gamepadChoices[i], count);
+                    } else {
+                        snprintf(newName, sizeof(newName), "%s (%d)", gamepadChoices[i], count);
+                    }
+                    
+                    // Remove the old string and replace it with the new one
+                    free(gamepadChoices[i]);
+                    gamepadChoices[i] = strdup(newName);
+                }
+            }
+        }
+
+        // Create the button
         djui_selectionbox_create(body, DLANG(CONTROLS, GAMEPAD), gamepadChoices, numJoys, &configGamepadNumber, NULL);
+
+        // Free the memory we don't need anymore
+        for (int i = 0; i < numJoys; i++) {
+            free(gamepadChoices[i]);
+        }
 #endif
 
         djui_slider_create(body, DLANG(CONTROLS, DEADZONE), &configStickDeadzone, 0, 100, djui_panel_controls_value_change);
