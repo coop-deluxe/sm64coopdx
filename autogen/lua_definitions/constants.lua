@@ -3818,6 +3818,9 @@ INTERACT_IGLOO_BARRIER = (1 << 30)
 INTERACT_PLAYER = (1 << 31)
 
 --- @type integer
+MAX_LOCAL_STATE_HISTORY = 30
+
+--- @type integer
 WARP_CHECKPOINT = 0x80
 
 --- @type integer
@@ -12508,13 +12511,13 @@ SPTASK_STATE_FINISHED_DP = 4
 MAX_VERSION_LENGTH = 32
 
 --- @type integer
-MINOR_VERSION_NUMBER = 3
+MINOR_VERSION_NUMBER = 0
 
 --- @type string
-SM64COOPDX_VERSION = "v1.0.4"
+SM64COOPDX_VERSION = "v1.1"
 
 --- @type integer
-VERSION_NUMBER = 37
+VERSION_NUMBER = 38
 
 --- @type string
 VERSION_REGION = "JP"

@@ -145,6 +145,22 @@ C_FIELD bool mod_storage_load_bool(const char* key) {
     return !strcmp(value, "true");
 }
 
+C_FIELD bool mod_storage_exists(const char* key) {
+    if (gLuaActiveMod == NULL) { return false; }
+    if (strlen(key) > MAX_KEY_VALUE_LENGTH) { return false; }
+    if (!char_valid((char *)key)) { return false; }
+
+    char filename[SYS_MAX_PATH] = { 0 };
+    mod_storage_get_filename(filename);
+    if (!fs_sys_path_exists(filename)) { return false; }
+
+    mINI::INIFile file(filename);
+    mINI::INIStructure ini;
+    file.read(ini);
+
+    return ini["storage"].has(key);
+}
+
 C_FIELD bool mod_storage_remove(const char* key) {
     if (gLuaActiveMod == NULL) { return false; }
     if (strlen(key) > MAX_KEY_VALUE_LENGTH) { return false; }

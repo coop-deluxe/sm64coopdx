@@ -4,15 +4,12 @@
 #include "game/hardcoded.h"
 #include "game/object_list_processor.h"
 
+struct ModAudio;
+
 void djui_hud_set_render_behind_hud(bool enable) {
     LOG_LUA_LINE_WARNING("[LUA] djui_hud_set_render_behind_hud() is deprecated! Please use HOOK_ON_HUD_RENDER_BEHIND instead.");
     if (!gLuaActiveMod) { return; }
     gLuaActiveMod->renderBehindHud = enable;
-}
-
-struct ModAudio* audio_stream_load_url(UNUSED const char* url) {
-    LOG_LUA_LINE_WARNING("[LUA] audio_stream_load_url() is deprecated! There is no replacement for this function.");
-    return NULL;
 }
 
 f32 audio_stream_get_tempo(UNUSED struct ModAudio* audio) {

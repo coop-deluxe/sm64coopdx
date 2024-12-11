@@ -7,6 +7,7 @@
 ////////////////
 
 void djui_base_set_visible(struct DjuiBase* base, bool visible) {
+    if (!base) { return; }
     base->visible = visible;
 }
 

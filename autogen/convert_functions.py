@@ -1,5 +1,6 @@
 import os
 import re
+import math
 from extract_functions import *
 from common import *
 
@@ -32,6 +33,7 @@ in_files = [
     "src/pc/network/network_utils.h",
     "src/pc/djui/djui_console.h",
     "src/pc/djui/djui_chat_message.h",
+    "src/pc/djui/djui_language.h",
     "src/game/interaction.h",
     "src/game/level_info.h",
     "src/game/save_file.h",
@@ -74,6 +76,7 @@ override_allowed_functions = {
     "src/audio/external.h":                 [ " play_", "fade", "current_background", "stop_", "sound_banks", "drop_queued_background_music", "sound_get_level_intensity" ],
     "src/game/rumble_init.c":               [ "queue_rumble_", "reset_rumble_timers" ],
     "src/pc/djui/djui_popup.h" :            [ "create" ],
+    "src/pc/djui/djui_language.h" :         [ "djui_language_get" ],
     "src/game/save_file.h":                 [ "save_file_get_", "save_file_set_flags", "save_file_clear_flags", "save_file_reload", "save_file_erase_current_backup_save", "save_file_set_star_flags", "save_file_is_cannon_unlocked", "touch_coin_score_age", "save_file_set_course_coin_score", "save_file_do_save", "save_file_remove_star_flags", "save_file_erase" ],
     "src/pc/lua/utils/smlua_model_utils.h": [ "smlua_model_util_get_id" ],
     "src/game/object_list_processor.h":     [ "set_object_respawn_info_bits" ],
@@ -89,7 +92,7 @@ override_allowed_functions = {
 override_disallowed_functions = {
     "src/audio/external.h":                     [ " func_" ],
     "src/engine/math_util.h":                   [ "atan2f", "vec3s_sub" ],
-    "src/engine/surface_load.h":                [ "alloc_surface_poools" ],
+    "src/engine/surface_load.h":                [ "alloc_surface_pools", "clear_dynamic_surfaces" ],
     "src/engine/surface_collision.h":           [ " debug_", "f32_find_wall_collision" ],
     "src/game/mario_actions_airborne.c":        [ "^[us]32 act_.*" ],
     "src/game/mario_actions_automatic.c":       [ "^[us]32 act_.*" ],
@@ -100,7 +103,7 @@ override_disallowed_functions = {
     "src/game/mario_actions_submerged.c":       [ "^[us]32 act_.*" ],
     "src/game/mario_step.h":                    [ " stub_mario_step", "transfer_bully_speed" ],
     "src/game/mario.h":                         [ " init_mario" ],
-    "src/pc/djui/djui_console.h":               [ " djui_console_create", "djui_console_message_create" ],
+    "src/pc/djui/djui_console.h":               [ " djui_console_create", "djui_console_message_create", "djui_console_message_dequeue" ],
     "src/pc/djui/djui_chat_message.h":          [ "create_from" ],
     "src/game/interaction.h":                   [ "process_interaction", "_handle_" ],
     "src/game/sound_init.h":                    [ "_loop_", "thread4_", "set_sound_mode" ],
@@ -119,7 +122,7 @@ override_disallowed_functions = {
     "src/pc/lua/utils/smlua_level_utils.h":     [ "smlua_level_util_reset" ],
     "src/pc/lua/utils/smlua_text_utils.h":      [ "smlua_text_utils_init", "smlua_text_utils_shutdown", "smlua_text_utils_reset_all" ],
     "src/pc/lua/utils/smlua_anim_utils.h":      [ "smlua_anim_util_reset", "smlua_anim_util_register_animation" ],
-    "src/pc/network/lag_compensation.h":        [ "lag_compensation_clear", "lag_compensation_store" ],
+    "src/pc/network/lag_compensation.h":        [ "lag_compensation_clear" ],
     "src/game/first_person_cam.h":              [ "first_person_update" ],
     "src/pc/lua/utils/smlua_collision_utils.h": [ "collision_find_surface_on_ray" ],
     "src/engine/behavior_script.h":             [ "stub_behavior_script_2", "cur_obj_update" ]
@@ -810,6 +813,7 @@ N/A
 ############################################################################
 
 total_functions = 0
+total_doc_functions = 0
 header_h = ""
 
 def reject_line(line):
@@ -976,6 +980,9 @@ def build_function(function, do_extern):
     else:
         global total_functions
         total_functions += 1
+        if function['description'] != "":
+            global total_doc_functions
+            total_doc_functions += 1
 
     return s + "\n"
 
@@ -1022,7 +1029,7 @@ def build_includes():
 
 ############################################################################
 
-def process_function(fname, line):
+def process_function(fname, line, description):
     if fname in override_allowed_functions:
         found_match = False
         for pattern in override_allowed_functions[fname]:
@@ -1041,6 +1048,7 @@ def process_function(fname, line):
 
     line = line.strip()
     function['line'] = line
+    function['description'] = description  # use the specific description passed in
 
     line = line.replace('UNUSED', '')
 
@@ -1084,18 +1092,19 @@ def process_function(fname, line):
 
     return function
 
-def process_functions(fname, file_str):
+def process_functions(fname, file_str, extracted_descriptions):
     functions = []
     for line in file_str.splitlines():
         if reject_line(line):
             global rejects
             rejects += line + '\n'
             continue
-        fn = process_function(fname, line)
+        line = line.strip()
+        description = extracted_descriptions.get(line, "")
+        fn = process_function(fname, line, description)
         if fn == None:
             continue
         functions.append(fn)
-
     functions = sorted(functions, key=lambda d: d['identifier'])
     return functions
 
@@ -1104,8 +1113,8 @@ def process_file(fname):
     processed_file['filename'] = fname.replace('\\', '/').split('/')[-1]
     processed_file['extern'] = fname.endswith('.c')
 
-    extracted_str = extract_functions(fname)
-    processed_file['functions'] = process_functions(fname, extracted_str)
+    extracted_str, extracted_descriptions = extract_functions(fname)
+    processed_file['functions'] = process_functions(fname, extracted_str, extracted_descriptions)
 
     return processed_file
 
@@ -1234,8 +1243,14 @@ def doc_function(fname, function):
     fid = function['identifier']
     s = '\n## [%s](#%s)\n' % (fid, fid)
 
+    description = function.get('description', "")
+
     rtype, rlink = translate_type_to_lua(function['type'])
     param_str = ', '.join([x['identifier'] for x in function['params']])
+
+    if description != "":
+        s += '\n### Description\n'
+        s +=  f'{description}\n'
 
     s += "\n### Lua Example\n"
     if rtype != None:
@@ -1362,6 +1377,9 @@ def def_function(function):
     if rtype == None:
         rtype = 'nil'
 
+    if function['description'].startswith("[DEPRECATED"):
+        s += "--- @deprecated\n"
+
     for param in function['params']:
         pid = param['identifier']
         ptype = param['type']
@@ -1379,6 +1397,8 @@ def def_function(function):
 
     if rtype != "nil":
         s += '--- @return %s\n' % rtype
+    if function['description'] != "":
+        s += "--- %s\n" % (function['description'])
     s += "function %s(%s)\n    -- ...\nend\n\n" % (fid, param_str)
 
     return s
@@ -1415,13 +1435,16 @@ def main():
     with open(filename, 'w', newline='\n') as out:
         out.write(gen)
 
-    print('REJECTS:\n%s' % rejects)
+    if rejects != "":
+        print(f"REJECTS:\n{rejects}")
 
     doc_files(processed_files)
     def_files(processed_files)
 
     global total_functions
-    print('Total functions: ' + str(total_functions))
+    print(f"Total functions: {total_functions}")
+    global total_doc_functions
+    print(f"Total documented functions: {total_doc_functions} ({round((total_doc_functions / total_functions) * 100, 2)}%)")
 
     if len(sys.argv) >= 2 and sys.argv[1] == 'fuzz':
         output_fuzz_file()

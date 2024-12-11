@@ -15,8 +15,7 @@ void bhv_warp_loop(void) {
     o->oInteractStatus = 0;
 }
 
-void bhv_fading_warp_loop() // identical to the above function except for o->hitboxRadius
-{
+void bhv_fading_warp_loop(void) { // identical to the above function except for o->hitboxRadius
     u16 sp6;
     if (o->oTimer == 0) {
         sp6 = (o->oBehParams >> 24) & 0xFF;

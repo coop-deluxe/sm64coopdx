@@ -2,8 +2,284 @@
 
 ---
 
-[< prev](functions-2.md) | [1](functions.md) | [2](functions-2.md) | 3 | [4](functions-4.md) | [5](functions-5.md) | [next >](functions-4.md)]
+[< prev](functions-2.md) | [1](functions.md) | [2](functions-2.md) | 3 | [4](functions-4.md) | [5](functions-5.md) | [6](functions-6.md) | [next >](functions-4.md)]
 
+
+---
+# functions from behavior_script.h
+
+<br />
+
+
+## [draw_distance_scalar](#draw_distance_scalar)
+
+### Description
+Gets the draw distance scalar
+
+### Lua Example
+`local numberValue = draw_distance_scalar()`
+
+### Parameters
+- None
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 draw_distance_scalar(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_update_gfx_pos_and_angle](#obj_update_gfx_pos_and_angle)
+
+### Description
+Updates an object's graphical position and angle
+
+### Lua Example
+`obj_update_gfx_pos_and_angle(obj)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| obj | [Object](structs.md#Object) |
+
+### Returns
+- None
+
+### C Prototype
+`void obj_update_gfx_pos_and_angle(struct Object *obj);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [position_based_random_float_position](#position_based_random_float_position)
+
+### Description
+Sets the current object's position to random floats between 0.0 and 1.0
+
+### Lua Example
+`local numberValue = position_based_random_float_position()`
+
+### Parameters
+- None
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 position_based_random_float_position(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [position_based_random_u16](#position_based_random_u16)
+
+### Description
+Sets the current object's position to random integers between 0 and 65536
+
+### Lua Example
+`local integerValue = position_based_random_u16()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u16 position_based_random_u16(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [random_float](#random_float)
+
+### Description
+Generates a pseudo random float between 0.0 and 1.0
+
+### Lua Example
+`local numberValue = random_float()`
+
+### Parameters
+- None
+
+### Returns
+- `number`
+
+### C Prototype
+`float random_float(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [random_sign](#random_sign)
+
+### Description
+Returns either 1 or -1 with a pseudo 50:50 chance
+
+### Lua Example
+`local integerValue = random_sign()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 random_sign(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [random_u16](#random_u16)
+
+### Description
+Generates a pseudo random integer between 0 and 65535
+
+### Lua Example
+`local integerValue = random_u16()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u16 random_u16(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
+# functions from behavior_table.h
+
+<br />
+
+
+## [get_behavior_from_id](#get_behavior_from_id)
+
+### Description
+Gets a behavior script from a behavior ID
+
+### Lua Example
+`local PointerValue = get_behavior_from_id(id)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| id | [enum BehaviorId](constants.md#enum-BehaviorId) |
+
+### Returns
+- `Pointer` <`BehaviorScript`>
+
+### C Prototype
+`const BehaviorScript* get_behavior_from_id(enum BehaviorId id);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_behavior_name_from_id](#get_behavior_name_from_id)
+
+### Description
+Gets a behavior name from a behavior ID (bhvMyGreatMODCustom004)
+
+### Lua Example
+`local stringValue = get_behavior_name_from_id(id)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| id | [enum BehaviorId](constants.md#enum-BehaviorId) |
+
+### Returns
+- `string`
+
+### C Prototype
+`const char* get_behavior_name_from_id(enum BehaviorId id);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_id_from_behavior](#get_id_from_behavior)
+
+### Description
+Gets a behavior ID from a behavior script
+
+### Lua Example
+`local enumValue = get_id_from_behavior(behavior)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| behavior | `Pointer` <`BehaviorScript`> |
+
+### Returns
+[enum BehaviorId](constants.md#enum-BehaviorId)
+
+### C Prototype
+`enum BehaviorId get_id_from_behavior(const BehaviorScript* behavior);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_id_from_behavior_name](#get_id_from_behavior_name)
+
+### Description
+gets a behavior ID from a behavior name
+
+### Lua Example
+`local enumValue = get_id_from_behavior_name(name)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| name | `string` |
+
+### Returns
+[enum BehaviorId](constants.md#enum-BehaviorId)
+
+### C Prototype
+`enum BehaviorId get_id_from_behavior_name(const char* name);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_id_from_vanilla_behavior](#get_id_from_vanilla_behavior)
+
+### Description
+Gets a behavior ID from only vanilla behavior scripts
+
+### Lua Example
+`local enumValue = get_id_from_vanilla_behavior(behavior)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| behavior | `Pointer` <`BehaviorScript`> |
+
+### Returns
+[enum BehaviorId](constants.md#enum-BehaviorId)
+
+### C Prototype
+`enum BehaviorId get_id_from_vanilla_behavior(const BehaviorScript* behavior);`
+
+[:arrow_up_small:](#)
+
+<br />
 
 ---
 # functions from camera.h
@@ -1918,6 +2194,9 @@
 
 ## [get_character_anim](#get_character_anim)
 
+### Description
+Gets the animation ID to use for a specific character and animation combination. The ID is based on `characterAnim` and the character currently controlled by Mario (`m`). Useful for determining which animation to play for actions like walking, jumping, or idle states
+
 ### Lua Example
 `local integerValue = get_character_anim(m, characterAnim)`
 
@@ -1939,6 +2218,9 @@
 
 ## [get_character_anim_offset](#get_character_anim_offset)
 
+### Description
+Calculates the animation offset for Mario's current animation. The offset is determined by the type of animation being played (e.g., hand, feet, or torso movement). Useful for smoothly syncing Mario's model height or positional adjustments during animations
+
 ### Lua Example
 `local numberValue = get_character_anim_offset(m)`
 
@@ -1958,6 +2240,9 @@
 <br />
 
 ## [play_character_sound](#play_character_sound)
+
+### Description
+Plays a character-specific sound based on the given `characterSound` value. The sound is tied to Mario's current state (`m`). Useful for triggering sound effects for actions like jumping or interacting with the environment
 
 ### Lua Example
 `play_character_sound(m, characterSound)`
@@ -1979,6 +2264,9 @@
 <br />
 
 ## [play_character_sound_if_no_flag](#play_character_sound_if_no_flag)
+
+### Description
+Plays a character-specific sound only if certain flags are not set. This ensures that sounds are not repeated unnecessarily. The sound is based on `characterSound`, and the flags are checked using `flags`. Useful for avoiding duplicate sound effects in rapid succession or conditional actions
 
 ### Lua Example
 `play_character_sound_if_no_flag(m, characterSound, flags)`
@@ -2002,6 +2290,9 @@
 
 ## [play_character_sound_offset](#play_character_sound_offset)
 
+### Description
+Plays a character-specific sound with an additional `offset`, allowing variations or delays in the sound effect. Uses Mario's current state (`m`). Useful for adding dynamic sound effects or syncing sounds to specific animations or events
+
 ### Lua Example
 `play_character_sound_offset(m, characterSound, offset)`
 
@@ -2023,6 +2314,9 @@
 <br />
 
 ## [update_character_anim_offset](#update_character_anim_offset)
+
+### Description
+Updates Mario's current animation offset. This adjusts Mario's position based on the calculated offset to ensure animations appear smooth and natural. Useful for keeping Mario's animations visually aligned, particularly when transitioning between animations
 
 ### Lua Example
 `update_character_anim_offset(m)`
@@ -2050,6 +2344,9 @@
 
 ## [djui_chat_message_create](#djui_chat_message_create)
 
+### Description
+Creates a `message` in the game's chat box
+
 ### Lua Example
 `djui_chat_message_create(message)`
 
@@ -2074,25 +2371,10 @@
 <br />
 
 
-## [djui_console_message_dequeue](#djui_console_message_dequeue)
-
-### Lua Example
-`djui_console_message_dequeue()`
-
-### Parameters
-- None
-
-### Returns
-- None
-
-### C Prototype
-`void djui_console_message_dequeue(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
 ## [djui_console_toggle](#djui_console_toggle)
+
+### Description
+Toggles the visibility of the DJUI console
 
 ### Lua Example
 `djui_console_toggle()`
@@ -2118,6 +2400,9 @@
 
 ## [djui_hud_get_color](#djui_hud_get_color)
 
+### Description
+Gets the current DJUI HUD color
+
 ### Lua Example
 `local DjuiColorValue = djui_hud_get_color()`
 
@@ -2135,6 +2420,9 @@
 <br />
 
 ## [djui_hud_get_filter](#djui_hud_get_filter)
+
+### Description
+Gets the current DJUI HUD texture filter
 
 ### Lua Example
 `local integerValue = djui_hud_get_filter()`
@@ -2154,6 +2442,9 @@
 
 ## [djui_hud_get_font](#djui_hud_get_font)
 
+### Description
+Gets the current DJUI HUD font
+
 ### Lua Example
 `local integerValue = djui_hud_get_font()`
 
@@ -2171,6 +2462,9 @@
 <br />
 
 ## [djui_hud_get_fov_coeff](#djui_hud_get_fov_coeff)
+
+### Description
+Gets the camera FOV coefficient
 
 ### Lua Example
 `local numberValue = djui_hud_get_fov_coeff()`
@@ -2190,6 +2484,9 @@
 
 ## [djui_hud_get_mouse_x](#djui_hud_get_mouse_x)
 
+### Description
+Returns the x coordinate of the mouse relative to the window
+
 ### Lua Example
 `local numberValue = djui_hud_get_mouse_x()`
 
@@ -2207,6 +2504,9 @@
 <br />
 
 ## [djui_hud_get_mouse_y](#djui_hud_get_mouse_y)
+
+### Description
+Returns the y coordinate of the mouse relative to the window
 
 ### Lua Example
 `local numberValue = djui_hud_get_mouse_y()`
@@ -2226,6 +2526,9 @@
 
 ## [djui_hud_get_raw_mouse_x](#djui_hud_get_raw_mouse_x)
 
+### Description
+Returns the x coordinate of the mouse relative to the screen
+
 ### Lua Example
 `local numberValue = djui_hud_get_raw_mouse_x()`
 
@@ -2243,6 +2546,9 @@
 <br />
 
 ## [djui_hud_get_raw_mouse_y](#djui_hud_get_raw_mouse_y)
+
+### Description
+Returns the y coordinate of the mouse relative to the screen
 
 ### Lua Example
 `local numberValue = djui_hud_get_raw_mouse_y()`
@@ -2262,6 +2568,9 @@
 
 ## [djui_hud_get_resolution](#djui_hud_get_resolution)
 
+### Description
+Gets the current DJUI HUD resolution
+
 ### Lua Example
 `local integerValue = djui_hud_get_resolution()`
 
@@ -2279,6 +2588,9 @@
 <br />
 
 ## [djui_hud_get_rotation](#djui_hud_get_rotation)
+
+### Description
+Gets the current DJUI HUD rotation
 
 ### Lua Example
 `local HudUtilsRotationValue = djui_hud_get_rotation()`
@@ -2298,6 +2610,9 @@
 
 ## [djui_hud_get_screen_height](#djui_hud_get_screen_height)
 
+### Description
+Gets the screen height in the current DJUI HUD resolution
+
 ### Lua Example
 `local integerValue = djui_hud_get_screen_height()`
 
@@ -2315,6 +2630,9 @@
 <br />
 
 ## [djui_hud_get_screen_width](#djui_hud_get_screen_width)
+
+### Description
+Gets the screen width in the current DJUI HUD resolution
 
 ### Lua Example
 `local integerValue = djui_hud_get_screen_width()`
@@ -2334,6 +2652,9 @@
 
 ## [djui_hud_is_pause_menu_created](#djui_hud_is_pause_menu_created)
 
+### Description
+Checks if the DJUI pause menu is created
+
 ### Lua Example
 `local booleanValue = djui_hud_is_pause_menu_created()`
 
@@ -2351,6 +2672,9 @@
 <br />
 
 ## [djui_hud_measure_text](#djui_hud_measure_text)
+
+### Description
+Measures the length of `message` in the current font
 
 ### Lua Example
 `local numberValue = djui_hud_measure_text(message)`
@@ -2371,6 +2695,9 @@
 <br />
 
 ## [djui_hud_print_text](#djui_hud_print_text)
+
+### Description
+Prints DJUI HUD text onto the screen
 
 ### Lua Example
 `djui_hud_print_text(message, x, y, scale)`
@@ -2394,6 +2721,9 @@
 <br />
 
 ## [djui_hud_print_text_interpolated](#djui_hud_print_text_interpolated)
+
+### Description
+Prints interpolated DJUI HUD text onto the screen
 
 ### Lua Example
 `djui_hud_print_text_interpolated(message, prevX, prevY, prevScale, x, y, scale)`
@@ -2421,6 +2751,9 @@
 
 ## [djui_hud_render_rect](#djui_hud_render_rect)
 
+### Description
+Renders a DJUI HUD rect onto the screen
+
 ### Lua Example
 `djui_hud_render_rect(x, y, width, height)`
 
@@ -2443,6 +2776,9 @@
 <br />
 
 ## [djui_hud_render_rect_interpolated](#djui_hud_render_rect_interpolated)
+
+### Description
+Renders an interpolated DJUI HUD rect onto the screen
 
 ### Lua Example
 `djui_hud_render_rect_interpolated(prevX, prevY, prevWidth, prevHeight, x, y, width, height)`
@@ -2471,6 +2807,9 @@
 
 ## [djui_hud_reset_color](#djui_hud_reset_color)
 
+### Description
+Resets the current DJUI HUD color
+
 ### Lua Example
 `djui_hud_reset_color()`
 
@@ -2488,6 +2827,9 @@
 <br />
 
 ## [djui_hud_set_color](#djui_hud_set_color)
+
+### Description
+Sets the current DJUI HUD color
 
 ### Lua Example
 `djui_hud_set_color(r, g, b, a)`
@@ -2512,6 +2854,9 @@
 
 ## [djui_hud_set_filter](#djui_hud_set_filter)
 
+### Description
+Sets the current DJUI HUD texture filter
+
 ### Lua Example
 `djui_hud_set_filter(filterType)`
 
@@ -2531,6 +2876,9 @@
 <br />
 
 ## [djui_hud_set_font](#djui_hud_set_font)
+
+### Description
+Sets the current DJUI HUD font
 
 ### Lua Example
 `djui_hud_set_font(fontType)`
@@ -2552,6 +2900,9 @@
 
 ## [djui_hud_set_mouse_locked](#djui_hud_set_mouse_locked)
 
+### Description
+Sets if the cursor is hidden and constrainted to the window
+
 ### Lua Example
 `djui_hud_set_mouse_locked(locked)`
 
@@ -2572,6 +2923,9 @@
 
 ## [djui_hud_set_resolution](#djui_hud_set_resolution)
 
+### Description
+Sets the current DJUI HUD resolution
+
 ### Lua Example
 `djui_hud_set_resolution(resolutionType)`
 
@@ -2591,6 +2945,9 @@
 <br />
 
 ## [djui_hud_set_rotation](#djui_hud_set_rotation)
+
+### Description
+Sets the current DJUI HUD rotation
 
 ### Lua Example
 `djui_hud_set_rotation(rotation, pivotX, pivotY)`
@@ -2613,6 +2970,9 @@
 <br />
 
 ## [djui_hud_set_rotation_interpolated](#djui_hud_set_rotation_interpolated)
+
+### Description
+Sets the current DJUI HUD rotation interpolated
 
 ### Lua Example
 `djui_hud_set_rotation_interpolated(prevRotation, prevPivotX, prevPivotY, rotation, pivotX, pivotY)`
@@ -2639,6 +2999,9 @@
 
 ## [djui_hud_world_pos_to_screen_pos](#djui_hud_world_pos_to_screen_pos)
 
+### Description
+Converts a world position to screen position
+
 ### Lua Example
 `local booleanValue = djui_hud_world_pos_to_screen_pos(pos, out)`
 
@@ -2660,6 +3023,9 @@
 
 ## [djui_open_pause_menu](#djui_open_pause_menu)
 
+### Description
+Opens the DJUI pause menu
+
 ### Lua Example
 `djui_open_pause_menu()`
 
@@ -2678,6 +3044,9 @@
 
 ## [get_current_fov](#get_current_fov)
 
+### Description
+Gets the current camera FOV
+
 ### Lua Example
 `local numberValue = get_current_fov()`
 
@@ -2695,12 +3064,45 @@
 <br />
 
 ---
+# functions from djui_language.h
+
+<br />
+
+
+## [djui_language_get](#djui_language_get)
+
+### Description
+Gets a language `key` from a `section`
+
+### Lua Example
+`local stringValue = djui_language_get(section, key)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| section | `string` |
+| key | `string` |
+
+### Returns
+- `string`
+
+### C Prototype
+`char* djui_language_get(const char *section, const char *key);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
 # functions from djui_popup.h
 
 <br />
 
 
 ## [djui_popup_create](#djui_popup_create)
+
+### Description
+Creates a popup that says `message` and has `lines`
 
 ### Lua Example
 `djui_popup_create(message, lines)`
@@ -3367,6 +3769,9 @@
 
 ## [first_person_check_cancels](#first_person_check_cancels)
 
+### Description
+Checks common cancels for first person
+
 ### Lua Example
 `local booleanValue = first_person_check_cancels(m)`
 
@@ -3387,6 +3792,9 @@
 
 ## [first_person_reset](#first_person_reset)
 
+### Description
+Resets first person
+
 ### Lua Example
 `first_person_reset()`
 
@@ -3405,6 +3813,9 @@
 
 ## [get_first_person_enabled](#get_first_person_enabled)
 
+### Description
+Checks if first person is enabled
+
 ### Lua Example
 `local booleanValue = get_first_person_enabled()`
 
@@ -3422,6 +3833,9 @@
 <br />
 
 ## [set_first_person_enabled](#set_first_person_enabled)
+
+### Description
+Sets if first person is enabled
 
 ### Lua Example
 `set_first_person_enabled(enable)`
@@ -4712,6 +5126,9 @@
 
 ## [lag_compensation_get_local_state](#lag_compensation_get_local_state)
 
+### Description
+Gets the local Mario's state stored in lag compensation history
+
 ### Lua Example
 `local MarioStateValue = lag_compensation_get_local_state(otherNp)`
 
@@ -4730,6 +5147,69 @@
 
 <br />
 
+## [lag_compensation_get_local_state_index](#lag_compensation_get_local_state_index)
+
+### Description
+Gets the local Mario's state index
+
+### Lua Example
+`local integerValue = lag_compensation_get_local_state_index()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 lag_compensation_get_local_state_index(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [lag_compensation_get_local_state_ready](#lag_compensation_get_local_state_ready)
+
+### Description
+Checks if lag compensation history is ready
+
+### Lua Example
+`local booleanValue = lag_compensation_get_local_state_ready()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool lag_compensation_get_local_state_ready(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [lag_compensation_store](#lag_compensation_store)
+
+### Description
+Stores the local Mario's current state in lag compensation history
+
+### Lua Example
+`lag_compensation_store()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void lag_compensation_store(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ---
 # functions from level_info.h
 
@@ -4737,6 +5217,9 @@
 
 
 ## [get_level_name](#get_level_name)
+
+### Description
+Returns the name of the level corresponding to `courseNum`, `levelNum` and `areaIndex` as a decapitalized ASCII (human readable) string
 
 ### Lua Example
 `local stringValue = get_level_name(courseNum, levelNum, areaIndex)`
@@ -4759,6 +5242,9 @@
 <br />
 
 ## [get_level_name_ascii](#get_level_name_ascii)
+
+### Description
+Returns the name of the level corresponding to `courseNum`, `levelNum` and `areaIndex` as an ASCII (human readable) string. Set `charCase` to 1 to capitalize or -1 to decapitalize the returned string
 
 ### Lua Example
 `local stringValue = get_level_name_ascii(courseNum, levelNum, areaIndex, charCase)`
@@ -4806,6 +5292,9 @@
 
 ## [get_star_name](#get_star_name)
 
+### Description
+Returns the name of the star corresponding to `courseNum` and `starNum` as a decapitalized ASCII (human readable) string
+
 ### Lua Example
 `local stringValue = get_star_name(courseNum, starNum)`
 
@@ -4826,6 +5315,9 @@
 <br />
 
 ## [get_star_name_ascii](#get_star_name_ascii)
+
+### Description
+Returns the name of the star corresponding to `courseNum` and `starNum` as an ASCII (human readable) string. Set `charCase` to 1 to capitalize or -1 to decapitalize the returned string
 
 ### Lua Example
 `local stringValue = get_star_name_ascii(courseNum, starNum, charCase)`
@@ -4876,6 +5368,9 @@
 
 
 ## [area_create_warp_node](#area_create_warp_node)
+
+### Description
+Creates a warp node in the current level and area with id `id` that goes to the warp node `destNode` in level `destLevel` and area `destArea`, and attach it to the object `o`. To work properly, object `o` must be able to trigger a warp (for example, with interact type set to `INTERACT_WARP`.) `checkpoint` should be set only to WARP_NO_CHECKPOINT (0x00) or WARP_CHECKPOINT (0x80.) If `checkpoint` is set to `0x80`, Mario will warp directly to this node if he enters the level again (after a death for example)
 
 ### Lua Example
 `local ObjectWarpNodeValue = area_create_warp_node(id, destLevel, destArea, destNode, checkpoint, o)`
@@ -7933,643 +8428,7 @@
 [:arrow_up_small:](#)
 
 <br />
-
----
-# functions from mario_actions_stationary.c
-
-<br />
-
-
-## [check_common_hold_idle_cancels](#check_common_hold_idle_cancels)
-
-### Lua Example
-`local integerValue = check_common_hold_idle_cancels(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 check_common_hold_idle_cancels(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [check_common_idle_cancels](#check_common_idle_cancels)
-
-### Lua Example
-`local integerValue = check_common_idle_cancels(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 check_common_idle_cancels(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [check_common_landing_cancels](#check_common_landing_cancels)
-
-### Lua Example
-`local integerValue = check_common_landing_cancels(m, action)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| action | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 check_common_landing_cancels(struct MarioState *m, u32 action);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [check_common_stationary_cancels](#check_common_stationary_cancels)
-
-### Lua Example
-`local integerValue = check_common_stationary_cancels(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 check_common_stationary_cancels(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [landing_step](#landing_step)
-
-### Lua Example
-`local integerValue = landing_step(m, arg1, action)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| arg1 | `integer` |
-| action | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 landing_step(struct MarioState *m, s32 arg1, u32 action);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [mario_execute_stationary_action](#mario_execute_stationary_action)
-
-### Lua Example
-`local integerValue = mario_execute_stationary_action(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 mario_execute_stationary_action(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [play_anim_sound](#play_anim_sound)
-
-### Lua Example
-`play_anim_sound(m, actionState, animFrame, sound)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| actionState | `integer` |
-| animFrame | `integer` |
-| sound | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void play_anim_sound(struct MarioState *m, u32 actionState, s32 animFrame, u32 sound);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [stopping_step](#stopping_step)
-
-### Lua Example
-`stopping_step(m, animID, action)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| animID | `integer` |
-| action | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void stopping_step(struct MarioState *m, s32 animID, u32 action);`
-
-[:arrow_up_small:](#)
-
-<br />
-
----
-# functions from mario_actions_submerged.c
-
-<br />
-
-
-## [apply_water_current](#apply_water_current)
-
-### Lua Example
-`apply_water_current(m, step)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| step | [Vec3f](structs.md#Vec3f) |
-
-### Returns
-- None
-
-### C Prototype
-`void apply_water_current(struct MarioState *m, Vec3f step);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [float_surface_gfx](#float_surface_gfx)
-
-### Lua Example
-`float_surface_gfx(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- None
-
-### C Prototype
-`void float_surface_gfx(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [mario_execute_submerged_action](#mario_execute_submerged_action)
-
-### Lua Example
-`local integerValue = mario_execute_submerged_action(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 mario_execute_submerged_action(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [perform_water_full_step](#perform_water_full_step)
-
-### Lua Example
-`local integerValue = perform_water_full_step(m, nextPos)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| nextPos | [Vec3f](structs.md#Vec3f) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`u32 perform_water_full_step(struct MarioState *m, Vec3f nextPos);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [perform_water_step](#perform_water_step)
-
-### Lua Example
-`local integerValue = perform_water_step(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`u32 perform_water_step(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [set_swimming_at_surface_particles](#set_swimming_at_surface_particles)
-
-### Lua Example
-`set_swimming_at_surface_particles(m, particleFlag)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| particleFlag | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void set_swimming_at_surface_particles(struct MarioState *m, u32 particleFlag);`
-
-[:arrow_up_small:](#)
-
-<br />
-
----
-# functions from mario_misc.h
-
-<br />
-
-
-## [bhv_toad_message_init](#bhv_toad_message_init)
-
-### Lua Example
-`bhv_toad_message_init()`
-
-### Parameters
-- None
-
-### Returns
-- None
-
-### C Prototype
-`void bhv_toad_message_init(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [bhv_toad_message_loop](#bhv_toad_message_loop)
-
-### Lua Example
-`bhv_toad_message_loop()`
-
-### Parameters
-- None
-
-### Returns
-- None
-
-### C Prototype
-`void bhv_toad_message_loop(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [bhv_unlock_door_star_init](#bhv_unlock_door_star_init)
-
-### Lua Example
-`bhv_unlock_door_star_init()`
-
-### Parameters
-- None
-
-### Returns
-- None
-
-### C Prototype
-`void bhv_unlock_door_star_init(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [bhv_unlock_door_star_loop](#bhv_unlock_door_star_loop)
-
-### Lua Example
-`bhv_unlock_door_star_loop()`
-
-### Parameters
-- None
-
-### Returns
-- None
-
-### C Prototype
-`void bhv_unlock_door_star_loop(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
----
-# functions from mario_step.h
-
-<br />
-
-
-## [get_additive_y_vel_for_jumps](#get_additive_y_vel_for_jumps)
-
-### Lua Example
-`local numberValue = get_additive_y_vel_for_jumps()`
-
-### Parameters
-- None
-
-### Returns
-- `number`
-
-### C Prototype
-`f32 get_additive_y_vel_for_jumps(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [init_bully_collision_data](#init_bully_collision_data)
-
-### Lua Example
-`init_bully_collision_data(data, posX, posZ, forwardVel, yaw, conversionRatio, radius)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| data | [BullyCollisionData](structs.md#BullyCollisionData) |
-| posX | `number` |
-| posZ | `number` |
-| forwardVel | `number` |
-| yaw | `integer` |
-| conversionRatio | `number` |
-| radius | `number` |
-
-### Returns
-- None
-
-### C Prototype
-`void init_bully_collision_data(struct BullyCollisionData *data, f32 posX, f32 posZ, f32 forwardVel, s16 yaw, f32 conversionRatio, f32 radius);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [mario_bonk_reflection](#mario_bonk_reflection)
-
-### Lua Example
-`mario_bonk_reflection(arg0, arg1)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| arg0 | [MarioState](structs.md#MarioState) |
-| arg1 | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void mario_bonk_reflection(struct MarioState *, u32);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [mario_push_off_steep_floor](#mario_push_off_steep_floor)
-
-### Lua Example
-`local integerValue = mario_push_off_steep_floor(arg0, arg1, arg2)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| arg0 | [MarioState](structs.md#MarioState) |
-| arg1 | `integer` |
-| arg2 | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`u32 mario_push_off_steep_floor(struct MarioState *, u32, u32);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [mario_update_moving_sand](#mario_update_moving_sand)
-
-### Lua Example
-`local integerValue = mario_update_moving_sand(arg0)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| arg0 | [MarioState](structs.md#MarioState) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`u32 mario_update_moving_sand(struct MarioState *);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [mario_update_quicksand](#mario_update_quicksand)
-
-### Lua Example
-`local integerValue = mario_update_quicksand(arg0, arg1)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| arg0 | [MarioState](structs.md#MarioState) |
-| arg1 | `number` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`u32 mario_update_quicksand(struct MarioState *, f32);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [mario_update_windy_ground](#mario_update_windy_ground)
-
-### Lua Example
-`local integerValue = mario_update_windy_ground(arg0)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| arg0 | [MarioState](structs.md#MarioState) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`u32 mario_update_windy_ground(struct MarioState *);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [perform_air_step](#perform_air_step)
-
-### Lua Example
-`local integerValue = perform_air_step(arg0, arg1)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| arg0 | [MarioState](structs.md#MarioState) |
-| arg1 | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 perform_air_step(struct MarioState *, u32);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [perform_ground_step](#perform_ground_step)
-
-### Lua Example
-`local integerValue = perform_ground_step(arg0)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| arg0 | [MarioState](structs.md#MarioState) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 perform_ground_step(struct MarioState *);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [set_vel_from_pitch_and_yaw](#set_vel_from_pitch_and_yaw)
-
-### Lua Example
-`set_vel_from_pitch_and_yaw(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- None
-
-### C Prototype
-`void set_vel_from_pitch_and_yaw(struct MarioState* m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [stationary_ground_step](#stationary_ground_step)
-
-### Lua Example
-`local integerValue = stationary_ground_step(arg0)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| arg0 | [MarioState](structs.md#MarioState) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 stationary_ground_step(struct MarioState *);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [stop_and_set_height_to_floor](#stop_and_set_height_to_floor)
-
-### Lua Example
-`stop_and_set_height_to_floor(arg0)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| arg0 | [MarioState](structs.md#MarioState) |
-
-### Returns
-- None
-
-### C Prototype
-`void stop_and_set_height_to_floor(struct MarioState *);`
-
-[:arrow_up_small:](#)
-
-<br />
 ---
 
-[< prev](functions-2.md) | [1](functions.md) | [2](functions-2.md) | 3 | [4](functions-4.md) | [5](functions-5.md) | [next >](functions-4.md)]
+[< prev](functions-2.md) | [1](functions.md) | [2](functions-2.md) | 3 | [4](functions-4.md) | [5](functions-5.md) | [6](functions-6.md) | [next >](functions-4.md)]
 

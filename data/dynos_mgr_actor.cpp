@@ -180,12 +180,14 @@ void DynOS_Actor_Override_All(void) {
     for (s32 list : { OBJ_LIST_PLAYER, OBJ_LIST_DESTRUCTIVE, OBJ_LIST_GENACTOR, OBJ_LIST_PUSHABLE, OBJ_LIST_LEVEL, OBJ_LIST_DEFAULT, OBJ_LIST_SURFACE, OBJ_LIST_POLELIKE, OBJ_LIST_UNIMPORTANT }) {
         struct Object *_Head = (struct Object *) &gObjectLists[list];
         for (struct Object *_Object = (struct Object *) _Head->header.next; _Object != _Head; _Object = (struct Object *) _Object->header.next) {
-            if (_Object->header.gfx.sharedChild != NULL && _Object->header.gfx.sharedChild->georef != NULL) {
-                GraphNode* georef = (GraphNode*)_Object->header.gfx.sharedChild->georef;
-                u32 id = 0;
-                _Object->header.gfx.sharedChild = DynOS_Model_LoadGeo(&id, MODEL_POOL_PERMANENT, georef, true);
+            if (_Object->activeFlags && _Object->header.gfx.sharedChild != NULL) {
+                if (_Object->header.gfx.sharedChild->georef != NULL) {
+                    GraphNode* georef = (GraphNode*)_Object->header.gfx.sharedChild->georef;
+                    u32 id = 0;
+                    _Object->header.gfx.sharedChild = DynOS_Model_LoadGeo(&id, MODEL_POOL_PERMANENT, georef, true);
+                }
+                DynOS_Actor_Override(_Object, (void**)&_Object->header.gfx.sharedChild);
             }
-            DynOS_Actor_Override(_Object, (void**)&_Object->header.gfx.sharedChild);
         }
     }
 }

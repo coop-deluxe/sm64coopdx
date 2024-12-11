@@ -40,8 +40,6 @@ struct ScrollTarget {
     s16 *interpS16;
     s16 *prevS16;
     u16 bhv;
-
-    struct ScrollTarget *next;
 };
 
 struct ScrollTarget *get_scroll_targets(u32 id, u16 size, u16 offset);

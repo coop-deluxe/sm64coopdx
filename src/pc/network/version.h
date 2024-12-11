@@ -1,12 +1,12 @@
 #ifndef VERSION_H
 #define VERSION_H
 
-#define SM64COOPDX_VERSION "v1.0.4"
+#define SM64COOPDX_VERSION "v1.1"
 
 // internal version
 #define VERSION_TEXT "v"
-#define VERSION_NUMBER 37
-#define MINOR_VERSION_NUMBER 3
+#define VERSION_NUMBER 38
+#define MINOR_VERSION_NUMBER 0
 
 #if defined(VERSION_JP)
     #define VERSION_REGION "JP"

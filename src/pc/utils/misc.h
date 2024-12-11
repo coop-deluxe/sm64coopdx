@@ -6,6 +6,7 @@
 #include "PR/gbi.h"
 
 float smoothstep(float edge0, float edge1, float x);
+/* |description|Updates every Mario state's star count with the save file total star count|descriptionEnd| */
 void update_all_mario_stars(void);
 
 f32 clock_elapsed(void);

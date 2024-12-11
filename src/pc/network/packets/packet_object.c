@@ -436,7 +436,7 @@ void network_receive_object(struct Packet* p) {
     }
 
     // apply platform displacement
-    if (o != NULL) {
+    if (o != NULL && o->collisionData) {
         Vec3f deltaPos = { 0 };
         deltaPos[0] = o->oPosX - oldPos[0];
         deltaPos[2] = o->oPosY - oldPos[1];

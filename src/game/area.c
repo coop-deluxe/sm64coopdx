@@ -180,7 +180,7 @@ struct ObjectWarpNode *area_get_any_warp_node(void) {
     struct ObjectWarpNode *pick = NULL;
 
     for (node = gCurrentArea->warpNodes; node != NULL; node = node->next) {
-        if (node->node.destLevel != gCurrLevelNum) { continue; }
+        if ((node->node.destLevel & 0x7F) != gCurrLevelNum) { continue; }
         if (!pick) { pick = node; continue; }
         if (node->node.destArea < pick->node.destArea) { pick = node; }
     }

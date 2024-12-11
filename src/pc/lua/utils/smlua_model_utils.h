@@ -398,6 +398,7 @@ enum ModelExtendedId {
 void smlua_model_util_clear(void);
 void smlua_model_util_store_in_slot(u32 slot, const char* name);
 u16 smlua_model_util_load(enum ModelExtendedId extId);
+/* |description|Gets the extended model ID for the `name` of a `GeoLayout`|descriptionEnd| */
 enum ModelExtendedId smlua_model_util_get_id(const char* name);
 
 #endif

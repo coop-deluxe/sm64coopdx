@@ -124,7 +124,7 @@ void DynOS_Add_Scroll_Target(u32 index, const char* name, u32 offset, u32 size) 
                 add_vtx_scroll_target(
                     index,
                     offset > 0 ? &node->mData[offset] : node->mData,
-                    size > 0 ? size : node->mSize,
+                    (size > 0 && size < node->mSize) ? size : node->mSize,
                     offset > 0
                 );
             }

@@ -27,6 +27,7 @@
 - [interaction.h](#interactionh)
     - [enum InteractionFlag](#enum-InteractionFlag)
     - [enum InteractionType](#enum-InteractionType)
+- [lag_compensation.h](#lag_compensationh)
 - [level_commands.h](#level_commandsh)
 - [level_defines.h](#level_definesh)
     - [enum LevelNum](#enum-LevelNum)
@@ -1350,6 +1351,13 @@
 | INTERACT_SHOCK | (1 << 29) |
 | INTERACT_IGLOO_BARRIER | (1 << 30) |
 | INTERACT_PLAYER | (1 << 31) |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [lag_compensation.h](#lag_compensation.h)
+- MAX_LOCAL_STATE_HISTORY
 
 [:arrow_up_small:](#)
 

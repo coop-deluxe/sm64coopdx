@@ -274,6 +274,7 @@ static void crash_handler_add_version_str(CrashHandlerText** pTextP, f32 x, f32 
     CrashHandlerText* pText = *pTextP;
     crash_handler_set_text(x, y, 0xFF, 0xFF, 0x00, "%s", "sm64coopdx ");
     crash_handler_set_text(-1, y, 0x00, 0xFF, 0xFF, "%s", get_version());
+    crash_handler_set_text(x, y + 8, 0xFF, 0xFF, 0x00, "Renderer: %s", RAPI_NAME);
     *pTextP = pText;
 }
 

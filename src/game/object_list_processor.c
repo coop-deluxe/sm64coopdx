@@ -588,9 +588,6 @@ void spawn_objects_from_info(UNUSED s32 unused, struct SpawnInfo *spawnInfo) {
     }
 }
 
-void stub_obj_list_processor_1(void) {
-}
-
 /**
  * Clear objects, dynamic surfaces, and some miscellaneous level data used by objects.
  */
@@ -618,9 +615,6 @@ void clear_objects(void) {
 
     init_free_object_list();
     clear_object_lists(gObjectListArray);
-
-    stub_behavior_script_2();
-    stub_obj_list_processor_1();
 
     for (i = 0; i < OBJECT_POOL_CAPACITY; i++) {
         gObjectPool[i].activeFlags = ACTIVE_FLAG_DEACTIVATED;

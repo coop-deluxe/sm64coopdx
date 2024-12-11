@@ -13,6 +13,8 @@ static struct DjuiPanel* sPanelList = NULL;
 static struct DjuiPanel* sPanelRemoving = NULL;
 static f32 sMoveAmount = 0;
 
+bool gDjuiPanelDisableBack = false;
+
 bool djui_panel_is_active(void) {
     return (sPanelList != NULL);
 }
@@ -96,6 +98,7 @@ struct DjuiPanel* djui_panel_add(struct DjuiBase* caller, struct DjuiThreePanel*
 void djui_panel_back(void) {
     if (sPanelRemoving != NULL) { return; }
     if (sPanelList == NULL) { return; }
+    if (gDjuiPanelDisableBack) { return; }
     if (sPanelList->parent == NULL) {
         if (gDjuiPanelPauseCreated) { djui_panel_shutdown(); }
         return;

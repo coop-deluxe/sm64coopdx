@@ -180,7 +180,9 @@ bool network_init(enum NetworkType inNetworkType, bool reconnecting) {
     configfile_save(configfile_name());
 
 #ifdef DISCORD_SDK
-    discord_activity_update();
+    if (gDiscordInitialized) {
+        discord_activity_update();
+    }
 #endif
 
     LOG_INFO("initialized");
@@ -694,6 +696,7 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
     gOverrideAllowToxicGasCamera = FALSE;
     gRomhackCameraAllowDpad = FALSE;
     camera_reset_overrides();
+    free_vtx_scroll_targets();
     dynos_mod_shutdown();
     mods_clear(&gActiveMods);
     mods_clear(&gRemoteMods);
@@ -702,7 +705,6 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
     gChangeLevel = LEVEL_CASTLE_GROUNDS;
     network_player_init();
     camera_set_use_course_specific_settings(true);
-    free_vtx_scroll_targets();
     gMarioStates[0].cap = 0;
     gMarioStates[0].input = 0;
     extern s16 gTTCSpeedSetting;
@@ -757,7 +759,9 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
     djui_lua_error_clear();
 
 #ifdef DISCORD_SDK
-    discord_activity_update();
+    if (gDiscordInitialized) {
+        discord_activity_update();
+    }
 #endif
     packet_ordered_clear_all();
 

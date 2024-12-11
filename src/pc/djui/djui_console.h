@@ -20,5 +20,6 @@ extern char gDjuiConsoleTmpBuffer[];
 
 void djui_console_message_dequeue(void);
 void djui_console_message_create(const char* message, enum ConsoleMessageLevel level);
+/* |description|Toggles the visibility of the DJUI console|descriptionEnd| */
 void djui_console_toggle(void);
 struct DjuiConsole* djui_console_create(void);

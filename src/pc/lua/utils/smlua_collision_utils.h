@@ -115,21 +115,29 @@ struct GlobalObjectCollisionData {
 extern struct GlobalObjectCollisionData gGlobalObjectCollisionData;
 
 struct RayIntersectionInfo* collision_find_surface_on_ray(f32 startX, f32 startY, f32 startZ, f32 dirX, f32 dirY, f32 dirZ, f32 precision);
+/* |description|Finds a potential floor at the given `x`, `y`, and `z` values|descriptionEnd| */
 struct Surface* collision_find_floor(f32 x, f32 y, f32 z);
+/* |description|Finds a potential ceiling at the given `x`, `y`, and `z` values|descriptionEnd| */
 struct Surface* collision_find_ceil(f32 x, f32 y, f32 z);
 
 struct Surface* get_water_surface_pseudo_floor(void);
 
+/* |description|Gets the `Collision` with `name`|descriptionEnd| */
 Collision* smlua_collision_util_get(const char* name);
 
+/* |description|Returns a temporary wall collision data pointer|descriptionEnd| */
 struct WallCollisionData* collision_get_temp_wall_collision_data(void);
 
+/* |description|Gets the surface corresponding to `index` from `wcd`|descriptionEnd| */
 struct Surface* get_surface_from_wcd_index(struct WallCollisionData* wcd, s8 index);
 
+/* |description|Gets the current level terrain collision|descriptionEnd| */
 Collision* smlua_collision_util_get_current_terrain_collision(void);
 
+/* |description|Gets the `level` terrain collision from `area`|descriptionEnd| */
 Collision *smlua_collision_util_get_level_collision(u32 level, u16 area);
 
+/* |description|Gets a table of the surface types from `data`|descriptionEnd| */
 void smlua_collision_util_find_surface_types(Collision* data);
 
 #endif

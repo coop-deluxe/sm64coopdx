@@ -45,7 +45,8 @@ in_files = [
     "src/pc/mods/mod_storage.h",
     "src/game/first_person_cam.h",
     "src/pc/djui/djui_console.h",
-    "src/game/player_palette.h"
+    "src/game/player_palette.h",
+    "src/pc/network/lag_compensation.h"
 ]
 
 exclude_constants = {

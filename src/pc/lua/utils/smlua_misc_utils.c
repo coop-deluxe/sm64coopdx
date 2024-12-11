@@ -118,7 +118,7 @@ s8 get_dialog_box_state(void) {
 ///
 
 extern u8 gLastCollectedStarOrKey;
-s32 get_last_star_or_key(void) {
+u8 get_last_star_or_key(void) {
     return gLastCollectedStarOrKey;
 }
 
@@ -150,7 +150,7 @@ bool get_got_file_coin_hi_score(void) {
 }
 
 void set_got_file_coin_hi_score(bool value) {
-    gGotFileCoinHiScore = value ? TRUE : FALSE;
+    gGotFileCoinHiScore = value;
 }
 
 extern s8 gSaveFileModified;
@@ -159,7 +159,7 @@ bool get_save_file_modified(void) {
 }
 
 void set_save_file_modified(bool value) {
-    gSaveFileModified = value ? TRUE : FALSE;
+    gSaveFileModified = value;
 }
 
 ///
@@ -427,9 +427,13 @@ s32 get_dialog_response(void) {
 
 const char* get_local_discord_id(void) {
 #ifdef DISCORD_SDK
-    static char sDiscordId[64] = "";
-    snprintf(sDiscordId, 64, "%" PRIu64 "", (uint64_t)discord_get_user_id());
-    return sDiscordId;
+    if (gDiscordInitialized) {
+        static char sDiscordId[64] = "";
+        snprintf(sDiscordId, 64, "%" PRIu64 "", (uint64_t)discord_get_user_id());
+        return sDiscordId;
+    } else {
+        return "0";
+    }
 #else
     return "0";
 #endif
@@ -500,6 +504,19 @@ void set_environment_region(u8 index, s32 value) {
     if (gEnvironmentRegions != NULL && index > 0 && index <= gEnvironmentRegions[0] && gEnvironmentRegionsLength > idx) {
         gEnvironmentRegions[idx] = value;
     }
+}
+
+///
+
+bool mod_file_exists(const char* filename) {
+    if (gLuaActiveMod == NULL) { return false; }
+
+    for (s32 i = 0; i < gLuaActiveMod->fileCount; i++) {
+        struct ModFile* file = &gLuaActiveMod->files[i];
+        return !strcmp(file->relativePath, filename);
+    }
+
+    return false;
 }
 
 ///

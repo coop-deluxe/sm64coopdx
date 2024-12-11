@@ -132,7 +132,7 @@ void exclamation_box_spawn_contents(struct ExclamationBoxContent *content, u8 it
                 o->oFlags |= OBJ_FLAG_PERSISTENT_RESPAWN;
 
             // send non-star spawn events
-            // stars cant be sent here to due jankiness in oBehParams
+            // stars cant be sent here due to jankiness in oBehParams
             if (content->behavior != get_id_from_behavior(smlua_override_behavior(bhvSpawnedStar)) && spawnedObject != NULL) {
                 // hack: if any other sync objects get spawned here we have to check for them
                 if (content->behavior == get_id_from_behavior(smlua_override_behavior(bhvKoopaShell))) {

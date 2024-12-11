@@ -1,9 +1,9 @@
 // grand_star.c.inc
 
-s32 arc_to_goal_pos(Vec3f empty, Vec3f pos, f32 yVel, f32 gravity) {
+s32 arc_to_goal_pos(Vec3f goal, Vec3f pos, f32 yVel, f32 gravity) {
     if (!o) { return 0; }
-    f32 dx = empty[0] - pos[0];
-    f32 dz = empty[2] - pos[2];
+    f32 dx = goal[0] - pos[0];
+    f32 dz = goal[2] - pos[2];
     f32 planarDist = sqrtf(dx * dx + dz * dz);
     o->oMoveAngleYaw = atan2s(dz, dx);
     o->oVelY = yVel;

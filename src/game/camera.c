@@ -12275,13 +12275,13 @@ void mode_rom_hack_camera(struct Camera *c) {
 
     // look left
     if (gMarioStates[0].controller->buttonPressed & L_CBUTTONS) {
-        sRomHackYaw += DEGREES(45) * (camera_config_is_x_inverted() ? -1 : 1);
+        sRomHackYaw -= DEGREES(45) * (camera_config_is_x_inverted() ? -1 : 1);
         play_sound_cbutton_side();
     }
 
     // look right
     if (gMarioStates[0].controller->buttonPressed & R_CBUTTONS) {
-        sRomHackYaw -= DEGREES(45) * (camera_config_is_x_inverted() ? -1 : 1);
+        sRomHackYaw += DEGREES(45) * (camera_config_is_x_inverted() ? -1 : 1);
         play_sound_cbutton_side();
     }
 
@@ -12339,7 +12339,7 @@ void mode_rom_hack_camera(struct Camera *c) {
     f32 desiredHeight = sRomHackZoom ? 300 : 450;
     f32* mPos = &gMarioStates[0].pos[0];
     pos[0] = mPos[0] + coss(sRomHackYaw) * desiredDist;
-    pos[1] =  pos[1] + desiredHeight;
+    pos[1] = mPos[1] + desiredHeight;
     pos[2] = mPos[2] + sins(sRomHackYaw) * desiredDist;
 
     // Move camera down for hangable ceilings
