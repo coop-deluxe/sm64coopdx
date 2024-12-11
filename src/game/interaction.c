@@ -153,7 +153,11 @@ u32 determine_interaction(struct MarioState *m, struct Object *o) {
 
     // hack: make water punch actually do something
     if (interaction == 0 && m->action == ACT_WATER_PUNCH && o->oInteractType & INTERACT_PLAYER) {
-        interaction = INT_PUNCH;
+        s16 dYawToObject = mario_obj_angle_to_object(m, o) - m->faceAngle[1];
+        // 120 degrees total, or 60 each way
+        if (-0x2AAA <= dYawToObject && dYawToObject <= 0x2AAA) {
+            interaction = INT_PUNCH;
+        }
     }
 
     if (interaction == 0 && action & ACT_FLAG_ATTACKING) {
