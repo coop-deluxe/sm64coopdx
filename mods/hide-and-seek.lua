@@ -26,8 +26,6 @@ local sRoundEndTimeout   = 3 * 60 * 30  -- three minutes
 local pauseExitTimer = 0
 local canLeave = false
 local sFlashingIndex = 0
-local puX = 0
-local puZ = 0
 local np = gNetworkPlayers[0]
 local cannonTimer = 0
 
@@ -230,7 +228,7 @@ local function mario_update(m)
     end
 
     -- pu prevention
-    if m.playerIndex == 0 and (m.pos.x > 32767 or m.pos.x < -32768 or m.pos.z > 32767 or m.pos.z < 32768) then
+    if m.playerIndex == 0 and (m.pos.x > 32767 or m.pos.x < -32768 or m.pos.z > 32767 or m.pos.z < -32768) then
         s.seeking = true
         warp_restart_level()
     end
