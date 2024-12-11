@@ -137,6 +137,9 @@ local function update()
     if network_is_server() then
         server_update()
     end
+
+    -- Force free camera collisions
+    camera_config_enable_camera_collisions(true)
 end
 
 local function screen_transition(trans)
@@ -227,17 +230,7 @@ local function mario_update(m)
     end
 
     -- pu prevention
-    if m.pos.x >= 0 then
-        puX = math_floor((8192 + m.pos.x) / 65536)
-    else
-        puX = math_ceil((-8192 + m.pos.x) / 65536)
-    end
-    if m.pos.z >= 0 then
-        puZ = math_floor((8192 + m.pos.z) / 65536)
-    else
-        puZ = math_ceil((-8192 + m.pos.z) / 65536)
-    end
-    if puX ~= 0 or puZ ~= 0 then
+    if m.playerIndex == 0 and (m.pos.x > 32767 or m.pos.x < -32768 or m.pos.z > 32767 or m.pos.z < 32768) then
         s.seeking = true
         warp_restart_level()
     end
