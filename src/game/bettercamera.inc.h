@@ -411,7 +411,9 @@ static void newcam_rotate_button(void) {
     }
 
     if ((newcam_mouse == 1) && !gDjuiInMainMenu && !gDjuiChatBoxFocus && !gDjuiConsoleFocus) {
-        newcam_yaw += ivrt(0) * mouse_x * 16;
+        if (!gFreeCameraUseDpad || !sFreeCameraDirectionLocked) {
+            newcam_yaw += ivrt(0) * mouse_x * 16;
+        }
         newcam_tilt += ivrt(1) * mouse_y * 16;
     }
 
