@@ -3855,6 +3855,12 @@ function djui_language_get(section, key)
     -- ...
 end
 
+--- @param color integer
+--- @return string
+function djui_menu_get_rainbow_string_color(color)
+    -- ...
+end
+
 --- @param message string
 --- @param lines integer
 --- Creates a popup that says `message` and has `lines`
