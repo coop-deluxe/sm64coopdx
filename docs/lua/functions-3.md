@@ -2000,6 +2000,26 @@ Gets a behavior ID from only vanilla behavior scripts
 
 <br />
 
+## [snap_to_45_degrees](#snap_to_45_degrees)
+
+### Lua Example
+`local integerValue = snap_to_45_degrees(angle)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| angle | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 snap_to_45_degrees(s16 angle);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [soft_reset_camera](#soft_reset_camera)
 
 ### Lua Example

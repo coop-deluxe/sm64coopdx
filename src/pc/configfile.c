@@ -127,6 +127,8 @@ bool         configUseStandardKeyBindingsChat     = false;
 // free camera settings
 bool         configEnableCamera                   = false;
 bool         configCameraAnalog                   = false;
+bool         configCameraDpadBehavior             = false;
+bool         configCameraHasCollision             = true;
 bool         configCameraMouse                    = false;
 bool         configCameraInvertX                  = false;
 bool         configCameraInvertY                  = true;
@@ -253,6 +255,8 @@ static const struct ConfigOption options[] = {
     // free camera settings
     {.name = "bettercam_enable",               .type = CONFIG_TYPE_BOOL, .boolValue = &configEnableCamera},
     {.name = "bettercam_analog",               .type = CONFIG_TYPE_BOOL, .boolValue = &configCameraAnalog},
+    {.name = "bettercam_dpad",                 .type = CONFIG_TYPE_BOOL, .boolValue = &configCameraDpadBehavior},
+    {.name = "bettercam_collision",            .type = CONFIG_TYPE_BOOL, .boolValue = &configCameraHasCollision},
     {.name = "bettercam_mouse_look",           .type = CONFIG_TYPE_BOOL, .boolValue = &configCameraMouse},
     {.name = "bettercam_invertx",              .type = CONFIG_TYPE_BOOL, .boolValue = &configCameraInvertX},
     {.name = "bettercam_inverty",              .type = CONFIG_TYPE_BOOL, .boolValue = &configCameraInvertY},

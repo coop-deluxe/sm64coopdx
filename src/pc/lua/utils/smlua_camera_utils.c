@@ -2,16 +2,18 @@
 #include "game/bettercamera.h"
 #include "game/object_list_processor.h"
 
-static struct CameraOverride sOverrideCameraXSens   = { 0 };
-static struct CameraOverride sOverrideCameraYSens   = { 0 };
-static struct CameraOverride sOverrideCameraAggr    = { 0 };
-static struct CameraOverride sOverrideCameraPan     = { 0 };
-static struct CameraOverride sOverrideCameraDegrade = { 0 };
-static struct CameraOverride sOverrideCameraInvertX = { 0 };
-static struct CameraOverride sOverrideCameraInvertY = { 0 };
-static struct CameraOverride sOverrideEnableCamera = { 0 };
-static struct CameraOverride sOverrideCameraAnalog  = { 0 };
-static struct CameraOverride sOverrideCameraMouse   = { 0 };
+static struct CameraOverride sOverrideCameraXSens            = { 0 };
+static struct CameraOverride sOverrideCameraYSens            = { 0 };
+static struct CameraOverride sOverrideCameraAggr             = { 0 };
+static struct CameraOverride sOverrideCameraPan              = { 0 };
+static struct CameraOverride sOverrideCameraDegrade          = { 0 };
+static struct CameraOverride sOverrideCameraInvertX          = { 0 };
+static struct CameraOverride sOverrideCameraInvertY          = { 0 };
+static struct CameraOverride sOverrideEnableCamera           = { 0 };
+static struct CameraOverride sOverrideCameraAnalog           = { 0 };
+static struct CameraOverride sOverrideCameraMouse            = { 0 };
+static struct CameraOverride sOverrideCameraFreecamDpad      = { 0 };
+static struct CameraOverride sOverrideCameraFreecamCollision = { 0 };
 
 void camera_reset_overrides(void) {
     sOverrideCameraXSens.override = false;
@@ -24,6 +26,8 @@ void camera_reset_overrides(void) {
     sOverrideEnableCamera.override = false;
     sOverrideCameraAnalog.override = false;
     sOverrideCameraMouse.override = false;
+    sOverrideCameraFreecamDpad.override = false;
+    sOverrideCameraFreecamCollision.override = false;
 }
 
 void camera_freeze(void) {
@@ -60,6 +64,14 @@ bool camera_config_is_free_cam_enabled(void) {
 
 bool camera_config_is_analog_cam_enabled(void) {
     return sOverrideCameraAnalog.override ? sOverrideCameraAnalog.value : configCameraAnalog;
+}
+
+bool camera_config_is_freecam_dpad_enabled(void) {
+    return sOverrideCameraFreecamDpad.override ? sOverrideCameraFreecamDpad.value : configCameraDpadBehavior;
+}
+
+bool camera_config_is_camera_collision_enabled(void) {
+    return sOverrideCameraFreecamCollision.override ? sOverrideCameraFreecamCollision.value : configCameraHasCollision;
 }
 
 bool camera_config_is_mouse_look_enabled(void) {
@@ -103,6 +115,18 @@ void camera_config_enable_free_cam(bool enable) {
 void camera_config_enable_analog_cam(bool enable) {
     sOverrideCameraAnalog.value = enable;
     sOverrideCameraAnalog.override = true;
+    newcam_init_settings();
+}
+
+void camera_config_enable_freecam_dpad(bool enable) {
+    sOverrideCameraFreecamDpad.value = enable;
+    sOverrideCameraFreecamDpad.override = true;
+    newcam_init_settings();
+}
+
+void camera_config_enable_camera_collisions(bool enable) {
+    sOverrideCameraFreecamCollision.value = enable;
+    sOverrideCameraFreecamCollision.override = true;
     newcam_init_settings();
 }
 

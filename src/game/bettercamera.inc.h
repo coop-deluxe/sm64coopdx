@@ -119,6 +119,10 @@ u16 newcam_modeflags;
 s16 newcam_saved_mode = -1;
 s16 newcam_saved_defmode = -1;
 
+u8 gFreeCameraUseDpad = FALSE;
+u8 gFreeCameraHasCollision = TRUE;
+u8 sFreeCameraDirectionLocked = FALSE;
+
 extern bool gDjuiInMainMenu;
 
 ///This is called at every level initialisation.
@@ -186,15 +190,17 @@ void newcam_toggle(bool enabled) {
 
 ///These are the default settings for Puppycam. You may change them to change how they'll be set for first timers.
 void newcam_init_settings(void) {
-    newcam_sensitivityX = newcam_clamp(camera_config_get_x_sensitivity(), 1, 100) * 5;
-    newcam_sensitivityY = newcam_clamp(camera_config_get_y_sensitivity(), 1, 100) * 5;
-    newcam_aggression   = newcam_clamp(camera_config_get_aggression(), 0, 100);
-    newcam_panlevel     = newcam_clamp(camera_config_get_pan_level(), 0, 100);
-    newcam_invertX      = (s16)camera_config_is_x_inverted();
-    newcam_invertY      = (s16)camera_config_is_y_inverted();
-    newcam_mouse        = (u8)camera_config_is_mouse_look_enabled();
-    newcam_analogue     = (s16)camera_config_is_analog_cam_enabled();
-    newcam_degrade      = (f32)camera_config_get_deceleration();
+    newcam_sensitivityX     = newcam_clamp(camera_config_get_x_sensitivity(), 1, 100) * 5;
+    newcam_sensitivityY     = newcam_clamp(camera_config_get_y_sensitivity(), 1, 100) * 5;
+    newcam_aggression       = newcam_clamp(camera_config_get_aggression(), 0, 100);
+    newcam_panlevel         = newcam_clamp(camera_config_get_pan_level(), 0, 100);
+    newcam_invertX          = (s16)camera_config_is_x_inverted();
+    newcam_invertY          = (s16)camera_config_is_y_inverted();
+    newcam_mouse            = (u8)camera_config_is_mouse_look_enabled();
+    newcam_analogue         = (s16)camera_config_is_analog_cam_enabled();
+    newcam_degrade          = (f32)camera_config_get_deceleration();
+    gFreeCameraUseDpad      = (u8)camera_config_is_freecam_dpad_enabled();
+    gFreeCameraHasCollision = (u8)camera_config_is_camera_collision_enabled();
 
     // setup main menu camera
     if (gDjuiInMainMenu) { newcam_tilt = 5; }
@@ -203,15 +209,17 @@ void newcam_init_settings(void) {
 }
 
 void newcam_init_settings_override(bool override) {
-    newcam_sensitivityX = newcam_clamp(camera_config_get_x_sensitivity(), 1, 100) * 5;
-    newcam_sensitivityY = newcam_clamp(camera_config_get_y_sensitivity(), 1, 100) * 5;
-    newcam_aggression   = newcam_clamp(camera_config_get_aggression(), 0, 100);
-    newcam_panlevel     = newcam_clamp(camera_config_get_pan_level(), 0, 100);
-    newcam_invertX      = (s16)camera_config_is_x_inverted();
-    newcam_invertY      = (s16)camera_config_is_y_inverted();
-    newcam_mouse        = (u8)camera_config_is_mouse_look_enabled();
-    newcam_analogue     = (s16)camera_config_is_analog_cam_enabled();
-    newcam_degrade      = (f32)camera_config_get_deceleration();
+    newcam_sensitivityX     = newcam_clamp(camera_config_get_x_sensitivity(), 1, 100) * 5;
+    newcam_sensitivityY     = newcam_clamp(camera_config_get_y_sensitivity(), 1, 100) * 5;
+    newcam_aggression       = newcam_clamp(camera_config_get_aggression(), 0, 100);
+    newcam_panlevel         = newcam_clamp(camera_config_get_pan_level(), 0, 100);
+    newcam_invertX          = (s16)camera_config_is_x_inverted();
+    newcam_invertY          = (s16)camera_config_is_y_inverted();
+    newcam_mouse            = (u8)camera_config_is_mouse_look_enabled();
+    newcam_analogue         = (s16)camera_config_is_analog_cam_enabled();
+    newcam_degrade          = (f32)camera_config_get_deceleration();
+    gFreeCameraUseDpad      = (u8)camera_config_is_freecam_dpad_enabled();
+    gFreeCameraHasCollision = (u8)camera_config_is_camera_collision_enabled();
 
     // setup main menu camera
     if (gDjuiInMainMenu) { newcam_tilt = 5; }
@@ -288,6 +296,7 @@ static int ivrt(u8 axis) {
 static void newcam_rotate_button(void) {
     f32 intendedXMag;
     f32 intendedYMag;
+    s16 prevNewcamYaw = newcam_yaw_acc;
 
     if ((newcam_modeflags & NC_FLAG_8D || newcam_modeflags & NC_FLAG_4D) && newcam_modeflags & NC_FLAG_XTURN) {
         //8 directional camera rotation input for buttons.
@@ -404,6 +413,25 @@ static void newcam_rotate_button(void) {
     if ((newcam_mouse == 1) && !gDjuiInMainMenu && !gDjuiChatBoxFocus && !gDjuiConsoleFocus) {
         newcam_yaw += ivrt(0) * mouse_x * 16;
         newcam_tilt += ivrt(1) * mouse_y * 16;
+    }
+
+    // Dpad behaviors
+    if (gFreeCameraUseDpad) {
+        // Make dpad up head to the nearest cardinal direction
+        if (gPlayer1Controller->buttonPressed & U_JPAD) {
+            newcam_yaw = snap_to_45_degrees(newcam_yaw);
+        }
+        // Make dpad left/right increment 45 degrees
+        else if (gPlayer1Controller->buttonPressed & L_JPAD) { newcam_yaw += ivrt(0)*DEGREES(45); }
+        else if (gPlayer1Controller->buttonPressed & R_JPAD) { newcam_yaw -= ivrt(0)*DEGREES(45); }
+        // Make dpad down lock the current camera direction
+        else if (gPlayer1Controller->buttonPressed & D_JPAD) {
+            sFreeCameraDirectionLocked = !sFreeCameraDirectionLocked;
+        }
+    }
+
+    if (gFreeCameraUseDpad && sFreeCameraDirectionLocked) {
+        newcam_yaw_acc = prevNewcamYaw;
     }
 }
 
@@ -692,7 +720,7 @@ static void newcam_position_cam(void) {
         newcam_lookat[2] = newcam_pos_target[2]-newcam_pan_z;
 
     newcam_level_bounds();
-    if (newcam_modeflags & NC_FLAG_COLLISION) {
+    if (gFreeCameraHasCollision && newcam_modeflags & NC_FLAG_COLLISION) {
         newcam_collision();
     }
 
