@@ -7,7 +7,8 @@
 enum NetworkType {
     NT_NONE,
     NT_SERVER,
-    NT_CLIENT
+    NT_CLIENT,
+    NT_COOPNET
 };
 
 #define IP_MAX_LEN 32
