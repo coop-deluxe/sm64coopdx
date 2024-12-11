@@ -3534,6 +3534,12 @@ function skip_camera_interpolation()
     -- ...
 end
 
+--- @param angle integer
+--- @return integer
+function snap_to_45_degrees(angle)
+    -- ...
+end
+
 --- @param c Camera
 function soft_reset_camera(c)
     -- ...
@@ -8488,8 +8494,20 @@ function camera_config_enable_analog_cam(enable)
 end
 
 --- @param enable boolean
+--- Overrides if Camera Collision is enabled
+function camera_config_enable_camera_collisions(enable)
+    -- ...
+end
+
+--- @param enable boolean
 --- Overrides if Free Camera is enabled
 function camera_config_enable_free_cam(enable)
+    -- ...
+end
+
+--- @param enable boolean
+--- Overrides if Freecam DPad Behavior is enabled
+function camera_config_enable_freecam_dpad(enable)
     -- ...
 end
 
@@ -8543,8 +8561,20 @@ function camera_config_is_analog_cam_enabled()
 end
 
 --- @return boolean
+--- Checks if Camera Collision is enabled
+function camera_config_is_camera_collision_enabled()
+    -- ...
+end
+
+--- @return boolean
 --- Checks if Free Camera is enabled
 function camera_config_is_free_cam_enabled()
+    -- ...
+end
+
+--- @return boolean
+--- Checks if Freecam DPad Behavior is enabled
+function camera_config_is_freecam_dpad_enabled()
     -- ...
 end
 

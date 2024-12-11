@@ -5799,6 +5799,29 @@ Overrides if Analog Camera is enabled
 
 <br />
 
+## [camera_config_enable_camera_collisions](#camera_config_enable_camera_collisions)
+
+### Description
+Overrides if Camera Collision is enabled
+
+### Lua Example
+`camera_config_enable_camera_collisions(enable)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| enable | `boolean` |
+
+### Returns
+- None
+
+### C Prototype
+`void camera_config_enable_camera_collisions(bool enable);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [camera_config_enable_free_cam](#camera_config_enable_free_cam)
 
 ### Description
@@ -5817,6 +5840,29 @@ Overrides if Free Camera is enabled
 
 ### C Prototype
 `void camera_config_enable_free_cam(bool enable);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_config_enable_freecam_dpad](#camera_config_enable_freecam_dpad)
+
+### Description
+Overrides if Freecam DPad Behavior is enabled
+
+### Lua Example
+`camera_config_enable_freecam_dpad(enable)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| enable | `boolean` |
+
+### Returns
+- None
+
+### C Prototype
+`void camera_config_enable_freecam_dpad(bool enable);`
 
 [:arrow_up_small:](#)
 
@@ -6002,6 +6048,27 @@ Checks if Analog Camera is enabled
 
 <br />
 
+## [camera_config_is_camera_collision_enabled](#camera_config_is_camera_collision_enabled)
+
+### Description
+Checks if Camera Collision is enabled
+
+### Lua Example
+`local booleanValue = camera_config_is_camera_collision_enabled()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool camera_config_is_camera_collision_enabled(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [camera_config_is_free_cam_enabled](#camera_config_is_free_cam_enabled)
 
 ### Description
@@ -6018,6 +6085,27 @@ Checks if Free Camera is enabled
 
 ### C Prototype
 `bool camera_config_is_free_cam_enabled(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_config_is_freecam_dpad_enabled](#camera_config_is_freecam_dpad_enabled)
+
+### Description
+Checks if Freecam DPad Behavior is enabled
+
+### Lua Example
+`local booleanValue = camera_config_is_freecam_dpad_enabled()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool camera_config_is_freecam_dpad_enabled(void);`
 
 [:arrow_up_small:](#)
 

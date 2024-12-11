@@ -30,6 +30,10 @@ void camera_romhack_allow_dpad_usage(u8 allow);
 bool camera_config_is_free_cam_enabled(void);
 /* |description|Checks if Analog Camera is enabled|descriptionEnd| */
 bool camera_config_is_analog_cam_enabled(void);
+/* |description|Checks if Freecam DPad Behavior is enabled|descriptionEnd| */
+bool camera_config_is_freecam_dpad_enabled(void);
+/* |description|Checks if Camera Collision is enabled|descriptionEnd| */
+bool camera_config_is_camera_collision_enabled(void);
 /* |description|Checks if Mouse Look is enabled|descriptionEnd| */
 bool camera_config_is_mouse_look_enabled(void);
 /* |description|Checks if camera X is inverted|descriptionEnd| */
@@ -51,6 +55,10 @@ u32  camera_config_get_deceleration(void);
 void camera_config_enable_free_cam(bool enable);
 /* |description|Overrides if Analog Camera is enabled|descriptionEnd| */
 void camera_config_enable_analog_cam(bool enable);
+/* |description|Overrides if Freecam DPad Behavior is enabled|descriptionEnd| */
+void camera_config_enable_freecam_dpad(bool enable);
+/* |description|Overrides if Camera Collision is enabled|descriptionEnd| */
+void camera_config_enable_camera_collisions(bool enable);
 /* |description|Overrides if camera mouse look is enabled|descriptionEnd| */
 void camera_config_enable_mouse_look(bool enable);
 /* |description|Overrides if camera X is inverted|descriptionEnd| */
