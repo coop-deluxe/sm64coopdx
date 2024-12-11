@@ -1,5 +1,6 @@
 #include "djui.h"
 #include "djui_panel.h"
+#include "djui_panel_playerlist.h"
 #include "pc/controller/controller_mouse.h"
 #include "pc/gfx/gfx_window_manager_api.h"
 #include "pc/pc_main.h"
@@ -115,7 +116,7 @@ void djui_cursor_update(void) {
 #if defined(CAPI_SDL2) || defined(CAPI_SDL1)
     if (djui_interactable_is_binding()) { return; }
     if (sMouseCursor == NULL) { return; }
-    if (!djui_panel_is_active()) { return; }
+    if (!djui_panel_is_active() && !gDjuiPlayerList->base.visible) { return; }
 
     controller_mouse_read_window();
 
@@ -135,6 +136,7 @@ void djui_cursor_update(void) {
     }
 
     // update mouse cursor
+    if (gDjuiPlayerList->base.visible) sCursorMouseControlled = true;
     if (sCursorMouseControlled) {
         gCursorX = mouse_window_x / djui_gfx_get_scale();
         gCursorY = mouse_window_y / djui_gfx_get_scale();
