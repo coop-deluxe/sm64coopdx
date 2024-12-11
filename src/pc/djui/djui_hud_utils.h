@@ -20,6 +20,7 @@ enum DjuiFontType {
     FONT_ALIASED,
     FONT_CUSTOM_HUD,
     FONT_RECOLOR_HUD,
+    FONT_SPECIAL,
     FONT_COUNT,
 };
 

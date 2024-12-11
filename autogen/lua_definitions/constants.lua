@@ -3277,7 +3277,10 @@ FONT_CUSTOM_HUD = 4
 FONT_RECOLOR_HUD = 5
 
 --- @type DjuiFontType
-FONT_COUNT = 6
+FONT_SPECIAL = 6
+
+--- @type DjuiFontType
+FONT_COUNT = 7
 
 --- @class HudUtilsFilter
 

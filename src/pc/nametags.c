@@ -60,7 +60,7 @@ void nametags_render(void) {
     }
 
     djui_hud_set_resolution(RESOLUTION_N64);
-    djui_hud_set_font(FONT_NORMAL);
+    djui_hud_set_font(FONT_SPECIAL);
 
     for (u8 i = gNametagsSettings.showSelfTag ? 0 : 1; i < MAX_PLAYERS; i++) {
         struct MarioState* m = &gMarioStates[i];
