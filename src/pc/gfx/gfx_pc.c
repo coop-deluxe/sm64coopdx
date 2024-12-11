@@ -1858,24 +1858,26 @@ void gfx_start_frame(void) {
 }
 
 void gfx_run(Gfx *commands) {
-    gfx_sp_reset();
+    if (WAPI.has_focus() || configRenderWhenUnfocused != 2) {
+        gfx_sp_reset();
 
-    //puts("New frame");
+        //puts("New frame");
 
-    if (!gfx_wapi->start_frame()) {
-        dropped_frame = true;
-        return;
+        if (!gfx_wapi->start_frame()) {
+            dropped_frame = true;
+            return;
+        }
+        dropped_frame = false;
+
+        //double t0 = gfx_wapi->get_time();
+        gfx_rapi->start_frame();
+        gfx_run_dl(commands);
+        gfx_flush();
+        //double t1 = gfx_wapi->get_time();
+        //printf("Process %f %f\n", t1, t1 - t0);
+        gfx_rapi->end_frame();
+        gfx_wapi->swap_buffers_begin();
     }
-    dropped_frame = false;
-
-    //double t0 = gfx_wapi->get_time();
-    gfx_rapi->start_frame();
-    gfx_run_dl(commands);
-    gfx_flush();
-    //double t1 = gfx_wapi->get_time();
-    //printf("Process %f %f\n", t1, t1 - t0);
-    gfx_rapi->end_frame();
-    gfx_wapi->swap_buffers_begin();
 }
 
 void gfx_end_frame(void) {
