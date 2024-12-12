@@ -462,7 +462,7 @@ struct ModelUtilsInfo sModels[E_MODEL_MAX] = {
     MODEL_UTIL_GEO_PERM(E_MODEL_WARIOS_WINGED_METAL_CAP,   warios_winged_metal_cap_geo,   MODEL_WARIOS_WINGED_METAL_CAP),
 };
 
-#define MAX_CUSTOM_MODELS 256
+#define MAX_CUSTOM_MODELS 1024
 static u16 sCustomModelsCount = 0;
 struct ModelUtilsInfo sCustomModels[MAX_CUSTOM_MODELS] = { 0 };
 
