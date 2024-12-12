@@ -1,10 +1,9 @@
 #include <inttypes.h>
 #include "types.h"
 #include "pc/lua/smlua.h"
+#include "pc/lua/utils/smlua_audio_utils.h"
 #include "game/hardcoded.h"
 #include "game/object_list_processor.h"
-
-struct ModAudio;
 
 void djui_hud_set_render_behind_hud(bool enable) {
     LOG_LUA_LINE_WARNING("[LUA] djui_hud_set_render_behind_hud() is deprecated! Please use HOOK_ON_HUD_RENDER_BEHIND instead.");
