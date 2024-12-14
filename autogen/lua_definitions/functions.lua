@@ -10118,7 +10118,7 @@ end
 
 --- @param colData WallCollisionData
 --- @return integer
---- Detects wall collisions at a given position and adjusts the position based on the walls found. Returns the number of wall collisions detected.
+--- Detects wall collisions at a given position and adjusts the position based on the walls found. Returns the number of wall collisions detected
 function find_wall_collisions(colData)
     -- ...
 end

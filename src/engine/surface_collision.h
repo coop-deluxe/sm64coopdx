@@ -46,7 +46,7 @@ s32 f32_find_wall_collision(f32 *xPtr, f32 *yPtr, f32 *zPtr, f32 offsetY, f32 ra
 
 /* |description|
 Detects wall collisions at a given position and adjusts the position based on the walls found. 
-Returns the number of wall collisions detected.
+Returns the number of wall collisions detected
 |descriptionEnd| */
 s32 find_wall_collisions(struct WallCollisionData *colData);
 f32 find_ceil(f32 posX, f32 posY, f32 posZ, struct Surface **pceil);
