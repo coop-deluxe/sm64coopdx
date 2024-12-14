@@ -1,5 +1,5 @@
 -- name: Star Road
--- description: Star Road is a romhack created by SKELUX\n\nwww.youtube.com/c/Skelux\n\nThere are 23 custom levels, with a total of 130 stars.\n\nPorted to PC by AloXado320, PeachyPeach, and PrinceFrizzy\n\nPorted to coop by djoslin0, PrinceFrizzy, and Isaac.
+-- description: Romhack created by \\#FFD700\\SKELUX\\#DCDCDC\\\n\nwww.youtube.com/c/Skelux\n\nThere are 23 custom levels, with a total of 130 stars.\n\nPorted to PC by AloXado320,\n\\#C96BBA\\PeachyPeach\\#DCDCDC\\, and \\#8C4AC7\\PrinceFrizzy\\#DCDCDC\\\n\nPorted to coop by \\#093614\\djoslin0\\#DCDCDC\\,\n\\#8C4AC7\\PrinceFrizzy\\#DCDCDC\\, and \\#141699\\Isaac\\#DCDCDC\\.\n\nAdditional Fixes and "\\#FF0000\\Hard Mode\\#DCDCDC\\" addition by  \\#2D851C\\Mr.Needlemouse\\#DCDCDC\\.
 -- incompatible: romhack
 
 --------------

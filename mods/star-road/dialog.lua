@@ -1,3 +1,8 @@
+changed_dialogs = {}
+
+
+
+
 smlua_text_utils_dialog_replace(DIALOG_000, 1, 6, 30, 200, "--WARNING--\
 FLOOR UNSTABLE. DO NOT\
 GROUND-POUND UNDER \
@@ -549,11 +554,6 @@ holding down [R], which will \
 make it zoom in. \
 Much better!")
 
-smlua_text_utils_dialog_replace(DIALOG_062, 1, 4, 30, 200, "Welcome to HARD MODE!\
-This challenge mode is an OHKO, which\
-means that everything-- and I mean\
-EVERYTHING kills you in one hit!'\
-Good Luck!")
 
 smlua_text_utils_dialog_replace(DIALOG_063, 1, 5, 30, 200, "I AM ERROR.")
 
@@ -1610,9 +1610,48 @@ their houses!")
 smlua_text_utils_dialog_replace(DIALOG_168, 1, 5, 30, 200, "Ack! Stop it or I'll\
 make you stop!")
 
-smlua_text_utils_dialog_replace(DIALOG_169, 1, 3, 30, 200, "Psst! Looking for\
-a challenge? Try holding\
-the L Button at the same\
-time you host with\
+changed_dialogs[169] = 1
+smlua_text_utils_dialog_replace(DIALOG_169, 1, 6, 30, 200, "Psst! Looking for\
+a challenge? Try pressing\
+[R] after pausing the\
+game, and select the\
 'Super Mario Star Road'\
-as the enabled romhack.")
+tab in the menu. For the\
+SMSR veterans, try holding\
+the L Button before you\
+host a lobby with 'Super\
+Mario Star Road' as the\
+active romhack! ")
+
+
+
+function dialog_replace()
+      if gGlobalSyncTable.hardMode then
+            changed_dialogs[169] = 1 -- thank you Emmi for being so cool and having this in MarioHunt so I could remember how to change dialog this way
+smlua_text_utils_dialog_replace(DIALOG_169, 1, 4, 30, 200, "Welcome to HARD MODE!\
+This challenge mode is an\
+OHKO, which means that\
+everything-- and I mean\
+EVERYTHING kills you in\
+one hit! Do you have what\
+it takes to complete this\
+challenge?")
+      else
+            changed_dialogs[169] = 1
+smlua_text_utils_dialog_replace(DIALOG_169, 1, 6, 30, 200, "Psst! Looking for\
+a challenge? Try pressing\
+[R] after pausing the\
+game, and select the\
+'Super Mario Star Road'\
+tab in the menu. For the\
+SMSR veterans, try holding\
+the L Button before you\
+host a lobby with 'Super\
+Mario Star Road' as the\
+active romhack! ")
+      end
+end
+
+
+
+hook_event(HOOK_ON_DIALOG, dialog_replace)
