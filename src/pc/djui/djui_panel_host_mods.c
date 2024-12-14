@@ -25,7 +25,7 @@ static struct DjuiText* sTooltip = NULL;
 static struct DjuiPaginated* sModPaginated = NULL;
 static struct DjuiButton* sBackButton = NULL;
 static struct DjuiButton* sRefreshButton = NULL;
-unsigned int selectedCategory = MOD_CATEGORY_ALL;
+static unsigned int sSelectedCategory = MOD_CATEGORY_ALL;
 static bool sWarned = false;
 
 struct ThreadHandle gModRefreshThread = { 0 };
@@ -135,7 +135,7 @@ void djui_panel_host_mods_add_mods(struct DjuiBase* layoutBase) {
     for (int i = 0; i < gLocalMods.entryCount; i++) {
         struct Mod* mod = gLocalMods.entries[i];
         char* category = mod->category != NULL ? mod->category : mod->incompatible;
-        switch (selectedCategory) {
+        switch (sSelectedCategory) {
             case MOD_CATEGORY_ALL: { break; }
             case MOD_CATEGORY_MISC: {
                 bool doContinue = false;
@@ -151,7 +151,7 @@ void djui_panel_host_mods_add_mods(struct DjuiBase* layoutBase) {
                 break;
             }
             default: {
-                if (!category || !strstr(category, sCategories[selectedCategory].category)) {
+                if (!category || !strstr(category, sCategories[sSelectedCategory].category)) {
                     continue;
                 }
                 break;
@@ -224,7 +224,7 @@ void djui_panel_host_mods_create(struct DjuiBase* caller) {
         for (int i = 0; i < numCategories; i++) {
             categoryChoices[i] = djui_language_get("HOST_MOD_CATEGORIES", sCategories[i].langKey);
         }
-        djui_selectionbox_create(body, DLANG(HOST_MODS, CATEGORIES), categoryChoices, numCategories, &selectedCategory, djui_panel_on_categories_change);
+        djui_selectionbox_create(body, DLANG(HOST_MODS, CATEGORIES), categoryChoices, numCategories, &sSelectedCategory, djui_panel_on_categories_change);
         struct DjuiPaginated* paginated = djui_paginated_create(body, 8);
         paginated->showMaxCount = true;
         sModLayout = paginated->layout;
