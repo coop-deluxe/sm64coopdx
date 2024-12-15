@@ -1,5 +1,5 @@
--- name: Star Road
--- description: Romhack created by \\#FFD700\\SKELUX\\#DCDCDC\\\n\nwww.youtube.com/c/Skelux\n\nThere are 23 custom levels, with a total of 130 stars.\n\nPorted to PC by AloXado320,\n\\#C96BBA\\PeachyPeach\\#DCDCDC\\, and \\#8C4AC7\\PrinceFrizzy\\#DCDCDC\\\n\nPorted to coop by \\#093614\\djoslin0\\#DCDCDC\\,\n\\#8C4AC7\\PrinceFrizzy\\#DCDCDC\\, and \\#141699\\Isaac\\#DCDCDC\\.\n\nAdditional Fixes and "\\#FF0000\\Hard Mode\\#DCDCDC\\" addition by  \\#2D851C\\Mr.Needlemouse\\#DCDCDC\\.
+-- name: Star Road Dev
+-- description: Romhack created by \\#FFD700\\SKELUX\\#DCDCDC\\\n\nwww.youtube.com/c/Skelux\n\nThere are 23 custom levels, with a total of 130 stars.\n\nPorted to PC by AloXado320,\n\\#FFAAFF\\PeachyPeach\\#DCDCDC\\, and \\#8C4AC7\\PrinceFrizzy\\#DCDCDC\\\n\nPorted to coop by \\#093614\\djoslin0\\#DCDCDC\\,\n\\#8C4AC7\\PrinceFrizzy\\#DCDCDC\\, and \\#141699\\Isaac\\#DCDCDC\\.\n\nAdditional Fixes and "\\#FF0000\\Hard Mode\\#DCDCDC\\" addition by  \\#2D851C\\Mr.Needlemouse\\#DCDCDC\\.
 -- incompatible: romhack
 
 --------------
@@ -128,9 +128,9 @@ function on_death(transitionType)
     end
 end
 
-function  void_death()
+function void_death()
     local m = gMarioStates[0]
-    if m.numLives < 0  then
+    if m.numLives < 0 then
         zerolife = true
         m.numLives = 3
     end
@@ -144,10 +144,9 @@ local function lives(m)
         startingLives = false
     end
     if zerolife then
-        warp_to_level(LEVEL_ZERO_LIFE, 1, 0) 
+        warp_to_level(LEVEL_ZERO_LIFE, 1, 0)
         zerolife = false
         startingLives = true
-       
     end
 end
 

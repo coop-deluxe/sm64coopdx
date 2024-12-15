@@ -44,14 +44,23 @@ local function mario_update(m)
     end
     if not gGlobalSyncTable.hardMode then return false end
 end
+---@param m MarioState
+function air(m)
+    if gGlobalSyncTable.hardMode then
+        if m.action & ACT_GROUP_MASK == ACT_GROUP_SUBMERGED and m.area.terrainType ~= TERRAIN_SNOW then
+            change = (m.pos.y < m.waterLevel - 140 and 1 or -0x1A)
+            m.health = m.health + change
+        end
+    end
+end
 
 function hard_mode_menu(_, value)
     gGlobalSyncTable.hardMode = value
     save_file_set_using_backup_slot(gGlobalSyncTable.hardMode)
     save_file_reload(1)
     djui_popup_create(value and "\\#ff0000\\HARD MODE\\#dcdcdc\\ Activated" or "You are currently in NORMAL MODE.", 1)
-    play_sound(SOUND_MENU_MARIO_CASTLE_WARP + 1 << 0, { x = 0, y = 0, z = 0 })
-    warp_to_warpnode(16, 1, 0, 128)
+    play_sound(SOUND_MENU_MARIO_CASTLE_WARP, { x = 0, y = 0, z = 0 })
+    warp_to_warpnode(LEVEL_CASTLE_GROUNDS, 1, 0, 128)
 end
 
 function dialog_box_colors(id)
@@ -85,3 +94,4 @@ hook_event(HOOK_ON_HUD_RENDER, hud_render)
 hook_event(HOOK_ON_DIALOG, dialog_box_colors)
 hook_event(HOOK_ON_LEVEL_INIT, on_level_init)
 hook_event(HOOK_MARIO_UPDATE, mario_update)
+hook_event(HOOK_BEFORE_MARIO_UPDATE, air)

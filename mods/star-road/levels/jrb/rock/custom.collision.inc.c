@@ -1,0 +1,13 @@
+const Collision col_jrb_geo_000930_0x70079e8[] = {
+COL_INIT(),
+COL_VERTEX_INIT(4),
+COL_VERTEX( 300, 0, 300),
+COL_VERTEX( -300, 0, -300),
+COL_VERTEX( -300, 0, 300),
+COL_VERTEX( 300, 0, -300),
+COL_TRI_INIT( 0, 2),
+COL_TRI( 0, 1, 2),
+COL_TRI( 1, 0, 3),
+COL_TRI_STOP(),
+COL_END(),
+};
