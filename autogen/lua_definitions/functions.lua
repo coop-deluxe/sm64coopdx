@@ -8176,27 +8176,32 @@ function reset_rumble_timers_2(m, a0)
 end
 
 --- @param flags integer
+--- Clears specific flags in the current save file. The flags are specified as a bitmask in the `flags` parameter. Ensures that the save file remains valid after clearing. Useful for removing specific game states, such as collected items or completed objectives, without resetting the entire save
 function save_file_clear_flags(flags)
     -- ...
 end
 
 --- @param fileIndex integer
 --- @param forceSave integer
+--- Saves the current state of the game into a specified save file. Includes data verification and backup management. Useful for maintaining game progress during play or when saving manually
 function save_file_do_save(fileIndex, forceSave)
     -- ...
 end
 
 --- @param fileIndex integer
+--- Erases all data in a specified save file, including backup slots. Marks the save file as modified and performs a save to apply the changes. Useful for resetting a save file to its default state
 function save_file_erase(fileIndex)
     -- ...
 end
 
+--- Erases the backup data for the current save file without affecting the primary save data. Reloads the save file afterward
 function save_file_erase_current_backup_save()
     -- ...
 end
 
 --- @param capPos Vec3s
 --- @return integer
+--- Retrieves the current position of Mario's cap, if it is on the ground in the current level and area. The position is stored in the provided `capPos` parameter. Useful for tracking the cap's location after it has been dropped or lost
 function save_file_get_cap_pos(capPos)
     -- ...
 end
@@ -8204,6 +8209,7 @@ end
 --- @param fileIndex integer
 --- @param courseIndex integer
 --- @return integer
+--- Returns the highest coin score for a specified course in the save file. Performs checks to ensure the coin score is valid. Useful for tracking player achievements and high scores
 function save_file_get_course_coin_score(fileIndex, courseIndex)
     -- ...
 end
@@ -8211,22 +8217,26 @@ end
 --- @param fileIndex integer
 --- @param courseIndex integer
 --- @return integer
+--- Calculates the total number of stars collected in a specific course for a given save file. Useful for determining completion status of individual levels
 function save_file_get_course_star_count(fileIndex, courseIndex)
     -- ...
 end
 
 --- @return integer
+--- Retrieves the bitmask of flags representing the current state of the save file. Flags indicate collected items, completed objectives, and other game states. Useful for checking specific game progress details
 function save_file_get_flags()
     -- ...
 end
 
 --- @param courseIndex integer
 --- @return integer
+--- Determines the maximum coin score for a course across all save files. Returns the score along with the file index of the save containing it. Useful for leaderboard-style comparisons and overall progress tracking
 function save_file_get_max_coin_score(courseIndex)
     -- ...
 end
 
 --- @return integer
+--- Returns the current sound mode (e.g., stereo, mono) stored in the save file. Useful for checking the audio output preferences when loading a save
 function save_file_get_sound_mode()
     -- ...
 end
@@ -8234,6 +8244,7 @@ end
 --- @param fileIndex integer
 --- @param courseIndex integer
 --- @return integer
+--- Retrieves the bitmask of stars collected in a specific course or castle secret stars (-1). Useful for evaluating level progress and completion
 function save_file_get_star_flags(fileIndex, courseIndex)
     -- ...
 end
@@ -8242,6 +8253,7 @@ end
 --- @param minCourse integer
 --- @param maxCourse integer
 --- @return integer
+--- Calculates the total number of stars collected across multiple courses within a specified range. Useful for determining the overall progress toward game completion
 function save_file_get_total_star_count(fileIndex, minCourse, maxCourse)
     -- ...
 end
@@ -8249,11 +8261,13 @@ end
 --- @param fileIndex integer
 --- @param courseIndex integer
 --- @return integer
+--- Checks whether the cannon in the specified course is unlocked. Returns true if the cannon is unlocked, otherwise false. Useful for tracking course-specific progress and enabling shortcuts
 function save_file_is_cannon_unlocked(fileIndex, courseIndex)
     -- ...
 end
 
 --- @param load_all integer
+--- Reloads the save file data into memory, optionally resetting all save files. Marks the save file as modified. Useful for reloading state after data corruption or during development debugging
 function save_file_reload(load_all)
     -- ...
 end
@@ -8261,6 +8275,7 @@ end
 --- @param fileIndex integer
 --- @param courseIndex integer
 --- @param starFlagsToRemove integer
+--- Removes specific star flags from the save file. This modifies the bitmask representing collected stars for a course or castle secret stars. Useful for undoing progress or debugging collected stars
 function save_file_remove_star_flags(fileIndex, courseIndex, starFlagsToRemove)
     -- ...
 end
@@ -8268,11 +8283,13 @@ end
 --- @param fileIndex integer
 --- @param courseIndex integer
 --- @param coinScore integer
+--- Updates the coin score for a specific course in the save file. The new score is provided in the `coinScore` parameter. Useful for manually setting achievements such as high coin counts in individual levels
 function save_file_set_course_coin_score(fileIndex, courseIndex, coinScore)
     -- ...
 end
 
 --- @param flags integer
+--- Adds new flags to the save file's flag bitmask. Useful for updating progress or triggering new gameplay features
 function save_file_set_flags(flags)
     -- ...
 end
@@ -8280,12 +8297,14 @@ end
 --- @param fileIndex integer
 --- @param courseIndex integer
 --- @param starFlags integer
+--- Adds specific star flags to the save file, indicating collected stars for a course or castle secret stars. Updates the save file flags as necessary. Useful for recording progress after star collection
 function save_file_set_star_flags(fileIndex, courseIndex, starFlags)
     -- ...
 end
 
 --- @param fileIndex integer
 --- @param courseIndex integer
+--- Marks the coin score for a specific course as the newest among all save files. Adjusts the age of other scores to reflect the update. Useful for leaderboard tracking or displaying recent progress
 function touch_coin_score_age(fileIndex, courseIndex)
     -- ...
 end
