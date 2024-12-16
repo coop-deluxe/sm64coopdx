@@ -5514,7 +5514,7 @@ Creates a warp node in the current level and area with id `id` that goes to the 
 - `integer`
 
 ### C Prototype
-`s32 lvl_set_current_level(UNUSED s16 arg0, s16 levelNum);`
+`s32 lvl_set_current_level(s16 arg0, s16 levelNum);`
 
 [:arrow_up_small:](#)
 
