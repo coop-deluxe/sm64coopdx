@@ -80,6 +80,8 @@ extern bool         configUseStandardKeyBindingsChat;
 // free camera settings
 extern bool         configEnableCamera;
 extern bool         configCameraAnalog;
+extern bool         configCameraDpadBehavior;
+extern bool         configCameraHasCollision;
 extern bool         configCameraMouse;
 extern bool         configCameraInvertX;
 extern bool         configCameraInvertY;
