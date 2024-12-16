@@ -315,7 +315,7 @@ Adjusts the camera's height toward a target value (`goalHeight`) while respectin
 ## [approach_f32_asymptotic](#approach_f32_asymptotic)
 
 ### Description
-Gradually approaches a floating-point value (`target) using asymptotic smoothing. The rate of approach is controlled by the `multiplier`. Useful for smoothly adjusting camera parameters like field-of-view or position
+Gradually approaches a floating-point value (`target`) using asymptotic smoothing. The rate of approach is controlled by the `multiplier`. Useful for smoothly adjusting camera parameters like field-of-view or position
 
 ### Lua Example
 `local numberValue = approach_f32_asymptotic(current, target, multiplier)`
@@ -365,7 +365,7 @@ Gradually adjusts a floating-point value (`current`) towards a target (`target`)
 ## [approach_s16_asymptotic](#approach_s16_asymptotic)
 
 ### Description
-Gradually approaches a signed 16-bit integer (`target`) using asymptotic smoothing. The divisor controls the rate of the adjustment Useful for adjusting angles or positions smoothly
+Gradually approaches a signed 16-bit integer (`target`) using asymptotic smoothing. The divisor controls the rate of the adjustment. Useful for adjusting angles or positions smoothly
 
 ### Lua Example
 `local integerValue = approach_s16_asymptotic(current, target, divisor)`
@@ -587,7 +587,7 @@ Selects an alternate camera mode based on the given angle. Used to toggle betwee
 ## [camera_approach_f32_symmetric](#camera_approach_f32_symmetric)
 
 ### Description
-Symmetrically approaches a floating-point value (`target`) with a fixed increment per frame. Limits the rate of change to ensure gradual transitions
+Symmetrically approaches a floating-point value (`target`) with a fixed increment (`increment`) per frame. Limits the rate of change to ensure gradual transitions
 
 ### Lua Example
 `local numberValue = camera_approach_f32_symmetric(value, target, increment)`
@@ -612,7 +612,7 @@ Symmetrically approaches a floating-point value (`target`) with a fixed incremen
 ## [camera_approach_f32_symmetric_bool](#camera_approach_f32_symmetric_bool)
 
 ### Description
-Adjusts a floating-point value (`current`) towards a target (`target`) symmetrically with a fixed increment. Returns true if the value reaches the target and false otherwise
+Adjusts a floating-point value (`current`) towards a target (`target`) symmetrically with a fixed increment (`increment`). Returns true if the value reaches the target and false otherwise
 
 ### Lua Example
 `local integerValue = camera_approach_f32_symmetric_bool(current, target, increment)`
@@ -637,7 +637,7 @@ Adjusts a floating-point value (`current`) towards a target (`target`) symmetric
 ## [camera_approach_s16_symmetric_bool](#camera_approach_s16_symmetric_bool)
 
 ### Description
-Adjusts a signed 16-bit integer (`current`) towards a target (`target`) symmetrically with a fixed increment. Returns true if the value reaches the target and false otherwise
+Adjusts a signed 16-bit integer (`current`) towards a target (`target`) symmetrically with a fixed increment (`increment`). Returns true if the value reaches the target and false otherwise
 
 ### Lua Example
 `local integerValue = camera_approach_s16_symmetric_bool(current, target, increment)`
@@ -708,7 +708,7 @@ Toggles whether the camera uses course-specific settings. This is useful for ena
 ## [center_rom_hack_camera](#center_rom_hack_camera)
 
 ### Description
-Centers the camera in a custom ROM hack environment. This function is designed for non-standard level layouts and modded game environments
+Centers the ROM hack camera. This function is designed for non-standard level layouts and modded game environments
 
 ### Lua Example
 `center_rom_hack_camera()`
@@ -1537,7 +1537,7 @@ Resolves collisions between the camera and level geometry. Adjusts the camera's 
 ## [rom_hack_cam_set_collisions](#rom_hack_cam_set_collisions)
 
 ### Description
-Toggles collision settings for custom ROM hack cameras. This enables or disables specific collision behaviors in modded levels
+Toggles collision settings for the ROM hack camera. This enables or disables specific collision behaviors in modded levels
 
 ### Lua Example
 `rom_hack_cam_set_collisions(enable)`

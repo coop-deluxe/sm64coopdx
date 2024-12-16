@@ -3004,7 +3004,7 @@ end
 --- @param target number
 --- @param multiplier number
 --- @return number
---- Gradually approaches a floating-point value (`target) using asymptotic smoothing. The rate of approach is controlled by the `multiplier`. Useful for smoothly adjusting camera parameters like field-of-view or position
+--- Gradually approaches a floating-point value (`target`) using asymptotic smoothing. The rate of approach is controlled by the `multiplier`. Useful for smoothly adjusting camera parameters like field-of-view or position
 function approach_f32_asymptotic(current, target, multiplier)
     -- ...
 end
@@ -3022,7 +3022,7 @@ end
 --- @param target integer
 --- @param divisor integer
 --- @return integer
---- Gradually approaches a signed 16-bit integer (`target`) using asymptotic smoothing. The divisor controls the rate of the adjustment Useful for adjusting angles or positions smoothly
+--- Gradually approaches a signed 16-bit integer (`target`) using asymptotic smoothing. The divisor controls the rate of the adjustment. Useful for adjusting angles or positions smoothly
 function approach_s16_asymptotic(current, target, divisor)
     -- ...
 end
@@ -3098,7 +3098,7 @@ end
 --- @param target number
 --- @param increment number
 --- @return number
---- Symmetrically approaches a floating-point value (`target`) with a fixed increment per frame. Limits the rate of change to ensure gradual transitions
+--- Symmetrically approaches a floating-point value (`target`) with a fixed increment (`increment`) per frame. Limits the rate of change to ensure gradual transitions
 function camera_approach_f32_symmetric(value, target, increment)
     -- ...
 end
@@ -3107,7 +3107,7 @@ end
 --- @param target number
 --- @param increment number
 --- @return integer
---- Adjusts a floating-point value (`current`) towards a target (`target`) symmetrically with a fixed increment. Returns true if the value reaches the target and false otherwise
+--- Adjusts a floating-point value (`current`) towards a target (`target`) symmetrically with a fixed increment (`increment`). Returns true if the value reaches the target and false otherwise
 function camera_approach_f32_symmetric_bool(current, target, increment)
     -- ...
 end
@@ -3116,7 +3116,7 @@ end
 --- @param target integer
 --- @param increment integer
 --- @return integer
---- Adjusts a signed 16-bit integer (`current`) towards a target (`target`) symmetrically with a fixed increment. Returns true if the value reaches the target and false otherwise
+--- Adjusts a signed 16-bit integer (`current`) towards a target (`target`) symmetrically with a fixed increment (`increment`). Returns true if the value reaches the target and false otherwise
 function camera_approach_s16_symmetric_bool(current, target, increment)
     -- ...
 end
@@ -3134,7 +3134,7 @@ function camera_set_use_course_specific_settings(enable)
     -- ...
 end
 
---- Centers the camera in a custom ROM hack environment. This function is designed for non-standard level layouts and modded game environments
+--- Centers the ROM hack camera. This function is designed for non-standard level layouts and modded game environments
 function center_rom_hack_camera()
     -- ...
 end
@@ -3393,7 +3393,7 @@ function resolve_geometry_collisions(pos, lastGood)
 end
 
 --- @param enable integer
---- Toggles collision settings for custom ROM hack cameras. This enables or disables specific collision behaviors in modded levels
+--- Toggles collision settings for the ROM hack camera. This enables or disables specific collision behaviors in modded levels
 function rom_hack_cam_set_collisions(enable)
     -- ...
 end

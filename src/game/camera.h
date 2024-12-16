@@ -849,7 +849,7 @@ Returns true if `current` reaches the `target` and false otherwise
 s32 approach_f32_asymptotic_bool(f32 *current, f32 target, f32 multiplier);
 
 /* |description|
-Gradually approaches a floating-point value (`target) using asymptotic smoothing.
+Gradually approaches a floating-point value (`target`) using asymptotic smoothing.
 The rate of approach is controlled by the `multiplier`.
 Useful for smoothly adjusting camera parameters like field-of-view or position
 |descriptionEnd| */
@@ -863,7 +863,7 @@ s32 approach_s16_asymptotic_bool(s16 *current, s16 target, s16 divisor);
 
 /* |description|
 Gradually approaches a signed 16-bit integer (`target`) using asymptotic smoothing.
-The divisor controls the rate of the adjustment
+The divisor controls the rate of the adjustment.
 Useful for adjusting angles or positions smoothly
 |descriptionEnd| */
 s32 approach_s16_asymptotic(s16 current, s16 target, s16 divisor);
@@ -881,7 +881,7 @@ Allows gradual or instantaneous alignment of 3D positions. Scaling values (the `
 void set_or_approach_vec3f_asymptotic(Vec3f dst, Vec3f goal, f32 xMul, f32 yMul, f32 zMul);
 
 /* |description|
-Adjusts a signed 16-bit integer (`current`) towards a target (`target`) symmetrically with a fixed increment.
+Adjusts a signed 16-bit integer (`current`) towards a target (`target`) symmetrically with a fixed increment (`increment`).
 Returns true if the value reaches the target and false otherwise
 |descriptionEnd| */
 s32 camera_approach_s16_symmetric_bool(s16 *current, s16 target, s16 increment);
@@ -893,13 +893,13 @@ Uses symmetric scaling for gradual or immediate adjustments
 s32 set_or_approach_s16_symmetric(s16 *current, s16 target, s16 increment);
 
 /* |description|
-Adjusts a floating-point value (`current`) towards a target (`target`) symmetrically with a fixed increment.
+Adjusts a floating-point value (`current`) towards a target (`target`) symmetrically with a fixed increment (`increment`).
 Returns true if the value reaches the target and false otherwise
 |descriptionEnd| */
 s32 camera_approach_f32_symmetric_bool(f32 *current, f32 target, f32 increment);
 
 /* |description|
-Symmetrically approaches a floating-point value (`target`) with a fixed increment per frame.
+Symmetrically approaches a floating-point value (`target`) with a fixed increment (`increment`) per frame.
 Limits the rate of change to ensure gradual transitions
 |descriptionEnd| */
 f32 camera_approach_f32_symmetric(f32 value, f32 target, f32 increment);
@@ -1241,13 +1241,13 @@ This is useful for enabling or disabling custom behaviors in specific courses or
 void camera_set_use_course_specific_settings(u8 enable);
 
 /* |description|
-Toggles collision settings for custom ROM hack cameras.
+Toggles collision settings for the ROM hack camera.
 This enables or disables specific collision behaviors in modded levels
 |descriptionEnd| */
 void rom_hack_cam_set_collisions(u8 enable);
 
 /* |description|
-Centers the camera in a custom ROM hack environment.
+Centers the ROM hack camera.
 This function is designed for non-standard level layouts and modded game environments
 |descriptionEnd| */
 void center_rom_hack_camera(void);
