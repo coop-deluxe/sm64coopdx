@@ -2995,6 +2995,7 @@ end
 --- @param c Camera
 --- @param goal number
 --- @param inc number
+--- Adjusts the camera's height toward a target value (`goalHeight`) while respecting terrain and obstructions. This is really wonky and probably shouldn't be used, prefer `gLakituStates`
 function approach_camera_height(c, goal, inc)
     -- ...
 end
@@ -3003,6 +3004,7 @@ end
 --- @param target number
 --- @param multiplier number
 --- @return number
+--- Gradually approaches a floating-point value (`target) using asymptotic smoothing. The rate of approach is controlled by the `multiplier`. Useful for smoothly adjusting camera parameters like field-of-view or position
 function approach_f32_asymptotic(current, target, multiplier)
     -- ...
 end
@@ -3011,6 +3013,7 @@ end
 --- @param target number
 --- @param multiplier number
 --- @return integer
+--- Gradually adjusts a floating-point value (`current`) towards a target (`target`) using asymptotic smoothing. Returns true if `current` reaches the `target` and false otherwise
 function approach_f32_asymptotic_bool(current, target, multiplier)
     -- ...
 end
@@ -3019,6 +3022,7 @@ end
 --- @param target integer
 --- @param divisor integer
 --- @return integer
+--- Gradually approaches a signed 16-bit integer (`target`) using asymptotic smoothing. The divisor controls the rate of the adjustment Useful for adjusting angles or positions smoothly
 function approach_s16_asymptotic(current, target, divisor)
     -- ...
 end
@@ -3027,6 +3031,7 @@ end
 --- @param target integer
 --- @param divisor integer
 --- @return integer
+--- Gradually adjusts a signed 16-bit integer (`current`) towards a target (`target`) using asymptotic smoothing. Returns true if `current` reaches `target` and false otherwise
 function approach_s16_asymptotic_bool(current, target, divisor)
     -- ...
 end
@@ -3036,6 +3041,7 @@ end
 --- @param xMul number
 --- @param yMul number
 --- @param zMul number
+--- Smoothly transitions a 3D vector (`current`) towards a target vector (`target`) using asymptotic scaling. Scaling values (the `Mul` variables) for x, y, and z axes determine the speed of adjustment for each component
 function approach_vec3f_asymptotic(current, target, xMul, yMul, zMul)
     -- ...
 end
@@ -3043,6 +3049,7 @@ end
 --- @param a Vec3f
 --- @param b Vec3f
 --- @return number
+--- Calculates the absolute distance between two 3D points (`a` and `b`). Returns the distance as a floating-point value. Useful for determining proximity between objects in 3D space
 function calc_abs_dist(a, b)
     -- ...
 end
@@ -3050,6 +3057,7 @@ end
 --- @param a Vec3f
 --- @param b Vec3f
 --- @return number
+--- Calculates the horizontal (XZ-plane) distance between two 3D points (`a` and `b`). Returns the distance as a floating-point value. Useful for terrain navigation or collision detection
 function calc_hor_dist(a, b)
     -- ...
 end
@@ -3058,6 +3066,7 @@ end
 --- @param to Vec3f
 --- @param pitch Pointer_integer
 --- @param yaw Pointer_integer
+--- Calculates the pitch and yaw angles from one 3D position (`from`) to another (`to`). Updates the provided pointers with the computed pitch and yaw values
 function calculate_angles(from, to, pitch, yaw)
     -- ...
 end
@@ -3065,6 +3074,7 @@ end
 --- @param from Vec3f
 --- @param to Vec3f
 --- @return integer
+--- Calculates the pitch angle (rotation around the X-axis) from one 3D point (`from`) to another (`to`). Returns the pitch as a signed 16-bit integer
 function calculate_pitch(from, to)
     -- ...
 end
@@ -3072,12 +3082,14 @@ end
 --- @param from Vec3f
 --- @param to Vec3f
 --- @return integer
+--- Determines the yaw angle (rotation around the Y-axis) from one 3D position (`from`) to another (`to`). Returns the yaw as a signed 16-bit integer
 function calculate_yaw(from, to)
     -- ...
 end
 
 --- @param angle integer
 --- @return integer
+--- Selects an alternate camera mode based on the given angle. Used to toggle between predefined camera modes dynamically
 function cam_select_alt_mode(angle)
     -- ...
 end
@@ -3086,6 +3098,7 @@ end
 --- @param target number
 --- @param increment number
 --- @return number
+--- Symmetrically approaches a floating-point value (`target`) with a fixed increment per frame. Limits the rate of change to ensure gradual transitions
 function camera_approach_f32_symmetric(value, target, increment)
     -- ...
 end
@@ -3094,6 +3107,7 @@ end
 --- @param target number
 --- @param increment number
 --- @return integer
+--- Adjusts a floating-point value (`current`) towards a target (`target`) symmetrically with a fixed increment. Returns true if the value reaches the target and false otherwise
 function camera_approach_f32_symmetric_bool(current, target, increment)
     -- ...
 end
@@ -3102,21 +3116,25 @@ end
 --- @param target integer
 --- @param increment integer
 --- @return integer
+--- Adjusts a signed 16-bit integer (`current`) towards a target (`target`) symmetrically with a fixed increment. Returns true if the value reaches the target and false otherwise
 function camera_approach_s16_symmetric_bool(current, target, increment)
     -- ...
 end
 
 --- @param c Camera
 --- @return integer
+--- Processes course-specific camera settings, such as predefined positions or modes. Adjusts the camera to match the design and gameplay requirements of the current course
 function camera_course_processing(c)
     -- ...
 end
 
 --- @param enable integer
+--- Toggles whether the camera uses course-specific settings. This is useful for enabling or disabling custom behaviors in specific courses or areas
 function camera_set_use_course_specific_settings(enable)
     -- ...
 end
 
+--- Centers the camera in a custom ROM hack environment. This function is designed for non-standard level layouts and modded game environments
 function center_rom_hack_camera()
     -- ...
 end
@@ -3126,6 +3144,7 @@ end
 --- @param maxPitch integer
 --- @param minPitch integer
 --- @return integer
+--- Clamps the camera's pitch angle between a maximum and minimum value. Prevents over-rotation and maintains a consistent viewing angle
 function clamp_pitch(from, to, maxPitch, minPitch)
     -- ...
 end
@@ -3137,6 +3156,7 @@ end
 --- @param zMax number
 --- @param zMin number
 --- @return integer
+--- Clamps a position within specified X and Z bounds and calculates the yaw angle from the origin. Prevents the camera from moving outside of the designated area
 function clamp_positions_and_find_yaw(pos, origin, xMax, xMin, zMax, zMin)
     -- ...
 end
@@ -3145,6 +3165,7 @@ end
 --- @param offsetY number
 --- @param radius number
 --- @return integer
+--- Checks for collisions between the camera and level geometry. Adjusts the camera's position to avoid clipping into walls or obstacles
 function collide_with_walls(pos, offsetY, radius)
     -- ...
 end
@@ -3152,6 +3173,7 @@ end
 --- @param cutscene integer
 --- @param o Object
 --- @return integer
+--- Initiates a cutscene focusing on a specific object in the game world. The camera transitions smoothly to the object, adapting its position as needed
 function cutscene_object(cutscene, o)
     -- ...
 end
@@ -3160,6 +3182,7 @@ end
 --- @param o Object
 --- @param dialogID integer
 --- @return integer
+--- Starts a cutscene involving an object and displays dialog during the sequence. The camera focuses on the object while synchronizing dialog with the scene
 function cutscene_object_with_dialog(cutscene, o, dialogID)
     -- ...
 end
@@ -3167,11 +3190,13 @@ end
 --- @param cutscene integer
 --- @param o Object
 --- @return integer
+--- Starts a cutscene involving an object without dialog. The camera transitions smoothly to focus on the object
 function cutscene_object_without_dialog(cutscene, o)
     -- ...
 end
 
 --- @param preset integer
+--- Applies a preset field-of-view shake effect during a cutscene. This creates dynamic visual effects, such as zoom or focus disruptions
 function cutscene_set_fov_shake_preset(preset)
     -- ...
 end
@@ -3179,6 +3204,7 @@ end
 --- @param obj integer
 --- @param frame integer
 --- @return integer
+--- Spawns an object as part of a cutscene, such as props or interactive elements. Returns the spawned object's reference for further manipulation
 function cutscene_spawn_obj(obj, frame)
     -- ...
 end
@@ -3187,22 +3213,26 @@ end
 --- @param buttonsPressed integer
 --- @param buttonsDown integer
 --- @return integer
+--- Determines which C-buttons are currently pressed by the player. Returns a bitmask indicating the active buttons for camera control
 function find_c_buttons_pressed(currentState, buttonsPressed, buttonsDown)
     -- ...
 end
 
 --- @param pg PlayerGeometry
+--- Finds the floor and ceiling directly above and below Mario's position. Updates Mario's geometry information for camera calculations
 function find_mario_floor_and_ceil(pg)
     -- ...
 end
 
 --- @param c Camera
 --- @return integer
+--- Gets the appropriate cutscene to play based on Mario's current gameplay state. This function helps determine transitions for cinematic or scripted sequences
 function get_cutscene_from_mario_status(c)
     -- ...
 end
 
 --- @param c Camera
+--- Handles camera movement based on input from the C-buttons. Updates the camera's position or angle to match directional player input
 function handle_c_button_movement(c)
     -- ...
 end
@@ -3213,6 +3243,7 @@ end
 --- @param range integer
 --- @param surfType integer
 --- @return integer
+--- Determines if a range is obstructed by a surface relative to the camera. Returns true if the range is behind the specified surface
 function is_range_behind_surface(from, to, surf, range, surfType)
     -- ...
 end
@@ -3221,11 +3252,13 @@ end
 --- @param posY number
 --- @param posZ number
 --- @return integer
+--- Checks if a position is within 100 units of Mario's current position. Returns true if the position is within the specified radius and false otherwise
 function is_within_100_units_of_mario(posX, posY, posZ)
     -- ...
 end
 
 --- @param c Camera
+--- Moves Mario's head slightly upward when the C-Up button is pressed. This function aligns the camera to match the head movement for consistency
 function move_mario_head_c_up(c)
     -- ...
 end
@@ -3238,6 +3271,7 @@ end
 --- @param oldFoc Vec3f
 --- @param yaw integer
 --- @return integer
+--- Transitions the camera to the next Lakitu state, updating position and focus. This function handles smooth transitions between different gameplay scenarios
 function next_lakitu_state(newPos, newFoc, curPos, curFoc, oldPos, oldFoc, yaw)
     -- ...
 end
@@ -3248,12 +3282,14 @@ end
 --- @param yawOff integer
 --- @param pitchDiv integer
 --- @param yawDiv integer
+--- Rotates an object toward a specific point in 3D space. Gradually updates the object's pitch and yaw angles to face the target
 function obj_rotate_towards_point(o, point, pitchOff, yawOff, pitchDiv, yawDiv)
     -- ...
 end
 
 --- @param dst Vec3f
 --- @param o Object
+--- Converts an object's position to a `Vec3f` format. Useful for aligning object behaviors or interactions with the camera system
 function object_pos_to_vec3f(dst, o)
     -- ...
 end
@@ -3262,6 +3298,7 @@ end
 --- @param from Vec3f
 --- @param to Vec3f
 --- @param rotation Vec3s
+--- Offsets a vector by rotating it in 3D space relative to a reference position. This is useful for creating radial effects or dynamic transformations
 function offset_rotated(dst, from, to, rotation)
     -- ...
 end
@@ -3269,47 +3306,58 @@ end
 --- @param c Camera
 --- @param areaYaw integer
 --- @return integer
+--- Calculates an outward radial offset based on the camera's yaw angle. Returns the offset yaw, used for positioning or alignment
 function offset_yaw_outward_radial(c, areaYaw)
     -- ...
 end
 
+--- Plays a buzzing sound effect when the camera's position is misaligned with the player's perspective. Used as audio feedback for incorrect camera behavior
 function play_camera_buzz_if_c_sideways()
     -- ...
 end
 
+--- Plays a buzzing sound effect when a blocked C-button action is attempted. Used to signal invalid input or restricted camera movement
 function play_camera_buzz_if_cbutton()
     -- ...
 end
 
+--- Plays a buzzing sound effect when the camera attempts to move downward but is restricted. Provides feedback for invalid C-Down input actions
 function play_camera_buzz_if_cdown()
     -- ...
 end
 
 --- @param c Camera
+--- Starts the execution of a predefined cutscene. The camera transitions dynamically to follow the scripted sequence
 function play_cutscene(c)
     -- ...
 end
 
+--- Plays a sound effect when a blocked action changes the camera mode. This provides feedback for invalid attempts to switch the camera state
 function play_sound_button_change_blocked()
     -- ...
 end
 
+--- Plays a sound effect when the C-Down button is pressed for camera movement. Provides auditory feedback for valid camera input
 function play_sound_cbutton_down()
     -- ...
 end
 
+--- Plays a sound effect when the C-Side button (left or right) is pressed for camera movement. Used as audio feedback for horizontal adjustments to the camera
 function play_sound_cbutton_side()
     -- ...
 end
 
+--- Plays a sound effect when the C-Up button is pressed for camera movement. Provides feedback for vertical camera adjustments
 function play_sound_cbutton_up()
     -- ...
 end
 
+--- Plays a sound effect when the camera switches between Lakitu and Mario perspectives. Signals a successful change in camera mode
 function play_sound_if_cam_switched_to_lakitu_or_mario()
     -- ...
 end
 
+--- Plays a sound effect when the R-Button camera mode is changed. Provides feedback for toggling camera behaviors
 function play_sound_rbutton_changed()
     -- ...
 end
@@ -3317,6 +3365,7 @@ end
 --- @param c Camera
 --- @param unused number
 --- @return integer
+--- Handles radial camera movement based on player input. Updates the camera's position or orientation accordingly
 function radial_camera_input(c, unused)
     -- ...
 end
@@ -3325,22 +3374,26 @@ end
 --- @param xRange integer
 --- @param yRange integer
 --- @param zRange integer
+--- Generates a random 3D vector with short integer components. Useful for randomized offsets or environmental effects
 function random_vec3s(dst, xRange, yRange, zRange)
     -- ...
 end
 
 --- @param c Camera
+--- Fully resets the camera to its default state and reinitializes all settings. This is typically used when restarting gameplay or loading a new area
 function reset_camera(c)
     -- ...
 end
 
 --- @param pos Vec3f
 --- @param lastGood Vec3f
+--- Resolves collisions between the camera and level geometry. Adjusts the camera's position to prevent clipping or intersecting with objects
 function resolve_geometry_collisions(pos, lastGood)
     -- ...
 end
 
 --- @param enable integer
+--- Toggles collision settings for custom ROM hack cameras. This enables or disables specific collision behaviors in modded levels
 function rom_hack_cam_set_collisions(enable)
     -- ...
 end
@@ -3350,6 +3403,7 @@ end
 --- @param avoidYaw Pointer_integer
 --- @param yawRange integer
 --- @return integer
+--- Rotates the camera to avoid walls or other obstructions. Ensures clear visibility of the player or target objects
 function rotate_camera_around_walls(c, cPos, avoidYaw, yawRange)
     -- ...
 end
@@ -3357,6 +3411,7 @@ end
 --- @param dst Vec3f
 --- @param src Vec3f
 --- @param yaw integer
+--- Rotates a vector around the XZ-plane by a specified yaw angle. The result is stored in the destination vector (`dst`). Useful for rotating camera positions or object coordinates horizontally
 function rotate_in_xz(dst, src, yaw)
     -- ...
 end
@@ -3364,6 +3419,7 @@ end
 --- @param dst Vec3f
 --- @param src Vec3f
 --- @param pitch integer
+--- Rotates a vector around the YZ-plane by a specified pitch angle. The result is stored in the destination vector (`dst`). Useful for vertical camera rotations or object transformations
 function rotate_in_yz(dst, src, pitch)
     -- ...
 end
@@ -3372,16 +3428,19 @@ end
 --- @param from Vec3f
 --- @param to Vec3f
 --- @param scale number
+--- Scales a point along a line between two 3D points (`from` and `to`). The scaling factor determines how far along the line the resulting point will be. The result is stored in the destination vector (`dest`)
 function scale_along_line(dest, from, to, scale)
     -- ...
 end
 
+--- Selects the appropriate camera mode for Mario based on the current gameplay context. Adapts camera behavior dynamically to match Mario's environment or state
 function select_mario_cam_mode()
     -- ...
 end
 
 --- @param mode integer
 --- @return integer
+--- Sets the camera's angle based on the specified mode. Handles rotation and focus adjustments for predefined camera behaviors
 function set_cam_angle(mode)
     -- ...
 end
@@ -3389,6 +3448,7 @@ end
 --- @param c Camera
 --- @param mode integer
 --- @param frames integer
+--- Changes the camera to a new mode, optionally interpolating over a specified number of frames. Useful for transitioning between different camera behaviors dynamically
 function set_camera_mode(c, mode, frames)
     -- ...
 end
@@ -3398,6 +3458,7 @@ end
 --- @param y integer
 --- @param z integer
 --- @return integer
+--- Activates a fixed camera mode and aligns the camera to specific X, Y, Z coordinates. This is useful for predefined static views in specific areas
 function set_camera_mode_fixed(c, x, y, z)
     -- ...
 end
@@ -3405,6 +3466,7 @@ end
 --- @param mag integer
 --- @param decay integer
 --- @param inc integer
+--- Applies a pitch-based shake effect to the camera. The shake's magnitude, decay, and increment are configurable. Simulates vertical disturbances like impacts or explosions
 function set_camera_pitch_shake(mag, decay, inc)
     -- ...
 end
@@ -3412,11 +3474,13 @@ end
 --- @param mag integer
 --- @param decay integer
 --- @param inc integer
+--- Applies a roll-based shake effect to the camera. Simulates rotational disturbances for dynamic camera effects
 function set_camera_roll_shake(mag, decay, inc)
     -- ...
 end
 
 --- @param shake integer
+--- Applies a shake effect to the camera based on a hit type. Different shake types simulate various impacts, such as attacks, falls, or shocks
 function set_camera_shake_from_hit(shake)
     -- ...
 end
@@ -3425,6 +3489,7 @@ end
 --- @param posX number
 --- @param posY number
 --- @param posZ number
+--- Applies a shake effect to the camera, scaled by its proximity to a specified point. The intensity decreases with distance from the point
 function set_camera_shake_from_point(shake, posX, posY, posZ)
     -- ...
 end
@@ -3432,21 +3497,25 @@ end
 --- @param mag integer
 --- @param decay integer
 --- @param inc integer
+--- Applies a yaw-based shake effect to the camera. Simulates horizontal vibrations or rotational impacts
 function set_camera_yaw_shake(mag, decay, inc)
     -- ...
 end
 
 --- @param shake integer
+--- Applies an environmental shake effect to the camera. Handles predefined shake types triggered by environmental events like explosions or platform movements
 function set_environmental_camera_shake(shake)
     -- ...
 end
 
 --- @param preset integer
+--- Transitions the camera to the next Lakitu state, updating position and focus. This function handles smooth transitions between different gameplay scenarios
 function set_fixed_cam_axis_sa_lobby(preset)
     -- ...
 end
 
 --- @param func integer
+--- Assigns a custom function for dynamic field-of-view adjustments. This allows precise control over the camera's zoom behavior during gameplay
 function set_fov_function(func)
     -- ...
 end
@@ -3454,6 +3523,7 @@ end
 --- @param amplitude integer
 --- @param decay integer
 --- @param shakeSpeed integer
+--- Applies a field-of-view shake effect to simulate zoom or focus disruptions. Shake parameters, such as amplitude and decay, control the intensity
 function set_fov_shake(amplitude, decay, shakeSpeed)
     -- ...
 end
@@ -3462,11 +3532,13 @@ end
 --- @param posX number
 --- @param posY number
 --- @param posZ number
+--- Applies a preset field-of-view shake effect relative to a specific point. The intensity diminishes as the distance from the point increases
 function set_fov_shake_from_point_preset(preset, posX, posY, posZ)
     -- ...
 end
 
 --- @param mode integer
+--- Applies a handheld camera shake effect with configurable parameters. Can be used to simulate dynamic, realistic camera movement
 function set_handheld_shake(mode)
     -- ...
 end
@@ -3475,6 +3547,7 @@ end
 --- @param goal number
 --- @param scale number
 --- @return integer
+--- Smoothly transitions or directly sets a floating-point value (`dst`) to approach a target (`goal`). Uses asymptotic scaling for gradual adjustments or direct assignment
 function set_or_approach_f32_asymptotic(dst, goal, scale)
     -- ...
 end
@@ -3483,6 +3556,7 @@ end
 --- @param target integer
 --- @param increment integer
 --- @return integer
+--- Smoothly transitions or directly sets a signed 16-bit value (`current`) to approach a target (`target`). Uses symmetric scaling for gradual or immediate adjustments
 function set_or_approach_s16_symmetric(current, target, increment)
     -- ...
 end
@@ -3492,6 +3566,7 @@ end
 --- @param xMul number
 --- @param yMul number
 --- @param zMul number
+--- Smoothly transitions a 3D vector (`current`) toward a target vector (`goal`) using asymptotic scaling. Allows gradual or instantaneous alignment of 3D positions. Scaling values (the `Mul` variables) for x, y, and z axes determine the speed of adjustment for each component
 function set_or_approach_vec3f_asymptotic(dst, goal, xMul, yMul, zMul)
     -- ...
 end
@@ -3503,74 +3578,87 @@ end
 --- @param posX number
 --- @param posY number
 --- @param posZ number
+--- Applies a pitch shake effect to the camera, scaled by proximity to a specified point. Simulates vibrations with intensity decreasing further from the point
 function set_pitch_shake_from_point(mag, decay, inc, maxDist, posX, posY, posZ)
     -- ...
 end
 
 --- @param pos Vec3f
 --- @param focus Vec3f
+--- Activates a handheld camera shake effect. Calculates positional and focus adjustments to simulate manual movement
 function shake_camera_handheld(pos, focus)
     -- ...
 end
 
 --- @param pos Vec3f
 --- @param focus Vec3f
+--- Activates a pitch-based shake effect. Adds vertical vibrational movement to the camera's behavior
 function shake_camera_pitch(pos, focus)
     -- ...
 end
 
 --- @param roll Pointer_integer
+--- Applies a roll-based shake effect to the camera. Simulates rotational disturbances caused by impacts or other events
 function shake_camera_roll(roll)
     -- ...
 end
 
 --- @param pos Vec3f
 --- @param focus Vec3f
+--- Activates a yaw-based shake effect. Adds horizontal vibrational movement to the camera's behavior
 function shake_camera_yaw(pos, focus)
     -- ...
 end
 
+--- Skips camera interpolation for a frame, locking the camera instantly to the target position. Useful for immediate changes in camera state or position without smooth transitions
 function skip_camera_interpolation()
     -- ...
 end
 
 --- @param c Camera
+--- Resets the camera's state while retaining some settings, such as position or mode. This is often used when soft-resetting gameplay without reinitialization
 function soft_reset_camera(c)
     -- ...
 end
 
 --- @param c Camera
 --- @param cutscene integer
+--- Starts a cutscene based on the provided ID. The camera transitions to predefined behaviors for the duration of the cutscene
 function start_cutscene(c, cutscene)
     -- ...
 end
 
 --- @param cutscene integer
 --- @return integer
+--- Starts a cutscene focused on an object without requiring focus to remain locked. This is useful for dynamic events where the camera adjusts freely
 function start_object_cutscene_without_focus(cutscene)
     -- ...
 end
 
 --- @param c Camera
 --- @param frames integer
+--- Transitions the camera to the next state over a specified number of frames. This is typically used for cutscenes or scripted sequences
 function transition_next_state(c, frames)
     -- ...
 end
 
 --- @param trigger integer
 --- @return integer
+--- Triggers a dialog sequence during a cutscene. The dialog is synchronized with the camera's position and movement
 function trigger_cutscene_dialog(trigger)
     -- ...
 end
 
 --- @param dst Vec3f
 --- @param src Vec3f
+--- Subtracts one 3D vector (`src`) from another (`dst`). Stores the result in the destination vector
 function vec3f_sub(dst, src)
     -- ...
 end
 
 --- @param o Object
 --- @param src Vec3f
+--- Converts a `Vec3f` position to an object's internal format. Useful for syncing 3D positions between objects and the game world
 function vec3f_to_object_pos(o, src)
     -- ...
 end
@@ -3578,6 +3666,7 @@ end
 --- @param displacementX number
 --- @param displacementY number
 --- @param displacementZ number
+--- Moves the camera to a specified warp destination. This function handles transitions between levels or areas seamlessly
 function warp_camera(displacementX, displacementY, displacementZ)
     -- ...
 end
