@@ -39,6 +39,7 @@ in_files = [
     "src/game/save_file.h",
     "src/game/sound_init.h",
     "src/pc/djui/djui_hud_utils.h",
+    "src/pc/djui/djui_panel_menu.c",
     "src/pc/network/network_player.h",
     "src/pc/network/lag_compensation.h",
     "include/behavior_table.h",
@@ -77,6 +78,7 @@ override_allowed_functions = {
     "src/game/rumble_init.c":               [ "queue_rumble_", "reset_rumble_timers" ],
     "src/pc/djui/djui_popup.h" :            [ "create" ],
     "src/pc/djui/djui_language.h" :         [ "djui_language_get" ],
+    "src/pc/djui/djui_panel_menu.c" :       [ "djui_menu_get_rainbow_string_color" ],
     "src/game/save_file.h":                 [ "save_file_get_", "save_file_set_flags", "save_file_clear_flags", "save_file_reload", "save_file_erase_current_backup_save", "save_file_set_star_flags", "save_file_is_cannon_unlocked", "touch_coin_score_age", "save_file_set_course_coin_score", "save_file_do_save", "save_file_remove_star_flags", "save_file_erase" ],
     "src/pc/lua/utils/smlua_model_utils.h": [ "smlua_model_util_get_id" ],
     "src/game/object_list_processor.h":     [ "set_object_respawn_info_bits" ],
@@ -130,7 +132,7 @@ override_disallowed_functions = {
 
 override_hide_functions = {
     "smlua_deprecated.h": [ ".*" ],
-    "network_player.h": [ "network_player_get_palette_color_channel", "network_player_get_override_palette_color_channel" ]
+    "network_player.h":   [ "network_player_get_palette_color_channel", "network_player_get_override_palette_color_channel" ]
 }
 
 override_function_version_excludes = {
