@@ -11,6 +11,7 @@
 #include "src/game/characters.h"
 #include "src/game/mario_step.h"
 #include "src/game/mario.h"
+#include "src/game/rumble_init.h"
 #include "src/pc/djui/djui_popup.h"
 #include "src/pc/network/network_utils.h"
 #include "src/pc/djui/djui_console.h"
@@ -27978,7 +27979,7 @@ int smlua_func_set_object_respawn_info_bits(lua_State* L) {
 }
 
   ///////////////////
- // rumble_init.c //
+ // rumble_init.h //
 ///////////////////
 
 int smlua_func_queue_rumble_data(lua_State* L) {
@@ -27995,7 +27996,6 @@ int smlua_func_queue_rumble_data(lua_State* L) {
     s16 a1 = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "queue_rumble_data"); return 0; }
 
-    extern void queue_rumble_data(s16 a0, s16 a1);
     queue_rumble_data(a0, a1);
 
     return 1;
@@ -28017,7 +28017,6 @@ int smlua_func_queue_rumble_data_mario(lua_State* L) {
     s16 a1 = smlua_to_integer(L, 3);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "queue_rumble_data_mario"); return 0; }
 
-    extern void queue_rumble_data_mario(struct MarioState* m, s16 a0, s16 a1);
     queue_rumble_data_mario(m, a0, a1);
 
     return 1;
@@ -28039,7 +28038,6 @@ int smlua_func_queue_rumble_data_object(lua_State* L) {
     s16 a1 = smlua_to_integer(L, 3);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "queue_rumble_data_object"); return 0; }
 
-    extern void queue_rumble_data_object(struct Object* object, s16 a0, s16 a1);
     queue_rumble_data_object(object, a0, a1);
 
     return 1;
@@ -28057,7 +28055,6 @@ int smlua_func_reset_rumble_timers(lua_State* L) {
     struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "reset_rumble_timers"); return 0; }
 
-    extern void reset_rumble_timers(struct MarioState* m);
     reset_rumble_timers(m);
 
     return 1;
@@ -28077,7 +28074,6 @@ int smlua_func_reset_rumble_timers_2(lua_State* L) {
     s32 a0 = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "reset_rumble_timers_2"); return 0; }
 
-    extern void reset_rumble_timers_2(struct MarioState* m, s32 a0);
     reset_rumble_timers_2(m, a0);
 
     return 1;
@@ -35052,7 +35048,7 @@ void smlua_bind_functions_autogen(void) {
     // object_list_processor.h
     smlua_bind_function(L, "set_object_respawn_info_bits", smlua_func_set_object_respawn_info_bits);
 
-    // rumble_init.c
+    // rumble_init.h
     smlua_bind_function(L, "queue_rumble_data", smlua_func_queue_rumble_data);
     smlua_bind_function(L, "queue_rumble_data_mario", smlua_func_queue_rumble_data_mario);
     smlua_bind_function(L, "queue_rumble_data_object", smlua_func_queue_rumble_data_object);

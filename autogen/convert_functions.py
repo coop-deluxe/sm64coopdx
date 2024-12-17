@@ -28,7 +28,7 @@ in_files = [
     "src/game/mario_actions_submerged.c",
     "src/game/mario_step.h",
     "src/game/mario.h",
-    "src/game/rumble_init.c",
+    "src/game/rumble_init.h",
     "src/pc/djui/djui_popup.h",
     "src/pc/network/network_utils.h",
     "src/pc/djui/djui_console.h",
@@ -75,7 +75,7 @@ in_files = [
 
 override_allowed_functions = {
     "src/audio/external.h":                 [ " play_", "fade", "current_background", "stop_", "sound_banks", "drop_queued_background_music", "set_sound_moving_speed", "background_music_default_volume", "get_sound_pan", "sound_get_level_intensity", "set_audio_muted" ],
-    "src/game/rumble_init.c":               [ "queue_rumble_", "reset_rumble_timers" ],
+    "src/game/rumble_init.h":               [ "queue_rumble_", "reset_rumble_timers" ],
     "src/pc/djui/djui_popup.h":             [ "create" ],
     "src/pc/djui/djui_language.h":          [ "djui_language_get" ],
     "src/pc/djui/djui_panel_menu.h":        [ "djui_menu_get_rainbow_string_color" ],

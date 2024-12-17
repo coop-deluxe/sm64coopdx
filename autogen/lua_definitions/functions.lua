@@ -8304,6 +8304,7 @@ end
 
 --- @param a0 integer
 --- @param a1 integer
+--- Queues rumble data
 function queue_rumble_data(a0, a1)
     -- ...
 end
@@ -8311,6 +8312,7 @@ end
 --- @param m MarioState
 --- @param a0 integer
 --- @param a1 integer
+--- Queues rumble data for Mario
 function queue_rumble_data_mario(m, a0, a1)
     -- ...
 end
@@ -8318,17 +8320,20 @@ end
 --- @param object Object
 --- @param a0 integer
 --- @param a1 integer
+--- Queues rumble data for object, factoring in its distance from Mario
 function queue_rumble_data_object(object, a0, a1)
     -- ...
 end
 
 --- @param m MarioState
+--- Resets rumble timers
 function reset_rumble_timers(m)
     -- ...
 end
 
 --- @param m MarioState
 --- @param a0 integer
+--- Resets rumble timers and sets a field based on `a0`
 function reset_rumble_timers_2(m, a0)
     -- ...
 end

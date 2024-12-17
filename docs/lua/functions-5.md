@@ -4591,12 +4591,15 @@
 <br />
 
 ---
-# functions from rumble_init.c
+# functions from rumble_init.h
 
 <br />
 
 
 ## [queue_rumble_data](#queue_rumble_data)
+
+### Description
+Queues rumble data
 
 ### Lua Example
 `queue_rumble_data(a0, a1)`
@@ -4618,6 +4621,9 @@
 <br />
 
 ## [queue_rumble_data_mario](#queue_rumble_data_mario)
+
+### Description
+Queues rumble data for Mario
 
 ### Lua Example
 `queue_rumble_data_mario(m, a0, a1)`
@@ -4641,6 +4647,9 @@
 
 ## [queue_rumble_data_object](#queue_rumble_data_object)
 
+### Description
+Queues rumble data for object, factoring in its distance from Mario
+
 ### Lua Example
 `queue_rumble_data_object(object, a0, a1)`
 
@@ -4663,6 +4672,9 @@
 
 ## [reset_rumble_timers](#reset_rumble_timers)
 
+### Description
+Resets rumble timers
+
 ### Lua Example
 `reset_rumble_timers(m)`
 
@@ -4682,6 +4694,9 @@
 <br />
 
 ## [reset_rumble_timers_2](#reset_rumble_timers_2)
+
+### Description
+Resets rumble timers and sets a field based on `a0`
 
 ### Lua Example
 `reset_rumble_timers_2(m, a0)`

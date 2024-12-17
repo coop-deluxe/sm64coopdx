@@ -1571,7 +1571,7 @@
 
 <br />
 
-- rumble_init.c
+- rumble_init.h
    - [queue_rumble_data](functions-5.md#queue_rumble_data)
    - [queue_rumble_data_mario](functions-5.md#queue_rumble_data_mario)
    - [queue_rumble_data_object](functions-5.md#queue_rumble_data_object)
