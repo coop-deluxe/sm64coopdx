@@ -224,6 +224,38 @@ static const struct DjuiFont sDjuiFontCustomHudRecolor = {
     .char_width           = djui_font_custom_hud_char_width,
 };
 
+  ///////////////////////////
+ // font 6 (special font) //
+///////////////////////////
+
+static void djui_font_special_render_char(char* c) {
+    // replace undisplayable characters
+    if (*c == ' ') { return; }
+
+    u32 index = djui_unicode_get_sprite_index(c);
+    u32 tx = index % 32;
+    u32 ty = index / 32;
+
+    extern ALIGNED8 const u8 texture_font_special[];
+    djui_gfx_render_texture_tile(texture_font_special, 256, 128, 32, tx * 8, ty * 16, 8, 16, false);
+}
+
+static f32 djui_font_special_char_width(char* c) {
+    if (*c == ' ') { return 0.5f; }
+    extern const f32 font_special_widths[];
+    return djui_unicode_get_sprite_width(c, font_special_widths, 32.0f);
+}
+
+static const struct DjuiFont sDjuiFontSpecial = {
+    .charWidth            = 0.5f,
+    .charHeight           = 1.0f,
+    .lineHeight           = 0.8125f,
+    .defaultFontScale     = 32.0f,
+    .textBeginDisplayList = NULL,
+    .render_char          = djui_font_special_render_char,
+    .char_width           = djui_font_special_char_width,
+};
+
   ///////////////
  // font list //
 ///////////////
@@ -234,5 +266,6 @@ const struct DjuiFont* gDjuiFonts[] = {
     &sDjuiFontHud,
     &sDjuiFontAliased,
     &sDjuiFontCustomHud,
-    &sDjuiFontCustomHudRecolor
+    &sDjuiFontCustomHudRecolor,
+    &sDjuiFontSpecial
 };

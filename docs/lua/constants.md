@@ -1114,7 +1114,8 @@
 | FONT_ALIASED | 3 |
 | FONT_CUSTOM_HUD | 4 |
 | FONT_RECOLOR_HUD | 5 |
-| FONT_COUNT | 6 |
+| FONT_SPECIAL | 6 |
+| FONT_COUNT | 7 |
 
 ### [enum HudUtilsFilter](#HudUtilsFilter)
 | Identifier | Value |
