@@ -6,6 +6,323 @@
 
 
 ---
+# functions from mario_actions_cutscene.c
+
+<br />
+
+
+## [bhv_end_peach_loop](#bhv_end_peach_loop)
+
+### Lua Example
+`bhv_end_peach_loop()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void bhv_end_peach_loop(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [bhv_end_toad_loop](#bhv_end_toad_loop)
+
+### Lua Example
+`bhv_end_toad_loop()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void bhv_end_toad_loop(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [common_death_handler](#common_death_handler)
+
+### Lua Example
+`local integerValue = common_death_handler(m, animation, frameToDeathWarp)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| animation | `integer` |
+| frameToDeathWarp | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 common_death_handler(struct MarioState *m, s32 animation, s32 frameToDeathWarp);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [cutscene_put_cap_on](#cutscene_put_cap_on)
+
+### Lua Example
+`cutscene_put_cap_on(m)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+
+### Returns
+- None
+
+### C Prototype
+`void cutscene_put_cap_on(struct MarioState *m);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [cutscene_take_cap_off](#cutscene_take_cap_off)
+
+### Lua Example
+`cutscene_take_cap_off(m)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+
+### Returns
+- None
+
+### C Prototype
+`void cutscene_take_cap_off(struct MarioState *m);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [general_star_dance_handler](#general_star_dance_handler)
+
+### Lua Example
+`general_star_dance_handler(m, isInWater)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| isInWater | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void general_star_dance_handler(struct MarioState *m, s32 isInWater);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [generate_yellow_sparkles](#generate_yellow_sparkles)
+
+### Lua Example
+`generate_yellow_sparkles(x, y, z, radius)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| x | `integer` |
+| y | `integer` |
+| z | `integer` |
+| radius | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void generate_yellow_sparkles(s16 x, s16 y, s16 z, f32 radius);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_credits_str_width](#get_credits_str_width)
+
+### Lua Example
+`local integerValue = get_credits_str_width(str)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| str | `Pointer` <`integer`> |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 get_credits_str_width(char *str);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_star_collection_dialog](#get_star_collection_dialog)
+
+### Lua Example
+`local integerValue = get_star_collection_dialog(m)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 get_star_collection_dialog(struct MarioState *m);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [handle_save_menu](#handle_save_menu)
+
+### Lua Example
+`handle_save_menu(m)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+
+### Returns
+- None
+
+### C Prototype
+`void handle_save_menu(struct MarioState *m);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [launch_mario_until_land](#launch_mario_until_land)
+
+### Lua Example
+`local integerValue = launch_mario_until_land(m, endAction, animation, forwardVel)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| endAction | `integer` |
+| animation | `integer` |
+| forwardVel | `number` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 launch_mario_until_land(struct MarioState *m, s32 endAction, s32 animation, f32 forwardVel);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mario_execute_cutscene_action](#mario_execute_cutscene_action)
+
+### Lua Example
+`local integerValue = mario_execute_cutscene_action(m)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 mario_execute_cutscene_action(struct MarioState *m);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mario_ready_to_speak](#mario_ready_to_speak)
+
+### Lua Example
+`local integerValue = mario_ready_to_speak(m)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 mario_ready_to_speak(struct MarioState* m);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [should_start_or_continue_dialog](#should_start_or_continue_dialog)
+
+### Lua Example
+`local integerValue = should_start_or_continue_dialog(m, object)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| object | [Object](structs.md#Object) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u8 should_start_or_continue_dialog(struct MarioState* m, struct Object* object);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [stuck_in_ground_handler](#stuck_in_ground_handler)
+
+### Lua Example
+`stuck_in_ground_handler(m, animation, unstuckFrame, target2, target3, endAction)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| animation | `integer` |
+| unstuckFrame | `integer` |
+| target2 | `integer` |
+| target3 | `integer` |
+| endAction | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void stuck_in_ground_handler(struct MarioState *m, s32 animation, s32 unstuckFrame, s32 target2, s32 target3, s32 endAction);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
 # functions from mario_actions_moving.c
 
 <br />

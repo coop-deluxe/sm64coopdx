@@ -3361,7 +3361,7 @@ Gets a language `key` from a `section`
 <br />
 
 ---
-# functions from djui_panel_menu.c
+# functions from djui_panel_menu.h
 
 <br />
 
@@ -3374,13 +3374,13 @@ Gets a language `key` from a `section`
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| color | `integer` |
+| color | [enum DjuiRainbowColor](constants.md#enum-DjuiRainbowColor) |
 
 ### Returns
 - `string`
 
 ### C Prototype
-`char* djui_menu_get_rainbow_string_color(int color);`
+`char* djui_menu_get_rainbow_string_color(enum DjuiRainbowColor color);`
 
 [:arrow_up_small:](#)
 
@@ -3424,6 +3424,9 @@ Creates a popup that says `message` and has `lines`
 
 ## [drop_queued_background_music](#drop_queued_background_music)
 
+### Description
+Drops any queued background music
+
 ### Lua Example
 `drop_queued_background_music()`
 
@@ -3441,6 +3444,9 @@ Creates a popup that says `message` and has `lines`
 <br />
 
 ## [fade_volume_scale](#fade_volume_scale)
+
+### Description
+Fades the volume of `player` to `targetScale` (0-127) over `fadeDuration`
 
 ### Lua Example
 `fade_volume_scale(player, targetScale, fadeDuration)`
@@ -3464,26 +3470,32 @@ Creates a popup that says `message` and has `lines`
 
 ## [fadeout_background_music](#fadeout_background_music)
 
+### Description
+Fades out background music `seqId` over `fadeOut`
+
 ### Lua Example
-`fadeout_background_music(arg0, fadeOut)`
+`fadeout_background_music(seqId, fadeOut)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| arg0 | `integer` |
+| seqId | `integer` |
 | fadeOut | `integer` |
 
 ### Returns
 - None
 
 ### C Prototype
-`void fadeout_background_music(u16 arg0, u16 fadeOut);`
+`void fadeout_background_music(u16 seqId, u16 fadeOut);`
 
 [:arrow_up_small:](#)
 
 <br />
 
 ## [get_current_background_music](#get_current_background_music)
+
+### Description
+Gets the current background music
 
 ### Lua Example
 `local integerValue = get_current_background_music()`
@@ -3503,6 +3515,9 @@ Creates a popup that says `message` and has `lines`
 
 ## [get_current_background_music_default_volume](#get_current_background_music_default_volume)
 
+### Description
+Gets the current background music's default volume
+
 ### Lua Example
 `local integerValue = get_current_background_music_default_volume()`
 
@@ -3520,6 +3535,9 @@ Creates a popup that says `message` and has `lines`
 <br />
 
 ## [get_current_background_music_max_target_volume](#get_current_background_music_max_target_volume)
+
+### Description
+Gets the current max target volume
 
 ### Lua Example
 `local integerValue = get_current_background_music_max_target_volume()`
@@ -3539,6 +3557,9 @@ Creates a popup that says `message` and has `lines`
 
 ## [get_current_background_music_target_volume](#get_current_background_music_target_volume)
 
+### Description
+Gets the current target volume
+
 ### Lua Example
 `local integerValue = get_current_background_music_target_volume()`
 
@@ -3555,7 +3576,31 @@ Creates a popup that says `message` and has `lines`
 
 <br />
 
+## [get_sound_pan](#get_sound_pan)
+
+### Lua Example
+`local numberValue = get_sound_pan(x, z)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| x | `number` |
+| z | `number` |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 get_sound_pan(f32 x, f32 z);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [is_current_background_music_volume_lowered](#is_current_background_music_volume_lowered)
+
+### Description
+Checks if the current background music is lowered
 
 ### Lua Example
 `local integerValue = is_current_background_music_volume_lowered()`
@@ -3575,6 +3620,9 @@ Creates a popup that says `message` and has `lines`
 
 ## [play_course_clear](#play_course_clear)
 
+### Description
+Plays the star collect fanfare (this function's name was mixed up with the other)
+
 ### Lua Example
 `play_course_clear()`
 
@@ -3592,6 +3640,9 @@ Creates a popup that says `message` and has `lines`
 <br />
 
 ## [play_dialog_sound](#play_dialog_sound)
+
+### Description
+Plays a dialog sound corresponding to `dialogID`
 
 ### Lua Example
 `play_dialog_sound(dialogID)`
@@ -3612,6 +3663,9 @@ Creates a popup that says `message` and has `lines`
 <br />
 
 ## [play_music](#play_music)
+
+### Description
+Plays fading in music (`seqArgs`) on `player` over `fadeTimer`
 
 ### Lua Example
 `play_music(player, seqArgs, fadeTimer)`
@@ -3635,6 +3689,9 @@ Creates a popup that says `message` and has `lines`
 
 ## [play_peachs_jingle](#play_peachs_jingle)
 
+### Description
+Plays Peach's letter jingle
+
 ### Lua Example
 `play_peachs_jingle()`
 
@@ -3653,25 +3710,31 @@ Creates a popup that says `message` and has `lines`
 
 ## [play_power_star_jingle](#play_power_star_jingle)
 
+### Description
+Plays the power star jingle, set `keepBackgroundMusic` to 0 to mute background music
+
 ### Lua Example
-`play_power_star_jingle(arg0)`
+`play_power_star_jingle(keepBackgroundMusic)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| arg0 | `integer` |
+| keepBackgroundMusic | `integer` |
 
 ### Returns
 - None
 
 ### C Prototype
-`void play_power_star_jingle(u8 arg0);`
+`void play_power_star_jingle(u8 keepBackgroundMusic);`
 
 [:arrow_up_small:](#)
 
 <br />
 
 ## [play_puzzle_jingle](#play_puzzle_jingle)
+
+### Description
+Plays the puzzle jingle
 
 ### Lua Example
 `play_puzzle_jingle()`
@@ -3691,6 +3754,9 @@ Creates a popup that says `message` and has `lines`
 
 ## [play_race_fanfare](#play_race_fanfare)
 
+### Description
+Plays the race fanfare when a race is started
+
 ### Lua Example
 `play_race_fanfare()`
 
@@ -3708,6 +3774,9 @@ Creates a popup that says `message` and has `lines`
 <br />
 
 ## [play_secondary_music](#play_secondary_music)
+
+### Description
+Plays fading in secondary music `seqId` at `volume` over `fadeTimer` and sets the current background music's volume to `bgMusicVolume`
 
 ### Lua Example
 `play_secondary_music(seqId, bgMusicVolume, volume, fadeTimer)`
@@ -3732,6 +3801,9 @@ Creates a popup that says `message` and has `lines`
 
 ## [play_sound](#play_sound)
 
+### Description
+Plays a sound (`soundBits`) at `pos` (usually `gGlobalSoundSource` or `m.header.gfx.cameraToObject`)
+
 ### Lua Example
 `play_sound(soundBits, pos)`
 
@@ -3752,6 +3824,9 @@ Creates a popup that says `message` and has `lines`
 <br />
 
 ## [play_sound_with_freq_scale](#play_sound_with_freq_scale)
+
+### Description
+Plays a sound (`soundBits`) with `freqScale` at `pos` (usually `gGlobalSoundSource` or `m.header.gfx.cameraToObject`)
 
 ### Lua Example
 `play_sound_with_freq_scale(soundBits, pos, freqScale)`
@@ -3775,6 +3850,9 @@ Creates a popup that says `message` and has `lines`
 
 ## [play_star_fanfare](#play_star_fanfare)
 
+### Description
+Plays the course clear fanfare (this function's name was mixed up with the other)
+
 ### Lua Example
 `play_star_fanfare()`
 
@@ -3793,6 +3871,9 @@ Creates a popup that says `message` and has `lines`
 
 ## [play_toads_jingle](#play_toads_jingle)
 
+### Description
+Plays Toad's jingle
+
 ### Lua Example
 `play_toads_jingle()`
 
@@ -3810,6 +3891,9 @@ Creates a popup that says `message` and has `lines`
 <br />
 
 ## [seq_player_fade_out](#seq_player_fade_out)
+
+### Description
+Fades out `player` with `fadeDuration`
 
 ### Lua Example
 `seq_player_fade_out(player, fadeDuration)`
@@ -3831,6 +3915,9 @@ Creates a popup that says `message` and has `lines`
 <br />
 
 ## [seq_player_lower_volume](#seq_player_lower_volume)
+
+### Description
+Fades the volume of `player` to `percentage` over `fadeDuration`
 
 ### Lua Example
 `seq_player_lower_volume(player, fadeDuration, percentage)`
@@ -3854,6 +3941,9 @@ Creates a popup that says `message` and has `lines`
 
 ## [seq_player_unlower_volume](#seq_player_unlower_volume)
 
+### Description
+Unfades the volume of `player` over `fadeDuration`
+
 ### Lua Example
 `seq_player_unlower_volume(player, fadeDuration)`
 
@@ -3875,6 +3965,9 @@ Creates a popup that says `message` and has `lines`
 
 ## [set_audio_fadeout](#set_audio_fadeout)
 
+### Description
+Sets the `fadeOutTime` of audio
+
 ### Lua Example
 `set_audio_fadeout(fadeOutTime)`
 
@@ -3893,7 +3986,57 @@ Creates a popup that says `message` and has `lines`
 
 <br />
 
+## [set_audio_muted](#set_audio_muted)
+
+### Description
+Sets the muted status of all sequence players
+
+### Lua Example
+`set_audio_muted(muted)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| muted | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_audio_muted(u8 muted);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_sound_moving_speed](#set_sound_moving_speed)
+
+### Description
+Sets the `speed` of moving `bank`
+
+### Lua Example
+`set_sound_moving_speed(bank, speed)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| bank | `integer` |
+| speed | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_sound_moving_speed(u8 bank, u8 speed);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [sound_banks_disable](#sound_banks_disable)
+
+### Description
+Enables `bankMask` soundbanks in `player`
 
 ### Lua Example
 `sound_banks_disable(player, bankMask)`
@@ -3915,6 +4058,9 @@ Creates a popup that says `message` and has `lines`
 <br />
 
 ## [sound_banks_enable](#sound_banks_enable)
+
+### Description
+Disables `bankMask` soundbanks in `player`
 
 ### Lua Example
 `sound_banks_enable(player, bankMask)`
@@ -3955,7 +4101,51 @@ Creates a popup that says `message` and has `lines`
 
 <br />
 
+## [sound_reset_background_music_default_volume](#sound_reset_background_music_default_volume)
+
+### Lua Example
+`sound_reset_background_music_default_volume(seqId)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| seqId | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void sound_reset_background_music_default_volume(u8 seqId);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [sound_set_background_music_default_volume](#sound_set_background_music_default_volume)
+
+### Lua Example
+`sound_set_background_music_default_volume(seqId, volume)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| seqId | `integer` |
+| volume | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void sound_set_background_music_default_volume(u8 seqId, u8 volume);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [stop_background_music](#stop_background_music)
+
+### Description
+Stops background music `seqId`
 
 ### Lua Example
 `stop_background_music(seqId)`
@@ -3977,6 +4167,9 @@ Creates a popup that says `message` and has `lines`
 
 ## [stop_secondary_music](#stop_secondary_music)
 
+### Description
+Fades out secondary music over `fadeTimer`
+
 ### Lua Example
 `stop_secondary_music(fadeTimer)`
 
@@ -3996,6 +4189,9 @@ Creates a popup that says `message` and has `lines`
 <br />
 
 ## [stop_sound](#stop_sound)
+
+### Description
+Stops a sound (`soundBits`) at `pos` (usually `gGlobalSoundSource` or `m.header.gfx.cameraToObject`)
 
 ### Lua Example
 `stop_sound(soundBits, pos)`
@@ -4018,6 +4214,9 @@ Creates a popup that says `message` and has `lines`
 
 ## [stop_sounds_from_source](#stop_sounds_from_source)
 
+### Description
+Stops sounds from `pos` (usually `gGlobalSoundSource` or `m.header.gfx.cameraToObject`)
+
 ### Lua Example
 `stop_sounds_from_source(pos)`
 
@@ -4037,6 +4236,9 @@ Creates a popup that says `message` and has `lines`
 <br />
 
 ## [stop_sounds_in_continuous_banks](#stop_sounds_in_continuous_banks)
+
+### Description
+Stops sounds in sound banks moving, env, and air
 
 ### Lua Example
 `stop_sounds_in_continuous_banks()`
@@ -7589,323 +7791,6 @@ Creates a warp node in the current level and area with id `id` that goes to the 
 
 ### C Prototype
 `void update_ledge_climb_camera(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
----
-# functions from mario_actions_cutscene.c
-
-<br />
-
-
-## [bhv_end_peach_loop](#bhv_end_peach_loop)
-
-### Lua Example
-`bhv_end_peach_loop()`
-
-### Parameters
-- None
-
-### Returns
-- None
-
-### C Prototype
-`void bhv_end_peach_loop(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [bhv_end_toad_loop](#bhv_end_toad_loop)
-
-### Lua Example
-`bhv_end_toad_loop()`
-
-### Parameters
-- None
-
-### Returns
-- None
-
-### C Prototype
-`void bhv_end_toad_loop(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [common_death_handler](#common_death_handler)
-
-### Lua Example
-`local integerValue = common_death_handler(m, animation, frameToDeathWarp)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| animation | `integer` |
-| frameToDeathWarp | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 common_death_handler(struct MarioState *m, s32 animation, s32 frameToDeathWarp);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [cutscene_put_cap_on](#cutscene_put_cap_on)
-
-### Lua Example
-`cutscene_put_cap_on(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- None
-
-### C Prototype
-`void cutscene_put_cap_on(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [cutscene_take_cap_off](#cutscene_take_cap_off)
-
-### Lua Example
-`cutscene_take_cap_off(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- None
-
-### C Prototype
-`void cutscene_take_cap_off(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [general_star_dance_handler](#general_star_dance_handler)
-
-### Lua Example
-`general_star_dance_handler(m, isInWater)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| isInWater | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void general_star_dance_handler(struct MarioState *m, s32 isInWater);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [generate_yellow_sparkles](#generate_yellow_sparkles)
-
-### Lua Example
-`generate_yellow_sparkles(x, y, z, radius)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| x | `integer` |
-| y | `integer` |
-| z | `integer` |
-| radius | `number` |
-
-### Returns
-- None
-
-### C Prototype
-`void generate_yellow_sparkles(s16 x, s16 y, s16 z, f32 radius);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [get_credits_str_width](#get_credits_str_width)
-
-### Lua Example
-`local integerValue = get_credits_str_width(str)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| str | `Pointer` <`integer`> |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 get_credits_str_width(char *str);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [get_star_collection_dialog](#get_star_collection_dialog)
-
-### Lua Example
-`local integerValue = get_star_collection_dialog(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 get_star_collection_dialog(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [handle_save_menu](#handle_save_menu)
-
-### Lua Example
-`handle_save_menu(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- None
-
-### C Prototype
-`void handle_save_menu(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [launch_mario_until_land](#launch_mario_until_land)
-
-### Lua Example
-`local integerValue = launch_mario_until_land(m, endAction, animation, forwardVel)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| endAction | `integer` |
-| animation | `integer` |
-| forwardVel | `number` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 launch_mario_until_land(struct MarioState *m, s32 endAction, s32 animation, f32 forwardVel);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [mario_execute_cutscene_action](#mario_execute_cutscene_action)
-
-### Lua Example
-`local integerValue = mario_execute_cutscene_action(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 mario_execute_cutscene_action(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [mario_ready_to_speak](#mario_ready_to_speak)
-
-### Lua Example
-`local integerValue = mario_ready_to_speak(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 mario_ready_to_speak(struct MarioState* m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [should_start_or_continue_dialog](#should_start_or_continue_dialog)
-
-### Lua Example
-`local integerValue = should_start_or_continue_dialog(m, object)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| object | [Object](structs.md#Object) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`u8 should_start_or_continue_dialog(struct MarioState* m, struct Object* object);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [stuck_in_ground_handler](#stuck_in_ground_handler)
-
-### Lua Example
-`stuck_in_ground_handler(m, animation, unstuckFrame, target2, target3, endAction)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| animation | `integer` |
-| unstuckFrame | `integer` |
-| target2 | `integer` |
-| target3 | `integer` |
-| endAction | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void stuck_in_ground_handler(struct MarioState *m, s32 animation, s32 unstuckFrame, s32 target2, s32 target3, s32 endAction);`
 
 [:arrow_up_small:](#)
 

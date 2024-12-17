@@ -17,6 +17,8 @@
     - [enum DjuiFontType](#enum-DjuiFontType)
     - [enum HudUtilsFilter](#enum-HudUtilsFilter)
     - [enum HudUtilsResolution](#enum-HudUtilsResolution)
+- [djui_panel_menu.h](#djui_panel_menuh)
+    - [enum DjuiRainbowColor](#enum-DjuiRainbowColor)
 - [envfx_snow.h](#envfx_snowh)
 - [external.h](#externalh)
     - [enum DialogSound](#enum-DialogSound)
@@ -1127,6 +1129,20 @@
 | RESOLUTION_DJUI | 0 |
 | RESOLUTION_N64 | 1 |
 | RESOLUTION_COUNT | 2 |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [djui_panel_menu.h](#djui_panel_menu.h)
+
+### [enum DjuiRainbowColor](#DjuiRainbowColor)
+| Identifier | Value |
+| :--------- | :---- |
+| DJUI_RAINBOW_COLOR_RED | 0 |
+| DJUI_RAINBOW_COLOR_GREEN | 1 |
+| DJUI_RAINBOW_COLOR_BLUE | 2 |
+| DJUI_RAINBOW_COLOR_YELLOW | 3 |
 
 [:arrow_up_small:](#)
 

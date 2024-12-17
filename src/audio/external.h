@@ -57,49 +57,85 @@ struct SPTask *create_next_audio_frame_task(void);
 #ifdef VERSION_SH
 struct SPTask *func_sh_802f5a80(void);
 #endif
+/* |description|Plays a sound (`soundBits`) at `pos` (usually `gGlobalSoundSource` or `m.header.gfx.cameraToObject`)|descriptionEnd| */
 void play_sound(s32 soundBits, f32 *pos);
+/* |description|Plays a sound (`soundBits`) with `freqScale` at `pos` (usually `gGlobalSoundSource` or `m.header.gfx.cameraToObject`)|descriptionEnd| */
 void play_sound_with_freq_scale(s32 soundBits, f32* pos, f32 freqScale);
 void audio_signal_game_loop_tick(void);
+/* |description|Fades out `player` with `fadeDuration`|descriptionEnd| */
 void seq_player_fade_out(u8 player, u16 fadeDuration);
+/* |description|Fades the volume of `player` to `targetScale` (0-127) over `fadeDuration`|descriptionEnd| */
 void fade_volume_scale(u8 player, u8 targetScale, u16 fadeDuration);
+/* |description|Fades the volume of `player` to `percentage` over `fadeDuration`|descriptionEnd| */
 void seq_player_lower_volume(u8 player, u16 fadeDuration, u8 percentage);
+/* |description|Unfades the volume of `player` over `fadeDuration`|descriptionEnd| */
 void seq_player_unlower_volume(u8 player, u16 fadeDuration);
+/* |description|Sets the muted status of all sequence players|descriptionEnd| */
 void set_audio_muted(u8 muted);
 void sound_init(void);
 void get_currently_playing_sound(u8 bank, u8 *numPlayingSounds, u8 *numSoundsInBank, u8 *soundId);
+/* |description|Stops a sound (`soundBits`) at `pos` (usually `gGlobalSoundSource` or `m.header.gfx.cameraToObject`)|descriptionEnd| */
 void stop_sound(u32 soundBits, f32 *pos);
+/* |description|Stops sounds from `pos` (usually `gGlobalSoundSource` or `m.header.gfx.cameraToObject`)|descriptionEnd| */
 void stop_sounds_from_source(f32 *pos);
+/* |description|Stops sounds in sound banks moving, env, and air|descriptionEnd| */
 void stop_sounds_in_continuous_banks(void);
+/* |description|Enables `bankMask` soundbanks in `player`|descriptionEnd| */
 void sound_banks_disable(u8 player, u16 bankMask);
+/* |description|Disables `bankMask` soundbanks in `player`|descriptionEnd| */
 void sound_banks_enable(u8 player, u16 bankMask);
+/* |description|Sets the `speed` of moving `bank`|descriptionEnd| */
 void set_sound_moving_speed(u8 bank, u8 speed);
+/* |description|Plays a dialog sound corresponding to `dialogID`|descriptionEnd| */
 void play_dialog_sound(u8 dialogID);
+/* |description|Sets the `volume` of `player`|descriptionEnd| */
 void set_sequence_player_volume(s32 player, f32 volume);
+/* |description|Plays fading in music (`seqArgs`) on `player` over `fadeTimer`|descriptionEnd| */
 void play_music(u8 player, u16 seqArgs, u16 fadeTimer);
+/* |description|Stops background music `seqId`|descriptionEnd| */
 void stop_background_music(u16 seqId);
-void fadeout_background_music(u16 arg0, u16 fadeOut);
+/* |description|Fades out background music `seqId` over `fadeOut`|descriptionEnd| */
+void fadeout_background_music(u16 seqId, u16 fadeOut);
+/* |description|Drops any queued background music|descriptionEnd| */
 void drop_queued_background_music(void);
+/* |description|Gets the current background music|descriptionEnd| */
 u16 get_current_background_music(void);
+/* |description|Gets the current background music's default volume|descriptionEnd| */
 u8 get_current_background_music_default_volume(void);
+/* |description|Gets the current target volume|descriptionEnd| */
 u8 get_current_background_music_target_volume(void);
+/* |description|Gets the current max target volume|descriptionEnd| */
 u8 get_current_background_music_max_target_volume(void);
+/* |description|Checks if the current background music is lowered|descriptionEnd| */
 u8 is_current_background_music_volume_lowered(void);
+/* |description|Plays fading in secondary music `seqId` at `volume` over `fadeTimer` and sets the current background music's volume to `bgMusicVolume`|descriptionEnd| */
 void play_secondary_music(u8 seqId, u8 bgMusicVolume, u8 volume, u16 fadeTimer);
+/* |description|Fades out secondary music over `fadeTimer`|descriptionEnd| */
 void stop_secondary_music(u16 fadeTimer);
+/* |description|Sets the `fadeOutTime` of audio|descriptionEnd| */
 void set_audio_fadeout(u16 fadeOutTime);
+/* |description|Plays the star collect fanfare (this function's name was mixed up with the other)|descriptionEnd| */
 void play_course_clear(void);
+/* |description|Plays Peach's letter jingle|descriptionEnd| */
 void play_peachs_jingle(void);
+/* |description|Plays the puzzle jingle|descriptionEnd| */
 void play_puzzle_jingle(void);
+/* |description|Plays the course clear fanfare (this function's name was mixed up with the other)|descriptionEnd| */
 void play_star_fanfare(void);
-void play_power_star_jingle(u8 arg0);
+/* |description|Plays the power star jingle, set `keepBackgroundMusic` to 0 to mute background music|descriptionEnd| */
+void play_power_star_jingle(u8 keepBackgroundMusic);
+/* |description|Plays the race fanfare when a race is started|descriptionEnd| */
 void play_race_fanfare(void);
+/* |description|Plays Toad's jingle|descriptionEnd| */
 void play_toads_jingle(void);
 void sound_reset(u8 presetId);
 void audio_set_sound_mode(u8 arg0);
 
 void audio_init(void); // in load.c
 
+/* |description||descriptionEnd| */
 void sound_reset_background_music_default_volume(u8 seqId);
+/* |description||descriptionEnd| */
 void sound_set_background_music_default_volume(u8 seqId, u8 volume);
 
 #if defined(VERSION_EU) || defined(VERSION_SH)

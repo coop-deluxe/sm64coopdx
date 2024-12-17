@@ -3255,6 +3255,20 @@ RESOLUTION_N64 = 1
 --- @type HudUtilsResolution
 RESOLUTION_COUNT = 2
 
+--- @class DjuiRainbowColor
+
+--- @type DjuiRainbowColor
+DJUI_RAINBOW_COLOR_RED = 0
+
+--- @type DjuiRainbowColor
+DJUI_RAINBOW_COLOR_GREEN = 1
+
+--- @type DjuiRainbowColor
+DJUI_RAINBOW_COLOR_BLUE = 2
+
+--- @type DjuiRainbowColor
+DJUI_RAINBOW_COLOR_YELLOW = 3
+
 --- @type integer
 ENVFX_BUBBLE_START = 10
 

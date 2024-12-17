@@ -21,6 +21,7 @@
 #include "src/game/save_file.h"
 #include "src/game/sound_init.h"
 #include "src/pc/djui/djui_hud_utils.h"
+#include "src/pc/djui/djui_panel_menu.h"
 #include "src/pc/network/network_player.h"
 #include "src/pc/network/lag_compensation.h"
 #include "include/behavior_table.h"
@@ -36,6 +37,7 @@
 #include "src/pc/lua/utils/smlua_level_utils.h"
 #include "src/pc/lua/utils/smlua_anim_utils.h"
 #include "src/pc/lua/utils/smlua_deprecated.h"
+#include "src/game/spawn_sound.h"
 #include "src/game/object_list_processor.h"
 #include "src/game/behavior_actions.h"
 #include "src/game/mario_misc.h"
@@ -12797,7 +12799,7 @@ int smlua_func_djui_language_get(lua_State* L) {
 }
 
   ///////////////////////
- // djui_panel_menu.c //
+ // djui_panel_menu.h //
 ///////////////////////
 
 int smlua_func_djui_menu_get_rainbow_string_color(lua_State* L) {
@@ -12812,7 +12814,6 @@ int smlua_func_djui_menu_get_rainbow_string_color(lua_State* L) {
     int color = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "djui_menu_get_rainbow_string_color"); return 0; }
 
-    extern char* djui_menu_get_rainbow_string_color(int color);
     lua_pushstring(L, djui_menu_get_rainbow_string_color(color));
 
     return 1;
@@ -12890,12 +12891,12 @@ int smlua_func_fadeout_background_music(lua_State* L) {
         return 0;
     }
 
-    u16 arg0 = smlua_to_integer(L, 1);
+    u16 seqId = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "fadeout_background_music"); return 0; }
     u16 fadeOut = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "fadeout_background_music"); return 0; }
 
-    fadeout_background_music(arg0, fadeOut);
+    fadeout_background_music(seqId, fadeOut);
 
     return 1;
 }
@@ -12956,6 +12957,25 @@ int smlua_func_get_current_background_music_target_volume(UNUSED lua_State* L) {
 
 
     lua_pushinteger(L, get_current_background_music_target_volume());
+
+    return 1;
+}
+
+int smlua_func_get_sound_pan(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "get_sound_pan", 2, top);
+        return 0;
+    }
+
+    f32 x = smlua_to_number(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "get_sound_pan"); return 0; }
+    f32 z = smlua_to_number(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "get_sound_pan"); return 0; }
+
+    lua_pushnumber(L, get_sound_pan(x, z));
 
     return 1;
 }
@@ -13052,10 +13072,10 @@ int smlua_func_play_power_star_jingle(lua_State* L) {
         return 0;
     }
 
-    u8 arg0 = smlua_to_integer(L, 1);
+    u8 keepBackgroundMusic = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "play_power_star_jingle"); return 0; }
 
-    play_power_star_jingle(arg0);
+    play_power_star_jingle(keepBackgroundMusic);
 
     return 1;
 }
@@ -13275,6 +13295,42 @@ int smlua_func_set_audio_fadeout(lua_State* L) {
     return 1;
 }
 
+int smlua_func_set_audio_muted(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "set_audio_muted", 1, top);
+        return 0;
+    }
+
+    u8 muted = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "set_audio_muted"); return 0; }
+
+    set_audio_muted(muted);
+
+    return 1;
+}
+
+int smlua_func_set_sound_moving_speed(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "set_sound_moving_speed", 2, top);
+        return 0;
+    }
+
+    u8 bank = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "set_sound_moving_speed"); return 0; }
+    u8 speed = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "set_sound_moving_speed"); return 0; }
+
+    set_sound_moving_speed(bank, speed);
+
+    return 1;
+}
+
 int smlua_func_sound_banks_disable(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -13326,6 +13382,42 @@ int smlua_func_sound_get_level_intensity(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "sound_get_level_intensity"); return 0; }
 
     lua_pushnumber(L, sound_get_level_intensity(distance));
+
+    return 1;
+}
+
+int smlua_func_sound_reset_background_music_default_volume(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "sound_reset_background_music_default_volume", 1, top);
+        return 0;
+    }
+
+    u8 seqId = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "sound_reset_background_music_default_volume"); return 0; }
+
+    sound_reset_background_music_default_volume(seqId);
+
+    return 1;
+}
+
+int smlua_func_sound_set_background_music_default_volume(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "sound_set_background_music_default_volume", 2, top);
+        return 0;
+    }
+
+    u8 seqId = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "sound_set_background_music_default_volume"); return 0; }
+    u8 volume = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "sound_set_background_music_default_volume"); return 0; }
+
+    sound_set_background_music_default_volume(seqId, volume);
 
     return 1;
 }
@@ -33031,7 +33123,7 @@ int smlua_func_stop_shell_music(UNUSED lua_State* L) {
 }
 
   ///////////////////
- // spawn_sound.c //
+ // spawn_sound.h //
 ///////////////////
 
 int smlua_func_calc_dist_to_volume_range_1(lua_State* L) {
@@ -33046,7 +33138,6 @@ int smlua_func_calc_dist_to_volume_range_1(lua_State* L) {
     f32 distance = smlua_to_number(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "calc_dist_to_volume_range_1"); return 0; }
 
-    extern s32 calc_dist_to_volume_range_1(f32 distance);
     lua_pushinteger(L, calc_dist_to_volume_range_1(distance));
 
     return 1;
@@ -33064,8 +33155,24 @@ int smlua_func_calc_dist_to_volume_range_2(lua_State* L) {
     f32 distance = smlua_to_number(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "calc_dist_to_volume_range_2"); return 0; }
 
-    extern s32 calc_dist_to_volume_range_2(f32 distance);
     lua_pushinteger(L, calc_dist_to_volume_range_2(distance));
+
+    return 1;
+}
+
+int smlua_func_create_sound_spawner(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "create_sound_spawner", 1, top);
+        return 0;
+    }
+
+    s32 soundMagic = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "create_sound_spawner"); return 0; }
+
+    create_sound_spawner(soundMagic);
 
     return 1;
 }
@@ -33082,7 +33189,6 @@ int smlua_func_cur_obj_play_sound_1(lua_State* L) {
     s32 soundMagic = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "cur_obj_play_sound_1"); return 0; }
 
-    extern void cur_obj_play_sound_1(s32 soundMagic);
     cur_obj_play_sound_1(soundMagic);
 
     return 1;
@@ -33100,7 +33206,6 @@ int smlua_func_cur_obj_play_sound_2(lua_State* L) {
     s32 soundMagic = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "cur_obj_play_sound_2"); return 0; }
 
-    extern void cur_obj_play_sound_2(s32 soundMagic);
     cur_obj_play_sound_2(soundMagic);
 
     return 1;
@@ -33120,7 +33225,6 @@ int smlua_func_exec_anim_sound_state(lua_State* L) {
     u16 maxSoundStates = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "exec_anim_sound_state"); return 0; }
 
-    extern void exec_anim_sound_state(struct SoundState *soundStates, u16 maxSoundStates);
     exec_anim_sound_state(soundStates, maxSoundStates);
 
     return 1;
@@ -34199,7 +34303,7 @@ void smlua_bind_functions_autogen(void) {
     // djui_language.h
     smlua_bind_function(L, "djui_language_get", smlua_func_djui_language_get);
 
-    // djui_panel_menu.c
+    // djui_panel_menu.h
     smlua_bind_function(L, "djui_menu_get_rainbow_string_color", smlua_func_djui_menu_get_rainbow_string_color);
 
     // djui_popup.h
@@ -34213,6 +34317,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "get_current_background_music_default_volume", smlua_func_get_current_background_music_default_volume);
     smlua_bind_function(L, "get_current_background_music_max_target_volume", smlua_func_get_current_background_music_max_target_volume);
     smlua_bind_function(L, "get_current_background_music_target_volume", smlua_func_get_current_background_music_target_volume);
+    smlua_bind_function(L, "get_sound_pan", smlua_func_get_sound_pan);
     smlua_bind_function(L, "is_current_background_music_volume_lowered", smlua_func_is_current_background_music_volume_lowered);
     smlua_bind_function(L, "play_course_clear", smlua_func_play_course_clear);
     smlua_bind_function(L, "play_dialog_sound", smlua_func_play_dialog_sound);
@@ -34230,9 +34335,13 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "seq_player_lower_volume", smlua_func_seq_player_lower_volume);
     smlua_bind_function(L, "seq_player_unlower_volume", smlua_func_seq_player_unlower_volume);
     smlua_bind_function(L, "set_audio_fadeout", smlua_func_set_audio_fadeout);
+    smlua_bind_function(L, "set_audio_muted", smlua_func_set_audio_muted);
+    smlua_bind_function(L, "set_sound_moving_speed", smlua_func_set_sound_moving_speed);
     smlua_bind_function(L, "sound_banks_disable", smlua_func_sound_banks_disable);
     smlua_bind_function(L, "sound_banks_enable", smlua_func_sound_banks_enable);
     smlua_bind_function(L, "sound_get_level_intensity", smlua_func_sound_get_level_intensity);
+    smlua_bind_function(L, "sound_reset_background_music_default_volume", smlua_func_sound_reset_background_music_default_volume);
+    smlua_bind_function(L, "sound_set_background_music_default_volume", smlua_func_sound_set_background_music_default_volume);
     smlua_bind_function(L, "stop_background_music", smlua_func_stop_background_music);
     smlua_bind_function(L, "stop_secondary_music", smlua_func_stop_secondary_music);
     smlua_bind_function(L, "stop_sound", smlua_func_stop_sound);
@@ -35259,9 +35368,10 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "stop_cap_music", smlua_func_stop_cap_music);
     smlua_bind_function(L, "stop_shell_music", smlua_func_stop_shell_music);
 
-    // spawn_sound.c
+    // spawn_sound.h
     smlua_bind_function(L, "calc_dist_to_volume_range_1", smlua_func_calc_dist_to_volume_range_1);
     smlua_bind_function(L, "calc_dist_to_volume_range_2", smlua_func_calc_dist_to_volume_range_2);
+    smlua_bind_function(L, "create_sound_spawner", smlua_func_create_sound_spawner);
     smlua_bind_function(L, "cur_obj_play_sound_1", smlua_func_cur_obj_play_sound_1);
     smlua_bind_function(L, "cur_obj_play_sound_2", smlua_func_cur_obj_play_sound_2);
     smlua_bind_function(L, "exec_anim_sound_state", smlua_func_exec_anim_sound_state);

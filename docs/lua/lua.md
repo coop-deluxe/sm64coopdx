@@ -18,6 +18,7 @@ Save file locations:
 
 ## Tips
 - When developing Lua mods, run the game from a console. Lua errors and logs will appear there, but only if the game is launched with the `--console` launch parameter.
+- When a function requests a time parameter, it is almost if not always in frames.
 - You can use the `print()` command when debugging. Your logs will show up in the console.
 - You can create a folder within the mods folder containing multiple lua scripts as long as one script is called `main.lua`. Dynos actors can be placed inside this mod folder under `<your mod folder>/actors/`.
 <br />

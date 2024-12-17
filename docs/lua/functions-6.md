@@ -2960,6 +2960,9 @@ Replaces the secret star course name of `courseNum` with `courseName`
 
 ## [disable_background_sound](#disable_background_sound)
 
+### Description
+Disables background soundbanks
+
 ### Lua Example
 `disable_background_sound()`
 
@@ -2977,6 +2980,9 @@ Replaces the secret star course name of `courseNum` with `courseName`
 <br />
 
 ## [enable_background_sound](#enable_background_sound)
+
+### Description
+Enables background soundbanks
 
 ### Lua Example
 `enable_background_sound()`
@@ -2996,6 +3002,9 @@ Replaces the secret star course name of `courseNum` with `courseName`
 
 ## [fadeout_cap_music](#fadeout_cap_music)
 
+### Description
+Fades out cap music
+
 ### Lua Example
 `fadeout_cap_music()`
 
@@ -3013,6 +3022,9 @@ Replaces the secret star course name of `courseNum` with `courseName`
 <br />
 
 ## [fadeout_level_music](#fadeout_level_music)
+
+### Description
+Fades out the level sequence player
 
 ### Lua Example
 `fadeout_level_music(fadeTimer)`
@@ -3034,6 +3046,9 @@ Replaces the secret star course name of `courseNum` with `courseName`
 
 ## [fadeout_music](#fadeout_music)
 
+### Description
+Fades out level, shell, and cap music
+
 ### Lua Example
 `fadeout_music(fadeOutTime)`
 
@@ -3053,6 +3068,9 @@ Replaces the secret star course name of `courseNum` with `courseName`
 <br />
 
 ## [lower_background_noise](#lower_background_noise)
+
+### Description
+Lowers the volume of music by 40%
 
 ### Lua Example
 `lower_background_noise(a)`
@@ -3074,6 +3092,9 @@ Replaces the secret star course name of `courseNum` with `courseName`
 
 ## [play_cap_music](#play_cap_music)
 
+### Description
+Plays `seqArgs` as cap music
+
 ### Lua Example
 `play_cap_music(seqArgs)`
 
@@ -3093,6 +3114,9 @@ Replaces the secret star course name of `courseNum` with `courseName`
 <br />
 
 ## [play_cutscene_music](#play_cutscene_music)
+
+### Description
+Plays and sets the current music to `seqArgs`
 
 ### Lua Example
 `play_cutscene_music(seqArgs)`
@@ -3114,6 +3138,9 @@ Replaces the secret star course name of `courseNum` with `courseName`
 
 ## [play_infinite_stairs_music](#play_infinite_stairs_music)
 
+### Description
+Plays the infinite stairs music if you're in the endless stairs room and have less than `gLevelValues.infiniteStairsRequirement` stars
+
 ### Lua Example
 `play_infinite_stairs_music()`
 
@@ -3131,6 +3158,9 @@ Replaces the secret star course name of `courseNum` with `courseName`
 <br />
 
 ## [play_menu_sounds](#play_menu_sounds)
+
+### Description
+Play menu sounds from `SOUND_MENU_FLAG_*` constants and queues rumble if `SOUND_MENU_FLAG_LETGOMARIOFACE` is one of the flags
 
 ### Lua Example
 `play_menu_sounds(soundMenuFlags)`
@@ -3152,6 +3182,9 @@ Replaces the secret star course name of `courseNum` with `courseName`
 
 ## [play_painting_eject_sound](#play_painting_eject_sound)
 
+### Description
+Plays the painting eject sound effect if it has not already been played
+
 ### Lua Example
 `play_painting_eject_sound()`
 
@@ -3170,6 +3203,9 @@ Replaces the secret star course name of `courseNum` with `courseName`
 
 ## [play_shell_music](#play_shell_music)
 
+### Description
+Plays shell music
+
 ### Lua Example
 `play_shell_music()`
 
@@ -3187,6 +3223,9 @@ Replaces the secret star course name of `courseNum` with `courseName`
 <br />
 
 ## [raise_background_noise](#raise_background_noise)
+
+### Description
+Raises music volume back up to normal levels
 
 ### Lua Example
 `raise_background_noise(a)`
@@ -3208,6 +3247,9 @@ Replaces the secret star course name of `courseNum` with `courseName`
 
 ## [reset_volume](#reset_volume)
 
+### Description
+Resets if music volume has been lowered
+
 ### Lua Example
 `reset_volume()`
 
@@ -3225,6 +3267,9 @@ Replaces the secret star course name of `courseNum` with `courseName`
 <br />
 
 ## [set_background_music](#set_background_music)
+
+### Description
+Sets the background music to `seqArgs` on sequence player `a` with a fade in time of `fadeTimer`
 
 ### Lua Example
 `set_background_music(a, seqArgs, fadeTimer)`
@@ -3248,6 +3293,9 @@ Replaces the secret star course name of `courseNum` with `courseName`
 
 ## [stop_cap_music](#stop_cap_music)
 
+### Description
+Stops cap music completely
+
 ### Lua Example
 `stop_cap_music()`
 
@@ -3266,6 +3314,9 @@ Replaces the secret star course name of `courseNum` with `courseName`
 
 ## [stop_shell_music](#stop_shell_music)
 
+### Description
+Stops shell music completely
+
 ### Lua Example
 `stop_shell_music()`
 
@@ -3283,12 +3334,15 @@ Replaces the secret star course name of `courseNum` with `courseName`
 <br />
 
 ---
-# functions from spawn_sound.c
+# functions from spawn_sound.h
 
 <br />
 
 
 ## [calc_dist_to_volume_range_1](#calc_dist_to_volume_range_1)
+
+### Description
+Unused vanilla function, calculates a volume based on `distance`. If `distance` is less than 500 then 127, if `distance` is greater than 1500 then 0, if `distance` is between 500 and 1500 then it ranges linearly from 60 to 124. What an even more strange and confusing function
 
 ### Lua Example
 `local integerValue = calc_dist_to_volume_range_1(distance)`
@@ -3310,6 +3364,9 @@ Replaces the secret star course name of `courseNum` with `courseName`
 
 ## [calc_dist_to_volume_range_2](#calc_dist_to_volume_range_2)
 
+### Description
+Unused vanilla function, calculates a volume based on `distance`. If `distance` is less than 1300 then 127, if `distance` is greater than 2300 then 0, if `distance` is between 1300 and 2300 then it ranges linearly from 60 to 127. What a strange and confusing function
+
 ### Lua Example
 `local integerValue = calc_dist_to_volume_range_2(distance)`
 
@@ -3328,7 +3385,33 @@ Replaces the secret star course name of `courseNum` with `courseName`
 
 <br />
 
+## [create_sound_spawner](#create_sound_spawner)
+
+### Description
+Create a sound spawner for objects that need a sound play once. (Breakable walls, King Bobomb exploding, etc)
+
+### Lua Example
+`create_sound_spawner(soundMagic)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| soundMagic | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void create_sound_spawner(s32 soundMagic);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [cur_obj_play_sound_1](#cur_obj_play_sound_1)
+
+### Description
+Plays a sound if the current object is visible
 
 ### Lua Example
 `cur_obj_play_sound_1(soundMagic)`
@@ -3349,6 +3432,9 @@ Replaces the secret star course name of `courseNum` with `courseName`
 <br />
 
 ## [cur_obj_play_sound_2](#cur_obj_play_sound_2)
+
+### Description
+Plays a sound if the current object is visible and queues rumble for specific sounds
 
 ### Lua Example
 `cur_obj_play_sound_2(soundMagic)`

@@ -3944,7 +3944,7 @@ function djui_language_get(section, key)
     -- ...
 end
 
---- @param color integer
+--- @param color DjuiRainbowColor
 --- @return string
 function djui_menu_get_rainbow_string_color(color)
     -- ...
@@ -3957,6 +3957,7 @@ function djui_popup_create(message, lines)
     -- ...
 end
 
+--- Drops any queued background music
 function drop_queued_background_music()
     -- ...
 end
@@ -3964,46 +3965,62 @@ end
 --- @param player integer
 --- @param targetScale integer
 --- @param fadeDuration integer
+--- Fades the volume of `player` to `targetScale` (0-127) over `fadeDuration`
 function fade_volume_scale(player, targetScale, fadeDuration)
     -- ...
 end
 
---- @param arg0 integer
+--- @param seqId integer
 --- @param fadeOut integer
-function fadeout_background_music(arg0, fadeOut)
+--- Fades out background music `seqId` over `fadeOut`
+function fadeout_background_music(seqId, fadeOut)
     -- ...
 end
 
 --- @return integer
+--- Gets the current background music
 function get_current_background_music()
     -- ...
 end
 
 --- @return integer
+--- Gets the current background music's default volume
 function get_current_background_music_default_volume()
     -- ...
 end
 
 --- @return integer
+--- Gets the current max target volume
 function get_current_background_music_max_target_volume()
     -- ...
 end
 
 --- @return integer
+--- Gets the current target volume
 function get_current_background_music_target_volume()
     -- ...
 end
 
+--- @param x number
+--- @param z number
+--- @return number
+function get_sound_pan(x, z)
+    -- ...
+end
+
 --- @return integer
+--- Checks if the current background music is lowered
 function is_current_background_music_volume_lowered()
     -- ...
 end
 
+--- Plays the star collect fanfare (this function's name was mixed up with the other)
 function play_course_clear()
     -- ...
 end
 
 --- @param dialogID integer
+--- Plays a dialog sound corresponding to `dialogID`
 function play_dialog_sound(dialogID)
     -- ...
 end
@@ -4011,23 +4028,28 @@ end
 --- @param player integer
 --- @param seqArgs integer
 --- @param fadeTimer integer
+--- Plays fading in music (`seqArgs`) on `player` over `fadeTimer`
 function play_music(player, seqArgs, fadeTimer)
     -- ...
 end
 
+--- Plays Peach's letter jingle
 function play_peachs_jingle()
     -- ...
 end
 
---- @param arg0 integer
-function play_power_star_jingle(arg0)
+--- @param keepBackgroundMusic integer
+--- Plays the power star jingle, set `keepBackgroundMusic` to 0 to mute background music
+function play_power_star_jingle(keepBackgroundMusic)
     -- ...
 end
 
+--- Plays the puzzle jingle
 function play_puzzle_jingle()
     -- ...
 end
 
+--- Plays the race fanfare when a race is started
 function play_race_fanfare()
     -- ...
 end
@@ -4036,12 +4058,14 @@ end
 --- @param bgMusicVolume integer
 --- @param volume integer
 --- @param fadeTimer integer
+--- Plays fading in secondary music `seqId` at `volume` over `fadeTimer` and sets the current background music's volume to `bgMusicVolume`
 function play_secondary_music(seqId, bgMusicVolume, volume, fadeTimer)
     -- ...
 end
 
 --- @param soundBits integer
 --- @param pos Vec3f
+--- Plays a sound (`soundBits`) at `pos` (usually `gGlobalSoundSource` or `m.header.gfx.cameraToObject`)
 function play_sound(soundBits, pos)
     -- ...
 end
@@ -4049,20 +4073,24 @@ end
 --- @param soundBits integer
 --- @param pos Vec3f
 --- @param freqScale number
+--- Plays a sound (`soundBits`) with `freqScale` at `pos` (usually `gGlobalSoundSource` or `m.header.gfx.cameraToObject`)
 function play_sound_with_freq_scale(soundBits, pos, freqScale)
     -- ...
 end
 
+--- Plays the course clear fanfare (this function's name was mixed up with the other)
 function play_star_fanfare()
     -- ...
 end
 
+--- Plays Toad's jingle
 function play_toads_jingle()
     -- ...
 end
 
 --- @param player integer
 --- @param fadeDuration integer
+--- Fades out `player` with `fadeDuration`
 function seq_player_fade_out(player, fadeDuration)
     -- ...
 end
@@ -4070,29 +4098,47 @@ end
 --- @param player integer
 --- @param fadeDuration integer
 --- @param percentage integer
+--- Fades the volume of `player` to `percentage` over `fadeDuration`
 function seq_player_lower_volume(player, fadeDuration, percentage)
     -- ...
 end
 
 --- @param player integer
 --- @param fadeDuration integer
+--- Unfades the volume of `player` over `fadeDuration`
 function seq_player_unlower_volume(player, fadeDuration)
     -- ...
 end
 
 --- @param fadeOutTime integer
+--- Sets the `fadeOutTime` of audio
 function set_audio_fadeout(fadeOutTime)
+    -- ...
+end
+
+--- @param muted integer
+--- Sets the muted status of all sequence players
+function set_audio_muted(muted)
+    -- ...
+end
+
+--- @param bank integer
+--- @param speed integer
+--- Sets the `speed` of moving `bank`
+function set_sound_moving_speed(bank, speed)
     -- ...
 end
 
 --- @param player integer
 --- @param bankMask integer
+--- Enables `bankMask` soundbanks in `player`
 function sound_banks_disable(player, bankMask)
     -- ...
 end
 
 --- @param player integer
 --- @param bankMask integer
+--- Disables `bankMask` soundbanks in `player`
 function sound_banks_enable(player, bankMask)
     -- ...
 end
@@ -4104,26 +4150,42 @@ function sound_get_level_intensity(distance)
 end
 
 --- @param seqId integer
+function sound_reset_background_music_default_volume(seqId)
+    -- ...
+end
+
+--- @param seqId integer
+--- @param volume integer
+function sound_set_background_music_default_volume(seqId, volume)
+    -- ...
+end
+
+--- @param seqId integer
+--- Stops background music `seqId`
 function stop_background_music(seqId)
     -- ...
 end
 
 --- @param fadeTimer integer
+--- Fades out secondary music over `fadeTimer`
 function stop_secondary_music(fadeTimer)
     -- ...
 end
 
 --- @param soundBits integer
 --- @param pos Vec3f
+--- Stops a sound (`soundBits`) at `pos` (usually `gGlobalSoundSource` or `m.header.gfx.cameraToObject`)
 function stop_sound(soundBits, pos)
     -- ...
 end
 
 --- @param pos Vec3f
+--- Stops sounds from `pos` (usually `gGlobalSoundSource` or `m.header.gfx.cameraToObject`)
 function stop_sounds_from_source(pos)
     -- ...
 end
 
+--- Stops sounds in sound banks moving, env, and air
 function stop_sounds_in_continuous_banks()
     -- ...
 end
@@ -8406,36 +8468,42 @@ end
 
 --- @param player integer
 --- @return integer
+--- Gets the tempo of `player`
 function sequence_player_get_tempo(player)
     -- ...
 end
 
 --- @param player integer
 --- @return integer
+--- Gets the tempoAcc (tempo ???) of `player`
 function sequence_player_get_tempo_acc(player)
     -- ...
 end
 
 --- @param player integer
 --- @return integer
+--- Gets the transposition (pitch) of `player`
 function sequence_player_get_transposition(player)
     -- ...
 end
 
 --- @param player integer
 --- @param tempo integer
+--- Sets the `tempo` of `player`. Resets when another sequence is played
 function sequence_player_set_tempo(player, tempo)
     -- ...
 end
 
 --- @param player integer
 --- @param tempoAcc integer
+--- Sets the `tempoAcc` (tempo ???) of `player`. Resets when another sequence is played
 function sequence_player_set_tempo_acc(player, tempoAcc)
     -- ...
 end
 
 --- @param player integer
 --- @param transposition integer
+--- Sets the `transposition` (pitch) of `player`. Resets when another sequence is played
 function sequence_player_set_transposition(player, transposition)
     -- ...
 end
@@ -10098,65 +10166,79 @@ function smlua_text_utils_secret_star_replace(courseNum, courseName)
     -- ...
 end
 
+--- Disables background soundbanks
 function disable_background_sound()
     -- ...
 end
 
+--- Enables background soundbanks
 function enable_background_sound()
     -- ...
 end
 
+--- Fades out cap music
 function fadeout_cap_music()
     -- ...
 end
 
 --- @param fadeTimer integer
+--- Fades out the level sequence player
 function fadeout_level_music(fadeTimer)
     -- ...
 end
 
 --- @param fadeOutTime integer
+--- Fades out level, shell, and cap music
 function fadeout_music(fadeOutTime)
     -- ...
 end
 
 --- @param a integer
+--- Lowers the volume of music by 40%
 function lower_background_noise(a)
     -- ...
 end
 
 --- @param seqArgs integer
+--- Plays `seqArgs` as cap music
 function play_cap_music(seqArgs)
     -- ...
 end
 
 --- @param seqArgs integer
+--- Plays and sets the current music to `seqArgs`
 function play_cutscene_music(seqArgs)
     -- ...
 end
 
+--- Plays the infinite stairs music if you're in the endless stairs room and have less than `gLevelValues.infiniteStairsRequirement` stars
 function play_infinite_stairs_music()
     -- ...
 end
 
 --- @param soundMenuFlags integer
+--- Play menu sounds from `SOUND_MENU_FLAG_*` constants and queues rumble if `SOUND_MENU_FLAG_LETGOMARIOFACE` is one of the flags
 function play_menu_sounds(soundMenuFlags)
     -- ...
 end
 
+--- Plays the painting eject sound effect if it has not already been played
 function play_painting_eject_sound()
     -- ...
 end
 
+--- Plays shell music
 function play_shell_music()
     -- ...
 end
 
 --- @param a integer
+--- Raises music volume back up to normal levels
 function raise_background_noise(a)
     -- ...
 end
 
+--- Resets if music volume has been lowered
 function reset_volume()
     -- ...
 end
@@ -10164,36 +10246,49 @@ end
 --- @param a integer
 --- @param seqArgs integer
 --- @param fadeTimer integer
+--- Sets the background music to `seqArgs` on sequence player `a` with a fade in time of `fadeTimer`
 function set_background_music(a, seqArgs, fadeTimer)
     -- ...
 end
 
+--- Stops cap music completely
 function stop_cap_music()
     -- ...
 end
 
+--- Stops shell music completely
 function stop_shell_music()
     -- ...
 end
 
 --- @param distance number
 --- @return integer
+--- Unused vanilla function, calculates a volume based on `distance`. If `distance` is less than 500 then 127, if `distance` is greater than 1500 then 0, if `distance` is between 500 and 1500 then it ranges linearly from 60 to 124. What an even more strange and confusing function
 function calc_dist_to_volume_range_1(distance)
     -- ...
 end
 
 --- @param distance number
 --- @return integer
+--- Unused vanilla function, calculates a volume based on `distance`. If `distance` is less than 1300 then 127, if `distance` is greater than 2300 then 0, if `distance` is between 1300 and 2300 then it ranges linearly from 60 to 127. What a strange and confusing function
 function calc_dist_to_volume_range_2(distance)
     -- ...
 end
 
 --- @param soundMagic integer
+--- Create a sound spawner for objects that need a sound play once. (Breakable walls, King Bobomb exploding, etc)
+function create_sound_spawner(soundMagic)
+    -- ...
+end
+
+--- @param soundMagic integer
+--- Plays a sound if the current object is visible
 function cur_obj_play_sound_1(soundMagic)
     -- ...
 end
 
 --- @param soundMagic integer
+--- Plays a sound if the current object is visible and queues rumble for specific sounds
 function cur_obj_play_sound_2(soundMagic)
     -- ...
 end

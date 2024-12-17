@@ -5161,6 +5161,9 @@ Marks the coin score for a specific course as the newest among all save files. A
 
 ## [sequence_player_get_tempo](#sequence_player_get_tempo)
 
+### Description
+Gets the tempo of `player`
+
 ### Lua Example
 `local integerValue = sequence_player_get_tempo(player)`
 
@@ -5180,6 +5183,9 @@ Marks the coin score for a specific course as the newest among all save files. A
 <br />
 
 ## [sequence_player_get_tempo_acc](#sequence_player_get_tempo_acc)
+
+### Description
+Gets the tempoAcc (tempo ???) of `player`
 
 ### Lua Example
 `local integerValue = sequence_player_get_tempo_acc(player)`
@@ -5201,6 +5207,9 @@ Marks the coin score for a specific course as the newest among all save files. A
 
 ## [sequence_player_get_transposition](#sequence_player_get_transposition)
 
+### Description
+Gets the transposition (pitch) of `player`
+
 ### Lua Example
 `local integerValue = sequence_player_get_transposition(player)`
 
@@ -5220,6 +5229,9 @@ Marks the coin score for a specific course as the newest among all save files. A
 <br />
 
 ## [sequence_player_set_tempo](#sequence_player_set_tempo)
+
+### Description
+Sets the `tempo` of `player`. Resets when another sequence is played
 
 ### Lua Example
 `sequence_player_set_tempo(player, tempo)`
@@ -5242,6 +5254,9 @@ Marks the coin score for a specific course as the newest among all save files. A
 
 ## [sequence_player_set_tempo_acc](#sequence_player_set_tempo_acc)
 
+### Description
+Sets the `tempoAcc` (tempo ???) of `player`. Resets when another sequence is played
+
 ### Lua Example
 `sequence_player_set_tempo_acc(player, tempoAcc)`
 
@@ -5262,6 +5277,9 @@ Marks the coin score for a specific course as the newest among all save files. A
 <br />
 
 ## [sequence_player_set_transposition](#sequence_player_set_transposition)
+
+### Description
+Sets the `transposition` (pitch) of `player`. Resets when another sequence is played
 
 ### Lua Example
 `sequence_player_set_transposition(player, transposition)`
