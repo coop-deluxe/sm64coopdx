@@ -694,107 +694,562 @@ extern struct Object *gCutsceneFocus;
 extern struct Object *gSecondCameraFocus;
 extern u8 gRecentCutscene;
 
+/* |description|
+Skips camera interpolation for a frame, locking the camera instantly to the target position.
+Useful for immediate changes in camera state or position without smooth transitions
+|descriptionEnd| */
 void skip_camera_interpolation(void);
+
+/* |description|
+Applies a shake effect to the camera based on a hit type.
+Different shake types simulate various impacts, such as attacks, falls, or shocks
+|descriptionEnd| */
 void set_camera_shake_from_hit(s16 shake);
+
+/* |description|
+Applies an environmental shake effect to the camera.
+Handles predefined shake types triggered by environmental events like explosions or platform movements
+|descriptionEnd| */
 void set_environmental_camera_shake(s16 shake);
+
+/* |description|
+Applies a shake effect to the camera, scaled by its proximity to a specified point.
+The intensity decreases with distance from the point
+|descriptionEnd| */
 void set_camera_shake_from_point(s16 shake, f32 posX, f32 posY, f32 posZ);
+
+/* |description|
+Moves Mario's head slightly upward when the C-Up button is pressed.
+This function aligns the camera to match the head movement for consistency
+|descriptionEnd| */
 void move_mario_head_c_up(UNUSED struct Camera *c);
+
+/* |description|
+Transitions the camera to the next state over a specified number of frames.
+This is typically used for cutscenes or scripted sequences
+|descriptionEnd| */
 void transition_next_state(UNUSED struct Camera *c, s16 frames);
+
+/* |description|
+Changes the camera to a new mode, optionally interpolating over a specified number of frames.
+Useful for transitioning between different camera behaviors dynamically
+|descriptionEnd| */
 void set_camera_mode(struct Camera *c, s16 mode, s16 frames);
+
 void update_camera(struct Camera *c);
+
+/* |description|
+Resets the camera's state while retaining some settings, such as position or mode.
+This is often used when soft-resetting gameplay without reinitialization
+|descriptionEnd| */
 void soft_reset_camera(struct Camera* c);
+
+/* |description|
+Fully resets the camera to its default state and reinitializes all settings.
+This is typically used when restarting gameplay or loading a new area
+|descriptionEnd| */
 void reset_camera(struct Camera *c);
+
 void init_camera(struct Camera *c);
+
+/* |description|
+Selects the appropriate camera mode for Mario based on the current gameplay context.
+Adapts camera behavior dynamically to match Mario's environment or state
+|descriptionEnd| */
 void select_mario_cam_mode(void);
+
 Gfx *geo_camera_main(s32 callContext, struct GraphNode *g, void *context);
+
 void stub_camera_2(UNUSED struct Camera *c);
+
 void stub_camera_3(UNUSED struct Camera *c);
+
+/* |description|
+Subtracts one 3D vector (`src`) from another (`dst`).
+Stores the result in the destination vector
+|descriptionEnd| */
 void vec3f_sub(Vec3f dst, Vec3f src);
+
+/* |description|
+Converts an object's position to a `Vec3f` format.
+Useful for aligning object behaviors or interactions with the camera system
+|descriptionEnd| */
 void object_pos_to_vec3f(Vec3f dst, struct Object *o);
+
+/* |description|
+Converts a `Vec3f` position to an object's internal format.
+Useful for syncing 3D positions between objects and the game world
+|descriptionEnd| */
 void vec3f_to_object_pos(struct Object *o, Vec3f src);
+
 s32 move_point_along_spline(Vec3f p, struct CutsceneSplinePoint spline[], s16 *splineSegment, f32 *progress);
+
+/* |description|
+Selects an alternate camera mode based on the given angle.
+Used to toggle between predefined camera modes dynamically
+|descriptionEnd| */
 s32 cam_select_alt_mode(s32 angle);
+
+/* |description|
+Sets the camera's angle based on the specified mode.
+Handles rotation and focus adjustments for predefined camera behaviors
+|descriptionEnd| */
 s32 set_cam_angle(s32 mode);
+
+/* |description|
+Applies a handheld camera shake effect with configurable parameters.
+Can be used to simulate dynamic, realistic camera movement
+|descriptionEnd| */
 void set_handheld_shake(u8 mode);
+
+/* |description|
+Activates a handheld camera shake effect.
+Calculates positional and focus adjustments to simulate manual movement
+|descriptionEnd| */
 void shake_camera_handheld(Vec3f pos, Vec3f focus);
+
+/* |description|
+Determines which C-buttons are currently pressed by the player.
+Returns a bitmask indicating the active buttons for camera control
+|descriptionEnd| */
 s32 find_c_buttons_pressed(u16 currentState, u16 buttonsPressed, u16 buttonsDown);
+
 s32 update_camera_hud_status(struct Camera *c);
+
+/* |description|
+Checks for collisions between the camera and level geometry.
+Adjusts the camera's position to avoid clipping into walls or obstacles
+|descriptionEnd| */
 s32 collide_with_walls(Vec3f pos, f32 offsetY, f32 radius);
+
+/* |description|
+Clamps the camera's pitch angle between a maximum and minimum value.
+Prevents over-rotation and maintains a consistent viewing angle
+|descriptionEnd| */
 s32 clamp_pitch(Vec3f from, Vec3f to, s16 maxPitch, s16 minPitch);
+
+/* |description|
+Checks if a position is within 100 units of Mario's current position.
+Returns true if the position is within the specified radius and false otherwise
+|descriptionEnd| */
 s32 is_within_100_units_of_mario(f32 posX, f32 posY, f32 posZ);
+
+
+/* |description|
+Smoothly transitions or directly sets a floating-point value (`dst`) to approach a target (`goal`).
+Uses asymptotic scaling for gradual adjustments or direct assignment
+|descriptionEnd| */
 s32 set_or_approach_f32_asymptotic(f32 *dst, f32 goal, f32 scale);
+
+
+/* |description|
+Gradually adjusts a floating-point value (`current`) towards a target (`target`) using asymptotic smoothing.
+Returns true if `current` reaches the `target` and false otherwise
+|descriptionEnd| */
 s32 approach_f32_asymptotic_bool(f32 *current, f32 target, f32 multiplier);
+
+/* |description|
+Gradually approaches a floating-point value (`target`) using asymptotic smoothing.
+The rate of approach is controlled by the `multiplier`.
+Useful for smoothly adjusting camera parameters like field-of-view or position
+|descriptionEnd| */
 f32 approach_f32_asymptotic(f32 current, f32 target, f32 multiplier);
+
+/* |description|
+Gradually adjusts a signed 16-bit integer (`current`) towards a target (`target`) using asymptotic smoothing.
+Returns true if `current` reaches `target` and false otherwise
+|descriptionEnd| */
 s32 approach_s16_asymptotic_bool(s16 *current, s16 target, s16 divisor);
+
+/* |description|
+Gradually approaches a signed 16-bit integer (`target`) using asymptotic smoothing.
+The divisor controls the rate of the adjustment.
+Useful for adjusting angles or positions smoothly
+|descriptionEnd| */
 s32 approach_s16_asymptotic(s16 current, s16 target, s16 divisor);
+
+/* |description|
+Smoothly transitions a 3D vector (`current`) towards a target vector (`target`) using asymptotic scaling.
+Scaling values (the `Mul` variables) for x, y, and z axes determine the speed of adjustment for each component
+|descriptionEnd| */
 void approach_vec3f_asymptotic(Vec3f current, Vec3f target, f32 xMul, f32 yMul, f32 zMul);
+
+/* |description|
+Smoothly transitions a 3D vector (`current`) toward a target vector (`goal`) using asymptotic scaling.
+Allows gradual or instantaneous alignment of 3D positions. Scaling values (the `Mul` variables) for x, y, and z axes determine the speed of adjustment for each component
+|descriptionEnd| */
 void set_or_approach_vec3f_asymptotic(Vec3f dst, Vec3f goal, f32 xMul, f32 yMul, f32 zMul);
+
+/* |description|
+Adjusts a signed 16-bit integer (`current`) towards a target (`target`) symmetrically with a fixed increment (`increment`).
+Returns true if the value reaches the target and false otherwise
+|descriptionEnd| */
 s32 camera_approach_s16_symmetric_bool(s16 *current, s16 target, s16 increment);
+
+/* |description|
+Smoothly transitions or directly sets a signed 16-bit value (`current`) to approach a target (`target`).
+Uses symmetric scaling for gradual or immediate adjustments
+|descriptionEnd| */
 s32 set_or_approach_s16_symmetric(s16 *current, s16 target, s16 increment);
+
+/* |description|
+Adjusts a floating-point value (`current`) towards a target (`target`) symmetrically with a fixed increment (`increment`).
+Returns true if the value reaches the target and false otherwise
+|descriptionEnd| */
 s32 camera_approach_f32_symmetric_bool(f32 *current, f32 target, f32 increment);
+
+/* |description|
+Symmetrically approaches a floating-point value (`target`) with a fixed increment (`increment`) per frame.
+Limits the rate of change to ensure gradual transitions
+|descriptionEnd| */
 f32 camera_approach_f32_symmetric(f32 value, f32 target, f32 increment);
+
+/* |description|
+Generates a random 3D vector with short integer components.
+Useful for randomized offsets or environmental effects
+|descriptionEnd| */
 void random_vec3s(Vec3s dst, s16 xRange, s16 yRange, s16 zRange);
+
+/* |description|
+Clamps a position within specified X and Z bounds and calculates the yaw angle from the origin.
+Prevents the camera from moving outside of the designated area
+|descriptionEnd| */
 s32 clamp_positions_and_find_yaw(Vec3f pos, Vec3f origin, f32 xMax, f32 xMin, f32 zMax, f32 zMin);
+
+/* |description|
+Determines if a range is obstructed by a surface relative to the camera.
+Returns true if the range is behind the specified surface
+|descriptionEnd| */
 s32 is_range_behind_surface(Vec3f from, Vec3f to, struct Surface *surf, s16 range, s16 surfType);
+
+/* |description|
+Scales a point along a line between two 3D points (`from` and `to`).
+The scaling factor determines how far along the line the resulting point will be.
+The result is stored in the destination vector (`dest`)
+|descriptionEnd| */
 void scale_along_line(Vec3f dest, Vec3f from, Vec3f to, f32 scale);
+
+/* |description|
+Calculates the pitch angle (rotation around the X-axis) from one 3D point (`from`) to another (`to`).
+Returns the pitch as a signed 16-bit integer
+|descriptionEnd| */
 s16 calculate_pitch(Vec3f from, Vec3f to);
+
+/* |description|
+Determines the yaw angle (rotation around the Y-axis) from one 3D position (`from`) to another (`to`).
+Returns the yaw as a signed 16-bit integer
+|descriptionEnd| */
 s16 calculate_yaw(Vec3f from, Vec3f to);
+
+/* |description|
+Calculates the pitch and yaw angles from one 3D position (`from`) to another (`to`).
+Updates the provided pointers with the computed pitch and yaw values
+|descriptionEnd| */
 void calculate_angles(Vec3f from, Vec3f to, s16 *pitch, s16 *yaw);
+
+/* |description|
+Calculates the absolute distance between two 3D points (`a` and `b`).
+Returns the distance as a floating-point value.
+Useful for determining proximity between objects in 3D space
+|descriptionEnd| */
 f32 calc_abs_dist(Vec3f a, Vec3f b);
+
+/* |description|
+Calculates the horizontal (XZ-plane) distance between two 3D points (`a` and `b`).
+Returns the distance as a floating-point value.
+Useful for terrain navigation or collision detection
+|descriptionEnd| */
 f32 calc_hor_dist(Vec3f a, Vec3f b);
+
+/* |description|
+Rotates a vector around the XZ-plane by a specified yaw angle.
+The result is stored in the destination vector (`dst`).
+Useful for rotating camera positions or object coordinates horizontally
+|descriptionEnd| */
 void rotate_in_xz(Vec3f dst, Vec3f src, s16 yaw);
+
+/* |description|
+Rotates a vector around the YZ-plane by a specified pitch angle.
+The result is stored in the destination vector (`dst`).
+Useful for vertical camera rotations or object transformations
+|descriptionEnd| */
 void rotate_in_yz(Vec3f dst, Vec3f src, s16 pitch);
+
+/* |description|
+Applies a pitch-based shake effect to the camera.
+The shake's magnitude, decay, and increment are configurable.
+Simulates vertical disturbances like impacts or explosions
+|descriptionEnd| */
 void set_camera_pitch_shake(s16 mag, s16 decay, s16 inc);
+
+/* |description|
+Applies a yaw-based shake effect to the camera.
+Simulates horizontal vibrations or rotational impacts
+|descriptionEnd| */
 void set_camera_yaw_shake(s16 mag, s16 decay, s16 inc);
+
+/* |description|
+Applies a roll-based shake effect to the camera.
+Simulates rotational disturbances for dynamic camera effects
+|descriptionEnd| */
 void set_camera_roll_shake(s16 mag, s16 decay, s16 inc);
+
+/* |description|
+Applies a pitch shake effect to the camera, scaled by proximity to a specified point.
+Simulates vibrations with intensity decreasing further from the point
+|descriptionEnd| */
 void set_pitch_shake_from_point(s16 mag, s16 decay, s16 inc, f32 maxDist, f32 posX, f32 posY, f32 posZ);
+
+/* |description|
+Activates a pitch-based shake effect.
+Adds vertical vibrational movement to the camera's behavior
+|descriptionEnd| */
 void shake_camera_pitch(Vec3f pos, Vec3f focus);
+
+/* |description|
+Activates a yaw-based shake effect.
+Adds horizontal vibrational movement to the camera's behavior
+|descriptionEnd| */
 void shake_camera_yaw(Vec3f pos, Vec3f focus);
+
+/* |description|
+Applies a roll-based shake effect to the camera.
+Simulates rotational disturbances caused by impacts or other events
+|descriptionEnd| */
 void shake_camera_roll(s16 *roll);
+
+/* |description|
+Calculates an outward radial offset based on the camera's yaw angle.
+Returns the offset yaw, used for positioning or alignment
+|descriptionEnd| */
 s32 offset_yaw_outward_radial(struct Camera *c, s16 areaYaw);
+
+/* |description|
+Plays a buzzing sound effect when the camera attempts to move downward but is restricted.
+Provides feedback for invalid C-Down input actions
+|descriptionEnd| */
 void play_camera_buzz_if_cdown(void);
+
+/* |description|
+Plays a buzzing sound effect when a blocked C-button action is attempted.
+Used to signal invalid input or restricted camera movement
+|descriptionEnd| */
 void play_camera_buzz_if_cbutton(void);
+
+/* |description|
+Plays a buzzing sound effect when the camera's position is misaligned with the player's perspective.
+Used as audio feedback for incorrect camera behavior
+|descriptionEnd| */
 void play_camera_buzz_if_c_sideways(void);
+
+/* |description|
+Plays a sound effect when the C-Up button is pressed for camera movement.
+Provides feedback for vertical camera adjustments
+|descriptionEnd| */
 void play_sound_cbutton_up(void);
+
+/* |description|
+Plays a sound effect when the C-Down button is pressed for camera movement.
+Provides auditory feedback for valid camera input
+|descriptionEnd| */
 void play_sound_cbutton_down(void);
+
+/* |description|
+Plays a sound effect when the C-Side button (left or right) is pressed for camera movement.
+Used as audio feedback for horizontal adjustments to the camera
+|descriptionEnd| */
 void play_sound_cbutton_side(void);
+
+/* |description|
+Plays a sound effect when a blocked action changes the camera mode.
+This provides feedback for invalid attempts to switch the camera state
+|descriptionEnd| */
 void play_sound_button_change_blocked(void);
+
+/* |description|
+Plays a sound effect when the R-Button camera mode is changed.
+Provides feedback for toggling camera behaviors
+|descriptionEnd| */
 void play_sound_rbutton_changed(void);
+
+/* |description|
+Plays a sound effect when the camera switches between Lakitu and Mario perspectives.
+Signals a successful change in camera mode
+|descriptionEnd| */
 void play_sound_if_cam_switched_to_lakitu_or_mario(void);
+
+/* |description|
+Handles radial camera movement based on player input.
+Updates the camera's position or orientation accordingly
+|descriptionEnd| */
 s32 radial_camera_input(struct Camera *c, UNUSED f32 unused);
+
+/* |description|
+Triggers a dialog sequence during a cutscene.
+The dialog is synchronized with the camera's position and movement
+|descriptionEnd| */
 s32 trigger_cutscene_dialog(s32 trigger);
+
+/* |description|
+Handles camera movement based on input from the C-buttons.
+Updates the camera's position or angle to match directional player input
+|descriptionEnd| */
 void handle_c_button_movement(struct Camera *c);
+
+/* |description|
+Starts a cutscene based on the provided ID.
+The camera transitions to predefined behaviors for the duration of the cutscene
+|descriptionEnd| */
 void start_cutscene(struct Camera *c, u8 cutscene);
+
+/* |description|
+Gets the appropriate cutscene to play based on Mario's current gameplay state.
+This function helps determine transitions for cinematic or scripted sequences
+|descriptionEnd| */
 u8 get_cutscene_from_mario_status(struct Camera *c);
+
+/* |description|
+Moves the camera to a specified warp destination.
+This function handles transitions between levels or areas seamlessly
+|descriptionEnd| */
 void warp_camera(f32 displacementX, f32 displacementY, f32 displacementZ);
+
+/* |description|
+Adjusts the camera's height toward a target value (`goalHeight`) while respecting terrain and obstructions.
+This is really wonky and probably shouldn't be used, prefer `gLakituStates`
+|descriptionEnd| */
 void approach_camera_height(struct Camera *c, f32 goal, f32 inc);
+
+/* |description|
+Offsets a vector by rotating it in 3D space relative to a reference position.
+This is useful for creating radial effects or dynamic transformations
+|descriptionEnd| */
 void offset_rotated(Vec3f dst, Vec3f from, Vec3f to, Vec3s rotation);
+
+/* |description|
+Transitions the camera to the next Lakitu state, updating position and focus.
+This function handles smooth transitions between different gameplay scenarios
+|descriptionEnd| */
 s16 next_lakitu_state(Vec3f newPos, Vec3f newFoc, Vec3f curPos, Vec3f curFoc, Vec3f oldPos, Vec3f oldFoc, s16 yaw);
+
 void set_fixed_cam_axis_sa_lobby(UNUSED s16 preset);
+/* |description|
+Processes course-specific camera settings, such as predefined positions or modes.
+Adjusts the camera to match the design and gameplay requirements of the current course
+|descriptionEnd| */
 s16 camera_course_processing(struct Camera *c);
+
+/* |description|
+Resolves collisions between the camera and level geometry.
+Adjusts the camera's position to prevent clipping or intersecting with objects
+|descriptionEnd| */
 void resolve_geometry_collisions(Vec3f pos, UNUSED Vec3f lastGood);
+
+/* |description|
+Rotates the camera to avoid walls or other obstructions.
+Ensures clear visibility of the player or target objects
+|descriptionEnd| */
 s32 rotate_camera_around_walls(struct Camera *c, Vec3f cPos, s16 *avoidYaw, s16 yawRange);
+
+
+/* |description|
+Finds the floor and ceiling directly above and below Mario's position.
+Updates Mario's geometry information for camera calculations
+|descriptionEnd| */
 void find_mario_floor_and_ceil(struct PlayerGeometry *pg);
+
+/* |description|
+Starts a cutscene focused on an object without requiring focus to remain locked.
+This is useful for dynamic events where the camera adjusts freely
+|descriptionEnd| */
 u8 start_object_cutscene_without_focus(u8 cutscene);
+
+/* |description|
+Starts a cutscene involving an object and displays dialog during the sequence.
+The camera focuses on the object while synchronizing dialog with the scene
+|descriptionEnd| */
 s16 cutscene_object_with_dialog(u8 cutscene, struct Object *o, s16 dialogID);
+
+/* |description|
+Starts a cutscene involving an object without dialog.
+The camera transitions smoothly to focus on the object
+|descriptionEnd| */
 s16 cutscene_object_without_dialog(u8 cutscene, struct Object *o);
+
+/* |description|
+Initiates a cutscene focusing on a specific object in the game world.
+The camera transitions smoothly to the object, adapting its position as needed
+|descriptionEnd| */
 s16 cutscene_object(u8 cutscene, struct Object *o);
+
+/* |description|
+Starts the execution of a predefined cutscene.
+The camera transitions dynamically to follow the scripted sequence
+|descriptionEnd| */
 void play_cutscene(struct Camera *c);
+
 s32 cutscene_event(CameraEvent event, struct Camera * c, s16 start, s16 end);
+
+/* |description|
+Spawns an object as part of a cutscene, such as props or interactive elements.
+Returns the spawned object's reference for further manipulation
+|descriptionEnd| */
 s32 cutscene_spawn_obj(u32 obj, s16 frame);
+
+/* |description|
+Applies a field-of-view shake effect to simulate zoom or focus disruptions.
+Shake parameters, such as amplitude and decay, control the intensity
+|descriptionEnd| */
 void set_fov_shake(s16 amplitude, s16 decay, s16 shakeSpeed);
 
+/* |description|
+Assigns a custom function for dynamic field-of-view adjustments.
+This allows precise control over the camera's zoom behavior during gameplay
+|descriptionEnd| */
 void set_fov_function(u8 func);
+
+/* |description|
+Applies a preset field-of-view shake effect during a cutscene.
+This creates dynamic visual effects, such as zoom or focus disruptions
+|descriptionEnd| */
 void cutscene_set_fov_shake_preset(u8 preset);
+
+/* |description|
+Applies a preset field-of-view shake effect relative to a specific point.
+The intensity diminishes as the distance from the point increases
+|descriptionEnd| */
 void set_fov_shake_from_point_preset(u8 preset, f32 posX, f32 posY, f32 posZ);
+
+/* |description|
+Rotates an object toward a specific point in 3D space.
+Gradually updates the object's pitch and yaw angles to face the target
+|descriptionEnd| */
 void obj_rotate_towards_point(struct Object *o, Vec3f point, s16 pitchOff, s16 yawOff, s16 pitchDiv, s16 yawDiv);
 
 Gfx *geo_camera_fov(s32 callContext, struct GraphNode *g, UNUSED void *context);
 
+/* |description|
+Activates a fixed camera mode and aligns the camera to specific X, Y, Z coordinates.
+This is useful for predefined static views in specific areas
+|descriptionEnd| */
 s32 set_camera_mode_fixed(struct Camera* c, s16 x, s16 y, s16 z);
 
+/* |description|
+Toggles whether the camera uses course-specific settings.
+This is useful for enabling or disabling custom behaviors in specific courses or areas
+|descriptionEnd| */
 void camera_set_use_course_specific_settings(u8 enable);
+
+/* |description|
+Toggles collision settings for the ROM hack camera.
+This enables or disables specific collision behaviors in modded levels
+|descriptionEnd| */
 void rom_hack_cam_set_collisions(u8 enable);
+
+/* |description|
+Centers the ROM hack camera.
+This function is designed for non-standard level layouts and modded game environments
+|descriptionEnd| */
 void center_rom_hack_camera(void);
 
 #endif // CAMERA_H

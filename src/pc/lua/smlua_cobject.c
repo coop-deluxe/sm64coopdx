@@ -386,7 +386,12 @@ static int smlua__get_field(lua_State* L) {
     CObject *cobj = lua_touserdata(L, 1);
     enum LuaObjectType lot = cobj->lot;
     u64 pointer = (u64)(intptr_t) cobj->pointer;
+
     const char *key = smlua_to_string(L, 2);
+    if (!gSmLuaConvertSuccess) {
+        LOG_LUA_LINE("Tried to get a non-string field of cobject");
+        return 0;
+    }
 
     // Legacy support
     if (strcmp(key, "_pointer") == 0) {
@@ -467,7 +472,12 @@ static int smlua__set_field(lua_State* L) {
     CObject *cobj = lua_touserdata(L, 1);
     enum LuaObjectType lot = cobj->lot;
     u64 pointer = (u64)(intptr_t) cobj->pointer;
+
     const char *key = smlua_to_string(L, 2);
+    if (!gSmLuaConvertSuccess) {
+        LOG_LUA_LINE("Tried to set a non-string field of cobject");
+        return 0;
+    }
 
     if (cobj->freed) {
         LOG_LUA_LINE("_set_field on freed object");
@@ -564,6 +574,7 @@ int smlua__gc(lua_State *L) {
 static int smlua_cpointer_get(lua_State* L) {
     CPointer *cptr = lua_touserdata(L, 1);
     const char *key = smlua_to_string(L, 2);
+    if (key == NULL) { return 0; }
 
     // Legacy support
     if (strcmp(key, "_pointer") == 0) {

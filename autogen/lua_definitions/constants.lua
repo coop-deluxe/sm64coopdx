@@ -195,54 +195,6 @@ function vec3s_dist(v1, v2)
     return math.sqrt(dx * dx + dy * dy + dz * dz)
 end
 
---- @param current number
---- @param target number
---- @param inc number
---- @param dec number
---- @return number
-function approach_f32(current, target, inc, dec)
-    if current < target then
-        current = current + inc
-        if current > target then
-            current = target
-        end
-    else
-        current = current - dec
-        if current < target then
-            current = target
-        end
-    end
-    return current
-end
-
---- @param current integer
---- @param target integer
---- @param inc integer
---- @param dec integer
---- @return integer
-function approach_s32(current, target, inc, dec)
-    if current < target then
-        current = current + inc
-        if current > target then
-            current = target
-        end
-    else
-        current = current - dec
-        if current < target then
-            current = target
-        end
-    end
-
-    -- keep within 32 bits
-    if current > 2147483647 then
-        current = -2147483648 + (current - 2147483647)
-    elseif current < -2147483648 then
-        current = 2147483647 + (current - (-2147483648))
-    end
-    return current
-end
-
-
 -----------
 -- sound --
 -----------
@@ -333,6 +285,7 @@ COURSE_MIN = 1
 --- @param np NetworkPlayer
 --- @param part PlayerPart
 --- @return Color
+--- Gets the palette color of `part` on `np`
 function network_player_get_palette_color(np, part)
     local color = {
         r = network_player_get_palette_color_channel(np, part, 0),
@@ -345,6 +298,7 @@ end
 --- @param np NetworkPlayer
 --- @param part PlayerPart
 --- @return Color
+--- Gets the override palette color of `part` on `np`
 function network_player_get_override_palette_color(np, part)
     local color = {
         r = network_player_get_override_palette_color_channel(np, part, 0),
@@ -3303,6 +3257,20 @@ RESOLUTION_N64 = 1
 
 --- @type HudUtilsResolution
 RESOLUTION_COUNT = 2
+
+--- @class DjuiRainbowColor
+
+--- @type DjuiRainbowColor
+DJUI_RAINBOW_COLOR_RED = 0
+
+--- @type DjuiRainbowColor
+DJUI_RAINBOW_COLOR_GREEN = 1
+
+--- @type DjuiRainbowColor
+DJUI_RAINBOW_COLOR_BLUE = 2
+
+--- @type DjuiRainbowColor
+DJUI_RAINBOW_COLOR_YELLOW = 3
 
 --- @type integer
 ENVFX_BUBBLE_START = 10
@@ -9187,7 +9155,10 @@ HOOK_ON_MODS_LOADED = 45
 HOOK_ON_NAMETAGS_RENDER = 46
 
 --- @type LuaHookedEventType
-HOOK_MAX = 47
+HOOK_ON_DJUI_THEME_CHANGED = 47
+
+--- @type LuaHookedEventType
+HOOK_MAX = 48
 
 --- @class LuaModMenuElementType
 

@@ -2851,8 +2851,8 @@ void play_star_fanfare(void) {
 /**
  * Called from threads: thread5_game_loop
  */
-void play_power_star_jingle(u8 arg0) {
-    if (!arg0) {
+void play_power_star_jingle(u8 keepBackgroundMusic) {
+    if (!keepBackgroundMusic) {
         sBackgroundMusicTargetVolume = 0;
     }
     seq_player_play_sequence(SEQ_PLAYER_ENV, SEQ_EVENT_CUTSCENE_STAR_SPAWN, 0);

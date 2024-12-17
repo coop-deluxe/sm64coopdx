@@ -547,6 +547,11 @@ bool mod_load(struct Mods* mods, char* basePath, char* modName) {
         mod->name = strdup(modName);
     }
 
+    // set category
+    if ((mod->category == NULL) && (strlen(mod->name) > 5) && (strncmp(mod->name, "[CS] ", 5) == 0)) {
+        mod->category = strdup("cs");
+    }
+
     // print
     // LOG_INFO("    %s", mod->name);
     for (int i = 0; i < mod->fileCount; i++) {

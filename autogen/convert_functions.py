@@ -28,7 +28,7 @@ in_files = [
     "src/game/mario_actions_submerged.c",
     "src/game/mario_step.h",
     "src/game/mario.h",
-    "src/game/rumble_init.c",
+    "src/game/rumble_init.h",
     "src/pc/djui/djui_popup.h",
     "src/pc/network/network_utils.h",
     "src/pc/djui/djui_console.h",
@@ -39,6 +39,7 @@ in_files = [
     "src/game/save_file.h",
     "src/game/sound_init.h",
     "src/pc/djui/djui_hud_utils.h",
+    "src/pc/djui/djui_panel_menu.h",
     "src/pc/network/network_player.h",
     "src/pc/network/lag_compensation.h",
     "include/behavior_table.h",
@@ -57,7 +58,7 @@ in_files = [
     "src/game/object_helpers.c",
     "src/game/obj_behaviors.c",
     "src/game/obj_behaviors_2.c",
-    "src/game/spawn_sound.c",
+    "src/game/spawn_sound.h",
     "src/game/object_list_processor.h",
     "src/game/behavior_actions.h",
     "src/game/mario_misc.h",
@@ -73,10 +74,11 @@ in_files = [
 ]
 
 override_allowed_functions = {
-    "src/audio/external.h":                 [ " play_", "fade", "current_background", "stop_", "sound_banks", "drop_queued_background_music", "sound_get_level_intensity" ],
-    "src/game/rumble_init.c":               [ "queue_rumble_", "reset_rumble_timers" ],
-    "src/pc/djui/djui_popup.h" :            [ "create" ],
-    "src/pc/djui/djui_language.h" :         [ "djui_language_get" ],
+    "src/audio/external.h":                 [ " play_", "fade", "current_background", "stop_", "sound_banks", "drop_queued_background_music", "set_sound_moving_speed", "background_music_default_volume", "get_sound_pan", "sound_get_level_intensity", "set_audio_muted" ],
+    "src/game/rumble_init.h":               [ "queue_rumble_", "reset_rumble_timers" ],
+    "src/pc/djui/djui_popup.h":             [ "create" ],
+    "src/pc/djui/djui_language.h":          [ "djui_language_get" ],
+    "src/pc/djui/djui_panel_menu.h":        [ "djui_menu_get_rainbow_string_color" ],
     "src/game/save_file.h":                 [ "save_file_get_", "save_file_set_flags", "save_file_clear_flags", "save_file_reload", "save_file_erase_current_backup_save", "save_file_set_star_flags", "save_file_is_cannon_unlocked", "touch_coin_score_age", "save_file_set_course_coin_score", "save_file_do_save", "save_file_remove_star_flags", "save_file_erase" ],
     "src/pc/lua/utils/smlua_model_utils.h": [ "smlua_model_util_get_id" ],
     "src/game/object_list_processor.h":     [ "set_object_respawn_info_bits" ],
@@ -112,7 +114,6 @@ override_disallowed_functions = {
     "src/game/object_helpers.c":                [ "spawn_obj", "^bhv_", "abs[fi]", "^bit_shift", "_debug$", "^stub_", "_set_model", "cur_obj_set_direction_table", "cur_obj_progress_direction_table" ],
     "src/game/obj_behaviors.c":                 [ "debug_" ],
     "src/game/obj_behaviors_2.c":               [ "wiggler_jumped_on_attack_handler", "huge_goomba_weakly_attacked" ],
-    "src/game/spawn_sound.c":                   [ "spawner" ],
     "src/game/level_info.h":                    [ "_name_table" ],
     "src/pc/lua/utils/smlua_obj_utils.h":       [ "spawn_object_remember_field" ],
     "src/game/camera.h":                        [ "update_camera", "init_camera", "stub_camera", "^reset_camera", "move_point_along_spline" ],
@@ -130,7 +131,7 @@ override_disallowed_functions = {
 
 override_hide_functions = {
     "smlua_deprecated.h": [ ".*" ],
-    "network_player.h": [ "network_player_get_palette_color_channel", "network_player_get_override_palette_color_channel" ]
+    "network_player.h":   [ "network_player_get_palette_color_channel", "network_player_get_override_palette_color_channel" ]
 }
 
 override_function_version_excludes = {

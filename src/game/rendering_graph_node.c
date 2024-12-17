@@ -1209,7 +1209,7 @@ static void geo_process_object(struct Object *node) {
     s32 hasAnimation = (node->header.gfx.node.flags & GRAPH_RENDER_HAS_ANIMATION) != 0;
     Vec3f scalePrev;
 
-    // Sanity check our stack index, If we above or equal to our stack size. Return to prevent OOB\.
+    // Sanity check our stack index, If we above or equal to our stack size. Return to prevent OOB.
     if ((gMatStackIndex + 1) >= MATRIX_STACK_SIZE) { LOG_ERROR("Preventing attempt to exceed the maximum size %i for our matrix stack with size of %i.", MATRIX_STACK_SIZE - 1, gMatStackIndex); return; }
 
     if (!node->header.gfx.inited) {
