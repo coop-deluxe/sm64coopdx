@@ -3946,6 +3946,7 @@ end
 
 --- @param color DjuiRainbowColor
 --- @return string
+--- Gets the header hex color code from a `DJUI_RAINBOW_COLOR_*` constant
 function djui_menu_get_rainbow_string_color(color)
     -- ...
 end

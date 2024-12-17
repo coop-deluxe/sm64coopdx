@@ -3368,6 +3368,9 @@ Gets a language `key` from a `section`
 
 ## [djui_menu_get_rainbow_string_color](#djui_menu_get_rainbow_string_color)
 
+### Description
+Gets the header hex color code from a `DJUI_RAINBOW_COLOR_*` constant
+
 ### Lua Example
 `local stringValue = djui_menu_get_rainbow_string_color(color)`
 
