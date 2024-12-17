@@ -1,8 +1,24 @@
 #include <fstream>
 #include <iostream>
 #include <vector>
-#include <filesystem>
+
+#ifndef __has_include
+    static_assert(false, "This statement's not supported: __has_include")
+#else
+#   if __cplusplus >= 201703L && __has_include(<filesystem>)
+#       include <filesystem>
+        namespace fs = std::filesystem;
+#   elif __has_include(<experimental/filesystem>)
+#       include <experimental/filesystem>
+        namespace fs = std::experimental::filesystem;
+#   elif __has_include(<boost/filesystem.hpp>)
+#       include <boost/filesystem.hpp>
+        namespace fs = boost::filesystem
+    #endif
+#endif
+
 #include <sstream>
+#include <iomanip>
 
 #if defined(_WIN32) || defined(_WIN64)
 #include <windows.h>
@@ -16,8 +32,6 @@ extern "C" {
 #include "loading.h"
 #include "fs/fs.h"
 }
-
-namespace fs = std::filesystem;
 
 bool gRomIsValid = false;
 char gRomFilename[SYS_MAX_PATH] = "";
@@ -63,10 +77,10 @@ static bool is_rom_valid(const std::string romPath) {
             std::string destPath = fs_get_write_path("") + std::string("baserom.") + md5->localizationName + ".z64";
 
             // Copy the rom to the user path
-            if (romPath != destPath && !std::filesystem::exists(std::filesystem::path(destPath))) {
-                std::filesystem::copy_file(
-                    std::filesystem::path(romPath),
-                    std::filesystem::path(destPath)
+            if (romPath != destPath && !fs::exists(fs::path(destPath))) {
+                fs::copy_file(
+                    fs::path(romPath),
+                    fs::path(destPath)
                 );
             }
 
@@ -81,7 +95,7 @@ static bool is_rom_valid(const std::string romPath) {
 }
 
 inline static bool scan_path_for_rom(const char *dir) {
-    for (const auto &entry: std::filesystem::directory_iterator(dir)) {
+    for (const auto &entry: fs::directory_iterator(dir)) {
         std::string path = entry.path().generic_string();
         if (str_ends_with(path.c_str(), ".z64")) {
             if (is_rom_valid(path)) { return true; }
