@@ -513,7 +513,9 @@ bool mod_file_exists(const char* filename) {
 
     for (s32 i = 0; i < gLuaActiveMod->fileCount; i++) {
         struct ModFile* file = &gLuaActiveMod->files[i];
-        return !strcmp(file->relativePath, filename);
+        if (!strcmp(file->relativePath, filename)) {
+            return true;
+        }
     }
 
     return false;
