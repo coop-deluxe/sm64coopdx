@@ -64,8 +64,12 @@ static void playerlist_update_row(u8 i, struct NetworkPlayer *np) {
 
 void djui_panel_playerlist_on_render_pre(UNUSED struct DjuiBase* base, UNUSED bool* skipRender) {
     if (gDjuiInMainMenu || gNetworkType == NT_NONE) {
-        djui_base_set_visible(&gDjuiPlayerList->base, false);
-        djui_base_set_visible(&gDjuiModList->base, false);
+        if (gDjuiPlayerList != NULL) {
+            djui_base_set_visible(&gDjuiPlayerList->base, false);
+        }
+        if (gDjuiModList != NULL) {
+            djui_base_set_visible(&gDjuiModList->base, false);
+        }
         return;
     }
 
