@@ -1,0 +1,13 @@
+const Collision col_geo_bbh_0005B0_0x701f2d8[] = {
+COL_INIT(),
+COL_VERTEX_INIT(4),
+COL_VERTEX( 625, 0, 700),
+COL_VERTEX( -625, 0, -700),
+COL_VERTEX( -625, 0, 700),
+COL_VERTEX( 625, 0, -700),
+COL_TRI_INIT( 1, 2),
+COL_TRI( 0, 1, 2),
+COL_TRI( 1, 0, 3),
+COL_TRI_STOP(),
+COL_END(),
+};
