@@ -101,4 +101,3 @@ end
 
 -- hook the behavior
 id_bhvGrandStar = hook_behavior(id_bhvGrandStar, OBJ_LIST_LEVEL, true, bhv_custom_grand_star_init, bhv_custom_grand_star_loop)
-
