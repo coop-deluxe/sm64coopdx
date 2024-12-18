@@ -85,14 +85,14 @@ void djui_panel_language_create(struct DjuiBase* caller) {
         // construct lang path
         char lpath[SYS_MAX_PATH] = "";
         snprintf(lpath, SYS_MAX_PATH, "%s/lang", sys_exe_path());
-
+        
         // open directory
         struct _wdirent* dir = NULL;
-		
-		//using wchar_t (have to do this for readdir to not return 0x3F for unicode filenames)
-		wchar_t lpath_w[SYS_MAX_PATH] = { 0 };
+        
+        //using wchar_t (have to do this for readdir to not return 0x3F for unicode filenames)
+        wchar_t lpath_w[SYS_MAX_PATH] = { 0 };
         swprintf(lpath_w, SYS_MAX_PATH, L"%s/lang", sys_exe_path());
-		
+        
         _WDIR* d = _wopendir(lpath_w);
         if (!d) {
             LOG_ERROR("Could not open directory '%s'", lpath);
@@ -107,7 +107,7 @@ void djui_panel_language_create(struct DjuiBase* caller) {
 
             goto skip_langs;
         }
-
+        
         struct DjuiPaginated* paginated = djui_paginated_create(body, 8);
         sLayoutBase = &paginated->layout->base;
 
@@ -119,12 +119,10 @@ void djui_panel_language_create(struct DjuiBase* caller) {
         while ((dir = _wreaddir(d)) != NULL) {
             // sanity check / fill path[]
             //if (!directory_sanity_check(dir, lpath, path)) { continue; }
-            //snprintf(path, SYS_MAX_PATH, "%s", dir->d_name);
-			
 			//d_name is represented as 16 bit unicode characters
-			extern size_t utf16_to_utf8(utf16_t const* utf16, size_t utf16_len, utf8_t* utf8, size_t utf8_len);
-			utf16_to_utf8(dir->d_name,wcslen(dir->d_name),(utf8_t*)path,SYS_MAX_PATH);
-			
+            extern size_t utf16_to_utf8(utf16_t const* utf16, size_t utf16_len, utf8_t* utf8, size_t utf8_len);
+            utf16_to_utf8(dir->d_name,wcslen(dir->d_name),(utf8_t*)path,SYS_MAX_PATH);
+            
             // strip the name before the .
             char* c = path;
             while (*c != '\0') {

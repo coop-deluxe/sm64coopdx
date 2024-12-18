@@ -185,7 +185,7 @@ static void coopnet_populate_description(void) {
     snprintf(buffer, bufferLength, "%s", version);
     buffer += versionLength;
     bufferLength -= versionLength;
-	
+
     // get mod strings
     if (gActiveMods.entryCount <= 0) { return; }
     char* strings[gActiveMods.entryCount];
