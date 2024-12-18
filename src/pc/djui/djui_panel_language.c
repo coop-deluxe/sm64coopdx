@@ -119,7 +119,7 @@ void djui_panel_language_create(struct DjuiBase* caller) {
         while ((dir = _wreaddir(d)) != NULL) {
             // sanity check / fill path[]
             //if (!directory_sanity_check(dir, lpath, path)) { continue; }
-			//d_name is represented as 16 bit unicode characters
+			//d_name is represented as UTF-16BE characters
             extern size_t utf16_to_utf8(utf16_t const* utf16, size_t utf16_len, utf8_t* utf8, size_t utf8_len);
             utf16_to_utf8(dir->d_name,wcslen(dir->d_name),(utf8_t*)path,SYS_MAX_PATH);
             

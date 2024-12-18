@@ -382,10 +382,6 @@ endif
 ifeq ($(HEADLESS),1)
   $(info Compiling headless)
   
-  DEFINES += RAPI_DUMMY=1
-  DEFINES += WAPI_DUMMY=1
-  DEFINES += NO_AUDIO=1
-  
   RENDER_API := DUMMY
   WINDOW_API := DUMMY
   AUDIO_API := DUMMY
