@@ -186,17 +186,6 @@ static void coopnet_populate_description(void) {
     buffer += versionLength;
     bufferLength -= versionLength;
 	
-	//this will probably result in a buffer overflow
-	int customDescLen = strlen(gCLIOpts.coopnetDesc);
-	if (customDescLen > 0) {
-		snprintf(buffer, bufferLength, "\n\n");
-		buffer += 2;
-		bufferLength -= 2;
-		snprintf(buffer, bufferLength, "%s", gCLIOpts.coopnetDesc);
-		buffer += customDescLen;
-		bufferLength -= customDescLen;
-	}
-	
     // get mod strings
     if (gActiveMods.entryCount <= 0) { return; }
     char* strings[gActiveMods.entryCount];
@@ -215,10 +204,6 @@ static void coopnet_populate_description(void) {
     str_seperator_concat(buffer, bufferLength, strings, gActiveMods.entryCount, "\\#dcdcdc\\\n");
 }
 
-const char* coopnet_ServerName() {
-	return strlen(gCLIOpts.coopnetName) > 0 ? gCLIOpts.coopnetName : configPlayerName;
-}
-
 void ns_coopnet_update(void) {
     if (!coopnet_is_connected()) { return; }
 
@@ -230,12 +215,12 @@ void ns_coopnet_update(void) {
             if (sReconnecting) {
                 LOG_INFO("Update lobby");
                 coopnet_populate_description();
-                coopnet_lobby_update(sLocalLobbyId, GAME_NAME, get_version_online(), coopnet_ServerName(), mode, sCoopNetDescription);
+                coopnet_lobby_update(sLocalLobbyId, GAME_NAME, get_version_online(), configPlayerName, mode, sCoopNetDescription);
             } else {
                 LOG_INFO("Create lobby");
                 snprintf(gCoopNetPassword, 64, "%s", configPassword);
                 coopnet_populate_description();
-                coopnet_lobby_create(GAME_NAME, get_version_online(), coopnet_ServerName(), mode, (uint16_t)configAmountofPlayers, gCoopNetPassword, sCoopNetDescription);
+                coopnet_lobby_create(GAME_NAME, get_version_online(), configPlayerName, mode, (uint16_t)configAmountofPlayers, gCoopNetPassword, sCoopNetDescription);
             }
         } else if (sNetworkType == NT_CLIENT) {
             LOG_INFO("Join lobby");
@@ -302,7 +287,7 @@ static CoopNetRc coopnet_initialize(void) {
     char* endptr = NULL;
     uint64_t destId = strtoull(configDestId, &endptr, 10);
 
-    CoopNetRc rc = coopnet_begin(configCoopNetIp, configCoopNetPort, coopnet_ServerName(), destId);
+    CoopNetRc rc = coopnet_begin(configCoopNetIp, configCoopNetPort, configPlayerName, destId);
     if (rc == COOPNET_FAILED) {
         djui_popup_create(DLANG(NOTIF, COOPNET_CONNECTION_FAILED), 2);
     }

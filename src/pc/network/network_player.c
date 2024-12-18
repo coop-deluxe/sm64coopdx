@@ -337,7 +337,6 @@ u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex, u8 mode
         construct_player_popup(np, DLANG(NOTIF, CONNECTED), NULL);
     }
     LOG_INFO("player connected, local %d, global %d", localIndex, np->globalIndex);
-	printf("%s connected\n",np->name);
 
     smlua_call_event_hooks_mario_param(HOOK_ON_PLAYER_CONNECTED, &gMarioStates[localIndex]);
 
@@ -367,8 +366,6 @@ u8 network_player_disconnected(u8 globalIndex) {
         struct NetworkPlayer* np = &gNetworkPlayers[i];
         if (!np->connected) { continue; }
         if (np->globalIndex != globalIndex) { continue; }
-		
-		printf("%s disconnected\n",np->name);
 		
         if (gNetworkType == NT_SERVER) { network_send_leaving(np->globalIndex); }
         np->connected = false;
