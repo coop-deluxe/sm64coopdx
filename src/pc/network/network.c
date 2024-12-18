@@ -183,7 +183,7 @@ bool network_init(enum NetworkType inNetworkType, bool reconnecting) {
 #endif
 
     LOG_INFO("initialized");
-
+	
     return true;
 }
 

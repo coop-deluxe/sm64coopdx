@@ -162,6 +162,9 @@ static void split_data(ini_t *ini) {
   }
 }
 
+#include "utils/utf16conv.h"
+#include "platform.h"
+
 /**
  * Loads data from specified path.
  * @return ini_t struct with loaded data.
@@ -177,9 +180,14 @@ ini_t* ini_load(const char *filename) {
     goto fail;
   }
   memset(ini, 0, sizeof(*ini));
-
+  
+  //convert filename to utf16
+  wchar_t filename_w[SYS_MAX_PATH] = { 0 };
+  extern size_t utf8_to_utf16(utf8_t const* utf8, size_t utf8_len, utf16_t* utf16, size_t utf16_len);
+  utf8_to_utf16((utf8_t*)filename,strlen(filename),(utf16_t*)filename_w,SYS_MAX_PATH);
+  
   /* Open file */
-  fp = fopen(filename, "rb");
+  fp = _wfopen(filename_w, L"rb");
   if (!fp) {
     goto fail;
   }
