@@ -82,9 +82,6 @@ void network_send_join(struct Packet* joinRequestPacket) {
     u8 globalIndex = joinRequestPacket->localIndex;
     u8 connectedCount = 1;
 	
-	//setting this to zero when headless to allow for genuine maxPlayers
-	if (gServerSettings.headlessServer) connectedCount = 0;
-	
     if (globalIndex == UNKNOWN_LOCAL_INDEX) {
         for (u32 i = 1; i < MAX_PLAYERS; i++) {
             if (!gNetworkPlayers[i].connected) {
@@ -95,7 +92,6 @@ void network_send_join(struct Packet* joinRequestPacket) {
             }
         }
         if (globalIndex == UNKNOWN_LOCAL_INDEX || connectedCount >= gServerSettings.maxPlayers) {
-			printf("%s kicked: too many players\n",sJoinRequestPlayerName);
             network_send_kick(0, EKT_FULL_PARTY);
             return;
         }
