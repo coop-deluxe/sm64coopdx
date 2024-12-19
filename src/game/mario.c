@@ -1693,7 +1693,6 @@ void update_burning_health_common(struct MarioState* m) {
     smlua_call_event_hooks_mario_param_and_int_ret_bool(HOOK_HURT_MARIO, m, HURT_BURNING, NULL);
     m->health -= 10;
     if (m->health < 0x100) {
-        extern struct MarioState gMarioStates[];
         if (m == &gMarioStates[0]) {
             // never kill remote marios
             set_mario_action(m, ACT_STANDING_DEATH, 0);
