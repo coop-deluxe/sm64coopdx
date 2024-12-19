@@ -7090,6 +7090,26 @@ Creates a warp node in the current level and area with id `id` that goes to the 
 
 <br />
 
+## [update_burning_health_common](#update_burning_health_common)
+
+### Lua Example
+`update_burning_health_common(m)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+
+### Returns
+- None
+
+### C Prototype
+`void update_burning_health_common(struct MarioState* m);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [update_mario_pos_for_anim](#update_mario_pos_for_anim)
 
 ### Lua Example

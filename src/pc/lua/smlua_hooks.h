@@ -59,6 +59,8 @@ enum LuaHookedEventType {
     HOOK_ON_MODS_LOADED,
     HOOK_ON_NAMETAGS_RENDER,
     HOOK_ON_DJUI_THEME_CHANGED,
+    HOOK_HEALED_MARIO,
+    HOOK_HURT_MARIO,
     HOOK_MAX,
 };
 
@@ -111,6 +113,8 @@ static const char* LuaHookedEventTypeName[] = {
     "HOOK_ON_MODS_LOADED",
     "HOOK_ON_NAMETAGS_RENDER",
     "HOOK_ON_DJUI_THEME_CHANGED",
+    "HOOK_HEALED_MARIO",
+    "HOOK_HURT_MARIO"
     "HOOK_MAX"
 };
 

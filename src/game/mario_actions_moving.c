@@ -1388,14 +1388,7 @@ s32 act_burning_ground(struct MarioState *m) {
     set_mario_particle_flags(m, PARTICLE_FIRE, FALSE);
     play_sound(SOUND_MOVING_LAVA_BURN, m->marioObj->header.gfx.cameraToObject);
 
-    m->health -= 10;
-    if (m->health < 0x100) {
-        extern struct MarioState gMarioStates[];
-        if (m == &gMarioStates[0]) {
-            // never kill remote marios
-            set_mario_action(m, ACT_STANDING_DEATH, 0);
-        }
-    }
+    update_burning_health_common(m);
 
     m->marioBodyState->eyeState = MARIO_EYES_DEAD;
 
