@@ -31,9 +31,14 @@ static void select_language(struct DjuiBase* caller) {
         tmp->base.interactable->update_style(&tmp->base);
         child = child->next;
     }
-
-    if (strcmp(configLanguage, checkbox->text->message)) {
-        snprintf(configLanguage, MAX_CONFIG_STRING, "%s", checkbox->text->message);
+	
+	//get key name from display text
+	char* langName = checkbox->text->message;
+	char* key = djui_language_find_key("LANGUAGE",langName);
+	if (key) langName = key;
+	
+    if (strcmp(configLanguage, langName)) {
+        snprintf(configLanguage, MAX_CONFIG_STRING, "%s", langName);
         sLanguageChanged = true;
         smlua_call_event_hooks_string_param(HOOK_ON_LANGUAGE_CHANGED, configLanguage);
     }
@@ -86,7 +91,7 @@ void djui_panel_language_create(struct DjuiBase* caller) {
 
         // open directory
         struct dirent* dir = NULL;
-
+		
         DIR* d = opendir(lpath);
         if (!d) {
             LOG_ERROR("Could not open directory '%s'", lpath);
@@ -107,14 +112,14 @@ void djui_panel_language_create(struct DjuiBase* caller) {
 
         struct DjuiCheckbox* chkEnglish = NULL;
         bool foundMatch = false;
-
+		
         // iterate
         char path[SYS_MAX_PATH] = { 0 };
         while ((dir = readdir(d)) != NULL) {
             // sanity check / fill path[]
             //if (!directory_sanity_check(dir, lpath, path)) { continue; }
             snprintf(path, SYS_MAX_PATH, "%s", dir->d_name);
-
+			
             // strip the name before the .
             char* c = path;
             while (*c != '\0') {
@@ -125,7 +130,20 @@ void djui_panel_language_create(struct DjuiBase* caller) {
 
             bool match = !strcmp(path, configLanguage);
             if (match) { foundMatch = true; }
-            struct DjuiCheckbox* checkbox = djui_checkbox_create(sLayoutBase, path, match ? &sTrue : &sFalse, select_language);
+			
+			char* displayName = djui_language_get("LANGUAGE",path);
+			
+			struct DjuiCheckbox* checkbox = NULL;
+			
+			if (displayName != (char*)path) {
+				char newName[SYS_MAX_PATH + 32] = { 0 };
+				snprintf(newName, SYS_MAX_PATH + 32, "%s", displayName);
+				checkbox = djui_checkbox_create(sLayoutBase, newName, match ? &sTrue : &sFalse, select_language);
+			}
+			else {
+				checkbox = djui_checkbox_create(sLayoutBase, path, match ? &sTrue : &sFalse, select_language);
+			}
+			
             if (!strcmp(path, "English")) { chkEnglish = checkbox; }
         }
 

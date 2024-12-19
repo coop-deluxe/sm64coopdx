@@ -252,7 +252,7 @@ void produce_one_frame(void) {
     CTX_EXTENT(CTX_INTERP, patch_interpolations_before);
 
     CTX_EXTENT(CTX_GAME_LOOP, game_loop_one_iteration);
-
+	
     CTX_EXTENT(CTX_SMLUA, smlua_update);
 
     CTX_EXTENT(CTX_AUDIO, buffer_audio);
@@ -467,7 +467,7 @@ int main(int argc, char *argv[]) {
     }
 
     // main loop
-    while (true) {
+	while (true) {
         debug_context_reset();
         CTX_BEGIN(CTX_TOTAL);
         WAPI.main_loop(produce_one_frame);
@@ -480,7 +480,7 @@ int main(int argc, char *argv[]) {
         fflush(stderr);
 #endif
         CTX_END(CTX_TOTAL);
-        
+
 #ifdef DEVELOPMENT
         djui_ctx_display_update();
 #endif
