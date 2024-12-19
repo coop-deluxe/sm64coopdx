@@ -992,6 +992,7 @@
    - [set_steep_jump_action](functions-3.md#set_steep_jump_action)
    - [set_water_plunge_action](functions-3.md#set_water_plunge_action)
    - [transition_submerged_to_walking](functions-3.md#transition_submerged_to_walking)
+   - [update_burning_health_common](functions-3.md#update_burning_health_common)
    - [update_mario_pos_for_anim](functions-3.md#update_mario_pos_for_anim)
    - [update_mario_sound_and_camera](functions-3.md#update_mario_sound_and_camera)
 

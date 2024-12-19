@@ -16045,6 +16045,23 @@ int smlua_func_transition_submerged_to_walking(lua_State* L) {
     return 1;
 }
 
+int smlua_func_update_burning_health_common(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "update_burning_health_common", 1, top);
+        return 0;
+    }
+
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "update_burning_health_common"); return 0; }
+
+    update_burning_health_common(m);
+
+    return 1;
+}
+
 int smlua_func_update_mario_pos_for_anim(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -34490,6 +34507,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "set_steep_jump_action", smlua_func_set_steep_jump_action);
     smlua_bind_function(L, "set_water_plunge_action", smlua_func_set_water_plunge_action);
     smlua_bind_function(L, "transition_submerged_to_walking", smlua_func_transition_submerged_to_walking);
+    smlua_bind_function(L, "update_burning_health_common", smlua_func_update_burning_health_common);
     smlua_bind_function(L, "update_mario_pos_for_anim", smlua_func_update_mario_pos_for_anim);
     smlua_bind_function(L, "update_mario_sound_and_camera", smlua_func_update_mario_sound_and_camera);
     //smlua_bind_function(L, "vec3f_find_ceil", smlua_func_vec3f_find_ceil); <--- UNIMPLEMENTED
