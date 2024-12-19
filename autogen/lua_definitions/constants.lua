@@ -4143,6 +4143,28 @@ HUD_DISPLAY_NONE = 0x0000
 --- @type HUDDisplayFlag
 HUD_DISPLAY_DEFAULT = HUD_DISPLAY_FLAG_LIVES | HUD_DISPLAY_FLAG_COIN_COUNT | HUD_DISPLAY_FLAG_STAR_COUNT | HUD_DISPLAY_FLAG_CAMERA_AND_POWER | HUD_DISPLAY_FLAG_CAMERA | HUD_DISPLAY_FLAG_POWER | HUD_DISPLAY_FLAG_KEYS | HUD_DISPLAY_FLAG_UNKNOWN_0020
 
+--- @class MarioHealType
+
+--- @type MarioHealType
+HEAL_NORMAL = 0
+
+--- @type MarioHealType
+HEAL_WATER = 1
+
+--- @class MarioHurtType
+
+--- @type MarioHurtType
+HURT_NORMAL = 0
+
+--- @type MarioHurtType
+HURT_WATER = 1
+
+--- @type MarioHurtType
+HURT_TOXIC_GAS = 2
+
+--- @type MarioHurtType
+HURT_BURNING = 3
+
 --- @class CharacterAnimID
 
 --- @type CharacterAnimID
@@ -9158,7 +9180,13 @@ HOOK_ON_NAMETAGS_RENDER = 46
 HOOK_ON_DJUI_THEME_CHANGED = 47
 
 --- @type LuaHookedEventType
-HOOK_MAX = 48
+HOOK_HEALED_MARIO = 48
+
+--- @type LuaHookedEventType
+HOOK_HURT_MARIO = 49
+
+--- @type LuaHookedEventType
+HOOK_MAX = 50
 
 --- @class LuaModMenuElementType
 

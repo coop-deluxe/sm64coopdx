@@ -1689,6 +1689,18 @@ void set_submerged_cam_preset_and_spawn_bubbles(struct MarioState *m) {
     }
 }
 
+void update_burning_health_common(struct MarioState* m) {
+    smlua_call_event_hooks_mario_param_and_int_ret_bool(HOOK_HURT_MARIO, m, HURT_BURNING, NULL);
+    m->health -= 10;
+    if (m->health < 0x100) {
+        extern struct MarioState gMarioStates[];
+        if (m == &gMarioStates[0]) {
+            // never kill remote marios
+            set_mario_action(m, ACT_STANDING_DEATH, 0);
+        }
+    }
+}
+
 /**
  * Both increments and decrements Mario's HP.
  */
@@ -1701,6 +1713,7 @@ void update_mario_health(struct MarioState *m) {
         if (((u32) m->healCounter | (u32) m->hurtCounter) == 0) {
             if ((m->input & INPUT_IN_POISON_GAS) && !(m->action & ACT_FLAG_INTANGIBLE)) {
                 if (!(m->flags & MARIO_METAL_CAP) && !gDebugLevelSelect) {
+                    smlua_call_event_hooks_mario_param_and_int_ret_bool(HOOK_HURT_MARIO, m, HURT_TOXIC_GAS, NULL);
                     m->health -= 4;
                 }
             } else {
@@ -1711,8 +1724,10 @@ void update_mario_health(struct MarioState *m) {
                     // when in snow terrains lose 3 health.
                     // If using the debug level select, do not lose any HP to water.
                     if ((m->pos[1] >= (m->waterLevel - 140)) && !terrainIsSnow) {
+                        smlua_call_event_hooks_mario_param_and_int_ret_bool(HOOK_HEALED_MARIO, m, HEAL_WATER, NULL);
                         m->health += 0x1A;
                     } else if (!gDebugLevelSelect) {
+                        smlua_call_event_hooks_mario_param_and_int_ret_bool(HOOK_HURT_MARIO, m, HURT_WATER, NULL);
                         m->health -= (terrainIsSnow ? 3 : 1);
                     }
                 }
@@ -1720,10 +1735,12 @@ void update_mario_health(struct MarioState *m) {
         }
 
         if (m->healCounter > 0) {
+            smlua_call_event_hooks_mario_param_and_int_ret_bool(HOOK_HEALED_MARIO, m, HEAL_NORMAL, NULL);
             m->health += 0x40;
             m->healCounter--;
         }
         if (m->hurtCounter > 0) {
+            smlua_call_event_hooks_mario_param_and_int_ret_bool(HOOK_HURT_MARIO, m, HURT_NORMAL, NULL);
             m->health -= 0x40;
             m->hurtCounter--;
         }

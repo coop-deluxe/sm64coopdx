@@ -910,7 +910,7 @@ void smlua_call_event_hooks_mario_param_and_int_ret_bool(enum LuaHookedEventType
         }
 
         // output the return value
-        if (lua_type(L, -1) == LUA_TBOOLEAN) {
+        if (lua_type(L, -1) == LUA_TBOOLEAN && returnValue != NULL) {
             *returnValue = smlua_to_boolean(L, -1);
         }
         lua_settop(L, prevTop);

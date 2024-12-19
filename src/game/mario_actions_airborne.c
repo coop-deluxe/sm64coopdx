@@ -1045,15 +1045,7 @@ s32 act_burning_jump(struct MarioState *m) {
 
     m->marioObj->oMarioBurnTimer += 3;
 
-    m->health -= 10;
-    if (m->health < 0x100) {
-        if (m != &gMarioStates[0]) {
-            // never kill remote marios
-            m->health = 0x100;
-        } else {
-            m->health = 0xFF;
-        }
-    }
+    update_burning_health_common(m);
 
     reset_rumble_timers(m);
     return FALSE;
@@ -1072,15 +1064,7 @@ s32 act_burning_fall(struct MarioState *m) {
     set_mario_particle_flags(m, PARTICLE_FIRE, FALSE);
     m->marioObj->oMarioBurnTimer += 3;
 
-    m->health -= 10;
-    if (m->health < 0x100) {
-        if (m != &gMarioStates[0]) {
-            // never kill remote marios
-            m->health = 0x100;
-        } else {
-            m->health = 0xFF;
-        }
-    }
+    update_burning_health_common(m);
 
     reset_rumble_timers(m);
     return FALSE;

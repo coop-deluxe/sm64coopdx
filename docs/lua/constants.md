@@ -35,6 +35,9 @@
     - [enum LevelNum](#enum-LevelNum)
 - [level_update.h](#level_updateh)
     - [enum HUDDisplayFlag](#enum-HUDDisplayFlag)
+- [mario.h](#marioh)
+    - [enum MarioHealType](#enum-MarioHealType)
+    - [enum MarioHurtType](#enum-MarioHurtType)
 - [mario_animation_ids.h](#mario_animation_idsh)
     - [enum CharacterAnimID](#enum-CharacterAnimID)
     - [enum MarioAnimID](#enum-MarioAnimID)
@@ -1517,6 +1520,26 @@
 | HUD_DISPLAY_FLAG_EMPHASIZE_POWER | 0x8000 |
 | HUD_DISPLAY_NONE | 0x0000 |
 | HUD_DISPLAY_DEFAULT | HUD_DISPLAY_FLAG_LIVES | HUD_DISPLAY_FLAG_COIN_COUNT | HUD_DISPLAY_FLAG_STAR_COUNT | HUD_DISPLAY_FLAG_CAMERA_AND_POWER | HUD_DISPLAY_FLAG_CAMERA | HUD_DISPLAY_FLAG_POWER | HUD_DISPLAY_FLAG_KEYS | HUD_DISPLAY_FLAG_UNKNOWN_0020 |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mario.h](#mario.h)
+
+### [enum MarioHealType](#MarioHealType)
+| Identifier | Value |
+| :--------- | :---- |
+| HEAL_NORMAL | 0 |
+| HEAL_WATER | 1 |
+
+### [enum MarioHurtType](#MarioHurtType)
+| Identifier | Value |
+| :--------- | :---- |
+| HURT_NORMAL | 0 |
+| HURT_WATER | 1 |
+| HURT_TOXIC_GAS | 2 |
+| HURT_BURNING | 3 |
 
 [:arrow_up_small:](#)
 
@@ -3335,7 +3358,9 @@
 | HOOK_ON_MODS_LOADED | 45 |
 | HOOK_ON_NAMETAGS_RENDER | 46 |
 | HOOK_ON_DJUI_THEME_CHANGED | 47 |
-| HOOK_MAX | 48 |
+| HOOK_HEALED_MARIO | 48 |
+| HOOK_HURT_MARIO | 49 |
+| HOOK_MAX | 50 |
 
 ### [enum LuaModMenuElementType](#LuaModMenuElementType)
 | Identifier | Value |

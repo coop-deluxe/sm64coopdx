@@ -4,15 +4,38 @@
 Hooks are a way for SM64 to trigger Lua code, whereas the functions listed in [functions](../functions.md) allow Lua to trigger SM64 code.
 
 # Supported Hooks
-- [hook_behavior](#hook_behavior)
-- [hook_chat_command](#hook_chat_command)
-- [hook_event](#hook_event)
-- [hook_mario_action](#hook_mario_action)
-- [hook_on_sync_table_change](#hook_on_sync_table_change)
-- [hook_mod_menu_button](#hook_mod_menu_button)
-- [hook_mod_menu_checkbox](#hook_mod_menu_checkbox)
-- [hook_mod_menu_slider](#hook_mod_menu_slider)
-- [hook_mod_menu_inputbox](#hook_mod_menu_inputbox)
+- [Hooks](#hooks)
+- [Supported Hooks](#supported-hooks)
+  - [hook\_behavior](#hook_behavior)
+    - [Parameters](#parameters)
+    - [Returns](#returns)
+    - [Lua Example](#lua-example)
+  - [hook\_chat\_command](#hook_chat_command)
+    - [Parameters](#parameters-1)
+    - [Lua Example](#lua-example-1)
+  - [hook\_event](#hook_event)
+    - [Hook Event Types](#hook-event-types)
+    - [Parameters](#parameters-2)
+    - [Lua Example](#lua-example-2)
+  - [hook\_mario\_action](#hook_mario_action)
+    - [Parameters](#parameters-3)
+      - [Action Hook Types](#action-hook-types)
+    - [Lua Example](#lua-example-3)
+  - [hook\_on\_sync\_table\_change](#hook_on_sync_table_change)
+    - [Parameters](#parameters-4)
+    - [Lua Example](#lua-example-4)
+  - [hook\_mod\_menu\_button](#hook_mod_menu_button)
+    - [Parameters](#parameters-5)
+    - [Lua Example](#lua-example-5)
+  - [hook\_mod\_menu\_checkbox](#hook_mod_menu_checkbox)
+    - [Parameters](#parameters-6)
+    - [Lua Example](#lua-example-6)
+  - [hook\_mod\_menu\_slider](#hook_mod_menu_slider)
+    - [Parameters](#parameters-7)
+    - [Lua Example](#lua-example-7)
+  - [hook\_mod\_menu\_inputbox](#hook_mod_menu_inputbox)
+    - [Parameters](#parameters-8)
+    - [Lua Example](#lua-example-8)
 
 <br />
 
@@ -139,6 +162,8 @@ The lua functions sent to `hook_event()` will be automatically called by SM64 wh
 | HOOK_ON_MODS_LOADED | Called directly after every mod file is loaded in by smlua | None |
 | HOOK_ON_NAMETAGS_RENDER | Called when nametags are rendered. Return a `string` to change what renders on the nametag, return an empty `string` to render nothing. | `string` playerIndex |
 | HOOK_ON_DJUI_THEME_CHANGED | Called when the DJUI theme is changed. Run `djui_menu_get_theme()` to get the new theme. | None |
+| HOOK_HEALED_MARIO | Called when any player is about to heal from any source. Called once per affected player. | MarioState mario, `integer` healType |
+| HOOK_HURT_MARIO | Called when any player is about to take damage from any source. Called once per affected player. | MarioState mario, `integer` hurtType |
 
 ### Parameters
 

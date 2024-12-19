@@ -9,6 +9,18 @@
 extern u16 gLocalBubbleCounter;
 struct WallCollisionData;
 
+enum MarioHealType {
+    HEAL_NORMAL,
+    HEAL_WATER,
+};
+
+enum MarioHurtType {
+    HURT_NORMAL,
+    HURT_WATER,
+    HURT_TOXIC_GAS,
+    HURT_BURNING,
+};
+
 s32 is_anim_at_end(struct MarioState *m);
 s32 is_anim_past_end(struct MarioState *m);
 s16 set_mario_animation(struct MarioState *m, s32 targetAnimID);
@@ -68,5 +80,6 @@ void init_mario_single_from_save_file(struct MarioState* m, u16 index);
 void init_mario_from_save_file(void);
 void set_mario_particle_flags(struct MarioState* m, u32 flags, u8 clear);
 void mario_update_wall(struct MarioState* m, struct WallCollisionData* wcd);
+void update_burning_health_common(struct MarioState* m);
 
 #endif // MARIO_H
