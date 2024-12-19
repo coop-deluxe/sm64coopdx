@@ -31,9 +31,14 @@ static void select_language(struct DjuiBase* caller) {
         tmp->base.interactable->update_style(&tmp->base);
         child = child->next;
     }
-
-    if (strcmp(configLanguage, checkbox->text->message)) {
-        snprintf(configLanguage, MAX_CONFIG_STRING, "%s", checkbox->text->message);
+	
+	//get key name from display text
+	char* langName = checkbox->text->message;
+	char* key = djui_language_find_key("LANGUAGE",langName);
+	if (key) langName = key;
+	
+    if (strcmp(configLanguage, langName)) {
+        snprintf(configLanguage, MAX_CONFIG_STRING, "%s", langName);
         sLanguageChanged = true;
         smlua_call_event_hooks_string_param(HOOK_ON_LANGUAGE_CHANGED, configLanguage);
     }
@@ -74,8 +79,6 @@ static void djui_panel_language_destroy(UNUSED struct DjuiBase* caller) {
     gPanelLanguageOnStartup = false;
 }
 
-#include "pc/utils/utf16conv.h"
-
 void djui_panel_language_create(struct DjuiBase* caller) {
     struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(LANGUAGE, LANGUAGE), false);
     struct DjuiBase* body = djui_three_panel_get_body(panel);
@@ -85,15 +88,11 @@ void djui_panel_language_create(struct DjuiBase* caller) {
         // construct lang path
         char lpath[SYS_MAX_PATH] = "";
         snprintf(lpath, SYS_MAX_PATH, "%s/lang", sys_exe_path());
-        
+
         // open directory
-        struct _wdirent* dir = NULL;
-        
-        //using wchar_t (have to do this for readdir to not return 0x3F for unicode filenames)
-        wchar_t lpath_w[SYS_MAX_PATH] = { 0 };
-        swprintf(lpath_w, SYS_MAX_PATH, L"%s/lang", sys_exe_path());
-        
-        _WDIR* d = _wopendir(lpath_w);
+        struct dirent* dir = NULL;
+		
+        DIR* d = opendir(lpath);
         if (!d) {
             LOG_ERROR("Could not open directory '%s'", lpath);
 
@@ -107,7 +106,7 @@ void djui_panel_language_create(struct DjuiBase* caller) {
 
             goto skip_langs;
         }
-        
+
         struct DjuiPaginated* paginated = djui_paginated_create(body, 8);
         sLayoutBase = &paginated->layout->base;
 
@@ -116,13 +115,11 @@ void djui_panel_language_create(struct DjuiBase* caller) {
 		
         // iterate
         char path[SYS_MAX_PATH] = { 0 };
-        while ((dir = _wreaddir(d)) != NULL) {
+        while ((dir = readdir(d)) != NULL) {
             // sanity check / fill path[]
             //if (!directory_sanity_check(dir, lpath, path)) { continue; }
-			//d_name is represented as UTF-16BE characters
-            extern size_t utf16_to_utf8(utf16_t const* utf16, size_t utf16_len, utf8_t* utf8, size_t utf8_len);
-            utf16_to_utf8(dir->d_name,wcslen(dir->d_name),(utf8_t*)path,SYS_MAX_PATH);
-            
+            snprintf(path, SYS_MAX_PATH, "%s", dir->d_name);
+			
             // strip the name before the .
             char* c = path;
             while (*c != '\0') {
@@ -133,11 +130,24 @@ void djui_panel_language_create(struct DjuiBase* caller) {
 
             bool match = !strcmp(path, configLanguage);
             if (match) { foundMatch = true; }
-            struct DjuiCheckbox* checkbox = djui_checkbox_create(sLayoutBase, path, match ? &sTrue : &sFalse, select_language);
+			
+			char* displayName = djui_language_get("LANGUAGE",path);
+			
+			struct DjuiCheckbox* checkbox = NULL;
+			
+			if (displayName != (char*)path) {
+				char newName[SYS_MAX_PATH + 32] = { 0 };
+				snprintf(newName, SYS_MAX_PATH + 32, "%s", displayName);
+				checkbox = djui_checkbox_create(sLayoutBase, newName, match ? &sTrue : &sFalse, select_language);
+			}
+			else {
+				checkbox = djui_checkbox_create(sLayoutBase, path, match ? &sTrue : &sFalse, select_language);
+			}
+			
             if (!strcmp(path, "English")) { chkEnglish = checkbox; }
         }
 
-        _wclosedir(d);
+        closedir(d);
 
         if (!foundMatch && chkEnglish) {
             chkEnglish->value = &sTrue;

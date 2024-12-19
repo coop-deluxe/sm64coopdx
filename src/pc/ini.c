@@ -162,9 +162,6 @@ static void split_data(ini_t *ini) {
   }
 }
 
-#include "utils/utf16conv.h"
-#include "platform.h"
-
 /**
  * Loads data from specified path.
  * @return ini_t struct with loaded data.
@@ -181,13 +178,8 @@ ini_t* ini_load(const char *filename) {
   }
   memset(ini, 0, sizeof(*ini));
   
-  //convert filename to utf16
-  wchar_t filename_w[SYS_MAX_PATH] = { 0 };
-  extern size_t utf8_to_utf16(utf8_t const* utf8, size_t utf8_len, utf16_t* utf16, size_t utf16_len);
-  utf8_to_utf16((utf8_t*)filename,strlen(filename),(utf16_t*)filename_w,SYS_MAX_PATH);
-  
   /* Open file */
-  fp = _wfopen(filename_w, L"rb");
+  fp = fopen(filename, "rb");
   if (!fp) {
     goto fail;
   }
@@ -260,6 +252,38 @@ const char* ini_get(ini_t *ini, const char *section, const char *key) {
   }
 
   return NULL;
+}
+
+/**
+ * Finds first key with matching value
+ * @return string of key name
+ */
+const char* ini_find_key(ini_t *ini, const char* section, const char* value) {
+	char *current_section = "";
+	char *val;
+	char *p = ini->data;
+	
+	if (*p == '\0') {
+		p = next(ini, p);
+	}
+	
+	while (p < ini->end) {
+		if (*p == '[') {
+			current_section = p + 1;
+		}
+		else {
+			val = next(ini, p);
+			if (!section || !strcmpci(section, current_section)) {
+				if (!strcmpci(val,value)) {
+					return p;
+				}
+			}
+			p = val;
+		}
+		p = next(ini,p);
+	}
+	
+	return NULL;
 }
 
 /**
