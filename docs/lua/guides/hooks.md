@@ -162,8 +162,8 @@ The lua functions sent to `hook_event()` will be automatically called by SM64 wh
 | HOOK_ON_MODS_LOADED | Called directly after every mod file is loaded in by smlua | None |
 | HOOK_ON_NAMETAGS_RENDER | Called when nametags are rendered. Return a `string` to change what renders on the nametag, return an empty `string` to render nothing. | `string` playerIndex |
 | HOOK_ON_DJUI_THEME_CHANGED | Called when the DJUI theme is changed. Run `djui_menu_get_theme()` to get the new theme. | None |
-| HOOK_HEALED_MARIO | Called when any player is about to heal from any source. Called once per affected player. | MarioState mario, `integer` healType |
-| HOOK_HURT_MARIO | Called when any player is about to take damage from any source. Called once per affected player. | MarioState mario, `integer` hurtType |
+| HOOK_HEALED_MARIO | Called when any player has just healed from any source. Called once per affected player. | MarioState mario, `integer` healType |
+| HOOK_HURT_MARIO | Called when any player has just taken damage from any source. Called once per affected player. | MarioState mario, `integer` hurtType |
 
 ### Parameters
 
