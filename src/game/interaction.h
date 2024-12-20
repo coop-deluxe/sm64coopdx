@@ -244,7 +244,7 @@ Useful for enemy encounters and applying consistent damage reactions
 u32 interact_mr_blizzard(struct MarioState *m, UNUSED u32 interactType, struct Object *o);
 
 /* |description|
-Handles interactions where Mario hits an object from below (e.g., hitting a block from underneath). Determines if Mario damages or destroys the object, or if it damages Mario.
+Handles interactions where Mario hits an object from below (e.g., hitting a block from underneath). Determines if Mario damages/destroys the object, or if it damages Mario.
 Useful for handling upward attacks, hitting coin blocks, or interacting with certain NPCs from below
 |descriptionEnd| */
 u32 interact_hit_from_below(struct MarioState *m, UNUSED u32 interactType, struct Object *o);
@@ -368,7 +368,7 @@ Makes Mario lose his normal cap to an enemy, such as Klepto or Ukiki. Updates fl
 Returns true if Mario was wearing his normal cap, otherwise false.
 Useful for scenarios where enemies steal Mario's cap, affecting his abilities or appearance
 |descriptionEnd| */
-u32 mario_lose_cap_to_enemy(struct MarioState* m, u32 arg
+u32 mario_lose_cap_to_enemy(struct MarioState* m, u32 arg);
 
 /* |description|
 Retrieves Mario's normal cap if it was previously lost. 

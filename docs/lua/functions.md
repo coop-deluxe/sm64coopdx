@@ -897,6 +897,7 @@
    - [mario_grab_used_object](functions-3.md#mario_grab_used_object)
    - [mario_lose_cap_to_enemy](functions-3.md#mario_lose_cap_to_enemy)
    - [mario_obj_angle_to_object](functions-3.md#mario_obj_angle_to_object)
+   - [mario_retrieve_cap](functions-3.md#mario_retrieve_cap)
    - [mario_stop_riding_and_holding](functions-3.md#mario_stop_riding_and_holding)
    - [mario_stop_riding_object](functions-3.md#mario_stop_riding_object)
    - [mario_throw_held_object](functions-3.md#mario_throw_held_object)

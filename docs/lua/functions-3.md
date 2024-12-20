@@ -4984,7 +4984,7 @@ Handles interaction with grabbable objects (e.g., crates, small enemies, or Bows
 ## [interact_hit_from_below](#interact_hit_from_below)
 
 ### Description
-Handles interactions where Mario hits an object from below (e.g., hitting a block from underneath). Determines if Mario damages or destroys the object, or if it damages Mario. Useful for handling upward attacks, hitting coin blocks, or interacting with certain NPCs from below
+Handles interactions where Mario hits an object from below (e.g., hitting a block from underneath). Determines if Mario damages/destroys the object, or if it damages Mario. Useful for handling upward attacks, hitting coin blocks, or interacting with certain NPCs from below
 
 ### Lua Example
 `local integerValue = interact_hit_from_below(m, interactType, o)`
@@ -5550,20 +5550,23 @@ Grabs the object currently referenced by Mario's `usedObj` if it's not already b
 
 ## [mario_lose_cap_to_enemy](#mario_lose_cap_to_enemy)
 
+### Description
+Makes Mario lose his normal cap to an enemy, such as Klepto or Ukiki. Updates flags so that the cap is no longer on Mario's head. Returns true if Mario was wearing his normal cap, otherwise false. Useful for scenarios where enemies steal Mario's cap, affecting his abilities or appearance
+
 ### Lua Example
-`local integerValue = mario_lose_cap_to_enemy(m, m)`
+`local integerValue = mario_lose_cap_to_enemy(m, arg)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | m | [MarioState](structs.md#MarioState) |
-| m | `Pointer` <`u32 argvoidmario_retrieve_cap(structMarioState`> |
+| arg | `integer` |
 
 ### Returns
 - `integer`
 
 ### C Prototype
-`u32 mario_lose_cap_to_enemy(struct MarioState* m, u32 argvoid mario_retrieve_cap(struct MarioState* m);`
+`u32 mario_lose_cap_to_enemy(struct MarioState* m, u32 arg);`
 
 [:arrow_up_small:](#)
 
@@ -5588,6 +5591,29 @@ Calculates the angle between Mario and a specified object. Used for determining 
 
 ### C Prototype
 `s16 mario_obj_angle_to_object(struct MarioState *m, struct Object *o);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mario_retrieve_cap](#mario_retrieve_cap)
+
+### Description
+Retrieves Mario's normal cap if it was previously lost. Removes the cap from Mario's hand state and places it on his head. Useful when Mario recovers his normal cap from enemies or finds it in the level
+
+### Lua Example
+`mario_retrieve_cap(m)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+
+### Returns
+- None
+
+### C Prototype
+`void mario_retrieve_cap(struct MarioState* m);`
 
 [:arrow_up_small:](#)
 

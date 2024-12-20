@@ -4417,7 +4417,7 @@ end
 --- @param interactType integer
 --- @param o Object
 --- @return integer
---- Handles interactions where Mario hits an object from below (e.g., hitting a block from underneath). Determines if Mario damages or destroys the object, or if it damages Mario. Useful for handling upward attacks, hitting coin blocks, or interacting with certain NPCs from below
+--- Handles interactions where Mario hits an object from below (e.g., hitting a block from underneath). Determines if Mario damages/destroys the object, or if it damages Mario. Useful for handling upward attacks, hitting coin blocks, or interacting with certain NPCs from below
 function interact_hit_from_below(m, interactType, o)
     -- ...
 end
@@ -4610,9 +4610,10 @@ function mario_grab_used_object(m)
 end
 
 --- @param m MarioState
---- @param m Pointer_u32argvoidmario_retrieve_cap(structMarioState
+--- @param arg integer
 --- @return integer
-function mario_lose_cap_to_enemy(m, m)
+--- Makes Mario lose his normal cap to an enemy, such as Klepto or Ukiki. Updates flags so that the cap is no longer on Mario's head. Returns true if Mario was wearing his normal cap, otherwise false. Useful for scenarios where enemies steal Mario's cap, affecting his abilities or appearance
+function mario_lose_cap_to_enemy(m, arg)
     -- ...
 end
 
@@ -4621,6 +4622,12 @@ end
 --- @return integer
 --- Calculates the angle between Mario and a specified object. Used for determining Mario's orientation relative to the object. Useful for deciding attack directions, whether Mario can punch/kick an enemy, or align the camera/player direction
 function mario_obj_angle_to_object(m, o)
+    -- ...
+end
+
+--- @param m MarioState
+--- Retrieves Mario's normal cap if it was previously lost. Removes the cap from Mario's hand state and places it on his head. Useful when Mario recovers his normal cap from enemies or finds it in the level
+function mario_retrieve_cap(m)
     -- ...
 end
 
@@ -10423,7 +10430,6 @@ end
 --- @class Pointer_integer
 --- @class Pointer_BehaviorScript
 --- @class Pointer_number
---- @class Pointer_u32argvoidmario_retrieve_cap(structMarioState
 --- @class Pointer_Vec4s
 --- @class Pointer_Mtx
 --- @class Pointer_Trajectory

@@ -14569,10 +14569,10 @@ int smlua_func_mario_lose_cap_to_enemy(lua_State* L) {
 
     struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mario_lose_cap_to_enemy"); return 0; }
-    u32 argvoidmario_retrieve_cap(structMarioState* m = (u32 argvoidmario_retrieve_cap(structMarioState*)smlua_to_cobject(L, 2, LOT_ARGVOIDMARIO_RETRIEVE_CAP(STRUCTMARIOSTATE);
+    u32 arg = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "mario_lose_cap_to_enemy"); return 0; }
 
-    lua_pushinteger(L, mario_lose_cap_to_enemy(m, m));
+    lua_pushinteger(L, mario_lose_cap_to_enemy(m, arg));
 
     return 1;
 }
@@ -14592,6 +14592,23 @@ int smlua_func_mario_obj_angle_to_object(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "mario_obj_angle_to_object"); return 0; }
 
     lua_pushinteger(L, mario_obj_angle_to_object(m, o));
+
+    return 1;
+}
+
+int smlua_func_mario_retrieve_cap(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "mario_retrieve_cap", 1, top);
+        return 0;
+    }
+
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mario_retrieve_cap"); return 0; }
+
+    mario_retrieve_cap(m);
 
     return 1;
 }
@@ -34388,6 +34405,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "mario_grab_used_object", smlua_func_mario_grab_used_object);
     smlua_bind_function(L, "mario_lose_cap_to_enemy", smlua_func_mario_lose_cap_to_enemy);
     smlua_bind_function(L, "mario_obj_angle_to_object", smlua_func_mario_obj_angle_to_object);
+    smlua_bind_function(L, "mario_retrieve_cap", smlua_func_mario_retrieve_cap);
     smlua_bind_function(L, "mario_stop_riding_and_holding", smlua_func_mario_stop_riding_and_holding);
     smlua_bind_function(L, "mario_stop_riding_object", smlua_func_mario_stop_riding_object);
     smlua_bind_function(L, "mario_throw_held_object", smlua_func_mario_throw_held_object);
