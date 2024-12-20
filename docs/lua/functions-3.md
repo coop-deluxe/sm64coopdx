@@ -4590,6 +4590,9 @@ Sets if first person is enabled
 
 ## [determine_interaction](#determine_interaction)
 
+### Description
+Determines how Mario interacts with a given object based on his current action, position, and other state variables. Calculates the appropriate interaction type (e.g., punch, kick, ground pound) that should result from Mario's contact with the specified object (`o`). Useful for handling different types of player-object collisions, attacks, and object behaviors
+
 ### Lua Example
 `local integerValue = determine_interaction(m, o)`
 
@@ -4611,6 +4614,9 @@ Sets if first person is enabled
 
 ## [does_mario_have_normal_cap_on_head](#does_mario_have_normal_cap_on_head)
 
+### Description
+Checks if Mario is currently wearing his normal cap on his head. Returns true if Mario's flag state matches that of having the normal cap equipped on his head, otherwise false. Useful for determining which cap-specific abilities or appearances to apply
+
 ### Lua Example
 `local integerValue = does_mario_have_normal_cap_on_head(m)`
 
@@ -4630,6 +4636,9 @@ Sets if first person is enabled
 <br />
 
 ## [get_door_save_file_flag](#get_door_save_file_flag)
+
+### Description
+Retrieves the save file flag associated with a door, based on the number of stars required to open it. Used to check if the player has unlocked certain star doors or progressed far enough to access new areas
 
 ### Lua Example
 `local integerValue = get_door_save_file_flag(door)`
@@ -4651,6 +4660,9 @@ Sets if first person is enabled
 
 ## [get_mario_cap_flag](#get_mario_cap_flag)
 
+### Description
+Determines the type of cap an object represents. Depending on the object's behavior, it returns a cap type (normal, metal, wing, vanish). Useful for handling the logic of picking up, wearing, or losing different kinds of caps
+
 ### Lua Example
 `local integerValue = get_mario_cap_flag(capObject)`
 
@@ -4670,6 +4682,9 @@ Sets if first person is enabled
 <br />
 
 ## [interact_bbh_entrance](#interact_bbh_entrance)
+
+### Description
+Handles Mario's interaction with the Boo's Big Haunt (BBH) entrance object. When Mario tries to enter the BBH area, this function determines the resulting action (e.g., a jump or spin entrance). Useful for managing special course entrances and cutscene triggers
 
 ### Lua Example
 `local integerValue = interact_bbh_entrance(m, interactType, o)`
@@ -4693,6 +4708,9 @@ Sets if first person is enabled
 
 ## [interact_bounce_top](#interact_bounce_top)
 
+### Description
+Handles interactions where Mario bounces off the top of an object (e.g., Goombas, Koopas). Checks if Mario attacks the object from above and applies the appropriate knockback, sound effects, and object state changes. Useful for enemy defeat mechanics and platform bouncing
+
 ### Lua Example
 `local integerValue = interact_bounce_top(m, interactType, o)`
 
@@ -4714,6 +4732,9 @@ Sets if first person is enabled
 <br />
 
 ## [interact_breakable](#interact_breakable)
+
+### Description
+Handles interactions with breakable objects (e.g., breakable boxes or bob-ombs). If Mario hits the object with a valid attack (like a punch or kick), the object is destroyed or changes state. Useful for managing collectible items hidden in breakable objects and level progression through destructible blocks
 
 ### Lua Example
 `local integerValue = interact_breakable(m, interactType, o)`
@@ -4737,6 +4758,9 @@ Sets if first person is enabled
 
 ## [interact_bully](#interact_bully)
 
+### Description
+Handles interaction with Bully enemies. Determines if Mario attacks the Bully or gets knocked back. Updates Mario's velocity and state accordingly, and can defeat the Bully if attacked successfully. Useful for enemy encounters that involve pushing and shoving mechanics rather than just stomping
+
 ### Lua Example
 `local integerValue = interact_bully(m, interactType, o)`
 
@@ -4758,6 +4782,9 @@ Sets if first person is enabled
 <br />
 
 ## [interact_cannon_base](#interact_cannon_base)
+
+### Description
+Handles interaction when Mario touches a cannon base. If the cannon is ready, Mario enters the cannon, triggering a special action and camera behavior. Useful for transitioning to cannon-aiming mode and enabling cannon travel within levels
 
 ### Lua Example
 `local integerValue = interact_cannon_base(m, interactType, o)`
@@ -4781,6 +4808,9 @@ Sets if first person is enabled
 
 ## [interact_cap](#interact_cap)
 
+### Description
+Handles interaction when Mario picks up a cap object. This includes normal caps, wing caps, vanish caps, and metal caps. Updates Mario's state (e.g., cap timers, sound effects) and may initiate putting on the cap animation. Useful for power-up mechanics and granting Mario temporary abilities
+
 ### Lua Example
 `local integerValue = interact_cap(m, interactType, o)`
 
@@ -4802,6 +4832,9 @@ Sets if first person is enabled
 <br />
 
 ## [interact_clam_or_bubba](#interact_clam_or_bubba)
+
+### Description
+Handles interactions with objects like Clams or Bubbas, which can damage Mario or, in Bubba's case, eat Mario. If Bubba eats Mario, it triggers a unique "caught" action. Otherwise, it deals damage and knockback if hit by a Clam. Useful for underwater hazards and special enemy behaviors
 
 ### Lua Example
 `local integerValue = interact_clam_or_bubba(m, interactType, o)`
@@ -4825,6 +4858,9 @@ Sets if first person is enabled
 
 ## [interact_coin](#interact_coin)
 
+### Description
+Handles Mario's interaction with coins. Collecting a coin increases Mario's coin count and heals him slightly. Useful for score, health management, and triggering coin-related stars
+
 ### Lua Example
 `local integerValue = interact_coin(m, interactType, o)`
 
@@ -4846,6 +4882,9 @@ Sets if first person is enabled
 <br />
 
 ## [interact_damage](#interact_damage)
+
+### Description
+Handles damaging interactions from various objects (e.g., enemies, hazards). If Mario takes damage, it applies knockback and reduces health. Useful for enemy attacks, environmental hazards, and ensuring damage feedback and sound effects
 
 ### Lua Example
 `local integerValue = interact_damage(m, interactType, o)`
@@ -4869,6 +4908,9 @@ Sets if first person is enabled
 
 ## [interact_door](#interact_door)
 
+### Description
+Handles interaction when Mario touches a door. If Mario meets the star requirement or has the key, he can unlock/open the door. Otherwise, it may display dialog indicating the requirement. Useful for controlling access to locked areas and providing progression gating in the game
+
 ### Lua Example
 `local integerValue = interact_door(m, interactType, o)`
 
@@ -4890,6 +4932,9 @@ Sets if first person is enabled
 <br />
 
 ## [interact_flame](#interact_flame)
+
+### Description
+Handles interaction with flame objects. If Mario touches a flame and is not invulnerable or protected by certain caps, he takes damage and may be set on fire, causing a burning jump. Useful for simulating fire damage and hazards in levels
 
 ### Lua Example
 `local integerValue = interact_flame(m, interactType, o)`
@@ -4913,6 +4958,9 @@ Sets if first person is enabled
 
 ## [interact_grabbable](#interact_grabbable)
 
+### Description
+Handles interaction with grabbable objects (e.g., crates, small enemies, or Bowser). Checks if Mario can pick up the object and initiates the grab action if possible. Useful for puzzle mechanics, throwing items, and unique boss fights that require grabbing
+
 ### Lua Example
 `local integerValue = interact_grabbable(m, interactType, o)`
 
@@ -4934,6 +4982,9 @@ Sets if first person is enabled
 <br />
 
 ## [interact_hit_from_below](#interact_hit_from_below)
+
+### Description
+Handles interactions where Mario hits an object from below (e.g., hitting a block from underneath). Determines if Mario damages or destroys the object, or if it damages Mario. Useful for handling upward attacks, hitting coin blocks, or interacting with certain NPCs from below
 
 ### Lua Example
 `local integerValue = interact_hit_from_below(m, interactType, o)`
@@ -4957,6 +5008,9 @@ Sets if first person is enabled
 
 ## [interact_hoot](#interact_hoot)
 
+### Description
+Handles interaction with Hoot, the owl. If Mario can grab onto Hoot, this sets Mario onto a riding action, allowing him to fly around the level. Useful for special traversal mechanics and shortcuts within a course
+
 ### Lua Example
 `local integerValue = interact_hoot(m, interactType, o)`
 
@@ -4978,6 +5032,9 @@ Sets if first person is enabled
 <br />
 
 ## [interact_igloo_barrier](#interact_igloo_barrier)
+
+### Description
+Handles interaction with the igloo barrier found in Snowman's Land. If Mario runs into the barrier, this function pushes him away and prevents passage without the vanish cap. Useful for enforcing require-caps to access certain areas
 
 ### Lua Example
 `local integerValue = interact_igloo_barrier(m, interactType, o)`
@@ -5001,6 +5058,9 @@ Sets if first person is enabled
 
 ## [interact_koopa_shell](#interact_koopa_shell)
 
+### Description
+Handles interaction when Mario touches a Koopa Shell. If conditions are met, Mario can hop onto the shell and start riding it, changing his movement mechanics. Useful for introducing new traversal methods and fun movement abilities
+
 ### Lua Example
 `local integerValue = interact_koopa_shell(m, interactType, o)`
 
@@ -5022,6 +5082,9 @@ Sets if first person is enabled
 <br />
 
 ## [interact_mr_blizzard](#interact_mr_blizzard)
+
+### Description
+Handles interaction with Mr. Blizzard (the snowman enemy) or similar objects. If Mario is attacked or collides with Mr. Blizzard, it applies damage and knockback if not protected or attacking. Useful for enemy encounters and applying consistent damage reactions
 
 ### Lua Example
 `local integerValue = interact_mr_blizzard(m, interactType, o)`
@@ -5045,6 +5108,9 @@ Sets if first person is enabled
 
 ## [interact_player](#interact_player)
 
+### Description
+Handles interaction with another player (in multiplayer scenarios). Checks if Mario and another player collide and resolves any special behavior like bouncing on top. Useful for multiplayer interactions, such as PvP or cooperative gameplay mechanics
+
 ### Lua Example
 `local integerValue = interact_player(m, interactType, o)`
 
@@ -5066,6 +5132,9 @@ Sets if first person is enabled
 <br />
 
 ## [interact_pole](#interact_pole)
+
+### Description
+Handles interaction with poles (e.g., climbing poles). If Mario runs into a vertical pole, he can grab it and start climbing. Useful for platforming mechanics that involve vertical navigation and stunts
 
 ### Lua Example
 `local integerValue = interact_pole(m, interactType, o)`
@@ -5089,6 +5158,9 @@ Sets if first person is enabled
 
 ## [interact_shock](#interact_shock)
 
+### Description
+Handles interaction with shocking objects. If Mario touches an electrified enemy or hazard, he takes damage and may be stunned or shocked. Useful for electric-themed enemies and obstacles that require careful avoidance
+
 ### Lua Example
 `local integerValue = interact_shock(m, interactType, o)`
 
@@ -5110,6 +5182,9 @@ Sets if first person is enabled
 <br />
 
 ## [interact_snufit_bullet](#interact_snufit_bullet)
+
+### Description
+Handles interaction with Snufit bullets (projectiles fired by certain enemies). If Mario is not protected, he takes damage. Otherwise, the bullet can be destroyed. Useful for projectile-based enemy attacks and introducing ranged hazards
 
 ### Lua Example
 `local integerValue = interact_snufit_bullet(m, interactType, o)`
@@ -5133,6 +5208,9 @@ Sets if first person is enabled
 
 ## [interact_spiny_walking](#interact_spiny_walking)
 
+### Description
+Handles interaction with Spiny-walking enemies. If Mario attacks it (e.g., by punching), the enemy is hurt. If he fails to attack properly, Mario takes damage and knockback. Useful for enemies that cannot be stomped from above and require direct attacks
+
 ### Lua Example
 `local integerValue = interact_spiny_walking(m, interactType, o)`
 
@@ -5154,6 +5232,9 @@ Sets if first person is enabled
 <br />
 
 ## [interact_star_or_key](#interact_star_or_key)
+
+### Description
+Handles interaction with Stars or Keys. If Mario collects a star or key, it triggers a specific star grab cutscene and progression is updated. Also handles no-exit variants (like the wing cap stage star). Useful for the main progression system of collecting Stars and unlocking new areas
 
 ### Lua Example
 `local integerValue = interact_star_or_key(m, interactType, o)`
@@ -5177,6 +5258,9 @@ Sets if first person is enabled
 
 ## [interact_strong_wind](#interact_strong_wind)
 
+### Description
+Handles interaction with strong wind gusts. These gusts push Mario back, often knocking him off platforms or sending him flying backwards. Useful for environmental hazards that challenge Mario's platforming skill and positioning
+
 ### Lua Example
 `local integerValue = interact_strong_wind(m, interactType, o)`
 
@@ -5198,6 +5282,9 @@ Sets if first person is enabled
 <br />
 
 ## [interact_text](#interact_text)
+
+### Description
+Handles interaction with signs, NPCs, and other text-bearing objects. If Mario presses the interact button facing them, he enters a dialog reading state. Useful for providing hints, story elements, or gameplay instructions through in-game text
 
 ### Lua Example
 `local integerValue = interact_text(m, interactType, o)`
@@ -5221,6 +5308,9 @@ Sets if first person is enabled
 
 ## [interact_tornado](#interact_tornado)
 
+### Description
+Handles interaction with tornados. If Mario touches a tornado, he enters a spinning twirl action, losing control temporarily. Useful for desert levels or areas where environmental hazards lift Mario into the air
+
 ### Lua Example
 `local integerValue = interact_tornado(m, interactType, o)`
 
@@ -5242,6 +5332,9 @@ Sets if first person is enabled
 <br />
 
 ## [interact_warp](#interact_warp)
+
+### Description
+Handles interaction with warps, including warp pipes and hole warps. If Mario steps onto a warp, he either transitions into another area or level. Useful for connecting different parts of the game world and controlling transitions between levels
 
 ### Lua Example
 `local integerValue = interact_warp(m, interactType, o)`
@@ -5265,6 +5358,9 @@ Sets if first person is enabled
 
 ## [interact_warp_door](#interact_warp_door)
 
+### Description
+Handles interaction with warp doors that lead to other areas or require keys. If Mario can open the door (has enough stars or a key), he proceeds. Otherwise, it may show a dialog. Useful for restricting access to certain areas based on progression
+
 ### Lua Example
 `local integerValue = interact_warp_door(m, interactType, o)`
 
@@ -5286,6 +5382,9 @@ Sets if first person is enabled
 <br />
 
 ## [interact_water_ring](#interact_water_ring)
+
+### Description
+Handles interactions with water rings that heal Mario. Passing through water rings increases his health counter. Useful for underwater stages to sustain Mario's health and encourage collecting rings
 
 ### Lua Example
 `local integerValue = interact_water_ring(m, interactType, o)`
@@ -5309,6 +5408,9 @@ Sets if first person is enabled
 
 ## [interact_whirlpool](#interact_whirlpool)
 
+### Description
+Handles interaction with whirlpools. If Mario gets caught in a whirlpool, he's pulled toward it, resulting in a unique "caught" action. Useful for underwater hazards that trap Mario and create more challenging underwater navigation
+
 ### Lua Example
 `local integerValue = interact_whirlpool(m, interactType, o)`
 
@@ -5331,6 +5433,9 @@ Sets if first person is enabled
 
 ## [mario_blow_off_cap](#mario_blow_off_cap)
 
+### Description
+Makes Mario blow off his normal cap at a given speed. Removes the normal cap from Mario's head and spawns it as a collectible object in the game world. Useful for simulating events where Mario loses his cap due to enemy attacks or environmental forces
+
 ### Lua Example
 `mario_blow_off_cap(m, capSpeed)`
 
@@ -5352,6 +5457,9 @@ Sets if first person is enabled
 
 ## [mario_check_object_grab](#mario_check_object_grab)
 
+### Description
+Checks if Mario can grab the currently encountered object (usually triggered when Mario punches or dives). If conditions are met, initiates the grabbing process. Useful for picking up objects, throwing enemies, or grabbing special items
+
 ### Lua Example
 `local integerValue = mario_check_object_grab(m)`
 
@@ -5372,6 +5480,9 @@ Sets if first person is enabled
 
 ## [mario_drop_held_object](#mario_drop_held_object)
 
+### Description
+Causes Mario to drop the object he is currently holding. Sets the held object's state accordingly and places it in front of Mario. Useful for releasing carried objects, such as throwing Bob-ombs or setting down crates
+
 ### Lua Example
 `mario_drop_held_object(m)`
 
@@ -5391,6 +5502,9 @@ Sets if first person is enabled
 <br />
 
 ## [mario_get_collided_object](#mario_get_collided_object)
+
+### Description
+Returns a collided object that matches a given interaction type from Mario's current collision data. Useful for determining which object Mario has come into contact with and how to respond
 
 ### Lua Example
 `local ObjectValue = mario_get_collided_object(m, interactType)`
@@ -5413,6 +5527,9 @@ Sets if first person is enabled
 
 ## [mario_grab_used_object](#mario_grab_used_object)
 
+### Description
+Grabs the object currently referenced by Mario's `usedObj` if it's not already being held. Changes the object's state to indicate it is now held by Mario. Useful for handling the moment Mario successfully picks up an object
+
 ### Lua Example
 `mario_grab_used_object(m)`
 
@@ -5434,25 +5551,28 @@ Sets if first person is enabled
 ## [mario_lose_cap_to_enemy](#mario_lose_cap_to_enemy)
 
 ### Lua Example
-`local integerValue = mario_lose_cap_to_enemy(m, arg)`
+`local integerValue = mario_lose_cap_to_enemy(m, m)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | m | [MarioState](structs.md#MarioState) |
-| arg | `integer` |
+| m | `Pointer` <`u32 argvoidmario_retrieve_cap(structMarioState`> |
 
 ### Returns
 - `integer`
 
 ### C Prototype
-`u32 mario_lose_cap_to_enemy(struct MarioState* m, u32 arg);`
+`u32 mario_lose_cap_to_enemy(struct MarioState* m, u32 argvoid mario_retrieve_cap(struct MarioState* m);`
 
 [:arrow_up_small:](#)
 
 <br />
 
 ## [mario_obj_angle_to_object](#mario_obj_angle_to_object)
+
+### Description
+Calculates the angle between Mario and a specified object. Used for determining Mario's orientation relative to the object. Useful for deciding attack directions, whether Mario can punch/kick an enemy, or align the camera/player direction
 
 ### Lua Example
 `local integerValue = mario_obj_angle_to_object(m, o)`
@@ -5473,27 +5593,10 @@ Sets if first person is enabled
 
 <br />
 
-## [mario_retrieve_cap](#mario_retrieve_cap)
-
-### Lua Example
-`mario_retrieve_cap(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- None
-
-### C Prototype
-`void mario_retrieve_cap(struct MarioState* m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
 ## [mario_stop_riding_and_holding](#mario_stop_riding_and_holding)
+
+### Description
+Causes Mario to stop riding any object (like a shell or Hoot) and also drop any held object. Resets related states to ensure Mario is no longer attached to or holding anything. Useful when changing Mario's state after certain actions, transitions, or to prevent exploits
 
 ### Lua Example
 `mario_stop_riding_and_holding(m)`
@@ -5515,6 +5618,9 @@ Sets if first person is enabled
 
 ## [mario_stop_riding_object](#mario_stop_riding_object)
 
+### Description
+Stops Mario from riding any currently ridden object (e.g., a Koopa shell or Hoot), updating the object's interaction status and Mario's state. Useful for cleanly dismounting ridden objects and ending special movement states
+
 ### Lua Example
 `mario_stop_riding_object(m)`
 
@@ -5535,6 +5641,9 @@ Sets if first person is enabled
 
 ## [mario_throw_held_object](#mario_throw_held_object)
 
+### Description
+Throws the object Mario is currently holding. The object is placed in front of Mario and given a forward velocity. Useful for attacking enemies with thrown objects, solving puzzles by throwing crates, or interacting with environment items
+
 ### Lua Example
 `mario_throw_held_object(m)`
 
@@ -5554,6 +5663,9 @@ Sets if first person is enabled
 <br />
 
 ## [passes_pvp_interaction_checks](#passes_pvp_interaction_checks)
+
+### Description
+Checks if the necessary conditions are met for one player to successfully attack another player in a PvP scenario. Considers factors like invincibility, action states, and whether the attack is valid. Useful for multiplayer modes where players can harm each other and need rules to govern this behavior
 
 ### Lua Example
 `local integerValue = passes_pvp_interaction_checks(attacker, victim)`
@@ -5576,6 +5688,9 @@ Sets if first person is enabled
 
 ## [should_push_or_pull_door](#should_push_or_pull_door)
 
+### Description
+Determines whether Mario should push or pull a door when he interacts with it, based on his orientation and position. Useful for animating door interactions realistically, depending on which side Mario approaches from
+
 ### Lua Example
 `local integerValue = should_push_or_pull_door(m, o)`
 
@@ -5596,6 +5711,9 @@ Sets if first person is enabled
 <br />
 
 ## [take_damage_and_knock_back](#take_damage_and_knock_back)
+
+### Description
+Handles the logic of Mario taking damage and being knocked back by a damaging object. Decreases Mario's health, sets his knockback state, and triggers appropriate sound and camera effects. Useful for implementing enemy attacks, hazards, and ensuring Mario receives proper feedback upon taking damage
 
 ### Lua Example
 `local integerValue = take_damage_and_knock_back(m, o)`
@@ -7125,675 +7243,6 @@ Creates a warp node in the current level and area with id `id` that goes to the 
 
 ### C Prototype
 `void update_mario_sound_and_camera(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
----
-# functions from mario_actions_airborne.c
-
-<br />
-
-
-## [check_common_airborne_cancels](#check_common_airborne_cancels)
-
-### Lua Example
-`local integerValue = check_common_airborne_cancels(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 check_common_airborne_cancels(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [check_fall_damage](#check_fall_damage)
-
-### Lua Example
-`local integerValue = check_fall_damage(m, hardFallAction)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| hardFallAction | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 check_fall_damage(struct MarioState *m, u32 hardFallAction);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [check_fall_damage_or_get_stuck](#check_fall_damage_or_get_stuck)
-
-### Lua Example
-`local integerValue = check_fall_damage_or_get_stuck(m, hardFallAction)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| hardFallAction | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 check_fall_damage_or_get_stuck(struct MarioState *m, u32 hardFallAction);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [check_horizontal_wind](#check_horizontal_wind)
-
-### Lua Example
-`local integerValue = check_horizontal_wind(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 check_horizontal_wind(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [check_kick_or_dive_in_air](#check_kick_or_dive_in_air)
-
-### Lua Example
-`local integerValue = check_kick_or_dive_in_air(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 check_kick_or_dive_in_air(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [check_wall_kick](#check_wall_kick)
-
-### Lua Example
-`local integerValue = check_wall_kick(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 check_wall_kick(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [common_air_action_step](#common_air_action_step)
-
-### Lua Example
-`local integerValue = common_air_action_step(m, landAction, animation, stepArg)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| landAction | `integer` |
-| animation | `integer` |
-| stepArg | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`u32 common_air_action_step(struct MarioState *m, u32 landAction, s32 animation, u32 stepArg);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [common_air_knockback_step](#common_air_knockback_step)
-
-### Lua Example
-`local integerValue = common_air_knockback_step(m, landAction, hardFallAction, animation, speed)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| landAction | `integer` |
-| hardFallAction | `integer` |
-| animation | `integer` |
-| speed | `number` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`u32 common_air_knockback_step(struct MarioState *m, u32 landAction, u32 hardFallAction, s32 animation, f32 speed);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [lava_boost_on_wall](#lava_boost_on_wall)
-
-### Lua Example
-`local integerValue = lava_boost_on_wall(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 lava_boost_on_wall(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [mario_execute_airborne_action](#mario_execute_airborne_action)
-
-### Lua Example
-`local integerValue = mario_execute_airborne_action(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 mario_execute_airborne_action(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [play_far_fall_sound](#play_far_fall_sound)
-
-### Lua Example
-`play_far_fall_sound(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- None
-
-### C Prototype
-`void play_far_fall_sound(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [play_flip_sounds](#play_flip_sounds)
-
-### Lua Example
-`play_flip_sounds(m, frame1, frame2, frame3)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| frame1 | `integer` |
-| frame2 | `integer` |
-| frame3 | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void play_flip_sounds(struct MarioState *m, s16 frame1, s16 frame2, s16 frame3);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [play_knockback_sound](#play_knockback_sound)
-
-### Lua Example
-`play_knockback_sound(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- None
-
-### C Prototype
-`void play_knockback_sound(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [should_get_stuck_in_ground](#should_get_stuck_in_ground)
-
-### Lua Example
-`local integerValue = should_get_stuck_in_ground(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 should_get_stuck_in_ground(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [update_air_with_turn](#update_air_with_turn)
-
-### Lua Example
-`update_air_with_turn(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- None
-
-### C Prototype
-`void update_air_with_turn(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [update_air_without_turn](#update_air_without_turn)
-
-### Lua Example
-`update_air_without_turn(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- None
-
-### C Prototype
-`void update_air_without_turn(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [update_flying](#update_flying)
-
-### Lua Example
-`update_flying(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- None
-
-### C Prototype
-`void update_flying(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [update_flying_pitch](#update_flying_pitch)
-
-### Lua Example
-`update_flying_pitch(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- None
-
-### C Prototype
-`void update_flying_pitch(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [update_flying_yaw](#update_flying_yaw)
-
-### Lua Example
-`update_flying_yaw(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- None
-
-### C Prototype
-`void update_flying_yaw(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [update_lava_boost_or_twirling](#update_lava_boost_or_twirling)
-
-### Lua Example
-`update_lava_boost_or_twirling(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- None
-
-### C Prototype
-`void update_lava_boost_or_twirling(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
----
-# functions from mario_actions_automatic.c
-
-<br />
-
-
-## [add_tree_leaf_particles](#add_tree_leaf_particles)
-
-### Lua Example
-`add_tree_leaf_particles(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- None
-
-### C Prototype
-`void add_tree_leaf_particles(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [check_common_automatic_cancels](#check_common_automatic_cancels)
-
-### Lua Example
-`local integerValue = check_common_automatic_cancels(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 check_common_automatic_cancels(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [climb_up_ledge](#climb_up_ledge)
-
-### Lua Example
-`climb_up_ledge(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- None
-
-### C Prototype
-`void climb_up_ledge(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [let_go_of_ledge](#let_go_of_ledge)
-
-### Lua Example
-`local integerValue = let_go_of_ledge(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 let_go_of_ledge(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [mario_execute_automatic_action](#mario_execute_automatic_action)
-
-### Lua Example
-`local integerValue = mario_execute_automatic_action(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 mario_execute_automatic_action(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [perform_hanging_step](#perform_hanging_step)
-
-### Lua Example
-`local integerValue = perform_hanging_step(m, nextPos)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| nextPos | [Vec3f](structs.md#Vec3f) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 perform_hanging_step(struct MarioState *m, Vec3f nextPos);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [play_climbing_sounds](#play_climbing_sounds)
-
-### Lua Example
-`play_climbing_sounds(m, b)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| b | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void play_climbing_sounds(struct MarioState *m, s32 b);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [set_pole_position](#set_pole_position)
-
-### Lua Example
-`local integerValue = set_pole_position(m, offsetY)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| offsetY | `number` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 set_pole_position(struct MarioState *m, f32 offsetY);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [update_hang_moving](#update_hang_moving)
-
-### Lua Example
-`local integerValue = update_hang_moving(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 update_hang_moving(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [update_hang_stationary](#update_hang_stationary)
-
-### Lua Example
-`update_hang_stationary(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- None
-
-### C Prototype
-`void update_hang_stationary(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [update_ledge_climb](#update_ledge_climb)
-
-### Lua Example
-`update_ledge_climb(m, animation, endAction)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| animation | `integer` |
-| endAction | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void update_ledge_climb(struct MarioState *m, s32 animation, u32 endAction);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [update_ledge_climb_camera](#update_ledge_climb_camera)
-
-### Lua Example
-`update_ledge_climb_camera(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- None
-
-### C Prototype
-`void update_ledge_climb_camera(struct MarioState *m);`
 
 [:arrow_up_small:](#)
 
