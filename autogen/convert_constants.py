@@ -47,7 +47,8 @@ in_files = [
     "src/pc/djui/djui_console.h",
     "src/game/player_palette.h",
     "src/pc/network/lag_compensation.h",
-    "src/pc/djui/djui_panel_menu.h"
+    "src/pc/djui/djui_panel_menu.h",
+    "src/game/mario.h"
 ]
 
 exclude_constants = {

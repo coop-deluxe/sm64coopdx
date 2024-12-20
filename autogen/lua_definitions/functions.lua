@@ -5130,6 +5130,11 @@ function transition_submerged_to_walking(m)
 end
 
 --- @param m MarioState
+function update_burning_health_common(m)
+    -- ...
+end
+
+--- @param m MarioState
 function update_mario_pos_for_anim(m)
     -- ...
 end
