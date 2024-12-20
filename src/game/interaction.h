@@ -365,7 +365,7 @@ void mario_blow_off_cap(struct MarioState *m, f32 capSpeed);
 
 /* |description|
 Makes Mario lose his normal cap to an enemy, such as Klepto or Ukiki. Updates flags so that the cap is no longer on Mario's head.
-Returns TRUE if Mario was wearing his normal cap, otherwise FALSE.
+Returns true if Mario was wearing his normal cap, otherwise false.
 Useful for scenarios where enemies steal Mario's cap, affecting his abilities or appearance
 |descriptionEnd| */
 u32 mario_lose_cap_to_enemy(struct MarioState* m, u32 arg
