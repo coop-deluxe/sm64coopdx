@@ -597,7 +597,7 @@ u32 mario_get_terrain_sound_addend(struct MarioState *m) {
                     floorSoundType = 5;
                     break;
             }
-            
+
             ret = sTerrainSounds[terrainType][floorSoundType] << 16;
         }
     }

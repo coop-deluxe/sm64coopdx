@@ -381,7 +381,6 @@ endif
 
 ifeq ($(HEADLESS),1)
   $(info Compiling headless)
-  
   RENDER_API := DUMMY
   WINDOW_API := DUMMY
   AUDIO_API := DUMMY

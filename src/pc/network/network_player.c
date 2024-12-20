@@ -250,7 +250,6 @@ u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex, u8 mode
     } else {
         assert(false);
     }
-	
     struct NetworkPlayer *np = &gNetworkPlayers[localIndex];
 
     // ensure that a name is given
@@ -368,7 +367,6 @@ u8 network_player_disconnected(u8 globalIndex) {
         struct NetworkPlayer* np = &gNetworkPlayers[i];
         if (!np->connected) { continue; }
         if (np->globalIndex != globalIndex) { continue; }
-		
         if (gNetworkType == NT_SERVER) { network_send_leaving(np->globalIndex); }
         np->connected = false;
         np->currCourseNum      = -1;

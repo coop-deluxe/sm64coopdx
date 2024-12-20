@@ -278,7 +278,7 @@ static CoopNetRc coopnet_initialize(void) {
     gCoopNetCallbacks.OnError = coopnet_on_error;
     gCoopNetCallbacks.OnPeerDisconnected = coopnet_on_peer_disconnected;
     gCoopNetCallbacks.OnLoadBalance = coopnet_on_load_balance;
-	
+
     if (coopnet_is_connected()) { return COOPNET_OK; }
 
     char* endptr = NULL;

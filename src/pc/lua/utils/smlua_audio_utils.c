@@ -168,8 +168,8 @@ static struct DynamicPool *sModAudioPool;
 
 static void smlua_audio_custom_init(void) {
     sModAudioPool = dynamic_pool_init();
-	
-	ma_result result = ma_engine_init(NULL, &sModAudioEngine);
+
+    ma_result result = ma_engine_init(NULL, &sModAudioEngine);
     if (result != MA_SUCCESS) {
         LOG_ERROR("failed to init Miniaudio: %d", result);
     }
@@ -311,11 +311,11 @@ struct ModAudio* audio_load_internal(const char* filename, bool isStream) {
         LOG_ERROR("failed to load audio file '%s': %d", filename, result);
         return NULL;
     }
+
     audio->buffer = buffer;
     audio->bufferSize = size;
     audio->isStream = isStream;
     audio->loaded = true;
-
     return audio;
 }
 

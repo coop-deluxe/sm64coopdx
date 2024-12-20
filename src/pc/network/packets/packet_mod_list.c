@@ -34,7 +34,7 @@ void network_receive_mod_list_request(UNUSED struct Packet* p) {
         return;
     }
     LOG_INFO("received mod list request");
-	
+
     network_send_mod_list();
 }
 
