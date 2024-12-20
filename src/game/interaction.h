@@ -128,13 +128,13 @@ extern u8 gPssSlideStarted;
 
 /* |description|
 Handles Mario's interaction with coins. Collecting a coin increases Mario's coin count and heals him slightly.
-Useful for score, health management, and triggering coin-related stars
+Useful for score, and coin management
 |descriptionEnd| */
 u32 interact_coin(struct MarioState *m, UNUSED u32 interactType, struct Object *o);
 
 /* |description|
 Handles interactions with water rings that heal Mario. Passing through water rings increases his health counter.
-Useful for underwater stages to sustain Mario's health and encourage collecting rings
+Useful for underwater stages
 |descriptionEnd| */
 u32 interact_water_ring(struct MarioState *m, UNUSED u32 interactType, struct Object *o);
 
@@ -145,14 +145,13 @@ Useful for the main progression system of collecting Stars and unlocking new are
 u32 interact_star_or_key(struct MarioState *m, UNUSED u32 interactType, struct Object *o);
 
 /* |description|
-Handles Mario's interaction with the Boo's Big Haunt (BBH) entrance object. When Mario tries to enter the BBH area, this function determines the resulting action (e.g., a jump or spin entrance).
-Useful for managing special course entrances and cutscene triggers
+Handles Mario's interaction with the Boo's Big Haunt (BBH) entrance object. When Mario tries to enter the BBH area, this function determines the resulting action (e.g., a jump or spin entrance)
 |descriptionEnd| */
 u32 interact_bbh_entrance(struct MarioState *m, UNUSED u32 interactType, struct Object *o);
 
 /* |description|
 Handles interaction with warps, including warp pipes and hole warps. If Mario steps onto a warp, he either transitions into another area or level.
-Useful for connecting different parts of the game world and controlling transitions between levels
+Useful for connecting different parts of the game world and controlling transitions between levels as well as custom warp areas
 |descriptionEnd| */
 u32 interact_warp(struct MarioState *m, UNUSED u32 interactType, struct Object *o);
 
@@ -195,13 +194,13 @@ u32 interact_tornado(struct MarioState *m, UNUSED u32 interactType, struct Objec
 
 /* |description|
 Handles interaction with whirlpools. If Mario gets caught in a whirlpool, he's pulled toward it, resulting in a unique "caught" action.
-Useful for underwater hazards that trap Mario and create more challenging underwater navigation
+Useful for hazards that trap Mario like whirlpools
 |descriptionEnd| */
 u32 interact_whirlpool(struct MarioState *m, UNUSED u32 interactType, struct Object *o);
 
 /* |description|
 Handles interaction with strong wind gusts. These gusts push Mario back, often knocking him off platforms or sending him flying backwards.
-Useful for environmental hazards that challenge Mario's platforming skill and positioning
+Useful for environmental wind hazards
 |descriptionEnd| */
 u32 interact_strong_wind(struct MarioState *m, UNUSED u32 interactType, struct Object *o);
 
@@ -212,34 +211,31 @@ Useful for simulating fire damage and hazards in levels
 u32 interact_flame(struct MarioState *m, UNUSED u32 interactType, struct Object *o);
 
 /* |description|
-Handles interaction with Snufit bullets (projectiles fired by certain enemies). If Mario is not protected, he takes damage. Otherwise, the bullet can be destroyed.
-Useful for projectile-based enemy attacks and introducing ranged hazards
+Handles interaction with Snufit bullets (projectiles fired by certain enemies). If Mario is not protected, he takes damage. Otherwise, the bullet can be destroyed
 |descriptionEnd| */
 u32 interact_snufit_bullet(struct MarioState *m, UNUSED u32 interactType, struct Object *o);
 
 /* |description|
 Handles interactions with objects like Clams or Bubbas, which can damage Mario or, in Bubba's case, eat Mario.
-If Bubba eats Mario, it triggers a unique "caught" action. Otherwise, it deals damage and knockback if hit by a Clam.
-Useful for underwater hazards and special enemy behaviors
+If Bubba eats Mario, it triggers a unique "caught" action. Otherwise, it deals damage and knockback if hit by a Clam
 |descriptionEnd| */
 u32 interact_clam_or_bubba(struct MarioState *m, UNUSED u32 interactType, struct Object *o);
 
 /* |description|
 Handles interaction with Bully enemies. Determines if Mario attacks the Bully or gets knocked back. Updates Mario's velocity and state accordingly, and can defeat the Bully if attacked successfully.
-Useful for enemy encounters that involve pushing and shoving mechanics rather than just stomping
+Useful for enemy encounters that involve pushing and shoving mechanics rather than just stomping like the bullies
 |descriptionEnd| */
 u32 interact_bully(struct MarioState *m, UNUSED u32 interactType, struct Object *o);
 
 /* |description|
 Handles interaction with shocking objects. If Mario touches an electrified enemy or hazard, he takes damage and may be stunned or shocked.
-Useful for electric-themed enemies and obstacles that require careful avoidance
+Useful for electric-themed enemies and obstacles
 |descriptionEnd| */
 u32 interact_shock(struct MarioState *m, UNUSED u32 interactType, struct Object *o);
 
 /* |description|
 Handles interaction with Mr. Blizzard (the snowman enemy) or similar objects. 
-If Mario is attacked or collides with Mr. Blizzard, it applies damage and knockback if not protected or attacking.
-Useful for enemy encounters and applying consistent damage reactions
+If Mario is attacked or collides with Mr. Blizzard, it applies damage and knockback if not protected or attacking
 |descriptionEnd| */
 u32 interact_mr_blizzard(struct MarioState *m, UNUSED u32 interactType, struct Object *o);
 
@@ -257,32 +253,32 @@ Useful for enemy defeat mechanics and platform bouncing
 u32 interact_bounce_top(struct MarioState *m, UNUSED u32 interactType, struct Object *o);
 
 /* |description|
-Handles interaction with Spiny-walking enemies. If Mario attacks it (e.g., by punching), the enemy is hurt. If he fails to attack properly, Mario takes damage and knockback.
+Handles interaction with Spiny-walking enemies. If Mario attacks it (e.g., by punching), the enemy is hurt. If he fails to attack properly (say bouncing on top), Mario takes damage and knockback.
 Useful for enemies that cannot be stomped from above and require direct attacks
 |descriptionEnd| */
 u32 interact_spiny_walking(struct MarioState *m, UNUSED u32 interactType, struct Object *o);
 
 /* |description|
 Handles damaging interactions from various objects (e.g., enemies, hazards). If Mario takes damage, it applies knockback and reduces health.
-Useful for enemy attacks, environmental hazards, and ensuring damage feedback and sound effects
+Useful for enemy attacks, environmental hazards, and managing damage related behaviors
 |descriptionEnd| */
 u32 interact_damage(struct MarioState *m, UNUSED u32 interactType, struct Object *o);
 
 /* |description|
 Handles interactions with breakable objects (e.g., breakable boxes or bob-ombs). If Mario hits the object with a valid attack (like a punch or kick), the object is destroyed or changes state.
-Useful for managing collectible items hidden in breakable objects and level progression through destructible blocks
+Useful for managing collectible items hidden in breakable objects and level progression through destructible blocks or walls
 |descriptionEnd| */
 u32 interact_breakable(struct MarioState *m, UNUSED u32 interactType, struct Object *o);
 
 /* |description|
 Handles interaction when Mario touches a Koopa Shell. If conditions are met, Mario can hop onto the shell and start riding it, changing his movement mechanics.
-Useful for introducing new traversal methods and fun movement abilities
+Useful for implementing Koopa Shell behavior
 |descriptionEnd| */
 u32 interact_koopa_shell(struct MarioState *m, UNUSED u32 interactType, struct Object *o);
 
 /* |description|
 Handles interaction with poles (e.g., climbing poles). If Mario runs into a vertical pole, he can grab it and start climbing.
-Useful for platforming mechanics that involve vertical navigation and stunts
+Useful for platforming mechanics
 |descriptionEnd| */
 u32 interact_pole(struct MarioState *m, UNUSED u32 interactType, struct Object *o);
 
@@ -295,31 +291,31 @@ u32 interact_hoot(struct MarioState *m, UNUSED u32 interactType, struct Object *
 /* |description|
 Handles interaction when Mario picks up a cap object. This includes normal caps, wing caps, vanish caps, and metal caps.
 Updates Mario's state (e.g., cap timers, sound effects) and may initiate putting on the cap animation.
-Useful for power-up mechanics and granting Mario temporary abilities
+Useful for managing cap statuses
 |descriptionEnd| */
 u32 interact_cap(struct MarioState *m, UNUSED u32 interactType, struct Object *o);
 
 /* |description|
 Handles interaction with grabbable objects (e.g., crates, small enemies, or Bowser). Checks if Mario can pick up the object and initiates the grab action if possible.
-Useful for puzzle mechanics, throwing items, and unique boss fights that require grabbing
+Useful for course mechanics, throwing items, and bowser
 |descriptionEnd| */
 u32 interact_grabbable(struct MarioState *m, u32 interactType, struct Object *o);
 
 /* |description|
 Handles interaction with signs, NPCs, and other text-bearing objects. If Mario presses the interact button facing them, he enters a dialog reading state.
-Useful for providing hints, story elements, or gameplay instructions through in-game text
+Useful for managing hints, story elements, or gameplay instructions through in-game dialogue
 |descriptionEnd| */
 u32 interact_text(struct MarioState *m, UNUSED u32 interactType, struct Object *o);
 
 /* |description|
 Calculates the angle between Mario and a specified object. Used for determining Mario's orientation relative to the object.
-Useful for deciding attack directions, whether Mario can punch/kick an enemy, or align the camera/player direction
+Useful for deciding directions between Mario and NPCs
 |descriptionEnd| */
 s16 mario_obj_angle_to_object(struct MarioState *m, struct Object *o);
 
 /* |description|
 Stops Mario from riding any currently ridden object (e.g., a Koopa shell or Hoot), updating the object's interaction status and Mario's state.
-Useful for cleanly dismounting ridden objects and ending special movement states
+Useful for cleanly dismounting ridden objects
 |descriptionEnd| */
 void mario_stop_riding_object(struct MarioState *m);
 
@@ -352,7 +348,7 @@ void mario_stop_riding_and_holding(struct MarioState *m);
 /* |description|
 Checks if Mario is currently wearing his normal cap on his head. 
 Returns true if Mario's flag state matches that of having the normal cap equipped on his head, otherwise false.
-Useful for determining which cap-specific abilities or appearances to apply
+Useful for determining Mario's cap status
 |descriptionEnd| */
 u32 does_mario_have_normal_cap_on_head(struct MarioState *m);
 
@@ -366,20 +362,20 @@ void mario_blow_off_cap(struct MarioState *m, f32 capSpeed);
 /* |description|
 Makes Mario lose his normal cap to an enemy, such as Klepto or Ukiki. Updates flags so that the cap is no longer on Mario's head.
 Returns true if Mario was wearing his normal cap, otherwise false.
-Useful for scenarios where enemies steal Mario's cap, affecting his abilities or appearance
+Useful for scenarios where enemies steal Mario's cap
 |descriptionEnd| */
 u32 mario_lose_cap_to_enemy(struct MarioState* m, u32 arg);
 
 /* |description|
 Retrieves Mario's normal cap if it was previously lost. 
 Removes the cap from Mario's hand state and places it on his head.
-Useful when Mario recovers his normal cap from enemies or finds it in the level
+Useful when Mario recovers his normal cap from enemies, finds it in a level, or if it were to disappear
 |descriptionEnd| */
 void mario_retrieve_cap(struct MarioState* m);
 
 /* |description|
 Returns a collided object that matches a given interaction type from Mario's current collision data.
-Useful for determining which object Mario has come into contact with and how to respond
+Useful for determining which object Mario has come into contact with
 |descriptionEnd| */
 struct Object *mario_get_collided_object(struct MarioState *m, u32 interactType);
 
@@ -401,7 +397,7 @@ void mario_handle_special_floors(struct MarioState *m);
 /* |description|
 Checks if the necessary conditions are met for one player to successfully attack another player in a PvP scenario.
 Considers factors like invincibility, action states, and whether the attack is valid.
-Useful for multiplayer modes where players can harm each other and need rules to govern this behavior
+Useful for multiplayer where players can harm each other
 |descriptionEnd| */
 u8 passes_pvp_interaction_checks(struct MarioState* attacker, struct MarioState* victim);
 

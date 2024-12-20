@@ -4615,7 +4615,7 @@ Determines how Mario interacts with a given object based on his current action, 
 ## [does_mario_have_normal_cap_on_head](#does_mario_have_normal_cap_on_head)
 
 ### Description
-Checks if Mario is currently wearing his normal cap on his head. Returns true if Mario's flag state matches that of having the normal cap equipped on his head, otherwise false. Useful for determining which cap-specific abilities or appearances to apply
+Checks if Mario is currently wearing his normal cap on his head. Returns true if Mario's flag state matches that of having the normal cap equipped on his head, otherwise false. Useful for determining Mario's cap status
 
 ### Lua Example
 `local integerValue = does_mario_have_normal_cap_on_head(m)`
@@ -4684,7 +4684,7 @@ Determines the type of cap an object represents. Depending on the object's behav
 ## [interact_bbh_entrance](#interact_bbh_entrance)
 
 ### Description
-Handles Mario's interaction with the Boo's Big Haunt (BBH) entrance object. When Mario tries to enter the BBH area, this function determines the resulting action (e.g., a jump or spin entrance). Useful for managing special course entrances and cutscene triggers
+Handles Mario's interaction with the Boo's Big Haunt (BBH) entrance object. When Mario tries to enter the BBH area, this function determines the resulting action (e.g., a jump or spin entrance)
 
 ### Lua Example
 `local integerValue = interact_bbh_entrance(m, interactType, o)`
@@ -4734,7 +4734,7 @@ Handles interactions where Mario bounces off the top of an object (e.g., Goombas
 ## [interact_breakable](#interact_breakable)
 
 ### Description
-Handles interactions with breakable objects (e.g., breakable boxes or bob-ombs). If Mario hits the object with a valid attack (like a punch or kick), the object is destroyed or changes state. Useful for managing collectible items hidden in breakable objects and level progression through destructible blocks
+Handles interactions with breakable objects (e.g., breakable boxes or bob-ombs). If Mario hits the object with a valid attack (like a punch or kick), the object is destroyed or changes state. Useful for managing collectible items hidden in breakable objects and level progression through destructible blocks or walls
 
 ### Lua Example
 `local integerValue = interact_breakable(m, interactType, o)`
@@ -4759,7 +4759,7 @@ Handles interactions with breakable objects (e.g., breakable boxes or bob-ombs).
 ## [interact_bully](#interact_bully)
 
 ### Description
-Handles interaction with Bully enemies. Determines if Mario attacks the Bully or gets knocked back. Updates Mario's velocity and state accordingly, and can defeat the Bully if attacked successfully. Useful for enemy encounters that involve pushing and shoving mechanics rather than just stomping
+Handles interaction with Bully enemies. Determines if Mario attacks the Bully or gets knocked back. Updates Mario's velocity and state accordingly, and can defeat the Bully if attacked successfully. Useful for enemy encounters that involve pushing and shoving mechanics rather than just stomping like the bullies
 
 ### Lua Example
 `local integerValue = interact_bully(m, interactType, o)`
@@ -4809,7 +4809,7 @@ Handles interaction when Mario touches a cannon base. If the cannon is ready, Ma
 ## [interact_cap](#interact_cap)
 
 ### Description
-Handles interaction when Mario picks up a cap object. This includes normal caps, wing caps, vanish caps, and metal caps. Updates Mario's state (e.g., cap timers, sound effects) and may initiate putting on the cap animation. Useful for power-up mechanics and granting Mario temporary abilities
+Handles interaction when Mario picks up a cap object. This includes normal caps, wing caps, vanish caps, and metal caps. Updates Mario's state (e.g., cap timers, sound effects) and may initiate putting on the cap animation. Useful for managing cap statuses
 
 ### Lua Example
 `local integerValue = interact_cap(m, interactType, o)`
@@ -4834,7 +4834,7 @@ Handles interaction when Mario picks up a cap object. This includes normal caps,
 ## [interact_clam_or_bubba](#interact_clam_or_bubba)
 
 ### Description
-Handles interactions with objects like Clams or Bubbas, which can damage Mario or, in Bubba's case, eat Mario. If Bubba eats Mario, it triggers a unique "caught" action. Otherwise, it deals damage and knockback if hit by a Clam. Useful for underwater hazards and special enemy behaviors
+Handles interactions with objects like Clams or Bubbas, which can damage Mario or, in Bubba's case, eat Mario. If Bubba eats Mario, it triggers a unique "caught" action. Otherwise, it deals damage and knockback if hit by a Clam
 
 ### Lua Example
 `local integerValue = interact_clam_or_bubba(m, interactType, o)`
@@ -4859,7 +4859,7 @@ Handles interactions with objects like Clams or Bubbas, which can damage Mario o
 ## [interact_coin](#interact_coin)
 
 ### Description
-Handles Mario's interaction with coins. Collecting a coin increases Mario's coin count and heals him slightly. Useful for score, health management, and triggering coin-related stars
+Handles Mario's interaction with coins. Collecting a coin increases Mario's coin count and heals him slightly. Useful for score, and coin management
 
 ### Lua Example
 `local integerValue = interact_coin(m, interactType, o)`
@@ -4884,7 +4884,7 @@ Handles Mario's interaction with coins. Collecting a coin increases Mario's coin
 ## [interact_damage](#interact_damage)
 
 ### Description
-Handles damaging interactions from various objects (e.g., enemies, hazards). If Mario takes damage, it applies knockback and reduces health. Useful for enemy attacks, environmental hazards, and ensuring damage feedback and sound effects
+Handles damaging interactions from various objects (e.g., enemies, hazards). If Mario takes damage, it applies knockback and reduces health. Useful for enemy attacks, environmental hazards, and managing damage related behaviors
 
 ### Lua Example
 `local integerValue = interact_damage(m, interactType, o)`
@@ -4959,7 +4959,7 @@ Handles interaction with flame objects. If Mario touches a flame and is not invu
 ## [interact_grabbable](#interact_grabbable)
 
 ### Description
-Handles interaction with grabbable objects (e.g., crates, small enemies, or Bowser). Checks if Mario can pick up the object and initiates the grab action if possible. Useful for puzzle mechanics, throwing items, and unique boss fights that require grabbing
+Handles interaction with grabbable objects (e.g., crates, small enemies, or Bowser). Checks if Mario can pick up the object and initiates the grab action if possible. Useful for course mechanics, throwing items, and bowser
 
 ### Lua Example
 `local integerValue = interact_grabbable(m, interactType, o)`
@@ -5059,7 +5059,7 @@ Handles interaction with the igloo barrier found in Snowman's Land. If Mario run
 ## [interact_koopa_shell](#interact_koopa_shell)
 
 ### Description
-Handles interaction when Mario touches a Koopa Shell. If conditions are met, Mario can hop onto the shell and start riding it, changing his movement mechanics. Useful for introducing new traversal methods and fun movement abilities
+Handles interaction when Mario touches a Koopa Shell. If conditions are met, Mario can hop onto the shell and start riding it, changing his movement mechanics. Useful for implementing Koopa Shell behavior
 
 ### Lua Example
 `local integerValue = interact_koopa_shell(m, interactType, o)`
@@ -5084,7 +5084,7 @@ Handles interaction when Mario touches a Koopa Shell. If conditions are met, Mar
 ## [interact_mr_blizzard](#interact_mr_blizzard)
 
 ### Description
-Handles interaction with Mr. Blizzard (the snowman enemy) or similar objects. If Mario is attacked or collides with Mr. Blizzard, it applies damage and knockback if not protected or attacking. Useful for enemy encounters and applying consistent damage reactions
+Handles interaction with Mr. Blizzard (the snowman enemy) or similar objects. If Mario is attacked or collides with Mr. Blizzard, it applies damage and knockback if not protected or attacking
 
 ### Lua Example
 `local integerValue = interact_mr_blizzard(m, interactType, o)`
@@ -5134,7 +5134,7 @@ Handles interaction with another player (in multiplayer scenarios). Checks if Ma
 ## [interact_pole](#interact_pole)
 
 ### Description
-Handles interaction with poles (e.g., climbing poles). If Mario runs into a vertical pole, he can grab it and start climbing. Useful for platforming mechanics that involve vertical navigation and stunts
+Handles interaction with poles (e.g., climbing poles). If Mario runs into a vertical pole, he can grab it and start climbing. Useful for platforming mechanics
 
 ### Lua Example
 `local integerValue = interact_pole(m, interactType, o)`
@@ -5159,7 +5159,7 @@ Handles interaction with poles (e.g., climbing poles). If Mario runs into a vert
 ## [interact_shock](#interact_shock)
 
 ### Description
-Handles interaction with shocking objects. If Mario touches an electrified enemy or hazard, he takes damage and may be stunned or shocked. Useful for electric-themed enemies and obstacles that require careful avoidance
+Handles interaction with shocking objects. If Mario touches an electrified enemy or hazard, he takes damage and may be stunned or shocked. Useful for electric-themed enemies and obstacles
 
 ### Lua Example
 `local integerValue = interact_shock(m, interactType, o)`
@@ -5184,7 +5184,7 @@ Handles interaction with shocking objects. If Mario touches an electrified enemy
 ## [interact_snufit_bullet](#interact_snufit_bullet)
 
 ### Description
-Handles interaction with Snufit bullets (projectiles fired by certain enemies). If Mario is not protected, he takes damage. Otherwise, the bullet can be destroyed. Useful for projectile-based enemy attacks and introducing ranged hazards
+Handles interaction with Snufit bullets (projectiles fired by certain enemies). If Mario is not protected, he takes damage. Otherwise, the bullet can be destroyed
 
 ### Lua Example
 `local integerValue = interact_snufit_bullet(m, interactType, o)`
@@ -5209,7 +5209,7 @@ Handles interaction with Snufit bullets (projectiles fired by certain enemies). 
 ## [interact_spiny_walking](#interact_spiny_walking)
 
 ### Description
-Handles interaction with Spiny-walking enemies. If Mario attacks it (e.g., by punching), the enemy is hurt. If he fails to attack properly, Mario takes damage and knockback. Useful for enemies that cannot be stomped from above and require direct attacks
+Handles interaction with Spiny-walking enemies. If Mario attacks it (e.g., by punching), the enemy is hurt. If he fails to attack properly (say bouncing on top), Mario takes damage and knockback. Useful for enemies that cannot be stomped from above and require direct attacks
 
 ### Lua Example
 `local integerValue = interact_spiny_walking(m, interactType, o)`
@@ -5259,7 +5259,7 @@ Handles interaction with Stars or Keys. If Mario collects a star or key, it trig
 ## [interact_strong_wind](#interact_strong_wind)
 
 ### Description
-Handles interaction with strong wind gusts. These gusts push Mario back, often knocking him off platforms or sending him flying backwards. Useful for environmental hazards that challenge Mario's platforming skill and positioning
+Handles interaction with strong wind gusts. These gusts push Mario back, often knocking him off platforms or sending him flying backwards. Useful for environmental wind hazards
 
 ### Lua Example
 `local integerValue = interact_strong_wind(m, interactType, o)`
@@ -5284,7 +5284,7 @@ Handles interaction with strong wind gusts. These gusts push Mario back, often k
 ## [interact_text](#interact_text)
 
 ### Description
-Handles interaction with signs, NPCs, and other text-bearing objects. If Mario presses the interact button facing them, he enters a dialog reading state. Useful for providing hints, story elements, or gameplay instructions through in-game text
+Handles interaction with signs, NPCs, and other text-bearing objects. If Mario presses the interact button facing them, he enters a dialog reading state. Useful for managing hints, story elements, or gameplay instructions through in-game dialogue
 
 ### Lua Example
 `local integerValue = interact_text(m, interactType, o)`
@@ -5334,7 +5334,7 @@ Handles interaction with tornados. If Mario touches a tornado, he enters a spinn
 ## [interact_warp](#interact_warp)
 
 ### Description
-Handles interaction with warps, including warp pipes and hole warps. If Mario steps onto a warp, he either transitions into another area or level. Useful for connecting different parts of the game world and controlling transitions between levels
+Handles interaction with warps, including warp pipes and hole warps. If Mario steps onto a warp, he either transitions into another area or level. Useful for connecting different parts of the game world and controlling transitions between levels as well as custom warp areas
 
 ### Lua Example
 `local integerValue = interact_warp(m, interactType, o)`
@@ -5384,7 +5384,7 @@ Handles interaction with warp doors that lead to other areas or require keys. If
 ## [interact_water_ring](#interact_water_ring)
 
 ### Description
-Handles interactions with water rings that heal Mario. Passing through water rings increases his health counter. Useful for underwater stages to sustain Mario's health and encourage collecting rings
+Handles interactions with water rings that heal Mario. Passing through water rings increases his health counter. Useful for underwater stages
 
 ### Lua Example
 `local integerValue = interact_water_ring(m, interactType, o)`
@@ -5409,7 +5409,7 @@ Handles interactions with water rings that heal Mario. Passing through water rin
 ## [interact_whirlpool](#interact_whirlpool)
 
 ### Description
-Handles interaction with whirlpools. If Mario gets caught in a whirlpool, he's pulled toward it, resulting in a unique "caught" action. Useful for underwater hazards that trap Mario and create more challenging underwater navigation
+Handles interaction with whirlpools. If Mario gets caught in a whirlpool, he's pulled toward it, resulting in a unique "caught" action. Useful for hazards that trap Mario like whirlpools
 
 ### Lua Example
 `local integerValue = interact_whirlpool(m, interactType, o)`
@@ -5504,7 +5504,7 @@ Causes Mario to drop the object he is currently holding. Sets the held object's 
 ## [mario_get_collided_object](#mario_get_collided_object)
 
 ### Description
-Returns a collided object that matches a given interaction type from Mario's current collision data. Useful for determining which object Mario has come into contact with and how to respond
+Returns a collided object that matches a given interaction type from Mario's current collision data. Useful for determining which object Mario has come into contact with
 
 ### Lua Example
 `local ObjectValue = mario_get_collided_object(m, interactType)`
@@ -5551,7 +5551,7 @@ Grabs the object currently referenced by Mario's `usedObj` if it's not already b
 ## [mario_lose_cap_to_enemy](#mario_lose_cap_to_enemy)
 
 ### Description
-Makes Mario lose his normal cap to an enemy, such as Klepto or Ukiki. Updates flags so that the cap is no longer on Mario's head. Returns true if Mario was wearing his normal cap, otherwise false. Useful for scenarios where enemies steal Mario's cap, affecting his abilities or appearance
+Makes Mario lose his normal cap to an enemy, such as Klepto or Ukiki. Updates flags so that the cap is no longer on Mario's head. Returns true if Mario was wearing his normal cap, otherwise false. Useful for scenarios where enemies steal Mario's cap
 
 ### Lua Example
 `local integerValue = mario_lose_cap_to_enemy(m, arg)`
@@ -5575,7 +5575,7 @@ Makes Mario lose his normal cap to an enemy, such as Klepto or Ukiki. Updates fl
 ## [mario_obj_angle_to_object](#mario_obj_angle_to_object)
 
 ### Description
-Calculates the angle between Mario and a specified object. Used for determining Mario's orientation relative to the object. Useful for deciding attack directions, whether Mario can punch/kick an enemy, or align the camera/player direction
+Calculates the angle between Mario and a specified object. Used for determining Mario's orientation relative to the object. Useful for deciding directions between Mario and NPCs
 
 ### Lua Example
 `local integerValue = mario_obj_angle_to_object(m, o)`
@@ -5599,7 +5599,7 @@ Calculates the angle between Mario and a specified object. Used for determining 
 ## [mario_retrieve_cap](#mario_retrieve_cap)
 
 ### Description
-Retrieves Mario's normal cap if it was previously lost. Removes the cap from Mario's hand state and places it on his head. Useful when Mario recovers his normal cap from enemies or finds it in the level
+Retrieves Mario's normal cap if it was previously lost. Removes the cap from Mario's hand state and places it on his head. Useful when Mario recovers his normal cap from enemies, finds it in a level, or if it were to disappear
 
 ### Lua Example
 `mario_retrieve_cap(m)`
@@ -5645,7 +5645,7 @@ Causes Mario to stop riding any object (like a shell or Hoot) and also drop any 
 ## [mario_stop_riding_object](#mario_stop_riding_object)
 
 ### Description
-Stops Mario from riding any currently ridden object (e.g., a Koopa shell or Hoot), updating the object's interaction status and Mario's state. Useful for cleanly dismounting ridden objects and ending special movement states
+Stops Mario from riding any currently ridden object (e.g., a Koopa shell or Hoot), updating the object's interaction status and Mario's state. Useful for cleanly dismounting ridden objects
 
 ### Lua Example
 `mario_stop_riding_object(m)`
@@ -5691,7 +5691,7 @@ Throws the object Mario is currently holding. The object is placed in front of M
 ## [passes_pvp_interaction_checks](#passes_pvp_interaction_checks)
 
 ### Description
-Checks if the necessary conditions are met for one player to successfully attack another player in a PvP scenario. Considers factors like invincibility, action states, and whether the attack is valid. Useful for multiplayer modes where players can harm each other and need rules to govern this behavior
+Checks if the necessary conditions are met for one player to successfully attack another player in a PvP scenario. Considers factors like invincibility, action states, and whether the attack is valid. Useful for multiplayer where players can harm each other
 
 ### Lua Example
 `local integerValue = passes_pvp_interaction_checks(attacker, victim)`
