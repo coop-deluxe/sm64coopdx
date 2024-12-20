@@ -177,7 +177,7 @@ ini_t* ini_load(const char *filename) {
     goto fail;
   }
   memset(ini, 0, sizeof(*ini));
-  
+
   /* Open file */
   fp = fopen(filename, "rb");
   if (!fp) {
