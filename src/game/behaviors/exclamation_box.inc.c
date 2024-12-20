@@ -12,24 +12,6 @@ struct ObjectHitbox sExclamationBoxHitbox = {
     /* hurtboxHeight: */ 30,
 };
 
-// hack: if any other sync objects get added here we have to check for them (search for hack in this file)
-struct Struct802C0DF0 sExclamationBoxContents[] = { { 0, 0, 0, MODEL_MARIOS_WING_CAP, bhvWingCap },
-                                                    { 1, 0, 0, MODEL_MARIOS_METAL_CAP, bhvMetalCap },
-                                                    { 2, 0, 0, MODEL_MARIOS_CAP, bhvVanishCap },
-                                                    { 3, 0, 0, MODEL_KOOPA_SHELL, bhvKoopaShell },
-                                                    { 4, 0, 0, MODEL_YELLOW_COIN, bhvSingleCoinGetsSpawned },
-                                                    { 5, 0, 0, MODEL_NONE, bhvThreeCoinsSpawn },
-                                                    { 6, 0, 0, MODEL_NONE, bhvTenCoinsSpawn },
-                                                    { 7, 0, 0, MODEL_1UP, bhv1upWalking },
-                                                    { 8, 0, 0, MODEL_STAR, bhvSpawnedStar },
-                                                    { 9, 0, 0, MODEL_1UP, bhv1upRunningAway },
-                                                    { 10, 0, 1, MODEL_STAR, bhvSpawnedStar },
-                                                    { 11, 0, 2, MODEL_STAR, bhvSpawnedStar },
-                                                    { 12, 0, 3, MODEL_STAR, bhvSpawnedStar },
-                                                    { 13, 0, 4, MODEL_STAR, bhvSpawnedStar },
-                                                    { 14, 0, 5, MODEL_STAR, bhvSpawnedStar },
-                                                    { 99, 0, 0, 0, NULL } };
-
 void bhv_rotating_exclamation_box_loop(void) {
     if (!o->parentObj || o->parentObj->oAction != 1)
         obj_mark_for_deletion(o);
@@ -122,7 +104,8 @@ static s32 exclamation_replace_model(struct MarioState* m, s32 model) {
     }
 }
 
-void exclamation_box_spawn_contents(struct Struct802C0DF0 *a0, u8 a1) {
+void exclamation_box_spawn_contents(struct ExclamationBoxContent *content, u8 itemId) {
+    if (content == NULL) { return; }
     struct MarioState* marioState = nearest_mario_state_to_object(o);
     struct Object* player = marioState ? marioState->marioObj : NULL;
     struct Object *spawnedObject = NULL;
@@ -131,11 +114,11 @@ void exclamation_box_spawn_contents(struct Struct802C0DF0 *a0, u8 a1) {
         return;
     }
 
-    while (a0->unk0 != 99) {
-        if (a1 == a0->unk0) {
-            s32 model = exclamation_replace_model(marioState, a0->model);
+    for (u8 i = 0; i < gExclamationBoxSize; i++) {
+        if (itemId == content->id) {
+            s32 model = exclamation_replace_model(marioState, smlua_model_util_load(content->model));
 
-            spawnedObject = spawn_object(o, model, a0->behavior);
+            spawnedObject = spawn_object(o, model, get_behavior_from_id(content->behavior));
             if (spawnedObject != NULL) {
                 spawnedObject->oVelY = 20.0f;
                 spawnedObject->oForwardVel = 3.0f;
@@ -144,29 +127,30 @@ void exclamation_box_spawn_contents(struct Struct802C0DF0 *a0, u8 a1) {
                     spawnedObject->globalPlayerIndex = player->globalPlayerIndex;
                 }
             }
-            o->oBehParams |= a0->unk2 << 24;
-            if (a0->model == 122)
-                o->oFlags |= 0x4000;
+            o->oBehParams |= content->firstByte << 24;
+            if (content->model == E_MODEL_STAR)
+                o->oFlags |= OBJ_FLAG_PERSISTENT_RESPAWN;
 
             // send non-star spawn events
-            // stars cant be sent here to due jankiness in oBehParams
-            if (a0->behavior != smlua_override_behavior(bhvSpawnedStar) && spawnedObject != NULL) {
-                // hack: if any other sync objects get spawned here we have to check for them
-                if (a0->behavior == smlua_override_behavior(bhvKoopaShell)) {
-                    sync_object_set_id(spawnedObject);
-                }
+            // stars cant be sent here due to jankiness in oBehParams
+            if (content->behavior != get_id_from_behavior(smlua_override_behavior(bhvSpawnedStar)) && spawnedObject != NULL) {
+                // hack: Sync everything
+                sync_object_set_id(spawnedObject);
+                struct SyncObject* so = sync_object_get(spawnedObject->oSyncID);
+                so->extendedModelId = content->model;
+
                 struct Object* spawn_objects[] = { spawnedObject };
                 u32 models[] = { model };
                 network_send_spawn_objects(spawn_objects, models, 1);
             }
             break;
         }
-        a0++;
+        content++;
     }
 }
 
 void exclamation_box_act_4(void) {
-    exclamation_box_spawn_contents(sExclamationBoxContents, o->oBehParams2ndByte);
+    exclamation_box_spawn_contents(gExclamationBoxContents, o->oBehParams2ndByte);
     spawn_mist_particles_variable(0, 0, 46.0f);
     spawn_triangle_break_particles(20, 139, 0.3f, o->oAnimState);
     create_sound_spawner(SOUND_GENERAL_BREAK_BOX);

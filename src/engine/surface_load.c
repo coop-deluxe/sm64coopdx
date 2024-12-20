@@ -348,7 +348,7 @@ static struct Surface *read_surface_data(s16 *vertexData, s16 **vertexIndices) {
  * Returns whether a surface has exertion/moves Mario
  * based on the surface type.
  */
-static bool surface_has_force(s16 surfaceType) {
+bool surface_has_force(s16 surfaceType) {
     return surfaceType == SURFACE_0004 ||
            surfaceType == SURFACE_FLOWING_WATER ||
            surfaceType == SURFACE_HORIZONTAL_WIND ||

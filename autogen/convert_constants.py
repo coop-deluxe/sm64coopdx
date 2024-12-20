@@ -45,14 +45,17 @@ in_files = [
     "src/pc/mods/mod_storage.h",
     "src/game/first_person_cam.h",
     "src/pc/djui/djui_console.h",
-    "src/game/player_palette.h"
+    "src/game/player_palette.h",
+    "src/pc/network/lag_compensation.h",
+    "src/pc/djui/djui_panel_menu.h"
 ]
 
 exclude_constants = {
     "*": [ "^MAXCONTROLLERS$", "^AREA_[^T].*", "^AREA_T[HTO]", "^CONT_ERR.*", "^READ_MASK$", "^SIGN_RANGE$", ],
     "src/game/obj_behaviors.c": [ "^o$" ],
     "src/pc/djui/djui_console.h": [ "CONSOLE_MAX_TMP_BUFFER" ],
-    "src/pc/lua/smlua_hooks.h": [ "MAX_HOOKED_MOD_MENU_ELEMENTS" ]
+    "src/pc/lua/smlua_hooks.h": [ "MAX_HOOKED_MOD_MENU_ELEMENTS" ],
+    "src/pc/djui/djui_panel_menu.h": [ "RAINBOW_TEXT_LEN" ]
 }
 
 include_constants = {

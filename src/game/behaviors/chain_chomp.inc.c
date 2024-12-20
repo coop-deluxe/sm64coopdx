@@ -252,7 +252,7 @@ static void chain_chomp_sub_act_lunge(void) {
 }
 
 static u8 chain_chomp_released_trigger_cutscene_continue_dialog(void) {
-    return (o->oChainChompReleaseStatus != CHAIN_CHOMP_RELEASED_END_CUTSCENE);
+    return o->oChainChompReleaseStatus != CHAIN_CHOMP_RELEASED_END_CUTSCENE;
 }
 
 /**
@@ -267,7 +267,7 @@ static void chain_chomp_released_trigger_cutscene(void) {
     // hack: get the nearest wooden post, this will work properly 99% of the time
     struct Object* woodenPost = cur_obj_nearest_object_with_behavior(bhvWoodenPost);
     struct MarioState* marioState = nearest_mario_state_to_object(woodenPost);
-    if (&gMarioStates[0] == marioState) {
+    if (&gMarioStates[0] == marioState && dynos_level_is_vanilla_level(gCurrLevelNum)) {
         if (set_mario_npc_dialog(&gMarioStates[0], 2, chain_chomp_released_trigger_cutscene_continue_dialog) == 2
             && (o->oMoveFlags & OBJ_MOVE_MASK_ON_GROUND) && cutscene_object(CUTSCENE_STAR_SPAWN, o) == 1) {
             o->oChainChompReleaseStatus = CHAIN_CHOMP_RELEASED_LUNGE_AROUND;

@@ -5,12 +5,15 @@
 
 #include "internal.h"
 #include "types.h"
+#include "src/pc/thread.h"
 
 #define AUDIO_LOCK_UNINITIALIZED 0
 #define AUDIO_LOCK_NOT_LOADING 0x76557364
 #define AUDIO_LOCK_LOADING 0x19710515
 
 #define NUMAIBUFFERS 3
+
+extern struct ThreadHandle gAudioThread;
 
 // constant .data
 #if defined(VERSION_EU) || defined(VERSION_SH)

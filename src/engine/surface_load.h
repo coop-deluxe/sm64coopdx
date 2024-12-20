@@ -33,7 +33,14 @@ u32 get_area_terrain_size(s16 *data);
 
 void load_area_terrain(s16 index, s16 *data, s8 *surfaceRooms, s16 *macroObjects);
 void clear_dynamic_surfaces(void);
+/* |description|
+Loads the object's collision data into dynamic collision.
+You must run this every frame in your object's behavior loop for it to have collision
+|descriptionEnd| */
 void load_object_collision_model(void);
+/* |description|Gets a surface corresponding to `index` from the surface pool buffer|descriptionEnd| */
 struct Surface *obj_get_surface_from_index(struct Object *o, u32 index);
+/* |description||descriptionEnd| */
+bool surface_has_force(s16 surfaceType);
 
 #endif // SURFACE_LOAD_H

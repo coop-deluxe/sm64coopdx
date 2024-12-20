@@ -78,7 +78,6 @@ void djui_panel_join_query(uint64_t aLobbyId, UNUSED uint64_t aOwnerId, uint16_t
     if (!sLobbyLayout) { return; }
     if (!sLobbyPaginated) { return; }
     if (aMaxConnections > MAX_PLAYERS) { return; }
-    if (strstr(aVersion, "v36") || strstr(aVersion, "beta")) { return; }
 
     char playerText[64] = "";
     snprintf(playerText, 63, "%u/%u", aConnections, aMaxConnections);
@@ -88,7 +87,7 @@ void djui_panel_join_query(uint64_t aLobbyId, UNUSED uint64_t aOwnerId, uint16_t
     snprintf(mode, 64, "%s", aMode);
 
     char version[MAX_VERSION_LENGTH] = { 0 };
-    snprintf(version, MAX_VERSION_LENGTH, "%s", get_version_online());
+    snprintf(version, MAX_VERSION_LENGTH, "%s", get_version());
     bool disabled = strcmp(version, aVersion) != 0;
     if (disabled) {
         snprintf(mode, 64, "\\#ff0000\\[%s]", aVersion);
@@ -108,7 +107,7 @@ void djui_panel_join_query_finish(void) {
     djui_base_set_enabled(&sRefreshButton->base, true);
 
     if (sLobbyLayout->base.child == NULL) {
-        struct DjuiText* text = djui_text_create(&sLobbyLayout->base, DLANG(LOBBIES, NONE_FOUND));
+        struct DjuiText* text = djui_text_create(&sLobbyLayout->base, DLANG(LOBBIES, NO_LOBBIES_FOUND));
         djui_base_set_size_type(&text->base, DJUI_SVT_RELATIVE, DJUI_SVT_RELATIVE);
         djui_base_set_size(&text->base, 1, 1);
         djui_text_set_alignment(text, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);

@@ -16,12 +16,9 @@ void smlua_pointer_user_data_add(uintptr_t pointer, CObject *obj) {
     if (pointer == 0) { return; }
 
     if (!sPointers) {
-        sPointers = hmap_create();
+        sPointers = hmap_create(true);
     }
-
-    if (!hmap_get(sPointers, pointer)) {
-        hmap_put(sPointers, pointer, obj);
-    }
+    hmap_put(sPointers, pointer, obj);
 }
 
 void smlua_pointer_user_data_delete(uintptr_t pointer) {

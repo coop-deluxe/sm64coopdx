@@ -4,6 +4,7 @@ extern "C" {
 #include "game/save_file.h"
 #include "levels/scripts.h"
 #include "pc/lua/utils/smlua_level_utils.h"
+#include "game/area.h"
 }
 
 //
@@ -45,6 +46,7 @@ struct DynosLevelScript {
 
 static DynosLevelScript sDynosLevelScripts[LEVEL_COUNT] = { { NULL, DYNOS_LEVEL_MOD_INDEX_VANILLA } };
 static Array<DynosWarp> sDynosLevelWarps[LEVEL_COUNT] = { Array<DynosWarp>() };
+static Collision *sDynosLevelCollision[LEVEL_COUNT][MAX_AREAS] = { NULL };
 
 u64 DynOS_Level_CmdGet(void *aCmd, u64 aOffset) {
     u64 _Offset = (((aOffset) & 3llu) | (((aOffset) & ~3llu) << (sizeof(void *) >> 3llu)));
@@ -154,6 +156,11 @@ static s32 DynOS_Level_PreprocessScript(u8 aType, void *aCmd) {
         case 0x03:
         case 0x04:
             return 3;
+
+        // TERRAIN
+        case 0x2E: {
+            sDynosLevelCollision[sDynosCurrentLevelNum][sDynosAreaIndex] = (Collision*) DynOS_Level_CmdGet(aCmd, 4);
+        } break;
     }
 
     return 0;
@@ -238,6 +245,13 @@ bool DynOS_Level_IsVanillaLevel(s32 aLevel) {
         return sDynosLevelScripts[aLevel].mLevelScript == gDynosLevelScriptsOriginal[aLevel];
     }
     return false;
+}
+
+Collision *DynOS_Level_GetCollision(u32 aLevel, u16 aArea) {
+    if (aLevel >= LEVEL_COUNT) return NULL;
+    if (aArea >= MAX_AREAS) return NULL;
+    DynOS_Level_Init();
+    return sDynosLevelCollision[aLevel][aArea];
 }
 
 //

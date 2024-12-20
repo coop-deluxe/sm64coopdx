@@ -1970,6 +1970,8 @@ s32 execute_mario_action(UNUSED struct Object *o) {
 
     if (gMarioState->knockbackTimer > 0) {
         gMarioState->knockbackTimer--;
+    } else if (gMarioState->knockbackTimer < 0) {
+        gMarioState->knockbackTimer++;
     }
 
     // hide inactive players

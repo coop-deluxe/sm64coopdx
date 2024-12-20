@@ -172,7 +172,10 @@ u64 discord_get_user_id(void) {
 
 void discord_update(void) {
     if (sDiscordFailed) { return; }
-    if (!gDiscordInitialized) { discord_initialize(); }
+    if (!gDiscordInitialized) {
+        if (gCLIOpts.noDiscord) { return; }
+        discord_initialize();
+    }
     if (sDiscordFailed) { return; }
 
     discord_activity_update_check();

@@ -1906,16 +1906,17 @@ s32 lvl_init_from_save_file(UNUSED s16 arg0, s16 levelNum) {
     return levelNum;
 }
 
-s32 lvl_set_current_level(UNUSED s16 arg0, s16 levelNum) {
+s32 lvl_set_current_level(s16 arg0, s16 levelNum) {
     s32 warpCheckpointActive = sWarpCheckpointActive;
+    s16 level = arg0 != 0 ? arg0 : levelNum;
 
     sWarpCheckpointActive = FALSE;
-    gCurrLevelNum = levelNum;
-    gCurrCourseNum = get_level_course_num(levelNum);
+    gCurrLevelNum = level;
+    gCurrCourseNum = get_level_course_num(level);
 
     bool foundHook = false;
     bool hookUseActSelect = false;
-    smlua_call_event_hooks_use_act_select(HOOK_USE_ACT_SELECT, levelNum, &foundHook, &hookUseActSelect);
+    smlua_call_event_hooks_use_act_select(HOOK_USE_ACT_SELECT, level, &foundHook, &hookUseActSelect);
 
     if (!foundHook || !hookUseActSelect) {
         if (gCurrDemoInput != NULL || gCurrCreditsEntry != NULL || gCurrCourseNum == COURSE_NONE) {

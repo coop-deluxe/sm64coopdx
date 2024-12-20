@@ -193,6 +193,11 @@ void mod_clear(struct Mod* mod) {
         mod->incompatible = NULL;
     }
 
+    if (mod->category != NULL) {
+        free(mod->category);
+        mod->category = NULL;
+    }
+
     if (mod->description != NULL) {
         free(mod->description);
         mod->description = NULL;
@@ -407,6 +412,7 @@ static void mod_extract_fields(struct Mod* mod) {
     // default to null
     mod->name = NULL;
     mod->incompatible = NULL;
+    mod->category = NULL;
     mod->description = NULL;
     mod->pausable = true;
     mod->ignoreScriptWarnings = false;
@@ -434,6 +440,11 @@ static void mod_extract_fields(struct Mod* mod) {
             mod->incompatible = calloc(MOD_INCOMPATIBLE_MAX_LENGTH + 1, sizeof(char));
             if (snprintf(mod->incompatible, MOD_INCOMPATIBLE_MAX_LENGTH, "%s", extracted) < 0) {
                 LOG_INFO("Truncated mod incompatible field '%s'", mod->incompatible);
+            }
+        } else if (mod->category == NULL && (extracted = extract_lua_field("-- category:", buffer))) {
+            mod->category = calloc(MOD_CATEGORY_MAX_LENGTH + 1, sizeof(char));
+            if (snprintf(mod->category, MOD_CATEGORY_MAX_LENGTH, "%s", extracted) < 0) {
+                LOG_INFO("Truncated mod category field '%s'", mod->category);
             }
         } else if (mod->description == NULL && (extracted = extract_lua_field("-- description:", buffer))) {
             mod->description = calloc(MOD_DESCRIPTION_MAX_LENGTH + 1, sizeof(char));
@@ -534,6 +545,11 @@ bool mod_load(struct Mods* mods, char* basePath, char* modName) {
     // set name
     if (mod->name == NULL) {
         mod->name = strdup(modName);
+    }
+
+    // set category
+    if ((mod->category == NULL) && (strlen(mod->name) > 5) && (strncmp(mod->name, "[CS] ", 5) == 0)) {
+        mod->category = strdup("cs");
     }
 
     // print

@@ -7,9 +7,7 @@
 
 #ifdef LOADING_SCREEN_SUPPORTED
 
-#include <pthread.h>
-
-#include "cliopts.h"
+#include "src/pc/thread.h"
 #include "djui/djui_hud_utils.h"
 
 struct LoadingSegment {
@@ -20,16 +18,13 @@ struct LoadingSegment {
 extern struct LoadingSegment gCurrLoadingSegment;
 
 #define LOADING_SCREEN_MUTEX(...) \
-    if (!gCLIOpts.hideLoadingScreen && gIsThreaded) { \
-        pthread_mutex_lock(&gLoadingThreadMutex); \
+    if (!gCLIOpts.hideLoadingScreen && gLoadingThread.state == RUNNING) { \
+        pthread_mutex_lock(&gLoadingThread.mutex); \
         __VA_ARGS__; \
-        pthread_mutex_unlock(&gLoadingThreadMutex); \
+        pthread_mutex_unlock(&gLoadingThread.mutex); \
     }
 
-extern pthread_t gLoadingThreadId;
-extern pthread_mutex_t gLoadingThreadMutex;
-
-extern bool gIsThreaded;
+extern struct ThreadHandle gLoadingThread;
 
 void loading_screen_set_segment_text(const char* text);
 void loading_screen_reset_progress_bar(void);

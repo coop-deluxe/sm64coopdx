@@ -24,6 +24,11 @@
 - [CutsceneVariable](#CutsceneVariable)
 - [DateTime](#DateTime)
 - [DjuiColor](#DjuiColor)
+- [DjuiInteractableTheme](#DjuiInteractableTheme)
+- [DjuiPanelTheme](#DjuiPanelTheme)
+- [DjuiTheme](#DjuiTheme)
+- [DjuiThreePanelTheme](#DjuiThreePanelTheme)
+- [ExclamationBoxContent](#ExclamationBoxContent)
 - [FirstPersonCamera](#FirstPersonCamera)
 - [FloorGeometry](#FloorGeometry)
 - [GlobalObjectAnimations](#GlobalObjectAnimations)
@@ -844,6 +849,71 @@
 
 <br />
 
+## [DjuiInteractableTheme](#DjuiInteractableTheme)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| cursorDownBorderColor | [DjuiColor](structs.md#DjuiColor) | read-only |
+| cursorDownRectColor | [DjuiColor](structs.md#DjuiColor) | read-only |
+| defaultBorderColor | [DjuiColor](structs.md#DjuiColor) | read-only |
+| defaultRectColor | [DjuiColor](structs.md#DjuiColor) | read-only |
+| hoveredBorderColor | [DjuiColor](structs.md#DjuiColor) | read-only |
+| hoveredRectColor | [DjuiColor](structs.md#DjuiColor) | read-only |
+| textColor | [DjuiColor](structs.md#DjuiColor) | read-only |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [DjuiPanelTheme](#DjuiPanelTheme)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| hudFontHeader | `boolean` |  |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [DjuiTheme](#DjuiTheme)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| id | `string` | read-only |
+| interactables | [DjuiInteractableTheme](structs.md#DjuiInteractableTheme) | read-only |
+| name | `string` | read-only |
+| panels | [DjuiPanelTheme](structs.md#DjuiPanelTheme) | read-only |
+| threePanels | [DjuiThreePanelTheme](structs.md#DjuiThreePanelTheme) | read-only |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [DjuiThreePanelTheme](#DjuiThreePanelTheme)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| borderColor | [DjuiColor](structs.md#DjuiColor) | read-only |
+| rectColor | [DjuiColor](structs.md#DjuiColor) | read-only |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [ExclamationBoxContent](#ExclamationBoxContent)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| behavior | [enum BehaviorId](constants.md#enum-BehaviorId) |  |
+| firstByte | `integer` |  |
+| id | `integer` |  |
+| model | [enum ModelExtendedId](constants.md#enum-ModelExtendedId) |  |
+| unused | `integer` |  |
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [FirstPersonCamera](#FirstPersonCamera)
 
 | Field | Type | Access |
@@ -1436,9 +1506,11 @@
 | Field | Type | Access |
 | ----- | ---- | ------ |
 | basePath | `string` | read-only |
+| category | `string` | read-only |
 | customBehaviorIndex | `integer` | read-only |
 | description | `string` | read-only |
 | enabled | `boolean` | read-only |
+| fileCapacity | `integer` | read-only |
 | fileCount | `integer` | read-only |
 | ignoreScriptWarnings | `boolean` | read-only |
 | incompatible | `string` | read-only |
@@ -2547,6 +2619,7 @@
 | pauseAnywhere | `integer` |  |
 | playerInteractions | [enum PlayerInteractions](constants.md#enum-PlayerInteractions) |  |
 | playerKnockbackStrength | `integer` |  |
+| pvpType | [enum PvpType](constants.md#enum-PvpType) |  |
 | skipIntro | `integer` |  |
 | stayInLevelAfterStar | `integer` |  |
 

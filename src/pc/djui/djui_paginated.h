@@ -9,6 +9,7 @@ struct DjuiPaginated {
     struct DjuiText* pageNumText;
     s32 startIndex;
     s32 showCount;
+    bool showMaxCount;
 };
 
 void djui_paginated_update_page_buttons(struct DjuiPaginated* paginated);

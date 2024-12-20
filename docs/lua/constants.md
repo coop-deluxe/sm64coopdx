@@ -17,6 +17,8 @@
     - [enum DjuiFontType](#enum-DjuiFontType)
     - [enum HudUtilsFilter](#enum-HudUtilsFilter)
     - [enum HudUtilsResolution](#enum-HudUtilsResolution)
+- [djui_panel_menu.h](#djui_panel_menuh)
+    - [enum DjuiRainbowColor](#enum-DjuiRainbowColor)
 - [envfx_snow.h](#envfx_snowh)
 - [external.h](#externalh)
     - [enum DialogSound](#enum-DialogSound)
@@ -27,6 +29,7 @@
 - [interaction.h](#interactionh)
     - [enum InteractionFlag](#enum-InteractionFlag)
     - [enum InteractionType](#enum-InteractionType)
+- [lag_compensation.h](#lag_compensationh)
 - [level_commands.h](#level_commandsh)
 - [level_defines.h](#level_definesh)
     - [enum LevelNum](#enum-LevelNum)
@@ -45,6 +48,7 @@
     - [enum BouncyLevelBounds](#enum-BouncyLevelBounds)
     - [enum NetworkSystemType](#enum-NetworkSystemType)
     - [enum PlayerInteractions](#enum-PlayerInteractions)
+    - [enum PvpType](#enum-PvpType)
 - [network_player.h](#network_playerh)
     - [enum NetworkPlayerType](#enum-NetworkPlayerType)
 - [obj_behaviors.c](#obj_behaviorsc)
@@ -1110,7 +1114,8 @@
 | FONT_ALIASED | 3 |
 | FONT_CUSTOM_HUD | 4 |
 | FONT_RECOLOR_HUD | 5 |
-| FONT_COUNT | 6 |
+| FONT_SPECIAL | 6 |
+| FONT_COUNT | 7 |
 
 ### [enum HudUtilsFilter](#HudUtilsFilter)
 | Identifier | Value |
@@ -1125,6 +1130,20 @@
 | RESOLUTION_DJUI | 0 |
 | RESOLUTION_N64 | 1 |
 | RESOLUTION_COUNT | 2 |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [djui_panel_menu.h](#djui_panel_menu.h)
+
+### [enum DjuiRainbowColor](#DjuiRainbowColor)
+| Identifier | Value |
+| :--------- | :---- |
+| DJUI_RAINBOW_COLOR_RED | 0 |
+| DJUI_RAINBOW_COLOR_GREEN | 1 |
+| DJUI_RAINBOW_COLOR_BLUE | 2 |
+| DJUI_RAINBOW_COLOR_YELLOW | 3 |
 
 [:arrow_up_small:](#)
 
@@ -1295,6 +1314,9 @@
 - INT_SUBTYPE_SIGN
 - INT_SUBTYPE_STAR_DOOR
 - INT_SUBTYPE_TWIRL_BOUNCE
+- PVP_ATTACK_KNOCKBACK_TIMER_DEFAULT
+- PVP_ATTACK_KNOCKBACK_TIMER_OVERRIDE
+- PVP_ATTACK_OVERRIDE_VANILLA_INVINCIBILITY
 
 ### [enum InteractionFlag](#InteractionFlag)
 | Identifier | Value |
@@ -1346,6 +1368,13 @@
 | INTERACT_SHOCK | (1 << 29) |
 | INTERACT_IGLOO_BARRIER | (1 << 30) |
 | INTERACT_PLAYER | (1 << 31) |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [lag_compensation.h](#lag_compensation.h)
+- MAX_LOCAL_STATE_HISTORY
 
 [:arrow_up_small:](#)
 
@@ -2005,6 +2034,12 @@
 | PLAYER_INTERACTIONS_NONE | 0 |
 | PLAYER_INTERACTIONS_SOLID | 1 |
 | PLAYER_INTERACTIONS_PVP | 2 |
+
+### [enum PvpType](#PvpType)
+| Identifier | Value |
+| :--------- | :---- |
+| PLAYER_PVP_CLASSIC | 0 |
+| PLAYER_PVP_REVAMPED | 1 |
 
 [:arrow_up_small:](#)
 
@@ -3299,7 +3334,8 @@
 | HOOK_ON_LANGUAGE_CHANGED | 44 |
 | HOOK_ON_MODS_LOADED | 45 |
 | HOOK_ON_NAMETAGS_RENDER | 46 |
-| HOOK_MAX | 47 |
+| HOOK_ON_DJUI_THEME_CHANGED | 47 |
+| HOOK_MAX | 48 |
 
 ### [enum LuaModMenuElementType](#LuaModMenuElementType)
 | Identifier | Value |

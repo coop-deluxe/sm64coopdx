@@ -77,6 +77,14 @@ static u8* smlua_text_utils_convert(const char* str) {
     return dialogStr;
 }
 
+// Checks the first 3 characters
+static bool str_starts_with_spaces(const char* str) {
+    for (u8 i = 0; i < 3; i++) {
+        if (str[i] != ' ') { return false; }
+    }
+    return true;
+}
+
 void smlua_text_utils_reset_all(void) {
     void **dialogTable = NULL;
     void **actNameTbl = NULL;
@@ -198,12 +206,13 @@ void smlua_text_utils_dialog_replace(enum DialogId dialogId, UNUSED u32 unused, 
 void smlua_text_utils_course_acts_replace(s16 courseNum, const char* courseName, const char* act1, const char* act2, const char* act3, const char* act4, const char* act5, const char* act6) {
     if (courseNum <= 0 || courseNum > COURSE_RR) { return; }
     struct CourseName* courseActNames = gReplacedActNameTable[courseNum];
-    snprintf(courseActNames->name, 256, "%s", courseName + 3);
+    snprintf(courseActNames->name, 256, "%s", courseName + (3 * (strlen(courseName) > 3)));
     courseActNames->modIndex = gLuaActiveMod->index;
 
-#define REPLACE_ACT_NAME(i) \
-    snprintf(courseActNames->actName[i-1].name, 256, "%s", act##i); \
-    courseActNames->actName[i-1].modIndex = gLuaActiveMod->index; \
+#define REPLACE_ACT_NAME(i) { \
+        snprintf(courseActNames->actName[i-1].name, 256, "%s", act##i); \
+        courseActNames->actName[i-1].modIndex = gLuaActiveMod->index; \
+    }
 
     REPLACE_ACT_NAME(1);
     REPLACE_ACT_NAME(2);
@@ -286,7 +295,7 @@ void smlua_text_utils_secret_star_replace(s16 courseNum, const char* courseName)
     */
 
     struct CourseName* courseActNames = gReplacedActNameTable[courseNum];
-    snprintf(courseActNames->name, 256, "%s", courseName + 3);
+    snprintf(courseActNames->name, 256, "%s", courseName + (3 * str_starts_with_spaces(courseName)));
     courseActNames->modIndex = gLuaActiveMod->index;
 }
 

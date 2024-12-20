@@ -20,7 +20,7 @@ bool djui_language_init(char* lang) {
     char path[SYS_MAX_PATH] = "";
     if (!lang || lang[0] == '\0') { lang = "English"; }
     snprintf(path, SYS_MAX_PATH, "%s/lang/%s.ini", sys_exe_path(), lang);
-    
+
     // load
     sLang = ini_load(path);
 
@@ -35,8 +35,8 @@ char* djui_language_get(const char *section, const char *key) {
 }
 
 char* djui_language_find_key(const char* section, const char* value) {
-	if (!sLang) return NULL;
-	return ini_find_key(sLang, section, value);
+    if (!sLang) return NULL;
+    return (char*)ini_find_key(sLang, section, value);
 }
 
 void djui_language_replace(char* src, char* dst, int size, char key, char* value) {

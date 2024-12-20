@@ -2,1689 +2,2109 @@
 
 --- @param id integer
 --- @return ObjectWarpNode
+--- Finds a warp node in the current area by its ID. The warp node must exist in the list of warp nodes for the current area. Useful for locating a specific warp point in the level, such as teleportation zones or connections to other areas
 function area_get_warp_node(id)
     -- ...
 end
 
 --- @param o Object
 --- @return ObjectWarpNode
+--- Finds a warp node in the current area using parameters from the provided object. The object's behavior parameters are used to determine the warp node ID. Useful for associating an object (like a door or warp pipe) with its corresponding warp node in the area
 function area_get_warp_node_from_params(o)
     -- ...
 end
 
---- @param a0 Vec3f
---- @param a1 Vec3f
+--- @param goal Vec3f
+--- @param pos Vec3f
 --- @param yVel number
 --- @param gravity number
 --- @return integer
-function arc_to_goal_pos(a0, a1, yVel, gravity)
+--- Calculates the time it takes for the current object to follow an arc from `pos` to `goal`
+function arc_to_goal_pos(goal, pos, yVel, gravity)
     -- ...
 end
 
+--- Behavior init function for common 1-Up
 function bhv_1up_common_init()
     -- ...
 end
 
+--- Behavior loop function for hidden 1-Up in pole (Green Demon)
 function bhv_1up_hidden_in_pole_loop()
     -- ...
 end
 
+--- Behavior loop function for 1-Up hidden in pole spawner
 function bhv_1up_hidden_in_pole_spawner_loop()
     -- ...
 end
 
+--- Behavior loop function for 1-Up hidden in pole trigger
 function bhv_1up_hidden_in_pole_trigger_loop()
     -- ...
 end
 
+--- Behavior loop function for hidden 1-Up
 function bhv_1up_hidden_loop()
     -- ...
 end
 
+--- Behavior loop function for hidden 1-Up trigger
 function bhv_1up_hidden_trigger_loop()
     -- ...
 end
 
+--- Behavior init function for 1-Up
 function bhv_1up_init()
     -- ...
 end
 
+--- Behavior loop function for jump on approach 1-Up
 function bhv_1up_jump_on_approach_loop()
     -- ...
 end
 
+--- Behavior loop function for 1-Up
 function bhv_1up_loop()
     -- ...
 end
 
+--- Behavior loop function for running away 1-Up
 function bhv_1up_running_away_loop()
     -- ...
 end
 
+--- Behavior loop function for sliding 1-Up
 function bhv_1up_sliding_loop()
     -- ...
 end
 
+--- Behavior init function for 1-Up trigger
 function bhv_1up_trigger_init()
     -- ...
 end
 
+--- Behavior loop function for walking 1-Up
 function bhv_1up_walking_loop()
     -- ...
 end
 
+--- Behavior init function for Act Selector
 function bhv_act_selector_init()
     -- ...
 end
 
+--- Behavior loop function for Act Selector
 function bhv_act_selector_loop()
     -- ...
 end
 
+--- Behavior loop function for Act Selector star type
 function bhv_act_selector_star_type_loop()
     -- ...
 end
 
+--- Behavior init function for activated back and forth platform in Bowser courses
 function bhv_activated_back_and_forth_platform_init()
     -- ...
 end
 
+--- Behavior loop function for activated back and forth platform in Bowser courses
 function bhv_activated_back_and_forth_platform_update()
     -- ...
 end
 
+--- Behavior loop function for alpha boo key
 function bhv_alpha_boo_key_loop()
     -- ...
 end
 
+--- Behavior init function for ambient sounds
 function bhv_ambient_sounds_init()
     -- ...
 end
 
+--- Behavior loop function for animated texture
 function bhv_animated_texture_loop()
     -- ...
 end
 
+--- Behavior init function for animates on floor switch press in Rainbow Ride and Bowser courses
 function bhv_animates_on_floor_switch_press_init()
     -- ...
 end
 
+--- Behavior loop function for animates on floor switch press in Rainbow Ride and Bowser courses
 function bhv_animates_on_floor_switch_press_loop()
     -- ...
 end
 
+--- Behavior loop function for Wet Dry World arrow lift
 function bhv_arrow_lift_loop()
     -- ...
 end
 
+--- Behavior loop function for Big Boo's Haunt tilting trap platform
 function bhv_bbh_tilting_trap_platform_loop()
     -- ...
 end
 
+--- Behavior loop function for beta boo key
 function bhv_beta_boo_key_loop()
     -- ...
 end
 
+--- Behavior loop function for beta Bowser anchor
 function bhv_beta_bowser_anchor_loop()
     -- ...
 end
 
+--- Behavior init function for beta chest bottom
 function bhv_beta_chest_bottom_init()
     -- ...
 end
 
+--- Behavior loop function for beta chest bottom
 function bhv_beta_chest_bottom_loop()
     -- ...
 end
 
+--- Behavior loop function for beta chest lid
 function bhv_beta_chest_lid_loop()
     -- ...
 end
 
+--- Behavior loop function for beta fish splash spawner
 function bhv_beta_fish_splash_spawner_loop()
     -- ...
 end
 
+--- Behavior init function for beta holdable object
 function bhv_beta_holdable_object_init()
     -- ...
 end
 
+--- Behavior loop function for beta holdable object
 function bhv_beta_holdable_object_loop()
     -- ...
 end
 
+--- Behavior loop function for beta moving flames
 function bhv_beta_moving_flames_loop()
     -- ...
 end
 
+--- Behavior loop function for beta moving flames spawn
 function bhv_beta_moving_flames_spawn_loop()
     -- ...
 end
 
+--- Behavior loop function for beta trampoline spring
 function bhv_beta_trampoline_spring_loop()
     -- ...
 end
 
+--- Behavior loop function for beta trampoline top
 function bhv_beta_trampoline_top_loop()
     -- ...
 end
 
+--- Behavior loop function for Big Boo
 function bhv_big_boo_loop()
     -- ...
 end
 
+--- Behavior loop function for big boulder generator
 function bhv_big_boulder_generator_loop()
     -- ...
 end
 
+--- Behavior init function for big boulder
 function bhv_big_boulder_init()
     -- ...
 end
 
+--- Behavior loop function for big boulder
 function bhv_big_boulder_loop()
     -- ...
 end
 
+--- Behavior init function for Big Bully
 function bhv_big_bully_init()
     -- ...
 end
 
+--- Behavior init function for Big Bully with minions
 function bhv_big_bully_with_minions_init()
     -- ...
 end
 
+--- Behavior loop function for Big Bully with minions
 function bhv_big_bully_with_minions_loop()
     -- ...
 end
 
+--- Behavior loop function for bird
 function bhv_bird_update()
     -- ...
 end
 
+--- Behavior loop function for birds sound
 function bhv_birds_sound_loop()
     -- ...
 end
 
+--- Behavior loop function for Bowser in the Fire Sea sinking cage platform
 function bhv_bitfs_sinking_cage_platform_loop()
     -- ...
 end
 
+--- Behavior loop function for Bowser in the Fire Sea sinking platform
 function bhv_bitfs_sinking_platform_loop()
     -- ...
 end
 
+--- Behavior loop function for black smoke Bowser
 function bhv_black_smoke_bowser_loop()
     -- ...
 end
 
+--- Behavior loop function for black smoke Mario
 function bhv_black_smoke_mario_loop()
     -- ...
 end
 
+--- Behavior loop function for black smoke upward
 function bhv_black_smoke_upward_loop()
     -- ...
 end
 
+--- Behavior init function for Blue Bowser flame
 function bhv_blue_bowser_flame_init()
     -- ...
 end
 
+--- Behavior loop function for Blue Bowser flame
 function bhv_blue_bowser_flame_loop()
     -- ...
 end
 
+--- Behavior loop function for Blue Coin jumping
 function bhv_blue_coin_jumping_loop()
     -- ...
 end
 
+--- Behavior loop function for Blue Coin number
 function bhv_blue_coin_number_loop()
     -- ...
 end
 
+--- Behavior init function for Blue Coin sliding jumping
 function bhv_blue_coin_sliding_jumping_init()
     -- ...
 end
 
+--- Behavior loop function for Blue Coin sliding
 function bhv_blue_coin_sliding_loop()
     -- ...
 end
 
+--- Behavior init function for Blue Coin switch
 function bhv_blue_coin_switch_init()
     -- ...
 end
 
+--- Behavior loop function for Blue Coin switch
 function bhv_blue_coin_switch_loop()
     -- ...
 end
 
+--- Behavior loop function for blue fish movement
 function bhv_blue_fish_movement_loop()
     -- ...
 end
 
+--- Behavior loop function for blue flames group
 function bhv_blue_flames_group_loop()
     -- ...
 end
 
+--- Behavior init function for Bob-omb Battlefield pit bowling ball
 function bhv_bob_pit_bowling_ball_init()
     -- ...
 end
 
+--- Behavior loop function for Bob-omb Battlefield pit bowling ball
 function bhv_bob_pit_bowling_ball_loop()
     -- ...
 end
 
+--- Behavior loop function for Bob-omb anchor mario
 function bhv_bobomb_anchor_mario_loop()
     -- ...
 end
 
+--- Behavior init function for Bob-omb buddy
 function bhv_bobomb_buddy_init()
     -- ...
 end
 
+--- Behavior loop function for Bob-omb buddy
 function bhv_bobomb_buddy_loop()
     -- ...
 end
 
+--- Behavior init function for Bob-omb and Bully death smoke
 function bhv_bobomb_bully_death_smoke_init()
     -- ...
 end
 
+--- Behavior init function for Bob-omb explosion bubble
 function bhv_bobomb_explosion_bubble_init()
     -- ...
 end
 
+--- Behavior loop function for Bob-omb explosion bubble
 function bhv_bobomb_explosion_bubble_loop()
     -- ...
 end
 
+--- Behavior init function for Bob-omb fuse smoke
 function bhv_bobomb_fuse_smoke_init()
     -- ...
 end
 
+--- Behavior init function for Bob-omb
 function bhv_bobomb_init()
     -- ...
 end
 
+--- Behavior loop function for Bob-omb
 function bhv_bobomb_loop()
     -- ...
 end
 
+--- Behavior loop function for Boo boss spawned bridge
 function bhv_boo_boss_spawned_bridge_loop()
     -- ...
 end
 
+--- Behavior init function for Boo cage
 function bhv_boo_cage_init()
     -- ...
 end
 
+--- Behavior loop function for Boo cage
 function bhv_boo_cage_loop()
     -- ...
 end
 
+--- Behavior loop function for the Boo inside the Castle
 function bhv_boo_in_castle_loop()
     -- ...
 end
 
+--- Behavior init function for Boo
 function bhv_boo_init()
     -- ...
 end
 
+--- Behavior loop function for Boo
 function bhv_boo_loop()
     -- ...
 end
 
+--- Behavior init function for Boo with cage
 function bhv_boo_with_cage_init()
     -- ...
 end
 
+--- Behavior loop function for Boo with cage
 function bhv_boo_with_cage_loop()
     -- ...
 end
 
+--- Behavior loop function for Book switch
 function bhv_book_switch_loop()
     -- ...
 end
 
+--- Behavior loop function for Bookend spawn
 function bhv_bookend_spawn_loop()
     -- ...
 end
 
+--- Behavior loop function for bouncing fireball flame
 function bhv_bouncing_fireball_flame_loop()
     -- ...
 end
 
+--- Behavior loop function for bouncing fireball
 function bhv_bouncing_fireball_loop()
     -- ...
 end
 
+--- Behavior init function for bowling ball
 function bhv_bowling_ball_init()
     -- ...
 end
 
+--- Behavior loop function for bowling ball
 function bhv_bowling_ball_loop()
     -- ...
 end
 
+--- Behavior init function for Bowser body anchor
 function bhv_bowser_body_anchor_init()
     -- ...
 end
 
+--- Behavior loop function for Bowser body anchor
 function bhv_bowser_body_anchor_loop()
     -- ...
 end
 
+--- Behavior loop function for Bowser bomb explosion
 function bhv_bowser_bomb_explosion_loop()
     -- ...
 end
 
+--- Behavior loop function for Bowser bomb
 function bhv_bowser_bomb_loop()
     -- ...
 end
 
+--- Behavior loop function for Bowser bomb smoke
 function bhv_bowser_bomb_smoke_loop()
     -- ...
 end
 
+--- Behavior loop function for Bowser course Red Coin Star
 function bhv_bowser_course_red_coin_star_loop()
     -- ...
 end
 
+--- Behavior loop function for Bowser flame spawn
 function bhv_bowser_flame_spawn_loop()
     -- ...
 end
 
+--- Behavior init function for Bowser
 function bhv_bowser_init()
     -- ...
 end
 
+--- Behavior loop function for Bowser key course exit
 function bhv_bowser_key_course_exit_loop()
     -- ...
 end
 
+--- Behavior init function for Bowser key
 function bhv_bowser_key_init()
     -- ...
 end
 
+--- Behavior loop function for Bowser key
 function bhv_bowser_key_loop()
     -- ...
 end
 
+--- Behavior loop function for Bowser key unlock door
 function bhv_bowser_key_unlock_door_loop()
     -- ...
 end
 
+--- Behavior loop function for Bowser
 function bhv_bowser_loop()
     -- ...
 end
 
+--- Behavior loop function for Bowser shock wave
 function bhv_bowser_shock_wave_loop()
     -- ...
 end
 
+--- Behavior init function for Bowser tail anchor
 function bhv_bowser_tail_anchor_init()
     -- ...
 end
 
+--- Behavior loop function for Bowser tail anchor
 function bhv_bowser_tail_anchor_loop()
     -- ...
 end
 
+--- Behavior loop function for Bowser's submarine
 function bhv_bowsers_sub_loop()
     -- ...
 end
 
+--- Behavior loop function for breakable box
 function bhv_breakable_box_loop()
     -- ...
 end
 
+--- Behavior init function for small breakable box
 function bhv_breakable_box_small_init()
     -- ...
 end
 
+--- Behavior loop function for small breakable box
 function bhv_breakable_box_small_loop()
     -- ...
 end
 
+--- Behavior loop function for Bub
 function bhv_bub_loop()
     -- ...
 end
 
+--- Behavior loop function for Bub spawner
 function bhv_bub_spawner_loop()
     -- ...
 end
 
+--- Behavior loop function for Bubba
 function bhv_bubba_loop()
     -- ...
 end
 
+--- Behavior loop function for bubble cannon barrel
 function bhv_bubble_cannon_barrel_loop()
     -- ...
 end
 
+--- Behavior loop function for bubble maybe
 function bhv_bubble_maybe_loop()
     -- ...
 end
 
+--- Behavior loop function for bubble player
 function bhv_bubble_player_loop()
     -- ...
 end
 
+--- Behavior init function for bubble splash
 function bhv_bubble_splash_init()
     -- ...
 end
 
+--- Behavior init function for bubble wave
 function bhv_bubble_wave_init()
     -- ...
 end
 
+--- Behavior init function for Bullet Bill
 function bhv_bullet_bill_init()
     -- ...
 end
 
+--- Behavior loop function for Bullet Bill
 function bhv_bullet_bill_loop()
     -- ...
 end
 
+--- Behavior loop function for Bully
 function bhv_bully_loop()
     -- ...
 end
 
+--- Behavior init function for Butterfly
 function bhv_butterfly_init()
     -- ...
 end
 
+--- Behavior loop function for Butterfly
 function bhv_butterfly_loop()
     -- ...
 end
 
+--- Behavior init function for Camera Lakitu
 function bhv_camera_lakitu_init()
     -- ...
 end
 
+--- Behavior loop function for Camera Lakitu
 function bhv_camera_lakitu_update()
     -- ...
 end
 
+--- Behavior loop function for cannon barrel
 function bhv_cannon_barrel_loop()
     -- ...
 end
 
+--- Behavior loop function for cannon base
 function bhv_cannon_base_loop()
     -- ...
 end
 
+--- Behavior loop function for cannon base unused
 function bhv_cannon_base_unused_loop()
     -- ...
 end
 
+--- Behavior init function for cannon closed
 function bhv_cannon_closed_init()
     -- ...
 end
 
+--- Behavior loop function for cannon closed
 function bhv_cannon_closed_loop()
     -- ...
 end
 
+--- Behavior loop function for Cap Switch
 function bhv_cap_switch_loop()
     -- ...
 end
 
+--- Behavior init function for Castle cannon grate
 function bhv_castle_cannon_grate_init()
     -- ...
 end
 
+--- Behavior init function for castle flag
 function bhv_castle_flag_init()
     -- ...
 end
 
+--- Behavior init function for Bowser in the Dark World floor trap manager
 function bhv_castle_floor_trap_init()
     -- ...
 end
 
+--- Behavior loop function for Bowser in the Dark World floor trap manager
 function bhv_castle_floor_trap_loop()
     -- ...
 end
 
+--- Behavior loop function for Cool, Cool Mountain touched Star spawn
 function bhv_ccm_touched_star_spawn_loop()
     -- ...
 end
 
+--- Behavior init function for Celebration Star
 function bhv_celebration_star_init()
     -- ...
 end
 
+--- Behavior loop function for Celebration Star
 function bhv_celebration_star_loop()
     -- ...
 end
 
+--- Behavior loop function for Celebration Star sparkle
 function bhv_celebration_star_sparkle_loop()
     -- ...
 end
 
+--- Behavior loop function for Chain Chomp chain part
 function bhv_chain_chomp_chain_part_update()
     -- ...
 end
 
+--- Behavior init function for Chain Chomp gate
 function bhv_chain_chomp_gate_init()
     -- ...
 end
 
+--- Behavior loop function for Chain Chomp gate
 function bhv_chain_chomp_gate_update()
     -- ...
 end
 
+--- Behavior loop function for Chain Chomp
 function bhv_chain_chomp_update()
     -- ...
 end
 
+--- Behavior init function for checkerboard elevator group
 function bhv_checkerboard_elevator_group_init()
     -- ...
 end
 
+--- Behavior loop function for checkerboard elevator group
 function bhv_checkerboard_elevator_group_loop()
     -- ...
 end
 
+--- Behavior init function for checkerboard platform
 function bhv_checkerboard_platform_init()
     -- ...
 end
 
+--- Behavior loop function for checkerboard platform
 function bhv_checkerboard_platform_loop()
     -- ...
 end
 
+--- Behavior loop function for Chuckya mario anchor
 function bhv_chuckya_anchor_mario_loop()
     -- ...
 end
 
+--- Behavior loop function for Chuckya
 function bhv_chuckya_loop()
     -- ...
 end
 
+--- Behavior init function for Circling Amp
 function bhv_circling_amp_init()
     -- ...
 end
 
+--- Behavior loop function for Circling Amp
 function bhv_circling_amp_loop()
     -- ...
 end
 
+--- Behavior loop function for Clam
 function bhv_clam_loop()
     -- ...
 end
 
+--- Behavior loop function for cloud part
 function bhv_cloud_part_update()
     -- ...
 end
 
+--- Behavior loop function for cloud
 function bhv_cloud_update()
     -- ...
 end
 
+--- Behavior loop function for coffin
 function bhv_coffin_loop()
     -- ...
 end
 
+--- Behavior loop function for coffin spawner
 function bhv_coffin_spawner_loop()
     -- ...
 end
 
+--- Behavior init function for Coin formation
 function bhv_coin_formation_init()
     -- ...
 end
 
+--- Behavior loop function for Coin formation
 function bhv_coin_formation_loop()
     -- ...
 end
 
+--- Behavior loop function for Coin formation spawn
 function bhv_coin_formation_spawn_loop()
     -- ...
 end
 
+--- Behavior init function for Coin
 function bhv_coin_init()
     -- ...
 end
 
+--- Behavior loop function for Coin inside Boo
 function bhv_coin_inside_boo_loop()
     -- ...
 end
 
+--- Behavior loop function for Coin
 function bhv_coin_loop()
     -- ...
 end
 
+--- Behavior loop function for Coin sparkles
 function bhv_coin_sparkles_loop()
     -- ...
 end
 
+--- Behavior init function for collectable Star
 function bhv_collect_star_init()
     -- ...
 end
 
+--- Behavior loop function for collectable Star
 function bhv_collect_star_loop()
     -- ...
 end
 
+--- Behavior init function for controllable platform
 function bhv_controllable_platform_init()
     -- ...
 end
 
+--- Behavior loop function for controllable platform
 function bhv_controllable_platform_loop()
     -- ...
 end
 
+--- Behavior loop function for controllable sub platform
 function bhv_controllable_platform_sub_loop()
     -- ...
 end
 
+--- Behavior init function for Courtyard Boo triplet
 function bhv_courtyard_boo_triplet_init()
     -- ...
 end
 
+--- Behavior loop function for Dire Dire Docks moving pole
 function bhv_ddd_moving_pole_loop()
     -- ...
 end
 
+--- Behavior init function for Dire Dire Docks pole
 function bhv_ddd_pole_init()
     -- ...
 end
 
+--- Behavior loop function for Dire Dire Docks pole
 function bhv_ddd_pole_update()
     -- ...
 end
 
+--- Behavior loop function for Castle Basement Dire Dire Docks warp collision
 function bhv_ddd_warp_loop()
     -- ...
 end
 
+--- Behavior init function for decorative pendulum
 function bhv_decorative_pendulum_init()
     -- ...
 end
 
+--- Behavior loop function for decorative pendulum
 function bhv_decorative_pendulum_loop()
     -- ...
 end
 
+--- Behavior loop function for donut platform spawner
 function bhv_donut_platform_spawner_update()
     -- ...
 end
 
+--- Behavior loop function for donut platform
 function bhv_donut_platform_update()
     -- ...
 end
 
+--- Behavior init function for door
 function bhv_door_init()
     -- ...
 end
 
+--- Behavior loop function for door
 function bhv_door_loop()
     -- ...
 end
 
+--- Behavior loop function for Dorrie
 function bhv_dorrie_update()
     -- ...
 end
 
+--- Behavior init function for elevator
 function bhv_elevator_init()
     -- ...
 end
 
+--- Behavior loop function for elevator
 function bhv_elevator_loop()
     -- ...
 end
 
+--- Behavior loop function for first end birds
 function bhv_end_birds_1_loop()
     -- ...
 end
 
+--- Behavior loop function for second end birds
 function bhv_end_birds_2_loop()
     -- ...
 end
 
+--- Behavior loop function for Enemy Lakitu
 function bhv_enemy_lakitu_update()
     -- ...
 end
 
+--- Behavior init function for Exclamation Box
 function bhv_exclamation_box_init()
     -- ...
 end
 
+--- Behavior loop function for Exclamation Box
 function bhv_exclamation_box_loop()
     -- ...
 end
 
+--- Behavior init function for explosion
 function bhv_explosion_init()
     -- ...
 end
 
+--- Behavior loop function for explosion
 function bhv_explosion_loop()
     -- ...
 end
 
+--- Behavior init function for Eyerok boss
 function bhv_eyerok_boss_init()
     -- ...
 end
 
+--- Behavior loop function for Eyerok boss
 function bhv_eyerok_boss_loop()
     -- ...
 end
 
+--- Behavior loop function for Eyerok hand
 function bhv_eyerok_hand_loop()
     -- ...
 end
 
+--- Behavior loop function for fading warp
 function bhv_fading_warp_loop()
     -- ...
 end
 
+--- Behavior loop function for falling Bowser in the Sky arena platform
 function bhv_falling_bowser_platform_loop()
     -- ...
 end
 
+--- Behavior loop function for Jolly Roger Bay falling pillar hitbox
 function bhv_falling_pillar_hitbox_loop()
     -- ...
 end
 
+--- Behavior init function for Jolly Roger Bay falling pillar
 function bhv_falling_pillar_init()
     -- ...
 end
 
+--- Behavior loop function for Jolly Roger Bay falling pillar
 function bhv_falling_pillar_loop()
     -- ...
 end
 
+--- Behavior init function for ferris wheel axle
 function bhv_ferris_wheel_axle_init()
     -- ...
 end
 
+--- Behavior init function for ferris wheel platform
 function bhv_ferris_wheel_platform_init()
     -- ...
 end
 
+--- Behavior loop function for ferris wheel platform
 function bhv_ferris_wheel_platform_update()
     -- ...
 end
 
+--- Behavior init function for Fire Piranha Plant
 function bhv_fire_piranha_plant_init()
     -- ...
 end
 
+--- Behavior loop function for Fire Piranha Plant
 function bhv_fire_piranha_plant_update()
     -- ...
 end
 
+--- Behavior loop function for Fire spitter
 function bhv_fire_spitter_update()
     -- ...
 end
 
+--- Behavior loop function for fish group
 function bhv_fish_group_loop()
     -- ...
 end
 
+--- Behavior loop function for fish
 function bhv_fish_loop()
     -- ...
 end
 
+--- Behavior loop function for fish spawner
 function bhv_fish_spawner_loop()
     -- ...
 end
 
+--- Behavior init function for flame bouncing
 function bhv_flame_bouncing_init()
     -- ...
 end
 
+--- Behavior loop function for flame bouncing
 function bhv_flame_bouncing_loop()
     -- ...
 end
 
+--- Behavior init function for Bowser flame
 function bhv_flame_bowser_init()
     -- ...
 end
 
+--- Behavior loop function for Bowser flame
 function bhv_flame_bowser_loop()
     -- ...
 end
 
+--- Behavior init function for flame floating landing
 function bhv_flame_floating_landing_init()
     -- ...
 end
 
+--- Behavior loop function for flame floating landing
 function bhv_flame_floating_landing_loop()
     -- ...
 end
 
+--- Behavior init function for large flame burning out
 function bhv_flame_large_burning_out_init()
     -- ...
 end
 
+--- Behavior loop function for flame Mario
 function bhv_flame_mario_loop()
     -- ...
 end
 
+--- Behavior init function for flame moving forward growing
 function bhv_flame_moving_forward_growing_init()
     -- ...
 end
 
+--- Behavior loop function for flame moving forward growing
 function bhv_flame_moving_forward_growing_loop()
     -- ...
 end
 
+--- Behavior loop function for flamethrower flame
 function bhv_flamethrower_flame_loop()
     -- ...
 end
 
+--- Behavior loop function for flamethrower
 function bhv_flamethrower_loop()
     -- ...
 end
 
+--- Behavior loop function for floating platform
 function bhv_floating_platform_loop()
     -- ...
 end
 
+--- Behavior loop function for Bowser in the Dark World floor trap
 function bhv_floor_trap_in_castle_loop()
     -- ...
 end
 
+--- Behavior loop function for Fly Guy flame
 function bhv_fly_guy_flame_loop()
     -- ...
 end
 
+--- Behavior loop function for Fly Guy
 function bhv_fly_guy_update()
     -- ...
 end
 
+--- Behavior loop function for flying bookend
 function bhv_flying_bookend_loop()
     -- ...
 end
 
+--- Behavior init function for free bowling ball
 function bhv_free_bowling_ball_init()
     -- ...
 end
 
+--- Behavior loop function for free bowling ball
 function bhv_free_bowling_ball_loop()
     -- ...
 end
 
+--- Behavior init function for generic bowling ball spawner
 function bhv_generic_bowling_ball_spawner_init()
     -- ...
 end
 
+--- Behavior loop function for generic bowling ball spawner
 function bhv_generic_bowling_ball_spawner_loop()
     -- ...
 end
 
+--- Behavior loop function for giant pole
 function bhv_giant_pole_loop()
     -- ...
 end
 
+--- Behavior loop function for golden Coin sparkles
 function bhv_golden_coin_sparkles_loop()
     -- ...
 end
 
+--- Behavior init function for Goomba
 function bhv_goomba_init()
     -- ...
 end
 
+--- Behavior loop function for Goomba triplet spawner
 function bhv_goomba_triplet_spawner_update()
     -- ...
 end
 
+--- Behavior loop function for Goomba
 function bhv_goomba_update()
     -- ...
 end
 
+--- Behavior init function for Grand Star
 function bhv_grand_star_init()
     -- ...
 end
 
+--- Behavior loop function for Grand Star
 function bhv_grand_star_loop()
     -- ...
 end
 
+--- Behavior loop function for Grindel and Thwomp
 function bhv_grindel_thwomp_loop()
     -- ...
 end
 
+--- Behavior init function for ground sand
 function bhv_ground_sand_init()
     -- ...
 end
 
+--- Behavior init function for ground snow
 function bhv_ground_snow_init()
     -- ...
 end
 
+--- Behavior loop function for Big Boo's Haunt haunted bookshelf
 function bhv_haunted_bookshelf_loop()
     -- ...
 end
 
+--- Behavior loop function for haunted bookshelf manager
 function bhv_haunted_bookshelf_manager_loop()
     -- ...
 end
 
+--- Behavior init function for Haunted Chair
 function bhv_haunted_chair_init()
     -- ...
 end
 
+--- Behavior loop function for Haunted Chair
 function bhv_haunted_chair_loop()
     -- ...
 end
 
+--- Behavior loop function for Heave ho
 function bhv_heave_ho_loop()
     -- ...
 end
 
+--- Behavior loop function for Heave ho throwing Mario
 function bhv_heave_ho_throw_mario_loop()
     -- ...
 end
 
+--- Behavior loop function for hidden Blue Coin
 function bhv_hidden_blue_coin_loop()
     -- ...
 end
 
+--- Behavior loop function for Wet Dry World hidden breakable box
 function bhv_hidden_object_loop()
     -- ...
 end
 
+--- Behavior init function for Hidden Red Coin Star
 function bhv_hidden_red_coin_star_init()
     -- ...
 end
 
+--- Behavior loop function for Hidden Red Coin Star
 function bhv_hidden_red_coin_star_loop()
     -- ...
 end
 
+--- Behavior init function for Secret Star
 function bhv_hidden_star_init()
     -- ...
 end
 
+--- Behavior loop function for Secret Star
 function bhv_hidden_star_loop()
     -- ...
 end
 
+--- Behavior loop function for Secrets
 function bhv_hidden_star_trigger_loop()
     -- ...
 end
 
+--- Behavior init function for Homing Amp
 function bhv_homing_amp_init()
     -- ...
 end
 
+--- Behavior loop function for Homing Amp
 function bhv_homing_amp_loop()
     -- ...
 end
 
+--- Behavior init function for Hoot
 function bhv_hoot_init()
     -- ...
 end
 
+--- Behavior loop function for Hoot
 function bhv_hoot_loop()
     -- ...
 end
 
+--- Behavior init function for horizontal Grindel
 function bhv_horizontal_grindel_init()
     -- ...
 end
 
+--- Behavior loop function for horizontal Grindel
 function bhv_horizontal_grindel_update()
     -- ...
 end
 
+--- Behavior loop function for idle water wave
 function bhv_idle_water_wave_loop()
     -- ...
 end
 
+--- Behavior init function for changing water level, called when Wet Dry World is loaded
 function bhv_init_changing_water_level_loop()
     -- ...
 end
 
+--- Behavior loop function for intro Lakitu
 function bhv_intro_lakitu_loop()
     -- ...
 end
 
+--- Behavior loop function for intro Peach
 function bhv_intro_peach_loop()
     -- ...
 end
 
+--- Behavior loop function for intro scene
 function bhv_intro_scene_loop()
     -- ...
 end
 
+--- Behavior init function for invisible objects under the Castle bridge
 function bhv_invisible_objects_under_bridge_init()
     -- ...
 end
 
+--- Behavior loop function for Invisible objects under the Castle bridge
 function bhv_invisible_objects_under_bridge_loop()
     -- ...
 end
 
+--- Behavior loop function for jet stream
 function bhv_jet_stream_loop()
     -- ...
 end
 
+--- Behavior loop function for jet stream ring spawner
 function bhv_jet_stream_ring_spawner_loop()
     -- ...
 end
 
+--- Behavior init function for jet stream water ring
 function bhv_jet_stream_water_ring_init()
     -- ...
 end
 
+--- Behavior loop function for jet stream water ring
 function bhv_jet_stream_water_ring_loop()
     -- ...
 end
 
+--- Behavior loop function for Jolly Roger Bay floating box
 function bhv_jrb_floating_box_loop()
     -- ...
 end
 
+--- Behavior loop function for Jolly Roger Bay sliding box
 function bhv_jrb_sliding_box_loop()
     -- ...
 end
 
+--- Behavior loop function for jumping box
 function bhv_jumping_box_loop()
     -- ...
 end
 
+--- Behavior loop function for Whomp's Fortress kickable board
 function bhv_kickable_board_loop()
     -- ...
 end
 
+--- Behavior loop function for King Bob-omb
 function bhv_king_bobomb_loop()
     -- ...
 end
 
+--- Behavior init function for Klepto
 function bhv_klepto_init()
     -- ...
 end
 
+--- Behavior loop function for Klepto
 function bhv_klepto_update()
     -- ...
 end
 
+--- Behavior init function for Koopa
 function bhv_koopa_init()
     -- ...
 end
 
+--- Behavior loop function for Koopa race endpoint
 function bhv_koopa_race_endpoint_update()
     -- ...
 end
 
+--- Behavior loop function for Koopa Shell flame
 function bhv_koopa_shell_flame_loop()
     -- ...
 end
 
+--- Behavior loop function for Koopa Shell
 function bhv_koopa_shell_loop()
     -- ...
 end
 
+--- Behavior loop function for Koopa Shell underwater
 function bhv_koopa_shell_underwater_loop()
     -- ...
 end
 
+--- Behavior loop function for Koopa
 function bhv_koopa_update()
     -- ...
 end
 
+--- Behavior init function for Large Bomp (Whomp's Fortress moving wall with eyes)
 function bhv_large_bomp_init()
     -- ...
 end
 
+--- Behavior loop function for Large Bomp (Whomp's Fortress moving wall with eyes)
 function bhv_large_bomp_loop()
     -- ...
 end
 
+--- Behavior loop function for Lethal Lava Land bowser puzzle
 function bhv_lll_bowser_puzzle_loop()
     -- ...
 end
 
+--- Behavior loop function for Lethal Lava Land bowser puzzle piece
 function bhv_lll_bowser_puzzle_piece_loop()
     -- ...
 end
 
+--- Behavior loop function for Lethal Lava Land drawbridge
 function bhv_lll_drawbridge_loop()
     -- ...
 end
 
+--- Behavior init function for Lethal Lava Land drawbridge spawner
 function bhv_lll_drawbridge_spawner_init()
     -- ...
 end
 
+--- Behavior loop function for Lethal Lava Land drawbridge spawner
 function bhv_lll_drawbridge_spawner_loop()
     -- ...
 end
 
+--- Behavior loop function for Lethal Lava Land floating wood bridge
 function bhv_lll_floating_wood_bridge_loop()
     -- ...
 end
 
+--- Behavior loop function for Lethal Lava Land moving octagonal mesh platform
 function bhv_lll_moving_octagonal_mesh_platform_loop()
     -- ...
 end
 
+--- Behavior init function for Lethal Lava Land rolling log
 function bhv_lll_rolling_log_init()
     -- ...
 end
 
+--- Behavior loop function for Lethal Lava Land rotating block fire bars
 function bhv_lll_rotating_block_fire_bars_loop()
     -- ...
 end
 
+--- Behavior loop function for Lethal Lava Land rotating hex flame
 function bhv_lll_rotating_hex_flame_loop()
     -- ...
 end
 
+--- Behavior loop function for Lethal Lava Land rotating hexagonal ring
 function bhv_lll_rotating_hexagonal_ring_loop()
     -- ...
 end
 
+--- Behavior loop function for Lethal Lava Land sinking rectangular platform
 function bhv_lll_sinking_rectangular_platform_loop()
     -- ...
 end
 
+--- Behavior loop function for Lethal Lava Land sinking rock block
 function bhv_lll_sinking_rock_block_loop()
     -- ...
 end
 
+--- Behavior loop function for Lethal Lava Land sinking square platforms
 function bhv_lll_sinking_square_platforms_loop()
     -- ...
 end
 
+--- Behavior loop function for Lethal Lava Land wood piece
 function bhv_lll_wood_piece_loop()
     -- ...
 end
 
+--- Behavior loop function for Mad Piano
 function bhv_mad_piano_update()
     -- ...
 end
 
+--- Behavior init function for Manta Ray
 function bhv_manta_ray_init()
     -- ...
 end
 
+--- Behavior loop function for Manta Ray
 function bhv_manta_ray_loop()
     -- ...
 end
 
+--- Behavior init function for Manta Ray water ring
 function bhv_manta_ray_water_ring_init()
     -- ...
 end
 
+--- Behavior loop function for Manta Ray water ring
 function bhv_manta_ray_water_ring_loop()
     -- ...
 end
 
+--- Behavior init function for File Select button
 function bhv_menu_button_init()
     -- ...
 end
 
+--- Behavior loop function for File Select button
 function bhv_menu_button_loop()
     -- ...
 end
 
+--- Behavior init function for File Select button manager
 function bhv_menu_button_manager_init()
     -- ...
 end
 
+--- Behavior loop function for File Select button manager
 function bhv_menu_button_manager_loop()
     -- ...
 end
 
+--- Behavior loop function for Merry Go Round Boo manager
 function bhv_merry_go_round_boo_manager_loop()
     -- ...
 end
 
+--- Behavior loop function for Big Boo's Haunt Merry Go Round
 function bhv_merry_go_round_loop()
     -- ...
 end
 
+--- Behavior init function for Metal Cap
 function bhv_metal_cap_init()
     -- ...
 end
 
+--- Behavior loop function for Metal Cap
 function bhv_metal_cap_loop()
     -- ...
 end
 
+--- Behavior init function for Mips
 function bhv_mips_init()
     -- ...
 end
 
+--- Behavior loop function for Mips
 function bhv_mips_loop()
     -- ...
 end
 
+--- Behavior loop function for moat grills
 function bhv_moat_grills_loop()
     -- ...
 end
 
+--- Behavior loop function for Moneybag hidden
 function bhv_moneybag_hidden_loop()
     -- ...
 end
 
+--- Behavior init function for Moneybag
 function bhv_moneybag_init()
     -- ...
 end
 
+--- Behavior loop function for Moneybag
 function bhv_moneybag_loop()
     -- ...
 end
 
+--- Behavior loop function for Monty Mole hole
 function bhv_monty_mole_hole_update()
     -- ...
 end
 
+--- Behavior init function for Monty Mole
 function bhv_monty_mole_init()
     -- ...
 end
 
+--- Behavior loop function for Monty Mole rock
 function bhv_monty_mole_rock_update()
     -- ...
 end
 
+--- Behavior loop function for Monty Mole
 function bhv_monty_mole_update()
     -- ...
 end
 
+--- Behavior init function for moving Blue Coin
 function bhv_moving_blue_coin_init()
     -- ...
 end
 
+--- Behavior loop function for moving Blue Coin
 function bhv_moving_blue_coin_loop()
     -- ...
 end
 
+--- Behavior init function for moving Yellow Coin
 function bhv_moving_yellow_coin_init()
     -- ...
 end
 
+--- Behavior loop function for moving Yellow Coin
 function bhv_moving_yellow_coin_loop()
     -- ...
 end
 
+--- Behavior init function for Mr. Blizzard
 function bhv_mr_blizzard_init()
     -- ...
 end
 
+--- Behavior loop function for Mr. Blizzard's snowball
 function bhv_mr_blizzard_snowball()
     -- ...
 end
 
+--- Behavior loop function for Mr. Blizzard
 function bhv_mr_blizzard_update()
     -- ...
 end
 
+--- Behavior loop function for Mr. I body
 function bhv_mr_i_body_loop()
     -- ...
 end
 
+--- Behavior loop function for Mr. I
 function bhv_mr_i_loop()
     -- ...
 end
 
+--- Behavior loop function for Mr. I particle
 function bhv_mr_i_particle_loop()
     -- ...
 end
 
+--- Behavior init function for Normal Cap
 function bhv_normal_cap_init()
     -- ...
 end
 
+--- Behavior loop function for Normal Cap
 function bhv_normal_cap_loop()
     -- ...
 end
 
+--- Behavior init function for bubble object
 function bhv_object_bubble_init()
     -- ...
 end
 
+--- Behavior loop function for bubble object
 function bhv_object_bubble_loop()
     -- ...
 end
 
+--- Behavior init function for water wave object
 function bhv_object_water_wave_init()
     -- ...
 end
 
+--- Behavior loop function for water wave object
 function bhv_object_water_wave_loop()
     -- ...
 end
 
+--- Behavior loop function for openable cage door
 function bhv_openable_cage_door_loop()
     -- ...
 end
 
+--- Behavior loop function for openable grill
 function bhv_openable_grill_loop()
     -- ...
 end
 
+--- Behavior init function for orange number
 function bhv_orange_number_init()
     -- ...
 end
 
+--- Behavior loop function for orange number
 function bhv_orange_number_loop()
     -- ...
 end
 
+--- Behavior init function for particle
 function bhv_particle_init()
     -- ...
 end
 
+--- Behavior loop function for particle
 function bhv_particle_loop()
     -- ...
 end
 
+--- Behavior loop function for Penguin race finish line
 function bhv_penguin_race_finish_line_update()
     -- ...
 end
 
+--- Behavior loop function for Penguin race shortcut check
 function bhv_penguin_race_shortcut_check_update()
     -- ...
 end
 
+--- Behavior loop function for Piranha particle
 function bhv_piranha_particle_loop()
     -- ...
 end
 
+--- Behavior loop function for Piranha Plant bubble
 function bhv_piranha_plant_bubble_loop()
     -- ...
 end
 
+--- Behavior loop function for Piranha Plant
 function bhv_piranha_plant_loop()
     -- ...
 end
 
+--- Behavior loop function for Piranha Plant waking bubbles
 function bhv_piranha_plant_waking_bubbles_loop()
     -- ...
 end
 
+--- Behavior init function for Bowser in the Dark World, Lethal Lava Land, and Bowser in the Fire Sea platform normals
 function bhv_platform_normals_init()
     -- ...
 end
 
+--- Behavior init function for platform on track
 function bhv_platform_on_track_init()
     -- ...
 end
 
+--- Behavior loop function for platform on track
 function bhv_platform_on_track_update()
     -- ...
 end
 
+--- Behavior loop function for playing a jingle when in a 200 unit radius
 function bhv_play_music_track_when_touched_loop()
     -- ...
 end
 
+--- Behavior loop function for Pokey body part
 function bhv_pokey_body_part_update()
     -- ...
 end
 
+--- Behavior loop function for Pokey
 function bhv_pokey_update()
     -- ...
 end
 
+--- Behavior loop function for pole base
 function bhv_pole_base_loop()
     -- ...
 end
 
+--- Behavior init function for pole
 function bhv_pole_init()
     -- ...
 end
 
+--- Behavior init function for tiny pound star particle
 function bhv_pound_tiny_star_particle_init()
     -- ...
 end
 
+--- Behavior loop function for tiny pound star particle
 function bhv_pound_tiny_star_particle_loop()
     -- ...
 end
 
+--- Behavior init function for pound white puffs
 function bhv_pound_white_puffs_init()
     -- ...
 end
 
+--- Behavior init function for tiny punch triangle
 function bhv_punch_tiny_triangle_init()
     -- ...
 end
 
+--- Behavior loop function for tiny punch triangle
 function bhv_punch_tiny_triangle_loop()
     -- ...
 end
 
+--- Behavior loop function for Purple Switch
 function bhv_purple_switch_loop()
     -- ...
 end
 
+--- Behavior loop function for pushable metal box
 function bhv_pushable_loop()
     -- ...
 end
 
+--- Behavior init function for Pyramid elevator
 function bhv_pyramid_elevator_init()
     -- ...
 end
 
+--- Behavior loop function for Pyramid elevator
 function bhv_pyramid_elevator_loop()
     -- ...
 end
 
+--- Behavior loop function for Pyramid elevator trajectory marker ball
 function bhv_pyramid_elevator_trajectory_marker_ball_loop()
     -- ...
 end
 
+--- Behavior loop function for Pyramid pillar touch detector
 function bhv_pyramid_pillar_touch_detector_loop()
     -- ...
 end
 
+--- Behavior init function for Pyramid top fragment
 function bhv_pyramid_top_fragment_init()
     -- ...
 end
 
+--- Behavior loop function for Pyramid top fragment
 function bhv_pyramid_top_fragment_loop()
     -- ...
 end
 
+--- Behavior init function for Pyramid top
 function bhv_pyramid_top_init()
     -- ...
 end
 
+--- Behavior loop function for Pyramid top
 function bhv_pyramid_top_loop()
     -- ...
 end
 
+--- Behavior init function for Racing Penguin
 function bhv_racing_penguin_init()
     -- ...
 end
 
+--- Behavior loop function for Racing Penguin
 function bhv_racing_penguin_update()
     -- ...
 end
 
+--- Behavior loop function for Recovery Heart
 function bhv_recovery_heart_loop()
     -- ...
 end
 
+--- Behavior init function for Red Coin
 function bhv_red_coin_init()
     -- ...
 end
 
+--- Behavior loop function for Red Coin
 function bhv_red_coin_loop()
     -- ...
 end
 
+--- Behavior init function for Red Coin Star marker
 function bhv_red_coin_star_marker_init()
     -- ...
 end
 
+--- Behavior loop function for respawner
 function bhv_respawner_loop()
     -- ...
 end
 
+--- Behavior loop function for rolling log
 function bhv_rolling_log_loop()
     -- ...
 end
 
+--- Behavior loop function for rotating clock arm
 function bhv_rotating_clock_arm_loop()
     -- ...
 end
 
+--- Behavior loop function for rotating exclamation mark
 function bhv_rotating_exclamation_box_loop()
     -- ...
 end
 
+--- Behavior init function for Rotating octagonal platform in Rainbow Ride and Bowser in the Sky
 function bhv_rotating_octagonal_plat_init()
     -- ...
 end
 
+--- Behavior loop function for Rotating octagonal platform in Rainbow Ride and Bowser in the Sky
 function bhv_rotating_octagonal_plat_loop()
     -- ...
 end
 
+--- Behavior loop function for rotating platform
 function bhv_rotating_platform_loop()
     -- ...
 end
 
+--- Behavior init function for Rainbow Ride cruiser wing
 function bhv_rr_cruiser_wing_init()
     -- ...
 end
 
+--- Behavior loop function for Rainbow Ride cruiser wing
 function bhv_rr_cruiser_wing_loop()
     -- ...
 end
 
+--- Behavior loop function for Rainbow Ride rotating bridge platform
 function bhv_rr_rotating_bridge_platform_loop()
     -- ...
 end
 
+--- Behavior loop function for sand sound
 function bhv_sand_sound_loop()
     -- ...
 end
 
+--- Behavior loop function for Scuttlebug
 function bhv_scuttlebug_loop()
     -- ...
 end
 
+--- Behavior loop function for Scuttlebug spawner
 function bhv_scuttlebug_spawn_loop()
     -- ...
 end
 
+--- Behavior init function for seaweed bundle
 function bhv_seaweed_bundle_init()
     -- ...
 end
 
+--- Behavior init function for seaweed
 function bhv_seaweed_init()
     -- ...
 end
 
+--- Behavior init function for seesaw platform
 function bhv_seesaw_platform_init()
     -- ...
 end
 
+--- Behavior loop function for seesaw platform
 function bhv_seesaw_platform_update()
     -- ...
 end
 
+--- Behavior init function for shallow water splash
 function bhv_shallow_water_splash_init()
     -- ...
 end
 
+--- Behavior loop function for Jolly Roger Bay ship part 3
 function bhv_ship_part_3_loop()
     -- ...
 end
 
+--- Behavior loop function for Skeeter
 function bhv_skeeter_update()
     -- ...
 end
 
+--- Behavior loop function for Skeeter wave
 function bhv_skeeter_wave_update()
     -- ...
 end
 
+--- Behavior loop function for Snowman's Land snowman wind
 function bhv_sl_snowman_wind_loop()
     -- ...
 end
 
+--- Behavior loop function for Snowman's Land walking penguin
 function bhv_sl_walking_penguin_loop()
     -- ...
 end
 
+--- Behavior init function for sliding platform 2 in Rainbow Ride and Bowser courses
 function bhv_sliding_plat_2_init()
     -- ...
 end
 
+--- Behavior loop function for sliding platform 2 in Rainbow Ride and Bowser courses
 function bhv_sliding_plat_2_loop()
     -- ...
 end
 
+--- Behavior loop function for sliding snow mound
 function bhv_sliding_snow_mound_loop()
     -- ...
 end
 
+--- Behavior init function for Small Bomp (Whomp's Fortress moving wall with eyes)
 function bhv_small_bomp_init()
     -- ...
 end
 
+--- Behavior loop function for Small Bomp (Whomp's Fortress moving wall with eyes)
 function bhv_small_bomp_loop()
     -- ...
 end
 
+--- Behavior loop function for small bubbles
 function bhv_small_bubbles_loop()
     -- ...
 end
 
+--- Behavior init function for Small Bully
 function bhv_small_bully_init()
     -- ...
 end
 
+--- Behavior loop function for small penguin
 function bhv_small_penguin_loop()
     -- ...
 end
 
+--- Behavior loop function for Small Piranha flame
 function bhv_small_piranha_flame_loop()
     -- ...
 end
 
+--- Behavior loop function for small water wave
 function bhv_small_water_wave_loop()
     -- ...
 end
 
+--- Behavior init function for snow leaf particle spawn
 function bhv_snow_leaf_particle_spawn_init()
     -- ...
 end
 
+--- Behavior loop function for snow mound spawn
 function bhv_snow_mound_spawn_loop()
     -- ...
 end
 
+--- Behavior loop function for Snowman's body checkpoint
 function bhv_snowmans_body_checkpoint_loop()
     -- ...
 end
 
+--- Behavior init function for Snowman's bottom
 function bhv_snowmans_bottom_init()
     -- ...
 end
 
+--- Behavior loop function for Snowman's bottom
 function bhv_snowmans_bottom_loop()
     -- ...
 end
 
+--- Behavior init function for Snowman's head
 function bhv_snowmans_head_init()
     -- ...
 end
 
+--- Behavior loop function for Snowman's head
 function bhv_snowmans_head_loop()
     -- ...
 end
 
+--- Behavior loop function for Snufit balls
 function bhv_snufit_balls_loop()
     -- ...
 end
 
+--- Behavior loop function for Snufit
 function bhv_snufit_loop()
     -- ...
 end
 
+--- Behavior init function for sound spawner
 function bhv_sound_spawner_init()
     -- ...
 end
 
+--- Behavior loop function for sparkle spawner
 function bhv_sparkle_spawn_loop()
     -- ...
 end
@@ -1692,534 +2112,667 @@ end
 --- @param object Object
 --- @param params integer
 --- @param networkSendEvent integer
+--- Spawns a Star parented to `object` that won't make Mario exit the level with an ID corresponding to `params`' first byte
 function bhv_spawn_star_no_level_exit(object, params, networkSendEvent)
     -- ...
 end
 
+--- Behavior init function for spawned star
 function bhv_spawned_star_init()
     -- ...
 end
 
+--- Behavior loop function for Spawned star
 function bhv_spawned_star_loop()
     -- ...
 end
 
+--- Behavior init function for Spindel
 function bhv_spindel_init()
     -- ...
 end
 
+--- Behavior loop function for Spindel
 function bhv_spindel_loop()
     -- ...
 end
 
+--- Behavior loop function for Spindrift
 function bhv_spindrift_loop()
     -- ...
 end
 
+--- Behavior loop function for Spiny
 function bhv_spiny_update()
     -- ...
 end
 
+--- Behavior loop function for Bowser in the Dark World squarish path moving
 function bhv_squarish_path_moving_loop()
     -- ...
 end
 
+--- Behavior init function for Bowser in the Dark World squarish path parent
 function bhv_squarish_path_parent_init()
     -- ...
 end
 
+--- Behavior loop function for Bowser in the Dark World Ssuarish path parent
 function bhv_squarish_path_parent_loop()
     -- ...
 end
 
+--- Behavior loop function for squishable platform
 function bhv_squishable_platform_loop()
     -- ...
 end
 
+--- Behavior init function for Ssl moving pyramid wall
 function bhv_ssl_moving_pyramid_wall_init()
     -- ...
 end
 
+--- Behavior loop function for Ssl moving pyramid wall
 function bhv_ssl_moving_pyramid_wall_loop()
     -- ...
 end
 
+--- Behavior loop function for Star Door
 function bhv_star_door_loop()
     -- ...
 end
 
+--- Behavior loop function for Star Door
 function bhv_star_door_loop_2()
     -- ...
 end
 
+--- Behavior loop function for Star and key collection puff spawner
 function bhv_star_key_collection_puff_spawner_loop()
     -- ...
 end
 
+--- Behavior loop function for Star number
 function bhv_star_number_loop()
     -- ...
 end
 
+--- Behavior init function for Star spawn
 function bhv_star_spawn_init()
     -- ...
 end
 
+--- Behavior loop function for Star spawn
 function bhv_star_spawn_loop()
     -- ...
 end
 
+--- Behavior loop function for static checkered platform
 function bhv_static_checkered_platform_loop()
     -- ...
 end
 
+--- Behavior loop function for strong wind particle
 function bhv_strong_wind_particle_loop()
     -- ...
 end
 
+--- Behavior loop function for Jolly Roger Bay sunken ship part
 function bhv_sunken_ship_part_loop()
     -- ...
 end
 
+--- Behavior loop function for Sushi Shark collision
 function bhv_sushi_shark_collision_loop()
     -- ...
 end
 
+--- Behavior loop function for Sushi Shark
 function bhv_sushi_shark_loop()
     -- ...
 end
 
+--- Behavior init function for swing platform
 function bhv_swing_platform_init()
     -- ...
 end
 
+--- Behavior loop function for swing platform
 function bhv_swing_platform_update()
     -- ...
 end
 
+--- Behavior loop function for Swoop
 function bhv_swoop_update()
     -- ...
 end
 
+--- Behavior loop function for tank fish group
 function bhv_tank_fish_group_loop()
     -- ...
 end
 
+--- Behavior loop function for despawning Coin
 function bhv_temp_coin_loop()
     -- ...
 end
 
+--- Behavior loop function for Tiny Huge Island bowling ball spawner
 function bhv_thi_bowling_ball_spawner_loop()
     -- ...
 end
 
+--- Behavior loop function for Tiny Huge Island huge island top
 function bhv_thi_huge_island_top_loop()
     -- ...
 end
 
+--- Behavior loop function for Tiny Huge Island tiny island top
 function bhv_thi_tiny_island_top_loop()
     -- ...
 end
 
+--- Behavior init function for tilting Bowser in the Fire Sea arena platform
 function bhv_tilting_bowser_lava_platform_init()
     -- ...
 end
 
+--- Behavior loop function for Lethal Lava Land and Bowser in the Fire Sea tilting inverted pyramid
 function bhv_tilting_inverted_pyramid_loop()
     -- ...
 end
 
+--- Behavior init function for tiny Star particles
 function bhv_tiny_star_particles_init()
     -- ...
 end
 
+--- Behavior loop function for Whomp's Fortress tower door
 function bhv_tower_door_loop()
     -- ...
 end
 
+--- Behavior init function for Whomp's Fortress tower platform group
 function bhv_tower_platform_group_init()
     -- ...
 end
 
+--- Behavior loop function for Whomp's Fortress tower platform group
 function bhv_tower_platform_group_loop()
     -- ...
 end
 
+--- Behavior loop function for Tox Box
 function bhv_tox_box_loop()
     -- ...
 end
 
+--- Behavior loop function for track ball
 function bhv_track_ball_update()
     -- ...
 end
 
+--- Behavior init function for treasure chest bottom
 function bhv_treasure_chest_bottom_init()
     -- ...
 end
 
+--- Behavior loop function for treasure chest bottom
 function bhv_treasure_chest_bottom_loop()
     -- ...
 end
 
+--- Behavior init function for treasure chest
 function bhv_treasure_chest_init()
     -- ...
 end
 
+--- Behavior init function for treasure chest jrb
 function bhv_treasure_chest_jrb_init()
     -- ...
 end
 
+--- Behavior loop function for treasure chest jrb
 function bhv_treasure_chest_jrb_loop()
     -- ...
 end
 
+--- Behavior loop function for treasure chest
 function bhv_treasure_chest_loop()
     -- ...
 end
 
+--- Behavior init function for treasure chest ship
 function bhv_treasure_chest_ship_init()
     -- ...
 end
 
+--- Behavior loop function for treasure chest ship
 function bhv_treasure_chest_ship_loop()
     -- ...
 end
 
+--- Behavior loop function for treasure chest top
 function bhv_treasure_chest_top_loop()
     -- ...
 end
 
+--- Behavior loop function for tree snow or leaf particle
 function bhv_tree_snow_or_leaf_loop()
     -- ...
 end
 
+--- Behavior loop function for a triplet of butterflies
 function bhv_triplet_butterfly_update()
     -- ...
 end
 
+--- Behavior init function for Tick Tock Clock 2D rotator
 function bhv_ttc_2d_rotator_init()
     -- ...
 end
 
+--- Behavior loop function for Tick Tock Clock 2D rotator
 function bhv_ttc_2d_rotator_update()
     -- ...
 end
 
+--- Behavior init function for Tick Tock Clock cog
 function bhv_ttc_cog_init()
     -- ...
 end
 
+--- Behavior loop function for Tick Tock Clock cog
 function bhv_ttc_cog_update()
     -- ...
 end
 
+--- Behavior init function for Tick Tock Clock elevator
 function bhv_ttc_elevator_init()
     -- ...
 end
 
+--- Behavior loop function for Tick Tock Clock elevator
 function bhv_ttc_elevator_update()
     -- ...
 end
 
+--- Behavior init function for Tick Tock Clock moving bar
 function bhv_ttc_moving_bar_init()
     -- ...
 end
 
+--- Behavior loop function for Tick Tock Clock moving bar
 function bhv_ttc_moving_bar_update()
     -- ...
 end
 
+--- Behavior init function for Tick Tock Clock pendulum
 function bhv_ttc_pendulum_init()
     -- ...
 end
 
+--- Behavior loop function for Tick Tock Clock pendulum
 function bhv_ttc_pendulum_update()
     -- ...
 end
 
+--- Behavior init function for Tick Tock Clock pit block
 function bhv_ttc_pit_block_init()
     -- ...
 end
 
+--- Behavior loop function for Tick Tock Clock pit block
 function bhv_ttc_pit_block_update()
     -- ...
 end
 
+--- Behavior init function for Tick Tock Clock rotating solid
 function bhv_ttc_rotating_solid_init()
     -- ...
 end
 
+--- Behavior loop function for Tick Tock Clock rotating solid
 function bhv_ttc_rotating_solid_update()
     -- ...
 end
 
+--- Behavior loop function for Tick Tock Clock spinner
 function bhv_ttc_spinner_update()
     -- ...
 end
 
+--- Behavior init function for Tick Tock Clock treadmill
 function bhv_ttc_treadmill_init()
     -- ...
 end
 
+--- Behavior loop function for Tick Tock Clock treadmill
 function bhv_ttc_treadmill_update()
     -- ...
 end
 
+--- Behavior init function for Tall, Tall Mountain rolling log
 function bhv_ttm_rolling_log_init()
     -- ...
 end
 
+--- Behavior loop function for tumbling bridge
 function bhv_tumbling_bridge_loop()
     -- ...
 end
 
+--- Behavior loop function for tumbling bridge platform
 function bhv_tumbling_bridge_platform_loop()
     -- ...
 end
 
+--- Behavior loop function for Tuxie's mother
 function bhv_tuxies_mother_loop()
     -- ...
 end
 
+--- Behavior loop function for Tweester
 function bhv_tweester_loop()
     -- ...
 end
 
+--- Behavior loop function for Tweester sand particle
 function bhv_tweester_sand_particle_loop()
     -- ...
 end
 
+--- Behavior loop function for Ukiki cage
 function bhv_ukiki_cage_loop()
     -- ...
 end
 
+--- Behavior loop function for Ukiki cage Star
 function bhv_ukiki_cage_star_loop()
     -- ...
 end
 
+--- Behavior init function for Ukiki
 function bhv_ukiki_init()
     -- ...
 end
 
+--- Behavior loop function for Ukiki
 function bhv_ukiki_loop()
     -- ...
 end
 
+--- Behavior init function for Unagi
 function bhv_unagi_init()
     -- ...
 end
 
+--- Behavior loop function for Unagi
 function bhv_unagi_loop()
     -- ...
 end
 
+--- Behavior loop function for Unagi subobject
 function bhv_unagi_subobject_loop()
     -- ...
 end
 
+--- Behavior loop function for unused particle spawn
 function bhv_unused_particle_spawn_loop()
     -- ...
 end
 
+--- Behavior loop function for unused poundable platform
 function bhv_unused_poundable_platform()
     -- ...
 end
 
+--- Behavior init function for Vanish Cap
 function bhv_vanish_cap_init()
     -- ...
 end
 
+--- Behavior loop function for Volcano flames
 function bhv_volcano_flames_loop()
     -- ...
 end
 
+--- Behavior loop function for volcano sound
 function bhv_volcano_sound_loop()
     -- ...
 end
 
+--- Behavior loop function for volcano trap
 function bhv_volcano_trap_loop()
     -- ...
 end
 
+--- Behavior loop function for tiny wall star particle
 function bhv_wall_tiny_star_particle_loop()
     -- ...
 end
 
+--- Behavior loop function for warp
 function bhv_warp_loop()
     -- ...
 end
 
+--- Behavior init function for water air bubble
 function bhv_water_air_bubble_init()
     -- ...
 end
 
+--- Behavior loop function for water air bubble
 function bhv_water_air_bubble_loop()
     -- ...
 end
 
+--- Behavior loop function for water bomb cannon
 function bhv_water_bomb_cannon_loop()
     -- ...
 end
 
+--- Behavior loop function for water bomb shadow
 function bhv_water_bomb_shadow_update()
     -- ...
 end
 
+--- Behavior loop function for water bomb spawner
 function bhv_water_bomb_spawner_update()
     -- ...
 end
 
+--- Behavior loop function for water bomb
 function bhv_water_bomb_update()
     -- ...
 end
 
+--- Behavior loop function for water droplet
 function bhv_water_droplet_loop()
     -- ...
 end
 
+--- Behavior init function for water droplet splash
 function bhv_water_droplet_splash_init()
     -- ...
 end
 
+--- Behavior loop function for Wet Dry World water level diamond
 function bhv_water_level_diamond_loop()
     -- ...
 end
 
+--- Behavior init function for Castle Basement water level pillar
 function bhv_water_level_pillar_init()
     -- ...
 end
 
+--- Behavior loop function for Castle Basement water level pillar
 function bhv_water_level_pillar_loop()
     -- ...
 end
 
+--- Behavior loop function for water mist 2
 function bhv_water_mist_2_loop()
     -- ...
 end
 
+--- Behavior loop function for water mist
 function bhv_water_mist_loop()
     -- ...
 end
 
+--- Behavior loop function for water mist spawn
 function bhv_water_mist_spawn_loop()
     -- ...
 end
 
+--- Behavior init function for spawning water splash droplets
 function bhv_water_splash_spawn_droplets()
     -- ...
 end
 
+--- Behavior init function for water waves
 function bhv_water_waves_init()
     -- ...
 end
 
+--- Behavior loop function for waterfall sound
 function bhv_waterfall_sound_loop()
     -- ...
 end
 
+--- Behavior loop function for shrinking water trail
 function bhv_wave_trail_shrink()
     -- ...
 end
 
+--- Behavior loop function for Wet Dry World express elevator
 function bhv_wdw_express_elevator_loop()
     -- ...
 end
 
+--- Behavior loop function for Whomp's Fortress breakable wall
 function bhv_wf_breakable_wall_loop()
     -- ...
 end
 
+--- Behavior loop function for Whomp's Fortress elevator tower platform
 function bhv_wf_elevator_tower_platform_loop()
     -- ...
 end
 
+--- Behavior init function for Whomp's Fortress rotating wooden platform
 function bhv_wf_rotating_wooden_platform_init()
     -- ...
 end
 
+--- Behavior loop function for Whomp's Fortress rotating wooden platform
 function bhv_wf_rotating_wooden_platform_loop()
     -- ...
 end
 
+--- Behavior init function for Whomp's Fortress sliding platform
 function bhv_wf_sliding_platform_init()
     -- ...
 end
 
+--- Behavior loop function for Whomp's Fortress sliding platform
 function bhv_wf_sliding_platform_loop()
     -- ...
 end
 
+--- Behavior loop function for Whomp's Fortress sliding tower platform
 function bhv_wf_sliding_tower_platform_loop()
     -- ...
 end
 
+--- Behavior loop function for Whomp's Fortress solid tower platform
 function bhv_wf_solid_tower_platform_loop()
     -- ...
 end
 
+--- Behavior init function for whirlpool
 function bhv_whirlpool_init()
     -- ...
 end
 
+--- Behavior loop function for whirlpool
 function bhv_whirlpool_loop()
     -- ...
 end
 
+--- Behavior loop function for white puff 1
 function bhv_white_puff_1_loop()
     -- ...
 end
 
+--- Behavior loop function for white puff 2
 function bhv_white_puff_2_loop()
     -- ...
 end
 
+--- Behavior loop function for white puff exploding
 function bhv_white_puff_exploding_loop()
     -- ...
 end
 
+--- Behavior init function for White puff smoke
 function bhv_white_puff_smoke_init()
     -- ...
 end
 
+--- Behavior loop function for Whomp
 function bhv_whomp_loop()
     -- ...
 end
 
+--- Behavior loop function for Wiggler body part
 function bhv_wiggler_body_part_update()
     -- ...
 end
 
+--- Behavior loop function for Wiggler
 function bhv_wiggler_update()
     -- ...
 end
 
+--- Behavior loop function for wind
 function bhv_wind_loop()
     -- ...
 end
 
+--- Behavior init function for Wing Cap
 function bhv_wing_cap_init()
     -- ...
 end
 
+--- Behavior loop function for Wing and Vanish caps
 function bhv_wing_vanish_cap_loop()
     -- ...
 end
 
+--- Behavior loop function for ground poundable wooden post
 function bhv_wooden_post_update()
     -- ...
 end
 
+--- Behavior init function for Yellow Coin
 function bhv_yellow_coin_init()
     -- ...
 end
 
+--- Behavior loop function for Yellow Coin
 function bhv_yellow_coin_loop()
     -- ...
 end
 
+--- Behavior init function for Yoshi
 function bhv_yoshi_init()
     -- ...
 end
 
+--- Behavior loop function for Yoshi
 function bhv_yoshi_loop()
     -- ...
 end
@@ -2227,11 +2780,13 @@ end
 --- @param a0 number
 --- @param a1 number
 --- @return integer
+--- Checks if the current object is moving `a1` units over a floor and within a threshold of `a0`
 function check_if_moving_over_floor(a0, a1)
     -- ...
 end
 
 --- @param flags integer
+--- Clears the particle flags of the current object
 function clear_particle_flags(flags)
     -- ...
 end
@@ -2239,6 +2794,7 @@ end
 --- @param sp28 number
 --- @param sp2C number
 --- @param sp30 integer
+--- Common behavior for when Mario's anchoring when grabbed
 function common_anchor_mario_behavior(sp28, sp2C, sp30)
     -- ...
 end
@@ -2248,20 +2804,24 @@ end
 --- @param relPosX number
 --- @param relPosY number
 --- @param relPosZ number
+--- Spawns strong wind particles relative to the current object
 function cur_obj_spawn_strong_wind_particles(windSpread, scale, relPosX, relPosY, relPosZ)
     -- ...
 end
 
 --- @return integer
+--- Checks if Mario is moving fast enough to make Piranha Plant bite. This one is a mouthful
 function mario_moving_fast_enough_to_make_piranha_plant_bite()
     -- ...
 end
 
+--- Sets the secondary camera focus
 function obj_set_secondary_camera_focus()
     -- ...
 end
 
 --- @param walk integer
+--- Plays the penguin walking sound
 function play_penguin_walking_sound(walk)
     -- ...
 end
@@ -2270,10 +2830,12 @@ end
 --- @param y number
 --- @param z number
 --- @return Object
+--- Spawns a Star with an ID corresponding to the current object's first behavior parameter byte
 function spawn_default_star(x, y, z)
     -- ...
 end
 
+--- Spawns mist particles around the current object
 function spawn_mist_from_global()
     -- ...
 end
@@ -2281,6 +2843,7 @@ end
 --- @param count integer
 --- @param offsetY integer
 --- @param size number
+--- Spawns mist particles around the current object
 function spawn_mist_particles_variable(count, offsetY, size)
     -- ...
 end
@@ -2289,6 +2852,7 @@ end
 --- @param y number
 --- @param z number
 --- @return Object
+--- Spawns a Star that won't make Mario exit the level with an ID corresponding to the current object's first behavior parameter byte
 function spawn_no_exit_star(x, y, z)
     -- ...
 end
@@ -2297,10 +2861,12 @@ end
 --- @param y number
 --- @param z number
 --- @return Object
+--- Spawns a Red Coin cutscene star with an ID corresponding to the current object's first behavior parameter byte
 function spawn_red_coin_cutscene_star(x, y, z)
     -- ...
 end
 
+--- Spawns a star number
 function spawn_star_number()
     -- ...
 end
@@ -2309,12 +2875,14 @@ end
 --- @param triModel integer
 --- @param triSize number
 --- @param triAnimState integer
+--- Spawns triangle break particles around the current object
 function spawn_triangle_break_particles(numTris, triModel, triSize, triAnimState)
     -- ...
 end
 
 --- @param pitch integer
 --- @param yaw integer
+--- Spawns wind particles around the current object
 function spawn_wind_particles(pitch, yaw)
     -- ...
 end
@@ -2323,87 +2891,103 @@ end
 --- @param a1 number
 --- @param deltaPitch integer
 --- @param deltaRoll integer
+--- Moves Tox Box
 function tox_box_move(forwardVel, a1, deltaPitch, deltaRoll)
     -- ...
 end
 
 --- @param angle Pointer_integer
 --- @return integer
+--- Updates the current object's angle from its move flags
 function update_angle_from_move_flags(angle)
     -- ...
 end
 
+--- Behavior loop function for UV texture scrolling
 function uv_update_scroll()
     -- ...
 end
 
 --- @param dest Vec3f
 --- @param src Vec3f
+--- Duplicate of vec3f_copy except without bad return
 function vec3f_copy_2(dest, src)
     -- ...
 end
 
 --- @return number
+--- Gets the draw distance scalar
 function draw_distance_scalar()
     -- ...
 end
 
 --- @param obj Object
+--- Updates an object's graphical position and angle
 function obj_update_gfx_pos_and_angle(obj)
     -- ...
 end
 
 --- @return number
+--- Sets the current object's position to random floats between 0.0 and 1.0
 function position_based_random_float_position()
     -- ...
 end
 
 --- @return integer
+--- Sets the current object's position to random integers between 0 and 65536
 function position_based_random_u16()
     -- ...
 end
 
 --- @return number
+--- Generates a pseudo random float between 0.0 and 1.0
 function random_float()
     -- ...
 end
 
 --- @return integer
+--- Returns either 1 or -1 with a pseudo 50:50 chance
 function random_sign()
     -- ...
 end
 
 --- @return integer
+--- Generates a pseudo random integer between 0 and 65535
 function random_u16()
     -- ...
 end
 
 --- @param id BehaviorId
 --- @return Pointer_BehaviorScript
+--- Gets a behavior script from a behavior ID
 function get_behavior_from_id(id)
     -- ...
 end
 
 --- @param id BehaviorId
 --- @return string
+--- Gets a behavior name from a behavior ID (bhvMyGreatMODCustom004)
 function get_behavior_name_from_id(id)
     -- ...
 end
 
 --- @param behavior Pointer_BehaviorScript
 --- @return BehaviorId
+--- Gets a behavior ID from a behavior script
 function get_id_from_behavior(behavior)
     -- ...
 end
 
 --- @param name string
 --- @return BehaviorId
+--- gets a behavior ID from a behavior name
 function get_id_from_behavior_name(name)
     -- ...
 end
 
 --- @param behavior Pointer_BehaviorScript
 --- @return BehaviorId
+--- Gets a behavior ID from only vanilla behavior scripts
 function get_id_from_vanilla_behavior(behavior)
     -- ...
 end
@@ -2411,6 +2995,7 @@ end
 --- @param c Camera
 --- @param goal number
 --- @param inc number
+--- Adjusts the camera's height toward a target value (`goalHeight`) while respecting terrain and obstructions. This is really wonky and probably shouldn't be used, prefer `gLakituStates`
 function approach_camera_height(c, goal, inc)
     -- ...
 end
@@ -2419,6 +3004,7 @@ end
 --- @param target number
 --- @param multiplier number
 --- @return number
+--- Gradually approaches a floating-point value (`target`) using asymptotic smoothing. The rate of approach is controlled by the `multiplier`. Useful for smoothly adjusting camera parameters like field-of-view or position
 function approach_f32_asymptotic(current, target, multiplier)
     -- ...
 end
@@ -2427,6 +3013,7 @@ end
 --- @param target number
 --- @param multiplier number
 --- @return integer
+--- Gradually adjusts a floating-point value (`current`) towards a target (`target`) using asymptotic smoothing. Returns true if `current` reaches the `target` and false otherwise
 function approach_f32_asymptotic_bool(current, target, multiplier)
     -- ...
 end
@@ -2435,6 +3022,7 @@ end
 --- @param target integer
 --- @param divisor integer
 --- @return integer
+--- Gradually approaches a signed 16-bit integer (`target`) using asymptotic smoothing. The divisor controls the rate of the adjustment. Useful for adjusting angles or positions smoothly
 function approach_s16_asymptotic(current, target, divisor)
     -- ...
 end
@@ -2443,6 +3031,7 @@ end
 --- @param target integer
 --- @param divisor integer
 --- @return integer
+--- Gradually adjusts a signed 16-bit integer (`current`) towards a target (`target`) using asymptotic smoothing. Returns true if `current` reaches `target` and false otherwise
 function approach_s16_asymptotic_bool(current, target, divisor)
     -- ...
 end
@@ -2452,6 +3041,7 @@ end
 --- @param xMul number
 --- @param yMul number
 --- @param zMul number
+--- Smoothly transitions a 3D vector (`current`) towards a target vector (`target`) using asymptotic scaling. Scaling values (the `Mul` variables) for x, y, and z axes determine the speed of adjustment for each component
 function approach_vec3f_asymptotic(current, target, xMul, yMul, zMul)
     -- ...
 end
@@ -2459,6 +3049,7 @@ end
 --- @param a Vec3f
 --- @param b Vec3f
 --- @return number
+--- Calculates the absolute distance between two 3D points (`a` and `b`). Returns the distance as a floating-point value. Useful for determining proximity between objects in 3D space
 function calc_abs_dist(a, b)
     -- ...
 end
@@ -2466,6 +3057,7 @@ end
 --- @param a Vec3f
 --- @param b Vec3f
 --- @return number
+--- Calculates the horizontal (XZ-plane) distance between two 3D points (`a` and `b`). Returns the distance as a floating-point value. Useful for terrain navigation or collision detection
 function calc_hor_dist(a, b)
     -- ...
 end
@@ -2474,6 +3066,7 @@ end
 --- @param to Vec3f
 --- @param pitch Pointer_integer
 --- @param yaw Pointer_integer
+--- Calculates the pitch and yaw angles from one 3D position (`from`) to another (`to`). Updates the provided pointers with the computed pitch and yaw values
 function calculate_angles(from, to, pitch, yaw)
     -- ...
 end
@@ -2481,6 +3074,7 @@ end
 --- @param from Vec3f
 --- @param to Vec3f
 --- @return integer
+--- Calculates the pitch angle (rotation around the X-axis) from one 3D point (`from`) to another (`to`). Returns the pitch as a signed 16-bit integer
 function calculate_pitch(from, to)
     -- ...
 end
@@ -2488,12 +3082,14 @@ end
 --- @param from Vec3f
 --- @param to Vec3f
 --- @return integer
+--- Determines the yaw angle (rotation around the Y-axis) from one 3D position (`from`) to another (`to`). Returns the yaw as a signed 16-bit integer
 function calculate_yaw(from, to)
     -- ...
 end
 
 --- @param angle integer
 --- @return integer
+--- Selects an alternate camera mode based on the given angle. Used to toggle between predefined camera modes dynamically
 function cam_select_alt_mode(angle)
     -- ...
 end
@@ -2502,6 +3098,7 @@ end
 --- @param target number
 --- @param increment number
 --- @return number
+--- Symmetrically approaches a floating-point value (`target`) with a fixed increment (`increment`) per frame. Limits the rate of change to ensure gradual transitions
 function camera_approach_f32_symmetric(value, target, increment)
     -- ...
 end
@@ -2510,6 +3107,7 @@ end
 --- @param target number
 --- @param increment number
 --- @return integer
+--- Adjusts a floating-point value (`current`) towards a target (`target`) symmetrically with a fixed increment (`increment`). Returns true if the value reaches the target and false otherwise
 function camera_approach_f32_symmetric_bool(current, target, increment)
     -- ...
 end
@@ -2518,21 +3116,25 @@ end
 --- @param target integer
 --- @param increment integer
 --- @return integer
+--- Adjusts a signed 16-bit integer (`current`) towards a target (`target`) symmetrically with a fixed increment (`increment`). Returns true if the value reaches the target and false otherwise
 function camera_approach_s16_symmetric_bool(current, target, increment)
     -- ...
 end
 
 --- @param c Camera
 --- @return integer
+--- Processes course-specific camera settings, such as predefined positions or modes. Adjusts the camera to match the design and gameplay requirements of the current course
 function camera_course_processing(c)
     -- ...
 end
 
 --- @param enable integer
+--- Toggles whether the camera uses course-specific settings. This is useful for enabling or disabling custom behaviors in specific courses or areas
 function camera_set_use_course_specific_settings(enable)
     -- ...
 end
 
+--- Centers the ROM hack camera. This function is designed for non-standard level layouts and modded game environments
 function center_rom_hack_camera()
     -- ...
 end
@@ -2542,6 +3144,7 @@ end
 --- @param maxPitch integer
 --- @param minPitch integer
 --- @return integer
+--- Clamps the camera's pitch angle between a maximum and minimum value. Prevents over-rotation and maintains a consistent viewing angle
 function clamp_pitch(from, to, maxPitch, minPitch)
     -- ...
 end
@@ -2553,6 +3156,7 @@ end
 --- @param zMax number
 --- @param zMin number
 --- @return integer
+--- Clamps a position within specified X and Z bounds and calculates the yaw angle from the origin. Prevents the camera from moving outside of the designated area
 function clamp_positions_and_find_yaw(pos, origin, xMax, xMin, zMax, zMin)
     -- ...
 end
@@ -2561,6 +3165,7 @@ end
 --- @param offsetY number
 --- @param radius number
 --- @return integer
+--- Checks for collisions between the camera and level geometry. Adjusts the camera's position to avoid clipping into walls or obstacles
 function collide_with_walls(pos, offsetY, radius)
     -- ...
 end
@@ -2568,6 +3173,7 @@ end
 --- @param cutscene integer
 --- @param o Object
 --- @return integer
+--- Initiates a cutscene focusing on a specific object in the game world. The camera transitions smoothly to the object, adapting its position as needed
 function cutscene_object(cutscene, o)
     -- ...
 end
@@ -2576,6 +3182,7 @@ end
 --- @param o Object
 --- @param dialogID integer
 --- @return integer
+--- Starts a cutscene involving an object and displays dialog during the sequence. The camera focuses on the object while synchronizing dialog with the scene
 function cutscene_object_with_dialog(cutscene, o, dialogID)
     -- ...
 end
@@ -2583,11 +3190,13 @@ end
 --- @param cutscene integer
 --- @param o Object
 --- @return integer
+--- Starts a cutscene involving an object without dialog. The camera transitions smoothly to focus on the object
 function cutscene_object_without_dialog(cutscene, o)
     -- ...
 end
 
 --- @param preset integer
+--- Applies a preset field-of-view shake effect during a cutscene. This creates dynamic visual effects, such as zoom or focus disruptions
 function cutscene_set_fov_shake_preset(preset)
     -- ...
 end
@@ -2595,6 +3204,7 @@ end
 --- @param obj integer
 --- @param frame integer
 --- @return integer
+--- Spawns an object as part of a cutscene, such as props or interactive elements. Returns the spawned object's reference for further manipulation
 function cutscene_spawn_obj(obj, frame)
     -- ...
 end
@@ -2603,22 +3213,26 @@ end
 --- @param buttonsPressed integer
 --- @param buttonsDown integer
 --- @return integer
+--- Determines which C-buttons are currently pressed by the player. Returns a bitmask indicating the active buttons for camera control
 function find_c_buttons_pressed(currentState, buttonsPressed, buttonsDown)
     -- ...
 end
 
 --- @param pg PlayerGeometry
+--- Finds the floor and ceiling directly above and below Mario's position. Updates Mario's geometry information for camera calculations
 function find_mario_floor_and_ceil(pg)
     -- ...
 end
 
 --- @param c Camera
 --- @return integer
+--- Gets the appropriate cutscene to play based on Mario's current gameplay state. This function helps determine transitions for cinematic or scripted sequences
 function get_cutscene_from_mario_status(c)
     -- ...
 end
 
 --- @param c Camera
+--- Handles camera movement based on input from the C-buttons. Updates the camera's position or angle to match directional player input
 function handle_c_button_movement(c)
     -- ...
 end
@@ -2629,6 +3243,7 @@ end
 --- @param range integer
 --- @param surfType integer
 --- @return integer
+--- Determines if a range is obstructed by a surface relative to the camera. Returns true if the range is behind the specified surface
 function is_range_behind_surface(from, to, surf, range, surfType)
     -- ...
 end
@@ -2637,11 +3252,13 @@ end
 --- @param posY number
 --- @param posZ number
 --- @return integer
+--- Checks if a position is within 100 units of Mario's current position. Returns true if the position is within the specified radius and false otherwise
 function is_within_100_units_of_mario(posX, posY, posZ)
     -- ...
 end
 
 --- @param c Camera
+--- Moves Mario's head slightly upward when the C-Up button is pressed. This function aligns the camera to match the head movement for consistency
 function move_mario_head_c_up(c)
     -- ...
 end
@@ -2654,6 +3271,7 @@ end
 --- @param oldFoc Vec3f
 --- @param yaw integer
 --- @return integer
+--- Transitions the camera to the next Lakitu state, updating position and focus. This function handles smooth transitions between different gameplay scenarios
 function next_lakitu_state(newPos, newFoc, curPos, curFoc, oldPos, oldFoc, yaw)
     -- ...
 end
@@ -2664,12 +3282,14 @@ end
 --- @param yawOff integer
 --- @param pitchDiv integer
 --- @param yawDiv integer
+--- Rotates an object toward a specific point in 3D space. Gradually updates the object's pitch and yaw angles to face the target
 function obj_rotate_towards_point(o, point, pitchOff, yawOff, pitchDiv, yawDiv)
     -- ...
 end
 
 --- @param dst Vec3f
 --- @param o Object
+--- Converts an object's position to a `Vec3f` format. Useful for aligning object behaviors or interactions with the camera system
 function object_pos_to_vec3f(dst, o)
     -- ...
 end
@@ -2678,6 +3298,7 @@ end
 --- @param from Vec3f
 --- @param to Vec3f
 --- @param rotation Vec3s
+--- Offsets a vector by rotating it in 3D space relative to a reference position. This is useful for creating radial effects or dynamic transformations
 function offset_rotated(dst, from, to, rotation)
     -- ...
 end
@@ -2685,47 +3306,58 @@ end
 --- @param c Camera
 --- @param areaYaw integer
 --- @return integer
+--- Calculates an outward radial offset based on the camera's yaw angle. Returns the offset yaw, used for positioning or alignment
 function offset_yaw_outward_radial(c, areaYaw)
     -- ...
 end
 
+--- Plays a buzzing sound effect when the camera's position is misaligned with the player's perspective. Used as audio feedback for incorrect camera behavior
 function play_camera_buzz_if_c_sideways()
     -- ...
 end
 
+--- Plays a buzzing sound effect when a blocked C-button action is attempted. Used to signal invalid input or restricted camera movement
 function play_camera_buzz_if_cbutton()
     -- ...
 end
 
+--- Plays a buzzing sound effect when the camera attempts to move downward but is restricted. Provides feedback for invalid C-Down input actions
 function play_camera_buzz_if_cdown()
     -- ...
 end
 
 --- @param c Camera
+--- Starts the execution of a predefined cutscene. The camera transitions dynamically to follow the scripted sequence
 function play_cutscene(c)
     -- ...
 end
 
+--- Plays a sound effect when a blocked action changes the camera mode. This provides feedback for invalid attempts to switch the camera state
 function play_sound_button_change_blocked()
     -- ...
 end
 
+--- Plays a sound effect when the C-Down button is pressed for camera movement. Provides auditory feedback for valid camera input
 function play_sound_cbutton_down()
     -- ...
 end
 
+--- Plays a sound effect when the C-Side button (left or right) is pressed for camera movement. Used as audio feedback for horizontal adjustments to the camera
 function play_sound_cbutton_side()
     -- ...
 end
 
+--- Plays a sound effect when the C-Up button is pressed for camera movement. Provides feedback for vertical camera adjustments
 function play_sound_cbutton_up()
     -- ...
 end
 
+--- Plays a sound effect when the camera switches between Lakitu and Mario perspectives. Signals a successful change in camera mode
 function play_sound_if_cam_switched_to_lakitu_or_mario()
     -- ...
 end
 
+--- Plays a sound effect when the R-Button camera mode is changed. Provides feedback for toggling camera behaviors
 function play_sound_rbutton_changed()
     -- ...
 end
@@ -2733,6 +3365,7 @@ end
 --- @param c Camera
 --- @param unused number
 --- @return integer
+--- Handles radial camera movement based on player input. Updates the camera's position or orientation accordingly
 function radial_camera_input(c, unused)
     -- ...
 end
@@ -2741,22 +3374,26 @@ end
 --- @param xRange integer
 --- @param yRange integer
 --- @param zRange integer
+--- Generates a random 3D vector with short integer components. Useful for randomized offsets or environmental effects
 function random_vec3s(dst, xRange, yRange, zRange)
     -- ...
 end
 
 --- @param c Camera
+--- Fully resets the camera to its default state and reinitializes all settings. This is typically used when restarting gameplay or loading a new area
 function reset_camera(c)
     -- ...
 end
 
 --- @param pos Vec3f
 --- @param lastGood Vec3f
+--- Resolves collisions between the camera and level geometry. Adjusts the camera's position to prevent clipping or intersecting with objects
 function resolve_geometry_collisions(pos, lastGood)
     -- ...
 end
 
 --- @param enable integer
+--- Toggles collision settings for the ROM hack camera. This enables or disables specific collision behaviors in modded levels
 function rom_hack_cam_set_collisions(enable)
     -- ...
 end
@@ -2766,6 +3403,7 @@ end
 --- @param avoidYaw Pointer_integer
 --- @param yawRange integer
 --- @return integer
+--- Rotates the camera to avoid walls or other obstructions. Ensures clear visibility of the player or target objects
 function rotate_camera_around_walls(c, cPos, avoidYaw, yawRange)
     -- ...
 end
@@ -2773,6 +3411,7 @@ end
 --- @param dst Vec3f
 --- @param src Vec3f
 --- @param yaw integer
+--- Rotates a vector around the XZ-plane by a specified yaw angle. The result is stored in the destination vector (`dst`). Useful for rotating camera positions or object coordinates horizontally
 function rotate_in_xz(dst, src, yaw)
     -- ...
 end
@@ -2780,6 +3419,7 @@ end
 --- @param dst Vec3f
 --- @param src Vec3f
 --- @param pitch integer
+--- Rotates a vector around the YZ-plane by a specified pitch angle. The result is stored in the destination vector (`dst`). Useful for vertical camera rotations or object transformations
 function rotate_in_yz(dst, src, pitch)
     -- ...
 end
@@ -2788,16 +3428,19 @@ end
 --- @param from Vec3f
 --- @param to Vec3f
 --- @param scale number
+--- Scales a point along a line between two 3D points (`from` and `to`). The scaling factor determines how far along the line the resulting point will be. The result is stored in the destination vector (`dest`)
 function scale_along_line(dest, from, to, scale)
     -- ...
 end
 
+--- Selects the appropriate camera mode for Mario based on the current gameplay context. Adapts camera behavior dynamically to match Mario's environment or state
 function select_mario_cam_mode()
     -- ...
 end
 
 --- @param mode integer
 --- @return integer
+--- Sets the camera's angle based on the specified mode. Handles rotation and focus adjustments for predefined camera behaviors
 function set_cam_angle(mode)
     -- ...
 end
@@ -2805,6 +3448,7 @@ end
 --- @param c Camera
 --- @param mode integer
 --- @param frames integer
+--- Changes the camera to a new mode, optionally interpolating over a specified number of frames. Useful for transitioning between different camera behaviors dynamically
 function set_camera_mode(c, mode, frames)
     -- ...
 end
@@ -2814,6 +3458,7 @@ end
 --- @param y integer
 --- @param z integer
 --- @return integer
+--- Activates a fixed camera mode and aligns the camera to specific X, Y, Z coordinates. This is useful for predefined static views in specific areas
 function set_camera_mode_fixed(c, x, y, z)
     -- ...
 end
@@ -2821,6 +3466,7 @@ end
 --- @param mag integer
 --- @param decay integer
 --- @param inc integer
+--- Applies a pitch-based shake effect to the camera. The shake's magnitude, decay, and increment are configurable. Simulates vertical disturbances like impacts or explosions
 function set_camera_pitch_shake(mag, decay, inc)
     -- ...
 end
@@ -2828,11 +3474,13 @@ end
 --- @param mag integer
 --- @param decay integer
 --- @param inc integer
+--- Applies a roll-based shake effect to the camera. Simulates rotational disturbances for dynamic camera effects
 function set_camera_roll_shake(mag, decay, inc)
     -- ...
 end
 
 --- @param shake integer
+--- Applies a shake effect to the camera based on a hit type. Different shake types simulate various impacts, such as attacks, falls, or shocks
 function set_camera_shake_from_hit(shake)
     -- ...
 end
@@ -2841,6 +3489,7 @@ end
 --- @param posX number
 --- @param posY number
 --- @param posZ number
+--- Applies a shake effect to the camera, scaled by its proximity to a specified point. The intensity decreases with distance from the point
 function set_camera_shake_from_point(shake, posX, posY, posZ)
     -- ...
 end
@@ -2848,21 +3497,25 @@ end
 --- @param mag integer
 --- @param decay integer
 --- @param inc integer
+--- Applies a yaw-based shake effect to the camera. Simulates horizontal vibrations or rotational impacts
 function set_camera_yaw_shake(mag, decay, inc)
     -- ...
 end
 
 --- @param shake integer
+--- Applies an environmental shake effect to the camera. Handles predefined shake types triggered by environmental events like explosions or platform movements
 function set_environmental_camera_shake(shake)
     -- ...
 end
 
 --- @param preset integer
+--- Transitions the camera to the next Lakitu state, updating position and focus. This function handles smooth transitions between different gameplay scenarios
 function set_fixed_cam_axis_sa_lobby(preset)
     -- ...
 end
 
 --- @param func integer
+--- Assigns a custom function for dynamic field-of-view adjustments. This allows precise control over the camera's zoom behavior during gameplay
 function set_fov_function(func)
     -- ...
 end
@@ -2870,6 +3523,7 @@ end
 --- @param amplitude integer
 --- @param decay integer
 --- @param shakeSpeed integer
+--- Applies a field-of-view shake effect to simulate zoom or focus disruptions. Shake parameters, such as amplitude and decay, control the intensity
 function set_fov_shake(amplitude, decay, shakeSpeed)
     -- ...
 end
@@ -2878,11 +3532,13 @@ end
 --- @param posX number
 --- @param posY number
 --- @param posZ number
+--- Applies a preset field-of-view shake effect relative to a specific point. The intensity diminishes as the distance from the point increases
 function set_fov_shake_from_point_preset(preset, posX, posY, posZ)
     -- ...
 end
 
 --- @param mode integer
+--- Applies a handheld camera shake effect with configurable parameters. Can be used to simulate dynamic, realistic camera movement
 function set_handheld_shake(mode)
     -- ...
 end
@@ -2891,6 +3547,7 @@ end
 --- @param goal number
 --- @param scale number
 --- @return integer
+--- Smoothly transitions or directly sets a floating-point value (`dst`) to approach a target (`goal`). Uses asymptotic scaling for gradual adjustments or direct assignment
 function set_or_approach_f32_asymptotic(dst, goal, scale)
     -- ...
 end
@@ -2899,6 +3556,7 @@ end
 --- @param target integer
 --- @param increment integer
 --- @return integer
+--- Smoothly transitions or directly sets a signed 16-bit value (`current`) to approach a target (`target`). Uses symmetric scaling for gradual or immediate adjustments
 function set_or_approach_s16_symmetric(current, target, increment)
     -- ...
 end
@@ -2908,6 +3566,7 @@ end
 --- @param xMul number
 --- @param yMul number
 --- @param zMul number
+--- Smoothly transitions a 3D vector (`current`) toward a target vector (`goal`) using asymptotic scaling. Allows gradual or instantaneous alignment of 3D positions. Scaling values (the `Mul` variables) for x, y, and z axes determine the speed of adjustment for each component
 function set_or_approach_vec3f_asymptotic(dst, goal, xMul, yMul, zMul)
     -- ...
 end
@@ -2919,74 +3578,87 @@ end
 --- @param posX number
 --- @param posY number
 --- @param posZ number
+--- Applies a pitch shake effect to the camera, scaled by proximity to a specified point. Simulates vibrations with intensity decreasing further from the point
 function set_pitch_shake_from_point(mag, decay, inc, maxDist, posX, posY, posZ)
     -- ...
 end
 
 --- @param pos Vec3f
 --- @param focus Vec3f
+--- Activates a handheld camera shake effect. Calculates positional and focus adjustments to simulate manual movement
 function shake_camera_handheld(pos, focus)
     -- ...
 end
 
 --- @param pos Vec3f
 --- @param focus Vec3f
+--- Activates a pitch-based shake effect. Adds vertical vibrational movement to the camera's behavior
 function shake_camera_pitch(pos, focus)
     -- ...
 end
 
 --- @param roll Pointer_integer
+--- Applies a roll-based shake effect to the camera. Simulates rotational disturbances caused by impacts or other events
 function shake_camera_roll(roll)
     -- ...
 end
 
 --- @param pos Vec3f
 --- @param focus Vec3f
+--- Activates a yaw-based shake effect. Adds horizontal vibrational movement to the camera's behavior
 function shake_camera_yaw(pos, focus)
     -- ...
 end
 
+--- Skips camera interpolation for a frame, locking the camera instantly to the target position. Useful for immediate changes in camera state or position without smooth transitions
 function skip_camera_interpolation()
     -- ...
 end
 
 --- @param c Camera
+--- Resets the camera's state while retaining some settings, such as position or mode. This is often used when soft-resetting gameplay without reinitialization
 function soft_reset_camera(c)
     -- ...
 end
 
 --- @param c Camera
 --- @param cutscene integer
+--- Starts a cutscene based on the provided ID. The camera transitions to predefined behaviors for the duration of the cutscene
 function start_cutscene(c, cutscene)
     -- ...
 end
 
 --- @param cutscene integer
 --- @return integer
+--- Starts a cutscene focused on an object without requiring focus to remain locked. This is useful for dynamic events where the camera adjusts freely
 function start_object_cutscene_without_focus(cutscene)
     -- ...
 end
 
 --- @param c Camera
 --- @param frames integer
+--- Transitions the camera to the next state over a specified number of frames. This is typically used for cutscenes or scripted sequences
 function transition_next_state(c, frames)
     -- ...
 end
 
 --- @param trigger integer
 --- @return integer
+--- Triggers a dialog sequence during a cutscene. The dialog is synchronized with the camera's position and movement
 function trigger_cutscene_dialog(trigger)
     -- ...
 end
 
 --- @param dst Vec3f
 --- @param src Vec3f
+--- Subtracts one 3D vector (`src`) from another (`dst`). Stores the result in the destination vector
 function vec3f_sub(dst, src)
     -- ...
 end
 
 --- @param o Object
 --- @param src Vec3f
+--- Converts a `Vec3f` position to an object's internal format. Useful for syncing 3D positions between objects and the game world
 function vec3f_to_object_pos(o, src)
     -- ...
 end
@@ -2994,6 +3666,7 @@ end
 --- @param displacementX number
 --- @param displacementY number
 --- @param displacementZ number
+--- Moves the camera to a specified warp destination. This function handles transitions between levels or areas seamlessly
 function warp_camera(displacementX, displacementY, displacementZ)
     -- ...
 end
@@ -3007,18 +3680,21 @@ end
 --- @param m MarioState
 --- @param characterAnim CharacterAnimID
 --- @return integer
+--- Gets the animation ID to use for a specific character and animation combination. The ID is based on `characterAnim` and the character currently controlled by Mario (`m`). Useful for determining which animation to play for actions like walking, jumping, or idle states
 function get_character_anim(m, characterAnim)
     -- ...
 end
 
 --- @param m MarioState
 --- @return number
+--- Calculates the animation offset for Mario's current animation. The offset is determined by the type of animation being played (e.g., hand, feet, or torso movement). Useful for smoothly syncing Mario's model height or positional adjustments during animations
 function get_character_anim_offset(m)
     -- ...
 end
 
 --- @param m MarioState
 --- @param characterSound CharacterSound
+--- Plays a character-specific sound based on the given `characterSound` value. The sound is tied to Mario's current state (`m`). Useful for triggering sound effects for actions like jumping or interacting with the environment
 function play_character_sound(m, characterSound)
     -- ...
 end
@@ -3026,6 +3702,7 @@ end
 --- @param m MarioState
 --- @param characterSound CharacterSound
 --- @param flags integer
+--- Plays a character-specific sound only if certain flags are not set. This ensures that sounds are not repeated unnecessarily. The sound is based on `characterSound`, and the flags are checked using `flags`. Useful for avoiding duplicate sound effects in rapid succession or conditional actions
 function play_character_sound_if_no_flag(m, characterSound, flags)
     -- ...
 end
@@ -3033,95 +3710,109 @@ end
 --- @param m MarioState
 --- @param characterSound CharacterSound
 --- @param offset integer
+--- Plays a character-specific sound with an additional `offset`, allowing variations or delays in the sound effect. Uses Mario's current state (`m`). Useful for adding dynamic sound effects or syncing sounds to specific animations or events
 function play_character_sound_offset(m, characterSound, offset)
     -- ...
 end
 
 --- @param m MarioState
+--- Updates Mario's current animation offset. This adjusts Mario's position based on the calculated offset to ensure animations appear smooth and natural. Useful for keeping Mario's animations visually aligned, particularly when transitioning between animations
 function update_character_anim_offset(m)
     -- ...
 end
 
 --- @param message string
+--- Creates a `message` in the game's chat box
 function djui_chat_message_create(message)
     -- ...
 end
 
-function djui_console_message_dequeue()
-    -- ...
-end
-
+--- Toggles the visibility of the DJUI console
 function djui_console_toggle()
     -- ...
 end
 
 --- @return DjuiColor
+--- Gets the current DJUI HUD color
 function djui_hud_get_color()
     -- ...
 end
 
 --- @return integer
+--- Gets the current DJUI HUD texture filter
 function djui_hud_get_filter()
     -- ...
 end
 
 --- @return integer
+--- Gets the current DJUI HUD font
 function djui_hud_get_font()
     -- ...
 end
 
 --- @return number
+--- Gets the camera FOV coefficient
 function djui_hud_get_fov_coeff()
     -- ...
 end
 
 --- @return number
+--- Returns the x coordinate of the mouse relative to the window
 function djui_hud_get_mouse_x()
     -- ...
 end
 
 --- @return number
+--- Returns the y coordinate of the mouse relative to the window
 function djui_hud_get_mouse_y()
     -- ...
 end
 
 --- @return number
+--- Returns the x coordinate of the mouse relative to the screen
 function djui_hud_get_raw_mouse_x()
     -- ...
 end
 
 --- @return number
+--- Returns the y coordinate of the mouse relative to the screen
 function djui_hud_get_raw_mouse_y()
     -- ...
 end
 
 --- @return integer
+--- Gets the current DJUI HUD resolution
 function djui_hud_get_resolution()
     -- ...
 end
 
 --- @return HudUtilsRotation
+--- Gets the current DJUI HUD rotation
 function djui_hud_get_rotation()
     -- ...
 end
 
 --- @return integer
+--- Gets the screen height in the current DJUI HUD resolution
 function djui_hud_get_screen_height()
     -- ...
 end
 
 --- @return integer
+--- Gets the screen width in the current DJUI HUD resolution
 function djui_hud_get_screen_width()
     -- ...
 end
 
 --- @return boolean
+--- Checks if the DJUI pause menu is created
 function djui_hud_is_pause_menu_created()
     -- ...
 end
 
 --- @param message string
 --- @return number
+--- Measures the length of `message` in the current font
 function djui_hud_measure_text(message)
     -- ...
 end
@@ -3130,6 +3821,7 @@ end
 --- @param x number
 --- @param y number
 --- @param scale number
+--- Prints DJUI HUD text onto the screen
 function djui_hud_print_text(message, x, y, scale)
     -- ...
 end
@@ -3141,6 +3833,7 @@ end
 --- @param x number
 --- @param y number
 --- @param scale number
+--- Prints interpolated DJUI HUD text onto the screen
 function djui_hud_print_text_interpolated(message, prevX, prevY, prevScale, x, y, scale)
     -- ...
 end
@@ -3149,6 +3842,7 @@ end
 --- @param y number
 --- @param width number
 --- @param height number
+--- Renders a DJUI HUD rect onto the screen
 function djui_hud_render_rect(x, y, width, height)
     -- ...
 end
@@ -3161,10 +3855,12 @@ end
 --- @param y number
 --- @param width number
 --- @param height number
+--- Renders an interpolated DJUI HUD rect onto the screen
 function djui_hud_render_rect_interpolated(prevX, prevY, prevWidth, prevHeight, x, y, width, height)
     -- ...
 end
 
+--- Resets the current DJUI HUD color
 function djui_hud_reset_color()
     -- ...
 end
@@ -3173,26 +3869,31 @@ end
 --- @param g integer
 --- @param b integer
 --- @param a integer
+--- Sets the current DJUI HUD color
 function djui_hud_set_color(r, g, b, a)
     -- ...
 end
 
 --- @param filterType HudUtilsFilter
+--- Sets the current DJUI HUD texture filter
 function djui_hud_set_filter(filterType)
     -- ...
 end
 
 --- @param fontType integer
+--- Sets the current DJUI HUD font
 function djui_hud_set_font(fontType)
     -- ...
 end
 
 --- @param locked boolean
+--- Sets if the cursor is hidden and constrainted to the window
 function djui_hud_set_mouse_locked(locked)
     -- ...
 end
 
 --- @param resolutionType HudUtilsResolution
+--- Sets the current DJUI HUD resolution
 function djui_hud_set_resolution(resolutionType)
     -- ...
 end
@@ -3200,6 +3901,7 @@ end
 --- @param rotation integer
 --- @param pivotX number
 --- @param pivotY number
+--- Sets the current DJUI HUD rotation
 function djui_hud_set_rotation(rotation, pivotX, pivotY)
     -- ...
 end
@@ -3210,6 +3912,7 @@ end
 --- @param rotation integer
 --- @param pivotX number
 --- @param pivotY number
+--- Sets the current DJUI HUD rotation interpolated
 function djui_hud_set_rotation_interpolated(prevRotation, prevPivotX, prevPivotY, rotation, pivotX, pivotY)
     -- ...
 end
@@ -3217,25 +3920,45 @@ end
 --- @param pos Vec3f
 --- @param out Vec3f
 --- @return boolean
+--- Converts a world position to screen position
 function djui_hud_world_pos_to_screen_pos(pos, out)
     -- ...
 end
 
+--- Opens the DJUI pause menu
 function djui_open_pause_menu()
     -- ...
 end
 
 --- @return number
+--- Gets the current camera FOV
 function get_current_fov()
+    -- ...
+end
+
+--- @param section string
+--- @param key string
+--- @return string
+--- Gets a language `key` from a `section`
+function djui_language_get(section, key)
+    -- ...
+end
+
+--- @param color DjuiRainbowColor
+--- @return string
+--- Gets the header hex color code from a `DJUI_RAINBOW_COLOR_*` constant
+function djui_menu_get_rainbow_string_color(color)
     -- ...
 end
 
 --- @param message string
 --- @param lines integer
+--- Creates a popup that says `message` and has `lines`
 function djui_popup_create(message, lines)
     -- ...
 end
 
+--- Drops any queued background music
 function drop_queued_background_music()
     -- ...
 end
@@ -3243,46 +3966,62 @@ end
 --- @param player integer
 --- @param targetScale integer
 --- @param fadeDuration integer
+--- Fades the volume of `player` to `targetScale` (0-127) over `fadeDuration`
 function fade_volume_scale(player, targetScale, fadeDuration)
     -- ...
 end
 
---- @param arg0 integer
+--- @param seqId integer
 --- @param fadeOut integer
-function fadeout_background_music(arg0, fadeOut)
+--- Fades out background music `seqId` over `fadeOut`
+function fadeout_background_music(seqId, fadeOut)
     -- ...
 end
 
 --- @return integer
+--- Gets the current background music
 function get_current_background_music()
     -- ...
 end
 
 --- @return integer
+--- Gets the current background music's default volume
 function get_current_background_music_default_volume()
     -- ...
 end
 
 --- @return integer
+--- Gets the current max target volume
 function get_current_background_music_max_target_volume()
     -- ...
 end
 
 --- @return integer
+--- Gets the current target volume
 function get_current_background_music_target_volume()
     -- ...
 end
 
+--- @param x number
+--- @param z number
+--- @return number
+function get_sound_pan(x, z)
+    -- ...
+end
+
 --- @return integer
+--- Checks if the current background music is lowered
 function is_current_background_music_volume_lowered()
     -- ...
 end
 
+--- Plays the star collect fanfare (this function's name was mixed up with the other)
 function play_course_clear()
     -- ...
 end
 
 --- @param dialogID integer
+--- Plays a dialog sound corresponding to `dialogID`
 function play_dialog_sound(dialogID)
     -- ...
 end
@@ -3290,23 +4029,28 @@ end
 --- @param player integer
 --- @param seqArgs integer
 --- @param fadeTimer integer
+--- Plays fading in music (`seqArgs`) on `player` over `fadeTimer`
 function play_music(player, seqArgs, fadeTimer)
     -- ...
 end
 
+--- Plays Peach's letter jingle
 function play_peachs_jingle()
     -- ...
 end
 
---- @param arg0 integer
-function play_power_star_jingle(arg0)
+--- @param keepBackgroundMusic integer
+--- Plays the power star jingle, set `keepBackgroundMusic` to 0 to mute background music
+function play_power_star_jingle(keepBackgroundMusic)
     -- ...
 end
 
+--- Plays the puzzle jingle
 function play_puzzle_jingle()
     -- ...
 end
 
+--- Plays the race fanfare when a race is started
 function play_race_fanfare()
     -- ...
 end
@@ -3315,12 +4059,14 @@ end
 --- @param bgMusicVolume integer
 --- @param volume integer
 --- @param fadeTimer integer
+--- Plays fading in secondary music `seqId` at `volume` over `fadeTimer` and sets the current background music's volume to `bgMusicVolume`
 function play_secondary_music(seqId, bgMusicVolume, volume, fadeTimer)
     -- ...
 end
 
 --- @param soundBits integer
 --- @param pos Vec3f
+--- Plays a sound (`soundBits`) at `pos` (usually `gGlobalSoundSource` or `m.header.gfx.cameraToObject`)
 function play_sound(soundBits, pos)
     -- ...
 end
@@ -3328,20 +4074,24 @@ end
 --- @param soundBits integer
 --- @param pos Vec3f
 --- @param freqScale number
+--- Plays a sound (`soundBits`) with `freqScale` at `pos` (usually `gGlobalSoundSource` or `m.header.gfx.cameraToObject`)
 function play_sound_with_freq_scale(soundBits, pos, freqScale)
     -- ...
 end
 
+--- Plays the course clear fanfare (this function's name was mixed up with the other)
 function play_star_fanfare()
     -- ...
 end
 
+--- Plays Toad's jingle
 function play_toads_jingle()
     -- ...
 end
 
 --- @param player integer
 --- @param fadeDuration integer
+--- Fades out `player` with `fadeDuration`
 function seq_player_fade_out(player, fadeDuration)
     -- ...
 end
@@ -3349,29 +4099,47 @@ end
 --- @param player integer
 --- @param fadeDuration integer
 --- @param percentage integer
+--- Fades the volume of `player` to `percentage` over `fadeDuration`
 function seq_player_lower_volume(player, fadeDuration, percentage)
     -- ...
 end
 
 --- @param player integer
 --- @param fadeDuration integer
+--- Unfades the volume of `player` over `fadeDuration`
 function seq_player_unlower_volume(player, fadeDuration)
     -- ...
 end
 
 --- @param fadeOutTime integer
+--- Sets the `fadeOutTime` of audio
 function set_audio_fadeout(fadeOutTime)
+    -- ...
+end
+
+--- @param muted integer
+--- Sets the muted status of all sequence players
+function set_audio_muted(muted)
+    -- ...
+end
+
+--- @param bank integer
+--- @param speed integer
+--- Sets the `speed` of moving `bank`
+function set_sound_moving_speed(bank, speed)
     -- ...
 end
 
 --- @param player integer
 --- @param bankMask integer
+--- Enables `bankMask` soundbanks in `player`
 function sound_banks_disable(player, bankMask)
     -- ...
 end
 
 --- @param player integer
 --- @param bankMask integer
+--- Disables `bankMask` soundbanks in `player`
 function sound_banks_enable(player, bankMask)
     -- ...
 end
@@ -3383,46 +4151,66 @@ function sound_get_level_intensity(distance)
 end
 
 --- @param seqId integer
+function sound_reset_background_music_default_volume(seqId)
+    -- ...
+end
+
+--- @param seqId integer
+--- @param volume integer
+function sound_set_background_music_default_volume(seqId, volume)
+    -- ...
+end
+
+--- @param seqId integer
+--- Stops background music `seqId`
 function stop_background_music(seqId)
     -- ...
 end
 
 --- @param fadeTimer integer
+--- Fades out secondary music over `fadeTimer`
 function stop_secondary_music(fadeTimer)
     -- ...
 end
 
 --- @param soundBits integer
 --- @param pos Vec3f
+--- Stops a sound (`soundBits`) at `pos` (usually `gGlobalSoundSource` or `m.header.gfx.cameraToObject`)
 function stop_sound(soundBits, pos)
     -- ...
 end
 
 --- @param pos Vec3f
+--- Stops sounds from `pos` (usually `gGlobalSoundSource` or `m.header.gfx.cameraToObject`)
 function stop_sounds_from_source(pos)
     -- ...
 end
 
+--- Stops sounds in sound banks moving, env, and air
 function stop_sounds_in_continuous_banks()
     -- ...
 end
 
 --- @param m MarioState
 --- @return boolean
+--- Checks common cancels for first person
 function first_person_check_cancels(m)
     -- ...
 end
 
+--- Resets first person
 function first_person_reset()
     -- ...
 end
 
 --- @return boolean
+--- Checks if first person is enabled
 function get_first_person_enabled()
     -- ...
 end
 
 --- @param enable boolean
+--- Sets if first person is enabled
 function set_first_person_enabled(enable)
     -- ...
 end
@@ -3839,7 +4627,25 @@ end
 
 --- @param otherNp NetworkPlayer
 --- @return MarioState
+--- Gets the local Mario's state stored in lag compensation history
 function lag_compensation_get_local_state(otherNp)
+    -- ...
+end
+
+--- @return integer
+--- Gets the local Mario's state index
+function lag_compensation_get_local_state_index()
+    -- ...
+end
+
+--- @return boolean
+--- Checks if lag compensation history is ready
+function lag_compensation_get_local_state_ready()
+    -- ...
+end
+
+--- Stores the local Mario's current state in lag compensation history
+function lag_compensation_store()
     -- ...
 end
 
@@ -3847,6 +4653,7 @@ end
 --- @param levelNum integer
 --- @param areaIndex integer
 --- @return string
+--- Returns the name of the level corresponding to `courseNum`, `levelNum` and `areaIndex` as a decapitalized ASCII (human readable) string
 function get_level_name(courseNum, levelNum, areaIndex)
     -- ...
 end
@@ -3856,6 +4663,7 @@ end
 --- @param areaIndex integer
 --- @param charCase integer
 --- @return string
+--- Returns the name of the level corresponding to `courseNum`, `levelNum` and `areaIndex` as an ASCII (human readable) string. Set `charCase` to 1 to capitalize or -1 to decapitalize the returned string
 function get_level_name_ascii(courseNum, levelNum, areaIndex, charCase)
     -- ...
 end
@@ -3872,6 +4680,7 @@ end
 --- @param courseNum integer
 --- @param starNum integer
 --- @return string
+--- Returns the name of the star corresponding to `courseNum` and `starNum` as a decapitalized ASCII (human readable) string
 function get_star_name(courseNum, starNum)
     -- ...
 end
@@ -3880,6 +4689,7 @@ end
 --- @param starNum integer
 --- @param charCase integer
 --- @return string
+--- Returns the name of the star corresponding to `courseNum` and `starNum` as an ASCII (human readable) string. Set `charCase` to 1 to capitalize or -1 to decapitalize the returned string
 function get_star_name_ascii(courseNum, starNum, charCase)
     -- ...
 end
@@ -3899,6 +4709,7 @@ end
 --- @param checkpoint integer
 --- @param o Object
 --- @return ObjectWarpNode
+--- Creates a warp node in the current level and area with id `id` that goes to the warp node `destNode` in level `destLevel` and area `destArea`, and attach it to the object `o`. To work properly, object `o` must be able to trigger a warp (for example, with interact type set to `INTERACT_WARP`.) `checkpoint` should be set only to WARP_NO_CHECKPOINT (0x00) or WARP_CHECKPOINT (0x80.) If `checkpoint` is set to `0x80`, Mario will warp directly to this node if he enters the level again (after a death for example)
 function area_create_warp_node(id, destLevel, destArea, destNode, checkpoint, o)
     -- ...
 end
@@ -5005,6 +5816,7 @@ end
 
 --- @param m MarioState
 --- @param keyFrames Pointer_Vec4s
+--- Initializes a spline-based animation for the `MarioState` structure `m` using the provided array of 3D signed-integer vectors `keyFrames`. This sets up the animation so that it can be advanced by polling
 function anim_spline_init(m, keyFrames)
     -- ...
 end
@@ -5012,6 +5824,7 @@ end
 --- @param m MarioState
 --- @param result Vec3f
 --- @return integer
+--- Advances the spline-based animation associated with `m` and stores the current interpolated position in `result`. It returns the animation's status, allowing the caller to determine if the animation is ongoing or has completed
 function anim_spline_poll(m, result)
     -- ...
 end
@@ -5021,6 +5834,7 @@ end
 --- @param inc number
 --- @param dec number
 --- @return number
+--- Similar to `approach_s32`, but operates on floating-point numbers. It moves `current` toward `target` by increasing it by `inc` if below target, or decreasing it by `dec` if above target, creating a smooth interpolation
 function approach_f32(current, target, inc, dec)
     -- ...
 end
@@ -5030,6 +5844,7 @@ end
 --- @param inc integer
 --- @param dec integer
 --- @return integer
+--- Gradually moves an integer `current` value toward a `target` value, increasing it by `inc` if it is too low, or decreasing it by `dec` if it is too high. This is often used for smooth transitions or animations
 function approach_s32(current, target, inc, dec)
     -- ...
 end
@@ -5037,12 +5852,14 @@ end
 --- @param y number
 --- @param x number
 --- @return integer
+--- Computes the arctangent of y/x and returns the angle as a signed 16-bit integer, typically representing a direction in the SM64 fixed-point angle format. This can be used to find an angle between x and y coordinates
 function atan2s(y, x)
     -- ...
 end
 
 --- @param sm64Angle integer
 --- @return number
+--- Calculates the cosine of the given angle, where the angle is specified as a signed 16-bit integer representing a fixed-point "SM64 angle". The function returns a floating-point value corresponding to cos(angle)
 function coss(sm64Angle)
     -- ...
 end
@@ -5052,6 +5869,7 @@ end
 --- @param b Vec3f
 --- @param c Vec3f
 --- @return void*
+--- Determines a vector that is perpendicular (normal) to the plane defined by three given 3D floating-point points `a`, `b`, and `c`. The resulting perpendicular vector is stored in `dest`
 function find_vector_perpendicular_to_plane(dest, a, b, c)
     -- ...
 end
@@ -5059,35 +5877,8 @@ end
 --- @param dest Vec3f
 --- @param objMtx Mat4
 --- @param camMtx Mat4
+--- Extracts the position (translation component) from the transformation matrix `objMtx` relative to the coordinate system defined by `camMtx` and stores that 3D position in `dest`. This can be used to get the object's coordinates in camera space
 function get_pos_from_transform_mtx(dest, objMtx, camMtx)
-    -- ...
-end
-
---- @param a integer
---- @param b integer
---- @return integer
-function max(a, b)
-    -- ...
-end
-
---- @param a number
---- @param b number
---- @return number
-function maxf(a, b)
-    -- ...
-end
-
---- @param a integer
---- @param b integer
---- @return integer
-function min(a, b)
-    -- ...
-end
-
---- @param a number
---- @param b number
---- @return number
-function minf(a, b)
     -- ...
 end
 
@@ -5095,6 +5886,7 @@ end
 --- @param upDir Vec3f
 --- @param pos Vec3f
 --- @param yaw integer
+--- Aligns `dest` so that it fits the orientation of a terrain surface defined by its normal vector `upDir`. The transformation is positioned at `pos` and oriented with a given `yaw`. This is often used to make objects sit naturally on uneven ground
 function mtxf_align_terrain_normal(dest, upDir, pos, yaw)
     -- ...
 end
@@ -5103,6 +5895,7 @@ end
 --- @param pos Vec3f
 --- @param yaw integer
 --- @param radius number
+--- Aligns `mtx` to fit onto a terrain triangle at `pos`, applying a given `yaw` and scaling by `radius`. This helps position objects so they match the orientation of the terrain's surface
 function mtxf_align_terrain_triangle(mtx, pos, yaw, radius)
     -- ...
 end
@@ -5111,12 +5904,14 @@ end
 --- @param mtx Mat4
 --- @param position Vec3f
 --- @param angle integer
+--- Transforms a 4x4 floating-point matrix `mtx` into a "billboard" oriented toward the camera or a given direction. The billboard is placed at `position` and rotated by `angle`. This is useful for objects that should always face the viewer
 function mtxf_billboard(dest, mtx, position, angle)
     -- ...
 end
 
 --- @param dest Mat4
 --- @param src Mat4
+--- Copies the 4x4 floating-point matrix `src` into `dest`. After this operation, `dest` contains the same matrix values as `src`
 function mtxf_copy(dest, src)
     -- ...
 end
@@ -5125,17 +5920,20 @@ end
 --- @param mtx Mat4
 --- @param position Vec3f
 --- @param angle integer
+--- Creates a "cylindrical billboard" transformation from the 4x4 matrix `mtx` placed at `position` with a given `angle`. Unlike a full billboard, this might allow rotation around one axis while still facing the viewer on others
 function mtxf_cylboard(dest, mtx, position, angle)
     -- ...
 end
 
 --- @param mtx Mat4
+--- Sets the 4x4 floating-point matrix `mtx` to the identity matrix. The identity matrix leaves points unchanged when they are transformed by it which is useful for matrix math
 function mtxf_identity(mtx)
     -- ...
 end
 
 --- @param dest Mat4
 --- @param src Mat4
+--- Inverts the 4x4 floating-point matrix `src` and stores the inverse in `dest`. Applying the inverse transformation undoes whatever `src` did, returning points back to their original coordinate space
 function mtxf_inverse(dest, src)
     -- ...
 end
@@ -5144,6 +5942,7 @@ end
 --- @param from Vec3f
 --- @param to Vec3f
 --- @param roll integer
+--- Adjusts the 4x4 floating-point matrix `mtx` so that it represents a viewing transformation looking from the point `from` toward the point `to`, with a given roll angle. This creates a view matrix oriented toward `to`
 function mtxf_lookat(mtx, from, to, roll)
     -- ...
 end
@@ -5151,18 +5950,21 @@ end
 --- @param dest Mat4
 --- @param a Mat4
 --- @param b Mat4
+--- Multiplies two 4x4 floating-point matrices `a` and `b` (in that order), storing the product in `dest`. This can be used for combining multiple transformations into one
 function mtxf_mul(dest, a, b)
     -- ...
 end
 
 --- @param mtx Mat4
 --- @param b Vec3s
+--- Multiplies the 4x4 floating-point matrix `mtx` by a 3D signed-integer vector `b`, potentially interpreting `b` as angles or translations depending on usage, and modifies `mtx` accordingly
 function mtxf_mul_vec3s(mtx, b)
     -- ...
 end
 
 --- @param mtx Pointer_Mtx
 --- @param angle integer
+--- Rotates the matrix `mtx` in the XY plane by the given `angle`. Rotating in the XY plane typically means pivoting around the Z axis
 function mtxf_rotate_xy(mtx, angle)
     -- ...
 end
@@ -5170,6 +5972,7 @@ end
 --- @param dest Mat4
 --- @param b Vec3f
 --- @param c Vec3s
+--- Rotates `dest` using angles in XYZ order, and then translates it by the 3D floating-point vector `b` and applies the rotations described by `c`. This sets up `dest` with a specific orientation and position in space
 function mtxf_rotate_xyz_and_translate(dest, b, c)
     -- ...
 end
@@ -5177,6 +5980,7 @@ end
 --- @param dest Mat4
 --- @param translate Vec3f
 --- @param rotate Vec3s
+--- Rotates `dest` according to the angles in `rotate` using ZXY order, and then translates it by the 3D floating-point vector `translate`. This effectively positions and orients `dest` in 3D space
 function mtxf_rotate_zxy_and_translate(dest, translate, rotate)
     -- ...
 end
@@ -5184,18 +5988,21 @@ end
 --- @param dest Mat4
 --- @param mtx Mat4
 --- @param s Vec3f
+--- Scales the 4x4 floating-point matrix `mtx` by the scaling factors found in the 3D floating-point vector `s`, and stores the result in `dest`. This enlarges or shrinks objects in 3D space
 function mtxf_scale_vec3f(dest, mtx, s)
     -- ...
 end
 
 --- @param dest Pointer_Mtx
 --- @param src Mat4
+--- Converts the floating-point matrix `src` into a fixed-point (integer-based) matrix suitable for the `Mtx` format, and stores the result in `dest`
 function mtxf_to_mtx(dest, src)
     -- ...
 end
 
 --- @param dest Mat4
 --- @param b Vec3f
+--- Applies a translation to the 4x4 floating-point matrix `dest` by adding the coordinates in the 3D floating-point vector `b`. This shifts any transformed point by `b`
 function mtxf_translate(dest, b)
     -- ...
 end
@@ -5203,12 +6010,14 @@ end
 --- @param value number
 --- @param replacement number
 --- @return number
+--- Checks if `value` is zero. If not, it returns `value`. If it is zero, it returns the `replacement` value. This function ensures that a zero value can be substituted with a fallback value if needed
 function not_zero(value, replacement)
     -- ...
 end
 
 --- @param sm64Angle integer
 --- @return number
+--- Calculates the sine of the given angle, where the angle is specified as a signed 16-bit integer representing a fixed-point "SM64 angle". This function returns a floating-point result corresponding to sin(angle)
 function sins(sm64Angle)
     -- ...
 end
@@ -5217,25 +6026,15 @@ end
 --- @param result Vec4f
 --- @param t number
 --- @param c integer
+--- Computes spline interpolation weights for a given parameter `t` and stores these weights in `result`. This is used in spline-based animations to find intermediate positions between keyframes
 function spline_get_weights(m, result, t, c)
-    -- ...
-end
-
---- @param x integer
---- @return integer
-function sqr(x)
-    -- ...
-end
-
---- @param x number
---- @return number
-function sqrf(x)
     -- ...
 end
 
 --- @param dest Vec3f
 --- @param a Vec3f
 --- @return void*
+--- Adds the components of the 3D floating-point vector `a` to `dest`. After this operation, `dest.x` will be `dest.x + a.x`, and similarly for the y and z components
 function vec3f_add(dest, a)
     -- ...
 end
@@ -5245,6 +6044,7 @@ end
 --- @param vecB Vec3f
 --- @param sclA number
 --- @param sclB number
+--- Takes two 3D floating-point vectors `vecA` and `vecB`, multiplies them by `sclA` and `sclB` respectively, and then adds the scaled vectors together. The final combined vector is stored in `dest`
 function vec3f_combine(dest, vecA, vecB, sclA, sclB)
     -- ...
 end
@@ -5252,6 +6052,7 @@ end
 --- @param dest Vec3f
 --- @param src Vec3f
 --- @return void*
+--- Copies the contents of a 3D floating-point vector (`src`) into another 3D floating-point vector (`dest`). After this operation, `dest` will have the same x, y, and z values as `src`
 function vec3f_copy(dest, src)
     -- ...
 end
@@ -5260,6 +6061,7 @@ end
 --- @param a Vec3f
 --- @param b Vec3f
 --- @return void*
+--- Computes the cross product of two 3D floating-point vectors `a` and `b`. The cross product is a vector perpendicular to both `a` and `b`. The result is stored in `dest`
 function vec3f_cross(dest, a, b)
     -- ...
 end
@@ -5268,6 +6070,7 @@ end
 --- @param a Vec3f
 --- @param b Vec3f
 --- @return void*
+--- Subtracts the components of the 3D floating-point vector `b` from the components of `a` and stores the result in `dest`. For example, `dest.x = a.x - b.x` This results in a vector that represents the difference between `a` and `b`.
 function vec3f_dif(dest, a, b)
     -- ...
 end
@@ -5275,6 +6078,7 @@ end
 --- @param v1 Vec3f
 --- @param v2 Vec3f
 --- @return number
+--- Calculates the distance between two 3D floating-point points `v1` and `v2`. The distance is the length of the vector `v2 - v1`, i.e., sqrt((v2.x - v1.x)² + (v2.y - v1.y)² + (v2.z - v1.z)²)
 function vec3f_dist(v1, v2)
     -- ...
 end
@@ -5282,6 +6086,7 @@ end
 --- @param a Vec3f
 --- @param b Vec3f
 --- @return number
+--- Computes the dot product of the two 3D floating-point vectors `a` and `b`. The dot product is a scalar value defined by (a.x * b.x + a.y * b.y + a.z * b.z), representing how aligned the two vectors are
 function vec3f_dot(a, b)
     -- ...
 end
@@ -5291,12 +6096,14 @@ end
 --- @param dist Pointer_number
 --- @param pitch Pointer_integer
 --- @param yaw Pointer_integer
+--- Calculates the distance between two points in 3D space (`from` and `to`), as well as the pitch and yaw angles that describe the direction from `from` to `to`. The results are stored in `dist`, `pitch`, and `yaw`
 function vec3f_get_dist_and_angle(from, to, dist, pitch, yaw)
     -- ...
 end
 
 --- @param a Vec3f
 --- @return number
+--- Calculates the length (magnitude) of the 3D floating-point vector `a`. The length is defined as sqrt(x² + y² + z²) for the vector components (x, y, z)
 function vec3f_length(a)
     -- ...
 end
@@ -5304,12 +6111,14 @@ end
 --- @param dest Vec3f
 --- @param a number
 --- @return void*
+--- Multiplies each component of the 3D floating-point vector `dest` by the scalar value `a`. For instance, `dest.x = dest.x * a`, and similarly for y and z. This scales the vector `dest` by `a`
 function vec3f_mul(dest, a)
     -- ...
 end
 
 --- @param dest Vec3f
 --- @return void*
+--- Normalizes the 3D floating-point vector `dest` so that its length (magnitude) becomes 1, while retaining its direction. This effectively scales `dest` so that it lies on the unit sphere
 function vec3f_normalize(dest)
     -- ...
 end
@@ -5317,6 +6126,7 @@ end
 --- @param vec Vec3f
 --- @param onto Vec3f
 --- @param out Vec3f
+--- Projects the 3D floating-point vector `vec` onto another 3D floating-point vector `onto`. The resulting projection, stored in `out`, represents how much of `vec` lies along the direction of `onto`
 function vec3f_project(vec, onto, out)
     -- ...
 end
@@ -5324,6 +6134,7 @@ end
 --- @param v Vec3f
 --- @param rotate Vec3s
 --- @return void*
+--- Rotates the 3D floating-point vector `v` by the angles specified in the 3D signed-integer vector `rotate`, applying the rotations in the order Z, then X, then Y. The rotated vector replaces `v`
 function vec3f_rotate_zxy(v, rotate)
     -- ...
 end
@@ -5333,6 +6144,7 @@ end
 --- @param y number
 --- @param z number
 --- @return void*
+--- Sets the values of the 3D floating-point vector `dest` to the given x, y, and z values. After this function, `dest` will have values (x, y, z)
 function vec3f_set(dest, x, y, z)
     -- ...
 end
@@ -5350,6 +6162,7 @@ end
 --- @param a Vec3f
 --- @param b Vec3f
 --- @return void*
+--- Adds the corresponding components of two 3D floating-point vectors `a` and `b`, and stores the result in `dest`. For example, `dest.x = a.x + b.x`, `dest.y = a.y + b.y`, and `dest.z = a.z + b.z`
 function vec3f_sum(dest, a, b)
     -- ...
 end
@@ -5357,6 +6170,7 @@ end
 --- @param dest Vec3s
 --- @param a Vec3f
 --- @return void*
+--- Converts a 3D floating-point vector `a` (Vec3f) into a 3D signed-integer vector and stores it in `dest`. After this operation, `dest` will contain the integer versions of `a`'s floating-point components
 function vec3f_to_vec3s(dest, a)
     -- ...
 end
@@ -5364,6 +6178,7 @@ end
 --- @param dest Vec3s
 --- @param a Vec3s
 --- @return void*
+--- Adds the components of a 3D signed-integer vector `a` to the corresponding components of `dest`. After this operation, each component of `dest` is increased by the corresponding component in `a`
 function vec3s_add(dest, a)
     -- ...
 end
@@ -5371,6 +6186,7 @@ end
 --- @param dest Vec3s
 --- @param src Vec3s
 --- @return void*
+--- Copies the components of one 3D signed-integer vector (`src`) to another (`dest`). After this function, `dest` will have the same x, y, and z integer values as `src`
 function vec3s_copy(dest, src)
     -- ...
 end
@@ -5380,6 +6196,7 @@ end
 --- @param y integer
 --- @param z integer
 --- @return void*
+--- Sets the 3D signed-integer vector `dest` to the specified integer values (x, y, z), so that `dest` becomes (x, y, z).
 function vec3s_set(dest, x, y, z)
     -- ...
 end
@@ -5388,6 +6205,7 @@ end
 --- @param a Vec3s
 --- @param b Vec3s
 --- @return void*
+--- Adds the components of two 3D signed-integer vectors `a` and `b` together and stores the resulting vector in `dest`. For example, `dest.x = a.x + b.x`, and similarly for y and z
 function vec3s_sum(dest, a, b)
     -- ...
 end
@@ -5395,39 +6213,53 @@ end
 --- @param dest Vec3f
 --- @param a Vec3s
 --- @return void*
+--- Converts a 3D signed-integer vector `a` (vec3s) into a 3D floating-point vector and stores it in `dest`. After this operation, `dest` will contain the floating-point equivalents of `a`'s integer components
 function vec3s_to_vec3f(dest, a)
     -- ...
 end
 
+--- Updates every Mario state's star count with the save file total star count
 function update_all_mario_stars()
     -- ...
 end
 
 --- @return boolean
+--- Clears the mod's data from mod storage
 function mod_storage_clear()
     -- ...
 end
 
 --- @param key string
+--- @return boolean
+--- Checks if a `key` is in mod storage
+function mod_storage_exists(key)
+    -- ...
+end
+
+--- @param key string
 --- @return string
+--- Loads a string `value` from a `key` in mod storage
 function mod_storage_load(key)
     -- ...
 end
 
 --- @param key string
 --- @return boolean
+--- Loads a bool `value` from a `key` in mod storage
 function mod_storage_load_bool(key)
     -- ...
 end
 
 --- @param key string
 --- @return number
+--- Loads a float `value` from a `key` in mod storage
 function mod_storage_load_number(key)
     -- ...
 end
 
 --- @param key string
 --- @return boolean
+--- Removes a `key` from mod storage
 function mod_storage_remove(key)
     -- ...
 end
@@ -5435,6 +6267,7 @@ end
 --- @param key string
 --- @param value string
 --- @return boolean
+--- Saves a `key` corresponding to a string `value` to mod storage
 function mod_storage_save(key, value)
     -- ...
 end
@@ -5442,6 +6275,7 @@ end
 --- @param key string
 --- @param value boolean
 --- @return boolean
+--- Saves a `key` corresponding to a bool `value` to mod storage
 function mod_storage_save_bool(key, value)
     -- ...
 end
@@ -5449,6 +6283,7 @@ end
 --- @param key string
 --- @param value number
 --- @return boolean
+--- Saves a `key` corresponding to a float `value` to mod storage
 function mod_storage_save_number(key, value)
     -- ...
 end
@@ -7403,6 +8238,11 @@ function set_mario_interact_hoot_if_in_range(sp0, sp4, sp8)
     -- ...
 end
 
+--- @param room integer
+function set_room_override(room)
+    -- ...
+end
+
 --- @param flags integer
 function set_time_stop_flags(flags)
     -- ...
@@ -7464,6 +8304,7 @@ end
 
 --- @param a0 integer
 --- @param a1 integer
+--- Queues rumble data
 function queue_rumble_data(a0, a1)
     -- ...
 end
@@ -7471,6 +8312,7 @@ end
 --- @param m MarioState
 --- @param a0 integer
 --- @param a1 integer
+--- Queues rumble data for Mario
 function queue_rumble_data_mario(m, a0, a1)
     -- ...
 end
@@ -7478,43 +8320,51 @@ end
 --- @param object Object
 --- @param a0 integer
 --- @param a1 integer
+--- Queues rumble data for object, factoring in its distance from Mario
 function queue_rumble_data_object(object, a0, a1)
     -- ...
 end
 
 --- @param m MarioState
+--- Resets rumble timers
 function reset_rumble_timers(m)
     -- ...
 end
 
 --- @param m MarioState
 --- @param a0 integer
+--- Resets rumble timers and sets a field based on `a0`
 function reset_rumble_timers_2(m, a0)
     -- ...
 end
 
 --- @param flags integer
+--- Clears specific flags in the current save file. The flags are specified as a bitmask in the `flags` parameter. Ensures that the save file remains valid after clearing. Useful for removing specific game states, such as collected items or completed objectives, without resetting the entire save
 function save_file_clear_flags(flags)
     -- ...
 end
 
 --- @param fileIndex integer
 --- @param forceSave integer
+--- Saves the current state of the game into a specified save file. Includes data verification and backup management. Useful for maintaining game progress during play or when saving manually
 function save_file_do_save(fileIndex, forceSave)
     -- ...
 end
 
 --- @param fileIndex integer
+--- Erases all data in a specified save file, including backup slots. Marks the save file as modified and performs a save to apply the changes. Useful for resetting a save file to its default state
 function save_file_erase(fileIndex)
     -- ...
 end
 
+--- Erases the backup data for the current save file without affecting the primary save data. Reloads the save file afterward
 function save_file_erase_current_backup_save()
     -- ...
 end
 
 --- @param capPos Vec3s
 --- @return integer
+--- Retrieves the current position of Mario's cap, if it is on the ground in the current level and area. The position is stored in the provided `capPos` parameter. Useful for tracking the cap's location after it has been dropped or lost
 function save_file_get_cap_pos(capPos)
     -- ...
 end
@@ -7522,6 +8372,7 @@ end
 --- @param fileIndex integer
 --- @param courseIndex integer
 --- @return integer
+--- Returns the highest coin score for a specified course in the save file. Performs checks to ensure the coin score is valid. Useful for tracking player achievements and high scores
 function save_file_get_course_coin_score(fileIndex, courseIndex)
     -- ...
 end
@@ -7529,22 +8380,26 @@ end
 --- @param fileIndex integer
 --- @param courseIndex integer
 --- @return integer
+--- Calculates the total number of stars collected in a specific course for a given save file. Useful for determining completion status of individual levels
 function save_file_get_course_star_count(fileIndex, courseIndex)
     -- ...
 end
 
 --- @return integer
+--- Retrieves the bitmask of flags representing the current state of the save file. Flags indicate collected items, completed objectives, and other game states. Useful for checking specific game progress details
 function save_file_get_flags()
     -- ...
 end
 
 --- @param courseIndex integer
 --- @return integer
+--- Determines the maximum coin score for a course across all save files. Returns the score along with the file index of the save containing it. Useful for leaderboard-style comparisons and overall progress tracking
 function save_file_get_max_coin_score(courseIndex)
     -- ...
 end
 
 --- @return integer
+--- Returns the current sound mode (e.g., stereo, mono) stored in the save file. Useful for checking the audio output preferences when loading a save
 function save_file_get_sound_mode()
     -- ...
 end
@@ -7552,6 +8407,7 @@ end
 --- @param fileIndex integer
 --- @param courseIndex integer
 --- @return integer
+--- Retrieves the bitmask of stars collected in a specific course or castle secret stars (-1). Useful for evaluating level progress and completion
 function save_file_get_star_flags(fileIndex, courseIndex)
     -- ...
 end
@@ -7560,6 +8416,7 @@ end
 --- @param minCourse integer
 --- @param maxCourse integer
 --- @return integer
+--- Calculates the total number of stars collected across multiple courses within a specified range. Useful for determining the overall progress toward game completion
 function save_file_get_total_star_count(fileIndex, minCourse, maxCourse)
     -- ...
 end
@@ -7567,11 +8424,13 @@ end
 --- @param fileIndex integer
 --- @param courseIndex integer
 --- @return integer
+--- Checks whether the cannon in the specified course is unlocked. Returns true if the cannon is unlocked, otherwise false. Useful for tracking course-specific progress and enabling shortcuts
 function save_file_is_cannon_unlocked(fileIndex, courseIndex)
     -- ...
 end
 
 --- @param load_all integer
+--- Reloads the save file data into memory, optionally resetting all save files. Marks the save file as modified. Useful for reloading state after data corruption or during development debugging
 function save_file_reload(load_all)
     -- ...
 end
@@ -7579,6 +8438,7 @@ end
 --- @param fileIndex integer
 --- @param courseIndex integer
 --- @param starFlagsToRemove integer
+--- Removes specific star flags from the save file. This modifies the bitmask representing collected stars for a course or castle secret stars. Useful for undoing progress or debugging collected stars
 function save_file_remove_star_flags(fileIndex, courseIndex, starFlagsToRemove)
     -- ...
 end
@@ -7586,11 +8446,13 @@ end
 --- @param fileIndex integer
 --- @param courseIndex integer
 --- @param coinScore integer
+--- Updates the coin score for a specific course in the save file. The new score is provided in the `coinScore` parameter. Useful for manually setting achievements such as high coin counts in individual levels
 function save_file_set_course_coin_score(fileIndex, courseIndex, coinScore)
     -- ...
 end
 
 --- @param flags integer
+--- Adds new flags to the save file's flag bitmask. Useful for updating progress or triggering new gameplay features
 function save_file_set_flags(flags)
     -- ...
 end
@@ -7598,77 +8460,90 @@ end
 --- @param fileIndex integer
 --- @param courseIndex integer
 --- @param starFlags integer
+--- Adds specific star flags to the save file, indicating collected stars for a course or castle secret stars. Updates the save file flags as necessary. Useful for recording progress after star collection
 function save_file_set_star_flags(fileIndex, courseIndex, starFlags)
     -- ...
 end
 
 --- @param fileIndex integer
 --- @param courseIndex integer
+--- Marks the coin score for a specific course as the newest among all save files. Adjusts the age of other scores to reflect the update. Useful for leaderboard tracking or displaying recent progress
 function touch_coin_score_age(fileIndex, courseIndex)
     -- ...
 end
 
 --- @param player integer
 --- @return integer
+--- Gets the tempo of `player`
 function sequence_player_get_tempo(player)
     -- ...
 end
 
 --- @param player integer
 --- @return integer
+--- Gets the tempoAcc (tempo ???) of `player`
 function sequence_player_get_tempo_acc(player)
     -- ...
 end
 
 --- @param player integer
 --- @return integer
+--- Gets the transposition (pitch) of `player`
 function sequence_player_get_transposition(player)
     -- ...
 end
 
 --- @param player integer
 --- @param tempo integer
+--- Sets the `tempo` of `player`. Resets when another sequence is played
 function sequence_player_set_tempo(player, tempo)
     -- ...
 end
 
 --- @param player integer
 --- @param tempoAcc integer
+--- Sets the `tempoAcc` (tempo ???) of `player`. Resets when another sequence is played
 function sequence_player_set_tempo_acc(player, tempoAcc)
     -- ...
 end
 
 --- @param player integer
 --- @param transposition integer
+--- Sets the `transposition` (pitch) of `player`. Resets when another sequence is played
 function sequence_player_set_transposition(player, transposition)
     -- ...
 end
 
 --- @param index integer
 --- @return Animation
+--- Gets a vanilla mario Animation with `index`
 function get_mario_vanilla_animation(index)
     -- ...
 end
 
 --- @param obj Object
 --- @return string
+--- Gets the name of the current animation playing on `obj`, returns `nil` if there's no name
 function smlua_anim_util_get_current_animation_name(obj)
     -- ...
 end
 
 --- @param obj Object
 --- @param name string
+--- Sets the animation of `obj` to the animation `name` corresponds to
 function smlua_anim_util_set_animation(obj, name)
     -- ...
 end
 
 --- @param audio ModAudio
+--- Destroys an `audio` sample
 function audio_sample_destroy(audio)
     -- ...
 end
 
 --- @param filename string
 --- @return ModAudio
+--- Loads an `audio` sample
 function audio_sample_load(filename)
     -- ...
 end
@@ -7676,51 +8551,60 @@ end
 --- @param audio ModAudio
 --- @param position Vec3f
 --- @param volume number
+--- Plays an `audio` sample at `position` with `volume`
 function audio_sample_play(audio, position, volume)
     -- ...
 end
 
 --- @param audio ModAudio
+--- Stops an `audio` sample
 function audio_sample_stop(audio)
     -- ...
 end
 
 --- @param audio ModAudio
+--- Destroys an `audio` stream
 function audio_stream_destroy(audio)
     -- ...
 end
 
 --- @param audio ModAudio
 --- @return number
+--- Gets the frequency of an `audio` stream
 function audio_stream_get_frequency(audio)
     -- ...
 end
 
 --- @param audio ModAudio
 --- @return boolean
+--- Gets if an `audio` stream is looping or not
 function audio_stream_get_looping(audio)
     -- ...
 end
 
 --- @param audio ModAudio
 --- @return number
+--- Gets the position of an `audio` stream
 function audio_stream_get_position(audio)
     -- ...
 end
 
 --- @param audio ModAudio
 --- @return number
+--- Gets the volume of an `audio` stream
 function audio_stream_get_volume(audio)
     -- ...
 end
 
 --- @param filename string
 --- @return ModAudio
+--- Loads an `audio` stream by `filename` (with extension)
 function audio_stream_load(filename)
     -- ...
 end
 
 --- @param audio ModAudio
+--- Pauses an `audio` stream
 function audio_stream_pause(audio)
     -- ...
 end
@@ -7728,35 +8612,41 @@ end
 --- @param audio ModAudio
 --- @param restart boolean
 --- @param volume number
+--- Plays an `audio` stream with `volume`. `restart` sets the elapsed time back to 0.
 function audio_stream_play(audio, restart, volume)
     -- ...
 end
 
 --- @param audio ModAudio
 --- @param freq number
+--- Sets the frequency of an `audio` stream
 function audio_stream_set_frequency(audio, freq)
     -- ...
 end
 
 --- @param audio ModAudio
 --- @param looping boolean
+--- Sets if an `audio` stream is looping or not
 function audio_stream_set_looping(audio, looping)
     -- ...
 end
 
 --- @param audio ModAudio
 --- @param pos number
+--- Sets the position of an `audio` stream
 function audio_stream_set_position(audio, pos)
     -- ...
 end
 
 --- @param audio ModAudio
 --- @param volume number
+--- Sets the volume of an `audio` stream
 function audio_stream_set_volume(audio, volume)
     -- ...
 end
 
 --- @param audio ModAudio
+--- Stops an `audio` stream
 function audio_stream_stop(audio)
     -- ...
 end
@@ -7774,21 +8664,25 @@ function smlua_audio_utils_reset_all()
 end
 
 --- @param allow integer
+--- Sets if the romhack camera should fly above poison gas
 function camera_allow_toxic_gas_camera(allow)
     -- ...
 end
 
 --- @param enable boolean
+--- Overrides if Analog Camera is enabled
 function camera_config_enable_analog_cam(enable)
     -- ...
 end
 
 --- @param enable boolean
+--- Overrides if Free Camera is enabled
 function camera_config_enable_free_cam(enable)
     -- ...
 end
 
 --- @param enable boolean
+--- Overrides if camera mouse look is enabled
 function camera_config_enable_mouse_look(enable)
     -- ...
 end
@@ -7819,103 +8713,124 @@ function camera_config_get_y_sensitivity()
 end
 
 --- @param invert boolean
+--- Overrides if camera X is inverted
 function camera_config_invert_x(invert)
     -- ...
 end
 
 --- @param invert boolean
+--- Overrides if camera Y is inverted
 function camera_config_invert_y(invert)
     -- ...
 end
 
 --- @return boolean
+--- Checks if Analog Camera is enabled
 function camera_config_is_analog_cam_enabled()
     -- ...
 end
 
 --- @return boolean
+--- Checks if Free Camera is enabled
 function camera_config_is_free_cam_enabled()
     -- ...
 end
 
 --- @return boolean
+--- Checks if Mouse Look is enabled
 function camera_config_is_mouse_look_enabled()
     -- ...
 end
 
 --- @return boolean
+--- Checks if camera X is inverted
 function camera_config_is_x_inverted()
     -- ...
 end
 
 --- @return boolean
+--- Checks if camera Y is inverted
 function camera_config_is_y_inverted()
     -- ...
 end
 
 --- @param value integer
+--- Overrides camera aggression
 function camera_config_set_aggression(value)
     -- ...
 end
 
 --- @param value integer
+--- Overrides camera deceleration
 function camera_config_set_deceleration(value)
     -- ...
 end
 
 --- @param value integer
+--- Overrides camera pan level
 function camera_config_set_pan_level(value)
     -- ...
 end
 
 --- @param value integer
+--- Overrides camera X sensitivity
 function camera_config_set_x_sensitivity(value)
     -- ...
 end
 
 --- @param value integer
+--- Overrides camera Y sensitivity
 function camera_config_set_y_sensitivity(value)
     -- ...
 end
 
+--- Freezes the camera by not updating it
 function camera_freeze()
     -- ...
 end
 
 --- @return boolean
+--- Checks if the camera should account for surfaces
 function camera_get_checking_surfaces()
     -- ...
 end
 
 --- @return boolean
+--- Checks if the camera is frozen
 function camera_is_frozen()
     -- ...
 end
 
+--- Resets camera config overrides
 function camera_reset_overrides()
     -- ...
 end
 
 --- @param allow integer
+--- Sets if the romhack camera should allow centering
 function camera_romhack_allow_centering(allow)
     -- ...
 end
 
 --- @param allow integer
+--- Sets if the romhack camera should allow D-Pad movement
 function camera_romhack_allow_dpad_usage(allow)
     -- ...
 end
 
 --- @param value boolean
+--- Sets if the camera should account for surfaces
 function camera_set_checking_surfaces(value)
     -- ...
 end
 
 --- @param rco RomhackCameraOverride
+--- Sets the romhack camera override status
 function camera_set_romhack_override(rco)
     -- ...
 end
 
+--- Unfreezes the camera
 function camera_unfreeze()
     -- ...
 end
@@ -7924,6 +8839,7 @@ end
 --- @param y number
 --- @param z number
 --- @return Surface
+--- Finds a potential ceiling at the given `x`, `y`, and `z` values
 function collision_find_ceil(x, y, z)
     -- ...
 end
@@ -7932,11 +8848,13 @@ end
 --- @param y number
 --- @param z number
 --- @return Surface
+--- Finds a potential floor at the given `x`, `y`, and `z` values
 function collision_find_floor(x, y, z)
     -- ...
 end
 
 --- @return WallCollisionData
+--- Returns a temporary wall collision data pointer
 function collision_get_temp_wall_collision_data()
     -- ...
 end
@@ -7944,175 +8862,224 @@ end
 --- @param wcd WallCollisionData
 --- @param index integer
 --- @return Surface
+--- Gets the surface corresponding to `index` from `wcd`
 function get_surface_from_wcd_index(wcd, index)
     -- ...
 end
 
 --- @return Surface
+--- Finds a potential ceiling at the given `x`, `y`, and `z` values
 function get_water_surface_pseudo_floor()
+    -- ...
+end
+
+--- @param data Pointer_Collision
+--- Gets a table of the surface types from `data`
+function smlua_collision_util_find_surface_types(data)
     -- ...
 end
 
 --- @param name string
 --- @return Pointer_Collision
+--- Gets the `Collision` with `name`
 function smlua_collision_util_get(name)
     -- ...
 end
 
+--- @return Pointer_Collision
+--- Gets the current level terrain collision
+function smlua_collision_util_get_current_terrain_collision()
+    -- ...
+end
+
+--- @param level integer
+--- @param area integer
+--- @return Pointer_Collision
+--- Gets the `level` terrain collision from `area`
+function smlua_collision_util_get_level_collision(level, area)
+    -- ...
+end
+
+--- @deprecated
 --- @param audio ModAudio
 --- @return number
+--- [DEPRECATED: There may be a replacement for this function in the future]
 function audio_stream_get_tempo(audio)
     -- ...
 end
 
---- @param url string
---- @return ModAudio
-function audio_stream_load_url(url)
-    -- ...
-end
-
+--- @deprecated
 --- @param audio ModAudio
 --- @param initial_freq number
 --- @param speed number
 --- @param pitch boolean
+--- [DEPRECATED: There may be a replacement for this function in the future]
 function audio_stream_set_speed(audio, initial_freq, speed, pitch)
     -- ...
 end
 
+--- @deprecated
 --- @param audio ModAudio
 --- @param tempo number
+--- [DEPRECATED: There may be a replacement for this function in the future]
 function audio_stream_set_tempo(audio, tempo)
     -- ...
 end
 
+--- @deprecated
 --- @param enable boolean
+--- [DEPRECATED: Use `HOOK_ON_HUD_RENDER_BEHIND` instead] Sets if DJUI should render behind the vanilla HUD
 function djui_hud_set_render_behind_hud(enable)
     -- ...
 end
 
+--- @deprecated
 --- @param np NetworkPlayer
 --- @param part PlayerPart
 --- @param color Color
+--- [DEPRECATED: Use `network_player_set_override_palette_color` instead]
 function network_player_color_to_palette(np, part, color)
     -- ...
 end
 
+--- @deprecated
 --- @param np NetworkPlayer
 --- @param part PlayerPart
 --- @param out Color
+--- [DEPRECATED: Use `network_player_get_palette_color` or `network_player_get_override_palette_color` instead]
 function network_player_palette_to_color(np, part, out)
     -- ...
 end
 
 --- @param index integer
 --- @return integer
+--- Gets a value of the global fog color
 function get_fog_color(index)
     -- ...
 end
 
 --- @return number
+--- Gets the intensity of the fog
 function get_fog_intensity()
     -- ...
 end
 
 --- @param index integer
 --- @return integer
+--- Gets a value of the global lighting color
 function get_lighting_color(index)
     -- ...
 end
 
 --- @param index integer
 --- @return integer
+--- Gets a value of the global ambient lighting color
 function get_lighting_color_ambient(index)
     -- ...
 end
 
 --- @param index integer
 --- @return number
+--- Gets a value of the global lighting direction
 function get_lighting_dir(index)
     -- ...
 end
 
 --- @return integer
+--- Gets the current skybox
 function get_skybox()
     -- ...
 end
 
 --- @param index integer
 --- @return integer
+--- Gets a value of the global skybox color
 function get_skybox_color(index)
     -- ...
 end
 
 --- @param index integer
 --- @return integer
+--- Gets a value of the global vertex shading color
 function get_vertex_color(index)
     -- ...
 end
 
 --- @param index integer
 --- @param value integer
+--- Sets a value of the global fog color
 function set_fog_color(index, value)
     -- ...
 end
 
 --- @param intensity number
+--- Sets the intensity of the fog (this value scales very quickly, 1.0 to 1.1 is a desirable range)
 function set_fog_intensity(intensity)
     -- ...
 end
 
 --- @param index integer
 --- @param value integer
+--- Sets a value of the global lighting color
 function set_lighting_color(index, value)
     -- ...
 end
 
 --- @param index integer
 --- @param value integer
+--- Sets a value of the global lighting color (run this after `set_lighting_color` for the ambient color to not be overriden)
 function set_lighting_color_ambient(index, value)
     -- ...
 end
 
 --- @param index integer
 --- @param value number
+--- Sets a value of the global lighting direction
 function set_lighting_dir(index, value)
     -- ...
 end
 
 --- @param far number
+--- Sets the override far plane
 function set_override_far(far)
     -- ...
 end
 
 --- @param fov number
+--- Sets the override FOV
 function set_override_fov(fov)
     -- ...
 end
 
 --- @param near number
+--- Sets the override near plane
 function set_override_near(near)
     -- ...
 end
 
 --- @param background integer
+--- Sets the override skybox
 function set_override_skybox(background)
     -- ...
 end
 
 --- @param index integer
 --- @param value integer
+--- Sets a value of the global skybox color
 function set_skybox_color(index, value)
     -- ...
 end
 
 --- @param index integer
 --- @param value integer
+--- Sets a value of the global vertex shading color
 function set_vertex_color(index, value)
     -- ...
 end
 
 --- @param levelNum integer
 --- @return boolean
+--- Checks if `levelNum` is a vanilla level
 function level_is_vanilla_level(levelNum)
     -- ...
 end
@@ -8126,46 +9093,54 @@ end
 --- @param echoLevel2 integer
 --- @param echoLevel3 integer
 --- @return integer
+--- Registers a fully custom level. Level ID begins at 50
 function level_register(scriptEntryName, courseNum, fullName, shortName, acousticReach, echoLevel1, echoLevel2, echoLevel3)
     -- ...
 end
 
 --- @param areaIndex integer
+--- Instantly changes the current area to `areaIndex`
 function smlua_level_util_change_area(areaIndex)
     -- ...
 end
 
 --- @param levelNum integer
 --- @return CustomLevelInfo
+--- Gets information on a custom level from `levelNum`
 function smlua_level_util_get_info(levelNum)
     -- ...
 end
 
 --- @param courseNum integer
 --- @return CustomLevelInfo
+--- Gets information on a custom level from `courseNum`
 function smlua_level_util_get_info_from_course_num(courseNum)
     -- ...
 end
 
 --- @param shortName string
 --- @return CustomLevelInfo
+--- Gets information on a custom level from `shortName`
 function smlua_level_util_get_info_from_short_name(shortName)
     -- ...
 end
 
 --- @param aDelay integer
 --- @return boolean
+--- Exits the current level after `aDelay`
 function warp_exit_level(aDelay)
     -- ...
 end
 
 --- @return boolean
+--- Restarts the current level
 function warp_restart_level()
     -- ...
 end
 
 --- @param aLevel integer
 --- @return boolean
+--- Warps back to the castle from `aLevel`
 function warp_to_castle(aLevel)
     -- ...
 end
@@ -8174,11 +9149,13 @@ end
 --- @param aArea integer
 --- @param aAct integer
 --- @return boolean
+--- Warps to `aArea` of `aLevel` in `aAct`
 function warp_to_level(aLevel, aArea, aAct)
     -- ...
 end
 
 --- @return boolean
+--- Warps to the start level (Castle Grounds by default)
 function warp_to_start_level()
     -- ...
 end
@@ -8188,6 +9165,7 @@ end
 --- @param aAct integer
 --- @param aWarpId integer
 --- @return boolean
+--- Warps to `aWarpId` of `aArea` in `aLevel` during `aAct`
 function warp_to_warpnode(aLevel, aArea, aAct, aWarpId)
     -- ...
 end
@@ -8196,6 +9174,7 @@ end
 --- @param b integer
 --- @param c integer
 --- @return integer
+--- Clamps a signed 32-bit integer `a` between bounds `b` (minimum) and `c` (maximum)
 function clamp(a, b, c)
     -- ...
 end
@@ -8204,12 +9183,14 @@ end
 --- @param b number
 --- @param c number
 --- @return number
+--- Clamps a floating-point number `a` between bounds `b` (minimum) and `c` (maximum)
 function clampf(a, b, c)
     -- ...
 end
 
 --- @param degreesAngle number
 --- @return integer
+--- Converts an angle from degrees to SM64 format
 function degrees_to_sm64(degreesAngle)
     -- ...
 end
@@ -8217,129 +9198,205 @@ end
 --- @param a number
 --- @param b number
 --- @return number
+--- Computes the hypotenuse of a right triangle given sides `a` and `b` using the Pythagorean theorem
 function hypotf(a, b)
+    -- ...
+end
+
+--- @param a integer
+--- @param b integer
+--- @return integer
+--- Finds the maximum of two signed 32-bit integers
+function max(a, b)
+    -- ...
+end
+
+--- @param a number
+--- @param b number
+--- @return number
+--- Finds the maximum of two floating-point numbers
+function maxf(a, b)
+    -- ...
+end
+
+--- @param a integer
+--- @param b integer
+--- @return integer
+--- Finds the minimum of two signed 32-bit integers
+function min(a, b)
+    -- ...
+end
+
+--- @param a number
+--- @param b number
+--- @return number
+--- Finds the minimum of two floating-point numbers
+function minf(a, b)
     -- ...
 end
 
 --- @param radiansAngle number
 --- @return integer
+--- Converts an angle from radians to SM64 format
 function radians_to_sm64(radiansAngle)
     -- ...
 end
 
 --- @param sm64Angle integer
 --- @return number
+--- Converts an angle from SM64 format to degrees
 function sm64_to_degrees(sm64Angle)
     -- ...
 end
 
 --- @param sm64Angle integer
 --- @return number
+--- Converts an angle from SM64 format to radians
 function sm64_to_radians(sm64Angle)
+    -- ...
+end
+
+--- @param x integer
+--- @return integer
+--- Computes the square of a signed 32-bit integer
+function sqr(x)
+    -- ...
+end
+
+--- @param x number
+--- @return number
+--- Computes the square of a floating-point number
+function sqrf(x)
     -- ...
 end
 
 --- @param actFlags integer
 --- @return integer
+--- Allocates an action ID with bitwise flags
 function allocate_mario_action(actFlags)
     -- ...
 end
 
 --- @param courseNum integer
 --- @return boolean
+--- Checks if a course is a main course and not the castle or secret levels
 function course_is_main_course(courseNum)
     -- ...
 end
 
 --- @param pointer Pointer_integer
 --- @return integer
+--- Gets the signed 32-bit integer value from `pointer`
 function deref_s32_pointer(pointer)
     -- ...
 end
 
 --- @return boolean
+--- Checks if the DJUI playerlist is attempting to be opened
 function djui_attempting_to_open_playerlist()
     -- ...
 end
 
 --- @return boolean
+--- Checks if the DJUI playerlist is open
 function djui_is_playerlist_open()
     -- ...
 end
 
 --- @return boolean
+--- Returns if popups are disabled
 function djui_is_popup_disabled()
     -- ...
 end
 
 --- @return DjuiFontType
+--- Gets the DJUI menu font
 function djui_menu_get_font()
+    -- ...
+end
+
+--- @return DjuiTheme
+--- Gets the DJUI menu theme
+function djui_menu_get_theme()
     -- ...
 end
 
 --- @param message string
 --- @param lines integer
+--- Creates a DJUI popup that is broadcasted to every client
 function djui_popup_create_global(message, lines)
     -- ...
 end
 
+--- Resets if popups are disabled
 function djui_reset_popup_disabled_override()
     -- ...
 end
 
 --- @param value boolean
+--- Sets if popups are disabled
 function djui_set_popup_disabled_override(value)
     -- ...
 end
 
 --- @param localIndex integer
 --- @return string
+--- Gets the CoopNet ID of a player with `localIndex` if CoopNet is being used and the player is connected, otherwise "-1" is returned
 function get_coopnet_id(localIndex)
     -- ...
 end
 
 --- @return integer
+--- Gets the current save file number (1-indexed)
 function get_current_save_file_num()
     -- ...
 end
 
 --- @return DateTime
+--- Gets the system clock's date and time
 function get_date_and_time()
     -- ...
 end
 
 --- @return integer
+--- Gets the current state of the dialog box
 function get_dialog_box_state()
     -- ...
 end
 
 --- @return integer
+--- Gets the current dialog box ID
 function get_dialog_id()
     -- ...
 end
 
 --- @return integer
+--- Gets the choice selected inside of a dialog box (0-1)
 function get_dialog_response()
     -- ...
 end
 
 --- @return integer
+--- Gets the non overridden environment effect (e.g. snow)
 function get_envfx()
     -- ...
 end
 
 --- @param index integer
 --- @return number
+--- Gets an environment region (gas/water boxes) height value
 function get_environment_region(index)
     -- ...
 end
 
 --- @return integer
+--- Gets the global timer that has been ticking at 30 frames per second since game boot
 function get_global_timer()
     -- ...
 end
 
 --- @return boolean
+--- Checks if the save file's coin "HI SCORE" was obtained with the last star or key collection
 function get_got_file_coin_hi_score()
     -- ...
 end
@@ -8347,6 +9404,7 @@ end
 --- @param m MarioState
 --- @param index integer
 --- @return number
+--- Gets the X coordinate of Mario's hand (0-1) or foot (2-3) but it is important to note that the positions are not updated off-screen
 function get_hand_foot_pos_x(m, index)
     -- ...
 end
@@ -8354,6 +9412,7 @@ end
 --- @param m MarioState
 --- @param index integer
 --- @return number
+--- Gets the Y coordinate of Mario's hand (0-1) or foot (2-3) but It is important to note that the positions are not updated off-screen
 function get_hand_foot_pos_y(m, index)
     -- ...
 end
@@ -8361,88 +9420,105 @@ end
 --- @param m MarioState
 --- @param index integer
 --- @return number
+--- Gets the Z coordinate of Mario's hand (0-1) or foot (2-3) but it is important to note that the positions are not updated off-screen
 function get_hand_foot_pos_z(m, index)
     -- ...
 end
 
 --- @return integer
+--- Gets the last course a star or key was collected in
 function get_last_completed_course_num()
     -- ...
 end
 
 --- @return integer
+--- Gets the last collected star's number (1-7)
 function get_last_completed_star_num()
     -- ...
 end
 
 --- @return integer
+--- Gets if the last objective collected was a star (0) or a key (1)
 function get_last_star_or_key()
     -- ...
 end
 
 --- @return string
+--- Gets the local discord ID if it isn't disabled, otherwise "0" is returned
 function get_local_discord_id()
     -- ...
 end
 
 --- @return integer
+--- Gets the current area's networked timer
 function get_network_area_timer()
     -- ...
 end
 
 --- @return string
+--- Gets the name of the operating system the game is running on
 function get_os_name()
     -- ...
 end
 
 --- @return boolean
+--- Checks if the save file has been modified without saving
 function get_save_file_modified()
     -- ...
 end
 
 --- @param initialValue integer
 --- @return Pointer_integer
+--- Returns a temporary signed 32-bit integer pointer with its value set to `initialValue`
 function get_temp_s32_pointer(initialValue)
     -- ...
 end
 
 --- @return integer
+--- Gets the Unix Timestamp
 function get_time()
     -- ...
 end
 
 --- @return integer
+--- Gets TTC's speed setting
 function get_ttc_speed_setting()
     -- ...
 end
 
 --- @return number
+--- Gets the volume level of environment sounds effects
 function get_volume_env()
     -- ...
 end
 
 --- @return number
+--- Gets the volume level of music
 function get_volume_level()
     -- ...
 end
 
 --- @return number
+--- Gets the master volume level
 function get_volume_master()
     -- ...
 end
 
 --- @return number
+--- Gets the volume level of sound effects
 function get_volume_sfx()
     -- ...
 end
 
 --- @param index integer
 --- @return integer
+--- Gets the water level in an area
 function get_water_level(index)
     -- ...
 end
 
 --- @return integer
+--- Gets if the star counter on the HUD should flash
 function hud_get_flash()
     -- ...
 end
@@ -8453,11 +9529,13 @@ function hud_get_value(type)
     -- ...
 end
 
+--- Hides the HUD
 function hud_hide()
     -- ...
 end
 
 --- @return boolean
+--- Checks if the HUD is hidden
 function hud_is_hidden()
     -- ...
 end
@@ -8467,6 +9545,7 @@ end
 --- @param y number
 --- @param width number
 --- @param height number
+--- Renders a power meter on the HUD
 function hud_render_power_meter(health, x, y, width, height)
     -- ...
 end
@@ -8480,32 +9559,45 @@ end
 --- @param y number
 --- @param width number
 --- @param height number
+--- Renders an interpolated power meter on the HUD
 function hud_render_power_meter_interpolated(health, prevX, prevY, prevWidth, prevHeight, x, y, width, height)
     -- ...
 end
 
 --- @param value integer
+--- Sets if the star counter on the HUD should flash
 function hud_set_flash(value)
     -- ...
 end
 
 --- @param type HudDisplayValue
 --- @param value integer
+--- Sets a HUD display value
 function hud_set_value(type, value)
     -- ...
 end
 
+--- Shows the HUD
 function hud_show()
     -- ...
 end
 
 --- @return boolean
+--- Checks if the game is paused
 function is_game_paused()
     -- ...
 end
 
 --- @return boolean
+--- Checks if a screen transition is playing
 function is_transition_playing()
+    -- ...
+end
+
+--- @param filename string
+--- @return boolean
+--- Checks if a file exists inside of a mod
+function mod_file_exists(filename)
     -- ...
 end
 
@@ -8513,6 +9605,7 @@ end
 --- @param level integer
 --- @param area integer
 --- @param type integer
+--- Registers a custom moving texture entry (used for vanilla water boxes)
 function movtexqc_register(name, level, area, type)
     -- ...
 end
@@ -8522,81 +9615,97 @@ end
 --- @param red integer
 --- @param green integer
 --- @param blue integer
+--- Plays a screen transition
 function play_transition(transType, time, red, green, blue)
     -- ...
 end
 
+--- Resets the window title
 function reset_window_title()
     -- ...
 end
 
 --- @return boolean
+--- Checks if the save file is using its backup slot
 function save_file_get_using_backup_slot()
     -- ...
 end
 
 --- @param usingBackupSlot boolean
+--- Sets if the save file should use its backup slot
 function save_file_set_using_backup_slot(usingBackupSlot)
     -- ...
 end
 
 --- @param index integer
 --- @param value integer
+--- Sets an environment region (gas/water boxes) height value
 function set_environment_region(index, value)
     -- ...
 end
 
 --- @param value boolean
+--- Sets if the save file's coin "HI SCORE" was obtained with the last star or key collection
 function set_got_file_coin_hi_score(value)
     -- ...
 end
 
 --- @param courseNum integer
+--- Sets the last course a star or key was collected in
 function set_last_completed_course_num(courseNum)
     -- ...
 end
 
 --- @param starNum integer
+--- Sets the last collected star's number (1-7)
 function set_last_completed_star_num(starNum)
     -- ...
 end
 
 --- @param value integer
+--- Sets if the last objective collected was a star (0) or a key (1)
 function set_last_star_or_key(value)
     -- ...
 end
 
 --- @param envfx integer
+--- Sets the override environment effect (e.g. snow)
 function set_override_envfx(envfx)
     -- ...
 end
 
 --- @param value boolean
+--- Sets if the save file has been modified without saving
 function set_save_file_modified(value)
     -- ...
 end
 
 --- @param speed integer
+--- Sets TTC's speed setting (TTC_SPEED_*)
 function set_ttc_speed_setting(speed)
     -- ...
 end
 
 --- @param volume number
+--- Sets the volume level of environment sounds effects
 function set_volume_env(volume)
     -- ...
 end
 
 --- @param volume number
+--- Sets the volume level of music
 function set_volume_level(volume)
     -- ...
 end
 
 --- @param volume number
+--- Sets the master volume level
 function set_volume_master(volume)
     -- ...
 end
 
 --- @param volume number
+--- Sets the volume level of sound effects
 function set_volume_sfx(volume)
     -- ...
 end
@@ -8604,28 +9713,33 @@ end
 --- @param index integer
 --- @param height integer
 --- @param sync boolean
+--- Sets the water level in an area
 function set_water_level(index, height, sync)
     -- ...
 end
 
 --- @param title string
+--- Sets the window title to a custom title
 function set_window_title(title)
     -- ...
 end
 
 --- @param name string
 --- @return ModelExtendedId
+--- Gets the extended model ID for the `name` of a `GeoLayout`
 function smlua_model_util_get_id(name)
     -- ...
 end
 
 --- @return ObjectHitbox
+--- Returns a temporary object hitbox pointer
 function get_temp_object_hitbox()
     -- ...
 end
 
 --- @param name string
 --- @return Pointer_Trajectory
+--- Gets a trajectory by `name`
 function get_trajectory(name)
     -- ...
 end
@@ -8633,6 +9747,7 @@ end
 --- @param o1 Object
 --- @param o2 Object
 --- @return boolean
+--- Checks if `o1`'s hitbox is colliding with `o2`'s hitbox
 function obj_check_hitbox_overlap(o1, o2)
     -- ...
 end
@@ -8645,12 +9760,14 @@ end
 --- @param r number
 --- @param d number
 --- @return boolean
+--- Checks if `o`'s hitbox is colliding with the parameters of a hitbox
 function obj_check_overlap_with_hitbox_params(o, x, y, z, h, r, d)
     -- ...
 end
 
 --- @param behaviorId BehaviorId
 --- @return integer
+--- Counts every object with `behaviorId`
 function obj_count_objects_with_behavior_id(behaviorId)
     -- ...
 end
@@ -8658,6 +9775,7 @@ end
 --- @param o Object
 --- @param index integer
 --- @return Object
+--- Gets the corresponding collided object to an index from `o`
 function obj_get_collided_object(o, index)
     -- ...
 end
@@ -8665,6 +9783,7 @@ end
 --- @param o Object
 --- @param fieldIndex integer
 --- @return number
+--- Sets the float value from the field corresponding to `fieldIndex`
 function obj_get_field_f32(o, fieldIndex)
     -- ...
 end
@@ -8673,6 +9792,7 @@ end
 --- @param fieldIndex integer
 --- @param fieldSubIndex integer
 --- @return integer
+--- Gets the signed 32-bit integer value from the sub field corresponding to `fieldSubIndex` from the field corresponding to `fieldIndex`
 function obj_get_field_s16(o, fieldIndex, fieldSubIndex)
     -- ...
 end
@@ -8680,6 +9800,7 @@ end
 --- @param o Object
 --- @param fieldIndex integer
 --- @return integer
+--- Gets the signed 32-bit integer value from the field corresponding to `fieldIndex`
 function obj_get_field_s32(o, fieldIndex)
     -- ...
 end
@@ -8687,18 +9808,21 @@ end
 --- @param o Object
 --- @param fieldIndex integer
 --- @return integer
+--- Gets the unsigned 32-bit integer value from the field corresponding to `fieldIndex`
 function obj_get_field_u32(o, fieldIndex)
     -- ...
 end
 
 --- @param objList ObjectList
 --- @return Object
+--- Gets the first object in an object list
 function obj_get_first(objList)
     -- ...
 end
 
 --- @param behaviorId BehaviorId
 --- @return Object
+--- Gets the first object loaded with `behaviorId`
 function obj_get_first_with_behavior_id(behaviorId)
     -- ...
 end
@@ -8707,6 +9831,7 @@ end
 --- @param fieldIndex integer
 --- @param value number
 --- @return Object
+--- Gets the first object loaded with `behaviorId` and object float field (look in `object_fields.h` to get the index of a field)
 function obj_get_first_with_behavior_id_and_field_f32(behaviorId, fieldIndex, value)
     -- ...
 end
@@ -8715,6 +9840,7 @@ end
 --- @param fieldIndex integer
 --- @param value integer
 --- @return Object
+--- Gets the first object loaded with `behaviorId` and object signed 32-bit integer field (look in `object_fields.h` to get the index of a field)
 function obj_get_first_with_behavior_id_and_field_s32(behaviorId, fieldIndex, value)
     -- ...
 end
@@ -8722,18 +9848,21 @@ end
 --- @param o Object
 --- @param behaviorId BehaviorId
 --- @return Object
+--- Gets the nearest object with `behaviorId` to `o`
 function obj_get_nearest_object_with_behavior_id(o, behaviorId)
     -- ...
 end
 
 --- @param o Object
 --- @return Object
+--- Gets the next object in an object list
 function obj_get_next(o)
     -- ...
 end
 
 --- @param o Object
 --- @return Object
+--- Gets the next object loaded with the same behavior ID
 function obj_get_next_with_same_behavior_id(o)
     -- ...
 end
@@ -8742,6 +9871,7 @@ end
 --- @param fieldIndex integer
 --- @param value number
 --- @return Object
+--- Gets the next object loaded with the same behavior ID and object float field (look in `object_fields.h` to get the index of a field)
 function obj_get_next_with_same_behavior_id_and_field_f32(o, fieldIndex, value)
     -- ...
 end
@@ -8750,12 +9880,14 @@ end
 --- @param fieldIndex integer
 --- @param value integer
 --- @return Object
+--- Gets the next object loaded with the same behavior ID and object signed 32-bit integer field (look in `object_fields.h` to get the index of a field)
 function obj_get_next_with_same_behavior_id_and_field_s32(o, fieldIndex, value)
     -- ...
 end
 
 --- @param modelId ModelExtendedId
 --- @return SpawnParticlesInfo
+--- Returns a temporary particle spawn info pointer with its model loaded in from `modelId`
 function obj_get_temp_spawn_particles_info(modelId)
     -- ...
 end
@@ -8763,6 +9895,7 @@ end
 --- @param o Object
 --- @param behaviorId BehaviorId
 --- @return integer
+--- Checks if an object has `behaviorId`
 function obj_has_behavior_id(o, behaviorId)
     -- ...
 end
@@ -8770,60 +9903,70 @@ end
 --- @param o Object
 --- @param modelId ModelExtendedId
 --- @return integer
+--- Checks if an object's model is equal to `modelId`
 function obj_has_model_extended(o, modelId)
     -- ...
 end
 
 --- @param o Object
 --- @return boolean
+--- Checks if `o` is attackable
 function obj_is_attackable(o)
     -- ...
 end
 
 --- @param o Object
 --- @return boolean
+--- Checks if `o` is breakable
 function obj_is_breakable_object(o)
     -- ...
 end
 
 --- @param o Object
 --- @return boolean
+--- Checks if `o` is a Bully
 function obj_is_bully(o)
     -- ...
 end
 
 --- @param o Object
 --- @return boolean
+--- Checks if `o` is a coin
 function obj_is_coin(o)
     -- ...
 end
 
 --- @param o Object
 --- @return boolean
+--- Checks if `o` is an exclamation box
 function obj_is_exclamation_box(o)
     -- ...
 end
 
 --- @param o Object
 --- @return boolean
+--- Checks if `o` is grabbable
 function obj_is_grabbable(o)
     -- ...
 end
 
 --- @param o Object
 --- @return boolean
+--- Checks if `o` is a 1-Up Mushroom
 function obj_is_mushroom_1up(o)
     -- ...
 end
 
 --- @param o Object
 --- @return boolean
+--- Checks if `o` is a secret
 function obj_is_secret(o)
     -- ...
 end
 
 --- @param o Object
 --- @return boolean
+--- Checks if `o` is activated, tangible, and interactible
 function obj_is_valid_for_interaction(o)
     -- ...
 end
@@ -8832,6 +9975,7 @@ end
 --- @param dx number
 --- @param dy number
 --- @param dz number
+--- Moves the object in the direction of `dx`, `dy`, and `dz`
 function obj_move_xyz(o, dx, dy, dz)
     -- ...
 end
@@ -8839,6 +9983,7 @@ end
 --- @param o Object
 --- @param fieldIndex integer
 --- @param value number
+--- Sets the float value from the field corresponding to `fieldIndex`
 function obj_set_field_f32(o, fieldIndex, value)
     -- ...
 end
@@ -8847,6 +9992,7 @@ end
 --- @param fieldIndex integer
 --- @param fieldSubIndex integer
 --- @param value integer
+--- Sets the signed 32-bit integer value from the sub field corresponding to `fieldSubIndex` from the field corresponding to `fieldIndex`
 function obj_set_field_s16(o, fieldIndex, fieldSubIndex, value)
     -- ...
 end
@@ -8854,6 +10000,7 @@ end
 --- @param o Object
 --- @param fieldIndex integer
 --- @param value integer
+--- Sets the signed 32-bit integer value from the field corresponding to `fieldIndex`
 function obj_set_field_s32(o, fieldIndex, value)
     -- ...
 end
@@ -8861,12 +10008,14 @@ end
 --- @param o Object
 --- @param fieldIndex integer
 --- @param value integer
+--- Sets the unsigned 32-bit integer value from the field corresponding to `fieldIndex`
 function obj_set_field_u32(o, fieldIndex, value)
     -- ...
 end
 
 --- @param o Object
 --- @param modelId ModelExtendedId
+--- Sets an object's model to `modelId`
 function obj_set_model_extended(o, modelId)
     -- ...
 end
@@ -8875,6 +10024,7 @@ end
 --- @param vx number
 --- @param vy number
 --- @param vz number
+--- Sets an object's velocity to `vx`, `vy`, and `vz`
 function obj_set_vel(o, vx, vy, vz)
     -- ...
 end
@@ -8885,6 +10035,7 @@ end
 --- @param strength integer
 --- @param area integer
 --- @param index integer
+--- Sets the parameters of one of the two whirlpools (0-indexed) in an area
 function set_whirlpools(x, y, z, strength, area, index)
     -- ...
 end
@@ -8896,6 +10047,7 @@ end
 --- @param z number
 --- @param objSetupFunction function
 --- @return Object
+--- Spawns a synchronized object in at `x`, `y`, and `z` as a child object of the local Mario with his rotation. You can change the fields of the object in `objSetupFunction`
 function spawn_non_sync_object(behaviorId, modelId, x, y, z, objSetupFunction)
     -- ...
 end
@@ -8907,6 +10059,7 @@ end
 --- @param z number
 --- @param objSetupFunction function
 --- @return Object
+--- Spawns a synchronized object in at `x`, `y`, and `z` as a child object of the local Mario with his rotation. You can change the fields of the object in `objSetupFunction`
 function spawn_sync_object(behaviorId, modelId, x, y, z, objSetupFunction)
     -- ...
 end
@@ -8914,6 +10067,7 @@ end
 --- @param courseNum integer
 --- @param actNum integer
 --- @return string
+--- Gets the act name of `actNum` in `courseNum`
 function smlua_text_utils_act_name_get(courseNum, actNum)
     -- ...
 end
@@ -8921,6 +10075,7 @@ end
 --- @param courseNum integer
 --- @param actNum integer
 --- @return integer
+--- Gets the index of the mod that replaced the act name of `actNum` in `courseNum`
 function smlua_text_utils_act_name_mod_index(courseNum, actNum)
     -- ...
 end
@@ -8928,17 +10083,20 @@ end
 --- @param courseNum integer
 --- @param actNum integer
 --- @param name string
+--- Replaces the act name of `actNum` in `courseNum` with `name`
 function smlua_text_utils_act_name_replace(courseNum, actNum, name)
     -- ...
 end
 
 --- @param courseNum integer
 --- @param actNum integer
+--- Resets the act name of `actNum` in `courseNum`
 function smlua_text_utils_act_name_reset(courseNum, actNum)
     -- ...
 end
 
 --- @param name string
+--- Replaces the castle secret stars text with `name`
 function smlua_text_utils_castle_secret_stars_replace(name)
     -- ...
 end
@@ -8951,29 +10109,34 @@ end
 --- @param act4 string
 --- @param act5 string
 --- @param act6 string
+--- Replaces the act names of `courseNum`
 function smlua_text_utils_course_acts_replace(courseNum, courseName, act1, act2, act3, act4, act5, act6)
     -- ...
 end
 
 --- @param courseNum integer
 --- @return string
+--- Gets the name of `courseNum`
 function smlua_text_utils_course_name_get(courseNum)
     -- ...
 end
 
 --- @param courseNum integer
 --- @return integer
+--- Gets the index of the mod that replaced the name of `courseNum`
 function smlua_text_utils_course_name_mod_index(courseNum)
     -- ...
 end
 
 --- @param courseNum integer
 --- @param name string
+--- Replaces the name of `courseNum` with `name`
 function smlua_text_utils_course_name_replace(courseNum, name)
     -- ...
 end
 
 --- @param courseNum integer
+--- Resets the name of `courseNum`
 function smlua_text_utils_course_name_reset(courseNum)
     -- ...
 end
@@ -8984,86 +10147,104 @@ end
 --- @param leftOffset integer
 --- @param width integer
 --- @param str string
+--- Replaces `dialogId` with a custom one
 function smlua_text_utils_dialog_replace(dialogId, unused, linesPerBox, leftOffset, width, str)
     -- ...
 end
 
 --- @param index integer
 --- @param text string
+--- Replace extra text (e.g. one of the castle's secret stars) with `text`
 function smlua_text_utils_extra_text_replace(index, text)
     -- ...
 end
 
 --- @return string
+--- Gets the current language
 function smlua_text_utils_get_language()
     -- ...
 end
 
 --- @param courseNum integer
 --- @param courseName string
+--- Replaces the secret star course name of `courseNum` with `courseName`
 function smlua_text_utils_secret_star_replace(courseNum, courseName)
     -- ...
 end
 
+--- Disables background soundbanks
 function disable_background_sound()
     -- ...
 end
 
+--- Enables background soundbanks
 function enable_background_sound()
     -- ...
 end
 
+--- Fades out cap music
 function fadeout_cap_music()
     -- ...
 end
 
 --- @param fadeTimer integer
+--- Fades out the level sequence player
 function fadeout_level_music(fadeTimer)
     -- ...
 end
 
 --- @param fadeOutTime integer
+--- Fades out level, shell, and cap music
 function fadeout_music(fadeOutTime)
     -- ...
 end
 
 --- @param a integer
+--- Lowers the volume of music by 40%
 function lower_background_noise(a)
     -- ...
 end
 
 --- @param seqArgs integer
+--- Plays `seqArgs` as cap music
 function play_cap_music(seqArgs)
     -- ...
 end
 
 --- @param seqArgs integer
+--- Plays and sets the current music to `seqArgs`
 function play_cutscene_music(seqArgs)
     -- ...
 end
 
+--- Plays the infinite stairs music if you're in the endless stairs room and have less than `gLevelValues.infiniteStairsRequirement` stars
 function play_infinite_stairs_music()
     -- ...
 end
 
 --- @param soundMenuFlags integer
+--- Play menu sounds from `SOUND_MENU_FLAG_*` constants and queues rumble if `SOUND_MENU_FLAG_LETGOMARIOFACE` is one of the flags
 function play_menu_sounds(soundMenuFlags)
     -- ...
 end
 
+--- Plays the painting eject sound effect if it has not already been played
 function play_painting_eject_sound()
     -- ...
 end
 
+--- Plays shell music
 function play_shell_music()
     -- ...
 end
 
 --- @param a integer
+--- Raises music volume back up to normal levels
 function raise_background_noise(a)
     -- ...
 end
 
+--- Resets if music volume has been lowered
 function reset_volume()
     -- ...
 end
@@ -9071,36 +10252,49 @@ end
 --- @param a integer
 --- @param seqArgs integer
 --- @param fadeTimer integer
+--- Sets the background music to `seqArgs` on sequence player `a` with a fade in time of `fadeTimer`
 function set_background_music(a, seqArgs, fadeTimer)
     -- ...
 end
 
+--- Stops cap music completely
 function stop_cap_music()
     -- ...
 end
 
+--- Stops shell music completely
 function stop_shell_music()
     -- ...
 end
 
 --- @param distance number
 --- @return integer
+--- Unused vanilla function, calculates a volume based on `distance`. If `distance` is less than 500 then 127, if `distance` is greater than 1500 then 0, if `distance` is between 500 and 1500 then it ranges linearly from 60 to 124. What an even more strange and confusing function
 function calc_dist_to_volume_range_1(distance)
     -- ...
 end
 
 --- @param distance number
 --- @return integer
+--- Unused vanilla function, calculates a volume based on `distance`. If `distance` is less than 1300 then 127, if `distance` is greater than 2300 then 0, if `distance` is between 1300 and 2300 then it ranges linearly from 60 to 127. What a strange and confusing function
 function calc_dist_to_volume_range_2(distance)
     -- ...
 end
 
 --- @param soundMagic integer
+--- Create a sound spawner for objects that need a sound play once. (Breakable walls, King Bobomb exploding, etc)
+function create_sound_spawner(soundMagic)
+    -- ...
+end
+
+--- @param soundMagic integer
+--- Plays a sound if the current object is visible
 function cur_obj_play_sound_1(soundMagic)
     -- ...
 end
 
 --- @param soundMagic integer
+--- Plays a sound if the current object is visible and queues rumble for specific sounds
 function cur_obj_play_sound_2(soundMagic)
     -- ...
 end
@@ -9115,6 +10309,7 @@ end
 --- @param y number
 --- @param z number
 --- @return number
+--- Finds the height of the highest ceiling above a given position (x, y, z). If no ceiling is found, returns the default height limit of `gLevelValues.cellHeightLimit`(20000 by default)
 function find_ceil_height(x, y, z)
     -- ...
 end
@@ -9123,6 +10318,7 @@ end
 --- @param y number
 --- @param z number
 --- @return number
+--- Finds the height of the highest floor below a given position (x, y, z). If no floor is found, returns the default floor height of `gLevelValues.floorLowerLimit`(-11000 by default)
 function find_floor_height(x, y, z)
     -- ...
 end
@@ -9130,12 +10326,14 @@ end
 --- @param x number
 --- @param z number
 --- @return number
+--- Finds the height of the poison gas at a given position (x, z), if the position is within a gas region. If no gas is found, returns the default height of `gLevelValues.floorLowerLimit`(-11000 by default)
 function find_poison_gas_level(x, z)
     -- ...
 end
 
 --- @param colData WallCollisionData
 --- @return integer
+--- Detects wall collisions at a given position and adjusts the position based on the walls found. Returns the number of wall collisions detected
 function find_wall_collisions(colData)
     -- ...
 end
@@ -9143,15 +10341,8 @@ end
 --- @param x number
 --- @param z number
 --- @return number
+--- Finds the height of water at a given position (x, z), if the position is within a water region. If no water is found, returns the default height of `gLevelValues.floorLowerLimit`(-11000 by default)
 function find_water_level(x, z)
-    -- ...
-end
-
-function alloc_surface_pools()
-    -- ...
-end
-
-function clear_dynamic_surfaces()
     -- ...
 end
 
@@ -9169,6 +10360,7 @@ function load_area_terrain(index, data, surfaceRooms, macroObjects)
     -- ...
 end
 
+--- Loads the object's collision data into dynamic collision. You must run this every frame in your object's behavior loop for it to have collision
 function load_object_collision_model()
     -- ...
 end
@@ -9176,7 +10368,14 @@ end
 --- @param o Object
 --- @param index integer
 --- @return Surface
+--- Gets a surface corresponding to `index` from the surface pool buffer
 function obj_get_surface_from_index(o, index)
+    -- ...
+end
+
+--- @param surfaceType integer
+--- @return boolean
+function surface_has_force(surfaceType)
     -- ...
 end
 

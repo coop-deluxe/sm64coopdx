@@ -494,7 +494,7 @@ local function mario_update(m)
             optionTable[i].optionBeingSet = false
         end
     end
-    
+
     local offset = gPlayerSyncTable[m.playerIndex].offset
     if offset ~= 0 and offset ~= nil then
         if altOffsetActs[m.action] ~= false then
@@ -710,7 +710,7 @@ local function on_hud_render()
             local textX = x * 0.5
             djui_hud_print_text(TEXT_NAME, width - textX - djui_hud_measure_text(TEXT_NAME) * 0.3, 55, 0.6)
             djui_hud_set_font(FONT_TINY)
-            local creditScale = 0.6 
+            local creditScale = 0.6
             creditScale = math.min(creditScale, 100/djui_hud_measure_text(TEXT_CREDIT))
             djui_hud_print_text(TEXT_CREDIT, width - textX - djui_hud_measure_text(TEXT_CREDIT) * creditScale *0.5, 74, creditScale)
             djui_hud_set_font(FONT_ALIASED)
@@ -961,7 +961,7 @@ local function on_hud_render()
                 djui_hud_render_rect(widthHalf - 4 * widthScaleLimited, yOffset + 10 - 2 * widthScaleLimited, 8 * widthScaleLimited, 5 * widthScaleLimited)
             end
 
-            -- Options 
+            -- Options
             for i = currOption - 2, currOption + 2 do
                 if not (i < 1 or i > optionTableCount) then
                     local toggleName = optionTable[i].name
@@ -1295,7 +1295,7 @@ local function chat_command(msg)
         return true
     end
 
-    -- Stop Character checks if API disallows it 
+    -- Stop Character checks if API disallows it
     if not menu_is_allowed() or charBeingSet then
         djui_chat_message_create("Character Cannot be Changed")
         return true

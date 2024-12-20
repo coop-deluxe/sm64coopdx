@@ -10,6 +10,7 @@
 #include "pc/lua/smlua.h"
 #include "pc/lua/utils/smlua_text_utils.h"
 #include "game/memory.h"
+#include "audio/data.h"
 #include "audio/external.h"
 
 #include "network/network.h"
@@ -25,6 +26,7 @@
 #include "loading.h"
 #include "cliopts.h"
 #include "configfile.h"
+#include "thread.h"
 #include "controller/controller_api.h"
 #include "controller/controller_keyboard.h"
 #include "fs/fs.h"
@@ -87,8 +89,9 @@ f32 gRenderingDelta = 0;
 
 #define FRAMERATE 30
 static const f64 sFrameTime = (1.0 / ((double)FRAMERATE));
-static f64 sFrameTargetTime = 0;
-static f64 sFrameTimeStart;
+static f64 sPeriodTimeStart = 0;
+static f64 sFrameTimeStart = 0;
+static u32 sDrawnFrames = 0;
 
 bool gGameInited = false;
 bool gGfxInited = false;
@@ -174,61 +177,79 @@ static inline void patch_interpolations(f32 delta) {
     patch_scroll_targets_interpolated(delta);
 }
 
+static void compute_fps(f64 start, f64 end) {
+    u32 fps = round((f64) sDrawnFrames / MAX(0.001, end - start));
+    djui_fps_display_update(fps);
+    sDrawnFrames = 0;
+}
+
 void produce_interpolation_frames_and_delay(void) {
-    u64 frames = 0;
-    f64 curTime = clock_elapsed_f64();
+    bool is30Fps = (!configUncappedFramerate && configFrameLimit == FRAMERATE);
 
     gRenderingInterpolated = true;
 
-    // sanity check target time to deal with hangs and such
-    if (fabs(sFrameTargetTime - curTime) > 1) { sFrameTargetTime = curTime - 0.01f; }
+    // Delta time is based on the remaining number of frames we need to draw during the current second
+    f64 curTime = clock_elapsed_f64();
+    f64 remainingTime = sPeriodTimeStart + 1.0 - curTime;
+    f64 targetTime = sFrameTimeStart + sFrameTime;
+    f64 targetDelta = (
+        is30Fps ?
+        targetTime - curTime :
+        remainingTime / (f64) MAX(1, configFrameLimit - sDrawnFrames)
+    );
+
+    if (!configUncappedFramerate && (remainingTime < 0.0 || sDrawnFrames >= configFrameLimit)) {
+        compute_fps(sPeriodTimeStart, curTime);
+        sPeriodTimeStart = curTime;
+        sFrameTimeStart = curTime;
+        targetTime = curTime + sFrameTime;
+        targetDelta = 1.0 / (f64) configFrameLimit;
+    }
 
     // interpolate and render
-    while ((curTime = clock_elapsed_f64()) < sFrameTargetTime) {
-        f32 delta = ((!configUncappedFramerate && configFrameLimit == FRAMERATE)
-            ? 1.0f
-            : MAX(MIN((curTime - sFrameTimeStart) / (sFrameTargetTime - sFrameTimeStart), 1.0f), 0.0f)
+    while ((curTime = clock_elapsed_f64()) < targetTime) {
+        f32 delta = (
+            is30Fps ?
+            1.0f :
+            MAX(MIN((curTime - sFrameTimeStart) / (targetTime - sFrameTimeStart), 1.0f), 0.0f)
         );
         gRenderingDelta = delta;
-        
+
         gfx_start_frame();
         if (!gSkipInterpolationTitleScreen) { patch_interpolations(delta); }
         send_display_list(gGfxSPTask);
         gfx_end_frame();
-        
-        frames++;
+
+        sDrawnFrames++;
 
         if (configUncappedFramerate) { continue; }
-        
+
         // Delay if our framerate is capped.
-        f64 targetDelta = 1.0 / (f64) configFrameLimit;
         f64 now = clock_elapsed_f64();
         f64 actualDelta = now - curTime;
         if (actualDelta >= targetDelta) { continue; }
-        f64 delay = ((targetDelta - actualDelta) * 1000.0) - 1.0;
+        f64 delay = (targetDelta - actualDelta) * 1000.0;
         if (delay > 0.0f) {
             WAPI.delay((u32)delay);
         }
+
+        if (is30Fps) { break; }
     }
 
-    static u64 sFramesSinceFpsUpdate = 0;
-    static u64 sLastFpsUpdateTime = 0;
-
-    sFramesSinceFpsUpdate += frames;
-
-    u64 sCurrentFpsUpdateTime = (u64)clock_elapsed_f64();
-    if (sLastFpsUpdateTime != sCurrentFpsUpdateTime) {
-        u32 fps = sFramesSinceFpsUpdate / (sCurrentFpsUpdateTime - sLastFpsUpdateTime);
-        sLastFpsUpdateTime = sCurrentFpsUpdateTime;
-        sFramesSinceFpsUpdate = 0;
-
-        djui_fps_display_update(fps);
+    if ((curTime = clock_elapsed_f64()) >= sPeriodTimeStart + 1.0) {
+        compute_fps(sPeriodTimeStart, curTime);
+        sPeriodTimeStart += 1.0;
+        sFrameTimeStart = sPeriodTimeStart;
+    } else {
+        sFrameTimeStart += sFrameTime;
     }
 
-    sFrameTimeStart = sFrameTargetTime;
-    sFrameTargetTime += sFrameTime;
     gRenderingInterpolated = false;
 }
+
+// It's just better to have this off the stack, Because the size isn't small.
+// It also may help static analysis and bug catching.
+static s16 sAudioBuffer[SAMPLES_HIGH * 2 * 2] = { 0 };
 
 inline static void buffer_audio(void) {
     bool shouldMute = configMuteFocusLoss && !WAPI.has_focus();
@@ -239,11 +260,37 @@ inline static void buffer_audio(void) {
 
     int samplesLeft = audio_api->buffered();
     u32 numAudioSamples = samplesLeft < audio_api->get_desired_buffered() ? SAMPLES_HIGH : SAMPLES_LOW;
-    s16 audioBuffer[SAMPLES_HIGH * 2 * 2];
     for (s32 i = 0; i < 2; i++) {
-        create_next_audio_buffer(audioBuffer + i * (numAudioSamples * 2), numAudioSamples);
+        create_next_audio_buffer(sAudioBuffer + i * (numAudioSamples * 2), numAudioSamples);
     }
-    audio_api->play((u8 *)audioBuffer, 2 * numAudioSamples * 4);
+    audio_api->play((u8 *)sAudioBuffer, 2 * numAudioSamples * 4);
+}
+
+void *audio_thread(UNUSED void *arg) {
+    // As long as we have an audio api and that we're threaded, Loop.
+    while (audio_api) {
+        f64 curTime = clock_elapsed_f64();
+
+        // Buffer the audio.
+        lock_mutex(&gAudioThread);
+        buffer_audio();
+        unlock_mutex(&gAudioThread);
+
+        // Delay till the next frame for smooth audio at the correct speed.
+        // delay
+        f64 targetDelta = 1.0 / (f64)FRAMERATE;
+        f64 now = clock_elapsed_f64();
+        f64 actualDelta = now - curTime;
+        if (actualDelta < targetDelta) {
+            f64 delay = ((targetDelta - actualDelta) * 1000.0);
+            WAPI.delay((u32)delay);
+        }
+    }
+
+    // Exit the thread if our loop breaks.
+    exit_thread();
+
+    return NULL;
 }
 
 void produce_one_frame(void) {
@@ -255,7 +302,10 @@ void produce_one_frame(void) {
 	
     CTX_EXTENT(CTX_SMLUA, smlua_update);
 
-    CTX_EXTENT(CTX_AUDIO, buffer_audio);
+    // If we aren't threaded
+    if (gAudioThread.state == INVALID) {
+        CTX_EXTENT(CTX_AUDIO, buffer_audio);
+    }
 
     CTX_EXTENT(CTX_RENDER, produce_interpolation_frames_and_delay);
 }
@@ -408,14 +458,12 @@ int main(int argc, char *argv[]) {
     // start the thread for setting up the game
 #ifdef LOADING_SCREEN_SUPPORTED
     bool threadSuccess = false;
-    if (!gCLIOpts.hideLoadingScreen && pthread_mutex_init(&gLoadingThreadMutex, NULL) == 0) {
-        gIsThreaded = true;
-        if (pthread_create(&gLoadingThreadId, NULL, main_game_init, NULL) == 0) {
+    if (!gCLIOpts.hideLoadingScreen) {
+        if (init_thread_handle(&gLoadingThread, main_game_init, NULL, NULL, 0) == 0) {
             render_loading_screen(); // render the loading screen while the game is setup
             threadSuccess = true;
+            destroy_mutex(&gLoadingThread);
         }
-        gIsThreaded = false;
-        pthread_mutex_destroy(&gLoadingThreadMutex);
     }
     if (!threadSuccess)
 #endif
@@ -431,6 +479,9 @@ int main(int argc, char *argv[]) {
     if (!audio_api && audio_sdl.init()) { audio_api = &audio_sdl; }
 #endif
     if (!audio_api) { audio_api = &audio_null; }
+
+    // Initialize the audio thread if possible.
+    // init_thread_handle(&gAudioThread, audio_thread, NULL, NULL, 0);
 
 #ifdef LOADING_SCREEN_SUPPORTED
     loading_screen_reset();

@@ -12275,13 +12275,13 @@ void mode_rom_hack_camera(struct Camera *c) {
 
     // look left
     if (gMarioStates[0].controller->buttonPressed & L_CBUTTONS) {
-        sRomHackYaw += DEGREES(45) * (camera_config_is_x_inverted() ? -1 : 1);
+        sRomHackYaw -= DEGREES(45) * (camera_config_is_x_inverted() ? -1 : 1);
         play_sound_cbutton_side();
     }
 
     // look right
     if (gMarioStates[0].controller->buttonPressed & R_CBUTTONS) {
-        sRomHackYaw -= DEGREES(45) * (camera_config_is_x_inverted() ? -1 : 1);
+        sRomHackYaw += DEGREES(45) * (camera_config_is_x_inverted() ? -1 : 1);
         play_sound_cbutton_side();
     }
 
@@ -12336,7 +12336,7 @@ void mode_rom_hack_camera(struct Camera *c) {
 
     // figure out desired position
     f32 desiredDist = sRomHackZoom ? 900 : 1400;
-    f32 desiredHeight = sRomHackZoom ? 350 : 500;
+    f32 desiredHeight = sRomHackZoom ? 300 : 450;
     f32* mPos = &gMarioStates[0].pos[0];
     pos[0] = mPos[0] + coss(sRomHackYaw) * desiredDist;
     pos[1] = mPos[1] + desiredHeight;
@@ -12380,9 +12380,14 @@ void mode_rom_hack_camera(struct Camera *c) {
     }
 
     // tween
-    oldPos[0] = oldPos[0];
     c->pos[0] = c->pos[0] * 0.6 + oldPos[0] * 0.4;
-    c->pos[1] = c->pos[1] * 0.6 + oldPos[1] * 0.4;
+    {
+        f32 approachRate = 20.0f;
+        f32 goalHeight = c->pos[1];
+        approachRate += ABS(oldPos[1] - goalHeight) / 20;
+        c->pos[1] = oldPos[1];
+        approach_camera_height(c, goalHeight, approachRate);
+    }
     c->pos[2] = c->pos[2] * 0.6 + oldPos[2] * 0.4;
 
     // update HUD

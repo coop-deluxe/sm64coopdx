@@ -7,6 +7,7 @@
 
 #define MOD_NAME_MAX_LENGTH 64
 #define MOD_INCOMPATIBLE_MAX_LENGTH 256
+#define MOD_CATEGORY_MAX_LENGTH 64
 #define MOD_DESCRIPTION_MAX_LENGTH 800
 
 struct Mods;
@@ -24,6 +25,7 @@ struct ModFile {
 struct Mod {
     char* name;
     char* incompatible;
+    char* category;
     char* description;
     char relativePath[SYS_MAX_PATH];
     char basePath[SYS_MAX_PATH];

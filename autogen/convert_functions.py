@@ -1,5 +1,6 @@
 import os
 import re
+import math
 from extract_functions import *
 from common import *
 
@@ -27,16 +28,18 @@ in_files = [
     "src/game/mario_actions_submerged.c",
     "src/game/mario_step.h",
     "src/game/mario.h",
-    "src/game/rumble_init.c",
+    "src/game/rumble_init.h",
     "src/pc/djui/djui_popup.h",
     "src/pc/network/network_utils.h",
     "src/pc/djui/djui_console.h",
     "src/pc/djui/djui_chat_message.h",
+    "src/pc/djui/djui_language.h",
     "src/game/interaction.h",
     "src/game/level_info.h",
     "src/game/save_file.h",
     "src/game/sound_init.h",
     "src/pc/djui/djui_hud_utils.h",
+    "src/pc/djui/djui_panel_menu.h",
     "src/pc/network/network_player.h",
     "src/pc/network/lag_compensation.h",
     "include/behavior_table.h",
@@ -55,7 +58,7 @@ in_files = [
     "src/game/object_helpers.c",
     "src/game/obj_behaviors.c",
     "src/game/obj_behaviors_2.c",
-    "src/game/spawn_sound.c",
+    "src/game/spawn_sound.h",
     "src/game/object_list_processor.h",
     "src/game/behavior_actions.h",
     "src/game/mario_misc.h",
@@ -71,9 +74,11 @@ in_files = [
 ]
 
 override_allowed_functions = {
-    "src/audio/external.h":                 [ " play_", "fade", "current_background", "stop_", "sound_banks", "drop_queued_background_music", "sound_get_level_intensity" ],
-    "src/game/rumble_init.c":               [ "queue_rumble_", "reset_rumble_timers" ],
-    "src/pc/djui/djui_popup.h" :            [ "create" ],
+    "src/audio/external.h":                 [ " play_", "fade", "current_background", "stop_", "sound_banks", "drop_queued_background_music", "set_sound_moving_speed", "background_music_default_volume", "get_sound_pan", "sound_get_level_intensity", "set_audio_muted" ],
+    "src/game/rumble_init.h":               [ "queue_rumble_", "reset_rumble_timers" ],
+    "src/pc/djui/djui_popup.h":             [ "create" ],
+    "src/pc/djui/djui_language.h":          [ "djui_language_get" ],
+    "src/pc/djui/djui_panel_menu.h":        [ "djui_menu_get_rainbow_string_color" ],
     "src/game/save_file.h":                 [ "save_file_get_", "save_file_set_flags", "save_file_clear_flags", "save_file_reload", "save_file_erase_current_backup_save", "save_file_set_star_flags", "save_file_is_cannon_unlocked", "touch_coin_score_age", "save_file_set_course_coin_score", "save_file_do_save", "save_file_remove_star_flags", "save_file_erase" ],
     "src/pc/lua/utils/smlua_model_utils.h": [ "smlua_model_util_get_id" ],
     "src/game/object_list_processor.h":     [ "set_object_respawn_info_bits" ],
@@ -89,7 +94,7 @@ override_allowed_functions = {
 override_disallowed_functions = {
     "src/audio/external.h":                     [ " func_" ],
     "src/engine/math_util.h":                   [ "atan2f", "vec3s_sub" ],
-    "src/engine/surface_load.h":                [ "alloc_surface_poools" ],
+    "src/engine/surface_load.h":                [ "alloc_surface_pools", "clear_dynamic_surfaces" ],
     "src/engine/surface_collision.h":           [ " debug_", "f32_find_wall_collision" ],
     "src/game/mario_actions_airborne.c":        [ "^[us]32 act_.*" ],
     "src/game/mario_actions_automatic.c":       [ "^[us]32 act_.*" ],
@@ -100,7 +105,7 @@ override_disallowed_functions = {
     "src/game/mario_actions_submerged.c":       [ "^[us]32 act_.*" ],
     "src/game/mario_step.h":                    [ " stub_mario_step", "transfer_bully_speed" ],
     "src/game/mario.h":                         [ " init_mario" ],
-    "src/pc/djui/djui_console.h":               [ " djui_console_create", "djui_console_message_create" ],
+    "src/pc/djui/djui_console.h":               [ " djui_console_create", "djui_console_message_create", "djui_console_message_dequeue" ],
     "src/pc/djui/djui_chat_message.h":          [ "create_from" ],
     "src/game/interaction.h":                   [ "process_interaction", "_handle_" ],
     "src/game/sound_init.h":                    [ "_loop_", "thread4_", "set_sound_mode" ],
@@ -109,7 +114,6 @@ override_disallowed_functions = {
     "src/game/object_helpers.c":                [ "spawn_obj", "^bhv_", "abs[fi]", "^bit_shift", "_debug$", "^stub_", "_set_model", "cur_obj_set_direction_table", "cur_obj_progress_direction_table" ],
     "src/game/obj_behaviors.c":                 [ "debug_" ],
     "src/game/obj_behaviors_2.c":               [ "wiggler_jumped_on_attack_handler", "huge_goomba_weakly_attacked" ],
-    "src/game/spawn_sound.c":                   [ "spawner" ],
     "src/game/level_info.h":                    [ "_name_table" ],
     "src/pc/lua/utils/smlua_obj_utils.h":       [ "spawn_object_remember_field" ],
     "src/game/camera.h":                        [ "update_camera", "init_camera", "stub_camera", "^reset_camera", "move_point_along_spline" ],
@@ -119,7 +123,7 @@ override_disallowed_functions = {
     "src/pc/lua/utils/smlua_level_utils.h":     [ "smlua_level_util_reset" ],
     "src/pc/lua/utils/smlua_text_utils.h":      [ "smlua_text_utils_init", "smlua_text_utils_shutdown", "smlua_text_utils_reset_all" ],
     "src/pc/lua/utils/smlua_anim_utils.h":      [ "smlua_anim_util_reset", "smlua_anim_util_register_animation" ],
-    "src/pc/network/lag_compensation.h":        [ "lag_compensation_clear", "lag_compensation_store" ],
+    "src/pc/network/lag_compensation.h":        [ "lag_compensation_clear" ],
     "src/game/first_person_cam.h":              [ "first_person_update" ],
     "src/pc/lua/utils/smlua_collision_utils.h": [ "collision_find_surface_on_ray" ],
     "src/engine/behavior_script.h":             [ "stub_behavior_script_2", "cur_obj_update" ]
@@ -127,7 +131,7 @@ override_disallowed_functions = {
 
 override_hide_functions = {
     "smlua_deprecated.h": [ ".*" ],
-    "network_player.h": [ "network_player_get_palette_color_channel", "network_player_get_override_palette_color_channel" ]
+    "network_player.h":   [ "network_player_get_palette_color_channel", "network_player_get_override_palette_color_channel" ]
 }
 
 override_function_version_excludes = {
@@ -725,11 +729,92 @@ Shoots a raycast from `startX`, `startY`, and `startZ` in the direction of `dirX
 
 <br />
 
+## [set_exclamation_box_contents](#set_exclamation_box_contents)
+
+Sets the contents that the exclamation box spawns. A single content has 5 keys: `id`, `unused`, `firstByte`, `model`, and `behavior`.
+* `id`: Required; what value the box's oBehParams2ndByte needs to be to spawn this object.
+* `unused`: Optional; unused by vanilla.
+* `firstByte`: Optional; Overrides the 1st byte given to the spawned object.
+* `model`: Required; The model that the object will spawn with. Uses `ModelExtendedId`.
+* `behavior`: Required; The behavior ID that the object will spawn with. Uses `BehaviorId`.
+
+### Lua Example
+```lua
+set_exclamation_box_contents({
+   {id = 0, unused = 0, firstByte = 0, model = E_MODEL_GOOMBA, behavior = id_bhvGoomba}, -- Uses both optional fields
+   {id = 1, unused = 0, model = E_MODEL_KOOPA_WITH_SHELL, behavior = id_bhvKoopa}, -- Only uses `unused` optional field
+   {id = 2, firsteByte = model = E_MODEL_BLACK_BOBOMB, behavior = id_bhvBobomb}, -- Only uses `firstByte` optional field
+   {id = 3, model = E_MODEL_BOO, behavior = id_bhvBoo}, -- Uses no optional fields
+})
+```
+
+### Parameters
+There exists only 1 parameter to this function which is the main table. However, each subtable has 5 different keys that could be accessed.
+| Field | Type |
+| ----- | ---- |
+| id | `integer` |
+| unused (Optional) | `integer` |
+| firstByte (Optional) | `integer` |
+| model | [ModelExtendedId](#ModelExtendedId) |
+| behavior | [BehaviorId](#BehaviorId) |
+
+### Returns
+- None
+
+### C Prototype
+N/A
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_exclamation_box_contents](#get_exclamation_box_contents)
+
+Gets the contents that the exclamation box spawns. A single content has 5 keys: `id`, `unused`, `firstByte`, `model`, and `behavior`.
+* `id`: Required; what value the box's oBehParams2ndByte needs to be to spawn this object.
+* `unused`: Optional; unused by vanilla.
+* `firstByte`: Optional; Overrides the 1st byte given to the spawned object.
+* `model`: Required; The model that the object will spawn with. Uses `ModelExtendedId`.
+* `behavior`: Required; The behavior ID that the object will spawn with. Uses `BehaviorId`.
+
+### Lua Example
+```lua
+local contents = get_exclamation_box_contents()
+for index, content in pairs(contents) do -- Enter the main table
+   djui_chat_message_create("Table index " .. index) -- Print the current table index
+      for key, value in pairs(content) do
+         djui_chat_message_create(key .. ": " .. value) -- Print a key-value pair within this subtable
+      end
+   djui_chat_message_create("---------------------------------") -- Separator
+end
+```
+
+### Parameters
+- N/A
+
+### Returns
+The function itself does not return every key/value pair. Instead it returns the main table which holds all the subtables that hold each key/value pair.
+| Field | Type |
+| ----- | ---- |
+| id | `integer` |
+| unused (Optional) | `integer` |
+| firstByte (Optional) | `integer` |
+| model | [ModelExtendedId](#ModelExtendedId) |
+| behavior | [BehaviorId](#BehaviorId) |
+
+### C Prototype
+N/A
+
+[:arrow_up_small:](#)
+
+<br />
+
 """
 
 ############################################################################
 
 total_functions = 0
+total_doc_functions = 0
 header_h = ""
 
 def reject_line(line):
@@ -896,6 +981,9 @@ def build_function(function, do_extern):
     else:
         global total_functions
         total_functions += 1
+        if function['description'] != "":
+            global total_doc_functions
+            total_doc_functions += 1
 
     return s + "\n"
 
@@ -942,7 +1030,7 @@ def build_includes():
 
 ############################################################################
 
-def process_function(fname, line):
+def process_function(fname, line, description):
     if fname in override_allowed_functions:
         found_match = False
         for pattern in override_allowed_functions[fname]:
@@ -961,6 +1049,7 @@ def process_function(fname, line):
 
     line = line.strip()
     function['line'] = line
+    function['description'] = description  # use the specific description passed in
 
     line = line.replace('UNUSED', '')
 
@@ -1004,18 +1093,19 @@ def process_function(fname, line):
 
     return function
 
-def process_functions(fname, file_str):
+def process_functions(fname, file_str, extracted_descriptions):
     functions = []
     for line in file_str.splitlines():
         if reject_line(line):
             global rejects
             rejects += line + '\n'
             continue
-        fn = process_function(fname, line)
+        line = line.strip()
+        description = extracted_descriptions.get(line, "")
+        fn = process_function(fname, line, description)
         if fn == None:
             continue
         functions.append(fn)
-
     functions = sorted(functions, key=lambda d: d['identifier'])
     return functions
 
@@ -1024,8 +1114,8 @@ def process_file(fname):
     processed_file['filename'] = fname.replace('\\', '/').split('/')[-1]
     processed_file['extern'] = fname.endswith('.c')
 
-    extracted_str = extract_functions(fname)
-    processed_file['functions'] = process_functions(fname, extracted_str)
+    extracted_str, extracted_descriptions = extract_functions(fname)
+    processed_file['functions'] = process_functions(fname, extracted_str, extracted_descriptions)
 
     return processed_file
 
@@ -1154,8 +1244,14 @@ def doc_function(fname, function):
     fid = function['identifier']
     s = '\n## [%s](#%s)\n' % (fid, fid)
 
+    description = function.get('description', "")
+
     rtype, rlink = translate_type_to_lua(function['type'])
     param_str = ', '.join([x['identifier'] for x in function['params']])
+
+    if description != "":
+        s += '\n### Description\n'
+        s +=  f'{description}\n'
 
     s += "\n### Lua Example\n"
     if rtype != None:
@@ -1282,6 +1378,9 @@ def def_function(function):
     if rtype == None:
         rtype = 'nil'
 
+    if function['description'].startswith("[DEPRECATED"):
+        s += "--- @deprecated\n"
+
     for param in function['params']:
         pid = param['identifier']
         ptype = param['type']
@@ -1299,6 +1398,8 @@ def def_function(function):
 
     if rtype != "nil":
         s += '--- @return %s\n' % rtype
+    if function['description'] != "":
+        s += "--- %s\n" % (function['description'])
     s += "function %s(%s)\n    -- ...\nend\n\n" % (fid, param_str)
 
     return s
@@ -1335,13 +1436,16 @@ def main():
     with open(filename, 'w', newline='\n') as out:
         out.write(gen)
 
-    print('REJECTS:\n%s' % rejects)
+    if rejects != "":
+        print(f"REJECTS:\n{rejects}")
 
     doc_files(processed_files)
     def_files(processed_files)
 
     global total_functions
-    print('Total functions: ' + str(total_functions))
+    print(f"Total functions: {total_functions}")
+    global total_doc_functions
+    print(f"Total documented functions: {total_doc_functions} ({round((total_doc_functions / total_functions) * 100, 2)}%)")
 
     if len(sys.argv) >= 2 and sys.argv[1] == 'fuzz':
         output_fuzz_file()

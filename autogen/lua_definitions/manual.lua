@@ -388,3 +388,27 @@ end
 function collision_find_surface_on_ray(startX, startY, startZ, dirX, dirY, dirZ, precision)
     -- ...
 end
+
+--- @param contents ExclamationBoxContent[]
+--- Sets the contents that the exclamation box spawns.
+--- A single content has 5 keys: `id`, `unused`, `firstByte`, `model`, and `behavior`.
+--- * `id`: Required; what value the box's oBehParams2ndByte needs to be to spawn this object.
+--- * `unused`: Optional; unused by vanilla.
+--- * `firstByte`: Optional; Overrides the 1st byte given to the spawned object.
+--- * `model`: Required; The model that the object will spawn with. Uses `ModelExtendedId`.
+--- * `behavior`: Required; The behavior ID that the object will spawn with. Uses `BehaviorId`.
+function set_exclamation_box_contents(contents)
+    -- ...
+end
+
+--- @return ExclamationBoxContent[]
+--- Gets the contents that the exclamation box spawns.
+--- A single content has 5 keys: `id`, `unused`, `firstByte`, `model`, and `behavior`.
+--- * `id`: Required; what value the box's oBehParams2ndByte needs to be to spawn this object.
+--- * `unused`: Optional; unused by vanilla.
+--- * `firstByte`: Optional; Overrides the 1st byte given to the spawned object.
+--- * `model`: Required; The model that the object will spawn with. Uses `ModelExtendedId`.
+--- * `behavior`: Required; The behavior ID that the object will spawn with. Uses `BehaviorId`.
+function get_exclamation_box_contents()
+    -- ...
+end

@@ -590,6 +590,36 @@
 --- @field public g integer
 --- @field public r integer
 
+--- @class DjuiInteractableTheme
+--- @field public cursorDownBorderColor DjuiColor
+--- @field public cursorDownRectColor DjuiColor
+--- @field public defaultBorderColor DjuiColor
+--- @field public defaultRectColor DjuiColor
+--- @field public hoveredBorderColor DjuiColor
+--- @field public hoveredRectColor DjuiColor
+--- @field public textColor DjuiColor
+
+--- @class DjuiPanelTheme
+--- @field public hudFontHeader boolean
+
+--- @class DjuiTheme
+--- @field public id string
+--- @field public interactables DjuiInteractableTheme
+--- @field public name string
+--- @field public panels DjuiPanelTheme
+--- @field public threePanels DjuiThreePanelTheme
+
+--- @class DjuiThreePanelTheme
+--- @field public borderColor DjuiColor
+--- @field public rectColor DjuiColor
+
+--- @class ExclamationBoxContent
+--- @field public behavior BehaviorId
+--- @field public firstByte integer
+--- @field public id integer
+--- @field public model ModelExtendedId
+--- @field public unused integer
+
 --- @class FirstPersonCamera
 --- @field public centerL boolean
 --- @field public crouch number
@@ -1060,9 +1090,11 @@
 
 --- @class Mod
 --- @field public basePath string
+--- @field public category string
 --- @field public customBehaviorIndex integer
 --- @field public description string
 --- @field public enabled boolean
+--- @field public fileCapacity integer
 --- @field public fileCount integer
 --- @field public ignoreScriptWarnings boolean
 --- @field public incompatible string
@@ -2026,6 +2058,7 @@
 --- @field public pauseAnywhere integer
 --- @field public playerInteractions PlayerInteractions
 --- @field public playerKnockbackStrength integer
+--- @field public pvpType PvpType
 --- @field public skipIntro integer
 --- @field public stayInLevelAfterStar integer
 

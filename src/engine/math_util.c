@@ -12,47 +12,6 @@
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wreturn-local-addr"
 
-#if defined(__clang__) || defined(__GNUC__)
-
-// Use built-in functions when using Clang or GCC
-inline f32 minf(f32 a, f32 b) {
-    return __builtin_fminf(a, b);
-}
-
-inline f32 maxf(f32 a, f32 b) {
-    return __builtin_fmaxf(a, b);
-}
-
-#else
-
-// Fallback to the original implementation for iDO
-inline f32 minf(f32 a, f32 b) {
-    return (a <= b) ? a : b;
-}
-
-inline f32 maxf(f32 a, f32 b) {
-    return (a > b) ? a : b;
-}
-
-#endif
-
-// The sqr, min, max, and trig functions do not have/need built-ins, so it's safe to leave them as is
-inline s16 (min)(s16 a, s16 b) {
-    return (a <= b) ? a : b;
-}
-
-inline s16 (max)(s16 a, s16 b) {
-    return (a > b) ? a : b;
-}
-
-inline f32 sqrf(f32 x) {
-    return x * x;
-}
-
-inline s16 (sqr)(s16 x) {
-    return x * x;
-}
-
 inline f32 sins(s16 sm64Angle) {
     return gSineTable[(u16) (sm64Angle) >> 4];
 }
@@ -226,7 +185,7 @@ void vec3f_combine(Vec3f dest, Vec3f vecA, Vec3f vecB, f32 sclA, f32 sclB) {
  */
 void *vec3f_rotate_zxy(Vec3f dest, Vec3s rotate) {
     Vec3f v = { dest[0], dest[1], dest[2] };
-    
+
     f32 sx = sins(rotate[0]);
     f32 cx = coss(rotate[0]);
 
@@ -235,7 +194,7 @@ void *vec3f_rotate_zxy(Vec3f dest, Vec3s rotate) {
 
     f32 sz = sins(rotate[2]);
     f32 cz = coss(rotate[2]);
-    
+
     f32 sysz = (sy * sz);
     f32 cycz = (cy * cz);
     f32 cysz = (cy * sz);
@@ -244,7 +203,7 @@ void *vec3f_rotate_zxy(Vec3f dest, Vec3s rotate) {
     dest[0] = v[0] * ((sysz * sx) + cycz) + v[1] * ((sycz * sx) - cysz) + v[2] * (cx * sy);
     dest[1] = v[0] * (cx * sz) + v[1] * (cx * cz) + v[2] * -sx;
     dest[2] = v[0] * ((cysz * sx) - sycz) + v[1] * ((cycz * sx) + sysz) + v[2] * (cx * cy);
-    
+
     return dest;
 }
 
@@ -316,7 +275,7 @@ void mtxf_lookat(Mat4 mtx, Vec3f from, Vec3f to, s16 roll) {
     } else {
         dx = dz = 0.0f;
     }
-	
+
     sinRoll = sins(roll);
     cosRoll = coss(roll);
 
@@ -336,7 +295,7 @@ void mtxf_lookat(Mat4 mtx, Vec3f from, Vec3f to, s16 roll) {
     up[0] = forward[1] * right[2] - forward[2] * right[1];
     up[1] = forward[2] * right[0] - forward[0] * right[2];
     up[2] = forward[0] * right[1] - forward[1] * right[0];
-	
+
     mtx[0][0] = right[0];
     mtx[1][0] = right[1];
     mtx[2][0] = right[2];
@@ -890,8 +849,11 @@ inline s16 atan2s(f32 y, f32 x) {
     static const s16 offsets[] = {0x4000, 0x4000, 0xC000, 0xC000, 0x0000, 0x8000, 0x0000, 0x8000};
     static const s8 signs[] = {-1,  1,  1, -1, 1, -1, -1,  1};
 
+    // Adjust output for (0, 0) edge case
+    s16 zeroAdj = (x == 0.0f && y == 0.0f) * -0x4000;
+
     // Ensure the result fits into 16 bits via an explicit cast on angle
-    return (offsets[idx] + (signs[idx] * (s16)angle)) & 0xFFFF;
+    return ((offsets[idx] + (signs[idx] * (s16)angle)) + zeroAdj) & 0xFFFF;
 }
 
 /**

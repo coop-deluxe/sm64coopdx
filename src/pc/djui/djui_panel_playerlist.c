@@ -87,6 +87,12 @@ void djui_panel_playerlist_on_render_pre(UNUSED struct DjuiBase* base, UNUSED bo
 void djui_panel_playerlist_create(UNUSED struct DjuiBase* caller) {
     f32 bodyHeight = (sPlayerListSize * 32) + (sPlayerListSize - 1) * 4;
 
+    // delete old player list
+    if (gDjuiPlayerList != NULL) {
+        djui_base_destroy(&gDjuiPlayerList->base);
+        gDjuiPlayerList= NULL;
+    }
+
     struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(PLAYER_LIST, PLAYERS), false);
     djui_three_panel_set_body_size(panel, bodyHeight);
     gDjuiPlayerList = panel;
