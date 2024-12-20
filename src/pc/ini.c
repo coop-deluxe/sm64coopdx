@@ -220,6 +220,38 @@ void ini_free(ini_t *ini) {
 }
 
 /**
+ * Finds first key with matching value
+ * @return string of key name
+ */
+const char* ini_find_key(ini_t *ini, const char* section, const char* value) {
+    char *current_section = "";
+    char *val;
+    char *p = ini->data;
+
+    if (*p == '\0') {
+        p = next(ini, p);
+    }
+
+    while (p < ini->end) {
+        if (*p == '[') {
+            current_section = p + 1;
+        }
+        else {
+            val = next(ini, p);
+            if (!section || !strcmpci(section, current_section)) {
+                if (!strcmpci(val,value)) {
+                    return p;
+                }
+            }
+            p = val;
+        }
+        p = next(ini,p);
+    }
+
+    return NULL;
+}
+
+/**
  * Gets value by specified key and section.
  * @return string with the key.
  */
