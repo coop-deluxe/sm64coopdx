@@ -626,6 +626,11 @@ void network_update(void) {
         }
     }*/
 
+    // Kick the player back to the Main Menu if network init failed
+    if ((gNetworkType == NT_NONE) && !gDjuiInMainMenu) {
+        network_reset_reconnect_and_rehost();
+        network_shutdown(true, false, false, false);
+    }
 }
 
 void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnecting) {
