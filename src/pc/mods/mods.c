@@ -301,7 +301,7 @@ void mods_refresh_local(void) {
     if (hasUserPath) { mods_load(&gLocalMods, userModPath, true); }
 
     char defaultModsPath[SYS_MAX_PATH] = { 0 };
-    snprintf(defaultModsPath, SYS_MAX_PATH, "%s/%s", sys_exe_path(), MOD_DIRECTORY);
+    snprintf(defaultModsPath, SYS_MAX_PATH, "%s/%s", sys_exe_path_dir(), MOD_DIRECTORY);
     mods_load(&gLocalMods, defaultModsPath, false);
 
     // sort
