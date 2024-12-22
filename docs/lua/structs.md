@@ -1225,8 +1225,8 @@
 | fnNode | [FnGraphNode](structs.md#FnGraphNode) | read-only |
 | prevCameraFocus | [Vec3f](structs.md#Vec3f) | read-only |
 | prevCameraPos | [Vec3f](structs.md#Vec3f) | read-only |
-| prevCameraTimestamp | `integer` |  |
-| unused | `integer` |  |
+| prevCameraTimestamp | `integer` | read-only |
+| unused | `integer` | read-only |
 
 [:arrow_up_small:](#)
 
@@ -1250,11 +1250,11 @@
 | fnNode | [FnGraphNode](structs.md#FnGraphNode) | read-only |
 | focus | [Vec3f](structs.md#Vec3f) | read-only |
 | matrixPtr | `Pointer` <`Mat4`> |  |
-| matrixPtrPrev | `Pointer` <`Mat4`> |  |
+| matrixPtrPrev | `Pointer` <`Mat4`> | read-only |
 | pos | [Vec3f](structs.md#Vec3f) | read-only |
 | prevFocus | [Vec3f](structs.md#Vec3f) | read-only |
 | prevPos | [Vec3f](structs.md#Vec3f) | read-only |
-| prevTimestamp | `integer` |  |
+| prevTimestamp | `integer` | read-only |
 | roll | `integer` |  |
 | rollScreen | `integer` |  |
 
@@ -1302,7 +1302,7 @@
 | objNode | [Object](structs.md#Object) |  |
 | playerIndex | `integer` |  |
 | prevShadowPos | [Vec3f](structs.md#Vec3f) | read-only |
-| prevShadowPosTimestamp | `integer` |  |
+| prevShadowPosTimestamp | `integer` | read-only |
 | translation | [Vec3s](structs.md#Vec3s) | read-only |
 
 [:arrow_up_small:](#)
@@ -1372,7 +1372,7 @@
 | Field | Type | Access |
 | ----- | ---- | ------ |
 | node | [GraphNode](structs.md#GraphNode) | read-only |
-| sharedChild | [GraphNode](structs.md#GraphNode) |  |
+| sharedChild | [GraphNode](structs.md#GraphNode) | read-only |
 
 [:arrow_up_small:](#)
 
@@ -1399,7 +1399,7 @@
 | near | `integer` |  |
 | prevFov | `number` |  |
 | prevTimestamp | `number` |  |
-| unused | `integer` |  |
+| unused | `integer` | read-only |
 
 [:arrow_up_small:](#)
 
@@ -1458,9 +1458,9 @@
 | Field | Type | Access |
 | ----- | ---- | ------ |
 | fnNode | [FnGraphNode](structs.md#FnGraphNode) | read-only |
-| numCases | `integer` |  |
-| selectedCase | `integer` |  |
-| unused | `integer` |  |
+| numCases | `integer` | read-only |
+| selectedCase | `integer` | read-only |
+| unused | `integer` | read-only |
 
 [:arrow_up_small:](#)
 

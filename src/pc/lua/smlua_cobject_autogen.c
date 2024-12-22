@@ -965,8 +965,8 @@ static struct LuaObjectField sGraphNodeBackgroundFields[LUA_GRAPH_NODE_BACKGROUN
     { "fnNode",              LVT_COBJECT, offsetof(struct GraphNodeBackground, fnNode),              true,  LOT_FNGRAPHNODE },
     { "prevCameraFocus",     LVT_COBJECT, offsetof(struct GraphNodeBackground, prevCameraFocus),     true,  LOT_VEC3F       },
     { "prevCameraPos",       LVT_COBJECT, offsetof(struct GraphNodeBackground, prevCameraPos),       true,  LOT_VEC3F       },
-    { "prevCameraTimestamp", LVT_U32,     offsetof(struct GraphNodeBackground, prevCameraTimestamp), false, LOT_NONE        },
-    { "unused",              LVT_S32,     offsetof(struct GraphNodeBackground, unused),              false, LOT_NONE        },
+    { "prevCameraTimestamp", LVT_U32,     offsetof(struct GraphNodeBackground, prevCameraTimestamp), true,  LOT_NONE        },
+    { "unused",              LVT_S32,     offsetof(struct GraphNodeBackground, unused),              true,  LOT_NONE        },
 };
 
 #define LUA_GRAPH_NODE_BILLBOARD_FIELD_COUNT 2
@@ -982,11 +982,11 @@ static struct LuaObjectField sGraphNodeCameraFields[LUA_GRAPH_NODE_CAMERA_FIELD_
     { "fnNode",        LVT_COBJECT,   offsetof(struct GraphNodeCamera, fnNode),        true,  LOT_FNGRAPHNODE },
     { "focus",         LVT_COBJECT,   offsetof(struct GraphNodeCamera, focus),         true,  LOT_VEC3F       },
     { "matrixPtr",     LVT_COBJECT_P, offsetof(struct GraphNodeCamera, matrixPtr),     false, LOT_POINTER     },
-    { "matrixPtrPrev", LVT_COBJECT_P, offsetof(struct GraphNodeCamera, matrixPtrPrev), false, LOT_POINTER     },
+    { "matrixPtrPrev", LVT_COBJECT_P, offsetof(struct GraphNodeCamera, matrixPtrPrev), true,  LOT_POINTER     },
     { "pos",           LVT_COBJECT,   offsetof(struct GraphNodeCamera, pos),           true,  LOT_VEC3F       },
     { "prevFocus",     LVT_COBJECT,   offsetof(struct GraphNodeCamera, prevFocus),     true,  LOT_VEC3F       },
     { "prevPos",       LVT_COBJECT,   offsetof(struct GraphNodeCamera, prevPos),       true,  LOT_VEC3F       },
-    { "prevTimestamp", LVT_U32,       offsetof(struct GraphNodeCamera, prevTimestamp), false, LOT_NONE        },
+    { "prevTimestamp", LVT_U32,       offsetof(struct GraphNodeCamera, prevTimestamp), true,  LOT_NONE        },
     { "roll",          LVT_S16,       offsetof(struct GraphNodeCamera, roll),          false, LOT_NONE        },
     { "rollScreen",    LVT_S16,       offsetof(struct GraphNodeCamera, rollScreen),    false, LOT_NONE        },
 };
@@ -1016,7 +1016,7 @@ static struct LuaObjectField sGraphNodeHeldObjectFields[LUA_GRAPH_NODE_HELD_OBJE
     { "objNode",                LVT_COBJECT_P, offsetof(struct GraphNodeHeldObject, objNode),                false, LOT_OBJECT      },
     { "playerIndex",            LVT_S32,       offsetof(struct GraphNodeHeldObject, playerIndex),            false, LOT_NONE        },
     { "prevShadowPos",          LVT_COBJECT,   offsetof(struct GraphNodeHeldObject, prevShadowPos),          true,  LOT_VEC3F       },
-    { "prevShadowPosTimestamp", LVT_U32,       offsetof(struct GraphNodeHeldObject, prevShadowPosTimestamp), false, LOT_NONE        },
+    { "prevShadowPosTimestamp", LVT_U32,       offsetof(struct GraphNodeHeldObject, prevShadowPosTimestamp), true,  LOT_NONE        },
     { "translation",            LVT_COBJECT,   offsetof(struct GraphNodeHeldObject, translation),            true,  LOT_VEC3S       },
 };
 
@@ -1067,8 +1067,8 @@ static struct LuaObjectField sGraphNodeObjectFields[LUA_GRAPH_NODE_OBJECT_FIELD_
 
 #define LUA_GRAPH_NODE_OBJECT_PARENT_FIELD_COUNT 2
 static struct LuaObjectField sGraphNodeObjectParentFields[LUA_GRAPH_NODE_OBJECT_PARENT_FIELD_COUNT] = {
-    { "node",        LVT_COBJECT,   offsetof(struct GraphNodeObjectParent, node),        true,  LOT_GRAPHNODE },
-    { "sharedChild", LVT_COBJECT_P, offsetof(struct GraphNodeObjectParent, sharedChild), false, LOT_GRAPHNODE },
+    { "node",        LVT_COBJECT,   offsetof(struct GraphNodeObjectParent, node),        true, LOT_GRAPHNODE },
+    { "sharedChild", LVT_COBJECT_P, offsetof(struct GraphNodeObjectParent, sharedChild), true, LOT_GRAPHNODE },
 };
 
 #define LUA_GRAPH_NODE_ORTHO_PROJECTION_FIELD_COUNT 2
@@ -1085,7 +1085,7 @@ static struct LuaObjectField sGraphNodePerspectiveFields[LUA_GRAPH_NODE_PERSPECT
     { "near",          LVT_S16,     offsetof(struct GraphNodePerspective, near),          false, LOT_NONE        },
     { "prevFov",       LVT_F32,     offsetof(struct GraphNodePerspective, prevFov),       false, LOT_NONE        },
     { "prevTimestamp", LVT_F32,     offsetof(struct GraphNodePerspective, prevTimestamp), false, LOT_NONE        },
-    { "unused",        LVT_S32,     offsetof(struct GraphNodePerspective, unused),        false, LOT_NONE        },
+    { "unused",        LVT_S32,     offsetof(struct GraphNodePerspective, unused),        true,  LOT_NONE        },
 };
 
 #define LUA_GRAPH_NODE_ROTATION_FIELD_COUNT 4
@@ -1120,10 +1120,10 @@ static struct LuaObjectField sGraphNodeStartFields[LUA_GRAPH_NODE_START_FIELD_CO
 
 #define LUA_GRAPH_NODE_SWITCH_CASE_FIELD_COUNT 4
 static struct LuaObjectField sGraphNodeSwitchCaseFields[LUA_GRAPH_NODE_SWITCH_CASE_FIELD_COUNT] = {
-    { "fnNode",       LVT_COBJECT, offsetof(struct GraphNodeSwitchCase, fnNode),       true,  LOT_FNGRAPHNODE },
-    { "numCases",     LVT_S16,     offsetof(struct GraphNodeSwitchCase, numCases),     false, LOT_NONE        },
-    { "selectedCase", LVT_S16,     offsetof(struct GraphNodeSwitchCase, selectedCase), false, LOT_NONE        },
-    { "unused",       LVT_S32,     offsetof(struct GraphNodeSwitchCase, unused),       false, LOT_NONE        },
+    { "fnNode",       LVT_COBJECT, offsetof(struct GraphNodeSwitchCase, fnNode),       true, LOT_FNGRAPHNODE },
+    { "numCases",     LVT_S16,     offsetof(struct GraphNodeSwitchCase, numCases),     true, LOT_NONE        },
+    { "selectedCase", LVT_S16,     offsetof(struct GraphNodeSwitchCase, selectedCase), true, LOT_NONE        },
+    { "unused",       LVT_S32,     offsetof(struct GraphNodeSwitchCase, unused),       true, LOT_NONE        },
 };
 
 #define LUA_GRAPH_NODE_TRANSLATION_FIELD_COUNT 2
