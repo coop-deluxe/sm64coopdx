@@ -4408,7 +4408,7 @@ end
 --- @param interactType integer
 --- @param o Object
 --- @return integer
---- Handles interaction with grabbable objects (e.g., crates, small enemies, or Bowser). Checks if Mario can pick up the object and initiates the grab action if possible. Useful for course mechanics, throwing items, and bowser
+--- Handles interaction with grabbable objects (e.g., crates, small enemies, or Bowser). Checks if Mario can pick up the object and initiates the grab action if possible. Useful for course mechanics, throwing items, and Bowser
 function interact_grabbable(m, interactType, o)
     -- ...
 end

@@ -4959,7 +4959,7 @@ Handles interaction with flame objects. If Mario touches a flame and is not invu
 ## [interact_grabbable](#interact_grabbable)
 
 ### Description
-Handles interaction with grabbable objects (e.g., crates, small enemies, or Bowser). Checks if Mario can pick up the object and initiates the grab action if possible. Useful for course mechanics, throwing items, and bowser
+Handles interaction with grabbable objects (e.g., crates, small enemies, or Bowser). Checks if Mario can pick up the object and initiates the grab action if possible. Useful for course mechanics, throwing items, and Bowser
 
 ### Lua Example
 `local integerValue = interact_grabbable(m, interactType, o)`
