@@ -297,7 +297,7 @@ u32 interact_cap(struct MarioState *m, UNUSED u32 interactType, struct Object *o
 
 /* |description|
 Handles interaction with grabbable objects (e.g., crates, small enemies, or Bowser). Checks if Mario can pick up the object and initiates the grab action if possible.
-Useful for course mechanics, throwing items, and bowser
+Useful for course mechanics, throwing items, and Bowser
 |descriptionEnd| */
 u32 interact_grabbable(struct MarioState *m, u32 interactType, struct Object *o);
 
