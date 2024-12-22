@@ -7,8 +7,8 @@
 extern "C" {
 #endif
 
-#define MAX_KEYS 512
-#define MAX_KEY_VALUE_LENGTH 512
+#define MAX_KEYS 1024
+#define MAX_KEY_VALUE_LENGTH 1024
 #define SAVE_DIRECTORY "sav"
 #define SAVE_EXTENSION ".sav"
 
