@@ -1,27 +1,27 @@
--- name: Star Road
--- description: Star Road is a romhack created by SKELUX\n\nwww.youtube.com/c/Skelux\n\nThere are 23 custom levels, with a total of 130 stars.\n\nPorted to PC by AloXado320, PeachyPeach, and PrinceFrizzy\n\nPorted to coop by djoslin0, PrinceFrizzy, and Isaac.
+-- name: Star Road Dev
+-- description: Romhack created by \\#FFD700\\SKELUX\\#DCDCDC\\\n\nwww.youtube.com/c/Skelux\n\nThere are 23 custom levels, with a total of 130 stars.\n\nPorted to PC by AloXado320,\n\\#FFAAFF\\PeachyPeach\\#DCDCDC\\, and \\#8C4AC7\\PrinceFrizzy\\#DCDCDC\\\n\nPorted to coop by \\#093614\\djoslin0\\#DCDCDC\\,\n\\#8C4AC7\\PrinceFrizzy\\#DCDCDC\\, and \\#141699\\Isaac\\#DCDCDC\\.\n\nAdditional Fixes and "\\#FF0000\\Hard Mode\\#DCDCDC\\" addition by  \\#2D851C\\Mr.Needlemouse\\#DCDCDC\\.
 -- incompatible: romhack
 
 --------------
 -- movtexs --
 --------------
 
-movtexqc_register('bbh_1_Movtex_0',              LEVEL_BBH,              1, 0)
-movtexqc_register('ccm_1_Movtex_0',              LEVEL_CCM,              1, 0)
-movtexqc_register('hmc_1_Movtex_0',              LEVEL_HMC,              1, 0)
-movtexqc_register('ssl_1_Movtex_0',              LEVEL_SSL,              1, 0)
-movtexqc_register('bob_1_Movtex_0',              LEVEL_BOB,              1, 0)
-movtexqc_register('sl_1_Movtex_0',               LEVEL_SL,               1, 0)
-movtexqc_register('jrb_1_Movtex_0',              LEVEL_JRB,              1, 0)
-movtexqc_register('castle_grounds_1_Movtex_0',   LEVEL_CASTLE_GROUNDS,   1, 0)
-movtexqc_register('lll_1_Movtex_0',              LEVEL_LLL,              1, 0)
-movtexqc_register('wf_1_Movtex_0',               LEVEL_WF,               1, 0)
-movtexqc_register('ending_1_Movtex_0',           LEVEL_ENDING,           1, 0)
+movtexqc_register('bbh_1_Movtex_0', LEVEL_BBH, 1, 0)
+movtexqc_register('ccm_1_Movtex_0', LEVEL_CCM, 1, 0)
+movtexqc_register('hmc_1_Movtex_0', LEVEL_HMC, 1, 0)
+movtexqc_register('ssl_1_Movtex_0', LEVEL_SSL, 1, 0)
+movtexqc_register('bob_1_Movtex_0', LEVEL_BOB, 1, 0)
+movtexqc_register('sl_1_Movtex_0', LEVEL_SL, 1, 0)
+movtexqc_register('jrb_1_Movtex_0', LEVEL_JRB, 1, 0)
+movtexqc_register('castle_grounds_1_Movtex_0', LEVEL_CASTLE_GROUNDS, 1, 0)
+movtexqc_register('lll_1_Movtex_0', LEVEL_LLL, 1, 0)
+movtexqc_register('wf_1_Movtex_0', LEVEL_WF, 1, 0)
+movtexqc_register('ending_1_Movtex_0', LEVEL_ENDING, 1, 0)
 movtexqc_register('castle_courtyard_1_Movtex_0', LEVEL_CASTLE_COURTYARD, 1, 0)
-movtexqc_register('pss_1_Movtex_0',              LEVEL_PSS,              1, 0)
-movtexqc_register('cotmc_1_Movtex_0',            LEVEL_COTMC,            1, 0)
-movtexqc_register('totwc_1_Movtex_0',            LEVEL_TOTWC,            1, 0)
-movtexqc_register('wmotr_1_Movtex_0',            LEVEL_WMOTR,            1, 0)
+movtexqc_register('pss_1_Movtex_0', LEVEL_PSS, 1, 0)
+movtexqc_register('cotmc_1_Movtex_0', LEVEL_COTMC, 1, 0)
+movtexqc_register('totwc_1_Movtex_0', LEVEL_TOTWC, 1, 0)
+movtexqc_register('wmotr_1_Movtex_0', LEVEL_WMOTR, 1, 0)
 
 ------------------
 -- extra levels --
@@ -30,12 +30,23 @@ movtexqc_register('wmotr_1_Movtex_0',            LEVEL_WMOTR,            1, 0)
 LEVEL_ZERO_LIFE = level_register('level_zerolife_entry', COURSE_NONE, 'ZERO LIFE', 'zl', 28000, 0x28, 0x28, 0x28)
 
 ---------------------------
+-- race character speed--
+---------------------------
+--- @param o Object
+function bhv_tuxierace_init(o)
+    if o.oRacingPenguinReachedBottom == 1 then
+        o.oRacingPenguinWeightedNewTargetSpeed = 10
+    end
+end
+
+hook_behavior(id_bhvRacingPenguin, OBJ_LIST_GENACTOR, false, nil, bhv_tuxierace_init, "bhvRacingPenguin")
+
+---------------------------
 -- force server settings --
 ---------------------------
 
 gLevelValues.fixCollisionBugs = true
 gLevelValues.vanishCapSequence = 0x32
-
 gServerSettings.skipIntro = 1
 
 -----------
@@ -84,7 +95,7 @@ smlua_audio_utils_replace_sequence(0x24, 0x11, 70, "24_Seq_smsrdeluxe_custom")
 smlua_audio_utils_replace_sequence(0x25, 0x25, 85, "25_Seq_smsrdeluxe_custom")
 smlua_audio_utils_replace_sequence(0x26, 0x25, 75, "26_Seq_smsrdeluxe_custom")
 smlua_audio_utils_replace_sequence(0x27, 0x25, 75, "27_Seq_smsrdeluxe_custom")
-smlua_audio_utils_replace_sequence(0x28, 0x25, 85, "28_Seq_smsrdeluxe_custom") -- One of Simpleflips outros. (Don't know the actual song name.)
+smlua_audio_utils_replace_sequence(0x28, 0x25, 85, "28_Seq_smsrdeluxe_custom") -- One of Simpleflips outros. (Song Name is "Lets Do the Fooka Fooka!" from Super Mario RPG) - Needle
 smlua_audio_utils_replace_sequence(0x29, 0x25, 70, "29_Seq_smsrdeluxe_custom")
 smlua_audio_utils_replace_sequence(0x2A, 0x11, 80, "2A_Seq_smsrdeluxe_custom")
 smlua_audio_utils_replace_sequence(0x2B, 0x1B, 80, "2B_Seq_smsrdeluxe_custom")
@@ -104,13 +115,38 @@ smlua_audio_utils_replace_sequence(0x32, 0x25, 80, "32_Seq_smsrdeluxe_custom")
 camera_set_romhack_override(RCO_ALL_EXCEPT_BOWSER)
 camera_set_use_course_specific_settings(false)
 
-----------------------------------
+-------------------------
+-- zero life checks --
+-------------------------
 
-function on_death()
+local zerolife = false
+function on_death(transitionType)
     local m = gMarioStates[0]
-    if m.numLives <= 0 then
+    if m.numLives < 0 and transitionType == WARP_TRANSITION_FADE_INTO_BOWSER then
+        zerolife = true
+        m.numLives = 3
+    end
+end
+
+function void_death()
+    local m = gMarioStates[0]
+    if m.numLives < 0 then
+        zerolife = true
+        m.numLives = 3
+    end
+end
+
+local startingLives = true
+local function lives(m)
+    if m.playerIndex ~= 0 then return end
+    if startingLives then
+        m.numLives = 3
+        startingLives = false
+    end
+    if zerolife then
         warp_to_level(LEVEL_ZERO_LIFE, 1, 0)
-        m.numLives = 4
+        zerolife = false
+        startingLives = true
     end
 end
 
@@ -121,6 +157,8 @@ function on_warp_and_init() -- 130 stars castle grounds music
     end
 end
 
-hook_event(HOOK_ON_DEATH, on_death)
+hook_event(HOOK_ON_SCREEN_TRANSITION, on_death)
 hook_event(HOOK_ON_LEVEL_INIT, on_warp_and_init)
 hook_event(HOOK_ON_WARP, on_warp_and_init)
+hook_event(HOOK_MARIO_UPDATE, lives)
+hook_event(HOOK_ON_DEATH, void_death)
