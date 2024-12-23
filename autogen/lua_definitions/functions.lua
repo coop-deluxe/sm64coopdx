@@ -8368,6 +8368,7 @@ end
 
 --- @param obj Object
 --- @param bits integer
+--- Runs an OR operator on the `obj`'s respawn info with `bits` << 8. If `bits` is 0xFF, this prevents the object from respawning after leaving and re-entering the area
 function set_object_respawn_info_bits(obj, bits)
     -- ...
 end
