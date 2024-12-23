@@ -946,6 +946,69 @@ int smlua_func_collision_find_surface_on_ray(lua_State* L) {
     return 1;
 }
 
+  ////////////////
+ // graph node //
+////////////////
+
+typedef struct { s16 type; u16 lot; } GraphNodeLot;
+static GraphNodeLot graphNodeLots[23] = {
+    { GRAPH_NODE_TYPE_ANIMATED_PART, LOT_GRAPHNODEANIMATEDPART },
+    { GRAPH_NODE_TYPE_BACKGROUND, LOT_GRAPHNODEBACKGROUND },
+    { GRAPH_NODE_TYPE_BILLBOARD, LOT_GRAPHNODEBILLBOARD },
+    { GRAPH_NODE_TYPE_CAMERA, LOT_GRAPHNODECAMERA },
+    { GRAPH_NODE_TYPE_CULLING_RADIUS, LOT_GRAPHNODECULLINGRADIUS },
+    { GRAPH_NODE_TYPE_DISPLAY_LIST, LOT_GRAPHNODEDISPLAYLIST },
+    { GRAPH_NODE_TYPE_FUNCTIONAL, LOT_FNGRAPHNODE },
+    { GRAPH_NODE_TYPE_GENERATED_LIST, LOT_GRAPHNODEGENERATED },
+    { GRAPH_NODE_TYPE_HELD_OBJ, LOT_GRAPHNODEHELDOBJECT },
+    { GRAPH_NODE_TYPE_LEVEL_OF_DETAIL, LOT_GRAPHNODELEVELOFDETAIL },
+    { GRAPH_NODE_TYPE_MASTER_LIST, LOT_GRAPHNODEMASTERLIST },
+    { GRAPH_NODE_TYPE_OBJECT, LOT_GRAPHNODEOBJECT },
+    { GRAPH_NODE_TYPE_OBJECT_PARENT, LOT_GRAPHNODEOBJECTPARENT },
+    { GRAPH_NODE_TYPE_ORTHO_PROJECTION, LOT_GRAPHNODEORTHOPROJECTION },
+    { GRAPH_NODE_TYPE_PERSPECTIVE, LOT_GRAPHNODEPERSPECTIVE },
+    { GRAPH_NODE_TYPE_ROOT, LOT_GRAPHNODE },
+    { GRAPH_NODE_TYPE_ROTATION, LOT_GRAPHNODEROTATION },
+    { GRAPH_NODE_TYPE_SCALE, LOT_GRAPHNODESCALE },
+    { GRAPH_NODE_TYPE_SHADOW, LOT_GRAPHNODESHADOW },
+    { GRAPH_NODE_TYPE_START, LOT_GRAPHNODESTART },
+    { GRAPH_NODE_TYPE_SWITCH_CASE, LOT_GRAPHNODESWITCHCASE },
+    { GRAPH_NODE_TYPE_TRANSLATION, LOT_GRAPHNODETRANSLATION },
+    { GRAPH_NODE_TYPE_TRANSLATION_ROTATION, LOT_GRAPHNODETRANSLATIONROTATION },
+};
+
+int smlua_func_cast_graph_node(lua_State* L) {
+    if (!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    struct GraphNode* graphNode;
+
+    if (smlua_is_cobject(L, 1, LOT_GRAPHNODE)) {
+        graphNode = (struct GraphNode*)smlua_to_cobject(L, 1, LOT_GRAPHNODE);
+        if (!gSmLuaConvertSuccess) { LOG_LUA("cast_graph_node: Failed to convert parameter 1"); return 0; }
+    } else if (smlua_is_cobject(L, 1, LOT_FNGRAPHNODE)) {
+        graphNode = (struct GraphNode*)smlua_to_cobject(L, 1, LOT_FNGRAPHNODE);
+        if (!gSmLuaConvertSuccess) { LOG_LUA("cast_graph_node: Failed to convert parameter 1"); return 0; }
+    } else {
+        LOG_LUA("cast_graph_node: Failed to convert parameter 1");
+        return 0;
+    }
+
+    u16 lot = 0;
+    for (u8 i = 0; i != 23; i++) {
+        if (graphNode->type != graphNodeLots[i].type) continue;
+        lot = graphNodeLots[i].lot;
+        break;
+    }
+    if (lot == 0) {
+        LOG_LUA("cast_graph_node: Invalid GraphNode type");
+        return 0;
+    }
+
+    smlua_push_object(L, lot, graphNode);
+
+    return 1;
+}
+
   //////////
  // bind //
 //////////
@@ -975,4 +1038,5 @@ void smlua_bind_functions(void) {
     smlua_bind_function(L, "log_to_console", smlua_func_log_to_console);
     smlua_bind_function(L, "add_scroll_target", smlua_func_add_scroll_target);
     smlua_bind_function(L, "collision_find_surface_on_ray", smlua_func_collision_find_surface_on_ray);
+    smlua_bind_function(L, "cast_graph_node", smlua_func_cast_graph_node);
 }

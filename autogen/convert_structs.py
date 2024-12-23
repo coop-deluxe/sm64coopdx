@@ -29,7 +29,8 @@ in_files = [
     "src/game/paintings.h",
     "src/pc/djui/djui_types.h",
     "src/game/first_person_cam.h",
-    "src/game/player_palette.h"
+    "src/game/player_palette.h",
+    "src/engine/graph_node.h"
 ]
 
 out_filename_c = 'src/pc/lua/smlua_cobject_autogen.c'
@@ -112,7 +113,13 @@ override_field_immutable = {
     "SpawnInfo": [ "syncID", "next", "unk18" ],
     "CustomLevelInfo": [ "next" ],
     "GraphNode": [ "children", "next", "parent", "prev", "type" ],
-    "GraphNodeObject": [  "angle", "animInfo", "cameraToObject", "node", "pos", "prevAngle", "prevPos", "prevScale", "prevScaleTimestamp", "prevShadowPos", "prevShadowPosTimestamp", "prevThrowMatrix", "prevThrowMatrixTimestamp", "prevTimestamp", "scale", "shadowPos", "sharedChild", "skipInterpolationTimestamp", "throwMatrixPrev", "unk4C", ],
+    "GraphNodeBackground": [ "prevCameraTimestamp", "unused" ],
+    "GraphNodeCamera": [ "matrixPtrPrev", "prevTimestamp" ],
+    "GraphNodeHeldObject": [ "prevShadowPosTimestamp" ],
+    "GraphNodeObject": [ "angle", "animInfo", "cameraToObject", "node", "pos", "prevAngle", "prevPos", "prevScale", "prevScaleTimestamp", "prevShadowPos", "prevShadowPosTimestamp", "prevThrowMatrix", "prevThrowMatrixTimestamp", "prevTimestamp", "scale", "shadowPos", "sharedChild", "skipInterpolationTimestamp", "throwMatrixPrev", "unk4C", ],
+    "GraphNodeObjectParent": [ "sharedChild" ],
+    "GraphNodePerspective": [ "unused" ],
+    "GraphNodeSwitchCase": [ "*" ],
     "ObjectWarpNode": [ "next "],
     "Animation": [ "length" ],
     "AnimationTable": [ "count" ],

@@ -26,6 +26,7 @@
    - [log_to_console](#log_to_console)
    - [add_scroll_target](#add_scroll_target)
    - [collision_find_surface_on_ray](#collision_find_surface_on_ray)
+   - [cast_graph_node](#cast_graph_node)
 
 <br />
 
@@ -2416,6 +2417,33 @@ The function itself does not return every key/value pair. Instead it returns the
 | firstByte (Optional) | `integer` |
 | model | [ModelExtendedId](#ModelExtendedId) |
 | behavior | [BehaviorId](#BehaviorId) |
+
+### C Prototype
+N/A
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [cast_graph_node](#cast_graph_node)
+
+Returns the specific GraphNode(...) the node is part of. Basically the reverse of `.node` or `.fnNode`.
+
+### Lua Example
+```lua
+local marioGfx = gMarioStates[0].marioObj.header.gfx -- GraphNodeObject
+local node = marioGfx.node -- GraphNode
+
+print(marioGfx == cast_graph_node(node)) -- true
+```
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| node  | [GraphNode](structs.md#GraphNode) |
+
+### Returns
+- GraphNode(...)
 
 ### C Prototype
 N/A
