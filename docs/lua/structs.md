@@ -1459,7 +1459,7 @@
 | ----- | ---- | ------ |
 | fnNode | [FnGraphNode](structs.md#FnGraphNode) | read-only |
 | numCases | `integer` | read-only |
-| selectedCase | `integer` | read-only |
+| selectedCase | `integer` |  |
 | unused | `integer` | read-only |
 
 [:arrow_up_small:](#)

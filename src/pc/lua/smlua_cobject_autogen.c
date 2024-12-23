@@ -1120,10 +1120,10 @@ static struct LuaObjectField sGraphNodeStartFields[LUA_GRAPH_NODE_START_FIELD_CO
 
 #define LUA_GRAPH_NODE_SWITCH_CASE_FIELD_COUNT 4
 static struct LuaObjectField sGraphNodeSwitchCaseFields[LUA_GRAPH_NODE_SWITCH_CASE_FIELD_COUNT] = {
-    { "fnNode",       LVT_COBJECT, offsetof(struct GraphNodeSwitchCase, fnNode),       true, LOT_FNGRAPHNODE },
-    { "numCases",     LVT_S16,     offsetof(struct GraphNodeSwitchCase, numCases),     true, LOT_NONE        },
-    { "selectedCase", LVT_S16,     offsetof(struct GraphNodeSwitchCase, selectedCase), true, LOT_NONE        },
-    { "unused",       LVT_S32,     offsetof(struct GraphNodeSwitchCase, unused),       true, LOT_NONE        },
+    { "fnNode",       LVT_COBJECT, offsetof(struct GraphNodeSwitchCase, fnNode),       true,  LOT_FNGRAPHNODE },
+    { "numCases",     LVT_S16,     offsetof(struct GraphNodeSwitchCase, numCases),     true,  LOT_NONE        },
+    { "selectedCase", LVT_S16,     offsetof(struct GraphNodeSwitchCase, selectedCase), false, LOT_NONE        },
+    { "unused",       LVT_S32,     offsetof(struct GraphNodeSwitchCase, unused),       true,  LOT_NONE        },
 };
 
 #define LUA_GRAPH_NODE_TRANSLATION_FIELD_COUNT 2

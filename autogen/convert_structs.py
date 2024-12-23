@@ -119,7 +119,7 @@ override_field_immutable = {
     "GraphNodeObject": [ "angle", "animInfo", "cameraToObject", "node", "pos", "prevAngle", "prevPos", "prevScale", "prevScaleTimestamp", "prevShadowPos", "prevShadowPosTimestamp", "prevThrowMatrix", "prevThrowMatrixTimestamp", "prevTimestamp", "scale", "shadowPos", "sharedChild", "skipInterpolationTimestamp", "throwMatrixPrev", "unk4C", ],
     "GraphNodeObjectParent": [ "sharedChild" ],
     "GraphNodePerspective": [ "unused" ],
-    "GraphNodeSwitchCase": [ "*" ],
+    "GraphNodeSwitchCase": [ "fnNode", "numCases", "unused" ],
     "ObjectWarpNode": [ "next "],
     "Animation": [ "length" ],
     "AnimationTable": [ "count" ],
