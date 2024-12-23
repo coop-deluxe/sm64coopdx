@@ -5768,23 +5768,28 @@ function set_swimming_at_surface_particles(m, particleFlag)
     -- ...
 end
 
+--- Behavior init function for NPC Toad
 function bhv_toad_message_init()
     -- ...
 end
 
+--- Behavior loop function for NPC Toad
 function bhv_toad_message_loop()
     -- ...
 end
 
+--- Behavior init function for Star Door unlock object
 function bhv_unlock_door_star_init()
     -- ...
 end
 
+--- Behavior loop function for Star Door unlock object
 function bhv_unlock_door_star_loop()
     -- ...
 end
 
 --- @return number
+--- Always returns zero. May have been originally used for beta trampolines
 function get_additive_y_vel_for_jumps()
     -- ...
 end
@@ -5800,65 +5805,75 @@ function init_bully_collision_data(data, posX, posZ, forwardVel, yaw, conversion
     -- ...
 end
 
---- @param arg0 MarioState
---- @param arg1 integer
-function mario_bonk_reflection(arg0, arg1)
-    -- ...
-end
-
---- @param arg0 MarioState
---- @param arg1 integer
---- @param arg2 integer
---- @return integer
-function mario_push_off_steep_floor(arg0, arg1, arg2)
-    -- ...
-end
-
---- @param arg0 MarioState
---- @return integer
-function mario_update_moving_sand(arg0)
-    -- ...
-end
-
---- @param arg0 MarioState
---- @param arg1 number
---- @return integer
-function mario_update_quicksand(arg0, arg1)
-    -- ...
-end
-
---- @param arg0 MarioState
---- @return integer
-function mario_update_windy_ground(arg0)
-    -- ...
-end
-
---- @param arg0 MarioState
---- @param arg1 integer
---- @return integer
-function perform_air_step(arg0, arg1)
-    -- ...
-end
-
---- @param arg0 MarioState
---- @return integer
-function perform_ground_step(arg0)
+--- @param m MarioState
+--- @param negateSpeed integer
+--- Reflects Mario off a wall if he is colliding with one and flips forward velocity if `negateSpeed` is TRUE
+function mario_bonk_reflection(m, negateSpeed)
     -- ...
 end
 
 --- @param m MarioState
+--- @param action integer
+--- @param actionArg integer
+--- @return integer
+--- Pushes Mario off a steep floor and sets his action to `action` with `actionArg`
+function mario_push_off_steep_floor(m, action, actionArg)
+    -- ...
+end
+
+--- @param m MarioState
+--- @return integer
+--- Pushes Mario in the direction of the quicksand based on the floor surface
+function mario_update_moving_sand(m)
+    -- ...
+end
+
+--- @param m MarioState
+--- @param sinkingSpeed number
+--- @return integer
+--- Updates Mario's state in quicksand, sinks him at `sinkingSpeed` if he's in non instant quicksand
+function mario_update_quicksand(m, sinkingSpeed)
+    -- ...
+end
+
+--- @param m MarioState
+--- @return integer
+--- Pushes Mario in the direction of the wind based on the floor surface
+function mario_update_windy_ground(m)
+    -- ...
+end
+
+--- @param m MarioState
+--- @param stepArg integer
+--- @return integer
+--- Performs a full Mario air physics step (4 substeps) and returns an `AIR_STEP_*` result
+function perform_air_step(m, stepArg)
+    -- ...
+end
+
+--- @param m MarioState
+--- @return integer
+--- Performs a full Mario ground physics step (4 substeps) and returns an `GROUND_STEP_*` result
+function perform_ground_step(m)
+    -- ...
+end
+
+--- @param m MarioState
+--- Sets Mario's velocity to his forward velocity multiplied by the cosine and sine of his pitch and yaw
 function set_vel_from_pitch_and_yaw(m)
     -- ...
 end
 
---- @param arg0 MarioState
+--- @param m MarioState
 --- @return integer
-function stationary_ground_step(arg0)
+--- Performs a full Mario stationary physics step (4 substeps) and returns an `GROUND_STEP_*` result
+function stationary_ground_step(m)
     -- ...
 end
 
---- @param arg0 MarioState
-function stop_and_set_height_to_floor(arg0)
+--- @param m MarioState
+--- Sets all of Mario's velocity variables to 0 and sets his Y position to the floor height
+function stop_and_set_height_to_floor(m)
     -- ...
 end
 
@@ -6420,40 +6435,47 @@ function network_player_set_override_palette_color(np, part, color)
 end
 
 --- @return boolean
+--- Checks if the game can currently be paused in singleplayer
 function network_check_singleplayer_pause()
     -- ...
 end
 
 --- @param localIndex integer
 --- @return string
+--- Gets a Discord ID corresponding to the network player with `localIndex`
 function network_discord_id_from_local_index(localIndex)
     -- ...
 end
 
 --- @param localIndex integer
 --- @return string
+--- Gets the DJUI hex color code string for the player corresponding to `localIndex`'s cap color
 function network_get_player_text_color_string(localIndex)
     -- ...
 end
 
 --- @param localIndex integer
 --- @return integer
+--- Gets a player's global index from their local index
 function network_global_index_from_local(localIndex)
     -- ...
 end
 
 --- @return boolean
+--- Checks if you are a moderator in the current lobby
 function network_is_moderator()
     -- ...
 end
 
 --- @return boolean
+--- Checks if you are hosting the current lobby, this value doesn't change
 function network_is_server()
     -- ...
 end
 
 --- @param globalIndex integer
 --- @return integer
+--- Gets a player's local index from their global index
 function network_local_index_from_global(globalIndex)
     -- ...
 end

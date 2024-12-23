@@ -2113,6 +2113,9 @@
 
 ## [bhv_toad_message_init](#bhv_toad_message_init)
 
+### Description
+Behavior init function for NPC Toad
+
 ### Lua Example
 `bhv_toad_message_init()`
 
@@ -2130,6 +2133,9 @@
 <br />
 
 ## [bhv_toad_message_loop](#bhv_toad_message_loop)
+
+### Description
+Behavior loop function for NPC Toad
 
 ### Lua Example
 `bhv_toad_message_loop()`
@@ -2149,6 +2155,9 @@
 
 ## [bhv_unlock_door_star_init](#bhv_unlock_door_star_init)
 
+### Description
+Behavior init function for Star Door unlock object
+
 ### Lua Example
 `bhv_unlock_door_star_init()`
 
@@ -2166,6 +2175,9 @@
 <br />
 
 ## [bhv_unlock_door_star_loop](#bhv_unlock_door_star_loop)
+
+### Description
+Behavior loop function for Star Door unlock object
 
 ### Lua Example
 `bhv_unlock_door_star_loop()`
@@ -2190,6 +2202,9 @@
 
 
 ## [get_additive_y_vel_for_jumps](#get_additive_y_vel_for_jumps)
+
+### Description
+Always returns zero. May have been originally used for beta trampolines
 
 ### Lua Example
 `local numberValue = get_additive_y_vel_for_jumps()`
@@ -2235,20 +2250,23 @@
 
 ## [mario_bonk_reflection](#mario_bonk_reflection)
 
+### Description
+Reflects Mario off a wall if he is colliding with one and flips forward velocity if `negateSpeed` is TRUE
+
 ### Lua Example
-`mario_bonk_reflection(arg0, arg1)`
+`mario_bonk_reflection(m, negateSpeed)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| arg0 | [MarioState](structs.md#MarioState) |
-| arg1 | `integer` |
+| m | [MarioState](structs.md#MarioState) |
+| negateSpeed | `integer` |
 
 ### Returns
 - None
 
 ### C Prototype
-`void mario_bonk_reflection(struct MarioState *, u32);`
+`void mario_bonk_reflection(struct MarioState *m, u8 negateSpeed);`
 
 [:arrow_up_small:](#)
 
@@ -2256,21 +2274,24 @@
 
 ## [mario_push_off_steep_floor](#mario_push_off_steep_floor)
 
+### Description
+Pushes Mario off a steep floor and sets his action to `action` with `actionArg`
+
 ### Lua Example
-`local integerValue = mario_push_off_steep_floor(arg0, arg1, arg2)`
+`local integerValue = mario_push_off_steep_floor(m, action, actionArg)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| arg0 | [MarioState](structs.md#MarioState) |
-| arg1 | `integer` |
-| arg2 | `integer` |
+| m | [MarioState](structs.md#MarioState) |
+| action | `integer` |
+| actionArg | `integer` |
 
 ### Returns
 - `integer`
 
 ### C Prototype
-`u32 mario_push_off_steep_floor(struct MarioState *, u32, u32);`
+`u32 mario_push_off_steep_floor(struct MarioState *m, u32 action, u32 actionArg);`
 
 [:arrow_up_small:](#)
 
@@ -2278,19 +2299,22 @@
 
 ## [mario_update_moving_sand](#mario_update_moving_sand)
 
+### Description
+Pushes Mario in the direction of the quicksand based on the floor surface
+
 ### Lua Example
-`local integerValue = mario_update_moving_sand(arg0)`
+`local integerValue = mario_update_moving_sand(m)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| arg0 | [MarioState](structs.md#MarioState) |
+| m | [MarioState](structs.md#MarioState) |
 
 ### Returns
 - `integer`
 
 ### C Prototype
-`u32 mario_update_moving_sand(struct MarioState *);`
+`u32 mario_update_moving_sand(struct MarioState *m);`
 
 [:arrow_up_small:](#)
 
@@ -2298,20 +2322,23 @@
 
 ## [mario_update_quicksand](#mario_update_quicksand)
 
+### Description
+Updates Mario's state in quicksand, sinks him at `sinkingSpeed` if he's in non instant quicksand
+
 ### Lua Example
-`local integerValue = mario_update_quicksand(arg0, arg1)`
+`local integerValue = mario_update_quicksand(m, sinkingSpeed)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| arg0 | [MarioState](structs.md#MarioState) |
-| arg1 | `number` |
+| m | [MarioState](structs.md#MarioState) |
+| sinkingSpeed | `number` |
 
 ### Returns
 - `integer`
 
 ### C Prototype
-`u32 mario_update_quicksand(struct MarioState *, f32);`
+`u32 mario_update_quicksand(struct MarioState *m, f32 sinkingSpeed);`
 
 [:arrow_up_small:](#)
 
@@ -2319,19 +2346,22 @@
 
 ## [mario_update_windy_ground](#mario_update_windy_ground)
 
+### Description
+Pushes Mario in the direction of the wind based on the floor surface
+
 ### Lua Example
-`local integerValue = mario_update_windy_ground(arg0)`
+`local integerValue = mario_update_windy_ground(m)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| arg0 | [MarioState](structs.md#MarioState) |
+| m | [MarioState](structs.md#MarioState) |
 
 ### Returns
 - `integer`
 
 ### C Prototype
-`u32 mario_update_windy_ground(struct MarioState *);`
+`u32 mario_update_windy_ground(struct MarioState *m);`
 
 [:arrow_up_small:](#)
 
@@ -2339,20 +2369,23 @@
 
 ## [perform_air_step](#perform_air_step)
 
+### Description
+Performs a full Mario air physics step (4 substeps) and returns an `AIR_STEP_*` result
+
 ### Lua Example
-`local integerValue = perform_air_step(arg0, arg1)`
+`local integerValue = perform_air_step(m, stepArg)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| arg0 | [MarioState](structs.md#MarioState) |
-| arg1 | `integer` |
+| m | [MarioState](structs.md#MarioState) |
+| stepArg | `integer` |
 
 ### Returns
 - `integer`
 
 ### C Prototype
-`s32 perform_air_step(struct MarioState *, u32);`
+`s32 perform_air_step(struct MarioState *m, u32 stepArg);`
 
 [:arrow_up_small:](#)
 
@@ -2360,25 +2393,31 @@
 
 ## [perform_ground_step](#perform_ground_step)
 
+### Description
+Performs a full Mario ground physics step (4 substeps) and returns an `GROUND_STEP_*` result
+
 ### Lua Example
-`local integerValue = perform_ground_step(arg0)`
+`local integerValue = perform_ground_step(m)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| arg0 | [MarioState](structs.md#MarioState) |
+| m | [MarioState](structs.md#MarioState) |
 
 ### Returns
 - `integer`
 
 ### C Prototype
-`s32 perform_ground_step(struct MarioState *);`
+`s32 perform_ground_step(struct MarioState *m);`
 
 [:arrow_up_small:](#)
 
 <br />
 
 ## [set_vel_from_pitch_and_yaw](#set_vel_from_pitch_and_yaw)
+
+### Description
+Sets Mario's velocity to his forward velocity multiplied by the cosine and sine of his pitch and yaw
 
 ### Lua Example
 `set_vel_from_pitch_and_yaw(m)`
@@ -2400,19 +2439,22 @@
 
 ## [stationary_ground_step](#stationary_ground_step)
 
+### Description
+Performs a full Mario stationary physics step (4 substeps) and returns an `GROUND_STEP_*` result
+
 ### Lua Example
-`local integerValue = stationary_ground_step(arg0)`
+`local integerValue = stationary_ground_step(m)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| arg0 | [MarioState](structs.md#MarioState) |
+| m | [MarioState](structs.md#MarioState) |
 
 ### Returns
 - `integer`
 
 ### C Prototype
-`s32 stationary_ground_step(struct MarioState *);`
+`s32 stationary_ground_step(struct MarioState *m);`
 
 [:arrow_up_small:](#)
 
@@ -2420,19 +2462,22 @@
 
 ## [stop_and_set_height_to_floor](#stop_and_set_height_to_floor)
 
+### Description
+Sets all of Mario's velocity variables to 0 and sets his Y position to the floor height
+
 ### Lua Example
-`stop_and_set_height_to_floor(arg0)`
+`stop_and_set_height_to_floor(m)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| arg0 | [MarioState](structs.md#MarioState) |
+| m | [MarioState](structs.md#MarioState) |
 
 ### Returns
 - None
 
 ### C Prototype
-`void stop_and_set_height_to_floor(struct MarioState *);`
+`void stop_and_set_height_to_floor(struct MarioState *m);`
 
 [:arrow_up_small:](#)
 
@@ -4117,6 +4162,9 @@ Saves a `key` corresponding to a float `value` to mod storage
 
 ## [network_check_singleplayer_pause](#network_check_singleplayer_pause)
 
+### Description
+Checks if the game can currently be paused in singleplayer
+
 ### Lua Example
 `local booleanValue = network_check_singleplayer_pause()`
 
@@ -4134,6 +4182,9 @@ Saves a `key` corresponding to a float `value` to mod storage
 <br />
 
 ## [network_discord_id_from_local_index](#network_discord_id_from_local_index)
+
+### Description
+Gets a Discord ID corresponding to the network player with `localIndex`
 
 ### Lua Example
 `local stringValue = network_discord_id_from_local_index(localIndex)`
@@ -4155,6 +4206,9 @@ Saves a `key` corresponding to a float `value` to mod storage
 
 ## [network_get_player_text_color_string](#network_get_player_text_color_string)
 
+### Description
+Gets the DJUI hex color code string for the player corresponding to `localIndex`'s cap color
+
 ### Lua Example
 `local stringValue = network_get_player_text_color_string(localIndex)`
 
@@ -4174,6 +4228,9 @@ Saves a `key` corresponding to a float `value` to mod storage
 <br />
 
 ## [network_global_index_from_local](#network_global_index_from_local)
+
+### Description
+Gets a player's global index from their local index
 
 ### Lua Example
 `local integerValue = network_global_index_from_local(localIndex)`
@@ -4195,6 +4252,9 @@ Saves a `key` corresponding to a float `value` to mod storage
 
 ## [network_is_moderator](#network_is_moderator)
 
+### Description
+Checks if you are a moderator in the current lobby
+
 ### Lua Example
 `local booleanValue = network_is_moderator()`
 
@@ -4213,6 +4273,9 @@ Saves a `key` corresponding to a float `value` to mod storage
 
 ## [network_is_server](#network_is_server)
 
+### Description
+Checks if you are hosting the current lobby, this value doesn't change
+
 ### Lua Example
 `local booleanValue = network_is_server()`
 
@@ -4230,6 +4293,9 @@ Saves a `key` corresponding to a float `value` to mod storage
 <br />
 
 ## [network_local_index_from_global](#network_local_index_from_global)
+
+### Description
+Gets a player's local index from their global index
 
 ### Lua Example
 `local integerValue = network_local_index_from_global(globalIndex)`
