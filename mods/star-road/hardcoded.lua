@@ -21,6 +21,9 @@ gLevelValues.vanishCapDurationVcutm = 900
 
 gLevelValues.wingCapLookUpReq = 120
 
+gLevelValues.fixCollisionBugs = true
+gLevelValues.vanishCapSequence = 0x32
+
 -- Replace Stars
 starPositions = gLevelValues.starPositions
 
