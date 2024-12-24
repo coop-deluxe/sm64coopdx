@@ -1,5 +1,5 @@
-E_MODEL_VCUTM_LIGHT = smlua_model_util_get_id("vcutm_light_geo")
-COL_WF_SMALL_BOMP = smlua_collision_util_get("wf_seg7_collision_small_bomp")
+local E_MODEL_VCUTM_LIGHT = smlua_model_util_get_id("vcutm_light_geo")
+local COL_WF_SMALL_BOMP = smlua_collision_util_get("wf_seg7_collision_small_bomp")
 
 -- we use this instead of o->oHiddenStarLastInteractedObject
 local oHiddenStarLastInteractedPlayer = nil
