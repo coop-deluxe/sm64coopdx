@@ -30,7 +30,7 @@ def translate_type_to_lvt(ptype):
         return "LVT_STRING"
 
     if "[" in ptype or "{" in ptype:
-        return "LOT_???"
+        return "LVT_???"
 
     # Strip out our pointer stars to get the true type.
     if "*" in ptype:
