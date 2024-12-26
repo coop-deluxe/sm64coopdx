@@ -586,8 +586,6 @@
 
 --- @class DisplayListNode
 --- @field public next DisplayListNode
---- @field public transform Pointer_Mtx
---- @field public transformPrev Pointer_Mtx
 --- @field public usingCamSpace integer
 
 --- @class DjuiColor
@@ -2363,7 +2361,6 @@
 --- @class Pointer_integer
 --- @class Pointer_Trajectory
 --- @class Pointer_LevelScript
---- @class Pointer_Mtx
 --- @class Pointer_ObjectAnimPointer
 --- @class Pointer_Collision
 --- @class Pointer_Mat4

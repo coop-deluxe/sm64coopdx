@@ -864,8 +864,6 @@
 | Field | Type | Access |
 | ----- | ---- | ------ |
 | next | [DisplayListNode](structs.md#DisplayListNode) |  |
-| transform | `Pointer` <`Mtx`> |  |
-| transformPrev | `Pointer` <`Mtx`> |  |
 | usingCamSpace | `integer` |  |
 
 [:arrow_up_small:](#)

@@ -671,12 +671,12 @@ static struct LuaObjectField sDateTimeFields[LUA_DATE_TIME_FIELD_COUNT] = {
     { "year",   LVT_S32, offsetof(struct DateTime, year),   false, LOT_NONE },
 };
 
-#define LUA_DISPLAY_LIST_NODE_FIELD_COUNT 4
+#define LUA_DISPLAY_LIST_NODE_FIELD_COUNT 2
 static struct LuaObjectField sDisplayListNodeFields[LUA_DISPLAY_LIST_NODE_FIELD_COUNT] = {
 //  { "displayList",   LVT_???,       offsetof(struct DisplayListNode, displayList),   false, LOT_???             }, <--- UNIMPLEMENTED
     { "next",          LVT_COBJECT_P, offsetof(struct DisplayListNode, next),          false, LOT_DISPLAYLISTNODE },
-    { "transform",     LVT_COBJECT_P, offsetof(struct DisplayListNode, transform),     false, LOT_POINTER         },
-    { "transformPrev", LVT_COBJECT_P, offsetof(struct DisplayListNode, transformPrev), false, LOT_POINTER         },
+//  { "transform",     LVT_???,       offsetof(struct DisplayListNode, transform),     false, LOT_???             }, <--- UNIMPLEMENTED
+//  { "transformPrev", LVT_???,       offsetof(struct DisplayListNode, transformPrev), false, LOT_???             }, <--- UNIMPLEMENTED
     { "usingCamSpace", LVT_U8,        offsetof(struct DisplayListNode, usingCamSpace), false, LOT_NONE            },
 };
 
@@ -981,8 +981,8 @@ static struct LuaObjectField sGraphNodeCameraFields[LUA_GRAPH_NODE_CAMERA_FIELD_
 //  { "config",        LOT_???,       offsetof(struct GraphNodeCamera, config),        false, LOT_???         }, <--- UNIMPLEMENTED
     { "fnNode",        LVT_COBJECT,   offsetof(struct GraphNodeCamera, fnNode),        true,  LOT_FNGRAPHNODE },
     { "focus",         LVT_COBJECT,   offsetof(struct GraphNodeCamera, focus),         true,  LOT_VEC3F       },
-    { "matrixPtr",     LVT_COBJECT_P, offsetof(struct GraphNodeCamera, matrixPtr),     false, LOT_POINTER     },
-    { "matrixPtrPrev", LVT_COBJECT_P, offsetof(struct GraphNodeCamera, matrixPtrPrev), true,  LOT_POINTER     },
+    { "matrixPtr",     LVT_COBJECT_P, offsetof(struct GraphNodeCamera, matrixPtr),     false, LOT_MAT4        },
+    { "matrixPtrPrev", LVT_COBJECT_P, offsetof(struct GraphNodeCamera, matrixPtrPrev), true,  LOT_MAT4        },
     { "pos",           LVT_COBJECT,   offsetof(struct GraphNodeCamera, pos),           true,  LOT_VEC3F       },
     { "prevFocus",     LVT_COBJECT,   offsetof(struct GraphNodeCamera, prevFocus),     true,  LOT_VEC3F       },
     { "prevPos",       LVT_COBJECT,   offsetof(struct GraphNodeCamera, prevPos),       true,  LOT_VEC3F       },
@@ -1060,8 +1060,8 @@ static struct LuaObjectField sGraphNodeObjectFields[LUA_GRAPH_NODE_OBJECT_FIELD_
     { "sharedChild",                LVT_COBJECT_P, offsetof(struct GraphNodeObject, sharedChild),                true,  LOT_GRAPHNODE },
     { "skipInViewCheck",            LVT_BOOL,      offsetof(struct GraphNodeObject, skipInViewCheck),            false, LOT_NONE      },
     { "skipInterpolationTimestamp", LVT_U32,       offsetof(struct GraphNodeObject, skipInterpolationTimestamp), true,  LOT_NONE      },
-    { "throwMatrix",                LVT_COBJECT_P, offsetof(struct GraphNodeObject, throwMatrix),                false, LOT_POINTER   },
-    { "throwMatrixPrev",            LVT_COBJECT_P, offsetof(struct GraphNodeObject, throwMatrixPrev),            true,  LOT_POINTER   },
+    { "throwMatrix",                LVT_COBJECT_P, offsetof(struct GraphNodeObject, throwMatrix),                false, LOT_MAT4      },
+    { "throwMatrixPrev",            LVT_COBJECT_P, offsetof(struct GraphNodeObject, throwMatrixPrev),            true,  LOT_MAT4      },
     { "unk4C",                      LVT_COBJECT_P, offsetof(struct GraphNodeObject, unk4C),                      true,  LOT_SPAWNINFO },
 };
 
@@ -1386,7 +1386,7 @@ static struct LuaObjectField sMarioStateFields[LUA_MARIO_STATE_FIELD_COUNT] = {
     { "slideYaw",                  LVT_S16,       offsetof(struct MarioState, slideYaw),                  false, LOT_NONE              },
     { "spawnInfo",                 LVT_COBJECT_P, offsetof(struct MarioState, spawnInfo),                 false, LOT_SPAWNINFO         },
     { "specialTripleJump",         LVT_U8,        offsetof(struct MarioState, specialTripleJump),         false, LOT_NONE              },
-    { "splineKeyframe",            LVT_COBJECT_P, offsetof(struct MarioState, splineKeyframe),            false, LOT_POINTER           },
+    { "splineKeyframe",            LVT_COBJECT_P, offsetof(struct MarioState, splineKeyframe),            false, LOT_VEC4S             },
     { "splineKeyframeFraction",    LVT_F32,       offsetof(struct MarioState, splineKeyframeFraction),    false, LOT_NONE              },
     { "splineState",               LVT_S32,       offsetof(struct MarioState, splineState),               false, LOT_NONE              },
     { "squishTimer",               LVT_U8,        offsetof(struct MarioState, squishTimer),               false, LOT_NONE              },
