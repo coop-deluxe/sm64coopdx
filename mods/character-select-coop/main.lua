@@ -466,7 +466,10 @@ end
 
 local function boot_note()
     if #characterTable > 1 then
-        djui_chat_message_create("Character Select has " .. (#characterTable - 1) .. " character" .. (#characterTable > 2 and "s" or "") .. " available!\nYou can use \\#ffff33\\/char-select \\#ffffff\\to open the menu!")
+        djui_chat_message_create("Character Select has " .. (#characterTable - 1) .. " character" .. (#characterTable > 2 and "s" or "") .." available!\nYou can use \\#ffff33\\/char-select \\#ffffff\\to open the menu!")
+        if #characterTable > 32 and network_is_server() then
+            djui_chat_message_create("\\#FFAAAA\\Warning: Having more than 32 Characters\nmay be unstable, For a better experience please\ndisable a few packs!")
+        end
     else
         djui_chat_message_create("Character Select is active!\nYou can use \\#ffff33\\/char-select \\#ffffff\\to open the menu!")
     end

@@ -77,9 +77,14 @@ for i = 0, MAX_PLAYERS - 1 do
     playerSample[i] = nil
 end
 
+local joinSoundPlayed = false
 --- @param m MarioState
 --- @param sound CharacterSound
 local function custom_character_sound(m, sound)
+    if not joinSoundPlayed then
+        joinSoundPlayed = true
+        return NO_SOUND
+    end
     local index = m.playerIndex
     if check_sound_exists(playerSample[index]) and type(playerSample[index]) ~= TYPE_STRING then
         audio_sample_stop(playerSample[index])
@@ -200,3 +205,16 @@ local function config_character_sounds()
     hook_event(HOOK_MARIO_UPDATE, custom_character_snore)
 end
 _G.charSelect.config_character_sounds = config_character_sounds
+
+-- Join sound
+local stallTimer = 0
+local function mario_update(m)
+    if m.playerIndex ~= 0 then return end
+    if stallTimer == 3 then
+        play_character_sound(m, CHAR_SOUND_OKEY_DOKEY)
+        stallTimer = stallTimer + 1
+    elseif stallTimer < 10 then
+        stallTimer = stallTimer + 1
+    end
+end
+hook_event(HOOK_MARIO_UPDATE, mario_update)
