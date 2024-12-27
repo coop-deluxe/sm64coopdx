@@ -869,6 +869,7 @@ ifeq ($(WINDOWS_BUILD),1)
   ifeq ($(CROSS),)
     LDFLAGS += -no-pie
   endif
+  LDFLAGS += -T windows.ld
 else ifeq ($(TARGET_RPI),1)
   LDFLAGS := $(OPT_FLAGS) -lm $(BACKEND_LDFLAGS) -no-pie
 else ifeq ($(OSX_BUILD),1)
@@ -1139,8 +1140,13 @@ endef
 all: $(EXE)
 
 ifeq ($(WINDOWS_BUILD),1)
+MAPFILE = $(BUILD_DIR)/coop.map
 exemap: $(EXE)
-	$(V)$(OBJDUMP) -t $(EXE) > $(BUILD_DIR)/coop.map
+	@$(PRINT) "$(GREEN)Creating map file: $(BLUE)$(MAPFILE) $(NO_COL)\n"
+	$(V)$(OBJDUMP) -t $(EXE) > $(MAPFILE)
+	@cp $(EXE) $(EXE).bak && cp $(MAPFILE) $(MAPFILE).bak
+	$(V)$(PYTHON) $(TOOLS_DIR)/clean_mapfile.py $(EXE) $(MAPFILE)
+	$(V)$(OBJCOPY) -p --strip-unneeded $(EXE)
 all: exemap
 endif
 
