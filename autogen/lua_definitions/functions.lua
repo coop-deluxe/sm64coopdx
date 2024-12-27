@@ -6025,13 +6025,6 @@ function mtxf_mul_vec3s(mtx, b)
     -- ...
 end
 
---- @param mtx Pointer_Mtx
---- @param angle integer
---- Rotates the matrix `mtx` in the XY plane by the given `angle`. Rotating in the XY plane typically means pivoting around the Z axis
-function mtxf_rotate_xy(mtx, angle)
-    -- ...
-end
-
 --- @param dest Mat4
 --- @param b Vec3f
 --- @param c Vec3s
@@ -6053,13 +6046,6 @@ end
 --- @param s Vec3f
 --- Scales the 4x4 floating-point matrix `mtx` by the scaling factors found in the 3D floating-point vector `s`, and stores the result in `dest`. This enlarges or shrinks objects in 3D space
 function mtxf_scale_vec3f(dest, mtx, s)
-    -- ...
-end
-
---- @param dest Pointer_Mtx
---- @param src Mat4
---- Converts the floating-point matrix `src` into a fixed-point (integer-based) matrix suitable for the `Mtx` format, and stores the result in `dest`
-function mtxf_to_mtx(dest, src)
     -- ...
 end
 
@@ -10454,6 +10440,5 @@ end
 --- @class Pointer_BehaviorScript
 --- @class Pointer_number
 --- @class Pointer_Vec4s
---- @class Pointer_Mtx
 --- @class Pointer_Trajectory
 --- @class Pointer_Collision

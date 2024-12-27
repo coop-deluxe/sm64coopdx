@@ -2937,30 +2937,6 @@ Multiplies the 4x4 floating-point matrix `mtx` by a 3D signed-integer vector `b`
 
 <br />
 
-## [mtxf_rotate_xy](#mtxf_rotate_xy)
-
-### Description
-Rotates the matrix `mtx` in the XY plane by the given `angle`. Rotating in the XY plane typically means pivoting around the Z axis
-
-### Lua Example
-`mtxf_rotate_xy(mtx, angle)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| mtx | `Pointer` <`Mtx`> |
-| angle | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void mtxf_rotate_xy(Mtx *mtx, s16 angle);`
-
-[:arrow_up_small:](#)
-
-<br />
-
 ## [mtxf_rotate_xyz_and_translate](#mtxf_rotate_xyz_and_translate)
 
 ### Description
@@ -3031,30 +3007,6 @@ Scales the 4x4 floating-point matrix `mtx` by the scaling factors found in the 3
 
 ### C Prototype
 `void mtxf_scale_vec3f(Mat4 dest, Mat4 mtx, Vec3f s);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [mtxf_to_mtx](#mtxf_to_mtx)
-
-### Description
-Converts the floating-point matrix `src` into a fixed-point (integer-based) matrix suitable for the `Mtx` format, and stores the result in `dest`
-
-### Lua Example
-`mtxf_to_mtx(dest, src)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | `Pointer` <`Mtx`> |
-| src | `Mat4` |
-
-### Returns
-- None
-
-### C Prototype
-`void mtxf_to_mtx(Mtx *dest, Mat4 src);`
 
 [:arrow_up_small:](#)
 
