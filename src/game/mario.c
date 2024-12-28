@@ -1504,8 +1504,7 @@ void update_mario_joystick_inputs(struct MarioState *m) {
  */
 void update_mario_geometry_inputs(struct MarioState *m) {
     if (!m) { return; }
-    u8 copiedPlayer = FALSE;
-copyPlayerGoto:;
+resetGoto:;
 
     f32 gasLevel;
     f32 ceilToFloorDist;
@@ -1558,21 +1557,15 @@ copyPlayerGoto:;
         }
 
     } else {
-        if (!copiedPlayer) {
-            // try to prevent OOB by copying position of other player
-            struct Surface* floor2 = NULL;
-            for (s32 i = 0; i < MAX_PLAYERS; i++) {
-                struct MarioState* m2 = &gMarioStates[i];
-                if (m == m2) { continue; }
-                find_floor(m2->pos[0], m2->pos[1], m2->pos[2], &floor2);
-                if (floor2 == NULL) { continue; }
-                LOG_INFO("OOB! teleporting to player with local index %d", i);
-                vec3f_copy(m->pos, m2->pos);
-                copiedPlayer = TRUE;
-                goto copyPlayerGoto;
-            }
+        vec3f_set(m->pos, m->spawnInfo->startPos[0], m->spawnInfo->startPos[1], m->spawnInfo->startPos[2]);
+        m->faceAngle[1] = m->spawnInfo->startAngle[1];
+        struct Surface* floor = NULL;
+        find_floor(m->pos[0], m->pos[1], m->pos[2], &floor);
+        if (floor == NULL) {
+            level_trigger_warp(m, WARP_OP_DEATH);
+        } else {
+            goto resetGoto;
         }
-        level_trigger_warp(m, WARP_OP_DEATH);
     }
 }
 
