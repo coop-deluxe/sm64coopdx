@@ -43,7 +43,6 @@
  *
  */
 
-#define MATRIX_STACK_SIZE 64
 #define DISPLAY_LIST_HEAP_SIZE 32000
 
 f32 gProjectionMaxNearValue = 5;
@@ -1512,6 +1511,8 @@ void geo_process_node_and_siblings(struct GraphNode *firstNode) {
     // processed instead of all children like usual
     if (parent != NULL) {
         iterateChildren = (parent->type != GRAPH_NODE_TYPE_SWITCH_CASE);
+
+        if (parent->hookProcess) smlua_call_event_hooks_graph_node_and_int_param(HOOK_ON_GEO_PROCESS_CHILDREN, parent, gMatStackIndex);
     }
 
     do {
@@ -1538,7 +1539,7 @@ void geo_process_node_and_siblings(struct GraphNode *firstNode) {
         }
 
         if (curGraphNode->flags & GRAPH_RENDER_ACTIVE) {
-            if (curGraphNode->hookProcess) smlua_call_event_hooks_graph_node_and_int_param(HOOK_BEFORE_GEO_PROCESS, curGraphNode, curGraphNode->hookProcess);
+            if (curGraphNode->hookProcess) smlua_call_event_hooks_graph_node_and_int_param(HOOK_BEFORE_GEO_PROCESS, curGraphNode, gMatStackIndex);
             if (curGraphNode->flags & GRAPH_RENDER_CHILDREN_FIRST) {
                 geo_try_process_children(curGraphNode);
             } else {
@@ -1606,7 +1607,7 @@ void geo_process_node_and_siblings(struct GraphNode *firstNode) {
                         break;
                 }
             }
-            if (curGraphNode->hookProcess) smlua_call_event_hooks_graph_node_and_int_param(HOOK_ON_GEO_PROCESS, curGraphNode, curGraphNode->hookProcess);
+            if (curGraphNode->hookProcess) smlua_call_event_hooks_graph_node_and_int_param(HOOK_ON_GEO_PROCESS, curGraphNode, gMatStackIndex + 1);
         } else {
             if (curGraphNode && curGraphNode->type == GRAPH_NODE_TYPE_OBJECT) {
                 ((struct GraphNodeObject *) curGraphNode)->throwMatrix = NULL;
