@@ -326,8 +326,7 @@ end
 --- @param tileW number The width of the tile
 --- @param tileH number The height of the tile
 --- Renders an interpolated tile of a texture to the screen
-function djui_hud_render_texture_tile_interpolated(texInfo, prevX, prevY, prevScaleW, prevScaleH, x, y, scaleW, scaleH,
-                                                   tileX, tileY, tileW, tileH)
+function djui_hud_render_texture_tile_interpolated(texInfo, prevX, prevY, prevScaleW, prevScaleH, x, y, scaleW, scaleH, tileX, tileY, tileW, tileH)
     -- ...
 end
 
