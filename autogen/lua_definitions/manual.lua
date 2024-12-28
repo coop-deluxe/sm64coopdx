@@ -31,6 +31,16 @@ gCharacters = {}
 --- - Index 0 always refers to the local player
 gControllers = {}
 
+--- @type Pointer_Mat4[]
+--- Matrix stack used during geo process
+--- - Only has an effect when used in a geo process hook
+gMatStack = {}
+
+--- @type Pointer_Mat4[]
+--- Matrix stack used during geo process
+--- - Only has an effect when used in a geo process hook
+gMatStackPrev = {}
+
 --- @type GlobalTextures
 --- Struct containing HUD glyph textures
 gTextures = {}
@@ -316,7 +326,8 @@ end
 --- @param tileW number The width of the tile
 --- @param tileH number The height of the tile
 --- Renders an interpolated tile of a texture to the screen
-function djui_hud_render_texture_tile_interpolated(texInfo, prevX, prevY, prevScaleW, prevScaleH, x, y, scaleW, scaleH, tileX, tileY, tileW, tileH)
+function djui_hud_render_texture_tile_interpolated(texInfo, prevX, prevY, prevScaleW, prevScaleH, x, y, scaleW, scaleH,
+                                                   tileX, tileY, tileW, tileH)
     -- ...
 end
 
