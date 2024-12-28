@@ -9158,7 +9158,13 @@ HOOK_ON_NAMETAGS_RENDER = 46
 HOOK_ON_DJUI_THEME_CHANGED = 47
 
 --- @type LuaHookedEventType
-HOOK_MAX = 48
+HOOK_ON_GEO_PROCESS = 48
+
+--- @type LuaHookedEventType
+HOOK_BEFORE_GEO_PROCESS = 49
+
+--- @type LuaHookedEventType
+HOOK_MAX = 50
 
 --- @class LuaModMenuElementType
 

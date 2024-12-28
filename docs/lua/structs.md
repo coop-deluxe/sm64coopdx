@@ -1195,6 +1195,7 @@
 | children | [GraphNode](structs.md#GraphNode) | read-only |
 | extraFlags | `integer` |  |
 | flags | `integer` |  |
+| hookProcess | `integer` |  |
 | next | [GraphNode](structs.md#GraphNode) | read-only |
 | parent | [GraphNode](structs.md#GraphNode) | read-only |
 | prev | [GraphNode](structs.md#GraphNode) | read-only |
