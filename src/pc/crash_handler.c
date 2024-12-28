@@ -651,7 +651,8 @@ static void crash_handler(const int signalNum, siginfo_t *info, UNUSED ucontext_
     // In case the game crashed before the game window opened
     if (!gGfxInited) {
         gfx_init(&WAPI, &RAPI, TITLE);
-        WAPI.set_keyboard_callbacks(keyboard_on_key_down, keyboard_on_key_up, keyboard_on_all_keys_up, keyboard_on_text_input);
+        WAPI.set_keyboard_callbacks(keyboard_on_key_down, keyboard_on_key_up, keyboard_on_all_keys_up,
+            keyboard_on_text_input, keyboard_on_text_editing);
     }
     if (!gGameInited) djui_unicode_init();
 
