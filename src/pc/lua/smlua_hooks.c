@@ -1049,7 +1049,7 @@ void smlua_call_event_hooks_graph_node_object_and_int_param(enum LuaHookedEventT
     }
 }
 
-void smlua_call_event_hooks_graph_node_and_int_param(enum LuaHookedEventType hookType, struct GraphNode* node, s32 param) {
+void smlua_call_event_hooks_graph_node_and_int_param(enum LuaHookedEventType hookType, struct GraphNode* node, s16 matIndex) {
     lua_State* L = gLuaState;
     if (L == NULL) { return; }
     struct LuaHookedEvent* hook = &sHookedEvents[hookType];
@@ -1060,8 +1060,8 @@ void smlua_call_event_hooks_graph_node_and_int_param(enum LuaHookedEventType hoo
         // push graph node
         smlua_push_object(L, LOT_GRAPHNODE, node);
 
-        // push param
-        lua_pushinteger(L, param);
+        // push mat index
+        lua_pushinteger(L, matIndex);
 
         // call the callback
         if (0 != smlua_call_hook(L, 2, 0, 0, hook->mod[i])) {

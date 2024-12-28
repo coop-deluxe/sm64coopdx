@@ -5,6 +5,10 @@
 
 #include "engine/graph_node.h"
 
+#define MATRIX_STACK_SIZE 64
+extern Mat4 gMatStack[MATRIX_STACK_SIZE];
+extern Mat4 gMatStackPrev[MATRIX_STACK_SIZE];
+
 extern f32 gProjectionMaxNearValue;
 extern s16 gProjectionVanillaNearValue;
 extern s16 gProjectionVanillaFarValue;
