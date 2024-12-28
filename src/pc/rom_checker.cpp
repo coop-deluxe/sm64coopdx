@@ -97,7 +97,7 @@ void legacy_folder_handler(void) {
 
 bool main_rom_handler(void) {
     if (scan_path_for_rom(fs_get_write_path(""))) { return true; }
-    scan_path_for_rom(sys_exe_path());
+    scan_path_for_rom(sys_exe_path_dir());
     return gRomIsValid;
 }
 

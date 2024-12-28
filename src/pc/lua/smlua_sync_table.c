@@ -146,7 +146,7 @@ static void smlua_sync_table_call_hook(int syncTableIndex, int keyIndex, int pre
         struct Mod* prev = gLuaActiveMod;
         gLuaActiveMod = mod;
         gLuaLastHookMod = mod;
-        gPcDebug.lastModRun = gLuaActiveMod;
+        gPcDebug.lastModRun = mod;
         if (0 != smlua_pcall(L, 3, 0, 0)) {
             LOG_LUA_LINE("Failed to call the hook_on_changed callback");
         }

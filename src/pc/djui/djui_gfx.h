@@ -15,7 +15,7 @@ void djui_gfx_displaylist_end(void);
 f32 djui_gfx_get_scale(void);
 
 void djui_gfx_render_texture(const u8* texture, u32 w, u32 h, u32 bitSize, bool filter);
-void djui_gfx_render_texture_tile(const u8* texture, u32 w, u32 h, u32 bitSize, u32 tileX, u32 tileY, u32 tileW, u32 tileH, bool filter);
+void djui_gfx_render_texture_tile(const u8* texture, u32 w, u32 h, u32 bitSize, u32 tileX, u32 tileY, u32 tileW, u32 tileH, bool filter, bool font);
 
 void djui_gfx_position_translate(f32* x, f32* y);
 void djui_gfx_scale_translate(f32* width, f32* height);

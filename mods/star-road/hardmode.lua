@@ -1,7 +1,7 @@
 local sBurnActions = { --Accounting for when you are on fire since that type of damage is handled differently.
     [ACT_BURNING_FALL] = true,
     [ACT_BURNING_GROUND] = true,
-    [ACT_BURNING_JUMP] = true,
+    [ACT_BURNING_JUMP] = true
 }
 
 local frameCounter = 10

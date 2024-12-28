@@ -42,6 +42,7 @@ int smlua_call_hook(lua_State* L, int nargs, int nresults, int errfunc, struct M
     struct Mod* prev = gLuaActiveMod;
     gLuaActiveMod = activeMod;
     gLuaLastHookMod = activeMod;
+    gPcDebug.lastModRun = activeMod;
 
     lua_profiler_start_counter(activeMod);
 

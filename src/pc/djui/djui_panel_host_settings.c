@@ -56,7 +56,7 @@ void djui_panel_host_settings_create(struct DjuiBase* caller) {
         djui_selectionbox_create(body, DLANG(HOST_SETTINGS, KNOCKBACK_STRENGTH), kChoices, 3, &sKnockbackIndex, djui_panel_host_settings_knockback_change);
 
         char* pChoices[2] = { DLANG(HOST_SETTINGS, CLASSIC_PVP), DLANG(HOST_SETTINGS, REVAMPED_PVP) };
-        djui_selectionbox_create(body, DLANG(HOST_SETTINGS, PVP_MODE), pChoices, 2, &configPvpMode, NULL);
+        djui_selectionbox_create(body, DLANG(HOST_SETTINGS, PVP_MODE), pChoices, 2, &configPvpType, NULL);
 
         char* lChoices[3] = { DLANG(HOST_SETTINGS, LEAVE_LEVEL), DLANG(HOST_SETTINGS, STAY_IN_LEVEL), DLANG(HOST_SETTINGS, NONSTOP) };
         djui_selectionbox_create(body, DLANG(HOST_SETTINGS, ON_STAR_COLLECTION), lChoices, 3, &configStayInLevelAfterStar, NULL);

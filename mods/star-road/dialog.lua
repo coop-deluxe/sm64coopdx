@@ -1,7 +1,3 @@
-changed_dialogs = {}
-
-
-
 
 smlua_text_utils_dialog_replace(DIALOG_000, 1, 6, 30, 200, "--WARNING--\
 FLOOR UNSTABLE. DO NOT\
@@ -1610,7 +1606,7 @@ their houses!")
 smlua_text_utils_dialog_replace(DIALOG_168, 1, 5, 30, 200, "Ack! Stop it or I'll\
 make you stop!")
 
-changed_dialogs[169] = 1
+
 smlua_text_utils_dialog_replace(DIALOG_169, 1, 6, 30, 200, "Psst! Looking for\
 a challenge? Try pressing\
 [R] after pausing the\
@@ -1628,7 +1624,10 @@ active romhack! ")
 function dialog_replace()
       if gGlobalSyncTable.hardMode then
             changed_dialogs[169] = 1 -- thank you Emmi for being so cool and having this in MarioHunt so I could remember how to change dialog this way
-smlua_text_utils_dialog_replace(DIALOG_169, 1, 4, 30, 200, "Welcome to HARD MODE!\
+
+function dialog_replace()
+      if gGlobalSyncTable.hardMode then
+            smlua_text_utils_dialog_replace(DIALOG_169, 1, 4, 30, 200, "Welcome to HARD MODE!\
 This challenge mode is an\
 OHKO, which means that\
 everything-- and I mean\
@@ -1637,8 +1636,7 @@ one hit! Do you have what\
 it takes to complete this\
 challenge?")
       else
-            changed_dialogs[169] = 1
-smlua_text_utils_dialog_replace(DIALOG_169, 1, 6, 30, 200, "Psst! Looking for\
+            smlua_text_utils_dialog_replace(DIALOG_169, 1, 6, 30, 200, "Psst! Looking for\
 a challenge? Try pressing\
 [R] after pausing the\
 game, and select the\

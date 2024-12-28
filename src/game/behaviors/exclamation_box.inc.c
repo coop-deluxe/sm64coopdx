@@ -134,10 +134,11 @@ void exclamation_box_spawn_contents(struct ExclamationBoxContent *content, u8 it
             // send non-star spawn events
             // stars cant be sent here due to jankiness in oBehParams
             if (content->behavior != get_id_from_behavior(smlua_override_behavior(bhvSpawnedStar)) && spawnedObject != NULL) {
-                // hack: if any other sync objects get spawned here we have to check for them
-                if (content->behavior == get_id_from_behavior(smlua_override_behavior(bhvKoopaShell))) {
-                    sync_object_set_id(spawnedObject);
-                }
+                // hack: Sync everything
+                sync_object_set_id(spawnedObject);
+                struct SyncObject* so = sync_object_get(spawnedObject->oSyncID);
+                so->extendedModelId = content->model;
+
                 struct Object* spawn_objects[] = { spawnedObject };
                 u32 models[] = { model };
                 network_send_spawn_objects(spawn_objects, models, 1);

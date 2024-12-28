@@ -9141,7 +9141,7 @@ int smlua_func_geo_snufit_move_mask(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "geo_snufit_move_mask"); return 0; }
     struct GraphNode* node = (struct GraphNode*)smlua_to_cobject(L, 2, LOT_GRAPHNODE);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "geo_snufit_move_mask"); return 0; }
-    Mat4 * c = (Mat4 *)smlua_to_cpointer(L, 3, LVT_COBJECT_P);
+    Mat4 * c = (Mat4 *)smlua_to_cobject(L, 3, LOT_MAT4);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "geo_snufit_move_mask"); return 0; }
 
     UNIMPLEMENTED -->(L, geo_snufit_move_mask(callContext, node, c));
@@ -9164,7 +9164,7 @@ int smlua_func_geo_snufit_scale_body(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "geo_snufit_scale_body"); return 0; }
     struct GraphNode* node = (struct GraphNode*)smlua_to_cobject(L, 2, LOT_GRAPHNODE);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "geo_snufit_scale_body"); return 0; }
-    Mat4 * c = (Mat4 *)smlua_to_cpointer(L, 3, LVT_COBJECT_P);
+    Mat4 * c = (Mat4 *)smlua_to_cobject(L, 3, LOT_MAT4);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "geo_snufit_scale_body"); return 0; }
 
     UNIMPLEMENTED -->(L, geo_snufit_scale_body(callContext, node, c));
@@ -9187,7 +9187,7 @@ int smlua_func_geo_switch_bowser_eyes(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "geo_switch_bowser_eyes"); return 0; }
     struct GraphNode* node = (struct GraphNode*)smlua_to_cobject(L, 2, LOT_GRAPHNODE);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "geo_switch_bowser_eyes"); return 0; }
-    Mat4 * mtx = (Mat4 *)smlua_to_cpointer(L, 3, LVT_COBJECT_P);
+    Mat4 * mtx = (Mat4 *)smlua_to_cobject(L, 3, LOT_MAT4);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "geo_switch_bowser_eyes"); return 0; }
 
     UNIMPLEMENTED -->(L, geo_switch_bowser_eyes(run, node, mtx));
@@ -9210,7 +9210,7 @@ int smlua_func_geo_switch_tuxie_mother_eyes(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "geo_switch_tuxie_mother_eyes"); return 0; }
     struct GraphNode* node = (struct GraphNode*)smlua_to_cobject(L, 2, LOT_GRAPHNODE);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "geo_switch_tuxie_mother_eyes"); return 0; }
-    Mat4 * mtx = (Mat4 *)smlua_to_cpointer(L, 3, LVT_COBJECT_P);
+    Mat4 * mtx = (Mat4 *)smlua_to_cobject(L, 3, LOT_MAT4);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "geo_switch_tuxie_mother_eyes"); return 0; }
 
     UNIMPLEMENTED -->(L, geo_switch_tuxie_mother_eyes(run, node, mtx));
@@ -18294,12 +18294,12 @@ int smlua_func_mario_bonk_reflection(lua_State* L) {
         return 0;
     }
 
-    struct MarioState* arg0 = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mario_bonk_reflection"); return 0; }
-    u32 arg1 = smlua_to_integer(L, 2);
+    u8 negateSpeed = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "mario_bonk_reflection"); return 0; }
 
-    mario_bonk_reflection(arg0, arg1);
+    mario_bonk_reflection(m, negateSpeed);
 
     return 1;
 }
@@ -18313,14 +18313,14 @@ int smlua_func_mario_push_off_steep_floor(lua_State* L) {
         return 0;
     }
 
-    struct MarioState* arg0 = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mario_push_off_steep_floor"); return 0; }
-    u32 arg1 = smlua_to_integer(L, 2);
+    u32 action = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "mario_push_off_steep_floor"); return 0; }
-    u32 arg2 = smlua_to_integer(L, 3);
+    u32 actionArg = smlua_to_integer(L, 3);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "mario_push_off_steep_floor"); return 0; }
 
-    lua_pushinteger(L, mario_push_off_steep_floor(arg0, arg1, arg2));
+    lua_pushinteger(L, mario_push_off_steep_floor(m, action, actionArg));
 
     return 1;
 }
@@ -18334,10 +18334,10 @@ int smlua_func_mario_update_moving_sand(lua_State* L) {
         return 0;
     }
 
-    struct MarioState* arg0 = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mario_update_moving_sand"); return 0; }
 
-    lua_pushinteger(L, mario_update_moving_sand(arg0));
+    lua_pushinteger(L, mario_update_moving_sand(m));
 
     return 1;
 }
@@ -18351,12 +18351,12 @@ int smlua_func_mario_update_quicksand(lua_State* L) {
         return 0;
     }
 
-    struct MarioState* arg0 = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mario_update_quicksand"); return 0; }
-    f32 arg1 = smlua_to_number(L, 2);
+    f32 sinkingSpeed = smlua_to_number(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "mario_update_quicksand"); return 0; }
 
-    lua_pushinteger(L, mario_update_quicksand(arg0, arg1));
+    lua_pushinteger(L, mario_update_quicksand(m, sinkingSpeed));
 
     return 1;
 }
@@ -18370,10 +18370,10 @@ int smlua_func_mario_update_windy_ground(lua_State* L) {
         return 0;
     }
 
-    struct MarioState* arg0 = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mario_update_windy_ground"); return 0; }
 
-    lua_pushinteger(L, mario_update_windy_ground(arg0));
+    lua_pushinteger(L, mario_update_windy_ground(m));
 
     return 1;
 }
@@ -18387,12 +18387,12 @@ int smlua_func_perform_air_step(lua_State* L) {
         return 0;
     }
 
-    struct MarioState* arg0 = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "perform_air_step"); return 0; }
-    u32 arg1 = smlua_to_integer(L, 2);
+    u32 stepArg = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "perform_air_step"); return 0; }
 
-    lua_pushinteger(L, perform_air_step(arg0, arg1));
+    lua_pushinteger(L, perform_air_step(m, stepArg));
 
     return 1;
 }
@@ -18406,10 +18406,10 @@ int smlua_func_perform_ground_step(lua_State* L) {
         return 0;
     }
 
-    struct MarioState* arg0 = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "perform_ground_step"); return 0; }
 
-    lua_pushinteger(L, perform_ground_step(arg0));
+    lua_pushinteger(L, perform_ground_step(m));
 
     return 1;
 }
@@ -18440,10 +18440,10 @@ int smlua_func_stationary_ground_step(lua_State* L) {
         return 0;
     }
 
-    struct MarioState* arg0 = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "stationary_ground_step"); return 0; }
 
-    lua_pushinteger(L, stationary_ground_step(arg0));
+    lua_pushinteger(L, stationary_ground_step(m));
 
     return 1;
 }
@@ -18457,10 +18457,10 @@ int smlua_func_stop_and_set_height_to_floor(lua_State* L) {
         return 0;
     }
 
-    struct MarioState* arg0 = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "stop_and_set_height_to_floor"); return 0; }
 
-    stop_and_set_height_to_floor(arg0);
+    stop_and_set_height_to_floor(m);
 
     return 1;
 }
@@ -18480,7 +18480,7 @@ int smlua_func_anim_spline_init(lua_State* L) {
 
     struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "anim_spline_init"); return 0; }
-    Vec4s * keyFrames = (Vec4s *)smlua_to_cpointer(L, 2, LVT_COBJECT_P);
+    Vec4s * keyFrames = (Vec4s *)smlua_to_cobject(L, 2, LOT_VEC4S);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "anim_spline_init"); return 0; }
 
     anim_spline_init(m, keyFrames);
@@ -19567,6 +19567,7 @@ int smlua_func_mtxf_mul_vec3s(lua_State* L) {
     return 1;
 }
 
+/*
 int smlua_func_mtxf_rotate_xy(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -19576,7 +19577,7 @@ int smlua_func_mtxf_rotate_xy(lua_State* L) {
         return 0;
     }
 
-    Mtx * mtx = (Mtx *)smlua_to_cpointer(L, 1, LVT_COBJECT_P);
+//  Mtx * mtx = (Mtx *)smlua_to_cobject(L, 1, LOT_???); <--- UNIMPLEMENTED
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mtxf_rotate_xy"); return 0; }
     s16 angle = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "mtxf_rotate_xy"); return 0; }
@@ -19585,6 +19586,7 @@ int smlua_func_mtxf_rotate_xy(lua_State* L) {
 
     return 1;
 }
+*/
 
 int smlua_func_mtxf_rotate_xyz_and_translate(lua_State* L) {
     if (L == NULL) { return 0; }
@@ -19825,6 +19827,7 @@ int smlua_func_mtxf_scale_vec3f(lua_State* L) {
     return 1;
 }
 
+/*
 int smlua_func_mtxf_to_mtx(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -19834,7 +19837,7 @@ int smlua_func_mtxf_to_mtx(lua_State* L) {
         return 0;
     }
 
-    Mtx * dest = (Mtx *)smlua_to_cpointer(L, 1, LVT_COBJECT_P);
+//  Mtx * dest = (Mtx *)smlua_to_cobject(L, 1, LOT_???); <--- UNIMPLEMENTED
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mtxf_to_mtx"); return 0; }
 
     Mat4 src;
@@ -19877,6 +19880,7 @@ int smlua_func_mtxf_to_mtx(lua_State* L) {
 
     return 1;
 }
+*/
 
 int smlua_func_mtxf_translate(lua_State* L) {
     if (L == NULL) { return 0; }
@@ -21485,7 +21489,7 @@ int smlua_func_geo_obj_transparency_something(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "geo_obj_transparency_something"); return 0; }
     struct GraphNode* node = (struct GraphNode*)smlua_to_cobject(L, 2, LOT_GRAPHNODE);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "geo_obj_transparency_something"); return 0; }
-    Mat4 * mtx = (Mat4 *)smlua_to_cpointer(L, 3, LVT_COBJECT_P);
+    Mat4 * mtx = (Mat4 *)smlua_to_cobject(L, 3, LOT_MAT4);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "geo_obj_transparency_something"); return 0; }
 
     extern Gfx UNUSED *geo_obj_transparency_something(s32 callContext, struct GraphNode *node, UNUSED Mat4 *mtx);
@@ -34650,11 +34654,11 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "mtxf_lookat", smlua_func_mtxf_lookat);
     smlua_bind_function(L, "mtxf_mul", smlua_func_mtxf_mul);
     smlua_bind_function(L, "mtxf_mul_vec3s", smlua_func_mtxf_mul_vec3s);
-    smlua_bind_function(L, "mtxf_rotate_xy", smlua_func_mtxf_rotate_xy);
+    //smlua_bind_function(L, "mtxf_rotate_xy", smlua_func_mtxf_rotate_xy); <--- UNIMPLEMENTED
     smlua_bind_function(L, "mtxf_rotate_xyz_and_translate", smlua_func_mtxf_rotate_xyz_and_translate);
     smlua_bind_function(L, "mtxf_rotate_zxy_and_translate", smlua_func_mtxf_rotate_zxy_and_translate);
     smlua_bind_function(L, "mtxf_scale_vec3f", smlua_func_mtxf_scale_vec3f);
-    smlua_bind_function(L, "mtxf_to_mtx", smlua_func_mtxf_to_mtx);
+    //smlua_bind_function(L, "mtxf_to_mtx", smlua_func_mtxf_to_mtx); <--- UNIMPLEMENTED
     smlua_bind_function(L, "mtxf_translate", smlua_func_mtxf_translate);
     smlua_bind_function(L, "not_zero", smlua_func_not_zero);
     smlua_bind_function(L, "sins", smlua_func_sins);

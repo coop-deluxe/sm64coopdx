@@ -6,6 +6,675 @@
 
 
 ---
+# functions from mario_actions_airborne.c
+
+<br />
+
+
+## [check_common_airborne_cancels](#check_common_airborne_cancels)
+
+### Lua Example
+`local integerValue = check_common_airborne_cancels(m)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 check_common_airborne_cancels(struct MarioState *m);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [check_fall_damage](#check_fall_damage)
+
+### Lua Example
+`local integerValue = check_fall_damage(m, hardFallAction)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| hardFallAction | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 check_fall_damage(struct MarioState *m, u32 hardFallAction);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [check_fall_damage_or_get_stuck](#check_fall_damage_or_get_stuck)
+
+### Lua Example
+`local integerValue = check_fall_damage_or_get_stuck(m, hardFallAction)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| hardFallAction | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 check_fall_damage_or_get_stuck(struct MarioState *m, u32 hardFallAction);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [check_horizontal_wind](#check_horizontal_wind)
+
+### Lua Example
+`local integerValue = check_horizontal_wind(m)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 check_horizontal_wind(struct MarioState *m);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [check_kick_or_dive_in_air](#check_kick_or_dive_in_air)
+
+### Lua Example
+`local integerValue = check_kick_or_dive_in_air(m)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 check_kick_or_dive_in_air(struct MarioState *m);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [check_wall_kick](#check_wall_kick)
+
+### Lua Example
+`local integerValue = check_wall_kick(m)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 check_wall_kick(struct MarioState *m);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [common_air_action_step](#common_air_action_step)
+
+### Lua Example
+`local integerValue = common_air_action_step(m, landAction, animation, stepArg)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| landAction | `integer` |
+| animation | `integer` |
+| stepArg | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 common_air_action_step(struct MarioState *m, u32 landAction, s32 animation, u32 stepArg);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [common_air_knockback_step](#common_air_knockback_step)
+
+### Lua Example
+`local integerValue = common_air_knockback_step(m, landAction, hardFallAction, animation, speed)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| landAction | `integer` |
+| hardFallAction | `integer` |
+| animation | `integer` |
+| speed | `number` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 common_air_knockback_step(struct MarioState *m, u32 landAction, u32 hardFallAction, s32 animation, f32 speed);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [lava_boost_on_wall](#lava_boost_on_wall)
+
+### Lua Example
+`local integerValue = lava_boost_on_wall(m)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 lava_boost_on_wall(struct MarioState *m);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mario_execute_airborne_action](#mario_execute_airborne_action)
+
+### Lua Example
+`local integerValue = mario_execute_airborne_action(m)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 mario_execute_airborne_action(struct MarioState *m);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [play_far_fall_sound](#play_far_fall_sound)
+
+### Lua Example
+`play_far_fall_sound(m)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+
+### Returns
+- None
+
+### C Prototype
+`void play_far_fall_sound(struct MarioState *m);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [play_flip_sounds](#play_flip_sounds)
+
+### Lua Example
+`play_flip_sounds(m, frame1, frame2, frame3)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| frame1 | `integer` |
+| frame2 | `integer` |
+| frame3 | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void play_flip_sounds(struct MarioState *m, s16 frame1, s16 frame2, s16 frame3);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [play_knockback_sound](#play_knockback_sound)
+
+### Lua Example
+`play_knockback_sound(m)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+
+### Returns
+- None
+
+### C Prototype
+`void play_knockback_sound(struct MarioState *m);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [should_get_stuck_in_ground](#should_get_stuck_in_ground)
+
+### Lua Example
+`local integerValue = should_get_stuck_in_ground(m)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 should_get_stuck_in_ground(struct MarioState *m);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [update_air_with_turn](#update_air_with_turn)
+
+### Lua Example
+`update_air_with_turn(m)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+
+### Returns
+- None
+
+### C Prototype
+`void update_air_with_turn(struct MarioState *m);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [update_air_without_turn](#update_air_without_turn)
+
+### Lua Example
+`update_air_without_turn(m)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+
+### Returns
+- None
+
+### C Prototype
+`void update_air_without_turn(struct MarioState *m);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [update_flying](#update_flying)
+
+### Lua Example
+`update_flying(m)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+
+### Returns
+- None
+
+### C Prototype
+`void update_flying(struct MarioState *m);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [update_flying_pitch](#update_flying_pitch)
+
+### Lua Example
+`update_flying_pitch(m)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+
+### Returns
+- None
+
+### C Prototype
+`void update_flying_pitch(struct MarioState *m);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [update_flying_yaw](#update_flying_yaw)
+
+### Lua Example
+`update_flying_yaw(m)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+
+### Returns
+- None
+
+### C Prototype
+`void update_flying_yaw(struct MarioState *m);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [update_lava_boost_or_twirling](#update_lava_boost_or_twirling)
+
+### Lua Example
+`update_lava_boost_or_twirling(m)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+
+### Returns
+- None
+
+### C Prototype
+`void update_lava_boost_or_twirling(struct MarioState *m);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
+# functions from mario_actions_automatic.c
+
+<br />
+
+
+## [add_tree_leaf_particles](#add_tree_leaf_particles)
+
+### Lua Example
+`add_tree_leaf_particles(m)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+
+### Returns
+- None
+
+### C Prototype
+`void add_tree_leaf_particles(struct MarioState *m);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [check_common_automatic_cancels](#check_common_automatic_cancels)
+
+### Lua Example
+`local integerValue = check_common_automatic_cancels(m)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 check_common_automatic_cancels(struct MarioState *m);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [climb_up_ledge](#climb_up_ledge)
+
+### Lua Example
+`climb_up_ledge(m)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+
+### Returns
+- None
+
+### C Prototype
+`void climb_up_ledge(struct MarioState *m);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [let_go_of_ledge](#let_go_of_ledge)
+
+### Lua Example
+`local integerValue = let_go_of_ledge(m)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 let_go_of_ledge(struct MarioState *m);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mario_execute_automatic_action](#mario_execute_automatic_action)
+
+### Lua Example
+`local integerValue = mario_execute_automatic_action(m)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 mario_execute_automatic_action(struct MarioState *m);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [perform_hanging_step](#perform_hanging_step)
+
+### Lua Example
+`local integerValue = perform_hanging_step(m, nextPos)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| nextPos | [Vec3f](structs.md#Vec3f) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 perform_hanging_step(struct MarioState *m, Vec3f nextPos);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [play_climbing_sounds](#play_climbing_sounds)
+
+### Lua Example
+`play_climbing_sounds(m, b)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| b | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void play_climbing_sounds(struct MarioState *m, s32 b);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_pole_position](#set_pole_position)
+
+### Lua Example
+`local integerValue = set_pole_position(m, offsetY)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| offsetY | `number` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 set_pole_position(struct MarioState *m, f32 offsetY);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [update_hang_moving](#update_hang_moving)
+
+### Lua Example
+`local integerValue = update_hang_moving(m)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 update_hang_moving(struct MarioState *m);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [update_hang_stationary](#update_hang_stationary)
+
+### Lua Example
+`update_hang_stationary(m)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+
+### Returns
+- None
+
+### C Prototype
+`void update_hang_stationary(struct MarioState *m);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [update_ledge_climb](#update_ledge_climb)
+
+### Lua Example
+`update_ledge_climb(m, animation, endAction)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| animation | `integer` |
+| endAction | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void update_ledge_climb(struct MarioState *m, s32 animation, u32 endAction);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [update_ledge_climb_camera](#update_ledge_climb_camera)
+
+### Lua Example
+`update_ledge_climb_camera(m)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+
+### Returns
+- None
+
+### C Prototype
+`void update_ledge_climb_camera(struct MarioState *m);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
 # functions from mario_actions_cutscene.c
 
 <br />
@@ -1444,6 +2113,9 @@
 
 ## [bhv_toad_message_init](#bhv_toad_message_init)
 
+### Description
+Behavior init function for NPC Toad
+
 ### Lua Example
 `bhv_toad_message_init()`
 
@@ -1461,6 +2133,9 @@
 <br />
 
 ## [bhv_toad_message_loop](#bhv_toad_message_loop)
+
+### Description
+Behavior loop function for NPC Toad
 
 ### Lua Example
 `bhv_toad_message_loop()`
@@ -1480,6 +2155,9 @@
 
 ## [bhv_unlock_door_star_init](#bhv_unlock_door_star_init)
 
+### Description
+Behavior init function for Star Door unlock object
+
 ### Lua Example
 `bhv_unlock_door_star_init()`
 
@@ -1497,6 +2175,9 @@
 <br />
 
 ## [bhv_unlock_door_star_loop](#bhv_unlock_door_star_loop)
+
+### Description
+Behavior loop function for Star Door unlock object
 
 ### Lua Example
 `bhv_unlock_door_star_loop()`
@@ -1521,6 +2202,9 @@
 
 
 ## [get_additive_y_vel_for_jumps](#get_additive_y_vel_for_jumps)
+
+### Description
+Always returns zero. May have been originally used for beta trampolines
 
 ### Lua Example
 `local numberValue = get_additive_y_vel_for_jumps()`
@@ -1566,20 +2250,23 @@
 
 ## [mario_bonk_reflection](#mario_bonk_reflection)
 
+### Description
+Reflects Mario off a wall if he is colliding with one and flips forward velocity if `negateSpeed` is TRUE
+
 ### Lua Example
-`mario_bonk_reflection(arg0, arg1)`
+`mario_bonk_reflection(m, negateSpeed)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| arg0 | [MarioState](structs.md#MarioState) |
-| arg1 | `integer` |
+| m | [MarioState](structs.md#MarioState) |
+| negateSpeed | `integer` |
 
 ### Returns
 - None
 
 ### C Prototype
-`void mario_bonk_reflection(struct MarioState *, u32);`
+`void mario_bonk_reflection(struct MarioState *m, u8 negateSpeed);`
 
 [:arrow_up_small:](#)
 
@@ -1587,21 +2274,24 @@
 
 ## [mario_push_off_steep_floor](#mario_push_off_steep_floor)
 
+### Description
+Pushes Mario off a steep floor and sets his action to `action` with `actionArg`
+
 ### Lua Example
-`local integerValue = mario_push_off_steep_floor(arg0, arg1, arg2)`
+`local integerValue = mario_push_off_steep_floor(m, action, actionArg)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| arg0 | [MarioState](structs.md#MarioState) |
-| arg1 | `integer` |
-| arg2 | `integer` |
+| m | [MarioState](structs.md#MarioState) |
+| action | `integer` |
+| actionArg | `integer` |
 
 ### Returns
 - `integer`
 
 ### C Prototype
-`u32 mario_push_off_steep_floor(struct MarioState *, u32, u32);`
+`u32 mario_push_off_steep_floor(struct MarioState *m, u32 action, u32 actionArg);`
 
 [:arrow_up_small:](#)
 
@@ -1609,19 +2299,22 @@
 
 ## [mario_update_moving_sand](#mario_update_moving_sand)
 
+### Description
+Pushes Mario in the direction of the quicksand based on the floor surface
+
 ### Lua Example
-`local integerValue = mario_update_moving_sand(arg0)`
+`local integerValue = mario_update_moving_sand(m)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| arg0 | [MarioState](structs.md#MarioState) |
+| m | [MarioState](structs.md#MarioState) |
 
 ### Returns
 - `integer`
 
 ### C Prototype
-`u32 mario_update_moving_sand(struct MarioState *);`
+`u32 mario_update_moving_sand(struct MarioState *m);`
 
 [:arrow_up_small:](#)
 
@@ -1629,20 +2322,23 @@
 
 ## [mario_update_quicksand](#mario_update_quicksand)
 
+### Description
+Updates Mario's state in quicksand, sinks him at `sinkingSpeed` if he's in non instant quicksand
+
 ### Lua Example
-`local integerValue = mario_update_quicksand(arg0, arg1)`
+`local integerValue = mario_update_quicksand(m, sinkingSpeed)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| arg0 | [MarioState](structs.md#MarioState) |
-| arg1 | `number` |
+| m | [MarioState](structs.md#MarioState) |
+| sinkingSpeed | `number` |
 
 ### Returns
 - `integer`
 
 ### C Prototype
-`u32 mario_update_quicksand(struct MarioState *, f32);`
+`u32 mario_update_quicksand(struct MarioState *m, f32 sinkingSpeed);`
 
 [:arrow_up_small:](#)
 
@@ -1650,19 +2346,22 @@
 
 ## [mario_update_windy_ground](#mario_update_windy_ground)
 
+### Description
+Pushes Mario in the direction of the wind based on the floor surface
+
 ### Lua Example
-`local integerValue = mario_update_windy_ground(arg0)`
+`local integerValue = mario_update_windy_ground(m)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| arg0 | [MarioState](structs.md#MarioState) |
+| m | [MarioState](structs.md#MarioState) |
 
 ### Returns
 - `integer`
 
 ### C Prototype
-`u32 mario_update_windy_ground(struct MarioState *);`
+`u32 mario_update_windy_ground(struct MarioState *m);`
 
 [:arrow_up_small:](#)
 
@@ -1670,20 +2369,23 @@
 
 ## [perform_air_step](#perform_air_step)
 
+### Description
+Performs a full Mario air physics step (4 substeps) and returns an `AIR_STEP_*` result
+
 ### Lua Example
-`local integerValue = perform_air_step(arg0, arg1)`
+`local integerValue = perform_air_step(m, stepArg)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| arg0 | [MarioState](structs.md#MarioState) |
-| arg1 | `integer` |
+| m | [MarioState](structs.md#MarioState) |
+| stepArg | `integer` |
 
 ### Returns
 - `integer`
 
 ### C Prototype
-`s32 perform_air_step(struct MarioState *, u32);`
+`s32 perform_air_step(struct MarioState *m, u32 stepArg);`
 
 [:arrow_up_small:](#)
 
@@ -1691,25 +2393,31 @@
 
 ## [perform_ground_step](#perform_ground_step)
 
+### Description
+Performs a full Mario ground physics step (4 substeps) and returns an `GROUND_STEP_*` result
+
 ### Lua Example
-`local integerValue = perform_ground_step(arg0)`
+`local integerValue = perform_ground_step(m)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| arg0 | [MarioState](structs.md#MarioState) |
+| m | [MarioState](structs.md#MarioState) |
 
 ### Returns
 - `integer`
 
 ### C Prototype
-`s32 perform_ground_step(struct MarioState *);`
+`s32 perform_ground_step(struct MarioState *m);`
 
 [:arrow_up_small:](#)
 
 <br />
 
 ## [set_vel_from_pitch_and_yaw](#set_vel_from_pitch_and_yaw)
+
+### Description
+Sets Mario's velocity to his forward velocity multiplied by the cosine and sine of his pitch and yaw
 
 ### Lua Example
 `set_vel_from_pitch_and_yaw(m)`
@@ -1731,19 +2439,22 @@
 
 ## [stationary_ground_step](#stationary_ground_step)
 
+### Description
+Performs a full Mario stationary physics step (4 substeps) and returns an `GROUND_STEP_*` result
+
 ### Lua Example
-`local integerValue = stationary_ground_step(arg0)`
+`local integerValue = stationary_ground_step(m)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| arg0 | [MarioState](structs.md#MarioState) |
+| m | [MarioState](structs.md#MarioState) |
 
 ### Returns
 - `integer`
 
 ### C Prototype
-`s32 stationary_ground_step(struct MarioState *);`
+`s32 stationary_ground_step(struct MarioState *m);`
 
 [:arrow_up_small:](#)
 
@@ -1751,19 +2462,22 @@
 
 ## [stop_and_set_height_to_floor](#stop_and_set_height_to_floor)
 
+### Description
+Sets all of Mario's velocity variables to 0 and sets his Y position to the floor height
+
 ### Lua Example
-`stop_and_set_height_to_floor(arg0)`
+`stop_and_set_height_to_floor(m)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| arg0 | [MarioState](structs.md#MarioState) |
+| m | [MarioState](structs.md#MarioState) |
 
 ### Returns
 - None
 
 ### C Prototype
-`void stop_and_set_height_to_floor(struct MarioState *);`
+`void stop_and_set_height_to_floor(struct MarioState *m);`
 
 [:arrow_up_small:](#)
 
@@ -2223,30 +2937,6 @@ Multiplies the 4x4 floating-point matrix `mtx` by a 3D signed-integer vector `b`
 
 <br />
 
-## [mtxf_rotate_xy](#mtxf_rotate_xy)
-
-### Description
-Rotates the matrix `mtx` in the XY plane by the given `angle`. Rotating in the XY plane typically means pivoting around the Z axis
-
-### Lua Example
-`mtxf_rotate_xy(mtx, angle)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| mtx | `Pointer` <`Mtx`> |
-| angle | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void mtxf_rotate_xy(Mtx *mtx, s16 angle);`
-
-[:arrow_up_small:](#)
-
-<br />
-
 ## [mtxf_rotate_xyz_and_translate](#mtxf_rotate_xyz_and_translate)
 
 ### Description
@@ -2317,30 +3007,6 @@ Scales the 4x4 floating-point matrix `mtx` by the scaling factors found in the 3
 
 ### C Prototype
 `void mtxf_scale_vec3f(Mat4 dest, Mat4 mtx, Vec3f s);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [mtxf_to_mtx](#mtxf_to_mtx)
-
-### Description
-Converts the floating-point matrix `src` into a fixed-point (integer-based) matrix suitable for the `Mtx` format, and stores the result in `dest`
-
-### Lua Example
-`mtxf_to_mtx(dest, src)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | `Pointer` <`Mtx`> |
-| src | `Mat4` |
-
-### Returns
-- None
-
-### C Prototype
-`void mtxf_to_mtx(Mtx *dest, Mat4 src);`
 
 [:arrow_up_small:](#)
 
@@ -3448,6 +4114,9 @@ Saves a `key` corresponding to a float `value` to mod storage
 
 ## [network_check_singleplayer_pause](#network_check_singleplayer_pause)
 
+### Description
+Checks if the game can currently be paused in singleplayer
+
 ### Lua Example
 `local booleanValue = network_check_singleplayer_pause()`
 
@@ -3465,6 +4134,9 @@ Saves a `key` corresponding to a float `value` to mod storage
 <br />
 
 ## [network_discord_id_from_local_index](#network_discord_id_from_local_index)
+
+### Description
+Gets a Discord ID corresponding to the network player with `localIndex`
 
 ### Lua Example
 `local stringValue = network_discord_id_from_local_index(localIndex)`
@@ -3486,6 +4158,9 @@ Saves a `key` corresponding to a float `value` to mod storage
 
 ## [network_get_player_text_color_string](#network_get_player_text_color_string)
 
+### Description
+Gets the DJUI hex color code string for the player corresponding to `localIndex`'s cap color
+
 ### Lua Example
 `local stringValue = network_get_player_text_color_string(localIndex)`
 
@@ -3505,6 +4180,9 @@ Saves a `key` corresponding to a float `value` to mod storage
 <br />
 
 ## [network_global_index_from_local](#network_global_index_from_local)
+
+### Description
+Gets a player's global index from their local index
 
 ### Lua Example
 `local integerValue = network_global_index_from_local(localIndex)`
@@ -3526,6 +4204,9 @@ Saves a `key` corresponding to a float `value` to mod storage
 
 ## [network_is_moderator](#network_is_moderator)
 
+### Description
+Checks if you are a moderator in the current lobby
+
 ### Lua Example
 `local booleanValue = network_is_moderator()`
 
@@ -3544,6 +4225,9 @@ Saves a `key` corresponding to a float `value` to mod storage
 
 ## [network_is_server](#network_is_server)
 
+### Description
+Checks if you are hosting the current lobby, this value doesn't change
+
 ### Lua Example
 `local booleanValue = network_is_server()`
 
@@ -3561,6 +4245,9 @@ Saves a `key` corresponding to a float `value` to mod storage
 <br />
 
 ## [network_local_index_from_global](#network_local_index_from_global)
+
+### Description
+Gets a player's local index from their global index
 
 ### Lua Example
 `local integerValue = network_local_index_from_global(globalIndex)`
