@@ -130,6 +130,7 @@ struct GraphNode
     struct GraphNode *children;
     const void *georef;
     u8 extraFlags;
+    u8 hookProcess;
 };
 
 struct AnimInfo

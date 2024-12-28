@@ -3335,7 +3335,9 @@
 | HOOK_ON_MODS_LOADED | 45 |
 | HOOK_ON_NAMETAGS_RENDER | 46 |
 | HOOK_ON_DJUI_THEME_CHANGED | 47 |
-| HOOK_MAX | 48 |
+| HOOK_ON_GEO_PROCESS | 48 |
+| HOOK_BEFORE_GEO_PROCESS | 49 |
+| HOOK_MAX | 50 |
 
 ### [enum LuaModMenuElementType](#LuaModMenuElementType)
 | Identifier | Value |

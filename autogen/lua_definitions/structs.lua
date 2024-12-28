@@ -826,6 +826,7 @@
 --- @field public children GraphNode
 --- @field public extraFlags integer
 --- @field public flags integer
+--- @field public hookProcess integer
 --- @field public next GraphNode
 --- @field public parent GraphNode
 --- @field public prev GraphNode
