@@ -198,7 +198,11 @@ void produce_interpolation_frames_and_delay(void) {
         remainingTime / (f64) MAX(1, configFrameLimit - sDrawnFrames)
     );
 
-    if (!configUncappedFramerate && (remainingTime < 0.0 || sDrawnFrames >= configFrameLimit)) {
+    // Reset counters if:
+    // - Freeze/lag happens during at least 1 game update
+    // - No time left for drawing the remaining frames
+    // - All frames are already drawn
+    if (!configUncappedFramerate && (curTime > targetTime || remainingTime < 0.0 || sDrawnFrames >= configFrameLimit)) {
         compute_fps(sPeriodTimeStart, curTime);
         sPeriodTimeStart = curTime;
         sFrameTimeStart = curTime;
