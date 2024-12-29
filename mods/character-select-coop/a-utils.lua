@@ -20,7 +20,8 @@ local dependacyFiles = {
 }
 local legacyFiles = {
     "voice.lua",
-    "palettes.lua"
+    "palettes.lua",
+    "z-anims.lua",
 }
 
 -- Check for Missing Files
@@ -54,8 +55,8 @@ if foundLegacyFiles then
 end
 
 MOD_VERSION_API = 1
-MOD_VERSION_MAJOR = 11
-MOD_VERSION_MINOR = 3
+MOD_VERSION_MAJOR = 12
+MOD_VERSION_MINOR = 0
 MOD_VERSION_INDEV = true
 MOD_VERSION_STRING = tostring(MOD_VERSION_API) .. "." .. tostring(MOD_VERSION_MAJOR) .. (MOD_VERSION_MINOR > 0 and ("." .. tostring(MOD_VERSION_MINOR)) or "") .. (MOD_VERSION_INDEV and " (In-Dev)" or "")
 

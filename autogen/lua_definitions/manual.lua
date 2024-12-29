@@ -423,8 +423,8 @@ function get_exclamation_box_contents()
     -- ...
 end
 
----@param node GraphNode | FnGraphNode
----@return GraphNode | GraphNodeAnimatedPart | GraphNodeBackground | GraphNodeBillboard | GraphNodeCamera | GraphNodeCullingRadius | GraphNodeDisplayList | GraphNodeGenerated | GraphNodeHeldObject | GraphNodeLevelOfDetail | GraphNodeMasterList | GraphNodeObject | GraphNodeObjectParent | GraphNodeOrthoProjection | GraphNodePerspective | GraphNodeRotation | GraphNodeScale | GraphNodeShadow | GraphNodeStart | GraphNodeSwitchCase | GraphNodeTranslation | GraphNodeTranslationRotation
+--- @param node GraphNode | FnGraphNode
+--- @return GraphNode | GraphNodeAnimatedPart | GraphNodeBackground | GraphNodeBillboard | GraphNodeCamera | GraphNodeCullingRadius | GraphNodeDisplayList | GraphNodeGenerated | GraphNodeHeldObject | GraphNodeLevelOfDetail | GraphNodeMasterList | GraphNodeObject | GraphNodeObjectParent | GraphNodeOrthoProjection | GraphNodePerspective | GraphNodeRotation | GraphNodeScale | GraphNodeShadow | GraphNodeStart | GraphNodeSwitchCase | GraphNodeTranslation | GraphNodeTranslationRotation
 --- Returns the specific GraphNode(...) the node is part of.
 --- Basically the reverse of `.node` or `.fnNode`.
 function cast_graph_node(node)

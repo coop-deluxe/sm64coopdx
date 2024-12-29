@@ -1494,6 +1494,7 @@ void geo_try_process_children(struct GraphNode *node) {
     }
 }
 
+#define MAX_GRAPH_NODE_DEPTH 5000
 /**
  * Process a generic geo node and its siblings.
  * The first argument is the start node, and all its siblings will
@@ -1533,7 +1534,7 @@ void geo_process_node_and_siblings(struct GraphNode *firstNode) {
         }
 
         // Break out of endless loops
-        if (++depthSanity > 5000) {
+        if (++depthSanity > MAX_GRAPH_NODE_DEPTH) {
             LOG_ERROR("Graph Node too deep!");
             break;
         }
