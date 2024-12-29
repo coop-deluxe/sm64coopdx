@@ -176,7 +176,9 @@ struct SmCodeGlyph sSmCodeGlyphs[] = {
     { "ї", 'l', 0, 0 },
     { "Ґ", 'R', 0, 0 },
     { "ґ", 'R', 0, 0 },
-    
+};
+
+struct SmCodeGlyph sSmCodeGlyphs_JP[] = {
 #include "jp_glyphs.h"
 };
 
@@ -236,6 +238,18 @@ void djui_unicode_init(void) {
         struct SmCodeGlyph* glyph = &sSmCodeGlyphs[i];
         glyph->spriteIndex = (128 + i) - SPRITE_INDEX_START_CHAR;
 
+        u64 key = convert_unicode_char_to_u64(glyph->unicode);
+        s32 bytes = count_bytes_for_char(glyph->unicode);
+        assert(bytes >= 2 && bytes <= 4);
+        assert(key > 127);
+        hmap_put(sCharMap, key, glyph);
+    }
+    
+    //add japanese glyphs
+    size_t jpCount = sizeof(sSmCodeGlyphs_JP) / sizeof(sSmCodeGlyphs_JP[0]);
+    for (size_t i = 0; i < jpCount; i++) {
+        struct SmCodeGlyph* glyph = &sSmCodeGlyphs_JP[i];
+        glyph->spriteIndex = 0x010000 + i;
         u64 key = convert_unicode_char_to_u64(glyph->unicode);
         s32 bytes = count_bytes_for_char(glyph->unicode);
         assert(bytes >= 2 && bytes <= 4);
