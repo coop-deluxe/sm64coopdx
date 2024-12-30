@@ -3,6 +3,7 @@ import re
 import math
 from extract_functions import *
 from common import *
+from vec_types import *
 
 rejects = ""
 integer_types = ["u8", "u16", "u32", "u64", "s8", "s16", "s32", "s64", "int"]
@@ -164,85 +165,12 @@ $[BINDS]
 
 ###########################################################
 
-c_types = {
-    "Vec2f": {
-        "field_type": "number",
-        "fields_mapping": {
-            "x": "[0]",
-            "y": "[1]",
-        },
-    },
-    "Vec3f": {
-        "field_type": "number",
-        "fields_mapping": {
-            "x": "[0]",
-            "y": "[1]",
-            "z": "[2]",
-        },
-    },
-    "Vec4f": {
-        "field_type": "number",
-        "fields_mapping": {
-            "x": "[0]",
-            "y": "[1]",
-            "z": "[2]",
-            "w": "[3]",
-        },
-    },
-    "Vec3s": {
-        "field_type": "integer",
-        "fields_mapping": {
-            "x": "[0]",
-            "y": "[1]",
-            "z": "[2]",
-        },
-    },
-    "Vec4s": {
-        "field_type": "integer",
-        "fields_mapping": {
-            "x": "[0]",
-            "y": "[1]",
-            "z": "[2]",
-            "w": "[3]",
-        },
-    },
-    "Mat4": {
-        "field_type": "number",
-        "fields_mapping": {
-            "m00": "[0][0]",
-            "m01": "[0][1]",
-            "m02": "[0][2]",
-            "m03": "[0][3]",
-            "m10": "[1][0]",
-            "m11": "[1][1]",
-            "m12": "[1][2]",
-            "m13": "[1][3]",
-            "m20": "[2][0]",
-            "m21": "[2][1]",
-            "m22": "[2][2]",
-            "m23": "[2][3]",
-            "m30": "[3][0]",
-            "m31": "[3][1]",
-            "m32": "[3][2]",
-            "m33": "[3][3]",
-        },
-    },
-    "Color": {
-        "field_type": "integer",
-        "fields_mapping": {
-            "r": "[0]",
-            "g": "[1]",
-            "b": "[2]",
-        },
-    },
-}
-
-c_type_before = """
+vec_type_before = """
     %s $[IDENTIFIER];
     smlua_get_%s($[IDENTIFIER], $[INDEX]);
 """
 
-c_type_after = """
+vec_type_after = """
     smlua_push_%s($[IDENTIFIER], $[INDEX]);
 """
 
@@ -817,20 +745,20 @@ def alter_type(t):
 
 ############################################################################
 
-def build_types():
-    s = gen_comment_header("types")
-    for type_name, c_type in c_types.items():
+def build_vec_types():
+    s = gen_comment_header("vec types")
+    for type_name, vec_type in VEC_TYPES.items():
 
         # Get
         s += "static void smlua_get_%s(%s dest, int index) {\n" % (type_name.lower(), type_name)
-        for lua_field, c_field in c_type["fields_mapping"].items():
-            s += "    dest%s = smlua_get_%s_field(index, \"%s\");\n" % (c_field, c_type["field_type"], lua_field)
+        for lua_field, c_field in vec_type["fields_mapping"].items():
+            s += "    dest%s = smlua_get_%s_field(index, \"%s\");\n" % (c_field, vec_type["field_lua_type"], lua_field)
         s += "}\n\n"
 
         # Push
         s += "static void smlua_push_%s(%s src, int index) {\n" % (type_name.lower(), type_name)
-        for lua_field, c_field in c_type["fields_mapping"].items():
-            s += "    smlua_push_%s_field(index, \"%s\", src%s);\n" % (c_type["field_type"], lua_field, c_field)
+        for lua_field, c_field in vec_type["fields_mapping"].items():
+            s += "    smlua_push_%s_field(index, \"%s\", src%s);\n" % (vec_type["field_lua_type"], lua_field, c_field)
         s += "}\n\n"
 
     return s
@@ -841,8 +769,8 @@ def build_param(param, i):
     ptype = alter_type(param['type'])
     pid = param['identifier']
 
-    if ptype in c_types:
-        return (c_type_before % (ptype, ptype.lower())).replace('$[IDENTIFIER]', str(pid)).replace('$[INDEX]', str(i))
+    if ptype in VEC_TYPES:
+        return (vec_type_before % (ptype, ptype.lower())).replace('$[IDENTIFIER]', str(pid)).replace('$[INDEX]', str(i))
     elif ptype == 'bool':
         return '    %s %s = smlua_to_boolean(L, %d);\n' % (ptype, pid, i)
     elif ptype in integer_types:
@@ -871,8 +799,8 @@ def build_param_after(param, i):
     ptype = param['type']
     pid = param['identifier']
 
-    if ptype in c_types:
-        return (c_type_after % (ptype.lower())).replace('$[IDENTIFIER]', str(pid)).replace('$[INDEX]', str(i))
+    if ptype in VEC_TYPES:
+        return (vec_type_after % (ptype.lower())).replace('$[IDENTIFIER]', str(pid)).replace('$[INDEX]', str(i))
     else:
         return ''
 
@@ -1414,7 +1342,7 @@ def def_files(processed_files):
 def main():
     processed_files = process_files()
 
-    built_types = build_types()
+    built_vec_types = build_vec_types()
     built_functions = build_functions(processed_files)
     built_binds = build_binds(processed_files)
     built_includes = build_includes()
@@ -1422,7 +1350,7 @@ def main():
     filename = get_path(out_filename)
 
     gen = template                                \
-        .replace("$[TYPES]", built_types)         \
+        .replace("$[TYPES]", built_vec_types)     \
         .replace("$[FUNCTIONS]", built_functions) \
         .replace("$[BINDS]", built_binds)         \
         .replace("$[INCLUDES]", built_includes)

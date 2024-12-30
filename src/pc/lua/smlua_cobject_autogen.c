@@ -29,6 +29,89 @@
 
 #include "include/object_fields.h"
 
+  ///////////////
+ // vec types //
+///////////////
+
+#define LUA_VEC2F_FIELD_COUNT 2
+static struct LuaObjectField sVec2fFields[LUA_VEC2F_FIELD_COUNT] = {
+    { "x", LVT_F32, sizeof(f32) * 0, false, LOT_NONE },
+    { "y", LVT_F32, sizeof(f32) * 1, false, LOT_NONE },
+};
+
+#define LUA_VEC3F_FIELD_COUNT 3
+static struct LuaObjectField sVec3fFields[LUA_VEC3F_FIELD_COUNT] = {
+    { "x", LVT_F32, sizeof(f32) * 0, false, LOT_NONE },
+    { "y", LVT_F32, sizeof(f32) * 1, false, LOT_NONE },
+    { "z", LVT_F32, sizeof(f32) * 2, false, LOT_NONE },
+};
+
+#define LUA_VEC4F_FIELD_COUNT 4
+static struct LuaObjectField sVec4fFields[LUA_VEC4F_FIELD_COUNT] = {
+    { "x", LVT_F32, sizeof(f32) * 0, false, LOT_NONE },
+    { "y", LVT_F32, sizeof(f32) * 1, false, LOT_NONE },
+    { "z", LVT_F32, sizeof(f32) * 2, false, LOT_NONE },
+    { "w", LVT_F32, sizeof(f32) * 3, false, LOT_NONE },
+};
+
+#define LUA_VEC3S_FIELD_COUNT 3
+static struct LuaObjectField sVec3sFields[LUA_VEC3S_FIELD_COUNT] = {
+    { "x", LVT_S16, sizeof(s16) * 0, false, LOT_NONE },
+    { "y", LVT_S16, sizeof(s16) * 1, false, LOT_NONE },
+    { "z", LVT_S16, sizeof(s16) * 2, false, LOT_NONE },
+};
+
+#define LUA_VEC4S_FIELD_COUNT 4
+static struct LuaObjectField sVec4sFields[LUA_VEC4S_FIELD_COUNT] = {
+    { "x", LVT_S16, sizeof(s16) * 0, false, LOT_NONE },
+    { "y", LVT_S16, sizeof(s16) * 1, false, LOT_NONE },
+    { "z", LVT_S16, sizeof(s16) * 2, false, LOT_NONE },
+    { "w", LVT_S16, sizeof(s16) * 3, false, LOT_NONE },
+};
+
+#define LUA_MAT4_FIELD_COUNT 16
+static struct LuaObjectField sMat4Fields[LUA_MAT4_FIELD_COUNT] = {
+    { "m00", LVT_F32, sizeof(f32) * 0, false, LOT_NONE },
+    { "m01", LVT_F32, sizeof(f32) * 1, false, LOT_NONE },
+    { "m02", LVT_F32, sizeof(f32) * 2, false, LOT_NONE },
+    { "m03", LVT_F32, sizeof(f32) * 3, false, LOT_NONE },
+    { "m10", LVT_F32, sizeof(f32) * 4, false, LOT_NONE },
+    { "m11", LVT_F32, sizeof(f32) * 5, false, LOT_NONE },
+    { "m12", LVT_F32, sizeof(f32) * 6, false, LOT_NONE },
+    { "m13", LVT_F32, sizeof(f32) * 7, false, LOT_NONE },
+    { "m20", LVT_F32, sizeof(f32) * 8, false, LOT_NONE },
+    { "m21", LVT_F32, sizeof(f32) * 9, false, LOT_NONE },
+    { "m22", LVT_F32, sizeof(f32) * 10, false, LOT_NONE },
+    { "m23", LVT_F32, sizeof(f32) * 11, false, LOT_NONE },
+    { "m30", LVT_F32, sizeof(f32) * 12, false, LOT_NONE },
+    { "m31", LVT_F32, sizeof(f32) * 13, false, LOT_NONE },
+    { "m32", LVT_F32, sizeof(f32) * 14, false, LOT_NONE },
+    { "m33", LVT_F32, sizeof(f32) * 15, false, LOT_NONE },
+};
+
+#define LUA_COLOR_FIELD_COUNT 3
+static struct LuaObjectField sColorFields[LUA_COLOR_FIELD_COUNT] = {
+    { "r", LVT_U8, sizeof(u8) * 0, false, LOT_NONE },
+    { "g", LVT_U8, sizeof(u8) * 1, false, LOT_NONE },
+    { "b", LVT_U8, sizeof(u8) * 2, false, LOT_NONE },
+};
+
+struct LuaObjectTable sLuaObjectTable[LOT_MAX] = {
+    [LOT_NONE] = { LOT_NONE, NULL, 0 },
+    [LOT_VEC2F] = { LOT_VEC2F, sVec2fFields, LUA_VEC2F_FIELD_COUNT },
+    [LOT_VEC3F] = { LOT_VEC3F, sVec3fFields, LUA_VEC3F_FIELD_COUNT },
+    [LOT_VEC4F] = { LOT_VEC4F, sVec4fFields, LUA_VEC4F_FIELD_COUNT },
+    [LOT_VEC3S] = { LOT_VEC3S, sVec3sFields, LUA_VEC3S_FIELD_COUNT },
+    [LOT_VEC4S] = { LOT_VEC4S, sVec4sFields, LUA_VEC4S_FIELD_COUNT },
+    [LOT_MAT4] = { LOT_MAT4, sMat4Fields, LUA_MAT4_FIELD_COUNT },
+    [LOT_COLOR] = { LOT_COLOR, sColorFields, LUA_COLOR_FIELD_COUNT },
+    [LOT_POINTER] = { LOT_POINTER, NULL, 0 },
+};
+
+  ///////////////////
+ // autogen types //
+///////////////////
+
 #define LUA_ANIM_INFO_FIELD_COUNT 11
 static struct LuaObjectField sAnimInfoFields[LUA_ANIM_INFO_FIELD_COUNT] = {
     { "animAccel",              LVT_S32,       offsetof(struct AnimInfo, animAccel),              false, LOT_NONE      },
