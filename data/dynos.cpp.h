@@ -882,8 +882,9 @@ void DynOS_Pack_AddTex(PackData* aPackData, DataNode<TexData>* aTexData);
 // Actor Manager
 //
 
-void DynOS_Actor_AddCustom(const SysPath &aFilename, const char *aActorName);
+void DynOS_Actor_AddCustom(s32 aModIndex, const SysPath &aFilename, const char *aActorName);
 const void *DynOS_Actor_GetLayoutFromName(const char *aActorName);
+bool DynOS_Actor_GetModIndexAndToken(const GraphNode *aGraphNode, u32 aTokenIndex, s32 *outModIndex, const char **outToken);
 ActorGfx* DynOS_Actor_GetActorGfx(const GraphNode* aGraphNode);
 void DynOS_Actor_Valid(const void* aGeoref, ActorGfx& aActorGfx);
 void DynOS_Actor_Invalid(const void* aGeoref, s32 aPackIndex);
@@ -977,7 +978,7 @@ void DynOS_Model_ClearPool(enum ModelPool aModelPool);
 
 typedef s64 (*RDConstantFunc)(const String& _Arg, bool* found);
 
-u32 DynOS_Lua_RememberVariable(GfxData* aGfxData, void* aPtr, String& token);
+u32 DynOS_Lua_RememberVariable(GfxData* aGfxData, void* aPtr, const String& token);
 void DynOS_Gfx_GeneratePacks(const char* directory);
 s64 DynOS_RecursiveDescent_Parse(const char* expr, bool* success, RDConstantFunc func);
 void DynOS_Read_Source(GfxData *aGfxData, const SysPath &aFilename);

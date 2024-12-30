@@ -87,6 +87,7 @@ override_field_invisible = {
     "MarioState": [ "visibleToEnemies" ],
     "NetworkPlayer": [ "gag", "moderator", "discordId" ],
     "GraphNode": [ "_guard1", "_guard2" ],
+    "FnGraphNode": [ "luaTokenIndex" ],
     "Object": [ "firstSurface" ],
     "ModAudio": [ "sound", "decoder", "buffer", "bufferSize", "sampleCopiesTail" ],
 }

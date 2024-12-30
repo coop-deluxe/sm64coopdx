@@ -653,6 +653,16 @@ struct GraphNode *geo_make_first_child(struct GraphNode *newFirstChild) {
     return parent;
 }
 
+// A sharedChild graph node has either a parent of type GRAPH_NODE_TYPE_OBJECT or GRAPH_NODE_TYPE_OBJECT_PARENT, or no parent at all
+struct GraphNode *geo_find_shared_child(struct GraphNode *graphNode) {
+    while (graphNode->parent &&
+           graphNode->parent->type != GRAPH_NODE_TYPE_OBJECT &&
+           graphNode->parent->type != GRAPH_NODE_TYPE_OBJECT_PARENT) {
+        graphNode = graphNode->parent;
+    }
+    return graphNode;
+}
+
 /**
  * Helper function for geo_call_global_function_nodes that recursively
  * traverses the scene graph and calls the functions of global nodes.

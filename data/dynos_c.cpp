@@ -111,12 +111,16 @@ void dynos_actor_override(struct Object* obj, void** aSharedChild) {
     DynOS_Actor_Override(obj, aSharedChild);
 }
 
-void dynos_add_actor_custom(const char *filePath, const char* geoName) {
-    DynOS_Actor_AddCustom(filePath, geoName);
+void dynos_add_actor_custom(s32 modIndex, const char *filePath, const char* geoName) {
+    DynOS_Actor_AddCustom(modIndex, filePath, geoName);
 }
 
 const void* dynos_geolayout_get(const char *name) {
     return DynOS_Actor_GetLayoutFromName(name);
+}
+
+bool dynos_actor_get_mod_index_and_token(struct GraphNode *graphNode, u32 tokenIndex, s32 *modIndex, const char **token) {
+    return DynOS_Actor_GetModIndexAndToken(graphNode, tokenIndex, modIndex, token);
 }
 
 // -- collisions -- //

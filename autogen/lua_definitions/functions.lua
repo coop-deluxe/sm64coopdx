@@ -5788,6 +5788,18 @@ function bhv_unlock_door_star_loop()
     -- ...
 end
 
+--- @return MarioBodyState
+--- When used in a geo function, retrieve the MarioBodyState associated to the current processed object
+function geo_get_body_state()
+    -- ...
+end
+
+--- @return MarioState
+--- When used in a geo function, retrieve the MarioState associated to the current processed object
+function geo_get_mario_state()
+    -- ...
+end
+
 --- @return number
 --- Always returns zero. May have been originally used for beta trampolines
 function get_additive_y_vel_for_jumps()
