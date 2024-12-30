@@ -16,7 +16,7 @@ static void djui_font_normal_render_char(char* c) {
     u32 ty = index / 32;
 
     extern ALIGNED8 const u8 texture_font_normal[];
-    djui_gfx_render_texture_tile(texture_font_normal, 256, 2048, 32, tx * 8, ty * 16, 8, 16, false, true);
+    djui_gfx_render_texture_tile(texture_font_normal, 256, 128, 32, tx * 8, ty * 16, 8, 16, false, true);
 }
 
 static f32 djui_font_normal_char_width(char* c) {
