@@ -4,6 +4,7 @@ import sys
 from extract_structs import *
 from extract_object_fields import *
 from common import *
+from vec_types import *
 
 in_files = [
     "include/types.h",
@@ -386,6 +387,32 @@ def output_fuzz_file():
 
 ############################################################################
 
+def build_vec_types():
+    s = gen_comment_header("vec types")
+
+    for type_name, vec_type in VEC_TYPES.items():
+        s += '#define LUA_%s_FIELD_COUNT %d\n' % (type_name.upper(), len(vec_type['fields_mapping']))
+        s += 'static struct LuaObjectField s%sFields[LUA_%s_FIELD_COUNT] = {\n' % (type_name, type_name.upper())
+
+        field_c_type = vec_type['field_c_type']
+        for i, lua_field in enumerate(vec_type['fields_mapping'].keys()):
+            s += '    { "%s", LVT_%s, sizeof(%s) * %d, false, LOT_NONE },\n' % (lua_field, field_c_type.upper(), field_c_type, i)
+
+        s += '};\n\n'
+
+    s += 'struct LuaObjectTable sLuaObjectTable[LOT_MAX] = {\n'
+    s += '    [LOT_NONE] = { LOT_NONE, NULL, 0 },\n'
+
+    for type_name in VEC_TYPES.keys():
+        s += '    [LOT_%s] = { LOT_%s, s%sFields, LUA_%s_FIELD_COUNT },\n' % (type_name.upper(), type_name.upper(), type_name, type_name.upper())
+
+    s += '    [LOT_POINTER] = { LOT_POINTER, NULL, 0 },\n'
+    s += '};\n\n'
+
+    return s
+
+############################################################################
+
 sLuaObjectTable = []
 sLotAutoGenList = []
 
@@ -491,7 +518,9 @@ def build_structs(structs):
     return s
 
 def build_body(parsed):
-    built = build_structs(parsed)
+    built = build_vec_types()
+    built += gen_comment_header("autogen types")
+    built += build_structs(parsed)
     obj_table_row_built, obj_table_count = table_to_string(sLuaObjectTable)
 
     obj_table_built = 'struct LuaObjectTable sLuaObjectAutogenTable[LOT_AUTOGEN_MAX - LOT_AUTOGEN_MIN] = {\n'
@@ -501,7 +530,19 @@ def build_body(parsed):
     return built + obj_table_built
 
 def build_lot_enum():
-    s  = 'enum LuaObjectAutogenType {\n'
+    s = ''
+
+    s += 'enum LuaObjectType {\n'
+    s += '    LOT_NONE = 0,\n'
+
+    for type_name in VEC_TYPES.keys():
+        s += '    LOT_%s,\n' % (type_name.upper())
+
+    s += '    LOT_POINTER,\n'
+    s += '    LOT_MAX,\n'
+    s += '};\n\n'
+
+    s += 'enum LuaObjectAutogenType {\n'
     s += '    LOT_AUTOGEN_MIN = 1000,\n'
 
     global sLotAutoGenList

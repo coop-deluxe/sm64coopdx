@@ -53,9 +53,9 @@
 #include "src/audio/seqplayer.h"
 
 
-  ///////////
- // types //
-///////////
+  ///////////////
+ // vec types //
+///////////////
 
 static void smlua_get_vec2f(Vec2f dest, int index) {
     dest[0] = smlua_get_number_field(index, "x");
