@@ -166,30 +166,6 @@ static void toad_message_fading(void) {
     }
 }
 
-void bhv_toad_message_loop(void) {
-    if (!gCurrentObject) { return; }
-    if (gCurrentObject->header.gfx.node.flags & GRAPH_RENDER_ACTIVE) {
-        gCurrentObject->oInteractionSubtype = 0;
-        switch (gCurrentObject->oToadMessageState) {
-            case TOAD_MESSAGE_FADED:
-                toad_message_faded();
-                break;
-            case TOAD_MESSAGE_OPAQUE:
-                toad_message_opaque();
-                break;
-            case TOAD_MESSAGE_OPACIFYING:
-                toad_message_opacifying();
-                break;
-            case TOAD_MESSAGE_FADING:
-                toad_message_fading();
-                break;
-            case TOAD_MESSAGE_TALKING:
-                toad_message_talking();
-                break;
-        }
-    }
-}
-
 void bhv_toad_message_init(void) {
     if (!gCurrentObject) { return; }
     s32 saveFlags = save_file_get_flags();
@@ -221,6 +197,30 @@ void bhv_toad_message_init(void) {
         gCurrentObject->oOpacity = 81;
     } else {
         obj_mark_for_deletion(gCurrentObject);
+    }
+}
+
+void bhv_toad_message_loop(void) {
+    if (!gCurrentObject) { return; }
+    if (gCurrentObject->header.gfx.node.flags & GRAPH_RENDER_ACTIVE) {
+        gCurrentObject->oInteractionSubtype = 0;
+        switch (gCurrentObject->oToadMessageState) {
+            case TOAD_MESSAGE_FADED:
+                toad_message_faded();
+                break;
+            case TOAD_MESSAGE_OPAQUE:
+                toad_message_opaque();
+                break;
+            case TOAD_MESSAGE_OPACIFYING:
+                toad_message_opacifying();
+                break;
+            case TOAD_MESSAGE_FADING:
+                toad_message_fading();
+                break;
+            case TOAD_MESSAGE_TALKING:
+                toad_message_talking();
+                break;
+        }
     }
 }
 

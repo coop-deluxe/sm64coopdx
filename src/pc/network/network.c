@@ -131,7 +131,7 @@ bool network_init(enum NetworkType inNetworkType, bool reconnecting) {
     gServerSettings.nametags = configNametags;
     gServerSettings.maxPlayers = configAmountofPlayers;
     gServerSettings.pauseAnywhere = configPauseAnywhere;
-    gServerSettings.pvpType = configPvpMode;
+    gServerSettings.pvpType = configPvpType;
 #if defined(RAPI_DUMMY) || defined(WAPI_DUMMY)
     gServerSettings.headlessServer = (inNetworkType == NT_SERVER);
 #else
@@ -144,8 +144,9 @@ bool network_init(enum NetworkType inNetworkType, bool reconnecting) {
     // initialize the network system
     gNetworkSentJoin = false;
     int rc = gNetworkSystem->initialize(inNetworkType, reconnecting);
-    if (!rc) {
+    if (!rc && inNetworkType != NT_NONE) {
         LOG_ERROR("failed to initialize network system");
+        djui_popup_create(DLANG(NOTIF, DISCONNECT_CLOSED), 2);
         return false;
     }
     if (gNetworkServerAddr != NULL) {
@@ -625,6 +626,11 @@ void network_update(void) {
         }
     }*/
 
+    // Kick the player back to the Main Menu if network init failed
+    if ((gNetworkType == NT_NONE) && !gDjuiInMainMenu) {
+        network_reset_reconnect_and_rehost();
+        network_shutdown(true, false, false, false);
+    }
 }
 
 void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnecting) {
@@ -638,13 +644,13 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
     gNetworkSentJoin = false;
 
     network_forget_all_reliable();
-    if (gNetworkType == NT_NONE) { return; }
-    if (gNetworkSystem == NULL) { LOG_ERROR("no network system attached"); return; }
-
-    if (gNetworkPlayerLocal != NULL && sendLeaving) { network_send_leaving(gNetworkPlayerLocal->globalIndex); }
-    network_player_shutdown(popup);
-    gNetworkSystem->shutdown(reconnecting);
-
+    if (gNetworkSystem == NULL) {
+        LOG_ERROR("no network system attached");
+    } else {
+        if (gNetworkPlayerLocal != NULL && sendLeaving) { network_send_leaving(gNetworkPlayerLocal->globalIndex); }
+        network_player_shutdown(popup);
+        gNetworkSystem->shutdown(reconnecting);
+    }
     if (gNetworkServerAddr != NULL) {
         free(gNetworkServerAddr);
         gNetworkServerAddr = NULL;

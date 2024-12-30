@@ -1,6 +1,6 @@
 sCourseNamesEE = false
 
-function course_names_swap_sm74()
+local function course_names_swap_sm74()
     if not sCourseNamesEE then return end
     smlua_text_utils_course_acts_replace(COURSE_BOB, " 1 DICE-FORTRESS", "WALLJUMPING LESSON", "CONQUER THE PILLARS", "THE OBSERVATION TOWER", "COLLECT 8 RED COINS", "SECRETS OF THE SKY", "THE BOX'S TREASURE")
     smlua_text_utils_course_acts_replace(COURSE_WF,  " 2 SKYWARD SLOPES", "TO THE TOP OF THE TOWER", "8 DANGEROUS RED COINS", "THE OUTER WALL", "NO TIME TO WASTE", "FLOATATION TECHNOLOGY BOX", "MASTER OF JUMPING")
@@ -39,7 +39,7 @@ function course_names_swap_sm74()
     smlua_text_utils_extra_text_replace(6, "")
 end
 
-function course_names_swap_sm74ee()
+local function course_names_swap_sm74ee()
     if sCourseNamesEE then return end
     smlua_text_utils_course_acts_replace(COURSE_BOB, " 1 DEVIL'S DICE", "LITTLE WARM-UP", "LET'S-A-GO!", "SCALE THE TOWER", "FUNDAMENTAL TUNNEL PROBLEMS", "FIRST RED KATASTROPHE", "YOU WON'T FIND ME!")
     smlua_text_utils_course_acts_replace(COURSE_WF,  " 2 VIRUSVINE VERANDA", "THE VINE'S TREASURE", "TIME PRESSURE TRAVEL", "ON TOP OF THAT WALL!", "JUMPING-PARCOUR 1", "JUMPING-PARCOUR 2", "LIGHT RED COINS")

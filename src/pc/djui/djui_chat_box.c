@@ -498,6 +498,10 @@ static void djui_chat_box_input_on_text_input(struct DjuiBase *base, char* text)
     }
 }
 
+static void djui_chat_box_input_on_text_editing(struct DjuiBase *base, char* text, int cursorPos) {
+    djui_inputbox_on_text_editing(base, text, cursorPos);
+}
+
 void djui_chat_box_toggle(void) {
     if (gDjuiChatBox == NULL) { return; }
     if (!gDjuiChatBoxFocus) { sDjuiChatBoxClearText = true; }
@@ -550,6 +554,7 @@ struct DjuiChatBox* djui_chat_box_create(void) {
     djui_base_set_alignment(ciBase, DJUI_HALIGN_LEFT, DJUI_VALIGN_BOTTOM);
     djui_interactable_hook_key(&chatInput->base, djui_chat_box_input_on_key_down, djui_inputbox_on_key_up);
     djui_interactable_hook_text_input(&chatInput->base, djui_chat_box_input_on_text_input);
+    djui_interactable_hook_text_editing(&chatInput->base, djui_chat_box_input_on_text_editing);
     chatBox->chatInput = chatInput;
 
     gDjuiChatBox = chatBox;

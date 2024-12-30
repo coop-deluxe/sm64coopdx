@@ -6,6 +6,7 @@
 #include "game/first_person_cam.h"
 #include "game/hardcoded.h"
 #include "game/scroll_targets.h"
+#include "game/rendering_graph_node.h"
 #include "audio/external.h"
 #include "object_fields.h"
 #include "pc/djui/djui_hud_utils.h"
@@ -662,6 +663,10 @@ void smlua_cobject_init_globals(void) {
     EXPOSE_GLOBAL_ARRAY(LOT_CHARACTER, gCharacters, CT_MAX);
 
     EXPOSE_GLOBAL_ARRAY(LOT_CONTROLLER, gControllers, MAX_PLAYERS);
+
+    EXPOSE_GLOBAL_ARRAY(LOT_MAT4, gMatStack, MATRIX_STACK_SIZE);
+
+    EXPOSE_GLOBAL_ARRAY(LOT_MAT4, gMatStackPrev, MATRIX_STACK_SIZE);
 
     // Structs
 

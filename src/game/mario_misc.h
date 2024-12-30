@@ -10,9 +10,13 @@ extern struct GraphNodeObject gMirrorMario[MAX_PLAYERS];
 extern struct MarioBodyState gBodyStates[MAX_PLAYERS];
 
 Gfx *geo_draw_mario_head_goddard(s32 callContext, struct GraphNode *node, Mat4 *c);
-void bhv_toad_message_loop(void);
+/* |description|Behavior init function for NPC Toad|descriptionEnd| */
 void bhv_toad_message_init(void);
+/* |description|Behavior loop function for NPC Toad|descriptionEnd| */
+void bhv_toad_message_loop(void);
+/* |description|Behavior init function for Star Door unlock object|descriptionEnd| */
 void bhv_unlock_door_star_init(void);
+/* |description|Behavior loop function for Star Door unlock object|descriptionEnd| */
 void bhv_unlock_door_star_loop(void);
 Gfx *geo_mirror_mario_set_alpha(s32 callContext, struct GraphNode *node, UNUSED Mat4 *c);
 Gfx *geo_switch_mario_stand_run(s32 callContext, struct GraphNode *node, UNUSED Mat4 *mtx);

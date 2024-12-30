@@ -401,6 +401,14 @@ static void level_cmd_alloc_level_pool(void) {
 static void level_cmd_free_level_pool(void) {
     s32 i;
 
+    for (i = 0; i < MAX_PLAYERS; i++) {
+        // these pointers would be invalid on the act selector menu
+        gMarioStates[i].wall = NULL;
+        gMarioStates[i].ceil = NULL;
+        gMarioStates[i].floor = NULL;
+    }
+
+
     if (!sFinishedLoadingPerm) {
         sFinishedLoadingPerm = true;
         // make sure we don't free the pool with the permanent models

@@ -141,6 +141,30 @@ void DynOS_Vtx_Load(BinFile *aFile, GfxData *aGfxData) {
         }
     }
 
+    // Billboard check
+    if (!(_Node->mFlags & GRAPH_EXTRA_FORCE_3D)) {
+        Vec3f pn = { 0, 0, 0 };
+        for (u32 i = 2; i < _Node->mSize; ++i) {
+            Vec3f p0; vec3f_copy(p0, _Node->mData[i - 2].v.ob);
+            Vec3f p1; vec3f_copy(p1, _Node->mData[i - 1].v.ob);
+            Vec3f p2; vec3f_copy(p2, _Node->mData[i - 0].v.ob);
+            Vec3f v0; vec3f_dif(v0, p0, p1);
+            Vec3f v1; vec3f_dif(v1, p1, p2);
+            Vec3f vn; vec3f_cross(vn, v0, v1);
+            if (vn[0] != 0.f || vn[1] != 0.f || vn[2] != 0.f) { // skip zero normals
+                vec3f_normalize(vn);
+                if (pn[0] != 0.f || pn[1] != 0.f || pn[2] != 0.f) { // don't compare to zero normal
+                    f32 dot = vec3f_dot(vn, pn);
+                    if (dot < 0.9f) { // Points don't form a plane -> no billboard
+                        _Node->mFlags |= GRAPH_EXTRA_FORCE_3D;
+                        break;
+                    }
+                }
+                vec3f_copy(pn, vn);
+            }
+        }
+    }
+
     // Append
     aGfxData->mVertices.Add(_Node);
 }
