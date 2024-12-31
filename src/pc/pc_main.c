@@ -89,7 +89,7 @@ f32 gRenderingDelta = 0;
 
 #define FRAMERATE 30
 static const f64 sFrameTime = (1.0 / ((double)FRAMERATE));
-static f64 sPeriodTimeStart = 0;
+static f64 sFpsTimeLast = 0;
 static f64 sFrameTimeStart = 0;
 static u32 sDrawnFrames = 0;
 
@@ -177,10 +177,20 @@ static inline void patch_interpolations(f32 delta) {
     patch_scroll_targets_interpolated(delta);
 }
 
-static void compute_fps(f64 start, f64 end) {
-    u32 fps = round((f64) sDrawnFrames / MAX(0.001, end - start));
+static void compute_fps(f64 curTime) {
+    u32 fps = round((f64) sDrawnFrames / MAX(0.001, curTime - sFpsTimeLast));
     djui_fps_display_update(fps);
+    sFpsTimeLast = curTime;
     sDrawnFrames = 0;
+}
+
+static s32 get_num_frames_to_draw(f64 t) {
+    if (configFrameLimit % FRAMERATE == 0) {
+        return configFrameLimit / FRAMERATE;
+    }
+    s64 numFramesCurr = (s64) (t * (f64) configFrameLimit);
+    s64 numFramesNext = (s64) ((t + sFrameTime) * (f64) configFrameLimit);
+    return (s32) MAX(1, numFramesNext - numFramesCurr);
 }
 
 void produce_interpolation_frames_and_delay(void) {
@@ -188,34 +198,28 @@ void produce_interpolation_frames_and_delay(void) {
 
     gRenderingInterpolated = true;
 
-    // Delta time is based on the remaining number of frames we need to draw during the current second
     f64 curTime = clock_elapsed_f64();
-    f64 remainingTime = sPeriodTimeStart + 1.0 - curTime;
     f64 targetTime = sFrameTimeStart + sFrameTime;
-    f64 targetDelta = (
-        is30Fps ?
-        targetTime - curTime :
-        remainingTime / (f64) MAX(1, configFrameLimit - sDrawnFrames)
-    );
+    s32 numFramesToDraw = get_num_frames_to_draw(sFrameTimeStart);
 
-    // Reset counters if:
-    // - Freeze/lag happens during at least 1 game update
-    // - No time left for drawing the remaining frames
-    // - All frames are already drawn
-    if (!configUncappedFramerate && (curTime > targetTime || remainingTime < 0.0 || sDrawnFrames >= configFrameLimit)) {
-        compute_fps(sPeriodTimeStart, curTime);
-        sPeriodTimeStart = curTime;
-        sFrameTimeStart = curTime;
-        targetTime = curTime + sFrameTime;
-        targetDelta = 1.0 / (f64) configFrameLimit;
+    // if the game update took too long, don't interpolate
+    if (targetTime - curTime < sFrameTime / 2) {
+        gRenderingInterpolated = false;
+        is30Fps = true;
+        numFramesToDraw = 1;
     }
 
+    f64 loopStartTime = curTime;
+    f64 expectedTime = 0;
+
     // interpolate and render
-    while ((curTime = clock_elapsed_f64()) < targetTime) {
+    // make sure to draw at least one frame to prevent the game from freezing completely
+    // (including inputs and window events) if the game update duration is greater than 33ms
+    do {
         f32 delta = (
             is30Fps ?
             1.0f :
-            MAX(MIN((curTime - sFrameTimeStart) / (targetTime - sFrameTimeStart), 1.0f), 0.0f)
+            MIN(MAX((curTime - sFrameTimeStart) / sFrameTime, 0.f), 1.f)
         );
         gRenderingDelta = delta;
 
@@ -226,24 +230,27 @@ void produce_interpolation_frames_and_delay(void) {
 
         sDrawnFrames++;
 
-        if (configUncappedFramerate) { continue; }
+        if (!is30Fps && configUncappedFramerate) { continue; }
 
-        // Delay if our framerate is capped.
+        // delay if our framerate is capped
         f64 now = clock_elapsed_f64();
-        f64 actualDelta = now - curTime;
-        if (actualDelta >= targetDelta) { continue; }
-        f64 delay = (targetDelta - actualDelta) * 1000.0;
-        if (delay > 0.0f) {
+        f64 elapsedTime = now - loopStartTime;
+        expectedTime += (targetTime - curTime) / (f64) numFramesToDraw;
+        f64 delay = (expectedTime - elapsedTime) * 1000.0;
+        if (delay > 0.0) {
             WAPI.delay((u32)delay);
         }
+        numFramesToDraw--;
+    } while ((curTime = clock_elapsed_f64()) < targetTime && numFramesToDraw > 0);
 
-        if (is30Fps) { break; }
+    // compute and update the frame rate every second
+    if ((curTime = clock_elapsed_f64()) >= sFpsTimeLast + 1.0) {
+        compute_fps(curTime);
     }
 
-    if ((curTime = clock_elapsed_f64()) >= sPeriodTimeStart + 1.0) {
-        compute_fps(sPeriodTimeStart, curTime);
-        sPeriodTimeStart += 1.0;
-        sFrameTimeStart = sPeriodTimeStart;
+    // advance frame start time
+    if (curTime > sFrameTimeStart + 2 * sFrameTime) {
+        sFrameTimeStart = curTime;
     } else {
         sFrameTimeStart += sFrameTime;
     }
