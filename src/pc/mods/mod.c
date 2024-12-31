@@ -21,7 +21,7 @@ size_t mod_get_lua_size(struct Mod* mod) {
     return size;
 }
 
-static void mod_activate_bin(struct ModFile* file) {
+static void mod_activate_bin(struct Mod* mod, struct ModFile* file) {
     // copy geo name
     char geoName[64] = { 0 };
     if (snprintf(geoName, 63, "%s", path_basename(file->relativePath)) < 0) {
@@ -41,7 +41,7 @@ static void mod_activate_bin(struct ModFile* file) {
 
     // Add to custom actors
     LOG_INFO("Activating DynOS bin: '%s', '%s'", file->cachedPath, geoName);
-    dynos_add_actor_custom(file->cachedPath, geoName);
+    dynos_add_actor_custom(mod->index, file->cachedPath, geoName);
 }
 
 static void mod_activate_col(struct ModFile* file) {
@@ -148,7 +148,7 @@ void mod_activate(struct Mod* mod) {
         }
 
         if (str_ends_with(file->relativePath, ".bin")) {
-            mod_activate_bin(file);
+            mod_activate_bin(mod, file);
         }
         if (str_ends_with(file->relativePath, ".col")) {
             mod_activate_col(file);

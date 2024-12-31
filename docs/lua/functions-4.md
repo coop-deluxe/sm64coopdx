@@ -2195,6 +2195,48 @@ Behavior loop function for Star Door unlock object
 
 <br />
 
+## [geo_get_body_state](#geo_get_body_state)
+
+### Description
+When used in a geo function, retrieve the MarioBodyState associated to the current processed object
+
+### Lua Example
+`local MarioBodyStateValue = geo_get_body_state()`
+
+### Parameters
+- None
+
+### Returns
+[MarioBodyState](structs.md#MarioBodyState)
+
+### C Prototype
+`struct MarioBodyState *geo_get_body_state(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [geo_get_mario_state](#geo_get_mario_state)
+
+### Description
+When used in a geo function, retrieve the MarioState associated to the current processed object
+
+### Lua Example
+`local MarioStateValue = geo_get_mario_state()`
+
+### Parameters
+- None
+
+### Returns
+[MarioState](structs.md#MarioState)
+
+### C Prototype
+`struct MarioState *geo_get_mario_state(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ---
 # functions from mario_step.h
 

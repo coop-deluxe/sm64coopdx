@@ -125,7 +125,7 @@ void DynOS_Gfx_Free(GfxData* aGfxData) {
     }
 }
 
-u32 DynOS_Lua_RememberVariable(GfxData* aGfxData, void* aPtr, String& token) {
+u32 DynOS_Lua_RememberVariable(GfxData* aGfxData, void* aPtr, const String& token) {
     // remember as lua pointer
     aGfxData->mLuaPointerList.Add(aPtr);
 

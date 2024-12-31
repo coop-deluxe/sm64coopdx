@@ -1130,6 +1130,8 @@
    - [bhv_toad_message_loop](functions-4.md#bhv_toad_message_loop)
    - [bhv_unlock_door_star_init](functions-4.md#bhv_unlock_door_star_init)
    - [bhv_unlock_door_star_loop](functions-4.md#bhv_unlock_door_star_loop)
+   - [geo_get_body_state](functions-4.md#geo_get_body_state)
+   - [geo_get_mario_state](functions-4.md#geo_get_mario_state)
 
 <br />
 
