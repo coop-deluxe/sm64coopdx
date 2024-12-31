@@ -28,6 +28,10 @@ void djui_panel_do_host(bool reconnecting, bool playSound) {
     network_set_system(configNetworkSystem);
 
     network_init(NT_SERVER, reconnecting);
+    fake_lvl_init_from_save_file();
+
+    extern s16 gChangeLevelTransition;
+    gChangeLevelTransition = gLevelValues.entryLevel;
 
     if (gMarioState->marioObj) vec3f_copy(gMarioState->marioObj->header.gfx.cameraToObject, gGlobalSoundSource);
     if (playSound) { gDelayedInitSound = CHAR_SOUND_OKEY_DOKEY; }
