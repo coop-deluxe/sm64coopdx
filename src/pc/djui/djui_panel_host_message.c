@@ -2,7 +2,6 @@
 #include "djui.h"
 #include "djui_panel.h"
 #include "djui_panel_menu.h"
-#include "djui_panel_modlist.h"
 #include "pc/network/network.h"
 #include "pc/utils/misc.h"
 #include "pc/configfile.h"
@@ -29,11 +28,6 @@ void djui_panel_do_host(bool reconnecting, bool playSound) {
     network_set_system(configNetworkSystem);
 
     network_init(NT_SERVER, reconnecting);
-    djui_panel_modlist_create(NULL);
-    fake_lvl_init_from_save_file();
-
-    extern s16 gChangeLevelTransition;
-    gChangeLevelTransition = gLevelValues.entryLevel;
 
     if (gMarioState->marioObj) vec3f_copy(gMarioState->marioObj->header.gfx.cameraToObject, gGlobalSoundSource);
     if (playSound) { gDelayedInitSound = CHAR_SOUND_OKEY_DOKEY; }
