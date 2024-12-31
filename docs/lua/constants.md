@@ -3338,7 +3338,8 @@
 | HOOK_ON_GEO_PROCESS | 48 |
 | HOOK_BEFORE_GEO_PROCESS | 49 |
 | HOOK_ON_GEO_PROCESS_CHILDREN | 50 |
-| HOOK_MAX | 51 |
+| HOOK_MARIO_OVERRIDE_GEOMETRY_INPUTS | 51 |
+| HOOK_MAX | 52 |
 
 ### [enum LuaModMenuElementType](#LuaModMenuElementType)
 | Identifier | Value |
