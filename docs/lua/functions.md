@@ -26,6 +26,7 @@
    - [log_to_console](#log_to_console)
    - [add_scroll_target](#add_scroll_target)
    - [collision_find_surface_on_ray](#collision_find_surface_on_ray)
+   - [cast_graph_node](#cast_graph_node)
 
 <br />
 
@@ -782,6 +783,11 @@
 
 <br />
 
+- djui_panel_menu.h
+   - [djui_menu_get_rainbow_string_color](functions-3.md#djui_menu_get_rainbow_string_color)
+
+<br />
+
 - djui_popup.h
    - [djui_popup_create](functions-3.md#djui_popup_create)
 
@@ -795,6 +801,7 @@
    - [get_current_background_music_default_volume](functions-3.md#get_current_background_music_default_volume)
    - [get_current_background_music_max_target_volume](functions-3.md#get_current_background_music_max_target_volume)
    - [get_current_background_music_target_volume](functions-3.md#get_current_background_music_target_volume)
+   - [get_sound_pan](functions-3.md#get_sound_pan)
    - [is_current_background_music_volume_lowered](functions-3.md#is_current_background_music_volume_lowered)
    - [play_course_clear](functions-3.md#play_course_clear)
    - [play_dialog_sound](functions-3.md#play_dialog_sound)
@@ -812,9 +819,13 @@
    - [seq_player_lower_volume](functions-3.md#seq_player_lower_volume)
    - [seq_player_unlower_volume](functions-3.md#seq_player_unlower_volume)
    - [set_audio_fadeout](functions-3.md#set_audio_fadeout)
+   - [set_audio_muted](functions-3.md#set_audio_muted)
+   - [set_sound_moving_speed](functions-3.md#set_sound_moving_speed)
    - [sound_banks_disable](functions-3.md#sound_banks_disable)
    - [sound_banks_enable](functions-3.md#sound_banks_enable)
    - [sound_get_level_intensity](functions-3.md#sound_get_level_intensity)
+   - [sound_reset_background_music_default_volume](functions-3.md#sound_reset_background_music_default_volume)
+   - [sound_set_background_music_default_volume](functions-3.md#sound_set_background_music_default_volume)
    - [stop_background_music](functions-3.md#stop_background_music)
    - [stop_secondary_music](functions-3.md#stop_secondary_music)
    - [stop_sound](functions-3.md#stop_sound)
@@ -989,107 +1000,107 @@
 <br />
 
 - mario_actions_airborne.c
-   - [check_common_airborne_cancels](functions-3.md#check_common_airborne_cancels)
-   - [check_fall_damage](functions-3.md#check_fall_damage)
-   - [check_fall_damage_or_get_stuck](functions-3.md#check_fall_damage_or_get_stuck)
-   - [check_horizontal_wind](functions-3.md#check_horizontal_wind)
-   - [check_kick_or_dive_in_air](functions-3.md#check_kick_or_dive_in_air)
-   - [check_wall_kick](functions-3.md#check_wall_kick)
-   - [common_air_action_step](functions-3.md#common_air_action_step)
-   - [common_air_knockback_step](functions-3.md#common_air_knockback_step)
-   - [lava_boost_on_wall](functions-3.md#lava_boost_on_wall)
-   - [mario_execute_airborne_action](functions-3.md#mario_execute_airborne_action)
-   - [play_far_fall_sound](functions-3.md#play_far_fall_sound)
-   - [play_flip_sounds](functions-3.md#play_flip_sounds)
-   - [play_knockback_sound](functions-3.md#play_knockback_sound)
-   - [should_get_stuck_in_ground](functions-3.md#should_get_stuck_in_ground)
-   - [update_air_with_turn](functions-3.md#update_air_with_turn)
-   - [update_air_without_turn](functions-3.md#update_air_without_turn)
-   - [update_flying](functions-3.md#update_flying)
-   - [update_flying_pitch](functions-3.md#update_flying_pitch)
-   - [update_flying_yaw](functions-3.md#update_flying_yaw)
-   - [update_lava_boost_or_twirling](functions-3.md#update_lava_boost_or_twirling)
+   - [check_common_airborne_cancels](functions-4.md#check_common_airborne_cancels)
+   - [check_fall_damage](functions-4.md#check_fall_damage)
+   - [check_fall_damage_or_get_stuck](functions-4.md#check_fall_damage_or_get_stuck)
+   - [check_horizontal_wind](functions-4.md#check_horizontal_wind)
+   - [check_kick_or_dive_in_air](functions-4.md#check_kick_or_dive_in_air)
+   - [check_wall_kick](functions-4.md#check_wall_kick)
+   - [common_air_action_step](functions-4.md#common_air_action_step)
+   - [common_air_knockback_step](functions-4.md#common_air_knockback_step)
+   - [lava_boost_on_wall](functions-4.md#lava_boost_on_wall)
+   - [mario_execute_airborne_action](functions-4.md#mario_execute_airborne_action)
+   - [play_far_fall_sound](functions-4.md#play_far_fall_sound)
+   - [play_flip_sounds](functions-4.md#play_flip_sounds)
+   - [play_knockback_sound](functions-4.md#play_knockback_sound)
+   - [should_get_stuck_in_ground](functions-4.md#should_get_stuck_in_ground)
+   - [update_air_with_turn](functions-4.md#update_air_with_turn)
+   - [update_air_without_turn](functions-4.md#update_air_without_turn)
+   - [update_flying](functions-4.md#update_flying)
+   - [update_flying_pitch](functions-4.md#update_flying_pitch)
+   - [update_flying_yaw](functions-4.md#update_flying_yaw)
+   - [update_lava_boost_or_twirling](functions-4.md#update_lava_boost_or_twirling)
 
 <br />
 
 - mario_actions_automatic.c
-   - [add_tree_leaf_particles](functions-3.md#add_tree_leaf_particles)
-   - [check_common_automatic_cancels](functions-3.md#check_common_automatic_cancels)
-   - [climb_up_ledge](functions-3.md#climb_up_ledge)
-   - [let_go_of_ledge](functions-3.md#let_go_of_ledge)
-   - [mario_execute_automatic_action](functions-3.md#mario_execute_automatic_action)
-   - [perform_hanging_step](functions-3.md#perform_hanging_step)
-   - [play_climbing_sounds](functions-3.md#play_climbing_sounds)
-   - [set_pole_position](functions-3.md#set_pole_position)
-   - [update_hang_moving](functions-3.md#update_hang_moving)
-   - [update_hang_stationary](functions-3.md#update_hang_stationary)
-   - [update_ledge_climb](functions-3.md#update_ledge_climb)
-   - [update_ledge_climb_camera](functions-3.md#update_ledge_climb_camera)
+   - [add_tree_leaf_particles](functions-4.md#add_tree_leaf_particles)
+   - [check_common_automatic_cancels](functions-4.md#check_common_automatic_cancels)
+   - [climb_up_ledge](functions-4.md#climb_up_ledge)
+   - [let_go_of_ledge](functions-4.md#let_go_of_ledge)
+   - [mario_execute_automatic_action](functions-4.md#mario_execute_automatic_action)
+   - [perform_hanging_step](functions-4.md#perform_hanging_step)
+   - [play_climbing_sounds](functions-4.md#play_climbing_sounds)
+   - [set_pole_position](functions-4.md#set_pole_position)
+   - [update_hang_moving](functions-4.md#update_hang_moving)
+   - [update_hang_stationary](functions-4.md#update_hang_stationary)
+   - [update_ledge_climb](functions-4.md#update_ledge_climb)
+   - [update_ledge_climb_camera](functions-4.md#update_ledge_climb_camera)
 
 <br />
 
 - mario_actions_cutscene.c
-   - [bhv_end_peach_loop](functions-3.md#bhv_end_peach_loop)
-   - [bhv_end_toad_loop](functions-3.md#bhv_end_toad_loop)
-   - [common_death_handler](functions-3.md#common_death_handler)
-   - [cutscene_put_cap_on](functions-3.md#cutscene_put_cap_on)
-   - [cutscene_take_cap_off](functions-3.md#cutscene_take_cap_off)
-   - [general_star_dance_handler](functions-3.md#general_star_dance_handler)
-   - [generate_yellow_sparkles](functions-3.md#generate_yellow_sparkles)
-   - [get_credits_str_width](functions-3.md#get_credits_str_width)
-   - [get_star_collection_dialog](functions-3.md#get_star_collection_dialog)
-   - [handle_save_menu](functions-3.md#handle_save_menu)
-   - [launch_mario_until_land](functions-3.md#launch_mario_until_land)
-   - [mario_execute_cutscene_action](functions-3.md#mario_execute_cutscene_action)
-   - [mario_ready_to_speak](functions-3.md#mario_ready_to_speak)
-   - [should_start_or_continue_dialog](functions-3.md#should_start_or_continue_dialog)
-   - [stuck_in_ground_handler](functions-3.md#stuck_in_ground_handler)
+   - [bhv_end_peach_loop](functions-4.md#bhv_end_peach_loop)
+   - [bhv_end_toad_loop](functions-4.md#bhv_end_toad_loop)
+   - [common_death_handler](functions-4.md#common_death_handler)
+   - [cutscene_put_cap_on](functions-4.md#cutscene_put_cap_on)
+   - [cutscene_take_cap_off](functions-4.md#cutscene_take_cap_off)
+   - [general_star_dance_handler](functions-4.md#general_star_dance_handler)
+   - [generate_yellow_sparkles](functions-4.md#generate_yellow_sparkles)
+   - [get_credits_str_width](functions-4.md#get_credits_str_width)
+   - [get_star_collection_dialog](functions-4.md#get_star_collection_dialog)
+   - [handle_save_menu](functions-4.md#handle_save_menu)
+   - [launch_mario_until_land](functions-4.md#launch_mario_until_land)
+   - [mario_execute_cutscene_action](functions-4.md#mario_execute_cutscene_action)
+   - [mario_ready_to_speak](functions-4.md#mario_ready_to_speak)
+   - [should_start_or_continue_dialog](functions-4.md#should_start_or_continue_dialog)
+   - [stuck_in_ground_handler](functions-4.md#stuck_in_ground_handler)
 
 <br />
 
 - mario_actions_moving.c
-   - [align_with_floor](functions-3.md#align_with_floor)
-   - [analog_stick_held_back](functions-3.md#analog_stick_held_back)
-   - [anim_and_audio_for_heavy_walk](functions-3.md#anim_and_audio_for_heavy_walk)
-   - [anim_and_audio_for_hold_walk](functions-3.md#anim_and_audio_for_hold_walk)
-   - [anim_and_audio_for_walk](functions-3.md#anim_and_audio_for_walk)
-   - [apply_landing_accel](functions-3.md#apply_landing_accel)
-   - [apply_slope_accel](functions-3.md#apply_slope_accel)
-   - [apply_slope_decel](functions-3.md#apply_slope_decel)
-   - [begin_braking_action](functions-3.md#begin_braking_action)
-   - [begin_walking_action](functions-3.md#begin_walking_action)
-   - [check_common_moving_cancels](functions-3.md#check_common_moving_cancels)
-   - [check_ground_dive_or_punch](functions-3.md#check_ground_dive_or_punch)
-   - [check_ledge_climb_down](functions-3.md#check_ledge_climb_down)
-   - [common_ground_knockback_action](functions-3.md#common_ground_knockback_action)
-   - [common_landing_action](functions-3.md#common_landing_action)
-   - [common_slide_action](functions-3.md#common_slide_action)
-   - [common_slide_action_with_jump](functions-3.md#common_slide_action_with_jump)
-   - [mario_execute_moving_action](functions-3.md#mario_execute_moving_action)
-   - [play_step_sound](functions-3.md#play_step_sound)
-   - [push_or_sidle_wall](functions-3.md#push_or_sidle_wall)
-   - [quicksand_jump_land_action](functions-3.md#quicksand_jump_land_action)
-   - [set_triple_jump_action](functions-3.md#set_triple_jump_action)
-   - [should_begin_sliding](functions-3.md#should_begin_sliding)
-   - [slide_bonk](functions-3.md#slide_bonk)
-   - [stomach_slide_action](functions-3.md#stomach_slide_action)
-   - [tilt_body_butt_slide](functions-3.md#tilt_body_butt_slide)
-   - [tilt_body_ground_shell](functions-3.md#tilt_body_ground_shell)
-   - [tilt_body_running](functions-3.md#tilt_body_running)
-   - [tilt_body_walking](functions-3.md#tilt_body_walking)
-   - [update_decelerating_speed](functions-3.md#update_decelerating_speed)
-   - [update_shell_speed](functions-3.md#update_shell_speed)
-   - [update_sliding](functions-3.md#update_sliding)
-   - [update_sliding_angle](functions-3.md#update_sliding_angle)
-   - [update_walking_speed](functions-3.md#update_walking_speed)
+   - [align_with_floor](functions-4.md#align_with_floor)
+   - [analog_stick_held_back](functions-4.md#analog_stick_held_back)
+   - [anim_and_audio_for_heavy_walk](functions-4.md#anim_and_audio_for_heavy_walk)
+   - [anim_and_audio_for_hold_walk](functions-4.md#anim_and_audio_for_hold_walk)
+   - [anim_and_audio_for_walk](functions-4.md#anim_and_audio_for_walk)
+   - [apply_landing_accel](functions-4.md#apply_landing_accel)
+   - [apply_slope_accel](functions-4.md#apply_slope_accel)
+   - [apply_slope_decel](functions-4.md#apply_slope_decel)
+   - [begin_braking_action](functions-4.md#begin_braking_action)
+   - [begin_walking_action](functions-4.md#begin_walking_action)
+   - [check_common_moving_cancels](functions-4.md#check_common_moving_cancels)
+   - [check_ground_dive_or_punch](functions-4.md#check_ground_dive_or_punch)
+   - [check_ledge_climb_down](functions-4.md#check_ledge_climb_down)
+   - [common_ground_knockback_action](functions-4.md#common_ground_knockback_action)
+   - [common_landing_action](functions-4.md#common_landing_action)
+   - [common_slide_action](functions-4.md#common_slide_action)
+   - [common_slide_action_with_jump](functions-4.md#common_slide_action_with_jump)
+   - [mario_execute_moving_action](functions-4.md#mario_execute_moving_action)
+   - [play_step_sound](functions-4.md#play_step_sound)
+   - [push_or_sidle_wall](functions-4.md#push_or_sidle_wall)
+   - [quicksand_jump_land_action](functions-4.md#quicksand_jump_land_action)
+   - [set_triple_jump_action](functions-4.md#set_triple_jump_action)
+   - [should_begin_sliding](functions-4.md#should_begin_sliding)
+   - [slide_bonk](functions-4.md#slide_bonk)
+   - [stomach_slide_action](functions-4.md#stomach_slide_action)
+   - [tilt_body_butt_slide](functions-4.md#tilt_body_butt_slide)
+   - [tilt_body_ground_shell](functions-4.md#tilt_body_ground_shell)
+   - [tilt_body_running](functions-4.md#tilt_body_running)
+   - [tilt_body_walking](functions-4.md#tilt_body_walking)
+   - [update_decelerating_speed](functions-4.md#update_decelerating_speed)
+   - [update_shell_speed](functions-4.md#update_shell_speed)
+   - [update_sliding](functions-4.md#update_sliding)
+   - [update_sliding_angle](functions-4.md#update_sliding_angle)
+   - [update_walking_speed](functions-4.md#update_walking_speed)
 
 <br />
 
 - mario_actions_object.c
-   - [animated_stationary_ground_step](functions-3.md#animated_stationary_ground_step)
-   - [check_common_object_cancels](functions-3.md#check_common_object_cancels)
-   - [mario_execute_object_action](functions-3.md#mario_execute_object_action)
-   - [mario_update_punch_sequence](functions-3.md#mario_update_punch_sequence)
+   - [animated_stationary_ground_step](functions-4.md#animated_stationary_ground_step)
+   - [check_common_object_cancels](functions-4.md#check_common_object_cancels)
+   - [mario_execute_object_action](functions-4.md#mario_execute_object_action)
+   - [mario_update_punch_sequence](functions-4.md#mario_update_punch_sequence)
 
 <br />
 
@@ -1120,6 +1131,8 @@
    - [bhv_toad_message_loop](functions-4.md#bhv_toad_message_loop)
    - [bhv_unlock_door_star_init](functions-4.md#bhv_unlock_door_star_init)
    - [bhv_unlock_door_star_loop](functions-4.md#bhv_unlock_door_star_loop)
+   - [geo_get_body_state](functions-4.md#geo_get_body_state)
+   - [geo_get_mario_state](functions-4.md#geo_get_mario_state)
 
 <br />
 
@@ -1158,11 +1171,9 @@
    - [mtxf_lookat](functions-4.md#mtxf_lookat)
    - [mtxf_mul](functions-4.md#mtxf_mul)
    - [mtxf_mul_vec3s](functions-4.md#mtxf_mul_vec3s)
-   - [mtxf_rotate_xy](functions-4.md#mtxf_rotate_xy)
    - [mtxf_rotate_xyz_and_translate](functions-4.md#mtxf_rotate_xyz_and_translate)
    - [mtxf_rotate_zxy_and_translate](functions-4.md#mtxf_rotate_zxy_and_translate)
    - [mtxf_scale_vec3f](functions-4.md#mtxf_scale_vec3f)
-   - [mtxf_to_mtx](functions-4.md#mtxf_to_mtx)
    - [mtxf_translate](functions-4.md#mtxf_translate)
    - [not_zero](functions-4.md#not_zero)
    - [sins](functions-4.md#sins)
@@ -1562,7 +1573,7 @@
 
 <br />
 
-- rumble_init.c
+- rumble_init.h
    - [queue_rumble_data](functions-5.md#queue_rumble_data)
    - [queue_rumble_data_mario](functions-5.md#queue_rumble_data_mario)
    - [queue_rumble_data_object](functions-5.md#queue_rumble_data_object)
@@ -1908,9 +1919,10 @@
 
 <br />
 
-- spawn_sound.c
+- spawn_sound.h
    - [calc_dist_to_volume_range_1](functions-6.md#calc_dist_to_volume_range_1)
    - [calc_dist_to_volume_range_2](functions-6.md#calc_dist_to_volume_range_2)
+   - [create_sound_spawner](functions-6.md#create_sound_spawner)
    - [cur_obj_play_sound_1](functions-6.md#cur_obj_play_sound_1)
    - [cur_obj_play_sound_2](functions-6.md#cur_obj_play_sound_2)
    - [exec_anim_sound_state](functions-6.md#exec_anim_sound_state)
@@ -2410,6 +2422,33 @@ The function itself does not return every key/value pair. Instead it returns the
 | firstByte (Optional) | `integer` |
 | model | [ModelExtendedId](#ModelExtendedId) |
 | behavior | [BehaviorId](#BehaviorId) |
+
+### C Prototype
+N/A
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [cast_graph_node](#cast_graph_node)
+
+Returns the specific GraphNode(...) the node is part of. Basically the reverse of `.node` or `.fnNode`.
+
+### Lua Example
+```lua
+local marioGfx = gMarioStates[0].marioObj.header.gfx -- GraphNodeObject
+local node = marioGfx.node -- GraphNode
+
+print(marioGfx == cast_graph_node(node)) -- true
+```
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| node  | [GraphNode](structs.md#GraphNode) |
+
+### Returns
+- GraphNode(...)
 
 ### C Prototype
 N/A

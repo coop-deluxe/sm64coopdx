@@ -131,34 +131,132 @@ extern s8 gSaveFileModified;
 
 s8 get_level_num_from_course_num(s16 courseNum);
 s8 get_level_course_num(s16 levelNum);
+
+/* |description|
+Marks the coin score for a specific course as the newest among all save files. Adjusts the age of other scores to reflect the update.
+Useful for leaderboard tracking or displaying recent progress
+|descriptionEnd| */
 void touch_coin_score_age(s32 fileIndex, s32 courseIndex);
+
+/* |description|
+Saves the current state of the game into a specified save file. Includes data verification and backup management.
+Useful for maintaining game progress during play or when saving manually
+|descriptionEnd| */
 void save_file_do_save(s32 fileIndex, s8 forceSave);
+
+/* |description|
+Erases all data in a specified save file, including backup slots. Marks the save file as modified and performs a save to apply the changes.
+Useful for resetting a save file to its default state
+|descriptionEnd| */
 void save_file_erase(s32 fileIndex);
+
+/* |description|
+Erases the backup data for the current save file without affecting the primary save data. Reloads the save file afterward
+|descriptionEnd| */
 void save_file_erase_current_backup_save(void);
+
 BAD_RETURN(s32) save_file_copy(s32 srcFileIndex, s32 destFileIndex);
 void save_file_load_all(u8 reload);
+
+/* |description|
+Reloads the save file data into memory, optionally resetting all save files. Marks the save file as modified.
+Useful for reloading state after data corruption or during development debugging
+|descriptionEnd| */
 void save_file_reload(u8 load_all);
+
 void save_file_collect_star_or_key(s16 coinScore, s16 starIndex, u8 fromNetwork);
 s32 save_file_exists(s32 fileIndex);
+
+/* |description|
+Determines the maximum coin score for a course across all save files. Returns the score along with the file index of the save containing it.
+Useful for leaderboard-style comparisons and overall progress tracking
+|descriptionEnd| */
 u32 save_file_get_max_coin_score(s32 courseIndex);
+
+/* |description|
+Calculates the total number of stars collected in a specific course for a given save file.
+Useful for determining completion status of individual levels
+|descriptionEnd| */
 s32 save_file_get_course_star_count(s32 fileIndex, s32 courseIndex);
+
+/* |description|
+Calculates the total number of stars collected across multiple courses within a specified range.
+Useful for determining the overall progress toward game completion
+|descriptionEnd| */
 s32 save_file_get_total_star_count(s32 fileIndex, s32 minCourse, s32 maxCourse);
+
+/* |description|
+Adds new flags to the save file's flag bitmask.
+Useful for updating progress or triggering new gameplay features
+|descriptionEnd| */
 void save_file_set_flags(u32 flags);
+
+/* |description|
+Clears specific flags in the current save file. The flags are specified as a bitmask in the `flags` parameter. Ensures that the save file remains valid after clearing.
+Useful for removing specific game states, such as collected items or completed objectives, without resetting the entire save
+|descriptionEnd| */
 void save_file_clear_flags(u32 flags);
+
+/* |description|
+Retrieves the bitmask of flags representing the current state of the save file. Flags indicate collected items, completed objectives, and other game states.
+Useful for checking specific game progress details
+|descriptionEnd| */
 u32 save_file_get_flags(void);
+
+/* |description|
+Retrieves the bitmask of stars collected in a specific course or castle secret stars (-1).
+Useful for evaluating level progress and completion
+|descriptionEnd| */
 u32 save_file_get_star_flags(s32 fileIndex, s32 courseIndex);
+
+/* |description|
+Adds specific star flags to the save file, indicating collected stars for a course or castle secret stars. Updates the save file flags as necessary.
+Useful for recording progress after star collection
+|descriptionEnd| */
 void save_file_set_star_flags(s32 fileIndex, s32 courseIndex, u32 starFlags);
+
+/* |description|
+Removes specific star flags from the save file. This modifies the bitmask representing collected stars for a course or castle secret stars.
+Useful for undoing progress or debugging collected stars
+|descriptionEnd| */
 void save_file_remove_star_flags(s32 fileIndex, s32 courseIndex, u32 starFlagsToRemove);
+
+/* |description|
+Returns the highest coin score for a specified course in the save file. Performs checks to ensure the coin score is valid.
+Useful for tracking player achievements and high scores
+|descriptionEnd| */
 s32 save_file_get_course_coin_score(s32 fileIndex, s32 courseIndex);
+
+/* |description|
+Updates the coin score for a specific course in the save file. The new score is provided in the `coinScore` parameter.
+Useful for manually setting achievements such as high coin counts in individual levels
+|descriptionEnd| */
 void save_file_set_course_coin_score(s32 fileIndex, s32 courseIndex, u8 coinScore);
+
+/* |description|
+Checks whether the cannon in the specified course is unlocked. Returns true if the cannon is unlocked, otherwise false.
+Useful for tracking course-specific progress and enabling shortcuts
+|descriptionEnd| */
 s32 save_file_is_cannon_unlocked(s32 fileIndex, s32 courseIndex);
+
 void save_file_set_cannon_unlocked(void);
 void save_file_set_cap_pos(s16 x, s16 y, s16 z);
-s32 save_file_get_cap_pos(Vec3s capPos);
-void save_file_set_sound_mode(u16 mode);
-u16 save_file_get_sound_mode(void);
-void save_file_move_cap_to_default_location(void);
 
+/* |description|
+Retrieves the current position of Mario's cap, if it is on the ground in the current level and area. The position is stored in the provided `capPos` parameter.
+Useful for tracking the cap's location after it has been dropped or lost
+|descriptionEnd| */
+s32 save_file_get_cap_pos(Vec3s capPos);
+
+void save_file_set_sound_mode(u16 mode);
+
+/* |description|
+Returns the current sound mode (e.g., stereo, mono) stored in the save file.
+Useful for checking the audio output preferences when loading a save
+|descriptionEnd| */
+u16 save_file_get_sound_mode(void);
+
+void save_file_move_cap_to_default_location(void);
 void disable_warp_checkpoint(void);
 void check_if_should_set_warp_checkpoint(struct WarpNode *warpNode);
 s32 check_warp_checkpoint(struct WarpNode *warpNode);

@@ -17,6 +17,8 @@
     - [enum DjuiFontType](#enum-DjuiFontType)
     - [enum HudUtilsFilter](#enum-HudUtilsFilter)
     - [enum HudUtilsResolution](#enum-HudUtilsResolution)
+- [djui_panel_menu.h](#djui_panel_menuh)
+    - [enum DjuiRainbowColor](#enum-DjuiRainbowColor)
 - [envfx_snow.h](#envfx_snowh)
 - [external.h](#externalh)
     - [enum DialogSound](#enum-DialogSound)
@@ -1112,7 +1114,8 @@
 | FONT_ALIASED | 3 |
 | FONT_CUSTOM_HUD | 4 |
 | FONT_RECOLOR_HUD | 5 |
-| FONT_COUNT | 6 |
+| FONT_SPECIAL | 6 |
+| FONT_COUNT | 7 |
 
 ### [enum HudUtilsFilter](#HudUtilsFilter)
 | Identifier | Value |
@@ -1127,6 +1130,20 @@
 | RESOLUTION_DJUI | 0 |
 | RESOLUTION_N64 | 1 |
 | RESOLUTION_COUNT | 2 |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [djui_panel_menu.h](#djui_panel_menu.h)
+
+### [enum DjuiRainbowColor](#DjuiRainbowColor)
+| Identifier | Value |
+| :--------- | :---- |
+| DJUI_RAINBOW_COLOR_RED | 0 |
+| DJUI_RAINBOW_COLOR_GREEN | 1 |
+| DJUI_RAINBOW_COLOR_BLUE | 2 |
+| DJUI_RAINBOW_COLOR_YELLOW | 3 |
 
 [:arrow_up_small:](#)
 
@@ -3317,7 +3334,12 @@
 | HOOK_ON_LANGUAGE_CHANGED | 44 |
 | HOOK_ON_MODS_LOADED | 45 |
 | HOOK_ON_NAMETAGS_RENDER | 46 |
-| HOOK_MAX | 47 |
+| HOOK_ON_DJUI_THEME_CHANGED | 47 |
+| HOOK_ON_GEO_PROCESS | 48 |
+| HOOK_BEFORE_GEO_PROCESS | 49 |
+| HOOK_ON_GEO_PROCESS_CHILDREN | 50 |
+| HOOK_MARIO_OVERRIDE_GEOMETRY_INPUTS | 51 |
+| HOOK_MAX | 52 |
 
 ### [enum LuaModMenuElementType](#LuaModMenuElementType)
 | Identifier | Value |

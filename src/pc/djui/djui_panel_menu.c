@@ -1,6 +1,7 @@
 #include "djui.h"
 #include "djui_panel.h"
 #include "djui_unicode.h"
+#include "djui_panel_menu.h"
 #include "pc/utils/misc.h"
 #include "pc/configfile.h"
 
@@ -47,6 +48,11 @@ static void generate_rainbow_text(char* text) {
 
         src = djui_unicode_next_char(src);
     }
+}
+
+char* djui_menu_get_rainbow_string_color(enum DjuiRainbowColor color) {
+    int i = (color >= 0 && color <= 3) ? color : 0;
+    return configExCoopTheme ? sExCoopRainbowColors[i] : sRainbowColors[i];
 }
 
 void djui_panel_menu_back(UNUSED struct DjuiBase* base) {

@@ -15,7 +15,6 @@
 #include "pc/djui/djui.h"
 #include "pc/djui/djui_panel.h"
 #include "pc/djui/djui_panel_modlist.h"
-#include "pc/djui/djui_panel_playerlist.h"
 #include "pc/djui/djui_panel_menu.h"
 #include "pc/djui/djui_panel_join_message.h"
 #include "pc/utils/string_builder.h"
@@ -125,6 +124,7 @@ void network_send_join(struct Packet* joinRequestPacket) {
     packet_write(&p, &gServerSettings.nametags, sizeof(u8));
     packet_write(&p, &gServerSettings.maxPlayers, sizeof(u8));
     packet_write(&p, &gServerSettings.pauseAnywhere, sizeof(u8));
+    packet_write(&p, &gServerSettings.pvpType, sizeof(u8));
     packet_write(&p, eeprom, sizeof(u8) * 512);
 
     network_send_to(globalIndex, &p);
@@ -177,6 +177,7 @@ void network_receive_join(struct Packet* p) {
     packet_read(p, &gServerSettings.nametags, sizeof(u8));
     packet_read(p, &gServerSettings.maxPlayers, sizeof(u8));
     packet_read(p, &gServerSettings.pauseAnywhere, sizeof(u8));
+    packet_read(p, &gServerSettings.pvpType, sizeof(u8));
     packet_read(p, eeprom, sizeof(u8) * 512);
 
     network_player_connected(NPT_SERVER, 0, 0, &DEFAULT_MARIO_PALETTE, "Player", "0");

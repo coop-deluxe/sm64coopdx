@@ -43,7 +43,6 @@
  *
  */
 
-#define MATRIX_STACK_SIZE 64
 #define DISPLAY_LIST_HEAP_SIZE 32000
 
 f32 gProjectionMaxNearValue = 5;
@@ -801,8 +800,7 @@ static void geo_process_display_list(struct GraphNodeDisplayList *node) {
  */
 static void geo_process_generated_list(struct GraphNodeGenerated *node) {
     if (node->fnNode.func != NULL) {
-        Gfx *list = node->fnNode.func(GEO_CONTEXT_RENDER, &node->fnNode.node,
-                                     (struct DynamicPool *) gMatStack[gMatStackIndex]);
+        Gfx *list = node->fnNode.func(GEO_CONTEXT_RENDER, &node->fnNode.node, gMatStack[gMatStackIndex]);
 
         if (list != NULL) {
             geo_append_display_list((void *) VIRTUAL_TO_PHYSICAL(list), node->fnNode.node.flags >> 8);
@@ -1209,7 +1207,7 @@ static void geo_process_object(struct Object *node) {
     s32 hasAnimation = (node->header.gfx.node.flags & GRAPH_RENDER_HAS_ANIMATION) != 0;
     Vec3f scalePrev;
 
-    // Sanity check our stack index, If we above or equal to our stack size. Return to prevent OOB\.
+    // Sanity check our stack index, If we above or equal to our stack size. Return to prevent OOB.
     if ((gMatStackIndex + 1) >= MATRIX_STACK_SIZE) { LOG_ERROR("Preventing attempt to exceed the maximum size %i for our matrix stack with size of %i.", MATRIX_STACK_SIZE - 1, gMatStackIndex); return; }
 
     if (!node->header.gfx.inited) {
@@ -1495,6 +1493,7 @@ void geo_try_process_children(struct GraphNode *node) {
     }
 }
 
+#define MAX_GRAPH_NODE_DEPTH 5000
 /**
  * Process a generic geo node and its siblings.
  * The first argument is the start node, and all its siblings will
@@ -1512,6 +1511,8 @@ void geo_process_node_and_siblings(struct GraphNode *firstNode) {
     // processed instead of all children like usual
     if (parent != NULL) {
         iterateChildren = (parent->type != GRAPH_NODE_TYPE_SWITCH_CASE);
+
+        if (parent->hookProcess) smlua_call_event_hooks_graph_node_and_int_param(HOOK_ON_GEO_PROCESS_CHILDREN, parent, gMatStackIndex);
     }
 
     do {
@@ -1532,12 +1533,13 @@ void geo_process_node_and_siblings(struct GraphNode *firstNode) {
         }
 
         // Break out of endless loops
-        if (++depthSanity > 5000) {
+        if (++depthSanity > MAX_GRAPH_NODE_DEPTH) {
             LOG_ERROR("Graph Node too deep!");
             break;
         }
 
         if (curGraphNode->flags & GRAPH_RENDER_ACTIVE) {
+            if (curGraphNode->hookProcess) smlua_call_event_hooks_graph_node_and_int_param(HOOK_BEFORE_GEO_PROCESS, curGraphNode, gMatStackIndex);
             if (curGraphNode->flags & GRAPH_RENDER_CHILDREN_FIRST) {
                 geo_try_process_children(curGraphNode);
             } else {
@@ -1605,6 +1607,7 @@ void geo_process_node_and_siblings(struct GraphNode *firstNode) {
                         break;
                 }
             }
+            if (curGraphNode->hookProcess) smlua_call_event_hooks_graph_node_and_int_param(HOOK_ON_GEO_PROCESS, curGraphNode, gMatStackIndex + 1);
         } else {
             if (curGraphNode && curGraphNode->type == GRAPH_NODE_TYPE_OBJECT) {
                 ((struct GraphNodeObject *) curGraphNode)->throwMatrix = NULL;

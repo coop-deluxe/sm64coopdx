@@ -42,6 +42,7 @@ int smlua_call_hook(lua_State* L, int nargs, int nresults, int errfunc, struct M
     struct Mod* prev = gLuaActiveMod;
     gLuaActiveMod = activeMod;
     gLuaLastHookMod = activeMod;
+    gPcDebug.lastModRun = activeMod;
 
     lua_profiler_start_counter(activeMod);
 
@@ -1039,6 +1040,28 @@ void smlua_call_event_hooks_graph_node_object_and_int_param(enum LuaHookedEventT
 
         // push param
         lua_pushinteger(L, param);
+
+        // call the callback
+        if (0 != smlua_call_hook(L, 2, 0, 0, hook->mod[i])) {
+            LOG_LUA("Failed to call the callback: %u", hookType);
+            continue;
+        }
+    }
+}
+
+void smlua_call_event_hooks_graph_node_and_int_param(enum LuaHookedEventType hookType, struct GraphNode* node, s16 matIndex) {
+    lua_State* L = gLuaState;
+    if (L == NULL) { return; }
+    struct LuaHookedEvent* hook = &sHookedEvents[hookType];
+    for (int i = 0; i < hook->count; i++) {
+        // push the callback onto the stack
+        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
+
+        // push graph node
+        smlua_push_object(L, LOT_GRAPHNODE, node);
+
+        // push mat index
+        lua_pushinteger(L, matIndex);
 
         // call the callback
         if (0 != smlua_call_hook(L, 2, 0, 0, hook->mod[i])) {

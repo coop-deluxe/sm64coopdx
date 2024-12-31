@@ -11,6 +11,7 @@
 #include "pc/configfile.h"
 #include "pc/djui/djui.h"
 #include "pc/djui/djui_panel.h"
+#include "pc/djui/djui_panel_modlist.h"
 #include "pc/djui/djui_hud_utils.h"
 #include "pc/djui/djui_panel_main.h"
 #include "pc/utils/misc.h"
@@ -131,7 +132,7 @@ bool network_init(enum NetworkType inNetworkType, bool reconnecting) {
     gServerSettings.nametags = configNametags;
     gServerSettings.maxPlayers = configAmountofPlayers;
     gServerSettings.pauseAnywhere = configPauseAnywhere;
-    gServerSettings.pvpType = configPvpMode;
+    gServerSettings.pvpType = configPvpType;
 #if defined(RAPI_DUMMY) || defined(WAPI_DUMMY)
     gServerSettings.headlessServer = (inNetworkType == NT_SERVER);
 #else
@@ -144,8 +145,9 @@ bool network_init(enum NetworkType inNetworkType, bool reconnecting) {
     // initialize the network system
     gNetworkSentJoin = false;
     int rc = gNetworkSystem->initialize(inNetworkType, reconnecting);
-    if (!rc) {
+    if (!rc && inNetworkType != NT_NONE) {
         LOG_ERROR("failed to initialize network system");
+        djui_popup_create(DLANG(NOTIF, DISCONNECT_CLOSED), 2);
         return false;
     }
     if (gNetworkServerAddr != NULL) {
@@ -157,24 +159,26 @@ bool network_init(enum NetworkType inNetworkType, bool reconnecting) {
     gNetworkType = inNetworkType;
 
     if (gNetworkType == NT_SERVER) {
-        extern s16 gCurrSaveFileNum;
-        gCurrSaveFileNum = configHostSaveSlot;
-
-        mods_activate(&gLocalMods);
-        smlua_init();
-
-        dynos_behavior_hook_all_custom_behaviors();
-
-        network_player_connected(NPT_LOCAL, 0, configPlayerModel, &configPlayerPalette, configPlayerName, get_local_discord_id());
         extern u8* gOverrideEeprom;
         gOverrideEeprom = NULL;
 
-        if (gCurrLevelNum != (s16)gLevelValues.entryLevel) {
-            extern s16 gChangeLevelTransition;
-            gChangeLevelTransition = gLevelValues.entryLevel;
-        }
+        extern s16 gCurrSaveFileNum;
+        gCurrSaveFileNum = configHostSaveSlot;
+
+        network_player_connected(NPT_LOCAL, 0, configPlayerModel, &configPlayerPalette, configPlayerName, get_local_discord_id());
 
         djui_chat_box_create();
+        djui_panel_shutdown();
+
+        fake_lvl_init_from_save_file();
+
+        mods_activate(&gLocalMods);
+        djui_panel_modlist_create(NULL);
+        smlua_init();
+        dynos_behavior_hook_all_custom_behaviors();
+
+        extern s16 gChangeLevelTransition;
+        gChangeLevelTransition = gLevelValues.entryLevel;
     }
 
     configfile_save(configfile_name());
@@ -625,6 +629,11 @@ void network_update(void) {
         }
     }*/
 
+    // Kick the player back to the Main Menu if network init failed
+    if ((gNetworkType == NT_NONE) && !gDjuiInMainMenu) {
+        network_reset_reconnect_and_rehost();
+        network_shutdown(true, false, false, false);
+    }
 }
 
 void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnecting) {
@@ -638,13 +647,13 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
     gNetworkSentJoin = false;
 
     network_forget_all_reliable();
-    if (gNetworkType == NT_NONE) { return; }
-    if (gNetworkSystem == NULL) { LOG_ERROR("no network system attached"); return; }
-
-    if (gNetworkPlayerLocal != NULL && sendLeaving) { network_send_leaving(gNetworkPlayerLocal->globalIndex); }
-    network_player_shutdown(popup);
-    gNetworkSystem->shutdown(reconnecting);
-
+    if (gNetworkSystem == NULL) {
+        LOG_ERROR("no network system attached");
+    } else {
+        if (gNetworkPlayerLocal != NULL && sendLeaving) { network_send_leaving(gNetworkPlayerLocal->globalIndex); }
+        network_player_shutdown(popup);
+        gNetworkSystem->shutdown(reconnecting);
+    }
     if (gNetworkServerAddr != NULL) {
         free(gNetworkServerAddr);
         gNetworkServerAddr = NULL;

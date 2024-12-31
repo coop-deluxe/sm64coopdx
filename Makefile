@@ -869,6 +869,7 @@ ifeq ($(WINDOWS_BUILD),1)
   ifeq ($(CROSS),)
     LDFLAGS += -no-pie
   endif
+  LDFLAGS += -T windows.ld
 else ifeq ($(TARGET_RPI),1)
   LDFLAGS := $(OPT_FLAGS) -lm $(BACKEND_LDFLAGS) -no-pie
 else ifeq ($(OSX_BUILD),1)
@@ -986,11 +987,12 @@ else
   endif
 endif
 
-IS_DEV_OR_DEBUG := $(or $(filter 1,$(DEVELOPMENT)),$(filter 1,$(DEBUG)))
-ifeq ($(IS_DEV_OR_DEBUG),0)
-  CFLAGS += -fno-ident -fno-common -fno-asynchronous-unwind-tables -ffile-prefix-map=$(PWD)=. -D__DATE__="\"\"" -D__TIME__="\"\"" -Wno-builtin-macro-redefined
-  LDFLAGS += -Wl,--build-id=none -Wl,--no-randomize-sections
-endif
+IS_DEV_OR_DEBUG := $(or $(filter 1,$(DEVELOPMENT)),$(filter 1,$(DEBUG)),0)
+# causes a lot of issues
+# ifeq ($(IS_DEV_OR_DEBUG),0)
+#   CFLAGS += -fno-ident -fno-common -fno-asynchronous-unwind-tables -ffile-prefix-map=$(PWD)=. -D__DATE__="\"\"" -D__TIME__="\"\"" -Wno-builtin-macro-redefined
+#   LDFLAGS += -Wl,--build-id=none
+# endif
 
 # Prevent a crash with -sopt
 export LANG := C
@@ -1139,8 +1141,15 @@ endef
 all: $(EXE)
 
 ifeq ($(WINDOWS_BUILD),1)
+MAPFILE = $(BUILD_DIR)/coop.map
 exemap: $(EXE)
-	$(V)$(OBJDUMP) -t $(EXE) > $(BUILD_DIR)/coop.map
+	@$(PRINT) "$(GREEN)Creating map file: $(BLUE)$(MAPFILE) $(NO_COL)\n"
+	$(V)$(OBJDUMP) -t $(EXE) > $(MAPFILE)
+	@cp $(EXE) $(EXE).bak && cp $(MAPFILE) $(MAPFILE).bak
+	$(V)$(PYTHON) $(TOOLS_DIR)/clean_mapfile.py $(EXE) $(MAPFILE)
+ifeq ($(IS_DEV_OR_DEBUG),0)
+	$(V)$(OBJCOPY) -p --strip-unneeded $(EXE)
+endif
 all: exemap
 endif
 

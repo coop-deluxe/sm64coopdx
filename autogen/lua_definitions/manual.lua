@@ -31,6 +31,16 @@ gCharacters = {}
 --- - Index 0 always refers to the local player
 gControllers = {}
 
+--- @type Pointer_Mat4[]
+--- Matrix stack used during geo process
+--- - Only has an effect when used in a geo process hook
+gMatStack = {}
+
+--- @type Pointer_Mat4[]
+--- Matrix stack used during geo process
+--- - Only has an effect when used in a geo process hook
+gMatStackPrev = {}
+
 --- @type GlobalTextures
 --- Struct containing HUD glyph textures
 gTextures = {}
@@ -129,8 +139,8 @@ function hook_event(hookEventType, func)
 end
 
 --- @class ActionTable
-    --- @field every_frame fun(m:MarioState):integer?
-    --- @field gravity fun(m:MarioState):integer?
+--- @field every_frame fun(m:MarioState):integer?
+--- @field gravity fun(m:MarioState):integer?
 
 --- @param actionId integer The action to replace
 --- @param funcOrFuncTable fun(m:MarioState):integer? | ActionTable The new behavior of the action
@@ -410,5 +420,13 @@ end
 --- * `model`: Required; The model that the object will spawn with. Uses `ModelExtendedId`.
 --- * `behavior`: Required; The behavior ID that the object will spawn with. Uses `BehaviorId`.
 function get_exclamation_box_contents()
+    -- ...
+end
+
+--- @param node GraphNode | FnGraphNode
+--- @return GraphNode | GraphNodeAnimatedPart | GraphNodeBackground | GraphNodeBillboard | GraphNodeCamera | GraphNodeCullingRadius | GraphNodeDisplayList | GraphNodeGenerated | GraphNodeHeldObject | GraphNodeLevelOfDetail | GraphNodeMasterList | GraphNodeObject | GraphNodeObjectParent | GraphNodeOrthoProjection | GraphNodePerspective | GraphNodeRotation | GraphNodeScale | GraphNodeShadow | GraphNodeStart | GraphNodeSwitchCase | GraphNodeTranslation | GraphNodeTranslationRotation
+--- Returns the specific GraphNode(...) the node is part of.
+--- Basically the reverse of `.node` or `.fnNode`.
+function cast_graph_node(node)
     -- ...
 end

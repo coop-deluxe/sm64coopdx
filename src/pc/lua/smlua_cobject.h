@@ -39,18 +39,6 @@ enum LuaValueType {
     LVT_MAX,
 };
 
-enum LuaObjectType {
-    LOT_NONE = 0,
-    LOT_VEC3S,
-    LOT_VEC3F,
-    LOT_VEC4S,
-    LOT_VEC4F,
-    LOT_MAT4,
-    LOT_COLOR,
-    LOT_POINTER,
-    LOT_MAX,
-};
-
 struct LuaObjectField {
     const char* key;
     enum LuaValueType valueType;

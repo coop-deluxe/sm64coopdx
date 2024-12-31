@@ -26,6 +26,7 @@
 #include "sound_init.h"
 #include "pc/network/network.h"
 #include "pc/lua/smlua_hooks.h"
+#include "pc/mods/mods.h"
 
 #define TOAD_STAR_1_REQUIREMENT gBehaviorValues.ToadStar1Requirement
 #define TOAD_STAR_2_REQUIREMENT gBehaviorValues.ToadStar2Requirement
@@ -166,30 +167,6 @@ static void toad_message_fading(void) {
     }
 }
 
-void bhv_toad_message_loop(void) {
-    if (!gCurrentObject) { return; }
-    if (gCurrentObject->header.gfx.node.flags & GRAPH_RENDER_ACTIVE) {
-        gCurrentObject->oInteractionSubtype = 0;
-        switch (gCurrentObject->oToadMessageState) {
-            case TOAD_MESSAGE_FADED:
-                toad_message_faded();
-                break;
-            case TOAD_MESSAGE_OPAQUE:
-                toad_message_opaque();
-                break;
-            case TOAD_MESSAGE_OPACIFYING:
-                toad_message_opacifying();
-                break;
-            case TOAD_MESSAGE_FADING:
-                toad_message_fading();
-                break;
-            case TOAD_MESSAGE_TALKING:
-                toad_message_talking();
-                break;
-        }
-    }
-}
-
 void bhv_toad_message_init(void) {
     if (!gCurrentObject) { return; }
     s32 saveFlags = save_file_get_flags();
@@ -221,6 +198,30 @@ void bhv_toad_message_init(void) {
         gCurrentObject->oOpacity = 81;
     } else {
         obj_mark_for_deletion(gCurrentObject);
+    }
+}
+
+void bhv_toad_message_loop(void) {
+    if (!gCurrentObject) { return; }
+    if (gCurrentObject->header.gfx.node.flags & GRAPH_RENDER_ACTIVE) {
+        gCurrentObject->oInteractionSubtype = 0;
+        switch (gCurrentObject->oToadMessageState) {
+            case TOAD_MESSAGE_FADED:
+                toad_message_faded();
+                break;
+            case TOAD_MESSAGE_OPAQUE:
+                toad_message_opaque();
+                break;
+            case TOAD_MESSAGE_OPACIFYING:
+                toad_message_opacifying();
+                break;
+            case TOAD_MESSAGE_FADING:
+                toad_message_fading();
+                break;
+            case TOAD_MESSAGE_TALKING:
+                toad_message_talking();
+                break;
+        }
     }
 }
 
@@ -346,12 +347,12 @@ static u8 geo_get_processing_object_index(void) {
     return (index >= MAX_PLAYERS) ? 0 : index;
 }
 
-static struct MarioState* geo_get_mario_state(void) {
+struct MarioState *geo_get_mario_state(void) {
     u8 index = geo_get_processing_object_index();
     return &gMarioStates[index];
 }
 
-static struct MarioBodyState* geo_get_body_state(void) {
+struct MarioBodyState *geo_get_body_state(void) {
     u8 index = geo_get_processing_object_index();
     return &gBodyStates[index];
 }
@@ -837,4 +838,64 @@ Gfx* geo_mario_cap_display_list(s32 callContext, struct GraphNode* node, UNUSED 
     struct GraphNodeGenerated* asGenerated = (struct GraphNodeGenerated*)node;
     asGenerated->fnNode.node.flags = (asGenerated->fnNode.node.flags & 0xFF) | (character->capEnemyLayer << 8);
     return gfx;
+}
+
+Gfx *geo_process_lua_function(s32 callContext, struct GraphNode *node, UNUSED Mat4 *c) {
+    extern s16 gMatStackIndex;
+    lua_State *L = gLuaState;
+
+    // Do nothing outside of geo_process
+    if (callContext != GEO_CONTEXT_RENDER) {
+        return NULL;
+    }
+
+    // Check node type
+    if (!node || !(node->type & GRAPH_NODE_TYPE_FUNCTIONAL)) {
+        return NULL;
+    }
+    struct FnGraphNode *fnNode = (struct FnGraphNode *) node;
+    struct GraphNode *sharedChild = geo_find_shared_child(node);
+
+    // Retrieve mod index and function name
+    s32 modIndex = -1;
+    const char *funcStr = NULL;
+    if (!dynos_actor_get_mod_index_and_token(sharedChild, fnNode->luaTokenIndex, &modIndex, &funcStr)) {
+        if (modIndex == -1) {
+            LOG_ERROR("Could not find graph node mod index");
+        } else if (funcStr == NULL) {
+            LOG_ERROR("Could not find graph node function name");
+        }
+        return NULL;
+    }
+
+    // Retrieve function ref
+    gSmLuaConvertSuccess = true;
+    LuaFunction funcRef = smlua_get_function_mod_variable(modIndex, funcStr);
+    if (!gSmLuaConvertSuccess) {
+        gSmLuaConvertSuccess = true;
+        funcRef = smlua_get_any_function_mod_variable(funcStr);
+    }
+    if (!gSmLuaConvertSuccess || funcRef == 0) {
+        LOG_LUA("Failed to call lua function, could not find lua function '%s'", funcStr);
+        return NULL;
+    }
+
+    // Get the mod
+    if (modIndex >= gActiveMods.entryCount) {
+        LOG_LUA("Failed to call lua function, could not find mod");
+        return NULL;
+    }
+    struct Mod *mod = gActiveMods.entries[modIndex];
+
+    // Push the callback, the graph node and the current matrix stack index
+    lua_rawgeti(L, LUA_REGISTRYINDEX, funcRef);
+    smlua_push_object(L, LOT_GRAPHNODE, node);
+    lua_pushinteger(L, gMatStackIndex);
+
+    // Call the callback
+    if (0 != smlua_call_hook(L, 2, 0, 0, mod)) {
+        LOG_LUA("Failed to call the function callback: '%s'", funcStr);
+    }
+
+    return NULL;
 }

@@ -289,6 +289,9 @@ Gets a behavior ID from only vanilla behavior scripts
 
 ## [approach_camera_height](#approach_camera_height)
 
+### Description
+Adjusts the camera's height toward a target value (`goalHeight`) while respecting terrain and obstructions. This is really wonky and probably shouldn't be used, prefer `gLakituStates`
+
 ### Lua Example
 `approach_camera_height(c, goal, inc)`
 
@@ -310,6 +313,9 @@ Gets a behavior ID from only vanilla behavior scripts
 <br />
 
 ## [approach_f32_asymptotic](#approach_f32_asymptotic)
+
+### Description
+Gradually approaches a floating-point value (`target`) using asymptotic smoothing. The rate of approach is controlled by the `multiplier`. Useful for smoothly adjusting camera parameters like field-of-view or position
 
 ### Lua Example
 `local numberValue = approach_f32_asymptotic(current, target, multiplier)`
@@ -333,6 +339,9 @@ Gets a behavior ID from only vanilla behavior scripts
 
 ## [approach_f32_asymptotic_bool](#approach_f32_asymptotic_bool)
 
+### Description
+Gradually adjusts a floating-point value (`current`) towards a target (`target`) using asymptotic smoothing. Returns true if `current` reaches the `target` and false otherwise
+
 ### Lua Example
 `local integerValue = approach_f32_asymptotic_bool(current, target, multiplier)`
 
@@ -354,6 +363,9 @@ Gets a behavior ID from only vanilla behavior scripts
 <br />
 
 ## [approach_s16_asymptotic](#approach_s16_asymptotic)
+
+### Description
+Gradually approaches a signed 16-bit integer (`target`) using asymptotic smoothing. The divisor controls the rate of the adjustment. Useful for adjusting angles or positions smoothly
 
 ### Lua Example
 `local integerValue = approach_s16_asymptotic(current, target, divisor)`
@@ -377,6 +389,9 @@ Gets a behavior ID from only vanilla behavior scripts
 
 ## [approach_s16_asymptotic_bool](#approach_s16_asymptotic_bool)
 
+### Description
+Gradually adjusts a signed 16-bit integer (`current`) towards a target (`target`) using asymptotic smoothing. Returns true if `current` reaches `target` and false otherwise
+
 ### Lua Example
 `local integerValue = approach_s16_asymptotic_bool(current, target, divisor)`
 
@@ -398,6 +413,9 @@ Gets a behavior ID from only vanilla behavior scripts
 <br />
 
 ## [approach_vec3f_asymptotic](#approach_vec3f_asymptotic)
+
+### Description
+Smoothly transitions a 3D vector (`current`) towards a target vector (`target`) using asymptotic scaling. Scaling values (the `Mul` variables) for x, y, and z axes determine the speed of adjustment for each component
 
 ### Lua Example
 `approach_vec3f_asymptotic(current, target, xMul, yMul, zMul)`
@@ -423,6 +441,9 @@ Gets a behavior ID from only vanilla behavior scripts
 
 ## [calc_abs_dist](#calc_abs_dist)
 
+### Description
+Calculates the absolute distance between two 3D points (`a` and `b`). Returns the distance as a floating-point value. Useful for determining proximity between objects in 3D space
+
 ### Lua Example
 `local numberValue = calc_abs_dist(a, b)`
 
@@ -444,6 +465,9 @@ Gets a behavior ID from only vanilla behavior scripts
 
 ## [calc_hor_dist](#calc_hor_dist)
 
+### Description
+Calculates the horizontal (XZ-plane) distance between two 3D points (`a` and `b`). Returns the distance as a floating-point value. Useful for terrain navigation or collision detection
+
 ### Lua Example
 `local numberValue = calc_hor_dist(a, b)`
 
@@ -464,6 +488,9 @@ Gets a behavior ID from only vanilla behavior scripts
 <br />
 
 ## [calculate_angles](#calculate_angles)
+
+### Description
+Calculates the pitch and yaw angles from one 3D position (`from`) to another (`to`). Updates the provided pointers with the computed pitch and yaw values
 
 ### Lua Example
 `calculate_angles(from, to, pitch, yaw)`
@@ -488,6 +515,9 @@ Gets a behavior ID from only vanilla behavior scripts
 
 ## [calculate_pitch](#calculate_pitch)
 
+### Description
+Calculates the pitch angle (rotation around the X-axis) from one 3D point (`from`) to another (`to`). Returns the pitch as a signed 16-bit integer
+
 ### Lua Example
 `local integerValue = calculate_pitch(from, to)`
 
@@ -508,6 +538,9 @@ Gets a behavior ID from only vanilla behavior scripts
 <br />
 
 ## [calculate_yaw](#calculate_yaw)
+
+### Description
+Determines the yaw angle (rotation around the Y-axis) from one 3D position (`from`) to another (`to`). Returns the yaw as a signed 16-bit integer
 
 ### Lua Example
 `local integerValue = calculate_yaw(from, to)`
@@ -530,6 +563,9 @@ Gets a behavior ID from only vanilla behavior scripts
 
 ## [cam_select_alt_mode](#cam_select_alt_mode)
 
+### Description
+Selects an alternate camera mode based on the given angle. Used to toggle between predefined camera modes dynamically
+
 ### Lua Example
 `local integerValue = cam_select_alt_mode(angle)`
 
@@ -549,6 +585,9 @@ Gets a behavior ID from only vanilla behavior scripts
 <br />
 
 ## [camera_approach_f32_symmetric](#camera_approach_f32_symmetric)
+
+### Description
+Symmetrically approaches a floating-point value (`target`) with a fixed increment (`increment`) per frame. Limits the rate of change to ensure gradual transitions
 
 ### Lua Example
 `local numberValue = camera_approach_f32_symmetric(value, target, increment)`
@@ -572,6 +611,9 @@ Gets a behavior ID from only vanilla behavior scripts
 
 ## [camera_approach_f32_symmetric_bool](#camera_approach_f32_symmetric_bool)
 
+### Description
+Adjusts a floating-point value (`current`) towards a target (`target`) symmetrically with a fixed increment (`increment`). Returns true if the value reaches the target and false otherwise
+
 ### Lua Example
 `local integerValue = camera_approach_f32_symmetric_bool(current, target, increment)`
 
@@ -593,6 +635,9 @@ Gets a behavior ID from only vanilla behavior scripts
 <br />
 
 ## [camera_approach_s16_symmetric_bool](#camera_approach_s16_symmetric_bool)
+
+### Description
+Adjusts a signed 16-bit integer (`current`) towards a target (`target`) symmetrically with a fixed increment (`increment`). Returns true if the value reaches the target and false otherwise
 
 ### Lua Example
 `local integerValue = camera_approach_s16_symmetric_bool(current, target, increment)`
@@ -616,6 +661,9 @@ Gets a behavior ID from only vanilla behavior scripts
 
 ## [camera_course_processing](#camera_course_processing)
 
+### Description
+Processes course-specific camera settings, such as predefined positions or modes. Adjusts the camera to match the design and gameplay requirements of the current course
+
 ### Lua Example
 `local integerValue = camera_course_processing(c)`
 
@@ -635,6 +683,9 @@ Gets a behavior ID from only vanilla behavior scripts
 <br />
 
 ## [camera_set_use_course_specific_settings](#camera_set_use_course_specific_settings)
+
+### Description
+Toggles whether the camera uses course-specific settings. This is useful for enabling or disabling custom behaviors in specific courses or areas
 
 ### Lua Example
 `camera_set_use_course_specific_settings(enable)`
@@ -656,6 +707,9 @@ Gets a behavior ID from only vanilla behavior scripts
 
 ## [center_rom_hack_camera](#center_rom_hack_camera)
 
+### Description
+Centers the ROM hack camera. This function is designed for non-standard level layouts and modded game environments
+
 ### Lua Example
 `center_rom_hack_camera()`
 
@@ -673,6 +727,9 @@ Gets a behavior ID from only vanilla behavior scripts
 <br />
 
 ## [clamp_pitch](#clamp_pitch)
+
+### Description
+Clamps the camera's pitch angle between a maximum and minimum value. Prevents over-rotation and maintains a consistent viewing angle
 
 ### Lua Example
 `local integerValue = clamp_pitch(from, to, maxPitch, minPitch)`
@@ -696,6 +753,9 @@ Gets a behavior ID from only vanilla behavior scripts
 <br />
 
 ## [clamp_positions_and_find_yaw](#clamp_positions_and_find_yaw)
+
+### Description
+Clamps a position within specified X and Z bounds and calculates the yaw angle from the origin. Prevents the camera from moving outside of the designated area
 
 ### Lua Example
 `local integerValue = clamp_positions_and_find_yaw(pos, origin, xMax, xMin, zMax, zMin)`
@@ -722,6 +782,9 @@ Gets a behavior ID from only vanilla behavior scripts
 
 ## [collide_with_walls](#collide_with_walls)
 
+### Description
+Checks for collisions between the camera and level geometry. Adjusts the camera's position to avoid clipping into walls or obstacles
+
 ### Lua Example
 `local integerValue = collide_with_walls(pos, offsetY, radius)`
 
@@ -744,6 +807,9 @@ Gets a behavior ID from only vanilla behavior scripts
 
 ## [cutscene_object](#cutscene_object)
 
+### Description
+Initiates a cutscene focusing on a specific object in the game world. The camera transitions smoothly to the object, adapting its position as needed
+
 ### Lua Example
 `local integerValue = cutscene_object(cutscene, o)`
 
@@ -764,6 +830,9 @@ Gets a behavior ID from only vanilla behavior scripts
 <br />
 
 ## [cutscene_object_with_dialog](#cutscene_object_with_dialog)
+
+### Description
+Starts a cutscene involving an object and displays dialog during the sequence. The camera focuses on the object while synchronizing dialog with the scene
 
 ### Lua Example
 `local integerValue = cutscene_object_with_dialog(cutscene, o, dialogID)`
@@ -787,6 +856,9 @@ Gets a behavior ID from only vanilla behavior scripts
 
 ## [cutscene_object_without_dialog](#cutscene_object_without_dialog)
 
+### Description
+Starts a cutscene involving an object without dialog. The camera transitions smoothly to focus on the object
+
 ### Lua Example
 `local integerValue = cutscene_object_without_dialog(cutscene, o)`
 
@@ -808,6 +880,9 @@ Gets a behavior ID from only vanilla behavior scripts
 
 ## [cutscene_set_fov_shake_preset](#cutscene_set_fov_shake_preset)
 
+### Description
+Applies a preset field-of-view shake effect during a cutscene. This creates dynamic visual effects, such as zoom or focus disruptions
+
 ### Lua Example
 `cutscene_set_fov_shake_preset(preset)`
 
@@ -827,6 +902,9 @@ Gets a behavior ID from only vanilla behavior scripts
 <br />
 
 ## [cutscene_spawn_obj](#cutscene_spawn_obj)
+
+### Description
+Spawns an object as part of a cutscene, such as props or interactive elements. Returns the spawned object's reference for further manipulation
 
 ### Lua Example
 `local integerValue = cutscene_spawn_obj(obj, frame)`
@@ -848,6 +926,9 @@ Gets a behavior ID from only vanilla behavior scripts
 <br />
 
 ## [find_c_buttons_pressed](#find_c_buttons_pressed)
+
+### Description
+Determines which C-buttons are currently pressed by the player. Returns a bitmask indicating the active buttons for camera control
 
 ### Lua Example
 `local integerValue = find_c_buttons_pressed(currentState, buttonsPressed, buttonsDown)`
@@ -871,6 +952,9 @@ Gets a behavior ID from only vanilla behavior scripts
 
 ## [find_mario_floor_and_ceil](#find_mario_floor_and_ceil)
 
+### Description
+Finds the floor and ceiling directly above and below Mario's position. Updates Mario's geometry information for camera calculations
+
 ### Lua Example
 `find_mario_floor_and_ceil(pg)`
 
@@ -890,6 +974,9 @@ Gets a behavior ID from only vanilla behavior scripts
 <br />
 
 ## [get_cutscene_from_mario_status](#get_cutscene_from_mario_status)
+
+### Description
+Gets the appropriate cutscene to play based on Mario's current gameplay state. This function helps determine transitions for cinematic or scripted sequences
 
 ### Lua Example
 `local integerValue = get_cutscene_from_mario_status(c)`
@@ -911,6 +998,9 @@ Gets a behavior ID from only vanilla behavior scripts
 
 ## [handle_c_button_movement](#handle_c_button_movement)
 
+### Description
+Handles camera movement based on input from the C-buttons. Updates the camera's position or angle to match directional player input
+
 ### Lua Example
 `handle_c_button_movement(c)`
 
@@ -930,6 +1020,9 @@ Gets a behavior ID from only vanilla behavior scripts
 <br />
 
 ## [is_range_behind_surface](#is_range_behind_surface)
+
+### Description
+Determines if a range is obstructed by a surface relative to the camera. Returns true if the range is behind the specified surface
 
 ### Lua Example
 `local integerValue = is_range_behind_surface(from, to, surf, range, surfType)`
@@ -955,6 +1048,9 @@ Gets a behavior ID from only vanilla behavior scripts
 
 ## [is_within_100_units_of_mario](#is_within_100_units_of_mario)
 
+### Description
+Checks if a position is within 100 units of Mario's current position. Returns true if the position is within the specified radius and false otherwise
+
 ### Lua Example
 `local integerValue = is_within_100_units_of_mario(posX, posY, posZ)`
 
@@ -977,6 +1073,9 @@ Gets a behavior ID from only vanilla behavior scripts
 
 ## [move_mario_head_c_up](#move_mario_head_c_up)
 
+### Description
+Moves Mario's head slightly upward when the C-Up button is pressed. This function aligns the camera to match the head movement for consistency
+
 ### Lua Example
 `move_mario_head_c_up(c)`
 
@@ -996,6 +1095,9 @@ Gets a behavior ID from only vanilla behavior scripts
 <br />
 
 ## [next_lakitu_state](#next_lakitu_state)
+
+### Description
+Transitions the camera to the next Lakitu state, updating position and focus. This function handles smooth transitions between different gameplay scenarios
 
 ### Lua Example
 `local integerValue = next_lakitu_state(newPos, newFoc, curPos, curFoc, oldPos, oldFoc, yaw)`
@@ -1023,6 +1125,9 @@ Gets a behavior ID from only vanilla behavior scripts
 
 ## [obj_rotate_towards_point](#obj_rotate_towards_point)
 
+### Description
+Rotates an object toward a specific point in 3D space. Gradually updates the object's pitch and yaw angles to face the target
+
 ### Lua Example
 `obj_rotate_towards_point(o, point, pitchOff, yawOff, pitchDiv, yawDiv)`
 
@@ -1048,6 +1153,9 @@ Gets a behavior ID from only vanilla behavior scripts
 
 ## [object_pos_to_vec3f](#object_pos_to_vec3f)
 
+### Description
+Converts an object's position to a `Vec3f` format. Useful for aligning object behaviors or interactions with the camera system
+
 ### Lua Example
 `object_pos_to_vec3f(dst, o)`
 
@@ -1068,6 +1176,9 @@ Gets a behavior ID from only vanilla behavior scripts
 <br />
 
 ## [offset_rotated](#offset_rotated)
+
+### Description
+Offsets a vector by rotating it in 3D space relative to a reference position. This is useful for creating radial effects or dynamic transformations
 
 ### Lua Example
 `offset_rotated(dst, from, to, rotation)`
@@ -1092,6 +1203,9 @@ Gets a behavior ID from only vanilla behavior scripts
 
 ## [offset_yaw_outward_radial](#offset_yaw_outward_radial)
 
+### Description
+Calculates an outward radial offset based on the camera's yaw angle. Returns the offset yaw, used for positioning or alignment
+
 ### Lua Example
 `local integerValue = offset_yaw_outward_radial(c, areaYaw)`
 
@@ -1113,6 +1227,9 @@ Gets a behavior ID from only vanilla behavior scripts
 
 ## [play_camera_buzz_if_c_sideways](#play_camera_buzz_if_c_sideways)
 
+### Description
+Plays a buzzing sound effect when the camera's position is misaligned with the player's perspective. Used as audio feedback for incorrect camera behavior
+
 ### Lua Example
 `play_camera_buzz_if_c_sideways()`
 
@@ -1130,6 +1247,9 @@ Gets a behavior ID from only vanilla behavior scripts
 <br />
 
 ## [play_camera_buzz_if_cbutton](#play_camera_buzz_if_cbutton)
+
+### Description
+Plays a buzzing sound effect when a blocked C-button action is attempted. Used to signal invalid input or restricted camera movement
 
 ### Lua Example
 `play_camera_buzz_if_cbutton()`
@@ -1149,6 +1269,9 @@ Gets a behavior ID from only vanilla behavior scripts
 
 ## [play_camera_buzz_if_cdown](#play_camera_buzz_if_cdown)
 
+### Description
+Plays a buzzing sound effect when the camera attempts to move downward but is restricted. Provides feedback for invalid C-Down input actions
+
 ### Lua Example
 `play_camera_buzz_if_cdown()`
 
@@ -1166,6 +1289,9 @@ Gets a behavior ID from only vanilla behavior scripts
 <br />
 
 ## [play_cutscene](#play_cutscene)
+
+### Description
+Starts the execution of a predefined cutscene. The camera transitions dynamically to follow the scripted sequence
 
 ### Lua Example
 `play_cutscene(c)`
@@ -1187,6 +1313,9 @@ Gets a behavior ID from only vanilla behavior scripts
 
 ## [play_sound_button_change_blocked](#play_sound_button_change_blocked)
 
+### Description
+Plays a sound effect when a blocked action changes the camera mode. This provides feedback for invalid attempts to switch the camera state
+
 ### Lua Example
 `play_sound_button_change_blocked()`
 
@@ -1204,6 +1333,9 @@ Gets a behavior ID from only vanilla behavior scripts
 <br />
 
 ## [play_sound_cbutton_down](#play_sound_cbutton_down)
+
+### Description
+Plays a sound effect when the C-Down button is pressed for camera movement. Provides auditory feedback for valid camera input
 
 ### Lua Example
 `play_sound_cbutton_down()`
@@ -1223,6 +1355,9 @@ Gets a behavior ID from only vanilla behavior scripts
 
 ## [play_sound_cbutton_side](#play_sound_cbutton_side)
 
+### Description
+Plays a sound effect when the C-Side button (left or right) is pressed for camera movement. Used as audio feedback for horizontal adjustments to the camera
+
 ### Lua Example
 `play_sound_cbutton_side()`
 
@@ -1240,6 +1375,9 @@ Gets a behavior ID from only vanilla behavior scripts
 <br />
 
 ## [play_sound_cbutton_up](#play_sound_cbutton_up)
+
+### Description
+Plays a sound effect when the C-Up button is pressed for camera movement. Provides feedback for vertical camera adjustments
 
 ### Lua Example
 `play_sound_cbutton_up()`
@@ -1259,6 +1397,9 @@ Gets a behavior ID from only vanilla behavior scripts
 
 ## [play_sound_if_cam_switched_to_lakitu_or_mario](#play_sound_if_cam_switched_to_lakitu_or_mario)
 
+### Description
+Plays a sound effect when the camera switches between Lakitu and Mario perspectives. Signals a successful change in camera mode
+
 ### Lua Example
 `play_sound_if_cam_switched_to_lakitu_or_mario()`
 
@@ -1277,6 +1418,9 @@ Gets a behavior ID from only vanilla behavior scripts
 
 ## [play_sound_rbutton_changed](#play_sound_rbutton_changed)
 
+### Description
+Plays a sound effect when the R-Button camera mode is changed. Provides feedback for toggling camera behaviors
+
 ### Lua Example
 `play_sound_rbutton_changed()`
 
@@ -1294,6 +1438,9 @@ Gets a behavior ID from only vanilla behavior scripts
 <br />
 
 ## [radial_camera_input](#radial_camera_input)
+
+### Description
+Handles radial camera movement based on player input. Updates the camera's position or orientation accordingly
 
 ### Lua Example
 `local integerValue = radial_camera_input(c, unused)`
@@ -1315,6 +1462,9 @@ Gets a behavior ID from only vanilla behavior scripts
 <br />
 
 ## [random_vec3s](#random_vec3s)
+
+### Description
+Generates a random 3D vector with short integer components. Useful for randomized offsets or environmental effects
 
 ### Lua Example
 `random_vec3s(dst, xRange, yRange, zRange)`
@@ -1339,6 +1489,9 @@ Gets a behavior ID from only vanilla behavior scripts
 
 ## [reset_camera](#reset_camera)
 
+### Description
+Fully resets the camera to its default state and reinitializes all settings. This is typically used when restarting gameplay or loading a new area
+
 ### Lua Example
 `reset_camera(c)`
 
@@ -1358,6 +1511,9 @@ Gets a behavior ID from only vanilla behavior scripts
 <br />
 
 ## [resolve_geometry_collisions](#resolve_geometry_collisions)
+
+### Description
+Resolves collisions between the camera and level geometry. Adjusts the camera's position to prevent clipping or intersecting with objects
 
 ### Lua Example
 `resolve_geometry_collisions(pos, lastGood)`
@@ -1380,6 +1536,9 @@ Gets a behavior ID from only vanilla behavior scripts
 
 ## [rom_hack_cam_set_collisions](#rom_hack_cam_set_collisions)
 
+### Description
+Toggles collision settings for the ROM hack camera. This enables or disables specific collision behaviors in modded levels
+
 ### Lua Example
 `rom_hack_cam_set_collisions(enable)`
 
@@ -1399,6 +1558,9 @@ Gets a behavior ID from only vanilla behavior scripts
 <br />
 
 ## [rotate_camera_around_walls](#rotate_camera_around_walls)
+
+### Description
+Rotates the camera to avoid walls or other obstructions. Ensures clear visibility of the player or target objects
 
 ### Lua Example
 `local integerValue = rotate_camera_around_walls(c, cPos, avoidYaw, yawRange)`
@@ -1423,6 +1585,9 @@ Gets a behavior ID from only vanilla behavior scripts
 
 ## [rotate_in_xz](#rotate_in_xz)
 
+### Description
+Rotates a vector around the XZ-plane by a specified yaw angle. The result is stored in the destination vector (`dst`). Useful for rotating camera positions or object coordinates horizontally
+
 ### Lua Example
 `rotate_in_xz(dst, src, yaw)`
 
@@ -1445,6 +1610,9 @@ Gets a behavior ID from only vanilla behavior scripts
 
 ## [rotate_in_yz](#rotate_in_yz)
 
+### Description
+Rotates a vector around the YZ-plane by a specified pitch angle. The result is stored in the destination vector (`dst`). Useful for vertical camera rotations or object transformations
+
 ### Lua Example
 `rotate_in_yz(dst, src, pitch)`
 
@@ -1466,6 +1634,9 @@ Gets a behavior ID from only vanilla behavior scripts
 <br />
 
 ## [scale_along_line](#scale_along_line)
+
+### Description
+Scales a point along a line between two 3D points (`from` and `to`). The scaling factor determines how far along the line the resulting point will be. The result is stored in the destination vector (`dest`)
 
 ### Lua Example
 `scale_along_line(dest, from, to, scale)`
@@ -1490,6 +1661,9 @@ Gets a behavior ID from only vanilla behavior scripts
 
 ## [select_mario_cam_mode](#select_mario_cam_mode)
 
+### Description
+Selects the appropriate camera mode for Mario based on the current gameplay context. Adapts camera behavior dynamically to match Mario's environment or state
+
 ### Lua Example
 `select_mario_cam_mode()`
 
@@ -1507,6 +1681,9 @@ Gets a behavior ID from only vanilla behavior scripts
 <br />
 
 ## [set_cam_angle](#set_cam_angle)
+
+### Description
+Sets the camera's angle based on the specified mode. Handles rotation and focus adjustments for predefined camera behaviors
 
 ### Lua Example
 `local integerValue = set_cam_angle(mode)`
@@ -1527,6 +1704,9 @@ Gets a behavior ID from only vanilla behavior scripts
 <br />
 
 ## [set_camera_mode](#set_camera_mode)
+
+### Description
+Changes the camera to a new mode, optionally interpolating over a specified number of frames. Useful for transitioning between different camera behaviors dynamically
 
 ### Lua Example
 `set_camera_mode(c, mode, frames)`
@@ -1549,6 +1729,9 @@ Gets a behavior ID from only vanilla behavior scripts
 <br />
 
 ## [set_camera_mode_fixed](#set_camera_mode_fixed)
+
+### Description
+Activates a fixed camera mode and aligns the camera to specific X, Y, Z coordinates. This is useful for predefined static views in specific areas
 
 ### Lua Example
 `local integerValue = set_camera_mode_fixed(c, x, y, z)`
@@ -1573,6 +1756,9 @@ Gets a behavior ID from only vanilla behavior scripts
 
 ## [set_camera_pitch_shake](#set_camera_pitch_shake)
 
+### Description
+Applies a pitch-based shake effect to the camera. The shake's magnitude, decay, and increment are configurable. Simulates vertical disturbances like impacts or explosions
+
 ### Lua Example
 `set_camera_pitch_shake(mag, decay, inc)`
 
@@ -1594,6 +1780,9 @@ Gets a behavior ID from only vanilla behavior scripts
 <br />
 
 ## [set_camera_roll_shake](#set_camera_roll_shake)
+
+### Description
+Applies a roll-based shake effect to the camera. Simulates rotational disturbances for dynamic camera effects
 
 ### Lua Example
 `set_camera_roll_shake(mag, decay, inc)`
@@ -1617,6 +1806,9 @@ Gets a behavior ID from only vanilla behavior scripts
 
 ## [set_camera_shake_from_hit](#set_camera_shake_from_hit)
 
+### Description
+Applies a shake effect to the camera based on a hit type. Different shake types simulate various impacts, such as attacks, falls, or shocks
+
 ### Lua Example
 `set_camera_shake_from_hit(shake)`
 
@@ -1636,6 +1828,9 @@ Gets a behavior ID from only vanilla behavior scripts
 <br />
 
 ## [set_camera_shake_from_point](#set_camera_shake_from_point)
+
+### Description
+Applies a shake effect to the camera, scaled by its proximity to a specified point. The intensity decreases with distance from the point
 
 ### Lua Example
 `set_camera_shake_from_point(shake, posX, posY, posZ)`
@@ -1660,6 +1855,9 @@ Gets a behavior ID from only vanilla behavior scripts
 
 ## [set_camera_yaw_shake](#set_camera_yaw_shake)
 
+### Description
+Applies a yaw-based shake effect to the camera. Simulates horizontal vibrations or rotational impacts
+
 ### Lua Example
 `set_camera_yaw_shake(mag, decay, inc)`
 
@@ -1682,6 +1880,9 @@ Gets a behavior ID from only vanilla behavior scripts
 
 ## [set_environmental_camera_shake](#set_environmental_camera_shake)
 
+### Description
+Applies an environmental shake effect to the camera. Handles predefined shake types triggered by environmental events like explosions or platform movements
+
 ### Lua Example
 `set_environmental_camera_shake(shake)`
 
@@ -1701,6 +1902,9 @@ Gets a behavior ID from only vanilla behavior scripts
 <br />
 
 ## [set_fixed_cam_axis_sa_lobby](#set_fixed_cam_axis_sa_lobby)
+
+### Description
+Transitions the camera to the next Lakitu state, updating position and focus. This function handles smooth transitions between different gameplay scenarios
 
 ### Lua Example
 `set_fixed_cam_axis_sa_lobby(preset)`
@@ -1722,6 +1926,9 @@ Gets a behavior ID from only vanilla behavior scripts
 
 ## [set_fov_function](#set_fov_function)
 
+### Description
+Assigns a custom function for dynamic field-of-view adjustments. This allows precise control over the camera's zoom behavior during gameplay
+
 ### Lua Example
 `set_fov_function(func)`
 
@@ -1741,6 +1948,9 @@ Gets a behavior ID from only vanilla behavior scripts
 <br />
 
 ## [set_fov_shake](#set_fov_shake)
+
+### Description
+Applies a field-of-view shake effect to simulate zoom or focus disruptions. Shake parameters, such as amplitude and decay, control the intensity
 
 ### Lua Example
 `set_fov_shake(amplitude, decay, shakeSpeed)`
@@ -1763,6 +1973,9 @@ Gets a behavior ID from only vanilla behavior scripts
 <br />
 
 ## [set_fov_shake_from_point_preset](#set_fov_shake_from_point_preset)
+
+### Description
+Applies a preset field-of-view shake effect relative to a specific point. The intensity diminishes as the distance from the point increases
 
 ### Lua Example
 `set_fov_shake_from_point_preset(preset, posX, posY, posZ)`
@@ -1787,6 +2000,9 @@ Gets a behavior ID from only vanilla behavior scripts
 
 ## [set_handheld_shake](#set_handheld_shake)
 
+### Description
+Applies a handheld camera shake effect with configurable parameters. Can be used to simulate dynamic, realistic camera movement
+
 ### Lua Example
 `set_handheld_shake(mode)`
 
@@ -1806,6 +2022,9 @@ Gets a behavior ID from only vanilla behavior scripts
 <br />
 
 ## [set_or_approach_f32_asymptotic](#set_or_approach_f32_asymptotic)
+
+### Description
+Smoothly transitions or directly sets a floating-point value (`dst`) to approach a target (`goal`). Uses asymptotic scaling for gradual adjustments or direct assignment
 
 ### Lua Example
 `local integerValue = set_or_approach_f32_asymptotic(dst, goal, scale)`
@@ -1829,6 +2048,9 @@ Gets a behavior ID from only vanilla behavior scripts
 
 ## [set_or_approach_s16_symmetric](#set_or_approach_s16_symmetric)
 
+### Description
+Smoothly transitions or directly sets a signed 16-bit value (`current`) to approach a target (`target`). Uses symmetric scaling for gradual or immediate adjustments
+
 ### Lua Example
 `local integerValue = set_or_approach_s16_symmetric(current, target, increment)`
 
@@ -1850,6 +2072,9 @@ Gets a behavior ID from only vanilla behavior scripts
 <br />
 
 ## [set_or_approach_vec3f_asymptotic](#set_or_approach_vec3f_asymptotic)
+
+### Description
+Smoothly transitions a 3D vector (`current`) toward a target vector (`goal`) using asymptotic scaling. Allows gradual or instantaneous alignment of 3D positions. Scaling values (the `Mul` variables) for x, y, and z axes determine the speed of adjustment for each component
 
 ### Lua Example
 `set_or_approach_vec3f_asymptotic(dst, goal, xMul, yMul, zMul)`
@@ -1874,6 +2099,9 @@ Gets a behavior ID from only vanilla behavior scripts
 <br />
 
 ## [set_pitch_shake_from_point](#set_pitch_shake_from_point)
+
+### Description
+Applies a pitch shake effect to the camera, scaled by proximity to a specified point. Simulates vibrations with intensity decreasing further from the point
 
 ### Lua Example
 `set_pitch_shake_from_point(mag, decay, inc, maxDist, posX, posY, posZ)`
@@ -1901,6 +2129,9 @@ Gets a behavior ID from only vanilla behavior scripts
 
 ## [shake_camera_handheld](#shake_camera_handheld)
 
+### Description
+Activates a handheld camera shake effect. Calculates positional and focus adjustments to simulate manual movement
+
 ### Lua Example
 `shake_camera_handheld(pos, focus)`
 
@@ -1921,6 +2152,9 @@ Gets a behavior ID from only vanilla behavior scripts
 <br />
 
 ## [shake_camera_pitch](#shake_camera_pitch)
+
+### Description
+Activates a pitch-based shake effect. Adds vertical vibrational movement to the camera's behavior
 
 ### Lua Example
 `shake_camera_pitch(pos, focus)`
@@ -1943,6 +2177,9 @@ Gets a behavior ID from only vanilla behavior scripts
 
 ## [shake_camera_roll](#shake_camera_roll)
 
+### Description
+Applies a roll-based shake effect to the camera. Simulates rotational disturbances caused by impacts or other events
+
 ### Lua Example
 `shake_camera_roll(roll)`
 
@@ -1962,6 +2199,9 @@ Gets a behavior ID from only vanilla behavior scripts
 <br />
 
 ## [shake_camera_yaw](#shake_camera_yaw)
+
+### Description
+Activates a yaw-based shake effect. Adds horizontal vibrational movement to the camera's behavior
 
 ### Lua Example
 `shake_camera_yaw(pos, focus)`
@@ -1983,6 +2223,9 @@ Gets a behavior ID from only vanilla behavior scripts
 <br />
 
 ## [skip_camera_interpolation](#skip_camera_interpolation)
+
+### Description
+Skips camera interpolation for a frame, locking the camera instantly to the target position. Useful for immediate changes in camera state or position without smooth transitions
 
 ### Lua Example
 `skip_camera_interpolation()`
@@ -2022,6 +2265,9 @@ Gets a behavior ID from only vanilla behavior scripts
 
 ## [soft_reset_camera](#soft_reset_camera)
 
+### Description
+Resets the camera's state while retaining some settings, such as position or mode. This is often used when soft-resetting gameplay without reinitialization
+
 ### Lua Example
 `soft_reset_camera(c)`
 
@@ -2041,6 +2287,9 @@ Gets a behavior ID from only vanilla behavior scripts
 <br />
 
 ## [start_cutscene](#start_cutscene)
+
+### Description
+Starts a cutscene based on the provided ID. The camera transitions to predefined behaviors for the duration of the cutscene
 
 ### Lua Example
 `start_cutscene(c, cutscene)`
@@ -2063,6 +2312,9 @@ Gets a behavior ID from only vanilla behavior scripts
 
 ## [start_object_cutscene_without_focus](#start_object_cutscene_without_focus)
 
+### Description
+Starts a cutscene focused on an object without requiring focus to remain locked. This is useful for dynamic events where the camera adjusts freely
+
 ### Lua Example
 `local integerValue = start_object_cutscene_without_focus(cutscene)`
 
@@ -2082,6 +2334,9 @@ Gets a behavior ID from only vanilla behavior scripts
 <br />
 
 ## [transition_next_state](#transition_next_state)
+
+### Description
+Transitions the camera to the next state over a specified number of frames. This is typically used for cutscenes or scripted sequences
 
 ### Lua Example
 `transition_next_state(c, frames)`
@@ -2104,6 +2359,9 @@ Gets a behavior ID from only vanilla behavior scripts
 
 ## [trigger_cutscene_dialog](#trigger_cutscene_dialog)
 
+### Description
+Triggers a dialog sequence during a cutscene. The dialog is synchronized with the camera's position and movement
+
 ### Lua Example
 `local integerValue = trigger_cutscene_dialog(trigger)`
 
@@ -2123,6 +2381,9 @@ Gets a behavior ID from only vanilla behavior scripts
 <br />
 
 ## [vec3f_sub](#vec3f_sub)
+
+### Description
+Subtracts one 3D vector (`src`) from another (`dst`). Stores the result in the destination vector
 
 ### Lua Example
 `vec3f_sub(dst, src)`
@@ -2145,6 +2406,9 @@ Gets a behavior ID from only vanilla behavior scripts
 
 ## [vec3f_to_object_pos](#vec3f_to_object_pos)
 
+### Description
+Converts a `Vec3f` position to an object's internal format. Useful for syncing 3D positions between objects and the game world
+
 ### Lua Example
 `vec3f_to_object_pos(o, src)`
 
@@ -2165,6 +2429,9 @@ Gets a behavior ID from only vanilla behavior scripts
 <br />
 
 ## [warp_camera](#warp_camera)
+
+### Description
+Moves the camera to a specified warp destination. This function handles transitions between levels or areas seamlessly
 
 ### Lua Example
 `warp_camera(displacementX, displacementY, displacementZ)`
@@ -3114,6 +3381,35 @@ Gets a language `key` from a `section`
 <br />
 
 ---
+# functions from djui_panel_menu.h
+
+<br />
+
+
+## [djui_menu_get_rainbow_string_color](#djui_menu_get_rainbow_string_color)
+
+### Description
+Gets the header hex color code from a `DJUI_RAINBOW_COLOR_*` constant
+
+### Lua Example
+`local stringValue = djui_menu_get_rainbow_string_color(color)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| color | [enum DjuiRainbowColor](constants.md#enum-DjuiRainbowColor) |
+
+### Returns
+- `string`
+
+### C Prototype
+`char* djui_menu_get_rainbow_string_color(enum DjuiRainbowColor color);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
 # functions from djui_popup.h
 
 <br />
@@ -3151,6 +3447,9 @@ Creates a popup that says `message` and has `lines`
 
 ## [drop_queued_background_music](#drop_queued_background_music)
 
+### Description
+Drops any queued background music
+
 ### Lua Example
 `drop_queued_background_music()`
 
@@ -3168,6 +3467,9 @@ Creates a popup that says `message` and has `lines`
 <br />
 
 ## [fade_volume_scale](#fade_volume_scale)
+
+### Description
+Fades the volume of `player` to `targetScale` (0-127) over `fadeDuration`
 
 ### Lua Example
 `fade_volume_scale(player, targetScale, fadeDuration)`
@@ -3191,26 +3493,32 @@ Creates a popup that says `message` and has `lines`
 
 ## [fadeout_background_music](#fadeout_background_music)
 
+### Description
+Fades out background music `seqId` over `fadeOut`
+
 ### Lua Example
-`fadeout_background_music(arg0, fadeOut)`
+`fadeout_background_music(seqId, fadeOut)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| arg0 | `integer` |
+| seqId | `integer` |
 | fadeOut | `integer` |
 
 ### Returns
 - None
 
 ### C Prototype
-`void fadeout_background_music(u16 arg0, u16 fadeOut);`
+`void fadeout_background_music(u16 seqId, u16 fadeOut);`
 
 [:arrow_up_small:](#)
 
 <br />
 
 ## [get_current_background_music](#get_current_background_music)
+
+### Description
+Gets the current background music
 
 ### Lua Example
 `local integerValue = get_current_background_music()`
@@ -3230,6 +3538,9 @@ Creates a popup that says `message` and has `lines`
 
 ## [get_current_background_music_default_volume](#get_current_background_music_default_volume)
 
+### Description
+Gets the current background music's default volume
+
 ### Lua Example
 `local integerValue = get_current_background_music_default_volume()`
 
@@ -3247,6 +3558,9 @@ Creates a popup that says `message` and has `lines`
 <br />
 
 ## [get_current_background_music_max_target_volume](#get_current_background_music_max_target_volume)
+
+### Description
+Gets the current max target volume
 
 ### Lua Example
 `local integerValue = get_current_background_music_max_target_volume()`
@@ -3266,6 +3580,9 @@ Creates a popup that says `message` and has `lines`
 
 ## [get_current_background_music_target_volume](#get_current_background_music_target_volume)
 
+### Description
+Gets the current target volume
+
 ### Lua Example
 `local integerValue = get_current_background_music_target_volume()`
 
@@ -3282,7 +3599,31 @@ Creates a popup that says `message` and has `lines`
 
 <br />
 
+## [get_sound_pan](#get_sound_pan)
+
+### Lua Example
+`local numberValue = get_sound_pan(x, z)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| x | `number` |
+| z | `number` |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 get_sound_pan(f32 x, f32 z);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [is_current_background_music_volume_lowered](#is_current_background_music_volume_lowered)
+
+### Description
+Checks if the current background music is lowered
 
 ### Lua Example
 `local integerValue = is_current_background_music_volume_lowered()`
@@ -3302,6 +3643,9 @@ Creates a popup that says `message` and has `lines`
 
 ## [play_course_clear](#play_course_clear)
 
+### Description
+Plays the star collect fanfare (this function's name was mixed up with the other)
+
 ### Lua Example
 `play_course_clear()`
 
@@ -3319,6 +3663,9 @@ Creates a popup that says `message` and has `lines`
 <br />
 
 ## [play_dialog_sound](#play_dialog_sound)
+
+### Description
+Plays a dialog sound corresponding to `dialogID`
 
 ### Lua Example
 `play_dialog_sound(dialogID)`
@@ -3339,6 +3686,9 @@ Creates a popup that says `message` and has `lines`
 <br />
 
 ## [play_music](#play_music)
+
+### Description
+Plays fading in music (`seqArgs`) on `player` over `fadeTimer`
 
 ### Lua Example
 `play_music(player, seqArgs, fadeTimer)`
@@ -3362,6 +3712,9 @@ Creates a popup that says `message` and has `lines`
 
 ## [play_peachs_jingle](#play_peachs_jingle)
 
+### Description
+Plays Peach's letter jingle
+
 ### Lua Example
 `play_peachs_jingle()`
 
@@ -3380,25 +3733,31 @@ Creates a popup that says `message` and has `lines`
 
 ## [play_power_star_jingle](#play_power_star_jingle)
 
+### Description
+Plays the power star jingle, set `keepBackgroundMusic` to 0 to mute background music
+
 ### Lua Example
-`play_power_star_jingle(arg0)`
+`play_power_star_jingle(keepBackgroundMusic)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| arg0 | `integer` |
+| keepBackgroundMusic | `integer` |
 
 ### Returns
 - None
 
 ### C Prototype
-`void play_power_star_jingle(u8 arg0);`
+`void play_power_star_jingle(u8 keepBackgroundMusic);`
 
 [:arrow_up_small:](#)
 
 <br />
 
 ## [play_puzzle_jingle](#play_puzzle_jingle)
+
+### Description
+Plays the puzzle jingle
 
 ### Lua Example
 `play_puzzle_jingle()`
@@ -3418,6 +3777,9 @@ Creates a popup that says `message` and has `lines`
 
 ## [play_race_fanfare](#play_race_fanfare)
 
+### Description
+Plays the race fanfare when a race is started
+
 ### Lua Example
 `play_race_fanfare()`
 
@@ -3435,6 +3797,9 @@ Creates a popup that says `message` and has `lines`
 <br />
 
 ## [play_secondary_music](#play_secondary_music)
+
+### Description
+Plays fading in secondary music `seqId` at `volume` over `fadeTimer` and sets the current background music's volume to `bgMusicVolume`
 
 ### Lua Example
 `play_secondary_music(seqId, bgMusicVolume, volume, fadeTimer)`
@@ -3459,6 +3824,9 @@ Creates a popup that says `message` and has `lines`
 
 ## [play_sound](#play_sound)
 
+### Description
+Plays a sound (`soundBits`) at `pos` (usually `gGlobalSoundSource` or `m.header.gfx.cameraToObject`)
+
 ### Lua Example
 `play_sound(soundBits, pos)`
 
@@ -3479,6 +3847,9 @@ Creates a popup that says `message` and has `lines`
 <br />
 
 ## [play_sound_with_freq_scale](#play_sound_with_freq_scale)
+
+### Description
+Plays a sound (`soundBits`) with `freqScale` at `pos` (usually `gGlobalSoundSource` or `m.header.gfx.cameraToObject`)
 
 ### Lua Example
 `play_sound_with_freq_scale(soundBits, pos, freqScale)`
@@ -3502,6 +3873,9 @@ Creates a popup that says `message` and has `lines`
 
 ## [play_star_fanfare](#play_star_fanfare)
 
+### Description
+Plays the course clear fanfare (this function's name was mixed up with the other)
+
 ### Lua Example
 `play_star_fanfare()`
 
@@ -3520,6 +3894,9 @@ Creates a popup that says `message` and has `lines`
 
 ## [play_toads_jingle](#play_toads_jingle)
 
+### Description
+Plays Toad's jingle
+
 ### Lua Example
 `play_toads_jingle()`
 
@@ -3537,6 +3914,9 @@ Creates a popup that says `message` and has `lines`
 <br />
 
 ## [seq_player_fade_out](#seq_player_fade_out)
+
+### Description
+Fades out `player` with `fadeDuration`
 
 ### Lua Example
 `seq_player_fade_out(player, fadeDuration)`
@@ -3558,6 +3938,9 @@ Creates a popup that says `message` and has `lines`
 <br />
 
 ## [seq_player_lower_volume](#seq_player_lower_volume)
+
+### Description
+Fades the volume of `player` to `percentage` over `fadeDuration`
 
 ### Lua Example
 `seq_player_lower_volume(player, fadeDuration, percentage)`
@@ -3581,6 +3964,9 @@ Creates a popup that says `message` and has `lines`
 
 ## [seq_player_unlower_volume](#seq_player_unlower_volume)
 
+### Description
+Unfades the volume of `player` over `fadeDuration`
+
 ### Lua Example
 `seq_player_unlower_volume(player, fadeDuration)`
 
@@ -3602,6 +3988,9 @@ Creates a popup that says `message` and has `lines`
 
 ## [set_audio_fadeout](#set_audio_fadeout)
 
+### Description
+Sets the `fadeOutTime` of audio
+
 ### Lua Example
 `set_audio_fadeout(fadeOutTime)`
 
@@ -3620,7 +4009,57 @@ Creates a popup that says `message` and has `lines`
 
 <br />
 
+## [set_audio_muted](#set_audio_muted)
+
+### Description
+Sets the muted status of all sequence players
+
+### Lua Example
+`set_audio_muted(muted)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| muted | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_audio_muted(u8 muted);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_sound_moving_speed](#set_sound_moving_speed)
+
+### Description
+Sets the `speed` of moving `bank`
+
+### Lua Example
+`set_sound_moving_speed(bank, speed)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| bank | `integer` |
+| speed | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_sound_moving_speed(u8 bank, u8 speed);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [sound_banks_disable](#sound_banks_disable)
+
+### Description
+Enables `bankMask` soundbanks in `player`
 
 ### Lua Example
 `sound_banks_disable(player, bankMask)`
@@ -3642,6 +4081,9 @@ Creates a popup that says `message` and has `lines`
 <br />
 
 ## [sound_banks_enable](#sound_banks_enable)
+
+### Description
+Disables `bankMask` soundbanks in `player`
 
 ### Lua Example
 `sound_banks_enable(player, bankMask)`
@@ -3682,7 +4124,51 @@ Creates a popup that says `message` and has `lines`
 
 <br />
 
+## [sound_reset_background_music_default_volume](#sound_reset_background_music_default_volume)
+
+### Lua Example
+`sound_reset_background_music_default_volume(seqId)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| seqId | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void sound_reset_background_music_default_volume(u8 seqId);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [sound_set_background_music_default_volume](#sound_set_background_music_default_volume)
+
+### Lua Example
+`sound_set_background_music_default_volume(seqId, volume)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| seqId | `integer` |
+| volume | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void sound_set_background_music_default_volume(u8 seqId, u8 volume);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [stop_background_music](#stop_background_music)
+
+### Description
+Stops background music `seqId`
 
 ### Lua Example
 `stop_background_music(seqId)`
@@ -3704,6 +4190,9 @@ Creates a popup that says `message` and has `lines`
 
 ## [stop_secondary_music](#stop_secondary_music)
 
+### Description
+Fades out secondary music over `fadeTimer`
+
 ### Lua Example
 `stop_secondary_music(fadeTimer)`
 
@@ -3723,6 +4212,9 @@ Creates a popup that says `message` and has `lines`
 <br />
 
 ## [stop_sound](#stop_sound)
+
+### Description
+Stops a sound (`soundBits`) at `pos` (usually `gGlobalSoundSource` or `m.header.gfx.cameraToObject`)
 
 ### Lua Example
 `stop_sound(soundBits, pos)`
@@ -3745,6 +4237,9 @@ Creates a popup that says `message` and has `lines`
 
 ## [stop_sounds_from_source](#stop_sounds_from_source)
 
+### Description
+Stops sounds from `pos` (usually `gGlobalSoundSource` or `m.header.gfx.cameraToObject`)
+
 ### Lua Example
 `stop_sounds_from_source(pos)`
 
@@ -3764,6 +4259,9 @@ Creates a popup that says `message` and has `lines`
 <br />
 
 ## [stop_sounds_in_continuous_banks](#stop_sounds_in_continuous_banks)
+
+### Description
+Stops sounds in sound banks moving, env, and air
 
 ### Lua Example
 `stop_sounds_in_continuous_banks()`
@@ -4112,6 +4610,9 @@ Sets if first person is enabled
 
 ## [determine_interaction](#determine_interaction)
 
+### Description
+Determines how Mario interacts with a given object based on his current action, position, and other state variables. Calculates the appropriate interaction type (e.g., punch, kick, ground pound) that should result from Mario's contact with the specified object (`o`). Useful for handling different types of player-object collisions, attacks, and object behaviors
+
 ### Lua Example
 `local integerValue = determine_interaction(m, o)`
 
@@ -4133,6 +4634,9 @@ Sets if first person is enabled
 
 ## [does_mario_have_normal_cap_on_head](#does_mario_have_normal_cap_on_head)
 
+### Description
+Checks if Mario is currently wearing his normal cap on his head. Returns true if Mario's flag state matches that of having the normal cap equipped on his head, otherwise false. Useful for determining Mario's cap status
+
 ### Lua Example
 `local integerValue = does_mario_have_normal_cap_on_head(m)`
 
@@ -4152,6 +4656,9 @@ Sets if first person is enabled
 <br />
 
 ## [get_door_save_file_flag](#get_door_save_file_flag)
+
+### Description
+Retrieves the save file flag associated with a door, based on the number of stars required to open it. Used to check if the player has unlocked certain star doors or progressed far enough to access new areas
 
 ### Lua Example
 `local integerValue = get_door_save_file_flag(door)`
@@ -4173,6 +4680,9 @@ Sets if first person is enabled
 
 ## [get_mario_cap_flag](#get_mario_cap_flag)
 
+### Description
+Determines the type of cap an object represents. Depending on the object's behavior, it returns a cap type (normal, metal, wing, vanish). Useful for handling the logic of picking up, wearing, or losing different kinds of caps
+
 ### Lua Example
 `local integerValue = get_mario_cap_flag(capObject)`
 
@@ -4192,6 +4702,9 @@ Sets if first person is enabled
 <br />
 
 ## [interact_bbh_entrance](#interact_bbh_entrance)
+
+### Description
+Handles Mario's interaction with the Boo's Big Haunt (BBH) entrance object. When Mario tries to enter the BBH area, this function determines the resulting action (e.g., a jump or spin entrance)
 
 ### Lua Example
 `local integerValue = interact_bbh_entrance(m, interactType, o)`
@@ -4215,6 +4728,9 @@ Sets if first person is enabled
 
 ## [interact_bounce_top](#interact_bounce_top)
 
+### Description
+Handles interactions where Mario bounces off the top of an object (e.g., Goombas, Koopas). Checks if Mario attacks the object from above and applies the appropriate knockback, sound effects, and object state changes. Useful for enemy defeat mechanics and platform bouncing
+
 ### Lua Example
 `local integerValue = interact_bounce_top(m, interactType, o)`
 
@@ -4236,6 +4752,9 @@ Sets if first person is enabled
 <br />
 
 ## [interact_breakable](#interact_breakable)
+
+### Description
+Handles interactions with breakable objects (e.g., breakable boxes or bob-ombs). If Mario hits the object with a valid attack (like a punch or kick), the object is destroyed or changes state. Useful for managing collectible items hidden in breakable objects and level progression through destructible blocks or walls
 
 ### Lua Example
 `local integerValue = interact_breakable(m, interactType, o)`
@@ -4259,6 +4778,9 @@ Sets if first person is enabled
 
 ## [interact_bully](#interact_bully)
 
+### Description
+Handles interaction with Bully enemies. Determines if Mario attacks the Bully or gets knocked back. Updates Mario's velocity and state accordingly, and can defeat the Bully if attacked successfully. Useful for enemy encounters that involve pushing and shoving mechanics rather than just stomping like the bullies
+
 ### Lua Example
 `local integerValue = interact_bully(m, interactType, o)`
 
@@ -4280,6 +4802,9 @@ Sets if first person is enabled
 <br />
 
 ## [interact_cannon_base](#interact_cannon_base)
+
+### Description
+Handles interaction when Mario touches a cannon base. If the cannon is ready, Mario enters the cannon, triggering a special action and camera behavior. Useful for transitioning to cannon-aiming mode and enabling cannon travel within levels
 
 ### Lua Example
 `local integerValue = interact_cannon_base(m, interactType, o)`
@@ -4303,6 +4828,9 @@ Sets if first person is enabled
 
 ## [interact_cap](#interact_cap)
 
+### Description
+Handles interaction when Mario picks up a cap object. This includes normal caps, wing caps, vanish caps, and metal caps. Updates Mario's state (e.g., cap timers, sound effects) and may initiate putting on the cap animation. Useful for managing cap statuses
+
 ### Lua Example
 `local integerValue = interact_cap(m, interactType, o)`
 
@@ -4324,6 +4852,9 @@ Sets if first person is enabled
 <br />
 
 ## [interact_clam_or_bubba](#interact_clam_or_bubba)
+
+### Description
+Handles interactions with objects like Clams or Bubbas, which can damage Mario or, in Bubba's case, eat Mario. If Bubba eats Mario, it triggers a unique "caught" action. Otherwise, it deals damage and knockback if hit by a Clam
 
 ### Lua Example
 `local integerValue = interact_clam_or_bubba(m, interactType, o)`
@@ -4347,6 +4878,9 @@ Sets if first person is enabled
 
 ## [interact_coin](#interact_coin)
 
+### Description
+Handles Mario's interaction with coins. Collecting a coin increases Mario's coin count and heals him slightly. Useful for score, and coin management
+
 ### Lua Example
 `local integerValue = interact_coin(m, interactType, o)`
 
@@ -4368,6 +4902,9 @@ Sets if first person is enabled
 <br />
 
 ## [interact_damage](#interact_damage)
+
+### Description
+Handles damaging interactions from various objects (e.g., enemies, hazards). If Mario takes damage, it applies knockback and reduces health. Useful for enemy attacks, environmental hazards, and managing damage related behaviors
 
 ### Lua Example
 `local integerValue = interact_damage(m, interactType, o)`
@@ -4391,6 +4928,9 @@ Sets if first person is enabled
 
 ## [interact_door](#interact_door)
 
+### Description
+Handles interaction when Mario touches a door. If Mario meets the star requirement or has the key, he can unlock/open the door. Otherwise, it may display dialog indicating the requirement. Useful for controlling access to locked areas and providing progression gating in the game
+
 ### Lua Example
 `local integerValue = interact_door(m, interactType, o)`
 
@@ -4412,6 +4952,9 @@ Sets if first person is enabled
 <br />
 
 ## [interact_flame](#interact_flame)
+
+### Description
+Handles interaction with flame objects. If Mario touches a flame and is not invulnerable or protected by certain caps, he takes damage and may be set on fire, causing a burning jump. Useful for simulating fire damage and hazards in levels
 
 ### Lua Example
 `local integerValue = interact_flame(m, interactType, o)`
@@ -4435,6 +4978,9 @@ Sets if first person is enabled
 
 ## [interact_grabbable](#interact_grabbable)
 
+### Description
+Handles interaction with grabbable objects (e.g., crates, small enemies, or Bowser). Checks if Mario can pick up the object and initiates the grab action if possible. Useful for course mechanics, throwing items, and Bowser
+
 ### Lua Example
 `local integerValue = interact_grabbable(m, interactType, o)`
 
@@ -4456,6 +5002,9 @@ Sets if first person is enabled
 <br />
 
 ## [interact_hit_from_below](#interact_hit_from_below)
+
+### Description
+Handles interactions where Mario hits an object from below (e.g., hitting a block from underneath). Determines if Mario damages/destroys the object, or if it damages Mario. Useful for handling upward attacks, hitting coin blocks, or interacting with certain NPCs from below
 
 ### Lua Example
 `local integerValue = interact_hit_from_below(m, interactType, o)`
@@ -4479,6 +5028,9 @@ Sets if first person is enabled
 
 ## [interact_hoot](#interact_hoot)
 
+### Description
+Handles interaction with Hoot, the owl. If Mario can grab onto Hoot, this sets Mario onto a riding action, allowing him to fly around the level. Useful for special traversal mechanics and shortcuts within a course
+
 ### Lua Example
 `local integerValue = interact_hoot(m, interactType, o)`
 
@@ -4500,6 +5052,9 @@ Sets if first person is enabled
 <br />
 
 ## [interact_igloo_barrier](#interact_igloo_barrier)
+
+### Description
+Handles interaction with the igloo barrier found in Snowman's Land. If Mario runs into the barrier, this function pushes him away and prevents passage without the vanish cap. Useful for enforcing require-caps to access certain areas
 
 ### Lua Example
 `local integerValue = interact_igloo_barrier(m, interactType, o)`
@@ -4523,6 +5078,9 @@ Sets if first person is enabled
 
 ## [interact_koopa_shell](#interact_koopa_shell)
 
+### Description
+Handles interaction when Mario touches a Koopa Shell. If conditions are met, Mario can hop onto the shell and start riding it, changing his movement mechanics. Useful for implementing Koopa Shell behavior
+
 ### Lua Example
 `local integerValue = interact_koopa_shell(m, interactType, o)`
 
@@ -4544,6 +5102,9 @@ Sets if first person is enabled
 <br />
 
 ## [interact_mr_blizzard](#interact_mr_blizzard)
+
+### Description
+Handles interaction with Mr. Blizzard (the snowman enemy) or similar objects. If Mario is attacked or collides with Mr. Blizzard, it applies damage and knockback if not protected or attacking
 
 ### Lua Example
 `local integerValue = interact_mr_blizzard(m, interactType, o)`
@@ -4567,6 +5128,9 @@ Sets if first person is enabled
 
 ## [interact_player](#interact_player)
 
+### Description
+Handles interaction with another player (in multiplayer scenarios). Checks if Mario and another player collide and resolves any special behavior like bouncing on top. Useful for multiplayer interactions, such as PvP or cooperative gameplay mechanics
+
 ### Lua Example
 `local integerValue = interact_player(m, interactType, o)`
 
@@ -4588,6 +5152,9 @@ Sets if first person is enabled
 <br />
 
 ## [interact_pole](#interact_pole)
+
+### Description
+Handles interaction with poles (e.g., climbing poles). If Mario runs into a vertical pole, he can grab it and start climbing. Useful for platforming mechanics
 
 ### Lua Example
 `local integerValue = interact_pole(m, interactType, o)`
@@ -4611,6 +5178,9 @@ Sets if first person is enabled
 
 ## [interact_shock](#interact_shock)
 
+### Description
+Handles interaction with shocking objects. If Mario touches an electrified enemy or hazard, he takes damage and may be stunned or shocked. Useful for electric-themed enemies and obstacles
+
 ### Lua Example
 `local integerValue = interact_shock(m, interactType, o)`
 
@@ -4632,6 +5202,9 @@ Sets if first person is enabled
 <br />
 
 ## [interact_snufit_bullet](#interact_snufit_bullet)
+
+### Description
+Handles interaction with Snufit bullets (projectiles fired by certain enemies). If Mario is not protected, he takes damage. Otherwise, the bullet can be destroyed
 
 ### Lua Example
 `local integerValue = interact_snufit_bullet(m, interactType, o)`
@@ -4655,6 +5228,9 @@ Sets if first person is enabled
 
 ## [interact_spiny_walking](#interact_spiny_walking)
 
+### Description
+Handles interaction with Spiny-walking enemies. If Mario attacks it (e.g., by punching), the enemy is hurt. If he fails to attack properly (say bouncing on top), Mario takes damage and knockback. Useful for enemies that cannot be stomped from above and require direct attacks
+
 ### Lua Example
 `local integerValue = interact_spiny_walking(m, interactType, o)`
 
@@ -4676,6 +5252,9 @@ Sets if first person is enabled
 <br />
 
 ## [interact_star_or_key](#interact_star_or_key)
+
+### Description
+Handles interaction with Stars or Keys. If Mario collects a star or key, it triggers a specific star grab cutscene and progression is updated. Also handles no-exit variants (like the wing cap stage star). Useful for the main progression system of collecting Stars and unlocking new areas
 
 ### Lua Example
 `local integerValue = interact_star_or_key(m, interactType, o)`
@@ -4699,6 +5278,9 @@ Sets if first person is enabled
 
 ## [interact_strong_wind](#interact_strong_wind)
 
+### Description
+Handles interaction with strong wind gusts. These gusts push Mario back, often knocking him off platforms or sending him flying backwards. Useful for environmental wind hazards
+
 ### Lua Example
 `local integerValue = interact_strong_wind(m, interactType, o)`
 
@@ -4720,6 +5302,9 @@ Sets if first person is enabled
 <br />
 
 ## [interact_text](#interact_text)
+
+### Description
+Handles interaction with signs, NPCs, and other text-bearing objects. If Mario presses the interact button facing them, he enters a dialog reading state. Useful for managing hints, story elements, or gameplay instructions through in-game dialogue
 
 ### Lua Example
 `local integerValue = interact_text(m, interactType, o)`
@@ -4743,6 +5328,9 @@ Sets if first person is enabled
 
 ## [interact_tornado](#interact_tornado)
 
+### Description
+Handles interaction with tornados. If Mario touches a tornado, he enters a spinning twirl action, losing control temporarily. Useful for desert levels or areas where environmental hazards lift Mario into the air
+
 ### Lua Example
 `local integerValue = interact_tornado(m, interactType, o)`
 
@@ -4764,6 +5352,9 @@ Sets if first person is enabled
 <br />
 
 ## [interact_warp](#interact_warp)
+
+### Description
+Handles interaction with warps, including warp pipes and hole warps. If Mario steps onto a warp, he either transitions into another area or level. Useful for connecting different parts of the game world and controlling transitions between levels as well as custom warp areas
 
 ### Lua Example
 `local integerValue = interact_warp(m, interactType, o)`
@@ -4787,6 +5378,9 @@ Sets if first person is enabled
 
 ## [interact_warp_door](#interact_warp_door)
 
+### Description
+Handles interaction with warp doors that lead to other areas or require keys. If Mario can open the door (has enough stars or a key), he proceeds. Otherwise, it may show a dialog. Useful for restricting access to certain areas based on progression
+
 ### Lua Example
 `local integerValue = interact_warp_door(m, interactType, o)`
 
@@ -4808,6 +5402,9 @@ Sets if first person is enabled
 <br />
 
 ## [interact_water_ring](#interact_water_ring)
+
+### Description
+Handles interactions with water rings that heal Mario. Passing through water rings increases his health counter. Useful for underwater stages
 
 ### Lua Example
 `local integerValue = interact_water_ring(m, interactType, o)`
@@ -4831,6 +5428,9 @@ Sets if first person is enabled
 
 ## [interact_whirlpool](#interact_whirlpool)
 
+### Description
+Handles interaction with whirlpools. If Mario gets caught in a whirlpool, he's pulled toward it, resulting in a unique "caught" action. Useful for hazards that trap Mario like whirlpools
+
 ### Lua Example
 `local integerValue = interact_whirlpool(m, interactType, o)`
 
@@ -4853,6 +5453,9 @@ Sets if first person is enabled
 
 ## [mario_blow_off_cap](#mario_blow_off_cap)
 
+### Description
+Makes Mario blow off his normal cap at a given speed. Removes the normal cap from Mario's head and spawns it as a collectible object in the game world. Useful for simulating events where Mario loses his cap due to enemy attacks or environmental forces
+
 ### Lua Example
 `mario_blow_off_cap(m, capSpeed)`
 
@@ -4874,6 +5477,9 @@ Sets if first person is enabled
 
 ## [mario_check_object_grab](#mario_check_object_grab)
 
+### Description
+Checks if Mario can grab the currently encountered object (usually triggered when Mario punches or dives). If conditions are met, initiates the grabbing process. Useful for picking up objects, throwing enemies, or grabbing special items
+
 ### Lua Example
 `local integerValue = mario_check_object_grab(m)`
 
@@ -4894,6 +5500,9 @@ Sets if first person is enabled
 
 ## [mario_drop_held_object](#mario_drop_held_object)
 
+### Description
+Causes Mario to drop the object he is currently holding. Sets the held object's state accordingly and places it in front of Mario. Useful for releasing carried objects, such as throwing Bob-ombs or setting down crates
+
 ### Lua Example
 `mario_drop_held_object(m)`
 
@@ -4913,6 +5522,9 @@ Sets if first person is enabled
 <br />
 
 ## [mario_get_collided_object](#mario_get_collided_object)
+
+### Description
+Returns a collided object that matches a given interaction type from Mario's current collision data. Useful for determining which object Mario has come into contact with
 
 ### Lua Example
 `local ObjectValue = mario_get_collided_object(m, interactType)`
@@ -4935,6 +5547,9 @@ Sets if first person is enabled
 
 ## [mario_grab_used_object](#mario_grab_used_object)
 
+### Description
+Grabs the object currently referenced by Mario's `usedObj` if it's not already being held. Changes the object's state to indicate it is now held by Mario. Useful for handling the moment Mario successfully picks up an object
+
 ### Lua Example
 `mario_grab_used_object(m)`
 
@@ -4954,6 +5569,9 @@ Sets if first person is enabled
 <br />
 
 ## [mario_lose_cap_to_enemy](#mario_lose_cap_to_enemy)
+
+### Description
+Makes Mario lose his normal cap to an enemy, such as Klepto or Ukiki. Updates flags so that the cap is no longer on Mario's head. Returns true if Mario was wearing his normal cap, otherwise false. Useful for scenarios where enemies steal Mario's cap
 
 ### Lua Example
 `local integerValue = mario_lose_cap_to_enemy(m, arg)`
@@ -4976,6 +5594,9 @@ Sets if first person is enabled
 
 ## [mario_obj_angle_to_object](#mario_obj_angle_to_object)
 
+### Description
+Calculates the angle between Mario and a specified object. Used for determining Mario's orientation relative to the object. Useful for deciding directions between Mario and NPCs
+
 ### Lua Example
 `local integerValue = mario_obj_angle_to_object(m, o)`
 
@@ -4997,6 +5618,9 @@ Sets if first person is enabled
 
 ## [mario_retrieve_cap](#mario_retrieve_cap)
 
+### Description
+Retrieves Mario's normal cap if it was previously lost. Removes the cap from Mario's hand state and places it on his head. Useful when Mario recovers his normal cap from enemies, finds it in a level, or if it were to disappear
+
 ### Lua Example
 `mario_retrieve_cap(m)`
 
@@ -5016,6 +5640,9 @@ Sets if first person is enabled
 <br />
 
 ## [mario_stop_riding_and_holding](#mario_stop_riding_and_holding)
+
+### Description
+Causes Mario to stop riding any object (like a shell or Hoot) and also drop any held object. Resets related states to ensure Mario is no longer attached to or holding anything. Useful when changing Mario's state after certain actions, transitions, or to prevent exploits
 
 ### Lua Example
 `mario_stop_riding_and_holding(m)`
@@ -5037,6 +5664,9 @@ Sets if first person is enabled
 
 ## [mario_stop_riding_object](#mario_stop_riding_object)
 
+### Description
+Stops Mario from riding any currently ridden object (e.g., a Koopa shell or Hoot), updating the object's interaction status and Mario's state. Useful for cleanly dismounting ridden objects
+
 ### Lua Example
 `mario_stop_riding_object(m)`
 
@@ -5057,6 +5687,9 @@ Sets if first person is enabled
 
 ## [mario_throw_held_object](#mario_throw_held_object)
 
+### Description
+Throws the object Mario is currently holding. The object is placed in front of Mario and given a forward velocity. Useful for attacking enemies with thrown objects, solving puzzles by throwing crates, or interacting with environment items
+
 ### Lua Example
 `mario_throw_held_object(m)`
 
@@ -5076,6 +5709,9 @@ Sets if first person is enabled
 <br />
 
 ## [passes_pvp_interaction_checks](#passes_pvp_interaction_checks)
+
+### Description
+Checks if the necessary conditions are met for one player to successfully attack another player in a PvP scenario. Considers factors like invincibility, action states, and whether the attack is valid. Useful for multiplayer where players can harm each other
 
 ### Lua Example
 `local integerValue = passes_pvp_interaction_checks(attacker, victim)`
@@ -5098,6 +5734,9 @@ Sets if first person is enabled
 
 ## [should_push_or_pull_door](#should_push_or_pull_door)
 
+### Description
+Determines whether Mario should push or pull a door when he interacts with it, based on his orientation and position. Useful for animating door interactions realistically, depending on which side Mario approaches from
+
 ### Lua Example
 `local integerValue = should_push_or_pull_door(m, o)`
 
@@ -5118,6 +5757,9 @@ Sets if first person is enabled
 <br />
 
 ## [take_damage_and_knock_back](#take_damage_and_knock_back)
+
+### Description
+Handles the logic of Mario taking damage and being knocked back by a damaging object. Decreases Mario's health, sets his knockback state, and triggers appropriate sound and camera effects. Useful for implementing enemy attacks, hazards, and ensuring Mario receives proper feedback upon taking damage
 
 ### Lua Example
 `local integerValue = take_damage_and_knock_back(m, o)`
@@ -5534,7 +6176,7 @@ Creates a warp node in the current level and area with id `id` that goes to the 
 - `integer`
 
 ### C Prototype
-`s32 lvl_set_current_level(UNUSED s16 arg0, s16 levelNum);`
+`s32 lvl_set_current_level(s16 arg0, s16 levelNum);`
 
 [:arrow_up_small:](#)
 
@@ -6647,1803 +7289,6 @@ Creates a warp node in the current level and area with id `id` that goes to the 
 
 ### C Prototype
 `void update_mario_sound_and_camera(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
----
-# functions from mario_actions_airborne.c
-
-<br />
-
-
-## [check_common_airborne_cancels](#check_common_airborne_cancels)
-
-### Lua Example
-`local integerValue = check_common_airborne_cancels(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 check_common_airborne_cancels(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [check_fall_damage](#check_fall_damage)
-
-### Lua Example
-`local integerValue = check_fall_damage(m, hardFallAction)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| hardFallAction | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 check_fall_damage(struct MarioState *m, u32 hardFallAction);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [check_fall_damage_or_get_stuck](#check_fall_damage_or_get_stuck)
-
-### Lua Example
-`local integerValue = check_fall_damage_or_get_stuck(m, hardFallAction)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| hardFallAction | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 check_fall_damage_or_get_stuck(struct MarioState *m, u32 hardFallAction);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [check_horizontal_wind](#check_horizontal_wind)
-
-### Lua Example
-`local integerValue = check_horizontal_wind(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 check_horizontal_wind(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [check_kick_or_dive_in_air](#check_kick_or_dive_in_air)
-
-### Lua Example
-`local integerValue = check_kick_or_dive_in_air(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 check_kick_or_dive_in_air(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [check_wall_kick](#check_wall_kick)
-
-### Lua Example
-`local integerValue = check_wall_kick(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 check_wall_kick(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [common_air_action_step](#common_air_action_step)
-
-### Lua Example
-`local integerValue = common_air_action_step(m, landAction, animation, stepArg)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| landAction | `integer` |
-| animation | `integer` |
-| stepArg | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`u32 common_air_action_step(struct MarioState *m, u32 landAction, s32 animation, u32 stepArg);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [common_air_knockback_step](#common_air_knockback_step)
-
-### Lua Example
-`local integerValue = common_air_knockback_step(m, landAction, hardFallAction, animation, speed)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| landAction | `integer` |
-| hardFallAction | `integer` |
-| animation | `integer` |
-| speed | `number` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`u32 common_air_knockback_step(struct MarioState *m, u32 landAction, u32 hardFallAction, s32 animation, f32 speed);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [lava_boost_on_wall](#lava_boost_on_wall)
-
-### Lua Example
-`local integerValue = lava_boost_on_wall(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 lava_boost_on_wall(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [mario_execute_airborne_action](#mario_execute_airborne_action)
-
-### Lua Example
-`local integerValue = mario_execute_airborne_action(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 mario_execute_airborne_action(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [play_far_fall_sound](#play_far_fall_sound)
-
-### Lua Example
-`play_far_fall_sound(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- None
-
-### C Prototype
-`void play_far_fall_sound(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [play_flip_sounds](#play_flip_sounds)
-
-### Lua Example
-`play_flip_sounds(m, frame1, frame2, frame3)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| frame1 | `integer` |
-| frame2 | `integer` |
-| frame3 | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void play_flip_sounds(struct MarioState *m, s16 frame1, s16 frame2, s16 frame3);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [play_knockback_sound](#play_knockback_sound)
-
-### Lua Example
-`play_knockback_sound(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- None
-
-### C Prototype
-`void play_knockback_sound(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [should_get_stuck_in_ground](#should_get_stuck_in_ground)
-
-### Lua Example
-`local integerValue = should_get_stuck_in_ground(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 should_get_stuck_in_ground(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [update_air_with_turn](#update_air_with_turn)
-
-### Lua Example
-`update_air_with_turn(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- None
-
-### C Prototype
-`void update_air_with_turn(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [update_air_without_turn](#update_air_without_turn)
-
-### Lua Example
-`update_air_without_turn(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- None
-
-### C Prototype
-`void update_air_without_turn(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [update_flying](#update_flying)
-
-### Lua Example
-`update_flying(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- None
-
-### C Prototype
-`void update_flying(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [update_flying_pitch](#update_flying_pitch)
-
-### Lua Example
-`update_flying_pitch(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- None
-
-### C Prototype
-`void update_flying_pitch(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [update_flying_yaw](#update_flying_yaw)
-
-### Lua Example
-`update_flying_yaw(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- None
-
-### C Prototype
-`void update_flying_yaw(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [update_lava_boost_or_twirling](#update_lava_boost_or_twirling)
-
-### Lua Example
-`update_lava_boost_or_twirling(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- None
-
-### C Prototype
-`void update_lava_boost_or_twirling(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
----
-# functions from mario_actions_automatic.c
-
-<br />
-
-
-## [add_tree_leaf_particles](#add_tree_leaf_particles)
-
-### Lua Example
-`add_tree_leaf_particles(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- None
-
-### C Prototype
-`void add_tree_leaf_particles(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [check_common_automatic_cancels](#check_common_automatic_cancels)
-
-### Lua Example
-`local integerValue = check_common_automatic_cancels(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 check_common_automatic_cancels(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [climb_up_ledge](#climb_up_ledge)
-
-### Lua Example
-`climb_up_ledge(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- None
-
-### C Prototype
-`void climb_up_ledge(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [let_go_of_ledge](#let_go_of_ledge)
-
-### Lua Example
-`local integerValue = let_go_of_ledge(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 let_go_of_ledge(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [mario_execute_automatic_action](#mario_execute_automatic_action)
-
-### Lua Example
-`local integerValue = mario_execute_automatic_action(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 mario_execute_automatic_action(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [perform_hanging_step](#perform_hanging_step)
-
-### Lua Example
-`local integerValue = perform_hanging_step(m, nextPos)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| nextPos | [Vec3f](structs.md#Vec3f) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 perform_hanging_step(struct MarioState *m, Vec3f nextPos);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [play_climbing_sounds](#play_climbing_sounds)
-
-### Lua Example
-`play_climbing_sounds(m, b)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| b | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void play_climbing_sounds(struct MarioState *m, s32 b);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [set_pole_position](#set_pole_position)
-
-### Lua Example
-`local integerValue = set_pole_position(m, offsetY)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| offsetY | `number` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 set_pole_position(struct MarioState *m, f32 offsetY);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [update_hang_moving](#update_hang_moving)
-
-### Lua Example
-`local integerValue = update_hang_moving(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 update_hang_moving(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [update_hang_stationary](#update_hang_stationary)
-
-### Lua Example
-`update_hang_stationary(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- None
-
-### C Prototype
-`void update_hang_stationary(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [update_ledge_climb](#update_ledge_climb)
-
-### Lua Example
-`update_ledge_climb(m, animation, endAction)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| animation | `integer` |
-| endAction | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void update_ledge_climb(struct MarioState *m, s32 animation, u32 endAction);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [update_ledge_climb_camera](#update_ledge_climb_camera)
-
-### Lua Example
-`update_ledge_climb_camera(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- None
-
-### C Prototype
-`void update_ledge_climb_camera(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
----
-# functions from mario_actions_cutscene.c
-
-<br />
-
-
-## [bhv_end_peach_loop](#bhv_end_peach_loop)
-
-### Lua Example
-`bhv_end_peach_loop()`
-
-### Parameters
-- None
-
-### Returns
-- None
-
-### C Prototype
-`void bhv_end_peach_loop(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [bhv_end_toad_loop](#bhv_end_toad_loop)
-
-### Lua Example
-`bhv_end_toad_loop()`
-
-### Parameters
-- None
-
-### Returns
-- None
-
-### C Prototype
-`void bhv_end_toad_loop(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [common_death_handler](#common_death_handler)
-
-### Lua Example
-`local integerValue = common_death_handler(m, animation, frameToDeathWarp)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| animation | `integer` |
-| frameToDeathWarp | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 common_death_handler(struct MarioState *m, s32 animation, s32 frameToDeathWarp);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [cutscene_put_cap_on](#cutscene_put_cap_on)
-
-### Lua Example
-`cutscene_put_cap_on(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- None
-
-### C Prototype
-`void cutscene_put_cap_on(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [cutscene_take_cap_off](#cutscene_take_cap_off)
-
-### Lua Example
-`cutscene_take_cap_off(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- None
-
-### C Prototype
-`void cutscene_take_cap_off(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [general_star_dance_handler](#general_star_dance_handler)
-
-### Lua Example
-`general_star_dance_handler(m, isInWater)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| isInWater | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void general_star_dance_handler(struct MarioState *m, s32 isInWater);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [generate_yellow_sparkles](#generate_yellow_sparkles)
-
-### Lua Example
-`generate_yellow_sparkles(x, y, z, radius)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| x | `integer` |
-| y | `integer` |
-| z | `integer` |
-| radius | `number` |
-
-### Returns
-- None
-
-### C Prototype
-`void generate_yellow_sparkles(s16 x, s16 y, s16 z, f32 radius);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [get_credits_str_width](#get_credits_str_width)
-
-### Lua Example
-`local integerValue = get_credits_str_width(str)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| str | `Pointer` <`integer`> |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 get_credits_str_width(char *str);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [get_star_collection_dialog](#get_star_collection_dialog)
-
-### Lua Example
-`local integerValue = get_star_collection_dialog(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 get_star_collection_dialog(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [handle_save_menu](#handle_save_menu)
-
-### Lua Example
-`handle_save_menu(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- None
-
-### C Prototype
-`void handle_save_menu(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [launch_mario_until_land](#launch_mario_until_land)
-
-### Lua Example
-`local integerValue = launch_mario_until_land(m, endAction, animation, forwardVel)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| endAction | `integer` |
-| animation | `integer` |
-| forwardVel | `number` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 launch_mario_until_land(struct MarioState *m, s32 endAction, s32 animation, f32 forwardVel);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [mario_execute_cutscene_action](#mario_execute_cutscene_action)
-
-### Lua Example
-`local integerValue = mario_execute_cutscene_action(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 mario_execute_cutscene_action(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [mario_ready_to_speak](#mario_ready_to_speak)
-
-### Lua Example
-`local integerValue = mario_ready_to_speak(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 mario_ready_to_speak(struct MarioState* m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [should_start_or_continue_dialog](#should_start_or_continue_dialog)
-
-### Lua Example
-`local integerValue = should_start_or_continue_dialog(m, object)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| object | [Object](structs.md#Object) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`u8 should_start_or_continue_dialog(struct MarioState* m, struct Object* object);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [stuck_in_ground_handler](#stuck_in_ground_handler)
-
-### Lua Example
-`stuck_in_ground_handler(m, animation, unstuckFrame, target2, target3, endAction)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| animation | `integer` |
-| unstuckFrame | `integer` |
-| target2 | `integer` |
-| target3 | `integer` |
-| endAction | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void stuck_in_ground_handler(struct MarioState *m, s32 animation, s32 unstuckFrame, s32 target2, s32 target3, s32 endAction);`
-
-[:arrow_up_small:](#)
-
-<br />
-
----
-# functions from mario_actions_moving.c
-
-<br />
-
-
-## [align_with_floor](#align_with_floor)
-
-### Lua Example
-`align_with_floor(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- None
-
-### C Prototype
-`void align_with_floor(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [analog_stick_held_back](#analog_stick_held_back)
-
-### Lua Example
-`local integerValue = analog_stick_held_back(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 analog_stick_held_back(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [anim_and_audio_for_heavy_walk](#anim_and_audio_for_heavy_walk)
-
-### Lua Example
-`anim_and_audio_for_heavy_walk(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- None
-
-### C Prototype
-`void anim_and_audio_for_heavy_walk(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [anim_and_audio_for_hold_walk](#anim_and_audio_for_hold_walk)
-
-### Lua Example
-`anim_and_audio_for_hold_walk(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- None
-
-### C Prototype
-`void anim_and_audio_for_hold_walk(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [anim_and_audio_for_walk](#anim_and_audio_for_walk)
-
-### Lua Example
-`anim_and_audio_for_walk(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- None
-
-### C Prototype
-`void anim_and_audio_for_walk(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [apply_landing_accel](#apply_landing_accel)
-
-### Lua Example
-`local integerValue = apply_landing_accel(m, frictionFactor)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| frictionFactor | `number` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 apply_landing_accel(struct MarioState *m, f32 frictionFactor);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [apply_slope_accel](#apply_slope_accel)
-
-### Lua Example
-`apply_slope_accel(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- None
-
-### C Prototype
-`void apply_slope_accel(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [apply_slope_decel](#apply_slope_decel)
-
-### Lua Example
-`local integerValue = apply_slope_decel(m, decelCoef)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| decelCoef | `number` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 apply_slope_decel(struct MarioState *m, f32 decelCoef);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [begin_braking_action](#begin_braking_action)
-
-### Lua Example
-`local integerValue = begin_braking_action(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 begin_braking_action(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [begin_walking_action](#begin_walking_action)
-
-### Lua Example
-`local integerValue = begin_walking_action(m, forwardVel, action, actionArg)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| forwardVel | `number` |
-| action | `integer` |
-| actionArg | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 begin_walking_action(struct MarioState *m, f32 forwardVel, u32 action, u32 actionArg);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [check_common_moving_cancels](#check_common_moving_cancels)
-
-### Lua Example
-`local integerValue = check_common_moving_cancels(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 check_common_moving_cancels(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [check_ground_dive_or_punch](#check_ground_dive_or_punch)
-
-### Lua Example
-`local integerValue = check_ground_dive_or_punch(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 check_ground_dive_or_punch(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [check_ledge_climb_down](#check_ledge_climb_down)
-
-### Lua Example
-`check_ledge_climb_down(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- None
-
-### C Prototype
-`void check_ledge_climb_down(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [common_ground_knockback_action](#common_ground_knockback_action)
-
-### Lua Example
-`local integerValue = common_ground_knockback_action(m, animation, arg2, arg3, arg4)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| animation | `integer` |
-| arg2 | `integer` |
-| arg3 | `integer` |
-| arg4 | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 common_ground_knockback_action(struct MarioState *m, s32 animation, s32 arg2, s32 arg3, s32 arg4);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [common_landing_action](#common_landing_action)
-
-### Lua Example
-`local integerValue = common_landing_action(m, animation, airAction)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| animation | `integer` |
-| airAction | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`u32 common_landing_action(struct MarioState *m, s16 animation, u32 airAction);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [common_slide_action](#common_slide_action)
-
-### Lua Example
-`common_slide_action(m, endAction, airAction, animation)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| endAction | `integer` |
-| airAction | `integer` |
-| animation | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void common_slide_action(struct MarioState *m, u32 endAction, u32 airAction, s32 animation);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [common_slide_action_with_jump](#common_slide_action_with_jump)
-
-### Lua Example
-`local integerValue = common_slide_action_with_jump(m, stopAction, jumpAction, airAction, animation)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| stopAction | `integer` |
-| jumpAction | `integer` |
-| airAction | `integer` |
-| animation | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 common_slide_action_with_jump(struct MarioState *m, u32 stopAction, u32 jumpAction, u32 airAction, s32 animation);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [mario_execute_moving_action](#mario_execute_moving_action)
-
-### Lua Example
-`local integerValue = mario_execute_moving_action(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 mario_execute_moving_action(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [play_step_sound](#play_step_sound)
-
-### Lua Example
-`play_step_sound(m, frame1, frame2)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| frame1 | `integer` |
-| frame2 | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void play_step_sound(struct MarioState *m, s16 frame1, s16 frame2);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [push_or_sidle_wall](#push_or_sidle_wall)
-
-### Lua Example
-`push_or_sidle_wall(m, startPos)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| startPos | [Vec3f](structs.md#Vec3f) |
-
-### Returns
-- None
-
-### C Prototype
-`void push_or_sidle_wall(struct MarioState *m, Vec3f startPos);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [quicksand_jump_land_action](#quicksand_jump_land_action)
-
-### Lua Example
-`local integerValue = quicksand_jump_land_action(m, animation1, animation2, endAction, airAction)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| animation1 | `integer` |
-| animation2 | `integer` |
-| endAction | `integer` |
-| airAction | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 quicksand_jump_land_action(struct MarioState *m, s32 animation1, s32 animation2, u32 endAction, u32 airAction);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [set_triple_jump_action](#set_triple_jump_action)
-
-### Lua Example
-`local integerValue = set_triple_jump_action(m, action, actionArg)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| action | `integer` |
-| actionArg | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 set_triple_jump_action(struct MarioState *m, UNUSED u32 action, UNUSED u32 actionArg);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [should_begin_sliding](#should_begin_sliding)
-
-### Lua Example
-`local integerValue = should_begin_sliding(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 should_begin_sliding(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [slide_bonk](#slide_bonk)
-
-### Lua Example
-`slide_bonk(m, fastAction, slowAction)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| fastAction | `integer` |
-| slowAction | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void slide_bonk(struct MarioState *m, u32 fastAction, u32 slowAction);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [stomach_slide_action](#stomach_slide_action)
-
-### Lua Example
-`local integerValue = stomach_slide_action(m, stopAction, airAction, animation)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| stopAction | `integer` |
-| airAction | `integer` |
-| animation | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 stomach_slide_action(struct MarioState *m, u32 stopAction, u32 airAction, s32 animation);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [tilt_body_butt_slide](#tilt_body_butt_slide)
-
-### Lua Example
-`tilt_body_butt_slide(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- None
-
-### C Prototype
-`void tilt_body_butt_slide(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [tilt_body_ground_shell](#tilt_body_ground_shell)
-
-### Lua Example
-`tilt_body_ground_shell(m, startYaw)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| startYaw | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void tilt_body_ground_shell(struct MarioState *m, s16 startYaw);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [tilt_body_running](#tilt_body_running)
-
-### Lua Example
-`local integerValue = tilt_body_running(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s16 tilt_body_running(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [tilt_body_walking](#tilt_body_walking)
-
-### Lua Example
-`tilt_body_walking(m, startYaw)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| startYaw | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void tilt_body_walking(struct MarioState *m, s16 startYaw);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [update_decelerating_speed](#update_decelerating_speed)
-
-### Lua Example
-`local integerValue = update_decelerating_speed(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 update_decelerating_speed(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [update_shell_speed](#update_shell_speed)
-
-### Lua Example
-`update_shell_speed(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- None
-
-### C Prototype
-`void update_shell_speed(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [update_sliding](#update_sliding)
-
-### Lua Example
-`local integerValue = update_sliding(m, stopSpeed)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| stopSpeed | `number` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 update_sliding(struct MarioState *m, f32 stopSpeed);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [update_sliding_angle](#update_sliding_angle)
-
-### Lua Example
-`update_sliding_angle(m, accel, lossFactor)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| accel | `number` |
-| lossFactor | `number` |
-
-### Returns
-- None
-
-### C Prototype
-`void update_sliding_angle(struct MarioState *m, f32 accel, f32 lossFactor);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [update_walking_speed](#update_walking_speed)
-
-### Lua Example
-`update_walking_speed(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- None
-
-### C Prototype
-`void update_walking_speed(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
----
-# functions from mario_actions_object.c
-
-<br />
-
-
-## [animated_stationary_ground_step](#animated_stationary_ground_step)
-
-### Lua Example
-`animated_stationary_ground_step(m, animation, endAction)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| animation | `integer` |
-| endAction | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void animated_stationary_ground_step(struct MarioState *m, s32 animation, u32 endAction);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [check_common_object_cancels](#check_common_object_cancels)
-
-### Lua Example
-`local integerValue = check_common_object_cancels(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 check_common_object_cancels(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [mario_execute_object_action](#mario_execute_object_action)
-
-### Lua Example
-`local integerValue = mario_execute_object_action(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 mario_execute_object_action(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [mario_update_punch_sequence](#mario_update_punch_sequence)
-
-### Lua Example
-`local integerValue = mario_update_punch_sequence(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 mario_update_punch_sequence(struct MarioState *m);`
 
 [:arrow_up_small:](#)
 

@@ -12,6 +12,7 @@
 #include "djui_hud_utils.h"
 #include "pc/utils/misc.h"
 #include "pc/configfile.h"
+#include "pc/lua/smlua_hooks.h"
 #include "game/level_update.h"
 #include "seq_ids.h"
 
@@ -86,6 +87,8 @@ static void djui_panel_menu_options_djui_setting_change(UNUSED struct DjuiBase* 
         djui_text_set_font(gDjuiPauseOptions, gDjuiFonts[configDjuiThemeFont == 0 ? FONT_NORMAL : FONT_ALIASED]);
         djui_text_set_text(gDjuiPauseOptions, DLANG(MISC, R_BUTTON));
     }
+
+    smlua_call_event_hooks(HOOK_ON_DJUI_THEME_CHANGED);
 }
 
 void djui_panel_main_menu_create(struct DjuiBase* caller) {

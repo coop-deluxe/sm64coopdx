@@ -458,8 +458,8 @@ static void crash_handler(const int signalNum, siginfo_t *info, UNUSED ucontext_
 
         // Load symbols
         char filename[256] = { 0 };
-        const char *exe_path = sys_exe_path();
-        if (NULL != exe_path) {
+        const char *exe_path = sys_exe_path_dir();
+        if (exe_path[0] != '\0') {
             snprintf(filename, 256, "%s/%s", exe_path, "coop.map");
         } else {
             snprintf(filename, 256, "%s", "coop.map");
@@ -651,7 +651,8 @@ static void crash_handler(const int signalNum, siginfo_t *info, UNUSED ucontext_
     // In case the game crashed before the game window opened
     if (!gGfxInited) {
         gfx_init(&WAPI, &RAPI, TITLE);
-        WAPI.set_keyboard_callbacks(keyboard_on_key_down, keyboard_on_key_up, keyboard_on_all_keys_up, keyboard_on_text_input);
+        WAPI.set_keyboard_callbacks(keyboard_on_key_down, keyboard_on_key_up, keyboard_on_all_keys_up,
+            keyboard_on_text_input, keyboard_on_text_editing);
     }
     if (!gGameInited) djui_unicode_init();
 

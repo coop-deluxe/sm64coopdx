@@ -54,9 +54,9 @@ extern "C" {
 #endif
 
 #ifdef GIT_HASH
-#define TITLE ({ char title[96] = ""; snprintf(title, 96, "%s %s, [%s]", GAME_NAME, get_version(), GIT_HASH); title; })
+#define TITLE ({ char title[96] = ""; snprintf(title, 96, "%s %s, [%s]", WINDOW_NAME, get_version(), GIT_HASH); title; })
 #else
-#define TITLE ({ char title[96] = ""; snprintf(title, 96, "%s %s", GAME_NAME, get_version()); title; })
+#define TITLE ({ char title[96] = ""; snprintf(title, 96, "%s %s", WINDOW_NAME, get_version()); title; })
 #endif
 
 #define AT_STARTUP __attribute__((constructor))

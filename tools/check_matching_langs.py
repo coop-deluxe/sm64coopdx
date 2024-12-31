@@ -33,7 +33,7 @@ def compare_ini_file(file_path):
 for filename in os.listdir("lang"):
     if filename.endswith(".ini"):
         ini_file_path = os.path.join("lang", filename)
-        if ini_file_path != "English.ini" and ini_file_path != "lang/English.ini":
+        if filename != "English.ini":
             missing_sections, extra_sections, missing_keys = compare_ini_file(ini_file_path)
 
             print(f"\nComparing {filename}:")
