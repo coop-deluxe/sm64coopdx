@@ -2331,6 +2331,7 @@ void stop_sound(u32 soundBits, f32 *pos) {
 void stop_sounds_from_source(f32 *pos) {
     MUTEX_LOCK(gAudioThread);
     
+    pos = smlua_get_vec3f_for_play_sound(pos);
     u8 bank;
     u8 soundIndex;
 

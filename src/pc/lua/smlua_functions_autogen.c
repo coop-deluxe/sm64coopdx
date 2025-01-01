@@ -12938,7 +12938,7 @@ int smlua_func_play_sound(lua_State* L) {
     s32 soundBits = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "play_sound"); return 0; }
 
-    Vec3f pos;
+    f32 *pos = smlua_get_vec3f_from_buffer();
     smlua_get_vec3f(pos, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "play_sound"); return 0; }
 
@@ -12961,7 +12961,7 @@ int smlua_func_play_sound_with_freq_scale(lua_State* L) {
     s32 soundBits = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "play_sound_with_freq_scale"); return 0; }
 
-    Vec3f pos;
+    f32 *pos = smlua_get_vec3f_from_buffer();
     smlua_get_vec3f(pos, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "play_sound_with_freq_scale"); return 0; }
     f32 freqScale = smlua_to_number(L, 3);
@@ -13253,7 +13253,7 @@ int smlua_func_stop_sound(lua_State* L) {
     u32 soundBits = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "stop_sound"); return 0; }
 
-    Vec3f pos;
+    f32 *pos = smlua_get_vec3f_from_buffer();
     smlua_get_vec3f(pos, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "stop_sound"); return 0; }
 
@@ -13274,7 +13274,7 @@ int smlua_func_stop_sounds_from_source(lua_State* L) {
     }
 
 
-    Vec3f pos;
+    f32 *pos = smlua_get_vec3f_from_buffer();
     smlua_get_vec3f(pos, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "stop_sounds_from_source"); return 0; }
 
