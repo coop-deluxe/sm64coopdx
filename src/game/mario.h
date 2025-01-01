@@ -238,9 +238,25 @@ Sets Mario to a jumping action (regular, double, triple, or steep jump) if condi
 |descriptionEnd| */
 s32 set_jumping_action(struct MarioState *m, u32 action, u32 actionArg);
 
+/* |description|
+Drops any currently held object and sets Mario to a new action. This function is typically used when Mario transitions to states where he cannot hold objects
+|descriptionEnd| */
 s32 drop_and_set_mario_action(struct MarioState *m, u32 action, u32 actionArg);
+
+/* |description|
+Increments Mario's `hurtCounter` and immediately sets a new action. Often used when Mario takes damage and transitions into a knockback or stunned action.
+|descriptionEnd| */
 s32 hurt_and_set_mario_action(struct MarioState *m, u32 action, u32 actionArg, s16 hurtCounter);
+
+/* |description|
+Checks for inputs that cause common action transitions (jump, freefall, walking, sliding).
+Useful for quickly exiting certain stationary actions when Mario begins moving or leaves the floor
+|descriptionEnd| */
 s32 check_common_action_exits(struct MarioState *m);
+
+/* |description|
+Checks for inputs that cause common hold-action transitions (hold jump, hold freefall, hold walking, hold sliding)
+|descriptionEnd| */
 s32 check_common_hold_action_exits(struct MarioState *m);
 
 /* |description|
@@ -265,7 +281,11 @@ Useful for quickly resetting Mario's state to an idle pose under special conditi
 |descriptionEnd| */
 s32 force_idle_state(struct MarioState* m);
 
+/* |description|
+Initializes the fields of a single `MarioState` structure when the player spawns or respawns. Sets starting position, velocity, action, and various internal flags
+|descriptionEnd| */
 void init_single_mario(struct MarioState* m);
+
 void init_mario(void);
 void init_mario_single_from_save_file(struct MarioState* m, u16 index);
 void init_mario_from_save_file(void);

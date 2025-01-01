@@ -105,9 +105,6 @@ def extract_functions(filename):
         if line.startswith('static ') or line.startswith('extern '):
             continue
 
-        # normalize function ending
-        line = re.sub(r'\)\s*\{', ');', line)
-
         # add function
         functions.append(line)
 
@@ -147,12 +144,11 @@ def extract_functions(filename):
                         combined_description = re.sub(r'\|\s*descriptionEnd\s*\|.*', '', combined_description).strip()
                         # Normalize whitespace
                         combined_description = re.sub(r'\s+', ' ', combined_description).strip()
-                        descriptions[line] = combined_description
-
+                        descriptions[re.sub(r'\)\s*\{', ');', line)] = combined_description
                 break
 
     # normalize function ending
-    txt = '\n'.join(functions)
+    txt = '\n'.join(functions).replace(' {', ';')
     return txt, descriptions
 
 if __name__ == "__main__":
@@ -161,5 +157,4 @@ if __name__ == "__main__":
     print("Descriptions:")
     for func, desc in descriptions.items():
         print(f"Function: {func}")
-        print(f"    Description: {desc}\n")
 

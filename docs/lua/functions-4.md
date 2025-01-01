@@ -37,7 +37,7 @@ Adjusts the pitch/volume of Mario's movement-based sounds according to his forwa
 ## [check_common_action_exits](#check_common_action_exits)
 
 ### Description
-Sets Mario to a jumping action (regular, double, triple, or steep jump) if conditions allow it. If the floor is too steep or if in quicksand, it changes the action accordingly
+Checks for inputs that cause common action transitions (jump, freefall, walking, sliding). Useful for quickly exiting certain stationary actions when Mario begins moving or leaves the floor
 
 ### Lua Example
 `local integerValue = check_common_action_exits(m)`
@@ -60,7 +60,7 @@ Sets Mario to a jumping action (regular, double, triple, or steep jump) if condi
 ## [check_common_hold_action_exits](#check_common_hold_action_exits)
 
 ### Description
-Sets Mario to a jumping action (regular, double, triple, or steep jump) if conditions allow it. If the floor is too steep or if in quicksand, it changes the action accordingly
+Checks for inputs that cause common hold-action transitions (hold jump, hold freefall, hold walking, hold sliding)
 
 ### Lua Example
 `local integerValue = check_common_hold_action_exits(m)`
@@ -83,7 +83,7 @@ Sets Mario to a jumping action (regular, double, triple, or steep jump) if condi
 ## [drop_and_set_mario_action](#drop_and_set_mario_action)
 
 ### Description
-Sets Mario to a jumping action (regular, double, triple, or steep jump) if conditions allow it. If the floor is too steep or if in quicksand, it changes the action accordingly
+Drops any currently held object and sets Mario to a new action. This function is typically used when Mario transitions to states where he cannot hold objects
 
 ### Lua Example
 `local integerValue = drop_and_set_mario_action(m, action, actionArg)`
@@ -228,7 +228,7 @@ Forces Mario into an idle state, either `ACT_IDLE` or `ACT_WATER_IDLE` depending
 ## [hurt_and_set_mario_action](#hurt_and_set_mario_action)
 
 ### Description
-Sets Mario to a jumping action (regular, double, triple, or steep jump) if conditions allow it. If the floor is too steep or if in quicksand, it changes the action accordingly
+Increments Mario's `hurtCounter` and immediately sets a new action. Often used when Mario takes damage and transitions into a knockback or stunned action.
 
 ### Lua Example
 `local integerValue = hurt_and_set_mario_action(m, action, actionArg, hurtCounter)`
@@ -254,7 +254,7 @@ Sets Mario to a jumping action (regular, double, triple, or steep jump) if condi
 ## [init_single_mario](#init_single_mario)
 
 ### Description
-Forces Mario into an idle state, either `ACT_IDLE` or `ACT_WATER_IDLE` depending on whether he is submerged. Useful for quickly resetting Mario's state to an idle pose under special conditions (e.g., cutscene triggers)
+Initializes the fields of a single `MarioState` structure when the player spawns or respawns. Sets starting position, velocity, action, and various internal flags
 
 ### Lua Example
 `init_single_mario(m)`
