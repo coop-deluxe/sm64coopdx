@@ -105,6 +105,9 @@ def extract_functions(filename):
         if line.startswith('static ') or line.startswith('extern '):
             continue
 
+        # normalize function ending
+        line = re.sub(r'\)\s*\{', ');', line)
+
         # add function
         functions.append(line)
 
@@ -149,7 +152,7 @@ def extract_functions(filename):
                 break
 
     # normalize function ending
-    txt = '\n'.join(functions).replace(' {', ';')
+    txt = '\n'.join(functions)
     return txt, descriptions
 
 if __name__ == "__main__":

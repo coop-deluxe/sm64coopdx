@@ -22,6 +22,10 @@
 #include "pc/lua/smlua.h"
 #include "hardcoded.h"
 
+/* |description|
+Plays a spinning sound at specific animation frames for flips (usually side flips or certain jump flips).
+If the current animation frame matches any of the specified frames, it triggers `SOUND_ACTION_SPIN`
+|descriptionEnd| */
 void play_flip_sounds(struct MarioState *m, s16 frame1, s16 frame2, s16 frame3) {
     if (!m) { return; }
     s32 animFrame = m->marioObj->header.gfx.animInfo.animFrame;
@@ -30,6 +34,10 @@ void play_flip_sounds(struct MarioState *m, s16 frame1, s16 frame2, s16 frame3) 
     }
 }
 
+/* |description|
+Plays a unique sound when Mario has fallen a significant distance without being invulnerable, twirling, or flying.
+If the fall exceeds a threshold, triggers a "long fall" exclamation. Also sets a flag to prevent repeated triggering
+|descriptionEnd| */
 void play_far_fall_sound(struct MarioState *m) {
     if (!m) { return; }
     u32 action = m->action;
@@ -43,6 +51,10 @@ void play_far_fall_sound(struct MarioState *m) {
 }
 
 #ifndef VERSION_JP
+/* |description|
+Plays a knockback sound effect if Mario is hit or knocked back with significant velocity. The specific sound differs
+depending on whether Mario's forward velocity is high enough to be considered a strong knockback
+|descriptionEnd| */
 void play_knockback_sound(struct MarioState *m) {
     if (!m) { return; }
     if (m->actionArg == 0 && (m->forwardVel <= -28.0f || m->forwardVel >= 28.0f)) {
@@ -53,6 +65,11 @@ void play_knockback_sound(struct MarioState *m) {
 }
 #endif
 
+/* |description|
+Allows Mario to 'lava boost' off a lava wall, reorienting him to face away from the wall and adjusting forward velocity.
+Increases Mario's hurt counter if he's not metal, plays a burning sound, and transitions his action to `ACT_LAVA_BOOST`.
+Useful for handling collisions with lava walls, giving Mario a strong upward/forward boost at the cost of health
+|descriptionEnd| */
 s32 lava_boost_on_wall(struct MarioState *m) {
     if (!m) { return 0; }
     bool allow = true;
@@ -73,6 +90,12 @@ s32 lava_boost_on_wall(struct MarioState *m) {
     return drop_and_set_mario_action(m, ACT_LAVA_BOOST, 1);
 }
 
+/* |description|
+Evaluates whether Mario should take fall damage based on the height difference between his peak and current position.
+If the fall is large enough and does not occur over burning surfaces or while twirling, Mario may get hurt or enter
+a hard fall action. If the fall is significant but not extreme, minimal damage and a squish effect may be applied.
+Useful for determining if Mario's fall warrants a health penalty or a special landing action
+|descriptionEnd| */
 s32 check_fall_damage(struct MarioState *m, u32 hardFallAction) {
     if (!m) { return 0; }
     
@@ -115,6 +138,10 @@ s32 check_fall_damage(struct MarioState *m, u32 hardFallAction) {
     return FALSE;
 }
 
+/* |description|
+Checks if Mario should perform a kick or a dive while in mid-air, depending on his current forward velocity.
+Pressing the B button in the air can trigger a jump kick (at lower speeds) or a dive (at higher speeds)
+|descriptionEnd| */
 s32 check_kick_or_dive_in_air(struct MarioState *m) {
     if (!m) { return 0; }
     if (m->input & INPUT_B_PRESSED) {
@@ -123,6 +150,11 @@ s32 check_kick_or_dive_in_air(struct MarioState *m) {
     return FALSE;
 }
 
+/* |description|
+Determines whether Mario should become stuck in the ground after landing, specifically for soft terrain such as snow
+or sand, provided certain conditions are met (height of the fall, normal of the floor, etc.).
+Returns true if Mario should be stuck, false otherwise
+|descriptionEnd| */
 s32 should_get_stuck_in_ground(struct MarioState *m) {
     if (!m) { return 0; }
     if (m->floor == NULL) { return FALSE; }
@@ -142,6 +174,11 @@ s32 should_get_stuck_in_ground(struct MarioState *m) {
     return FALSE;
 }
 
+/* |description|
+Checks if Mario should get stuck in the ground after a large fall onto soft terrain (like snow or sand) or if he
+should just proceed with regular fall damage calculations. If the terrain and height conditions are met, Mario's
+action changes to being stuck in the ground. Otherwise, normal fall damage logic applies
+|descriptionEnd| */
 s32 check_fall_damage_or_get_stuck(struct MarioState *m, u32 hardFallAction) {
     if (!m) { return 0; }
     if (should_get_stuck_in_ground(m)) {
@@ -160,6 +197,10 @@ s32 check_fall_damage_or_get_stuck(struct MarioState *m, u32 hardFallAction) {
     return check_fall_damage(m, hardFallAction);
 }
 
+/* |description|
+Checks for the presence of a horizontal wind surface under Mario. If found, applies a push force to Mario's horizontal
+velocity. Caps speed at certain thresholds, updates Mario's forward velocity and yaw for sliding/wind movement
+|descriptionEnd| */
 s32 check_horizontal_wind(struct MarioState *m) {
     if (!m) { return 0; }
     struct Surface *floor;
@@ -198,6 +239,10 @@ s32 check_horizontal_wind(struct MarioState *m) {
     return FALSE;
 }
 
+/* |description|
+Updates Mario's air movement while allowing him to turn. Checks horizontal wind and applies a moderate amount of drag,
+approaches the forward velocity toward zero if no input is pressed, and modifies forward velocity/angle based on stick input
+|descriptionEnd| */
 void update_air_with_turn(struct MarioState *m) {
     if (!m) { return; }
     f32 dragThreshold;
@@ -229,6 +274,10 @@ void update_air_with_turn(struct MarioState *m) {
     }
 }
 
+/* |description|
+Updates Mario's air movement without directly turning his facing angle to match his intended yaw. Instead, Mario can
+move sideways relative to his current facing direction. Also checks horizontal wind and applies drag
+|descriptionEnd| */
 void update_air_without_turn(struct MarioState *m) {
     if (!m) { return; }
     f32 sidewaysSpeed = 0.0f;
@@ -267,6 +316,11 @@ void update_air_without_turn(struct MarioState *m) {
     }
 }
 
+
+/* |description|
+Updates Mario's movement when in actions like lava boost or twirling in mid-air. Applies player input to adjust forward velocity
+and facing angle, but in a more restricted manner compared to standard jump movement. Used by `ACT_LAVA_BOOST` and `ACT_TWIRLING`
+|descriptionEnd| */
 void update_lava_boost_or_twirling(struct MarioState *m) {
     if (!m) { return; }
     s16 intendedDYaw;
@@ -293,6 +347,10 @@ void update_lava_boost_or_twirling(struct MarioState *m) {
     m->vel[2] = m->slideVelZ = m->forwardVel * coss(m->faceAngle[1]);
 }
 
+/* |description|
+Calculates and applies a change in Mario's yaw while flying, based on horizontal stick input. Approaches a target yaw velocity
+and sets Mario's roll angle to simulate banking turns. This results in a more natural, curved flight path
+|descriptionEnd| */
 void update_flying_yaw(struct MarioState *m) {
     if (!m) { return; }
     s16 targetYawVel = -(s16)(m->controller->stickX * (m->forwardVel / 4.0f));
@@ -323,6 +381,10 @@ void update_flying_yaw(struct MarioState *m) {
     m->faceAngle[2] = 20 * -m->angleVel[1];
 }
 
+/* |description|
+Calculates and applies a change in Mario's pitch while flying, based on vertical stick input. Approaches a target pitch velocity
+and clamps the final pitch angle to a certain range, simulating a smooth flight control
+|descriptionEnd| */
 void update_flying_pitch(struct MarioState *m) {
     if (!m) { return; }
     s16 targetPitchVel = -(s16)(m->controller->stickY * (m->forwardVel / 5.0f));
@@ -350,6 +412,10 @@ void update_flying_pitch(struct MarioState *m) {
     }
 }
 
+/* |description|
+Handles the complete flying logic for Mario (usually with the wing cap). Continuously updates pitch and yaw based on controller input,
+applies drag, and adjusts forward velocity. Also updates Mario's model angles for flight animations
+|descriptionEnd| */
 void update_flying(struct MarioState *m) {
     if (!m) { return; }
     UNUSED u32 unused;
@@ -389,6 +455,11 @@ void update_flying(struct MarioState *m) {
     m->slideVelZ = m->vel[2];
 }
 
+/* |description|
+Performs a standard step update for air actions without knockback, typically used for jumps or freefalls.
+Updates Mario's velocity (and possibly checks horizontal wind), then calls `perform_air_step` with given `stepArg`.
+Handles how Mario lands, hits walls, grabs ledges, or grabs ceilings. Optionally sets an animation
+|descriptionEnd| */
 u32 common_air_action_step(struct MarioState *m, u32 landAction, s32 animation, u32 stepArg) {
     if (!m) { return 0; }
     u32 stepResult;
@@ -1151,6 +1222,10 @@ s32 act_crazy_box_bounce(struct MarioState *m) {
     return FALSE;
 }
 
+/* |description|
+A shared step update used for airborne knockback states (both forward and backward). Updates velocity, calls `perform_air_step`,
+and handles wall collisions or landing transitions to appropriate ground knockback actions. Also sets animation and speed
+|descriptionEnd| */
 u32 common_air_knockback_step(struct MarioState *m, u32 landAction, u32 hardFallAction, s32 animation,
                               f32 speed) {
     if (!m) { return 0; }
@@ -1210,6 +1285,10 @@ u32 common_air_knockback_step(struct MarioState *m, u32 landAction, u32 hardFall
     return stepResult;
 }
 
+/* |description|
+Checks if Mario should wall kick after performing an air hit against a wall. If the input conditions (e.g., pressing A)
+and the `wallKickTimer` allow, Mario transitions to `ACT_WALL_KICK_AIR`
+|descriptionEnd| */
 s32 check_wall_kick(struct MarioState *m) {
     if (!m) { return 0; }
     if ((m->input & INPUT_A_PRESSED) && m->wallKickTimer != 0 && m->prevAction == ACT_AIR_HIT_WALL) {
@@ -2206,6 +2285,11 @@ s32 act_special_triple_jump(struct MarioState *m) {
     return FALSE;
 }
 
+/* |description|
+Checks for and handles common conditions that would cancel Mario's current air action. This includes transitioning
+to a water plunge if below the water level, becoming squished if appropriate, or switching to vertical wind action
+if on certain wind surfaces. Also resets `m.quicksandDepth`
+|descriptionEnd| */
 s32 check_common_airborne_cancels(struct MarioState *m) {
     if (!m) { return 0; }
     if (m->pos[1] < m->waterLevel - 100) {
@@ -2224,6 +2308,10 @@ s32 check_common_airborne_cancels(struct MarioState *m) {
     return FALSE;
 }
 
+/* |description|
+Executes Mario's current airborne action by first checking common airborne cancels, then playing a far-fall sound if needed.
+Dispatches to the appropriate action function, such as jump, double jump, freefall, etc
+|descriptionEnd| */
 s32 mario_execute_airborne_action(struct MarioState *m) {
     if (!m) { return FALSE; }
     u32 cancel;
