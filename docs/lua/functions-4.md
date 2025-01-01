@@ -2383,7 +2383,7 @@ Checks if the dialog from a specified `object` should start or continue for this
 ## [align_with_floor](#align_with_floor)
 
 ### Description
-Aligns Mario's position and model transformation matrix to match the floor's angle. Specifically: - Sets Mario's vertical position to be at `m.floorHeight` plus any active character animation offset - Adjusts Mario's `throwMatrix` so that his body appears flush with the floor
+Aligns Mario's position and model transformation matrix to match the floor's angle. Specifically: Sets Mario's vertical position to be at `m.floorHeight` plus any active character animation offset and adjusts Mario's `throwMatrix` so that his body appears flush with the floor
 
 ### Lua Example
 `align_with_floor(m)`
@@ -2618,7 +2618,7 @@ Sets Mario's facing yaw to his intended yaw, applies a specified forward velocit
 ## [check_common_moving_cancels](#check_common_moving_cancels)
 
 ### Description
-Performs common checks when Mario is in a moving state. - Transitions to water plunge if underwater - Handles squished or shockwave bounce scenarios - Checks for death conditions
+Performs common checks when Mario is in a moving state, transitions to water plunge if underwater, handles squished or shockwave bounce scenarios, and checks for death conditions
 
 ### Lua Example
 `local integerValue = check_common_moving_cancels(m)`
@@ -2687,7 +2687,7 @@ Checks if Mario is near an edge while moving slowly and the floor below that edg
 ## [common_ground_knockback_action](#common_ground_knockback_action)
 
 ### Description
-Handles knockback on the ground (getting hit while on the ground) with shared logic for multiple knockback states. - Applies deceleration or minimal momentum - Chooses appropriate landing action if Mario leaves the ground - Handles death transitions if Mario's health is depleted
+Handles knockback on the ground (getting hit while on the ground) with shared logic for multiple knockback states. Applies deceleration or minimal momentum, chooses appropriate landing action if Mario leaves the ground, and handles death transitions if Mario's health is depleted
 
 ### Lua Example
 `local integerValue = common_ground_knockback_action(m, animation, arg2, arg3, arg4)`
@@ -2714,7 +2714,7 @@ Handles knockback on the ground (getting hit while on the ground) with shared lo
 ## [common_landing_action](#common_landing_action)
 
 ### Description
-Applies movement upon landing from a jump or fall. - Adjusts velocity based on slope or friction - Checks for transitions like sliding or hitting a wall - Handles small dust particles if moving fast
+Applies movement upon landing from a jump or fall. Adjusts velocity based on slope or friction, checks for transitions like sliding or hitting a wall, handles small dust particles if moving fast
 
 ### Lua Example
 `local integerValue = common_landing_action(m, animation, airAction)`
@@ -2739,7 +2739,7 @@ Applies movement upon landing from a jump or fall. - Adjusts velocity based on s
 ## [common_slide_action](#common_slide_action)
 
 ### Description
-Applies shared logic for sliding-related actions: - Plays sliding sounds - Manages ground steps (falling off edges, hitting walls) - Updates animation
+Applies shared logic for sliding-related actions while playing sliding sounds, managing ground steps (falling off edges, hitting walls), updates animation
 
 ### Lua Example
 `common_slide_action(m, endAction, airAction, animation)`
@@ -2789,7 +2789,7 @@ Applies shared logic for sliding-related actions: - Plays sliding sounds - Manag
 ## [mario_execute_moving_action](#mario_execute_moving_action)
 
 ### Description
-Executes Mario's current moving action by: 1. Checking common cancellations (e.g., water plunge, squish, death) 2. Handling quicksand updates 3. Switching to the correct sub-action handler based on `m.action`
+Executes Mario's current moving actions by: checking common cancellations (e.g., water plunge, squish, death), handling quicksand updates, and switching to the correct sub-action handler based on `m.action`
 
 ### Lua Example
 `local integerValue = mario_execute_moving_action(m)`
@@ -2837,7 +2837,7 @@ Checks the current animation frame against two specified frames to trigger foots
 ## [push_or_sidle_wall](#push_or_sidle_wall)
 
 ### Description
-When Mario hits a wall during movement, decides whether he's pushing against the wall or sidling along it. - Plays pushing animations and sounds if he's head-on - Sidles along the wall if he's more angled
+When Mario hits a wall during movement, decides whether he's pushing against the wall or sidling along it. Plays pushing animations and sounds if he's head-on, sidles along the wall if he's more angled
 
 ### Lua Example
 `push_or_sidle_wall(m, startPos)`
@@ -2885,7 +2885,7 @@ When Mario hits a wall during movement, decides whether he's pushing against the
 ## [set_triple_jump_action](#set_triple_jump_action)
 
 ### Description
-Determines the proper triple jump action based on Mario's forward velocity and the Wing Cap flag. - Normal triple jump, flying triple jump, or just a single jump if not enough speed
+Determines the proper triple jump action based on Mario's forward velocity and the Wing Cap flag: Normal triple jump, flying triple jump, or just a single jump if not enough speed
 
 ### Lua Example
 `local integerValue = set_triple_jump_action(m, action, actionArg)`
@@ -2910,7 +2910,7 @@ Determines the proper triple jump action based on Mario's forward velocity and t
 ## [should_begin_sliding](#should_begin_sliding)
 
 ### Description
-Checks if Mario should begin sliding, based on: - Player input (facing downhill, pressing the analog stick backward, or on a slide terrain) - Current floor steepness Returns true if conditions to slide are met.
+Checks if Mario should begin sliding, based on player input (facing downhill, pressing the analog stick backward, or on a slide terrain), and current floor steepness. Returns true if conditions to slide are met.
 
 ### Lua Example
 `local integerValue = should_begin_sliding(m)`
@@ -2933,7 +2933,7 @@ Checks if Mario should begin sliding, based on: - Player input (facing downhill,
 ## [slide_bonk](#slide_bonk)
 
 ### Description
-Handles the scenario where Mario slides into a wall. - If Mario is moving fast, reflects his velocity and transitions to a fast knockback - Otherwise, stops his forward velocity and sets a slower knockback
+Handles the scenario where Mario slides into a wall. If Mario is moving fast, reflects his velocity and transitions to a fast knockback, Otherwise, stops his forward velocity and sets a slower knockback
 
 ### Lua Example
 `slide_bonk(m, fastAction, slowAction)`
@@ -3078,7 +3078,7 @@ Applies a left/right tilt to Mario's torso (and some pitch if running fast) whil
 ## [update_decelerating_speed](#update_decelerating_speed)
 
 ### Description
-Gradually reduces Mario's forward speed to zero over time on level ground, unless otherwise influenced by slope or friction. Returns `TRUE` if Mario's speed reaches zero, meaning he has stopped
+Gradually reduces Mario's forward speed to zero over time on level ground, unless otherwise influenced by slope or friction. Returns true if Mario's speed reaches zero, meaning he has stopped
 
 ### Lua Example
 `local integerValue = update_decelerating_speed(m)`

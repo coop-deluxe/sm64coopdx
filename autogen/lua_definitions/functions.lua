@@ -5526,7 +5526,7 @@ function stuck_in_ground_handler(m, animation, unstuckFrame, target2, target3, e
 end
 
 --- @param m MarioState
---- Aligns Mario's position and model transformation matrix to match the floor's angle. Specifically: - Sets Mario's vertical position to be at `m.floorHeight` plus any active character animation offset - Adjusts Mario's `throwMatrix` so that his body appears flush with the floor
+--- Aligns Mario's position and model transformation matrix to match the floor's angle. Specifically: Sets Mario's vertical position to be at `m.floorHeight` plus any active character animation offset and adjusts Mario's `throwMatrix` so that his body appears flush with the floor
 function align_with_floor(m)
     -- ...
 end
@@ -5597,7 +5597,7 @@ end
 
 --- @param m MarioState
 --- @return integer
---- Performs common checks when Mario is in a moving state. - Transitions to water plunge if underwater - Handles squished or shockwave bounce scenarios - Checks for death conditions
+--- Performs common checks when Mario is in a moving state, transitions to water plunge if underwater, handles squished or shockwave bounce scenarios, and checks for death conditions
 function check_common_moving_cancels(m)
     -- ...
 end
@@ -5621,7 +5621,7 @@ end
 --- @param arg3 integer
 --- @param arg4 integer
 --- @return integer
---- Handles knockback on the ground (getting hit while on the ground) with shared logic for multiple knockback states. - Applies deceleration or minimal momentum - Chooses appropriate landing action if Mario leaves the ground - Handles death transitions if Mario's health is depleted
+--- Handles knockback on the ground (getting hit while on the ground) with shared logic for multiple knockback states. Applies deceleration or minimal momentum, chooses appropriate landing action if Mario leaves the ground, and handles death transitions if Mario's health is depleted
 function common_ground_knockback_action(m, animation, arg2, arg3, arg4)
     -- ...
 end
@@ -5630,7 +5630,7 @@ end
 --- @param animation integer
 --- @param airAction integer
 --- @return integer
---- Applies movement upon landing from a jump or fall. - Adjusts velocity based on slope or friction - Checks for transitions like sliding or hitting a wall - Handles small dust particles if moving fast
+--- Applies movement upon landing from a jump or fall. Adjusts velocity based on slope or friction, checks for transitions like sliding or hitting a wall, handles small dust particles if moving fast
 function common_landing_action(m, animation, airAction)
     -- ...
 end
@@ -5639,7 +5639,7 @@ end
 --- @param endAction integer
 --- @param airAction integer
 --- @param animation integer
---- Applies shared logic for sliding-related actions: - Plays sliding sounds - Manages ground steps (falling off edges, hitting walls) - Updates animation
+--- Applies shared logic for sliding-related actions while playing sliding sounds, managing ground steps (falling off edges, hitting walls), updates animation
 function common_slide_action(m, endAction, airAction, animation)
     -- ...
 end
@@ -5656,7 +5656,7 @@ end
 
 --- @param m MarioState
 --- @return integer
---- Executes Mario's current moving action by: 1. Checking common cancellations (e.g., water plunge, squish, death) 2. Handling quicksand updates 3. Switching to the correct sub-action handler based on `m.action`
+--- Executes Mario's current moving actions by: checking common cancellations (e.g., water plunge, squish, death), handling quicksand updates, and switching to the correct sub-action handler based on `m.action`
 function mario_execute_moving_action(m)
     -- ...
 end
@@ -5671,7 +5671,7 @@ end
 
 --- @param m MarioState
 --- @param startPos Vec3f
---- When Mario hits a wall during movement, decides whether he's pushing against the wall or sidling along it. - Plays pushing animations and sounds if he's head-on - Sidles along the wall if he's more angled
+--- When Mario hits a wall during movement, decides whether he's pushing against the wall or sidling along it. Plays pushing animations and sounds if he's head-on, sidles along the wall if he's more angled
 function push_or_sidle_wall(m, startPos)
     -- ...
 end
@@ -5690,14 +5690,14 @@ end
 --- @param action integer
 --- @param actionArg integer
 --- @return integer
---- Determines the proper triple jump action based on Mario's forward velocity and the Wing Cap flag. - Normal triple jump, flying triple jump, or just a single jump if not enough speed
+--- Determines the proper triple jump action based on Mario's forward velocity and the Wing Cap flag: Normal triple jump, flying triple jump, or just a single jump if not enough speed
 function set_triple_jump_action(m, action, actionArg)
     -- ...
 end
 
 --- @param m MarioState
 --- @return integer
---- Checks if Mario should begin sliding, based on: - Player input (facing downhill, pressing the analog stick backward, or on a slide terrain) - Current floor steepness Returns true if conditions to slide are met.
+--- Checks if Mario should begin sliding, based on player input (facing downhill, pressing the analog stick backward, or on a slide terrain), and current floor steepness. Returns true if conditions to slide are met.
 function should_begin_sliding(m)
     -- ...
 end
@@ -5705,7 +5705,7 @@ end
 --- @param m MarioState
 --- @param fastAction integer
 --- @param slowAction integer
---- Handles the scenario where Mario slides into a wall. - If Mario is moving fast, reflects his velocity and transitions to a fast knockback - Otherwise, stops his forward velocity and sets a slower knockback
+--- Handles the scenario where Mario slides into a wall. If Mario is moving fast, reflects his velocity and transitions to a fast knockback, Otherwise, stops his forward velocity and sets a slower knockback
 function slide_bonk(m, fastAction, slowAction)
     -- ...
 end
@@ -5749,7 +5749,7 @@ end
 
 --- @param m MarioState
 --- @return integer
---- Gradually reduces Mario's forward speed to zero over time on level ground, unless otherwise influenced by slope or friction. Returns `TRUE` if Mario's speed reaches zero, meaning he has stopped
+--- Gradually reduces Mario's forward speed to zero over time on level ground, unless otherwise influenced by slope or friction. Returns true if Mario's speed reaches zero, meaning he has stopped
 function update_decelerating_speed(m)
     -- ...
 end
