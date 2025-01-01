@@ -933,6 +933,7 @@
 
 - level_update.h
    - [fade_into_special_warp](functions-3.md#fade_into_special_warp)
+   - [get_instant_warp](functions-3.md#get_instant_warp)
    - [get_painting_warp_node](functions-3.md#get_painting_warp_node)
    - [initiate_painting_warp](functions-3.md#initiate_painting_warp)
    - [level_control_timer_running](functions-3.md#level_control_timer_running)

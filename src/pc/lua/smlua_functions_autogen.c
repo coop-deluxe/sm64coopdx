@@ -14749,6 +14749,23 @@ int smlua_func_fade_into_special_warp(lua_State* L) {
     return 1;
 }
 
+int smlua_func_get_instant_warp(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "get_instant_warp", 1, top);
+        return 0;
+    }
+
+    u8 index = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "get_instant_warp"); return 0; }
+
+    smlua_push_object(L, LOT_INSTANTWARP, get_instant_warp(index));
+
+    return 1;
+}
+
 int smlua_func_get_painting_warp_node(UNUSED lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -32838,6 +32855,7 @@ void smlua_bind_functions_autogen(void) {
 
     // level_update.h
     smlua_bind_function(L, "fade_into_special_warp", smlua_func_fade_into_special_warp);
+    smlua_bind_function(L, "get_instant_warp", smlua_func_get_instant_warp);
     smlua_bind_function(L, "get_painting_warp_node", smlua_func_get_painting_warp_node);
     smlua_bind_function(L, "initiate_painting_warp", smlua_func_initiate_painting_warp);
     smlua_bind_function(L, "level_control_timer_running", smlua_func_level_control_timer_running);

@@ -6045,6 +6045,9 @@ Creates a warp node in the current level and area with id `id` that goes to the 
 
 ## [fade_into_special_warp](#fade_into_special_warp)
 
+### Description
+Fades into a special warp with `arg` and using `color`
+
 ### Lua Example
 `fade_into_special_warp(arg, color)`
 
@@ -6064,7 +6067,33 @@ Creates a warp node in the current level and area with id `id` that goes to the 
 
 <br />
 
+## [get_instant_warp](#get_instant_warp)
+
+### Description
+Gets an instant warp from the current area's instant warp array (0-3)
+
+### Lua Example
+`local InstantWarpValue = get_instant_warp(index)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| index | `integer` |
+
+### Returns
+[InstantWarp](structs.md#InstantWarp)
+
+### C Prototype
+`struct InstantWarp *get_instant_warp(u8 index);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [get_painting_warp_node](#get_painting_warp_node)
+
+### Description
+Gets a painting warp node from the local mario's floor type
 
 ### Lua Example
 `local WarpNodeValue = get_painting_warp_node()`
@@ -6083,6 +6112,9 @@ Creates a warp node in the current level and area with id `id` that goes to the 
 <br />
 
 ## [initiate_painting_warp](#initiate_painting_warp)
+
+### Description
+Initiates a painting warp of `paintingIndex`
 
 ### Lua Example
 `initiate_painting_warp(paintingIndex)`
@@ -6104,6 +6136,9 @@ Creates a warp node in the current level and area with id `id` that goes to the 
 
 ## [level_control_timer_running](#level_control_timer_running)
 
+### Description
+Returns if the level timer is running
+
 ### Lua Example
 `local integerValue = level_control_timer_running()`
 
@@ -6121,6 +6156,9 @@ Creates a warp node in the current level and area with id `id` that goes to the 
 <br />
 
 ## [level_trigger_warp](#level_trigger_warp)
+
+### Description
+Triggers a warp (WARP_OP_*) for the level. Pass in `gMarioStates[0]` for `m`
 
 ### Lua Example
 `local integerValue = level_trigger_warp(m, warpOp)`
@@ -6143,6 +6181,9 @@ Creates a warp node in the current level and area with id `id` that goes to the 
 
 ## [lvl_set_current_level](#lvl_set_current_level)
 
+### Description
+Sets the level number and handles the act select screen
+
 ### Lua Example
 `local integerValue = lvl_set_current_level(arg0, levelNum)`
 
@@ -6163,6 +6204,9 @@ Creates a warp node in the current level and area with id `id` that goes to the 
 <br />
 
 ## [warp_special](#warp_special)
+
+### Description
+Special warps to arg (`SPECIAL_WARP_*`)
 
 ### Lua Example
 `warp_special(arg)`

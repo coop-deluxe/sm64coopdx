@@ -4764,21 +4764,32 @@ end
 
 --- @param arg integer
 --- @param color integer
+--- Fades into a special warp with `arg` and using `color`
 function fade_into_special_warp(arg, color)
     -- ...
 end
 
+--- @param index integer
+--- @return InstantWarp
+--- Gets an instant warp from the current area's instant warp array (0-3)
+function get_instant_warp(index)
+    -- ...
+end
+
 --- @return WarpNode
+--- Gets a painting warp node from the local mario's floor type
 function get_painting_warp_node()
     -- ...
 end
 
 --- @param paintingIndex integer
+--- Initiates a painting warp of `paintingIndex`
 function initiate_painting_warp(paintingIndex)
     -- ...
 end
 
 --- @return integer
+--- Returns if the level timer is running
 function level_control_timer_running()
     -- ...
 end
@@ -4786,6 +4797,7 @@ end
 --- @param m MarioState
 --- @param warpOp integer
 --- @return integer
+--- Triggers a warp (WARP_OP_*) for the level. Pass in `gMarioStates[0]` for `m`
 function level_trigger_warp(m, warpOp)
     -- ...
 end
@@ -4793,11 +4805,13 @@ end
 --- @param arg0 integer
 --- @param levelNum integer
 --- @return integer
+--- Sets the level number and handles the act select screen
 function lvl_set_current_level(arg0, levelNum)
     -- ...
 end
 
 --- @param arg integer
+--- Special warps to arg (`SPECIAL_WARP_*`)
 function warp_special(arg)
     -- ...
 end
