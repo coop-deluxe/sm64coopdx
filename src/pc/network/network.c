@@ -170,15 +170,15 @@ bool network_init(enum NetworkType inNetworkType, bool reconnecting) {
         djui_chat_box_create();
         djui_panel_shutdown();
 
+        fake_lvl_init_from_save_file();
+
         mods_activate(&gLocalMods);
         djui_panel_modlist_create(NULL);
         smlua_init();
         dynos_behavior_hook_all_custom_behaviors();
 
-        if (gCurrLevelNum != (s16)gLevelValues.entryLevel) {
-            extern s16 gChangeLevelTransition;
-            gChangeLevelTransition = gLevelValues.entryLevel;
-        }
+        extern s16 gChangeLevelTransition;
+        gChangeLevelTransition = gLevelValues.entryLevel;
     }
 
     configfile_save(configfile_name());
