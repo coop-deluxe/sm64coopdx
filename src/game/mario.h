@@ -82,7 +82,7 @@ Plays Mario’s jump sound if it hasn't been played yet since the last action ch
 void play_mario_jump_sound(struct MarioState *m);
 
 /* |description|
-Adjusts the pitch/volume of Mario's movement-based sounds according to his forward velocity (`m->forwardVel`).
+Adjusts the pitch/volume of Mario's movement-based sounds according to his forward velocity (`m.forwardVel`).
 Useful for adding dynamic audio feedback based on Mario's running or walking speed
 |descriptionEnd| */
 void adjust_sound_for_speed(struct MarioState *m);

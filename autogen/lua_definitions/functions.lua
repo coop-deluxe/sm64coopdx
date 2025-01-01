@@ -4803,7 +4803,7 @@ function warp_special(arg)
 end
 
 --- @param m MarioState
---- Adjusts the pitch/volume of Mario's movement-based sounds according to his forward velocity (`m->forwardVel`). Useful for adding dynamic audio feedback based on Mario's running or walking speed
+--- Adjusts the pitch/volume of Mario's movement-based sounds according to his forward velocity (`m.forwardVel`). Useful for adding dynamic audio feedback based on Mario's running or walking speed
 function adjust_sound_for_speed(m)
     -- ...
 end
