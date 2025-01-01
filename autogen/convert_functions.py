@@ -174,6 +174,22 @@ vec_type_after = """
     smlua_push_%s($[IDENTIFIER], $[INDEX]);
 """
 
+#
+# Special cases for sound functions
+#
+
+SOUND_FUNCTIONS = [
+    "play_sound",
+    "play_sound_with_freq_scale",
+    "stop_sound",
+    "stop_sounds_from_source",
+]
+
+vec3f_sound_before = """
+    f32 *$[IDENTIFIER] = smlua_get_vec3f_from_buffer();
+    smlua_get_vec3f($[IDENTIFIER], $[INDEX]);
+"""
+
 ###########################################################
 
 manual_index_documentation = """
@@ -765,12 +781,15 @@ def build_vec_types():
 
 ############################################################################
 
-def build_param(param, i):
+def build_param(fid, param, i):
     ptype = alter_type(param['type'])
     pid = param['identifier']
 
     if ptype in VEC_TYPES:
-        return (vec_type_before % (ptype, ptype.lower())).replace('$[IDENTIFIER]', str(pid)).replace('$[INDEX]', str(i))
+        if ptype == "Vec3f" and fid in SOUND_FUNCTIONS:
+            return vec3f_sound_before.replace('$[IDENTIFIER]', str(pid)).replace('$[INDEX]', str(i))
+        else:
+            return (vec_type_before % (ptype, ptype.lower())).replace('$[IDENTIFIER]', str(pid)).replace('$[INDEX]', str(i))
     elif ptype == 'bool':
         return '    %s %s = smlua_to_boolean(L, %d);\n' % (ptype, pid, i)
     elif ptype in integer_types:
@@ -870,7 +889,7 @@ def build_function(function, do_extern):
         if is_interact_func and param['identifier'] == 'interactType':
             s += "    // interactType skipped so mods can't lie about what interaction it is\n"
         else:
-            s += build_param(param, i)
+            s += build_param(fid, param, i)
             s += '    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %%u for function \'%%s\'", %d, "%s"); return 0; }\n' % (i, fid)
         i += 1
     s += '\n'
