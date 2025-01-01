@@ -54,6 +54,10 @@ Useful for conditional logic where an action can branch after reaching a specifi
 |descriptionEnd| */
 s32 is_anim_past_frame(struct MarioState *m, s16 animFrame);
 
+/* |description|
+Retrieves the current animation flags and calculates the translation for Mario's animation, rotating it into the global coordinate system based on `yaw`.
+Useful for determining positional offsets from animations (e.g., stepping forward in a walk animation) and applying them to Mario's position
+|descriptionEnd| */
 s16 find_mario_anim_flags_and_translation(struct Object *o, s32 yaw, Vec3s translation);
 
 /* |description|
@@ -77,6 +81,10 @@ Plays Mario’s jump sound if it hasn't been played yet since the last action ch
 |descriptionEnd| */
 void play_mario_jump_sound(struct MarioState *m);
 
+/* |description|
+Adjusts the pitch/volume of Mario's movement-based sounds according to his forward velocity (`m->forwardVel`).
+Useful for adding dynamic audio feedback based on Mario's running or walking speed
+|descriptionEnd| */
 void adjust_sound_for_speed(struct MarioState *m);
 
 /* |description|
@@ -159,6 +167,7 @@ struct Surface *resolve_and_return_wall_collisions(Vec3f pos, f32 offset, f32 ra
 Similar to `resolve_and_return_wall_collisions` but also returns detailed collision data (`WallCollisionData`). This can handle multiple walls and store them for further checks
 |descriptionEnd| */
 void resolve_and_return_wall_collisions_data(Vec3f pos, f32 offset, f32 radius, struct WallCollisionData* collisionData);
+
 f32 vec3f_find_ceil(Vec3f pos, f32 height, struct Surface **ceil);
 f32 vec3f_mario_ceil(Vec3f pos, f32 height, struct Surface **ceil);
 
@@ -185,8 +194,22 @@ Useful for restricting normal movement on surfaces with extreme angles
 |descriptionEnd| */
 s32 mario_floor_is_steep(struct MarioState *m);
 
+/* |description|
+Finds the floor height relative to Mario's current position given a polar displacement (`angleFromMario`, `distFromMario`).
+Useful for determining height differentials ahead or behind Mario, e.g. for slope checks or collision logic
+|descriptionEnd| */
 f32 find_floor_height_relative_polar(struct MarioState *m, s16 angleFromMario, f32 distFromMario);
+
+/* |description|
+Returns a slope angle based on comparing the floor heights slightly in front and behind Mario. It essentially calculates how steep the ground is in a specific yaw direction.
+Useful for slope-based calculations such as setting walking or sliding behaviors
+|descriptionEnd| */
 s16 find_floor_slope(struct MarioState *m, s16 yawOffset);
+
+/* |description|
+Updates the background noise and camera modes based on Mario's action. Especially relevant for actions like first-person view or sleeping.
+Useful for synchronizing camera behavior and ambient sounds with Mario's state changes
+|descriptionEnd| */
 void update_mario_sound_and_camera(struct MarioState *m);
 
 /* |description|
@@ -230,8 +253,18 @@ s32 transition_submerged_to_walking(struct MarioState *m);
 Transitions Mario into a "water plunge" action, used when he enters water from above. Adjusts position, velocity, and camera mode
 |descriptionEnd| */
 s32 set_water_plunge_action(struct MarioState *m);
+
+/* |description|
+Main driver for Mario's behavior. Executes the current action group (stationary, moving, airborne, etc.) in a loop until no further action changes are necessary
+|descriptionEnd| */
 s32 execute_mario_action(UNUSED struct Object *o);
+
+/* |description|
+Forces Mario into an idle state, either `ACT_IDLE` or `ACT_WATER_IDLE` depending on whether he is submerged.
+Useful for quickly resetting Mario's state to an idle pose under special conditions (e.g., cutscene triggers)
+|descriptionEnd| */
 s32 force_idle_state(struct MarioState* m);
+
 void init_single_mario(struct MarioState* m);
 void init_mario(void);
 void init_mario_single_from_save_file(struct MarioState* m, u16 index);

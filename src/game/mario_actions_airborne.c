@@ -1226,8 +1226,7 @@ s32 act_crazy_box_bounce(struct MarioState *m) {
 A shared step update used for airborne knockback states (both forward and backward). Updates velocity, calls `perform_air_step`,
 and handles wall collisions or landing transitions to appropriate ground knockback actions. Also sets animation and speed
 |descriptionEnd| */
-u32 common_air_knockback_step(struct MarioState *m, u32 landAction, u32 hardFallAction, s32 animation,
-                              f32 speed) {
+u32 common_air_knockback_step(struct MarioState *m, u32 landAction, u32 hardFallAction, s32 animation, f32 speed) {
     if (!m) { return 0; }
     u32 stepResult;
 

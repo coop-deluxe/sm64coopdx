@@ -4803,7 +4803,7 @@ function warp_special(arg)
 end
 
 --- @param m MarioState
---- Plays Mario’s jump sound if it hasn't been played yet since the last action change. This helps avoid overlapping jump voice lines on repeated jumps
+--- Adjusts the pitch/volume of Mario's movement-based sounds according to his forward velocity (`m->forwardVel`). Useful for adding dynamic audio feedback based on Mario's running or walking speed
 function adjust_sound_for_speed(m)
     -- ...
 end
@@ -4833,7 +4833,7 @@ end
 
 --- @param o Object
 --- @return integer
---- Transitions Mario into a "water plunge" action, used when he enters water from above. Adjusts position, velocity, and camera mode
+--- Main driver for Mario's behavior. Executes the current action group (stationary, moving, airborne, etc.) in a loop until no further action changes are necessary
 function execute_mario_action(o)
     -- ...
 end
@@ -4842,7 +4842,7 @@ end
 --- @param angleFromMario integer
 --- @param distFromMario number
 --- @return number
---- Checks whether Mario's floor is steep enough to cause special behavior, such as forcing slides or preventing certain actions. Returns true if the slope is too steep. Useful for restricting normal movement on surfaces with extreme angles
+--- Finds the floor height relative to Mario's current position given a polar displacement (`angleFromMario`, `distFromMario`). Useful for determining height differentials ahead or behind Mario, e.g. for slope checks or collision logic
 function find_floor_height_relative_polar(m, angleFromMario, distFromMario)
     -- ...
 end
@@ -4850,7 +4850,7 @@ end
 --- @param m MarioState
 --- @param yawOffset integer
 --- @return integer
---- Checks whether Mario's floor is steep enough to cause special behavior, such as forcing slides or preventing certain actions. Returns true if the slope is too steep. Useful for restricting normal movement on surfaces with extreme angles
+--- Returns a slope angle based on comparing the floor heights slightly in front and behind Mario. It essentially calculates how steep the ground is in a specific yaw direction. Useful for slope-based calculations such as setting walking or sliding behaviors
 function find_floor_slope(m, yawOffset)
     -- ...
 end
@@ -4859,14 +4859,14 @@ end
 --- @param yaw integer
 --- @param translation Vec3s
 --- @return integer
---- Checks if Mario's current animation is past a specified `animFrame`. Useful for conditional logic where an action can branch after reaching a specific point in the animation
+--- Retrieves the current animation flags and calculates the translation for Mario's animation, rotating it into the global coordinate system based on `yaw`. Useful for determining positional offsets from animations (e.g., stepping forward in a walk animation) and applying them to Mario's position
 function find_mario_anim_flags_and_translation(o, yaw, translation)
     -- ...
 end
 
 --- @param m MarioState
 --- @return integer
---- Transitions Mario into a "water plunge" action, used when he enters water from above. Adjusts position, velocity, and camera mode
+--- Forces Mario into an idle state, either `ACT_IDLE` or `ACT_WATER_IDLE` depending on whether he is submerged. Useful for quickly resetting Mario's state to an idle pose under special conditions (e.g., cutscene triggers)
 function force_idle_state(m)
     -- ...
 end
@@ -4882,7 +4882,7 @@ function hurt_and_set_mario_action(m, action, actionArg, hurtCounter)
 end
 
 --- @param m MarioState
---- Transitions Mario into a "water plunge" action, used when he enters water from above. Adjusts position, velocity, and camera mode
+--- Forces Mario into an idle state, either `ACT_IDLE` or `ACT_WATER_IDLE` depending on whether he is submerged. Useful for quickly resetting Mario's state to an idle pose under special conditions (e.g., cutscene triggers)
 function init_single_mario(m)
     -- ...
 end
@@ -5186,7 +5186,7 @@ function update_mario_pos_for_anim(m)
 end
 
 --- @param m MarioState
---- Checks whether Mario's floor is steep enough to cause special behavior, such as forcing slides or preventing certain actions. Returns true if the slope is too steep. Useful for restricting normal movement on surfaces with extreme angles
+--- Updates the background noise and camera modes based on Mario's action. Especially relevant for actions like first-person view or sleeping. Useful for synchronizing camera behavior and ambient sounds with Mario's state changes
 function update_mario_sound_and_camera(m)
     -- ...
 end
@@ -5251,6 +5251,7 @@ end
 --- @param animation integer
 --- @param speed number
 --- @return integer
+--- A shared step update used for airborne knockback states (both forward and backward). Updates velocity, calls `perform_air_step`, and handles wall collisions or landing transitions to appropriate ground knockback actions. Also sets animation and speed
 function common_air_knockback_step(m, landAction, hardFallAction, animation, speed)
     -- ...
 end
