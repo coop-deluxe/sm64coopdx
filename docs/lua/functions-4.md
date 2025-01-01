@@ -1973,7 +1973,7 @@ Keeps Mario stationary while he is hanging from a ceiling. This function zeroes 
 ## [update_ledge_climb](#update_ledge_climb)
 
 ### Description
-Gradually adjusts the camera position to track Mario as he climbs a ledge. This creates a smoother view transition from the ledge-grab camera angle to Mario's new location on top of the ledge
+Updates Mario's climb onto a ledge by setting the chosen climbing animation and transitioning to the specified end action (e.g., standing idle) once the animation finishes. If the end action is `ACT_IDLE`, Mario is placed on top of the ledge
 
 ### Lua Example
 `update_ledge_climb(m, animation, endAction)`

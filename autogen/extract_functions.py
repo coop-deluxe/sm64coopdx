@@ -13,7 +13,6 @@ replacements = {
     'BAD_RETURN(u64)': 'void',
     'BAD_RETURN(f32)': 'void',
     'BAD_RETURN(f64)': 'void',
-
 }
 
 def extract_functions(filename):
@@ -83,11 +82,9 @@ def extract_functions(filename):
     for character in tmp:
         if inside == 0:
             txt += character
-
         if character == '{':
             txt += '\n'
             inside += 1
-
         if character == '}':
             inside -= 1
 
@@ -112,6 +109,11 @@ def extract_functions(filename):
         function_without_semicolon = line.rstrip(';')
         for i, raw_line in enumerate(raw_lines):
             if function_without_semicolon in raw_line:
+                if i - 1 >= 0:
+                    prev_line = raw_lines[i - 1].rstrip()
+                    if not prev_line.endswith('*/'):
+                        break
+
                 # found the function in raw_lines, now look above for |descriptionEnd|
                 # We'll scan upwards until we find |descriptionEnd| and then keep going until |description| is found.
                 description_end_line_index = None
@@ -157,4 +159,4 @@ if __name__ == "__main__":
     print("Descriptions:")
     for func, desc in descriptions.items():
         print(f"Function: {func}")
-
+        print(f"    Description: {desc}\n")

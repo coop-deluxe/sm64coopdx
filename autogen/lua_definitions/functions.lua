@@ -3509,7 +3509,6 @@ function set_environmental_camera_shake(shake)
 end
 
 --- @param preset integer
---- Transitions the camera to the next Lakitu state, updating position and focus. This function handles smooth transitions between different gameplay scenarios
 function set_fixed_cam_axis_sa_lobby(preset)
     -- ...
 end
@@ -5406,7 +5405,7 @@ end
 --- @param m MarioState
 --- @param animation integer
 --- @param endAction integer
---- Gradually adjusts the camera position to track Mario as he climbs a ledge. This creates a smoother view transition from the ledge-grab camera angle to Mario's new location on top of the ledge
+--- Updates Mario's climb onto a ledge by setting the chosen climbing animation and transitioning to the specified end action (e.g., standing idle) once the animation finishes. If the end action is `ACT_IDLE`, Mario is placed on top of the ledge
 function update_ledge_climb(m, animation, endAction)
     -- ...
 end
@@ -9067,7 +9066,6 @@ function get_surface_from_wcd_index(wcd, index)
 end
 
 --- @return Surface
---- Finds a potential ceiling at the given `x`, `y`, and `z` values
 function get_water_surface_pseudo_floor()
     -- ...
 end

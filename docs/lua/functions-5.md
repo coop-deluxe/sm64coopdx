@@ -7562,9 +7562,6 @@ Gets the surface corresponding to `index` from `wcd`
 
 ## [get_water_surface_pseudo_floor](#get_water_surface_pseudo_floor)
 
-### Description
-Finds a potential ceiling at the given `x`, `y`, and `z` values
-
 ### Lua Example
 `local SurfaceValue = get_water_surface_pseudo_floor()`
 

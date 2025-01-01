@@ -1903,9 +1903,6 @@ Applies an environmental shake effect to the camera. Handles predefined shake ty
 
 ## [set_fixed_cam_axis_sa_lobby](#set_fixed_cam_axis_sa_lobby)
 
-### Description
-Transitions the camera to the next Lakitu state, updating position and focus. This function handles smooth transitions between different gameplay scenarios
-
 ### Lua Example
 `set_fixed_cam_axis_sa_lobby(preset)`
 

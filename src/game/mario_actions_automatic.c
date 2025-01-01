@@ -603,6 +603,9 @@ void update_ledge_climb_camera(struct MarioState *m) {
     m->flags |= MARIO_UNKNOWN_25;
 }
 
+/* |description|
+Updates Mario's climb onto a ledge by setting the chosen climbing animation and transitioning to the specified end action (e.g., standing idle) once the animation finishes. If the end action is `ACT_IDLE`, Mario is placed on top of the ledge
+|descriptionEnd| */
 void update_ledge_climb(struct MarioState *m, s32 animation, u32 endAction) {
     stop_and_set_height_to_floor(m);
 
