@@ -11,7 +11,6 @@
 #include "pc/configfile.h"
 #include "pc/djui/djui.h"
 #include "pc/djui/djui_panel.h"
-#include "pc/djui/djui_panel_modlist.h"
 #include "pc/djui/djui_hud_utils.h"
 #include "pc/djui/djui_panel_main.h"
 #include "pc/utils/misc.h"
@@ -159,26 +158,24 @@ bool network_init(enum NetworkType inNetworkType, bool reconnecting) {
     gNetworkType = inNetworkType;
 
     if (gNetworkType == NT_SERVER) {
-        extern u8* gOverrideEeprom;
-        gOverrideEeprom = NULL;
-
         extern s16 gCurrSaveFileNum;
         gCurrSaveFileNum = configHostSaveSlot;
 
-        network_player_connected(NPT_LOCAL, 0, configPlayerModel, &configPlayerPalette, configPlayerName, get_local_discord_id());
-
-        djui_chat_box_create();
-        djui_panel_shutdown();
-
-        fake_lvl_init_from_save_file();
-
         mods_activate(&gLocalMods);
-        djui_panel_modlist_create(NULL);
         smlua_init();
+
         dynos_behavior_hook_all_custom_behaviors();
 
-        extern s16 gChangeLevelTransition;
-        gChangeLevelTransition = gLevelValues.entryLevel;
+        network_player_connected(NPT_LOCAL, 0, configPlayerModel, &configPlayerPalette, configPlayerName, get_local_discord_id());
+        extern u8* gOverrideEeprom;
+        gOverrideEeprom = NULL;
+
+        if (gCurrLevelNum != (s16)gLevelValues.entryLevel) {
+            extern s16 gChangeLevelTransition;
+            gChangeLevelTransition = gLevelValues.entryLevel;
+        }
+
+        djui_chat_box_create();
     }
 
     configfile_save(configfile_name());
