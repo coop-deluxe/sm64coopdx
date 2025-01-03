@@ -34,7 +34,6 @@ function handleMusic()
         audioCurSeq = get_current_background_music()
         if audioMain then
             audio_stream_stop(audioMain)
-            audio_stream_destroy(audioMain)
             audioMain = nil
         end
         if bgms[curMap] and bgms[curMap].audio then
@@ -76,7 +75,6 @@ function handleMusic()
     else
         if audioSpecial then
             audio_stream_stop(audioSpecial)
-            audio_stream_destroy(audioSpecial)
             audioSpecial = nil
             if audioMain and audioMainPaused then
                 audioMainPaused = false
