@@ -344,19 +344,17 @@ void smlua_update(void) {
     audio_sample_destroy_pending_copies();
 
     smlua_call_event_hooks(HOOK_UPDATE);
+
     // Collect our garbage after calling our hooks.
     // If we don't, Lag can quickly build up from our mods.
-    /*lua_gc(L, LUA_GCSTEP, 1);
-    lua_gc(L, LUA_GCSTOP, 0);*/
-
-    // EDIT: uhh, it turns out that is not the case
-    // if we only do incremental garbage collection,
-    // eventually the garbage will build up so much
-    // that the game slows to a crawl. Messing with
-    // the GC setting is what caused Arena to get worse
-    // over time.
+    // Truth is smlua generates so much garbage that the
+    // incremental collection fails to keep up after some time.
+    // So, for now, stop the GC from running during the hooks
+    // and perform a full GC at the end of the frame.
     // The real fix would be to make smlua produce less
     // garbage.
+    lua_gc(L, LUA_GCSTOP, 0);
+    lua_gc(L, LUA_GCCOLLECT, 0);
 }
 
 void smlua_shutdown(void) {
