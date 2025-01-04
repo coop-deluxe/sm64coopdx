@@ -11,13 +11,17 @@
 #include "object_fields.h"
 #include "pc/djui/djui_hud_utils.h"
 #include "pc/lua/smlua.h"
-#include "pc/lua/smlua_cobject_map.h"
 #include "pc/lua/utils/smlua_anim_utils.h"
 #include "pc/lua/utils/smlua_collision_utils.h"
 #include "pc/lua/utils/smlua_obj_utils.h"
 #include "pc/mods/mods.h"
 
 extern struct LuaObjectTable sLuaObjectTable[LOT_MAX];
+
+int gSmLuaCObjects = 0;
+int gSmLuaCPointers = 0;
+int gSmLuaCObjectMetatable = 0;
+int gSmLuaCPointerMetatable = 0;
 
 struct LuaObjectField* smlua_get_object_field_from_ot(struct LuaObjectTable* ot, const char* key) {
     // binary search
@@ -324,26 +328,28 @@ struct LuaObjectField* smlua_get_custom_field(lua_State* L, u32 lot, int keyInde
 /////////////////////
 
 static int smlua__get_field(lua_State* L) {
-    LUA_STACK_CHECK_BEGIN();
+    LUA_STACK_CHECK_BEGIN_NUM(1);
 
-    CObject *cobj = lua_touserdata(L, 1);
+    const CObject *cobj = lua_topointer(L, 1);
     enum LuaObjectType lot = cobj->lot;
     u64 pointer = (u64)(intptr_t) cobj->pointer;
 
-    const char *key = smlua_to_string(L, 2);
-    if (!gSmLuaConvertSuccess) {
+    const char *key = lua_tostring(L, 2);
+    if (!key) {
         LOG_LUA_LINE("Tried to get a non-string field of cobject");
         return 0;
     }
 
     // Legacy support
-    if (strcmp(key, "_pointer") == 0) {
-        lua_pushinteger(L, pointer);
-        return 1;
-    }
-    if (strcmp(key, "_lot") == 0) {
-        lua_pushinteger(L, cobj->lot);
-        return 1;
+    if (key[0] == '_') {
+        if (strcmp(key, "_lot") == 0) {
+            lua_pushinteger(L, lot);
+            return 1;
+        }
+        if (strcmp(key, "_pointer") == 0) {
+            lua_pushinteger(L, pointer);
+            return 1;
+        }
     }
 
     if (cobj->freed) {
@@ -359,8 +365,6 @@ static int smlua__get_field(lua_State* L) {
         LOG_LUA_LINE("_get_field on invalid key '%s', lot '%d'", key, lot);
         return 0;
     }
-
-    LUA_STACK_CHECK_END();
 
     u8* p = ((u8*)(intptr_t)pointer) + data->valueOffset;
     switch (data->valueType) {
@@ -406,18 +410,19 @@ static int smlua__get_field(lua_State* L) {
             return 0;
     }
 
+    LUA_STACK_CHECK_END();
     return 1;
 }
 
 static int smlua__set_field(lua_State* L) {
     LUA_STACK_CHECK_BEGIN();
 
-    CObject *cobj = lua_touserdata(L, 1);
+    const CObject *cobj = lua_topointer(L, 1);
     enum LuaObjectType lot = cobj->lot;
     u64 pointer = (u64)(intptr_t) cobj->pointer;
 
-    const char *key = smlua_to_string(L, 2);
-    if (!gSmLuaConvertSuccess) {
+    const char *key = lua_tostring(L, 2);
+    if (!key) {
         LOG_LUA_LINE("Tried to set a non-string field of cobject");
         return 0;
     }
@@ -496,37 +501,27 @@ static int smlua__set_field(lua_State* L) {
 }
 
 int smlua__eq(lua_State *L) {
-    CObject *a = lua_touserdata(L, 1);
-    CObject *b = lua_touserdata(L, 2);
-    lua_pushboolean(L, a->lot == b->lot && a->pointer == b->pointer);
+    const CObject *a = lua_touserdata(L, 1);
+    const CObject *b = lua_touserdata(L, 2);
+    lua_pushboolean(L, a && b && a->lot == b->lot && a->pointer == b->pointer);
     return 1;
 }
 
-int smlua__gc(lua_State *L) {
-    CObject *cobj = lua_touserdata(L, 1);
-    if (!cobj->freed) {
-        switch (cobj->lot) {
-            case LOT_SURFACE: {
-                smlua_pointer_user_data_delete((uintptr_t) cobj->pointer);
-            }
-        }
-    }
-    return 0;
-}
-
 static int smlua_cpointer_get(lua_State* L) {
-    CPointer *cptr = lua_touserdata(L, 1);
-    const char *key = smlua_to_string(L, 2);
+    const CPointer *cptr = lua_topointer(L, 1);
+    const char *key = lua_tostring(L, 2);
     if (key == NULL) { return 0; }
 
     // Legacy support
-    if (strcmp(key, "_pointer") == 0) {
-        lua_pushinteger(L, (u64)(intptr_t) cptr->pointer);
-        return 1;
-    }
-    if (strcmp(key, "_lot") == 0) {
-        lua_pushinteger(L, cptr->lvt);
-        return 1;
+    if (key[0] == '_') {
+        if (strcmp(key, "_pointer") == 0) {
+            lua_pushinteger(L, (u64)(intptr_t) cptr->pointer);
+            return 1;
+        }
+        if (strcmp(key, "_lot") == 0) {
+            lua_pushinteger(L, cptr->lvt);
+            return 1;
+        }
     }
 
     return 0;
@@ -540,17 +535,22 @@ static int smlua_cpointer_set(UNUSED lua_State* L) { return 0; }
 void smlua_cobject_init_globals(void) {
     lua_State* L = gLuaState;
 
+    // Create object pools
+    lua_newtable(L);
+    gSmLuaCObjects = luaL_ref(L, LUA_REGISTRYINDEX);
+    lua_newtable(L);
+    gSmLuaCPointers = luaL_ref(L, LUA_REGISTRYINDEX);
+
     // Create metatables
     luaL_newmetatable(L, "CObject");
     luaL_Reg cObjectMethods[] = {
         { "__index",    smlua__get_field },
         { "__newindex", smlua__set_field },
         { "__eq",       smlua__eq },
-        { "__gc",       smlua__gc },
         { NULL, NULL }
     };
     luaL_setfuncs(L, cObjectMethods, 0);
-    lua_pop(L, 1);
+    gSmLuaCObjectMetatable = luaL_ref(L, LUA_REGISTRYINDEX);
     luaL_newmetatable(L, "CPointer");
     luaL_Reg cPointerMethods[] = {
         { "__index",    smlua_cpointer_get },
@@ -559,7 +559,7 @@ void smlua_cobject_init_globals(void) {
         { NULL, NULL }
     };
     luaL_setfuncs(L, cPointerMethods, 0);
-    lua_pop(L, 1);
+    gSmLuaCPointerMetatable = luaL_ref(L, LUA_REGISTRYINDEX);
 
 #define EXPOSE_GLOBAL_ARRAY(lot, ptr, iterator) \
     { \
