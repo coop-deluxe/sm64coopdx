@@ -71,22 +71,22 @@ static struct LuaObjectField sVec4sFields[LUA_VEC4S_FIELD_COUNT] = {
 
 #define LUA_MAT4_FIELD_COUNT 16
 static struct LuaObjectField sMat4Fields[LUA_MAT4_FIELD_COUNT] = {
-    { "m00", LVT_F32, sizeof(f32) * 0, false, LOT_NONE },
-    { "m01", LVT_F32, sizeof(f32) * 1, false, LOT_NONE },
-    { "m02", LVT_F32, sizeof(f32) * 2, false, LOT_NONE },
-    { "m03", LVT_F32, sizeof(f32) * 3, false, LOT_NONE },
-    { "m10", LVT_F32, sizeof(f32) * 4, false, LOT_NONE },
-    { "m11", LVT_F32, sizeof(f32) * 5, false, LOT_NONE },
-    { "m12", LVT_F32, sizeof(f32) * 6, false, LOT_NONE },
-    { "m13", LVT_F32, sizeof(f32) * 7, false, LOT_NONE },
-    { "m20", LVT_F32, sizeof(f32) * 8, false, LOT_NONE },
-    { "m21", LVT_F32, sizeof(f32) * 9, false, LOT_NONE },
-    { "m22", LVT_F32, sizeof(f32) * 10, false, LOT_NONE },
-    { "m23", LVT_F32, sizeof(f32) * 11, false, LOT_NONE },
-    { "m30", LVT_F32, sizeof(f32) * 12, false, LOT_NONE },
-    { "m31", LVT_F32, sizeof(f32) * 13, false, LOT_NONE },
-    { "m32", LVT_F32, sizeof(f32) * 14, false, LOT_NONE },
-    { "m33", LVT_F32, sizeof(f32) * 15, false, LOT_NONE },
+    { "a", LVT_F32, sizeof(f32) * 0, false, LOT_NONE },
+    { "b", LVT_F32, sizeof(f32) * 1, false, LOT_NONE },
+    { "c", LVT_F32, sizeof(f32) * 2, false, LOT_NONE },
+    { "d", LVT_F32, sizeof(f32) * 3, false, LOT_NONE },
+    { "e", LVT_F32, sizeof(f32) * 4, false, LOT_NONE },
+    { "f", LVT_F32, sizeof(f32) * 5, false, LOT_NONE },
+    { "g", LVT_F32, sizeof(f32) * 6, false, LOT_NONE },
+    { "h", LVT_F32, sizeof(f32) * 7, false, LOT_NONE },
+    { "i", LVT_F32, sizeof(f32) * 8, false, LOT_NONE },
+    { "j", LVT_F32, sizeof(f32) * 9, false, LOT_NONE },
+    { "k", LVT_F32, sizeof(f32) * 10, false, LOT_NONE },
+    { "l", LVT_F32, sizeof(f32) * 11, false, LOT_NONE },
+    { "m", LVT_F32, sizeof(f32) * 12, false, LOT_NONE },
+    { "n", LVT_F32, sizeof(f32) * 13, false, LOT_NONE },
+    { "o", LVT_F32, sizeof(f32) * 14, false, LOT_NONE },
+    { "p", LVT_F32, sizeof(f32) * 15, false, LOT_NONE },
 };
 
 #define LUA_COLOR_FIELD_COUNT 3
