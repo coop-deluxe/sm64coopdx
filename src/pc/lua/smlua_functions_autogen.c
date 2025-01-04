@@ -120,38 +120,22 @@ static void smlua_push_vec4s(Vec4s src, int index) {
 }
 
 static void smlua_get_mat4(Mat4 dest, int index) {
-    dest[0][0] = smlua_get_number_field(index, "m00");
-    dest[0][1] = smlua_get_number_field(index, "m01");
-    dest[0][2] = smlua_get_number_field(index, "m02");
-    dest[0][3] = smlua_get_number_field(index, "m03");
-    dest[1][0] = smlua_get_number_field(index, "m10");
-    dest[1][1] = smlua_get_number_field(index, "m11");
-    dest[1][2] = smlua_get_number_field(index, "m12");
-    dest[1][3] = smlua_get_number_field(index, "m13");
-    dest[2][0] = smlua_get_number_field(index, "m20");
-    dest[2][1] = smlua_get_number_field(index, "m21");
-    dest[2][2] = smlua_get_number_field(index, "m22");
-    dest[2][3] = smlua_get_number_field(index, "m23");
-    dest[3][0] = smlua_get_number_field(index, "m30");
-    dest[3][1] = smlua_get_number_field(index, "m31");
-    dest[3][2] = smlua_get_number_field(index, "m32");
-    dest[3][3] = smlua_get_number_field(index, "m33");
-    dest[0][0] = smlua_get_number_field(index, "a");
-    dest[0][1] = smlua_get_number_field(index, "b");
-    dest[0][2] = smlua_get_number_field(index, "c");
-    dest[0][3] = smlua_get_number_field(index, "d");
-    dest[1][0] = smlua_get_number_field(index, "e");
-    dest[1][1] = smlua_get_number_field(index, "f");
-    dest[1][2] = smlua_get_number_field(index, "g");
-    dest[1][3] = smlua_get_number_field(index, "h");
-    dest[2][0] = smlua_get_number_field(index, "i");
-    dest[2][1] = smlua_get_number_field(index, "j");
-    dest[2][2] = smlua_get_number_field(index, "k");
-    dest[2][3] = smlua_get_number_field(index, "l");
-    dest[3][0] = smlua_get_number_field(index, "m");
-    dest[3][1] = smlua_get_number_field(index, "n");
-    dest[3][2] = smlua_get_number_field(index, "o");
-    dest[3][3] = smlua_get_number_field(index, "p");
+    dest[0][0] = smlua_get_number_field(index, "m00") || smlua_get_number_field(index, "a");
+    dest[0][1] = smlua_get_number_field(index, "m01") || smlua_get_number_field(index, "b");
+    dest[0][2] = smlua_get_number_field(index, "m02") || smlua_get_number_field(index, "c");
+    dest[0][3] = smlua_get_number_field(index, "m03") || smlua_get_number_field(index, "d");
+    dest[1][0] = smlua_get_number_field(index, "m10") || smlua_get_number_field(index, "e");
+    dest[1][1] = smlua_get_number_field(index, "m11") || smlua_get_number_field(index, "f");
+    dest[1][2] = smlua_get_number_field(index, "m12") || smlua_get_number_field(index, "g");
+    dest[1][3] = smlua_get_number_field(index, "m13") || smlua_get_number_field(index, "h");
+    dest[2][0] = smlua_get_number_field(index, "m20") || smlua_get_number_field(index, "i");
+    dest[2][1] = smlua_get_number_field(index, "m21") || smlua_get_number_field(index, "j");
+    dest[2][2] = smlua_get_number_field(index, "m22") || smlua_get_number_field(index, "k");
+    dest[2][3] = smlua_get_number_field(index, "m23") || smlua_get_number_field(index, "l");
+    dest[3][0] = smlua_get_number_field(index, "m30") || smlua_get_number_field(index, "m");
+    dest[3][1] = smlua_get_number_field(index, "m31") || smlua_get_number_field(index, "n");
+    dest[3][2] = smlua_get_number_field(index, "m32") || smlua_get_number_field(index, "o");
+    dest[3][3] = smlua_get_number_field(index, "m33") || smlua_get_number_field(index, "p");
 }
 
 static void smlua_push_mat4(Mat4 src, int index) {

@@ -767,13 +767,19 @@ def build_vec_types():
 
         # Get
         s += "static void smlua_get_%s(%s dest, int index) {\n" % (type_name.lower(), type_name)
-        for lua_field, c_field in vec_type["fields_mapping"].items():
-            s += "    dest%s = smlua_get_%s_field(index, \"%s\");\n" % (c_field, vec_type["field_lua_type"], lua_field)
+        optional_fields_list = list(vec_type.get("optional_fields_mapping", {}).keys())
+        for index, (lua_field, c_field) in enumerate(vec_type["fields_mapping"].items()):
+            s += "    dest%s = smlua_get_%s_field(index, \"%s\")" % (c_field, vec_type["field_lua_type"], lua_field)
+            if 'optional_fields_mapping' in vec_type:
+                s += " || smlua_get_%s_field(index, \"%s\")" % (vec_type["field_lua_type"], optional_fields_list[index])
+            s += ";\n"
         s += "}\n\n"
 
         # Push
         s += "static void smlua_push_%s(%s src, int index) {\n" % (type_name.lower(), type_name)
         for lua_field, c_field in vec_type["fields_mapping"].items():
+            s += "    smlua_push_%s_field(index, \"%s\", src%s);\n" % (vec_type["field_lua_type"], lua_field, c_field)
+        for lua_field, c_field in vec_type.get('optional_fields_mapping', {}).items():
             s += "    smlua_push_%s_field(index, \"%s\", src%s);\n" % (vec_type["field_lua_type"], lua_field, c_field)
         s += "}\n\n"
 

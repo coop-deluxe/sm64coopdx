@@ -392,12 +392,19 @@ def build_vec_types():
     s = gen_comment_header("vec types")
 
     for type_name, vec_type in VEC_TYPES.items():
-        s += '#define LUA_%s_FIELD_COUNT %d\n' % (type_name.upper(), len(vec_type['fields_mapping']))
+        optional_fields = vec_type.get('optional_fields_mapping', {})
+        s += '#define LUA_%s_FIELD_COUNT %d\n' % (type_name.upper(), len(vec_type['fields_mapping']) + len(optional_fields))
         s += 'static struct LuaObjectField s%sFields[LUA_%s_FIELD_COUNT] = {\n' % (type_name, type_name.upper())
 
         field_c_type = vec_type['field_c_type']
-        for i, lua_field in enumerate(vec_type['fields_mapping'].keys()):
-            s += '    { "%s", LVT_%s, sizeof(%s) * %d, false, LOT_NONE },\n' % (lua_field, field_c_type.upper(), field_c_type, i)
+        combined_fields = [
+            (index, field_name)
+            for mapping in [vec_type['fields_mapping'], optional_fields]
+            for index, field_name in enumerate(mapping.keys())
+        ]
+        sorted_fields_with_order = sorted(combined_fields, key=lambda x: x[1]) # sort alphabetically
+        for original_index, lua_field in sorted_fields_with_order:
+            s += '    { "%s", LVT_%s, sizeof(%s) * %d, false, LOT_NONE },\n' % (lua_field, field_c_type.upper(), field_c_type, original_index)
 
         s += '};\n\n'
 
