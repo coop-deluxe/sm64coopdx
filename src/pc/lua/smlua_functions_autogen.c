@@ -120,41 +120,41 @@ static void smlua_push_vec4s(Vec4s src, int index) {
 }
 
 static void smlua_get_mat4(Mat4 dest, int index) {
-    dest[0][0] = smlua_get_number_field(index, "m00");
-    dest[0][1] = smlua_get_number_field(index, "m01");
-    dest[0][2] = smlua_get_number_field(index, "m02");
-    dest[0][3] = smlua_get_number_field(index, "m03");
-    dest[1][0] = smlua_get_number_field(index, "m10");
-    dest[1][1] = smlua_get_number_field(index, "m11");
-    dest[1][2] = smlua_get_number_field(index, "m12");
-    dest[1][3] = smlua_get_number_field(index, "m13");
-    dest[2][0] = smlua_get_number_field(index, "m20");
-    dest[2][1] = smlua_get_number_field(index, "m21");
-    dest[2][2] = smlua_get_number_field(index, "m22");
-    dest[2][3] = smlua_get_number_field(index, "m23");
-    dest[3][0] = smlua_get_number_field(index, "m30");
-    dest[3][1] = smlua_get_number_field(index, "m31");
-    dest[3][2] = smlua_get_number_field(index, "m32");
-    dest[3][3] = smlua_get_number_field(index, "m33");
+    dest[0][0] = smlua_get_number_field(index, "a");
+    dest[0][1] = smlua_get_number_field(index, "b");
+    dest[0][2] = smlua_get_number_field(index, "c");
+    dest[0][3] = smlua_get_number_field(index, "d");
+    dest[1][0] = smlua_get_number_field(index, "e");
+    dest[1][1] = smlua_get_number_field(index, "f");
+    dest[1][2] = smlua_get_number_field(index, "g");
+    dest[1][3] = smlua_get_number_field(index, "h");
+    dest[2][0] = smlua_get_number_field(index, "i");
+    dest[2][1] = smlua_get_number_field(index, "j");
+    dest[2][2] = smlua_get_number_field(index, "k");
+    dest[2][3] = smlua_get_number_field(index, "l");
+    dest[3][0] = smlua_get_number_field(index, "m");
+    dest[3][1] = smlua_get_number_field(index, "n");
+    dest[3][2] = smlua_get_number_field(index, "o");
+    dest[3][3] = smlua_get_number_field(index, "p");
 }
 
 static void smlua_push_mat4(Mat4 src, int index) {
-    smlua_push_number_field(index, "m00", src[0][0]);
-    smlua_push_number_field(index, "m01", src[0][1]);
-    smlua_push_number_field(index, "m02", src[0][2]);
-    smlua_push_number_field(index, "m03", src[0][3]);
-    smlua_push_number_field(index, "m10", src[1][0]);
-    smlua_push_number_field(index, "m11", src[1][1]);
-    smlua_push_number_field(index, "m12", src[1][2]);
-    smlua_push_number_field(index, "m13", src[1][3]);
-    smlua_push_number_field(index, "m20", src[2][0]);
-    smlua_push_number_field(index, "m21", src[2][1]);
-    smlua_push_number_field(index, "m22", src[2][2]);
-    smlua_push_number_field(index, "m23", src[2][3]);
-    smlua_push_number_field(index, "m30", src[3][0]);
-    smlua_push_number_field(index, "m31", src[3][1]);
-    smlua_push_number_field(index, "m32", src[3][2]);
-    smlua_push_number_field(index, "m33", src[3][3]);
+    smlua_push_number_field(index, "a", src[0][0]);
+    smlua_push_number_field(index, "b", src[0][1]);
+    smlua_push_number_field(index, "c", src[0][2]);
+    smlua_push_number_field(index, "d", src[0][3]);
+    smlua_push_number_field(index, "e", src[1][0]);
+    smlua_push_number_field(index, "f", src[1][1]);
+    smlua_push_number_field(index, "g", src[1][2]);
+    smlua_push_number_field(index, "h", src[1][3]);
+    smlua_push_number_field(index, "i", src[2][0]);
+    smlua_push_number_field(index, "j", src[2][1]);
+    smlua_push_number_field(index, "k", src[2][2]);
+    smlua_push_number_field(index, "l", src[2][3]);
+    smlua_push_number_field(index, "m", src[3][0]);
+    smlua_push_number_field(index, "n", src[3][1]);
+    smlua_push_number_field(index, "o", src[3][2]);
+    smlua_push_number_field(index, "p", src[3][3]);
 }
 
 static void smlua_get_color(Color dest, int index) {
