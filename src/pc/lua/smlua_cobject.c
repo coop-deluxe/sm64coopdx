@@ -330,7 +330,7 @@ struct LuaObjectField* smlua_get_custom_field(lua_State* L, u32 lot, int keyInde
 static int smlua__get_field(lua_State* L) {
     LUA_STACK_CHECK_BEGIN_NUM(1);
 
-    const CObject *cobj = lua_topointer(L, 1);
+    const CObject *cobj = lua_touserdata(L, 1);
     enum LuaObjectType lot = cobj->lot;
     u64 pointer = (u64)(intptr_t) cobj->pointer;
 
@@ -417,7 +417,7 @@ static int smlua__get_field(lua_State* L) {
 static int smlua__set_field(lua_State* L) {
     LUA_STACK_CHECK_BEGIN();
 
-    const CObject *cobj = lua_topointer(L, 1);
+    const CObject *cobj = lua_touserdata(L, 1);
     enum LuaObjectType lot = cobj->lot;
     u64 pointer = (u64)(intptr_t) cobj->pointer;
 
@@ -508,7 +508,7 @@ int smlua__eq(lua_State *L) {
 }
 
 static int smlua_cpointer_get(lua_State* L) {
-    const CPointer *cptr = lua_topointer(L, 1);
+    const CPointer *cptr = lua_touserdata(L, 1);
     const char *key = lua_tostring(L, 2);
     if (key == NULL) { return 0; }
 
@@ -547,6 +547,7 @@ void smlua_cobject_init_globals(void) {
         { "__index",    smlua__get_field },
         { "__newindex", smlua__set_field },
         { "__eq",       smlua__eq },
+        { "__metatable", NULL },
         { NULL, NULL }
     };
     luaL_setfuncs(L, cObjectMethods, 0);
@@ -556,6 +557,7 @@ void smlua_cobject_init_globals(void) {
         { "__index",    smlua_cpointer_get },
         { "__newindex", smlua_cpointer_set },
         { "__eq",       smlua__eq },
+        { "__metatable", NULL },
         { NULL, NULL }
     };
     luaL_setfuncs(L, cPointerMethods, 0);
