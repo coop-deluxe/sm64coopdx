@@ -144,9 +144,13 @@ override_allowed_structs = {
 sLuaManuallyDefinedStructs = [{
     'path': 'n/a',
     'structs': [
-        'struct Vec3f { float x; float y; float z; }',
-        'struct Vec3s { s16 x; s16 y; s16 z; }',
-        'struct Color { u8 r; u8 g; u8 b; }'
+        'struct %s { %s }' % (
+            type_name,
+            ' '.join([
+                '%s %s;' % (vec_type['field_c_type'], lua_field)
+                for lua_field in vec_type['fields_mapping'].keys()
+            ])
+        ) for type_name, vec_type in VEC_TYPES.items()
     ]
 }]
 
@@ -254,7 +258,7 @@ def table_to_string(table):
 
 ############################################################################
 
-def parse_struct(struct_str):
+def parse_struct(struct_str, sortFields = True):
     struct = {}
     identifier = struct_str.split(' ')[1]
     struct['identifier'] = identifier
@@ -291,15 +295,16 @@ def parse_struct(struct_str):
     if identifier == 'Object':
         struct['fields'] += extract_object_fields()
 
-    struct['fields'] = sorted(struct['fields'], key=lambda d: d['identifier'])
+    if sortFields:
+        struct['fields'] = sorted(struct['fields'], key=lambda d: d['identifier'])
 
     return struct
 
-def parse_structs(extracted):
+def parse_structs(extracted, sortFields = True):
     structs = []
     for e in extracted:
         for struct in e['structs']:
-            parsed = parse_struct(struct)
+            parsed = parse_struct(struct, sortFields)
             if e['path'] in override_allowed_structs:
                 if parsed['identifier'] not in override_allowed_structs[e['path']]:
                     continue
@@ -647,7 +652,7 @@ def doc_struct(struct):
     return s
 
 def doc_structs(structs):
-    structs.extend(parse_structs(sLuaManuallyDefinedStructs))
+    structs.extend(parse_structs(sLuaManuallyDefinedStructs, False)) # Don't sort fields for vec types in the documentation
     structs = sorted(structs, key=lambda d: d['identifier'])
 
     s = '## [:rewind: Lua Reference](lua.md)\n\n'

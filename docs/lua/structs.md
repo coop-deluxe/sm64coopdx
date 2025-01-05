@@ -70,6 +70,7 @@
 - [MarioAnimation](#MarioAnimation)
 - [MarioBodyState](#MarioBodyState)
 - [MarioState](#MarioState)
+- [Mat4](#Mat4)
 - [Mod](#Mod)
 - [ModAudio](#ModAudio)
 - [ModAudioSampleCopies](#ModAudioSampleCopies)
@@ -103,8 +104,11 @@
 - [TransitionInfo](#TransitionInfo)
 - [UnusedArea28](#UnusedArea28)
 - [VblankHandler](#VblankHandler)
+- [Vec2f](#Vec2f)
 - [Vec3f](#Vec3f)
 - [Vec3s](#Vec3s)
+- [Vec4f](#Vec4f)
+- [Vec4s](#Vec4s)
 - [WallCollisionData](#WallCollisionData)
 - [WarpNode](#WarpNode)
 - [WarpTransition](#WarpTransition)
@@ -759,9 +763,9 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
-| b | `integer` |  |
-| g | `integer` |  |
 | r | `integer` |  |
+| g | `integer` |  |
+| b | `integer` |  |
 
 [:arrow_up_small:](#)
 
@@ -1788,6 +1792,31 @@
 | wallNormal | [Vec3f](structs.md#Vec3f) | read-only |
 | wasNetworkVisible | `integer` |  |
 | waterLevel | `integer` |  |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [Mat4](#Mat4)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| m00 | `number` |  |
+| m01 | `number` |  |
+| m02 | `number` |  |
+| m03 | `number` |  |
+| m10 | `number` |  |
+| m11 | `number` |  |
+| m12 | `number` |  |
+| m13 | `number` |  |
+| m20 | `number` |  |
+| m21 | `number` |  |
+| m22 | `number` |  |
+| m23 | `number` |  |
+| m30 | `number` |  |
+| m31 | `number` |  |
+| m32 | `number` |  |
+| m33 | `number` |  |
 
 [:arrow_up_small:](#)
 
@@ -3088,6 +3117,17 @@
 
 <br />
 
+## [Vec2f](#Vec2f)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| x | `number` |  |
+| y | `number` |  |
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [Vec3f](#Vec3f)
 
 | Field | Type | Access |
@@ -3107,6 +3147,32 @@
 | x | `integer` |  |
 | y | `integer` |  |
 | z | `integer` |  |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [Vec4f](#Vec4f)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| x | `number` |  |
+| y | `number` |  |
+| z | `number` |  |
+| w | `number` |  |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [Vec4s](#Vec4s)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| x | `integer` |  |
+| y | `integer` |  |
+| z | `integer` |  |
+| w | `integer` |  |
 
 [:arrow_up_small:](#)
 
