@@ -226,6 +226,7 @@ void djui_panel_host_mods_create(struct DjuiBase* caller) {
         }
         djui_selectionbox_create(body, DLANG(HOST_MODS, CATEGORIES), categoryChoices, numCategories, &sSelectedCategory, djui_panel_on_categories_change);
         struct DjuiPaginated* paginated = djui_paginated_create(body, 8);
+        paginated->showMaxCount = true;
         sModLayout = paginated->layout;
         djui_panel_host_mods_add_mods(&paginated->layout->base);
         djui_paginated_calculate_height(paginated);
