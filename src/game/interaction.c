@@ -671,9 +671,9 @@ u32 determine_knockback_action(struct MarioState *m, UNUSED s32 arg) {
 
     // set knockback very high when dealing with player attacks
     if (m->interactObj != NULL && (m->interactObj->oInteractType & INTERACT_PLAYER) && terrainIndex != 2) {
-        f32 scaler = 1;
+        f32 scaler = 1.0f;
         s8 hasBeenPunched = FALSE;
-#define IF_REVAMPED_PVP(is, isNot) gServerSettings.pvpType == PLAYER_PVP_REVAMPED ? (is) : (isNot);
+#define IF_REVAMPED_PVP(is, isNot) (gServerSettings.pvpType == PLAYER_PVP_REVAMPED ? (is) : (isNot));
         for (s32 i = 0; i < MAX_PLAYERS; i++) {
             struct MarioState* m2 = &gMarioStates[i];
             if (!is_player_active(m2)) { continue; }
@@ -681,7 +681,7 @@ u32 determine_knockback_action(struct MarioState *m, UNUSED s32 arg) {
             if (m2->marioObj != m->interactObj) { continue; }
             // Redundent check in case the kicking flag somehow gets missed
             if (m2->action == ACT_JUMP_KICK || m2->flags & MARIO_KICKING) { scaler = IF_REVAMPED_PVP(1.85f, 2.0f); }
-            else if (m2->action == ACT_DIVE) { scaler = 1 + IF_REVAMPED_PVP(m2->forwardVel * 0.005f, 0); }
+            else if (m2->action == ACT_DIVE) { scaler = 1.0f + IF_REVAMPED_PVP(m2->forwardVel * 0.005f, 0.0f); }
             else if ((m2->flags & MARIO_PUNCHING)) { scaler = IF_REVAMPED_PVP(0.18f, 1.0f); hasBeenPunched = gServerSettings.pvpType == PLAYER_PVP_REVAMPED; }
             if (m2->flags & MARIO_METAL_CAP) { scaler *= 1.25f; }
             break;
