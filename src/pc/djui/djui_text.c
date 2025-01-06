@@ -65,16 +65,16 @@ static void djui_text_translate(f32 x, f32 y) {
 }
 
 static void djui_text_render_single_char(struct DjuiText* text, char* c) {
-    // struct DjuiBaseRect* comp = &text->base.comp;
+    struct DjuiBaseRect* comp = &text->base.comp;
 
-    // f32 dX = comp->x + sTextRenderX * text->fontScale;
-    // f32 dY = comp->y + sTextRenderY * text->fontScale;
-    // f32 dW = text->font->charWidth  * text->fontScale;
-    // f32 dH = text->font->charHeight * text->fontScale;
+    f32 dX = comp->x + sTextRenderX * text->fontScale;
+    f32 dY = comp->y + sTextRenderY * text->fontScale;
+    f32 dW = text->font->charWidth  * text->fontScale;
+    f32 dH = text->font->charHeight * text->fontScale;
 
-    // if (djui_gfx_add_clipping_specific(&text->base, dX, dY, dW, dH)) {
-    //     return;
-    // }
+    if (djui_gfx_add_clipping_specific(&text->base, dX, dY, dW, dH)) {
+        return;
+    }
 
     create_dl_translation_matrix(DJUI_MTX_NOPUSH, sTextRenderX - sTextRenderLastX, (sTextRenderY - sTextRenderLastY) * -1.0f, 0);
     text->font->render_char(c);

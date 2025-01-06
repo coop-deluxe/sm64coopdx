@@ -17,13 +17,12 @@ static void djui_font_normal_render_char(char* c) {
         index &= ~0x010000;
         u32 tx = index % 64;
         u32 ty = index / 64;
-        extern ALIGNED8 const u8 texture_font_jp[];
+        extern ALIGNED8 const Texture texture_font_jp[];
         djui_gfx_render_texture_tile(texture_font_jp, 512, 1024, 32, tx * 8, ty * 16, 8, 16, false, true);
-    }
-    else {
+    } else {
         u32 tx = index % 32;
         u32 ty = index / 32;
-        extern ALIGNED8 const u8 texture_font_normal[];
+        extern ALIGNED8 const Texture texture_font_normal[];
         djui_gfx_render_texture_tile(texture_font_normal, 256, 128, 32, tx * 8, ty * 16, 8, 16, false, true);
     }
 }
@@ -62,7 +61,7 @@ static void djui_font_title_render_char(char* c) {
     u32 tx = index % 16;
     u32 ty = index / 16;
 
-    extern ALIGNED8 const u8 texture_font_title[];
+    extern ALIGNED8 const Texture texture_font_title[];
     djui_gfx_render_texture_tile(texture_font_title, 1024, 512, 32, tx * 64, ty * 64, 64, 64, false, true);
 }
 
@@ -157,13 +156,12 @@ static void djui_font_aliased_render_char(char* c) {
         index &= ~0x010000;
         u32 tx = index % 64;
         u32 ty = index / 64;
-        extern ALIGNED8 const u8 texture_font_jp_aliased[];
+        extern ALIGNED8 const Texture texture_font_jp_aliased[];
         djui_gfx_render_texture_tile(texture_font_jp_aliased, 1024, 2048, 32, tx * 16, ty * 32, 16, 32, false, true);
-    }
-    else {
+    } else {
         u32 tx = index % 32;
         u32 ty = index / 32;
-        extern ALIGNED8 const u8 texture_font_aliased[];
+        extern ALIGNED8 const Texture texture_font_aliased[];
         djui_gfx_render_texture_tile(texture_font_aliased, 512, 256, 32, tx * 16, ty * 32, 16, 32, false, true);
     }
 }
@@ -197,7 +195,7 @@ static void djui_font_custom_hud_render_char(char* c) {
     u32 tx = index % 16;
     u32 ty = index / 16;
 
-    extern ALIGNED8 const u8 texture_font_hud[];
+    extern ALIGNED8 const Texture texture_font_hud[];
     djui_gfx_render_texture_tile(texture_font_hud, 512, 512, 32, tx * 32, ty * 32, 32, 32, false, true);
 }
 
@@ -210,7 +208,7 @@ static void djui_font_custom_hud_recolor_render_char(char* c) {
     u32 tx = index % 16;
     u32 ty = index / 16;
 
-    extern ALIGNED8 const u8 texture_font_hud_recolor[];
+    extern ALIGNED8 const Texture texture_font_hud_recolor[];
     djui_gfx_render_texture_tile(texture_font_hud_recolor, 512, 512, 32, tx * 32, ty * 32, 32, 32, false, true);
 }
 
@@ -251,11 +249,19 @@ static void djui_font_special_render_char(char* c) {
     if (*c == ' ') { return; }
 
     u32 index = djui_unicode_get_sprite_index(c);
-    u32 tx = index % 32;
-    u32 ty = index / 32;
+    if (index & 0x010000) {
+        index &= ~0x010000;
+        u32 tx = index % 64;
+        u32 ty = index / 64;
+        extern ALIGNED8 const Texture texture_font_jp[];
+        djui_gfx_render_texture_tile(texture_font_jp, 512, 1024, 32, tx * 8, ty * 16, 8, 16, false, true);
+    } else {
+        u32 tx = index % 32;
+        u32 ty = index / 32;
+        extern ALIGNED8 const Texture texture_font_special[];
+        djui_gfx_render_texture_tile(texture_font_special, 256, 128, 32, tx * 8, ty * 16, 8, 16, false, true);
+    }
 
-    extern ALIGNED8 const u8 texture_font_special[];
-    djui_gfx_render_texture_tile(texture_font_special, 256, 128, 32, tx * 8, ty * 16, 8, 16, false, true);
 }
 
 static f32 djui_font_special_char_width(char* c) {

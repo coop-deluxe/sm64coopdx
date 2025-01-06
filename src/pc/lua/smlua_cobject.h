@@ -65,6 +65,11 @@ typedef struct {
     bool freed;
 } CPointer;
 
+extern int gSmLuaCObjects;
+extern int gSmLuaCPointers;
+extern int gSmLuaCObjectMetatable;
+extern int gSmLuaCPointerMetatable;
+
 bool smlua_valid_lot(u16 lot);
 bool smlua_valid_lvt(u16 lvt);
 struct LuaObjectField* smlua_get_object_field_from_ot(struct LuaObjectTable* ot, const char* key);

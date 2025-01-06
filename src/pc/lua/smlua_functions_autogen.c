@@ -155,6 +155,22 @@ static void smlua_push_mat4(Mat4 src, int index) {
     smlua_push_number_field(index, "m31", src[3][1]);
     smlua_push_number_field(index, "m32", src[3][2]);
     smlua_push_number_field(index, "m33", src[3][3]);
+    smlua_push_number_field(index, "a", src[0][0]);
+    smlua_push_number_field(index, "b", src[0][1]);
+    smlua_push_number_field(index, "c", src[0][2]);
+    smlua_push_number_field(index, "d", src[0][3]);
+    smlua_push_number_field(index, "e", src[1][0]);
+    smlua_push_number_field(index, "f", src[1][1]);
+    smlua_push_number_field(index, "g", src[1][2]);
+    smlua_push_number_field(index, "h", src[1][3]);
+    smlua_push_number_field(index, "i", src[2][0]);
+    smlua_push_number_field(index, "j", src[2][1]);
+    smlua_push_number_field(index, "k", src[2][2]);
+    smlua_push_number_field(index, "l", src[2][3]);
+    smlua_push_number_field(index, "m", src[3][0]);
+    smlua_push_number_field(index, "n", src[3][1]);
+    smlua_push_number_field(index, "o", src[3][2]);
+    smlua_push_number_field(index, "p", src[3][3]);
 }
 
 static void smlua_get_color(Color dest, int index) {
@@ -12955,7 +12971,7 @@ int smlua_func_play_sound(lua_State* L) {
     s32 soundBits = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "play_sound"); return 0; }
 
-    Vec3f pos;
+    f32 *pos = smlua_get_vec3f_from_buffer();
     smlua_get_vec3f(pos, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "play_sound"); return 0; }
 
@@ -12978,7 +12994,7 @@ int smlua_func_play_sound_with_freq_scale(lua_State* L) {
     s32 soundBits = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "play_sound_with_freq_scale"); return 0; }
 
-    Vec3f pos;
+    f32 *pos = smlua_get_vec3f_from_buffer();
     smlua_get_vec3f(pos, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "play_sound_with_freq_scale"); return 0; }
     f32 freqScale = smlua_to_number(L, 3);
@@ -13270,7 +13286,7 @@ int smlua_func_stop_sound(lua_State* L) {
     u32 soundBits = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "stop_sound"); return 0; }
 
-    Vec3f pos;
+    f32 *pos = smlua_get_vec3f_from_buffer();
     smlua_get_vec3f(pos, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "stop_sound"); return 0; }
 
@@ -13291,7 +13307,7 @@ int smlua_func_stop_sounds_from_source(lua_State* L) {
     }
 
 
-    Vec3f pos;
+    f32 *pos = smlua_get_vec3f_from_buffer();
     smlua_get_vec3f(pos, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "stop_sounds_from_source"); return 0; }
 
@@ -14762,6 +14778,23 @@ int smlua_func_fade_into_special_warp(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "fade_into_special_warp"); return 0; }
 
     fade_into_special_warp(arg, color);
+
+    return 1;
+}
+
+int smlua_func_get_instant_warp(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "get_instant_warp", 1, top);
+        return 0;
+    }
+
+    u8 index = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "get_instant_warp"); return 0; }
+
+    smlua_push_object(L, LOT_INSTANTWARP, get_instant_warp(index));
 
     return 1;
 }
@@ -32920,6 +32953,7 @@ void smlua_bind_functions_autogen(void) {
 
     // level_update.h
     smlua_bind_function(L, "fade_into_special_warp", smlua_func_fade_into_special_warp);
+    smlua_bind_function(L, "get_instant_warp", smlua_func_get_instant_warp);
     smlua_bind_function(L, "get_painting_warp_node", smlua_func_get_painting_warp_node);
     smlua_bind_function(L, "initiate_painting_warp", smlua_func_initiate_painting_warp);
     smlua_bind_function(L, "level_control_timer_running", smlua_func_level_control_timer_running);

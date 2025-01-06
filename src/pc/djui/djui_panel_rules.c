@@ -35,14 +35,14 @@ void djui_panel_rules_create(struct DjuiBase* caller) {
 
         struct DjuiText* text1 = djui_text_create(body, sRules);
         djui_base_set_location(&text1->base, 0, 0);
-        djui_base_set_size(&text1->base, (DJUI_DEFAULT_PANEL_WIDTH * (configDjuiThemeCenter ? DJUI_THEME_CENTERED_WIDTH : 1)) - 64, 11 * 27);
+        djui_base_set_size(&text1->base, (DJUI_DEFAULT_PANEL_WIDTH * (configDjuiThemeCenter ? DJUI_THEME_CENTERED_WIDTH : 1)) - 64, 11 * 30);
         djui_base_set_color(&text1->base, 220, 220, 220, 255);
         djui_text_set_drop_shadow(text1, 64, 64, 64, 100);
         djui_text_set_alignment(text1, DJUI_HALIGN_LEFT, DJUI_VALIGN_TOP);
 
         struct DjuiText* text2 = djui_text_create(body, DLANG(RULES, SUBJECT_TO_CHANGE));
         djui_base_set_location(&text2->base, 0, 0);
-        djui_base_set_size(&text2->base, (DJUI_DEFAULT_PANEL_WIDTH * (configDjuiThemeCenter ? DJUI_THEME_CENTERED_WIDTH : 1)) - 64, 2 * 27);
+        djui_base_set_size(&text2->base, (DJUI_DEFAULT_PANEL_WIDTH * (configDjuiThemeCenter ? DJUI_THEME_CENTERED_WIDTH : 1)) - 64, 2 * 30);
         djui_base_set_color(&text2->base, 220, 220, 220, 255);
         djui_text_set_drop_shadow(text2, 64, 64, 64, 100);
         djui_text_set_alignment(text2, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
@@ -50,7 +50,7 @@ void djui_panel_rules_create(struct DjuiBase* caller) {
         if (configRulesVersion != RULES_VERSION) {
             struct DjuiText* text3 = djui_text_create(body, DLANG(RULES, NOTICE));
             djui_base_set_location(&text3->base, 0, 0);
-            djui_base_set_size(&text3->base, (DJUI_DEFAULT_PANEL_WIDTH * (configDjuiThemeCenter ? DJUI_THEME_CENTERED_WIDTH : 1)) - 64, 3 * 27);
+            djui_base_set_size(&text3->base, (DJUI_DEFAULT_PANEL_WIDTH * (configDjuiThemeCenter ? DJUI_THEME_CENTERED_WIDTH : 1)) - 64, 3 * 30);
             djui_base_set_color(&text3->base, 220, 220, 220, 255);
             djui_text_set_drop_shadow(text3, 64, 64, 64, 100);
             djui_text_set_alignment(text3, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);

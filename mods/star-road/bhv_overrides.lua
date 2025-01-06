@@ -1,7 +1,7 @@
 --- @param o Object
 local function bhv_custom_koopa_the_quick_loop(o)
     if o.oKoopaMovementType >= KOOPA_BP_KOOPA_THE_QUICK_BASE then
-        if gNetworkPlayers[0].currLevelNum == 27 then
+        if gNetworkPlayers[0].currLevelNum == LEVEL_PSS then
             o.oKoopaTheQuickRaceIndex = 1
         else
             o.oKoopaTheQuickRaceIndex = 0
@@ -71,7 +71,7 @@ local function bhv_custom_big_bully_loop(o)
     end
 end
 
-id_bhvBigBully = hook_behavior(id_bhvBigBully, OBJ_LIST_GENACTOR, true, bhv_custom_big_bully_init, bhv_custom_big_bully_loop, "bhvBigBully")
+id_bhvBigBully = hook_behavior(id_bhvBigBully, OBJ_LIST_GENACTOR, true, bhv_custom_big_bully_init, bhv_custom_big_bully_loop, "bhvBigBullyBoss")
 
 ---------------------------------------------------
 

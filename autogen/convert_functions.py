@@ -84,7 +84,7 @@ override_allowed_functions = {
     "src/game/object_list_processor.h":     [ "set_object_respawn_info_bits" ],
     "src/game/mario_misc.h":                [ "bhv_toad.*", "bhv_unlock_door.*", "geo_get_.*_state" ],
     "src/pc/utils/misc.h":                  [ "update_all_mario_stars" ],
-    "src/game/level_update.h":              [ "level_trigger_warp", "get_painting_warp_node", "initiate_painting_warp", "warp_special", "lvl_set_current_level", "level_control_timer_running", "fade_into_special_warp" ],
+    "src/game/level_update.h":              [ "level_trigger_warp", "get_painting_warp_node", "initiate_painting_warp", "warp_special", "lvl_set_current_level", "level_control_timer_running", "fade_into_special_warp", "get_instant_warp" ],
     "src/game/area.h":                      [ "area_get_warp_node" ],
     "src/engine/level_script.h":            [ "area_create_warp_node" ],
     "src/game/ingame_menu.h":               [ "set_min_dialog_width", "set_dialog_override_pos", "reset_dialog_override_pos", "set_dialog_override_color", "reset_dialog_override_color", "set_menu_mode", "create_dialog_box", "create_dialog_box_with_var", "create_dialog_inverted_box", "create_dialog_box_with_response", "reset_dialog_render_state", "close_dialog_box", ],
@@ -172,6 +172,22 @@ vec_type_before = """
 
 vec_type_after = """
     smlua_push_%s($[IDENTIFIER], $[INDEX]);
+"""
+
+#
+# Special cases for sound functions
+#
+
+SOUND_FUNCTIONS = [
+    "play_sound",
+    "play_sound_with_freq_scale",
+    "stop_sound",
+    "stop_sounds_from_source",
+]
+
+vec3f_sound_before = """
+    f32 *$[IDENTIFIER] = smlua_get_vec3f_from_buffer();
+    smlua_get_vec3f($[IDENTIFIER], $[INDEX]);
 """
 
 ###########################################################
@@ -759,18 +775,23 @@ def build_vec_types():
         s += "static void smlua_push_%s(%s src, int index) {\n" % (type_name.lower(), type_name)
         for lua_field, c_field in vec_type["fields_mapping"].items():
             s += "    smlua_push_%s_field(index, \"%s\", src%s);\n" % (vec_type["field_lua_type"], lua_field, c_field)
+        for lua_field, c_field in vec_type.get('optional_fields_mapping', {}).items():
+            s += "    smlua_push_%s_field(index, \"%s\", src%s);\n" % (vec_type["field_lua_type"], lua_field, c_field)
         s += "}\n\n"
 
     return s
 
 ############################################################################
 
-def build_param(param, i):
+def build_param(fid, param, i):
     ptype = alter_type(param['type'])
     pid = param['identifier']
 
     if ptype in VEC_TYPES:
-        return (vec_type_before % (ptype, ptype.lower())).replace('$[IDENTIFIER]', str(pid)).replace('$[INDEX]', str(i))
+        if ptype == "Vec3f" and fid in SOUND_FUNCTIONS:
+            return vec3f_sound_before.replace('$[IDENTIFIER]', str(pid)).replace('$[INDEX]', str(i))
+        else:
+            return (vec_type_before % (ptype, ptype.lower())).replace('$[IDENTIFIER]', str(pid)).replace('$[INDEX]', str(i))
     elif ptype == 'bool':
         return '    %s %s = smlua_to_boolean(L, %d);\n' % (ptype, pid, i)
     elif ptype in integer_types:
@@ -870,7 +891,7 @@ def build_function(function, do_extern):
         if is_interact_func and param['identifier'] == 'interactType':
             s += "    // interactType skipped so mods can't lie about what interaction it is\n"
         else:
-            s += build_param(param, i)
+            s += build_param(fid, param, i)
             s += '    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %%u for function \'%%s\'", %d, "%s"); return 0; }\n' % (i, fid)
         i += 1
     s += '\n'

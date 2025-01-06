@@ -109,3 +109,16 @@ function spawn_object_abs_with_rot(parent, _, modelId, bhvId, x, y, z, rx, ry, r
 
     return childObj
 end
+
+
+--- @param obj Object
+--- Replacement for DROP_TO_FLOOR()
+function object_drop_to_floor(obj)
+    local x = obj.oPosX
+    local y = obj.oPosY
+    local z = obj.oPosZ
+
+    local floorHeight = find_floor_height(x, y + 200, z)
+    obj.oPosY = floorHeight
+    obj.oMoveFlags = (obj.oMoveFlags | OBJ_MOVE_ON_GROUND)
+end

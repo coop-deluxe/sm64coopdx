@@ -144,9 +144,13 @@ override_allowed_structs = {
 sLuaManuallyDefinedStructs = [{
     'path': 'n/a',
     'structs': [
-        'struct Vec3f { float x; float y; float z; }',
-        'struct Vec3s { s16 x; s16 y; s16 z; }',
-        'struct Color { u8 r; u8 g; u8 b; }'
+        'struct %s { %s }' % (
+            type_name,
+            ' '.join([
+                '%s %s;' % (vec_type['field_c_type'], lua_field)
+                for lua_field in vec_type['fields_mapping'].keys()
+            ])
+        ) for type_name, vec_type in VEC_TYPES.items()
     ]
 }]
 
@@ -254,7 +258,7 @@ def table_to_string(table):
 
 ############################################################################
 
-def parse_struct(struct_str):
+def parse_struct(struct_str, sortFields = True):
     struct = {}
     identifier = struct_str.split(' ')[1]
     struct['identifier'] = identifier
@@ -291,15 +295,16 @@ def parse_struct(struct_str):
     if identifier == 'Object':
         struct['fields'] += extract_object_fields()
 
-    struct['fields'] = sorted(struct['fields'], key=lambda d: d['identifier'])
+    if sortFields:
+        struct['fields'] = sorted(struct['fields'], key=lambda d: d['identifier'])
 
     return struct
 
-def parse_structs(extracted):
+def parse_structs(extracted, sortFields = True):
     structs = []
     for e in extracted:
         for struct in e['structs']:
-            parsed = parse_struct(struct)
+            parsed = parse_struct(struct, sortFields)
             if e['path'] in override_allowed_structs:
                 if parsed['identifier'] not in override_allowed_structs[e['path']]:
                     continue
@@ -392,12 +397,19 @@ def build_vec_types():
     s = gen_comment_header("vec types")
 
     for type_name, vec_type in VEC_TYPES.items():
-        s += '#define LUA_%s_FIELD_COUNT %d\n' % (type_name.upper(), len(vec_type['fields_mapping']))
+        optional_fields = vec_type.get('optional_fields_mapping', {})
+        s += '#define LUA_%s_FIELD_COUNT %d\n' % (type_name.upper(), len(vec_type['fields_mapping']) + len(optional_fields))
         s += 'static struct LuaObjectField s%sFields[LUA_%s_FIELD_COUNT] = {\n' % (type_name, type_name.upper())
 
         field_c_type = vec_type['field_c_type']
-        for i, lua_field in enumerate(vec_type['fields_mapping'].keys()):
-            s += '    { "%s", LVT_%s, sizeof(%s) * %d, false, LOT_NONE },\n' % (lua_field, field_c_type.upper(), field_c_type, i)
+        combined_fields = [
+            (index, field_name)
+            for mapping in [vec_type['fields_mapping'], optional_fields]
+            for index, field_name in enumerate(mapping.keys())
+        ]
+        sorted_fields_with_order = sorted(combined_fields, key=lambda x: x[1]) # sort alphabetically
+        for original_index, lua_field in sorted_fields_with_order:
+            s += '    { "%s", LVT_%s, sizeof(%s) * %d, false, LOT_NONE },\n' % (lua_field, field_c_type.upper(), field_c_type, original_index)
 
         s += '};\n\n'
 
@@ -640,7 +652,7 @@ def doc_struct(struct):
     return s
 
 def doc_structs(structs):
-    structs.extend(parse_structs(sLuaManuallyDefinedStructs))
+    structs.extend(parse_structs(sLuaManuallyDefinedStructs, False)) # Don't sort fields for vec types in the documentation
     structs = sorted(structs, key=lambda d: d['identifier'])
 
     s = '## [:rewind: Lua Reference](lua.md)\n\n'

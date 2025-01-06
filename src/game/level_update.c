@@ -251,7 +251,7 @@ u16 level_control_timer(s32 timerOp) {
 
 u32 pressed_pause(void) {
     if (gServerSettings.pauseAnywhere) {
-        if (get_dialog_id() < 0) {
+        if (get_dialog_id() < 0 && sCurrPlayMode == PLAY_MODE_NORMAL) {
             return gPlayer1Controller->buttonPressed & START_BUTTON;
         }
     } else {
@@ -422,6 +422,8 @@ void init_mario_after_warp(void) {
     u32 marioSpawnType = get_mario_spawn_type(spawnNode->object);
 
     if (gMarioState && gMarioState->action != ACT_UNINITIALIZED) {
+        struct Object *obj = spawnNode->object;
+        printf("init mario x: %f, y: %f, z: %f\n", obj->oPosX, obj->oPosY, obj->oPosZ);
         for (s32 i = 0; i < MAX_PLAYERS; i++) {
             gPlayerSpawnInfos[i].startPos[0] = (s16) spawnNode->object->oPosX;
             gPlayerSpawnInfos[i].startPos[1] = (s16) spawnNode->object->oPosY;
@@ -634,6 +636,14 @@ void warp_credits(void) {
     }
 }
 
+struct InstantWarp *get_instant_warp(u8 index) {
+    if (index >= 4) { return NULL; }
+    if (!gCurrentArea) { return NULL; }
+    if (gCurrentArea->instantWarps == NULL) { return NULL; }
+
+    return &gCurrentArea->instantWarps[index];
+}
+
 void check_instant_warp(void) {
     if (!gCurrentArea) { return; }
     s16 cameraAngle;
@@ -747,7 +757,7 @@ s16 music_changed_through_warp(s16 arg) {
 /**
  * Set the current warp type and destination level/area/node.
  */
-void initiate_warp(s16 destLevel, s16 destArea, s16 destWarpNode, s32 arg3) {
+void initiate_warp(s16 destLevel, s16 destArea, s16 destWarpNode, s32 arg) {
     if (destWarpNode >= WARP_NODE_CREDITS_MIN) {
         sWarpDest.type = WARP_TYPE_CHANGE_LEVEL;
     } else if (destLevel != gCurrLevelNum) {
@@ -761,7 +771,7 @@ void initiate_warp(s16 destLevel, s16 destArea, s16 destWarpNode, s32 arg3) {
     sWarpDest.levelNum = destLevel;
     sWarpDest.areaIdx = destArea;
     sWarpDest.nodeId = destWarpNode;
-    sWarpDest.arg = arg3;
+    sWarpDest.arg = arg;
 }
 
 /**
@@ -1343,6 +1353,7 @@ s32 play_mode_paused(void) {
         if (gDebugLevelSelect) {
             fade_into_special_warp(-9, 1);
         } else {
+            gCamera->cutscene = 0;
             initiate_warp(gLevelValues.exitCastleLevel, gLevelValues.exitCastleArea, gLevelValues.exitCastleWarpNode, 0);
             fade_into_special_warp(0, 0);
             gSavedCourseNum = COURSE_NONE;

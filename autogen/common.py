@@ -1,9 +1,8 @@
 import os
+from vec_types import *
 
 usf_types = ['u8', 'u16', 'u32', 'u64', 's8', 's16', 's32', 's64', 'f32']
-vec3_types = ['Vec3s', 'Vec3f', 'Color']
-vec4_types = ['Vec4s', 'Vec4f']
-mat4_types = ['Mat4'] # Mtx isn't defined in Lua so we can't actually use it here
+vec_types = list(VEC_TYPES.keys())
 typedef_pointers = ['BehaviorScript', 'ObjectAnimPointer', 'Collision', 'LevelScript', 'Trajectory']
 
 exclude_structs = [
@@ -62,21 +61,7 @@ def translate_type_to_lvt(ptype):
             return "LVT_" + ptype.upper() + "_P"
         return "LVT_" + ptype.upper()
 
-    if ptype in vec3_types:
-        if pointerLvl > 1:
-            return "LVT_???"
-        if pointerLvl == 1:
-            return "LVT_COBJECT_P"
-        return "LVT_COBJECT"
-
-    if ptype in vec4_types:
-        if pointerLvl > 1:
-            return "LVT_???"
-        if pointerLvl == 1:
-            return "LVT_COBJECT_P"
-        return "LVT_COBJECT"
-
-    if ptype in mat4_types:
+    if ptype in vec_types:
         if pointerLvl > 1:
             return "LVT_???"
         if pointerLvl == 1:
@@ -144,13 +129,7 @@ def translate_type_to_lot(ptype):
     if ptype == 'bool':
         return 'LOT_NONE'
 
-    if ptype in vec3_types:
-        return 'LOT_' + ptype.upper()
-
-    if ptype in vec4_types:
-        return 'LOT_' + ptype.upper()
-
-    if ptype in mat4_types:
+    if ptype in vec_types:
         return 'LOT_' + ptype.upper()
 
     if ptype == 'float':
