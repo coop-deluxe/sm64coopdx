@@ -1372,7 +1372,8 @@ u8 passes_pvp_interaction_checks(struct MarioState* attacker, struct MarioState*
                           || attacker->action == ACT_FORWARD_ROLLOUT || attacker->action == ACT_BACKWARD_ROLLOUT);
     u8 isVictimIntangible = (victim->action & ACT_FLAG_INTANGIBLE);
     u8 isVictimGroundPounding = (victim->action == ACT_GROUND_POUND) && (victim->actionState != 0);
-    u8 isVictimInRolloutFlip = (victim->action == ACT_FORWARD_ROLLOUT || victim->action == ACT_BACKWARD_ROLLOUT) && (victim->actionState == 1);
+    u8 isVictimInRolloutFlip = gServerSettings.pvpType == PLAYER_PVP_REVAMPED &&
+                                ((victim->action == ACT_FORWARD_ROLLOUT || victim->action == ACT_BACKWARD_ROLLOUT) && (victim->actionState == 1));
     if (victim->knockbackTimer != 0) {
         return false;
     }
@@ -1381,8 +1382,6 @@ u8 passes_pvp_interaction_checks(struct MarioState* attacker, struct MarioState*
         (attacker->action == ACT_PUNCHING || attacker->action == ACT_MOVE_PUNCHING) &&
         (victim->action == ACT_SOFT_BACKWARD_GROUND_KB || victim->action == ACT_SOFT_FORWARD_GROUND_KB)) {
         return true;
-    } else if (attacker->flags & MARIO_TRIPPING) {
-        return false;
     }
 
     return (!isInvulnerable && !isIgnoredAttack && !isAttackerInvulnerable && !isVictimIntangible && !isVictimGroundPounding && !isVictimInRolloutFlip);
