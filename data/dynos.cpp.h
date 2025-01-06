@@ -820,7 +820,7 @@ const void *DynOS_Level_GetScript(s32 aLevel);
 s32 DynOS_Level_GetModIndex(s32 aLevel);
 bool DynOS_Level_IsVanillaLevel(s32 aLevel);
 Collision *DynOS_Level_GetCollision(u32 aLevel, u16 aArea);
-s16 *DynOS_Level_GetWarp(s32 aLevel, s32 aArea, u8 aWarpId);
+s16 *DynOS_Level_GetWarp(s32 aLevel, s32 aArea, s8 aWarpId);
 s16 *DynOS_Level_GetWarpEntry(s32 aLevel, s32 aArea);
 s16 *DynOS_Level_GetWarpDeath(s32 aLevel, s32 aArea);
 u64 DynOS_Level_CmdGet(void *aCmd, u64 aOffset);
