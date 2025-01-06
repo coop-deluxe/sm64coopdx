@@ -162,7 +162,6 @@ void djui_render(void) {
     djui_panel_update();
     djui_popup_update();
 
-    djui_base_set_visible(&gDjuiPauseOptions->base, (sCurrPlayMode == PLAY_MODE_PAUSED));
     djui_base_set_visible(&gDjuiPauseOptions->base, (sCurrPlayMode == PLAY_MODE_PAUSED) && !gDjuiPanelPauseCreated);
     if (gDjuiRoot != NULL) {
         djui_base_render(&gDjuiRoot->base);

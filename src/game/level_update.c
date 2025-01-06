@@ -251,7 +251,7 @@ u16 level_control_timer(s32 timerOp) {
 
 u32 pressed_pause(void) {
     if (gServerSettings.pauseAnywhere) {
-        if (get_dialog_id() < 0 && !gWarpTransition.isActive && sDelayedWarpOp == WARP_OP_NONE) {
+        if (get_dialog_id() < 0 && sCurrPlayMode == PLAY_MODE_NORMAL) {
             return gPlayer1Controller->buttonPressed & START_BUTTON;
         }
     } else {
@@ -1351,6 +1351,7 @@ s32 play_mode_paused(void) {
         if (gDebugLevelSelect) {
             fade_into_special_warp(-9, 1);
         } else {
+            gCamera->cutscene = 0;
             initiate_warp(gLevelValues.exitCastleLevel, gLevelValues.exitCastleArea, gLevelValues.exitCastleWarpNode, 0);
             fade_into_special_warp(0, 0);
             gSavedCourseNum = COURSE_NONE;
