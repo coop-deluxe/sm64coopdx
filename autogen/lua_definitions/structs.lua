@@ -1118,6 +1118,7 @@
 --- @field public shadeR integer
 --- @field public torsoAngle Vec3s
 --- @field public torsoPos Vec3f
+--- @field public updateHeadPosTime integer
 --- @field public updateTorsoTime integer
 --- @field public wingFlutter integer
 
