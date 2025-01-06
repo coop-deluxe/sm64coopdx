@@ -422,6 +422,8 @@ void init_mario_after_warp(void) {
     u32 marioSpawnType = get_mario_spawn_type(spawnNode->object);
 
     if (gMarioState && gMarioState->action != ACT_UNINITIALIZED) {
+        struct Object *obj = spawnNode->object;
+        printf("init mario x: %f, y: %f, z: %f\n", obj->oPosX, obj->oPosY, obj->oPosZ);
         for (s32 i = 0; i < MAX_PLAYERS; i++) {
             gPlayerSpawnInfos[i].startPos[0] = (s16) spawnNode->object->oPosX;
             gPlayerSpawnInfos[i].startPos[1] = (s16) spawnNode->object->oPosY;
