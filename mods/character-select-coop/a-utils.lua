@@ -20,13 +20,13 @@ local dependacyFiles = {
 }
 local legacyFiles = {
     "voice.lua",
-    "palettes.lua"
+    "palettes.lua",
+    "z-anims.lua",
 }
 
 -- Check for Missing Files
 local missingDependacyFiles = false
 for i = 1, #dependacyFiles do
-    --log_to_console(dependacyFiles[i] .. " = " .. tostring(mod_file_exists(dependacyFiles[i])))
     if not mod_file_exists(dependacyFiles[i]) then
         log_to_console("Character Select file missing: '" .. dependacyFiles[i] .. "'", CONSOLE_MESSAGE_ERROR)
         missingDependacyFiles = true
@@ -41,7 +41,6 @@ end
 -- Check for Legacy Files
 local foundLegacyFiles = false
 for i = 1, #legacyFiles do
-    --log_to_console(dependacyFiles[i] .. " = " .. tostring(mod_file_exists(dependacyFiles[i])))
     if mod_file_exists(legacyFiles[i]) then
         log_to_console("Character Select legacy file found: '" .. legacyFiles[i] .. "'", CONSOLE_MESSAGE_ERROR)
         foundLegacyFiles = true
@@ -53,10 +52,11 @@ if foundLegacyFiles then
     return 0
 end
 
+-- Version Data --
 MOD_VERSION_API = 1
-MOD_VERSION_MAJOR = 11
-MOD_VERSION_MINOR = 3
-MOD_VERSION_INDEV = true
+MOD_VERSION_MAJOR = 12
+MOD_VERSION_MINOR = 0
+MOD_VERSION_INDEV = false
 MOD_VERSION_STRING = tostring(MOD_VERSION_API) .. "." .. tostring(MOD_VERSION_MAJOR) .. (MOD_VERSION_MINOR > 0 and ("." .. tostring(MOD_VERSION_MINOR)) or "") .. (MOD_VERSION_INDEV and " (In-Dev)" or "")
 
 ommActive = false

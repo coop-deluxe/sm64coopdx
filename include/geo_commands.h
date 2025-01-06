@@ -439,4 +439,21 @@
     CMD_PTR(background), \
     CMD_PTR(function)
 
+
+/**
+ * 0x22: Create switch-case scene graph node with a custom Lua callback
+ */
+#define GEO_SWITCH_CASE_EXT(count, luaTokenIndex) \
+    CMD_BBH(0x22, 0x00, count), \
+    CMD_W(luaTokenIndex)
+
+
+/**
+ * 0x23: Create dynamically generated displaylist scene graph node with a custom Lua callback
+ */
+#define GEO_ASM_EXT(param, luaTokenIndex) \
+    CMD_BBH(0x23, 0x00, param), \
+    CMD_W(luaTokenIndex)
+
+
 #endif // GEO_COMMANDS_H

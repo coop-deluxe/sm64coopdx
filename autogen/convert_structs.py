@@ -4,6 +4,7 @@ import sys
 from extract_structs import *
 from extract_object_fields import *
 from common import *
+from vec_types import *
 
 in_files = [
     "include/types.h",
@@ -87,6 +88,7 @@ override_field_invisible = {
     "MarioState": [ "visibleToEnemies" ],
     "NetworkPlayer": [ "gag", "moderator", "discordId" ],
     "GraphNode": [ "_guard1", "_guard2" ],
+    "FnGraphNode": [ "luaTokenIndex" ],
     "Object": [ "firstSurface" ],
     "ModAudio": [ "sound", "decoder", "buffer", "bufferSize", "sampleCopiesTail" ],
 }
@@ -142,9 +144,13 @@ override_allowed_structs = {
 sLuaManuallyDefinedStructs = [{
     'path': 'n/a',
     'structs': [
-        'struct Vec3f { float x; float y; float z; }',
-        'struct Vec3s { s16 x; s16 y; s16 z; }',
-        'struct Color { u8 r; u8 g; u8 b; }'
+        'struct %s { %s }' % (
+            type_name,
+            ' '.join([
+                '%s %s;' % (vec_type['field_c_type'], lua_field)
+                for lua_field in vec_type['fields_mapping'].keys()
+            ])
+        ) for type_name, vec_type in VEC_TYPES.items()
     ]
 }]
 
@@ -252,7 +258,7 @@ def table_to_string(table):
 
 ############################################################################
 
-def parse_struct(struct_str):
+def parse_struct(struct_str, sortFields = True):
     struct = {}
     identifier = struct_str.split(' ')[1]
     struct['identifier'] = identifier
@@ -289,15 +295,16 @@ def parse_struct(struct_str):
     if identifier == 'Object':
         struct['fields'] += extract_object_fields()
 
-    struct['fields'] = sorted(struct['fields'], key=lambda d: d['identifier'])
+    if sortFields:
+        struct['fields'] = sorted(struct['fields'], key=lambda d: d['identifier'])
 
     return struct
 
-def parse_structs(extracted):
+def parse_structs(extracted, sortFields = True):
     structs = []
     for e in extracted:
         for struct in e['structs']:
-            parsed = parse_struct(struct)
+            parsed = parse_struct(struct, sortFields)
             if e['path'] in override_allowed_structs:
                 if parsed['identifier'] not in override_allowed_structs[e['path']]:
                     continue
@@ -383,6 +390,39 @@ def output_fuzz_file():
         file_str = f.read()
     with open(fuzz_to, 'w') as f:
         f.write(file_str.replace('-- $[STRUCTS]', fuzz_structs).replace('-- $[FUZZ-STRUCTS]', fuzz_structs_calls))
+
+############################################################################
+
+def build_vec_types():
+    s = gen_comment_header("vec types")
+
+    for type_name, vec_type in VEC_TYPES.items():
+        optional_fields = vec_type.get('optional_fields_mapping', {})
+        s += '#define LUA_%s_FIELD_COUNT %d\n' % (type_name.upper(), len(vec_type['fields_mapping']) + len(optional_fields))
+        s += 'static struct LuaObjectField s%sFields[LUA_%s_FIELD_COUNT] = {\n' % (type_name, type_name.upper())
+
+        field_c_type = vec_type['field_c_type']
+        combined_fields = [
+            (index, field_name)
+            for mapping in [vec_type['fields_mapping'], optional_fields]
+            for index, field_name in enumerate(mapping.keys())
+        ]
+        sorted_fields_with_order = sorted(combined_fields, key=lambda x: x[1]) # sort alphabetically
+        for original_index, lua_field in sorted_fields_with_order:
+            s += '    { "%s", LVT_%s, sizeof(%s) * %d, false, LOT_NONE },\n' % (lua_field, field_c_type.upper(), field_c_type, original_index)
+
+        s += '};\n\n'
+
+    s += 'struct LuaObjectTable sLuaObjectTable[LOT_MAX] = {\n'
+    s += '    [LOT_NONE] = { LOT_NONE, NULL, 0 },\n'
+
+    for type_name in VEC_TYPES.keys():
+        s += '    [LOT_%s] = { LOT_%s, s%sFields, LUA_%s_FIELD_COUNT },\n' % (type_name.upper(), type_name.upper(), type_name, type_name.upper())
+
+    s += '    [LOT_POINTER] = { LOT_POINTER, NULL, 0 },\n'
+    s += '};\n\n'
+
+    return s
 
 ############################################################################
 
@@ -491,7 +531,9 @@ def build_structs(structs):
     return s
 
 def build_body(parsed):
-    built = build_structs(parsed)
+    built = build_vec_types()
+    built += gen_comment_header("autogen types")
+    built += build_structs(parsed)
     obj_table_row_built, obj_table_count = table_to_string(sLuaObjectTable)
 
     obj_table_built = 'struct LuaObjectTable sLuaObjectAutogenTable[LOT_AUTOGEN_MAX - LOT_AUTOGEN_MIN] = {\n'
@@ -501,7 +543,19 @@ def build_body(parsed):
     return built + obj_table_built
 
 def build_lot_enum():
-    s  = 'enum LuaObjectAutogenType {\n'
+    s = ''
+
+    s += 'enum LuaObjectType {\n'
+    s += '    LOT_NONE = 0,\n'
+
+    for type_name in VEC_TYPES.keys():
+        s += '    LOT_%s,\n' % (type_name.upper())
+
+    s += '    LOT_POINTER,\n'
+    s += '    LOT_MAX,\n'
+    s += '};\n\n'
+
+    s += 'enum LuaObjectAutogenType {\n'
     s += '    LOT_AUTOGEN_MIN = 1000,\n'
 
     global sLotAutoGenList
@@ -598,7 +652,7 @@ def doc_struct(struct):
     return s
 
 def doc_structs(structs):
-    structs.extend(parse_structs(sLuaManuallyDefinedStructs))
+    structs.extend(parse_structs(sLuaManuallyDefinedStructs, False)) # Don't sort fields for vec types in the documentation
     structs = sorted(structs, key=lambda d: d['identifier'])
 
     s = '## [:rewind: Lua Reference](lua.md)\n\n'

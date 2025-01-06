@@ -826,6 +826,7 @@
 --- @field public children GraphNode
 --- @field public extraFlags integer
 --- @field public flags integer
+--- @field public hookProcess integer
 --- @field public next GraphNode
 --- @field public parent GraphNode
 --- @field public prev GraphNode
@@ -2343,20 +2344,54 @@
 --- @field public unk00 integer
 --- @field public unk02 integer
 
+--- @class Vec2f
+--- @field public x number
+--- @field public y number
+
 --- @class Vec3f
 --- @field public x number
 --- @field public y number
 --- @field public z number
+
+--- @class Vec4f
+--- @field public x number
+--- @field public y number
+--- @field public z number
+--- @field public w number
 
 --- @class Vec3s
 --- @field public x integer
 --- @field public y integer
 --- @field public z integer
 
+--- @class Vec4s
+--- @field public x integer
+--- @field public y integer
+--- @field public z integer
+--- @field public w integer
+
+--- @class Mat4
+--- @field public m00 number
+--- @field public m01 number
+--- @field public m02 number
+--- @field public m03 number
+--- @field public m10 number
+--- @field public m11 number
+--- @field public m12 number
+--- @field public m13 number
+--- @field public m20 number
+--- @field public m21 number
+--- @field public m22 number
+--- @field public m23 number
+--- @field public m30 number
+--- @field public m31 number
+--- @field public m32 number
+--- @field public m33 number
+
 --- @class Color
---- @field public b integer
---- @field public g integer
 --- @field public r integer
+--- @field public g integer
+--- @field public b integer
 
 --- @class Pointer_integer
 --- @class Pointer_Trajectory

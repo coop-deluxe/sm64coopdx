@@ -65,6 +65,10 @@ struct LandingAction sBackflipLandAction = {
 
 Mat4 sFloorAlignMatrix[MAX_PLAYERS];
 
+/* |description|
+Tilts Mario's body according to his running speed and slope angle.
+Calculates a pitch offset used while running to simulate leaning forward at higher speeds or on slopes
+|descriptionEnd| */
 s16 tilt_body_running(struct MarioState *m) {
     if (!m) { return 0; }
     s16 pitch = find_floor_slope(m, 0);
@@ -72,6 +76,10 @@ s16 tilt_body_running(struct MarioState *m) {
     return -pitch;
 }
 
+/* |description|
+Checks the current animation frame against two specified frames to trigger footstep sounds.
+Also chooses specific sounds if Mario is wearing Metal Cap or is in quicksand
+|descriptionEnd| */
 void play_step_sound(struct MarioState *m, s16 frame1, s16 frame2) {
     if (!m) { return; }
     if (is_anim_past_frame(m, frame1) || is_anim_past_frame(m, frame2)) {
@@ -91,6 +99,9 @@ void play_step_sound(struct MarioState *m, s16 frame1, s16 frame2) {
     }
 }
 
+/* |description|
+Aligns Mario's position and model transformation matrix to match the floor's angle. Specifically: Sets Mario's vertical position to be at `m.floorHeight` plus any active character animation offset and adjusts Mario's `throwMatrix` so that his body appears flush with the floor
+|descriptionEnd| */
 void align_with_floor(struct MarioState *m) {
     if (!m) { return; }
     m->pos[1] = m->floorHeight + get_character_anim_offset(m);
@@ -98,6 +109,9 @@ void align_with_floor(struct MarioState *m) {
     m->marioObj->header.gfx.throwMatrix = &sFloorAlignMatrix[m->playerIndex];
 }
 
+/* |description|
+Sets Mario's facing yaw to his intended yaw, applies a specified forward velocity, and transitions to the given action (e.g., `ACT_WALKING`).
+|descriptionEnd| */
 s32 begin_walking_action(struct MarioState *m, f32 forwardVel, u32 action, u32 actionArg) {
     if (!m) { return 0; }
     m->faceAngle[1] = m->intendedYaw;
@@ -105,6 +119,10 @@ s32 begin_walking_action(struct MarioState *m, f32 forwardVel, u32 action, u32 a
     return set_mario_action(m, action, actionArg);
 }
 
+/* |description|
+Checks if Mario is near an edge while moving slowly and the floor below that edge is significantly lower.
+If the conditions are met, transitions Mario into a ledge-climb-down action and positions him accordingly on the edge
+|descriptionEnd| */
 void check_ledge_climb_down(struct MarioState *m) {
     if (!m) { return; }
     struct WallCollisionData wallCols;
@@ -143,6 +161,9 @@ void check_ledge_climb_down(struct MarioState *m) {
     }
 }
 
+/* |description|
+Handles the scenario where Mario slides into a wall. If Mario is moving fast, reflects his velocity and transitions to a fast knockback, Otherwise, stops his forward velocity and sets a slower knockback
+|descriptionEnd| */
 void slide_bonk(struct MarioState *m, u32 fastAction, u32 slowAction) {
     if (!m) { return; }
     if (m->forwardVel > 16.0f) {
@@ -154,6 +175,9 @@ void slide_bonk(struct MarioState *m, u32 fastAction, u32 slowAction) {
     }
 }
 
+/* |description|
+Determines the proper triple jump action based on Mario's forward velocity and the Wing Cap flag: Normal triple jump, flying triple jump, or just a single jump if not enough speed
+|descriptionEnd| */
 s32 set_triple_jump_action(struct MarioState *m, UNUSED u32 action, UNUSED u32 actionArg) {
     if (!m) { return FALSE; }
 
@@ -168,6 +192,11 @@ s32 set_triple_jump_action(struct MarioState *m, UNUSED u32 action, UNUSED u32 a
     return FALSE;
 }
 
+/* |description|
+Adjusts Mario's slide velocity and facing angle when on a slope.
+Calculates slope direction and steepness, then modifies velocity accordingly (speed up downhill, slow uphill).
+Handles facing-direction changes and maximum speed limits
+|descriptionEnd| */
 void update_sliding_angle(struct MarioState *m, f32 accel, f32 lossFactor) {
     if (!m) { return; }
     s32 newFacingDYaw;
@@ -231,6 +260,11 @@ void update_sliding_angle(struct MarioState *m, f32 accel, f32 lossFactor) {
     }
 }
 
+/* |description|
+Updates Mario's sliding state each frame, applying additional friction or acceleration based on the surface's slipperiness.
+Also checks if speed has slowed below a threshold to end the slide.
+Returns `true` if sliding has stopped
+|descriptionEnd| */
 s32 update_sliding(struct MarioState *m, f32 stopSpeed) {
     if (!m) { return FALSE; }
     f32 lossFactor;
@@ -296,6 +330,10 @@ s32 update_sliding(struct MarioState *m, f32 stopSpeed) {
     return stopped;
 }
 
+/* |description|
+Applies acceleration or deceleration based on the slope of the floor.
+On downward slopes, Mario gains speed, while on upward slopes, Mario loses speed
+|descriptionEnd| */
 void apply_slope_accel(struct MarioState *m) {
     if (!m) { return; }
     f32 slopeAccel;
@@ -349,6 +387,10 @@ void apply_slope_accel(struct MarioState *m) {
     mario_update_windy_ground(m);
 }
 
+/* |description|
+Applies friction-like deceleration if the floor is flat, or slope-based acceleration if the floor is sloped.
+Capped in such a way that Mario eventually stops or stabilizes on flatter ground
+|descriptionEnd| */
 s32 apply_landing_accel(struct MarioState *m, f32 frictionFactor) {
     if (!m) { return FALSE; }
     s32 stopped = FALSE;
@@ -366,6 +408,9 @@ s32 apply_landing_accel(struct MarioState *m, f32 frictionFactor) {
     return stopped;
 }
 
+/* |description|
+Controls Mario's speed when riding a Koopa Shell on the ground.
+|descriptionEnd| */
 void update_shell_speed(struct MarioState *m) {
     if (!m || !m->floor) { return; }
     f32 maxTargetSpeed;
@@ -410,6 +455,10 @@ void update_shell_speed(struct MarioState *m) {
     apply_slope_accel(m);
 }
 
+/* |description|
+Approaches Mario's forward velocity toward zero at a rate dependent on the floor's slipperiness.
+This function can completely stop Mario if the slope is gentle enough or if friction is high
+|descriptionEnd| */
 s32 apply_slope_decel(struct MarioState *m, f32 decelCoef) {
     if (!m) { return 0; }
     f32 decel;
@@ -438,6 +487,10 @@ s32 apply_slope_decel(struct MarioState *m, f32 decelCoef) {
     return stopped;
 }
 
+/* |description|
+Gradually reduces Mario's forward speed to zero over time on level ground, unless otherwise influenced by slope or friction.
+Returns true if Mario's speed reaches zero, meaning he has stopped
+|descriptionEnd| */
 s32 update_decelerating_speed(struct MarioState *m) {
     if (!m) { return 0; }
     s32 stopped = FALSE;
@@ -453,6 +506,11 @@ s32 update_decelerating_speed(struct MarioState *m) {
     return stopped;
 }
 
+
+/* |description|
+Updates Mario's walking speed based on player input and floor conditions (e.g., a slow floor or quicksand).
+Caps speed at a certain value and may reduce it slightly on steep slopes
+|descriptionEnd| */
 void update_walking_speed(struct MarioState *m) {
     if (!m) { return; }
     f32 maxTargetSpeed;
@@ -486,6 +544,10 @@ void update_walking_speed(struct MarioState *m) {
     apply_slope_accel(m);
 }
 
+/* |description|
+Checks if Mario should begin sliding, based on player input (facing downhill, pressing the analog stick backward, or on a slide terrain), and current floor steepness.
+Returns true if conditions to slide are met.
+|descriptionEnd| */
 s32 should_begin_sliding(struct MarioState *m) {
     if (!m) { return FALSE; }
     if (m->input & INPUT_ABOVE_SLIDE) {
@@ -500,12 +562,20 @@ s32 should_begin_sliding(struct MarioState *m) {
     return FALSE;
 }
 
+/* |description|
+Checks if the analog stick is held significantly behind Mario's current facing angle.
+Returns true if the stick is far enough in the opposite direction, indicating Mario wants to move backward
+|descriptionEnd| */
 s32 analog_stick_held_back(struct MarioState *m) {
     if (!m) { return FALSE; }
     s16 intendedDYaw = m->intendedYaw - m->faceAngle[1];
     return intendedDYaw < -0x471C || intendedDYaw > 0x471C;
 }
 
+/* |description|
+Checks if the B button was pressed to either initiate a dive (if moving fast enough) or a punch (if moving slowly).
+Returns `true` if the action was changed to either a dive or a punching attack
+|descriptionEnd| */
 s32 check_ground_dive_or_punch(struct MarioState *m) {
     if (!m) { return FALSE; }
     UNUSED s32 unused;
@@ -523,6 +593,10 @@ s32 check_ground_dive_or_punch(struct MarioState *m) {
     return FALSE;
 }
 
+/* |description|
+Begins a braking action if Mario's forward velocity is high enough or transitions to a decelerating action otherwise.
+Also handles the scenario where Mario is up against a wall, transitioning to a standing state
+|descriptionEnd| */
 s32 begin_braking_action(struct MarioState *m) {
     if (!m) { return FALSE; }
     mario_drop_held_object(m);
@@ -539,6 +613,10 @@ s32 begin_braking_action(struct MarioState *m) {
     return set_mario_action(m, ACT_DECELERATING, 0);
 }
 
+/* |description|
+Handles the animation and audio (footstep sounds) for normal walking or running.
+The specific animation used (tiptoe, walk, or run) depends on Mario's current speed
+|descriptionEnd| */
 void anim_and_audio_for_walk(struct MarioState *m) {
     if (!m) { return; }
     s32 val14;
@@ -634,6 +712,10 @@ void anim_and_audio_for_walk(struct MarioState *m) {
     marioObj->header.gfx.angle[0] = marioObj->oMarioWalkingPitch;
 }
 
+/* |description|
+Plays the appropriate animation and footstep sounds for walking while carrying a lighter object (like a small box).
+Adjusts the animation speed dynamically based on Mario's velocity
+|descriptionEnd| */
 void anim_and_audio_for_hold_walk(struct MarioState *m) {
     if (!m) { return; }
     s32 val0C;
@@ -696,6 +778,10 @@ void anim_and_audio_for_hold_walk(struct MarioState *m) {
     }
 }
 
+/* |description|
+Plays the appropriate animation and footstep sounds for walking while carrying a heavy object.
+Sets the character animation speed based on Mario's intended movement speed
+|descriptionEnd| */
 void anim_and_audio_for_heavy_walk(struct MarioState *m) {
     if (!m) { return; }
     s32 val04 = (s32)(m->intendedMag * 0x10000);
@@ -703,6 +789,9 @@ void anim_and_audio_for_heavy_walk(struct MarioState *m) {
     play_step_sound(m, 26, 79);
 }
 
+/* |description|
+When Mario hits a wall during movement, decides whether he's pushing against the wall or sidling along it. Plays pushing animations and sounds if he's head-on, sidles along the wall if he's more angled
+|descriptionEnd| */
 void push_or_sidle_wall(struct MarioState *m, Vec3f startPos) {
     if (!m) { return; }
     s16 wallAngle = 0;
@@ -745,6 +834,10 @@ void push_or_sidle_wall(struct MarioState *m, Vec3f startPos) {
     }
 }
 
+/* |description|
+Applies a left/right tilt to Mario's torso (and some pitch if running fast) while walking or running.
+The tilt is based on his change in yaw and current speed, giving a leaning appearance when turning
+|descriptionEnd| */
 void tilt_body_walking(struct MarioState *m, s16 startYaw) {
     if (!m) { return; }
     struct MarioBodyState *val0C = m->marioBodyState;
@@ -780,6 +873,10 @@ void tilt_body_walking(struct MarioState *m, s16 startYaw) {
     }
 }
 
+/* |description|
+Tilts Mario's torso and head while riding a shell on the ground to reflect turning.
+Similar to other tilt functions but tuned for shell-riding speeds and angles
+|descriptionEnd| */
 void tilt_body_ground_shell(struct MarioState *m, s16 startYaw) {
     if (!m) { return; }
     struct MarioBodyState *val0C = m->marioBodyState;
@@ -1403,6 +1500,10 @@ s32 act_burning_ground(struct MarioState *m) {
     return FALSE;
 }
 
+/* |description|
+Tilts Mario's torso while butt sliding based on analog input direction and magnitude.
+Gives the appearance that Mario is balancing or leaning into a turn
+|descriptionEnd| */
 void tilt_body_butt_slide(struct MarioState *m) {
     if (!m) { return; }
     s16 intendedDYaw = m->intendedYaw - m->faceAngle[1];
@@ -1410,6 +1511,9 @@ void tilt_body_butt_slide(struct MarioState *m) {
     m->marioBodyState->torsoAngle[2] = (s32)(-(5461.3335f * m->intendedMag / 32.0f * sins(intendedDYaw)));
 }
 
+/* |description|
+Applies shared logic for sliding-related actions while playing sliding sounds, managing ground steps (falling off edges, hitting walls), updates animation
+|descriptionEnd| */
 void common_slide_action(struct MarioState *m, u32 endAction, u32 airAction, s32 animation) {
     if (!m) { return; }
     Vec3f pos;
@@ -1466,6 +1570,10 @@ void common_slide_action(struct MarioState *m, u32 endAction, u32 airAction, s32
     }
 }
 
+/* |description|
+Builds on `common_slide_action` by also allowing Mario to jump out of a slide if A is pressed after a short delay.
+If the sliding slows enough, Mario transitions to a specified stopping action
+|descriptionEnd| */
 s32 common_slide_action_with_jump(struct MarioState *m, u32 stopAction, u32 jumpAction, u32 airAction,
                                   s32 animation) {
     if (!m) { return FALSE; }
@@ -1578,6 +1686,10 @@ s32 act_slide_kick_slide(struct MarioState *m) {
     return FALSE;
 }
 
+/* |description|
+Updates Mario's sliding state where he is on his stomach. Similar to other slide actions but has a chance to roll out if A or B is pressed.
+Uses `common_slide_action` for the core movement logic
+|descriptionEnd| */
 s32 stomach_slide_action(struct MarioState *m, u32 stopAction, u32 airAction, s32 animation) {
     if (!m) { return FALSE; }
     if (m->actionTimer == 5) {
@@ -1651,6 +1763,9 @@ s32 act_dive_slide(struct MarioState *m) {
     return FALSE;
 }
 
+/* |description|
+Handles knockback on the ground (getting hit while on the ground) with shared logic for multiple knockback states. Applies deceleration or minimal momentum, chooses appropriate landing action if Mario leaves the ground, and handles death transitions if Mario's health is depleted
+|descriptionEnd| */
 s32 common_ground_knockback_action(struct MarioState *m, s32 animation, s32 arg2, s32 arg3, s32 arg4) {
     if (!m) { return 0; }
     s32 animFrame;
@@ -1802,6 +1917,9 @@ s32 act_death_exit_land(struct MarioState *m) {
     return FALSE;
 }
 
+/* |description|
+Applies movement upon landing from a jump or fall. Adjusts velocity based on slope or friction, checks for transitions like sliding or hitting a wall, handles small dust particles if moving fast
+|descriptionEnd| */
 u32 common_landing_action(struct MarioState *m, s16 animation, u32 airAction) {
     if (!m) { return 0; }
     u32 stepResult;
@@ -2005,6 +2123,9 @@ s32 act_backflip_land(struct MarioState *m) {
     return FALSE;
 }
 
+/* |description|
+Handles a special landing in quicksand after a jump. Over several frames, Mario emerges from the quicksand. First part of the animation reduces his quicksand depth. Ends with a normal landing action or transitions back to air if he leaves the ground
+|descriptionEnd| */
 s32 quicksand_jump_land_action(struct MarioState *m, s32 animation1, s32 animation2, u32 endAction,
                                u32 airAction) {
     if (!m) { return FALSE; }
@@ -2047,6 +2168,10 @@ s32 act_hold_quicksand_jump_land(struct MarioState *m) {
     return cancel;
 }
 
+
+/* |description|
+Performs common checks when Mario is in a moving state, transitions to water plunge if underwater, handles squished or shockwave bounce scenarios, and checks for death conditions
+|descriptionEnd| */
 s32 check_common_moving_cancels(struct MarioState *m) {
     if (!m) { return FALSE; }
     if (m->pos[1] < m->waterLevel - 100) {
@@ -2070,6 +2195,9 @@ s32 check_common_moving_cancels(struct MarioState *m) {
     return FALSE;
 }
 
+/* |description|
+Executes Mario's current moving actions by: checking common cancellations (e.g., water plunge, squish, death), handling quicksand updates, and switching to the correct sub-action handler based on `m.action`
+|descriptionEnd| */
 s32 mario_execute_moving_action(struct MarioState *m) {
     if (!m) { return FALSE; }
     s32 cancel;

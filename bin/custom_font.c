@@ -3,6 +3,14 @@
 #include "game/ingame_menu.h"
 #include "make_const_nonconst.h"
 
+ALIGNED8 const u8 texture_font_jp[] = {
+#include "textures/custom_font/custom_font_jp.rgba32.inc.c"
+};
+
+ALIGNED8 const u8 texture_font_jp_aliased[] = {
+#include "textures/custom_font/custom_font_jp_aliased.rgba32.inc.c"
+};
+
 ALIGNED8 const u8 texture_font_normal[] = {
 #include "textures/custom_font/custom_font_normal.rgba32.inc.c"
 };

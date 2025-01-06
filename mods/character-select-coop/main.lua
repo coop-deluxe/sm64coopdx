@@ -1,5 +1,5 @@
 -- name: Character Select
--- description:\\#ffff33\\-- Character Select Coop v1.11.3 --\n\n\\#dcdcdc\\A Library / API made to make adding and using Custom Characters as simple as possible!\nUse\\#ffff33\\ /char-select\\#dcdcdc\\ to get started!\n\nCreated by:\\#008800\\ Squishy6094\n\n\\#AAAAFF\\Updates can be found on\nCharacter Select's Github:\n\\#6666FF\\Squishy6094/character-select-coop
+-- description:\\#ffff33\\-- Character Select Coop v1.12 --\n\n\\#dcdcdc\\A Library / API made to make adding and using Custom Characters as simple as possible!\nUse\\#ffff33\\ /char-select\\#dcdcdc\\ to get started!\n\nCreated by:\\#008800\\ Squishy6094\n\n\\#AAAAFF\\Updates can be found on\nCharacter Select's Github:\n\\#6666FF\\Squishy6094/character-select-coop
 -- pausable: false
 -- category: cs
 
@@ -863,8 +863,9 @@ local TEXT_MOVESET_RESTRICTED = "Movesets are Restricted"
 local TEXT_PALETTE_RESTRICTED = "Palettes are Restricted"
 local TEXT_MOVESET_AND_PALETTE_RESTRICTED = "Moveset and Palettes are Restricted"
 local TEXT_CHAR_LOCKED = "Locked"
+-- Easter Egg if you get lucky loading the mod
+-- Referencing the original sm64ex DynOS options by PeachyPeach >v<
 if math_random(100) == 64 then
-    -- Easter Egg if you get lucky loading the mod Referencing the original sm64ex DynOS options by PeachyPeach >v<
     TEXT_PAUSE_Z_OPEN = "Z - DynOS"
     TEXT_PAUSE_CURR_CHAR = "Model: "
 end
@@ -1736,9 +1737,14 @@ local function chat_command(msg)
     msg = string_lower(msg)
 
     -- Open Menu Check
-    if msg == "" or msg == "menu" then
-        menu = not menu
-        return true
+    if (msg == "" or msg == "menu") then
+        if menu_is_allowed(gMarioStates[0]) then
+            menu = not menu
+            return true
+        else
+            djui_chat_message_create(TEXT_PAUSE_UNAVALIBLE)
+            return true
+        end
     end
 
     -- Help Prompt Check
@@ -1798,3 +1804,16 @@ local function chat_command(msg)
 end
 
 hook_chat_command("char-select", "- Opens the Character Select Menu", chat_command)
+
+--[[
+local function mod_menu_open_cs()
+    local m = gMarioStates[0]
+    if menu_is_allowed(m) then
+        gMarioStates[0].controller.buttonPressed = START_BUTTON
+        menu = true
+    else
+        play_sound(SOUND_MENU_CAMERA_BUZZ, m.pos)
+    end
+end
+hook_mod_menu_button("Open Menu", mod_menu_open_cs)
+]]

@@ -790,7 +790,6 @@ static void ParseGfxSymbol(GfxData* aGfxData, DataNode<Gfx>* aNode, Gfx*& aHead,
     gfx_symbol_1(gsSPNumLights, false);
     gfx_symbol_1(gsDPSetDepthSource, false);
     gfx_symbol_1(gsDPSetTextureLUT, false);
-    gfx_symbol_2(gsDPLoadTLUTCmd, false);
     gfx_symbol_5(gsDPLoadBlock);
     gfx_symbol_2(gsDPSetRenderMode, false);
     gfx_symbol_2(gsSPGeometryMode, false);
@@ -1004,7 +1003,7 @@ static void ParseGfxSymbol(GfxData* aGfxData, DataNode<Gfx>* aNode, Gfx*& aHead,
         gDPSetTileSize(aHead++, G_TX_RENDERTILE, 0, 0, (((u64)_Arg3) - 1) << G_TEXTURE_IMAGE_FRAC, (((u64)_Arg4) - 1) << G_TEXTURE_IMAGE_FRAC);
         return;
     }
-    if (_Symbol == "gDPLoadTLUTCmd") {
+    if (_Symbol == "gsDPLoadTLUTCmd") {
         s64 _Arg0 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
         s64 _Arg1 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
         SetCurrentTextureAsPalette(aGfxData);

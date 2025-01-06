@@ -5482,7 +5482,7 @@ MARIO_HAND_HOLDING_WING_CAP = 4
 MARIO_HAND_RIGHT_OPEN = 5
 
 --- @type integer
-MAX_KEYS = 1024
+MAX_KEYS = 4096
 
 --- @type integer
 MAX_KEY_VALUE_LENGTH = 1024
@@ -9158,7 +9158,19 @@ HOOK_ON_NAMETAGS_RENDER = 46
 HOOK_ON_DJUI_THEME_CHANGED = 47
 
 --- @type LuaHookedEventType
-HOOK_MAX = 48
+HOOK_ON_GEO_PROCESS = 48
+
+--- @type LuaHookedEventType
+HOOK_BEFORE_GEO_PROCESS = 49
+
+--- @type LuaHookedEventType
+HOOK_ON_GEO_PROCESS_CHILDREN = 50
+
+--- @type LuaHookedEventType
+HOOK_MARIO_OVERRIDE_GEOMETRY_INPUTS = 51
+
+--- @type LuaHookedEventType
+HOOK_MAX = 52
 
 --- @class LuaModMenuElementType
 

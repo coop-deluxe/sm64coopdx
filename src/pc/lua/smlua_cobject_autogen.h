@@ -3,6 +3,19 @@
 #ifndef SMLUA_COBJECT_AUTOGEN_H
 #define SMLUA_COBJECT_AUTOGEN_H
 
+enum LuaObjectType {
+    LOT_NONE = 0,
+    LOT_VEC2F,
+    LOT_VEC3F,
+    LOT_VEC4F,
+    LOT_VEC3S,
+    LOT_VEC4S,
+    LOT_MAT4,
+    LOT_COLOR,
+    LOT_POINTER,
+    LOT_MAX,
+};
+
 enum LuaObjectAutogenType {
     LOT_AUTOGEN_MIN = 1000,
     LOT_ANIMINFO,

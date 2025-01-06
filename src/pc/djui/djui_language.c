@@ -34,6 +34,11 @@ char* djui_language_get(const char *section, const char *key) {
     return value;
 }
 
+char* djui_language_find_key(const char* section, const char* value) {
+    if (!sLang) return NULL;
+    return (char*)ini_find_key(sLang, section, value);
+}
+
 void djui_language_replace(char* src, char* dst, int size, char key, char* value) {
     char tmpChar[10] = { 0 };
     char* c = src;

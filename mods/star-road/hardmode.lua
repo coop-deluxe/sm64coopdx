@@ -32,6 +32,7 @@ function mario_update_hardmode(m)
     end
 
     if m.hurtCounter > 0 or sBurnActions[m.action] then
+
         m.health = 0 -- Damage Check. Hard Mode is a OHKO mode
         m.healCounter = 0  -- Prevents you from healing from a coin or any health regen object via landing on one while dying
     end

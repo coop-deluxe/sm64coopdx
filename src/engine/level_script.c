@@ -401,10 +401,13 @@ static void level_cmd_alloc_level_pool(void) {
 static void level_cmd_free_level_pool(void) {
     s32 i;
 
-    // these pointers would be invalid on the act selector menu
-    gMarioStates[0].wall = NULL;
-    gMarioStates[0].ceil = NULL;
-    gMarioStates[0].floor = NULL;
+    for (i = 0; i < MAX_PLAYERS; i++) {
+        // these pointers would be invalid on the act selector menu
+        gMarioStates[i].wall = NULL;
+        gMarioStates[i].ceil = NULL;
+        gMarioStates[i].floor = NULL;
+    }
+
 
     if (!sFinishedLoadingPerm) {
         sFinishedLoadingPerm = true;

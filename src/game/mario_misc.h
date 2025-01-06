@@ -18,6 +18,10 @@ void bhv_toad_message_loop(void);
 void bhv_unlock_door_star_init(void);
 /* |description|Behavior loop function for Star Door unlock object|descriptionEnd| */
 void bhv_unlock_door_star_loop(void);
+/* |description|When used in a geo function, retrieve the MarioState associated to the current processed object|descriptionEnd| */
+struct MarioState *geo_get_mario_state(void);
+/* |description|When used in a geo function, retrieve the MarioBodyState associated to the current processed object|descriptionEnd| */
+struct MarioBodyState *geo_get_body_state(void);
 Gfx *geo_mirror_mario_set_alpha(s32 callContext, struct GraphNode *node, UNUSED Mat4 *c);
 Gfx *geo_switch_mario_stand_run(s32 callContext, struct GraphNode *node, UNUSED Mat4 *mtx);
 Gfx *geo_switch_mario_eyes(s32 callContext, struct GraphNode *node, UNUSED Mat4 *c);
@@ -33,5 +37,6 @@ Gfx *geo_render_mirror_mario(s32 callContext, struct GraphNode *node, UNUSED Mat
 Gfx *geo_mirror_mario_backface_culling(s32 callContext, struct GraphNode *node, UNUSED Mat4 *c);
 Gfx* geo_mario_set_player_colors(s32 callContext, struct GraphNode* node, UNUSED Mat4* c);
 Gfx* geo_mario_cap_display_list(s32 callContext, struct GraphNode* node, UNUSED Mat4* c);
+Gfx *geo_process_lua_function(s32 callContext, struct GraphNode *node, UNUSED Mat4 *c);
 
 #endif // MARIO_MISC_H

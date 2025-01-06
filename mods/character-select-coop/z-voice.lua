@@ -12,6 +12,8 @@ local SLEEP_TALK_SNORES = 8
 local STARTING_SNORE = 46
 local SLEEP_TALK_START = STARTING_SNORE + 49
 local SLEEP_TALK_END = SLEEP_TALK_START + SLEEP_TALK_SNORES
+local stallTimer = 0
+local stallSayLine = 5
 
 local TYPE_TABLE = "table"
 local TYPE_USERDATA = "userdata"
@@ -77,13 +79,13 @@ for i = 0, MAX_PLAYERS - 1 do
     playerSample[i] = nil
 end
 
-local joinSoundPlayed = false
 --- @param m MarioState
 --- @param sound CharacterSound
 local function custom_character_sound(m, sound)
-    if not joinSoundPlayed then
-        joinSoundPlayed = true
-        return NO_SOUND
+    if m.playerIndex == 0 then
+        if stallTimer < stallSayLine - 1 then
+            return NO_SOUND
+        end
     end
     local index = m.playerIndex
     if check_sound_exists(playerSample[index]) and type(playerSample[index]) ~= TYPE_STRING then
@@ -207,13 +209,12 @@ end
 _G.charSelect.config_character_sounds = config_character_sounds
 
 -- Join sound
-local stallTimer = 0
 local function mario_update(m)
     if m.playerIndex ~= 0 then return end
-    if stallTimer == 3 then
+    if stallTimer == stallSayLine then
         play_character_sound(m, CHAR_SOUND_OKEY_DOKEY)
         stallTimer = stallTimer + 1
-    elseif stallTimer < 10 then
+    elseif stallTimer < stallSayLine then
         stallTimer = stallTimer + 1
     end
 end

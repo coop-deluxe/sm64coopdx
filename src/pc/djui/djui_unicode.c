@@ -8,7 +8,7 @@
 #define SPRITE_INDEX_START_CHAR '!'
 
 struct SmCodeGlyph {
-    char unicode[3];
+    char unicode[4];
     char base;
     f32 width;
     u32 spriteIndex;
@@ -178,6 +178,10 @@ struct SmCodeGlyph sSmCodeGlyphs[] = {
     { "ґ", 'R', 0, 0 },
 };
 
+struct SmCodeGlyph sSmCodeGlyphs_JP[] = {
+#include "jp_glyphs.h"
+};
+
 struct SmCodeGlyph sSmCodeDuplicateGlyphs[] = {
     { "А", 'A', 0, 0 },
     { "В", 'B', 0, 0 },
@@ -222,7 +226,6 @@ static u64 convert_unicode_char_to_u64(char* text) {
         value <<= 8;
         value |= (u8)*(++text);
         bytes--;
-        text++;
     }
     return value;
 }
@@ -235,6 +238,18 @@ void djui_unicode_init(void) {
         struct SmCodeGlyph* glyph = &sSmCodeGlyphs[i];
         glyph->spriteIndex = (128 + i) - SPRITE_INDEX_START_CHAR;
 
+        u64 key = convert_unicode_char_to_u64(glyph->unicode);
+        s32 bytes = count_bytes_for_char(glyph->unicode);
+        assert(bytes >= 2 && bytes <= 4);
+        assert(key > 127);
+        hmap_put(sCharMap, key, glyph);
+    }
+    
+    //add japanese glyphs
+    size_t jpCount = sizeof(sSmCodeGlyphs_JP) / sizeof(sSmCodeGlyphs_JP[0]);
+    for (size_t i = 0; i < jpCount; i++) {
+        struct SmCodeGlyph* glyph = &sSmCodeGlyphs_JP[i];
+        glyph->spriteIndex = 0x010000 + i;
         u64 key = convert_unicode_char_to_u64(glyph->unicode);
         s32 bytes = count_bytes_for_char(glyph->unicode);
         assert(bytes >= 2 && bytes <= 4);
@@ -388,7 +403,7 @@ char djui_unicode_get_base_char(char* text) {
     if (!sCharMap) { return '?'; }
     u64 key = convert_unicode_char_to_u64(text);
     struct SmCodeGlyph* glyph = hmap_get(sCharMap, key);
-    return (glyph != NULL || ((u8)glyph->base < (u8)'!')) ? glyph->base : '?';
+    return (glyph == NULL) ? '?' : glyph->base;
 }
 
 void djui_unicode_get_char(char* text, char* output) {
