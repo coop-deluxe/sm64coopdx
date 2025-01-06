@@ -11,7 +11,8 @@
 #include "pc/network/version.h"
 #include "pc/loading.h"
 
-#define URL "https://sm64coopdx.com/download/version.txt"
+#define URL "https://raw.githubusercontent.com/coop-deluxe/sm64coopdx/refs/heads/main/src/pc/network/version.h"
+#define VERSION_IDENTIFIER "#define SM64COOPDX_VERSION \""
 
 static char sVersionUpdateTextBuffer[256] = { 0 };
 static char sRemoteVersion[8] = { 0 };
@@ -38,10 +39,20 @@ size_t write_callback(char *ptr, size_t size, size_t nmemb, char **data) {
 }
 #endif
 
+void parse_version(const char *data) {
+    const char *version = strstr(data, VERSION_IDENTIFIER);
+    if (version == NULL) { return; }
+    u8 len = strlen(VERSION_IDENTIFIER);
+    version += len;
+    const char *end = strchr(version, '"');
+    memcpy(sRemoteVersion, version, end - version);
+    sRemoteVersion[end - version] = '\0';
+}
+
 // function to download a text file from the internet
 void get_version_remote(void) {
 #if defined(_WIN32) || defined(_WIN64)
-    char buffer[8];
+    char buffer[0xFF];
 
     // initialize WinINet
     HINTERNET hInternet = InternetOpenA("sm64coopdx", INTERNET_OPEN_TYPE_DIRECT, NULL, NULL, 0);
@@ -112,6 +123,7 @@ void get_version_remote(void) {
     // Clean up
     curl_easy_cleanup(curl);
 #endif
+    parse_version(buffer);
 }
 
 void check_for_updates(void) {

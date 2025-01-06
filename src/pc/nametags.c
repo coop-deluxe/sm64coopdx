@@ -84,8 +84,8 @@ void nametags_render(void) {
 
         Vec3f pos;
         Vec3f out;
-        vec3f_copy(pos, m->marioBodyState->headPos);
-        pos[1] += 100;
+        vec3f_copy(pos, m->marioObj->header.gfx.pos);
+        pos[1] += 200;
 
         if (djui_hud_world_pos_to_screen_pos(pos, out) &&
             (i != 0 || (i == 0 && m->action != ACT_FIRST_PERSON))) {

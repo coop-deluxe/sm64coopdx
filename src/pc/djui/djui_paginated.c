@@ -28,7 +28,7 @@ static s32 djui_paginated_get_count(struct DjuiPaginated* paginated) {
 
 void djui_paginated_update_page_buttons(struct DjuiPaginated* paginated) {
     s32 count = djui_paginated_get_count(paginated);
-    paginated->startIndex = MIN(paginated->startIndex, count) & ~(paginated->showCount - 1);
+    paginated->startIndex = MIN(paginated->startIndex, count);
 
     char pageNumString[32] = { 0 };
     snprintf(pageNumString, 32, "%d/%d", paginated->startIndex / paginated->showCount + 1, (count - 1) / paginated->showCount + 1);
@@ -64,21 +64,16 @@ void djui_paginated_calculate_height(struct DjuiPaginated* paginated) {
     f32 height = 0;
     s32 count = 0;
 
-    if (paginated->showMaxCount) {
-        height = paginated->showCount * (32 + paginated->layout->margin.value);
-        count = paginated->showCount + 1;
-    } else {
-        while (dbc != NULL) {
-            struct DjuiBase* cbase = dbc->base;
-            if (count < paginated->showCount) {
-                if (height != 0) {
-                    height += paginated->layout->margin.value;
-                }
-                height += cbase->height.value;
+    while (dbc != NULL) {
+        struct DjuiBase* cbase = dbc->base;
+        if (count < paginated->showCount) {
+            if (height != 0) {
+                height += paginated->layout->margin.value;
             }
-            count++;
-            dbc = dbc->next;
+            height += cbase->height.value;
         }
+        count++;
+        dbc = dbc->next;
     }
 
     if (count <= paginated->showCount) {

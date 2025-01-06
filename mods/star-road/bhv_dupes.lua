@@ -105,7 +105,7 @@ end
 
 --- @param o Object
 function bhv_breakable_window_loop(o)
-    if (o.oInteractStatus & INT_STATUS_INTERACTED) == 0 or (o.oInteractStatus & INT_STATUS_WAS_ATTACKED) == 0 then
+    if (o.oInteractStatus & INT_STATUS_INTERACTED) ~= 0 or (o.oInteractStatus & INT_STATUS_WAS_ATTACKED) ~= 0 then
         return
     end
 
