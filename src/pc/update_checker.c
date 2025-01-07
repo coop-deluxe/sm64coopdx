@@ -130,7 +130,7 @@ void check_for_updates(void) {
     LOADING_SCREEN_MUTEX(loading_screen_set_segment_text("Checking For Updates"));
 
     get_version_remote();
-    if (sRemoteVersion[0] != '\0' && strcmp(sRemoteVersion, get_version())) {
+    if (sRemoteVersion[0] == 'v' && strcmp(sRemoteVersion, get_version())) {
         snprintf(
             sVersionUpdateTextBuffer, 256,
             "\\#ffffa0\\%s\n\\#dcdcdc\\%s: %s\n%s: %s",
