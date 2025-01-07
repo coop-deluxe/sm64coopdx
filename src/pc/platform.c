@@ -332,19 +332,19 @@ const char *sys_user_path(void) {
 
 const char *sys_resource_path(void)
 {
-    #ifdef __APPLE__ // Kinda lazy, but I don't know how to add CoreFoundation.framework
+#ifdef __APPLE__ // Kinda lazy, but I don't know how to add CoreFoundation.framework
     static char path[SYS_MAX_PATH];
     if ('\0' != path[0]) { return path; }
 
     const char *exeDir = sys_exe_path_dir();
     char *lastSeparator = strrchr(exeDir, '/');
     if (lastSeparator != NULL) {
-        const char folder[10] = "/Resources";
+        const char folder[] = "/Resources";
         size_t count = (size_t)(lastSeparator - exeDir);
         strncpy(path, exeDir, count);
-        return strcat(path, folder);
+        return strncat(path, folder, sizeof(path) - 1 - count);
     }
-    #endif
+#endif
 
     return sys_exe_path_dir();
 }
