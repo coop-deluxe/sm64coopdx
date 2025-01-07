@@ -839,6 +839,9 @@
 | RCO_ALL | 0 |
 | RCO_ALL_EXCEPT_BOWSER | 1 |
 | RCO_NONE | 2 |
+| RCO_ALL_INCLUDING_VANILLA | 3 |
+| RCO_ALL_VANILLA_EXCEPT_BOWSER | 4 |
+| RCO_DISABLE | 5 |
 
 [:arrow_up_small:](#)
 

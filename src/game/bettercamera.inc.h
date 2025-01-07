@@ -200,7 +200,7 @@ void newcam_init_settings(void) {
     newcam_analogue         = (s16)camera_config_is_analog_cam_enabled();
     newcam_degrade          = (f32)camera_config_get_deceleration();
     gFreeCameraUseDpad      = (u8)camera_config_is_freecam_dpad_enabled();
-    gFreeCameraHasCollision = (u8)camera_config_is_camera_collision_enabled();
+    gFreeCameraHasCollision = (u8)camera_config_is_free_camera_collision_enabled();
 
     // setup main menu camera
     if (gDjuiInMainMenu) { newcam_tilt = 5; }
@@ -219,7 +219,7 @@ void newcam_init_settings_override(bool override) {
     newcam_analogue         = (s16)camera_config_is_analog_cam_enabled();
     newcam_degrade          = (f32)camera_config_get_deceleration();
     gFreeCameraUseDpad      = (u8)camera_config_is_freecam_dpad_enabled();
-    gFreeCameraHasCollision = (u8)camera_config_is_camera_collision_enabled();
+    gFreeCameraHasCollision = (u8)camera_config_is_free_camera_collision_enabled();
 
     // setup main menu camera
     if (gDjuiInMainMenu) { newcam_tilt = 5; }

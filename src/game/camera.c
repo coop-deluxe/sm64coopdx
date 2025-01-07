@@ -3109,17 +3109,27 @@ void update_lakitu(struct Camera *c) {
 extern bool gIsDemoActive;
 static void update_romhack_camera_override(struct Camera *c) {
     if (gOverrideRomhackCamera == RCO_NONE) { return; }
-    if (c->mode == CAMERA_MODE_ROM_HACK) { return; }
-    if (dynos_level_is_vanilla_level(gCurrLevelNum)) { return; }
+    else if (gOverrideRomhackCamera == RCO_DISABLE) {
+        c->mode = c->defMode;
+        set_camera_mode(c, c->defMode, 0);
+        gOverrideRomhackCamera = RCO_NONE;
+        return;
+    }
     if (gIsDemoActive) { return; }
 
-    if (gOverrideRomhackCamera == RCO_ALL_EXCEPT_BOWSER) {
-        if (gCurrLevelNum == LEVEL_BOWSER_1 || gCurrLevelNum == LEVEL_BOWSER_2 || gCurrLevelNum == LEVEL_BOWSER_3) {
-            return;
+    if ((!(gOverrideRomhackCamera == RCO_ALL_INCLUDING_VANILLA || gOverrideRomhackCamera == RCO_ALL_VANILLA_EXCEPT_BOWSER)) &&
+            dynos_level_is_vanilla_level(gCurrLevelNum)) {
+        return;
+    } else if ((gOverrideRomhackCamera == RCO_ALL_EXCEPT_BOWSER || gOverrideRomhackCamera == RCO_ALL_VANILLA_EXCEPT_BOWSER) &&
+            (gCurrLevelNum == LEVEL_BOWSER_1 || gCurrLevelNum == LEVEL_BOWSER_2 || gCurrLevelNum == LEVEL_BOWSER_3)) {
+        if (c->mode == CAMERA_MODE_ROM_HACK) {
+            c->mode = c->defMode;
+            set_camera_mode(c, c->defMode, 0);
         }
+        return;
     }
 
-    if (!allow_romhack_camera_override_mode(c->mode)) { return; }
+    if (c->mode == CAMERA_MODE_ROM_HACK || !allow_romhack_camera_override_mode(c->mode)) { return; }
 
     set_camera_mode(c, CAMERA_MODE_ROM_HACK, 0);
 }
@@ -3632,6 +3642,7 @@ void init_camera(struct Camera *c) {
 
     newcam_init(c, sSoftResettingCamera);
     newcam_init_settings();
+    romhack_camera_init_settings();
 
     sSoftResettingCamera = FALSE;
 }
@@ -12159,8 +12170,15 @@ s32 snap_to_45_degrees(s16 angle) {
     return angle;
 }
 
-void rom_hack_cam_set_collisions(u8 enable) {
-    gRomHackCamSetCollisions = enable;
+void romhack_camera_init_settings(void) {
+    enum RomhackCameraOverride override = configEnableRomhackCamera ?
+            (configRomhackCameraBowserFights ? RCO_ALL_INCLUDING_VANILLA : RCO_ALL_VANILLA_EXCEPT_BOWSER) : RCO_DISABLE;
+    camera_set_romhack_override(override);
+    camera_set_use_course_specific_settings(dynos_level_is_vanilla_level(gCurrLevelNum) ? 1 : 0);
+    rom_hack_cam_set_collisions(configRomhackCameraHasCollision);
+    camera_romhack_allow_centering(configRomhackCameraHasCentering);
+    camera_romhack_allow_dpad_usage(configRomhackCameraDpadBehavior);
+    camera_allow_toxic_gas_camera(configCameraToxicGas);
 }
 
 static u8 rom_hack_cam_can_see_mario(Vec3f desiredPos) {

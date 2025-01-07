@@ -7109,27 +7109,6 @@ Checks if Analog Camera is enabled
 
 <br />
 
-## [camera_config_is_camera_collision_enabled](#camera_config_is_camera_collision_enabled)
-
-### Description
-Checks if Camera Collision is enabled
-
-### Lua Example
-`local booleanValue = camera_config_is_camera_collision_enabled()`
-
-### Parameters
-- None
-
-### Returns
-- `boolean`
-
-### C Prototype
-`bool camera_config_is_camera_collision_enabled(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
 ## [camera_config_is_free_cam_enabled](#camera_config_is_free_cam_enabled)
 
 ### Description
@@ -7146,6 +7125,27 @@ Checks if Free Camera is enabled
 
 ### C Prototype
 `bool camera_config_is_free_cam_enabled(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_config_is_free_camera_collision_enabled](#camera_config_is_free_camera_collision_enabled)
+
+### Description
+Checks if Camera Collision is enabled
+
+### Lua Example
+`local booleanValue = camera_config_is_free_camera_collision_enabled()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool camera_config_is_free_camera_collision_enabled(void);`
 
 [:arrow_up_small:](#)
 
@@ -7371,6 +7371,27 @@ Freezes the camera by not updating it
 
 <br />
 
+## [camera_get_allow_toxic_gas_camera](#camera_get_allow_toxic_gas_camera)
+
+### Description
+Gets if the romhack camera should fly above poison gas
+
+### Lua Example
+`local integerValue = camera_get_allow_toxic_gas_camera()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u8 camera_get_allow_toxic_gas_camera(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [camera_get_checking_surfaces](#camera_get_checking_surfaces)
 
 ### Description
@@ -7387,6 +7408,27 @@ Checks if the camera should account for surfaces
 
 ### C Prototype
 `bool camera_get_checking_surfaces(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_get_romhack_override](#camera_get_romhack_override)
+
+### Description
+Gets the current romhack camera override status
+
+### Lua Example
+`local enumValue = camera_get_romhack_override()`
+
+### Parameters
+- None
+
+### Returns
+[enum RomhackCameraOverride](constants.md#enum-RomhackCameraOverride)
+
+### C Prototype
+`enum RomhackCameraOverride camera_get_romhack_override(void);`
 
 [:arrow_up_small:](#)
 
@@ -7437,7 +7479,7 @@ Resets camera config overrides
 ## [camera_romhack_allow_centering](#camera_romhack_allow_centering)
 
 ### Description
-Sets if the romhack camera should allow centering
+Sets if the romhack camera should allow centering, triggered with the L button
 
 ### Lua Example
 `camera_romhack_allow_centering(allow)`
@@ -7475,6 +7517,69 @@ Sets if the romhack camera should allow D-Pad movement
 
 ### C Prototype
 `void camera_romhack_allow_dpad_usage(u8 allow);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_romhack_get_allow_centering](#camera_romhack_get_allow_centering)
+
+### Description
+Gets if the romhack camera should allow centering
+
+### Lua Example
+`local integerValue = camera_romhack_get_allow_centering()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u8 camera_romhack_get_allow_centering(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_romhack_get_allow_dpad_usage](#camera_romhack_get_allow_dpad_usage)
+
+### Description
+Gets if the romhack camera should allow D-Pad movement
+
+### Lua Example
+`local integerValue = camera_romhack_get_allow_dpad_usage()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u8 camera_romhack_get_allow_dpad_usage(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_romhack_get_collisions](#camera_romhack_get_collisions)
+
+### Description
+Gets if the romhack camera has surface collisions
+
+### Lua Example
+`local integerValue = camera_romhack_get_collisions()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u8 camera_romhack_get_collisions(void);`
 
 [:arrow_up_small:](#)
 
@@ -7542,6 +7647,29 @@ Unfreezes the camera
 
 ### C Prototype
 `void camera_unfreeze(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [rom_hack_cam_set_collisions](#rom_hack_cam_set_collisions)
+
+### Description
+Toggles collision settings for the ROM hack camera. This enables or disables specific collision behaviors in modded levels
+
+### Lua Example
+`rom_hack_cam_set_collisions(enable)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| enable | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void rom_hack_cam_set_collisions(u8 enable);`
 
 [:arrow_up_small:](#)
 

@@ -3392,12 +3392,6 @@ function resolve_geometry_collisions(pos, lastGood)
     -- ...
 end
 
---- @param enable integer
---- Toggles collision settings for the ROM hack camera. This enables or disables specific collision behaviors in modded levels
-function rom_hack_cam_set_collisions(enable)
-    -- ...
-end
-
 --- @param c Camera
 --- @param cPos Vec3f
 --- @param avoidYaw Pointer_integer
@@ -3616,6 +3610,7 @@ end
 
 --- @param angle integer
 --- @return integer
+--- Takes in an SM64 angle unit and returns the nearest 45 degree angle, also in SM64 angle units. Useful when needing to align angles (camera, yaw, ect.)
 function snap_to_45_degrees(angle)
     -- ...
 end
@@ -8961,14 +8956,14 @@ function camera_config_is_analog_cam_enabled()
 end
 
 --- @return boolean
---- Checks if Camera Collision is enabled
-function camera_config_is_camera_collision_enabled()
+--- Checks if Free Camera is enabled
+function camera_config_is_free_cam_enabled()
     -- ...
 end
 
 --- @return boolean
---- Checks if Free Camera is enabled
-function camera_config_is_free_cam_enabled()
+--- Checks if Camera Collision is enabled
+function camera_config_is_free_camera_collision_enabled()
     -- ...
 end
 
@@ -9031,9 +9026,21 @@ function camera_freeze()
     -- ...
 end
 
+--- @return integer
+--- Gets if the romhack camera should fly above poison gas
+function camera_get_allow_toxic_gas_camera()
+    -- ...
+end
+
 --- @return boolean
 --- Checks if the camera should account for surfaces
 function camera_get_checking_surfaces()
+    -- ...
+end
+
+--- @return RomhackCameraOverride
+--- Gets the current romhack camera override status
+function camera_get_romhack_override()
     -- ...
 end
 
@@ -9049,7 +9056,7 @@ function camera_reset_overrides()
 end
 
 --- @param allow integer
---- Sets if the romhack camera should allow centering
+--- Sets if the romhack camera should allow centering, triggered with the L button
 function camera_romhack_allow_centering(allow)
     -- ...
 end
@@ -9057,6 +9064,24 @@ end
 --- @param allow integer
 --- Sets if the romhack camera should allow D-Pad movement
 function camera_romhack_allow_dpad_usage(allow)
+    -- ...
+end
+
+--- @return integer
+--- Gets if the romhack camera should allow centering
+function camera_romhack_get_allow_centering()
+    -- ...
+end
+
+--- @return integer
+--- Gets if the romhack camera should allow D-Pad movement
+function camera_romhack_get_allow_dpad_usage()
+    -- ...
+end
+
+--- @return integer
+--- Gets if the romhack camera has surface collisions
+function camera_romhack_get_collisions()
     -- ...
 end
 
@@ -9074,6 +9099,12 @@ end
 
 --- Unfreezes the camera
 function camera_unfreeze()
+    -- ...
+end
+
+--- @param enable integer
+--- Toggles collision settings for the ROM hack camera. This enables or disables specific collision behaviors in modded levels
+function rom_hack_cam_set_collisions(enable)
     -- ...
 end
 

@@ -11071,23 +11071,6 @@ int smlua_func_resolve_geometry_collisions(lua_State* L) {
     return 1;
 }
 
-int smlua_func_rom_hack_cam_set_collisions(lua_State* L) {
-    if (L == NULL) { return 0; }
-
-    int top = lua_gettop(L);
-    if (top != 1) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "rom_hack_cam_set_collisions", 1, top);
-        return 0;
-    }
-
-    u8 enable = smlua_to_integer(L, 1);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "rom_hack_cam_set_collisions"); return 0; }
-
-    rom_hack_cam_set_collisions(enable);
-
-    return 1;
-}
-
 int smlua_func_rotate_camera_around_walls(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -27666,21 +27649,6 @@ int smlua_func_camera_config_is_analog_cam_enabled(UNUSED lua_State* L) {
     return 1;
 }
 
-int smlua_func_camera_config_is_camera_collision_enabled(UNUSED lua_State* L) {
-    if (L == NULL) { return 0; }
-
-    int top = lua_gettop(L);
-    if (top != 0) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "camera_config_is_camera_collision_enabled", 0, top);
-        return 0;
-    }
-
-
-    lua_pushboolean(L, camera_config_is_camera_collision_enabled());
-
-    return 1;
-}
-
 int smlua_func_camera_config_is_free_cam_enabled(UNUSED lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -27692,6 +27660,21 @@ int smlua_func_camera_config_is_free_cam_enabled(UNUSED lua_State* L) {
 
 
     lua_pushboolean(L, camera_config_is_free_cam_enabled());
+
+    return 1;
+}
+
+int smlua_func_camera_config_is_free_camera_collision_enabled(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "camera_config_is_free_camera_collision_enabled", 0, top);
+        return 0;
+    }
+
+
+    lua_pushboolean(L, camera_config_is_free_camera_collision_enabled());
 
     return 1;
 }
@@ -27856,6 +27839,21 @@ int smlua_func_camera_freeze(UNUSED lua_State* L) {
     return 1;
 }
 
+int smlua_func_camera_get_allow_toxic_gas_camera(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "camera_get_allow_toxic_gas_camera", 0, top);
+        return 0;
+    }
+
+
+    lua_pushinteger(L, camera_get_allow_toxic_gas_camera());
+
+    return 1;
+}
+
 int smlua_func_camera_get_checking_surfaces(UNUSED lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -27867,6 +27865,21 @@ int smlua_func_camera_get_checking_surfaces(UNUSED lua_State* L) {
 
 
     lua_pushboolean(L, camera_get_checking_surfaces());
+
+    return 1;
+}
+
+int smlua_func_camera_get_romhack_override(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "camera_get_romhack_override", 0, top);
+        return 0;
+    }
+
+
+    lua_pushinteger(L, camera_get_romhack_override());
 
     return 1;
 }
@@ -27935,6 +27948,51 @@ int smlua_func_camera_romhack_allow_dpad_usage(lua_State* L) {
     return 1;
 }
 
+int smlua_func_camera_romhack_get_allow_centering(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "camera_romhack_get_allow_centering", 0, top);
+        return 0;
+    }
+
+
+    lua_pushinteger(L, camera_romhack_get_allow_centering());
+
+    return 1;
+}
+
+int smlua_func_camera_romhack_get_allow_dpad_usage(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "camera_romhack_get_allow_dpad_usage", 0, top);
+        return 0;
+    }
+
+
+    lua_pushinteger(L, camera_romhack_get_allow_dpad_usage());
+
+    return 1;
+}
+
+int smlua_func_camera_romhack_get_collisions(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "camera_romhack_get_collisions", 0, top);
+        return 0;
+    }
+
+
+    lua_pushinteger(L, camera_romhack_get_collisions());
+
+    return 1;
+}
+
 int smlua_func_camera_set_checking_surfaces(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -27980,6 +28038,23 @@ int smlua_func_camera_unfreeze(UNUSED lua_State* L) {
 
 
     camera_unfreeze();
+
+    return 1;
+}
+
+int smlua_func_rom_hack_cam_set_collisions(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "rom_hack_cam_set_collisions", 1, top);
+        return 0;
+    }
+
+    u8 enable = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "rom_hack_cam_set_collisions"); return 0; }
+
+    rom_hack_cam_set_collisions(enable);
 
     return 1;
 }
@@ -32732,7 +32807,6 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "random_vec3s", smlua_func_random_vec3s);
     smlua_bind_function(L, "reset_camera", smlua_func_reset_camera);
     smlua_bind_function(L, "resolve_geometry_collisions", smlua_func_resolve_geometry_collisions);
-    smlua_bind_function(L, "rom_hack_cam_set_collisions", smlua_func_rom_hack_cam_set_collisions);
     smlua_bind_function(L, "rotate_camera_around_walls", smlua_func_rotate_camera_around_walls);
     smlua_bind_function(L, "rotate_in_xz", smlua_func_rotate_in_xz);
     smlua_bind_function(L, "rotate_in_yz", smlua_func_rotate_in_yz);
@@ -33649,8 +33723,8 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "camera_config_invert_x", smlua_func_camera_config_invert_x);
     smlua_bind_function(L, "camera_config_invert_y", smlua_func_camera_config_invert_y);
     smlua_bind_function(L, "camera_config_is_analog_cam_enabled", smlua_func_camera_config_is_analog_cam_enabled);
-    smlua_bind_function(L, "camera_config_is_camera_collision_enabled", smlua_func_camera_config_is_camera_collision_enabled);
     smlua_bind_function(L, "camera_config_is_free_cam_enabled", smlua_func_camera_config_is_free_cam_enabled);
+    smlua_bind_function(L, "camera_config_is_free_camera_collision_enabled", smlua_func_camera_config_is_free_camera_collision_enabled);
     smlua_bind_function(L, "camera_config_is_freecam_dpad_enabled", smlua_func_camera_config_is_freecam_dpad_enabled);
     smlua_bind_function(L, "camera_config_is_mouse_look_enabled", smlua_func_camera_config_is_mouse_look_enabled);
     smlua_bind_function(L, "camera_config_is_x_inverted", smlua_func_camera_config_is_x_inverted);
@@ -33661,14 +33735,20 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "camera_config_set_x_sensitivity", smlua_func_camera_config_set_x_sensitivity);
     smlua_bind_function(L, "camera_config_set_y_sensitivity", smlua_func_camera_config_set_y_sensitivity);
     smlua_bind_function(L, "camera_freeze", smlua_func_camera_freeze);
+    smlua_bind_function(L, "camera_get_allow_toxic_gas_camera", smlua_func_camera_get_allow_toxic_gas_camera);
     smlua_bind_function(L, "camera_get_checking_surfaces", smlua_func_camera_get_checking_surfaces);
+    smlua_bind_function(L, "camera_get_romhack_override", smlua_func_camera_get_romhack_override);
     smlua_bind_function(L, "camera_is_frozen", smlua_func_camera_is_frozen);
     smlua_bind_function(L, "camera_reset_overrides", smlua_func_camera_reset_overrides);
     smlua_bind_function(L, "camera_romhack_allow_centering", smlua_func_camera_romhack_allow_centering);
     smlua_bind_function(L, "camera_romhack_allow_dpad_usage", smlua_func_camera_romhack_allow_dpad_usage);
+    smlua_bind_function(L, "camera_romhack_get_allow_centering", smlua_func_camera_romhack_get_allow_centering);
+    smlua_bind_function(L, "camera_romhack_get_allow_dpad_usage", smlua_func_camera_romhack_get_allow_dpad_usage);
+    smlua_bind_function(L, "camera_romhack_get_collisions", smlua_func_camera_romhack_get_collisions);
     smlua_bind_function(L, "camera_set_checking_surfaces", smlua_func_camera_set_checking_surfaces);
     smlua_bind_function(L, "camera_set_romhack_override", smlua_func_camera_set_romhack_override);
     smlua_bind_function(L, "camera_unfreeze", smlua_func_camera_unfreeze);
+    smlua_bind_function(L, "rom_hack_cam_set_collisions", smlua_func_rom_hack_cam_set_collisions);
 
     // smlua_collision_utils.h
     smlua_bind_function(L, "collision_find_ceil", smlua_func_collision_find_ceil);

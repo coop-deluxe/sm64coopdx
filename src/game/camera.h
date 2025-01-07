@@ -14,6 +14,9 @@ enum RomhackCameraOverride {
     RCO_ALL,
     RCO_ALL_EXCEPT_BOWSER,
     RCO_NONE,
+    RCO_ALL_INCLUDING_VANILLA,
+    RCO_ALL_VANILLA_EXCEPT_BOWSER,
+    RCO_DISABLE
 };
 
 extern u8 gOverrideFreezeCamera;
@@ -21,6 +24,7 @@ extern enum RomhackCameraOverride gOverrideRomhackCamera;
 extern u8 gRomhackCameraAllowCentering;
 extern u8 gOverrideAllowToxicGasCamera;
 extern u8 gRomhackCameraAllowDpad;
+extern u8 gRomHackCamSetCollisions;
 
 /**
  * @file camera.h
@@ -1247,15 +1251,11 @@ This is useful for enabling or disabling custom behaviors in specific courses or
 void camera_set_use_course_specific_settings(u8 enable);
 
 /* |description|
-Toggles collision settings for the ROM hack camera.
-This enables or disables specific collision behaviors in modded levels
-|descriptionEnd| */
-void rom_hack_cam_set_collisions(u8 enable);
-
-/* |description|
 Centers the ROM hack camera.
 This function is designed for non-standard level layouts and modded game environments
 |descriptionEnd| */
 void center_rom_hack_camera(void);
+
+void romhack_camera_init_settings(void);
 
 #endif // CAMERA_H
