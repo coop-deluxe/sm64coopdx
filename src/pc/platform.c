@@ -252,6 +252,10 @@ const char *sys_user_path(void)
     return sys_windows_short_path_from_wcs(shortPath, SYS_MAX_PATH, widePath) ? shortPath : NULL;
 }
 
+const char *sys_resource_path(void) {
+    return sys_exe_path_dir();
+}
+
 const char *sys_exe_path_dir(void)
 {
     static char path[SYS_MAX_PATH];
@@ -324,6 +328,25 @@ const char *sys_user_path(void) {
     if (path[len-1] == '/' || path[len-1] == '\\') { path[len-1] = 0; }
 
     return path;
+}
+
+const char *sys_resource_path(void)
+{
+#ifdef __APPLE__ // Kinda lazy, but I don't know how to add CoreFoundation.framework
+    static char path[SYS_MAX_PATH];
+    if ('\0' != path[0]) { return path; }
+
+    const char *exeDir = sys_exe_path_dir();
+    char *lastSeparator = strrchr(exeDir, '/');
+    if (lastSeparator != NULL) {
+        const char folder[] = "/Resources";
+        size_t count = (size_t)(lastSeparator - exeDir);
+        strncpy(path, exeDir, count);
+        return strncat(path, folder, sizeof(path) - 1 - count);
+    }
+#endif
+
+    return sys_exe_path_dir();
 }
 
 const char *sys_exe_path_dir(void) {
