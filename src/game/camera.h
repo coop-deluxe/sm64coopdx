@@ -25,6 +25,7 @@ extern u8 gRomhackCameraAllowCentering;
 extern u8 gOverrideAllowToxicGasCamera;
 extern u8 gRomhackCameraAllowDpad;
 extern u8 gRomHackCamSetCollisions;
+extern u8 gRomhackCameraSlowFall;
 
 /**
  * @file camera.h

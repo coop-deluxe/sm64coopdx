@@ -143,6 +143,7 @@ bool         configRomhackCameraBowserFights      = false;
 bool         configRomhackCameraHasCollision      = false;
 bool         configRomhackCameraHasCentering      = false;
 bool         configRomhackCameraDpadBehavior      = false;
+bool         configRomhackCameraSlowFall          = true;
 bool         configCameraToxicGas                 = true;
 // debug
 bool         configLuaProfiler                    = false;
@@ -273,12 +274,13 @@ static const struct ConfigOption options[] = {
     {.name = "bettercam_pan_level",            .type = CONFIG_TYPE_UINT, .uintValue = &configCameraPan},
     {.name = "bettercam_degrade",              .type = CONFIG_TYPE_UINT, .uintValue = &configCameraDegrade},
     // romhack camera settings
-    {.name = "romhackcam_enable",               .type = CONFIG_TYPE_BOOL, .boolValue = &configEnableRomhackCamera},
-    {.name = "romhackcam_bowser",               .type = CONFIG_TYPE_BOOL, .boolValue = &configRomhackCameraBowserFights},
-    {.name = "romhackcam_collision",            .type = CONFIG_TYPE_BOOL, .boolValue = &configRomhackCameraHasCollision},
-    {.name = "romhackcam_centering",            .type = CONFIG_TYPE_BOOL, .boolValue = &configRomhackCameraHasCentering},
-    {.name = "romhackcam_dpad",                 .type = CONFIG_TYPE_BOOL, .boolValue = &configRomhackCameraDpadBehavior},
-    {.name = "romhackcam_toxic_gas",            .type = CONFIG_TYPE_BOOL, .boolValue = &configCameraToxicGas},
+    {.name = "romhackcam_enable",              .type = CONFIG_TYPE_BOOL, .boolValue = &configEnableRomhackCamera},
+    {.name = "romhackcam_bowser",              .type = CONFIG_TYPE_BOOL, .boolValue = &configRomhackCameraBowserFights},
+    {.name = "romhackcam_collision",           .type = CONFIG_TYPE_BOOL, .boolValue = &configRomhackCameraHasCollision},
+    {.name = "romhackcam_centering",           .type = CONFIG_TYPE_BOOL, .boolValue = &configRomhackCameraHasCentering},
+    {.name = "romhackcam_dpad",                .type = CONFIG_TYPE_BOOL, .boolValue = &configRomhackCameraDpadBehavior},
+    {.name = "romhackcam_slowfall",            .type = CONFIG_TYPE_BOOL, .boolValue = &configRomhackCameraSlowFall},
+    {.name = "romhackcam_toxic_gas",           .type = CONFIG_TYPE_BOOL, .boolValue = &configCameraToxicGas},
     // debug
     {.name = "debug_offset",                   .type = CONFIG_TYPE_U64,  .u64Value    = &gPcDebug.bhvOffset},
     {.name = "debug_tags",                     .type = CONFIG_TYPE_U64,  .u64Value    = gPcDebug.tags},

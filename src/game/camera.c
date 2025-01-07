@@ -47,6 +47,7 @@ enum RomhackCameraOverride gOverrideRomhackCamera = RCO_ALL;
 u8 gRomhackCameraAllowCentering = TRUE;
 u8 gOverrideAllowToxicGasCamera = FALSE;
 u8 gRomhackCameraAllowDpad = FALSE;
+u8 gRomhackCameraSlowFall = TRUE;
 
 /**
  * @file camera.c
@@ -12174,11 +12175,12 @@ void romhack_camera_init_settings(void) {
     enum RomhackCameraOverride override = configEnableRomhackCamera ?
             (configRomhackCameraBowserFights ? RCO_ALL_INCLUDING_VANILLA : RCO_ALL_VANILLA_EXCEPT_BOWSER) : RCO_DISABLE;
     camera_set_romhack_override(override);
-    camera_set_use_course_specific_settings(dynos_level_is_vanilla_level(gCurrLevelNum) ? 1 : 0);
-    rom_hack_cam_set_collisions(configRomhackCameraHasCollision);
-    camera_romhack_allow_centering(configRomhackCameraHasCentering);
-    camera_romhack_allow_dpad_usage(configRomhackCameraDpadBehavior);
-    camera_allow_toxic_gas_camera(configCameraToxicGas);
+    gCameraUseCourseSpecificSettings = dynos_level_is_vanilla_level(gCurrLevelNum) ? 1 : 0;
+    gRomHackCamSetCollisions = configRomhackCameraHasCollision;
+    gRomhackCameraAllowCentering = configRomhackCameraHasCentering;
+    gRomhackCameraAllowDpad = configRomhackCameraDpadBehavior;
+    gOverrideAllowToxicGasCamera = configCameraToxicGas;
+    gRomhackCameraSlowFall = configRomhackCameraSlowFall;
 }
 
 static u8 rom_hack_cam_can_see_mario(Vec3f desiredPos) {
@@ -12399,12 +12401,14 @@ void mode_rom_hack_camera(struct Camera *c) {
 
     // tween
     c->pos[0] = c->pos[0] * 0.6 + oldPos[0] * 0.4;
-    {
+    if (gRomhackCameraSlowFall) {
         f32 approachRate = 20.0f;
         f32 goalHeight = c->pos[1];
         approachRate += ABS(oldPos[1] - goalHeight) / 20;
         c->pos[1] = oldPos[1];
         approach_camera_height(c, goalHeight, approachRate);
+    } else {
+        c->pos[1] = c->pos[1] * 0.6 + oldPos[1] * 0.4;
     }
     c->pos[2] = c->pos[2] * 0.6 + oldPos[2] * 0.4;
 

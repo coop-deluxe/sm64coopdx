@@ -96,6 +96,7 @@ extern bool configRomhackCameraBowserFights;
 extern bool configRomhackCameraHasCollision;
 extern bool configRomhackCameraHasCentering;
 extern bool configRomhackCameraDpadBehavior;
+extern bool configRomhackCameraSlowFall;
 extern bool configCameraToxicGas;
 // debug
 extern bool         configLuaProfiler;
