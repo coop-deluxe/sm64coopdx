@@ -1391,7 +1391,7 @@ static struct LuaObjectField sMarioAnimationFields[LUA_MARIO_ANIMATION_FIELD_COU
     { "targetAnim",      LVT_COBJECT_P, offsetof(struct MarioAnimation, targetAnim),      false, LOT_ANIMATION },
 };
 
-#define LUA_MARIO_BODY_STATE_FIELD_COUNT 24
+#define LUA_MARIO_BODY_STATE_FIELD_COUNT 25
 static struct LuaObjectField sMarioBodyStateFields[LUA_MARIO_BODY_STATE_FIELD_COUNT] = {
     { "action",              LVT_U32,     offsetof(struct MarioBodyState, action),              false, LOT_NONE  },
     { "allowPartRotation",   LVT_U8,      offsetof(struct MarioBodyState, allowPartRotation),   false, LOT_NONE  },
@@ -1416,6 +1416,7 @@ static struct LuaObjectField sMarioBodyStateFields[LUA_MARIO_BODY_STATE_FIELD_CO
     { "shadeR",              LVT_U16,     offsetof(struct MarioBodyState, shadeR),              false, LOT_NONE  },
     { "torsoAngle",          LVT_COBJECT, offsetof(struct MarioBodyState, torsoAngle),          true,  LOT_VEC3S },
     { "torsoPos",            LVT_COBJECT, offsetof(struct MarioBodyState, torsoPos),            true,  LOT_VEC3F },
+    { "updateHeadPosTime",   LVT_U32,     offsetof(struct MarioBodyState, updateHeadPosTime),   false, LOT_NONE  },
     { "updateTorsoTime",     LVT_U32,     offsetof(struct MarioBodyState, updateTorsoTime),     true,  LOT_NONE  },
     { "wingFlutter",         LVT_S8,      offsetof(struct MarioBodyState, wingFlutter),         false, LOT_NONE  },
 };

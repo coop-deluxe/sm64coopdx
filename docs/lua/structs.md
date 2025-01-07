@@ -1701,6 +1701,7 @@
 | shadeR | `integer` |  |
 | torsoAngle | [Vec3s](structs.md#Vec3s) | read-only |
 | torsoPos | [Vec3f](structs.md#Vec3f) | read-only |
+| updateHeadPosTime | `integer` |  |
 | updateTorsoTime | `integer` | read-only |
 | wingFlutter | `integer` |  |
 

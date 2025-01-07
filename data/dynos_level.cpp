@@ -5,6 +5,7 @@ extern "C" {
 #include "levels/scripts.h"
 #include "pc/lua/utils/smlua_level_utils.h"
 #include "game/area.h"
+#include "game/level_update.h"
 }
 
 //
@@ -17,6 +18,8 @@ extern const BehaviorScript *sWarpBhvSpawnTable[];
 }
 
 #define DYNOS_LEVEL_MOD_INDEX_VANILLA (-1)
+
+#define DYNOS_LEVEL_MARIO_POS_WARP_ID (-1)
 
 extern void *gDynosLevelScriptsOriginal[LEVEL_COUNT];
 
@@ -63,45 +66,10 @@ LvlCmd *DynOS_Level_CmdNext(LvlCmd *aCmd) {
 // Init
 //
 
-static s32 DynOS_Level_PreprocessMasterScript(u8 aType, void *aCmd) {
-    static bool sDynosScriptExecLevelTable = false;
-    static s32 sDynosLevelNum = -1;
-
-    if (sDynosScriptExecLevelTable) {
-        switch (aType) {
-
-            // JUMP_IF
-            case 0x0C: {
-                sDynosLevelNum = (s32) DynOS_Level_CmdGet(aCmd, 0x04);
-            } return 0;
-
-            // EXECUTE
-            case 0x00: {
-                void *_Script = (void *) DynOS_Level_CmdGet(aCmd, 0x0C);
-                if (sDynosLevelNum >= 0 && sDynosLevelNum < LEVEL_COUNT && !sDynosLevelScripts[sDynosLevelNum].mLevelScript) {
-                    sDynosLevelScripts[sDynosLevelNum].mLevelScript = _Script;
-                    sDynosLevelScripts[sDynosLevelNum].mModIndex = DYNOS_LEVEL_MOD_INDEX_VANILLA;
-                    gDynosLevelScriptsOriginal[sDynosLevelNum] = _Script;
-                }
-                sDynosLevelNum = -1;
-            } return 2;
-
-            // EXIT or SLEEP
-            case 0x02:
-            case 0x03:
-                return 3;
-        }
-    } else if (aType == 0x06) { // JUMP_LINK
-        sDynosScriptExecLevelTable = true;
-        return 0;
-    }
-    return 0;
-}
-
 static s32 sDynosCurrentLevelNum;
 static u8 sDynosAreaIndex = 0;
 
-inline static DynosWarp *DynOS_Level_GetWarpStruct(u8 aId) {
+inline static DynosWarp *DynOS_Level_GetWarpStruct(s8 aId) {
     for (s32 i = 0; i != sDynosLevelWarps[sDynosCurrentLevelNum].Count(); ++i) {
         if (sDynosLevelWarps[sDynosCurrentLevelNum][i].mArea == sDynosAreaIndex &&
             sDynosLevelWarps[sDynosCurrentLevelNum][i].mId == aId) {
@@ -150,6 +118,20 @@ static s32 DynOS_Level_PreprocessScript(u8 aType, void *aCmd) {
                 _Warp->mDestArea = (u8) DynOS_Level_CmdGet(aCmd, 4);
                 _Warp->mDestId = (u8) DynOS_Level_CmdGet(aCmd, 5);
             }
+        } break;
+
+        // MARIO_POS
+        case 0x2B: {
+            DynosWarp *_Warp = DynOS_Level_GetWarpStruct(DYNOS_LEVEL_MARIO_POS_WARP_ID);
+            _Warp->mArea = (s16) DynOS_Level_CmdGet(aCmd, 2);
+            _Warp->mAngle = ((s16) DynOS_Level_CmdGet(aCmd, 4) * 0x8000) / 180 - 0x8000;
+            _Warp->mPosX = (s16) DynOS_Level_CmdGet(aCmd, 6);
+            _Warp->mPosY = (s16) DynOS_Level_CmdGet(aCmd, 8);
+            _Warp->mPosZ = (s16) DynOS_Level_CmdGet(aCmd, 10);
+            _Warp->mType = MARIO_SPAWN_IDLE - 1;
+            _Warp->mDestLevel = sDynosCurrentLevelNum;
+            _Warp->mDestArea = _Warp->mArea;
+            _Warp->mDestId = DYNOS_LEVEL_MARIO_POS_WARP_ID;
         } break;
 
         // SLEEP or SLEEP_BEFORE_EXIT
@@ -399,7 +381,7 @@ void DynOS_Level_ParseScript(const void *aScript, s32 (*aPreprocessFunction)(u8,
 // Level Script Utilities
 //
 
-s16 *DynOS_Level_GetWarp(s32 aLevel, s32 aArea, u8 aWarpId) {
+s16 *DynOS_Level_GetWarp(s32 aLevel, s32 aArea, s8 aWarpId) {
     if (aLevel >= CUSTOM_LEVEL_NUM_START) {
         struct CustomLevelInfo* info = smlua_level_util_get_info(aLevel);
         if (!info || !info->script) { return NULL; }
@@ -435,7 +417,7 @@ s16 *DynOS_Level_GetWarpEntry(s32 aLevel, s32 aArea) {
         if (sDynosLevelScripts[aLevel].mLevelScript == level_castle_inside_entry) {
             return DynOS_Level_GetWarp(aLevel, aArea, (aArea == 3) ? 0x00 : 0x01);
         } else if (sDynosLevelScripts[aLevel].mLevelScript == level_castle_grounds_entry) {
-            return DynOS_Level_GetWarp(aLevel, aArea, 0x00);
+            return DynOS_Level_GetWarp(aLevel, aArea, DYNOS_LEVEL_MARIO_POS_WARP_ID);
         } else if (sDynosLevelScripts[aLevel].mLevelScript == level_castle_courtyard_entry) {
             return DynOS_Level_GetWarp(aLevel, aArea, 0x01);
         }

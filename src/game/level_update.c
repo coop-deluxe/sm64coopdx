@@ -251,7 +251,7 @@ u16 level_control_timer(s32 timerOp) {
 
 u32 pressed_pause(void) {
     if (gServerSettings.pauseAnywhere) {
-        if (get_dialog_id() < 0 && sCurrPlayMode == PLAY_MODE_NORMAL) {
+        if (get_dialog_id() < 0 && sCurrPlayMode == PLAY_MODE_NORMAL && sDelayedWarpOp == WARP_OP_NONE) {
             return gPlayer1Controller->buttonPressed & START_BUTTON;
         }
     } else {
@@ -355,10 +355,10 @@ void set_mario_initial_action(struct MarioState *m, u32 spawnType, u32 actionArg
         case MARIO_SPAWN_DOOR_WARP:
             set_mario_action(m, ACT_WARP_DOOR_SPAWN, actionArg);
             break;
-        case MARIO_SPAWN_UNKNOWN_02:
+        case MARIO_SPAWN_IDLE:
             set_mario_action(m, ACT_IDLE, 0);
             break;
-        case MARIO_SPAWN_UNKNOWN_03:
+        case MARIO_SPAWN_PIPE:
             set_mario_action(m, ACT_EMERGE_FROM_PIPE, 0);
             break;
         case MARIO_SPAWN_TELEPORT:
@@ -422,8 +422,6 @@ void init_mario_after_warp(void) {
     u32 marioSpawnType = get_mario_spawn_type(spawnNode->object);
 
     if (gMarioState && gMarioState->action != ACT_UNINITIALIZED) {
-        struct Object *obj = spawnNode->object;
-        printf("init mario x: %f, y: %f, z: %f\n", obj->oPosX, obj->oPosY, obj->oPosZ);
         for (s32 i = 0; i < MAX_PLAYERS; i++) {
             gPlayerSpawnInfos[i].startPos[0] = (s16) spawnNode->object->oPosX;
             gPlayerSpawnInfos[i].startPos[1] = (s16) spawnNode->object->oPosY;
@@ -477,7 +475,7 @@ void init_mario_after_warp(void) {
     sDelayedWarpOp = WARP_OP_NONE;
 
     switch (marioSpawnType) {
-        case MARIO_SPAWN_UNKNOWN_03:
+        case MARIO_SPAWN_PIPE:
             play_transition(WARP_TRANSITION_FADE_FROM_STAR, 0x10, 0x00, 0x00, 0x00);
             break;
         case MARIO_SPAWN_DOOR_WARP:
@@ -492,7 +490,7 @@ void init_mario_after_warp(void) {
         case MARIO_SPAWN_SPIN_AIRBORNE_CIRCLE:
             play_transition(WARP_TRANSITION_FADE_FROM_CIRCLE, 0x10, 0x00, 0x00, 0x00);
             break;
-        case MARIO_SPAWN_UNKNOWN_27:
+        case MARIO_SPAWN_FADE_FROM_BLACK:
             play_transition(WARP_TRANSITION_FADE_FROM_COLOR, 0x10, 0x00, 0x00, 0x00);
             break;
         default:
