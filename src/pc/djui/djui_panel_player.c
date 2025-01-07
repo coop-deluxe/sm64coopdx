@@ -441,7 +441,7 @@ void djui_panel_player_create(struct DjuiBase* caller) {
         djui_selectionbox_create(body, DLANG(PLAYER, MODEL), characterChoices, CT_MAX, &configPlayerModel, djui_panel_player_value_changed);
 
         player_palettes_reset();
-        player_palettes_read(sys_exe_path_dir(), true);
+        player_palettes_read(sys_resource_path(), true);
         player_palettes_read(fs_get_write_path(PALETTES_DIRECTORY), false);
 
         char* palettePresets[MAX_PRESET_PALETTES + 1] = { DLANG(PALETTE, CUSTOM) };

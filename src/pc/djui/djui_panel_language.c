@@ -94,7 +94,7 @@ void djui_panel_language_create(struct DjuiBase* caller) {
     {
         // construct lang path
         char lpath[SYS_MAX_PATH] = "";
-        snprintf(lpath, SYS_MAX_PATH, "%s/lang", sys_exe_path_dir());
+        snprintf(lpath, SYS_MAX_PATH, "%s/lang", sys_resource_path());
 
         // open directory
         struct dirent* dir = NULL;
