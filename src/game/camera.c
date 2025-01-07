@@ -3128,6 +3128,11 @@ static void update_romhack_camera_override(struct Camera *c) {
             set_camera_mode(c, c->defMode, 0);
         }
         return;
+    } else {
+        if (c->mode == CAMERA_MODE_BOSS_FIGHT) {
+            set_camera_mode(c, CAMERA_MODE_ROM_HACK, 0);
+            return;
+        }
     }
 
     if (c->mode == CAMERA_MODE_ROM_HACK || !allow_romhack_camera_override_mode(c->mode)) { return; }
@@ -12174,8 +12179,8 @@ s32 snap_to_45_degrees(s16 angle) {
 void romhack_camera_init_settings(void) {
     enum RomhackCameraOverride override = configEnableRomhackCamera ?
             (configRomhackCameraBowserFights ? RCO_ALL_INCLUDING_VANILLA : RCO_ALL_VANILLA_EXCEPT_BOWSER) : RCO_DISABLE;
-    camera_set_romhack_override(override);
-    gCameraUseCourseSpecificSettings = dynos_level_is_vanilla_level(gCurrLevelNum) ? 1 : 0;
+    gOverrideRomhackCamera = override;
+    gCameraUseCourseSpecificSettings = (override == RCO_DISABLE && dynos_level_is_vanilla_level(gCurrLevelNum));
     gRomHackCamSetCollisions = configRomhackCameraHasCollision;
     gRomhackCameraAllowCentering = configRomhackCameraHasCentering;
     gRomhackCameraAllowDpad = configRomhackCameraDpadBehavior;
