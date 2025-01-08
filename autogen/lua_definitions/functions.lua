@@ -9110,25 +9110,25 @@ function camera_romhack_get_zoomed_out_height()
 end
 
 --- @param val integer
---- Sets the romhack camera's zoomed in distance, between 600 and 1600
+--- Sets the romhack camera's zoomed in distance, between 700 and 1200 units
 function camera_romhack_set_zoomed_in_dist(val)
     -- ...
 end
 
 --- @param val integer
---- Sets the romhack camera's zoomed in height, between 200 and 600
+--- Sets the romhack camera's zoomed in height, between 150 and 500 units
 function camera_romhack_set_zoomed_in_height(val)
     -- ...
 end
 
 --- @param val integer
---- Sets the romhack camera's zoomed out additional distance, between 400 and 1000
+--- Sets the romhack camera's zoomed out additional distance, between 100 and 600 units
 function camera_romhack_set_zoomed_out_dist(val)
     -- ...
 end
 
 --- @param val integer
---- Sets the romhack camera's zoomed out additional height, between 200 and 600
+--- Sets the romhack camera's zoomed out additional height, between 100 and 500 units
 function camera_romhack_set_zoomed_out_height(val)
     -- ...
 end

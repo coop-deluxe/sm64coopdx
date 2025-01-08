@@ -71,30 +71,22 @@ void rom_hack_cam_set_collisions(u8 enable) {
 }
 
 void camera_romhack_set_zoomed_in_dist(u32 val) {
-    if (val < 700) { val = 700; }
-    else if (val > 1600) { val = 1600; }
-    sOverrideCameraRomhackZoomedInDist.value = val;
+    sOverrideCameraRomhackZoomedInDist.value = MIN(MAX(val, 700), 1200);
     sOverrideCameraRomhackZoomedInDist.override = true;
 }
 
 void camera_romhack_set_zoomed_out_dist(u32 val) {
-    if (val < 400) { val = 400; }
-    else if (val > 1000) { val = 1000; }
-    sOverrideCameraRomhackZoomedOutDist.value = val;
+    sOverrideCameraRomhackZoomedOutDist.value = MIN(MAX(val, 100), 600);
     sOverrideCameraRomhackZoomedOutDist.override = true;
 }
 
 void camera_romhack_set_zoomed_in_height(u32 val) {
-    if (val < 200) { val = 200; }
-    else if (val > 600) { val = 600; }
-    sOverrideCameraRomhackZoomedInHeight.value = val;
+    sOverrideCameraRomhackZoomedInHeight.value = MIN(MAX(val, 150), 500);
     sOverrideCameraRomhackZoomedInHeight.override = true;
 }
 
 void camera_romhack_set_zoomed_out_height(u32 val) {
-    if (val < 200) { val = 200; }
-    else if (val > 600) { val = 600; }
-    sOverrideCameraRomhackZoomedOutHeight.value = val;
+    sOverrideCameraRomhackZoomedOutHeight.value = MIN(MAX(val, 100), 500);
     sOverrideCameraRomhackZoomedOutHeight.override = true;
 }
 

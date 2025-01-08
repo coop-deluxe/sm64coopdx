@@ -7672,7 +7672,7 @@ Gets the romhack camera's additional zoomed out height
 ## [camera_romhack_set_zoomed_in_dist](#camera_romhack_set_zoomed_in_dist)
 
 ### Description
-Sets the romhack camera's zoomed in distance, between 600 and 1600
+Sets the romhack camera's zoomed in distance, between 700 and 1200 units
 
 ### Lua Example
 `camera_romhack_set_zoomed_in_dist(val)`
@@ -7695,7 +7695,7 @@ Sets the romhack camera's zoomed in distance, between 600 and 1600
 ## [camera_romhack_set_zoomed_in_height](#camera_romhack_set_zoomed_in_height)
 
 ### Description
-Sets the romhack camera's zoomed in height, between 200 and 600
+Sets the romhack camera's zoomed in height, between 150 and 500 units
 
 ### Lua Example
 `camera_romhack_set_zoomed_in_height(val)`
@@ -7718,7 +7718,7 @@ Sets the romhack camera's zoomed in height, between 200 and 600
 ## [camera_romhack_set_zoomed_out_dist](#camera_romhack_set_zoomed_out_dist)
 
 ### Description
-Sets the romhack camera's zoomed out additional distance, between 400 and 1000
+Sets the romhack camera's zoomed out additional distance, between 100 and 600 units
 
 ### Lua Example
 `camera_romhack_set_zoomed_out_dist(val)`
@@ -7741,7 +7741,7 @@ Sets the romhack camera's zoomed out additional distance, between 400 and 1000
 ## [camera_romhack_set_zoomed_out_height](#camera_romhack_set_zoomed_out_height)
 
 ### Description
-Sets the romhack camera's zoomed out additional height, between 200 and 600
+Sets the romhack camera's zoomed out additional height, between 100 and 500 units
 
 ### Lua Example
 `camera_romhack_set_zoomed_out_height(val)`

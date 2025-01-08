@@ -46,10 +46,10 @@ void djui_panel_romhack_camera_create(struct DjuiBase* caller) {
         djui_checkbox_create(body, DLANG(CAMERA, ROMHACK_CAMERA_L_CENTERING), &configRomhackCameraHasCentering, djui_panel_romhack_camera_value_changed);
         djui_checkbox_create(body, DLANG(CAMERA, ROMHACK_CAMERA_USE_DPAD), &configRomhackCameraDpadBehavior, djui_panel_romhack_camera_value_changed);
         djui_checkbox_create(body, DLANG(CAMERA, ROMHACK_CAMERA_SLOW_FALL), &configRomhackCameraSlowFall, djui_panel_romhack_camera_value_changed);
-        djui_slider_create(body, DLANG(CAMERA, ROMHACK_CAMERA_ZOOMED_IN_DIST), &configRomhackCameraZoomedInDist, 700, 1600, djui_panel_free_camera_value_changed);
-        djui_slider_create(body, DLANG(CAMERA, ROMHACK_CAMERA_ZOOMED_OUT_DIST), &configRomhackCameraZoomedOutDist, 400, 1000, djui_panel_free_camera_value_changed);
-        djui_slider_create(body, DLANG(CAMERA, ROMHACK_CAMERA_ZOOMED_IN_HEIGHT), &configRomhackCameraZoomedInHeight, 200, 600, djui_panel_free_camera_value_changed);
-        djui_slider_create(body, DLANG(CAMERA, ROMHACK_CAMERA_ZOOMED_OUT_HEIGHT), &configRomhackCameraZoomedOutHeight, 200, 600, djui_panel_free_camera_value_changed);
+        djui_slider_create(body, DLANG(CAMERA, ROMHACK_CAMERA_ZOOMED_IN_DIST), &configRomhackCameraZoomedInDist, 700, 1200, djui_panel_free_camera_value_changed);
+        djui_slider_create(body, DLANG(CAMERA, ROMHACK_CAMERA_ZOOMED_OUT_DIST), &configRomhackCameraZoomedOutDist, 100, 600, djui_panel_free_camera_value_changed);
+        djui_slider_create(body, DLANG(CAMERA, ROMHACK_CAMERA_ZOOMED_IN_HEIGHT), &configRomhackCameraZoomedInHeight, 150, 500, djui_panel_free_camera_value_changed);
+        djui_slider_create(body, DLANG(CAMERA, ROMHACK_CAMERA_ZOOMED_OUT_HEIGHT), &configRomhackCameraZoomedOutHeight, 100, 500, djui_panel_free_camera_value_changed);
         djui_checkbox_create(body, DLANG(CAMERA, CAMERA_TOXIC_GAS), &configCameraToxicGas, djui_panel_romhack_camera_value_changed);
 
         djui_button_create(body, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
