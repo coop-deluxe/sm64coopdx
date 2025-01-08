@@ -9085,6 +9085,54 @@ function camera_romhack_get_collisions()
     -- ...
 end
 
+--- @return integer
+--- Gets the romhack camera's zoomed in distance
+function camera_romhack_get_zoomed_in_dist()
+    -- ...
+end
+
+--- @return integer
+--- Gets the romhack camera's zoomed in height
+function camera_romhack_get_zoomed_in_height()
+    -- ...
+end
+
+--- @return integer
+--- Gets the romhack camera's additional zoomed out distance
+function camera_romhack_get_zoomed_out_dist()
+    -- ...
+end
+
+--- @return integer
+--- Gets the romhack camera's additional zoomed out height
+function camera_romhack_get_zoomed_out_height()
+    -- ...
+end
+
+--- @param val integer
+--- Sets the romhack camera's zoomed in distance, between 600 and 1600
+function camera_romhack_set_zoomed_in_dist(val)
+    -- ...
+end
+
+--- @param val integer
+--- Sets the romhack camera's zoomed in height, between 200 and 600
+function camera_romhack_set_zoomed_in_height(val)
+    -- ...
+end
+
+--- @param val integer
+--- Sets the romhack camera's zoomed out additional distance, between 400 and 1000
+function camera_romhack_set_zoomed_out_dist(val)
+    -- ...
+end
+
+--- @param val integer
+--- Sets the romhack camera's zoomed out additional height, between 200 and 600
+function camera_romhack_set_zoomed_out_height(val)
+    -- ...
+end
+
 --- @param value boolean
 --- Sets if the camera should account for surfaces
 function camera_set_checking_surfaces(value)

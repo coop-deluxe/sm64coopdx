@@ -32,6 +32,24 @@ This enables or disables specific collision behaviors in modded levels
 |descriptionEnd| */
 void rom_hack_cam_set_collisions(u8 enable);
 
+/* |description|Sets the romhack camera's zoomed in distance, between 600 and 1600|descriptionEnd| */
+void camera_romhack_set_zoomed_in_dist(u32 val);
+/* |description|Sets the romhack camera's zoomed out additional distance, between 400 and 1000|descriptionEnd| */
+void camera_romhack_set_zoomed_out_dist(u32 val);
+/* |description|Sets the romhack camera's zoomed in height, between 200 and 600|descriptionEnd| */
+void camera_romhack_set_zoomed_in_height(u32 val);
+/* |description|Sets the romhack camera's zoomed out additional height, between 200 and 600|descriptionEnd| */
+void camera_romhack_set_zoomed_out_height(u32 val);
+
+/* |description|Gets the romhack camera's zoomed in distance|descriptionEnd| */
+u32 camera_romhack_get_zoomed_in_dist(void);
+/* |description|Gets the romhack camera's additional zoomed out distance|descriptionEnd| */
+u32 camera_romhack_get_zoomed_out_dist(void);
+/* |description|Gets the romhack camera's zoomed in height|descriptionEnd| */
+u32 camera_romhack_get_zoomed_in_height(void);
+/* |description|Gets the romhack camera's additional zoomed out height|descriptionEnd| */
+u32 camera_romhack_get_zoomed_out_height(void);
+
 /* |description|Gets the current romhack camera override status|descriptionEnd| */
 enum RomhackCameraOverride camera_get_romhack_override(void);
 /* |description|Gets if the romhack camera should allow centering|descriptionEnd| */

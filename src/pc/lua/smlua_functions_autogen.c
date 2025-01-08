@@ -27993,6 +27993,134 @@ int smlua_func_camera_romhack_get_collisions(UNUSED lua_State* L) {
     return 1;
 }
 
+int smlua_func_camera_romhack_get_zoomed_in_dist(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "camera_romhack_get_zoomed_in_dist", 0, top);
+        return 0;
+    }
+
+
+    lua_pushinteger(L, camera_romhack_get_zoomed_in_dist());
+
+    return 1;
+}
+
+int smlua_func_camera_romhack_get_zoomed_in_height(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "camera_romhack_get_zoomed_in_height", 0, top);
+        return 0;
+    }
+
+
+    lua_pushinteger(L, camera_romhack_get_zoomed_in_height());
+
+    return 1;
+}
+
+int smlua_func_camera_romhack_get_zoomed_out_dist(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "camera_romhack_get_zoomed_out_dist", 0, top);
+        return 0;
+    }
+
+
+    lua_pushinteger(L, camera_romhack_get_zoomed_out_dist());
+
+    return 1;
+}
+
+int smlua_func_camera_romhack_get_zoomed_out_height(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "camera_romhack_get_zoomed_out_height", 0, top);
+        return 0;
+    }
+
+
+    lua_pushinteger(L, camera_romhack_get_zoomed_out_height());
+
+    return 1;
+}
+
+int smlua_func_camera_romhack_set_zoomed_in_dist(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "camera_romhack_set_zoomed_in_dist", 1, top);
+        return 0;
+    }
+
+    u32 val = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "camera_romhack_set_zoomed_in_dist"); return 0; }
+
+    camera_romhack_set_zoomed_in_dist(val);
+
+    return 1;
+}
+
+int smlua_func_camera_romhack_set_zoomed_in_height(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "camera_romhack_set_zoomed_in_height", 1, top);
+        return 0;
+    }
+
+    u32 val = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "camera_romhack_set_zoomed_in_height"); return 0; }
+
+    camera_romhack_set_zoomed_in_height(val);
+
+    return 1;
+}
+
+int smlua_func_camera_romhack_set_zoomed_out_dist(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "camera_romhack_set_zoomed_out_dist", 1, top);
+        return 0;
+    }
+
+    u32 val = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "camera_romhack_set_zoomed_out_dist"); return 0; }
+
+    camera_romhack_set_zoomed_out_dist(val);
+
+    return 1;
+}
+
+int smlua_func_camera_romhack_set_zoomed_out_height(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "camera_romhack_set_zoomed_out_height", 1, top);
+        return 0;
+    }
+
+    u32 val = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "camera_romhack_set_zoomed_out_height"); return 0; }
+
+    camera_romhack_set_zoomed_out_height(val);
+
+    return 1;
+}
+
 int smlua_func_camera_set_checking_surfaces(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -33745,6 +33873,14 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "camera_romhack_get_allow_centering", smlua_func_camera_romhack_get_allow_centering);
     smlua_bind_function(L, "camera_romhack_get_allow_dpad_usage", smlua_func_camera_romhack_get_allow_dpad_usage);
     smlua_bind_function(L, "camera_romhack_get_collisions", smlua_func_camera_romhack_get_collisions);
+    smlua_bind_function(L, "camera_romhack_get_zoomed_in_dist", smlua_func_camera_romhack_get_zoomed_in_dist);
+    smlua_bind_function(L, "camera_romhack_get_zoomed_in_height", smlua_func_camera_romhack_get_zoomed_in_height);
+    smlua_bind_function(L, "camera_romhack_get_zoomed_out_dist", smlua_func_camera_romhack_get_zoomed_out_dist);
+    smlua_bind_function(L, "camera_romhack_get_zoomed_out_height", smlua_func_camera_romhack_get_zoomed_out_height);
+    smlua_bind_function(L, "camera_romhack_set_zoomed_in_dist", smlua_func_camera_romhack_set_zoomed_in_dist);
+    smlua_bind_function(L, "camera_romhack_set_zoomed_in_height", smlua_func_camera_romhack_set_zoomed_in_height);
+    smlua_bind_function(L, "camera_romhack_set_zoomed_out_dist", smlua_func_camera_romhack_set_zoomed_out_dist);
+    smlua_bind_function(L, "camera_romhack_set_zoomed_out_height", smlua_func_camera_romhack_set_zoomed_out_height);
     smlua_bind_function(L, "camera_set_checking_surfaces", smlua_func_camera_set_checking_surfaces);
     smlua_bind_function(L, "camera_set_romhack_override", smlua_func_camera_set_romhack_override);
     smlua_bind_function(L, "camera_unfreeze", smlua_func_camera_unfreeze);

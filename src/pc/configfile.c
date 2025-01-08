@@ -145,6 +145,10 @@ bool         configRomhackCameraHasCentering      = false;
 bool         configRomhackCameraDpadBehavior      = false;
 bool         configRomhackCameraSlowFall          = true;
 bool         configCameraToxicGas                 = true;
+unsigned int configRomhackCameraZoomedInDist      = 900;
+unsigned int configRomhackCameraZoomedOutDist     = 1400;
+unsigned int configRomhackCameraZoomedInHeight    = 300;
+unsigned int configRomhackCameraZoomedOutHeight   = 450;
 // debug
 bool         configLuaProfiler                    = false;
 bool         configDebugPrint                     = false;
@@ -281,6 +285,10 @@ static const struct ConfigOption options[] = {
     {.name = "romhackcam_dpad",                .type = CONFIG_TYPE_BOOL, .boolValue = &configRomhackCameraDpadBehavior},
     {.name = "romhackcam_slowfall",            .type = CONFIG_TYPE_BOOL, .boolValue = &configRomhackCameraSlowFall},
     {.name = "romhackcam_toxic_gas",           .type = CONFIG_TYPE_BOOL, .boolValue = &configCameraToxicGas},
+    {.name = "romhackcam_zi_dist",             .type = CONFIG_TYPE_UINT, .uintValue = &configRomhackCameraZoomedInDist},
+    {.name = "romhackcam_zo_dist",             .type = CONFIG_TYPE_UINT, .uintValue = &configRomhackCameraZoomedOutDist},
+    {.name = "romhackcam_zi_height",           .type = CONFIG_TYPE_UINT, .uintValue = &configRomhackCameraZoomedInHeight},
+    {.name = "romhackcam_zo_height",           .type = CONFIG_TYPE_UINT, .uintValue = &configRomhackCameraZoomedOutHeight},
     // debug
     {.name = "debug_offset",                   .type = CONFIG_TYPE_U64,  .u64Value    = &gPcDebug.bhvOffset},
     {.name = "debug_tags",                     .type = CONFIG_TYPE_U64,  .u64Value    = gPcDebug.tags},

@@ -14,6 +14,10 @@ static struct CameraOverride sOverrideCameraAnalog           = { 0 };
 static struct CameraOverride sOverrideCameraMouse            = { 0 };
 static struct CameraOverride sOverrideCameraFreecamDpad      = { 0 };
 static struct CameraOverride sOverrideCameraFreecamCollision = { 0 };
+static struct CameraOverride sOverrideCameraRomhackZoomedInDist = { 0 };
+static struct CameraOverride sOverrideCameraRomhackZoomedOutDist = { 0 };
+static struct CameraOverride sOverrideCameraRomhackZoomedInHeight = { 0 };
+static struct CameraOverride sOverrideCameraRomhackZoomedOutHeight = { 0 };
 
 void camera_reset_overrides(void) {
     sOverrideCameraXSens.override = false;
@@ -28,6 +32,10 @@ void camera_reset_overrides(void) {
     sOverrideCameraMouse.override = false;
     sOverrideCameraFreecamDpad.override = false;
     sOverrideCameraFreecamCollision.override = false;
+    sOverrideCameraRomhackZoomedInDist.override = false;
+    sOverrideCameraRomhackZoomedOutDist.override = false;
+    sOverrideCameraRomhackZoomedInHeight.override = false;
+    sOverrideCameraRomhackZoomedOutHeight.override = false;
 }
 
 void camera_freeze(void) {
@@ -60,6 +68,50 @@ void camera_romhack_allow_dpad_usage(u8 allow) {
 
 void rom_hack_cam_set_collisions(u8 enable) {
     gRomHackCamSetCollisions = enable;
+}
+
+void camera_romhack_set_zoomed_in_dist(u32 val) {
+    if (val < 700) { val = 700; }
+    else if (val > 1600) { val = 1600; }
+    sOverrideCameraRomhackZoomedInDist.value = val;
+    sOverrideCameraRomhackZoomedInDist.override = true;
+}
+
+void camera_romhack_set_zoomed_out_dist(u32 val) {
+    if (val < 400) { val = 400; }
+    else if (val > 1000) { val = 1000; }
+    sOverrideCameraRomhackZoomedOutDist.value = val;
+    sOverrideCameraRomhackZoomedOutDist.override = true;
+}
+
+void camera_romhack_set_zoomed_in_height(u32 val) {
+    if (val < 200) { val = 200; }
+    else if (val > 600) { val = 600; }
+    sOverrideCameraRomhackZoomedInHeight.value = val;
+    sOverrideCameraRomhackZoomedInHeight.override = true;
+}
+
+void camera_romhack_set_zoomed_out_height(u32 val) {
+    if (val < 200) { val = 200; }
+    else if (val > 600) { val = 600; }
+    sOverrideCameraRomhackZoomedOutHeight.value = val;
+    sOverrideCameraRomhackZoomedOutHeight.override = true;
+}
+
+u32 camera_romhack_get_zoomed_in_dist(void) {
+    return sOverrideCameraRomhackZoomedInDist.override ? sOverrideCameraRomhackZoomedInDist.value : configRomhackCameraZoomedInDist;
+}
+
+u32 camera_romhack_get_zoomed_out_dist(void) {
+    return sOverrideCameraRomhackZoomedOutDist.override ? sOverrideCameraRomhackZoomedOutDist.value : configRomhackCameraZoomedOutDist;
+}
+
+u32 camera_romhack_get_zoomed_in_height(void) {
+    return sOverrideCameraRomhackZoomedInHeight.override ? sOverrideCameraRomhackZoomedInHeight.value : configRomhackCameraZoomedInHeight;
+}
+
+u32 camera_romhack_get_zoomed_out_height(void) {
+    return sOverrideCameraRomhackZoomedOutHeight.override ? sOverrideCameraRomhackZoomedOutHeight.value : configRomhackCameraZoomedOutHeight;
 }
 
 enum RomhackCameraOverride camera_get_romhack_override(void) {

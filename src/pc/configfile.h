@@ -98,6 +98,10 @@ extern bool configRomhackCameraHasCentering;
 extern bool configRomhackCameraDpadBehavior;
 extern bool configRomhackCameraSlowFall;
 extern bool configCameraToxicGas;
+extern unsigned int configRomhackCameraZoomedInDist;
+extern unsigned int configRomhackCameraZoomedOutDist;
+extern unsigned int configRomhackCameraZoomedInHeight;
+extern unsigned int configRomhackCameraZoomedOutHeight;
 // debug
 extern bool         configLuaProfiler;
 extern bool         configDebugPrint;

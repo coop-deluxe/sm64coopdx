@@ -12360,8 +12360,8 @@ void mode_rom_hack_camera(struct Camera *c) {
     sRomHackIsUpdate = 0;
 
     // figure out desired position
-    f32 desiredDist = sRomHackZoom ? 900 : 1400;
-    f32 desiredHeight = sRomHackZoom ? 300 : 450;
+    f32 desiredDist = sRomHackZoom ? configRomhackCameraZoomedInDist : configRomhackCameraZoomedInDist + configRomhackCameraZoomedOutDist;
+    f32 desiredHeight = sRomHackZoom ? configRomhackCameraZoomedInHeight : configRomhackCameraZoomedInHeight + configRomhackCameraZoomedOutHeight;
     f32* mPos = &gMarioStates[0].pos[0];
     pos[0] = mPos[0] + coss(sRomHackYaw) * desiredDist;
     pos[1] = mPos[1] + desiredHeight;
