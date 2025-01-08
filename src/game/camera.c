@@ -12431,6 +12431,8 @@ void mode_rom_hack_camera(struct Camera *c) {
     // update area yaw
     sAreaYaw = sRomHackYaw;
     sAreaYawChange = sAreaYaw - oldAreaYaw;
+
+    set_camera_height(c, c->pos[1]);
 }
 
 s32 update_rom_hack_camera(struct Camera *c, Vec3f focus, Vec3f pos) {
@@ -12457,9 +12459,6 @@ s32 update_rom_hack_camera(struct Camera *c, Vec3f focus, Vec3f pos) {
     calc_y_to_curr_floor(&posY, 1.f, 200.f, &focusY, 0.9f, 200.f);
     focus_on_mario(focus, pos, posY + yOff, focusY + yOff, sLakituDist + baseDist, pitch, sAreaYaw);
     pan_ahead_of_player(c);
-    if (gCameraUseCourseSpecificSettings && c->mode != CAMERA_MODE_ROM_HACK && gCurrLevelArea == AREA_DDD_SUB) {
-        camYaw = clamp_positions_and_find_yaw(pos, focus, 6839.f, 995.f, 5994.f, -3945.f);
-    }
 
     // adjust focus when under water
     struct MarioState* m = &gMarioStates[0];
