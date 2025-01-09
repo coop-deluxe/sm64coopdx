@@ -16,7 +16,7 @@ static void djui_panel_romhack_camera_value_changed(UNUSED struct DjuiBase* call
 }
 
 void djui_panel_free_camera_create(struct DjuiBase* caller) {
-    struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(CAMERA, FREE_CAMERA), false);
+    struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(CAMERA, FREE_CAMERA_TITLE), false);
     struct DjuiBase* body = djui_three_panel_get_body(panel);
     {
         djui_checkbox_create(body, DLANG(CAMERA, FREE_CAMERA), &configEnableFreeCamera, djui_panel_free_camera_value_changed);
@@ -37,7 +37,7 @@ void djui_panel_free_camera_create(struct DjuiBase* caller) {
 }
 
 void djui_panel_romhack_camera_create(struct DjuiBase* caller) {
-    struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(CAMERA, ROMHACK_CAMERA), false);
+    struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(CAMERA, ROMHACK_CAMERA_TITLE), false);
     struct DjuiBase* body = djui_three_panel_get_body(panel);
     {
         djui_checkbox_create(body, DLANG(CAMERA, ROMHACK_CAMERA), &configEnableRomhackCamera, djui_panel_romhack_camera_value_changed);
