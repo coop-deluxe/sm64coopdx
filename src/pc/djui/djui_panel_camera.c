@@ -21,6 +21,7 @@ void djui_panel_free_camera_create(struct DjuiBase* caller) {
     {
         djui_checkbox_create(body, DLANG(CAMERA, FREE_CAMERA), &configEnableFreeCamera, djui_panel_free_camera_value_changed);
         djui_checkbox_create(body, DLANG(CAMERA, ANALOG_CAMERA), &configFreeCameraAnalog, djui_panel_free_camera_value_changed);
+        djui_checkbox_create(body, DLANG(CAMERA, ROMHACK_CAMERA_L_CENTERING), &configFreeCameraLCentering, djui_panel_free_camera_value_changed);
         djui_checkbox_create(body, DLANG(CAMERA, FREE_CAMERA_USE_DPAD), &configFreeCameraDpadBehavior, djui_panel_free_camera_value_changed);
         djui_checkbox_create(body, DLANG(CAMERA, FREE_CAMERA_COLLISION), &configFreeCameraHasCollision, djui_panel_free_camera_value_changed);
         djui_checkbox_create(body, DLANG(CAMERA, MOUSE_LOOK), &configCameraMouse, djui_panel_free_camera_value_changed);

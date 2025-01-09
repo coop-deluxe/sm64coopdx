@@ -6883,6 +6883,29 @@ Overrides if Camera Collision is enabled
 
 <br />
 
+## [camera_config_enable_centering](#camera_config_enable_centering)
+
+### Description
+Overrides if the L button will center the camera
+
+### Lua Example
+`camera_config_enable_centering(enable)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| enable | `boolean` |
+
+### Returns
+- None
+
+### C Prototype
+`void camera_config_enable_centering(bool enable);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [camera_config_enable_free_cam](#camera_config_enable_free_cam)
 
 ### Description
@@ -6965,6 +6988,27 @@ Overrides if camera mouse look is enabled
 
 ### C Prototype
 `u32 camera_config_get_aggression(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_config_get_centering](#camera_config_get_centering)
+
+### Description
+Gets if the L button will center the camera
+
+### Lua Example
+`local booleanValue = camera_config_get_centering()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool camera_config_get_centering(void);`
 
 [:arrow_up_small:](#)
 

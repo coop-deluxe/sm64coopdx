@@ -85,11 +85,15 @@ u32  camera_config_get_aggression(void);
 u32  camera_config_get_pan_level(void);
 /* |description|Gets camera deceleration|descriptionEnd| */
 u32  camera_config_get_deceleration(void);
+/* |description|Gets if the L button will center the camera|descriptionEnd| */
+bool camera_config_get_centering(void);
 
 /* |description|Overrides if Free Camera is enabled|descriptionEnd| */
 void camera_config_enable_free_cam(bool enable);
 /* |description|Overrides if Analog Camera is enabled|descriptionEnd| */
 void camera_config_enable_analog_cam(bool enable);
+/* |description|Overrides if the L button will center the camera|descriptionEnd| */
+void camera_config_enable_centering(bool enable);
 /* |description|Overrides if Freecam DPad Behavior is enabled|descriptionEnd| */
 void camera_config_enable_freecam_dpad(bool enable);
 /* |description|Overrides if Camera Collision is enabled|descriptionEnd| */

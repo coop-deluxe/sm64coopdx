@@ -122,6 +122,7 @@ s16 newcam_saved_defmode = -1;
 u8 gFreeCameraUseDpad = FALSE;
 u8 gFreeCameraHasCollision = TRUE;
 u8 sFreeCameraDirectionLocked = FALSE;
+u8 sFreeCameraLCentering = TRUE;
 
 extern bool gDjuiInMainMenu;
 
@@ -201,6 +202,7 @@ void newcam_init_settings(void) {
     newcam_degrade          = (f32)camera_config_get_deceleration();
     gFreeCameraUseDpad      = (u8)camera_config_is_freecam_dpad_enabled();
     gFreeCameraHasCollision = (u8)camera_config_is_free_camera_collision_enabled();
+    sFreeCameraLCentering   = (u8)camera_config_get_centering();
 
     // setup main menu camera
     if (gDjuiInMainMenu) { newcam_tilt = 5; }
@@ -220,6 +222,7 @@ void newcam_init_settings_override(bool override) {
     newcam_degrade          = (f32)camera_config_get_deceleration();
     gFreeCameraUseDpad      = (u8)camera_config_is_freecam_dpad_enabled();
     gFreeCameraHasCollision = (u8)camera_config_is_free_camera_collision_enabled();
+    sFreeCameraLCentering   = configFreeCameraLCentering;
 
     // setup main menu camera
     if (gDjuiInMainMenu) { newcam_tilt = 5; }
@@ -456,7 +459,7 @@ static void newcam_zoom_button(void) {
             newcam_distance = newcam_distance_target;
     }
 
-    if ((gPlayer1Controller->buttonDown & L_TRIG) && (newcam_modeflags & NC_FLAG_ZOOM)) {
+    if (sFreeCameraLCentering && (gPlayer1Controller->buttonDown & L_TRIG) && (newcam_modeflags & NC_FLAG_ZOOM)) {
         //When you press L, set the flag for centering the camera. Afterwards, start setting the yaw to the Player's yaw at the time.
         newcam_yaw_target = -gMarioStates[0].faceAngle[1]-0x4000;
         newcam_centering = 1;

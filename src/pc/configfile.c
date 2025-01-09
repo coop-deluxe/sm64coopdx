@@ -127,11 +127,10 @@ bool         configUseStandardKeyBindingsChat     = false;
 // free camera settings
 bool         configEnableFreeCamera               = false;
 bool         configFreeCameraAnalog               = false;
+bool         configFreeCameraLCentering           = false;
 bool         configFreeCameraDpadBehavior         = false;
 bool         configFreeCameraHasCollision         = true;
 bool         configCameraMouse                    = false;
-bool         configCameraInvertX                  = false;
-bool         configCameraInvertY                  = true;
 unsigned int configCameraXSens                    = 50;
 unsigned int configCameraYSens                    = 50;
 unsigned int configCameraAggr                     = 0;
@@ -149,6 +148,9 @@ unsigned int configRomhackCameraZoomedInDist      = 900;
 unsigned int configRomhackCameraZoomedOutDist     = 1400;
 unsigned int configRomhackCameraZoomedInHeight    = 300;
 unsigned int configRomhackCameraZoomedOutHeight   = 450;
+// common camera settings
+bool         configCameraInvertX                  = false;
+bool         configCameraInvertY                  = true;
 // debug
 bool         configLuaProfiler                    = false;
 bool         configDebugPrint                     = false;
@@ -267,6 +269,7 @@ static const struct ConfigOption options[] = {
     // free camera settings
     {.name = "bettercam_enable",               .type = CONFIG_TYPE_BOOL, .boolValue = &configEnableFreeCamera},
     {.name = "bettercam_analog",               .type = CONFIG_TYPE_BOOL, .boolValue = &configFreeCameraAnalog},
+    {.name = "bettercam_centering",            .type = CONFIG_TYPE_BOOL, .boolValue = &configFreeCameraLCentering},
     {.name = "bettercam_dpad",                 .type = CONFIG_TYPE_BOOL, .boolValue = &configFreeCameraDpadBehavior},
     {.name = "bettercam_collision",            .type = CONFIG_TYPE_BOOL, .boolValue = &configFreeCameraHasCollision},
     {.name = "bettercam_mouse_look",           .type = CONFIG_TYPE_BOOL, .boolValue = &configCameraMouse},

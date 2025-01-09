@@ -80,11 +80,10 @@ extern bool         configUseStandardKeyBindingsChat;
 // free camera settings
 extern bool         configEnableFreeCamera;
 extern bool         configFreeCameraAnalog;
+extern bool         configFreeCameraLCentering;
 extern bool         configFreeCameraDpadBehavior;
 extern bool         configFreeCameraHasCollision;
 extern bool         configCameraMouse;
-extern bool         configCameraInvertX;
-extern bool         configCameraInvertY;
 extern unsigned int configCameraXSens;
 extern unsigned int configCameraYSens;
 extern unsigned int configCameraAggr;
@@ -102,6 +101,9 @@ extern unsigned int configRomhackCameraZoomedInDist;
 extern unsigned int configRomhackCameraZoomedOutDist;
 extern unsigned int configRomhackCameraZoomedInHeight;
 extern unsigned int configRomhackCameraZoomedOutHeight;
+// common camera settings
+extern bool         configCameraInvertX;
+extern bool         configCameraInvertY;
 // debug
 extern bool         configLuaProfiler;
 extern bool         configDebugPrint;

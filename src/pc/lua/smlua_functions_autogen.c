@@ -27474,6 +27474,23 @@ int smlua_func_camera_config_enable_camera_collisions(lua_State* L) {
     return 1;
 }
 
+int smlua_func_camera_config_enable_centering(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "camera_config_enable_centering", 1, top);
+        return 0;
+    }
+
+    bool enable = smlua_to_boolean(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "camera_config_enable_centering"); return 0; }
+
+    camera_config_enable_centering(enable);
+
+    return 1;
+}
+
 int smlua_func_camera_config_enable_free_cam(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -27536,6 +27553,21 @@ int smlua_func_camera_config_get_aggression(UNUSED lua_State* L) {
 
 
     lua_pushinteger(L, camera_config_get_aggression());
+
+    return 1;
+}
+
+int smlua_func_camera_config_get_centering(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "camera_config_get_centering", 0, top);
+        return 0;
+    }
+
+
+    lua_pushboolean(L, camera_config_get_centering());
 
     return 1;
 }
@@ -33840,10 +33872,12 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "camera_allow_toxic_gas_camera", smlua_func_camera_allow_toxic_gas_camera);
     smlua_bind_function(L, "camera_config_enable_analog_cam", smlua_func_camera_config_enable_analog_cam);
     smlua_bind_function(L, "camera_config_enable_camera_collisions", smlua_func_camera_config_enable_camera_collisions);
+    smlua_bind_function(L, "camera_config_enable_centering", smlua_func_camera_config_enable_centering);
     smlua_bind_function(L, "camera_config_enable_free_cam", smlua_func_camera_config_enable_free_cam);
     smlua_bind_function(L, "camera_config_enable_freecam_dpad", smlua_func_camera_config_enable_freecam_dpad);
     smlua_bind_function(L, "camera_config_enable_mouse_look", smlua_func_camera_config_enable_mouse_look);
     smlua_bind_function(L, "camera_config_get_aggression", smlua_func_camera_config_get_aggression);
+    smlua_bind_function(L, "camera_config_get_centering", smlua_func_camera_config_get_centering);
     smlua_bind_function(L, "camera_config_get_deceleration", smlua_func_camera_config_get_deceleration);
     smlua_bind_function(L, "camera_config_get_pan_level", smlua_func_camera_config_get_pan_level);
     smlua_bind_function(L, "camera_config_get_x_sensitivity", smlua_func_camera_config_get_x_sensitivity);

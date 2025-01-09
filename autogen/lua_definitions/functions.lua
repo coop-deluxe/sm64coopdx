@@ -8895,6 +8895,12 @@ function camera_config_enable_camera_collisions(enable)
 end
 
 --- @param enable boolean
+--- Overrides if the L button will center the camera
+function camera_config_enable_centering(enable)
+    -- ...
+end
+
+--- @param enable boolean
 --- Overrides if Free Camera is enabled
 function camera_config_enable_free_cam(enable)
     -- ...
@@ -8914,6 +8920,12 @@ end
 
 --- @return integer
 function camera_config_get_aggression()
+    -- ...
+end
+
+--- @return boolean
+--- Gets if the L button will center the camera
+function camera_config_get_centering()
     -- ...
 end
 

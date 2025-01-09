@@ -12,6 +12,7 @@ static struct CameraOverride sOverrideCameraInvertY          = { 0 };
 static struct CameraOverride sOverrideEnableCamera           = { 0 };
 static struct CameraOverride sOverrideCameraAnalog           = { 0 };
 static struct CameraOverride sOverrideCameraMouse            = { 0 };
+static struct CameraOverride sOverrideCameraLCentering       = { 0 };
 static struct CameraOverride sOverrideCameraFreecamDpad      = { 0 };
 static struct CameraOverride sOverrideCameraFreecamCollision = { 0 };
 static struct CameraOverride sOverrideCameraRomhackZoomedInDist = { 0 };
@@ -30,6 +31,7 @@ void camera_reset_overrides(void) {
     sOverrideEnableCamera.override = false;
     sOverrideCameraAnalog.override = false;
     sOverrideCameraMouse.override = false;
+    sOverrideCameraLCentering.override = false;
     sOverrideCameraFreecamDpad.override = false;
     sOverrideCameraFreecamCollision.override = false;
     sOverrideCameraRomhackZoomedInDist.override = false;
@@ -174,6 +176,10 @@ u32 camera_config_get_deceleration(void) {
     return sOverrideCameraDegrade.override ? sOverrideCameraDegrade.value : configCameraDegrade;
 }
 
+bool camera_config_get_centering(void) {
+    return sOverrideCameraLCentering.override ? sOverrideCameraLCentering.value : configCameraDegrade;
+}
+
 void camera_config_enable_free_cam(bool enable) {
     sOverrideEnableCamera.value = enable;
     sOverrideEnableCamera.override = true;
@@ -183,6 +189,12 @@ void camera_config_enable_free_cam(bool enable) {
 void camera_config_enable_analog_cam(bool enable) {
     sOverrideCameraAnalog.value = enable;
     sOverrideCameraAnalog.override = true;
+    newcam_init_settings();
+}
+
+void camera_config_enable_centering(bool enable) {
+    sOverrideCameraLCentering.value = enable;
+    sOverrideCameraLCentering.override = true;
     newcam_init_settings();
 }
 
