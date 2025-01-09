@@ -568,3 +568,18 @@ void str_seperator_concat(char *output_buffer, int buffer_size, char** strings, 
         }
     }
 }
+
+char *str_remove_color_codes(const char *str) {
+    char *output = strdup(str);
+    char *startColor;
+    while ((startColor = strstr(output, "\\#"))) {
+        char *endColor = strchr(startColor + 2, '\\');
+        if (endColor) {
+            memmove(startColor, endColor + 1, strlen(endColor + 1) + 1);
+        } else {
+            *startColor = 0;
+            break;
+        }
+    }
+    return output;
+}

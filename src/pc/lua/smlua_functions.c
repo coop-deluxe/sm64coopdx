@@ -11,6 +11,7 @@
 #include "engine/math_util.h"
 #include "engine/level_script.h"
 #include "pc/djui/djui_hud_utils.h"
+#include "pc/utils/misc.h"
 #include "include/level_misc_macros.h"
 #include "include/macro_presets.h"
 #include "utils/smlua_anim_utils.h"
@@ -1009,6 +1010,23 @@ int smlua_func_cast_graph_node(lua_State* L) {
     return 1;
 }
 
+  /////////////
+ // strings //
+/////////////
+
+int smlua_func_get_uncolored_string(lua_State* L) {
+    if (!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    const char *str = smlua_to_string(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("get_uncolored_string: Failed to convert parameter 1"); return 0; }
+
+    char *strNoColor = str_remove_color_codes(str);
+    lua_pushstring(L, strNoColor);
+    free(strNoColor);
+
+    return 1;
+}
+
   //////////
  // bind //
 //////////
@@ -1039,4 +1057,5 @@ void smlua_bind_functions(void) {
     smlua_bind_function(L, "add_scroll_target", smlua_func_add_scroll_target);
     smlua_bind_function(L, "collision_find_surface_on_ray", smlua_func_collision_find_surface_on_ray);
     smlua_bind_function(L, "cast_graph_node", smlua_func_cast_graph_node);
+    smlua_bind_function(L, "get_uncolored_string", smlua_func_get_uncolored_string);
 }
