@@ -511,7 +511,7 @@ int main(int argc, char *argv[]) {
         snprintf(configJoinIp, MAX_CONFIG_STRING, "%s", gCLIOpts.joinIp);
         configJoinPort = gCLIOpts.networkPort;
         network_init(NT_CLIENT, false);
-    } else if (gCLIOpts.network == NT_SERVER || gCLIOpts.coopnet == true) {
+    } else if (gCLIOpts.network == NT_SERVER || gCLIOpts.coopnet) {
         if (gCLIOpts.network == NT_SERVER) {
             configNetworkSystem = NS_SOCKET;
             configHostPort = gCLIOpts.networkPort;
