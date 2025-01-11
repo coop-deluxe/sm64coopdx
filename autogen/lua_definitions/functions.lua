@@ -10376,6 +10376,11 @@ function smlua_text_utils_get_language()
     -- ...
 end
 
+--- Resets every modified dialog back to vanilla
+function smlua_text_utils_reset_all()
+    -- ...
+end
+
 --- @param courseNum integer
 --- @param courseName string
 --- Replaces the secret star course name of `courseNum` with `courseName`

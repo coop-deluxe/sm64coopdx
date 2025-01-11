@@ -39,7 +39,7 @@ static void djui_panel_host_player_text_change(struct DjuiBase* caller) {
         djui_inputbox_set_text_color(inputbox1, 255, 0, 0, 255);
         return;
     }
-	configAmountofPlayers = atoi(sPlayerAmount->buffer);
+	configAmountOfPlayers = atoi(sPlayerAmount->buffer);
 }
 
 void djui_panel_host_settings_create(struct DjuiBase* caller) {
@@ -83,7 +83,7 @@ void djui_panel_host_settings_create(struct DjuiBase* caller) {
             djui_base_set_size(&inputbox1->base, 0.45f, 32);
             djui_base_set_alignment(&inputbox1->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_TOP);
             char limitString[32] = { 0 };
-            snprintf(limitString, 32, "%d", configAmountofPlayers);
+            snprintf(limitString, 32, "%d", configAmountOfPlayers);
             djui_inputbox_set_text(inputbox1, limitString);
             djui_interactable_hook_value_change(&inputbox1->base, djui_panel_host_player_text_change);
             sPlayerAmount = inputbox1;

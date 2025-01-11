@@ -98,19 +98,23 @@ void djui_panel_main_menu_create(struct DjuiBase* caller) {
     djui_themes_init();
 
     {
-        djui_checkbox_create(body, DLANG(DJUI_THEMES, CENTER), &configDjuiThemeCenter, djui_panel_menu_options_djui_setting_change);
+        struct DjuiCheckbox* center = djui_checkbox_create(body, DLANG(DJUI_THEMES, CENTER), &configDjuiThemeCenter, djui_panel_menu_options_djui_setting_change);
+        if (configExCoopTheme) { djui_base_set_enabled(&center->base, false); }
 
         char* themeChoices[DJUI_THEME_MAX];
         for (int i = 0; i < DJUI_THEME_MAX; i++) {
             themeChoices[i] = (char*)gDjuiThemes[i]->name;
         }
-        djui_selectionbox_create(body, DLANG(DJUI_THEMES, DJUI_THEME), themeChoices, DJUI_THEME_MAX, &configDjuiTheme, djui_panel_menu_options_djui_setting_change);
+        struct DjuiSelectionbox* theme = djui_selectionbox_create(body, DLANG(DJUI_THEMES, DJUI_THEME), themeChoices, DJUI_THEME_MAX, &configDjuiTheme, djui_panel_menu_options_djui_setting_change);
+        if (configExCoopTheme) { djui_base_set_enabled(&theme->base, false); }
 
         char* djuiScaleChoices[5] = {DLANG(DJUI_THEMES, AUTO), "x0.5", "x0.85", "x1.0", "x1.5"};
-        djui_selectionbox_create(body, DLANG(DJUI_THEMES, DJUI_SCALE), djuiScaleChoices, 5, &configDjuiScale, djui_panel_menu_options_djui_setting_change);
+        struct DjuiSelectionbox* scale = djui_selectionbox_create(body, DLANG(DJUI_THEMES, DJUI_SCALE), djuiScaleChoices, 5, &configDjuiScale, djui_panel_menu_options_djui_setting_change);
+        if (configExCoopTheme) { djui_base_set_enabled(&scale->base, false); }
 
         char* djuiFontChoices[2] = {DLANG(DJUI_THEMES, FONT_NORMAL), DLANG(DJUI_THEMES, FONT_ALIASED)};
-        djui_selectionbox_create(body, DLANG(DJUI_THEMES, DJUI_FONT), djuiFontChoices, 2, &configDjuiThemeFont, djui_panel_menu_options_djui_setting_change);
+        struct DjuiSelectionbox* font = djui_selectionbox_create(body, DLANG(DJUI_THEMES, DJUI_FONT), djuiFontChoices, 2, &configDjuiThemeFont, djui_panel_menu_options_djui_setting_change);
+        if (configExCoopTheme) { djui_base_set_enabled(&font->base, false); }
 
         if (gDjuiInMainMenu) {
             // get level choices

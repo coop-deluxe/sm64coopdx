@@ -1,5 +1,5 @@
 -- name: [CS] Extra Characters 
--- description: [CS] Extra Characters v7.0\nBy: \\#00ff00\\ULTRA BROS TEAM\n\n\\#ffff00\\Ultra Bros Team:\n\\#ffffff\\FunkyLion\nMelzinoff\nFluffaMario\nSharen\nSquishy\n\n\\#f54e59\\Characters:\n\\#ffffff\\Toadette\nPeach\nDaisy\nYoshi\nBirdo\nForeman Spike\nPauline
+-- description: [CS] Extra Characters v7.1\nBy: \\#00ff00\\ULTRA BROS TEAM\n\n\\#ffff00\\Ultra Bros Team:\n\\#ffffff\\FunkyLion\nMelzinoff\nFluffaMario\nSharen\nSquishy\n\n\\#f54e59\\Characters:\n\\#ffffff\\Toadette\nPeach\nDaisy\nYoshi\nBirdo\nForeman Spike\nPauline
 
 if not _G.charSelectExists then
     djui_popup_create("\\#ffffa0\\Extra Characters requires\nCharacter Select to be enabled.\n\nPlease rehost with it enabled.", 4)
