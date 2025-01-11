@@ -520,9 +520,9 @@ int main(int argc, char *argv[]) {
             configHostPort = gCLIOpts.networkPort;
         } else {
             configNetworkSystem = NS_COOPNET;
-            configPassword = gCLIOpts.coopnetPassword;
+            snprintf(configPassword, MAX_CONFIG_STRING, "%s", gCLIOpts.configPassword);
         }
-        
+
         // horrible, hacky fix for mods that access marioObj straight away
         // best fix: host with the standard main menu method
         static struct Object sHackyObject = { 0 };
