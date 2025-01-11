@@ -382,7 +382,7 @@ static void enable_mod_read(char** tokens, UNUSED int numTokens) {
 
 static void enable_mod(char* mod) {
     struct QueuedFile* queued = malloc(sizeof(struct QueuedFile));
-    queued->path = strdup(mod);
+    queued->path = mod;
     queued->next = NULL;
     if (!sQueuedEnableModsHead) {
         sQueuedEnableModsHead = queued;
