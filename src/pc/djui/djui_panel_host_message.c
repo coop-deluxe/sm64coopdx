@@ -24,7 +24,7 @@ void djui_panel_do_host(bool reconnecting, bool playSound) {
 #ifndef COOPNET
     if (configNetworkSystem == NS_COOPNET) { configNetworkSystem = NS_SOCKET; }
 #endif
-    if (configNetworkSystem == NS_COOPNET && configAmountofPlayers == 1) { configNetworkSystem = NS_SOCKET; }
+    if (configNetworkSystem == NS_COOPNET && configAmountOfPlayers == 1) { configNetworkSystem = NS_SOCKET; }
     if (configNetworkSystem >= NS_MAX) { configNetworkSystem = NS_MAX; }
     network_set_system(configNetworkSystem);
 
