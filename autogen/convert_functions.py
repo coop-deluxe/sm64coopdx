@@ -121,7 +121,7 @@ override_disallowed_functions = {
     "src/pc/lua/utils/smlua_audio_utils.h":     [ "smlua_audio_utils_override", "audio_custom_shutdown", "smlua_audio_custom_deinit", "audio_sample_destroy_pending_copies", "audio_custom_update_volume" ],
     "src/pc/djui/djui_hud_utils.h":             [ "djui_hud_render_texture", "djui_hud_render_texture_raw", "djui_hud_render_texture_tile", "djui_hud_render_texture_tile_raw" ],
     "src/pc/lua/utils/smlua_level_utils.h":     [ "smlua_level_util_reset" ],
-    "src/pc/lua/utils/smlua_text_utils.h":      [ "smlua_text_utils_init", "smlua_text_utils_shutdown", "smlua_text_utils_reset_all" ],
+    "src/pc/lua/utils/smlua_text_utils.h":      [ "smlua_text_utils_init", "smlua_text_utils_shutdown" ],
     "src/pc/lua/utils/smlua_anim_utils.h":      [ "smlua_anim_util_reset", "smlua_anim_util_register_animation" ],
     "src/pc/network/lag_compensation.h":        [ "lag_compensation_clear" ],
     "src/game/first_person_cam.h":              [ "first_person_update" ],

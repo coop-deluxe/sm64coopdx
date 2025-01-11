@@ -1890,6 +1890,7 @@
    - [smlua_text_utils_dialog_replace](functions-6.md#smlua_text_utils_dialog_replace)
    - [smlua_text_utils_extra_text_replace](functions-6.md#smlua_text_utils_extra_text_replace)
    - [smlua_text_utils_get_language](functions-6.md#smlua_text_utils_get_language)
+   - [smlua_text_utils_reset_all](functions-6.md#smlua_text_utils_reset_all)
    - [smlua_text_utils_secret_star_replace](functions-6.md#smlua_text_utils_secret_star_replace)
 
 <br />

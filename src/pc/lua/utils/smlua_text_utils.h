@@ -24,6 +24,7 @@ extern struct CourseName *gReplacedActNameTable[];
 
 void smlua_text_utils_init(void);
 void smlua_text_utils_shutdown(void);
+/* |description|Resets every modified dialog back to vanilla|descriptionEnd|*/
 void smlua_text_utils_reset_all(void);
 /* |description|Replaces `dialogId` with a custom one|descriptionEnd| */
 void smlua_text_utils_dialog_replace(enum DialogId dialogId, u32 unused, s8 linesPerBox, s16 leftOffset, s16 width, const char* str);
