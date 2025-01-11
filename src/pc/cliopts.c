@@ -17,19 +17,22 @@ static void print_help(void) {
 #if defined(_WIN32) || defined(_WIN64)
     printf("--console               Enables the Windows console.\n");
 #endif
-    printf("--savepath SAVEPATH     Overrides the default save/config path ('!' expands to executable path).\n");
-    printf("--configfile CONFIGNAME Saves the configuration file as CONFIGNAME.\n");
-    printf("--hide-loading-screen   Hides the loading screen before the menu boots up.\n");
-    printf("--fullscreen            Starts the game in full screen mode.\n");
-    printf("--windowed              Starts the game in windowed mode.\n");
-    printf("--skip-intro            Skips the Peach and Lakitu intros when on a zero star save.\n");
-    printf("--server PORT           Starts the game and creates a new server on PORT.\n");
-    printf("--client IP PORT        Starts the game and joins an existing server.\n");
-    printf("--playername PLAYERNAME Starts the game with a specific playername.\n");
-    printf("--skip-update-check     Skips the update check when loading the game.\n");
-    printf("--no-discord            Disables discord integration.\n");
-    printf("--disable-mods          Disables all mods that are already enabled.\n");
-    printf("--enable-mod MODNAME    Enables a mod.");
+    printf("--savepath SAVEPATH       Overrides the default save/config path ('!' expands to executable path).\n");
+    printf("--configfile CONFIGNAME   Saves the configuration file as CONFIGNAME.\n");
+    printf("--hide-loading-screen     Hides the loading screen before the menu boots up.\n");
+    printf("--fullscreen              Starts the game in full screen mode.\n");
+    printf("--windowed                Starts the game in windowed mode.\n");
+    printf("--width WIDTH             Sets the window width.\n");
+    printf("--height HEIGHT           Sets the window height.\n");
+    printf("--skip-intro              Skips the Peach and Lakitu intros when on a zero star save.\n");
+    printf("--server PORT             Starts the game and creates a new server on PORT.\n");
+    printf("--client IP PORT          Starts the game and joins an existing server.\n");
+    printf("--playername PLAYERNAME   Starts the game with a specific playername.\n");
+    printf("--playercount PLAYERCOUNT Starts the game with a specific player count limit.\n");
+    printf("--skip-update-check       Skips the update check when loading the game.\n");
+    printf("--no-discord              Disables discord integration.\n");
+    printf("--disable-mods            Disables all mods that are already enabled.\n");
+    printf("--enable-mod MODNAME      Enables a mod.");
 }
 
 static inline int arg_string(const char *name, const char *value, char *target, int maxLength) {
@@ -70,6 +73,10 @@ bool parse_cli_opts(int argc, char* argv[]) {
             gCLIOpts.fullscreen = 1;
         } else if (!strcmp(argv[i], "--windowed")) {
             gCLIOpts.fullscreen = 2;
+        } else if (!strcmp(argv[i], "--width")) {
+            arg_uint("--width <width>", argv[++i], &gCLIOpts.width);
+        } else if (!strcmp(argv[i], "--height")) {
+            arg_uint("--height <height>", argv[++i], &gCLIOpts.height);
         } else if (!strcmp(argv[i], "--skip-intro")) {
             gCLIOpts.skipIntro = true;
         } else if (!strcmp(argv[i], "--server") && (i + 1) < argc) {
@@ -84,7 +91,9 @@ bool parse_cli_opts(int argc, char* argv[]) {
                 gCLIOpts.networkPort = 7777;
             }
         } else if (!strcmp(argv[i], "--playername") && (i + 1) < argc) {
-            arg_string("--playername", argv[++i], gCLIOpts.playerName, MAX_CONFIG_STRING);
+            arg_string("--playername <playername>", argv[++i], gCLIOpts.playerName, MAX_CONFIG_STRING);
+        } else if (!strcmp(argv[i], "--playercount") && (i + 1) < argc) {
+            arg_uint("--playercount <playercount>", argv[++i], &gCLIOpts.playerCount);
         } else if (!strcmp(argv[i], "--skip-update-check")) {
             gCLIOpts.skipUpdateCheck = true;
         } else if (!strcmp(argv[i], "--no-discord")) {

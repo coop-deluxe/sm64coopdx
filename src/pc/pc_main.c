@@ -406,9 +406,6 @@ void* main_game_init(UNUSED void* dummy) {
         loading_screen_set_segment_text("Starting Game");
     );
 
-    if (gCLIOpts.fullscreen == 1) { configWindow.fullscreen = true; }
-    else if (gCLIOpts.fullscreen == 2) { configWindow.fullscreen = false; }
-
     audio_init();
     sound_init();
     network_player_init();

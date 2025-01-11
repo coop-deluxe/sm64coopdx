@@ -110,7 +110,7 @@ void discord_activity_update(void) {
         sCurActivity.party.size.max_size = 1;
     }
 
-    if ((sCurActivity.party.size.current_size > 1 || configAmountofPlayers == 1) && !gDjuiInMainMenu) {
+    if ((sCurActivity.party.size.current_size > 1 || configAmountOfPlayers == 1) && !gDjuiInMainMenu) {
         strcpy(sCurActivity.state, "Playing!");
     } else if (gNetworkType == NT_SERVER) {
         strcpy(sCurActivity.state, "Waiting for players...");

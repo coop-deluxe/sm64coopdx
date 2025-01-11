@@ -148,7 +148,7 @@ char         configPlayerName[MAX_CONFIG_STRING]  = "";
 unsigned int configPlayerModel                    = 0;
 struct PlayerPalette configPlayerPalette          = { { { 0x00, 0x00, 0xff }, { 0xff, 0x00, 0x00 }, { 0xff, 0xff, 0xff }, { 0x72, 0x1c, 0x0e }, { 0x73, 0x06, 0x00 }, { 0xfe, 0xc1, 0x79 }, { 0xff, 0x00, 0x00 }, { 0xff, 0x00, 0x00 } } };
 // coop settings
-unsigned int configAmountofPlayers                = MAX_PLAYERS;
+unsigned int configAmountOfPlayers                = MAX_PLAYERS;
 bool         configBubbleDeath                    = true;
 unsigned int configHostPort                       = DEFAULT_PORT;
 unsigned int configHostSaveSlot                   = 1;
@@ -283,7 +283,7 @@ static const struct ConfigOption options[] = {
     {.name = "coop_player_palette_cap",        .type = CONFIG_TYPE_COLOR,  .colorValue  = &configPlayerPalette.parts[CAP]},
     {.name = "coop_player_palette_emblem",     .type = CONFIG_TYPE_COLOR,  .colorValue  = &configPlayerPalette.parts[EMBLEM]},
     // coop settings
-    {.name = "amount_of_players",              .type = CONFIG_TYPE_UINT,   .uintValue   = &configAmountofPlayers},
+    {.name = "amount_of_players",              .type = CONFIG_TYPE_UINT,   .uintValue   = &configAmountOfPlayers},
     {.name = "bubble_death",                   .type = CONFIG_TYPE_BOOL,   .boolValue   = &configBubbleDeath},
     {.name = "coop_host_port",                 .type = CONFIG_TYPE_UINT,   .uintValue   = &configHostPort},
     {.name = "coop_host_save_slot",            .type = CONFIG_TYPE_UINT,   .uintValue   = &configHostSaveSlot},
@@ -739,10 +739,24 @@ NEXT_OPTION:
     if (configDjuiTheme >= DJUI_THEME_MAX) { configDjuiTheme = 0; }
     if (configDjuiScale >= 5) { configDjuiScale = 0; }
 
+    if (gCLIOpts.fullscreen == 1) { 
+        configWindow.fullscreen = true;
+    } else if (gCLIOpts.fullscreen == 2) {
+        configWindow.fullscreen = false;
+    }
+    if (gCLIOpts.width != 0) { configWindow.w = gCLIOpts.width; }
+    if (gCLIOpts.height != 0) { configWindow.h = gCLIOpts.height; }
+
+    if (gCLIOpts.playerName[0]) { snprintf(configPlayerName, MAX_CONFIG_STRING, "%s", gCLIOpts.playerName); }
+
     for (int i = 0; i < gCLIOpts.enabledModsCount; i++) {
         enable_mod(gCLIOpts.enableMods[i]);
     }
     free(gCLIOpts.enableMods);
+
+    if (gCLIOpts.playerCount != 0) {
+        configAmountOfPlayers = MIN(gCLIOpts.playerCount, MAX_PLAYERS);
+    }
 
 #ifndef COOPNET
     configNetworkSystem = NS_SOCKET;
