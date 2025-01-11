@@ -82,11 +82,13 @@ bool parse_cli_opts(int argc, char* argv[]) {
             } else {
                 gCLIOpts.networkPort = 7777;
             }
-        } else if (!strcmp(argv[i], "--coopnet") && (i + 1) < argc) {
-            gCLIOpts.coopnet = true;
-            arg_string("--coopnet", argv[++i], gCLIOpts.coopnetPassword, MAX_CONFIG_STRING);
         } else if (!strcmp(argv[i], "--coopnet")) {
             gCLIOpts.coopnet = true;
+            if ((i + 1) < argc && argv[i + 1][0] != '-') {
+                arg_string("--coopnet <password>", argv[++i], gCLIOpts.coopnetPassword, MAX_CONFIG_STRING);
+            } else {
+                gCLIOpts.coopnetPassword[0] = '\0';
+            }
         } else if (!strcmp(argv[i], "--playername") && (i + 1) < argc) {
             arg_string("--playername", argv[++i], gCLIOpts.playerName, MAX_CONFIG_STRING);
         } else if (!strcmp(argv[i], "--skip-update-check")) {
