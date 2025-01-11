@@ -31,6 +31,8 @@ struct CLIOptions {
     bool hideLoadingScreen;
     bool skipUpdateCheck;
     bool noDiscord;
+    bool coopnet;
+    char coopnetPassword[MAX_CONFIG_STRING];
     bool disableMods;
     int enabledModsCount;
     char** enableMods;
