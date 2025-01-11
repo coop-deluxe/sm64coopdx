@@ -25,6 +25,8 @@ static void print_help(void) {
     printf("--skip-intro            Skips the Peach and Lakitu intros when on a zero star save.\n");
     printf("--server PORT           Starts the game and creates a new server on PORT.\n");
     printf("--client IP PORT        Starts the game and joins an existing server.\n");
+    printf("--coopnet               Starts the game and creates a new public coopnet server.\n");
+    printf("--coopnet PASSWORD      Starts the game and creates a new private coopnet server with a password.\n");
     printf("--playername PLAYERNAME Starts the game with a specific playername.\n");
     printf("--skip-update-check     Skips the update check when loading the game.\n");
     printf("--no-discord            Disables discord integration.");
@@ -80,6 +82,11 @@ bool parse_cli_opts(int argc, char* argv[]) {
             } else {
                 gCLIOpts.networkPort = 7777;
             }
+        } else if (!strcmp(argv[i], "--coopnet") && (i + 1) < argc) {
+            gCLIOpts.coopnet = true;
+            arg_string("--coopnet", argv[++i], gCLIOpts.coopnetPassword, MAX_CONFIG_STRING);
+        } else if (!strcmp(argv[i], "--coopnet")) {
+            gCLIOpts.coopnet = true;
         } else if (!strcmp(argv[i], "--playername") && (i + 1) < argc) {
             arg_string("--playername", argv[++i], gCLIOpts.playerName, MAX_CONFIG_STRING);
         } else if (!strcmp(argv[i], "--skip-update-check")) {
