@@ -360,6 +360,8 @@ void enable_queued_mods(void) {
 }
 
 static void enable_mod_read(char** tokens, UNUSED int numTokens) {
+    if (gCLIOpts.disableMods) { return; }
+
     char combined[256] = { 0 };
     for (int i = 1; i < numTokens; i++) {
         if (i != 1) { strncat(combined, " ", 255); }
@@ -368,6 +370,19 @@ static void enable_mod_read(char** tokens, UNUSED int numTokens) {
 
     struct QueuedFile* queued = malloc(sizeof(struct QueuedFile));
     queued->path = strdup(combined);
+    queued->next = NULL;
+    if (!sQueuedEnableModsHead) {
+        sQueuedEnableModsHead = queued;
+    } else {
+        struct QueuedFile* tail = sQueuedEnableModsHead;
+        while (tail->next) { tail = tail->next; }
+        tail->next = queued;
+    }
+}
+
+static void enable_mod(char* mod) {
+    struct QueuedFile* queued = malloc(sizeof(struct QueuedFile));
+    queued->path = strdup(mod);
     queued->next = NULL;
     if (!sQueuedEnableModsHead) {
         sQueuedEnableModsHead = queued;
@@ -723,6 +738,11 @@ NEXT_OPTION:
 
     if (configDjuiTheme >= DJUI_THEME_MAX) { configDjuiTheme = 0; }
     if (configDjuiScale >= 5) { configDjuiScale = 0; }
+
+    for (int i = 0; i < gCLIOpts.enabledModsCount; i++) {
+        enable_mod(gCLIOpts.enableMods[i]);
+    }
+    free(gCLIOpts.enableMods);
 
 #ifndef COOPNET
     configNetworkSystem = NS_SOCKET;

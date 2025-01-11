@@ -28,6 +28,9 @@ struct CLIOptions {
     bool hideLoadingScreen;
     bool skipUpdateCheck;
     bool noDiscord;
+    bool disableMods;
+    int enabledModsCount;
+    char** enableMods;
 };
 
 extern struct CLIOptions gCLIOpts;

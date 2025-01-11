@@ -27,7 +27,9 @@ static void print_help(void) {
     printf("--client IP PORT        Starts the game and joins an existing server.\n");
     printf("--playername PLAYERNAME Starts the game with a specific playername.\n");
     printf("--skip-update-check     Skips the update check when loading the game.\n");
-    printf("--no-discord            Disables discord integration.");
+    printf("--no-discord            Disables discord integration.\n");
+    printf("--disable-mods          Disables all mods that are already enabled.\n");
+    printf("--enable-mod MODNAME    Enables a mod.");
 }
 
 static inline int arg_string(const char *name, const char *value, char *target, int maxLength) {
@@ -49,6 +51,7 @@ static inline int arg_uint(UNUSED const char *name, const char *value, unsigned 
 bool parse_cli_opts(int argc, char* argv[]) {
     // initialize options with false values
     memset(&gCLIOpts, 0, sizeof(gCLIOpts));
+    gCLIOpts.enableMods = NULL;
 
     for (int i = 1; i < argc; i++) {
 #if defined(_WIN32) || defined(_WIN64)
@@ -86,6 +89,16 @@ bool parse_cli_opts(int argc, char* argv[]) {
             gCLIOpts.skipUpdateCheck = true;
         } else if (!strcmp(argv[i], "--no-discord")) {
             gCLIOpts.noDiscord = true;
+        } else if (!strcmp(argv[i], "--disable-mods")) {
+            gCLIOpts.disableMods = true;
+        } else if (!strcmp(argv[i], "--enable-mod") && (i + 1) < argc) {
+            gCLIOpts.enabledModsCount++;
+            if (gCLIOpts.enableMods == NULL) {
+                gCLIOpts.enableMods = malloc(sizeof(char*));
+            } else {
+                gCLIOpts.enableMods = realloc(gCLIOpts.enableMods, sizeof(char*) * gCLIOpts.enabledModsCount);
+            }
+            gCLIOpts.enableMods[gCLIOpts.enabledModsCount - 1] = strdup(argv[++i]);
         } else if (!strcmp(argv[i], "--help")) {
             print_help();
             return false;
