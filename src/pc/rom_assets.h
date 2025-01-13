@@ -64,7 +64,7 @@ __attribute__((constructor)) static void _ptr ## _rom_assets_queue () { \
 
 #define ROM_ASSET_LOAD_DEMO(_name, _ptr, _physicalAddress, _physicalSize, _segmentedAddress, _segmentedSize) \
 __attribute__((constructor)) static void _name ## _rom_assets_queue () { \
-    rom_assets_queue(_ptr, ROM_ASSET_DIALOG, _physicalAddress, _physicalSize, _segmentedAddress, _segmentedSize); \
+    rom_assets_queue(_ptr, ROM_ASSET_DEMO, _physicalAddress, _physicalSize, _segmentedAddress, _segmentedSize); \
 }
 
 void rom_assets_load(void);
