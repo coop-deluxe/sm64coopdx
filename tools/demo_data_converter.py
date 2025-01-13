@@ -61,7 +61,7 @@ def main():
     for item in demofiles:
         structdef.append("u8 " + item["name"] + "[" + str(item["size"]) + "];")
         if "ignore" not in item:
-            rom_assets.append(f"ROM_ASSET_LOAD_DEMO({item["name"]}, gDemoInputs.{item["name"]}, {item["address"]}, {item["size"]}, 0x00000000, {item["size"]});")
+            rom_assets.append(f"ROM_ASSET_LOAD_DEMO({item['name']}, gDemoInputs.{item['name']}, {item['address']}, {item['size']}, 0x00000000, {item['size']});")
 
     print("#include \"types.h\"")
     print("#include <stddef.h>")
