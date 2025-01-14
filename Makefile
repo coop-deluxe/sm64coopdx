@@ -128,10 +128,10 @@ endif
 
 ifeq ($(HOST_OS),Linux)
   machine = $(shell sh -c 'uname -m 2>/dev/null || echo unknown')
-  ifeq($(machine),aarch64)
-    TARGET_RPI = 1
-  ifeq($(findstring arm, $(machine)), arm)
-    TARGET_RPI = 1
+  ifneq (,$(findstring aarch64,$(machine)))
+    TARGET_RPI = 1 #Raspberry Pi 4-5
+  ifneq (,$(findstring arm,$(machine)))
+    TARGET_RPI = 1 #Rasberry Pi zero, 2, 3, etc
 
 # MXE overrides
 
