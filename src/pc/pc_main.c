@@ -202,13 +202,6 @@ void produce_interpolation_frames_and_delay(void) {
     f64 targetTime = sFrameTimeStart + sFrameTime;
     s32 numFramesToDraw = get_num_frames_to_draw(sFrameTimeStart);
 
-    // if the game update took too long, don't interpolate
-    if (targetTime - curTime < sFrameTime / 2) {
-        gRenderingInterpolated = false;
-        is30Fps = true;
-        numFramesToDraw = 1;
-    }
-
     f64 loopStartTime = curTime;
     f64 expectedTime = 0;
 
