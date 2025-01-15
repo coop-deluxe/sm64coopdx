@@ -6,6 +6,296 @@
 
 
 ---
+# functions from smlua_level_utils.h
+
+<br />
+
+
+## [level_is_vanilla_level](#level_is_vanilla_level)
+
+### Description
+Checks if `levelNum` is a vanilla level
+
+### Lua Example
+`local booleanValue = level_is_vanilla_level(levelNum)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| levelNum | `integer` |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool level_is_vanilla_level(s16 levelNum);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [level_register](#level_register)
+
+### Description
+Registers a fully custom level. Level ID begins at 50
+
+### Lua Example
+`local integerValue = level_register(scriptEntryName, courseNum, fullName, shortName, acousticReach, echoLevel1, echoLevel2, echoLevel3)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| scriptEntryName | `string` |
+| courseNum | `integer` |
+| fullName | `string` |
+| shortName | `string` |
+| acousticReach | `integer` |
+| echoLevel1 | `integer` |
+| echoLevel2 | `integer` |
+| echoLevel3 | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s16 level_register(const char* scriptEntryName, s16 courseNum, const char* fullName, const char* shortName, u32 acousticReach, u32 echoLevel1, u32 echoLevel2, u32 echoLevel3);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [smlua_level_util_change_area](#smlua_level_util_change_area)
+
+### Description
+Instantly changes the current area to `areaIndex`
+
+### Lua Example
+`smlua_level_util_change_area(areaIndex)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| areaIndex | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void smlua_level_util_change_area(s32 areaIndex);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [smlua_level_util_get_info](#smlua_level_util_get_info)
+
+### Description
+Gets information on a custom level from `levelNum`
+
+### Lua Example
+`local CustomLevelInfoValue = smlua_level_util_get_info(levelNum)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| levelNum | `integer` |
+
+### Returns
+[CustomLevelInfo](structs.md#CustomLevelInfo)
+
+### C Prototype
+`struct CustomLevelInfo* smlua_level_util_get_info(s16 levelNum);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [smlua_level_util_get_info_from_course_num](#smlua_level_util_get_info_from_course_num)
+
+### Description
+Gets information on a custom level from `courseNum`
+
+### Lua Example
+`local CustomLevelInfoValue = smlua_level_util_get_info_from_course_num(courseNum)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| courseNum | `integer` |
+
+### Returns
+[CustomLevelInfo](structs.md#CustomLevelInfo)
+
+### C Prototype
+`struct CustomLevelInfo* smlua_level_util_get_info_from_course_num(u8 courseNum);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [smlua_level_util_get_info_from_short_name](#smlua_level_util_get_info_from_short_name)
+
+### Description
+Gets information on a custom level from `shortName`
+
+### Lua Example
+`local CustomLevelInfoValue = smlua_level_util_get_info_from_short_name(shortName)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| shortName | `string` |
+
+### Returns
+[CustomLevelInfo](structs.md#CustomLevelInfo)
+
+### C Prototype
+`struct CustomLevelInfo* smlua_level_util_get_info_from_short_name(const char* shortName);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [warp_exit_level](#warp_exit_level)
+
+### Description
+Exits the current level after `aDelay`
+
+### Lua Example
+`local booleanValue = warp_exit_level(aDelay)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| aDelay | `integer` |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool warp_exit_level(s32 aDelay);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [warp_restart_level](#warp_restart_level)
+
+### Description
+Restarts the current level
+
+### Lua Example
+`local booleanValue = warp_restart_level()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool warp_restart_level(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [warp_to_castle](#warp_to_castle)
+
+### Description
+Warps back to the castle from `aLevel`
+
+### Lua Example
+`local booleanValue = warp_to_castle(aLevel)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| aLevel | `integer` |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool warp_to_castle(s32 aLevel);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [warp_to_level](#warp_to_level)
+
+### Description
+Warps to `aArea` of `aLevel` in `aAct`
+
+### Lua Example
+`local booleanValue = warp_to_level(aLevel, aArea, aAct)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| aLevel | `integer` |
+| aArea | `integer` |
+| aAct | `integer` |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool warp_to_level(s32 aLevel, s32 aArea, s32 aAct);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [warp_to_start_level](#warp_to_start_level)
+
+### Description
+Warps to the start level (Castle Grounds by default)
+
+### Lua Example
+`local booleanValue = warp_to_start_level()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool warp_to_start_level(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [warp_to_warpnode](#warp_to_warpnode)
+
+### Description
+Warps to `aWarpId` of `aArea` in `aLevel` during `aAct`
+
+### Lua Example
+`local booleanValue = warp_to_warpnode(aLevel, aArea, aAct, aWarpId)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| aLevel | `integer` |
+| aArea | `integer` |
+| aAct | `integer` |
+| aWarpId | `integer` |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool warp_to_warpnode(s32 aLevel, s32 aArea, s32 aAct, s32 aWarpId);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
 # functions from smlua_math_utils.h
 
 <br />

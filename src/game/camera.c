@@ -47,6 +47,7 @@ enum RomhackCameraOverride gOverrideRomhackCamera = RCO_ALL;
 u8 gRomhackCameraAllowCentering = TRUE;
 u8 gOverrideAllowToxicGasCamera = FALSE;
 u8 gRomhackCameraAllowDpad = FALSE;
+u8 gRomhackCameraSlowFall = TRUE;
 
 /**
  * @file camera.c
@@ -3109,17 +3110,32 @@ void update_lakitu(struct Camera *c) {
 extern bool gIsDemoActive;
 static void update_romhack_camera_override(struct Camera *c) {
     if (gOverrideRomhackCamera == RCO_NONE) { return; }
-    if (c->mode == CAMERA_MODE_ROM_HACK) { return; }
-    if (dynos_level_is_vanilla_level(gCurrLevelNum)) { return; }
+    else if (gOverrideRomhackCamera == RCO_DISABLE) {
+        c->mode = c->defMode;
+        set_camera_mode(c, c->defMode, 0);
+        gOverrideRomhackCamera = RCO_NONE;
+        return;
+    }
     if (gIsDemoActive) { return; }
 
-    if (gOverrideRomhackCamera == RCO_ALL_EXCEPT_BOWSER) {
-        if (gCurrLevelNum == LEVEL_BOWSER_1 || gCurrLevelNum == LEVEL_BOWSER_2 || gCurrLevelNum == LEVEL_BOWSER_3) {
+    if ((!(gOverrideRomhackCamera == RCO_ALL_INCLUDING_VANILLA || gOverrideRomhackCamera == RCO_ALL_VANILLA_EXCEPT_BOWSER)) &&
+            dynos_level_is_vanilla_level(gCurrLevelNum)) {
+        return;
+    } else if ((gOverrideRomhackCamera == RCO_ALL_EXCEPT_BOWSER || gOverrideRomhackCamera == RCO_ALL_VANILLA_EXCEPT_BOWSER) &&
+            (gCurrLevelNum == LEVEL_BOWSER_1 || gCurrLevelNum == LEVEL_BOWSER_2 || gCurrLevelNum == LEVEL_BOWSER_3)) {
+        if (c->mode == CAMERA_MODE_ROM_HACK) {
+            c->mode = c->defMode;
+            set_camera_mode(c, c->defMode, 0);
+        }
+        return;
+    } else {
+        if (c->mode == CAMERA_MODE_BOSS_FIGHT) {
+            set_camera_mode(c, CAMERA_MODE_ROM_HACK, 0);
             return;
         }
     }
 
-    if (!allow_romhack_camera_override_mode(c->mode)) { return; }
+    if (c->mode == CAMERA_MODE_ROM_HACK || !allow_romhack_camera_override_mode(c->mode)) { return; }
 
     set_camera_mode(c, CAMERA_MODE_ROM_HACK, 0);
 }
@@ -3632,6 +3648,7 @@ void init_camera(struct Camera *c) {
 
     newcam_init(c, sSoftResettingCamera);
     newcam_init_settings();
+    romhack_camera_init_settings();
 
     sSoftResettingCamera = FALSE;
 }
@@ -12159,8 +12176,16 @@ s32 snap_to_45_degrees(s16 angle) {
     return angle;
 }
 
-void rom_hack_cam_set_collisions(u8 enable) {
-    gRomHackCamSetCollisions = enable;
+void romhack_camera_init_settings(void) {
+    enum RomhackCameraOverride override = configEnableRomhackCamera ?
+            (configRomhackCameraBowserFights ? RCO_ALL_INCLUDING_VANILLA : RCO_ALL_VANILLA_EXCEPT_BOWSER) : RCO_DISABLE;
+    gOverrideRomhackCamera = override;
+    gCameraUseCourseSpecificSettings = (override == RCO_DISABLE && dynos_level_is_vanilla_level(gCurrLevelNum));
+    gRomHackCamSetCollisions = configRomhackCameraHasCollision;
+    gRomhackCameraAllowCentering = configRomhackCameraHasCentering;
+    gRomhackCameraAllowDpad = configRomhackCameraDpadBehavior;
+    gOverrideAllowToxicGasCamera = configCameraToxicGas;
+    gRomhackCameraSlowFall = configRomhackCameraSlowFall;
 }
 
 static u8 rom_hack_cam_can_see_mario(Vec3f desiredPos) {
@@ -12335,8 +12360,8 @@ void mode_rom_hack_camera(struct Camera *c) {
     sRomHackIsUpdate = 0;
 
     // figure out desired position
-    f32 desiredDist = sRomHackZoom ? 900 : 1400;
-    f32 desiredHeight = sRomHackZoom ? 300 : 450;
+    f32 desiredDist = sRomHackZoom ? configRomhackCameraZoomedInDist : configRomhackCameraZoomedInDist + configRomhackCameraZoomedOutDist;
+    f32 desiredHeight = sRomHackZoom ? configRomhackCameraZoomedInHeight : configRomhackCameraZoomedInHeight + configRomhackCameraZoomedOutHeight;
     f32* mPos = &gMarioStates[0].pos[0];
     pos[0] = mPos[0] + coss(sRomHackYaw) * desiredDist;
     pos[1] = mPos[1] + desiredHeight;
@@ -12381,12 +12406,14 @@ void mode_rom_hack_camera(struct Camera *c) {
 
     // tween
     c->pos[0] = c->pos[0] * 0.6 + oldPos[0] * 0.4;
-    {
+    if (gRomhackCameraSlowFall) {
         f32 approachRate = 20.0f;
         f32 goalHeight = c->pos[1];
         approachRate += ABS(oldPos[1] - goalHeight) / 20;
         c->pos[1] = oldPos[1];
         approach_camera_height(c, goalHeight, approachRate);
+    } else {
+        c->pos[1] = c->pos[1] * 0.6 + oldPos[1] * 0.4;
     }
     c->pos[2] = c->pos[2] * 0.6 + oldPos[2] * 0.4;
 
@@ -12404,6 +12431,8 @@ void mode_rom_hack_camera(struct Camera *c) {
     // update area yaw
     sAreaYaw = sRomHackYaw;
     sAreaYawChange = sAreaYaw - oldAreaYaw;
+
+    set_camera_height(c, c->pos[1]);
 }
 
 s32 update_rom_hack_camera(struct Camera *c, Vec3f focus, Vec3f pos) {
@@ -12430,9 +12459,6 @@ s32 update_rom_hack_camera(struct Camera *c, Vec3f focus, Vec3f pos) {
     calc_y_to_curr_floor(&posY, 1.f, 200.f, &focusY, 0.9f, 200.f);
     focus_on_mario(focus, pos, posY + yOff, focusY + yOff, sLakituDist + baseDist, pitch, sAreaYaw);
     pan_ahead_of_player(c);
-    if (gCameraUseCourseSpecificSettings && c->mode != CAMERA_MODE_ROM_HACK && gCurrLevelArea == AREA_DDD_SUB) {
-        camYaw = clamp_positions_and_find_yaw(pos, focus, 6839.f, 995.f, 5994.f, -3945.f);
-    }
 
     // adjust focus when under water
     struct MarioState* m = &gMarioStates[0];
