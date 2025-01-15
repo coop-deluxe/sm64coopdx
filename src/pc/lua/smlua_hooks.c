@@ -1297,7 +1297,7 @@ struct LuaHookedBehavior {
     struct Mod* mod;
 };
 
-#define MAX_HOOKED_BEHAVIORS 256
+#define MAX_HOOKED_BEHAVIORS 1024
 
 static struct LuaHookedBehavior sHookedBehaviors[MAX_HOOKED_BEHAVIORS] = { 0 };
 static int sHookedBehaviorsCount = 0;
