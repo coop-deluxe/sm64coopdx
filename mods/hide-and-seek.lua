@@ -31,6 +31,7 @@ local cannonTimer = 0
 
 -- server settings
 gServerSettings.bubbleDeath = 0
+gServerSettings.nametags = false
 
 --localize functions to improve performance
 local

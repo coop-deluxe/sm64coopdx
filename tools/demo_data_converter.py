@@ -23,7 +23,7 @@ def main():
             prog_args.append(a)
 
     defines = [d.split("=")[0] for d in defines]
-    
+
     if len(prog_args) < 1 or need_help:
         print("Usage: {} <demo_data.json> [-D <symbol>] > <demo_data.c>".format(sys.argv[0]))
         sys.exit(0 if need_help else 1)
@@ -49,21 +49,23 @@ def main():
 
     structobj.append("{")
     for item in table:
-        offset_to_data = "offsetof(struct DemoInputsObj, " + item["demofile"] + ")"
-        size = "sizeof(gDemoInputs." + item["demofile"] + ")"
-        if "extraSize" in item:
-            size += " + " + str(item["extraSize"])
-        structobj.append("{" + offset_to_data + ", " + size + "},")
-    structobj.append("},")
+        if "ignore" not in item:
+            offset_to_data = "offsetof(struct DemoInputsObj, " + item["demofile"] + ")"
+            size = "sizeof(gDemoInputs." + item["demofile"] + ")"
+            if "extraSize" in item:
+                size += " + " + str(item["extraSize"])
+            structobj.append("{" + offset_to_data + ", " + size + "},")
+    structobj.append("}, " + ", ".join("{0}" for _ in demofiles))
 
+    rom_assets = []
     for item in demofiles:
-        with open("assets/demos/" + item["name"] + ".bin", "rb") as file:
-            demobytes = file.read()
-        structdef.append("u8 " + item["name"] + "[" + str(len(demobytes)) + "];")
-        structobj.append("{" + ",".join(hex(x) for x in demobytes) + "},")
+        structdef.append("u8 " + item["name"] + "[" + str(item["size"]) + "];")
+        if "ignore" not in item:
+            rom_assets.append(f"ROM_ASSET_LOAD_DEMO({item['name']}, gDemoInputs.{item['name']}, {item['address']}, {item['size']}, 0x00000000, {item['size']});")
 
     print("#include \"types.h\"")
     print("#include <stddef.h>")
+    print("#include \"pc/rom_assets.h\"")
     print("")
 
     print("struct DemoInputsObj {")
@@ -73,6 +75,8 @@ def main():
     for s in structobj:
         print(s)
     print("};")
+    for s in rom_assets:
+        print(s)
 
 if __name__ == "__main__":
     main()

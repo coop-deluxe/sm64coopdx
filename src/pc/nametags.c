@@ -89,7 +89,7 @@ void nametags_render(void) {
 
         if (djui_hud_world_pos_to_screen_pos(pos, out) &&
             (i != 0 || (i == 0 && m->action != ACT_FIRST_PERSON))) {
-            f32 scale = -400 / out[2] * djui_hud_get_fov_coeff();
+            f32 scale = -300 / out[2] * djui_hud_get_fov_coeff();
 
             char name[MAX_CONFIG_STRING];
             char* hookedString = NULL;

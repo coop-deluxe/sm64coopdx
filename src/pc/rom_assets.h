@@ -7,7 +7,8 @@ enum RomAssetType {
     ROM_ASSET_SAMPLE,
     ROM_ASSET_COLLISION,
     ROM_ASSET_ANIM,
-    ROM_ASSET_DIALOG
+    ROM_ASSET_DIALOG,
+    ROM_ASSET_DEMO,
 };
 
 #define ROM_ASSET_LOAD_VTX(_name, _physicalAddress, _physicalSize, _segmentedAddress, _segmentedSize) \
@@ -59,6 +60,11 @@ __attribute__((constructor)) static void _name ## _rom_assets_queue () { \
 #define ROM_ASSET_LOAD_DIALOG(_ptr, _physicalAddress, _physicalSize, _segmentedAddress, _segmentedSize) \
 __attribute__((constructor)) static void _ptr ## _rom_assets_queue () { \
     rom_assets_queue(_ptr, ROM_ASSET_DIALOG, _physicalAddress, _physicalSize, _segmentedAddress, _segmentedSize); \
+}
+
+#define ROM_ASSET_LOAD_DEMO(_name, _ptr, _physicalAddress, _physicalSize, _segmentedAddress, _segmentedSize) \
+__attribute__((constructor)) static void _name ## _rom_assets_queue () { \
+    rom_assets_queue(_ptr, ROM_ASSET_DEMO, _physicalAddress, _physicalSize, _segmentedAddress, _segmentedSize); \
 }
 
 void rom_assets_load(void);

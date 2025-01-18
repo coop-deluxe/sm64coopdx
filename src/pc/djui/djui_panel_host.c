@@ -70,7 +70,7 @@ static void djui_panel_host_do_host(struct DjuiBase* caller) {
     }
 
     // Doesn't let you host if the player limit is not good
-    if (configAmountofPlayers < 1 || configAmountofPlayers > MAX_PLAYERS) {
+    if (configAmountOfPlayers < 1 || configAmountOfPlayers > MAX_PLAYERS) {
         return;
     }
 
@@ -78,7 +78,7 @@ static void djui_panel_host_do_host(struct DjuiBase* caller) {
 
     if (gNetworkType == NT_SERVER) {
         network_rehost_begin();
-    } else if (configNetworkSystem == NS_COOPNET || configAmountofPlayers == 1) {
+    } else if (configNetworkSystem == NS_COOPNET || configAmountOfPlayers == 1) {
         network_reset_reconnect_and_rehost();
         djui_panel_do_host(false, true);
     } else {

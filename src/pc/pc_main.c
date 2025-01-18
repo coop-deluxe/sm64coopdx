@@ -202,13 +202,6 @@ void produce_interpolation_frames_and_delay(void) {
     f64 targetTime = sFrameTimeStart + sFrameTime;
     s32 numFramesToDraw = get_num_frames_to_draw(sFrameTimeStart);
 
-    // if the game update took too long, don't interpolate
-    if (targetTime - curTime < sFrameTime / 2) {
-        gRenderingInterpolated = false;
-        is30Fps = true;
-        numFramesToDraw = 1;
-    }
-
     f64 loopStartTime = curTime;
     f64 expectedTime = 0;
 
@@ -406,9 +399,6 @@ void* main_game_init(UNUSED void* dummy) {
         loading_screen_set_segment_text("Starting Game");
     );
 
-    if (gCLIOpts.fullscreen == 1) { configWindow.fullscreen = true; }
-    else if (gCLIOpts.fullscreen == 2) { configWindow.fullscreen = false; }
-
     audio_init();
     sound_init();
     network_player_init();
@@ -514,9 +504,14 @@ int main(int argc, char *argv[]) {
         snprintf(configJoinIp, MAX_CONFIG_STRING, "%s", gCLIOpts.joinIp);
         configJoinPort = gCLIOpts.networkPort;
         network_init(NT_CLIENT, false);
-    } else if (gCLIOpts.network == NT_SERVER) {
-        configNetworkSystem = NS_SOCKET;
-        configHostPort = gCLIOpts.networkPort;
+    } else if (gCLIOpts.network == NT_SERVER || gCLIOpts.coopnet) {
+        if (gCLIOpts.network == NT_SERVER) {
+            configNetworkSystem = NS_SOCKET;
+            configHostPort = gCLIOpts.networkPort;
+        } else {
+            configNetworkSystem = NS_COOPNET;
+            snprintf(configPassword, MAX_CONFIG_STRING, "%s", gCLIOpts.coopnetPassword);
+        }
 
         // horrible, hacky fix for mods that access marioObj straight away
         // best fix: host with the standard main menu method

@@ -7,6 +7,7 @@
 #include "pc/loading.h"
 #include "pc/fs/fmem.h"
 #include "pc/pc_main.h"
+#include "pc/utils/misc.h"
 
 #if defined(_WIN32) || defined(_WIN64)
 #include <windows.h>
@@ -60,8 +61,9 @@ u16 mods_get_character_select_count(void) {
 
     for (u16 i = 0; i < gLocalMods.entryCount; i++) {
         struct Mod* mod = gLocalMods.entries[i];
-        if (!mod->enabled || strcmp(mod->name, "[CS]")) { continue; }
-        enabled++;
+        if (mod->enabled && mod->category && strcmp(mod->category, "cs") == 0) {
+            enabled++;
+        }
     }
 
     return enabled;
@@ -176,21 +178,6 @@ void mods_activate(struct Mods* mods) {
     mod_cache_save();
 }
 
-static char* mods_remove_color_codes(const char* str) {
-    char* result = strdup(str);
-    char* startColor;
-    while ((startColor = strstr(result, "\\#"))) {
-        char* endColor = strstr(startColor + 2, "\\");
-        if (endColor) {
-            memmove(startColor, endColor + 1, strlen(endColor + 1) + 1);
-        } else {
-            *startColor = '\0';
-            break;
-        }
-    }
-    return result;
-}
-
 static void mods_sort(struct Mods* mods) {
     if (mods->entryCount <= 1) {
         return;
@@ -201,8 +188,8 @@ static void mods_sort(struct Mods* mods) {
         struct Mod* mod = mods->entries[i];
         for (s32 j = 0; j < i; ++j) {
             struct Mod* mod2 = mods->entries[j];
-            char* name = mods_remove_color_codes(mod->name);
-            char* name2 = mods_remove_color_codes(mod2->name);
+            char* name = str_remove_color_codes(mod->name);
+            char* name2 = str_remove_color_codes(mod2->name);
             if (strcmp(name, name2) < 0) {
                 mods->entries[i] = mod2;
                 mods->entries[j] = mod;
@@ -301,7 +288,7 @@ void mods_refresh_local(void) {
     if (hasUserPath) { mods_load(&gLocalMods, userModPath, true); }
 
     char defaultModsPath[SYS_MAX_PATH] = { 0 };
-    snprintf(defaultModsPath, SYS_MAX_PATH, "%s/%s", sys_exe_path_dir(), MOD_DIRECTORY);
+    snprintf(defaultModsPath, SYS_MAX_PATH, "%s/%s", sys_resource_path(), MOD_DIRECTORY);
     mods_load(&gLocalMods, defaultModsPath, false);
 
     // sort

@@ -1,7 +1,7 @@
 -- version
 DNC_VERSION_MAJOR = 2
 DNC_VERSION_MINOR = 3
-DNC_VERSION_PATCH = 0
+DNC_VERSION_PATCH = 1
 DNC_VERSION = math.tointeger(string.format("%d%d%d", DNC_VERSION_MAJOR, DNC_VERSION_MINOR, DNC_VERSION_PATCH))
 
 -- skybox constants
@@ -54,8 +54,8 @@ FOG_INTENSITY_NORMAL = 1.0
 FOG_INTENSITY_DENSE = 1.02
 
 -- colors
-COLOR_NIGHT                = { r = 90,  g = 100, b = 130 }
-COLOR_AMBIENT_NIGHT        = { r = 80,  g = 100, b = 130 }
+COLOR_NIGHT                = { r = 90,  g = 110, b = 150 }
+COLOR_AMBIENT_NIGHT        = { r = 90,  g = 100, b = 150 }
 COLOR_SUNRISE              = { r = 255, g = 250, b = 150 }
 COLOR_AMBIENT_SUNRISE      = { r = 200, g = 200, b = 255 }
 COLOR_DAY                  = { r = 255, g = 255, b = 255 }
