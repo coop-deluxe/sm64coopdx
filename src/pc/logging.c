@@ -139,6 +139,8 @@ static const char* get_category_string(LogCategory category) {
         case LOG_CATEGORY_CLIENT: return "Client";
         case LOG_CATEGORY_SERVER: return "Server";
         case LOG_CATEGORY_COOPNET: return "CoopNet";
+        case LOG_CATEGORY_CONSOLE: return "Console";
+        case LOG_CATEGORY_CHAT: return "Chat";
         case LOG_CATEGORY_DEBUG: return "Debug";
         default: return "Unknown";
     }
