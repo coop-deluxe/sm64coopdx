@@ -59,6 +59,7 @@
 
 #include "gfx_dimensions.h"
 #include "game/segment2.h"
+#include "logging.h"
 
 #ifdef DISCORD_SDK
 #include "pc/discord/discord.h"
@@ -376,22 +377,27 @@ void game_exit(void) {
 }
 
 void* main_game_init(UNUSED void* dummy) {
+    log_message(LOG_CATEGORY_RUNTIME, LOG_TYPE_INFO, "Initializing Language...", NULL);
     // load language
     if (!djui_language_init(configLanguage)) { snprintf(configLanguage, MAX_CONFIG_STRING, "%s", ""); }
 
     LOADING_SCREEN_MUTEX(loading_screen_set_segment_text("Loading"));
+    log_message(LOG_CATEGORY_RUNTIME, LOG_TYPE_INFO, "Initializing DynOS GFX...", NULL);
     dynos_gfx_init();
     enable_queued_dynos_packs();
     sync_objects_init_system();
 
+    log_message(LOG_CATEGORY_RUNTIME, LOG_TYPE_INFO, "Checking For Updates...", NULL);
     if (gCLIOpts.network != NT_SERVER && !gCLIOpts.skipUpdateCheck) {
         check_for_updates();
     }
 
+    log_message(LOG_CATEGORY_RUNTIME, LOG_TYPE_INFO, "Loading ROM Assets...", NULL);
     LOADING_SCREEN_MUTEX(loading_screen_set_segment_text("Loading ROM Assets"));
     rom_assets_load();
     smlua_text_utils_init();
 
+    log_message(LOG_CATEGORY_RUNTIME, LOG_TYPE_INFO, "Initializing Mods...", NULL);
     mods_init();
     enable_queued_mods();
     LOADING_SCREEN_MUTEX(
@@ -399,11 +405,17 @@ void* main_game_init(UNUSED void* dummy) {
         loading_screen_set_segment_text("Starting Game");
     );
 
+
+    log_message(LOG_CATEGORY_RUNTIME, LOG_TYPE_INFO, "Initializing Audio...", NULL);
     audio_init();
+    log_message(LOG_CATEGORY_RUNTIME, LOG_TYPE_INFO, "Initializing Sound...", NULL);
     sound_init();
+    log_message(LOG_CATEGORY_RUNTIME, LOG_TYPE_INFO, "Initializing Network Player...", NULL);
     network_player_init();
+    log_message(LOG_CATEGORY_RUNTIME, LOG_TYPE_INFO, "Initializing Mumble...", NULL);
     mumble_init();
 
+    log_message(LOG_CATEGORY_RUNTIME, LOG_TYPE_INFO, "Game Initialization complete!", NULL);
     gGameInited = true;
 }
 
@@ -444,12 +456,14 @@ int main(int argc, char *argv[]) {
     }
 #endif
 
+    log_message(LOG_CATEGORY_RUNTIME, LOG_TYPE_INFO, "Loading Configuration...", NULL);
     configfile_load();
 
     legacy_folder_handler();
 
     // create the window almost straight away
     if (!gGfxInited) {
+        log_message(LOG_CATEGORY_RUNTIME, LOG_TYPE_INFO, "Starting sm64coopdx (Version: ", get_version(), ")...", NULL);
         gfx_init(&WAPI, &RAPI, TITLE);
         WAPI.set_keyboard_callbacks(keyboard_on_key_down, keyboard_on_key_up, keyboard_on_all_keys_up,
             keyboard_on_text_input, keyboard_on_text_editing);
@@ -485,9 +499,11 @@ int main(int argc, char *argv[]) {
     }
 
     // initialize sm64 data and controllers
+    log_message(LOG_CATEGORY_RUNTIME, LOG_TYPE_INFO, "Starting game loop...", NULL);
     thread5_game_loop(NULL);
 
     // initialize sound outside threads
+    log_message(LOG_CATEGORY_RUNTIME, LOG_TYPE_INFO, "Initializing Sound/Audio API...", NULL);
     if (gCLIOpts.headless) audio_api = &audio_null;
 #if defined(AAPI_SDL1) || defined(AAPI_SDL2)
     if (!audio_api && audio_sdl.init()) audio_api = &audio_sdl;
@@ -502,6 +518,7 @@ int main(int argc, char *argv[]) {
 #endif
 
     // initialize djui
+    log_message(LOG_CATEGORY_RUNTIME, LOG_TYPE_INFO, "Initializing DJUI...", NULL);
     djui_init();
     djui_unicode_init();
     djui_init_late();
@@ -510,18 +527,22 @@ int main(int argc, char *argv[]) {
     show_update_popup();
 
     // initialize network
+    log_message(LOG_CATEGORY_RUNTIME, LOG_TYPE_INFO, "Initializing Network...", NULL);
     if (gCLIOpts.network == NT_CLIENT) {
         network_set_system(NS_SOCKET);
         snprintf(gGetHostName, MAX_CONFIG_STRING, "%s", gCLIOpts.joinIp);
         snprintf(configJoinIp, MAX_CONFIG_STRING, "%s", gCLIOpts.joinIp);
         configJoinPort = gCLIOpts.networkPort;
+        log_message(LOG_CATEGORY_RUNTIME, LOG_TYPE_INFO, "Network set to client by config (", gCLIOpts.joinIp, ":", log_uint(gCLIOpts.networkPort), ").", NULL);
         network_init(NT_CLIENT, false);
     } else if (gCLIOpts.network == NT_SERVER || gCLIOpts.coopnet) {
         if (gCLIOpts.network == NT_SERVER) {
             configNetworkSystem = NS_SOCKET;
             configHostPort = gCLIOpts.networkPort;
+            log_message(LOG_CATEGORY_RUNTIME, LOG_TYPE_INFO, "Network set to server by config (Port: ", log_uint(gCLIOpts.networkPort), ").", NULL);
         } else {
             configNetworkSystem = NS_COOPNET;
+            log_message(LOG_CATEGORY_RUNTIME, LOG_TYPE_INFO, "Network set to coopnet by config.", NULL);
             snprintf(configPassword, MAX_CONFIG_STRING, "%s", gCLIOpts.coopnetPassword);
         }
 
@@ -536,6 +557,7 @@ int main(int argc, char *argv[]) {
         network_init(NT_NONE, false);
     }
 
+    log_message(LOG_CATEGORY_RUNTIME, LOG_TYPE_INFO, "Game started (Playername: ", configPlayerName,")!", NULL);       
     // main loop
     while (true) {
         debug_context_reset();
