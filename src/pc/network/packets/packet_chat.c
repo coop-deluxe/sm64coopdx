@@ -2,6 +2,7 @@
 #include "../network.h"
 #include "pc/djui/djui.h"
 #include "pc/debuglog.h"
+#include "pc/logging.h"
 
 #define ARR_SIZE(_X) (sizeof(_X) / sizeof(_X[0]))
 
@@ -74,6 +75,8 @@ void network_send_chat(char* message, u8 globalIndex) {
     packet_write(&p, &messageLength, sizeof(u16));
     packet_write(&p, message, messageLength * sizeof(u8));
     network_send(&p);
+    struct NetworkPlayer* np = network_player_from_global_index(globalIndex);
+    log_message(LOG_CATEGORY_CHAT, LOG_TYPE_INFO, "[", gNetworkSystem->get_id_str(np->localIndex), "] ", np->name, ": ", message, NULL);
 }
 
 void network_receive_chat(struct Packet* p) {
@@ -88,6 +91,7 @@ void network_receive_chat(struct Packet* p) {
 
     // anti spoof
     if (packet_spoofed(p, globalIndex)) {
+        log_message(LOG_CATEGORY_CONSOLE, LOG_TYPE_ERROR, "rx spoofed chat", NULL);
         LOG_ERROR("rx spoofed chat");
         return;
     }
