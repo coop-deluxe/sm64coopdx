@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <stdarg.h>
+#include <stdbool.h>
 
 /**
  * Enum representing the different logging categories.
@@ -46,4 +47,21 @@ typedef enum {
  */
 void log_message(LogCategory category, LogType type, const char *message, ...);
 
-#endif
+/**
+ * Utility functions to convert various basic data types to strings.
+ */
+char* log_int(int value);
+char* log_uint(unsigned int value);
+char* log_short(short value);
+char* log_ushort(unsigned short value);
+char* log_long(long value);
+char* log_ulong(unsigned long value);
+char* log_longlong(long long value);
+char* log_ulonglong(unsigned long long value);
+char* log_float(float value);
+char* log_double(double value);
+char* log_longdouble(long double value);
+char* log_bool(bool value);
+char* log_char(char value);
+
+#endif // LOGGING_H

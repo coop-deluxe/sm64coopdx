@@ -4,12 +4,101 @@
 #include <string.h>
 #include <time.h>
 #include <stdarg.h>
+#include <stdbool.h>
 #include "fs/fs.h"
 
 #define LOG_FOLDER "logs"
 #define LOG_EXTENSION ".log"
 
 static FILE *logFile = NULL;
+
+char* log_int(int value) {
+    static char buffer[32];
+    snprintf(buffer, sizeof(buffer), "%d", value);
+    return buffer;
+}
+
+char* log_uint(unsigned int value) {
+    static char buffer[32];
+    snprintf(buffer, sizeof(buffer), "%u", value);
+    return buffer;
+}
+
+char* log_short(short value) {
+    static char buffer[32];
+    snprintf(buffer, sizeof(buffer), "%hd", value);
+    return buffer;
+}
+
+char* log_ushort(unsigned short value) {
+    static char buffer[32];
+    snprintf(buffer, sizeof(buffer), "%hu", value);
+    return buffer;
+}
+
+char* log_long(long value) {
+    static char buffer[32];
+    snprintf(buffer, sizeof(buffer), "%ld", value);
+    return buffer;
+}
+
+char* log_ulong(unsigned long value) {
+    static char buffer[32];
+    snprintf(buffer, sizeof(buffer), "%lu", value);
+    return buffer;
+}
+
+char* log_longlong(long long value) {
+    static char buffer[32];
+    snprintf(buffer, sizeof(buffer), "%lld", value);
+    return buffer;
+}
+
+char* log_ulonglong(unsigned long long value) {
+    static char buffer[32];
+    snprintf(buffer, sizeof(buffer), "%llu", value);
+    return buffer;
+}
+
+char* log_float(float value) {
+    static char buffer[64];
+    snprintf(buffer, sizeof(buffer), "%.9f", value);
+    char* end = buffer + strlen(buffer) - 1;
+    while (*end == '0' && *(end - 1) != '.') --end;
+    if (*end == '.') --end;
+    *(end + 1) = '\0';
+    return buffer;
+}
+
+char* log_double(double value) {
+    static char buffer[64];
+    snprintf(buffer, sizeof(buffer), "%.17lf", value);
+    char* end = buffer + strlen(buffer) - 1;
+    while (*end == '0' && *(end - 1) != '.') --end;
+    if (*end == '.') --end;
+    *(end + 1) = '\0';
+    return buffer;
+}
+
+char* log_longdouble(long double value) {
+    static char buffer[128];
+    snprintf(buffer, sizeof(buffer), "%.21Lf", value);
+    char* end = buffer + strlen(buffer) - 1;
+    while (*end == '0' && *(end - 1) != '.') --end;
+    if (*end == '.') --end;
+    *(end + 1) = '\0';
+    return buffer;
+}
+
+char* log_bool(bool value) {
+    return value ? "true" : "false";
+}
+
+char* log_char(char value) {
+    static char buffer[2] = {0};
+    buffer[0] = value;
+    return buffer;
+}
 
 // Generates a timestamp for filenames or log entries
 static void generate_timestamp(char *date_buffer, size_t date_size, char *time_buffer, size_t time_size, int for_filename) {
