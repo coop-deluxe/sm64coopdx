@@ -3118,11 +3118,11 @@ static void update_romhack_camera_override(struct Camera *c) {
     }
     if (gIsDemoActive) { return; }
 
-    if ((!(gOverrideRomhackCamera == RCO_ALL_INCLUDING_VANILLA || gOverrideRomhackCamera == RCO_ALL_VANILLA_EXCEPT_BOWSER)) &&
-            dynos_level_is_vanilla_level(gCurrLevelNum)) {
+    if ((gOverrideRomhackCamera != RCO_ALL_INCLUDING_VANILLA && gOverrideRomhackCamera != RCO_ALL_VANILLA_EXCEPT_BOWSER) &&
+         dynos_level_is_vanilla_level(gCurrLevelNum)) {
         return;
     } else if ((gOverrideRomhackCamera == RCO_ALL_EXCEPT_BOWSER || gOverrideRomhackCamera == RCO_ALL_VANILLA_EXCEPT_BOWSER) &&
-            (gCurrLevelNum == LEVEL_BOWSER_1 || gCurrLevelNum == LEVEL_BOWSER_2 || gCurrLevelNum == LEVEL_BOWSER_3)) {
+               (gCurrLevelNum == LEVEL_BOWSER_1 || gCurrLevelNum == LEVEL_BOWSER_2 || gCurrLevelNum == LEVEL_BOWSER_3)) {
         if (c->mode == CAMERA_MODE_ROM_HACK) {
             c->mode = c->defMode;
             set_camera_mode(c, c->defMode, 0);

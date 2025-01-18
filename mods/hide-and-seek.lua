@@ -137,8 +137,13 @@ local function update()
         server_update()
     end
 
-    -- Force free camera collisions
+    -- Force several camera configs
     camera_config_enable_camera_collisions(true)
+    rom_hack_cam_set_collisions(1)
+    camera_romhack_set_zoomed_in_dist(900)
+    camera_romhack_set_zoomed_out_dist(1400)
+    camera_romhack_set_zoomed_in_height(300)
+    camera_romhack_set_zoomed_out_height(450)
 end
 
 local function screen_transition(trans)
@@ -229,7 +234,7 @@ local function mario_update(m)
     end
 
     -- pu prevention
-    if m.playerIndex == 0 and (m.pos.x > 32767 or m.pos.x < -32768 or m.pos.z > 32767 or m.pos.z < -32768) then
+    if m.playerIndex == 0 and (m.pos.x > 0x7FFF or m.pos.x < -0x8000 or m.pos.z > 0x7FFF or m.pos.z < -0x8000) then
         s.seeking = true
         warp_restart_level()
     end

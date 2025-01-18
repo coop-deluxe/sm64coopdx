@@ -32,13 +32,13 @@ This enables or disables specific collision behaviors in modded levels
 |descriptionEnd| */
 void rom_hack_cam_set_collisions(u8 enable);
 
-/* |description|Sets the romhack camera's zoomed in distance, between 700 and 1200 units|descriptionEnd| */
+/* |description|Sets the romhack camera's zoomed in distance, between 700 and 1200 units (Default: 900)|descriptionEnd| */
 void camera_romhack_set_zoomed_in_dist(u32 val);
-/* |description|Sets the romhack camera's zoomed out additional distance, between 100 and 600 units|descriptionEnd| */
+/* |description|Sets the romhack camera's zoomed out additional distance, between 100 and 600 units (Default: 500)|descriptionEnd| */
 void camera_romhack_set_zoomed_out_dist(u32 val);
-/* |description|Sets the romhack camera's zoomed in height, between 150 and 500 units|descriptionEnd| */
+/* |description|Sets the romhack camera's zoomed in height, between 150 and 500 units (Default: 300)|descriptionEnd| */
 void camera_romhack_set_zoomed_in_height(u32 val);
-/* |description|Sets the romhack camera's zoomed out additional height, between 100 and 500 units|descriptionEnd| */
+/* |description|Sets the romhack camera's zoomed out additional height, between 100 and 500 units (Default: 150)|descriptionEnd| */
 void camera_romhack_set_zoomed_out_height(u32 val);
 
 /* |description|Gets the romhack camera's zoomed in distance|descriptionEnd| */
