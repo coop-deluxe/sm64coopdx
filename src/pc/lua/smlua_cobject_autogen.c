@@ -1391,7 +1391,7 @@ static struct LuaObjectField sMarioAnimationFields[LUA_MARIO_ANIMATION_FIELD_COU
     { "targetAnim",      LVT_COBJECT_P, offsetof(struct MarioAnimation, targetAnim),      false, LOT_ANIMATION },
 };
 
-#define LUA_MARIO_BODY_STATE_FIELD_COUNT 25
+#define LUA_MARIO_BODY_STATE_FIELD_COUNT 26
 static struct LuaObjectField sMarioBodyStateFields[LUA_MARIO_BODY_STATE_FIELD_COUNT] = {
     { "action",              LVT_U32,     offsetof(struct MarioBodyState, action),              false, LOT_NONE  },
     { "allowPartRotation",   LVT_U8,      offsetof(struct MarioBodyState, allowPartRotation),   false, LOT_NONE  },
@@ -1409,6 +1409,7 @@ static struct LuaObjectField sMarioBodyStateFields[LUA_MARIO_BODY_STATE_FIELD_CO
     { "lightingDirX",        LVT_F32,     offsetof(struct MarioBodyState, lightingDirX),        false, LOT_NONE  },
     { "lightingDirY",        LVT_F32,     offsetof(struct MarioBodyState, lightingDirY),        false, LOT_NONE  },
     { "lightingDirZ",        LVT_F32,     offsetof(struct MarioBodyState, lightingDirZ),        false, LOT_NONE  },
+    { "mirrorMario",         LVT_BOOL,    offsetof(struct MarioBodyState, mirrorMario),         false, LOT_NONE  },
     { "modelState",          LVT_S16,     offsetof(struct MarioBodyState, modelState),          false, LOT_NONE  },
     { "punchState",          LVT_U8,      offsetof(struct MarioBodyState, punchState),          false, LOT_NONE  },
     { "shadeB",              LVT_U16,     offsetof(struct MarioBodyState, shadeB),              false, LOT_NONE  },
