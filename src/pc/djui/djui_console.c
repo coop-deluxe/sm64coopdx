@@ -3,6 +3,7 @@
 #include "djui.h"
 #include "djui_console.h"
 #include "pc/pc_main.h"
+#include "pc/logging.h"
 
 #define MAX_CONSOLE_MESSAGES 500
 
@@ -104,6 +105,18 @@ static bool djui_console_on_key_down(UNUSED struct DjuiBase* base, int scancode)
 }
 
 void djui_console_message_create(const char* message, enum ConsoleMessageLevel level) {
+    switch (level) {
+        case CONSOLE_MESSAGE_INFO:
+            log_message(LOG_CATEGORY_CONSOLE, LOG_TYPE_INFO, message, NULL);
+            break;
+        case CONSOLE_MESSAGE_WARNING:
+            log_message(LOG_CATEGORY_CONSOLE, LOG_TYPE_WARN, message, NULL);
+            break;
+        case CONSOLE_MESSAGE_ERROR:
+            log_message(LOG_CATEGORY_CONSOLE, LOG_TYPE_ERROR, message, NULL);
+            break;
+    }
+    
     if (sDjuiConsoleQueueMessages || !gDjuiConsole) {
         djui_console_message_queue(message, level);
         return;

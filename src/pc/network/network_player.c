@@ -12,6 +12,7 @@
 #include "pc/lua/smlua_hooks.h"
 #include "pc/network/socket/socket.h"
 #include "lag_compensation.h"
+#include "pc/logging.h"
 #ifdef DISCORD_SDK
 #include "pc/discord/discord.h"
 #endif
@@ -335,6 +336,7 @@ u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex, u8 mode
     if (!gCurrentlyJoining && type != NPT_SERVER && (gNetworkType != NT_SERVER || type != NPT_LOCAL)) {
         construct_player_popup(np, DLANG(NOTIF, CONNECTED), NULL);
     }
+    log_message(LOG_CATEGORY_NETWORK, LOG_TYPE_INFO, "<Connected> " , np->name, " (", gNetworkSystem->get_id_str(np->localIndex), ")", NULL);
     LOG_INFO("player connected, local %d, global %d", localIndex, np->globalIndex);
 
     smlua_call_event_hooks_mario_param(HOOK_ON_PLAYER_CONNECTED, &gMarioStates[localIndex]);
@@ -363,6 +365,8 @@ u8 network_player_disconnected(u8 globalIndex) {
         return UNKNOWN_GLOBAL_INDEX;
     }
 
+    char* disconnectedId = gNetworkSystem->get_id_str(globalIndex);
+
     for (s32 i = 1; i < MAX_PLAYERS; i++) {
         struct NetworkPlayer* np = &gNetworkPlayers[i];
         if (!np->connected) { continue; }
@@ -381,7 +385,8 @@ u8 network_player_disconnected(u8 globalIndex) {
         for (struct SyncObject* so = sync_object_get_first(); so != NULL; so = sync_object_get_next()) {
             so->rxEventId[i] = 0;
         }
-
+        
+        log_message(LOG_CATEGORY_NETWORK, LOG_TYPE_INFO, "<Disconnected> " , np->name, " (", disconnectedId, ")", NULL);
         LOG_INFO("player disconnected, local %d, global %d", i, globalIndex);
 
         // display popup
