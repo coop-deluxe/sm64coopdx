@@ -45,6 +45,8 @@ GeoLayoutCommandProc GeoLayoutJumpTable[] = {
     geo_layout_cmd_node_culling_radius,
     // coop
     geo_layout_cmd_node_background_ext,
+    geo_layout_cmd_node_switch_case_ext,
+    geo_layout_cmd_node_generated_ext,
 };
 
 struct GraphNode gObjParentGraphNode;
@@ -788,6 +790,44 @@ void geo_layout_cmd_node_background_ext(void) {
     register_scene_graph_node(&graphNode->fnNode.node);
 
     gGeoLayoutCommand += 0x0C << CMD_SIZE_SHIFT;
+}
+
+/*
+  0x22: Create switch-case scene graph node with a custom Lua callback
+*/
+void geo_layout_cmd_node_switch_case_ext(void) {
+    struct GraphNodeSwitchCase *graphNode;
+
+    graphNode = init_graph_node_switch_case(
+        gGraphNodePool, NULL,
+        cur_geo_cmd_s16(0x02), // num cases
+        0,
+        (GraphNodeFunc) geo_process_lua_function,
+        0
+    );
+    graphNode->fnNode.luaTokenIndex = cur_geo_cmd_u32(0x04);
+
+    register_scene_graph_node(&graphNode->fnNode.node);
+
+    gGeoLayoutCommand += 0x08 << CMD_SIZE_SHIFT;
+}
+
+/*
+  0x23: Create dynamically generated displaylist scene graph node with a custom Lua callback
+*/
+void geo_layout_cmd_node_generated_ext(void) {
+    struct GraphNodeGenerated *graphNode;
+
+    graphNode = init_graph_node_generated(
+        gGraphNodePool, NULL,
+        (GraphNodeFunc) geo_process_lua_function,
+        cur_geo_cmd_s16(0x02) // parameter
+    );
+    graphNode->fnNode.luaTokenIndex = cur_geo_cmd_u32(0x04);
+
+    register_scene_graph_node(&graphNode->fnNode.node);
+
+    gGeoLayoutCommand += 0x08 << CMD_SIZE_SHIFT;
 }
 
 struct GraphNode *process_geo_layout(struct DynamicPool *pool, void *segptr) {

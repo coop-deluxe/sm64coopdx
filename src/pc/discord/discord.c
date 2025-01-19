@@ -2,16 +2,15 @@
 #include "pc/djui/djui.h"
 #include "pc/crash_handler.h"
 #include "pc/debuglog.h"
+#include "pc/platform.h"
 
-#if defined(_WIN32) || defined(_WIN64)
-#include <windows.h>
-#include <winuser.h>
+#if defined(_WIN32)
+#include <minwindef.h>
 #else
-#include <unistd.h>
 #define MAX_PATH 1024
 #endif
 
-#define MAX_LAUNCH_CMD (MAX_PATH + 12)
+#define MAX_LAUNCH_CMD (MAX_PATH + 2)
 
 #define APPLICATION_ID_COOPDX 1159627283506679839
 
@@ -54,26 +53,17 @@ static void get_oauth2_token_callback(UNUSED void* data, enum EDiscordResult res
 
 static void register_launch_command(void) {
     char cmd[MAX_LAUNCH_CMD] = { 0 };
-    int rc;
-#if defined(_WIN32) || defined(_WIN64)
-    HMODULE hModule = GetModuleHandle(NULL);
-    if (hModule == NULL) {
-        LOG_ERROR("unable to retrieve absolute path!");
-        return;
-    }
-    GetModuleFileName(hModule, cmd, sizeof(cmd));
+
+    const char *exe_path = sys_exe_path_file();
+    if (exe_path[0] == '\0') { return; }
+
+#if defined(_WIN32)
+    snprintf(cmd, MAX_LAUNCH_CMD, "\"%s\"", exe_path);  // argv[0] double-quoted
 #else
-    char pidpath[MAX_LAUNCH_CMD] = { 0 };
-    char fullpath[MAX_LAUNCH_CMD] = { 0 };
-    snprintf(pidpath, MAX_LAUNCH_CMD - 1, "/proc/%d/exe", getpid());
-    rc = readlink(pidpath, fullpath, MAX_LAUNCH_CMD - 1);
-    if (rc <= 0) {
-        LOG_ERROR("unable to retrieve absolute path! rc = %d", rc);
-        return;
-    }
-    snprintf(cmd, MAX_LAUNCH_CMD, "%s", fullpath);
+    snprintf(cmd, MAX_LAUNCH_CMD, "'%s'", exe_path);  // argv[0] single-quoted
 #endif
-    rc = app.activities->register_command(app.activities, cmd);
+
+    int rc = app.activities->register_command(app.activities, cmd);
     if (rc != DiscordResult_Ok) {
         LOG_ERROR("register command failed %d", rc);
         return;

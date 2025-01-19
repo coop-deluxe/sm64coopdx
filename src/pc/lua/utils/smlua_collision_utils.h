@@ -117,6 +117,7 @@ extern struct GlobalObjectCollisionData gGlobalObjectCollisionData;
 struct RayIntersectionInfo* collision_find_surface_on_ray(f32 startX, f32 startY, f32 startZ, f32 dirX, f32 dirY, f32 dirZ, f32 precision);
 /* |description|Finds a potential floor at the given `x`, `y`, and `z` values|descriptionEnd| */
 struct Surface* collision_find_floor(f32 x, f32 y, f32 z);
+
 /* |description|Finds a potential ceiling at the given `x`, `y`, and `z` values|descriptionEnd| */
 struct Surface* collision_find_ceil(f32 x, f32 y, f32 z);
 

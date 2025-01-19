@@ -123,6 +123,8 @@ void djui_panel_host_save_create(struct DjuiBase* caller) {
                 djui_base_set_alignment(&button3->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_TOP);
             }
         }
+
+        djui_button_create(body, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_NORMAL, djui_panel_menu_back);
     }
 
     djui_panel_add(caller, panel, NULL);

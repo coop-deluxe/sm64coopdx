@@ -79,6 +79,7 @@ struct FnGraphNode
 {
     /*0x00*/ struct GraphNode node;
     /*0x14*/ GraphNodeFunc func;
+    u32 luaTokenIndex; // reference to lua function resolved during geo_process_lua_function (1-indexed)
 };
 
 /** The very root of the geo tree. Specifies the viewport.
@@ -431,6 +432,7 @@ struct GraphNode *geo_add_child(struct GraphNode *parent, struct GraphNode *chil
 struct GraphNode* geo_remove_child_from_parent(struct GraphNode* parent, struct GraphNode* graphNode);
 struct GraphNode *geo_remove_child(struct GraphNode *graphNode);
 struct GraphNode *geo_make_first_child(struct GraphNode *newFirstChild);
+struct GraphNode *geo_find_shared_child(struct GraphNode *graphNode);
 
 void geo_call_global_function_nodes_helper(struct GraphNode *graphNode, s32 callContext);
 void geo_call_global_function_nodes(struct GraphNode *graphNode, s32 callContext);

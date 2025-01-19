@@ -130,6 +130,7 @@ struct GraphNode
     struct GraphNode *children;
     const void *georef;
     u8 extraFlags;
+    u8 hookProcess;
 };
 
 struct AnimInfo
@@ -316,6 +317,7 @@ struct MarioBodyState
     /*????*/ Vec3f handFootPos[4];
     /*????*/ u32 updateTorsoTime;
     /*????*/ Vec3f headPos;
+    /*????*/ u32 updateHeadPosTime;
     /*????*/ u16 shadeR; /// shadow red value
     /*????*/ u16 shadeG; /// shadow green value
     /*????*/ u16 shadeB; /// shadow blue value
@@ -326,6 +328,7 @@ struct MarioBodyState
     /*????*/ f32 lightingDirY;
     /*????*/ f32 lightingDirZ;
     /*????*/ u8 allowPartRotation;
+    /*????*/ bool mirrorMario; // some of these fields are updated for Mirror Mario too
     // u8 padding[4];
 };
 

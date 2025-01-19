@@ -397,6 +397,31 @@ void djui_inputbox_on_text_input(struct DjuiBase *base, char* text) {
     inputbox->selection[1] = inputbox->selection[0];
     sCursorBlink = 0;
     djui_inputbox_on_change(inputbox);
+    
+    inputbox->imePos = 0;
+    if (inputbox->imeBuffer != NULL) {
+        free(inputbox->imeBuffer);
+        inputbox->imeBuffer = NULL;
+    }
+}
+
+void djui_inputbox_on_text_editing(struct DjuiBase *base, char* text, int cursorPos) {
+    struct DjuiInputbox *inputbox = (struct DjuiInputbox *) base;
+    inputbox->imePos = (u16)cursorPos;
+    
+    if (inputbox->imeBuffer != NULL) free(inputbox->imeBuffer);
+    
+    if (*text == '\0') {
+        inputbox->imeBuffer = NULL;
+    }
+    else {
+        size_t size = strlen(text);
+        char* copy = malloc(size + 1);
+        strcpy(copy,text);
+        inputbox->imeBuffer = copy;
+    }
+    
+    djui_inputbox_on_change(inputbox);
 }
 
 static void djui_inputbox_render_char(struct DjuiInputbox* inputbox, char* c, f32* drawX, f32* additionalShift) {
@@ -444,11 +469,22 @@ static void djui_inputbox_render_selection(struct DjuiInputbox* inputbox) {
     }
 
     sCursorBlink = (sCursorBlink + 1) % DJUI_INPUTBOX_MAX_BLINK;
-
+    
+    f32 renderX = x;
+    
+    u16 imePos = inputbox->imePos;
+    if (imePos != 0) {
+        char* ime = inputbox->imeBuffer;
+        for (u16 i = 0; i < imePos; i++) {
+            renderX += font->char_width(ime);
+            ime = djui_unicode_next_char(ime);
+        }
+    }
+    
     // render only cursor when there is no selection width
     if (selection[0] == selection[1]) {
         if (sCursorBlink < DJUI_INPUTBOX_MID_BLINK && djui_interactable_is_input_focus(&inputbox->base)) {
-            create_dl_translation_matrix(DJUI_MTX_PUSH, x - DJUI_INPUTBOX_CURSOR_WIDTH / 2.0f, -0.1f, 0);
+            create_dl_translation_matrix(DJUI_MTX_PUSH, renderX - DJUI_INPUTBOX_CURSOR_WIDTH / 2.0f, -0.1f, 0);
             create_dl_scale_matrix(DJUI_MTX_NOPUSH, DJUI_INPUTBOX_CURSOR_WIDTH, 0.8f, 1.0f);
             gDPSetEnvColor(gDisplayListHead++, 0, 0, 0, 255);
             gSPDisplayList(gDisplayListHead++, dl_djui_simple_rect);
@@ -547,13 +583,23 @@ static bool djui_inputbox_render(struct DjuiBase* base) {
     u16 selection[2] = { 0 };
     selection[0] = fmin(inputbox->selection[0], inputbox->selection[1]);
     selection[1] = fmax(inputbox->selection[0], inputbox->selection[1]);
-
+    
     // render text
     char* c = inputbox->buffer;
     f32 drawX = inputbox->viewX;
     f32 additionalShift = 0;
     bool wasInsideSelection = false;
     for (u16 i = 0; i < inputbox->bufferSize; i++) {
+        
+        //render composition text
+        if (selection[0] == i && inputbox->imeBuffer != NULL) {
+            char *ime = inputbox->imeBuffer;
+            while (*ime != '\0') {
+                djui_inputbox_render_char(inputbox, ime, &drawX, &additionalShift);
+                ime = djui_unicode_next_char(ime);
+            }
+        }
+        
         if (*c == '\0') { break; }
 
         // deal with seleciton color
@@ -598,6 +644,7 @@ struct DjuiInputbox* djui_inputbox_create(struct DjuiBase* parent, u16 bufferSiz
     djui_interactable_hook_key(base, djui_inputbox_on_key_down, djui_inputbox_on_key_up);
     djui_interactable_hook_focus(base, djui_inputbox_on_focus_begin, NULL, djui_inputbox_on_focus_end);
     djui_interactable_hook_text_input(base, djui_inputbox_on_text_input);
+    djui_interactable_hook_text_editing(base, djui_inputbox_on_text_editing);
 
     djui_inputbox_update_style(base);
 

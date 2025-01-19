@@ -849,8 +849,11 @@ inline s16 atan2s(f32 y, f32 x) {
     static const s16 offsets[] = {0x4000, 0x4000, 0xC000, 0xC000, 0x0000, 0x8000, 0x0000, 0x8000};
     static const s8 signs[] = {-1,  1,  1, -1, 1, -1, -1,  1};
 
+    // Adjust output for (0, 0) edge case
+    s16 zeroAdj = (x == 0.0f && y == 0.0f) * -0x4000;
+
     // Ensure the result fits into 16 bits via an explicit cast on angle
-    return (offsets[idx] + (signs[idx] * (s16)angle)) & 0xFFFF;
+    return ((offsets[idx] + (signs[idx] * (s16)angle)) + zeroAdj) & 0xFFFF;
 }
 
 /**

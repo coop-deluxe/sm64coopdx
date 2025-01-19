@@ -49,7 +49,8 @@ static void sleep_ms(int milliseconds) { // cross-platform sleep function
 static void gfx_dummy_wm_init(UNUSED const char *game_name) {
 }
 
-static void gfx_dummy_wm_set_keyboard_callbacks(UNUSED kb_callback_t on_key_down, UNUSED kb_callback_t on_key_up, UNUSED void (*on_all_keys_up)(void), UNUSED void (*on_text_input)(char*)) {
+static void gfx_dummy_wm_set_keyboard_callbacks(UNUSED kb_callback_t on_key_down, UNUSED kb_callback_t on_key_up, UNUSED void (*on_all_keys_up)(void),
+                                                UNUSED void (*on_text_input)(char*), UNUSED void (*on_text_editing)(char*, int)) {
 }
 
 static void gfx_dummy_wm_set_fullscreen_changed_callback(UNUSED void (*on_fullscreen_changed)(bool is_now_fullscreen)) {

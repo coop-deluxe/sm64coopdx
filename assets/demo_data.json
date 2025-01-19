@@ -32,18 +32,18 @@
         {"demofile":"pss"}
     ],
     "demofiles": [
-        {"name":"bbh"},
-        {"name":"ccm"},
-        {"name":"hmc"},
-        {"name":"jrb"},
-        {"name":"wf"},
-        {"name":"pss"},
         
+        {"name":"bbh", "size":988, "address":"0x00579c60"},
+        {"name":"ccm", "size":1320, "address":"0x0057a03c"},
+        {"name":"hmc", "size":980, "address":"0x0057a564"},
+        {"name":"jrb", "size":620, "address":"0x0057a938"},
+        {"name":"wf", "size":672, "address":"0x0057aba4"},
+        {"name":"pss", "size":748, "address":"0x0057ae44"},
         /* Might be an unused demo, but it doesn't define a header,
            so it can't be normally called. Speculation: "blooper" take for CCM.
            Mario runs into the sign and aligns himself as if it were a mistake. */
-        {"name":"unused"},
+        {"name": "unused", "size": 108, "address": "0x0057b130", "ignore": true},
         
-        {"name":"bitdw", "ifdef":["VERSION_US", "VERSION_SH"]}
+        {"name": "bitdw", "size": 1412, "address": "0x0057b19c", "ifdef": ["VERSION_US", "VERSION_SH"]}
     ]
 }

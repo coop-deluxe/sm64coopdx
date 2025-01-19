@@ -1,19 +1,41 @@
 -- name: Super Mario 74 (+EE)
--- description: This is two romhacks in one.\n\nSuper Mario 74 and Super Mario 74 Extreme Edition.\n\nThere are 60 custom levels, with a total of 308 stars.\n\nUse the chat command '/swap' to swap between EE and normal.\n\nCreated by Lugmillord\n\nPorted to PC by PeachyPeach and jesusyoshi54\n\nPorted to coop by djoslin0
 -- incompatible: romhack
+-- description: This is two romhacks in one.\n\nSuper Mario 74 and Super Mario 74 Extreme Edition.\n\nThere are 60 custom levels, with a total of 308 stars.\n\nUse the chat command '/swap' to swap between EE and normal.\n\nCreated by Lugmillord\n\nPorted to PC by PeachyPeach and jesusyoshi54\n\nPorted to coop by djoslin0
 
-------------------
--- level values --
-------------------
+local function on_level_init()
+    local np = gNetworkPlayers[0]
+
+    save_file_set_using_backup_slot(np.currAreaIndex ~= 1)
+    gMarioStates[0].numStars = save_file_get_total_star_count(get_current_save_file_num()-1,COURSE_MIN-1,COURSE_MAX-1)
+    gLevelValues.exitCastleArea = gNetworkPlayers[0].currAreaIndex
+
+    star_areas_replace()
+    course_names_swap()
+    dialog_swap()
+
+end
+
+local function get_star_collection_dialog()
+    return 0
+end
+
+
+local function on_swap_command()
+    local np = gNetworkPlayers[0]
+    if np.currAreaIndex == 1 then
+        djui_chat_message_create("Swapping to Extreme Edition")
+    else
+        djui_chat_message_create("Swapping to normal edition")
+    end
+    warp_to_level(np.currLevelNum, np.currAreaIndex ~ 3, np.currActNum)
+    return true
+end
+
 
 gLevelValues.entryLevel = LEVEL_CASTLE_COURTYARD
 gLevelValues.exitCastleLevel = LEVEL_CASTLE_COURTYARD
 gLevelValues.exitCastleWarpNode = 0x40
 gLevelValues.skipCreditsAt = LEVEL_BOB
-
----------------------
--- behavior values --
----------------------
 
 gBehaviorValues.KoopaBobAgility = 6.0
 gBehaviorValues.KoopaThiAgility = 6.0
@@ -26,10 +48,6 @@ gBehaviorValues.dialogs.KoopaQuickBobWinDialog = DIALOG_031
 gBehaviorValues.dialogs.KoopaQuickThiWinDialog = DIALOG_031
 
 gLevelValues.fixCollisionBugs = 1
-
---------------
--- movtexs --
---------------
 
 movtexqc_register('bbh_2_Movtex_0',               0 + 4, 2, 0)
 movtexqc_register('ccm_1_Movtex_0',               1 + 4, 1, 0)
@@ -46,10 +64,6 @@ movtexqc_register('ddd_1_Movtex_0',              19 + 4, 1, 0)
 movtexqc_register('castle_courtyard_1_Movtex_0', 22 + 4, 1, 0)
 movtexqc_register('cotmc_1_Movtex_0',            24 + 4, 1, 0)
 movtexqc_register('wmotr_2_Movtex_0',            27 + 4, 2, 0)
-
------------
--- music --
------------
 
 smlua_audio_utils_replace_sequence(0x02, 0x11, 80, "02_Seq_sm74_custom")
 smlua_audio_utils_replace_sequence(0x03, 0x1E, 75, "03_Seq_sm74_custom")
@@ -82,42 +96,8 @@ smlua_audio_utils_replace_sequence(0x2F, 0x1D, 70, "2F_Seq_sm74EE_custom")
 smlua_audio_utils_replace_sequence(0x30, 0x23, 65, "30_Seq_sm74EE_custom")
 smlua_audio_utils_replace_sequence(0x31, 0x11, 80, "31_Seq_sm74EE_custom")
 
-------------
--- camera --
-------------
 camera_set_romhack_override(RCO_ALL_EXCEPT_BOWSER)
 camera_set_use_course_specific_settings(false)
-
-----------------------------------
-
-function on_level_init()
-    local m = gMarioStates[0]
-    local np = gNetworkPlayers[0]
-
-    save_file_set_using_backup_slot(np.currAreaIndex ~= 1)
-    gMarioStates[0].numStars = save_file_get_total_star_count(get_current_save_file_num()-1,COURSE_MIN-1,COURSE_MAX-1)
-    gLevelValues.exitCastleArea = gNetworkPlayers[0].currAreaIndex
-
-    star_areas_replace()
-    course_names_swap()
-    dialog_swap()
-
-end
-
-function get_star_collection_dialog()
-    return 0
-end
-
-function on_swap_command(msg)
-    local np = gNetworkPlayers[0]
-    if np.currAreaIndex == 1 then
-        djui_chat_message_create('Swapping to Extreme Edition')
-    else
-        djui_chat_message_create('Swapping to normal edition')
-    end
-    warp_to_level(np.currLevelNum, np.currAreaIndex ~ 3, np.currActNum)
-    return true
-end
 
 hook_event(HOOK_ON_LEVEL_INIT, on_level_init)
 hook_event(HOOK_GET_STAR_COLLECTION_DIALOG, get_star_collection_dialog)

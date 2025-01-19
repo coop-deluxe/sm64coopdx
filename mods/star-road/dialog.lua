@@ -1,9 +1,9 @@
-smlua_text_utils_dialog_replace(DIALOG_000,1,6,30,200, "--WARNING--\
+smlua_text_utils_dialog_replace(DIALOG_000, 1, 6, 30, 200, "--WARNING--\
 FLOOR UNSTABLE. DO NOT\
 GROUND-POUND UNDER \
 ANY CIRCUMSTANCES!'")
 
-smlua_text_utils_dialog_replace(DIALOG_001,1,4,95,200, "Hey, you! You better be \
+smlua_text_utils_dialog_replace(DIALOG_001, 1, 4, 95, 200, "Hey, you! You better be \
 pretty careful unless you\
 want to be blasted by a\
 water bomb from our \
@@ -21,14 +21,14 @@ could do us a favor and \
 get our ★ back?\
 Good luck!")
 
-smlua_text_utils_dialog_replace(DIALOG_002,1,3,95,200, "It's a good thing we\
+smlua_text_utils_dialog_replace(DIALOG_002, 1, 3, 95, 200, "It's a good thing we\
 sunk their ship early\
 in the battle, I hate\
 to think what damage\
 those cannons could\
 have done!")
 
-smlua_text_utils_dialog_replace(DIALOG_003,1,5,95,200, "Hey Mario, good to see\
+smlua_text_utils_dialog_replace(DIALOG_003, 1, 5, 95, 200, "Hey Mario, good to see\
 you once more!\
 I came here to catch the\
 train to Koopa City,\
@@ -49,12 +49,12 @@ find out for yourself.\
 \
 See ya!")
 
-smlua_text_utils_dialog_replace(DIALOG_004,1,4,95,200, "You need to\
+smlua_text_utils_dialog_replace(DIALOG_004, 1, 4, 95, 200, "You need to\
 use our cannon? Sure!\
 Just wait a moment while\
 I open it up for you...")
 
-smlua_text_utils_dialog_replace(DIALOG_005,1,3,30,200, "Hey, Mario! I've been\
+smlua_text_utils_dialog_replace(DIALOG_005, 1, 3, 30, 200, "Hey, Mario! I've been\
 practicing running to\
 the top of Koopa Canyon.\
 Do you think you have\
@@ -68,14 +68,14 @@ Ready....\
 \
 //Go!////Don't Go")
 
-smlua_text_utils_dialog_replace(DIALOG_006,1,3,30,200, "Hey!!! Don't try to scam\
+smlua_text_utils_dialog_replace(DIALOG_006, 1, 3, 30, 200, "Hey!!! Don't try to scam\
 ME. You've gotta run\
 the whole course.\
 Later. Look me up when\
 you want to race for\
 real.")
 
-smlua_text_utils_dialog_replace(DIALOG_007,1,3,30,200, "Wow, I can't believe you\
+smlua_text_utils_dialog_replace(DIALOG_007, 1, 3, 30, 200, "Wow, I can't believe you\
 still beat me after all \
 that training! Maybe I\
 shouldn't have shown off\
@@ -84,7 +84,7 @@ pillars...\
 Anyway, here's \
 your prize.")
 
-smlua_text_utils_dialog_replace(DIALOG_008,1,4,30,200, "It's locked... But wait,\
+smlua_text_utils_dialog_replace(DIALOG_008, 1, 4, 30, 200, "It's locked... But wait,\
 there is supposed to be\
 another entrance \
 hidden in Gloomy Garden.\
@@ -93,7 +93,7 @@ Make sure you search\
 every dark corner in the\
 whole garden...")
 
-smlua_text_utils_dialog_replace(DIALOG_009,1,5,30,200, "Nice to see you again,\
+smlua_text_utils_dialog_replace(DIALOG_009, 1, 5, 30, 200, "Nice to see you again,\
 Mario. It sure has been\
 a while. How about a \
 race? First to the \
@@ -101,7 +101,7 @@ top of the mountain!\
 \
 //Go//// Don't Go")
 
-smlua_text_utils_dialog_replace(DIALOG_010,1,4,30,200, "You've stepped on the\
+smlua_text_utils_dialog_replace(DIALOG_010, 1, 4, 30, 200, "You've stepped on the\
 Wing Cap Switch. Wearing\
 the Wing Cap, you can\
 soar through the sky.\
@@ -113,7 +113,7 @@ Would you like to Save?\
 \
 //Yes////No")
 
-smlua_text_utils_dialog_replace(DIALOG_011,1,4,30,200, "You've just stepped on\
+smlua_text_utils_dialog_replace(DIALOG_011, 1, 4, 30, 200, "You've just stepped on\
 the Metal Cap Switch!\
 The Metal Cap makes\
 Mario invincible.\
@@ -125,7 +125,7 @@ Would you like to Save?\
 \
 //Yes////No")
 
-smlua_text_utils_dialog_replace(DIALOG_012,1,4,30,200, "You've just stepped on\
+smlua_text_utils_dialog_replace(DIALOG_012, 1, 4, 30, 200, "You've just stepped on\
 the Vanish Cap Switch.\
 The Vanish Cap makes\
 Mario disappear.\
@@ -137,13 +137,13 @@ Would you like to Save?\
 \
 //Yes////No")
 
-smlua_text_utils_dialog_replace(DIALOG_013,1,5,30,200, "You've collected 100\
+smlua_text_utils_dialog_replace(DIALOG_013, 1, 5, 30, 200, "You've collected 100\
 coins! Mario gains more\
 power from the stars.\
 Do you want to Save?\
 //Yes////No")
 
-smlua_text_utils_dialog_replace(DIALOG_014,1,4,30,200, "Wow! Another Power Star!\
+smlua_text_utils_dialog_replace(DIALOG_014, 1, 4, 30, 200, "Wow! Another Power Star!\
 Mario gains more courage\
 from the power of the\
 stars.\
@@ -151,7 +151,7 @@ Do you want to Save?\
 \
 //You Bet//Not Now")
 
-smlua_text_utils_dialog_replace(DIALOG_015,1,4,30,200, "Hey there, don't\
+smlua_text_utils_dialog_replace(DIALOG_015, 1, 4, 30, 200, "Hey there, don't\
 mistake me for those\
 other hot-heads, I'm not\
 the sort to blow my top.\
@@ -174,13 +174,13 @@ purple switch to hide\
 the entrance.\
 Good luck finding it!")
 
-smlua_text_utils_dialog_replace(DIALOG_016,1,3,30,200, "See the 1-up symbols on\
+smlua_text_utils_dialog_replace(DIALOG_016, 1, 3, 30, 200, "See the 1-up symbols on\
 these pillars? Stand on\
 all four and you will\
 win a prize! Well, if you\
 can catch it...")
 
-smlua_text_utils_dialog_replace(DIALOG_017,1,4,30,200, "You again! Are you\
+smlua_text_utils_dialog_replace(DIALOG_017, 1, 4, 30, 200, "You again! Are you\
 following me or what?\
 Well, you better prepare \
 yourself for a tough \
@@ -190,10 +190,10 @@ my power star again!\
 Because I'm not going to\
 go easy on you this time!")
 
-smlua_text_utils_dialog_replace(DIALOG_018,1,2,30,200, "The life... \
+smlua_text_utils_dialog_replace(DIALOG_018, 1, 2, 30, 200, "The life... \
 It's fading.")
 
-smlua_text_utils_dialog_replace(DIALOG_019,1,4,30,200, "Hmm, Lakitu is probably\
+smlua_text_utils_dialog_replace(DIALOG_019, 1, 4, 30, 200, "Hmm, Lakitu is probably\
 going to have trouble\
 fitting through this\
 small entrance. If you\
@@ -202,44 +202,44 @@ Camera Control code,\
 hold [R] as you enter\
 the cave to help him in.")
 
-smlua_text_utils_dialog_replace(DIALOG_020,1,6,95,150, "Dear Mario,\
+smlua_text_utils_dialog_replace(DIALOG_020, 1, 6, 95, 150, "Dear Mario,\
 I just wanted to wish\
 you luck and tell you \
 that I'm sure we'll see \
 each other again soon!")
 
-smlua_text_utils_dialog_replace(DIALOG_021,1,5,95,200, "BOWSER SOUND EFFECT")
+smlua_text_utils_dialog_replace(DIALOG_021, 1, 5, 95, 200, "BOWSER SOUND EFFECT")
 
-smlua_text_utils_dialog_replace(DIALOG_022,1,2,95,200, "You cannot open this\
+smlua_text_utils_dialog_replace(DIALOG_022, 1, 2, 95, 200, "You cannot open this\
 door yet.")
 
-smlua_text_utils_dialog_replace(DIALOG_023,1,3,95,200, "This key doesn't fit!")
+smlua_text_utils_dialog_replace(DIALOG_023, 1, 3, 95, 200, "This key doesn't fit!")
 
-smlua_text_utils_dialog_replace(DIALOG_024,1,5,95,200, "You do not have enough\
+smlua_text_utils_dialog_replace(DIALOG_024, 1, 5, 95, 200, "You do not have enough\
 power stars to break the\
 seal on this door.")
 
-smlua_text_utils_dialog_replace(DIALOG_025,1,4,95,200, "You do not have enough\
+smlua_text_utils_dialog_replace(DIALOG_025, 1, 4, 95, 200, "You do not have enough\
 power stars to break the\
 seal on this door.")
 
-smlua_text_utils_dialog_replace(DIALOG_026,1,4,95,200, "You do not have enough\
+smlua_text_utils_dialog_replace(DIALOG_026, 1, 4, 95, 200, "You do not have enough\
 power stars to break the\
 seal on this door.")
 
-smlua_text_utils_dialog_replace(DIALOG_027,1,4,95,200, "You do not have enough\
+smlua_text_utils_dialog_replace(DIALOG_027, 1, 4, 95, 200, "You do not have enough\
 power stars to break the\
 seal on this door.")
 
-smlua_text_utils_dialog_replace(DIALOG_028,1,4,95,200, "You do not have enough\
+smlua_text_utils_dialog_replace(DIALOG_028, 1, 4, 95, 200, "You do not have enough\
 power stars to break the\
 seal on this door.")
 
-smlua_text_utils_dialog_replace(DIALOG_029,1,5,95,200, "You do not have enough\
+smlua_text_utils_dialog_replace(DIALOG_029, 1, 5, 95, 200, "You do not have enough\
 power stars to break the\
 seal on this door.")
 
-smlua_text_utils_dialog_replace(DIALOG_030,1,6,30,200, "Did you know that it is\
+smlua_text_utils_dialog_replace(DIALOG_030, 1, 6, 30, 200, "Did you know that it is\
 possible for a plumber\
 with exceptional jumping\
 skills to jump up a steep \
@@ -249,7 +249,7 @@ after your second hop\
 then pressing [A] once \
 more to triple-jump.")
 
-smlua_text_utils_dialog_replace(DIALOG_031,1,5,30,200, "Woah, you completely\
+smlua_text_utils_dialog_replace(DIALOG_031, 1, 5, 30, 200, "Woah, you completely\
 stomped my record! I\
 promise I'll train\
 extra hard for our\
@@ -258,10 +258,10 @@ next time, here is\
 your prize.\
 Congrats, Mario!")
 
-smlua_text_utils_dialog_replace(DIALOG_032,1,2,30,200, "Mario...\
+smlua_text_utils_dialog_replace(DIALOG_032, 1, 2, 30, 200, "Mario...\
 You can't let Bowser win!")
 
-smlua_text_utils_dialog_replace(DIALOG_033,1,6,30,200, "Well done, Mario!\
+smlua_text_utils_dialog_replace(DIALOG_033, 1, 6, 30, 200, "Well done, Mario!\
 You've always been\
 there to help out when\
 we need you. You have\
@@ -272,7 +272,7 @@ use them to drive out \
 the last of Bowser's\
 evil minions.")
 
-smlua_text_utils_dialog_replace(DIALOG_034,1,6,30,200, "Good afternoon. The\
+smlua_text_utils_dialog_replace(DIALOG_034, 1, 6, 30, 200, "Good afternoon. The\
 Lakitu Bros., here,\
 reporting live from just\
 outside the Princess's\
@@ -306,7 +306,7 @@ For now, reporting live,\
 this has been the\
 Lakitu Bros.")
 
-smlua_text_utils_dialog_replace(DIALOG_035,1,5,30,200, "Wow Mario, you really\
+smlua_text_utils_dialog_replace(DIALOG_035, 1, 5, 30, 200, "Wow Mario, you really\
 have all the power\
 stars? I hope you\
 enjoyed your journey, I\
@@ -332,20 +332,20 @@ me, I listed all the\
 levels where I hid\
 star replicas.")
 
-smlua_text_utils_dialog_replace(DIALOG_036,1,5,30,200, "You're the greatest,\
+smlua_text_utils_dialog_replace(DIALOG_036, 1, 5, 30, 200, "You're the greatest,\
 Mario! I was so sick of\
 those goombas breaking\
 into my house to jump\
 on my bed!")
 
-smlua_text_utils_dialog_replace(DIALOG_037,1,2,30,200, "I win! Better luck next\
+smlua_text_utils_dialog_replace(DIALOG_037, 1, 2, 30, 200, "I win! Better luck next\
 time, pal.")
 
-smlua_text_utils_dialog_replace(DIALOG_038,1,3,95,200, "The power of your stars\
+smlua_text_utils_dialog_replace(DIALOG_038, 1, 3, 95, 200, "The power of your stars\
 has broken the seal on\
 this door!")
 
-smlua_text_utils_dialog_replace(DIALOG_039,1,4,30,200, "Did you ever work out\
+smlua_text_utils_dialog_replace(DIALOG_039, 1, 4, 30, 200, "Did you ever work out\
 how to reach the lookout\
 on top of Star-Leap\
 Tower? All I know is\
@@ -353,28 +353,28 @@ that the pipe leading\
 there is hidden\
 somewhere very windy.")
 
-smlua_text_utils_dialog_replace(DIALOG_040,1,3,30,200, "Are you going go keep\
+smlua_text_utils_dialog_replace(DIALOG_040, 1, 3, 30, 200, "Are you going go keep\
 searching for the power\
 stars now, Mario? When\
 you're ready, go and\
 grab Bowser's power\
 star over there.")
 
-smlua_text_utils_dialog_replace(DIALOG_041,1,3,30,200, "I win! You lose!\
+smlua_text_utils_dialog_replace(DIALOG_041, 1, 3, 30, 200, "I win! You lose!\
 Ha ha ha!\
 \
 Not looking so speedy\
 now, are you Mario?")
 
-smlua_text_utils_dialog_replace(DIALOG_042,1,4,30,200, "This is a great spot\
+smlua_text_utils_dialog_replace(DIALOG_042, 1, 4, 30, 200, "This is a great spot\
 to sit and stare at the\
 stars...")
 
-smlua_text_utils_dialog_replace(DIALOG_043,1,5,30,200, "Hey you, get off my\
+smlua_text_utils_dialog_replace(DIALOG_043, 1, 5, 30, 200, "Hey you, get off my\
 roof! You're too heavy,\
 you'll break it!")
 
-smlua_text_utils_dialog_replace(DIALOG_044,1,5,95,200, "Whooo's there? Whooo\
+smlua_text_utils_dialog_replace(DIALOG_044, 1, 5, 95, 200, "Whooo's there? Whooo\
 disturbed my dinner?\
 Oh, it's you, Mario!\
 I haven't seen you in\
@@ -386,25 +386,25 @@ and whomps were making.\
 \
 So, do you need a ride?")
 
-smlua_text_utils_dialog_replace(DIALOG_045,1,6,95,200, "Whew! I really don't\
+smlua_text_utils_dialog_replace(DIALOG_045, 1, 6, 95, 200, "Whew! I really don't\
 think I can hold you\
 much longer. I still\
 think you should cut\
 down on the spaghetti.")
 
-smlua_text_utils_dialog_replace(DIALOG_046,1,4,30,200, "Oh dear, Mario forgot\
+smlua_text_utils_dialog_replace(DIALOG_046, 1, 4, 30, 200, "Oh dear, Mario forgot\
 how to climb ladders\
 again! It looks like he\
 will have to go around.")
 
-smlua_text_utils_dialog_replace(DIALOG_047,1,2,95,200, "Hi! I'll prepare the\
+smlua_text_utils_dialog_replace(DIALOG_047, 1, 2, 95, 200, "Hi! I'll prepare the\
 cannon for you!")
 
-smlua_text_utils_dialog_replace(DIALOG_048,1,3,30,200, "It's not over yet.\
+smlua_text_utils_dialog_replace(DIALOG_048, 1, 3, 30, 200, "It's not over yet.\
 Jump into the vortex\
 and this never happened.")
 
-smlua_text_utils_dialog_replace(DIALOG_049,1,5,30,200, "Great job unlocking\
+smlua_text_utils_dialog_replace(DIALOG_049, 1, 5, 30, 200, "Great job unlocking\
 the door, Mario!\
 Have a look around and\
 I'm sure you will find\
@@ -419,7 +419,7 @@ inside. It's pretty\
 amazing what they can\
 do!")
 
-smlua_text_utils_dialog_replace(DIALOG_050,1,4,30,200, "Brrr, this place gives\
+smlua_text_utils_dialog_replace(DIALOG_050, 1, 4, 30, 200, "Brrr, this place gives\
 me the creeps, Mario!\
 I don't really fancy\
 hanging around with\
@@ -431,7 +431,7 @@ there's no telling where\
 those mischievous ghosts\
 could of have hid it!")
 
-smlua_text_utils_dialog_replace(DIALOG_051,1,5,30,200, "I wanted to play the\
+smlua_text_utils_dialog_replace(DIALOG_051, 1, 5, 30, 200, "I wanted to play the\
 piano, but I couldn't\
 reach! Really, was that\
 piano made for giants\
@@ -447,7 +447,7 @@ can long-jump onto it,\
 maybe you'll find\
 something!")
 
-smlua_text_utils_dialog_replace(DIALOG_052,1,2,30,200, "CREEPY CAP CAVE \
+smlua_text_utils_dialog_replace(DIALOG_052, 1, 2, 30, 200, "CREEPY CAP CAVE \
 \
 PUZZLE OF THE\
 VANISH CAP\
@@ -465,11 +465,11 @@ SANDY SLIDE SECRET\
 \
 HIDDEN PALACE FINALE")
 
-smlua_text_utils_dialog_replace(DIALOG_053,1,3,30,200, "If you look up, you can\
+smlua_text_utils_dialog_replace(DIALOG_053, 1, 3, 30, 200, "If you look up, you can\
 see the satellite used \
 by this base.")
 
-smlua_text_utils_dialog_replace(DIALOG_054,1,5,30,200, "Wow, you found the\
+smlua_text_utils_dialog_replace(DIALOG_054, 1, 5, 30, 200, "Wow, you found the\
 Sandy Slide Secret!\
 \
 There are two stars here,\
@@ -488,7 +488,7 @@ hidden in this level... \
 can you find them all?\
 ")
 
-smlua_text_utils_dialog_replace(DIALOG_055,1,4,30,200, "Hey Mario, remember me?\
+smlua_text_utils_dialog_replace(DIALOG_055, 1, 4, 30, 200, "Hey Mario, remember me?\
 I'm Tuxie! Thanks for\
 helping me out when I\
 was lost a few years ago.\
@@ -500,13 +500,13 @@ Ready...\
 \
 //Go//// Don't Go")
 
-smlua_text_utils_dialog_replace(DIALOG_056,1,6,30,200, "Wow, you're so fast! \
+smlua_text_utils_dialog_replace(DIALOG_056, 1, 6, 30, 200, "Wow, you're so fast! \
 Here, take this.\
 I don't have a medal,\
 but this shiny ★ looks\
 kinda like one.")
 
-smlua_text_utils_dialog_replace(DIALOG_057,1,4,30,200, "Ugh! How many times do\
+smlua_text_utils_dialog_replace(DIALOG_057, 1, 4, 30, 200, "Ugh! How many times do\
 I have to tell my silly\
 child not to wander off?\
 While he's wandering\
@@ -515,7 +515,7 @@ cliffs, I have to sit \
 here worrying myself \
 sick!")
 
-smlua_text_utils_dialog_replace(DIALOG_058,1,4,30,200, "Thank you so much for\
+smlua_text_utils_dialog_replace(DIALOG_058, 1, 4, 30, 200, "Thank you so much for\
 finding my naughty\
 child! I'll have to\
 keep a closer eye on\
@@ -524,11 +524,11 @@ If you like, you\
 can take this ★ I found\
 as my thanks.")
 
-smlua_text_utils_dialog_replace(DIALOG_059,1,4,30,200, "I'm going to keep\
+smlua_text_utils_dialog_replace(DIALOG_059, 1, 4, 30, 200, "I'm going to keep\
 practicing so I can beat\
 you one day!")
 
-smlua_text_utils_dialog_replace(DIALOG_060,1,5,30,200, "If you can shoot through\
+smlua_text_utils_dialog_replace(DIALOG_060, 1, 5, 30, 200, "If you can shoot through\
 all five of those hoops,\
 I bet a ★ will appear. \
 Just press the purple \
@@ -537,7 +537,7 @@ side of the turret, then \
 I'll climb through this \
 hatch and aim for you.")
 
-smlua_text_utils_dialog_replace(DIALOG_061,1,4,30,200, "Do you think Lakitu is \
+smlua_text_utils_dialog_replace(DIALOG_061, 1, 4, 30, 200, "Do you think Lakitu is \
 doing a bad job today? \
 Try the code on the next \
 sign. Controlling this new \
@@ -549,19 +549,12 @@ holding down [R], which will \
 make it zoom in. \
 Much better!")
 
-smlua_text_utils_dialog_replace(DIALOG_062,1,4,30,200, "SMSR Camera Control:\
-8033C685 0005\
-8033C849 0002\
-D033AFA1 0010\
-8033C849 0000\
-D033AFA1 0008\
-8033C848 0030")
 
-smlua_text_utils_dialog_replace(DIALOG_063,1,5,30,200, "I AM ERROR.")
+smlua_text_utils_dialog_replace(DIALOG_063, 1, 5, 30, 200, "I AM ERROR.")
 
-smlua_text_utils_dialog_replace(DIALOG_064,1,5,30,200, "To Flowpipe Sewer.")
+smlua_text_utils_dialog_replace(DIALOG_064, 1, 5, 30, 200, "To Flowpipe Sewer.")
 
-smlua_text_utils_dialog_replace(DIALOG_065,1,6,30,200, "It's time for the final\
+smlua_text_utils_dialog_replace(DIALOG_065, 1, 6, 30, 200, "It's time for the final\
 showdown with Bowser!\
 Good luck, and \
 thank you for playing.\
@@ -573,7 +566,7 @@ can gather them all up,\
 and maybe something\
 good will happen...")
 
-smlua_text_utils_dialog_replace(DIALOG_066,1,5,30,200, "Have you seen that huge \
+smlua_text_utils_dialog_replace(DIALOG_066, 1, 5, 30, 200, "Have you seen that huge \
 broken star in the sky? \
 It certainly wasn't like \
 that when I last saw it \
@@ -591,7 +584,7 @@ close enough to see it, \
 I'd probably be \
 done for...")
 
-smlua_text_utils_dialog_replace(DIALOG_067,1,5,30,200, "Too bad I couldn't stop\
+smlua_text_utils_dialog_replace(DIALOG_067, 1, 5, 30, 200, "Too bad I couldn't stop\
 by to talk to you in\
 person, Mario, but I'm\
 a little busy taking\
@@ -605,7 +598,7 @@ have quite an appetite \
 for pesky plumbers!\
 Bwa ha ha!")
 
-smlua_text_utils_dialog_replace(DIALOG_068,1,5,30,200, "It's Lethal Lava Land!\
+smlua_text_utils_dialog_replace(DIALOG_068, 1, 5, 30, 200, "It's Lethal Lava Land!\
 If you catch fire or fall\
 into a pool of flames,\
 you'll be hopping mad, but\
@@ -614,14 +607,14 @@ You can still control\
 Mario--just try to keep\
 calm!")
 
-smlua_text_utils_dialog_replace(DIALOG_069,1,6,30,200, "Sometimes you'll bump into\
+smlua_text_utils_dialog_replace(DIALOG_069, 1, 6, 30, 200, "Sometimes you'll bump into\
 invisible walls at the\
 edges of the painting\
 worlds. If you hit a wall\
 while flying, you'll bounce\
 back.")
 
-smlua_text_utils_dialog_replace(DIALOG_070,1,5,30,200, "You can return to the\
+smlua_text_utils_dialog_replace(DIALOG_070, 1, 5, 30, 200, "You can return to the\
 castle's main hall at any\
 time from the painting\
 worlds where the enemies\
@@ -652,7 +645,7 @@ Stars next. You don't\
 have to recover the one\
 described by the hint.")
 
-smlua_text_utils_dialog_replace(DIALOG_071,1,3,30,200, "Danger Ahead!\
+smlua_text_utils_dialog_replace(DIALOG_071, 1, 3, 30, 200, "Danger Ahead!\
 Beware of the strange\
 cloud! Don't inhale!\
 If you feel faint, run for\
@@ -661,7 +654,7 @@ air!\
 Circle: Shelter\
 Arrow: Entrance-Exit")
 
-smlua_text_utils_dialog_replace(DIALOG_072,1,4,30,200, "NOTICE:\
+smlua_text_utils_dialog_replace(DIALOG_072, 1, 4, 30, 200, "NOTICE:\
 This Star Road cannot\
 function without at\
 least 65 power stars.\
@@ -670,10 +663,10 @@ working at any point,\
 this should be the\
 first thing you check.")
 
-smlua_text_utils_dialog_replace(DIALOG_073,1,2,95,200, "Trying to take shortcuts\
+smlua_text_utils_dialog_replace(DIALOG_073, 1, 2, 95, 200, "Trying to take shortcuts\
 can backfire...")
 
-smlua_text_utils_dialog_replace(DIALOG_074,1,5,30,200, "You can grab on to the\
+smlua_text_utils_dialog_replace(DIALOG_074, 1, 5, 30, 200, "You can grab on to the\
 edge of a cliff or ledge\
 with your fingertips and\
 hang down from it.\
@@ -689,7 +682,7 @@ Control Stick or press [A]\
 as soon as you grab the\
 ledge to climb up quickly.")
 
-smlua_text_utils_dialog_replace(DIALOG_075,1,5,30,200, "Mario!! My castle is in\
+smlua_text_utils_dialog_replace(DIALOG_075, 1, 5, 30, 200, "Mario!! My castle is in\
 great peril. I know that\
 Bowser is the cause...and\
 I know that only you can\
@@ -720,7 +713,7 @@ and free us from this\
 awful prison!\
 Please!")
 
-smlua_text_utils_dialog_replace(DIALOG_076,1,6,30,200, "What are you staring at?\
+smlua_text_utils_dialog_replace(DIALOG_076, 1, 6, 30, 200, "What are you staring at?\
 I'm not stuck! I was\
 just... admiring the\
 view. Anyway, I found\
@@ -730,14 +723,14 @@ do something in return\
 for all the help you\
 give us, Mario!")
 
-smlua_text_utils_dialog_replace(DIALOG_077,1,3,150,200, "Some say that if you \
+smlua_text_utils_dialog_replace(DIALOG_077, 1, 3, 150, 200, "Some say that if you \
 collect 120 power stars \
 and pray to the Star\
 Spirits from this spot by \
 pressing [C]^, something \
 good will happen.")
 
-smlua_text_utils_dialog_replace(DIALOG_078,1,4,30,200, "★★★★★★★★★★★★★\
+smlua_text_utils_dialog_replace(DIALOG_078, 1, 4, 30, 200, "★★★★★★★★★★★★★\
  Super Mario Star Road \
        by Skelux\
 ★★★★★★★★★★★★★\
@@ -766,7 +759,7 @@ me to keep working.\
        playing!\
 ★★★★★★★★★★★★★")
 
-smlua_text_utils_dialog_replace(DIALOG_079,1,4,30,200, "Owwwuu! Let me go!\
+smlua_text_utils_dialog_replace(DIALOG_079, 1, 4, 30, 200, "Owwwuu! Let me go!\
 Uukee-kee! I was only\
 teasing! Can't you take\
 a joke?\
@@ -778,9 +771,9 @@ So, how about it?\
 \
 //Free him/ Hold on")
 
-smlua_text_utils_dialog_replace(DIALOG_080,1,1,30,200, "Eeeh hee hee hee!")
+smlua_text_utils_dialog_replace(DIALOG_080, 1, 1, 30, 200, "Eeeh hee hee hee!")
 
-smlua_text_utils_dialog_replace(DIALOG_081,1,4,30,200, "This is it, you have\
+smlua_text_utils_dialog_replace(DIALOG_081, 1, 4, 30, 200, "This is it, you have\
 arrived at the Hidden\
 Palace Finale, the\
 final level! Even if\
@@ -789,7 +782,7 @@ this challenge, you\
 have done very well\
 to make it this far.")
 
-smlua_text_utils_dialog_replace(DIALOG_082,1,4,30,200, "I'm so glad to see you,\
+smlua_text_utils_dialog_replace(DIALOG_082, 1, 4, 30, 200, "I'm so glad to see you,\
 Mario! Missing my\
 jumping lessons really\
 backfired... I came in\
@@ -804,7 +797,7 @@ here. Please give me\
 a boost onto the pipe,\
 too. Hehe.")
 
-smlua_text_utils_dialog_replace(DIALOG_083,1,4,30,200, "Hi, Mario!\
+smlua_text_utils_dialog_replace(DIALOG_083, 1, 4, 30, 200, "Hi, Mario!\
 When I heard that you\
 collected enough power\
 stars to fix the Star\
@@ -820,29 +813,29 @@ By the way, I have a\
 power star for you,\
 Mario! ")
 
-smlua_text_utils_dialog_replace(DIALOG_084,1,3,30,200, "Hey, put me down! \
+smlua_text_utils_dialog_replace(DIALOG_084, 1, 3, 30, 200, "Hey, put me down! \
 I didn't say you could \
 enter my house! How did \
 you get in here, anyway? \
 Look, just take this ★\
 and don't come back.")
 
-smlua_text_utils_dialog_replace(DIALOG_085,1,5,30,200, "You don't stand a ghost\
+smlua_text_utils_dialog_replace(DIALOG_085, 1, 5, 30, 200, "You don't stand a ghost\
 of a chance in this house.\
 If you walk out of here,\
 you deserve...\
 ...a Ghoul Medal...")
 
-smlua_text_utils_dialog_replace(DIALOG_086,1,3,30,200, "Running around in circles\
+smlua_text_utils_dialog_replace(DIALOG_086, 1, 3, 30, 200, "Running around in circles\
 makes some bad guys roll\
 their eyes.")
 
-smlua_text_utils_dialog_replace(DIALOG_087,1,4,30,200, "Santa Claus isn't the only\
+smlua_text_utils_dialog_replace(DIALOG_087, 1, 4, 30, 200, "Santa Claus isn't the only\
 one who can go down a\
 chimney! Come on in!\
 /--Cabin Proprietor")
 
-smlua_text_utils_dialog_replace(DIALOG_088,1,5,30,200, "Does that rock look a\
+smlua_text_utils_dialog_replace(DIALOG_088, 1, 5, 30, 200, "Does that rock look a\
 little suspicious to\
 you? Oh, it doesn't?\
 Well, try standing on\
@@ -850,7 +843,7 @@ top of it and jumping\
 anyway. Maybe you will\
 find a hidden 1-up block!")
 
-smlua_text_utils_dialog_replace(DIALOG_089,1,5,95,200, "Both ways fraught with\
+smlua_text_utils_dialog_replace(DIALOG_089, 1, 5, 95, 200, "Both ways fraught with\
 danger! Watch your feet!\
 Those who can't do the\
 Long Jump, tsk, tsk. Make\
@@ -864,26 +857,26 @@ Red Circle: Elevator 2\
 //// Underground Lake\
 Arrow: You are here")
 
-smlua_text_utils_dialog_replace(DIALOG_090,1,6,30,200, "Bwa ha ha ha!\
+smlua_text_utils_dialog_replace(DIALOG_090, 1, 6, 30, 200, "Bwa ha ha ha!\
 You've stepped right into\
 my trap, just as I knew\
 you would! I warn you,\
 『Friend,』 watch your\
 step!")
 
-smlua_text_utils_dialog_replace(DIALOG_091,2,2,30,200, "Danger!\
+smlua_text_utils_dialog_replace(DIALOG_091, 2, 2, 30, 200, "Danger!\
 Strong Gusts!\
 But the wind makes a\
 comfy ride.")
 
-smlua_text_utils_dialog_replace(DIALOG_092,1,5,30,200, "Still trying to stop me,\
+smlua_text_utils_dialog_replace(DIALOG_092, 1, 5, 30, 200, "Still trying to stop me,\
 Mario? Even if you do\
 manage to get past my\
 delicious Blueberry Bully, \
 you will never defeat me!\
 Bwa ha ha!")
 
-smlua_text_utils_dialog_replace(DIALOG_093,1,5,30,200, "I warned you, Mario.\
+smlua_text_utils_dialog_replace(DIALOG_093, 1, 5, 30, 200, "I warned you, Mario.\
 This mysterious world\
 has given me so much\
 power, you can even\
@@ -894,12 +887,12 @@ and then the Mushroom\
 Kingdom will be mine\
 to rule! Bwa ha ha!")
 
-smlua_text_utils_dialog_replace(DIALOG_094,1,4,30,200, "Get a good run up the\
+smlua_text_utils_dialog_replace(DIALOG_094, 1, 4, 30, 200, "Get a good run up the\
 slope! Do you remember\
 the Long Jump? Run, press\
 [Z], then jump!")
 
-smlua_text_utils_dialog_replace(DIALOG_095,1,4,30,200, "To read a sign, stand in\
+smlua_text_utils_dialog_replace(DIALOG_095, 1, 4, 30, 200, "To read a sign, stand in\
 front of it and press [B],\
 like you did just now.\
 \
@@ -911,7 +904,7 @@ Please recover the Stars\
 that were stolen by\
 Bowser in this course.")
 
-smlua_text_utils_dialog_replace(DIALOG_096,1,4,30,200, "The path is narrow here.\
+smlua_text_utils_dialog_replace(DIALOG_096, 1, 4, 30, 200, "The path is narrow here.\
 Easy does it! No one is\
 allowed on top of the\
 mountain!\
@@ -922,24 +915,24 @@ sleeping!\
 Move slowly,\
 tread lightly.")
 
-smlua_text_utils_dialog_replace(DIALOG_097,1,3,30,200, "Hi Mario! How's my\
+smlua_text_utils_dialog_replace(DIALOG_097, 1, 3, 30, 200, "Hi Mario! How's my\
 painting? Careful not\
 to scratch it!")
 
-smlua_text_utils_dialog_replace(DIALOG_098,1,2,95,200, "Come on in here...\
+smlua_text_utils_dialog_replace(DIALOG_098, 1, 2, 95, 200, "Come on in here...\
 ...heh, heh, heh...")
 
-smlua_text_utils_dialog_replace(DIALOG_099,1,5,95,200, "Eh he he...\
+smlua_text_utils_dialog_replace(DIALOG_099, 1, 5, 95, 200, "Eh he he...\
 You're mine, now, hee hee!\
 I'll pass right through\
 this wall. Can you do\
 that? Heh, heh, heh!")
 
-smlua_text_utils_dialog_replace(DIALOG_100,1,3,95,200, "Ukkiki...Wakkiki...kee kee!\
+smlua_text_utils_dialog_replace(DIALOG_100, 1, 3, 95, 200, "Ukkiki...Wakkiki...kee kee!\
 Ha! I snagged it!\
 It's mine! Heeheeheeee!")
 
-smlua_text_utils_dialog_replace(DIALOG_101,1,3,95,200, "Ackk! Let...go...\
+smlua_text_utils_dialog_replace(DIALOG_101, 1, 3, 95, 200, "Ackk! Let...go...\
 You're...choking...me...\
 Cough...I've been framed!\
 This Cap? Oh, all right,\
@@ -949,7 +942,7 @@ I think it looks better on\
 me than it does on you,\
 though! Eeeee! Kee keee!")
 
-smlua_text_utils_dialog_replace(DIALOG_102,1,5,30,200, "Pssst! The Boos are super\
+smlua_text_utils_dialog_replace(DIALOG_102, 1, 5, 30, 200, "Pssst! The Boos are super\
 shy. If you look them\
 in the eyes, they fade\
 away, but if you turn\
@@ -959,12 +952,12 @@ them when they're fading\
 away. Instead, sneak up\
 behind them and punch.")
 
-smlua_text_utils_dialog_replace(DIALOG_103,1,4,95,200, "Upon four towers\
+smlua_text_utils_dialog_replace(DIALOG_103, 1, 4, 95, 200, "Upon four towers\
 one must alight...\
 Then at the peak\
 shall shine the light...")
 
-smlua_text_utils_dialog_replace(DIALOG_104,1,5,30,200, "You did it, Mario! \
+smlua_text_utils_dialog_replace(DIALOG_104, 1, 5, 30, 200, "You did it, Mario! \
 You've saved the \
 Mushroom Kingdom from \
 Bowser's terrors! We all \
@@ -978,37 +971,37 @@ remaining troops we\
 can banish from the\
 kingdom.")
 
-smlua_text_utils_dialog_replace(DIALOG_105,1,3,95,200, "Ready for blastoff! Go\
+smlua_text_utils_dialog_replace(DIALOG_105, 1, 3, 95, 200, "Ready for blastoff! Go\
 hop in the cannon when\
 you are ready.")
 
-smlua_text_utils_dialog_replace(DIALOG_106,1,2,95,200, "Ready for blastoff! Go\
+smlua_text_utils_dialog_replace(DIALOG_106, 1, 2, 95, 200, "Ready for blastoff! Go\
 hop in the cannon when\
 you are ready.")
 
-smlua_text_utils_dialog_replace(DIALOG_107,1,3,95,200, "...follow...the light...")
+smlua_text_utils_dialog_replace(DIALOG_107, 1, 3, 95, 200, "...follow...the light...")
 
-smlua_text_utils_dialog_replace(DIALOG_108,1,2,95,200, "Boooooo-m! Here comes\
+smlua_text_utils_dialog_replace(DIALOG_108, 1, 2, 95, 200, "Boooooo-m! Here comes\
 the master of mischief,\
 the tower of terror,\
 the Big Boo!\
 Ka ha ha ha...")
 
-smlua_text_utils_dialog_replace(DIALOG_109,1,2,95,200, "You found the secret\
+smlua_text_utils_dialog_replace(DIALOG_109, 1, 2, 95, 200, "You found the secret\
 entrance to the lookout!")
 
-smlua_text_utils_dialog_replace(DIALOG_110,1,5,95,200, "I need a good head on my\
+smlua_text_utils_dialog_replace(DIALOG_110, 1, 5, 95, 200, "I need a good head on my\
 shoulders. Do you know of\
 anybody in need of a good\
 body? Please! I'll follow\
 you if you do!")
 
-smlua_text_utils_dialog_replace(DIALOG_111,1,4,95,200, "Perfect! What a great\
+smlua_text_utils_dialog_replace(DIALOG_111, 1, 4, 95, 200, "Perfect! What a great\
 new body! Here--this is a\
 present for you. It's sure\
 to warm you up.")
 
-smlua_text_utils_dialog_replace(DIALOG_112,1,4,30,200, "Collect as many coins as\
+smlua_text_utils_dialog_replace(DIALOG_112, 1, 4, 30, 200, "Collect as many coins as\
 possible! They'll refill\
 your Power Meter.\
 \
@@ -1024,12 +1017,12 @@ The faster you run\
 through the heart, the\
 more power you'll recover.")
 
-smlua_text_utils_dialog_replace(DIALOG_113,1,4,30,200, "This window looks\
+smlua_text_utils_dialog_replace(DIALOG_113, 1, 4, 30, 200, "This window looks\
 fairly damaged. A solid\
 kick might be enough to\
 finish the job...")
 
-smlua_text_utils_dialog_replace(DIALOG_114,1,4,95,200, "Hey, you're the plumber\
+smlua_text_utils_dialog_replace(DIALOG_114, 1, 4, 95, 200, "Hey, you're the plumber\
 who defeated the old\
 Whomp King! Grr, but\
 he was not even fit for\
@@ -1041,27 +1034,27 @@ anything like that\
 stack of cobble, I'm \
 a whole new slab!")
 
-smlua_text_utils_dialog_replace(DIALOG_115,1,3,95,200, "Why do you step on us\
+smlua_text_utils_dialog_replace(DIALOG_115, 1, 3, 95, 200, "Why do you step on us\
 like we are nothing?\
 Maybe you will finally\
 learn a thing or two\
 when the rest of us\
 arrive. Wahaha!")
 
-smlua_text_utils_dialog_replace(DIALOG_116,1,5,95,200, "Ack!!! Defeated again!\
+smlua_text_utils_dialog_replace(DIALOG_116, 1, 5, 95, 200, "Ack!!! Defeated again!\
 Next time it will be\
 ME walking away with\
 YOUR power stars, though.")
 
-smlua_text_utils_dialog_replace(DIALOG_117,1,3,95,200, "BZZZT! INTRUDER!\
+smlua_text_utils_dialog_replace(DIALOG_117, 1, 3, 95, 200, "BZZZT! INTRUDER!\
 YOU MUST LEAVE OR\
 BE DESTROYED!")
 
-smlua_text_utils_dialog_replace(DIALOG_118,1,3,95,200, "BZZZT! CLUNK!\
+smlua_text_utils_dialog_replace(DIALOG_118, 1, 3, 95, 200, "BZZZT! CLUNK!\
 EMERGENCY! ALL SYSTEMS\
 FAILING!")
 
-smlua_text_utils_dialog_replace(DIALOG_119,1,6,30,200, "Grrr! I was a bit\
+smlua_text_utils_dialog_replace(DIALOG_119, 1, 6, 30, 200, "Grrr! I was a bit\
 careless. This is not as I\
 had planned...but I still\
 hold the power of the\
@@ -1074,7 +1067,7 @@ but I'll let you go for\
 now. You'll pay for this...\
 later!")
 
-smlua_text_utils_dialog_replace(DIALOG_120,1,4,30,200, "Ooowaah! Can it be that\
+smlua_text_utils_dialog_replace(DIALOG_120, 1, 4, 30, 200, "Ooowaah! Can it be that\
 I've lost??? The power of\
 the Stars has failed me...\
 this time.\
@@ -1089,7 +1082,7 @@ tower.\
 I'll be waiting!\
 Gwa ha ha ha!")
 
-smlua_text_utils_dialog_replace(DIALOG_121,1,4,30,200, "Rarrgh! I can't believe\
+smlua_text_utils_dialog_replace(DIALOG_121, 1, 4, 30, 200, "Rarrgh! I can't believe\
 you beat me, even with\
 all this extra power... \
 I should have\
@@ -1110,17 +1103,17 @@ of the Mushroom\
 Kingdom's true ruler!\
 Bwa ha ha!")
 
-smlua_text_utils_dialog_replace(DIALOG_122,1,4,30,200, "--WARNING--\
+smlua_text_utils_dialog_replace(DIALOG_122, 1, 4, 30, 200, "--WARNING--\
 PIPE NOT CURRENTLY \
 SAFE TO ENTER.")
 
-smlua_text_utils_dialog_replace(DIALOG_123,1,4,30,200, "You are about to enter\
+smlua_text_utils_dialog_replace(DIALOG_123, 1, 4, 30, 200, "You are about to enter\
 Bowser's Slippery Swamp,\
 home of the monster\
 which Bowser gave the\
 key to Star Leap Tower.")
 
-smlua_text_utils_dialog_replace(DIALOG_124,1,4,30,200, "Work Elevator\
+smlua_text_utils_dialog_replace(DIALOG_124, 1, 4, 30, 200, "Work Elevator\
 Danger!!\
 Read instructions\
 thoroughly!\
@@ -1128,7 +1121,7 @@ Elevator continues in the\
 direction of the arrow\
 activated.")
 
-smlua_text_utils_dialog_replace(DIALOG_125,1,4,30,200, "Oh, the horror! On my\
+smlua_text_utils_dialog_replace(DIALOG_125, 1, 4, 30, 200, "Oh, the horror! On my\
 way home from the shops\
 yesterday, I was ambushed\
 by a group of koopas who\
@@ -1141,11 +1134,11 @@ You're a pasta-lover, \
 I'm sure you know \
 how I feel.")
 
-smlua_text_utils_dialog_replace(DIALOG_126,2,3,30,200, "Up: Black Hole\
+smlua_text_utils_dialog_replace(DIALOG_126, 2, 3, 30, 200, "Up: Black Hole\
 Right: Work Elevator\
 /// Hazy Maze")
 
-smlua_text_utils_dialog_replace(DIALOG_127,3,4,30,200, "Underground Lake\
+smlua_text_utils_dialog_replace(DIALOG_127, 3, 4, 30, 200, "Underground Lake\
 Right: Metal Cave\
 Left: Abandoned Mine\
 ///(Closed)\
@@ -1154,12 +1147,12 @@ here. Pound on his back to\
 make him lower his head.\
 Don't become his lunch.")
 
-smlua_text_utils_dialog_replace(DIALOG_128,1,4,95,200, "You must fight with\
+smlua_text_utils_dialog_replace(DIALOG_128, 1, 4, 95, 200, "You must fight with\
 honor! It is against the\
 royal rules to throw the\
 king out of the ring!")
 
-smlua_text_utils_dialog_replace(DIALOG_129,1,5,30,200, "Welcome to the Vanish\
+smlua_text_utils_dialog_replace(DIALOG_129, 1, 5, 30, 200, "Welcome to the Vanish\
 Cap Switch Course! All of\
 the blue blocks you find\
 will become solid once you\
@@ -1170,7 +1163,7 @@ you'll be able to elude\
 enemies and walk through\
 many things. Try it out!")
 
-smlua_text_utils_dialog_replace(DIALOG_130,1,5,30,200, "Welcome to the Metal Cap\
+smlua_text_utils_dialog_replace(DIALOG_130, 1, 5, 30, 200, "Welcome to the Metal Cap\
 Switch Course! Once you\
 step on the Cap Switch,\
 the green blocks will\
@@ -1180,7 +1173,7 @@ into metal with the Metal\
 Cap, you can walk\
 underwater! Try it!")
 
-smlua_text_utils_dialog_replace(DIALOG_131,1,5,30,200, "Welcome to the Wing Cap\
+smlua_text_utils_dialog_replace(DIALOG_131, 1, 5, 30, 200, "Welcome to the Wing Cap\
 Course! Step on the red\
 switch at the top of the\
 tower, in the center of\
@@ -1201,12 +1194,12 @@ forward to nose down,\
 just as you would when\
 flying an airplane.")
 
-smlua_text_utils_dialog_replace(DIALOG_132,1,4,30,200, "Woah, don't try to\
+smlua_text_utils_dialog_replace(DIALOG_132, 1, 4, 30, 200, "Woah, don't try to\
 cheat! You're\
 disqualified! Next time,\
 play fair!")
 
-smlua_text_utils_dialog_replace(DIALOG_133,1,6,30,200, "Am I glad to see you! The\
+smlua_text_utils_dialog_replace(DIALOG_133, 1, 6, 30, 200, "Am I glad to see you! The\
 Princess...and I...and,\
 well, everybody...we're all\
 trapped inside the castle\
@@ -1236,7 +1229,7 @@ able to open the door\
 with the big star. The\
 Princess must be inside!")
 
-smlua_text_utils_dialog_replace(DIALOG_134,1,5,30,200, "The names of the Stars\
+smlua_text_utils_dialog_replace(DIALOG_134, 1, 5, 30, 200, "The names of the Stars\
 are also hints for\
 finding them. They are\
 displayed at the beginning\
@@ -1252,7 +1245,7 @@ another course.\
 We're all waiting for\
 your help!")
 
-smlua_text_utils_dialog_replace(DIALOG_135,1,5,30,200, "It was Bowser who stole\
+smlua_text_utils_dialog_replace(DIALOG_135, 1, 5, 30, 200, "It was Bowser who stole\
 the Stars. I saw him with\
 my own eyes!\
 \
@@ -1273,7 +1266,7 @@ already defeated, select\
 the Stars you recovered\
 from them.")
 
-smlua_text_utils_dialog_replace(DIALOG_136,1,6,30,200, "Wow! You've already\
+smlua_text_utils_dialog_replace(DIALOG_136, 1, 6, 30, 200, "Wow! You've already\
 recovered that many\
 Stars? Way to go, Mario!\
 I'll bet you'll have us out\
@@ -1303,7 +1296,7 @@ minimize damage if you\
 Pound the Ground as you\
 land.")
 
-smlua_text_utils_dialog_replace(DIALOG_137,1,6,30,200, "Thanks, Mario! The castle\
+smlua_text_utils_dialog_replace(DIALOG_137, 1, 6, 30, 200, "Thanks, Mario! The castle\
 is recovering its energy\
 as you retrieve Power\
 Stars, and you've chased\
@@ -1315,18 +1308,18 @@ Stars appear when you\
 collect 100 coins in each\
 of the 15 courses!")
 
-smlua_text_utils_dialog_replace(DIALOG_138,1,3,30,200, "Gee, that ★ must\
+smlua_text_utils_dialog_replace(DIALOG_138, 1, 3, 30, 200, "Gee, that ★ must\
 be pretty powerful to\
 have done that to an\
 ordinary wiggler...")
 
-smlua_text_utils_dialog_replace(DIALOG_139,1,6,30,200, "Thanks for dealing with\
+smlua_text_utils_dialog_replace(DIALOG_139, 1, 6, 30, 200, "Thanks for dealing with\
 that huge brute! It looks\
 like some of the trees\
 have even started\
 growing back!")
 
-smlua_text_utils_dialog_replace(DIALOG_140,1,6,30,200, "So you're looking for\
+smlua_text_utils_dialog_replace(DIALOG_140, 1, 6, 30, 200, "So you're looking for\
 power stars again, Mario?\
 Well, I know about one\
 that used to be at the\
@@ -1337,19 +1330,19 @@ have absorbed it! Who \
 knows if anyone will \
 ever see it again...")
 
-smlua_text_utils_dialog_replace(DIALOG_141,1,5,150,200, "You've recovered one of\
+smlua_text_utils_dialog_replace(DIALOG_141, 1, 5, 150, 200, "You've recovered one of\
 the Power Stars! Keep\
 searching, you need\
 7 more before you can\
 open any sealed doors.")
 
-smlua_text_utils_dialog_replace(DIALOG_142,1,4,150,200, "You should take a\
+smlua_text_utils_dialog_replace(DIALOG_142, 1, 4, 150, 200, "You should take a\
 break occasionally,\
 otherwise the game\
 will be over before\
 you know it!")
 
-smlua_text_utils_dialog_replace(DIALOG_143,1,6,150,200, "Hurry! Bowser Is causing\
+smlua_text_utils_dialog_replace(DIALOG_143, 1, 6, 150, 200, "Hurry! Bowser Is causing\
 more chaos every minute!\
 You have enough power\
 stars to break the seals\
@@ -1359,24 +1352,24 @@ Garden, so get in there\
 and hunt down some more\
 power stars!")
 
-smlua_text_utils_dialog_replace(DIALOG_144,1,6,150,200, "If you are having \
+smlua_text_utils_dialog_replace(DIALOG_144, 1, 6, 150, 200, "If you are having \
 trouble finding a power\
 star, remember to select \
 the right ★ in the \
 course menu.")
 
-smlua_text_utils_dialog_replace(DIALOG_145,1,6,150,200, "Keep going! Once you've\
+smlua_text_utils_dialog_replace(DIALOG_145, 1, 6, 150, 200, "Keep going! Once you've\
 collected 65 of the\
 power stars, you will \
 have enough power to\
 activate the Star Road!")
 
-smlua_text_utils_dialog_replace(DIALOG_146,1,6,150,200, "Bowser must be shivering\
+smlua_text_utils_dialog_replace(DIALOG_146, 1, 6, 150, 200, "Bowser must be shivering\
 in his shell, you are\
 very close to finding\
 him now!")
 
-smlua_text_utils_dialog_replace(DIALOG_147,1,5,30,200, "Are you using the Cap\
+smlua_text_utils_dialog_replace(DIALOG_147, 1, 5, 30, 200, "Are you using the Cap\
 Blocks? You really should,\
 you know.\
 \
@@ -1397,7 +1390,7 @@ Cap, green for the Metal\
 Cap, blue for the Vanish\
 Cap.")
 
-smlua_text_utils_dialog_replace(DIALOG_148,1,6,30,200, "NOTICE:\
+smlua_text_utils_dialog_replace(DIALOG_148, 1, 6, 30, 200, "NOTICE:\
 The annual 'Chucking the \
 Furthest a Chuckya can \
 Chuck' Competition will \
@@ -1415,7 +1408,7 @@ Chuckya by chuckling\
 while he is chucking\
 his chuckable object.")
 
-smlua_text_utils_dialog_replace(DIALOG_149,1,3,30,200, "It's a disaster! Ever\
+smlua_text_utils_dialog_replace(DIALOG_149, 1, 3, 30, 200, "It's a disaster! Ever\
 since the huge wiggler\
 showed up, he's been\
 raging around eating\
@@ -1429,16 +1422,16 @@ giant tree-eating\
 wigglers, your help sure\
 would be appreciated!")
 
-smlua_text_utils_dialog_replace(DIALOG_150,1,5,30,200, "Stomping sounds are\
+smlua_text_utils_dialog_replace(DIALOG_150, 1, 5, 30, 200, "Stomping sounds are\
 travelling from far\
 away bushes...")
 
-smlua_text_utils_dialog_replace(DIALOG_151,1,4,30,200, "Hey, that hurt! I can \
+smlua_text_utils_dialog_replace(DIALOG_151, 1, 4, 30, 200, "Hey, that hurt! I can \
 eat as many trees as I \
 like, there's nothing you \
 can do about it!")
 
-smlua_text_utils_dialog_replace(DIALOG_152,1,3,30,200, "Hey, knock it off! My\
+smlua_text_utils_dialog_replace(DIALOG_152, 1, 3, 30, 200, "Hey, knock it off! My\
 head is really starting\
 to hurt now!\
 Fine, I'll stop eating\
@@ -1449,7 +1442,7 @@ ever had this huge\
 appetite since I found\
 it...")
 
-smlua_text_utils_dialog_replace(DIALOG_153,1,4,30,200, "Hey! Who's there?\
+smlua_text_utils_dialog_replace(DIALOG_153, 1, 4, 30, 200, "Hey! Who's there?\
 What's climbing on me?\
 Is it an ice ant?\
 A snow flea?\
@@ -1457,15 +1450,15 @@ Whatever it is, it's\
 bugging me! I think I'll\
 blow it away!")
 
-smlua_text_utils_dialog_replace(DIALOG_154,1,5,30,200, "So, are you going to\
+smlua_text_utils_dialog_replace(DIALOG_154, 1, 5, 30, 200, "So, are you going to\
 get me out of here any\
 time soon?")
 
-smlua_text_utils_dialog_replace(DIALOG_155,1,6,30,200, "Really, I'm fine! I have\
+smlua_text_utils_dialog_replace(DIALOG_155, 1, 6, 30, 200, "Really, I'm fine! I have\
 this situation fully\
 under control!")
 
-smlua_text_utils_dialog_replace(DIALOG_156,1,4,30,200, "I guess you're\
+smlua_text_utils_dialog_replace(DIALOG_156, 1, 4, 30, 200, "I guess you're\
 wondering how to get\
 off these boxes. Well,\
 I've worked out two\
@@ -1476,7 +1469,7 @@ deep breath and dive\
 through the clouds\
 into the lake!")
 
-smlua_text_utils_dialog_replace(DIALOG_157,1,5,30,200, "Brrrr! It's amazing \
+smlua_text_utils_dialog_replace(DIALOG_157, 1, 5, 30, 200, "Brrrr! It's amazing \
 you're not frozen to the \
 spot in this kind of\
 temperature! This is\
@@ -1490,7 +1483,7 @@ to mention the icy\
 baddies, so you better\
 watch your step!")
 
-smlua_text_utils_dialog_replace(DIALOG_158,1,6,30,200, "Thanks for defeating\
+smlua_text_utils_dialog_replace(DIALOG_158, 1, 6, 30, 200, "Thanks for defeating\
 Big Bob-omb Mario! With\
 the strength of this\
 recovered power star, we\
@@ -1498,7 +1491,7 @@ just might be able to\
 knock out the enemy for\
 good!")
 
-smlua_text_utils_dialog_replace(DIALOG_159,1,6,30,200, "Ah, It's you again! I\
+smlua_text_utils_dialog_replace(DIALOG_159, 1, 6, 30, 200, "Ah, It's you again! I\
 saw you defeat the Whomp\
 King, and you have my\
 genuine thanks for it.\
@@ -1510,12 +1503,12 @@ arrived, but hopefully\
 in time we will manage\
 to drive them all out.")
 
-smlua_text_utils_dialog_replace(DIALOG_160,1,4,30,200, "It's so peaceful to just\
+smlua_text_utils_dialog_replace(DIALOG_160, 1, 4, 30, 200, "It's so peaceful to just\
 sit down by the pond and \
 watch the fish swim\
 around...")
 
-smlua_text_utils_dialog_replace(DIALOG_161,1,6,30,200, "Hi, Mario! It's great to\
+smlua_text_utils_dialog_replace(DIALOG_161, 1, 6, 30, 200, "Hi, Mario! It's great to\
 see you again, but I have\
 some bad news.\
 Bowser learned the secret\
@@ -1547,7 +1540,7 @@ collect enough power\
 stars to break the seals.\
 Good luck!")
 
-smlua_text_utils_dialog_replace(DIALOG_162,1,4,30,200, "Noooo! How could you\
+smlua_text_utils_dialog_replace(DIALOG_162, 1, 4, 30, 200, "Noooo! How could you\
 have taken all 120\
 power stars I gave\
 to my troops!?\
@@ -1558,7 +1551,7 @@ Just remember, though,\
 it doesn't mean you've\
 seen the last of me!")
 
-smlua_text_utils_dialog_replace(DIALOG_163,1,4,30,200, "Noooo! How could you\
+smlua_text_utils_dialog_replace(DIALOG_163, 1, 4, 30, 200, "Noooo! How could you\
 have taken all 120\
 power stars I gave\
 to my troops!?\
@@ -1569,7 +1562,7 @@ Just remember, though,\
 it doesn't mean you've\
 seen the last of me!")
 
-smlua_text_utils_dialog_replace(DIALOG_164,1,4,30,200, "Mario! What's up, pal?\
+smlua_text_utils_dialog_replace(DIALOG_164, 1, 4, 30, 200, "Mario! What's up, pal?\
 I haven't been on the\
 slide lately, so I'm out\
 of shape.\
@@ -1580,18 +1573,18 @@ Ready...set...\
 \
 //Go//// Don't Go")
 
-smlua_text_utils_dialog_replace(DIALOG_165,1,5,30,200, "Wow, the lookout is\
+smlua_text_utils_dialog_replace(DIALOG_165, 1, 5, 30, 200, "Wow, the lookout is\
 finally safe to go on!\
 It's about time too, I\
 was missing these views.")
 
-smlua_text_utils_dialog_replace(DIALOG_166,1,4,30,200, "I'm so glad that big\
+smlua_text_utils_dialog_replace(DIALOG_166, 1, 4, 30, 200, "I'm so glad that big\
 brute is gone, I was\
 biginning to think I'd\
 never see the sunlight\
 again!")
 
-smlua_text_utils_dialog_replace(DIALOG_167,1,4,30,200, "Hello sir, welcome to\
+smlua_text_utils_dialog_replace(DIALOG_167, 1, 4, 30, 200, "Hello sir, welcome to\
 the Sky Land Resort! I\
 would like to be able to\
 tell you this is a place\
@@ -1609,14 +1602,44 @@ place! The residents are\
 too scared to even leave\
 their houses!")
 
-smlua_text_utils_dialog_replace(DIALOG_168,1,5,30,200, "Ack! Stop it or I'll\
+smlua_text_utils_dialog_replace(DIALOG_168, 1, 5, 30, 200, "Ack! Stop it or I'll\
 make you stop!")
 
-smlua_text_utils_dialog_replace(DIALOG_169,1,4,30,200, "Keep out!\
-That means you!\
-Arrgghh!\
-\
-Anyone entering this cave\
-without permission will\
-meet certain disaster.")
+smlua_text_utils_dialog_replace(DIALOG_169, 1, 6, 30, 200, "Psst! Looking for\
+a challenge? Try pressing\
+[R] after pausing the\
+game, and select the\
+'Super Mario Star Road'\
+tab in the menu. For the\
+SMSR veterans, try holding\
+the L Button before you\
+host a lobby with 'Super\
+Mario Star Road' as the\
+active romhack!")
 
+function dialog_replace()
+      if gGlobalSyncTable.hardMode then
+            smlua_text_utils_dialog_replace(DIALOG_169, 1, 4, 30, 200, "Welcome to HARD MODE!\
+This challenge mode is an\
+OHKO, which means that\
+everything-- and I mean\
+EVERYTHING kills you in\
+one hit! Do you have what\
+it takes to complete this\
+challenge?")
+      else
+            smlua_text_utils_dialog_replace(DIALOG_169, 1, 6, 30, 200, "Psst! Looking for\
+a challenge? Try pressing\
+[R] after pausing the\
+game, and select the\
+'Super Mario Star Road'\
+tab in the menu. For the\
+SMSR veterans, try holding\
+the L Button before you\
+host a lobby with 'Super\
+Mario Star Road' as the\
+active romhack!")
+      end
+end
+
+hook_event(HOOK_ON_DIALOG, dialog_replace)

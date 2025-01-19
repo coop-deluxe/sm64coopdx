@@ -328,6 +328,13 @@ void djui_interactable_on_text_input(char* text) {
     gInteractableFocus->interactable->on_text_input(gInteractableFocus, text);
 }
 
+void djui_interactable_on_text_editing(char* text, int cursorPos) {
+    if (gInteractableFocus == NULL) { return; }
+    if (gInteractableFocus->interactable == NULL) { return; }
+    if (gInteractableFocus->interactable->on_text_editing == NULL) { return; }
+    gInteractableFocus->interactable->on_text_editing(gInteractableFocus, text, cursorPos);
+}
+
 void djui_interactable_update_pad(void) {
     OSContPad* pad = &gInteractablePad;
 
@@ -519,6 +526,12 @@ void djui_interactable_hook_text_input(struct DjuiBase *base,
                                        void (*on_text_input)(struct DjuiBase*, char*)) {
     struct DjuiInteractable *interactable = base->interactable;
     interactable->on_text_input = on_text_input;
+}
+
+void djui_interactable_hook_text_editing(struct DjuiBase* base,
+                                       void (*on_text_editing)(struct DjuiBase*, char*, int)) {
+    struct DjuiInteractable *interactable = base->interactable;
+    interactable->on_text_editing = on_text_editing;
 }
 
 void djui_interactable_hook_enabled_change(struct DjuiBase *base,

@@ -33,6 +33,7 @@ void init_scene_graph_node_links(struct GraphNode *graphNode, s32 type) {
     graphNode->parent = NULL;
     graphNode->children = NULL;
     graphNode->georef = NULL;
+    graphNode->hookProcess = 0;
     graphNode->_guard1 = GRAPH_NODE_GUARD;
     graphNode->_guard2 = GRAPH_NODE_GUARD;
 }
@@ -650,6 +651,16 @@ struct GraphNode *geo_make_first_child(struct GraphNode *newFirstChild) {
     }
 
     return parent;
+}
+
+// A sharedChild graph node has either a parent of type GRAPH_NODE_TYPE_OBJECT or GRAPH_NODE_TYPE_OBJECT_PARENT, or no parent at all
+struct GraphNode *geo_find_shared_child(struct GraphNode *graphNode) {
+    while (graphNode->parent &&
+           graphNode->parent->type != GRAPH_NODE_TYPE_OBJECT &&
+           graphNode->parent->type != GRAPH_NODE_TYPE_OBJECT_PARENT) {
+        graphNode = graphNode->parent;
+    }
+    return graphNode;
 }
 
 /**

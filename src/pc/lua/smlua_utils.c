@@ -1,5 +1,4 @@
 #include "smlua.h"
-#include "smlua_cobject_map.h"
 #include "pc/mods/mods.h"
 #include "audio/external.h"
 
@@ -354,19 +353,30 @@ void smlua_push_object(lua_State* L, u16 lot, void* p) {
         lua_pushnil(L);
         return;
     }
+    LUA_STACK_CHECK_BEGIN_NUM(1);
+
+    uintptr_t key = lot ^ (uintptr_t) p;
+    lua_rawgeti(L, LUA_REGISTRYINDEX, gSmLuaCObjects);
+    lua_pushinteger(L, key);
+    lua_gettable(L, -2);
+    if (lua_isuserdata(L, -1)) {
+        lua_remove(L, -2); // Remove gSmLuaCObjects table
+        return;
+    }
+    lua_pop(L, 1);
 
     CObject *cobject = lua_newuserdata(L, sizeof(CObject));
     cobject->pointer = p;
     cobject->lot = lot;
     cobject->freed = false;
-    luaL_getmetatable(L, "CObject");
+    lua_rawgeti(L, LUA_REGISTRYINDEX, gSmLuaCObjectMetatable);
     lua_setmetatable(L, -2);
+    lua_pushinteger(L, key);
+    lua_pushvalue(L, -2); // Duplicate userdata
+    lua_settable(L, -4);
+    lua_remove(L, -2); // Remove gSmLuaCObjects table
 
-    switch (lot) {
-        case LOT_SURFACE: {
-            smlua_pointer_user_data_add((uintptr_t) p, cobject);
-        }
-    }
+    LUA_STACK_CHECK_END();
 }
 
 void smlua_push_pointer(lua_State* L, u16 lvt, void* p) {
@@ -374,13 +384,29 @@ void smlua_push_pointer(lua_State* L, u16 lvt, void* p) {
         lua_pushnil(L);
         return;
     }
+    LUA_STACK_CHECK_BEGIN_NUM(1);
+
+    uintptr_t key = lvt ^ (uintptr_t) p;
+    lua_rawgeti(L, LUA_REGISTRYINDEX, gSmLuaCPointers);
+    lua_pushinteger(L, key);
+    lua_gettable(L, -2);
+    if (lua_isuserdata(L, -1)) {
+        lua_remove(L, -2); // Remove gSmLuaCPointers table
+        return;
+    }
+    lua_pop(L, 1);
 
     CPointer *cpointer = lua_newuserdata(L, sizeof(CPointer));
     cpointer->pointer = p;
     cpointer->lvt = lvt;
     cpointer->freed = false;
-    luaL_getmetatable(L, "CPointer");
+    lua_rawgeti(L, LUA_REGISTRYINDEX, gSmLuaCPointerMetatable);
     lua_setmetatable(L, -2);
+    lua_pushinteger(L, key);
+    lua_pushvalue(L, -2); // Duplicate userdata
+    lua_settable(L, -4);
+    lua_remove(L, -2); // Remove gSmLuaCPointers table
+    LUA_STACK_CHECK_END();
 }
 
 void smlua_push_integer_field(int index, const char* name, lua_Integer val) {
@@ -710,7 +736,7 @@ void smlua_logline(void) {
     while (lua_getstack(L, level, &info)) {
         lua_getinfo(L, "nSl", &info);
 
-        // Get the folder and file of the crash
+        // Get the folder and file
         // in the format: "folder/file.lua"
         const char* src = info.source;
         int slashCount = 0;
@@ -733,13 +759,28 @@ void smlua_logline(void) {
 
 // If an object is freed that Lua has a CObject to,
 // Lua is able to use-after-free that pointer
+// todo figure out a better way to do this
 void smlua_free(void *ptr) {
     if (ptr && gLuaState) {
-        CObject *obj = smlua_pointer_user_data_get((uintptr_t) ptr);
-        if (obj) {
+        lua_State *L = gLuaState;
+        LUA_STACK_CHECK_BEGIN();
+        u16 lot = LOT_SURFACE; // Assuming this is a surface
+        uintptr_t key = lot ^ (uintptr_t) ptr;
+        lua_rawgeti(L, LUA_REGISTRYINDEX, gSmLuaCObjects);
+        lua_pushinteger(L, key);
+        lua_gettable(L, -2);
+        CObject *obj = (CObject *) lua_touserdata(L, -1);
+        if (obj && obj->pointer == ptr) {
             obj->freed = true;
-            smlua_pointer_user_data_delete((uintptr_t) ptr);
+            lua_pop(L, 1);
+            lua_pushinteger(L, key);
+            lua_pushnil(L);
+            lua_settable(L, -3);
+        } else {
+            lua_pop(L, 1);
         }
+        lua_pop(L, 1);
+        LUA_STACK_CHECK_END();
     }
     free(ptr);
 }

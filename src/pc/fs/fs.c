@@ -255,7 +255,7 @@ const char *fs_convert_path(char *buf, const size_t bufsiz, const char *path) {
 
     // ! means "executable directory"
     if (path[0] == '!') {
-        if (snprintf(buf, bufsiz, "%s%s", sys_exe_path(), path + 1) < 0) {
+        if (snprintf(buf, bufsiz, "%s%s", sys_exe_path_dir(), path + 1) < 0) {
             return "";
         }
     } else {

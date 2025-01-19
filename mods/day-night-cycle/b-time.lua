@@ -1,7 +1,7 @@
 local sNightSequences = {}
 
 -- localize functions to improve performance
-local mod_storage_remove,mod_storage_load_bool,math_floor,mod_storage_save_number,mod_storage_load_number,type,error,network_is_moderator,network_is_server,string_format,djui_hud_is_pause_menu_created,smlua_audio_utils_replace_sequence,fade_volume_scale,set_background_music,obj_mark_for_deletion = mod_storage_remove,mod_storage_load_bool,math.floor,mod_storage_save_number,mod_storage_load_number,type,error,network_is_moderator,network_is_server,string.format,djui_hud_is_pause_menu_created,smlua_audio_utils_replace_sequence,fade_volume_scale,set_background_music,obj_mark_for_deletion
+local mod_storage_remove,mod_storage_load_bool,mod_storage_exists,math_floor,mod_storage_save_number,mod_storage_load_number,string_format,smlua_audio_utils_replace_sequence,fade_volume_scale,set_background_music,obj_mark_for_deletion = mod_storage_remove,mod_storage_load_bool,mod_storage_exists,math.floor,mod_storage_save_number,mod_storage_load_number,string.format,smlua_audio_utils_replace_sequence,fade_volume_scale,set_background_music,obj_mark_for_deletion
 
 -- purge legacy fields
 mod_storage_remove("ampm")
@@ -10,7 +10,7 @@ mod_storage_remove("night-music")
 use24h = mod_storage_load_bool("24h")
 
 --- @type boolean
-playNightMusic = if_then_else(mod_storage_load("night_music") == nil, true, mod_storage_load_bool("night_music"))
+playNightMusic = if_then_else(mod_storage_exists("night_music"), mod_storage_load_bool("night_music"), true)
 playingNightMusic = false
 
 --- Returns the amount of days that have passed
@@ -27,7 +27,7 @@ end
 function load_time()
     local time = mod_storage_load_number("time")
     if time == nil then
-        time = MINUTE * 4 -- starts at the beginning of sunrise
+        time = HOUR_SUNRISE_START -- starts at the beginning of sunrise
         mod_storage_save_number("time", time)
     end
     return time
@@ -45,7 +45,6 @@ function set_raw_time(time)
         error("set_raw_time: Parameter 'time' must be a number")
         return
     end
-    if not network_is_server() and not network_is_moderator() then return end
 
     gGlobalSyncTable.time = time
 end
@@ -53,6 +52,12 @@ end
 --- Returns the amount of time that has passed in the day in minutes
 function get_time_minutes()
     return (gGlobalSyncTable.time / MINUTE) % 24
+end
+
+--- @param minutes number
+--- Sets the amount of time that has passed in the day in minutes
+function set_time_minutes(minutes)
+    gGlobalSyncTable.time = get_day_count() * (MINUTE * 24) + (MINUTE * minutes)
 end
 
 --- Returns the time scale
@@ -67,7 +72,6 @@ function set_time_scale(scale)
         error("set_time_scale: Parameter 'scale' must be a number")
         return
     end
-    if not network_is_server() and not network_is_moderator() then return end
 
     gGlobalSyncTable.timeScale = scale
 end
@@ -99,6 +103,16 @@ function get_time_string(time)
     return string_format("%d:%02d%s", formattedMinutes, seconds, if_then_else(not use24h, if_then_else(minutes < 12, " AM", " PM"), ""))
 end
 
+--- @param sunrise number
+--- @param sunset number
+--- Sets the hours at which the sun rises and sets
+function set_sun_hours(sunrise, sunset)
+    if _G.dayNightCycleApi.lockSunHours then return end
+
+    gGlobalSyncTable.sunrise = sunrise
+    gGlobalSyncTable.sunset = sunset
+end
+
 function time_tick()
     gGlobalSyncTable.time = gGlobalSyncTable.time + gGlobalSyncTable.timeScale
 end
@@ -117,7 +131,7 @@ function night_music_register(sequenceId, m64Name)
     end
 
     local id = SEQ_COUNT + sequenceId
-    smlua_audio_utils_replace_sequence(id, 42, 80, m64Name)
+    smlua_audio_utils_replace_sequence(id, 42, 70, m64Name)
     sNightSequences[sequenceId] = id
 end
 
@@ -172,7 +186,7 @@ function delete_at_dark(obj)
         error("delete_at_dark: Parameter 'obj' must be an Object")
         return
     end
-    local minutes = gGlobalSyncTable.time / MINUTE % 24
+    local minutes = get_time_minutes()
 
     local delete = minutes < HOUR_SUNRISE_START or minutes > HOUR_SUNSET_END
     overrideDelete = dnc_call_hook(DNC_HOOK_DELETE_AT_DARK, obj, delete)

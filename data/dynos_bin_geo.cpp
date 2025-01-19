@@ -307,7 +307,6 @@ static void ParseGeoSymbol(GfxData* aGfxData, DataNode<GeoLayout>* aNode, GeoLay
     geo_symbol_2(GEO_DISPLAY_LIST, 1);
     geo_symbol_3(GEO_SHADOW, 0);
     geo_symbol_0(GEO_RENDER_OBJ);
-    geo_symbol_2(GEO_ASM, 1);
     geo_symbol_1(GEO_BACKGROUND_COLOR, 0);
     geo_symbol_0(GEO_NOP_1A);
     geo_symbol_5(GEO_HELD_OBJECT, 2);
@@ -317,6 +316,26 @@ static void ParseGeoSymbol(GfxData* aGfxData, DataNode<GeoLayout>* aNode, GeoLay
     geo_symbol_0(GEO_NOP_1F);
     geo_symbol_1(GEO_CULLING_RADIUS, 0);
 
+    // Geo function node
+    if (_Symbol == "GEO_ASM") {
+        s64 _Arg0 = ParseGeoSymbolArg(aGfxData, aNode, aTokenIndex);
+        const String& _Arg1 = aNode->mTokens[aTokenIndex++];
+
+        const void *_FunctionPtr = DynOS_Builtin_Func_GetFromName(_Arg1.begin());
+        if (_FunctionPtr != NULL) {
+            aGfxData->mPointerList.Add(aHead + 1);
+            GeoLayout _Gl[] = { GEO_ASM(_Arg0, _FunctionPtr) };
+            memcpy(aHead, _Gl, sizeof(_Gl));
+            aHead += (sizeof(_Gl) / sizeof(_Gl[0]));
+        } else {
+            u32 _FuncIndex = DynOS_Lua_RememberVariable(aGfxData, aHead + 1, _Arg1);
+            GeoLayout _Gl[] = { GEO_ASM_EXT(_Arg0, _FuncIndex) };
+            memcpy(aHead, _Gl, sizeof(_Gl));
+            aHead += (sizeof(_Gl) / sizeof(_Gl[0]));
+        }
+        return;
+    }
+
     // Switch node
     if (_Symbol == "GEO_SWITCH_CASE") {
 
@@ -324,11 +343,20 @@ static void ParseGeoSymbol(GfxData* aGfxData, DataNode<GeoLayout>* aNode, GeoLay
         aSwitchNodes.Add(0);
 
         s64 _Arg0 = ParseGeoSymbolArg(aGfxData, aNode, aTokenIndex);
-        s64 _Arg1 = ParseGeoSymbolArg(aGfxData, aNode, aTokenIndex);
-        aGfxData->mPointerList.Add(aHead + 1);
-        GeoLayout _Gl[] = { GEO_SWITCH_CASE(_Arg0, _Arg1) };
-        memcpy(aHead, _Gl, sizeof(_Gl));
-        aHead += (sizeof(_Gl) / sizeof(_Gl[0]));
+        const String& _Arg1 = aNode->mTokens[aTokenIndex++];
+
+        const void *_FunctionPtr = DynOS_Builtin_Func_GetFromName(_Arg1.begin());
+        if (_FunctionPtr != NULL) {
+            aGfxData->mPointerList.Add(aHead + 1);
+            GeoLayout _Gl[] = { GEO_SWITCH_CASE(_Arg0, _FunctionPtr) };
+            memcpy(aHead, _Gl, sizeof(_Gl));
+            aHead += (sizeof(_Gl) / sizeof(_Gl[0]));
+        } else {
+            u32 _FuncIndex = DynOS_Lua_RememberVariable(aGfxData, aHead + 1, _Arg1);
+            GeoLayout _Gl[] = { GEO_SWITCH_CASE_EXT(_Arg0, _FuncIndex) };
+            memcpy(aHead, _Gl, sizeof(_Gl));
+            aHead += (sizeof(_Gl) / sizeof(_Gl[0]));
+        }
         return;
     }
 
@@ -444,6 +472,8 @@ void DynOS_Geo_Write(BinFile *aFile, GfxData *aGfxData, DataNode<GeoLayout> *aNo
         GeoLayout *_Head = &aNode->mData[i];
         if (aGfxData->mPointerList.Find((void *) _Head) != -1) {
             DynOS_Pointer_Write(aFile, (const void *) (*_Head), aGfxData);
+        } else if (aGfxData->mLuaPointerList.Find((void *) _Head) != -1) {
+            DynOS_Pointer_Lua_Write(aFile, *(u32 *)_Head, aGfxData);
         } else {
             aFile->Write<u32>(*((u32 *) _Head));
         }

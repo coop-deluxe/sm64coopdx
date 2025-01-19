@@ -118,6 +118,7 @@ extern s16 gMarioOnMerryGoRound;
 
 
 void bhv_mario_update(void);
+/* |description|Runs an OR operator on the `obj`'s respawn info with `bits` << 8. If `bits` is 0xFF, this prevents the object from respawning after leaving and re-entering the area|descriptionEnd| */
 void set_object_respawn_info_bits(struct Object *obj, u8 bits);
 void unload_objects_from_area(UNUSED s32 unused, s32 areaIndex);
 void spawn_objects_from_info(UNUSED s32 unused, struct SpawnInfo *spawnInfo);

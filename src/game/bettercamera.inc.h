@@ -461,15 +461,15 @@ static void newcam_update_values(void) {
 
     if (newcam_modeflags & NC_FLAG_XTURN)
         newcam_yaw -= ((newcam_yaw_acc*(newcam_sensitivityX/10))*ivrt(0));
-    if (((newcam_tilt <= 15000) && (newcam_tilt >= -15000)) && newcam_modeflags & NC_FLAG_YTURN)
+    if (((newcam_tilt <= 0x3000) && (newcam_tilt >= -0x3000)) && newcam_modeflags & NC_FLAG_YTURN)
         newcam_tilt += ((newcam_tilt_acc*ivrt(1))*(newcam_sensitivityY/10));
 
-    if (newcam_tilt > 15000)
-        newcam_tilt = 15000;
-    if (newcam_tilt < -15000 && gMarioStates[0].pos[1] - gMarioStates[0].floorHeight > 20)
-        newcam_tilt = -15000;
-    if (newcam_tilt < -12000 && gMarioStates[0].pos[1] - gMarioStates[0].floorHeight < 20)
-        newcam_tilt = -12000;
+    if (newcam_tilt > 0x3000)
+        newcam_tilt = 0x3000;
+    if (newcam_tilt < -0x3000 && gMarioStates[0].pos[1] - gMarioStates[0].floorHeight > 20)
+        newcam_tilt = -0x3000;
+    if (newcam_tilt < -0x3000 && gMarioStates[0].pos[1] - gMarioStates[0].floorHeight < 20)
+        newcam_tilt = -0x3000;
 
     if (newcam_turnwait > 0 && gMarioStates[0].vel[1] == 0) {
         newcam_turnwait -= 1;

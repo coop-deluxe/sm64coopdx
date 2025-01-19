@@ -3920,54 +3920,6 @@ LEVEL_UNKNOWN_38 = 38
 LEVEL_COUNT = 39
 
 --- @type integer
-MARIO_SPAWN_AIRBORNE = 0x12
-
---- @type integer
-MARIO_SPAWN_AIRBORNE_DEATH = 0x23
-
---- @type integer
-MARIO_SPAWN_AIRBORNE_STAR_COLLECT = 0x22
-
---- @type integer
-MARIO_SPAWN_DEATH = 0x15
-
---- @type integer
-MARIO_SPAWN_DOOR_WARP = 0x01
-
---- @type integer
-MARIO_SPAWN_FLYING = 0x17
-
---- @type integer
-MARIO_SPAWN_HARD_AIR_KNOCKBACK = 0x13
-
---- @type integer
-MARIO_SPAWN_INSTANT_ACTIVE = 0x10
-
---- @type integer
-MARIO_SPAWN_LAUNCH_DEATH = 0x25
-
---- @type integer
-MARIO_SPAWN_LAUNCH_STAR_COLLECT = 0x24
-
---- @type integer
-MARIO_SPAWN_PAINTING_DEATH = 0x21
-
---- @type integer
-MARIO_SPAWN_PAINTING_STAR_COLLECT = 0x20
-
---- @type integer
-MARIO_SPAWN_SPIN_AIRBORNE = 0x16
-
---- @type integer
-MARIO_SPAWN_SPIN_AIRBORNE_CIRCLE = 0x14
-
---- @type integer
-MARIO_SPAWN_SWIMMING = 0x11
-
---- @type integer
-MARIO_SPAWN_TELEPORT = 0x04
-
---- @type integer
 MARIO_SPAWN_UNKNOWN_02 = 0x02
 
 --- @type integer
@@ -4142,6 +4094,71 @@ HUD_DISPLAY_NONE = 0x0000
 
 --- @type HUDDisplayFlag
 HUD_DISPLAY_DEFAULT = HUD_DISPLAY_FLAG_LIVES | HUD_DISPLAY_FLAG_COIN_COUNT | HUD_DISPLAY_FLAG_STAR_COUNT | HUD_DISPLAY_FLAG_CAMERA_AND_POWER | HUD_DISPLAY_FLAG_CAMERA | HUD_DISPLAY_FLAG_POWER | HUD_DISPLAY_FLAG_KEYS | HUD_DISPLAY_FLAG_UNKNOWN_0020
+
+--- @class MarioSpawnType
+
+--- @type MarioSpawnType
+MARIO_SPAWN_NONE = 0
+
+--- @type MarioSpawnType
+MARIO_SPAWN_DOOR_WARP = 1
+
+--- @type MarioSpawnType
+MARIO_SPAWN_IDLE = 2
+
+--- @type MarioSpawnType
+MARIO_SPAWN_PIPE = 3
+
+--- @type MarioSpawnType
+MARIO_SPAWN_TELEPORT = 4
+
+--- @type MarioSpawnType
+MARIO_SPAWN_INSTANT_ACTIVE = 0x10
+
+--- @type MarioSpawnType
+MARIO_SPAWN_SWIMMING = ((MARIO_SPAWN_INSTANT_ACTIVE ) + 1)
+
+--- @type MarioSpawnType
+MARIO_SPAWN_AIRBORNE = ((MARIO_SPAWN_INSTANT_ACTIVE ) + 2)
+
+--- @type MarioSpawnType
+MARIO_SPAWN_HARD_AIR_KNOCKBACK = ((MARIO_SPAWN_INSTANT_ACTIVE ) + 3)
+
+--- @type MarioSpawnType
+MARIO_SPAWN_SPIN_AIRBORNE_CIRCLE = ((MARIO_SPAWN_INSTANT_ACTIVE ) + 4)
+
+--- @type MarioSpawnType
+MARIO_SPAWN_DEATH = ((MARIO_SPAWN_INSTANT_ACTIVE ) + 5)
+
+--- @type MarioSpawnType
+MARIO_SPAWN_SPIN_AIRBORNE = ((MARIO_SPAWN_INSTANT_ACTIVE ) + 6)
+
+--- @type MarioSpawnType
+MARIO_SPAWN_FLYING = ((MARIO_SPAWN_INSTANT_ACTIVE ) + 7)
+
+--- @type MarioSpawnType
+MARIO_SPAWN_PAINTING_STAR_COLLECT = 0x20
+
+--- @type MarioSpawnType
+MARIO_SPAWN_PAINTING_DEATH = ((MARIO_SPAWN_PAINTING_STAR_COLLECT ) + 1)
+
+--- @type MarioSpawnType
+MARIO_SPAWN_AIRBORNE_STAR_COLLECT = ((MARIO_SPAWN_PAINTING_STAR_COLLECT ) + 2)
+
+--- @type MarioSpawnType
+MARIO_SPAWN_AIRBORNE_DEATH = ((MARIO_SPAWN_PAINTING_STAR_COLLECT ) + 3)
+
+--- @type MarioSpawnType
+MARIO_SPAWN_LAUNCH_STAR_COLLECT = ((MARIO_SPAWN_PAINTING_STAR_COLLECT ) + 4)
+
+--- @type MarioSpawnType
+MARIO_SPAWN_LAUNCH_DEATH = ((MARIO_SPAWN_PAINTING_STAR_COLLECT ) + 5)
+
+--- @type MarioSpawnType
+MARIO_SPAWN_UNUSED_38 = ((MARIO_SPAWN_PAINTING_STAR_COLLECT ) + 6)
+
+--- @type MarioSpawnType
+MARIO_SPAWN_FADE_FROM_BLACK = ((MARIO_SPAWN_PAINTING_STAR_COLLECT ) + 7)
 
 --- @class MarioHealType
 
@@ -5504,10 +5521,10 @@ MARIO_HAND_HOLDING_WING_CAP = 4
 MARIO_HAND_RIGHT_OPEN = 5
 
 --- @type integer
-MAX_KEYS = 512
+MAX_KEYS = 4096
 
 --- @type integer
-MAX_KEY_VALUE_LENGTH = 512
+MAX_KEY_VALUE_LENGTH = 1024
 
 --- @type integer
 PACKET_LENGTH = 3000
@@ -9180,13 +9197,25 @@ HOOK_ON_NAMETAGS_RENDER = 46
 HOOK_ON_DJUI_THEME_CHANGED = 47
 
 --- @type LuaHookedEventType
-HOOK_HEALED_MARIO = 48
+HOOK_ON_GEO_PROCESS = 48
 
 --- @type LuaHookedEventType
-HOOK_HURT_MARIO = 49
+HOOK_BEFORE_GEO_PROCESS = 49
 
 --- @type LuaHookedEventType
-HOOK_MAX = 50
+HOOK_ON_GEO_PROCESS_CHILDREN = 50
+
+--- @type LuaHookedEventType
+HOOK_MARIO_OVERRIDE_GEOMETRY_INPUTS = 51
+
+--- @type LuaHookedEventType
+HOOK_HEALED_MARIO = 52
+
+--- @type LuaHookedEventType
+HOOK_HURT_MARIO = 53
+
+--- @type LuaHookedEventType
+HOOK_MAX = 54
 
 --- @class LuaModMenuElementType
 
@@ -12513,10 +12542,10 @@ SPTASK_STATE_FINISHED_DP = 4
 MAX_VERSION_LENGTH = 32
 
 --- @type integer
-MINOR_VERSION_NUMBER = 0
+MINOR_VERSION_NUMBER = 1
 
 --- @type string
-SM64COOPDX_VERSION = "v1.1"
+SM64COOPDX_VERSION = "v1.1.1"
 
 --- @type integer
 VERSION_NUMBER = 38

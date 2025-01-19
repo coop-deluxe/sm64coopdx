@@ -54,8 +54,11 @@ static void DynOS_Pack_ActivateActor(s32 aPackIndex, Pair<const char *, GfxData 
     actorGfx.mGraphNode = graphNode;
     actorGfx.mPackIndex = aPackIndex;
 
-    if (geoNode->mFlags & GRAPH_EXTRA_FORCE_3D) {
-        actorGfx.mGraphNode->extraFlags |= GRAPH_EXTRA_FORCE_3D;
+    for (const auto &vtxNode : aGfxData->mVertices) {
+        if (vtxNode->mFlags & GRAPH_EXTRA_FORCE_3D) {
+            actorGfx.mGraphNode->extraFlags |= GRAPH_EXTRA_FORCE_3D;
+            break;
+        }
     }
 
     DynOS_Actor_Valid(georef, actorGfx);

@@ -113,7 +113,7 @@ void djui_gfx_render_texture(const u8* texture, u32 w, u32 h, u32 bitSize, bool 
     gSPDisplayList(gDisplayListHead++, dl_djui_image);
 }
 
-void djui_gfx_render_texture_tile(const u8* texture, u32 w, u32 h, u32 bitSize, u32 tileX, u32 tileY, u32 tileW, u32 tileH, bool filter) {
+void djui_gfx_render_texture_tile(const u8* texture, u32 w, u32 h, u32 bitSize, u32 tileX, u32 tileY, u32 tileW, u32 tileH, bool filter, bool font) {
     if (!gDisplayListHead) {
         LOG_ERROR("Retrieved a null displaylist head");
         return;
@@ -131,8 +131,8 @@ void djui_gfx_render_texture_tile(const u8* texture, u32 w, u32 h, u32 bitSize, 
     }
 
     f32 aspect = tileH ? ((f32)tileW / (f32)tileH) : 1;
-    f32 halfPxX = 1024.0f / (f32)w;
-    f32 halfPxY = 1024.0f / (f32)h;
+    f32 halfPxX = font && configWindow.msaa > 0 ? 1024.0f / (f32)w : 0;
+    f32 halfPxY = font && configWindow.msaa > 0 ? 1024.0f / (f32)h : 0;
     // I don't know why adding 1 to all of the UVs seems to fix rendering, but it does...
     vtx[0] = (Vtx) {{{ 0,          -1, 0 }, 0, { ( tileX          * 2048.0f) / (f32)w - halfPxX, ((tileY + tileH) * 2048.0f) / (f32)h - halfPxY }, { 0xff, 0xff, 0xff, 0xff }}};
     vtx[1] = (Vtx) {{{ 1 * aspect, -1, 0 }, 0, { ((tileX + tileW) * 2048.0f) / (f32)w - halfPxX, ((tileY + tileH) * 2048.0f) / (f32)h - halfPxY }, { 0xff, 0xff, 0xff, 0xff }}};

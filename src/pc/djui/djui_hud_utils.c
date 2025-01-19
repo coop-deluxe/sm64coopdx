@@ -487,7 +487,7 @@ void djui_hud_render_texture_tile_raw(const u8* texture, u32 bitSize, u32 width,
     create_dl_scale_matrix(DJUI_MTX_NOPUSH, width * translatedW, height * translatedH, 1.0f);
 
     // render
-    djui_gfx_render_texture_tile(texture, width, height, bitSize, tileX, tileY, tileW, tileH, sFilter);
+    djui_gfx_render_texture_tile(texture, width, height, bitSize, tileX, tileY, tileW, tileH, sFilter, false);
 
     // pop
     gSPPopMatrix(gDisplayListHead++, G_MTX_MODELVIEW);

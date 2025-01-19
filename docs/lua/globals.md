@@ -44,6 +44,20 @@ The `gControllers[]` table is an array from `0` to `(MAX_PLAYERS - 1)` that cont
 
 <br />
 
+## [gMatStack](#gMatStack)
+The `gMatStack[]` table is an array from `0` to `(MATRIX_STACK_SIZE - 1)` that contains `Mat4`s used by geo process.
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [gMatStackPrev](#gMatStackPrev)
+The `gMatStackPrev[]` table is similar to [gMatStack](#gMatStack) for interpolation.
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [gTextures](#gTextures)
 The `gTextures` table contains references to textures. Listed in [GlobalTextures](structs.md#GlobalTextures).
 
@@ -126,7 +140,7 @@ The `gGlobalSyncTable` is a table used for networking. Any field set inside of t
 <br />
 
 ## [gPlayerSyncTable](#gPlayerSyncTable)
-The `gPlayerSyncTable[]` is an array from 0 to `(MAX_PLAYERS - 1)` that is used for networking. Any field set inside of this table is automatically synchronized with all other clients. 
+The `gPlayerSyncTable[]` is an array from 0 to `(MAX_PLAYERS - 1)` that is used for networking. Any field set inside of this table is automatically synchronized with all other clients.
 
 It is indexed by the local `playerIndex`, so `gPlayerSyncTable[0]` is always for the local player.
 

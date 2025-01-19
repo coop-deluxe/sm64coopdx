@@ -6,75 +6,22 @@
 #include "game/first_person_cam.h"
 #include "game/hardcoded.h"
 #include "game/scroll_targets.h"
+#include "game/rendering_graph_node.h"
 #include "audio/external.h"
 #include "object_fields.h"
 #include "pc/djui/djui_hud_utils.h"
 #include "pc/lua/smlua.h"
-#include "pc/lua/smlua_cobject_map.h"
 #include "pc/lua/utils/smlua_anim_utils.h"
 #include "pc/lua/utils/smlua_collision_utils.h"
 #include "pc/lua/utils/smlua_obj_utils.h"
 #include "pc/mods/mods.h"
 
-#define LUA_VEC3S_FIELD_COUNT 3
-static struct LuaObjectField sVec3sFields[LUA_VEC3S_FIELD_COUNT] = {
-    { "x", LVT_S16, sizeof(s16) * 0, false, LOT_NONE },
-    { "y", LVT_S16, sizeof(s16) * 1, false, LOT_NONE },
-    { "z", LVT_S16, sizeof(s16) * 2, false, LOT_NONE },
-};
+extern struct LuaObjectTable sLuaObjectTable[LOT_MAX];
 
-#define LUA_VEC3F_FIELD_COUNT 3
-static struct LuaObjectField sVec3fFields[LUA_VEC3F_FIELD_COUNT] = {
-    { "x", LVT_F32, sizeof(f32) * 0, false, LOT_NONE },
-    { "y", LVT_F32, sizeof(f32) * 1, false, LOT_NONE },
-    { "z", LVT_F32, sizeof(f32) * 2, false, LOT_NONE },
-};
-
-#define LUA_VEC4S_FIELD_COUNT 4
-static struct LuaObjectField sVec4sFields[LUA_VEC4S_FIELD_COUNT] = {
-    { "x", LVT_S16, sizeof(s16) * 0, false, LOT_NONE },
-    { "y", LVT_S16, sizeof(s16) * 1, false, LOT_NONE },
-    { "z", LVT_S16, sizeof(s16) * 2, false, LOT_NONE },
-    { "w", LVT_S16, sizeof(s16) * 3, false, LOT_NONE },
-};
-
-#define LUA_VEC4F_FIELD_COUNT 4
-static struct LuaObjectField sVec4fFields[LUA_VEC4F_FIELD_COUNT] = {
-    { "x", LVT_F32, sizeof(f32) * 0, false, LOT_NONE },
-    { "y", LVT_F32, sizeof(f32) * 1, false, LOT_NONE },
-    { "z", LVT_F32, sizeof(f32) * 2, false, LOT_NONE },
-    { "w", LVT_F32, sizeof(f32) * 3, false, LOT_NONE },
-};
-
-#define LUA_MAT4_FIELD_COUNT 16
-static struct LuaObjectField sMat4Fields[LUA_MAT4_FIELD_COUNT] = {
-    { "a", LVT_F32, sizeof(f32) * 0, false, LOT_NONE },
-    { "b", LVT_F32, sizeof(f32) * 1, false, LOT_NONE },
-    { "c", LVT_F32, sizeof(f32) * 2, false, LOT_NONE },
-    { "d", LVT_F32, sizeof(f32) * 3, false, LOT_NONE },
-    { "e", LVT_F32, sizeof(f32) * 4, false, LOT_NONE },
-    { "f", LVT_F32, sizeof(f32) * 5, false, LOT_NONE },
-    { "g", LVT_F32, sizeof(f32) * 6, false, LOT_NONE },
-    { "h", LVT_F32, sizeof(f32) * 7, false, LOT_NONE },
-    { "i", LVT_F32, sizeof(f32) * 8, false, LOT_NONE },
-    { "j", LVT_F32, sizeof(f32) * 9, false, LOT_NONE },
-    { "k", LVT_F32, sizeof(f32) * 10, false, LOT_NONE },
-    { "l", LVT_F32, sizeof(f32) * 11, false, LOT_NONE },
-    { "m", LVT_F32, sizeof(f32) * 12, false, LOT_NONE },
-    { "n", LVT_F32, sizeof(f32) * 13, false, LOT_NONE },
-    { "o", LVT_F32, sizeof(f32) * 14, false, LOT_NONE },
-    { "p", LVT_F32, sizeof(f32) * 15, false, LOT_NONE },
-};
-
-
-struct LuaObjectTable sLuaObjectTable[LOT_MAX] = {
-    { LOT_NONE,  NULL,         0                     },
-    { LOT_VEC3S, sVec3sFields, LUA_VEC3S_FIELD_COUNT },
-    { LOT_VEC3F, sVec3fFields, LUA_VEC3F_FIELD_COUNT },
-    { LOT_VEC4S, sVec4sFields, LUA_VEC4S_FIELD_COUNT },
-    { LOT_VEC4F, sVec4fFields, LUA_VEC4F_FIELD_COUNT },
-    { LOT_MAT4,  sMat4Fields,  LUA_MAT4_FIELD_COUNT  },
-};
+int gSmLuaCObjects = 0;
+int gSmLuaCPointers = 0;
+int gSmLuaCObjectMetatable = 0;
+int gSmLuaCPointerMetatable = 0;
 
 struct LuaObjectField* smlua_get_object_field_from_ot(struct LuaObjectTable* ot, const char* key) {
     // binary search
@@ -381,26 +328,28 @@ struct LuaObjectField* smlua_get_custom_field(lua_State* L, u32 lot, int keyInde
 /////////////////////
 
 static int smlua__get_field(lua_State* L) {
-    LUA_STACK_CHECK_BEGIN();
+    LUA_STACK_CHECK_BEGIN_NUM(1);
 
-    CObject *cobj = lua_touserdata(L, 1);
+    const CObject *cobj = lua_touserdata(L, 1);
     enum LuaObjectType lot = cobj->lot;
     u64 pointer = (u64)(intptr_t) cobj->pointer;
 
-    const char *key = smlua_to_string(L, 2);
-    if (!gSmLuaConvertSuccess) {
+    const char *key = lua_tostring(L, 2);
+    if (!key) {
         LOG_LUA_LINE("Tried to get a non-string field of cobject");
         return 0;
     }
 
     // Legacy support
-    if (strcmp(key, "_pointer") == 0) {
-        lua_pushinteger(L, pointer);
-        return 1;
-    }
-    if (strcmp(key, "_lot") == 0) {
-        lua_pushinteger(L, cobj->lot);
-        return 1;
+    if (key[0] == '_') {
+        if (strcmp(key, "_lot") == 0) {
+            lua_pushinteger(L, lot);
+            return 1;
+        }
+        if (strcmp(key, "_pointer") == 0) {
+            lua_pushinteger(L, pointer);
+            return 1;
+        }
     }
 
     if (cobj->freed) {
@@ -416,8 +365,6 @@ static int smlua__get_field(lua_State* L) {
         LOG_LUA_LINE("_get_field on invalid key '%s', lot '%d'", key, lot);
         return 0;
     }
-
-    LUA_STACK_CHECK_END();
 
     u8* p = ((u8*)(intptr_t)pointer) + data->valueOffset;
     switch (data->valueType) {
@@ -463,18 +410,19 @@ static int smlua__get_field(lua_State* L) {
             return 0;
     }
 
+    LUA_STACK_CHECK_END();
     return 1;
 }
 
 static int smlua__set_field(lua_State* L) {
     LUA_STACK_CHECK_BEGIN();
 
-    CObject *cobj = lua_touserdata(L, 1);
+    const CObject *cobj = lua_touserdata(L, 1);
     enum LuaObjectType lot = cobj->lot;
     u64 pointer = (u64)(intptr_t) cobj->pointer;
 
-    const char *key = smlua_to_string(L, 2);
-    if (!gSmLuaConvertSuccess) {
+    const char *key = lua_tostring(L, 2);
+    if (!key) {
         LOG_LUA_LINE("Tried to set a non-string field of cobject");
         return 0;
     }
@@ -553,37 +501,27 @@ static int smlua__set_field(lua_State* L) {
 }
 
 int smlua__eq(lua_State *L) {
-    CObject *a = lua_touserdata(L, 1);
-    CObject *b = lua_touserdata(L, 2);
-    lua_pushboolean(L, a->lot == b->lot && a->pointer == b->pointer);
+    const CObject *a = lua_touserdata(L, 1);
+    const CObject *b = lua_touserdata(L, 2);
+    lua_pushboolean(L, a && b && a->lot == b->lot && a->pointer == b->pointer);
     return 1;
 }
 
-int smlua__gc(lua_State *L) {
-    CObject *cobj = lua_touserdata(L, 1);
-    if (!cobj->freed) {
-        switch (cobj->lot) {
-            case LOT_SURFACE: {
-                smlua_pointer_user_data_delete((uintptr_t) cobj->pointer);
-            }
-        }
-    }
-    return 0;
-}
-
 static int smlua_cpointer_get(lua_State* L) {
-    CPointer *cptr = lua_touserdata(L, 1);
-    const char *key = smlua_to_string(L, 2);
+    const CPointer *cptr = lua_touserdata(L, 1);
+    const char *key = lua_tostring(L, 2);
     if (key == NULL) { return 0; }
 
     // Legacy support
-    if (strcmp(key, "_pointer") == 0) {
-        lua_pushinteger(L, (u64)(intptr_t) cptr->pointer);
-        return 1;
-    }
-    if (strcmp(key, "_lot") == 0) {
-        lua_pushinteger(L, cptr->lvt);
-        return 1;
+    if (key[0] == '_') {
+        if (strcmp(key, "_pointer") == 0) {
+            lua_pushinteger(L, (u64)(intptr_t) cptr->pointer);
+            return 1;
+        }
+        if (strcmp(key, "_lot") == 0) {
+            lua_pushinteger(L, cptr->lvt);
+            return 1;
+        }
     }
 
     return 0;
@@ -597,26 +535,33 @@ static int smlua_cpointer_set(UNUSED lua_State* L) { return 0; }
 void smlua_cobject_init_globals(void) {
     lua_State* L = gLuaState;
 
+    // Create object pools
+    lua_newtable(L);
+    gSmLuaCObjects = luaL_ref(L, LUA_REGISTRYINDEX);
+    lua_newtable(L);
+    gSmLuaCPointers = luaL_ref(L, LUA_REGISTRYINDEX);
+
     // Create metatables
     luaL_newmetatable(L, "CObject");
     luaL_Reg cObjectMethods[] = {
         { "__index",    smlua__get_field },
         { "__newindex", smlua__set_field },
         { "__eq",       smlua__eq },
-        { "__gc",       smlua__gc },
+        { "__metatable", NULL },
         { NULL, NULL }
     };
     luaL_setfuncs(L, cObjectMethods, 0);
-    lua_pop(L, 1);
+    gSmLuaCObjectMetatable = luaL_ref(L, LUA_REGISTRYINDEX);
     luaL_newmetatable(L, "CPointer");
     luaL_Reg cPointerMethods[] = {
         { "__index",    smlua_cpointer_get },
         { "__newindex", smlua_cpointer_set },
         { "__eq",       smlua__eq },
+        { "__metatable", NULL },
         { NULL, NULL }
     };
     luaL_setfuncs(L, cPointerMethods, 0);
-    lua_pop(L, 1);
+    gSmLuaCPointerMetatable = luaL_ref(L, LUA_REGISTRYINDEX);
 
 #define EXPOSE_GLOBAL_ARRAY(lot, ptr, iterator) \
     { \
@@ -662,6 +607,10 @@ void smlua_cobject_init_globals(void) {
     EXPOSE_GLOBAL_ARRAY(LOT_CHARACTER, gCharacters, CT_MAX);
 
     EXPOSE_GLOBAL_ARRAY(LOT_CONTROLLER, gControllers, MAX_PLAYERS);
+
+    EXPOSE_GLOBAL_ARRAY(LOT_MAT4, gMatStack, MATRIX_STACK_SIZE);
+
+    EXPOSE_GLOBAL_ARRAY(LOT_MAT4, gMatStackPrev, MATRIX_STACK_SIZE);
 
     // Structs
 

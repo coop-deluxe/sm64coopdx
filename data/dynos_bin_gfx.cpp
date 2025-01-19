@@ -380,6 +380,13 @@ s64 DynOS_Gfx_ParseGfxConstants(const String& _Arg, bool* found) {
     gfx_constant(CALC_DXT(64,G_IM_SIZ_32b_BYTES));
     gfx_constant(CALC_DXT(128,G_IM_SIZ_32b_BYTES));
     gfx_constant(CALC_DXT(256,G_IM_SIZ_32b_BYTES));
+    gfx_constant(CALC_DXT_4b(4));
+    gfx_constant(CALC_DXT_4b(8));
+    gfx_constant(CALC_DXT_4b(16));
+    gfx_constant(CALC_DXT_4b(32));
+    gfx_constant(CALC_DXT_4b(64));
+    gfx_constant(CALC_DXT_4b(128));
+    gfx_constant(CALC_DXT_4b(256));
 
     *found = false;
     return 0;
@@ -747,7 +754,6 @@ static void UpdateTextureInfo(GfxData* aGfxData, s64 *aTexPtr, s32 aFormat, s32 
             return;
         }
 
-        aGfxData->mGfxContext.mCurrentPalette = aGfxData->mGfxContext.mCurrentTexture;
         aGfxData->mGfxContext.mCurrentTexture = (DataNode<TexData>*) (*aTexPtr);
     }
 
@@ -757,6 +763,12 @@ static void UpdateTextureInfo(GfxData* aGfxData, s64 *aTexPtr, s32 aFormat, s32 
         if (aSize   != -1) aGfxData->mGfxContext.mCurrentTexture->mData->mRawSize   = aSize;
         if (aWidth  != -1) aGfxData->mGfxContext.mCurrentTexture->mData->mRawWidth  = aWidth;
         if (aHeight != -1) aGfxData->mGfxContext.mCurrentTexture->mData->mRawHeight = aHeight;
+    }
+}
+
+static void SetCurrentTextureAsPalette(GfxData* aGfxData) {
+    if (aGfxData->mGfxContext.mCurrentTexture) {
+        aGfxData->mGfxContext.mCurrentPalette = aGfxData->mGfxContext.mCurrentTexture;
     }
 }
 
@@ -778,7 +790,6 @@ static void ParseGfxSymbol(GfxData* aGfxData, DataNode<Gfx>* aNode, Gfx*& aHead,
     gfx_symbol_1(gsSPNumLights, false);
     gfx_symbol_1(gsDPSetDepthSource, false);
     gfx_symbol_1(gsDPSetTextureLUT, false);
-    gfx_symbol_2(gsDPLoadTLUTCmd, false);
     gfx_symbol_5(gsDPLoadBlock);
     gfx_symbol_2(gsDPSetRenderMode, false);
     gfx_symbol_2(gsSPGeometryMode, false);
@@ -990,6 +1001,67 @@ static void ParseGfxSymbol(GfxData* aGfxData, DataNode<Gfx>* aNode, Gfx*& aHead,
         gDPPipeSync(aHead++);
         gDPSetTile(aHead++, _Arg1, _Arg2, ((((_Arg3) * arg2_4) + 7) >> 3), 0, G_TX_RENDERTILE, _Arg5, _Arg7, _Arg9, _ArgB, _Arg6, _Arg8, _ArgA);
         gDPSetTileSize(aHead++, G_TX_RENDERTILE, 0, 0, (((u64)_Arg3) - 1) << G_TEXTURE_IMAGE_FRAC, (((u64)_Arg4) - 1) << G_TEXTURE_IMAGE_FRAC);
+        return;
+    }
+    if (_Symbol == "gsDPLoadTLUTCmd") {
+        s64 _Arg0 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
+        s64 _Arg1 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
+        SetCurrentTextureAsPalette(aGfxData);
+
+        gDPLoadTLUTCmd(aHead++, _Arg0, _Arg1);
+        return;
+    }
+    if (_Symbol == "gsDPLoadTLUT_pal16") {
+        s64 _Arg0 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
+        s64 _Arg1 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
+        UpdateTextureInfo(aGfxData, &_Arg1, G_IM_FMT_RGBA, G_IM_SIZ_16b, -1, -1);
+        SetCurrentTextureAsPalette(aGfxData);
+
+        aGfxData->mPointerList.Add(aHead);
+        gDPSetTextureImage(aHead++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, _Arg1);
+        gDPTileSync(aHead++);
+        gDPSetTile(aHead++, 0, 0, 0, (256+(((_Arg0)&0xf)*16)), G_TX_LOADTILE, 0, 0, 0, 0, 0, 0, 0);
+        gDPLoadSync(aHead++);
+        gDPLoadTLUTCmd(aHead++, G_TX_LOADTILE, 15);
+        gDPPipeSync(aHead++);
+        return;
+    }
+    if (_Symbol == "gsDPLoadTLUT_pal256") {
+        s64 _Arg0 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
+        UpdateTextureInfo(aGfxData, &_Arg0, G_IM_FMT_RGBA, G_IM_SIZ_16b, -1, -1);
+        SetCurrentTextureAsPalette(aGfxData);
+
+        aGfxData->mPointerList.Add(aHead);
+        gDPSetTextureImage(aHead++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, _Arg0);
+        gDPTileSync(aHead++);
+        gDPSetTile(aHead++, 0, 0, 0, 256, G_TX_LOADTILE, 0 , 0, 0, 0, 0, 0, 0);
+        gDPLoadSync(aHead++);
+        gDPLoadTLUTCmd(aHead++, G_TX_LOADTILE, 255);
+        gDPPipeSync(aHead++);
+        return;
+    }
+    if (_Symbol == "gsDPLoadTextureBlock_4b") {
+        s64 _Arg0 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
+        s64 _Arg1 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
+        s64 _Arg2 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
+        s64 _Arg3 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
+        s64 _Arg4 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
+        s64 _Arg5 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
+        s64 _Arg6 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
+        s64 _Arg7 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
+        s64 _Arg8 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
+        s64 _Arg9 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
+        s64 _ArgA = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
+        UpdateTextureInfo(aGfxData, &_Arg0, (s32) _Arg1, G_IM_SIZ_4b, (s32) _Arg2, (s32) _Arg3);
+
+        aGfxData->mPointerList.Add(aHead);
+        gDPSetTextureImage(aHead++, _Arg1, G_IM_SIZ_4b, 1, _Arg0);
+        gDPSetTile(aHead++, _Arg1, G_IM_SIZ_4b, 0, 0, G_TX_LOADTILE, 0, _Arg6, _Arg8, _ArgA, _Arg5, _Arg7, _Arg9);
+        gDPLoadSync(aHead++);
+        gDPLoadBlock(aHead++, G_TX_LOADTILE, 0, 0, (((_Arg2) * (_Arg3) + 3) >> 2) - 1, CALC_DXT_4b(_Arg2));
+        gDPPipeSync(aHead++);
+        gDPSetTile(aHead++, _Arg1, G_IM_SIZ_4b, ((((_Arg2) >> 1) + 7) >> 3), 0, G_TX_RENDERTILE, _Arg4, _Arg6, _Arg8, _ArgA, _Arg5, _Arg7, _Arg9);
+        gDPSetTileSize(aHead++, G_TX_RENDERTILE, 0, 0, (((u64)_Arg2) - 1) << G_TEXTURE_IMAGE_FRAC, (((u64)_Arg3) - 1) << G_TEXTURE_IMAGE_FRAC);
         return;
     }
 

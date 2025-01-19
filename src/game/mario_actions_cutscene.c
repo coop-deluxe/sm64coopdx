@@ -90,6 +90,9 @@ static Vec4s sJumboStarKeyframes[27] = {
  * character is a null character (equal to 0), stop counting the length since
  * that's the end of the string.
  */
+/* |description|
+Calculates the pixel width of a given credits string. Each space is counted as 4 pixels, and any other character as 7 pixels. Stops counting at the null terminator
+|descriptionEnd| */
 s32 get_credits_str_width(char *str) {
     if (!str) { return 0; }
     u32 c;
@@ -184,6 +187,9 @@ void print_displaying_credits_entry(void) {
     }
 }
 
+/* |description|
+Handles Peach's final cutscene animation. Cycles through frames based on the global `sEndPeachAnimation` value
+|descriptionEnd| */
 void bhv_end_peach_loop(void) {
     cur_obj_init_animation_with_sound(sEndPeachAnimation);
     if (cur_obj_check_if_near_animation_end()) {
@@ -194,6 +200,9 @@ void bhv_end_peach_loop(void) {
     }
 }
 
+/* |description|
+Handles Toad's final cutscene animation. Chooses which animation index to use based on Toad's x-position, then progresses through the animation frames as it nears completion
+|descriptionEnd| */
 void bhv_end_toad_loop(void) {
     if (!gCurrentObject) { return; }
     s32 toadAnimIndex = (gCurrentObject->oPosX >= 0.0f);
@@ -241,6 +250,9 @@ static void stub_is_textbox_active(u16 *a0) {
  * if so, return the dialog ID. Otherwise, return 0. A dialog is returned if
  * numStars has reached a milestone and prevNumStarsForDialog has not reached it.
  */
+/* |description|
+Determines which (if any) dialog to show when Mario collects a star. Checks milestone star counts against `prevNumStarsForDialog`, and returns a dialog ID if a milestone is reached. Otherwise, returns 0
+|descriptionEnd| */
 s32 get_star_collection_dialog(struct MarioState *m) {
     if (!m) { return 0; }
     s32 dialogID = 0;
@@ -274,6 +286,9 @@ s32 get_star_collection_dialog(struct MarioState *m) {
 }
 
 // save menu handler
+/* |description|
+Handles interactions with the save menu after collecting a star/key. Checks the user's selection (e.g., Save and Continue) and performs the corresponding action, such as saving the file or returning Mario to idle
+|descriptionEnd| */
 void handle_save_menu(struct MarioState *m) {
     if (!m) { return; }
 
@@ -332,6 +347,9 @@ struct Object *spawn_obj_at_mario_rel_yaw(struct MarioState *m, s32 model, const
  * Clears "cap on head" flag, sets "cap in hand" flag, plays sound
  * SOUND_ACTION_UNKNOWN43D.
  */
+/* |description|
+Transitions Mario's state from wearing the cap on his head to holding it in his hand. Clears the `MARIO_CAP_ON_HEAD` flag, sets the `MARIO_CAP_IN_HAND` flag, and plays the 'take cap off' sound
+|descriptionEnd| */
 void cutscene_take_cap_off(struct MarioState *m) {
     if (!m) { return; }
     m->flags &= ~MARIO_CAP_ON_HEAD;
@@ -344,6 +362,9 @@ void cutscene_take_cap_off(struct MarioState *m) {
  * Clears "cap in hand" flag, sets "cap on head" flag, plays sound
  * SOUND_ACTION_UNKNOWN43E.
  */
+/* |description|
+Transitions Mario's state from having the cap in his hand to wearing it on his head. Clears the `MARIO_CAP_IN_HAND` flag, sets the `MARIO_CAP_ON_HEAD` flag, and plays the 'put cap on' sound
+|descriptionEnd| */
 void cutscene_put_cap_on(struct MarioState *m) {
     if (!m) { return; }
     m->flags &= ~MARIO_CAP_IN_HAND;
@@ -361,6 +382,9 @@ void cutscene_put_cap_on(struct MarioState *m) {
  * 2: Mario mat not be riding a shell or be invulnerable.
  * 3: Mario must not be in first person mode.
  */
+/* |description|
+Checks if Mario's current action allows him to speak. For Mario to be ready, his action must be in a 'stationary' or 'moving' group (or waiting for dialog), and he must not be riding a shell, invulnerable, or in first-person mode
+|descriptionEnd| */
 s32 mario_ready_to_speak(struct MarioState* m) {
     if (!m) { return FALSE; }
     u32 actionGroup = m->action & ACT_GROUP_MASK;
@@ -376,6 +400,9 @@ s32 mario_ready_to_speak(struct MarioState* m) {
     return isReadyToSpeak;
 }
 
+/* |description|
+Checks if the dialog from a specified `object` should start or continue for this particular Mario. Ensures Mario is visible to enemies (i.e., not in certain invulnerable states) and, for remote players, validates the correct dialog object
+|descriptionEnd| */
 u8 should_start_or_continue_dialog(struct MarioState* m, struct Object* object) {
     if (!m) { return FALSE; }
     if (!m->visibleToEnemies) { return FALSE; }
@@ -688,6 +715,9 @@ s32 act_debug_free_move(struct MarioState *m) {
     return FALSE;
 }
 
+/* |description|
+Manages the star collection dance sequence for Mario, both on land and in water. Plays music, spawns the celebration star, increments the star count, and triggers level exits or dialogs at the correct times
+|descriptionEnd| */
 void general_star_dance_handler(struct MarioState *m, s32 isInWater) {
     if (m == NULL) { return; }
 
@@ -808,6 +838,9 @@ s32 act_fall_after_star_grab(struct MarioState *m) {
     return FALSE;
 }
 
+/* |description|
+Handles shared logic for Mario's various death states. Plays the specified death animation (`animation`), checks for a specific frame (`frameToDeathWarp`) to trigger a warp or bubble state if allowed, and sets Mario's eye state to 'dead'
+|descriptionEnd| */
 s32 common_death_handler(struct MarioState *m, s32 animation, s32 frameToDeathWarp) {
     if (!m) { return 0; }
     s32 animFrame = set_character_animation(m, animation);
@@ -933,6 +966,9 @@ s32 act_eaten_by_bubba(struct MarioState *m) {
 
 // set animation and forwardVel; when perform_air_step returns AIR_STEP_LANDED,
 // set the new action
+/* |description|
+Launches Mario forward with a given velocity (`forwardVel`) and sets his animation. Continues moving him through the air until he lands, then changes Mario's action to `endAction`
+|descriptionEnd| */
 s32 launch_mario_until_land(struct MarioState *m, s32 endAction, s32 animation, f32 forwardVel) {
     s32 airStepLanded;
     mario_set_forward_vel(m, forwardVel);
@@ -1905,6 +1941,9 @@ s32 act_taking_off_cap(struct MarioState *m) {
     return FALSE;
 }
 
+/* |description|
+Handles the cutscene and animation sequence for when Mario is stuck in the ground (head, butt, or feet). Plays a designated `animation`, checks specific frames (`unstuckFrame`, `target2`, `target3`) for sound effects or transitions, and frees Mario to the `endAction` once the animation completes
+|descriptionEnd| */
 void stuck_in_ground_handler(struct MarioState *m, s32 animation, s32 unstuckFrame, s32 target2,
                              s32 target3, s32 endAction) {
     if (!m) { return; }
@@ -2324,6 +2363,9 @@ static s32 act_jumbo_star_cutscene(struct MarioState *m) {
     return FALSE;
 }
 
+/* |description|
+Spawns yellow sparkles in a circular pattern around a specified point (`x`, `y`, `z`) within a given `radius`. Frequently seen during end cutscenes when objects like stars or Peach appear
+|descriptionEnd| */
 void generate_yellow_sparkles(s16 x, s16 y, s16 z, f32 radius) {
     static s32 sSparkleGenTheta = 0;
     static s32 sSparkleGenPhi = 0;
@@ -3102,6 +3144,9 @@ static s32 check_for_instant_quicksand(struct MarioState *m) {
     return FALSE;
 }
 
+/* |description|
+Executes Mario's current cutscene action based on his `action` field. Includes various story-related sequences like entering doors, collecting stars, and final boss cutscenes. Delegates to the appropriate function for each cutscene action
+|descriptionEnd| */
 s32 mario_execute_cutscene_action(struct MarioState *m) {
     if (!m) { return FALSE; }
 

@@ -18,6 +18,7 @@
 #include "pc/djui/djui_lua_profiler.h"
 #include "pc/djui/djui_panel.h"
 #include "pc/configfile.h"
+#include "pc/utils/misc.h"
 
 #include "../mods/mods.h"
 #include "game/print.h"
@@ -42,6 +43,7 @@ int smlua_call_hook(lua_State* L, int nargs, int nresults, int errfunc, struct M
     struct Mod* prev = gLuaActiveMod;
     gLuaActiveMod = activeMod;
     gLuaLastHookMod = activeMod;
+    gPcDebug.lastModRun = activeMod;
 
     lua_profiler_start_counter(activeMod);
 
@@ -1048,6 +1050,28 @@ void smlua_call_event_hooks_graph_node_object_and_int_param(enum LuaHookedEventT
     }
 }
 
+void smlua_call_event_hooks_graph_node_and_int_param(enum LuaHookedEventType hookType, struct GraphNode* node, s16 matIndex) {
+    lua_State* L = gLuaState;
+    if (L == NULL) { return; }
+    struct LuaHookedEvent* hook = &sHookedEvents[hookType];
+    for (int i = 0; i < hook->count; i++) {
+        // push the callback onto the stack
+        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
+
+        // push graph node
+        smlua_push_object(L, LOT_GRAPHNODE, node);
+
+        // push mat index
+        lua_pushinteger(L, matIndex);
+
+        // call the callback
+        if (0 != smlua_call_hook(L, 2, 0, 0, hook->mod[i])) {
+            LOG_LUA("Failed to call the callback: %u", hookType);
+            continue;
+        }
+    }
+}
+
 const char *smlua_call_event_hooks_int_ret_bool_and_string(enum LuaHookedEventType hookType, s32 param, bool* returnValue) {
     lua_State* L = gLuaState;
     if (L == NULL) { return NULL; }
@@ -1714,21 +1738,6 @@ void smlua_display_chat_commands(void) {
     }
 }
 
-char* remove_color_codes(const char* str) {
-    char* result = strdup(str);
-    char* startColor;
-    while ((startColor = strstr(result, "\\#"))) {
-        char* endColor = strstr(startColor + 2, "\\");
-        if (endColor) {
-            memmove(startColor, endColor + 1, strlen(endColor + 1) + 1);
-        } else {
-            *startColor = '\0';
-            break;
-        }
-    }
-    return result;
-}
-
 bool is_valid_subcommand(const char* start, const char* end) {
     for (const char* ptr = start; ptr < end; ptr++) {
         if (isspace(*ptr) || *ptr == '\0') {
@@ -1828,7 +1837,7 @@ char** smlua_get_chat_subcommands_list(const char* maincommand) {
     for (s32 i = 0; i < sHookedChatCommandsCount; i++) {
         struct LuaHookedChatCommand* hook = &sHookedChatCommands[i];
         if (strcmp(hook->command, maincommand) == 0) {
-            char* noColorsDesc = remove_color_codes(hook->description);
+            char* noColorsDesc = str_remove_color_codes(hook->description);
             char* startSubcommands = strstr(noColorsDesc, "[");
             char* endSubcommands = strstr(noColorsDesc, "]");
 

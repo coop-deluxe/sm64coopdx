@@ -5,7 +5,6 @@
 
 #ifdef _WIN32
 #define DISCORD_ID_FORMAT "%lld"
-#include <Windows.h>
 #else
 #define DISCORD_ID_FORMAT "%ld"
 #endif

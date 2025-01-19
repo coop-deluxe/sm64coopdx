@@ -1,4 +1,7 @@
-if incompatibleClient then return end
+if incompatibleClient then return 0 end
+
+-- localize functions to improve performance - z-voice.lua
+local type,audio_sample_stop,audio_sample_load,math_random,audio_sample_play,is_game_paused,table_insert,play_character_sound = type,audio_sample_stop,audio_sample_load,math.random,audio_sample_play,is_game_paused,table.insert,play_character_sound
 
 -- rewritten custom voice system for Character Select
 -- by Agent X
@@ -9,6 +12,23 @@ local SLEEP_TALK_SNORES = 8
 local STARTING_SNORE = 46
 local SLEEP_TALK_START = STARTING_SNORE + 49
 local SLEEP_TALK_END = SLEEP_TALK_START + SLEEP_TALK_SNORES
+local stallTimer = 0
+local stallSayLine = 5
+
+local TYPE_TABLE = "table"
+local TYPE_USERDATA = "userdata"
+local TYPE_STRING = "string"
+local function check_sound_exists(sound)
+    if sound == nil then return false end
+    local soundType = type(sound)
+    if soundType == TYPE_USERDATA and sound._pointer ~= nil then
+        return true
+    elseif soundType == TYPE_STRING then
+        sound = "sound/"..sound
+        return (mod_file_exists(sound))
+    end
+    return false
+end
 
 local function stop_all_custom_character_sounds()
     -- run through each player
@@ -54,44 +74,68 @@ end
     end
 end]]
 
+local playerSample = {}
+for i = 0, MAX_PLAYERS - 1 do
+    playerSample[i] = nil
+end
+
 --- @param m MarioState
 --- @param sound CharacterSound
 local function custom_character_sound(m, sound)
+    if m.playerIndex == 0 then
+        if stallTimer < stallSayLine - 1 then
+            return NO_SOUND
+        end
+    end
+    local index = m.playerIndex
+    if check_sound_exists(playerSample[index]) and type(playerSample[index]) ~= TYPE_STRING then
+        audio_sample_stop(playerSample[index])
+    end
     if optionTable[optionTableRef.localVoices].toggle == 0 then return NO_SOUND end
 
     -- get the voice table
     local voiceTable = character_get_voice(m)
+    if voiceTable == nil then return end
     -- load samples that haven't been loaded
     for voice, name in pairs(voiceTable) do
-        if type(voiceTable[voice]) == "string" then
-            voiceTable[voice] = audio_sample_load(name)
+        if check_sound_exists(voiceTable[voice]) and type(voiceTable[voice]) == "string" then
+            local load = audio_sample_load(name)
+            if load ~= nil then
+                voiceTable[voice] = load
+            end
         end
     end
 
     -- get the sample to play
     local voice = voiceTable[sound]
     if voice == nil then return NO_SOUND end
-    local sample = voice
+    playerSample[index] = voice
     -- if there's no pointer then it must be a sound clip table
-    if voice._pointer == nil then
+    if voice._pointer == nil and type(voice) ~= TYPE_STRING then
         -- run through each sample and load in any samples that haven't been loaded
         for i, name in pairs(voice) do
-            if type(voice[i]) == "string" then
-                voice[i] = audio_sample_load(name)
+            if check_sound_exists(voice[i]) and type(voice[i]) == "string" then
+                local load = audio_sample_load(name)
+                if load ~= nil then
+                    voice[i] = load
+                end
             end
         end
-        -- choose a random sample
-        sample = voice[math.random(#voice)]
+        if #voice ~= 0 then
+            -- choose a random sample
+            playerSample[index] = voice[math_random(#voice)]
+        end
     end
 
-    -- play the sample
-    audio_sample_stop(sample)
-    if sound == CHAR_SOUND_SNORING1 or sound == CHAR_SOUND_SNORING2 or sound == CHAR_SOUND_SNORING3 then
-        audio_sample_play(sample, m.pos, 0.5)
-    else
-        audio_sample_play(sample, m.pos, 1.0)
+    -- Play the sample
+    if check_sound_exists(playerSample[index]) then
+        if sound == CHAR_SOUND_SNORING1 or sound == CHAR_SOUND_SNORING2 or sound == CHAR_SOUND_SNORING3 then
+            audio_sample_play(playerSample[index], m.pos, 0.5)
+        else
+            audio_sample_play(playerSample[index], m.pos, 1.0)
+        end
+        return NO_SOUND
     end
-    return NO_SOUND
 end
 
 --- @param m MarioState
@@ -99,25 +143,19 @@ local function custom_character_snore(m)
     if is_game_paused() or optionTable[optionTableRef.localVoices].toggle == 0 then return end
 
     if m.action ~= ACT_SLEEPING then
-        -- if m.isSnoring ~= 0 then
-        --     stop_custom_character_sound(m, CHAR_SOUND_SNORING1)
-        --     stop_custom_character_sound(m, CHAR_SOUND_SNORING2)
-        --     stop_custom_character_sound(m, CHAR_SOUND_SNORING3)
-        -- end
         return
     elseif m.actionState ~= 2 or (m.flags & MARIO_MARIO_SOUND_PLAYED) == 0 then
         return
     end
 
     local voice = character_get_voice(m)
+    if voice == nil then return end
     local snoreTable = voice[CHAR_SOUND_SNORING3]
-    -- for some reason CS seemed to originally expect snoring to all be under SNORING3 for some reason???
-    -- if there's a pointer then it can't be a sound clip table
     if snoreTable == nil or snoreTable._pointer ~= nil then
         snoreTable = {}
         for i = CHAR_SOUND_SNORING1, CHAR_SOUND_SNORING3 do
             if voice[i] ~= nil then
-                table.insert(snoreTable, voice[i])
+                table_insert(snoreTable, voice[i])
             end
         end
     end
@@ -162,3 +200,22 @@ _G.charSelect.voice = {
     sound = custom_character_sound,
     snore = custom_character_snore,
 }
+
+-- Must be ran on startup
+local function config_character_sounds()
+    hook_event(HOOK_CHARACTER_SOUND, custom_character_sound)
+    hook_event(HOOK_MARIO_UPDATE, custom_character_snore)
+end
+_G.charSelect.config_character_sounds = config_character_sounds
+
+-- Join sound
+local function mario_update(m)
+    if m.playerIndex ~= 0 then return end
+    if stallTimer == stallSayLine then
+        play_character_sound(m, CHAR_SOUND_OKEY_DOKEY)
+        stallTimer = stallTimer + 1
+    elseif stallTimer < stallSayLine then
+        stallTimer = stallTimer + 1
+    end
+end
+hook_event(HOOK_MARIO_UPDATE, mario_update)

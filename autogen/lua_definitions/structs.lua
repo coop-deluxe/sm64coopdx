@@ -584,6 +584,10 @@
 --- @field public second integer
 --- @field public year integer
 
+--- @class DisplayListNode
+--- @field public next DisplayListNode
+--- @field public usingCamSpace integer
+
 --- @class DjuiColor
 --- @field public a integer
 --- @field public b integer
@@ -637,6 +641,9 @@
 --- @field public normalY number
 --- @field public normalZ number
 --- @field public originOffset number
+
+--- @class FnGraphNode
+--- @field public node GraphNode
 
 --- @class GlobalObjectAnimations
 --- @field public amp_seg8_anims_08004034 Pointer_ObjectAnimPointer
@@ -819,10 +826,66 @@
 --- @field public children GraphNode
 --- @field public extraFlags integer
 --- @field public flags integer
+--- @field public hookProcess integer
 --- @field public next GraphNode
 --- @field public parent GraphNode
 --- @field public prev GraphNode
 --- @field public type integer
+
+--- @class GraphNodeAnimatedPart
+--- @field public node GraphNode
+--- @field public translation Vec3s
+
+--- @class GraphNodeBackground
+--- @field public background integer
+--- @field public fnNode FnGraphNode
+--- @field public prevCameraFocus Vec3f
+--- @field public prevCameraPos Vec3f
+--- @field public prevCameraTimestamp integer
+--- @field public unused integer
+
+--- @class GraphNodeBillboard
+--- @field public node GraphNode
+--- @field public translation Vec3s
+
+--- @class GraphNodeCamera
+--- @field public fnNode FnGraphNode
+--- @field public focus Vec3f
+--- @field public matrixPtr Pointer_Mat4
+--- @field public matrixPtrPrev Pointer_Mat4
+--- @field public pos Vec3f
+--- @field public prevFocus Vec3f
+--- @field public prevPos Vec3f
+--- @field public prevTimestamp integer
+--- @field public roll integer
+--- @field public rollScreen integer
+
+--- @class GraphNodeCullingRadius
+--- @field public cullingRadius integer
+--- @field public node GraphNode
+
+--- @class GraphNodeDisplayList
+--- @field public node GraphNode
+
+--- @class GraphNodeGenerated
+--- @field public fnNode FnGraphNode
+--- @field public parameter integer
+
+--- @class GraphNodeHeldObject
+--- @field public fnNode FnGraphNode
+--- @field public objNode Object
+--- @field public playerIndex integer
+--- @field public prevShadowPos Vec3f
+--- @field public prevShadowPosTimestamp integer
+--- @field public translation Vec3s
+
+--- @class GraphNodeLevelOfDetail
+--- @field public maxDistance integer
+--- @field public minDistance integer
+--- @field public node GraphNode
+
+--- @class GraphNodeMasterList
+--- @field public node GraphNode
 
 --- @class GraphNodeObject
 --- @field public activeAreaIndex integer
@@ -852,6 +915,58 @@
 --- @field public throwMatrix Pointer_Mat4
 --- @field public throwMatrixPrev Pointer_Mat4
 --- @field public unk4C SpawnInfo
+
+--- @class GraphNodeObjectParent
+--- @field public node GraphNode
+--- @field public sharedChild GraphNode
+
+--- @class GraphNodeOrthoProjection
+--- @field public node GraphNode
+--- @field public scale number
+
+--- @class GraphNodePerspective
+--- @field public far integer
+--- @field public fnNode FnGraphNode
+--- @field public fov number
+--- @field public near integer
+--- @field public prevFov number
+--- @field public prevTimestamp number
+--- @field public unused integer
+
+--- @class GraphNodeRotation
+--- @field public node GraphNode
+--- @field public prevRotation Vec3s
+--- @field public prevTimestamp integer
+--- @field public rotation Vec3s
+
+--- @class GraphNodeScale
+--- @field public node GraphNode
+--- @field public prevScale number
+--- @field public scale number
+
+--- @class GraphNodeShadow
+--- @field public node GraphNode
+--- @field public shadowScale integer
+--- @field public shadowSolidity integer
+--- @field public shadowType integer
+
+--- @class GraphNodeStart
+--- @field public node GraphNode
+
+--- @class GraphNodeSwitchCase
+--- @field public fnNode FnGraphNode
+--- @field public numCases integer
+--- @field public selectedCase integer
+--- @field public unused integer
+
+--- @class GraphNodeTranslation
+--- @field public node GraphNode
+--- @field public translation Vec3s
+
+--- @class GraphNodeTranslationRotation
+--- @field public node GraphNode
+--- @field public rotation Vec3s
+--- @field public translation Vec3s
 
 --- @class GraphNode_802A45E4
 --- @field public unk18 integer
@@ -1003,6 +1118,7 @@
 --- @field public shadeR integer
 --- @field public torsoAngle Vec3s
 --- @field public torsoPos Vec3f
+--- @field public updateHeadPosTime integer
 --- @field public updateTorsoTime integer
 --- @field public wingFlutter integer
 
@@ -2229,20 +2345,54 @@
 --- @field public unk00 integer
 --- @field public unk02 integer
 
+--- @class Vec2f
+--- @field public x number
+--- @field public y number
+
 --- @class Vec3f
 --- @field public x number
 --- @field public y number
 --- @field public z number
+
+--- @class Vec4f
+--- @field public x number
+--- @field public y number
+--- @field public z number
+--- @field public w number
 
 --- @class Vec3s
 --- @field public x integer
 --- @field public y integer
 --- @field public z integer
 
+--- @class Vec4s
+--- @field public x integer
+--- @field public y integer
+--- @field public z integer
+--- @field public w integer
+
+--- @class Mat4
+--- @field public m00 number
+--- @field public m01 number
+--- @field public m02 number
+--- @field public m03 number
+--- @field public m10 number
+--- @field public m11 number
+--- @field public m12 number
+--- @field public m13 number
+--- @field public m20 number
+--- @field public m21 number
+--- @field public m22 number
+--- @field public m23 number
+--- @field public m30 number
+--- @field public m31 number
+--- @field public m32 number
+--- @field public m33 number
+
 --- @class Color
---- @field public b integer
---- @field public g integer
 --- @field public r integer
+--- @field public g integer
+--- @field public b integer
 
 --- @class Pointer_integer
 --- @class Pointer_Trajectory

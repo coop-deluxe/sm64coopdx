@@ -3509,7 +3509,6 @@ function set_environmental_camera_shake(shake)
 end
 
 --- @param preset integer
---- Transitions the camera to the next Lakitu state, updating position and focus. This function handles smooth transitions between different gameplay scenarios
 function set_fixed_cam_axis_sa_lobby(preset)
     -- ...
 end
@@ -4279,24 +4278,28 @@ end
 --- @param m MarioState
 --- @param o Object
 --- @return integer
+--- Determines how Mario interacts with a given object based on his current action, position, and other state variables. Calculates the appropriate interaction type (e.g., punch, kick, ground pound) that should result from Mario's contact with the specified object (`o`). Useful for handling different types of player-object collisions, attacks, and object behaviors
 function determine_interaction(m, o)
     -- ...
 end
 
 --- @param m MarioState
 --- @return integer
+--- Checks if Mario is currently wearing his normal cap on his head. Returns true if Mario's flag state matches that of having the normal cap equipped on his head, otherwise false. Useful for determining Mario's cap status
 function does_mario_have_normal_cap_on_head(m)
     -- ...
 end
 
 --- @param door Object
 --- @return integer
+--- Retrieves the save file flag associated with a door, based on the number of stars required to open it. Used to check if the player has unlocked certain star doors or progressed far enough to access new areas
 function get_door_save_file_flag(door)
     -- ...
 end
 
 --- @param capObject Object
 --- @return integer
+--- Determines the type of cap an object represents. Depending on the object's behavior, it returns a cap type (normal, metal, wing, vanish). Useful for handling the logic of picking up, wearing, or losing different kinds of caps
 function get_mario_cap_flag(capObject)
     -- ...
 end
@@ -4305,6 +4308,7 @@ end
 --- @param interactType integer
 --- @param o Object
 --- @return integer
+--- Handles Mario's interaction with the Boo's Big Haunt (BBH) entrance object. When Mario tries to enter the BBH area, this function determines the resulting action (e.g., a jump or spin entrance)
 function interact_bbh_entrance(m, interactType, o)
     -- ...
 end
@@ -4313,6 +4317,7 @@ end
 --- @param interactType integer
 --- @param o Object
 --- @return integer
+--- Handles interactions where Mario bounces off the top of an object (e.g., Goombas, Koopas). Checks if Mario attacks the object from above and applies the appropriate knockback, sound effects, and object state changes. Useful for enemy defeat mechanics and platform bouncing
 function interact_bounce_top(m, interactType, o)
     -- ...
 end
@@ -4321,6 +4326,7 @@ end
 --- @param interactType integer
 --- @param o Object
 --- @return integer
+--- Handles interactions with breakable objects (e.g., breakable boxes or bob-ombs). If Mario hits the object with a valid attack (like a punch or kick), the object is destroyed or changes state. Useful for managing collectible items hidden in breakable objects and level progression through destructible blocks or walls
 function interact_breakable(m, interactType, o)
     -- ...
 end
@@ -4329,6 +4335,7 @@ end
 --- @param interactType integer
 --- @param o Object
 --- @return integer
+--- Handles interaction with Bully enemies. Determines if Mario attacks the Bully or gets knocked back. Updates Mario's velocity and state accordingly, and can defeat the Bully if attacked successfully. Useful for enemy encounters that involve pushing and shoving mechanics rather than just stomping like the bullies
 function interact_bully(m, interactType, o)
     -- ...
 end
@@ -4337,6 +4344,7 @@ end
 --- @param interactType integer
 --- @param o Object
 --- @return integer
+--- Handles interaction when Mario touches a cannon base. If the cannon is ready, Mario enters the cannon, triggering a special action and camera behavior. Useful for transitioning to cannon-aiming mode and enabling cannon travel within levels
 function interact_cannon_base(m, interactType, o)
     -- ...
 end
@@ -4345,6 +4353,7 @@ end
 --- @param interactType integer
 --- @param o Object
 --- @return integer
+--- Handles interaction when Mario picks up a cap object. This includes normal caps, wing caps, vanish caps, and metal caps. Updates Mario's state (e.g., cap timers, sound effects) and may initiate putting on the cap animation. Useful for managing cap statuses
 function interact_cap(m, interactType, o)
     -- ...
 end
@@ -4353,6 +4362,7 @@ end
 --- @param interactType integer
 --- @param o Object
 --- @return integer
+--- Handles interactions with objects like Clams or Bubbas, which can damage Mario or, in Bubba's case, eat Mario. If Bubba eats Mario, it triggers a unique "caught" action. Otherwise, it deals damage and knockback if hit by a Clam
 function interact_clam_or_bubba(m, interactType, o)
     -- ...
 end
@@ -4361,6 +4371,7 @@ end
 --- @param interactType integer
 --- @param o Object
 --- @return integer
+--- Handles Mario's interaction with coins. Collecting a coin increases Mario's coin count and heals him slightly. Useful for score, and coin management
 function interact_coin(m, interactType, o)
     -- ...
 end
@@ -4369,6 +4380,7 @@ end
 --- @param interactType integer
 --- @param o Object
 --- @return integer
+--- Handles damaging interactions from various objects (e.g., enemies, hazards). If Mario takes damage, it applies knockback and reduces health. Useful for enemy attacks, environmental hazards, and managing damage related behaviors
 function interact_damage(m, interactType, o)
     -- ...
 end
@@ -4377,6 +4389,7 @@ end
 --- @param interactType integer
 --- @param o Object
 --- @return integer
+--- Handles interaction when Mario touches a door. If Mario meets the star requirement or has the key, he can unlock/open the door. Otherwise, it may display dialog indicating the requirement. Useful for controlling access to locked areas and providing progression gating in the game
 function interact_door(m, interactType, o)
     -- ...
 end
@@ -4385,6 +4398,7 @@ end
 --- @param interactType integer
 --- @param o Object
 --- @return integer
+--- Handles interaction with flame objects. If Mario touches a flame and is not invulnerable or protected by certain caps, he takes damage and may be set on fire, causing a burning jump. Useful for simulating fire damage and hazards in levels
 function interact_flame(m, interactType, o)
     -- ...
 end
@@ -4393,6 +4407,7 @@ end
 --- @param interactType integer
 --- @param o Object
 --- @return integer
+--- Handles interaction with grabbable objects (e.g., crates, small enemies, or Bowser). Checks if Mario can pick up the object and initiates the grab action if possible. Useful for course mechanics, throwing items, and Bowser
 function interact_grabbable(m, interactType, o)
     -- ...
 end
@@ -4401,6 +4416,7 @@ end
 --- @param interactType integer
 --- @param o Object
 --- @return integer
+--- Handles interactions where Mario hits an object from below (e.g., hitting a block from underneath). Determines if Mario damages/destroys the object, or if it damages Mario. Useful for handling upward attacks, hitting coin blocks, or interacting with certain NPCs from below
 function interact_hit_from_below(m, interactType, o)
     -- ...
 end
@@ -4409,6 +4425,7 @@ end
 --- @param interactType integer
 --- @param o Object
 --- @return integer
+--- Handles interaction with Hoot, the owl. If Mario can grab onto Hoot, this sets Mario onto a riding action, allowing him to fly around the level. Useful for special traversal mechanics and shortcuts within a course
 function interact_hoot(m, interactType, o)
     -- ...
 end
@@ -4417,6 +4434,7 @@ end
 --- @param interactType integer
 --- @param o Object
 --- @return integer
+--- Handles interaction with the igloo barrier found in Snowman's Land. If Mario runs into the barrier, this function pushes him away and prevents passage without the vanish cap. Useful for enforcing require-caps to access certain areas
 function interact_igloo_barrier(m, interactType, o)
     -- ...
 end
@@ -4425,6 +4443,7 @@ end
 --- @param interactType integer
 --- @param o Object
 --- @return integer
+--- Handles interaction when Mario touches a Koopa Shell. If conditions are met, Mario can hop onto the shell and start riding it, changing his movement mechanics. Useful for implementing Koopa Shell behavior
 function interact_koopa_shell(m, interactType, o)
     -- ...
 end
@@ -4433,6 +4452,7 @@ end
 --- @param interactType integer
 --- @param o Object
 --- @return integer
+--- Handles interaction with Mr. Blizzard (the snowman enemy) or similar objects. If Mario is attacked or collides with Mr. Blizzard, it applies damage and knockback if not protected or attacking
 function interact_mr_blizzard(m, interactType, o)
     -- ...
 end
@@ -4441,6 +4461,7 @@ end
 --- @param interactType integer
 --- @param o Object
 --- @return integer
+--- Handles interaction with another player (in multiplayer scenarios). Checks if Mario and another player collide and resolves any special behavior like bouncing on top. Useful for multiplayer interactions, such as PvP or cooperative gameplay mechanics
 function interact_player(m, interactType, o)
     -- ...
 end
@@ -4449,6 +4470,7 @@ end
 --- @param interactType integer
 --- @param o Object
 --- @return integer
+--- Handles interaction with poles (e.g., climbing poles). If Mario runs into a vertical pole, he can grab it and start climbing. Useful for platforming mechanics
 function interact_pole(m, interactType, o)
     -- ...
 end
@@ -4457,6 +4479,7 @@ end
 --- @param interactType integer
 --- @param o Object
 --- @return integer
+--- Handles interaction with shocking objects. If Mario touches an electrified enemy or hazard, he takes damage and may be stunned or shocked. Useful for electric-themed enemies and obstacles
 function interact_shock(m, interactType, o)
     -- ...
 end
@@ -4465,6 +4488,7 @@ end
 --- @param interactType integer
 --- @param o Object
 --- @return integer
+--- Handles interaction with Snufit bullets (projectiles fired by certain enemies). If Mario is not protected, he takes damage. Otherwise, the bullet can be destroyed
 function interact_snufit_bullet(m, interactType, o)
     -- ...
 end
@@ -4473,6 +4497,7 @@ end
 --- @param interactType integer
 --- @param o Object
 --- @return integer
+--- Handles interaction with Spiny-walking enemies. If Mario attacks it (e.g., by punching), the enemy is hurt. If he fails to attack properly (say bouncing on top), Mario takes damage and knockback. Useful for enemies that cannot be stomped from above and require direct attacks
 function interact_spiny_walking(m, interactType, o)
     -- ...
 end
@@ -4481,6 +4506,7 @@ end
 --- @param interactType integer
 --- @param o Object
 --- @return integer
+--- Handles interaction with Stars or Keys. If Mario collects a star or key, it triggers a specific star grab cutscene and progression is updated. Also handles no-exit variants (like the wing cap stage star). Useful for the main progression system of collecting Stars and unlocking new areas
 function interact_star_or_key(m, interactType, o)
     -- ...
 end
@@ -4489,6 +4515,7 @@ end
 --- @param interactType integer
 --- @param o Object
 --- @return integer
+--- Handles interaction with strong wind gusts. These gusts push Mario back, often knocking him off platforms or sending him flying backwards. Useful for environmental wind hazards
 function interact_strong_wind(m, interactType, o)
     -- ...
 end
@@ -4497,6 +4524,7 @@ end
 --- @param interactType integer
 --- @param o Object
 --- @return integer
+--- Handles interaction with signs, NPCs, and other text-bearing objects. If Mario presses the interact button facing them, he enters a dialog reading state. Useful for managing hints, story elements, or gameplay instructions through in-game dialogue
 function interact_text(m, interactType, o)
     -- ...
 end
@@ -4505,6 +4533,7 @@ end
 --- @param interactType integer
 --- @param o Object
 --- @return integer
+--- Handles interaction with tornados. If Mario touches a tornado, he enters a spinning twirl action, losing control temporarily. Useful for desert levels or areas where environmental hazards lift Mario into the air
 function interact_tornado(m, interactType, o)
     -- ...
 end
@@ -4513,6 +4542,7 @@ end
 --- @param interactType integer
 --- @param o Object
 --- @return integer
+--- Handles interaction with warps, including warp pipes and hole warps. If Mario steps onto a warp, he either transitions into another area or level. Useful for connecting different parts of the game world and controlling transitions between levels as well as custom warp areas
 function interact_warp(m, interactType, o)
     -- ...
 end
@@ -4521,6 +4551,7 @@ end
 --- @param interactType integer
 --- @param o Object
 --- @return integer
+--- Handles interaction with warp doors that lead to other areas or require keys. If Mario can open the door (has enough stars or a key), he proceeds. Otherwise, it may show a dialog. Useful for restricting access to certain areas based on progression
 function interact_warp_door(m, interactType, o)
     -- ...
 end
@@ -4529,6 +4560,7 @@ end
 --- @param interactType integer
 --- @param o Object
 --- @return integer
+--- Handles interactions with water rings that heal Mario. Passing through water rings increases his health counter. Useful for underwater stages
 function interact_water_ring(m, interactType, o)
     -- ...
 end
@@ -4537,23 +4569,27 @@ end
 --- @param interactType integer
 --- @param o Object
 --- @return integer
+--- Handles interaction with whirlpools. If Mario gets caught in a whirlpool, he's pulled toward it, resulting in a unique "caught" action. Useful for hazards that trap Mario like whirlpools
 function interact_whirlpool(m, interactType, o)
     -- ...
 end
 
 --- @param m MarioState
 --- @param capSpeed number
+--- Makes Mario blow off his normal cap at a given speed. Removes the normal cap from Mario's head and spawns it as a collectible object in the game world. Useful for simulating events where Mario loses his cap due to enemy attacks or environmental forces
 function mario_blow_off_cap(m, capSpeed)
     -- ...
 end
 
 --- @param m MarioState
 --- @return integer
+--- Checks if Mario can grab the currently encountered object (usually triggered when Mario punches or dives). If conditions are met, initiates the grabbing process. Useful for picking up objects, throwing enemies, or grabbing special items
 function mario_check_object_grab(m)
     -- ...
 end
 
 --- @param m MarioState
+--- Causes Mario to drop the object he is currently holding. Sets the held object's state accordingly and places it in front of Mario. Useful for releasing carried objects, such as throwing Bob-ombs or setting down crates
 function mario_drop_held_object(m)
     -- ...
 end
@@ -4561,11 +4597,13 @@ end
 --- @param m MarioState
 --- @param interactType integer
 --- @return Object
+--- Returns a collided object that matches a given interaction type from Mario's current collision data. Useful for determining which object Mario has come into contact with
 function mario_get_collided_object(m, interactType)
     -- ...
 end
 
 --- @param m MarioState
+--- Grabs the object currently referenced by Mario's `usedObj` if it's not already being held. Changes the object's state to indicate it is now held by Mario. Useful for handling the moment Mario successfully picks up an object
 function mario_grab_used_object(m)
     -- ...
 end
@@ -4573,6 +4611,7 @@ end
 --- @param m MarioState
 --- @param arg integer
 --- @return integer
+--- Makes Mario lose his normal cap to an enemy, such as Klepto or Ukiki. Updates flags so that the cap is no longer on Mario's head. Returns true if Mario was wearing his normal cap, otherwise false. Useful for scenarios where enemies steal Mario's cap
 function mario_lose_cap_to_enemy(m, arg)
     -- ...
 end
@@ -4580,26 +4619,31 @@ end
 --- @param m MarioState
 --- @param o Object
 --- @return integer
+--- Calculates the angle between Mario and a specified object. Used for determining Mario's orientation relative to the object. Useful for deciding directions between Mario and NPCs
 function mario_obj_angle_to_object(m, o)
     -- ...
 end
 
 --- @param m MarioState
+--- Retrieves Mario's normal cap if it was previously lost. Removes the cap from Mario's hand state and places it on his head. Useful when Mario recovers his normal cap from enemies, finds it in a level, or if it were to disappear
 function mario_retrieve_cap(m)
     -- ...
 end
 
 --- @param m MarioState
+--- Causes Mario to stop riding any object (like a shell or Hoot) and also drop any held object. Resets related states to ensure Mario is no longer attached to or holding anything. Useful when changing Mario's state after certain actions, transitions, or to prevent exploits
 function mario_stop_riding_and_holding(m)
     -- ...
 end
 
 --- @param m MarioState
+--- Stops Mario from riding any currently ridden object (e.g., a Koopa shell or Hoot), updating the object's interaction status and Mario's state. Useful for cleanly dismounting ridden objects
 function mario_stop_riding_object(m)
     -- ...
 end
 
 --- @param m MarioState
+--- Throws the object Mario is currently holding. The object is placed in front of Mario and given a forward velocity. Useful for attacking enemies with thrown objects, solving puzzles by throwing crates, or interacting with environment items
 function mario_throw_held_object(m)
     -- ...
 end
@@ -4607,6 +4651,7 @@ end
 --- @param attacker MarioState
 --- @param victim MarioState
 --- @return integer
+--- Checks if the necessary conditions are met for one player to successfully attack another player in a PvP scenario. Considers factors like invincibility, action states, and whether the attack is valid. Useful for multiplayer where players can harm each other
 function passes_pvp_interaction_checks(attacker, victim)
     -- ...
 end
@@ -4614,6 +4659,7 @@ end
 --- @param m MarioState
 --- @param o Object
 --- @return integer
+--- Determines whether Mario should push or pull a door when he interacts with it, based on his orientation and position. Useful for animating door interactions realistically, depending on which side Mario approaches from
 function should_push_or_pull_door(m, o)
     -- ...
 end
@@ -4621,6 +4667,7 @@ end
 --- @param m MarioState
 --- @param o Object
 --- @return integer
+--- Handles the logic of Mario taking damage and being knocked back by a damaging object. Decreases Mario's health, sets his knockback state, and triggers appropriate sound and camera effects. Useful for implementing enemy attacks, hazards, and ensuring Mario receives proper feedback upon taking damage
 function take_damage_and_knock_back(m, o)
     -- ...
 end
@@ -4716,21 +4763,32 @@ end
 
 --- @param arg integer
 --- @param color integer
+--- Fades into a special warp with `arg` and using `color`
 function fade_into_special_warp(arg, color)
     -- ...
 end
 
+--- @param index integer
+--- @return InstantWarp
+--- Gets an instant warp from the current area's instant warp array (0-3)
+function get_instant_warp(index)
+    -- ...
+end
+
 --- @return WarpNode
+--- Gets a painting warp node from the local mario's floor type
 function get_painting_warp_node()
     -- ...
 end
 
 --- @param paintingIndex integer
+--- Initiates a painting warp of `paintingIndex`
 function initiate_painting_warp(paintingIndex)
     -- ...
 end
 
 --- @return integer
+--- Returns if the level timer is running
 function level_control_timer_running()
     -- ...
 end
@@ -4738,6 +4796,7 @@ end
 --- @param m MarioState
 --- @param warpOp integer
 --- @return integer
+--- Triggers a warp (WARP_OP_*) for the level. Pass in `gMarioStates[0]` for `m`
 function level_trigger_warp(m, warpOp)
     -- ...
 end
@@ -4745,28 +4804,33 @@ end
 --- @param arg0 integer
 --- @param levelNum integer
 --- @return integer
+--- Sets the level number and handles the act select screen
 function lvl_set_current_level(arg0, levelNum)
     -- ...
 end
 
 --- @param arg integer
+--- Special warps to arg (`SPECIAL_WARP_*`)
 function warp_special(arg)
     -- ...
 end
 
 --- @param m MarioState
+--- Adjusts the pitch/volume of Mario's movement-based sounds according to his forward velocity (`m.forwardVel`). Useful for adding dynamic audio feedback based on Mario's running or walking speed
 function adjust_sound_for_speed(m)
     -- ...
 end
 
 --- @param m MarioState
 --- @return integer
+--- Checks for inputs that cause common action transitions (jump, freefall, walking, sliding). Useful for quickly exiting certain stationary actions when Mario begins moving or leaves the floor
 function check_common_action_exits(m)
     -- ...
 end
 
 --- @param m MarioState
 --- @return integer
+--- Checks for inputs that cause common hold-action transitions (hold jump, hold freefall, hold walking, hold sliding)
 function check_common_hold_action_exits(m)
     -- ...
 end
@@ -4775,12 +4839,14 @@ end
 --- @param action integer
 --- @param actionArg integer
 --- @return integer
+--- Drops any currently held object and sets Mario to a new action. This function is typically used when Mario transitions to states where he cannot hold objects
 function drop_and_set_mario_action(m, action, actionArg)
     -- ...
 end
 
 --- @param o Object
 --- @return integer
+--- Main driver for Mario's behavior. Executes the current action group (stationary, moving, airborne, etc.) in a loop until no further action changes are necessary
 function execute_mario_action(o)
     -- ...
 end
@@ -4789,6 +4855,7 @@ end
 --- @param angleFromMario integer
 --- @param distFromMario number
 --- @return number
+--- Finds the floor height relative to Mario's current position given a polar displacement (`angleFromMario`, `distFromMario`). Useful for determining height differentials ahead or behind Mario, e.g. for slope checks or collision logic
 function find_floor_height_relative_polar(m, angleFromMario, distFromMario)
     -- ...
 end
@@ -4796,6 +4863,7 @@ end
 --- @param m MarioState
 --- @param yawOffset integer
 --- @return integer
+--- Returns a slope angle based on comparing the floor heights slightly in front and behind Mario. It essentially calculates how steep the ground is in a specific yaw direction. Useful for slope-based calculations such as setting walking or sliding behaviors
 function find_floor_slope(m, yawOffset)
     -- ...
 end
@@ -4804,12 +4872,14 @@ end
 --- @param yaw integer
 --- @param translation Vec3s
 --- @return integer
+--- Retrieves the current animation flags and calculates the translation for Mario's animation, rotating it into the global coordinate system based on `yaw`. Useful for determining positional offsets from animations (e.g., stepping forward in a walk animation) and applying them to Mario's position
 function find_mario_anim_flags_and_translation(o, yaw, translation)
     -- ...
 end
 
 --- @param m MarioState
 --- @return integer
+--- Forces Mario into an idle state, either `ACT_IDLE` or `ACT_WATER_IDLE` depending on whether he is submerged. Useful for quickly resetting Mario's state to an idle pose under special conditions (e.g., cutscene triggers)
 function force_idle_state(m)
     -- ...
 end
@@ -4819,23 +4889,27 @@ end
 --- @param actionArg integer
 --- @param hurtCounter integer
 --- @return integer
+--- Increments Mario's `hurtCounter` and immediately sets a new action. Often used when Mario takes damage and transitions into a knockback or stunned action.
 function hurt_and_set_mario_action(m, action, actionArg, hurtCounter)
     -- ...
 end
 
 --- @param m MarioState
+--- Initializes the fields of a single `MarioState` structure when the player spawns or respawns. Sets starting position, velocity, action, and various internal flags
 function init_single_mario(m)
     -- ...
 end
 
 --- @param m MarioState
 --- @return integer
+--- Checks if Mario's current animation has reached its final frame (i.e., the last valid frame in the animation). Useful for deciding when to transition out of an animation-driven action
 function is_anim_at_end(m)
     -- ...
 end
 
 --- @param m MarioState
 --- @return integer
+--- Checks if Mario's current animation has passed the second-to-last valid frame (i.e., effectively at or beyond its final frames). Useful for advanced checks where slightly early transitions or timing are needed before the final frame
 function is_anim_past_end(m)
     -- ...
 end
@@ -4843,12 +4917,14 @@ end
 --- @param m MarioState
 --- @param animFrame integer
 --- @return integer
+--- Checks if Mario's current animation is past a specified `animFrame`. Useful for conditional logic where an action can branch after reaching a specific point in the animation
 function is_anim_past_frame(m, animFrame)
     -- ...
 end
 
 --- @param m MarioState
 --- @return boolean
+--- Checks whether Mario can become bubbled under certain game conditions (multiplayer bubble mechanic). Returns false if already bubbled or if not allowed by settings
 function mario_can_bubble(m)
     -- ...
 end
@@ -4856,59 +4932,69 @@ end
 --- @param m MarioState
 --- @param turnYaw integer
 --- @return integer
+--- Determines if Mario is facing downhill relative to his floor angle, optionally accounting for forward velocity direction. Returns true if he is oriented down the slope. Useful for deciding if Mario will walk or slide on sloped floors
 function mario_facing_downhill(m, turnYaw)
     -- ...
 end
 
 --- @param m MarioState
 --- @return integer
+--- Checks whether Mario's current floor is slippery based on both the floor's surface class and Mario's environment (e.g., special slides). Useful for deciding if Mario should transition to sliding or maintain normal traction
 function mario_floor_is_slippery(m)
     -- ...
 end
 
 --- @param m MarioState
 --- @return integer
+--- Checks whether Mario's floor is a slope, i.e., not flat but not necessarily steep. This depends on the floor's surface class and angle
 function mario_floor_is_slope(m)
     -- ...
 end
 
 --- @param m MarioState
 --- @return integer
+--- Checks whether Mario's floor is steep enough to cause special behavior, such as forcing slides or preventing certain actions. Returns true if the slope is too steep. Useful for restricting normal movement on surfaces with extreme angles
 function mario_floor_is_steep(m)
     -- ...
 end
 
 --- @param m MarioState
 --- @return integer
+--- Retrieves the slipperiness class of Mario's current floor, ranging from not slippery to very slippery. Considers terrain types and special surfaces. Useful for controlling friction, movement speed adjustments, and whether Mario slips or walks
 function mario_get_floor_class(m)
     -- ...
 end
 
 --- @param m MarioState
 --- @return integer
+--- Computes a value added to terrain sounds, depending on the floor’s type (sand, snow, water, etc.) and slipperiness. This returns a sound 'addend' used with sound effects. Useful for playing context-specific footstep or movement sounds
 function mario_get_terrain_sound_addend(m)
     -- ...
 end
 
 --- @param m MarioState
 --- @return boolean
+--- Returns true if Mario is in any of the crouching or crawling states, checking his current action
 function mario_is_crouching(m)
     -- ...
 end
 
 --- @param m MarioState
+--- Transitions Mario into a bubbled state (if available in multiplayer), decrementing lives and preventing normal movement
 function mario_set_bubbled(m)
     -- ...
 end
 
 --- @param m MarioState
 --- @param speed number
+--- Sets Mario's forward velocity (`m.forwardVel`) and updates `slideVelX/Z` and `m.vel` accordingly, based on `m.faceAngle.y`. Useful for controlling Mario's speed and direction in various actions (jumping, walking, sliding, etc.)
 function mario_set_forward_vel(m, speed)
     -- ...
 end
 
 --- @param m MarioState
 --- @param wcd WallCollisionData
+--- Updates Mario's wall information based on wall collisions (`WallCollisionData`). Chooses the most relevant wall depending on the level’s collision fix settings
 function mario_update_wall(m, wcd)
     -- ...
 end
@@ -4916,35 +5002,41 @@ end
 --- @param m MarioState
 --- @param soundBits integer
 --- @param waveParticleType integer
+--- Plays an action sound once per action, optionally spawning wave or dust particles depending on the surface. This sets the `MARIO_ACTION_SOUND_PLAYED` flag to prevent repeats
 function play_mario_action_sound(m, soundBits, waveParticleType)
     -- ...
 end
 
 --- @param m MarioState
 --- @param soundBits integer
+--- Plays a heavier, more forceful landing sound, possibly for ground pounds or large impacts. Takes into account whether Mario has a metal cap equipped. Useful for making big impact landings stand out aurally
 function play_mario_heavy_landing_sound(m, soundBits)
     -- ...
 end
 
 --- @param m MarioState
 --- @param soundBits integer
+--- A variant of `play_mario_heavy_landing_sound` that ensures the sound is only played once per action (using `play_mario_action_sound` internally). Useful for consistent heavy landing effects without repetition
 function play_mario_heavy_landing_sound_once(m, soundBits)
     -- ...
 end
 
 --- @param m MarioState
+--- Plays Mario’s jump sound if it hasn't been played yet since the last action change. This helps avoid overlapping jump voice lines on repeated jumps
 function play_mario_jump_sound(m)
     -- ...
 end
 
 --- @param m MarioState
 --- @param soundBits integer
+--- Plays a normal landing sound (or metal landing sound if Mario is metal) and spawns appropriate particle effects (water splash, dust, etc.)
 function play_mario_landing_sound(m, soundBits)
     -- ...
 end
 
 --- @param m MarioState
 --- @param soundBits integer
+--- A variant of `play_mario_landing_sound` that ensures the sound is only played once per action. Uses `play_mario_action_sound` internally
 function play_mario_landing_sound_once(m, soundBits)
     -- ...
 end
@@ -4952,6 +5044,7 @@ end
 --- @param m MarioState
 --- @param primarySoundBits integer
 --- @param scondarySoundBits integer
+--- Plays a given action sound (like a jump or landing) and also a Mario voice line if certain conditions are met. It manages flags to avoid repeated sounds
 function play_mario_sound(m, primarySoundBits, scondarySoundBits)
     -- ...
 end
@@ -4959,6 +5052,7 @@ end
 --- @param m MarioState
 --- @param soundBits integer
 --- @param waveParticleType integer
+--- Plays the specified sound effect and spawns surface-appropriate particles (e.g., water splash, snow, sand). Checks if Mario is metal to adjust audio accordingly
 function play_sound_and_spawn_particles(m, soundBits, waveParticleType)
     -- ...
 end
@@ -4966,6 +5060,7 @@ end
 --- @param m MarioState
 --- @param soundBits integer
 --- @param flags integer
+--- Plays a sound if Mario does not currently have a specific flag set. Once played, the flag is set to prevent immediate repeats
 function play_sound_if_no_flag(m, soundBits, flags)
     -- ...
 end
@@ -4974,6 +5069,7 @@ end
 --- @param offset number
 --- @param radius number
 --- @return Surface
+--- Checks for and resolves wall collisions at a given position `pos`, returning the last wall encountered. Primarily used to prevent Mario from going through walls. Useful for collision detection when updating Mario’s movement or adjusting his position
 function resolve_and_return_wall_collisions(pos, offset, radius)
     -- ...
 end
@@ -4982,18 +5078,21 @@ end
 --- @param offset number
 --- @param radius number
 --- @param collisionData WallCollisionData
+--- Similar to `resolve_and_return_wall_collisions` but also returns detailed collision data (`WallCollisionData`). This can handle multiple walls and store them for further checks
 function resolve_and_return_wall_collisions_data(pos, offset, radius, collisionData)
     -- ...
 end
 
 --- @param m MarioState
 --- @return integer
+--- Determines the vertical translation from Mario's animation (how much the animation moves Mario up or down). Returns the y-component of the animation's translation. Useful for adjusting Mario's vertical position based on an ongoing animation (e.g., a bounce or jump)
 function return_mario_anim_y_translation(m)
     -- ...
 end
 
 --- @param m MarioState
 --- @param animFrame integer
+--- Sets the current animation frame to a specific `animFrame`
 function set_anim_to_frame(m, animFrame)
     -- ...
 end
@@ -5002,6 +5101,7 @@ end
 --- @param targetAnimID integer
 --- @param accel integer
 --- @return integer
+--- Sets a character-specific animation where the animation speed is adjusted by `accel`. Useful for varying animation speeds based on context or dynamic conditions (e.g., slow-motion)
 function set_character_anim_with_accel(m, targetAnimID, accel)
     -- ...
 end
@@ -5009,12 +5109,14 @@ end
 --- @param m MarioState
 --- @param targetAnimID integer
 --- @return integer
+--- Sets the character-specific animation at its default rate (no acceleration)
 function set_character_animation(m, targetAnimID)
     -- ...
 end
 
 --- @param m MarioState
 --- @return integer
+--- When Mario lands on the ground, decides whether to jump again (single, double, triple) or enter a steep jump if the floor is very steep. Handles quicksand logic as well
 function set_jump_from_landing(m)
     -- ...
 end
@@ -5023,6 +5125,7 @@ end
 --- @param action integer
 --- @param actionArg integer
 --- @return integer
+--- Sets Mario to a jumping action (regular, double, triple, or steep jump) if conditions allow it. If the floor is too steep or if in quicksand, it changes the action accordingly
 function set_jumping_action(m, action, actionArg)
     -- ...
 end
@@ -5031,6 +5134,7 @@ end
 --- @param action integer
 --- @param actionArg integer
 --- @return integer
+--- Sets Mario's action to the specified `action` and `actionArg`, routing through group-specific transition functions (e.g., airborne actions). Resets sound flags and updates internal timers
 function set_mario_action(m, action, actionArg)
     -- ...
 end
@@ -5039,6 +5143,7 @@ end
 --- @param targetAnimID integer
 --- @param accel integer
 --- @return integer
+--- Sets Mario's current animation to `targetAnimID` with a custom `accel` value to speed up or slow down the animation. Useful for controlling animation timing, e.g., slow-motion or fast-forward effects
 function set_mario_anim_with_accel(m, targetAnimID, accel)
     -- ...
 end
@@ -5046,6 +5151,7 @@ end
 --- @param m MarioState
 --- @param targetAnimID integer
 --- @return integer
+--- Sets Mario's current animation to `targetAnimID` at a default acceleration (no speed change)
 function set_mario_animation(m, targetAnimID)
     -- ...
 end
@@ -5053,6 +5159,7 @@ end
 --- @param m MarioState
 --- @param flags integer
 --- @param clear integer
+--- Sets Mario's particle flags to spawn various visual effects (dust, water splashes, etc.), with an option to clear or set new flags
 function set_mario_particle_flags(m, flags, clear)
     -- ...
 end
@@ -5060,23 +5167,27 @@ end
 --- @param m MarioState
 --- @param initialVelY number
 --- @param multiplier number
+--- Adjusts Mario's vertical velocity (`m.vel.y`) based on his forward speed. This function also accounts for conditions like quicksand to halve velocity
 function set_mario_y_vel_based_on_fspeed(m, initialVelY, multiplier)
     -- ...
 end
 
 --- @param m MarioState
+--- Transitions Mario into ACT_STEEP_JUMP if the floor is too steep, adjusting his forward velocity and orientation accordingly. Useful for forcing special jump states on surfaces exceeding normal slope limits
 function set_steep_jump_action(m)
     -- ...
 end
 
 --- @param m MarioState
 --- @return integer
+--- Transitions Mario into a "water plunge" action, used when he enters water from above. Adjusts position, velocity, and camera mode
 function set_water_plunge_action(m)
     -- ...
 end
 
 --- @param m MarioState
 --- @return integer
+--- Transitions Mario from being underwater to a walking state. Resets camera to the default mode and can handle object-holding states. Useful for restoring standard ground movement when emerging from water
 function transition_submerged_to_walking(m)
     -- ...
 end
@@ -5087,17 +5198,20 @@ function update_burning_health_common(m)
 end
 
 --- @param m MarioState
+--- Applies the translation from Mario's current animation to his world position. Considers animation flags (horizontal/vertical translation)
 function update_mario_pos_for_anim(m)
     -- ...
 end
 
 --- @param m MarioState
+--- Updates the background noise and camera modes based on Mario's action. Especially relevant for actions like first-person view or sleeping. Useful for synchronizing camera behavior and ambient sounds with Mario's state changes
 function update_mario_sound_and_camera(m)
     -- ...
 end
 
 --- @param m MarioState
 --- @return integer
+--- Checks for and handles common conditions that would cancel Mario's current air action. This includes transitioning to a water plunge if below the water level, becoming squished if appropriate, or switching to vertical wind action if on certain wind surfaces. Also resets `m.quicksandDepth`
 function check_common_airborne_cancels(m)
     -- ...
 end
@@ -5105,6 +5219,7 @@ end
 --- @param m MarioState
 --- @param hardFallAction integer
 --- @return integer
+--- Evaluates whether Mario should take fall damage based on the height difference between his peak and current position. If the fall is large enough and does not occur over burning surfaces or while twirling, Mario may get hurt or enter a hard fall action. If the fall is significant but not extreme, minimal damage and a squish effect may be applied. Useful for determining if Mario's fall warrants a health penalty or a special landing action
 function check_fall_damage(m, hardFallAction)
     -- ...
 end
@@ -5112,24 +5227,28 @@ end
 --- @param m MarioState
 --- @param hardFallAction integer
 --- @return integer
+--- Checks if Mario should get stuck in the ground after a large fall onto soft terrain (like snow or sand) or if he should just proceed with regular fall damage calculations. If the terrain and height conditions are met, Mario's action changes to being stuck in the ground. Otherwise, normal fall damage logic applies
 function check_fall_damage_or_get_stuck(m, hardFallAction)
     -- ...
 end
 
 --- @param m MarioState
 --- @return integer
+--- Checks for the presence of a horizontal wind surface under Mario. If found, applies a push force to Mario's horizontal velocity. Caps speed at certain thresholds, updates Mario's forward velocity and yaw for sliding/wind movement
 function check_horizontal_wind(m)
     -- ...
 end
 
 --- @param m MarioState
 --- @return integer
+--- Checks if Mario should perform a kick or a dive while in mid-air, depending on his current forward velocity. Pressing the B button in the air can trigger a jump kick (at lower speeds) or a dive (at higher speeds)
 function check_kick_or_dive_in_air(m)
     -- ...
 end
 
 --- @param m MarioState
 --- @return integer
+--- Checks if Mario should wall kick after performing an air hit against a wall. If the input conditions (e.g., pressing A) and the `wallKickTimer` allow, Mario transitions to `ACT_WALL_KICK_AIR`
 function check_wall_kick(m)
     -- ...
 end
@@ -5139,6 +5258,7 @@ end
 --- @param animation integer
 --- @param stepArg integer
 --- @return integer
+--- Performs a standard step update for air actions without knockback, typically used for jumps or freefalls. Updates Mario's velocity (and possibly checks horizontal wind), then calls `perform_air_step` with given `stepArg`. Handles how Mario lands, hits walls, grabs ledges, or grabs ceilings. Optionally sets an animation
 function common_air_action_step(m, landAction, animation, stepArg)
     -- ...
 end
@@ -5149,23 +5269,27 @@ end
 --- @param animation integer
 --- @param speed number
 --- @return integer
+--- A shared step update used for airborne knockback states (both forward and backward). Updates velocity, calls `perform_air_step`, and handles wall collisions or landing transitions to appropriate ground knockback actions. Also sets animation and speed
 function common_air_knockback_step(m, landAction, hardFallAction, animation, speed)
     -- ...
 end
 
 --- @param m MarioState
 --- @return integer
+--- Allows Mario to 'lava boost' off a lava wall, reorienting him to face away from the wall and adjusting forward velocity. Increases Mario's hurt counter if he's not metal, plays a burning sound, and transitions his action to `ACT_LAVA_BOOST`. Useful for handling collisions with lava walls, giving Mario a strong upward/forward boost at the cost of health
 function lava_boost_on_wall(m)
     -- ...
 end
 
 --- @param m MarioState
 --- @return integer
+--- Executes Mario's current airborne action by first checking common airborne cancels, then playing a far-fall sound if needed. Dispatches to the appropriate action function, such as jump, double jump, freefall, etc
 function mario_execute_airborne_action(m)
     -- ...
 end
 
 --- @param m MarioState
+--- Plays a unique sound when Mario has fallen a significant distance without being invulnerable, twirling, or flying. If the fall exceeds a threshold, triggers a "long fall" exclamation. Also sets a flag to prevent repeated triggering
 function play_far_fall_sound(m)
     -- ...
 end
@@ -5174,75 +5298,89 @@ end
 --- @param frame1 integer
 --- @param frame2 integer
 --- @param frame3 integer
+--- Plays a spinning sound at specific animation frames for flips (usually side flips or certain jump flips). If the current animation frame matches any of the specified frames, it triggers `SOUND_ACTION_SPIN`
 function play_flip_sounds(m, frame1, frame2, frame3)
     -- ...
 end
 
 --- @param m MarioState
+--- Plays a knockback sound effect if Mario is hit or knocked back with significant velocity. The specific sound differs depending on whether Mario's forward velocity is high enough to be considered a strong knockback
 function play_knockback_sound(m)
     -- ...
 end
 
 --- @param m MarioState
 --- @return integer
+--- Determines whether Mario should become stuck in the ground after landing, specifically for soft terrain such as snow or sand, provided certain conditions are met (height of the fall, normal of the floor, etc.). Returns true if Mario should be stuck, false otherwise
 function should_get_stuck_in_ground(m)
     -- ...
 end
 
 --- @param m MarioState
+--- Updates Mario's air movement while allowing him to turn. Checks horizontal wind and applies a moderate amount of drag, approaches the forward velocity toward zero if no input is pressed, and modifies forward velocity/angle based on stick input
 function update_air_with_turn(m)
     -- ...
 end
 
 --- @param m MarioState
+--- Updates Mario's air movement without directly turning his facing angle to match his intended yaw. Instead, Mario can move sideways relative to his current facing direction. Also checks horizontal wind and applies drag
 function update_air_without_turn(m)
     -- ...
 end
 
 --- @param m MarioState
+--- Handles the complete flying logic for Mario (usually with the wing cap). Continuously updates pitch and yaw based on controller input, applies drag, and adjusts forward velocity. Also updates Mario's model angles for flight animations
 function update_flying(m)
     -- ...
 end
 
 --- @param m MarioState
+--- Calculates and applies a change in Mario's pitch while flying, based on vertical stick input. Approaches a target pitch velocity and clamps the final pitch angle to a certain range, simulating a smooth flight control
 function update_flying_pitch(m)
     -- ...
 end
 
 --- @param m MarioState
+--- Calculates and applies a change in Mario's yaw while flying, based on horizontal stick input. Approaches a target yaw velocity and sets Mario's roll angle to simulate banking turns. This results in a more natural, curved flight path
 function update_flying_yaw(m)
     -- ...
 end
 
 --- @param m MarioState
+--- Updates Mario's movement when in actions like lava boost or twirling in mid-air. Applies player input to adjust forward velocity and facing angle, but in a more restricted manner compared to standard jump movement. Used by `ACT_LAVA_BOOST` and `ACT_TWIRLING`
 function update_lava_boost_or_twirling(m)
     -- ...
 end
 
 --- @param m MarioState
+--- Spawns leaf particles when Mario climbs a tree, if he is sufficiently high above the floor. In Shifting Sand Land, the leaf effect spawns higher due to the taller palm trees
 function add_tree_leaf_particles(m)
     -- ...
 end
 
 --- @param m MarioState
 --- @return integer
+--- Checks if Mario should cancel his current automatic action, primarily by detecting if he falls into deep water. If so, transitions him to the water-plunge state
 function check_common_automatic_cancels(m)
     -- ...
 end
 
 --- @param m MarioState
+--- Moves Mario onto the top of a ledge once he finishes climbing it. This shifts Mario forward slightly on the ledge and updates his animation accordingly
 function climb_up_ledge(m)
     -- ...
 end
 
 --- @param m MarioState
 --- @return integer
+--- Handles Mario letting go of a ledge by adjusting his position and setting his velocity to make him fall away from the ledge. The action then transitions to a 'soft bonk' state
 function let_go_of_ledge(m)
     -- ...
 end
 
 --- @param m MarioState
 --- @return integer
+--- Executes Mario's current automatic action (e.g., climbing a pole, hanging, ledge-grabbing) by calling the corresponding function. It also checks for common cancellations, like falling into water. Returns true if the action was canceled and a new action was set, or false otherwise
 function mario_execute_automatic_action(m)
     -- ...
 end
@@ -5250,12 +5388,14 @@ end
 --- @param m MarioState
 --- @param nextPos Vec3f
 --- @return integer
+--- Performs a single step of movement while Mario is hanging from a ceiling. It handles wall collisions and checks the floor and ceiling to determine if Mario remains hanging, leaves the ceiling, or hits it
 function perform_hanging_step(m, nextPos)
     -- ...
 end
 
 --- @param m MarioState
 --- @param b integer
+--- Plays the appropriate climbing sound effect depending on whether Mario is on a tree or a pole. If `b == 1`, it plays the "climbing up" sound; otherwise, it plays the "sliding down" sound
 function play_climbing_sounds(m, b)
     -- ...
 end
@@ -5263,17 +5403,20 @@ end
 --- @param m MarioState
 --- @param offsetY number
 --- @return integer
+--- Sets Mario's position and alignment while he is on a climbable pole or tree. This function checks collisions with floors and ceilings, and updates Mario's action if he leaves the pole or touches the floor. Useful for ensuring Mario's correct placement and transitions when climbing poles or trees
 function set_pole_position(m, offsetY)
     -- ...
 end
 
 --- @param m MarioState
 --- @return integer
+--- Updates Mario's velocity and position while he is moving across a hangable ceiling. It calls `perform_hanging_step()` to handle collisions and movement logic, returning a status code indicating if Mario is still hanging or if he left the ceiling
 function update_hang_moving(m)
     -- ...
 end
 
 --- @param m MarioState
+--- Keeps Mario stationary while he is hanging from a ceiling. This function zeroes out his velocity and ensures he remains aligned with the ceiling
 function update_hang_stationary(m)
     -- ...
 end
@@ -5281,19 +5424,23 @@ end
 --- @param m MarioState
 --- @param animation integer
 --- @param endAction integer
+--- Updates Mario's climb onto a ledge by setting the chosen climbing animation and transitioning to the specified end action (e.g., standing idle) once the animation finishes. If the end action is `ACT_IDLE`, Mario is placed on top of the ledge
 function update_ledge_climb(m, animation, endAction)
     -- ...
 end
 
 --- @param m MarioState
+--- Gradually adjusts the camera position to track Mario as he climbs a ledge. This creates a smoother view transition from the ledge-grab camera angle to Mario's new location on top of the ledge
 function update_ledge_climb_camera(m)
     -- ...
 end
 
+--- Handles Peach's final cutscene animation. Cycles through frames based on the global `sEndPeachAnimation` value
 function bhv_end_peach_loop()
     -- ...
 end
 
+--- Handles Toad's final cutscene animation. Chooses which animation index to use based on Toad's x-position, then progresses through the animation frames as it nears completion
 function bhv_end_toad_loop()
     -- ...
 end
@@ -5302,22 +5449,26 @@ end
 --- @param animation integer
 --- @param frameToDeathWarp integer
 --- @return integer
+--- Handles shared logic for Mario's various death states. Plays the specified death animation (`animation`), checks for a specific frame (`frameToDeathWarp`) to trigger a warp or bubble state if allowed, and sets Mario's eye state to 'dead'
 function common_death_handler(m, animation, frameToDeathWarp)
     -- ...
 end
 
 --- @param m MarioState
+--- Transitions Mario's state from having the cap in his hand to wearing it on his head. Clears the `MARIO_CAP_IN_HAND` flag, sets the `MARIO_CAP_ON_HEAD` flag, and plays the 'put cap on' sound
 function cutscene_put_cap_on(m)
     -- ...
 end
 
 --- @param m MarioState
+--- Transitions Mario's state from wearing the cap on his head to holding it in his hand. Clears the `MARIO_CAP_ON_HEAD` flag, sets the `MARIO_CAP_IN_HAND` flag, and plays the 'take cap off' sound
 function cutscene_take_cap_off(m)
     -- ...
 end
 
 --- @param m MarioState
 --- @param isInWater integer
+--- Manages the star collection dance sequence for Mario, both on land and in water. Plays music, spawns the celebration star, increments the star count, and triggers level exits or dialogs at the correct times
 function general_star_dance_handler(m, isInWater)
     -- ...
 end
@@ -5326,23 +5477,27 @@ end
 --- @param y integer
 --- @param z integer
 --- @param radius number
+--- Spawns yellow sparkles in a circular pattern around a specified point (`x`, `y`, `z`) within a given `radius`. Frequently seen during end cutscenes when objects like stars or Peach appear
 function generate_yellow_sparkles(x, y, z, radius)
     -- ...
 end
 
 --- @param str Pointer_integer
 --- @return integer
+--- Calculates the pixel width of a given credits string. Each space is counted as 4 pixels, and any other character as 7 pixels. Stops counting at the null terminator
 function get_credits_str_width(str)
     -- ...
 end
 
 --- @param m MarioState
 --- @return integer
+--- Determines which (if any) dialog to show when Mario collects a star. Checks milestone star counts against `prevNumStarsForDialog`, and returns a dialog ID if a milestone is reached. Otherwise, returns 0
 function get_star_collection_dialog(m)
     -- ...
 end
 
 --- @param m MarioState
+--- Handles interactions with the save menu after collecting a star/key. Checks the user's selection (e.g., Save and Continue) and performs the corresponding action, such as saving the file or returning Mario to idle
 function handle_save_menu(m)
     -- ...
 end
@@ -5352,18 +5507,21 @@ end
 --- @param animation integer
 --- @param forwardVel number
 --- @return integer
+--- Launches Mario forward with a given velocity (`forwardVel`) and sets his animation. Continues moving him through the air until he lands, then changes Mario's action to `endAction`
 function launch_mario_until_land(m, endAction, animation, forwardVel)
     -- ...
 end
 
 --- @param m MarioState
 --- @return integer
+--- Executes Mario's current cutscene action based on his `action` field. Includes various story-related sequences like entering doors, collecting stars, and final boss cutscenes. Delegates to the appropriate function for each cutscene action
 function mario_execute_cutscene_action(m)
     -- ...
 end
 
 --- @param m MarioState
 --- @return integer
+--- Checks if Mario's current action allows him to speak. For Mario to be ready, his action must be in a 'stationary' or 'moving' group (or waiting for dialog), and he must not be riding a shell, invulnerable, or in first-person mode
 function mario_ready_to_speak(m)
     -- ...
 end
@@ -5371,6 +5529,7 @@ end
 --- @param m MarioState
 --- @param object Object
 --- @return integer
+--- Checks if the dialog from a specified `object` should start or continue for this particular Mario. Ensures Mario is visible to enemies (i.e., not in certain invulnerable states) and, for remote players, validates the correct dialog object
 function should_start_or_continue_dialog(m, object)
     -- ...
 end
@@ -5386,27 +5545,32 @@ function stuck_in_ground_handler(m, animation, unstuckFrame, target2, target3, e
 end
 
 --- @param m MarioState
+--- Aligns Mario's position and model transformation matrix to match the floor's angle. Specifically: Sets Mario's vertical position to be at `m.floorHeight` plus any active character animation offset and adjusts Mario's `throwMatrix` so that his body appears flush with the floor
 function align_with_floor(m)
     -- ...
 end
 
 --- @param m MarioState
 --- @return integer
+--- Checks if the analog stick is held significantly behind Mario's current facing angle. Returns true if the stick is far enough in the opposite direction, indicating Mario wants to move backward
 function analog_stick_held_back(m)
     -- ...
 end
 
 --- @param m MarioState
+--- Plays the appropriate animation and footstep sounds for walking while carrying a heavy object. Sets the character animation speed based on Mario's intended movement speed
 function anim_and_audio_for_heavy_walk(m)
     -- ...
 end
 
 --- @param m MarioState
+--- Plays the appropriate animation and footstep sounds for walking while carrying a lighter object (like a small box). Adjusts the animation speed dynamically based on Mario's velocity
 function anim_and_audio_for_hold_walk(m)
     -- ...
 end
 
 --- @param m MarioState
+--- Handles the animation and audio (footstep sounds) for normal walking or running. The specific animation used (tiptoe, walk, or run) depends on Mario's current speed
 function anim_and_audio_for_walk(m)
     -- ...
 end
@@ -5414,11 +5578,13 @@ end
 --- @param m MarioState
 --- @param frictionFactor number
 --- @return integer
+--- Applies friction-like deceleration if the floor is flat, or slope-based acceleration if the floor is sloped. Capped in such a way that Mario eventually stops or stabilizes on flatter ground
 function apply_landing_accel(m, frictionFactor)
     -- ...
 end
 
 --- @param m MarioState
+--- Applies acceleration or deceleration based on the slope of the floor. On downward slopes, Mario gains speed, while on upward slopes, Mario loses speed
 function apply_slope_accel(m)
     -- ...
 end
@@ -5426,12 +5592,14 @@ end
 --- @param m MarioState
 --- @param decelCoef number
 --- @return integer
+--- Approaches Mario's forward velocity toward zero at a rate dependent on the floor's slipperiness. This function can completely stop Mario if the slope is gentle enough or if friction is high
 function apply_slope_decel(m, decelCoef)
     -- ...
 end
 
 --- @param m MarioState
 --- @return integer
+--- Begins a braking action if Mario's forward velocity is high enough or transitions to a decelerating action otherwise. Also handles the scenario where Mario is up against a wall, transitioning to a standing state
 function begin_braking_action(m)
     -- ...
 end
@@ -5441,23 +5609,27 @@ end
 --- @param action integer
 --- @param actionArg integer
 --- @return integer
+--- Sets Mario's facing yaw to his intended yaw, applies a specified forward velocity, and transitions to the given action (e.g., `ACT_WALKING`).
 function begin_walking_action(m, forwardVel, action, actionArg)
     -- ...
 end
 
 --- @param m MarioState
 --- @return integer
+--- Performs common checks when Mario is in a moving state, transitions to water plunge if underwater, handles squished or shockwave bounce scenarios, and checks for death conditions
 function check_common_moving_cancels(m)
     -- ...
 end
 
 --- @param m MarioState
 --- @return integer
+--- Checks if the B button was pressed to either initiate a dive (if moving fast enough) or a punch (if moving slowly). Returns `true` if the action was changed to either a dive or a punching attack
 function check_ground_dive_or_punch(m)
     -- ...
 end
 
 --- @param m MarioState
+--- Checks if Mario is near an edge while moving slowly and the floor below that edge is significantly lower. If the conditions are met, transitions Mario into a ledge-climb-down action and positions him accordingly on the edge
 function check_ledge_climb_down(m)
     -- ...
 end
@@ -5468,6 +5640,7 @@ end
 --- @param arg3 integer
 --- @param arg4 integer
 --- @return integer
+--- Handles knockback on the ground (getting hit while on the ground) with shared logic for multiple knockback states. Applies deceleration or minimal momentum, chooses appropriate landing action if Mario leaves the ground, and handles death transitions if Mario's health is depleted
 function common_ground_knockback_action(m, animation, arg2, arg3, arg4)
     -- ...
 end
@@ -5476,6 +5649,7 @@ end
 --- @param animation integer
 --- @param airAction integer
 --- @return integer
+--- Applies movement upon landing from a jump or fall. Adjusts velocity based on slope or friction, checks for transitions like sliding or hitting a wall, handles small dust particles if moving fast
 function common_landing_action(m, animation, airAction)
     -- ...
 end
@@ -5484,6 +5658,7 @@ end
 --- @param endAction integer
 --- @param airAction integer
 --- @param animation integer
+--- Applies shared logic for sliding-related actions while playing sliding sounds, managing ground steps (falling off edges, hitting walls), updates animation
 function common_slide_action(m, endAction, airAction, animation)
     -- ...
 end
@@ -5500,6 +5675,7 @@ end
 
 --- @param m MarioState
 --- @return integer
+--- Executes Mario's current moving actions by: checking common cancellations (e.g., water plunge, squish, death), handling quicksand updates, and switching to the correct sub-action handler based on `m.action`
 function mario_execute_moving_action(m)
     -- ...
 end
@@ -5507,12 +5683,14 @@ end
 --- @param m MarioState
 --- @param frame1 integer
 --- @param frame2 integer
+--- Checks the current animation frame against two specified frames to trigger footstep sounds. Also chooses specific sounds if Mario is wearing Metal Cap or is in quicksand
 function play_step_sound(m, frame1, frame2)
     -- ...
 end
 
 --- @param m MarioState
 --- @param startPos Vec3f
+--- When Mario hits a wall during movement, decides whether he's pushing against the wall or sidling along it. Plays pushing animations and sounds if he's head-on, sidles along the wall if he's more angled
 function push_or_sidle_wall(m, startPos)
     -- ...
 end
@@ -5531,12 +5709,14 @@ end
 --- @param action integer
 --- @param actionArg integer
 --- @return integer
+--- Determines the proper triple jump action based on Mario's forward velocity and the Wing Cap flag: Normal triple jump, flying triple jump, or just a single jump if not enough speed
 function set_triple_jump_action(m, action, actionArg)
     -- ...
 end
 
 --- @param m MarioState
 --- @return integer
+--- Checks if Mario should begin sliding, based on player input (facing downhill, pressing the analog stick backward, or on a slide terrain), and current floor steepness. Returns true if conditions to slide are met.
 function should_begin_sliding(m)
     -- ...
 end
@@ -5544,6 +5724,7 @@ end
 --- @param m MarioState
 --- @param fastAction integer
 --- @param slowAction integer
+--- Handles the scenario where Mario slides into a wall. If Mario is moving fast, reflects his velocity and transitions to a fast knockback, Otherwise, stops his forward velocity and sets a slower knockback
 function slide_bonk(m, fastAction, slowAction)
     -- ...
 end
@@ -5553,40 +5734,47 @@ end
 --- @param airAction integer
 --- @param animation integer
 --- @return integer
+--- Updates Mario's sliding state where he is on his stomach. Similar to other slide actions but has a chance to roll out if A or B is pressed. Uses `common_slide_action` for the core movement logic
 function stomach_slide_action(m, stopAction, airAction, animation)
     -- ...
 end
 
 --- @param m MarioState
+--- Tilts Mario's torso while butt sliding based on analog input direction and magnitude. Gives the appearance that Mario is balancing or leaning into a turn
 function tilt_body_butt_slide(m)
     -- ...
 end
 
 --- @param m MarioState
 --- @param startYaw integer
+--- Tilts Mario's torso and head while riding a shell on the ground to reflect turning. Similar to other tilt functions but tuned for shell-riding speeds and angles
 function tilt_body_ground_shell(m, startYaw)
     -- ...
 end
 
 --- @param m MarioState
 --- @return integer
+--- Tilts Mario's body according to his running speed and slope angle. Calculates a pitch offset used while running to simulate leaning forward at higher speeds or on slopes
 function tilt_body_running(m)
     -- ...
 end
 
 --- @param m MarioState
 --- @param startYaw integer
+--- Applies a left/right tilt to Mario's torso (and some pitch if running fast) while walking or running. The tilt is based on his change in yaw and current speed, giving a leaning appearance when turning
 function tilt_body_walking(m, startYaw)
     -- ...
 end
 
 --- @param m MarioState
 --- @return integer
+--- Gradually reduces Mario's forward speed to zero over time on level ground, unless otherwise influenced by slope or friction. Returns true if Mario's speed reaches zero, meaning he has stopped
 function update_decelerating_speed(m)
     -- ...
 end
 
 --- @param m MarioState
+--- Controls Mario's speed when riding a Koopa Shell on the ground.
 function update_shell_speed(m)
     -- ...
 end
@@ -5594,6 +5782,7 @@ end
 --- @param m MarioState
 --- @param stopSpeed number
 --- @return integer
+--- Updates Mario's sliding state each frame, applying additional friction or acceleration based on the surface's slipperiness. Also checks if speed has slowed below a threshold to end the slide. Returns `true` if sliding has stopped
 function update_sliding(m, stopSpeed)
     -- ...
 end
@@ -5601,11 +5790,13 @@ end
 --- @param m MarioState
 --- @param accel number
 --- @param lossFactor number
+--- Adjusts Mario's slide velocity and facing angle when on a slope. Calculates slope direction and steepness, then modifies velocity accordingly (speed up downhill, slow uphill). Handles facing-direction changes and maximum speed limits
 function update_sliding_angle(m, accel, lossFactor)
     -- ...
 end
 
 --- @param m MarioState
+--- Updates Mario's walking speed based on player input and floor conditions (e.g., a slow floor or quicksand). Caps speed at a certain value and may reduce it slightly on steep slopes
 function update_walking_speed(m)
     -- ...
 end
@@ -5725,23 +5916,40 @@ function set_swimming_at_surface_particles(m, particleFlag)
     -- ...
 end
 
+--- Behavior init function for NPC Toad
 function bhv_toad_message_init()
     -- ...
 end
 
+--- Behavior loop function for NPC Toad
 function bhv_toad_message_loop()
     -- ...
 end
 
+--- Behavior init function for Star Door unlock object
 function bhv_unlock_door_star_init()
     -- ...
 end
 
+--- Behavior loop function for Star Door unlock object
 function bhv_unlock_door_star_loop()
     -- ...
 end
 
+--- @return MarioBodyState
+--- When used in a geo function, retrieve the MarioBodyState associated to the current processed object
+function geo_get_body_state()
+    -- ...
+end
+
+--- @return MarioState
+--- When used in a geo function, retrieve the MarioState associated to the current processed object
+function geo_get_mario_state()
+    -- ...
+end
+
 --- @return number
+--- Always returns zero. May have been originally used for beta trampolines
 function get_additive_y_vel_for_jumps()
     -- ...
 end
@@ -5757,65 +5965,75 @@ function init_bully_collision_data(data, posX, posZ, forwardVel, yaw, conversion
     -- ...
 end
 
---- @param arg0 MarioState
---- @param arg1 integer
-function mario_bonk_reflection(arg0, arg1)
-    -- ...
-end
-
---- @param arg0 MarioState
---- @param arg1 integer
---- @param arg2 integer
---- @return integer
-function mario_push_off_steep_floor(arg0, arg1, arg2)
-    -- ...
-end
-
---- @param arg0 MarioState
---- @return integer
-function mario_update_moving_sand(arg0)
-    -- ...
-end
-
---- @param arg0 MarioState
---- @param arg1 number
---- @return integer
-function mario_update_quicksand(arg0, arg1)
-    -- ...
-end
-
---- @param arg0 MarioState
---- @return integer
-function mario_update_windy_ground(arg0)
-    -- ...
-end
-
---- @param arg0 MarioState
---- @param arg1 integer
---- @return integer
-function perform_air_step(arg0, arg1)
-    -- ...
-end
-
---- @param arg0 MarioState
---- @return integer
-function perform_ground_step(arg0)
+--- @param m MarioState
+--- @param negateSpeed integer
+--- Reflects Mario off a wall if he is colliding with one and flips forward velocity if `negateSpeed` is TRUE
+function mario_bonk_reflection(m, negateSpeed)
     -- ...
 end
 
 --- @param m MarioState
+--- @param action integer
+--- @param actionArg integer
+--- @return integer
+--- Pushes Mario off a steep floor and sets his action to `action` with `actionArg`
+function mario_push_off_steep_floor(m, action, actionArg)
+    -- ...
+end
+
+--- @param m MarioState
+--- @return integer
+--- Pushes Mario in the direction of the quicksand based on the floor surface
+function mario_update_moving_sand(m)
+    -- ...
+end
+
+--- @param m MarioState
+--- @param sinkingSpeed number
+--- @return integer
+--- Updates Mario's state in quicksand, sinks him at `sinkingSpeed` if he's in non instant quicksand
+function mario_update_quicksand(m, sinkingSpeed)
+    -- ...
+end
+
+--- @param m MarioState
+--- @return integer
+--- Pushes Mario in the direction of the wind based on the floor surface
+function mario_update_windy_ground(m)
+    -- ...
+end
+
+--- @param m MarioState
+--- @param stepArg integer
+--- @return integer
+--- Performs a full Mario air physics step (4 substeps) and returns an `AIR_STEP_*` result
+function perform_air_step(m, stepArg)
+    -- ...
+end
+
+--- @param m MarioState
+--- @return integer
+--- Performs a full Mario ground physics step (4 substeps) and returns an `GROUND_STEP_*` result
+function perform_ground_step(m)
+    -- ...
+end
+
+--- @param m MarioState
+--- Sets Mario's velocity to his forward velocity multiplied by the cosine and sine of his pitch and yaw
 function set_vel_from_pitch_and_yaw(m)
     -- ...
 end
 
---- @param arg0 MarioState
+--- @param m MarioState
 --- @return integer
-function stationary_ground_step(arg0)
+--- Performs a full Mario stationary physics step (4 substeps) and returns an `GROUND_STEP_*` result
+function stationary_ground_step(m)
     -- ...
 end
 
---- @param arg0 MarioState
-function stop_and_set_height_to_floor(arg0)
+--- @param m MarioState
+--- Sets all of Mario's velocity variables to 0 and sets his Y position to the floor height
+function stop_and_set_height_to_floor(m)
     -- ...
 end
 
@@ -5967,13 +6185,6 @@ function mtxf_mul_vec3s(mtx, b)
     -- ...
 end
 
---- @param mtx Pointer_Mtx
---- @param angle integer
---- Rotates the matrix `mtx` in the XY plane by the given `angle`. Rotating in the XY plane typically means pivoting around the Z axis
-function mtxf_rotate_xy(mtx, angle)
-    -- ...
-end
-
 --- @param dest Mat4
 --- @param b Vec3f
 --- @param c Vec3s
@@ -5995,13 +6206,6 @@ end
 --- @param s Vec3f
 --- Scales the 4x4 floating-point matrix `mtx` by the scaling factors found in the 3D floating-point vector `s`, and stores the result in `dest`. This enlarges or shrinks objects in 3D space
 function mtxf_scale_vec3f(dest, mtx, s)
-    -- ...
-end
-
---- @param dest Pointer_Mtx
---- @param src Mat4
---- Converts the floating-point matrix `src` into a fixed-point (integer-based) matrix suitable for the `Mtx` format, and stores the result in `dest`
-function mtxf_to_mtx(dest, src)
     -- ...
 end
 
@@ -6377,40 +6581,47 @@ function network_player_set_override_palette_color(np, part, color)
 end
 
 --- @return boolean
+--- Checks if the game can currently be paused in singleplayer
 function network_check_singleplayer_pause()
     -- ...
 end
 
 --- @param localIndex integer
 --- @return string
+--- Gets a Discord ID corresponding to the network player with `localIndex`
 function network_discord_id_from_local_index(localIndex)
     -- ...
 end
 
 --- @param localIndex integer
 --- @return string
+--- Gets the DJUI hex color code string for the player corresponding to `localIndex`'s cap color
 function network_get_player_text_color_string(localIndex)
     -- ...
 end
 
 --- @param localIndex integer
 --- @return integer
+--- Gets a player's global index from their local index
 function network_global_index_from_local(localIndex)
     -- ...
 end
 
 --- @return boolean
+--- Checks if you are a moderator in the current lobby
 function network_is_moderator()
     -- ...
 end
 
 --- @return boolean
+--- Checks if you are hosting the current lobby, this value doesn't change
 function network_is_server()
     -- ...
 end
 
 --- @param globalIndex integer
 --- @return integer
+--- Gets a player's local index from their global index
 function network_local_index_from_global(globalIndex)
     -- ...
 end
@@ -8303,6 +8514,7 @@ end
 
 --- @param obj Object
 --- @param bits integer
+--- Runs an OR operator on the `obj`'s respawn info with `bits` << 8. If `bits` is 0xFF, this prevents the object from respawning after leaving and re-entering the area
 function set_object_respawn_info_bits(obj, bits)
     -- ...
 end
@@ -8873,7 +9085,6 @@ function get_surface_from_wcd_index(wcd, index)
 end
 
 --- @return Surface
---- Finds a potential ceiling at the given `x`, `y`, and `z` values
 function get_water_surface_pseudo_floor()
     -- ...
 end
@@ -10170,6 +10381,11 @@ function smlua_text_utils_get_language()
     -- ...
 end
 
+--- Resets every modified dialog back to vanilla
+function smlua_text_utils_reset_all()
+    -- ...
+end
+
 --- @param courseNum integer
 --- @param courseName string
 --- Replaces the secret star course name of `courseNum` with `courseName`
@@ -10388,6 +10604,5 @@ end
 --- @class Pointer_BehaviorScript
 --- @class Pointer_number
 --- @class Pointer_Vec4s
---- @class Pointer_Mtx
 --- @class Pointer_Trajectory
 --- @class Pointer_Collision

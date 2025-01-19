@@ -24,7 +24,7 @@ static Array<Pair<const char*, void *>>& DynosCustomActors() {
 // TODO: the cleanup/refactor didn't really go as planned.
 //       clean up the actor management code more
 
-void DynOS_Actor_AddCustom(const SysPath &aFilename, const char *aActorName) {
+void DynOS_Actor_AddCustom(s32 aModIndex, const SysPath &aFilename, const char *aActorName) {
     const void* georef = DynOS_Builtin_Actor_GetFromName(aActorName);
 
     u16 actorLen = strlen(aActorName);
@@ -37,6 +37,7 @@ void DynOS_Actor_AddCustom(const SysPath &aFilename, const char *aActorName) {
         free(actorName);
         return;
     }
+    _GfxData->mModIndex = aModIndex;
 
     void* geoLayout = (*(_GfxData->mGeoLayouts.end() - 1))->mData;
     if (!geoLayout) {
@@ -107,6 +108,26 @@ const void *DynOS_Actor_GetLayoutFromName(const char *aActorName) {
     }
 
     return NULL;
+}
+
+bool DynOS_Actor_GetModIndexAndToken(const GraphNode *aGraphNode, u32 aTokenIndex, s32 *outModIndex, const char **outToken) {
+    ActorGfx *_ActorGfx = DynOS_Actor_GetActorGfx(aGraphNode);
+    if (_ActorGfx) {
+        GfxData *_GfxData = _ActorGfx->mGfxData;
+        if (_GfxData) {
+            if (outModIndex) {
+                *outModIndex = _GfxData->mModIndex;
+            }
+            if (outToken) {
+                if (!aTokenIndex || aTokenIndex > _GfxData->mLuaTokenList.Count()) {
+                    return false;
+                }
+                *outToken = _GfxData->mLuaTokenList[aTokenIndex - 1].begin(); // token index is 1-indexed
+            }
+            return true;
+        }
+    }
+    return false;
 }
 
 ActorGfx* DynOS_Actor_GetActorGfx(const GraphNode* aGraphNode) {

@@ -33,6 +33,10 @@
 #define HANG_HIT_CEIL_OR_OOB 1
 #define HANG_LEFT_CEIL       2
 
+/* |description|
+Spawns leaf particles when Mario climbs a tree, if he is sufficiently high above the floor.
+In Shifting Sand Land, the leaf effect spawns higher due to the taller palm trees
+|descriptionEnd| */
 void add_tree_leaf_particles(struct MarioState *m) {
     if (!m) { return; }
     f32 leafHeight;
@@ -50,6 +54,9 @@ void add_tree_leaf_particles(struct MarioState *m) {
     }
 }
 
+/* |description|
+Plays the appropriate climbing sound effect depending on whether Mario is on a tree or a pole. If `b == 1`, it plays the "climbing up" sound; otherwise, it plays the "sliding down" sound
+|descriptionEnd| */
 void play_climbing_sounds(struct MarioState *m, s32 b) {
     if (!m) { return; }
     s32 isOnTree = (m->usedObj != NULL && m->usedObj->behavior == segmented_to_virtual(smlua_override_behavior(bhvTree)));
@@ -65,6 +72,10 @@ void play_climbing_sounds(struct MarioState *m, s32 b) {
     }
 }
 
+/* |description|
+Sets Mario's position and alignment while he is on a climbable pole or tree. This function checks collisions with floors and ceilings, and updates Mario's action if he leaves the pole or touches the floor.
+Useful for ensuring Mario's correct placement and transitions when climbing poles or trees
+|descriptionEnd| */
 s32 set_pole_position(struct MarioState *m, f32 offsetY) {
     if (!m) { return 0; }
     if (m->usedObj == NULL) { m->usedObj = cur_obj_find_nearest_pole(); }
@@ -330,6 +341,9 @@ s32 act_top_of_pole(struct MarioState *m) {
     return FALSE;
 }
 
+/* |description|
+Performs a single step of movement while Mario is hanging from a ceiling. It handles wall collisions and checks the floor and ceiling to determine if Mario remains hanging, leaves the ceiling, or hits it
+|descriptionEnd| */
 s32 perform_hanging_step(struct MarioState *m, Vec3f nextPos) {
     if (!m) { return 0; }
     UNUSED s32 unused;
@@ -383,6 +397,9 @@ s32 perform_hanging_step(struct MarioState *m, Vec3f nextPos) {
     return HANG_NONE;
 }
 
+/* |description|
+Updates Mario's velocity and position while he is moving across a hangable ceiling. It calls `perform_hanging_step()` to handle collisions and movement logic, returning a status code indicating if Mario is still hanging or if he left the ceiling
+|descriptionEnd| */
 s32 update_hang_moving(struct MarioState *m) {
     if (!m) { return 0; }
     s32 stepResult;
@@ -418,6 +435,9 @@ s32 update_hang_moving(struct MarioState *m) {
     return stepResult;
 }
 
+/* |description|
+Keeps Mario stationary while he is hanging from a ceiling. This function zeroes out his velocity and ensures he remains aligned with the ceiling
+|descriptionEnd| */
 void update_hang_stationary(struct MarioState *m) {
     if (!m) { return; }
     m->forwardVel = 0.0f;
@@ -530,6 +550,9 @@ s32 act_hang_moving(struct MarioState *m) {
     return FALSE;
 }
 
+/* |description|
+Handles Mario letting go of a ledge by adjusting his position and setting his velocity to make him fall away from the ledge. The action then transitions to a 'soft bonk' state
+|descriptionEnd| */
 s32 let_go_of_ledge(struct MarioState *m) {
     if (!m) { return 0; }
     f32 floorHeight;
@@ -550,6 +573,9 @@ s32 let_go_of_ledge(struct MarioState *m) {
     return set_mario_action(m, ACT_SOFT_BONK, 0);
 }
 
+/* |description|
+Moves Mario onto the top of a ledge once he finishes climbing it. This shifts Mario forward slightly on the ledge and updates his animation accordingly
+|descriptionEnd| */
 void climb_up_ledge(struct MarioState *m) {
     if (!m) { return; }
     set_character_animation(m, CHAR_ANIM_IDLE_HEAD_LEFT);
@@ -558,6 +584,9 @@ void climb_up_ledge(struct MarioState *m) {
     vec3f_copy(m->marioObj->header.gfx.pos, m->pos);
 }
 
+/* |description|
+Gradually adjusts the camera position to track Mario as he climbs a ledge. This creates a smoother view transition from the ledge-grab camera angle to Mario's new location on top of the ledge
+|descriptionEnd| */
 void update_ledge_climb_camera(struct MarioState *m) {
     if (!m) { return; }
     f32 sp4;
@@ -574,6 +603,9 @@ void update_ledge_climb_camera(struct MarioState *m) {
     m->flags |= MARIO_UNKNOWN_25;
 }
 
+/* |description|
+Updates Mario's climb onto a ledge by setting the chosen climbing animation and transitioning to the specified end action (e.g., standing idle) once the animation finishes. If the end action is `ACT_IDLE`, Mario is placed on top of the ledge
+|descriptionEnd| */
 void update_ledge_climb(struct MarioState *m, s32 animation, u32 endAction) {
     stop_and_set_height_to_floor(m);
 
@@ -1123,6 +1155,9 @@ s32 act_bubbled(struct MarioState* m) {
     return FALSE;
 }
 
+/* |description|
+Checks if Mario should cancel his current automatic action, primarily by detecting if he falls into deep water. If so, transitions him to the water-plunge state
+|descriptionEnd| */
 s32 check_common_automatic_cancels(struct MarioState *m) {
     if (!m) { return 0; }
     if (m->pos[1] < m->waterLevel - 100) {
@@ -1132,6 +1167,10 @@ s32 check_common_automatic_cancels(struct MarioState *m) {
     return FALSE;
 }
 
+/* |description|
+Executes Mario's current automatic action (e.g., climbing a pole, hanging, ledge-grabbing) by calling the corresponding function. It also checks for common cancellations, like falling into water.
+Returns true if the action was canceled and a new action was set, or false otherwise
+|descriptionEnd| */
 s32 mario_execute_automatic_action(struct MarioState *m) {
     if (!m) { return 0; }
     if (!m) { return FALSE; }

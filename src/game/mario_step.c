@@ -91,7 +91,7 @@ BAD_RETURN(s32) init_bully_collision_data(struct BullyCollisionData *data, f32 p
     data->velZ = forwardVel * coss(yaw);
 }
 
-void mario_bonk_reflection(struct MarioState *m, u32 negateSpeed) {
+void mario_bonk_reflection(struct MarioState *m, u8 negateSpeed) {
     if (!m) { return; }
     if (m->wall != NULL) {
         s16 wallAngle = atan2s(m->wallNormal[2], m->wallNormal[0]);

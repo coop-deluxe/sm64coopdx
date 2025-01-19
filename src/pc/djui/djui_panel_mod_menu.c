@@ -115,9 +115,7 @@ void djui_panel_mod_menu_mod_create(struct DjuiBase* caller) {
             }
         }
         djui_paginated_calculate_height(paginated);
-        if (count == 8) {
-            djui_base_set_size(layoutBase, layoutBase->width.value, layoutBase->height.value + 16);
-        }
+        djui_base_set_size(layoutBase, layoutBase->width.value, 650);
 
         djui_button_create(body, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
     }

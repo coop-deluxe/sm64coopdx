@@ -66,6 +66,10 @@ void keyboard_on_text_input(char* text) {
     djui_interactable_on_text_input(text);
 }
 
+void keyboard_on_text_editing(char* text, int cursorPos) {
+    djui_interactable_on_text_editing(text, cursorPos);
+}
+
 static void keyboard_add_binds(int mask, unsigned int *scancode) {
     for (int i = 0; i < MAX_BINDS && num_keybinds < MAX_KEYBINDS; ++i) {
         if (scancode[i] < VK_BASE_KEYBOARD + VK_SIZE) {

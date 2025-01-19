@@ -30,6 +30,11 @@ void djui_panel_join_message_cancel(struct DjuiBase* caller) {
     djui_panel_menu_back(caller);
 }
 
+bool djui_panel_join_message_back(struct DjuiBase* caller) {
+    djui_panel_join_message_cancel(caller);
+    return true;
+}
+
 void djui_panel_join_message_render_pre(struct DjuiBase* base, UNUSED bool* unused) {
     if (sDisplayingError) { return; }
     struct DjuiText* text1 = (struct DjuiText*)base;
@@ -75,6 +80,7 @@ void djui_panel_join_message_create(struct DjuiBase* caller) {
 
         djui_button_create(body, DLANG(MENU, CANCEL), DJUI_BUTTON_STYLE_BACK, djui_panel_join_message_cancel);
     }
+    panel->on_back = djui_panel_join_message_back;
 
     djui_panel_add(caller, panel, NULL);
     gDjuiPanelJoinMessageVisible = true;

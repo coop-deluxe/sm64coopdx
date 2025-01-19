@@ -4,7 +4,7 @@ sDialogsEE = false
 -- sm74 --
 ----------
 
-function dialog_swap_sm74()
+local function dialog_swap_sm74()
 if not sDialogsEE then return end
 smlua_text_utils_dialog_replace(DIALOG_000,1,6,30,200, "Welcome to a new world!")
 
@@ -1516,7 +1516,7 @@ end
 -- sm74ee --
 ------------
 
-function dialog_swap_sm74ee()
+local function dialog_swap_sm74ee()
 if sDialogsEE then return end
 smlua_text_utils_dialog_replace(DIALOG_000,1,6,30,200, "Welcome to another\
 devilish level.")
@@ -2885,6 +2885,7 @@ Ready...set...\
 \
 //Go//// Don't Go")
 
+-- weird
 smlua_text_utils_dialog_replace(DIALOG_165,1,5,30,200, "165")
 
 smlua_text_utils_dialog_replace(DIALOG_166,1,4,30,200, "166")

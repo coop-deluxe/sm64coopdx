@@ -101,7 +101,7 @@ extern char         configPlayerName[MAX_CONFIG_STRING];
 extern unsigned int configPlayerModel;
 extern struct PlayerPalette configPlayerPalette;
 // coop settings
-extern unsigned int configAmountofPlayers;
+extern unsigned int configAmountOfPlayers;
 extern bool         configBubbleDeath;
 extern unsigned int configHostPort;
 extern unsigned int configHostSaveSlot;
@@ -123,7 +123,7 @@ extern bool         configMenuDemos;
 extern bool         configDisablePopups;
 extern char         configLanguage[MAX_CONFIG_STRING];
 extern bool         configDynosLocalPlayerModelOnly;
-extern unsigned int configPvpMode;
+extern unsigned int configPvpType;
 // CoopNet settings
 extern char         configCoopNetIp[MAX_CONFIG_STRING];
 extern unsigned int configCoopNetPort;
@@ -137,6 +137,7 @@ extern unsigned int configDjuiScale;
 // other
 extern unsigned int configRulesVersion;
 extern bool         configCompressOnStartup;
+extern bool         configSkipPackGeneration;
 
 // secrets
 extern bool configExCoopTheme;

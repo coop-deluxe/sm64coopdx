@@ -417,7 +417,8 @@ static void gfx_dxgi_init(const char *window_title) {
     update_screen_settings();
 }
 
-static void gfx_dxgi_set_keyboard_callbacks(bool (*on_key_down)(int scancode), bool (*on_key_up)(int scancode), void (*on_all_keys_up)(void), void (*on_text_input)(char*)) {
+static void gfx_dxgi_set_keyboard_callbacks(bool (*on_key_down)(int scancode), bool (*on_key_up)(int scancode), void (*on_all_keys_up)(void),
+                                            void (*on_text_input)(char*), UNUSED void (*on_text_editing)(char*, int)) {
     dxgi.on_key_down = on_key_down;
     dxgi.on_key_up = on_key_up;
     dxgi.on_all_keys_up = on_all_keys_up;

@@ -11,6 +11,8 @@ struct DjuiInputbox {
     struct DjuiColor textColor;
     void (*on_enter_press)(struct DjuiInputbox*);
     void (*on_escape_press)(struct DjuiInputbox*);
+    char* imeBuffer;
+    u16 imePos;
 };
 
 void djui_inputbox_on_focus_begin(UNUSED struct DjuiBase* base);
@@ -25,5 +27,6 @@ void djui_inputbox_hook_escape_press(struct DjuiInputbox* inputbox, void (*on_es
 bool djui_inputbox_on_key_down(struct DjuiBase* base, int scancode);
 void djui_inputbox_on_key_up(struct DjuiBase* base, int scancode);
 void djui_inputbox_on_text_input(struct DjuiBase *base, char* text);
+void djui_inputbox_on_text_editing(struct DjuiBase *base, char* text, int cursorPos);
 
 struct DjuiInputbox* djui_inputbox_create(struct DjuiBase* parent, u16 bufferSize);

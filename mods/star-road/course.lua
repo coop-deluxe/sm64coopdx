@@ -27,7 +27,7 @@ smlua_text_utils_secret_star_replace(COURSE_CAKE_END, "   SECRET STARS")
 
 smlua_text_utils_castle_secret_stars_replace("   SECRET STARS")
 smlua_text_utils_extra_text_replace(0, "ONE OF THE SECRET STARS!")
-smlua_text_utils_extra_text_replace(1, "TEST")
+smlua_text_utils_extra_text_replace(1, "")
 smlua_text_utils_extra_text_replace(2, "")
 smlua_text_utils_extra_text_replace(3, "")
 smlua_text_utils_extra_text_replace(4, "")

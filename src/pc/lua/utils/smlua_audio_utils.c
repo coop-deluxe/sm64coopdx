@@ -336,9 +336,13 @@ void audio_stream_play(struct ModAudio* audio, bool restart, f32 volume) {
     if (!audio_sanity_check(audio, true, "play stream")) {
         return;
     }
-    f32 masterVolume = (f32)configMasterVolume / 127.0f * (f32)gLuaVolumeMaster / 127.0f;
-    f32 musicVolume = (f32)configMusicVolume / 127.0f * (f32)gLuaVolumeLevel / 127.0f;
-    ma_sound_set_volume(&audio->sound, masterVolume * musicVolume * volume);
+    if (configMuteFocusLoss && !WAPI.has_focus()) {
+        ma_sound_set_volume(&audio->sound, 0);
+    } else {
+        f32 masterVolume = (f32)configMasterVolume / 127.0f * (f32)gLuaVolumeMaster / 127.0f;
+        f32 musicVolume = (f32)configMusicVolume / 127.0f * (f32)gLuaVolumeLevel / 127.0f;
+        ma_sound_set_volume(&audio->sound, masterVolume * musicVolume * volume);
+    }
     audio->baseVolume = volume;
     if (restart || !ma_sound_is_playing(&audio->sound)) { ma_sound_seek_to_pcm_frame(&audio->sound, 0); }
     ma_sound_start(&audio->sound);
@@ -427,9 +431,13 @@ void audio_stream_set_volume(struct ModAudio* audio, f32 volume) {
     if (!audio_sanity_check(audio, true, "set stream volume")) {
         return;
     }
-    f32 masterVolume = (f32)configMasterVolume / 127.0f;
-    f32 musicVolume = (f32)configMusicVolume / 127.0f;
-    ma_sound_set_volume(&audio->sound, masterVolume * musicVolume * volume);
+    if (configMuteFocusLoss && !WAPI.has_focus()) {
+        ma_sound_set_volume(&audio->sound, 0);
+    } else {
+        f32 masterVolume = (f32)configMasterVolume / 127.0f;
+        f32 musicVolume = (f32)configMusicVolume / 127.0f;
+        ma_sound_set_volume(&audio->sound, masterVolume * musicVolume * volume);
+    }
     audio->baseVolume = volume;
 }
 
@@ -568,10 +576,14 @@ void audio_sample_play(struct ModAudio* audio, Vec3f position, f32 volume) {
         pan = (get_sound_pan(mtx[3][0] * factor, mtx[3][2] * factor) - 0.5f) * 2.0f;
     }
 
-    f32 intensity = sound_get_level_intensity(dist);
-    f32 masterVolume = (f32)configMasterVolume / 127.0f * (f32)gLuaVolumeMaster / 127.0f;
-    f32 sfxVolume = (f32)configSfxVolume / 127.0f * (f32)gLuaVolumeSfx / 127.0f;
-    ma_sound_set_volume(sound, masterVolume * sfxVolume * volume * intensity);
+    if (configMuteFocusLoss && !WAPI.has_focus()) {
+        ma_sound_set_volume(sound, 0);
+    } else {
+        f32 intensity = sound_get_level_intensity(dist);
+        f32 masterVolume = (f32)configMasterVolume / 127.0f * (f32)gLuaVolumeMaster / 127.0f;
+        f32 sfxVolume = (f32)configSfxVolume / 127.0f * (f32)gLuaVolumeSfx / 127.0f;
+        ma_sound_set_volume(sound, masterVolume * sfxVolume * volume * intensity);
+    }
     ma_sound_set_pan(sound, pan);
     audio->baseVolume = volume;
 
@@ -584,9 +596,11 @@ void audio_custom_update_volume(void) {
     while (node) {
         struct DynamicPoolNode* prev = node->prev;
         struct ModAudio* audio = node->ptr;
-        f32 masterVolume = (f32)configMasterVolume / 127.0f * (f32)gLuaVolumeMaster / 127.0f;
-        f32 musicVolume = (f32)configMusicVolume / 127.0f * (f32)gLuaVolumeLevel / 127.0f;
-        if (audio->isStream) {
+        if (configMuteFocusLoss && !WAPI.has_focus()) {
+            ma_sound_set_volume(&audio->sound, 0);
+        } else if (audio->isStream) {
+            f32 masterVolume = (f32)configMasterVolume / 127.0f * (f32)gLuaVolumeMaster / 127.0f;
+            f32 musicVolume = (f32)configMusicVolume / 127.0f * (f32)gLuaVolumeLevel / 127.0f;
             ma_sound_set_volume(&audio->sound, masterVolume * musicVolume * audio->baseVolume);
         }
         node = prev;
