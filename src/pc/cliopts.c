@@ -27,7 +27,7 @@ static void print_help(void) {
     printf("--skip-intro              Skips the Peach and Lakitu intros when on a zero star save.\n");
     printf("--server PORT             Starts the game and creates a new server on PORT.\n");
     printf("--client IP PORT          Starts the game and joins an existing server.\n");
-    printf("--coopnet PASSWORD        Starts the game and creates a new private coopnet server with a password.\n");
+    printf("--coopnet PASSWORD        Starts the game and creates a new CoopNet server.\n");
     printf("--playername PLAYERNAME   Starts the game with a specific playername.\n");
     printf("--playercount PLAYERCOUNT Starts the game with a specific player count limit.\n");
     printf("--skip-update-check       Skips the update check when loading the game.\n");
