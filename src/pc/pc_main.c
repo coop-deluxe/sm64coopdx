@@ -411,6 +411,10 @@ int main(int argc, char *argv[]) {
     // handle terminal arguments
     if (!parse_cli_opts(argc, argv)) { return 0; }
 
+#if defined(RAPI_DUMMY) || defined(WAPI_DUMMY)
+    gCLIOpts.headless = true;
+#endif
+
 #ifdef _WIN32
     // handle Windows console
     if (gCLIOpts.console || gCLIOpts.headless) {
@@ -433,10 +437,12 @@ int main(int argc, char *argv[]) {
     fs_init(gCLIOpts.savePath[0] ? gCLIOpts.savePath : sys_user_path());
 #endif
 
+#if !defined(RAPI_DUMMY) && !defined(WAPI_DUMMY)
     if (gCLIOpts.headless) {
         memcpy(&WAPI, &gfx_dummy_wm_api, sizeof(struct GfxWindowManagerAPI));
         memcpy(&RAPI, &gfx_dummy_renderer_api, sizeof(struct GfxRenderingAPI));
     }
+#endif
 
     configfile_load();
 
