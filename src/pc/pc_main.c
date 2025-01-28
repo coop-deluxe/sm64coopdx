@@ -411,9 +411,13 @@ int main(int argc, char *argv[]) {
     // handle terminal arguments
     if (!parse_cli_opts(argc, argv)) { return 0; }
 
+#if defined(RAPI_DUMMY) || defined(WAPI_DUMMY)
+    gCLIOpts.headless = true;
+#endif
+
 #ifdef _WIN32
     // handle Windows console
-    if (gCLIOpts.console) {
+    if (gCLIOpts.console || gCLIOpts.headless) {
         SetConsoleOutputCP(CP_UTF8);
     } else {
         FreeConsole();
@@ -431,6 +435,13 @@ int main(int argc, char *argv[]) {
     }
 #else
     fs_init(gCLIOpts.savePath[0] ? gCLIOpts.savePath : sys_user_path());
+#endif
+
+#if !defined(RAPI_DUMMY) && !defined(WAPI_DUMMY)
+    if (gCLIOpts.headless) {
+        memcpy(&WAPI, &gfx_dummy_wm_api, sizeof(struct GfxWindowManagerAPI));
+        memcpy(&RAPI, &gfx_dummy_renderer_api, sizeof(struct GfxRenderingAPI));
+    }
 #endif
 
     configfile_load();
@@ -460,7 +471,7 @@ int main(int argc, char *argv[]) {
     // start the thread for setting up the game
 #ifdef LOADING_SCREEN_SUPPORTED
     bool threadSuccess = false;
-    if (!gCLIOpts.hideLoadingScreen) {
+    if (!gCLIOpts.hideLoadingScreen && !gCLIOpts.headless) {
         if (init_thread_handle(&gLoadingThread, main_game_init, NULL, NULL, 0) == 0) {
             render_loading_screen(); // render the loading screen while the game is setup
             threadSuccess = true;
@@ -477,10 +488,11 @@ int main(int argc, char *argv[]) {
     thread5_game_loop(NULL);
 
     // initialize sound outside threads
+    if (gCLIOpts.headless) audio_api = &audio_null;
 #if defined(AAPI_SDL1) || defined(AAPI_SDL2)
-    if (!audio_api && audio_sdl.init()) { audio_api = &audio_sdl; }
+    if (!audio_api && audio_sdl.init()) audio_api = &audio_sdl;
 #endif
-    if (!audio_api) { audio_api = &audio_null; }
+    if (!audio_api) audio_api = &audio_null;
 
     // Initialize the audio thread if possible.
     // init_thread_handle(&gAudioThread, audio_thread, NULL, NULL, 0);

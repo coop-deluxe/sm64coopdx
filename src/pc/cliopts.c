@@ -15,7 +15,7 @@ struct CLIOptions gCLIOpts;
 static void print_help(void) {
     printf("sm64coopdx\n");
 #if defined(_WIN32) || defined(_WIN64)
-    printf("--console               Enables the Windows console.\n");
+    printf("--console                 Enables the Windows console.\n");
 #endif
     printf("--savepath SAVEPATH       Overrides the default save/config path ('!' expands to executable path).\n");
     printf("--configfile CONFIGNAME   Saves the configuration file as CONFIGNAME.\n");
@@ -33,7 +33,8 @@ static void print_help(void) {
     printf("--skip-update-check       Skips the update check when loading the game.\n");
     printf("--no-discord              Disables discord integration.\n");
     printf("--disable-mods            Disables all mods that are already enabled.\n");
-    printf("--enable-mod MODNAME      Enables a mod.");
+    printf("--enable-mod MODNAME      Enables a mod.\n");
+    printf("--headless                Enable Headless mode.");
 }
 
 static inline int arg_string(const char *name, const char *value, char *target, int maxLength) {
@@ -112,6 +113,8 @@ bool parse_cli_opts(int argc, char* argv[]) {
                 gCLIOpts.enableMods = realloc(gCLIOpts.enableMods, sizeof(char*) * gCLIOpts.enabledModsCount);
             }
             gCLIOpts.enableMods[gCLIOpts.enabledModsCount - 1] = strdup(argv[++i]);
+        } else if (!strcmp(argv[i], "--headless")) {
+            gCLIOpts.headless = true;
         } else if (!strcmp(argv[i], "--help")) {
             print_help();
             return false;
