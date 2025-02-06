@@ -188,7 +188,7 @@ unsigned int configDjuiScale                      = 0;
 // other
 unsigned int configRulesVersion                   = 0;
 bool         configCompressOnStartup              = false;
-bool         configSkipPackGeneration             = false;
+bool         configSkipPackGeneration             = true;
 
 // secrets
 bool configExCoopTheme = false;
@@ -747,7 +747,7 @@ NEXT_OPTION:
         configDjuiThemeFont = 1;
     }
 
-    if (gCLIOpts.fullscreen == 1) { 
+    if (gCLIOpts.fullscreen == 1) {
         configWindow.fullscreen = true;
     } else if (gCLIOpts.fullscreen == 2) {
         configWindow.fullscreen = false;
