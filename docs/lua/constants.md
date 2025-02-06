@@ -36,6 +36,9 @@
 - [level_update.h](#level_updateh)
     - [enum HUDDisplayFlag](#enum-HUDDisplayFlag)
     - [enum MarioSpawnType](#enum-MarioSpawnType)
+- [mario.h](#marioh)
+    - [enum MarioHealType](#enum-MarioHealType)
+    - [enum MarioHurtType](#enum-MarioHurtType)
 - [mario_animation_ids.h](#mario_animation_idsh)
     - [enum CharacterAnimID](#enum-CharacterAnimID)
     - [enum MarioAnimID](#enum-MarioAnimID)
@@ -1527,6 +1530,26 @@
 | MARIO_SPAWN_LAUNCH_DEATH | ((MARIO_SPAWN_PAINTING_STAR_COLLECT ) + 5) |
 | MARIO_SPAWN_UNUSED_38 | ((MARIO_SPAWN_PAINTING_STAR_COLLECT ) + 6) |
 | MARIO_SPAWN_FADE_FROM_BLACK | ((MARIO_SPAWN_PAINTING_STAR_COLLECT ) + 7) |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mario.h](#mario.h)
+
+### [enum MarioHealType](#MarioHealType)
+| Identifier | Value |
+| :--------- | :---- |
+| HEAL_NORMAL | 0 |
+| HEAL_WATER | 1 |
+
+### [enum MarioHurtType](#MarioHurtType)
+| Identifier | Value |
+| :--------- | :---- |
+| HURT_NORMAL | 0 |
+| HURT_WATER | 1 |
+| HURT_TOXIC_GAS | 2 |
+| HURT_BURNING | 3 |
 
 [:arrow_up_small:](#)
 
@@ -3349,7 +3372,9 @@
 | HOOK_BEFORE_GEO_PROCESS | 49 |
 | HOOK_ON_GEO_PROCESS_CHILDREN | 50 |
 | HOOK_MARIO_OVERRIDE_GEOMETRY_INPUTS | 51 |
-| HOOK_MAX | 52 |
+| HOOK_HEALED_MARIO | 52 |
+| HOOK_HURT_MARIO | 53 |
+| HOOK_MAX | 54 |
 
 ### [enum LuaModMenuElementType](#LuaModMenuElementType)
 | Identifier | Value |

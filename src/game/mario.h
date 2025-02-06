@@ -9,6 +9,18 @@
 extern u16 gLocalBubbleCounter;
 struct WallCollisionData;
 
+enum MarioHealType {
+    HEAL_NORMAL,
+    HEAL_WATER,
+};
+
+enum MarioHurtType {
+    HURT_NORMAL,
+    HURT_WATER,
+    HURT_TOXIC_GAS,
+    HURT_BURNING,
+};
+
 /* |description|
 Checks if Mario's current animation has reached its final frame (i.e., the last valid frame in the animation).
 Useful for deciding when to transition out of an animation-driven action
@@ -299,5 +311,6 @@ void set_mario_particle_flags(struct MarioState* m, u32 flags, u8 clear);
 Updates Mario's wall information based on wall collisions (`WallCollisionData`). Chooses the most relevant wall depending on the level’s collision fix settings
 |descriptionEnd| */
 void mario_update_wall(struct MarioState* m, struct WallCollisionData* wcd);
+void update_burning_health_common(struct MarioState* m);
 
 #endif // MARIO_H
