@@ -1694,6 +1694,7 @@
 | lightingDirX | `number` |  |
 | lightingDirY | `number` |  |
 | lightingDirZ | `number` |  |
+| mirrorMario | `boolean` |  |
 | modelState | `integer` |  |
 | punchState | `integer` |  |
 | shadeB | `integer` |  |

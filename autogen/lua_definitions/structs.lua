@@ -1111,6 +1111,7 @@
 --- @field public lightingDirX number
 --- @field public lightingDirY number
 --- @field public lightingDirZ number
+--- @field public mirrorMario boolean
 --- @field public modelState integer
 --- @field public punchState integer
 --- @field public shadeB integer
