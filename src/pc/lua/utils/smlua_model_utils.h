@@ -395,6 +395,7 @@ enum ModelExtendedId {
     E_MODEL_MAX
 };
 
+void smlua_model_util_initialize(void);
 void smlua_model_util_clear(void);
 void smlua_model_util_store_in_slot(u32 slot, const char* name);
 u16 smlua_model_util_load(enum ModelExtendedId extId);
