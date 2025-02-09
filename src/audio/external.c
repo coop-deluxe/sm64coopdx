@@ -2950,6 +2950,7 @@ void sound_reset_background_music_default_volume(u8 seqId) {
 }
 
 void sound_set_background_music_default_volume(u8 seqId, u8 volume) {
+    if (seqId >= MAX_AUDIO_OVERRIDE) { return; }
     sBackgroundMusicDefaultVolume[seqId] = volume;
 }
 
