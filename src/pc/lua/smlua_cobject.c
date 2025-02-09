@@ -518,7 +518,7 @@ static int smlua_cpointer_get(lua_State* L) {
             lua_pushinteger(L, (u64)(intptr_t) cptr->pointer);
             return 1;
         }
-        if (strcmp(key, "_lot") == 0) {
+        if (strcmp(key, "_lvt") == 0) {
             lua_pushinteger(L, cptr->lvt);
             return 1;
         }
