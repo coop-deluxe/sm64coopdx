@@ -27,7 +27,7 @@
 #define INVALID_SRC_SLOT(_ss) ((u32)_ss >= 2)
 #define INVALID_LEVEL_NUM(_ln) ((u32)_ln >= LEVEL_COUNT)
 #define INVALID_COURSE_STAR_INDEX(_ci) ((u32)_ci >= COURSE_COUNT)
-#define INVALID_COURSE_COIN_INDEX(_ci) ((u32)_ci >= COURSE_COUNT)
+#define INVALID_COURSE_COIN_INDEX(_ci) ((u32)_ci >= COURSE_STAGES_COUNT)
 
 STATIC_ASSERT(sizeof(struct SaveBuffer) == EEPROM_SIZE, "eeprom buffer size must match");
 
@@ -738,6 +738,9 @@ s32 save_file_get_course_coin_score(s32 fileIndex, s32 courseIndex) {
 }
 
 void save_file_set_course_coin_score(s32 fileIndex, s32 courseIndex, u8 coinScore) {
+    if (INVALID_FILE_INDEX(fileIndex)) { return; }
+    if (INVALID_SRC_SLOT(gSaveFileUsingBackupSlot)) { return; }
+    if (INVALID_COURSE_COIN_INDEX(courseIndex)) { return; }
     gSaveBuffer.files[fileIndex][gSaveFileUsingBackupSlot].courseCoinScores[courseIndex] = coinScore;
 }
 

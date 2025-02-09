@@ -328,6 +328,7 @@ struct MarioBodyState
     /*????*/ f32 lightingDirY;
     /*????*/ f32 lightingDirZ;
     /*????*/ u8 allowPartRotation;
+    /*????*/ bool mirrorMario; // some of these fields are updated for Mirror Mario too
     // u8 padding[4];
 };
 

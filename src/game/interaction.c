@@ -1273,6 +1273,7 @@ static u8 resolve_player_collision(struct MarioState* m, struct MarioState* m2) 
     f32 radius = m->marioObj->hitboxRadius * 2.0f;
 
     if (!m->marioBodyState || !m2->marioBodyState) { return FALSE; }
+    if (m->marioBodyState->mirrorMario || m2->marioBodyState->mirrorMario) { return FALSE; }
 
     f32* localTorso = m->marioBodyState->torsoPos;
     f32* remoteTorso = m2->marioBodyState->torsoPos;
