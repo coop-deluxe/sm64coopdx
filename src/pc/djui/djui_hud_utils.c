@@ -234,7 +234,8 @@ void djui_hud_set_rotation(s16 rotation, f32 pivotX, f32 pivotY) {
 }
 
 void djui_hud_set_rotation_interpolated(s32 prevRotation, f32 prevPivotX, f32 prevPivotY, s32 rotation, f32 pivotX, f32 pivotY) {
-    sRotation.rotationDiff = ((rotation - prevRotation) * 180.f) / 0x8000;
+    f32 normalizedDiff = ((rotation - prevRotation + 0x8000) & 0xFFFF) - 0x8000; // Fix modular overflow/underflow
+    sRotation.rotationDiff = (normalizedDiff * 180.f) / 0x8000;
     sRotation.prevPivotX = prevPivotX;
     sRotation.prevPivotY = prevPivotY;
     sRotation.rotation = (rotation * 180.f) / 0x8000;
