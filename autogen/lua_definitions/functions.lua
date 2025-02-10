@@ -3392,12 +3392,6 @@ function resolve_geometry_collisions(pos, lastGood)
     -- ...
 end
 
---- @param enable integer
---- Toggles collision settings for the ROM hack camera. This enables or disables specific collision behaviors in modded levels
-function rom_hack_cam_set_collisions(enable)
-    -- ...
-end
-
 --- @param c Camera
 --- @param cPos Vec3f
 --- @param avoidYaw Pointer_integer
@@ -3611,6 +3605,13 @@ end
 
 --- Skips camera interpolation for a frame, locking the camera instantly to the target position. Useful for immediate changes in camera state or position without smooth transitions
 function skip_camera_interpolation()
+    -- ...
+end
+
+--- @param angle integer
+--- @return integer
+--- Takes in an SM64 angle unit and returns the nearest 45 degree angle, also in SM64 angle units. Useful when needing to align angles (camera, yaw, ect.)
+function snap_to_45_degrees(angle)
     -- ...
 end
 
@@ -8888,8 +8889,26 @@ function camera_config_enable_analog_cam(enable)
 end
 
 --- @param enable boolean
+--- Overrides if Camera Collision is enabled
+function camera_config_enable_camera_collisions(enable)
+    -- ...
+end
+
+--- @param enable boolean
+--- Overrides if the L button will center the camera
+function camera_config_enable_centering(enable)
+    -- ...
+end
+
+--- @param enable boolean
 --- Overrides if Free Camera is enabled
 function camera_config_enable_free_cam(enable)
+    -- ...
+end
+
+--- @param enable boolean
+--- Overrides if Freecam DPad Behavior is enabled
+function camera_config_enable_freecam_dpad(enable)
     -- ...
 end
 
@@ -8901,6 +8920,12 @@ end
 
 --- @return integer
 function camera_config_get_aggression()
+    -- ...
+end
+
+--- @return boolean
+--- Gets if the L button will center the camera
+function camera_config_get_centering()
     -- ...
 end
 
@@ -8945,6 +8970,18 @@ end
 --- @return boolean
 --- Checks if Free Camera is enabled
 function camera_config_is_free_cam_enabled()
+    -- ...
+end
+
+--- @return boolean
+--- Checks if Camera Collision is enabled
+function camera_config_is_free_camera_collision_enabled()
+    -- ...
+end
+
+--- @return boolean
+--- Checks if Freecam DPad Behavior is enabled
+function camera_config_is_freecam_dpad_enabled()
     -- ...
 end
 
@@ -9001,9 +9038,21 @@ function camera_freeze()
     -- ...
 end
 
+--- @return integer
+--- Gets if the romhack camera should fly above poison gas
+function camera_get_allow_toxic_gas_camera()
+    -- ...
+end
+
 --- @return boolean
 --- Checks if the camera should account for surfaces
 function camera_get_checking_surfaces()
+    -- ...
+end
+
+--- @return RomhackCameraOverride
+--- Gets the current romhack camera override status
+function camera_get_romhack_override()
     -- ...
 end
 
@@ -9019,7 +9068,7 @@ function camera_reset_overrides()
 end
 
 --- @param allow integer
---- Sets if the romhack camera should allow centering
+--- Sets if the romhack camera should allow centering, triggered with the L button
 function camera_romhack_allow_centering(allow)
     -- ...
 end
@@ -9027,6 +9076,72 @@ end
 --- @param allow integer
 --- Sets if the romhack camera should allow D-Pad movement
 function camera_romhack_allow_dpad_usage(allow)
+    -- ...
+end
+
+--- @return integer
+--- Gets if the romhack camera should allow centering
+function camera_romhack_get_allow_centering()
+    -- ...
+end
+
+--- @return integer
+--- Gets if the romhack camera should allow D-Pad movement
+function camera_romhack_get_allow_dpad_usage()
+    -- ...
+end
+
+--- @return integer
+--- Gets if the romhack camera has surface collisions
+function camera_romhack_get_collisions()
+    -- ...
+end
+
+--- @return integer
+--- Gets the romhack camera's zoomed in distance
+function camera_romhack_get_zoomed_in_dist()
+    -- ...
+end
+
+--- @return integer
+--- Gets the romhack camera's zoomed in height
+function camera_romhack_get_zoomed_in_height()
+    -- ...
+end
+
+--- @return integer
+--- Gets the romhack camera's additional zoomed out distance
+function camera_romhack_get_zoomed_out_dist()
+    -- ...
+end
+
+--- @return integer
+--- Gets the romhack camera's additional zoomed out height
+function camera_romhack_get_zoomed_out_height()
+    -- ...
+end
+
+--- @param val integer
+--- Sets the romhack camera's zoomed in distance, between 700 and 1200 units (Default: 900)
+function camera_romhack_set_zoomed_in_dist(val)
+    -- ...
+end
+
+--- @param val integer
+--- Sets the romhack camera's zoomed in height, between 150 and 500 units (Default: 300)
+function camera_romhack_set_zoomed_in_height(val)
+    -- ...
+end
+
+--- @param val integer
+--- Sets the romhack camera's zoomed out additional distance, between 100 and 600 units (Default: 500)
+function camera_romhack_set_zoomed_out_dist(val)
+    -- ...
+end
+
+--- @param val integer
+--- Sets the romhack camera's zoomed out additional height, between 100 and 500 units (Default: 150)
+function camera_romhack_set_zoomed_out_height(val)
     -- ...
 end
 
@@ -9044,6 +9159,12 @@ end
 
 --- Unfreezes the camera
 function camera_unfreeze()
+    -- ...
+end
+
+--- @param enable integer
+--- Toggles collision settings for the ROM hack camera. This enables or disables specific collision behaviors in modded levels
+function rom_hack_cam_set_collisions(enable)
     -- ...
 end
 
