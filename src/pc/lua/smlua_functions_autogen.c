@@ -13388,6 +13388,23 @@ int smlua_func_set_first_person_enabled(lua_State* L) {
  // ingame_menu.h //
 ///////////////////
 
+int smlua_func_set_dialog_box_state(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "set_dialog_box_state", 1, top);
+        return 0;
+    }
+
+    u8 state = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "set_dialog_box_state"); return 0; }
+
+    set_dialog_box_state(state);
+
+    return 1;
+}
+
 int smlua_func_create_dialog_box(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -32805,6 +32822,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "set_first_person_enabled", smlua_func_set_first_person_enabled);
 
     // ingame_menu.h
+    smlua_bind_function(L, "set_dialog_box_state", smlua_func_set_dialog_box_state);
     smlua_bind_function(L, "create_dialog_box", smlua_func_create_dialog_box);
     smlua_bind_function(L, "create_dialog_box_with_response", smlua_func_create_dialog_box_with_response);
     smlua_bind_function(L, "create_dialog_box_with_var", smlua_func_create_dialog_box_with_var);

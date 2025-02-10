@@ -842,6 +842,7 @@
 <br />
 
 - ingame_menu.h
+   - [set_dialog_box_state](functions-3.md#set_dialog_box_state)
    - [create_dialog_box](functions-3.md#create_dialog_box)
    - [create_dialog_box_with_response](functions-3.md#create_dialog_box_with_response)
    - [create_dialog_box_with_var](functions-3.md#create_dialog_box_with_var)
