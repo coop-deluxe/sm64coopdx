@@ -32,8 +32,8 @@ void djui_fps_display_create(void) {
     struct DjuiBase* base = &fpsDisplay->base;
     djui_base_init(NULL, base, NULL, djui_fps_display_on_destroy);
     djui_base_set_size(base, 150, 50);
-    djui_base_set_color(base, 0, 0, 0, 240);
-    djui_base_set_border_color(base, 0, 0, 0, 200);
+    djui_base_set_color(base, 0, 0, 0, 200);
+    djui_base_set_border_color(base, 0, 0, 0, 160);
     djui_base_set_border_width(base, 4);
     djui_base_set_padding(base, 16, 16, 16, 16);
 
