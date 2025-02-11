@@ -842,7 +842,6 @@
 <br />
 
 - ingame_menu.h
-   - [set_dialog_box_state](functions-3.md#set_dialog_box_state)
    - [create_dialog_box](functions-3.md#create_dialog_box)
    - [create_dialog_box_with_response](functions-3.md#create_dialog_box_with_response)
    - [create_dialog_box_with_var](functions-3.md#create_dialog_box_with_var)
@@ -850,6 +849,7 @@
    - [reset_dialog_override_color](functions-3.md#reset_dialog_override_color)
    - [reset_dialog_override_pos](functions-3.md#reset_dialog_override_pos)
    - [reset_dialog_render_state](functions-3.md#reset_dialog_render_state)
+   - [set_dialog_box_state](functions-3.md#set_dialog_box_state)
    - [set_dialog_override_color](functions-3.md#set_dialog_override_color)
    - [set_dialog_override_pos](functions-3.md#set_dialog_override_pos)
    - [set_menu_mode](functions-3.md#set_menu_mode)

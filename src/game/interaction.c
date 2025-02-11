@@ -2349,6 +2349,8 @@ void mario_process_interactions(struct MarioState *m) {
         m->invincTimer -= 1;
     }
 
+    smlua_call_event_hooks_mario_param(HOOK_ON_INTERACTIONS, m);
+
     //! If the kick/punch flags are set and an object collision changes Mario's
     // action, he will get the kick/punch wall speed anyway.
     check_kick_or_punch_wall(m);

@@ -4356,26 +4356,6 @@ Sets if first person is enabled
 <br />
 
 
-## [set_dialog_box_state](#set_dialog_box_state)
-
-### Lua Example
-`set_dialog_box_state(state)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| state | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void set_dialog_box_state(u8 state);`
-
-[:arrow_up_small:](#)
-
-<br />
-
 ## [create_dialog_box](#create_dialog_box)
 
 ### Lua Example
@@ -4506,6 +4486,26 @@ Sets if first person is enabled
 
 ### C Prototype
 `void reset_dialog_render_state(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_dialog_box_state](#set_dialog_box_state)
+
+### Lua Example
+`set_dialog_box_state(state)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| state | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_dialog_box_state(u8 state);`
 
 [:arrow_up_small:](#)
 

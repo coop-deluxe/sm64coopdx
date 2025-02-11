@@ -4214,11 +4214,6 @@ function set_first_person_enabled(enable)
     -- ...
 end
 
---- @param state integer
-function set_dialog_box_state(state)
-    -- ...
-end
-
 --- @param dialog integer
 function create_dialog_box(dialog)
     -- ...
@@ -4249,6 +4244,11 @@ function reset_dialog_override_pos()
 end
 
 function reset_dialog_render_state()
+    -- ...
+end
+
+--- @param state integer
+function set_dialog_box_state(state)
     -- ...
 end
 

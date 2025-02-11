@@ -9187,7 +9187,10 @@ HOOK_ON_GEO_PROCESS_CHILDREN = 50
 HOOK_MARIO_OVERRIDE_GEOMETRY_INPUTS = 51
 
 --- @type LuaHookedEventType
-HOOK_MAX = 52
+HOOK_ON_INTERACTIONS = 52
+
+--- @type LuaHookedEventType
+HOOK_MAX = 53
 
 --- @class LuaModMenuElementType
 
