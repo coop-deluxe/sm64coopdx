@@ -241,6 +241,7 @@
 
 --- @class CameraOverride
 --- @field public override boolean
+--- @field public value integer
 
 --- @class CameraStoredInfo
 --- @field public cannonYOffset number

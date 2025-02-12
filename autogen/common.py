@@ -123,7 +123,7 @@ def translate_type_to_lvt(ptype, allowArrays=False):
 
     if pointerLvl == 1 and "(" not in ptype and "[" not in ptype:
         ptype = ptype.replace("const", "").replace("*", "").strip()
-        if ptype in usf_types or ptype in typedef_pointers:
+        if ptype in usf_types or extract_integer_datatype(ptype) or ptype in typedef_pointers:
             return "LVT_%s_P" % ptype.upper()
 
     return "LVT_???"
@@ -158,6 +158,9 @@ def translate_type_to_lot(ptype, allowArrays=True):
         return 'LOT_NONE'
 
     if ptype in usf_types:
+        return 'LOT_NONE'
+
+    if extract_integer_datatype(ptype):
         return 'LOT_NONE'
 
     # Strip out our pointer stars to get the true type.
@@ -220,7 +223,7 @@ def translate_type_to_lua(ptype):
     if ptype.startswith('enum '):
         return ptype, 'constants.md#%s' % ptype.replace(' ', '-')
 
-    if ptype in usf_types:
+    if ptype in usf_types or extract_integer_datatype(ptype):
         if ptype.startswith('f'):
             return '`number`', None
         return '`integer`', None

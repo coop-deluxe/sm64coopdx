@@ -434,6 +434,7 @@
 | Field | Type | Access |
 | ----- | ---- | ------ |
 | override | `boolean` |  |
+| value | `integer` |  |
 
 [:arrow_up_small:](#)
 

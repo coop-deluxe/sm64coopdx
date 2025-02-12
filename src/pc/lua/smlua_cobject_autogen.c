@@ -390,10 +390,10 @@ static struct LuaObjectField sCameraFOVStatusFields[LUA_CAMERA_FOVSTATUS_FIELD_C
     { "unusedIsSleeping", LVT_U32, offsetof(struct CameraFOVStatus, unusedIsSleeping), false, LOT_NONE, 1, sizeof(u32) },
 };
 
-#define LUA_CAMERA_OVERRIDE_FIELD_COUNT 1
+#define LUA_CAMERA_OVERRIDE_FIELD_COUNT 2
 static struct LuaObjectField sCameraOverrideFields[LUA_CAMERA_OVERRIDE_FIELD_COUNT] = {
     { "override", LVT_BOOL,         offsetof(struct CameraOverride, override), false, LOT_NONE, 1, sizeof(bool)         },
-//  { "value",    LVT_UNSIGNED INT, offsetof(struct CameraOverride, value),    false, LOT_???,  1, sizeof(unsigned int) }, <--- UNIMPLEMENTED
+    { "value",    LVT_UNSIGNED INT, offsetof(struct CameraOverride, value),    false, LOT_NONE, 1, sizeof(unsigned int) },
 };
 
 #define LUA_CAMERA_STORED_INFO_FIELD_COUNT 4
