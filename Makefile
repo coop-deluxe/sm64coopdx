@@ -30,6 +30,9 @@ TARGET_RPI ?= 0
 # Makeflag to enable OSX fixes
 OSX_BUILD ?= 0
 
+# Is this a FreeBSD system?
+FREEBSD_BUILD ?= 0
+
 # Specify the target you are building for, TARGET_BITS=0 means native
 TARGET_ARCH ?= native
 TARGET_BITS ?= 0
@@ -59,13 +62,6 @@ HEADLESS ?= 0
 ICON ?= 1
 # Use .app (for macOS)
 USE_APP ?= 1
-# Minimum macOS Version
-# If our arch is arm, set to macOS 14
-ifeq ($(shell arch),arm64)
-  MIN_MACOS_VERSION ?= 14
-else
-  MIN_MACOS_VERSION ?= 10.15
-endif
 # Make some small adjustments for handheld devices
 HANDHELD ?= 0
 
@@ -121,9 +117,24 @@ endif
 ifeq ($(HOST_OS),Darwin)
   OSX_BUILD := 1
 
+# Minimum macOS Version
+# If our arch is arm, set to macOS 14
+  ifeq ($(shell arch),arm64)
+    MIN_MACOS_VERSION ?= 14
+  else
+    MIN_MACOS_VERSION ?= 10.15
+  endif
   ifndef BREW_PREFIX
     BREW_PREFIX := $(shell brew --prefix)
   endif
+endif
+
+ifeq ($(OSTYPE),FreeBSD)
+  FREEBSD_BUILD := 1
+  DISCORD_SDK := 0
+  COOPNET := 0
+  COMPILER := clang
+  OPT_LEVEL := 0
 endif
 
 # MXE overrides
@@ -941,6 +952,8 @@ else ifeq ($(TARGET_RPI),1)
   else
     LDFLAGS += -Llib/lua/linux -l:liblua53-arm.a
   endif
+else ifeq ($(FREEBSD_BUILD),1)
+  LDFLAGS += -Llib/lua/freebsd -l:liblua.a
 else
   LDFLAGS += -Llib/lua/linux -l:liblua53.a -ldl
 endif
@@ -996,8 +1009,10 @@ endif
 # Prevent a crash with -sopt
 export LANG := C
 
-ifeq ($(OSX_BUILD),0)
-  LDFLAGS += -latomic
+ifeq ($(OSX_BUILD),1)
+  ifeq ($(FREEBSD_BUILD),0)
+    LDFLAGS += -latomic
+  endif
 endif
 
 #==============================================================================#

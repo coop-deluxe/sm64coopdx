@@ -13,6 +13,10 @@
 
 #include <stdbool.h>
 
+#ifdef __FreeBSD__
+#include <sys/stat.h>
+#endif
+
 #ifdef _WIN32
 	#include <windows.h>
 #else

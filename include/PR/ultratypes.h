@@ -1,9 +1,11 @@
 #ifndef _ULTRA64_TYPES_H_
 #define _ULTRA64_TYPES_H_
 
+#ifndef __FreeBSD__
 #ifndef NULL
 #define NULL    (void *)0
-#endif
+#endif /* !NULL */
+#endif /* !__FreeBSD__ */
 
 #define TRUE 1
 #define FALSE 0

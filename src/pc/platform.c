@@ -373,10 +373,16 @@ const char *sys_exe_path_file(void) {
 
 #else
     char procPath[SYS_MAX_PATH];
-    snprintf(procPath, SYS_MAX_PATH, "/proc/%d/exe", getpid());
+    snprintf(procPath, SYS_MAX_PATH,
+#ifdef __FreeBSD__
+    "/proc/%d/file",
+#else
+    "/proc/%d/exe",
+#endif /* __FreeBSD__ */
+    getpid());
     ssize_t res = readlink(procPath, path, SYS_MAX_PATH);
 
-#endif
+#endif /* __APPLE__ */
     if (res <= 0) {
         LOG_ERROR("unable to retrieve absolute path.");
     }
