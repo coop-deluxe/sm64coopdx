@@ -1,6 +1,8 @@
 import os
 import re
 import sys
+import xxhash
+import random
 from extract_structs import *
 from extract_object_fields import *
 from common import *
@@ -156,6 +158,23 @@ sLuaManuallyDefinedStructs = [{
 
 total_structs = 0
 total_fields = 0
+
+def find_perfect_hash(keys):
+    N = len(keys)
+    while True:
+        seed = random.randint(1, 2**16)
+        hash_table = [None] * N
+        collision = False
+
+        for key in keys:
+            idx = xxhash.xxh32(key, seed=seed).intdigest() % N
+            if idx in hash_table:
+                collision = True
+                break
+            hash_table[idx] = key
+
+        if not collision:
+            return seed
 
 ############################################################################
 
@@ -480,6 +499,14 @@ def build_struct(struct):
 
     sid = struct['identifier']
 
+    seed = 0
+    if len(struct['fields']) > 16:
+        keys = []
+        for field in struct['fields']:
+            fid, ftype, fimmutable, lvt, lot, size = get_struct_field_info(struct, field)
+            keys.append(fid)
+        seed = find_perfect_hash(keys)
+
     # build up table and track column width
     field_table = []
     for field in struct['fields']:
@@ -530,7 +557,8 @@ def build_struct(struct):
     struct_row.append('    { '                           )
     struct_row.append('%s, '        % struct_lot         )
     struct_row.append('s%sFields, ' % sid                )
-    struct_row.append('%s '         % field_count_define )
+    struct_row.append('%s, '        % field_count_define )
+    struct_row.append('%s'          % seed               )
     struct_row.append('},'                               )
     sLuaObjectTable.append(struct_row)
 

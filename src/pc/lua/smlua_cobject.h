@@ -53,6 +53,7 @@ struct LuaObjectTable {
     u16 lot;
     struct LuaObjectField* fields;
     u16 fieldCount;
+    u16 seed;
 };
 
 typedef struct {

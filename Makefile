@@ -925,6 +925,9 @@ endif
 # Zlib
 LDFLAGS += -lz
 
+# ! experimental perfect hashing
+LDFLAGS += -lxxhash
+
 # Update checker library
 ifeq ($(WINDOWS_BUILD),1)
   LDFLAGS += -lwininet

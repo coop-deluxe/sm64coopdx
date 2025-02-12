@@ -1,5 +1,7 @@
 #include "smlua.h"
 
+#include <xxhash.h>
+
 #include "game/level_update.h"
 #include "game/area.h"
 #include "game/mario.h"
@@ -24,6 +26,14 @@ int gSmLuaCObjectMetatable = 0;
 int gSmLuaCPointerMetatable = 0;
 
 struct LuaObjectField* smlua_get_object_field_from_ot(struct LuaObjectTable* ot, const char* key) {
+
+    // perfect hash
+    // ! experimental
+    if (ot->seed != 0) {
+        u16 hash = XXH32(key, strlen(key), ot->seed) % ot->fieldCount;
+        if (strcmp(ot->fields[hash].key, key) == 0) { return &ot->fields[hash]; }
+    }
+
     // binary search
     s32 min = 0;
     s32 max = ot->fieldCount - 1;
