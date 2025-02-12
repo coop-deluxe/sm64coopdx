@@ -324,6 +324,9 @@ INSTANT_WARP_INDEX_STOP = 0x04
 --- @type integer
 MAX_AREAS = 16
 
+--- @type string
+VERSION_REGION = "US"
+
 --- @type integer
 WARP_TRANSITION_FADE_FROM_BOWSER = 0x12
 
@@ -12524,18 +12527,6 @@ SM64COOPDX_VERSION = "v1.2.0"
 
 --- @type integer
 VERSION_NUMBER = 38
-
---- @type string
-VERSION_REGION = "JP"
-
---- @type string
-VERSION_REGION = "EU"
-
---- @type string
-VERSION_REGION = "SH"
-
---- @type string
-VERSION_REGION = "US"
 
 --- @type string
 VERSION_TEXT = "v"

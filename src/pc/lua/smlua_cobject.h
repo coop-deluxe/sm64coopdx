@@ -45,6 +45,8 @@ struct LuaObjectField {
     size_t valueOffset;
     bool immutable;
     u16 lot;
+    u16 count;
+    u32 size;
 };
 
 struct LuaObjectTable {

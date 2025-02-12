@@ -144,13 +144,13 @@ override_allowed_structs = {
 sLuaManuallyDefinedStructs = [{
     'path': 'n/a',
     'structs': [
-        'struct %s { %s }' % (
+        *['struct %s { %s }' % (
             type_name,
             ' '.join([
                 '%s %s;' % (vec_type['field_c_type'], lua_field)
                 for lua_field in vec_type['fields_mapping'].keys()
             ])
-        ) for type_name, vec_type in VEC_TYPES.items()
+        ) for type_name, vec_type in VEC_TYPES.items()]
     ]
 }]
 
@@ -342,7 +342,7 @@ def output_fuzz_struct(struct):
 
     s_out += '    local funcs = {\n'
     for field in struct['fields']:
-        fid, ftype, fimmutable, lvt, lot = get_struct_field_info(struct, field)
+        fid, ftype, fimmutable, lvt, lot, size = get_struct_field_info(struct, field)
         if fimmutable == 'true':
             continue
         if sid in override_field_invisible:
@@ -409,7 +409,7 @@ def build_vec_types():
         ]
         sorted_fields_with_order = sorted(combined_fields, key=lambda x: x[1]) # sort alphabetically
         for original_index, lua_field in sorted_fields_with_order:
-            s += '    { "%s", LVT_%s, sizeof(%s) * %d, false, LOT_NONE },\n' % (lua_field, field_c_type.upper(), field_c_type, original_index)
+            s += '    { "%s", LVT_%s, sizeof(%s) * %d, false, LOT_NONE, 1, sizeof(%s) },\n' % (lua_field, field_c_type.upper(), field_c_type, original_index, field_c_type)
 
         s += '};\n\n'
 
@@ -433,6 +433,7 @@ def get_struct_field_info(struct, field):
     sid = struct['identifier']
     fid = field['identifier']
     ftype = field['type']
+    size = 1
 
     if sid in override_field_names and fid in override_field_names[sid]:
         fid = override_field_names[sid][fid]
@@ -440,8 +441,8 @@ def get_struct_field_info(struct, field):
     if sid in override_field_types and fid in override_field_types[sid]:
         ftype = override_field_types[sid][fid]
 
-    lvt = translate_type_to_lvt(ftype)
-    lot = translate_type_to_lot(ftype)
+    lvt = translate_type_to_lvt(ftype, allowArrays=True)
+    lot = translate_type_to_lot(ftype, allowArrays=True)
     fimmutable = str(lvt == 'LVT_COBJECT' or 'const ' in ftype).lower()
     if lvt.startswith('LVT_') and lvt.endswith('_P') and 'OBJECT' not in lvt and 'COLLISION' not in lvt and 'TRAJECTORY' not in lvt:
         fimmutable = 'true'
@@ -454,7 +455,18 @@ def get_struct_field_info(struct, field):
         if fid in override_field_mutable[sid] or '*' in override_field_mutable[sid]:
             fimmutable = 'false'
 
-    return fid, ftype, fimmutable, lvt, lot
+    if not ('char' in ftype and '[' in ftype):
+        array_match = re.search(r'\[([^\]]+)\]', ftype)
+        if array_match:
+            array_size = array_match.group(1).strip()
+            if array_size.isdigit():
+                size = int(array_size)
+            elif array_size.startswith("0x") and all(c in "0123456789abcdef" for c in array_size[2:]):
+                size = int(array_size, 16)
+            else:
+                lvt, lot = 'LVT_???', "LOT_???" # array size not provided, so not supported
+
+    return fid, ftype, fimmutable, lvt, lot, size
 
 def build_struct(struct):
     # debug print out lua fuzz functions
@@ -466,7 +478,10 @@ def build_struct(struct):
     # build up table and track column width
     field_table = []
     for field in struct['fields']:
-        fid, ftype, fimmutable, lvt, lot = get_struct_field_info(struct, field)
+        fid, ftype, fimmutable, lvt, lot, size = get_struct_field_info(struct, field)
+
+        if re.search(r'\[([^\]]+)\]', ftype):
+            ftype = re.sub(r'\[[^\]]*\]', '', ftype).strip()
 
         if sid in override_field_invisible:
             if fid in override_field_invisible[sid]:
@@ -487,7 +502,9 @@ def build_struct(struct):
         row.append('%s, '                      % lvt                        )
         row.append('offsetof(struct %s, %s), ' % (sid, field['identifier']) )
         row.append('%s, '                      % fimmutable                 )
-        row.append("%s"                        % lot                        )
+        row.append('%s, '                      % lot                        )
+        row.append('%s, '                      % size                       )
+        row.append('sizeof(%s)'                % ftype                      )
         row.append(endStr                                                   )
         field_table.append(row)
 
@@ -586,7 +603,7 @@ def doc_struct_index(structs):
     return s
 
 def doc_struct_field(struct, field):
-    fid, ftype, fimmutable, lvt, lot = get_struct_field_info(struct, field)
+    fid, ftype, fimmutable, lvt, lot, size = get_struct_field_info(struct, field)
 
     sid = struct['identifier']
     if sid in override_field_invisible:
@@ -679,7 +696,7 @@ def def_struct(struct):
     s = '\n--- @class %s\n' % stype
 
     for field in struct['fields']:
-        fid, ftype, fimmutable, lvt, lot = get_struct_field_info(struct, field)
+        fid, ftype, fimmutable, lvt, lot, size = get_struct_field_info(struct, field)
 
         if sid in override_field_invisible:
             if fid in override_field_invisible[sid]:
