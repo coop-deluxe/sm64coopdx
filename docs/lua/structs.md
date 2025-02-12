@@ -109,6 +109,7 @@
 - [Vec3s](#Vec3s)
 - [Vec4f](#Vec4f)
 - [Vec4s](#Vec4s)
+- [Vtx_Interp](#Vtx_Interp)
 - [WallCollisionData](#WallCollisionData)
 - [WarpNode](#WarpNode)
 - [WarpTransition](#WarpTransition)
@@ -3192,6 +3193,17 @@
 | y | `integer` |  |
 | z | `integer` |  |
 | w | `integer` |  |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [Vtx_Interp](#Vtx_Interp)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| n | `string` |  |
+| ob | `Array` <`number`> |  |
 
 [:arrow_up_small:](#)
 

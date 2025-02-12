@@ -260,7 +260,9 @@ def table_to_string(table):
 
 def parse_struct(struct_str, sortFields = True):
     struct = {}
-    identifier = struct_str.split(' ')[1]
+    match = re.match(r"struct\s*(\w+)?\s*{(.*?)}\s*(\w+)?\s*", struct_str.replace("typedef ", ""), re.DOTALL)
+    struct_name, body, trailing_name = match.groups()
+    identifier = struct_name if struct_name else trailing_name
     struct['identifier'] = identifier
 
     body = struct_str.split('{', 1)[1].rsplit('}', 1)[0]
@@ -277,7 +279,9 @@ def parse_struct(struct_str, sortFields = True):
             field_type, field_id = field_str.strip().rsplit('*', 1)
             field_type = field_type.strip() + '*'
         else:
-            field_type, field_id = field_str.strip().rsplit(' ', 1)
+            split_parts = re.split(r'\s+', field_str.strip())
+            field_type = ' '.join(split_parts[:-1])
+            field_id = split_parts[-1]
 
         if '[' in field_id:
             array_str = '[' + field_id.split('[', 1)[1]

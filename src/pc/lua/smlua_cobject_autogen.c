@@ -2679,6 +2679,12 @@ static struct LuaObjectField sTransitionInfoFields[LUA_TRANSITION_INFO_FIELD_COU
     { "posYaw",     LVT_S16,     offsetof(struct TransitionInfo, posYaw),     false, LOT_NONE,  1, sizeof(s16)   },
 };
 
+#define LUA_VTX__INTERP_FIELD_COUNT 2
+static struct LuaObjectField sVtx_InterpFields[LUA_VTX__INTERP_FIELD_COUNT] = {
+    { "n",  LVT_STRING, offsetof(struct Vtx_Interp, n),  false, LOT_NONE, 1, sizeof(signed char) },
+    { "ob", LVT_FLOAT,  offsetof(struct Vtx_Interp, ob), false, LOT_NONE, 3, sizeof(float)       },
+};
+
 #define LUA_WALL_COLLISION_DATA_FIELD_COUNT 10
 static struct LuaObjectField sWallCollisionDataFields[LUA_WALL_COLLISION_DATA_FIELD_COUNT] = {
     { "normalAddition", LVT_COBJECT,   offsetof(struct WallCollisionData, normalAddition), true,  LOT_VEC3F,   1, sizeof(Vec3f)           },
@@ -2854,6 +2860,7 @@ struct LuaObjectTable sLuaObjectAutogenTable[LOT_AUTOGEN_MAX - LOT_AUTOGEN_MIN] 
     { LOT_SURFACE,                      sSurfaceFields,                      LUA_SURFACE_FIELD_COUNT                         },
     { LOT_TEXTUREINFO,                  sTextureInfoFields,                  LUA_TEXTURE_INFO_FIELD_COUNT                    },
     { LOT_TRANSITIONINFO,               sTransitionInfoFields,               LUA_TRANSITION_INFO_FIELD_COUNT                 },
+    { LOT_VTX_INTERP,                   sVtx_InterpFields,                   LUA_VTX__INTERP_FIELD_COUNT                     },
     { LOT_WALLCOLLISIONDATA,            sWallCollisionDataFields,            LUA_WALL_COLLISION_DATA_FIELD_COUNT             },
     { LOT_WARPNODE,                     sWarpNodeFields,                     LUA_WARP_NODE_FIELD_COUNT                       },
     { LOT_WARPTRANSITION,               sWarpTransitionFields,               LUA_WARP_TRANSITION_FIELD_COUNT                 },

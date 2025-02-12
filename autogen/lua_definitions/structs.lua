@@ -2302,6 +2302,10 @@
 --- @field public posPitch integer
 --- @field public posYaw integer
 
+--- @class Vtx_Interp
+--- @field public n string
+--- @field public ob Array_number
+
 --- @class WallCollisionData
 --- @field public normalAddition Vec3f
 --- @field public normalCount integer
