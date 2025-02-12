@@ -264,6 +264,7 @@ def parse_struct(struct_str, sortFields = True):
     struct_name, body, trailing_name = match.groups()
     identifier = struct_name if struct_name else trailing_name
     struct['identifier'] = identifier
+    struct['typedef'] = 'typedef ' in struct_str
 
     body = struct_str.split('{', 1)[1].rsplit('}', 1)[0]
     body = strip_anonymous_blocks(body)
@@ -495,21 +496,22 @@ def build_struct(struct):
 
         row = []
 
+        struct_str = "struct " if not struct['typedef'] else ""
         startStr = ''
         endStr = ' },'
         if fid in override_field_version_excludes:
             startStr += '#ifndef ' + override_field_version_excludes[fid] + '\n'
             endStr += '\n#endif'
         startStr += '    { '
-        row.append(startStr                                                 )
-        row.append('"%s", '                    % fid                        )
-        row.append('%s, '                      % lvt                        )
-        row.append('offsetof(struct %s, %s), ' % (sid, field['identifier']) )
-        row.append('%s, '                      % fimmutable                 )
-        row.append('%s, '                      % lot                        )
-        row.append('%s, '                      % size                       )
-        row.append('sizeof(%s)'                % ftype                      )
-        row.append(endStr                                                   )
+        row.append(startStr                                                       )
+        row.append('"%s", '               % fid                                   )
+        row.append('%s, '                 % lvt                                   )
+        row.append('offsetof(%s%s, %s), ' % (struct_str, sid, field['identifier']))
+        row.append('%s, '                 % fimmutable                            )
+        row.append('%s, '                 % lot                                   )
+        row.append('%s, '                 % size                                  )
+        row.append('sizeof(%s)'           % ftype                                 )
+        row.append(endStr                                                         )
         field_table.append(row)
 
     field_table_str, field_count = table_to_string(field_table)

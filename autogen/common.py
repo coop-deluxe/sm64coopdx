@@ -94,8 +94,8 @@ def translate_type_to_lvt(ptype, allowArrays=False):
         if pointerLvl > 1:
             return "LVT_???"
         if pointerLvl == 1:
-            return "LVT_" + ptype.upper() + "_P"
-        return "LVT_" + ptype.upper()
+            return "LVT_" + type.upper() + "_P"
+        return "LVT_" + type.upper()
 
     if ptype in vec_types:
         if pointerLvl > 1:

@@ -392,8 +392,8 @@ static struct LuaObjectField sCameraFOVStatusFields[LUA_CAMERA_FOVSTATUS_FIELD_C
 
 #define LUA_CAMERA_OVERRIDE_FIELD_COUNT 2
 static struct LuaObjectField sCameraOverrideFields[LUA_CAMERA_OVERRIDE_FIELD_COUNT] = {
-    { "override", LVT_BOOL,         offsetof(struct CameraOverride, override), false, LOT_NONE, 1, sizeof(bool)         },
-    { "value",    LVT_UNSIGNED INT, offsetof(struct CameraOverride, value),    false, LOT_NONE, 1, sizeof(unsigned int) },
+    { "override", LVT_BOOL, offsetof(struct CameraOverride, override), false, LOT_NONE, 1, sizeof(bool)         },
+    { "value",    LVT_U32,  offsetof(struct CameraOverride, value),    false, LOT_NONE, 1, sizeof(unsigned int) },
 };
 
 #define LUA_CAMERA_STORED_INFO_FIELD_COUNT 4
@@ -2681,8 +2681,8 @@ static struct LuaObjectField sTransitionInfoFields[LUA_TRANSITION_INFO_FIELD_COU
 
 #define LUA_VTX__INTERP_FIELD_COUNT 2
 static struct LuaObjectField sVtx_InterpFields[LUA_VTX__INTERP_FIELD_COUNT] = {
-    { "n",  LVT_STRING, offsetof(struct Vtx_Interp, n),  false, LOT_NONE, 1, sizeof(signed char) },
-    { "ob", LVT_FLOAT,  offsetof(struct Vtx_Interp, ob), false, LOT_NONE, 3, sizeof(float)       },
+    { "n",  LVT_STRING, offsetof(Vtx_Interp, n),  false, LOT_NONE, 1, sizeof(signed char) },
+    { "ob", LVT_F32,    offsetof(Vtx_Interp, ob), false, LOT_NONE, 3, sizeof(float)       },
 };
 
 #define LUA_WALL_COLLISION_DATA_FIELD_COUNT 10
