@@ -741,12 +741,6 @@ NEXT_OPTION:
     if (configDjuiTheme >= DJUI_THEME_MAX) { configDjuiTheme = 0; }
     if (configDjuiScale >= 5) { configDjuiScale = 0; }
 
-    if (configExCoopTheme) {
-        configDjuiTheme = DJUI_THEME_LIGHT;
-        configDjuiThemeCenter = false;
-        configDjuiThemeFont = 1;
-    }
-
     if (gCLIOpts.fullscreen == 1) {
         configWindow.fullscreen = true;
     } else if (gCLIOpts.fullscreen == 2) {

@@ -99,7 +99,7 @@ void bhv_idle_water_wave_loop(void) {
     }
     obj_copy_pos(o, o->parentObj);
     u8 index = o->parentObj->oBehParams - 1;
-    o->oPosY = gMarioStates[index].waterLevel + 5;
+    if (index < MAX_PLAYERS) { o->oPosY = gMarioStates[index].waterLevel + 5; }
     if (!(o->parentObj->oMarioParticleFlags & ACTIVE_PARTICLE_IDLE_WATER_WAVE)) {
         o->parentObj->oActiveParticleFlags &= (u16)~ACTIVE_PARTICLE_IDLE_WATER_WAVE;
         o->activeFlags = ACTIVE_FLAG_DEACTIVATED;

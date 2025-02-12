@@ -324,6 +324,9 @@ INSTANT_WARP_INDEX_STOP = 0x04
 --- @type integer
 MAX_AREAS = 16
 
+--- @type string
+VERSION_REGION = "US"
+
 --- @type integer
 WARP_TRANSITION_FADE_FROM_BOWSER = 0x12
 
@@ -9215,7 +9218,10 @@ HOOK_HEALED_MARIO = 52
 HOOK_HURT_MARIO = 53
 
 --- @type LuaHookedEventType
-HOOK_MAX = 54
+HOOK_ON_INTERACTIONS = 54
+
+--- @type LuaHookedEventType
+HOOK_MAX = 55
 
 --- @class LuaModMenuElementType
 
@@ -12545,22 +12551,10 @@ MAX_VERSION_LENGTH = 32
 MINOR_VERSION_NUMBER = 1
 
 --- @type string
-SM64COOPDX_VERSION = "v1.1.1"
+SM64COOPDX_VERSION = "v1.2.0"
 
 --- @type integer
 VERSION_NUMBER = 38
-
---- @type string
-VERSION_REGION = "JP"
-
---- @type string
-VERSION_REGION = "EU"
-
---- @type string
-VERSION_REGION = "SH"
-
---- @type string
-VERSION_REGION = "US"
 
 --- @type string
 VERSION_TEXT = "v"

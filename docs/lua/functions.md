@@ -849,6 +849,7 @@
    - [reset_dialog_override_color](functions-3.md#reset_dialog_override_color)
    - [reset_dialog_override_pos](functions-3.md#reset_dialog_override_pos)
    - [reset_dialog_render_state](functions-3.md#reset_dialog_render_state)
+   - [set_dialog_box_state](functions-3.md#set_dialog_box_state)
    - [set_dialog_override_color](functions-3.md#set_dialog_override_color)
    - [set_dialog_override_pos](functions-3.md#set_dialog_override_pos)
    - [set_menu_mode](functions-3.md#set_menu_mode)

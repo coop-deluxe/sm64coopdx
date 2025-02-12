@@ -4247,6 +4247,11 @@ function reset_dialog_render_state()
     -- ...
 end
 
+--- @param state integer
+function set_dialog_box_state(state)
+    -- ...
+end
+
 --- @param bgR integer
 --- @param bgG integer
 --- @param bgB integer

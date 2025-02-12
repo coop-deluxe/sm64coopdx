@@ -167,6 +167,7 @@ The lua functions sent to `hook_event()` will be automatically called by SM64 wh
 | HOOK_ON_GEO_PROCESS_CHILDREN | Called when the children of a GeoLayout node is processed **Note:** You must set the `hookProcess` field of the parent graph node to a non-zero value | [GraphNode](../structs.md#GraphNode) graphNode, `integer` matStackIndex |
 | HOOK_HEALED_MARIO | Called when any player has just healed from any source. Called once per affected player. | MarioState mario, `integer` healType |
 | HOOK_HURT_MARIO | Called when any player has just taken damage from any source. Called once per affected player. | MarioState mario, `integer` hurtType |
+| HOOK_ON_INTERACTIONS | Called when the Mario interactions are processed | [MarioState](../structs.md#MarioState) mario |
 
 ### Parameters
 

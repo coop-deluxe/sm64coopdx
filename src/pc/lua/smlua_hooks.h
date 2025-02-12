@@ -10,6 +10,7 @@
 // forward declare
 struct Camera;
 
+// ! Hooks must be added at the end
 enum LuaHookedEventType {
     HOOK_UPDATE,
     HOOK_MARIO_UPDATE,
@@ -65,6 +66,7 @@ enum LuaHookedEventType {
     HOOK_MARIO_OVERRIDE_GEOMETRY_INPUTS,
     HOOK_HEALED_MARIO,
     HOOK_HURT_MARIO,
+    HOOK_ON_INTERACTIONS,
     HOOK_MAX,
 };
 
@@ -123,6 +125,7 @@ static const char* LuaHookedEventTypeName[] = {
     "HOOK_MARIO_OVERRIDE_GEOMETRY_INPUTS",
     "HOOK_HEALED_MARIO",
     "HOOK_HURT_MARIO",
+    "HOOK_ON_INTERACTIONS",
     "HOOK_MAX"
 };
 
