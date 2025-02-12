@@ -134,7 +134,6 @@ ifeq ($(OSTYPE),FreeBSD)
   DISCORD_SDK := 0
   COOPNET := 0
   COMPILER := clang
-  OPT_LEVEL := 0
 endif
 
 # MXE overrides
@@ -1010,9 +1009,7 @@ endif
 export LANG := C
 
 ifeq ($(OSX_BUILD),1)
-  ifeq ($(FREEBSD_BUILD),0)
-    LDFLAGS += -latomic
-  endif
+  LDFLAGS += -latomic
 endif
 
 #==============================================================================#

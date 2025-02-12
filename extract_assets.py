@@ -159,14 +159,13 @@ def main():
             sys.exit(1)
 
     # Make sure tools exist
-    if os.getenv('FREEBSD_BUILD', 0) == 1:
-        subprocess.check_call(
-            ["gmake", "-s", "-C", "tools/", "n64graphics", "skyconv", "mio0", "aifc_decode"]
-        )
+    if os.getenv("OSTYPE") == "FreeBSD":
+        MAKE = "gmake"
     else:
-        subprocess.check_call(
-            ["make", "-s", "-C", "tools/", "n64graphics", "skyconv", "mio0", "aifc_decode"]
-        )
+        MAKE = "make"
+    subprocess.check_call(
+        [MAKE, "-s", "-C", "tools/", "n64graphics", "skyconv", "mio0", "aifc_decode"]
+    )
 
     # Go through the assets in roughly alphabetical order (but assets in the same
     # mio0 file still go together).
