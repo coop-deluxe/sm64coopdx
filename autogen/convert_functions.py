@@ -809,7 +809,7 @@ def build_param(fid, param, i):
         lot = translate_type_to_lot(ptype)
         s = '  %s %s = (%s)smlua_to_cobject(L, %d, %s);' % (ptype, pid, ptype, i, lot)
 
-        if '???' in lot:
+        if '???' in lot or "GRAPHNODE" in lot:
             s = '//' + s + ' <--- UNIMPLEMENTED'
         else:
             s = '  ' + s
