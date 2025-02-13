@@ -160,7 +160,7 @@ u32 determine_interaction(struct MarioState *m, struct Object *o) {
         }
     }
 
-    if (interaction == 0 && action & ACT_FLAG_ATTACKING) {
+    if ((interaction == 0 || interaction & INT_LUA) && action & ACT_FLAG_ATTACKING) {
         u32 flags = (MARIO_PUNCHING | MARIO_KICKING | MARIO_TRIPPING);
         if ((action == ACT_PUNCHING || action == ACT_MOVE_PUNCHING || action == ACT_JUMP_KICK) ||
             ((m->flags & flags) && (interaction & INT_LUA))) {
