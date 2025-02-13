@@ -99,7 +99,6 @@ void network_send_level_respawn_info(struct Object* o, u8 respawnInfoBits) {
 
     // make sure our area is valid
     if (!gNetworkPlayerLocal->currAreaSyncValid) {
-        LOG_ERROR("my area is invalid");
         return;
     }
 
