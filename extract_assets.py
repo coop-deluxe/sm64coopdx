@@ -159,8 +159,12 @@ def main():
             sys.exit(1)
 
     # Make sure tools exist
+    if os.getenv("OSTYPE") == "FreeBSD":
+        MAKE = "gmake"
+    else:
+        MAKE = "make"
     subprocess.check_call(
-        ["make", "-s", "-C", "tools/", "n64graphics", "skyconv", "mio0", "aifc_decode"]
+        [MAKE, "-s", "-C", "tools/", "n64graphics", "skyconv", "mio0", "aifc_decode"]
     )
 
     # Go through the assets in roughly alphabetical order (but assets in the same
