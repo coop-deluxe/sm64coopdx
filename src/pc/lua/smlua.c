@@ -309,6 +309,7 @@ void smlua_init(void) {
     smlua_exec_str(gSmluaConstants);
 
     smlua_cobject_init_globals();
+    smlua_model_util_initialize();
 
     // load scripts
     mods_size_enforce(&gActiveMods);
