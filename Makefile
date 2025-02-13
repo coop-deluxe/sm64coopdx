@@ -1005,6 +1005,9 @@ ifeq ($(IS_DEV_OR_DEBUG),0)
   endif
 endif
 
+# Enable ASLR
+CFLAGS += -fPIE
+
 # Prevent a crash with -sopt
 export LANG := C
 
