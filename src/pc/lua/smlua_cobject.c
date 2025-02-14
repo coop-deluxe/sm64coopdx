@@ -315,6 +315,7 @@ struct LuaObjectField* smlua_get_custom_field(lua_State* L, u32 lot, int keyInde
     lof.lot = LOT_NONE;
     lof.valueOffset = offsetof(struct Object, rawData.asU32[fieldIndex]);
     lof.valueType = lvt;
+    lof.count = 1;
 
     lua_pop(L, 1); // pop value table
     lua_pop(L, 1); // pop _custom_fields
