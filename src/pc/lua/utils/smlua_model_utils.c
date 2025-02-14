@@ -528,7 +528,7 @@ enum ModelExtendedId smlua_model_util_get_id(const char* name) {
 
     // If we've extended past our current custom model limit. Reallocate so we have more space.
     if (sCustomModelsCount >= sMaxCustomModelsCount) {
-        if (sMaxCustomModelsCount + CUSTOM_MODEL_CHUNK_SIZE < 0xFFFF) {
+        if (sMaxCustomModelsCount + CUSTOM_MODEL_CHUNK_SIZE >= 0xFFFF) {
             LOG_LUA("Failed to get model: '%s' (too many custom models!)", name);
             return E_MODEL_ERROR_MODEL;
         }
