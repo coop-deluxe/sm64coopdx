@@ -5,7 +5,7 @@
 
 // internal version
 #define VERSION_TEXT "v"
-#define VERSION_NUMBER 38
+#define VERSION_NUMBER 39
 #define MINOR_VERSION_NUMBER 1
 
 #if defined(VERSION_JP)
