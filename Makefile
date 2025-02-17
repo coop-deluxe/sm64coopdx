@@ -27,6 +27,9 @@ TARGET_N64 = 0
 # Build and optimize for Raspberry Pi(s)
 TARGET_RPI ?= 0
 
+# Build and optimize for RK3588 processor
+TARGET_RK3588 ?= 0
+
 # Makeflag to enable OSX fixes
 OSX_BUILD ?= 0
 
@@ -304,6 +307,17 @@ ifeq ($(TARGET_RPI),1)
 	endif
 endif
 
+ifeq ($(TARGET_RK3588),1)
+  $(info Compiling for RK3588)
+  DISCORD_SDK := 0
+  COOPNET := 0
+  machine = $(shell sh -c 'uname -m 2>/dev/null || echo unknown')
+
+  # RK3588 in ARM64 (aarch64) mode
+  $(info ARM64 mode)
+  OPT_FLAGS := -march=armv8.2-a+crc+simd -mtune=cortex-a76 -O3
+endif
+
 # Set BITS (32/64) to compile for
 OPT_FLAGS += $(BITS)
 
@@ -346,6 +360,12 @@ endif
 
 ifeq ($(TARGET_RPI),1) # Define RPi to change SDL2 title & GLES2 hints
      DEFINES += USE_GLES=1
+endif
+
+# Check for rk3588 option
+ifeq ($(TARGET_RK3588),1)
+  CC_CHECK_CFLAGS += -DTARGET_RK3588
+  CFLAGS += -DTARGET_RK3588
 endif
 
 ifeq ($(OSX_BUILD),1) # Modify GFX & SDL2 for OSX GL
