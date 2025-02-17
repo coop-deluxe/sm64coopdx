@@ -362,10 +362,8 @@ ifeq ($(TARGET_RPI),1) # Define RPi to change SDL2 title & GLES2 hints
      DEFINES += USE_GLES=1
 endif
 
-# Check for rk3588 option
-ifeq ($(TARGET_RK3588),1)
-  CC_CHECK_CFLAGS += -DTARGET_RK3588
-  CFLAGS += -DTARGET_RK3588
+ifeq ($(TARGET_RK3588),1) # Define RK3588 to change SDL2 title & GLES2 hints
+  DEFINES += USE_GLES=1
 endif
 
 ifeq ($(OSX_BUILD),1) # Modify GFX & SDL2 for OSX GL
@@ -506,6 +504,10 @@ else # Linux builds/binary namer
 	else
 		EXE := $(BUILD_DIR)/sm64coopdx
 	endif
+endif
+
+ifeq ($(TARGET_RK3588),1)
+  EXE := $(BUILD_DIR)/sm64coopdx.arm
 endif
 
 ELF            := $(BUILD_DIR)/$(TARGET).elf
@@ -785,6 +787,8 @@ else ifeq ($(findstring SDL,$(WINDOW_API)),SDL)
     BACKEND_LDFLAGS += -lglew32 -lglu32 -lopengl32
   else ifeq ($(TARGET_RPI),1)
     BACKEND_LDFLAGS += -lGLESv2
+  else ifeq ($(TARGET_RK3588),1)
+    BACKEND_LDFLAGS += -lGLESv2
   else ifeq ($(OSX_BUILD),1)
     BACKEND_LDFLAGS += -framework OpenGL `pkg-config --libs glew` -mmacosx-version-min=$(MIN_MACOS_VERSION)
     EXTRA_CPP_FLAGS += -stdlib=libc++ -std=c++17 -mmacosx-version-min=$(MIN_MACOS_VERSION)
@@ -892,6 +896,8 @@ ifeq ($(WINDOWS_BUILD),1)
   LDFLAGS += -T windows.ld
 else ifeq ($(TARGET_RPI),1)
   LDFLAGS := $(OPT_FLAGS) -lm $(BACKEND_LDFLAGS) -no-pie
+else ifeq ($(TARGET_RK3588),1)
+  LDFLAGS := $(OPT_FLAGS) -lm $(BACKEND_LDFLAGS) -no-pie
 else ifeq ($(OSX_BUILD),1)
   LDFLAGS := -lm $(BACKEND_LDFLAGS) -lpthread
 else
@@ -961,6 +967,8 @@ else ifeq ($(TARGET_RPI),1)
   else
     LDFLAGS += -Llib/lua/linux -l:liblua53-arm.a
   endif
+else ifeq ($(TARGET_RK3588),1)
+  LDFLAGS += -Llib/lua/linux -l:liblua53-arm64.a
 else
   LDFLAGS += -Llib/lua/linux -l:liblua53.a -ldl
 endif
@@ -990,6 +998,8 @@ ifeq ($(COOPNET),1)
     else
       LDFLAGS += -Llib/coopnet/linux -l:libcoopnet-arm.a -l:libjuice.a
     endif
+  else ifeq ($(TARGET_RK3588),1)
+    LDFLAGS += -Llib/coopnet/linux -l:libcoopnet-arm64.a -l:libjuice.a
   else
     LDFLAGS += -Llib/coopnet/linux -l:libcoopnet.a -l:libjuice.a
   endif
@@ -1066,6 +1076,12 @@ endif
 ifeq ($(TARGET_RPI),1)
   CC_CHECK_CFLAGS += -DTARGET_RPI
   CFLAGS += -DTARGET_RPI
+endif
+
+# Check for rk3588 option
+ifeq ($(TARGET_RK3588),1)
+  CC_CHECK_CFLAGS += -DTARGET_RK3588
+  CFLAGS += -DTARGET_RK3588
 endif
 
 # Check for texture fix option
