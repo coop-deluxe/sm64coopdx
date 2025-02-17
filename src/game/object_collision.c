@@ -26,6 +26,8 @@ int detect_player_hitbox_overlap(struct MarioState* local, struct MarioState* re
     if (!local || !remote) { return FALSE; }
     if (local->marioObj == NULL || local->marioObj->oIntangibleTimer != 0) { return FALSE; }
     if (remote->marioObj == NULL || remote->marioObj->oIntangibleTimer != 0) { return FALSE; }
+    if (local->marioBodyState->mirrorMario) { return FALSE; }
+    if (remote->marioBodyState->mirrorMario) { return FALSE; }
 
     struct Object* a = local->marioObj;
     f32* aTorso = local->marioBodyState->torsoPos;

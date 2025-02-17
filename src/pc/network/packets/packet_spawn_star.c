@@ -56,12 +56,12 @@ void network_receive_spawn_star(struct Packet* p) {
     if (o != NULL) {
         packet_read(p, &o->oPosX, sizeof(u32) * 3);
         packet_read(p, &o->oHomeX, sizeof(u32) * 3);
-        
+
         // Here we check if we're supposed to play the cutscene or not depending on if
         // the global player index sent matches us.
         // If the network player index is -1, Then the cutscene will always be skipped.
         // This check is vital for objects which are network owned specfically.
-        // Leaving this the only way to properly set the cutscene flags 
+        // Leaving this the only way to properly set the cutscene flags
         // for those who don't own the object.
         //printf("network_receive_spawn_star: Network Player Index is %i, Our Global Index is %i.\n", networkPlayerIndex, gNetworkPlayers[0].globalIndex);
         if (networkPlayerIndex == gNetworkPlayers[0].globalIndex) {
@@ -77,7 +77,7 @@ void network_send_spawn_star_nle(struct Object* o, u32 params) {
     u8 globalIndex = UNKNOWN_GLOBAL_INDEX;
     if (o->behavior == smlua_override_behavior(bhvMario)) {
         u8 localIndex = o->oBehParams - 1;
-        globalIndex = gNetworkPlayers[localIndex].globalIndex;
+        if (localIndex < MAX_PLAYERS) { globalIndex = gNetworkPlayers[localIndex].globalIndex; }
     }
 
     struct Packet p = { 0 };

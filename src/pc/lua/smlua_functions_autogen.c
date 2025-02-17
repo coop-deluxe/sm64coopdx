@@ -9162,7 +9162,7 @@ int smlua_func_geo_bits_bowser_coloring(lua_State* L) {
 
     s32 run = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "geo_bits_bowser_coloring"); return 0; }
-    struct GraphNode* node = (struct GraphNode*)smlua_to_cobject(L, 2, LOT_GRAPHNODE);
+//  struct GraphNode* node = (struct GraphNode*)smlua_to_cobject(L, 2, LOT_GRAPHNODE); <--- UNIMPLEMENTED
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "geo_bits_bowser_coloring"); return 0; }
     s32 a2 = smlua_to_integer(L, 3);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "geo_bits_bowser_coloring"); return 0; }
@@ -9185,7 +9185,7 @@ int smlua_func_geo_move_mario_part_from_parent(lua_State* L) {
 
     s32 run = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "geo_move_mario_part_from_parent"); return 0; }
-    struct GraphNode* node = (struct GraphNode*)smlua_to_cobject(L, 2, LOT_GRAPHNODE);
+//  struct GraphNode* node = (struct GraphNode*)smlua_to_cobject(L, 2, LOT_GRAPHNODE); <--- UNIMPLEMENTED
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "geo_move_mario_part_from_parent"); return 0; }
 
     Mat4 mtx;
@@ -9212,7 +9212,7 @@ int smlua_func_geo_scale_bowser_key(lua_State* L) {
 
     s32 run = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "geo_scale_bowser_key"); return 0; }
-    struct GraphNode* node = (struct GraphNode*)smlua_to_cobject(L, 2, LOT_GRAPHNODE);
+//  struct GraphNode* node = (struct GraphNode*)smlua_to_cobject(L, 2, LOT_GRAPHNODE); <--- UNIMPLEMENTED
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "geo_scale_bowser_key"); return 0; }
     f32 mtx[4][4] = smlua_to_number(L, 3);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "geo_scale_bowser_key"); return 0; }
@@ -9235,7 +9235,7 @@ int smlua_func_geo_snufit_move_mask(lua_State* L) {
 
     s32 callContext = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "geo_snufit_move_mask"); return 0; }
-    struct GraphNode* node = (struct GraphNode*)smlua_to_cobject(L, 2, LOT_GRAPHNODE);
+//  struct GraphNode* node = (struct GraphNode*)smlua_to_cobject(L, 2, LOT_GRAPHNODE); <--- UNIMPLEMENTED
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "geo_snufit_move_mask"); return 0; }
     Mat4 * c = (Mat4 *)smlua_to_cobject(L, 3, LOT_MAT4);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "geo_snufit_move_mask"); return 0; }
@@ -9258,7 +9258,7 @@ int smlua_func_geo_snufit_scale_body(lua_State* L) {
 
     s32 callContext = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "geo_snufit_scale_body"); return 0; }
-    struct GraphNode* node = (struct GraphNode*)smlua_to_cobject(L, 2, LOT_GRAPHNODE);
+//  struct GraphNode* node = (struct GraphNode*)smlua_to_cobject(L, 2, LOT_GRAPHNODE); <--- UNIMPLEMENTED
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "geo_snufit_scale_body"); return 0; }
     Mat4 * c = (Mat4 *)smlua_to_cobject(L, 3, LOT_MAT4);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "geo_snufit_scale_body"); return 0; }
@@ -9281,7 +9281,7 @@ int smlua_func_geo_switch_bowser_eyes(lua_State* L) {
 
     s32 run = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "geo_switch_bowser_eyes"); return 0; }
-    struct GraphNode* node = (struct GraphNode*)smlua_to_cobject(L, 2, LOT_GRAPHNODE);
+//  struct GraphNode* node = (struct GraphNode*)smlua_to_cobject(L, 2, LOT_GRAPHNODE); <--- UNIMPLEMENTED
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "geo_switch_bowser_eyes"); return 0; }
     Mat4 * mtx = (Mat4 *)smlua_to_cobject(L, 3, LOT_MAT4);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "geo_switch_bowser_eyes"); return 0; }
@@ -9304,7 +9304,7 @@ int smlua_func_geo_switch_tuxie_mother_eyes(lua_State* L) {
 
     s32 run = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "geo_switch_tuxie_mother_eyes"); return 0; }
-    struct GraphNode* node = (struct GraphNode*)smlua_to_cobject(L, 2, LOT_GRAPHNODE);
+//  struct GraphNode* node = (struct GraphNode*)smlua_to_cobject(L, 2, LOT_GRAPHNODE); <--- UNIMPLEMENTED
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "geo_switch_tuxie_mother_eyes"); return 0; }
     Mat4 * mtx = (Mat4 *)smlua_to_cobject(L, 3, LOT_MAT4);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "geo_switch_tuxie_mother_eyes"); return 0; }
@@ -9327,7 +9327,7 @@ int smlua_func_geo_update_body_rot_from_parent(lua_State* L) {
 
     s32 run = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "geo_update_body_rot_from_parent"); return 0; }
-    struct GraphNode* node = (struct GraphNode*)smlua_to_cobject(L, 2, LOT_GRAPHNODE);
+//  struct GraphNode* node = (struct GraphNode*)smlua_to_cobject(L, 2, LOT_GRAPHNODE); <--- UNIMPLEMENTED
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "geo_update_body_rot_from_parent"); return 0; }
 
     Mat4 mtx;
@@ -9354,7 +9354,7 @@ int smlua_func_geo_update_held_mario_pos(lua_State* L) {
 
     s32 run = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "geo_update_held_mario_pos"); return 0; }
-    struct GraphNode* node = (struct GraphNode*)smlua_to_cobject(L, 2, LOT_GRAPHNODE);
+//  struct GraphNode* node = (struct GraphNode*)smlua_to_cobject(L, 2, LOT_GRAPHNODE); <--- UNIMPLEMENTED
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "geo_update_held_mario_pos"); return 0; }
 
     Mat4 mtx;
@@ -10525,7 +10525,7 @@ int smlua_func_geo_camera_fov(lua_State* L) {
 
     s32 callContext = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "geo_camera_fov"); return 0; }
-    struct GraphNode* g = (struct GraphNode*)smlua_to_cobject(L, 2, LOT_GRAPHNODE);
+//  struct GraphNode* g = (struct GraphNode*)smlua_to_cobject(L, 2, LOT_GRAPHNODE); <--- UNIMPLEMENTED
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "geo_camera_fov"); return 0; }
 //  void * context = (void *)smlua_to_cobject(L, 3, LOT_???); <--- UNIMPLEMENTED
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "geo_camera_fov"); return 0; }
@@ -10548,7 +10548,7 @@ int smlua_func_geo_camera_main(lua_State* L) {
 
     s32 callContext = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "geo_camera_main"); return 0; }
-    struct GraphNode* g = (struct GraphNode*)smlua_to_cobject(L, 2, LOT_GRAPHNODE);
+//  struct GraphNode* g = (struct GraphNode*)smlua_to_cobject(L, 2, LOT_GRAPHNODE); <--- UNIMPLEMENTED
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "geo_camera_main"); return 0; }
 //  void * context = (void *)smlua_to_cobject(L, 3, LOT_???); <--- UNIMPLEMENTED
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "geo_camera_main"); return 0; }
@@ -13499,6 +13499,23 @@ int smlua_func_reset_dialog_render_state(UNUSED lua_State* L) {
 
 
     reset_dialog_render_state();
+
+    return 1;
+}
+
+int smlua_func_set_dialog_box_state(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "set_dialog_box_state", 1, top);
+        return 0;
+    }
+
+    u8 state = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "set_dialog_box_state"); return 0; }
+
+    set_dialog_box_state(state);
 
     return 1;
 }
@@ -20300,7 +20317,7 @@ int smlua_func_geo_obj_transparency_something(lua_State* L) {
 
     s32 callContext = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "geo_obj_transparency_something"); return 0; }
-    struct GraphNode* node = (struct GraphNode*)smlua_to_cobject(L, 2, LOT_GRAPHNODE);
+//  struct GraphNode* node = (struct GraphNode*)smlua_to_cobject(L, 2, LOT_GRAPHNODE); <--- UNIMPLEMENTED
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "geo_obj_transparency_something"); return 0; }
     Mat4 * mtx = (Mat4 *)smlua_to_cobject(L, 3, LOT_MAT4);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "geo_obj_transparency_something"); return 0; }
@@ -24518,7 +24535,7 @@ int smlua_func_geo_choose_area_ext(lua_State* L) {
 
     s32 callContext = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "geo_choose_area_ext"); return 0; }
-    struct GraphNode* node = (struct GraphNode*)smlua_to_cobject(L, 2, LOT_GRAPHNODE);
+//  struct GraphNode* node = (struct GraphNode*)smlua_to_cobject(L, 2, LOT_GRAPHNODE); <--- UNIMPLEMENTED
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "geo_choose_area_ext"); return 0; }
 
     Mat4 mtx;
@@ -24534,6 +24551,7 @@ int smlua_func_geo_choose_area_ext(lua_State* L) {
 }
 */
 
+/*
 int smlua_func_geo_offset_klepto_debug(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -24545,7 +24563,7 @@ int smlua_func_geo_offset_klepto_debug(lua_State* L) {
 
     s32 callContext = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "geo_offset_klepto_debug"); return 0; }
-    struct GraphNode* a1 = (struct GraphNode*)smlua_to_cobject(L, 2, LOT_GRAPHNODE);
+//  struct GraphNode* a1 = (struct GraphNode*)smlua_to_cobject(L, 2, LOT_GRAPHNODE); <--- UNIMPLEMENTED
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "geo_offset_klepto_debug"); return 0; }
     s32 sp8 = smlua_to_integer(L, 3);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "geo_offset_klepto_debug"); return 0; }
@@ -24555,6 +24573,7 @@ int smlua_func_geo_offset_klepto_debug(lua_State* L) {
 
     return 1;
 }
+*/
 
 /*
 int smlua_func_geo_offset_klepto_held_object(lua_State* L) {
@@ -24568,7 +24587,7 @@ int smlua_func_geo_offset_klepto_held_object(lua_State* L) {
 
     s32 callContext = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "geo_offset_klepto_held_object"); return 0; }
-    struct GraphNode* node = (struct GraphNode*)smlua_to_cobject(L, 2, LOT_GRAPHNODE);
+//  struct GraphNode* node = (struct GraphNode*)smlua_to_cobject(L, 2, LOT_GRAPHNODE); <--- UNIMPLEMENTED
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "geo_offset_klepto_held_object"); return 0; }
 
     Mat4 mtx;
@@ -24596,7 +24615,7 @@ int smlua_func_geo_switch_anim_state(lua_State* L) {
 
     s32 callContext = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "geo_switch_anim_state"); return 0; }
-    struct GraphNode* node = (struct GraphNode*)smlua_to_cobject(L, 2, LOT_GRAPHNODE);
+//  struct GraphNode* node = (struct GraphNode*)smlua_to_cobject(L, 2, LOT_GRAPHNODE); <--- UNIMPLEMENTED
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "geo_switch_anim_state"); return 0; }
 
     extern Gfx *geo_switch_anim_state(s32 callContext, struct GraphNode *node);
@@ -24618,7 +24637,7 @@ int smlua_func_geo_switch_area(lua_State* L) {
 
     s32 callContext = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "geo_switch_area"); return 0; }
-    struct GraphNode* node = (struct GraphNode*)smlua_to_cobject(L, 2, LOT_GRAPHNODE);
+//  struct GraphNode* node = (struct GraphNode*)smlua_to_cobject(L, 2, LOT_GRAPHNODE); <--- UNIMPLEMENTED
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "geo_switch_area"); return 0; }
 
     extern Gfx *geo_switch_area(s32 callContext, struct GraphNode *node);
@@ -24640,7 +24659,7 @@ int smlua_func_geo_update_layer_transparency(lua_State* L) {
 
     s32 callContext = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "geo_update_layer_transparency"); return 0; }
-    struct GraphNode* node = (struct GraphNode*)smlua_to_cobject(L, 2, LOT_GRAPHNODE);
+//  struct GraphNode* node = (struct GraphNode*)smlua_to_cobject(L, 2, LOT_GRAPHNODE); <--- UNIMPLEMENTED
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "geo_update_layer_transparency"); return 0; }
 //  void * context = (void *)smlua_to_cobject(L, 3, LOT_???); <--- UNIMPLEMENTED
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "geo_update_layer_transparency"); return 0; }
@@ -24664,7 +24683,7 @@ int smlua_func_geo_update_projectile_pos_from_parent(lua_State* L) {
 
     s32 callContext = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "geo_update_projectile_pos_from_parent"); return 0; }
-    struct GraphNode* node = (struct GraphNode*)smlua_to_cobject(L, 2, LOT_GRAPHNODE);
+//  struct GraphNode* node = (struct GraphNode*)smlua_to_cobject(L, 2, LOT_GRAPHNODE); <--- UNIMPLEMENTED
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "geo_update_projectile_pos_from_parent"); return 0; }
 
     Mat4 mtx;
@@ -29040,23 +29059,6 @@ int smlua_func_course_is_main_course(lua_State* L) {
     return 1;
 }
 
-int smlua_func_deref_s32_pointer(lua_State* L) {
-    if (L == NULL) { return 0; }
-
-    int top = lua_gettop(L);
-    if (top != 1) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "deref_s32_pointer", 1, top);
-        return 0;
-    }
-
-    s32* pointer = (s32*)smlua_to_cpointer(L, 1, LVT_S32_P);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "deref_s32_pointer"); return 0; }
-
-    lua_pushinteger(L, deref_s32_pointer(pointer));
-
-    return 1;
-}
-
 int smlua_func_djui_attempting_to_open_playerlist(UNUSED lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -29495,23 +29497,6 @@ int smlua_func_get_save_file_modified(UNUSED lua_State* L) {
 
 
     lua_pushboolean(L, get_save_file_modified());
-
-    return 1;
-}
-
-int smlua_func_get_temp_s32_pointer(lua_State* L) {
-    if (L == NULL) { return 0; }
-
-    int top = lua_gettop(L);
-    if (top != 1) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "get_temp_s32_pointer", 1, top);
-        return 0;
-    }
-
-    s32 initialValue = smlua_to_integer(L, 1);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "get_temp_s32_pointer"); return 0; }
-
-    smlua_push_pointer(L, LVT_S32_P, (void*)get_temp_s32_pointer(initialValue));
 
     return 1;
 }
@@ -32812,6 +32797,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "reset_dialog_override_color", smlua_func_reset_dialog_override_color);
     smlua_bind_function(L, "reset_dialog_override_pos", smlua_func_reset_dialog_override_pos);
     smlua_bind_function(L, "reset_dialog_render_state", smlua_func_reset_dialog_render_state);
+    smlua_bind_function(L, "set_dialog_box_state", smlua_func_set_dialog_box_state);
     smlua_bind_function(L, "set_dialog_override_color", smlua_func_set_dialog_override_color);
     smlua_bind_function(L, "set_dialog_override_pos", smlua_func_set_dialog_override_pos);
     smlua_bind_function(L, "set_menu_mode", smlua_func_set_menu_mode);
@@ -33411,7 +33397,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "find_object_with_behavior", smlua_func_find_object_with_behavior);
     smlua_bind_function(L, "find_unimportant_object", smlua_func_find_unimportant_object);
     //smlua_bind_function(L, "geo_choose_area_ext", smlua_func_geo_choose_area_ext); <--- UNIMPLEMENTED
-    smlua_bind_function(L, "geo_offset_klepto_debug", smlua_func_geo_offset_klepto_debug);
+    //smlua_bind_function(L, "geo_offset_klepto_debug", smlua_func_geo_offset_klepto_debug); <--- UNIMPLEMENTED
     //smlua_bind_function(L, "geo_offset_klepto_held_object", smlua_func_geo_offset_klepto_held_object); <--- UNIMPLEMENTED
     //smlua_bind_function(L, "geo_switch_anim_state", smlua_func_geo_switch_anim_state); <--- UNIMPLEMENTED
     //smlua_bind_function(L, "geo_switch_area", smlua_func_geo_switch_area); <--- UNIMPLEMENTED
@@ -33671,7 +33657,6 @@ void smlua_bind_functions_autogen(void) {
     // smlua_misc_utils.h
     smlua_bind_function(L, "allocate_mario_action", smlua_func_allocate_mario_action);
     smlua_bind_function(L, "course_is_main_course", smlua_func_course_is_main_course);
-    smlua_bind_function(L, "deref_s32_pointer", smlua_func_deref_s32_pointer);
     smlua_bind_function(L, "djui_attempting_to_open_playerlist", smlua_func_djui_attempting_to_open_playerlist);
     smlua_bind_function(L, "djui_is_playerlist_open", smlua_func_djui_is_playerlist_open);
     smlua_bind_function(L, "djui_is_popup_disabled", smlua_func_djui_is_popup_disabled);
@@ -33700,7 +33685,6 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "get_network_area_timer", smlua_func_get_network_area_timer);
     smlua_bind_function(L, "get_os_name", smlua_func_get_os_name);
     smlua_bind_function(L, "get_save_file_modified", smlua_func_get_save_file_modified);
-    smlua_bind_function(L, "get_temp_s32_pointer", smlua_func_get_temp_s32_pointer);
     smlua_bind_function(L, "get_time", smlua_func_get_time);
     smlua_bind_function(L, "get_ttc_speed_setting", smlua_func_get_ttc_speed_setting);
     smlua_bind_function(L, "get_volume_env", smlua_func_get_volume_env);

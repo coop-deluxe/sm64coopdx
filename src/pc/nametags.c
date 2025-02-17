@@ -80,7 +80,7 @@ void nametags_render(void) {
             continue;
         }
 
-        if (m->marioBodyState->updateHeadPosTime != gGlobalTimer) { continue; }
+        if (m->marioBodyState->mirrorMario || m->marioBodyState->updateHeadPosTime != gGlobalTimer) { continue; }
 
         Vec3f pos;
         Vec3f out;

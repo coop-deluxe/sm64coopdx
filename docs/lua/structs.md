@@ -109,6 +109,7 @@
 - [Vec3s](#Vec3s)
 - [Vec4f](#Vec4f)
 - [Vec4s](#Vec4s)
+- [Vtx_Interp](#Vtx_Interp)
 - [WallCollisionData](#WallCollisionData)
 - [WarpNode](#WarpNode)
 - [WarpTransition](#WarpTransition)
@@ -175,6 +176,7 @@
 | Field | Type | Access |
 | ----- | ---- | ------ |
 | camera | [Camera](structs.md#Camera) |  |
+| dialog | `Array` <`integer`> |  |
 | flags | `integer` |  |
 | index | `integer` |  |
 | instantWarps | [InstantWarp](structs.md#InstantWarp) |  |
@@ -192,6 +194,7 @@
 | terrainData | `Pointer` <`integer`> | read-only |
 | terrainType | `integer` |  |
 | warpNodes | [ObjectWarpNode](structs.md#ObjectWarpNode) | read-only |
+| whirlpools | `Array` <Whirlpool> |  |
 
 [:arrow_up_small:](#)
 
@@ -395,6 +398,8 @@
 | cutscene | `integer` |  |
 | defMode | `integer` |  |
 | doorStatus | `integer` |  |
+| filler31 | `Array` <`integer`> |  |
+| filler3C | `Array` <`integer`> |  |
 | focus | [Vec3f](structs.md#Vec3f) | read-only |
 | mode | `integer` |  |
 | mtx | `Mat4` | read-only |
@@ -430,6 +435,7 @@
 | Field | Type | Access |
 | ----- | ---- | ------ |
 | override | `boolean` |  |
+| value | `integer` |  |
 
 [:arrow_up_small:](#)
 
@@ -979,6 +985,7 @@
 | normalY | `number` |  |
 | normalZ | `number` |  |
 | originOffset | `number` |  |
+| unused | `Array` <`number`> |  |
 
 [:arrow_up_small:](#)
 
@@ -1271,6 +1278,7 @@
 | ----- | ---- | ------ |
 | cullingRadius | `integer` |  |
 | node | [GraphNode](structs.md#GraphNode) | read-only |
+| pad1E | `Array` <`integer`> |  |
 
 [:arrow_up_small:](#)
 
@@ -1474,6 +1482,7 @@
 | Field | Type | Access |
 | ----- | ---- | ------ |
 | node | [GraphNode](structs.md#GraphNode) | read-only |
+| pad1E | `Array` <`integer`> |  |
 | translation | [Vec3s](structs.md#Vec3s) | read-only |
 
 [:arrow_up_small:](#)
@@ -1553,6 +1562,9 @@
 | curFocus | [Vec3f](structs.md#Vec3f) | read-only |
 | curPos | [Vec3f](structs.md#Vec3f) | read-only |
 | defMode | `integer` |  |
+| filler30 | `Array` <`integer`> |  |
+| filler3E | `Array` <`integer`> |  |
+| filler72 | `Array` <`integer`> |  |
 | focHSpeed | `number` |  |
 | focVSpeed | `number` |  |
 | focus | [Vec3f](structs.md#Vec3f) | read-only |
@@ -1669,6 +1681,7 @@
 | Field | Type | Access |
 | ----- | ---- | ------ |
 | currentAnimAddr | `Pointer` <`integer`> | read-only |
+| padding | `Array` <`integer`> |  |
 | targetAnim | [Animation](structs.md#Animation) |  |
 
 [:arrow_up_small:](#)
@@ -1684,6 +1697,7 @@
 | capState | `integer` |  |
 | eyeState | `integer` |  |
 | grabPos | `integer` |  |
+| handFootPos | `Array` <Vec3f> | read-only |
 | handState | `integer` |  |
 | headAngle | [Vec3s](structs.md#Vec3s) | read-only |
 | headPos | [Vec3f](structs.md#Vec3f) | read-only |
@@ -1694,6 +1708,7 @@
 | lightingDirX | `number` |  |
 | lightingDirY | `number` |  |
 | lightingDirZ | `number` |  |
+| mirrorMario | `boolean` |  |
 | modelState | `integer` |  |
 | punchState | `integer` |  |
 | shadeB | `integer` |  |
@@ -1878,6 +1893,7 @@
 | Field | Type | Access |
 | ----- | ---- | ------ |
 | cachedPath | `string` | read-only |
+| dataHash | `Array` <`integer`> | read-only |
 | relativePath | `string` | read-only |
 | wroteBytes | `integer` | read-only |
 
@@ -1962,6 +1978,7 @@
 | bhvDelayTimer | `integer` |  |
 | bhvStackIndex | `integer` | read-only |
 | collidedObjInteractTypes | `integer` |  |
+| collidedObjs | `Array` <Object> |  |
 | collisionData | `Pointer` <`Collision`> |  |
 | coopFlags | `integer` | read-only |
 | ctx | `integer` |  |
@@ -2826,6 +2843,8 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
+| norm | `Array` <`integer`> |  |
+| pos | `Array` <`integer`> |  |
 
 [:arrow_up_small:](#)
 
@@ -3179,6 +3198,17 @@
 
 <br />
 
+## [Vtx_Interp](#Vtx_Interp)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| n | `string` |  |
+| ob | `Array` <`number`> |  |
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [WallCollisionData](#WallCollisionData)
 
 | Field | Type | Access |
@@ -3189,6 +3219,7 @@
 | offsetY | `number` |  |
 | radius | `number` |  |
 | unused | `integer` |  |
+| walls | `Array` <Surface> |  |
 | x | `number` |  |
 | y | `number` |  |
 | z | `number` |  |

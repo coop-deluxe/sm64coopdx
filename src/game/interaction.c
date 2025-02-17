@@ -160,7 +160,7 @@ u32 determine_interaction(struct MarioState *m, struct Object *o) {
         }
     }
 
-    if (interaction == 0 && action & ACT_FLAG_ATTACKING) {
+    if ((interaction == 0 || interaction & INT_LUA) && action & ACT_FLAG_ATTACKING) {
         u32 flags = (MARIO_PUNCHING | MARIO_KICKING | MARIO_TRIPPING);
         if ((action == ACT_PUNCHING || action == ACT_MOVE_PUNCHING || action == ACT_JUMP_KICK) ||
             ((m->flags & flags) && (interaction & INT_LUA))) {
@@ -1273,6 +1273,7 @@ static u8 resolve_player_collision(struct MarioState* m, struct MarioState* m2) 
     f32 radius = m->marioObj->hitboxRadius * 2.0f;
 
     if (!m->marioBodyState || !m2->marioBodyState) { return FALSE; }
+    if (m->marioBodyState->mirrorMario || m2->marioBodyState->mirrorMario) { return FALSE; }
 
     f32* localTorso = m->marioBodyState->torsoPos;
     f32* remoteTorso = m2->marioBodyState->torsoPos;
@@ -2347,6 +2348,8 @@ void mario_process_interactions(struct MarioState *m) {
     if (m->invincTimer > 0 && !sDelayInvincTimer) {
         m->invincTimer -= 1;
     }
+
+    smlua_call_event_hooks_mario_param(HOOK_ON_INTERACTIONS, m);
 
     //! If the kick/punch flags are set and an object collision changes Mario's
     // action, he will get the kick/punch wall speed anyway.

@@ -4491,6 +4491,26 @@ Sets if first person is enabled
 
 <br />
 
+## [set_dialog_box_state](#set_dialog_box_state)
+
+### Lua Example
+`set_dialog_box_state(state)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| state | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_dialog_box_state(u8 state);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [set_dialog_override_color](#set_dialog_override_color)
 
 ### Lua Example

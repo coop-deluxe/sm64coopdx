@@ -184,6 +184,14 @@ static void rom_asset_load_dialog(struct RomAsset* asset) {
     }
 }
 
+static void rom_asset_load_demo(struct RomAsset* asset) {
+    u8* demo = asset->ptr;
+    while (asset->cursor < asset->segmentedSize) {
+        *demo = READ8(asset);
+        demo++;
+    }
+}
+
 static void rom_asset_load(struct RomAsset* asset) {
     if (!rom_asset_load_segment(asset->physicalAddress, asset->physicalSize)) {
         return;
@@ -195,6 +203,7 @@ static void rom_asset_load(struct RomAsset* asset) {
         case ROM_ASSET_COLLISION: rom_asset_load_collision(asset); break;
         case ROM_ASSET_ANIM: rom_asset_load_anim(asset); break;
         case ROM_ASSET_DIALOG: rom_asset_load_dialog(asset); break;
+        case ROM_ASSET_DEMO: rom_asset_load_demo(asset); break;
         default:
             LOG_ERROR("Could not load unknown asset type %u!", asset->assetType);
     }

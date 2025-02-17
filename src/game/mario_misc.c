@@ -424,6 +424,7 @@ Gfx* geo_mario_tilt_torso(s32 callContext, struct GraphNode* node, Mat4* mtx) {
     u8 plrIdx = geo_get_processing_object_index();
     struct MarioBodyState* bodyState = &gBodyStates[plrIdx];
     s32 action = bodyState->action;
+    bodyState->mirrorMario = gCurGraphNodeObject == &gMirrorMario[plrIdx];
 
     u8 charIndex = gNetworkPlayers[plrIdx].overrideModelIndex;
     if (charIndex >= CT_MAX) { charIndex = 0; }
@@ -458,6 +459,7 @@ Gfx* geo_mario_head_rotation(s32 callContext, struct GraphNode* node, Mat4* c) {
     u8 plrIdx = geo_get_processing_object_index();
     struct MarioBodyState* bodyState = &gBodyStates[plrIdx];
     s32 action = bodyState->action;
+    bodyState->mirrorMario = gCurGraphNodeObject == &gMirrorMario[plrIdx];
 
     bool marioActive = gMarioObjects[plrIdx] != NULL && gMarioObjects[plrIdx]->activeFlags != ACTIVE_FLAG_DEACTIVATED;
 
@@ -805,6 +807,7 @@ Gfx* geo_mario_set_player_colors(s32 callContext, struct GraphNode* node, UNUSED
     gNetworkPlayerColors[index] = color;
 
     struct MarioBodyState* bodyState = &gBodyStates[index];
+    bodyState->mirrorMario = gCurGraphNodeObject == &gMirrorMario[index];
 
     if (callContext == GEO_CONTEXT_RENDER) {
         gfx = geo_mario_create_player_colors_dl(index, NULL, NULL);

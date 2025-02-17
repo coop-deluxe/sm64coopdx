@@ -219,6 +219,15 @@ void unload_object(struct Object *obj) {
     obj->header.gfx.node.flags &= ~GRAPH_RENDER_CYLBOARD;
     obj->header.gfx.node.flags &= ~GRAPH_RENDER_ACTIVE;
 
+    // Clear Mario object pointers
+    if (obj->behavior == smlua_override_behavior(bhvMario)) {
+        u8 playerIndex = obj->oBehParams - 1;
+        if (playerIndex < MAX_PLAYERS) {
+            gMarioObjects[playerIndex] = NULL;
+            gMarioStates[playerIndex].marioObj = NULL;
+        }
+    }
+
     struct SyncObject* so = sync_object_get(obj->oSyncID);
     if (so && gNetworkType != NT_NONE) {
         if (so->syncDeathEvent) {

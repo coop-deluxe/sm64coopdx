@@ -42,11 +42,6 @@ struct DateTime {
 /* |description|Gets the current area's networked timer|descriptionEnd| */
 u32 get_network_area_timer(void);
 
-/* |description|Returns a temporary signed 32-bit integer pointer with its value set to `initialValue`|descriptionEnd| */
-s32* get_temp_s32_pointer(s32 initialValue);
-/* |description|Gets the signed 32-bit integer value from `pointer`|descriptionEnd| */
-s32 deref_s32_pointer(s32* pointer);
-
 /* |description|Creates a DJUI popup that is broadcasted to every client|descriptionEnd| */
 void djui_popup_create_global(const char* message, int lines);
 /* |description|Returns if popups are disabled|descriptionEnd| */
