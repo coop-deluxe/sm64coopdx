@@ -9167,7 +9167,7 @@ int smlua_func_geo_bits_bowser_coloring(lua_State* L) {
     s32 a2 = smlua_to_integer(L, 3);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "geo_bits_bowser_coloring"); return 0; }
 
-    UNIMPLEMENTED -->(L, geo_bits_bowser_coloring(run, node, a2));
+    smlua_push_object(L, LOT_GFX, geo_bits_bowser_coloring(run, node, a2), NULL);
 
     return 1;
 }
@@ -9192,7 +9192,7 @@ int smlua_func_geo_move_mario_part_from_parent(lua_State* L) {
     smlua_get_mat4(mtx, 3);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "geo_move_mario_part_from_parent"); return 0; }
 
-    UNIMPLEMENTED -->(L, geo_move_mario_part_from_parent(run, node, mtx));
+    smlua_push_object(L, LOT_GFX, geo_move_mario_part_from_parent(run, node, mtx), NULL);
 
     smlua_push_mat4(mtx, 3);
 
@@ -9217,7 +9217,7 @@ int smlua_func_geo_scale_bowser_key(lua_State* L) {
     f32 mtx[4][4] = smlua_to_number(L, 3);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "geo_scale_bowser_key"); return 0; }
 
-    UNIMPLEMENTED -->(L, geo_scale_bowser_key(run, node, mtx[4][4]));
+    smlua_push_object(L, LOT_GFX, geo_scale_bowser_key(run, node, mtx[4][4]), NULL);
 
     return 1;
 }
@@ -9240,7 +9240,7 @@ int smlua_func_geo_snufit_move_mask(lua_State* L) {
     Mat4 * c = (Mat4 *)smlua_to_cobject(L, 3, LOT_MAT4);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "geo_snufit_move_mask"); return 0; }
 
-    UNIMPLEMENTED -->(L, geo_snufit_move_mask(callContext, node, c));
+    smlua_push_object(L, LOT_GFX, geo_snufit_move_mask(callContext, node, c), NULL);
 
     return 1;
 }
@@ -9263,7 +9263,7 @@ int smlua_func_geo_snufit_scale_body(lua_State* L) {
     Mat4 * c = (Mat4 *)smlua_to_cobject(L, 3, LOT_MAT4);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "geo_snufit_scale_body"); return 0; }
 
-    UNIMPLEMENTED -->(L, geo_snufit_scale_body(callContext, node, c));
+    smlua_push_object(L, LOT_GFX, geo_snufit_scale_body(callContext, node, c), NULL);
 
     return 1;
 }
@@ -9286,7 +9286,7 @@ int smlua_func_geo_switch_bowser_eyes(lua_State* L) {
     Mat4 * mtx = (Mat4 *)smlua_to_cobject(L, 3, LOT_MAT4);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "geo_switch_bowser_eyes"); return 0; }
 
-    UNIMPLEMENTED -->(L, geo_switch_bowser_eyes(run, node, mtx));
+    smlua_push_object(L, LOT_GFX, geo_switch_bowser_eyes(run, node, mtx), NULL);
 
     return 1;
 }
@@ -9309,7 +9309,7 @@ int smlua_func_geo_switch_tuxie_mother_eyes(lua_State* L) {
     Mat4 * mtx = (Mat4 *)smlua_to_cobject(L, 3, LOT_MAT4);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "geo_switch_tuxie_mother_eyes"); return 0; }
 
-    UNIMPLEMENTED -->(L, geo_switch_tuxie_mother_eyes(run, node, mtx));
+    smlua_push_object(L, LOT_GFX, geo_switch_tuxie_mother_eyes(run, node, mtx), NULL);
 
     return 1;
 }
@@ -9334,7 +9334,7 @@ int smlua_func_geo_update_body_rot_from_parent(lua_State* L) {
     smlua_get_mat4(mtx, 3);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "geo_update_body_rot_from_parent"); return 0; }
 
-    UNIMPLEMENTED -->(L, geo_update_body_rot_from_parent(run, node, mtx));
+    smlua_push_object(L, LOT_GFX, geo_update_body_rot_from_parent(run, node, mtx), NULL);
 
     smlua_push_mat4(mtx, 3);
 
@@ -9361,7 +9361,7 @@ int smlua_func_geo_update_held_mario_pos(lua_State* L) {
     smlua_get_mat4(mtx, 3);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "geo_update_held_mario_pos"); return 0; }
 
-    UNIMPLEMENTED -->(L, geo_update_held_mario_pos(run, node, mtx));
+    smlua_push_object(L, LOT_GFX, geo_update_held_mario_pos(run, node, mtx), NULL);
 
     smlua_push_mat4(mtx, 3);
 
@@ -10530,7 +10530,7 @@ int smlua_func_geo_camera_fov(lua_State* L) {
 //  void * context = (void *)smlua_to_cobject(L, 3, LOT_???); <--- UNIMPLEMENTED
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "geo_camera_fov"); return 0; }
 
-    UNIMPLEMENTED -->(L, geo_camera_fov(callContext, g, context));
+    smlua_push_object(L, LOT_GFX, geo_camera_fov(callContext, g, context), NULL);
 
     return 1;
 }
@@ -10553,7 +10553,7 @@ int smlua_func_geo_camera_main(lua_State* L) {
 //  void * context = (void *)smlua_to_cobject(L, 3, LOT_???); <--- UNIMPLEMENTED
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "geo_camera_main"); return 0; }
 
-    UNIMPLEMENTED -->(L, geo_camera_main(callContext, g, context));
+    smlua_push_object(L, LOT_GFX, geo_camera_main(callContext, g, context), NULL);
 
     return 1;
 }
@@ -20323,7 +20323,7 @@ int smlua_func_geo_obj_transparency_something(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "geo_obj_transparency_something"); return 0; }
 
     extern Gfx UNUSED *geo_obj_transparency_something(s32 callContext, struct GraphNode *node, UNUSED Mat4 *mtx);
-    UNIMPLEMENTED -->(L, geo_obj_transparency_something(callContext, node, mtx));
+    smlua_push_object(L, LOT_GFX, geo_obj_transparency_something(callContext, node, mtx), NULL);
 
     return 1;
 }
@@ -24543,7 +24543,7 @@ int smlua_func_geo_choose_area_ext(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "geo_choose_area_ext"); return 0; }
 
     extern Gfx *geo_choose_area_ext(UNUSED s32 callContext, struct GraphNode *node, UNUSED Mat4 mtx);
-    UNIMPLEMENTED -->(L, geo_choose_area_ext(callContext, node, mtx));
+    smlua_push_object(L, LOT_GFX, geo_choose_area_ext(callContext, node, mtx), NULL);
 
     smlua_push_mat4(mtx, 3);
 
@@ -24595,7 +24595,7 @@ int smlua_func_geo_offset_klepto_held_object(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "geo_offset_klepto_held_object"); return 0; }
 
     extern Gfx *geo_offset_klepto_held_object(s32 callContext, struct GraphNode *node, UNUSED Mat4 mtx);
-    UNIMPLEMENTED -->(L, geo_offset_klepto_held_object(callContext, node, mtx));
+    smlua_push_object(L, LOT_GFX, geo_offset_klepto_held_object(callContext, node, mtx), NULL);
 
     smlua_push_mat4(mtx, 3);
 
@@ -24619,7 +24619,7 @@ int smlua_func_geo_switch_anim_state(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "geo_switch_anim_state"); return 0; }
 
     extern Gfx *geo_switch_anim_state(s32 callContext, struct GraphNode *node);
-    UNIMPLEMENTED -->(L, geo_switch_anim_state(callContext, node));
+    smlua_push_object(L, LOT_GFX, geo_switch_anim_state(callContext, node), NULL);
 
     return 1;
 }
@@ -24641,7 +24641,7 @@ int smlua_func_geo_switch_area(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "geo_switch_area"); return 0; }
 
     extern Gfx *geo_switch_area(s32 callContext, struct GraphNode *node);
-    UNIMPLEMENTED -->(L, geo_switch_area(callContext, node));
+    smlua_push_object(L, LOT_GFX, geo_switch_area(callContext, node), NULL);
 
     return 1;
 }
@@ -24665,7 +24665,7 @@ int smlua_func_geo_update_layer_transparency(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "geo_update_layer_transparency"); return 0; }
 
     extern Gfx *geo_update_layer_transparency(s32 callContext, struct GraphNode *node, UNUSED void *context);
-    UNIMPLEMENTED -->(L, geo_update_layer_transparency(callContext, node, context));
+    smlua_push_object(L, LOT_GFX, geo_update_layer_transparency(callContext, node, context), NULL);
 
     return 1;
 }
@@ -24691,7 +24691,7 @@ int smlua_func_geo_update_projectile_pos_from_parent(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "geo_update_projectile_pos_from_parent"); return 0; }
 
     extern Gfx *geo_update_projectile_pos_from_parent(s32 callContext, UNUSED struct GraphNode *node, Mat4 mtx);
-    UNIMPLEMENTED -->(L, geo_update_projectile_pos_from_parent(callContext, node, mtx));
+    smlua_push_object(L, LOT_GFX, geo_update_projectile_pos_from_parent(callContext, node, mtx), NULL);
 
     smlua_push_mat4(mtx, 3);
 
@@ -28347,6 +28347,220 @@ int smlua_func_get_vertex_color(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "get_vertex_color"); return 0; }
 
     lua_pushinteger(L, get_vertex_color(index));
+
+    return 1;
+}
+
+int smlua_func_gfx_clear_geometrymode(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "gfx_clear_geometrymode", 2, top);
+        return 0;
+    }
+
+    Gfx* gfx = (Gfx*)smlua_to_cobject(L, 1, LOT_GFX);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "gfx_clear_geometrymode"); return 0; }
+    u32 mode = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "gfx_clear_geometrymode"); return 0; }
+
+    gfx_clear_geometrymode(gfx, mode);
+
+    return 1;
+}
+
+int smlua_func_gfx_copy_lights_player_part(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "gfx_copy_lights_player_part", 2, top);
+        return 0;
+    }
+
+    Gfx* gfx = (Gfx*)smlua_to_cobject(L, 1, LOT_GFX);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "gfx_copy_lights_player_part"); return 0; }
+    u8 part = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "gfx_copy_lights_player_part"); return 0; }
+
+    gfx_copy_lights_player_part(gfx, part);
+
+    return 1;
+}
+
+int smlua_func_gfx_get_vtx(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "gfx_get_vtx", 2, top);
+        return 0;
+    }
+
+    Gfx* gfx = (Gfx*)smlua_to_cobject(L, 1, LOT_GFX);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "gfx_get_vtx"); return 0; }
+    u16 offset = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "gfx_get_vtx"); return 0; }
+
+    smlua_push_object(L, LOT_VTX, gfx_get_vtx(gfx, offset), NULL);
+
+    return 1;
+}
+
+int smlua_func_gfx_parse(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "gfx_parse", 2, top);
+        return 0;
+    }
+
+    Gfx* cmd = (Gfx*)smlua_to_cobject(L, 1, LOT_GFX);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "gfx_parse"); return 0; }
+    LuaFunction func = smlua_to_lua_function(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "gfx_parse"); return 0; }
+
+    gfx_parse(cmd, func);
+
+    return 1;
+}
+
+int smlua_func_gfx_set_cycle_type(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "gfx_set_cycle_type", 2, top);
+        return 0;
+    }
+
+    Gfx* gfx = (Gfx*)smlua_to_cobject(L, 1, LOT_GFX);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "gfx_set_cycle_type"); return 0; }
+    u32 type = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "gfx_set_cycle_type"); return 0; }
+
+    gfx_set_cycle_type(gfx, type);
+
+    return 1;
+}
+
+int smlua_func_gfx_set_env_color(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 5) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "gfx_set_env_color", 5, top);
+        return 0;
+    }
+
+    Gfx* gfx = (Gfx*)smlua_to_cobject(L, 1, LOT_GFX);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "gfx_set_env_color"); return 0; }
+    u8 r = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "gfx_set_env_color"); return 0; }
+    u8 g = smlua_to_integer(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "gfx_set_env_color"); return 0; }
+    u8 b = smlua_to_integer(L, 4);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "gfx_set_env_color"); return 0; }
+    u8 a = smlua_to_integer(L, 5);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 5, "gfx_set_env_color"); return 0; }
+
+    gfx_set_env_color(gfx, r, g, b, a);
+
+    return 1;
+}
+
+int smlua_func_gfx_set_fog_color(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 5) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "gfx_set_fog_color", 5, top);
+        return 0;
+    }
+
+    Gfx* gfx = (Gfx*)smlua_to_cobject(L, 1, LOT_GFX);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "gfx_set_fog_color"); return 0; }
+    u8 r = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "gfx_set_fog_color"); return 0; }
+    u8 g = smlua_to_integer(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "gfx_set_fog_color"); return 0; }
+    u8 b = smlua_to_integer(L, 4);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "gfx_set_fog_color"); return 0; }
+    u8 a = smlua_to_integer(L, 5);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 5, "gfx_set_fog_color"); return 0; }
+
+    gfx_set_fog_color(gfx, r, g, b, a);
+
+    return 1;
+}
+
+int smlua_func_gfx_set_geometrymode(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "gfx_set_geometrymode", 2, top);
+        return 0;
+    }
+
+    Gfx* gfx = (Gfx*)smlua_to_cobject(L, 1, LOT_GFX);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "gfx_set_geometrymode"); return 0; }
+    u32 mode = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "gfx_set_geometrymode"); return 0; }
+
+    gfx_set_geometrymode(gfx, mode);
+
+    return 1;
+}
+
+int smlua_func_gfx_set_prim_color(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 7) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "gfx_set_prim_color", 7, top);
+        return 0;
+    }
+
+    Gfx* gfx = (Gfx*)smlua_to_cobject(L, 1, LOT_GFX);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "gfx_set_prim_color"); return 0; }
+    u8 m = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "gfx_set_prim_color"); return 0; }
+    u8 l = smlua_to_integer(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "gfx_set_prim_color"); return 0; }
+    u8 r = smlua_to_integer(L, 4);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "gfx_set_prim_color"); return 0; }
+    u8 g = smlua_to_integer(L, 5);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 5, "gfx_set_prim_color"); return 0; }
+    u8 b = smlua_to_integer(L, 6);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 6, "gfx_set_prim_color"); return 0; }
+    u8 a = smlua_to_integer(L, 7);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 7, "gfx_set_prim_color"); return 0; }
+
+    gfx_set_prim_color(gfx, m, l, r, g, b, a);
+
+    return 1;
+}
+
+int smlua_func_gfx_set_render_mode(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 3) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "gfx_set_render_mode", 3, top);
+        return 0;
+    }
+
+    Gfx* gfx = (Gfx*)smlua_to_cobject(L, 1, LOT_GFX);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "gfx_set_render_mode"); return 0; }
+    u32 c0 = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "gfx_set_render_mode"); return 0; }
+    u32 c1 = smlua_to_integer(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "gfx_set_render_mode"); return 0; }
+
+    gfx_set_render_mode(gfx, c0, c1);
 
     return 1;
 }
@@ -33613,6 +33827,16 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "get_skybox", smlua_func_get_skybox);
     smlua_bind_function(L, "get_skybox_color", smlua_func_get_skybox_color);
     smlua_bind_function(L, "get_vertex_color", smlua_func_get_vertex_color);
+    smlua_bind_function(L, "gfx_clear_geometrymode", smlua_func_gfx_clear_geometrymode);
+    smlua_bind_function(L, "gfx_copy_lights_player_part", smlua_func_gfx_copy_lights_player_part);
+    smlua_bind_function(L, "gfx_get_vtx", smlua_func_gfx_get_vtx);
+    smlua_bind_function(L, "gfx_parse", smlua_func_gfx_parse);
+    smlua_bind_function(L, "gfx_set_cycle_type", smlua_func_gfx_set_cycle_type);
+    smlua_bind_function(L, "gfx_set_env_color", smlua_func_gfx_set_env_color);
+    smlua_bind_function(L, "gfx_set_fog_color", smlua_func_gfx_set_fog_color);
+    smlua_bind_function(L, "gfx_set_geometrymode", smlua_func_gfx_set_geometrymode);
+    smlua_bind_function(L, "gfx_set_prim_color", smlua_func_gfx_set_prim_color);
+    smlua_bind_function(L, "gfx_set_render_mode", smlua_func_gfx_set_render_mode);
     smlua_bind_function(L, "set_fog_color", smlua_func_set_fog_color);
     smlua_bind_function(L, "set_fog_intensity", smlua_func_set_fog_intensity);
     smlua_bind_function(L, "set_lighting_color", smlua_func_set_lighting_color);

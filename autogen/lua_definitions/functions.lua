@@ -9213,6 +9213,79 @@ function get_vertex_color(index)
     -- ...
 end
 
+--- @param gfx Pointer_Gfx
+--- @param mode integer
+function gfx_clear_geometrymode(gfx, mode)
+    -- ...
+end
+
+--- @param gfx Pointer_Gfx
+--- @param part integer
+function gfx_copy_lights_player_part(gfx, part)
+    -- ...
+end
+
+--- @param gfx Pointer_Gfx
+--- @param offset integer
+--- @return Pointer_Vtx
+function gfx_get_vtx(gfx, offset)
+    -- ...
+end
+
+--- @param cmd Pointer_Gfx
+--- @param func function
+function gfx_parse(cmd, func)
+    -- ...
+end
+
+--- @param gfx Pointer_Gfx
+--- @param type integer
+function gfx_set_cycle_type(gfx, type)
+    -- ...
+end
+
+--- @param gfx Pointer_Gfx
+--- @param r integer
+--- @param g integer
+--- @param b integer
+--- @param a integer
+function gfx_set_env_color(gfx, r, g, b, a)
+    -- ...
+end
+
+--- @param gfx Pointer_Gfx
+--- @param r integer
+--- @param g integer
+--- @param b integer
+--- @param a integer
+function gfx_set_fog_color(gfx, r, g, b, a)
+    -- ...
+end
+
+--- @param gfx Pointer_Gfx
+--- @param mode integer
+function gfx_set_geometrymode(gfx, mode)
+    -- ...
+end
+
+--- @param gfx Pointer_Gfx
+--- @param m integer
+--- @param l integer
+--- @param r integer
+--- @param g integer
+--- @param b integer
+--- @param a integer
+function gfx_set_prim_color(gfx, m, l, r, g, b, a)
+    -- ...
+end
+
+--- @param gfx Pointer_Gfx
+--- @param c0 integer
+--- @param c1 integer
+function gfx_set_render_mode(gfx, c0, c1)
+    -- ...
+end
+
 --- @param index integer
 --- @param value integer
 --- Sets a value of the global fog color
@@ -10584,3 +10657,5 @@ end
 --- @class Pointer_Vec4s
 --- @class Pointer_Trajectory
 --- @class Pointer_Collision
+--- @class Pointer_Gfx
+--- @class Pointer_Vtx
