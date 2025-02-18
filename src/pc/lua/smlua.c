@@ -350,10 +350,12 @@ void smlua_update(void) {
     // incremental collection fails to keep up after some time.
     // So, for now, stop the GC from running during the hooks
     // and perform a full GC at the end of the frame.
+    // EDIT: That builds up lag over time, so we need to keep
+    // doing incremental garbage collection.
     // The real fix would be to make smlua produce less
     // garbage.
-    lua_gc(L, LUA_GCSTOP, 0);
-    lua_gc(L, LUA_GCCOLLECT, 0);
+    // lua_gc(L, LUA_GCSTOP, 0);
+    // lua_gc(L, LUA_GCCOLLECT, 0);
 }
 
 void smlua_shutdown(void) {
