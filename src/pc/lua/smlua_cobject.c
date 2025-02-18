@@ -432,14 +432,25 @@ static int smlua__get_field(lua_State* L) {
     }
 
     if (lot == LOT_ARRAY) {
-        u32 key = lua_tointeger(L, 2);
-        if (!key) {
-            LOG_LUA_LINE("Tried to get a non-integer field of cobject array");
+        struct LuaObjectField* data = cobj->info;
+        if (!data) {
+            LOG_LUA_LINE("Tried to get invalid cobject array");
             return 0;
         }
 
-        struct LuaObjectField* data = cobj->info;
-        if (!data) {
+        u32 key = lua_tointeger(L, 2);
+        if (!key) {
+            const char *key = lua_tostring(L, 2);
+            if (key && key[0] == '_') {
+                if (strcmp(key, "_lot") == 0) {
+                    lua_pushinteger(L, data->lot);
+                    return 1;
+                }
+                if (strcmp(key, "_pointer") == 0) {
+                    lua_pushinteger(L, pointer);
+                    return 1;
+                }
+            }
             LOG_LUA_LINE("Tried to get a non-integer field of cobject array");
             return 0;
         }
@@ -518,15 +529,15 @@ static int smlua__set_field(lua_State* L) {
     }
 
     if (lot == LOT_ARRAY) {
-        u32 key = lua_tointeger(L, 2);
-        if (!key) {
-            LOG_LUA_LINE("Tried to get a non-integer field of cobject array");
+        struct LuaObjectField* data = cobj->info;
+        if (!data) {
+            LOG_LUA_LINE("Tried to set invalid cobject array");
             return 0;
         }
 
-        struct LuaObjectField* data = cobj->info;
-        if (!data) {
-            LOG_LUA_LINE("Tried to get a non-integer field of cobject array");
+        u32 key = lua_tointeger(L, 2);
+        if (!key) {
+            LOG_LUA_LINE("Tried to set a non-integer field of cobject array");
             return 0;
         }
 
