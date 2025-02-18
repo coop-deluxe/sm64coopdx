@@ -12,6 +12,7 @@ enum LuaObjectType {
     LOT_VEC4S,
     LOT_MAT4,
     LOT_COLOR,
+    LOT_ARRAY,
     LOT_POINTER,
     LOT_MAX,
 };

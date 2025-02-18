@@ -13,7 +13,7 @@
 static struct Object* spawn_object_internal(enum BehaviorId behaviorId, enum ModelExtendedId modelId, f32 x, f32 y, f32 z, LuaFunction objSetupFunction, bool doSync) {
     // prevent spawning objects on mod init, this can cause issues if --server is specificed
     if (gLuaLoadingMod != NULL) { return NULL; }
-    
+
     if (doSync) {
         // prevent spawning objects before area is synchronized
         if (gNetworkPlayerLocal == NULL || !gNetworkPlayerLocal->currAreaSyncValid) { return NULL; }
@@ -56,7 +56,7 @@ static struct Object* spawn_object_internal(enum BehaviorId behaviorId, enum Mod
     if (objSetupFunction != 0) {
         lua_State* L = gLuaState;
         lua_rawgeti(L, LUA_REGISTRYINDEX, objSetupFunction);
-        smlua_push_object(L, LOT_OBJECT, obj);
+        smlua_push_object(L, LOT_OBJECT, obj, NULL);
         if (0 != smlua_pcall(L, 1, 0, 0)) {
             LOG_LUA("Failed to call the object setup callback: %u", objSetupFunction);
         }
@@ -174,7 +174,7 @@ struct Object *obj_get_nearest_object_with_behavior_id(struct Object *o, enum Be
     const BehaviorScript *behavior = get_behavior_from_id(behaviorId);
     behavior = smlua_override_behavior(behavior);
     struct Object *closestObj = NULL;
-    
+
     if (behavior) {
         enum ObjectList objList = get_object_list_from_behavior(behavior);
         for (struct Object *obj = obj_get_first(objList); obj != NULL; obj = obj_get_next(obj)) {
@@ -194,14 +194,14 @@ s32 obj_count_objects_with_behavior_id(enum BehaviorId behaviorId) {
     const BehaviorScript *behavior = get_behavior_from_id(behaviorId);
     behavior = smlua_override_behavior(behavior);
     s32 count = 0;
-    
+
     if (behavior) {
         enum ObjectList objList = get_object_list_from_behavior(behavior);
         for (struct Object *obj = obj_get_first(objList); obj != NULL; obj = obj_get_next(obj)) {
             if (obj->behavior == behavior) { count++; }
         }
     }
-    
+
     return count;
 }
 
@@ -337,7 +337,7 @@ struct ObjectHitbox* get_temp_object_hitbox(void) {
 
 bool obj_is_attackable(struct Object *o) {
     if (o == NULL) { return FALSE; }
-    
+
     return ((o->oInteractType & INTERACT_KOOPA) != 0 ||
             (o->oInteractType & INTERACT_BOUNCE_TOP) != 0 ||
             (o->oInteractType & INTERACT_BOUNCE_TOP2) != 0 ||
@@ -346,7 +346,7 @@ bool obj_is_attackable(struct Object *o) {
 
 bool obj_is_breakable_object(struct Object *o) {
     if (o == NULL) { return FALSE; }
-    
+
     return (obj_has_behavior_id(o, id_bhvBreakableBox) == 1 ||
             obj_has_behavior_id(o, id_bhvBreakableBoxSmall) == 1 ||
             obj_has_behavior_id(o, id_bhvHiddenObject) == 1 ||
@@ -355,31 +355,31 @@ bool obj_is_breakable_object(struct Object *o) {
 
 bool obj_is_bully(struct Object *o) {
     if (o == NULL) { return FALSE; }
-    
+
     return (o->oInteractType & INTERACT_BULLY) != 0;
 }
 
 bool obj_is_coin(struct Object *o) {
     if (o == NULL) { return FALSE; }
-    
+
     return (o->oInteractType & INTERACT_COIN) != 0;
 }
 
 bool obj_is_exclamation_box(struct Object *o) {
     if (o == NULL) { return FALSE; }
-    
+
     return obj_has_behavior_id(o, id_bhvExclamationBox) == 1 && o->oAction == 2;
 }
 
 bool obj_is_grabbable(struct Object *o) {
     if (o == NULL) { return FALSE; }
-    
+
     return (o->oInteractType & INTERACT_GRABBABLE) != 0 && (o->oInteractionSubtype & INT_SUBTYPE_NOT_GRABBABLE) == 0;
 }
 
 bool obj_is_mushroom_1up(struct Object *o) {
     if (o == NULL) { return FALSE; }
-    
+
     return (o->header.gfx.node.flags & GRAPH_RENDER_INVISIBLE) == 0 && (
             obj_has_behavior_id(o, id_bhv1Up) == 1 ||
             obj_has_behavior_id(o, id_bhv1upJumpOnApproach) == 1 ||
@@ -395,24 +395,24 @@ bool obj_is_mushroom_1up(struct Object *o) {
 
 bool obj_is_secret(struct Object *o) {
     if (o == NULL) { return FALSE; }
-    
+
     return obj_has_behavior_id(o, id_bhvHiddenStarTrigger) == 1;
 }
 
 bool obj_is_valid_for_interaction(struct Object *o) {
     if (o == NULL) { return FALSE; }
-    
+
     return o->activeFlags != ACTIVE_FLAG_DEACTIVATED && o->oIntangibleTimer == 0 && (o->oInteractStatus & INT_STATUS_INTERACTED) == 0;
 }
 
 bool obj_check_hitbox_overlap(struct Object *o1, struct Object *o2) {
     if (o1 == NULL || o2 == NULL) { return FALSE; }
-    
+
     f32 o1H = max(o1->hitboxHeight, o1->hurtboxHeight);
     f32 o1R = max(o1->hitboxRadius, o1->hurtboxRadius);
     f32 o2H = max(o2->hitboxHeight, o2->hurtboxHeight);
     f32 o2R = max(o2->hitboxRadius, o2->hurtboxRadius);
-    
+
     f32 r2 = sqr(o1R + o2R);
     f32 d2 = sqr(o1->oPosX - o2->oPosX) + sqr(o1->oPosZ - o2->oPosZ);
     if (d2 > r2) return FALSE;
@@ -427,10 +427,10 @@ bool obj_check_hitbox_overlap(struct Object *o1, struct Object *o2) {
 
 bool obj_check_overlap_with_hitbox_params(struct Object *o, f32 x, f32 y, f32 z, f32 h, f32 r, f32 d) {
     if (o == NULL) { return FALSE; }
-    
+
     f32 oH = max(o->hitboxHeight, o->hurtboxHeight);
     f32 oR = max(o->hitboxRadius, o->hurtboxRadius);
-    
+
     f32 r2 = sqr(oR + r);
     f32 d2 = sqr(o->oPosX - x) + sqr(o->oPosZ - z);
     if (d2 > r2) return FALSE;
@@ -445,7 +445,7 @@ bool obj_check_overlap_with_hitbox_params(struct Object *o, f32 x, f32 y, f32 z,
 
 void obj_set_vel(struct Object *o, f32 vx, f32 vy, f32 vz) {
     if (o == NULL) { return; }
-    
+
     o->oVelX = vx;
     o->oVelY = vy;
     o->oVelZ = vz;
@@ -453,7 +453,7 @@ void obj_set_vel(struct Object *o, f32 vx, f32 vy, f32 vz) {
 
 void obj_move_xyz(struct Object *o, f32 dx, f32 dy, f32 dz) {
     if (o == NULL) { return; }
-    
+
     o->oPosX += dx;
     o->oPosY += dy;
     o->oPosZ += dz;
