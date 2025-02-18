@@ -9239,6 +9239,27 @@ function gfx_parse(cmd, func)
 end
 
 --- @param gfx Pointer_Gfx
+--- @param a0 integer
+--- @param b0 integer
+--- @param c0 integer
+--- @param d0 integer
+--- @param Aa0 integer
+--- @param Ab0 integer
+--- @param Ac0 integer
+--- @param Ad0 integer
+--- @param a1 integer
+--- @param b1 integer
+--- @param c1 integer
+--- @param d1 integer
+--- @param Aa1 integer
+--- @param Ab1 integer
+--- @param Ac1 integer
+--- @param Ad1 integer
+function gfx_set_combine_lerp(gfx, a0, b0, c0, d0, Aa0, Ab0, Ac0, Ad0, a1, b1, c1, d1, Aa1, Ab1, Ac1, Ad1)
+    -- ...
+end
+
+--- @param gfx Pointer_Gfx
 --- @param type integer
 function gfx_set_cycle_type(gfx, type)
     -- ...

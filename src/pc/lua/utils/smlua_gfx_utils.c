@@ -214,3 +214,8 @@ void gfx_copy_lights_player_part(Gfx* gfx, u8 part) {
     if (!gfx) { return; }
     gSPCopyLightsPlayerPart(gfx, part);
 }
+
+void gfx_set_combine_lerp(Gfx* gfx, u32 a0, u32 b0, u32 c0, u32 d0, u32 Aa0, u32 Ab0, u32 Ac0, u32 Ad0, u32 a1, u32 b1, u32 c1, u32 d1,	u32 Aa1, u32 Ab1, u32 Ac1, u32 Ad1) {
+    if (!gfx) { return; }
+    gDPSetCombineLERPNoString(gfx, a0, b0, c0, d0, Aa0, Ab0, Ac0, Ad0, a1, b1, c1, d1, Aa1, Ab1, Ac1, Ad1);
+}

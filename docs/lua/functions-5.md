@@ -7923,6 +7923,42 @@ Gets a value of the global vertex shading color
 
 <br />
 
+## [gfx_set_combine_lerp](#gfx_set_combine_lerp)
+
+### Lua Example
+`gfx_set_combine_lerp(gfx, a0, b0, c0, d0, Aa0, Ab0, Ac0, Ad0, a1, b1, c1, d1, Aa1, Ab1, Ac1, Ad1)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| gfx | `Pointer` <`Gfx`> |
+| a0 | `integer` |
+| b0 | `integer` |
+| c0 | `integer` |
+| d0 | `integer` |
+| Aa0 | `integer` |
+| Ab0 | `integer` |
+| Ac0 | `integer` |
+| Ad0 | `integer` |
+| a1 | `integer` |
+| b1 | `integer` |
+| c1 | `integer` |
+| d1 | `integer` |
+| Aa1 | `integer` |
+| Ab1 | `integer` |
+| Ac1 | `integer` |
+| Ad1 | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void gfx_set_combine_lerp(Gfx* gfx, u32 a0, u32 b0, u32 c0, u32 d0, u32 Aa0, u32 Ab0, u32 Ac0, u32 Ad0, u32 a1, u32 b1, u32 c1, u32 d1,	u32 Aa1, u32 Ab1, u32 Ac1, u32 Ad1);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [gfx_set_cycle_type](#gfx_set_cycle_type)
 
 ### Lua Example

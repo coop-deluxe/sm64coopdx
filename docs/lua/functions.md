@@ -1709,6 +1709,7 @@
    - [gfx_copy_lights_player_part](functions-5.md#gfx_copy_lights_player_part)
    - [gfx_get_vtx](functions-5.md#gfx_get_vtx)
    - [gfx_parse](functions-5.md#gfx_parse)
+   - [gfx_set_combine_lerp](functions-5.md#gfx_set_combine_lerp)
    - [gfx_set_cycle_type](functions-5.md#gfx_set_cycle_type)
    - [gfx_set_env_color](functions-5.md#gfx_set_env_color)
    - [gfx_set_fog_color](functions-5.md#gfx_set_fog_color)

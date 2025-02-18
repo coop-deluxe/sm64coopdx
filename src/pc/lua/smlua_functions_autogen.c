@@ -28427,6 +28427,55 @@ int smlua_func_gfx_parse(lua_State* L) {
     return 1;
 }
 
+int smlua_func_gfx_set_combine_lerp(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 17) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "gfx_set_combine_lerp", 17, top);
+        return 0;
+    }
+
+    Gfx* gfx = (Gfx*)smlua_to_cobject(L, 1, LOT_GFX);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "gfx_set_combine_lerp"); return 0; }
+    u32 a0 = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "gfx_set_combine_lerp"); return 0; }
+    u32 b0 = smlua_to_integer(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "gfx_set_combine_lerp"); return 0; }
+    u32 c0 = smlua_to_integer(L, 4);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "gfx_set_combine_lerp"); return 0; }
+    u32 d0 = smlua_to_integer(L, 5);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 5, "gfx_set_combine_lerp"); return 0; }
+    u32 Aa0 = smlua_to_integer(L, 6);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 6, "gfx_set_combine_lerp"); return 0; }
+    u32 Ab0 = smlua_to_integer(L, 7);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 7, "gfx_set_combine_lerp"); return 0; }
+    u32 Ac0 = smlua_to_integer(L, 8);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 8, "gfx_set_combine_lerp"); return 0; }
+    u32 Ad0 = smlua_to_integer(L, 9);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 9, "gfx_set_combine_lerp"); return 0; }
+    u32 a1 = smlua_to_integer(L, 10);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 10, "gfx_set_combine_lerp"); return 0; }
+    u32 b1 = smlua_to_integer(L, 11);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 11, "gfx_set_combine_lerp"); return 0; }
+    u32 c1 = smlua_to_integer(L, 12);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 12, "gfx_set_combine_lerp"); return 0; }
+    u32 d1 = smlua_to_integer(L, 13);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 13, "gfx_set_combine_lerp"); return 0; }
+    u32 Aa1 = smlua_to_integer(L, 14);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 14, "gfx_set_combine_lerp"); return 0; }
+    u32 Ab1 = smlua_to_integer(L, 15);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 15, "gfx_set_combine_lerp"); return 0; }
+    u32 Ac1 = smlua_to_integer(L, 16);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 16, "gfx_set_combine_lerp"); return 0; }
+    u32 Ad1 = smlua_to_integer(L, 17);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 17, "gfx_set_combine_lerp"); return 0; }
+
+    gfx_set_combine_lerp(gfx, a0, b0, c0, d0, Aa0, Ab0, Ac0, Ad0, a1, b1, c1, d1, Aa1, Ab1, Ac1, Ad1);
+
+    return 1;
+}
+
 int smlua_func_gfx_set_cycle_type(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -33831,6 +33880,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "gfx_copy_lights_player_part", smlua_func_gfx_copy_lights_player_part);
     smlua_bind_function(L, "gfx_get_vtx", smlua_func_gfx_get_vtx);
     smlua_bind_function(L, "gfx_parse", smlua_func_gfx_parse);
+    smlua_bind_function(L, "gfx_set_combine_lerp", smlua_func_gfx_set_combine_lerp);
     smlua_bind_function(L, "gfx_set_cycle_type", smlua_func_gfx_set_cycle_type);
     smlua_bind_function(L, "gfx_set_env_color", smlua_func_gfx_set_env_color);
     smlua_bind_function(L, "gfx_set_fog_color", smlua_func_gfx_set_fog_color);

@@ -58,5 +58,6 @@ void gfx_set_prim_color(Gfx* gfx, u8 m, u8 l, u8 r, u8 g, u8 b, u8 a);
 void gfx_set_env_color(Gfx* gfx, u8 r, u8 g, u8 b, u8 a);
 void gfx_set_fog_color(Gfx* gfx, u8 r, u8 g, u8 b, u8 a);
 void gfx_copy_lights_player_part(Gfx* gfx, u8 part);
+void gfx_set_combine_lerp(Gfx* gfx, u32 a0, u32 b0, u32 c0, u32 d0, u32 Aa0, u32 Ab0, u32 Ac0, u32 Ad0, u32 a1, u32 b1, u32 c1, u32 d1,	u32 Aa1, u32 Ab1, u32 Ac1, u32 Ad1);
 
 #endif
