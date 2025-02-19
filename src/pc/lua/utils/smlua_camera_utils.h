@@ -18,6 +18,8 @@ void camera_unfreeze(void);
 /* |description|Checks if the camera is frozen|descriptionEnd| */
 bool camera_is_frozen(void);
 
+/* |description|Sets if only mods are allowed to modify the camera (Enabling prevents the player from modifying the camera through the settings)|descriptionEnd| */
+void camera_romhack_allow_only_mods(u8 allow);
 /* |description|Sets the romhack camera override status|descriptionEnd| */
 void camera_set_romhack_override(enum RomhackCameraOverride rco);
 /* |description|Sets if the romhack camera should allow centering, triggered with the L button|descriptionEnd| */
@@ -32,13 +34,13 @@ This enables or disables specific collision behaviors in modded levels
 |descriptionEnd| */
 void rom_hack_cam_set_collisions(u8 enable);
 
-/* |description|Sets the romhack camera's zoomed in distance, between 700 and 1200 units (Default: 900)|descriptionEnd| */
+/* |description|Sets the romhack camera's zoomed in distance (Default: 900)|descriptionEnd| */
 void camera_romhack_set_zoomed_in_dist(u32 val);
-/* |description|Sets the romhack camera's zoomed out additional distance, between 100 and 600 units (Default: 500)|descriptionEnd| */
+/* |description|Sets the romhack camera's zoomed out additional distance (Default: 500)|descriptionEnd| */
 void camera_romhack_set_zoomed_out_dist(u32 val);
-/* |description|Sets the romhack camera's zoomed in height, between 150 and 500 units (Default: 300)|descriptionEnd| */
+/* |description|Sets the romhack camera's zoomed in height (Default: 300)|descriptionEnd| */
 void camera_romhack_set_zoomed_in_height(u32 val);
-/* |description|Sets the romhack camera's zoomed out additional height, between 100 and 500 units (Default: 150)|descriptionEnd| */
+/* |description|Sets the romhack camera's zoomed out additional height (Default: 150)|descriptionEnd| */
 void camera_romhack_set_zoomed_out_height(u32 val);
 
 /* |description|Gets the romhack camera's zoomed in distance|descriptionEnd| */

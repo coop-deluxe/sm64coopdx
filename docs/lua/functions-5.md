@@ -7544,6 +7544,29 @@ Sets if the romhack camera should allow D-Pad movement
 
 <br />
 
+## [camera_romhack_allow_only_mods](#camera_romhack_allow_only_mods)
+
+### Description
+Sets if only mods are allowed to modify the camera (Enabling prevents the player from modifying the camera through the settings)
+
+### Lua Example
+`camera_romhack_allow_only_mods(allow)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| allow | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void camera_romhack_allow_only_mods(u8 allow);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [camera_romhack_get_allow_centering](#camera_romhack_get_allow_centering)
 
 ### Description
@@ -7694,7 +7717,7 @@ Gets the romhack camera's additional zoomed out height
 ## [camera_romhack_set_zoomed_in_dist](#camera_romhack_set_zoomed_in_dist)
 
 ### Description
-Sets the romhack camera's zoomed in distance, between 700 and 1200 units (Default: 900)
+Sets the romhack camera's zoomed in distance (Default: 900)
 
 ### Lua Example
 `camera_romhack_set_zoomed_in_dist(val)`
@@ -7717,7 +7740,7 @@ Sets the romhack camera's zoomed in distance, between 700 and 1200 units (Defaul
 ## [camera_romhack_set_zoomed_in_height](#camera_romhack_set_zoomed_in_height)
 
 ### Description
-Sets the romhack camera's zoomed in height, between 150 and 500 units (Default: 300)
+Sets the romhack camera's zoomed in height (Default: 300)
 
 ### Lua Example
 `camera_romhack_set_zoomed_in_height(val)`
@@ -7740,7 +7763,7 @@ Sets the romhack camera's zoomed in height, between 150 and 500 units (Default: 
 ## [camera_romhack_set_zoomed_out_dist](#camera_romhack_set_zoomed_out_dist)
 
 ### Description
-Sets the romhack camera's zoomed out additional distance, between 100 and 600 units (Default: 500)
+Sets the romhack camera's zoomed out additional distance (Default: 500)
 
 ### Lua Example
 `camera_romhack_set_zoomed_out_dist(val)`
@@ -7763,7 +7786,7 @@ Sets the romhack camera's zoomed out additional distance, between 100 and 600 un
 ## [camera_romhack_set_zoomed_out_height](#camera_romhack_set_zoomed_out_height)
 
 ### Description
-Sets the romhack camera's zoomed out additional height, between 100 and 500 units (Default: 150)
+Sets the romhack camera's zoomed out additional height (Default: 150)
 
 ### Lua Example
 `camera_romhack_set_zoomed_out_height(val)`

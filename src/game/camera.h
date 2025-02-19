@@ -19,13 +19,22 @@ enum RomhackCameraOverride {
     RCO_DISABLE
 };
 
+struct RomhackCameraSettings {
+    enum RomhackCameraOverride enable;
+    u8 centering;
+    u8 dpad;
+    u8 collisions;
+    u8 slowFall;
+    u32 zoomedInDist;
+    u32 zoomedOutDist;
+    u32 zoomedInHeight;
+    u32 zoomedOutHeight;
+    u8 modsOnly;
+};
+extern struct RomhackCameraSettings gRomhackCameraSettings;
+
 extern u8 gOverrideFreezeCamera;
-extern enum RomhackCameraOverride gOverrideRomhackCamera;
-extern u8 gRomhackCameraAllowCentering;
 extern u8 gOverrideAllowToxicGasCamera;
-extern u8 gRomhackCameraAllowDpad;
-extern u8 gRomHackCamSetCollisions;
-extern u8 gRomhackCameraSlowFall;
 
 /**
  * @file camera.h
@@ -1241,7 +1250,7 @@ s32 set_camera_mode_fixed(struct Camera* c, s16 x, s16 y, s16 z);
 
 /* |description|
 Takes in an SM64 angle unit and returns the nearest 45 degree angle, also in SM64 angle units.
-Useful when needing to align angles (camera, yaw, ect.)
+Useful when needing to align angles (camera, yaw, etc.)
 |descriptionEnd| */
 s32 snap_to_45_degrees(s16 angle);
 
@@ -1258,5 +1267,6 @@ This function is designed for non-standard level layouts and modded game environ
 void center_rom_hack_camera(void);
 
 void romhack_camera_init_settings(void);
+void romhack_camera_reset_settings(void);
 
 #endif // CAMERA_H

@@ -15,10 +15,6 @@ static struct CameraOverride sOverrideCameraMouse            = { 0 };
 static struct CameraOverride sOverrideCameraLCentering       = { 0 };
 static struct CameraOverride sOverrideCameraFreecamDpad      = { 0 };
 static struct CameraOverride sOverrideCameraFreecamCollision = { 0 };
-static struct CameraOverride sOverrideCameraRomhackZoomedInDist = { 0 };
-static struct CameraOverride sOverrideCameraRomhackZoomedOutDist = { 0 };
-static struct CameraOverride sOverrideCameraRomhackZoomedInHeight = { 0 };
-static struct CameraOverride sOverrideCameraRomhackZoomedOutHeight = { 0 };
 
 void camera_reset_overrides(void) {
     sOverrideCameraXSens.override = false;
@@ -34,10 +30,6 @@ void camera_reset_overrides(void) {
     sOverrideCameraLCentering.override = false;
     sOverrideCameraFreecamDpad.override = false;
     sOverrideCameraFreecamCollision.override = false;
-    sOverrideCameraRomhackZoomedInDist.override = false;
-    sOverrideCameraRomhackZoomedOutDist.override = false;
-    sOverrideCameraRomhackZoomedInHeight.override = false;
-    sOverrideCameraRomhackZoomedOutHeight.override = false;
 }
 
 void camera_freeze(void) {
@@ -52,12 +44,16 @@ bool camera_is_frozen(void) {
     return gOverrideFreezeCamera;
 }
 
+void camera_romhack_allow_only_mods(u8 allow) {
+    gRomhackCameraSettings.modsOnly = allow;
+}
+
 void camera_set_romhack_override(enum RomhackCameraOverride rco) {
-    gOverrideRomhackCamera = rco;
+    gRomhackCameraSettings.enable = rco;
 }
 
 void camera_romhack_allow_centering(u8 allow) {
-    gRomhackCameraAllowCentering = allow;
+    gRomhackCameraSettings.centering = allow;
 }
 
 void camera_allow_toxic_gas_camera(u8 allow) {
@@ -65,55 +61,51 @@ void camera_allow_toxic_gas_camera(u8 allow) {
 }
 
 void camera_romhack_allow_dpad_usage(u8 allow) {
-    gRomhackCameraAllowDpad = allow;
+    gRomhackCameraSettings.dpad = allow;
 }
 
 void rom_hack_cam_set_collisions(u8 enable) {
-    gRomHackCamSetCollisions = enable;
+    gRomhackCameraSettings.collisions = enable;
 }
 
 void camera_romhack_set_zoomed_in_dist(u32 val) {
-    sOverrideCameraRomhackZoomedInDist.value = MIN(MAX(val, 700), 1200);
-    sOverrideCameraRomhackZoomedInDist.override = true;
+    gRomhackCameraSettings.zoomedInDist = val;
 }
 
 void camera_romhack_set_zoomed_out_dist(u32 val) {
-    sOverrideCameraRomhackZoomedOutDist.value = MIN(MAX(val, 100), 600);
-    sOverrideCameraRomhackZoomedOutDist.override = true;
+    gRomhackCameraSettings.zoomedOutDist = val;
 }
 
 void camera_romhack_set_zoomed_in_height(u32 val) {
-    sOverrideCameraRomhackZoomedInHeight.value = MIN(MAX(val, 150), 500);
-    sOverrideCameraRomhackZoomedInHeight.override = true;
+    gRomhackCameraSettings.zoomedInHeight = val;
 }
 
 void camera_romhack_set_zoomed_out_height(u32 val) {
-    sOverrideCameraRomhackZoomedOutHeight.value = MIN(MAX(val, 100), 500);
-    sOverrideCameraRomhackZoomedOutHeight.override = true;
+    gRomhackCameraSettings.zoomedOutHeight = val;
 }
 
 u32 camera_romhack_get_zoomed_in_dist(void) {
-    return sOverrideCameraRomhackZoomedInDist.override ? sOverrideCameraRomhackZoomedInDist.value : configRomhackCameraZoomedInDist;
+    return gRomhackCameraSettings.zoomedInDist;
 }
 
 u32 camera_romhack_get_zoomed_out_dist(void) {
-    return sOverrideCameraRomhackZoomedOutDist.override ? sOverrideCameraRomhackZoomedOutDist.value : configRomhackCameraZoomedOutDist;
+    return gRomhackCameraSettings.zoomedOutDist;
 }
 
 u32 camera_romhack_get_zoomed_in_height(void) {
-    return sOverrideCameraRomhackZoomedInHeight.override ? sOverrideCameraRomhackZoomedInHeight.value : configRomhackCameraZoomedInHeight;
+    return gRomhackCameraSettings.zoomedInHeight;
 }
 
 u32 camera_romhack_get_zoomed_out_height(void) {
-    return sOverrideCameraRomhackZoomedOutHeight.override ? sOverrideCameraRomhackZoomedOutHeight.value : configRomhackCameraZoomedOutHeight;
+    return gRomhackCameraSettings.zoomedOutHeight;
 }
 
 enum RomhackCameraOverride camera_get_romhack_override(void) {
-    return gOverrideRomhackCamera;
+    return gRomhackCameraSettings.enable;
 }
 
 u8 camera_romhack_get_allow_centering(void) {
-    return gRomhackCameraAllowCentering;
+    return gRomhackCameraSettings.centering;
 }
 
 u8 camera_get_allow_toxic_gas_camera(void) {
@@ -121,11 +113,11 @@ u8 camera_get_allow_toxic_gas_camera(void) {
 }
 
 u8 camera_romhack_get_allow_dpad_usage(void) {
-    return gRomhackCameraAllowDpad;
+    return gRomhackCameraSettings.dpad;
 }
 
 u8 camera_romhack_get_collisions(void) {
-    return gRomHackCamSetCollisions;
+    return gRomhackCameraSettings.collisions;
 }
 
 bool camera_config_is_free_cam_enabled(void) {

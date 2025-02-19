@@ -222,7 +222,7 @@ void newcam_init_settings_override(bool override) {
     newcam_degrade          = (f32)camera_config_get_deceleration();
     gFreeCameraUseDpad      = (u8)camera_config_is_freecam_dpad_enabled();
     gFreeCameraHasCollision = (u8)camera_config_is_free_camera_collision_enabled();
-    sFreeCameraLCentering   = configFreeCameraLCentering;
+    sFreeCameraLCentering   = (u8)camera_config_get_centering();
 
     // setup main menu camera
     if (gDjuiInMainMenu) { newcam_tilt = 5; }

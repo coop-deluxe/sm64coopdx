@@ -2220,7 +2220,7 @@ Skips camera interpolation for a frame, locking the camera instantly to the targ
 ## [snap_to_45_degrees](#snap_to_45_degrees)
 
 ### Description
-Takes in an SM64 angle unit and returns the nearest 45 degree angle, also in SM64 angle units. Useful when needing to align angles (camera, yaw, ect.)
+Takes in an SM64 angle unit and returns the nearest 45 degree angle, also in SM64 angle units. Useful when needing to align angles (camera, yaw, etc.)
 
 ### Lua Example
 `local integerValue = snap_to_45_degrees(angle)`

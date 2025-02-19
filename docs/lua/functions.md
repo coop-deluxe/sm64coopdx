@@ -1681,6 +1681,7 @@
    - [camera_reset_overrides](functions-5.md#camera_reset_overrides)
    - [camera_romhack_allow_centering](functions-5.md#camera_romhack_allow_centering)
    - [camera_romhack_allow_dpad_usage](functions-5.md#camera_romhack_allow_dpad_usage)
+   - [camera_romhack_allow_only_mods](functions-5.md#camera_romhack_allow_only_mods)
    - [camera_romhack_get_allow_centering](functions-5.md#camera_romhack_get_allow_centering)
    - [camera_romhack_get_allow_dpad_usage](functions-5.md#camera_romhack_get_allow_dpad_usage)
    - [camera_romhack_get_collisions](functions-5.md#camera_romhack_get_collisions)

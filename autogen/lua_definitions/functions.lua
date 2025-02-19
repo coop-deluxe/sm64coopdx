@@ -3610,7 +3610,7 @@ end
 
 --- @param angle integer
 --- @return integer
---- Takes in an SM64 angle unit and returns the nearest 45 degree angle, also in SM64 angle units. Useful when needing to align angles (camera, yaw, ect.)
+--- Takes in an SM64 angle unit and returns the nearest 45 degree angle, also in SM64 angle units. Useful when needing to align angles (camera, yaw, etc.)
 function snap_to_45_degrees(angle)
     -- ...
 end
@@ -9076,6 +9076,12 @@ function camera_romhack_allow_dpad_usage(allow)
     -- ...
 end
 
+--- @param allow integer
+--- Sets if only mods are allowed to modify the camera (Enabling prevents the player from modifying the camera through the settings)
+function camera_romhack_allow_only_mods(allow)
+    -- ...
+end
+
 --- @return integer
 --- Gets if the romhack camera should allow centering
 function camera_romhack_get_allow_centering()
@@ -9119,25 +9125,25 @@ function camera_romhack_get_zoomed_out_height()
 end
 
 --- @param val integer
---- Sets the romhack camera's zoomed in distance, between 700 and 1200 units (Default: 900)
+--- Sets the romhack camera's zoomed in distance (Default: 900)
 function camera_romhack_set_zoomed_in_dist(val)
     -- ...
 end
 
 --- @param val integer
---- Sets the romhack camera's zoomed in height, between 150 and 500 units (Default: 300)
+--- Sets the romhack camera's zoomed in height (Default: 300)
 function camera_romhack_set_zoomed_in_height(val)
     -- ...
 end
 
 --- @param val integer
---- Sets the romhack camera's zoomed out additional distance, between 100 and 600 units (Default: 500)
+--- Sets the romhack camera's zoomed out additional distance (Default: 500)
 function camera_romhack_set_zoomed_out_dist(val)
     -- ...
 end
 
 --- @param val integer
---- Sets the romhack camera's zoomed out additional height, between 100 and 500 units (Default: 150)
+--- Sets the romhack camera's zoomed out additional height (Default: 150)
 function camera_romhack_set_zoomed_out_height(val)
     -- ...
 end
