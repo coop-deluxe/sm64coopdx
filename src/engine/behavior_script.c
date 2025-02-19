@@ -998,7 +998,7 @@ static s32 bhv_cmd_call_native_ext(void) {
         gCurBhvCommand += 2;
         return BHV_PROC_CONTINUE;
     }
-    
+
     // Get our mod.
     if (modIndex >= gActiveMods.entryCount) {
         LOG_LUA("Failed to call lua function, could not find mod");
@@ -1011,7 +1011,7 @@ static s32 bhv_cmd_call_native_ext(void) {
     lua_rawgeti(gLuaState, LUA_REGISTRYINDEX, funcRef);
 
     // Push object
-    smlua_push_object(gLuaState, LOT_OBJECT, gCurrentObject);
+    smlua_push_object(gLuaState, LOT_OBJECT, gCurrentObject, NULL);
 
     // Call the callback
     if (0 != smlua_call_hook(gLuaState, 1, 0, 0, mod)) {
@@ -1051,7 +1051,7 @@ static s32 bhv_cmd_spawn_child_ext(void) {
         gCurBhvCommand += 3;
         return BHV_PROC_CONTINUE;
     }
-    
+
     BehaviorScript *childBhvScript = (BehaviorScript *)get_behavior_from_id(behId);
     if (childBhvScript == NULL) {
         LOG_LUA("Failed to spawn custom child, could not get behavior '%s' from the id %u.", behStr, behId);
@@ -1098,7 +1098,7 @@ static s32 bhv_cmd_spawn_child_with_param_ext(void) {
         gCurBhvCommand += 3;
         return BHV_PROC_CONTINUE;
     }
-    
+
     BehaviorScript *childBhvScript = (BehaviorScript *)get_behavior_from_id(behId);
     if (childBhvScript == NULL) {
         LOG_LUA("Failed to spawn custom child with params, could not get behavior '%s' from the id %u.", behStr, behId);
@@ -1145,7 +1145,7 @@ static s32 bhv_cmd_spawn_obj_ext(void) {
         gCurBhvCommand += 3;
         return BHV_PROC_CONTINUE;
     }
-    
+
     BehaviorScript *objBhvScript = (BehaviorScript *)get_behavior_from_id(behId);
     if (objBhvScript == NULL) {
         LOG_LUA("Failed to spawn custom object, could not get behavior '%s' from the id %u.", behStr, behId);
@@ -1167,9 +1167,9 @@ static s32 bhv_cmd_spawn_obj_ext(void) {
 // Usage: LOAD_ANIMATIONS_EXT(field, anims)
 static s32 bhv_cmd_load_animations_ext(void) {
     //u8 field = BHV_CMD_GET_2ND_U8(0);
-    
+
     LOG_ERROR("LOAD_ANIMATIONS_EXT is not yet supported! Skipping behavior command.\n");
-    
+
     //BehaviorScript *behavior = (BehaviorScript *)gCurrentObject->behavior;
 
     //const char *animStr = dynos_behavior_get_token(behavior, BHV_CMD_GET_U32(1));
@@ -1186,7 +1186,7 @@ static s32 bhv_cmd_load_collision_data_ext(void) {
     BehaviorScript *behavior = (BehaviorScript *)gCurrentObject->behavior;
 
     const char *collisionDataStr = dynos_behavior_get_token(behavior, BHV_CMD_GET_U32(1));
-    
+
     Collision *collisionData = dynos_collision_get(collisionDataStr);
     if (collisionData == NULL) {
         LOG_ERROR("Failed to load custom collision, could not get collision from name '%s'", collisionDataStr);
@@ -1466,7 +1466,7 @@ f32 position_based_random_float_position(void) {
 
 f32 draw_distance_scalar(void) {
     if (!gBehaviorValues.InfiniteRenderDistance) { return 1.0f; }
-    
+
     switch (configDrawDistance) {
         case 0: return 0.5f;
         case 1: return 1.0f;

@@ -107,7 +107,6 @@ static void network_send_level_macro_area(struct NetworkPlayer* destNp, u8 areaI
 
 void network_send_level_macro(struct NetworkPlayer* destNp) {
     if (!gNetworkPlayerLocal->currLevelSyncValid) {
-        LOG_ERROR("my area is invalid");
         return;
     }
 

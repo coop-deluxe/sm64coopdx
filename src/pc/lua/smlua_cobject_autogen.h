@@ -12,6 +12,7 @@ enum LuaObjectType {
     LOT_VEC4S,
     LOT_MAT4,
     LOT_COLOR,
+    LOT_ARRAY,
     LOT_POINTER,
     LOT_MAX,
 };
@@ -114,6 +115,7 @@ enum LuaObjectAutogenType {
     LOT_SURFACE,
     LOT_TEXTUREINFO,
     LOT_TRANSITIONINFO,
+    LOT_VTX_INTERP,
     LOT_WALLCOLLISIONDATA,
     LOT_WARPNODE,
     LOT_WARPTRANSITION,
