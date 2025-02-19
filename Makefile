@@ -126,6 +126,18 @@ ifeq ($(HOST_OS),Darwin)
   endif
 endif
 
+ifeq ($(HOST_OS),Linux)
+  machine = $(shell sh -c 'uname -m 2>/dev/null || echo unknown')
+  ifneq (,$(findstring aarch64,$(machine)))
+    #Raspberry Pi 4-5
+    TARGET_RPI = 1
+  endif
+  ifneq (,$(findstring arm,$(machine)))
+    #Rasberry Pi zero, 2, 3, etc
+    TARGET_RPI = 1
+  endif
+endif
+
 # MXE overrides
 
 ifeq ($(WINDOWS_BUILD),1)
@@ -272,8 +284,6 @@ endif
 ifeq ($(TARGET_RPI),1)
   $(info Compiling for Raspberry Pi)
   DISCORD_SDK := 0
-  COOPNET := 0
-	machine = $(shell sh -c 'uname -m 2>/dev/null || echo unknown')
 
     # Raspberry Pi B+, Zero, etc
 	ifneq (,$(findstring armv6l,$(machine)))
@@ -966,9 +976,9 @@ ifeq ($(COOPNET),1)
     endif
   else ifeq ($(TARGET_RPI),1)
     ifneq (,$(findstring aarch64,$(machine)))
-      LDFLAGS += -Llib/coopnet/linux -l:libcoopnet-arm64.a -l:libjuice.a
+      LDFLAGS += -Llib/coopnet/linux -l:libcoopnet-arm64.a -l:libjuice-arm64.a
     else
-      LDFLAGS += -Llib/coopnet/linux -l:libcoopnet-arm.a -l:libjuice.a
+      LDFLAGS += -Llib/coopnet/linux -l:libcoopnet-arm.a -l:libjuice-arm.a
     endif
   else
     LDFLAGS += -Llib/coopnet/linux -l:libcoopnet.a -l:libjuice.a
@@ -990,8 +1000,13 @@ endif
 IS_DEV_OR_DEBUG := $(or $(filter 1,$(DEVELOPMENT)),$(filter 1,$(DEBUG)),0)
 ifeq ($(IS_DEV_OR_DEBUG),0)
   CFLAGS += -fno-ident -fno-common -ffile-prefix-map="$(PWD)"=. -D__DATE__="\"\"" -D__TIME__="\"\"" -Wno-builtin-macro-redefined
-  LDFLAGS += -Wl,--build-id=none
+  ifeq ($(OSX_BUILD),0)
+    LDFLAGS += -Wl,--build-id=none
+  endif
 endif
+
+# Enable ASLR
+CFLAGS += -fPIE
 
 # Prevent a crash with -sopt
 export LANG := C

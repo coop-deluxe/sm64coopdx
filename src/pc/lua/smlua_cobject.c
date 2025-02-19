@@ -315,6 +315,7 @@ struct LuaObjectField* smlua_get_custom_field(lua_State* L, u32 lot, int keyInde
     lof.lot = LOT_NONE;
     lof.valueOffset = offsetof(struct Object, rawData.asU32[fieldIndex]);
     lof.valueType = lvt;
+    lof.count = 1;
 
     lua_pop(L, 1); // pop value table
     lua_pop(L, 1); // pop _custom_fields
@@ -327,65 +328,26 @@ struct LuaObjectField* smlua_get_custom_field(lua_State* L, u32 lot, int keyInde
  // CObject get/set //
 /////////////////////
 
-static int smlua__get_field(lua_State* L) {
-    LUA_STACK_CHECK_BEGIN_NUM(1);
-
-    const CObject *cobj = lua_touserdata(L, 1);
-    enum LuaObjectType lot = cobj->lot;
-    u64 pointer = (u64)(intptr_t) cobj->pointer;
-
-    const char *key = lua_tostring(L, 2);
-    if (!key) {
-        LOG_LUA_LINE("Tried to get a non-string field of cobject");
-        return 0;
-    }
-
-    // Legacy support
-    if (key[0] == '_') {
-        if (strcmp(key, "_lot") == 0) {
-            lua_pushinteger(L, lot);
-            return 1;
-        }
-        if (strcmp(key, "_pointer") == 0) {
-            lua_pushinteger(L, pointer);
-            return 1;
-        }
-    }
-
-    if (cobj->freed) {
-        LOG_LUA_LINE("_get_field on freed object");
-        return 0;
-    }
-
-    struct LuaObjectField* data = smlua_get_object_field(lot, key);
-    if (data == NULL) {
-        data = smlua_get_custom_field(L, lot, 2);
-    }
-    if (data == NULL) {
-        LOG_LUA_LINE("_get_field on invalid key '%s', lot '%d'", key, lot);
-        return 0;
-    }
-
-    u8* p = ((u8*)(intptr_t)pointer) + data->valueOffset;
+static bool smlua_push_field(lua_State* L, u8* p, struct LuaObjectField *data) {
     switch (data->valueType) {
-        case LVT_BOOL:              lua_pushboolean(L, *(u8* )p);              break;
-        case LVT_U8:                lua_pushinteger(L, *(u8* )p);              break;
-        case LVT_U16:               lua_pushinteger(L, *(u16*)p);              break;
-        case LVT_U32:               lua_pushinteger(L, *(u32*)p);              break;
-        case LVT_S8:                lua_pushinteger(L, *(s8* )p);              break;
-        case LVT_S16:               lua_pushinteger(L, *(s16*)p);              break;
-        case LVT_S32:               lua_pushinteger(L, *(s32*)p);              break;
-        case LVT_F32:               lua_pushnumber( L, *(f32*)p);              break;
-        case LVT_U64:               lua_pushinteger(L, *(u64*)p);              break;
-        case LVT_COBJECT:           smlua_push_object(L, data->lot, p);        break;
-        case LVT_COBJECT_P:         smlua_push_object(L, data->lot, *(u8**)p); break;
-        case LVT_STRING:            lua_pushstring(L, (char*)p);               break;
-        case LVT_STRING_P:          lua_pushstring(L, *(char**)p);             break;
-        case LVT_BEHAVIORSCRIPT:    lua_pushinteger(L, *(s32*)p);              break;
-        case LVT_OBJECTANIMPOINTER: lua_pushinteger(L, *(s32*)p);              break;
-        case LVT_COLLISION:         lua_pushinteger(L, *(s32*)p);              break;
-        case LVT_LEVELSCRIPT:       lua_pushinteger(L, *(s32*)p);              break;
-        case LVT_TRAJECTORY:        lua_pushinteger(L, *(s16*)p);              break;
+        case LVT_BOOL:              lua_pushboolean(L, *(u8* )p);                    break;
+        case LVT_U8:                lua_pushinteger(L, *(u8* )p);                    break;
+        case LVT_U16:               lua_pushinteger(L, *(u16*)p);                    break;
+        case LVT_U32:               lua_pushinteger(L, *(u32*)p);                    break;
+        case LVT_S8:                lua_pushinteger(L, *(s8* )p);                    break;
+        case LVT_S16:               lua_pushinteger(L, *(s16*)p);                    break;
+        case LVT_S32:               lua_pushinteger(L, *(s32*)p);                    break;
+        case LVT_F32:               lua_pushnumber( L, *(f32*)p);                    break;
+        case LVT_U64:               lua_pushinteger(L, *(u64*)p);                    break;
+        case LVT_COBJECT:           smlua_push_object(L, data->lot, p, NULL);        break;
+        case LVT_COBJECT_P:         smlua_push_object(L, data->lot, *(u8**)p, NULL); break;
+        case LVT_STRING:            lua_pushstring(L, (char*)p);                     break;
+        case LVT_STRING_P:          lua_pushstring(L, *(char**)p);                   break;
+        case LVT_BEHAVIORSCRIPT:    lua_pushinteger(L, *(s32*)p);                    break;
+        case LVT_OBJECTANIMPOINTER: lua_pushinteger(L, *(s32*)p);                    break;
+        case LVT_COLLISION:         lua_pushinteger(L, *(s32*)p);                    break;
+        case LVT_LEVELSCRIPT:       lua_pushinteger(L, *(s32*)p);                    break;
+        case LVT_TRAJECTORY:        lua_pushinteger(L, *(s16*)p);                    break;
 
         // pointers
         case LVT_BOOL_P:
@@ -402,53 +364,17 @@ static int smlua__get_field(lua_State* L) {
         case LVT_COLLISION_P:
         case LVT_LEVELSCRIPT_P:
         case LVT_TRAJECTORY_P:
-            smlua_push_pointer(L, data->valueType, *(u8**)p);
+            smlua_push_pointer(L, data->valueType, *(u8**)p, NULL);
             break;
 
         default:
-            LOG_LUA_LINE("_get_field on unimplemented type '%d', key '%s'", data->valueType, key);
-            return 0;
+            return true;
     }
-
-    LUA_STACK_CHECK_END();
-    return 1;
+    return false;
 }
 
-static int smlua__set_field(lua_State* L) {
-    LUA_STACK_CHECK_BEGIN();
-
-    const CObject *cobj = lua_touserdata(L, 1);
-    enum LuaObjectType lot = cobj->lot;
-    u64 pointer = (u64)(intptr_t) cobj->pointer;
-
-    const char *key = lua_tostring(L, 2);
-    if (!key) {
-        LOG_LUA_LINE("Tried to set a non-string field of cobject");
-        return 0;
-    }
-
-    if (cobj->freed) {
-        LOG_LUA_LINE("_set_field on freed object");
-        return 0;
-    }
-
-    struct LuaObjectField* data = smlua_get_object_field(lot, key);
-    if (data == NULL) {
-        data = smlua_get_custom_field(L, lot, 2);
-    }
-
-    if (data == NULL) {
-        LOG_LUA_LINE("_set_field on invalid key '%s'", key);
-        return 0;
-    }
-
-    if (data->immutable) {
-        LOG_LUA_LINE("_set_field on immutable key '%s'", key);
-        return 0;
-    }
-
+static bool smlua_set_field(lua_State* L, u8* p, struct LuaObjectField *data) {
     void* valuePointer = NULL;
-    u8* p = ((u8*)(intptr_t)pointer) + data->valueOffset;
     switch (data->valueType) {
         case LVT_BOOL:*(u8*) p = smlua_to_boolean(L, 3); break;
         case LVT_U8:  *(u8*) p = smlua_to_integer(L, 3); break;
@@ -488,8 +414,174 @@ static int smlua__set_field(lua_State* L) {
             break;
 
         default:
-            LOG_LUA_LINE("_set_field on unimplemented type '%d', key '%s'", data->valueType, key);
+            return true;
+    }
+    return false;
+}
+
+static int smlua__get_field(lua_State* L) {
+    LUA_STACK_CHECK_BEGIN_NUM(1);
+
+    const CObject *cobj = lua_touserdata(L, 1);
+    enum LuaObjectType lot = cobj->lot;
+    u64 pointer = (u64)(intptr_t) cobj->pointer;
+
+    if (cobj->freed) {
+        LOG_LUA_LINE("_get_field on freed object");
+        return 0;
+    }
+
+    if (lot == LOT_ARRAY) {
+        struct LuaObjectField* data = cobj->info;
+        if (!data) {
+            LOG_LUA_LINE("Tried to get invalid cobject array");
             return 0;
+        }
+
+        u32 key = lua_tointeger(L, 2);
+        if (!key) {
+            const char *key = lua_tostring(L, 2);
+            if (key && key[0] == '_') {
+                if (strcmp(key, "_lot") == 0) {
+                    lua_pushinteger(L, data->lot);
+                    return 1;
+                }
+                if (strcmp(key, "_pointer") == 0) {
+                    lua_pushinteger(L, pointer);
+                    return 1;
+                }
+            }
+            LOG_LUA_LINE("Tried to get a non-integer field of cobject array");
+            return 0;
+        }
+
+        key--; // Lua is +1 indexed
+        if (key >= data->count) {
+            LOG_LUA_LINE("Key is out of bounds for array: key '%u'", key);
+            return 0;
+        }
+
+        u8* p = ((u8*)(intptr_t)pointer) + (key * data->size);
+        if (smlua_push_field(L, p, data)) {
+            LOG_LUA_LINE("_get_field on unimplemented type '%d', key '%u'", data->valueType, key);
+            return 0;
+        }
+
+        LUA_STACK_CHECK_END();
+        return 1;
+    }
+
+    const char *key = lua_tostring(L, 2);
+    if (!key) {
+        LOG_LUA_LINE("Tried to get a non-string field of cobject");
+        return 0;
+    }
+
+    // Legacy support
+    if (key[0] == '_') {
+        if (strcmp(key, "_lot") == 0) {
+            lua_pushinteger(L, lot);
+            return 1;
+        }
+        if (strcmp(key, "_pointer") == 0) {
+            lua_pushinteger(L, pointer);
+            return 1;
+        }
+    }
+
+    struct LuaObjectField* data = smlua_get_object_field(lot, key);
+    if (data == NULL) {
+        data = smlua_get_custom_field(L, lot, 2);
+    }
+    if (data == NULL) {
+        LOG_LUA_LINE("_get_field on invalid key '%s', lot '%d'", key, lot);
+        return 0;
+    }
+
+    u8* p = ((u8*)(intptr_t)pointer) + data->valueOffset;
+    if (data->count == 1) {
+        if (smlua_push_field(L, p, data)) {
+            LOG_LUA_LINE("_get_field on unimplemented type '%d', key '%s'", data->valueType, key);
+            return 0;
+        }
+    } else {
+        smlua_push_object(L, LOT_ARRAY, p, data);
+        if (!gSmLuaConvertSuccess) {
+            LOG_LUA_LINE("_set_field failed to retrieve value type '%d', key '%s'", data->valueType, key);
+            return 0;
+        }
+    }
+
+    LUA_STACK_CHECK_END();
+    return 1;
+}
+
+static int smlua__set_field(lua_State* L) {
+    LUA_STACK_CHECK_BEGIN();
+
+    const CObject *cobj = lua_touserdata(L, 1);
+    enum LuaObjectType lot = cobj->lot;
+    u64 pointer = (u64)(intptr_t) cobj->pointer;
+
+    if (cobj->freed) {
+        LOG_LUA_LINE("_set_field on freed object");
+        return 0;
+    }
+
+    if (lot == LOT_ARRAY) {
+        struct LuaObjectField* data = cobj->info;
+        if (!data) {
+            LOG_LUA_LINE("Tried to set invalid cobject array");
+            return 0;
+        }
+
+        u32 key = lua_tointeger(L, 2);
+        if (!key) {
+            LOG_LUA_LINE("Tried to set a non-integer field of cobject array");
+            return 0;
+        }
+
+        key--; // Lua is +1 indexed
+        if (key >= data->count) {
+            LOG_LUA_LINE("Key is out of bounds for array: key '%u'", key);
+            return 0;
+        }
+
+        u8* p = ((u8*)(intptr_t)pointer) + (key * data->size);
+        if (smlua_set_field(L, p, data)) {
+            LOG_LUA_LINE("_set_field on unimplemented type '%d', key '%u'", data->valueType, key);
+            return 0;
+        }
+
+        LUA_STACK_CHECK_END();
+        return 1;
+    }
+
+    const char *key = lua_tostring(L, 2);
+    if (!key) {
+        LOG_LUA_LINE("Tried to set a non-string field of cobject");
+        return 0;
+    }
+
+    struct LuaObjectField* data = smlua_get_object_field(lot, key);
+    if (data == NULL) {
+        data = smlua_get_custom_field(L, lot, 2);
+    }
+
+    if (data == NULL) {
+        LOG_LUA_LINE("_set_field on invalid key '%s'", key);
+        return 0;
+    }
+
+    if (data->immutable) {
+        LOG_LUA_LINE("_set_field on immutable key '%s'", key);
+        return 0;
+    }
+
+    u8* p = ((u8*)(intptr_t)pointer) + data->valueOffset;
+    if (smlua_set_field(L, p, data)) {
+        LOG_LUA_LINE("_set_field on unimplemented type '%d', key '%s'", data->valueType, key);
+        return 0;
     }
     if (!gSmLuaConvertSuccess) {
         LOG_LUA_LINE("_set_field failed to retrieve value type '%d', key '%s'", data->valueType, key);
@@ -518,7 +610,7 @@ static int smlua_cpointer_get(lua_State* L) {
             lua_pushinteger(L, (u64)(intptr_t) cptr->pointer);
             return 1;
         }
-        if (strcmp(key, "_lot") == 0) {
+        if (strcmp(key, "_lvt") == 0) {
             lua_pushinteger(L, cptr->lvt);
             return 1;
         }
@@ -569,7 +661,7 @@ void smlua_cobject_init_globals(void) {
         int t = lua_gettop(gLuaState); \
         for (s32 i = 0; i < iterator; i++) { \
             lua_pushinteger(L, i); \
-            smlua_push_object(L, lot, &ptr[i]); \
+            smlua_push_object(L, lot, &ptr[i], NULL); \
             lua_settable(L, t); \
         } \
         lua_setglobal(L, #ptr); \
@@ -577,13 +669,13 @@ void smlua_cobject_init_globals(void) {
 
 #define EXPOSE_GLOBAL(lot, ptr) \
     { \
-        smlua_push_object(L, lot, &ptr); \
+        smlua_push_object(L, lot, &ptr, NULL); \
         lua_setglobal(L, #ptr); \
     } \
 
 #define EXPOSE_GLOBAL_WITH_NAME(lot, ptr, name) \
     { \
-        smlua_push_object(L, lot, &ptr); \
+        smlua_push_object(L, lot, &ptr, NULL); \
         lua_setglobal(L, name); \
     } \
 
@@ -598,7 +690,7 @@ void smlua_cobject_init_globals(void) {
         int t = lua_gettop(gLuaState);
         for (s32 i = 0; i < gActiveMods.entryCount; i++) {
             lua_pushinteger(L, i);
-            smlua_push_object(L, LOT_MOD, gActiveMods.entries[i]);
+            smlua_push_object(L, LOT_MOD, gActiveMods.entries[i], NULL);
             lua_settable(L, t);
         }
         lua_setglobal(L, "gActiveMods");

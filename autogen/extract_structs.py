@@ -67,7 +67,7 @@ def extract_structs(filename):
             continue
         if ';' not in line:
             continue
-        if not line.startswith('struct '):
+        if not line.startswith('struct ') and not line.startswith('typedef struct '):
             continue
         txt += line + '\n'
 

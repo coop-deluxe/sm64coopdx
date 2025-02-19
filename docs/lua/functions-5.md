@@ -3758,28 +3758,6 @@
 
 <br />
 
-## [geo_offset_klepto_debug](#geo_offset_klepto_debug)
-
-### Lua Example
-`local integerValue = geo_offset_klepto_debug(callContext, a1, sp8)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| callContext | `integer` |
-| a1 | [GraphNode](structs.md#GraphNode) |
-| sp8 | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 geo_offset_klepto_debug(s32 callContext, struct GraphNode *a1, UNUSED s32 sp8);`
-
-[:arrow_up_small:](#)
-
-<br />
-
 ## [get_object_list_from_behavior](#get_object_list_from_behavior)
 
 ### Lua Example

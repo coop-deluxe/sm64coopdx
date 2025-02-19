@@ -45,6 +45,8 @@ struct LuaObjectField {
     size_t valueOffset;
     bool immutable;
     u16 lot;
+    u16 count;
+    u32 size;
 };
 
 struct LuaObjectTable {
@@ -57,12 +59,14 @@ typedef struct {
     void *pointer;
     u16 lot;
     bool freed;
+    void *info;
 } CObject;
 
 typedef struct {
     void *pointer;
     u16 lvt;
     bool freed;
+    void *info;
 } CPointer;
 
 extern int gSmLuaCObjects;

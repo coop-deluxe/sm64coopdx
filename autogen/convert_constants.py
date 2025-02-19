@@ -73,6 +73,9 @@ pretend_find = [
 seen_constants = []
 totalConstants = 0
 verbose = len(sys.argv) > 1 and (sys.argv[1] == "-v" or sys.argv[1] == "--verbose")
+overrideConstant = {
+    'VERSION_REGION': '"US"',
+}
 
 ############################################################################
 
@@ -112,6 +115,9 @@ def allowed_identifier(filename, ident):
         for include in include_constants[filename]:
             if re.search(include, ident) != None:
                 return True
+        return False
+    
+    if ident in overrideConstant:
         return False
 
     return True
@@ -218,6 +224,8 @@ def process_files():
     files = sorted(in_files, key=lambda d: d.split('/')[-1])
     for f in files:
         processed_files.append(process_file(f))
+    for key, item in overrideConstant.items():
+        processed_files[0]['constants'].append([key, item])
     return processed_files
 
 ############################################################################

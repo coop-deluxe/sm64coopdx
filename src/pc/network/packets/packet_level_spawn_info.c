@@ -76,7 +76,6 @@ static void network_send_level_spawn_info_area(struct NetworkPlayer* destNp, u8 
 
 void network_send_level_spawn_info(struct NetworkPlayer* destNp) {
     if (!gNetworkPlayerLocal->currAreaSyncValid) {
-        LOG_ERROR("my area is invalid");
         return;
     }
 
