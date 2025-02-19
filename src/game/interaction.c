@@ -154,7 +154,7 @@ u32 determine_interaction(struct MarioState *m, struct Object *o) {
     // hack: make water punch actually do something
     if (interaction == 0 && m->action == ACT_WATER_PUNCH && o->oInteractType & INTERACT_PLAYER) {
         Vec3f facing = { coss(m->faceAngle[1])*coss(m->faceAngle[0]), sins(m->faceAngle[0]), sins(m->faceAngle[1])*coss(m->faceAngle[0]) };
-        Vec3f dif = { o->oPosX - m->pos[0], o->oPosY - m->pos[1], o->oPosZ - m->pos[2] };
+        Vec3f dif = { o->oPosX - m->pos[0], (o->oPosY + o->hitboxHeight * 0.5) - m->pos[1], o->oPosZ - m->pos[2] };
         vec3f_normalize(dif);
         f32 angle = vec3f_dot(facing, dif);
         // Unknown angle (60 degrees in each direction?)
