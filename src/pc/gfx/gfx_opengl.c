@@ -8,7 +8,7 @@
 #endif
 #include <PR/gbi.h>
 
-#ifdef __MINGW32__
+#if defined(__MINGW32__) && !defined(__SWITCH__)
 # define FOR_WINDOWS 1
 #else
 # define FOR_WINDOWS 0
@@ -23,7 +23,7 @@
 
 #ifdef WAPI_SDL2
 # include <SDL2/SDL.h>
-# ifdef USE_GLES
+# if (defined(USE_GLES) || defined(__SWITCH__))
 #  include <SDL2/SDL_opengles2.h>
 # else
 #  include <SDL2/SDL_opengl.h>
@@ -255,7 +255,7 @@ static struct ShaderProgram *gfx_opengl_create_and_load_new_shader(struct ColorC
     bool opt_2cycle = cc->cm.use_2cycle;
     bool opt_light_map = cc->cm.light_map;
 
-#ifdef USE_GLES
+#if (defined(USE_GLES) || defined(__SWITCH__))
     bool opt_dither = false;
 #else
     bool opt_dither = cc->cm.use_dither;
@@ -268,7 +268,7 @@ static struct ShaderProgram *gfx_opengl_create_and_load_new_shader(struct ColorC
     size_t num_floats = 4;
 
     // Vertex shader
-#ifdef USE_GLES
+#if (defined(USE_GLES) || defined(__SWITCH__))
     append_line(vs_buf, &vs_len, "#version 100");
 #else
     append_line(vs_buf, &vs_len, "#version 120");
@@ -311,7 +311,7 @@ static struct ShaderProgram *gfx_opengl_create_and_load_new_shader(struct ColorC
     append_line(vs_buf, &vs_len, "}");
 
     // Fragment shader
-#ifdef USE_GLES
+#if (defined(USE_GLES) || defined(__SWITCH__))
     append_line(fs_buf, &fs_len, "#version 100");
     append_line(fs_buf, &fs_len, "precision mediump float;");
 #else
@@ -709,10 +709,12 @@ static void gfx_opengl_init(void) {
     
     glBindBuffer(GL_ARRAY_BUFFER, opengl_vbo);
 
+#if !defined(__SWITCH__)
     if (vmajor >= 3 && !is_es) {
         glGenVertexArrays(1, &opengl_vao);
         glBindVertexArray(opengl_vao);
     }
+#endif
     
     glDepthFunc(GL_LEQUAL);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

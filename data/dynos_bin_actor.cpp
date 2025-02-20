@@ -16,7 +16,7 @@ void ClearGfxDataNodes(DataNodes<T> &aDataNodes) {
 static bool DynOS_Actor_WriteBinary(const SysPath &aOutputFilename, GfxData *aGfxData) {
     BinFile *_File = BinFile::OpenW(aOutputFilename.c_str());
     if (!_File) {
-        PrintDataError("  ERROR: Unable to create file \"%s\"", aOutputFilename.c_str());
+        DynOS_PrintDataError("  ERROR: Unable to create file \"%s\"", aOutputFilename.c_str());
         return false;
     }
 
@@ -188,7 +188,7 @@ static void DynOS_Actor_Generate(const SysPath &aPackFolder, Array<Pair<u64, Str
 
         // Parse data
         PrintNoNewLine("%s.bin: Model identifier: %X - Processing... ", _GeoRootName.begin(), _GfxData->mModelIdentifier);
-        PrintConsole(CONSOLE_MESSAGE_INFO, "%s.bin: Model identifier: %X - Processing... ", _GeoRootName.begin(), _GfxData->mModelIdentifier);
+        DynOS_PrintConsole(CONSOLE_MESSAGE_INFO, "%s.bin: Model identifier: %X - Processing... ", _GeoRootName.begin(), _GfxData->mModelIdentifier);
         DynOS_Geo_Parse(_GfxData, _GeoNode, true);
 
         // Init animation data
@@ -222,7 +222,7 @@ static void DynOS_Actor_Generate(const SysPath &aPackFolder, Array<Pair<u64, Str
         if (_GfxData->mErrorCount == 0) {
             DynOS_Actor_WriteBinary(_BinFilename, _GfxData);
         } else {
-            PrintError("  %u error(s): Unable to parse data", _GfxData->mErrorCount);
+            DynOS_PrintError("  %u error(s): Unable to parse data", _GfxData->mErrorCount);
         }
         // Clear data pointers
         ClearGfxDataNodes(_GfxData->mLights);

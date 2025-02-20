@@ -1,5 +1,5 @@
 #include "djui.h"
-#include "pc/pc_main.h"
+#include "pc/game_main.h"
 
 struct DjuiFpsDisplay {
     struct DjuiText *text;

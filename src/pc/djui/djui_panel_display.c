@@ -2,7 +2,7 @@
 #include "djui_panel.h"
 #include "djui_panel_menu.h"
 #include "pc/gfx/gfx_window_manager_api.h"
-#include "pc/pc_main.h"
+#include "pc/game_main.h"
 #include "pc/utils/misc.h"
 #include "pc/configfile.h"
 

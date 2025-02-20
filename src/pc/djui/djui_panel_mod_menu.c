@@ -4,6 +4,7 @@
 #include "djui_panel_menu.h"
 #include "pc/lua/smlua_hooks.h"
 #include "pc/mods/mods.h"
+#include "pc/string_utils.h"
 
 static char* to_uppercase(char* str) {
     char* buffer = strdup(str);

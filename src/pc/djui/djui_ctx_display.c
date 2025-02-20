@@ -1,7 +1,7 @@
 #include "djui_ctx_display.h"
 
 #include "djui.h"
-#include "pc/pc_main.h"
+#include "pc/game_main.h"
 #include "pc/debug_context.h"
 
 #ifdef DEVELOPMENT

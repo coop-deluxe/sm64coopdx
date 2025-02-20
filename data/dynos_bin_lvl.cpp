@@ -523,7 +523,7 @@ static LevelScript ParseLevelScriptSymbolArg(GfxData* aGfxData, DataNode<LevelSc
     LevelScript value = ParseLevelScriptSymbolArgInternal(aGfxData, aNode, aTokenIndex, &found);
     if (!found) {
         const String& _Arg = aNode->mTokens[aTokenIndex - 1];
-        PrintDataError("  ERROR: Unknown lvl arg: %s", _Arg.begin());
+        DynOS_PrintDataError("  ERROR: Unknown lvl arg: %s", _Arg.begin());
     }
     return value;
 }
@@ -873,7 +873,7 @@ static void ParseLevelScriptSymbol(GfxData* aGfxData, DataNode<LevelScript>* aNo
     }
 
     // Unknown
-    PrintDataError("  ERROR: Unknown lvl symbol: %s", _Symbol.begin());
+    DynOS_PrintDataError("  ERROR: Unknown lvl symbol: %s", _Symbol.begin());
 }
 
 DataNode<LevelScript>* DynOS_Lvl_Parse(GfxData* aGfxData, DataNode<LevelScript>* aNode, bool aDisplayPercent) {
@@ -930,7 +930,7 @@ static void DynOS_Lvl_Write(BinFile* aFile, GfxData* aGfxData, DataNode<LevelScr
 static bool DynOS_Lvl_WriteBinary(const SysPath &aOutputFilename, GfxData *aGfxData) {
     BinFile *_File = BinFile::OpenW(aOutputFilename.c_str());
     if (!_File) {
-        PrintDataError("  ERROR: Unable to create file \"%s\"", aOutputFilename.c_str());
+        DynOS_PrintDataError("  ERROR: Unable to create file \"%s\"", aOutputFilename.c_str());
         return false;
     }
 
@@ -1050,12 +1050,12 @@ static DataNode<LevelScript>* DynOS_Lvl_Load(BinFile *aFile, GfxData *aGfxData) 
         void *_Ptr = DynOS_Pointer_Load(aFile, aGfxData, _Value, &_Node->mFlags);
         if (_Ptr) {
             if (!requirePointer) {
-                PrintError("Didn't expect a pointer while reading level script: %s, %u", _Node->mName.begin(), _Value);
+                DynOS_PrintError("Didn't expect a pointer while reading level script: %s, %u", _Node->mName.begin(), _Value);
             }
             _Node->mData[i] = (uintptr_t) _Ptr;
         } else {
             if (requirePointer) {
-                PrintError("Expected a pointer while reading level script: %s, %u", _Node->mName.begin(), _Value);
+                DynOS_PrintError("Expected a pointer while reading level script: %s, %u", _Node->mName.begin(), _Value);
                 _Node->mData[i] = 0;
             } else {
                 _Node->mData[i] = (uintptr_t) _Value;
@@ -1143,7 +1143,7 @@ static bool DynOS_Lvl_GeneratePack_Internal(const SysPath &aPackFolder, Array<Pa
 
         // Parse data
         PrintNoNewLine("%s.lvl: Level identifier: %X - Processing... ", _LvlRootName.begin(), _GfxData->mModelIdentifier);
-        PrintConsole(CONSOLE_MESSAGE_INFO, "%s.lvl: Level identifier: %X - Processing... ", _LvlRootName.begin(), _GfxData->mModelIdentifier);
+        DynOS_PrintConsole(CONSOLE_MESSAGE_INFO, "%s.lvl: Level identifier: %X - Processing... ", _LvlRootName.begin(), _GfxData->mModelIdentifier);
         DynOS_Lvl_Parse(_GfxData, _LvlRoot, true);
 
         // Force all of the movtexs, collisions, and trajectories into the compiled lvl
@@ -1168,7 +1168,7 @@ static bool DynOS_Lvl_GeneratePack_Internal(const SysPath &aPackFolder, Array<Pa
         if (_GfxData->mErrorCount == 0) {
             DynOS_Lvl_WriteBinary(_LvlFilename, _GfxData);
         } else {
-            PrintError("  %u error(s): Unable to parse data", _GfxData->mErrorCount);
+            DynOS_PrintError("  %u error(s): Unable to parse data", _GfxData->mErrorCount);
         }
 
         // Clear data pointers

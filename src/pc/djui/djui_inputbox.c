@@ -4,7 +4,7 @@
 #include "djui_unicode.h"
 #include "djui_hud_utils.h"
 #include "pc/gfx/gfx_window_manager_api.h"
-#include "pc/pc_main.h"
+#include "pc/game_main.h"
 #include "game/segment2.h"
 #include "pc/controller/controller_keyboard.h"
 

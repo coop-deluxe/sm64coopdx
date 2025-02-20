@@ -1,4 +1,5 @@
-#ifndef __CONSOLE__
+#ifdef __SWITCH__
+#include <switch.h>
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -24,7 +25,7 @@
 
 #include "rom_assets.h"
 #include "rom_checker.h"
-#include "pc_main.h"
+#include "nx_main.h"
 #include "loading.h"
 #include "cliopts.h"
 #include "configfile.h"
@@ -62,63 +63,20 @@
 #include "gfx_dimensions.h"
 #include "game/segment2.h"
 
-#ifdef DISCORD_SDK
-#include "pc/discord/discord.h"
-#endif
-
-#include "pc/mumble/mumble.h"
-
-#if defined(_WIN32) || defined(_WIN64)
-#include <windows.h>
-#endif
-
 struct AudioAPI *audio_api = NULL;
 struct GfxWindowManagerAPI *wm_api = &WAPI;
 
 int main(int argc, char *argv[]) {
-    // handle terminal arguments
-    if (!parse_cli_opts(argc, argv)) { return 0; }
-
-#if defined(RAPI_DUMMY) || defined(WAPI_DUMMY)
-    gCLIOpts.headless = true;
-#endif
-
-#ifdef _WIN32
-    // handle Windows console
-    if (gCLIOpts.console || gCLIOpts.headless) {
-        SetConsoleOutputCP(CP_UTF8);
-    } else {
-        FreeConsole();
-        freopen("NUL", "w", stdout);
-    }
-#endif
-
-#ifdef _WIN32
-    if (gCLIOpts.savePath[0]) {
-        char portable_path[SYS_MAX_PATH] = {};
-        sys_windows_short_path_from_mbs(portable_path, SYS_MAX_PATH, gCLIOpts.savePath);
-        fs_init(portable_path);
-    } else {
-        fs_init(sys_user_path());
-    }
-#else
+    accountInitialize(AccountServiceType_Application);
+    socketInitializeDefault();
+    
     fs_init(gCLIOpts.savePath[0] ? gCLIOpts.savePath : sys_user_path());
-#endif
-
-#if !defined(RAPI_DUMMY) && !defined(WAPI_DUMMY)
-    if (gCLIOpts.headless) {
-        memcpy(&WAPI, &gfx_dummy_wm_api, sizeof(struct GfxWindowManagerAPI));
-        memcpy(&RAPI, &gfx_dummy_renderer_api, sizeof(struct GfxRenderingAPI));
-    }
-#endif
 
     configfile_load();
 
-    legacy_folder_handler();
-
     // create the window almost straight away
     if (!gGfxInited) {
-        gfx_init(&WAPI, &RAPI, TITLE);
+        gfx_init(&WAPI, &RAPI, "Super Mario 64 Coop Deluxe");
         WAPI.set_keyboard_callbacks(keyboard_on_key_down, keyboard_on_key_up, keyboard_on_all_keys_up,
             keyboard_on_text_input, keyboard_on_text_editing);
     }
@@ -131,7 +89,7 @@ int main(int argc, char *argv[]) {
         } else
 #endif
         {
-            printf("ERROR: could not find valid vanilla us sm64 rom in game's user folder\n");
+            printf("ERROR: Could not find a valid vanilla US SM64 rom in the game user folder.\n");
             return 0;
         }
     }
@@ -156,10 +114,7 @@ int main(int argc, char *argv[]) {
     thread5_game_loop(NULL);
 
     // initialize sound outside threads
-    if (gCLIOpts.headless) audio_api = &audio_null;
-#if defined(AAPI_SDL1) || defined(AAPI_SDL2)
-    if (!audio_api && audio_sdl.init()) audio_api = &audio_sdl;
-#endif
+    if (audio_sdl.init()) audio_api = &audio_sdl;
     if (!audio_api) audio_api = &audio_null;
 
     // Initialize the audio thread if possible.
@@ -207,16 +162,9 @@ int main(int argc, char *argv[]) {
     // main loop
     while (true) {
         debug_context_reset();
+        
         CTX_BEGIN(CTX_TOTAL);
         WAPI.main_loop(produce_one_frame);
-#ifdef DISCORD_SDK
-        discord_update();
-#endif
-        mumble_update();
-#ifdef DEBUG
-        fflush(stdout);
-        fflush(stderr);
-#endif
         CTX_END(CTX_TOTAL);
 
 #ifdef DEVELOPMENT
@@ -228,4 +176,4 @@ int main(int argc, char *argv[]) {
     return 0;
 }
 
-#endif // __CONSOLE__
+#endif // __SWITCH__

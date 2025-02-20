@@ -4,6 +4,13 @@
 #include "pc/debuglog.h"
 #include "pc/djui/djui.h"
 
+struct sockaddr_in6;
+struct sin6_addr;
+
+#ifdef __SWITCH__
+#include <switch.h>
+#endif
+
 static SOCKET sCurSocket = INVALID_SOCKET;
 static struct sockaddr_in6 sAddr[MAX_PLAYERS] = { 0 };
 struct addrinfo hints;
@@ -88,8 +95,7 @@ static int socket_bind(SOCKET socket, unsigned int port) {
     rxAddr.sin6_port = htons(port);
     rxAddr.sin6_addr = in6addr_any;
 
-    int rc = bind(socket, (SOCKADDR *)&rxAddr, sizeof(rxAddr));
-
+    int rc = bind(socket, (SOCKADDR *)&rxAddr, sizeof(struct sockaddr_in6));
     if (rc != 0) {
         LOG_ERROR("bind failed with error %d", SOCKET_LAST_ERROR);
     }

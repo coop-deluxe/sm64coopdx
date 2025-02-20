@@ -529,7 +529,7 @@ static s64 ParseGfxSymbolArg(GfxData* aGfxData, DataNode<Gfx>* aNode, u64* pToke
     }
 
     // Unknown
-    PrintDataError("  ERROR: Unknown gfx arg: %s", _Arg.begin());
+    DynOS_PrintDataError("  ERROR: Unknown gfx arg: %s", _Arg.begin());
     return 0;
 }
 
@@ -722,7 +722,7 @@ static String ConvertSetCombineModeArgToString(GfxData *aGfxData, const String& 
     gfx_set_combine_mode_arg(G_CC_HILITERGBA2);
     gfx_set_combine_mode_arg(G_CC_HILITERGBDECALA2);
     gfx_set_combine_mode_arg(G_CC_HILITERGBPASSA2);
-    PrintDataError("  ERROR: Unknown gfx gsDPSetCombineMode arg: %s", _Arg.begin());
+    DynOS_PrintDataError("  ERROR: Unknown gfx gsDPSetCombineMode arg: %s", _Arg.begin());
     return "";
 }
 
@@ -742,7 +742,7 @@ static Array<s64> ParseGfxSetCombineMode(GfxData* aGfxData, DataNode<Gfx>* aNode
         }
     }
     if (_Args.Count() < 8) {
-        PrintDataError("  ERROR: gsDPSetCombineMode %s: Not enough arguments", _Buffer.begin());
+        DynOS_PrintDataError("  ERROR: gsDPSetCombineMode %s: Not enough arguments", _Buffer.begin());
     }
     return _Args;
 }
@@ -1066,7 +1066,7 @@ static void ParseGfxSymbol(GfxData* aGfxData, DataNode<Gfx>* aNode, Gfx*& aHead,
     }
 
     // Unknown
-    PrintDataError("  ERROR: Unknown gfx symbol: %s", _Symbol.begin());
+    DynOS_PrintDataError("  ERROR: Unknown gfx symbol: %s", _Symbol.begin());
 }
 
 DataNode<Gfx>* DynOS_Gfx_Parse(GfxData* aGfxData, DataNode<Gfx>* aNode) {

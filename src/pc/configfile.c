@@ -20,6 +20,7 @@
 #include "debuglog.h"
 #include "djui/djui_hud_utils.h"
 #include "game/save_file.h"
+#include "string_utils.h"
 
 #define ARRAY_LEN(arr) (sizeof(arr) / sizeof(arr[0]))
 

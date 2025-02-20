@@ -27,7 +27,7 @@ char gLastRemoteBhv[256] = "";
 #include "pc/gfx/gfx_rendering_api.h"
 #include "pc/mods/mods.h"
 #include "pc/debuglog.h"
-#include "pc/pc_main.h"
+#include "pc/game_main.h"
 #include "controller/controller_keyboard.h"
 
 typedef struct {

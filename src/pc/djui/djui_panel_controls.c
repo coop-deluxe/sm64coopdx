@@ -7,6 +7,7 @@
 #include "pc/configfile.h"
 #include "pc/controller/controller_api.h"
 #include "pc/controller/controller_sdl.h"
+#include "pc/string_utils.h"
 
 void djui_panel_controls_value_change(UNUSED struct DjuiBase* caller) {
     controller_reconfigure();

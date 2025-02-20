@@ -29,7 +29,7 @@
 #include "../platform.h"
 #include "../configfile.h"
 #include "../fs/fs.h"
-#include "../pc_main.h"
+#include "../game_main.h"
 
 #include "macros.h"
 

@@ -370,7 +370,8 @@ const char *sys_exe_path_file(void) {
 #if defined(__APPLE__)
     uint32_t bufsize = SYS_MAX_PATH;
     int res = _NSGetExecutablePath(path, &bufsize);
-
+#elif defined(__SWITCH__)
+    int res = -1;
 #else
     char procPath[SYS_MAX_PATH];
     snprintf(procPath, SYS_MAX_PATH, "/proc/%d/exe", getpid());

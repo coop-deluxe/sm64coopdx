@@ -16106,7 +16106,7 @@ static ma_result ma_thread_create__posix(ma_thread* pThread, ma_thread_priority 
         pAttr = &attr;
 
         /* We need to set the scheduler policy. Only do this if the OS supports pthread_attr_setschedpolicy() */
-        #if !defined(MA_BEOS)
+        #if !defined(MA_BEOS) && defined(_POSIX_THREAD_PRIORITY_SCHEDULING)
         {
             if (priority == ma_thread_priority_idle) {
             #ifdef SCHED_IDLE
@@ -16131,7 +16131,8 @@ static ma_result ma_thread_create__posix(ma_thread* pThread, ma_thread_priority 
         if (stackSize > 0) {
             pthread_attr_setstacksize(&attr, stackSize);
         }
-
+        
+        #if defined(_POSIX_THREAD_PRIORITY_SCHEDULING)
         if (scheduler != -1) {
             int priorityMin = sched_get_priority_min(scheduler);
             int priorityMax = sched_get_priority_max(scheduler);
@@ -16157,6 +16158,7 @@ static ma_result ma_thread_create__posix(ma_thread* pThread, ma_thread_priority 
                 pthread_attr_setschedparam(&attr, &sched);
             }
         }
+        #endif
     }
 #else
     /* It's the emscripten build. We'll have a few unused parameters. */

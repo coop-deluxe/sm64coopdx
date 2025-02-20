@@ -3,6 +3,7 @@
 #include <PR/ultratypes.h>
 #include "ban_list.h"
 #include "pc/debuglog.h"
+#include "pc/string_utils.h"
 
 char** gBanAddresses = NULL;
 bool* gBanPerm = NULL;

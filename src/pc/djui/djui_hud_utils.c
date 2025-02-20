@@ -6,7 +6,7 @@
 #include "pc/controller/controller_mouse.h"
 #include "pc/gfx/gfx_pc.h"
 #include "pc/gfx/gfx_window_manager_api.h"
-#include "pc/pc_main.h"
+#include "pc/game_main.h"
 #include "pc/utils/misc.h"
 
 #include "djui_gfx.h"
@@ -649,7 +649,7 @@ bool djui_hud_world_pos_to_screen_pos(Vec3f pos, Vec3f out) {
         screenHeight = SCREEN_HEIGHT;
     } else {
         u32 windowWidth, windowHeight;
-        WAPI.get_dimensions(&windowWidth, &windowHeight);
+        wm_api->get_dimensions(&windowWidth, &windowHeight);
         screenWidth = (f32) windowWidth;
         screenHeight = (f32) windowHeight;
     }

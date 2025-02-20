@@ -33,7 +33,7 @@
 
 #include "gfx_window_manager_api.h"
 #include "gfx_screen_config.h"
-#include "../pc_main.h"
+#include "../game_main.h"
 #include "../configfile.h"
 #include "../cliopts.h"
 
@@ -93,6 +93,9 @@ static void gfx_sdl_reset_dimension_and_pos(void) {
         SDL_ShowCursor(0);
     }
 
+#ifdef __SWITCH__
+    SDL_SetWindowSize(wnd, 1920, 1080);
+#else
     if (configWindow.reset) {
         configWindow.x = WAPI_WIN_CENTERPOS;
         configWindow.y = WAPI_WIN_CENTERPOS;
@@ -108,8 +111,10 @@ static void gfx_sdl_reset_dimension_and_pos(void) {
 
     SDL_SetWindowSize(wnd, configWindow.w, configWindow.h);
     SDL_SetWindowPosition(wnd, xpos, ypos);
+    
     // in case vsync changed
     gfx_sdl_set_vsync(configWindow.vsync);
+#endif
 }
 
 static void gfx_sdl_init(const char *window_title) {
@@ -131,15 +136,20 @@ static void gfx_sdl_init(const char *window_title) {
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
-#ifdef USE_GLES
+#if (defined(USE_GLES) || defined(__SWITCH__))
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);  // These attributes allow for hardware acceleration on RPis.
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
 #endif
 
+#ifdef __SWITCH__
+    wnd = SDL_CreateWindow("sdl2_gles2", 0, 0, 1920, 1080, SDL_WINDOW_OPENGL);
+    ctx = SDL_GL_CreateContext(wnd);
+    gfx_sdl_set_vsync(1);
+#else
     int xpos = (configWindow.x == WAPI_WIN_CENTERPOS) ? SDL_WINDOWPOS_CENTERED : configWindow.x;
     int ypos = (configWindow.y == WAPI_WIN_CENTERPOS) ? SDL_WINDOWPOS_CENTERED : configWindow.y;
-
+    
     wnd = SDL_CreateWindow(
         window_title,
         xpos, ypos, configWindow.w, configWindow.h,
@@ -153,6 +163,7 @@ static void gfx_sdl_init(const char *window_title) {
     if (configWindow.fullscreen) {
         SDL_ShowCursor(SDL_DISABLE);
     }
+#endif
 
     controller_bind_init();
 }
@@ -247,7 +258,9 @@ static void gfx_sdl_handle_events(void) {
     }
 
     if (configWindow.settings_changed) {
+#ifndef __SWITCH__
         gfx_sdl_set_fullscreen();
+#endif
         gfx_sdl_reset_dimension_and_pos();
         configWindow.settings_changed = false;
     }
@@ -294,7 +307,7 @@ static void gfx_sdl_set_window_title(const char* title) {
 }
 
 static void gfx_sdl_reset_window_title(void) {
-    SDL_SetWindowTitle(wnd, TITLE);
+    SDL_SetWindowTitle(wnd, "SM64 Coop DX");
 }
 
 static void gfx_sdl_shutdown(void) {

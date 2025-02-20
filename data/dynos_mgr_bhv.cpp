@@ -105,7 +105,7 @@ void DynOS_Bhv_HookAllCustomBehaviors() {
 
         // Theres currently no better place but to do this here.
         if (smlua_hook_custom_bhv(script, scriptName) == 0) {
-            PrintDataError("  ERROR: Failed to add custom behavior '%s'!", scriptName);
+            DynOS_PrintDataError("  ERROR: Failed to add custom behavior '%s'!", scriptName);
         }
     }
 }

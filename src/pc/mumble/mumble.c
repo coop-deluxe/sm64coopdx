@@ -1,3 +1,5 @@
+#ifndef __CONSOLE__
+
 // adapted from https://www.mumble.info/documentation/developer/positional-audio/link-plugin/
 
 #include "mumble.h"
@@ -197,3 +199,5 @@ bool should_update_context() {
 
 	return true;
 }
+
+#endif // __CONSOLE__
