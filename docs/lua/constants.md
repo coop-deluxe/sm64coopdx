@@ -3376,7 +3376,8 @@
 | HOOK_HEALED_MARIO | 52 |
 | HOOK_HURT_MARIO | 53 |
 | HOOK_ON_INTERACTIONS | 54 |
-| HOOK_MAX | 55 |
+| HOOK_AFTER_QUARTER_STEP | 55 |
+| HOOK_MAX | 56 |
 
 ### [enum LuaModMenuElementType](#LuaModMenuElementType)
 | Identifier | Value |

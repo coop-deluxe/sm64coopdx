@@ -168,6 +168,7 @@ The lua functions sent to `hook_event()` will be automatically called by SM64 wh
 | HOOK_HEALED_MARIO | Called when any player has just healed from any source. Called once per affected player. | MarioState mario, `integer` healType |
 | HOOK_HURT_MARIO | Called when any player has just taken damage from any source. Called once per affected player. | MarioState mario, `integer` hurtType |
 | HOOK_ON_INTERACTIONS | Called when the Mario interactions are processed | [MarioState](../structs.md#MarioState) mario |
+| HOOK_AFTER_QUARTER_STEP | Called after a single quarter step has been processed. Return a step result to override the current step result. | [MarioState](../structs.md#MarioState) mario, `integer` stepType, `integer` stepResult, `integer` stepNumber |
 
 ### Parameters
 

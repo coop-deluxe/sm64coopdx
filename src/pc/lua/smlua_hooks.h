@@ -67,6 +67,7 @@ enum LuaHookedEventType {
     HOOK_HEALED_MARIO,
     HOOK_HURT_MARIO,
     HOOK_ON_INTERACTIONS,
+    HOOK_AFTER_QUARTER_STEP,
     HOOK_MAX,
 };
 
@@ -126,6 +127,7 @@ static const char* LuaHookedEventTypeName[] = {
     "HOOK_HEALED_MARIO",
     "HOOK_HURT_MARIO",
     "HOOK_ON_INTERACTIONS",
+    "HOOK_AFTER_QUARTER_STEP",
     "HOOK_MAX"
 };
 
@@ -206,6 +208,7 @@ void smlua_call_event_hooks_graph_node_and_int_param(enum LuaHookedEventType hoo
 void smlua_call_event_hooks_on_seq_load(enum LuaHookedEventType hookType, u32 player, u32 seqId, s32 loadAsync, s16* returnValue);
 const char *smlua_call_event_hooks_int_ret_bool_and_string(enum LuaHookedEventType hookType, s32 param, bool* returnValue);
 void smlua_call_event_hooks_string_param(enum LuaHookedEventType hookType, const char* string);
+void smlua_call_event_hooks_after_quarter_step(enum LuaHookedEventType hookType, struct MarioState* m, s32 stepType, s32 stepResult, s32 stepNumber, s32* newResult);
 
 enum BehaviorId smlua_get_original_behavior_id(const BehaviorScript* behavior);
 const BehaviorScript* smlua_override_behavior(const BehaviorScript* behavior);

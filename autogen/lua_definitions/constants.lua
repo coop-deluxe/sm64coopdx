@@ -9221,7 +9221,10 @@ HOOK_HURT_MARIO = 53
 HOOK_ON_INTERACTIONS = 54
 
 --- @type LuaHookedEventType
-HOOK_MAX = 55
+HOOK_AFTER_QUARTER_STEP = 55
+
+--- @type LuaHookedEventType
+HOOK_MAX = 56
 
 --- @class LuaModMenuElementType
 
@@ -12554,7 +12557,7 @@ MINOR_VERSION_NUMBER = 1
 SM64COOPDX_VERSION = "v1.2.1"
 
 --- @type integer
-VERSION_NUMBER = 38
+VERSION_NUMBER = 39
 
 --- @type string
 VERSION_TEXT = "v"
