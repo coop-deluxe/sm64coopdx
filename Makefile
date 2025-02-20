@@ -332,7 +332,7 @@ else ifeq ($(TARGET_NX),1) # Nintendo Switch
 	PATH := $(PORTLIBS)/bin:$(DEVKITPRO)/tools/bin:$(DEVKITPRO)/devkitA64/bin:$(PATH)
 	LIBNX ?= $(DEVKITPRO)/libnx
 	
-	APP_TITLE := SM64 Coop DNX
+	APP_TITLE := SM64 Coop DX
 	APP_AUTHOR := The Coop DX Team
 	APP_VERSION := 1.0.0.$(VERSION)
 	APP_ICON := icon.jpg
@@ -524,7 +524,7 @@ ifeq ($(TARGET_RPI),1)
 	EXE := $(BUILD_DIR)/sm64coopdx.arm
 else ifeq ($(TARGET_NX),1) # Nintendo Switch
 	BUILD_DIR := $(BUILD_DIR_BASE)/$(VERSION)_nx
-	EXE := $(BUILD_DIR)/sm64coopdx.nro
+	EXE := $(BUILD_DIR)/sm64coopdx.elf
 else ifeq ($(WINDOWS_BUILD),1)
     BUILD_DIR := $(BUILD_DIR_BASE)/$(VERSION)_pc
 	EXE := $(BUILD_DIR)/sm64coopdx.exe
@@ -1622,18 +1622,15 @@ else ifeq ($(TARGET_NX),1) # Nintendo Switch
   $(EXE): $(O_FILES) $(MIO0_FILES:.mio0=.o) $(ULTRA_O_FILES) $(GODDARD_O_FILES) $(BUILD_DIR)/$(RPC_LIBS) $(BUILD_DIR)/$(DISCORD_SDK_LIBS) $(BUILD_DIR)/$(COOPNET_LIBS) $(BUILD_DIR)/$(LANG_DIR) $(BUILD_DIR)/$(MOD_DIR) $(BUILD_DIR)/$(PALETTES_DIR)
 	@$(PRINT) "$(GREEN)Linking executable: $(BLUE)$@ $(NO_COL)\n"
 	$(V)$(LD) $(PROF_FLAGS) -L $(BUILD_DIR) -o $@ $(O_FILES) $(ULTRA_O_FILES) $(GODDARD_O_FILES) $(LDFLAGS) -lnx -lm -specs=$(LIBNX)/switch.specs
-  
-  %.nro: %.stripped %.nacp
-	$(V)elf2nro $< $@ --nacp=$*.nacp --icon=$(APP_ICON) --romfsdir=$(ROMFS)
-	@$(PRINT) "$(GREEN)Built NRO: $(BLUE)$(notdir $@) $(NO_COL)\n"
-  
-  %.nacp:
-	$(V)nacptool --create "$(APP_TITLE)" "$(APP_AUTHOR)" "$(APP_VERSION)" $@ $(NACPFLAGS)
-	@$(PRINT) "$(GREEN)Built NACP: $(BLUE)$(notdir $@) $(NO_COL)\n"
-  
-  %.stripped: %
-	$(V)$(STRIP) -o $@ $<
-	@$(PRINT) "$(GREEN)Stripped: $(BLUE)$(notdir $<) $(NO_COL)\n"
+
+	$(V)$(STRIP) -o $(EXE).stripped $(EXE)
+	@$(PRINT) "$(GREEN)Stripped: $(BLUE)$(notdir $(EXE)) $(NO_COL)\n"
+	
+	$(V)nacptool --create "$(APP_TITLE)" "$(APP_AUTHOR)" "$(APP_VERSION)" $(BUILD_DIR)/sm64coopdx.nca $(NACPFLAGS)
+	@$(PRINT) "$(GREEN)Built NACP: $(BLUE)$(notdir $(BUILD_DIR)/sm64coopdx.nca) $(NO_COL)\n"
+	
+	$(V)elf2nro $(EXE).stripped $(BUILD_DIR)/sm64coopdx.nro --nacp=$(BUILD_DIR)/sm64coopdx.nca --icon=$(APP_ICON) --romfsdir=$(ROMFS)
+	@$(PRINT) "$(GREEN)Built NRO: $(BLUE)$(notdir $(BUILD_DIR)/sm64coopdx.nro) $(NO_COL)\n"
 else
   $(EXE): $(O_FILES) $(MIO0_FILES:.mio0=.o) $(ULTRA_O_FILES) $(GODDARD_O_FILES) $(BUILD_DIR)/$(RPC_LIBS) $(BUILD_DIR)/$(DISCORD_SDK_LIBS) $(BUILD_DIR)/$(COOPNET_LIBS) $(BUILD_DIR)/$(LANG_DIR) $(BUILD_DIR)/$(MOD_DIR) $(BUILD_DIR)/$(PALETTES_DIR)
 	@$(PRINT) "$(GREEN)Linking executable: $(BLUE)$@ $(NO_COL)\n"
