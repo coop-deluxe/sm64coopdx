@@ -327,11 +327,12 @@ static void djui_panel_player_edit_palette_create(struct DjuiBase* caller) {
  // player panel //
 //////////////////
 
-static bool djui_panel_player_name_valid(char* buffer) {
+bool djui_panel_player_name_valid(char* buffer) {
     if (buffer[0] == '\0') { return false; }
     char* c = buffer;
     while (*c != '\0') {
         if (*c == ' ') { return false; }
+        if (*c == '\\') { return false; }
         if (!djui_unicode_valid_char(c)) { return false; }
         c = djui_unicode_next_char(c);
     }

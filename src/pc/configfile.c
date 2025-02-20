@@ -749,6 +749,11 @@ NEXT_OPTION:
 
     if (gCLIOpts.playerName[0]) { snprintf(configPlayerName, MAX_CONFIG_STRING, "%s", gCLIOpts.playerName); }
 
+    bool djui_panel_player_name_valid(char* buffer);
+    if (!djui_panel_player_name_valid(configPlayerName)) {
+        snprintf(configPlayerName, MAX_CONFIG_STRING, "Player");
+    }
+
     for (int i = 0; i < gCLIOpts.enabledModsCount; i++) {
         enable_mod(gCLIOpts.enableMods[i]);
     }
