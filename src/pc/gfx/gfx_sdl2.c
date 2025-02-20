@@ -117,7 +117,7 @@ static void gfx_sdl_reset_dimension_and_pos(void) {
 #endif
 }
 
-static void gfx_sdl_init(const char *window_title) {
+static void gfx_sdl_init(const char *window_title) {   
 #if defined(_WIN32) || defined(_WIN64)
     SetProcessDPIAware();
 #endif
@@ -136,16 +136,32 @@ static void gfx_sdl_init(const char *window_title) {
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
-#if (defined(USE_GLES) || defined(__SWITCH__))
+#if defined(USE_GLES)
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);  // These attributes allow for hardware acceleration on RPis.
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
 #endif
 
 #ifdef __SWITCH__
-    wnd = SDL_CreateWindow("sdl2_gles2", 0, 0, 1920, 1080, SDL_WINDOW_OPENGL);
+    if (appletGetOperationMode() == 1) {
+        configWindow.w = 1920;
+        configWindow.h = 1080;
+    } else {
+        configWindow.w = 1280;
+        configWindow.h = 720;
+    }
+    configWindow.x = 0;
+    configWindow.y = 0;
+    
+    wnd = SDL_CreateWindow("sdl2_gles2", configWindow.w, configWindow.h, configWindow.w, configWindow.h, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
     ctx = SDL_GL_CreateContext(wnd);
-    gfx_sdl_set_vsync(1);
+    if (!ctx) {
+        printf("SDL2: Failed to create context with error: %s", SDL_GetError());
+        return;
+    }
+    
+    gfx_sdl_set_vsync(2);
+    gfx_sdl_set_fullscreen();
 #else
     int xpos = (configWindow.x == WAPI_WIN_CENTERPOS) ? SDL_WINDOWPOS_CENTERED : configWindow.x;
     int ypos = (configWindow.y == WAPI_WIN_CENTERPOS) ? SDL_WINDOWPOS_CENTERED : configWindow.y;
@@ -156,6 +172,10 @@ static void gfx_sdl_init(const char *window_title) {
         SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE
     );
     ctx = SDL_GL_CreateContext(wnd);
+    if (!ctx) {
+        printf("SDL2: Failed to create context with error: %s", SDL_GetError());
+        return;
+    }
 
     gfx_sdl_set_vsync(configWindow.vsync);
 
@@ -258,9 +278,7 @@ static void gfx_sdl_handle_events(void) {
     }
 
     if (configWindow.settings_changed) {
-#ifndef __SWITCH__
         gfx_sdl_set_fullscreen();
-#endif
         gfx_sdl_reset_dimension_and_pos();
         configWindow.settings_changed = false;
     }

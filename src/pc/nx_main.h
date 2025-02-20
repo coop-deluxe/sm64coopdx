@@ -14,9 +14,12 @@ extern "C" {
 #include "gfx/gfx_sdl.h"
 
 #define WAPI gfx_sdl
+#ifndef WAPI_SDL2
+#define WAPI_SDL2
+#endif
 
 #define RAPI gfx_opengl_api
-#define RAPI_NAME "OpenGL"
+#define RAPI_NAME "OpenGL ES"
 
 extern struct AudioAPI *audio_api;
 extern struct GfxWindowManagerAPI *wm_api;

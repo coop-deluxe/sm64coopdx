@@ -54,7 +54,8 @@ bool fs_init(const char *writepath) {
 
     // we shall not progress any further if the path is inaccessible
     if (('\0' == fs_writepath[0]) || !fs_sys_dir_exists(fs_writepath)) {
-        sys_fatal("Could not access the User Preferences directory.");
+        printf("FS: Could not access the User Preferences directory.");
+        return false;
     }
 
     fs_mount(fs_writepath);

@@ -209,6 +209,7 @@ $(eval $(call validate-option,VERSION,us))
 # Graphics microcode used
 GRUCODE ?= f3dex2e
 
+
 ifeq      ($(VERSION),jp)
   DEFINES   += VERSION_JP=1
   #GRUCODE   ?= f3d_old
@@ -319,28 +320,38 @@ ifeq ($(TARGET_RPI),1)
 	endif
 else ifeq ($(TARGET_NX),1) # Nintendo Switch
     $(info Compiling for Nintendo Switch)
-	DISCORD_SDK := 0
-	
-	ifeq ($(strip $(DEVKITPRO)),)
-		$(error "Please set DEVKITPRO in your environment. export DEVKITPRO=<path to>/devkitpro")
-	endif
-	
-	OPT_FLAGS := -ffunction-sections -fdata-sections -march=armv8-a+crc+crypto+simd -mtune=cortex-a57 -mtp=soft -ftls-model=local-exec -fPIC
-	DEFINES += __SWITCH__=1 BUILD_NRO=1 __CONSOLE__=1 MA_NO_RUNTIME_LINKING=1
-	
-    PORTLIBS ?= $(DEVKITPRO)/portlibs/switch
-	PATH := $(PORTLIBS)/bin:$(DEVKITPRO)/tools/bin:$(DEVKITPRO)/devkitA64/bin:$(PATH)
-	LIBNX ?= $(DEVKITPRO)/libnx
-	
-	APP_TITLE := SM64 Coop DX
-	APP_AUTHOR := The Coop DX Team
-	APP_VERSION := 1.0.0.$(VERSION)
-	APP_ICON := icon.jpg
-	ROMFS := romfs
-	
-	ifneq ($(ROMFS),)
-		export NROFLAGS += --romfsdir=$(CURDIR)/$(ROMFS)
-	endif
+    RENDER_API := GL
+    WINDOW_API := SDL2
+    AUDIO_API := SDL2
+    DISCORD_SDK := 0
+
+    ifeq ($(strip $(DEVKITPRO)),)
+        $(error "Please set DEVKITPRO in your environment. export DEVKITPRO=<path to>/devkitpro")
+    endif
+
+    export PATH := $(DEVKITPRO)/tools/bin:$(DEVKITPRO)/devkitA64/bin:$(PATH)
+    include $(DEVKITPRO)/devkitA64/base_tools
+    NXPATH := $(DEVKITPRO)/portlibs/switch/bin
+    PORTLIBS := $(DEVKITPRO)/portlibs/switch
+    LIBNX ?= $(DEVKITPRO)/libnx
+    CROSS ?= aarch64-none-elf-
+    SDLCROSS := $(NXPATH)/
+    CC := $(CROSS)gcc
+    CXX := $(CROSS)g++
+    STRIP := $(CROSS)strip
+
+    OPT_FLAGS := -ffunction-sections -fdata-sections -march=armv8-a+crc+crypto+simd -mtune=cortex-a57 -mtp=soft -ftls-model=local-exec -fwrapv -fPIC
+    DEFINES += __SWITCH__=1 BUILD_NRO=1 __CONSOLE__=1 MA_NO_RUNTIME_LINKING=1 USE_GLES=1
+
+    APP_TITLE := SM64 Coop DX
+    APP_AUTHOR := The Coop DX Team
+    APP_VERSION := 1.0.0.$(VERSION)
+    APP_ICON := icon.jpg
+    ROMFS := romfs
+
+    ifneq ($(ROMFS),)
+        export NROFLAGS += --romfsdir=$(CURDIR)/$(ROMFS)
+    endif
 endif
 
 # Set BITS (32/64) to compile for
@@ -685,6 +696,8 @@ endif
 # Compiler Options                                                             #
 #==============================================================================#
 
+SDLCROSS ?= $(CROSS)
+
 ifeq ($(OSX_BUILD),1)
   AS := i686-w64-mingw32-as
 else ifeq ($(TARGET_NX),1) # Nintendo Switch
@@ -732,14 +745,6 @@ ifeq ($(OSX_BUILD),1)
   CPP := cpp-$(OSX_GCC_VER) -P
   OBJDUMP := i686-w64-mingw32-objdump
   OBJCOPY := i686-w64-mingw32-objcopy
-else ifeq ($(TARGET_NX),1) # Nintendo Switch
-  CC := aarch64-none-elf-gcc
-  CXX := aarch64-none-elf-g++
-  LD := aarch64-none-elf-g++
-  CPP := aarch64-none-elf-cpp -P
-  OBJDUMP := aarch64-none-elf-objdump
-  OBJCOPY := aarch64-none-elf-objcopy
-  STRIP := aarch64-none-elf-strip
 else ifeq ($(TARGET_N64),0) # Linux & other builds
   CPP := $(CROSS)cpp -P
   OBJCOPY := $(CROSS)objcopy
@@ -803,7 +808,7 @@ endif
 
 # Connfigure backend flags
 
-SDLCONFIG := $(CROSS)sdl2-config
+SDLCONFIG := $(SDLCROSS)sdl2-config
 
 BACKEND_CFLAGS := -DRAPI_$(RENDER_API)=1 -DWAPI_$(WINDOW_API)=1 -DAAPI_$(AUDIO_API)=1
 # can have multiple controller APIs
@@ -824,7 +829,7 @@ else ifeq ($(findstring SDL,$(WINDOW_API)),SDL)
   else ifeq ($(TARGET_RPI),1)
     BACKEND_LDFLAGS += -lGLESv2
   else ifeq ($(TARGET_NX),1) # Nintendo Switch
-    BACKEND_LDFLAGS += -lSDL2 -lEGL -lGLESv2 -lglapi -ldrm_nouveau -lm -lz -lstdc++
+    BACKEND_LDFLAGS += -lGLESv2
 	EXTRA_CPP_FLAGS += -std=gnu++17
   else ifeq ($(OSX_BUILD),1)
     BACKEND_LDFLAGS += -framework OpenGL `pkg-config --libs glew` -mmacosx-version-min=$(MIN_MACOS_VERSION)
@@ -855,14 +860,10 @@ endif
 # SDL can be used by different systems, so we consolidate all of that shit into this
 
 ifeq ($(SDL2_USED),1)
-  ifeq ($(TARGET_NX),1) # Nintendo Switch
-    SDLCONFIG := sdl2-config
-  else
-    SDLCONFIG := $(CROSS)sdl2-config
-  endif
+  SDLCONFIG := $(SDLCROSS)sdl2-config
   BACKEND_CFLAGS += -DHAVE_SDL2=1
 else ifeq ($(SDL1_USED),1)
-  SDLCONFIG := $(CROSS)sdl-config
+  SDLCONFIG := $(SDLCROSS)sdl-config
   BACKEND_CFLAGS += -DHAVE_SDL1=1
 endif
 
@@ -943,7 +944,7 @@ ifeq ($(WINDOWS_BUILD),1)
 else ifeq ($(TARGET_RPI),1)
   LDFLAGS := $(OPT_FLAGS) $(BACKEND_LDFLAGS) -no-pie
 else ifeq ($(TARGET_NX),1) # Nintendo Switch
-  LDFLAGS := $(OPT_FLAGS) -no-pie -L$(LIBNX)/lib -L$(PORTLIBS)/lib $(BACKEND_LDFLAGS)
+  LDFLAGS := -specs=$(LIBNX)/switch.specs $(OPT_FLAGS) -L$(LIBNX)/lib -L$(PORTLIBS)/lib $(BACKEND_LDFLAGS)
 else ifeq ($(OSX_BUILD),1)
   LDFLAGS := -lm $(BACKEND_LDFLAGS) -lpthread
 else
@@ -1621,13 +1622,13 @@ ifeq ($(TARGET_N64),1)
 else ifeq ($(TARGET_NX),1) # Nintendo Switch
   $(EXE): $(O_FILES) $(MIO0_FILES:.mio0=.o) $(ULTRA_O_FILES) $(GODDARD_O_FILES) $(BUILD_DIR)/$(RPC_LIBS) $(BUILD_DIR)/$(DISCORD_SDK_LIBS) $(BUILD_DIR)/$(COOPNET_LIBS) $(BUILD_DIR)/$(LANG_DIR) $(BUILD_DIR)/$(MOD_DIR) $(BUILD_DIR)/$(PALETTES_DIR)
 	@$(PRINT) "$(GREEN)Linking executable: $(BLUE)$@ $(NO_COL)\n"
-	$(V)$(LD) $(PROF_FLAGS) -L $(BUILD_DIR) -o $@ $(O_FILES) $(ULTRA_O_FILES) $(GODDARD_O_FILES) $(LDFLAGS) -lnx -lm -specs=$(LIBNX)/switch.specs
-
-	$(V)$(STRIP) -o $(EXE).stripped $(EXE)
-	@$(PRINT) "$(GREEN)Stripped: $(BLUE)$(notdir $(EXE)) $(NO_COL)\n"
+	$(V)$(LD) $(PROF_FLAGS) -L $(BUILD_DIR) -o $@ $(O_FILES) $(ULTRA_O_FILES) $(GODDARD_O_FILES) $(LDFLAGS) -lnx -lm
 	
 	$(V)nacptool --create "$(APP_TITLE)" "$(APP_AUTHOR)" "$(APP_VERSION)" $(BUILD_DIR)/sm64coopdx.nca $(NACPFLAGS)
 	@$(PRINT) "$(GREEN)Built NACP: $(BLUE)$(notdir $(BUILD_DIR)/sm64coopdx.nca) $(NO_COL)\n"
+	
+	$(V)$(STRIP) -o $(EXE).stripped $(EXE)
+	@$(PRINT) "$(GREEN)Stripped: $(BLUE)$(notdir $(EXE)) $(NO_COL)\n"
 	
 	$(V)elf2nro $(EXE).stripped $(BUILD_DIR)/sm64coopdx.nro --nacp=$(BUILD_DIR)/sm64coopdx.nca --icon=$(APP_ICON) --romfsdir=$(ROMFS)
 	@$(PRINT) "$(GREEN)Built NRO: $(BLUE)$(notdir $(BUILD_DIR)/sm64coopdx.nro) $(NO_COL)\n"

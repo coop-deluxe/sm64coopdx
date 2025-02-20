@@ -23,7 +23,7 @@
 
 #ifdef WAPI_SDL2
 # include <SDL2/SDL.h>
-# if (defined(USE_GLES) || defined(__SWITCH__))
+# if defined(USE_GLES)
 #  include <SDL2/SDL_opengles2.h>
 # else
 #  include <SDL2/SDL_opengl.h>
@@ -105,6 +105,50 @@ static inline void gfx_opengl_set_texture_uniforms(struct ShaderProgram *prg, co
         glUniform2f(prg->uniform_locations[tile*2 + 0], opengl_tex[tile]->size[0], opengl_tex[tile]->size[1]);
         glUniform1i(prg->uniform_locations[tile*2 + 1], opengl_tex[tile]->filter);
     }
+}
+
+static GLuint gfx_opengl_compile_shader(const char *vertex_shader_raw, const char *fragment_shader_raw) {
+    GLint success;
+
+    GLuint vertex_shader = glCreateShader(GL_VERTEX_SHADER);
+    glShaderSource(vertex_shader, 1, &vertex_shader_raw, NULL);
+    glCompileShader(vertex_shader);
+    glGetShaderiv(vertex_shader, GL_COMPILE_STATUS, &success);
+    if (!success) {
+        GLint max_length = 0;
+        glGetShaderiv(vertex_shader, GL_INFO_LOG_LENGTH, &max_length);
+        char error_log[1024];
+        fprintf(stderr, "Vertex shader compilation failed\n");
+        glGetShaderInfoLog(vertex_shader, max_length, &max_length, &error_log[0]);
+        fprintf(stderr, "%s\n", &error_log[0]);
+        sys_fatal("vertex shader compilation failed (see terminal)");
+    }
+
+    GLuint fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
+    glShaderSource(fragment_shader, 1, &fragment_shader_raw, NULL);
+    glCompileShader(fragment_shader);
+    glGetShaderiv(fragment_shader, GL_COMPILE_STATUS, &success);
+    if (!success) {
+        GLint max_length = 0;
+        glGetShaderiv(fragment_shader, GL_INFO_LOG_LENGTH, &max_length);
+        char error_log[1024];
+        fprintf(stderr, "Fragment shader compilation failed\n");
+        glGetShaderInfoLog(fragment_shader, max_length, &max_length, &error_log[0]);
+        fprintf(stderr, "%s\n", &error_log[0]);
+        sys_fatal("fragment shader compilation failed (see terminal)");
+    }
+
+    GLuint shader_program = glCreateProgram();
+    glAttachShader(shader_program, vertex_shader);
+    glAttachShader(shader_program, fragment_shader);
+    glLinkProgram(shader_program);
+    
+    glDetachShader(shader_program, vertex_shader);
+    glDetachShader(shader_program, fragment_shader);
+    glDeleteShader(vertex_shader);
+    glDeleteShader(fragment_shader);
+    
+    return shader_program;
 }
 
 static void gfx_opengl_unload_shader(struct ShaderProgram *old_prg) {
@@ -255,7 +299,7 @@ static struct ShaderProgram *gfx_opengl_create_and_load_new_shader(struct ColorC
     bool opt_2cycle = cc->cm.use_2cycle;
     bool opt_light_map = cc->cm.light_map;
 
-#if (defined(USE_GLES) || defined(__SWITCH__))
+#if defined(USE_GLES)
     bool opt_dither = false;
 #else
     bool opt_dither = cc->cm.use_dither;
@@ -268,7 +312,7 @@ static struct ShaderProgram *gfx_opengl_create_and_load_new_shader(struct ColorC
     size_t num_floats = 4;
 
     // Vertex shader
-#if (defined(USE_GLES) || defined(__SWITCH__))
+#if defined(USE_GLES)
     append_line(vs_buf, &vs_len, "#version 100");
 #else
     append_line(vs_buf, &vs_len, "#version 120");
@@ -311,7 +355,7 @@ static struct ShaderProgram *gfx_opengl_create_and_load_new_shader(struct ColorC
     append_line(vs_buf, &vs_len, "}");
 
     // Fragment shader
-#if (defined(USE_GLES) || defined(__SWITCH__))
+#if defined(USE_GLES)
     append_line(fs_buf, &fs_len, "#version 100");
     append_line(fs_buf, &fs_len, "precision mediump float;");
 #else
@@ -367,7 +411,11 @@ static struct ShaderProgram *gfx_opengl_create_and_load_new_shader(struct ColorC
 
         append_line(fs_buf, &fs_len, "float random(in vec3 value) {");
         append_line(fs_buf, &fs_len, "    float random = dot(sin(value), vec3(12.9898, 78.233, 37.719));");
+#ifdef USE_GLES
+        append_line(fs_buf, &fs_len, "    return fract(sin(random) * 143.7585453);");
+#else
         append_line(fs_buf, &fs_len, "    return fract(sin(random) * 143758.5453);");
+#endif
         append_line(fs_buf, &fs_len, "}");
     }
 
@@ -449,42 +497,7 @@ static struct ShaderProgram *gfx_opengl_create_and_load_new_shader(struct ColorC
     puts(fs_buf);
     puts("End");*/
 
-    const GLchar *sources[2] = { vs_buf, fs_buf };
-    const GLint lengths[2] = { vs_len, fs_len };
-    GLint success;
-
-    GLuint vertex_shader = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertex_shader, 1, &sources[0], &lengths[0]);
-    glCompileShader(vertex_shader);
-    glGetShaderiv(vertex_shader, GL_COMPILE_STATUS, &success);
-    if (!success) {
-        GLint max_length = 0;
-        glGetShaderiv(vertex_shader, GL_INFO_LOG_LENGTH, &max_length);
-        char error_log[1024];
-        fprintf(stderr, "Vertex shader compilation failed\n");
-        glGetShaderInfoLog(vertex_shader, max_length, &max_length, &error_log[0]);
-        fprintf(stderr, "%s\n", &error_log[0]);
-        sys_fatal("vertex shader compilation failed (see terminal)");
-    }
-
-    GLuint fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragment_shader, 1, &sources[1], &lengths[1]);
-    glCompileShader(fragment_shader);
-    glGetShaderiv(fragment_shader, GL_COMPILE_STATUS, &success);
-    if (!success) {
-        GLint max_length = 0;
-        glGetShaderiv(fragment_shader, GL_INFO_LOG_LENGTH, &max_length);
-        char error_log[1024];
-        fprintf(stderr, "Fragment shader compilation failed\n");
-        glGetShaderInfoLog(fragment_shader, max_length, &max_length, &error_log[0]);
-        fprintf(stderr, "%s\n", &error_log[0]);
-        sys_fatal("fragment shader compilation failed (see terminal)");
-    }
-
-    GLuint shader_program = glCreateProgram();
-    glAttachShader(shader_program, vertex_shader);
-    glAttachShader(shader_program, fragment_shader);
-    glLinkProgram(shader_program);
+    GLuint shader_program = gfx_opengl_compile_shader(vs_buf, fs_buf);
 
     size_t cnt = 0;
 
@@ -702,8 +715,12 @@ static void gfx_opengl_init(void) {
     int vminor = 0;
     bool is_es = false;
     gl_get_version(&vmajor, &vminor, &is_es);
-    if (vmajor < 2 && vminor < 1 && !is_es)
-        sys_fatal("OpenGL 2.1+ is required.\nReported version: %s%d.%d", is_es ? "ES" : "", vmajor, vminor);
+    if (vmajor < 2 && vminor < 1 && !is_es) {
+        printf("OpenGL 2.1+ is required.\nReported version: %s%d.%d\n", is_es ? "ES" : "", vmajor, vminor);
+        return;
+    }
+    
+    printf("OpenGL %s%d.%d in use.\n", is_es ? "ES " : " ", vmajor, vminor);
 
     glGenBuffers(1, &opengl_vbo);
     

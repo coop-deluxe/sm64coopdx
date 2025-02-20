@@ -66,22 +66,51 @@
 struct AudioAPI *audio_api = NULL;
 struct GfxWindowManagerAPI *wm_api = &WAPI;
 
-int main(int argc, char *argv[]) {
-    accountInitialize(AccountServiceType_Application);
+void nx_init(void) {
+    //accountInitialize(AccountServiceType_Application);
     socketInitializeDefault();
+    //nifmInitialize(NifmServiceType_User);
+    //plInitialize(PlServiceType_User);
+    romfsInit();
+    nxlinkStdio();
+
+    NWindow* win = nwindowGetDefault();
+    nwindowSetDimensions(win, 1920, 1080);
+}
+
+void nx_cleanup(void) {
+    //accountExit();
+    socketExit();
+    //nifmExit();
+    //plExit();
+    romfsExit();
+}
+
+int main(int argc, char *argv[]) {
+    nx_init();
     
-    fs_init(gCLIOpts.savePath[0] ? gCLIOpts.savePath : sys_user_path());
-
+    // Initialize our filesystem, If it fails.
+    // We can't continue.
+    if (!fs_init("sdmc:/switch")) {
+        nx_cleanup();
+        return 0;
+    }
+    
+    printf("Loading game config.\n");
+    
+    // Load our config.
     configfile_load();
+    
+    printf("Loading gfx for game.\n");
 
-    // create the window almost straight away
+    // Create the window as soon as possible.
     if (!gGfxInited) {
         gfx_init(&WAPI, &RAPI, "Super Mario 64 Coop Deluxe");
-        WAPI.set_keyboard_callbacks(keyboard_on_key_down, keyboard_on_key_up, keyboard_on_all_keys_up,
-            keyboard_on_text_input, keyboard_on_text_editing);
     }
+    
+    printf("Checking for game ROM.\n");
 
-    // render the rom setup screen
+    // Render the ROM setup screen
     if (!main_rom_handler()) {
 #ifdef LOADING_SCREEN_SUPPORTED
         if (!gCLIOpts.hideLoadingScreen) {
@@ -90,11 +119,14 @@ int main(int argc, char *argv[]) {
 #endif
         {
             printf("ERROR: Could not find a valid vanilla US SM64 rom in the game user folder.\n");
+            nx_cleanup();
             return 0;
         }
     }
+    
+    printf("Loading game data.\n");
 
-    // start the thread for setting up the game
+    // Start the thread for setting up the game
 #ifdef LOADING_SCREEN_SUPPORTED
     bool threadSuccess = false;
     if (!gCLIOpts.hideLoadingScreen && !gCLIOpts.headless) {
@@ -112,6 +144,8 @@ int main(int argc, char *argv[]) {
 
     // initialize sm64 data and controllers
     thread5_game_loop(NULL);
+    
+    printf("Initializing audio.\n");
 
     // initialize sound outside threads
     if (audio_sdl.init()) audio_api = &audio_sdl;
@@ -124,6 +158,8 @@ int main(int argc, char *argv[]) {
     loading_screen_reset();
 #endif
 
+    printf("Initializing DJUI.\n");
+
     // initialize djui
     djui_init();
     djui_unicode_init();
@@ -131,6 +167,8 @@ int main(int argc, char *argv[]) {
     djui_console_message_dequeue();
 
     show_update_popup();
+    
+    printf("Initializing networking.\n");
 
     // initialize network
     if (gCLIOpts.network == NT_CLIENT) {
@@ -158,9 +196,11 @@ int main(int argc, char *argv[]) {
     } else {
         network_init(NT_NONE, false);
     }
+    
+    printf("Starting main loop.\n");
 
     // main loop
-    while (true) {
+    while (appletMainLoop()) {
         debug_context_reset();
         
         CTX_BEGIN(CTX_TOTAL);
@@ -172,7 +212,8 @@ int main(int argc, char *argv[]) {
 #endif
         djui_lua_profiler_update();
     }
-
+  
+    nx_cleanup();
     return 0;
 }
 
