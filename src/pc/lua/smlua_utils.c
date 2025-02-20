@@ -348,7 +348,7 @@ bool packet_read_lnt(struct Packet* p, struct LSTNetworkType* lnt) {
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-void smlua_push_object(lua_State* L, u16 lot, void* p) {
+void smlua_push_object(lua_State* L, u16 lot, void* p, void *extraInfo) {
     if (p == NULL) {
         lua_pushnil(L);
         return;
@@ -369,6 +369,7 @@ void smlua_push_object(lua_State* L, u16 lot, void* p) {
     cobject->pointer = p;
     cobject->lot = lot;
     cobject->freed = false;
+    cobject->info = extraInfo;
     lua_rawgeti(L, LUA_REGISTRYINDEX, gSmLuaCObjectMetatable);
     lua_setmetatable(L, -2);
     lua_pushinteger(L, key);
@@ -379,7 +380,7 @@ void smlua_push_object(lua_State* L, u16 lot, void* p) {
     LUA_STACK_CHECK_END();
 }
 
-void smlua_push_pointer(lua_State* L, u16 lvt, void* p) {
+void smlua_push_pointer(lua_State* L, u16 lvt, void* p, void *extraInfo) {
     if (p == NULL) {
         lua_pushnil(L);
         return;
@@ -400,6 +401,7 @@ void smlua_push_pointer(lua_State* L, u16 lvt, void* p) {
     cpointer->pointer = p;
     cpointer->lvt = lvt;
     cpointer->freed = false;
+    cpointer->info = extraInfo;
     lua_rawgeti(L, LUA_REGISTRYINDEX, gSmLuaCPointerMetatable);
     lua_setmetatable(L, -2);
     lua_pushinteger(L, key);

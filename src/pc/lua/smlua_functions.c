@@ -308,7 +308,7 @@ int smlua_func_get_texture_info(lua_State* L) {
     lua_newtable(L);
 
     lua_pushstring(L, "texture");
-    smlua_push_pointer(L, LVT_U8_P, texInfo.texture);
+    smlua_push_pointer(L, LVT_U8_P, texInfo.texture, NULL);
     lua_settable(L, -3);
 
     lua_pushstring(L, "bitSize");
@@ -942,7 +942,7 @@ int smlua_func_collision_find_surface_on_ray(lua_State* L) {
     f32 precision = paramCount == 7 ? smlua_to_number(L, 7) : 3.0f;
     if (!gSmLuaConvertSuccess) { LOG_LUA("collision_find_surface_on_ray: Failed to convert parameter 7"); return 0; }
 
-    smlua_push_object(L, LOT_RAYINTERSECTIONINFO, collision_find_surface_on_ray(startX, startY, startZ, dirX, dirY, dirZ, precision));
+    smlua_push_object(L, LOT_RAYINTERSECTIONINFO, collision_find_surface_on_ray(startX, startY, startZ, dirX, dirY, dirZ, precision), NULL);
 
     return 1;
 }
@@ -1005,7 +1005,7 @@ int smlua_func_cast_graph_node(lua_State* L) {
         return 0;
     }
 
-    smlua_push_object(L, lot, graphNode);
+    smlua_push_object(L, lot, graphNode, NULL);
 
     return 1;
 }

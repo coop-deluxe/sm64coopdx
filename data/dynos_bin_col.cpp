@@ -53,7 +53,7 @@ static void ValidateColSectionChange(GfxData* aGfxData, struct CollisionValidati
             PrintDataError("Improper triangle count found in section. Allocated: %u, Defined: %u", aColValData.triAlloc, aColValData.triCount);
         }
         if (aColValData.specialAlloc != aColValData.specialCount) {
-            PrintDataError("Improper sepcial count found in section. Allocated: %u, Defined: %u", aColValData.triAlloc, aColValData.triCount);
+            PrintDataError("Improper special count found in section. Allocated: %u, Defined: %u", aColValData.triAlloc, aColValData.triCount);
         }
         if (aColValData.waterBoxAlloc != aColValData.waterBoxCount) {
             PrintDataError("Improper water box count found in section. Allocated: %u, Defined: %u", aColValData.waterBoxAlloc, aColValData.waterBoxCount);

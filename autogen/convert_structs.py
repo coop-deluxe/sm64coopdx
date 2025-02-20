@@ -424,6 +424,7 @@ def build_vec_types():
     for type_name in VEC_TYPES.keys():
         s += '    [LOT_%s] = { LOT_%s, s%sFields, LUA_%s_FIELD_COUNT },\n' % (type_name.upper(), type_name.upper(), type_name, type_name.upper())
 
+    s += '    [LOT_ARRAY] = { LOT_ARRAY, NULL, 0 },\n'
     s += '    [LOT_POINTER] = { LOT_POINTER, NULL, 0 },\n'
     s += '};\n\n'
 
@@ -574,6 +575,7 @@ def build_lot_enum():
     for type_name in VEC_TYPES.keys():
         s += '    LOT_%s,\n' % (type_name.upper())
 
+    s += '    LOT_ARRAY,\n'
     s += '    LOT_POINTER,\n'
     s += '    LOT_MAX,\n'
     s += '};\n\n'

@@ -298,8 +298,8 @@ void network_send_object(struct Object* o) {
 }
 
 void network_send_object_reliability(struct Object* o, bool reliable) {
+    // don't send sync objects while area sync is invalid
     if (gNetworkPlayerLocal == NULL || !gNetworkPlayerLocal->currAreaSyncValid) {
-        LOG_INFO("tried to send sync obj when area sync invalid");
         return;
     }
     // prevent sending objects during credits sequence
@@ -468,9 +468,11 @@ void network_update_objects(void) {
 
         // check for stale sync object
         if (so->o->oSyncID != so->id) {
-            enum BehaviorId bhvId = get_id_from_behavior(so->o->behavior);
-            const char* bhvName = get_behavior_name_from_id(bhvId);
-            LOG_ERROR("sync id mismatch: %d vs %d (behavior %s, %d)", so->o->oSyncID, so->id, bhvName != NULL ? bhvName : "NULL", bhvId);
+            if (so->o->activeFlags != ACTIVE_FLAG_DEACTIVATED) { // check if object was just deleted
+                enum BehaviorId bhvId = get_id_from_behavior(so->o->behavior);
+                const char* bhvName = get_behavior_name_from_id(bhvId);
+                LOG_ERROR("sync id mismatch: %d vs %d (behavior %s, %d)", so->o->oSyncID, so->id, bhvName != NULL ? bhvName : "NULL", bhvId);
+            }
             sync_object_forget(so->id);
             continue;
         }

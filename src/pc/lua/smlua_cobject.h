@@ -59,12 +59,14 @@ typedef struct {
     void *pointer;
     u16 lot;
     bool freed;
+    void *info;
 } CObject;
 
 typedef struct {
     void *pointer;
     u16 lvt;
     bool freed;
+    void *info;
 } CPointer;
 
 extern int gSmLuaCObjects;

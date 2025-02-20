@@ -809,7 +809,7 @@ def build_param(fid, param, i):
         lot = translate_type_to_lot(ptype)
         s = '  %s %s = (%s)smlua_to_cobject(L, %d, %s);' % (ptype, pid, ptype, i, lot)
 
-        if '???' in lot:
+        if '???' in lot or "GRAPHNODE" in lot:
             s = '//' + s + ' <--- UNIMPLEMENTED'
         else:
             s = '  ' + s
@@ -853,9 +853,9 @@ def build_call(function):
         lfunc = 'lua_pushstring'
     elif translate_type_to_lot(ftype) == 'LOT_POINTER':
         lvt = translate_type_to_lvt(ftype)
-        return '    smlua_push_pointer(L, %s, (void*)%s);\n' % (lvt, ccall)
+        return '    smlua_push_pointer(L, %s, (void*)%s, NULL);\n' % (lvt, ccall)
     elif '???' not in flot and flot != 'LOT_NONE':
-        return '    smlua_push_object(L, %s, %s);\n' % (flot, ccall)
+        return '    smlua_push_object(L, %s, %s, NULL);\n' % (flot, ccall)
 
     return '    %s(L, %s);\n' % (lfunc, ccall)
 

@@ -121,6 +121,7 @@ struct LuaObjectTable sLuaObjectTable[LOT_MAX] = {
     [LOT_VEC4S] = { LOT_VEC4S, sVec4sFields, LUA_VEC4S_FIELD_COUNT },
     [LOT_MAT4] = { LOT_MAT4, sMat4Fields, LUA_MAT4_FIELD_COUNT },
     [LOT_COLOR] = { LOT_COLOR, sColorFields, LUA_COLOR_FIELD_COUNT },
+    [LOT_ARRAY] = { LOT_ARRAY, NULL, 0 },
     [LOT_POINTER] = { LOT_POINTER, NULL, 0 },
 };
 

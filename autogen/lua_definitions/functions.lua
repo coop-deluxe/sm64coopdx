@@ -7977,14 +7977,6 @@ function find_unimportant_object()
     -- ...
 end
 
---- @param callContext integer
---- @param a1 GraphNode
---- @param sp8 integer
---- @return integer
-function geo_offset_klepto_debug(callContext, a1, sp8)
-    -- ...
-end
-
 --- @param behavior Pointer_BehaviorScript
 --- @return integer
 function get_object_list_from_behavior(behavior)
@@ -9505,13 +9497,6 @@ function course_is_main_course(courseNum)
     -- ...
 end
 
---- @param pointer Pointer_integer
---- @return integer
---- Gets the signed 32-bit integer value from `pointer`
-function deref_s32_pointer(pointer)
-    -- ...
-end
-
 --- @return boolean
 --- Checks if the DJUI playerlist is attempting to be opened
 function djui_attempting_to_open_playerlist()
@@ -9685,13 +9670,6 @@ end
 --- @return boolean
 --- Checks if the save file has been modified without saving
 function get_save_file_modified()
-    -- ...
-end
-
---- @param initialValue integer
---- @return Pointer_integer
---- Returns a temporary signed 32-bit integer pointer with its value set to `initialValue`
-function get_temp_s32_pointer(initialValue)
     -- ...
 end
 

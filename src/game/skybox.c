@@ -12,6 +12,7 @@
 #include "hud.h"
 #include "geo_commands.h"
 #include "hardcoded.h"
+#include "skybox.h"
 
 /**
  * @file skybox.c
@@ -55,9 +56,6 @@ struct Skybox {
     f32 scaledX;
     /// The skybox's Y position in world space
     f32 scaledY;
-
-    /// The index of the upper-left tile in the 3x3 grid that gets drawn
-    s32 upperLeftTile;
 };
 
 struct Skybox sSkyBoxInfo[2];
@@ -183,24 +181,14 @@ f32 calculate_skybox_scaled_y(s8 player, UNUSED f32 fov) {
 }
 
 /**
- * Converts the upper left xPos and yPos to the index of the upper left tile in the skybox.
- */
-static s32 get_top_left_tile_idx(s8 player) {
-    s32 tileCol = sSkyBoxInfo[player].scaledX / SKYBOX_TILE_WIDTH;
-    s32 tileRow = (SKYBOX_HEIGHT - sSkyBoxInfo[player].scaledY) / SKYBOX_TILE_HEIGHT;
-
-    return tileRow * SKYBOX_COLS + tileCol;
-}
-
-/**
  * Generates vertices for the skybox tile.
  *
  * @param tileIndex The index into the 32x32 sections of the whole skybox image. The index is converted
  *                  into an x and y by modulus and division by SKYBOX_COLS. x and y are then scaled by
  *                  SKYBOX_TILE_WIDTH to get a point in world space.
  */
-Vtx *make_skybox_rect(s32 tileIndex, s8 colorIndex, s32 row, s32 col) {
-    extern Vtx* gBackgroundSkyboxVerts[3][3];
+Vtx *make_skybox_rect(s32 tileRow, s32 tileCol, s8 colorIndex, s32 row, s32 col) {
+    extern Vtx* gBackgroundSkyboxVerts[SKYBOX_TILES_Y][SKYBOX_TILES_X];
 
     Vtx *verts;
     if (gRenderingInterpolated) {
@@ -210,22 +198,18 @@ Vtx *make_skybox_rect(s32 tileIndex, s8 colorIndex, s32 row, s32 col) {
         gBackgroundSkyboxVerts[row][col] = verts;
     }
 
-    f32 x = tileIndex % SKYBOX_COLS * SKYBOX_TILE_WIDTH;
-    f32 y = SKYBOX_HEIGHT - tileIndex / SKYBOX_COLS * SKYBOX_TILE_HEIGHT;
+    f32 x = tileCol * SKYBOX_TILE_WIDTH;
+    f32 y = SKYBOX_HEIGHT - tileRow / SKYBOX_COLS * SKYBOX_TILE_HEIGHT;
 
     if (verts != NULL) {
         f32 r = gSkyboxColor[0] / 255.0f;
         f32 g = gSkyboxColor[1] / 255.0f;
         f32 b = gSkyboxColor[2] / 255.0f;
-        make_vertex(verts, 0, x, y, -1, 0, 0, sSkyboxColors[colorIndex][0] * r, sSkyboxColors[colorIndex][1] * g,
-                    sSkyboxColors[colorIndex][2] * b, 255);
-        make_vertex(verts, 1, x, y - SKYBOX_TILE_HEIGHT, -1, 0, 31 << 5, sSkyboxColors[colorIndex][0] * r, sSkyboxColors[colorIndex][1] * g,
-                    sSkyboxColors[colorIndex][2] * b, 255);
-        make_vertex(verts, 2, x + SKYBOX_TILE_WIDTH, y - SKYBOX_TILE_HEIGHT, -1, 31 << 5, 31 << 5, sSkyboxColors[colorIndex][0] * r,
-                    sSkyboxColors[colorIndex][1] * g, sSkyboxColors[colorIndex][2] * b, 255);
-        make_vertex(verts, 3, x + SKYBOX_TILE_WIDTH, y, -1, 31 << 5, 0, sSkyboxColors[colorIndex][0] * r, sSkyboxColors[colorIndex][1] * g,
-                    sSkyboxColors[colorIndex][2] * b, 255);
-    } else {
+        u8 *colors = sSkyboxColors[colorIndex];
+        make_vertex(verts, 0, x, y, -1, 0, 0, colors[0] * r, colors[1] * g, colors[2] * b, 255);
+        make_vertex(verts, 1, x, y - SKYBOX_TILE_HEIGHT, -1, 0, 31 << 5, colors[0] * r, colors[1] * g, colors[2] * b, 255);
+        make_vertex(verts, 2, x + SKYBOX_TILE_WIDTH, y - SKYBOX_TILE_HEIGHT, -1, 31 << 5, 31 << 5, colors[0] * r, colors[1] * g, colors[2] * b, 255);
+        make_vertex(verts, 3, x + SKYBOX_TILE_WIDTH, y, -1, 31 << 5, 0, colors[0] * r, colors[1] * g, colors[2] * b, 255);
     }
     return verts;
 }
@@ -239,9 +223,15 @@ void draw_skybox_tile_grid(Gfx **dlist, s8 background, s8 player, s8 colorIndex)
     s32 row;
     s32 col;
 
-    for (row = 0; row < 3; row++) {
-        for (col = 0; col < 3; col++) {
-            s32 tileIndex = sSkyBoxInfo[player].upperLeftTile + row * SKYBOX_COLS + col;
+    for (row = 0; row < SKYBOX_TILES_Y; row++) {
+        for (col = 0; col < SKYBOX_TILES_X; col++) {
+            s32 tileRow = (s32) (((SKYBOX_HEIGHT - sSkyBoxInfo[player].scaledY) / SKYBOX_TILE_HEIGHT) + row) * SKYBOX_COLS;
+            s32 tileColTmp = ((floor(sSkyBoxInfo[player].scaledX / SKYBOX_TILE_WIDTH) + col) - 1);
+            s32 tileCol = tileColTmp;
+            if (tileCol >= SKYBOX_ROWS) { tileCol -= SKYBOX_ROWS; }
+            if (tileCol < 0) { tileCol += SKYBOX_ROWS; }
+            s32 tileIndex = tileRow + tileCol;
+
             // UGLY HACK: if the camera moves weird after a level transition this can go too high
             if (tileIndex < 0)  { tileIndex = 0;  }
             if (tileIndex > 79) { tileIndex = 79; }
@@ -252,7 +242,7 @@ void draw_skybox_tile_grid(Gfx **dlist, s8 background, s8 player, s8 colorIndex)
                 texture = (Texture*)(*(SkyboxTexture *) segmented_to_virtual(sSkyboxTextures[background]))[tileIndex];
             }
 
-            Vtx *vertices = make_skybox_rect(tileIndex, colorIndex, row, col);
+            Vtx *vertices = make_skybox_rect(tileRow, tileColTmp, colorIndex, row, col);
 
             gLoadBlockTexture((*dlist)++, 32, 32, G_IM_FMT_RGBA, texture);
             gSPVertexNonGlobal((*dlist)++, VIRTUAL_TO_PHYSICAL(vertices), 4, 0);
@@ -276,10 +266,11 @@ void *create_skybox_ortho_matrix(s8 player) {
         gBackgroundSkyboxMtx = mtx;
     }
 
-    f32 half_width = (4.0f / 3.0f) / GFX_DIMENSIONS_ASPECT_RATIO * SCREEN_WIDTH / 2;
+    // Stretch the screen to hide sides of skybox
+    f32 half_width = (21.0f / 9.0f) / GFX_DIMENSIONS_ASPECT_RATIO * SCREEN_WIDTH / 2;
     f32 center = (sSkyBoxInfo[player].scaledX + SCREEN_WIDTH / 2);
     if (half_width < SCREEN_WIDTH / 2) {
-        // A wider screen than 4:3
+        // A wider screen than 21:9
         left = center - half_width;
         right = center + half_width;
     }
@@ -298,7 +289,7 @@ void *create_skybox_ortho_matrix(s8 player) {
 Gfx *init_skybox_display_list(s8 player, s8 background, s8 colorIndex) {
     extern Gfx* gBackgroundSkyboxGfx;
 
-    s32 dlCommandCount = 5 + (3 * 3) * 7; // 5 for the start and end, plus 9 skybox tiles
+    s32 dlCommandCount = 5 + (SKYBOX_TILES_Y * SKYBOX_TILES_X) * 7; // 5 for the start and end, plus the amount of skybox tiles
 
     void *skybox;
     if (gRenderingInterpolated) {
@@ -341,7 +332,7 @@ Gfx *create_skybox_facing_camera(s8 player, s8 background, f32 fov,
                                     f32 focX, f32 focY, f32 focZ) {
     gReadOnlyBackground = background;
     background = gOverrideBackground == -1 ? background : gOverrideBackground;
-    
+
     f32 cameraFaceX = focX - posX;
     f32 cameraFaceY = focY - posY;
     f32 cameraFaceZ = focZ - posZ;
@@ -362,7 +353,6 @@ Gfx *create_skybox_facing_camera(s8 player, s8 background, f32 fov,
 
     sSkyBoxInfo[player].scaledX = calculate_skybox_scaled_x(player, fov);
     sSkyBoxInfo[player].scaledY = calculate_skybox_scaled_y(player, fov);
-    sSkyBoxInfo[player].upperLeftTile = get_top_left_tile_idx(player);
 
     return init_skybox_display_list(player, background, colorIndex);
 }
