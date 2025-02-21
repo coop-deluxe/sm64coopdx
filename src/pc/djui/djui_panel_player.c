@@ -330,13 +330,16 @@ static void djui_panel_player_edit_palette_create(struct DjuiBase* caller) {
 bool djui_panel_player_name_valid(char* buffer) {
     if (buffer[0] == '\0') { return false; }
     u16 numEscapeChars = 0;
+    bool isOnlyEscapeChars = true;
     char* c = buffer;
     while (*c != '\0') {
         if (*c == ' ') { return false; }
         if (!djui_unicode_valid_char(c)) { return false; }
         if (*c == '\\') { numEscapeChars++; }
+        else { isOnlyEscapeChars = false; }
         c = djui_unicode_next_char(c);
     }
+    if (isOnlyEscapeChars) { return false; }
     if (numEscapeChars % 2 != 0) { return false; }
     return true;
 }
