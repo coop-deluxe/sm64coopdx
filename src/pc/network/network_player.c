@@ -24,7 +24,7 @@ struct NetworkPlayer *gNetworkPlayerServer = NULL;
 static char sDefaultPlayerName[] = "Player";
 static char sDefaultDiscordId[] = "0";
 
-bool network_player_name_valid(const char* buffer) {
+bool network_player_name_valid(char* buffer) {
     if (buffer[0] == '\0') { return false; }
     u16 numEscapeChars = 0;
     bool isOnlyEscapeChars = true;
@@ -272,7 +272,7 @@ u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex, u8 mode
     struct NetworkPlayer *np = &gNetworkPlayers[localIndex];
 
     // ensure that a valid name is given
-    if (!network_player_name_valid(name)) {
+    if (!network_player_name_valid((char*)name)) {
         name = sDefaultPlayerName;
     }
     if (discordId[0] == '\0') {
