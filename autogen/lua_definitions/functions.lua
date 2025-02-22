@@ -10545,6 +10545,14 @@ function find_water_level(x, z)
     -- ...
 end
 
+--- @param dir Vec3f
+--- @param active boolean
+--- @param airborne boolean
+--- Sets whether collision finding functions should check wall directions.
+function set_find_wall_direction(dir, active, airborne)
+    -- ...
+end
+
 --- @param data Pointer_integer
 --- @return integer
 function get_area_terrain_size(data)

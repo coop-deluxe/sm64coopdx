@@ -31892,6 +31892,31 @@ int smlua_func_find_water_level(lua_State* L) {
     return 1;
 }
 
+int smlua_func_set_find_wall_direction(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 3) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "set_find_wall_direction", 3, top);
+        return 0;
+    }
+
+
+    Vec3f dir;
+    smlua_get_vec3f(dir, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "set_find_wall_direction"); return 0; }
+    bool active = smlua_to_boolean(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "set_find_wall_direction"); return 0; }
+    bool airborne = smlua_to_boolean(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "set_find_wall_direction"); return 0; }
+
+    set_find_wall_direction(dir, active, airborne);
+
+    smlua_push_vec3f(dir, 1);
+
+    return 1;
+}
+
   ////////////////////
  // surface_load.h //
 ////////////////////
@@ -33824,6 +33849,7 @@ void smlua_bind_functions_autogen(void) {
     //smlua_bind_function(L, "find_surface_on_ray", smlua_func_find_surface_on_ray); <--- UNIMPLEMENTED
     smlua_bind_function(L, "find_wall_collisions", smlua_func_find_wall_collisions);
     smlua_bind_function(L, "find_water_level", smlua_func_find_water_level);
+    smlua_bind_function(L, "set_find_wall_direction", smlua_func_set_find_wall_direction);
 
     // surface_load.h
     smlua_bind_function(L, "get_area_terrain_size", smlua_func_get_area_terrain_size);
