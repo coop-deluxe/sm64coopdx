@@ -5198,6 +5198,11 @@ function transition_submerged_to_walking(m)
 end
 
 --- @param m MarioState
+function update_burning_health_common(m)
+    -- ...
+end
+
+--- @param m MarioState
 --- Applies the translation from Mario's current animation to his world position. Considers animation flags (horizontal/vertical translation)
 function update_mario_pos_for_anim(m)
     -- ...

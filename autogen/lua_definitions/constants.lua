@@ -4163,6 +4163,28 @@ MARIO_SPAWN_UNUSED_38 = ((MARIO_SPAWN_PAINTING_STAR_COLLECT ) + 6)
 --- @type MarioSpawnType
 MARIO_SPAWN_FADE_FROM_BLACK = ((MARIO_SPAWN_PAINTING_STAR_COLLECT ) + 7)
 
+--- @class MarioHealType
+
+--- @type MarioHealType
+HEAL_NORMAL = 0
+
+--- @type MarioHealType
+HEAL_WATER = 1
+
+--- @class MarioHurtType
+
+--- @type MarioHurtType
+HURT_NORMAL = 0
+
+--- @type MarioHurtType
+HURT_WATER = 1
+
+--- @type MarioHurtType
+HURT_TOXIC_GAS = 2
+
+--- @type MarioHurtType
+HURT_BURNING = 3
+
 --- @class CharacterAnimID
 
 --- @type CharacterAnimID
@@ -9190,10 +9212,19 @@ HOOK_ON_GEO_PROCESS_CHILDREN = 50
 HOOK_MARIO_OVERRIDE_GEOMETRY_INPUTS = 51
 
 --- @type LuaHookedEventType
-HOOK_ON_INTERACTIONS = 52
+HOOK_HEALED_MARIO = 52
 
 --- @type LuaHookedEventType
-HOOK_MAX = 53
+HOOK_HURT_MARIO = 53
+
+--- @type LuaHookedEventType
+HOOK_ON_INTERACTIONS = 54
+
+--- @type LuaHookedEventType
+HOOK_AFTER_QUARTER_STEP = 55
+
+--- @type LuaHookedEventType
+HOOK_MAX = 56
 
 --- @class LuaModMenuElementType
 
@@ -12526,7 +12557,7 @@ MINOR_VERSION_NUMBER = 1
 SM64COOPDX_VERSION = "v1.2.1"
 
 --- @type integer
-VERSION_NUMBER = 38
+VERSION_NUMBER = 39
 
 --- @type string
 VERSION_TEXT = "v"

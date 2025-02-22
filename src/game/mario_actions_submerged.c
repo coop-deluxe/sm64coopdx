@@ -186,7 +186,7 @@ void apply_water_current(struct MarioState *m, Vec3f step) {
 u32 perform_water_step(struct MarioState *m) {
     if (!m) { return 0; }
     UNUSED u32 unused;
-    u32 stepResult;
+    s32 stepResult;
     Vec3f nextPos;
     Vec3f step;
     struct Object *marioObj = m->marioObj;
@@ -210,6 +210,8 @@ u32 perform_water_step(struct MarioState *m) {
     }
 
     stepResult = perform_water_full_step(m, nextPos);
+
+    smlua_call_event_hooks_after_quarter_step(HOOK_AFTER_QUARTER_STEP, m, STEP_TYPE_WATER, stepResult, 0, &stepResult);
 
     vec3f_copy(marioObj->header.gfx.pos, m->pos);
     vec3s_set(marioObj->header.gfx.angle, -m->faceAngle[0], m->faceAngle[1], m->faceAngle[2]);
