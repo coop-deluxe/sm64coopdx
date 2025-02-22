@@ -495,6 +495,10 @@ const char* DynOS_Builtin_LvlMacro_GetFromData(const MacroObject* aData) {
     MGR_FIND_NAME(sDynosBuiltinLvlMacros);
 }
 
+  ////////////////
+ // Level Geos //
+////////////////
+
 static const void* sDynosBuiltinLvlGeos[] = {
     define_builtin(bitfs_geo_0004B0),
     define_builtin(bitfs_geo_0004C8),
