@@ -2530,6 +2530,15 @@ RCO_ALL_EXCEPT_BOWSER = 1
 --- @type RomhackCameraOverride
 RCO_NONE = 2
 
+--- @type RomhackCameraOverride
+RCO_ALL_INCLUDING_VANILLA = 3
+
+--- @type RomhackCameraOverride
+RCO_ALL_VANILLA_EXCEPT_BOWSER = 4
+
+--- @type RomhackCameraOverride
+RCO_DISABLE = 5
+
 --- @class CharacterSound
 
 --- @type CharacterSound
@@ -12526,7 +12535,7 @@ MINOR_VERSION_NUMBER = 1
 SM64COOPDX_VERSION = "v1.2.1"
 
 --- @type integer
-VERSION_NUMBER = 38
+VERSION_NUMBER = 39
 
 --- @type string
 VERSION_TEXT = "v"

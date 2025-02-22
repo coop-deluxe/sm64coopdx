@@ -1534,29 +1534,6 @@ Resolves collisions between the camera and level geometry. Adjusts the camera's 
 
 <br />
 
-## [rom_hack_cam_set_collisions](#rom_hack_cam_set_collisions)
-
-### Description
-Toggles collision settings for the ROM hack camera. This enables or disables specific collision behaviors in modded levels
-
-### Lua Example
-`rom_hack_cam_set_collisions(enable)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| enable | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void rom_hack_cam_set_collisions(u8 enable);`
-
-[:arrow_up_small:](#)
-
-<br />
-
 ## [rotate_camera_around_walls](#rotate_camera_around_walls)
 
 ### Description
@@ -2235,6 +2212,29 @@ Skips camera interpolation for a frame, locking the camera instantly to the targ
 
 ### C Prototype
 `void skip_camera_interpolation(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [snap_to_45_degrees](#snap_to_45_degrees)
+
+### Description
+Takes in an SM64 angle unit and returns the nearest 45 degree angle, also in SM64 angle units. Useful when needing to align angles (camera, yaw, etc.)
+
+### Lua Example
+`local integerValue = snap_to_45_degrees(angle)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| angle | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 snap_to_45_degrees(s16 angle);`
 
 [:arrow_up_small:](#)
 
