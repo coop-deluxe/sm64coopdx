@@ -1,6 +1,7 @@
 #ifndef SMLUA_GFX_UTILS_H
 #define SMLUA_GFX_UTILS_H
 
+#include "pc/lua/smlua.h"
 #include "types.h"
 
 /* |description|Sets the override FOV|descriptionEnd| */
@@ -46,5 +47,17 @@ void set_override_skybox(s8 background);
 u8 get_skybox_color(u8 index);
 /* |description|Sets a value of the global skybox color|descriptionEnd| */
 void set_skybox_color(u8 index, u8 value);
+
+void gfx_parse(Gfx* cmd, LuaFunction func);
+Vtx *gfx_get_vtx(Gfx* gfx, u16 offset);
+void gfx_set_geometrymode(Gfx* gfx, u32 mode);
+void gfx_clear_geometrymode(Gfx* gfx, u32 mode);
+void gfx_set_cycle_type(Gfx* gfx, u32 type);
+void gfx_set_render_mode(Gfx* gfx, u32 c0, u32 c1);
+void gfx_set_prim_color(Gfx* gfx, u8 m, u8 l, u8 r, u8 g, u8 b, u8 a);
+void gfx_set_env_color(Gfx* gfx, u8 r, u8 g, u8 b, u8 a);
+void gfx_set_fog_color(Gfx* gfx, u8 r, u8 g, u8 b, u8 a);
+void gfx_copy_lights_player_part(Gfx* gfx, u8 part);
+void gfx_set_combine_lerp(Gfx* gfx, u32 a0, u32 b0, u32 c0, u32 d0, u32 Aa0, u32 Ab0, u32 Ac0, u32 Ad0, u32 a1, u32 b1, u32 c1, u32 d1,	u32 Aa1, u32 Ab1, u32 Ac1, u32 Ad1);
 
 #endif

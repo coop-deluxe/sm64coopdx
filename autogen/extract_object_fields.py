@@ -23,15 +23,16 @@ def extract_object_fields():
     fields = []
     for line in extract_constants("include/object_fields.h").splitlines():
         parts = line.split(' ', 3)
+        if len(parts) < 3: continue
         field_id = parts[1]
         val = parts[2]
-    
+
         if not field_id.startswith('o'):
             #print('REJECT: ' + line)
             continue
-        
+
         field_type = object_field_types[val.split('(')[0]]
-            
+
         field = {}
         field['type'] = field_type.strip()
         field['identifier'] = field_id.strip()

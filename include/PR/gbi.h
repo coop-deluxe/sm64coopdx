@@ -3197,6 +3197,28 @@ typedef union {
 					       G_ACMUX_##Ad1));		\
 }
 
+#define	gDPSetCombineLERPNoString(pkt, a0, b0, c0, d0, Aa0, Ab0, Ac0, Ad0,	\
+	a1, b1, c1, d1,	Aa1, Ab1, Ac1, Ad1)			\
+{									\
+	Gfx *_g = (Gfx *)(pkt);						\
+								\
+	_g->words.w0 =	_SHIFTL(G_SETCOMBINE, 24, 8) |			\
+		_SHIFTL(GCCc0w0(a0, c0,	\
+				   Aa0, Ac0) |	\
+			   GCCc1w0(a1, c1), 	\
+			   0, 24);					\
+	_g->words.w1 =	(unsigned int)(GCCc0w1(b0, 		\
+					   d0,		\
+					   Ab0, 		\
+					   Ad0) |		\
+				   GCCc1w1(b1, 		\
+					   Aa1,		\
+					   Ac1, 		\
+					   d1,		\
+					   Ab1, 		\
+					   Ad1));		\
+}
+
 #define	gsDPSetCombineLERP(a0, b0, c0, d0, Aa0, Ab0, Ac0, Ad0,		\
 		a1, b1, c1, d1,	Aa1, Ab1, Ac1, Ad1)			\
 {{									\

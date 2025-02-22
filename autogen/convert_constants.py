@@ -47,7 +47,8 @@ in_files = [
     "src/pc/djui/djui_console.h",
     "src/game/player_palette.h",
     "src/pc/network/lag_compensation.h",
-    "src/pc/djui/djui_panel_menu.h"
+    "src/pc/djui/djui_panel_menu.h",
+    "include/PR/gbi.h"
 ]
 
 exclude_constants = {
@@ -55,7 +56,8 @@ exclude_constants = {
     "src/game/obj_behaviors.c": [ "^o$" ],
     "src/pc/djui/djui_console.h": [ "CONSOLE_MAX_TMP_BUFFER" ],
     "src/pc/lua/smlua_hooks.h": [ "MAX_HOOKED_MOD_MENU_ELEMENTS" ],
-    "src/pc/djui/djui_panel_menu.h": [ "RAINBOW_TEXT_LEN" ]
+    "src/pc/djui/djui_panel_menu.h": [ "RAINBOW_TEXT_LEN" ],
+    "include/PR/gbi.h": ["RM_AA_", "G_RM_", "G_CC_"]
 }
 
 include_constants = {
