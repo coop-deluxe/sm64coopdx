@@ -136,7 +136,7 @@ static PointerData GetDataFromPointer(const void* aPtr, GfxData* aGfxData) {
         return { builtinActor, 0 };
     }
 
-// Built-in Level Macros
+    // Built-in Level Macros
     auto builtinLvlMacro = DynOS_Builtin_LvlMacro_GetFromData((const MacroObject*)aPtr);
     if (builtinLvlMacro != NULL) {
         return { builtinLvlMacro, 0 };
