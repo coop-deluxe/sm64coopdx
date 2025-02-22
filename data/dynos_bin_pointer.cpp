@@ -136,6 +136,12 @@ static PointerData GetDataFromPointer(const void* aPtr, GfxData* aGfxData) {
         return { builtinActor, 0 };
     }
 
+    // Built-in Level Macros
+    auto builtinLvlMacro = DynOS_Builtin_LvlMacro_GetFromData((const MacroObject*)aPtr);
+    if (builtinLvlMacro != NULL) {
+        return { builtinLvlMacro, 0 };
+    }
+
     // Built-in Lvl Geos
     auto builtinGeo = DynOS_Builtin_LvlGeo_GetFromData((const GeoLayout*)aPtr);
     if (builtinGeo != NULL) {
@@ -402,6 +408,12 @@ static void *GetPointerFromData(GfxData *aGfxData, const String &aPtrName, u32 a
     auto builtinActor = DynOS_Builtin_Actor_GetFromName(aPtrName.begin());
     if (builtinActor != NULL) {
         return (void*)builtinActor;
+    }
+
+    // Built-in Lvl Macros
+    auto builtinLvlMacro = DynOS_Builtin_LvlMacro_GetFromName(aPtrName.begin());
+    if (builtinLvlMacro != NULL) {
+        return (void*)builtinLvlMacro;
     }
 
     // Built-in Lvl Geos

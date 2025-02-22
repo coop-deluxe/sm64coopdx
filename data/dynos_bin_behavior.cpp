@@ -1919,6 +1919,12 @@ static BehaviorScript ParseBehaviorScriptSymbolArgInternal(GfxData *aGfxData, Da
         return (BehaviorScript)builtinActor;
     }
 
+    // Built-in Lvl Macros
+    auto builtinLvlMacro = DynOS_Builtin_LvlMacro_GetFromName(_Arg.begin());
+    if (builtinLvlMacro != NULL) {
+        return (BehaviorScript)builtinLvlMacro;
+    }
+
     // Built-in Lvl Geos
     auto builtinGeo = DynOS_Builtin_LvlGeo_GetFromName(_Arg.begin());
     if (builtinGeo != NULL) {
