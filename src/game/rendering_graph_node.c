@@ -17,6 +17,7 @@
 #include "game/skybox.h"
 #include "game/first_person_cam.h"
 #include "course_table.h"
+#include "skybox.h"
 
 /**
  * This file contains the code that processes the scene graph for rendering.
@@ -172,7 +173,7 @@ static Vp   sViewportInterp  = { 0 };
 
 static struct GraphNodeBackground* sBackgroundNode = NULL;
 Gfx* gBackgroundSkyboxGfx = NULL;
-Vtx* gBackgroundSkyboxVerts[3][3] = { 0 };
+Vtx* gBackgroundSkyboxVerts[SKYBOX_TILES_Y][SKYBOX_TILES_X] = { 0 };
 Mtx* gBackgroundSkyboxMtx = NULL;
 struct GraphNodeRoot* sBackgroundNodeRoot = NULL;
 
@@ -1628,7 +1629,7 @@ static void geo_clear_interp_variables(void) {
 
     sBackgroundNode = NULL;
     gBackgroundSkyboxGfx = NULL;
-    memset(gBackgroundSkyboxVerts, 0, sizeof(Vtx*) * 3 * 3);
+    memset(gBackgroundSkyboxVerts, 0, sizeof(Vtx*) * SKYBOX_TILES_Y * SKYBOX_TILES_X);
     gBackgroundSkyboxMtx = NULL;
     sBackgroundNodeRoot = NULL;
 

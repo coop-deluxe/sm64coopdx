@@ -346,7 +346,7 @@ void smlua_call_event_hooks_interact_params(enum LuaHookedEventType hookType, st
         lua_remove(L, -2);
 
         // push object
-        smlua_push_object(L, LOT_OBJECT, obj);
+        smlua_push_object(L, LOT_OBJECT, obj, NULL);
 
         // push interact type
         lua_pushinteger(L, interactType);
@@ -379,7 +379,7 @@ void smlua_call_event_hooks_interact_params_ret_bool(enum LuaHookedEventType hoo
         lua_remove(L, -2);
 
         // push object
-        smlua_push_object(L, LOT_OBJECT, obj);
+        smlua_push_object(L, LOT_OBJECT, obj, NULL);
 
         // push interact type
         lua_pushinteger(L, interactType);
@@ -413,7 +413,7 @@ void smlua_call_event_hooks_interact_params_no_ret(enum LuaHookedEventType hookT
         lua_remove(L, -2);
 
         // push object
-        smlua_push_object(L, LOT_OBJECT, obj);
+        smlua_push_object(L, LOT_OBJECT, obj, NULL);
 
         // push interact type
         lua_pushinteger(L, interactType);
@@ -435,7 +435,7 @@ void smlua_call_event_hooks_object_param(enum LuaHookedEventType hookType, struc
         lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
 
         // push object
-        smlua_push_object(L, LOT_OBJECT, obj);
+        smlua_push_object(L, LOT_OBJECT, obj, NULL);
 
         // call the callback
         if (0 != smlua_call_hook(L, 1, 0, 0, hook->mod[i])) {
@@ -454,7 +454,7 @@ void smlua_call_event_hooks_object_model_param(enum LuaHookedEventType hookType,
         lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
 
         // push params
-        smlua_push_object(L, LOT_OBJECT, obj);
+        smlua_push_object(L, LOT_OBJECT, obj, NULL);
         lua_pushinteger(L, modelID);
 
         // call the callback
@@ -552,7 +552,7 @@ void smlua_call_event_hooks_set_camera_mode_params(enum LuaHookedEventType hookT
         lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
 
         // push params
-        smlua_push_object(L, LOT_CAMERA, c);
+        smlua_push_object(L, LOT_CAMERA, c, NULL);
         lua_pushinteger(L, mode);
         lua_pushinteger(L, frames);
 
@@ -1037,7 +1037,7 @@ void smlua_call_event_hooks_graph_node_object_and_int_param(enum LuaHookedEventT
         lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
 
         // push graph node object
-        smlua_push_object(L, LOT_GRAPHNODEOBJECT, node);
+        smlua_push_object(L, LOT_GRAPHNODEOBJECT, node, NULL);
 
         // push param
         lua_pushinteger(L, param);
@@ -1059,7 +1059,7 @@ void smlua_call_event_hooks_graph_node_and_int_param(enum LuaHookedEventType hoo
         lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
 
         // push graph node
-        smlua_push_object(L, LOT_GRAPHNODE, node);
+        smlua_push_object(L, LOT_GRAPHNODE, node, NULL);
 
         // push mat index
         lua_pushinteger(L, matIndex);
@@ -1576,7 +1576,7 @@ bool smlua_call_behavior_hook(const BehaviorScript** behavior, struct Object* ob
         lua_rawgeti(L, LUA_REGISTRYINDEX, reference);
 
         // push object
-        smlua_push_object(L, LOT_OBJECT, object);
+        smlua_push_object(L, LOT_OBJECT, object, NULL);
 
         // call the callback
         if (0 != smlua_call_hook(L, 1, 0, 0, hooked->mod)) {

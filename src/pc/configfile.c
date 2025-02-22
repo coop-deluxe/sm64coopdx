@@ -20,6 +20,7 @@
 #include "debuglog.h"
 #include "djui/djui_hud_utils.h"
 #include "game/save_file.h"
+#include "pc/network/network_player.h"
 
 #define ARRAY_LEN(arr) (sizeof(arr) / sizeof(arr[0]))
 
@@ -188,7 +189,6 @@ unsigned int configDjuiScale                      = 0;
 // other
 unsigned int configRulesVersion                   = 0;
 bool         configCompressOnStartup              = false;
-bool         configSkipPackGeneration             = false;
 
 // secrets
 bool configExCoopTheme = false;
@@ -320,7 +320,6 @@ static const struct ConfigOption options[] = {
     // other
     {.name = "rules_version",                  .type = CONFIG_TYPE_UINT,   .uintValue   = &configRulesVersion},
     {.name = "compress_on_startup",            .type = CONFIG_TYPE_BOOL,   .boolValue   = &configCompressOnStartup},
-    {.name = "skip_pack_generation",           .type = CONFIG_TYPE_BOOL,   .boolValue   = &configSkipPackGeneration},
 };
 
 struct SecretConfigOption {
@@ -741,13 +740,7 @@ NEXT_OPTION:
     if (configDjuiTheme >= DJUI_THEME_MAX) { configDjuiTheme = 0; }
     if (configDjuiScale >= 5) { configDjuiScale = 0; }
 
-    if (configExCoopTheme) {
-        configDjuiTheme = DJUI_THEME_LIGHT;
-        configDjuiThemeCenter = false;
-        configDjuiThemeFont = 1;
-    }
-
-    if (gCLIOpts.fullscreen == 1) { 
+    if (gCLIOpts.fullscreen == 1) {
         configWindow.fullscreen = true;
     } else if (gCLIOpts.fullscreen == 2) {
         configWindow.fullscreen = false;
@@ -756,6 +749,10 @@ NEXT_OPTION:
     if (gCLIOpts.height != 0) { configWindow.h = gCLIOpts.height; }
 
     if (gCLIOpts.playerName[0]) { snprintf(configPlayerName, MAX_CONFIG_STRING, "%s", gCLIOpts.playerName); }
+
+    if (!network_player_name_valid(configPlayerName)) {
+        snprintf(configPlayerName, MAX_CONFIG_STRING, "Player");
+    }
 
     for (int i = 0; i < gCLIOpts.enabledModsCount; i++) {
         enable_mod(gCLIOpts.enableMods[i]);

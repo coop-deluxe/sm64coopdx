@@ -179,5 +179,6 @@ void set_dialog_override_pos(s16 x, s16 y);
 void reset_dialog_override_pos();
 void set_dialog_override_color(u8 bgR, u8 bgG, u8 bgB, u8 bgA, u8 textR, u8 textG, u8 textB, u8 textA);
 void reset_dialog_override_color();
+void set_dialog_box_state(u8 state);
 
 #endif // INGAME_MENU_H

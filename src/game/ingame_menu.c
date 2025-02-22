@@ -1160,30 +1160,27 @@ void handle_special_dialog_text(s16 dialogID) { // dialog ID tables, in order
 static u8 sHookString[255];
 static bool sOverrideDialogString = false;
 void convert_string_ascii_to_sm64(u8 *str64, const char *strAscii, bool menu);
-void handle_dialog_hook(s16 dialogId) {
+bool handle_dialog_hook(s16 dialogId) {
     bool open = false;
     const char *str = smlua_call_event_hooks_int_ret_bool_and_string(HOOK_ON_DIALOG, dialogId, &open);
+    if (!open) {
+        if (gCamera->cutscene == CUTSCENE_READ_MESSAGE) { gCamera->cutscene = 0; }
+        return false;
+    }
     sOverrideDialogString = str != NULL;
     if (sOverrideDialogString) { convert_string_ascii_to_sm64(sHookString, str, false); }
-    if (!open) {
-        gDialogLineNum = 1;
-        gDialogBoxState = DIALOG_STATE_CLOSING;
-        gDialogBoxOpenTimer = 20;
-        handle_special_dialog_text(dialogId);
-    }
+    return true;
 }
 
 void create_dialog_box(s16 dialog) {
-    handle_dialog_hook(dialog);
-    if (gDialogID == -1) {
+    if (handle_dialog_hook(dialog) && gDialogID == -1) {
         gDialogID = dialog;
         gDialogBoxType = DIALOG_TYPE_ROTATE;
     }
 }
 
 void create_dialog_box_with_var(s16 dialog, s32 dialogVar) {
-    handle_dialog_hook(dialog);
-    if (gDialogID == -1) {
+    if (handle_dialog_hook(dialog) && gDialogID == -1) {
         gDialogID = dialog;
         gDialogVariable = dialogVar;
         gDialogBoxType = DIALOG_TYPE_ROTATE;
@@ -1191,16 +1188,14 @@ void create_dialog_box_with_var(s16 dialog, s32 dialogVar) {
 }
 
 void create_dialog_inverted_box(s16 dialog) {
-    handle_dialog_hook(dialog);
-    if (gDialogID == -1) {
+    if (handle_dialog_hook(dialog) && gDialogID == -1) {
         gDialogID = dialog;
         gDialogBoxType = DIALOG_TYPE_ZOOM;
     }
 }
 
 void create_dialog_box_with_response(s16 dialog) {
-    handle_dialog_hook(dialog);
-    if (gDialogID == -1) {
+    if (handle_dialog_hook(dialog) && gDialogID == -1) {
         gDialogID = dialog;
         gDialogBoxType = DIALOG_TYPE_ROTATE;
         gLastDialogResponse = 1;
@@ -3596,7 +3591,7 @@ void reset_dialog_override_color(void) {
     gOverrideDialogColor = 0;
 }
 
-void close_dialog_box(u8 state) {
+void set_dialog_box_state(u8 state) {
     if (state > DIALOG_STATE_CLOSING) { return; }
     gDialogBoxState = state;
 }

@@ -4,6 +4,9 @@
 #include <PR/ultratypes.h>
 #include <PR/gbi.h>
 
+#define SKYBOX_TILES_X 5
+#define SKYBOX_TILES_Y 3
+
 extern s8 gReadOnlyBackground;
 extern s8 gOverrideBackground;
 extern Color gSkyboxColor;

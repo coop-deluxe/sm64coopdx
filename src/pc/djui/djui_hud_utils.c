@@ -137,14 +137,14 @@ void patch_djui_hud(f32 delta) {
         // rotate
         f32 translatedW = scaleW;
         f32 translatedH = scaleH;
-        s32 rotation = delta_interpolate_s32(sRotation.rotation - sRotation.rotationDiff, sRotation.rotation, delta);
-        f32 pivotX = delta_interpolate_f32(sRotation.prevPivotX, sRotation.pivotX, delta);
-        f32 pivotY = delta_interpolate_f32(sRotation.prevPivotY, sRotation.pivotY, delta);
         djui_hud_size_translate(&translatedW);
         djui_hud_size_translate(&translatedH);
         if (sRotation.rotationDiff != 0 || sRotation.rotation != 0) {
-            f32 pivotTranslationX = translatedW * pivotX;
-            f32 pivotTranslationY = translatedH * pivotY;
+            s32 rotation = delta_interpolate_s32(sRotation.rotation - sRotation.rotationDiff, sRotation.rotation, delta);
+            f32 pivotX = delta_interpolate_f32(sRotation.prevPivotX, sRotation.pivotX, delta);
+            f32 pivotY = delta_interpolate_f32(sRotation.prevPivotY, sRotation.pivotY, delta);
+            f32 pivotTranslationX = interp->width * translatedW * pivotX;
+            f32 pivotTranslationY = interp->height * translatedH * pivotY;
             create_dl_translation_matrix(DJUI_MTX_NOPUSH, +pivotTranslationX, -pivotTranslationY, 0);
             create_dl_rotation_matrix(DJUI_MTX_NOPUSH, rotation, 0, 0, 1);
             create_dl_translation_matrix(DJUI_MTX_NOPUSH, -pivotTranslationX, +pivotTranslationY, 0);
@@ -234,7 +234,8 @@ void djui_hud_set_rotation(s16 rotation, f32 pivotX, f32 pivotY) {
 }
 
 void djui_hud_set_rotation_interpolated(s32 prevRotation, f32 prevPivotX, f32 prevPivotY, s32 rotation, f32 pivotX, f32 pivotY) {
-    sRotation.rotationDiff = ((rotation - prevRotation) * 180.f) / 0x8000;
+    f32 normalizedDiff = ((rotation - prevRotation + 0x8000) & 0xFFFF) - 0x8000; // Fix modular overflow/underflow
+    sRotation.rotationDiff = (normalizedDiff * 180.f) / 0x8000;
     sRotation.prevPivotX = prevPivotX;
     sRotation.prevPivotY = prevPivotY;
     sRotation.rotation = (rotation * 180.f) / 0x8000;

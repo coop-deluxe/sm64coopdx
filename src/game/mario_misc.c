@@ -893,7 +893,7 @@ Gfx *geo_process_lua_function(s32 callContext, struct GraphNode *node, UNUSED Ma
 
     // Push the callback, the graph node and the current matrix stack index
     lua_rawgeti(L, LUA_REGISTRYINDEX, funcRef);
-    smlua_push_object(L, LOT_GRAPHNODE, node);
+    smlua_push_object(L, LOT_GRAPHNODE, node, NULL);
     lua_pushinteger(L, gMatStackIndex);
 
     // Call the callback
