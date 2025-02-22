@@ -312,8 +312,8 @@ void djui_hud_print_text(const char* message, f32 x, f32 y, f32 scale) {
     }
 
     // translate position
-    f32 translatedX = x;
-    f32 translatedY = y;
+    f32 translatedX = x + (font->xOffset * scale);
+    f32 translatedY = y + (font->yOffset * scale);
     djui_hud_position_translate(&translatedX, &translatedY);
     create_dl_translation_matrix(DJUI_MTX_PUSH, translatedX, translatedY, gDjuiHudUtilsZ);
 
@@ -367,8 +367,8 @@ void djui_hud_print_text_interpolated(const char* message, f32 prevX, f32 prevY,
     Gfx* savedHeadPos = gDisplayListHead;
 
     // translate position
-    f32 translatedX = x;
-    f32 translatedY = y;
+    f32 translatedX = x + (font->xOffset * scale);
+    f32 translatedY = y + (font->yOffset * scale);
     djui_hud_position_translate(&translatedX, &translatedY);
     create_dl_translation_matrix(DJUI_MTX_PUSH, translatedX, translatedY, gDjuiHudUtilsZ);
 
@@ -403,8 +403,8 @@ void djui_hud_print_text_interpolated(const char* message, f32 prevX, f32 prevY,
     if (sInterpHudCount >= MAX_INTERP_HUD) { return; }
     struct InterpHud* interp = &sInterpHuds[sInterpHudCount++];
     interp->headPos = savedHeadPos;
-    interp->prevX = prevX;
-    interp->prevY = prevY;
+    interp->prevX = prevX + (font->xOffset * prevScale);
+    interp->prevY = prevY + (font->yOffset * prevScale);
     interp->prevScaleW = prevScale;
     interp->prevScaleH = prevScale;
     interp->x = x;
