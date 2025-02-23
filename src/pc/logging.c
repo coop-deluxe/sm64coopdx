@@ -9,96 +9,9 @@
 
 #define LOG_FOLDER "logs"
 #define LOG_EXTENSION ".log"
+#define MAX_LOG_LINE 512
 
 static FILE *logFile = NULL;
-
-char* log_int(int value) {
-    static char buffer[32];
-    snprintf(buffer, sizeof(buffer), "%d", value);
-    return buffer;
-}
-
-char* log_uint(unsigned int value) {
-    static char buffer[32];
-    snprintf(buffer, sizeof(buffer), "%u", value);
-    return buffer;
-}
-
-char* log_short(short value) {
-    static char buffer[32];
-    snprintf(buffer, sizeof(buffer), "%hd", value);
-    return buffer;
-}
-
-char* log_ushort(unsigned short value) {
-    static char buffer[32];
-    snprintf(buffer, sizeof(buffer), "%hu", value);
-    return buffer;
-}
-
-char* log_long(long value) {
-    static char buffer[32];
-    snprintf(buffer, sizeof(buffer), "%ld", value);
-    return buffer;
-}
-
-char* log_ulong(unsigned long value) {
-    static char buffer[32];
-    snprintf(buffer, sizeof(buffer), "%lu", value);
-    return buffer;
-}
-
-char* log_longlong(long long value) {
-    static char buffer[32];
-    snprintf(buffer, sizeof(buffer), "%lld", value);
-    return buffer;
-}
-
-char* log_ulonglong(unsigned long long value) {
-    static char buffer[32];
-    snprintf(buffer, sizeof(buffer), "%llu", value);
-    return buffer;
-}
-
-char* log_float(float value) {
-    static char buffer[64];
-    snprintf(buffer, sizeof(buffer), "%.9f", value);
-    char* end = buffer + strlen(buffer) - 1;
-    while (*end == '0' && *(end - 1) != '.') --end;
-    if (*end == '.') --end;
-    *(end + 1) = '\0';
-    return buffer;
-}
-
-char* log_double(double value) {
-    static char buffer[64];
-    snprintf(buffer, sizeof(buffer), "%.17lf", value);
-    char* end = buffer + strlen(buffer) - 1;
-    while (*end == '0' && *(end - 1) != '.') --end;
-    if (*end == '.') --end;
-    *(end + 1) = '\0';
-    return buffer;
-}
-
-char* log_longdouble(long double value) {
-    static char buffer[128];
-    snprintf(buffer, sizeof(buffer), "%.21Lf", value);
-    char* end = buffer + strlen(buffer) - 1;
-    while (*end == '0' && *(end - 1) != '.') --end;
-    if (*end == '.') --end;
-    *(end + 1) = '\0';
-    return buffer;
-}
-
-char* log_bool(bool value) {
-    return value ? "true" : "false";
-}
-
-char* log_char(char value) {
-    static char buffer[2] = {0};
-    buffer[0] = value;
-    return buffer;
-}
 
 // Generates a timestamp for filenames or log entries
 static void generate_timestamp(char *date_buffer, size_t date_size, char *time_buffer, size_t time_size, int for_filename) {
@@ -133,15 +46,10 @@ static const char* get_category_string(LogCategory category) {
     switch (category) {
         case LOG_CATEGORY_RUNTIME: return "Runtime";
         case LOG_CATEGORY_GAME: return "Game";
-        case LOG_CATEGORY_SETTINGS: return "Settings";
-        case LOG_CATEGORY_MODS: return "Mods";
+        case LOG_CATEGORY_DYNOS: return "DynOS";
+        case LOG_CATEGORY_LUA: return "Lua";
         case LOG_CATEGORY_NETWORK: return "Network";
-        case LOG_CATEGORY_CLIENT: return "Client";
-        case LOG_CATEGORY_SERVER: return "Server";
-        case LOG_CATEGORY_COOPNET: return "CoopNet";
-        case LOG_CATEGORY_CONSOLE: return "Console";
         case LOG_CATEGORY_CHAT: return "Chat";
-        case LOG_CATEGORY_DEBUG: return "Debug";
         default: return "Unknown";
     }
 }
@@ -213,53 +121,16 @@ static void write_log(LogCategory category, LogType type, const char *message) {
     fflush(logFile);
 }
 
-/**
- * Logs a message with optional additional arguments.
- * IMPORTANT: Always terminate the variadic arguments with NULL.
- *
- * Examples:
- * log_message(LOG_CATEGORY_CLIENT, LOG_TYPE_INFO, "Test", NULL);
- * log_message(LOG_CATEGORY_CLIENT, LOG_TYPE_INFO, "Hello", " World", "!", NULL);
- *
- * @param category The log category (e.g., LOG_CATEGORY_GAME).
- * @param type The log type (e.g., LOG_TYPE_INFO).
- * @param message The base message string.
- * @param ... Additional strings to concatenate, terminated by NULL.
- */
-void log_message(LogCategory category, LogType type, const char *message, ...) {
+void log_message(LogCategory category, LogType type, const char *format, ...) {
     ensure_log_file_open();
 
-    if (logFile == NULL) {
-        fprintf(stderr, "Error: Log file is not open. Skipping log message.\n");
-        return;
-    }
-
+    static char message[MAX_LOG_LINE];
     va_list args;
-    va_start(args, message);
-
-    size_t total_length = strlen(message);
-    const char *current;
-    while ((current = va_arg(args, const char *)) != NULL) {
-        total_length += strlen(current);
-    }
+    va_start(args, format);
+    vsnprintf(message, MAX_LOG_LINE, format, args);
     va_end(args);
 
-    char *concatenated_message = malloc(total_length + 1);
-    if (!concatenated_message) {
-        fprintf(stderr, "Error: Could not allocate memory for log message.\n");
-        return;
-    }
-
-    strcpy(concatenated_message, message);
-    va_start(args, message);
-    while ((current = va_arg(args, const char *)) != NULL) {
-        strcat(concatenated_message, current);
-    }
-    va_end(args);
-
-    write_log(category, type, concatenated_message);
-
-    free(concatenated_message); // Freeing memory here to avoid leaks
+    write_log(category, type, message);
 }
 
 // Closes the log file when the program exits
