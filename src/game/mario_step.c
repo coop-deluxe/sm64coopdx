@@ -353,7 +353,7 @@ static s32 perform_ground_quarter_step(struct MarioState *m, Vec3f nextPos) {
 s32 perform_ground_step(struct MarioState *m) {
     if (!m) { return 0; }
     s32 i;
-    u32 stepResult;
+    s32 stepResult;
     Vec3f intendedPos;
 
     s32 returnValue = 0;
@@ -381,6 +381,8 @@ s32 perform_ground_step(struct MarioState *m) {
         gFindWallDirectionActive = true;
         stepResult = perform_ground_quarter_step(m, intendedPos);
         gFindWallDirectionActive = false;
+
+        smlua_call_event_hooks_after_quarter_step(HOOK_AFTER_QUARTER_STEP, m, STEP_TYPE_GROUND, stepResult, i, &stepResult);
 
         if (stepResult == GROUND_STEP_LEFT_GROUND || stepResult == GROUND_STEP_HIT_WALL_STOP_QSTEPS) {
             break;
@@ -752,6 +754,8 @@ s32 perform_air_step(struct MarioState *m, u32 stepArg) {
         quarterStepResult = perform_air_quarter_step(m, intendedPos, stepArg);
         gFindWallDirectionAirborne = false;
         gFindWallDirectionActive = false;
+
+        smlua_call_event_hooks_after_quarter_step(HOOK_AFTER_QUARTER_STEP, m, STEP_TYPE_AIR, quarterStepResult, i, &quarterStepResult);
 
         //! On one qf, hit OOB/ceil/wall to store the 2 return value, and continue
         // getting 0s until your last qf. Graze a wall on your last qf, and it will

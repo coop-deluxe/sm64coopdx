@@ -365,26 +365,19 @@ s32 perform_hanging_step(struct MarioState *m, Vec3f nextPos) {
     floorHeight = find_floor(nextPos[0], nextPos[1], nextPos[2], &floor);
     ceilHeight = vec3f_mario_ceil(nextPos, floorHeight, &ceil);
 
-    if (floor == NULL) {
-        return HANG_HIT_CEIL_OR_OOB;
-    }
-    if (ceil == NULL) {
-        return HANG_LEFT_CEIL;
-    }
-    if (ceilHeight - floorHeight <= 160.0f) {
-        return HANG_HIT_CEIL_OR_OOB;
-    }
-    if (ceil->type != SURFACE_HANGABLE) {
-        return HANG_LEFT_CEIL;
+    s32 stepResult = HANG_NONE;
+    if (floor == NULL) { stepResult = HANG_HIT_CEIL_OR_OOB; }
+    else if (ceil == NULL) { stepResult = HANG_LEFT_CEIL; }
+    else if (ceilHeight - floorHeight <= 160.0f) { stepResult = HANG_HIT_CEIL_OR_OOB; }
+    else if (ceil->type != SURFACE_HANGABLE) { stepResult = HANG_LEFT_CEIL; }
+    else {
+        ceilOffset = ceilHeight - (nextPos[1] + 160.0f);
+        if (ceilOffset < -30.0f) { stepResult = HANG_HIT_CEIL_OR_OOB; }
+        if (ceilOffset > 30.0f) { stepResult = HANG_LEFT_CEIL; }
     }
 
-    ceilOffset = ceilHeight - (nextPos[1] + 160.0f);
-    if (ceilOffset < -30.0f) {
-        return HANG_HIT_CEIL_OR_OOB;
-    }
-    if (ceilOffset > 30.0f) {
-        return HANG_LEFT_CEIL;
-    }
+    smlua_call_event_hooks_after_quarter_step(HOOK_AFTER_QUARTER_STEP, m, STEP_TYPE_HANG, stepResult, 0, &stepResult);
+    if (stepResult != HANG_NONE) { return stepResult; }
 
     nextPos[1] = m->ceilHeight - 160.0f;
     vec3f_copy(m->pos, nextPos);
