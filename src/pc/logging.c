@@ -10,6 +10,7 @@
 #define LOG_FOLDER "logs"
 #define LOG_EXTENSION ".log"
 #define MAX_LOG_LINE 512
+#define LOG_FORMAT "[%s %s] (%s/%s) %s\n"
 
 static FILE *logFile = NULL;
 
@@ -117,7 +118,9 @@ static void write_log(LogCategory category, LogType type, const char *message) {
     char date_buffer[64], time_buffer[64];
     generate_timestamp(date_buffer, sizeof(date_buffer), time_buffer, sizeof(time_buffer), 0);
 
-    fprintf(logFile, "[%s] (%s) {%s/%s}: %s\n", date_buffer, time_buffer, get_category_string(category), get_type_string(type), message);
+    printf(LOG_FORMAT, date_buffer, time_buffer, get_category_string(category), get_type_string(type), message);
+
+    fprintf(logFile, LOG_FORMAT, date_buffer, time_buffer, get_category_string(category), get_type_string(type), message);
     fflush(logFile);
 }
 
