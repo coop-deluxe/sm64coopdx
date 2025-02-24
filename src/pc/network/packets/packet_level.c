@@ -8,7 +8,7 @@
 #include "object_constants.h"
 #include "object_fields.h"
 //#define DISABLE_MODULE_LOG 1
-#include "pc/debuglog.h"
+#include "pc/log.h"
 #include "pc/lua/smlua.h"
 #include "pc/lua/smlua_utils.h"
 #include "pc/lua/utils/smlua_obj_utils.h"

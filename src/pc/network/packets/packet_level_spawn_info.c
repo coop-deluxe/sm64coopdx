@@ -12,7 +12,7 @@
 #include "behavior_table.h"
 #include "model_ids.h"
 #define DISABLE_MODULE_LOG 1
-#include "pc/debuglog.h"
+#include "pc/log.h"
 
 // TODO: move to common utility location
 static struct Object* get_object_matching_respawn_info(u32* respawnInfo) {

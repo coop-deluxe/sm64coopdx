@@ -11,7 +11,7 @@
 #include "audio/external.h"
 #include "audio/effects.h"
 
-#include "pc/debuglog.h"
+#include "pc/log.h"
 
 #define PORTAMENTO_IS_SPECIAL(x) ((x).mode & 0x80)
 #define PORTAMENTO_MODE(x) ((x).mode & ~0x80)

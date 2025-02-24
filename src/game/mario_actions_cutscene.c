@@ -30,7 +30,7 @@
 #include "obj_behaviors.h"
 #include "hardcoded.h"
 #include "../../include/libc/stdlib.h"
-#include "pc/debuglog.h"
+#include "pc/log.h"
 #include "pc/pc_main.h"
 #include "pc/configfile.h"
 #include "pc/network/network.h"

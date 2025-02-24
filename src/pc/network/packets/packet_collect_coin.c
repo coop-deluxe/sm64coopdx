@@ -10,7 +10,7 @@
 #include "game/memory.h"
 #include "game/object_helpers.h"
 #include "pc/lua/smlua_hooks.h"
-#include "pc/debuglog.h"
+#include "pc/log.h"
 
 extern s16 gCurrCourseNum, gCurrAreaIndex;
 

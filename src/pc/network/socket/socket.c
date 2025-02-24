@@ -1,7 +1,7 @@
 #include "socket.h"
 #include <stdio.h>
 #include "pc/configfile.h"
-#include "pc/debuglog.h"
+#include "pc/log.h"
 #include "pc/djui/djui.h"
 
 static SOCKET sCurSocket = INVALID_SOCKET;

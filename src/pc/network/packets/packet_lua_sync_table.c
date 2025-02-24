@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "../network.h"
 #include "pc/lua/smlua.h"
-#include "pc/debuglog.h"
+#include "pc/log.h"
 
 /////////////////////////////////////////////////////////////
 

@@ -8,7 +8,7 @@
 #include "seqplayer.h"
 #include "effects.h"
 
-#include "pc/debuglog.h"
+#include "pc/log.h"
 
 #define ALIGN16(val) (((val) + 0xF) & ~0xF)
 

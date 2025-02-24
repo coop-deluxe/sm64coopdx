@@ -11,7 +11,7 @@
 #include "pc/lua/utils/smlua_obj_utils.h"
 #include "pc/crash_handler.h"
 //#define DISABLE_MODULE_LOG 1
-#include "pc/debuglog.h"
+#include "pc/log.h"
 
 #define MAX_SPAWN_OBJECTS_PER_PACKET 8
 

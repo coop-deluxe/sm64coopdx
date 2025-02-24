@@ -9,7 +9,7 @@
 #include "game/hud.h"
 #include "pc/lua/smlua.h"
 #include "smlua_misc_utils.h"
-#include "pc/debuglog.h"
+#include "pc/log.h"
 #include "pc/mods/mod.h"
 #include "pc/mods/mods.h"
 #include "pc/mods/mods_utils.h"
@@ -28,6 +28,7 @@
 #include "game/first_person_cam.h"
 #include "pc/lua/utils/smlua_math_utils.h"
 #include "pc/lua/utils/smlua_audio_utils.h"
+#include "pc/network/network.h"
 
 #ifdef DISCORD_SDK
 #include "pc/discord/discord.h"

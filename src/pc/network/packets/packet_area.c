@@ -12,7 +12,7 @@
 #include "pc/utils/misc.h"
 #include "pc/lua/smlua_hooks.h"
 //#define DISABLE_MODULE_LOG 1
-#include "pc/debuglog.h"
+#include "pc/log.h"
 
 u32 sRemoveSyncIds[SYNC_ID_BLOCK_SIZE] = { 0 };
 u32 sRemoveSyncIdsIndex = 0;

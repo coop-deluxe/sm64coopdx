@@ -6,7 +6,7 @@
 #include "game/mario_misc.h"
 #include "djui.h"
 #include "djui_hud_utils.h"
-#include "pc/debuglog.h"
+#include "pc/log.h"
 #include "pc/lua/smlua_hooks.h"
 
 #define DJUI_CHAT_LIFE_TIME 10.0f

@@ -4,7 +4,7 @@
 #include "djui_panel_menu.h"
 #include "djui_panel_misc.h"
 #include "pc/mods/mods.h"
-#include "pc/debuglog.h"
+#include "pc/log.h"
 
 struct DjuiThreePanel* gDjuiModList = NULL;
 

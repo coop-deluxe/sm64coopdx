@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "../network.h"
 #define DISABLE_MODULE_LOG 1
-#include "pc/debuglog.h"
+#include "pc/log.h"
 
 void network_send_level_area_request(struct NetworkPlayer* fromNp, struct NetworkPlayer* toNp) {
     if (gNetworkType == NT_SERVER && toNp == gNetworkPlayerLocal) {

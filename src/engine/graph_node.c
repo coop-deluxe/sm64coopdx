@@ -9,7 +9,7 @@
 #include "game/area.h"
 #include "geo_layout.h"
 #include "include/geo_commands.h"
-#include "pc/debuglog.h"
+#include "pc/log.h"
 
 // unused Mtx(s)
 s16 identityMtx[4][4] = { { 1, 0, 0, 0 }, { 0, 1, 0, 0 }, { 0, 0, 1, 0 }, { 0, 0, 0, 1 } };

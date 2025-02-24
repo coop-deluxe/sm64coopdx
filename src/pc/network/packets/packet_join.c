@@ -20,7 +20,7 @@
 #include "pc/djui/djui_panel_join_message.h"
 #include "pc/utils/string_builder.h"
 //#define DISABLE_MODULE_LOG 1
-#include "pc/debuglog.h"
+#include "pc/log.h"
 #include "pc/utils/misc.h"
 #include "pc/mods/mods.h"
 #include "pc/lua/smlua.h"

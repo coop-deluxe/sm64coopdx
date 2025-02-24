@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "../network.h"
 #include "pc/djui/djui.h"
-#include "pc/debuglog.h"
+#include "pc/log.h"
 
 #define ARR_SIZE(_X) (sizeof(_X) / sizeof(_X[0]))
 

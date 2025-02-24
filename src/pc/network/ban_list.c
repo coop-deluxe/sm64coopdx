@@ -1,8 +1,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <PR/ultratypes.h>
+#include <assert.h>
 #include "ban_list.h"
-#include "pc/debuglog.h"
+#include "pc/log.h"
 
 char** gBanAddresses = NULL;
 bool* gBanPerm = NULL;

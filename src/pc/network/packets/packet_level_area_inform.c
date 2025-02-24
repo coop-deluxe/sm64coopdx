@@ -2,7 +2,7 @@
 #include "../network.h"
 #include "level_table.h"
 //#define DISABLE_MODULE_LOG 1
-#include "pc/debuglog.h"
+#include "pc/log.h"
 
 #include "pc/djui/djui.h"
 #include "game/level_info.h"

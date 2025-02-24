@@ -10,7 +10,7 @@
 #include "pc/network/coopnet/coopnet.h"
 #include "pc/utils/misc.h"
 #include "pc/configfile.h"
-#include "pc/debuglog.h"
+#include "pc/log.h"
 #include "macros.h"
 
 static struct DjuiInputbox* sInputboxIp = NULL;

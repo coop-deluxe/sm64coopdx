@@ -20,7 +20,7 @@
 #include "pc/lua/utils/smlua_camera_utils.h"
 #include "pc/mods/mods.h"
 #include "pc/crash_handler.h"
-#include "pc/debuglog.h"
+#include "pc/log.h"
 #include "pc/pc_main.h"
 #include "pc/gfx/gfx_pc.h"
 #include "pc/fs/fmem.h"

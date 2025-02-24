@@ -5,8 +5,9 @@
 #include "data/dynos.c.h"
 #include "pc/utils/misc.h"
 #include "pc/utils/md5.h"
-#include "pc/debuglog.h"
+#include "pc/log.h"
 #include "pc/fs/fmem.h"
+#include "pc/network/network.h"
 
 size_t mod_get_lua_size(struct Mod* mod) {
     if (!mod) { return 0; }

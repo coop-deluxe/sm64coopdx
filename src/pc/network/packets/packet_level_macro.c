@@ -14,7 +14,7 @@
 #include "model_ids.h"
 #include "pc/lua/smlua_hooks.h"
 //#define DISABLE_MODULE_LOG 1
-#include "pc/debuglog.h"
+#include "pc/log.h"
 
 // TODO: move to common utility location
 static struct Object* get_object_matching_respawn_info(s16* respawnInfo) {

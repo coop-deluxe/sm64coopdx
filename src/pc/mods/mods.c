@@ -1,9 +1,10 @@
 #include <unistd.h>
+#include <assert.h>
 #include "mods.h"
 #include "mods_utils.h"
 #include "mod_cache.h"
 #include "data/dynos.c.h"
-#include "pc/debuglog.h"
+#include "pc/log.h"
 #include "pc/loading.h"
 #include "pc/fs/fmem.h"
 #include "pc/pc_main.h"

@@ -17,10 +17,12 @@
 #include "network/ban_list.h"
 #include "crash_handler.h"
 #include "network/moderator_list.h"
-#include "debuglog.h"
+#include "log.h"
 #include "djui/djui_hud_utils.h"
 #include "game/save_file.h"
 #include "pc/network/network_player.h"
+#include "network/network.h"
+#include "djui/djui_theme.h"
 
 #define ARRAY_LEN(arr) (sizeof(arr) / sizeof(arr[0]))
 

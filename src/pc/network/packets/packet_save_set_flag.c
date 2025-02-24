@@ -2,7 +2,7 @@
 #include "../network.h"
 #include "game/save_file.h"
 #include "buffers/buffers.h"
-#include "pc/debuglog.h"
+#include "pc/log.h"
 
 extern u8 gSaveFileUsingBackupSlot;
 

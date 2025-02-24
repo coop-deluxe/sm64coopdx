@@ -4,7 +4,7 @@
 #include "pc/mods/mods_utils.h"
 #include "pc/djui/djui.h"
 #include "pc/djui/djui_panel_join_message.h"
-#include "pc/debuglog.h"
+#include "pc/log.h"
 #include "pc/mods/mod_cache.h"
 
 void network_send_mod_list_request(void) {

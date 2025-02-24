@@ -8,7 +8,7 @@
 #include "game/object_list_processor.h"
 #include "game/obj_behaviors.h"
 #include "game/object_helpers.h"
-#include "pc/debuglog.h"
+#include "pc/log.h"
 #include "pc/utils/misc.h"
 #include "data/dynos_cmap.cpp.h"
 #include "pc/debug_context.h"

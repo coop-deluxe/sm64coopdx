@@ -26,7 +26,7 @@ char gLastRemoteBhv[256] = "";
 #include "pc/network/network.h"
 #include "pc/gfx/gfx_rendering_api.h"
 #include "pc/mods/mods.h"
-#include "pc/debuglog.h"
+#include "pc/log.h"
 #include "pc/pc_main.h"
 #include "controller/controller_keyboard.h"
 
@@ -291,7 +291,8 @@ static CRASH_HANDLER_TYPE crash_handler(EXCEPTION_POINTERS *ExceptionInfo) {
 #elif __linux__
 static void crash_handler(const int signalNum, siginfo_t *info, UNUSED ucontext_t *context) {
 #endif
-    printf("Game crashed! preparing crash screen...\n");
+    // printf("Game crashed! preparing crash screen...\n");
+    LOG_CRASH("Game crashed! Preparing crash screen...");
     memset(sCrashHandlerText, 0, sizeof(sCrashHandlerText));
     CrashHandlerText *pText = &sCrashHandlerText[0];
     gDjuiDisabled = true;

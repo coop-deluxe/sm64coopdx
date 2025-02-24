@@ -8,7 +8,7 @@
 #include "djui_ctx_display.h"
 #include "djui_fps_display.h"
 #include "djui_lua_profiler.h"
-#include "../debuglog.h"
+#include "../log.h"
 #include "pc/cliopts.h"
 #include "game/level_update.h"
 #include "pc/lua/smlua_hooks.h"

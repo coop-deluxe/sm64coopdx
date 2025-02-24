@@ -3,7 +3,7 @@
 #include "djui_panel_main.h"
 #include "djui_panel_pause.h"
 #include "djui_panel_join_message.h"
-#include "pc/debuglog.h"
+#include "pc/log.h"
 #include "pc/utils/misc.h"
 #include "sounds.h"
 #include "audio/external.h"

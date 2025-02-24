@@ -8,7 +8,7 @@
 
 #include "pc/lua/smlua.h"
 #include "smlua_collision_utils.h"
-#include "pc/debuglog.h"
+#include "pc/log.h"
 
 // actors
 #include "actors/common0.h"

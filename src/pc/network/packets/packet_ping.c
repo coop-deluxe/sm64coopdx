@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "../network.h"
 #include "pc/utils/misc.h"
-#include "pc/debuglog.h"
+#include "pc/log.h"
 
 void network_send_ping(struct NetworkPlayer* toNp) {
     struct Packet p = { 0 };

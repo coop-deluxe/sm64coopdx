@@ -1,7 +1,7 @@
 #include "types.h"
 #include "network_player.h"
 #include "lag_compensation.h"
-#include "pc/debuglog.h"
+#include "pc/log.h"
 #include "game/object_helpers.h"
 #include "behavior_table.h"
 #include "model_ids.h"

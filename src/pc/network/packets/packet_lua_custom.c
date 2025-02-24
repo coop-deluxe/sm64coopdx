@@ -3,7 +3,7 @@
 #include "pc/mods/mod.h"
 #include "pc/lua/smlua.h"
 #include "pc/lua/smlua_utils.h"
-#include "pc/debuglog.h"
+#include "pc/log.h"
 
 void network_send_lua_custom(bool broadcast) {
     LOG_INFO("Sending lua custom packet");

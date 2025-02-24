@@ -11,7 +11,7 @@
 #include "heap.h"
 #include "load.h"
 #include "seqplayer.h"
-#include "pc/debuglog.h"
+#include "pc/log.h"
 
 #define PORTAMENTO_IS_SPECIAL(x) ((x).mode & 0x80)
 #define PORTAMENTO_MODE(x) ((x).mode & ~0x80)

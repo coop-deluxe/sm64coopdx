@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include "../network.h"
-#include "pc/debuglog.h"
+#include "pc/log.h"
 #include "pc/djui/djui.h"
 #include "pc/utils/misc.h"
 

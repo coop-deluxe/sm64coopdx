@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include "../network.h"
-#include "pc/debuglog.h"
+#include "pc/log.h"
 
 void network_send_leaving(u8 globalIndex) {
     if (gNetworkPlayerLocal == NULL) {

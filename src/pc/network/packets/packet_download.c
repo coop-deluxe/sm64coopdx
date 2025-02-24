@@ -8,7 +8,7 @@
 #include "pc/utils/misc.h"
 #include "pc/djui/djui_panel_join_message.h"
 //#define DISABLE_MODULE_LOG 1
-#include "pc/debuglog.h"
+#include "pc/log.h"
 #include "pc/fs/fmem.h"
 
 #define CHUNK_SIZE 800

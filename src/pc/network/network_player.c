@@ -3,7 +3,7 @@
 #include "object_fields.h"
 #include "game/mario_misc.h"
 #include "pc/djui/djui.h"
-#include "pc/debuglog.h"
+#include "pc/log.h"
 #include "pc/utils/misc.h"
 #include "game/area.h"
 #include "game/level_info.h"

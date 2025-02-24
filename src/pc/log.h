@@ -15,7 +15,9 @@ typedef enum {
     LOG_CTX_DYNOS,
     LOG_CTX_LUA,
     LOG_CTX_NETWORK,
-    LOG_CTX_CHAT
+    LOG_CTX_CHAT,
+    LOG_CTX_AUDIO,
+    LOG_CTX_RENDER
     // MUST BE KEPT IN SYNC WITH sLogContextNames
 } LogContext;
 

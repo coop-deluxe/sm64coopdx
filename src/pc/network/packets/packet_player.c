@@ -15,7 +15,7 @@
 #include "pc/configfile.h"
 #include "pc/djui/djui.h"
 #include "pc/djui/djui_language.h"
-#include "pc/debuglog.h"
+#include "pc/log.h"
 
 #pragma pack(1)
 struct PacketPlayerData {

@@ -8,7 +8,7 @@
 #include "pc/djui/djui_popup.h"
 #include "pc/mods/mods.h"
 #include "pc/utils/misc.h"
-#include "pc/debuglog.h"
+#include "pc/log.h"
 #ifdef DISCORD_SDK
 #include "pc/discord/discord.h"
 #endif

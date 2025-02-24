@@ -17,6 +17,7 @@
 #include "utils/smlua_anim_utils.h"
 #include "utils/smlua_collision_utils.h"
 #include "game/hardcoded.h"
+#include "pc/network/network.h"
 
 bool smlua_functions_valid_param_count(lua_State* L, int expected) {
     int top = lua_gettop(L);

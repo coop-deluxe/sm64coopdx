@@ -1,6 +1,6 @@
 #include "../network.h"
 #include "game/area.h"
-#include "pc/debuglog.h"
+#include "pc/log.h"
 
 #define PACKET_FLAG_BUFFER_OFFSET        3
 #define PACKET_DESTINATION_BUFFER_OFFSET 4

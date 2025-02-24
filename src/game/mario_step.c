@@ -10,6 +10,7 @@
 #include "mario_step.h"
 #include "pc/lua/smlua.h"
 #include "game/hardcoded.h"
+#include "pc/network/network.h"
 
 #define CLAMP(_val, _min, _max) MAX(MIN((_val), _max), _min)
 

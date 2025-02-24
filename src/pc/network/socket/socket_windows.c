@@ -1,7 +1,7 @@
 #ifdef WINSOCK
 #include "socket_windows.h"
 #include <stdio.h>
-#include "pc/debuglog.h"
+#include "pc/log.h"
 
 SOCKET socket_initialize(void) {
     // start up winsock

@@ -4,7 +4,7 @@
 #include "behavior_data.h"
 #include "game/behavior_actions.h"
 #include "pc/lua/smlua_hooks.h"
-#include "pc/debuglog.h"
+#include "pc/log.h"
 
 extern struct Object* gCurrentObject;
 

@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "../network.h"
 #include "pc/utils/misc.h"
-#include "pc/debuglog.h"
+#include "pc/log.h"
 
 #define RELIABLE_RESEND_RATE 0.07f
 #define MAX_RESEND_ATTEMPTS 15

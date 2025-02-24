@@ -1,8 +1,9 @@
 #include "discord.h"
 #include "pc/djui/djui.h"
 #include "pc/crash_handler.h"
-#include "pc/debuglog.h"
+#include "pc/log.h"
 #include "pc/platform.h"
+#include "pc/cliopts.h"
 
 #if defined(_WIN32)
 #include <minwindef.h>

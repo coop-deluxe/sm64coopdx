@@ -2,7 +2,7 @@
 #include <zlib.h>
 #include "../network.h"
 #include "pc/network/ban_list.h"
-#include "pc/debuglog.h"
+#include "pc/log.h"
 
 static u32 sCompBufferLen = 0;
 static Bytef* sCompBuffer = NULL;

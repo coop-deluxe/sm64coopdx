@@ -9,7 +9,7 @@
 #include "game/object_helpers.h"
 #include "game/save_file.h"
 #include "pc/lua/smlua_hooks.h"
-#include "pc/debuglog.h"
+#include "pc/log.h"
 
 extern s16 gCurrSaveFileNum;
 extern s16 gCurrCourseNum;

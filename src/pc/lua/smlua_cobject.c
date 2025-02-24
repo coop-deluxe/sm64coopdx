@@ -15,6 +15,7 @@
 #include "pc/lua/utils/smlua_collision_utils.h"
 #include "pc/lua/utils/smlua_obj_utils.h"
 #include "pc/mods/mods.h"
+#include "pc/network/network.h"
 
 extern struct LuaObjectTable sLuaObjectTable[LOT_MAX];
 

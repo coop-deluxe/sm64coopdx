@@ -49,7 +49,7 @@
 #include "pc/djui/djui_ctx_display.h"
 #include "pc/djui/djui_fps_display.h"
 #include "pc/djui/djui_lua_profiler.h"
-#include "pc/debuglog.h"
+#include "pc/log.h"
 #include "pc/utils/misc.h"
 
 #include "pc/mods/mods.h"
@@ -370,7 +370,7 @@ void game_deinit(void) {
 }
 
 void game_exit(void) {
-    LOG_INFO("exiting cleanly");
+    LOG_INFO("Exiting cleanly");
     game_deinit();
     exit(0);
 }

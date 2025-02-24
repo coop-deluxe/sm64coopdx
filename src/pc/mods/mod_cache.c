@@ -2,7 +2,7 @@
 #include <unistd.h>
 #define DISABLE_MODULE_LOG 1
 #include "pc/gfx/gfx_pc.h"
-#include "pc/debuglog.h"
+#include "pc/log.h"
 #include "mod_cache.h"
 #include "mods.h"
 #include "mod.h"

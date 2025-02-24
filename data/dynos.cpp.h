@@ -10,6 +10,7 @@ extern "C" {
 #include "game/moving_texture.h"
 #include "pc/djui/djui_console.h"
 #include "pc/fs/fmem.h"
+#include "pc/network/network.h"
 }
 
 #define FUNCTION_CODE   (u32) 0x434E5546

@@ -13,7 +13,7 @@
 #include "game/level_update.h"
 #include "pc/lua/smlua_hooks.h"
 #include "pc/utils/misc.h"
-#include "pc/debuglog.h"
+#include "pc/log.h"
 #include "game/skybox.h"
 #include "game/first_person_cam.h"
 #include "course_table.h"

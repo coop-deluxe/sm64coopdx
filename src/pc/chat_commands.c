@@ -6,7 +6,7 @@
 #include "chat_commands.h"
 #include "pc/network/ban_list.h"
 #include "pc/network/moderator_list.h"
-#include "pc/debuglog.h"
+#include "pc/log.h"
 #include "pc/lua/utils/smlua_level_utils.h"
 #include "level_table.h"
 #ifdef DEVELOPMENT

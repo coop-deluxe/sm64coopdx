@@ -16,7 +16,7 @@
 #include "sound_init.h"
 #include "surface_terrains.h"
 #include "rumble_init.h"
-#include "pc/debuglog.h"
+#include "pc/log.h"
 #include "pc/configfile.h"
 #include "pc/network/network.h"
 #include "pc/lua/smlua.h"

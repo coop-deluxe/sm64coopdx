@@ -2,12 +2,13 @@
 #include "types.h"
 #include "pc/platform.h"
 #include "pc/utils/miniz/miniz.h"
-#include "pc/debuglog.h"
+#include "pc/log.h"
 #include "data/dynos.c.h"
 #include "pc/djui/djui_language.h"
 #include "pc/djui/djui_popup.h"
 #include "mods.h"
 #include "mods_utils.h"
+#include "pc/network/network.h"
 
 static bool mod_import_lua(char* src) {
     char dst[SYS_MAX_PATH] = { 0 };

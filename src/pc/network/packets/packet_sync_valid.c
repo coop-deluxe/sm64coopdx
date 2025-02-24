@@ -2,7 +2,7 @@
 #include "../network.h"
 #include "pc/lua/smlua_hooks.h"
 //#define DISABLE_MODULE_LOG 1
-#include "pc/debuglog.h"
+#include "pc/log.h"
 
 void network_send_sync_valid(struct NetworkPlayer* toNp, s16 courseNum, s16 actNum, s16 levelNum, s16 areaIndex) {
     bool wasSyncValid = (toNp->currLevelSyncValid && toNp->currAreaSyncValid);

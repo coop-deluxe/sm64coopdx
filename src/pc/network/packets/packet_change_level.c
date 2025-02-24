@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "../network.h"
 #include "level_table.h"
-#include "pc/debuglog.h"
+#include "pc/log.h"
 
 static void player_changed_level(struct NetworkPlayer *np, s16 courseNum, s16 actNum, s16 levelNum, s16 areaIndex) {
     // set NetworkPlayer variables

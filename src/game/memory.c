@@ -3,7 +3,7 @@
 
 #include "memory.h"
 #include "print.h"
-#include "pc/debuglog.h"
+#include "pc/log.h"
 #include "pc/lua/smlua.h"
 
 #define ALIGN16(val) (((val) + 0xF) & ~0xF)

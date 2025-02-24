@@ -1,6 +1,6 @@
 #include "../network.h"
 #include "behavior_table.h"
-#include "pc/debuglog.h"
+#include "pc/log.h"
 #include "object_fields.h"
 
 void print_sync_object_table(void) {

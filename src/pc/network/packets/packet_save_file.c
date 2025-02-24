@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "../network.h"
 #include "game/save_file.h"
-#include "pc/debuglog.h"
+#include "pc/log.h"
 
 extern u8 gSaveFileUsingBackupSlot;
 

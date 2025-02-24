@@ -4,7 +4,7 @@
 #include "pc/djui/djui_chat_message.h"
 #include "pc/network/ban_list.h"
 #include "pc/network/moderator_list.h"
-#include "pc/debuglog.h"
+#include "pc/log.h"
 
 void network_send_chat_command(u8 globalIndex, enum ChatConfirmCommand ccc) {
     if (!gNetworkPlayers[0].moderator) return;

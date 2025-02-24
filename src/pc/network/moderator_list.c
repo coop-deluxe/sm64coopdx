@@ -2,7 +2,7 @@
 #include <string.h>
 #include <PR/ultratypes.h>
 #include "moderator_list.h"
-#include "pc/debuglog.h"
+#include "pc/log.h"
 
 char** gModeratorAddresses = NULL;
 bool* gModerator = NULL;

@@ -28,7 +28,9 @@ static const char* sLogContextNames[] = {
     "DynOS",
     "Lua",
     "Network",
-    "Chat"
+    "Chat",
+    "Audio",
+    "Render"
 };
 
 typedef struct {

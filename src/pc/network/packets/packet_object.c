@@ -11,7 +11,7 @@
 #include "game/object_list_processor.h"
 #include "game/area.h"
 #include "pc/lua/smlua_hooks.h"
-#include "pc/debuglog.h"
+#include "pc/log.h"
 #include "pc/utils/misc.h"
 
 struct DelayedPacketObject {
