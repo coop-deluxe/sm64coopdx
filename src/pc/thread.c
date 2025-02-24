@@ -2,6 +2,7 @@
 
 #include <assert.h>
 #include <string.h>
+#include "log.h"
 
 int init_thread_handle(struct ThreadHandle *handle, void *(*entry)(void *), void *arg, void *sp, size_t sp_size) {
     int err1 = init_mutex(handle);
@@ -54,6 +55,8 @@ int init_thread(struct ThreadHandle *handle, void *(*entry)(void *), void *arg, 
     assert(err == 0);
 
     handle->state = RUNNING;
+
+    log_assign_thread(handle->thread);
 
     return ret;
 }

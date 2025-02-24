@@ -7,14 +7,13 @@
 #include <stdarg.h>
 #include <stdbool.h>
 #include <stdint.h>
+#include <pthread.h>
 #include "fs/fs.h"
 #include "cliopts.h"
 #include "configfile.h"
 
 #define LOG_FOLDER "logs"
 #define LOG_EXTENSION ".log"
-
-#define LOG_CONTEXT_STACK_SIZE 32
 
 #define MAX_LOG_LINE 512
 // [DATE TIME] (CTX/TYPE) MESSAGE
@@ -33,15 +32,42 @@ static const char* sLogContextNames[] = {
     "Render"
 };
 
-typedef struct {
-    LogContext ctx;
-    uint16_t depth;
-    bool verbose;
-} LogContextItem;
+#define LOG_CONTEXT_STACK_SIZE 32
 
-LogContextItem contextStack[LOG_CONTEXT_STACK_SIZE];
-uint16_t contextStackTop = 0;
-LogContext currentContext;
+typedef struct {
+    struct {
+        LogContext ctx;
+        uint16_t depth;
+        bool verbose;
+    } items[LOG_CONTEXT_STACK_SIZE];
+    int top;
+} LogContextStack;
+
+#define NUM_THREADS 6
+
+pthread_t threads[NUM_THREADS];
+LogContextStack contextStack[NUM_THREADS + 1];
+
+int get_thread() {
+    pthread_t threadId = pthread_self();
+    for (int i = 1; i < NUM_THREADS; i++) {
+        if (threads[i] == threadId) return i;
+    }
+    return 0;
+}
+
+void log_assign_thread(pthread_t threadId) {
+    for (int i = 1; i < NUM_THREADS; i++) {
+        if (threads[i] == threadId) return;
+        if (threads[i] == 0) {
+            threads[i] = threadId;
+            contextStack[i].items[0].ctx = contextStack[0].items[0].ctx;
+            contextStack[i].items[0].verbose = contextStack[0].items[0].verbose;
+            return;
+        }
+    }
+    printf("Ran out of logging threads!");
+}
 
 // Generates a timestamp for filenames or log entries
 static void generate_timestamp(char *date_buffer, size_t date_size, char *time_buffer, size_t time_size, int for_filename) {
@@ -126,7 +152,8 @@ static void ensure_log_file_open() {
 
 // Writes a log message to the file
 static void write_to_log(LogContext ctx, LogType type, const char *message) {
-    if (contextStack[contextStackTop].verbose) {
+    LogContextStack stack = contextStack[get_thread()];
+    if (stack.items[stack.top].verbose) {
         if (!(configVerboseLogs || gCLIOpts.verbose)) return;
     }
 
@@ -153,7 +180,8 @@ static void write_to_log(LogContext ctx, LogType type, const char *message) {
 }
 
 void log_set_verbose(bool verbose) {
-    contextStack[contextStackTop].verbose = verbose;
+    LogContextStack* stack = &contextStack[get_thread()];
+    stack->items[stack->top].verbose = verbose;
 }
 
 void log_message(LogType type, const char *format, ...) {
@@ -163,8 +191,9 @@ void log_message(LogType type, const char *format, ...) {
     vsnprintf(message, MAX_LOG_LINE, format, args);
     va_end(args);
     
+    LogContextStack stack = contextStack[get_thread()];
     ensure_log_file_open();
-    write_to_log(currentContext, type, message);
+    write_to_log(stack.items[stack.top].ctx, type, message);
 }
 
 void log_message_with_file(LogType type, const char* filename, uint16_t line, const char *format, ...) {
@@ -177,43 +206,43 @@ void log_message_with_file(LogType type, const char* filename, uint16_t line, co
     static char full_message[MAX_LOG_LINE];
     snprintf(full_message, MAX_LOG_LINE, "<%s:%i> %s", filename, line, message);
 
+    LogContextStack stack = contextStack[get_thread()];
     ensure_log_file_open();
-    write_to_log(currentContext, type, full_message);
+    write_to_log(stack.items[stack.top].ctx, type, message);
 }
 
 void log_context_begin(LogContext ctx) {
-    currentContext = ctx;
-
-    LogContextItem top = contextStack[contextStackTop];
-    if (ctx == top.ctx) {
-        top.depth++;
+    // LOG_INFO("Open context %i on %i", ctx, get_thread());
+    LogContextStack* stack = &contextStack[get_thread()];
+    if (ctx == stack->items[stack->top].ctx) {
+        stack->items[stack->top].depth++;
         return;
     }
 
-    if (contextStackTop == LOG_CONTEXT_STACK_SIZE - 1) {
+    if (stack->top == LOG_CONTEXT_STACK_SIZE - 1) {
         LOG_ERROR("Filled log context stack! Log context may not persist correctly.");
-        top.depth++; // Prevent errors when closing context
+        stack->items[stack->top].depth++; // Prevent errors when closing context
         return;
     }
 
-    top = contextStack[contextStackTop++];
-    top.ctx = ctx;
-    top.depth++;
+    stack->top++;
+    stack->items[stack->top].ctx = ctx;
+    stack->items[stack->top].depth++;
+    // LOG_INFO("stack %i now has top %i ctx %i", get_thread(), stack->top, stack->items[stack->top].ctx);
 }
 
 void log_context_end(LogContext ctx) {
-    if (ctx != currentContext) LOG_ERROR("Closing log context is not the same as current log context.");
-;
-    LogContextItem top = contextStack[contextStackTop];
-    currentContext = top.ctx;
+    // LOG_INFO("Close context %i on %i", ctx, get_thread());
+    LogContextStack* stack = &contextStack[get_thread()];
+    if (ctx != stack->items[stack->top].ctx) LOG_ERROR("Closing log context (%i) is not the same as current log context (%i). (%i)", ctx, stack->items[stack->top].ctx, get_thread());
 
-    if (contextStackTop == 0 && top.depth == 0) {
+    if (stack->top == 0 && stack->items[stack->top].depth == 0) {
         LOG_ERROR("Log context was closed too many times!");
         return;
     }
 
-    if (top.depth-- == 0) {
-        currentContext = contextStack[contextStackTop--].ctx;
+    if (--stack->items[stack->top].depth == 0) {
+        stack->top--;
     }
 }
 

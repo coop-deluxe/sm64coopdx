@@ -5,6 +5,7 @@
 #include <stdarg.h>
 #include <stdbool.h>
 #include <stdint.h>
+#include <pthread.h>
 
 /**
  * Enum representing the different logging contexts.
@@ -31,6 +32,11 @@ typedef enum {
     LOG_TYPE_DEBUG,
     LOG_TYPE_CRASH
 } LogType;
+
+/**
+ * Fixes logging from different threads.
+ */
+void log_assign_thread(pthread_t threadId);
 
 /**
  * Sets verbose logging for the current context. If true, logs written after this will only be shown if verbose logs are enabled.
