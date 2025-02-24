@@ -438,8 +438,9 @@ static int smlua__get_field(lua_State* L) {
             return 0;
         }
 
-        u32 key = lua_tointeger(L, 2);
-        if (!key) {
+        int isNum;
+        u32 key = lua_tointegerx(L, 2, &isNum);
+        if (!isNum) {
             const char *key = lua_tostring(L, 2);
             if (key && key[0] == '_') {
                 if (strcmp(key, "_lot") == 0) {
@@ -452,6 +453,11 @@ static int smlua__get_field(lua_State* L) {
                 }
             }
             LOG_LUA_LINE("Tried to get a non-integer field of cobject array");
+            return 0;
+        }
+
+        if (key == 0) {
+            LOG_LUA_LINE("Key is out of bounds for array: key '%u' (help: array starts at 1)", key);
             return 0;
         }
 

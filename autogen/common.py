@@ -224,7 +224,10 @@ def translate_type_to_lua(ptype):
     # Detect arrays
     if re.search(r'\[([^\]]+)\]', ptype):
         ptype = re.sub(r'\[[^\]]*\]', '', ptype).strip()
-        s = '`Array` <%s>' % translate_type_to_lua(ptype)[0]
+        ptype = translate_type_to_lua(ptype)[0]
+        if not ptype.startswith('`'):
+            ptype = '`' + ptype + '`'
+        s = '`Array` <%s>' % ptype
         return s, None
 
     if ptype.startswith('struct '):
