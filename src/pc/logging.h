@@ -31,7 +31,7 @@ typedef enum {
 
 /**
  * Logs a message with optional additional arguments.
- * 
+ *
  * Examples:
  * log_message(LOG_CATEGORY_CLIENT, LOG_TYPE_INFO, "Test", NULL);
  * log_message(LOG_CATEGORY_CLIENT, LOG_TYPE_INFO, "Hello", " World", "!", NULL);
@@ -42,5 +42,11 @@ typedef enum {
  * @param ... Values to replace format specifiers.
  */
 void log_message(LogCategory category, LogType type, const char *format, ...);
+
+#define LOG_INFO(category, ...) log_message(category, LOG_TYPE_INFO, __VA_ARGS__)
+#define LOG_WARN(category, ...) log_message(category, LOG_TYPE_WARN, __VA_ARGS__)
+#define LOG_ERROR(category, ...) log_message(category, LOG_TYPE_ERROR, __VA_ARGS__)
+#define LOG_DEBUG(category, ...) log_message(category, LOG_TYPE_DEBUG, __VA_ARGS__)
+#define LOG_CRASH(...) log_message(LOG_CATEGORY_RUNTIME, LOG_TYPE_CRASH, __VA_ARGS__)
 
 #endif // LOGGING_H
