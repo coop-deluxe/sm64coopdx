@@ -192,7 +192,7 @@ void log_message_with_file(LogType type, const char* filename, uint16_t line, co
 
     LogContextStack stack = contextStack[get_thread()];
     ensure_log_file_open();
-    write_to_log(stack.items[stack.top].ctx, type, message);
+    write_to_log(stack.items[stack.top].ctx, type, full_message);
 }
 
 void log_context_begin(LogContext ctx) {
