@@ -21,7 +21,7 @@ bool gDiscordInitialized = false;
 static bool sDiscordFailed = false;
 
 static void discord_sdk_log_callback(UNUSED void* hook_data, enum EDiscordLogLevel level, const char* message) {
-    LOG_INFO("callback (%d): %s", level, message);
+    LOG_DEBUG_VERBOSE("callback (%d): %s", level, message);
 }
 
 void discord_fatal_message(int rc) { // Discord usually does this because of loss of connection to Discord
@@ -47,9 +47,9 @@ void discord_fatal(int rc) {
 }
 
 static void get_oauth2_token_callback(UNUSED void* data, enum EDiscordResult result, struct DiscordOAuth2Token* token) {
-    LOG_INFO("> get_oauth2_token_callback returned %d", result);
+    LOG_DEBUG_VERBOSE("> get_oauth2_token_callback returned %d", result);
     if (result != DiscordResult_Ok) { return; }
-    LOG_INFO("OAuth2 token: %s", token->access_token);
+    LOG_DEBUG_VERBOSE("OAuth2 token: %s", token->access_token);
 }
 
 static void register_launch_command(void) {
@@ -66,14 +66,14 @@ static void register_launch_command(void) {
 
     int rc = app.activities->register_command(app.activities, cmd);
     if (rc != DiscordResult_Ok) {
-        LOG_ERROR("register command failed %d", rc);
+        LOG_ERROR_VERBOSE("register command failed %d", rc);
         return;
     }
-    LOG_INFO("cmd: %s", cmd);
+    LOG_DEBUG_VERBOSE("cmd: %s", cmd);
 }
 
 static void on_current_user_update(UNUSED void* data) {
-    LOG_INFO("> on_current_user_update");
+    LOG_DEBUG_VERBOSE("> on_current_user_update");
     struct DiscordUser user = { 0 };
     app.users->get_current_user(app.users, &user);
 
@@ -96,7 +96,7 @@ static void on_current_user_update(UNUSED void* data) {
 }
 
 struct IDiscordUserEvents* discord_user_initialize(void) {
-    LOG_INFO("> discord_user_intitialize");
+    LOG_DEBUG_VERBOSE("> discord_user_intitialize");
     static struct IDiscordUserEvents events = { 0 };
     events.on_current_user_update = on_current_user_update;
     return &events;
@@ -154,7 +154,7 @@ static void discord_initialize(void) {
     // register launch params
     register_launch_command();
 
-    LOG_INFO("initialized");
+    LOG_DEBUG_VERBOSE("initialized");
 }
 
 u64 discord_get_user_id(void) {

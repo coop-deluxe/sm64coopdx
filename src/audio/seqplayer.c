@@ -280,7 +280,7 @@ void sequence_player_disable_channels(struct SequencePlayer *seqPlayer, u16 chan
 void sequence_player_init_channels_extended(struct SequencePlayer* seqPlayer, u64 channelBitsUpper, u64 channelBitsLower) {
     if (!seqPlayer) { return; }
     u64 channelBits = channelBitsLower;
-    LOG_DEBUG("Enabling channels (extended) with corresponding bits %llX", channelBits);
+    LOG_DEBUG_VERBOSE("Enabling channels (extended) with corresponding bits %llX", channelBits);
     
     for (u32 i = 0; i < CHANNELS_MAX; i++) {
         if (i == sizeof(u64) * 8) {
@@ -307,10 +307,10 @@ void sequence_player_init_channels_extended(struct SequencePlayer* seqPlayer, u6
                 seqChannel->noteAllocPolicy = seqPlayer->noteAllocPolicy;
             }
 
-            LOG_DEBUG("Tried to enable channel (extended) %i with result of validity %u.", i, IS_SEQUENCE_CHANNEL_VALID(seqChannel));
+            LOG_DEBUG_VERBOSE("Tried to enable channel (extended) %i with result of validity %u.", i, IS_SEQUENCE_CHANNEL_VALID(seqChannel));
         }
 
-        LOG_DEBUG("Checked channel (extended) %i for enable with bit %llu.", i, channelBits & 1);
+        LOG_DEBUG_VERBOSE("Checked channel (extended) %i for enable with bit %llu.", i, channelBits & 1);
 
 #ifdef VERSION_EU
         channelBits = channelBits >> 1;
@@ -323,7 +323,7 @@ void sequence_player_init_channels_extended(struct SequencePlayer* seqPlayer, u6
 void sequence_player_disable_channels_extended(struct SequencePlayer* seqPlayer, u64 channelBitsUpper, u64 channelBitsLower) {
     if (!seqPlayer) { return; }
     u64 channelBits = channelBitsLower;
-    LOG_DEBUG("Disabling channels (extended) with corresponding bits %llX", channelBits);
+    LOG_DEBUG_VERBOSE("Disabling channels (extended) with corresponding bits %llX", channelBits);
 
     for (u32 i = 0; i < CHANNELS_MAX; i++) {
         if (i == sizeof(u64) * 8) {
@@ -410,7 +410,7 @@ void sequence_channel_enable(struct SequencePlayer *seqPlayer, u8 channelIndex, 
             }
         }
         
-        LOG_DEBUG("Enabled sequence channel %d with script entry of %p", channelIndex, script);
+        LOG_DEBUG_VERBOSE("Enabled sequence channel %d with script entry of %p", channelIndex, script);
     }
     
     MUTEX_UNLOCK(gAudioThread);
@@ -420,7 +420,9 @@ void sequence_player_disable(struct SequencePlayer *seqPlayer) {
     if (!seqPlayer) { return; }
     MUTEX_LOCK(gAudioThread);
     
-    LOG_DEBUG("Disabling sequence player %p", seqPlayer);
+    log_context_begin(LOG_CTX_AUDIO);
+
+    LOG_DEBUG_VERBOSE("Disabling sequence player %p", seqPlayer);
     
     sequence_player_disable_all_channels(seqPlayer);
     note_pool_clear(&seqPlayer->notePool);
@@ -463,6 +465,8 @@ void sequence_player_disable(struct SequencePlayer *seqPlayer) {
         gBankLoadedPool.temporary.nextSide = 0;
     }
 #endif
+
+    log_context_end(LOG_CTX_AUDIO);
 
     MUTEX_UNLOCK(gAudioThread);
 }

@@ -54,8 +54,8 @@ void packet_process(struct Packet* p) {
         // drop packet
         if (levelAreaMismatch) {
             if (gNetworkType != NT_SERVER) {
-                LOG_INFO("dropping level mismatch packet %d", p->packetType);
-                LOG_INFO("    (%d, %d, %d, %d) != (%d, %d, %d, %d)", p->courseNum, p->actNum, p->levelNum, p->areaIndex, gCurrCourseNum, gCurrActStarNum, gCurrLevelNum, gCurrAreaIndex);
+                LOG_WARN_VERBOSE("dropping level mismatch packet %d", p->packetType);
+                LOG_WARN_VERBOSE("    (%d, %d, %d, %d) != (%d, %d, %d, %d)", p->courseNum, p->actNum, p->levelNum, p->areaIndex, gCurrCourseNum, gCurrActStarNum, gCurrLevelNum, gCurrAreaIndex);
             }
             return;
         }
@@ -68,8 +68,8 @@ void packet_process(struct Packet* p) {
         // drop packet
         if (levelMismatch) {
             if (gNetworkType != NT_SERVER) {
-                LOG_INFO("dropping level mismatch packet %d", p->packetType);
-                LOG_INFO("    (%d, %d, %d) != (%d, %d, %d)", p->courseNum, p->actNum, p->levelNum, gCurrCourseNum, gCurrActStarNum, gCurrLevelNum);
+                LOG_WARN_VERBOSE("dropping level mismatch packet %d", p->packetType);
+                LOG_WARN_VERBOSE("    (%d, %d, %d) != (%d, %d, %d)", p->courseNum, p->actNum, p->levelNum, gCurrCourseNum, gCurrActStarNum, gCurrLevelNum);
             }
             return;
         }
@@ -140,7 +140,7 @@ void packet_process(struct Packet* p) {
 
         // custom
         case PACKET_CUSTOM:                  network_receive_custom(p);                  break;
-        default: LOG_ERROR("received unknown packet: %d", p->buffer[0]);
+        default: LOG_ERROR_VERBOSE("received unknown packet: %d", p->buffer[0]);
     }
 }
 
@@ -153,7 +153,7 @@ void packet_receive(struct Packet* p) {
     // refuse packets from banned players
     if (gNetworkType == NT_SERVER) {
         if (ban_list_contains(gNetworkSystem->get_id_str(p->localIndex))) {
-            LOG_INFO("kicking banned player");
+            LOG_INFO_VERBOSE("kicking banned player");
             network_send_kick(0, EKT_BANNED);
             return;
         }
@@ -164,7 +164,7 @@ void packet_receive(struct Packet* p) {
         bool fromServer = (p->localIndex == UNKNOWN_LOCAL_INDEX);
         if (gNetworkPlayerServer != NULL) { fromServer = fromServer || p->localIndex == gNetworkPlayerServer->localIndex; }
         if (fromServer && !gNetworkSystem->match_addr(gNetworkServerAddr, p->addr)) {
-            LOG_INFO("refusing packet from unknown server");
+            LOG_WARN_VERBOSE("refusing packet from unknown server");
             return;
         }
     }
@@ -172,14 +172,14 @@ void packet_receive(struct Packet* p) {
     // refuse packets from unknown players other than join request
     if (gNetworkType == NT_SERVER && p->localIndex == UNKNOWN_LOCAL_INDEX && !network_allow_unknown_local_index(packetType)) {
         if (gNetworkStartupTimer > 0) {
-            LOG_INFO("refusing packet from unknown player on startup, packetType: %d", packetType);
+            LOG_WARN_VERBOSE("refusing packet from unknown player on startup, packetType: %d", packetType);
             return;
         }
         if (packetType != PACKET_PLAYER) {
-            LOG_INFO("closing connection for packetType: %d", packetType);
+            LOG_INFO_VERBOSE("closing connection for packetType: %d", packetType);
             network_send_kick(0, EKT_CLOSE_CONNECTION);
         }
-        LOG_INFO("refusing packet from unknown player, packetType: %d", packetType);
+        LOG_WARN_VERBOSE("refusing packet from unknown player, packetType: %d", packetType);
         return;
     }
 
@@ -189,7 +189,7 @@ void packet_receive(struct Packet* p) {
         struct NetworkPlayer* np = &gNetworkPlayers[p->localIndex];
         for (s32 i = 0; i < MAX_RX_SEQ_IDS; i++) {
             if (np->rxSeqIds[i] == p->seqId && np->rxPacketHash[i] == packetHash) {
-                LOG_INFO("received duplicate packet %u", packetType);
+                LOG_WARN("received duplicate packet %u from %s", packetType, gNetworkSystem->get_id_str(p->localIndex));
                 return;
             }
         }
@@ -215,7 +215,7 @@ void packet_receive(struct Packet* p) {
             packet_process(p);
         }
     } else {
-        LOG_ERROR("packet initial read failed, packetType: %d", packetType);
+        LOG_ERROR_VERBOSE("packet initial read failed, packetType: %d", packetType);
     }
 
     // broadcast packet

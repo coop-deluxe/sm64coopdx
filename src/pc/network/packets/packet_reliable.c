@@ -35,7 +35,7 @@ static void remove_node_from_list(struct PacketLinkedList* node) {
 }
 
 void network_forget_all_reliable(void) {
-    LOG_INFO("Clearing all reliable!");
+    LOG_INFO_VERBOSE("Clearing all reliable!");
     struct PacketLinkedList* node = head;
     while (node != NULL) {
         struct PacketLinkedList* next = node->next;
@@ -48,7 +48,7 @@ void network_forget_all_reliable(void) {
 
 void network_forget_all_reliable_from(u8 localIndex) {
     if (localIndex == 0) { return; }
-    LOG_INFO("Clearing all reliable from %u", localIndex);
+    LOG_INFO_VERBOSE("Clearing all reliable from %u", localIndex);
     struct PacketLinkedList* node = head;
     while (node != NULL) {
         struct PacketLinkedList* next = node->next;
@@ -182,7 +182,7 @@ void network_update_reliable(void) {
                 struct PacketLinkedList* next = node->next;
                 remove_node_from_list(node);
                 node = next;
-                LOG_ERROR("giving up on reliable packet");
+                LOG_ERROR_VERBOSE("giving up on reliable packet");
                 continue;
             }
         }

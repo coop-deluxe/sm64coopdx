@@ -723,11 +723,11 @@ void load_object_collision_model(void) {
         numVertices = gCurrentObject->collisionData[1];
     }
     if (numVertices <= 0) {
-        LOG_ERROR("Object collisions had invalid vertex count");
+        LOG_ERROR_VERBOSE("Object collisions had invalid vertex count");
         return;
     }
     if (numVertices >= 4096) {
-        LOG_ERROR("Object collisions had too many vertices");
+        LOG_ERROR_VERBOSE("Object collisions had too many vertices");
         return;
     }
 
@@ -740,7 +740,7 @@ void load_object_collision_model(void) {
         sVertexDataCount = numVertices;
         if (sVertexDataCount < 64) { sVertexDataCount = 64; }
         sVertexData = malloc((3 * sVertexDataCount + 1) * sizeof(s16));
-        LOG_INFO("Reallocating object vertex data: %u", sVertexDataCount);
+        LOG_INFO_VERBOSE("Reallocating object vertex data: %u", sVertexDataCount);
     }
 
     s16* collisionData = gCurrentObject->collisionData;

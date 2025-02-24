@@ -10,14 +10,14 @@ void network_send_lua_sync_table_request(void) {
     struct Packet p = { 0 };
     packet_init(&p, PACKET_LUA_SYNC_TABLE_REQUEST, true, PLMT_NONE);
     network_send_to((gNetworkPlayerServer != NULL) ? gNetworkPlayerServer->localIndex : 0, &p);
-    LOG_INFO("sending lua sync table request");
+    LOG_INFO_VERBOSE("sending lua sync table request");
 }
 
 void network_receive_lua_sync_table_request(struct Packet* p) {
     SOFT_ASSERT(gNetworkType == NT_SERVER);
     SOFT_ASSERT(p->localIndex < MAX_PLAYERS);
     smlua_sync_table_send_all(p->localIndex);
-    LOG_INFO("received lua sync table request");
+    LOG_INFO_VERBOSE("received lua sync table request");
 }
 
 void network_send_lua_sync_table(u8 toLocalIndex, u64 seq, u16 modRemoteIndex, u16 lntKeyCount, struct LSTNetworkType* lntKeys, struct LSTNetworkType* lntValue) {
@@ -71,7 +71,7 @@ void network_receive_lua_sync_table(struct Packet* p) {
 
     if (!packet_read_lnt(p, &lntValue)) { goto cleanup; }
 
-    if (p->error) { LOG_ERROR("Packet read error"); return; }
+    if (p->error) { LOG_ERROR_VERBOSE("Packet read error"); return; }
     smlua_set_sync_table_field_from_network(seq, modRemoteIndex, lntKeyCount, lntKeys, &lntValue);
 
 cleanup:

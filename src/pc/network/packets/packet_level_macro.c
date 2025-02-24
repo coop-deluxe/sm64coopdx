@@ -33,7 +33,7 @@ static void network_send_level_macro_area(struct NetworkPlayer* destNp, u8 areaI
     if (area->unk04 == NULL) { return; }
 
     if (destNp == NULL || !destNp->connected) {
-        LOG_ERROR("network_send_level_macro: dest np is invalid");
+        LOG_ERROR_VERBOSE("network_send_level_macro: dest np is invalid");
         return;
     }
 
@@ -69,7 +69,7 @@ static void network_send_level_macro_area(struct NetworkPlayer* destNp, u8 areaI
             *macroDeletionCount = *macroDeletionCount + 1;
             u16 offset = respawnInfo - area->macroObjects;
             packet_write(&p, &offset, sizeof(u16));
-            LOG_INFO("tx macro: offset %d", offset);
+            LOG_DEBUG_VERBOSE("tx macro: offset %d", offset);
         }
     }
 
@@ -94,24 +94,25 @@ static void network_send_level_macro_area(struct NetworkPlayer* destNp, u8 areaI
             *macroSpecialCount = *macroSpecialCount + 1;
             packet_write(&p, &index, sizeof(u16));
             packet_write(&p, respawnInfo, sizeof(s16));
-            LOG_INFO("tx macro special: index %d, respawnInfo %d", index, *respawnInfo);
+            LOG_DEBUG_VERBOSE("tx macro special: index %d, respawnInfo %d", index, *respawnInfo);
         }
     }
 
     // send the packet if there are deletions
     if (*macroDeletionCount > 0 || *macroSpecialCount > 0) {
         network_send_to(destNp->localIndex, &p);
-        LOG_INFO("tx macro for area %d (count %d, %d)", areaIndex, *macroDeletionCount, *macroSpecialCount);
+        LOG_DEBUG_VERBOSE("tx macro for area %d (count %d, %d)", areaIndex, *macroDeletionCount, *macroSpecialCount);
     }
 }
 
 void network_send_level_macro(struct NetworkPlayer* destNp) {
     if (!gNetworkPlayerLocal->currLevelSyncValid) {
+        LOG_ERROR_VERBOSE("my area is invalid");
         return;
     }
 
     if (destNp == NULL || !destNp->connected) {
-        LOG_ERROR("network_send_level_macro: dest np is invalid");
+        LOG_ERROR_VERBOSE("network_send_level_macro: dest np is invalid");
         return;
     }
 
@@ -128,30 +129,30 @@ void network_receive_level_macro(struct Packet* p) {
     packet_read(p, &areaIndex, sizeof(s16));
 
     if (courseNum != gCurrCourseNum || actNum != gCurrActStarNum || levelNum != gCurrLevelNum) {
-        LOG_ERROR("Receiving 'location response' with the wrong location!");
+        LOG_ERROR_VERBOSE("Receiving 'location response' with the wrong location!");
         return;
     }
 
     u8 thisAreaIndex;
     packet_read(p, &thisAreaIndex, sizeof(u8));
     if (thisAreaIndex >= MAX_AREAS) {
-        LOG_ERROR("Receiving 'location response' with invalid areaIndex!");
+        LOG_ERROR_VERBOSE("Receiving 'location response' with invalid areaIndex!");
         return;
     }
     if (gAreaData[thisAreaIndex].macroObjects == NULL) {
-        LOG_ERROR("Receiving 'location response' with invalid macroObjects!");
+        LOG_ERROR_VERBOSE("Receiving 'location response' with invalid macroObjects!");
         return;
     }
 
     // read and execute macro deletions
     u8 macroDeletionCount;
     packet_read(p, &macroDeletionCount, sizeof(u8));
-    LOG_INFO("rx macro (count %d)", macroDeletionCount);
+    LOG_DEBUG_VERBOSE("rx macro (count %d)", macroDeletionCount);
 
     while (macroDeletionCount-- > 0) {
         u16 index;
         packet_read(p, &index, sizeof(u16));
-        LOG_INFO("rx macro deletion: index %d", index);
+        LOG_DEBUG_VERBOSE("rx macro deletion: index %d", index);
 
         // mark respawninfo as dont respawn
         s16* respawnInfo = gAreaData[thisAreaIndex].macroObjects + index;
@@ -161,11 +162,11 @@ void network_receive_level_macro(struct Packet* p) {
         struct Object* o = get_object_matching_respawn_info(respawnInfo);
         if (o != NULL) {
             obj_mark_for_deletion(o);
-            LOG_INFO("rx macro deletion: object, behavior: %d", get_id_from_behavior(o->behavior));
+            LOG_DEBUG_VERBOSE("rx macro deletion: object, behavior: %d", get_id_from_behavior(o->behavior));
             if (o->oSyncID != 0) {
                 struct SyncObject* so = sync_object_get(o->oSyncID);
                 if (so && so->o == o) {
-                    LOG_INFO("rx macro deletion: sync object (id %d)", o->oSyncID);
+                    LOG_DEBUG_VERBOSE("rx macro deletion: sync object (id %d)", o->oSyncID);
                     sync_object_forget(so->id);
                 }
             }
@@ -181,7 +182,7 @@ void network_receive_level_macro(struct Packet* p) {
 
         s16* respawnInfo = gAreaData[thisAreaIndex].macroObjects + index;
         packet_read(p, respawnInfo, sizeof(s16));
-        LOG_INFO("rx macro special: index %d, respawnInfo %d", index, *respawnInfo);
+        LOG_DEBUG_VERBOSE("rx macro special: index %d, respawnInfo %d", index, *respawnInfo);
         gAreaData[thisAreaIndex].macroObjectsAltered[index] = true;
 
         s32 presetID = (*(respawnInfo - 4) & 0x1FF) - 31;
@@ -189,7 +190,7 @@ void network_receive_level_macro(struct Packet* p) {
 
         struct Object* o = get_object_matching_respawn_info(respawnInfo);
         if (o != NULL) {
-            LOG_INFO("rx macro special: object");
+            LOG_DEBUG_VERBOSE("rx macro special: object");
             // coin formation
             if (behavior == smlua_override_behavior(bhvCoinFormation)) {
                 o->oBehParams = *respawnInfo;
@@ -205,7 +206,7 @@ void network_receive_level_macro(struct Packet* p) {
                         obj_mark_for_deletion(o2);
                     }
                 }
-                LOG_INFO("rx macro special: coin formation");
+                LOG_DEBUG_VERBOSE("rx macro special: coin formation");
             } else if (behavior == bhvGoombaTripletSpawner) {
                 for (s32 i = 0; i < OBJECT_POOL_CAPACITY; i++) {
                     struct Object* o2 = &gObjectPool[i];
@@ -223,11 +224,11 @@ void network_receive_level_macro(struct Packet* p) {
                         gCurrentObject = prevObject;
                     }
                 }
-                LOG_INFO("rx macro special: goomba triplet");
+                LOG_DEBUG_VERBOSE("rx macro special: goomba triplet");
             } else {
                 o->oBehParams = (((*respawnInfo) & 0x00FF) << 16) + ((*respawnInfo) & 0xFF00);
                 o->oBehParams2ndByte = (*respawnInfo) & 0x00FF;
-                LOG_INFO("rx macro special: %u", get_id_from_behavior(behavior));
+                LOG_DEBUG_VERBOSE("rx macro special: %u", get_id_from_behavior(behavior));
             }
         }
     }

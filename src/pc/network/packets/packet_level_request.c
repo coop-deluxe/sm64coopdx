@@ -18,11 +18,11 @@ void network_send_level_request(struct NetworkPlayer* fromNp, struct NetworkPlay
     packet_write(&p, &fromNp->currActNum,        sizeof(s16));
     packet_write(&p, &fromNp->currLevelNum,      sizeof(s16));
     network_send_to(toNp->localIndex, &p);
-    LOG_INFO("tx level request");
+    LOG_DEBUG_VERBOSE("tx level request");
 }
 
 void network_receive_level_request(struct Packet* p) {
-    LOG_INFO("rx level request");
+    LOG_DEBUG_VERBOSE("rx level request");
 
     u8 globalIndex;
     s16 courseNum, actNum, levelNum;
@@ -33,21 +33,21 @@ void network_receive_level_request(struct Packet* p) {
 
     struct NetworkPlayer* toNp = network_player_from_global_index(globalIndex);
     if (toNp == NULL || toNp->localIndex == UNKNOWN_LOCAL_INDEX || !toNp->connected) {
-        LOG_ERROR("Receiving level request from inactive player!");
+        LOG_ERROR_VERBOSE("Receiving level request from inactive player!");
         if (toNp != NULL) { network_send_request_failed(toNp, 0); }
         return;
     }
 
     extern s16 gCurrCourseNum, gCurrActStarNum, gCurrLevelNum;
     if (courseNum != gCurrCourseNum || actNum != gCurrActStarNum || levelNum != gCurrLevelNum) {
-        LOG_ERROR("rx level request: received an improper location");
+        LOG_ERROR_VERBOSE("rx level request: received an improper location");
         if (toNp != NULL) { network_send_request_failed(toNp, 0); }
         return;
     }
 
     struct NetworkPlayer* np = gNetworkPlayerLocal;
     if (np == NULL || !np->currLevelSyncValid) {
-        LOG_ERROR("rx level request: received when we're not synchronized");
+        LOG_ERROR_VERBOSE("rx level request: received when we're not synchronized");
         if (toNp != NULL) { network_send_request_failed(toNp, 0); }
         return;
     }

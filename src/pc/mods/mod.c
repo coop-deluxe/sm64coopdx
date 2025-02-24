@@ -26,7 +26,7 @@ static void mod_activate_bin(struct Mod* mod, struct ModFile* file) {
     // copy geo name
     char geoName[64] = { 0 };
     if (snprintf(geoName, 63, "%s", path_basename(file->relativePath)) < 0) {
-        LOG_ERROR("Truncated geo name");
+        LOG_ERROR_VERBOSE("Truncated geo name");
         return;
     }
 
@@ -49,7 +49,7 @@ static void mod_activate_col(struct ModFile* file) {
     // copy col name
     char colName[64] = { 0 };
     if (snprintf(colName, 63, "%s", path_basename(file->relativePath)) < 0) {
-        LOG_ERROR("Truncated col name");
+        LOG_ERROR_VERBOSE("Truncated col name");
         return;
     }
 
@@ -72,7 +72,7 @@ static void mod_activate_tex(struct ModFile* file) {
     // copy tex name
     char texName[64] = { 0 };
     if (snprintf(texName, 63, "%s", path_basename(file->relativePath)) < 0) {
-        LOG_ERROR("Truncated tex name");
+        LOG_ERROR_VERBOSE("Truncated tex name");
         return;
     }
 
@@ -95,7 +95,7 @@ static void mod_activate_lvl(struct Mod* mod, struct ModFile* file) {
     // copy lvl name
     char lvlName[64] = { 0 };
     if (snprintf(lvlName, 63, "%s", path_basename(file->relativePath)) < 0) {
-        LOG_ERROR("Truncated lvl name");
+        LOG_ERROR_VERBOSE("Truncated lvl name");
         return;
     }
 
@@ -118,7 +118,7 @@ static void mod_activate_bhv(struct Mod *mod, struct ModFile *file) {
     // copy bhv name
     char bhvName[64] = { 0 };
     if (snprintf(bhvName, 63, "%s", path_basename(file->relativePath)) < 0) {
-        LOG_ERROR("Truncated bhv name");
+        LOG_ERROR_VERBOSE("Truncated bhv name");
         return;
     }
 
@@ -148,6 +148,7 @@ void mod_activate(struct Mod* mod) {
             mod_cache_update(mod, file);
         }
 
+        log_context_begin(LOG_CTX_DYNOS);
         if (str_ends_with(file->relativePath, ".bin")) {
             mod_activate_bin(mod, file);
         }
@@ -163,6 +164,7 @@ void mod_activate(struct Mod* mod) {
         if (str_ends_with(file->relativePath, ".tex")) {
             mod_activate_tex(file);
         }
+        log_context_end(LOG_CTX_DYNOS);
     }
 }
 
@@ -435,22 +437,22 @@ static void mod_extract_fields(struct Mod* mod) {
         if (mod->name == NULL && (extracted = extract_lua_field("-- name:", buffer))) {
             mod->name = calloc(MOD_NAME_MAX_LENGTH + 1, sizeof(char));
             if (snprintf(mod->name, MOD_NAME_MAX_LENGTH, "%s", extracted) < 0) {
-                LOG_INFO("Truncated mod name field '%s'", mod->name);
+                LOG_WARN("Truncated mod name field '%s'", mod->name);
             }
         } else if (mod->incompatible == NULL && (extracted = extract_lua_field("-- incompatible:", buffer))) {
             mod->incompatible = calloc(MOD_INCOMPATIBLE_MAX_LENGTH + 1, sizeof(char));
             if (snprintf(mod->incompatible, MOD_INCOMPATIBLE_MAX_LENGTH, "%s", extracted) < 0) {
-                LOG_INFO("Truncated mod incompatible field '%s'", mod->incompatible);
+                LOG_WARN("Truncated mod incompatible field '%s'", mod->incompatible);
             }
         } else if (mod->category == NULL && (extracted = extract_lua_field("-- category:", buffer))) {
             mod->category = calloc(MOD_CATEGORY_MAX_LENGTH + 1, sizeof(char));
             if (snprintf(mod->category, MOD_CATEGORY_MAX_LENGTH, "%s", extracted) < 0) {
-                LOG_INFO("Truncated mod category field '%s'", mod->category);
+                LOG_WARN("Truncated mod category field '%s'", mod->category);
             }
         } else if (mod->description == NULL && (extracted = extract_lua_field("-- description:", buffer))) {
             mod->description = calloc(MOD_DESCRIPTION_MAX_LENGTH + 1, sizeof(char));
             if (snprintf(mod->description, MOD_DESCRIPTION_MAX_LENGTH, "%s", extracted) < 0) {
-                LOG_INFO("Truncated mod description field '%s'", mod->description);
+                LOG_WARN("Truncated mod description field '%s'", mod->description);
             }
         } else if ((extracted = extract_lua_field("-- pausable:", buffer))) {
             mod->pausable = !strcmp(extracted, "true");

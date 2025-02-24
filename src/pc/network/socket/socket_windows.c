@@ -8,14 +8,14 @@ SOCKET socket_initialize(void) {
     WSADATA wsaData;
     int rc = WSAStartup(MAKEWORD(2, 2), &wsaData);
     if (rc != NO_ERROR) {
-        LOG_ERROR("WSAStartup failed with error %d", rc);
+        LOG_ERROR_VERBOSE("WSAStartup failed with error %d", rc);
         return INVALID_SOCKET;
     }
 
     // initialize socket
     SOCKET sock = socket(AF_INET6, SOCK_DGRAM, IPPROTO_UDP);
     if (sock == INVALID_SOCKET) {
-        LOG_ERROR("socket failed with error %d", SOCKET_LAST_ERROR);
+        LOG_ERROR_VERBOSE("socket failed with error %d", SOCKET_LAST_ERROR);
         return INVALID_SOCKET;
     }
 
@@ -23,14 +23,14 @@ SOCKET socket_initialize(void) {
     u_long iMode = 1;
     rc = ioctlsocket(sock, FIONBIO, &iMode);
     if (rc != NO_ERROR) {
-        LOG_ERROR("ioctlsocket failed with error: %d", rc);
+        LOG_ERROR_VERBOSE("ioctlsocket failed with error: %d", rc);
         return INVALID_SOCKET;
     }
 
     // set dual-stack socket mode
     int v6only = 0;
     if (setsockopt(sock, IPPROTO_IPV6, IPV6_V6ONLY, (void *)&v6only, sizeof(v6only)) < 0) {
-        LOG_ERROR("setsockopt(IPV6_V6ONLY) failed.");
+        LOG_ERROR_VERBOSE("setsockopt(IPV6_V6ONLY) failed.");
         return INVALID_SOCKET;
     };
 
@@ -41,7 +41,7 @@ SOCKET socket_initialize(void) {
     int bufsiz = 128 * 1024; // 128kb, default is apparently 8kb or 16kb
     rc = setsockopt(sock, SOL_SOCKET, SO_SNDBUF, (const char *)&bufsiz, sizeof(bufsiz));
     if (rc != NO_ERROR) {
-        LOG_ERROR("setsockopt(SO_SNDBUF) failed with error: %d", rc);
+        LOG_ERROR_VERBOSE("setsockopt(SO_SNDBUF) failed with error: %d", rc);
     }
 #endif
 
@@ -52,7 +52,7 @@ void socket_shutdown(SOCKET socket) {
     if (socket == INVALID_SOCKET) { return; }
     int rc = closesocket(socket);
     if (rc == SOCKET_ERROR) {
-        LOG_ERROR("closesocket failed with error %d", SOCKET_LAST_ERROR);
+        LOG_ERROR_VERBOSE("closesocket failed with error %d", SOCKET_LAST_ERROR);
     }
     WSACleanup();
 }

@@ -26,7 +26,7 @@ void network_delayed_packet_object_remember(struct Packet* p) {
     struct DelayedPacketObject* node = calloc(1, sizeof(struct DelayedPacketObject));
     packet_duplicate(p, &node->p);
     node->next = NULL;
-    LOG_INFO("saving delayed object");
+    LOG_DEBUG_VERBOSE("saving delayed object");
 
     if (delayedPacketObjectHead == NULL) {
         delayedPacketObjectHead = node;
@@ -41,7 +41,7 @@ void network_delayed_packet_object_execute(void) {
     struct DelayedPacketObject* node = delayedPacketObjectHead;
     while (node != NULL) {
         struct DelayedPacketObject* next = node->next;
-        LOG_INFO("executing delayed object");
+        LOG_DEBUG_VERBOSE("executing delayed object");
         network_receive_object(&node->p);
         free(node);
         node = next;
@@ -91,14 +91,14 @@ static struct SyncObject* packet_read_object_header(struct Packet* p, u8* fromLo
     packet_read(p, &syncId, sizeof(u32));
     struct SyncObject* so = sync_object_get(syncId);
     if (!so) {
-        LOG_ERROR("invalid SyncID: %d", syncId);
+        LOG_ERROR_VERBOSE("invalid SyncID: %d", syncId);
         return NULL;
     }
 
     // extract object, sanity check
     struct Object* o = so->o;
     if (o == NULL) {
-        LOG_ERROR("invalid SyncObject for %d", syncId);
+        LOG_ERROR_VERBOSE("invalid SyncObject for %d", syncId);
         return NULL;
     }
 
@@ -108,7 +108,7 @@ static struct SyncObject* packet_read_object_header(struct Packet* p, u8* fromLo
     gCurrentObject = o;
     if ((so->ignore_if_true != NULL) && ((*so->ignore_if_true)() != FALSE)) {
         gCurrentObject = tmp;
-        LOG_INFO("ignored sync object due to callback");
+        LOG_DEBUG_VERBOSE("ignored sync object due to callback");
         return NULL;
     }
     gCurrentObject = tmp;
@@ -118,7 +118,7 @@ static struct SyncObject* packet_read_object_header(struct Packet* p, u8* fromLo
     u16 eventId = 0;
     packet_read(p, &eventId, sizeof(u16));
     if (so->rxEventId[*fromLocalIndex] > eventId && (u16)abs(eventId - so->rxEventId[*fromLocalIndex]) < USHRT_MAX / 2) {
-        LOG_INFO("ignored sync object due to eventId");
+        LOG_DEBUG_VERBOSE("ignored sync object due to eventId");
         return NULL;
     }
     so->rxEventId[*fromLocalIndex] = eventId;
@@ -133,10 +133,10 @@ static struct SyncObject* packet_read_object_header(struct Packet* p, u8* fromLo
     BehaviorScript* behavior = (BehaviorScript*)get_behavior_from_id(behaviorId);
     BehaviorScript* lBehavior = (BehaviorScript*)smlua_override_behavior(behavior);
     if (behavior == NULL) {
-        LOG_ERROR("unable to find behavior %04X for id %d", behaviorId, syncId);
+        LOG_ERROR_VERBOSE("unable to find behavior %04X for id %d", behaviorId, syncId);
         return NULL;
     } if (o->behavior != behavior && o->behavior != lBehavior && !allowable_behavior_change(so, behavior)) {
-        LOG_ERROR("behavior mismatch for %d: %04X vs %04X", syncId, get_id_from_behavior(o->behavior), get_id_from_behavior(behavior));
+        LOG_ERROR_VERBOSE("behavior mismatch for %d: %04X vs %04X", syncId, get_id_from_behavior(o->behavior), get_id_from_behavior(behavior));
         return NULL;
     }
 
@@ -233,7 +233,7 @@ static void packet_read_object_extra_fields(struct Packet* p, struct Object* o) 
     u8 extraFieldsCount = 0;
     packet_read(p, &extraFieldsCount, sizeof(u8));
     if (extraFieldsCount != so->extraFieldCount) {
-        LOG_ERROR("mismatching extra fields count");
+        LOG_ERROR_VERBOSE("mismatching extra fields count");
         return;
     }
 
@@ -273,22 +273,22 @@ void network_send_object(struct Object* o) {
 
     // sanity check SyncObject
     if (!sync_object_is_initialized(o->oSyncID)) {
-        //LOG_ERROR("tried to send uninitialized sync obj");
+        //LOG_ERROR_VERBOSE("tried to send uninitialized sync obj");
         return;
     }
     if (o->behavior == smlua_override_behavior(bhvRespawner)) {
-        LOG_INFO("tried to send respawner sync obj");
+        LOG_DEBUG_VERBOSE("tried to send respawner sync obj");
         return;
     }
 
     struct SyncObject* so = sync_object_get(o->oSyncID);
-    if (so == NULL) { LOG_ERROR("tried to send null sync obj"); return; }
+    if (so == NULL) { LOG_ERROR_VERBOSE("tried to send null sync obj"); return; }
     if (o != so->o) {
-        LOG_ERROR("object mismatch for %d", o->oSyncID);
+        LOG_ERROR_VERBOSE("object mismatch for %d", o->oSyncID);
         return;
     }
     if (o->behavior != so->behavior && !allowable_behavior_change(so, so->behavior)) {
-        LOG_ERROR("behavior mismatch for %d: %04X vs %04X", o->oSyncID, get_id_from_behavior(o->behavior), get_id_from_behavior(so->behavior));
+        LOG_ERROR_VERBOSE("behavior mismatch for %d: %04X vs %04X", o->oSyncID, get_id_from_behavior(o->behavior), get_id_from_behavior(so->behavior));
         sync_object_forget(so->id);
         return;
     }
@@ -300,6 +300,7 @@ void network_send_object(struct Object* o) {
 void network_send_object_reliability(struct Object* o, bool reliable) {
     // don't send sync objects while area sync is invalid
     if (gNetworkPlayerLocal == NULL || !gNetworkPlayerLocal->currAreaSyncValid) {
+        LOG_DEBUG_VERBOSE("tried to send sync obj when area sync invalid");
         return;
     }
     // prevent sending objects during credits sequence
@@ -307,22 +308,22 @@ void network_send_object_reliability(struct Object* o, bool reliable) {
 
     // sanity check SyncObject
     if (!sync_object_is_initialized(o->oSyncID)) {
-        //LOG_ERROR("tried to send uninitialized sync obj");
+        //LOG_ERROR_VERBOSE("tried to send uninitialized sync obj");
         return;
     }
 
     u32 syncId = o->oSyncID;
     struct SyncObject* so = sync_object_get(syncId);
     if (so == NULL) {
-        LOG_ERROR("tried to send null sync obj");
+        LOG_ERROR_VERBOSE("tried to send null sync obj");
         return;
     }
     if (o != so->o) {
-        LOG_ERROR("object mismatch for %d", syncId);
+        LOG_ERROR_VERBOSE("object mismatch for %d", syncId);
         return;
     }
     if (o->behavior != so->behavior && !allowable_behavior_change(so, so->behavior)) {
-        LOG_ERROR("behavior mismatch for %d: %04X vs %04X", syncId, get_id_from_behavior(o->behavior), get_id_from_behavior(so->behavior));
+        LOG_ERROR_VERBOSE("behavior mismatch for %d: %04X vs %04X", syncId, get_id_from_behavior(o->behavior), get_id_from_behavior(so->behavior));
         sync_object_forget(so->id);
         return;
     }
@@ -384,12 +385,12 @@ void network_receive_object(struct Packet* p) {
     u8 fromLocalIndex = 0;
     struct SyncObject* so = packet_read_object_header(p, &fromLocalIndex);
     if (so == NULL) {
-        LOG_ERROR("received null sync object");
+        LOG_ERROR_VERBOSE("received null sync object");
         return;
     }
     struct Object* o = so->o;
     if (!sync_object_is_initialized(o->oSyncID)) {
-        LOG_ERROR("received uninitialized sync object");
+        LOG_ERROR_VERBOSE("received uninitialized sync object");
         return;
     }
 

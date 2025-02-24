@@ -44,7 +44,7 @@ void network_receive_pong(struct Packet* p) {
 
     struct NetworkPlayer* np = network_player_from_global_index(globalIndex);
     if (np == NULL || np->localIndex == UNKNOWN_LOCAL_INDEX || !np->connected) {
-        LOG_ERROR("Receiving pong from inactive player!");
+        LOG_ERROR_VERBOSE("Receiving pong from inactive player!");
         return;
     }
 

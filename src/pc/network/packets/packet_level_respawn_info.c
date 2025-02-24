@@ -99,6 +99,7 @@ void network_send_level_respawn_info(struct Object* o, u8 respawnInfoBits) {
 
     // make sure our area is valid
     if (!gNetworkPlayerLocal->currAreaSyncValid) {
+        LOG_ERROR_VERBOSE("my area is invalid");
         return;
     }
 
@@ -106,7 +107,7 @@ void network_send_level_respawn_info(struct Object* o, u8 respawnInfoBits) {
     u16 macroOffset    = get_macro_offset_of_object(o);
     u16 spawnInfoIndex = get_spawn_info_index_of_object(o);
     if (macroOffset == ERR_COULD_NOT_FIND_OBJECT && spawnInfoIndex == ERR_COULD_NOT_FIND_OBJECT) {
-        LOG_INFO("could not find object in macro or spawn info");
+        LOG_WARN_VERBOSE("could not find object in macro or spawn info");
         return;
     }
     bool isMacroObject = (macroOffset != ERR_COULD_NOT_FIND_OBJECT);
@@ -140,16 +141,16 @@ void network_send_level_respawn_info(struct Object* o, u8 respawnInfoBits) {
             struct Packet p2 = { 0 };
             packet_duplicate(&p, &p2);
             network_send_to(np->localIndex, &p2);
-            LOG_INFO("tx level respawn info to %d", np->globalIndex);
+            LOG_DEBUG_VERBOSE("tx level respawn info to %d", np->globalIndex);
         }
     } else {
         network_send_to(gNetworkPlayerServer->localIndex, &p);
-        LOG_INFO("tx level respawn info to %d", gNetworkPlayerServer->globalIndex);
+        LOG_DEBUG_VERBOSE("tx level respawn info to %d", gNetworkPlayerServer->globalIndex);
     }
 }
 
 void network_receive_level_respawn_info(struct Packet* p) {
-    LOG_INFO("rx level respawn info");
+    LOG_DEBUG_VERBOSE("rx level respawn info");
 
     // read header
     s16 courseNum, actNum, levelNum, areaIndex;
@@ -172,7 +173,7 @@ void network_receive_level_respawn_info(struct Packet* p) {
         // ensure we got the info from a valid player
         struct NetworkPlayer* npFrom = &gNetworkPlayers[p->localIndex];
         if (npFrom == NULL || npFrom->localIndex == UNKNOWN_LOCAL_INDEX || !npFrom->connected) {
-            LOG_ERROR("Receiving 'level respawn info' from inactive player!");
+            LOG_ERROR_VERBOSE("Receiving 'level respawn info' from inactive player!");
             return;
         }
 
@@ -193,14 +194,14 @@ void network_receive_level_respawn_info(struct Packet* p) {
         // do not have the server apply the changes unless their level matches
         if (levelMismatch) { return; }
     } else if (levelMismatch) {
-        LOG_ERROR("Receiving 'level respawn info' with the wrong location!");
+        LOG_ERROR_VERBOSE("Receiving 'level respawn info' with the wrong location!");
         return;
     }
 
     if (isMacroObject) {
         s16* respawnInfo = get_respawn_info_from_macro_offset(areaIndex, offsetOrIndex);
         if (respawnInfo == NULL) {
-            LOG_ERROR("Could not find respawn info from macro offset");
+            LOG_ERROR_VERBOSE("Could not find respawn info from macro offset");
             return;
         }
         // apply the change
@@ -208,11 +209,11 @@ void network_receive_level_respawn_info(struct Packet* p) {
     } else {
         u32* respawnInfo = get_respawn_info_from_spawn_info_index(areaIndex, offsetOrIndex);
         if (respawnInfo == NULL) {
-            LOG_ERROR("Could not find respawn info from spawn info index");
+            LOG_ERROR_VERBOSE("Could not find respawn info from spawn info index");
             return;
         }
         // apply the change
         *respawnInfo |= respawnInfoBits << 8;
     }
-    LOG_INFO("rx level respawn info (success!)");
+    LOG_DEBUG_VERBOSE("rx level respawn info (success!)");
 }

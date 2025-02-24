@@ -73,7 +73,7 @@ void eu_process_audio_cmd(struct EuAudioCmd *cmd) {
     case AUDIO_CMD_LOAD_SEQUENCE2:
         load_sequence(cmd->u.s.arg1, cmd->u.s.arg2, cmd->u.s.arg3);
         seq_player_fade_from_zero_volume(cmd->u.s.arg1, cmd->u2.as_s32);
-        //LOG_DEBUG("Playing sequence with arguments: %d, 0x%X, %d", cmd->u.s.arg1, cmd->u.s.arg2, cmd->u.s.arg3);
+        LOG_INFO_VERBOSE("Playing sequence with arguments: %d, 0x%X, %d", cmd->u.s.arg1, cmd->u.s.arg2, cmd->u.s.arg3);
         break;
 
     case AUDIO_CMD_FADE_TO_ZERO_VOLUME:

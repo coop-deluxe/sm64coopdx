@@ -826,7 +826,7 @@ void configfile_save(const char *filename) {
         return;
     }
 
-    printf("Saving configuration to '%s'\n", filename);
+    LOG_INFO("Saving configuration to '%s'", filename);
 
     for (unsigned int i = 0; i < ARRAY_LEN(options); i++) {
         const struct ConfigOption *option = &options[i];

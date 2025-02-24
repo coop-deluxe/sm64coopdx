@@ -41,7 +41,7 @@ static void coopnet_on_connected(uint64_t userId) {
 }
 
 static void coopnet_on_disconnected(bool intentional) {
-    LOG_INFO("Coopnet shutdown!");
+    LOG_INFO_VERBOSE("Coopnet shutdown!");
     if (!intentional) {
         djui_popup_create(DLANG(NOTIF, COOPNET_DISCONNECTED), 2);
     }
@@ -72,7 +72,7 @@ static void coopnet_on_receive(uint64_t userId, const uint8_t* data, uint64_t da
 }
 
 static void coopnet_on_lobby_joined(uint64_t lobbyId, uint64_t userId, uint64_t ownerId, uint64_t destId) {
-    LOG_INFO("coopnet_on_lobby_joined!");
+    LOG_INFO_VERBOSE("coopnet_on_lobby_joined!");
     coopnet_set_user_id(0, ownerId);
     sLocalLobbyId = lobbyId;
     sLocalLobbyOwnerId = ownerId;
@@ -95,7 +95,7 @@ static void coopnet_on_lobby_joined(uint64_t lobbyId, uint64_t userId, uint64_t 
 }
 
 static void coopnet_on_lobby_left(uint64_t lobbyId, uint64_t userId) {
-    LOG_INFO("coopnet_on_lobby_left!");
+    LOG_INFO_VERBOSE("coopnet_on_lobby_left!");
     coopnet_clear_dest_id(userId);
     if (lobbyId == sLocalLobbyId && userId == coopnet_get_local_user_id()) {
         network_shutdown(false, false, true, false);
@@ -210,17 +210,17 @@ void ns_coopnet_update(void) {
             char mode[64] = "";
             mods_get_main_mod_name(mode, 64);
             if (sReconnecting) {
-                LOG_INFO("Update lobby");
+                LOG_INFO_VERBOSE("Update lobby");
                 coopnet_populate_description();
                 coopnet_lobby_update(sLocalLobbyId, GAME_NAME, get_version(), configPlayerName, mode, sCoopNetDescription);
             } else {
-                LOG_INFO("Create lobby");
+                LOG_INFO_VERBOSE("Create lobby");
                 snprintf(gCoopNetPassword, 64, "%s", configPassword);
                 coopnet_populate_description();
                 coopnet_lobby_create(GAME_NAME, get_version(), configPlayerName, mode, (uint16_t)configAmountOfPlayers, gCoopNetPassword, sCoopNetDescription);
             }
         } else if (sNetworkType == NT_CLIENT) {
-            LOG_INFO("Join lobby");
+            LOG_INFO_VERBOSE("Join lobby");
             coopnet_lobby_join(gCoopNetDesiredLobby, gCoopNetPassword);
         }
         sNetworkType = NT_NONE;
@@ -260,7 +260,7 @@ static void ns_coopnet_get_lobby_secret(UNUSED char* destination, UNUSED u32 des
 
 static void ns_coopnet_shutdown(bool reconnecting) {
     if (reconnecting) { return; }
-    LOG_INFO("Coopnet shutdown!");
+    LOG_INFO_VERBOSE("Coopnet shutdown!");
     coopnet_shutdown();
     gCoopNetCallbacks.OnLobbyListGot = NULL;
     gCoopNetCallbacks.OnLobbyListFinish = NULL;

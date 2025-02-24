@@ -50,7 +50,7 @@ void network_send_level(struct NetworkPlayer* toNp, bool sendArea) {
     }
     packet_ordered_end();
 
-    LOG_INFO("tx level");
+    LOG_DEBUG_VERBOSE("tx level");
 }
 
 extern s16 gTTC2DRotatorSpeeds[];
@@ -60,7 +60,7 @@ extern f32 gTTCPendulumInitialAccels[];
 extern u8 gTTCRotatingSolidInitialDelays[];
 extern s16 gTTCTreadmillSpeeds[];
 void network_receive_level(struct Packet* p) {
-    LOG_INFO("rx level");
+    LOG_DEBUG_VERBOSE("rx level");
 
     // read level location
     s16 courseNum, actNum, levelNum;
@@ -70,7 +70,7 @@ void network_receive_level(struct Packet* p) {
 
     extern s16 gCurrCourseNum, gCurrActStarNum, gCurrLevelNum;
     if (courseNum != gCurrCourseNum || actNum != gCurrActStarNum || levelNum != gCurrLevelNum) {
-        LOG_ERROR("rx level: received an improper location");
+        LOG_ERROR_VERBOSE("rx level: received an improper location");
         return;
     }
 

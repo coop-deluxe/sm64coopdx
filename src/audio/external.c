@@ -2513,7 +2513,7 @@ void play_music(u8 player, u16 seqArgs, u16 fadeTimer) {
     u8 i;
     u8 foundIndex = 0;
 
-    //LOG_DEBUG("Playing music with arguments: %d, 0x%X, %d, %d", player, seqId, priority, fadeTimer);
+    LOG_INFO_VERBOSE("Playing music with arguments: %d, 0x%X, %d, %d", player, seqId, priority, fadeTimer);
 
     // Except for the background music player, we don't support queued
     // sequences. Just play them immediately, stopping any old sequence.
@@ -2524,7 +2524,7 @@ void play_music(u8 player, u16 seqArgs, u16 fadeTimer) {
 
     // Abort if the queue is already full.
     if (sBackgroundMusicQueueSize == MAX_BACKGROUND_MUSIC_QUEUE_SIZE) {
-        LOG_DEBUG("Background music queue reached max size! Ignoring request to queue sequence %d.", seqId);
+        LOG_INFO_VERBOSE("Background music queue reached max size! Ignoring request to queue sequence %d.", seqId);
         return;
     }
 
@@ -2538,7 +2538,7 @@ void play_music(u8 player, u16 seqArgs, u16 fadeTimer) {
             } else if (!gSequencePlayers[SEQ_PLAYER_LEVEL].enabled) {
                 stop_background_music(sBackgroundMusicQueue[0].seqId);
             }
-            //LOG_DEBUG("Sequence 0x%X is already in the background music queue!", seqId);
+            LOG_WARN_VERBOSE("Sequence 0x%X is already in the background music queue!", seqId);
             return;
         }
     }
@@ -2555,7 +2555,7 @@ void play_music(u8 player, u16 seqArgs, u16 fadeTimer) {
     // one more entry in the queue.
     if (foundIndex == 0) {
         seq_player_play_sequence(SEQ_PLAYER_LEVEL, seqId, fadeTimer);
-        //LOG_DEBUG("Playing sequence 0x%X as it's first in the background music queue!", seqId);
+        LOG_INFO_VERBOSE("Playing sequence 0x%X as it's first in the background music queue!", seqId);
         sBackgroundMusicQueueSize++;
     }
 

@@ -242,7 +242,7 @@ static int smlua_func_define_custom_obj_fields(lua_State* L) {
         }
         lua_settable(L, -3); // set _custom_object_fields
 
-        LOG_INFO("Registered custom object field: 0x%02X as %s - %s", fieldIndex, smlua_get_custom_field_type_name(node->lvt), node->key);
+        LOG_INFO_VERBOSE("Registered custom object field: 0x%02X as %s - %s", fieldIndex, smlua_get_custom_field_type_name(node->lvt), node->key);
 
         fieldIndex++;
 

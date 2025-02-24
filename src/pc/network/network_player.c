@@ -224,7 +224,7 @@ void network_player_update(void) {
 #else
             if (elapsed > NETWORK_PLAYER_TIMEOUT) {
 #endif
-                LOG_INFO("dropping player %d", i);
+                LOG_INFO("Dropping player %d", i);
                 network_player_disconnected(i);
                 continue;
             }
@@ -243,7 +243,7 @@ void network_player_update(void) {
 #else
         if (elapsed > NETWORK_PLAYER_TIMEOUT * 1.5f) {
 #endif
-            LOG_INFO("dropping due to no server connectivity");
+            LOG_INFO("Dropping due to no server connectivity");
             network_shutdown(false, false, true, false);
         }
 
@@ -354,7 +354,7 @@ u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex, u8 mode
     if (!gCurrentlyJoining && type != NPT_SERVER && (gNetworkType != NT_SERVER || type != NPT_LOCAL)) {
         construct_player_popup(np, DLANG(NOTIF, CONNECTED), NULL);
     }
-    LOG_INFO("player connected, local %d, global %d", localIndex, np->globalIndex);
+    LOG_INFO_VERBOSE("Player connected, local %d, global %d", localIndex, np->globalIndex);
 
     smlua_call_event_hooks_mario_param(HOOK_ON_PLAYER_CONNECTED, &gMarioStates[localIndex]);
 
@@ -370,7 +370,7 @@ u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex, u8 mode
 u8 network_player_disconnected(u8 globalIndex) {
     if (globalIndex == 0) {
         if (gNetworkType == NT_SERVER) {
-            LOG_ERROR("player disconnected, but it's local.. this shouldn't happen!");
+            LOG_ERROR_VERBOSE("player disconnected, but it's local.. this shouldn't happen!");
             return UNKNOWN_GLOBAL_INDEX;
         } else {
             network_shutdown(true, false, true, false);
@@ -378,7 +378,7 @@ u8 network_player_disconnected(u8 globalIndex) {
     }
 
     if (globalIndex == UNKNOWN_GLOBAL_INDEX) {
-        LOG_ERROR("player disconnected, but unknown global index!");
+        LOG_ERROR_VERBOSE("player disconnected, but unknown global index!");
         return UNKNOWN_GLOBAL_INDEX;
     }
 
@@ -403,7 +403,7 @@ u8 network_player_disconnected(u8 globalIndex) {
             so->rxEventId[i] = 0;
         }
         
-        LOG_INFO("player disconnected, local %d, global %d", i, globalIndex);
+        LOG_INFO_VERBOSE("Player disconnected, local %d, global %d", i, globalIndex);
 
         // display popup
         construct_player_popup(np, DLANG(NOTIF, DISCONNECTED), NULL);
@@ -516,5 +516,5 @@ void network_player_shutdown(bool popup) {
     }
 
     if (popup) { djui_popup_create(DLANG(NOTIF, SERVER_CLOSED), 1); }
-    LOG_INFO("cleared all network players");
+    LOG_DEBUG_VERBOSE("Cleared all network players");
 }

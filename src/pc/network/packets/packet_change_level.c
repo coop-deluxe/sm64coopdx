@@ -58,16 +58,16 @@ void network_send_change_level(void) {
     np->currLevelSyncValid = false;
     network_player_update_course_level(np, gCurrCourseNum, gCurrActStarNum, gCurrLevelNum, gCurrAreaIndex);
 
-    LOG_INFO("tx change level");
+    LOG_DEBUG_VERBOSE("tx change level");
 }
 
 void network_receive_change_level(struct Packet *p) {
-    LOG_INFO("rx change level");
+    LOG_DEBUG_VERBOSE("rx change level");
 
     SOFT_ASSERT(gNetworkType == NT_SERVER);
     struct NetworkPlayer *np = &gNetworkPlayers[p->localIndex];
     if (np == NULL || np->localIndex == UNKNOWN_LOCAL_INDEX || !np->connected) {
-        LOG_ERROR("Receiving change level from inactive player!");
+        LOG_ERROR_VERBOSE("Receiving change level from inactive player!");
         return;
     }
 

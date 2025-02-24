@@ -13,7 +13,7 @@ void network_send_mod_list_request(void) {
     mods_clear(&gRemoteMods);
 
     if (!mods_generate_remote_base_path()) {
-        LOG_ERROR("Failed to generate remote base path!");
+        LOG_ERROR_VERBOSE("Failed to generate remote base path!");
         return;
     }
 
@@ -24,16 +24,16 @@ void network_send_mod_list_request(void) {
     packet_write(&p, &version, sizeof(u8) * MAX_VERSION_LENGTH);
 
     network_send_to(PACKET_DESTINATION_SERVER, &p);
-    LOG_INFO("sending mod list request");
+    LOG_DEBUG_VERBOSE("sending mod list request");
     gAllowOrderedPacketClear = 0;
 }
 
 void network_receive_mod_list_request(UNUSED struct Packet* p) {
     if (gNetworkType != NT_SERVER) {
-        LOG_ERROR("Network type should be server!");
+        LOG_ERROR_VERBOSE("Network type should be server!");
         return;
     }
-    LOG_INFO("received mod list request");
+    LOG_DEBUG_VERBOSE("received mod list request");
 
     network_send_mod_list();
 }
@@ -48,12 +48,12 @@ void network_send_mod_list(void) {
 
     char version[MAX_VERSION_LENGTH] = { 0 };
     snprintf(version, MAX_VERSION_LENGTH, "%s", get_version());
-    LOG_INFO("sending version: %s", version);
+    LOG_DEBUG_VERBOSE("sending version: %s", version);
     packet_write(&p, &version, sizeof(u8) * MAX_VERSION_LENGTH);
     packet_write(&p, &gActiveMods.entryCount, sizeof(u16));
     network_send_to(0, &p);
 
-    LOG_INFO("sent mod list (%u):", gActiveMods.entryCount);
+    LOG_DEBUG_VERBOSE("sent mod list (%u):", gActiveMods.entryCount);
     for (u16 i = 0; i < gActiveMods.entryCount; i++) {
         struct Mod* mod = gActiveMods.entries[i];
 
@@ -88,7 +88,7 @@ void network_send_mod_list(void) {
         packet_write(&p, &mod->ignoreScriptWarnings, sizeof(u8));
         packet_write(&p, &mod->fileCount, sizeof(u16));
         network_send_to(0, &p);
-        LOG_INFO("    '%s': %llu", mod->name, (u64)mod->size);
+        LOG_DEBUG_VERBOSE("    '%s': %llu", mod->name, (u64)mod->size);
 
         for (u16 j = 0; j < mod->fileCount; j++) {
             struct Packet p = { 0 };
@@ -103,7 +103,7 @@ void network_send_mod_list(void) {
             packet_write(&p, &fileSize, sizeof(u64));
             packet_write(&p, &file->dataHash[0], sizeof(u8) * 16);
             network_send_to(0, &p);
-            LOG_INFO("      '%s': %llu", file->relativePath, (u64)file->size);
+            LOG_DEBUG_VERBOSE("      '%s': %llu", file->relativePath, (u64)file->size);
         }
     }
 
@@ -120,13 +120,13 @@ void network_receive_mod_list(struct Packet* p) {
 
     if (p->localIndex != UNKNOWN_LOCAL_INDEX) {
         if (gNetworkPlayerServer == NULL || gNetworkPlayerServer->localIndex != p->localIndex) {
-            LOG_ERROR("Received mod list from known local index '%d'", p->localIndex);
+            LOG_ERROR_VERBOSE("Received mod list from known local index '%d'", p->localIndex);
             return;
         }
     }
 
     if (gRemoteMods.entries != NULL) {
-        LOG_INFO("received mod list after allocating");
+        LOG_DEBUG_VERBOSE("received mod list after allocating");
         return;
     }
 
@@ -136,15 +136,15 @@ void network_receive_mod_list(struct Packet* p) {
 
     char version[MAX_VERSION_LENGTH] = { 0 };
     snprintf(version, MAX_VERSION_LENGTH, "%s", get_version());
-    LOG_INFO("client has version: %s", version);
+    LOG_DEBUG_VERBOSE("client has version: %s", version);
 
     // verify version
     char remoteVersion[MAX_VERSION_LENGTH] = { 0 };
     packet_read(p, &remoteVersion, sizeof(u8) * MAX_VERSION_LENGTH);
-    LOG_INFO("server has version: %s", version);
+    LOG_DEBUG_VERBOSE("server has version: %s", version);
     if (memcmp(version, remoteVersion, MAX_VERSION_LENGTH) != 0) {
         network_shutdown(true, false, false, false);
-        LOG_ERROR("version mismatch");
+        LOG_ERROR_VERBOSE("version mismatch");
         char mismatchMessage[256] = { 0 };
         snprintf(mismatchMessage, 256, "\\#ffa0a0\\Error:\\#dcdcdc\\ Version mismatch.\n\nYour version: \\#a0a0ff\\%s\\#dcdcdc\\\nTheir version: \\#a0a0ff\\%s\\#dcdcdc\\\n\nSomeone is out of date!\n", version, remoteVersion);
         djui_panel_join_message_error(mismatchMessage);
@@ -154,11 +154,11 @@ void network_receive_mod_list(struct Packet* p) {
     packet_read(p, &gRemoteMods.entryCount, sizeof(u16));
     gRemoteMods.entries = calloc(gRemoteMods.entryCount, sizeof(struct Mod*));
     if (gRemoteMods.entries == NULL) {
-        LOG_ERROR("Failed to allocate remote mod entries");
+        LOG_ERROR_VERBOSE("Failed to allocate remote mod entries");
         return;
     }
 
-    LOG_INFO("received mod list (%u):", gRemoteMods.entryCount);
+    LOG_DEBUG_VERBOSE("received mod list (%u):", gRemoteMods.entryCount);
 }
 
 void network_receive_mod_list_entry(struct Packet* p) {
@@ -167,7 +167,7 @@ void network_receive_mod_list_entry(struct Packet* p) {
     // make sure it was sent by the server
     if (p->localIndex != UNKNOWN_LOCAL_INDEX) {
         if (gNetworkPlayerServer == NULL || gNetworkPlayerServer->localIndex != p->localIndex) {
-            LOG_ERROR("Received download from known local index '%d'", p->localIndex);
+            LOG_ERROR_VERBOSE("Received download from known local index '%d'", p->localIndex);
             return;
         }
     }
@@ -176,7 +176,7 @@ void network_receive_mod_list_entry(struct Packet* p) {
     u16 modIndex = 0;
     packet_read(p, &modIndex, sizeof(u16));
     if (modIndex >= gRemoteMods.entryCount) {
-        LOG_ERROR("Received mod outside of known range");
+        LOG_ERROR_VERBOSE("Received mod outside of known range");
         return;
     }
 
@@ -184,7 +184,7 @@ void network_receive_mod_list_entry(struct Packet* p) {
     gRemoteMods.entries[modIndex] = calloc(1, sizeof(struct Mod));
     struct Mod* mod = gRemoteMods.entries[modIndex];
     if (mod == NULL) {
-        LOG_ERROR("Failed to allocate remote mod!");
+        LOG_ERROR_VERBOSE("Failed to allocate remote mod!");
         return;
     }
 
@@ -192,7 +192,7 @@ void network_receive_mod_list_entry(struct Packet* p) {
     u16 nameLength = 0;
     packet_read(p, &nameLength, sizeof(u16));
     if (nameLength > MOD_NAME_MAX_LENGTH) {
-        LOG_ERROR("Received name with invalid length!");
+        LOG_ERROR_VERBOSE("Received name with invalid length!");
         return;
     }
 
@@ -205,7 +205,7 @@ void network_receive_mod_list_entry(struct Packet* p) {
     u16 incompatibleLength = 0;
     packet_read(p, &incompatibleLength, sizeof(u16));
     if (incompatibleLength > MOD_INCOMPATIBLE_MAX_LENGTH) {
-        LOG_ERROR("Received name with invalid length!");
+        LOG_ERROR_VERBOSE("Received name with invalid length!");
         return;
     }
 
@@ -227,18 +227,18 @@ void network_receive_mod_list_entry(struct Packet* p) {
     packet_read(p, &mod->pausable, sizeof(u8));
     packet_read(p, &mod->ignoreScriptWarnings, sizeof(u8));
     normalize_path(mod->relativePath);
-    LOG_INFO("    '%s': %llu", mod->name, (u64)mod->size);
+    LOG_DEBUG_VERBOSE("    '%s': %llu", mod->name, (u64)mod->size);
 
     // figure out base path
     if (mod->isDirectory) {
         if (snprintf(mod->basePath, SYS_MAX_PATH - 1, "%s/%s", gRemoteModsBasePath, mod->relativePath) < 0) {
-            LOG_ERROR("Failed save remote base path!");
+            LOG_ERROR_VERBOSE("Failed save remote base path!");
             return;
         }
         normalize_path(mod->basePath);
     } else {
         if (snprintf(mod->basePath, SYS_MAX_PATH - 1, "%s", gRemoteModsBasePath) < 0) {
-            LOG_ERROR("Failed save remote base path!");
+            LOG_ERROR_VERBOSE("Failed save remote base path!");
             return;
         }
     }
@@ -254,7 +254,7 @@ void network_receive_mod_list_entry(struct Packet* p) {
     packet_read(p, &mod->fileCount, sizeof(u16));
     mod->files = calloc(mod->fileCount, sizeof(struct ModFile));
     if (mod->files == NULL) {
-        LOG_ERROR("Failed to allocate mod files!");
+        LOG_ERROR_VERBOSE("Failed to allocate mod files!");
         return;
     }
 }
@@ -264,7 +264,7 @@ void network_receive_mod_list_file(struct Packet* p) {
 
     if (p->localIndex != UNKNOWN_LOCAL_INDEX) {
         if (gNetworkPlayerServer == NULL || gNetworkPlayerServer->localIndex != p->localIndex) {
-            LOG_ERROR("Received download from known local index '%d'", p->localIndex);
+            LOG_ERROR_VERBOSE("Received download from known local index '%d'", p->localIndex);
             return;
         }
     }
@@ -273,12 +273,12 @@ void network_receive_mod_list_file(struct Packet* p) {
     u16 modIndex = 0;
     packet_read(p, &modIndex, sizeof(u16));
     if (modIndex >= gRemoteMods.entryCount) {
-        LOG_ERROR("Received mod outside of known range");
+        LOG_ERROR_VERBOSE("Received mod outside of known range");
         return;
     }
     struct Mod* mod = gRemoteMods.entries[modIndex];
     if (mod == NULL) {
-        LOG_ERROR("Received mod file for null mod");
+        LOG_ERROR_VERBOSE("Received mod file for null mod");
         return;
     }
 
@@ -286,12 +286,12 @@ void network_receive_mod_list_file(struct Packet* p) {
     u16 fileIndex = 0;
     packet_read(p, &fileIndex, sizeof(u16));
     if (fileIndex >= mod->fileCount) {
-        LOG_ERROR("Received mod file outside of known range");
+        LOG_ERROR_VERBOSE("Received mod file outside of known range");
         return;
     }
     struct ModFile* file = &mod->files[fileIndex];
     if (mod == NULL) {
-        LOG_ERROR("Received null mod file");
+        LOG_ERROR_VERBOSE("Received null mod file");
         return;
     }
 
@@ -301,11 +301,11 @@ void network_receive_mod_list_file(struct Packet* p) {
     packet_read(p, &file->size, sizeof(u64));
     packet_read(p, &file->dataHash, sizeof(u8) * 16);
     file->fp = NULL;
-    LOG_INFO("      '%s': %llu", file->relativePath, (u64)file->size);
+    LOG_DEBUG_VERBOSE("      '%s': %llu", file->relativePath, (u64)file->size);
 
     struct ModCacheEntry* cache = mod_cache_get_from_hash(file->dataHash);
     if (cache != NULL) {
-        LOG_INFO("Found file in cache: %s -> %s", file->relativePath, cache->path);
+        LOG_INFO_VERBOSE("Found file in cache: %s -> %s", file->relativePath, cache->path);
         if (file->cachedPath != NULL) {
             free((char*)file->cachedPath);
         }
@@ -319,7 +319,7 @@ void network_receive_mod_list_done(struct Packet* p) {
 
     if (p->localIndex != UNKNOWN_LOCAL_INDEX) {
         if (gNetworkPlayerServer == NULL || gNetworkPlayerServer->localIndex != p->localIndex) {
-            LOG_ERROR("Received download from known local index '%d'", p->localIndex);
+            LOG_ERROR_VERBOSE("Received download from known local index '%d'", p->localIndex);
             return;
         }
     }

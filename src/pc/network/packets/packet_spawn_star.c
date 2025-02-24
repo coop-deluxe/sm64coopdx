@@ -47,7 +47,7 @@ void network_receive_spawn_star(struct Packet* p) {
             case 0: o = spawn_default_star(x, y, z); break;
             case 1: o = spawn_red_coin_cutscene_star(x, y, z); break;
             case 2: o = spawn_no_exit_star(x, y, z); break;
-            default: LOG_ERROR("UNKNOWN SPAWN STAR %d", starType);
+            default: LOG_ERROR_VERBOSE("UNKNOWN SPAWN STAR %d", starType);
         }
         gCurrentObject->oBehParams = oldBehParams;
     }
@@ -115,7 +115,7 @@ void network_receive_spawn_star_nle(struct Packet* p) {
 
     // sanity check object
     if (object == NULL) {
-        LOG_ERROR("Could not find object to attach to. %d %d", globalIndex, syncId);
+        LOG_ERROR_VERBOSE("Could not find object to attach to. %d %d", globalIndex, syncId);
         return;
     }
 

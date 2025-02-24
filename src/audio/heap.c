@@ -249,11 +249,13 @@ void discard_sequence(s32 seqId) {
 }
 
 void *soundAlloc(struct SoundAllocPool *pool, u32 size) {
+    log_context_begin(LOG_CTX_AUDIO);
 #if defined(VERSION_EU) || defined(VERSION_SH)
     u32 alignedSize = ALIGN16(size);
     
     if (pool == NULL || pool->cur == NULL) {
         LOG_ERROR("Failed to allocate for sound pool! Pool is NULL!");
+        log_context_end(LOG_CTX_AUDIO);
         return NULL;
     }
 
@@ -263,10 +265,12 @@ void *soundAlloc(struct SoundAllocPool *pool, u32 size) {
         pool->cur += alignedSize;
     } else {
         LOG_ERROR("Tried to alloc %u bytes at %p (%i free) and failed!", ALIGN16(size), (void*)pool, pool->start + pool->size - pool->cur);
+        log_context_end(LOG_CTX_AUDIO);
         return NULL;
     }
     if (start == NULL) {
         LOG_ERROR("An unknown error occured when allocating %u bytes at %p (%i free)!", ALIGN16(size), (void*)pool, pool->start + pool->size - pool->cur);
+        log_context_end(LOG_CTX_AUDIO);
         return NULL;
     }
 #ifdef VERSION_SH
@@ -278,6 +282,7 @@ void *soundAlloc(struct SoundAllocPool *pool, u32 size) {
 
     if (pool == NULL || pool->cur == NULL) {
         LOG_ERROR("Failed to allocate for sound pool! Pool is NULL!");
+        log_context_end(LOG_CTX_AUDIO);
         return NULL;
     }
 
@@ -287,10 +292,13 @@ void *soundAlloc(struct SoundAllocPool *pool, u32 size) {
         pool->cur += alignedSize;
     } else {
         LOG_ERROR("Tried to alloc %u bytes at %p (%i free) and failed!", (unsigned int)ALIGN16(size), (void*)pool, (int)(pool->start + pool->size - pool->cur));
+        log_context_end(LOG_CTX_AUDIO);
         return NULL;
     }
+    log_context_end(LOG_CTX_AUDIO);
     return start;
 #endif
+    log_context_end(LOG_CTX_AUDIO);
 }
 
 #ifdef VERSION_SH

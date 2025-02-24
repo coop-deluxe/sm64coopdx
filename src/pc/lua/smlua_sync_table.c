@@ -395,7 +395,7 @@ void smlua_set_sync_table_field_from_network(u64 seq, u16 modRemoteIndex, u16 ln
 
     // validate seq
     if (seq <= readSeq) {
-        LOG_INFO("Received outdated sync table field packet: %llu <= %llu", seq, readSeq);
+        LOG_WARN_VERBOSE("Received outdated sync table field packet: %llu <= %llu", seq, readSeq);
         lua_pop(L, 1); // pop seq table
         lua_pop(L, syncTableSize); // pop sync table
         return;
@@ -531,7 +531,7 @@ static void smlua_sync_table_send_all_file(u8 toLocalIndex, const char* path) {
     LUA_STACK_CHECK_BEGIN();
     lua_State* L = gLuaState;
 
-    LOG_INFO("sending sync table for file %s to %u", path, toLocalIndex);
+    LOG_DEBUG_VERBOSE("sending sync table for file %s to %u", path, toLocalIndex);
 
     lua_getfield(L, LUA_REGISTRYINDEX, path); // get the file's "global" table
     if (lua_type(L, -1) == LUA_TNIL) {

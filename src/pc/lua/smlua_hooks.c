@@ -1390,7 +1390,7 @@ int smlua_hook_custom_bhv(BehaviorScript *bhvScript, const char *bhvName) {
     if (L != NULL) {
         lua_pushinteger(L, customBehaviorId);
         lua_setglobal(L, bhvName);
-        LOG_INFO("Registered custom behavior: 0x%04hX - %s", customBehaviorId, bhvName);
+        LOG_INFO_VERBOSE("Registered custom behavior: 0x%04hX - %s", customBehaviorId, bhvName);
     }
 
     return 1;
@@ -1529,7 +1529,7 @@ int smlua_hook_behavior(lua_State* L) {
     // It's also used for some things that would normally access a LUA behavior instead.
     lua_pushinteger(L, customBehaviorId);
     lua_setglobal(L, bhvName);
-    LOG_INFO("Registered custom behavior: 0x%04hX - %s", customBehaviorId, bhvName);
+    LOG_INFO_VERBOSE("Registered custom behavior: 0x%04hX - %s", customBehaviorId, bhvName);
 
     // return behavior ID
     lua_pushinteger(L, customBehaviorId);

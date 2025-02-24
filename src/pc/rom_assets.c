@@ -211,7 +211,7 @@ static void rom_asset_load(struct RomAsset* asset) {
 }
 
 void rom_assets_load(void) {
-    LOG_INFO("loading asset");
+    LOG_INFO("Loading ROM assets");
 
     assert(fs_sys_file_exists(gRomFilename)); // Should never be false
 
@@ -244,7 +244,9 @@ void rom_assets_queue(void* ptr, enum RomAssetType assetType, u32 physicalAddres
     asset->cursor = 0;
     asset->next = sRomAssets;
     sRomAssets = asset;
-    LOG_INFO("added asset");
+    #ifdef DEVELOPMENT
+    printf("Added ROM asset @ %08x/%08x\n", physicalAddress, segmentedAddress);
+    #endif
 }
 
 u8* rom_assets_decompress(u32* data, u32* decompressedSize) {

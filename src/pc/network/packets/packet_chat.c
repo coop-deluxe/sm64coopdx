@@ -89,7 +89,7 @@ void network_receive_chat(struct Packet* p) {
 
     // anti spoof
     if (packet_spoofed(p, globalIndex)) {
-        LOG_ERROR("rx spoofed chat");
+        LOG_ERROR_VERBOSE("rx spoofed chat");
         return;
     }
 

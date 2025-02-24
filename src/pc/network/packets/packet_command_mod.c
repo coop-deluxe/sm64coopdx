@@ -10,7 +10,7 @@ void network_send_chat_command(u8 globalIndex, enum ChatConfirmCommand ccc) {
     if (!gNetworkPlayers[0].moderator) return;
 
     u8 cccType = ccc; struct Packet p = { 0 };
-    LOG_INFO("sending chat command to host with type: %d", cccType);
+    LOG_DEBUG_VERBOSE("sending chat command to host with type: %d", cccType);
     packet_init(&p, PACKET_COMMAND, false, PLMT_NONE);
     packet_write(&p, &globalIndex, sizeof(u8));
     packet_write(&p, &cccType, sizeof(u8));
@@ -19,12 +19,12 @@ void network_send_chat_command(u8 globalIndex, enum ChatConfirmCommand ccc) {
 
 void network_receive_chat_command(struct Packet *p) {
     if (gNetworkType != NT_SERVER) {
-        LOG_ERROR("recieved chat command as non server");
+        LOG_ERROR_VERBOSE("recieved chat command as non server");
         return;
     }
 
     if (!moderator_list_contains(gNetworkSystem->get_id_str(p->localIndex))) {
-        LOG_ERROR("recieved moderator command from non moderator");
+        LOG_ERROR_VERBOSE("recieved moderator command from non moderator");
         return;
     }
     u8 CCC; u8 player;
@@ -32,13 +32,13 @@ void network_receive_chat_command(struct Packet *p) {
     packet_read(p, &CCC, sizeof(u8));
 
     if (CCC != CCC_KICK && CCC != CCC_BAN) {
-        LOG_ERROR("recieved an invalid chat command: %d", CCC);
+        LOG_ERROR_VERBOSE("recieved an invalid chat command: %d", CCC);
         return;
     }
 
     struct NetworkPlayer *np = &gNetworkPlayers[player];
     if (!np->connected) {
-        LOG_ERROR("recieved player that isn't connected");
+        LOG_ERROR_VERBOSE("recieved player that isn't connected");
         return;
     }
     char message[256] = { 0 };

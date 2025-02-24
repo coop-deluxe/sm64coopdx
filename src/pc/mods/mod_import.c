@@ -110,7 +110,7 @@ static bool mod_import_zip(char* path, bool* isLua, bool* isDynos) {
     mz_zip_archive zip_archive = { 0 };
     mz_bool status = mz_zip_reader_init_file(&zip_archive, path, 0);
     if (!status) {
-        LOG_ERROR("mz_zip_reader_init_file() failed!");
+        LOG_ERROR_VERBOSE("mz_zip_reader_init_file() failed!");
         return false;
     }
 
@@ -120,7 +120,7 @@ static bool mod_import_zip(char* path, bool* isLua, bool* isDynos) {
     for (int i = 0; i < (int)mz_zip_reader_get_num_files(&zip_archive); i++) {
         mz_zip_archive_file_stat file_stat;
         if (!mz_zip_reader_file_stat(&zip_archive, i, &file_stat)) {
-            LOG_ERROR("mz_zip_reader_file_stat() failed!");
+            LOG_ERROR_VERBOSE("mz_zip_reader_file_stat() failed!");
             mz_zip_reader_end(&zip_archive);
             return false;
         }
@@ -181,7 +181,7 @@ static bool mod_import_zip(char* path, bool* isLua, bool* isDynos) {
     for (int i = 0; i < (int)mz_zip_reader_get_num_files(&zip_archive); i++) {
         mz_zip_archive_file_stat file_stat;
         if (!mz_zip_reader_file_stat(&zip_archive, i, &file_stat)) {
-            LOG_ERROR("mz_zip_reader_file_stat() failed!");
+            LOG_ERROR_VERBOSE("mz_zip_reader_file_stat() failed!");
             mz_zip_reader_end(&zip_archive);
             return false;
         }
@@ -193,7 +193,7 @@ static bool mod_import_zip(char* path, bool* isLua, bool* isDynos) {
             return false;
         }
 
-        LOG_INFO("Filename: \"%s\", Comment: \"%s\", Uncompressed size: %u, Compressed size: %u, Is Dir: %u", file_stat.m_filename, file_stat.m_comment, (u32)file_stat.m_uncomp_size, (u32)file_stat.m_comp_size, mz_zip_reader_is_file_a_directory(&zip_archive, i));
+        LOG_DEBUG_VERBOSE("Filename: \"%s\", Comment: \"%s\", Uncompressed size: %u, Compressed size: %u, Is Dir: %u", file_stat.m_filename, file_stat.m_comment, (u32)file_stat.m_uncomp_size, (u32)file_stat.m_comp_size, mz_zip_reader_is_file_a_directory(&zip_archive, i));
 
         // If it's a directory, make it
         if (mz_zip_reader_is_file_a_directory(&zip_archive, i)) {
@@ -214,14 +214,14 @@ static bool mod_import_zip(char* path, bool* isLua, bool* isDynos) {
         size_t uncompSize = 0;
         const char* p = mz_zip_reader_extract_file_to_heap(&zip_archive, file_stat.m_filename, &uncompSize, 0);
         if (!p) {
-            LOG_ERROR("mz_zip_reader_extract_file_to_heap() failed!");
+            LOG_ERROR_VERBOSE("mz_zip_reader_extract_file_to_heap() failed!");
             mz_zip_reader_end(&zip_archive);
             return false;
         }
 
         // Make sure the extraction really succeeded.
         if (uncompSize != file_stat.m_uncomp_size) {
-            LOG_ERROR("mz_zip_reader_extract_file_to_heap() failed to extract the proper data");
+            LOG_ERROR_VERBOSE("mz_zip_reader_extract_file_to_heap() failed to extract the proper data");
             mz_free((void*)p);
             mz_zip_reader_end(&zip_archive);
             return false;

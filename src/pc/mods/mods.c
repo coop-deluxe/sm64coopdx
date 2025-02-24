@@ -215,7 +215,9 @@ static void mods_load(struct Mods* mods, char* modsBasePath, UNUSED bool isUserM
     LOADING_SCREEN_MUTEX(snprintf(gCurrLoadingSegment.str, 256, "Generating DynOS Packs In %s Mod Path:\n\\#808080\\%s", isUserModPath ? "User" : "Local", modsBasePath));
 
     // generate bins
+    log_context_begin(LOG_CTX_DYNOS);
     dynos_generate_packs(modsBasePath);
+    log_context_end(LOG_CTX_DYNOS);
 
     // sanity check
     if (modsBasePath == NULL) {

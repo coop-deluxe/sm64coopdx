@@ -65,7 +65,7 @@ void sync_objects_update(void) {
             } else {
                 sForgetList = next;
             }
-            //LOG_INFO("Freeing sync object %u : %s\n", entry->so->id, get_behavior_name_from_id(get_id_from_behavior(entry->so->behavior)));
+            LOG_DEBUG_VERBOSE("Freeing sync object %u : %s\n", entry->so->id, get_behavior_name_from_id(get_id_from_behavior(entry->so->behavior)));
             free(entry->so);
             free(entry);
 
@@ -130,7 +130,7 @@ void sync_object_forget(u32 syncId) {
         }
         entry->next = newEntry;
     }
-    //LOG_INFO("Scheduling sync object to free %u : %s\n", so->id, get_behavior_name_from_id(get_id_from_behavior(so->behavior)));
+    LOG_DEBUG_VERBOSE("Scheduling sync object to free %u : %s\n", so->id, get_behavior_name_from_id(get_id_from_behavior(so->behavior)));
 
 }
 
@@ -150,7 +150,7 @@ struct SyncObject* sync_object_init(struct Object *o, float maxSyncDistance) {
     bool hadSyncId = (o->oSyncID != 0);
     // generate new sync ID
     if (!sync_object_set_id(o)) {
-        LOG_ERROR("failed to set sync id for object w/behavior %d (init_object)", get_id_from_behavior(o->behavior));
+        LOG_ERROR_VERBOSE("failed to set sync id for object w/behavior %d (init_object)", get_id_from_behavior(o->behavior));
         o->activeFlags = ACTIVE_FLAG_DEACTIVATED;
         return NULL;
     }
@@ -159,7 +159,7 @@ struct SyncObject* sync_object_init(struct Object *o, float maxSyncDistance) {
     // set default values for sync object
     struct SyncObject* so = sync_object_get(id);
     if (!so) {
-        LOG_ERROR("Failed to get sync object in init");
+        LOG_ERROR_VERBOSE("Failed to get sync object in init");
         return NULL;
     }
 
@@ -216,7 +216,7 @@ void sync_object_init_field(struct Object *o, void* field) {
     u32 index = so->extraFieldCount++;
     if (so->extraFieldCount >= MAX_SYNC_OBJECT_FIELDS) {
         so->extraFieldCount = MAX_SYNC_OBJECT_FIELDS - 1;
-        LOG_ERROR("Sync Object %u tried to set too many extra fields!", o->oSyncID);
+        LOG_ERROR_VERBOSE("Sync Object %u tried to set too many extra fields!", o->oSyncID);
         return;
     }
     so->extraFields[index] = field;
@@ -235,7 +235,7 @@ void sync_object_init_field_with_size(struct Object *o, void* field, u8 size) {
     u32 index = so->extraFieldCount++;
     if (so->extraFieldCount >= MAX_SYNC_OBJECT_FIELDS) {
         so->extraFieldCount = MAX_SYNC_OBJECT_FIELDS - 1;
-        LOG_ERROR("Sync Object %u tried to set too many extra fields!", o->oSyncID);
+        LOG_ERROR_VERBOSE("Sync Object %u tried to set too many extra fields!", o->oSyncID);
         return;
     }
     so->extraFields[index] = field;
@@ -409,7 +409,7 @@ bool sync_object_set_id(struct Object* o) {
 
     if (syncId == 0 || !ctx) {
         o->oSyncID = 0;
-        LOG_ERROR("failed to set sync id for object w/behavior %d (set_sync_id) %u", get_id_from_behavior(o->behavior), gNetworkAreaLoaded);
+        LOG_ERROR_VERBOSE("failed to set sync id for object w/behavior %d (set_sync_id) %u", get_id_from_behavior(o->behavior), gNetworkAreaLoaded);
         return !ctx;
     }
 
@@ -419,13 +419,13 @@ bool sync_object_set_id(struct Object* o) {
         so = calloc(1, sizeof(struct SyncObject));
         so->extendedModelId = 0xFFFF;
         hmap_put(sSoMap, syncId, so);
-        //LOG_INFO("Allocated sync object @ %u, size %ld", syncId, (long int)hmap_len(sSoMap));
+        LOG_DEBUG_VERBOSE("Allocated sync object @ %u, size %ld", syncId, (long int)hmap_len(sSoMap));
     } else if (so->o != o) {
-        LOG_INFO("Already exists...");
+        LOG_DEBUG_VERBOSE("Already exists...");
     }
 
     if (!so) {
-        LOG_ERROR("failed to set sync id (o) for object w/behavior %d (set_sync_id) %u, ctx %u", get_id_from_behavior(o->behavior), gNetworkAreaLoaded, ctx);
+        LOG_ERROR_VERBOSE("Failed to set sync id (o) for object w/behavior %d (set_sync_id) %u, ctx %u", get_id_from_behavior(o->behavior), gNetworkAreaLoaded, ctx);
         return false;
     }
 
@@ -436,7 +436,7 @@ bool sync_object_set_id(struct Object* o) {
     o->oSyncID = syncId;
 
     if (gNetworkAreaLoaded) {
-        LOG_INFO("set sync id for object w/behavior %d, ctx %u", get_id_from_behavior(o->behavior), ctx);
+        LOG_INFO_VERBOSE("set sync id for object w/behavior %d, ctx %u", get_id_from_behavior(o->behavior), ctx);
     }
 
     return true;

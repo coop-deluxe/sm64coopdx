@@ -45,7 +45,7 @@ static void packet_ordered_check_for_processing(struct OrderedPacketTable* opt) 
 
     // process it
     packet_process(p);
-    LOG_INFO("processed ordered packet (%d, %d, %d)", p->orderedFromGlobalId, p->orderedGroupId, p->orderedSeqId);
+    LOG_DEBUG_VERBOSE("processed ordered packet (%d, %d, %d)", p->orderedFromGlobalId, p->orderedGroupId, p->orderedSeqId);
 
     // remove from linked list
     if (oplLast == opl) {
@@ -72,7 +72,7 @@ static void packet_ordered_add_to_table(struct OrderedPacketTable* opt, struct P
 
     if (p->orderedSeqId < opt->processSeqId) {
         // this packet has already been processed!
-        LOG_INFO("this packet has already been processed!");
+        LOG_WARN_VERBOSE("this packet has already been processed!");
         return;
     }
 
@@ -93,7 +93,7 @@ static void packet_ordered_add_to_table(struct OrderedPacketTable* opt, struct P
     while (opl != NULL) {
         if (opl->p.orderedSeqId == p->orderedSeqId) {
             // this packet is already in the list!
-            LOG_INFO("this packet is already in the list!");
+            LOG_WARN_VERBOSE("this packet is already in the list!");
             return;
         }
         // iterate
@@ -113,7 +113,7 @@ static void packet_ordered_add_to_table(struct OrderedPacketTable* opt, struct P
     memcpy(&opl->p, p, sizeof(struct Packet));
     opl->next = NULL;
 
-    LOG_INFO("added to list for (%d, %d, %d)", opt->fromGlobalId, opt->groupId, p->orderedSeqId);
+    LOG_DEBUG_VERBOSE("added to list for (%d, %d, %d)", opt->fromGlobalId, opt->groupId, p->orderedSeqId);
     opt->lastReceived = clock_elapsed();
 
     packet_ordered_check_for_processing(opt);
@@ -154,14 +154,14 @@ void packet_ordered_add(struct Packet* p) {
     opt->packets      = NULL;
     opt->next         = NULL;
     opt->lastReceived = clock_elapsed();
-    LOG_INFO("created table for (%d, %d)", opt->fromGlobalId, opt->groupId);
+    LOG_DEBUG_VERBOSE("created table for (%d, %d)", opt->fromGlobalId, opt->groupId);
 
     // add the packet to the table
     packet_ordered_add_to_table(opt, p);
 }
 
 void packet_ordered_clear_table(u8 globalIndex, u16 groupId) {
-    LOG_INFO("clearing out ordered packet table for %d (%d)", globalIndex, groupId);
+    LOG_DEBUG_VERBOSE("clearing out ordered packet table for %d (%d)", globalIndex, groupId);
     if (globalIndex > MAX_PLAYERS) { return; }
 
     struct OrderedPacketTable* opt = orderedPacketTable[globalIndex];
@@ -175,7 +175,7 @@ void packet_ordered_clear_table(u8 globalIndex, u16 groupId) {
                 struct OrderedPacketList* oplNext = opl->next;
                 free(opl);
                 opl = oplNext;
-                LOG_INFO("cleared out opl");
+                LOG_DEBUG_VERBOSE("cleared out opl");
             }
 
             // remove from linked list
@@ -187,7 +187,7 @@ void packet_ordered_clear_table(u8 globalIndex, u16 groupId) {
 
             // deallocate table
             free(opt);
-            LOG_INFO("cleared out opt");
+            LOG_DEBUG_VERBOSE("cleared out opt");
             return;
         }
 
@@ -200,11 +200,11 @@ void packet_ordered_clear_table(u8 globalIndex, u16 groupId) {
 void packet_ordered_clear(u8 globalIndex) {
     if (globalIndex > MAX_PLAYERS) { return; }
     if (!gAllowOrderedPacketClear) {
-        LOG_INFO("disallowed ordered packets to be cleared");
+        LOG_INFO_VERBOSE("disallowed ordered packets to be cleared");
         return;
     }
 
-    LOG_INFO("clearing out all ordered packet tables for %d", globalIndex);
+    LOG_DEBUG_VERBOSE("clearing out all ordered packet tables for %d", globalIndex);
     struct OrderedPacketTable* opt = orderedPacketTable[globalIndex];
 
     while (opt != NULL) {
@@ -214,14 +214,14 @@ void packet_ordered_clear(u8 globalIndex) {
             struct OrderedPacketList* oplNext = opl->next;
             free(opl);
             opl = oplNext;
-            LOG_INFO("cleared out opl");
+            LOG_DEBUG_VERBOSE("cleared out opl");
         }
 
         // goto next table and free the current one
         struct OrderedPacketTable* optNext = opt->next;
         free(opt);
         opt = optNext;
-        LOG_INFO("cleared out opt");
+        LOG_DEBUG_VERBOSE("cleared out opt");
     }
 
     orderedPacketTable[globalIndex] = NULL;

@@ -4,13 +4,13 @@
 
 void network_send_leaving(u8 globalIndex) {
     if (gNetworkPlayerLocal == NULL) {
-        LOG_ERROR("Local network player not initialized.");
+        LOG_ERROR_VERBOSE("Local network player not initialized.");
         return;
     }
 
     if (gNetworkType != NT_SERVER) {
         if (gNetworkPlayerServer == NULL) {
-            LOG_ERROR("Server network player not initialized.");
+            LOG_ERROR_VERBOSE("Server network player not initialized.");
             return;
         }
 
@@ -25,7 +25,7 @@ void network_send_leaving(u8 globalIndex) {
     } else {
         network_send_to(gNetworkPlayerServer->localIndex, &p);
     }
-    LOG_INFO("Sending leaving event for %d", globalIndex);
+    LOG_DEBUG_VERBOSE("Sending leaving event for %d", globalIndex);
 }
 
 void network_receive_leaving(struct Packet* p) {
@@ -37,6 +37,6 @@ void network_receive_leaving(struct Packet* p) {
     u8 globalIndex = 0;
     packet_read(p, &globalIndex, sizeof(u8));
 
-    LOG_INFO("Received leaving event for %d", globalIndex);
+    LOG_DEBUG_VERBOSE("Received leaving event for %d", globalIndex);
     network_player_disconnected(globalIndex);
 }

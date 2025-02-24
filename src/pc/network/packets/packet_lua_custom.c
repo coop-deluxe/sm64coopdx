@@ -6,13 +6,13 @@
 #include "pc/log.h"
 
 void network_send_lua_custom(bool broadcast) {
-    LOG_INFO("Sending lua custom packet");
+    LOG_DEBUG_VERBOSE("Sending lua custom packet");
     lua_State* L = gLuaState;
     u16 zero = 0;
     s32 paramIndex = 1;
 
     if (!L) {
-        LOG_ERROR("Sent lua custom packet when lua is dead");
+        LOG_ERROR_VERBOSE("Sent lua custom packet when lua is dead");
         return;
     }
 
@@ -97,7 +97,7 @@ void network_send_lua_custom(bool broadcast) {
 }
 
 void network_receive_lua_custom(struct Packet* p) {
-    LOG_INFO("Receiving lua custom packet");
+    LOG_DEBUG_VERBOSE("Receiving lua custom packet");
     lua_State* L = gLuaState;
     u16 modIndex = 0;
     u8  keyCount = 0;
@@ -105,7 +105,7 @@ void network_receive_lua_custom(struct Packet* p) {
     packet_read(p, &keyCount, sizeof(u8));
 
     if (!L) {
-        LOG_ERROR("Received lua custom packet when lua is dead");
+        LOG_ERROR_VERBOSE("Received lua custom packet when lua is dead");
         return;
     }
 

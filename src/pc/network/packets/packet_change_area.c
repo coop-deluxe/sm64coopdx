@@ -51,16 +51,16 @@ void network_send_change_area(void) {
     np->currAreaSyncValid  = false;
     network_player_update_course_level(np, gCurrCourseNum, gCurrActStarNum, gCurrLevelNum, gCurrAreaIndex);
 
-    LOG_INFO("tx change area");
+    LOG_DEBUG_VERBOSE("tx change area");
 }
 
 void network_receive_change_area(struct Packet *p) {
-    LOG_INFO("rx change area");
+    LOG_DEBUG_VERBOSE("rx change area");
 
     SOFT_ASSERT(gNetworkType == NT_SERVER);
     struct NetworkPlayer *np = &gNetworkPlayers[p->localIndex];
     if (np == NULL || np->localIndex == UNKNOWN_LOCAL_INDEX || !np->connected) {
-        LOG_ERROR("Receiving change area from inactive player!");
+        LOG_ERROR_VERBOSE("Receiving change area from inactive player!");
         return;
     }
 

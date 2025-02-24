@@ -51,7 +51,7 @@ void mod_cache_md5(const char* inPath, u8* outDataPath) {
     snprintf(cpath, SYS_MAX_PATH-1, "%s", inPath);
 
     if (strlen(cpath) == 0) {
-        LOG_ERROR("Failed to retrieve path");
+        LOG_ERROR_VERBOSE("Failed to retrieve mod path from cache");
         return;
     }
 
@@ -60,7 +60,7 @@ void mod_cache_md5(const char* inPath, u8* outDataPath) {
     // open file pointer
     FILE* fp = fopen(cpath, "rb");
     if (fp == NULL) {
-        LOG_ERROR("Failed to open filepointer for mod hashing: '%s'.", cpath);
+        LOG_ERROR_VERBOSE("Failed to open filepointer for mod hashing: '%s'.", cpath);
         return;
     }
 
@@ -138,12 +138,12 @@ void mod_cache_add_internal(u8* dataHash, u64 lastLoaded, char* inPath) {
 
     // sanity check
     if (path == NULL || strlen(path) == 0) {
-        LOG_ERROR("Invalid path");
+        LOG_ERROR_VERBOSE("Invalid mod path for cache");
         free(path);
         return;
     }
     if (!fs_sys_file_exists(path)) {
-        LOG_ERROR("File does not exist: %s", path);
+        LOG_ERROR_VERBOSE("File does not exist: %s", path);
         free(path);
         return;
     }
@@ -158,7 +158,7 @@ void mod_cache_add_internal(u8* dataHash, u64 lastLoaded, char* inPath) {
         }
     }
     if (!foundNonZero) {
-        LOG_ERROR("Hash was all zeros for path '%s'", path);
+        LOG_ERROR_VERBOSE("Hash was all zeros for path '%s'", path);
         free(path);
         return;
     }
@@ -184,7 +184,7 @@ void mod_cache_add_internal(u8* dataHash, u64 lastLoaded, char* inPath) {
 
         // found old hash, remove it
         if (n->pathHash == pathHash && !strcmp(n->path, path)) {
-            LOG_INFO("Removing old node: %s", node->path);
+            LOG_INFO_VERBOSE("Removing old node: %s", node->path);
             mod_cache_remove_node(n);
         } else {
             i++;
@@ -196,7 +196,7 @@ void mod_cache_add_internal(u8* dataHash, u64 lastLoaded, char* inPath) {
 void mod_cache_add(struct Mod* mod, struct ModFile* file, bool useFilePath) {
     // sanity check
     if (mod == NULL || file == NULL) {
-        LOG_ERROR("Could not add to cache, mod or file is null");
+        LOG_ERROR_VERBOSE("Could not add to cache, mod or file is null");
         return;
     }
 
@@ -208,7 +208,7 @@ void mod_cache_add(struct Mod* mod, struct ModFile* file, bool useFilePath) {
     // build the path
     char modFilePath[SYS_MAX_PATH] = { 0 };
     if (!concat_path(modFilePath, mod->basePath, file->relativePath)) {
-        LOG_ERROR("Could not concat mod file path");
+        LOG_ERROR_VERBOSE("Could not concat mod file path");
         return;
     }
 
@@ -232,14 +232,14 @@ void mod_cache_add(struct Mod* mod, struct ModFile* file, bool useFilePath) {
 void mod_cache_update(struct Mod* mod, struct ModFile* file) {
     // sanity check
     if (mod == NULL || file == NULL) {
-        LOG_ERROR("Could not add to cache, mod or file is null");
+        LOG_ERROR_VERBOSE("Could not add to cache, mod or file is null");
         return;
     }
 
     // build the path
     char modFilePath[SYS_MAX_PATH] = { 0 };
     if (!concat_path(modFilePath, mod->basePath, file->relativePath)) {
-        LOG_ERROR("Could not concat mod file path");
+        LOG_ERROR_VERBOSE("Could not concat mod file path");
         return;
     }
 
@@ -261,7 +261,7 @@ void mod_cache_load(void) {
     const char* filename = fs_get_write_path(MOD_CACHE_FILENAME);
     FILE* fp = fopen(filename, "rb");
     if (fp == NULL) {
-        LOG_INFO("Could not open mod cache load fp: %s", filename);
+        LOG_ERROR_VERBOSE("Could not open mod cache load fp: %s", filename);
         return;
     }
 
@@ -269,7 +269,7 @@ void mod_cache_load(void) {
     fread(&version, sizeof(u16), 1, fp);
     if (version != MOD_CACHE_VERSION) {
         fclose(fp);
-        LOG_INFO("Mod cache version mismatch");
+        LOG_WARN("Mod cache version mismatch");
         mods_delete_tmp();
         return;
     }
@@ -311,13 +311,13 @@ void mod_cache_save(void) {
     const char* filename = fs_get_write_path(MOD_CACHE_FILENAME);
 
     if (filename == NULL || strlen(filename) == 0) {
-        LOG_ERROR("Failed to get filename for mod cache");
+        LOG_ERROR_VERBOSE("Failed to get filename for mod cache");
         return;
     }
 
     FILE* fp = fopen(filename, "wb");
     if (fp == NULL) {
-        LOG_ERROR("Failed to open mod cache save fp: %s", filename);
+        LOG_ERROR_VERBOSE("Failed to open mod cache save fp: %s", filename);
         return;
     }
 

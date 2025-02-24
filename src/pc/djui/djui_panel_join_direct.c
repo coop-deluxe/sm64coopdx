@@ -97,7 +97,7 @@ static void djui_panel_join_direct_ip_text_set_new(void) {
     char buffer[256] = { 0 };
     char orig_ip[256] = { 0 };
     if (snprintf(buffer, 256, "%s", sInputboxIp->buffer) < 0) {
-        LOG_INFO("truncating IP");
+        LOG_DEBUG_VERBOSE("truncating IP");
     }
 
     // copy original buffer for storing to gGetHostName
@@ -116,9 +116,9 @@ static void djui_panel_join_direct_ip_text_set_new(void) {
     }
 
     if (is_ipv6) {
-        LOG_INFO("Detected direct IPv6 address");
+        LOG_INFO_VERBOSE("Detected direct IPv6 address");
     } else {
-        LOG_INFO("Detected direct IPv4 address or hostname");
+        LOG_INFO_VERBOSE("Detected direct IPv4 address or hostname");
     }
 
     // this needs cleaning
@@ -160,7 +160,7 @@ static void djui_panel_join_direct_ip_text_set_new(void) {
 
     snprintf(gGetHostName, MAX_CONFIG_STRING, "%s", orig_ip);
     if (snprintf(configJoinIp, MAX_CONFIG_STRING, "%s", buffer) < 0) {
-        LOG_INFO("truncating IP");
+        LOG_DEBUG_VERBOSE("truncating IP");
     }
     if (port >= 1 && port <= 65535) {
         configJoinPort = port;
@@ -172,11 +172,11 @@ static void djui_panel_join_direct_ip_text_set_new(void) {
 static void djui_panel_join_direct_ip_text_set(struct DjuiInputbox* inputbox1) {
     char buffer[256] = { 0 };
     if (strlen(configJoinIp) > 0 && configJoinPort != DEFAULT_PORT) {
-        if (snprintf(buffer, 256, "%s:%d", configJoinIp, configJoinPort) < 0) { LOG_INFO("truncating IP"); }
+        if (snprintf(buffer, 256, "%s:%d", configJoinIp, configJoinPort) < 0) { LOG_DEBUG_VERBOSE("truncating IP"); }
     } else if (strlen(configJoinIp) > 0) {
-        if (snprintf(buffer, 256, "%s", configJoinIp) < 0) { LOG_INFO("truncating IP"); }
+        if (snprintf(buffer, 256, "%s", configJoinIp) < 0) { LOG_DEBUG_VERBOSE("truncating IP"); }
     } else {
-        if (snprintf(buffer, 256, "localhost") < 0) { LOG_INFO("truncating IP"); }
+        if (snprintf(buffer, 256, "localhost") < 0) { LOG_DEBUG_VERBOSE("truncating IP"); }
     }
 
     djui_inputbox_set_text(inputbox1, buffer);

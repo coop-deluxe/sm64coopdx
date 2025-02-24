@@ -24,7 +24,7 @@ void resolve_domain(struct sockaddr_in6 *addr) {
 
     // sanity check: remove square brackets from configJoinIp. getaddrinfo doesn't like those, at least on Linux.
     if (configJoinIp[0] == '[') {
-        LOG_INFO("sanity check: found opening square bracket on configJoinIp, removing it.");
+        LOG_INFO_VERBOSE("sanity check: found opening square bracket on configJoinIp, removing it.");
         for (int i = 0; i < MAX_CONFIG_STRING; i++) {
             if (configJoinIp[i] == '\0') { break; }
             if (configJoinIp[i] == ']') {
@@ -76,7 +76,7 @@ void resolve_domain(struct sockaddr_in6 *addr) {
             }
         }
     } else {
-        LOG_ERROR("getaddrinfo() failed with error code %i: %s", error, gai_strerror(error));
+        LOG_ERROR_VERBOSE("getaddrinfo() failed with error code %i: %s", error, gai_strerror(error));
     }
 }
 
@@ -91,7 +91,7 @@ static int socket_bind(SOCKET socket, unsigned int port) {
     int rc = bind(socket, (SOCKADDR *)&rxAddr, sizeof(rxAddr));
 
     if (rc != 0) {
-        LOG_ERROR("bind failed with error %d", SOCKET_LAST_ERROR);
+        LOG_ERROR_VERBOSE("bind failed with error %d", SOCKET_LAST_ERROR);
     }
 
     return rc;
@@ -105,7 +105,7 @@ static int socket_send(SOCKET socket, struct sockaddr_in6* addr, u8* buffer, u16
     int error = SOCKET_LAST_ERROR;
     if (error == SOCKET_EWOULDBLOCK) { return NO_ERROR; }
 
-    LOG_ERROR("sendto failed with error: %d", error);
+    LOG_ERROR_VERBOSE("sendto failed with error: %d", error);
     return rc;
 }
 
@@ -125,7 +125,7 @@ static int socket_receive(SOCKET socket, struct sockaddr_in6* rxAddr, u8* buffer
     if (rc == SOCKET_ERROR) {
         int error = SOCKET_LAST_ERROR;
         if (error != SOCKET_EWOULDBLOCK && error != SOCKET_ECONNRESET) {
-            LOG_ERROR("recvfrom failed with error %d", SOCKET_LAST_ERROR);
+            LOG_ERROR_VERBOSE("recvfrom failed with error %d", SOCKET_LAST_ERROR);
         }
         return SOCKET_ERROR;
     }
@@ -147,21 +147,21 @@ static bool ns_socket_initialize(enum NetworkType networkType, UNUSED bool recon
     if (networkType == NT_SERVER) {
         int reuse = 1;
         if (setsockopt(sCurSocket, SOL_SOCKET, SO_REUSEADDR, (const char*)&reuse, sizeof(reuse)) < 0) {
-            LOG_ERROR("setsockopt(SO_REUSEADDR) failed");
+            LOG_ERROR_VERBOSE("setsockopt(SO_REUSEADDR) failed");
         }        
 
 #ifdef SO_REUSEPORT
         if (setsockopt(sCurSocket, SOL_SOCKET, SO_REUSEPORT, (const char*)&reuse, sizeof(reuse)) < 0) {
-            LOG_ERROR("setsockopt(SO_REUSEPORT) failed");
+            LOG_ERROR_VERBOSE("setsockopt(SO_REUSEPORT) failed");
         }
 #endif
         // bind the socket to any address and the specified port.
         int rc = socket_bind(sCurSocket, port);
         if (rc != NO_ERROR) { 
-            LOG_ERROR("bind returned an error.");
+            LOG_ERROR_VERBOSE("bind returned an error.");
             return false; 
         }
-        LOG_INFO("bound to port %u", port);
+        LOG_INFO_VERBOSE("bound to port %u", port);
     } else if (networkType == NT_CLIENT) {
         struct sockaddr_in6 addr;
         // set and clean struct to prevent garbage data
@@ -172,7 +172,7 @@ static bool ns_socket_initialize(enum NetworkType networkType, UNUSED bool recon
         // resolve and get address list to connect
         resolve_domain(&addr);
         sAddr[0].sin6_addr = addr.sin6_addr;
-        LOG_INFO("connecting to %s, port %u", configJoinIp, port);
+        LOG_INFO_VERBOSE("connecting to %s, port %u", configJoinIp, port);
         // copy hostname to be saved to config file
         snprintf(configJoinIp, MAX_CONFIG_STRING, "%s", gGetHostName);
 
@@ -184,7 +184,7 @@ static bool ns_socket_initialize(enum NetworkType networkType, UNUSED bool recon
         gNetworkType = NT_CLIENT;
     }
 
-    LOG_INFO("initialized");
+    LOG_INFO_VERBOSE("initialized");
 
     if (networkType == NT_CLIENT) {
         network_send_mod_list_request();
@@ -209,14 +209,14 @@ static void ns_socket_save_id(u8 localId, UNUSED s64 networkId) {
     SOFT_ASSERT(localId > 0);
     SOFT_ASSERT(localId < MAX_PLAYERS);
     sAddr[localId] = sAddr[0];
-    LOG_INFO("saved addr for id %d", localId);
+    LOG_INFO_VERBOSE("saved addr for id %d", localId);
 }
 
 static void ns_socket_clear_id(u8 localId) {
     if (localId == 0) { return; }
     SOFT_ASSERT(localId < MAX_PLAYERS);
     memset(&sAddr[localId], 0, sizeof(struct sockaddr_in6));
-    LOG_INFO("cleared addr for id %d", localId);
+    LOG_INFO_VERBOSE("cleared addr for id %d", localId);
 }
 
 static void* ns_socket_dup_addr(u8 localIndex) {
@@ -254,7 +254,7 @@ static int ns_socket_send(u8 localIndex, void* address, u8* data, u16 dataLength
 
     int rc = socket_send(sCurSocket, userAddr, data, dataLength);
     if (rc) {
-        LOG_ERROR("    localIndex: %d, packetType: %d, dataLength: %d", localIndex, data[0], dataLength);
+        LOG_ERROR_VERBOSE("    localIndex: %d, packetType: %d, dataLength: %d", localIndex, data[0], dataLength);
     }
     return rc;
 }
@@ -273,7 +273,7 @@ static void ns_socket_shutdown(UNUSED bool reconnecting) {
     for (u16 i = 0; i < MAX_PLAYERS; i++) {
         memset(&sAddr[i], 0, sizeof(struct sockaddr_in6));
     }
-    LOG_INFO("shutdown");
+    LOG_INFO_VERBOSE("shutdown");
 }
 
 struct NetworkSystem gNetworkSystemSocket = {
