@@ -33,8 +33,8 @@ typedef enum {
  * Logs a message with optional additional arguments.
  *
  * Examples:
- * log_message(LOG_CATEGORY_CLIENT, LOG_TYPE_INFO, "Test", NULL);
- * log_message(LOG_CATEGORY_CLIENT, LOG_TYPE_INFO, "Hello", " World", "!", NULL);
+ * log_message(LOG_CATEGORY_CLIENT, LOG_TYPE_INFO, "Test");
+ * log_message(LOG_CATEGORY_CLIENT, LOG_TYPE_INFO, "Hello, %s!", "World");
  *
  * @param category Log category (e.g. LOG_CATEGORY_GAME).
  * @param type Log type (e.g. LOG_TYPE_INFO).
