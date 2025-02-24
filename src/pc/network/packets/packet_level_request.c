@@ -10,7 +10,8 @@ void network_send_level_request(struct NetworkPlayer* fromNp, struct NetworkPlay
         network_send_level(fromNp, false);
         return;
     }
-
+    
+    log_context_begin(LOG_CTX_NETWORK);
     struct Packet p = { 0 };
     packet_init(&p, PACKET_LEVEL_REQUEST, true, PLMT_NONE);
     packet_write(&p, &fromNp->globalIndex,       sizeof(u8));
@@ -19,6 +20,7 @@ void network_send_level_request(struct NetworkPlayer* fromNp, struct NetworkPlay
     packet_write(&p, &fromNp->currLevelNum,      sizeof(s16));
     network_send_to(toNp->localIndex, &p);
     LOG_DEBUG_VERBOSE("tx level request");
+    log_context_end(LOG_CTX_NETWORK);
 }
 
 void network_receive_level_request(struct Packet* p) {

@@ -5,6 +5,7 @@
 #include "pc/log.h"
 
 void network_send_global_popup(const char* message, int lines) {
+    log_context_begin(LOG_CTX_NETWORK);
     // get message length
     u16 messageLength = strlen(message);
 
@@ -17,6 +18,7 @@ void network_send_global_popup(const char* message, int lines) {
     
     // send the packet
     network_send(&p);
+    log_context_end(LOG_CTX_NETWORK);
 }
 
 void network_receive_global_popup(struct Packet* p) {

@@ -9,6 +9,7 @@
 extern struct Object* gCurrentObject;
 
 void network_send_spawn_star(struct Object* o, u8 starType, f32 x, f32 y, f32 z, u32 behParams, u8 networkPlayerIndex) {
+    log_context_begin(LOG_CTX_NETWORK);
     struct Packet p = { 0 };
     packet_init(&p, PACKET_SPAWN_STAR, true, PLMT_AREA);
     packet_write(&p, &starType, sizeof(u8));
@@ -22,6 +23,7 @@ void network_send_spawn_star(struct Object* o, u8 starType, f32 x, f32 y, f32 z,
     packet_write(&p, &o->oHomeX, sizeof(u32) * 3);
 
     network_send(&p);
+    log_context_end(LOG_CTX_NETWORK);
 }
 
 void network_receive_spawn_star(struct Packet* p) {
@@ -74,6 +76,7 @@ void network_receive_spawn_star(struct Packet* p) {
 
 void network_send_spawn_star_nle(struct Object* o, u32 params) {
     if (!o) { return; }
+    log_context_begin(LOG_CTX_NETWORK);
     u8 globalIndex = UNKNOWN_GLOBAL_INDEX;
     if (o->behavior == smlua_override_behavior(bhvMario)) {
         u8 localIndex = o->oBehParams - 1;
@@ -87,6 +90,7 @@ void network_send_spawn_star_nle(struct Object* o, u32 params) {
     packet_write(&p, &params, sizeof(u32));
 
     network_send(&p);
+    log_context_end(LOG_CTX_NETWORK);
 }
 
 void network_receive_spawn_star_nle(struct Packet* p) {

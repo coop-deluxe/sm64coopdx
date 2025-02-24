@@ -26,12 +26,14 @@ static struct Object* get_object_matching_respawn_info(u32* respawnInfo) {
 ////
 
 static void network_send_level_spawn_info_area(struct NetworkPlayer* destNp, u8 areaIndex) {
+    log_context_begin(LOG_CTX_NETWORK);
     // check that the area is active
     struct Area* area = &gAreaData[areaIndex];
     if (area->unk04 == NULL) { return; }
 
     if (destNp == NULL || !destNp->connected) {
         LOG_ERROR_VERBOSE("network_send_level_spawn_info_area: dest np is invalid");
+        log_context_end(LOG_CTX_NETWORK);
         return;
     }
 
@@ -72,22 +74,27 @@ static void network_send_level_spawn_info_area(struct NetworkPlayer* destNp, u8 
         network_send_to(destNp->localIndex, &p);
         LOG_DEBUG_VERBOSE("tx spawn info for area %d (count %d)", areaIndex, *spawnInfoDeletionCount);
     }
+    log_context_end(LOG_CTX_NETWORK);
 }
 
 void network_send_level_spawn_info(struct NetworkPlayer* destNp) {
+    log_context_begin(LOG_CTX_NETWORK);
     if (!gNetworkPlayerLocal->currAreaSyncValid) {
         LOG_ERROR_VERBOSE("my area is invalid");
+        log_context_end(LOG_CTX_NETWORK);
         return;
     }
 
     if (destNp == NULL || !destNp->connected) {
         LOG_ERROR_VERBOSE("network_send_level_spawn_info: dest np is invalid");
+        log_context_end(LOG_CTX_NETWORK);
         return;
     }
 
     for (s32 i = 0; i < MAX_AREAS; i++) {
         network_send_level_spawn_info_area(destNp, i);
     }
+    log_context_end(LOG_CTX_NETWORK);
 }
 
 void network_receive_level_spawn_info(struct Packet* p) {

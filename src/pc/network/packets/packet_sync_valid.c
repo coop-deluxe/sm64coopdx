@@ -5,6 +5,7 @@
 #include "pc/log.h"
 
 void network_send_sync_valid(struct NetworkPlayer* toNp, s16 courseNum, s16 actNum, s16 levelNum, s16 areaIndex) {
+    log_context_begin(LOG_CTX_NETWORK);
     bool wasSyncValid = (toNp->currLevelSyncValid && toNp->currAreaSyncValid);
 
     // set the NetworkPlayers sync valid
@@ -20,6 +21,7 @@ void network_send_sync_valid(struct NetworkPlayer* toNp, s16 courseNum, s16 actN
             network_player_update_course_level(toNp, courseNum, actNum, levelNum, areaIndex);
             smlua_call_event_hooks(HOOK_ON_SYNC_VALID);
         }
+        log_context_end(LOG_CTX_NETWORK);
         return;
     }
 
@@ -34,6 +36,7 @@ void network_send_sync_valid(struct NetworkPlayer* toNp, s16 courseNum, s16 actN
     network_send_to(toNp->localIndex, &p);
 
     LOG_DEBUG_VERBOSE("tx sync valid");
+    log_context_end(LOG_CTX_NETWORK);
 }
 
 void network_receive_sync_valid(struct Packet* p) {

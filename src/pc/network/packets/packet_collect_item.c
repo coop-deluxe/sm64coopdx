@@ -44,6 +44,7 @@ static struct Object* find_nearest_item(const BehaviorScript *behavior, f32* pos
 
 void network_send_collect_item(struct Object* o) {
     if (gNetworkPlayerLocal == NULL || !gNetworkPlayerLocal->currAreaSyncValid) { return; }
+    log_context_begin(LOG_CTX_NETWORK);
     u32 behaviorId = get_id_from_behavior(o->behavior);
 
     struct Packet p = { 0 };
@@ -52,6 +53,7 @@ void network_send_collect_item(struct Object* o) {
     packet_write(&p, &o->oPosX, sizeof(f32) * 3);
 
     network_send(&p);
+    log_context_end(LOG_CTX_NETWORK);
 }
 
 void network_receive_collect_item(struct Packet* p) {

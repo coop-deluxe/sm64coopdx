@@ -11,6 +11,7 @@
 #include "sync_object.h"
 #include "pc/utils/string_linked_list.h"
 #include "../cliopts.h"
+#include "pc/log.h"
 
 #define SET_BIT(val, num) ((((u8)(val)) & 0x01) << (num));
 #define GET_BIT(val, num) (((val) >> (num)) & 0x01)

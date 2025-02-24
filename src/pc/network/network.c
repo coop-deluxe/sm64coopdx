@@ -404,6 +404,7 @@ void network_send(struct Packet* p) {
 }
 
 void network_receive(u8 localIndex, void* addr, u8* data, u16 dataLength) {
+    log_context_begin(LOG_CTX_NETWORK);
 
     // receive packet
     struct Packet p = {
@@ -415,6 +416,7 @@ void network_receive(u8 localIndex, void* addr, u8* data, u16 dataLength) {
     };
     if (!packet_decompress(&p, data, dataLength)) {
         LOG_ERROR_VERBOSE("Failed to decompress!");
+        log_context_end(LOG_CTX_NETWORK);
         return;
     }
 
@@ -425,6 +427,7 @@ void network_receive(u8 localIndex, void* addr, u8* data, u16 dataLength) {
     // subtract and check hash
     if (!packet_check_hash(&p)) {
         LOG_ERROR_VERBOSE("invalid packet hash!");
+        log_context_end(LOG_CTX_NETWORK);
         return;
     }
 
@@ -432,6 +435,7 @@ void network_receive(u8 localIndex, void* addr, u8* data, u16 dataLength) {
 
     // execute packet
     packet_receive(&p);
+    log_context_end(LOG_CTX_NETWORK);
 }
 
 void* network_duplicate_address(u8 localIndex) {

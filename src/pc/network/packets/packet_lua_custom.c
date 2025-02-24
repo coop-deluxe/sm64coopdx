@@ -6,6 +6,7 @@
 #include "pc/log.h"
 
 void network_send_lua_custom(bool broadcast) {
+    log_context_begin(LOG_CTX_NETWORK);
     LOG_DEBUG_VERBOSE("Sending lua custom packet");
     lua_State* L = gLuaState;
     u16 zero = 0;
@@ -13,12 +14,14 @@ void network_send_lua_custom(bool broadcast) {
 
     if (!L) {
         LOG_ERROR_VERBOSE("Sent lua custom packet when lua is dead");
+        log_context_end(LOG_CTX_NETWORK);
         return;
     }
 
     // figure out mod index
     if (gLuaActiveMod == NULL) {
         LOG_LUA_LINE("Could not figure out the current active mod!");
+        log_context_end(LOG_CTX_NETWORK);
         return;
     }
     u16 modIndex = gLuaActiveMod->index;
@@ -29,10 +32,12 @@ void network_send_lua_custom(bool broadcast) {
         toLocalIndex = smlua_to_integer(L, paramIndex++);
         if (toLocalIndex <= 0 || toLocalIndex >= MAX_PLAYERS) {
             LOG_LUA_LINE("Tried to send packet to invalid local index: %d", toLocalIndex)
+            log_context_end(LOG_CTX_NETWORK);
             return;
         }
         if (!gSmLuaConvertSuccess) {
             LOG_LUA("Invalid 'localIndex' type");
+            log_context_end(LOG_CTX_NETWORK);
             return;
         }
     }
@@ -41,6 +46,7 @@ void network_send_lua_custom(bool broadcast) {
     bool reliability = smlua_to_boolean(L, paramIndex++);
     if (!gSmLuaConvertSuccess) {
         LOG_LUA("Invalid 'reliable' type");
+        log_context_end(LOG_CTX_NETWORK);
         return;
     }
 
@@ -55,6 +61,7 @@ void network_send_lua_custom(bool broadcast) {
     s32 tableIndex = paramIndex;
     if (lua_type(L, tableIndex) != LUA_TTABLE) {
         LOG_LUA_LINE("Tried to send a packet with a non-table");
+        log_context_end(LOG_CTX_NETWORK);
         return;
     }
 
@@ -66,19 +73,23 @@ void network_send_lua_custom(bool broadcast) {
         struct LSTNetworkType lntKey = smlua_to_lnt(L, -2);
         if (!gSmLuaConvertSuccess) {
             LOG_LUA_LINE("Failed to convert key to LNT (tx)");
+            log_context_end(LOG_CTX_NETWORK);
             return;
         }
         if (!packet_write_lnt(&p, &lntKey)) {
             return;
+            log_context_end(LOG_CTX_NETWORK);
         }
 
         // convert and write value
         struct LSTNetworkType lntValue = smlua_to_lnt(L, -1);
         if (!gSmLuaConvertSuccess) {
             LOG_LUA_LINE("Failed to convert value to LNT (tx)");
+            log_context_end(LOG_CTX_NETWORK);
             return;
         }
         if (!packet_write_lnt(&p, &lntValue)) {
+            log_context_end(LOG_CTX_NETWORK);
             return;
         }
 
@@ -94,6 +105,7 @@ void network_send_lua_custom(bool broadcast) {
     } else {
         network_send_to(toLocalIndex, &p);
     }
+    log_context_end(LOG_CTX_NETWORK);
 }
 
 void network_receive_lua_custom(struct Packet* p) {

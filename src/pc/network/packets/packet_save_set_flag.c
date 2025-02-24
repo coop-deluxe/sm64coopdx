@@ -7,6 +7,7 @@
 extern u8 gSaveFileUsingBackupSlot;
 
 void network_send_save_set_flag(s32 fileIndex, s32 courseIndex, u8 courseStars, u32 flags) {
+    log_context_begin(LOG_CTX_NETWORK);
     struct Packet p = { 0 };
     packet_init(&p, PACKET_SAVE_SET_FLAG, true, PLMT_NONE);
     packet_write(&p, &fileIndex,                sizeof(s32));
@@ -15,6 +16,7 @@ void network_send_save_set_flag(s32 fileIndex, s32 courseIndex, u8 courseStars, 
     packet_write(&p, &flags,                    sizeof(u32));
     packet_write(&p, &gSaveFileUsingBackupSlot, sizeof(u8));
     network_send(&p);
+    log_context_end(LOG_CTX_NETWORK);
 }
 
 void network_receive_save_set_flag(struct Packet* p) {

@@ -24,6 +24,7 @@ static void player_changed_area(struct NetworkPlayer *np, s16 courseNum, s16 act
 }
 
 void network_send_change_area(void) {
+    log_context_begin(LOG_CTX_NETWORK);
     extern s16 gCurrCourseNum, gCurrActNum, gCurrActStarNum, gCurrLevelNum, gCurrAreaIndex;
 
     // override castle act to 0 to prevent instancing of the hub
@@ -52,6 +53,7 @@ void network_send_change_area(void) {
     network_player_update_course_level(np, gCurrCourseNum, gCurrActStarNum, gCurrLevelNum, gCurrAreaIndex);
 
     LOG_DEBUG_VERBOSE("tx change area");
+    log_context_end(LOG_CTX_NETWORK);
 }
 
 void network_receive_change_area(struct Packet *p) {

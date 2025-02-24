@@ -130,6 +130,7 @@ static bool network_start_offset_group(struct OffsetGroup* og) {
     // sanity check
     if (!foundIndex) {
         LOG_INFO_VERBOSE("Could not find offset group, may be near the end of the download");
+        log_context_end(LOG_CTX_NETWORK);
         return false;
     }
 
@@ -216,6 +217,7 @@ static void network_update_offset_groups(void) {
 
 void network_send_download_request(u64 offset) {
     SOFT_ASSERT(gNetworkType == NT_CLIENT);
+    log_context_begin(LOG_CTX_NETWORK);
 
     struct Packet p = { 0 };
     packet_init(&p, PACKET_DOWNLOAD_REQUEST, true, PLMT_NONE);
@@ -224,6 +226,7 @@ void network_send_download_request(u64 offset) {
     network_send_to((gNetworkPlayerServer != NULL) ? gNetworkPlayerServer->localIndex : 0, &p);
 
     LOG_INFO_VERBOSE("Requesting group: %llu [ %llu <---> %llu ]", (offset / GROUP_SIZE), offset, offset + GROUP_SIZE);
+    log_context_end(LOG_CTX_NETWORK);
 }
 
 void network_receive_download_request(struct Packet* p) {
@@ -245,6 +248,7 @@ void network_receive_download_request(struct Packet* p) {
 }
 
 void network_send_download(u64 requestOffset) {
+    log_context_begin(LOG_CTX_NETWORK);
     u8 chunk[CHUNK_SIZE] = { 0 };
     u64 chunkFill = 0;
     u64 fileStartOffset = 0;
@@ -278,6 +282,7 @@ void network_send_download(u64 requestOffset) {
                 modFile->fp = fopen(modFile->cachedPath, "rb");
                 if (modFile->fp == NULL) {
                     LOG_ERROR_VERBOSE("Failed to open mod file during download: %s", modFile->cachedPath);
+                    log_context_end(LOG_CTX_NETWORK);
                     return;
                 }
                 opened = true;
@@ -314,6 +319,7 @@ after_filled:;
     network_send_to(0, &p);
 
     //LOG_INFO_VERBOSE("Sent chunk: offset %llu, length %llu", requestOffset, chunkFill);
+    log_context_end(LOG_CTX_NETWORK);
 }
 
 // Cache any mod that doesn't have "(wip)" or "[wip]" in its name (case-insensitive)

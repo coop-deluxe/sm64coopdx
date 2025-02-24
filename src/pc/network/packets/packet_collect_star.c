@@ -48,6 +48,7 @@ static struct Object* find_nearest_star(const BehaviorScript* behavior, f32* pos
 }
 
 void network_send_collect_star(struct Object* o, s16 coinScore, s16 starIndex) {
+    log_context_begin(LOG_CTX_NETWORK);
     u32 behaviorId = get_id_from_behavior(o->behavior);
 
     struct Packet p = { 0 };
@@ -64,6 +65,7 @@ void network_send_collect_star(struct Object* o, s16 coinScore, s16 starIndex) {
     packet_write(&p, &gSaveFileUsingBackupSlot, sizeof(u8));
 
     network_send(&p);
+    log_context_end(LOG_CTX_NETWORK);
 }
 
 void network_receive_collect_star(struct Packet* p) {

@@ -9,6 +9,7 @@
 
 void network_send_mod_list_request(void) {
     SOFT_ASSERT(gNetworkType == NT_CLIENT);
+    log_context_begin(LOG_CTX_NETWORK);
     mods_clear(&gActiveMods);
     mods_clear(&gRemoteMods);
 
@@ -26,6 +27,7 @@ void network_send_mod_list_request(void) {
     network_send_to(PACKET_DESTINATION_SERVER, &p);
     LOG_DEBUG_VERBOSE("sending mod list request");
     gAllowOrderedPacketClear = 0;
+    log_context_end(LOG_CTX_NETWORK);
 }
 
 void network_receive_mod_list_request(UNUSED struct Packet* p) {
@@ -41,6 +43,7 @@ void network_receive_mod_list_request(UNUSED struct Packet* p) {
 void network_send_mod_list(void) {
     SOFT_ASSERT(gNetworkType == NT_SERVER);
 
+    log_context_begin(LOG_CTX_NETWORK);
     packet_ordered_begin();
 
     struct Packet p = { 0 };
@@ -113,6 +116,7 @@ void network_send_mod_list(void) {
 
     packet_ordered_end();
 
+    log_context_end(LOG_CTX_NETWORK);
 }
 
 void network_receive_mod_list(struct Packet* p) {

@@ -3,6 +3,7 @@
 #include "pc/log.h"
 
 void network_send_player_settings(void) {
+    log_context_begin(LOG_CTX_NETWORK);
     char playerName[MAX_CONFIG_STRING] = { 0 };
     if (snprintf(playerName, MAX_CONFIG_STRING, "%s", configPlayerName) < 0) {
         LOG_WARN_VERBOSE("truncating player name");
@@ -22,6 +23,7 @@ void network_send_player_settings(void) {
     }
 
     network_send(&p);
+    log_context_end(LOG_CTX_NETWORK);
 }
 
 void network_receive_player_settings(struct Packet* p) {

@@ -271,13 +271,16 @@ static void packet_read_object_only_death(struct Packet* p, struct Object* o) {
 void network_send_object(struct Object* o) {
     if (gNetworkType == NT_NONE || gNetworkPlayerLocal == NULL) { return; }
 
+    log_context_begin(LOG_CTX_NETWORK);
     // sanity check SyncObject
     if (!sync_object_is_initialized(o->oSyncID)) {
-        //LOG_ERROR_VERBOSE("tried to send uninitialized sync obj");
+        LOG_ERROR_VERBOSE("tried to send uninitialized sync obj");
+        log_context_end(LOG_CTX_NETWORK);
         return;
     }
     if (o->behavior == smlua_override_behavior(bhvRespawner)) {
         LOG_DEBUG_VERBOSE("tried to send respawner sync obj");
+        log_context_end(LOG_CTX_NETWORK);
         return;
     }
 
@@ -285,30 +288,39 @@ void network_send_object(struct Object* o) {
     if (so == NULL) { LOG_ERROR_VERBOSE("tried to send null sync obj"); return; }
     if (o != so->o) {
         LOG_ERROR_VERBOSE("object mismatch for %d", o->oSyncID);
+        log_context_end(LOG_CTX_NETWORK);
         return;
     }
     if (o->behavior != so->behavior && !allowable_behavior_change(so, so->behavior)) {
         LOG_ERROR_VERBOSE("behavior mismatch for %d: %04X vs %04X", o->oSyncID, get_id_from_behavior(o->behavior), get_id_from_behavior(so->behavior));
         sync_object_forget(so->id);
+        log_context_end(LOG_CTX_NETWORK);
         return;
     }
 
     bool reliable = (o->activeFlags == ACTIVE_FLAG_DEACTIVATED || so->maxSyncDistance == SYNC_DISTANCE_ONLY_EVENTS);
     network_send_object_reliability(o, reliable);
+    log_context_end(LOG_CTX_NETWORK);
 }
 
 void network_send_object_reliability(struct Object* o, bool reliable) {
+    log_context_begin(LOG_CTX_NETWORK);
     // don't send sync objects while area sync is invalid
     if (gNetworkPlayerLocal == NULL || !gNetworkPlayerLocal->currAreaSyncValid) {
         LOG_DEBUG_VERBOSE("tried to send sync obj when area sync invalid");
+        log_context_end(LOG_CTX_NETWORK);
         return;
     }
     // prevent sending objects during credits sequence
-    if (gCurrActStarNum == 99) { return; }
+    if (gCurrActStarNum == 99) { 
+        log_context_end(LOG_CTX_NETWORK);
+        return;
+    }
 
     // sanity check SyncObject
     if (!sync_object_is_initialized(o->oSyncID)) {
-        //LOG_ERROR_VERBOSE("tried to send uninitialized sync obj");
+        LOG_ERROR_VERBOSE("tried to send uninitialized sync obj");
+        log_context_end(LOG_CTX_NETWORK);
         return;
     }
 
@@ -316,15 +328,18 @@ void network_send_object_reliability(struct Object* o, bool reliable) {
     struct SyncObject* so = sync_object_get(syncId);
     if (so == NULL) {
         LOG_ERROR_VERBOSE("tried to send null sync obj");
+        log_context_end(LOG_CTX_NETWORK);
         return;
     }
     if (o != so->o) {
         LOG_ERROR_VERBOSE("object mismatch for %d", syncId);
+        log_context_end(LOG_CTX_NETWORK);
         return;
     }
     if (o->behavior != so->behavior && !allowable_behavior_change(so, so->behavior)) {
         LOG_ERROR_VERBOSE("behavior mismatch for %d: %04X vs %04X", syncId, get_id_from_behavior(o->behavior), get_id_from_behavior(so->behavior));
         sync_object_forget(so->id);
+        log_context_end(LOG_CTX_NETWORK);
         return;
     }
 
@@ -369,6 +384,7 @@ void network_send_object_reliability(struct Object* o, bool reliable) {
         so->on_sent_post();
         gCurrentObject = tmp;
     }
+    log_context_end(LOG_CTX_NETWORK);
 }
 
 void network_receive_object(struct Packet* p) {

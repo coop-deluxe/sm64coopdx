@@ -4,6 +4,7 @@
 #include "pc/log.h"
 
 void network_send_area_request(struct NetworkPlayer* fromNp, struct NetworkPlayer* toNp) {
+    log_context_begin(LOG_CTX_NETWORK);
     gNetworkRequestLocationTimer = 0;
     if (gNetworkType == NT_SERVER && toNp == gNetworkPlayerLocal) {
         // requesting server's area, send it immediately
@@ -20,6 +21,7 @@ void network_send_area_request(struct NetworkPlayer* fromNp, struct NetworkPlaye
     packet_write(&p, &fromNp->currAreaIndex,     sizeof(s16));
     network_send_to(toNp->localIndex, &p);
     LOG_DEBUG_VERBOSE("tx area request");
+    log_context_end(LOG_CTX_NETWORK);
 }
 
 void network_receive_area_request(struct Packet* p) {

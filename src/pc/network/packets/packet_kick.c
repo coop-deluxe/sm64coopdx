@@ -8,12 +8,14 @@ f32 sLastReconnectTime = -9999999;
 f32 sLastNotifyTime = -9999999;
 
 void network_send_kick(u8 localIndex, enum KickReasonType kickReason) {
+    log_context_begin(LOG_CTX_NETWORK);
     u8 kickReasonType = kickReason;
     struct Packet p = { 0 };
     packet_init(&p, PACKET_KICK, true, PLMT_NONE);
     p.keepSendingAfterDisconnect = (kickReason == EKT_REJOIN);
     packet_write(&p, &kickReasonType, sizeof(u8));
     network_send_to(localIndex, &p);
+    log_context_end(LOG_CTX_NETWORK);
 }
 
 void network_receive_kick(struct Packet* p) {

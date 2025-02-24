@@ -21,6 +21,7 @@ void print_sync_object_table(void) {
 }
 
 void network_send_debug_sync(void) {
+    log_context_begin(LOG_CTX_NETWORK);
     // check for lag
     for (int i = 0; i < MAX_PLAYERS; i++) {
         struct NetworkPlayer* np = &gNetworkPlayers[i];
@@ -37,6 +38,7 @@ void network_send_debug_sync(void) {
         packet_write(&p, &behaviorId, sizeof(u32));
         network_send(&p);
     }
+    log_context_end(LOG_CTX_NETWORK);
 }
 
 void network_receive_debug_sync(struct Packet* p) {

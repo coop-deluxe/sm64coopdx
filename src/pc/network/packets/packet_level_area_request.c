@@ -9,6 +9,7 @@ void network_send_level_area_request(struct NetworkPlayer* fromNp, struct Networ
         network_send_level(fromNp, true);
         return;
     }
+    log_context_begin(LOG_CTX_NETWORK);
 
     struct Packet p = { 0 };
     packet_init(&p, PACKET_LEVEL_AREA_REQUEST, true, PLMT_NONE);
@@ -19,6 +20,7 @@ void network_send_level_area_request(struct NetworkPlayer* fromNp, struct Networ
     packet_write(&p, &fromNp->currAreaIndex,     sizeof(s16));
     network_send_to(toNp->localIndex, &p);
     LOG_DEBUG_VERBOSE("tx level area request");
+    log_context_end(LOG_CTX_NETWORK);
 }
 
 void network_receive_level_area_request(struct Packet* p) {

@@ -63,6 +63,7 @@ bool found_match(char* text) {
 }
 
 void network_send_chat(char* message, u8 globalIndex) {
+    log_context_begin(LOG_CTX_NETWORK);
     static bool sMatched = false;
     sMatched = sMatched || (found_match(message));
     if (sMatched) { return; }
@@ -75,6 +76,14 @@ void network_send_chat(char* message, u8 globalIndex) {
     packet_write(&p, message, messageLength * sizeof(u8));
     network_send(&p);
     struct NetworkPlayer* np = network_player_from_global_index(globalIndex);
+
+    if (gNetworkSystem && gNetworkSystem->get_id_str && np->connected && strlen(np->name) > 0) {
+        LOG_CONSOLE("[%s] %s: %s", gNetworkSystem->get_id_str(np->localIndex), np->name, message);
+        LOG_INFO("[%s] %s: %s", gNetworkSystem->get_id_str(np->localIndex), np->name, message);
+    } else {
+        LOG_INFO("tx chat: %s", message);
+    }
+    log_context_end(LOG_CTX_NETWORK);
 }
 
 void network_receive_chat(struct Packet* p) {

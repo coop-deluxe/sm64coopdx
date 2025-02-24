@@ -76,6 +76,7 @@ void network_receive_join_request(struct Packet* p) {
 }
 
 void network_send_join(struct Packet* joinRequestPacket) {
+    log_context_begin(LOG_CTX_NETWORK);
     SOFT_ASSERT(gNetworkType == NT_SERVER);
 
     // figure out id
@@ -92,6 +93,7 @@ void network_send_join(struct Packet* joinRequestPacket) {
         }
         if (globalIndex == UNKNOWN_LOCAL_INDEX || connectedCount >= gServerSettings.maxPlayers) {
             network_send_kick(0, EKT_FULL_PARTY);
+            log_context_end(LOG_CTX_NETWORK);
             return;
         }
     }
@@ -132,6 +134,7 @@ void network_send_join(struct Packet* joinRequestPacket) {
     LOG_DEBUG_VERBOSE("sending join packet");
 
     network_send_network_players(globalIndex);
+    log_context_end(LOG_CTX_NETWORK);
 }
 
 void network_receive_join(struct Packet* p) {

@@ -51,6 +51,7 @@ static struct Object* find_nearest_coin(const BehaviorScript *behavior, f32* pos
 
 void network_send_collect_coin(struct Object* o) {
     if (gNetworkPlayerLocal == NULL || !gNetworkPlayerLocal->currAreaSyncValid) { return; }
+    log_context_begin(LOG_CTX_NETWORK);
     u32 behaviorId = get_id_from_behavior(o->behavior);
 
     struct Packet p = { 0 };
@@ -62,6 +63,7 @@ void network_send_collect_coin(struct Object* o) {
     packet_write(&p, &gCurrAreaIndex, sizeof(s16));
 
     network_send(&p);
+    log_context_end(LOG_CTX_NETWORK);
 }
 
 void network_receive_collect_coin(struct Packet* p) {

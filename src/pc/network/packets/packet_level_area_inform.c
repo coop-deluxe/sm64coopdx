@@ -11,6 +11,7 @@
 void network_send_level_area_inform(void) {
     struct NetworkPlayer* np = gNetworkPlayerLocal;
     if (np == NULL) { return; }
+    log_context_begin(LOG_CTX_NETWORK);
     np->currLevelAreaSeqId++;
 
     struct Packet p = { 0 };
@@ -26,6 +27,7 @@ void network_send_level_area_inform(void) {
     network_send(&p);
 
     LOG_INFO_VERBOSE("tx level area inform for global %d: (%d, %d, %d, %d)", np->globalIndex, np->currCourseNum, np->currActNum, np->currLevelNum, np->currAreaIndex);
+    log_context_end(LOG_CTX_NETWORK);
 }
 
 void network_receive_level_area_inform(struct Packet* p) {

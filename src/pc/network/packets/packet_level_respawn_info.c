@@ -95,11 +95,13 @@ static u16 get_spawn_info_index_of_object(struct Object* o) {
 ////
 
 void network_send_level_respawn_info(struct Object* o, u8 respawnInfoBits) {
+    log_context_begin(LOG_CTX_NETWORK);
     if (gNetworkType == NT_NONE || gNetworkPlayerLocal == NULL) { return; }
 
     // make sure our area is valid
     if (!gNetworkPlayerLocal->currAreaSyncValid) {
         LOG_ERROR_VERBOSE("my area is invalid");
+        log_context_end(LOG_CTX_NETWORK);
         return;
     }
 
@@ -108,6 +110,7 @@ void network_send_level_respawn_info(struct Object* o, u8 respawnInfoBits) {
     u16 spawnInfoIndex = get_spawn_info_index_of_object(o);
     if (macroOffset == ERR_COULD_NOT_FIND_OBJECT && spawnInfoIndex == ERR_COULD_NOT_FIND_OBJECT) {
         LOG_WARN_VERBOSE("could not find object in macro or spawn info");
+        log_context_end(LOG_CTX_NETWORK);
         return;
     }
     bool isMacroObject = (macroOffset != ERR_COULD_NOT_FIND_OBJECT);
@@ -147,6 +150,7 @@ void network_send_level_respawn_info(struct Object* o, u8 respawnInfoBits) {
         network_send_to(gNetworkPlayerServer->localIndex, &p);
         LOG_DEBUG_VERBOSE("tx level respawn info to %d", gNetworkPlayerServer->globalIndex);
     }
+    log_context_end(LOG_CTX_NETWORK);
 }
 
 void network_receive_level_respawn_info(struct Packet* p) {

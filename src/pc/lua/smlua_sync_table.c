@@ -528,6 +528,7 @@ static void smlua_sync_table_send_table(u8 toLocalIndex) {
 }
 
 static void smlua_sync_table_send_all_file(u8 toLocalIndex, const char* path) {
+    log_context_begin(LOG_CTX_NETWORK);
     LUA_STACK_CHECK_BEGIN();
     lua_State* L = gLuaState;
 
@@ -537,6 +538,7 @@ static void smlua_sync_table_send_all_file(u8 toLocalIndex, const char* path) {
     if (lua_type(L, -1) == LUA_TNIL) {
         LOG_ERROR("Could not find table for '%s'", path);
         lua_pop(L, 1);
+        log_context_end(LOG_CTX_NETWORK);
         return;
     }
 
@@ -563,6 +565,7 @@ static void smlua_sync_table_send_all_file(u8 toLocalIndex, const char* path) {
     lua_pop(L, 1); // pop file's "global" table
 
     LUA_STACK_CHECK_END();
+    log_context_end(LOG_CTX_NETWORK);
 }
 
 void smlua_sync_table_send_all(u8 toLocalIndex) {

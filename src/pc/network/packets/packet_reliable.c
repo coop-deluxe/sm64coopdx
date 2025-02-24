@@ -69,11 +69,13 @@ void network_send_ack(struct Packet* p) {
     p->reliable = (seqId != 0);
     if (seqId == 0) { return; }
 
+    log_context_begin(LOG_CTX_NETWORK);
     // send back the ACK
     struct Packet ack = { 0 };
     packet_init(&ack, PACKET_ACK, false, PLMT_NONE);
     packet_write(&ack, &seqId, sizeof(u16));
     network_send_to(0, &ack);
+    log_context_end(LOG_CTX_NETWORK);
 }
 
 void network_receive_ack(struct Packet* p) {

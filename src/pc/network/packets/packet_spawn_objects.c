@@ -60,13 +60,16 @@ void network_send_spawn_objects(struct Object* objects[], u32 models[], u8 objec
 }
 
 void network_send_spawn_objects_to(u8 sendToLocalIndex, struct Object* objects[], u32 models[], u8 objectCount) {
+    log_context_begin(LOG_CTX_NETWORK);
     if (gNetworkPlayerLocal == NULL || !gNetworkPlayerLocal->currAreaSyncValid) {
         LOG_ERROR_VERBOSE("failed: area sync invalid");
+        log_context_end(LOG_CTX_NETWORK);
         return;
     }
 
     if (objectCount == 0) {
         LOG_ERROR_VERBOSE("Tried to send 0 objects");
+        log_context_end(LOG_CTX_NETWORK);
         return;
     }
 
@@ -74,6 +77,7 @@ void network_send_spawn_objects_to(u8 sendToLocalIndex, struct Object* objects[]
     // prevent sending spawn objects during credits
     if (gCurrActStarNum == 99) {
         LOG_ERROR_VERBOSE("failed: in credits");
+        log_context_end(LOG_CTX_NETWORK);
         return;
     }
 
@@ -87,6 +91,7 @@ void network_send_spawn_objects_to(u8 sendToLocalIndex, struct Object* objects[]
         struct Object* o = objects[i];
         if (!o || !o->ctx) {
             LOG_ERROR_VERBOSE("Tried to send null object");
+            log_context_end(LOG_CTX_NETWORK);
             return;
         }
 
@@ -122,6 +127,7 @@ void network_send_spawn_objects_to(u8 sendToLocalIndex, struct Object* objects[]
             LOG_DEBUG_VERBOSE("tx spawn objects to %d | %u", gNetworkPlayers[sendToLocalIndex].globalIndex, get_id_from_behavior(objects[0]->behavior));
         }
     }
+    log_context_end(LOG_CTX_NETWORK);
 }
 
 void network_receive_spawn_objects(struct Packet* p) {

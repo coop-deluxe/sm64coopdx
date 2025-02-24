@@ -4,6 +4,7 @@
 #include "pc/log.h"
 
 void network_send_request_failed(struct NetworkPlayer *toNp, u8 requestType) {
+    log_context_begin(LOG_CTX_NETWORK);
     if (gNetworkType == NT_SERVER && toNp == gNetworkPlayerLocal) {
         struct NetworkPlayer *np = gNetworkPlayerLocal;
         if (requestType == 0 && !np->currLevelSyncValid) {
@@ -13,6 +14,7 @@ void network_send_request_failed(struct NetworkPlayer *toNp, u8 requestType) {
             LOG_DEBUG_VERBOSE("re-requesting area");
             network_send_change_area();
         }
+        log_context_end(LOG_CTX_NETWORK);
         return;
     }
 
@@ -22,6 +24,7 @@ void network_send_request_failed(struct NetworkPlayer *toNp, u8 requestType) {
 
     network_send_to(toNp->localIndex, &p);
     LOG_DEBUG_VERBOSE("tx request failed");
+    log_context_end(LOG_CTX_NETWORK);
 }
 
 void network_receive_request_failed(struct Packet *p) {

@@ -14,6 +14,7 @@
 #include "pc/lua/utils/smlua_obj_utils.h"
 
 void network_send_level(struct NetworkPlayer* toNp, bool sendArea) {
+    log_context_begin(LOG_CTX_NETWORK);
     extern s16 gCurrCourseNum, gCurrActStarNum, gCurrLevelNum;
 
     packet_ordered_begin();
@@ -51,6 +52,7 @@ void network_send_level(struct NetworkPlayer* toNp, bool sendArea) {
     packet_ordered_end();
 
     LOG_DEBUG_VERBOSE("tx level");
+    log_context_end(LOG_CTX_NETWORK);
 }
 
 extern s16 gTTC2DRotatorSpeeds[];

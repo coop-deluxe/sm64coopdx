@@ -3,14 +3,17 @@
 #include "pc/log.h"
 
 void network_send_leaving(u8 globalIndex) {
+    log_context_begin(LOG_CTX_NETWORK);
     if (gNetworkPlayerLocal == NULL) {
         LOG_ERROR_VERBOSE("Local network player not initialized.");
+        log_context_end(LOG_CTX_NETWORK);
         return;
     }
 
     if (gNetworkType != NT_SERVER) {
         if (gNetworkPlayerServer == NULL) {
             LOG_ERROR_VERBOSE("Server network player not initialized.");
+            log_context_end(LOG_CTX_NETWORK);
             return;
         }
 
@@ -26,6 +29,7 @@ void network_send_leaving(u8 globalIndex) {
         network_send_to(gNetworkPlayerServer->localIndex, &p);
     }
     LOG_DEBUG_VERBOSE("Sending leaving event for %d", globalIndex);
+    log_context_end(LOG_CTX_NETWORK);
 }
 
 void network_receive_leaving(struct Packet* p) {

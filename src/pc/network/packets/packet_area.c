@@ -32,6 +32,7 @@ void area_remove_sync_ids_clear(void) {
 /////////////////////////////////////////////////
 
 void network_send_area(struct NetworkPlayer* toNp) {
+    log_context_begin(LOG_CTX_NETWORK);
     extern s16 gCurrCourseNum, gCurrActStarNum, gCurrLevelNum, gCurrAreaIndex;
     bool levelControlTimerRunning = level_control_timer_running();
     bool levelControlTimerVisible = (gHudDisplay.flags & HUD_DISPLAY_FLAG_TIMER) ? 1 : 0;
@@ -126,6 +127,7 @@ void network_send_area(struct NetworkPlayer* toNp) {
     packet_ordered_end();
 
     LOG_DEBUG_VERBOSE("tx area");
+    log_context_end(LOG_CTX_NETWORK);
 }
 
 void network_receive_area(struct Packet* p) {
