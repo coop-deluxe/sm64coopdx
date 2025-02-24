@@ -1,18 +1,42 @@
-#include "logging.h"
+#include "log.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
 #include <stdarg.h>
 #include <stdbool.h>
+#include <stdint.h>
 #include "fs/fs.h"
 
 #define LOG_FOLDER "logs"
 #define LOG_EXTENSION ".log"
+
+#define LOG_CONTEXT_STACK_SIZE 32
+
 #define MAX_LOG_LINE 512
+// [DATE TIME] (CTX/TYPE) MESSAGE
 #define LOG_FORMAT "[%s %s] (%s/%s) %s\n"
 
 static FILE *logFile = NULL;
+
+static const char* sLogContextNames[] = {
+    "Runtime",
+    "Game",
+    "DynOS",
+    "Lua",
+    "Network",
+    "Chat"
+};
+
+typedef struct {
+    LogContext ctx;
+    uint16_t depth;
+} LogContextItem;
+
+LogContextItem contextStack[LOG_CONTEXT_STACK_SIZE];
+uint16_t contextStackTop = 0;
+LogContext currentContext;
 
 // Generates a timestamp for filenames or log entries
 static void generate_timestamp(char *date_buffer, size_t date_size, char *time_buffer, size_t time_size, int for_filename) {
@@ -27,8 +51,8 @@ static void generate_timestamp(char *date_buffer, size_t date_size, char *time_b
     struct tm *t = localtime(&ts.tv_sec);
     if (t == NULL) {
         fprintf(stderr, "Error: Failed to convert time to localtime.\n");
-        strncpy(date_buffer, "unknown_date", date_size);
-        strncpy(time_buffer, "unknown_time", time_size);
+        strncpy(date_buffer, "???", date_size);
+        strncpy(time_buffer, "???", time_size);
         return;
     }
 
@@ -42,19 +66,6 @@ static void generate_timestamp(char *date_buffer, size_t date_size, char *time_b
     snprintf(time_buffer, time_size, "%s_%03ld", time_part, ts.tv_nsec / 1000000);
 }
 
-// Returns a string representation of the log category
-static const char* get_category_string(LogCategory category) {
-    switch (category) {
-        case LOG_CATEGORY_RUNTIME: return "Runtime";
-        case LOG_CATEGORY_GAME: return "Game";
-        case LOG_CATEGORY_DYNOS: return "DynOS";
-        case LOG_CATEGORY_LUA: return "Lua";
-        case LOG_CATEGORY_NETWORK: return "Network";
-        case LOG_CATEGORY_CHAT: return "Chat";
-        default: return "Unknown";
-    }
-}
-
 // Returns a string representation of the log type
 static const char* get_type_string(LogType type) {
     switch (type) {
@@ -63,7 +74,7 @@ static const char* get_type_string(LogType type) {
         case LOG_TYPE_ERROR: return "ERROR";
         case LOG_TYPE_CRASH: return "CRASH";
         case LOG_TYPE_DEBUG: return "DEBUG";
-        default: return "UNKNOWN";
+        default: return "INFO";
     }
 }
 
@@ -109,7 +120,7 @@ static void ensure_log_file_open() {
 }
 
 // Writes a log message to the file
-static void write_log(LogCategory category, LogType type, const char *message) {
+static void write_to_log(LogContext ctx, LogType type, const char *message) {
     if (logFile == NULL) {
         fprintf(stderr, "Error: Log file is not open. Cannot write log message.\n");
         return;
@@ -118,22 +129,81 @@ static void write_log(LogCategory category, LogType type, const char *message) {
     char date_buffer[64], time_buffer[64];
     generate_timestamp(date_buffer, sizeof(date_buffer), time_buffer, sizeof(time_buffer), 0);
 
-    printf(LOG_FORMAT, date_buffer, time_buffer, get_category_string(category), get_type_string(type), message);
+    const char* ctx_str = sLogContextNames[ctx];
+    const char* type_str = get_type_string(type);
 
-    fprintf(logFile, LOG_FORMAT, date_buffer, time_buffer, get_category_string(category), get_type_string(type), message);
+    switch(type)
+    {
+        case LOG_TYPE_ERROR:
+        case LOG_TYPE_CRASH: fprintf(stderr, LOG_FORMAT, date_buffer, time_buffer, ctx_str, type_str, message); break;
+        default: printf(LOG_FORMAT, date_buffer, time_buffer, ctx_str, type_str, message); break;
+    }
+
+    fprintf(logFile, LOG_FORMAT, date_buffer, time_buffer, ctx_str, type_str, message);
     fflush(logFile);
 }
 
-void log_message(LogCategory category, LogType type, const char *format, ...) {
-    ensure_log_file_open();
 
+
+void log_message(LogType type, const char *format, ...) {
     static char message[MAX_LOG_LINE];
     va_list args;
     va_start(args, format);
     vsnprintf(message, MAX_LOG_LINE, format, args);
     va_end(args);
+    
+    ensure_log_file_open();
+    write_to_log(currentContext, type, message);
+}
 
-    write_log(category, type, message);
+void log_message_with_file(LogType type, const char* filename, uint16_t line, const char *format, ...) {
+    static char message[MAX_LOG_LINE];
+    va_list args;
+    va_start(args, format);
+    vsnprintf(message, MAX_LOG_LINE, format, args);
+    va_end(args);
+    
+    static char full_message[MAX_LOG_LINE];
+    snprintf(full_message, MAX_LOG_LINE, "<%s:%i> %s", filename, line, message);
+
+    ensure_log_file_open();
+    write_to_log(currentContext, type, full_message);
+}
+
+void log_context_begin(LogContext ctx) {
+    currentContext = ctx;
+
+    LogContextItem top = contextStack[contextStackTop];
+    if (ctx == top.ctx) {
+        top.depth++;
+        return;
+    }
+
+    if (contextStackTop == LOG_CONTEXT_STACK_SIZE - 1) {
+        LOG_ERROR("Filled log context stack! Log context may not persist correctly.");
+        top.depth++; // Prevent errors when closing context
+        return;
+    }
+
+    top = contextStack[contextStackTop++];
+    top.ctx = ctx;
+    top.depth++;
+}
+
+void log_context_end(LogContext ctx) {
+    if (ctx != currentContext) LOG_ERROR("Closing log context is not the same as current log context.");
+;
+    LogContextItem top = contextStack[contextStackTop];
+    currentContext = top.ctx;
+
+    if (contextStackTop == 0 && top.depth == 0) {
+        LOG_ERROR("Log context was closed too many times!");
+        return;
+    }
+
+    if (top.depth-- == 0) {
+        currentContext = contextStack[contextStackTop--].ctx;
+    }
 }
 
 // Closes the log file when the program exits

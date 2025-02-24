@@ -6,16 +6,17 @@
 #include <stdbool.h>
 
 /**
- * Enum representing the different logging categories.
+ * Enum representing the different logging contexts.
  */
 typedef enum {
-    LOG_CATEGORY_RUNTIME,
-    LOG_CATEGORY_GAME,
-    LOG_CATEGORY_DYNOS,
-    LOG_CATEGORY_LUA,
-    LOG_CATEGORY_NETWORK,
-    LOG_CATEGORY_CHAT
-} LogCategory;
+    LOG_CTX_RUNTIME,
+    LOG_CTX_GAME,
+    LOG_CTX_DYNOS,
+    LOG_CTX_LUA,
+    LOG_CTX_NETWORK,
+    LOG_CTX_CHAT
+    // MUST BE KEPT IN SYNC WITH sLogContextNames
+} LogContext;
 
 /**
  * Enum representing the different log types.
@@ -27,7 +28,6 @@ typedef enum {
     LOG_TYPE_DEBUG,
     LOG_TYPE_CRASH
 } LogType;
-
 
 /**
  * Logs a message with optional additional arguments.
@@ -41,12 +41,10 @@ typedef enum {
  * @param format String to be logged. Optionally can include format specifiers.
  * @param ... Values to replace format specifiers.
  */
-void log_message(LogCategory category, LogType type, const char *format, ...);
+void log_message(LogType type, const char *format, ...);
+void log_message_with_file(LogType type, const char* filename, uint16_t line, const char *format, ...);
 
-#define LOG_INFO(category, ...) log_message(category, LOG_TYPE_INFO, __VA_ARGS__)
-#define LOG_WARN(category, ...) log_message(category, LOG_TYPE_WARN, __VA_ARGS__)
-#define LOG_ERROR(category, ...) log_message(category, LOG_TYPE_ERROR, __VA_ARGS__)
-#define LOG_DEBUG(category, ...) log_message(category, LOG_TYPE_DEBUG, __VA_ARGS__)
-#define LOG_CRASH(...) log_message(LOG_CATEGORY_RUNTIME, LOG_TYPE_CRASH, __VA_ARGS__)
+void log_context_begin(LogContext ctx);
+void log_context_end(LogContext ctx);
 
 #endif // LOGGING_H
