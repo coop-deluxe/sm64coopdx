@@ -1731,18 +1731,18 @@
 <br />
 
 - smlua_level_utils.h
-   - [level_is_vanilla_level](functions-5.md#level_is_vanilla_level)
-   - [level_register](functions-5.md#level_register)
-   - [smlua_level_util_change_area](functions-5.md#smlua_level_util_change_area)
-   - [smlua_level_util_get_info](functions-5.md#smlua_level_util_get_info)
-   - [smlua_level_util_get_info_from_course_num](functions-5.md#smlua_level_util_get_info_from_course_num)
-   - [smlua_level_util_get_info_from_short_name](functions-5.md#smlua_level_util_get_info_from_short_name)
-   - [warp_exit_level](functions-5.md#warp_exit_level)
-   - [warp_restart_level](functions-5.md#warp_restart_level)
-   - [warp_to_castle](functions-5.md#warp_to_castle)
-   - [warp_to_level](functions-5.md#warp_to_level)
-   - [warp_to_start_level](functions-5.md#warp_to_start_level)
-   - [warp_to_warpnode](functions-5.md#warp_to_warpnode)
+   - [level_is_vanilla_level](functions-6.md#level_is_vanilla_level)
+   - [level_register](functions-6.md#level_register)
+   - [smlua_level_util_change_area](functions-6.md#smlua_level_util_change_area)
+   - [smlua_level_util_get_info](functions-6.md#smlua_level_util_get_info)
+   - [smlua_level_util_get_info_from_course_num](functions-6.md#smlua_level_util_get_info_from_course_num)
+   - [smlua_level_util_get_info_from_short_name](functions-6.md#smlua_level_util_get_info_from_short_name)
+   - [warp_exit_level](functions-6.md#warp_exit_level)
+   - [warp_restart_level](functions-6.md#warp_restart_level)
+   - [warp_to_castle](functions-6.md#warp_to_castle)
+   - [warp_to_level](functions-6.md#warp_to_level)
+   - [warp_to_start_level](functions-6.md#warp_to_start_level)
+   - [warp_to_warpnode](functions-6.md#warp_to_warpnode)
 
 <br />
 

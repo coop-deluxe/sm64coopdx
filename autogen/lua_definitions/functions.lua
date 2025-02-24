@@ -9215,12 +9215,14 @@ end
 
 --- @param gfx Pointer_Gfx
 --- @param mode integer
+--- Clears the display list geometry mode.
 function gfx_clear_geometrymode(gfx, mode)
     -- ...
 end
 
 --- @param gfx Pointer_Gfx
 --- @param part integer
+--- Copies a player light parameters.
 function gfx_copy_lights_player_part(gfx, part)
     -- ...
 end
@@ -9228,12 +9230,14 @@ end
 --- @param gfx Pointer_Gfx
 --- @param offset integer
 --- @return Pointer_Vtx
+--- Gets a vertex from a display list command if it has the correct op. Intended to be used with `gfx_parse`.
 function gfx_get_vtx(gfx, offset)
     -- ...
 end
 
 --- @param cmd Pointer_Gfx
 --- @param func function
+--- Traverses a display list. Takes a Lua function as a parameter, which is called back for each command in the display list with the parameters `cmd` (display list pointer), and `op`.
 function gfx_parse(cmd, func)
     -- ...
 end
@@ -9255,12 +9259,14 @@ end
 --- @param Ab1 integer
 --- @param Ac1 integer
 --- @param Ad1 integer
+--- Sets the display list combine mode.
 function gfx_set_combine_lerp(gfx, a0, b0, c0, d0, Aa0, Ab0, Ac0, Ad0, a1, b1, c1, d1, Aa1, Ab1, Ac1, Ad1)
     -- ...
 end
 
 --- @param gfx Pointer_Gfx
 --- @param type integer
+--- Sets the display list cycle type.
 function gfx_set_cycle_type(gfx, type)
     -- ...
 end
@@ -9270,6 +9276,7 @@ end
 --- @param g integer
 --- @param b integer
 --- @param a integer
+--- Sets the display list environment color.
 function gfx_set_env_color(gfx, r, g, b, a)
     -- ...
 end
@@ -9279,12 +9286,14 @@ end
 --- @param g integer
 --- @param b integer
 --- @param a integer
+--- Sets the display list fog color.
 function gfx_set_fog_color(gfx, r, g, b, a)
     -- ...
 end
 
 --- @param gfx Pointer_Gfx
 --- @param mode integer
+--- Sets the display list geometry mode.
 function gfx_set_geometrymode(gfx, mode)
     -- ...
 end
@@ -9296,6 +9305,7 @@ end
 --- @param g integer
 --- @param b integer
 --- @param a integer
+--- Sets the display list primary color.
 function gfx_set_prim_color(gfx, m, l, r, g, b, a)
     -- ...
 end
@@ -9303,6 +9313,7 @@ end
 --- @param gfx Pointer_Gfx
 --- @param c0 integer
 --- @param c1 integer
+--- Sets the display list render mode.
 function gfx_set_render_mode(gfx, c0, c1)
     -- ...
 end
