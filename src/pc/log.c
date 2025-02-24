@@ -29,7 +29,8 @@ static const char* sLogContextNames[] = {
     "Network",
     "Chat",
     "Audio",
-    "Render"
+    "Render",
+    "Discord"
 };
 
 #define LOG_CONTEXT_STACK_SIZE 32
@@ -38,7 +39,6 @@ typedef struct {
     struct {
         LogContext ctx;
         uint16_t depth;
-        bool verbose;
     } items[LOG_CONTEXT_STACK_SIZE];
     int top;
 } LogContextStack;
@@ -62,7 +62,6 @@ void log_assign_thread(pthread_t threadId) {
         if (threads[i] == 0) {
             threads[i] = threadId;
             contextStack[i].items[0].ctx = contextStack[0].items[0].ctx;
-            contextStack[i].items[0].verbose = contextStack[0].items[0].verbose;
             return;
         }
     }
@@ -115,14 +114,7 @@ static void ensure_log_file_open() {
         return;
     }
 
-    const char *base_path = fs_get_write_path("");
-    if (!base_path) {
-        fprintf(stderr, "Error: Could not determine write path.\n");
-        return;
-    }
-
-    char log_folder_path[SYS_MAX_PATH];
-    snprintf(log_folder_path, sizeof(log_folder_path), "%s/%s", base_path, LOG_FOLDER);
+    const char *log_folder_path = fs_get_write_path(LOG_FOLDER);
 
     // Check if the directory exists, create it if it doesn't
     if (!fs_sys_dir_exists(log_folder_path) && !fs_sys_mkdir(log_folder_path)) {
@@ -153,14 +145,6 @@ static void ensure_log_file_open() {
 // Writes a log message to the file
 static void write_to_log(LogContext ctx, LogType type, const char *message) {
     LogContextStack stack = contextStack[get_thread()];
-    if (stack.items[stack.top].verbose) {
-        if (!(configVerboseLogs || gCLIOpts.verbose)) return;
-    }
-
-    if (logFile == NULL) {
-        fprintf(stderr, "Error: Log file is not open. Cannot write log message.\n");
-        return;
-    }
 
     char date_buffer[64], time_buffer[64];
     generate_timestamp(date_buffer, sizeof(date_buffer), time_buffer, sizeof(time_buffer), 0);
@@ -175,13 +159,13 @@ static void write_to_log(LogContext ctx, LogType type, const char *message) {
         default: printf(LOG_FORMAT, date_buffer, time_buffer, ctx_str, type_str, message); break;
     }
 
+    if (logFile == NULL) {
+        fprintf(stderr, "Error: Log file is not open. Cannot write log message.\n");
+        return;
+    }
+
     fprintf(logFile, LOG_FORMAT, date_buffer, time_buffer, ctx_str, type_str, message);
     fflush(logFile);
-}
-
-void log_set_verbose(bool verbose) {
-    LogContextStack* stack = &contextStack[get_thread()];
-    stack->items[stack->top].verbose = verbose;
 }
 
 void log_message(LogType type, const char *format, ...) {

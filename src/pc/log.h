@@ -7,6 +7,9 @@
 #include <stdint.h>
 #include <pthread.h>
 
+#include "configfile.h"
+#include "cliopts.h"
+
 /**
  * Enum representing the different logging contexts.
  */
@@ -18,7 +21,8 @@ typedef enum {
     LOG_CTX_NETWORK,
     LOG_CTX_CHAT,
     LOG_CTX_AUDIO,
-    LOG_CTX_RENDER
+    LOG_CTX_RENDER,
+    LOG_CTX_DISCORD
     // MUST BE KEPT IN SYNC WITH sLogContextNames
 } LogContext;
 
@@ -37,14 +41,6 @@ typedef enum {
  * Fixes logging from different threads.
  */
 void log_assign_thread(pthread_t threadId);
-
-/**
- * Sets verbose logging for the current context. If true, logs written after this will only be shown if verbose logs are enabled.
- * It is important that this is reset to false.
- * 
- * @param verbose true or false.
- */
-void log_set_verbose(bool verbose);
 
 /**
  * Logs a message with optional additional arguments.
@@ -106,15 +102,24 @@ void log_context_end(LogContext ctx);
 #define LOG_WARN(...)
 #define LOG_ERROR(...)
 #define LOG_DEBUG(...)
+#define LOG_INFO_VERBOSE(...)
+#define LOG_WARN_VERBOSE(...)
+#define LOG_ERROR_VERBOSE(...)
+#define LOG_DEBUG_VERBOSE(...)
 #else
 #define LOG_INFO(...) log_message(LOG_TYPE_INFO, __VA_ARGS__)
 #define LOG_WARN(...) log_message(LOG_TYPE_WARN, __VA_ARGS__)
 #define LOG_ERROR(...) log_message(LOG_TYPE_ERROR, __VA_ARGS__)
+#define LOG_INFO_VERBOSE(...) (configVerboseLogs || gCLIOpts.verbose) ? log_message_with_file(LOG_TYPE_INFO,  __FILE__, __LINE__, __VA_ARGS__) : 0
+#define LOG_WARN_VERBOSE(...) (configVerboseLogs || gCLIOpts.verbose) ? log_message_with_file(LOG_TYPE_WARN, __FILE__, __LINE__, __VA_ARGS__) : 0
+#define LOG_ERROR_VERBOSE(...) (configVerboseLogs || gCLIOpts.verbose) ? log_message_with_file(LOG_TYPE_ERROR, __FILE__, __LINE__, __VA_ARGS__) : 0
+#ifdef DEBUG
 #define LOG_DEBUG(...) log_message(LOG_TYPE_DEBUG, __VA_ARGS__)
-#define LOG_INFO_FILE(...) log_message_with_file(LOG_TYPE_INFO,  __FILE__, __LINE__, __VA_ARGS__)
-#define LOG_WARN_FILE(...) log_message_with_file(LOG_TYPE_WARN, __FILE__, __LINE__, __VA_ARGS__)
-#define LOG_ERROR_FILE(...) log_message_with_file(LOG_TYPE_ERROR, __FILE__, __LINE__, __VA_ARGS__)
-#define LOG_DEBUG_FILE(...) log_message_with_file(LOG_TYPE_DEBUG, __FILE__, __LINE__, __VA_ARGS__)
+#define LOG_DEBUG_VERBOSE(...) (configVerboseLogs || gCLIOpts.verbose) ? log_message_with_file(LOG_TYPE_DEBUG, __FILE__, __LINE__, __VA_ARGS__) : 0
+#else
+#define LOG_DEBUG(...)
+#define LOG_DEBUG_VERBOSE(...)
+#endif
 #endif
 #define LOG_CRASH(...) log_message(LOG_TYPE_CRASH, __VA_ARGS__)
 #define LOG_CONSOLE(...)  snprintf(gDjuiConsoleTmpBuffer, CONSOLE_MAX_TMP_BUFFER, __VA_ARGS__), djui_console_message_create(gDjuiConsoleTmpBuffer, CONSOLE_MESSAGE_INFO)
