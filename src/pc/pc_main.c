@@ -395,10 +395,12 @@ void* main_game_init(UNUSED void* dummy) {
 
     LOADING_SCREEN_MUTEX(loading_screen_set_segment_text("Loading"));
     log_context_begin(LOG_CTX_DYNOS);
+    LOG_INFO_VERBOSE("DynOS init");
     dynos_gfx_init();
     enable_queued_dynos_packs();
     log_context_end(LOG_CTX_DYNOS);
     log_context_begin(LOG_CTX_NETWORK);
+    LOG_INFO_VERBOSE("Sync init");
     sync_objects_init_system();
     log_context_end(LOG_CTX_NETWORK);
 
@@ -407,9 +409,11 @@ void* main_game_init(UNUSED void* dummy) {
     }
 
     LOADING_SCREEN_MUTEX(loading_screen_set_segment_text("Loading ROM Assets"));
+    LOG_INFO_VERBOSE("Rom assets loading");
     rom_assets_load();
     smlua_text_utils_init();
 
+    LOG_INFO_VERBOSE("Mods init");
     mods_init();
     enable_queued_mods();
     LOADING_SCREEN_MUTEX(
@@ -419,13 +423,17 @@ void* main_game_init(UNUSED void* dummy) {
 
 
     log_context_begin(LOG_CTX_AUDIO);
+    LOG_INFO_VERBOSE("Audio init");
     audio_init();
+    LOG_INFO_VERBOSE("Sound init");
     sound_init();
     log_context_end(LOG_CTX_AUDIO);
     log_context_begin(LOG_CTX_NETWORK);
+    LOG_INFO_VERBOSE("Network player init");
     network_player_init();
     log_context_end(LOG_CTX_NETWORK);
     log_context_begin(LOG_CTX_AUDIO);
+    LOG_INFO_VERBOSE("Mumble init");
     mumble_init();
     log_context_end(LOG_CTX_AUDIO);
 
@@ -515,18 +523,18 @@ int main(int argc, char *argv[]) {
 
     // initialize sm64 data and controllers
     log_context_begin(LOG_CTX_GAME);
+    LOG_INFO_VERBOSE("Game init");
     thread5_game_loop(NULL);
     log_context_end(LOG_CTX_GAME);
 
     // initialize sound outside threads
-    log_message(LOG_CATEGORY_RUNTIME, LOG_TYPE_INFO, "Initializing Sound/Audio API...", NULL);
-    if (gCLIOpts.headless) audio_api = &audio_null;
-#if defined(AAPI_SDL1) || defined(AAPI_SDL2)
     log_context_begin(LOG_CTX_AUDIO);
+    LOG_INFO_VERBOSE("Audio API init");;
+    #if defined(AAPI_SDL1) || defined(AAPI_SDL2)
     if (!audio_api && audio_sdl.init()) audio_api = &audio_sdl;
+    #endif
+    if (!audio_api) { audio_api = &audio_null; }
     log_context_end(LOG_CTX_AUDIO);
-#endif
-    if (!audio_api) audio_api = &audio_null;
 
     // Initialize the audio thread if possible.
     // init_thread_handle(&gAudioThread, audio_thread, NULL, NULL, 0);
@@ -537,6 +545,7 @@ int main(int argc, char *argv[]) {
 
     // initialize djui
     log_context_begin(LOG_CTX_RENDER);
+    LOG_INFO_VERBOSE("Djui init");
     djui_init();
     djui_unicode_init();
     djui_init_late();
@@ -547,6 +556,7 @@ int main(int argc, char *argv[]) {
 
     // initialize network
     log_context_begin(LOG_CTX_NETWORK);
+    LOG_INFO_VERBOSE("Network init");
     if (gCLIOpts.network == NT_CLIENT) {
         network_set_system(NS_SOCKET);
         snprintf(gGetHostName, MAX_CONFIG_STRING, "%s", gCLIOpts.joinIp);
@@ -575,6 +585,7 @@ int main(int argc, char *argv[]) {
     log_context_end(LOG_CTX_NETWORK);
 
     // main loop
+    LOG_INFO_VERBOSE("Begin main loop");
     while (true) {
         debug_context_reset();
         CTX_BEGIN(CTX_TOTAL);
