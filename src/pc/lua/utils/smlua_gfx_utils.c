@@ -109,10 +109,9 @@ void set_skybox_color(u8 index, u8 value) {
 
 ///
 
-#define MAX_VERTICES 64
-
 #define C0(pos, width) ((cmd->words.w0 >> (pos)) & ((1U << width) - 1))
 
+// Assumes the current microcode is Fast3DEX2 Extended (default for pc port)
 void gfx_parse(Gfx* cmd, LuaFunction func) {
     if (!cmd) { return; }
     if (func == 0) { return; }
@@ -137,19 +136,18 @@ void gfx_parse(Gfx* cmd, LuaFunction func) {
                 ++cmd;
                 break;
             case G_FILLRECT:
-#ifdef F3DEX_GBI_2E
                 ++cmd;
-#endif
                 break;
-        }
-        lua_rawgeti(L, LUA_REGISTRYINDEX, func);
-        smlua_push_object(L, LOT_GFX, cmd, NULL);
-        lua_pushinteger(L, op);
-        if (smlua_pcall(L, 2, 1, 0) != 0) {
-            LOG_LUA("Failed to call the gfx_parse callback: %u", func);
-        }
-        if (lua_type(L, -1) == LUA_TBOOLEAN && smlua_to_boolean(L, -1)) {
-            return;
+            default:
+                lua_rawgeti(L, LUA_REGISTRYINDEX, func);
+                smlua_push_object(L, LOT_GFX, cmd, NULL);
+                lua_pushinteger(L, op);
+                if (smlua_pcall(L, 2, 1, 0) != 0) {
+                    LOG_LUA("Failed to call the gfx_parse callback: %u", func);
+                }
+                if (lua_type(L, -1) == LUA_TBOOLEAN && smlua_to_boolean(L, -1)) {
+                    return;
+                }
         }
         ++cmd;
     }
@@ -159,19 +157,11 @@ Vtx *gfx_get_vtx(Gfx* cmd, u16 offset) {
     if (!cmd) { return NULL; }
     u32 op = cmd->words.w0 >> 24;
     if (op != G_VTX) { return NULL; }
+    if (cmd->words.w1 == NULL) { return NULL; }
 
-#ifdef F3DEX_GBI_2
     u16 numVertices = C0(12, 8);
-    u16 destIndex = C0(1, 7) - C0(12, 8);
-#elif defined(F3DEX_GBI) || defined(F3DLP_GBI)
-    u16 numVertices = C0(10, 6);
-    u16 destIndex = C0(16, 8) / 2;
-#else
-    u16 numVertices = (C0(0, 16)) / sizeof(Vtx);
-    u16 destIndex = C0(16, 4);
-#endif
     if (offset >= numVertices) { return NULL; }
-    if (destIndex >= MAX_VERTICES) { return NULL; }
+
     return &((Vtx *) cmd->words.w1)[offset];
 }
 

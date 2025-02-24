@@ -9305,7 +9305,7 @@ end
 --- @param g integer
 --- @param b integer
 --- @param a integer
---- Sets the display list primary color.
+--- Sets the display list primitive color.
 function gfx_set_prim_color(gfx, m, l, r, g, b, a)
     -- ...
 end

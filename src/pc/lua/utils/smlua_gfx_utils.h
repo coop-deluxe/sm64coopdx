@@ -60,7 +60,7 @@ void gfx_clear_geometrymode(Gfx* gfx, u32 mode);
 void gfx_set_cycle_type(Gfx* gfx, u32 type);
 /* |description|Sets the display list render mode.|descriptionEnd| */
 void gfx_set_render_mode(Gfx* gfx, u32 c0, u32 c1);
-/* |description|Sets the display list primary color.|descriptionEnd| */
+/* |description|Sets the display list primitive color.|descriptionEnd| */
 void gfx_set_prim_color(Gfx* gfx, u8 m, u8 l, u8 r, u8 g, u8 b, u8 a);
 /* |description|Sets the display list environment color.|descriptionEnd| */
 void gfx_set_env_color(Gfx* gfx, u8 r, u8 g, u8 b, u8 a);

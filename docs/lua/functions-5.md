@@ -8079,7 +8079,7 @@ Sets the display list geometry mode.
 ## [gfx_set_prim_color](#gfx_set_prim_color)
 
 ### Description
-Sets the display list primary color.
+Sets the display list primitive color.
 
 ### Lua Example
 `gfx_set_prim_color(gfx, m, l, r, g, b, a)`
