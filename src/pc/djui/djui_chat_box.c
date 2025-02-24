@@ -6,7 +6,6 @@
 #include "pc/chat_commands.h"
 #include "pc/configfile.h"
 #include "djui.h"
-#include "pc/logging.h"
 
 struct DjuiChatBox* gDjuiChatBox = NULL;
 bool gDjuiChatBoxFocus = false;
@@ -136,7 +135,6 @@ static void djui_chat_box_input_enter(struct DjuiInputbox* chatInput) {
                 snprintf(extendedUnknownCommandMessage, sizeof(extendedUnknownCommandMessage), "%s (/help)", DLANG(CHAT, UNRECOGNIZED));
                 djui_chat_message_create(extendedUnknownCommandMessage);
             }
-            log_message(LOG_CATEGORY_CHAT, LOG_TYPE_INFO, "[", gNetworkSystem->get_id_str(gNetworkPlayerLocal->globalIndex), "] ", gNetworkPlayerLocal->name, ": ", chatInput->buffer, NULL);
         } else {
             djui_chat_message_create_from(gNetworkPlayerLocal->globalIndex, chatInput->buffer);
             network_send_chat(chatInput->buffer, gNetworkPlayerLocal->globalIndex);
