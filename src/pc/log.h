@@ -53,17 +53,14 @@ void log_context_end(LogContext ctx);
 #define LOG_ERROR(...)
 #define LOG_DEBUG(...)
 #else
-#if defined(LOG_FILENAME)
-#define LOG_INFO(...) log_message_with_file(LOG_TYPE_INFO,  __FILE__, __LINE__, __VA_ARGS__)
-#define LOG_WARN(...) log_message_with_file(LOG_TYPE_WARN, __FILE__, __LINE__, __VA_ARGS__)
-#define LOG_ERROR(...) log_message_with_file(LOG_TYPE_ERROR, __FILE__, __LINE__, __VA_ARGS__)
-#define LOG_DEBUG(...) log_message_with_file(LOG_TYPE_DEBUG, __FILE__, __LINE__, __VA_ARGS__)
-#else
 #define LOG_INFO(...) log_message(LOG_TYPE_INFO, __VA_ARGS__)
 #define LOG_WARN(...) log_message(LOG_TYPE_WARN, __VA_ARGS__)
 #define LOG_ERROR(...) log_message(LOG_TYPE_ERROR, __VA_ARGS__)
 #define LOG_DEBUG(...) log_message(LOG_TYPE_DEBUG, __VA_ARGS__)
-#endif
+#define LOG_INFO_FILE(...) log_message_with_file(LOG_TYPE_INFO,  __FILE__, __LINE__, __VA_ARGS__)
+#define LOG_WARN_FILE(...) log_message_with_file(LOG_TYPE_WARN, __FILE__, __LINE__, __VA_ARGS__)
+#define LOG_ERROR_FILE(...) log_message_with_file(LOG_TYPE_ERROR, __FILE__, __LINE__, __VA_ARGS__)
+#define LOG_DEBUG_FILE(...) log_message_with_file(LOG_TYPE_DEBUG, __FILE__, __LINE__, __VA_ARGS__)
 #endif
 #define LOG_CRASH(...) log_message(LOG_TYPE_CRASH, __VA_ARGS__)
 #define LOG_CONSOLE(...)  snprintf(gDjuiConsoleTmpBuffer, CONSOLE_MAX_TMP_BUFFER, __VA_ARGS__), djui_console_message_create(gDjuiConsoleTmpBuffer, CONSOLE_MESSAGE_INFO)
