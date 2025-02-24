@@ -17,6 +17,7 @@ static void print_help(void) {
 #if defined(_WIN32) || defined(_WIN64)
     printf("--console                 Enables the Windows console.\n");
 #endif
+    printf("--verbose                 Enables extra/verbose logs.\n");
     printf("--savepath SAVEPATH       Overrides the default save/config path ('!' expands to executable path).\n");
     printf("--configfile CONFIGNAME   Saves the configuration file as CONFIGNAME.\n");
     printf("--hide-loading-screen     Hides the loading screen before the menu boots up.\n");
@@ -115,6 +116,8 @@ bool parse_cli_opts(int argc, char* argv[]) {
             gCLIOpts.enableMods[gCLIOpts.enabledModsCount - 1] = strdup(argv[++i]);
         } else if (!strcmp(argv[i], "--headless")) {
             gCLIOpts.headless = true;
+        } else if (!strcmp(argv[i], "--verbose")) {
+            gCLIOpts.verbose = true;
         } else if (!strcmp(argv[i], "--help")) {
             print_help();
             return false;

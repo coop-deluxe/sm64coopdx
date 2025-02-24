@@ -31,20 +31,66 @@ typedef enum {
 } LogType;
 
 /**
+ * Sets verbose logging for the current context. If true, logs written after this will only be shown if verbose logs are enabled.
+ * It is important that this is reset to false.
+ * 
+ * @param verbose true or false.
+ */
+void log_set_verbose(bool verbose);
+
+/**
  * Logs a message with optional additional arguments.
  *
  * Examples:
+ * ```
  * log_message(LOG_CATEGORY_CLIENT, LOG_TYPE_INFO, "Test");
  * log_message(LOG_CATEGORY_CLIENT, LOG_TYPE_INFO, "Hello, %s!", "World");
+ * ```
  *
  * @param type Log type (e.g. LOG_TYPE_INFO).
  * @param format String to be logged. Optionally can include format specifiers.
  * @param ... Values to replace format specifiers.
  */
 void log_message(LogType type, const char *format, ...);
+/**
+ * Logs a message with a filename, line number, and optional additional arguments.
+ *
+ * ```
+ * log_message_with_file(LOG_CATEGORY_CLIENT, "hello.c", 3, LOG_TYPE_INFO, "Test");
+ * log_message_with_file(LOG_CATEGORY_CLIENT, "hello.c", 3, LOG_TYPE_INFO, "Hello, %s!", "World");
+ * ```
+ *
+ * @param type Log type (e.g. LOG_TYPE_INFO).
+ * @param filename File name
+ * @param line Line number
+ * @param format String to be logged. Optionally can include format specifiers.
+ * @param ... Values to replace format specifiers.
+ */
 void log_message_with_file(LogType type, const char* filename, uint16_t line, const char *format, ...);
 
+/**
+ * Begins a new log context.
+ * 
+ * ```
+ * log_context_begin(LOG_CTX_RUNTIME);
+ * // ...
+ * log_context_end(LOG_CTX_RUNTIME);
+ * ```
+ * 
+ * @param ctx Log context to use
+ */
 void log_context_begin(LogContext ctx);
+/**
+ * Closes the current log context. The context is passed again so we can check if it's being used incorrectly.
+ * 
+ * ```
+ * log_context_begin(LOG_CTX_RUNTIME);
+ * // ...
+ * log_context_end(LOG_CTX_RUNTIME);
+ * ```
+ * 
+ * @param ctx Log context to use
+ */
 void log_context_end(LogContext ctx);
 
 #if defined(DISABLE_MODULE_LOG)

@@ -138,9 +138,7 @@ unsigned int configCameraPan                      = 0;
 unsigned int configCameraDegrade                  = 50; // 0 - 100%
 // debug
 bool         configLuaProfiler                    = false;
-bool         configDebugPrint                     = false;
-bool         configDebugInfo                      = false;
-bool         configDebugError                     = false;
+bool         configVerboseLogs                    = false;
 #ifdef DEVELOPMENT
 bool         configCtxProfiler                    = false;
 #endif
@@ -266,9 +264,7 @@ static const struct ConfigOption options[] = {
     {.name = "debug_offset",                   .type = CONFIG_TYPE_U64,  .u64Value    = &gPcDebug.bhvOffset},
     {.name = "debug_tags",                     .type = CONFIG_TYPE_U64,  .u64Value    = gPcDebug.tags},
     {.name = "lua_profiler",                   .type = CONFIG_TYPE_BOOL, .boolValue   = &configLuaProfiler},
-    {.name = "debug_print",                    .type = CONFIG_TYPE_BOOL, .boolValue   = &configDebugPrint},
-    {.name = "debug_info",                     .type = CONFIG_TYPE_BOOL, .boolValue   = &configDebugInfo},
-    {.name = "debug_error",                    .type = CONFIG_TYPE_BOOL, .boolValue   = &configDebugError},
+    {.name = "verbose_logs",                   .type = CONFIG_TYPE_BOOL, .boolValue   = &configVerboseLogs},
 #ifdef DEVELOPMENT
     {.name = "ctx_profiler",                   .type = CONFIG_TYPE_BOOL, .boolValue   = &configCtxProfiler},
 #endif

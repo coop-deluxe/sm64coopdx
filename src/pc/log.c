@@ -8,6 +8,8 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include "fs/fs.h"
+#include "cliopts.h"
+#include "configfile.h"
 
 #define LOG_FOLDER "logs"
 #define LOG_EXTENSION ".log"
@@ -32,6 +34,7 @@ static const char* sLogContextNames[] = {
 typedef struct {
     LogContext ctx;
     uint16_t depth;
+    bool verbose;
 } LogContextItem;
 
 LogContextItem contextStack[LOG_CONTEXT_STACK_SIZE];
@@ -121,6 +124,10 @@ static void ensure_log_file_open() {
 
 // Writes a log message to the file
 static void write_to_log(LogContext ctx, LogType type, const char *message) {
+    if (contextStack[contextStackTop].verbose) {
+        if (!(configVerboseLogs || gCLIOpts.verbose)) return;
+    }
+
     if (logFile == NULL) {
         fprintf(stderr, "Error: Log file is not open. Cannot write log message.\n");
         return;
@@ -143,7 +150,9 @@ static void write_to_log(LogContext ctx, LogType type, const char *message) {
     fflush(logFile);
 }
 
-
+void log_set_verbose(bool verbose) {
+    contextStack[contextStackTop].verbose = verbose;
+}
 
 void log_message(LogType type, const char *format, ...) {
     static char message[MAX_LOG_LINE];
