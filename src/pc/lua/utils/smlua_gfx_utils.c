@@ -157,7 +157,7 @@ Vtx *gfx_get_vtx(Gfx* cmd, u16 offset) {
     if (!cmd) { return NULL; }
     u32 op = cmd->words.w0 >> 24;
     if (op != G_VTX) { return NULL; }
-    if (cmd->words.w1 == NULL) { return NULL; }
+    if (cmd->words.w1 == 0) { return NULL; }
 
     u16 numVertices = C0(12, 8);
     if (offset >= numVertices) { return NULL; }
