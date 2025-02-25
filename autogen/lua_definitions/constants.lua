@@ -2530,6 +2530,15 @@ RCO_ALL_EXCEPT_BOWSER = 1
 --- @type RomhackCameraOverride
 RCO_NONE = 2
 
+--- @type RomhackCameraOverride
+RCO_ALL_INCLUDING_VANILLA = 3
+
+--- @type RomhackCameraOverride
+RCO_ALL_VANILLA_EXCEPT_BOWSER = 4
+
+--- @type RomhackCameraOverride
+RCO_DISABLE = 5
+
 --- @class CharacterSound
 
 --- @type CharacterSound
