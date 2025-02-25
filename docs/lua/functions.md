@@ -1951,6 +1951,7 @@
    - [find_poison_gas_level](functions-6.md#find_poison_gas_level)
    - [find_wall_collisions](functions-6.md#find_wall_collisions)
    - [find_water_level](functions-6.md#find_water_level)
+   - [set_find_wall_direction](functions-6.md#set_find_wall_direction)
 
 <br />
 

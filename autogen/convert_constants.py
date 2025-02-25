@@ -85,7 +85,7 @@ def validate_identifiers(built_files):
     for ident in all_identifiers:
         if ident in pretend_find:
             continue
-        if ident + ' = ' not in built_files:
+        if ident + '=' not in built_files:
             print('COULD NOT FIND ' + ident)
 
 
@@ -116,7 +116,7 @@ def allowed_identifier(filename, ident):
             if re.search(include, ident) != None:
                 return True
         return False
-    
+
     if ident in overrideConstant:
         return False
 
@@ -241,7 +241,7 @@ def build_constant(processed_constant):
         constants = [processed_constant]
 
     for c in constants:
-        s += '%s = %s\n' % (c[0], c[1].replace('"', "'"))
+        s += '%s=%s\n' % (c[0], c[1].replace('"', "'"))
 
     return s
 
@@ -262,7 +262,9 @@ def build_files(processed_files):
 def build_to_c(built_files):
     txt = ''
     with open(get_path(in_filename), 'r') as f:
-        txt = f.read()
+        txt = ''
+        for line in f.readlines():
+            txt += line.strip() + '\n'
     txt += '\n' + built_files
 
     while ('\n\n' in txt):

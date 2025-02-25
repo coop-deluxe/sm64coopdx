@@ -327,20 +327,9 @@ static void djui_panel_player_edit_palette_create(struct DjuiBase* caller) {
  // player panel //
 //////////////////
 
-static bool djui_panel_player_name_valid(char* buffer) {
-    if (buffer[0] == '\0') { return false; }
-    char* c = buffer;
-    while (*c != '\0') {
-        if (*c == ' ') { return false; }
-        if (!djui_unicode_valid_char(c)) { return false; }
-        c = djui_unicode_next_char(c);
-    }
-    return true;
-}
-
 static char *djui_panel_player_name_default_get(void) {
     char *langName = DLANG(PLAYER, PLAYER);
-    if (djui_panel_player_name_valid(langName)) {
+    if (network_player_name_valid(langName)) {
         return langName;
     }
     static char *name = "Player";
@@ -349,7 +338,7 @@ static char *djui_panel_player_name_default_get(void) {
 
 static void djui_panel_player_name_text_change(struct DjuiBase* caller) {
     struct DjuiInputbox* inputbox1 = (struct DjuiInputbox*)caller;
-    if (djui_panel_player_name_valid(inputbox1->buffer)) {
+    if (network_player_name_valid(inputbox1->buffer)) {
         djui_inputbox_set_text_color(inputbox1, 0, 0, 0, 255);
     } else {
         djui_inputbox_set_text_color(inputbox1, 255, 0, 0, 255);
@@ -358,7 +347,7 @@ static void djui_panel_player_name_text_change(struct DjuiBase* caller) {
 
 static void djui_panel_player_name_on_focus_end(struct DjuiBase* caller) {
     struct DjuiInputbox* inputbox1 = (struct DjuiInputbox*)caller;
-    if (!djui_panel_player_name_valid(inputbox1->buffer)) {
+    if (!network_player_name_valid(inputbox1->buffer)) {
         djui_inputbox_set_text(inputbox1, djui_panel_player_name_default_get());
     }
     snprintf(configPlayerName, MAX_CONFIG_STRING, "%s", inputbox1->buffer);
@@ -434,7 +423,7 @@ void djui_panel_player_create(struct DjuiBase* caller) {
             djui_base_set_size_type(&inputbox1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
             djui_base_set_size(&inputbox1->base, 0.45f, 32);
             djui_base_set_alignment(&inputbox1->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_TOP);
-            if (djui_panel_player_name_valid(configPlayerName)) {
+            if (network_player_name_valid(configPlayerName)) {
                 djui_inputbox_set_text(inputbox1, configPlayerName);
             } else {
                 djui_inputbox_set_text(inputbox1, djui_panel_player_name_default_get());

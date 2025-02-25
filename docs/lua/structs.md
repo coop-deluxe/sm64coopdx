@@ -195,7 +195,7 @@
 | terrainData | `Pointer` <`integer`> | read-only |
 | terrainType | `integer` |  |
 | warpNodes | [ObjectWarpNode](structs.md#ObjectWarpNode) | read-only |
-| whirlpools | `Array` <Whirlpool> |  |
+| whirlpools | `Array` <`Whirlpool`> |  |
 
 [:arrow_up_small:](#)
 
@@ -1698,7 +1698,7 @@
 | capState | `integer` |  |
 | eyeState | `integer` |  |
 | grabPos | `integer` |  |
-| handFootPos | `Array` <Vec3f> | read-only |
+| handFootPos | `Array` <`Vec3f`> | read-only |
 | handState | `integer` |  |
 | headAngle | [Vec3s](structs.md#Vec3s) | read-only |
 | headPos | [Vec3f](structs.md#Vec3f) | read-only |
@@ -1979,7 +1979,7 @@
 | bhvDelayTimer | `integer` |  |
 | bhvStackIndex | `integer` | read-only |
 | collidedObjInteractTypes | `integer` |  |
-| collidedObjs | `Array` <Object> |  |
+| collidedObjs | `Array` <`Object`> |  |
 | collisionData | `Pointer` <`Collision`> |  |
 | coopFlags | `integer` | read-only |
 | ctx | `integer` |  |
@@ -3239,7 +3239,7 @@
 | offsetY | `number` |  |
 | radius | `number` |  |
 | unused | `integer` |  |
-| walls | `Array` <Surface> |  |
+| walls | `Array` <`Surface`> |  |
 | x | `number` |  |
 | y | `number` |  |
 | z | `number` |  |
