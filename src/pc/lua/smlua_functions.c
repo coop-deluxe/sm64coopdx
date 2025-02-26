@@ -1053,7 +1053,6 @@ if (strcmp(command, #symb) == 0) {                                      \
     REPEAT(HANDLE_PARAM, params);                                       \
     Gfx _Gfx[] = { CALL_SYMB(symb, LIST_ARGS(GET_ARG, params)) };       \
     memcpy(gfx, _Gfx, sizeof(_Gfx));                                    \
-    gfx += (sizeof(_Gfx) / sizeof(_Gfx[0]));                            \
     return 1;                                                           \
 }
 
