@@ -148,6 +148,7 @@ void gfx_parse(Gfx* cmd, LuaFunction func) {
                 if (lua_type(L, -1) == LUA_TBOOLEAN && smlua_to_boolean(L, -1)) {
                     return;
                 }
+                break;
         }
         ++cmd;
     }
