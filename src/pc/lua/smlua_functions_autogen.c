@@ -28351,44 +28351,6 @@ int smlua_func_get_vertex_color(lua_State* L) {
     return 1;
 }
 
-int smlua_func_gfx_clear_geometrymode(lua_State* L) {
-    if (L == NULL) { return 0; }
-
-    int top = lua_gettop(L);
-    if (top != 2) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "gfx_clear_geometrymode", 2, top);
-        return 0;
-    }
-
-    Gfx* gfx = (Gfx*)smlua_to_cobject(L, 1, LOT_GFX);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "gfx_clear_geometrymode"); return 0; }
-    u32 mode = smlua_to_integer(L, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "gfx_clear_geometrymode"); return 0; }
-
-    gfx_clear_geometrymode(gfx, mode);
-
-    return 1;
-}
-
-int smlua_func_gfx_copy_lights_player_part(lua_State* L) {
-    if (L == NULL) { return 0; }
-
-    int top = lua_gettop(L);
-    if (top != 2) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "gfx_copy_lights_player_part", 2, top);
-        return 0;
-    }
-
-    Gfx* gfx = (Gfx*)smlua_to_cobject(L, 1, LOT_GFX);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "gfx_copy_lights_player_part"); return 0; }
-    u8 part = smlua_to_integer(L, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "gfx_copy_lights_player_part"); return 0; }
-
-    gfx_copy_lights_player_part(gfx, part);
-
-    return 1;
-}
-
 int smlua_func_gfx_get_vtx(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -28472,144 +28434,6 @@ int smlua_func_gfx_set_combine_lerp(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 17, "gfx_set_combine_lerp"); return 0; }
 
     gfx_set_combine_lerp(gfx, a0, b0, c0, d0, Aa0, Ab0, Ac0, Ad0, a1, b1, c1, d1, Aa1, Ab1, Ac1, Ad1);
-
-    return 1;
-}
-
-int smlua_func_gfx_set_cycle_type(lua_State* L) {
-    if (L == NULL) { return 0; }
-
-    int top = lua_gettop(L);
-    if (top != 2) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "gfx_set_cycle_type", 2, top);
-        return 0;
-    }
-
-    Gfx* gfx = (Gfx*)smlua_to_cobject(L, 1, LOT_GFX);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "gfx_set_cycle_type"); return 0; }
-    u32 type = smlua_to_integer(L, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "gfx_set_cycle_type"); return 0; }
-
-    gfx_set_cycle_type(gfx, type);
-
-    return 1;
-}
-
-int smlua_func_gfx_set_env_color(lua_State* L) {
-    if (L == NULL) { return 0; }
-
-    int top = lua_gettop(L);
-    if (top != 5) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "gfx_set_env_color", 5, top);
-        return 0;
-    }
-
-    Gfx* gfx = (Gfx*)smlua_to_cobject(L, 1, LOT_GFX);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "gfx_set_env_color"); return 0; }
-    u8 r = smlua_to_integer(L, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "gfx_set_env_color"); return 0; }
-    u8 g = smlua_to_integer(L, 3);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "gfx_set_env_color"); return 0; }
-    u8 b = smlua_to_integer(L, 4);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "gfx_set_env_color"); return 0; }
-    u8 a = smlua_to_integer(L, 5);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 5, "gfx_set_env_color"); return 0; }
-
-    gfx_set_env_color(gfx, r, g, b, a);
-
-    return 1;
-}
-
-int smlua_func_gfx_set_fog_color(lua_State* L) {
-    if (L == NULL) { return 0; }
-
-    int top = lua_gettop(L);
-    if (top != 5) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "gfx_set_fog_color", 5, top);
-        return 0;
-    }
-
-    Gfx* gfx = (Gfx*)smlua_to_cobject(L, 1, LOT_GFX);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "gfx_set_fog_color"); return 0; }
-    u8 r = smlua_to_integer(L, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "gfx_set_fog_color"); return 0; }
-    u8 g = smlua_to_integer(L, 3);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "gfx_set_fog_color"); return 0; }
-    u8 b = smlua_to_integer(L, 4);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "gfx_set_fog_color"); return 0; }
-    u8 a = smlua_to_integer(L, 5);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 5, "gfx_set_fog_color"); return 0; }
-
-    gfx_set_fog_color(gfx, r, g, b, a);
-
-    return 1;
-}
-
-int smlua_func_gfx_set_geometrymode(lua_State* L) {
-    if (L == NULL) { return 0; }
-
-    int top = lua_gettop(L);
-    if (top != 2) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "gfx_set_geometrymode", 2, top);
-        return 0;
-    }
-
-    Gfx* gfx = (Gfx*)smlua_to_cobject(L, 1, LOT_GFX);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "gfx_set_geometrymode"); return 0; }
-    u32 mode = smlua_to_integer(L, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "gfx_set_geometrymode"); return 0; }
-
-    gfx_set_geometrymode(gfx, mode);
-
-    return 1;
-}
-
-int smlua_func_gfx_set_prim_color(lua_State* L) {
-    if (L == NULL) { return 0; }
-
-    int top = lua_gettop(L);
-    if (top != 7) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "gfx_set_prim_color", 7, top);
-        return 0;
-    }
-
-    Gfx* gfx = (Gfx*)smlua_to_cobject(L, 1, LOT_GFX);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "gfx_set_prim_color"); return 0; }
-    u8 m = smlua_to_integer(L, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "gfx_set_prim_color"); return 0; }
-    u8 l = smlua_to_integer(L, 3);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "gfx_set_prim_color"); return 0; }
-    u8 r = smlua_to_integer(L, 4);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "gfx_set_prim_color"); return 0; }
-    u8 g = smlua_to_integer(L, 5);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 5, "gfx_set_prim_color"); return 0; }
-    u8 b = smlua_to_integer(L, 6);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 6, "gfx_set_prim_color"); return 0; }
-    u8 a = smlua_to_integer(L, 7);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 7, "gfx_set_prim_color"); return 0; }
-
-    gfx_set_prim_color(gfx, m, l, r, g, b, a);
-
-    return 1;
-}
-
-int smlua_func_gfx_set_render_mode(lua_State* L) {
-    if (L == NULL) { return 0; }
-
-    int top = lua_gettop(L);
-    if (top != 3) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "gfx_set_render_mode", 3, top);
-        return 0;
-    }
-
-    Gfx* gfx = (Gfx*)smlua_to_cobject(L, 1, LOT_GFX);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "gfx_set_render_mode"); return 0; }
-    u32 c0 = smlua_to_integer(L, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "gfx_set_render_mode"); return 0; }
-    u32 c1 = smlua_to_integer(L, 3);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "gfx_set_render_mode"); return 0; }
-
-    gfx_set_render_mode(gfx, c0, c1);
 
     return 1;
 }
@@ -33901,17 +33725,9 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "get_skybox", smlua_func_get_skybox);
     smlua_bind_function(L, "get_skybox_color", smlua_func_get_skybox_color);
     smlua_bind_function(L, "get_vertex_color", smlua_func_get_vertex_color);
-    smlua_bind_function(L, "gfx_clear_geometrymode", smlua_func_gfx_clear_geometrymode);
-    smlua_bind_function(L, "gfx_copy_lights_player_part", smlua_func_gfx_copy_lights_player_part);
     smlua_bind_function(L, "gfx_get_vtx", smlua_func_gfx_get_vtx);
     smlua_bind_function(L, "gfx_parse", smlua_func_gfx_parse);
     smlua_bind_function(L, "gfx_set_combine_lerp", smlua_func_gfx_set_combine_lerp);
-    smlua_bind_function(L, "gfx_set_cycle_type", smlua_func_gfx_set_cycle_type);
-    smlua_bind_function(L, "gfx_set_env_color", smlua_func_gfx_set_env_color);
-    smlua_bind_function(L, "gfx_set_fog_color", smlua_func_gfx_set_fog_color);
-    smlua_bind_function(L, "gfx_set_geometrymode", smlua_func_gfx_set_geometrymode);
-    smlua_bind_function(L, "gfx_set_prim_color", smlua_func_gfx_set_prim_color);
-    smlua_bind_function(L, "gfx_set_render_mode", smlua_func_gfx_set_render_mode);
     smlua_bind_function(L, "set_fog_color", smlua_func_set_fog_color);
     smlua_bind_function(L, "set_fog_intensity", smlua_func_set_fog_intensity);
     smlua_bind_function(L, "set_lighting_color", smlua_func_set_lighting_color);

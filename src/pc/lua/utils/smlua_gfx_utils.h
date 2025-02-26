@@ -52,22 +52,6 @@ void set_skybox_color(u8 index, u8 value);
 void gfx_parse(Gfx* cmd, LuaFunction func);
 /* |description|Gets a vertex from a display list command if it has the correct op. Intended to be used with `gfx_parse`.|descriptionEnd| */
 Vtx *gfx_get_vtx(Gfx* gfx, u16 offset);
-/* |description|Sets the display list geometry mode.|descriptionEnd| */
-void gfx_set_geometrymode(Gfx* gfx, u32 mode);
-/* |description|Clears the display list geometry mode.|descriptionEnd| */
-void gfx_clear_geometrymode(Gfx* gfx, u32 mode);
-/* |description|Sets the display list cycle type.|descriptionEnd| */
-void gfx_set_cycle_type(Gfx* gfx, u32 type);
-/* |description|Sets the display list render mode.|descriptionEnd| */
-void gfx_set_render_mode(Gfx* gfx, u32 c0, u32 c1);
-/* |description|Sets the display list primitive color.|descriptionEnd| */
-void gfx_set_prim_color(Gfx* gfx, u8 m, u8 l, u8 r, u8 g, u8 b, u8 a);
-/* |description|Sets the display list environment color.|descriptionEnd| */
-void gfx_set_env_color(Gfx* gfx, u8 r, u8 g, u8 b, u8 a);
-/* |description|Sets the display list fog color.|descriptionEnd| */
-void gfx_set_fog_color(Gfx* gfx, u8 r, u8 g, u8 b, u8 a);
-/* |description|Copies a player light parameters.|descriptionEnd| */
-void gfx_copy_lights_player_part(Gfx* gfx, u8 part);
 /* |description|Sets the display list combine mode.|descriptionEnd| */
 void gfx_set_combine_lerp(Gfx* gfx, u32 a0, u32 b0, u32 c0, u32 d0, u32 Aa0, u32 Ab0, u32 Ac0, u32 Ad0, u32 a1, u32 b1, u32 c1, u32 d1,	u32 Aa1, u32 Ab1, u32 Ac1, u32 Ad1);
 

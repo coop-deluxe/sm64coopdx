@@ -430,3 +430,18 @@ end
 function cast_graph_node(node)
     -- ...
 end
+
+--- @param str string
+--- @return string
+--- Removes color codes from a string
+function get_uncolored_string(str)
+    -- ...
+end
+
+--- @param gfx Gfx
+--- @param command string
+--- @vararg integer Parameters for the command
+--- Sets the specified display list command on the display list given.
+function gfx_set_command(gfx, command, ...)
+    -- ...
+end
