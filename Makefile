@@ -1187,8 +1187,23 @@ endef
 # Main Targets                                                                 #
 #==============================================================================#
 
-#all: $(ROM)
-all: $(EXE)
+.PHONY: all
+all:
+	@mkdir -p logs
+	@echo "==== Compiling Build (Terminal + Logfile) ===="
+	@unique_name=$$(date +'%Y-%m-%d_%H-%M-%S_%3N'); \
+	stdbuf -oL $(MAKE) compile 2>&1 \
+	| stdbuf -oL tee /dev/tty \
+	| stdbuf -oL sed -r 's/\x1B\[[0-9;]*[mK]//g' \
+	| stdbuf -oL /bin/sh -c 'while IFS= read -r line; do \
+	    d="$$(date +"%Y-%m-%d %H:%M:%S_%3N")"; \
+	    echo "[$$d] $$line"; \
+	done' \
+	> "logs/build_$${unique_name}.log"
+
+
+#compile: $(ROM)
+compile: $(EXE)
 
 ifeq ($(WINDOWS_BUILD),1)
 MAPFILE = $(BUILD_DIR)/coop.map
@@ -1200,7 +1215,7 @@ exemap: $(EXE)
 ifeq ($(IS_DEV_OR_DEBUG),0)
 	$(V)$(OBJCOPY) -p --strip-unneeded $(EXE)
 endif
-all: exemap
+compile: exemap
 endif
 
 clean:
@@ -1604,7 +1619,7 @@ ifeq ($(OSX_BUILD),1)
   SDL2_LIB := $(shell find $(BREW_PREFIX)/Cellar/sdl2 | grep libSDL2- | sort -n | uniq)
 endif
 
-all:
+compile:
 	@if [ "$(USE_APP)" = "0" ]; then \
 		rm -rf build/us_pc/sm64coopdx.app; \
   else \

@@ -52,6 +52,7 @@
 # General project-specific ignores
 doxygen/doxygen/*
 build/*
+logs/*
 *.dump
 *.mio0
 *.z64
