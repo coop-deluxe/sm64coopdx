@@ -482,6 +482,8 @@
 --- @field public animWaterThrowObj integer
 --- @field public animWingCapFly integer
 --- @field public cameraHudHead integer
+--- @field public capEnemyDecalGfx Pointer_Gfx
+--- @field public capEnemyGfx Pointer_Gfx
 --- @field public capEnemyLayer integer
 --- @field public capMetalModelId integer
 --- @field public capMetalWingModelId integer
@@ -590,6 +592,7 @@
 --- @field public year integer
 
 --- @class DisplayListNode
+--- @field public displayList Pointer_Gfx
 --- @field public next DisplayListNode
 --- @field public usingCamSpace integer
 
@@ -650,6 +653,10 @@
 
 --- @class FnGraphNode
 --- @field public node GraphNode
+
+--- @class Gfx
+--- @field public w0 integer
+--- @field public w1 integer
 
 --- @class GlobalObjectAnimations
 --- @field public amp_seg8_anims_08004034 Pointer_ObjectAnimPointer
@@ -839,6 +846,7 @@
 --- @field public type integer
 
 --- @class GraphNodeAnimatedPart
+--- @field public displayList Pointer_Gfx
 --- @field public node GraphNode
 --- @field public translation Vec3s
 
@@ -851,6 +859,7 @@
 --- @field public unused integer
 
 --- @class GraphNodeBillboard
+--- @field public displayList Pointer_Gfx
 --- @field public node GraphNode
 --- @field public translation Vec3s
 
@@ -872,6 +881,7 @@
 --- @field public pad1E Array_integer
 
 --- @class GraphNodeDisplayList
+--- @field public displayList Pointer_Gfx
 --- @field public node GraphNode
 
 --- @class GraphNodeGenerated
@@ -941,12 +951,14 @@
 --- @field public unused integer
 
 --- @class GraphNodeRotation
+--- @field public displayList Pointer_Gfx
 --- @field public node GraphNode
 --- @field public prevRotation Vec3s
 --- @field public prevTimestamp integer
 --- @field public rotation Vec3s
 
 --- @class GraphNodeScale
+--- @field public displayList Pointer_Gfx
 --- @field public node GraphNode
 --- @field public prevScale number
 --- @field public scale number
@@ -967,11 +979,13 @@
 --- @field public unused integer
 
 --- @class GraphNodeTranslation
+--- @field public displayList Pointer_Gfx
 --- @field public node GraphNode
 --- @field public pad1E Array_integer
 --- @field public translation Vec3s
 
 --- @class GraphNodeTranslationRotation
+--- @field public displayList Pointer_Gfx
 --- @field public node GraphNode
 --- @field public rotation Vec3s
 --- @field public translation Vec3s
@@ -2103,6 +2117,7 @@
 --- @field public marioIsUnder integer
 --- @field public marioWasUnder integer
 --- @field public marioWentUnder integer
+--- @field public normalDisplayList Pointer_Gfx
 --- @field public passiveDispersionFactor number
 --- @field public passiveRippleDecay number
 --- @field public passiveRippleMag number
@@ -2112,6 +2127,7 @@
 --- @field public posY number
 --- @field public posZ number
 --- @field public rippleDecay number
+--- @field public rippleDisplayList Pointer_Gfx
 --- @field public rippleTimer number
 --- @field public rippleTrigger integer
 --- @field public rippleX number
@@ -2302,6 +2318,12 @@
 --- @field public posPitch integer
 --- @field public posYaw integer
 
+--- @class Vtx
+--- @field public cn Array_integer
+--- @field public flag integer
+--- @field public ob Array_number
+--- @field public tc Array_integer
+
 --- @class Vtx_Interp
 --- @field public n string
 --- @field public ob Array_number
@@ -2419,6 +2441,7 @@
 
 --- @class Pointer_integer
 --- @class Pointer_Trajectory
+--- @class Pointer_Gfx
 --- @class Pointer_LevelScript
 --- @class Pointer_ObjectAnimPointer
 --- @class Pointer_Collision
