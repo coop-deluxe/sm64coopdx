@@ -17,6 +17,7 @@ struct CLIOptions {
 #if defined(_WIN32) || defined(_WIN64)
     bool console;
 #endif
+    bool verbose;
     char savePath[SYS_MAX_PATH];
     char configFile[SYS_MAX_PATH];
     unsigned int fullscreen;

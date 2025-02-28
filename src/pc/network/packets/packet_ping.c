@@ -1,9 +1,10 @@
 #include <stdio.h>
 #include "../network.h"
 #include "pc/utils/misc.h"
-#include "pc/debuglog.h"
+#include "pc/log.h"
 
 void network_send_ping(struct NetworkPlayer* toNp) {
+    log_context_begin(LOG_CTX_NETWORK);
     struct Packet p = { 0 };
     f64 timestamp = clock_elapsed_f64();
 
@@ -15,6 +16,7 @@ void network_send_ping(struct NetworkPlayer* toNp) {
     network_send_to(toNp->localIndex, &p);
 
     //LOG_INFO("tx ping");
+    log_context_end(LOG_CTX_NETWORK);
 }
 
 void network_receive_ping(struct Packet* p) {
@@ -44,7 +46,7 @@ void network_receive_pong(struct Packet* p) {
 
     struct NetworkPlayer* np = network_player_from_global_index(globalIndex);
     if (np == NULL || np->localIndex == UNKNOWN_LOCAL_INDEX || !np->connected) {
-        LOG_ERROR("Receiving pong from inactive player!");
+        LOG_ERROR_VERBOSE("Receiving pong from inactive player!");
         return;
     }
 

@@ -2,7 +2,7 @@
 #include "../network.h"
 #include "level_table.h"
 //#define DISABLE_MODULE_LOG 1
-#include "pc/debuglog.h"
+#include "pc/log.h"
 
 #include "pc/djui/djui.h"
 #include "game/level_info.h"
@@ -11,6 +11,7 @@
 void network_send_level_area_inform(void) {
     struct NetworkPlayer* np = gNetworkPlayerLocal;
     if (np == NULL) { return; }
+    log_context_begin(LOG_CTX_NETWORK);
     np->currLevelAreaSeqId++;
 
     struct Packet p = { 0 };
@@ -25,7 +26,8 @@ void network_send_level_area_inform(void) {
     packet_write(&p, &np->currAreaSyncValid,  sizeof(u8));
     network_send(&p);
 
-    LOG_INFO("tx level area inform for global %d: (%d, %d, %d, %d)", np->globalIndex, np->currCourseNum, np->currActNum, np->currLevelNum, np->currAreaIndex);
+    LOG_INFO_VERBOSE("tx level area inform for global %d: (%d, %d, %d, %d)", np->globalIndex, np->currCourseNum, np->currActNum, np->currLevelNum, np->currAreaIndex);
+    log_context_end(LOG_CTX_NETWORK);
 }
 
 void network_receive_level_area_inform(struct Packet* p) {
@@ -42,18 +44,18 @@ void network_receive_level_area_inform(struct Packet* p) {
     packet_read(p, &levelSyncValid, sizeof(u8));
     packet_read(p, &areaSyncValid,  sizeof(u8));
 
-    LOG_INFO("rx level area inform for global %d: (%d, %d, %d, %d)", globalIndex, courseNum, actNum, levelNum, areaIndex);
+    LOG_INFO_VERBOSE("rx level area inform for global %d: (%d, %d, %d, %d)", globalIndex, courseNum, actNum, levelNum, areaIndex);
 
     struct NetworkPlayer *np = network_player_from_global_index(globalIndex);
     if (np == NULL || np->localIndex == UNKNOWN_LOCAL_INDEX || !np->connected) {
-        LOG_ERROR("Receiving level area inform from inactive player!");
+        LOG_ERROR_VERBOSE("Receiving level area inform from inactive player!");
         return;
     }
 
     if (np == gNetworkPlayerLocal) { return; }
 
     if (np->currLevelAreaSeqId >= seq && abs(np->currLevelAreaSeqId - seq) < 256) {
-        LOG_INFO("Received old level area inform seq: %d vs %d", np->currLevelAreaSeqId, seq);
+        LOG_WARN("Received old level area inform seq: %d vs %d", np->currLevelAreaSeqId, seq);
         return;
     }
 

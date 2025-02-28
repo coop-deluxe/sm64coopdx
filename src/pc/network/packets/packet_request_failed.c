@@ -1,18 +1,20 @@
 #include <stdio.h>
 #include "../network.h"
 //#define DISABLE_MODULE_LOG 1
-#include "pc/debuglog.h"
+#include "pc/log.h"
 
 void network_send_request_failed(struct NetworkPlayer *toNp, u8 requestType) {
+    log_context_begin(LOG_CTX_NETWORK);
     if (gNetworkType == NT_SERVER && toNp == gNetworkPlayerLocal) {
         struct NetworkPlayer *np = gNetworkPlayerLocal;
         if (requestType == 0 && !np->currLevelSyncValid) {
-            LOG_INFO("re-requesting level");
+            LOG_DEBUG_VERBOSE("re-requesting level");
             network_send_change_level();
         } else if (requestType == 1 && (!np->currAreaSyncValid || !np->currLevelSyncValid)) {
-            LOG_INFO("re-requesting area");
+            LOG_DEBUG_VERBOSE("re-requesting area");
             network_send_change_area();
         }
+        log_context_end(LOG_CTX_NETWORK);
         return;
     }
 
@@ -21,21 +23,22 @@ void network_send_request_failed(struct NetworkPlayer *toNp, u8 requestType) {
     packet_write(&p, &requestType, sizeof(u8));
 
     network_send_to(toNp->localIndex, &p);
-    LOG_INFO("tx request failed");
+    LOG_DEBUG_VERBOSE("tx request failed");
+    log_context_end(LOG_CTX_NETWORK);
 }
 
 void network_receive_request_failed(struct Packet *p) {
-    LOG_INFO("rx request failed");
+    LOG_DEBUG_VERBOSE("rx request failed");
 
     u8 requestType;
     packet_read(p, &requestType, sizeof(u8));
 
     struct NetworkPlayer *np = gNetworkPlayerLocal;
     if (requestType == 0 && !np->currLevelSyncValid) {
-        LOG_INFO("re-requesting level");
+        LOG_DEBUG_VERBOSE("re-requesting level");
         network_send_change_level();
     } else if (requestType == 1 && (!np->currAreaSyncValid || !np->currLevelSyncValid)) {
-        LOG_INFO("re-requesting area");
+        LOG_DEBUG_VERBOSE("re-requesting area");
         network_send_change_area();
     }
 }

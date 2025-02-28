@@ -20,7 +20,7 @@
 #include "obj_behaviors.h"
 #include "level_update.h"
 #include "mario_step.h"
-#include "pc/debuglog.h"
+#include "pc/log.h"
 #include "pc/configfile.h"
 #include "pc/network/network.h"
 #include "pc/lua/smlua.h"

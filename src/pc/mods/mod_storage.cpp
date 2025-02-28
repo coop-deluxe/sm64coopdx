@@ -11,7 +11,7 @@ extern "C" {
 #include "pc/lua/smlua.h"
 #include "pc/mods/mods_utils.h"
 #include "pc/fs/fs.h"
-#include "pc/debuglog.h"
+#include "pc/log.h"
 }
 
 #define C_FIELD extern "C"

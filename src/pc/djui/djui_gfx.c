@@ -7,7 +7,7 @@
 #include "pc/gfx/gfx_window_manager_api.h"
 #include "gfx_dimensions.h"
 #include "djui_gfx.h"
-#include "pc/debuglog.h"
+#include "pc/log.h"
 
 const Gfx dl_djui_display_list_begin[] = {
     gsSPTextureAddrDjui(1),

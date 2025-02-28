@@ -49,7 +49,7 @@
 #include "pc/djui/djui_ctx_display.h"
 #include "pc/djui/djui_fps_display.h"
 #include "pc/djui/djui_lua_profiler.h"
-#include "pc/debuglog.h"
+#include "pc/log.h"
 #include "pc/utils/misc.h"
 
 #include "pc/mods/mods.h"
@@ -298,20 +298,34 @@ void *audio_thread(UNUSED void *arg) {
 }
 
 void produce_one_frame(void) {
+    log_context_begin(LOG_CTX_NETWORK);
     CTX_EXTENT(CTX_NETWORK, network_update);
+    log_context_end(LOG_CTX_NETWORK);
 
+    log_context_begin(LOG_CTX_RENDER);
     CTX_EXTENT(CTX_INTERP, patch_interpolations_before);
+    log_context_end(LOG_CTX_RENDER);
 
+    log_context_begin(LOG_CTX_GAME);
     CTX_EXTENT(CTX_GAME_LOOP, game_loop_one_iteration);
+    log_context_end(LOG_CTX_GAME);
 
+    log_context_begin(LOG_CTX_LUA);
     CTX_EXTENT(CTX_SMLUA, smlua_update);
+    log_context_end(LOG_CTX_LUA);
 
     // If we aren't threaded
     if (gAudioThread.state == INVALID) {
+        log_context_begin(LOG_CTX_AUDIO);
+
         CTX_EXTENT(CTX_AUDIO, buffer_audio);
+
+        log_context_end(LOG_CTX_AUDIO);
     }
 
+    log_context_begin(LOG_CTX_RENDER);
     CTX_EXTENT(CTX_RENDER, produce_interpolation_frames_and_delay);
+    log_context_end(LOG_CTX_RENDER);
 }
 
 // used for rendering 2D scenes fullscreen like the loading or crash screens
@@ -370,7 +384,7 @@ void game_deinit(void) {
 }
 
 void game_exit(void) {
-    LOG_INFO("exiting cleanly");
+    LOG_INFO("Exiting cleanly");
     game_deinit();
     exit(0);
 }
@@ -380,18 +394,26 @@ void* main_game_init(UNUSED void* dummy) {
     if (!djui_language_init(configLanguage)) { snprintf(configLanguage, MAX_CONFIG_STRING, "%s", ""); }
 
     LOADING_SCREEN_MUTEX(loading_screen_set_segment_text("Loading"));
+    log_context_begin(LOG_CTX_DYNOS);
+    LOG_INFO_VERBOSE("DynOS init");
     dynos_gfx_init();
     enable_queued_dynos_packs();
+    log_context_end(LOG_CTX_DYNOS);
+    log_context_begin(LOG_CTX_NETWORK);
+    LOG_INFO_VERBOSE("Sync init");
     sync_objects_init_system();
+    log_context_end(LOG_CTX_NETWORK);
 
     if (gCLIOpts.network != NT_SERVER && !gCLIOpts.skipUpdateCheck) {
         check_for_updates();
     }
 
     LOADING_SCREEN_MUTEX(loading_screen_set_segment_text("Loading ROM Assets"));
+    LOG_INFO_VERBOSE("Rom assets loading");
     rom_assets_load();
     smlua_text_utils_init();
 
+    LOG_INFO_VERBOSE("Mods init");
     mods_init();
     enable_queued_mods();
     LOADING_SCREEN_MUTEX(
@@ -399,10 +421,21 @@ void* main_game_init(UNUSED void* dummy) {
         loading_screen_set_segment_text("Starting Game");
     );
 
+
+    log_context_begin(LOG_CTX_AUDIO);
+    LOG_INFO_VERBOSE("Audio init");
     audio_init();
+    LOG_INFO_VERBOSE("Sound init");
     sound_init();
+    log_context_end(LOG_CTX_AUDIO);
+    log_context_begin(LOG_CTX_NETWORK);
+    LOG_INFO_VERBOSE("Network player init");
     network_player_init();
+    log_context_end(LOG_CTX_NETWORK);
+    log_context_begin(LOG_CTX_AUDIO);
+    LOG_INFO_VERBOSE("Mumble init");
     mumble_init();
+    log_context_end(LOG_CTX_AUDIO);
 
     gGameInited = true;
 }
@@ -473,7 +506,9 @@ int main(int argc, char *argv[]) {
     bool threadSuccess = false;
     if (!gCLIOpts.hideLoadingScreen && !gCLIOpts.headless) {
         if (init_thread_handle(&gLoadingThread, main_game_init, NULL, NULL, 0) == 0) {
+            log_context_begin(LOG_CTX_RENDER);
             render_loading_screen(); // render the loading screen while the game is setup
+            log_context_end(LOG_CTX_RENDER);
             threadSuccess = true;
             destroy_mutex(&gLoadingThread);
         }
@@ -485,14 +520,15 @@ int main(int argc, char *argv[]) {
     }
 
     // initialize sm64 data and controllers
+    LOG_INFO_VERBOSE("Game init");
     thread5_game_loop(NULL);
 
     // initialize sound outside threads
-    if (gCLIOpts.headless) audio_api = &audio_null;
-#if defined(AAPI_SDL1) || defined(AAPI_SDL2)
+    LOG_INFO_VERBOSE("Audio API init");;
+    #if defined(AAPI_SDL1) || defined(AAPI_SDL2)
     if (!audio_api && audio_sdl.init()) audio_api = &audio_sdl;
-#endif
-    if (!audio_api) audio_api = &audio_null;
+    #endif
+    if (!audio_api) { audio_api = &audio_null; }
 
     // Initialize the audio thread if possible.
     // init_thread_handle(&gAudioThread, audio_thread, NULL, NULL, 0);
@@ -502,6 +538,7 @@ int main(int argc, char *argv[]) {
 #endif
 
     // initialize djui
+    LOG_INFO_VERBOSE("Djui init");
     djui_init();
     djui_unicode_init();
     djui_init_late();
@@ -510,6 +547,7 @@ int main(int argc, char *argv[]) {
     show_update_popup();
 
     // initialize network
+    LOG_INFO_VERBOSE("Network init");
     if (gCLIOpts.network == NT_CLIENT) {
         network_set_system(NS_SOCKET);
         snprintf(gGetHostName, MAX_CONFIG_STRING, "%s", gCLIOpts.joinIp);
@@ -537,14 +575,19 @@ int main(int argc, char *argv[]) {
     }
 
     // main loop
+    LOG_INFO_VERBOSE("Begin main loop");
     while (true) {
         debug_context_reset();
         CTX_BEGIN(CTX_TOTAL);
         WAPI.main_loop(produce_one_frame);
 #ifdef DISCORD_SDK
+        log_context_begin(LOG_CTX_DISCORD);
         discord_update();
+        log_context_end(LOG_CTX_DISCORD);
 #endif
+        log_context_begin(LOG_CTX_AUDIO);
         mumble_update();
+        log_context_end(LOG_CTX_AUDIO);
 #ifdef DEBUG
         fflush(stdout);
         fflush(stderr);

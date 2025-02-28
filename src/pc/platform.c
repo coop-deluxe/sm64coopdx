@@ -17,7 +17,7 @@
 
 #include "cliopts.h"
 #include "fs/fs.h"
-#include "debuglog.h"
+#include "log.h"
 #include "configfile.h"
 
 /* these are not available on some platforms, so might as well */

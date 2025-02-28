@@ -10,7 +10,7 @@
 #include "engine/math_util.h"
 #include "rumble_init.h"
 #include "behavior_data.h"
-#include "pc/debuglog.h"
+#include "pc/log.h"
 #include "pc/configfile.h"
 #include "pc/network/network.h"
 #include "object_helpers.h"

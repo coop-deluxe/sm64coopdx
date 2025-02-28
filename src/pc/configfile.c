@@ -17,10 +17,12 @@
 #include "network/ban_list.h"
 #include "crash_handler.h"
 #include "network/moderator_list.h"
-#include "debuglog.h"
+#include "log.h"
 #include "djui/djui_hud_utils.h"
 #include "game/save_file.h"
 #include "pc/network/network_player.h"
+#include "network/network.h"
+#include "djui/djui_theme.h"
 
 #define ARRAY_LEN(arr) (sizeof(arr) / sizeof(arr[0]))
 
@@ -138,9 +140,7 @@ unsigned int configCameraPan                      = 0;
 unsigned int configCameraDegrade                  = 50; // 0 - 100%
 // debug
 bool         configLuaProfiler                    = false;
-bool         configDebugPrint                     = false;
-bool         configDebugInfo                      = false;
-bool         configDebugError                     = false;
+bool         configVerboseLogs                    = false;
 #ifdef DEVELOPMENT
 bool         configCtxProfiler                    = false;
 #endif
@@ -266,9 +266,7 @@ static const struct ConfigOption options[] = {
     {.name = "debug_offset",                   .type = CONFIG_TYPE_U64,  .u64Value    = &gPcDebug.bhvOffset},
     {.name = "debug_tags",                     .type = CONFIG_TYPE_U64,  .u64Value    = gPcDebug.tags},
     {.name = "lua_profiler",                   .type = CONFIG_TYPE_BOOL, .boolValue   = &configLuaProfiler},
-    {.name = "debug_print",                    .type = CONFIG_TYPE_BOOL, .boolValue   = &configDebugPrint},
-    {.name = "debug_info",                     .type = CONFIG_TYPE_BOOL, .boolValue   = &configDebugInfo},
-    {.name = "debug_error",                    .type = CONFIG_TYPE_BOOL, .boolValue   = &configDebugError},
+    {.name = "verbose_logs",                   .type = CONFIG_TYPE_BOOL, .boolValue   = &configVerboseLogs},
 #ifdef DEVELOPMENT
     {.name = "ctx_profiler",                   .type = CONFIG_TYPE_BOOL, .boolValue   = &configCtxProfiler},
 #endif
@@ -828,7 +826,7 @@ void configfile_save(const char *filename) {
         return;
     }
 
-    printf("Saving configuration to '%s'\n", filename);
+    LOG_INFO("Saving configuration to '%s'", filename);
 
     for (unsigned int i = 0; i < ARRAY_LEN(options); i++) {
         const struct ConfigOption *option = &options[i];

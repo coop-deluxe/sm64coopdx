@@ -2,9 +2,10 @@
 #include "../network.h"
 #include "pc/lua/smlua_hooks.h"
 //#define DISABLE_MODULE_LOG 1
-#include "pc/debuglog.h"
+#include "pc/log.h"
 
 void network_send_sync_valid(struct NetworkPlayer* toNp, s16 courseNum, s16 actNum, s16 levelNum, s16 areaIndex) {
+    log_context_begin(LOG_CTX_NETWORK);
     bool wasSyncValid = (toNp->currLevelSyncValid && toNp->currAreaSyncValid);
 
     // set the NetworkPlayers sync valid
@@ -20,6 +21,7 @@ void network_send_sync_valid(struct NetworkPlayer* toNp, s16 courseNum, s16 actN
             network_player_update_course_level(toNp, courseNum, actNum, levelNum, areaIndex);
             smlua_call_event_hooks(HOOK_ON_SYNC_VALID);
         }
+        log_context_end(LOG_CTX_NETWORK);
         return;
     }
 
@@ -33,11 +35,12 @@ void network_send_sync_valid(struct NetworkPlayer* toNp, s16 courseNum, s16 actN
     packet_write(&p, &myGlobalIndex, sizeof(u8));
     network_send_to(toNp->localIndex, &p);
 
-    LOG_INFO("tx sync valid");
+    LOG_DEBUG_VERBOSE("tx sync valid");
+    log_context_end(LOG_CTX_NETWORK);
 }
 
 void network_receive_sync_valid(struct Packet* p) {
-    LOG_INFO("rx sync valid");
+    LOG_DEBUG_VERBOSE("rx sync valid");
 
     s16 courseNum, actNum, levelNum, areaIndex;
     u8 fromGlobalIndex;
@@ -50,14 +53,14 @@ void network_receive_sync_valid(struct Packet* p) {
     if (gNetworkType != NT_SERVER) {
         extern s16 gCurrCourseNum, gCurrActStarNum, gCurrLevelNum, gCurrAreaIndex;
         if (courseNum != gCurrCourseNum || actNum != gCurrActStarNum || levelNum != gCurrLevelNum || (areaIndex != gCurrAreaIndex && areaIndex != -1)) {
-            LOG_ERROR("rx sync valid: received an improper location");
+            LOG_ERROR_VERBOSE("rx sync valid: received an improper location");
             return;
         }
     }
 
     struct NetworkPlayer* np = (gNetworkType != NT_SERVER) ? gNetworkPlayerLocal : &gNetworkPlayers[p->localIndex];
     if (np == NULL || np->localIndex == UNKNOWN_LOCAL_INDEX || !np->connected) {
-        LOG_ERROR("Receiving sync valid from inactive player!");
+        LOG_ERROR_VERBOSE("Receiving sync valid from inactive player!");
         return;
     }
 
@@ -72,7 +75,7 @@ void network_receive_sync_valid(struct Packet* p) {
 
     // inform server
     if (fromGlobalIndex != gNetworkPlayerServer->globalIndex) {
-        LOG_INFO("informing server of sync valid");
+        LOG_DEBUG_VERBOSE("informing server of sync valid");
         network_send_sync_valid(gNetworkPlayerServer, courseNum, actNum, levelNum, areaIndex);
     }
 

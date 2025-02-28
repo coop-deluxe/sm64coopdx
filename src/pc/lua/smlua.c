@@ -199,7 +199,7 @@ static void smlua_load_script(struct Mod* mod, struct ModFile* file, u16 remoteI
 
     gSmLuaConvertSuccess = true;
     gLuaInitializingScript = 1;
-    LOG_INFO("Loading lua script '%s'", file->cachedPath);
+    LOG_INFO_VERBOSE("Loading lua script '%s'", file->cachedPath);
 
     FILE *f = f_open_r(file->cachedPath);
     if (!f) {
@@ -272,7 +272,7 @@ static void smlua_load_script(struct Mod* mod, struct ModFile* file, u16 remoteI
     }
 
     // run chunks
-    LOG_INFO("Executing '%s'", file->relativePath);
+    LOG_INFO_VERBOSE("Executing '%s'", file->relativePath);
     if (smlua_pcall(L, 0, LUA_MULTRET, 0) != LUA_OK) {
         LOG_LUA("Failed to execute lua script '%s'.", file->cachedPath);
     }
@@ -313,10 +313,10 @@ void smlua_init(void) {
 
     // load scripts
     mods_size_enforce(&gActiveMods);
-    LOG_INFO("Loading scripts:");
+    LOG_INFO_VERBOSE("Loading scripts:");
     for (int i = 0; i < gActiveMods.entryCount; i++) {
         struct Mod* mod = gActiveMods.entries[i];
-        LOG_INFO("    %s", mod->relativePath);
+        LOG_INFO_VERBOSE("    %s", mod->relativePath);
         gLuaLoadingMod = mod;
         gLuaActiveMod = mod;
         gLuaLastHookMod = mod;
