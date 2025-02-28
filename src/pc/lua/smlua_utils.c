@@ -356,13 +356,16 @@ void smlua_push_object(lua_State* L, u16 lot, void* p, void *extraInfo) {
     }
     LUA_STACK_CHECK_BEGIN_NUM(1);
 
-    uintptr_t key = lot ^ (uintptr_t) p;
+    uintptr_t key = (lot * 0x9E3779B97F4A7C15) ^ ((uintptr_t)p >> 3);
     lua_rawgeti(L, LUA_REGISTRYINDEX, gSmLuaCObjects);
     lua_pushinteger(L, key);
     lua_gettable(L, -2);
     if (lua_isuserdata(L, -1)) {
-        lua_remove(L, -2); // Remove gSmLuaCObjects table
-        return;
+        const CObject *cobj = lua_touserdata(L, -1);
+        if (cobj && cobj->lot == lot && cobj->pointer == p) {
+            lua_remove(L, -2); // Remove gSmLuaCObjects table
+            return;
+        }
     }
     lua_pop(L, 1);
 
@@ -388,13 +391,16 @@ void smlua_push_pointer(lua_State* L, u16 lvt, void* p, void *extraInfo) {
     }
     LUA_STACK_CHECK_BEGIN_NUM(1);
 
-    uintptr_t key = lvt ^ (uintptr_t) p;
+    uintptr_t key = (lvt * 0x9E3779B97F4A7C15) ^ ((uintptr_t)p >> 3);
     lua_rawgeti(L, LUA_REGISTRYINDEX, gSmLuaCPointers);
     lua_pushinteger(L, key);
     lua_gettable(L, -2);
     if (lua_isuserdata(L, -1)) {
-        lua_remove(L, -2); // Remove gSmLuaCPointers table
-        return;
+        const CPointer *cptr = lua_touserdata(L, 1);
+        if (cptr && cptr->lvt == lvt && cptr->pointer == p) {
+            lua_remove(L, -2); // Remove gSmLuaCPointers table
+            return;
+        }
     }
     lua_pop(L, 1);
 

@@ -116,23 +116,33 @@ void patch_scroll_targets_before(void) {
     }
 }
 
-#define SHORT_RANGE 0x7FFF
+static inline f32 wrap_f32(f32 val) {
+    if (val >=  0x8000) { val -= 0x10000; }
+    if (val <= -0x8000) { val += 0x10000; }
+    return val;
+}
+
+static inline s32 wrap_s32(s32 val) {
+    if (val >=  0x8000) { val -= 0x10000; }
+    if (val <= -0x8000) { val += 0x10000; }
+    return val;
+}
 
 void patch_scroll_targets_interpolated(f32 delta) {
-    f32 antiDelta = 1.0f - delta;
-
     for (struct ScrollTarget* scroll = hmap_begin(sScrollTargets); scroll != NULL; scroll = hmap_next(sScrollTargets)) {
         if (scroll->needInterp) {
             Vtx* *verts = scroll->vertices;
             if (scroll->bhv < SCROLL_UV_X) {
                 u8 bhvIndex = MIN(scroll->bhv, 2);
                 for (u16 k = 0; k < scroll->size; k++) {
-                    verts[k]->n.ob[bhvIndex] = scroll->prevF32[k] * antiDelta + scroll->interpF32[k] * delta;
+                    f32 diff = wrap_f32(scroll->interpF32[k] - scroll->prevF32[k]);
+                    verts[k]->n.ob[bhvIndex] = wrap_f32(scroll->prevF32[k] + diff * delta);
                 }
             } else {
                 u8 bhvIndex = MIN(scroll->bhv-SCROLL_UV_X, 1);
                 for (u16 k = 0; k < scroll->size; k++) {
-                    verts[k]->n.tc[bhvIndex] = clampf(scroll->prevS16[k] * antiDelta + scroll->interpS16[k] * delta, -SHORT_RANGE, SHORT_RANGE);
+                    s32 diff = wrap_s32(scroll->interpS16[k] - scroll->prevS16[k]);
+                    verts[k]->n.tc[bhvIndex] = wrap_s32(scroll->prevS16[k] + diff * delta);
                 }
             }
         }

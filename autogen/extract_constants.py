@@ -44,7 +44,7 @@ def extract_constants(filename):
     txt = ''
     inside = 0
     for character in tmp:
-        if inside != 0 and character == '\n':
+        if inside > 0 and character == '\n':
             continue
 
         txt += character
@@ -62,25 +62,21 @@ def extract_constants(filename):
     while ('\n\n' in txt):
         txt = txt.replace('\n\n', '\n')
 
-    # BAD culling of ifdef version
+    # Cull false ifdef blocks
     tmp = txt
     txt = ''
-    inside = 0
+    inside_false = 0
     for line in tmp.splitlines():
         line = line.strip()
-        if line == '#ifdef VERSION_JP':
-            inside = 1
+        if line == '#ifdef _LANGUAGE_ASSEMBLY' or line.startswith('#if '):
+            inside_false += 1
             continue
-        if line == '#ifdef VERSION_EU':
-            inside = 1
+        if line.startswith('#else') and inside_false > 0:
             continue
-        if line == '#else':
-            inside = 0
+        if line.startswith('#endif') and inside_false > 0:
+            inside_false -= 1
             continue
-        if line == '#endif':
-            inside = 0
-            continue
-        if inside == 0:
+        if inside_false == 0:
             txt += line + '\n'
 
     # cull obvious non-enums, non-defines
@@ -96,6 +92,8 @@ def extract_constants(filename):
                 continue
             if '(' in pieces[1]:
                 continue
+            txt += line + '\n'
+        if line.startswith('#if') or line == '#else' or line == '#endif':
             txt += line + '\n'
 
     return txt
