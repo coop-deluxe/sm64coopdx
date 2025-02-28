@@ -134,9 +134,9 @@ void save_file_set_using_backup_slot(bool usingBackupSlot);
 
 /* |description|Registers a custom moving texture entry (used for vanilla water boxes)|descriptionEnd| */
 void movtexqc_register(const char* name, s16 level, s16 area, s16 type);
-/* |description|Gets the water level in an area|descriptionEnd| */
+/* |description|Gets the water level in an area corresponding to `index` (0-indexed)|descriptionEnd| */
 s16 get_water_level(u8 index);
-/* |description|Sets the water level in an area|descriptionEnd| */
+/* |description|Sets the water level in an area corresponding to `index` (0-indexed)|descriptionEnd| */
 void set_water_level(u8 index, s16 height, bool sync);
 
 /* |description|Plays a screen transition|descriptionEnd| */
