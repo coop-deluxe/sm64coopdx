@@ -292,6 +292,7 @@ static CRASH_HANDLER_TYPE crash_handler(EXCEPTION_POINTERS *ExceptionInfo) {
 static void crash_handler(const int signalNum, siginfo_t *info, UNUSED ucontext_t *context) {
 #endif
     // printf("Game crashed! preparing crash screen...\n");
+    log_context_begin(LOG_CTX_RUNTIME);
     LOG_CRASH("Game crashed! Preparing crash screen...");
     memset(sCrashHandlerText, 0, sizeof(sCrashHandlerText));
     CrashHandlerText *pText = &sCrashHandlerText[0];
