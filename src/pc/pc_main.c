@@ -483,11 +483,9 @@ int main(int argc, char *argv[]) {
 
     // create the window almost straight away
     if (!gGfxInited) {
-        log_context_begin(LOG_CTX_RENDER);
         gfx_init(&WAPI, &RAPI, TITLE);
         WAPI.set_keyboard_callbacks(keyboard_on_key_down, keyboard_on_key_up, keyboard_on_all_keys_up,
             keyboard_on_text_input, keyboard_on_text_editing);
-        log_context_end(LOG_CTX_RENDER);
     }
 
     // render the rom setup screen
@@ -522,19 +520,15 @@ int main(int argc, char *argv[]) {
     }
 
     // initialize sm64 data and controllers
-    log_context_begin(LOG_CTX_GAME);
     LOG_INFO_VERBOSE("Game init");
     thread5_game_loop(NULL);
-    log_context_end(LOG_CTX_GAME);
 
     // initialize sound outside threads
-    log_context_begin(LOG_CTX_AUDIO);
     LOG_INFO_VERBOSE("Audio API init");;
     #if defined(AAPI_SDL1) || defined(AAPI_SDL2)
     if (!audio_api && audio_sdl.init()) audio_api = &audio_sdl;
     #endif
     if (!audio_api) { audio_api = &audio_null; }
-    log_context_end(LOG_CTX_AUDIO);
 
     // Initialize the audio thread if possible.
     // init_thread_handle(&gAudioThread, audio_thread, NULL, NULL, 0);
@@ -544,7 +538,6 @@ int main(int argc, char *argv[]) {
 #endif
 
     // initialize djui
-    log_context_begin(LOG_CTX_RENDER);
     LOG_INFO_VERBOSE("Djui init");
     djui_init();
     djui_unicode_init();
@@ -552,10 +545,8 @@ int main(int argc, char *argv[]) {
     djui_console_message_dequeue();
 
     show_update_popup();
-    log_context_end(LOG_CTX_RENDER);
 
     // initialize network
-    log_context_begin(LOG_CTX_NETWORK);
     LOG_INFO_VERBOSE("Network init");
     if (gCLIOpts.network == NT_CLIENT) {
         network_set_system(NS_SOCKET);
@@ -582,7 +573,6 @@ int main(int argc, char *argv[]) {
     } else {
         network_init(NT_NONE, false);
     }
-    log_context_end(LOG_CTX_NETWORK);
 
     // main loop
     LOG_INFO_VERBOSE("Begin main loop");

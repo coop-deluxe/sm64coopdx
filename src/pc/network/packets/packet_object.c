@@ -285,7 +285,11 @@ void network_send_object(struct Object* o) {
     }
 
     struct SyncObject* so = sync_object_get(o->oSyncID);
-    if (so == NULL) { LOG_ERROR_VERBOSE("tried to send null sync obj"); return; }
+    if (so == NULL) {
+        LOG_ERROR_VERBOSE("tried to send null sync obj"); 
+        log_context_end(LOG_CTX_NETWORK);
+        return;
+    }
     if (o != so->o) {
         LOG_ERROR_VERBOSE("object mismatch for %d", o->oSyncID);
         log_context_end(LOG_CTX_NETWORK);

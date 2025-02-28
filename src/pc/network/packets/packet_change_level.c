@@ -43,6 +43,7 @@ void network_send_change_level(void) {
 
     if (gNetworkType == NT_SERVER) {
         player_changed_level(gNetworkPlayerLocal, gCurrCourseNum, gCurrActStarNum, gCurrLevelNum, gCurrAreaIndex);
+        log_context_end(LOG_CTX_NETWORK);
         return;
     }
 

@@ -76,9 +76,9 @@ void network_receive_join_request(struct Packet* p) {
 }
 
 void network_send_join(struct Packet* joinRequestPacket) {
-    log_context_begin(LOG_CTX_NETWORK);
     SOFT_ASSERT(gNetworkType == NT_SERVER);
-
+    
+    log_context_begin(LOG_CTX_NETWORK);
     // figure out id
     u8 globalIndex = joinRequestPacket->localIndex;
     u8 connectedCount = 1;

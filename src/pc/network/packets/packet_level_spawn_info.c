@@ -26,10 +26,10 @@ static struct Object* get_object_matching_respawn_info(u32* respawnInfo) {
 ////
 
 static void network_send_level_spawn_info_area(struct NetworkPlayer* destNp, u8 areaIndex) {
-    log_context_begin(LOG_CTX_NETWORK);
     // check that the area is active
     struct Area* area = &gAreaData[areaIndex];
     if (area->unk04 == NULL) { return; }
+    log_context_begin(LOG_CTX_NETWORK);
 
     if (destNp == NULL || !destNp->connected) {
         LOG_ERROR_VERBOSE("network_send_level_spawn_info_area: dest np is invalid");

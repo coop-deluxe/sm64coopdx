@@ -37,6 +37,7 @@ void network_send_change_area(void) {
 
     if (gNetworkType == NT_SERVER) {
         player_changed_area(gNetworkPlayerLocal, gCurrCourseNum, gCurrActStarNum, gCurrLevelNum, gCurrAreaIndex);
+        log_context_end(LOG_CTX_NETWORK);
         return;
     }
 

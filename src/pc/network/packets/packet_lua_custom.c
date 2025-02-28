@@ -77,8 +77,8 @@ void network_send_lua_custom(bool broadcast) {
             return;
         }
         if (!packet_write_lnt(&p, &lntKey)) {
-            return;
             log_context_end(LOG_CTX_NETWORK);
+            return;
         }
 
         // convert and write value

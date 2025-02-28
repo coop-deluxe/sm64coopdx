@@ -15,6 +15,7 @@ void network_send_mod_list_request(void) {
 
     if (!mods_generate_remote_base_path()) {
         LOG_ERROR_VERBOSE("Failed to generate remote base path!");
+        log_context_end(LOG_CTX_NETWORK);
         return;
     }
 

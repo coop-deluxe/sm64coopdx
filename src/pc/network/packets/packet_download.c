@@ -130,7 +130,6 @@ static bool network_start_offset_group(struct OffsetGroup* og) {
     // sanity check
     if (!foundIndex) {
         LOG_INFO_VERBOSE("Could not find offset group, may be near the end of the download");
-        log_context_end(LOG_CTX_NETWORK);
         return false;
     }
 

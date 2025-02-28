@@ -95,8 +95,8 @@ static u16 get_spawn_info_index_of_object(struct Object* o) {
 ////
 
 void network_send_level_respawn_info(struct Object* o, u8 respawnInfoBits) {
-    log_context_begin(LOG_CTX_NETWORK);
     if (gNetworkType == NT_NONE || gNetworkPlayerLocal == NULL) { return; }
+    log_context_begin(LOG_CTX_NETWORK);
 
     // make sure our area is valid
     if (!gNetworkPlayerLocal->currAreaSyncValid) {
