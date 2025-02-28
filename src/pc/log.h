@@ -122,6 +122,6 @@ void log_context_end(LogContext ctx);
 #endif
 #endif
 #define LOG_CRASH(...) log_message(LOG_TYPE_CRASH, __VA_ARGS__)
-#define LOG_CONSOLE(...)  snprintf(gDjuiConsoleTmpBuffer, CONSOLE_MAX_TMP_BUFFER, __VA_ARGS__), djui_console_message_create(gDjuiConsoleTmpBuffer, CONSOLE_MESSAGE_INFO)
+#define LOG_CONSOLE(...) snprintf(gDjuiConsoleTmpBuffer, CONSOLE_MAX_TMP_BUFFER, __VA_ARGS__), djui_console_message_create(gDjuiConsoleTmpBuffer, CONSOLE_MESSAGE_INFO)
 
 #endif // LOGGING_H

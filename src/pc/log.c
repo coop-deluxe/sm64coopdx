@@ -212,13 +212,13 @@ void log_context_begin(LogContext ctx) {
     stack->top++;
     stack->items[stack->top].ctx = ctx;
     stack->items[stack->top].depth++;
-    // LOG_INFO("stack %i now has top %i ctx %i", get_thread(), stack->top, stack->items[stack->top].ctx);
+    // LOG_INFO("stack %i now has top %i ctx %i depth %i", get_thread(), stack->top, stack->items[stack->top].ctx, stack->items[stack->top].depth);
 }
 
 void log_context_end(LogContext ctx) {
     // LOG_INFO("Close context %i on %i", ctx, get_thread());
     LogContextStack* stack = &contextStack[get_thread()];
-    if (ctx != stack->items[stack->top].ctx) LOG_ERROR("Closing log context (%i) is not the same as current log context (%i). (%i)", ctx, stack->items[stack->top].ctx, get_thread());
+    if (ctx != stack->items[stack->top].ctx) { LOG_ERROR("Closing log context (%i) is not the same as current log context (%i). (%i)", ctx, stack->items[stack->top].ctx, get_thread()); }
 
     if (stack->top == 0 && stack->items[stack->top].depth == 0) {
         LOG_ERROR("Log context was closed too many times!");
