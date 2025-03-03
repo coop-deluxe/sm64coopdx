@@ -252,10 +252,6 @@ const char *sys_user_path(void)
     return sys_windows_short_path_from_wcs(shortPath, SYS_MAX_PATH, widePath) ? shortPath : NULL;
 }
 
-const char *sys_resource_path(void) {
-    return sys_exe_path_dir();
-}
-
 const char *sys_exe_path_dir(void)
 {
     static char path[SYS_MAX_PATH];
@@ -330,8 +326,7 @@ const char *sys_user_path(void) {
     return path;
 }
 
-const char *sys_resource_path(void)
-{
+const char *sys_resource_path(void) {
 #ifdef __APPLE__ // Kinda lazy, but I don't know how to add CoreFoundation.framework
     static char path[SYS_MAX_PATH];
     if ('\0' != path[0]) { return path; }
@@ -344,9 +339,14 @@ const char *sys_resource_path(void)
         strncpy(path, exeDir, count);
         return strncat(path, folder, sizeof(path) - 1 - count);
     }
-#endif
-
+    
     return sys_exe_path_dir();
+#elif defined(__SWITCH__)
+    static const char path[] = "sdmc:/switch/sm64coopdx";
+    return path;
+#else
+    return sys_exe_path_dir();
+#endif
 }
 
 const char *sys_exe_path_dir(void) {

@@ -23,6 +23,11 @@
 #include "rom_assets.h"
 #include "rom_checker.h"
 #include "game_main.h"
+#ifdef __SWITCH__
+#include "nx_main.h"
+#else
+#include "pc_main.h"
+#endif
 #include "loading.h"
 #include "configfile.h"
 #include "thread.h"
@@ -360,6 +365,9 @@ void game_deinit(void) {
     mods_shutdown();
     djui_shutdown();
     gfx_shutdown();
+#ifdef __SWITCH__
+    nx_cleanup();
+#endif
     gGameInited = false;
 }
 

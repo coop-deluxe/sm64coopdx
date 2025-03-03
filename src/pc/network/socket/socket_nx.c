@@ -1,18 +1,17 @@
-#include "socket.h"
-#include <stdio.h>
+#ifdef __SWITCH__
+#include "socket_nx.h"
+#include "../network.h"
 #include "pc/configfile.h"
 #include "pc/debuglog.h"
 #include "pc/djui/djui.h"
 
-struct sockaddr_in6;
-struct sin6_addr;
+#include <stdio.h>
 
-#ifdef __SWITCH__
-#include <switch.h>
-#endif
+struct sockaddr_in;
+struct sin_addr;
 
 static SOCKET sCurSocket = INVALID_SOCKET;
-static struct sockaddr_in6 sAddr[MAX_PLAYERS] = { 0 };
+static struct sockaddr_in sAddr[MAX_PLAYERS] = { 0 };
 struct addrinfo hints;
 struct addrinfo *result, *i;
 
@@ -21,7 +20,7 @@ char gGetHostName[MAX_CONFIG_STRING] = "";
 // Resolves a hostname to an IP address. Current limitation: It still only gets the first address it sees and returns.
 // getaddrinfo() is smart enough to prioritize IPv4 if the user is not in an IPv6 enabled network, so this shouldn't be a problem for now.
 // TODO: Store all found addresses somewhere and make the game try to connect to each of them if one fails.
-void resolve_domain(struct sockaddr_in6 *addr) {
+void resolve_domain(struct sockaddr_in *addr) {
     // non zero value if getaddrinfo throws an error.
     int error;
 
@@ -45,57 +44,40 @@ void resolve_domain(struct sockaddr_in6 *addr) {
     // Get host addresses
     error = getaddrinfo(configJoinIp, NULL, &hints, &result);
 
-    // If it was successful:
-    if (error == 0) {
-        // Iterate through results
-        for (i = result; i != NULL; i = i->ai_next) {
-            // buffer for IPv6 address
-            char str[INET6_ADDRSTRLEN];
-            // IPv6 address:
-            if (i->ai_addr->sa_family == AF_INET6) {
-                struct sockaddr_in6 *p = (struct sockaddr_in6 *)i->ai_addr;
-                // copy address to sockaddr_in6 struct
-                memcpy(&addr->sin6_addr, &p->sin6_addr, sizeof(struct in6_addr));
-                // set new join IP for config file
-                snprintf(configJoinIp, MAX_CONFIG_STRING, "%s", inet_ntop(AF_INET6, &p->sin6_addr, str, sizeof(str)));
-                // Free results from memory and return
-                freeaddrinfo(result);
-                return;
-
-            } else if (i->ai_addr->sa_family == AF_INET) { // IPv4 address. Convert it to an IPv6-mapped IPv4 address so it's compatible with the IPv6 socket.
-                struct sockaddr_in *p = (struct sockaddr_in *)i->ai_addr;
-                struct in6_addr ipv6_mapped_addr;
-                // clear out IPv6-mapped IPv4 address buffer
-                memset(&ipv6_mapped_addr, 0, sizeof(struct in6_addr));
-                // ::ffff: Prefix
-                ipv6_mapped_addr.s6_addr[10] = 0xff;
-                ipv6_mapped_addr.s6_addr[11] = 0xff;
-                // then copy the IPv4 address to the end of the IPv6 address. The address is now properly formed.
-                memcpy(&ipv6_mapped_addr.s6_addr[12], &p->sin_addr, sizeof(p->sin_addr));
-                // copy address to sockaddr_in6 struct
-                memcpy(&addr->sin6_addr, &ipv6_mapped_addr, sizeof(struct in6_addr));
-
-                // set new join IP for config file
-                snprintf(configJoinIp, MAX_CONFIG_STRING, "%s", inet_ntop(AF_INET6, &ipv6_mapped_addr, str, sizeof(str)));
-                // Free results from memory and return
-                freeaddrinfo(result);
-                return;
-            }
-        }
-    } else {
+    // If it wasn't successful
+    if (error != 0) {
         LOG_ERROR("getaddrinfo() failed with error code %i: %s", error, gai_strerror(error));
+    }
+    
+    // If it was successful:
+    
+    // Iterate through results
+    for (i = result; i != NULL; i = i->ai_next) {
+        // Buffer for IPv4 address
+        char str[INET_ADDRSTRLEN];
+
+        // Sadly since we can't claim the IPv6 port on Switch.
+        // We can't use any of the IPv6 addresses.
+        if (i->ai_addr->sa_family != AF_INET) { continue; }
+        
+        // IPv4 address:
+        struct sockaddr_in *p = (struct sockaddr_in *)i->ai_addr;
+        // copy address to sockaddr_in struct
+        memcpy(&addr->sin_addr, &p->sin_addr, sizeof(struct in_addr));
+        // set new join IP for config file
+        snprintf(configJoinIp, MAX_CONFIG_STRING, "%s", inet_ntop(AF_INET, &p->sin_addr, str, sizeof(str)));
+        // Free results from memory and return
+        freeaddrinfo(result);
+        return;
     }
 }
 
 static int socket_bind(SOCKET socket, unsigned int port) {
-    struct sockaddr_in6 rxAddr;
-    // Clean struct to prevent rare cases of binding errors due to garbage data in that memory location. This just happened to me randomly on Windows and left me very confused.
-    memset(&rxAddr, 0, sizeof(struct sockaddr_in6));
-    rxAddr.sin6_family = AF_INET6;
-    rxAddr.sin6_port = htons(port);
-    rxAddr.sin6_addr = in6addr_any;
-
-    int rc = bind(socket, (SOCKADDR *)&rxAddr, sizeof(struct sockaddr_in6));
+    struct sockaddr_in rxAddr;
+    rxAddr.sin_family = AF_INET;
+    rxAddr.sin_port = htons(port);
+    rxAddr.sin_addr.s_addr = htonl(INADDR_ANY);
+    int rc = bind(socket, (SOCKADDR *)&rxAddr, sizeof(rxAddr));
     if (rc != 0) {
         LOG_ERROR("bind failed with error %d", SOCKET_LAST_ERROR);
     }
@@ -103,9 +85,9 @@ static int socket_bind(SOCKET socket, unsigned int port) {
     return rc;
 }
 
-static int socket_send(SOCKET socket, struct sockaddr_in6* addr, u8* buffer, u16 bufferLength) {
-    int addrSize = sizeof(struct sockaddr_in6);
-    int rc = sendto(socket, (char*)buffer, bufferLength, 0, (struct sockaddr*)addr, addrSize);
+static int socket_send(SOCKET socket, struct sockaddr_in *addr, u8 *buffer, u16 bufferLength) {
+    int addrSize = sizeof(struct sockaddr_in);
+    int rc = sendto(socket, (char *)buffer, bufferLength, 0, (struct sockaddr *)addr, addrSize);
     if (rc != SOCKET_ERROR) { return NO_ERROR; }
 
     int error = SOCKET_LAST_ERROR;
@@ -115,14 +97,14 @@ static int socket_send(SOCKET socket, struct sockaddr_in6* addr, u8* buffer, u16
     return rc;
 }
 
-static int socket_receive(SOCKET socket, struct sockaddr_in6* rxAddr, u8* buffer, u16 bufferLength, u16* receiveLength, u8* localIndex) {
+static int socket_receive(SOCKET socket, struct sockaddr_in *rxAddr, u8 *buffer, u16 bufferLength, u16 *receiveLength, u8 *localIndex) {
     *receiveLength = 0;
 
-    RX_ADDR_SIZE_TYPE rxAddrSize = sizeof(struct sockaddr_in6);
+    RX_ADDR_SIZE_TYPE rxAddrSize = sizeof(struct sockaddr_in);
     int rc = recvfrom(socket, (char*)buffer, bufferLength, 0, (struct sockaddr*)rxAddr, &rxAddrSize);
 
     for (int i = 1; i < MAX_PLAYERS; i++) {
-        if (memcmp(rxAddr, &sAddr[i], sizeof(struct sockaddr_in6)) == 0) {
+        if (memcmp(rxAddr, &sAddr[i], sizeof(struct sockaddr_in)) == 0) {
             *localIndex = i;
             break;
         }
@@ -138,6 +120,38 @@ static int socket_receive(SOCKET socket, struct sockaddr_in6* rxAddr, u8* buffer
 
     *receiveLength = rc;
     return NO_ERROR;
+}
+
+SOCKET socket_initialize(void) {
+    // initialize socket
+    SOCKET sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+    if (sock == INVALID_SOCKET) {
+        LOG_ERROR("socket failed with error %d", SOCKET_LAST_ERROR);
+        return INVALID_SOCKET;
+    }
+
+    // set non-blocking mode
+    int rc = fcntl(sock, F_SETFL, fcntl(sock, F_GETFL, 0) | O_NONBLOCK);
+    if (rc == (int)INVALID_SOCKET) {
+        LOG_ERROR("fcntl failed with error: %d", rc);
+        return INVALID_SOCKET;
+    }
+
+    // The Nintendo Switch does support IPv6. But that socket is already claimed!
+    // We aren't able to retrieve an already opened socket so we have to settle for IPv4.
+    // It could be worse I suppose.
+
+    LOG_INFO("Socket initialized.");
+
+    return sock;
+}
+
+void socket_shutdown(SOCKET socket) {
+    if (socket == INVALID_SOCKET) { return; }
+    int rc = closesocket(socket);
+    if (rc == (int)SOCKET_ERROR) {
+        LOG_ERROR("closesocket failed with error %d\n", SOCKET_LAST_ERROR);
+    }
 }
 
 static bool ns_socket_initialize(enum NetworkType networkType, UNUSED bool reconnecting) {
@@ -167,18 +181,18 @@ static bool ns_socket_initialize(enum NetworkType networkType, UNUSED bool recon
             LOG_ERROR("bind returned an error.");
             return false; 
         }
-        LOG_INFO("bound to port %u", port);
+        LOG_INFO("Bound to port %u", port);
     } else if (networkType == NT_CLIENT) {
-        struct sockaddr_in6 addr;
+        struct sockaddr_in addr;
         // set and clean struct to prevent garbage data
-        memset(&addr, 0, sizeof(struct sockaddr_in6));
+        memset(&addr, 0, sizeof(struct sockaddr_in));
         // save the port to send to
-        sAddr[0].sin6_family = AF_INET6;
-        sAddr[0].sin6_port = htons(port);
+        sAddr[0].sin_family = AF_INET;
+        sAddr[0].sin_port = htons(port);
         // resolve and get address list to connect
         resolve_domain(&addr);
-        sAddr[0].sin6_addr = addr.sin6_addr;
-        LOG_INFO("connecting to %s, port %u", configJoinIp, port);
+        sAddr[0].sin_addr = addr.sin_addr;
+        LOG_INFO("Connecting to %s, port %u", configJoinIp, port);
         // copy hostname to be saved to config file
         snprintf(configJoinIp, MAX_CONFIG_STRING, "%s", gGetHostName);
 
@@ -190,7 +204,7 @@ static bool ns_socket_initialize(enum NetworkType networkType, UNUSED bool recon
         gNetworkType = NT_CLIENT;
     }
 
-    LOG_INFO("initialized");
+    LOG_INFO("Initialized");
 
     if (networkType == NT_CLIENT) {
         network_send_mod_list_request();
@@ -206,8 +220,8 @@ static s64 ns_socket_get_id(UNUSED u8 localId) {
 
 static char* ns_socket_get_id_str(u8 localId) {
     if (localId == UNKNOWN_LOCAL_INDEX) { localId = 0; }
-    static char id_str[INET6_ADDRSTRLEN] = { 0 };
-    snprintf(id_str, INET6_ADDRSTRLEN, "%s", inet_ntop(AF_INET6, &sAddr[localId].sin6_addr, id_str, sizeof(id_str)));
+    static char id_str[INET_ADDRSTRLEN] = { 0 };
+    snprintf(id_str, INET_ADDRSTRLEN, "%s", inet_ntop(AF_INET, &sAddr[localId].sin_addr, id_str, sizeof(id_str)));
     return id_str;
 }
 
@@ -221,18 +235,18 @@ static void ns_socket_save_id(u8 localId, UNUSED s64 networkId) {
 static void ns_socket_clear_id(u8 localId) {
     if (localId == 0) { return; }
     SOFT_ASSERT(localId < MAX_PLAYERS);
-    memset(&sAddr[localId], 0, sizeof(struct sockaddr_in6));
+    memset(&sAddr[localId], 0, sizeof(struct sockaddr_in));
     LOG_INFO("cleared addr for id %d", localId);
 }
 
 static void* ns_socket_dup_addr(u8 localIndex) {
-    void* address = malloc(sizeof(struct sockaddr_in6));
-    memcpy(address, &sAddr[localIndex], sizeof(struct sockaddr_in6));
+    void* address = malloc(sizeof(struct sockaddr_in));
+    memcpy(address, &sAddr[localIndex], sizeof(struct sockaddr_in));
     return address;
 }
 
 static bool ns_socket_match_addr(void* addr1, void* addr2) {
-    return !memcmp(addr1, addr2, sizeof(struct sockaddr_in6));
+    return !memcmp(addr1, addr2, sizeof(struct sockaddr_in));
 }
 
 static void ns_socket_update(void) {
@@ -255,8 +269,8 @@ static int ns_socket_send(u8 localIndex, void* address, u8* data, u16 dataLength
         if (gNetworkType == NT_CLIENT && gNetworkPlayers[localIndex].type != NPT_SERVER) { return SOCKET_ERROR; }
     }
 
-    struct sockaddr_in6* userAddr = &sAddr[localIndex];
-    if (localIndex == 0 && address != NULL) { userAddr = (struct sockaddr_in6*)address; }
+    struct sockaddr_in *userAddr = &sAddr[localIndex];
+    if (localIndex == 0 && address != NULL) { userAddr = (struct sockaddr_in *)address; }
 
     int rc = socket_send(sCurSocket, userAddr, data, dataLength);
     if (rc) {
@@ -277,7 +291,7 @@ static void ns_socket_shutdown(UNUSED bool reconnecting) {
     socket_shutdown(sCurSocket);
     sCurSocket = INVALID_SOCKET;
     for (u16 i = 0; i < MAX_PLAYERS; i++) {
-        memset(&sAddr[i], 0, sizeof(struct sockaddr_in6));
+        memset(&sAddr[i], 0, sizeof(struct sockaddr_in));
     }
     LOG_INFO("shutdown");
 }
@@ -298,3 +312,5 @@ struct NetworkSystem gNetworkSystemSocket = {
     .requireServerBroadcast = true,
     .name             = "Socket",
 };
+
+#endif

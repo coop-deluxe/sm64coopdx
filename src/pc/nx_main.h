@@ -24,6 +24,15 @@ extern "C" {
 extern struct AudioAPI *audio_api;
 extern struct GfxWindowManagerAPI *wm_api;
 
+void nx_init(void);
+void nx_cleanup(void);
+
+#ifdef GIT_HASH
+#define TITLE ({ char title[96] = ""; snprintf(title, 96, "%s %s, [%s]", WINDOW_NAME, get_version(), GIT_HASH); title; })
+#else
+#define TITLE ({ char title[96] = ""; snprintf(title, 96, "%s %s", WINDOW_NAME, get_version()); title; })
+#endif
+
 #ifdef __cplusplus
 }
 #endif

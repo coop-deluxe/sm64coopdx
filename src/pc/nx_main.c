@@ -32,6 +32,7 @@
 #include "thread.h"
 #include "controller/controller_api.h"
 #include "controller/controller_keyboard.h"
+#include "controller/controller_switch.h"
 #include "fs/fs.h"
 
 #include "game/display.h" // for gGlobalTimer
@@ -66,24 +67,32 @@
 struct AudioAPI *audio_api = NULL;
 struct GfxWindowManagerAPI *wm_api = &WAPI;
 
-void nx_init(void) {
-    //accountInitialize(AccountServiceType_Application);
-    socketInitializeDefault();
-    //nifmInitialize(NifmServiceType_User);
-    //plInitialize(PlServiceType_User);
-    romfsInit();
-    nxlinkStdio();
+static bool gNxInitialized = false;
 
-    NWindow* win = nwindowGetDefault();
-    nwindowSetDimensions(win, 1920, 1080);
+void nx_init(void) {
+    accountInitialize(AccountServiceType_Application);
+    socketInitializeDefault();
+    nifmInitialize(NifmServiceType_User);
+    plInitialize(PlServiceType_User);
+    Result rc = romfsInit();
+    if (R_FAILED(rc)) {
+        printf("romfsInit: %08X\n", rc);
+    }
+    nxlinkStdio();
+    
+    gNxInitialized = true;
 }
 
 void nx_cleanup(void) {
-    //accountExit();
+    if (!gNxInitialized) { return; }
+    
+    accountExit();
     socketExit();
-    //nifmExit();
-    //plExit();
+    nifmExit();
+    plExit();
     romfsExit();
+    
+    gNxInitialized = false;
 }
 
 int main(int argc, char *argv[]) {
@@ -91,7 +100,8 @@ int main(int argc, char *argv[]) {
     
     // Initialize our filesystem, If it fails.
     // We can't continue.
-    if (!fs_init("sdmc:/switch")) {
+    if (!fs_init("sdmc:/switch/sm64coopdx")) {
+        fflush(stdout);
         nx_cleanup();
         return 0;
     }
@@ -100,6 +110,7 @@ int main(int argc, char *argv[]) {
     
     // Load our config.
     configfile_load();
+    
     
     printf("Loading gfx for game.\n");
 
@@ -119,6 +130,7 @@ int main(int argc, char *argv[]) {
 #endif
         {
             printf("ERROR: Could not find a valid vanilla US SM64 rom in the game user folder.\n");
+            fflush(stdout);
             nx_cleanup();
             return 0;
         }
@@ -206,6 +218,11 @@ int main(int argc, char *argv[]) {
         CTX_BEGIN(CTX_TOTAL);
         WAPI.main_loop(produce_one_frame);
         CTX_END(CTX_TOTAL);
+        
+#ifdef DEBUG
+        fflush(stdout);
+        fflush(stderr);
+#endif
 
 #ifdef DEVELOPMENT
         djui_ctx_display_update();

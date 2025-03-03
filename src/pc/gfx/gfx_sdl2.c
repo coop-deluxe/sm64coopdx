@@ -58,7 +58,7 @@
 static const f64 sFrameTime = 1.0 / ((double)FRAMERATE);
 static f64 sFrameTargetTime = 0;
 
-static SDL_Window *wnd;
+static SDL_Window *wnd = NULL;
 static SDL_GLContext ctx = NULL;
 
 static kb_callback_t kb_key_down = NULL;
@@ -74,6 +74,10 @@ static inline void gfx_sdl_set_vsync(const bool enabled) {
 }
 
 static void gfx_sdl_set_fullscreen(void) {
+#ifdef __SWITCH__
+    SDL_SetWindowFullscreen(wnd, 0);
+    SDL_ShowCursor(SDL_ENABLE);
+#else
     if (configWindow.reset)
         configWindow.fullscreen = false;
     if (configWindow.fullscreen == IS_FULLSCREEN())
@@ -82,19 +86,36 @@ static void gfx_sdl_set_fullscreen(void) {
         SDL_SetWindowFullscreen(wnd, SDL_WINDOW_FULLSCREEN_DESKTOP);
     } else {
         SDL_SetWindowFullscreen(wnd, 0);
-        SDL_ShowCursor(1);
+        SDL_ShowCursor(SDL_ENABLE);
         configWindow.exiting_fullscreen = true;
     }
+#endif
 }
 
 static void gfx_sdl_reset_dimension_and_pos(void) {
     if (configWindow.exiting_fullscreen) {
         configWindow.exiting_fullscreen = false;
-        SDL_ShowCursor(0);
+        SDL_ShowCursor(SDL_DISABLE);
     }
 
 #ifdef __SWITCH__
-    SDL_SetWindowSize(wnd, 1920, 1080);
+    if (configWindow.reset) {
+        configWindow.x = 0;
+        configWindow.y = 0;
+        if (appletGetOperationMode() == 1) {
+            configWindow.w = 1920;
+            configWindow.h = 1080;
+        } else {
+            configWindow.w = 1280;
+            configWindow.h = 720;
+        }
+        configWindow.reset = false;
+    } else if (!configWindow.settings_changed) {
+        return;
+    }
+    
+    SDL_SetWindowSize(wnd, configWindow.w, configWindow.h);
+    SDL_SetWindowPosition(wnd, configWindow.x, configWindow.y);
 #else
     if (configWindow.reset) {
         configWindow.x = WAPI_WIN_CENTERPOS;
@@ -132,17 +153,17 @@ static void gfx_sdl_init(const char *window_title) {
     } else {
         SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 0);
     }
-
+    
+    // Request a depth buffer
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
-#if defined(USE_GLES)
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);  // These attributes allow for hardware acceleration on RPis.
+#ifdef __SWITCH__
+    // Request an OpenGL 3 context
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
-#endif
-
-#ifdef __SWITCH__
+    
     if (appletGetOperationMode() == 1) {
         configWindow.w = 1920;
         configWindow.h = 1080;
@@ -153,16 +174,30 @@ static void gfx_sdl_init(const char *window_title) {
     configWindow.x = 0;
     configWindow.y = 0;
     
+    printf("Creating SDL Window with size: %d %d\n", configWindow.w, configWindow.h);
     wnd = SDL_CreateWindow("sdl2_gles2", configWindow.w, configWindow.h, configWindow.w, configWindow.h, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
+    if (!wnd) {
+        printf("SDL2: Failed to create window with error: %s\n", SDL_GetError());
+        return;
+    }
+    
     ctx = SDL_GL_CreateContext(wnd);
     if (!ctx) {
-        printf("SDL2: Failed to create context with error: %s", SDL_GetError());
+        printf("SDL2: Failed to create context with error: %s\n", SDL_GetError());
         return;
     }
     
     gfx_sdl_set_vsync(2);
     gfx_sdl_set_fullscreen();
 #else
+  
+#if defined(USE_GLES)
+    // Request an OpenGL 2.1 context
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);  // These attributes allow for hardware acceleration on RPis.
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
+#endif
+
     int xpos = (configWindow.x == WAPI_WIN_CENTERPOS) ? SDL_WINDOWPOS_CENTERED : configWindow.x;
     int ypos = (configWindow.y == WAPI_WIN_CENTERPOS) ? SDL_WINDOWPOS_CENTERED : configWindow.y;
     

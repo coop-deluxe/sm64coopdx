@@ -17,15 +17,24 @@ void djui_panel_controls_create(struct DjuiBase* caller) {
     struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(CONTROLS, CONTROLS), false);
     struct DjuiBase* body = djui_three_panel_get_body(panel);
     {
-        djui_button_create(body, DLANG(CONTROLS, N64_BINDS), DJUI_BUTTON_STYLE_NORMAL, djui_panel_controls_n64_create);
-        djui_button_create(body, DLANG(CONTROLS, EXTRA_BINDS), DJUI_BUTTON_STYLE_NORMAL, djui_panel_controls_extra_create);
-        djui_checkbox_create(body, DLANG(CONTROLS, BACKGROUND_GAMEPAD), &configBackgroundGamepad, NULL);
-#ifndef HANDHELD
-        djui_checkbox_create(body, DLANG(CONTROLS, DISABLE_GAMEPADS), &configDisableGamepads, NULL);
-#endif
+        struct DjuiButton *binds = djui_button_create(body, DLANG(CONTROLS, N64_BINDS), DJUI_BUTTON_STYLE_NORMAL, djui_panel_controls_n64_create);
+        struct DjuiButton *extra_binds = djui_button_create(body, DLANG(CONTROLS, EXTRA_BINDS), DJUI_BUTTON_STYLE_NORMAL, djui_panel_controls_extra_create);
+        struct DjuiCheckbox *background_gamepad = djui_checkbox_create(body, DLANG(CONTROLS, BACKGROUND_GAMEPAD), &configBackgroundGamepad, NULL);
+        struct DjuiCheckbox *disable_gamepads = djui_checkbox_create(body, DLANG(CONTROLS, DISABLE_GAMEPADS), &configDisableGamepads, NULL);
         djui_checkbox_create(body, DLANG(MISC, USE_STANDARD_KEY_BINDINGS_CHAT), &configUseStandardKeyBindingsChat, NULL);
+        
+#ifdef __SWITCH__
+        djui_base_set_enabled(&binds->base, false);
+        djui_base_set_enabled(&extra_binds->base, false);
+        djui_base_set_enabled(&background_gamepad->base, false);
+#endif
 
-#ifdef HAVE_SDL2
+#ifdef HANDHELD
+        djui_base_set_enabled(&disable_gamepads->base, false);
+#endif
+
+
+#if defined(HAVE_SDL2) && !defined(__SWITCH__)
         int numJoys = SDL_NumJoysticks();
         if (numJoys == 0) { numJoys = 1; }
         if (numJoys > 10) { numJoys = 10; }

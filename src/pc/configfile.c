@@ -81,7 +81,11 @@ ConfigWindow configWindow       = {
 // display settings
 unsigned int configFiltering                      = 2; // 0 = Nearest, 1 = Bilinear, 2 = Trilinear
 bool         configShowFPS                        = false;
+#if defined(__SWITCH__)
+bool         configUncappedFramerate              = false;
+#else
 bool         configUncappedFramerate              = true;
+#endif
 unsigned int configFrameLimit                     = 60;
 unsigned int configInterpolationMode              = 1;
 unsigned int configDrawDistance                   = 4;

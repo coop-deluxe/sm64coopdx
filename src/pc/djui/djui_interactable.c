@@ -311,13 +311,49 @@ void djui_interactable_on_key_up(int scancode) {
         return;
     }
 
-    OSContPad* pad = &gInteractablePad;
+    OSContPad *pad = &gInteractablePad;
     switch (scancode) {
         case SCANCODE_UP:    if (sKeyboardHoldDirection == PAD_HOLD_DIR_UP)    { sKeyboardHoldDirection = PAD_HOLD_DIR_NONE; pad->stick_y = 0; } break;
         case SCANCODE_DOWN:  if (sKeyboardHoldDirection == PAD_HOLD_DIR_DOWN)  { sKeyboardHoldDirection = PAD_HOLD_DIR_NONE; pad->stick_y = 0; } break;
         case SCANCODE_LEFT:  if (sKeyboardHoldDirection == PAD_HOLD_DIR_LEFT)  { sKeyboardHoldDirection = PAD_HOLD_DIR_NONE; pad->stick_x = 0; } break;
         case SCANCODE_RIGHT: if (sKeyboardHoldDirection == PAD_HOLD_DIR_RIGHT) { sKeyboardHoldDirection = PAD_HOLD_DIR_NONE; pad->stick_x = 0; } break;
         case SCANCODE_ENTER: sKeyboardButtons &= ~PAD_BUTTON_A; break;
+    }
+}
+
+bool djui_interactable_on_button_down(u8 code) {
+    if (gInteractableBinding != NULL) {
+        return true;
+    }
+
+    if (code == DJUI_BTN_SELECT && djui_panel_is_active()) {
+        // Pressed select on controller.
+        djui_panel_back();
+        return true;
+    }
+
+    return false;
+}
+
+void djui_interactable_on_button_up(u8 code) {
+    OSContPad *pad = &gInteractablePad;
+    switch (code) {
+        case DJUI_BTN_UP:    if (sKeyboardHoldDirection == PAD_HOLD_DIR_UP)    { sKeyboardHoldDirection = PAD_HOLD_DIR_NONE; pad->stick_y = 0; } break;
+        case DJUI_BTN_DOWN:  if (sKeyboardHoldDirection == PAD_HOLD_DIR_DOWN)  { sKeyboardHoldDirection = PAD_HOLD_DIR_NONE; pad->stick_y = 0; } break;
+        case DJUI_BTN_LEFT:  if (sKeyboardHoldDirection == PAD_HOLD_DIR_LEFT)  { sKeyboardHoldDirection = PAD_HOLD_DIR_NONE; pad->stick_x = 0; } break;
+        case DJUI_BTN_RIGHT: if (sKeyboardHoldDirection == PAD_HOLD_DIR_RIGHT) { sKeyboardHoldDirection = PAD_HOLD_DIR_NONE; pad->stick_x = 0; } break;
+    }
+}
+
+void djui_interactable_on_button_held(u8 code) {
+    OSContPad *pad = &gInteractablePad;
+    if (gDjuiChatBoxFocus || djui_panel_is_active()) {
+        switch (code) {
+            case DJUI_BTN_UP:    sKeyboardHoldDirection = PAD_HOLD_DIR_UP;    break;
+            case DJUI_BTN_DOWN:  sKeyboardHoldDirection = PAD_HOLD_DIR_DOWN;  break;
+            case DJUI_BTN_LEFT:  sKeyboardHoldDirection = PAD_HOLD_DIR_LEFT;  break;
+            case DJUI_BTN_RIGHT: sKeyboardHoldDirection = PAD_HOLD_DIR_RIGHT; break;
+        }
     }
 }
 
@@ -362,7 +398,7 @@ void djui_interactable_update_pad(void) {
             case PAD_HOLD_DIR_DOWN:  pad->stick_x =   0; pad->stick_y =  64; break;
             case PAD_HOLD_DIR_LEFT:  pad->stick_x = -64; pad->stick_y =   0; break;
             case PAD_HOLD_DIR_RIGHT: pad->stick_x =  64; pad->stick_y =   0; break;
-            default: break;
+            default:                 pad->stick_x =  0;  pad->stick_y =   0; break;
         }
     } else if (pad->stick_x == 0 && pad->stick_y == 0) {
         padHoldDirection = PAD_HOLD_DIR_NONE;
@@ -429,7 +465,7 @@ void djui_interactable_update(void) {
             djui_interactable_on_focus(gInteractableFocus);
         }
     } else if ((padButtons & PAD_BUTTON_B) && !(sLastInteractablePad.button & PAD_BUTTON_B)) {
-        // pressed back button on controller
+        // pressed back button on controller 
         djui_panel_back();
     } else if ((padButtons & PAD_BUTTON_START) && !(sLastInteractablePad.button & PAD_BUTTON_START)) {
         // pressed start button

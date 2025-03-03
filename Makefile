@@ -70,7 +70,7 @@ else
   MIN_MACOS_VERSION ?= 10.15
 endif
 # Make some small adjustments for handheld devices
-HANDHELD ?= 0
+HANDHELD ?= $(TARGET_NX)
 
 # Various workarounds for weird toolchains
 NO_BZERO_BCOPY ?= 0
@@ -84,7 +84,7 @@ RENDER_API ?= GL
 WINDOW_API ?= SDL2
 # Audio backends: SDL1, SDL2, DUMMY
 AUDIO_API ?= SDL2
-# Controller backends (can have multiple, space separated): SDL2, SDL1
+# Controller backends (can have multiple, space separated): SDL2, SDL1, SWITCH
 CONTROLLER_API ?= SDL2
 
 # Automatic settings for PC port(s)
@@ -92,6 +92,11 @@ CONTROLLER_API ?= SDL2
 WINDOWS_BUILD ?= 0
 
 WINDOWS_AUTO_BUILDER ?= 0
+
+# Switch Only Settings
+ifeq ($(TARGET_NX), 1)
+BUILD_NRO ?= 0
+endif
 
 # Setup extra cflags
 EXTRA_CFLAGS ?=
@@ -341,17 +346,19 @@ else ifeq ($(TARGET_NX),1) # Nintendo Switch
     STRIP := $(CROSS)strip
 
     OPT_FLAGS := -ffunction-sections -fdata-sections -march=armv8-a+crc+crypto+simd -mtune=cortex-a57 -mtp=soft -ftls-model=local-exec -fwrapv -fPIC
-    DEFINES += __SWITCH__=1 BUILD_NRO=1 __CONSOLE__=1 MA_NO_RUNTIME_LINKING=1 USE_GLES=1
+    DEFINES += __SWITCH__=1 __CONSOLE__=1 MA_NO_RUNTIME_LINKING=1 USE_GLES=1
+    
+    ifeq ($(BUILD_NRO),1)
+        DEFINES += BUILD_NRO=1
+    endif
 
     APP_TITLE := SM64 Coop DX
     APP_AUTHOR := The Coop DX Team
-    APP_VERSION := 1.0.0.$(VERSION)
-    APP_ICON := icon.jpg
-    ROMFS := romfs
-
-    ifneq ($(ROMFS),)
-        export NROFLAGS += --romfsdir=$(CURDIR)/$(ROMFS)
-    endif
+    APP_VERSION := 1.0.0
+    APP_ICON := res/icon_AmericanEnglish.jpg
+    APP_TITLEID := 0100534d36344350
+    APP_JSON := res/npdm.json
+    ICON := res/icon_AmericanEnglish.dat
 endif
 
 # Set BITS (32/64) to compile for
@@ -531,20 +538,30 @@ BUILD_DIR_BASE := build
 
 
 ifeq ($(TARGET_RPI),1)
-	BUILD_DIR := $(BUILD_DIR_BASE)/$(VERSION)_rpi
-	EXE := $(BUILD_DIR)/sm64coopdx.arm
+    BUILD_DIR := $(BUILD_DIR_BASE)/$(VERSION)_rpi
+    EXE := $(BUILD_DIR)/sm64coopdx.arm
 else ifeq ($(TARGET_NX),1) # Nintendo Switch
-	BUILD_DIR := $(BUILD_DIR_BASE)/$(VERSION)_nx
-	EXE := $(BUILD_DIR)/sm64coopdx.elf
+    BUILD_DIR := $(BUILD_DIR_BASE)/$(VERSION)_nx
+    ELF := $(BUILD_DIR)/sm64coopdx.elf
+    ifeq ($(BUILD_NRO),1)
+        EXE := $(BUILD_DIR)/sm64coopdx.nro
+    else
+        EXE := $(BUILD_DIR)/sm64coopdx.nsp
+    endif
+else ifeq ($(TARGET_N64),1) # Nintendo 64 (Unused)
+    BUILD_DIR := $(BUILD_DIR_BASE)/$(VERSION)
+    ELF := $(BUILD_DIR)/sm64coopdx.elf
+    EXE := $(BUILD_DIR)/sm64coopdx.n64
 else ifeq ($(WINDOWS_BUILD),1)
     BUILD_DIR := $(BUILD_DIR_BASE)/$(VERSION)_pc
-	EXE := $(BUILD_DIR)/sm64coopdx.exe
+    EXE := $(BUILD_DIR)/sm64coopdx.exe
 else
-	BUILD_DIR := $(BUILD_DIR_BASE)/$(VERSION)_pc
-	EXE := $(BUILD_DIR)/sm64coopdx
+    BUILD_DIR := $(BUILD_DIR_BASE)/$(VERSION)_pc
+    EXE := $(BUILD_DIR)/sm64coopdx
 endif
 
-ELF            := $(BUILD_DIR)/$(TARGET).elf
+MAP := $(BUILD_DIR)/sm64coopdx.map
+
 LIBULTRA       := $(BUILD_DIR)/libultra.a
 LD_SCRIPT      := sm64.ld
 MIO0_DIR       := $(BUILD_DIR)/bin
@@ -657,6 +674,16 @@ ifeq ($(DISCORD_SDK), 1)
   else
     DISCORD_SDK_LIBS := lib/discordsdk/libdiscord_game_sdk.so
   endif
+endif
+
+
+ifeq ($(TARGET_NX),1)
+
+ROMFS_DIR := romfs
+
+# Remove old romfs dir
+_ := $(shell rm -rf ./$(BUILD_DIR)/$(ROMFS_DIR))
+
 endif
 
 LANG_DIR := lang
@@ -830,7 +857,7 @@ else ifeq ($(findstring SDL,$(WINDOW_API)),SDL)
     BACKEND_LDFLAGS += -lGLESv2
   else ifeq ($(TARGET_NX),1) # Nintendo Switch
     BACKEND_LDFLAGS += -lGLESv2
-	EXTRA_CPP_FLAGS += -std=gnu++17
+	EXTRA_CPP_FLAGS += -std=gnu++17 -fsanitize=builtin -fstack-protector
   else ifeq ($(OSX_BUILD),1)
     BACKEND_LDFLAGS += -framework OpenGL `pkg-config --libs glew` -mmacosx-version-min=$(MIN_MACOS_VERSION)
     EXTRA_CPP_FLAGS += -stdlib=libc++ -std=c++17 -mmacosx-version-min=$(MIN_MACOS_VERSION)
@@ -1079,6 +1106,9 @@ endif
 # Enable ASLR
 CFLAGS += -fPIE
 
+# Generate a map file
+LDFLAGS += -Wl,-Map $(MAP)
+
 # Prevent a crash with -sopt
 export LANG := C
 
@@ -1266,14 +1296,25 @@ $(BUILD_DIR)/$(DISCORD_SDK_LIBS):
 $(BUILD_DIR)/$(COOPNET_LIBS):
 	@$(CP) -f $(COOPNET_LIBS) $(BUILD_DIR)
 
+ifeq ($(TARGET_NX),1)
+$(BUILD_DIR)/$(ROMFS_DIR):
+	@mkdir -p $(BUILD_DIR)/$(ROMFS_DIR)
+    
+$(BUILD_DIR)/$(LANG_DIR): $(BUILD_DIR)/$(ROMFS_DIR)
+	@$(CP) -f -r $(LANG_DIR) $(BUILD_DIR)/$(ROMFS_DIR)/$(LANG_DIR)/
+
+$(BUILD_DIR)/$(PALETTES_DIR): $(BUILD_DIR)/$(ROMFS_DIR)
+	@$(CP) -f -r $(PALETTES_DIR) $(BUILD_DIR)/$(ROMFS_DIR)/$(PALETTES_DIR)/
+else
 $(BUILD_DIR)/$(LANG_DIR):
 	@$(CP) -f -r $(LANG_DIR) $(BUILD_DIR)
 
-$(BUILD_DIR)/$(MOD_DIR):
-	$(CP) -f -r $(MOD_DIR) $(BUILD_DIR)
-
 $(BUILD_DIR)/$(PALETTES_DIR):
 	@$(CP) -f -r $(PALETTES_DIR) $(BUILD_DIR)
+endif
+
+$(BUILD_DIR)/$(MOD_DIR):
+	$(CP) -f -r $(MOD_DIR) $(BUILD_DIR)
 
 # Extra object file dependencies
 
@@ -1393,6 +1434,57 @@ $(BUILD_DIR)/%.mio0.o: $(BUILD_DIR)/%.mio0
 
 endif
 
+#==============================================================================#
+# Nintendo Switch App Generation                                               #
+#==============================================================================#
+
+ifeq ($(TARGET_NX),1)
+
+ifneq ($(APP_TITLEID),)
+    export NACPFLAGS += --titleid=$(APP_TITLEID)
+endif
+
+ifneq ($(APP_ICON),)
+    export NROFLAGS += --icon=$(APP_ICON)
+endif
+
+ifneq ($(ROMFS),)
+    export NROFLAGS += --romfsdir=$(BUILD_DIR)/$(ROMFS_DIR)
+endif
+
+define make_pfs0
+	$(V)mkdir -p $(BUILD_DIR)/exefs
+	$(V)[ $(BUILD_EXEFS_SRC) ] && [ -d $(BUILD_EXEFS_SRC) ] && cp -R $(BUILD_EXEFS_SRC)/* $(BUILD_DIR)/exefs || echo > /dev/null
+	$(V)cp $*.nso $(BUILD_DIR)/exefs/main
+	$(V)[ $(APP_JSON) ] && cp $*.npdm $(BUILD_DIR)/exefs/main.npdm || echo > /dev/null
+	$(V)build_pfs0 $(BUILD_DIR)/exefs $@
+endef
+
+%.nacp: $(MAKEFILE_LIST)
+	$(V)nacptool --create "$(APP_TITLE)" "$(APP_AUTHOR)" "$(APP_VERSION)" $@ $(NACPFLAGS)
+	@$(PRINT) "$(GREEN)Built NACP: $(BLUE)$(notdir $@) $(NO_COL)\n"
+
+%.nro: %.elf %.nacp
+	$(V)elf2nro $< $@ --nacp=$(BUILD_DIR)/sm64coopdx.nacp $(NROFLAGS)
+	@$(PRINT) "$(GREEN)Built NRO: $(BLUE)$(notdir $@) $(NO_COL)\n"
+    
+%.nso: %.elf
+	$(V)elf2nso $< $@
+	@$(PRINT) "$(GREEN)Built NSO: $(BLUE)$(notdir $@) $(NO_COL)\n"
+
+%.npdm: $(APP_JSON)
+	$(V)npdmtool $< $@
+	@$(PRINT) "$(GREEN)Built NPDM: $(BLUE)$(notdir $@) $(NO_COL)\n"
+    
+%.pfs0: %.nso %.npdm
+	$(make_pfs0)
+	@$(PRINT) "$(GREEN)Built PFS0: $(BLUE)$(notdir $@) $(NO_COL)\n"
+    
+%.nsp: %.nso %.npdm %.nacp
+	$(make_pfs0)
+	@$(PRINT) "$(GREEN)Built NSP: $(BLUE)$(notdir $@) $(NO_COL)\n"
+    
+endif
 
 #==============================================================================#
 # Sound File Generation                                                        #
@@ -1620,18 +1712,9 @@ ifeq ($(TARGET_N64),1)
   $(BUILD_DIR)/$(TARGET).objdump: $(ELF)
 	$(OBJDUMP) -D $< > $@
 else ifeq ($(TARGET_NX),1) # Nintendo Switch
-  $(EXE): $(O_FILES) $(MIO0_FILES:.mio0=.o) $(ULTRA_O_FILES) $(GODDARD_O_FILES) $(BUILD_DIR)/$(RPC_LIBS) $(BUILD_DIR)/$(DISCORD_SDK_LIBS) $(BUILD_DIR)/$(COOPNET_LIBS) $(BUILD_DIR)/$(LANG_DIR) $(BUILD_DIR)/$(MOD_DIR) $(BUILD_DIR)/$(PALETTES_DIR)
+  $(ELF): $(O_FILES) $(MIO0_FILES:.mio0=.o) $(ULTRA_O_FILES) $(GODDARD_O_FILES) $(BUILD_DIR)/$(RPC_LIBS) $(BUILD_DIR)/$(DISCORD_SDK_LIBS) $(BUILD_DIR)/$(COOPNET_LIBS) $(BUILD_DIR)/$(LANG_DIR) $(BUILD_DIR)/$(MOD_DIR) $(BUILD_DIR)/$(PALETTES_DIR)
 	@$(PRINT) "$(GREEN)Linking executable: $(BLUE)$@ $(NO_COL)\n"
 	$(V)$(LD) $(PROF_FLAGS) -L $(BUILD_DIR) -o $@ $(O_FILES) $(ULTRA_O_FILES) $(GODDARD_O_FILES) $(LDFLAGS) -lnx -lm
-	
-	$(V)nacptool --create "$(APP_TITLE)" "$(APP_AUTHOR)" "$(APP_VERSION)" $(BUILD_DIR)/sm64coopdx.nca $(NACPFLAGS)
-	@$(PRINT) "$(GREEN)Built NACP: $(BLUE)$(notdir $(BUILD_DIR)/sm64coopdx.nca) $(NO_COL)\n"
-	
-	$(V)$(STRIP) -o $(EXE).stripped $(EXE)
-	@$(PRINT) "$(GREEN)Stripped: $(BLUE)$(notdir $(EXE)) $(NO_COL)\n"
-	
-	$(V)elf2nro $(EXE).stripped $(BUILD_DIR)/sm64coopdx.nro --nacp=$(BUILD_DIR)/sm64coopdx.nca --icon=$(APP_ICON) --romfsdir=$(ROMFS)
-	@$(PRINT) "$(GREEN)Built NRO: $(BLUE)$(notdir $(BUILD_DIR)/sm64coopdx.nro) $(NO_COL)\n"
 else
   $(EXE): $(O_FILES) $(MIO0_FILES:.mio0=.o) $(ULTRA_O_FILES) $(GODDARD_O_FILES) $(BUILD_DIR)/$(RPC_LIBS) $(BUILD_DIR)/$(DISCORD_SDK_LIBS) $(BUILD_DIR)/$(COOPNET_LIBS) $(BUILD_DIR)/$(LANG_DIR) $(BUILD_DIR)/$(MOD_DIR) $(BUILD_DIR)/$(PALETTES_DIR)
 	@$(PRINT) "$(GREEN)Linking executable: $(BLUE)$@ $(NO_COL)\n"
