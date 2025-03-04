@@ -353,8 +353,8 @@ end
 --- @param func fun(areaIndex:number, bhvData:bhvData, macroBhvIds:BehaviorId[], macroBhvArgs:integer[])
 --- When `func` is called, arguments are filled depending on the level command:
 --- - `AREA` command: only `areaIndex` is filled. It's a number.
---- - `OBJECT` command: only `bhvData` is filled. `bhvData` is a table with two fields: `behavior` and `behaviorArg`.
---- - `MACRO` command: only `macroBhvIds` and `macroBhvArgs` are filled. `macrobhvIds` is a list of behavior ids. `macroBhvArgs` is a list of behavior params. Both lists have the same size and start at index 0.
+--- - `OBJECT` command: only `bhvData` is filled. `bhvData` is a table with nine fields: 'behavior', 'behaviorArg', 'model', 'posX', 'posY', 'posZ', 'pitch', 'yaw' and 'roll'.
+--- - `MACRO` command: only `macroBhvIds`, `macroBhvArgs` and 'macroBhvModels' are filled. `macroBhvIds` is a list of behavior ids. `macroBhvArgs` is a list of behavior params. 'macroBhvModels' is a list of model ids. All lists have the same size and start at index 0.
 function level_script_parse(levelNum, func)
     -- ...
 end
