@@ -10077,6 +10077,13 @@ function obj_get_first_with_behavior_id_and_field_s32(behaviorId, fieldIndex, va
 end
 
 --- @param o Object
+--- @return ModelExtendedId
+--- Returns an object's extended model id
+function obj_get_model_id_extended(o)
+    -- ...
+end
+
+--- @param o Object
 --- @param behaviorId BehaviorId
 --- @return Object
 --- Gets the nearest object with `behaviorId` to `o`

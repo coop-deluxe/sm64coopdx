@@ -1847,6 +1847,7 @@
    - [obj_get_first_with_behavior_id](functions-6.md#obj_get_first_with_behavior_id)
    - [obj_get_first_with_behavior_id_and_field_f32](functions-6.md#obj_get_first_with_behavior_id_and_field_f32)
    - [obj_get_first_with_behavior_id_and_field_s32](functions-6.md#obj_get_first_with_behavior_id_and_field_s32)
+   - [obj_get_model_id_extended](functions-6.md#obj_get_model_id_extended)
    - [obj_get_nearest_object_with_behavior_id](functions-6.md#obj_get_nearest_object_with_behavior_id)
    - [obj_get_next](functions-6.md#obj_get_next)
    - [obj_get_next_with_same_behavior_id](functions-6.md#obj_get_next_with_same_behavior_id)

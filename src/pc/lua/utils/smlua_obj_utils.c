@@ -92,9 +92,14 @@ s32 obj_has_behavior_id(struct Object *o, enum BehaviorId behaviorId) {
 
 s32 obj_has_model_extended(struct Object *o, enum ModelExtendedId modelId) {
     if (!o) { return 0; }
-    u16 slot = smlua_model_util_load(modelId);
-    struct GraphNode *model = dynos_model_get_geo(slot);
-    return o->header.gfx.sharedChild == model;
+    if (!o->header.gfx.sharedChild && modelId == E_MODEL_NONE) { return 1; }
+    return dynos_model_get_id_from_graph_node(o->header.gfx.sharedChild) == smlua_model_util_ext_id_to_id(modelId);
+}
+
+enum ModelExtendedId obj_get_model_id_extended(struct Object *o) {
+    if (!o) { return E_MODEL_NONE; }
+    if (!o->header.gfx.sharedChild) { return E_MODEL_NONE; }
+    return smlua_model_util_id_to_ext_id(dynos_model_get_id_from_graph_node(o->header.gfx.sharedChild));
 }
 
 void obj_set_model_extended(struct Object *o, enum ModelExtendedId modelId) {

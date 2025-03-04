@@ -30547,6 +30547,23 @@ int smlua_func_obj_get_first_with_behavior_id_and_field_s32(lua_State* L) {
     return 1;
 }
 
+int smlua_func_obj_get_model_id_extended(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "obj_get_model_id_extended", 1, top);
+        return 0;
+    }
+
+    struct Object* o = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "obj_get_model_id_extended"); return 0; }
+
+    lua_pushinteger(L, obj_get_model_id_extended(o));
+
+    return 1;
+}
+
 int smlua_func_obj_get_nearest_object_with_behavior_id(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -33857,6 +33874,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "obj_get_first_with_behavior_id", smlua_func_obj_get_first_with_behavior_id);
     smlua_bind_function(L, "obj_get_first_with_behavior_id_and_field_f32", smlua_func_obj_get_first_with_behavior_id_and_field_f32);
     smlua_bind_function(L, "obj_get_first_with_behavior_id_and_field_s32", smlua_func_obj_get_first_with_behavior_id_and_field_s32);
+    smlua_bind_function(L, "obj_get_model_id_extended", smlua_func_obj_get_model_id_extended);
     smlua_bind_function(L, "obj_get_nearest_object_with_behavior_id", smlua_func_obj_get_nearest_object_with_behavior_id);
     smlua_bind_function(L, "obj_get_next", smlua_func_obj_get_next);
     smlua_bind_function(L, "obj_get_next_with_same_behavior_id", smlua_func_obj_get_next_with_same_behavior_id);
