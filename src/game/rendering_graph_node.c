@@ -69,6 +69,15 @@ Mtx sPrevCamTranf, sCurrCamTranf = {
     }
 };
 
+static Gfx obj_sanitize_gfx[] = {
+    gsSPClearGeometryMode(G_TEXTURE_GEN),
+    gsSPSetGeometryMode(G_LIGHTING),
+    gsDPSetCombineMode(G_CC_SHADE, G_CC_SHADE),
+    gsSPTexture(0xFFFF, 0xFFFF, 0, 0, G_OFF),
+    gsDPSetAlphaCompare(G_AC_NONE),
+    gsSPEndDisplayList(),
+};
+
 /**
  * Animation nodes have state in global variables, so this struct captures
  * the animation state so a 'context switch' can be made when rendering the
@@ -1197,6 +1206,12 @@ static s32 obj_is_in_view(struct GraphNodeObject *node, Mat4 matrix) {
     return TRUE;
 }
 
+static void geo_sanitize_object_gfx() {
+    geo_append_display_list(obj_sanitize_gfx, LAYER_OPAQUE);
+    geo_append_display_list(obj_sanitize_gfx, LAYER_ALPHA);
+    geo_append_display_list(obj_sanitize_gfx, LAYER_TRANSPARENT);
+}
+
 /**
  * Process an object node.
  */
@@ -1353,6 +1368,7 @@ static void geo_process_object(struct Object *node) {
             if (node->header.gfx.sharedChild != NULL) {
                 gCurGraphNodeObject = (struct GraphNodeObject *) node;
                 node->header.gfx.sharedChild->parent = &node->header.gfx.node;
+                geo_sanitize_object_gfx();
                 geo_process_node_and_siblings(node->header.gfx.sharedChild);
                 node->header.gfx.sharedChild->parent = NULL;
                 gCurGraphNodeObject = NULL;
@@ -1464,6 +1480,7 @@ void geo_process_held_object(struct GraphNodeHeldObject *node) {
             dynos_gfx_swap_animations(node->objNode);
         }
 
+        geo_sanitize_object_gfx();
         geo_process_node_and_siblings(node->objNode->header.gfx.sharedChild);
         gCurGraphNodeHeldObject = NULL;
         gCurAnimType = gGeoTempState.type;
