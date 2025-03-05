@@ -8298,6 +8298,93 @@ Gets a value of the global vertex shading color
 
 <br />
 
+## [gfx_get_vtx](#gfx_get_vtx)
+
+### Description
+Gets a vertex from a display list command if it has the correct op. Intended to be used with `gfx_parse`.
+
+### Lua Example
+`local PointerValue = gfx_get_vtx(gfx, offset)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| gfx | `Pointer` <`Gfx`> |
+| offset | `integer` |
+
+### Returns
+- `Pointer` <`Vtx`>
+
+### C Prototype
+`Vtx *gfx_get_vtx(Gfx* gfx, u16 offset);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [gfx_parse](#gfx_parse)
+
+### Description
+Traverses a display list. Takes a Lua function as a parameter, which is called back for each command in the display list with the parameters `cmd` (display list pointer), and `op`.
+
+### Lua Example
+`gfx_parse(cmd, func)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| cmd | `Pointer` <`Gfx`> |
+| func | `Lua Function` () |
+
+### Returns
+- None
+
+### C Prototype
+`void gfx_parse(Gfx* cmd, LuaFunction func);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [gfx_set_combine_lerp](#gfx_set_combine_lerp)
+
+### Description
+Sets the display list combine mode.
+
+### Lua Example
+`gfx_set_combine_lerp(gfx, a0, b0, c0, d0, Aa0, Ab0, Ac0, Ad0, a1, b1, c1, d1, Aa1, Ab1, Ac1, Ad1)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| gfx | `Pointer` <`Gfx`> |
+| a0 | `integer` |
+| b0 | `integer` |
+| c0 | `integer` |
+| d0 | `integer` |
+| Aa0 | `integer` |
+| Ab0 | `integer` |
+| Ac0 | `integer` |
+| Ad0 | `integer` |
+| a1 | `integer` |
+| b1 | `integer` |
+| c1 | `integer` |
+| d1 | `integer` |
+| Aa1 | `integer` |
+| Ab1 | `integer` |
+| Ac1 | `integer` |
+| Ad1 | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void gfx_set_combine_lerp(Gfx* gfx, u32 a0, u32 b0, u32 c0, u32 d0, u32 Aa0, u32 Ab0, u32 Ac0, u32 Ad0, u32 a1, u32 b1, u32 c1, u32 d1,	u32 Aa1, u32 Ab1, u32 Ac1, u32 Ad1);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [set_fog_color](#set_fog_color)
 
 ### Description

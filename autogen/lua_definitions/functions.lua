@@ -9340,6 +9340,43 @@ function get_vertex_color(index)
     -- ...
 end
 
+--- @param gfx Pointer_Gfx
+--- @param offset integer
+--- @return Pointer_Vtx
+--- Gets a vertex from a display list command if it has the correct op. Intended to be used with `gfx_parse`.
+function gfx_get_vtx(gfx, offset)
+    -- ...
+end
+
+--- @param cmd Pointer_Gfx
+--- @param func function
+--- Traverses a display list. Takes a Lua function as a parameter, which is called back for each command in the display list with the parameters `cmd` (display list pointer), and `op`.
+function gfx_parse(cmd, func)
+    -- ...
+end
+
+--- @param gfx Pointer_Gfx
+--- @param a0 integer
+--- @param b0 integer
+--- @param c0 integer
+--- @param d0 integer
+--- @param Aa0 integer
+--- @param Ab0 integer
+--- @param Ac0 integer
+--- @param Ad0 integer
+--- @param a1 integer
+--- @param b1 integer
+--- @param c1 integer
+--- @param d1 integer
+--- @param Aa1 integer
+--- @param Ab1 integer
+--- @param Ac1 integer
+--- @param Ad1 integer
+--- Sets the display list combine mode.
+function gfx_set_combine_lerp(gfx, a0, b0, c0, d0, Aa0, Ab0, Ac0, Ad0, a1, b1, c1, d1, Aa1, Ab1, Ac1, Ad1)
+    -- ...
+end
+
 --- @param index integer
 --- @param value integer
 --- Sets a value of the global fog color
@@ -10167,6 +10204,13 @@ function obj_get_first_with_behavior_id_and_field_s32(behaviorId, fieldIndex, va
 end
 
 --- @param o Object
+--- @return ModelExtendedId
+--- Returns an object's extended model id
+function obj_get_model_id_extended(o)
+    -- ...
+end
+
+--- @param o Object
 --- @param behaviorId BehaviorId
 --- @return Object
 --- Gets the nearest object with `behaviorId` to `o`
@@ -10719,3 +10763,5 @@ end
 --- @class Pointer_Vec4s
 --- @class Pointer_Trajectory
 --- @class Pointer_Collision
+--- @class Pointer_Gfx
+--- @class Pointer_Vtx

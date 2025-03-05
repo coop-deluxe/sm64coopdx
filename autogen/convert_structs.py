@@ -31,7 +31,8 @@ in_files = [
     "src/pc/djui/djui_types.h",
     "src/game/first_person_cam.h",
     "src/game/player_palette.h",
-    "src/engine/graph_node.h"
+    "src/engine/graph_node.h",
+    "include/PR/gbi.h"
 ]
 
 out_filename_c = 'src/pc/lua/smlua_cobject_autogen.c'
@@ -128,6 +129,7 @@ override_field_immutable = {
     "Controller": [ "controllerData", "statusData" ],
     "FirstPersonCamera": [ "enabled" ],
     "ModAudio": [ "isStream", "loaded" ],
+    "Gfx": [ "w0", "w1" ], # to protect from invalid type conversions
 }
 
 override_field_version_excludes = {
@@ -138,7 +140,8 @@ override_field_version_excludes = {
 override_allowed_structs = {
     "src/pc/network/network.h": [ "ServerSettings", "NametagsSettings" ],
     "src/pc/djui/djui_types.h": [ "DjuiColor" ],
-    "src/game/player_palette.h": [ "PlayerPalette" ]
+    "src/game/player_palette.h": [ "PlayerPalette" ],
+    "include/PR/gbi.h": [ "Gfx", "Vtx" ]
 }
 
 sLuaManuallyDefinedStructs = [{
@@ -153,6 +156,12 @@ sLuaManuallyDefinedStructs = [{
         ) for type_name, vec_type in VEC_TYPES.items()]
     ]
 }]
+
+override_types = {
+    "Gwords": "Gfx",
+    "Vtx_t": "Vtx"
+}
+reversed_override_types = {v: k for k, v in override_types.items()}
 
 total_structs = 0
 total_fields = 0
@@ -263,6 +272,10 @@ def parse_struct(struct_str, sortFields = True):
     match = re.match(r"struct\s*(\w+)?\s*{(.*?)}\s*(\w+)?\s*", struct_str.replace("typedef ", ""), re.DOTALL)
     struct_name, body, trailing_name = match.groups()
     identifier = struct_name if struct_name else trailing_name
+
+    if identifier in override_types:
+        identifier = override_types[identifier]
+
     struct['identifier'] = identifier
     struct['typedef'] = 'typedef ' in struct_str
 
@@ -461,7 +474,7 @@ def get_struct_field_info(struct, field):
         if fid in override_field_mutable[sid] or '*' in override_field_mutable[sid]:
             fimmutable = 'false'
 
-    if not ('char' in ftype and '[' in ftype):
+    if not ('char' in ftype and '[' in ftype and 'unsigned' not in ftype):
         array_match = re.search(r'\[([^\]]+)\]', ftype)
         if array_match:
             array_size = array_match.group(1).strip()
@@ -493,6 +506,10 @@ def build_struct(struct):
             if fid in override_field_invisible[sid]:
                 continue
 
+        name = sid
+        if sid in reversed_override_types:
+            name = reversed_override_types[sid]
+
         version = None
 
         row = []
@@ -507,7 +524,7 @@ def build_struct(struct):
         row.append(startStr                                                       )
         row.append('"%s", '               % fid                                   )
         row.append('%s, '                 % lvt                                   )
-        row.append('offsetof(%s%s, %s), ' % (struct_str, sid, field['identifier']))
+        row.append('offsetof(%s%s, %s), ' % (struct_str, name, field['identifier']))
         row.append('%s, '                 % fimmutable                            )
         row.append('%s, '                 % lot                                   )
         row.append('%s, '                 % size                                  )
