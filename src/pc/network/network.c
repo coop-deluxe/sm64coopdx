@@ -34,6 +34,7 @@
 #include "game/first_person_cam.h"
 #include "game/envfx_snow.h"
 #include "engine/math_util.h"
+#include "game/mario.h"
 
 #ifdef DISCORD_SDK
 #include "pc/discord/discord.h"
@@ -673,9 +674,7 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
     gCurrActStarNum = 0;
     gCurrActNum = 0;
     gCurrCreditsEntry = NULL;
-    gLightingDir[0] = 0;
-    gLightingDir[1] = 0;
-    gLightingDir[2] = 0;
+    vec3f_set(gLightingDir, 0xFF, 0xFF, 0xFF);
     gLightingColor[0][0] = 255;
     gLightingColor[0][1] = 255;
     gLightingColor[0][2] = 255;
@@ -751,6 +750,8 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
     gMenuMode = -1;
 
     reset_window_title();
+
+    init_mario_from_save_file();
 
     djui_panel_shutdown();
     extern bool gDjuiInMainMenu;
