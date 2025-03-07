@@ -3748,7 +3748,8 @@
 | HOOK_ON_GEO_PROCESS_CHILDREN | 50 |
 | HOOK_MARIO_OVERRIDE_GEOMETRY_INPUTS | 51 |
 | HOOK_ON_INTERACTIONS | 52 |
-| HOOK_MAX | 53 |
+| HOOK_ALLOW_FALL_DAMAGE | 53 |
+| HOOK_MAX | 54 |
 
 ### [enum LuaModMenuElementType](#LuaModMenuElementType)
 | Identifier | Value |

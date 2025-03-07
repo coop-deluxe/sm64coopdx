@@ -10350,7 +10350,10 @@ HOOK_MARIO_OVERRIDE_GEOMETRY_INPUTS = 51
 HOOK_ON_INTERACTIONS = 52
 
 --- @type LuaHookedEventType
-HOOK_MAX = 53
+HOOK_ALLOW_FALL_DAMAGE = 53
+
+--- @type LuaHookedEventType
+HOOK_MAX = 54
 
 --- @class LuaModMenuElementType
 

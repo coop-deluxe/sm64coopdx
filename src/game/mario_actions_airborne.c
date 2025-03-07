@@ -98,6 +98,11 @@ Useful for determining if Mario's fall warrants a health penalty or a special la
 |descriptionEnd| */
 s32 check_fall_damage(struct MarioState *m, u32 hardFallAction) {
     if (!m) { return 0; }
+
+    bool allowFallDamage = true;
+    smlua_call_event_hooks_mario_param_ret_bool(HOOK_ALLOW_FALL_DAMAGE, m, &allowFallDamage);
+
+    if (!allowFallDamage) { return FALSE; }
     
     f32 fallHeight;
     f32 damageHeight;
@@ -181,6 +186,12 @@ action changes to being stuck in the ground. Otherwise, normal fall damage logic
 |descriptionEnd| */
 s32 check_fall_damage_or_get_stuck(struct MarioState *m, u32 hardFallAction) {
     if (!m) { return 0; }
+
+    bool allowFallDamage = true;
+    smlua_call_event_hooks_mario_param_ret_bool(HOOK_ALLOW_FALL_DAMAGE, m, &allowFallDamage);
+
+    if (!allowFallDamage) { return FALSE; }
+
     if (should_get_stuck_in_ground(m)) {
 #ifdef VERSION_JP
         play_character_sound(m, CHAR_SOUND_OOOF);
