@@ -28114,10 +28114,12 @@ static ma_result ma_device_stop__alsa(ma_device* pDevice)
 
 static ma_result ma_device_wait__alsa(ma_device* pDevice, ma_snd_pcm_t* pPCM, struct pollfd* pPollDescriptors, int pollDescriptorCount, short requiredEvent)
 {
+#ifdef __SWITCH__
     if (pollDescriptorCount >= RLIMIT_NOFILE) {
         ma_log_post(ma_device_get_log(pDevice), MA_LOG_LEVEL_ERROR, "[ALSA] poll() failed. Too many poll descriptors.\n");
         return MA_INVALID_ARGS;
     }
+#endif
     
     for (;;) {
         unsigned short revents;
