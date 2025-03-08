@@ -45,9 +45,9 @@ jobs:
             - name: Install dependencies
               uses: msys2/setup-msys2@v2
               with:
-                msystem: mingw64
+                msystem: usr
                 update: true
-                pacboy: make:p python3:p unzip:p git:p gcc:p glew:p SDL2:p
+                pacboy: unzip:p make:p git:p mingw-w64-x86_64-gcc:p mingw-w64-x86_64-glew:p mingw-w64-x86_64-SDL2:p python3:p
 
             - name: Build the game
               run: make -j$(nproc)
