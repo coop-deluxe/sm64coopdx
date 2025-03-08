@@ -4,6 +4,7 @@ on:
     push:
         branches:
             - dev
+            - nx-support
     pull_request:
         branches:
             - "**"
