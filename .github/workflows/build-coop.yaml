@@ -1,4 +1,4 @@
-name: Build coop on windows
+name: Build coop
 
 on:
     push:
@@ -9,9 +9,29 @@ on:
             - "**"
 
 jobs:
-    build:
-        runs-on: windows-latest
+    build-ubuntu:
+        if: ${{ contains(github.event.head_commit.message, '[build]')}}
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
 
+            - name: Install dependencies
+              run: |
+                sudo apt update
+                sudo apt install -y build-essential git python3 libglew-dev libsdl2-dev libz-dev libcurl4-openssl-dev
+
+            - name: Build the game
+              run: make -j$(nproc)
+
+            - name: Upload artifact
+              uses: actions/upload-artifact@v4
+              with:
+                name: sm64coopdx-ubuntu
+                path: ./build/us_pc/sm64coopdx
+    build:
+        if: ${{ contains(github.event.head_commit.message, '[build]')}}
+        runs-on: windows-latest
         steps:
             - name: Checkout repository
               uses: actions/checkout@v4
@@ -20,9 +40,9 @@ jobs:
               run: |
                 choco install mingw
                 choco install git
-                choco install python3
+                choco install python
 
-            - name: Set up MSYS2 (if needed for SDL2 or other dependencies)
+            - name: Set up MSYS2
               run: |
                 pacman -Syu --noconfirm
                 pacman -S unzip make git mingw-w64-i686-gcc mingw-w64-x86_64-gcc mingw-w64-i686-glew mingw-w64-x86_64-glew mingw-w64-i686-SDL2 mingw-w64-i686-SDL mingw-w64-x86_64-SDL2 mingw-w64-x86_64-SDL python3
