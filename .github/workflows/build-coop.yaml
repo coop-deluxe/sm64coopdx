@@ -32,24 +32,22 @@ jobs:
     build-windows:
         if: ${{ contains(github.event.head_commit.message, '[build]')}}
         runs-on: windows-latest
+        defaults:
+            run:
+                shell: msys2 {0}
         steps:
             - name: Checkout repository
               uses: actions/checkout@v4
 
             - name: Install dependencies
-              run: |
-                choco install mingw
-                choco install git
-                choco install python
-
-            - name: Set up MSYS2
-              run: |
-                pacman -Syu --noconfirm
-                pacman -S unzip make git mingw-w64-i686-gcc mingw-w64-x86_64-gcc mingw-w64-i686-glew mingw-w64-x86_64-glew mingw-w64-i686-SDL2 mingw-w64-i686-SDL mingw-w64-x86_64-SDL2 mingw-w64-x86_64-SDL python3
+              uses: msys2/setup-msys2@v2
+              with:
+                msystem: ucrt64
+                update: true
+                pacboy: unzip:p make:p git:p mingw-w64-x86_64-gcc:p mingw-w64-x86_64-glew:p mingw-w64-x86_64-SDL2:p python3:p
 
             - name: Build the game
-              run: |
-                make -j$(nproc)
+              run: make -j$(nproc)
 
             - name: Upload artifact
               uses: actions/upload-artifact@v4
