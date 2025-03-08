@@ -37,7 +37,7 @@ jobs:
         runs-on: windows-latest
         defaults:
             run:
-                shell: set MSYSTEM=MINGW64 msys2 {0}
+                shell: msys2 {0}
         steps:
             - name: Checkout repository
               uses: actions/checkout@v4
@@ -50,7 +50,9 @@ jobs:
                 pacboy: unzip:p make:p git:p mingw-w64-x86_64-gcc:p mingw-w64-x86_64-glew:p mingw-w64-x86_64-SDL2:p python3:p
 
             - name: Build the game
-              run: make -j$(nproc)
+              run: |
+                set MSYSTEM=MINGW64
+                make -j$(nproc)
 
             - name: Upload artifact
               uses: actions/upload-artifact@v4
