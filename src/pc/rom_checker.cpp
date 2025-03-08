@@ -57,7 +57,6 @@ static bool is_rom_valid(const std::string romPath) {
         ss << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(dataHash[i]);
     }
 
-    bool foundHash = false;
     for (VanillaMD5 *md5 = sVanillaMD5; md5->localizationName != NULL; md5++) {
         if (md5->md5 == ss.str()) {
             std::string destPath = fs_get_write_path("") + std::string("baserom.") + md5->localizationName + ".z64";
@@ -72,12 +71,11 @@ static bool is_rom_valid(const std::string romPath) {
 
             snprintf(gRomFilename, SYS_MAX_PATH, "%s", destPath.c_str()); // Load the copied rom
             gRomIsValid = true;
-            foundHash = true;
-            break;
+            return true;
         }
     }
 
-    return foundHash;
+    return false;
 }
 
 inline static bool scan_path_for_rom(const char *dir) {
@@ -104,11 +102,9 @@ bool main_rom_handler(void) {
 #ifdef LOADING_SCREEN_SUPPORTED
 void rom_on_drop_file(const char *path) {
     static bool hasDroppedInvalidFile = false;
-    if (strlen(path) > 0) {
-        if (!is_rom_valid(path) && !hasDroppedInvalidFile) {
-            hasDroppedInvalidFile = true;
-            strcat(gCurrLoadingSegment.str, "\n\\#ffc000\\The file you last dropped was not a valid, vanilla SM64 rom.");
-        }
+    if (strlen(path) > 0 && !is_rom_valid(path) && !hasDroppedInvalidFile) {
+        hasDroppedInvalidFile = true;
+        strcat(gCurrLoadingSegment.str, "\n\\#ffc000\\The file you last dropped was not a valid, vanilla SM64 rom.");
     }
 }
 #endif
