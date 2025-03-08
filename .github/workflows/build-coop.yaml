@@ -47,7 +47,11 @@ jobs:
               with:
                 msystem: ucrt64
                 update: true
-                pacboy: unzip:p make:p git:p mingw-w64-x86_64-gcc:p mingw-w64-x86_64-glew:p mingw-w64-x86_64-SDL2:p python3:p
+                pacboy: make:p python3:p
+              with:
+                msystem: mingw64
+                update: true
+                pacboy: unzip:p git:p gcc:p glew:p SDL2:p
 
             - name: Build the game
               run: make -j$(nproc)
