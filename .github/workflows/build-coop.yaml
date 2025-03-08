@@ -67,3 +67,29 @@ jobs:
               with:
                 name: sm64coopdx-windows
                 path: ./build/us_pc/sm64coopdx.exe
+    build-switch:
+        if: ${{ contains(github.event.head_commit.message, '[build]') || github.event_name == 'workflow_dispatch' }}
+        runs-on: ubuntu-latest
+        container: devkitpro/devkita64:latest
+        
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Install dependencies
+              run: |
+                sudo apt update
+                sudo apt install -y build-essential git python3
+
+            - name: Build the game
+              run: |
+                source /etc/profile.d/devkit-env.sh
+                export DEVKITA64=${DEVKITPRO}/devkitA64
+                export PATH=${DEVKITPRO}/tools/bin:${DEVKITA64}/bin:$PATH
+                make TARGET_NX=1 BUILD_NRO=1 CONTROLLER_API=SWITCH -j$(nproc)
+
+            - name: Upload artifact
+              uses: actions/upload-artifact@v4
+              with:
+                name: sm64coopdx-switch
+                path: ./build/us_nx/sm64coopdx.nro
