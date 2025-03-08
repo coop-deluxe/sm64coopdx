@@ -45,7 +45,7 @@ jobs:
             - name: Install dependencies
               uses: msys2/setup-msys2@v2
               with:
-                msystem: usr
+                msystem: msys
                 update: true
                 pacboy: unzip:p make:p git:p mingw-w64-x86_64-gcc:p mingw-w64-x86_64-glew:p mingw-w64-x86_64-SDL2:p python3:p
 
