@@ -80,7 +80,7 @@ jobs:
             - name: Install dependencies
               run: |
                 sudo apt update
-                sudo apt install -y build-essential git python3
+                sudo apt install -y build-essential bsdmainutils git python3
 
             - name: Build the game
               run: |
