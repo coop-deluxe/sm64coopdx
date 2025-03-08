@@ -252,6 +252,10 @@ const char *sys_user_path(void)
     return sys_windows_short_path_from_wcs(shortPath, SYS_MAX_PATH, widePath) ? shortPath : NULL;
 }
 
+const char *sys_resource_path(void) {
+    return sys_exe_path_dir();
+}
+
 const char *sys_exe_path_dir(void)
 {
     static char path[SYS_MAX_PATH];
