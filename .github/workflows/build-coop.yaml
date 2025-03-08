@@ -7,10 +7,11 @@ on:
     pull_request:
         branches:
             - "**"
+    workflow_dispatch:
 
 jobs:
     build-ubuntu:
-        if: ${{ contains(github.event.head_commit.message, '[build]')}}
+        if: ${{ contains(github.event.head_commit.message, '[build]') || github.event_name == 'workflow_dispatch' }}
         runs-on: ubuntu-latest
         steps:
             - name: Checkout repository
@@ -30,7 +31,7 @@ jobs:
                 name: sm64coopdx-ubuntu
                 path: ./build/us_pc/sm64coopdx
     build-windows:
-        if: ${{ contains(github.event.head_commit.message, '[build]')}}
+        if: ${{ contains(github.event.head_commit.message, '[build]') || github.event_name == 'workflow_dispatch' }}
         runs-on: windows-latest
         defaults:
             run:
