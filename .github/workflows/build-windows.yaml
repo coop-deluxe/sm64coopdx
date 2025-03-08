@@ -1,0 +1,38 @@
+name: Build coop on windows
+
+on:
+    push:
+        branches:
+            - dev
+    pull_request:
+        branches:
+            - "**"
+
+jobs:
+    build:
+        runs-on: windows-latest
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Install dependencies
+              run: |
+                choco install mingw
+                choco install git
+                choco install python3
+
+            - name: Set up MSYS2 (if needed for SDL2 or other dependencies)
+              run: |
+                pacman -Syu --noconfirm
+                pacman -S unzip make git mingw-w64-i686-gcc mingw-w64-x86_64-gcc mingw-w64-i686-glew mingw-w64-x86_64-glew mingw-w64-i686-SDL2 mingw-w64-i686-SDL mingw-w64-x86_64-SDL2 mingw-w64-x86_64-SDL python3
+
+            - name: Build the game
+              run: |
+                make -j$(nproc)
+
+            - name: Upload artifact
+              uses: actions/upload-artifact@v3
+              with:
+                name: sm64coopdx-windows
+                path: ./build/us_pc/sm64coopdx.exe

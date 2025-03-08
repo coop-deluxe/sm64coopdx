@@ -1,4 +1,4 @@
-name: Build coop
+name: Build coop on ubuntu
 
 on:
     push:
@@ -22,3 +22,9 @@ jobs:
 
             - name: Build the game
               run: make -j$(nproc)
+
+            - name: Upload artifact
+              uses: actions/upload-artifact@v3
+              with:
+                name: sm64coopdx-ubuntu
+                path: ./build/us_pc/sm64coopdx
