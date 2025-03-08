@@ -8,8 +8,6 @@ on:
         branches:
             - "**"
     workflow_dispatch:
-        branches:
-            - "**"
 
 jobs:
     build-ubuntu:
@@ -41,18 +39,28 @@ jobs:
         steps:
             - name: Checkout repository
               uses: actions/checkout@v4
-                
+
             - name: Install dependencies
               uses: msys2/setup-msys2@v2
               with:
-                msystem: msys
+                msystem: mingw64
                 update: true
-                pacboy: unzip:p make:p git:p mingw-w64-x86_64-gcc:p mingw-w64-x86_64-glew:p mingw-w64-x86_64-SDL2:p python3:p
+                install: >
+                    unzip
+                    make
+                    git
+                    mingw-w64-i686-gcc
+                    mingw-w64-x86_64-gcc
+                    mingw-w64-i686-glew
+                    mingw-w64-x86_64-glew
+                    mingw-w64-i686-SDL2
+                    mingw-w64-i686-SDL
+                    mingw-w64-x86_64-SDL2
+                    mingw-w64-x86_64-SDL
+                    python3
 
             - name: Build the game
-              run: |
-                set MSYSTEM=MINGW64
-                make -j$(nproc)
+              run: make -j$(nproc)
 
             - name: Upload artifact
               uses: actions/upload-artifact@v4
