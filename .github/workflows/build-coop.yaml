@@ -41,20 +41,13 @@ jobs:
         steps:
             - name: Checkout repository
               uses: actions/checkout@v4
-
-            - name: Install dependencies [UCRT]
-              uses: msys2/setup-msys2@v2
-              with:
-                msystem: ucrt64
-                update: true
-                pacboy: make:p python3:p
                 
-            - name: Install dependencies [MINGW64]
+            - name: Install dependencies
               uses: msys2/setup-msys2@v2
               with:
                 msystem: mingw64
                 update: true
-                pacboy: unzip:p git:p gcc:p glew:p SDL2:p
+                pacboy: make:p python3:p unzip:p git:p gcc:p glew:p SDL2:p
 
             - name: Build the game
               run: make -j$(nproc)
