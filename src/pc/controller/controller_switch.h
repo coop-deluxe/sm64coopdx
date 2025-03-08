@@ -5,4 +5,8 @@
 
 extern struct ControllerAPI controller_switch;
 
+void show_swkb(char *text);
+void hide_swkb(void);
+void poll_swkb(void);
+
 #endif

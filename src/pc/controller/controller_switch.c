@@ -7,18 +7,98 @@
 #include <sm64.h>
 #include "../../game/level_update.h"
 
-#include "controller_api.h"
+#include "controller_switch.h"
 #include "pc/djui/djui.h"
+#include "pc/djui/djui_base.h"
+#include "pc/djui/djui_interactable.h"
 #include "pc/djui/djui_panel_pause.h"
 
-static bool isSixAxis = false;
-static HidVibrationDeviceHandle VibrationDeviceHandles[2][2] = { 0 };
-static HidSixAxisSensorHandle sixAxisHandles[4] = { 0 };
+// Buttons & Sticks
 static HidAnalogStickState stickStates[2] = { 0 };
 static PadState padState = { 0 };
 static u64 padBtnsPressed = 0;
 static u64 padBtnsDown = 0;
 static u64 padBtnsUp = 0;
+
+// Motion Controls
+static bool isSixAxis = false;
+static HidSixAxisSensorHandle sixAxisHandles[4] = { 0 };
+
+// Rumble
+static HidVibrationDeviceHandle VibrationDeviceHandles[2][2] = { 0 };
+
+// Switch Keyboard
+static bool kbdInited = false;
+static bool kbdShown = false;
+static SwkbdInline kbd = { 0 };
+static SwkbdAppearArg kbdAppearArg = { 0 };
+
+static void enter_cb(const char *str, SwkbdDecidedEnterArg *arg) {
+    djui_interactable_on_text_input((char *)str);
+    djui_interactable_set_input_focus(NULL);
+}
+
+static void cancel_cb(void) {
+    djui_interactable_set_input_focus(NULL);
+}
+
+static void changed_string(const char *str, SwkbdChangedStringArg *arg) {
+    djui_interactable_on_text_editing((char *)str, arg->cursorPos);
+}
+
+static void moved_cursor(const char *str, SwkbdMovedCursorArg *arg) {
+    djui_interactable_on_text_editing((char *)str, arg->cursorPos);
+}
+
+static void start_swkb(void) {
+    if (kbdInited) { return; }
+    
+    Result rc = swkbdInlineCreate(&kbd);
+    if (!R_SUCCEEDED(rc)) { return; }
+    
+    rc = swkbdInlineLaunchForLibraryApplet(&kbd, SwkbdInlineMode_AppletDisplay, 0);
+    if (!R_SUCCEEDED(rc)) { return; }
+    
+    swkbdInlineSetDecidedEnterCallback(&kbd, enter_cb);
+    swkbdInlineSetDecidedCancelCallback(&kbd, cancel_cb);
+    swkbdInlineSetChangedStringCallback(&kbd, changed_string);
+    swkbdInlineSetMovedCursorCallback(&kbd, moved_cursor);
+    swkbdInlineMakeAppearArg(&kbdAppearArg, SwkbdType_All);
+    swkbdInlineAppearArgSetOkButtonText(&kbdAppearArg, "Submit");
+    kbdAppearArg.dicFlag = 1;
+    kbdAppearArg.returnButtonFlag = 1;
+    kbdInited = true;
+}
+
+void show_swkb(char *text) {
+    if (!kbdInited) { return; }
+    
+    swkbdInlineSetInputText(&kbd, text);
+    swkbdInlineSetCursorPos(&kbd, strlen(text));
+    swkbdInlineAppear(&kbd, &kbdAppearArg);
+    kbdShown = true;
+    
+    djui_interactable_on_text_editing("\0", 0);
+}
+
+void hide_swkb(void) {
+    if (!kbdInited) { return; }
+
+    swkbdInlineDisappear(&kbd);
+    kbdShown = false;
+}
+
+void poll_swkb(void) {
+    if (!kbdInited) { return; }
+    swkbdInlineUpdate(&kbd, NULL);
+}
+
+static void quit_swkb(void) {
+    if (!kbdInited) { return; }
+    
+    swkbdInlineClose(&kbd);
+    kbdInited = false;
+}
 
 static void start_six_axis() {
     isSixAxis = true;
@@ -87,7 +167,7 @@ static void update_buttons(OSContPad *pad) {
     update_button_game(pad, D_JPAD, HidNpadButton_Down);
     update_button_game(pad, R_JPAD, HidNpadButton_Right);
     
-    // Bind the C stick to the buttons.
+    // Bind the C stick to the C buttons.
     update_button(pad, R_CBUTTONS, DJUI_BTN_CRIGHT, HidNpadButton_StickRRight);
     update_button(pad, L_CBUTTONS, DJUI_BTN_CLEFT, HidNpadButton_StickRLeft);
     update_button(pad, U_CBUTTONS, DJUI_BTN_CUP, HidNpadButton_StickRUp);
@@ -138,9 +218,12 @@ static void controller_switch_nx_init(void) {
     hidGetSixAxisSensorHandles(&sixAxisHandles[0], 1, HidNpadIdType_Handheld, HidNpadStyleTag_NpadHandheld);
     hidGetSixAxisSensorHandles(&sixAxisHandles[1], 1, HidNpadIdType_No1,      HidNpadStyleTag_NpadFullKey);
     hidGetSixAxisSensorHandles(&sixAxisHandles[2], 2, HidNpadIdType_No1,      HidNpadStyleTag_NpadJoyDual);
+    
+    djui_interactable_set_buttons_only(true);
+    start_swkb();
 }
 
-static void controller_switch_nx_read(OSContPad *pad) { 
+static void controller_switch_nx_read(OSContPad *pad) {
     switch (gMarioState->action) {
         case ACT_IN_CANNON:
         case ACT_FIRST_PERSON:
@@ -160,6 +243,7 @@ static void controller_switch_nx_read(OSContPad *pad) {
     
     update_buttons(pad);
     update_sticks(pad);
+    poll_swkb();
 }
 
 static u32 controller_switch_nx_rawkey(void)  {
@@ -196,6 +280,8 @@ static void controller_switch_nx_rumble_stop(void) {
 }
 
 static void controller_switch_nx_shutdown(void) {
+    djui_interactable_set_buttons_only(false);
+    quit_swkb();
 }
 
 struct ControllerAPI controller_switch = {

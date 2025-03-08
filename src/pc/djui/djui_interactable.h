@@ -84,6 +84,8 @@ bool djui_interactable_is_binding(void);
 void djui_interactable_set_binding(struct DjuiBase* base);
 void djui_interactable_set_input_focus(struct DjuiBase* base);
 bool djui_interactable_is_input_focus(struct DjuiBase* base);
+void djui_interactable_set_buttons_only(bool enabled);
+bool djui_interactable_is_buttons_only(void);
 bool djui_interactable_on_key_down(int scancode);
 void djui_interactable_on_key_up(int scancode);
 bool djui_interactable_on_button_down(u8 code);

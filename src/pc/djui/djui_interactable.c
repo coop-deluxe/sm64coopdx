@@ -28,6 +28,7 @@ struct DjuiBase* gDjuiCursorDownOn = NULL;
 struct DjuiBase* gInteractableFocus = NULL;
 struct DjuiBase* gInteractableBinding = NULL;
 struct DjuiBase* gInteractableMouseDown    = NULL;
+bool gIsUsingButtonsOnly              = false;
 bool gInteractableOverridePad         = false;
 OSContPad gInteractablePad            = { 0 };
 static OSContPad sLastInteractablePad = { 0 };
@@ -193,6 +194,14 @@ bool djui_interactable_is_input_focus(struct DjuiBase* base) {
     return gInteractableFocus == base;
 }
 
+void djui_interactable_set_buttons_only(bool enabled) {
+    gIsUsingButtonsOnly = enabled;
+}
+
+bool djui_interactable_is_buttons_only(void) {
+    return gIsUsingButtonsOnly;
+}
+
 bool djui_interactable_on_key_down(int scancode) {
     if (gInteractableBinding != NULL) {
         return true;
@@ -323,6 +332,14 @@ void djui_interactable_on_key_up(int scancode) {
 
 bool djui_interactable_on_button_down(u8 code) {
     if (gInteractableBinding != NULL) {
+        return true;
+    }
+    
+    bool keyFocused = (gInteractableFocus != NULL) && (gInteractableFocus->interactable != NULL);
+
+    if (keyFocused) {
+        sKeyboardHoldDirection = PAD_HOLD_DIR_NONE;
+        sKeyboardButtons = 0;
         return true;
     }
 
@@ -456,7 +473,7 @@ void djui_interactable_update(void) {
             if (!gDjuiChatBoxFocus) {
                 djui_interactable_set_input_focus(NULL);
             }
-        } else if ((padButtons & mainButtons) && !(sLastInteractablePad.button & mainButtons)) {
+        } else if (!gIsUsingButtonsOnly && (padButtons & mainButtons) && !(sLastInteractablePad.button & mainButtons)) {
             // pressed main face button
             if (!gDjuiChatBoxFocus) {
                 djui_interactable_set_input_focus(NULL);
@@ -474,7 +491,7 @@ void djui_interactable_update(void) {
 
     if (gInteractableBinding != NULL) {
         djui_interactable_on_bind(gInteractableBinding);
-    } else if ((padButtons & PAD_BUTTON_A) || (mouseButtons & MOUSE_BUTTON_1)) {
+    } else if (!(gIsUsingButtonsOnly && gInteractableFocus) && ((padButtons & PAD_BUTTON_A) || (mouseButtons & MOUSE_BUTTON_1))) {
         // cursor down events
         if (gDjuiHovered != NULL) {
             gInteractableMouseDown = gDjuiHovered;
