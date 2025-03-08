@@ -84,7 +84,6 @@ jobs:
 
             - name: Build the game
               run: |
-                source /etc/profile.d/devkit-env.sh
                 export DEVKITA64=${DEVKITPRO}/devkitA64
                 export PATH=${DEVKITPRO}/tools/bin:${DEVKITA64}/bin:$PATH
                 make TARGET_NX=1 BUILD_NRO=1 CONTROLLER_API=SWITCH -j$(nproc)
