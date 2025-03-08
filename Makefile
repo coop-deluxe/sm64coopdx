@@ -27,6 +27,9 @@ TARGET_N64 = 0
 # Build and optimize for Raspberry Pi(s)
 TARGET_RPI ?= 0
 
+# Build and optimize for RK3588 processor
+TARGET_RK3588 ?= 0
+
 # Build and optimize for the Nintendo Switch
 TARGET_NX ?= 0
 
@@ -361,6 +364,17 @@ else ifeq ($(TARGET_NX),1) # Nintendo Switch
     ICON := res/icon_AmericanEnglish.dat
 endif
 
+ifeq ($(TARGET_RK3588),1)
+  $(info Compiling for RK3588)
+  DISCORD_SDK := 0
+  COOPNET := 0
+  machine = $(shell sh -c 'uname -m 2>/dev/null || echo unknown')
+
+  # RK3588 in ARM64 (aarch64) mode
+  $(info ARM64 mode)
+  OPT_FLAGS := -march=armv8.2-a+crc+simd -mtune=cortex-a76 -O3
+endif
+
 # Set BITS (32/64) to compile for
 ifeq ($(TARGET_NX),0)
   OPT_FLAGS += $(BITS)
@@ -405,6 +419,10 @@ endif
 
 ifeq ($(TARGET_RPI),1) # Define RPi to change SDL2 title & GLES2 hints
      DEFINES += USE_GLES=1
+endif
+
+ifeq ($(TARGET_RK3588),1) # Define RK3588 to change SDL2 title & GLES2 hints
+  DEFINES += USE_GLES=1
 endif
 
 ifeq ($(OSX_BUILD),1) # Modify GFX & SDL2 for OSX GL
@@ -500,16 +518,6 @@ TOOLS_DIR := tools
 PYTHON := python3
 
 ifeq ($(filter clean distclean print-%,$(MAKECMDGOALS)),)
-
-  # Make sure assets exist
-  NOEXTRACT ?= 0
-  ifeq ($(NOEXTRACT),0)
-    DUMMY != $(PYTHON) extract_assets.py $(VERSION) >&2 || echo FAIL
-    ifeq ($(DUMMY),FAIL)
-      $(error Failed to extract assets)
-    endif
-  endif
-
   ifeq ($(WINDOWS_AUTO_BUILDER),0)
     $(info Building tools...)
     DUMMY != $(MAKE) -C $(TOOLS_DIR) >&2 || echo FAIL
@@ -548,6 +556,8 @@ else ifeq ($(TARGET_NX),1) # Nintendo Switch
     else
         EXE := $(BUILD_DIR)/sm64coopdx.nsp
     endif
+else ifeq ($(TARGET_RK3588),1)
+    EXE := $(BUILD_DIR)/sm64coopdx.arm
 else ifeq ($(TARGET_N64),1) # Nintendo 64 (Unused)
     BUILD_DIR := $(BUILD_DIR_BASE)/$(VERSION)
     ELF := $(BUILD_DIR)/sm64coopdx.elf
@@ -855,6 +865,8 @@ else ifeq ($(findstring SDL,$(WINDOW_API)),SDL)
     BACKEND_LDFLAGS += -lglew32 -lglu32 -lopengl32
   else ifeq ($(TARGET_RPI),1)
     BACKEND_LDFLAGS += -lGLESv2
+  else ifeq ($(TARGET_RK3588),1)
+    BACKEND_LDFLAGS += -lGLESv2
   else ifeq ($(TARGET_NX),1) # Nintendo Switch
     BACKEND_LDFLAGS += -lGLESv2
 	EXTRA_CPP_FLAGS += -std=gnu++17 -fsanitize=builtin -fstack-protector
@@ -970,6 +982,8 @@ ifeq ($(WINDOWS_BUILD),1)
   LDFLAGS += -T windows.ld
 else ifeq ($(TARGET_RPI),1)
   LDFLAGS := $(OPT_FLAGS) $(BACKEND_LDFLAGS) -no-pie
+else ifeq ($(TARGET_RK3588),1)
+  LDFLAGS := $(OPT_FLAGS) -lm $(BACKEND_LDFLAGS) -no-pie
 else ifeq ($(TARGET_NX),1) # Nintendo Switch
   LDFLAGS := -specs=$(LIBNX)/switch.specs $(OPT_FLAGS) -L$(LIBNX)/lib -L$(PORTLIBS)/lib $(BACKEND_LDFLAGS)
 else ifeq ($(OSX_BUILD),1)
@@ -1045,6 +1059,8 @@ else ifeq ($(TARGET_RPI),1)
   else
     LDFLAGS += -Llib/lua/linux -l:liblua53-arm.a
   endif
+else ifeq ($(TARGET_RK3588),1)
+  LDFLAGS += -Llib/lua/linux -l:liblua53-arm64.a
 else ifeq ($(TARGET_NX),1)
   LDFLAGS += -Llib/lua/nx -l:liblua53.a
 else
@@ -1076,6 +1092,8 @@ ifeq ($(COOPNET),1)
     else
       LDFLAGS += -Llib/coopnet/linux -l:libcoopnet-arm.a -l:libjuice-arm.a
     endif
+  else ifeq ($(TARGET_RK3588),1)
+    LDFLAGS += -Llib/coopnet/linux -l:libcoopnet-arm64.a -l:libjuice.a
   else ifeq ($(TARGET_NX),1)
     LDFLAGS += -Llib/coopnet/nx -l:libcoopnet.a -l:libjuice.a
   else
@@ -1164,6 +1182,12 @@ endif
 ifeq ($(TARGET_RPI),1)
   CC_CHECK_CFLAGS += -DTARGET_RPI
   CFLAGS += -DTARGET_RPI
+endif
+
+# Check for rk3588 option
+ifeq ($(TARGET_RK3588),1)
+  CC_CHECK_CFLAGS += -DTARGET_RK3588
+  CFLAGS += -DTARGET_RK3588
 endif
 
 # Check for texture fix option
@@ -1326,8 +1350,6 @@ endif
 
 $(BUILD_DIR)/src/game/characters.o:   $(SOUND_SAMPLE_TABLES)
 $(SOUND_BIN_DIR)/sound_data.o:        $(SOUND_BIN_DIR)/sound_data.ctl.inc.c $(SOUND_BIN_DIR)/sound_data.tbl.inc.c $(SOUND_BIN_DIR)/sequences.bin.inc.c $(SOUND_BIN_DIR)/bank_sets.inc.c
-$(SOUND_BIN_DIR)/samples_assets.o:    $(SOUND_BIN_DIR)/samples_offsets.inc.c
-$(SOUND_BIN_DIR)/sequences_assets.o:  $(SOUND_BIN_DIR)/sequences_offsets.inc.c
 $(BUILD_DIR)/levels/scripts.o:        $(BUILD_DIR)/include/level_headers.h
 
 ifeq ($(VERSION),sh)
@@ -1507,12 +1529,17 @@ $(ENDIAN_BITWIDTH): $(TOOLS_DIR)/determine-endian-bitwidth.c
 	@$(RM) $@.dummy1
 	@$(RM) $@.dummy2
 
-$(SOUND_BIN_DIR)/sound_data.ctl: sound/sound_banks/ $(SOUND_BANK_FILES) $(SOUND_SAMPLE_AIFCS) $(ENDIAN_BITWIDTH)
-	@$(PRINT) "$(GREEN)Generating:  $(BLUE)$@ $(NO_COL)\n"
-	$(V)$(PYTHON) $(TOOLS_DIR)/assemble_sound.py $(BUILD_DIR)/sound/samples/ sound/sound_banks/ $(SOUND_BIN_DIR)/sound_data.ctl $(SOUND_BIN_DIR)/ctl_header $(SOUND_BIN_DIR)/sound_data.tbl $(SOUND_BIN_DIR)/tbl_header $(C_DEFINES) $$(cat $(ENDIAN_BITWIDTH))
+$(SOUND_BIN_DIR)/sound_data.tbl: sound/sound_data_compressed.tbl
+	@$(PRINT) "$(GREEN)Decompressing:  $(BLUE)$@ $(NO_COL)\n"
+	$(V)$(PYTHON) $(TOOLS_DIR)/decompress.py sound/sound_data_compressed.tbl $(SOUND_BIN_DIR)/sound_data.tbl
 
-$(SOUND_BIN_DIR)/sound_data.tbl: $(SOUND_BIN_DIR)/sound_data.ctl
-	@true
+$(SOUND_BIN_DIR)/sound_data.ctl: sound/sound_data_compressed.ctl
+	@$(PRINT) "$(GREEN)Decompressing:  $(BLUE)$@ $(NO_COL)\n"
+	$(V)$(PYTHON) $(TOOLS_DIR)/decompress.py sound/sound_data_compressed.ctl $(SOUND_BIN_DIR)/sound_data.ctl
+
+$(SOUND_BIN_DIR)/bank_sets: sound/bank_sets_compressed
+	@$(PRINT) "$(GREEN)Decompressing:  $(BLUE)$@ $(NO_COL)\n"
+	$(V)$(PYTHON) $(TOOLS_DIR)/decompress.py sound/bank_sets_compressed $(SOUND_BIN_DIR)/bank_sets
 
 $(SOUND_BIN_DIR)/ctl_header: $(SOUND_BIN_DIR)/sound_data.ctl
 	@true
@@ -1520,20 +1547,11 @@ $(SOUND_BIN_DIR)/ctl_header: $(SOUND_BIN_DIR)/sound_data.ctl
 $(SOUND_BIN_DIR)/tbl_header: $(SOUND_BIN_DIR)/sound_data.ctl
 	@true
 
-$(SOUND_BIN_DIR)/samples_offsets.inc.c: $(SOUND_BIN_DIR)/sound_data.ctl
-	@true
-
-$(SOUND_BIN_DIR)/sequences.bin: $(SOUND_BANK_FILES) sound/sequences.json $(SOUND_SEQUENCE_DIRS) $(SOUND_SEQUENCE_FILES) $(ENDIAN_BITWIDTH)
-	@$(PRINT) "$(GREEN)Generating:  $(BLUE)$@ $(NO_COL)\n"
-	$(V)$(PYTHON) $(TOOLS_DIR)/assemble_sound.py --sequences $@ $(SOUND_BIN_DIR)/sequences_header $(SOUND_BIN_DIR)/bank_sets sound/sound_banks/ sound/sequences.json $(SOUND_SEQUENCE_FILES) $(C_DEFINES) $$(cat $(ENDIAN_BITWIDTH))
-
-$(SOUND_BIN_DIR)/bank_sets: $(SOUND_BIN_DIR)/sequences.bin
-	@true
+$(SOUND_BIN_DIR)/sequences.bin:
+	@$(PRINT) "$(GREEN)Decompressing:  $(BLUE)$@ $(NO_COL)\n"
+	$(V)$(PYTHON) $(TOOLS_DIR)/decompress.py sound/sequences_compressed.bin $(SOUND_BIN_DIR)/sequences.bin
 
 $(SOUND_BIN_DIR)/sequences_header: $(SOUND_BIN_DIR)/sequences.bin
-	@true
-
-$(SOUND_BIN_DIR)/sequences_offsets.inc.c: $(SOUND_BIN_DIR)/sequences.bin
 	@true
 
 $(SOUND_BIN_DIR)/%.m64: $(SOUND_BIN_DIR)/%.o

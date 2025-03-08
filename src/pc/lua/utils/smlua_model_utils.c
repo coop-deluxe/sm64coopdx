@@ -486,8 +486,10 @@ void smlua_model_util_store_in_slot(u32 slot, const char* name) {
     dynos_model_overwrite_slot(slot, loadedId);
 }
 
+// Takes an extended model id, loads the model, and returns the regular model id
 u16 smlua_model_util_load(enum ModelExtendedId extId) {
-    if ((u32)extId >= (u32)E_MODEL_MAX + (u32)sCustomModelsCount) { extId = E_MODEL_ERROR_MODEL; }
+    if (extId == E_MODEL_NONE) { return MODEL_NONE; }
+    if (!extId || (u32)extId >= (u32)E_MODEL_MAX + (u32)sCustomModelsCount) { extId = E_MODEL_ERROR_MODEL; }
 
     struct ModelUtilsInfo* info = (extId < E_MODEL_MAX)
         ? &sModels[extId]
@@ -500,6 +502,61 @@ u16 smlua_model_util_load(enum ModelExtendedId extId) {
         dynos_model_load_geo(&id, MODEL_POOL_SESSION, (void*)info->asset, true);
     }
     return (u16)id;
+}
+
+// Links the regular model id created by DynOS to our models list
+void smlua_model_util_register_model_id(u32 id, const void *asset) {
+    if (id < VANILLA_ID_END) {
+        for (u32 i = 0; i < E_MODEL_MAX; i++) {
+            struct ModelUtilsInfo* m = &sModels[i];
+            if (m->asset == asset) {
+                m->loadedId = id;
+                return;
+            }
+        }
+    } else {
+        for (u32 i = 0; i < sCustomModelsCount; i++) {
+            struct ModelUtilsInfo* m = &sCustomModels[i];
+            if (m->asset == asset) {
+                m->loadedId = id;
+                return;
+            }
+        }
+    }
+}
+
+// Translates an extended model id to a regular model id
+u16 smlua_model_util_ext_id_to_id(enum ModelExtendedId extId) {
+    if (extId == E_MODEL_NONE) { return MODEL_NONE; }
+    if ((u32)extId >= (u32)E_MODEL_MAX + (u32)sCustomModelsCount) { return MODEL_ERROR_MODEL; }
+
+    struct ModelUtilsInfo* info = (extId < E_MODEL_MAX)
+        ? &sModels[extId]
+        : &sCustomModels[extId - E_MODEL_MAX];
+    return info->loadedId != UNLOADED_ID ? info->loadedId : MODEL_ERROR_MODEL;
+}
+
+// Translates a regular model id to an extended model id
+enum ModelExtendedId smlua_model_util_id_to_ext_id(u16 id) {
+    if (!id) { return E_MODEL_NONE; }
+
+    // Check built-in models
+    for (u32 i = 0; i < E_MODEL_MAX; i++) {
+        struct ModelUtilsInfo* m = &sModels[i];
+        if (m->loadedId == id) {
+            return m->extId;
+        }
+    }
+
+    // Check custom models
+    for (u32 i = 0; i < sCustomModelsCount; i++) {
+        struct ModelUtilsInfo* m = &sCustomModels[i];
+        if (m->loadedId == id) {
+            return m->extId;
+        }
+    }
+
+    return E_MODEL_ERROR_MODEL;
 }
 
 enum ModelExtendedId smlua_model_util_get_id(const char* name) {

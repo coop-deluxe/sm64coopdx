@@ -17,6 +17,7 @@
 #include "game/skybox.h"
 #include "game/first_person_cam.h"
 #include "course_table.h"
+#include "skybox.h"
 
 /**
  * This file contains the code that processes the scene graph for rendering.
@@ -66,6 +67,15 @@ Mtx sPrevCamTranf, sCurrCamTranf = {
         {0.0f, 0.0f, 1.0f, 0.0f},
         {0.0f, 0.0f, 0.0f, 1.0f}
     }
+};
+
+static Gfx obj_sanitize_gfx[] = {
+    gsSPClearGeometryMode(G_TEXTURE_GEN),
+    gsSPSetGeometryMode(G_LIGHTING),
+    gsDPSetCombineMode(G_CC_SHADE, G_CC_SHADE),
+    gsSPTexture(0xFFFF, 0xFFFF, 0, 0, G_OFF),
+    gsDPSetAlphaCompare(G_AC_NONE),
+    gsSPEndDisplayList(),
 };
 
 /**
@@ -172,7 +182,7 @@ static Vp   sViewportInterp  = { 0 };
 
 static struct GraphNodeBackground* sBackgroundNode = NULL;
 Gfx* gBackgroundSkyboxGfx = NULL;
-Vtx* gBackgroundSkyboxVerts[3][3] = { 0 };
+Vtx* gBackgroundSkyboxVerts[SKYBOX_TILES_Y][SKYBOX_TILES_X] = { 0 };
 Mtx* gBackgroundSkyboxMtx = NULL;
 struct GraphNodeRoot* sBackgroundNodeRoot = NULL;
 
@@ -1196,6 +1206,12 @@ static s32 obj_is_in_view(struct GraphNodeObject *node, Mat4 matrix) {
     return TRUE;
 }
 
+static void geo_sanitize_object_gfx() {
+    geo_append_display_list(obj_sanitize_gfx, LAYER_OPAQUE);
+    geo_append_display_list(obj_sanitize_gfx, LAYER_ALPHA);
+    geo_append_display_list(obj_sanitize_gfx, LAYER_TRANSPARENT);
+}
+
 /**
  * Process an object node.
  */
@@ -1234,6 +1250,7 @@ static void geo_process_object(struct Object *node) {
         }
     }
 
+    bool noBillboard = (node->header.gfx.sharedChild && node->header.gfx.sharedChild->extraFlags & GRAPH_EXTRA_FORCE_3D);
     if (node->header.gfx.areaIndex == gCurGraphNodeRoot->areaIndex) {
         if (node->header.gfx.throwMatrix != NULL) {
 
@@ -1246,14 +1263,13 @@ static void geo_process_object(struct Object *node) {
                 mtxf_copy(mtxf, node->header.gfx.prevThrowMatrix);
                 mtxf_mul(gMatStackPrev[gMatStackIndex + 1], mtxf, gMatStackPrev[gMatStackIndex]);
             } else {
-                mtxf_mul(gMatStackPrev[gMatStackIndex + 1], (void *) node->header.gfx.throwMatrix,
-                         gMatStackPrev[gMatStackIndex]);
+                mtxf_mul(gMatStackPrev[gMatStackIndex + 1], (void *) node->header.gfx.throwMatrix, gMatStackPrev[gMatStackIndex]);
             }
 
             mtxf_copy(node->header.gfx.prevThrowMatrix, *node->header.gfx.throwMatrix);
             node->header.gfx.prevThrowMatrixTimestamp = gGlobalTimer;
 
-        } else if ((node->header.gfx.node.flags & GRAPH_RENDER_CYLBOARD) && !(node->header.gfx.sharedChild && node->header.gfx.sharedChild->extraFlags & GRAPH_EXTRA_FORCE_3D)) {
+        } else if (node->header.gfx.node.flags & GRAPH_RENDER_CYLBOARD && !noBillboard) {
 
             Vec3f posPrev;
 
@@ -1267,12 +1283,10 @@ static void geo_process_object(struct Object *node) {
 
             vec3f_copy(node->header.gfx.prevPos, node->header.gfx.pos);
             node->header.gfx.prevTimestamp = gGlobalTimer;
-            mtxf_cylboard(gMatStack[gMatStackIndex + 1], gMatStack[gMatStackIndex],
-                           node->header.gfx.pos, gCurGraphNodeCamera->roll);
-            mtxf_cylboard(gMatStackPrev[gMatStackIndex + 1], gMatStackPrev[gMatStackIndex],
-                           posPrev, gCurGraphNodeCamera->roll);
+            mtxf_cylboard(gMatStack[gMatStackIndex + 1], gMatStack[gMatStackIndex], node->header.gfx.pos, gCurGraphNodeCamera->roll);
+            mtxf_cylboard(gMatStackPrev[gMatStackIndex + 1], gMatStackPrev[gMatStackIndex], posPrev, gCurGraphNodeCamera->roll);
 
-        } else if ((node->header.gfx.node.flags & GRAPH_RENDER_BILLBOARD) && !(node->header.gfx.sharedChild && node->header.gfx.sharedChild->extraFlags & GRAPH_EXTRA_FORCE_3D)) {
+        } else if (node->header.gfx.node.flags & GRAPH_RENDER_BILLBOARD && !noBillboard) {
 
             Vec3f posPrev;
 
@@ -1286,10 +1300,8 @@ static void geo_process_object(struct Object *node) {
 
             vec3f_copy(node->header.gfx.prevPos, node->header.gfx.pos);
             node->header.gfx.prevTimestamp = gGlobalTimer;
-            mtxf_billboard(gMatStack[gMatStackIndex + 1], gMatStack[gMatStackIndex],
-                           node->header.gfx.pos, gCurGraphNodeCamera->roll);
-            mtxf_billboard(gMatStackPrev[gMatStackIndex + 1], gMatStackPrev[gMatStackIndex],
-                           posPrev, gCurGraphNodeCamera->roll);
+            mtxf_billboard(gMatStack[gMatStackIndex + 1], gMatStack[gMatStackIndex], node->header.gfx.pos, gCurGraphNodeCamera->roll);
+            mtxf_billboard(gMatStackPrev[gMatStackIndex + 1], gMatStackPrev[gMatStackIndex], posPrev, gCurGraphNodeCamera->roll);
 
         } else {
 
@@ -1356,6 +1368,7 @@ static void geo_process_object(struct Object *node) {
             if (node->header.gfx.sharedChild != NULL) {
                 gCurGraphNodeObject = (struct GraphNodeObject *) node;
                 node->header.gfx.sharedChild->parent = &node->header.gfx.node;
+                geo_sanitize_object_gfx();
                 geo_process_node_and_siblings(node->header.gfx.sharedChild);
                 node->header.gfx.sharedChild->parent = NULL;
                 gCurGraphNodeObject = NULL;
@@ -1467,6 +1480,7 @@ void geo_process_held_object(struct GraphNodeHeldObject *node) {
             dynos_gfx_swap_animations(node->objNode);
         }
 
+        geo_sanitize_object_gfx();
         geo_process_node_and_siblings(node->objNode->header.gfx.sharedChild);
         gCurGraphNodeHeldObject = NULL;
         gCurAnimType = gGeoTempState.type;
@@ -1628,7 +1642,7 @@ static void geo_clear_interp_variables(void) {
 
     sBackgroundNode = NULL;
     gBackgroundSkyboxGfx = NULL;
-    memset(gBackgroundSkyboxVerts, 0, sizeof(Vtx*) * 3 * 3);
+    memset(gBackgroundSkyboxVerts, 0, sizeof(Vtx*) * SKYBOX_TILES_Y * SKYBOX_TILES_X);
     gBackgroundSkyboxMtx = NULL;
     sBackgroundNodeRoot = NULL;
 

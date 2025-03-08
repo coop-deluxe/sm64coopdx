@@ -16,12 +16,31 @@
 #include "pc/discord/discord.h"
 #endif
 #include "game/mario.h"
+#include "pc/djui/djui_unicode.h"
 
 struct NetworkPlayer gNetworkPlayers[MAX_PLAYERS] = { 0 };
 struct NetworkPlayer *gNetworkPlayerLocal = NULL;
 struct NetworkPlayer *gNetworkPlayerServer = NULL;
 static char sDefaultPlayerName[] = "Player";
 static char sDefaultDiscordId[] = "0";
+
+bool network_player_name_valid(char* buffer) {
+    if (buffer[0] == '\0') { return false; }
+    u16 numEscapeChars = 0;
+    bool isOnlyEscapeChars = true;
+    bool isInEscapedChar = false;
+    char* c = buffer;
+    while (*c != '\0') {
+        if (*c == ' ') { return false; }
+        if (!djui_unicode_valid_char(c)) { return false; }
+        if (*c == '\\') { numEscapeChars++; isInEscapedChar = !isInEscapedChar; }
+        else if (!isInEscapedChar) { isOnlyEscapeChars = false; }
+        c = djui_unicode_next_char(c);
+    }
+    if (isOnlyEscapeChars) { return false; }
+    if (numEscapeChars % 2 != 0) { return false; }
+    return true;
+}
 
 void network_player_init(void) {
     gNetworkPlayers[0].modelIndex = (configPlayerModel < CT_MAX) ? configPlayerModel : CT_MARIO;
@@ -252,8 +271,8 @@ u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex, u8 mode
     }
     struct NetworkPlayer *np = &gNetworkPlayers[localIndex];
 
-    // ensure that a name is given
-    if (name[0] == '\0') {
+    // ensure that a valid name is given
+    if (!network_player_name_valid((char*)name)) {
         name = sDefaultPlayerName;
     }
     if (discordId[0] == '\0') {

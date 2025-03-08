@@ -6,9 +6,8 @@ extern "C" {
 #include "engine/geo_layout.h"
 #include "engine/graph_node.h"
 #include "model_ids.h"
+#include "pc/lua/utils/smlua_model_utils.h"
 }
-
-#define VANILLA_ID_END 255
 
 enum ModelLoadType {
     MLT_GEO,
@@ -58,7 +57,7 @@ void DynOS_Model_Dump() {
     }
 }
 
-struct GraphNode* DynOS_Model_LoadCommon(u32* aId, enum ModelPool aModelPool, void* aAsset, u8 aLayer, struct GraphNode* aGraphNode, bool aDeDuplicate, enum ModelLoadType mlt) {
+static struct GraphNode* DynOS_Model_LoadCommonInternal(u32* aId, enum ModelPool aModelPool, void* aAsset, u8 aLayer, struct GraphNode* aGraphNode, bool aDeDuplicate, enum ModelLoadType mlt) {
     // sanity check pool
     if (aModelPool >= MODEL_POOL_MAX) { return NULL; }
 
@@ -121,6 +120,12 @@ struct GraphNode* DynOS_Model_LoadCommon(u32* aId, enum ModelPool aModelPool, vo
     sIdMap[*aId].push_back(info);
     map[aAsset] = info;
 
+    return node;
+}
+
+static struct GraphNode* DynOS_Model_LoadCommon(u32* aId, enum ModelPool aModelPool, void* aAsset, u8 aLayer, struct GraphNode* aGraphNode, bool aDeDuplicate, enum ModelLoadType mlt) {
+    struct GraphNode* node = DynOS_Model_LoadCommonInternal(aId, aModelPool, aAsset, aLayer, aGraphNode, aDeDuplicate, mlt);
+    smlua_model_util_register_model_id(*aId, aAsset);
     return node;
 }
 

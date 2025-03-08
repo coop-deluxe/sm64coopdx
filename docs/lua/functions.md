@@ -1705,6 +1705,9 @@
    - [get_skybox](functions-5.md#get_skybox)
    - [get_skybox_color](functions-5.md#get_skybox_color)
    - [get_vertex_color](functions-5.md#get_vertex_color)
+   - [gfx_get_vtx](functions-5.md#gfx_get_vtx)
+   - [gfx_parse](functions-5.md#gfx_parse)
+   - [gfx_set_combine_lerp](functions-5.md#gfx_set_combine_lerp)
    - [set_fog_color](functions-5.md#set_fog_color)
    - [set_fog_intensity](functions-5.md#set_fog_intensity)
    - [set_lighting_color](functions-5.md#set_lighting_color)
@@ -1736,19 +1739,19 @@
 <br />
 
 - smlua_math_utils.h
-   - [clamp](functions-5.md#clamp)
-   - [clampf](functions-5.md#clampf)
-   - [degrees_to_sm64](functions-5.md#degrees_to_sm64)
-   - [hypotf](functions-5.md#hypotf)
-   - [max](functions-5.md#max)
-   - [maxf](functions-5.md#maxf)
-   - [min](functions-5.md#min)
-   - [minf](functions-5.md#minf)
-   - [radians_to_sm64](functions-5.md#radians_to_sm64)
-   - [sm64_to_degrees](functions-5.md#sm64_to_degrees)
-   - [sm64_to_radians](functions-5.md#sm64_to_radians)
-   - [sqr](functions-5.md#sqr)
-   - [sqrf](functions-5.md#sqrf)
+   - [clamp](functions-6.md#clamp)
+   - [clampf](functions-6.md#clampf)
+   - [degrees_to_sm64](functions-6.md#degrees_to_sm64)
+   - [hypotf](functions-6.md#hypotf)
+   - [max](functions-6.md#max)
+   - [maxf](functions-6.md#maxf)
+   - [min](functions-6.md#min)
+   - [minf](functions-6.md#minf)
+   - [radians_to_sm64](functions-6.md#radians_to_sm64)
+   - [sm64_to_degrees](functions-6.md#sm64_to_degrees)
+   - [sm64_to_radians](functions-6.md#sm64_to_radians)
+   - [sqr](functions-6.md#sqr)
+   - [sqrf](functions-6.md#sqrf)
 
 <br />
 
@@ -1844,6 +1847,7 @@
    - [obj_get_first_with_behavior_id](functions-6.md#obj_get_first_with_behavior_id)
    - [obj_get_first_with_behavior_id_and_field_f32](functions-6.md#obj_get_first_with_behavior_id_and_field_f32)
    - [obj_get_first_with_behavior_id_and_field_s32](functions-6.md#obj_get_first_with_behavior_id_and_field_s32)
+   - [obj_get_model_id_extended](functions-6.md#obj_get_model_id_extended)
    - [obj_get_nearest_object_with_behavior_id](functions-6.md#obj_get_nearest_object_with_behavior_id)
    - [obj_get_next](functions-6.md#obj_get_next)
    - [obj_get_next_with_same_behavior_id](functions-6.md#obj_get_next_with_same_behavior_id)
@@ -1930,6 +1934,7 @@
    - [find_poison_gas_level](functions-6.md#find_poison_gas_level)
    - [find_wall_collisions](functions-6.md#find_wall_collisions)
    - [find_water_level](functions-6.md#find_water_level)
+   - [set_find_wall_direction](functions-6.md#set_find_wall_direction)
 
 <br />
 

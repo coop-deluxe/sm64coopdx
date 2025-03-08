@@ -7839,6 +7839,93 @@ Gets a value of the global vertex shading color
 
 <br />
 
+## [gfx_get_vtx](#gfx_get_vtx)
+
+### Description
+Gets a vertex from a display list command if it has the correct op. Intended to be used with `gfx_parse`.
+
+### Lua Example
+`local PointerValue = gfx_get_vtx(gfx, offset)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| gfx | `Pointer` <`Gfx`> |
+| offset | `integer` |
+
+### Returns
+- `Pointer` <`Vtx`>
+
+### C Prototype
+`Vtx *gfx_get_vtx(Gfx* gfx, u16 offset);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [gfx_parse](#gfx_parse)
+
+### Description
+Traverses a display list. Takes a Lua function as a parameter, which is called back for each command in the display list with the parameters `cmd` (display list pointer), and `op`.
+
+### Lua Example
+`gfx_parse(cmd, func)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| cmd | `Pointer` <`Gfx`> |
+| func | `Lua Function` () |
+
+### Returns
+- None
+
+### C Prototype
+`void gfx_parse(Gfx* cmd, LuaFunction func);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [gfx_set_combine_lerp](#gfx_set_combine_lerp)
+
+### Description
+Sets the display list combine mode.
+
+### Lua Example
+`gfx_set_combine_lerp(gfx, a0, b0, c0, d0, Aa0, Ab0, Ac0, Ad0, a1, b1, c1, d1, Aa1, Ab1, Ac1, Ad1)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| gfx | `Pointer` <`Gfx`> |
+| a0 | `integer` |
+| b0 | `integer` |
+| c0 | `integer` |
+| d0 | `integer` |
+| Aa0 | `integer` |
+| Ab0 | `integer` |
+| Ac0 | `integer` |
+| Ad0 | `integer` |
+| a1 | `integer` |
+| b1 | `integer` |
+| c1 | `integer` |
+| d1 | `integer` |
+| Aa1 | `integer` |
+| Ab1 | `integer` |
+| Ac1 | `integer` |
+| Ad1 | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void gfx_set_combine_lerp(Gfx* gfx, u32 a0, u32 b0, u32 c0, u32 d0, u32 Aa0, u32 Ab0, u32 Ac0, u32 Ad0, u32 a1, u32 b1, u32 c1, u32 d1,	u32 Aa1, u32 Ab1, u32 Ac1, u32 Ad1);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [set_fog_color](#set_fog_color)
 
 ### Description
@@ -8383,320 +8470,6 @@ Warps to `aWarpId` of `aArea` in `aLevel` during `aAct`
 
 ### C Prototype
 `bool warp_to_warpnode(s32 aLevel, s32 aArea, s32 aAct, s32 aWarpId);`
-
-[:arrow_up_small:](#)
-
-<br />
-
----
-# functions from smlua_math_utils.h
-
-<br />
-
-
-## [clamp](#clamp)
-
-### Description
-Clamps a signed 32-bit integer `a` between bounds `b` (minimum) and `c` (maximum)
-
-### Lua Example
-`local integerValue = clamp(a, b, c)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| a | `integer` |
-| b | `integer` |
-| c | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 clamp(s32 a, s32 b, s32 c);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [clampf](#clampf)
-
-### Description
-Clamps a floating-point number `a` between bounds `b` (minimum) and `c` (maximum)
-
-### Lua Example
-`local numberValue = clampf(a, b, c)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| a | `number` |
-| b | `number` |
-| c | `number` |
-
-### Returns
-- `number`
-
-### C Prototype
-`f32 clampf(f32 a, f32 b, f32 c);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [degrees_to_sm64](#degrees_to_sm64)
-
-### Description
-Converts an angle from degrees to SM64 format
-
-### Lua Example
-`local integerValue = degrees_to_sm64(degreesAngle)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| degreesAngle | `number` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s16 degrees_to_sm64(f32 degreesAngle);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [hypotf](#hypotf)
-
-### Description
-Computes the hypotenuse of a right triangle given sides `a` and `b` using the Pythagorean theorem
-
-### Lua Example
-`local numberValue = hypotf(a, b)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| a | `number` |
-| b | `number` |
-
-### Returns
-- `number`
-
-### C Prototype
-`f32 hypotf(f32 a, f32 b);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [max](#max)
-
-### Description
-Finds the maximum of two signed 32-bit integers
-
-### Lua Example
-`local integerValue = max(a, b)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| a | `integer` |
-| b | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 max(s32 a, s32 b);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [maxf](#maxf)
-
-### Description
-Finds the maximum of two floating-point numbers
-
-### Lua Example
-`local numberValue = maxf(a, b)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| a | `number` |
-| b | `number` |
-
-### Returns
-- `number`
-
-### C Prototype
-`f32 maxf(f32 a, f32 b);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [min](#min)
-
-### Description
-Finds the minimum of two signed 32-bit integers
-
-### Lua Example
-`local integerValue = min(a, b)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| a | `integer` |
-| b | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 min(s32 a, s32 b);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [minf](#minf)
-
-### Description
-Finds the minimum of two floating-point numbers
-
-### Lua Example
-`local numberValue = minf(a, b)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| a | `number` |
-| b | `number` |
-
-### Returns
-- `number`
-
-### C Prototype
-`f32 minf(f32 a, f32 b);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [radians_to_sm64](#radians_to_sm64)
-
-### Description
-Converts an angle from radians to SM64 format
-
-### Lua Example
-`local integerValue = radians_to_sm64(radiansAngle)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| radiansAngle | `number` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s16 radians_to_sm64(f32 radiansAngle);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [sm64_to_degrees](#sm64_to_degrees)
-
-### Description
-Converts an angle from SM64 format to degrees
-
-### Lua Example
-`local numberValue = sm64_to_degrees(sm64Angle)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| sm64Angle | `integer` |
-
-### Returns
-- `number`
-
-### C Prototype
-`f32 sm64_to_degrees(s16 sm64Angle);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [sm64_to_radians](#sm64_to_radians)
-
-### Description
-Converts an angle from SM64 format to radians
-
-### Lua Example
-`local numberValue = sm64_to_radians(sm64Angle)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| sm64Angle | `integer` |
-
-### Returns
-- `number`
-
-### C Prototype
-`f32 sm64_to_radians(s16 sm64Angle);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [sqr](#sqr)
-
-### Description
-Computes the square of a signed 32-bit integer
-
-### Lua Example
-`local integerValue = sqr(x)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| x | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 sqr(s32 x);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [sqrf](#sqrf)
-
-### Description
-Computes the square of a floating-point number
-
-### Lua Example
-`local numberValue = sqrf(x)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| x | `number` |
-
-### Returns
-- `number`
-
-### C Prototype
-`f32 sqrf(f32 x);`
 
 [:arrow_up_small:](#)
 

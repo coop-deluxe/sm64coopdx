@@ -14,6 +14,8 @@ type_mappings = {
     'long long': 's64',
     'float': 'f32',
     'double': 'f64',
+
+    'uintptr_t': 'u64', # this is assumed
 }
 
 exclude_structs = [
@@ -23,6 +25,8 @@ exclude_structs = [
     'MarioAnimDmaRelatedThing',
     'UnusedArea28',
 ]
+
+override_types = { "Gfx", "Vtx" }
 
 def extract_integer_datatype(c_type):
     c_type = c_type.strip().lower()
@@ -49,7 +53,7 @@ def translate_type_to_lvt(ptype, allowArrays=False):
     if "const " in ptype:
         ptype = ptype.replace("const ", "").strip()
 
-    if ("char" in ptype and "[" in ptype):
+    if 'unsigned' not in ptype and ("char" in ptype and "[" in ptype):
         return "LVT_STRING"
 
     # Remove array symbols so they can be identified
@@ -121,6 +125,13 @@ def translate_type_to_lvt(ptype, allowArrays=False):
             return "LVT_COBJECT_P"
         return "LVT_COBJECT"
 
+    if ptype in override_types:
+        if pointerLvl > 1:
+            return "LVT_???"
+        if pointerLvl == 1:
+            return "LVT_COBJECT_P"
+        return "LVT_COBJECT"
+
     if pointerLvl == 1 and "(" not in ptype and "[" not in ptype:
         ptype = ptype.replace("const", "").replace("*", "").strip()
         if ptype in usf_types or extract_integer_datatype(ptype) or ptype in typedef_pointers:
@@ -138,7 +149,7 @@ def translate_type_to_lot(ptype, allowArrays=True):
     if ptype == 'const char*':
         return 'LOT_NONE'
 
-    if ptype == 'char*' or ('char' in ptype and '[' in ptype):
+    if 'unsigned' not in ptype and (ptype == 'char*' or ('char' in ptype and '[' in ptype)):
         return 'LOT_NONE'
 
     # Remove array symbols so they can be identified
@@ -181,6 +192,9 @@ def translate_type_to_lot(ptype, allowArrays=True):
     if ptype == 'LuaFunction':
         return 'LOT_NONE'
 
+    if ptype in override_types:
+        return 'LOT_' + ptype.upper()
+
     if 'struct' in ptype:
         if pointerLvl > 1:
             return 'LOT_???'
@@ -202,7 +216,7 @@ def translate_type_to_lua(ptype):
     if ptype == 'const char*':
         return '`string`', None
 
-    if ptype == 'char*' or ('char' in ptype and '[' in ptype):
+    if 'unsigned' not in ptype and (ptype == 'char*' or ('char' in ptype and '[' in ptype)):
         return '`string`', None
 
     ptype = ptype.replace('const ', '')
@@ -210,7 +224,10 @@ def translate_type_to_lua(ptype):
     # Detect arrays
     if re.search(r'\[([^\]]+)\]', ptype):
         ptype = re.sub(r'\[[^\]]*\]', '', ptype).strip()
-        s = '`Array` <%s>' % translate_type_to_lua(ptype)[0]
+        ptype = translate_type_to_lua(ptype)[0]
+        if not ptype.startswith('`'):
+            ptype = '`' + ptype + '`'
+        s = '`Array` <%s>' % ptype
         return s, None
 
     if ptype.startswith('struct '):

@@ -772,53 +772,16 @@ static void SetCurrentTextureAsPalette(GfxData* aGfxData) {
     }
 }
 
+extern "C" {
+#include "gfx_symbols.h"
+}
+#define define_gfx_symbol(symb, params, ...) gfx_symbol_##params(symb, ##__VA_ARGS__)
+
 static void ParseGfxSymbol(GfxData* aGfxData, DataNode<Gfx>* aNode, Gfx*& aHead, u64& aTokenIndex) {
     const String& _Symbol = aNode->mTokens[aTokenIndex++];
 
     // Simple symbols
-    gfx_symbol_0(gsDPFullSync);
-    gfx_symbol_0(gsDPTileSync);
-    gfx_symbol_0(gsDPPipeSync);
-    gfx_symbol_0(gsDPLoadSync);
-    gfx_symbol_0(gsDPNoOp);
-    gfx_symbol_1(gsDPNoOpTag, false);
-    gfx_symbol_1(gsDPSetCycleType, false);
-    gfx_symbol_2(gsSPLight, true);
-    gfx_symbol_3(gsSPVertex, true);
-    gfx_symbol_4(gsSP1Triangle);
-    gfx_symbol_8(gsSP2Triangles);
-    gfx_symbol_1(gsSPNumLights, false);
-    gfx_symbol_1(gsDPSetDepthSource, false);
-    gfx_symbol_1(gsDPSetTextureLUT, false);
-    gfx_symbol_5(gsDPLoadBlock);
-    gfx_symbol_2(gsDPSetRenderMode, false);
-    gfx_symbol_2(gsSPGeometryMode, false);
-    gfx_symbol_2(gsSPGeometryModeSetFirst, false);
-    gfx_symbol_6(gsDPSetPrimColor);
-    gfx_symbol_4(gsDPSetEnvColor);
-    gfx_symbol_4(gsDPSetFogColor);
-    gfx_symbol_2(gsSPFogPosition, false);
-    gfx_symbol_1(gsDPSetAlphaCompare, false);
-    gfx_symbol_1(gsDPSetTextureFilter, false);
-    gfx_symbol_2(gsSPCullDisplayList, false);
-    gfx_symbol_1(gsDPSetAlphaDither, false);
-    gfx_symbol_1(gsDPSetCombineKey, false);
-    gfx_symbol_1(gsDPSetTextureConvert, false);
-    gfx_symbol_1(gsDPSetCombineKey, false);
-    gfx_symbol_1(gsDPSetTextureConvert, false);
-    gfx_symbol_1(gsDPPipelineMode, false);
-    gfx_symbol_4(gsSPSetOtherMode);
-    gfx_symbol_1(gsDPSetTextureDetail, false);
-    gfx_symbol_1(gsDPSetColorDither, false);
-    gfx_symbol_2(gsDPSetPrimDepth, false);
-    gfx_symbol_4(gsDPSetBlendColor);
-
-    gfx_symbol_2(gsSPCopyLightEXT, false);
-    gfx_symbol_1(gsSPCopyLightsPlayerPart, false);
-    gfx_symbol_2(gsSPFogFactor, false);
-    gfx_symbol_1(gsDPSetTextureLOD, false);
-    gfx_symbol_3(gsMoveWd, false);
-    gfx_symbol_3(gsSPVertexNonGlobal, true);
+    GFX_SYMBOLS();
 
     // Special symbols
     if (_Symbol == "gsSPTexture") {

@@ -495,6 +495,12 @@ static LevelScript ParseLevelScriptSymbolArgInternal(GfxData* aGfxData, DataNode
         return (LevelScript)builtinActor;
     }
 
+    // Built-in Lvl Macros
+    auto builtinLvlMacro = DynOS_Builtin_LvlMacro_GetFromName(_Arg.begin());
+    if (builtinLvlMacro != NULL) {
+        return (LevelScript)builtinLvlMacro;
+    }
+
     // Built-in Lvl Geos
     auto builtinGeo = DynOS_Builtin_LvlGeo_GetFromName(_Arg.begin());
     if (builtinGeo != NULL) {
