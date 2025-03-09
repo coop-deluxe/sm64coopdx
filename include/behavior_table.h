@@ -543,6 +543,8 @@ enum BehaviorId {
     id_editor_Scroll_Texture,
     id_bhvBlueCoinNumber,
     id_bhvStarNumber,
+    id_bhvAmbientLight,
+    id_bhvPointLight,
 
     id_bhv_max_count // must be the last in the list
 };

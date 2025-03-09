@@ -543,5 +543,7 @@ extern const BehaviorScript bhvIntroScene[];
 extern const BehaviorScript bhvUnusedFakeStar[];
 extern const BehaviorScript RM_Scroll_Texture[];
 extern const BehaviorScript editor_Scroll_Texture[];
+extern const BehaviorScript bhvAmbientLight[];
+extern const BehaviorScript bhvPointLight[];
 
 #endif // BEHAVIOR_DATA_H

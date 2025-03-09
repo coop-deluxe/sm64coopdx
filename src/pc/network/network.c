@@ -6,8 +6,6 @@
 #include "game/level_update.h"
 #include "object_constants.h"
 #include "behavior_table.h"
-#include "game/hardcoded.h"
-#include "game/scroll_targets.h"
 #include "pc/configfile.h"
 #include "pc/djui/djui.h"
 #include "pc/djui/djui_panel.h"
@@ -24,6 +22,8 @@
 #include "pc/pc_main.h"
 #include "pc/gfx/gfx_pc.h"
 #include "pc/fs/fmem.h"
+#include "game/hardcoded.h"
+#include "game/scroll_targets.h"
 #include "game/camera.h"
 #include "game/skybox.h"
 #include "game/object_list_processor.h"
@@ -34,7 +34,7 @@
 #include "game/first_person_cam.h"
 #include "game/envfx_snow.h"
 #include "engine/math_util.h"
-#include "game/mario.h"
+#include "engine/lighting_engine.h"
 
 #ifdef DISCORD_SDK
 #include "pc/discord/discord.h"
@@ -736,6 +736,8 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
     gFirstPersonCamera.fov = FIRST_PERSON_DEFAULT_FOV;
     vec3f_set(gFirstPersonCamera.offset, 0, 0, 0);
     first_person_reset();
+
+    le_shutdown();
 
     extern void save_file_load_all(UNUSED u8 reload);
     save_file_load_all(TRUE);

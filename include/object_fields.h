@@ -1166,4 +1166,7 @@
 /* Breakable Wall */
 #define /*0x104*/ oBreakableWallForce OBJECT_FIELD_S32(0x1F)
 
+/* Point Light */
+#define /*0x104*/ oLightID OBJECT_FIELD_S32(0x1F)
+
 #endif // OBJECT_FIELDS_H

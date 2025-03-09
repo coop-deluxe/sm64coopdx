@@ -194,7 +194,7 @@ Gets a value of the global vertex shading color
 ## [gfx_get_vtx](#gfx_get_vtx)
 
 ### Description
-Gets a vertex from a display list command if it has the correct op. Intended to be used with `gfx_parse`.
+Gets a vertex from a display list command if it has the correct op. Intended to be used with `gfx_parse`
 
 ### Lua Example
 `local PointerValue = gfx_get_vtx(gfx, offset)`
@@ -215,10 +215,33 @@ Gets a vertex from a display list command if it has the correct op. Intended to 
 
 <br />
 
+## [gfx_get_vtx_count](#gfx_get_vtx_count)
+
+### Description
+Gets the number of vertices from a display list command if it has the correct op
+
+### Lua Example
+`local integerValue = gfx_get_vtx_count(cmd)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| cmd | `Pointer` <`Gfx`> |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u16 gfx_get_vtx_count(Gfx* cmd);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [gfx_parse](#gfx_parse)
 
 ### Description
-Traverses a display list. Takes a Lua function as a parameter, which is called back for each command in the display list with the parameters `cmd` (display list pointer), and `op`.
+Traverses a display list. Takes a Lua function as a parameter, which is called back for each command in the display list with the parameters `cmd` (display list pointer), and `op`
 
 ### Lua Example
 `gfx_parse(cmd, func)`

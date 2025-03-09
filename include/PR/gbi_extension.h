@@ -4,7 +4,8 @@
 // G_SETGEOMETRYMODE //
 ///////////////////////
 
-#define G_LIGHT_MAP_EXT 0x00000800
+#define G_LIGHT_MAP_EXT       0x00000800
+#define G_LIGHTING_ENGINE_EXT 0x00004000
 
 //////////
 // DJUI //

@@ -1708,6 +1708,7 @@
 --- @field public oKoopaTheQuickRaceIndex integer
 --- @field public oKoopaTurningAwayFromWall integer
 --- @field public oKoopaUnshelledTimeUntilTurn integer
+--- @field public oLightID integer
 --- @field public oLllRotatingHexFlameUnkF4 number
 --- @field public oLllRotatingHexFlameUnkF8 number
 --- @field public oLllRotatingHexFlameUnkFC number

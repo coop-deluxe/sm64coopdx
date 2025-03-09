@@ -436,6 +436,27 @@ Behavior loop function for alpha boo key
 
 <br />
 
+## [bhv_ambient_light_init](#bhv_ambient_light_init)
+
+### Description
+Behavior loop function for the lighting engine ambient light. Takes the first 3 behavior parameter bytes for RGB color
+
+### Lua Example
+`bhv_ambient_light_init()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void bhv_ambient_light_init(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [bhv_ambient_sounds_init](#bhv_ambient_sounds_init)
 
 ### Description
@@ -7340,6 +7361,48 @@ Behavior loop function for playing a jingle when in a 200 unit radius
 
 ### C Prototype
 `void bhv_play_music_track_when_touched_loop(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [bhv_point_light_init](#bhv_point_light_init)
+
+### Description
+Behavior init function for the lighting engine point light. Takes the first 3 behavior parameter bytes for RGB color and the last for radius
+
+### Lua Example
+`bhv_point_light_init()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void bhv_point_light_init(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [bhv_point_light_loop](#bhv_point_light_loop)
+
+### Description
+Behavior loop function for the lighting engine point light
+
+### Lua Example
+`bhv_point_light_loop()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void bhv_point_light_loop(void);`
 
 [:arrow_up_small:](#)
 

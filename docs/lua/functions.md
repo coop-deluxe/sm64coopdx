@@ -59,6 +59,7 @@
    - [bhv_activated_back_and_forth_platform_init](functions-2.md#bhv_activated_back_and_forth_platform_init)
    - [bhv_activated_back_and_forth_platform_update](functions-2.md#bhv_activated_back_and_forth_platform_update)
    - [bhv_alpha_boo_key_loop](functions-2.md#bhv_alpha_boo_key_loop)
+   - [bhv_ambient_light_init](functions-2.md#bhv_ambient_light_init)
    - [bhv_ambient_sounds_init](functions-2.md#bhv_ambient_sounds_init)
    - [bhv_animated_texture_loop](functions-2.md#bhv_animated_texture_loop)
    - [bhv_animates_on_floor_switch_press_init](functions-2.md#bhv_animates_on_floor_switch_press_init)
@@ -388,6 +389,8 @@
    - [bhv_platform_on_track_init](functions-2.md#bhv_platform_on_track_init)
    - [bhv_platform_on_track_update](functions-2.md#bhv_platform_on_track_update)
    - [bhv_play_music_track_when_touched_loop](functions-2.md#bhv_play_music_track_when_touched_loop)
+   - [bhv_point_light_init](functions-2.md#bhv_point_light_init)
+   - [bhv_point_light_loop](functions-2.md#bhv_point_light_loop)
    - [bhv_pokey_body_part_update](functions-2.md#bhv_pokey_body_part_update)
    - [bhv_pokey_update](functions-2.md#bhv_pokey_update)
    - [bhv_pole_base_loop](functions-2.md#bhv_pole_base_loop)
@@ -943,6 +946,20 @@
    - [level_trigger_warp](functions-3.md#level_trigger_warp)
    - [lvl_set_current_level](functions-3.md#lvl_set_current_level)
    - [warp_special](functions-3.md#warp_special)
+
+<br />
+
+- lighting_engine.h
+   - [le_add_light](functions-3.md#le_add_light)
+   - [le_calculate_lighting_color](functions-3.md#le_calculate_lighting_color)
+   - [le_calculate_lighting_dir](functions-3.md#le_calculate_lighting_dir)
+   - [le_get_light_count](functions-3.md#le_get_light_count)
+   - [le_remove_light](functions-3.md#le_remove_light)
+   - [le_set_ambient_color](functions-3.md#le_set_ambient_color)
+   - [le_set_light_color](functions-3.md#le_set_light_color)
+   - [le_set_light_intensity](functions-3.md#le_set_light_intensity)
+   - [le_set_light_pos](functions-3.md#le_set_light_pos)
+   - [le_set_light_radius](functions-3.md#le_set_light_radius)
 
 <br />
 
@@ -1739,6 +1756,7 @@
    - [get_skybox_color](functions-6.md#get_skybox_color)
    - [get_vertex_color](functions-6.md#get_vertex_color)
    - [gfx_get_vtx](functions-6.md#gfx_get_vtx)
+   - [gfx_get_vtx_count](functions-6.md#gfx_get_vtx_count)
    - [gfx_parse](functions-6.md#gfx_parse)
    - [gfx_set_combine_lerp](functions-6.md#gfx_set_combine_lerp)
    - [gfx_set_texture_image](functions-6.md#gfx_set_texture_image)
