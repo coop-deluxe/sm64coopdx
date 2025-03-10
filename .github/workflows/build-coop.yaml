@@ -81,11 +81,19 @@ jobs:
               run: |
                 gmake OSX_BUILD=1 -j$(sysctl -n hw.ncpu)
 
+            - name: Remove quarantine attribute
+              run: xattr -cr ./build/us_pc/sm64coopdx.app
+
+            - name: Zip the .app bundle
+              run: |
+                cd ./build/us_pc
+                zip -r sm64coopdx-macos-arm.zip sm64coopdx.app
+            
             - name: Upload artifact
               uses: actions/upload-artifact@v4
               with:
                 name: sm64coopdx-macos-arm
-                path: ./build/us_pc/sm64coopdx.app
+                path: ./build/us_pc/sm64coopdx-macos-arm.zip
 
     build-macos-intel:
         if: ${{ github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[build]') }}
@@ -103,8 +111,16 @@ jobs:
               run: |
                 gmake OSX_BUILD=1 -j$(sysctl -n hw.ncpu)
 
+            - name: Remove quarantine attribute
+              run: xattr -cr ./build/us_pc/sm64coopdx.app
+
+            - name: Zip the .app bundle
+              run: |
+                cd ./build/us_pc
+                zip -r sm64coopdx-macos-intel.zip sm64coopdx.app
+            
             - name: Upload artifact
               uses: actions/upload-artifact@v4
               with:
                 name: sm64coopdx-macos-intel
-                path: ./build/us_pc/sm64coopdx.app
+                path: ./build/us_pc/sm64coopdx-macos-intel.zip
