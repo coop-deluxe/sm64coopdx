@@ -81,8 +81,9 @@ jobs:
               run: |
                 gmake OSX_BUILD=1 -j$(sysctl -n hw.ncpu)
 
-            - name: Remove quarantine attribute
-              run: xattr -cr ./build/us_pc/sm64coopdx.app
+            - name: Code sign the app (Ad-Hoc)
+              run: |
+                codesign --force --deep --sign - ./build/us_pc/sm64coopdx.app
 
             - name: Zip the .app bundle
               run: |
@@ -111,8 +112,9 @@ jobs:
               run: |
                 gmake OSX_BUILD=1 -j$(sysctl -n hw.ncpu)
 
-            - name: Remove quarantine attribute
-              run: xattr -cr ./build/us_pc/sm64coopdx.app
+            - name: Code sign the app (Ad-Hoc)
+              run: |
+                codesign --force --deep --sign - ./build/us_pc/sm64coopdx.app
 
             - name: Zip the .app bundle
               run: |
