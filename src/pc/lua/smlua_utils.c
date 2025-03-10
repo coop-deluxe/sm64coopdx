@@ -159,7 +159,7 @@ void* smlua_to_cobject(lua_State* L, int index, u16 lot) {
     CObject *cobject = luaL_checkudata(L, index, "CObject");
 
     if (lot != cobject->lot) {
-        LOG_LUA_LINE("smlua_to_cobject received improper LOT. Expected '%d', received '%d'", lot, cobject->lot);
+        LOG_LUA_LINE("smlua_to_cobject received improper LOT. Expected '%s', received '%s'", smlua_get_lot_name(lot), smlua_get_lot_name(cobject->lot));
         gSmLuaConvertSuccess = false;
         return NULL;
     }
@@ -185,7 +185,7 @@ void* smlua_to_cpointer(lua_State* L, int index, u16 lvt) {
     CPointer *cpointer = luaL_checkudata(L, index, "CPointer");
 
     if (lvt != cpointer->lvt) {
-        LOG_LUA_LINE("smlua_to_cpointer received improper LOT. Expected '%d', received '%d'", lvt, cpointer->lvt);
+        LOG_LUA_LINE("smlua_to_cpointer received improper LOT. Expected '%s', received '%s'", smlua_get_lvt_name(lvt), smlua_get_lvt_name(cpointer->lvt));
         gSmLuaConvertSuccess = false;
         return NULL;
     }

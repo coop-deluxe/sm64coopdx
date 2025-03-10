@@ -9743,7 +9743,7 @@ end
 
 --- @param index integer
 --- @return integer
---- Gets the water level in an area
+--- Gets the water level in an area corresponding to `index` (0-indexed)
 function get_water_level(index)
     -- ...
 end
@@ -9944,7 +9944,7 @@ end
 --- @param index integer
 --- @param height integer
 --- @param sync boolean
---- Sets the water level in an area
+--- Sets the water level in an area corresponding to `index` (0-indexed)
 function set_water_level(index, height, sync)
     -- ...
 end
