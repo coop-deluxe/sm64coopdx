@@ -75,7 +75,7 @@ jobs:
             - name: Install dependencies
               run: |
                 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-                brew install make mingw-w64 gcc sdl2 pkg-config glew glfw3 libusb audiofile coreutils
+                brew install make mingw-w64 gcc sdl2 pkg-config glew glfw3 libusb coreutils
 
             - name: Build the game
               run: |
@@ -97,7 +97,7 @@ jobs:
             - name: Install dependencies
               run: |
                 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-                brew install make mingw-w64 gcc@9 sdl2 pkg-config glew glfw3 libusb audiofile coreutils
+                brew install make mingw-w64 gcc@9 sdl2 pkg-config glew glfw3 libusb coreutils
 
             - name: Build the game
               run: |
