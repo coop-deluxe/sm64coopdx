@@ -72,16 +72,16 @@ jobs:
             - name: Checkout repository
               uses: actions/checkout@v4
 
-            - name: Install dependencies (ARM)
+            - name: Install dependencies
               run: |
                 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
                 brew install make mingw-w64 gcc sdl2 pkg-config glew glfw3 libusb audiofile coreutils
 
-            - name: Build the game (ARM)
+            - name: Build the game
               run: |
                 gmake OSX_BUILD=1 -j$(sysctl -n hw.ncpu)
 
-            - name: Upload artifact (ARM)
+            - name: Upload artifact
               uses: actions/upload-artifact@v4
               with:
                 name: sm64coopdx-macos-arm
@@ -94,16 +94,16 @@ jobs:
             - name: Checkout repository
               uses: actions/checkout@v4
 
-            - name: Install dependencies (Intel)
+            - name: Install dependencies
               run: |
                 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
                 brew install make mingw-w64 gcc@9 sdl2 pkg-config glew glfw3 libusb audiofile coreutils
 
-            - name: Build the game (Intel)
+            - name: Build the game
               run: |
                 gmake OSX_BUILD=1 -j$(sysctl -n hw.ncpu)
 
-            - name: Upload artifact (Intel)
+            - name: Upload artifact
               uses: actions/upload-artifact@v4
               with:
                 name: sm64coopdx-macos-intel
