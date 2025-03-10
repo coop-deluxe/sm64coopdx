@@ -90,9 +90,7 @@ extern unsigned int configCameraPan;
 extern unsigned int configCameraDegrade;
 // debug
 extern bool         configLuaProfiler;
-extern bool         configDebugPrint;
-extern bool         configDebugInfo;
-extern bool         configDebugError;
+extern bool         configVerboseLogs;
 #ifdef DEVELOPMENT
 extern bool         configCtxProfiler;
 #endif

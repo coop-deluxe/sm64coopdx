@@ -7,7 +7,7 @@
 #include "djui_panel_modlist.h"
 #include "djui_panel_pause.h"
 #include "djui_panel_playerlist.h"
-#include "pc/debuglog.h"
+#include "pc/log.h"
 #include "pc/utils/misc.h"
 #include "pc/configfile.h"
 #include "pc/lua/smlua_hooks.h"

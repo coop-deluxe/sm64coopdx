@@ -2,7 +2,7 @@
 
 #include "pc/lua/smlua.h"
 #include "smlua_anim_utils.h"
-#include "pc/debuglog.h"
+#include "pc/log.h"
 
 // models
 #include "actors/common0.h"

@@ -1,7 +1,7 @@
 #include "libcoopnet.h"
 #include "coopnet.h"
 #include "pc/network/network.h"
-#include "pc/debuglog.h"
+#include "pc/log.h"
 
 static uint64_t sLocalUserId = 0;
 static uint64_t sNetworkUserIds[MAX_PLAYERS] = { 0 };

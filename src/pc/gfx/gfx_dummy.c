@@ -16,7 +16,7 @@
 
 #include "pc/pc_main.h"
 #include "pc/utils/misc.h"
-#include "pc/debuglog.h"
+#include "pc/log.h"
 
 // TODO: figure out if this shit even works
 #ifdef VERSION_EU

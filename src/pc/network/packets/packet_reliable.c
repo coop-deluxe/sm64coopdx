@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "../network.h"
 #include "pc/utils/misc.h"
-#include "pc/debuglog.h"
+#include "pc/log.h"
 
 #define RELIABLE_RESEND_RATE 0.07f
 #define MAX_RESEND_ATTEMPTS 15
@@ -35,7 +35,7 @@ static void remove_node_from_list(struct PacketLinkedList* node) {
 }
 
 void network_forget_all_reliable(void) {
-    LOG_INFO("Clearing all reliable!");
+    LOG_INFO_VERBOSE("Clearing all reliable!");
     struct PacketLinkedList* node = head;
     while (node != NULL) {
         struct PacketLinkedList* next = node->next;
@@ -48,7 +48,7 @@ void network_forget_all_reliable(void) {
 
 void network_forget_all_reliable_from(u8 localIndex) {
     if (localIndex == 0) { return; }
-    LOG_INFO("Clearing all reliable from %u", localIndex);
+    LOG_INFO_VERBOSE("Clearing all reliable from %u", localIndex);
     struct PacketLinkedList* node = head;
     while (node != NULL) {
         struct PacketLinkedList* next = node->next;
@@ -69,11 +69,13 @@ void network_send_ack(struct Packet* p) {
     p->reliable = (seqId != 0);
     if (seqId == 0) { return; }
 
+    log_context_begin(LOG_CTX_NETWORK);
     // send back the ACK
     struct Packet ack = { 0 };
     packet_init(&ack, PACKET_ACK, false, PLMT_NONE);
     packet_write(&ack, &seqId, sizeof(u16));
     network_send_to(0, &ack);
+    log_context_end(LOG_CTX_NETWORK);
 }
 
 void network_receive_ack(struct Packet* p) {
@@ -182,7 +184,7 @@ void network_update_reliable(void) {
                 struct PacketLinkedList* next = node->next;
                 remove_node_from_list(node);
                 node = next;
-                LOG_ERROR("giving up on reliable packet");
+                LOG_ERROR_VERBOSE("giving up on reliable packet");
                 continue;
             }
         }

@@ -20,7 +20,7 @@
 #include "pc/lua/utils/smlua_camera_utils.h"
 #include "pc/mods/mods.h"
 #include "pc/crash_handler.h"
-#include "pc/debuglog.h"
+#include "pc/log.h"
 #include "pc/pc_main.h"
 #include "pc/gfx/gfx_pc.h"
 #include "pc/fs/fmem.h"
@@ -101,7 +101,7 @@ void network_set_system(enum NetworkSystemType nsType) {
 #ifdef COOPNET
         case NS_COOPNET: gNetworkSystem = &gNetworkSystemCoopNet; break;
 #endif
-        default: gNetworkSystem = &gNetworkSystemSocket; LOG_ERROR("Unknown network system: %d", nsType); break;
+        default: gNetworkSystem = &gNetworkSystemSocket; LOG_ERROR_VERBOSE("Unknown network system: %d", nsType); break;
     }
 }
 
@@ -113,7 +113,7 @@ bool network_init(enum NetworkType inNetworkType, bool reconnecting) {
 
     // sanity check network system
     if (gNetworkSystem == NULL) {
-        LOG_ERROR("no network system attached");
+        LOG_ERROR_VERBOSE("no network system attached");
         return false;
     }
 
@@ -142,7 +142,7 @@ bool network_init(enum NetworkType inNetworkType, bool reconnecting) {
     gNetworkSentJoin = false;
     int rc = gNetworkSystem->initialize(inNetworkType, reconnecting);
     if (!rc && inNetworkType != NT_NONE) {
-        LOG_ERROR("failed to initialize network system");
+        LOG_ERROR_VERBOSE("failed to initialize network system");
         djui_popup_create(DLANG(NOTIF, DISCONNECT_CLOSED), 2);
         return false;
     }
@@ -183,7 +183,7 @@ bool network_init(enum NetworkType inNetworkType, bool reconnecting) {
     }
 #endif
 
-    LOG_INFO("initialized");
+    LOG_INFO_VERBOSE("Initialized network");
 
     return true;
 }
@@ -242,7 +242,7 @@ bool network_allow_unknown_local_index(enum PacketType packetType) {
 
 void network_send_to(u8 localIndex, struct Packet* p) {
     if (p == NULL) {
-        LOG_ERROR("no data to send");
+        LOG_ERROR_VERBOSE("no data to send");
         return;
     }
 
@@ -253,7 +253,7 @@ void network_send_to(u8 localIndex, struct Packet* p) {
     } else {
         u8 idx = (localIndex == 0) ? p->localIndex : localIndex;
         if (idx >= MAX_PLAYERS) {
-            LOG_ERROR("Could not set destination to %u", idx);
+            LOG_ERROR_VERBOSE("Could not set destination to %u", idx);
             return;
         }
         packet_set_destination(p, p->requestBroadcast
@@ -262,18 +262,18 @@ void network_send_to(u8 localIndex, struct Packet* p) {
     }
 
     // sanity checks
-    if (gNetworkType == NT_NONE) { LOG_ERROR("network type error none!"); return; }
-    if (p->error) { LOG_ERROR("packet error!"); return; }
-    if (gNetworkSystem == NULL) { LOG_ERROR("no network system attached"); return; }
+    if (gNetworkType == NT_NONE) { LOG_ERROR_VERBOSE("network type error none!"); return; }
+    if (p->error) { LOG_ERROR_VERBOSE("packet error!"); return; }
+    if (gNetworkSystem == NULL) { LOG_ERROR_VERBOSE("no network system attached"); return; }
     if (localIndex == 0 && !network_allow_unknown_local_index(p->buffer[0])) {
-        LOG_ERROR("\n####################\nsending to myself, packetType: %d\n####################\n", p->packetType);
+        LOG_ERROR_VERBOSE("\n####################\nsending to myself, packetType: %d\n####################\n", p->packetType);
         // SOFT_ASSERT(false); - Crash?
         return;
     }
 
     if (gNetworkType == NT_SERVER) {
         if (localIndex >= MAX_PLAYERS) {
-            LOG_ERROR("Could not get network player %u", localIndex);
+            LOG_ERROR_VERBOSE("Could not get network player %u", localIndex);
             return;
         }
         struct NetworkPlayer* np = &gNetworkPlayers[localIndex];
@@ -322,7 +322,7 @@ void network_send_to(u8 localIndex, struct Packet* p) {
     f32 currentTime = clock_elapsed();
     if ((currentTime - sPacketsPerSecondTime[localIndex]) > 0) {
         if (sPacketsPerSecond[localIndex] > maxPacketsPerSecond) {
-            LOG_ERROR("Too many packets sent to localIndex %d! Attempted %d. Connected count %d.", localIndex, sPacketsPerSecond[localIndex], network_player_connected_count());
+            LOG_ERROR_VERBOSE("Too many packets sent to localIndex %d! Attempted %d. Connected count %d.", localIndex, sPacketsPerSecond[localIndex], network_player_connected_count());
         }
         sPacketsPerSecondTime[localIndex] = currentTime;
         sPacketsPerSecond[localIndex] = 1;
@@ -342,10 +342,10 @@ void network_send_to(u8 localIndex, struct Packet* p) {
         u32 len = 0;
         packet_compress(p, &buffer, &len);
         if (!buffer || len == 0) {
-            LOG_ERROR("Failed to compress!");
+            LOG_ERROR_VERBOSE("Failed to compress!");
         } else {
             int rc = gNetworkSystem->send(localIndex, p->addr, buffer, len);
-            if (rc == SOCKET_ERROR) { LOG_ERROR("send error %d", rc); return; }
+            if (rc == SOCKET_ERROR) { LOG_ERROR_VERBOSE("send error %d", rc); return; }
         }
     }
     p->sent = true;
@@ -359,12 +359,12 @@ void network_send_to(u8 localIndex, struct Packet* p) {
 
 void network_send(struct Packet* p) {
     if (p == NULL) {
-        LOG_ERROR("no data to send");
+        LOG_ERROR_VERBOSE("no data to send");
         return;
     }
     // prevent errors during writing from propagating
     if (p->writeError) {
-        LOG_ERROR("packet has write error: %u", p->packetType);
+        LOG_ERROR_VERBOSE("packet has write error: %u", p->packetType);
         return;
     }
 
@@ -405,6 +405,7 @@ void network_send(struct Packet* p) {
 }
 
 void network_receive(u8 localIndex, void* addr, u8* data, u16 dataLength) {
+    log_context_begin(LOG_CTX_NETWORK);
 
     // receive packet
     struct Packet p = {
@@ -415,7 +416,8 @@ void network_receive(u8 localIndex, void* addr, u8* data, u16 dataLength) {
         .dataLength = dataLength,
     };
     if (!packet_decompress(&p, data, dataLength)) {
-        LOG_ERROR("Failed to decompress!");
+        LOG_ERROR_VERBOSE("Failed to decompress!");
+        log_context_end(LOG_CTX_NETWORK);
         return;
     }
 
@@ -425,7 +427,8 @@ void network_receive(u8 localIndex, void* addr, u8* data, u16 dataLength) {
 
     // subtract and check hash
     if (!packet_check_hash(&p)) {
-        LOG_ERROR("invalid packet hash!");
+        LOG_ERROR_VERBOSE("invalid packet hash!");
+        log_context_end(LOG_CTX_NETWORK);
         return;
     }
 
@@ -433,6 +436,7 @@ void network_receive(u8 localIndex, void* addr, u8* data, u16 dataLength) {
 
     // execute packet
     packet_receive(&p);
+    log_context_end(LOG_CTX_NETWORK);
 }
 
 void* network_duplicate_address(u8 localIndex) {
@@ -642,7 +646,7 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
 
     network_forget_all_reliable();
     if (gNetworkSystem == NULL) {
-        LOG_ERROR("no network system attached");
+        LOG_ERROR_VERBOSE("no network system attached");
     } else {
         if (gNetworkPlayerLocal != NULL && sendLeaving) { network_send_leaving(gNetworkPlayerLocal->globalIndex); }
         network_player_shutdown(popup);

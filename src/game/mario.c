@@ -1990,7 +1990,7 @@ s32 execute_mario_action(UNUSED struct Object *o) {
 
             // drop their held object
             if (gMarioState->heldObj != NULL) {
-                LOG_INFO("dropping held object");
+                LOG_INFO_VERBOSE("dropping held object");
                 u8 tmpPlayerIndex = gMarioState->playerIndex;
                 gMarioState->playerIndex = 0;
                 mario_drop_held_object(gMarioState);
@@ -1999,13 +1999,13 @@ s32 execute_mario_action(UNUSED struct Object *o) {
 
             // no longer held by an object
             if (gMarioState->heldByObj != NULL) {
-                LOG_INFO("dropping heldby object");
+                LOG_INFO_VERBOSE("dropping heldby object");
                 gMarioState->heldByObj = NULL;
             }
 
             // no longer riding object
             if (gMarioState->riddenObj != NULL) {
-                LOG_INFO("dropping ridden object");
+                LOG_INFO_VERBOSE("dropping ridden object");
                 u8 tmpPlayerIndex = gMarioState->playerIndex;
                 gMarioState->playerIndex = 0;
                 mario_stop_riding_object(gMarioState);

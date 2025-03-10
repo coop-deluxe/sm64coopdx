@@ -8,12 +8,13 @@
 #include "object_constants.h"
 #include "object_fields.h"
 //#define DISABLE_MODULE_LOG 1
-#include "pc/debuglog.h"
+#include "pc/log.h"
 #include "pc/lua/smlua.h"
 #include "pc/lua/smlua_utils.h"
 #include "pc/lua/utils/smlua_obj_utils.h"
 
 void network_send_level(struct NetworkPlayer* toNp, bool sendArea) {
+    log_context_begin(LOG_CTX_NETWORK);
     extern s16 gCurrCourseNum, gCurrActStarNum, gCurrLevelNum;
 
     packet_ordered_begin();
@@ -50,7 +51,8 @@ void network_send_level(struct NetworkPlayer* toNp, bool sendArea) {
     }
     packet_ordered_end();
 
-    LOG_INFO("tx level");
+    LOG_DEBUG_VERBOSE("tx level");
+    log_context_end(LOG_CTX_NETWORK);
 }
 
 extern s16 gTTC2DRotatorSpeeds[];
@@ -60,7 +62,7 @@ extern f32 gTTCPendulumInitialAccels[];
 extern u8 gTTCRotatingSolidInitialDelays[];
 extern s16 gTTCTreadmillSpeeds[];
 void network_receive_level(struct Packet* p) {
-    LOG_INFO("rx level");
+    LOG_DEBUG_VERBOSE("rx level");
 
     // read level location
     s16 courseNum, actNum, levelNum;
@@ -70,7 +72,7 @@ void network_receive_level(struct Packet* p) {
 
     extern s16 gCurrCourseNum, gCurrActStarNum, gCurrLevelNum;
     if (courseNum != gCurrCourseNum || actNum != gCurrActStarNum || levelNum != gCurrLevelNum) {
-        LOG_ERROR("rx level: received an improper location");
+        LOG_ERROR_VERBOSE("rx level: received an improper location");
         return;
     }
 

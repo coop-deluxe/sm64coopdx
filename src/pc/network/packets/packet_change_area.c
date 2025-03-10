@@ -2,7 +2,7 @@
 #include "../network.h"
 #include "level_table.h"
 //#define DISABLE_MODULE_LOG 1
-#include "pc/debuglog.h"
+#include "pc/log.h"
 
 static void player_changed_area(struct NetworkPlayer *np, s16 courseNum, s16 actNum, s16 levelNum, s16 areaIndex) {
     // set NetworkPlayer variables
@@ -24,6 +24,7 @@ static void player_changed_area(struct NetworkPlayer *np, s16 courseNum, s16 act
 }
 
 void network_send_change_area(void) {
+    log_context_begin(LOG_CTX_NETWORK);
     extern s16 gCurrCourseNum, gCurrActNum, gCurrActStarNum, gCurrLevelNum, gCurrAreaIndex;
 
     // override castle act to 0 to prevent instancing of the hub
@@ -36,6 +37,7 @@ void network_send_change_area(void) {
 
     if (gNetworkType == NT_SERVER) {
         player_changed_area(gNetworkPlayerLocal, gCurrCourseNum, gCurrActStarNum, gCurrLevelNum, gCurrAreaIndex);
+        log_context_end(LOG_CTX_NETWORK);
         return;
     }
 
@@ -51,16 +53,17 @@ void network_send_change_area(void) {
     np->currAreaSyncValid  = false;
     network_player_update_course_level(np, gCurrCourseNum, gCurrActStarNum, gCurrLevelNum, gCurrAreaIndex);
 
-    LOG_INFO("tx change area");
+    LOG_DEBUG_VERBOSE("tx change area");
+    log_context_end(LOG_CTX_NETWORK);
 }
 
 void network_receive_change_area(struct Packet *p) {
-    LOG_INFO("rx change area");
+    LOG_DEBUG_VERBOSE("rx change area");
 
     SOFT_ASSERT(gNetworkType == NT_SERVER);
     struct NetworkPlayer *np = &gNetworkPlayers[p->localIndex];
     if (np == NULL || np->localIndex == UNKNOWN_LOCAL_INDEX || !np->connected) {
-        LOG_ERROR("Receiving change area from inactive player!");
+        LOG_ERROR_VERBOSE("Receiving change area from inactive player!");
         return;
     }
 

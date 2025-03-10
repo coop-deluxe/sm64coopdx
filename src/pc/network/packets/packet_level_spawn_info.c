@@ -12,7 +12,7 @@
 #include "behavior_table.h"
 #include "model_ids.h"
 #define DISABLE_MODULE_LOG 1
-#include "pc/debuglog.h"
+#include "pc/log.h"
 
 // TODO: move to common utility location
 static struct Object* get_object_matching_respawn_info(u32* respawnInfo) {
@@ -29,9 +29,11 @@ static void network_send_level_spawn_info_area(struct NetworkPlayer* destNp, u8 
     // check that the area is active
     struct Area* area = &gAreaData[areaIndex];
     if (area->unk04 == NULL) { return; }
+    log_context_begin(LOG_CTX_NETWORK);
 
     if (destNp == NULL || !destNp->connected) {
-        LOG_ERROR("network_send_level_spawn_info_area: dest np is invalid");
+        LOG_ERROR_VERBOSE("network_send_level_spawn_info_area: dest np is invalid");
+        log_context_end(LOG_CTX_NETWORK);
         return;
     }
 
@@ -60,7 +62,7 @@ static void network_send_level_spawn_info_area(struct NetworkPlayer* destNp, u8 
         if (((spawnInfo->behaviorArg >> 8) & RESPAWN_INFO_DONT_RESPAWN) == RESPAWN_INFO_DONT_RESPAWN) {
             *spawnInfoDeletionCount = *spawnInfoDeletionCount + 1;
             packet_write(&p, &spawnInfoIndex, sizeof(u16));
-            LOG_INFO("tx spawn info deletion: index %d", spawnInfoIndex);
+            LOG_DEBUG_VERBOSE("tx spawn info deletion: index %d", spawnInfoIndex);
         }
 
         spawnInfo = spawnInfo->next;
@@ -70,23 +72,29 @@ static void network_send_level_spawn_info_area(struct NetworkPlayer* destNp, u8 
     // send the packet if there are deletions
     if (*spawnInfoDeletionCount > 0) {
         network_send_to(destNp->localIndex, &p);
-        LOG_INFO("tx spawn info for area %d (count %d)", areaIndex, *spawnInfoDeletionCount);
+        LOG_DEBUG_VERBOSE("tx spawn info for area %d (count %d)", areaIndex, *spawnInfoDeletionCount);
     }
+    log_context_end(LOG_CTX_NETWORK);
 }
 
 void network_send_level_spawn_info(struct NetworkPlayer* destNp) {
+    log_context_begin(LOG_CTX_NETWORK);
     if (!gNetworkPlayerLocal->currAreaSyncValid) {
+        LOG_ERROR_VERBOSE("my area is invalid");
+        log_context_end(LOG_CTX_NETWORK);
         return;
     }
 
     if (destNp == NULL || !destNp->connected) {
-        LOG_ERROR("network_send_level_spawn_info: dest np is invalid");
+        LOG_ERROR_VERBOSE("network_send_level_spawn_info: dest np is invalid");
+        log_context_end(LOG_CTX_NETWORK);
         return;
     }
 
     for (s32 i = 0; i < MAX_AREAS; i++) {
         network_send_level_spawn_info_area(destNp, i);
     }
+    log_context_end(LOG_CTX_NETWORK);
 }
 
 void network_receive_level_spawn_info(struct Packet* p) {
@@ -97,17 +105,17 @@ void network_receive_level_spawn_info(struct Packet* p) {
     packet_read(p, &areaIndex,       sizeof(s16));
 
     if (courseNum != gCurrCourseNum || actNum != gCurrActStarNum || levelNum != gCurrLevelNum) {
-        LOG_ERROR("Receiving 'location response' with the wrong location!");
+        LOG_ERROR_VERBOSE("Receiving 'location response' with the wrong location!");
         return;
     }
 
     u8 thisAreaIndex, spawnInfoDeletionCount;
     packet_read(p, &thisAreaIndex, sizeof(u8));
     packet_read(p, &spawnInfoDeletionCount, sizeof(u8));
-    LOG_INFO("rx spawn info (count %d)", spawnInfoDeletionCount);
+    LOG_DEBUG_VERBOSE("rx spawn info (count %d)", spawnInfoDeletionCount);
     if (spawnInfoDeletionCount <= 0) { return; }
     if (thisAreaIndex >= MAX_AREAS) {
-        LOG_ERROR("Receiving 'location response' with invalid areaIndex!");
+        LOG_ERROR_VERBOSE("Receiving 'location response' with invalid areaIndex!");
         return;
     }
 
@@ -123,12 +131,12 @@ void network_receive_level_spawn_info(struct Packet* p) {
             struct Object* o = get_object_matching_respawn_info(respawnInfo);
             if (o != NULL) {
                 obj_mark_for_deletion(o);
-                LOG_INFO("rx spawn info deletion: object");
+                LOG_DEBUG_VERBOSE("rx spawn info deletion: object");
                 if (o->oSyncID != 0) {
                     struct SyncObject* so = sync_object_get(o->oSyncID);
                     if (so && so->o == o) {
                         sync_object_forget(so->id);
-                        LOG_INFO("rx spawn info deletion: sync object");
+                        LOG_DEBUG_VERBOSE("rx spawn info deletion: sync object");
                     }
                 }
             }

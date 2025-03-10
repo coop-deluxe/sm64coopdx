@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include "../network.h"
-#include "pc/debuglog.h"
+#include "pc/log.h"
 #define MAX_CUSTOM_PACKETS 128
 
 struct NetworkCustomPacket {

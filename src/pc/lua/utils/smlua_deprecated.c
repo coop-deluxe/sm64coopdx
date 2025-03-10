@@ -4,6 +4,7 @@
 #include "pc/lua/utils/smlua_audio_utils.h"
 #include "game/hardcoded.h"
 #include "game/object_list_processor.h"
+#include "pc/network/network.h"
 
 void djui_hud_set_render_behind_hud(bool enable) {
     LOG_LUA_LINE_WARNING("[LUA] djui_hud_set_render_behind_hud() is deprecated! Please use HOOK_ON_HUD_RENDER_BEHIND instead.");

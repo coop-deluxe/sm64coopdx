@@ -14,7 +14,7 @@
 #include "pc/lua/utils/smlua_audio_utils.h"
 #include "pc/mods/mods_utils.h"
 #include "pc/utils/misc.h"
-#include "pc/debuglog.h"
+#include "pc/log.h"
 #include "pc/pc_main.h"
 #include "pc/fs/fmem.h"
 #include "audio/external.h"
