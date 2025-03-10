@@ -1710,6 +1710,7 @@
    - [gfx_get_vtx](functions-5.md#gfx_get_vtx)
    - [gfx_parse](functions-5.md#gfx_parse)
    - [gfx_set_combine_lerp](functions-5.md#gfx_set_combine_lerp)
+   - [gfx_set_texture_image](functions-5.md#gfx_set_texture_image)
    - [set_fog_color](functions-5.md#set_fog_color)
    - [set_fog_intensity](functions-5.md#set_fog_intensity)
    - [set_lighting_color](functions-5.md#set_lighting_color)
