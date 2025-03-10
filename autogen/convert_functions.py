@@ -734,7 +734,7 @@ Removes color codes from a string.
 
 ### Lua Example
 ```lua
-print(get_uncolored_string("\#210059\Colored \#FF086F\String")) -- "Colored String"
+print(get_uncolored_string("\\#210059\\Colored \\#FF086F\\String")) -- "Colored String"
 ```
 
 ### Parameters
