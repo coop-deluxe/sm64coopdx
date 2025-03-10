@@ -26,6 +26,7 @@ jobs:
               with:
                 name: sm64coopdx-ubuntu
                 path: ./build/us_pc/sm64coopdx
+
     build-windows:
         if: ${{ github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[build]') }}
         runs-on: windows-latest
@@ -63,3 +64,47 @@ jobs:
               with:
                 name: sm64coopdx-windows
                 path: ./build/us_pc/sm64coopdx.exe
+
+    build-macos-arm:
+        if: ${{ github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[build]') }}
+        runs-on: macos-latest
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Install dependencies (ARM)
+              run: |
+                /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+                brew install make mingw-w64 gcc sdl2 pkg-config glew glfw3 libusb audiofile coreutils
+
+            - name: Build the game (ARM)
+              run: |
+                gmake OSX_BUILD=1 -j$(sysctl -n hw.ncpu)
+
+            - name: Upload artifact (ARM)
+              uses: actions/upload-artifact@v4
+              with:
+                name: sm64coopdx-macos-arm
+                path: ./build/us_pc/sm64coopdx.app
+
+    build-macos-intel:
+        if: ${{ github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[build]') }}
+        runs-on: macos-latest
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Install dependencies (Intel)
+              run: |
+                /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+                brew install make mingw-w64 gcc@9 sdl2 pkg-config glew glfw3 libusb audiofile coreutils
+
+            - name: Build the game (Intel)
+              run: |
+                gmake OSX_BUILD=1 -j$(sysctl -n hw.ncpu)
+
+            - name: Upload artifact (Intel)
+              uses: actions/upload-artifact@v4
+              with:
+                name: sm64coopdx-macos-intel
+                path: ./build/us_pc/sm64coopdx.app
