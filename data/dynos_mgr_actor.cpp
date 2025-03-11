@@ -126,6 +126,20 @@ bool DynOS_Actor_GetModIndexAndToken(const GraphNode *aGraphNode, u32 aTokenInde
             }
             return true;
         }
+    } else { // try the active level
+        GfxData *_GfxData = DynOS_Lvl_GetActiveGfx();
+        if (_GfxData) {
+            if (outModIndex) {
+                *outModIndex = _GfxData->mModIndex;
+            }
+            if (outToken) {
+                if (!aTokenIndex || aTokenIndex > _GfxData->mLuaTokenList.Count()) {
+                    return false;
+                }
+                *outToken = _GfxData->mLuaTokenList[aTokenIndex - 1].begin(); // token index is 1-indexed
+            }
+            return true;
+        }
     }
     return false;
 }

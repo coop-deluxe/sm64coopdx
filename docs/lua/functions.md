@@ -27,6 +27,8 @@
    - [add_scroll_target](#add_scroll_target)
    - [collision_find_surface_on_ray](#collision_find_surface_on_ray)
    - [cast_graph_node](#cast_graph_node)
+   - [get_uncolored_string](#get_uncolored_string)
+   - [gfx_set_command](#gfx_set_command)
 
 <br />
 
@@ -1708,6 +1710,7 @@
    - [gfx_get_vtx](functions-5.md#gfx_get_vtx)
    - [gfx_parse](functions-5.md#gfx_parse)
    - [gfx_set_combine_lerp](functions-5.md#gfx_set_combine_lerp)
+   - [gfx_set_texture_image](functions-5.md#gfx_set_texture_image)
    - [set_fog_color](functions-5.md#set_fog_color)
    - [set_fog_intensity](functions-5.md#set_fog_intensity)
    - [set_lighting_color](functions-5.md#set_lighting_color)
@@ -2449,6 +2452,56 @@ print(marioGfx == cast_graph_node(node)) -- true
 
 ### Returns
 - GraphNode(...)
+
+### C Prototype
+N/A
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_uncolored_string](#get_uncolored_string)
+
+Removes color codes from a string.
+
+### Lua Example
+```lua
+print(get_uncolored_string("\#210059\Colored \#FF086F\String")) -- "Colored String"
+```
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| str   | 'string' |
+
+### Returns
+- `string`
+
+### C Prototype
+N/A
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [gfx_set_command](#gfx_set_command)
+
+Sets the specified display list command on the display list given.
+
+### Lua Example
+```lua
+gfx_set_command(gfx, "gsDPSetEnvColor", 0x00, 0xFF, 0x00, 0xFF)
+```
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| gfx   | [Gfx](structs.md#Gfx) |
+| command | `string` |
+| (Any number of arguments) | `integer` |
+
+### Returns
+- None
 
 ### C Prototype
 N/A

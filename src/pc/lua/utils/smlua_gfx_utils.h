@@ -52,7 +52,9 @@ void set_skybox_color(u8 index, u8 value);
 void gfx_parse(Gfx* cmd, LuaFunction func);
 /* |description|Gets a vertex from a display list command if it has the correct op. Intended to be used with `gfx_parse`.|descriptionEnd| */
 Vtx *gfx_get_vtx(Gfx* gfx, u16 offset);
-/* |description|Sets the display list combine mode.|descriptionEnd| */
+/* |description|Sets the display list combine mode. you can fill this function with G_CCMUX_* and G_ACMUX_* constants|descriptionEnd| */
 void gfx_set_combine_lerp(Gfx* gfx, u32 a0, u32 b0, u32 c0, u32 d0, u32 Aa0, u32 Ab0, u32 Ac0, u32 Ad0, u32 a1, u32 b1, u32 c1, u32 d1,	u32 Aa1, u32 Ab1, u32 Ac1, u32 Ad1);
+/* |description|Sets the display list texture image. Pass in textureInfo.texture as `texture`|descriptionEnd| */
+void gfx_set_texture_image(Gfx* gfx, u32 format, u32 size, u32 width, u8* texture);
 
 #endif
