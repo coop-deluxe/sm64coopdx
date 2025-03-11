@@ -169,7 +169,7 @@ u32 camera_config_get_deceleration(void) {
 }
 
 bool camera_config_get_centering(void) {
-    return sOverrideCameraLCentering.override ? sOverrideCameraLCentering.value : configCameraDegrade;
+    return sOverrideCameraLCentering.override ? sOverrideCameraLCentering.value : configFreeCameraLCentering;
 }
 
 void camera_config_enable_free_cam(bool enable) {
