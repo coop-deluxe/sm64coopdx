@@ -55,11 +55,14 @@ s8 gLevelToCourseNumTable[] = {
 #undef STUB_LEVEL
 #undef DEFINE_LEVEL
 
-#define STUB_LEVEL(_0, levelenum, _2, _3, _4, _5, _6, _7, _8) levelenum,
-#define DEFINE_LEVEL(_0, levelenum, _2, _3, _4, _5, _6, _7, _8, _9, _10) levelenum,
-s8 gCourseNumToLevelNumTable[] = {
+#define STUB_LEVEL(_0, levelenum, courseenum, _3, _4, _5, _6, _7, _8) [courseenum] = levelenum,
+#define DEFINE_LEVEL(_0, levelenum, courseenum, _3, _4, _5, _6, _7, _8, _9, _10) [courseenum] = levelenum,
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Woverride-init" // this is hacky, but its dealt with in the getter function
+s8 sCourseNumToLevelNumTable[] = {
 #include "levels/level_defines.h"
 };
+#pragma GCC diagnostic pop
 #undef STUB_LEVEL
 #undef DEFINE_LEVEL
 
@@ -70,7 +73,17 @@ s8 get_level_num_from_course_num(s16 courseNum) {
     if (courseNum < 0 || courseNum >= COURSE_COUNT) {
         return LEVEL_NONE;
     }
-    return gCourseNumToLevelNumTable[courseNum];
+    switch (courseNum) { // deal with the overridden courses
+        case COURSE_NONE:
+            return LEVEL_CASTLE;
+        case COURSE_BITDW:
+            return LEVEL_BITDW;
+        case COURSE_BITFS:
+            return LEVEL_BITFS;
+        case COURSE_BITS:
+            return LEVEL_BITS;
+    }
+    return sCourseNumToLevelNumTable[courseNum];
 }
 
 s8 get_level_course_num(s16 levelNum) {
@@ -707,11 +720,11 @@ void save_file_set_star_flags(s32 fileIndex, s32 courseIndex, u32 starFlags) {
 void save_file_remove_star_flags(s32 fileIndex, s32 courseIndex, u32 starFlagsToRemove) {
     if (INVALID_FILE_INDEX(fileIndex)) { return; }
     if (INVALID_SRC_SLOT(gSaveFileUsingBackupSlot)) { return; }
-    
+
     if (courseIndex == -1) {
         gSaveBuffer.files[fileIndex][gSaveFileUsingBackupSlot].flags &= ~STAR_FLAG_TO_SAVE_FLAG(starFlagsToRemove);
         network_send_save_remove_flag(fileIndex, courseIndex, 0, STAR_FLAG_TO_SAVE_FLAG(starFlagsToRemove));
-    } 
+    }
     else if (!INVALID_COURSE_STAR_INDEX(courseIndex)) {
         gSaveBuffer.files[fileIndex][gSaveFileUsingBackupSlot].courseStars[courseIndex] &= ~starFlagsToRemove;
         network_send_save_remove_flag(fileIndex, courseIndex, starFlagsToRemove, 0);

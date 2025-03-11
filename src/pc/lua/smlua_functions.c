@@ -99,7 +99,7 @@ int smlua_func_network_init_object(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("network_init_object: Failed to convert parameter 2"); return 0; }
 
     if (lua_type(L, 3) != LUA_TNIL && lua_type(L, 3) != LUA_TTABLE) {
-        LOG_LUA_LINE("network_init_object() called with an invalid type for param 3: %u", lua_type(L, 3));
+        LOG_LUA_LINE("network_init_object() called with an invalid type for param 3: %s", luaL_typename(L, 3));
         return 0;
     }
 
@@ -115,7 +115,7 @@ int smlua_func_network_init_object(lua_State* L) {
         while (lua_next(L, 3) != 0) {
             // uses 'key' (at index -2) and 'value' (at index -1)
             if (lua_type(L, -1) != LUA_TSTRING) {
-                LOG_LUA_LINE("Invalid type passed to network_init_object(): %u", lua_type(L, -1));
+                LOG_LUA_LINE("Invalid type passed to network_init_object(): %s", luaL_typename(L, -1));
                 lua_pop(L, 1); // pop value
                 continue;
             }
@@ -189,7 +189,7 @@ int smlua_func_set_exclamation_box_contents(lua_State* L) {
     if (!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
     if (lua_type(L, 1) != LUA_TTABLE) {
-        LOG_LUA_LINE("Invalid type passed to set_exclamation_box(): %u", lua_type(L, -1));
+        LOG_LUA_LINE("Invalid type passed to set_exclamation_box(): %s", luaL_typename(L, -1));
         return 0;
     }
 
@@ -297,7 +297,7 @@ int smlua_func_get_texture_info(lua_State* L) {
     if (!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
     if (lua_type(L, -1) != LUA_TSTRING) {
-        LOG_LUA_LINE("Invalid type passed to get_texture_info(): %u", lua_type(L, -1));
+        LOG_LUA_LINE("Invalid type passed to get_texture_info(): %s", luaL_typename(L, -1));
         lua_pop(L, 1); // pop value
         return 0;
     }
@@ -1083,7 +1083,7 @@ if (strcmp(command, #symb) == 0) {                                      \
     if (paramCount != params) { LOG_LUA("gfx_set_command: '" #symb "' received incorrect number of parameters. Received %u, expected %u", paramCount, params); return 0; } \
     UNUSED const char symbolName[] = #symb;                             \
     REPEAT(HANDLE_PARAM, params);                                       \
-    Gfx _Gfx[] = { CALL_SYMB(symb, LIST_ARGS(GET_ARG, params)) };       \
+    const Gfx _Gfx[] = { CALL_SYMB(symb, LIST_ARGS(GET_ARG, params)) }; \
     memcpy(gfx, _Gfx, sizeof(_Gfx));                                    \
     return 1;                                                           \
 }

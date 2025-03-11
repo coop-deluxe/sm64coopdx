@@ -8349,7 +8349,7 @@ Traverses a display list. Takes a Lua function as a parameter, which is called b
 ## [gfx_set_combine_lerp](#gfx_set_combine_lerp)
 
 ### Description
-Sets the display list combine mode.
+Sets the display list combine mode. you can fill this function with G_CCMUX_* and G_ACMUX_* constants
 
 ### Lua Example
 `gfx_set_combine_lerp(gfx, a0, b0, c0, d0, Aa0, Ab0, Ac0, Ad0, a1, b1, c1, d1, Aa1, Ab1, Ac1, Ad1)`
@@ -8380,6 +8380,33 @@ Sets the display list combine mode.
 
 ### C Prototype
 `void gfx_set_combine_lerp(Gfx* gfx, u32 a0, u32 b0, u32 c0, u32 d0, u32 Aa0, u32 Ab0, u32 Ac0, u32 Ad0, u32 a1, u32 b1, u32 c1, u32 d1,	u32 Aa1, u32 Ab1, u32 Ac1, u32 Ad1);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [gfx_set_texture_image](#gfx_set_texture_image)
+
+### Description
+Sets the display list texture image. Pass in textureInfo.texture as `texture`
+
+### Lua Example
+`gfx_set_texture_image(gfx, format, size, width, texture)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| gfx | `Pointer` <`Gfx`> |
+| format | `integer` |
+| size | `integer` |
+| width | `integer` |
+| texture | `Pointer` <`integer`> |
+
+### Returns
+- None
+
+### C Prototype
+`void gfx_set_texture_image(Gfx* gfx, u32 format, u32 size, u32 width, u8* texture);`
 
 [:arrow_up_small:](#)
 

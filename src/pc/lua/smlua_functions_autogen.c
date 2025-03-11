@@ -28771,6 +28771,31 @@ int smlua_func_gfx_set_combine_lerp(lua_State* L) {
     return 1;
 }
 
+int smlua_func_gfx_set_texture_image(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 5) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "gfx_set_texture_image", 5, top);
+        return 0;
+    }
+
+    Gfx* gfx = (Gfx*)smlua_to_cobject(L, 1, LOT_GFX);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "gfx_set_texture_image"); return 0; }
+    u32 format = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "gfx_set_texture_image"); return 0; }
+    u32 size = smlua_to_integer(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "gfx_set_texture_image"); return 0; }
+    u32 width = smlua_to_integer(L, 4);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "gfx_set_texture_image"); return 0; }
+    u8* texture = (u8*)smlua_to_cpointer(L, 5, LVT_U8_P);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 5, "gfx_set_texture_image"); return 0; }
+
+    gfx_set_texture_image(gfx, format, size, width, texture);
+
+    return 1;
+}
+
 int smlua_func_set_fog_color(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -34099,6 +34124,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "gfx_get_vtx", smlua_func_gfx_get_vtx);
     smlua_bind_function(L, "gfx_parse", smlua_func_gfx_parse);
     smlua_bind_function(L, "gfx_set_combine_lerp", smlua_func_gfx_set_combine_lerp);
+    smlua_bind_function(L, "gfx_set_texture_image", smlua_func_gfx_set_texture_image);
     smlua_bind_function(L, "set_fog_color", smlua_func_set_fog_color);
     smlua_bind_function(L, "set_fog_intensity", smlua_func_set_fog_intensity);
     smlua_bind_function(L, "set_lighting_color", smlua_func_set_lighting_color);

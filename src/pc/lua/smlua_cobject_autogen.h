@@ -130,6 +130,7 @@ enum LuaObjectAutogenType {
     LOT_AUTOGEN_MAX,
 };
 
+const char *smlua_get_lot_name(u16 lot);
 struct LuaObjectField* smlua_get_object_field_autogen(u16 lot, const char* key);
 
 #endif

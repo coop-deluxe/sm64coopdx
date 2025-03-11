@@ -1396,7 +1396,7 @@ Gets the volume level of sound effects
 ## [get_water_level](#get_water_level)
 
 ### Description
-Gets the water level in an area
+Gets the water level in an area corresponding to `index` (0-indexed)
 
 ### Lua Example
 `local integerValue = get_water_level(index)`
@@ -2088,7 +2088,7 @@ Sets the volume level of sound effects
 ## [set_water_level](#set_water_level)
 
 ### Description
-Sets the water level in an area
+Sets the water level in an area corresponding to `index` (0-indexed)
 
 ### Lua Example
 `set_water_level(index, height, sync)`
