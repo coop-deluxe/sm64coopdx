@@ -1083,7 +1083,7 @@ if (strcmp(command, #symb) == 0) {                                      \
     if (paramCount != params) { LOG_LUA("gfx_set_command: '" #symb "' received incorrect number of parameters. Received %u, expected %u", paramCount, params); return 0; } \
     UNUSED const char symbolName[] = #symb;                             \
     REPEAT(HANDLE_PARAM, params);                                       \
-    Gfx _Gfx[] = { CALL_SYMB(symb, LIST_ARGS(GET_ARG, params)) };       \
+    const Gfx _Gfx[] = { CALL_SYMB(symb, LIST_ARGS(GET_ARG, params)) }; \
     memcpy(gfx, _Gfx, sizeof(_Gfx));                                    \
     return 1;                                                           \
 }

@@ -46,7 +46,11 @@ void bhv_pokey_body_part_update(void) {
     f32 baseHeight;
 
     if (o->parentObj == NULL || o->parentObj->behavior != smlua_override_behavior(bhvPokey) || o->parentObj->activeFlags == ACTIVE_FLAG_DEACTIVATED) {
-        obj_mark_for_deletion(o);
+        if (o->oBehParams2ndByte == 0) {
+            obj_die_if_health_non_positive();
+        } else {
+            obj_mark_for_deletion(o);
+        }
         return;
     }
 

@@ -170,3 +170,8 @@ void gfx_set_combine_lerp(Gfx* gfx, u32 a0, u32 b0, u32 c0, u32 d0, u32 Aa0, u32
     if (!gfx) { return; }
     gDPSetCombineLERPNoString(gfx, a0, b0, c0, d0, Aa0, Ab0, Ac0, Ad0, a1, b1, c1, d1, Aa1, Ab1, Ac1, Ad1);
 }
+
+void gfx_set_texture_image(Gfx* gfx, u32 format, u32 size, u32 width, u8* texture) {
+    if (!gfx) { return; }
+    gDPSetTextureImage(gfx, format, size, width, texture);
+}
