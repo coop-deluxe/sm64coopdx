@@ -758,7 +758,6 @@ def serialize_seqfile(
                 for fname in asset_offsets:
                     macro_name = 'SAMPLE_' + fname.split('/samples/')[-1].replace('/', '_').replace('.', '_').replace('-', '_')
                     f.write(f'#define {macro_name} {hex(asset_offsets[fname] + data_start)} // {fname}\n')
-            data = data[:entry_offsets[0] + data_start] # remove the fake data
             out_filename = 'sound/sound_data_compressed.tbl'
             compress = True
 
