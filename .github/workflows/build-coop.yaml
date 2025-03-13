@@ -3,7 +3,7 @@ name: Build coop
 on:
     workflow_dispatch:
     push:
-        branches: [ dev ]
+        branches: [ dev, suggestions ]
 
 jobs:
     build-ubuntu:
