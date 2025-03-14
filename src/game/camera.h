@@ -19,6 +19,12 @@ enum RomhackCameraOverride {
     RCO_DISABLE
 };
 
+enum RomhackCameraEnable {
+    RCE_AUTOMATIC,
+    RCE_ON,
+    RCE_OFF
+};
+
 struct RomhackCameraSettings {
     enum RomhackCameraOverride enable;
     u8 centering;

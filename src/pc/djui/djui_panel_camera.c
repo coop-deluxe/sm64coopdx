@@ -41,7 +41,8 @@ void djui_panel_romhack_camera_create(struct DjuiBase* caller) {
     struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(CAMERA, ROMHACK_CAMERA_TITLE), false);
     struct DjuiBase* body = djui_three_panel_get_body(panel);
     {
-        djui_checkbox_create(body, DLANG(CAMERA, ROMHACK_CAMERA), &configEnableRomhackCamera, djui_panel_romhack_camera_value_changed);
+        char* choices[3] = { DLANG(CAMERA, ROMHACK_CAMERA_AUTOMATIC), DLANG(CAMERA, ROMHACK_CAMERA_ON), DLANG(CAMERA, ROMHACK_CAMERA_OFF) };
+        djui_selectionbox_create(body, DLANG(CAMERA, ROMHACK_CAMERA), choices, 3, &configEnableRomhackCamera, djui_panel_romhack_camera_value_changed);
         djui_checkbox_create(body, DLANG(CAMERA, ROMHACK_CAMERA_IN_BOWSER), &configRomhackCameraBowserFights, djui_panel_romhack_camera_value_changed);
         djui_checkbox_create(body, DLANG(CAMERA, ROMHACK_CAMERA_COLLISION), &configRomhackCameraHasCollision, djui_panel_romhack_camera_value_changed);
         djui_checkbox_create(body, DLANG(CAMERA, ROMHACK_CAMERA_L_CENTERING), &configRomhackCameraHasCentering, djui_panel_romhack_camera_value_changed);
