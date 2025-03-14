@@ -2197,6 +2197,18 @@
 --- @field public hitPos Vec3f
 --- @field public surface Surface
 
+--- @class RomhackCameraSettings
+--- @field public centering integer
+--- @field public collisions integer
+--- @field public dpad integer
+--- @field public enable RomhackCameraOverride
+--- @field public modsOnly integer
+--- @field public slowFall integer
+--- @field public zoomedInDist integer
+--- @field public zoomedInHeight integer
+--- @field public zoomedOutDist integer
+--- @field public zoomedOutHeight integer
+
 --- @class ServerSettings
 --- @field public bouncyLevelBounds BouncyLevelBounds
 --- @field public bubbleDeath integer

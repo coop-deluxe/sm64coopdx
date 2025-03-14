@@ -2545,6 +2545,20 @@ static struct LuaObjectField sRayIntersectionInfoFields[LUA_RAY_INTERSECTION_INF
     { "surface", LVT_COBJECT_P, offsetof(struct RayIntersectionInfo, surface), false, LOT_SURFACE, 1, sizeof(struct Surface*) },
 };
 
+#define LUA_ROMHACK_CAMERA_SETTINGS_FIELD_COUNT 10
+static struct LuaObjectField sRomhackCameraSettingsFields[LUA_ROMHACK_CAMERA_SETTINGS_FIELD_COUNT] = {
+    { "centering",       LVT_U8,  offsetof(struct RomhackCameraSettings, centering),       false, LOT_NONE, 1, sizeof(u8)                         },
+    { "collisions",      LVT_U8,  offsetof(struct RomhackCameraSettings, collisions),      false, LOT_NONE, 1, sizeof(u8)                         },
+    { "dpad",            LVT_U8,  offsetof(struct RomhackCameraSettings, dpad),            false, LOT_NONE, 1, sizeof(u8)                         },
+    { "enable",          LVT_S32, offsetof(struct RomhackCameraSettings, enable),          false, LOT_NONE, 1, sizeof(enum RomhackCameraOverride) },
+    { "modsOnly",        LVT_U8,  offsetof(struct RomhackCameraSettings, modsOnly),        false, LOT_NONE, 1, sizeof(u8)                         },
+    { "slowFall",        LVT_U8,  offsetof(struct RomhackCameraSettings, slowFall),        false, LOT_NONE, 1, sizeof(u8)                         },
+    { "zoomedInDist",    LVT_U32, offsetof(struct RomhackCameraSettings, zoomedInDist),    false, LOT_NONE, 1, sizeof(u32)                        },
+    { "zoomedInHeight",  LVT_U32, offsetof(struct RomhackCameraSettings, zoomedInHeight),  false, LOT_NONE, 1, sizeof(u32)                        },
+    { "zoomedOutDist",   LVT_U32, offsetof(struct RomhackCameraSettings, zoomedOutDist),   false, LOT_NONE, 1, sizeof(u32)                        },
+    { "zoomedOutHeight", LVT_U32, offsetof(struct RomhackCameraSettings, zoomedOutHeight), false, LOT_NONE, 1, sizeof(u32)                        },
+};
+
 #define LUA_SERVER_SETTINGS_FIELD_COUNT 13
 static struct LuaObjectField sServerSettingsFields[LUA_SERVER_SETTINGS_FIELD_COUNT] = {
     { "bouncyLevelBounds",           LVT_S32, offsetof(struct ServerSettings, bouncyLevelBounds),           false, LOT_NONE, 1, sizeof(enum BouncyLevelBounds)  },
@@ -2867,6 +2881,7 @@ struct LuaObjectTable sLuaObjectAutogenTable[LOT_AUTOGEN_MAX - LOT_AUTOGEN_MIN] 
     { LOT_PLAYERGEOMETRY,               sPlayerGeometryFields,               LUA_PLAYER_GEOMETRY_FIELD_COUNT                 },
     { LOT_PLAYERPALETTE,                sPlayerPaletteFields,                LUA_PLAYER_PALETTE_FIELD_COUNT                  },
     { LOT_RAYINTERSECTIONINFO,          sRayIntersectionInfoFields,          LUA_RAY_INTERSECTION_INFO_FIELD_COUNT           },
+    { LOT_ROMHACKCAMERASETTINGS,        sRomhackCameraSettingsFields,        LUA_ROMHACK_CAMERA_SETTINGS_FIELD_COUNT         },
     { LOT_SERVERSETTINGS,               sServerSettingsFields,               LUA_SERVER_SETTINGS_FIELD_COUNT                 },
     { LOT_SOUNDSTATE,                   sSoundStateFields,                   LUA_SOUND_STATE_FIELD_COUNT                     },
     { LOT_SPAWNINFO,                    sSpawnInfoFields,                    LUA_SPAWN_INFO_FIELD_COUNT                      },

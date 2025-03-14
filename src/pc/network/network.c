@@ -689,10 +689,11 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
     gFogIntensity = 1.0f;
     gOverrideBackground = -1;
     gOverrideEnvFx = ENVFX_MODE_NO_OVERRIDE;
-    gRomhackCameraAllowCentering = TRUE;
+    gRomhackCameraSettings.centering = FALSE;
     gOverrideAllowToxicGasCamera = FALSE;
-    gRomhackCameraAllowDpad = FALSE;
+    gRomhackCameraSettings.dpad = FALSE;
     camera_reset_overrides();
+    romhack_camera_reset_settings();
     free_vtx_scroll_targets();
     dynos_mod_shutdown();
     mods_clear(&gActiveMods);

@@ -92,6 +92,7 @@
 - [PlayerGeometry](#PlayerGeometry)
 - [PlayerPalette](#PlayerPalette)
 - [RayIntersectionInfo](#RayIntersectionInfo)
+- [RomhackCameraSettings](#RomhackCameraSettings)
 - [SPTask](#SPTask)
 - [ServerSettings](#ServerSettings)
 - [SoundState](#SoundState)
@@ -2966,6 +2967,25 @@
 | ----- | ---- | ------ |
 | hitPos | [Vec3f](structs.md#Vec3f) | read-only |
 | surface | [Surface](structs.md#Surface) |  |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [RomhackCameraSettings](#RomhackCameraSettings)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| centering | `integer` |  |
+| collisions | `integer` |  |
+| dpad | `integer` |  |
+| enable | [enum RomhackCameraOverride](constants.md#enum-RomhackCameraOverride) |  |
+| modsOnly | `integer` |  |
+| slowFall | `integer` |  |
+| zoomedInDist | `integer` |  |
+| zoomedInHeight | `integer` |  |
+| zoomedOutDist | `integer` |  |
+| zoomedOutHeight | `integer` |  |
 
 [:arrow_up_small:](#)
 
