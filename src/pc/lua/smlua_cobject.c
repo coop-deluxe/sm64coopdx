@@ -430,6 +430,10 @@ static bool smlua_set_field(lua_State* L, u8* p, struct LuaObjectField *data) {
         case LVT_U64: *(s64*)p = smlua_to_integer(L, 3); break;
 
         case LVT_COBJECT_P:
+            if (lua_isnil(L, 3)) {
+                *(u8**)p = NULL;
+                break;
+            }
             valuePointer = smlua_to_cobject(L, 3, data->lot);
             if (gSmLuaConvertSuccess) {
                 *(u8**)p = valuePointer;
@@ -450,6 +454,10 @@ static bool smlua_set_field(lua_State* L, u8* p, struct LuaObjectField *data) {
         case LVT_OBJECTANIMPOINTER_P:
         case LVT_COLLISION_P:
         case LVT_TRAJECTORY_P:
+            if (lua_isnil(L, 3)) {
+                *(u8**)p = NULL;
+                break;
+            }
             valuePointer = smlua_to_cpointer(L, 3, data->valueType);
             if (gSmLuaConvertSuccess) {
                 *(u8**)p = valuePointer;
