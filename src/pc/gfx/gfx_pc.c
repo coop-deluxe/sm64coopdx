@@ -187,10 +187,10 @@ static f32 sDepthZAdd = 0;
 static f32 sDepthZMult = 1;
 static f32 sDepthZSub = 0;
 
-Vec3f gLightingDir;
-Color gLightingColor[2] = { { 255, 255, 255 }, { 255, 255, 255 } };
-Color gVertexColor = { 255, 255, 255 };
-Color gFogColor = { 255, 255, 255 };
+Vec3f gLightingDir = { 0.0f, 0.0f, 0.0f };
+Color gLightingColor[2] = { { 0xFF, 0xFF, 0xFF }, { 0xFF, 0xFF, 0xFF } };
+Color gVertexColor = { 0xFF, 0xFF, 0xFF };
+Color gFogColor = { 0xFF, 0xFF, 0xFF };
 f32 gFogIntensity = 1;
 
 // 4x4 pink-black checkerboard texture to indicate missing textures

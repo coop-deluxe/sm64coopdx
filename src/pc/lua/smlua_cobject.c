@@ -68,6 +68,49 @@ bool smlua_valid_lvt(u16 lvt) {
     return (lvt < LVT_MAX);
 }
 
+const char *sLuaLvtNames[] = {
+    [LVT_BOOL] = "bool",
+    [LVT_BOOL_P] = "bool Pointer",
+    [LVT_U8] = "u8",
+    [LVT_U8_P] = "u8 Pointer",
+    [LVT_U16] = "u16",
+    [LVT_U16_P] = "u16 Pointer",
+    [LVT_U32] = "u32",
+    [LVT_U32_P] = "u32 Pointer",
+    [LVT_S8] = "s8",
+    [LVT_S8_P] = "s8 Pointer",
+    [LVT_S16] = "s16",
+    [LVT_S16_P] = "s16 Pointer",
+    [LVT_S32] = "s32",
+    [LVT_S32_P] = "s32 Pointer",
+    [LVT_F32] = "f32",
+    [LVT_F32_P] = "f32 Pointer",
+    [LVT_U64] = "u64",
+    [LVT_U64_P] = "u64 Pointer",
+    [LVT_COBJECT] = "CObject",
+    [LVT_COBJECT_P] = "CObject Pointer",
+    [LVT_STRING] = "string",
+    [LVT_STRING_P] = "string Pointer",
+    [LVT_BEHAVIORSCRIPT] = "BehaviorScript",
+    [LVT_BEHAVIORSCRIPT_P] = "BehaviorScript Pointer",
+    [LVT_OBJECTANIMPOINTER] = "ObjectAnimPointer",
+    [LVT_OBJECTANIMPOINTER_P] = "ObjectAnimPointer Pointer",
+    [LVT_COLLISION] = "Collision",
+    [LVT_COLLISION_P] = "Collision Pointer",
+    [LVT_LEVELSCRIPT] = "LevelScript",
+    [LVT_LEVELSCRIPT_P] = "LevelScript Pointer",
+    [LVT_TRAJECTORY] = "Trajectory",
+    [LVT_TRAJECTORY_P] = "Trajectory Pointer",
+    [LVT_LUAFUNCTION] = "LuaFunction",
+    [LVT_POINTER] = "Pointer",
+    [LVT_MAX] = "Max",
+};
+
+const char *smlua_get_lvt_name(u16 lvt) {
+    assert(smlua_valid_lvt(lvt)); // if this is false, it means there's an invalid lvt somewhere
+    return sLuaLvtNames[lvt];
+}
+
   //////////////////
  // obj behavior //
 //////////////////
@@ -387,6 +430,10 @@ static bool smlua_set_field(lua_State* L, u8* p, struct LuaObjectField *data) {
         case LVT_U64: *(s64*)p = smlua_to_integer(L, 3); break;
 
         case LVT_COBJECT_P:
+            if (lua_isnil(L, 3)) {
+                *(u8**)p = NULL;
+                break;
+            }
             valuePointer = smlua_to_cobject(L, 3, data->lot);
             if (gSmLuaConvertSuccess) {
                 *(u8**)p = valuePointer;
@@ -407,6 +454,10 @@ static bool smlua_set_field(lua_State* L, u8* p, struct LuaObjectField *data) {
         case LVT_OBJECTANIMPOINTER_P:
         case LVT_COLLISION_P:
         case LVT_TRAJECTORY_P:
+            if (lua_isnil(L, 3)) {
+                *(u8**)p = NULL;
+                break;
+            }
             valuePointer = smlua_to_cpointer(L, 3, data->valueType);
             if (gSmLuaConvertSuccess) {
                 *(u8**)p = valuePointer;
@@ -500,7 +551,7 @@ static int smlua__get_field(lua_State* L) {
         data = smlua_get_custom_field(L, lot, 2);
     }
     if (data == NULL) {
-        LOG_LUA_LINE("_get_field on invalid key '%s', lot '%d'", key, lot);
+        LOG_LUA_LINE("_get_field on invalid key '%s', lot '%s'", key, smlua_get_lot_name(lot));
         return 0;
     }
 

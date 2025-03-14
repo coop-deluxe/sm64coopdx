@@ -78,16 +78,32 @@ extern bool         configBackgroundGamepad;
 extern bool         configDisableGamepads;
 extern bool         configUseStandardKeyBindingsChat;
 // free camera settings
-extern bool         configEnableCamera;
-extern bool         configCameraAnalog;
+extern bool         configEnableFreeCamera;
+extern bool         configFreeCameraAnalog;
+extern bool         configFreeCameraLCentering;
+extern bool         configFreeCameraDpadBehavior;
+extern bool         configFreeCameraHasCollision;
 extern bool         configCameraMouse;
-extern bool         configCameraInvertX;
-extern bool         configCameraInvertY;
 extern unsigned int configCameraXSens;
 extern unsigned int configCameraYSens;
 extern unsigned int configCameraAggr;
 extern unsigned int configCameraPan;
 extern unsigned int configCameraDegrade;
+// romhack camera settings
+extern bool configEnableRomhackCamera;
+extern bool configRomhackCameraBowserFights;
+extern bool configRomhackCameraHasCollision;
+extern bool configRomhackCameraHasCentering;
+extern bool configRomhackCameraDpadBehavior;
+extern bool configRomhackCameraSlowFall;
+extern bool configCameraToxicGas;
+extern unsigned int configRomhackCameraZoomedInDist;
+extern unsigned int configRomhackCameraZoomedOutDist;
+extern unsigned int configRomhackCameraZoomedInHeight;
+extern unsigned int configRomhackCameraZoomedOutHeight;
+// common camera settings
+extern bool         configCameraInvertX;
+extern bool         configCameraInvertY;
 // debug
 extern bool         configLuaProfiler;
 extern bool         configDebugPrint;

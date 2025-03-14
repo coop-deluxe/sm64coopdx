@@ -2530,6 +2530,15 @@ RCO_ALL_EXCEPT_BOWSER = 1
 --- @type RomhackCameraOverride
 RCO_NONE = 2
 
+--- @type RomhackCameraOverride
+RCO_ALL_INCLUDING_VANILLA = 3
+
+--- @type RomhackCameraOverride
+RCO_ALL_VANILLA_EXCEPT_BOWSER = 4
+
+--- @type RomhackCameraOverride
+RCO_DISABLE = 5
+
 --- @class CharacterSound
 
 --- @type CharacterSound
@@ -13625,7 +13634,7 @@ OBJECT_CUSTOM_FIELDS_START = (OBJECT_NUM_REGULAR_FIELDS)
 OBJECT_MAX_BHV_STACK = 16
 
 --- @type integer
-OBJECT_NUM_CUSTOM_FIELDS = 0x10
+OBJECT_NUM_CUSTOM_FIELDS = 0x40
 
 --- @type integer
 OBJECT_NUM_FIELDS = (OBJECT_CUSTOM_FIELDS_START + OBJECT_NUM_CUSTOM_FIELDS)
@@ -13677,7 +13686,7 @@ SPTASK_STATE_FINISHED = 3
 SPTASK_STATE_FINISHED_DP = 4
 
 --- @type integer
-MAX_VERSION_LENGTH = 32
+MAX_VERSION_LENGTH = 128
 
 --- @type integer
 MINOR_VERSION_NUMBER = 1

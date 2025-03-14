@@ -116,7 +116,7 @@ override_disallowed_functions = {
     "src/game/obj_behaviors_2.c":               [ "wiggler_jumped_on_attack_handler", "huge_goomba_weakly_attacked" ],
     "src/game/level_info.h":                    [ "_name_table" ],
     "src/pc/lua/utils/smlua_obj_utils.h":       [ "spawn_object_remember_field" ],
-    "src/game/camera.h":                        [ "update_camera", "init_camera", "stub_camera", "^reset_camera", "move_point_along_spline" ],
+    "src/game/camera.h":                        [ "update_camera", "init_camera", "stub_camera", "^reset_camera", "move_point_along_spline", "romhack_camera_init_settings", "romhack_camera_reset_settings" ],
     "src/game/behavior_actions.h":              [ "bhv_dust_smoke_loop", "bhv_init_room" ],
     "src/pc/lua/utils/smlua_audio_utils.h":     [ "smlua_audio_utils_override", "audio_custom_shutdown", "smlua_audio_custom_deinit", "audio_sample_destroy_pending_copies", "audio_custom_update_volume" ],
     "src/pc/djui/djui_hud_utils.h":             [ "djui_hud_render_texture", "djui_hud_render_texture_raw", "djui_hud_render_texture_tile", "djui_hud_render_texture_tile_raw" ],
@@ -212,6 +212,8 @@ manual_index_documentation = """
    - [add_scroll_target](#add_scroll_target)
    - [collision_find_surface_on_ray](#collision_find_surface_on_ray)
    - [cast_graph_node](#cast_graph_node)
+   - [get_uncolored_string](#get_uncolored_string)
+   - [gfx_set_command](#gfx_set_command)
 
 <br />
 
@@ -718,6 +720,56 @@ print(marioGfx == cast_graph_node(node)) -- true
 
 ### Returns
 - GraphNode(...)
+
+### C Prototype
+N/A
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_uncolored_string](#get_uncolored_string)
+
+Removes color codes from a string.
+
+### Lua Example
+```lua
+print(get_uncolored_string("\\#210059\\Colored \\#FF086F\\String")) -- "Colored String"
+```
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| str   | 'string' |
+
+### Returns
+- `string`
+
+### C Prototype
+N/A
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [gfx_set_command](#gfx_set_command)
+
+Sets the specified display list command on the display list given.
+
+### Lua Example
+```lua
+gfx_set_command(gfx, "gsDPSetEnvColor", 0x00, 0xFF, 0x00, 0xFF)
+```
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| gfx   | [Gfx](structs.md#Gfx) |
+| command | `string` |
+| (Any number of arguments) | `integer` |
+
+### Returns
+- None
 
 ### C Prototype
 N/A

@@ -287,7 +287,6 @@ void smlua_init(void) {
 
     // load libraries
     luaopen_base(L);
-    //luaopen_coroutine(L);
 #if defined(DEVELOPMENT)
     luaL_requiref(L, "debug", luaopen_debug, 1);
     luaL_requiref(L, "io", luaopen_io, 1);
@@ -297,7 +296,8 @@ void smlua_init(void) {
     luaL_requiref(L, "math", luaopen_math, 1);
     luaL_requiref(L, "string", luaopen_string, 1);
     luaL_requiref(L, "table", luaopen_table, 1);
-    //luaopen_utf8(L);
+    luaL_requiref(L, "coroutine", luaopen_coroutine, 1);
+    // luaopen_utf8(L);
 
     smlua_bind_hooks();
     smlua_bind_cobject();

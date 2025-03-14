@@ -80,7 +80,6 @@ extern s8 sUnusedGotGlobalCoinHiScore;
 extern u8 gGotFileCoinHiScore;
 extern u8 gCurrCourseStarFlags;
 extern s8 gLevelToCourseNumTable[];
-extern s8 gCourseNumToLevelNumTable[];
 
 // game progress flags
 #define SAVE_FLAG_FILE_EXISTS            /* 0x00000001 */ (1 << 0)

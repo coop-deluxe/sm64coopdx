@@ -650,7 +650,7 @@ s32 obj_resolve_collisions_and_turn(s16 targetYaw, s16 turnSpeed) {
 
 void obj_die_if_health_non_positive(void) {
     if (!o) { return; }
-    if (o->oHealth <= 0) {
+    if (o->oHealth <= 0 || o->oSyncDeath) {
         if (o->oDeathSound == 0) {
             spawn_mist_particles_with_sound(SOUND_OBJ_DEFAULT_DEATH);
         } else if (o->oDeathSound > 0) {

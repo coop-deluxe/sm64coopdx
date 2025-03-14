@@ -131,16 +131,32 @@ bool         configBackgroundGamepad              = true;
 bool         configDisableGamepads                = false;
 bool         configUseStandardKeyBindingsChat     = false;
 // free camera settings
-bool         configEnableCamera                   = false;
-bool         configCameraAnalog                   = false;
+bool         configEnableFreeCamera               = false;
+bool         configFreeCameraAnalog               = false;
+bool         configFreeCameraLCentering           = false;
+bool         configFreeCameraDpadBehavior         = false;
+bool         configFreeCameraHasCollision         = true;
 bool         configCameraMouse                    = false;
-bool         configCameraInvertX                  = false;
-bool         configCameraInvertY                  = true;
 unsigned int configCameraXSens                    = 50;
 unsigned int configCameraYSens                    = 50;
 unsigned int configCameraAggr                     = 0;
 unsigned int configCameraPan                      = 0;
 unsigned int configCameraDegrade                  = 50; // 0 - 100%
+// romhack camera settings
+bool         configEnableRomhackCamera            = false;
+bool         configRomhackCameraBowserFights      = false;
+bool         configRomhackCameraHasCollision      = false;
+bool         configRomhackCameraHasCentering      = false;
+bool         configRomhackCameraDpadBehavior      = false;
+bool         configRomhackCameraSlowFall          = true;
+bool         configCameraToxicGas                 = true;
+unsigned int configRomhackCameraZoomedInDist      = 900;
+unsigned int configRomhackCameraZoomedOutDist     = 1400;
+unsigned int configRomhackCameraZoomedInHeight    = 300;
+unsigned int configRomhackCameraZoomedOutHeight   = 450;
+// common camera settings
+bool         configCameraInvertX                  = false;
+bool         configCameraInvertY                  = true;
 // debug
 bool         configLuaProfiler                    = false;
 bool         configDebugPrint                     = false;
@@ -258,8 +274,11 @@ static const struct ConfigOption options[] = {
 #endif
     {.name = "use_standard_key_bindings_chat", .type = CONFIG_TYPE_BOOL, .boolValue = &configUseStandardKeyBindingsChat},
     // free camera settings
-    {.name = "bettercam_enable",               .type = CONFIG_TYPE_BOOL, .boolValue = &configEnableCamera},
-    {.name = "bettercam_analog",               .type = CONFIG_TYPE_BOOL, .boolValue = &configCameraAnalog},
+    {.name = "bettercam_enable",               .type = CONFIG_TYPE_BOOL, .boolValue = &configEnableFreeCamera},
+    {.name = "bettercam_analog",               .type = CONFIG_TYPE_BOOL, .boolValue = &configFreeCameraAnalog},
+    {.name = "bettercam_centering",            .type = CONFIG_TYPE_BOOL, .boolValue = &configFreeCameraLCentering},
+    {.name = "bettercam_dpad",                 .type = CONFIG_TYPE_BOOL, .boolValue = &configFreeCameraDpadBehavior},
+    {.name = "bettercam_collision",            .type = CONFIG_TYPE_BOOL, .boolValue = &configFreeCameraHasCollision},
     {.name = "bettercam_mouse_look",           .type = CONFIG_TYPE_BOOL, .boolValue = &configCameraMouse},
     {.name = "bettercam_invertx",              .type = CONFIG_TYPE_BOOL, .boolValue = &configCameraInvertX},
     {.name = "bettercam_inverty",              .type = CONFIG_TYPE_BOOL, .boolValue = &configCameraInvertY},
@@ -268,6 +287,18 @@ static const struct ConfigOption options[] = {
     {.name = "bettercam_aggression",           .type = CONFIG_TYPE_UINT, .uintValue = &configCameraAggr},
     {.name = "bettercam_pan_level",            .type = CONFIG_TYPE_UINT, .uintValue = &configCameraPan},
     {.name = "bettercam_degrade",              .type = CONFIG_TYPE_UINT, .uintValue = &configCameraDegrade},
+    // romhack camera settings
+    {.name = "romhackcam_enable",              .type = CONFIG_TYPE_BOOL, .boolValue = &configEnableRomhackCamera},
+    {.name = "romhackcam_bowser",              .type = CONFIG_TYPE_BOOL, .boolValue = &configRomhackCameraBowserFights},
+    {.name = "romhackcam_collision",           .type = CONFIG_TYPE_BOOL, .boolValue = &configRomhackCameraHasCollision},
+    {.name = "romhackcam_centering",           .type = CONFIG_TYPE_BOOL, .boolValue = &configRomhackCameraHasCentering},
+    {.name = "romhackcam_dpad",                .type = CONFIG_TYPE_BOOL, .boolValue = &configRomhackCameraDpadBehavior},
+    {.name = "romhackcam_slowfall",            .type = CONFIG_TYPE_BOOL, .boolValue = &configRomhackCameraSlowFall},
+    {.name = "romhackcam_toxic_gas",           .type = CONFIG_TYPE_BOOL, .boolValue = &configCameraToxicGas},
+    {.name = "romhackcam_zi_dist",             .type = CONFIG_TYPE_UINT, .uintValue = &configRomhackCameraZoomedInDist},
+    {.name = "romhackcam_zo_dist",             .type = CONFIG_TYPE_UINT, .uintValue = &configRomhackCameraZoomedOutDist},
+    {.name = "romhackcam_zi_height",           .type = CONFIG_TYPE_UINT, .uintValue = &configRomhackCameraZoomedInHeight},
+    {.name = "romhackcam_zo_height",           .type = CONFIG_TYPE_UINT, .uintValue = &configRomhackCameraZoomedOutHeight},
     // debug
     {.name = "debug_offset",                   .type = CONFIG_TYPE_U64,  .u64Value    = &gPcDebug.bhvOffset},
     {.name = "debug_tags",                     .type = CONFIG_TYPE_U64,  .u64Value    = gPcDebug.tags},

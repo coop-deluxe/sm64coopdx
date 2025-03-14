@@ -1171,19 +1171,19 @@ int smlua_hook_mario_action(lua_State* L) {
     bool oldApi = secondParamType == LUA_TFUNCTION;
 
     if (!oldApi && secondParamType != LUA_TTABLE) {
-        LOG_LUA_LINE("smlua_hook_mario_action received improper type '%d'", lua_type(L, 2));
+        LOG_LUA_LINE("smlua_hook_mario_action received improper type '%s'", luaL_typename(L, 2));
         return 0;
     }
 
     lua_Integer interactionType = 0;
     if (paramCount >= 3) {
         interactionType = smlua_to_integer(L, 3);
-        interactionType |= (1 << 31); /* INT_LUA */
         if (!gSmLuaConvertSuccess) {
             LOG_LUA_LINE("Hook Action: tried to hook invalid interactionType: %lld, %u", interactionType, gSmLuaConvertSuccess);
             return 0;
         }
     }
+    interactionType |= (1 << 31); /* INT_LUA */
 
     struct LuaHookedMarioAction* hooked = &sHookedMarioActions[sHookedMarioActionsCount];
 
@@ -1938,12 +1938,12 @@ int smlua_hook_on_sync_table_change(lua_State* L) {
     }
 
     if (lua_type(L, syncTableIndex) != LUA_TTABLE) {
-        LOG_LUA_LINE("Tried to attach a non-table to hook_on_sync_table_change: %d", lua_type(L, syncTableIndex));
+        LOG_LUA_LINE("Tried to attach a non-table to hook_on_sync_table_change: %s", luaL_typename(L, syncTableIndex));
         return 0;
     }
 
     if (lua_type(L, funcIndex) != LUA_TFUNCTION) {
-        LOG_LUA_LINE("Tried to attach a non-function to hook_on_sync_table_change: %d", lua_type(L, funcIndex));
+        LOG_LUA_LINE("Tried to attach a non-function to hook_on_sync_table_change: %s", luaL_typename(L, funcIndex));
         return 0;
     }
 

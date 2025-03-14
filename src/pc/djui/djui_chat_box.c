@@ -128,7 +128,7 @@ static void djui_chat_box_input_enter(struct DjuiInputbox* chatInput) {
     if (strlen(chatInput->buffer) != 0) {
         sent_history_add_message(&sentHistory, chatInput->buffer);
         if (chatInput->buffer[0] == '/') {
-            if (strcmp(chatInput->buffer, "/help") == 0 || strcmp(chatInput->buffer, "/?") == 0) {
+            if (strcmp(chatInput->buffer, "/help") == 0 || strcmp(chatInput->buffer, "/?") == 0 || strcmp(chatInput->buffer, "/") == 0) {
                 display_chat_commands();
             } else if (!exec_chat_command(chatInput->buffer)) {
                 char extendedUnknownCommandMessage[MAX_CHAT_MSG_LENGTH];
@@ -321,21 +321,21 @@ static void handle_tab_completion(void) {
             if (sCommandsTabCompletionIndex == -1) {
                 snprintf(sCommandsTabCompletionOriginalText, MAX_CHAT_MSG_LENGTH, "%s", gDjuiChatBox->chatInput->buffer);
             }
-            
+
             char* bufferWithoutSlash = sCommandsTabCompletionOriginalText + 1;
             char** commands = smlua_get_chat_maincommands_list();
             s32 foundCommandsCount = 0;
-            
+
             for (s32 i = 0; commands[i] != NULL; i++) {
                 if (strncmp(commands[i], bufferWithoutSlash, strlen(bufferWithoutSlash)) == 0) {
                     foundCommandsCount++;
                 }
             }
-            
+
             if (foundCommandsCount > 0) {
                 sCommandsTabCompletionIndex = (sCommandsTabCompletionIndex + 1) % foundCommandsCount;
                 s32 currentIndex = 0;
-                
+
                 for (s32 i = 0; commands[i] != NULL; i++) {
                     if (strncmp(commands[i], bufferWithoutSlash, strlen(bufferWithoutSlash)) == 0) {
                         if (currentIndex == sCommandsTabCompletionIndex) {
@@ -362,7 +362,7 @@ static void handle_tab_completion(void) {
                     }
                 }
             }
-            
+
             for (s32 i = 0; commands[i] != NULL; i++) {
                 free(commands[i]);
             }

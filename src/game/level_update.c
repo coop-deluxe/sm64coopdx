@@ -1344,7 +1344,13 @@ s32 play_mode_paused(void) {
         gCameraMovementFlags &= ~CAM_MOVE_PAUSE_SCREEN;
         set_play_mode(PLAY_MODE_NORMAL);
     } else if (gPauseScreenMode == 2) {
-        level_trigger_warp(&gMarioStates[0], WARP_OP_EXIT);
+        extern s16 gPrevMenuMode;
+        if (gPrevMenuMode > 1) { // Course complete screen
+            raise_background_noise(1);
+            gCameraMovementFlags &= ~CAM_MOVE_PAUSE_SCREEN;
+        } else { // Pause menu
+            level_trigger_warp(&gMarioStates[0], WARP_OP_EXIT);
+        }
         set_play_mode(PLAY_MODE_NORMAL);
     } else if (gPauseScreenMode == 3) {
         // Exit level

@@ -1,18 +1,13 @@
 name: Build coop
 
 on:
-    push:
-        branches:
-            - dev
-            - nx-support
-    pull_request:
-        branches:
-            - "**"
     workflow_dispatch:
+    push:
+        branches: [ dev, nx-support ]
 
 jobs:
     build-ubuntu:
-        if: ${{ contains(github.event.head_commit.message, '[build]') || github.event_name == 'workflow_dispatch' }}
+        if: ${{ github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[build]') }}
         runs-on: ubuntu-latest
         steps:
             - name: Checkout repository
@@ -31,8 +26,9 @@ jobs:
               with:
                 name: sm64coopdx-ubuntu
                 path: ./build/us_pc/sm64coopdx
+
     build-windows:
-        if: ${{ contains(github.event.head_commit.message, '[build]') || github.event_name == 'workflow_dispatch' }}
+        if: ${{ github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[build]') }}
         runs-on: windows-latest
         defaults:
             run:
@@ -68,11 +64,73 @@ jobs:
               with:
                 name: sm64coopdx-windows
                 path: ./build/us_pc/sm64coopdx.exe
+
+    build-macos-arm:
+        if: ${{ github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[build]') }}
+        runs-on: macos-latest
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Install dependencies
+              run: |
+                /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+                brew install make mingw-w64 gcc sdl2 pkg-config glew glfw3 libusb coreutils
+
+            - name: Build the game
+              run: |
+                gmake OSX_BUILD=1 -j$(sysctl -n hw.ncpu)
+
+            - name: Code sign the app (Ad-Hoc)
+              run: |
+                codesign --force --deep --sign - ./build/us_pc/sm64coopdx.app
+
+            - name: Zip the .app bundle
+              run: |
+                cd ./build/us_pc
+                zip -r sm64coopdx-macos-arm.zip sm64coopdx.app
+            
+            - name: Upload artifact
+              uses: actions/upload-artifact@v4
+              with:
+                name: sm64coopdx-macos-arm
+                path: ./build/us_pc/sm64coopdx-macos-arm.zip
+
+    build-macos-intel:
+        if: ${{ github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[build]') }}
+        runs-on: macos-13
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Install dependencies
+              run: |
+                /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+                brew install make mingw-w64 gcc@9 sdl2 pkg-config glew glfw3 libusb coreutils
+
+            - name: Build the game
+              run: |
+                gmake OSX_BUILD=1 -j$(sysctl -n hw.ncpu)
+
+            - name: Code sign the app (Ad-Hoc)
+              run: |
+                codesign --force --deep --sign - ./build/us_pc/sm64coopdx.app
+
+            - name: Zip the .app bundle
+              run: |
+                cd ./build/us_pc
+                zip -r sm64coopdx-macos-intel.zip sm64coopdx.app
+            
+            - name: Upload artifact
+              uses: actions/upload-artifact@v4
+              with:
+                name: sm64coopdx-macos-intel
+                path: ./build/us_pc/sm64coopdx-macos-intel.zip
+                
     build-switch:
         if: ${{ contains(github.event.head_commit.message, '[build]') || github.event_name == 'workflow_dispatch' }}
         runs-on: ubuntu-latest
         container: devkitpro/devkita64:latest
-        
         steps:
             - name: Checkout repository
               uses: actions/checkout@v4

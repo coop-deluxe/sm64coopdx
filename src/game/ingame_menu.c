@@ -1863,6 +1863,7 @@ void render_dialog_string_color(s8 linesPerBox) {
 }
 
 s16 gMenuMode = -1;
+s16 gPrevMenuMode = -1;
 
 u8 *gEndCutsceneStringsEn[] = {
     INGAME_TEXT_PTR(TEXT_FILE_MARIO_EXCLAMATION),
@@ -3532,6 +3533,7 @@ s16 render_menus_and_dialogs(void) {
     create_dl_ortho_matrix();
 
     if (gMenuMode != -1) {
+        gPrevMenuMode = gMenuMode;
         switch (gMenuMode) {
             case 0:
                 mode = render_pause_courses_and_castle();
