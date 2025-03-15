@@ -9,6 +9,7 @@ Hooks are a way for SM64 to trigger Lua code, whereas the functions listed in [f
 - [hook_event](#hook_event)
 - [hook_mario_action](#hook_mario_action)
 - [hook_on_sync_table_change](#hook_on_sync_table_change)
+- [hook_mod_menu_text](#hook_mod_menu_text)
 - [hook_mod_menu_button](#hook_mod_menu_button)
 - [hook_mod_menu_checkbox](#hook_mod_menu_checkbox)
 - [hook_mod_menu_slider](#hook_mod_menu_slider)
@@ -286,6 +287,25 @@ gGlobalSyncTable.testingField = "hello"
 
 <br />
 
+## [hook_mod_menu_text](#hook_mod_menu_text)
+`hook_mod_menu_text()` allows Lua to add text labels to their designated mod menu submenu.
+
+### Parameters
+
+| Field | Type |
+| ----- | ---- |
+| message | `string` |
+
+### Lua Example
+
+```lua
+hook_mod_menu_text("Rise and shine, Mr. Freeman.")
+```
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [hook_mod_menu_button](#hook_mod_menu_button)
 `hook_mod_menu_button()` allows Lua to add buttons to their designated mod menu submenu.
 
@@ -293,7 +313,7 @@ gGlobalSyncTable.testingField = "hello"
 
 | Field | Type |
 | ----- | ---- |
-| message | `string` |
+| name | `string` |
 | func | `Lua Function` (`integer` index) |
 
 ### Lua Example
@@ -329,7 +349,7 @@ hook_mod_menu_button("Open Menu 2", on_open_menu)
 
 | Field | Type |
 | ----- | ---- |
-| message | `string` |
+| name | `string` |
 | defaultValue | `boolean` |
 | func | `Lua Function` (`integer` index, `boolean` value) |
 
@@ -365,7 +385,7 @@ hook_mod_menu_checkbox("Noclip Mode", false, on_set_player_mode)
 
 | Field | Type |
 | ----- | ---- |
-| message | `string` |
+| name | `string` |
 | defaultValue | `integer` |
 | min | `integer` |
 | max | `integer` |
@@ -394,7 +414,7 @@ hook_mod_menu_slider("Time Scale", 1, 0, 10, on_set_time_scale)
 
 | Field | Type |
 | ----- | ---- |
-| message | `string` |
+| name | `string` |
 | defaultValue | `string` |
 | stringLength | `integer` |
 | func | `Lua Function` (`integer` index, `string` value) |

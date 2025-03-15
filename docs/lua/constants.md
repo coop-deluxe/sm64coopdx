@@ -3756,11 +3756,12 @@
 ### [enum LuaModMenuElementType](#LuaModMenuElementType)
 | Identifier | Value |
 | :--------- | :---- |
-| MOD_MENU_ELEMENT_BUTTON | 0 |
-| MOD_MENU_ELEMENT_CHECKBOX | 1 |
-| MOD_MENU_ELEMENT_SLIDER | 2 |
-| MOD_MENU_ELEMENT_INPUTBOX | 3 |
-| MOD_MENU_ELEMENT_MAX | 4 |
+| MOD_MENU_ELEMENT_TEXT | 0 |
+| MOD_MENU_ELEMENT_BUTTON | 1 |
+| MOD_MENU_ELEMENT_CHECKBOX | 2 |
+| MOD_MENU_ELEMENT_SLIDER | 3 |
+| MOD_MENU_ELEMENT_INPUTBOX | 4 |
+| MOD_MENU_ELEMENT_MAX | 5 |
 
 [:arrow_up_small:](#)
 

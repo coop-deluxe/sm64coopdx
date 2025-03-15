@@ -10364,19 +10364,22 @@ HOOK_MAX = 53
 --- @class LuaModMenuElementType
 
 --- @type LuaModMenuElementType
-MOD_MENU_ELEMENT_BUTTON = 0
+MOD_MENU_ELEMENT_TEXT = 0
 
 --- @type LuaModMenuElementType
-MOD_MENU_ELEMENT_CHECKBOX = 1
+MOD_MENU_ELEMENT_BUTTON = 1
 
 --- @type LuaModMenuElementType
-MOD_MENU_ELEMENT_SLIDER = 2
+MOD_MENU_ELEMENT_CHECKBOX = 2
 
 --- @type LuaModMenuElementType
-MOD_MENU_ELEMENT_INPUTBOX = 3
+MOD_MENU_ELEMENT_SLIDER = 3
 
 --- @type LuaModMenuElementType
-MOD_MENU_ELEMENT_MAX = 4
+MOD_MENU_ELEMENT_INPUTBOX = 4
+
+--- @type LuaModMenuElementType
+MOD_MENU_ELEMENT_MAX = 5
 
 --- @class HudDisplayFlags
 
