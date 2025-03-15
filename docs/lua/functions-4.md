@@ -5180,6 +5180,196 @@ Converts a 3D signed-integer vector `a` (vec3s) into a 3D floating-point vector 
 <br />
 
 
+## [clock_elapsed](#clock_elapsed)
+
+### Description
+Gets the current clock elapsed time
+
+### Lua Example
+`local numberValue = clock_elapsed()`
+
+### Parameters
+- None
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 clock_elapsed(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [clock_elapsed_f64](#clock_elapsed_f64)
+
+### Description
+Gets the current clock elapsed time with double precision
+
+### Lua Example
+`local numberValue = clock_elapsed_f64()`
+
+### Parameters
+- None
+
+### Returns
+- `number`
+
+### C Prototype
+`f64 clock_elapsed_f64(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [clock_elapsed_ticks](#clock_elapsed_ticks)
+
+### Description
+Gets the current clock elapsed time in frames
+
+### Lua Example
+`local integerValue = clock_elapsed_ticks()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 clock_elapsed_ticks(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [delta_interpolate_f32](#delta_interpolate_f32)
+
+### Description
+Linearly interpolates between `a` and `b` with `delta`
+
+### Lua Example
+`local numberValue = delta_interpolate_f32(a, b, delta)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| a | `number` |
+| b | `number` |
+| delta | `number` |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 delta_interpolate_f32(f32 a, f32 b, f32 delta);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [delta_interpolate_s32](#delta_interpolate_s32)
+
+### Description
+Linearly interpolates between `a` and `b` with `delta`
+
+### Lua Example
+`local integerValue = delta_interpolate_s32(a, b, delta)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| a | `integer` |
+| b | `integer` |
+| delta | `number` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 delta_interpolate_s32(s32 a, s32 b, f32 delta);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [delta_interpolate_vec3f](#delta_interpolate_vec3f)
+
+### Description
+Linearly interpolates `res` between `a` and `b` with `delta`
+
+### Lua Example
+`delta_interpolate_vec3f(res, a, b, delta)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| res | [Vec3f](structs.md#Vec3f) |
+| a | [Vec3f](structs.md#Vec3f) |
+| b | [Vec3f](structs.md#Vec3f) |
+| delta | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void delta_interpolate_vec3f(Vec3f res, Vec3f a, Vec3f b, f32 delta);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [delta_interpolate_vec3s](#delta_interpolate_vec3s)
+
+### Description
+Linearly interpolates `res` between `a` and `b` with `delta`
+
+### Lua Example
+`delta_interpolate_vec3s(res, a, b, delta)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| res | [Vec3s](structs.md#Vec3s) |
+| a | [Vec3s](structs.md#Vec3s) |
+| b | [Vec3s](structs.md#Vec3s) |
+| delta | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void delta_interpolate_vec3s(Vec3s res, Vec3s a, Vec3s b, f32 delta);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [smooth_step](#smooth_step)
+
+### Description
+Smoothly steps between `edge0` and `edge1` with `x` as delta
+
+### Lua Example
+`local numberValue = smooth_step(edge0, edge1, x)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| edge0 | `number` |
+| edge1 | `number` |
+| x | `number` |
+
+### Returns
+- `number`
+
+### C Prototype
+`float smooth_step(float edge0, float edge1, float x);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [update_all_mario_stars](#update_all_mario_stars)
 
 ### Description

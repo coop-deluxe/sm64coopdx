@@ -14,7 +14,7 @@
 #include "engine/math_util.h"
 #include "pc/configfile.h"
 
-float smoothstep(float edge0, float edge1, float x) {
+float smooth_step(float edge0, float edge1, float x) {
     float t = (x - edge0) / (edge1 - edge0);
     if (t < 0) { t = 0; }
     if (t > 1) { t = 1; }
@@ -121,8 +121,8 @@ next_get:
 
 /////////////////
 
-f32 delta_interpolate_f32(f32 start, f32 end, f32 delta) {
-    return start * (1.0f - delta) + end * delta;
+f32 delta_interpolate_f32(f32 a, f32 b, f32 delta) {
+    return a * (1.0f - delta) + b * delta;
 }
 
 s32 delta_interpolate_s32(s32 a, s32 b, f32 delta) {
