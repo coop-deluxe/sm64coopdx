@@ -2,7 +2,7 @@ import os
 import re
 from vec_types import *
 
-usf_types = ['u8', 'u16', 'u32', 'u64', 's8', 's16', 's32', 's64', 'f32']
+usf_types = ['u8', 'u16', 'u32', 'u64', 's8', 's16', 's32', 's64', 'f32', 'f64']
 vec_types = list(VEC_TYPES.keys())
 typedef_pointers = ['BehaviorScript', 'ObjectAnimPointer', 'Collision', 'LevelScript', 'Trajectory']
 

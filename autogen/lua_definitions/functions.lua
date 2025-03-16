@@ -6428,6 +6428,69 @@ function vec3s_to_vec3f(dest, a)
     -- ...
 end
 
+--- @return number
+--- Gets the current clock elapsed time
+function clock_elapsed()
+    -- ...
+end
+
+--- @return number
+--- Gets the current clock elapsed time with double precision
+function clock_elapsed_f64()
+    -- ...
+end
+
+--- @return integer
+--- Gets the current clock elapsed time in frames
+function clock_elapsed_ticks()
+    -- ...
+end
+
+--- @param a number
+--- @param b number
+--- @param delta number
+--- @return number
+--- Linearly interpolates between `a` and `b` with `delta`
+function delta_interpolate_f32(a, b, delta)
+    -- ...
+end
+
+--- @param a integer
+--- @param b integer
+--- @param delta number
+--- @return integer
+--- Linearly interpolates between `a` and `b` with `delta`
+function delta_interpolate_s32(a, b, delta)
+    -- ...
+end
+
+--- @param res Vec3f
+--- @param a Vec3f
+--- @param b Vec3f
+--- @param delta number
+--- Linearly interpolates `res` between `a` and `b` with `delta`
+function delta_interpolate_vec3f(res, a, b, delta)
+    -- ...
+end
+
+--- @param res Vec3s
+--- @param a Vec3s
+--- @param b Vec3s
+--- @param delta number
+--- Linearly interpolates `res` between `a` and `b` with `delta`
+function delta_interpolate_vec3s(res, a, b, delta)
+    -- ...
+end
+
+--- @param edge0 number
+--- @param edge1 number
+--- @param x number
+--- @return number
+--- Smoothly steps between `edge0` and `edge1` with `x` as delta
+function smooth_step(edge0, edge1, x)
+    -- ...
+end
+
 --- Updates every Mario state's star count with the save file total star count
 function update_all_mario_stars()
     -- ...

@@ -83,7 +83,6 @@ override_allowed_functions = {
     "src/pc/lua/utils/smlua_model_utils.h": [ "smlua_model_util_get_id" ],
     "src/game/object_list_processor.h":     [ "set_object_respawn_info_bits" ],
     "src/game/mario_misc.h":                [ "bhv_toad.*", "bhv_unlock_door.*", "geo_get_.*_state" ],
-    "src/pc/utils/misc.h":                  [ "update_all_mario_stars" ],
     "src/game/level_update.h":              [ "level_trigger_warp", "get_painting_warp_node", "initiate_painting_warp", "warp_special", "lvl_set_current_level", "level_control_timer_running", "fade_into_special_warp", "get_instant_warp" ],
     "src/game/area.h":                      [ "area_get_warp_node" ],
     "src/engine/level_script.h":            [ "area_create_warp_node" ],
@@ -126,7 +125,8 @@ override_disallowed_functions = {
     "src/pc/network/lag_compensation.h":        [ "lag_compensation_clear" ],
     "src/game/first_person_cam.h":              [ "first_person_update" ],
     "src/pc/lua/utils/smlua_collision_utils.h": [ "collision_find_surface_on_ray" ],
-    "src/engine/behavior_script.h":             [ "stub_behavior_script_2", "cur_obj_update" ]
+    "src/engine/behavior_script.h":             [ "stub_behavior_script_2", "cur_obj_update" ],
+    "src/pc/utils/misc.h":                      [ "str_.*", "file_get_line", "delta_interpolate_(normal|rgba|mtx)", "detect_and_skip_mtx_interpolation" ]
 }
 
 override_hide_functions = {

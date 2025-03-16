@@ -180,12 +180,12 @@ void djui_panel_update(void) {
     }
 
     if (activeBase && removingBase) {
-        activeBase->y.value = moveMax - moveMax * smoothstep(0, moveMax, sMoveAmount);
+        activeBase->y.value = moveMax - moveMax * smooth_step(0, moveMax, sMoveAmount);
         if (sPanelRemoving) {
             removingBase->y.value = activeBase->y.value - 1.0f;
         }
     } else if (activeBase && parentBase) {
-        activeBase->y.value = moveMax * smoothstep(0, moveMax, sMoveAmount) - moveMax;
+        activeBase->y.value = moveMax * smooth_step(0, moveMax, sMoveAmount) - moveMax;
         parentBase->y.value = activeBase->y.value + moveMax;
     }
 }

@@ -160,8 +160,16 @@ function hook_on_sync_table_change(syncTable, field, tag, func)
     -- ...
 end
 
+--- @param message string The message for the text to show
+--- @return integer
+--- Hooks DJUI text into the mod menu
+function hook_mod_menu_text(message)
+    -- ...
+end
+
 --- @param name string The text to show on the button
 --- @param func fun(index:integer) The function that is called when the button is pressed
+--- @return integer
 --- Hooks a DJUI button into the mod menu
 function hook_mod_menu_button(name, func)
     -- ...
@@ -170,6 +178,7 @@ end
 --- @param name string The text to show on the left
 --- @param defaultValue boolean The default state of the checkbox
 --- @param func fun(index:integer, value:boolean) The function that is called when the checkbox is changed
+--- @return integer
 --- Hooks a DJUI checkbox into the mod menu
 function hook_mod_menu_checkbox(name, defaultValue, func)
     -- ...
@@ -180,6 +189,7 @@ end
 --- @param min integer The lowest the slider can go
 --- @param max integer The highest the slider can go
 --- @param func fun(index:integer, value:integer) The function that is called when the value of the slider changes
+--- @return integer
 --- Hooks a DJUI slider into the mod menu
 function hook_mod_menu_slider(name, defaultValue, min, max, func)
     -- ...
@@ -189,6 +199,7 @@ end
 --- @param defaultValue string The default text in the inputbox
 --- @param stringLength integer The max length of the inputbox
 --- @param func fun(index:integer, value:string) The function that is called when the value of the inputbox changes
+--- @return integer
 --- Hooks a DJUI inputbox into the mod menu
 function hook_mod_menu_inputbox(name, defaultValue, stringLength, func)
     -- ...
