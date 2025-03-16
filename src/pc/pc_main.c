@@ -223,6 +223,8 @@ void produce_interpolation_frames_and_delay(void) {
 
         sDrawnFrames++;
 
+        CTX_EXTENT(CTX_SMLUA, smlua_update_interval_hooks);
+
         if (!is30Fps && configUncappedFramerate) { continue; }
 
         // delay if our framerate is capped
