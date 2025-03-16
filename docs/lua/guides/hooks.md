@@ -14,6 +14,7 @@ Hooks are a way for SM64 to trigger Lua code, whereas the functions listed in [f
 - [hook_mod_menu_checkbox](#hook_mod_menu_checkbox)
 - [hook_mod_menu_slider](#hook_mod_menu_slider)
 - [hook_mod_menu_inputbox](#hook_mod_menu_inputbox)
+- [hook_interval](#hook_interval)
 
 <br />
 
@@ -429,4 +430,28 @@ local function on_set_network_player_description(index, value)
 end
 
 hook_mod_menu_inputbox("Network Player Description", on_set_network_player_description)
+```
+
+## [hook_interval](#hook_interval)
+`hook_interval()` allows Lua to run a callback at a rate other than 30hz. The period in seconds is given as `interval`.
+- When `cumulative` is true, the callback is only run once to make up for skipped intervals, and the delta time is summed
+- Delta time is always the interval when `cumulative` is false
+
+### Parameters
+
+| Field | Type |
+| ----- | ---- |
+| interval | `number` |
+| cumulative | `boolean` |
+| callback | `Lua Function` (`number` delta) |
+
+### Lua Example
+
+```lua
+--- @param delta number
+local function runs_at_100hz(delta)
+    print("100hz! Delta:", delta) -- "100hz! Delta: 0.01"
+end
+
+hook_interval(1/100, false, runs_at_100hz)
 ```
