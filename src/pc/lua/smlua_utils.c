@@ -748,7 +748,7 @@ void smlua_logline(void) {
         int slashCount = 0;
         const char* folderStart = NULL;
         for (const char* p = src + strlen(src); p > src; --p) {
-            if (*p == '/') {
+            if (*p == '/' || *p == '\\') {
                 if (++slashCount == 2) {
                     folderStart = p + 1;
                     break;

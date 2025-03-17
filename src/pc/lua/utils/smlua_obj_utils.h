@@ -29,6 +29,23 @@ void obj_set_model_extended(struct Object *o, enum ModelExtendedId modelId);
 Trajectory* get_trajectory(const char* name);
 
 //
+// Expose various object pointers
+//
+
+/* |description|Gets the object currently being processed|descriptionEnd| */
+struct Object *get_current_object(void);
+/* |description|Gets the NPC object Mario is talking to|descriptionEnd| */
+struct Object *get_dialog_object(void);
+/* |description|Gets the cutscene focus object|descriptionEnd| */
+struct Object *get_cutscene_focus(void);
+/* |description|Gets the secondary camera focus object|descriptionEnd| */
+struct Object *get_secondary_camera_focus(void);
+/* |description|Sets the cutscene focus object|descriptionEnd| */
+void *set_cutscene_focus(struct Object *o);
+/* |description|Sets the secondary camera focus object|descriptionEnd| */
+void *set_secondary_camera_focus(struct Object *o);
+
+//
 // Helpers to iterate through the object table
 //
 

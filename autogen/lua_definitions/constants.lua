@@ -2519,6 +2519,17 @@ SHAKE_SHOCK = 10
 --- @type integer
 SHAKE_SMALL_DAMAGE = 3
 
+--- @class RomhackCameraEnable
+
+--- @type RomhackCameraEnable
+RCE_AUTOMATIC = 0
+
+--- @type RomhackCameraEnable
+RCE_ON = 1
+
+--- @type RomhackCameraEnable
+RCE_OFF = 2
+
 --- @class RomhackCameraOverride
 
 --- @type RomhackCameraOverride

@@ -41,6 +41,8 @@ struct DateTime {
 
 /* |description|Gets the current area's networked timer|descriptionEnd| */
 u32 get_network_area_timer(void);
+/* |description|Gets the area update counter incremented when objects are updated|descriptionEnd| */
+u16 get_area_update_counter(void);
 
 /* |description|Creates a DJUI popup that is broadcasted to every client|descriptionEnd| */
 void djui_popup_create_global(const char* message, int lines);
@@ -195,6 +197,8 @@ void set_environment_region(u8 index, s32 value);
 
 /* |description|Checks if a file exists inside of a mod|descriptionEnd| */
 bool mod_file_exists(const char* filename);
+/* |description|Gets the mod currently being processed|descriptionEnd| */
+struct Mod* get_active_mod(void);
 
 /* |description|Sets the window title to a custom title|descriptionEnd| */
 void set_window_title(const char* title);

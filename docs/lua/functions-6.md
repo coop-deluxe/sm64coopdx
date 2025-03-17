@@ -1393,6 +1393,48 @@ Sets if popups are disabled
 
 <br />
 
+## [get_active_mod](#get_active_mod)
+
+### Description
+Gets the mod currently being processed
+
+### Lua Example
+`local ModValue = get_active_mod()`
+
+### Parameters
+- None
+
+### Returns
+[Mod](structs.md#Mod)
+
+### C Prototype
+`struct Mod* get_active_mod(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_area_update_counter](#get_area_update_counter)
+
+### Description
+Gets the area update counter incremented when objects are updated
+
+### Lua Example
+`local integerValue = get_area_update_counter()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u16 get_area_update_counter(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [get_coopnet_id](#get_coopnet_id)
 
 ### Description
@@ -2727,6 +2769,90 @@ Gets the extended model ID for the `name` of a `GeoLayout`
 <br />
 
 
+## [get_current_object](#get_current_object)
+
+### Description
+Gets the object currently being processed
+
+### Lua Example
+`local ObjectValue = get_current_object()`
+
+### Parameters
+- None
+
+### Returns
+[Object](structs.md#Object)
+
+### C Prototype
+`struct Object *get_current_object(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_cutscene_focus](#get_cutscene_focus)
+
+### Description
+Gets the cutscene focus object
+
+### Lua Example
+`local ObjectValue = get_cutscene_focus()`
+
+### Parameters
+- None
+
+### Returns
+[Object](structs.md#Object)
+
+### C Prototype
+`struct Object *get_cutscene_focus(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_dialog_object](#get_dialog_object)
+
+### Description
+Gets the NPC object Mario is talking to
+
+### Lua Example
+`local ObjectValue = get_dialog_object()`
+
+### Parameters
+- None
+
+### Returns
+[Object](structs.md#Object)
+
+### C Prototype
+`struct Object *get_dialog_object(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_secondary_camera_focus](#get_secondary_camera_focus)
+
+### Description
+Gets the secondary camera focus object
+
+### Lua Example
+`local ObjectValue = get_secondary_camera_focus()`
+
+### Parameters
+- None
+
+### Returns
+[Object](structs.md#Object)
+
+### C Prototype
+`struct Object *get_secondary_camera_focus(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [get_temp_object_hitbox](#get_temp_object_hitbox)
 
 ### Description
@@ -3657,6 +3783,52 @@ Sets an object's velocity to `vx`, `vy`, and `vz`
 
 ### C Prototype
 `void obj_set_vel(struct Object *o, f32 vx, f32 vy, f32 vz);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_cutscene_focus](#set_cutscene_focus)
+
+### Description
+Sets the cutscene focus object
+
+### Lua Example
+`local voidValue = set_cutscene_focus(o)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| o | [Object](structs.md#Object) |
+
+### Returns
+- `void *`
+
+### C Prototype
+`void *set_cutscene_focus(struct Object *o);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_secondary_camera_focus](#set_secondary_camera_focus)
+
+### Description
+Sets the secondary camera focus object
+
+### Lua Example
+`local voidValue = set_secondary_camera_focus(o)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| o | [Object](structs.md#Object) |
+
+### Returns
+- `void *`
+
+### C Prototype
+`void *set_secondary_camera_focus(struct Object *o);`
 
 [:arrow_up_small:](#)
 

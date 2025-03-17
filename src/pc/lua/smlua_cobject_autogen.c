@@ -3003,6 +3003,7 @@ const char *sLuaLotNames[] = {
 	[LOT_PLAYERGEOMETRY] = "PlayerGeometry",
 	[LOT_PLAYERPALETTE] = "PlayerPalette",
 	[LOT_RAYINTERSECTIONINFO] = "RayIntersectionInfo",
+	[LOT_ROMHACKCAMERASETTINGS] = "RomhackCameraSettings",
 	[LOT_SERVERSETTINGS] = "ServerSettings",
 	[LOT_SOUNDSTATE] = "SoundState",
 	[LOT_SPAWNINFO] = "SpawnInfo",
