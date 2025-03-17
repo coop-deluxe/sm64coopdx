@@ -90,7 +90,7 @@ extern unsigned int configCameraAggr;
 extern unsigned int configCameraPan;
 extern unsigned int configCameraDegrade;
 // romhack camera settings
-extern bool configEnableRomhackCamera;
+extern unsigned int configEnableRomhackCamera;
 extern bool configRomhackCameraBowserFights;
 extern bool configRomhackCameraHasCollision;
 extern bool configRomhackCameraHasCentering;

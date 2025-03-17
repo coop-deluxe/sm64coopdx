@@ -138,7 +138,7 @@ unsigned int configCameraAggr                     = 0;
 unsigned int configCameraPan                      = 0;
 unsigned int configCameraDegrade                  = 50; // 0 - 100%
 // romhack camera settings
-bool         configEnableRomhackCamera            = false;
+unsigned int configEnableRomhackCamera            = 0; // 0 for automatic, 1 for force on, 2 for force off
 bool         configRomhackCameraBowserFights      = false;
 bool         configRomhackCameraHasCollision      = false;
 bool         configRomhackCameraHasCentering      = false;
@@ -283,7 +283,7 @@ static const struct ConfigOption options[] = {
     {.name = "bettercam_pan_level",            .type = CONFIG_TYPE_UINT, .uintValue = &configCameraPan},
     {.name = "bettercam_degrade",              .type = CONFIG_TYPE_UINT, .uintValue = &configCameraDegrade},
     // romhack camera settings
-    {.name = "romhackcam_enable",              .type = CONFIG_TYPE_BOOL, .boolValue = &configEnableRomhackCamera},
+    {.name = "romhackcam_enable",              .type = CONFIG_TYPE_UINT, .uintValue = &configEnableRomhackCamera},
     {.name = "romhackcam_bowser",              .type = CONFIG_TYPE_BOOL, .boolValue = &configRomhackCameraBowserFights},
     {.name = "romhackcam_collision",           .type = CONFIG_TYPE_BOOL, .boolValue = &configRomhackCameraHasCollision},
     {.name = "romhackcam_centering",           .type = CONFIG_TYPE_BOOL, .boolValue = &configRomhackCameraHasCentering},
