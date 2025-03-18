@@ -1868,6 +1868,7 @@
 <br />
 
 - smlua_obj_utils.h
+   - [geo_get_current_object](functions-6.md#geo_get_current_object)
    - [get_current_object](functions-6.md#get_current_object)
    - [get_cutscene_focus](functions-6.md#get_cutscene_focus)
    - [get_dialog_object](functions-6.md#get_dialog_object)

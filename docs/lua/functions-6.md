@@ -2769,6 +2769,27 @@ Gets the extended model ID for the `name` of a `GeoLayout`
 <br />
 
 
+## [geo_get_current_object](#geo_get_current_object)
+
+### Description
+When used in a geo function, retrieve the current processed object
+
+### Lua Example
+`local ObjectValue = geo_get_current_object()`
+
+### Parameters
+- None
+
+### Returns
+[Object](structs.md#Object)
+
+### C Prototype
+`struct Object *geo_get_current_object(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [get_current_object](#get_current_object)
 
 ### Description

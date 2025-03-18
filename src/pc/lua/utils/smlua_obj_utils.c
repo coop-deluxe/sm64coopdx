@@ -115,6 +115,7 @@ Trajectory* get_trajectory(const char* name) {
 // Expose various object pointers
 //
 
+struct Object *geo_get_current_object(void) { return (struct Object*) gCurGraphNodeObject; }
 struct Object *get_current_object(void) { return gCurrentObject; }
 struct Object *get_dialog_object(void) { return gContinueDialogFunctionObject; }
 struct Object *get_cutscene_focus(void) { return gCutsceneFocus; }

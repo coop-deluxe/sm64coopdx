@@ -32,6 +32,8 @@ Trajectory* get_trajectory(const char* name);
 // Expose various object pointers
 //
 
+/* |description|When used in a geo function, retrieve the current processed object|descriptionEnd| */
+struct Object *geo_get_current_object(void);
 /* |description|Gets the object currently being processed|descriptionEnd| */
 struct Object *get_current_object(void);
 /* |description|Gets the NPC object Mario is talking to|descriptionEnd| */

@@ -10183,6 +10183,12 @@ function smlua_model_util_get_id(name)
 end
 
 --- @return Object
+--- When used in a geo function, retrieve the current processed object
+function geo_get_current_object()
+    -- ...
+end
+
+--- @return Object
 --- Gets the object currently being processed
 function get_current_object()
     -- ...

@@ -30864,6 +30864,21 @@ int smlua_func_smlua_model_util_get_id(lua_State* L) {
  // smlua_obj_utils.h //
 ///////////////////////
 
+int smlua_func_geo_get_current_object(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "geo_get_current_object", 0, top);
+        return 0;
+    }
+
+
+    smlua_push_object(L, LOT_OBJECT, geo_get_current_object(), NULL);
+
+    return 1;
+}
+
 int smlua_func_get_current_object(UNUSED lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -34574,6 +34589,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "smlua_model_util_get_id", smlua_func_smlua_model_util_get_id);
 
     // smlua_obj_utils.h
+    smlua_bind_function(L, "geo_get_current_object", smlua_func_geo_get_current_object);
     smlua_bind_function(L, "get_current_object", smlua_func_get_current_object);
     smlua_bind_function(L, "get_cutscene_focus", smlua_func_get_cutscene_focus);
     smlua_bind_function(L, "get_dialog_object", smlua_func_get_dialog_object);
