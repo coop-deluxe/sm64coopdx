@@ -1326,10 +1326,12 @@ static u8 resolve_player_collision(struct MarioState* m, struct MarioState* m2) 
         return TRUE;
     }
 
-    //! If this function pushes Mario out of bounds, it will trigger Mario's
-    //  oob failsafe
-    m->pos[0] += (radius - marioDist) / radius * marioRelX;
-    m->pos[2] += (radius - marioDist) / radius * marioRelZ;
+    f32 posX = m->pos[0] + (radius - marioDist) / radius * marioRelX;
+    f32 posZ = m->pos[2] + (radius - marioDist) / radius * marioRelZ;
+    // Prevent a push into out of bounds
+    if (find_floor_height(posX, m->pos[1], posZ) == gLevelValues.floorLowerLimit) { return FALSE; }
+    m->pos[0] = posX;
+    m->pos[2] = posZ;
     m->marioBodyState->torsoPos[0] += (radius - marioDist) / radius * marioRelX;
     m->marioBodyState->torsoPos[2] += (radius - marioDist) / radius * marioRelZ;
     return FALSE;
