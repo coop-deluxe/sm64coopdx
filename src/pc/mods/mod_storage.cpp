@@ -47,7 +47,7 @@ bool char_valid(const char* buffer, bool isKey) {
     if (buffer[0] == '\0') { return false; }
 
     while (*buffer != '\0') {
-        if (*buffer > '' && !(isKey && (*buffer == '[' || *buffer == ']' || *buffer == '='))) {
+        if (*buffer >= ' ' && !(isKey && (*buffer == '[' || *buffer == ']' || *buffer == '='))) {
             buffer++;
             continue;
         }
@@ -148,7 +148,7 @@ C_FIELD bool mod_storage_load_bool(const char* key) {
 C_FIELD bool mod_storage_exists(const char* key) {
     if (gLuaActiveMod == NULL) { return false; }
     if (strlen(key) > MAX_KEY_VALUE_LENGTH) { return false; }
-    if (!char_valid((char *)key, true)) { return false; }
+    if (!char_valid(key, true)) { return false; }
 
     char filename[SYS_MAX_PATH] = { 0 };
     mod_storage_get_filename(filename);
@@ -164,7 +164,7 @@ C_FIELD bool mod_storage_exists(const char* key) {
 C_FIELD bool mod_storage_remove(const char* key) {
     if (gLuaActiveMod == NULL) { return false; }
     if (strlen(key) > MAX_KEY_VALUE_LENGTH) { return false; }
-    if (!char_valid((char *)key, true)) { return false; }
+    if (!char_valid(key, true)) { return false; }
 
     char filename[SYS_MAX_PATH] = { 0 };
     mod_storage_get_filename(filename);
