@@ -38,6 +38,9 @@ void djui_slider_update_value(struct DjuiBase* base) {
     u32  max   = slider->max;
     u32* value = slider->value;
     djui_base_set_size(&slider->rectValue->base, ((f32)*value - min) / ((f32)max - min), 1.0f);
+    char message[128];
+    snprintf(message, 128, "%s - %d", slider->message, *value);
+    djui_text_set_text(slider->text, message);
 }
 
 static void djui_slider_get_cursor_hover_location(struct DjuiBase* base, f32* x, f32* y) {
@@ -109,6 +112,7 @@ struct DjuiSlider* djui_slider_create(struct DjuiBase* parent, const char* messa
     slider->value = value;
     slider->min = min;
     slider->max = max;
+    slider->message = message;
 
     slider->updateRectValueColor = true;
 
