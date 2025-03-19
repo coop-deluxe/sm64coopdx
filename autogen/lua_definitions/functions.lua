@@ -8949,26 +8949,26 @@ function camera_config_enable_analog_cam(enable)
 end
 
 --- @param enable boolean
---- Overrides if Camera Collision is enabled
-function camera_config_enable_camera_collisions(enable)
-    -- ...
-end
-
---- @param enable boolean
 --- Overrides if the L button will center the camera
 function camera_config_enable_centering(enable)
     -- ...
 end
 
 --- @param enable boolean
---- Overrides if Free Camera is enabled
-function camera_config_enable_free_cam(enable)
+--- Overrides if Camera Collision is enabled
+function camera_config_enable_collisions(enable)
     -- ...
 end
 
 --- @param enable boolean
 --- Overrides if Freecam DPad Behavior is enabled
-function camera_config_enable_freecam_dpad(enable)
+function camera_config_enable_dpad(enable)
+    -- ...
+end
+
+--- @param enable boolean
+--- Overrides if Free Camera is enabled
+function camera_config_enable_free_cam(enable)
     -- ...
 end
 
@@ -9028,20 +9028,20 @@ function camera_config_is_analog_cam_enabled()
 end
 
 --- @return boolean
---- Checks if Free Camera is enabled
-function camera_config_is_free_cam_enabled()
-    -- ...
-end
-
---- @return boolean
 --- Checks if Camera Collision is enabled
-function camera_config_is_free_camera_collision_enabled()
+function camera_config_is_collision_enabled()
     -- ...
 end
 
 --- @return boolean
 --- Checks if Freecam DPad Behavior is enabled
-function camera_config_is_freecam_dpad_enabled()
+function camera_config_is_dpad_enabled()
+    -- ...
+end
+
+--- @return boolean
+--- Checks if Free Camera is enabled
+function camera_config_is_free_cam_enabled()
     -- ...
 end
 

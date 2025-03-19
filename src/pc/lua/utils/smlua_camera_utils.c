@@ -13,8 +13,8 @@ static struct CameraOverride sOverrideEnableCamera           = { 0 };
 static struct CameraOverride sOverrideCameraAnalog           = { 0 };
 static struct CameraOverride sOverrideCameraMouse            = { 0 };
 static struct CameraOverride sOverrideCameraLCentering       = { 0 };
-static struct CameraOverride sOverrideCameraFreecamDpad      = { 0 };
-static struct CameraOverride sOverrideCameraFreecamCollision = { 0 };
+static struct CameraOverride sOverrideCameraDPad             = { 0 };
+static struct CameraOverride sOverrideCameraCollision        = { 0 };
 
 void camera_reset_overrides(void) {
     sOverrideCameraXSens.override = false;
@@ -28,8 +28,8 @@ void camera_reset_overrides(void) {
     sOverrideCameraAnalog.override = false;
     sOverrideCameraMouse.override = false;
     sOverrideCameraLCentering.override = false;
-    sOverrideCameraFreecamDpad.override = false;
-    sOverrideCameraFreecamCollision.override = false;
+    sOverrideCameraDPad.override = false;
+    sOverrideCameraCollision.override = false;
 }
 
 void camera_freeze(void) {
@@ -128,16 +128,16 @@ bool camera_config_is_analog_cam_enabled(void) {
     return sOverrideCameraAnalog.override ? sOverrideCameraAnalog.value : configFreeCameraAnalog;
 }
 
-bool camera_config_is_freecam_dpad_enabled(void) {
-    return sOverrideCameraFreecamDpad.override ? sOverrideCameraFreecamDpad.value : configFreeCameraDpadBehavior;
+bool camera_config_is_dpad_enabled(void) {
+    return sOverrideCameraDPad.override ? sOverrideCameraDPad.value : configFreeCameraDPadBehavior;
 }
 
-bool camera_config_is_free_camera_collision_enabled(void) {
-    return sOverrideCameraFreecamCollision.override ? sOverrideCameraFreecamCollision.value : configFreeCameraHasCollision;
+bool camera_config_is_collision_enabled(void) {
+    return sOverrideCameraCollision.override ? sOverrideCameraCollision.value : configFreeCameraHasCollision;
 }
 
 bool camera_config_is_mouse_look_enabled(void) {
-    return sOverrideCameraMouse.override ? sOverrideCameraMouse.value : configCameraMouse;
+    return sOverrideCameraMouse.override ? sOverrideCameraMouse.value : configFreeCameraMouse;
 }
 
 bool camera_config_is_x_inverted(void) {
@@ -149,23 +149,23 @@ bool camera_config_is_y_inverted(void) {
 }
 
 u32 camera_config_get_x_sensitivity(void) {
-    return sOverrideCameraXSens.override ? sOverrideCameraXSens.value : configCameraXSens;
+    return sOverrideCameraXSens.override ? sOverrideCameraXSens.value : configFreeCameraXSens;
 }
 
 u32 camera_config_get_y_sensitivity(void) {
-    return sOverrideCameraYSens.override ? sOverrideCameraYSens.value : configCameraYSens;
+    return sOverrideCameraYSens.override ? sOverrideCameraYSens.value : configFreeCameraYSens;
 }
 
 u32 camera_config_get_aggression(void) {
-    return sOverrideCameraAggr.override ? sOverrideCameraAggr.value : configCameraAggr;
+    return sOverrideCameraAggr.override ? sOverrideCameraAggr.value : configFreeCameraAggr;
 }
 
 u32 camera_config_get_pan_level(void) {
-    return sOverrideCameraPan.override ? sOverrideCameraPan.value : configCameraPan;
+    return sOverrideCameraPan.override ? sOverrideCameraPan.value : configFreeCameraPan;
 }
 
 u32 camera_config_get_deceleration(void) {
-    return sOverrideCameraDegrade.override ? sOverrideCameraDegrade.value : configCameraDegrade;
+    return sOverrideCameraDegrade.override ? sOverrideCameraDegrade.value : configFreeCameraDegrade;
 }
 
 bool camera_config_get_centering(void) {
@@ -190,15 +190,15 @@ void camera_config_enable_centering(bool enable) {
     newcam_init_settings();
 }
 
-void camera_config_enable_freecam_dpad(bool enable) {
-    sOverrideCameraFreecamDpad.value = enable;
-    sOverrideCameraFreecamDpad.override = true;
+void camera_config_enable_dpad(bool enable) {
+    sOverrideCameraDPad.value = enable;
+    sOverrideCameraDPad.override = true;
     newcam_init_settings();
 }
 
-void camera_config_enable_camera_collisions(bool enable) {
-    sOverrideCameraFreecamCollision.value = enable;
-    sOverrideCameraFreecamCollision.override = true;
+void camera_config_enable_collisions(bool enable) {
+    sOverrideCameraCollision.value = enable;
+    sOverrideCameraCollision.override = true;
     newcam_init_settings();
 }
 

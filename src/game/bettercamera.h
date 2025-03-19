@@ -42,6 +42,3 @@ extern u16 newcam_intendedmode;
 
 extern u16 newcam_mode;
 extern s16 newcam_yaw;
-
-extern u8 gFreeCameraUseDpad;
-extern u8 gFreeCameraHasCollision;

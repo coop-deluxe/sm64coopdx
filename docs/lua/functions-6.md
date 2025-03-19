@@ -6,6 +6,565 @@
 
 
 ---
+# functions from smlua_gfx_utils.h
+
+<br />
+
+
+## [get_fog_color](#get_fog_color)
+
+### Description
+Gets a value of the global fog color
+
+### Lua Example
+`local integerValue = get_fog_color(index)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| index | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u8 get_fog_color(u8 index);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_fog_intensity](#get_fog_intensity)
+
+### Description
+Gets the intensity of the fog
+
+### Lua Example
+`local numberValue = get_fog_intensity()`
+
+### Parameters
+- None
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 get_fog_intensity(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_lighting_color](#get_lighting_color)
+
+### Description
+Gets a value of the global lighting color
+
+### Lua Example
+`local integerValue = get_lighting_color(index)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| index | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u8 get_lighting_color(u8 index);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_lighting_color_ambient](#get_lighting_color_ambient)
+
+### Description
+Gets a value of the global ambient lighting color
+
+### Lua Example
+`local integerValue = get_lighting_color_ambient(index)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| index | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u8 get_lighting_color_ambient(u8 index);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_lighting_dir](#get_lighting_dir)
+
+### Description
+Gets a value of the global lighting direction
+
+### Lua Example
+`local numberValue = get_lighting_dir(index)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| index | `integer` |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 get_lighting_dir(u8 index);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_skybox](#get_skybox)
+
+### Description
+Gets the current skybox
+
+### Lua Example
+`local integerValue = get_skybox()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`s8 get_skybox(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_skybox_color](#get_skybox_color)
+
+### Description
+Gets a value of the global skybox color
+
+### Lua Example
+`local integerValue = get_skybox_color(index)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| index | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u8 get_skybox_color(u8 index);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_vertex_color](#get_vertex_color)
+
+### Description
+Gets a value of the global vertex shading color
+
+### Lua Example
+`local integerValue = get_vertex_color(index)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| index | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u8 get_vertex_color(u8 index);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [gfx_get_vtx](#gfx_get_vtx)
+
+### Description
+Gets a vertex from a display list command if it has the correct op. Intended to be used with `gfx_parse`.
+
+### Lua Example
+`local PointerValue = gfx_get_vtx(gfx, offset)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| gfx | `Pointer` <`Gfx`> |
+| offset | `integer` |
+
+### Returns
+- `Pointer` <`Vtx`>
+
+### C Prototype
+`Vtx *gfx_get_vtx(Gfx* gfx, u16 offset);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [gfx_parse](#gfx_parse)
+
+### Description
+Traverses a display list. Takes a Lua function as a parameter, which is called back for each command in the display list with the parameters `cmd` (display list pointer), and `op`.
+
+### Lua Example
+`gfx_parse(cmd, func)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| cmd | `Pointer` <`Gfx`> |
+| func | `Lua Function` () |
+
+### Returns
+- None
+
+### C Prototype
+`void gfx_parse(Gfx* cmd, LuaFunction func);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [gfx_set_combine_lerp](#gfx_set_combine_lerp)
+
+### Description
+Sets the display list combine mode. you can fill this function with G_CCMUX_* and G_ACMUX_* constants
+
+### Lua Example
+`gfx_set_combine_lerp(gfx, a0, b0, c0, d0, Aa0, Ab0, Ac0, Ad0, a1, b1, c1, d1, Aa1, Ab1, Ac1, Ad1)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| gfx | `Pointer` <`Gfx`> |
+| a0 | `integer` |
+| b0 | `integer` |
+| c0 | `integer` |
+| d0 | `integer` |
+| Aa0 | `integer` |
+| Ab0 | `integer` |
+| Ac0 | `integer` |
+| Ad0 | `integer` |
+| a1 | `integer` |
+| b1 | `integer` |
+| c1 | `integer` |
+| d1 | `integer` |
+| Aa1 | `integer` |
+| Ab1 | `integer` |
+| Ac1 | `integer` |
+| Ad1 | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void gfx_set_combine_lerp(Gfx* gfx, u32 a0, u32 b0, u32 c0, u32 d0, u32 Aa0, u32 Ab0, u32 Ac0, u32 Ad0, u32 a1, u32 b1, u32 c1, u32 d1,	u32 Aa1, u32 Ab1, u32 Ac1, u32 Ad1);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [gfx_set_texture_image](#gfx_set_texture_image)
+
+### Description
+Sets the display list texture image. Pass in textureInfo.texture as `texture`
+
+### Lua Example
+`gfx_set_texture_image(gfx, format, size, width, texture)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| gfx | `Pointer` <`Gfx`> |
+| format | `integer` |
+| size | `integer` |
+| width | `integer` |
+| texture | `Pointer` <`integer`> |
+
+### Returns
+- None
+
+### C Prototype
+`void gfx_set_texture_image(Gfx* gfx, u32 format, u32 size, u32 width, u8* texture);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_fog_color](#set_fog_color)
+
+### Description
+Sets a value of the global fog color
+
+### Lua Example
+`set_fog_color(index, value)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| index | `integer` |
+| value | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_fog_color(u8 index, u8 value);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_fog_intensity](#set_fog_intensity)
+
+### Description
+Sets the intensity of the fog (this value scales very quickly, 1.0 to 1.1 is a desirable range)
+
+### Lua Example
+`set_fog_intensity(intensity)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| intensity | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_fog_intensity(f32 intensity);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_lighting_color](#set_lighting_color)
+
+### Description
+Sets a value of the global lighting color
+
+### Lua Example
+`set_lighting_color(index, value)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| index | `integer` |
+| value | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_lighting_color(u8 index, u8 value);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_lighting_color_ambient](#set_lighting_color_ambient)
+
+### Description
+Sets a value of the global lighting color (run this after `set_lighting_color` for the ambient color to not be overriden)
+
+### Lua Example
+`set_lighting_color_ambient(index, value)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| index | `integer` |
+| value | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_lighting_color_ambient(u8 index, u8 value);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_lighting_dir](#set_lighting_dir)
+
+### Description
+Sets a value of the global lighting direction
+
+### Lua Example
+`set_lighting_dir(index, value)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| index | `integer` |
+| value | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_lighting_dir(u8 index, f32 value);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_override_far](#set_override_far)
+
+### Description
+Sets the override far plane
+
+### Lua Example
+`set_override_far(far)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| far | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_override_far(f32 far);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_override_fov](#set_override_fov)
+
+### Description
+Sets the override FOV
+
+### Lua Example
+`set_override_fov(fov)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| fov | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_override_fov(f32 fov);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_override_near](#set_override_near)
+
+### Description
+Sets the override near plane
+
+### Lua Example
+`set_override_near(near)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| near | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_override_near(f32 near);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_override_skybox](#set_override_skybox)
+
+### Description
+Sets the override skybox
+
+### Lua Example
+`set_override_skybox(background)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| background | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_override_skybox(s8 background);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_skybox_color](#set_skybox_color)
+
+### Description
+Sets a value of the global skybox color
+
+### Lua Example
+`set_skybox_color(index, value)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| index | `integer` |
+| value | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_skybox_color(u8 index, u8 value);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_vertex_color](#set_vertex_color)
+
+### Description
+Sets a value of the global vertex shading color
+
+### Lua Example
+`set_vertex_color(index, value)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| index | `integer` |
+| value | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_vertex_color(u8 index, u8 value);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
 # functions from smlua_level_utils.h
 
 <br />

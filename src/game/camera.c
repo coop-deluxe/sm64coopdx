@@ -12210,13 +12210,13 @@ void romhack_camera_init_settings(void) {
     gCameraUseCourseSpecificSettings = (override == RCO_DISABLE && dynos_level_is_vanilla_level(gCurrLevelNum));
     gRomhackCameraSettings.collisions = configRomhackCameraHasCollision;
     gRomhackCameraSettings.centering = configRomhackCameraHasCentering;
-    gRomhackCameraSettings.dpad = configRomhackCameraDpadBehavior;
+    gRomhackCameraSettings.dpad = configRomhackCameraDPadBehavior;
     gOverrideAllowToxicGasCamera = configCameraToxicGas;
     gRomhackCameraSettings.slowFall = configRomhackCameraSlowFall;
-    gRomhackCameraSettings.zoomedInDist = configRomhackCameraZoomedInDist;
-    gRomhackCameraSettings.zoomedOutDist = configRomhackCameraZoomedOutDist;
-    gRomhackCameraSettings.zoomedInHeight = configRomhackCameraZoomedInHeight;
-    gRomhackCameraSettings.zoomedOutHeight = configRomhackCameraZoomedOutHeight;
+    gRomhackCameraSettings.zoomedInDist = 900;
+    gRomhackCameraSettings.zoomedOutDist = 1400;
+    gRomhackCameraSettings.zoomedInHeight = 300;
+    gRomhackCameraSettings.zoomedOutHeight = 450;
 }
 
 static u8 rom_hack_cam_can_see_mario(Vec3f desiredPos) {
