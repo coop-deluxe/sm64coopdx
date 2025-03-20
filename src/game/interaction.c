@@ -1311,6 +1311,11 @@ static u8 resolve_player_collision(struct MarioState* m, struct MarioState* m2) 
             mario_stop_riding_and_holding(m);
             set_mario_action(m, (m->specialTripleJump && m->playerIndex == 0) ? ACT_SPECIAL_TRIPLE_JUMP : m->flags & MARIO_WING_CAP ? ACT_FLYING_TRIPLE_JUMP : ACT_TRIPLE_JUMP, 0);
             velY = fmax(fmin(60.0f, 20.0f + fabs(m->vel[1])), 40.0f);
+        } else if (m->action == ACT_LONG_JUMP) {
+            velY = fmax(fmin(40.0f, 5.0f + fabs(m->vel[1])), 30.0f);
+        } else if (m->action == ACT_HOLD_JUMP || m->action == ACT_HOLD_FREEFALL) {
+            set_mario_action(m, ACT_HOLD_JUMP, 0);
+            velY = fmax(fmin(40.0f, 15.0f + fabs(m->vel[1])), 25.0f);
         } else {
             mario_stop_riding_and_holding(m);
             set_mario_action(m, ACT_JUMP, 0);
@@ -1322,10 +1327,12 @@ static u8 resolve_player_collision(struct MarioState* m, struct MarioState* m2) 
         return TRUE;
     }
 
-    //! If this function pushes Mario out of bounds, it will trigger Mario's
-    //  oob failsafe
-    m->pos[0] += (radius - marioDist) / radius * marioRelX;
-    m->pos[2] += (radius - marioDist) / radius * marioRelZ;
+    f32 posX = m->pos[0] + (radius - marioDist) / radius * marioRelX;
+    f32 posZ = m->pos[2] + (radius - marioDist) / radius * marioRelZ;
+    // Prevent a push into out of bounds
+    if (find_floor_height(posX, m->pos[1], posZ) == gLevelValues.floorLowerLimit) { return FALSE; }
+    m->pos[0] = posX;
+    m->pos[2] = posZ;
     m->marioBodyState->torsoPos[0] += (radius - marioDist) / radius * marioRelX;
     m->marioBodyState->torsoPos[2] += (radius - marioDist) / radius * marioRelZ;
     return FALSE;
