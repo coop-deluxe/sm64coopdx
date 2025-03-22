@@ -6656,20 +6656,20 @@ Sets the frequency of an `audio` stream
 Sets an `audio` stream's loop points (samples)
 
 ### Lua Example
-`audio_stream_set_loop_points(audio, start, end)`
+`audio_stream_set_loop_points(audio, loopStart, loopEnd)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | audio | [ModAudio](structs.md#ModAudio) |
-| start | `integer` |
-| end | `integer` |
+| loopStart | `integer` |
+| loopEnd | `integer` |
 
 ### Returns
 - None
 
 ### C Prototype
-`void audio_stream_set_loop_points(struct ModAudio* audio, u64 start, u64 end);`
+`void audio_stream_set_loop_points(struct ModAudio* audio, s64 loopStart, s64 loopEnd);`
 
 [:arrow_up_small:](#)
 

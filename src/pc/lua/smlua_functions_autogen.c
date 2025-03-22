@@ -27515,12 +27515,12 @@ int smlua_func_audio_stream_set_loop_points(lua_State* L) {
 
     struct ModAudio* audio = (struct ModAudio*)smlua_to_cobject(L, 1, LOT_MODAUDIO);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "audio_stream_set_loop_points"); return 0; }
-    u64 start = smlua_to_integer(L, 2);
+    s64 loopStart = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "audio_stream_set_loop_points"); return 0; }
-    u64 end = smlua_to_integer(L, 3);
+    s64 loopEnd = smlua_to_integer(L, 3);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "audio_stream_set_loop_points"); return 0; }
 
-    audio_stream_set_loop_points(audio, start, end);
+    audio_stream_set_loop_points(audio, loopStart, loopEnd);
 
     return 1;
 }

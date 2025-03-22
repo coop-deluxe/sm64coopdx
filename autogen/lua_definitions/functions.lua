@@ -8898,10 +8898,10 @@ function audio_stream_set_frequency(audio, freq)
 end
 
 --- @param audio ModAudio
---- @param start integer
---- @param end integer
+--- @param loopStart integer
+--- @param loopEnd integer
 --- Sets an `audio` stream's loop points (samples)
-function audio_stream_set_loop_points(audio, start, end)
+function audio_stream_set_loop_points(audio, loopStart, loopEnd)
     -- ...
 end
 
