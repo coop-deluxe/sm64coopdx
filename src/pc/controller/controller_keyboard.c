@@ -9,7 +9,7 @@
 #include "controller_keyboard.h"
 
 #include "pc/gfx/gfx_window_manager_api.h"
-#include "pc/pc_main.h"
+#include "pc/game_main.h"
 #include "engine/math_util.h"
 #include "menu/file_select.h"
 #include "pc/djui/djui.h"

@@ -478,7 +478,7 @@ bool DynOS_Tex_Get(const char* aTexName, struct TextureInfo* aOutTexInfo) {
                 u8 *_RawData = stbi_load_from_memory(_Data->mPngData.begin(), _Data->mPngData.Count(), &_Data->mRawWidth, &_Data->mRawHeight, NULL, 4);
                 // texture data is corrupted
                 if (_RawData == NULL) {
-                    PrintError("Attempted to load corrupted tex file: %s", aTexName);
+                    DynOS_PrintError("Attempted to load corrupted tex file: %s", aTexName);
                     return false;
                 }
                 _Data->mRawFormat = G_IM_FMT_RGBA;

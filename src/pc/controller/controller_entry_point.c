@@ -6,6 +6,7 @@
 
 #include "controller_keyboard.h"
 #include "controller_sdl.h"
+#include "controller_switch.h"
 
 // Analog camera movement by Pathétique (github.com/vrmiguel), y0shin and Mors
 // Contribute or communicate bugs at github.com/vrmiguel/sm64-analog-camera
@@ -13,10 +14,14 @@
 // moved these from sdl controller implementations
 
 static struct ControllerAPI *controller_implementations[] = {
-#if defined(CAPI_SDL2) || defined(CAPI_SDL1)
-    &controller_sdl,
+#if defined(CAPI_SWITCH)
+    &controller_switch,
+#else
+    #if defined(CAPI_SDL2) || defined(CAPI_SDL1)
+        &controller_sdl,
+    #endif
+        &controller_keyboard,
 #endif
-    &controller_keyboard,
 };
 
 s32 osContInit(UNUSED OSMesgQueue *mq, u8 *controllerBits, UNUSED OSContStatus *status) {

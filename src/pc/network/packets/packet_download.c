@@ -10,6 +10,7 @@
 //#define DISABLE_MODULE_LOG 1
 #include "pc/debuglog.h"
 #include "pc/fs/fmem.h"
+#include "pc/string_utils.h"
 
 #define CHUNK_SIZE 800
 #define OFFSET_COUNT 50

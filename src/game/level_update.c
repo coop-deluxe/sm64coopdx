@@ -36,7 +36,7 @@
 #include "game/interaction.h"
 #include "menu/intro_geo.h"
 
-#include "pc/pc_main.h"
+#include "pc/game_main.h"
 #include "pc/cliopts.h"
 #include "pc/configfile.h"
 #include "pc/network/network.h"

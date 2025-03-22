@@ -128,7 +128,7 @@ void get_version_remote(void) {
 
 void check_for_updates(void) {
     LOADING_SCREEN_MUTEX(loading_screen_set_segment_text("Checking For Updates"));
-
+    
     get_version_remote();
     if (sRemoteVersion[0] != '\0' && strcmp(sRemoteVersion, get_version())) {
         snprintf(

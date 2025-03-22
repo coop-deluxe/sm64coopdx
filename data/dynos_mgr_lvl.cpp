@@ -85,7 +85,7 @@ void DynOS_Lvl_Activate(s32 modIndex, const SysPath &aFilename, const char *aLev
     // Override vanilla script
     auto& newScripts = _Node->mLevelScripts;
     if (newScripts.Count() <= 0) {
-        PrintError("Could not find level scripts: '%s'", aLevelName);
+        DynOS_PrintError("Could not find level scripts: '%s'", aLevelName);
         return;
     }
 
@@ -161,7 +161,7 @@ void DynOS_Lvl_LoadBackground(void *aPtr) {
 double_break:
 
     if (foundList == NULL) {
-        PrintError("Could not find custom background");
+        DynOS_PrintError("Could not find custom background");
         return;
     }
 

@@ -6,7 +6,7 @@
 #include "game/save_file.h"
 #include "game/segment2.h"
 #include "game/level_info.h"
-#include "pc/pc_main.h"
+#include "pc/game_main.h"
 #include "../smlua.h"
 #include "smlua_level_utils.h"
 #include "smlua_text_utils.h"

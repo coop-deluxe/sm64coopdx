@@ -14,7 +14,7 @@
 #include "gfx_window_manager_api.h"
 #include "gfx_rendering_api.h"
 
-#include "pc/pc_main.h"
+#include "pc/game_main.h"
 #include "pc/utils/misc.h"
 #include "pc/debuglog.h"
 
@@ -32,7 +32,7 @@ static void sleep_ms(int milliseconds) { // cross-platform sleep function
     // from StackOverflow user Bernardo Ramos: https://stackoverflow.com/a/28827188
 #ifdef WIN32
     Sleep(milliseconds);
-#elif _POSIX_C_SOURCE >= 199309L
+#elif _POSIX_C_SOURCE >= 199309L || defined(__SWITCH__)
     struct timespec ts;
     ts.tv_sec = milliseconds / 1000;
     ts.tv_nsec = (milliseconds % 1000) * 1000000;

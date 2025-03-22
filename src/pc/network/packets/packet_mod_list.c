@@ -6,6 +6,7 @@
 #include "pc/djui/djui_panel_join_message.h"
 #include "pc/debuglog.h"
 #include "pc/mods/mod_cache.h"
+#include "pc/string_utils.h"
 
 void network_send_mod_list_request(void) {
     SOFT_ASSERT(gNetworkType == NT_CLIENT);

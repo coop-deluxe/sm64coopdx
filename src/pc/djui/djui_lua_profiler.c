@@ -1,7 +1,7 @@
 #include "djui_lua_profiler.h"
 
 #include "djui.h"
-#include "pc/pc_main.h"
+#include "pc/game_main.h"
 #include "pc/mods/mod.h"
 #include "pc/mods/mods.h"
 

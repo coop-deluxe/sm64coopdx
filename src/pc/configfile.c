@@ -21,6 +21,7 @@
 #include "djui/djui_hud_utils.h"
 #include "game/save_file.h"
 #include "pc/network/network_player.h"
+#include "string_utils.h"
 
 #define ARRAY_LEN(arr) (sizeof(arr) / sizeof(arr[0]))
 
@@ -81,7 +82,11 @@ ConfigWindow configWindow       = {
 // display settings
 unsigned int configFiltering                      = 2; // 0 = Nearest, 1 = Bilinear, 2 = Trilinear
 bool         configShowFPS                        = false;
+#if defined(__SWITCH__)
+bool         configUncappedFramerate              = false;
+#else
 bool         configUncappedFramerate              = true;
+#endif
 unsigned int configFrameLimit                     = 60;
 unsigned int configInterpolationMode              = 1;
 unsigned int configDrawDistance                   = 4;

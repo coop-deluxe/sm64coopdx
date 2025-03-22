@@ -52,7 +52,7 @@ static TexData* LoadTextureFromFile(GfxData *aGfxData, const char* aFile) {
 
         // The file does not exist in either spot!
         if (!_File) {
-            PrintDataError("  ERROR: Unable to open file at \"%s\" or \"%s\"", _Filename.c_str(), _ActorFilename.c_str());
+            DynOS_PrintDataError("  ERROR: Unable to open file at \"%s\" or \"%s\"", _Filename.c_str(), _ActorFilename.c_str());
             return NULL;
         }
     }
@@ -72,7 +72,7 @@ void DynOS_Tex_ConvertTextureDataToPng(GfxData *aGfxData, TexData* aTexture) {
     const u8 *_Palette = (aGfxData->mGfxContext.mCurrentPalette ? aGfxData->mGfxContext.mCurrentPalette->mData->mRawData.begin() : NULL);
     u8 *_Buffer = DynOS_Tex_ConvertToRGBA32(aTexture->mRawData.begin(), aTexture->mRawData.Count(), aTexture->mRawFormat, aTexture->mRawSize, _Palette);
     if (_Buffer == NULL) {
-        PrintDataError("  ERROR: Unknown texture format");
+        DynOS_PrintDataError("  ERROR: Unknown texture format");
         return;
     }
 
@@ -80,7 +80,7 @@ void DynOS_Tex_ConvertTextureDataToPng(GfxData *aGfxData, TexData* aTexture) {
     s32 _PngLength = 0;
     u8 *_PngData = stbi_write_png_to_mem(_Buffer, 0, aTexture->mRawWidth, aTexture->mRawHeight, 4, &_PngLength);
     if (!_PngData || !_PngLength) {
-        PrintDataError("  ERROR: Cannot convert texture to PNG");
+        DynOS_PrintDataError("  ERROR: Cannot convert texture to PNG");
         return;
     }
 
@@ -97,7 +97,7 @@ DataNode<TexData>* DynOS_Tex_Parse(GfxData* aGfxData, DataNode<TexData>* aNode) 
 
     // Check tokens Count
     if (aNode->mTokens.Count() < 1) {
-        PrintDataError("  ERROR: %s: not enough data", aNode->mName.begin());
+        DynOS_PrintDataError("  ERROR: %s: not enough data", aNode->mName.begin());
         return aNode;
     }
 
@@ -107,7 +107,7 @@ DataNode<TexData>* DynOS_Tex_Parse(GfxData* aGfxData, DataNode<TexData>* aNode) 
         s32 i1 = aNode->mTokens[0].Find(".inc.c");
         if (i1 == -1) {
             if (strstr(aNode->mName.begin(), "_pal_") == NULL) {
-                PrintDataError("  ERROR: %s: missing .inc.c in String %s", aNode->mName.begin(), aNode->mTokens[0].begin());
+                DynOS_PrintDataError("  ERROR: %s: missing .inc.c in String %s", aNode->mName.begin(), aNode->mTokens[0].begin());
             } else {
                 // hack for pal textures to be "found"
                 TexData* _Texture = New<TexData>();
@@ -129,7 +129,7 @@ DataNode<TexData>* DynOS_Tex_Parse(GfxData* aGfxData, DataNode<TexData>* aNode) 
     if (dq0 != -1) {
         s32 dq1 = aNode->mTokens[0].Find('\"', dq0 + 1);
         if (dq1 == -1) {
-            PrintDataError("  ERROR: %s: missing second quote in String %s", aNode->mName.begin(), aNode->mTokens[0].begin());
+            DynOS_PrintDataError("  ERROR: %s: missing second quote in String %s", aNode->mName.begin(), aNode->mTokens[0].begin());
             return aNode;
         }
 
@@ -188,7 +188,7 @@ void DynOS_Tex_Write(BinFile* aFile, GfxData* aGfxData, DataNode<TexData> *aNode
 static bool DynOS_Tex_WriteBinary(GfxData* aGfxData, const SysPath &aOutputFilename, String& aName, TexData* aTexData, bool aRawTexture) {
     BinFile *_File = BinFile::OpenW(aOutputFilename.c_str());
     if (!_File) {
-        PrintDataError("  ERROR: Unable to create file \"%s\"", aOutputFilename.c_str());
+        DynOS_PrintDataError("  ERROR: Unable to create file \"%s\"", aOutputFilename.c_str());
         return false;
     }
 
@@ -429,7 +429,7 @@ static void DynOS_Tex_GeneratePack_Recursive(const SysPath &aPackFolder, SysPath
         aGfxData->mModelIdentifier++;
         TexData* _TexData = LoadTextureFromFile(aGfxData, _Path.c_str());
         if (_TexData == NULL) {
-            PrintDataError("Error reading texture from file: %s", _Path.c_str());
+            DynOS_PrintDataError("Error reading texture from file: %s", _Path.c_str());
             continue;
         }
 

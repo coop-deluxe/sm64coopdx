@@ -12,6 +12,7 @@
 #include "pc/configfile.h"
 #include "pc/debuglog.h"
 #include "macros.h"
+#include "pc/string_utils.h"
 
 #ifdef COOPNET
 

@@ -3,6 +3,7 @@
 #include "mods.h"
 #include "mods_utils.h"
 #include "pc/debuglog.h"
+#include "pc/string_utils.h"
 
 #if defined(_WIN32) || defined(_WIN64)
 #include <windows.h>
@@ -26,6 +27,9 @@ void mods_size_enforce(struct Mods* mods) {
 }
 
 static bool mods_incompatible_match(struct Mod* a, struct Mod* b) {
+#ifdef __SWITCH__
+    return false;
+#else
     if (a->incompatible == NULL || b->incompatible == NULL) {
         return false;
     }
@@ -52,6 +56,7 @@ static bool mods_incompatible_match(struct Mod* a, struct Mod* b) {
     free(bi);
 
     return false;
+#endif
 }
 
 void mods_update_selectable(void) {

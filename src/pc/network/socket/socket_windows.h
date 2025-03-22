@@ -9,4 +9,4 @@
 #define SOCKET_ECONNRESET WSAECONNRESET
 #define RX_ADDR_SIZE_TYPE int
 
-#endif
+#endif // SOCKET_WINDOWS_H

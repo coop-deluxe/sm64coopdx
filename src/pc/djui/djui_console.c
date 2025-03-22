@@ -2,7 +2,8 @@
 #include <string.h>
 #include "djui.h"
 #include "djui_console.h"
-#include "pc/pc_main.h"
+#include "pc/game_main.h"
+#include "pc/string_utils.h"
 
 #define MAX_CONSOLE_MESSAGES 500
 
