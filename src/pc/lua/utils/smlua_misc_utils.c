@@ -45,6 +45,10 @@ u32 get_network_area_timer(void) {
     return gNetworkAreaTimer;
 }
 
+u16 get_area_update_counter(void) {
+    return gAreaUpdateCounter;
+}
+
 ///
 
 void djui_popup_create_global(const char* message, int lines) {
@@ -503,6 +507,10 @@ bool mod_file_exists(const char* filename) {
     }
 
     return false;
+}
+
+struct Mod* get_active_mod(void) {
+    return gLuaActiveMod;
 }
 
 ///

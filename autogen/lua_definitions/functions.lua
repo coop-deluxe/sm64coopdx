@@ -8898,6 +8898,14 @@ function audio_stream_set_frequency(audio, freq)
 end
 
 --- @param audio ModAudio
+--- @param loopStart integer
+--- @param loopEnd integer
+--- Sets an `audio` stream's loop points (samples)
+function audio_stream_set_loop_points(audio, loopStart, loopEnd)
+    -- ...
+end
+
+--- @param audio ModAudio
 --- @param looping boolean
 --- Sets if an `audio` stream is looping or not
 function audio_stream_set_looping(audio, looping)
@@ -9777,6 +9785,18 @@ function djui_set_popup_disabled_override(value)
     -- ...
 end
 
+--- @return Mod
+--- Gets the mod currently being processed
+function get_active_mod()
+    -- ...
+end
+
+--- @return integer
+--- Gets the area update counter incremented when objects are updated
+function get_area_update_counter()
+    -- ...
+end
+
 --- @param localIndex integer
 --- @return string
 --- Gets the CoopNet ID of a player with `localIndex` if CoopNet is being used and the player is connected, otherwise "-1" is returned
@@ -10162,6 +10182,36 @@ function smlua_model_util_get_id(name)
     -- ...
 end
 
+--- @return Object
+--- When used in a geo function, retrieve the current processed object
+function geo_get_current_object()
+    -- ...
+end
+
+--- @return Object
+--- Gets the object currently being processed
+function get_current_object()
+    -- ...
+end
+
+--- @return Object
+--- Gets the cutscene focus object
+function get_cutscene_focus()
+    -- ...
+end
+
+--- @return Object
+--- Gets the NPC object Mario is talking to
+function get_dialog_object()
+    -- ...
+end
+
+--- @return Object
+--- Gets the secondary camera focus object
+function get_secondary_camera_focus()
+    -- ...
+end
+
 --- @return ObjectHitbox
 --- Returns a temporary object hitbox pointer
 function get_temp_object_hitbox()
@@ -10464,6 +10514,20 @@ end
 --- @param vz number
 --- Sets an object's velocity to `vx`, `vy`, and `vz`
 function obj_set_vel(o, vx, vy, vz)
+    -- ...
+end
+
+--- @param o Object
+--- @return void*
+--- Sets the cutscene focus object
+function set_cutscene_focus(o)
+    -- ...
+end
+
+--- @param o Object
+--- @return void*
+--- Sets the secondary camera focus object
+function set_secondary_camera_focus(o)
     -- ...
 end
 

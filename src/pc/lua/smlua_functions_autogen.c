@@ -27504,6 +27504,27 @@ int smlua_func_audio_stream_set_frequency(lua_State* L) {
     return 1;
 }
 
+int smlua_func_audio_stream_set_loop_points(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 3) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "audio_stream_set_loop_points", 3, top);
+        return 0;
+    }
+
+    struct ModAudio* audio = (struct ModAudio*)smlua_to_cobject(L, 1, LOT_MODAUDIO);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "audio_stream_set_loop_points"); return 0; }
+    s64 loopStart = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "audio_stream_set_loop_points"); return 0; }
+    s64 loopEnd = smlua_to_integer(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "audio_stream_set_loop_points"); return 0; }
+
+    audio_stream_set_loop_points(audio, loopStart, loopEnd);
+
+    return 1;
+}
+
 int smlua_func_audio_stream_set_looping(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -29808,6 +29829,36 @@ int smlua_func_djui_set_popup_disabled_override(lua_State* L) {
     return 1;
 }
 
+int smlua_func_get_active_mod(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "get_active_mod", 0, top);
+        return 0;
+    }
+
+
+    smlua_push_object(L, LOT_MOD, get_active_mod(), NULL);
+
+    return 1;
+}
+
+int smlua_func_get_area_update_counter(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "get_area_update_counter", 0, top);
+        return 0;
+    }
+
+
+    lua_pushinteger(L, get_area_update_counter());
+
+    return 1;
+}
+
 int smlua_func_get_coopnet_id(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -30813,6 +30864,81 @@ int smlua_func_smlua_model_util_get_id(lua_State* L) {
  // smlua_obj_utils.h //
 ///////////////////////
 
+int smlua_func_geo_get_current_object(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "geo_get_current_object", 0, top);
+        return 0;
+    }
+
+
+    smlua_push_object(L, LOT_OBJECT, geo_get_current_object(), NULL);
+
+    return 1;
+}
+
+int smlua_func_get_current_object(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "get_current_object", 0, top);
+        return 0;
+    }
+
+
+    smlua_push_object(L, LOT_OBJECT, get_current_object(), NULL);
+
+    return 1;
+}
+
+int smlua_func_get_cutscene_focus(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "get_cutscene_focus", 0, top);
+        return 0;
+    }
+
+
+    smlua_push_object(L, LOT_OBJECT, get_cutscene_focus(), NULL);
+
+    return 1;
+}
+
+int smlua_func_get_dialog_object(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "get_dialog_object", 0, top);
+        return 0;
+    }
+
+
+    smlua_push_object(L, LOT_OBJECT, get_dialog_object(), NULL);
+
+    return 1;
+}
+
+int smlua_func_get_secondary_camera_focus(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "get_secondary_camera_focus", 0, top);
+        return 0;
+    }
+
+
+    smlua_push_object(L, LOT_OBJECT, get_secondary_camera_focus(), NULL);
+
+    return 1;
+}
+
 int smlua_func_get_temp_object_hitbox(UNUSED lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -31550,6 +31676,40 @@ int smlua_func_obj_set_vel(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "obj_set_vel"); return 0; }
 
     obj_set_vel(o, vx, vy, vz);
+
+    return 1;
+}
+
+int smlua_func_set_cutscene_focus(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "set_cutscene_focus", 1, top);
+        return 0;
+    }
+
+    struct Object* o = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "set_cutscene_focus"); return 0; }
+
+    set_cutscene_focus(o);
+
+    return 1;
+}
+
+int smlua_func_set_secondary_camera_focus(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "set_secondary_camera_focus", 1, top);
+        return 0;
+    }
+
+    struct Object* o = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "set_secondary_camera_focus"); return 0; }
+
+    set_secondary_camera_focus(o);
 
     return 1;
 }
@@ -34219,6 +34379,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "audio_stream_pause", smlua_func_audio_stream_pause);
     smlua_bind_function(L, "audio_stream_play", smlua_func_audio_stream_play);
     smlua_bind_function(L, "audio_stream_set_frequency", smlua_func_audio_stream_set_frequency);
+    smlua_bind_function(L, "audio_stream_set_loop_points", smlua_func_audio_stream_set_loop_points);
     smlua_bind_function(L, "audio_stream_set_looping", smlua_func_audio_stream_set_looping);
     smlua_bind_function(L, "audio_stream_set_position", smlua_func_audio_stream_set_position);
     smlua_bind_function(L, "audio_stream_set_volume", smlua_func_audio_stream_set_volume);
@@ -34363,6 +34524,8 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "djui_popup_create_global", smlua_func_djui_popup_create_global);
     smlua_bind_function(L, "djui_reset_popup_disabled_override", smlua_func_djui_reset_popup_disabled_override);
     smlua_bind_function(L, "djui_set_popup_disabled_override", smlua_func_djui_set_popup_disabled_override);
+    smlua_bind_function(L, "get_active_mod", smlua_func_get_active_mod);
+    smlua_bind_function(L, "get_area_update_counter", smlua_func_get_area_update_counter);
     smlua_bind_function(L, "get_coopnet_id", smlua_func_get_coopnet_id);
     smlua_bind_function(L, "get_current_save_file_num", smlua_func_get_current_save_file_num);
     smlua_bind_function(L, "get_date_and_time", smlua_func_get_date_and_time);
@@ -34426,6 +34589,11 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "smlua_model_util_get_id", smlua_func_smlua_model_util_get_id);
 
     // smlua_obj_utils.h
+    smlua_bind_function(L, "geo_get_current_object", smlua_func_geo_get_current_object);
+    smlua_bind_function(L, "get_current_object", smlua_func_get_current_object);
+    smlua_bind_function(L, "get_cutscene_focus", smlua_func_get_cutscene_focus);
+    smlua_bind_function(L, "get_dialog_object", smlua_func_get_dialog_object);
+    smlua_bind_function(L, "get_secondary_camera_focus", smlua_func_get_secondary_camera_focus);
     smlua_bind_function(L, "get_temp_object_hitbox", smlua_func_get_temp_object_hitbox);
     smlua_bind_function(L, "get_trajectory", smlua_func_get_trajectory);
     smlua_bind_function(L, "obj_check_hitbox_overlap", smlua_func_obj_check_hitbox_overlap);
@@ -34465,6 +34633,8 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "obj_set_field_u32", smlua_func_obj_set_field_u32);
     smlua_bind_function(L, "obj_set_model_extended", smlua_func_obj_set_model_extended);
     smlua_bind_function(L, "obj_set_vel", smlua_func_obj_set_vel);
+    smlua_bind_function(L, "set_cutscene_focus", smlua_func_set_cutscene_focus);
+    smlua_bind_function(L, "set_secondary_camera_focus", smlua_func_set_secondary_camera_focus);
     smlua_bind_function(L, "set_whirlpools", smlua_func_set_whirlpools);
     smlua_bind_function(L, "spawn_non_sync_object", smlua_func_spawn_non_sync_object);
     smlua_bind_function(L, "spawn_sync_object", smlua_func_spawn_sync_object);

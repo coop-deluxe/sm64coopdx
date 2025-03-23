@@ -5,6 +5,7 @@
 - [behavior_table.h](#behavior_tableh)
     - [enum BehaviorId](#enum-BehaviorId)
 - [camera.h](#camerah)
+    - [enum RomhackCameraEnable](#enum-RomhackCameraEnable)
     - [enum RomhackCameraOverride](#enum-RomhackCameraOverride)
 - [characters.h](#charactersh)
     - [enum CharacterSound](#enum-CharacterSound)
@@ -836,6 +837,13 @@
 - SHAKE_POS_SMALL
 - SHAKE_SHOCK
 - SHAKE_SMALL_DAMAGE
+
+### [enum RomhackCameraEnable](#RomhackCameraEnable)
+| Identifier | Value |
+| :--------- | :---- |
+| RCE_AUTOMATIC | 0 |
+| RCE_ON | 1 |
+| RCE_OFF | 2 |
 
 ### [enum RomhackCameraOverride](#RomhackCameraOverride)
 | Identifier | Value |

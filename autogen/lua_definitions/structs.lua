@@ -31,7 +31,7 @@
 
 --- @class Area
 --- @field public camera Camera
---- @field public dialog Array_integer
+--- @field public dialog integer[]
 --- @field public flags integer
 --- @field public index integer
 --- @field public instantWarps InstantWarp
@@ -49,7 +49,7 @@
 --- @field public terrainData Pointer_integer
 --- @field public terrainType integer
 --- @field public warpNodes ObjectWarpNode
---- @field public whirlpools Array_Whirlpool
+--- @field public whirlpools Whirlpool[]
 
 --- @class BehaviorDialogs
 --- @field public BobombBuddyBob1Dialog DialogId
@@ -218,8 +218,8 @@
 --- @field public cutscene integer
 --- @field public defMode integer
 --- @field public doorStatus integer
---- @field public filler31 Array_integer
---- @field public filler3C Array_integer
+--- @field public filler31 integer[]
+--- @field public filler3C integer[]
 --- @field public focus Vec3f
 --- @field public mode integer
 --- @field public mtx Mat4
@@ -649,7 +649,7 @@
 --- @field public normalY number
 --- @field public normalZ number
 --- @field public originOffset number
---- @field public unused Array_number
+--- @field public unused number[]
 
 --- @class FnGraphNode
 --- @field public node GraphNode
@@ -878,7 +878,7 @@
 --- @class GraphNodeCullingRadius
 --- @field public cullingRadius integer
 --- @field public node GraphNode
---- @field public pad1E Array_integer
+--- @field public pad1E integer[]
 
 --- @class GraphNodeDisplayList
 --- @field public displayList Pointer_Gfx
@@ -981,7 +981,7 @@
 --- @class GraphNodeTranslation
 --- @field public displayList Pointer_Gfx
 --- @field public node GraphNode
---- @field public pad1E Array_integer
+--- @field public pad1E integer[]
 --- @field public translation Vec3s
 
 --- @class GraphNodeTranslationRotation
@@ -1020,9 +1020,9 @@
 --- @field public curFocus Vec3f
 --- @field public curPos Vec3f
 --- @field public defMode integer
---- @field public filler30 Array_integer
---- @field public filler3E Array_integer
---- @field public filler72 Array_integer
+--- @field public filler30 integer[]
+--- @field public filler3E integer[]
+--- @field public filler72 integer[]
 --- @field public focHSpeed number
 --- @field public focVSpeed number
 --- @field public focus Vec3f
@@ -1118,7 +1118,7 @@
 
 --- @class MarioAnimation
 --- @field public currentAnimAddr Pointer_integer
---- @field public padding Array_integer
+--- @field public padding integer[]
 --- @field public targetAnim Animation
 
 --- @class MarioBodyState
@@ -1127,7 +1127,7 @@
 --- @field public capState integer
 --- @field public eyeState integer
 --- @field public grabPos integer
---- @field public handFootPos Array_Vec3f
+--- @field public handFootPos Vec3f[]
 --- @field public handState integer
 --- @field public headAngle Vec3s
 --- @field public headPos Vec3f
@@ -1263,7 +1263,7 @@
 
 --- @class ModFile
 --- @field public cachedPath string
---- @field public dataHash Array_integer
+--- @field public dataHash integer[]
 --- @field public relativePath string
 --- @field public wroteBytes integer
 
@@ -1323,7 +1323,7 @@
 --- @field public bhvDelayTimer integer
 --- @field public bhvStackIndex integer
 --- @field public collidedObjInteractTypes integer
---- @field public collidedObjs Array_Object
+--- @field public collidedObjs Object[]
 --- @field public collisionData Pointer_Collision
 --- @field public coopFlags integer
 --- @field public ctx integer
@@ -2140,8 +2140,8 @@
 --- @field public yaw number
 
 --- @class PaintingMeshVertex
---- @field public norm Array_integer
---- @field public pos Array_integer
+--- @field public norm integer[]
+--- @field public pos integer[]
 
 --- @class PaintingValues
 --- @field public bob_painting Painting
@@ -2331,14 +2331,14 @@
 --- @field public posYaw integer
 
 --- @class Vtx
---- @field public cn Array_integer
+--- @field public cn integer[]
 --- @field public flag integer
---- @field public ob Array_number
---- @field public tc Array_integer
+--- @field public ob number[]
+--- @field public tc integer[]
 
 --- @class Vtx_Interp
 --- @field public n string
---- @field public ob Array_number
+--- @field public ob number[]
 
 --- @class WallCollisionData
 --- @field public normalAddition Vec3f
@@ -2347,7 +2347,7 @@
 --- @field public offsetY number
 --- @field public radius number
 --- @field public unused integer
---- @field public walls Array_Surface
+--- @field public walls Surface[]
 --- @field public x number
 --- @field public y number
 --- @field public z number

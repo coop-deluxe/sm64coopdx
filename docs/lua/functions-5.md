@@ -6650,6 +6650,31 @@ Sets the frequency of an `audio` stream
 
 <br />
 
+## [audio_stream_set_loop_points](#audio_stream_set_loop_points)
+
+### Description
+Sets an `audio` stream's loop points (samples)
+
+### Lua Example
+`audio_stream_set_loop_points(audio, loopStart, loopEnd)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+| loopStart | `integer` |
+| loopEnd | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void audio_stream_set_loop_points(struct ModAudio* audio, s64 loopStart, s64 loopEnd);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [audio_stream_set_looping](#audio_stream_set_looping)
 
 ### Description

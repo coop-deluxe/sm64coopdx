@@ -357,1627 +357,1088 @@ WARP_TRANSITION_FADE_INTO_MARIO = 0x11
 --- @type integer
 WARP_TRANSITION_FADE_INTO_STAR = 0x09
 
---- @class BehaviorId
-
---- @type BehaviorId
-id_bhv1Up = 0
-
---- @type BehaviorId
-id_bhv1upJumpOnApproach = 1
-
---- @type BehaviorId
-id_bhv1upRunningAway = 2
-
---- @type BehaviorId
-id_bhv1upSliding = 3
-
---- @type BehaviorId
-id_bhv1upWalking = 4
-
---- @type BehaviorId
-id_bhvActivatedBackAndForthPlatform = 5
-
---- @type BehaviorId
-id_bhvActSelector = 6
-
---- @type BehaviorId
-id_bhvActSelectorStarType = 7
-
---- @type BehaviorId
-id_bhvAirborneDeathWarp = 8
-
---- @type BehaviorId
-id_bhvAirborneStarCollectWarp = 9
-
---- @type BehaviorId
-id_bhvAirborneWarp = 10
-
---- @type BehaviorId
-id_bhvAlphaBooKey = 11
-
---- @type BehaviorId
-id_bhvAmbientSounds = 12
-
---- @type BehaviorId
-id_bhvAnimatedTexture = 13
-
---- @type BehaviorId
-id_bhvAnimatesOnFloorSwitchPress = 14
-
---- @type BehaviorId
-id_bhvAnotherElavator = 15
-
---- @type BehaviorId
-id_bhvAnotherTiltingPlatform = 16
-
---- @type BehaviorId
-id_bhvArrowLift = 17
-
---- @type BehaviorId
-id_bhvBalconyBigBoo = 18
-
---- @type BehaviorId
-id_bhvBbhTiltingTrapPlatform = 19
-
---- @type BehaviorId
-id_bhvBbhTumblingBridge = 20
-
---- @type BehaviorId
-id_bhvBeginningLakitu = 21
-
---- @type BehaviorId
-id_bhvBeginningPeach = 22
-
---- @type BehaviorId
-id_bhvBetaBooKey = 23
-
---- @type BehaviorId
-id_bhvBetaBowserAnchor = 24
-
---- @type BehaviorId
-id_bhvBetaChestBottom = 25
-
---- @type BehaviorId
-id_bhvBetaChestLid = 26
-
---- @type BehaviorId
-id_bhvBetaFishSplashSpawner = 27
-
---- @type BehaviorId
-id_bhvBetaHoldableObject = 28
-
---- @type BehaviorId
-id_bhvBetaMovingFlames = 29
-
---- @type BehaviorId
-id_bhvBetaMovingFlamesSpawn = 30
-
---- @type BehaviorId
-id_bhvBetaTrampolineSpring = 31
-
---- @type BehaviorId
-id_bhvBetaTrampolineTop = 32
-
---- @type BehaviorId
-id_bhvBigBoulder = 33
-
---- @type BehaviorId
-id_bhvBigBoulderGenerator = 34
-
---- @type BehaviorId
-id_bhvBigBully = 35
-
---- @type BehaviorId
-id_bhvBigBullyWithMinions = 36
-
---- @type BehaviorId
-id_bhvBigChillBully = 37
-
---- @type BehaviorId
-id_bhvBigSnowmanWhole = 38
-
---- @type BehaviorId
-id_bhvBird = 39
-
---- @type BehaviorId
-id_bhvBirdsSoundLoop = 40
-
---- @type BehaviorId
-id_bhvBitfsSinkingCagePlatform = 41
-
---- @type BehaviorId
-id_bhvBitfsSinkingPlatforms = 42
-
---- @type BehaviorId
-id_bhvBitfsTiltingInvertedPyramid = 43
-
---- @type BehaviorId
-id_bhvBlackSmokeBowser = 44
-
---- @type BehaviorId
-id_bhvBlackSmokeMario = 45
-
---- @type BehaviorId
-id_bhvBlackSmokeUpward = 46
-
---- @type BehaviorId
-id_bhvBlueBowserFlame = 47
-
---- @type BehaviorId
-id_bhvBlueCoinJumping = 48
-
---- @type BehaviorId
-id_bhvBlueCoinSliding = 49
-
---- @type BehaviorId
-id_bhvBlueCoinSwitch = 50
-
---- @type BehaviorId
-id_bhvBlueFish = 51
-
---- @type BehaviorId
-id_bhvBlueFlamesGroup = 52
-
---- @type BehaviorId
-id_bhvBobBowlingBallSpawner = 53
-
---- @type BehaviorId
-id_bhvBobomb = 54
-
---- @type BehaviorId
-id_bhvBobombAnchorMario = 55
-
---- @type BehaviorId
-id_bhvBobombBuddy = 56
-
---- @type BehaviorId
-id_bhvBobombBuddyOpensCannon = 57
-
---- @type BehaviorId
-id_bhvBobombBullyDeathSmoke = 58
-
---- @type BehaviorId
-id_bhvBobombExplosionBubble = 59
-
---- @type BehaviorId
-id_bhvBobombExplosionBubble3600 = 60
-
---- @type BehaviorId
-id_bhvBobombFuseSmoke = 61
-
---- @type BehaviorId
-id_bhvBoo = 62
-
---- @type BehaviorId
-id_bhvBooBossSpawnedBridge = 63
-
---- @type BehaviorId
-id_bhvBooCage = 64
-
---- @type BehaviorId
-id_bhvBooInCastle = 65
-
---- @type BehaviorId
-id_bhvBookendSpawn = 66
-
---- @type BehaviorId
-id_bhvBookSwitch = 67
-
---- @type BehaviorId
-id_bhvBooWithCage = 68
-
---- @type BehaviorId
-id_bhvBouncingFireball = 69
-
---- @type BehaviorId
-id_bhvBouncingFireballFlame = 70
-
---- @type BehaviorId
-id_bhvBowlingBall = 71
-
---- @type BehaviorId
-id_bhvBowser = 72
-
---- @type BehaviorId
-id_bhvBowserBodyAnchor = 73
-
---- @type BehaviorId
-id_bhvBowserBomb = 74
-
---- @type BehaviorId
-id_bhvBowserBombExplosion = 75
-
---- @type BehaviorId
-id_bhvBowserBombSmoke = 76
-
---- @type BehaviorId
-id_bhvBowserCourseRedCoinStar = 77
-
---- @type BehaviorId
-id_bhvBowserFlameSpawn = 78
-
---- @type BehaviorId
-id_bhvBowserKey = 79
-
---- @type BehaviorId
-id_bhvBowserKeyCourseExit = 80
-
---- @type BehaviorId
-id_bhvBowserKeyUnlockDoor = 81
-
---- @type BehaviorId
-id_bhvBowserShockWave = 82
-
---- @type BehaviorId
-id_bhvBowsersSub = 83
-
---- @type BehaviorId
-id_bhvBowserSubDoor = 84
-
---- @type BehaviorId
-id_bhvBowserTailAnchor = 85
-
---- @type BehaviorId
-id_bhvBreakableBox = 86
-
---- @type BehaviorId
-id_bhvBreakableBoxSmall = 87
-
---- @type BehaviorId
-id_bhvBreakBoxTriangle = 88
-
---- @type BehaviorId
-id_bhvBreathParticleSpawner = 89
-
---- @type BehaviorId
-id_bhvBub = 90
-
---- @type BehaviorId
-id_bhvBubba = 91
-
---- @type BehaviorId
-id_bhvBubbleMaybe = 92
-
---- @type BehaviorId
-id_bhvBubbleParticleSpawner = 93
-
---- @type BehaviorId
-id_bhvBubblePlayer = 94
-
---- @type BehaviorId
-id_bhvBubbleSplash = 95
-
---- @type BehaviorId
-id_bhvBulletBill = 96
-
---- @type BehaviorId
-id_bhvBulletBillCannon = 97
-
---- @type BehaviorId
-id_bhvButterfly = 98
-
---- @type BehaviorId
-id_bhvCameraLakitu = 99
-
---- @type BehaviorId
-id_bhvCannon = 100
-
---- @type BehaviorId
-id_bhvCannonBarrel = 101
-
---- @type BehaviorId
-id_bhvCannonBarrelBubbles = 102
-
---- @type BehaviorId
-id_bhvCannonBaseUnused = 103
-
---- @type BehaviorId
-id_bhvCannonClosed = 104
-
---- @type BehaviorId
-id_bhvCapSwitch = 105
-
---- @type BehaviorId
-id_bhvCapSwitchBase = 106
-
---- @type BehaviorId
-id_bhvCarrySomething1 = 107
-
---- @type BehaviorId
-id_bhvCarrySomething2 = 108
-
---- @type BehaviorId
-id_bhvCarrySomething3 = 109
-
---- @type BehaviorId
-id_bhvCarrySomething4 = 110
-
---- @type BehaviorId
-id_bhvCarrySomething5 = 111
-
---- @type BehaviorId
-id_bhvCarrySomething6 = 112
-
---- @type BehaviorId
-id_bhvCastleFlagWaving = 113
-
---- @type BehaviorId
-id_bhvCastleFloorTrap = 114
-
---- @type BehaviorId
-id_bhvCcmTouchedStarSpawn = 115
-
---- @type BehaviorId
-id_bhvCelebrationStar = 116
-
---- @type BehaviorId
-id_bhvCelebrationStarSparkle = 117
-
---- @type BehaviorId
-id_bhvChainChomp = 118
-
---- @type BehaviorId
-id_bhvChainChompChainPart = 119
-
---- @type BehaviorId
-id_bhvChainChompGate = 120
-
---- @type BehaviorId
-id_bhvCheckerboardElevatorGroup = 121
-
---- @type BehaviorId
-id_bhvCheckerboardPlatformSub = 122
-
---- @type BehaviorId
-id_bhvChirpChirp = 123
-
---- @type BehaviorId
-id_bhvChirpChirpUnused = 124
-
---- @type BehaviorId
-id_bhvChuckya = 125
-
---- @type BehaviorId
-id_bhvChuckyaAnchorMario = 126
-
---- @type BehaviorId
-id_bhvCirclingAmp = 127
-
---- @type BehaviorId
-id_bhvClamShell = 128
-
---- @type BehaviorId
-id_bhvClockHourHand = 129
-
---- @type BehaviorId
-id_bhvClockMinuteHand = 130
-
---- @type BehaviorId
-id_bhvCloud = 131
-
---- @type BehaviorId
-id_bhvCloudPart = 132
-
---- @type BehaviorId
-id_bhvCoffin = 133
-
---- @type BehaviorId
-id_bhvCoffinSpawner = 134
-
---- @type BehaviorId
-id_bhvCoinFormation = 135
-
---- @type BehaviorId
-id_bhvCoinFormationSpawn = 136
-
---- @type BehaviorId
-id_bhvCoinInsideBoo = 137
-
---- @type BehaviorId
-id_bhvCoinSparkles = 138
-
---- @type BehaviorId
-id_bhvControllablePlatform = 139
-
---- @type BehaviorId
-id_bhvControllablePlatformSub = 140
-
---- @type BehaviorId
-id_bhvCourtyardBooTriplet = 141
-
---- @type BehaviorId
-id_bhvCutOutObject = 142
-
---- @type BehaviorId
-id_bhvDddMovingPole = 143
-
---- @type BehaviorId
-id_bhvDDDPole = 144
-
---- @type BehaviorId
-id_bhvDddWarp = 145
-
---- @type BehaviorId
-id_bhvDeathWarp = 146
-
---- @type BehaviorId
-id_bhvDecorativePendulum = 147
-
---- @type BehaviorId
-id_bhvDirtParticleSpawner = 148
-
---- @type BehaviorId
-id_bhvDonutPlatform = 149
-
---- @type BehaviorId
-id_bhvDonutPlatformSpawner = 150
-
---- @type BehaviorId
-id_bhvDoor = 151
-
---- @type BehaviorId
-id_bhvDoorWarp = 152
-
---- @type BehaviorId
-id_bhvDorrie = 153
-
---- @type BehaviorId
-id_bhvEndBirds1 = 154
-
---- @type BehaviorId
-id_bhvEndBirds2 = 155
-
---- @type BehaviorId
-id_bhvEndPeach = 156
-
---- @type BehaviorId
-id_bhvEndToad = 157
-
---- @type BehaviorId
-id_bhvEnemyLakitu = 158
-
---- @type BehaviorId
-id_bhvExclamationBox = 159
-
---- @type BehaviorId
-id_bhvExitPodiumWarp = 160
-
---- @type BehaviorId
-id_bhvExplosion = 161
-
---- @type BehaviorId
-id_bhvEyerokBoss = 162
-
---- @type BehaviorId
-id_bhvEyerokHand = 163
-
---- @type BehaviorId
-id_bhvFadingWarp = 164
-
---- @type BehaviorId
-id_bhvFallingBowserPlatform = 165
-
---- @type BehaviorId
-id_bhvFallingPillar = 166
-
---- @type BehaviorId
-id_bhvFallingPillarHitbox = 167
-
---- @type BehaviorId
-id_bhvFerrisWheelAxle = 168
-
---- @type BehaviorId
-id_bhvFerrisWheelPlatform = 169
-
---- @type BehaviorId
-id_bhvFewBlueFishSpawner = 170
-
---- @type BehaviorId
-id_bhvFireParticleSpawner = 171
-
---- @type BehaviorId
-id_bhvFirePiranhaPlant = 172
-
---- @type BehaviorId
-id_bhvFireSpitter = 173
-
---- @type BehaviorId
-id_bhvFish = 174
-
---- @type BehaviorId
-id_bhvFishGroup = 175
-
---- @type BehaviorId
-id_bhvFishSpawner = 176
-
---- @type BehaviorId
-id_bhvFlame = 177
-
---- @type BehaviorId
-id_bhvFlameBouncing = 178
-
---- @type BehaviorId
-id_bhvFlameBowser = 179
-
---- @type BehaviorId
-id_bhvFlameFloatingLanding = 180
-
---- @type BehaviorId
-id_bhvFlameLargeBurningOut = 181
-
---- @type BehaviorId
-id_bhvFlameMovingForwardGrowing = 182
-
---- @type BehaviorId
-id_bhvFlamethrower = 183
-
---- @type BehaviorId
-id_bhvFlamethrowerFlame = 184
-
---- @type BehaviorId
-id_bhvFloorSwitchAnimatesObject = 185
-
---- @type BehaviorId
-id_bhvFloorSwitchGrills = 186
-
---- @type BehaviorId
-id_bhvFloorSwitchHardcodedModel = 187
-
---- @type BehaviorId
-id_bhvFloorSwitchHiddenObjects = 188
-
---- @type BehaviorId
-id_bhvFloorTrapInCastle = 189
-
---- @type BehaviorId
-id_bhvFlyGuy = 190
-
---- @type BehaviorId
-id_bhvFlyguyFlame = 191
-
---- @type BehaviorId
-id_bhvFlyingBookend = 192
-
---- @type BehaviorId
-id_bhvFlyingWarp = 193
-
---- @type BehaviorId
-id_bhvFreeBowlingBall = 194
-
---- @type BehaviorId
-id_bhvGhostHuntBigBoo = 195
-
---- @type BehaviorId
-id_bhvGhostHuntBoo = 196
-
---- @type BehaviorId
-id_bhvGiantPole = 197
-
---- @type BehaviorId
-id_bhvGoldenCoinSparkles = 198
-
---- @type BehaviorId
-id_bhvGoomba = 199
-
---- @type BehaviorId
-id_bhvGoombaTripletSpawner = 200
-
---- @type BehaviorId
-id_bhvGrandStar = 201
-
---- @type BehaviorId
-id_bhvGrindel = 202
-
---- @type BehaviorId
-id_bhvHardAirKnockBackWarp = 203
-
---- @type BehaviorId
-id_bhvHauntedBookshelf = 204
-
---- @type BehaviorId
-id_bhvHauntedBookshelfManager = 205
-
---- @type BehaviorId
-id_bhvHauntedChair = 206
-
---- @type BehaviorId
-id_bhvHeaveHo = 207
-
---- @type BehaviorId
-id_bhvHeaveHoThrowMario = 208
-
---- @type BehaviorId
-id_bhvHidden1up = 209
-
---- @type BehaviorId
-id_bhvHidden1upInPole = 210
-
---- @type BehaviorId
-id_bhvHidden1upInPoleSpawner = 211
-
---- @type BehaviorId
-id_bhvHidden1upInPoleTrigger = 212
-
---- @type BehaviorId
-id_bhvHidden1upTrigger = 213
-
---- @type BehaviorId
-id_bhvHiddenAt120Stars = 214
-
---- @type BehaviorId
-id_bhvHiddenBlueCoin = 215
-
---- @type BehaviorId
-id_bhvHiddenObject = 216
-
---- @type BehaviorId
-id_bhvHiddenRedCoinStar = 217
-
---- @type BehaviorId
-id_bhvHiddenStaircaseStep = 218
-
---- @type BehaviorId
-id_bhvHiddenStar = 219
-
---- @type BehaviorId
-id_bhvHiddenStarTrigger = 220
-
---- @type BehaviorId
-id_bhvHmcElevatorPlatform = 221
-
---- @type BehaviorId
-id_bhvHomingAmp = 222
-
---- @type BehaviorId
-id_bhvHoot = 223
-
---- @type BehaviorId
-id_bhvHorizontalGrindel = 224
-
---- @type BehaviorId
-id_bhvHorStarParticleSpawner = 225
-
---- @type BehaviorId
-id_bhvIdleWaterWave = 226
-
---- @type BehaviorId
-id_bhvIgloo = 227
-
---- @type BehaviorId
-id_bhvInitializeChangingWaterLevel = 228
-
---- @type BehaviorId
-id_bhvInsideCannon = 229
-
---- @type BehaviorId
-id_bhvInstantActiveWarp = 230
-
---- @type BehaviorId
-id_bhvInSunkenShip = 231
-
---- @type BehaviorId
-id_bhvInSunkenShip2 = 232
-
---- @type BehaviorId
-id_bhvInSunkenShip3 = 233
-
---- @type BehaviorId
-id_bhvIntroScene = 234
-
---- @type BehaviorId
-id_bhvInvisibleObjectsUnderBridge = 235
-
---- @type BehaviorId
-id_bhvJetStream = 236
-
---- @type BehaviorId
-id_bhvJetStreamRingSpawner = 237
-
---- @type BehaviorId
-id_bhvJetStreamWaterRing = 238
-
---- @type BehaviorId
-id_bhvJrbFloatingBox = 239
-
---- @type BehaviorId
-id_bhvJrbFloatingPlatform = 240
-
---- @type BehaviorId
-id_bhvJrbSlidingBox = 241
-
---- @type BehaviorId
-id_bhvJumpingBox = 242
-
---- @type BehaviorId
-id_bhvKickableBoard = 243
-
---- @type BehaviorId
-id_bhvKingBobomb = 244
-
---- @type BehaviorId
-id_bhvKlepto = 245
-
---- @type BehaviorId
-id_bhvKoopa = 246
-
---- @type BehaviorId
-id_bhvKoopaFlag = 247
-
---- @type BehaviorId
-id_bhvKoopaRaceEndpoint = 248
-
---- @type BehaviorId
-id_bhvKoopaShell = 249
-
---- @type BehaviorId
-id_bhvKoopaShellFlame = 250
-
---- @type BehaviorId
-id_bhvKoopaShellUnderwater = 251
-
---- @type BehaviorId
-id_bhvLargeBomp = 252
-
---- @type BehaviorId
-id_bhvLaunchDeathWarp = 253
-
---- @type BehaviorId
-id_bhvLaunchStarCollectWarp = 254
-
---- @type BehaviorId
-id_bhvLeafParticleSpawner = 255
-
---- @type BehaviorId
-id_bhvLllBowserPuzzle = 256
-
---- @type BehaviorId
-id_bhvLllBowserPuzzlePiece = 257
-
---- @type BehaviorId
-id_bhvLllDrawbridge = 258
-
---- @type BehaviorId
-id_bhvLllDrawbridgeSpawner = 259
-
---- @type BehaviorId
-id_bhvLllFloatingWoodBridge = 260
-
---- @type BehaviorId
-id_bhvLllHexagonalMesh = 261
-
---- @type BehaviorId
-id_bhvLllMovingOctagonalMeshPlatform = 262
-
---- @type BehaviorId
-id_bhvLllRollingLog = 263
-
---- @type BehaviorId
-id_bhvLllRotatingBlockWithFireBars = 264
-
---- @type BehaviorId
-id_bhvLllRotatingHexagonalPlatform = 265
-
---- @type BehaviorId
-id_bhvLllRotatingHexagonalRing = 266
-
---- @type BehaviorId
-id_bhvLllRotatingHexFlame = 267
-
---- @type BehaviorId
-id_bhvLllSinkingRectangularPlatform = 268
-
---- @type BehaviorId
-id_bhvLllSinkingRockBlock = 269
-
---- @type BehaviorId
-id_bhvLllSinkingSquarePlatforms = 270
-
---- @type BehaviorId
-id_bhvLllTiltingInvertedPyramid = 271
-
---- @type BehaviorId
-id_bhvLllTumblingBridge = 272
-
---- @type BehaviorId
-id_bhvLllVolcanoFallingTrap = 273
-
---- @type BehaviorId
-id_bhvLllWoodPiece = 274
-
---- @type BehaviorId
-id_bhvMacroUkiki = 275
-
---- @type BehaviorId
-id_bhvMadPiano = 276
-
---- @type BehaviorId
-id_bhvMantaRay = 277
-
---- @type BehaviorId
-id_bhvMantaRayRingManager = 278
-
---- @type BehaviorId
-id_bhvMantaRayWaterRing = 279
-
---- @type BehaviorId
-id_bhvManyBlueFishSpawner = 280
-
---- @type BehaviorId
-id_bhvMario = 281
-
---- @type BehaviorId
-id_bhvMenuButton = 282
-
---- @type BehaviorId
-id_bhvMenuButtonManager = 283
-
---- @type BehaviorId
-id_bhvMerryGoRound = 284
-
---- @type BehaviorId
-id_bhvMerryGoRoundBigBoo = 285
-
---- @type BehaviorId
-id_bhvMerryGoRoundBoo = 286
-
---- @type BehaviorId
-id_bhvMerryGoRoundBooManager = 287
-
---- @type BehaviorId
-id_bhvMeshElevator = 288
-
---- @type BehaviorId
-id_bhvMessagePanel = 289
-
---- @type BehaviorId
-id_bhvMetalCap = 290
-
---- @type BehaviorId
-id_bhvMips = 291
-
---- @type BehaviorId
-id_bhvMistCircParticleSpawner = 292
-
---- @type BehaviorId
-id_bhvMistParticleSpawner = 293
-
---- @type BehaviorId
-id_bhvMoatGrills = 294
-
---- @type BehaviorId
-id_bhvMoneybag = 295
-
---- @type BehaviorId
-id_bhvMoneybagHidden = 296
-
---- @type BehaviorId
-id_bhvMontyMole = 297
-
---- @type BehaviorId
-id_bhvMontyMoleHole = 298
-
---- @type BehaviorId
-id_bhvMontyMoleRock = 299
-
---- @type BehaviorId
-id_bhvMovingBlueCoin = 300
-
---- @type BehaviorId
-id_bhvMovingYellowCoin = 301
-
---- @type BehaviorId
-id_bhvMrBlizzard = 302
-
---- @type BehaviorId
-id_bhvMrBlizzardSnowball = 303
-
---- @type BehaviorId
-id_bhvMrI = 304
-
---- @type BehaviorId
-id_bhvMrIBlueCoin = 305
-
---- @type BehaviorId
-id_bhvMrIBody = 306
-
---- @type BehaviorId
-id_bhvMrIParticle = 307
-
---- @type BehaviorId
-id_bhvNormalCap = 308
-
---- @type BehaviorId
-id_bhvObjectBubble = 309
-
---- @type BehaviorId
-id_bhvObjectWaterSplash = 310
-
---- @type BehaviorId
-id_bhvObjectWaterWave = 311
-
---- @type BehaviorId
-id_bhvObjectWaveTrail = 312
-
---- @type BehaviorId
-id_bhvOctagonalPlatformRotating = 313
-
---- @type BehaviorId
-id_bhvOneCoin = 314
-
---- @type BehaviorId
-id_bhvOpenableCageDoor = 315
-
---- @type BehaviorId
-id_bhvOpenableGrill = 316
-
---- @type BehaviorId
-id_bhvOrangeNumber = 317
-
---- @type BehaviorId
-id_bhvPaintingDeathWarp = 318
-
---- @type BehaviorId
-id_bhvPaintingStarCollectWarp = 319
-
---- @type BehaviorId
-id_bhvPenguinBaby = 320
-
---- @type BehaviorId
-id_bhvPenguinRaceFinishLine = 321
-
---- @type BehaviorId
-id_bhvPenguinRaceShortcutCheck = 322
-
---- @type BehaviorId
-id_bhvPillarBase = 323
-
---- @type BehaviorId
-id_bhvPiranhaPlant = 324
-
---- @type BehaviorId
-id_bhvPiranhaPlantBubble = 325
-
---- @type BehaviorId
-id_bhvPiranhaPlantWakingBubbles = 326
-
---- @type BehaviorId
-id_bhvPitBowlingBall = 327
-
---- @type BehaviorId
-id_bhvPlatformOnTrack = 328
-
---- @type BehaviorId
-id_bhvPlaysMusicTrackWhenTouched = 329
-
---- @type BehaviorId
-id_bhvPlungeBubble = 330
-
---- @type BehaviorId
-id_bhvPokey = 331
-
---- @type BehaviorId
-id_bhvPokeyBodyPart = 332
-
---- @type BehaviorId
-id_bhvPoleGrabbing = 333
-
---- @type BehaviorId
-id_bhvPoundTinyStarParticle = 334
-
---- @type BehaviorId
-id_bhvPunchTinyTriangle = 335
-
---- @type BehaviorId
-id_bhvPurpleParticle = 336
-
---- @type BehaviorId
-id_bhvPurpleSwitchHiddenBoxes = 337
-
---- @type BehaviorId
-id_bhvPushableMetalBox = 338
-
---- @type BehaviorId
-id_bhvPyramidElevator = 339
-
---- @type BehaviorId
-id_bhvPyramidElevatorTrajectoryMarkerBall = 340
-
---- @type BehaviorId
-id_bhvPyramidPillarTouchDetector = 341
-
---- @type BehaviorId
-id_bhvPyramidTop = 342
-
---- @type BehaviorId
-id_bhvPyramidTopFragment = 343
-
---- @type BehaviorId
-id_bhvRacingPenguin = 344
-
---- @type BehaviorId
-id_bhvRandomAnimatedTexture = 345
-
---- @type BehaviorId
-id_bhvRecoveryHeart = 346
-
---- @type BehaviorId
-id_bhvRedCoin = 347
-
---- @type BehaviorId
-id_bhvRedCoinStarMarker = 348
-
---- @type BehaviorId
-id_bhvRespawner = 349
-
---- @type BehaviorId
-id_bhvRockSolid = 350
-
---- @type BehaviorId
-id_bhvRotatingCounterClockwise = 351
-
---- @type BehaviorId
-id_bhvRotatingExclamationMark = 352
-
---- @type BehaviorId
-id_bhvRotatingPlatform = 353
-
---- @type BehaviorId
-id_bhvRrCruiserWing = 354
-
---- @type BehaviorId
-id_bhvRrElevatorPlatform = 355
-
---- @type BehaviorId
-id_bhvRrRotatingBridgePlatform = 356
-
---- @type BehaviorId
-id_bhvSandSoundLoop = 357
-
---- @type BehaviorId
-id_bhvScuttlebug = 358
-
---- @type BehaviorId
-id_bhvScuttlebugSpawn = 359
-
---- @type BehaviorId
-id_bhvSeaweed = 360
-
---- @type BehaviorId
-id_bhvSeaweedBundle = 361
-
---- @type BehaviorId
-id_bhvSeesawPlatform = 362
-
---- @type BehaviorId
-id_bhvShallowWaterSplash = 363
-
---- @type BehaviorId
-id_bhvShallowWaterWave = 364
-
---- @type BehaviorId
-id_bhvShipPart3 = 365
-
---- @type BehaviorId
-id_bhvSignOnWall = 366
-
---- @type BehaviorId
-id_bhvSingleCoinGetsSpawned = 367
-
---- @type BehaviorId
-id_bhvSkeeter = 368
-
---- @type BehaviorId
-id_bhvSkeeterWave = 369
-
---- @type BehaviorId
-id_bhvSlidingPlatform2 = 370
-
---- @type BehaviorId
-id_bhvSlidingSnowMound = 371
-
---- @type BehaviorId
-id_bhvSLSnowmanWind = 372
-
---- @type BehaviorId
-id_bhvSLWalkingPenguin = 373
-
---- @type BehaviorId
-id_bhvSmallBomp = 374
-
---- @type BehaviorId
-id_bhvSmallBully = 375
-
---- @type BehaviorId
-id_bhvSmallChillBully = 376
-
---- @type BehaviorId
-id_bhvSmallParticle = 377
-
---- @type BehaviorId
-id_bhvSmallParticleBubbles = 378
-
---- @type BehaviorId
-id_bhvSmallParticleSnow = 379
-
---- @type BehaviorId
-id_bhvSmallPenguin = 380
-
---- @type BehaviorId
-id_bhvSmallPiranhaFlame = 381
-
---- @type BehaviorId
-id_bhvSmallWaterWave = 382
-
---- @type BehaviorId
-id_bhvSmallWaterWave398 = 383
-
---- @type BehaviorId
-id_bhvSmallWhomp = 384
-
---- @type BehaviorId
-id_bhvSmoke = 385
-
---- @type BehaviorId
-id_bhvSnowBall = 386
-
---- @type BehaviorId
-id_bhvSnowmansBodyCheckpoint = 387
-
---- @type BehaviorId
-id_bhvSnowmansBottom = 388
-
---- @type BehaviorId
-id_bhvSnowmansHead = 389
-
---- @type BehaviorId
-id_bhvSnowMoundSpawn = 390
-
---- @type BehaviorId
-id_bhvSnowParticleSpawner = 391
-
---- @type BehaviorId
-id_bhvSnufit = 392
-
---- @type BehaviorId
-id_bhvSnufitBalls = 393
-
---- @type BehaviorId
-id_bhvSoundSpawner = 394
-
---- @type BehaviorId
-id_bhvSparkle = 395
-
---- @type BehaviorId
-id_bhvSparkleParticleSpawner = 396
-
---- @type BehaviorId
-id_bhvSparkleSpawn = 397
-
---- @type BehaviorId
-id_bhvSpawnedStar = 398
-
---- @type BehaviorId
-id_bhvSpawnedStarNoLevelExit = 399
-
---- @type BehaviorId
-id_bhvSpinAirborneCircleWarp = 400
-
---- @type BehaviorId
-id_bhvSpinAirborneWarp = 401
-
---- @type BehaviorId
-id_bhvSpindel = 402
-
---- @type BehaviorId
-id_bhvSpindrift = 403
-
---- @type BehaviorId
-id_bhvSpiny = 404
-
---- @type BehaviorId
-id_bhvSquarishPathMoving = 405
-
---- @type BehaviorId
-id_bhvSquarishPathParent = 406
-
---- @type BehaviorId
-id_bhvSquishablePlatform = 407
-
---- @type BehaviorId
-id_bhvSslMovingPyramidWall = 408
-
---- @type BehaviorId
-id_bhvStar = 409
-
---- @type BehaviorId
-id_bhvStarDoor = 410
-
---- @type BehaviorId
-id_bhvStarKeyCollectionPuffSpawner = 411
-
---- @type BehaviorId
-id_bhvStarSpawnCoordinates = 412
-
---- @type BehaviorId
-id_bhvStaticCheckeredPlatform = 413
-
---- @type BehaviorId
-id_bhvStaticObject = 414
-
---- @type BehaviorId
-id_bhvStrongWindParticle = 415
-
---- @type BehaviorId
-id_bhvStub = 416
-
---- @type BehaviorId
-id_bhvStub1D0C = 417
-
---- @type BehaviorId
-id_bhvStub1D70 = 418
-
---- @type BehaviorId
-id_bhvSunkenShipPart = 419
-
---- @type BehaviorId
-id_bhvSunkenShipPart2 = 420
-
---- @type BehaviorId
-id_bhvSunkenShipSetRotation = 421
-
---- @type BehaviorId
-id_bhvSushiShark = 422
-
---- @type BehaviorId
-id_bhvSushiSharkCollisionChild = 423
-
---- @type BehaviorId
-id_bhvSwimmingWarp = 424
-
---- @type BehaviorId
-id_bhvSwingPlatform = 425
-
---- @type BehaviorId
-id_bhvSwoop = 426
-
---- @type BehaviorId
-id_bhvTankFishGroup = 427
-
---- @type BehaviorId
-id_bhvTemporaryYellowCoin = 428
-
---- @type BehaviorId
-id_bhvTenCoinsSpawn = 429
-
---- @type BehaviorId
-id_bhvThiBowlingBallSpawner = 430
-
---- @type BehaviorId
-id_bhvThiHugeIslandTop = 431
-
---- @type BehaviorId
-id_bhvThiTinyIslandTop = 432
-
---- @type BehaviorId
-id_bhvThreeCoinsSpawn = 433
-
---- @type BehaviorId
-id_bhvThwomp = 434
-
---- @type BehaviorId
-id_bhvThwomp2 = 435
-
---- @type BehaviorId
-id_bhvTiltingBowserLavaPlatform = 436
-
---- @type BehaviorId
-id_bhvTinyStrongWindParticle = 437
-
---- @type BehaviorId
-id_bhvToadMessage = 438
-
---- @type BehaviorId
-id_bhvTower = 439
-
---- @type BehaviorId
-id_bhvTowerDoor = 440
-
---- @type BehaviorId
-id_bhvTowerPlatformGroup = 441
-
---- @type BehaviorId
-id_bhvToxBox = 442
-
---- @type BehaviorId
-id_bhvTrackBall = 443
-
---- @type BehaviorId
-id_bhvTreasureChestBottom = 444
-
---- @type BehaviorId
-id_bhvTreasureChests = 445
-
---- @type BehaviorId
-id_bhvTreasureChestsJrb = 446
-
---- @type BehaviorId
-id_bhvTreasureChestsShip = 447
-
---- @type BehaviorId
-id_bhvTreasureChestTop = 448
-
---- @type BehaviorId
-id_bhvTree = 449
-
---- @type BehaviorId
-id_bhvTreeLeaf = 450
-
---- @type BehaviorId
-id_bhvTreeSnow = 451
-
---- @type BehaviorId
-id_bhvTriangleParticleSpawner = 452
-
---- @type BehaviorId
-id_bhvTripletButterfly = 453
-
---- @type BehaviorId
-id_bhvTTC2DRotator = 454
-
---- @type BehaviorId
-id_bhvTTCCog = 455
-
---- @type BehaviorId
-id_bhvTTCElevator = 456
-
---- @type BehaviorId
-id_bhvTTCMovingBar = 457
-
---- @type BehaviorId
-id_bhvTTCPendulum = 458
-
---- @type BehaviorId
-id_bhvTTCPitBlock = 459
-
---- @type BehaviorId
-id_bhvTTCRotatingSolid = 460
-
---- @type BehaviorId
-id_bhvTTCSpinner = 461
-
---- @type BehaviorId
-id_bhvTTCTreadmill = 462
-
---- @type BehaviorId
-id_bhvTtmBowlingBallSpawner = 463
-
---- @type BehaviorId
-id_bhvTtmRollingLog = 464
-
---- @type BehaviorId
-id_bhvTumblingBridgePlatform = 465
-
---- @type BehaviorId
-id_bhvTuxiesMother = 466
-
---- @type BehaviorId
-id_bhvTweester = 467
-
---- @type BehaviorId
-id_bhvTweesterSandParticle = 468
-
---- @type BehaviorId
-id_bhvUkiki = 469
-
---- @type BehaviorId
-id_bhvUkikiCage = 470
-
---- @type BehaviorId
-id_bhvUkikiCageChild = 471
-
---- @type BehaviorId
-id_bhvUkikiCageStar = 472
-
---- @type BehaviorId
-id_bhvUnagi = 473
-
---- @type BehaviorId
-id_bhvUnagiSubobject = 474
-
---- @type BehaviorId
-id_bhvUnlockDoorStar = 475
-
---- @type BehaviorId
-id_bhvUnused05A8 = 476
-
---- @type BehaviorId
-id_bhvUnused0DFC = 477
-
---- @type BehaviorId
-id_bhvUnused1820 = 478
-
---- @type BehaviorId
-id_bhvUnused1F30 = 479
-
---- @type BehaviorId
-id_bhvUnused20E0 = 480
-
---- @type BehaviorId
-id_bhvUnused2A10 = 481
-
---- @type BehaviorId
-id_bhvUnused2A54 = 482
-
---- @type BehaviorId
-id_bhvUnusedFakeStar = 483
-
---- @type BehaviorId
-id_bhvUnusedParticleSpawn = 484
-
---- @type BehaviorId
-id_bhvUnusedPoundablePlatform = 485
-
---- @type BehaviorId
-id_bhvVanishCap = 486
-
---- @type BehaviorId
-id_bhvVertStarParticleSpawner = 487
-
---- @type BehaviorId
-id_bhvVolcanoFlames = 488
-
---- @type BehaviorId
-id_bhvVolcanoSoundLoop = 489
-
---- @type BehaviorId
-id_bhvWallTinyStarParticle = 490
-
---- @type BehaviorId
-id_bhvWarp = 491
-
---- @type BehaviorId
-id_bhvWarpPipe = 492
-
---- @type BehaviorId
-id_bhvWaterAirBubble = 493
-
---- @type BehaviorId
-id_bhvWaterBomb = 494
-
---- @type BehaviorId
-id_bhvWaterBombCannon = 495
-
---- @type BehaviorId
-id_bhvWaterBombShadow = 496
-
---- @type BehaviorId
-id_bhvWaterBombSpawner = 497
-
---- @type BehaviorId
-id_bhvWaterDroplet = 498
-
---- @type BehaviorId
-id_bhvWaterDropletSplash = 499
-
---- @type BehaviorId
-id_bhvWaterfallSoundLoop = 500
-
---- @type BehaviorId
-id_bhvWaterLevelDiamond = 501
-
---- @type BehaviorId
-id_bhvWaterLevelPillar = 502
-
---- @type BehaviorId
-id_bhvWaterMist = 503
-
---- @type BehaviorId
-id_bhvWaterMist2 = 504
-
---- @type BehaviorId
-id_bhvWaterSplash = 505
-
---- @type BehaviorId
-id_bhvWaveTrail = 506
-
---- @type BehaviorId
-id_bhvWdwExpressElevator = 507
-
---- @type BehaviorId
-id_bhvWdwExpressElevatorPlatform = 508
-
---- @type BehaviorId
-id_bhvWdwRectangularFloatingPlatform = 509
-
---- @type BehaviorId
-id_bhvWdwSquareFloatingPlatform = 510
-
---- @type BehaviorId
-id_bhvWfBreakableWallLeft = 511
-
---- @type BehaviorId
-id_bhvWfBreakableWallRight = 512
-
---- @type BehaviorId
-id_bhvWfElevatorTowerPlatform = 513
-
---- @type BehaviorId
-id_bhvWfRotatingWoodenPlatform = 514
-
---- @type BehaviorId
-id_bhvWfSlidingPlatform = 515
-
---- @type BehaviorId
-id_bhvWfSlidingTowerPlatform = 516
-
---- @type BehaviorId
-id_bhvWfSolidTowerPlatform = 517
-
---- @type BehaviorId
-id_bhvWfTumblingBridge = 518
-
---- @type BehaviorId
-id_bhvWhirlpool = 519
-
---- @type BehaviorId
-id_bhvWhitePuff1 = 520
-
---- @type BehaviorId
-id_bhvWhitePuff2 = 521
-
---- @type BehaviorId
-id_bhvWhitePuffExplosion = 522
-
---- @type BehaviorId
-id_bhvWhitePuffSmoke = 523
-
---- @type BehaviorId
-id_bhvWhitePuffSmoke2 = 524
-
---- @type BehaviorId
-id_bhvWhompKingBoss = 525
-
---- @type BehaviorId
-id_bhvWigglerBody = 526
-
---- @type BehaviorId
-id_bhvWigglerHead = 527
-
---- @type BehaviorId
-id_bhvWind = 528
-
---- @type BehaviorId
-id_bhvWingCap = 529
-
---- @type BehaviorId
-id_bhvWoodenPost = 530
-
---- @type BehaviorId
-id_bhvYellowBackgroundInMenu = 531
-
---- @type BehaviorId
-id_bhvYellowBall = 532
-
---- @type BehaviorId
-id_bhvYellowCoin = 533
-
---- @type BehaviorId
-id_bhvYoshi = 534
-
---- @type BehaviorId
-id_RM_Scroll_Texture = 535
-
---- @type BehaviorId
-id_editor_Scroll_Texture = 536
-
---- @type BehaviorId
-id_bhvBlueCoinNumber = 537
-
---- @type BehaviorId
-id_bhvStarNumber = 538
-
---- @type BehaviorId
-id_bhv_max_count = 539
+id_bhv1Up                                 =   0 --- @type BehaviorId
+id_bhv1upJumpOnApproach                   =   1 --- @type BehaviorId
+id_bhv1upRunningAway                      =   2 --- @type BehaviorId
+id_bhv1upSliding                          =   3 --- @type BehaviorId
+id_bhv1upWalking                          =   4 --- @type BehaviorId
+id_bhvActivatedBackAndForthPlatform       =   5 --- @type BehaviorId
+id_bhvActSelector                         =   6 --- @type BehaviorId
+id_bhvActSelectorStarType                 =   7 --- @type BehaviorId
+id_bhvAirborneDeathWarp                   =   8 --- @type BehaviorId
+id_bhvAirborneStarCollectWarp             =   9 --- @type BehaviorId
+id_bhvAirborneWarp                        =  10 --- @type BehaviorId
+id_bhvAlphaBooKey                         =  11 --- @type BehaviorId
+id_bhvAmbientSounds                       =  12 --- @type BehaviorId
+id_bhvAnimatedTexture                     =  13 --- @type BehaviorId
+id_bhvAnimatesOnFloorSwitchPress          =  14 --- @type BehaviorId
+id_bhvAnotherElavator                     =  15 --- @type BehaviorId
+id_bhvAnotherTiltingPlatform              =  16 --- @type BehaviorId
+id_bhvArrowLift                           =  17 --- @type BehaviorId
+id_bhvBalconyBigBoo                       =  18 --- @type BehaviorId
+id_bhvBbhTiltingTrapPlatform              =  19 --- @type BehaviorId
+id_bhvBbhTumblingBridge                   =  20 --- @type BehaviorId
+id_bhvBeginningLakitu                     =  21 --- @type BehaviorId
+id_bhvBeginningPeach                      =  22 --- @type BehaviorId
+id_bhvBetaBooKey                          =  23 --- @type BehaviorId
+id_bhvBetaBowserAnchor                    =  24 --- @type BehaviorId
+id_bhvBetaChestBottom                     =  25 --- @type BehaviorId
+id_bhvBetaChestLid                        =  26 --- @type BehaviorId
+id_bhvBetaFishSplashSpawner               =  27 --- @type BehaviorId
+id_bhvBetaHoldableObject                  =  28 --- @type BehaviorId
+id_bhvBetaMovingFlames                    =  29 --- @type BehaviorId
+id_bhvBetaMovingFlamesSpawn               =  30 --- @type BehaviorId
+id_bhvBetaTrampolineSpring                =  31 --- @type BehaviorId
+id_bhvBetaTrampolineTop                   =  32 --- @type BehaviorId
+id_bhvBigBoulder                          =  33 --- @type BehaviorId
+id_bhvBigBoulderGenerator                 =  34 --- @type BehaviorId
+id_bhvBigBully                            =  35 --- @type BehaviorId
+id_bhvBigBullyWithMinions                 =  36 --- @type BehaviorId
+id_bhvBigChillBully                       =  37 --- @type BehaviorId
+id_bhvBigSnowmanWhole                     =  38 --- @type BehaviorId
+id_bhvBird                                =  39 --- @type BehaviorId
+id_bhvBirdsSoundLoop                      =  40 --- @type BehaviorId
+id_bhvBitfsSinkingCagePlatform            =  41 --- @type BehaviorId
+id_bhvBitfsSinkingPlatforms               =  42 --- @type BehaviorId
+id_bhvBitfsTiltingInvertedPyramid         =  43 --- @type BehaviorId
+id_bhvBlackSmokeBowser                    =  44 --- @type BehaviorId
+id_bhvBlackSmokeMario                     =  45 --- @type BehaviorId
+id_bhvBlackSmokeUpward                    =  46 --- @type BehaviorId
+id_bhvBlueBowserFlame                     =  47 --- @type BehaviorId
+id_bhvBlueCoinJumping                     =  48 --- @type BehaviorId
+id_bhvBlueCoinSliding                     =  49 --- @type BehaviorId
+id_bhvBlueCoinSwitch                      =  50 --- @type BehaviorId
+id_bhvBlueFish                            =  51 --- @type BehaviorId
+id_bhvBlueFlamesGroup                     =  52 --- @type BehaviorId
+id_bhvBobBowlingBallSpawner               =  53 --- @type BehaviorId
+id_bhvBobomb                              =  54 --- @type BehaviorId
+id_bhvBobombAnchorMario                   =  55 --- @type BehaviorId
+id_bhvBobombBuddy                         =  56 --- @type BehaviorId
+id_bhvBobombBuddyOpensCannon              =  57 --- @type BehaviorId
+id_bhvBobombBullyDeathSmoke               =  58 --- @type BehaviorId
+id_bhvBobombExplosionBubble               =  59 --- @type BehaviorId
+id_bhvBobombExplosionBubble3600           =  60 --- @type BehaviorId
+id_bhvBobombFuseSmoke                     =  61 --- @type BehaviorId
+id_bhvBoo                                 =  62 --- @type BehaviorId
+id_bhvBooBossSpawnedBridge                =  63 --- @type BehaviorId
+id_bhvBooCage                             =  64 --- @type BehaviorId
+id_bhvBooInCastle                         =  65 --- @type BehaviorId
+id_bhvBookendSpawn                        =  66 --- @type BehaviorId
+id_bhvBookSwitch                          =  67 --- @type BehaviorId
+id_bhvBooWithCage                         =  68 --- @type BehaviorId
+id_bhvBouncingFireball                    =  69 --- @type BehaviorId
+id_bhvBouncingFireballFlame               =  70 --- @type BehaviorId
+id_bhvBowlingBall                         =  71 --- @type BehaviorId
+id_bhvBowser                              =  72 --- @type BehaviorId
+id_bhvBowserBodyAnchor                    =  73 --- @type BehaviorId
+id_bhvBowserBomb                          =  74 --- @type BehaviorId
+id_bhvBowserBombExplosion                 =  75 --- @type BehaviorId
+id_bhvBowserBombSmoke                     =  76 --- @type BehaviorId
+id_bhvBowserCourseRedCoinStar             =  77 --- @type BehaviorId
+id_bhvBowserFlameSpawn                    =  78 --- @type BehaviorId
+id_bhvBowserKey                           =  79 --- @type BehaviorId
+id_bhvBowserKeyCourseExit                 =  80 --- @type BehaviorId
+id_bhvBowserKeyUnlockDoor                 =  81 --- @type BehaviorId
+id_bhvBowserShockWave                     =  82 --- @type BehaviorId
+id_bhvBowsersSub                          =  83 --- @type BehaviorId
+id_bhvBowserSubDoor                       =  84 --- @type BehaviorId
+id_bhvBowserTailAnchor                    =  85 --- @type BehaviorId
+id_bhvBreakableBox                        =  86 --- @type BehaviorId
+id_bhvBreakableBoxSmall                   =  87 --- @type BehaviorId
+id_bhvBreakBoxTriangle                    =  88 --- @type BehaviorId
+id_bhvBreathParticleSpawner               =  89 --- @type BehaviorId
+id_bhvBub                                 =  90 --- @type BehaviorId
+id_bhvBubba                               =  91 --- @type BehaviorId
+id_bhvBubbleMaybe                         =  92 --- @type BehaviorId
+id_bhvBubbleParticleSpawner               =  93 --- @type BehaviorId
+id_bhvBubblePlayer                        =  94 --- @type BehaviorId
+id_bhvBubbleSplash                        =  95 --- @type BehaviorId
+id_bhvBulletBill                          =  96 --- @type BehaviorId
+id_bhvBulletBillCannon                    =  97 --- @type BehaviorId
+id_bhvButterfly                           =  98 --- @type BehaviorId
+id_bhvCameraLakitu                        =  99 --- @type BehaviorId
+id_bhvCannon                              = 100 --- @type BehaviorId
+id_bhvCannonBarrel                        = 101 --- @type BehaviorId
+id_bhvCannonBarrelBubbles                 = 102 --- @type BehaviorId
+id_bhvCannonBaseUnused                    = 103 --- @type BehaviorId
+id_bhvCannonClosed                        = 104 --- @type BehaviorId
+id_bhvCapSwitch                           = 105 --- @type BehaviorId
+id_bhvCapSwitchBase                       = 106 --- @type BehaviorId
+id_bhvCarrySomething1                     = 107 --- @type BehaviorId
+id_bhvCarrySomething2                     = 108 --- @type BehaviorId
+id_bhvCarrySomething3                     = 109 --- @type BehaviorId
+id_bhvCarrySomething4                     = 110 --- @type BehaviorId
+id_bhvCarrySomething5                     = 111 --- @type BehaviorId
+id_bhvCarrySomething6                     = 112 --- @type BehaviorId
+id_bhvCastleFlagWaving                    = 113 --- @type BehaviorId
+id_bhvCastleFloorTrap                     = 114 --- @type BehaviorId
+id_bhvCcmTouchedStarSpawn                 = 115 --- @type BehaviorId
+id_bhvCelebrationStar                     = 116 --- @type BehaviorId
+id_bhvCelebrationStarSparkle              = 117 --- @type BehaviorId
+id_bhvChainChomp                          = 118 --- @type BehaviorId
+id_bhvChainChompChainPart                 = 119 --- @type BehaviorId
+id_bhvChainChompGate                      = 120 --- @type BehaviorId
+id_bhvCheckerboardElevatorGroup           = 121 --- @type BehaviorId
+id_bhvCheckerboardPlatformSub             = 122 --- @type BehaviorId
+id_bhvChirpChirp                          = 123 --- @type BehaviorId
+id_bhvChirpChirpUnused                    = 124 --- @type BehaviorId
+id_bhvChuckya                             = 125 --- @type BehaviorId
+id_bhvChuckyaAnchorMario                  = 126 --- @type BehaviorId
+id_bhvCirclingAmp                         = 127 --- @type BehaviorId
+id_bhvClamShell                           = 128 --- @type BehaviorId
+id_bhvClockHourHand                       = 129 --- @type BehaviorId
+id_bhvClockMinuteHand                     = 130 --- @type BehaviorId
+id_bhvCloud                               = 131 --- @type BehaviorId
+id_bhvCloudPart                           = 132 --- @type BehaviorId
+id_bhvCoffin                              = 133 --- @type BehaviorId
+id_bhvCoffinSpawner                       = 134 --- @type BehaviorId
+id_bhvCoinFormation                       = 135 --- @type BehaviorId
+id_bhvCoinFormationSpawn                  = 136 --- @type BehaviorId
+id_bhvCoinInsideBoo                       = 137 --- @type BehaviorId
+id_bhvCoinSparkles                        = 138 --- @type BehaviorId
+id_bhvControllablePlatform                = 139 --- @type BehaviorId
+id_bhvControllablePlatformSub             = 140 --- @type BehaviorId
+id_bhvCourtyardBooTriplet                 = 141 --- @type BehaviorId
+id_bhvCutOutObject                        = 142 --- @type BehaviorId
+id_bhvDddMovingPole                       = 143 --- @type BehaviorId
+id_bhvDDDPole                             = 144 --- @type BehaviorId
+id_bhvDddWarp                             = 145 --- @type BehaviorId
+id_bhvDeathWarp                           = 146 --- @type BehaviorId
+id_bhvDecorativePendulum                  = 147 --- @type BehaviorId
+id_bhvDirtParticleSpawner                 = 148 --- @type BehaviorId
+id_bhvDonutPlatform                       = 149 --- @type BehaviorId
+id_bhvDonutPlatformSpawner                = 150 --- @type BehaviorId
+id_bhvDoor                                = 151 --- @type BehaviorId
+id_bhvDoorWarp                            = 152 --- @type BehaviorId
+id_bhvDorrie                              = 153 --- @type BehaviorId
+id_bhvEndBirds1                           = 154 --- @type BehaviorId
+id_bhvEndBirds2                           = 155 --- @type BehaviorId
+id_bhvEndPeach                            = 156 --- @type BehaviorId
+id_bhvEndToad                             = 157 --- @type BehaviorId
+id_bhvEnemyLakitu                         = 158 --- @type BehaviorId
+id_bhvExclamationBox                      = 159 --- @type BehaviorId
+id_bhvExitPodiumWarp                      = 160 --- @type BehaviorId
+id_bhvExplosion                           = 161 --- @type BehaviorId
+id_bhvEyerokBoss                          = 162 --- @type BehaviorId
+id_bhvEyerokHand                          = 163 --- @type BehaviorId
+id_bhvFadingWarp                          = 164 --- @type BehaviorId
+id_bhvFallingBowserPlatform               = 165 --- @type BehaviorId
+id_bhvFallingPillar                       = 166 --- @type BehaviorId
+id_bhvFallingPillarHitbox                 = 167 --- @type BehaviorId
+id_bhvFerrisWheelAxle                     = 168 --- @type BehaviorId
+id_bhvFerrisWheelPlatform                 = 169 --- @type BehaviorId
+id_bhvFewBlueFishSpawner                  = 170 --- @type BehaviorId
+id_bhvFireParticleSpawner                 = 171 --- @type BehaviorId
+id_bhvFirePiranhaPlant                    = 172 --- @type BehaviorId
+id_bhvFireSpitter                         = 173 --- @type BehaviorId
+id_bhvFish                                = 174 --- @type BehaviorId
+id_bhvFishGroup                           = 175 --- @type BehaviorId
+id_bhvFishSpawner                         = 176 --- @type BehaviorId
+id_bhvFlame                               = 177 --- @type BehaviorId
+id_bhvFlameBouncing                       = 178 --- @type BehaviorId
+id_bhvFlameBowser                         = 179 --- @type BehaviorId
+id_bhvFlameFloatingLanding                = 180 --- @type BehaviorId
+id_bhvFlameLargeBurningOut                = 181 --- @type BehaviorId
+id_bhvFlameMovingForwardGrowing           = 182 --- @type BehaviorId
+id_bhvFlamethrower                        = 183 --- @type BehaviorId
+id_bhvFlamethrowerFlame                   = 184 --- @type BehaviorId
+id_bhvFloorSwitchAnimatesObject           = 185 --- @type BehaviorId
+id_bhvFloorSwitchGrills                   = 186 --- @type BehaviorId
+id_bhvFloorSwitchHardcodedModel           = 187 --- @type BehaviorId
+id_bhvFloorSwitchHiddenObjects            = 188 --- @type BehaviorId
+id_bhvFloorTrapInCastle                   = 189 --- @type BehaviorId
+id_bhvFlyGuy                              = 190 --- @type BehaviorId
+id_bhvFlyguyFlame                         = 191 --- @type BehaviorId
+id_bhvFlyingBookend                       = 192 --- @type BehaviorId
+id_bhvFlyingWarp                          = 193 --- @type BehaviorId
+id_bhvFreeBowlingBall                     = 194 --- @type BehaviorId
+id_bhvGhostHuntBigBoo                     = 195 --- @type BehaviorId
+id_bhvGhostHuntBoo                        = 196 --- @type BehaviorId
+id_bhvGiantPole                           = 197 --- @type BehaviorId
+id_bhvGoldenCoinSparkles                  = 198 --- @type BehaviorId
+id_bhvGoomba                              = 199 --- @type BehaviorId
+id_bhvGoombaTripletSpawner                = 200 --- @type BehaviorId
+id_bhvGrandStar                           = 201 --- @type BehaviorId
+id_bhvGrindel                             = 202 --- @type BehaviorId
+id_bhvHardAirKnockBackWarp                = 203 --- @type BehaviorId
+id_bhvHauntedBookshelf                    = 204 --- @type BehaviorId
+id_bhvHauntedBookshelfManager             = 205 --- @type BehaviorId
+id_bhvHauntedChair                        = 206 --- @type BehaviorId
+id_bhvHeaveHo                             = 207 --- @type BehaviorId
+id_bhvHeaveHoThrowMario                   = 208 --- @type BehaviorId
+id_bhvHidden1up                           = 209 --- @type BehaviorId
+id_bhvHidden1upInPole                     = 210 --- @type BehaviorId
+id_bhvHidden1upInPoleSpawner              = 211 --- @type BehaviorId
+id_bhvHidden1upInPoleTrigger              = 212 --- @type BehaviorId
+id_bhvHidden1upTrigger                    = 213 --- @type BehaviorId
+id_bhvHiddenAt120Stars                    = 214 --- @type BehaviorId
+id_bhvHiddenBlueCoin                      = 215 --- @type BehaviorId
+id_bhvHiddenObject                        = 216 --- @type BehaviorId
+id_bhvHiddenRedCoinStar                   = 217 --- @type BehaviorId
+id_bhvHiddenStaircaseStep                 = 218 --- @type BehaviorId
+id_bhvHiddenStar                          = 219 --- @type BehaviorId
+id_bhvHiddenStarTrigger                   = 220 --- @type BehaviorId
+id_bhvHmcElevatorPlatform                 = 221 --- @type BehaviorId
+id_bhvHomingAmp                           = 222 --- @type BehaviorId
+id_bhvHoot                                = 223 --- @type BehaviorId
+id_bhvHorizontalGrindel                   = 224 --- @type BehaviorId
+id_bhvHorStarParticleSpawner              = 225 --- @type BehaviorId
+id_bhvIdleWaterWave                       = 226 --- @type BehaviorId
+id_bhvIgloo                               = 227 --- @type BehaviorId
+id_bhvInitializeChangingWaterLevel        = 228 --- @type BehaviorId
+id_bhvInsideCannon                        = 229 --- @type BehaviorId
+id_bhvInstantActiveWarp                   = 230 --- @type BehaviorId
+id_bhvInSunkenShip                        = 231 --- @type BehaviorId
+id_bhvInSunkenShip2                       = 232 --- @type BehaviorId
+id_bhvInSunkenShip3                       = 233 --- @type BehaviorId
+id_bhvIntroScene                          = 234 --- @type BehaviorId
+id_bhvInvisibleObjectsUnderBridge         = 235 --- @type BehaviorId
+id_bhvJetStream                           = 236 --- @type BehaviorId
+id_bhvJetStreamRingSpawner                = 237 --- @type BehaviorId
+id_bhvJetStreamWaterRing                  = 238 --- @type BehaviorId
+id_bhvJrbFloatingBox                      = 239 --- @type BehaviorId
+id_bhvJrbFloatingPlatform                 = 240 --- @type BehaviorId
+id_bhvJrbSlidingBox                       = 241 --- @type BehaviorId
+id_bhvJumpingBox                          = 242 --- @type BehaviorId
+id_bhvKickableBoard                       = 243 --- @type BehaviorId
+id_bhvKingBobomb                          = 244 --- @type BehaviorId
+id_bhvKlepto                              = 245 --- @type BehaviorId
+id_bhvKoopa                               = 246 --- @type BehaviorId
+id_bhvKoopaFlag                           = 247 --- @type BehaviorId
+id_bhvKoopaRaceEndpoint                   = 248 --- @type BehaviorId
+id_bhvKoopaShell                          = 249 --- @type BehaviorId
+id_bhvKoopaShellFlame                     = 250 --- @type BehaviorId
+id_bhvKoopaShellUnderwater                = 251 --- @type BehaviorId
+id_bhvLargeBomp                           = 252 --- @type BehaviorId
+id_bhvLaunchDeathWarp                     = 253 --- @type BehaviorId
+id_bhvLaunchStarCollectWarp               = 254 --- @type BehaviorId
+id_bhvLeafParticleSpawner                 = 255 --- @type BehaviorId
+id_bhvLllBowserPuzzle                     = 256 --- @type BehaviorId
+id_bhvLllBowserPuzzlePiece                = 257 --- @type BehaviorId
+id_bhvLllDrawbridge                       = 258 --- @type BehaviorId
+id_bhvLllDrawbridgeSpawner                = 259 --- @type BehaviorId
+id_bhvLllFloatingWoodBridge               = 260 --- @type BehaviorId
+id_bhvLllHexagonalMesh                    = 261 --- @type BehaviorId
+id_bhvLllMovingOctagonalMeshPlatform      = 262 --- @type BehaviorId
+id_bhvLllRollingLog                       = 263 --- @type BehaviorId
+id_bhvLllRotatingBlockWithFireBars        = 264 --- @type BehaviorId
+id_bhvLllRotatingHexagonalPlatform        = 265 --- @type BehaviorId
+id_bhvLllRotatingHexagonalRing            = 266 --- @type BehaviorId
+id_bhvLllRotatingHexFlame                 = 267 --- @type BehaviorId
+id_bhvLllSinkingRectangularPlatform       = 268 --- @type BehaviorId
+id_bhvLllSinkingRockBlock                 = 269 --- @type BehaviorId
+id_bhvLllSinkingSquarePlatforms           = 270 --- @type BehaviorId
+id_bhvLllTiltingInvertedPyramid           = 271 --- @type BehaviorId
+id_bhvLllTumblingBridge                   = 272 --- @type BehaviorId
+id_bhvLllVolcanoFallingTrap               = 273 --- @type BehaviorId
+id_bhvLllWoodPiece                        = 274 --- @type BehaviorId
+id_bhvMacroUkiki                          = 275 --- @type BehaviorId
+id_bhvMadPiano                            = 276 --- @type BehaviorId
+id_bhvMantaRay                            = 277 --- @type BehaviorId
+id_bhvMantaRayRingManager                 = 278 --- @type BehaviorId
+id_bhvMantaRayWaterRing                   = 279 --- @type BehaviorId
+id_bhvManyBlueFishSpawner                 = 280 --- @type BehaviorId
+id_bhvMario                               = 281 --- @type BehaviorId
+id_bhvMenuButton                          = 282 --- @type BehaviorId
+id_bhvMenuButtonManager                   = 283 --- @type BehaviorId
+id_bhvMerryGoRound                        = 284 --- @type BehaviorId
+id_bhvMerryGoRoundBigBoo                  = 285 --- @type BehaviorId
+id_bhvMerryGoRoundBoo                     = 286 --- @type BehaviorId
+id_bhvMerryGoRoundBooManager              = 287 --- @type BehaviorId
+id_bhvMeshElevator                        = 288 --- @type BehaviorId
+id_bhvMessagePanel                        = 289 --- @type BehaviorId
+id_bhvMetalCap                            = 290 --- @type BehaviorId
+id_bhvMips                                = 291 --- @type BehaviorId
+id_bhvMistCircParticleSpawner             = 292 --- @type BehaviorId
+id_bhvMistParticleSpawner                 = 293 --- @type BehaviorId
+id_bhvMoatGrills                          = 294 --- @type BehaviorId
+id_bhvMoneybag                            = 295 --- @type BehaviorId
+id_bhvMoneybagHidden                      = 296 --- @type BehaviorId
+id_bhvMontyMole                           = 297 --- @type BehaviorId
+id_bhvMontyMoleHole                       = 298 --- @type BehaviorId
+id_bhvMontyMoleRock                       = 299 --- @type BehaviorId
+id_bhvMovingBlueCoin                      = 300 --- @type BehaviorId
+id_bhvMovingYellowCoin                    = 301 --- @type BehaviorId
+id_bhvMrBlizzard                          = 302 --- @type BehaviorId
+id_bhvMrBlizzardSnowball                  = 303 --- @type BehaviorId
+id_bhvMrI                                 = 304 --- @type BehaviorId
+id_bhvMrIBlueCoin                         = 305 --- @type BehaviorId
+id_bhvMrIBody                             = 306 --- @type BehaviorId
+id_bhvMrIParticle                         = 307 --- @type BehaviorId
+id_bhvNormalCap                           = 308 --- @type BehaviorId
+id_bhvObjectBubble                        = 309 --- @type BehaviorId
+id_bhvObjectWaterSplash                   = 310 --- @type BehaviorId
+id_bhvObjectWaterWave                     = 311 --- @type BehaviorId
+id_bhvObjectWaveTrail                     = 312 --- @type BehaviorId
+id_bhvOctagonalPlatformRotating           = 313 --- @type BehaviorId
+id_bhvOneCoin                             = 314 --- @type BehaviorId
+id_bhvOpenableCageDoor                    = 315 --- @type BehaviorId
+id_bhvOpenableGrill                       = 316 --- @type BehaviorId
+id_bhvOrangeNumber                        = 317 --- @type BehaviorId
+id_bhvPaintingDeathWarp                   = 318 --- @type BehaviorId
+id_bhvPaintingStarCollectWarp             = 319 --- @type BehaviorId
+id_bhvPenguinBaby                         = 320 --- @type BehaviorId
+id_bhvPenguinRaceFinishLine               = 321 --- @type BehaviorId
+id_bhvPenguinRaceShortcutCheck            = 322 --- @type BehaviorId
+id_bhvPillarBase                          = 323 --- @type BehaviorId
+id_bhvPiranhaPlant                        = 324 --- @type BehaviorId
+id_bhvPiranhaPlantBubble                  = 325 --- @type BehaviorId
+id_bhvPiranhaPlantWakingBubbles           = 326 --- @type BehaviorId
+id_bhvPitBowlingBall                      = 327 --- @type BehaviorId
+id_bhvPlatformOnTrack                     = 328 --- @type BehaviorId
+id_bhvPlaysMusicTrackWhenTouched          = 329 --- @type BehaviorId
+id_bhvPlungeBubble                        = 330 --- @type BehaviorId
+id_bhvPokey                               = 331 --- @type BehaviorId
+id_bhvPokeyBodyPart                       = 332 --- @type BehaviorId
+id_bhvPoleGrabbing                        = 333 --- @type BehaviorId
+id_bhvPoundTinyStarParticle               = 334 --- @type BehaviorId
+id_bhvPunchTinyTriangle                   = 335 --- @type BehaviorId
+id_bhvPurpleParticle                      = 336 --- @type BehaviorId
+id_bhvPurpleSwitchHiddenBoxes             = 337 --- @type BehaviorId
+id_bhvPushableMetalBox                    = 338 --- @type BehaviorId
+id_bhvPyramidElevator                     = 339 --- @type BehaviorId
+id_bhvPyramidElevatorTrajectoryMarkerBall = 340 --- @type BehaviorId
+id_bhvPyramidPillarTouchDetector          = 341 --- @type BehaviorId
+id_bhvPyramidTop                          = 342 --- @type BehaviorId
+id_bhvPyramidTopFragment                  = 343 --- @type BehaviorId
+id_bhvRacingPenguin                       = 344 --- @type BehaviorId
+id_bhvRandomAnimatedTexture               = 345 --- @type BehaviorId
+id_bhvRecoveryHeart                       = 346 --- @type BehaviorId
+id_bhvRedCoin                             = 347 --- @type BehaviorId
+id_bhvRedCoinStarMarker                   = 348 --- @type BehaviorId
+id_bhvRespawner                           = 349 --- @type BehaviorId
+id_bhvRockSolid                           = 350 --- @type BehaviorId
+id_bhvRotatingCounterClockwise            = 351 --- @type BehaviorId
+id_bhvRotatingExclamationMark             = 352 --- @type BehaviorId
+id_bhvRotatingPlatform                    = 353 --- @type BehaviorId
+id_bhvRrCruiserWing                       = 354 --- @type BehaviorId
+id_bhvRrElevatorPlatform                  = 355 --- @type BehaviorId
+id_bhvRrRotatingBridgePlatform            = 356 --- @type BehaviorId
+id_bhvSandSoundLoop                       = 357 --- @type BehaviorId
+id_bhvScuttlebug                          = 358 --- @type BehaviorId
+id_bhvScuttlebugSpawn                     = 359 --- @type BehaviorId
+id_bhvSeaweed                             = 360 --- @type BehaviorId
+id_bhvSeaweedBundle                       = 361 --- @type BehaviorId
+id_bhvSeesawPlatform                      = 362 --- @type BehaviorId
+id_bhvShallowWaterSplash                  = 363 --- @type BehaviorId
+id_bhvShallowWaterWave                    = 364 --- @type BehaviorId
+id_bhvShipPart3                           = 365 --- @type BehaviorId
+id_bhvSignOnWall                          = 366 --- @type BehaviorId
+id_bhvSingleCoinGetsSpawned               = 367 --- @type BehaviorId
+id_bhvSkeeter                             = 368 --- @type BehaviorId
+id_bhvSkeeterWave                         = 369 --- @type BehaviorId
+id_bhvSlidingPlatform2                    = 370 --- @type BehaviorId
+id_bhvSlidingSnowMound                    = 371 --- @type BehaviorId
+id_bhvSLSnowmanWind                       = 372 --- @type BehaviorId
+id_bhvSLWalkingPenguin                    = 373 --- @type BehaviorId
+id_bhvSmallBomp                           = 374 --- @type BehaviorId
+id_bhvSmallBully                          = 375 --- @type BehaviorId
+id_bhvSmallChillBully                     = 376 --- @type BehaviorId
+id_bhvSmallParticle                       = 377 --- @type BehaviorId
+id_bhvSmallParticleBubbles                = 378 --- @type BehaviorId
+id_bhvSmallParticleSnow                   = 379 --- @type BehaviorId
+id_bhvSmallPenguin                        = 380 --- @type BehaviorId
+id_bhvSmallPiranhaFlame                   = 381 --- @type BehaviorId
+id_bhvSmallWaterWave                      = 382 --- @type BehaviorId
+id_bhvSmallWaterWave398                   = 383 --- @type BehaviorId
+id_bhvSmallWhomp                          = 384 --- @type BehaviorId
+id_bhvSmoke                               = 385 --- @type BehaviorId
+id_bhvSnowBall                            = 386 --- @type BehaviorId
+id_bhvSnowmansBodyCheckpoint              = 387 --- @type BehaviorId
+id_bhvSnowmansBottom                      = 388 --- @type BehaviorId
+id_bhvSnowmansHead                        = 389 --- @type BehaviorId
+id_bhvSnowMoundSpawn                      = 390 --- @type BehaviorId
+id_bhvSnowParticleSpawner                 = 391 --- @type BehaviorId
+id_bhvSnufit                              = 392 --- @type BehaviorId
+id_bhvSnufitBalls                         = 393 --- @type BehaviorId
+id_bhvSoundSpawner                        = 394 --- @type BehaviorId
+id_bhvSparkle                             = 395 --- @type BehaviorId
+id_bhvSparkleParticleSpawner              = 396 --- @type BehaviorId
+id_bhvSparkleSpawn                        = 397 --- @type BehaviorId
+id_bhvSpawnedStar                         = 398 --- @type BehaviorId
+id_bhvSpawnedStarNoLevelExit              = 399 --- @type BehaviorId
+id_bhvSpinAirborneCircleWarp              = 400 --- @type BehaviorId
+id_bhvSpinAirborneWarp                    = 401 --- @type BehaviorId
+id_bhvSpindel                             = 402 --- @type BehaviorId
+id_bhvSpindrift                           = 403 --- @type BehaviorId
+id_bhvSpiny                               = 404 --- @type BehaviorId
+id_bhvSquarishPathMoving                  = 405 --- @type BehaviorId
+id_bhvSquarishPathParent                  = 406 --- @type BehaviorId
+id_bhvSquishablePlatform                  = 407 --- @type BehaviorId
+id_bhvSslMovingPyramidWall                = 408 --- @type BehaviorId
+id_bhvStar                                = 409 --- @type BehaviorId
+id_bhvStarDoor                            = 410 --- @type BehaviorId
+id_bhvStarKeyCollectionPuffSpawner        = 411 --- @type BehaviorId
+id_bhvStarSpawnCoordinates                = 412 --- @type BehaviorId
+id_bhvStaticCheckeredPlatform             = 413 --- @type BehaviorId
+id_bhvStaticObject                        = 414 --- @type BehaviorId
+id_bhvStrongWindParticle                  = 415 --- @type BehaviorId
+id_bhvStub                                = 416 --- @type BehaviorId
+id_bhvStub1D0C                            = 417 --- @type BehaviorId
+id_bhvStub1D70                            = 418 --- @type BehaviorId
+id_bhvSunkenShipPart                      = 419 --- @type BehaviorId
+id_bhvSunkenShipPart2                     = 420 --- @type BehaviorId
+id_bhvSunkenShipSetRotation               = 421 --- @type BehaviorId
+id_bhvSushiShark                          = 422 --- @type BehaviorId
+id_bhvSushiSharkCollisionChild            = 423 --- @type BehaviorId
+id_bhvSwimmingWarp                        = 424 --- @type BehaviorId
+id_bhvSwingPlatform                       = 425 --- @type BehaviorId
+id_bhvSwoop                               = 426 --- @type BehaviorId
+id_bhvTankFishGroup                       = 427 --- @type BehaviorId
+id_bhvTemporaryYellowCoin                 = 428 --- @type BehaviorId
+id_bhvTenCoinsSpawn                       = 429 --- @type BehaviorId
+id_bhvThiBowlingBallSpawner               = 430 --- @type BehaviorId
+id_bhvThiHugeIslandTop                    = 431 --- @type BehaviorId
+id_bhvThiTinyIslandTop                    = 432 --- @type BehaviorId
+id_bhvThreeCoinsSpawn                     = 433 --- @type BehaviorId
+id_bhvThwomp                              = 434 --- @type BehaviorId
+id_bhvThwomp2                             = 435 --- @type BehaviorId
+id_bhvTiltingBowserLavaPlatform           = 436 --- @type BehaviorId
+id_bhvTinyStrongWindParticle              = 437 --- @type BehaviorId
+id_bhvToadMessage                         = 438 --- @type BehaviorId
+id_bhvTower                               = 439 --- @type BehaviorId
+id_bhvTowerDoor                           = 440 --- @type BehaviorId
+id_bhvTowerPlatformGroup                  = 441 --- @type BehaviorId
+id_bhvToxBox                              = 442 --- @type BehaviorId
+id_bhvTrackBall                           = 443 --- @type BehaviorId
+id_bhvTreasureChestBottom                 = 444 --- @type BehaviorId
+id_bhvTreasureChests                      = 445 --- @type BehaviorId
+id_bhvTreasureChestsJrb                   = 446 --- @type BehaviorId
+id_bhvTreasureChestsShip                  = 447 --- @type BehaviorId
+id_bhvTreasureChestTop                    = 448 --- @type BehaviorId
+id_bhvTree                                = 449 --- @type BehaviorId
+id_bhvTreeLeaf                            = 450 --- @type BehaviorId
+id_bhvTreeSnow                            = 451 --- @type BehaviorId
+id_bhvTriangleParticleSpawner             = 452 --- @type BehaviorId
+id_bhvTripletButterfly                    = 453 --- @type BehaviorId
+id_bhvTTC2DRotator                        = 454 --- @type BehaviorId
+id_bhvTTCCog                              = 455 --- @type BehaviorId
+id_bhvTTCElevator                         = 456 --- @type BehaviorId
+id_bhvTTCMovingBar                        = 457 --- @type BehaviorId
+id_bhvTTCPendulum                         = 458 --- @type BehaviorId
+id_bhvTTCPitBlock                         = 459 --- @type BehaviorId
+id_bhvTTCRotatingSolid                    = 460 --- @type BehaviorId
+id_bhvTTCSpinner                          = 461 --- @type BehaviorId
+id_bhvTTCTreadmill                        = 462 --- @type BehaviorId
+id_bhvTtmBowlingBallSpawner               = 463 --- @type BehaviorId
+id_bhvTtmRollingLog                       = 464 --- @type BehaviorId
+id_bhvTumblingBridgePlatform              = 465 --- @type BehaviorId
+id_bhvTuxiesMother                        = 466 --- @type BehaviorId
+id_bhvTweester                            = 467 --- @type BehaviorId
+id_bhvTweesterSandParticle                = 468 --- @type BehaviorId
+id_bhvUkiki                               = 469 --- @type BehaviorId
+id_bhvUkikiCage                           = 470 --- @type BehaviorId
+id_bhvUkikiCageChild                      = 471 --- @type BehaviorId
+id_bhvUkikiCageStar                       = 472 --- @type BehaviorId
+id_bhvUnagi                               = 473 --- @type BehaviorId
+id_bhvUnagiSubobject                      = 474 --- @type BehaviorId
+id_bhvUnlockDoorStar                      = 475 --- @type BehaviorId
+id_bhvUnused05A8                          = 476 --- @type BehaviorId
+id_bhvUnused0DFC                          = 477 --- @type BehaviorId
+id_bhvUnused1820                          = 478 --- @type BehaviorId
+id_bhvUnused1F30                          = 479 --- @type BehaviorId
+id_bhvUnused20E0                          = 480 --- @type BehaviorId
+id_bhvUnused2A10                          = 481 --- @type BehaviorId
+id_bhvUnused2A54                          = 482 --- @type BehaviorId
+id_bhvUnusedFakeStar                      = 483 --- @type BehaviorId
+id_bhvUnusedParticleSpawn                 = 484 --- @type BehaviorId
+id_bhvUnusedPoundablePlatform             = 485 --- @type BehaviorId
+id_bhvVanishCap                           = 486 --- @type BehaviorId
+id_bhvVertStarParticleSpawner             = 487 --- @type BehaviorId
+id_bhvVolcanoFlames                       = 488 --- @type BehaviorId
+id_bhvVolcanoSoundLoop                    = 489 --- @type BehaviorId
+id_bhvWallTinyStarParticle                = 490 --- @type BehaviorId
+id_bhvWarp                                = 491 --- @type BehaviorId
+id_bhvWarpPipe                            = 492 --- @type BehaviorId
+id_bhvWaterAirBubble                      = 493 --- @type BehaviorId
+id_bhvWaterBomb                           = 494 --- @type BehaviorId
+id_bhvWaterBombCannon                     = 495 --- @type BehaviorId
+id_bhvWaterBombShadow                     = 496 --- @type BehaviorId
+id_bhvWaterBombSpawner                    = 497 --- @type BehaviorId
+id_bhvWaterDroplet                        = 498 --- @type BehaviorId
+id_bhvWaterDropletSplash                  = 499 --- @type BehaviorId
+id_bhvWaterfallSoundLoop                  = 500 --- @type BehaviorId
+id_bhvWaterLevelDiamond                   = 501 --- @type BehaviorId
+id_bhvWaterLevelPillar                    = 502 --- @type BehaviorId
+id_bhvWaterMist                           = 503 --- @type BehaviorId
+id_bhvWaterMist2                          = 504 --- @type BehaviorId
+id_bhvWaterSplash                         = 505 --- @type BehaviorId
+id_bhvWaveTrail                           = 506 --- @type BehaviorId
+id_bhvWdwExpressElevator                  = 507 --- @type BehaviorId
+id_bhvWdwExpressElevatorPlatform          = 508 --- @type BehaviorId
+id_bhvWdwRectangularFloatingPlatform      = 509 --- @type BehaviorId
+id_bhvWdwSquareFloatingPlatform           = 510 --- @type BehaviorId
+id_bhvWfBreakableWallLeft                 = 511 --- @type BehaviorId
+id_bhvWfBreakableWallRight                = 512 --- @type BehaviorId
+id_bhvWfElevatorTowerPlatform             = 513 --- @type BehaviorId
+id_bhvWfRotatingWoodenPlatform            = 514 --- @type BehaviorId
+id_bhvWfSlidingPlatform                   = 515 --- @type BehaviorId
+id_bhvWfSlidingTowerPlatform              = 516 --- @type BehaviorId
+id_bhvWfSolidTowerPlatform                = 517 --- @type BehaviorId
+id_bhvWfTumblingBridge                    = 518 --- @type BehaviorId
+id_bhvWhirlpool                           = 519 --- @type BehaviorId
+id_bhvWhitePuff1                          = 520 --- @type BehaviorId
+id_bhvWhitePuff2                          = 521 --- @type BehaviorId
+id_bhvWhitePuffExplosion                  = 522 --- @type BehaviorId
+id_bhvWhitePuffSmoke                      = 523 --- @type BehaviorId
+id_bhvWhitePuffSmoke2                     = 524 --- @type BehaviorId
+id_bhvWhompKingBoss                       = 525 --- @type BehaviorId
+id_bhvWigglerBody                         = 526 --- @type BehaviorId
+id_bhvWigglerHead                         = 527 --- @type BehaviorId
+id_bhvWind                                = 528 --- @type BehaviorId
+id_bhvWingCap                             = 529 --- @type BehaviorId
+id_bhvWoodenPost                          = 530 --- @type BehaviorId
+id_bhvYellowBackgroundInMenu              = 531 --- @type BehaviorId
+id_bhvYellowBall                          = 532 --- @type BehaviorId
+id_bhvYellowCoin                          = 533 --- @type BehaviorId
+id_bhvYoshi                               = 534 --- @type BehaviorId
+id_RM_Scroll_Texture                      = 535 --- @type BehaviorId
+id_editor_Scroll_Texture                  = 536 --- @type BehaviorId
+id_bhvBlueCoinNumber                      = 537 --- @type BehaviorId
+id_bhvStarNumber                          = 538 --- @type BehaviorId
+id_bhv_max_count                          = 539 --- @type BehaviorId
+
+--- @alias BehaviorId
+--- | `id_bhv1Up`
+--- | `id_bhv1upJumpOnApproach`
+--- | `id_bhv1upRunningAway`
+--- | `id_bhv1upSliding`
+--- | `id_bhv1upWalking`
+--- | `id_bhvActivatedBackAndForthPlatform`
+--- | `id_bhvActSelector`
+--- | `id_bhvActSelectorStarType`
+--- | `id_bhvAirborneDeathWarp`
+--- | `id_bhvAirborneStarCollectWarp`
+--- | `id_bhvAirborneWarp`
+--- | `id_bhvAlphaBooKey`
+--- | `id_bhvAmbientSounds`
+--- | `id_bhvAnimatedTexture`
+--- | `id_bhvAnimatesOnFloorSwitchPress`
+--- | `id_bhvAnotherElavator`
+--- | `id_bhvAnotherTiltingPlatform`
+--- | `id_bhvArrowLift`
+--- | `id_bhvBalconyBigBoo`
+--- | `id_bhvBbhTiltingTrapPlatform`
+--- | `id_bhvBbhTumblingBridge`
+--- | `id_bhvBeginningLakitu`
+--- | `id_bhvBeginningPeach`
+--- | `id_bhvBetaBooKey`
+--- | `id_bhvBetaBowserAnchor`
+--- | `id_bhvBetaChestBottom`
+--- | `id_bhvBetaChestLid`
+--- | `id_bhvBetaFishSplashSpawner`
+--- | `id_bhvBetaHoldableObject`
+--- | `id_bhvBetaMovingFlames`
+--- | `id_bhvBetaMovingFlamesSpawn`
+--- | `id_bhvBetaTrampolineSpring`
+--- | `id_bhvBetaTrampolineTop`
+--- | `id_bhvBigBoulder`
+--- | `id_bhvBigBoulderGenerator`
+--- | `id_bhvBigBully`
+--- | `id_bhvBigBullyWithMinions`
+--- | `id_bhvBigChillBully`
+--- | `id_bhvBigSnowmanWhole`
+--- | `id_bhvBird`
+--- | `id_bhvBirdsSoundLoop`
+--- | `id_bhvBitfsSinkingCagePlatform`
+--- | `id_bhvBitfsSinkingPlatforms`
+--- | `id_bhvBitfsTiltingInvertedPyramid`
+--- | `id_bhvBlackSmokeBowser`
+--- | `id_bhvBlackSmokeMario`
+--- | `id_bhvBlackSmokeUpward`
+--- | `id_bhvBlueBowserFlame`
+--- | `id_bhvBlueCoinJumping`
+--- | `id_bhvBlueCoinSliding`
+--- | `id_bhvBlueCoinSwitch`
+--- | `id_bhvBlueFish`
+--- | `id_bhvBlueFlamesGroup`
+--- | `id_bhvBobBowlingBallSpawner`
+--- | `id_bhvBobomb`
+--- | `id_bhvBobombAnchorMario`
+--- | `id_bhvBobombBuddy`
+--- | `id_bhvBobombBuddyOpensCannon`
+--- | `id_bhvBobombBullyDeathSmoke`
+--- | `id_bhvBobombExplosionBubble`
+--- | `id_bhvBobombExplosionBubble3600`
+--- | `id_bhvBobombFuseSmoke`
+--- | `id_bhvBoo`
+--- | `id_bhvBooBossSpawnedBridge`
+--- | `id_bhvBooCage`
+--- | `id_bhvBooInCastle`
+--- | `id_bhvBookendSpawn`
+--- | `id_bhvBookSwitch`
+--- | `id_bhvBooWithCage`
+--- | `id_bhvBouncingFireball`
+--- | `id_bhvBouncingFireballFlame`
+--- | `id_bhvBowlingBall`
+--- | `id_bhvBowser`
+--- | `id_bhvBowserBodyAnchor`
+--- | `id_bhvBowserBomb`
+--- | `id_bhvBowserBombExplosion`
+--- | `id_bhvBowserBombSmoke`
+--- | `id_bhvBowserCourseRedCoinStar`
+--- | `id_bhvBowserFlameSpawn`
+--- | `id_bhvBowserKey`
+--- | `id_bhvBowserKeyCourseExit`
+--- | `id_bhvBowserKeyUnlockDoor`
+--- | `id_bhvBowserShockWave`
+--- | `id_bhvBowsersSub`
+--- | `id_bhvBowserSubDoor`
+--- | `id_bhvBowserTailAnchor`
+--- | `id_bhvBreakableBox`
+--- | `id_bhvBreakableBoxSmall`
+--- | `id_bhvBreakBoxTriangle`
+--- | `id_bhvBreathParticleSpawner`
+--- | `id_bhvBub`
+--- | `id_bhvBubba`
+--- | `id_bhvBubbleMaybe`
+--- | `id_bhvBubbleParticleSpawner`
+--- | `id_bhvBubblePlayer`
+--- | `id_bhvBubbleSplash`
+--- | `id_bhvBulletBill`
+--- | `id_bhvBulletBillCannon`
+--- | `id_bhvButterfly`
+--- | `id_bhvCameraLakitu`
+--- | `id_bhvCannon`
+--- | `id_bhvCannonBarrel`
+--- | `id_bhvCannonBarrelBubbles`
+--- | `id_bhvCannonBaseUnused`
+--- | `id_bhvCannonClosed`
+--- | `id_bhvCapSwitch`
+--- | `id_bhvCapSwitchBase`
+--- | `id_bhvCarrySomething1`
+--- | `id_bhvCarrySomething2`
+--- | `id_bhvCarrySomething3`
+--- | `id_bhvCarrySomething4`
+--- | `id_bhvCarrySomething5`
+--- | `id_bhvCarrySomething6`
+--- | `id_bhvCastleFlagWaving`
+--- | `id_bhvCastleFloorTrap`
+--- | `id_bhvCcmTouchedStarSpawn`
+--- | `id_bhvCelebrationStar`
+--- | `id_bhvCelebrationStarSparkle`
+--- | `id_bhvChainChomp`
+--- | `id_bhvChainChompChainPart`
+--- | `id_bhvChainChompGate`
+--- | `id_bhvCheckerboardElevatorGroup`
+--- | `id_bhvCheckerboardPlatformSub`
+--- | `id_bhvChirpChirp`
+--- | `id_bhvChirpChirpUnused`
+--- | `id_bhvChuckya`
+--- | `id_bhvChuckyaAnchorMario`
+--- | `id_bhvCirclingAmp`
+--- | `id_bhvClamShell`
+--- | `id_bhvClockHourHand`
+--- | `id_bhvClockMinuteHand`
+--- | `id_bhvCloud`
+--- | `id_bhvCloudPart`
+--- | `id_bhvCoffin`
+--- | `id_bhvCoffinSpawner`
+--- | `id_bhvCoinFormation`
+--- | `id_bhvCoinFormationSpawn`
+--- | `id_bhvCoinInsideBoo`
+--- | `id_bhvCoinSparkles`
+--- | `id_bhvControllablePlatform`
+--- | `id_bhvControllablePlatformSub`
+--- | `id_bhvCourtyardBooTriplet`
+--- | `id_bhvCutOutObject`
+--- | `id_bhvDddMovingPole`
+--- | `id_bhvDDDPole`
+--- | `id_bhvDddWarp`
+--- | `id_bhvDeathWarp`
+--- | `id_bhvDecorativePendulum`
+--- | `id_bhvDirtParticleSpawner`
+--- | `id_bhvDonutPlatform`
+--- | `id_bhvDonutPlatformSpawner`
+--- | `id_bhvDoor`
+--- | `id_bhvDoorWarp`
+--- | `id_bhvDorrie`
+--- | `id_bhvEndBirds1`
+--- | `id_bhvEndBirds2`
+--- | `id_bhvEndPeach`
+--- | `id_bhvEndToad`
+--- | `id_bhvEnemyLakitu`
+--- | `id_bhvExclamationBox`
+--- | `id_bhvExitPodiumWarp`
+--- | `id_bhvExplosion`
+--- | `id_bhvEyerokBoss`
+--- | `id_bhvEyerokHand`
+--- | `id_bhvFadingWarp`
+--- | `id_bhvFallingBowserPlatform`
+--- | `id_bhvFallingPillar`
+--- | `id_bhvFallingPillarHitbox`
+--- | `id_bhvFerrisWheelAxle`
+--- | `id_bhvFerrisWheelPlatform`
+--- | `id_bhvFewBlueFishSpawner`
+--- | `id_bhvFireParticleSpawner`
+--- | `id_bhvFirePiranhaPlant`
+--- | `id_bhvFireSpitter`
+--- | `id_bhvFish`
+--- | `id_bhvFishGroup`
+--- | `id_bhvFishSpawner`
+--- | `id_bhvFlame`
+--- | `id_bhvFlameBouncing`
+--- | `id_bhvFlameBowser`
+--- | `id_bhvFlameFloatingLanding`
+--- | `id_bhvFlameLargeBurningOut`
+--- | `id_bhvFlameMovingForwardGrowing`
+--- | `id_bhvFlamethrower`
+--- | `id_bhvFlamethrowerFlame`
+--- | `id_bhvFloorSwitchAnimatesObject`
+--- | `id_bhvFloorSwitchGrills`
+--- | `id_bhvFloorSwitchHardcodedModel`
+--- | `id_bhvFloorSwitchHiddenObjects`
+--- | `id_bhvFloorTrapInCastle`
+--- | `id_bhvFlyGuy`
+--- | `id_bhvFlyguyFlame`
+--- | `id_bhvFlyingBookend`
+--- | `id_bhvFlyingWarp`
+--- | `id_bhvFreeBowlingBall`
+--- | `id_bhvGhostHuntBigBoo`
+--- | `id_bhvGhostHuntBoo`
+--- | `id_bhvGiantPole`
+--- | `id_bhvGoldenCoinSparkles`
+--- | `id_bhvGoomba`
+--- | `id_bhvGoombaTripletSpawner`
+--- | `id_bhvGrandStar`
+--- | `id_bhvGrindel`
+--- | `id_bhvHardAirKnockBackWarp`
+--- | `id_bhvHauntedBookshelf`
+--- | `id_bhvHauntedBookshelfManager`
+--- | `id_bhvHauntedChair`
+--- | `id_bhvHeaveHo`
+--- | `id_bhvHeaveHoThrowMario`
+--- | `id_bhvHidden1up`
+--- | `id_bhvHidden1upInPole`
+--- | `id_bhvHidden1upInPoleSpawner`
+--- | `id_bhvHidden1upInPoleTrigger`
+--- | `id_bhvHidden1upTrigger`
+--- | `id_bhvHiddenAt120Stars`
+--- | `id_bhvHiddenBlueCoin`
+--- | `id_bhvHiddenObject`
+--- | `id_bhvHiddenRedCoinStar`
+--- | `id_bhvHiddenStaircaseStep`
+--- | `id_bhvHiddenStar`
+--- | `id_bhvHiddenStarTrigger`
+--- | `id_bhvHmcElevatorPlatform`
+--- | `id_bhvHomingAmp`
+--- | `id_bhvHoot`
+--- | `id_bhvHorizontalGrindel`
+--- | `id_bhvHorStarParticleSpawner`
+--- | `id_bhvIdleWaterWave`
+--- | `id_bhvIgloo`
+--- | `id_bhvInitializeChangingWaterLevel`
+--- | `id_bhvInsideCannon`
+--- | `id_bhvInstantActiveWarp`
+--- | `id_bhvInSunkenShip`
+--- | `id_bhvInSunkenShip2`
+--- | `id_bhvInSunkenShip3`
+--- | `id_bhvIntroScene`
+--- | `id_bhvInvisibleObjectsUnderBridge`
+--- | `id_bhvJetStream`
+--- | `id_bhvJetStreamRingSpawner`
+--- | `id_bhvJetStreamWaterRing`
+--- | `id_bhvJrbFloatingBox`
+--- | `id_bhvJrbFloatingPlatform`
+--- | `id_bhvJrbSlidingBox`
+--- | `id_bhvJumpingBox`
+--- | `id_bhvKickableBoard`
+--- | `id_bhvKingBobomb`
+--- | `id_bhvKlepto`
+--- | `id_bhvKoopa`
+--- | `id_bhvKoopaFlag`
+--- | `id_bhvKoopaRaceEndpoint`
+--- | `id_bhvKoopaShell`
+--- | `id_bhvKoopaShellFlame`
+--- | `id_bhvKoopaShellUnderwater`
+--- | `id_bhvLargeBomp`
+--- | `id_bhvLaunchDeathWarp`
+--- | `id_bhvLaunchStarCollectWarp`
+--- | `id_bhvLeafParticleSpawner`
+--- | `id_bhvLllBowserPuzzle`
+--- | `id_bhvLllBowserPuzzlePiece`
+--- | `id_bhvLllDrawbridge`
+--- | `id_bhvLllDrawbridgeSpawner`
+--- | `id_bhvLllFloatingWoodBridge`
+--- | `id_bhvLllHexagonalMesh`
+--- | `id_bhvLllMovingOctagonalMeshPlatform`
+--- | `id_bhvLllRollingLog`
+--- | `id_bhvLllRotatingBlockWithFireBars`
+--- | `id_bhvLllRotatingHexagonalPlatform`
+--- | `id_bhvLllRotatingHexagonalRing`
+--- | `id_bhvLllRotatingHexFlame`
+--- | `id_bhvLllSinkingRectangularPlatform`
+--- | `id_bhvLllSinkingRockBlock`
+--- | `id_bhvLllSinkingSquarePlatforms`
+--- | `id_bhvLllTiltingInvertedPyramid`
+--- | `id_bhvLllTumblingBridge`
+--- | `id_bhvLllVolcanoFallingTrap`
+--- | `id_bhvLllWoodPiece`
+--- | `id_bhvMacroUkiki`
+--- | `id_bhvMadPiano`
+--- | `id_bhvMantaRay`
+--- | `id_bhvMantaRayRingManager`
+--- | `id_bhvMantaRayWaterRing`
+--- | `id_bhvManyBlueFishSpawner`
+--- | `id_bhvMario`
+--- | `id_bhvMenuButton`
+--- | `id_bhvMenuButtonManager`
+--- | `id_bhvMerryGoRound`
+--- | `id_bhvMerryGoRoundBigBoo`
+--- | `id_bhvMerryGoRoundBoo`
+--- | `id_bhvMerryGoRoundBooManager`
+--- | `id_bhvMeshElevator`
+--- | `id_bhvMessagePanel`
+--- | `id_bhvMetalCap`
+--- | `id_bhvMips`
+--- | `id_bhvMistCircParticleSpawner`
+--- | `id_bhvMistParticleSpawner`
+--- | `id_bhvMoatGrills`
+--- | `id_bhvMoneybag`
+--- | `id_bhvMoneybagHidden`
+--- | `id_bhvMontyMole`
+--- | `id_bhvMontyMoleHole`
+--- | `id_bhvMontyMoleRock`
+--- | `id_bhvMovingBlueCoin`
+--- | `id_bhvMovingYellowCoin`
+--- | `id_bhvMrBlizzard`
+--- | `id_bhvMrBlizzardSnowball`
+--- | `id_bhvMrI`
+--- | `id_bhvMrIBlueCoin`
+--- | `id_bhvMrIBody`
+--- | `id_bhvMrIParticle`
+--- | `id_bhvNormalCap`
+--- | `id_bhvObjectBubble`
+--- | `id_bhvObjectWaterSplash`
+--- | `id_bhvObjectWaterWave`
+--- | `id_bhvObjectWaveTrail`
+--- | `id_bhvOctagonalPlatformRotating`
+--- | `id_bhvOneCoin`
+--- | `id_bhvOpenableCageDoor`
+--- | `id_bhvOpenableGrill`
+--- | `id_bhvOrangeNumber`
+--- | `id_bhvPaintingDeathWarp`
+--- | `id_bhvPaintingStarCollectWarp`
+--- | `id_bhvPenguinBaby`
+--- | `id_bhvPenguinRaceFinishLine`
+--- | `id_bhvPenguinRaceShortcutCheck`
+--- | `id_bhvPillarBase`
+--- | `id_bhvPiranhaPlant`
+--- | `id_bhvPiranhaPlantBubble`
+--- | `id_bhvPiranhaPlantWakingBubbles`
+--- | `id_bhvPitBowlingBall`
+--- | `id_bhvPlatformOnTrack`
+--- | `id_bhvPlaysMusicTrackWhenTouched`
+--- | `id_bhvPlungeBubble`
+--- | `id_bhvPokey`
+--- | `id_bhvPokeyBodyPart`
+--- | `id_bhvPoleGrabbing`
+--- | `id_bhvPoundTinyStarParticle`
+--- | `id_bhvPunchTinyTriangle`
+--- | `id_bhvPurpleParticle`
+--- | `id_bhvPurpleSwitchHiddenBoxes`
+--- | `id_bhvPushableMetalBox`
+--- | `id_bhvPyramidElevator`
+--- | `id_bhvPyramidElevatorTrajectoryMarkerBall`
+--- | `id_bhvPyramidPillarTouchDetector`
+--- | `id_bhvPyramidTop`
+--- | `id_bhvPyramidTopFragment`
+--- | `id_bhvRacingPenguin`
+--- | `id_bhvRandomAnimatedTexture`
+--- | `id_bhvRecoveryHeart`
+--- | `id_bhvRedCoin`
+--- | `id_bhvRedCoinStarMarker`
+--- | `id_bhvRespawner`
+--- | `id_bhvRockSolid`
+--- | `id_bhvRotatingCounterClockwise`
+--- | `id_bhvRotatingExclamationMark`
+--- | `id_bhvRotatingPlatform`
+--- | `id_bhvRrCruiserWing`
+--- | `id_bhvRrElevatorPlatform`
+--- | `id_bhvRrRotatingBridgePlatform`
+--- | `id_bhvSandSoundLoop`
+--- | `id_bhvScuttlebug`
+--- | `id_bhvScuttlebugSpawn`
+--- | `id_bhvSeaweed`
+--- | `id_bhvSeaweedBundle`
+--- | `id_bhvSeesawPlatform`
+--- | `id_bhvShallowWaterSplash`
+--- | `id_bhvShallowWaterWave`
+--- | `id_bhvShipPart3`
+--- | `id_bhvSignOnWall`
+--- | `id_bhvSingleCoinGetsSpawned`
+--- | `id_bhvSkeeter`
+--- | `id_bhvSkeeterWave`
+--- | `id_bhvSlidingPlatform2`
+--- | `id_bhvSlidingSnowMound`
+--- | `id_bhvSLSnowmanWind`
+--- | `id_bhvSLWalkingPenguin`
+--- | `id_bhvSmallBomp`
+--- | `id_bhvSmallBully`
+--- | `id_bhvSmallChillBully`
+--- | `id_bhvSmallParticle`
+--- | `id_bhvSmallParticleBubbles`
+--- | `id_bhvSmallParticleSnow`
+--- | `id_bhvSmallPenguin`
+--- | `id_bhvSmallPiranhaFlame`
+--- | `id_bhvSmallWaterWave`
+--- | `id_bhvSmallWaterWave398`
+--- | `id_bhvSmallWhomp`
+--- | `id_bhvSmoke`
+--- | `id_bhvSnowBall`
+--- | `id_bhvSnowmansBodyCheckpoint`
+--- | `id_bhvSnowmansBottom`
+--- | `id_bhvSnowmansHead`
+--- | `id_bhvSnowMoundSpawn`
+--- | `id_bhvSnowParticleSpawner`
+--- | `id_bhvSnufit`
+--- | `id_bhvSnufitBalls`
+--- | `id_bhvSoundSpawner`
+--- | `id_bhvSparkle`
+--- | `id_bhvSparkleParticleSpawner`
+--- | `id_bhvSparkleSpawn`
+--- | `id_bhvSpawnedStar`
+--- | `id_bhvSpawnedStarNoLevelExit`
+--- | `id_bhvSpinAirborneCircleWarp`
+--- | `id_bhvSpinAirborneWarp`
+--- | `id_bhvSpindel`
+--- | `id_bhvSpindrift`
+--- | `id_bhvSpiny`
+--- | `id_bhvSquarishPathMoving`
+--- | `id_bhvSquarishPathParent`
+--- | `id_bhvSquishablePlatform`
+--- | `id_bhvSslMovingPyramidWall`
+--- | `id_bhvStar`
+--- | `id_bhvStarDoor`
+--- | `id_bhvStarKeyCollectionPuffSpawner`
+--- | `id_bhvStarSpawnCoordinates`
+--- | `id_bhvStaticCheckeredPlatform`
+--- | `id_bhvStaticObject`
+--- | `id_bhvStrongWindParticle`
+--- | `id_bhvStub`
+--- | `id_bhvStub1D0C`
+--- | `id_bhvStub1D70`
+--- | `id_bhvSunkenShipPart`
+--- | `id_bhvSunkenShipPart2`
+--- | `id_bhvSunkenShipSetRotation`
+--- | `id_bhvSushiShark`
+--- | `id_bhvSushiSharkCollisionChild`
+--- | `id_bhvSwimmingWarp`
+--- | `id_bhvSwingPlatform`
+--- | `id_bhvSwoop`
+--- | `id_bhvTankFishGroup`
+--- | `id_bhvTemporaryYellowCoin`
+--- | `id_bhvTenCoinsSpawn`
+--- | `id_bhvThiBowlingBallSpawner`
+--- | `id_bhvThiHugeIslandTop`
+--- | `id_bhvThiTinyIslandTop`
+--- | `id_bhvThreeCoinsSpawn`
+--- | `id_bhvThwomp`
+--- | `id_bhvThwomp2`
+--- | `id_bhvTiltingBowserLavaPlatform`
+--- | `id_bhvTinyStrongWindParticle`
+--- | `id_bhvToadMessage`
+--- | `id_bhvTower`
+--- | `id_bhvTowerDoor`
+--- | `id_bhvTowerPlatformGroup`
+--- | `id_bhvToxBox`
+--- | `id_bhvTrackBall`
+--- | `id_bhvTreasureChestBottom`
+--- | `id_bhvTreasureChests`
+--- | `id_bhvTreasureChestsJrb`
+--- | `id_bhvTreasureChestsShip`
+--- | `id_bhvTreasureChestTop`
+--- | `id_bhvTree`
+--- | `id_bhvTreeLeaf`
+--- | `id_bhvTreeSnow`
+--- | `id_bhvTriangleParticleSpawner`
+--- | `id_bhvTripletButterfly`
+--- | `id_bhvTTC2DRotator`
+--- | `id_bhvTTCCog`
+--- | `id_bhvTTCElevator`
+--- | `id_bhvTTCMovingBar`
+--- | `id_bhvTTCPendulum`
+--- | `id_bhvTTCPitBlock`
+--- | `id_bhvTTCRotatingSolid`
+--- | `id_bhvTTCSpinner`
+--- | `id_bhvTTCTreadmill`
+--- | `id_bhvTtmBowlingBallSpawner`
+--- | `id_bhvTtmRollingLog`
+--- | `id_bhvTumblingBridgePlatform`
+--- | `id_bhvTuxiesMother`
+--- | `id_bhvTweester`
+--- | `id_bhvTweesterSandParticle`
+--- | `id_bhvUkiki`
+--- | `id_bhvUkikiCage`
+--- | `id_bhvUkikiCageChild`
+--- | `id_bhvUkikiCageStar`
+--- | `id_bhvUnagi`
+--- | `id_bhvUnagiSubobject`
+--- | `id_bhvUnlockDoorStar`
+--- | `id_bhvUnused05A8`
+--- | `id_bhvUnused0DFC`
+--- | `id_bhvUnused1820`
+--- | `id_bhvUnused1F30`
+--- | `id_bhvUnused20E0`
+--- | `id_bhvUnused2A10`
+--- | `id_bhvUnused2A54`
+--- | `id_bhvUnusedFakeStar`
+--- | `id_bhvUnusedParticleSpawn`
+--- | `id_bhvUnusedPoundablePlatform`
+--- | `id_bhvVanishCap`
+--- | `id_bhvVertStarParticleSpawner`
+--- | `id_bhvVolcanoFlames`
+--- | `id_bhvVolcanoSoundLoop`
+--- | `id_bhvWallTinyStarParticle`
+--- | `id_bhvWarp`
+--- | `id_bhvWarpPipe`
+--- | `id_bhvWaterAirBubble`
+--- | `id_bhvWaterBomb`
+--- | `id_bhvWaterBombCannon`
+--- | `id_bhvWaterBombShadow`
+--- | `id_bhvWaterBombSpawner`
+--- | `id_bhvWaterDroplet`
+--- | `id_bhvWaterDropletSplash`
+--- | `id_bhvWaterfallSoundLoop`
+--- | `id_bhvWaterLevelDiamond`
+--- | `id_bhvWaterLevelPillar`
+--- | `id_bhvWaterMist`
+--- | `id_bhvWaterMist2`
+--- | `id_bhvWaterSplash`
+--- | `id_bhvWaveTrail`
+--- | `id_bhvWdwExpressElevator`
+--- | `id_bhvWdwExpressElevatorPlatform`
+--- | `id_bhvWdwRectangularFloatingPlatform`
+--- | `id_bhvWdwSquareFloatingPlatform`
+--- | `id_bhvWfBreakableWallLeft`
+--- | `id_bhvWfBreakableWallRight`
+--- | `id_bhvWfElevatorTowerPlatform`
+--- | `id_bhvWfRotatingWoodenPlatform`
+--- | `id_bhvWfSlidingPlatform`
+--- | `id_bhvWfSlidingTowerPlatform`
+--- | `id_bhvWfSolidTowerPlatform`
+--- | `id_bhvWfTumblingBridge`
+--- | `id_bhvWhirlpool`
+--- | `id_bhvWhitePuff1`
+--- | `id_bhvWhitePuff2`
+--- | `id_bhvWhitePuffExplosion`
+--- | `id_bhvWhitePuffSmoke`
+--- | `id_bhvWhitePuffSmoke2`
+--- | `id_bhvWhompKingBoss`
+--- | `id_bhvWigglerBody`
+--- | `id_bhvWigglerHead`
+--- | `id_bhvWind`
+--- | `id_bhvWingCap`
+--- | `id_bhvWoodenPost`
+--- | `id_bhvYellowBackgroundInMenu`
+--- | `id_bhvYellowBall`
+--- | `id_bhvYellowCoin`
+--- | `id_bhvYoshi`
+--- | `id_RM_Scroll_Texture`
+--- | `id_editor_Scroll_Texture`
+--- | `id_bhvBlueCoinNumber`
+--- | `id_bhvStarNumber`
+--- | `id_bhv_max_count`
 
 --- @type integer
 CAMERA_MODE_8_DIRECTIONS = 0x0E
@@ -2519,770 +1980,539 @@ SHAKE_SHOCK = 10
 --- @type integer
 SHAKE_SMALL_DAMAGE = 3
 
---- @class RomhackCameraOverride
-
---- @type RomhackCameraOverride
-RCO_ALL = 0
-
---- @type RomhackCameraOverride
-RCO_ALL_EXCEPT_BOWSER = 1
-
---- @type RomhackCameraOverride
-RCO_NONE = 2
-
---- @type RomhackCameraOverride
-RCO_ALL_INCLUDING_VANILLA = 3
-
---- @type RomhackCameraOverride
-RCO_ALL_VANILLA_EXCEPT_BOWSER = 4
-
---- @type RomhackCameraOverride
-RCO_DISABLE = 5
-
---- @class CharacterSound
-
---- @type CharacterSound
-CHAR_SOUND_YAH_WAH_HOO = 0
-
---- @type CharacterSound
-CHAR_SOUND_HOOHOO = 1
-
---- @type CharacterSound
-CHAR_SOUND_YAHOO = 2
-
---- @type CharacterSound
-CHAR_SOUND_UH = 3
-
---- @type CharacterSound
-CHAR_SOUND_HRMM = 4
-
---- @type CharacterSound
-CHAR_SOUND_WAH2 = 5
-
---- @type CharacterSound
-CHAR_SOUND_WHOA = 6
-
---- @type CharacterSound
-CHAR_SOUND_EEUH = 7
-
---- @type CharacterSound
-CHAR_SOUND_ATTACKED = 8
-
---- @type CharacterSound
-CHAR_SOUND_OOOF = 9
-
---- @type CharacterSound
-CHAR_SOUND_OOOF2 = 10
-
---- @type CharacterSound
-CHAR_SOUND_HERE_WE_GO = 11
-
---- @type CharacterSound
-CHAR_SOUND_YAWNING = 12
-
---- @type CharacterSound
-CHAR_SOUND_SNORING1 = 13
-
---- @type CharacterSound
-CHAR_SOUND_SNORING2 = 14
-
---- @type CharacterSound
-CHAR_SOUND_WAAAOOOW = 15
-
---- @type CharacterSound
-CHAR_SOUND_HAHA = 16
-
---- @type CharacterSound
-CHAR_SOUND_HAHA_2 = 17
-
---- @type CharacterSound
-CHAR_SOUND_UH2 = 18
-
---- @type CharacterSound
-CHAR_SOUND_UH2_2 = 19
-
---- @type CharacterSound
-CHAR_SOUND_ON_FIRE = 20
-
---- @type CharacterSound
-CHAR_SOUND_DYING = 21
-
---- @type CharacterSound
-CHAR_SOUND_PANTING_COLD = 22
-
---- @type CharacterSound
-CHAR_SOUND_PANTING = 23
-
---- @type CharacterSound
-CHAR_SOUND_COUGHING1 = 24
-
---- @type CharacterSound
-CHAR_SOUND_COUGHING2 = 25
-
---- @type CharacterSound
-CHAR_SOUND_COUGHING3 = 26
-
---- @type CharacterSound
-CHAR_SOUND_PUNCH_YAH = 27
-
---- @type CharacterSound
-CHAR_SOUND_PUNCH_HOO = 28
-
---- @type CharacterSound
-CHAR_SOUND_MAMA_MIA = 29
-
---- @type CharacterSound
-CHAR_SOUND_GROUND_POUND_WAH = 30
-
---- @type CharacterSound
-CHAR_SOUND_DROWNING = 31
-
---- @type CharacterSound
-CHAR_SOUND_PUNCH_WAH = 32
-
---- @type CharacterSound
-CHAR_SOUND_YAHOO_WAHA_YIPPEE = 33
-
---- @type CharacterSound
-CHAR_SOUND_DOH = 34
-
---- @type CharacterSound
-CHAR_SOUND_GAME_OVER = 35
-
---- @type CharacterSound
-CHAR_SOUND_HELLO = 36
-
---- @type CharacterSound
-CHAR_SOUND_PRESS_START_TO_PLAY = 37
-
---- @type CharacterSound
-CHAR_SOUND_TWIRL_BOUNCE = 38
-
---- @type CharacterSound
-CHAR_SOUND_SNORING3 = 39
-
---- @type CharacterSound
-CHAR_SOUND_SO_LONGA_BOWSER = 40
-
---- @type CharacterSound
-CHAR_SOUND_IMA_TIRED = 41
-
---- @type CharacterSound
-CHAR_SOUND_LETS_A_GO = 42
-
---- @type CharacterSound
-CHAR_SOUND_OKEY_DOKEY = 43
-
---- @type CharacterSound
-CHAR_SOUND_MAX = 44
-
---- @class CharacterType
-
---- @type CharacterType
-CT_MARIO = 0
-
---- @type CharacterType
-CT_LUIGI = 1
-
---- @type CharacterType
-CT_TOAD = 2
-
---- @type CharacterType
-CT_WALUIGI = 3
-
---- @type CharacterType
-CT_WARIO = 4
-
---- @type CharacterType
-CT_MAX = 5
-
---- @class DialogId
-
---- @type DialogId
-DIALOG_000 = 0
-
---- @type DialogId
-DIALOG_001 = 1
-
---- @type DialogId
-DIALOG_002 = 2
-
---- @type DialogId
-DIALOG_003 = 3
-
---- @type DialogId
-DIALOG_004 = 4
-
---- @type DialogId
-DIALOG_005 = 5
-
---- @type DialogId
-DIALOG_006 = 6
-
---- @type DialogId
-DIALOG_007 = 7
-
---- @type DialogId
-DIALOG_008 = 8
-
---- @type DialogId
-DIALOG_009 = 9
-
---- @type DialogId
-DIALOG_010 = 10
-
---- @type DialogId
-DIALOG_011 = 11
-
---- @type DialogId
-DIALOG_012 = 12
-
---- @type DialogId
-DIALOG_013 = 13
-
---- @type DialogId
-DIALOG_014 = 14
-
---- @type DialogId
-DIALOG_015 = 15
-
---- @type DialogId
-DIALOG_016 = 16
-
---- @type DialogId
-DIALOG_017 = 17
-
---- @type DialogId
-DIALOG_018 = 18
-
---- @type DialogId
-DIALOG_019 = 19
-
---- @type DialogId
-DIALOG_020 = 20
-
---- @type DialogId
-DIALOG_021 = 21
-
---- @type DialogId
-DIALOG_022 = 22
-
---- @type DialogId
-DIALOG_023 = 23
-
---- @type DialogId
-DIALOG_024 = 24
-
---- @type DialogId
-DIALOG_025 = 25
-
---- @type DialogId
-DIALOG_026 = 26
-
---- @type DialogId
-DIALOG_027 = 27
-
---- @type DialogId
-DIALOG_028 = 28
-
---- @type DialogId
-DIALOG_029 = 29
-
---- @type DialogId
-DIALOG_030 = 30
-
---- @type DialogId
-DIALOG_031 = 31
-
---- @type DialogId
-DIALOG_032 = 32
-
---- @type DialogId
-DIALOG_033 = 33
-
---- @type DialogId
-DIALOG_034 = 34
-
---- @type DialogId
-DIALOG_035 = 35
-
---- @type DialogId
-DIALOG_036 = 36
-
---- @type DialogId
-DIALOG_037 = 37
-
---- @type DialogId
-DIALOG_038 = 38
-
---- @type DialogId
-DIALOG_039 = 39
-
---- @type DialogId
-DIALOG_040 = 40
-
---- @type DialogId
-DIALOG_041 = 41
-
---- @type DialogId
-DIALOG_042 = 42
-
---- @type DialogId
-DIALOG_043 = 43
-
---- @type DialogId
-DIALOG_044 = 44
-
---- @type DialogId
-DIALOG_045 = 45
-
---- @type DialogId
-DIALOG_046 = 46
-
---- @type DialogId
-DIALOG_047 = 47
-
---- @type DialogId
-DIALOG_048 = 48
-
---- @type DialogId
-DIALOG_049 = 49
-
---- @type DialogId
-DIALOG_050 = 50
-
---- @type DialogId
-DIALOG_051 = 51
-
---- @type DialogId
-DIALOG_052 = 52
-
---- @type DialogId
-DIALOG_053 = 53
-
---- @type DialogId
-DIALOG_054 = 54
-
---- @type DialogId
-DIALOG_055 = 55
-
---- @type DialogId
-DIALOG_056 = 56
-
---- @type DialogId
-DIALOG_057 = 57
-
---- @type DialogId
-DIALOG_058 = 58
-
---- @type DialogId
-DIALOG_059 = 59
-
---- @type DialogId
-DIALOG_060 = 60
-
---- @type DialogId
-DIALOG_061 = 61
-
---- @type DialogId
-DIALOG_062 = 62
-
---- @type DialogId
-DIALOG_063 = 63
-
---- @type DialogId
-DIALOG_064 = 64
-
---- @type DialogId
-DIALOG_065 = 65
-
---- @type DialogId
-DIALOG_066 = 66
-
---- @type DialogId
-DIALOG_067 = 67
-
---- @type DialogId
-DIALOG_068 = 68
-
---- @type DialogId
-DIALOG_069 = 69
-
---- @type DialogId
-DIALOG_070 = 70
-
---- @type DialogId
-DIALOG_071 = 71
-
---- @type DialogId
-DIALOG_072 = 72
-
---- @type DialogId
-DIALOG_073 = 73
-
---- @type DialogId
-DIALOG_074 = 74
-
---- @type DialogId
-DIALOG_075 = 75
-
---- @type DialogId
-DIALOG_076 = 76
-
---- @type DialogId
-DIALOG_077 = 77
-
---- @type DialogId
-DIALOG_078 = 78
-
---- @type DialogId
-DIALOG_079 = 79
-
---- @type DialogId
-DIALOG_080 = 80
-
---- @type DialogId
-DIALOG_081 = 81
-
---- @type DialogId
-DIALOG_082 = 82
-
---- @type DialogId
-DIALOG_083 = 83
-
---- @type DialogId
-DIALOG_084 = 84
-
---- @type DialogId
-DIALOG_085 = 85
-
---- @type DialogId
-DIALOG_086 = 86
-
---- @type DialogId
-DIALOG_087 = 87
-
---- @type DialogId
-DIALOG_088 = 88
-
---- @type DialogId
-DIALOG_089 = 89
-
---- @type DialogId
-DIALOG_090 = 90
-
---- @type DialogId
-DIALOG_091 = 91
-
---- @type DialogId
-DIALOG_092 = 92
-
---- @type DialogId
-DIALOG_093 = 93
-
---- @type DialogId
-DIALOG_094 = 94
-
---- @type DialogId
-DIALOG_095 = 95
-
---- @type DialogId
-DIALOG_096 = 96
-
---- @type DialogId
-DIALOG_097 = 97
-
---- @type DialogId
-DIALOG_098 = 98
-
---- @type DialogId
-DIALOG_099 = 99
-
---- @type DialogId
-DIALOG_100 = 100
-
---- @type DialogId
-DIALOG_101 = 101
-
---- @type DialogId
-DIALOG_102 = 102
-
---- @type DialogId
-DIALOG_103 = 103
-
---- @type DialogId
-DIALOG_104 = 104
-
---- @type DialogId
-DIALOG_105 = 105
-
---- @type DialogId
-DIALOG_106 = 106
-
---- @type DialogId
-DIALOG_107 = 107
-
---- @type DialogId
-DIALOG_108 = 108
-
---- @type DialogId
-DIALOG_109 = 109
-
---- @type DialogId
-DIALOG_110 = 110
-
---- @type DialogId
-DIALOG_111 = 111
-
---- @type DialogId
-DIALOG_112 = 112
-
---- @type DialogId
-DIALOG_113 = 113
-
---- @type DialogId
-DIALOG_114 = 114
-
---- @type DialogId
-DIALOG_115 = 115
-
---- @type DialogId
-DIALOG_116 = 116
-
---- @type DialogId
-DIALOG_117 = 117
-
---- @type DialogId
-DIALOG_118 = 118
-
---- @type DialogId
-DIALOG_119 = 119
-
---- @type DialogId
-DIALOG_120 = 120
-
---- @type DialogId
-DIALOG_121 = 121
-
---- @type DialogId
-DIALOG_122 = 122
-
---- @type DialogId
-DIALOG_123 = 123
-
---- @type DialogId
-DIALOG_124 = 124
-
---- @type DialogId
-DIALOG_125 = 125
-
---- @type DialogId
-DIALOG_126 = 126
-
---- @type DialogId
-DIALOG_127 = 127
-
---- @type DialogId
-DIALOG_128 = 128
-
---- @type DialogId
-DIALOG_129 = 129
-
---- @type DialogId
-DIALOG_130 = 130
-
---- @type DialogId
-DIALOG_131 = 131
-
---- @type DialogId
-DIALOG_132 = 132
-
---- @type DialogId
-DIALOG_133 = 133
-
---- @type DialogId
-DIALOG_134 = 134
-
---- @type DialogId
-DIALOG_135 = 135
-
---- @type DialogId
-DIALOG_136 = 136
-
---- @type DialogId
-DIALOG_137 = 137
-
---- @type DialogId
-DIALOG_138 = 138
-
---- @type DialogId
-DIALOG_139 = 139
-
---- @type DialogId
-DIALOG_140 = 140
-
---- @type DialogId
-DIALOG_141 = 141
-
---- @type DialogId
-DIALOG_142 = 142
-
---- @type DialogId
-DIALOG_143 = 143
-
---- @type DialogId
-DIALOG_144 = 144
-
---- @type DialogId
-DIALOG_145 = 145
-
---- @type DialogId
-DIALOG_146 = 146
-
---- @type DialogId
-DIALOG_147 = 147
-
---- @type DialogId
-DIALOG_148 = 148
-
---- @type DialogId
-DIALOG_149 = 149
-
---- @type DialogId
-DIALOG_150 = 150
-
---- @type DialogId
-DIALOG_151 = 151
-
---- @type DialogId
-DIALOG_152 = 152
-
---- @type DialogId
-DIALOG_153 = 153
-
---- @type DialogId
-DIALOG_154 = 154
-
---- @type DialogId
-DIALOG_155 = 155
-
---- @type DialogId
-DIALOG_156 = 156
-
---- @type DialogId
-DIALOG_157 = 157
-
---- @type DialogId
-DIALOG_158 = 158
-
---- @type DialogId
-DIALOG_159 = 159
-
---- @type DialogId
-DIALOG_160 = 160
-
---- @type DialogId
-DIALOG_161 = 161
-
---- @type DialogId
-DIALOG_162 = 162
-
---- @type DialogId
-DIALOG_163 = 163
-
---- @type DialogId
-DIALOG_164 = 164
-
---- @type DialogId
-DIALOG_165 = 165
-
---- @type DialogId
-DIALOG_166 = 166
-
---- @type DialogId
-DIALOG_167 = 167
-
---- @type DialogId
-DIALOG_168 = 168
-
---- @type DialogId
-DIALOG_169 = 169
-
---- @type DialogId
-DIALOG_COUNT = 170
-
---- @class ConsoleMessageLevel
-
---- @type ConsoleMessageLevel
-CONSOLE_MESSAGE_INFO = 0
-
---- @type ConsoleMessageLevel
-CONSOLE_MESSAGE_WARNING = 1
-
---- @type ConsoleMessageLevel
-CONSOLE_MESSAGE_ERROR = 2
-
---- @class DjuiFontType
-
---- @type DjuiFontType
-FONT_NORMAL = 0
-
---- @type DjuiFontType
-FONT_MENU = 1
-
---- @type DjuiFontType
-FONT_HUD = 2
-
---- @type DjuiFontType
-FONT_ALIASED = 3
-
---- @type DjuiFontType
-FONT_CUSTOM_HUD = 4
-
---- @type DjuiFontType
-FONT_RECOLOR_HUD = 5
-
---- @type DjuiFontType
-FONT_SPECIAL = 6
-
---- @type DjuiFontType
-FONT_COUNT = 7
-
---- @class HudUtilsFilter
-
---- @type HudUtilsFilter
-FILTER_NEAREST = 0
-
---- @type HudUtilsFilter
-FILTER_LINEAR = 1
-
---- @type HudUtilsFilter
-FILTER_COUNT = 2
-
---- @class HudUtilsResolution
-
---- @type HudUtilsResolution
-RESOLUTION_DJUI = 0
-
---- @type HudUtilsResolution
-RESOLUTION_N64 = 1
-
---- @type HudUtilsResolution
-RESOLUTION_COUNT = 2
-
---- @class DjuiRainbowColor
-
---- @type DjuiRainbowColor
-DJUI_RAINBOW_COLOR_RED = 0
-
---- @type DjuiRainbowColor
-DJUI_RAINBOW_COLOR_GREEN = 1
-
---- @type DjuiRainbowColor
-DJUI_RAINBOW_COLOR_BLUE = 2
-
---- @type DjuiRainbowColor
-DJUI_RAINBOW_COLOR_YELLOW = 3
+RCE_AUTOMATIC = 0 --- @type RomhackCameraEnable
+RCE_ON        = 1 --- @type RomhackCameraEnable
+RCE_OFF       = 2 --- @type RomhackCameraEnable
+
+--- @alias RomhackCameraEnable
+--- | `RCE_AUTOMATIC`
+--- | `RCE_ON`
+--- | `RCE_OFF`
+
+RCO_ALL                       = 0 --- @type RomhackCameraOverride
+RCO_ALL_EXCEPT_BOWSER         = 1 --- @type RomhackCameraOverride
+RCO_NONE                      = 2 --- @type RomhackCameraOverride
+RCO_ALL_INCLUDING_VANILLA     = 3 --- @type RomhackCameraOverride
+RCO_ALL_VANILLA_EXCEPT_BOWSER = 4 --- @type RomhackCameraOverride
+RCO_DISABLE                   = 5 --- @type RomhackCameraOverride
+
+--- @alias RomhackCameraOverride
+--- | `RCO_ALL`
+--- | `RCO_ALL_EXCEPT_BOWSER`
+--- | `RCO_NONE`
+--- | `RCO_ALL_INCLUDING_VANILLA`
+--- | `RCO_ALL_VANILLA_EXCEPT_BOWSER`
+--- | `RCO_DISABLE`
+
+CHAR_SOUND_YAH_WAH_HOO         =  0 --- @type CharacterSound
+CHAR_SOUND_HOOHOO              =  1 --- @type CharacterSound
+CHAR_SOUND_YAHOO               =  2 --- @type CharacterSound
+CHAR_SOUND_UH                  =  3 --- @type CharacterSound
+CHAR_SOUND_HRMM                =  4 --- @type CharacterSound
+CHAR_SOUND_WAH2                =  5 --- @type CharacterSound
+CHAR_SOUND_WHOA                =  6 --- @type CharacterSound
+CHAR_SOUND_EEUH                =  7 --- @type CharacterSound
+CHAR_SOUND_ATTACKED            =  8 --- @type CharacterSound
+CHAR_SOUND_OOOF                =  9 --- @type CharacterSound
+CHAR_SOUND_OOOF2               = 10 --- @type CharacterSound
+CHAR_SOUND_HERE_WE_GO          = 11 --- @type CharacterSound
+CHAR_SOUND_YAWNING             = 12 --- @type CharacterSound
+CHAR_SOUND_SNORING1            = 13 --- @type CharacterSound
+CHAR_SOUND_SNORING2            = 14 --- @type CharacterSound
+CHAR_SOUND_WAAAOOOW            = 15 --- @type CharacterSound
+CHAR_SOUND_HAHA                = 16 --- @type CharacterSound
+CHAR_SOUND_HAHA_2              = 17 --- @type CharacterSound
+CHAR_SOUND_UH2                 = 18 --- @type CharacterSound
+CHAR_SOUND_UH2_2               = 19 --- @type CharacterSound
+CHAR_SOUND_ON_FIRE             = 20 --- @type CharacterSound
+CHAR_SOUND_DYING               = 21 --- @type CharacterSound
+CHAR_SOUND_PANTING_COLD        = 22 --- @type CharacterSound
+CHAR_SOUND_PANTING             = 23 --- @type CharacterSound
+CHAR_SOUND_COUGHING1           = 24 --- @type CharacterSound
+CHAR_SOUND_COUGHING2           = 25 --- @type CharacterSound
+CHAR_SOUND_COUGHING3           = 26 --- @type CharacterSound
+CHAR_SOUND_PUNCH_YAH           = 27 --- @type CharacterSound
+CHAR_SOUND_PUNCH_HOO           = 28 --- @type CharacterSound
+CHAR_SOUND_MAMA_MIA            = 29 --- @type CharacterSound
+CHAR_SOUND_GROUND_POUND_WAH    = 30 --- @type CharacterSound
+CHAR_SOUND_DROWNING            = 31 --- @type CharacterSound
+CHAR_SOUND_PUNCH_WAH           = 32 --- @type CharacterSound
+CHAR_SOUND_YAHOO_WAHA_YIPPEE   = 33 --- @type CharacterSound
+CHAR_SOUND_DOH                 = 34 --- @type CharacterSound
+CHAR_SOUND_GAME_OVER           = 35 --- @type CharacterSound
+CHAR_SOUND_HELLO               = 36 --- @type CharacterSound
+CHAR_SOUND_PRESS_START_TO_PLAY = 37 --- @type CharacterSound
+CHAR_SOUND_TWIRL_BOUNCE        = 38 --- @type CharacterSound
+CHAR_SOUND_SNORING3            = 39 --- @type CharacterSound
+CHAR_SOUND_SO_LONGA_BOWSER     = 40 --- @type CharacterSound
+CHAR_SOUND_IMA_TIRED           = 41 --- @type CharacterSound
+CHAR_SOUND_LETS_A_GO           = 42 --- @type CharacterSound
+CHAR_SOUND_OKEY_DOKEY          = 43 --- @type CharacterSound
+CHAR_SOUND_MAX                 = 44 --- @type CharacterSound
+
+--- @alias CharacterSound
+--- | `CHAR_SOUND_YAH_WAH_HOO`
+--- | `CHAR_SOUND_HOOHOO`
+--- | `CHAR_SOUND_YAHOO`
+--- | `CHAR_SOUND_UH`
+--- | `CHAR_SOUND_HRMM`
+--- | `CHAR_SOUND_WAH2`
+--- | `CHAR_SOUND_WHOA`
+--- | `CHAR_SOUND_EEUH`
+--- | `CHAR_SOUND_ATTACKED`
+--- | `CHAR_SOUND_OOOF`
+--- | `CHAR_SOUND_OOOF2`
+--- | `CHAR_SOUND_HERE_WE_GO`
+--- | `CHAR_SOUND_YAWNING`
+--- | `CHAR_SOUND_SNORING1`
+--- | `CHAR_SOUND_SNORING2`
+--- | `CHAR_SOUND_WAAAOOOW`
+--- | `CHAR_SOUND_HAHA`
+--- | `CHAR_SOUND_HAHA_2`
+--- | `CHAR_SOUND_UH2`
+--- | `CHAR_SOUND_UH2_2`
+--- | `CHAR_SOUND_ON_FIRE`
+--- | `CHAR_SOUND_DYING`
+--- | `CHAR_SOUND_PANTING_COLD`
+--- | `CHAR_SOUND_PANTING`
+--- | `CHAR_SOUND_COUGHING1`
+--- | `CHAR_SOUND_COUGHING2`
+--- | `CHAR_SOUND_COUGHING3`
+--- | `CHAR_SOUND_PUNCH_YAH`
+--- | `CHAR_SOUND_PUNCH_HOO`
+--- | `CHAR_SOUND_MAMA_MIA`
+--- | `CHAR_SOUND_GROUND_POUND_WAH`
+--- | `CHAR_SOUND_DROWNING`
+--- | `CHAR_SOUND_PUNCH_WAH`
+--- | `CHAR_SOUND_YAHOO_WAHA_YIPPEE`
+--- | `CHAR_SOUND_DOH`
+--- | `CHAR_SOUND_GAME_OVER`
+--- | `CHAR_SOUND_HELLO`
+--- | `CHAR_SOUND_PRESS_START_TO_PLAY`
+--- | `CHAR_SOUND_TWIRL_BOUNCE`
+--- | `CHAR_SOUND_SNORING3`
+--- | `CHAR_SOUND_SO_LONGA_BOWSER`
+--- | `CHAR_SOUND_IMA_TIRED`
+--- | `CHAR_SOUND_LETS_A_GO`
+--- | `CHAR_SOUND_OKEY_DOKEY`
+--- | `CHAR_SOUND_MAX`
+
+CT_MARIO   = 0 --- @type CharacterType
+CT_LUIGI   = 1 --- @type CharacterType
+CT_TOAD    = 2 --- @type CharacterType
+CT_WALUIGI = 3 --- @type CharacterType
+CT_WARIO   = 4 --- @type CharacterType
+CT_MAX     = 5 --- @type CharacterType
+
+--- @alias CharacterType
+--- | `CT_MARIO`
+--- | `CT_LUIGI`
+--- | `CT_TOAD`
+--- | `CT_WALUIGI`
+--- | `CT_WARIO`
+--- | `CT_MAX`
+
+DIALOG_000   =   0 --- @type DialogId
+DIALOG_001   =   1 --- @type DialogId
+DIALOG_002   =   2 --- @type DialogId
+DIALOG_003   =   3 --- @type DialogId
+DIALOG_004   =   4 --- @type DialogId
+DIALOG_005   =   5 --- @type DialogId
+DIALOG_006   =   6 --- @type DialogId
+DIALOG_007   =   7 --- @type DialogId
+DIALOG_008   =   8 --- @type DialogId
+DIALOG_009   =   9 --- @type DialogId
+DIALOG_010   =  10 --- @type DialogId
+DIALOG_011   =  11 --- @type DialogId
+DIALOG_012   =  12 --- @type DialogId
+DIALOG_013   =  13 --- @type DialogId
+DIALOG_014   =  14 --- @type DialogId
+DIALOG_015   =  15 --- @type DialogId
+DIALOG_016   =  16 --- @type DialogId
+DIALOG_017   =  17 --- @type DialogId
+DIALOG_018   =  18 --- @type DialogId
+DIALOG_019   =  19 --- @type DialogId
+DIALOG_020   =  20 --- @type DialogId
+DIALOG_021   =  21 --- @type DialogId
+DIALOG_022   =  22 --- @type DialogId
+DIALOG_023   =  23 --- @type DialogId
+DIALOG_024   =  24 --- @type DialogId
+DIALOG_025   =  25 --- @type DialogId
+DIALOG_026   =  26 --- @type DialogId
+DIALOG_027   =  27 --- @type DialogId
+DIALOG_028   =  28 --- @type DialogId
+DIALOG_029   =  29 --- @type DialogId
+DIALOG_030   =  30 --- @type DialogId
+DIALOG_031   =  31 --- @type DialogId
+DIALOG_032   =  32 --- @type DialogId
+DIALOG_033   =  33 --- @type DialogId
+DIALOG_034   =  34 --- @type DialogId
+DIALOG_035   =  35 --- @type DialogId
+DIALOG_036   =  36 --- @type DialogId
+DIALOG_037   =  37 --- @type DialogId
+DIALOG_038   =  38 --- @type DialogId
+DIALOG_039   =  39 --- @type DialogId
+DIALOG_040   =  40 --- @type DialogId
+DIALOG_041   =  41 --- @type DialogId
+DIALOG_042   =  42 --- @type DialogId
+DIALOG_043   =  43 --- @type DialogId
+DIALOG_044   =  44 --- @type DialogId
+DIALOG_045   =  45 --- @type DialogId
+DIALOG_046   =  46 --- @type DialogId
+DIALOG_047   =  47 --- @type DialogId
+DIALOG_048   =  48 --- @type DialogId
+DIALOG_049   =  49 --- @type DialogId
+DIALOG_050   =  50 --- @type DialogId
+DIALOG_051   =  51 --- @type DialogId
+DIALOG_052   =  52 --- @type DialogId
+DIALOG_053   =  53 --- @type DialogId
+DIALOG_054   =  54 --- @type DialogId
+DIALOG_055   =  55 --- @type DialogId
+DIALOG_056   =  56 --- @type DialogId
+DIALOG_057   =  57 --- @type DialogId
+DIALOG_058   =  58 --- @type DialogId
+DIALOG_059   =  59 --- @type DialogId
+DIALOG_060   =  60 --- @type DialogId
+DIALOG_061   =  61 --- @type DialogId
+DIALOG_062   =  62 --- @type DialogId
+DIALOG_063   =  63 --- @type DialogId
+DIALOG_064   =  64 --- @type DialogId
+DIALOG_065   =  65 --- @type DialogId
+DIALOG_066   =  66 --- @type DialogId
+DIALOG_067   =  67 --- @type DialogId
+DIALOG_068   =  68 --- @type DialogId
+DIALOG_069   =  69 --- @type DialogId
+DIALOG_070   =  70 --- @type DialogId
+DIALOG_071   =  71 --- @type DialogId
+DIALOG_072   =  72 --- @type DialogId
+DIALOG_073   =  73 --- @type DialogId
+DIALOG_074   =  74 --- @type DialogId
+DIALOG_075   =  75 --- @type DialogId
+DIALOG_076   =  76 --- @type DialogId
+DIALOG_077   =  77 --- @type DialogId
+DIALOG_078   =  78 --- @type DialogId
+DIALOG_079   =  79 --- @type DialogId
+DIALOG_080   =  80 --- @type DialogId
+DIALOG_081   =  81 --- @type DialogId
+DIALOG_082   =  82 --- @type DialogId
+DIALOG_083   =  83 --- @type DialogId
+DIALOG_084   =  84 --- @type DialogId
+DIALOG_085   =  85 --- @type DialogId
+DIALOG_086   =  86 --- @type DialogId
+DIALOG_087   =  87 --- @type DialogId
+DIALOG_088   =  88 --- @type DialogId
+DIALOG_089   =  89 --- @type DialogId
+DIALOG_090   =  90 --- @type DialogId
+DIALOG_091   =  91 --- @type DialogId
+DIALOG_092   =  92 --- @type DialogId
+DIALOG_093   =  93 --- @type DialogId
+DIALOG_094   =  94 --- @type DialogId
+DIALOG_095   =  95 --- @type DialogId
+DIALOG_096   =  96 --- @type DialogId
+DIALOG_097   =  97 --- @type DialogId
+DIALOG_098   =  98 --- @type DialogId
+DIALOG_099   =  99 --- @type DialogId
+DIALOG_100   = 100 --- @type DialogId
+DIALOG_101   = 101 --- @type DialogId
+DIALOG_102   = 102 --- @type DialogId
+DIALOG_103   = 103 --- @type DialogId
+DIALOG_104   = 104 --- @type DialogId
+DIALOG_105   = 105 --- @type DialogId
+DIALOG_106   = 106 --- @type DialogId
+DIALOG_107   = 107 --- @type DialogId
+DIALOG_108   = 108 --- @type DialogId
+DIALOG_109   = 109 --- @type DialogId
+DIALOG_110   = 110 --- @type DialogId
+DIALOG_111   = 111 --- @type DialogId
+DIALOG_112   = 112 --- @type DialogId
+DIALOG_113   = 113 --- @type DialogId
+DIALOG_114   = 114 --- @type DialogId
+DIALOG_115   = 115 --- @type DialogId
+DIALOG_116   = 116 --- @type DialogId
+DIALOG_117   = 117 --- @type DialogId
+DIALOG_118   = 118 --- @type DialogId
+DIALOG_119   = 119 --- @type DialogId
+DIALOG_120   = 120 --- @type DialogId
+DIALOG_121   = 121 --- @type DialogId
+DIALOG_122   = 122 --- @type DialogId
+DIALOG_123   = 123 --- @type DialogId
+DIALOG_124   = 124 --- @type DialogId
+DIALOG_125   = 125 --- @type DialogId
+DIALOG_126   = 126 --- @type DialogId
+DIALOG_127   = 127 --- @type DialogId
+DIALOG_128   = 128 --- @type DialogId
+DIALOG_129   = 129 --- @type DialogId
+DIALOG_130   = 130 --- @type DialogId
+DIALOG_131   = 131 --- @type DialogId
+DIALOG_132   = 132 --- @type DialogId
+DIALOG_133   = 133 --- @type DialogId
+DIALOG_134   = 134 --- @type DialogId
+DIALOG_135   = 135 --- @type DialogId
+DIALOG_136   = 136 --- @type DialogId
+DIALOG_137   = 137 --- @type DialogId
+DIALOG_138   = 138 --- @type DialogId
+DIALOG_139   = 139 --- @type DialogId
+DIALOG_140   = 140 --- @type DialogId
+DIALOG_141   = 141 --- @type DialogId
+DIALOG_142   = 142 --- @type DialogId
+DIALOG_143   = 143 --- @type DialogId
+DIALOG_144   = 144 --- @type DialogId
+DIALOG_145   = 145 --- @type DialogId
+DIALOG_146   = 146 --- @type DialogId
+DIALOG_147   = 147 --- @type DialogId
+DIALOG_148   = 148 --- @type DialogId
+DIALOG_149   = 149 --- @type DialogId
+DIALOG_150   = 150 --- @type DialogId
+DIALOG_151   = 151 --- @type DialogId
+DIALOG_152   = 152 --- @type DialogId
+DIALOG_153   = 153 --- @type DialogId
+DIALOG_154   = 154 --- @type DialogId
+DIALOG_155   = 155 --- @type DialogId
+DIALOG_156   = 156 --- @type DialogId
+DIALOG_157   = 157 --- @type DialogId
+DIALOG_158   = 158 --- @type DialogId
+DIALOG_159   = 159 --- @type DialogId
+DIALOG_160   = 160 --- @type DialogId
+DIALOG_161   = 161 --- @type DialogId
+DIALOG_162   = 162 --- @type DialogId
+DIALOG_163   = 163 --- @type DialogId
+DIALOG_164   = 164 --- @type DialogId
+DIALOG_165   = 165 --- @type DialogId
+DIALOG_166   = 166 --- @type DialogId
+DIALOG_167   = 167 --- @type DialogId
+DIALOG_168   = 168 --- @type DialogId
+DIALOG_169   = 169 --- @type DialogId
+DIALOG_COUNT = 170 --- @type DialogId
+
+--- @alias DialogId
+--- | `DIALOG_000`
+--- | `DIALOG_001`
+--- | `DIALOG_002`
+--- | `DIALOG_003`
+--- | `DIALOG_004`
+--- | `DIALOG_005`
+--- | `DIALOG_006`
+--- | `DIALOG_007`
+--- | `DIALOG_008`
+--- | `DIALOG_009`
+--- | `DIALOG_010`
+--- | `DIALOG_011`
+--- | `DIALOG_012`
+--- | `DIALOG_013`
+--- | `DIALOG_014`
+--- | `DIALOG_015`
+--- | `DIALOG_016`
+--- | `DIALOG_017`
+--- | `DIALOG_018`
+--- | `DIALOG_019`
+--- | `DIALOG_020`
+--- | `DIALOG_021`
+--- | `DIALOG_022`
+--- | `DIALOG_023`
+--- | `DIALOG_024`
+--- | `DIALOG_025`
+--- | `DIALOG_026`
+--- | `DIALOG_027`
+--- | `DIALOG_028`
+--- | `DIALOG_029`
+--- | `DIALOG_030`
+--- | `DIALOG_031`
+--- | `DIALOG_032`
+--- | `DIALOG_033`
+--- | `DIALOG_034`
+--- | `DIALOG_035`
+--- | `DIALOG_036`
+--- | `DIALOG_037`
+--- | `DIALOG_038`
+--- | `DIALOG_039`
+--- | `DIALOG_040`
+--- | `DIALOG_041`
+--- | `DIALOG_042`
+--- | `DIALOG_043`
+--- | `DIALOG_044`
+--- | `DIALOG_045`
+--- | `DIALOG_046`
+--- | `DIALOG_047`
+--- | `DIALOG_048`
+--- | `DIALOG_049`
+--- | `DIALOG_050`
+--- | `DIALOG_051`
+--- | `DIALOG_052`
+--- | `DIALOG_053`
+--- | `DIALOG_054`
+--- | `DIALOG_055`
+--- | `DIALOG_056`
+--- | `DIALOG_057`
+--- | `DIALOG_058`
+--- | `DIALOG_059`
+--- | `DIALOG_060`
+--- | `DIALOG_061`
+--- | `DIALOG_062`
+--- | `DIALOG_063`
+--- | `DIALOG_064`
+--- | `DIALOG_065`
+--- | `DIALOG_066`
+--- | `DIALOG_067`
+--- | `DIALOG_068`
+--- | `DIALOG_069`
+--- | `DIALOG_070`
+--- | `DIALOG_071`
+--- | `DIALOG_072`
+--- | `DIALOG_073`
+--- | `DIALOG_074`
+--- | `DIALOG_075`
+--- | `DIALOG_076`
+--- | `DIALOG_077`
+--- | `DIALOG_078`
+--- | `DIALOG_079`
+--- | `DIALOG_080`
+--- | `DIALOG_081`
+--- | `DIALOG_082`
+--- | `DIALOG_083`
+--- | `DIALOG_084`
+--- | `DIALOG_085`
+--- | `DIALOG_086`
+--- | `DIALOG_087`
+--- | `DIALOG_088`
+--- | `DIALOG_089`
+--- | `DIALOG_090`
+--- | `DIALOG_091`
+--- | `DIALOG_092`
+--- | `DIALOG_093`
+--- | `DIALOG_094`
+--- | `DIALOG_095`
+--- | `DIALOG_096`
+--- | `DIALOG_097`
+--- | `DIALOG_098`
+--- | `DIALOG_099`
+--- | `DIALOG_100`
+--- | `DIALOG_101`
+--- | `DIALOG_102`
+--- | `DIALOG_103`
+--- | `DIALOG_104`
+--- | `DIALOG_105`
+--- | `DIALOG_106`
+--- | `DIALOG_107`
+--- | `DIALOG_108`
+--- | `DIALOG_109`
+--- | `DIALOG_110`
+--- | `DIALOG_111`
+--- | `DIALOG_112`
+--- | `DIALOG_113`
+--- | `DIALOG_114`
+--- | `DIALOG_115`
+--- | `DIALOG_116`
+--- | `DIALOG_117`
+--- | `DIALOG_118`
+--- | `DIALOG_119`
+--- | `DIALOG_120`
+--- | `DIALOG_121`
+--- | `DIALOG_122`
+--- | `DIALOG_123`
+--- | `DIALOG_124`
+--- | `DIALOG_125`
+--- | `DIALOG_126`
+--- | `DIALOG_127`
+--- | `DIALOG_128`
+--- | `DIALOG_129`
+--- | `DIALOG_130`
+--- | `DIALOG_131`
+--- | `DIALOG_132`
+--- | `DIALOG_133`
+--- | `DIALOG_134`
+--- | `DIALOG_135`
+--- | `DIALOG_136`
+--- | `DIALOG_137`
+--- | `DIALOG_138`
+--- | `DIALOG_139`
+--- | `DIALOG_140`
+--- | `DIALOG_141`
+--- | `DIALOG_142`
+--- | `DIALOG_143`
+--- | `DIALOG_144`
+--- | `DIALOG_145`
+--- | `DIALOG_146`
+--- | `DIALOG_147`
+--- | `DIALOG_148`
+--- | `DIALOG_149`
+--- | `DIALOG_150`
+--- | `DIALOG_151`
+--- | `DIALOG_152`
+--- | `DIALOG_153`
+--- | `DIALOG_154`
+--- | `DIALOG_155`
+--- | `DIALOG_156`
+--- | `DIALOG_157`
+--- | `DIALOG_158`
+--- | `DIALOG_159`
+--- | `DIALOG_160`
+--- | `DIALOG_161`
+--- | `DIALOG_162`
+--- | `DIALOG_163`
+--- | `DIALOG_164`
+--- | `DIALOG_165`
+--- | `DIALOG_166`
+--- | `DIALOG_167`
+--- | `DIALOG_168`
+--- | `DIALOG_169`
+--- | `DIALOG_COUNT`
+
+CONSOLE_MESSAGE_INFO    = 0 --- @type ConsoleMessageLevel
+CONSOLE_MESSAGE_WARNING = 1 --- @type ConsoleMessageLevel
+CONSOLE_MESSAGE_ERROR   = 2 --- @type ConsoleMessageLevel
+
+--- @alias ConsoleMessageLevel
+--- | `CONSOLE_MESSAGE_INFO`
+--- | `CONSOLE_MESSAGE_WARNING`
+--- | `CONSOLE_MESSAGE_ERROR`
+
+FONT_NORMAL      = 0 --- @type DjuiFontType
+FONT_MENU        = 1 --- @type DjuiFontType
+FONT_HUD         = 2 --- @type DjuiFontType
+FONT_ALIASED     = 3 --- @type DjuiFontType
+FONT_CUSTOM_HUD  = 4 --- @type DjuiFontType
+FONT_RECOLOR_HUD = 5 --- @type DjuiFontType
+FONT_SPECIAL     = 6 --- @type DjuiFontType
+FONT_COUNT       = 7 --- @type DjuiFontType
+
+--- @alias DjuiFontType
+--- | `FONT_NORMAL`
+--- | `FONT_MENU`
+--- | `FONT_HUD`
+--- | `FONT_ALIASED`
+--- | `FONT_CUSTOM_HUD`
+--- | `FONT_RECOLOR_HUD`
+--- | `FONT_SPECIAL`
+--- | `FONT_COUNT`
+
+FILTER_NEAREST = 0 --- @type HudUtilsFilter
+FILTER_LINEAR  = 1 --- @type HudUtilsFilter
+FILTER_COUNT   = 2 --- @type HudUtilsFilter
+
+--- @alias HudUtilsFilter
+--- | `FILTER_NEAREST`
+--- | `FILTER_LINEAR`
+--- | `FILTER_COUNT`
+
+RESOLUTION_DJUI  = 0 --- @type HudUtilsResolution
+RESOLUTION_N64   = 1 --- @type HudUtilsResolution
+RESOLUTION_COUNT = 2 --- @type HudUtilsResolution
+
+--- @alias HudUtilsResolution
+--- | `RESOLUTION_DJUI`
+--- | `RESOLUTION_N64`
+--- | `RESOLUTION_COUNT`
+
+DJUI_RAINBOW_COLOR_RED    = 0 --- @type DjuiRainbowColor
+DJUI_RAINBOW_COLOR_GREEN  = 1 --- @type DjuiRainbowColor
+DJUI_RAINBOW_COLOR_BLUE   = 2 --- @type DjuiRainbowColor
+DJUI_RAINBOW_COLOR_YELLOW = 3 --- @type DjuiRainbowColor
+
+--- @alias DjuiRainbowColor
+--- | `DJUI_RAINBOW_COLOR_RED`
+--- | `DJUI_RAINBOW_COLOR_GREEN`
+--- | `DJUI_RAINBOW_COLOR_BLUE`
+--- | `DJUI_RAINBOW_COLOR_YELLOW`
 
 --- @type integer
 ENVFX_BUBBLE_START = 10
@@ -3329,46 +2559,34 @@ SEQ_PLAYER_LEVEL = 0
 --- @type integer
 SEQ_PLAYER_SFX = 2
 
---- @class DialogSound
+DS_UKIKI =    0 --- @type DialogSound
+DS_TUXIE =    1 --- @type DialogSound
+DS_BOWS1 =    2 --- @type DialogSound
+DS_KOOPA =    3 --- @type DialogSound
+DS_KBOMB =    4 --- @type DialogSound
+DS_BOO   =    5 --- @type DialogSound
+DS_BOMB  =    6 --- @type DialogSound
+DS_BOWS2 =    7 --- @type DialogSound
+DS_GRUNT =    8 --- @type DialogSound
+DS_WIGLR =    9 --- @type DialogSound
+DS_YOSHI =   10 --- @type DialogSound
+DS_MAX   =   11 --- @type DialogSound
+DS_NONE  = 0xff --- @type DialogSound
 
---- @type DialogSound
-DS_UKIKI = 0
-
---- @type DialogSound
-DS_TUXIE = 1
-
---- @type DialogSound
-DS_BOWS1 = 2
-
---- @type DialogSound
-DS_KOOPA = 3
-
---- @type DialogSound
-DS_KBOMB = 4
-
---- @type DialogSound
-DS_BOO = 5
-
---- @type DialogSound
-DS_BOMB = 6
-
---- @type DialogSound
-DS_BOWS2 = 7
-
---- @type DialogSound
-DS_GRUNT = 8
-
---- @type DialogSound
-DS_WIGLR = 9
-
---- @type DialogSound
-DS_YOSHI = 10
-
---- @type DialogSound
-DS_MAX = 11
-
---- @type DialogSound
-DS_NONE = 0xff
+--- @alias DialogSound
+--- | `DS_UKIKI`
+--- | `DS_TUXIE`
+--- | `DS_BOWS1`
+--- | `DS_KOOPA`
+--- | `DS_KBOMB`
+--- | `DS_BOO`
+--- | `DS_BOMB`
+--- | `DS_BOWS2`
+--- | `DS_GRUNT`
+--- | `DS_WIGLR`
+--- | `DS_YOSHI`
+--- | `DS_MAX`
+--- | `DS_NONE`
 
 --- @type integer
 FIRST_PERSON_DEFAULT_FOV = 70
@@ -4810,138 +4028,97 @@ PVP_ATTACK_KNOCKBACK_TIMER_OVERRIDE = -5
 --- @type integer
 PVP_ATTACK_OVERRIDE_VANILLA_INVINCIBILITY = 0x0000FFFF
 
---- @class InteractionFlag
+INT_GROUND_POUND          =                       (1 << 0) --- @type InteractionFlag
+INT_PUNCH                 =                       (1 << 1) --- @type InteractionFlag
+INT_KICK                  =                       (1 << 2) --- @type InteractionFlag
+INT_TRIP                  =                       (1 << 3) --- @type InteractionFlag
+INT_SLIDE_KICK            =                       (1 << 4) --- @type InteractionFlag
+INT_FAST_ATTACK_OR_SHELL  =                       (1 << 5) --- @type InteractionFlag
+INT_HIT_FROM_ABOVE        =                       (1 << 6) --- @type InteractionFlag
+INT_HIT_FROM_BELOW        =                       (1 << 7) --- @type InteractionFlag
+INT_TWIRL                 =                       (1 << 8) --- @type InteractionFlag
+INT_GROUND_POUND_OR_TWIRL = (INT_GROUND_POUND | INT_TWIRL) --- @type InteractionFlag
+INT_LUA                   =                      (1 << 31) --- @type InteractionFlag
 
---- @type InteractionFlag
-INT_GROUND_POUND = (1 << 0)
+--- @alias InteractionFlag
+--- | `INT_GROUND_POUND`
+--- | `INT_PUNCH`
+--- | `INT_KICK`
+--- | `INT_TRIP`
+--- | `INT_SLIDE_KICK`
+--- | `INT_FAST_ATTACK_OR_SHELL`
+--- | `INT_HIT_FROM_ABOVE`
+--- | `INT_HIT_FROM_BELOW`
+--- | `INT_TWIRL`
+--- | `INT_GROUND_POUND_OR_TWIRL`
+--- | `INT_LUA`
 
---- @type InteractionFlag
-INT_PUNCH = (1 << 1)
+INTERACT_HOOT           =  (1 << 0) --- @type InteractionType
+INTERACT_GRABBABLE      =  (1 << 1) --- @type InteractionType
+INTERACT_DOOR           =  (1 << 2) --- @type InteractionType
+INTERACT_DAMAGE         =  (1 << 3) --- @type InteractionType
+INTERACT_COIN           =  (1 << 4) --- @type InteractionType
+INTERACT_CAP            =  (1 << 5) --- @type InteractionType
+INTERACT_POLE           =  (1 << 6) --- @type InteractionType
+INTERACT_KOOPA          =  (1 << 7) --- @type InteractionType
+INTERACT_SPINY_WALKING  =  (1 << 8) --- @type InteractionType
+INTERACT_BREAKABLE      =  (1 << 9) --- @type InteractionType
+INTERACT_STRONG_WIND    = (1 << 10) --- @type InteractionType
+INTERACT_WARP_DOOR      = (1 << 11) --- @type InteractionType
+INTERACT_STAR_OR_KEY    = (1 << 12) --- @type InteractionType
+INTERACT_WARP           = (1 << 13) --- @type InteractionType
+INTERACT_CANNON_BASE    = (1 << 14) --- @type InteractionType
+INTERACT_BOUNCE_TOP     = (1 << 15) --- @type InteractionType
+INTERACT_WATER_RING     = (1 << 16) --- @type InteractionType
+INTERACT_BULLY          = (1 << 17) --- @type InteractionType
+INTERACT_FLAME          = (1 << 18) --- @type InteractionType
+INTERACT_KOOPA_SHELL    = (1 << 19) --- @type InteractionType
+INTERACT_BOUNCE_TOP2    = (1 << 20) --- @type InteractionType
+INTERACT_MR_BLIZZARD    = (1 << 21) --- @type InteractionType
+INTERACT_HIT_FROM_BELOW = (1 << 22) --- @type InteractionType
+INTERACT_TEXT           = (1 << 23) --- @type InteractionType
+INTERACT_TORNADO        = (1 << 24) --- @type InteractionType
+INTERACT_WHIRLPOOL      = (1 << 25) --- @type InteractionType
+INTERACT_CLAM_OR_BUBBA  = (1 << 26) --- @type InteractionType
+INTERACT_BBH_ENTRANCE   = (1 << 27) --- @type InteractionType
+INTERACT_SNUFIT_BULLET  = (1 << 28) --- @type InteractionType
+INTERACT_SHOCK          = (1 << 29) --- @type InteractionType
+INTERACT_IGLOO_BARRIER  = (1 << 30) --- @type InteractionType
+INTERACT_PLAYER         = (1 << 31) --- @type InteractionType
 
---- @type InteractionFlag
-INT_KICK = (1 << 2)
-
---- @type InteractionFlag
-INT_TRIP = (1 << 3)
-
---- @type InteractionFlag
-INT_SLIDE_KICK = (1 << 4)
-
---- @type InteractionFlag
-INT_FAST_ATTACK_OR_SHELL = (1 << 5)
-
---- @type InteractionFlag
-INT_HIT_FROM_ABOVE = (1 << 6)
-
---- @type InteractionFlag
-INT_HIT_FROM_BELOW = (1 << 7)
-
---- @type InteractionFlag
-INT_TWIRL = (1 << 8)
-
---- @type InteractionFlag
-INT_GROUND_POUND_OR_TWIRL = (INT_GROUND_POUND | INT_TWIRL)
-
---- @type InteractionFlag
-INT_LUA = (1 << 31)
-
---- @class InteractionType
-
---- @type InteractionType
-INTERACT_HOOT = (1 << 0)
-
---- @type InteractionType
-INTERACT_GRABBABLE = (1 << 1)
-
---- @type InteractionType
-INTERACT_DOOR = (1 << 2)
-
---- @type InteractionType
-INTERACT_DAMAGE = (1 << 3)
-
---- @type InteractionType
-INTERACT_COIN = (1 << 4)
-
---- @type InteractionType
-INTERACT_CAP = (1 << 5)
-
---- @type InteractionType
-INTERACT_POLE = (1 << 6)
-
---- @type InteractionType
-INTERACT_KOOPA = (1 << 7)
-
---- @type InteractionType
-INTERACT_SPINY_WALKING = (1 << 8)
-
---- @type InteractionType
-INTERACT_BREAKABLE = (1 << 9)
-
---- @type InteractionType
-INTERACT_STRONG_WIND = (1 << 10)
-
---- @type InteractionType
-INTERACT_WARP_DOOR = (1 << 11)
-
---- @type InteractionType
-INTERACT_STAR_OR_KEY = (1 << 12)
-
---- @type InteractionType
-INTERACT_WARP = (1 << 13)
-
---- @type InteractionType
-INTERACT_CANNON_BASE = (1 << 14)
-
---- @type InteractionType
-INTERACT_BOUNCE_TOP = (1 << 15)
-
---- @type InteractionType
-INTERACT_WATER_RING = (1 << 16)
-
---- @type InteractionType
-INTERACT_BULLY = (1 << 17)
-
---- @type InteractionType
-INTERACT_FLAME = (1 << 18)
-
---- @type InteractionType
-INTERACT_KOOPA_SHELL = (1 << 19)
-
---- @type InteractionType
-INTERACT_BOUNCE_TOP2 = (1 << 20)
-
---- @type InteractionType
-INTERACT_MR_BLIZZARD = (1 << 21)
-
---- @type InteractionType
-INTERACT_HIT_FROM_BELOW = (1 << 22)
-
---- @type InteractionType
-INTERACT_TEXT = (1 << 23)
-
---- @type InteractionType
-INTERACT_TORNADO = (1 << 24)
-
---- @type InteractionType
-INTERACT_WHIRLPOOL = (1 << 25)
-
---- @type InteractionType
-INTERACT_CLAM_OR_BUBBA = (1 << 26)
-
---- @type InteractionType
-INTERACT_BBH_ENTRANCE = (1 << 27)
-
---- @type InteractionType
-INTERACT_SNUFIT_BULLET = (1 << 28)
-
---- @type InteractionType
-INTERACT_SHOCK = (1 << 29)
-
---- @type InteractionType
-INTERACT_IGLOO_BARRIER = (1 << 30)
-
---- @type InteractionType
-INTERACT_PLAYER = (1 << 31)
+--- @alias InteractionType
+--- | `INTERACT_HOOT`
+--- | `INTERACT_GRABBABLE`
+--- | `INTERACT_DOOR`
+--- | `INTERACT_DAMAGE`
+--- | `INTERACT_COIN`
+--- | `INTERACT_CAP`
+--- | `INTERACT_POLE`
+--- | `INTERACT_KOOPA`
+--- | `INTERACT_SPINY_WALKING`
+--- | `INTERACT_BREAKABLE`
+--- | `INTERACT_STRONG_WIND`
+--- | `INTERACT_WARP_DOOR`
+--- | `INTERACT_STAR_OR_KEY`
+--- | `INTERACT_WARP`
+--- | `INTERACT_CANNON_BASE`
+--- | `INTERACT_BOUNCE_TOP`
+--- | `INTERACT_WATER_RING`
+--- | `INTERACT_BULLY`
+--- | `INTERACT_FLAME`
+--- | `INTERACT_KOOPA_SHELL`
+--- | `INTERACT_BOUNCE_TOP2`
+--- | `INTERACT_MR_BLIZZARD`
+--- | `INTERACT_HIT_FROM_BELOW`
+--- | `INTERACT_TEXT`
+--- | `INTERACT_TORNADO`
+--- | `INTERACT_WHIRLPOOL`
+--- | `INTERACT_CLAM_OR_BUBBA`
+--- | `INTERACT_BBH_ENTRANCE`
+--- | `INTERACT_SNUFIT_BULLET`
+--- | `INTERACT_SHOCK`
+--- | `INTERACT_IGLOO_BARRIER`
+--- | `INTERACT_PLAYER`
 
 --- @type integer
 MAX_LOCAL_STATE_HISTORY = 30
@@ -4952,127 +4129,88 @@ WARP_CHECKPOINT = 0x80
 --- @type integer
 WARP_NO_CHECKPOINT = 0x00
 
---- @class LevelNum
+LEVEL_NONE             =  0 --- @type LevelNum
+LEVEL_UNKNOWN_1        =  1 --- @type LevelNum
+LEVEL_UNKNOWN_2        =  2 --- @type LevelNum
+LEVEL_UNKNOWN_3        =  3 --- @type LevelNum
+LEVEL_BBH              =  4 --- @type LevelNum
+LEVEL_CCM              =  5 --- @type LevelNum
+LEVEL_CASTLE           =  6 --- @type LevelNum
+LEVEL_HMC              =  7 --- @type LevelNum
+LEVEL_SSL              =  8 --- @type LevelNum
+LEVEL_BOB              =  9 --- @type LevelNum
+LEVEL_SL               = 10 --- @type LevelNum
+LEVEL_WDW              = 11 --- @type LevelNum
+LEVEL_JRB              = 12 --- @type LevelNum
+LEVEL_THI              = 13 --- @type LevelNum
+LEVEL_TTC              = 14 --- @type LevelNum
+LEVEL_RR               = 15 --- @type LevelNum
+LEVEL_CASTLE_GROUNDS   = 16 --- @type LevelNum
+LEVEL_BITDW            = 17 --- @type LevelNum
+LEVEL_VCUTM            = 18 --- @type LevelNum
+LEVEL_BITFS            = 19 --- @type LevelNum
+LEVEL_SA               = 20 --- @type LevelNum
+LEVEL_BITS             = 21 --- @type LevelNum
+LEVEL_LLL              = 22 --- @type LevelNum
+LEVEL_DDD              = 23 --- @type LevelNum
+LEVEL_WF               = 24 --- @type LevelNum
+LEVEL_ENDING           = 25 --- @type LevelNum
+LEVEL_CASTLE_COURTYARD = 26 --- @type LevelNum
+LEVEL_PSS              = 27 --- @type LevelNum
+LEVEL_COTMC            = 28 --- @type LevelNum
+LEVEL_TOTWC            = 29 --- @type LevelNum
+LEVEL_BOWSER_1         = 30 --- @type LevelNum
+LEVEL_WMOTR            = 31 --- @type LevelNum
+LEVEL_UNKNOWN_32       = 32 --- @type LevelNum
+LEVEL_BOWSER_2         = 33 --- @type LevelNum
+LEVEL_BOWSER_3         = 34 --- @type LevelNum
+LEVEL_UNKNOWN_35       = 35 --- @type LevelNum
+LEVEL_TTM              = 36 --- @type LevelNum
+LEVEL_UNKNOWN_37       = 37 --- @type LevelNum
+LEVEL_UNKNOWN_38       = 38 --- @type LevelNum
+LEVEL_COUNT            = 39 --- @type LevelNum
 
---- @type LevelNum
-LEVEL_NONE = 0
-
---- @type LevelNum
-LEVEL_UNKNOWN_1 = 1
-
---- @type LevelNum
-LEVEL_UNKNOWN_2 = 2
-
---- @type LevelNum
-LEVEL_UNKNOWN_3 = 3
-
---- @type LevelNum
-LEVEL_BBH = 4
-
---- @type LevelNum
-LEVEL_CCM = 5
-
---- @type LevelNum
-LEVEL_CASTLE = 6
-
---- @type LevelNum
-LEVEL_HMC = 7
-
---- @type LevelNum
-LEVEL_SSL = 8
-
---- @type LevelNum
-LEVEL_BOB = 9
-
---- @type LevelNum
-LEVEL_SL = 10
-
---- @type LevelNum
-LEVEL_WDW = 11
-
---- @type LevelNum
-LEVEL_JRB = 12
-
---- @type LevelNum
-LEVEL_THI = 13
-
---- @type LevelNum
-LEVEL_TTC = 14
-
---- @type LevelNum
-LEVEL_RR = 15
-
---- @type LevelNum
-LEVEL_CASTLE_GROUNDS = 16
-
---- @type LevelNum
-LEVEL_BITDW = 17
-
---- @type LevelNum
-LEVEL_VCUTM = 18
-
---- @type LevelNum
-LEVEL_BITFS = 19
-
---- @type LevelNum
-LEVEL_SA = 20
-
---- @type LevelNum
-LEVEL_BITS = 21
-
---- @type LevelNum
-LEVEL_LLL = 22
-
---- @type LevelNum
-LEVEL_DDD = 23
-
---- @type LevelNum
-LEVEL_WF = 24
-
---- @type LevelNum
-LEVEL_ENDING = 25
-
---- @type LevelNum
-LEVEL_CASTLE_COURTYARD = 26
-
---- @type LevelNum
-LEVEL_PSS = 27
-
---- @type LevelNum
-LEVEL_COTMC = 28
-
---- @type LevelNum
-LEVEL_TOTWC = 29
-
---- @type LevelNum
-LEVEL_BOWSER_1 = 30
-
---- @type LevelNum
-LEVEL_WMOTR = 31
-
---- @type LevelNum
-LEVEL_UNKNOWN_32 = 32
-
---- @type LevelNum
-LEVEL_BOWSER_2 = 33
-
---- @type LevelNum
-LEVEL_BOWSER_3 = 34
-
---- @type LevelNum
-LEVEL_UNKNOWN_35 = 35
-
---- @type LevelNum
-LEVEL_TTM = 36
-
---- @type LevelNum
-LEVEL_UNKNOWN_37 = 37
-
---- @type LevelNum
-LEVEL_UNKNOWN_38 = 38
-
---- @type LevelNum
-LEVEL_COUNT = 39
+--- @alias LevelNum
+--- | `LEVEL_NONE`
+--- | `LEVEL_UNKNOWN_1`
+--- | `LEVEL_UNKNOWN_2`
+--- | `LEVEL_UNKNOWN_3`
+--- | `LEVEL_BBH`
+--- | `LEVEL_CCM`
+--- | `LEVEL_CASTLE`
+--- | `LEVEL_HMC`
+--- | `LEVEL_SSL`
+--- | `LEVEL_BOB`
+--- | `LEVEL_SL`
+--- | `LEVEL_WDW`
+--- | `LEVEL_JRB`
+--- | `LEVEL_THI`
+--- | `LEVEL_TTC`
+--- | `LEVEL_RR`
+--- | `LEVEL_CASTLE_GROUNDS`
+--- | `LEVEL_BITDW`
+--- | `LEVEL_VCUTM`
+--- | `LEVEL_BITFS`
+--- | `LEVEL_SA`
+--- | `LEVEL_BITS`
+--- | `LEVEL_LLL`
+--- | `LEVEL_DDD`
+--- | `LEVEL_WF`
+--- | `LEVEL_ENDING`
+--- | `LEVEL_CASTLE_COURTYARD`
+--- | `LEVEL_PSS`
+--- | `LEVEL_COTMC`
+--- | `LEVEL_TOTWC`
+--- | `LEVEL_BOWSER_1`
+--- | `LEVEL_WMOTR`
+--- | `LEVEL_UNKNOWN_32`
+--- | `LEVEL_BOWSER_2`
+--- | `LEVEL_BOWSER_3`
+--- | `LEVEL_UNKNOWN_35`
+--- | `LEVEL_TTM`
+--- | `LEVEL_UNKNOWN_37`
+--- | `LEVEL_UNKNOWN_38`
+--- | `LEVEL_COUNT`
 
 --- @type integer
 MARIO_SPAWN_UNKNOWN_02 = 0x02
@@ -5212,1446 +4350,979 @@ WARP_TYPE_NOT_WARPING = 0
 --- @type integer
 WARP_TYPE_SAME_AREA = 3
 
---- @class HUDDisplayFlag
-
---- @type HUDDisplayFlag
-HUD_DISPLAY_FLAG_LIVES = 0x0001
-
---- @type HUDDisplayFlag
-HUD_DISPLAY_FLAG_COIN_COUNT = 0x0002
-
---- @type HUDDisplayFlag
-HUD_DISPLAY_FLAG_STAR_COUNT = 0x0004
-
---- @type HUDDisplayFlag
-HUD_DISPLAY_FLAG_CAMERA_AND_POWER = 0x0008
-
---- @type HUDDisplayFlag
-HUD_DISPLAY_FLAG_KEYS = 0x0010
-
---- @type HUDDisplayFlag
-HUD_DISPLAY_FLAG_UNKNOWN_0020 = 0x0020
-
---- @type HUDDisplayFlag
-HUD_DISPLAY_FLAG_TIMER = 0x0040
-
---- @type HUDDisplayFlag
-HUD_DISPLAY_FLAG_CAMERA = 0x0080
-
---- @type HUDDisplayFlag
-HUD_DISPLAY_FLAG_POWER = 0x0100
-
---- @type HUDDisplayFlag
-HUD_DISPLAY_FLAG_EMPHASIZE_POWER = 0x8000
-
---- @type HUDDisplayFlag
-HUD_DISPLAY_NONE = 0x0000
-
---- @type HUDDisplayFlag
-HUD_DISPLAY_DEFAULT = HUD_DISPLAY_FLAG_LIVES | HUD_DISPLAY_FLAG_COIN_COUNT | HUD_DISPLAY_FLAG_STAR_COUNT | HUD_DISPLAY_FLAG_CAMERA_AND_POWER | HUD_DISPLAY_FLAG_CAMERA | HUD_DISPLAY_FLAG_POWER | HUD_DISPLAY_FLAG_KEYS | HUD_DISPLAY_FLAG_UNKNOWN_0020
-
---- @class MarioSpawnType
-
---- @type MarioSpawnType
-MARIO_SPAWN_NONE = 0
-
---- @type MarioSpawnType
-MARIO_SPAWN_DOOR_WARP = 1
-
---- @type MarioSpawnType
-MARIO_SPAWN_IDLE = 2
-
---- @type MarioSpawnType
-MARIO_SPAWN_PIPE = 3
-
---- @type MarioSpawnType
-MARIO_SPAWN_TELEPORT = 4
-
---- @type MarioSpawnType
-MARIO_SPAWN_INSTANT_ACTIVE = 0x10
-
---- @type MarioSpawnType
-MARIO_SPAWN_SWIMMING = ((MARIO_SPAWN_INSTANT_ACTIVE ) + 1)
-
---- @type MarioSpawnType
-MARIO_SPAWN_AIRBORNE = ((MARIO_SPAWN_INSTANT_ACTIVE ) + 2)
-
---- @type MarioSpawnType
-MARIO_SPAWN_HARD_AIR_KNOCKBACK = ((MARIO_SPAWN_INSTANT_ACTIVE ) + 3)
-
---- @type MarioSpawnType
-MARIO_SPAWN_SPIN_AIRBORNE_CIRCLE = ((MARIO_SPAWN_INSTANT_ACTIVE ) + 4)
-
---- @type MarioSpawnType
-MARIO_SPAWN_DEATH = ((MARIO_SPAWN_INSTANT_ACTIVE ) + 5)
-
---- @type MarioSpawnType
-MARIO_SPAWN_SPIN_AIRBORNE = ((MARIO_SPAWN_INSTANT_ACTIVE ) + 6)
-
---- @type MarioSpawnType
-MARIO_SPAWN_FLYING = ((MARIO_SPAWN_INSTANT_ACTIVE ) + 7)
-
---- @type MarioSpawnType
-MARIO_SPAWN_PAINTING_STAR_COLLECT = 0x20
-
---- @type MarioSpawnType
-MARIO_SPAWN_PAINTING_DEATH = ((MARIO_SPAWN_PAINTING_STAR_COLLECT ) + 1)
-
---- @type MarioSpawnType
-MARIO_SPAWN_AIRBORNE_STAR_COLLECT = ((MARIO_SPAWN_PAINTING_STAR_COLLECT ) + 2)
-
---- @type MarioSpawnType
-MARIO_SPAWN_AIRBORNE_DEATH = ((MARIO_SPAWN_PAINTING_STAR_COLLECT ) + 3)
-
---- @type MarioSpawnType
-MARIO_SPAWN_LAUNCH_STAR_COLLECT = ((MARIO_SPAWN_PAINTING_STAR_COLLECT ) + 4)
-
---- @type MarioSpawnType
-MARIO_SPAWN_LAUNCH_DEATH = ((MARIO_SPAWN_PAINTING_STAR_COLLECT ) + 5)
-
---- @type MarioSpawnType
-MARIO_SPAWN_UNUSED_38 = ((MARIO_SPAWN_PAINTING_STAR_COLLECT ) + 6)
-
---- @type MarioSpawnType
-MARIO_SPAWN_FADE_FROM_BLACK = ((MARIO_SPAWN_PAINTING_STAR_COLLECT ) + 7)
-
---- @class CharacterAnimID
-
---- @type CharacterAnimID
-CHAR_ANIM_SLOW_LEDGE_GRAB = 0
-
---- @type CharacterAnimID
-CHAR_ANIM_FALL_OVER_BACKWARDS = 1
-
---- @type CharacterAnimID
-CHAR_ANIM_BACKWARD_AIR_KB = 2
-
---- @type CharacterAnimID
-CHAR_ANIM_DYING_ON_BACK = 3
-
---- @type CharacterAnimID
-CHAR_ANIM_BACKFLIP = 4
-
---- @type CharacterAnimID
-CHAR_ANIM_CLIMB_UP_POLE = 5
-
---- @type CharacterAnimID
-CHAR_ANIM_GRAB_POLE_SHORT = 6
-
---- @type CharacterAnimID
-CHAR_ANIM_GRAB_POLE_SWING_PART1 = 7
-
---- @type CharacterAnimID
-CHAR_ANIM_GRAB_POLE_SWING_PART2 = 8
-
---- @type CharacterAnimID
-CHAR_ANIM_HANDSTAND_IDLE = 9
-
---- @type CharacterAnimID
-CHAR_ANIM_HANDSTAND_JUMP = 10
-
---- @type CharacterAnimID
-CHAR_ANIM_START_HANDSTAND = 11
-
---- @type CharacterAnimID
-CHAR_ANIM_RETURN_FROM_HANDSTAND = 12
-
---- @type CharacterAnimID
-CHAR_ANIM_IDLE_ON_POLE = 13
-
---- @type CharacterAnimID
-CHAR_ANIM_A_POSE = 14
-
---- @type CharacterAnimID
-CHAR_ANIM_SKID_ON_GROUND = 15
-
---- @type CharacterAnimID
-CHAR_ANIM_STOP_SKID = 16
-
---- @type CharacterAnimID
-CHAR_ANIM_CROUCH_FROM_FAST_LONGJUMP = 17
-
---- @type CharacterAnimID
-CHAR_ANIM_CROUCH_FROM_SLOW_LONGJUMP = 18
-
---- @type CharacterAnimID
-CHAR_ANIM_FAST_LONGJUMP = 19
-
---- @type CharacterAnimID
-CHAR_ANIM_SLOW_LONGJUMP = 20
-
---- @type CharacterAnimID
-CHAR_ANIM_AIRBORNE_ON_STOMACH = 21
-
---- @type CharacterAnimID
-CHAR_ANIM_WALK_WITH_LIGHT_OBJ = 22
-
---- @type CharacterAnimID
-CHAR_ANIM_RUN_WITH_LIGHT_OBJ = 23
-
---- @type CharacterAnimID
-CHAR_ANIM_SLOW_WALK_WITH_LIGHT_OBJ = 24
-
---- @type CharacterAnimID
-CHAR_ANIM_SHIVERING_WARMING_HAND = 25
-
---- @type CharacterAnimID
-CHAR_ANIM_SHIVERING_RETURN_TO_IDLE = 26
-
---- @type CharacterAnimID
-CHAR_ANIM_SHIVERING = 27
-
---- @type CharacterAnimID
-CHAR_ANIM_CLIMB_DOWN_LEDGE = 28
-
---- @type CharacterAnimID
-CHAR_ANIM_CREDITS_WAVING = 29
-
---- @type CharacterAnimID
-CHAR_ANIM_CREDITS_LOOK_UP = 30
-
---- @type CharacterAnimID
-CHAR_ANIM_CREDITS_RETURN_FROM_LOOK_UP = 31
-
---- @type CharacterAnimID
-CHAR_ANIM_CREDITS_RAISE_HAND = 32
-
---- @type CharacterAnimID
-CHAR_ANIM_CREDITS_LOWER_HAND = 33
-
---- @type CharacterAnimID
-CHAR_ANIM_CREDITS_TAKE_OFF_CAP = 34
-
---- @type CharacterAnimID
-CHAR_ANIM_CREDITS_START_WALK_LOOK_UP = 35
-
---- @type CharacterAnimID
-CHAR_ANIM_CREDITS_LOOK_BACK_THEN_RUN = 36
-
---- @type CharacterAnimID
-CHAR_ANIM_FINAL_BOWSER_RAISE_HAND_SPIN = 37
-
---- @type CharacterAnimID
-CHAR_ANIM_FINAL_BOWSER_WING_CAP_TAKE_OFF = 38
-
---- @type CharacterAnimID
-CHAR_ANIM_CREDITS_PEACE_SIGN = 39
-
---- @type CharacterAnimID
-CHAR_ANIM_STAND_UP_FROM_LAVA_BOOST = 40
-
---- @type CharacterAnimID
-CHAR_ANIM_FIRE_LAVA_BURN = 41
-
---- @type CharacterAnimID
-CHAR_ANIM_WING_CAP_FLY = 42
-
---- @type CharacterAnimID
-CHAR_ANIM_HANG_ON_OWL = 43
-
---- @type CharacterAnimID
-CHAR_ANIM_LAND_ON_STOMACH = 44
-
---- @type CharacterAnimID
-CHAR_ANIM_AIR_FORWARD_KB = 45
-
---- @type CharacterAnimID
-CHAR_ANIM_DYING_ON_STOMACH = 46
-
---- @type CharacterAnimID
-CHAR_ANIM_SUFFOCATING = 47
-
---- @type CharacterAnimID
-CHAR_ANIM_COUGHING = 48
-
---- @type CharacterAnimID
-CHAR_ANIM_THROW_CATCH_KEY = 49
-
---- @type CharacterAnimID
-CHAR_ANIM_DYING_FALL_OVER = 50
-
---- @type CharacterAnimID
-CHAR_ANIM_IDLE_ON_LEDGE = 51
-
---- @type CharacterAnimID
-CHAR_ANIM_FAST_LEDGE_GRAB = 52
-
---- @type CharacterAnimID
-CHAR_ANIM_HANG_ON_CEILING = 53
-
---- @type CharacterAnimID
-CHAR_ANIM_PUT_CAP_ON = 54
-
---- @type CharacterAnimID
-CHAR_ANIM_TAKE_CAP_OFF_THEN_ON = 55
-
---- @type CharacterAnimID
-CHAR_ANIM_QUICKLY_PUT_CAP_ON = 56
-
---- @type CharacterAnimID
-CHAR_ANIM_HEAD_STUCK_IN_GROUND = 57
-
---- @type CharacterAnimID
-CHAR_ANIM_GROUND_POUND_LANDING = 58
-
---- @type CharacterAnimID
-CHAR_ANIM_TRIPLE_JUMP_GROUND_POUND = 59
-
---- @type CharacterAnimID
-CHAR_ANIM_START_GROUND_POUND = 60
-
---- @type CharacterAnimID
-CHAR_ANIM_GROUND_POUND = 61
-
---- @type CharacterAnimID
-CHAR_ANIM_BOTTOM_STUCK_IN_GROUND = 62
-
---- @type CharacterAnimID
-CHAR_ANIM_IDLE_WITH_LIGHT_OBJ = 63
-
---- @type CharacterAnimID
-CHAR_ANIM_JUMP_LAND_WITH_LIGHT_OBJ = 64
-
---- @type CharacterAnimID
-CHAR_ANIM_JUMP_WITH_LIGHT_OBJ = 65
-
---- @type CharacterAnimID
-CHAR_ANIM_FALL_LAND_WITH_LIGHT_OBJ = 66
-
---- @type CharacterAnimID
-CHAR_ANIM_FALL_WITH_LIGHT_OBJ = 67
-
---- @type CharacterAnimID
-CHAR_ANIM_FALL_FROM_SLIDING_WITH_LIGHT_OBJ = 68
-
---- @type CharacterAnimID
-CHAR_ANIM_SLIDING_ON_BOTTOM_WITH_LIGHT_OBJ = 69
-
---- @type CharacterAnimID
-CHAR_ANIM_STAND_UP_FROM_SLIDING_WITH_LIGHT_OBJ = 70
-
---- @type CharacterAnimID
-CHAR_ANIM_RIDING_SHELL = 71
-
---- @type CharacterAnimID
-CHAR_ANIM_WALKING = 72
-
---- @type CharacterAnimID
-CHAR_ANIM_FORWARD_FLIP = 73
-
---- @type CharacterAnimID
-CHAR_ANIM_JUMP_RIDING_SHELL = 74
-
---- @type CharacterAnimID
-CHAR_ANIM_LAND_FROM_DOUBLE_JUMP = 75
-
---- @type CharacterAnimID
-CHAR_ANIM_DOUBLE_JUMP_FALL = 76
-
---- @type CharacterAnimID
-CHAR_ANIM_SINGLE_JUMP = 77
-
---- @type CharacterAnimID
-CHAR_ANIM_LAND_FROM_SINGLE_JUMP = 78
-
---- @type CharacterAnimID
-CHAR_ANIM_AIR_KICK = 79
-
---- @type CharacterAnimID
-CHAR_ANIM_DOUBLE_JUMP_RISE = 80
-
---- @type CharacterAnimID
-CHAR_ANIM_START_FORWARD_SPINNING = 81
-
---- @type CharacterAnimID
-CHAR_ANIM_THROW_LIGHT_OBJECT = 82
-
---- @type CharacterAnimID
-CHAR_ANIM_FALL_FROM_SLIDE_KICK = 83
-
---- @type CharacterAnimID
-CHAR_ANIM_BEND_KNESS_RIDING_SHELL = 84
-
---- @type CharacterAnimID
-CHAR_ANIM_LEGS_STUCK_IN_GROUND = 85
-
---- @type CharacterAnimID
-CHAR_ANIM_GENERAL_FALL = 86
-
---- @type CharacterAnimID
-CHAR_ANIM_GENERAL_LAND = 87
-
---- @type CharacterAnimID
-CHAR_ANIM_BEING_GRABBED = 88
-
---- @type CharacterAnimID
-CHAR_ANIM_GRAB_HEAVY_OBJECT = 89
-
---- @type CharacterAnimID
-CHAR_ANIM_SLOW_LAND_FROM_DIVE = 90
-
---- @type CharacterAnimID
-CHAR_ANIM_FLY_FROM_CANNON = 91
-
---- @type CharacterAnimID
-CHAR_ANIM_MOVE_ON_WIRE_NET_RIGHT = 92
-
---- @type CharacterAnimID
-CHAR_ANIM_MOVE_ON_WIRE_NET_LEFT = 93
-
---- @type CharacterAnimID
-CHAR_ANIM_MISSING_CAP = 94
-
---- @type CharacterAnimID
-CHAR_ANIM_PULL_DOOR_WALK_IN = 95
-
---- @type CharacterAnimID
-CHAR_ANIM_PUSH_DOOR_WALK_IN = 96
-
---- @type CharacterAnimID
-CHAR_ANIM_UNLOCK_DOOR = 97
-
---- @type CharacterAnimID
-CHAR_ANIM_START_REACH_POCKET = 98
-
---- @type CharacterAnimID
-CHAR_ANIM_REACH_POCKET = 99
-
---- @type CharacterAnimID
-CHAR_ANIM_STOP_REACH_POCKET = 100
-
---- @type CharacterAnimID
-CHAR_ANIM_GROUND_THROW = 101
-
---- @type CharacterAnimID
-CHAR_ANIM_GROUND_KICK = 102
-
---- @type CharacterAnimID
-CHAR_ANIM_FIRST_PUNCH = 103
-
---- @type CharacterAnimID
-CHAR_ANIM_SECOND_PUNCH = 104
-
---- @type CharacterAnimID
-CHAR_ANIM_FIRST_PUNCH_FAST = 105
-
---- @type CharacterAnimID
-CHAR_ANIM_SECOND_PUNCH_FAST = 106
-
---- @type CharacterAnimID
-CHAR_ANIM_PICK_UP_LIGHT_OBJ = 107
-
---- @type CharacterAnimID
-CHAR_ANIM_PUSHING = 108
-
---- @type CharacterAnimID
-CHAR_ANIM_START_RIDING_SHELL = 109
-
---- @type CharacterAnimID
-CHAR_ANIM_PLACE_LIGHT_OBJ = 110
-
---- @type CharacterAnimID
-CHAR_ANIM_FORWARD_SPINNING = 111
-
---- @type CharacterAnimID
-CHAR_ANIM_BACKWARD_SPINNING = 112
-
---- @type CharacterAnimID
-CHAR_ANIM_BREAKDANCE = 113
-
---- @type CharacterAnimID
-CHAR_ANIM_RUNNING = 114
-
---- @type CharacterAnimID
-CHAR_ANIM_RUNNING_UNUSED = 115
-
---- @type CharacterAnimID
-CHAR_ANIM_SOFT_BACK_KB = 116
-
---- @type CharacterAnimID
-CHAR_ANIM_SOFT_FRONT_KB = 117
-
---- @type CharacterAnimID
-CHAR_ANIM_DYING_IN_QUICKSAND = 118
-
---- @type CharacterAnimID
-CHAR_ANIM_IDLE_IN_QUICKSAND = 119
-
---- @type CharacterAnimID
-CHAR_ANIM_MOVE_IN_QUICKSAND = 120
-
---- @type CharacterAnimID
-CHAR_ANIM_ELECTROCUTION = 121
-
---- @type CharacterAnimID
-CHAR_ANIM_SHOCKED = 122
-
---- @type CharacterAnimID
-CHAR_ANIM_BACKWARD_KB = 123
-
---- @type CharacterAnimID
-CHAR_ANIM_FORWARD_KB = 124
-
---- @type CharacterAnimID
-CHAR_ANIM_IDLE_HEAVY_OBJ = 125
-
---- @type CharacterAnimID
-CHAR_ANIM_STAND_AGAINST_WALL = 126
-
---- @type CharacterAnimID
-CHAR_ANIM_SIDESTEP_LEFT = 127
-
---- @type CharacterAnimID
-CHAR_ANIM_SIDESTEP_RIGHT = 128
-
---- @type CharacterAnimID
-CHAR_ANIM_START_SLEEP_IDLE = 129
-
---- @type CharacterAnimID
-CHAR_ANIM_START_SLEEP_SCRATCH = 130
-
---- @type CharacterAnimID
-CHAR_ANIM_START_SLEEP_YAWN = 131
-
---- @type CharacterAnimID
-CHAR_ANIM_START_SLEEP_SITTING = 132
-
---- @type CharacterAnimID
-CHAR_ANIM_SLEEP_IDLE = 133
-
---- @type CharacterAnimID
-CHAR_ANIM_SLEEP_START_LYING = 134
-
---- @type CharacterAnimID
-CHAR_ANIM_SLEEP_LYING = 135
-
---- @type CharacterAnimID
-CHAR_ANIM_DIVE = 136
-
---- @type CharacterAnimID
-CHAR_ANIM_SLIDE_DIVE = 137
-
---- @type CharacterAnimID
-CHAR_ANIM_GROUND_BONK = 138
-
---- @type CharacterAnimID
-CHAR_ANIM_STOP_SLIDE_LIGHT_OBJ = 139
-
---- @type CharacterAnimID
-CHAR_ANIM_SLIDE_KICK = 140
-
---- @type CharacterAnimID
-CHAR_ANIM_CROUCH_FROM_SLIDE_KICK = 141
-
---- @type CharacterAnimID
-CHAR_ANIM_SLIDE_MOTIONLESS = 142
-
---- @type CharacterAnimID
-CHAR_ANIM_STOP_SLIDE = 143
-
---- @type CharacterAnimID
-CHAR_ANIM_FALL_FROM_SLIDE = 144
-
---- @type CharacterAnimID
-CHAR_ANIM_SLIDE = 145
-
---- @type CharacterAnimID
-CHAR_ANIM_TIPTOE = 146
-
---- @type CharacterAnimID
-CHAR_ANIM_TWIRL_LAND = 147
-
---- @type CharacterAnimID
-CHAR_ANIM_TWIRL = 148
-
---- @type CharacterAnimID
-CHAR_ANIM_START_TWIRL = 149
-
---- @type CharacterAnimID
-CHAR_ANIM_STOP_CROUCHING = 150
-
---- @type CharacterAnimID
-CHAR_ANIM_START_CROUCHING = 151
-
---- @type CharacterAnimID
-CHAR_ANIM_CROUCHING = 152
-
---- @type CharacterAnimID
-CHAR_ANIM_CRAWLING = 153
-
---- @type CharacterAnimID
-CHAR_ANIM_STOP_CRAWLING = 154
-
---- @type CharacterAnimID
-CHAR_ANIM_START_CRAWLING = 155
-
---- @type CharacterAnimID
-CHAR_ANIM_SUMMON_STAR = 156
-
---- @type CharacterAnimID
-CHAR_ANIM_RETURN_STAR_APPROACH_DOOR = 157
-
---- @type CharacterAnimID
-CHAR_ANIM_BACKWARDS_WATER_KB = 158
-
---- @type CharacterAnimID
-CHAR_ANIM_SWIM_WITH_OBJ_PART1 = 159
-
---- @type CharacterAnimID
-CHAR_ANIM_SWIM_WITH_OBJ_PART2 = 160
-
---- @type CharacterAnimID
-CHAR_ANIM_FLUTTERKICK_WITH_OBJ = 161
-
---- @type CharacterAnimID
-CHAR_ANIM_WATER_ACTION_END_WITH_OBJ = 162
-
---- @type CharacterAnimID
-CHAR_ANIM_STOP_GRAB_OBJ_WATER = 163
-
---- @type CharacterAnimID
-CHAR_ANIM_WATER_IDLE_WITH_OBJ = 164
-
---- @type CharacterAnimID
-CHAR_ANIM_DROWNING_PART1 = 165
-
---- @type CharacterAnimID
-CHAR_ANIM_DROWNING_PART2 = 166
-
---- @type CharacterAnimID
-CHAR_ANIM_WATER_DYING = 167
-
---- @type CharacterAnimID
-CHAR_ANIM_WATER_FORWARD_KB = 168
-
---- @type CharacterAnimID
-CHAR_ANIM_FALL_FROM_WATER = 169
-
---- @type CharacterAnimID
-CHAR_ANIM_SWIM_PART1 = 170
-
---- @type CharacterAnimID
-CHAR_ANIM_SWIM_PART2 = 171
-
---- @type CharacterAnimID
-CHAR_ANIM_FLUTTERKICK = 172
-
---- @type CharacterAnimID
-CHAR_ANIM_WATER_ACTION_END = 173
-
---- @type CharacterAnimID
-CHAR_ANIM_WATER_PICK_UP_OBJ = 174
-
---- @type CharacterAnimID
-CHAR_ANIM_WATER_GRAB_OBJ_PART2 = 175
-
---- @type CharacterAnimID
-CHAR_ANIM_WATER_GRAB_OBJ_PART1 = 176
-
---- @type CharacterAnimID
-CHAR_ANIM_WATER_THROW_OBJ = 177
-
---- @type CharacterAnimID
-CHAR_ANIM_WATER_IDLE = 178
-
---- @type CharacterAnimID
-CHAR_ANIM_WATER_STAR_DANCE = 179
-
---- @type CharacterAnimID
-CHAR_ANIM_RETURN_FROM_WATER_STAR_DANCE = 180
-
---- @type CharacterAnimID
-CHAR_ANIM_GRAB_BOWSER = 181
-
---- @type CharacterAnimID
-CHAR_ANIM_SWINGING_BOWSER = 182
-
---- @type CharacterAnimID
-CHAR_ANIM_RELEASE_BOWSER = 183
-
---- @type CharacterAnimID
-CHAR_ANIM_HOLDING_BOWSER = 184
-
---- @type CharacterAnimID
-CHAR_ANIM_HEAVY_THROW = 185
-
---- @type CharacterAnimID
-CHAR_ANIM_WALK_PANTING = 186
-
---- @type CharacterAnimID
-CHAR_ANIM_WALK_WITH_HEAVY_OBJ = 187
-
---- @type CharacterAnimID
-CHAR_ANIM_TURNING_PART1 = 188
-
---- @type CharacterAnimID
-CHAR_ANIM_TURNING_PART2 = 189
-
---- @type CharacterAnimID
-CHAR_ANIM_SLIDEFLIP_LAND = 190
-
---- @type CharacterAnimID
-CHAR_ANIM_SLIDEFLIP = 191
-
---- @type CharacterAnimID
-CHAR_ANIM_TRIPLE_JUMP_LAND = 192
-
---- @type CharacterAnimID
-CHAR_ANIM_TRIPLE_JUMP = 193
-
---- @type CharacterAnimID
-CHAR_ANIM_FIRST_PERSON = 194
-
---- @type CharacterAnimID
-CHAR_ANIM_IDLE_HEAD_LEFT = 195
-
---- @type CharacterAnimID
-CHAR_ANIM_IDLE_HEAD_RIGHT = 196
-
---- @type CharacterAnimID
-CHAR_ANIM_IDLE_HEAD_CENTER = 197
-
---- @type CharacterAnimID
-CHAR_ANIM_HANDSTAND_LEFT = 198
-
---- @type CharacterAnimID
-CHAR_ANIM_HANDSTAND_RIGHT = 199
-
---- @type CharacterAnimID
-CHAR_ANIM_WAKE_FROM_SLEEP = 200
-
---- @type CharacterAnimID
-CHAR_ANIM_WAKE_FROM_LYING = 201
-
---- @type CharacterAnimID
-CHAR_ANIM_START_TIPTOE = 202
-
---- @type CharacterAnimID
-CHAR_ANIM_SLIDEJUMP = 203
-
---- @type CharacterAnimID
-CHAR_ANIM_START_WALLKICK = 204
-
---- @type CharacterAnimID
-CHAR_ANIM_STAR_DANCE = 205
-
---- @type CharacterAnimID
-CHAR_ANIM_RETURN_FROM_STAR_DANCE = 206
-
---- @type CharacterAnimID
-CHAR_ANIM_FORWARD_SPINNING_FLIP = 207
-
---- @type CharacterAnimID
-CHAR_ANIM_TRIPLE_JUMP_FLY = 208
-
---- @type CharacterAnimID
-CHAR_ANIM_MAX = 209
-
---- @class MarioAnimID
-
---- @type MarioAnimID
-MARIO_ANIM_SLOW_LEDGE_GRAB = 0
-
---- @type MarioAnimID
-MARIO_ANIM_FALL_OVER_BACKWARDS = 1
-
---- @type MarioAnimID
-MARIO_ANIM_BACKWARD_AIR_KB = 2
-
---- @type MarioAnimID
-MARIO_ANIM_DYING_ON_BACK = 3
-
---- @type MarioAnimID
-MARIO_ANIM_BACKFLIP = 4
-
---- @type MarioAnimID
-MARIO_ANIM_CLIMB_UP_POLE = 5
-
---- @type MarioAnimID
-MARIO_ANIM_GRAB_POLE_SHORT = 6
-
---- @type MarioAnimID
-MARIO_ANIM_GRAB_POLE_SWING_PART1 = 7
-
---- @type MarioAnimID
-MARIO_ANIM_GRAB_POLE_SWING_PART2 = 8
-
---- @type MarioAnimID
-MARIO_ANIM_HANDSTAND_IDLE = 9
-
---- @type MarioAnimID
-MARIO_ANIM_HANDSTAND_JUMP = 10
-
---- @type MarioAnimID
-MARIO_ANIM_START_HANDSTAND = 11
-
---- @type MarioAnimID
-MARIO_ANIM_RETURN_FROM_HANDSTAND = 12
-
---- @type MarioAnimID
-MARIO_ANIM_IDLE_ON_POLE = 13
-
---- @type MarioAnimID
-MARIO_ANIM_A_POSE = 14
-
---- @type MarioAnimID
-MARIO_ANIM_SKID_ON_GROUND = 15
-
---- @type MarioAnimID
-MARIO_ANIM_STOP_SKID = 16
-
---- @type MarioAnimID
-MARIO_ANIM_CROUCH_FROM_FAST_LONGJUMP = 17
-
---- @type MarioAnimID
-MARIO_ANIM_CROUCH_FROM_SLOW_LONGJUMP = 18
-
---- @type MarioAnimID
-MARIO_ANIM_FAST_LONGJUMP = 19
-
---- @type MarioAnimID
-MARIO_ANIM_SLOW_LONGJUMP = 20
-
---- @type MarioAnimID
-MARIO_ANIM_AIRBORNE_ON_STOMACH = 21
-
---- @type MarioAnimID
-MARIO_ANIM_WALK_WITH_LIGHT_OBJ = 22
-
---- @type MarioAnimID
-MARIO_ANIM_RUN_WITH_LIGHT_OBJ = 23
-
---- @type MarioAnimID
-MARIO_ANIM_SLOW_WALK_WITH_LIGHT_OBJ = 24
-
---- @type MarioAnimID
-MARIO_ANIM_SHIVERING_WARMING_HAND = 25
-
---- @type MarioAnimID
-MARIO_ANIM_SHIVERING_RETURN_TO_IDLE = 26
-
---- @type MarioAnimID
-MARIO_ANIM_SHIVERING = 27
-
---- @type MarioAnimID
-MARIO_ANIM_CLIMB_DOWN_LEDGE = 28
-
---- @type MarioAnimID
-MARIO_ANIM_CREDITS_WAVING = 29
-
---- @type MarioAnimID
-MARIO_ANIM_CREDITS_LOOK_UP = 30
-
---- @type MarioAnimID
-MARIO_ANIM_CREDITS_RETURN_FROM_LOOK_UP = 31
-
---- @type MarioAnimID
-MARIO_ANIM_CREDITS_RAISE_HAND = 32
-
---- @type MarioAnimID
-MARIO_ANIM_CREDITS_LOWER_HAND = 33
-
---- @type MarioAnimID
-MARIO_ANIM_CREDITS_TAKE_OFF_CAP = 34
-
---- @type MarioAnimID
-MARIO_ANIM_CREDITS_START_WALK_LOOK_UP = 35
-
---- @type MarioAnimID
-MARIO_ANIM_CREDITS_LOOK_BACK_THEN_RUN = 36
-
---- @type MarioAnimID
-MARIO_ANIM_FINAL_BOWSER_RAISE_HAND_SPIN = 37
-
---- @type MarioAnimID
-MARIO_ANIM_FINAL_BOWSER_WING_CAP_TAKE_OFF = 38
-
---- @type MarioAnimID
-MARIO_ANIM_CREDITS_PEACE_SIGN = 39
-
---- @type MarioAnimID
-MARIO_ANIM_STAND_UP_FROM_LAVA_BOOST = 40
-
---- @type MarioAnimID
-MARIO_ANIM_FIRE_LAVA_BURN = 41
-
---- @type MarioAnimID
-MARIO_ANIM_WING_CAP_FLY = 42
-
---- @type MarioAnimID
-MARIO_ANIM_HANG_ON_OWL = 43
-
---- @type MarioAnimID
-MARIO_ANIM_LAND_ON_STOMACH = 44
-
---- @type MarioAnimID
-MARIO_ANIM_AIR_FORWARD_KB = 45
-
---- @type MarioAnimID
-MARIO_ANIM_DYING_ON_STOMACH = 46
-
---- @type MarioAnimID
-MARIO_ANIM_SUFFOCATING = 47
-
---- @type MarioAnimID
-MARIO_ANIM_COUGHING = 48
-
---- @type MarioAnimID
-MARIO_ANIM_THROW_CATCH_KEY = 49
-
---- @type MarioAnimID
-MARIO_ANIM_DYING_FALL_OVER = 50
-
---- @type MarioAnimID
-MARIO_ANIM_IDLE_ON_LEDGE = 51
-
---- @type MarioAnimID
-MARIO_ANIM_FAST_LEDGE_GRAB = 52
-
---- @type MarioAnimID
-MARIO_ANIM_HANG_ON_CEILING = 53
-
---- @type MarioAnimID
-MARIO_ANIM_PUT_CAP_ON = 54
-
---- @type MarioAnimID
-MARIO_ANIM_TAKE_CAP_OFF_THEN_ON = 55
-
---- @type MarioAnimID
-MARIO_ANIM_QUICKLY_PUT_CAP_ON = 56
-
---- @type MarioAnimID
-MARIO_ANIM_HEAD_STUCK_IN_GROUND = 57
-
---- @type MarioAnimID
-MARIO_ANIM_GROUND_POUND_LANDING = 58
-
---- @type MarioAnimID
-MARIO_ANIM_TRIPLE_JUMP_GROUND_POUND = 59
-
---- @type MarioAnimID
-MARIO_ANIM_START_GROUND_POUND = 60
-
---- @type MarioAnimID
-MARIO_ANIM_GROUND_POUND = 61
-
---- @type MarioAnimID
-MARIO_ANIM_BOTTOM_STUCK_IN_GROUND = 62
-
---- @type MarioAnimID
-MARIO_ANIM_IDLE_WITH_LIGHT_OBJ = 63
-
---- @type MarioAnimID
-MARIO_ANIM_JUMP_LAND_WITH_LIGHT_OBJ = 64
-
---- @type MarioAnimID
-MARIO_ANIM_JUMP_WITH_LIGHT_OBJ = 65
-
---- @type MarioAnimID
-MARIO_ANIM_FALL_LAND_WITH_LIGHT_OBJ = 66
-
---- @type MarioAnimID
-MARIO_ANIM_FALL_WITH_LIGHT_OBJ = 67
-
---- @type MarioAnimID
-MARIO_ANIM_FALL_FROM_SLIDING_WITH_LIGHT_OBJ = 68
-
---- @type MarioAnimID
-MARIO_ANIM_SLIDING_ON_BOTTOM_WITH_LIGHT_OBJ = 69
-
---- @type MarioAnimID
-MARIO_ANIM_STAND_UP_FROM_SLIDING_WITH_LIGHT_OBJ = 70
-
---- @type MarioAnimID
-MARIO_ANIM_RIDING_SHELL = 71
-
---- @type MarioAnimID
-MARIO_ANIM_WALKING = 72
-
---- @type MarioAnimID
-MARIO_ANIM_FORWARD_FLIP = 73
-
---- @type MarioAnimID
-MARIO_ANIM_JUMP_RIDING_SHELL = 74
-
---- @type MarioAnimID
-MARIO_ANIM_LAND_FROM_DOUBLE_JUMP = 75
-
---- @type MarioAnimID
-MARIO_ANIM_DOUBLE_JUMP_FALL = 76
-
---- @type MarioAnimID
-MARIO_ANIM_SINGLE_JUMP = 77
-
---- @type MarioAnimID
-MARIO_ANIM_LAND_FROM_SINGLE_JUMP = 78
-
---- @type MarioAnimID
-MARIO_ANIM_AIR_KICK = 79
-
---- @type MarioAnimID
-MARIO_ANIM_DOUBLE_JUMP_RISE = 80
-
---- @type MarioAnimID
-MARIO_ANIM_START_FORWARD_SPINNING = 81
-
---- @type MarioAnimID
-MARIO_ANIM_THROW_LIGHT_OBJECT = 82
-
---- @type MarioAnimID
-MARIO_ANIM_FALL_FROM_SLIDE_KICK = 83
-
---- @type MarioAnimID
-MARIO_ANIM_BEND_KNESS_RIDING_SHELL = 84
-
---- @type MarioAnimID
-MARIO_ANIM_LEGS_STUCK_IN_GROUND = 85
-
---- @type MarioAnimID
-MARIO_ANIM_GENERAL_FALL = 86
-
---- @type MarioAnimID
-MARIO_ANIM_GENERAL_LAND = 87
-
---- @type MarioAnimID
-MARIO_ANIM_BEING_GRABBED = 88
-
---- @type MarioAnimID
-MARIO_ANIM_GRAB_HEAVY_OBJECT = 89
-
---- @type MarioAnimID
-MARIO_ANIM_SLOW_LAND_FROM_DIVE = 90
-
---- @type MarioAnimID
-MARIO_ANIM_FLY_FROM_CANNON = 91
-
---- @type MarioAnimID
-MARIO_ANIM_MOVE_ON_WIRE_NET_RIGHT = 92
-
---- @type MarioAnimID
-MARIO_ANIM_MOVE_ON_WIRE_NET_LEFT = 93
-
---- @type MarioAnimID
-MARIO_ANIM_MISSING_CAP = 94
-
---- @type MarioAnimID
-MARIO_ANIM_PULL_DOOR_WALK_IN = 95
-
---- @type MarioAnimID
-MARIO_ANIM_PUSH_DOOR_WALK_IN = 96
-
---- @type MarioAnimID
-MARIO_ANIM_UNLOCK_DOOR = 97
-
---- @type MarioAnimID
-MARIO_ANIM_START_REACH_POCKET = 98
-
---- @type MarioAnimID
-MARIO_ANIM_REACH_POCKET = 99
-
---- @type MarioAnimID
-MARIO_ANIM_STOP_REACH_POCKET = 100
-
---- @type MarioAnimID
-MARIO_ANIM_GROUND_THROW = 101
-
---- @type MarioAnimID
-MARIO_ANIM_GROUND_KICK = 102
-
---- @type MarioAnimID
-MARIO_ANIM_FIRST_PUNCH = 103
-
---- @type MarioAnimID
-MARIO_ANIM_SECOND_PUNCH = 104
-
---- @type MarioAnimID
-MARIO_ANIM_FIRST_PUNCH_FAST = 105
-
---- @type MarioAnimID
-MARIO_ANIM_SECOND_PUNCH_FAST = 106
-
---- @type MarioAnimID
-MARIO_ANIM_PICK_UP_LIGHT_OBJ = 107
-
---- @type MarioAnimID
-MARIO_ANIM_PUSHING = 108
-
---- @type MarioAnimID
-MARIO_ANIM_START_RIDING_SHELL = 109
-
---- @type MarioAnimID
-MARIO_ANIM_PLACE_LIGHT_OBJ = 110
-
---- @type MarioAnimID
-MARIO_ANIM_FORWARD_SPINNING = 111
-
---- @type MarioAnimID
-MARIO_ANIM_BACKWARD_SPINNING = 112
-
---- @type MarioAnimID
-MARIO_ANIM_BREAKDANCE = 113
-
---- @type MarioAnimID
-MARIO_ANIM_RUNNING = 114
-
---- @type MarioAnimID
-MARIO_ANIM_RUNNING_UNUSED = 115
-
---- @type MarioAnimID
-MARIO_ANIM_SOFT_BACK_KB = 116
-
---- @type MarioAnimID
-MARIO_ANIM_SOFT_FRONT_KB = 117
-
---- @type MarioAnimID
-MARIO_ANIM_DYING_IN_QUICKSAND = 118
-
---- @type MarioAnimID
-MARIO_ANIM_IDLE_IN_QUICKSAND = 119
-
---- @type MarioAnimID
-MARIO_ANIM_MOVE_IN_QUICKSAND = 120
-
---- @type MarioAnimID
-MARIO_ANIM_ELECTROCUTION = 121
-
---- @type MarioAnimID
-MARIO_ANIM_SHOCKED = 122
-
---- @type MarioAnimID
-MARIO_ANIM_BACKWARD_KB = 123
-
---- @type MarioAnimID
-MARIO_ANIM_FORWARD_KB = 124
-
---- @type MarioAnimID
-MARIO_ANIM_IDLE_HEAVY_OBJ = 125
-
---- @type MarioAnimID
-MARIO_ANIM_STAND_AGAINST_WALL = 126
-
---- @type MarioAnimID
-MARIO_ANIM_SIDESTEP_LEFT = 127
-
---- @type MarioAnimID
-MARIO_ANIM_SIDESTEP_RIGHT = 128
-
---- @type MarioAnimID
-MARIO_ANIM_START_SLEEP_IDLE = 129
-
---- @type MarioAnimID
-MARIO_ANIM_START_SLEEP_SCRATCH = 130
-
---- @type MarioAnimID
-MARIO_ANIM_START_SLEEP_YAWN = 131
-
---- @type MarioAnimID
-MARIO_ANIM_START_SLEEP_SITTING = 132
-
---- @type MarioAnimID
-MARIO_ANIM_SLEEP_IDLE = 133
-
---- @type MarioAnimID
-MARIO_ANIM_SLEEP_START_LYING = 134
-
---- @type MarioAnimID
-MARIO_ANIM_SLEEP_LYING = 135
-
---- @type MarioAnimID
-MARIO_ANIM_DIVE = 136
-
---- @type MarioAnimID
-MARIO_ANIM_SLIDE_DIVE = 137
-
---- @type MarioAnimID
-MARIO_ANIM_GROUND_BONK = 138
-
---- @type MarioAnimID
-MARIO_ANIM_STOP_SLIDE_LIGHT_OBJ = 139
-
---- @type MarioAnimID
-MARIO_ANIM_SLIDE_KICK = 140
-
---- @type MarioAnimID
-MARIO_ANIM_CROUCH_FROM_SLIDE_KICK = 141
-
---- @type MarioAnimID
-MARIO_ANIM_SLIDE_MOTIONLESS = 142
-
---- @type MarioAnimID
-MARIO_ANIM_STOP_SLIDE = 143
-
---- @type MarioAnimID
-MARIO_ANIM_FALL_FROM_SLIDE = 144
-
---- @type MarioAnimID
-MARIO_ANIM_SLIDE = 145
-
---- @type MarioAnimID
-MARIO_ANIM_TIPTOE = 146
-
---- @type MarioAnimID
-MARIO_ANIM_TWIRL_LAND = 147
-
---- @type MarioAnimID
-MARIO_ANIM_TWIRL = 148
-
---- @type MarioAnimID
-MARIO_ANIM_START_TWIRL = 149
-
---- @type MarioAnimID
-MARIO_ANIM_STOP_CROUCHING = 150
-
---- @type MarioAnimID
-MARIO_ANIM_START_CROUCHING = 151
-
---- @type MarioAnimID
-MARIO_ANIM_CROUCHING = 152
-
---- @type MarioAnimID
-MARIO_ANIM_CRAWLING = 153
-
---- @type MarioAnimID
-MARIO_ANIM_STOP_CRAWLING = 154
-
---- @type MarioAnimID
-MARIO_ANIM_START_CRAWLING = 155
-
---- @type MarioAnimID
-MARIO_ANIM_SUMMON_STAR = 156
-
---- @type MarioAnimID
-MARIO_ANIM_RETURN_STAR_APPROACH_DOOR = 157
-
---- @type MarioAnimID
-MARIO_ANIM_BACKWARDS_WATER_KB = 158
-
---- @type MarioAnimID
-MARIO_ANIM_SWIM_WITH_OBJ_PART1 = 159
-
---- @type MarioAnimID
-MARIO_ANIM_SWIM_WITH_OBJ_PART2 = 160
-
---- @type MarioAnimID
-MARIO_ANIM_FLUTTERKICK_WITH_OBJ = 161
-
---- @type MarioAnimID
-MARIO_ANIM_WATER_ACTION_END_WITH_OBJ = 162
-
---- @type MarioAnimID
-MARIO_ANIM_STOP_GRAB_OBJ_WATER = 163
-
---- @type MarioAnimID
-MARIO_ANIM_WATER_IDLE_WITH_OBJ = 164
-
---- @type MarioAnimID
-MARIO_ANIM_DROWNING_PART1 = 165
-
---- @type MarioAnimID
-MARIO_ANIM_DROWNING_PART2 = 166
-
---- @type MarioAnimID
-MARIO_ANIM_WATER_DYING = 167
-
---- @type MarioAnimID
-MARIO_ANIM_WATER_FORWARD_KB = 168
-
---- @type MarioAnimID
-MARIO_ANIM_FALL_FROM_WATER = 169
-
---- @type MarioAnimID
-MARIO_ANIM_SWIM_PART1 = 170
-
---- @type MarioAnimID
-MARIO_ANIM_SWIM_PART2 = 171
-
---- @type MarioAnimID
-MARIO_ANIM_FLUTTERKICK = 172
-
---- @type MarioAnimID
-MARIO_ANIM_WATER_ACTION_END = 173
-
---- @type MarioAnimID
-MARIO_ANIM_WATER_PICK_UP_OBJ = 174
-
---- @type MarioAnimID
-MARIO_ANIM_WATER_GRAB_OBJ_PART2 = 175
-
---- @type MarioAnimID
-MARIO_ANIM_WATER_GRAB_OBJ_PART1 = 176
-
---- @type MarioAnimID
-MARIO_ANIM_WATER_THROW_OBJ = 177
-
---- @type MarioAnimID
-MARIO_ANIM_WATER_IDLE = 178
-
---- @type MarioAnimID
-MARIO_ANIM_WATER_STAR_DANCE = 179
-
---- @type MarioAnimID
-MARIO_ANIM_RETURN_FROM_WATER_STAR_DANCE = 180
-
---- @type MarioAnimID
-MARIO_ANIM_GRAB_BOWSER = 181
-
---- @type MarioAnimID
-MARIO_ANIM_SWINGING_BOWSER = 182
-
---- @type MarioAnimID
-MARIO_ANIM_RELEASE_BOWSER = 183
-
---- @type MarioAnimID
-MARIO_ANIM_HOLDING_BOWSER = 184
-
---- @type MarioAnimID
-MARIO_ANIM_HEAVY_THROW = 185
-
---- @type MarioAnimID
-MARIO_ANIM_WALK_PANTING = 186
-
---- @type MarioAnimID
-MARIO_ANIM_WALK_WITH_HEAVY_OBJ = 187
-
---- @type MarioAnimID
-MARIO_ANIM_TURNING_PART1 = 188
-
---- @type MarioAnimID
-MARIO_ANIM_TURNING_PART2 = 189
-
---- @type MarioAnimID
-MARIO_ANIM_SLIDEFLIP_LAND = 190
-
---- @type MarioAnimID
-MARIO_ANIM_SLIDEFLIP = 191
-
---- @type MarioAnimID
-MARIO_ANIM_TRIPLE_JUMP_LAND = 192
-
---- @type MarioAnimID
-MARIO_ANIM_TRIPLE_JUMP = 193
-
---- @type MarioAnimID
-MARIO_ANIM_FIRST_PERSON = 194
-
---- @type MarioAnimID
-MARIO_ANIM_IDLE_HEAD_LEFT = 195
-
---- @type MarioAnimID
-MARIO_ANIM_IDLE_HEAD_RIGHT = 196
-
---- @type MarioAnimID
-MARIO_ANIM_IDLE_HEAD_CENTER = 197
-
---- @type MarioAnimID
-MARIO_ANIM_HANDSTAND_LEFT = 198
-
---- @type MarioAnimID
-MARIO_ANIM_HANDSTAND_RIGHT = 199
-
---- @type MarioAnimID
-MARIO_ANIM_WAKE_FROM_SLEEP = 200
-
---- @type MarioAnimID
-MARIO_ANIM_WAKE_FROM_LYING = 201
-
---- @type MarioAnimID
-MARIO_ANIM_START_TIPTOE = 202
-
---- @type MarioAnimID
-MARIO_ANIM_SLIDEJUMP = 203
-
---- @type MarioAnimID
-MARIO_ANIM_START_WALLKICK = 204
-
---- @type MarioAnimID
-MARIO_ANIM_STAR_DANCE = 205
-
---- @type MarioAnimID
-MARIO_ANIM_RETURN_FROM_STAR_DANCE = 206
-
---- @type MarioAnimID
-MARIO_ANIM_FORWARD_SPINNING_FLIP = 207
-
---- @type MarioAnimID
-MARIO_ANIM_TRIPLE_JUMP_FLY = 208
-
---- @class MarioCapGSCId
-
---- @type MarioCapGSCId
-MARIO_HAS_DEFAULT_CAP_ON = 0
-
---- @type MarioCapGSCId
-MARIO_HAS_DEFAULT_CAP_OFF = 1
-
---- @type MarioCapGSCId
-MARIO_HAS_WING_CAP_ON = 2
-
---- @type MarioCapGSCId
-MARIO_HAS_WING_CAP_OFF = 3
-
---- @class MarioEyesGSCId
-
---- @type MarioEyesGSCId
-MARIO_EYES_BLINK = 0
-
---- @type MarioEyesGSCId
-MARIO_EYES_OPEN = 1
-
---- @type MarioEyesGSCId
-MARIO_EYES_HALF_CLOSED = 2
-
---- @type MarioEyesGSCId
-MARIO_EYES_CLOSED = 3
-
---- @type MarioEyesGSCId
-MARIO_EYES_LOOK_LEFT = 4
-
---- @type MarioEyesGSCId
-MARIO_EYES_LOOK_RIGHT = 5
-
---- @type MarioEyesGSCId
-MARIO_EYES_LOOK_UP = 6
-
---- @type MarioEyesGSCId
-MARIO_EYES_LOOK_DOWN = 7
-
---- @type MarioEyesGSCId
-MARIO_EYES_DEAD = 8
-
---- @class MarioGrabPosGSCId
-
---- @type MarioGrabPosGSCId
-GRAB_POS_NULL = 0
-
---- @type MarioGrabPosGSCId
-GRAB_POS_LIGHT_OBJ = 1
-
---- @type MarioGrabPosGSCId
-GRAB_POS_HEAVY_OBJ = 2
-
---- @type MarioGrabPosGSCId
-GRAB_POS_BOWSER = 3
-
---- @class MarioHandGSCId
-
---- @type MarioHandGSCId
-MARIO_HAND_FISTS = 0
-
---- @type MarioHandGSCId
-MARIO_HAND_OPEN = 1
-
---- @type MarioHandGSCId
-MARIO_HAND_PEACE_SIGN = 2
-
---- @type MarioHandGSCId
-MARIO_HAND_HOLDING_CAP = 3
-
---- @type MarioHandGSCId
-MARIO_HAND_HOLDING_WING_CAP = 4
-
---- @type MarioHandGSCId
-MARIO_HAND_RIGHT_OPEN = 5
+HUD_DISPLAY_FLAG_LIVES            =                                                                                                                                                                                                                            0x0001 --- @type HUDDisplayFlag
+HUD_DISPLAY_FLAG_COIN_COUNT       =                                                                                                                                                                                                                            0x0002 --- @type HUDDisplayFlag
+HUD_DISPLAY_FLAG_STAR_COUNT       =                                                                                                                                                                                                                            0x0004 --- @type HUDDisplayFlag
+HUD_DISPLAY_FLAG_CAMERA_AND_POWER =                                                                                                                                                                                                                            0x0008 --- @type HUDDisplayFlag
+HUD_DISPLAY_FLAG_KEYS             =                                                                                                                                                                                                                            0x0010 --- @type HUDDisplayFlag
+HUD_DISPLAY_FLAG_UNKNOWN_0020     =                                                                                                                                                                                                                            0x0020 --- @type HUDDisplayFlag
+HUD_DISPLAY_FLAG_TIMER            =                                                                                                                                                                                                                            0x0040 --- @type HUDDisplayFlag
+HUD_DISPLAY_FLAG_CAMERA           =                                                                                                                                                                                                                            0x0080 --- @type HUDDisplayFlag
+HUD_DISPLAY_FLAG_POWER            =                                                                                                                                                                                                                            0x0100 --- @type HUDDisplayFlag
+HUD_DISPLAY_FLAG_EMPHASIZE_POWER  =                                                                                                                                                                                                                            0x8000 --- @type HUDDisplayFlag
+HUD_DISPLAY_NONE                  =                                                                                                                                                                                                                            0x0000 --- @type HUDDisplayFlag
+HUD_DISPLAY_DEFAULT               = HUD_DISPLAY_FLAG_LIVES | HUD_DISPLAY_FLAG_COIN_COUNT | HUD_DISPLAY_FLAG_STAR_COUNT | HUD_DISPLAY_FLAG_CAMERA_AND_POWER | HUD_DISPLAY_FLAG_CAMERA | HUD_DISPLAY_FLAG_POWER | HUD_DISPLAY_FLAG_KEYS | HUD_DISPLAY_FLAG_UNKNOWN_0020 --- @type HUDDisplayFlag
+
+--- @alias HUDDisplayFlag
+--- | `HUD_DISPLAY_FLAG_LIVES`
+--- | `HUD_DISPLAY_FLAG_COIN_COUNT`
+--- | `HUD_DISPLAY_FLAG_STAR_COUNT`
+--- | `HUD_DISPLAY_FLAG_CAMERA_AND_POWER`
+--- | `HUD_DISPLAY_FLAG_KEYS`
+--- | `HUD_DISPLAY_FLAG_UNKNOWN_0020`
+--- | `HUD_DISPLAY_FLAG_TIMER`
+--- | `HUD_DISPLAY_FLAG_CAMERA`
+--- | `HUD_DISPLAY_FLAG_POWER`
+--- | `HUD_DISPLAY_FLAG_EMPHASIZE_POWER`
+--- | `HUD_DISPLAY_NONE`
+--- | `HUD_DISPLAY_DEFAULT`
+
+MARIO_SPAWN_NONE                  =                                          0 --- @type MarioSpawnType
+MARIO_SPAWN_DOOR_WARP             =                                          1 --- @type MarioSpawnType
+MARIO_SPAWN_IDLE                  =                                          2 --- @type MarioSpawnType
+MARIO_SPAWN_PIPE                  =                                          3 --- @type MarioSpawnType
+MARIO_SPAWN_TELEPORT              =                                          4 --- @type MarioSpawnType
+MARIO_SPAWN_INSTANT_ACTIVE        =                                       0x10 --- @type MarioSpawnType
+MARIO_SPAWN_SWIMMING              =        ((MARIO_SPAWN_INSTANT_ACTIVE ) + 1) --- @type MarioSpawnType
+MARIO_SPAWN_AIRBORNE              =        ((MARIO_SPAWN_INSTANT_ACTIVE ) + 2) --- @type MarioSpawnType
+MARIO_SPAWN_HARD_AIR_KNOCKBACK    =        ((MARIO_SPAWN_INSTANT_ACTIVE ) + 3) --- @type MarioSpawnType
+MARIO_SPAWN_SPIN_AIRBORNE_CIRCLE  =        ((MARIO_SPAWN_INSTANT_ACTIVE ) + 4) --- @type MarioSpawnType
+MARIO_SPAWN_DEATH                 =        ((MARIO_SPAWN_INSTANT_ACTIVE ) + 5) --- @type MarioSpawnType
+MARIO_SPAWN_SPIN_AIRBORNE         =        ((MARIO_SPAWN_INSTANT_ACTIVE ) + 6) --- @type MarioSpawnType
+MARIO_SPAWN_FLYING                =        ((MARIO_SPAWN_INSTANT_ACTIVE ) + 7) --- @type MarioSpawnType
+MARIO_SPAWN_PAINTING_STAR_COLLECT =                                       0x20 --- @type MarioSpawnType
+MARIO_SPAWN_PAINTING_DEATH        = ((MARIO_SPAWN_PAINTING_STAR_COLLECT ) + 1) --- @type MarioSpawnType
+MARIO_SPAWN_AIRBORNE_STAR_COLLECT = ((MARIO_SPAWN_PAINTING_STAR_COLLECT ) + 2) --- @type MarioSpawnType
+MARIO_SPAWN_AIRBORNE_DEATH        = ((MARIO_SPAWN_PAINTING_STAR_COLLECT ) + 3) --- @type MarioSpawnType
+MARIO_SPAWN_LAUNCH_STAR_COLLECT   = ((MARIO_SPAWN_PAINTING_STAR_COLLECT ) + 4) --- @type MarioSpawnType
+MARIO_SPAWN_LAUNCH_DEATH          = ((MARIO_SPAWN_PAINTING_STAR_COLLECT ) + 5) --- @type MarioSpawnType
+MARIO_SPAWN_UNUSED_38             = ((MARIO_SPAWN_PAINTING_STAR_COLLECT ) + 6) --- @type MarioSpawnType
+MARIO_SPAWN_FADE_FROM_BLACK       = ((MARIO_SPAWN_PAINTING_STAR_COLLECT ) + 7) --- @type MarioSpawnType
+
+--- @alias MarioSpawnType
+--- | `MARIO_SPAWN_NONE`
+--- | `MARIO_SPAWN_DOOR_WARP`
+--- | `MARIO_SPAWN_IDLE`
+--- | `MARIO_SPAWN_PIPE`
+--- | `MARIO_SPAWN_TELEPORT`
+--- | `MARIO_SPAWN_INSTANT_ACTIVE`
+--- | `MARIO_SPAWN_SWIMMING`
+--- | `MARIO_SPAWN_AIRBORNE`
+--- | `MARIO_SPAWN_HARD_AIR_KNOCKBACK`
+--- | `MARIO_SPAWN_SPIN_AIRBORNE_CIRCLE`
+--- | `MARIO_SPAWN_DEATH`
+--- | `MARIO_SPAWN_SPIN_AIRBORNE`
+--- | `MARIO_SPAWN_FLYING`
+--- | `MARIO_SPAWN_PAINTING_STAR_COLLECT`
+--- | `MARIO_SPAWN_PAINTING_DEATH`
+--- | `MARIO_SPAWN_AIRBORNE_STAR_COLLECT`
+--- | `MARIO_SPAWN_AIRBORNE_DEATH`
+--- | `MARIO_SPAWN_LAUNCH_STAR_COLLECT`
+--- | `MARIO_SPAWN_LAUNCH_DEATH`
+--- | `MARIO_SPAWN_UNUSED_38`
+--- | `MARIO_SPAWN_FADE_FROM_BLACK`
+
+CHAR_ANIM_SLOW_LEDGE_GRAB                      =   0 --- @type CharacterAnimID
+CHAR_ANIM_FALL_OVER_BACKWARDS                  =   1 --- @type CharacterAnimID
+CHAR_ANIM_BACKWARD_AIR_KB                      =   2 --- @type CharacterAnimID
+CHAR_ANIM_DYING_ON_BACK                        =   3 --- @type CharacterAnimID
+CHAR_ANIM_BACKFLIP                             =   4 --- @type CharacterAnimID
+CHAR_ANIM_CLIMB_UP_POLE                        =   5 --- @type CharacterAnimID
+CHAR_ANIM_GRAB_POLE_SHORT                      =   6 --- @type CharacterAnimID
+CHAR_ANIM_GRAB_POLE_SWING_PART1                =   7 --- @type CharacterAnimID
+CHAR_ANIM_GRAB_POLE_SWING_PART2                =   8 --- @type CharacterAnimID
+CHAR_ANIM_HANDSTAND_IDLE                       =   9 --- @type CharacterAnimID
+CHAR_ANIM_HANDSTAND_JUMP                       =  10 --- @type CharacterAnimID
+CHAR_ANIM_START_HANDSTAND                      =  11 --- @type CharacterAnimID
+CHAR_ANIM_RETURN_FROM_HANDSTAND                =  12 --- @type CharacterAnimID
+CHAR_ANIM_IDLE_ON_POLE                         =  13 --- @type CharacterAnimID
+CHAR_ANIM_A_POSE                               =  14 --- @type CharacterAnimID
+CHAR_ANIM_SKID_ON_GROUND                       =  15 --- @type CharacterAnimID
+CHAR_ANIM_STOP_SKID                            =  16 --- @type CharacterAnimID
+CHAR_ANIM_CROUCH_FROM_FAST_LONGJUMP            =  17 --- @type CharacterAnimID
+CHAR_ANIM_CROUCH_FROM_SLOW_LONGJUMP            =  18 --- @type CharacterAnimID
+CHAR_ANIM_FAST_LONGJUMP                        =  19 --- @type CharacterAnimID
+CHAR_ANIM_SLOW_LONGJUMP                        =  20 --- @type CharacterAnimID
+CHAR_ANIM_AIRBORNE_ON_STOMACH                  =  21 --- @type CharacterAnimID
+CHAR_ANIM_WALK_WITH_LIGHT_OBJ                  =  22 --- @type CharacterAnimID
+CHAR_ANIM_RUN_WITH_LIGHT_OBJ                   =  23 --- @type CharacterAnimID
+CHAR_ANIM_SLOW_WALK_WITH_LIGHT_OBJ             =  24 --- @type CharacterAnimID
+CHAR_ANIM_SHIVERING_WARMING_HAND               =  25 --- @type CharacterAnimID
+CHAR_ANIM_SHIVERING_RETURN_TO_IDLE             =  26 --- @type CharacterAnimID
+CHAR_ANIM_SHIVERING                            =  27 --- @type CharacterAnimID
+CHAR_ANIM_CLIMB_DOWN_LEDGE                     =  28 --- @type CharacterAnimID
+CHAR_ANIM_CREDITS_WAVING                       =  29 --- @type CharacterAnimID
+CHAR_ANIM_CREDITS_LOOK_UP                      =  30 --- @type CharacterAnimID
+CHAR_ANIM_CREDITS_RETURN_FROM_LOOK_UP          =  31 --- @type CharacterAnimID
+CHAR_ANIM_CREDITS_RAISE_HAND                   =  32 --- @type CharacterAnimID
+CHAR_ANIM_CREDITS_LOWER_HAND                   =  33 --- @type CharacterAnimID
+CHAR_ANIM_CREDITS_TAKE_OFF_CAP                 =  34 --- @type CharacterAnimID
+CHAR_ANIM_CREDITS_START_WALK_LOOK_UP           =  35 --- @type CharacterAnimID
+CHAR_ANIM_CREDITS_LOOK_BACK_THEN_RUN           =  36 --- @type CharacterAnimID
+CHAR_ANIM_FINAL_BOWSER_RAISE_HAND_SPIN         =  37 --- @type CharacterAnimID
+CHAR_ANIM_FINAL_BOWSER_WING_CAP_TAKE_OFF       =  38 --- @type CharacterAnimID
+CHAR_ANIM_CREDITS_PEACE_SIGN                   =  39 --- @type CharacterAnimID
+CHAR_ANIM_STAND_UP_FROM_LAVA_BOOST             =  40 --- @type CharacterAnimID
+CHAR_ANIM_FIRE_LAVA_BURN                       =  41 --- @type CharacterAnimID
+CHAR_ANIM_WING_CAP_FLY                         =  42 --- @type CharacterAnimID
+CHAR_ANIM_HANG_ON_OWL                          =  43 --- @type CharacterAnimID
+CHAR_ANIM_LAND_ON_STOMACH                      =  44 --- @type CharacterAnimID
+CHAR_ANIM_AIR_FORWARD_KB                       =  45 --- @type CharacterAnimID
+CHAR_ANIM_DYING_ON_STOMACH                     =  46 --- @type CharacterAnimID
+CHAR_ANIM_SUFFOCATING                          =  47 --- @type CharacterAnimID
+CHAR_ANIM_COUGHING                             =  48 --- @type CharacterAnimID
+CHAR_ANIM_THROW_CATCH_KEY                      =  49 --- @type CharacterAnimID
+CHAR_ANIM_DYING_FALL_OVER                      =  50 --- @type CharacterAnimID
+CHAR_ANIM_IDLE_ON_LEDGE                        =  51 --- @type CharacterAnimID
+CHAR_ANIM_FAST_LEDGE_GRAB                      =  52 --- @type CharacterAnimID
+CHAR_ANIM_HANG_ON_CEILING                      =  53 --- @type CharacterAnimID
+CHAR_ANIM_PUT_CAP_ON                           =  54 --- @type CharacterAnimID
+CHAR_ANIM_TAKE_CAP_OFF_THEN_ON                 =  55 --- @type CharacterAnimID
+CHAR_ANIM_QUICKLY_PUT_CAP_ON                   =  56 --- @type CharacterAnimID
+CHAR_ANIM_HEAD_STUCK_IN_GROUND                 =  57 --- @type CharacterAnimID
+CHAR_ANIM_GROUND_POUND_LANDING                 =  58 --- @type CharacterAnimID
+CHAR_ANIM_TRIPLE_JUMP_GROUND_POUND             =  59 --- @type CharacterAnimID
+CHAR_ANIM_START_GROUND_POUND                   =  60 --- @type CharacterAnimID
+CHAR_ANIM_GROUND_POUND                         =  61 --- @type CharacterAnimID
+CHAR_ANIM_BOTTOM_STUCK_IN_GROUND               =  62 --- @type CharacterAnimID
+CHAR_ANIM_IDLE_WITH_LIGHT_OBJ                  =  63 --- @type CharacterAnimID
+CHAR_ANIM_JUMP_LAND_WITH_LIGHT_OBJ             =  64 --- @type CharacterAnimID
+CHAR_ANIM_JUMP_WITH_LIGHT_OBJ                  =  65 --- @type CharacterAnimID
+CHAR_ANIM_FALL_LAND_WITH_LIGHT_OBJ             =  66 --- @type CharacterAnimID
+CHAR_ANIM_FALL_WITH_LIGHT_OBJ                  =  67 --- @type CharacterAnimID
+CHAR_ANIM_FALL_FROM_SLIDING_WITH_LIGHT_OBJ     =  68 --- @type CharacterAnimID
+CHAR_ANIM_SLIDING_ON_BOTTOM_WITH_LIGHT_OBJ     =  69 --- @type CharacterAnimID
+CHAR_ANIM_STAND_UP_FROM_SLIDING_WITH_LIGHT_OBJ =  70 --- @type CharacterAnimID
+CHAR_ANIM_RIDING_SHELL                         =  71 --- @type CharacterAnimID
+CHAR_ANIM_WALKING                              =  72 --- @type CharacterAnimID
+CHAR_ANIM_FORWARD_FLIP                         =  73 --- @type CharacterAnimID
+CHAR_ANIM_JUMP_RIDING_SHELL                    =  74 --- @type CharacterAnimID
+CHAR_ANIM_LAND_FROM_DOUBLE_JUMP                =  75 --- @type CharacterAnimID
+CHAR_ANIM_DOUBLE_JUMP_FALL                     =  76 --- @type CharacterAnimID
+CHAR_ANIM_SINGLE_JUMP                          =  77 --- @type CharacterAnimID
+CHAR_ANIM_LAND_FROM_SINGLE_JUMP                =  78 --- @type CharacterAnimID
+CHAR_ANIM_AIR_KICK                             =  79 --- @type CharacterAnimID
+CHAR_ANIM_DOUBLE_JUMP_RISE                     =  80 --- @type CharacterAnimID
+CHAR_ANIM_START_FORWARD_SPINNING               =  81 --- @type CharacterAnimID
+CHAR_ANIM_THROW_LIGHT_OBJECT                   =  82 --- @type CharacterAnimID
+CHAR_ANIM_FALL_FROM_SLIDE_KICK                 =  83 --- @type CharacterAnimID
+CHAR_ANIM_BEND_KNESS_RIDING_SHELL              =  84 --- @type CharacterAnimID
+CHAR_ANIM_LEGS_STUCK_IN_GROUND                 =  85 --- @type CharacterAnimID
+CHAR_ANIM_GENERAL_FALL                         =  86 --- @type CharacterAnimID
+CHAR_ANIM_GENERAL_LAND                         =  87 --- @type CharacterAnimID
+CHAR_ANIM_BEING_GRABBED                        =  88 --- @type CharacterAnimID
+CHAR_ANIM_GRAB_HEAVY_OBJECT                    =  89 --- @type CharacterAnimID
+CHAR_ANIM_SLOW_LAND_FROM_DIVE                  =  90 --- @type CharacterAnimID
+CHAR_ANIM_FLY_FROM_CANNON                      =  91 --- @type CharacterAnimID
+CHAR_ANIM_MOVE_ON_WIRE_NET_RIGHT               =  92 --- @type CharacterAnimID
+CHAR_ANIM_MOVE_ON_WIRE_NET_LEFT                =  93 --- @type CharacterAnimID
+CHAR_ANIM_MISSING_CAP                          =  94 --- @type CharacterAnimID
+CHAR_ANIM_PULL_DOOR_WALK_IN                    =  95 --- @type CharacterAnimID
+CHAR_ANIM_PUSH_DOOR_WALK_IN                    =  96 --- @type CharacterAnimID
+CHAR_ANIM_UNLOCK_DOOR                          =  97 --- @type CharacterAnimID
+CHAR_ANIM_START_REACH_POCKET                   =  98 --- @type CharacterAnimID
+CHAR_ANIM_REACH_POCKET                         =  99 --- @type CharacterAnimID
+CHAR_ANIM_STOP_REACH_POCKET                    = 100 --- @type CharacterAnimID
+CHAR_ANIM_GROUND_THROW                         = 101 --- @type CharacterAnimID
+CHAR_ANIM_GROUND_KICK                          = 102 --- @type CharacterAnimID
+CHAR_ANIM_FIRST_PUNCH                          = 103 --- @type CharacterAnimID
+CHAR_ANIM_SECOND_PUNCH                         = 104 --- @type CharacterAnimID
+CHAR_ANIM_FIRST_PUNCH_FAST                     = 105 --- @type CharacterAnimID
+CHAR_ANIM_SECOND_PUNCH_FAST                    = 106 --- @type CharacterAnimID
+CHAR_ANIM_PICK_UP_LIGHT_OBJ                    = 107 --- @type CharacterAnimID
+CHAR_ANIM_PUSHING                              = 108 --- @type CharacterAnimID
+CHAR_ANIM_START_RIDING_SHELL                   = 109 --- @type CharacterAnimID
+CHAR_ANIM_PLACE_LIGHT_OBJ                      = 110 --- @type CharacterAnimID
+CHAR_ANIM_FORWARD_SPINNING                     = 111 --- @type CharacterAnimID
+CHAR_ANIM_BACKWARD_SPINNING                    = 112 --- @type CharacterAnimID
+CHAR_ANIM_BREAKDANCE                           = 113 --- @type CharacterAnimID
+CHAR_ANIM_RUNNING                              = 114 --- @type CharacterAnimID
+CHAR_ANIM_RUNNING_UNUSED                       = 115 --- @type CharacterAnimID
+CHAR_ANIM_SOFT_BACK_KB                         = 116 --- @type CharacterAnimID
+CHAR_ANIM_SOFT_FRONT_KB                        = 117 --- @type CharacterAnimID
+CHAR_ANIM_DYING_IN_QUICKSAND                   = 118 --- @type CharacterAnimID
+CHAR_ANIM_IDLE_IN_QUICKSAND                    = 119 --- @type CharacterAnimID
+CHAR_ANIM_MOVE_IN_QUICKSAND                    = 120 --- @type CharacterAnimID
+CHAR_ANIM_ELECTROCUTION                        = 121 --- @type CharacterAnimID
+CHAR_ANIM_SHOCKED                              = 122 --- @type CharacterAnimID
+CHAR_ANIM_BACKWARD_KB                          = 123 --- @type CharacterAnimID
+CHAR_ANIM_FORWARD_KB                           = 124 --- @type CharacterAnimID
+CHAR_ANIM_IDLE_HEAVY_OBJ                       = 125 --- @type CharacterAnimID
+CHAR_ANIM_STAND_AGAINST_WALL                   = 126 --- @type CharacterAnimID
+CHAR_ANIM_SIDESTEP_LEFT                        = 127 --- @type CharacterAnimID
+CHAR_ANIM_SIDESTEP_RIGHT                       = 128 --- @type CharacterAnimID
+CHAR_ANIM_START_SLEEP_IDLE                     = 129 --- @type CharacterAnimID
+CHAR_ANIM_START_SLEEP_SCRATCH                  = 130 --- @type CharacterAnimID
+CHAR_ANIM_START_SLEEP_YAWN                     = 131 --- @type CharacterAnimID
+CHAR_ANIM_START_SLEEP_SITTING                  = 132 --- @type CharacterAnimID
+CHAR_ANIM_SLEEP_IDLE                           = 133 --- @type CharacterAnimID
+CHAR_ANIM_SLEEP_START_LYING                    = 134 --- @type CharacterAnimID
+CHAR_ANIM_SLEEP_LYING                          = 135 --- @type CharacterAnimID
+CHAR_ANIM_DIVE                                 = 136 --- @type CharacterAnimID
+CHAR_ANIM_SLIDE_DIVE                           = 137 --- @type CharacterAnimID
+CHAR_ANIM_GROUND_BONK                          = 138 --- @type CharacterAnimID
+CHAR_ANIM_STOP_SLIDE_LIGHT_OBJ                 = 139 --- @type CharacterAnimID
+CHAR_ANIM_SLIDE_KICK                           = 140 --- @type CharacterAnimID
+CHAR_ANIM_CROUCH_FROM_SLIDE_KICK               = 141 --- @type CharacterAnimID
+CHAR_ANIM_SLIDE_MOTIONLESS                     = 142 --- @type CharacterAnimID
+CHAR_ANIM_STOP_SLIDE                           = 143 --- @type CharacterAnimID
+CHAR_ANIM_FALL_FROM_SLIDE                      = 144 --- @type CharacterAnimID
+CHAR_ANIM_SLIDE                                = 145 --- @type CharacterAnimID
+CHAR_ANIM_TIPTOE                               = 146 --- @type CharacterAnimID
+CHAR_ANIM_TWIRL_LAND                           = 147 --- @type CharacterAnimID
+CHAR_ANIM_TWIRL                                = 148 --- @type CharacterAnimID
+CHAR_ANIM_START_TWIRL                          = 149 --- @type CharacterAnimID
+CHAR_ANIM_STOP_CROUCHING                       = 150 --- @type CharacterAnimID
+CHAR_ANIM_START_CROUCHING                      = 151 --- @type CharacterAnimID
+CHAR_ANIM_CROUCHING                            = 152 --- @type CharacterAnimID
+CHAR_ANIM_CRAWLING                             = 153 --- @type CharacterAnimID
+CHAR_ANIM_STOP_CRAWLING                        = 154 --- @type CharacterAnimID
+CHAR_ANIM_START_CRAWLING                       = 155 --- @type CharacterAnimID
+CHAR_ANIM_SUMMON_STAR                          = 156 --- @type CharacterAnimID
+CHAR_ANIM_RETURN_STAR_APPROACH_DOOR            = 157 --- @type CharacterAnimID
+CHAR_ANIM_BACKWARDS_WATER_KB                   = 158 --- @type CharacterAnimID
+CHAR_ANIM_SWIM_WITH_OBJ_PART1                  = 159 --- @type CharacterAnimID
+CHAR_ANIM_SWIM_WITH_OBJ_PART2                  = 160 --- @type CharacterAnimID
+CHAR_ANIM_FLUTTERKICK_WITH_OBJ                 = 161 --- @type CharacterAnimID
+CHAR_ANIM_WATER_ACTION_END_WITH_OBJ            = 162 --- @type CharacterAnimID
+CHAR_ANIM_STOP_GRAB_OBJ_WATER                  = 163 --- @type CharacterAnimID
+CHAR_ANIM_WATER_IDLE_WITH_OBJ                  = 164 --- @type CharacterAnimID
+CHAR_ANIM_DROWNING_PART1                       = 165 --- @type CharacterAnimID
+CHAR_ANIM_DROWNING_PART2                       = 166 --- @type CharacterAnimID
+CHAR_ANIM_WATER_DYING                          = 167 --- @type CharacterAnimID
+CHAR_ANIM_WATER_FORWARD_KB                     = 168 --- @type CharacterAnimID
+CHAR_ANIM_FALL_FROM_WATER                      = 169 --- @type CharacterAnimID
+CHAR_ANIM_SWIM_PART1                           = 170 --- @type CharacterAnimID
+CHAR_ANIM_SWIM_PART2                           = 171 --- @type CharacterAnimID
+CHAR_ANIM_FLUTTERKICK                          = 172 --- @type CharacterAnimID
+CHAR_ANIM_WATER_ACTION_END                     = 173 --- @type CharacterAnimID
+CHAR_ANIM_WATER_PICK_UP_OBJ                    = 174 --- @type CharacterAnimID
+CHAR_ANIM_WATER_GRAB_OBJ_PART2                 = 175 --- @type CharacterAnimID
+CHAR_ANIM_WATER_GRAB_OBJ_PART1                 = 176 --- @type CharacterAnimID
+CHAR_ANIM_WATER_THROW_OBJ                      = 177 --- @type CharacterAnimID
+CHAR_ANIM_WATER_IDLE                           = 178 --- @type CharacterAnimID
+CHAR_ANIM_WATER_STAR_DANCE                     = 179 --- @type CharacterAnimID
+CHAR_ANIM_RETURN_FROM_WATER_STAR_DANCE         = 180 --- @type CharacterAnimID
+CHAR_ANIM_GRAB_BOWSER                          = 181 --- @type CharacterAnimID
+CHAR_ANIM_SWINGING_BOWSER                      = 182 --- @type CharacterAnimID
+CHAR_ANIM_RELEASE_BOWSER                       = 183 --- @type CharacterAnimID
+CHAR_ANIM_HOLDING_BOWSER                       = 184 --- @type CharacterAnimID
+CHAR_ANIM_HEAVY_THROW                          = 185 --- @type CharacterAnimID
+CHAR_ANIM_WALK_PANTING                         = 186 --- @type CharacterAnimID
+CHAR_ANIM_WALK_WITH_HEAVY_OBJ                  = 187 --- @type CharacterAnimID
+CHAR_ANIM_TURNING_PART1                        = 188 --- @type CharacterAnimID
+CHAR_ANIM_TURNING_PART2                        = 189 --- @type CharacterAnimID
+CHAR_ANIM_SLIDEFLIP_LAND                       = 190 --- @type CharacterAnimID
+CHAR_ANIM_SLIDEFLIP                            = 191 --- @type CharacterAnimID
+CHAR_ANIM_TRIPLE_JUMP_LAND                     = 192 --- @type CharacterAnimID
+CHAR_ANIM_TRIPLE_JUMP                          = 193 --- @type CharacterAnimID
+CHAR_ANIM_FIRST_PERSON                         = 194 --- @type CharacterAnimID
+CHAR_ANIM_IDLE_HEAD_LEFT                       = 195 --- @type CharacterAnimID
+CHAR_ANIM_IDLE_HEAD_RIGHT                      = 196 --- @type CharacterAnimID
+CHAR_ANIM_IDLE_HEAD_CENTER                     = 197 --- @type CharacterAnimID
+CHAR_ANIM_HANDSTAND_LEFT                       = 198 --- @type CharacterAnimID
+CHAR_ANIM_HANDSTAND_RIGHT                      = 199 --- @type CharacterAnimID
+CHAR_ANIM_WAKE_FROM_SLEEP                      = 200 --- @type CharacterAnimID
+CHAR_ANIM_WAKE_FROM_LYING                      = 201 --- @type CharacterAnimID
+CHAR_ANIM_START_TIPTOE                         = 202 --- @type CharacterAnimID
+CHAR_ANIM_SLIDEJUMP                            = 203 --- @type CharacterAnimID
+CHAR_ANIM_START_WALLKICK                       = 204 --- @type CharacterAnimID
+CHAR_ANIM_STAR_DANCE                           = 205 --- @type CharacterAnimID
+CHAR_ANIM_RETURN_FROM_STAR_DANCE               = 206 --- @type CharacterAnimID
+CHAR_ANIM_FORWARD_SPINNING_FLIP                = 207 --- @type CharacterAnimID
+CHAR_ANIM_TRIPLE_JUMP_FLY                      = 208 --- @type CharacterAnimID
+CHAR_ANIM_MAX                                  = 209 --- @type CharacterAnimID
+
+--- @alias CharacterAnimID
+--- | `CHAR_ANIM_SLOW_LEDGE_GRAB`
+--- | `CHAR_ANIM_FALL_OVER_BACKWARDS`
+--- | `CHAR_ANIM_BACKWARD_AIR_KB`
+--- | `CHAR_ANIM_DYING_ON_BACK`
+--- | `CHAR_ANIM_BACKFLIP`
+--- | `CHAR_ANIM_CLIMB_UP_POLE`
+--- | `CHAR_ANIM_GRAB_POLE_SHORT`
+--- | `CHAR_ANIM_GRAB_POLE_SWING_PART1`
+--- | `CHAR_ANIM_GRAB_POLE_SWING_PART2`
+--- | `CHAR_ANIM_HANDSTAND_IDLE`
+--- | `CHAR_ANIM_HANDSTAND_JUMP`
+--- | `CHAR_ANIM_START_HANDSTAND`
+--- | `CHAR_ANIM_RETURN_FROM_HANDSTAND`
+--- | `CHAR_ANIM_IDLE_ON_POLE`
+--- | `CHAR_ANIM_A_POSE`
+--- | `CHAR_ANIM_SKID_ON_GROUND`
+--- | `CHAR_ANIM_STOP_SKID`
+--- | `CHAR_ANIM_CROUCH_FROM_FAST_LONGJUMP`
+--- | `CHAR_ANIM_CROUCH_FROM_SLOW_LONGJUMP`
+--- | `CHAR_ANIM_FAST_LONGJUMP`
+--- | `CHAR_ANIM_SLOW_LONGJUMP`
+--- | `CHAR_ANIM_AIRBORNE_ON_STOMACH`
+--- | `CHAR_ANIM_WALK_WITH_LIGHT_OBJ`
+--- | `CHAR_ANIM_RUN_WITH_LIGHT_OBJ`
+--- | `CHAR_ANIM_SLOW_WALK_WITH_LIGHT_OBJ`
+--- | `CHAR_ANIM_SHIVERING_WARMING_HAND`
+--- | `CHAR_ANIM_SHIVERING_RETURN_TO_IDLE`
+--- | `CHAR_ANIM_SHIVERING`
+--- | `CHAR_ANIM_CLIMB_DOWN_LEDGE`
+--- | `CHAR_ANIM_CREDITS_WAVING`
+--- | `CHAR_ANIM_CREDITS_LOOK_UP`
+--- | `CHAR_ANIM_CREDITS_RETURN_FROM_LOOK_UP`
+--- | `CHAR_ANIM_CREDITS_RAISE_HAND`
+--- | `CHAR_ANIM_CREDITS_LOWER_HAND`
+--- | `CHAR_ANIM_CREDITS_TAKE_OFF_CAP`
+--- | `CHAR_ANIM_CREDITS_START_WALK_LOOK_UP`
+--- | `CHAR_ANIM_CREDITS_LOOK_BACK_THEN_RUN`
+--- | `CHAR_ANIM_FINAL_BOWSER_RAISE_HAND_SPIN`
+--- | `CHAR_ANIM_FINAL_BOWSER_WING_CAP_TAKE_OFF`
+--- | `CHAR_ANIM_CREDITS_PEACE_SIGN`
+--- | `CHAR_ANIM_STAND_UP_FROM_LAVA_BOOST`
+--- | `CHAR_ANIM_FIRE_LAVA_BURN`
+--- | `CHAR_ANIM_WING_CAP_FLY`
+--- | `CHAR_ANIM_HANG_ON_OWL`
+--- | `CHAR_ANIM_LAND_ON_STOMACH`
+--- | `CHAR_ANIM_AIR_FORWARD_KB`
+--- | `CHAR_ANIM_DYING_ON_STOMACH`
+--- | `CHAR_ANIM_SUFFOCATING`
+--- | `CHAR_ANIM_COUGHING`
+--- | `CHAR_ANIM_THROW_CATCH_KEY`
+--- | `CHAR_ANIM_DYING_FALL_OVER`
+--- | `CHAR_ANIM_IDLE_ON_LEDGE`
+--- | `CHAR_ANIM_FAST_LEDGE_GRAB`
+--- | `CHAR_ANIM_HANG_ON_CEILING`
+--- | `CHAR_ANIM_PUT_CAP_ON`
+--- | `CHAR_ANIM_TAKE_CAP_OFF_THEN_ON`
+--- | `CHAR_ANIM_QUICKLY_PUT_CAP_ON`
+--- | `CHAR_ANIM_HEAD_STUCK_IN_GROUND`
+--- | `CHAR_ANIM_GROUND_POUND_LANDING`
+--- | `CHAR_ANIM_TRIPLE_JUMP_GROUND_POUND`
+--- | `CHAR_ANIM_START_GROUND_POUND`
+--- | `CHAR_ANIM_GROUND_POUND`
+--- | `CHAR_ANIM_BOTTOM_STUCK_IN_GROUND`
+--- | `CHAR_ANIM_IDLE_WITH_LIGHT_OBJ`
+--- | `CHAR_ANIM_JUMP_LAND_WITH_LIGHT_OBJ`
+--- | `CHAR_ANIM_JUMP_WITH_LIGHT_OBJ`
+--- | `CHAR_ANIM_FALL_LAND_WITH_LIGHT_OBJ`
+--- | `CHAR_ANIM_FALL_WITH_LIGHT_OBJ`
+--- | `CHAR_ANIM_FALL_FROM_SLIDING_WITH_LIGHT_OBJ`
+--- | `CHAR_ANIM_SLIDING_ON_BOTTOM_WITH_LIGHT_OBJ`
+--- | `CHAR_ANIM_STAND_UP_FROM_SLIDING_WITH_LIGHT_OBJ`
+--- | `CHAR_ANIM_RIDING_SHELL`
+--- | `CHAR_ANIM_WALKING`
+--- | `CHAR_ANIM_FORWARD_FLIP`
+--- | `CHAR_ANIM_JUMP_RIDING_SHELL`
+--- | `CHAR_ANIM_LAND_FROM_DOUBLE_JUMP`
+--- | `CHAR_ANIM_DOUBLE_JUMP_FALL`
+--- | `CHAR_ANIM_SINGLE_JUMP`
+--- | `CHAR_ANIM_LAND_FROM_SINGLE_JUMP`
+--- | `CHAR_ANIM_AIR_KICK`
+--- | `CHAR_ANIM_DOUBLE_JUMP_RISE`
+--- | `CHAR_ANIM_START_FORWARD_SPINNING`
+--- | `CHAR_ANIM_THROW_LIGHT_OBJECT`
+--- | `CHAR_ANIM_FALL_FROM_SLIDE_KICK`
+--- | `CHAR_ANIM_BEND_KNESS_RIDING_SHELL`
+--- | `CHAR_ANIM_LEGS_STUCK_IN_GROUND`
+--- | `CHAR_ANIM_GENERAL_FALL`
+--- | `CHAR_ANIM_GENERAL_LAND`
+--- | `CHAR_ANIM_BEING_GRABBED`
+--- | `CHAR_ANIM_GRAB_HEAVY_OBJECT`
+--- | `CHAR_ANIM_SLOW_LAND_FROM_DIVE`
+--- | `CHAR_ANIM_FLY_FROM_CANNON`
+--- | `CHAR_ANIM_MOVE_ON_WIRE_NET_RIGHT`
+--- | `CHAR_ANIM_MOVE_ON_WIRE_NET_LEFT`
+--- | `CHAR_ANIM_MISSING_CAP`
+--- | `CHAR_ANIM_PULL_DOOR_WALK_IN`
+--- | `CHAR_ANIM_PUSH_DOOR_WALK_IN`
+--- | `CHAR_ANIM_UNLOCK_DOOR`
+--- | `CHAR_ANIM_START_REACH_POCKET`
+--- | `CHAR_ANIM_REACH_POCKET`
+--- | `CHAR_ANIM_STOP_REACH_POCKET`
+--- | `CHAR_ANIM_GROUND_THROW`
+--- | `CHAR_ANIM_GROUND_KICK`
+--- | `CHAR_ANIM_FIRST_PUNCH`
+--- | `CHAR_ANIM_SECOND_PUNCH`
+--- | `CHAR_ANIM_FIRST_PUNCH_FAST`
+--- | `CHAR_ANIM_SECOND_PUNCH_FAST`
+--- | `CHAR_ANIM_PICK_UP_LIGHT_OBJ`
+--- | `CHAR_ANIM_PUSHING`
+--- | `CHAR_ANIM_START_RIDING_SHELL`
+--- | `CHAR_ANIM_PLACE_LIGHT_OBJ`
+--- | `CHAR_ANIM_FORWARD_SPINNING`
+--- | `CHAR_ANIM_BACKWARD_SPINNING`
+--- | `CHAR_ANIM_BREAKDANCE`
+--- | `CHAR_ANIM_RUNNING`
+--- | `CHAR_ANIM_RUNNING_UNUSED`
+--- | `CHAR_ANIM_SOFT_BACK_KB`
+--- | `CHAR_ANIM_SOFT_FRONT_KB`
+--- | `CHAR_ANIM_DYING_IN_QUICKSAND`
+--- | `CHAR_ANIM_IDLE_IN_QUICKSAND`
+--- | `CHAR_ANIM_MOVE_IN_QUICKSAND`
+--- | `CHAR_ANIM_ELECTROCUTION`
+--- | `CHAR_ANIM_SHOCKED`
+--- | `CHAR_ANIM_BACKWARD_KB`
+--- | `CHAR_ANIM_FORWARD_KB`
+--- | `CHAR_ANIM_IDLE_HEAVY_OBJ`
+--- | `CHAR_ANIM_STAND_AGAINST_WALL`
+--- | `CHAR_ANIM_SIDESTEP_LEFT`
+--- | `CHAR_ANIM_SIDESTEP_RIGHT`
+--- | `CHAR_ANIM_START_SLEEP_IDLE`
+--- | `CHAR_ANIM_START_SLEEP_SCRATCH`
+--- | `CHAR_ANIM_START_SLEEP_YAWN`
+--- | `CHAR_ANIM_START_SLEEP_SITTING`
+--- | `CHAR_ANIM_SLEEP_IDLE`
+--- | `CHAR_ANIM_SLEEP_START_LYING`
+--- | `CHAR_ANIM_SLEEP_LYING`
+--- | `CHAR_ANIM_DIVE`
+--- | `CHAR_ANIM_SLIDE_DIVE`
+--- | `CHAR_ANIM_GROUND_BONK`
+--- | `CHAR_ANIM_STOP_SLIDE_LIGHT_OBJ`
+--- | `CHAR_ANIM_SLIDE_KICK`
+--- | `CHAR_ANIM_CROUCH_FROM_SLIDE_KICK`
+--- | `CHAR_ANIM_SLIDE_MOTIONLESS`
+--- | `CHAR_ANIM_STOP_SLIDE`
+--- | `CHAR_ANIM_FALL_FROM_SLIDE`
+--- | `CHAR_ANIM_SLIDE`
+--- | `CHAR_ANIM_TIPTOE`
+--- | `CHAR_ANIM_TWIRL_LAND`
+--- | `CHAR_ANIM_TWIRL`
+--- | `CHAR_ANIM_START_TWIRL`
+--- | `CHAR_ANIM_STOP_CROUCHING`
+--- | `CHAR_ANIM_START_CROUCHING`
+--- | `CHAR_ANIM_CROUCHING`
+--- | `CHAR_ANIM_CRAWLING`
+--- | `CHAR_ANIM_STOP_CRAWLING`
+--- | `CHAR_ANIM_START_CRAWLING`
+--- | `CHAR_ANIM_SUMMON_STAR`
+--- | `CHAR_ANIM_RETURN_STAR_APPROACH_DOOR`
+--- | `CHAR_ANIM_BACKWARDS_WATER_KB`
+--- | `CHAR_ANIM_SWIM_WITH_OBJ_PART1`
+--- | `CHAR_ANIM_SWIM_WITH_OBJ_PART2`
+--- | `CHAR_ANIM_FLUTTERKICK_WITH_OBJ`
+--- | `CHAR_ANIM_WATER_ACTION_END_WITH_OBJ`
+--- | `CHAR_ANIM_STOP_GRAB_OBJ_WATER`
+--- | `CHAR_ANIM_WATER_IDLE_WITH_OBJ`
+--- | `CHAR_ANIM_DROWNING_PART1`
+--- | `CHAR_ANIM_DROWNING_PART2`
+--- | `CHAR_ANIM_WATER_DYING`
+--- | `CHAR_ANIM_WATER_FORWARD_KB`
+--- | `CHAR_ANIM_FALL_FROM_WATER`
+--- | `CHAR_ANIM_SWIM_PART1`
+--- | `CHAR_ANIM_SWIM_PART2`
+--- | `CHAR_ANIM_FLUTTERKICK`
+--- | `CHAR_ANIM_WATER_ACTION_END`
+--- | `CHAR_ANIM_WATER_PICK_UP_OBJ`
+--- | `CHAR_ANIM_WATER_GRAB_OBJ_PART2`
+--- | `CHAR_ANIM_WATER_GRAB_OBJ_PART1`
+--- | `CHAR_ANIM_WATER_THROW_OBJ`
+--- | `CHAR_ANIM_WATER_IDLE`
+--- | `CHAR_ANIM_WATER_STAR_DANCE`
+--- | `CHAR_ANIM_RETURN_FROM_WATER_STAR_DANCE`
+--- | `CHAR_ANIM_GRAB_BOWSER`
+--- | `CHAR_ANIM_SWINGING_BOWSER`
+--- | `CHAR_ANIM_RELEASE_BOWSER`
+--- | `CHAR_ANIM_HOLDING_BOWSER`
+--- | `CHAR_ANIM_HEAVY_THROW`
+--- | `CHAR_ANIM_WALK_PANTING`
+--- | `CHAR_ANIM_WALK_WITH_HEAVY_OBJ`
+--- | `CHAR_ANIM_TURNING_PART1`
+--- | `CHAR_ANIM_TURNING_PART2`
+--- | `CHAR_ANIM_SLIDEFLIP_LAND`
+--- | `CHAR_ANIM_SLIDEFLIP`
+--- | `CHAR_ANIM_TRIPLE_JUMP_LAND`
+--- | `CHAR_ANIM_TRIPLE_JUMP`
+--- | `CHAR_ANIM_FIRST_PERSON`
+--- | `CHAR_ANIM_IDLE_HEAD_LEFT`
+--- | `CHAR_ANIM_IDLE_HEAD_RIGHT`
+--- | `CHAR_ANIM_IDLE_HEAD_CENTER`
+--- | `CHAR_ANIM_HANDSTAND_LEFT`
+--- | `CHAR_ANIM_HANDSTAND_RIGHT`
+--- | `CHAR_ANIM_WAKE_FROM_SLEEP`
+--- | `CHAR_ANIM_WAKE_FROM_LYING`
+--- | `CHAR_ANIM_START_TIPTOE`
+--- | `CHAR_ANIM_SLIDEJUMP`
+--- | `CHAR_ANIM_START_WALLKICK`
+--- | `CHAR_ANIM_STAR_DANCE`
+--- | `CHAR_ANIM_RETURN_FROM_STAR_DANCE`
+--- | `CHAR_ANIM_FORWARD_SPINNING_FLIP`
+--- | `CHAR_ANIM_TRIPLE_JUMP_FLY`
+--- | `CHAR_ANIM_MAX`
+
+MARIO_ANIM_SLOW_LEDGE_GRAB                      =   0 --- @type MarioAnimID
+MARIO_ANIM_FALL_OVER_BACKWARDS                  =   1 --- @type MarioAnimID
+MARIO_ANIM_BACKWARD_AIR_KB                      =   2 --- @type MarioAnimID
+MARIO_ANIM_DYING_ON_BACK                        =   3 --- @type MarioAnimID
+MARIO_ANIM_BACKFLIP                             =   4 --- @type MarioAnimID
+MARIO_ANIM_CLIMB_UP_POLE                        =   5 --- @type MarioAnimID
+MARIO_ANIM_GRAB_POLE_SHORT                      =   6 --- @type MarioAnimID
+MARIO_ANIM_GRAB_POLE_SWING_PART1                =   7 --- @type MarioAnimID
+MARIO_ANIM_GRAB_POLE_SWING_PART2                =   8 --- @type MarioAnimID
+MARIO_ANIM_HANDSTAND_IDLE                       =   9 --- @type MarioAnimID
+MARIO_ANIM_HANDSTAND_JUMP                       =  10 --- @type MarioAnimID
+MARIO_ANIM_START_HANDSTAND                      =  11 --- @type MarioAnimID
+MARIO_ANIM_RETURN_FROM_HANDSTAND                =  12 --- @type MarioAnimID
+MARIO_ANIM_IDLE_ON_POLE                         =  13 --- @type MarioAnimID
+MARIO_ANIM_A_POSE                               =  14 --- @type MarioAnimID
+MARIO_ANIM_SKID_ON_GROUND                       =  15 --- @type MarioAnimID
+MARIO_ANIM_STOP_SKID                            =  16 --- @type MarioAnimID
+MARIO_ANIM_CROUCH_FROM_FAST_LONGJUMP            =  17 --- @type MarioAnimID
+MARIO_ANIM_CROUCH_FROM_SLOW_LONGJUMP            =  18 --- @type MarioAnimID
+MARIO_ANIM_FAST_LONGJUMP                        =  19 --- @type MarioAnimID
+MARIO_ANIM_SLOW_LONGJUMP                        =  20 --- @type MarioAnimID
+MARIO_ANIM_AIRBORNE_ON_STOMACH                  =  21 --- @type MarioAnimID
+MARIO_ANIM_WALK_WITH_LIGHT_OBJ                  =  22 --- @type MarioAnimID
+MARIO_ANIM_RUN_WITH_LIGHT_OBJ                   =  23 --- @type MarioAnimID
+MARIO_ANIM_SLOW_WALK_WITH_LIGHT_OBJ             =  24 --- @type MarioAnimID
+MARIO_ANIM_SHIVERING_WARMING_HAND               =  25 --- @type MarioAnimID
+MARIO_ANIM_SHIVERING_RETURN_TO_IDLE             =  26 --- @type MarioAnimID
+MARIO_ANIM_SHIVERING                            =  27 --- @type MarioAnimID
+MARIO_ANIM_CLIMB_DOWN_LEDGE                     =  28 --- @type MarioAnimID
+MARIO_ANIM_CREDITS_WAVING                       =  29 --- @type MarioAnimID
+MARIO_ANIM_CREDITS_LOOK_UP                      =  30 --- @type MarioAnimID
+MARIO_ANIM_CREDITS_RETURN_FROM_LOOK_UP          =  31 --- @type MarioAnimID
+MARIO_ANIM_CREDITS_RAISE_HAND                   =  32 --- @type MarioAnimID
+MARIO_ANIM_CREDITS_LOWER_HAND                   =  33 --- @type MarioAnimID
+MARIO_ANIM_CREDITS_TAKE_OFF_CAP                 =  34 --- @type MarioAnimID
+MARIO_ANIM_CREDITS_START_WALK_LOOK_UP           =  35 --- @type MarioAnimID
+MARIO_ANIM_CREDITS_LOOK_BACK_THEN_RUN           =  36 --- @type MarioAnimID
+MARIO_ANIM_FINAL_BOWSER_RAISE_HAND_SPIN         =  37 --- @type MarioAnimID
+MARIO_ANIM_FINAL_BOWSER_WING_CAP_TAKE_OFF       =  38 --- @type MarioAnimID
+MARIO_ANIM_CREDITS_PEACE_SIGN                   =  39 --- @type MarioAnimID
+MARIO_ANIM_STAND_UP_FROM_LAVA_BOOST             =  40 --- @type MarioAnimID
+MARIO_ANIM_FIRE_LAVA_BURN                       =  41 --- @type MarioAnimID
+MARIO_ANIM_WING_CAP_FLY                         =  42 --- @type MarioAnimID
+MARIO_ANIM_HANG_ON_OWL                          =  43 --- @type MarioAnimID
+MARIO_ANIM_LAND_ON_STOMACH                      =  44 --- @type MarioAnimID
+MARIO_ANIM_AIR_FORWARD_KB                       =  45 --- @type MarioAnimID
+MARIO_ANIM_DYING_ON_STOMACH                     =  46 --- @type MarioAnimID
+MARIO_ANIM_SUFFOCATING                          =  47 --- @type MarioAnimID
+MARIO_ANIM_COUGHING                             =  48 --- @type MarioAnimID
+MARIO_ANIM_THROW_CATCH_KEY                      =  49 --- @type MarioAnimID
+MARIO_ANIM_DYING_FALL_OVER                      =  50 --- @type MarioAnimID
+MARIO_ANIM_IDLE_ON_LEDGE                        =  51 --- @type MarioAnimID
+MARIO_ANIM_FAST_LEDGE_GRAB                      =  52 --- @type MarioAnimID
+MARIO_ANIM_HANG_ON_CEILING                      =  53 --- @type MarioAnimID
+MARIO_ANIM_PUT_CAP_ON                           =  54 --- @type MarioAnimID
+MARIO_ANIM_TAKE_CAP_OFF_THEN_ON                 =  55 --- @type MarioAnimID
+MARIO_ANIM_QUICKLY_PUT_CAP_ON                   =  56 --- @type MarioAnimID
+MARIO_ANIM_HEAD_STUCK_IN_GROUND                 =  57 --- @type MarioAnimID
+MARIO_ANIM_GROUND_POUND_LANDING                 =  58 --- @type MarioAnimID
+MARIO_ANIM_TRIPLE_JUMP_GROUND_POUND             =  59 --- @type MarioAnimID
+MARIO_ANIM_START_GROUND_POUND                   =  60 --- @type MarioAnimID
+MARIO_ANIM_GROUND_POUND                         =  61 --- @type MarioAnimID
+MARIO_ANIM_BOTTOM_STUCK_IN_GROUND               =  62 --- @type MarioAnimID
+MARIO_ANIM_IDLE_WITH_LIGHT_OBJ                  =  63 --- @type MarioAnimID
+MARIO_ANIM_JUMP_LAND_WITH_LIGHT_OBJ             =  64 --- @type MarioAnimID
+MARIO_ANIM_JUMP_WITH_LIGHT_OBJ                  =  65 --- @type MarioAnimID
+MARIO_ANIM_FALL_LAND_WITH_LIGHT_OBJ             =  66 --- @type MarioAnimID
+MARIO_ANIM_FALL_WITH_LIGHT_OBJ                  =  67 --- @type MarioAnimID
+MARIO_ANIM_FALL_FROM_SLIDING_WITH_LIGHT_OBJ     =  68 --- @type MarioAnimID
+MARIO_ANIM_SLIDING_ON_BOTTOM_WITH_LIGHT_OBJ     =  69 --- @type MarioAnimID
+MARIO_ANIM_STAND_UP_FROM_SLIDING_WITH_LIGHT_OBJ =  70 --- @type MarioAnimID
+MARIO_ANIM_RIDING_SHELL                         =  71 --- @type MarioAnimID
+MARIO_ANIM_WALKING                              =  72 --- @type MarioAnimID
+MARIO_ANIM_FORWARD_FLIP                         =  73 --- @type MarioAnimID
+MARIO_ANIM_JUMP_RIDING_SHELL                    =  74 --- @type MarioAnimID
+MARIO_ANIM_LAND_FROM_DOUBLE_JUMP                =  75 --- @type MarioAnimID
+MARIO_ANIM_DOUBLE_JUMP_FALL                     =  76 --- @type MarioAnimID
+MARIO_ANIM_SINGLE_JUMP                          =  77 --- @type MarioAnimID
+MARIO_ANIM_LAND_FROM_SINGLE_JUMP                =  78 --- @type MarioAnimID
+MARIO_ANIM_AIR_KICK                             =  79 --- @type MarioAnimID
+MARIO_ANIM_DOUBLE_JUMP_RISE                     =  80 --- @type MarioAnimID
+MARIO_ANIM_START_FORWARD_SPINNING               =  81 --- @type MarioAnimID
+MARIO_ANIM_THROW_LIGHT_OBJECT                   =  82 --- @type MarioAnimID
+MARIO_ANIM_FALL_FROM_SLIDE_KICK                 =  83 --- @type MarioAnimID
+MARIO_ANIM_BEND_KNESS_RIDING_SHELL              =  84 --- @type MarioAnimID
+MARIO_ANIM_LEGS_STUCK_IN_GROUND                 =  85 --- @type MarioAnimID
+MARIO_ANIM_GENERAL_FALL                         =  86 --- @type MarioAnimID
+MARIO_ANIM_GENERAL_LAND                         =  87 --- @type MarioAnimID
+MARIO_ANIM_BEING_GRABBED                        =  88 --- @type MarioAnimID
+MARIO_ANIM_GRAB_HEAVY_OBJECT                    =  89 --- @type MarioAnimID
+MARIO_ANIM_SLOW_LAND_FROM_DIVE                  =  90 --- @type MarioAnimID
+MARIO_ANIM_FLY_FROM_CANNON                      =  91 --- @type MarioAnimID
+MARIO_ANIM_MOVE_ON_WIRE_NET_RIGHT               =  92 --- @type MarioAnimID
+MARIO_ANIM_MOVE_ON_WIRE_NET_LEFT                =  93 --- @type MarioAnimID
+MARIO_ANIM_MISSING_CAP                          =  94 --- @type MarioAnimID
+MARIO_ANIM_PULL_DOOR_WALK_IN                    =  95 --- @type MarioAnimID
+MARIO_ANIM_PUSH_DOOR_WALK_IN                    =  96 --- @type MarioAnimID
+MARIO_ANIM_UNLOCK_DOOR                          =  97 --- @type MarioAnimID
+MARIO_ANIM_START_REACH_POCKET                   =  98 --- @type MarioAnimID
+MARIO_ANIM_REACH_POCKET                         =  99 --- @type MarioAnimID
+MARIO_ANIM_STOP_REACH_POCKET                    = 100 --- @type MarioAnimID
+MARIO_ANIM_GROUND_THROW                         = 101 --- @type MarioAnimID
+MARIO_ANIM_GROUND_KICK                          = 102 --- @type MarioAnimID
+MARIO_ANIM_FIRST_PUNCH                          = 103 --- @type MarioAnimID
+MARIO_ANIM_SECOND_PUNCH                         = 104 --- @type MarioAnimID
+MARIO_ANIM_FIRST_PUNCH_FAST                     = 105 --- @type MarioAnimID
+MARIO_ANIM_SECOND_PUNCH_FAST                    = 106 --- @type MarioAnimID
+MARIO_ANIM_PICK_UP_LIGHT_OBJ                    = 107 --- @type MarioAnimID
+MARIO_ANIM_PUSHING                              = 108 --- @type MarioAnimID
+MARIO_ANIM_START_RIDING_SHELL                   = 109 --- @type MarioAnimID
+MARIO_ANIM_PLACE_LIGHT_OBJ                      = 110 --- @type MarioAnimID
+MARIO_ANIM_FORWARD_SPINNING                     = 111 --- @type MarioAnimID
+MARIO_ANIM_BACKWARD_SPINNING                    = 112 --- @type MarioAnimID
+MARIO_ANIM_BREAKDANCE                           = 113 --- @type MarioAnimID
+MARIO_ANIM_RUNNING                              = 114 --- @type MarioAnimID
+MARIO_ANIM_RUNNING_UNUSED                       = 115 --- @type MarioAnimID
+MARIO_ANIM_SOFT_BACK_KB                         = 116 --- @type MarioAnimID
+MARIO_ANIM_SOFT_FRONT_KB                        = 117 --- @type MarioAnimID
+MARIO_ANIM_DYING_IN_QUICKSAND                   = 118 --- @type MarioAnimID
+MARIO_ANIM_IDLE_IN_QUICKSAND                    = 119 --- @type MarioAnimID
+MARIO_ANIM_MOVE_IN_QUICKSAND                    = 120 --- @type MarioAnimID
+MARIO_ANIM_ELECTROCUTION                        = 121 --- @type MarioAnimID
+MARIO_ANIM_SHOCKED                              = 122 --- @type MarioAnimID
+MARIO_ANIM_BACKWARD_KB                          = 123 --- @type MarioAnimID
+MARIO_ANIM_FORWARD_KB                           = 124 --- @type MarioAnimID
+MARIO_ANIM_IDLE_HEAVY_OBJ                       = 125 --- @type MarioAnimID
+MARIO_ANIM_STAND_AGAINST_WALL                   = 126 --- @type MarioAnimID
+MARIO_ANIM_SIDESTEP_LEFT                        = 127 --- @type MarioAnimID
+MARIO_ANIM_SIDESTEP_RIGHT                       = 128 --- @type MarioAnimID
+MARIO_ANIM_START_SLEEP_IDLE                     = 129 --- @type MarioAnimID
+MARIO_ANIM_START_SLEEP_SCRATCH                  = 130 --- @type MarioAnimID
+MARIO_ANIM_START_SLEEP_YAWN                     = 131 --- @type MarioAnimID
+MARIO_ANIM_START_SLEEP_SITTING                  = 132 --- @type MarioAnimID
+MARIO_ANIM_SLEEP_IDLE                           = 133 --- @type MarioAnimID
+MARIO_ANIM_SLEEP_START_LYING                    = 134 --- @type MarioAnimID
+MARIO_ANIM_SLEEP_LYING                          = 135 --- @type MarioAnimID
+MARIO_ANIM_DIVE                                 = 136 --- @type MarioAnimID
+MARIO_ANIM_SLIDE_DIVE                           = 137 --- @type MarioAnimID
+MARIO_ANIM_GROUND_BONK                          = 138 --- @type MarioAnimID
+MARIO_ANIM_STOP_SLIDE_LIGHT_OBJ                 = 139 --- @type MarioAnimID
+MARIO_ANIM_SLIDE_KICK                           = 140 --- @type MarioAnimID
+MARIO_ANIM_CROUCH_FROM_SLIDE_KICK               = 141 --- @type MarioAnimID
+MARIO_ANIM_SLIDE_MOTIONLESS                     = 142 --- @type MarioAnimID
+MARIO_ANIM_STOP_SLIDE                           = 143 --- @type MarioAnimID
+MARIO_ANIM_FALL_FROM_SLIDE                      = 144 --- @type MarioAnimID
+MARIO_ANIM_SLIDE                                = 145 --- @type MarioAnimID
+MARIO_ANIM_TIPTOE                               = 146 --- @type MarioAnimID
+MARIO_ANIM_TWIRL_LAND                           = 147 --- @type MarioAnimID
+MARIO_ANIM_TWIRL                                = 148 --- @type MarioAnimID
+MARIO_ANIM_START_TWIRL                          = 149 --- @type MarioAnimID
+MARIO_ANIM_STOP_CROUCHING                       = 150 --- @type MarioAnimID
+MARIO_ANIM_START_CROUCHING                      = 151 --- @type MarioAnimID
+MARIO_ANIM_CROUCHING                            = 152 --- @type MarioAnimID
+MARIO_ANIM_CRAWLING                             = 153 --- @type MarioAnimID
+MARIO_ANIM_STOP_CRAWLING                        = 154 --- @type MarioAnimID
+MARIO_ANIM_START_CRAWLING                       = 155 --- @type MarioAnimID
+MARIO_ANIM_SUMMON_STAR                          = 156 --- @type MarioAnimID
+MARIO_ANIM_RETURN_STAR_APPROACH_DOOR            = 157 --- @type MarioAnimID
+MARIO_ANIM_BACKWARDS_WATER_KB                   = 158 --- @type MarioAnimID
+MARIO_ANIM_SWIM_WITH_OBJ_PART1                  = 159 --- @type MarioAnimID
+MARIO_ANIM_SWIM_WITH_OBJ_PART2                  = 160 --- @type MarioAnimID
+MARIO_ANIM_FLUTTERKICK_WITH_OBJ                 = 161 --- @type MarioAnimID
+MARIO_ANIM_WATER_ACTION_END_WITH_OBJ            = 162 --- @type MarioAnimID
+MARIO_ANIM_STOP_GRAB_OBJ_WATER                  = 163 --- @type MarioAnimID
+MARIO_ANIM_WATER_IDLE_WITH_OBJ                  = 164 --- @type MarioAnimID
+MARIO_ANIM_DROWNING_PART1                       = 165 --- @type MarioAnimID
+MARIO_ANIM_DROWNING_PART2                       = 166 --- @type MarioAnimID
+MARIO_ANIM_WATER_DYING                          = 167 --- @type MarioAnimID
+MARIO_ANIM_WATER_FORWARD_KB                     = 168 --- @type MarioAnimID
+MARIO_ANIM_FALL_FROM_WATER                      = 169 --- @type MarioAnimID
+MARIO_ANIM_SWIM_PART1                           = 170 --- @type MarioAnimID
+MARIO_ANIM_SWIM_PART2                           = 171 --- @type MarioAnimID
+MARIO_ANIM_FLUTTERKICK                          = 172 --- @type MarioAnimID
+MARIO_ANIM_WATER_ACTION_END                     = 173 --- @type MarioAnimID
+MARIO_ANIM_WATER_PICK_UP_OBJ                    = 174 --- @type MarioAnimID
+MARIO_ANIM_WATER_GRAB_OBJ_PART2                 = 175 --- @type MarioAnimID
+MARIO_ANIM_WATER_GRAB_OBJ_PART1                 = 176 --- @type MarioAnimID
+MARIO_ANIM_WATER_THROW_OBJ                      = 177 --- @type MarioAnimID
+MARIO_ANIM_WATER_IDLE                           = 178 --- @type MarioAnimID
+MARIO_ANIM_WATER_STAR_DANCE                     = 179 --- @type MarioAnimID
+MARIO_ANIM_RETURN_FROM_WATER_STAR_DANCE         = 180 --- @type MarioAnimID
+MARIO_ANIM_GRAB_BOWSER                          = 181 --- @type MarioAnimID
+MARIO_ANIM_SWINGING_BOWSER                      = 182 --- @type MarioAnimID
+MARIO_ANIM_RELEASE_BOWSER                       = 183 --- @type MarioAnimID
+MARIO_ANIM_HOLDING_BOWSER                       = 184 --- @type MarioAnimID
+MARIO_ANIM_HEAVY_THROW                          = 185 --- @type MarioAnimID
+MARIO_ANIM_WALK_PANTING                         = 186 --- @type MarioAnimID
+MARIO_ANIM_WALK_WITH_HEAVY_OBJ                  = 187 --- @type MarioAnimID
+MARIO_ANIM_TURNING_PART1                        = 188 --- @type MarioAnimID
+MARIO_ANIM_TURNING_PART2                        = 189 --- @type MarioAnimID
+MARIO_ANIM_SLIDEFLIP_LAND                       = 190 --- @type MarioAnimID
+MARIO_ANIM_SLIDEFLIP                            = 191 --- @type MarioAnimID
+MARIO_ANIM_TRIPLE_JUMP_LAND                     = 192 --- @type MarioAnimID
+MARIO_ANIM_TRIPLE_JUMP                          = 193 --- @type MarioAnimID
+MARIO_ANIM_FIRST_PERSON                         = 194 --- @type MarioAnimID
+MARIO_ANIM_IDLE_HEAD_LEFT                       = 195 --- @type MarioAnimID
+MARIO_ANIM_IDLE_HEAD_RIGHT                      = 196 --- @type MarioAnimID
+MARIO_ANIM_IDLE_HEAD_CENTER                     = 197 --- @type MarioAnimID
+MARIO_ANIM_HANDSTAND_LEFT                       = 198 --- @type MarioAnimID
+MARIO_ANIM_HANDSTAND_RIGHT                      = 199 --- @type MarioAnimID
+MARIO_ANIM_WAKE_FROM_SLEEP                      = 200 --- @type MarioAnimID
+MARIO_ANIM_WAKE_FROM_LYING                      = 201 --- @type MarioAnimID
+MARIO_ANIM_START_TIPTOE                         = 202 --- @type MarioAnimID
+MARIO_ANIM_SLIDEJUMP                            = 203 --- @type MarioAnimID
+MARIO_ANIM_START_WALLKICK                       = 204 --- @type MarioAnimID
+MARIO_ANIM_STAR_DANCE                           = 205 --- @type MarioAnimID
+MARIO_ANIM_RETURN_FROM_STAR_DANCE               = 206 --- @type MarioAnimID
+MARIO_ANIM_FORWARD_SPINNING_FLIP                = 207 --- @type MarioAnimID
+MARIO_ANIM_TRIPLE_JUMP_FLY                      = 208 --- @type MarioAnimID
+
+--- @alias MarioAnimID
+--- | `MARIO_ANIM_SLOW_LEDGE_GRAB`
+--- | `MARIO_ANIM_FALL_OVER_BACKWARDS`
+--- | `MARIO_ANIM_BACKWARD_AIR_KB`
+--- | `MARIO_ANIM_DYING_ON_BACK`
+--- | `MARIO_ANIM_BACKFLIP`
+--- | `MARIO_ANIM_CLIMB_UP_POLE`
+--- | `MARIO_ANIM_GRAB_POLE_SHORT`
+--- | `MARIO_ANIM_GRAB_POLE_SWING_PART1`
+--- | `MARIO_ANIM_GRAB_POLE_SWING_PART2`
+--- | `MARIO_ANIM_HANDSTAND_IDLE`
+--- | `MARIO_ANIM_HANDSTAND_JUMP`
+--- | `MARIO_ANIM_START_HANDSTAND`
+--- | `MARIO_ANIM_RETURN_FROM_HANDSTAND`
+--- | `MARIO_ANIM_IDLE_ON_POLE`
+--- | `MARIO_ANIM_A_POSE`
+--- | `MARIO_ANIM_SKID_ON_GROUND`
+--- | `MARIO_ANIM_STOP_SKID`
+--- | `MARIO_ANIM_CROUCH_FROM_FAST_LONGJUMP`
+--- | `MARIO_ANIM_CROUCH_FROM_SLOW_LONGJUMP`
+--- | `MARIO_ANIM_FAST_LONGJUMP`
+--- | `MARIO_ANIM_SLOW_LONGJUMP`
+--- | `MARIO_ANIM_AIRBORNE_ON_STOMACH`
+--- | `MARIO_ANIM_WALK_WITH_LIGHT_OBJ`
+--- | `MARIO_ANIM_RUN_WITH_LIGHT_OBJ`
+--- | `MARIO_ANIM_SLOW_WALK_WITH_LIGHT_OBJ`
+--- | `MARIO_ANIM_SHIVERING_WARMING_HAND`
+--- | `MARIO_ANIM_SHIVERING_RETURN_TO_IDLE`
+--- | `MARIO_ANIM_SHIVERING`
+--- | `MARIO_ANIM_CLIMB_DOWN_LEDGE`
+--- | `MARIO_ANIM_CREDITS_WAVING`
+--- | `MARIO_ANIM_CREDITS_LOOK_UP`
+--- | `MARIO_ANIM_CREDITS_RETURN_FROM_LOOK_UP`
+--- | `MARIO_ANIM_CREDITS_RAISE_HAND`
+--- | `MARIO_ANIM_CREDITS_LOWER_HAND`
+--- | `MARIO_ANIM_CREDITS_TAKE_OFF_CAP`
+--- | `MARIO_ANIM_CREDITS_START_WALK_LOOK_UP`
+--- | `MARIO_ANIM_CREDITS_LOOK_BACK_THEN_RUN`
+--- | `MARIO_ANIM_FINAL_BOWSER_RAISE_HAND_SPIN`
+--- | `MARIO_ANIM_FINAL_BOWSER_WING_CAP_TAKE_OFF`
+--- | `MARIO_ANIM_CREDITS_PEACE_SIGN`
+--- | `MARIO_ANIM_STAND_UP_FROM_LAVA_BOOST`
+--- | `MARIO_ANIM_FIRE_LAVA_BURN`
+--- | `MARIO_ANIM_WING_CAP_FLY`
+--- | `MARIO_ANIM_HANG_ON_OWL`
+--- | `MARIO_ANIM_LAND_ON_STOMACH`
+--- | `MARIO_ANIM_AIR_FORWARD_KB`
+--- | `MARIO_ANIM_DYING_ON_STOMACH`
+--- | `MARIO_ANIM_SUFFOCATING`
+--- | `MARIO_ANIM_COUGHING`
+--- | `MARIO_ANIM_THROW_CATCH_KEY`
+--- | `MARIO_ANIM_DYING_FALL_OVER`
+--- | `MARIO_ANIM_IDLE_ON_LEDGE`
+--- | `MARIO_ANIM_FAST_LEDGE_GRAB`
+--- | `MARIO_ANIM_HANG_ON_CEILING`
+--- | `MARIO_ANIM_PUT_CAP_ON`
+--- | `MARIO_ANIM_TAKE_CAP_OFF_THEN_ON`
+--- | `MARIO_ANIM_QUICKLY_PUT_CAP_ON`
+--- | `MARIO_ANIM_HEAD_STUCK_IN_GROUND`
+--- | `MARIO_ANIM_GROUND_POUND_LANDING`
+--- | `MARIO_ANIM_TRIPLE_JUMP_GROUND_POUND`
+--- | `MARIO_ANIM_START_GROUND_POUND`
+--- | `MARIO_ANIM_GROUND_POUND`
+--- | `MARIO_ANIM_BOTTOM_STUCK_IN_GROUND`
+--- | `MARIO_ANIM_IDLE_WITH_LIGHT_OBJ`
+--- | `MARIO_ANIM_JUMP_LAND_WITH_LIGHT_OBJ`
+--- | `MARIO_ANIM_JUMP_WITH_LIGHT_OBJ`
+--- | `MARIO_ANIM_FALL_LAND_WITH_LIGHT_OBJ`
+--- | `MARIO_ANIM_FALL_WITH_LIGHT_OBJ`
+--- | `MARIO_ANIM_FALL_FROM_SLIDING_WITH_LIGHT_OBJ`
+--- | `MARIO_ANIM_SLIDING_ON_BOTTOM_WITH_LIGHT_OBJ`
+--- | `MARIO_ANIM_STAND_UP_FROM_SLIDING_WITH_LIGHT_OBJ`
+--- | `MARIO_ANIM_RIDING_SHELL`
+--- | `MARIO_ANIM_WALKING`
+--- | `MARIO_ANIM_FORWARD_FLIP`
+--- | `MARIO_ANIM_JUMP_RIDING_SHELL`
+--- | `MARIO_ANIM_LAND_FROM_DOUBLE_JUMP`
+--- | `MARIO_ANIM_DOUBLE_JUMP_FALL`
+--- | `MARIO_ANIM_SINGLE_JUMP`
+--- | `MARIO_ANIM_LAND_FROM_SINGLE_JUMP`
+--- | `MARIO_ANIM_AIR_KICK`
+--- | `MARIO_ANIM_DOUBLE_JUMP_RISE`
+--- | `MARIO_ANIM_START_FORWARD_SPINNING`
+--- | `MARIO_ANIM_THROW_LIGHT_OBJECT`
+--- | `MARIO_ANIM_FALL_FROM_SLIDE_KICK`
+--- | `MARIO_ANIM_BEND_KNESS_RIDING_SHELL`
+--- | `MARIO_ANIM_LEGS_STUCK_IN_GROUND`
+--- | `MARIO_ANIM_GENERAL_FALL`
+--- | `MARIO_ANIM_GENERAL_LAND`
+--- | `MARIO_ANIM_BEING_GRABBED`
+--- | `MARIO_ANIM_GRAB_HEAVY_OBJECT`
+--- | `MARIO_ANIM_SLOW_LAND_FROM_DIVE`
+--- | `MARIO_ANIM_FLY_FROM_CANNON`
+--- | `MARIO_ANIM_MOVE_ON_WIRE_NET_RIGHT`
+--- | `MARIO_ANIM_MOVE_ON_WIRE_NET_LEFT`
+--- | `MARIO_ANIM_MISSING_CAP`
+--- | `MARIO_ANIM_PULL_DOOR_WALK_IN`
+--- | `MARIO_ANIM_PUSH_DOOR_WALK_IN`
+--- | `MARIO_ANIM_UNLOCK_DOOR`
+--- | `MARIO_ANIM_START_REACH_POCKET`
+--- | `MARIO_ANIM_REACH_POCKET`
+--- | `MARIO_ANIM_STOP_REACH_POCKET`
+--- | `MARIO_ANIM_GROUND_THROW`
+--- | `MARIO_ANIM_GROUND_KICK`
+--- | `MARIO_ANIM_FIRST_PUNCH`
+--- | `MARIO_ANIM_SECOND_PUNCH`
+--- | `MARIO_ANIM_FIRST_PUNCH_FAST`
+--- | `MARIO_ANIM_SECOND_PUNCH_FAST`
+--- | `MARIO_ANIM_PICK_UP_LIGHT_OBJ`
+--- | `MARIO_ANIM_PUSHING`
+--- | `MARIO_ANIM_START_RIDING_SHELL`
+--- | `MARIO_ANIM_PLACE_LIGHT_OBJ`
+--- | `MARIO_ANIM_FORWARD_SPINNING`
+--- | `MARIO_ANIM_BACKWARD_SPINNING`
+--- | `MARIO_ANIM_BREAKDANCE`
+--- | `MARIO_ANIM_RUNNING`
+--- | `MARIO_ANIM_RUNNING_UNUSED`
+--- | `MARIO_ANIM_SOFT_BACK_KB`
+--- | `MARIO_ANIM_SOFT_FRONT_KB`
+--- | `MARIO_ANIM_DYING_IN_QUICKSAND`
+--- | `MARIO_ANIM_IDLE_IN_QUICKSAND`
+--- | `MARIO_ANIM_MOVE_IN_QUICKSAND`
+--- | `MARIO_ANIM_ELECTROCUTION`
+--- | `MARIO_ANIM_SHOCKED`
+--- | `MARIO_ANIM_BACKWARD_KB`
+--- | `MARIO_ANIM_FORWARD_KB`
+--- | `MARIO_ANIM_IDLE_HEAVY_OBJ`
+--- | `MARIO_ANIM_STAND_AGAINST_WALL`
+--- | `MARIO_ANIM_SIDESTEP_LEFT`
+--- | `MARIO_ANIM_SIDESTEP_RIGHT`
+--- | `MARIO_ANIM_START_SLEEP_IDLE`
+--- | `MARIO_ANIM_START_SLEEP_SCRATCH`
+--- | `MARIO_ANIM_START_SLEEP_YAWN`
+--- | `MARIO_ANIM_START_SLEEP_SITTING`
+--- | `MARIO_ANIM_SLEEP_IDLE`
+--- | `MARIO_ANIM_SLEEP_START_LYING`
+--- | `MARIO_ANIM_SLEEP_LYING`
+--- | `MARIO_ANIM_DIVE`
+--- | `MARIO_ANIM_SLIDE_DIVE`
+--- | `MARIO_ANIM_GROUND_BONK`
+--- | `MARIO_ANIM_STOP_SLIDE_LIGHT_OBJ`
+--- | `MARIO_ANIM_SLIDE_KICK`
+--- | `MARIO_ANIM_CROUCH_FROM_SLIDE_KICK`
+--- | `MARIO_ANIM_SLIDE_MOTIONLESS`
+--- | `MARIO_ANIM_STOP_SLIDE`
+--- | `MARIO_ANIM_FALL_FROM_SLIDE`
+--- | `MARIO_ANIM_SLIDE`
+--- | `MARIO_ANIM_TIPTOE`
+--- | `MARIO_ANIM_TWIRL_LAND`
+--- | `MARIO_ANIM_TWIRL`
+--- | `MARIO_ANIM_START_TWIRL`
+--- | `MARIO_ANIM_STOP_CROUCHING`
+--- | `MARIO_ANIM_START_CROUCHING`
+--- | `MARIO_ANIM_CROUCHING`
+--- | `MARIO_ANIM_CRAWLING`
+--- | `MARIO_ANIM_STOP_CRAWLING`
+--- | `MARIO_ANIM_START_CRAWLING`
+--- | `MARIO_ANIM_SUMMON_STAR`
+--- | `MARIO_ANIM_RETURN_STAR_APPROACH_DOOR`
+--- | `MARIO_ANIM_BACKWARDS_WATER_KB`
+--- | `MARIO_ANIM_SWIM_WITH_OBJ_PART1`
+--- | `MARIO_ANIM_SWIM_WITH_OBJ_PART2`
+--- | `MARIO_ANIM_FLUTTERKICK_WITH_OBJ`
+--- | `MARIO_ANIM_WATER_ACTION_END_WITH_OBJ`
+--- | `MARIO_ANIM_STOP_GRAB_OBJ_WATER`
+--- | `MARIO_ANIM_WATER_IDLE_WITH_OBJ`
+--- | `MARIO_ANIM_DROWNING_PART1`
+--- | `MARIO_ANIM_DROWNING_PART2`
+--- | `MARIO_ANIM_WATER_DYING`
+--- | `MARIO_ANIM_WATER_FORWARD_KB`
+--- | `MARIO_ANIM_FALL_FROM_WATER`
+--- | `MARIO_ANIM_SWIM_PART1`
+--- | `MARIO_ANIM_SWIM_PART2`
+--- | `MARIO_ANIM_FLUTTERKICK`
+--- | `MARIO_ANIM_WATER_ACTION_END`
+--- | `MARIO_ANIM_WATER_PICK_UP_OBJ`
+--- | `MARIO_ANIM_WATER_GRAB_OBJ_PART2`
+--- | `MARIO_ANIM_WATER_GRAB_OBJ_PART1`
+--- | `MARIO_ANIM_WATER_THROW_OBJ`
+--- | `MARIO_ANIM_WATER_IDLE`
+--- | `MARIO_ANIM_WATER_STAR_DANCE`
+--- | `MARIO_ANIM_RETURN_FROM_WATER_STAR_DANCE`
+--- | `MARIO_ANIM_GRAB_BOWSER`
+--- | `MARIO_ANIM_SWINGING_BOWSER`
+--- | `MARIO_ANIM_RELEASE_BOWSER`
+--- | `MARIO_ANIM_HOLDING_BOWSER`
+--- | `MARIO_ANIM_HEAVY_THROW`
+--- | `MARIO_ANIM_WALK_PANTING`
+--- | `MARIO_ANIM_WALK_WITH_HEAVY_OBJ`
+--- | `MARIO_ANIM_TURNING_PART1`
+--- | `MARIO_ANIM_TURNING_PART2`
+--- | `MARIO_ANIM_SLIDEFLIP_LAND`
+--- | `MARIO_ANIM_SLIDEFLIP`
+--- | `MARIO_ANIM_TRIPLE_JUMP_LAND`
+--- | `MARIO_ANIM_TRIPLE_JUMP`
+--- | `MARIO_ANIM_FIRST_PERSON`
+--- | `MARIO_ANIM_IDLE_HEAD_LEFT`
+--- | `MARIO_ANIM_IDLE_HEAD_RIGHT`
+--- | `MARIO_ANIM_IDLE_HEAD_CENTER`
+--- | `MARIO_ANIM_HANDSTAND_LEFT`
+--- | `MARIO_ANIM_HANDSTAND_RIGHT`
+--- | `MARIO_ANIM_WAKE_FROM_SLEEP`
+--- | `MARIO_ANIM_WAKE_FROM_LYING`
+--- | `MARIO_ANIM_START_TIPTOE`
+--- | `MARIO_ANIM_SLIDEJUMP`
+--- | `MARIO_ANIM_START_WALLKICK`
+--- | `MARIO_ANIM_STAR_DANCE`
+--- | `MARIO_ANIM_RETURN_FROM_STAR_DANCE`
+--- | `MARIO_ANIM_FORWARD_SPINNING_FLIP`
+--- | `MARIO_ANIM_TRIPLE_JUMP_FLY`
+
+MARIO_HAS_DEFAULT_CAP_ON  = 0 --- @type MarioCapGSCId
+MARIO_HAS_DEFAULT_CAP_OFF = 1 --- @type MarioCapGSCId
+MARIO_HAS_WING_CAP_ON     = 2 --- @type MarioCapGSCId
+MARIO_HAS_WING_CAP_OFF    = 3 --- @type MarioCapGSCId
+
+--- @alias MarioCapGSCId
+--- | `MARIO_HAS_DEFAULT_CAP_ON`
+--- | `MARIO_HAS_DEFAULT_CAP_OFF`
+--- | `MARIO_HAS_WING_CAP_ON`
+--- | `MARIO_HAS_WING_CAP_OFF`
+
+MARIO_EYES_BLINK       = 0 --- @type MarioEyesGSCId
+MARIO_EYES_OPEN        = 1 --- @type MarioEyesGSCId
+MARIO_EYES_HALF_CLOSED = 2 --- @type MarioEyesGSCId
+MARIO_EYES_CLOSED      = 3 --- @type MarioEyesGSCId
+MARIO_EYES_LOOK_LEFT   = 4 --- @type MarioEyesGSCId
+MARIO_EYES_LOOK_RIGHT  = 5 --- @type MarioEyesGSCId
+MARIO_EYES_LOOK_UP     = 6 --- @type MarioEyesGSCId
+MARIO_EYES_LOOK_DOWN   = 7 --- @type MarioEyesGSCId
+MARIO_EYES_DEAD        = 8 --- @type MarioEyesGSCId
+
+--- @alias MarioEyesGSCId
+--- | `MARIO_EYES_BLINK`
+--- | `MARIO_EYES_OPEN`
+--- | `MARIO_EYES_HALF_CLOSED`
+--- | `MARIO_EYES_CLOSED`
+--- | `MARIO_EYES_LOOK_LEFT`
+--- | `MARIO_EYES_LOOK_RIGHT`
+--- | `MARIO_EYES_LOOK_UP`
+--- | `MARIO_EYES_LOOK_DOWN`
+--- | `MARIO_EYES_DEAD`
+
+GRAB_POS_NULL      = 0 --- @type MarioGrabPosGSCId
+GRAB_POS_LIGHT_OBJ = 1 --- @type MarioGrabPosGSCId
+GRAB_POS_HEAVY_OBJ = 2 --- @type MarioGrabPosGSCId
+GRAB_POS_BOWSER    = 3 --- @type MarioGrabPosGSCId
+
+--- @alias MarioGrabPosGSCId
+--- | `GRAB_POS_NULL`
+--- | `GRAB_POS_LIGHT_OBJ`
+--- | `GRAB_POS_HEAVY_OBJ`
+--- | `GRAB_POS_BOWSER`
+
+MARIO_HAND_FISTS            = 0 --- @type MarioHandGSCId
+MARIO_HAND_OPEN             = 1 --- @type MarioHandGSCId
+MARIO_HAND_PEACE_SIGN       = 2 --- @type MarioHandGSCId
+MARIO_HAND_HOLDING_CAP      = 3 --- @type MarioHandGSCId
+MARIO_HAND_HOLDING_WING_CAP = 4 --- @type MarioHandGSCId
+MARIO_HAND_RIGHT_OPEN       = 5 --- @type MarioHandGSCId
+
+--- @alias MarioHandGSCId
+--- | `MARIO_HAND_FISTS`
+--- | `MARIO_HAND_OPEN`
+--- | `MARIO_HAND_PEACE_SIGN`
+--- | `MARIO_HAND_HOLDING_CAP`
+--- | `MARIO_HAND_HOLDING_WING_CAP`
+--- | `MARIO_HAND_RIGHT_OPEN`
 
 --- @type integer
 MAX_KEYS = 4096
@@ -6671,46 +5342,39 @@ SYNC_DISTANCE_ONLY_DEATH = -1
 --- @type integer
 SYNC_DISTANCE_ONLY_EVENTS = -2
 
---- @class BouncyLevelBounds
+BOUNCY_LEVEL_BOUNDS_OFF    = 0 --- @type BouncyLevelBounds
+BOUNCY_LEVEL_BOUNDS_ON     = 1 --- @type BouncyLevelBounds
+BOUNCY_LEVEL_BOUNDS_ON_CAP = 2 --- @type BouncyLevelBounds
 
---- @type BouncyLevelBounds
-BOUNCY_LEVEL_BOUNDS_OFF = 0
+--- @alias BouncyLevelBounds
+--- | `BOUNCY_LEVEL_BOUNDS_OFF`
+--- | `BOUNCY_LEVEL_BOUNDS_ON`
+--- | `BOUNCY_LEVEL_BOUNDS_ON_CAP`
 
---- @type BouncyLevelBounds
-BOUNCY_LEVEL_BOUNDS_ON = 1
+NS_SOCKET  = 0 --- @type NetworkSystemType
+NS_COOPNET = 1 --- @type NetworkSystemType
+NS_MAX     = 2 --- @type NetworkSystemType
 
---- @type BouncyLevelBounds
-BOUNCY_LEVEL_BOUNDS_ON_CAP = 2
+--- @alias NetworkSystemType
+--- | `NS_SOCKET`
+--- | `NS_COOPNET`
+--- | `NS_MAX`
 
---- @class NetworkSystemType
+PLAYER_INTERACTIONS_NONE  = 0 --- @type PlayerInteractions
+PLAYER_INTERACTIONS_SOLID = 1 --- @type PlayerInteractions
+PLAYER_INTERACTIONS_PVP   = 2 --- @type PlayerInteractions
 
---- @type NetworkSystemType
-NS_SOCKET = 0
+--- @alias PlayerInteractions
+--- | `PLAYER_INTERACTIONS_NONE`
+--- | `PLAYER_INTERACTIONS_SOLID`
+--- | `PLAYER_INTERACTIONS_PVP`
 
---- @type NetworkSystemType
-NS_COOPNET = 1
+PLAYER_PVP_CLASSIC  = 0 --- @type PvpType
+PLAYER_PVP_REVAMPED = 1 --- @type PvpType
 
---- @type NetworkSystemType
-NS_MAX = 2
-
---- @class PlayerInteractions
-
---- @type PlayerInteractions
-PLAYER_INTERACTIONS_NONE = 0
-
---- @type PlayerInteractions
-PLAYER_INTERACTIONS_SOLID = 1
-
---- @type PlayerInteractions
-PLAYER_INTERACTIONS_PVP = 2
-
---- @class PvpType
-
---- @type PvpType
-PLAYER_PVP_CLASSIC = 0
-
---- @type PvpType
-PLAYER_PVP_REVAMPED = 1
+--- @alias PvpType
+--- | `PLAYER_PVP_CLASSIC`
+--- | `PLAYER_PVP_REVAMPED`
 
 --- @type integer
 MAX_DESCRIPTION_STRING = 20
@@ -6736,19 +5400,16 @@ UNKNOWN_NETWORK_INDEX = (-1)
 --- @type integer
 USE_REAL_PALETTE_VAR = 0xFF
 
---- @class NetworkPlayerType
+NPT_UNKNOWN = 0 --- @type NetworkPlayerType
+NPT_LOCAL   = 1 --- @type NetworkPlayerType
+NPT_SERVER  = 2 --- @type NetworkPlayerType
+NPT_CLIENT  = 3 --- @type NetworkPlayerType
 
---- @type NetworkPlayerType
-NPT_UNKNOWN = 0
-
---- @type NetworkPlayerType
-NPT_LOCAL = 1
-
---- @type NetworkPlayerType
-NPT_SERVER = 2
-
---- @type NetworkPlayerType
-NPT_CLIENT = 3
+--- @alias NetworkPlayerType
+--- | `NPT_UNKNOWN`
+--- | `NPT_LOCAL`
+--- | `NPT_SERVER`
+--- | `NPT_CLIENT`
 
 --- @type integer
 OBJ_COL_FLAGS_LANDED = (OBJ_COL_FLAG_GROUNDED | OBJ_COL_FLAG_NO_Y_VEL)
@@ -8643,49 +7304,36 @@ TIME_STOP_MARIO_OPENED_DOOR = (1 << 5)
 --- @type integer
 TIME_STOP_UNKNOWN_0 = (1 << 0)
 
---- @class ObjectList
+OBJ_LIST_PLAYER      =  0 --- @type ObjectList
+OBJ_LIST_EXT         =  1 --- @type ObjectList
+OBJ_LIST_DESTRUCTIVE =  2 --- @type ObjectList
+OBJ_LIST_UNUSED_3    =  3 --- @type ObjectList
+OBJ_LIST_GENACTOR    =  4 --- @type ObjectList
+OBJ_LIST_PUSHABLE    =  5 --- @type ObjectList
+OBJ_LIST_LEVEL       =  6 --- @type ObjectList
+OBJ_LIST_UNUSED_7    =  7 --- @type ObjectList
+OBJ_LIST_DEFAULT     =  8 --- @type ObjectList
+OBJ_LIST_SURFACE     =  9 --- @type ObjectList
+OBJ_LIST_POLELIKE    = 10 --- @type ObjectList
+OBJ_LIST_SPAWNER     = 11 --- @type ObjectList
+OBJ_LIST_UNIMPORTANT = 12 --- @type ObjectList
+NUM_OBJ_LISTS        = 13 --- @type ObjectList
 
---- @type ObjectList
-OBJ_LIST_PLAYER = 0
-
---- @type ObjectList
-OBJ_LIST_EXT = 1
-
---- @type ObjectList
-OBJ_LIST_DESTRUCTIVE = 2
-
---- @type ObjectList
-OBJ_LIST_UNUSED_3 = 3
-
---- @type ObjectList
-OBJ_LIST_GENACTOR = 4
-
---- @type ObjectList
-OBJ_LIST_PUSHABLE = 5
-
---- @type ObjectList
-OBJ_LIST_LEVEL = 6
-
---- @type ObjectList
-OBJ_LIST_UNUSED_7 = 7
-
---- @type ObjectList
-OBJ_LIST_DEFAULT = 8
-
---- @type ObjectList
-OBJ_LIST_SURFACE = 9
-
---- @type ObjectList
-OBJ_LIST_POLELIKE = 10
-
---- @type ObjectList
-OBJ_LIST_SPAWNER = 11
-
---- @type ObjectList
-OBJ_LIST_UNIMPORTANT = 12
-
---- @type ObjectList
-NUM_OBJ_LISTS = 13
+--- @alias ObjectList
+--- | `OBJ_LIST_PLAYER`
+--- | `OBJ_LIST_EXT`
+--- | `OBJ_LIST_DESTRUCTIVE`
+--- | `OBJ_LIST_UNUSED_3`
+--- | `OBJ_LIST_GENACTOR`
+--- | `OBJ_LIST_PUSHABLE`
+--- | `OBJ_LIST_LEVEL`
+--- | `OBJ_LIST_UNUSED_7`
+--- | `OBJ_LIST_DEFAULT`
+--- | `OBJ_LIST_SURFACE`
+--- | `OBJ_LIST_POLELIKE`
+--- | `OBJ_LIST_SPAWNER`
+--- | `OBJ_LIST_UNIMPORTANT`
+--- | `NUM_OBJ_LISTS`
 
 --- @type integer
 A_BUTTON = CONT_A
@@ -8837,37 +7485,28 @@ Z_TRIG = CONT_G
 --- @type integer
 MAX_PRESET_PALETTES = 128
 
---- @class PlayerPart
+PANTS           =   0 --- @type PlayerPart
+SHIRT           =   1 --- @type PlayerPart
+GLOVES          =   2 --- @type PlayerPart
+SHOES           =   3 --- @type PlayerPart
+HAIR            =   4 --- @type PlayerPart
+SKIN            =   5 --- @type PlayerPart
+CAP             =   6 --- @type PlayerPart
+EMBLEM          =   7 --- @type PlayerPart
+PLAYER_PART_MAX =   8 --- @type PlayerPart
+METAL           = CAP --- @type PlayerPart
 
---- @type PlayerPart
-PANTS = 0
-
---- @type PlayerPart
-SHIRT = 1
-
---- @type PlayerPart
-GLOVES = 2
-
---- @type PlayerPart
-SHOES = 3
-
---- @type PlayerPart
-HAIR = 4
-
---- @type PlayerPart
-SKIN = 5
-
---- @type PlayerPart
-CAP = 6
-
---- @type PlayerPart
-EMBLEM = 7
-
---- @type PlayerPart
-PLAYER_PART_MAX = 8
-
---- @type PlayerPart
-METAL = CAP
+--- @alias PlayerPart
+--- | `PANTS`
+--- | `SHIRT`
+--- | `GLOVES`
+--- | `SHOES`
+--- | `HAIR`
+--- | `SKIN`
+--- | `CAP`
+--- | `EMBLEM`
+--- | `PLAYER_PART_MAX`
+--- | `METAL`
 
 --- @type integer
 EEPROM_SIZE = 0x200
@@ -8953,33 +7592,27 @@ SAVE_FLAG_UNLOCKED_UPSTAIRS_DOOR = (1 << 7)
 --- @type integer
 SAVE_FLAG_UNLOCKED_WF_DOOR = (1 << 11)
 
---- @class EuLanguages
+LANGUAGE_ENGLISH = 0 --- @type EuLanguages
+LANGUAGE_FRENCH  = 1 --- @type EuLanguages
+LANGUAGE_GERMAN  = 2 --- @type EuLanguages
+LANGUAGE_MAX     = 3 --- @type EuLanguages
 
---- @type EuLanguages
-LANGUAGE_ENGLISH = 0
+--- @alias EuLanguages
+--- | `LANGUAGE_ENGLISH`
+--- | `LANGUAGE_FRENCH`
+--- | `LANGUAGE_GERMAN`
+--- | `LANGUAGE_MAX`
 
---- @type EuLanguages
-LANGUAGE_FRENCH = 1
+SAVE_FILE_A = 0 --- @type SaveFileIndex
+SAVE_FILE_B = 1 --- @type SaveFileIndex
+SAVE_FILE_C = 2 --- @type SaveFileIndex
+SAVE_FILE_D = 3 --- @type SaveFileIndex
 
---- @type EuLanguages
-LANGUAGE_GERMAN = 2
-
---- @type EuLanguages
-LANGUAGE_MAX = 3
-
---- @class SaveFileIndex
-
---- @type SaveFileIndex
-SAVE_FILE_A = 0
-
---- @type SaveFileIndex
-SAVE_FILE_B = 1
-
---- @type SaveFileIndex
-SAVE_FILE_C = 2
-
---- @type SaveFileIndex
-SAVE_FILE_D = 3
+--- @alias SaveFileIndex
+--- | `SAVE_FILE_A`
+--- | `SAVE_FILE_B`
+--- | `SAVE_FILE_C`
+--- | `SAVE_FILE_D`
 
 --- @type integer
 SEQ_BASE_ID = 0x7f
@@ -8987,115 +7620,80 @@ SEQ_BASE_ID = 0x7f
 --- @type integer
 SEQ_VARIATION = 0x80
 
---- @class SeqId
+SEQ_SOUND_PLAYER                =  0 --- @type SeqId
+SEQ_EVENT_CUTSCENE_COLLECT_STAR =  1 --- @type SeqId
+SEQ_MENU_TITLE_SCREEN           =  2 --- @type SeqId
+SEQ_LEVEL_GRASS                 =  3 --- @type SeqId
+SEQ_LEVEL_INSIDE_CASTLE         =  4 --- @type SeqId
+SEQ_LEVEL_WATER                 =  5 --- @type SeqId
+SEQ_LEVEL_HOT                   =  6 --- @type SeqId
+SEQ_LEVEL_BOSS_KOOPA            =  7 --- @type SeqId
+SEQ_LEVEL_SNOW                  =  8 --- @type SeqId
+SEQ_LEVEL_SLIDE                 =  9 --- @type SeqId
+SEQ_LEVEL_SPOOKY                = 10 --- @type SeqId
+SEQ_EVENT_PIRANHA_PLANT         = 11 --- @type SeqId
+SEQ_LEVEL_UNDERGROUND           = 12 --- @type SeqId
+SEQ_MENU_STAR_SELECT            = 13 --- @type SeqId
+SEQ_EVENT_POWERUP               = 14 --- @type SeqId
+SEQ_EVENT_METAL_CAP             = 15 --- @type SeqId
+SEQ_EVENT_KOOPA_MESSAGE         = 16 --- @type SeqId
+SEQ_LEVEL_KOOPA_ROAD            = 17 --- @type SeqId
+SEQ_EVENT_HIGH_SCORE            = 18 --- @type SeqId
+SEQ_EVENT_MERRY_GO_ROUND        = 19 --- @type SeqId
+SEQ_EVENT_RACE                  = 20 --- @type SeqId
+SEQ_EVENT_CUTSCENE_STAR_SPAWN   = 21 --- @type SeqId
+SEQ_EVENT_BOSS                  = 22 --- @type SeqId
+SEQ_EVENT_CUTSCENE_COLLECT_KEY  = 23 --- @type SeqId
+SEQ_EVENT_ENDLESS_STAIRS        = 24 --- @type SeqId
+SEQ_LEVEL_BOSS_KOOPA_FINAL      = 25 --- @type SeqId
+SEQ_EVENT_CUTSCENE_CREDITS      = 26 --- @type SeqId
+SEQ_EVENT_SOLVE_PUZZLE          = 27 --- @type SeqId
+SEQ_EVENT_TOAD_MESSAGE          = 28 --- @type SeqId
+SEQ_EVENT_PEACH_MESSAGE         = 29 --- @type SeqId
+SEQ_EVENT_CUTSCENE_INTRO        = 30 --- @type SeqId
+SEQ_EVENT_CUTSCENE_VICTORY      = 31 --- @type SeqId
+SEQ_EVENT_CUTSCENE_ENDING       = 32 --- @type SeqId
+SEQ_MENU_FILE_SELECT            = 33 --- @type SeqId
+SEQ_EVENT_CUTSCENE_LAKITU       = 34 --- @type SeqId
+SEQ_COUNT                       = 35 --- @type SeqId
 
---- @type SeqId
-SEQ_SOUND_PLAYER = 0
-
---- @type SeqId
-SEQ_EVENT_CUTSCENE_COLLECT_STAR = 1
-
---- @type SeqId
-SEQ_MENU_TITLE_SCREEN = 2
-
---- @type SeqId
-SEQ_LEVEL_GRASS = 3
-
---- @type SeqId
-SEQ_LEVEL_INSIDE_CASTLE = 4
-
---- @type SeqId
-SEQ_LEVEL_WATER = 5
-
---- @type SeqId
-SEQ_LEVEL_HOT = 6
-
---- @type SeqId
-SEQ_LEVEL_BOSS_KOOPA = 7
-
---- @type SeqId
-SEQ_LEVEL_SNOW = 8
-
---- @type SeqId
-SEQ_LEVEL_SLIDE = 9
-
---- @type SeqId
-SEQ_LEVEL_SPOOKY = 10
-
---- @type SeqId
-SEQ_EVENT_PIRANHA_PLANT = 11
-
---- @type SeqId
-SEQ_LEVEL_UNDERGROUND = 12
-
---- @type SeqId
-SEQ_MENU_STAR_SELECT = 13
-
---- @type SeqId
-SEQ_EVENT_POWERUP = 14
-
---- @type SeqId
-SEQ_EVENT_METAL_CAP = 15
-
---- @type SeqId
-SEQ_EVENT_KOOPA_MESSAGE = 16
-
---- @type SeqId
-SEQ_LEVEL_KOOPA_ROAD = 17
-
---- @type SeqId
-SEQ_EVENT_HIGH_SCORE = 18
-
---- @type SeqId
-SEQ_EVENT_MERRY_GO_ROUND = 19
-
---- @type SeqId
-SEQ_EVENT_RACE = 20
-
---- @type SeqId
-SEQ_EVENT_CUTSCENE_STAR_SPAWN = 21
-
---- @type SeqId
-SEQ_EVENT_BOSS = 22
-
---- @type SeqId
-SEQ_EVENT_CUTSCENE_COLLECT_KEY = 23
-
---- @type SeqId
-SEQ_EVENT_ENDLESS_STAIRS = 24
-
---- @type SeqId
-SEQ_LEVEL_BOSS_KOOPA_FINAL = 25
-
---- @type SeqId
-SEQ_EVENT_CUTSCENE_CREDITS = 26
-
---- @type SeqId
-SEQ_EVENT_SOLVE_PUZZLE = 27
-
---- @type SeqId
-SEQ_EVENT_TOAD_MESSAGE = 28
-
---- @type SeqId
-SEQ_EVENT_PEACH_MESSAGE = 29
-
---- @type SeqId
-SEQ_EVENT_CUTSCENE_INTRO = 30
-
---- @type SeqId
-SEQ_EVENT_CUTSCENE_VICTORY = 31
-
---- @type SeqId
-SEQ_EVENT_CUTSCENE_ENDING = 32
-
---- @type SeqId
-SEQ_MENU_FILE_SELECT = 33
-
---- @type SeqId
-SEQ_EVENT_CUTSCENE_LAKITU = 34
-
---- @type SeqId
-SEQ_COUNT = 35
+--- @alias SeqId
+--- | `SEQ_SOUND_PLAYER`
+--- | `SEQ_EVENT_CUTSCENE_COLLECT_STAR`
+--- | `SEQ_MENU_TITLE_SCREEN`
+--- | `SEQ_LEVEL_GRASS`
+--- | `SEQ_LEVEL_INSIDE_CASTLE`
+--- | `SEQ_LEVEL_WATER`
+--- | `SEQ_LEVEL_HOT`
+--- | `SEQ_LEVEL_BOSS_KOOPA`
+--- | `SEQ_LEVEL_SNOW`
+--- | `SEQ_LEVEL_SLIDE`
+--- | `SEQ_LEVEL_SPOOKY`
+--- | `SEQ_EVENT_PIRANHA_PLANT`
+--- | `SEQ_LEVEL_UNDERGROUND`
+--- | `SEQ_MENU_STAR_SELECT`
+--- | `SEQ_EVENT_POWERUP`
+--- | `SEQ_EVENT_METAL_CAP`
+--- | `SEQ_EVENT_KOOPA_MESSAGE`
+--- | `SEQ_LEVEL_KOOPA_ROAD`
+--- | `SEQ_EVENT_HIGH_SCORE`
+--- | `SEQ_EVENT_MERRY_GO_ROUND`
+--- | `SEQ_EVENT_RACE`
+--- | `SEQ_EVENT_CUTSCENE_STAR_SPAWN`
+--- | `SEQ_EVENT_BOSS`
+--- | `SEQ_EVENT_CUTSCENE_COLLECT_KEY`
+--- | `SEQ_EVENT_ENDLESS_STAIRS`
+--- | `SEQ_LEVEL_BOSS_KOOPA_FINAL`
+--- | `SEQ_EVENT_CUTSCENE_CREDITS`
+--- | `SEQ_EVENT_SOLVE_PUZZLE`
+--- | `SEQ_EVENT_TOAD_MESSAGE`
+--- | `SEQ_EVENT_PEACH_MESSAGE`
+--- | `SEQ_EVENT_CUTSCENE_INTRO`
+--- | `SEQ_EVENT_CUTSCENE_VICTORY`
+--- | `SEQ_EVENT_CUTSCENE_ENDING`
+--- | `SEQ_MENU_FILE_SELECT`
+--- | `SEQ_EVENT_CUTSCENE_LAKITU`
+--- | `SEQ_COUNT`
 
 --- @type integer
 ACT_AIR_HIT_WALL = 0x000008A7
@@ -10186,1409 +8784,951 @@ WATER_STEP_HIT_WALL = 4
 --- @type integer
 WATER_STEP_NONE = 0
 
---- @class LuaActionHookType
-
---- @type LuaActionHookType
-ACTION_HOOK_EVERY_FRAME = 0
-
---- @type LuaActionHookType
-ACTION_HOOK_GRAVITY = 1
-
---- @type LuaActionHookType
-ACTION_HOOK_MAX = 2
-
---- @class LuaHookedEventType
-
---- @type LuaHookedEventType
-HOOK_UPDATE = 0
-
---- @type LuaHookedEventType
-HOOK_MARIO_UPDATE = 1
-
---- @type LuaHookedEventType
-HOOK_BEFORE_MARIO_UPDATE = 2
-
---- @type LuaHookedEventType
-HOOK_ON_SET_MARIO_ACTION = 3
-
---- @type LuaHookedEventType
-HOOK_BEFORE_PHYS_STEP = 4
-
---- @type LuaHookedEventType
-HOOK_ALLOW_PVP_ATTACK = 5
-
---- @type LuaHookedEventType
-HOOK_ON_PVP_ATTACK = 6
-
---- @type LuaHookedEventType
-HOOK_ON_PLAYER_CONNECTED = 7
-
---- @type LuaHookedEventType
-HOOK_ON_PLAYER_DISCONNECTED = 8
-
---- @type LuaHookedEventType
-HOOK_ON_HUD_RENDER = 9
-
---- @type LuaHookedEventType
-HOOK_ALLOW_INTERACT = 10
-
---- @type LuaHookedEventType
-HOOK_ON_INTERACT = 11
-
---- @type LuaHookedEventType
-HOOK_ON_LEVEL_INIT = 12
-
---- @type LuaHookedEventType
-HOOK_ON_WARP = 13
-
---- @type LuaHookedEventType
-HOOK_ON_SYNC_VALID = 14
-
---- @type LuaHookedEventType
-HOOK_ON_OBJECT_UNLOAD = 15
-
---- @type LuaHookedEventType
-HOOK_ON_SYNC_OBJECT_UNLOAD = 16
-
---- @type LuaHookedEventType
-HOOK_ON_PAUSE_EXIT = 17
-
---- @type LuaHookedEventType
-HOOK_GET_STAR_COLLECTION_DIALOG = 18
-
---- @type LuaHookedEventType
-HOOK_ON_SET_CAMERA_MODE = 19
-
---- @type LuaHookedEventType
-HOOK_ON_OBJECT_RENDER = 20
-
---- @type LuaHookedEventType
-HOOK_ON_DEATH = 21
-
---- @type LuaHookedEventType
-HOOK_ON_PACKET_RECEIVE = 22
-
---- @type LuaHookedEventType
-HOOK_USE_ACT_SELECT = 23
-
---- @type LuaHookedEventType
-HOOK_ON_CHANGE_CAMERA_ANGLE = 24
-
---- @type LuaHookedEventType
-HOOK_ON_SCREEN_TRANSITION = 25
-
---- @type LuaHookedEventType
-HOOK_ALLOW_HAZARD_SURFACE = 26
-
---- @type LuaHookedEventType
-HOOK_ON_CHAT_MESSAGE = 27
-
---- @type LuaHookedEventType
-HOOK_OBJECT_SET_MODEL = 28
-
---- @type LuaHookedEventType
-HOOK_CHARACTER_SOUND = 29
-
---- @type LuaHookedEventType
-HOOK_BEFORE_SET_MARIO_ACTION = 30
-
---- @type LuaHookedEventType
-HOOK_JOINED_GAME = 31
-
---- @type LuaHookedEventType
-HOOK_ON_OBJECT_ANIM_UPDATE = 32
-
---- @type LuaHookedEventType
-HOOK_ON_DIALOG = 33
-
---- @type LuaHookedEventType
-HOOK_ON_EXIT = 34
-
---- @type LuaHookedEventType
-HOOK_DIALOG_SOUND = 35
-
---- @type LuaHookedEventType
-HOOK_ON_HUD_RENDER_BEHIND = 36
-
---- @type LuaHookedEventType
-HOOK_ON_COLLIDE_LEVEL_BOUNDS = 37
-
---- @type LuaHookedEventType
-HOOK_MIRROR_MARIO_RENDER = 38
-
---- @type LuaHookedEventType
-HOOK_MARIO_OVERRIDE_PHYS_STEP_DEFACTO_SPEED = 39
-
---- @type LuaHookedEventType
-HOOK_ON_OBJECT_LOAD = 40
-
---- @type LuaHookedEventType
-HOOK_ON_PLAY_SOUND = 41
-
---- @type LuaHookedEventType
-HOOK_ON_SEQ_LOAD = 42
-
---- @type LuaHookedEventType
-HOOK_ON_ATTACK_OBJECT = 43
-
---- @type LuaHookedEventType
-HOOK_ON_LANGUAGE_CHANGED = 44
-
---- @type LuaHookedEventType
-HOOK_ON_MODS_LOADED = 45
-
---- @type LuaHookedEventType
-HOOK_ON_NAMETAGS_RENDER = 46
-
---- @type LuaHookedEventType
-HOOK_ON_DJUI_THEME_CHANGED = 47
-
---- @type LuaHookedEventType
-HOOK_ON_GEO_PROCESS = 48
-
---- @type LuaHookedEventType
-HOOK_BEFORE_GEO_PROCESS = 49
-
---- @type LuaHookedEventType
-HOOK_ON_GEO_PROCESS_CHILDREN = 50
-
---- @type LuaHookedEventType
-HOOK_MARIO_OVERRIDE_GEOMETRY_INPUTS = 51
-
---- @type LuaHookedEventType
-HOOK_ON_INTERACTIONS = 52
-
---- @type LuaHookedEventType
-HOOK_MAX = 53
-
---- @class LuaModMenuElementType
-
---- @type LuaModMenuElementType
-MOD_MENU_ELEMENT_TEXT = 0
-
---- @type LuaModMenuElementType
-MOD_MENU_ELEMENT_BUTTON = 1
-
---- @type LuaModMenuElementType
-MOD_MENU_ELEMENT_CHECKBOX = 2
-
---- @type LuaModMenuElementType
-MOD_MENU_ELEMENT_SLIDER = 3
-
---- @type LuaModMenuElementType
-MOD_MENU_ELEMENT_INPUTBOX = 4
-
---- @type LuaModMenuElementType
-MOD_MENU_ELEMENT_MAX = 5
-
---- @class HudDisplayFlags
-
---- @type HudDisplayFlags
-HUD_DISPLAY_FLAGS_NONE = 0x0000
-
---- @type HudDisplayFlags
-HUD_DISPLAY_FLAGS_LIVES = 0x0001
-
---- @type HudDisplayFlags
-HUD_DISPLAY_FLAGS_COIN_COUNT = 0x0002
-
---- @type HudDisplayFlags
-HUD_DISPLAY_FLAGS_STAR_COUNT = 0x0004
-
---- @type HudDisplayFlags
-HUD_DISPLAY_FLAGS_CAMERA_AND_POWER = 0x0008
-
---- @type HudDisplayFlags
-HUD_DISPLAY_FLAGS_KEYS = 0x0010
-
---- @type HudDisplayFlags
-HUD_DISPLAY_FLAGS_UNKNOWN_0020 = 0x0020
-
---- @type HudDisplayFlags
-HUD_DISPLAY_FLAGS_TIMER = 0x0040
-
---- @type HudDisplayFlags
-HUD_DISPLAY_FLAGS_CAMERA = 0x0080
-
---- @type HudDisplayFlags
-HUD_DISPLAY_FLAGS_POWER = 0x0100
-
---- @type HudDisplayFlags
-HUD_DISPLAY_FLAGS_EMPHASIZE_POWER = 0x8000
-
---- @class HudDisplayValue
-
---- @type HudDisplayValue
-HUD_DISPLAY_LIVES = 0
-
---- @type HudDisplayValue
-HUD_DISPLAY_COINS = 1
-
---- @type HudDisplayValue
-HUD_DISPLAY_STARS = 2
-
---- @type HudDisplayValue
-HUD_DISPLAY_WEDGES = 3
-
---- @type HudDisplayValue
-HUD_DISPLAY_KEYS = 4
-
---- @type HudDisplayValue
-HUD_DISPLAY_FLAGS = 5
-
---- @type HudDisplayValue
-HUD_DISPLAY_TIMER = 6
-
---- @type HudDisplayValue
-HUD_DISPLAY_CAMERA_STATUS = 7
-
---- @class ModelExtendedId
-
---- @type ModelExtendedId
-E_MODEL_NONE = 0
-
---- @type ModelExtendedId
-E_MODEL_MARIO = 1
-
---- @type ModelExtendedId
-E_MODEL_SMOKE = 2
-
---- @type ModelExtendedId
-E_MODEL_SPARKLES = 3
-
---- @type ModelExtendedId
-E_MODEL_BUBBLE = 4
-
---- @type ModelExtendedId
-E_MODEL_SMALL_WATER_SPLASH = 5
-
---- @type ModelExtendedId
-E_MODEL_IDLE_WATER_WAVE = 6
-
---- @type ModelExtendedId
-E_MODEL_WATER_SPLASH = 7
-
---- @type ModelExtendedId
-E_MODEL_WAVE_TRAIL = 8
-
---- @type ModelExtendedId
-E_MODEL_YELLOW_COIN = 9
-
---- @type ModelExtendedId
-E_MODEL_STAR = 10
-
---- @type ModelExtendedId
-E_MODEL_TRANSPARENT_STAR = 11
-
---- @type ModelExtendedId
-E_MODEL_WOODEN_SIGNPOST = 12
-
---- @type ModelExtendedId
-E_MODEL_WHITE_PARTICLE_SMALL = 13
-
---- @type ModelExtendedId
-E_MODEL_RED_FLAME = 14
-
---- @type ModelExtendedId
-E_MODEL_BLUE_FLAME = 15
-
---- @type ModelExtendedId
-E_MODEL_BURN_SMOKE = 16
-
---- @type ModelExtendedId
-E_MODEL_LEAVES = 17
-
---- @type ModelExtendedId
-E_MODEL_PURPLE_MARBLE = 18
-
---- @type ModelExtendedId
-E_MODEL_TRAMPOLINE = 19
-
---- @type ModelExtendedId
-E_MODEL_TRAMPOLINE_CENTER = 20
-
---- @type ModelExtendedId
-E_MODEL_TRAMPOLINE_BASE = 21
-
---- @type ModelExtendedId
-E_MODEL_FISH = 22
-
---- @type ModelExtendedId
-E_MODEL_FISH_SHADOW = 23
-
---- @type ModelExtendedId
-E_MODEL_SPARKLES_ANIMATION = 24
-
---- @type ModelExtendedId
-E_MODEL_SAND_DUST = 25
-
---- @type ModelExtendedId
-E_MODEL_BUTTERFLY = 26
-
---- @type ModelExtendedId
-E_MODEL_BURN_SMOKE_UNUSED = 27
-
---- @type ModelExtendedId
-E_MODEL_PEBBLE = 28
-
---- @type ModelExtendedId
-E_MODEL_MIST = 29
-
---- @type ModelExtendedId
-E_MODEL_WHITE_PUFF = 30
-
---- @type ModelExtendedId
-E_MODEL_WHITE_PARTICLE_DL = 31
-
---- @type ModelExtendedId
-E_MODEL_WHITE_PARTICLE = 32
-
---- @type ModelExtendedId
-E_MODEL_YELLOW_COIN_NO_SHADOW = 33
-
---- @type ModelExtendedId
-E_MODEL_BLUE_COIN = 34
-
---- @type ModelExtendedId
-E_MODEL_BLUE_COIN_NO_SHADOW = 35
-
---- @type ModelExtendedId
-E_MODEL_MARIOS_WINGED_METAL_CAP = 36
-
---- @type ModelExtendedId
-E_MODEL_MARIOS_METAL_CAP = 37
-
---- @type ModelExtendedId
-E_MODEL_MARIOS_WING_CAP = 38
-
---- @type ModelExtendedId
-E_MODEL_MARIOS_CAP = 39
-
---- @type ModelExtendedId
-E_MODEL_BOWSER_KEY_CUTSCENE = 40
-
---- @type ModelExtendedId
-E_MODEL_BOWSER_KEY = 41
-
---- @type ModelExtendedId
-E_MODEL_RED_FLAME_SHADOW = 42
-
---- @type ModelExtendedId
-E_MODEL_1UP = 43
-
---- @type ModelExtendedId
-E_MODEL_RED_COIN = 44
-
---- @type ModelExtendedId
-E_MODEL_RED_COIN_NO_SHADOW = 45
-
---- @type ModelExtendedId
-E_MODEL_NUMBER = 46
-
---- @type ModelExtendedId
-E_MODEL_EXPLOSION = 47
-
---- @type ModelExtendedId
-E_MODEL_DIRT_ANIMATION = 48
-
---- @type ModelExtendedId
-E_MODEL_CARTOON_STAR = 49
-
---- @type ModelExtendedId
-E_MODEL_BLUE_COIN_SWITCH = 50
-
---- @type ModelExtendedId
-E_MODEL_AMP = 51
-
---- @type ModelExtendedId
-E_MODEL_PURPLE_SWITCH = 52
-
---- @type ModelExtendedId
-E_MODEL_CHECKERBOARD_PLATFORM = 53
-
---- @type ModelExtendedId
-E_MODEL_BREAKABLE_BOX = 54
-
---- @type ModelExtendedId
-E_MODEL_BREAKABLE_BOX_SMALL = 55
-
---- @type ModelExtendedId
-E_MODEL_EXCLAMATION_BOX_OUTLINE = 56
-
---- @type ModelExtendedId
-E_MODEL_EXCLAMATION_BOX = 57
-
---- @type ModelExtendedId
-E_MODEL_GOOMBA = 58
-
---- @type ModelExtendedId
-E_MODEL_EXCLAMATION_POINT = 59
-
---- @type ModelExtendedId
-E_MODEL_KOOPA_SHELL = 60
-
---- @type ModelExtendedId
-E_MODEL_METAL_BOX = 61
-
---- @type ModelExtendedId
-E_MODEL_METAL_BOX_DL = 62
-
---- @type ModelExtendedId
-E_MODEL_BLACK_BOBOMB = 63
-
---- @type ModelExtendedId
-E_MODEL_BOBOMB_BUDDY = 64
-
---- @type ModelExtendedId
-E_MODEL_DL_CANNON_LID = 65
-
---- @type ModelExtendedId
-E_MODEL_BOWLING_BALL = 66
-
---- @type ModelExtendedId
-E_MODEL_CANNON_BARREL = 67
-
---- @type ModelExtendedId
-E_MODEL_CANNON_BASE = 68
-
---- @type ModelExtendedId
-E_MODEL_HEART = 69
-
---- @type ModelExtendedId
-E_MODEL_FLYGUY = 70
-
---- @type ModelExtendedId
-E_MODEL_CHUCKYA = 71
-
---- @type ModelExtendedId
-E_MODEL_TRAJECTORY_MARKER_BALL = 72
-
---- @type ModelExtendedId
-E_MODEL_BULLET_BILL = 73
-
---- @type ModelExtendedId
-E_MODEL_YELLOW_SPHERE = 74
-
---- @type ModelExtendedId
-E_MODEL_HOOT = 75
-
---- @type ModelExtendedId
-E_MODEL_YOSHI_EGG = 76
-
---- @type ModelExtendedId
-E_MODEL_THWOMP = 77
-
---- @type ModelExtendedId
-E_MODEL_HEAVE_HO = 78
-
---- @type ModelExtendedId
-E_MODEL_BLARGG = 79
-
---- @type ModelExtendedId
-E_MODEL_BULLY = 80
-
---- @type ModelExtendedId
-E_MODEL_BULLY_BOSS = 81
-
---- @type ModelExtendedId
-E_MODEL_WATER_BOMB = 82
-
---- @type ModelExtendedId
-E_MODEL_WATER_BOMB_SHADOW = 83
-
---- @type ModelExtendedId
-E_MODEL_KING_BOBOMB = 84
-
---- @type ModelExtendedId
-E_MODEL_MANTA_RAY = 85
-
---- @type ModelExtendedId
-E_MODEL_UNAGI = 86
-
---- @type ModelExtendedId
-E_MODEL_SUSHI = 87
-
---- @type ModelExtendedId
-E_MODEL_DL_WHIRLPOOL = 88
-
---- @type ModelExtendedId
-E_MODEL_CLAM_SHELL = 89
-
---- @type ModelExtendedId
-E_MODEL_POKEY_HEAD = 90
-
---- @type ModelExtendedId
-E_MODEL_POKEY_BODY_PART = 91
-
---- @type ModelExtendedId
-E_MODEL_TWEESTER = 92
-
---- @type ModelExtendedId
-E_MODEL_KLEPTO = 93
-
---- @type ModelExtendedId
-E_MODEL_EYEROK_LEFT_HAND = 94
-
---- @type ModelExtendedId
-E_MODEL_EYEROK_RIGHT_HAND = 95
-
---- @type ModelExtendedId
-E_MODEL_DL_MONTY_MOLE_HOLE = 96
-
---- @type ModelExtendedId
-E_MODEL_MONTY_MOLE = 97
-
---- @type ModelExtendedId
-E_MODEL_UKIKI = 98
-
---- @type ModelExtendedId
-E_MODEL_FWOOSH = 99
-
---- @type ModelExtendedId
-E_MODEL_SPINDRIFT = 100
-
---- @type ModelExtendedId
-E_MODEL_MR_BLIZZARD_HIDDEN = 101
-
---- @type ModelExtendedId
-E_MODEL_MR_BLIZZARD = 102
-
---- @type ModelExtendedId
-E_MODEL_PENGUIN = 103
-
---- @type ModelExtendedId
-E_MODEL_CAP_SWITCH_EXCLAMATION = 104
-
---- @type ModelExtendedId
-E_MODEL_CAP_SWITCH = 105
-
---- @type ModelExtendedId
-E_MODEL_CAP_SWITCH_BASE = 106
-
---- @type ModelExtendedId
-E_MODEL_BOO = 107
-
---- @type ModelExtendedId
-E_MODEL_BETA_BOO_KEY = 108
-
---- @type ModelExtendedId
-E_MODEL_HAUNTED_CHAIR = 109
-
---- @type ModelExtendedId
-E_MODEL_MAD_PIANO = 110
-
---- @type ModelExtendedId
-E_MODEL_BOOKEND_PART = 111
-
---- @type ModelExtendedId
-E_MODEL_BOOKEND = 112
-
---- @type ModelExtendedId
-E_MODEL_HAUNTED_CAGE = 113
-
---- @type ModelExtendedId
-E_MODEL_BIRDS = 114
-
---- @type ModelExtendedId
-E_MODEL_PEACH = 115
-
---- @type ModelExtendedId
-E_MODEL_YOSHI = 116
-
---- @type ModelExtendedId
-E_MODEL_ENEMY_LAKITU = 117
-
---- @type ModelExtendedId
-E_MODEL_SPINY_BALL = 118
-
---- @type ModelExtendedId
-E_MODEL_SPINY = 119
-
---- @type ModelExtendedId
-E_MODEL_WIGGLER_HEAD = 120
-
---- @type ModelExtendedId
-E_MODEL_WIGGLER_BODY = 121
-
---- @type ModelExtendedId
-E_MODEL_BUBBA = 122
-
---- @type ModelExtendedId
-E_MODEL_BOWSER = 123
-
---- @type ModelExtendedId
-E_MODEL_BOWSER_BOMB_CHILD_OBJ = 124
-
---- @type ModelExtendedId
-E_MODEL_BOWSER_BOMB = 125
-
---- @type ModelExtendedId
-E_MODEL_BOWSER_SMOKE = 126
-
---- @type ModelExtendedId
-E_MODEL_BOWSER_FLAMES = 127
-
---- @type ModelExtendedId
-E_MODEL_BOWSER_WAVE = 128
-
---- @type ModelExtendedId
-E_MODEL_BOWSER2 = 129
-
---- @type ModelExtendedId
-E_MODEL_BUB = 130
-
---- @type ModelExtendedId
-E_MODEL_TREASURE_CHEST_BASE = 131
-
---- @type ModelExtendedId
-E_MODEL_TREASURE_CHEST_LID = 132
-
---- @type ModelExtendedId
-E_MODEL_CYAN_FISH = 133
-
---- @type ModelExtendedId
-E_MODEL_WATER_RING = 134
-
---- @type ModelExtendedId
-E_MODEL_WATER_MINE = 135
-
---- @type ModelExtendedId
-E_MODEL_SEAWEED = 136
-
---- @type ModelExtendedId
-E_MODEL_SKEETER = 137
-
---- @type ModelExtendedId
-E_MODEL_PIRANHA_PLANT = 138
-
---- @type ModelExtendedId
-E_MODEL_WHOMP = 139
-
---- @type ModelExtendedId
-E_MODEL_KOOPA_WITH_SHELL = 140
-
---- @type ModelExtendedId
-E_MODEL_KOOPA_WITHOUT_SHELL = 141
-
---- @type ModelExtendedId
-E_MODEL_METALLIC_BALL = 142
-
---- @type ModelExtendedId
-E_MODEL_CHAIN_CHOMP = 143
-
---- @type ModelExtendedId
-E_MODEL_KOOPA_FLAG = 144
-
---- @type ModelExtendedId
-E_MODEL_WOODEN_POST = 145
-
---- @type ModelExtendedId
-E_MODEL_MIPS = 146
-
---- @type ModelExtendedId
-E_MODEL_BOO_CASTLE = 147
-
---- @type ModelExtendedId
-E_MODEL_LAKITU = 148
-
---- @type ModelExtendedId
-E_MODEL_TOAD = 149
-
---- @type ModelExtendedId
-E_MODEL_CHILL_BULLY = 150
-
---- @type ModelExtendedId
-E_MODEL_BIG_CHILL_BULLY = 151
-
---- @type ModelExtendedId
-E_MODEL_MONEYBAG = 152
-
---- @type ModelExtendedId
-E_MODEL_SWOOP = 153
-
---- @type ModelExtendedId
-E_MODEL_SCUTTLEBUG = 154
-
---- @type ModelExtendedId
-E_MODEL_MR_I_IRIS = 155
-
---- @type ModelExtendedId
-E_MODEL_MR_I = 156
-
---- @type ModelExtendedId
-E_MODEL_DORRIE = 157
-
---- @type ModelExtendedId
-E_MODEL_SNUFIT = 158
-
---- @type ModelExtendedId
-E_MODEL_ERROR_MODEL = 159
-
---- @type ModelExtendedId
-E_MODEL_BUBBLY_TREE = 160
-
---- @type ModelExtendedId
-E_MODEL_COURTYARD_SPIKY_TREE = 161
-
---- @type ModelExtendedId
-E_MODEL_SNOW_TREE = 162
-
---- @type ModelExtendedId
-E_MODEL_PALM_TREE = 163
-
---- @type ModelExtendedId
-E_MODEL_CASTLE_CASTLE_DOOR = 164
-
---- @type ModelExtendedId
-E_MODEL_BBH_HAUNTED_DOOR = 165
-
---- @type ModelExtendedId
-E_MODEL_HMC_WOODEN_DOOR = 166
-
---- @type ModelExtendedId
-E_MODEL_HMC_METAL_DOOR = 167
-
---- @type ModelExtendedId
-E_MODEL_HMC_HAZY_MAZE_DOOR = 168
-
---- @type ModelExtendedId
-E_MODEL_CASTLE_DOOR_0_STARS = 169
-
---- @type ModelExtendedId
-E_MODEL_CASTLE_DOOR_1_STAR = 170
-
---- @type ModelExtendedId
-E_MODEL_CASTLE_DOOR_3_STARS = 171
-
---- @type ModelExtendedId
-E_MODEL_CASTLE_STAR_DOOR_8_STARS = 172
-
---- @type ModelExtendedId
-E_MODEL_CASTLE_STAR_DOOR_30_STARS = 173
-
---- @type ModelExtendedId
-E_MODEL_CASTLE_STAR_DOOR_50_STARS = 174
-
---- @type ModelExtendedId
-E_MODEL_CASTLE_STAR_DOOR_70_STARS = 175
-
---- @type ModelExtendedId
-E_MODEL_CASTLE_KEY_DOOR = 176
-
---- @type ModelExtendedId
-E_MODEL_CCM_CABIN_DOOR = 177
-
---- @type ModelExtendedId
-E_MODEL_CASTLE_METAL_DOOR = 178
-
---- @type ModelExtendedId
-E_MODEL_CASTLE_GROUNDS_METAL_DOOR = 179
-
---- @type ModelExtendedId
-E_MODEL_WF_TOWER_TRAPEZOID_PLATORM = 180
-
---- @type ModelExtendedId
-E_MODEL_WF_TOWER_SQUARE_PLATORM = 181
-
---- @type ModelExtendedId
-E_MODEL_WF_TOWER_SQUARE_PLATORM_UNUSED = 182
-
---- @type ModelExtendedId
-E_MODEL_WF_TOWER_SQUARE_PLATORM_ELEVATOR = 183
-
---- @type ModelExtendedId
-E_MODEL_BBH_STAIRCASE_STEP = 184
-
---- @type ModelExtendedId
-E_MODEL_BBH_TILTING_FLOOR_PLATFORM = 185
-
---- @type ModelExtendedId
-E_MODEL_BBH_TUMBLING_PLATFORM = 186
-
---- @type ModelExtendedId
-E_MODEL_BBH_TUMBLING_PLATFORM_PART = 187
-
---- @type ModelExtendedId
-E_MODEL_BBH_MOVING_BOOKSHELF = 188
-
---- @type ModelExtendedId
-E_MODEL_BBH_MESH_ELEVATOR = 189
-
---- @type ModelExtendedId
-E_MODEL_BBH_MERRY_GO_ROUND = 190
-
---- @type ModelExtendedId
-E_MODEL_BBH_WOODEN_TOMB = 191
-
---- @type ModelExtendedId
-E_MODEL_CCM_ROPEWAY_LIFT = 192
-
---- @type ModelExtendedId
-E_MODEL_CCM_SNOWMAN_HEAD = 193
-
---- @type ModelExtendedId
-E_MODEL_CASTLE_BOWSER_TRAP = 194
-
---- @type ModelExtendedId
-E_MODEL_CASTLE_WATER_LEVEL_PILLAR = 195
-
---- @type ModelExtendedId
-E_MODEL_CASTLE_CLOCK_MINUTE_HAND = 196
-
---- @type ModelExtendedId
-E_MODEL_CASTLE_CLOCK_HOUR_HAND = 197
-
---- @type ModelExtendedId
-E_MODEL_CASTLE_CLOCK_PENDULUM = 198
-
---- @type ModelExtendedId
-E_MODEL_HMC_METAL_PLATFORM = 199
-
---- @type ModelExtendedId
-E_MODEL_HMC_METAL_ARROW_PLATFORM = 200
-
---- @type ModelExtendedId
-E_MODEL_HMC_ELEVATOR_PLATFORM = 201
-
---- @type ModelExtendedId
-E_MODEL_HMC_ROLLING_ROCK = 202
-
---- @type ModelExtendedId
-E_MODEL_HMC_ROCK_PIECE = 203
-
---- @type ModelExtendedId
-E_MODEL_HMC_ROCK_SMALL_PIECE = 204
-
---- @type ModelExtendedId
-E_MODEL_HMC_RED_GRILLS = 205
-
---- @type ModelExtendedId
-E_MODEL_SSL_PYRAMID_TOP = 206
-
---- @type ModelExtendedId
-E_MODEL_SSL_GRINDEL = 207
-
---- @type ModelExtendedId
-E_MODEL_SSL_SPINDEL = 208
-
---- @type ModelExtendedId
-E_MODEL_SSL_MOVING_PYRAMID_WALL = 209
-
---- @type ModelExtendedId
-E_MODEL_SSL_PYRAMID_ELEVATOR = 210
-
---- @type ModelExtendedId
-E_MODEL_SSL_TOX_BOX = 211
-
---- @type ModelExtendedId
-E_MODEL_BOB_CHAIN_CHOMP_GATE = 212
-
---- @type ModelExtendedId
-E_MODEL_BOB_SEESAW_PLATFORM = 213
-
---- @type ModelExtendedId
-E_MODEL_BOB_BARS_GRILLS = 214
-
---- @type ModelExtendedId
-E_MODEL_SL_SNOW_TRIANGLE = 215
-
---- @type ModelExtendedId
-E_MODEL_SL_CRACKED_ICE = 216
-
---- @type ModelExtendedId
-E_MODEL_SL_CRACKED_ICE_CHUNK = 217
-
---- @type ModelExtendedId
-E_MODEL_WDW_SQUARE_FLOATING_PLATFORM = 218
-
---- @type ModelExtendedId
-E_MODEL_WDW_ARROW_LIFT = 219
-
---- @type ModelExtendedId
-E_MODEL_WDW_WATER_LEVEL_DIAMOND = 220
-
---- @type ModelExtendedId
-E_MODEL_WDW_HIDDEN_PLATFORM = 221
-
---- @type ModelExtendedId
-E_MODEL_WDW_EXPRESS_ELEVATOR = 222
-
---- @type ModelExtendedId
-E_MODEL_WDW_RECTANGULAR_FLOATING_PLATFORM = 223
-
---- @type ModelExtendedId
-E_MODEL_WDW_ROTATING_PLATFORM = 224
-
---- @type ModelExtendedId
-E_MODEL_JRB_SHIP_LEFT_HALF_PART = 225
-
---- @type ModelExtendedId
-E_MODEL_JRB_SHIP_BACK_LEFT_PART = 226
-
---- @type ModelExtendedId
-E_MODEL_JRB_SHIP_RIGHT_HALF_PART = 227
-
---- @type ModelExtendedId
-E_MODEL_JRB_SHIP_BACK_RIGHT_PART = 228
-
---- @type ModelExtendedId
-E_MODEL_JRB_SUNKEN_SHIP = 229
-
---- @type ModelExtendedId
-E_MODEL_JRB_SUNKEN_SHIP_BACK = 230
-
---- @type ModelExtendedId
-E_MODEL_JRB_ROCK = 231
-
---- @type ModelExtendedId
-E_MODEL_JRB_SLIDING_BOX = 232
-
---- @type ModelExtendedId
-E_MODEL_JRB_FALLING_PILLAR = 233
-
---- @type ModelExtendedId
-E_MODEL_JRB_FALLING_PILLAR_BASE = 234
-
---- @type ModelExtendedId
-E_MODEL_JRB_FLOATING_PLATFORM = 235
-
---- @type ModelExtendedId
-E_MODEL_THI_HUGE_ISLAND_TOP = 236
-
---- @type ModelExtendedId
-E_MODEL_THI_TINY_ISLAND_TOP = 237
-
---- @type ModelExtendedId
-E_MODEL_TTC_ROTATING_CUBE = 238
-
---- @type ModelExtendedId
-E_MODEL_TTC_ROTATING_PRISM = 239
-
---- @type ModelExtendedId
-E_MODEL_TTC_PENDULUM = 240
-
---- @type ModelExtendedId
-E_MODEL_TTC_LARGE_TREADMILL = 241
-
---- @type ModelExtendedId
-E_MODEL_TTC_SMALL_TREADMILL = 242
-
---- @type ModelExtendedId
-E_MODEL_TTC_PUSH_BLOCK = 243
-
---- @type ModelExtendedId
-E_MODEL_TTC_ROTATING_HEXAGON = 244
-
---- @type ModelExtendedId
-E_MODEL_TTC_ROTATING_TRIANGLE = 245
-
---- @type ModelExtendedId
-E_MODEL_TTC_PIT_BLOCK = 246
-
---- @type ModelExtendedId
-E_MODEL_TTC_PIT_BLOCK_UNUSED = 247
-
---- @type ModelExtendedId
-E_MODEL_TTC_ELEVATOR_PLATFORM = 248
-
---- @type ModelExtendedId
-E_MODEL_TTC_CLOCK_HAND = 249
-
---- @type ModelExtendedId
-E_MODEL_TTC_SPINNER = 250
-
---- @type ModelExtendedId
-E_MODEL_TTC_SMALL_GEAR = 251
-
---- @type ModelExtendedId
-E_MODEL_TTC_LARGE_GEAR = 252
-
---- @type ModelExtendedId
-E_MODEL_RR_SLIDING_PLATFORM = 253
-
---- @type ModelExtendedId
-E_MODEL_RR_FLYING_CARPET = 254
-
---- @type ModelExtendedId
-E_MODEL_RR_OCTAGONAL_PLATFORM = 255
-
---- @type ModelExtendedId
-E_MODEL_RR_ROTATING_BRIDGE_PLATFORM = 256
-
---- @type ModelExtendedId
-E_MODEL_RR_TRIANGLE_PLATFORM = 257
-
---- @type ModelExtendedId
-E_MODEL_RR_CRUISER_WING = 258
-
---- @type ModelExtendedId
-E_MODEL_RR_SEESAW_PLATFORM = 259
-
---- @type ModelExtendedId
-E_MODEL_RR_L_SHAPED_PLATFORM = 260
-
---- @type ModelExtendedId
-E_MODEL_RR_SWINGING_PLATFORM = 261
-
---- @type ModelExtendedId
-E_MODEL_RR_DONUT_PLATFORM = 262
-
---- @type ModelExtendedId
-E_MODEL_RR_ELEVATOR_PLATFORM = 263
-
---- @type ModelExtendedId
-E_MODEL_RR_TRICKY_TRIANGLES = 264
-
---- @type ModelExtendedId
-E_MODEL_RR_TRICKY_TRIANGLES_FRAME1 = 265
-
---- @type ModelExtendedId
-E_MODEL_RR_TRICKY_TRIANGLES_FRAME2 = 266
-
---- @type ModelExtendedId
-E_MODEL_RR_TRICKY_TRIANGLES_FRAME3 = 267
-
---- @type ModelExtendedId
-E_MODEL_RR_TRICKY_TRIANGLES_FRAME4 = 268
-
---- @type ModelExtendedId
-E_MODEL_BITDW_SQUARE_PLATFORM = 269
-
---- @type ModelExtendedId
-E_MODEL_BITDW_SEESAW_PLATFORM = 270
-
---- @type ModelExtendedId
-E_MODEL_BITDW_SLIDING_PLATFORM = 271
-
---- @type ModelExtendedId
-E_MODEL_BITDW_FERRIS_WHEEL_AXLE = 272
-
---- @type ModelExtendedId
-E_MODEL_BITDW_BLUE_PLATFORM = 273
-
---- @type ModelExtendedId
-E_MODEL_BITDW_STAIRCASE_FRAME4 = 274
-
---- @type ModelExtendedId
-E_MODEL_BITDW_STAIRCASE_FRAME3 = 275
-
---- @type ModelExtendedId
-E_MODEL_BITDW_STAIRCASE_FRAME2 = 276
-
---- @type ModelExtendedId
-E_MODEL_BITDW_STAIRCASE_FRAME1 = 277
-
---- @type ModelExtendedId
-E_MODEL_BITDW_STAIRCASE = 278
-
---- @type ModelExtendedId
-E_MODEL_BITFS_PLATFORM_ON_TRACK = 279
-
---- @type ModelExtendedId
-E_MODEL_BITFS_TILTING_SQUARE_PLATFORM = 280
-
---- @type ModelExtendedId
-E_MODEL_BITFS_SINKING_PLATFORMS = 281
-
---- @type ModelExtendedId
-E_MODEL_BITFS_BLUE_POLE = 282
-
---- @type ModelExtendedId
-E_MODEL_BITFS_SINKING_CAGE_PLATFORM = 283
-
---- @type ModelExtendedId
-E_MODEL_BITFS_ELEVATOR = 284
-
---- @type ModelExtendedId
-E_MODEL_BITFS_STRETCHING_PLATFORMS = 285
-
---- @type ModelExtendedId
-E_MODEL_BITFS_SEESAW_PLATFORM = 286
-
---- @type ModelExtendedId
-E_MODEL_BITFS_MOVING_SQUARE_PLATFORM = 287
-
---- @type ModelExtendedId
-E_MODEL_BITFS_SLIDING_PLATFORM = 288
-
---- @type ModelExtendedId
-E_MODEL_BITFS_TUMBLING_PLATFORM_PART = 289
-
---- @type ModelExtendedId
-E_MODEL_BITFS_TUMBLING_PLATFORM = 290
-
---- @type ModelExtendedId
-E_MODEL_BITS_SLIDING_PLATFORM = 291
-
---- @type ModelExtendedId
-E_MODEL_BITS_TWIN_SLIDING_PLATFORMS = 292
-
---- @type ModelExtendedId
-E_MODEL_BITS_OCTAGONAL_PLATFORM = 293
-
---- @type ModelExtendedId
-E_MODEL_BITS_BLUE_PLATFORM = 294
-
---- @type ModelExtendedId
-E_MODEL_BITS_FERRIS_WHEEL_AXLE = 295
-
---- @type ModelExtendedId
-E_MODEL_BITS_ARROW_PLATFORM = 296
-
---- @type ModelExtendedId
-E_MODEL_BITS_SEESAW_PLATFORM = 297
-
---- @type ModelExtendedId
-E_MODEL_BITS_TILTING_W_PLATFORM = 298
-
---- @type ModelExtendedId
-E_MODEL_BITS_STAIRCASE = 299
-
---- @type ModelExtendedId
-E_MODEL_BITS_STAIRCASE_FRAME1 = 300
-
---- @type ModelExtendedId
-E_MODEL_BITS_STAIRCASE_FRAME2 = 301
-
---- @type ModelExtendedId
-E_MODEL_BITS_STAIRCASE_FRAME3 = 302
-
---- @type ModelExtendedId
-E_MODEL_BITS_STAIRCASE_FRAME4 = 303
-
---- @type ModelExtendedId
-E_MODEL_BITS_WARP_PIPE = 304
-
---- @type ModelExtendedId
-E_MODEL_LLL_DRAWBRIDGE_PART = 305
-
---- @type ModelExtendedId
-E_MODEL_LLL_ROTATING_BLOCK_FIRE_BARS = 306
-
---- @type ModelExtendedId
-E_MODEL_LLL_ROTATING_HEXAGONAL_RING = 307
-
---- @type ModelExtendedId
-E_MODEL_LLL_SINKING_RECTANGULAR_PLATFORM = 308
-
---- @type ModelExtendedId
-E_MODEL_LLL_SINKING_SQUARE_PLATFORMS = 309
-
---- @type ModelExtendedId
-E_MODEL_LLL_TILTING_SQUARE_PLATFORM = 310
-
---- @type ModelExtendedId
-E_MODEL_LLL_BOWSER_PIECE_1 = 311
-
---- @type ModelExtendedId
-E_MODEL_LLL_BOWSER_PIECE_2 = 312
-
---- @type ModelExtendedId
-E_MODEL_LLL_BOWSER_PIECE_3 = 313
-
---- @type ModelExtendedId
-E_MODEL_LLL_BOWSER_PIECE_4 = 314
-
---- @type ModelExtendedId
-E_MODEL_LLL_BOWSER_PIECE_5 = 315
-
---- @type ModelExtendedId
-E_MODEL_LLL_BOWSER_PIECE_6 = 316
-
---- @type ModelExtendedId
-E_MODEL_LLL_BOWSER_PIECE_7 = 317
-
---- @type ModelExtendedId
-E_MODEL_LLL_BOWSER_PIECE_8 = 318
-
---- @type ModelExtendedId
-E_MODEL_LLL_BOWSER_PIECE_9 = 319
-
---- @type ModelExtendedId
-E_MODEL_LLL_BOWSER_PIECE_10 = 320
-
---- @type ModelExtendedId
-E_MODEL_LLL_BOWSER_PIECE_11 = 321
-
---- @type ModelExtendedId
-E_MODEL_LLL_BOWSER_PIECE_12 = 322
-
---- @type ModelExtendedId
-E_MODEL_LLL_BOWSER_PIECE_13 = 323
-
---- @type ModelExtendedId
-E_MODEL_LLL_BOWSER_PIECE_14 = 324
-
---- @type ModelExtendedId
-E_MODEL_LLL_MOVING_OCTAGONAL_MESH_PLATFORM = 325
-
---- @type ModelExtendedId
-E_MODEL_LLL_SINKING_ROCK_BLOCK = 326
-
---- @type ModelExtendedId
-E_MODEL_LLL_ROLLING_LOG = 327
-
---- @type ModelExtendedId
-E_MODEL_LLL_WOOD_BRIDGE = 328
-
---- @type ModelExtendedId
-E_MODEL_LLL_LARGE_WOOD_BRIDGE = 329
-
---- @type ModelExtendedId
-E_MODEL_LLL_FALLING_PLATFORM = 330
-
---- @type ModelExtendedId
-E_MODEL_LLL_LARGE_FALLING_PLATFORM = 331
-
---- @type ModelExtendedId
-E_MODEL_LLL_VOLCANO_FALLING_TRAP = 332
-
---- @type ModelExtendedId
-E_MODEL_DDD_BOWSER_SUB_DOOR = 333
-
---- @type ModelExtendedId
-E_MODEL_DDD_BOWSER_SUB = 334
-
---- @type ModelExtendedId
-E_MODEL_DDD_POLE = 335
-
---- @type ModelExtendedId
-E_MODEL_WF_BREAKABLE_WALL_RIGHT = 336
-
---- @type ModelExtendedId
-E_MODEL_WF_BREAKABLE_WALL_LEFT = 337
-
---- @type ModelExtendedId
-E_MODEL_WF_KICKABLE_BOARD = 338
-
---- @type ModelExtendedId
-E_MODEL_WF_TOWER_DOOR = 339
-
---- @type ModelExtendedId
-E_MODEL_WF_KICKABLE_BOARD_FELLED = 340
-
---- @type ModelExtendedId
-E_MODEL_CASTLE_GROUNDS_VCUTM_GRILL = 341
-
---- @type ModelExtendedId
-E_MODEL_CASTLE_GROUNDS_FLAG = 342
-
---- @type ModelExtendedId
-E_MODEL_CASTLE_GROUNDS_CANNON_GRILL = 343
-
---- @type ModelExtendedId
-E_MODEL_BOWSER_2_TILTING_ARENA = 344
-
---- @type ModelExtendedId
-E_MODEL_BOWSER_3_FALLING_PLATFORM_1 = 345
-
---- @type ModelExtendedId
-E_MODEL_BOWSER_3_FALLING_PLATFORM_2 = 346
-
---- @type ModelExtendedId
-E_MODEL_BOWSER_3_FALLING_PLATFORM_3 = 347
-
---- @type ModelExtendedId
-E_MODEL_BOWSER_3_FALLING_PLATFORM_4 = 348
-
---- @type ModelExtendedId
-E_MODEL_BOWSER_3_FALLING_PLATFORM_5 = 349
-
---- @type ModelExtendedId
-E_MODEL_BOWSER_3_FALLING_PLATFORM_6 = 350
-
---- @type ModelExtendedId
-E_MODEL_BOWSER_3_FALLING_PLATFORM_7 = 351
-
---- @type ModelExtendedId
-E_MODEL_BOWSER_3_FALLING_PLATFORM_8 = 352
-
---- @type ModelExtendedId
-E_MODEL_BOWSER_3_FALLING_PLATFORM_9 = 353
-
---- @type ModelExtendedId
-E_MODEL_BOWSER_3_FALLING_PLATFORM_10 = 354
-
---- @type ModelExtendedId
-E_MODEL_TTM_ROLLING_LOG = 355
-
---- @type ModelExtendedId
-E_MODEL_TTM_STAR_CAGE = 356
-
---- @type ModelExtendedId
-E_MODEL_TTM_BLUE_SMILEY = 357
-
---- @type ModelExtendedId
-E_MODEL_TTM_YELLOW_SMILEY = 358
-
---- @type ModelExtendedId
-E_MODEL_TTM_STAR_SMILEY = 359
-
---- @type ModelExtendedId
-E_MODEL_TTM_MOON_SMILEY = 360
-
---- @type ModelExtendedId
-E_MODEL_BUBBLE_PLAYER = 361
-
---- @type ModelExtendedId
-E_MODEL_LUIGI = 362
-
---- @type ModelExtendedId
-E_MODEL_LUIGIS_CAP = 363
-
---- @type ModelExtendedId
-E_MODEL_LUIGIS_METAL_CAP = 364
-
---- @type ModelExtendedId
-E_MODEL_LUIGIS_WING_CAP = 365
-
---- @type ModelExtendedId
-E_MODEL_LUIGIS_WINGED_METAL_CAP = 366
-
---- @type ModelExtendedId
-E_MODEL_TOAD_PLAYER = 367
-
---- @type ModelExtendedId
-E_MODEL_TOADS_CAP = 368
-
---- @type ModelExtendedId
-E_MODEL_TOADS_METAL_CAP = 369
-
---- @type ModelExtendedId
-E_MODEL_TOADS_WING_CAP = 370
-
---- @type ModelExtendedId
-E_MODEL_WALUIGI = 371
-
---- @type ModelExtendedId
-E_MODEL_WALUIGIS_CAP = 372
-
---- @type ModelExtendedId
-E_MODEL_WALUIGIS_METAL_CAP = 373
-
---- @type ModelExtendedId
-E_MODEL_WALUIGIS_WING_CAP = 374
-
---- @type ModelExtendedId
-E_MODEL_WALUIGIS_WINGED_METAL_CAP = 375
-
---- @type ModelExtendedId
-E_MODEL_WARIO = 376
-
---- @type ModelExtendedId
-E_MODEL_WARIOS_CAP = 377
-
---- @type ModelExtendedId
-E_MODEL_WARIOS_METAL_CAP = 378
-
---- @type ModelExtendedId
-E_MODEL_WARIOS_WING_CAP = 379
-
---- @type ModelExtendedId
-E_MODEL_WARIOS_WINGED_METAL_CAP = 380
-
---- @type ModelExtendedId
-E_MODEL_MAX = 381
+ACTION_HOOK_EVERY_FRAME = 0 --- @type LuaActionHookType
+ACTION_HOOK_GRAVITY     = 1 --- @type LuaActionHookType
+ACTION_HOOK_MAX         = 2 --- @type LuaActionHookType
+
+--- @alias LuaActionHookType
+--- | `ACTION_HOOK_EVERY_FRAME`
+--- | `ACTION_HOOK_GRAVITY`
+--- | `ACTION_HOOK_MAX`
+
+HOOK_UPDATE                                 =  0 --- @type LuaHookedEventType
+HOOK_MARIO_UPDATE                           =  1 --- @type LuaHookedEventType
+HOOK_BEFORE_MARIO_UPDATE                    =  2 --- @type LuaHookedEventType
+HOOK_ON_SET_MARIO_ACTION                    =  3 --- @type LuaHookedEventType
+HOOK_BEFORE_PHYS_STEP                       =  4 --- @type LuaHookedEventType
+HOOK_ALLOW_PVP_ATTACK                       =  5 --- @type LuaHookedEventType
+HOOK_ON_PVP_ATTACK                          =  6 --- @type LuaHookedEventType
+HOOK_ON_PLAYER_CONNECTED                    =  7 --- @type LuaHookedEventType
+HOOK_ON_PLAYER_DISCONNECTED                 =  8 --- @type LuaHookedEventType
+HOOK_ON_HUD_RENDER                          =  9 --- @type LuaHookedEventType
+HOOK_ALLOW_INTERACT                         = 10 --- @type LuaHookedEventType
+HOOK_ON_INTERACT                            = 11 --- @type LuaHookedEventType
+HOOK_ON_LEVEL_INIT                          = 12 --- @type LuaHookedEventType
+HOOK_ON_WARP                                = 13 --- @type LuaHookedEventType
+HOOK_ON_SYNC_VALID                          = 14 --- @type LuaHookedEventType
+HOOK_ON_OBJECT_UNLOAD                       = 15 --- @type LuaHookedEventType
+HOOK_ON_SYNC_OBJECT_UNLOAD                  = 16 --- @type LuaHookedEventType
+HOOK_ON_PAUSE_EXIT                          = 17 --- @type LuaHookedEventType
+HOOK_GET_STAR_COLLECTION_DIALOG             = 18 --- @type LuaHookedEventType
+HOOK_ON_SET_CAMERA_MODE                     = 19 --- @type LuaHookedEventType
+HOOK_ON_OBJECT_RENDER                       = 20 --- @type LuaHookedEventType
+HOOK_ON_DEATH                               = 21 --- @type LuaHookedEventType
+HOOK_ON_PACKET_RECEIVE                      = 22 --- @type LuaHookedEventType
+HOOK_USE_ACT_SELECT                         = 23 --- @type LuaHookedEventType
+HOOK_ON_CHANGE_CAMERA_ANGLE                 = 24 --- @type LuaHookedEventType
+HOOK_ON_SCREEN_TRANSITION                   = 25 --- @type LuaHookedEventType
+HOOK_ALLOW_HAZARD_SURFACE                   = 26 --- @type LuaHookedEventType
+HOOK_ON_CHAT_MESSAGE                        = 27 --- @type LuaHookedEventType
+HOOK_OBJECT_SET_MODEL                       = 28 --- @type LuaHookedEventType
+HOOK_CHARACTER_SOUND                        = 29 --- @type LuaHookedEventType
+HOOK_BEFORE_SET_MARIO_ACTION                = 30 --- @type LuaHookedEventType
+HOOK_JOINED_GAME                            = 31 --- @type LuaHookedEventType
+HOOK_ON_OBJECT_ANIM_UPDATE                  = 32 --- @type LuaHookedEventType
+HOOK_ON_DIALOG                              = 33 --- @type LuaHookedEventType
+HOOK_ON_EXIT                                = 34 --- @type LuaHookedEventType
+HOOK_DIALOG_SOUND                           = 35 --- @type LuaHookedEventType
+HOOK_ON_HUD_RENDER_BEHIND                   = 36 --- @type LuaHookedEventType
+HOOK_ON_COLLIDE_LEVEL_BOUNDS                = 37 --- @type LuaHookedEventType
+HOOK_MIRROR_MARIO_RENDER                    = 38 --- @type LuaHookedEventType
+HOOK_MARIO_OVERRIDE_PHYS_STEP_DEFACTO_SPEED = 39 --- @type LuaHookedEventType
+HOOK_ON_OBJECT_LOAD                         = 40 --- @type LuaHookedEventType
+HOOK_ON_PLAY_SOUND                          = 41 --- @type LuaHookedEventType
+HOOK_ON_SEQ_LOAD                            = 42 --- @type LuaHookedEventType
+HOOK_ON_ATTACK_OBJECT                       = 43 --- @type LuaHookedEventType
+HOOK_ON_LANGUAGE_CHANGED                    = 44 --- @type LuaHookedEventType
+HOOK_ON_MODS_LOADED                         = 45 --- @type LuaHookedEventType
+HOOK_ON_NAMETAGS_RENDER                     = 46 --- @type LuaHookedEventType
+HOOK_ON_DJUI_THEME_CHANGED                  = 47 --- @type LuaHookedEventType
+HOOK_ON_GEO_PROCESS                         = 48 --- @type LuaHookedEventType
+HOOK_BEFORE_GEO_PROCESS                     = 49 --- @type LuaHookedEventType
+HOOK_ON_GEO_PROCESS_CHILDREN                = 50 --- @type LuaHookedEventType
+HOOK_MARIO_OVERRIDE_GEOMETRY_INPUTS         = 51 --- @type LuaHookedEventType
+HOOK_ON_INTERACTIONS                        = 52 --- @type LuaHookedEventType
+HOOK_MAX                                    = 53 --- @type LuaHookedEventType
+
+--- @alias LuaHookedEventType
+--- | `HOOK_UPDATE`
+--- | `HOOK_MARIO_UPDATE`
+--- | `HOOK_BEFORE_MARIO_UPDATE`
+--- | `HOOK_ON_SET_MARIO_ACTION`
+--- | `HOOK_BEFORE_PHYS_STEP`
+--- | `HOOK_ALLOW_PVP_ATTACK`
+--- | `HOOK_ON_PVP_ATTACK`
+--- | `HOOK_ON_PLAYER_CONNECTED`
+--- | `HOOK_ON_PLAYER_DISCONNECTED`
+--- | `HOOK_ON_HUD_RENDER`
+--- | `HOOK_ALLOW_INTERACT`
+--- | `HOOK_ON_INTERACT`
+--- | `HOOK_ON_LEVEL_INIT`
+--- | `HOOK_ON_WARP`
+--- | `HOOK_ON_SYNC_VALID`
+--- | `HOOK_ON_OBJECT_UNLOAD`
+--- | `HOOK_ON_SYNC_OBJECT_UNLOAD`
+--- | `HOOK_ON_PAUSE_EXIT`
+--- | `HOOK_GET_STAR_COLLECTION_DIALOG`
+--- | `HOOK_ON_SET_CAMERA_MODE`
+--- | `HOOK_ON_OBJECT_RENDER`
+--- | `HOOK_ON_DEATH`
+--- | `HOOK_ON_PACKET_RECEIVE`
+--- | `HOOK_USE_ACT_SELECT`
+--- | `HOOK_ON_CHANGE_CAMERA_ANGLE`
+--- | `HOOK_ON_SCREEN_TRANSITION`
+--- | `HOOK_ALLOW_HAZARD_SURFACE`
+--- | `HOOK_ON_CHAT_MESSAGE`
+--- | `HOOK_OBJECT_SET_MODEL`
+--- | `HOOK_CHARACTER_SOUND`
+--- | `HOOK_BEFORE_SET_MARIO_ACTION`
+--- | `HOOK_JOINED_GAME`
+--- | `HOOK_ON_OBJECT_ANIM_UPDATE`
+--- | `HOOK_ON_DIALOG`
+--- | `HOOK_ON_EXIT`
+--- | `HOOK_DIALOG_SOUND`
+--- | `HOOK_ON_HUD_RENDER_BEHIND`
+--- | `HOOK_ON_COLLIDE_LEVEL_BOUNDS`
+--- | `HOOK_MIRROR_MARIO_RENDER`
+--- | `HOOK_MARIO_OVERRIDE_PHYS_STEP_DEFACTO_SPEED`
+--- | `HOOK_ON_OBJECT_LOAD`
+--- | `HOOK_ON_PLAY_SOUND`
+--- | `HOOK_ON_SEQ_LOAD`
+--- | `HOOK_ON_ATTACK_OBJECT`
+--- | `HOOK_ON_LANGUAGE_CHANGED`
+--- | `HOOK_ON_MODS_LOADED`
+--- | `HOOK_ON_NAMETAGS_RENDER`
+--- | `HOOK_ON_DJUI_THEME_CHANGED`
+--- | `HOOK_ON_GEO_PROCESS`
+--- | `HOOK_BEFORE_GEO_PROCESS`
+--- | `HOOK_ON_GEO_PROCESS_CHILDREN`
+--- | `HOOK_MARIO_OVERRIDE_GEOMETRY_INPUTS`
+--- | `HOOK_ON_INTERACTIONS`
+--- | `HOOK_MAX`
+
+MOD_MENU_ELEMENT_TEXT     = 0 --- @type LuaModMenuElementType
+MOD_MENU_ELEMENT_BUTTON   = 1 --- @type LuaModMenuElementType
+MOD_MENU_ELEMENT_CHECKBOX = 2 --- @type LuaModMenuElementType
+MOD_MENU_ELEMENT_SLIDER   = 3 --- @type LuaModMenuElementType
+MOD_MENU_ELEMENT_INPUTBOX = 4 --- @type LuaModMenuElementType
+MOD_MENU_ELEMENT_MAX      = 5 --- @type LuaModMenuElementType
+
+--- @alias LuaModMenuElementType
+--- | `MOD_MENU_ELEMENT_TEXT`
+--- | `MOD_MENU_ELEMENT_BUTTON`
+--- | `MOD_MENU_ELEMENT_CHECKBOX`
+--- | `MOD_MENU_ELEMENT_SLIDER`
+--- | `MOD_MENU_ELEMENT_INPUTBOX`
+--- | `MOD_MENU_ELEMENT_MAX`
+
+HUD_DISPLAY_FLAGS_NONE             = 0x0000 --- @type HudDisplayFlags
+HUD_DISPLAY_FLAGS_LIVES            = 0x0001 --- @type HudDisplayFlags
+HUD_DISPLAY_FLAGS_COIN_COUNT       = 0x0002 --- @type HudDisplayFlags
+HUD_DISPLAY_FLAGS_STAR_COUNT       = 0x0004 --- @type HudDisplayFlags
+HUD_DISPLAY_FLAGS_CAMERA_AND_POWER = 0x0008 --- @type HudDisplayFlags
+HUD_DISPLAY_FLAGS_KEYS             = 0x0010 --- @type HudDisplayFlags
+HUD_DISPLAY_FLAGS_UNKNOWN_0020     = 0x0020 --- @type HudDisplayFlags
+HUD_DISPLAY_FLAGS_TIMER            = 0x0040 --- @type HudDisplayFlags
+HUD_DISPLAY_FLAGS_CAMERA           = 0x0080 --- @type HudDisplayFlags
+HUD_DISPLAY_FLAGS_POWER            = 0x0100 --- @type HudDisplayFlags
+HUD_DISPLAY_FLAGS_EMPHASIZE_POWER  = 0x8000 --- @type HudDisplayFlags
+
+--- @alias HudDisplayFlags
+--- | `HUD_DISPLAY_FLAGS_NONE`
+--- | `HUD_DISPLAY_FLAGS_LIVES`
+--- | `HUD_DISPLAY_FLAGS_COIN_COUNT`
+--- | `HUD_DISPLAY_FLAGS_STAR_COUNT`
+--- | `HUD_DISPLAY_FLAGS_CAMERA_AND_POWER`
+--- | `HUD_DISPLAY_FLAGS_KEYS`
+--- | `HUD_DISPLAY_FLAGS_UNKNOWN_0020`
+--- | `HUD_DISPLAY_FLAGS_TIMER`
+--- | `HUD_DISPLAY_FLAGS_CAMERA`
+--- | `HUD_DISPLAY_FLAGS_POWER`
+--- | `HUD_DISPLAY_FLAGS_EMPHASIZE_POWER`
+
+HUD_DISPLAY_LIVES         = 0 --- @type HudDisplayValue
+HUD_DISPLAY_COINS         = 1 --- @type HudDisplayValue
+HUD_DISPLAY_STARS         = 2 --- @type HudDisplayValue
+HUD_DISPLAY_WEDGES        = 3 --- @type HudDisplayValue
+HUD_DISPLAY_KEYS          = 4 --- @type HudDisplayValue
+HUD_DISPLAY_FLAGS         = 5 --- @type HudDisplayValue
+HUD_DISPLAY_TIMER         = 6 --- @type HudDisplayValue
+HUD_DISPLAY_CAMERA_STATUS = 7 --- @type HudDisplayValue
+
+--- @alias HudDisplayValue
+--- | `HUD_DISPLAY_LIVES`
+--- | `HUD_DISPLAY_COINS`
+--- | `HUD_DISPLAY_STARS`
+--- | `HUD_DISPLAY_WEDGES`
+--- | `HUD_DISPLAY_KEYS`
+--- | `HUD_DISPLAY_FLAGS`
+--- | `HUD_DISPLAY_TIMER`
+--- | `HUD_DISPLAY_CAMERA_STATUS`
+
+E_MODEL_NONE                               =   0 --- @type ModelExtendedId
+E_MODEL_MARIO                              =   1 --- @type ModelExtendedId
+E_MODEL_SMOKE                              =   2 --- @type ModelExtendedId
+E_MODEL_SPARKLES                           =   3 --- @type ModelExtendedId
+E_MODEL_BUBBLE                             =   4 --- @type ModelExtendedId
+E_MODEL_SMALL_WATER_SPLASH                 =   5 --- @type ModelExtendedId
+E_MODEL_IDLE_WATER_WAVE                    =   6 --- @type ModelExtendedId
+E_MODEL_WATER_SPLASH                       =   7 --- @type ModelExtendedId
+E_MODEL_WAVE_TRAIL                         =   8 --- @type ModelExtendedId
+E_MODEL_YELLOW_COIN                        =   9 --- @type ModelExtendedId
+E_MODEL_STAR                               =  10 --- @type ModelExtendedId
+E_MODEL_TRANSPARENT_STAR                   =  11 --- @type ModelExtendedId
+E_MODEL_WOODEN_SIGNPOST                    =  12 --- @type ModelExtendedId
+E_MODEL_WHITE_PARTICLE_SMALL               =  13 --- @type ModelExtendedId
+E_MODEL_RED_FLAME                          =  14 --- @type ModelExtendedId
+E_MODEL_BLUE_FLAME                         =  15 --- @type ModelExtendedId
+E_MODEL_BURN_SMOKE                         =  16 --- @type ModelExtendedId
+E_MODEL_LEAVES                             =  17 --- @type ModelExtendedId
+E_MODEL_PURPLE_MARBLE                      =  18 --- @type ModelExtendedId
+E_MODEL_TRAMPOLINE                         =  19 --- @type ModelExtendedId
+E_MODEL_TRAMPOLINE_CENTER                  =  20 --- @type ModelExtendedId
+E_MODEL_TRAMPOLINE_BASE                    =  21 --- @type ModelExtendedId
+E_MODEL_FISH                               =  22 --- @type ModelExtendedId
+E_MODEL_FISH_SHADOW                        =  23 --- @type ModelExtendedId
+E_MODEL_SPARKLES_ANIMATION                 =  24 --- @type ModelExtendedId
+E_MODEL_SAND_DUST                          =  25 --- @type ModelExtendedId
+E_MODEL_BUTTERFLY                          =  26 --- @type ModelExtendedId
+E_MODEL_BURN_SMOKE_UNUSED                  =  27 --- @type ModelExtendedId
+E_MODEL_PEBBLE                             =  28 --- @type ModelExtendedId
+E_MODEL_MIST                               =  29 --- @type ModelExtendedId
+E_MODEL_WHITE_PUFF                         =  30 --- @type ModelExtendedId
+E_MODEL_WHITE_PARTICLE_DL                  =  31 --- @type ModelExtendedId
+E_MODEL_WHITE_PARTICLE                     =  32 --- @type ModelExtendedId
+E_MODEL_YELLOW_COIN_NO_SHADOW              =  33 --- @type ModelExtendedId
+E_MODEL_BLUE_COIN                          =  34 --- @type ModelExtendedId
+E_MODEL_BLUE_COIN_NO_SHADOW                =  35 --- @type ModelExtendedId
+E_MODEL_MARIOS_WINGED_METAL_CAP            =  36 --- @type ModelExtendedId
+E_MODEL_MARIOS_METAL_CAP                   =  37 --- @type ModelExtendedId
+E_MODEL_MARIOS_WING_CAP                    =  38 --- @type ModelExtendedId
+E_MODEL_MARIOS_CAP                         =  39 --- @type ModelExtendedId
+E_MODEL_BOWSER_KEY_CUTSCENE                =  40 --- @type ModelExtendedId
+E_MODEL_BOWSER_KEY                         =  41 --- @type ModelExtendedId
+E_MODEL_RED_FLAME_SHADOW                   =  42 --- @type ModelExtendedId
+E_MODEL_1UP                                =  43 --- @type ModelExtendedId
+E_MODEL_RED_COIN                           =  44 --- @type ModelExtendedId
+E_MODEL_RED_COIN_NO_SHADOW                 =  45 --- @type ModelExtendedId
+E_MODEL_NUMBER                             =  46 --- @type ModelExtendedId
+E_MODEL_EXPLOSION                          =  47 --- @type ModelExtendedId
+E_MODEL_DIRT_ANIMATION                     =  48 --- @type ModelExtendedId
+E_MODEL_CARTOON_STAR                       =  49 --- @type ModelExtendedId
+E_MODEL_BLUE_COIN_SWITCH                   =  50 --- @type ModelExtendedId
+E_MODEL_AMP                                =  51 --- @type ModelExtendedId
+E_MODEL_PURPLE_SWITCH                      =  52 --- @type ModelExtendedId
+E_MODEL_CHECKERBOARD_PLATFORM              =  53 --- @type ModelExtendedId
+E_MODEL_BREAKABLE_BOX                      =  54 --- @type ModelExtendedId
+E_MODEL_BREAKABLE_BOX_SMALL                =  55 --- @type ModelExtendedId
+E_MODEL_EXCLAMATION_BOX_OUTLINE            =  56 --- @type ModelExtendedId
+E_MODEL_EXCLAMATION_BOX                    =  57 --- @type ModelExtendedId
+E_MODEL_GOOMBA                             =  58 --- @type ModelExtendedId
+E_MODEL_EXCLAMATION_POINT                  =  59 --- @type ModelExtendedId
+E_MODEL_KOOPA_SHELL                        =  60 --- @type ModelExtendedId
+E_MODEL_METAL_BOX                          =  61 --- @type ModelExtendedId
+E_MODEL_METAL_BOX_DL                       =  62 --- @type ModelExtendedId
+E_MODEL_BLACK_BOBOMB                       =  63 --- @type ModelExtendedId
+E_MODEL_BOBOMB_BUDDY                       =  64 --- @type ModelExtendedId
+E_MODEL_DL_CANNON_LID                      =  65 --- @type ModelExtendedId
+E_MODEL_BOWLING_BALL                       =  66 --- @type ModelExtendedId
+E_MODEL_CANNON_BARREL                      =  67 --- @type ModelExtendedId
+E_MODEL_CANNON_BASE                        =  68 --- @type ModelExtendedId
+E_MODEL_HEART                              =  69 --- @type ModelExtendedId
+E_MODEL_FLYGUY                             =  70 --- @type ModelExtendedId
+E_MODEL_CHUCKYA                            =  71 --- @type ModelExtendedId
+E_MODEL_TRAJECTORY_MARKER_BALL             =  72 --- @type ModelExtendedId
+E_MODEL_BULLET_BILL                        =  73 --- @type ModelExtendedId
+E_MODEL_YELLOW_SPHERE                      =  74 --- @type ModelExtendedId
+E_MODEL_HOOT                               =  75 --- @type ModelExtendedId
+E_MODEL_YOSHI_EGG                          =  76 --- @type ModelExtendedId
+E_MODEL_THWOMP                             =  77 --- @type ModelExtendedId
+E_MODEL_HEAVE_HO                           =  78 --- @type ModelExtendedId
+E_MODEL_BLARGG                             =  79 --- @type ModelExtendedId
+E_MODEL_BULLY                              =  80 --- @type ModelExtendedId
+E_MODEL_BULLY_BOSS                         =  81 --- @type ModelExtendedId
+E_MODEL_WATER_BOMB                         =  82 --- @type ModelExtendedId
+E_MODEL_WATER_BOMB_SHADOW                  =  83 --- @type ModelExtendedId
+E_MODEL_KING_BOBOMB                        =  84 --- @type ModelExtendedId
+E_MODEL_MANTA_RAY                          =  85 --- @type ModelExtendedId
+E_MODEL_UNAGI                              =  86 --- @type ModelExtendedId
+E_MODEL_SUSHI                              =  87 --- @type ModelExtendedId
+E_MODEL_DL_WHIRLPOOL                       =  88 --- @type ModelExtendedId
+E_MODEL_CLAM_SHELL                         =  89 --- @type ModelExtendedId
+E_MODEL_POKEY_HEAD                         =  90 --- @type ModelExtendedId
+E_MODEL_POKEY_BODY_PART                    =  91 --- @type ModelExtendedId
+E_MODEL_TWEESTER                           =  92 --- @type ModelExtendedId
+E_MODEL_KLEPTO                             =  93 --- @type ModelExtendedId
+E_MODEL_EYEROK_LEFT_HAND                   =  94 --- @type ModelExtendedId
+E_MODEL_EYEROK_RIGHT_HAND                  =  95 --- @type ModelExtendedId
+E_MODEL_DL_MONTY_MOLE_HOLE                 =  96 --- @type ModelExtendedId
+E_MODEL_MONTY_MOLE                         =  97 --- @type ModelExtendedId
+E_MODEL_UKIKI                              =  98 --- @type ModelExtendedId
+E_MODEL_FWOOSH                             =  99 --- @type ModelExtendedId
+E_MODEL_SPINDRIFT                          = 100 --- @type ModelExtendedId
+E_MODEL_MR_BLIZZARD_HIDDEN                 = 101 --- @type ModelExtendedId
+E_MODEL_MR_BLIZZARD                        = 102 --- @type ModelExtendedId
+E_MODEL_PENGUIN                            = 103 --- @type ModelExtendedId
+E_MODEL_CAP_SWITCH_EXCLAMATION             = 104 --- @type ModelExtendedId
+E_MODEL_CAP_SWITCH                         = 105 --- @type ModelExtendedId
+E_MODEL_CAP_SWITCH_BASE                    = 106 --- @type ModelExtendedId
+E_MODEL_BOO                                = 107 --- @type ModelExtendedId
+E_MODEL_BETA_BOO_KEY                       = 108 --- @type ModelExtendedId
+E_MODEL_HAUNTED_CHAIR                      = 109 --- @type ModelExtendedId
+E_MODEL_MAD_PIANO                          = 110 --- @type ModelExtendedId
+E_MODEL_BOOKEND_PART                       = 111 --- @type ModelExtendedId
+E_MODEL_BOOKEND                            = 112 --- @type ModelExtendedId
+E_MODEL_HAUNTED_CAGE                       = 113 --- @type ModelExtendedId
+E_MODEL_BIRDS                              = 114 --- @type ModelExtendedId
+E_MODEL_PEACH                              = 115 --- @type ModelExtendedId
+E_MODEL_YOSHI                              = 116 --- @type ModelExtendedId
+E_MODEL_ENEMY_LAKITU                       = 117 --- @type ModelExtendedId
+E_MODEL_SPINY_BALL                         = 118 --- @type ModelExtendedId
+E_MODEL_SPINY                              = 119 --- @type ModelExtendedId
+E_MODEL_WIGGLER_HEAD                       = 120 --- @type ModelExtendedId
+E_MODEL_WIGGLER_BODY                       = 121 --- @type ModelExtendedId
+E_MODEL_BUBBA                              = 122 --- @type ModelExtendedId
+E_MODEL_BOWSER                             = 123 --- @type ModelExtendedId
+E_MODEL_BOWSER_BOMB_CHILD_OBJ              = 124 --- @type ModelExtendedId
+E_MODEL_BOWSER_BOMB                        = 125 --- @type ModelExtendedId
+E_MODEL_BOWSER_SMOKE                       = 126 --- @type ModelExtendedId
+E_MODEL_BOWSER_FLAMES                      = 127 --- @type ModelExtendedId
+E_MODEL_BOWSER_WAVE                        = 128 --- @type ModelExtendedId
+E_MODEL_BOWSER2                            = 129 --- @type ModelExtendedId
+E_MODEL_BUB                                = 130 --- @type ModelExtendedId
+E_MODEL_TREASURE_CHEST_BASE                = 131 --- @type ModelExtendedId
+E_MODEL_TREASURE_CHEST_LID                 = 132 --- @type ModelExtendedId
+E_MODEL_CYAN_FISH                          = 133 --- @type ModelExtendedId
+E_MODEL_WATER_RING                         = 134 --- @type ModelExtendedId
+E_MODEL_WATER_MINE                         = 135 --- @type ModelExtendedId
+E_MODEL_SEAWEED                            = 136 --- @type ModelExtendedId
+E_MODEL_SKEETER                            = 137 --- @type ModelExtendedId
+E_MODEL_PIRANHA_PLANT                      = 138 --- @type ModelExtendedId
+E_MODEL_WHOMP                              = 139 --- @type ModelExtendedId
+E_MODEL_KOOPA_WITH_SHELL                   = 140 --- @type ModelExtendedId
+E_MODEL_KOOPA_WITHOUT_SHELL                = 141 --- @type ModelExtendedId
+E_MODEL_METALLIC_BALL                      = 142 --- @type ModelExtendedId
+E_MODEL_CHAIN_CHOMP                        = 143 --- @type ModelExtendedId
+E_MODEL_KOOPA_FLAG                         = 144 --- @type ModelExtendedId
+E_MODEL_WOODEN_POST                        = 145 --- @type ModelExtendedId
+E_MODEL_MIPS                               = 146 --- @type ModelExtendedId
+E_MODEL_BOO_CASTLE                         = 147 --- @type ModelExtendedId
+E_MODEL_LAKITU                             = 148 --- @type ModelExtendedId
+E_MODEL_TOAD                               = 149 --- @type ModelExtendedId
+E_MODEL_CHILL_BULLY                        = 150 --- @type ModelExtendedId
+E_MODEL_BIG_CHILL_BULLY                    = 151 --- @type ModelExtendedId
+E_MODEL_MONEYBAG                           = 152 --- @type ModelExtendedId
+E_MODEL_SWOOP                              = 153 --- @type ModelExtendedId
+E_MODEL_SCUTTLEBUG                         = 154 --- @type ModelExtendedId
+E_MODEL_MR_I_IRIS                          = 155 --- @type ModelExtendedId
+E_MODEL_MR_I                               = 156 --- @type ModelExtendedId
+E_MODEL_DORRIE                             = 157 --- @type ModelExtendedId
+E_MODEL_SNUFIT                             = 158 --- @type ModelExtendedId
+E_MODEL_ERROR_MODEL                        = 159 --- @type ModelExtendedId
+E_MODEL_BUBBLY_TREE                        = 160 --- @type ModelExtendedId
+E_MODEL_COURTYARD_SPIKY_TREE               = 161 --- @type ModelExtendedId
+E_MODEL_SNOW_TREE                          = 162 --- @type ModelExtendedId
+E_MODEL_PALM_TREE                          = 163 --- @type ModelExtendedId
+E_MODEL_CASTLE_CASTLE_DOOR                 = 164 --- @type ModelExtendedId
+E_MODEL_BBH_HAUNTED_DOOR                   = 165 --- @type ModelExtendedId
+E_MODEL_HMC_WOODEN_DOOR                    = 166 --- @type ModelExtendedId
+E_MODEL_HMC_METAL_DOOR                     = 167 --- @type ModelExtendedId
+E_MODEL_HMC_HAZY_MAZE_DOOR                 = 168 --- @type ModelExtendedId
+E_MODEL_CASTLE_DOOR_0_STARS                = 169 --- @type ModelExtendedId
+E_MODEL_CASTLE_DOOR_1_STAR                 = 170 --- @type ModelExtendedId
+E_MODEL_CASTLE_DOOR_3_STARS                = 171 --- @type ModelExtendedId
+E_MODEL_CASTLE_STAR_DOOR_8_STARS           = 172 --- @type ModelExtendedId
+E_MODEL_CASTLE_STAR_DOOR_30_STARS          = 173 --- @type ModelExtendedId
+E_MODEL_CASTLE_STAR_DOOR_50_STARS          = 174 --- @type ModelExtendedId
+E_MODEL_CASTLE_STAR_DOOR_70_STARS          = 175 --- @type ModelExtendedId
+E_MODEL_CASTLE_KEY_DOOR                    = 176 --- @type ModelExtendedId
+E_MODEL_CCM_CABIN_DOOR                     = 177 --- @type ModelExtendedId
+E_MODEL_CASTLE_METAL_DOOR                  = 178 --- @type ModelExtendedId
+E_MODEL_CASTLE_GROUNDS_METAL_DOOR          = 179 --- @type ModelExtendedId
+E_MODEL_WF_TOWER_TRAPEZOID_PLATORM         = 180 --- @type ModelExtendedId
+E_MODEL_WF_TOWER_SQUARE_PLATORM            = 181 --- @type ModelExtendedId
+E_MODEL_WF_TOWER_SQUARE_PLATORM_UNUSED     = 182 --- @type ModelExtendedId
+E_MODEL_WF_TOWER_SQUARE_PLATORM_ELEVATOR   = 183 --- @type ModelExtendedId
+E_MODEL_BBH_STAIRCASE_STEP                 = 184 --- @type ModelExtendedId
+E_MODEL_BBH_TILTING_FLOOR_PLATFORM         = 185 --- @type ModelExtendedId
+E_MODEL_BBH_TUMBLING_PLATFORM              = 186 --- @type ModelExtendedId
+E_MODEL_BBH_TUMBLING_PLATFORM_PART         = 187 --- @type ModelExtendedId
+E_MODEL_BBH_MOVING_BOOKSHELF               = 188 --- @type ModelExtendedId
+E_MODEL_BBH_MESH_ELEVATOR                  = 189 --- @type ModelExtendedId
+E_MODEL_BBH_MERRY_GO_ROUND                 = 190 --- @type ModelExtendedId
+E_MODEL_BBH_WOODEN_TOMB                    = 191 --- @type ModelExtendedId
+E_MODEL_CCM_ROPEWAY_LIFT                   = 192 --- @type ModelExtendedId
+E_MODEL_CCM_SNOWMAN_HEAD                   = 193 --- @type ModelExtendedId
+E_MODEL_CASTLE_BOWSER_TRAP                 = 194 --- @type ModelExtendedId
+E_MODEL_CASTLE_WATER_LEVEL_PILLAR          = 195 --- @type ModelExtendedId
+E_MODEL_CASTLE_CLOCK_MINUTE_HAND           = 196 --- @type ModelExtendedId
+E_MODEL_CASTLE_CLOCK_HOUR_HAND             = 197 --- @type ModelExtendedId
+E_MODEL_CASTLE_CLOCK_PENDULUM              = 198 --- @type ModelExtendedId
+E_MODEL_HMC_METAL_PLATFORM                 = 199 --- @type ModelExtendedId
+E_MODEL_HMC_METAL_ARROW_PLATFORM           = 200 --- @type ModelExtendedId
+E_MODEL_HMC_ELEVATOR_PLATFORM              = 201 --- @type ModelExtendedId
+E_MODEL_HMC_ROLLING_ROCK                   = 202 --- @type ModelExtendedId
+E_MODEL_HMC_ROCK_PIECE                     = 203 --- @type ModelExtendedId
+E_MODEL_HMC_ROCK_SMALL_PIECE               = 204 --- @type ModelExtendedId
+E_MODEL_HMC_RED_GRILLS                     = 205 --- @type ModelExtendedId
+E_MODEL_SSL_PYRAMID_TOP                    = 206 --- @type ModelExtendedId
+E_MODEL_SSL_GRINDEL                        = 207 --- @type ModelExtendedId
+E_MODEL_SSL_SPINDEL                        = 208 --- @type ModelExtendedId
+E_MODEL_SSL_MOVING_PYRAMID_WALL            = 209 --- @type ModelExtendedId
+E_MODEL_SSL_PYRAMID_ELEVATOR               = 210 --- @type ModelExtendedId
+E_MODEL_SSL_TOX_BOX                        = 211 --- @type ModelExtendedId
+E_MODEL_BOB_CHAIN_CHOMP_GATE               = 212 --- @type ModelExtendedId
+E_MODEL_BOB_SEESAW_PLATFORM                = 213 --- @type ModelExtendedId
+E_MODEL_BOB_BARS_GRILLS                    = 214 --- @type ModelExtendedId
+E_MODEL_SL_SNOW_TRIANGLE                   = 215 --- @type ModelExtendedId
+E_MODEL_SL_CRACKED_ICE                     = 216 --- @type ModelExtendedId
+E_MODEL_SL_CRACKED_ICE_CHUNK               = 217 --- @type ModelExtendedId
+E_MODEL_WDW_SQUARE_FLOATING_PLATFORM       = 218 --- @type ModelExtendedId
+E_MODEL_WDW_ARROW_LIFT                     = 219 --- @type ModelExtendedId
+E_MODEL_WDW_WATER_LEVEL_DIAMOND            = 220 --- @type ModelExtendedId
+E_MODEL_WDW_HIDDEN_PLATFORM                = 221 --- @type ModelExtendedId
+E_MODEL_WDW_EXPRESS_ELEVATOR               = 222 --- @type ModelExtendedId
+E_MODEL_WDW_RECTANGULAR_FLOATING_PLATFORM  = 223 --- @type ModelExtendedId
+E_MODEL_WDW_ROTATING_PLATFORM              = 224 --- @type ModelExtendedId
+E_MODEL_JRB_SHIP_LEFT_HALF_PART            = 225 --- @type ModelExtendedId
+E_MODEL_JRB_SHIP_BACK_LEFT_PART            = 226 --- @type ModelExtendedId
+E_MODEL_JRB_SHIP_RIGHT_HALF_PART           = 227 --- @type ModelExtendedId
+E_MODEL_JRB_SHIP_BACK_RIGHT_PART           = 228 --- @type ModelExtendedId
+E_MODEL_JRB_SUNKEN_SHIP                    = 229 --- @type ModelExtendedId
+E_MODEL_JRB_SUNKEN_SHIP_BACK               = 230 --- @type ModelExtendedId
+E_MODEL_JRB_ROCK                           = 231 --- @type ModelExtendedId
+E_MODEL_JRB_SLIDING_BOX                    = 232 --- @type ModelExtendedId
+E_MODEL_JRB_FALLING_PILLAR                 = 233 --- @type ModelExtendedId
+E_MODEL_JRB_FALLING_PILLAR_BASE            = 234 --- @type ModelExtendedId
+E_MODEL_JRB_FLOATING_PLATFORM              = 235 --- @type ModelExtendedId
+E_MODEL_THI_HUGE_ISLAND_TOP                = 236 --- @type ModelExtendedId
+E_MODEL_THI_TINY_ISLAND_TOP                = 237 --- @type ModelExtendedId
+E_MODEL_TTC_ROTATING_CUBE                  = 238 --- @type ModelExtendedId
+E_MODEL_TTC_ROTATING_PRISM                 = 239 --- @type ModelExtendedId
+E_MODEL_TTC_PENDULUM                       = 240 --- @type ModelExtendedId
+E_MODEL_TTC_LARGE_TREADMILL                = 241 --- @type ModelExtendedId
+E_MODEL_TTC_SMALL_TREADMILL                = 242 --- @type ModelExtendedId
+E_MODEL_TTC_PUSH_BLOCK                     = 243 --- @type ModelExtendedId
+E_MODEL_TTC_ROTATING_HEXAGON               = 244 --- @type ModelExtendedId
+E_MODEL_TTC_ROTATING_TRIANGLE              = 245 --- @type ModelExtendedId
+E_MODEL_TTC_PIT_BLOCK                      = 246 --- @type ModelExtendedId
+E_MODEL_TTC_PIT_BLOCK_UNUSED               = 247 --- @type ModelExtendedId
+E_MODEL_TTC_ELEVATOR_PLATFORM              = 248 --- @type ModelExtendedId
+E_MODEL_TTC_CLOCK_HAND                     = 249 --- @type ModelExtendedId
+E_MODEL_TTC_SPINNER                        = 250 --- @type ModelExtendedId
+E_MODEL_TTC_SMALL_GEAR                     = 251 --- @type ModelExtendedId
+E_MODEL_TTC_LARGE_GEAR                     = 252 --- @type ModelExtendedId
+E_MODEL_RR_SLIDING_PLATFORM                = 253 --- @type ModelExtendedId
+E_MODEL_RR_FLYING_CARPET                   = 254 --- @type ModelExtendedId
+E_MODEL_RR_OCTAGONAL_PLATFORM              = 255 --- @type ModelExtendedId
+E_MODEL_RR_ROTATING_BRIDGE_PLATFORM        = 256 --- @type ModelExtendedId
+E_MODEL_RR_TRIANGLE_PLATFORM               = 257 --- @type ModelExtendedId
+E_MODEL_RR_CRUISER_WING                    = 258 --- @type ModelExtendedId
+E_MODEL_RR_SEESAW_PLATFORM                 = 259 --- @type ModelExtendedId
+E_MODEL_RR_L_SHAPED_PLATFORM               = 260 --- @type ModelExtendedId
+E_MODEL_RR_SWINGING_PLATFORM               = 261 --- @type ModelExtendedId
+E_MODEL_RR_DONUT_PLATFORM                  = 262 --- @type ModelExtendedId
+E_MODEL_RR_ELEVATOR_PLATFORM               = 263 --- @type ModelExtendedId
+E_MODEL_RR_TRICKY_TRIANGLES                = 264 --- @type ModelExtendedId
+E_MODEL_RR_TRICKY_TRIANGLES_FRAME1         = 265 --- @type ModelExtendedId
+E_MODEL_RR_TRICKY_TRIANGLES_FRAME2         = 266 --- @type ModelExtendedId
+E_MODEL_RR_TRICKY_TRIANGLES_FRAME3         = 267 --- @type ModelExtendedId
+E_MODEL_RR_TRICKY_TRIANGLES_FRAME4         = 268 --- @type ModelExtendedId
+E_MODEL_BITDW_SQUARE_PLATFORM              = 269 --- @type ModelExtendedId
+E_MODEL_BITDW_SEESAW_PLATFORM              = 270 --- @type ModelExtendedId
+E_MODEL_BITDW_SLIDING_PLATFORM             = 271 --- @type ModelExtendedId
+E_MODEL_BITDW_FERRIS_WHEEL_AXLE            = 272 --- @type ModelExtendedId
+E_MODEL_BITDW_BLUE_PLATFORM                = 273 --- @type ModelExtendedId
+E_MODEL_BITDW_STAIRCASE_FRAME4             = 274 --- @type ModelExtendedId
+E_MODEL_BITDW_STAIRCASE_FRAME3             = 275 --- @type ModelExtendedId
+E_MODEL_BITDW_STAIRCASE_FRAME2             = 276 --- @type ModelExtendedId
+E_MODEL_BITDW_STAIRCASE_FRAME1             = 277 --- @type ModelExtendedId
+E_MODEL_BITDW_STAIRCASE                    = 278 --- @type ModelExtendedId
+E_MODEL_BITFS_PLATFORM_ON_TRACK            = 279 --- @type ModelExtendedId
+E_MODEL_BITFS_TILTING_SQUARE_PLATFORM      = 280 --- @type ModelExtendedId
+E_MODEL_BITFS_SINKING_PLATFORMS            = 281 --- @type ModelExtendedId
+E_MODEL_BITFS_BLUE_POLE                    = 282 --- @type ModelExtendedId
+E_MODEL_BITFS_SINKING_CAGE_PLATFORM        = 283 --- @type ModelExtendedId
+E_MODEL_BITFS_ELEVATOR                     = 284 --- @type ModelExtendedId
+E_MODEL_BITFS_STRETCHING_PLATFORMS         = 285 --- @type ModelExtendedId
+E_MODEL_BITFS_SEESAW_PLATFORM              = 286 --- @type ModelExtendedId
+E_MODEL_BITFS_MOVING_SQUARE_PLATFORM       = 287 --- @type ModelExtendedId
+E_MODEL_BITFS_SLIDING_PLATFORM             = 288 --- @type ModelExtendedId
+E_MODEL_BITFS_TUMBLING_PLATFORM_PART       = 289 --- @type ModelExtendedId
+E_MODEL_BITFS_TUMBLING_PLATFORM            = 290 --- @type ModelExtendedId
+E_MODEL_BITS_SLIDING_PLATFORM              = 291 --- @type ModelExtendedId
+E_MODEL_BITS_TWIN_SLIDING_PLATFORMS        = 292 --- @type ModelExtendedId
+E_MODEL_BITS_OCTAGONAL_PLATFORM            = 293 --- @type ModelExtendedId
+E_MODEL_BITS_BLUE_PLATFORM                 = 294 --- @type ModelExtendedId
+E_MODEL_BITS_FERRIS_WHEEL_AXLE             = 295 --- @type ModelExtendedId
+E_MODEL_BITS_ARROW_PLATFORM                = 296 --- @type ModelExtendedId
+E_MODEL_BITS_SEESAW_PLATFORM               = 297 --- @type ModelExtendedId
+E_MODEL_BITS_TILTING_W_PLATFORM            = 298 --- @type ModelExtendedId
+E_MODEL_BITS_STAIRCASE                     = 299 --- @type ModelExtendedId
+E_MODEL_BITS_STAIRCASE_FRAME1              = 300 --- @type ModelExtendedId
+E_MODEL_BITS_STAIRCASE_FRAME2              = 301 --- @type ModelExtendedId
+E_MODEL_BITS_STAIRCASE_FRAME3              = 302 --- @type ModelExtendedId
+E_MODEL_BITS_STAIRCASE_FRAME4              = 303 --- @type ModelExtendedId
+E_MODEL_BITS_WARP_PIPE                     = 304 --- @type ModelExtendedId
+E_MODEL_LLL_DRAWBRIDGE_PART                = 305 --- @type ModelExtendedId
+E_MODEL_LLL_ROTATING_BLOCK_FIRE_BARS       = 306 --- @type ModelExtendedId
+E_MODEL_LLL_ROTATING_HEXAGONAL_RING        = 307 --- @type ModelExtendedId
+E_MODEL_LLL_SINKING_RECTANGULAR_PLATFORM   = 308 --- @type ModelExtendedId
+E_MODEL_LLL_SINKING_SQUARE_PLATFORMS       = 309 --- @type ModelExtendedId
+E_MODEL_LLL_TILTING_SQUARE_PLATFORM        = 310 --- @type ModelExtendedId
+E_MODEL_LLL_BOWSER_PIECE_1                 = 311 --- @type ModelExtendedId
+E_MODEL_LLL_BOWSER_PIECE_2                 = 312 --- @type ModelExtendedId
+E_MODEL_LLL_BOWSER_PIECE_3                 = 313 --- @type ModelExtendedId
+E_MODEL_LLL_BOWSER_PIECE_4                 = 314 --- @type ModelExtendedId
+E_MODEL_LLL_BOWSER_PIECE_5                 = 315 --- @type ModelExtendedId
+E_MODEL_LLL_BOWSER_PIECE_6                 = 316 --- @type ModelExtendedId
+E_MODEL_LLL_BOWSER_PIECE_7                 = 317 --- @type ModelExtendedId
+E_MODEL_LLL_BOWSER_PIECE_8                 = 318 --- @type ModelExtendedId
+E_MODEL_LLL_BOWSER_PIECE_9                 = 319 --- @type ModelExtendedId
+E_MODEL_LLL_BOWSER_PIECE_10                = 320 --- @type ModelExtendedId
+E_MODEL_LLL_BOWSER_PIECE_11                = 321 --- @type ModelExtendedId
+E_MODEL_LLL_BOWSER_PIECE_12                = 322 --- @type ModelExtendedId
+E_MODEL_LLL_BOWSER_PIECE_13                = 323 --- @type ModelExtendedId
+E_MODEL_LLL_BOWSER_PIECE_14                = 324 --- @type ModelExtendedId
+E_MODEL_LLL_MOVING_OCTAGONAL_MESH_PLATFORM = 325 --- @type ModelExtendedId
+E_MODEL_LLL_SINKING_ROCK_BLOCK             = 326 --- @type ModelExtendedId
+E_MODEL_LLL_ROLLING_LOG                    = 327 --- @type ModelExtendedId
+E_MODEL_LLL_WOOD_BRIDGE                    = 328 --- @type ModelExtendedId
+E_MODEL_LLL_LARGE_WOOD_BRIDGE              = 329 --- @type ModelExtendedId
+E_MODEL_LLL_FALLING_PLATFORM               = 330 --- @type ModelExtendedId
+E_MODEL_LLL_LARGE_FALLING_PLATFORM         = 331 --- @type ModelExtendedId
+E_MODEL_LLL_VOLCANO_FALLING_TRAP           = 332 --- @type ModelExtendedId
+E_MODEL_DDD_BOWSER_SUB_DOOR                = 333 --- @type ModelExtendedId
+E_MODEL_DDD_BOWSER_SUB                     = 334 --- @type ModelExtendedId
+E_MODEL_DDD_POLE                           = 335 --- @type ModelExtendedId
+E_MODEL_WF_BREAKABLE_WALL_RIGHT            = 336 --- @type ModelExtendedId
+E_MODEL_WF_BREAKABLE_WALL_LEFT             = 337 --- @type ModelExtendedId
+E_MODEL_WF_KICKABLE_BOARD                  = 338 --- @type ModelExtendedId
+E_MODEL_WF_TOWER_DOOR                      = 339 --- @type ModelExtendedId
+E_MODEL_WF_KICKABLE_BOARD_FELLED           = 340 --- @type ModelExtendedId
+E_MODEL_CASTLE_GROUNDS_VCUTM_GRILL         = 341 --- @type ModelExtendedId
+E_MODEL_CASTLE_GROUNDS_FLAG                = 342 --- @type ModelExtendedId
+E_MODEL_CASTLE_GROUNDS_CANNON_GRILL        = 343 --- @type ModelExtendedId
+E_MODEL_BOWSER_2_TILTING_ARENA             = 344 --- @type ModelExtendedId
+E_MODEL_BOWSER_3_FALLING_PLATFORM_1        = 345 --- @type ModelExtendedId
+E_MODEL_BOWSER_3_FALLING_PLATFORM_2        = 346 --- @type ModelExtendedId
+E_MODEL_BOWSER_3_FALLING_PLATFORM_3        = 347 --- @type ModelExtendedId
+E_MODEL_BOWSER_3_FALLING_PLATFORM_4        = 348 --- @type ModelExtendedId
+E_MODEL_BOWSER_3_FALLING_PLATFORM_5        = 349 --- @type ModelExtendedId
+E_MODEL_BOWSER_3_FALLING_PLATFORM_6        = 350 --- @type ModelExtendedId
+E_MODEL_BOWSER_3_FALLING_PLATFORM_7        = 351 --- @type ModelExtendedId
+E_MODEL_BOWSER_3_FALLING_PLATFORM_8        = 352 --- @type ModelExtendedId
+E_MODEL_BOWSER_3_FALLING_PLATFORM_9        = 353 --- @type ModelExtendedId
+E_MODEL_BOWSER_3_FALLING_PLATFORM_10       = 354 --- @type ModelExtendedId
+E_MODEL_TTM_ROLLING_LOG                    = 355 --- @type ModelExtendedId
+E_MODEL_TTM_STAR_CAGE                      = 356 --- @type ModelExtendedId
+E_MODEL_TTM_BLUE_SMILEY                    = 357 --- @type ModelExtendedId
+E_MODEL_TTM_YELLOW_SMILEY                  = 358 --- @type ModelExtendedId
+E_MODEL_TTM_STAR_SMILEY                    = 359 --- @type ModelExtendedId
+E_MODEL_TTM_MOON_SMILEY                    = 360 --- @type ModelExtendedId
+E_MODEL_BUBBLE_PLAYER                      = 361 --- @type ModelExtendedId
+E_MODEL_LUIGI                              = 362 --- @type ModelExtendedId
+E_MODEL_LUIGIS_CAP                         = 363 --- @type ModelExtendedId
+E_MODEL_LUIGIS_METAL_CAP                   = 364 --- @type ModelExtendedId
+E_MODEL_LUIGIS_WING_CAP                    = 365 --- @type ModelExtendedId
+E_MODEL_LUIGIS_WINGED_METAL_CAP            = 366 --- @type ModelExtendedId
+E_MODEL_TOAD_PLAYER                        = 367 --- @type ModelExtendedId
+E_MODEL_TOADS_CAP                          = 368 --- @type ModelExtendedId
+E_MODEL_TOADS_METAL_CAP                    = 369 --- @type ModelExtendedId
+E_MODEL_TOADS_WING_CAP                     = 370 --- @type ModelExtendedId
+E_MODEL_WALUIGI                            = 371 --- @type ModelExtendedId
+E_MODEL_WALUIGIS_CAP                       = 372 --- @type ModelExtendedId
+E_MODEL_WALUIGIS_METAL_CAP                 = 373 --- @type ModelExtendedId
+E_MODEL_WALUIGIS_WING_CAP                  = 374 --- @type ModelExtendedId
+E_MODEL_WALUIGIS_WINGED_METAL_CAP          = 375 --- @type ModelExtendedId
+E_MODEL_WARIO                              = 376 --- @type ModelExtendedId
+E_MODEL_WARIOS_CAP                         = 377 --- @type ModelExtendedId
+E_MODEL_WARIOS_METAL_CAP                   = 378 --- @type ModelExtendedId
+E_MODEL_WARIOS_WING_CAP                    = 379 --- @type ModelExtendedId
+E_MODEL_WARIOS_WINGED_METAL_CAP            = 380 --- @type ModelExtendedId
+E_MODEL_MAX                                = 381 --- @type ModelExtendedId
+
+--- @alias ModelExtendedId
+--- | `E_MODEL_NONE`
+--- | `E_MODEL_MARIO`
+--- | `E_MODEL_SMOKE`
+--- | `E_MODEL_SPARKLES`
+--- | `E_MODEL_BUBBLE`
+--- | `E_MODEL_SMALL_WATER_SPLASH`
+--- | `E_MODEL_IDLE_WATER_WAVE`
+--- | `E_MODEL_WATER_SPLASH`
+--- | `E_MODEL_WAVE_TRAIL`
+--- | `E_MODEL_YELLOW_COIN`
+--- | `E_MODEL_STAR`
+--- | `E_MODEL_TRANSPARENT_STAR`
+--- | `E_MODEL_WOODEN_SIGNPOST`
+--- | `E_MODEL_WHITE_PARTICLE_SMALL`
+--- | `E_MODEL_RED_FLAME`
+--- | `E_MODEL_BLUE_FLAME`
+--- | `E_MODEL_BURN_SMOKE`
+--- | `E_MODEL_LEAVES`
+--- | `E_MODEL_PURPLE_MARBLE`
+--- | `E_MODEL_TRAMPOLINE`
+--- | `E_MODEL_TRAMPOLINE_CENTER`
+--- | `E_MODEL_TRAMPOLINE_BASE`
+--- | `E_MODEL_FISH`
+--- | `E_MODEL_FISH_SHADOW`
+--- | `E_MODEL_SPARKLES_ANIMATION`
+--- | `E_MODEL_SAND_DUST`
+--- | `E_MODEL_BUTTERFLY`
+--- | `E_MODEL_BURN_SMOKE_UNUSED`
+--- | `E_MODEL_PEBBLE`
+--- | `E_MODEL_MIST`
+--- | `E_MODEL_WHITE_PUFF`
+--- | `E_MODEL_WHITE_PARTICLE_DL`
+--- | `E_MODEL_WHITE_PARTICLE`
+--- | `E_MODEL_YELLOW_COIN_NO_SHADOW`
+--- | `E_MODEL_BLUE_COIN`
+--- | `E_MODEL_BLUE_COIN_NO_SHADOW`
+--- | `E_MODEL_MARIOS_WINGED_METAL_CAP`
+--- | `E_MODEL_MARIOS_METAL_CAP`
+--- | `E_MODEL_MARIOS_WING_CAP`
+--- | `E_MODEL_MARIOS_CAP`
+--- | `E_MODEL_BOWSER_KEY_CUTSCENE`
+--- | `E_MODEL_BOWSER_KEY`
+--- | `E_MODEL_RED_FLAME_SHADOW`
+--- | `E_MODEL_1UP`
+--- | `E_MODEL_RED_COIN`
+--- | `E_MODEL_RED_COIN_NO_SHADOW`
+--- | `E_MODEL_NUMBER`
+--- | `E_MODEL_EXPLOSION`
+--- | `E_MODEL_DIRT_ANIMATION`
+--- | `E_MODEL_CARTOON_STAR`
+--- | `E_MODEL_BLUE_COIN_SWITCH`
+--- | `E_MODEL_AMP`
+--- | `E_MODEL_PURPLE_SWITCH`
+--- | `E_MODEL_CHECKERBOARD_PLATFORM`
+--- | `E_MODEL_BREAKABLE_BOX`
+--- | `E_MODEL_BREAKABLE_BOX_SMALL`
+--- | `E_MODEL_EXCLAMATION_BOX_OUTLINE`
+--- | `E_MODEL_EXCLAMATION_BOX`
+--- | `E_MODEL_GOOMBA`
+--- | `E_MODEL_EXCLAMATION_POINT`
+--- | `E_MODEL_KOOPA_SHELL`
+--- | `E_MODEL_METAL_BOX`
+--- | `E_MODEL_METAL_BOX_DL`
+--- | `E_MODEL_BLACK_BOBOMB`
+--- | `E_MODEL_BOBOMB_BUDDY`
+--- | `E_MODEL_DL_CANNON_LID`
+--- | `E_MODEL_BOWLING_BALL`
+--- | `E_MODEL_CANNON_BARREL`
+--- | `E_MODEL_CANNON_BASE`
+--- | `E_MODEL_HEART`
+--- | `E_MODEL_FLYGUY`
+--- | `E_MODEL_CHUCKYA`
+--- | `E_MODEL_TRAJECTORY_MARKER_BALL`
+--- | `E_MODEL_BULLET_BILL`
+--- | `E_MODEL_YELLOW_SPHERE`
+--- | `E_MODEL_HOOT`
+--- | `E_MODEL_YOSHI_EGG`
+--- | `E_MODEL_THWOMP`
+--- | `E_MODEL_HEAVE_HO`
+--- | `E_MODEL_BLARGG`
+--- | `E_MODEL_BULLY`
+--- | `E_MODEL_BULLY_BOSS`
+--- | `E_MODEL_WATER_BOMB`
+--- | `E_MODEL_WATER_BOMB_SHADOW`
+--- | `E_MODEL_KING_BOBOMB`
+--- | `E_MODEL_MANTA_RAY`
+--- | `E_MODEL_UNAGI`
+--- | `E_MODEL_SUSHI`
+--- | `E_MODEL_DL_WHIRLPOOL`
+--- | `E_MODEL_CLAM_SHELL`
+--- | `E_MODEL_POKEY_HEAD`
+--- | `E_MODEL_POKEY_BODY_PART`
+--- | `E_MODEL_TWEESTER`
+--- | `E_MODEL_KLEPTO`
+--- | `E_MODEL_EYEROK_LEFT_HAND`
+--- | `E_MODEL_EYEROK_RIGHT_HAND`
+--- | `E_MODEL_DL_MONTY_MOLE_HOLE`
+--- | `E_MODEL_MONTY_MOLE`
+--- | `E_MODEL_UKIKI`
+--- | `E_MODEL_FWOOSH`
+--- | `E_MODEL_SPINDRIFT`
+--- | `E_MODEL_MR_BLIZZARD_HIDDEN`
+--- | `E_MODEL_MR_BLIZZARD`
+--- | `E_MODEL_PENGUIN`
+--- | `E_MODEL_CAP_SWITCH_EXCLAMATION`
+--- | `E_MODEL_CAP_SWITCH`
+--- | `E_MODEL_CAP_SWITCH_BASE`
+--- | `E_MODEL_BOO`
+--- | `E_MODEL_BETA_BOO_KEY`
+--- | `E_MODEL_HAUNTED_CHAIR`
+--- | `E_MODEL_MAD_PIANO`
+--- | `E_MODEL_BOOKEND_PART`
+--- | `E_MODEL_BOOKEND`
+--- | `E_MODEL_HAUNTED_CAGE`
+--- | `E_MODEL_BIRDS`
+--- | `E_MODEL_PEACH`
+--- | `E_MODEL_YOSHI`
+--- | `E_MODEL_ENEMY_LAKITU`
+--- | `E_MODEL_SPINY_BALL`
+--- | `E_MODEL_SPINY`
+--- | `E_MODEL_WIGGLER_HEAD`
+--- | `E_MODEL_WIGGLER_BODY`
+--- | `E_MODEL_BUBBA`
+--- | `E_MODEL_BOWSER`
+--- | `E_MODEL_BOWSER_BOMB_CHILD_OBJ`
+--- | `E_MODEL_BOWSER_BOMB`
+--- | `E_MODEL_BOWSER_SMOKE`
+--- | `E_MODEL_BOWSER_FLAMES`
+--- | `E_MODEL_BOWSER_WAVE`
+--- | `E_MODEL_BOWSER2`
+--- | `E_MODEL_BUB`
+--- | `E_MODEL_TREASURE_CHEST_BASE`
+--- | `E_MODEL_TREASURE_CHEST_LID`
+--- | `E_MODEL_CYAN_FISH`
+--- | `E_MODEL_WATER_RING`
+--- | `E_MODEL_WATER_MINE`
+--- | `E_MODEL_SEAWEED`
+--- | `E_MODEL_SKEETER`
+--- | `E_MODEL_PIRANHA_PLANT`
+--- | `E_MODEL_WHOMP`
+--- | `E_MODEL_KOOPA_WITH_SHELL`
+--- | `E_MODEL_KOOPA_WITHOUT_SHELL`
+--- | `E_MODEL_METALLIC_BALL`
+--- | `E_MODEL_CHAIN_CHOMP`
+--- | `E_MODEL_KOOPA_FLAG`
+--- | `E_MODEL_WOODEN_POST`
+--- | `E_MODEL_MIPS`
+--- | `E_MODEL_BOO_CASTLE`
+--- | `E_MODEL_LAKITU`
+--- | `E_MODEL_TOAD`
+--- | `E_MODEL_CHILL_BULLY`
+--- | `E_MODEL_BIG_CHILL_BULLY`
+--- | `E_MODEL_MONEYBAG`
+--- | `E_MODEL_SWOOP`
+--- | `E_MODEL_SCUTTLEBUG`
+--- | `E_MODEL_MR_I_IRIS`
+--- | `E_MODEL_MR_I`
+--- | `E_MODEL_DORRIE`
+--- | `E_MODEL_SNUFIT`
+--- | `E_MODEL_ERROR_MODEL`
+--- | `E_MODEL_BUBBLY_TREE`
+--- | `E_MODEL_COURTYARD_SPIKY_TREE`
+--- | `E_MODEL_SNOW_TREE`
+--- | `E_MODEL_PALM_TREE`
+--- | `E_MODEL_CASTLE_CASTLE_DOOR`
+--- | `E_MODEL_BBH_HAUNTED_DOOR`
+--- | `E_MODEL_HMC_WOODEN_DOOR`
+--- | `E_MODEL_HMC_METAL_DOOR`
+--- | `E_MODEL_HMC_HAZY_MAZE_DOOR`
+--- | `E_MODEL_CASTLE_DOOR_0_STARS`
+--- | `E_MODEL_CASTLE_DOOR_1_STAR`
+--- | `E_MODEL_CASTLE_DOOR_3_STARS`
+--- | `E_MODEL_CASTLE_STAR_DOOR_8_STARS`
+--- | `E_MODEL_CASTLE_STAR_DOOR_30_STARS`
+--- | `E_MODEL_CASTLE_STAR_DOOR_50_STARS`
+--- | `E_MODEL_CASTLE_STAR_DOOR_70_STARS`
+--- | `E_MODEL_CASTLE_KEY_DOOR`
+--- | `E_MODEL_CCM_CABIN_DOOR`
+--- | `E_MODEL_CASTLE_METAL_DOOR`
+--- | `E_MODEL_CASTLE_GROUNDS_METAL_DOOR`
+--- | `E_MODEL_WF_TOWER_TRAPEZOID_PLATORM`
+--- | `E_MODEL_WF_TOWER_SQUARE_PLATORM`
+--- | `E_MODEL_WF_TOWER_SQUARE_PLATORM_UNUSED`
+--- | `E_MODEL_WF_TOWER_SQUARE_PLATORM_ELEVATOR`
+--- | `E_MODEL_BBH_STAIRCASE_STEP`
+--- | `E_MODEL_BBH_TILTING_FLOOR_PLATFORM`
+--- | `E_MODEL_BBH_TUMBLING_PLATFORM`
+--- | `E_MODEL_BBH_TUMBLING_PLATFORM_PART`
+--- | `E_MODEL_BBH_MOVING_BOOKSHELF`
+--- | `E_MODEL_BBH_MESH_ELEVATOR`
+--- | `E_MODEL_BBH_MERRY_GO_ROUND`
+--- | `E_MODEL_BBH_WOODEN_TOMB`
+--- | `E_MODEL_CCM_ROPEWAY_LIFT`
+--- | `E_MODEL_CCM_SNOWMAN_HEAD`
+--- | `E_MODEL_CASTLE_BOWSER_TRAP`
+--- | `E_MODEL_CASTLE_WATER_LEVEL_PILLAR`
+--- | `E_MODEL_CASTLE_CLOCK_MINUTE_HAND`
+--- | `E_MODEL_CASTLE_CLOCK_HOUR_HAND`
+--- | `E_MODEL_CASTLE_CLOCK_PENDULUM`
+--- | `E_MODEL_HMC_METAL_PLATFORM`
+--- | `E_MODEL_HMC_METAL_ARROW_PLATFORM`
+--- | `E_MODEL_HMC_ELEVATOR_PLATFORM`
+--- | `E_MODEL_HMC_ROLLING_ROCK`
+--- | `E_MODEL_HMC_ROCK_PIECE`
+--- | `E_MODEL_HMC_ROCK_SMALL_PIECE`
+--- | `E_MODEL_HMC_RED_GRILLS`
+--- | `E_MODEL_SSL_PYRAMID_TOP`
+--- | `E_MODEL_SSL_GRINDEL`
+--- | `E_MODEL_SSL_SPINDEL`
+--- | `E_MODEL_SSL_MOVING_PYRAMID_WALL`
+--- | `E_MODEL_SSL_PYRAMID_ELEVATOR`
+--- | `E_MODEL_SSL_TOX_BOX`
+--- | `E_MODEL_BOB_CHAIN_CHOMP_GATE`
+--- | `E_MODEL_BOB_SEESAW_PLATFORM`
+--- | `E_MODEL_BOB_BARS_GRILLS`
+--- | `E_MODEL_SL_SNOW_TRIANGLE`
+--- | `E_MODEL_SL_CRACKED_ICE`
+--- | `E_MODEL_SL_CRACKED_ICE_CHUNK`
+--- | `E_MODEL_WDW_SQUARE_FLOATING_PLATFORM`
+--- | `E_MODEL_WDW_ARROW_LIFT`
+--- | `E_MODEL_WDW_WATER_LEVEL_DIAMOND`
+--- | `E_MODEL_WDW_HIDDEN_PLATFORM`
+--- | `E_MODEL_WDW_EXPRESS_ELEVATOR`
+--- | `E_MODEL_WDW_RECTANGULAR_FLOATING_PLATFORM`
+--- | `E_MODEL_WDW_ROTATING_PLATFORM`
+--- | `E_MODEL_JRB_SHIP_LEFT_HALF_PART`
+--- | `E_MODEL_JRB_SHIP_BACK_LEFT_PART`
+--- | `E_MODEL_JRB_SHIP_RIGHT_HALF_PART`
+--- | `E_MODEL_JRB_SHIP_BACK_RIGHT_PART`
+--- | `E_MODEL_JRB_SUNKEN_SHIP`
+--- | `E_MODEL_JRB_SUNKEN_SHIP_BACK`
+--- | `E_MODEL_JRB_ROCK`
+--- | `E_MODEL_JRB_SLIDING_BOX`
+--- | `E_MODEL_JRB_FALLING_PILLAR`
+--- | `E_MODEL_JRB_FALLING_PILLAR_BASE`
+--- | `E_MODEL_JRB_FLOATING_PLATFORM`
+--- | `E_MODEL_THI_HUGE_ISLAND_TOP`
+--- | `E_MODEL_THI_TINY_ISLAND_TOP`
+--- | `E_MODEL_TTC_ROTATING_CUBE`
+--- | `E_MODEL_TTC_ROTATING_PRISM`
+--- | `E_MODEL_TTC_PENDULUM`
+--- | `E_MODEL_TTC_LARGE_TREADMILL`
+--- | `E_MODEL_TTC_SMALL_TREADMILL`
+--- | `E_MODEL_TTC_PUSH_BLOCK`
+--- | `E_MODEL_TTC_ROTATING_HEXAGON`
+--- | `E_MODEL_TTC_ROTATING_TRIANGLE`
+--- | `E_MODEL_TTC_PIT_BLOCK`
+--- | `E_MODEL_TTC_PIT_BLOCK_UNUSED`
+--- | `E_MODEL_TTC_ELEVATOR_PLATFORM`
+--- | `E_MODEL_TTC_CLOCK_HAND`
+--- | `E_MODEL_TTC_SPINNER`
+--- | `E_MODEL_TTC_SMALL_GEAR`
+--- | `E_MODEL_TTC_LARGE_GEAR`
+--- | `E_MODEL_RR_SLIDING_PLATFORM`
+--- | `E_MODEL_RR_FLYING_CARPET`
+--- | `E_MODEL_RR_OCTAGONAL_PLATFORM`
+--- | `E_MODEL_RR_ROTATING_BRIDGE_PLATFORM`
+--- | `E_MODEL_RR_TRIANGLE_PLATFORM`
+--- | `E_MODEL_RR_CRUISER_WING`
+--- | `E_MODEL_RR_SEESAW_PLATFORM`
+--- | `E_MODEL_RR_L_SHAPED_PLATFORM`
+--- | `E_MODEL_RR_SWINGING_PLATFORM`
+--- | `E_MODEL_RR_DONUT_PLATFORM`
+--- | `E_MODEL_RR_ELEVATOR_PLATFORM`
+--- | `E_MODEL_RR_TRICKY_TRIANGLES`
+--- | `E_MODEL_RR_TRICKY_TRIANGLES_FRAME1`
+--- | `E_MODEL_RR_TRICKY_TRIANGLES_FRAME2`
+--- | `E_MODEL_RR_TRICKY_TRIANGLES_FRAME3`
+--- | `E_MODEL_RR_TRICKY_TRIANGLES_FRAME4`
+--- | `E_MODEL_BITDW_SQUARE_PLATFORM`
+--- | `E_MODEL_BITDW_SEESAW_PLATFORM`
+--- | `E_MODEL_BITDW_SLIDING_PLATFORM`
+--- | `E_MODEL_BITDW_FERRIS_WHEEL_AXLE`
+--- | `E_MODEL_BITDW_BLUE_PLATFORM`
+--- | `E_MODEL_BITDW_STAIRCASE_FRAME4`
+--- | `E_MODEL_BITDW_STAIRCASE_FRAME3`
+--- | `E_MODEL_BITDW_STAIRCASE_FRAME2`
+--- | `E_MODEL_BITDW_STAIRCASE_FRAME1`
+--- | `E_MODEL_BITDW_STAIRCASE`
+--- | `E_MODEL_BITFS_PLATFORM_ON_TRACK`
+--- | `E_MODEL_BITFS_TILTING_SQUARE_PLATFORM`
+--- | `E_MODEL_BITFS_SINKING_PLATFORMS`
+--- | `E_MODEL_BITFS_BLUE_POLE`
+--- | `E_MODEL_BITFS_SINKING_CAGE_PLATFORM`
+--- | `E_MODEL_BITFS_ELEVATOR`
+--- | `E_MODEL_BITFS_STRETCHING_PLATFORMS`
+--- | `E_MODEL_BITFS_SEESAW_PLATFORM`
+--- | `E_MODEL_BITFS_MOVING_SQUARE_PLATFORM`
+--- | `E_MODEL_BITFS_SLIDING_PLATFORM`
+--- | `E_MODEL_BITFS_TUMBLING_PLATFORM_PART`
+--- | `E_MODEL_BITFS_TUMBLING_PLATFORM`
+--- | `E_MODEL_BITS_SLIDING_PLATFORM`
+--- | `E_MODEL_BITS_TWIN_SLIDING_PLATFORMS`
+--- | `E_MODEL_BITS_OCTAGONAL_PLATFORM`
+--- | `E_MODEL_BITS_BLUE_PLATFORM`
+--- | `E_MODEL_BITS_FERRIS_WHEEL_AXLE`
+--- | `E_MODEL_BITS_ARROW_PLATFORM`
+--- | `E_MODEL_BITS_SEESAW_PLATFORM`
+--- | `E_MODEL_BITS_TILTING_W_PLATFORM`
+--- | `E_MODEL_BITS_STAIRCASE`
+--- | `E_MODEL_BITS_STAIRCASE_FRAME1`
+--- | `E_MODEL_BITS_STAIRCASE_FRAME2`
+--- | `E_MODEL_BITS_STAIRCASE_FRAME3`
+--- | `E_MODEL_BITS_STAIRCASE_FRAME4`
+--- | `E_MODEL_BITS_WARP_PIPE`
+--- | `E_MODEL_LLL_DRAWBRIDGE_PART`
+--- | `E_MODEL_LLL_ROTATING_BLOCK_FIRE_BARS`
+--- | `E_MODEL_LLL_ROTATING_HEXAGONAL_RING`
+--- | `E_MODEL_LLL_SINKING_RECTANGULAR_PLATFORM`
+--- | `E_MODEL_LLL_SINKING_SQUARE_PLATFORMS`
+--- | `E_MODEL_LLL_TILTING_SQUARE_PLATFORM`
+--- | `E_MODEL_LLL_BOWSER_PIECE_1`
+--- | `E_MODEL_LLL_BOWSER_PIECE_2`
+--- | `E_MODEL_LLL_BOWSER_PIECE_3`
+--- | `E_MODEL_LLL_BOWSER_PIECE_4`
+--- | `E_MODEL_LLL_BOWSER_PIECE_5`
+--- | `E_MODEL_LLL_BOWSER_PIECE_6`
+--- | `E_MODEL_LLL_BOWSER_PIECE_7`
+--- | `E_MODEL_LLL_BOWSER_PIECE_8`
+--- | `E_MODEL_LLL_BOWSER_PIECE_9`
+--- | `E_MODEL_LLL_BOWSER_PIECE_10`
+--- | `E_MODEL_LLL_BOWSER_PIECE_11`
+--- | `E_MODEL_LLL_BOWSER_PIECE_12`
+--- | `E_MODEL_LLL_BOWSER_PIECE_13`
+--- | `E_MODEL_LLL_BOWSER_PIECE_14`
+--- | `E_MODEL_LLL_MOVING_OCTAGONAL_MESH_PLATFORM`
+--- | `E_MODEL_LLL_SINKING_ROCK_BLOCK`
+--- | `E_MODEL_LLL_ROLLING_LOG`
+--- | `E_MODEL_LLL_WOOD_BRIDGE`
+--- | `E_MODEL_LLL_LARGE_WOOD_BRIDGE`
+--- | `E_MODEL_LLL_FALLING_PLATFORM`
+--- | `E_MODEL_LLL_LARGE_FALLING_PLATFORM`
+--- | `E_MODEL_LLL_VOLCANO_FALLING_TRAP`
+--- | `E_MODEL_DDD_BOWSER_SUB_DOOR`
+--- | `E_MODEL_DDD_BOWSER_SUB`
+--- | `E_MODEL_DDD_POLE`
+--- | `E_MODEL_WF_BREAKABLE_WALL_RIGHT`
+--- | `E_MODEL_WF_BREAKABLE_WALL_LEFT`
+--- | `E_MODEL_WF_KICKABLE_BOARD`
+--- | `E_MODEL_WF_TOWER_DOOR`
+--- | `E_MODEL_WF_KICKABLE_BOARD_FELLED`
+--- | `E_MODEL_CASTLE_GROUNDS_VCUTM_GRILL`
+--- | `E_MODEL_CASTLE_GROUNDS_FLAG`
+--- | `E_MODEL_CASTLE_GROUNDS_CANNON_GRILL`
+--- | `E_MODEL_BOWSER_2_TILTING_ARENA`
+--- | `E_MODEL_BOWSER_3_FALLING_PLATFORM_1`
+--- | `E_MODEL_BOWSER_3_FALLING_PLATFORM_2`
+--- | `E_MODEL_BOWSER_3_FALLING_PLATFORM_3`
+--- | `E_MODEL_BOWSER_3_FALLING_PLATFORM_4`
+--- | `E_MODEL_BOWSER_3_FALLING_PLATFORM_5`
+--- | `E_MODEL_BOWSER_3_FALLING_PLATFORM_6`
+--- | `E_MODEL_BOWSER_3_FALLING_PLATFORM_7`
+--- | `E_MODEL_BOWSER_3_FALLING_PLATFORM_8`
+--- | `E_MODEL_BOWSER_3_FALLING_PLATFORM_9`
+--- | `E_MODEL_BOWSER_3_FALLING_PLATFORM_10`
+--- | `E_MODEL_TTM_ROLLING_LOG`
+--- | `E_MODEL_TTM_STAR_CAGE`
+--- | `E_MODEL_TTM_BLUE_SMILEY`
+--- | `E_MODEL_TTM_YELLOW_SMILEY`
+--- | `E_MODEL_TTM_STAR_SMILEY`
+--- | `E_MODEL_TTM_MOON_SMILEY`
+--- | `E_MODEL_BUBBLE_PLAYER`
+--- | `E_MODEL_LUIGI`
+--- | `E_MODEL_LUIGIS_CAP`
+--- | `E_MODEL_LUIGIS_METAL_CAP`
+--- | `E_MODEL_LUIGIS_WING_CAP`
+--- | `E_MODEL_LUIGIS_WINGED_METAL_CAP`
+--- | `E_MODEL_TOAD_PLAYER`
+--- | `E_MODEL_TOADS_CAP`
+--- | `E_MODEL_TOADS_METAL_CAP`
+--- | `E_MODEL_TOADS_WING_CAP`
+--- | `E_MODEL_WALUIGI`
+--- | `E_MODEL_WALUIGIS_CAP`
+--- | `E_MODEL_WALUIGIS_METAL_CAP`
+--- | `E_MODEL_WALUIGIS_WING_CAP`
+--- | `E_MODEL_WALUIGIS_WINGED_METAL_CAP`
+--- | `E_MODEL_WARIO`
+--- | `E_MODEL_WARIOS_CAP`
+--- | `E_MODEL_WARIOS_METAL_CAP`
+--- | `E_MODEL_WARIOS_WING_CAP`
+--- | `E_MODEL_WARIOS_WINGED_METAL_CAP`
+--- | `E_MODEL_MAX`
 
 --- @type integer
 NO_SOUND = 0
@@ -13660,33 +11800,27 @@ PLAY_MODE_NORMAL = 0
 --- @type integer
 PLAY_MODE_PAUSED = 2
 
---- @class AreaTimerType
+AREA_TIMER_TYPE_NONE    = 0 --- @type AreaTimerType
+AREA_TIMER_TYPE_LOOP    = 1 --- @type AreaTimerType
+AREA_TIMER_TYPE_MAXIMUM = 2 --- @type AreaTimerType
 
---- @type AreaTimerType
-AREA_TIMER_TYPE_NONE = 0
+--- @alias AreaTimerType
+--- | `AREA_TIMER_TYPE_NONE`
+--- | `AREA_TIMER_TYPE_LOOP`
+--- | `AREA_TIMER_TYPE_MAXIMUM`
 
---- @type AreaTimerType
-AREA_TIMER_TYPE_LOOP = 1
+SPTASK_STATE_NOT_STARTED = 0 --- @type SpTaskState
+SPTASK_STATE_RUNNING     = 1 --- @type SpTaskState
+SPTASK_STATE_INTERRUPTED = 2 --- @type SpTaskState
+SPTASK_STATE_FINISHED    = 3 --- @type SpTaskState
+SPTASK_STATE_FINISHED_DP = 4 --- @type SpTaskState
 
---- @type AreaTimerType
-AREA_TIMER_TYPE_MAXIMUM = 2
-
---- @class SpTaskState
-
---- @type SpTaskState
-SPTASK_STATE_NOT_STARTED = 0
-
---- @type SpTaskState
-SPTASK_STATE_RUNNING = 1
-
---- @type SpTaskState
-SPTASK_STATE_INTERRUPTED = 2
-
---- @type SpTaskState
-SPTASK_STATE_FINISHED = 3
-
---- @type SpTaskState
-SPTASK_STATE_FINISHED_DP = 4
+--- @alias SpTaskState
+--- | `SPTASK_STATE_NOT_STARTED`
+--- | `SPTASK_STATE_RUNNING`
+--- | `SPTASK_STATE_INTERRUPTED`
+--- | `SPTASK_STATE_FINISHED`
+--- | `SPTASK_STATE_FINISHED_DP`
 
 --- @type integer
 MAX_VERSION_LENGTH = 128

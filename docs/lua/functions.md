@@ -1646,6 +1646,7 @@
    - [audio_stream_pause](functions-5.md#audio_stream_pause)
    - [audio_stream_play](functions-5.md#audio_stream_play)
    - [audio_stream_set_frequency](functions-5.md#audio_stream_set_frequency)
+   - [audio_stream_set_loop_points](functions-5.md#audio_stream_set_loop_points)
    - [audio_stream_set_looping](functions-5.md#audio_stream_set_looping)
    - [audio_stream_set_position](functions-5.md#audio_stream_set_position)
    - [audio_stream_set_volume](functions-5.md#audio_stream_set_volume)
@@ -1798,6 +1799,8 @@
    - [djui_popup_create_global](functions-6.md#djui_popup_create_global)
    - [djui_reset_popup_disabled_override](functions-6.md#djui_reset_popup_disabled_override)
    - [djui_set_popup_disabled_override](functions-6.md#djui_set_popup_disabled_override)
+   - [get_active_mod](functions-6.md#get_active_mod)
+   - [get_area_update_counter](functions-6.md#get_area_update_counter)
    - [get_coopnet_id](functions-6.md#get_coopnet_id)
    - [get_current_save_file_num](functions-6.md#get_current_save_file_num)
    - [get_date_and_time](functions-6.md#get_date_and_time)
@@ -1865,6 +1868,11 @@
 <br />
 
 - smlua_obj_utils.h
+   - [geo_get_current_object](functions-6.md#geo_get_current_object)
+   - [get_current_object](functions-6.md#get_current_object)
+   - [get_cutscene_focus](functions-6.md#get_cutscene_focus)
+   - [get_dialog_object](functions-6.md#get_dialog_object)
+   - [get_secondary_camera_focus](functions-6.md#get_secondary_camera_focus)
    - [get_temp_object_hitbox](functions-6.md#get_temp_object_hitbox)
    - [get_trajectory](functions-6.md#get_trajectory)
    - [obj_check_hitbox_overlap](functions-6.md#obj_check_hitbox_overlap)
@@ -1904,6 +1912,8 @@
    - [obj_set_field_u32](functions-6.md#obj_set_field_u32)
    - [obj_set_model_extended](functions-6.md#obj_set_model_extended)
    - [obj_set_vel](functions-6.md#obj_set_vel)
+   - [set_cutscene_focus](functions-6.md#set_cutscene_focus)
+   - [set_secondary_camera_focus](functions-6.md#set_secondary_camera_focus)
    - [set_whirlpools](functions-6.md#set_whirlpools)
    - [spawn_non_sync_object](functions-6.md#spawn_non_sync_object)
    - [spawn_sync_object](functions-6.md#spawn_sync_object)

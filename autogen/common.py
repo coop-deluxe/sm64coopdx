@@ -305,4 +305,6 @@ def translate_to_def(ptype):
         return 'nil'
     if 'Lua Function' in ptype:
         return 'function'
+    if ptype.startswith('`Array` <'):
+        ptype = ptype.replace('`Array` <', '') + "[]"
     return ptype.replace('enum ', '').replace('const ', '').replace(' ', '').replace('`', '').replace('<', '_').replace('>', '')
