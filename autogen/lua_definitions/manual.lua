@@ -248,7 +248,7 @@ function define_custom_obj_fields(objFieldTable)
 end
 
 --- @param object Object Object to sync
---- @param standardSync boolean Automatically syncs common fields and syncs with distance. If `false`, all syncing must be done with `network_send_object`.
+--- @param standardSync boolean Automatically syncs common fields and syncs with distance. If `false`, all syncing must be done with `network_send_object`
 --- @param fieldTable table<string> The fields to sync
 --- All synced fields must start with `o` and there should not be any keys, just values
 function network_init_object(object, standardSync, fieldTable)
@@ -263,8 +263,8 @@ function network_send_object(object, reliable)
 end
 
 --- @param reliable boolean Whether or not the game should try to resend the packet in case its lost, good for important packets
---- @param dataTable table Table of values to be included in the packet
---- `dataTable` can only contain strings, integers, numbers, booleans, and nil
+--- @param dataTable table<string, number|boolean|string|nil> Table of values to be included in the packet
+--- Sends a global Lua packet with the values of `dataTable`
 function network_send(reliable, dataTable)
     -- ...
 end
@@ -272,7 +272,7 @@ end
 --- @param toLocalIndex integer The local index to send the packet to
 --- @param reliable boolean Whether or not the game should try to resend the packet in case its lost, good for important packets
 --- @param dataTable table Table of values to be included in the packet
---- `dataTable` can only contain strings, integers, numbers, booleans, and nil
+--- Sends a Lua packet with the values of `dataTable` to a specific client through local indices
 function network_send_to(toLocalIndex, reliable, dataTable)
     -- ...
 end
@@ -363,9 +363,9 @@ end
 --- @param levelNum LevelNum | integer
 --- @param func fun(areaIndex:number, bhvData:bhvData, macroBhvIds:BehaviorId[], macroBhvArgs:integer[])
 --- When `func` is called, arguments are filled depending on the level command:
---- - `AREA` command: only `areaIndex` is filled. It's a number.
---- - `OBJECT` command: only `bhvData` is filled. `bhvData` is a table with nine fields: 'behavior', 'behaviorArg', 'model', 'posX', 'posY', 'posZ', 'pitch', 'yaw' and 'roll'.
---- - `MACRO` command: only `macroBhvIds`, `macroBhvArgs` and 'macroBhvModels' are filled. `macroBhvIds` is a list of behavior ids. `macroBhvArgs` is a list of behavior params. 'macroBhvModels' is a list of model ids. All lists have the same size and start at index 0.
+--- - `AREA` command: only `areaIndex` is filled. It's a number
+--- - `OBJECT` command: only `bhvData` is filled. `bhvData` is a table with nine fields: 'behavior', 'behaviorArg', 'model', 'posX', 'posY', 'posZ', 'pitch', 'yaw' and 'roll'
+--- - `MACRO` command: only `macroBhvIds`, `macroBhvArgs` and 'macroBhvModels' are filled. `macroBhvIds` is a list of behavior ids. `macroBhvArgs` is a list of behavior params. 'macroBhvModels' is a list of model ids. All lists have the same size and start at index 0
 function level_script_parse(levelNum, func)
     -- ...
 end
@@ -412,24 +412,24 @@ end
 
 --- @param contents ExclamationBoxContent[]
 --- Sets the contents that the exclamation box spawns.
---- A single content has 5 keys: `id`, `unused`, `firstByte`, `model`, and `behavior`.
---- * `id`: Required; what value the box's oBehParams2ndByte needs to be to spawn this object.
---- * `unused`: Optional; unused by vanilla.
---- * `firstByte`: Optional; Overrides the 1st byte given to the spawned object.
---- * `model`: Required; The model that the object will spawn with. Uses `ModelExtendedId`.
---- * `behavior`: Required; The behavior ID that the object will spawn with. Uses `BehaviorId`.
+--- A single content has 5 keys: `id`, `unused`, `firstByte`, `model`, and `behavior`
+--- * `id`: Required; what value the box's oBehParams2ndByte needs to be to spawn this object
+--- * `unused`: Optional; unused by vanilla
+--- * `firstByte`: Optional; Overrides the 1st byte given to the spawned object
+--- * `model`: Required; The model that the object will spawn with. Uses `ModelExtendedId`
+--- * `behavior`: Required; The behavior ID that the object will spawn with. Uses `BehaviorId`
 function set_exclamation_box_contents(contents)
     -- ...
 end
 
 --- @return ExclamationBoxContent[]
---- Gets the contents that the exclamation box spawns.
---- A single content has 5 keys: `id`, `unused`, `firstByte`, `model`, and `behavior`.
---- * `id`: Required; what value the box's oBehParams2ndByte needs to be to spawn this object.
---- * `unused`: Optional; unused by vanilla.
---- * `firstByte`: Optional; Overrides the 1st byte given to the spawned object.
---- * `model`: Required; The model that the object will spawn with. Uses `ModelExtendedId`.
---- * `behavior`: Required; The behavior ID that the object will spawn with. Uses `BehaviorId`.
+--- Gets the contents that the exclamation box spawns
+--- A single content has 5 keys: `id`, `unused`, `firstByte`, `model`, and `behavior`
+--- * `id`: Required; what value the box's oBehParams2ndByte needs to be to spawn this object
+--- * `unused`: Optional; unused by vanilla
+--- * `firstByte`: Optional; Overrides the 1st byte given to the spawned object
+--- * `model`: Required; The model that the object will spawn with. Uses `ModelExtendedId`
+--- * `behavior`: Required; The behavior ID that the object will spawn with. Uses `BehaviorId`
 function get_exclamation_box_contents()
     -- ...
 end
@@ -437,7 +437,7 @@ end
 --- @param node GraphNode | FnGraphNode
 --- @return GraphNode | GraphNodeAnimatedPart | GraphNodeBackground | GraphNodeBillboard | GraphNodeCamera | GraphNodeCullingRadius | GraphNodeDisplayList | GraphNodeGenerated | GraphNodeHeldObject | GraphNodeLevelOfDetail | GraphNodeMasterList | GraphNodeObject | GraphNodeObjectParent | GraphNodeOrthoProjection | GraphNodePerspective | GraphNodeRotation | GraphNodeScale | GraphNodeShadow | GraphNodeStart | GraphNodeSwitchCase | GraphNodeTranslation | GraphNodeTranslationRotation
 --- Returns the specific GraphNode(...) the node is part of.
---- Basically the reverse of `.node` or `.fnNode`.
+--- Basically the reverse of `.node` or `.fnNode`
 function cast_graph_node(node)
     -- ...
 end
@@ -452,7 +452,7 @@ end
 --- @param gfx Gfx
 --- @param command string
 --- @vararg integer Parameters for the command
---- Sets the specified display list command on the display list given.
+--- Sets the specified display list command on the display list given
 function gfx_set_command(gfx, command, ...)
     -- ...
 end
