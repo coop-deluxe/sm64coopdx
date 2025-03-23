@@ -29,6 +29,7 @@ void bhv_point_light_loop(void) {
         }
 
         obj_copy_pos(o, o->parentObj);
-        le_set_light_pos(o->oLightID, o->oPosX, o->oPosY, o->oPosZ);
     }
+
+    le_set_light_pos(o->oLightID, o->oPosX, o->oPosY, o->oPosZ);
 }
