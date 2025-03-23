@@ -392,13 +392,21 @@ def def_constant(processed_constant):
 
     is_enum = 'identifier' in processed_constant
     if is_enum:
-        s += '\n--- @class %s\n' % translate_to_def(processed_constant['identifier'])
         constants = processed_constant['constants']
         if len(constants) == 0:
             return ''
+        id = translate_to_def(processed_constant['identifier'])
+        klen = 0
+        vlen = 0
+        s += '\n'
         for c in constants:
-            s += '\n--- @type %s\n' % translate_to_def(processed_constant['identifier'])
-            s += '%s = %s\n' % (c[0], c[1])
+            klen = max(klen, len(c[0]))
+            vlen = max(vlen, len(c[1]))
+        for c in constants:
+            s += c[0].ljust(klen) + ' = ' + c[1].rjust(vlen) + ' --- @type %s\n' % id
+        s += '\n--- @alias %s\n' % id
+        for c in constants:
+            s += '--- | `%s`\n' % c[0]
         return s
 
     for c in [processed_constant]:
