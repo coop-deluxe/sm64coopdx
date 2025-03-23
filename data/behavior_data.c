@@ -6446,6 +6446,7 @@ const BehaviorScript bhvAmbientLight[] = {
 const BehaviorScript bhvPointLight[] = {
     BEGIN(OBJ_LIST_DEFAULT),
     ID(id_bhvPointLight),
+    SET_HOME(),
     CALL_NATIVE(bhv_point_light_init),
     BEGIN_LOOP(),
         CALL_NATIVE(bhv_point_light_loop),
