@@ -438,8 +438,8 @@ void audio_stream_set_volume(struct ModAudio* audio, f32 volume) {
 }
 
 // void audio_stream_set_speed(struct ModAudio* audio, f32 initial_freq, f32 speed, bool pitch) {
-//     if (!audio_sanity_check(audio, true, "set stream speed for"))
-//         return;
+//     if (!audio_sanity_check(audio, true, "set stream speed for")) { return; }
+//
 //     bassh_set_speed(audio->handle, initial_freq, speed, pitch);
 // }
 
