@@ -59,8 +59,8 @@ void le_calculate_lighting_color(Vec3f pos, Color out, f32 lightIntensityScalar)
 void le_calculate_lighting_dir(Vec3f pos, Vec3f out) {
     if (sLights == NULL) { return; }
 
-    Vec3f lightingDir;
-    s16 count;
+    Vec3f lightingDir = { 0, 0, 0 };
+    s16 count = 0;
     for (struct LELight* light = hmap_begin(sLights); light != NULL; light = hmap_next(sLights)) {
         f32 dist = vec3f_dist(light->pos, pos);
         if (dist > light->radius) { continue; }
@@ -102,6 +102,7 @@ s16 le_add_light(f32 x, f32 y, f32 z, u8 r, u8 g, u8 b, f32 radius, f32 intensit
 }
 
 void le_remove_light(s16 id) {
+    free(hmap_get(sLights, id));
     hmap_del(sLights, id);
 }
 
