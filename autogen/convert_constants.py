@@ -105,8 +105,6 @@ def saw_constant(identifier, inIfBlock):
         print("SAW DUPLICATE CONSTANT: " + identifier)
         return True
     else:
-        global totalConstants
-        totalConstants += 1
         seen_constants.append(identifier)
         return False
 
@@ -387,6 +385,7 @@ def doc_files(processed_files):
 ############################################################################
 
 def def_constant(processed_constant):
+    global totalConstants
     constants = processed_constant
     s = ''
 
@@ -404,6 +403,7 @@ def def_constant(processed_constant):
             vlen = max(vlen, len(c[1]))
         for c in constants:
             s += c[0].ljust(klen) + ' = ' + c[1].rjust(vlen) + ' --- @type %s\n' % id
+            totalConstants += 1
         s += '\n--- @alias %s\n' % id
         for c in constants:
             s += '--- | `%s`\n' % c[0]
@@ -417,6 +417,7 @@ def def_constant(processed_constant):
         else:
             s += '\n--- @type integer\n'
         s += '%s = %s\n' % (c[0], c[1])
+        totalConstants += 1
 
     return s
 

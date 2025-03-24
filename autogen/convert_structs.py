@@ -772,7 +772,7 @@ def def_structs(structs):
 
     s += '\n'
     for def_pointer in def_pointers:
-        s += '--- @class %s\n' % def_pointer
+        s += '--- @alias %s %s\n' % (def_pointer, def_pointer[8:])
 
     with open(get_path(out_filename_defs), 'w', newline='\n') as out:
         out.write(s)

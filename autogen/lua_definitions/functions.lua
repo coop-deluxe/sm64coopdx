@@ -11030,11 +11030,11 @@ function surface_has_force(surfaceType)
     -- ...
 end
 
---- @class Pointer_integer
---- @class Pointer_BehaviorScript
---- @class Pointer_number
---- @class Pointer_Vec4s
---- @class Pointer_Trajectory
---- @class Pointer_Collision
---- @class Pointer_Gfx
---- @class Pointer_Vtx
+--- @alias Pointer_integer integer
+--- @alias Pointer_BehaviorScript BehaviorScript
+--- @alias Pointer_number number
+--- @alias Pointer_Vec4s Vec4s
+--- @alias Pointer_Trajectory Trajectory
+--- @alias Pointer_Collision Collision
+--- @alias Pointer_Gfx Gfx
+--- @alias Pointer_Vtx Vtx
