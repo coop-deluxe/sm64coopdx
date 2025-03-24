@@ -121,7 +121,7 @@ void gfx_parse(Gfx* cmd, LuaFunction func) {
         u32 op = cmd->words.w0 >> 24;
         switch (op) {
             case G_DL:
-                if (C0(16, 1) == G_DL_PUSH) {
+                if (C0(16, 1) == 0) {
                     gfx_parse((Gfx *) cmd->words.w1, func);
                 } else {
                     cmd = (Gfx *) cmd->words.w1;
