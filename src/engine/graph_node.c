@@ -11,6 +11,8 @@
 #include "include/geo_commands.h"
 #include "pc/debuglog.h"
 
+static struct DynamicPool *sDisplayListDupPool = NULL;
+
 // unused Mtx(s)
 s16 identityMtx[4][4] = { { 1, 0, 0, 0 }, { 0, 1, 0, 0 }, { 0, 0, 1, 0 }, { 0, 0, 0, 1 } };
 s16 zeroMtx[4][4] = { { 0, 0, 0, 0 }, { 0, 0, 0, 0 }, { 0, 0, 0, 0 }, { 0, 0, 0, 0 } };
@@ -19,6 +21,50 @@ Vec3f gVec3fZero = { 0.0f, 0.0f, 0.0f };
 Vec3s gVec3sZero = { 0, 0, 0 };
 Vec3f gVec3fOne = { 1.0f, 1.0f, 1.0f };
 UNUSED Vec3s gVec3sOne = { 1, 1, 1 };
+
+#define C0(cmd, pos, width) (((cmd)->words.w0 >> (pos)) & ((1U << width) - 1))
+
+// Get the size of a display list by iterating
+// until gsSPEndDisplayList or gsSPBranchList is found
+u32 gfx_get_size(const Gfx* gfx) {
+    for (u16 i = 0;;) {
+        u32 op = (gfx + i)->words.w0 >> 24;
+        u8 cmdSize = 1;
+        switch (op) {
+            case G_DL:
+                if (C0(gfx + i, 16, 1) == G_DL_NOPUSH) { return i + 1; } // For displaylists that end with branches (jumps)
+                break;
+            case G_ENDDL:
+                return i + 1;
+            case G_TEXRECT:
+            case G_TEXRECTFLIP:
+                cmdSize = 3;
+                break;
+            case G_FILLRECT:
+                cmdSize = 2;
+                break;
+        }
+        i += cmdSize;
+    }
+}
+
+// Display lists need to be duplicated so they can be modified by mods
+// also to prevent trying to write to read only memory for vanilla display lists
+Gfx *gfx_dup_display_list(const Gfx *gfx) {
+    if (!gfx) { return NULL; }
+    if (!sDisplayListDupPool) { sDisplayListDupPool = dynamic_pool_init(); }
+
+    u32 size = gfx_get_size(gfx) * sizeof(Gfx);
+    void *mem = dynamic_pool_alloc(sDisplayListDupPool, size);
+    memcpy(mem, gfx, size);
+
+    return mem;
+}
+
+void gfx_displaylist_dup_pool_reset() {
+    dynamic_pool_free_pool(sDisplayListDupPool);
+    sDisplayListDupPool = NULL;
+}
 
 /**
  * Initialize a geo node with a given type. Sets all links such that there
@@ -235,7 +281,7 @@ init_graph_node_translation_rotation(struct DynamicPool *pool,
         vec3s_copy(graphNode->translation, translation);
         vec3s_copy(graphNode->rotation, rotation);
         graphNode->node.flags = (drawingLayer << 8) | (graphNode->node.flags & 0xFF);
-        graphNode->displayList = displayList;
+        graphNode->displayList = gfx_dup_display_list(displayList);
     }
 
     return graphNode;
@@ -257,7 +303,7 @@ struct GraphNodeTranslation *init_graph_node_translation(struct DynamicPool *poo
 
         vec3s_copy(graphNode->translation, translation);
         graphNode->node.flags = (drawingLayer << 8) | (graphNode->node.flags & 0xFF);
-        graphNode->displayList = displayList;
+        graphNode->displayList = gfx_dup_display_list(displayList);
     }
 
     return graphNode;
@@ -278,7 +324,7 @@ struct GraphNodeRotation *init_graph_node_rotation(struct DynamicPool *pool,
         init_scene_graph_node_links(&graphNode->node, GRAPH_NODE_TYPE_ROTATION);
         vec3s_copy(graphNode->rotation, rotation);
         graphNode->node.flags = (drawingLayer << 8) | (graphNode->node.flags & 0xFF);
-        graphNode->displayList = displayList;
+        graphNode->displayList = gfx_dup_display_list(displayList);
     }
 
     return graphNode;
@@ -299,7 +345,7 @@ struct GraphNodeScale *init_graph_node_scale(struct DynamicPool *pool,
         graphNode->node.flags = (drawingLayer << 8) | (graphNode->node.flags & 0xFF);
         graphNode->scale = scale;
         graphNode->prevScale = scale;
-        graphNode->displayList = displayList;
+        graphNode->displayList = gfx_dup_display_list(displayList);
     }
 
     return graphNode;
@@ -369,7 +415,7 @@ struct GraphNodeAnimatedPart *init_graph_node_animated_part(struct DynamicPool *
         init_scene_graph_node_links(&graphNode->node, GRAPH_NODE_TYPE_ANIMATED_PART);
         vec3s_copy(graphNode->translation, translation);
         graphNode->node.flags = (drawingLayer << 8) | (graphNode->node.flags & 0xFF);
-        graphNode->displayList = displayList;
+        graphNode->displayList = gfx_dup_display_list(displayList);
     }
 
     return graphNode;
@@ -390,7 +436,7 @@ struct GraphNodeBillboard *init_graph_node_billboard(struct DynamicPool *pool,
         init_scene_graph_node_links(&graphNode->node, GRAPH_NODE_TYPE_BILLBOARD);
         vec3s_copy(graphNode->translation, translation);
         graphNode->node.flags = (drawingLayer << 8) | (graphNode->node.flags & 0xFF);
-        graphNode->displayList = displayList;
+        graphNode->displayList = gfx_dup_display_list(displayList);
     }
 
     return graphNode;
@@ -409,7 +455,7 @@ struct GraphNodeDisplayList *init_graph_node_display_list(struct DynamicPool *po
     if (graphNode != NULL) {
         init_scene_graph_node_links(&graphNode->node, GRAPH_NODE_TYPE_DISPLAY_LIST);
         graphNode->node.flags = (drawingLayer << 8) | (graphNode->node.flags & 0xFF);
-        graphNode->displayList = displayList;
+        graphNode->displayList = gfx_dup_display_list(displayList);
     }
 
     return graphNode;

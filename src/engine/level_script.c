@@ -363,6 +363,8 @@ static void level_cmd_clear_level(void) {
 }
 
 static void level_reset_globals(void) {
+    gfx_displaylist_dup_pool_reset();
+
     // free previous level pool
     if (gLevelPool != NULL) {
         dynamic_pool_free_pool(gLevelPool);
