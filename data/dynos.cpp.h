@@ -972,6 +972,7 @@ struct GraphNode* DynOS_Model_GetGeo(u32 aId);
 u32 DynOS_Model_GetIdFromAsset(void* asset);
 u32 DynOS_Model_GetIdFromGraphNode(struct GraphNode* aNode);
 void DynOS_Model_OverwriteSlot(u32 srcSlot, u32 dstSlot);
+Gfx *DynOS_Model_Duplicate_DisplayList(Gfx* aGfx);
 void DynOS_Model_ClearPool(enum ModelPool aModelPool);
 
 //

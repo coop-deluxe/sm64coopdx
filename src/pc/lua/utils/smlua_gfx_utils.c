@@ -3,6 +3,7 @@
 #include "game/rendering_graph_node.h"
 #include "game/skybox.h"
 #include "geo_commands.h"
+#include "engine/display_list.h"
 
 void set_override_fov(f32 fov) {
     gOverrideFOV = fov;
@@ -109,8 +110,6 @@ void set_skybox_color(u8 index, u8 value) {
 
 ///
 
-#define C0(pos, width) ((cmd->words.w0 >> (pos)) & ((1U << width) - 1))
-
 // Assumes the current microcode is Fast3DEX2 Extended (default for pc port)
 void gfx_parse(Gfx* cmd, LuaFunction func) {
     if (!cmd) { return; }
@@ -121,7 +120,7 @@ void gfx_parse(Gfx* cmd, LuaFunction func) {
         u32 op = cmd->words.w0 >> 24;
         switch (op) {
             case G_DL:
-                if (C0(16, 1) == 0) {
+                if (C0(cmd, 16, 1) == G_DL_PUSH) {
                     gfx_parse((Gfx *) cmd->words.w1, func);
                 } else {
                     cmd = (Gfx *) cmd->words.w1;
@@ -160,7 +159,7 @@ Vtx *gfx_get_vtx(Gfx* cmd, u16 offset) {
     if (op != G_VTX) { return NULL; }
     if (cmd->words.w1 == 0) { return NULL; }
 
-    u16 numVertices = C0(12, 8);
+    u16 numVertices = C0(cmd, 12, 8);
     if (offset >= numVertices) { return NULL; }
 
     return &((Vtx *) cmd->words.w1)[offset];

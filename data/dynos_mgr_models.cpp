@@ -7,6 +7,7 @@ extern "C" {
 #include "engine/graph_node.h"
 #include "model_ids.h"
 #include "pc/lua/utils/smlua_model_utils.h"
+#include "engine/display_list.h"
 }
 
 enum ModelLoadType {
@@ -20,7 +21,11 @@ struct ModelInfo {
     void* asset;
     struct GraphNode* graphNode;
     enum ModelPool modelPool;
+    std::vector<void*> *duplicates;
 };
+
+static std::vector<void*> *sCurrDuplicates = nullptr;
+static std::vector<void*> sScheduledFree;
 
 static struct DynamicPool* sModelPools[MODEL_POOL_MAX] = { 0 };
 
@@ -90,6 +95,8 @@ static struct GraphNode* DynOS_Model_LoadCommonInternal(u32* aId, enum ModelPool
         return found.graphNode;
     }
 
+    sCurrDuplicates = new std::vector<void*>();
+
     // load geo
     struct GraphNode* node = NULL;
     switch (mlt) {
@@ -113,7 +120,8 @@ static struct GraphNode* DynOS_Model_LoadCommonInternal(u32* aId, enum ModelPool
         .id = *aId,
         .asset = aAsset,
         .graphNode = node,
-        .modelPool = aModelPool
+        .modelPool = aModelPool,
+        .duplicates = sCurrDuplicates,
     };
 
     // store in maps
@@ -224,11 +232,52 @@ void DynOS_Model_OverwriteSlot(u32 srcSlot, u32 dstSlot) {
     sOverwriteMap[srcSlot] = dstSlot;
 }
 
+// Display lists need to be duplicated so they can be modified by mods
+// also to prevent trying to write to read only memory for vanilla display lists
+Gfx *DynOS_Model_Duplicate_DisplayList(Gfx* aGfx) {
+    if (!aGfx) { return nullptr; }
+
+    u32 size = gfx_get_size(aGfx) * sizeof(Gfx);
+    Gfx *mem = (Gfx *) malloc(size);
+    memcpy(mem, aGfx, size);
+
+    // Look for other display lists or vertices
+    for (u16 i = 0; i < size / sizeof(Gfx); i++) {
+        Gfx *cmd = mem + i;
+        u32 op = cmd->words.w0 >> 24;
+
+        // Duplicate referenced display lists
+        if (op == G_DL) {
+            cmd->words.w1 = (uintptr_t) DynOS_Model_Duplicate_DisplayList((Gfx *) cmd->words.w1);
+            if (C0(cmd, 16, 1) == G_DL_NOPUSH) { break; } // This is a branch (jump), end of display list
+        }
+
+        // Duplicate referenced vertices
+        if (op == G_VTX) {
+            u32 size = C0(cmd, 12, 8) * sizeof(Vtx);
+            Vtx *mem = (Vtx *) malloc(size);
+            memcpy(mem, (Vtx *) cmd->words.w1, size);
+            cmd->words.w1 = (uintptr_t) mem;
+            sCurrDuplicates->push_back(mem);
+        }
+    }
+
+    sCurrDuplicates->push_back(mem);
+
+    return mem;
+}
+
 void DynOS_Model_ClearPool(enum ModelPool aModelPool) {
     if (!sModelPools[aModelPool]) { return; }
 
     // schedule pool to be freed
     dynamic_pool_free_pool(sModelPools[aModelPool]);
+
+    // free scheduled duplicates
+    for (auto& duplicate : sScheduledFree) {
+        free(duplicate);
+    }
+    sScheduledFree.clear();
 
     // clear overwrite
     if (aModelPool == MODEL_POOL_LEVEL) {
@@ -257,6 +306,12 @@ void DynOS_Model_ClearPool(enum ModelPool aModelPool) {
                 info2++;
             }
         }
+
+        // schedule duplicates to be freed
+        for (auto& duplicate : *info.duplicates) {
+            sScheduledFree.push_back(duplicate);
+        }
+        delete info.duplicates;
     }
 
     assetMap.clear();
