@@ -206,8 +206,14 @@ s32 check_horizontal_wind(struct MarioState *m) {
     struct Surface *floor;
     f32 speed;
     s16 pushAngle;
+    bool allow = true;
+    smlua_call_event_hooks_mario_param_and_int_ret_bool(HOOK_ALLOW_HAZARD_SURFACE, m, HAZARD_TYPE_HORIZONTAL_WIND, &allow);
+    if (!allow) {
+    	return FALSE;
+    }
 
     floor = m->floor;
+    
 
     if (floor && floor->type == SURFACE_HORIZONTAL_WIND) {
         pushAngle = floor->force << 8;
@@ -2299,7 +2305,9 @@ s32 check_common_airborne_cancels(struct MarioState *m) {
         return drop_and_set_mario_action(m, ACT_SQUISHED, 0);
     }
 
-    if (m->floor && m->floor->type == SURFACE_VERTICAL_WIND && (m->action & ACT_FLAG_ALLOW_VERTICAL_WIND_ACTION)) {
+    bool allow = true;
+    smlua_call_event_hooks_mario_param_and_int_ret_bool(HOOK_ALLOW_HAZARD_SURFACE, m, HAZARD_TYPE_VERTICAL_WIND, &allow);
+    if (allow && m->floor && m->floor->type == SURFACE_VERTICAL_WIND && (m->action & ACT_FLAG_ALLOW_VERTICAL_WIND_ACTION)) {
         return drop_and_set_mario_action(m, ACT_VERTICAL_WIND, 0);
     }
 
