@@ -19705,6 +19705,25 @@ int smlua_func_clock_elapsed_ticks(UNUSED lua_State* L) {
     return 1;
 }
 
+int smlua_func_clock_is_date(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "clock_is_date", 2, top);
+        return 0;
+    }
+
+    u8 month = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "clock_is_date"); return 0; }
+    u8 day = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "clock_is_date"); return 0; }
+
+    lua_pushboolean(L, clock_is_date(month, day));
+
+    return 1;
+}
+
 int smlua_func_delta_interpolate_f32(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -33954,6 +33973,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "clock_elapsed", smlua_func_clock_elapsed);
     smlua_bind_function(L, "clock_elapsed_f64", smlua_func_clock_elapsed_f64);
     smlua_bind_function(L, "clock_elapsed_ticks", smlua_func_clock_elapsed_ticks);
+    smlua_bind_function(L, "clock_is_date", smlua_func_clock_is_date);
     smlua_bind_function(L, "delta_interpolate_f32", smlua_func_delta_interpolate_f32);
     smlua_bind_function(L, "delta_interpolate_s32", smlua_func_delta_interpolate_s32);
     smlua_bind_function(L, "delta_interpolate_vec3f", smlua_func_delta_interpolate_vec3f);

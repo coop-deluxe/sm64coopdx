@@ -6446,6 +6446,14 @@ function clock_elapsed_ticks()
     -- ...
 end
 
+--- @param month integer
+--- @param day integer
+--- @return boolean
+--- Checks whether it is the day given
+function clock_is_date(month, day)
+    -- ...
+end
+
 --- @param a number
 --- @param b number
 --- @param delta number

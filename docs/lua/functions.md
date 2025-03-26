@@ -1210,6 +1210,7 @@
    - [clock_elapsed](functions-4.md#clock_elapsed)
    - [clock_elapsed_f64](functions-4.md#clock_elapsed_f64)
    - [clock_elapsed_ticks](functions-4.md#clock_elapsed_ticks)
+   - [clock_is_date](functions-4.md#clock_is_date)
    - [delta_interpolate_f32](functions-4.md#delta_interpolate_f32)
    - [delta_interpolate_s32](functions-4.md#delta_interpolate_s32)
    - [delta_interpolate_vec3f](functions-4.md#delta_interpolate_vec3f)

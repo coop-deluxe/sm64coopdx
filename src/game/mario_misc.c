@@ -847,6 +847,7 @@ Gfx* geo_mario_cap_display_list(s32 callContext, struct GraphNode* node, UNUSED 
 Gfx *geo_process_lua_function(s32 callContext, struct GraphNode *node, UNUSED Mat4 *c) {
     extern s16 gMatStackIndex;
     lua_State *L = gLuaState;
+    if (!L) { return NULL; }
 
     // Do nothing outside of geo_process
     if (callContext != GEO_CONTEXT_RENDER) {
