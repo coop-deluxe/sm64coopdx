@@ -51,6 +51,7 @@
 #include "src/game/first_person_cam.h"
 #include "src/engine/behavior_script.h"
 #include "src/audio/seqplayer.h"
+#include "src/engine/lighting_engine.h"
 
 
   ///////////////
@@ -560,6 +561,22 @@ int smlua_func_bhv_alpha_boo_key_loop(UNUSED lua_State* L) {
 
 
     bhv_alpha_boo_key_loop();
+
+    return 1;
+}
+
+int smlua_func_bhv_ambient_light_init(UNUSED lua_State* L) {
+    if (!gCurrentObject) { return 0; }
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "bhv_ambient_light_init", 0, top);
+        return 0;
+    }
+
+
+    bhv_ambient_light_init();
 
     return 1;
 }
@@ -5829,6 +5846,38 @@ int smlua_func_bhv_play_music_track_when_touched_loop(UNUSED lua_State* L) {
     return 1;
 }
 #endif
+
+int smlua_func_bhv_point_light_init(UNUSED lua_State* L) {
+    if (!gCurrentObject) { return 0; }
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "bhv_point_light_init", 0, top);
+        return 0;
+    }
+
+
+    bhv_point_light_init();
+
+    return 1;
+}
+
+int smlua_func_bhv_point_light_loop(UNUSED lua_State* L) {
+    if (!gCurrentObject) { return 0; }
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "bhv_point_light_loop", 0, top);
+        return 0;
+    }
+
+
+    bhv_point_light_loop();
+
+    return 1;
+}
 
 int smlua_func_bhv_pokey_body_part_update(UNUSED lua_State* L) {
     if (!gCurrentObject) { return 0; }
@@ -14897,6 +14946,234 @@ int smlua_func_warp_special(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "warp_special"); return 0; }
 
     warp_special(arg);
+
+    return 1;
+}
+
+  ///////////////////////
+ // lighting_engine.h //
+///////////////////////
+
+int smlua_func_le_add_light(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 8) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "le_add_light", 8, top);
+        return 0;
+    }
+
+    f32 x = smlua_to_number(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "le_add_light"); return 0; }
+    f32 y = smlua_to_number(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "le_add_light"); return 0; }
+    f32 z = smlua_to_number(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "le_add_light"); return 0; }
+    u8 r = smlua_to_integer(L, 4);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "le_add_light"); return 0; }
+    u8 g = smlua_to_integer(L, 5);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 5, "le_add_light"); return 0; }
+    u8 b = smlua_to_integer(L, 6);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 6, "le_add_light"); return 0; }
+    f32 radius = smlua_to_number(L, 7);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 7, "le_add_light"); return 0; }
+    f32 intensity = smlua_to_number(L, 8);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 8, "le_add_light"); return 0; }
+
+    lua_pushinteger(L, le_add_light(x, y, z, r, g, b, radius, intensity));
+
+    return 1;
+}
+
+int smlua_func_le_calculate_lighting_color(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 3) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "le_calculate_lighting_color", 3, top);
+        return 0;
+    }
+
+
+    Vec3f pos;
+    smlua_get_vec3f(pos, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "le_calculate_lighting_color"); return 0; }
+
+    Color out;
+    smlua_get_color(out, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "le_calculate_lighting_color"); return 0; }
+    f32 lightIntensityScalar = smlua_to_number(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "le_calculate_lighting_color"); return 0; }
+
+    le_calculate_lighting_color(pos, out, lightIntensityScalar);
+
+    smlua_push_vec3f(pos, 1);
+
+    smlua_push_color(out, 2);
+
+    return 1;
+}
+
+int smlua_func_le_calculate_lighting_dir(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "le_calculate_lighting_dir", 2, top);
+        return 0;
+    }
+
+
+    Vec3f pos;
+    smlua_get_vec3f(pos, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "le_calculate_lighting_dir"); return 0; }
+
+    Vec3f out;
+    smlua_get_vec3f(out, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "le_calculate_lighting_dir"); return 0; }
+
+    le_calculate_lighting_dir(pos, out);
+
+    smlua_push_vec3f(pos, 1);
+
+    smlua_push_vec3f(out, 2);
+
+    return 1;
+}
+
+int smlua_func_le_get_light_count(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "le_get_light_count", 0, top);
+        return 0;
+    }
+
+
+    lua_pushinteger(L, le_get_light_count());
+
+    return 1;
+}
+
+int smlua_func_le_remove_light(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "le_remove_light", 1, top);
+        return 0;
+    }
+
+    s16 id = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "le_remove_light"); return 0; }
+
+    le_remove_light(id);
+
+    return 1;
+}
+
+int smlua_func_le_set_ambient_color(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 3) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "le_set_ambient_color", 3, top);
+        return 0;
+    }
+
+    u8 r = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "le_set_ambient_color"); return 0; }
+    u8 g = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "le_set_ambient_color"); return 0; }
+    u8 b = smlua_to_integer(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "le_set_ambient_color"); return 0; }
+
+    le_set_ambient_color(r, g, b);
+
+    return 1;
+}
+
+int smlua_func_le_set_light_color(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 4) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "le_set_light_color", 4, top);
+        return 0;
+    }
+
+    s16 id = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "le_set_light_color"); return 0; }
+    u8 r = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "le_set_light_color"); return 0; }
+    u8 g = smlua_to_integer(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "le_set_light_color"); return 0; }
+    u8 b = smlua_to_integer(L, 4);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "le_set_light_color"); return 0; }
+
+    le_set_light_color(id, r, g, b);
+
+    return 1;
+}
+
+int smlua_func_le_set_light_intensity(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "le_set_light_intensity", 2, top);
+        return 0;
+    }
+
+    s16 id = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "le_set_light_intensity"); return 0; }
+    f32 intensity = smlua_to_number(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "le_set_light_intensity"); return 0; }
+
+    le_set_light_intensity(id, intensity);
+
+    return 1;
+}
+
+int smlua_func_le_set_light_pos(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 4) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "le_set_light_pos", 4, top);
+        return 0;
+    }
+
+    s16 id = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "le_set_light_pos"); return 0; }
+    f32 x = smlua_to_number(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "le_set_light_pos"); return 0; }
+    f32 y = smlua_to_number(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "le_set_light_pos"); return 0; }
+    f32 z = smlua_to_number(L, 4);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "le_set_light_pos"); return 0; }
+
+    le_set_light_pos(id, x, y, z);
+
+    return 1;
+}
+
+int smlua_func_le_set_light_radius(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "le_set_light_radius", 2, top);
+        return 0;
+    }
+
+    s16 id = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "le_set_light_radius"); return 0; }
+    f32 radius = smlua_to_number(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "le_set_light_radius"); return 0; }
+
+    le_set_light_radius(id, radius);
 
     return 1;
 }
@@ -28921,6 +29198,23 @@ int smlua_func_gfx_get_vtx(lua_State* L) {
     return 1;
 }
 
+int smlua_func_gfx_get_vtx_count(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "gfx_get_vtx_count", 1, top);
+        return 0;
+    }
+
+    Gfx* cmd = (Gfx*)smlua_to_cobject(L, 1, LOT_GFX);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "gfx_get_vtx_count"); return 0; }
+
+    lua_pushinteger(L, gfx_get_vtx_count(cmd));
+
+    return 1;
+}
+
 int smlua_func_gfx_parse(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -32861,6 +33155,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "bhv_activated_back_and_forth_platform_init", smlua_func_bhv_activated_back_and_forth_platform_init);
     smlua_bind_function(L, "bhv_activated_back_and_forth_platform_update", smlua_func_bhv_activated_back_and_forth_platform_update);
     smlua_bind_function(L, "bhv_alpha_boo_key_loop", smlua_func_bhv_alpha_boo_key_loop);
+    smlua_bind_function(L, "bhv_ambient_light_init", smlua_func_bhv_ambient_light_init);
     smlua_bind_function(L, "bhv_ambient_sounds_init", smlua_func_bhv_ambient_sounds_init);
     smlua_bind_function(L, "bhv_animated_texture_loop", smlua_func_bhv_animated_texture_loop);
     smlua_bind_function(L, "bhv_animates_on_floor_switch_press_init", smlua_func_bhv_animates_on_floor_switch_press_init);
@@ -33192,6 +33487,8 @@ void smlua_bind_functions_autogen(void) {
 #ifndef VERSION_JP
     smlua_bind_function(L, "bhv_play_music_track_when_touched_loop", smlua_func_bhv_play_music_track_when_touched_loop);
 #endif
+    smlua_bind_function(L, "bhv_point_light_init", smlua_func_bhv_point_light_init);
+    smlua_bind_function(L, "bhv_point_light_loop", smlua_func_bhv_point_light_loop);
     smlua_bind_function(L, "bhv_pokey_body_part_update", smlua_func_bhv_pokey_body_part_update);
     smlua_bind_function(L, "bhv_pokey_update", smlua_func_bhv_pokey_update);
     smlua_bind_function(L, "bhv_pole_base_loop", smlua_func_bhv_pole_base_loop);
@@ -33723,6 +34020,18 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "level_trigger_warp", smlua_func_level_trigger_warp);
     smlua_bind_function(L, "lvl_set_current_level", smlua_func_lvl_set_current_level);
     smlua_bind_function(L, "warp_special", smlua_func_warp_special);
+
+    // lighting_engine.h
+    smlua_bind_function(L, "le_add_light", smlua_func_le_add_light);
+    smlua_bind_function(L, "le_calculate_lighting_color", smlua_func_le_calculate_lighting_color);
+    smlua_bind_function(L, "le_calculate_lighting_dir", smlua_func_le_calculate_lighting_dir);
+    smlua_bind_function(L, "le_get_light_count", smlua_func_le_get_light_count);
+    smlua_bind_function(L, "le_remove_light", smlua_func_le_remove_light);
+    smlua_bind_function(L, "le_set_ambient_color", smlua_func_le_set_ambient_color);
+    smlua_bind_function(L, "le_set_light_color", smlua_func_le_set_light_color);
+    smlua_bind_function(L, "le_set_light_intensity", smlua_func_le_set_light_intensity);
+    smlua_bind_function(L, "le_set_light_pos", smlua_func_le_set_light_pos);
+    smlua_bind_function(L, "le_set_light_radius", smlua_func_le_set_light_radius);
 
     // mario.h
     smlua_bind_function(L, "adjust_sound_for_speed", smlua_func_adjust_sound_for_speed);
@@ -34489,6 +34798,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "get_skybox_color", smlua_func_get_skybox_color);
     smlua_bind_function(L, "get_vertex_color", smlua_func_get_vertex_color);
     smlua_bind_function(L, "gfx_get_vtx", smlua_func_gfx_get_vtx);
+    smlua_bind_function(L, "gfx_get_vtx_count", smlua_func_gfx_get_vtx_count);
     smlua_bind_function(L, "gfx_parse", smlua_func_gfx_parse);
     smlua_bind_function(L, "gfx_set_combine_lerp", smlua_func_gfx_set_combine_lerp);
     smlua_bind_function(L, "gfx_set_texture_image", smlua_func_gfx_set_texture_image);

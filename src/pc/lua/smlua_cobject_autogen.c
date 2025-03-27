@@ -1616,7 +1616,7 @@ static struct LuaObjectField sNetworkPlayerFields[LUA_NETWORK_PLAYER_FIELD_COUNT
     { "type",                   LVT_U8,      offsetof(struct NetworkPlayer, type),                   true,  LOT_NONE,          1, sizeof(u8)                   },
 };
 
-#define LUA_OBJECT_FIELD_COUNT 760
+#define LUA_OBJECT_FIELD_COUNT 761
 static struct LuaObjectField sObjectFields[LUA_OBJECT_FIELD_COUNT] = {
     { "activeFlags",                                LVT_S16,                 offsetof(struct Object, activeFlags),                                false, LOT_NONE,         1, sizeof(s16)                   },
     { "allowRemoteInteractions",                    LVT_U8,                  offsetof(struct Object, allowRemoteInteractions),                    false, LOT_NONE,         1, sizeof(u8)                    },
@@ -2021,6 +2021,7 @@ static struct LuaObjectField sObjectFields[LUA_OBJECT_FIELD_COUNT] = {
     { "oKoopaTheQuickRaceIndex",                    LVT_S16,                 offsetof(struct Object, oKoopaTheQuickRaceIndex),                    false, LOT_NONE,         1, sizeof(s16)                   },
     { "oKoopaTurningAwayFromWall",                  LVT_S32,                 offsetof(struct Object, oKoopaTurningAwayFromWall),                  false, LOT_NONE,         1, sizeof(s32)                   },
     { "oKoopaUnshelledTimeUntilTurn",               LVT_S32,                 offsetof(struct Object, oKoopaUnshelledTimeUntilTurn),               false, LOT_NONE,         1, sizeof(s32)                   },
+    { "oLightID",                                   LVT_S32,                 offsetof(struct Object, oLightID),                                   false, LOT_NONE,         1, sizeof(s32)                   },
     { "oLllRotatingHexFlameUnkF4",                  LVT_F32,                 offsetof(struct Object, oLllRotatingHexFlameUnkF4),                  false, LOT_NONE,         1, sizeof(f32)                   },
     { "oLllRotatingHexFlameUnkF8",                  LVT_F32,                 offsetof(struct Object, oLllRotatingHexFlameUnkF8),                  false, LOT_NONE,         1, sizeof(f32)                   },
     { "oLllRotatingHexFlameUnkFC",                  LVT_F32,                 offsetof(struct Object, oLllRotatingHexFlameUnkFC),                  false, LOT_NONE,         1, sizeof(f32)                   },
