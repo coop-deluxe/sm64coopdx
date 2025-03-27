@@ -35,13 +35,13 @@ s16 set_mario_anim_with_accel(struct MarioState *m, s32 targetAnimID, s32 accel)
 /* |description|
 Sets the character-specific animation at its default rate (no acceleration)
 |descriptionEnd| */
-s16 set_character_animation(struct MarioState *m, s32 targetAnimID);
+s16 set_character_animation(struct MarioState *m, enum CharacterAnimID targetAnimID);
 
 /* |description|
 Sets a character-specific animation where the animation speed is adjusted by `accel`.
 Useful for varying animation speeds based on context or dynamic conditions (e.g., slow-motion)
 |descriptionEnd| */
-s16 set_character_anim_with_accel(struct MarioState *m, s32 targetAnimID, s32 accel);
+s16 set_character_anim_with_accel(struct MarioState *m, enum CharacterAnimID targetAnimID, s32 accel);
 
 /* |description|
 Sets the current animation frame to a specific `animFrame`

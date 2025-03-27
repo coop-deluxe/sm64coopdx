@@ -15915,7 +15915,7 @@ int smlua_func_set_character_anim_with_accel(lua_State* L) {
 
     struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "set_character_anim_with_accel"); return 0; }
-    s32 targetAnimID = smlua_to_integer(L, 2);
+    int targetAnimID = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "set_character_anim_with_accel"); return 0; }
     s32 accel = smlua_to_integer(L, 3);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "set_character_anim_with_accel"); return 0; }
@@ -15936,7 +15936,7 @@ int smlua_func_set_character_animation(lua_State* L) {
 
     struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "set_character_animation"); return 0; }
-    s32 targetAnimID = smlua_to_integer(L, 2);
+    int targetAnimID = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "set_character_animation"); return 0; }
 
     lua_pushinteger(L, set_character_animation(m, targetAnimID));
