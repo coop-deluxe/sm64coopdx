@@ -5200,7 +5200,7 @@ function set_anim_to_frame(m, animFrame)
 end
 
 --- @param m MarioState
---- @param targetAnimID integer
+--- @param targetAnimID CharacterAnimID
 --- @param accel integer
 --- @return integer
 --- Sets a character-specific animation where the animation speed is adjusted by `accel`. Useful for varying animation speeds based on context or dynamic conditions (e.g., slow-motion)
@@ -5209,7 +5209,7 @@ function set_character_anim_with_accel(m, targetAnimID, accel)
 end
 
 --- @param m MarioState
---- @param targetAnimID integer
+--- @param targetAnimID CharacterAnimID
 --- @return integer
 --- Sets the character-specific animation at its default rate (no acceleration)
 function set_character_animation(m, targetAnimID)

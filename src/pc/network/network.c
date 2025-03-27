@@ -33,6 +33,7 @@
 #include "game/ingame_menu.h"
 #include "game/first_person_cam.h"
 #include "game/envfx_snow.h"
+#include "game/mario.h"
 #include "engine/math_util.h"
 #include "engine/lighting_engine.h"
 
