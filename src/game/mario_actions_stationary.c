@@ -1151,8 +1151,9 @@ s32 act_first_person(struct MarioState *m) {
 s32 check_common_stationary_cancels(struct MarioState *m) {
     if (!m) { return 0; }
     if (m->playerIndex != 0) { return FALSE; }
-
-    if (m->pos[1] < m->waterLevel - 100) {
+    bool allow = TRUE;
+    smlua_call_event_hooks_mario_param_and_int_ret_bool(HOOK_ALLOW_FORCE_WATER_ACTION, m, ACT_GROUP_STATIONARY, &allow);
+    if (allow && m->pos[1] < m->waterLevel - 100) {
         if (m->action == ACT_SPAWN_SPIN_LANDING) {
             if (m == &gMarioStates[0]) {
                 load_level_init_text(0);
