@@ -3,9 +3,9 @@
 // Get the size of a display list by iterating
 // until gsSPEndDisplayList or gsSPBranchList is found
 u32 gfx_get_size(const Gfx* gfx) {
-    for (u16 i = 0;;) {
+    for (u32 i = 0;;) {
         u32 op = (gfx + i)->words.w0 >> 24;
-        u8 cmdSize = 1;
+        u32 cmdSize = 1;
         switch (op) {
             case G_DL:
                 if (C0(gfx + i, 16, 1) == G_DL_NOPUSH) { return i + 1; } // For displaylists that end with branches (jumps)
