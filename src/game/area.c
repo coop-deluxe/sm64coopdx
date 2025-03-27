@@ -28,6 +28,7 @@
 #include "pc/djui/djui.h"
 #include "pc/djui/djui_panel_pause.h"
 #include "pc/nametags.h"
+#include "engine/lighting_engine.h"
 
 struct SpawnInfo gPlayerSpawnInfos[MAX_PLAYERS];
 struct Area gAreaData[MAX_AREAS];
@@ -248,6 +249,8 @@ void clear_areas(void) {
         gAreaData[i].musicParam = 0;
         gAreaData[i].musicParam2 = 0;
     }
+
+    le_clear();
 }
 
 void clear_area_graph_nodes(void) {

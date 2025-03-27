@@ -650,7 +650,9 @@
 | id_editor_Scroll_Texture | 536 |
 | id_bhvBlueCoinNumber | 537 |
 | id_bhvStarNumber | 538 |
-| id_bhv_max_count | 539 |
+| id_bhvAmbientLight | 539 |
+| id_bhvPointLight | 540 |
+| id_bhv_max_count | 541 |
 
 [:arrow_up_small:](#)
 

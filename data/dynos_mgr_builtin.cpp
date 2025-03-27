@@ -2030,6 +2030,9 @@ static const void* sDynosBuiltinFuncs[] = {
     define_builtin(spawn_star_number),
     define_builtin(bhv_ferris_wheel_platform_init),
     define_builtin(geo_mario_cap_display_list),
+    define_builtin(bhv_ambient_light_init),
+    define_builtin(bhv_point_light_init),
+    define_builtin(bhv_point_light_loop),
 };
 
 const void* DynOS_Builtin_Func_GetFromName(const char* aDataName) {

@@ -896,7 +896,9 @@ id_RM_Scroll_Texture                      = 535 --- @type BehaviorId
 id_editor_Scroll_Texture                  = 536 --- @type BehaviorId
 id_bhvBlueCoinNumber                      = 537 --- @type BehaviorId
 id_bhvStarNumber                          = 538 --- @type BehaviorId
-id_bhv_max_count                          = 539 --- @type BehaviorId
+id_bhvAmbientLight                        = 539 --- @type BehaviorId
+id_bhvPointLight                          = 540 --- @type BehaviorId
+id_bhv_max_count                          = 541 --- @type BehaviorId
 
 --- @alias BehaviorId
 --- | `id_bhv1Up`
@@ -1438,6 +1440,8 @@ id_bhv_max_count                          = 539 --- @type BehaviorId
 --- | `id_editor_Scroll_Texture`
 --- | `id_bhvBlueCoinNumber`
 --- | `id_bhvStarNumber`
+--- | `id_bhvAmbientLight`
+--- | `id_bhvPointLight`
 --- | `id_bhv_max_count`
 
 --- @type integer
@@ -11836,13 +11840,13 @@ SPTASK_STATE_FINISHED_DP = 4 --- @type SpTaskState
 MAX_VERSION_LENGTH = 128
 
 --- @type integer
-MINOR_VERSION_NUMBER = 1
+MINOR_VERSION_NUMBER = 0
 
 --- @type string
-SM64COOPDX_VERSION = "v1.2.1"
+SM64COOPDX_VERSION = "v1.3"
 
 --- @type integer
-VERSION_NUMBER = 39
+VERSION_NUMBER = 40
 
 --- @type string
 VERSION_TEXT = "v"

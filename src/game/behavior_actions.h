@@ -1147,6 +1147,12 @@ void bhv_yoshi_loop(void);
 void bhv_volcano_trap_loop(void);
 /* |description|Behavior loop function for UV texture scrolling|descriptionEnd| */
 void uv_update_scroll(void);
+/* |description|Behavior loop function for the lighting engine ambient light. Takes the first 3 behavior parameter bytes for RGB color|descriptionEnd| */
+void bhv_ambient_light_init(void);
+/* |description|Behavior init function for the lighting engine point light. Takes the first 3 behavior parameter bytes for RGB color and the last for radius|descriptionEnd| */
+void bhv_point_light_init(void);
+/* |description|Behavior loop function for the lighting engine point light|descriptionEnd| */
+void bhv_point_light_loop(void);
 
 Gfx *geo_move_mario_part_from_parent(s32 run, UNUSED struct GraphNode *node, Mat4 mtx);
 
