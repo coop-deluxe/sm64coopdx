@@ -1613,7 +1613,9 @@ static s32 act_hold_metal_water_fall_land(struct MarioState *m) {
 
 static s32 check_common_submerged_cancels(struct MarioState *m) {
     if (!m) { return 0; }
-    if (m->pos[1] > m->waterLevel - 80) {
+    bool allow = TRUE;
+    smlua_call_event_hooks_mario_param_ret_bool(HOOK_ALLOW_FORCE_NON_WATER_ACTION, m, &allow);
+    if (allow && m->pos[1] > m->waterLevel - 80) {
         if (m->waterLevel - 80 > m->floorHeight) {
             m->pos[1] = m->waterLevel - 80;
         } else {
