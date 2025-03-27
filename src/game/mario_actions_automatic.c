@@ -1160,7 +1160,7 @@ Checks if Mario should cancel his current automatic action, primarily by detecti
 |descriptionEnd| */
 s32 check_common_automatic_cancels(struct MarioState *m) {
     if (!m) { return 0; }
-    bool allow = TRUE;
+    bool allow = true;
     smlua_call_event_hooks_mario_param_and_int_ret_bool(HOOK_ALLOW_FORCE_WATER_ACTION, m, ACT_GROUP_AUTOMATIC, &allow);
     if (!allow) { return FALSE; }
     if (m->pos[1] < m->waterLevel - 100) {
