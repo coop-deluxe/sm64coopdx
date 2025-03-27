@@ -11225,6 +11225,12 @@ HAZARD_TYPE_LAVA_WALL = 2
 HAZARD_TYPE_QUICKSAND = 3
 
 --- @type integer
+HAZARD_TYPE_HORIZONTAL_WIND = 4
+
+--- @type integer
+HAZARD_TYPE_VERTICAL_WIND = 5
+
+--- @type integer
 SURFACE_0004 = 0x0004
 
 --- @type integer

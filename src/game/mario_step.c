@@ -206,7 +206,12 @@ u32 mario_update_windy_ground(struct MarioState *m) {
     if (!m) { return 0; }
     struct Surface *floor = m->floor;
     if (!floor) { return 0; }
-
+    bool allow = true;
+    smlua_call_event_hooks_mario_param_and_int_ret_bool(HOOK_ALLOW_HAZARD_SURFACE, m, HAZARD_TYPE_HORIZONTAL_WIND, &allow);
+    if (!allow) {
+    	return FALSE;
+    }
+    
     extern bool gDjuiInMainMenu;
     if (floor->type == SURFACE_HORIZONTAL_WIND && !gDjuiInMainMenu) {
         f32 pushSpeed;
@@ -697,8 +702,9 @@ void apply_vertical_wind(struct MarioState *m) {
     if (!m) { return; }
     f32 maxVelY;
     f32 offsetY;
-
-    if (m->action != ACT_GROUND_POUND) {
+    bool allow = true;
+    smlua_call_event_hooks_mario_param_and_int_ret_bool(HOOK_ALLOW_HAZARD_SURFACE, m, HAZARD_TYPE_VERTICAL_WIND, &allow);
+    if (m->action != ACT_GROUND_POUND && allow) {
         offsetY = m->pos[1] - -1500.0f;
 
         if (m->floor && m->floor->type == SURFACE_VERTICAL_WIND && -3000.0f < offsetY && offsetY < 2000.0f) {
