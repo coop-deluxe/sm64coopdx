@@ -7,6 +7,7 @@ extern "C" {
 #include "engine/graph_node.h"
 #include "model_ids.h"
 #include "pc/lua/utils/smlua_model_utils.h"
+#include "engine/display_list.h"
 }
 
 enum ModelLoadType {
@@ -20,6 +21,7 @@ struct ModelInfo {
     void* asset;
     struct GraphNode* graphNode;
     enum ModelPool modelPool;
+    std::vector<void*> *duplicates;
 };
 
 static struct DynamicPool* sModelPools[MODEL_POOL_MAX] = { 0 };
@@ -27,6 +29,10 @@ static struct DynamicPool* sModelPools[MODEL_POOL_MAX] = { 0 };
 static std::map<void*, struct ModelInfo> sAssetMap[MODEL_POOL_MAX];
 static std::map<u32, std::vector<struct ModelInfo>> sIdMap;
 static std::map<u32, u32> sOverwriteMap;
+
+// An array of display list and/or vertex buffer duplicates for the current model processed in process_geo_layout
+static std::vector<void*> *sCurrModelDuplicates = nullptr;
+static std::vector<void*> sScheduledFree[MODEL_POOL_MAX];
 
 static u32 find_empty_id(bool aIsPermanent) {
     u32 id = aIsPermanent ? 9999 : VANILLA_ID_END + 1;
@@ -90,6 +96,8 @@ static struct GraphNode* DynOS_Model_LoadCommonInternal(u32* aId, enum ModelPool
         return found.graphNode;
     }
 
+    sCurrModelDuplicates = new std::vector<void*>();
+
     // load geo
     struct GraphNode* node = NULL;
     switch (mlt) {
@@ -103,7 +111,14 @@ static struct GraphNode* DynOS_Model_LoadCommonInternal(u32* aId, enum ModelPool
             node = aGraphNode;
             break;
     }
-    if (!node) { return NULL; }
+    if (!node) {
+        for (auto &duplicate : *sCurrModelDuplicates) {
+            free(duplicate);
+        }
+        delete sCurrModelDuplicates;
+        sCurrModelDuplicates = nullptr;
+        return NULL;
+    }
 
     // figure out id
     if (!*aId) { *aId = find_empty_id(aModelPool == MODEL_POOL_PERMANENT); }
@@ -113,8 +128,10 @@ static struct GraphNode* DynOS_Model_LoadCommonInternal(u32* aId, enum ModelPool
         .id = *aId,
         .asset = aAsset,
         .graphNode = node,
-        .modelPool = aModelPool
+        .modelPool = aModelPool,
+        .duplicates = sCurrModelDuplicates,
     };
+    sCurrModelDuplicates = nullptr;
 
     // store in maps
     sIdMap[*aId].push_back(info);
@@ -224,11 +241,52 @@ void DynOS_Model_OverwriteSlot(u32 srcSlot, u32 dstSlot) {
     sOverwriteMap[srcSlot] = dstSlot;
 }
 
+// Display lists need to be duplicated so they can be modified by mods
+// also to prevent trying to write to read only memory for vanilla display lists
+Gfx *DynOS_Model_Duplicate_DisplayList(Gfx* aGfx) {
+    if (!aGfx) { return nullptr; }
+
+    u32 size = gfx_get_size(aGfx) * sizeof(Gfx);
+    Gfx *gfxDuplicate = (Gfx *) malloc(size);
+    memcpy(gfxDuplicate, aGfx, size);
+
+    // Look for other display lists or vertices
+    for (u32 i = 0; i < size / sizeof(Gfx); i++) {
+        Gfx *cmd = gfxDuplicate + i;
+        u32 op = cmd->words.w0 >> 24;
+
+        // Duplicate referenced display lists
+        if (op == G_DL) {
+            cmd->words.w1 = (uintptr_t) DynOS_Model_Duplicate_DisplayList((Gfx *) cmd->words.w1);
+            if (C0(cmd, 16, 1) == G_DL_NOPUSH) { break; } // This is a branch (jump), end of display list
+        }
+
+        // Duplicate referenced vertices
+        if (op == G_VTX) {
+            u32 size = C0(cmd, 12, 8) * sizeof(Vtx);
+            Vtx *vtxDuplicate = (Vtx *) malloc(size);
+            memcpy(vtxDuplicate, (Vtx *) cmd->words.w1, size);
+            cmd->words.w1 = (uintptr_t) vtxDuplicate;
+            sCurrModelDuplicates->push_back(vtxDuplicate);
+        }
+    }
+
+    sCurrModelDuplicates->push_back(gfxDuplicate);
+
+    return gfxDuplicate;
+}
+
 void DynOS_Model_ClearPool(enum ModelPool aModelPool) {
     if (!sModelPools[aModelPool]) { return; }
 
     // schedule pool to be freed
     dynamic_pool_free_pool(sModelPools[aModelPool]);
+
+    // free scheduled duplicates
+    for (auto &duplicate : sScheduledFree[aModelPool]) {
+        free(duplicate);
+    }
+    sScheduledFree[aModelPool].clear();
 
     // clear overwrite
     if (aModelPool == MODEL_POOL_LEVEL) {
@@ -256,6 +314,15 @@ void DynOS_Model_ClearPool(enum ModelPool aModelPool) {
             } else {
                 info2++;
             }
+        }
+
+        // schedule duplicates to be freed
+        if (info.duplicates) {
+            for (auto &duplicate : *info.duplicates) {
+                sScheduledFree[aModelPool].push_back(duplicate);
+            }
+            delete info.duplicates;
+            info.duplicates = nullptr;
         }
     }
 
