@@ -166,6 +166,15 @@ Vtx *gfx_get_vtx(Gfx* cmd, u16 offset) {
     return &((Vtx *) cmd->words.w1)[offset];
 }
 
+u16 gfx_get_vtx_count(Gfx* cmd) {
+    if (!cmd) { return 0; }
+    u32 op = cmd->words.w0 >> 24;
+    if (op != G_VTX) { return 0; }
+    if (cmd->words.w1 == 0) { return 0; }
+
+    return C0(12, 8);
+}
+
 void gfx_set_combine_lerp(Gfx* gfx, u32 a0, u32 b0, u32 c0, u32 d0, u32 Aa0, u32 Ab0, u32 Ac0, u32 Ad0, u32 a1, u32 b1, u32 c1, u32 d1,	u32 Aa1, u32 Ab1, u32 Ac1, u32 Ad1) {
     if (!gfx) { return; }
     gDPSetCombineLERPNoString(gfx, a0, b0, c0, d0, Aa0, Ab0, Ac0, Ad0, a1, b1, c1, d1, Aa1, Ab1, Ac1, Ad1);

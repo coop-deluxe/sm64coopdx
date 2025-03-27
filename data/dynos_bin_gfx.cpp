@@ -350,6 +350,7 @@ s64 DynOS_Gfx_ParseGfxConstants(const String& _Arg, bool* found) {
 
     // Extended
     gfx_constant(G_LIGHT_MAP_EXT);
+    gfx_constant(G_LIGHTING_ENGINE_EXT);
 
     // Common values
     gfx_constant(CALC_DXT(4,G_IM_SIZ_4b_BYTES));

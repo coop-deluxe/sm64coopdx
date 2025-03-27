@@ -34,6 +34,8 @@
 #include "macros.h"
 
 #include "game/rendering_graph_node.h"
+#include "engine/lighting_engine.h"
+#include "pc/debug_context.h"
 
 #define SUPPORT_CHECK(x) assert(x)
 
@@ -769,10 +771,15 @@ static float gfx_adjust_x_for_aspect_ratio(float x) {
 
 static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, const Vtx *vertices, bool luaVertexColor) {
     float globalLightCached[2][3];
+    float vertexColorCached[3];
     if (rsp.geometry_mode & G_LIGHTING) {
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 3; j++)
                 globalLightCached[i][j] = gLightingColor[i][j] / 255.0f;
+        }
+    } else if (luaVertexColor) {
+        for (int i = 0; i < 3; i ++) {
+            vertexColorCached[i] = gVertexColor[i] / 255.0f;
         }
     }
 
@@ -856,14 +863,26 @@ static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, cons
                 U = (int32_t)((dotx / 127.0f + 1.0f) / 4.0f * rsp.texture_scaling_factor.s);
                 V = (int32_t)((doty / 127.0f + 1.0f) / 4.0f * rsp.texture_scaling_factor.t);
             }
+        } else if (rsp.geometry_mode & G_LIGHTING_ENGINE_EXT) {
+            Color color;
+            CTX_BEGIN(CTX_LIGHTING);
+            le_calculate_vertex_lighting((Vtx_t*)v, color);
+            CTX_END(CTX_LIGHTING);
+            if (luaVertexColor) {
+                d->color.r = color[0] * vertexColorCached[0];
+                d->color.g = color[1] * vertexColorCached[1];
+                d->color.b = color[2] * vertexColorCached[2];
+            } else {
+                d->color.r = color[0];
+                d->color.g = color[1];
+                d->color.b = color[2];
+            }
+
         } else {
             if (!(rsp.geometry_mode & G_LIGHT_MAP_EXT) && luaVertexColor) {
-                f32 r = gVertexColor[0] / 255.0f;
-                f32 g = gVertexColor[1] / 255.0f;
-                f32 b = gVertexColor[2] / 255.0f;
-                d->color.r = v->cn[0] * r;
-                d->color.g = v->cn[1] * g;
-                d->color.b = v->cn[2] * b;
+                d->color.r = v->cn[0] * vertexColorCached[0];
+                d->color.g = v->cn[1] * vertexColorCached[1];
+                d->color.b = v->cn[2] * vertexColorCached[2];
             } else {
                 d->color.r = v->cn[0];
                 d->color.g = v->cn[1];
