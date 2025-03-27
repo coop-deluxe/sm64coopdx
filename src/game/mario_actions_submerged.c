@@ -204,7 +204,9 @@ u32 perform_water_step(struct MarioState *m) {
     nextPos[1] = m->pos[1] + step[1];
     nextPos[2] = m->pos[2] + step[2];
 
-    if (nextPos[1] > m->waterLevel - 80) {
+    bool allow = true;
+    smlua_call_event_hooks_mario_param_ret_bool(HOOK_ALLOW_FORCE_NON_WATER_ACTION, m, &allow); 
+    if (allow && nextPos[1] > m->waterLevel - 80) {
         nextPos[1] = m->waterLevel - 80;
         m->vel[1] = 0.0f;
     }
@@ -525,6 +527,9 @@ static void play_swimming_noise(struct MarioState *m) {
 
 static s32 check_water_jump(struct MarioState *m) {
     if (!m) { return 0; }
+    bool allow = true;
+    smlua_call_event_hooks_mario_param_ret_bool(HOOK_ALLOW_FORCE_NON_WATER_ACTION, m, &allow); 
+    if (!allow) { return FALSE; }
     s32 probe = (s32)(m->pos[1] + 1.5f);
 
     if (m->input & INPUT_A_PRESSED) {
