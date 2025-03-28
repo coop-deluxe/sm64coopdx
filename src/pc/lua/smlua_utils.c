@@ -346,7 +346,7 @@ bool packet_read_lnt(struct Packet* p, struct LSTNetworkType* lnt) {
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-void smlua_push_object(lua_State* L, u16 lot, void* p, void *extraInfo) {
+CObject *smlua_push_object(lua_State* L, u16 lot, void* p, void *extraInfo) {
     if (p == NULL) {
         lua_pushnil(L);
         return;
@@ -379,9 +379,11 @@ void smlua_push_object(lua_State* L, u16 lot, void* p, void *extraInfo) {
     lua_remove(L, -2); // Remove gSmLuaCObjects table
 
     LUA_STACK_CHECK_END();
+
+    return cobject;
 }
 
-void smlua_push_pointer(lua_State* L, u16 lvt, void* p, void *extraInfo) {
+CPointer *smlua_push_pointer(lua_State* L, u16 lvt, void* p, void *extraInfo) {
     if (p == NULL) {
         lua_pushnil(L);
         return;
@@ -413,6 +415,8 @@ void smlua_push_pointer(lua_State* L, u16 lvt, void* p, void *extraInfo) {
     lua_settable(L, -4);
     lua_remove(L, -2); // Remove gSmLuaCPointers table
     LUA_STACK_CHECK_END();
+
+    return cpointer;
 }
 
 void smlua_push_integer_field(int index, const char* name, lua_Integer val) {
