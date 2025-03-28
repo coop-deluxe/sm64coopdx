@@ -6123,6 +6123,52 @@ Marks the coin score for a specific course as the newest among all save files. A
 <br />
 
 
+## [sequence_player_get_fade_volume](#sequence_player_get_fade_volume)
+
+### Description
+Gets the fade volume of `player`
+
+### Lua Example
+`local numberValue = sequence_player_get_fade_volume(player)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| player | `integer` |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 sequence_player_get_fade_volume(u8 player);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [sequence_player_get_mute_volume_scale](#sequence_player_get_mute_volume_scale)
+
+### Description
+Gets the mute volume scale of `player`
+
+### Lua Example
+`local numberValue = sequence_player_get_mute_volume_scale(player)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| player | `integer` |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 sequence_player_get_mute_volume_scale(u8 player);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [sequence_player_get_tempo](#sequence_player_get_tempo)
 
 ### Description
@@ -6149,7 +6195,7 @@ Gets the tempo of `player`
 ## [sequence_player_get_tempo_acc](#sequence_player_get_tempo_acc)
 
 ### Description
-Gets the tempoAcc (tempo ???) of `player`
+Gets the tempoAcc (tempo accumulation) of `player`
 
 ### Lua Example
 `local integerValue = sequence_player_get_tempo_acc(player)`
@@ -6192,6 +6238,29 @@ Gets the transposition (pitch) of `player`
 
 <br />
 
+## [sequence_player_get_volume](#sequence_player_get_volume)
+
+### Description
+Gets the volume of `player`
+
+### Lua Example
+`local numberValue = sequence_player_get_volume(player)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| player | `integer` |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 sequence_player_get_volume(u8 player);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [sequence_player_set_tempo](#sequence_player_set_tempo)
 
 ### Description
@@ -6219,7 +6288,7 @@ Sets the `tempo` of `player`. Resets when another sequence is played
 ## [sequence_player_set_tempo_acc](#sequence_player_set_tempo_acc)
 
 ### Description
-Sets the `tempoAcc` (tempo ???) of `player`. Resets when another sequence is played
+Sets the `tempoAcc` (tempo accumulation) of `player`. Resets when another sequence is played
 
 ### Lua Example
 `sequence_player_set_tempo_acc(player, tempoAcc)`

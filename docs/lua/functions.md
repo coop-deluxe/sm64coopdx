@@ -1636,9 +1636,12 @@
 <br />
 
 - seqplayer.h
+   - [sequence_player_get_fade_volume](functions-5.md#sequence_player_get_fade_volume)
+   - [sequence_player_get_mute_volume_scale](functions-5.md#sequence_player_get_mute_volume_scale)
    - [sequence_player_get_tempo](functions-5.md#sequence_player_get_tempo)
    - [sequence_player_get_tempo_acc](functions-5.md#sequence_player_get_tempo_acc)
    - [sequence_player_get_transposition](functions-5.md#sequence_player_get_transposition)
+   - [sequence_player_get_volume](functions-5.md#sequence_player_get_volume)
    - [sequence_player_set_tempo](functions-5.md#sequence_player_set_tempo)
    - [sequence_player_set_tempo_acc](functions-5.md#sequence_player_set_tempo_acc)
    - [sequence_player_set_transposition](functions-5.md#sequence_player_set_transposition)

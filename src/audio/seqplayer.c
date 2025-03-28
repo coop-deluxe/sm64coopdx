@@ -3076,3 +3076,15 @@ u16 sequence_player_get_tempo_acc(u8 player) {
 u16 sequence_player_get_transposition(u8 player) {
     return gSequencePlayers[player].transposition;
 }
+
+f32 sequence_player_get_volume(u8 player) {
+    return gSequencePlayers[player].volume;
+}
+
+f32 sequence_player_get_fade_volume(u8 player) {
+    return gSequencePlayers[player].fadeVolume;
+}
+
+f32 sequence_player_get_mute_volume_scale(u8 player) {
+    return gSequencePlayers[player].muteVolumeScale;
+}

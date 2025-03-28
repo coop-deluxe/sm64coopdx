@@ -8875,6 +8875,20 @@ function touch_coin_score_age(fileIndex, courseIndex)
 end
 
 --- @param player integer
+--- @return number
+--- Gets the fade volume of `player`
+function sequence_player_get_fade_volume(player)
+    -- ...
+end
+
+--- @param player integer
+--- @return number
+--- Gets the mute volume scale of `player`
+function sequence_player_get_mute_volume_scale(player)
+    -- ...
+end
+
+--- @param player integer
 --- @return integer
 --- Gets the tempo of `player`
 function sequence_player_get_tempo(player)
@@ -8883,7 +8897,7 @@ end
 
 --- @param player integer
 --- @return integer
---- Gets the tempoAcc (tempo ???) of `player`
+--- Gets the tempoAcc (tempo accumulation) of `player`
 function sequence_player_get_tempo_acc(player)
     -- ...
 end
@@ -8896,6 +8910,13 @@ function sequence_player_get_transposition(player)
 end
 
 --- @param player integer
+--- @return number
+--- Gets the volume of `player`
+function sequence_player_get_volume(player)
+    -- ...
+end
+
+--- @param player integer
 --- @param tempo integer
 --- Sets the `tempo` of `player`. Resets when another sequence is played
 function sequence_player_set_tempo(player, tempo)
@@ -8904,7 +8925,7 @@ end
 
 --- @param player integer
 --- @param tempoAcc integer
---- Sets the `tempoAcc` (tempo ???) of `player`. Resets when another sequence is played
+--- Sets the `tempoAcc` (tempo accumulation) of `player`. Resets when another sequence is played
 function sequence_player_set_tempo_acc(player, tempoAcc)
     -- ...
 end

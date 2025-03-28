@@ -761,6 +761,9 @@ NEXT_OPTION:
 
     if (configFrameLimit < 30)   { configFrameLimit = 30; }
     if (configFrameLimit > 3000) { configFrameLimit = 3000; }
+    
+    extern f32 gMasterVolume; 
+    gMasterVolume = (f32)configMasterVolume / 127.0f;
 
     if (configPlayerModel >= CT_MAX) { configPlayerModel = 0; }
 

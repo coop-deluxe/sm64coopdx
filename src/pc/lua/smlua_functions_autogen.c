@@ -27905,6 +27905,40 @@ int smlua_func_touch_coin_score_age(lua_State* L) {
  // seqplayer.h //
 /////////////////
 
+int smlua_func_sequence_player_get_fade_volume(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "sequence_player_get_fade_volume", 1, top);
+        return 0;
+    }
+
+    u8 player = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "sequence_player_get_fade_volume"); return 0; }
+
+    lua_pushnumber(L, sequence_player_get_fade_volume(player));
+
+    return 1;
+}
+
+int smlua_func_sequence_player_get_mute_volume_scale(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "sequence_player_get_mute_volume_scale", 1, top);
+        return 0;
+    }
+
+    u8 player = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "sequence_player_get_mute_volume_scale"); return 0; }
+
+    lua_pushnumber(L, sequence_player_get_mute_volume_scale(player));
+
+    return 1;
+}
+
 int smlua_func_sequence_player_get_tempo(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -27952,6 +27986,23 @@ int smlua_func_sequence_player_get_transposition(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "sequence_player_get_transposition"); return 0; }
 
     lua_pushinteger(L, sequence_player_get_transposition(player));
+
+    return 1;
+}
+
+int smlua_func_sequence_player_get_volume(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "sequence_player_get_volume", 1, top);
+        return 0;
+    }
+
+    u8 player = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "sequence_player_get_volume"); return 0; }
+
+    lua_pushnumber(L, sequence_player_get_volume(player));
 
     return 1;
 }
@@ -35266,9 +35317,12 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "touch_coin_score_age", smlua_func_touch_coin_score_age);
 
     // seqplayer.h
+    smlua_bind_function(L, "sequence_player_get_fade_volume", smlua_func_sequence_player_get_fade_volume);
+    smlua_bind_function(L, "sequence_player_get_mute_volume_scale", smlua_func_sequence_player_get_mute_volume_scale);
     smlua_bind_function(L, "sequence_player_get_tempo", smlua_func_sequence_player_get_tempo);
     smlua_bind_function(L, "sequence_player_get_tempo_acc", smlua_func_sequence_player_get_tempo_acc);
     smlua_bind_function(L, "sequence_player_get_transposition", smlua_func_sequence_player_get_transposition);
+    smlua_bind_function(L, "sequence_player_get_volume", smlua_func_sequence_player_get_volume);
     smlua_bind_function(L, "sequence_player_set_tempo", smlua_func_sequence_player_set_tempo);
     smlua_bind_function(L, "sequence_player_set_tempo_acc", smlua_func_sequence_player_set_tempo_acc);
     smlua_bind_function(L, "sequence_player_set_transposition", smlua_func_sequence_player_set_transposition);
