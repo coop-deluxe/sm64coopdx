@@ -143,9 +143,6 @@ static void discord_initialize(void) {
         app.application = app.core->get_application_manager(app.core);
     }
 
-    // get oath2 token
-    app.application->get_oauth2_token(app.application, NULL, get_oauth2_token_callback);
-
     // set activity
     discord_activity_update();
     sDiscordFailed = false;
