@@ -534,6 +534,11 @@ void skip_camera_interpolation(void) {
     gCamSkipInterp = 1;
 }
 
+static void set_gcamera(struct Camera *c) {
+    gCamera = c;
+    if (gCameraCObject != NULL) { gCameraCObject->pointer = c; }
+}
+
 /**
  * Starts a camera shake triggered by an interaction
  */
@@ -3170,7 +3175,7 @@ void update_camera(struct Camera *c) {
     if (!c) { return; }
     UNUSED u8 unused[24];
 
-    gCamera = c;
+    set_gcamera(c);
     update_camera_hud_status(c);
 
     if ((gOverrideFreezeCamera || get_first_person_enabled()) && !gDjuiInMainMenu) {
@@ -3412,7 +3417,7 @@ void soft_reset_camera(struct Camera* c) {
  */
 void reset_camera(struct Camera *c) {
     if (!c) { return; }
-    gCamera = c;
+    set_gcamera(c);
     gCameraMovementFlags = 0;
     s2ndRotateFlags = 0;
     sStatusFlags = 0;
@@ -12205,7 +12210,7 @@ void romhack_camera_init_settings(void) {
     } else if (configEnableRomhackCamera == RCE_ON) {
         override = configRomhackCameraBowserFights ? RCO_ALL_INCLUDING_VANILLA : RCO_ALL_VANILLA_EXCEPT_BOWSER;
     }
-    
+
     gRomhackCameraSettings.enable = override;
     gCameraUseCourseSpecificSettings = (override == RCO_DISABLE && dynos_level_is_vanilla_level(gCurrLevelNum));
     gRomhackCameraSettings.collisions = configRomhackCameraHasCollision;

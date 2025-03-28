@@ -23,6 +23,8 @@ int gSmLuaCPointers = 0;
 int gSmLuaCObjectMetatable = 0;
 int gSmLuaCPointerMetatable = 0;
 
+CObject *gCameraCObject = NULL;
+
 struct LuaObjectField* smlua_get_object_field_from_ot(struct LuaObjectTable* ot, const char* key) {
     // binary search
     s32 min = 0;
@@ -724,17 +726,9 @@ void smlua_cobject_init_globals(void) {
         lua_setglobal(L, #ptr); \
     } \
 
-#define EXPOSE_GLOBAL(lot, ptr) \
-    { \
-        smlua_push_object(L, lot, &ptr, NULL); \
-        lua_setglobal(L, #ptr); \
-    } \
-
-#define EXPOSE_GLOBAL_WITH_NAME(lot, ptr, name) \
-    { \
-        smlua_push_object(L, lot, &ptr, NULL); \
-        lua_setglobal(L, name); \
-    } \
+#define EXPOSE_GLOBAL(lot, ptr) smlua_push_object(L, lot, &ptr, NULL); lua_setglobal(L, #ptr);
+#define EXPOSE_GLOBAL_PTR(lot, ptr) smlua_push_object(L, lot, ptr, NULL); lua_setglobal(L, #ptr);
+#define EXPOSE_GLOBAL_WITH_NAME(lot, ptr, name) smlua_push_object(L, lot, ptr, NULL); lua_setglobal(L, name);
 
     // Array structs
 
@@ -763,9 +757,9 @@ void smlua_cobject_init_globals(void) {
 
     // Structs
 
-    EXPOSE_GLOBAL_WITH_NAME(LOT_GLOBALTEXTURES, gGlobalTextures, "gTextures");
+    EXPOSE_GLOBAL_WITH_NAME(LOT_GLOBALTEXTURES, &gGlobalTextures, "gTextures");
 
-    EXPOSE_GLOBAL_WITH_NAME(LOT_GLOBALOBJECTANIMATIONS, gGlobalObjectAnimations, "gObjectAnimations");
+    EXPOSE_GLOBAL_WITH_NAME(LOT_GLOBALOBJECTANIMATIONS, &gGlobalObjectAnimations, "gObjectAnimations");
 
     EXPOSE_GLOBAL(LOT_PAINTINGVALUES, gPaintingValues);
 
@@ -783,7 +777,7 @@ void smlua_cobject_init_globals(void) {
 
     EXPOSE_GLOBAL(LOT_NAMETAGSSETTINGS, gNametagsSettings);
 
-    EXPOSE_GLOBAL(LOT_CAMERA, gCamera);
+    gCameraCObject = smlua_push_object(L, LOT_CAMERA, gCamera, NULL); lua_setglobal(L, "gCamera");
 }
 
 void smlua_cobject_init_per_file_globals(const char* path) {
