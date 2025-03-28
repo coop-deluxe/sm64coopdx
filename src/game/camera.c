@@ -536,7 +536,7 @@ void skip_camera_interpolation(void) {
 
 static void set_gcamera(struct Camera *c) {
     gCamera = c;
-    gCameraCObject->pointer = c;
+    if (gCameraCObject != NULL) { gCameraCObject->pointer = c; }
 }
 
 /**
