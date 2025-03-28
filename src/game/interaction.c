@@ -1344,7 +1344,7 @@ u8 determine_player_damage_value(struct MarioState* attacker, u32 interaction) {
         else if (interaction & INT_GROUND_POUND) { return 3; }
         else if (interaction & (INT_KICK | INT_SLIDE_KICK | INT_TRIP | INT_TWIRL)) { return 2; }
         else if (interaction & INT_PUNCH && attacker->actionArg < 3) { return 2; }
-        else if (attacker->action == ACT_FLYING) { return (u8)(attacker->forwardVel / 75.0f) + 1; }
+        else if (attacker->action == ACT_FLYING) { return (u8)(MAX((attacker->forwardVel - 40.0f) / 20.0f, 0)) + 1; }
         return 1;
     } else {
         if (interaction & INT_GROUND_POUND_OR_TWIRL) { return 3; }
