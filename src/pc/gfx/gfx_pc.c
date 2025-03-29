@@ -877,7 +877,6 @@ static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, cons
                 d->color.g = color[1];
                 d->color.b = color[2];
             }
-
         } else {
             if (!(rsp.geometry_mode & G_LIGHT_MAP_EXT) && luaVertexColor) {
                 d->color.r = v->cn[0] * vertexColorCached[0];
