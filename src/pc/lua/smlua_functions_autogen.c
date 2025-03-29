@@ -15121,7 +15121,7 @@ int smlua_func_le_remove_light(lua_State* L) {
         return 0;
     }
 
-    s16 id = smlua_to_integer(L, 1);
+    s32 id = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "le_remove_light"); return 0; }
 
     le_remove_light(id);
@@ -15159,7 +15159,7 @@ int smlua_func_le_set_light_color(lua_State* L) {
         return 0;
     }
 
-    s16 id = smlua_to_integer(L, 1);
+    s32 id = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "le_set_light_color"); return 0; }
     u8 r = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "le_set_light_color"); return 0; }
@@ -15182,7 +15182,7 @@ int smlua_func_le_set_light_intensity(lua_State* L) {
         return 0;
     }
 
-    s16 id = smlua_to_integer(L, 1);
+    s32 id = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "le_set_light_intensity"); return 0; }
     f32 intensity = smlua_to_number(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "le_set_light_intensity"); return 0; }
@@ -15201,7 +15201,7 @@ int smlua_func_le_set_light_pos(lua_State* L) {
         return 0;
     }
 
-    s16 id = smlua_to_integer(L, 1);
+    s32 id = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "le_set_light_pos"); return 0; }
     f32 x = smlua_to_number(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "le_set_light_pos"); return 0; }
@@ -15224,7 +15224,7 @@ int smlua_func_le_set_light_radius(lua_State* L) {
         return 0;
     }
 
-    s16 id = smlua_to_integer(L, 1);
+    s32 id = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "le_set_light_radius"); return 0; }
     f32 radius = smlua_to_number(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "le_set_light_radius"); return 0; }
