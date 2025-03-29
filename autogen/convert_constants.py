@@ -334,7 +334,6 @@ def doc_constant_index(processed_files):
     for processed_file in processed_files:
         s += '- [%s](#%s)\n' % (processed_file['filename'], processed_file['filename'].replace('.', ''))
         constants = [x for x in processed_file['constants'] if 'identifier' in x]
-        constants = sorted(constants, key=lambda d: d['identifier'])
         for c in constants:
             s += '    - [enum %s](#enum-%s)\n' % (c['identifier'], c['identifier'])
     s += '\n<br />\n\n'
@@ -367,7 +366,7 @@ def doc_constant(processed_constant):
 
 def doc_file(processed_file):
     s = '## [%s](#%s)\n' % (processed_file['filename'], processed_file['filename'])
-    constants = sorted(processed_file['constants'], key=lambda d: 'zzz' + d['identifier'] if 'identifier' in d else d[0])
+    constants = processed_file['constants']
     for c in constants:
         s += doc_constant(c)
 
@@ -429,7 +428,7 @@ def build_to_def(processed_files):
         s += '\n'
 
     for file in processed_files:
-        constants = sorted(file['constants'], key=lambda d: 'zzz' + d['identifier'] if 'identifier' in d else d[0])
+        constants = file['constants']
         for c in constants:
             s += def_constant(c)
 
