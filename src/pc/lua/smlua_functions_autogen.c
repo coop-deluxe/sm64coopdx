@@ -565,18 +565,18 @@ int smlua_func_bhv_alpha_boo_key_loop(UNUSED lua_State* L) {
     return 1;
 }
 
-int smlua_func_bhv_ambient_light_init(UNUSED lua_State* L) {
+int smlua_func_bhv_ambient_light_update(UNUSED lua_State* L) {
     if (!gCurrentObject) { return 0; }
     if (L == NULL) { return 0; }
 
     int top = lua_gettop(L);
     if (top != 0) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "bhv_ambient_light_init", 0, top);
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "bhv_ambient_light_update", 0, top);
         return 0;
     }
 
 
-    bhv_ambient_light_init();
+    bhv_ambient_light_update();
 
     return 1;
 }
@@ -9465,6 +9465,33 @@ int smlua_func_play_penguin_walking_sound(lua_State* L) {
     return 1;
 }
 
+int smlua_func_spawn_ambient_light(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 6) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "spawn_ambient_light", 6, top);
+        return 0;
+    }
+
+    f32 x = smlua_to_number(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "spawn_ambient_light"); return 0; }
+    f32 y = smlua_to_number(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "spawn_ambient_light"); return 0; }
+    f32 z = smlua_to_number(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "spawn_ambient_light"); return 0; }
+    u8 r = smlua_to_integer(L, 4);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "spawn_ambient_light"); return 0; }
+    u8 g = smlua_to_integer(L, 5);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 5, "spawn_ambient_light"); return 0; }
+    u8 b = smlua_to_integer(L, 6);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 6, "spawn_ambient_light"); return 0; }
+
+    smlua_push_object(L, LOT_OBJECT, spawn_ambient_light(x, y, z, r, g, b), NULL);
+
+    return 1;
+}
+
 int smlua_func_spawn_default_star(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -9539,6 +9566,35 @@ int smlua_func_spawn_no_exit_star(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "spawn_no_exit_star"); return 0; }
 
     smlua_push_object(L, LOT_OBJECT, spawn_no_exit_star(x, y, z), NULL);
+
+    return 1;
+}
+
+int smlua_func_spawn_point_light(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 7) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "spawn_point_light", 7, top);
+        return 0;
+    }
+
+    f32 x = smlua_to_number(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "spawn_point_light"); return 0; }
+    f32 y = smlua_to_number(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "spawn_point_light"); return 0; }
+    f32 z = smlua_to_number(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "spawn_point_light"); return 0; }
+    u8 r = smlua_to_integer(L, 4);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "spawn_point_light"); return 0; }
+    u8 g = smlua_to_integer(L, 5);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 5, "spawn_point_light"); return 0; }
+    u8 b = smlua_to_integer(L, 6);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 6, "spawn_point_light"); return 0; }
+    f32 radius = smlua_to_number(L, 7);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 7, "spawn_point_light"); return 0; }
+
+    smlua_push_object(L, LOT_OBJECT, spawn_point_light(x, y, z, r, g, b, radius), NULL);
 
     return 1;
 }
@@ -33155,7 +33211,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "bhv_activated_back_and_forth_platform_init", smlua_func_bhv_activated_back_and_forth_platform_init);
     smlua_bind_function(L, "bhv_activated_back_and_forth_platform_update", smlua_func_bhv_activated_back_and_forth_platform_update);
     smlua_bind_function(L, "bhv_alpha_boo_key_loop", smlua_func_bhv_alpha_boo_key_loop);
-    smlua_bind_function(L, "bhv_ambient_light_init", smlua_func_bhv_ambient_light_init);
+    smlua_bind_function(L, "bhv_ambient_light_update", smlua_func_bhv_ambient_light_update);
     smlua_bind_function(L, "bhv_ambient_sounds_init", smlua_func_bhv_ambient_sounds_init);
     smlua_bind_function(L, "bhv_animated_texture_loop", smlua_func_bhv_animated_texture_loop);
     smlua_bind_function(L, "bhv_animates_on_floor_switch_press_init", smlua_func_bhv_animates_on_floor_switch_press_init);
@@ -33707,10 +33763,12 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "mario_moving_fast_enough_to_make_piranha_plant_bite", smlua_func_mario_moving_fast_enough_to_make_piranha_plant_bite);
     smlua_bind_function(L, "obj_set_secondary_camera_focus", smlua_func_obj_set_secondary_camera_focus);
     smlua_bind_function(L, "play_penguin_walking_sound", smlua_func_play_penguin_walking_sound);
+    smlua_bind_function(L, "spawn_ambient_light", smlua_func_spawn_ambient_light);
     smlua_bind_function(L, "spawn_default_star", smlua_func_spawn_default_star);
     smlua_bind_function(L, "spawn_mist_from_global", smlua_func_spawn_mist_from_global);
     smlua_bind_function(L, "spawn_mist_particles_variable", smlua_func_spawn_mist_particles_variable);
     smlua_bind_function(L, "spawn_no_exit_star", smlua_func_spawn_no_exit_star);
+    smlua_bind_function(L, "spawn_point_light", smlua_func_spawn_point_light);
     smlua_bind_function(L, "spawn_red_coin_cutscene_star", smlua_func_spawn_red_coin_cutscene_star);
     smlua_bind_function(L, "spawn_star_number", smlua_func_spawn_star_number);
     smlua_bind_function(L, "spawn_triangle_break_particles", smlua_func_spawn_triangle_break_particles);

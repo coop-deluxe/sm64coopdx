@@ -356,12 +356,12 @@ function texture_override_reset(textureName)
     -- ...
 end
 
---- @class bhvData
+--- @class BehaviorData
 --- @field behavior BehaviorId
 --- @field behaviorArg integer
 
 --- @param levelNum LevelNum | integer
---- @param func fun(areaIndex:number, bhvData:bhvData, macroBhvIds:BehaviorId[], macroBhvArgs:integer[])
+--- @param func fun(areaIndex:number, bhvData:BehaviorData, macroBhvIds:BehaviorId[], macroBhvArgs:integer[])
 --- When `func` is called, arguments are filled depending on the level command:
 --- - `AREA` command: only `areaIndex` is filled. It's a number
 --- - `OBJECT` command: only `bhvData` is filled. `bhvData` is a table with nine fields: 'behavior', 'behaviorArg', 'model', 'posX', 'posY', 'posZ', 'pitch', 'yaw' and 'roll'

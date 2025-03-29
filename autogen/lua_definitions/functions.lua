@@ -120,7 +120,7 @@ function bhv_alpha_boo_key_loop()
 end
 
 --- Behavior loop function for the lighting engine ambient light. Takes the first 3 behavior parameter bytes for RGB color
-function bhv_ambient_light_init()
+function bhv_ambient_light_update()
     -- ...
 end
 
@@ -2844,6 +2844,18 @@ end
 --- @param x number
 --- @param y number
 --- @param z number
+--- @param r integer
+--- @param g integer
+--- @param b integer
+--- @return Object
+--- Spawns a lighting engine point light
+function spawn_ambient_light(x, y, z, r, g, b)
+    -- ...
+end
+
+--- @param x number
+--- @param y number
+--- @param z number
 --- @return Object
 --- Spawns a Star with an ID corresponding to the current object's first behavior parameter byte
 function spawn_default_star(x, y, z)
@@ -2869,6 +2881,19 @@ end
 --- @return Object
 --- Spawns a Star that won't make Mario exit the level with an ID corresponding to the current object's first behavior parameter byte
 function spawn_no_exit_star(x, y, z)
+    -- ...
+end
+
+--- @param x number
+--- @param y number
+--- @param z number
+--- @param r integer
+--- @param g integer
+--- @param b integer
+--- @param radius number
+--- @return Object
+--- Spawns a lighting engine ambient light
+function spawn_point_light(x, y, z, r, g, b, radius)
     -- ...
 end
 

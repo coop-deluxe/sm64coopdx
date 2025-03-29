@@ -6273,7 +6273,7 @@ Adds a lighting engine point light at `x`, `y`, `z` with color `r`, `g`, `b` and
 - `integer`
 
 ### C Prototype
-`s16 le_add_light(f32 x, f32 y, f32 z, u8 r, u8 g, u8 b, f32 radius, f32 intensity);`
+`s32 le_add_light(f32 x, f32 y, f32 z, u8 r, u8 g, u8 b, f32 radius, f32 intensity);`
 
 [:arrow_up_small:](#)
 
@@ -6343,7 +6343,7 @@ Gets the total number of lights currently loaded in the lighting engine
 - `integer`
 
 ### C Prototype
-`s16 le_get_light_count(void);`
+`s32 le_get_light_count(void);`
 
 [:arrow_up_small:](#)
 
