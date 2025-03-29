@@ -1103,7 +1103,6 @@ def process_functions(fname, file_str, extracted_descriptions):
         if fn == None:
             continue
         functions.append(fn)
-    functions = sorted(functions, key=lambda d: d['identifier'])
     return functions
 
 def process_file(fname):

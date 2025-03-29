@@ -56,6 +56,8 @@ void djui_reset_popup_disabled_override(void);
 bool djui_is_playerlist_open(void);
 /* |description|Checks if the DJUI playerlist is attempting to be opened|descriptionEnd| */
 bool djui_attempting_to_open_playerlist(void);
+/* |description|Gets the DJUI playerlist's page index|descriptionEnd| */
+u8 djui_get_playerlist_page_index(void);
 /* |description|Gets the DJUI menu font|descriptionEnd| */
 enum DjuiFontType djui_menu_get_font(void);
 /* |description|Gets the DJUI menu theme|descriptionEnd| */

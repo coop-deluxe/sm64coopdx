@@ -88,6 +88,11 @@ bool djui_attempting_to_open_playerlist(void) {
     return gAttemptingToOpenPlayerlist;
 }
 
+u8 djui_get_playerlist_page_index(void) {
+    extern u8 sPageIndex;
+    return sPageIndex;
+}
+
 enum DjuiFontType djui_menu_get_font(void) {
     return configDjuiThemeFont == 0 ? FONT_NORMAL : FONT_ALIASED;
 }
