@@ -86,7 +86,7 @@ void le_calculate_lighting_dir(Vec3f pos, Vec3f out) {
     if (sLights == NULL) { return; }
 
     Vec3f lightingDir = { 0, 0, 0 };
-    s16 count = 1;
+    s32 count = 1;
     for (struct LELight* light = hmap_begin(sLights); light != NULL; light = hmap_next(sLights)) {
         f32 diffX = light->posX - pos[0];
         f32 diffY = light->posY - pos[1];
@@ -136,7 +136,7 @@ s32 le_add_light(f32 x, f32 y, f32 z, u8 r, u8 g, u8 b, f32 radius, f32 intensit
     return sLightID;
 }
 
-void le_remove_light(s16 id) {
+void le_remove_light(s32 id) {
     if (sLights == NULL || id <= 0) { return; }
 
     free(hmap_get(sLights, id));
@@ -152,7 +152,7 @@ void le_set_ambient_color(u8 r, u8 g, u8 b) {
     color_set(sAmbientColor, r, g, b);
 }
 
-void le_set_light_pos(s16 id, f32 x, f32 y, f32 z) {
+void le_set_light_pos(s32 id, f32 x, f32 y, f32 z) {
     if (sLights == NULL || id <= 0) { return; }
 
     struct LELight* light = hmap_get(sLights, id);
@@ -162,7 +162,7 @@ void le_set_light_pos(s16 id, f32 x, f32 y, f32 z) {
     light->posZ = z;
 }
 
-void le_set_light_color(s16 id, u8 r, u8 g, u8 b) {
+void le_set_light_color(s32 id, u8 r, u8 g, u8 b) {
     if (sLights == NULL || id <= 0) { return; }
 
     struct LELight* light = hmap_get(sLights, id);
@@ -172,7 +172,7 @@ void le_set_light_color(s16 id, u8 r, u8 g, u8 b) {
     light->colorB = b;
 }
 
-void le_set_light_radius(s16 id, f32 radius) {
+void le_set_light_radius(s32 id, f32 radius) {
     if (sLights == NULL || id <= 0) { return; }
 
     struct LELight* light = hmap_get(sLights, id);
@@ -180,7 +180,7 @@ void le_set_light_radius(s16 id, f32 radius) {
     light->radius = radius;
 }
 
-void le_set_light_intensity(s16 id, f32 intensity) {
+void le_set_light_intensity(s32 id, f32 intensity) {
     if (sLights == NULL || id <= 0) { return; }
 
     struct LELight* light = hmap_get(sLights, id);

@@ -6366,7 +6366,7 @@ Removes a lighting engine point light corresponding to `id`
 - None
 
 ### C Prototype
-`void le_remove_light(s16 id);`
+`void le_remove_light(s32 id);`
 
 [:arrow_up_small:](#)
 
@@ -6417,7 +6417,7 @@ Sets a lighting engine point light's color to `r`, `g`, `b`
 - None
 
 ### C Prototype
-`void le_set_light_color(s16 id, u8 r, u8 g, u8 b);`
+`void le_set_light_color(s32 id, u8 r, u8 g, u8 b);`
 
 [:arrow_up_small:](#)
 
@@ -6441,7 +6441,7 @@ Sets a lighting engine point light's `intensity`
 - None
 
 ### C Prototype
-`void le_set_light_intensity(s16 id, f32 intensity);`
+`void le_set_light_intensity(s32 id, f32 intensity);`
 
 [:arrow_up_small:](#)
 
@@ -6467,7 +6467,7 @@ Sets a lighting engine point light's position to `x`, `y`, `z`
 - None
 
 ### C Prototype
-`void le_set_light_pos(s16 id, f32 x, f32 y, f32 z);`
+`void le_set_light_pos(s32 id, f32 x, f32 y, f32 z);`
 
 [:arrow_up_small:](#)
 
@@ -6491,7 +6491,7 @@ Sets a lighting engine point light's `radius`
 - None
 
 ### C Prototype
-`void le_set_light_radius(s16 id, f32 radius);`
+`void le_set_light_radius(s32 id, f32 radius);`
 
 [:arrow_up_small:](#)
 
