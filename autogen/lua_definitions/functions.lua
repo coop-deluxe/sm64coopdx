@@ -3796,6 +3796,24 @@ function djui_hud_get_fov_coeff()
     -- ...
 end
 
+--- @return integer
+--- Returns the flags of the mouse buttons clicked
+function djui_hud_get_mouse_click()
+    -- ...
+end
+
+--- @return integer
+--- Returns the flags of the mouse buttons held down
+function djui_hud_get_mouse_down()
+    -- ...
+end
+
+--- @return integer
+--- Returns the flags of the mouse buttons released
+function djui_hud_get_mouse_released()
+    -- ...
+end
+
 --- @return number
 --- Returns the x coordinate of the mouse relative to the window
 function djui_hud_get_mouse_x()

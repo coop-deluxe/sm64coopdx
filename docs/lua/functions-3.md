@@ -2746,6 +2746,69 @@ Gets the camera FOV coefficient
 
 <br />
 
+## [djui_hud_get_mouse_click](#djui_hud_get_mouse_click)
+
+### Description
+Returns the flags of the mouse buttons clicked
+
+### Lua Example
+`local integerValue = djui_hud_get_mouse_click()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u8 djui_hud_get_mouse_click(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [djui_hud_get_mouse_down](#djui_hud_get_mouse_down)
+
+### Description
+Returns the flags of the mouse buttons held down
+
+### Lua Example
+`local integerValue = djui_hud_get_mouse_down()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u8 djui_hud_get_mouse_down(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [djui_hud_get_mouse_released](#djui_hud_get_mouse_released)
+
+### Description
+Returns the flags of the mouse buttons released
+
+### Lua Example
+`local integerValue = djui_hud_get_mouse_released()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u8 djui_hud_get_mouse_released(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [djui_hud_get_mouse_x](#djui_hud_get_mouse_x)
 
 ### Description

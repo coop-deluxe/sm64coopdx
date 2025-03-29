@@ -30,9 +30,11 @@ bool mouse_dxgi_prev_focus;
 
 static u32 controller_mouse_dxgi_button_state(u32* mouse_held, bool has_focus) {
     u32 mouse =
-        ((GetKeyState(VK_LBUTTON) < 0) ? (1 << 0) : 0) |
-        ((GetKeyState(VK_MBUTTON) < 0) ? (1 << 1) : 0) |
-        ((GetKeyState(VK_RBUTTON) < 0) ? (1 << 2) : 0);
+        ((GetKeyState(VK_LBUTTON ) < 0) ? MOUSE_1 : 0) |
+        ((GetKeyState(VK_MBUTTON ) < 0) ? MOUSE_2 : 0) |
+        ((GetKeyState(VK_RBUTTON ) < 0) ? MOUSE_3 : 0) |
+        ((GetKeyState(VK_XBUTTON1) < 0) ? MOUSE_4 : 0) |
+        ((GetKeyState(VK_XBUTTON2) < 0) ? MOUSE_5 : 0);
 
     bool prev_focus = mouse_dxgi_prev_focus;
     mouse_dxgi_prev_focus = has_focus;

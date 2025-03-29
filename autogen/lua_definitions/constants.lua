@@ -2116,6 +2116,30 @@ CT_MAX     = 5 --- @type CharacterType
 --- | `CT_WARIO`
 --- | `CT_MAX`
 
+--- @type integer
+L_MOUSE = MOUSE_1
+
+--- @type integer
+MOUSE_1 = (1 << 0)
+
+--- @type integer
+MOUSE_2 = (1 << 1)
+
+--- @type integer
+MOUSE_3 = (1 << 2)
+
+--- @type integer
+MOUSE_4 = (1 << 3)
+
+--- @type integer
+MOUSE_5 = (1 << 4)
+
+--- @type integer
+M_MOUSE = MOUSE_2
+
+--- @type integer
+R_MOUSE = MOUSE_3
+
 DIALOG_000   =   0 --- @type DialogId
 DIALOG_001   =   1 --- @type DialogId
 DIALOG_002   =   2 --- @type DialogId

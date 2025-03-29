@@ -22,6 +22,7 @@ in_files = [
     "src/game/interaction.c",
     "src/game/interaction.h",
     "src/pc/djui/djui_hud_utils.h",
+    "src/pc/controller/controller_mouse.h",
     "include/behavior_table.h",
     "src/pc/lua/utils/smlua_model_utils.h",
     "src/pc/lua/utils/smlua_misc_utils.h",

@@ -285,6 +285,22 @@ void djui_hud_set_mouse_locked(bool locked) {
     gDjuiHudLockMouse = locked;
 }
 
+u8 gMouseDown;
+u8 gMouseClick;
+u8 gMouseReleased;
+
+u8 djui_hud_get_mouse_down(void) {
+    return gMouseDown;
+}
+
+u8 djui_hud_get_mouse_click(void) {
+    return gMouseClick;
+}
+
+u8 djui_hud_get_mouse_released(void) {
+    return gMouseReleased;
+}
+
 f32 djui_hud_measure_text(const char* message) {
     if (message == NULL) { return 0; }
     const struct DjuiFont* font = gDjuiFonts[sFont];
