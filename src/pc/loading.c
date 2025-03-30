@@ -49,6 +49,9 @@ static bool loading_screen_on_render(struct DjuiBase* base) {
 
     u32 windowWidth, windowHeight;
     WAPI.get_dimensions(&windowWidth, &windowHeight);
+    if (configForce4By3) {
+        windowWidth = gfx_current_dimensions.aspect_ratio * windowHeight;
+    }
     f32 scale = djui_gfx_get_scale();
     windowWidth /= scale;
     windowHeight /= scale;

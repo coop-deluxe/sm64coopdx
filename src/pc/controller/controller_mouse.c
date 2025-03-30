@@ -1,4 +1,5 @@
 #include "controller_mouse.h"
+#include "pc/gfx/gfx_pc.h"
 
 #ifdef WAPI_DXGI
 #define WIN32_LEAN_AND_MEAN
@@ -70,11 +71,12 @@ void controller_mouse_read_window(void) {
 
     POINT p;
     if (GetCursorPos(&p) && ScreenToClient(game_window, &p)) {
-        mouse_window_x = p.x;
+        mouse_window_x = p.x - gfx_current_dimensions.x_adjust_4by3;
         mouse_window_y = p.y;
     }
 #elif defined(CAPI_SDL1) || defined(CAPI_SDL2)
     mouse_window_buttons = SDL_GetMouseState(&mouse_window_x, &mouse_window_y);
+    mouse_window_x -= gfx_current_dimensions.x_adjust_4by3;
 #endif
 }
 
