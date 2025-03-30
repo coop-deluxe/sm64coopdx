@@ -21,6 +21,7 @@
 #include "djui/djui_hud_utils.h"
 #include "game/save_file.h"
 #include "pc/network/network_player.h"
+#include "pc/pc_main.h"
 
 #define ARRAY_LEN(arr) (sizeof(arr) / sizeof(arr[0]))
 
@@ -762,7 +763,6 @@ NEXT_OPTION:
     if (configFrameLimit < 30)   { configFrameLimit = 30; }
     if (configFrameLimit > 3000) { configFrameLimit = 3000; }
     
-    extern f32 gMasterVolume; 
     gMasterVolume = (f32)configMasterVolume / 127.0f;
 
     if (configPlayerModel >= CT_MAX) { configPlayerModel = 0; }

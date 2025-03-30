@@ -2117,28 +2117,28 @@ CHAR_SOUND_MAX                 = 44 --- @type CharacterSound
 --- | `CHAR_SOUND_MAX`
 
 --- @type integer
-MOUSE_1 = (1 << 0)
+MOUSE_BUTTON_1 = (1 << 0)
 
 --- @type integer
-MOUSE_2 = (1 << 1)
+MOUSE_BUTTON_2 = (1 << 1)
 
 --- @type integer
-MOUSE_3 = (1 << 2)
+MOUSE_BUTTON_3 = (1 << 2)
 
 --- @type integer
-MOUSE_4 = (1 << 3)
+MOUSE_BUTTON_4 = (1 << 3)
 
 --- @type integer
-MOUSE_5 = (1 << 4)
+MOUSE_BUTTON_5 = (1 << 4)
 
 --- @type integer
-L_MOUSE = MOUSE_1
+L_MOUSE_BUTTON = MOUSE_BUTTON_1
 
 --- @type integer
-M_MOUSE = MOUSE_2
+M_MOUSE_BUTTON = MOUSE_BUTTON_2
 
 --- @type integer
-R_MOUSE = MOUSE_3
+R_MOUSE_BUTTON = MOUSE_BUTTON_3
 
 DIALOG_000   =   0 --- @type DialogId
 DIALOG_001   =   1 --- @type DialogId

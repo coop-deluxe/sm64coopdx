@@ -18,6 +18,8 @@ s32 mouse_x;
 s32 mouse_y;
 
 u32 mouse_window_buttons;
+u32 mouse_window_buttons_pressed;
+u32 mouse_window_buttons_released;
 s32 mouse_window_x;
 s32 mouse_window_y;
 

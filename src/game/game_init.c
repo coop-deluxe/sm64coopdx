@@ -511,13 +511,10 @@ void read_controller_inputs(void) {
     gPlayer3Controller->buttonDown = gPlayer1Controller->buttonDown;*/
 
     // Mouse Input
+    u32 prev_mouse_window_buttons = mouse_window_buttons;
     controller_mouse_read_window();
-    extern u8 gMouseDown;
-    extern u8 gMouseClick;
-    extern u8 gMouseReleased;
-    gMouseClick = ~gMouseDown & mouse_window_buttons;
-    gMouseReleased = ~mouse_window_buttons & gMouseDown;
-    gMouseDown = mouse_window_buttons;
+    mouse_window_buttons_pressed = ~prev_mouse_window_buttons & mouse_window_buttons;
+    mouse_window_buttons_released = ~mouse_window_buttons & prev_mouse_window_buttons;
 }
 
 // initialize the controller structs to point at the OSCont information.

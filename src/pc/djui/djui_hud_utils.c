@@ -285,20 +285,16 @@ void djui_hud_set_mouse_locked(bool locked) {
     gDjuiHudLockMouse = locked;
 }
 
-u8 gMouseDown;
-u8 gMouseClick;
-u8 gMouseReleased;
-
-u8 djui_hud_get_mouse_down(void) {
-    return gMouseDown;
+u8 djui_hud_get_mouse_buttons_down(void) {
+    return mouse_window_buttons;
 }
 
-u8 djui_hud_get_mouse_click(void) {
-    return gMouseClick;
+u8 djui_hud_get_mouse_buttons_pressed(void) {
+    return mouse_window_buttons_pressed;
 }
 
-u8 djui_hud_get_mouse_released(void) {
-    return gMouseReleased;
+u8 djui_hud_get_mouse_buttons_released(void) {
+    return mouse_window_buttons_released;
 }
 
 f32 djui_hud_measure_text(const char* message) {

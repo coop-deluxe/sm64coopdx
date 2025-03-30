@@ -96,6 +96,8 @@ static u32 sDrawnFrames = 0;
 bool gGameInited = false;
 bool gGfxInited = false;
 
+f32 gMasterVolume;
+
 u8 gLuaVolumeMaster = 127;
 u8 gLuaVolumeLevel = 127;
 u8 gLuaVolumeSfx = 127;
@@ -254,8 +256,6 @@ void produce_interpolation_frames_and_delay(void) {
 // It's just better to have this off the stack, Because the size isn't small.
 // It also may help static analysis and bug catching.
 static s16 sAudioBuffer[SAMPLES_HIGH * 2 * 2] = { 0 };
-
-f32 gMasterVolume;
 
 inline static void buffer_audio(void) {
     bool shouldMute = (configMuteFocusLoss && !WAPI.has_focus()) || (gMasterVolume == 0);

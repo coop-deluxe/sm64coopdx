@@ -7,8 +7,6 @@
 #define PAD_BUTTON_Z     ((u16)(1 << 13))
 #define PAD_BUTTON_START ((u16)(1 << 12))
 
-#define MOUSE_BUTTON_1  ((u16)(1 << 0))
-
 #define SCANCODE_UP        328
 #define SCANCODE_DOWN      336
 #define SCANCODE_LEFT      331

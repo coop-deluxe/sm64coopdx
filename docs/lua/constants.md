@@ -928,14 +928,14 @@
 <br />
 
 ## [controller_mouse.h](#controller_mouse.h)
-- MOUSE_1
-- MOUSE_2
-- MOUSE_3
-- MOUSE_4
-- MOUSE_5
-- L_MOUSE
-- M_MOUSE
-- R_MOUSE
+- MOUSE_BUTTON_1
+- MOUSE_BUTTON_2
+- MOUSE_BUTTON_3
+- MOUSE_BUTTON_4
+- MOUSE_BUTTON_5
+- L_MOUSE_BUTTON
+- M_MOUSE_BUTTON
+- R_MOUSE_BUTTON
 
 [:arrow_up_small:](#)
 

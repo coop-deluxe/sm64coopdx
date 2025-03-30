@@ -10,17 +10,19 @@ extern u32 mouse_buttons;
 extern s32 mouse_x;
 extern s32 mouse_y;
 
-#define MOUSE_1 (1 << 0)
-#define MOUSE_2 (1 << 1)
-#define MOUSE_3 (1 << 2)
-#define MOUSE_4 (1 << 3)
-#define MOUSE_5 (1 << 4)
+#define MOUSE_BUTTON_1 (1 << 0)
+#define MOUSE_BUTTON_2 (1 << 1)
+#define MOUSE_BUTTON_3 (1 << 2)
+#define MOUSE_BUTTON_4 (1 << 3)
+#define MOUSE_BUTTON_5 (1 << 4)
 
-#define L_MOUSE MOUSE_1
-#define M_MOUSE MOUSE_2
-#define R_MOUSE MOUSE_3
+#define L_MOUSE_BUTTON MOUSE_BUTTON_1
+#define M_MOUSE_BUTTON MOUSE_BUTTON_2
+#define R_MOUSE_BUTTON MOUSE_BUTTON_3
 
 extern u32 mouse_window_buttons;
+extern u32 mouse_window_buttons_pressed;
+extern u32 mouse_window_buttons_released;
 extern s32 mouse_window_x;
 extern s32 mouse_window_y;
 

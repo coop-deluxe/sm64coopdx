@@ -18,8 +18,6 @@
 #include "pc/pc_main.h"
 #include "pc/fs/fmem.h"
 
-extern f32 gMasterVolume;
-
 struct AudioOverride {
     bool enabled;
     bool loaded;

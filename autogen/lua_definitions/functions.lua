@@ -3897,19 +3897,19 @@ end
 
 --- @return integer
 --- Returns the flags of the mouse buttons held down
-function djui_hud_get_mouse_down()
+function djui_hud_get_mouse_buttons_down()
     -- ...
 end
 
 --- @return integer
 --- Returns the flags of the mouse buttons clicked
-function djui_hud_get_mouse_click()
+function djui_hud_get_mouse_buttons_pressed()
     -- ...
 end
 
 --- @return integer
 --- Returns the flags of the mouse buttons released
-function djui_hud_get_mouse_released()
+function djui_hud_get_mouse_buttons_released()
     -- ...
 end
 
