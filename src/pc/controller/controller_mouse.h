@@ -26,6 +26,10 @@ extern u32 mouse_window_buttons_released;
 extern s32 mouse_window_x;
 extern s32 mouse_window_y;
 
+extern u32 mouse_scroll_timestamp;
+extern f32 mouse_scroll_x;
+extern f32 mouse_scroll_y;
+
 extern bool mouse_relative_enabled;
 
 void controller_mouse_read_window(void);
@@ -33,5 +37,7 @@ void controller_mouse_read_relative(void);
 
 void controller_mouse_enter_relative(void);
 void controller_mouse_leave_relative(void);
+
+void mouse_on_scroll(float x, float y);
 
 #endif

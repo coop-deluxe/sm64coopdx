@@ -3913,6 +3913,18 @@ function djui_hud_get_mouse_buttons_released()
     -- ...
 end
 
+--- @return number
+--- Returns the amount scrolled horizontally (-left/right+)
+function djui_hud_get_mouse_scroll_x()
+    -- ...
+end
+
+--- @return number
+--- Returns the amount scrolled vertically (-down/up+)
+function djui_hud_get_mouse_scroll_y()
+    -- ...
+end
+
 --- @param message string
 --- @return number
 --- Measures the length of `message` in the current font

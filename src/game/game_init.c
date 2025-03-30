@@ -515,6 +515,11 @@ void read_controller_inputs(void) {
     controller_mouse_read_window();
     mouse_window_buttons_pressed = ~prev_mouse_window_buttons & mouse_window_buttons;
     mouse_window_buttons_released = ~mouse_window_buttons & prev_mouse_window_buttons;
+
+    if (gGlobalTimer > mouse_scroll_timestamp) {
+        mouse_scroll_x = 0;
+        mouse_scroll_y = 0;
+    }
 }
 
 // initialize the controller structs to point at the OSCont information.

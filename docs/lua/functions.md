@@ -774,6 +774,8 @@
    - [djui_hud_get_mouse_buttons_down](functions-3.md#djui_hud_get_mouse_buttons_down)
    - [djui_hud_get_mouse_buttons_pressed](functions-3.md#djui_hud_get_mouse_buttons_pressed)
    - [djui_hud_get_mouse_buttons_released](functions-3.md#djui_hud_get_mouse_buttons_released)
+   - [djui_hud_get_mouse_scroll_x](functions-3.md#djui_hud_get_mouse_scroll_x)
+   - [djui_hud_get_mouse_scroll_y](functions-3.md#djui_hud_get_mouse_scroll_y)
    - [djui_hud_measure_text](functions-3.md#djui_hud_measure_text)
    - [djui_hud_print_text](functions-3.md#djui_hud_print_text)
    - [djui_hud_print_text_interpolated](functions-3.md#djui_hud_print_text_interpolated)

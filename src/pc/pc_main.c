@@ -29,6 +29,7 @@
 #include "thread.h"
 #include "controller/controller_api.h"
 #include "controller/controller_keyboard.h"
+#include "controller/controller_mouse.h"
 #include "fs/fs.h"
 
 #include "game/display.h" // for gGlobalTimer
@@ -462,6 +463,7 @@ int main(int argc, char *argv[]) {
         gfx_init(&WAPI, &RAPI, TITLE);
         WAPI.set_keyboard_callbacks(keyboard_on_key_down, keyboard_on_key_up, keyboard_on_all_keys_up,
             keyboard_on_text_input, keyboard_on_text_editing);
+        WAPI.set_scroll_callback(mouse_on_scroll);
     }
 
     // render the rom setup screen

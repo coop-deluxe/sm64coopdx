@@ -29,6 +29,7 @@ char gLastRemoteBhv[256] = "";
 #include "pc/debuglog.h"
 #include "pc/pc_main.h"
 #include "controller/controller_keyboard.h"
+#include "controller/controller_mouse.h"
 
 typedef struct {
     s32 x, y;
@@ -652,6 +653,7 @@ static void crash_handler(const int signalNum, siginfo_t *info, UNUSED ucontext_
         gfx_init(&WAPI, &RAPI, TITLE);
         WAPI.set_keyboard_callbacks(keyboard_on_key_down, keyboard_on_key_up, keyboard_on_all_keys_up,
             keyboard_on_text_input, keyboard_on_text_editing);
+        WAPI.set_scroll_callback(mouse_on_scroll);
     }
     if (!gGameInited) djui_unicode_init();
 

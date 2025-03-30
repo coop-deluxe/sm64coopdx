@@ -295,6 +295,14 @@ u8 djui_hud_get_mouse_buttons_released(void) {
     return mouse_window_buttons_released;
 }
 
+f32 djui_hud_get_mouse_scroll_x(void) {
+    return mouse_scroll_x;
+}
+
+f32 djui_hud_get_mouse_scroll_y(void) {
+    return mouse_scroll_y;
+}
+
 f32 djui_hud_measure_text(const char* message) {
     if (message == NULL) { return 0; }
     const struct DjuiFont* font = gDjuiFonts[sFont];
