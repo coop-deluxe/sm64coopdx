@@ -12212,7 +12212,7 @@ void romhack_camera_init_settings(void) {
     }
 
     gRomhackCameraSettings.enable = override;
-    gCameraUseCourseSpecificSettings = (override == RCO_DISABLE && dynos_level_is_vanilla_level(gCurrLevelNum));
+    gCameraUseCourseSpecificSettings = (dynos_level_is_vanilla_level(gCurrLevelNum));
     gRomhackCameraSettings.collisions = configRomhackCameraHasCollision;
     gRomhackCameraSettings.centering = configRomhackCameraHasCentering;
     gRomhackCameraSettings.dpad = configRomhackCameraDPadBehavior;
