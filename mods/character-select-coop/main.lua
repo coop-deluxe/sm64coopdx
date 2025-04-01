@@ -1,5 +1,5 @@
 -- name: Character Select
--- description:\\#ffff33\\-- Character Select Coop v1.12 --\n\n\\#dcdcdc\\A Library / API made to make adding and using Custom Characters as simple as possible!\nUse\\#ffff33\\ /char-select\\#dcdcdc\\ to get started!\n\nCreated by:\\#008800\\ Squishy6094\n\n\\#AAAAFF\\Updates can be found on\nCharacter Select's Github:\n\\#6666FF\\Squishy6094/character-select-coop
+-- description:\\#ffff33\\--- Character Select Coop v1.13 ---\n\n\\#dcdcdc\\A Library / API made to make adding and using Custom Characters as simple as possible!\nUse\\#ffff33\\ /char-select\\#dcdcdc\\ to get started!\n\nCreated by:\\#008800\\ Squishy6094\n\n\\#AAAAFF\\Updates can be found on\nCharacter Select's Github:\n\\#6666FF\\Squishy6094/character-select-coop
 -- pausable: false
 -- category: cs
 
@@ -62,7 +62,7 @@ characterTable = {
             credit = "Nintendo / Coop Team",
             color = { r = 255, g = 50,  b = 50  },
             model = E_MODEL_MARIO,
-            offset = 0,
+            ogModel = E_MODEL_MARIO,
             forceChar = CT_MARIO,
             lifeIcon = gTextures.mario_head,
             starIcon = gTextures.star,
@@ -80,7 +80,7 @@ characterTable = {
             credit = "Nintendo / Coop Team",
             color = { r = 50,  g = 255, b = 50  },
             model = E_MODEL_LUIGI,
-            offset = 0,
+            ogModel = E_MODEL_LUIGI,
             forceChar = CT_LUIGI,
             lifeIcon = gTextures.luigi_head,
             starIcon = gTextures.star,
@@ -97,7 +97,7 @@ characterTable = {
             credit = "Nintendo / Coop Team",
             color = { r = 50,  g = 50,  b = 255 },
             model = E_MODEL_TOAD_PLAYER,
-            offset = 0,
+            ogModel = E_MODEL_TOAD_PLAYER,
             forceChar = CT_TOAD,
             lifeIcon = gTextures.toad_head,
             starIcon = gTextures.star,
@@ -114,7 +114,7 @@ characterTable = {
             credit = "Nintendo / Coop Team",
             color = { r = 130, g = 25,  b = 130 },
             model = E_MODEL_WALUIGI,
-            offset = 0,
+            ogModel = E_MODEL_WALUIGI,
             forceChar = CT_WALUIGI,
             lifeIcon = gTextures.waluigi_head,
             starIcon = gTextures.star,
@@ -132,7 +132,7 @@ characterTable = {
             credit = "Nintendo / Coop Team",
             color = { r = 255, g = 255, b = 50  },
             model = E_MODEL_WARIO,
-            offset = 0,
+            ogModel = E_MODEL_WARIO,
             forceChar = CT_WARIO,
             lifeIcon = gTextures.wario_head,
             starIcon = gTextures.star,
@@ -157,14 +157,13 @@ optionTableRef = {
     inputLatency = 5,
     showLocked = 6,
     -- Characters
-    autoPalette = 7,
-    localMoveset = 8,
-    localModels = 9,
-    localVoices = 10,
+    localMoveset = 7,
+    localModels = 8,
+    localVoices = 9,
     -- CS
-    credits = 11,
-    debugInfo = 12,
-    resetSaveData = 13,
+    credits = 10,
+    debugInfo = 11,
+    resetSaveData = 12,
 }
 
 optionTable = {
@@ -220,14 +219,6 @@ optionTable = {
         toggleDefault = 1,
         toggleMax = 1,
         description = {"Toggles if Locked Characters", "Display In-Menu"}
-    },
-    [optionTableRef.autoPalette] = {
-        name = "Auto-Apply Palette",
-        toggle = tonumber(mod_storage_load("autoPalette")),
-        toggleSaveName = "autoPalette",
-        toggleDefault = 1,
-        toggleMax = 1,
-        description = {"If On, Automatically", "sets your palette to the", "Character's Preset if avalible"}
     },
     [optionTableRef.localMoveset] = {
         name = "Character Moveset",
@@ -306,29 +297,6 @@ local menuColorTable = {
     { r = 130, g = 25,  b = 130 },
     { r = 255, g = 255, b = 255 },
     { r = 50,  g = 50,  b = 50  }
-}
-
--- Default Player Adjustments
-local defaultMenuColors = {
-    [CT_MARIO] = menuColorTable[1],
-    [CT_LUIGI] = menuColorTable[4],
-    [CT_TOAD] =  menuColorTable[5],
-    [CT_WALUIGI] = menuColorTable[7],
-    [CT_WARIO] = menuColorTable[3]
-}
-local defaultModels = {
-    [CT_MARIO] = E_MODEL_MARIO,
-    [CT_LUIGI] = E_MODEL_LUIGI,
-    [CT_TOAD] = E_MODEL_TOAD_PLAYER,
-    [CT_WALUIGI] = E_MODEL_WALUIGI,
-    [CT_WARIO] = E_MODEL_WARIO
-}
-local defaultForceChar = {
-    [CT_MARIO] = "CT_MARIO",
-    [CT_LUIGI] = "CT_LUIGI",
-    [CT_TOAD] = "CT_TOAD",
-    [CT_WALUIGI] = "CT_WALUIGI",
-    [CT_WARIO] = "CT_WARIO"
 }
 
 ---@param m MarioState
@@ -524,7 +492,7 @@ end
 local stallFrame = 0
 local noLoop = false
 
-local CUTSCENE_CS_MENU = 0xFA
+CUTSCENE_CS_MENU = 0xFA
 
 local ignoredSurfaces = {
     SURFACE_BURNING, SURFACE_QUICKSAND, SURFACE_INSTANT_QUICKSAND, SURFACE_INSTANT_MOVING_QUICKSAND, SURFACE_DEEP_MOVING_QUICKSAND, SURFACE_INSTANT_QUICKSAND, SURFACE_DEEP_QUICKSAND, SURFACE_SHALLOW_MOVING_QUICKSAND,
@@ -556,36 +524,12 @@ local menuActBlacklist = {
     [ACT_PUSHING_DOOR] = true,
     [ACT_UNLOCKING_KEY_DOOR] = true,
     [ACT_UNLOCKING_STAR_DOOR] = true,
+    [ACT_IN_CANNON] = true,
     -- Dialog Acts
     [ACT_READING_NPC_DIALOG] = true,
     [ACT_WAITING_FOR_DIALOG] = true,
     [ACT_EXIT_LAND_SAVE_DIALOG] = true,
     [ACT_READING_AUTOMATIC_DIALOG] = true,
-}
-
-local faceAngle = 0
-local function anim_generic_idle_offset(offset, animFrame)
-    return offset - math.max((math.sin((animFrame)/24*MATH_PI)+1.1)*2, 1.8)
-end
-local altOffsetAnim = {
-    [MARIO_ANIM_CROUCHING] = true,
-    [ACT_READING_AUTOMATIC_DIALOG] = true,
-    [MARIO_ANIM_FALL_OVER_BACKWARDS] = true,
-    [MARIO_ANIM_SLIDE_KICK] = false,
-    [MARIO_ANIM_GROUND_POUND] = false,
-    [MARIO_ANIM_GROUND_POUND_LANDING] = false,
-    [MARIO_ANIM_SLEEP_IDLE] = false,
-    [MARIO_ANIM_SLEEP_LYING] = false,
-    [MARIO_ANIM_SLEEP_START_LYING] = false,
-    [MARIO_ANIM_IDLE_HEAD_LEFT] = function (offset, animFrame)
-        return anim_generic_idle_offset(offset, animFrame)
-    end,
-    [MARIO_ANIM_IDLE_HEAD_CENTER] = function (offset, animFrame)
-        return anim_generic_idle_offset(offset, animFrame)
-    end,
-    [MARIO_ANIM_IDLE_HEAD_RIGHT] = function (offset, animFrame)
-        return anim_generic_idle_offset(offset, animFrame)
-    end,
 }
 
 local prevBaseCharFrame = gNetworkPlayers[0].modelIndex
@@ -628,14 +572,14 @@ local function mario_update(m)
             if charTable[charTable.currAlt].forceChar ~= nil then
                 p.forceChar = charTable[charTable.currAlt].forceChar
             end
+            p.modelEditOffset = charTable[charTable.currAlt].model - charTable[charTable.currAlt].ogModel
             m.marioObj.hookRender = 1
         else
             p.modelId = nil
             p.forceChar = defaultTable.forceChar
+            p.modelEditOffset = 0
             currChar = 1
         end
-
-        p.offset = charTable[charTable.currAlt].offset
 
         if menuAndTransition then
             --play_secondary_music(0, 0, 0.5, 0)
@@ -659,7 +603,6 @@ local function mario_update(m)
             gLakituState.pos.z = m.pos.z + coss(faceAngle) * 500 * camScale
 
             if m.forwardVel == 0 and m.pos.y == m.floorHeight and not ignoredSurfaces[m.floor.type] and m.health > 255 and not menuActBlacklist[m.action] then
-                set_mario_action(m, ACT_IDLE, 0)
                 set_mario_animation(m, MARIO_ANIM_FIRST_PERSON)
             end
             noLoop = false
@@ -712,6 +655,8 @@ local function mario_update(m)
         for i = 1, #optionTable do
             optionTable[i].optionBeingSet = false
         end
+
+        p.movesetToggle = optionTable[optionTableRef.localMoveset].toggle ~= 0
     end
 
     local marioGfx = m.marioObj.header.gfx
@@ -721,27 +666,11 @@ local function mario_update(m)
     end
     animTimer = animTimer + 1
         
-    
-    local networkOffset = p.offset
-    local forceChar = p.forceChar
-    if networkOffset ~= 0 and networkOffset ~= nil then
-        if m.playerIndex == 0 then
-        end
-        local offset = altOffsetAnim[marioGfx.animInfo.animID]
-        if offset ~= false then
-            if type(offset) == TYPE_FUNCTION then
-                marioGfx.pos.y = marioGfx.pos.y + offset(networkOffset, marioGfx.animInfo.animFrame)
-            elseif type(offset) == TYPE_TABLE then
-                marioGfx.pos.y = marioGfx.pos.y - offset[(math.min(animTimer, #offset))]*networkOffset + networkOffset
-            elseif type(offset) == TYPE_INTEGER then
-                marioGfx.pos.y = marioGfx.pos.y + networkOffset*offset
-            else
-                marioGfx.pos.y = (altOffsetAnim[marioGfx.animInfo.animID] and m.pos.y or marioGfx.pos.y) + networkOffset
-            end
-        end
-    end
-    if forceChar ~= nil then
-        np.overrideModelIndex = forceChar
+
+    if p.forceChar ~= nil then
+        np.overrideModelIndex = p.forceChar
+    else
+        np.overrideModelIndex = CT_MARIO
     end
 
     -- Character Animations
@@ -778,10 +707,27 @@ function set_model(o, model)
     if optionTable[optionTableRef.localModels].toggle == 0 then return end
     if obj_has_behavior_id(o, id_bhvMario) ~= 0 then
         local i = network_local_index_from_global(o.globalPlayerIndex)
-        if gCSPlayers[i].modelId ~= nil and obj_has_model_extended(o, gCSPlayers[i].modelId) == 0 then
-            settingModel = true
-            obj_set_model_extended(o, gCSPlayers[i].modelId)
-            settingModel = false
+        local localModelData = nil
+        for c = 1, #characterTable do
+            if gCSPlayers[i].saveName == characterTable[c].saveName then
+                if gCSPlayers[i].currAlt <= #characterTable[c] then
+                    localModelData = characterTable[c][gCSPlayers[i].currAlt].ogModel + gCSPlayers[i].modelEditOffset
+                end
+            end
+        end
+        if localModelData ~= nil then
+            if obj_has_model_extended(o, localModelData) == 0 then
+                settingModel = true
+                obj_set_model_extended(o, localModelData)
+                settingModel = false
+            end
+        else
+            -- Original/Backup
+            if gCSPlayers[i].modelId ~= nil and obj_has_model_extended(o, gCSPlayers[i].modelId) == 0 then
+                settingModel = true
+                obj_set_model_extended(o, gCSPlayers[i].modelId)
+                settingModel = false
+            end
         end
         return
     end
@@ -857,7 +803,7 @@ local TEXT_DESCRIPTION = "Character Description:"
 local TEXT_PREF_SAVE = "Press A to Set as Preferred Character"
 local TEXT_PREF_SAVE_AND_PALETTE = "A - Set Preference | Y - Toggle Palette"
 local TEXT_PAUSE_Z_OPEN = "Z Button - Character Select"
-local TEXT_PAUSE_UNAVALIBLE = "Character Select is Unavalible"
+local TEXT_PAUSE_UNAVAILABLE = "Character Select is Unavailable"
 local TEXT_PAUSE_CURR_CHAR = "Current Character: "
 local TEXT_MOVESET_RESTRICTED = "Movesets are Restricted"
 local TEXT_PALETTE_RESTRICTED = "Palettes are Restricted"
@@ -876,7 +822,6 @@ local TEXT_DESCRIPTION_SHORT = "Description:"
 local TEXT_LIFE_ICON = "Life Icon:"
 local TEXT_STAR_ICON = "Star Icon:"
 local TEXT_FORCED_CHAR = "Forced: "
-local TEXT_OFFSET = "Offset: "
 local TEXT_TABLE_POS = "Table Position: "
 local TEXT_PALETTE = "Palette: "
 
@@ -891,6 +836,14 @@ local TEXT_LOCAL_MODEL_OFF_OPTIONS = "You can turn it back on in the Options Men
 local TEXT_CREDITS_HEADER = "Credits"
 
 menuColor = characterTable[1][1].color
+
+local forceCharStrings = {
+    [CT_MARIO] = "CT_MARIO",
+    [CT_LUIGI] = "CT_LUIGI",
+    [CT_TOAD] = "CT_TOAD",
+    [CT_WALUIGI] = "CT_WALUIGI",
+    [CT_WARIO] = "CT_WARIO"
+}
 
 local MATH_DIVIDE_320 = 1/320
 local MATH_DIVIDE_64 = 1/64
@@ -972,21 +925,22 @@ local function on_hud_render()
         local TEXT_ALT = "Alt: " .. character.currAlt .. "/" .. #character
         character = characterTable[currChar][character.currAlt]
         local paletteCount = characterColorPresets[gCSPlayers[0].modelId] ~= nil and #characterColorPresets[gCSPlayers[0].modelId] or 0
+        local currPaletteTable = characterColorPresets[gCSPlayers[0].modelId] and characterColorPresets[gCSPlayers[0].modelId] or {currPalette = 0}
         if optionTable[optionTableRef.debugInfo].toggle == 0 then
             -- Actual Description --
             local TEXT_NAME = string_underscore_to_space(character.name)
             local TEXT_CREDIT = "Credit: " .. character.credit
             local TEXT_DESCRIPTION_TABLE = character.description
-            local TEXT_PRESET = "Preset Character Palette: "..(gCSPlayers[0].presetPalette > 0 and (paletteCount > 1 and "("..gCSPlayers[0].presetPalette.."/"..paletteCount..")" or "On") or "Off")
+            local TEXT_PRESET = "Preset Character Palette: "..((paletteCount > 1 and "("..currPaletteTable.currPalette.."/"..paletteCount..")" or (currPaletteTable.currPalette > 0 and "Off" or "On")) or "Off")
             local TEXT_PREF = "Preferred Character:"
-            local TEXT_PREF_LOAD_NAME = string_underscore_to_space(TEXT_PREF_LOAD_NAME)
+            local TEXT_PREF_LOAD_NAME = ' "' .. string_underscore_to_space(TEXT_PREF_LOAD_NAME) .. '"' .. ((TEXT_PREF_LOAD_ALT ~= 1 and TEXT_PREF_LOAD_NAME ~= "Default" and currChar ~= 1) and " ("..TEXT_PREF_LOAD_ALT..")" or "")
             if djui_hud_measure_text(TEXT_PREF_LOAD_NAME) / widthScale > 110 then
                 TEXT_PREF = "Preferred Char:"
             end
             if djui_hud_measure_text(TEXT_PREF_LOAD_NAME) / widthScale > 164 then
                 TEXT_PREF = "Pref Char:"
             end
-            TEXT_PREF = TEXT_PREF .. ' "' .. TEXT_PREF_LOAD_NAME .. '"' .. ((TEXT_PREF_LOAD_ALT ~= 1 and TEXT_PREF_LOAD_NAME ~= "Default" and currChar ~= 1) and " ("..TEXT_PREF_LOAD_ALT..")" or "")
+            TEXT_PREF = TEXT_PREF .. TEXT_PREF_LOAD_NAME
 
             local textX = x * 0.5
             djui_hud_print_text(TEXT_NAME, width - textX - djui_hud_measure_text(TEXT_NAME) * 0.3, 55, 0.6)
@@ -1013,16 +967,17 @@ local function on_hud_render()
                 end
             end
 
-            local modelId = gCSPlayers[0].modelId and gCSPlayers[0].modelId or defaultModels[gMarioStates[0].character.type]
+            local modelId = gCSPlayers[0].modelId
             djui_hud_print_text(TEXT_PREF, width - textX - djui_hud_measure_text(TEXT_PREF) * 0.15, height - 22, 0.3)
+            local text = TEXT_PREF_SAVE
             if characterColorPresets[modelId] and not stopPalettes then
                 djui_hud_print_text(TEXT_PRESET, width - textX - djui_hud_measure_text(TEXT_PRESET) * 0.15, height - 31, 0.3)
-                djui_hud_set_font(FONT_TINY)
-                djui_hud_print_text(TEXT_PREF_SAVE_AND_PALETTE, width - textX - djui_hud_measure_text(TEXT_PREF_SAVE_AND_PALETTE) * 0.25, height - 13, 0.5)
-            else
-                djui_hud_set_font(FONT_TINY)
-                djui_hud_print_text(TEXT_PREF_SAVE, width - textX - djui_hud_measure_text(TEXT_PREF_SAVE) * 0.25, height - 13, 0.5)
+                text = TEXT_PREF_SAVE_AND_PALETTE
+            elseif stopPalettes then
+                djui_hud_print_text(TEXT_PALETTE_RESTRICTED, width - textX - djui_hud_measure_text(TEXT_PALETTE_RESTRICTED) * 0.15, height - 31, 0.3)
             end
+            djui_hud_set_font(FONT_TINY)
+            djui_hud_print_text(text, width - textX - djui_hud_measure_text(TEXT_PREF_SAVE) * 0.25, height - 13, 0.5)
         else
             -- Debugging Info --
             local TEXT_NAME = "Name: " .. character.name
@@ -1032,7 +987,7 @@ local function on_hud_render()
             local TEX_LIFE_ICON = character.lifeIcon
             local TEX_STAR_ICON = character.starIcon
             local TEXT_SCALE = "Camera Scale: " .. character.camScale
-            local TEXT_PRESET = "Preset Palette: ("..gCSPlayers[0].presetPalette.."/"..paletteCount..")"
+            local TEXT_PRESET = "Preset Palette: ("..currPaletteTable.currPalette.."/"..paletteCount..")"
             local TEXT_PREF = "Preferred: " .. TEXT_PREF_LOAD_NAME .. " ("..TEXT_PREF_LOAD_ALT..")"
             local TEXT_PREF_COLOR = "Pref Color: R-" .. prefCharColor.r .. ", G-" .. prefCharColor.g .. ", B-" .. prefCharColor.b
 
@@ -1092,20 +1047,18 @@ local function on_hud_render()
             djui_hud_render_texture(TEX_STAR_ICON, width - x + 35, y + 1, 0.4 / (TEX_STAR_ICON.width * MATH_DIVIDE_16), 0.4 / (TEX_STAR_ICON.height * MATH_DIVIDE_16))
             y = y + 7
             djui_hud_set_color(menuColor.r, menuColor.g, menuColor.b, 255)
-            djui_hud_print_text(TEXT_FORCED_CHAR .. defaultForceChar[character.forceChar], width - x + 8, y, 0.5)
-            y = y + 7
-            djui_hud_print_text(TEXT_OFFSET .. character.offset, width - x + 8, y, 0.5)
+            djui_hud_print_text(TEXT_FORCED_CHAR .. forceCharStrings[character.forceChar], width - x + 8, y, 0.5)
             y = y + 7
             djui_hud_print_text(TEXT_TABLE_POS .. currChar, width - x + 8, y, 0.5)
             y = y + 7
             djui_hud_print_text(TEXT_SCALE, width - x + 8, y, 0.5)
-            local modelId = gCSPlayers[0].modelId and gCSPlayers[0].modelId or defaultModels[gMarioStates[0].character.type]
+            local modelId = gCSPlayers[0].modelId
             y = y + 7
             if characterColorPresets[modelId] ~= nil then
                 djui_hud_print_text(TEXT_PALETTE, width - x + 8, y, 0.5)
                 local x = x - djui_hud_measure_text(TEXT_PALETTE)*0.5
-                local currPalette = gCSPlayers[0].presetPalette > 0 and gCSPlayers[0].presetPalette or 1
-                local paletteTable = characterColorPresets[modelId][currPalette]
+                local currPalette = currPaletteTable.currPalette > 0 and currPaletteTable.currPalette or 1
+                local paletteTable = currPaletteTable[currPalette]
                 for i = 0, #paletteTable do
                     djui_hud_set_color(menuColor.r, menuColor.g, menuColor.b, 255)
                     djui_hud_render_rect(width - x + 6.5 + (6.5 * i), y + 1.5, 6, 6)
@@ -1113,7 +1066,7 @@ local function on_hud_render()
                     djui_hud_render_rect(width - x + 7 + (6.5 * i), y + 2, 5, 5)
                 end
                 y = y + 7
-                djui_hud_set_color(character.color.r, character.color.g, character.color.b, 255)
+                djui_hud_set_color(menuColor.r, menuColor.g, menuColor.b, 255)
             end
             djui_hud_print_text(TEXT_MOVESET, width - x + 8, y, 0.5)
             y = y + 7
@@ -1492,7 +1445,7 @@ local function on_hud_render()
         djui_hud_set_font(FONT_USER)
         if optionTable[optionTableRef.openInputs].toggle == 1 then
             currCharY = 27
-            local text = menu_is_allowed() and TEXT_PAUSE_Z_OPEN or TEXT_PAUSE_UNAVALIBLE
+            local text = menu_is_allowed() and TEXT_PAUSE_Z_OPEN or TEXT_PAUSE_UNAVAILABLE
             width = djui_hud_get_screen_width() - djui_hud_measure_text(text)
             djui_hud_set_color(255, 255, 255, 255)
             djui_hud_print_text(text, width - 20, 16, 1)
@@ -1558,7 +1511,6 @@ local function before_mario_update(m)
     end
 
     local cameraToObject = m.marioObj.header.gfx.cameraToObject
-
     if menuAndTransition and not options then
         if menu then
             if inputStallTimerDirectional == 0 and optionTable[optionTableRef.localModels].toggle ~= 0 and not charBeingSet then
@@ -1579,8 +1531,10 @@ local function before_mario_update(m)
                         buttonScroll = buttonScrollCap
                     end
                     play_sound(SOUND_MENU_MESSAGE_NEXT_PAGE, cameraToObject)
-                    gCSPlayers[0].presetPalette = 0
                     if currChar > #characterTable then currChar = 1 end
+                    if characterColorPresets[characterTable[currChar]] ~= nil then
+                        characterColorPresets[characterTable[currChar]].currPalette = 0
+                    end
                 end
                 if (controller.buttonPressed & U_JPAD) ~= 0 or (controller.buttonPressed & U_CBUTTONS) ~= 0 or controller.stickY > 60 then
                     currChar = currChar - 1
@@ -1599,8 +1553,10 @@ local function before_mario_update(m)
                         buttonScroll = -buttonScrollCap
                     end
                     play_sound(SOUND_MENU_MESSAGE_NEXT_PAGE, cameraToObject)
-                    gCSPlayers[0].presetPalette = 0
                     if currChar < 1 then currChar = #characterTable end
+                    if characterColorPresets[characterTable[currChar]] ~= nil then
+                        characterColorPresets[characterTable[currChar]].currPalette = 0
+                    end
                 end
 
                 -- Alt switcher
@@ -1639,20 +1595,23 @@ local function before_mario_update(m)
                 if (controller.buttonPressed & START_BUTTON) ~= 0 then
                     options = true
                 end
-                local modelId = gCSPlayers[0].modelId and gCSPlayers[0].modelId or defaultModels[m.character.type]
+                local modelId = gCSPlayers[0].modelId
+                local paletteCount = characterColorPresets[gCSPlayers[0].modelId] ~= nil and #characterColorPresets[gCSPlayers[0].modelId] or 0
+                local currPaletteTable = characterColorPresets[gCSPlayers[0].modelId] and characterColorPresets[gCSPlayers[0].modelId] or {currPalette = 0}
+
                 if (controller.buttonPressed & Y_BUTTON) ~= 0 then
                     if characterColorPresets[modelId] and optionTable[optionTableRef.localModels].toggle > 0 and not stopPalettes then
                         play_sound(SOUND_MENU_CLICK_FILE_SELECT, cameraToObject)
-                        gCSPlayers[0].presetPalette = gCSPlayers[0].presetPalette + 1
+                        currPaletteTable.currPalette = currPaletteTable.currPalette + 1
                         inputStallTimerButton = inputStallToButton
                     else
                         play_sound(SOUND_MENU_CAMERA_BUZZ, cameraToObject)
                         inputStallTimerButton = inputStallToButton
                     end
                 end
-            end
-            if characterColorPresets[gCSPlayers[0].modelId] ~= nil then
-                if #characterColorPresets[gCSPlayers[0].modelId] < gCSPlayers[0].presetPalette then gCSPlayers[0].presetPalette = 0 end
+                if characterColorPresets[gCSPlayers[0].modelId] ~= nil then
+                    if paletteCount < currPaletteTable.currPalette then currPaletteTable.currPalette = 0 end
+                end
             end
         end
 
@@ -1742,7 +1701,7 @@ local function chat_command(msg)
             menu = not menu
             return true
         else
-            djui_chat_message_create(TEXT_PAUSE_UNAVALIBLE)
+            djui_chat_message_create(TEXT_PAUSE_UNAVAILABLE)
             return true
         end
     end

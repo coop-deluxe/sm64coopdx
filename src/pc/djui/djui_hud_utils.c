@@ -403,8 +403,8 @@ void djui_hud_print_text_interpolated(const char* message, f32 prevX, f32 prevY,
     if (sInterpHudCount >= MAX_INTERP_HUD) { return; }
     struct InterpHud* interp = &sInterpHuds[sInterpHudCount++];
     interp->headPos = savedHeadPos;
-    interp->prevX = prevX + (font->xOffset * prevScale);
-    interp->prevY = prevY + (font->yOffset * prevScale);
+    interp->prevX = prevX;
+    interp->prevY = prevY;
     interp->prevScaleW = prevScale;
     interp->prevScaleH = prevScale;
     interp->x = x;
