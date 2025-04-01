@@ -5,10 +5,7 @@
 static bool djui_root_render(struct DjuiBase* base) {
     // grab window height
     u32 windowWidth, windowHeight;
-    wm_api->get_dimensions(&windowWidth, &windowHeight);
-    if (configForce4By3) {
-        windowWidth = gfx_current_dimensions.aspect_ratio * windowHeight;
-    }
+    djui_gfx_get_dimensions(&windowWidth, &windowHeight);
 
     // fill the screen
     djui_base_set_location(base, 0, 0);

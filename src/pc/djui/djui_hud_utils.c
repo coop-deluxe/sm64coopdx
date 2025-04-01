@@ -245,16 +245,16 @@ void djui_hud_set_rotation_interpolated(s32 prevRotation, f32 prevPivotX, f32 pr
 
 u32 djui_hud_get_screen_width(void) {
     u32 windowWidth, windowHeight;
-    wm_api->get_dimensions(&windowWidth, &windowHeight);
+    djui_gfx_get_dimensions(&windowWidth, &windowHeight);
 
     return (sResolution == RESOLUTION_N64)
         ? GFX_DIMENSIONS_ASPECT_RATIO * SCREEN_HEIGHT
-        : (configForce4By3 ? GFX_DIMENSIONS_ASPECT_RATIO * windowHeight : windowWidth) / djui_gfx_get_scale();
+        : (windowWidth / djui_gfx_get_scale());
 }
 
 u32 djui_hud_get_screen_height(void) {
     u32 windowWidth, windowHeight;
-    wm_api->get_dimensions(&windowWidth, &windowHeight);
+    djui_gfx_get_dimensions(&windowWidth, &windowHeight);
 
     return (sResolution == RESOLUTION_N64)
         ? SCREEN_HEIGHT
@@ -667,8 +667,8 @@ bool djui_hud_world_pos_to_screen_pos(Vec3f pos, Vec3f out) {
         screenHeight = SCREEN_HEIGHT;
     } else {
         u32 windowWidth, windowHeight;
-        WAPI.get_dimensions(&windowWidth, &windowHeight);
-        screenWidth = configForce4By3 ? GFX_DIMENSIONS_ASPECT_RATIO * windowHeight : (f32) windowWidth;
+        djui_gfx_get_dimensions(&windowWidth, &windowHeight);
+        screenWidth = (f32) windowWidth;
         screenHeight = (f32) windowHeight;
     }
 

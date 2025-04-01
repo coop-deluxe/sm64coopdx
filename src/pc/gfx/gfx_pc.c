@@ -993,17 +993,21 @@ static void OPTIMIZE_O3 gfx_sp_tri1(uint8_t vtx1_idx, uint8_t vtx2_idx, uint8_t 
     }
 
     if (rdp.viewport_or_scissor_changed) {
-        if (memcmp(&rdp.viewport, &rendering_state.viewport, sizeof(rdp.viewport)) != 0) {
+        static uint32_t x_adjust_4by3_prev;
+        if (memcmp(&rdp.viewport, &rendering_state.viewport, sizeof(rdp.viewport)) != 0
+            || x_adjust_4by3_prev != gfx_current_dimensions.x_adjust_4by3) {
             gfx_flush();
             gfx_rapi->set_viewport(rdp.viewport.x + gfx_current_dimensions.x_adjust_4by3, rdp.viewport.y, rdp.viewport.width, rdp.viewport.height);
             rendering_state.viewport = rdp.viewport;
         }
-        if (memcmp(&rdp.scissor, &rendering_state.scissor, sizeof(rdp.scissor)) != 0) {
+        if (memcmp(&rdp.scissor, &rendering_state.scissor, sizeof(rdp.scissor)) != 0
+            || x_adjust_4by3_prev != gfx_current_dimensions.x_adjust_4by3) {
             gfx_flush();
             gfx_rapi->set_scissor(rdp.scissor.x + gfx_current_dimensions.x_adjust_4by3, rdp.scissor.y, rdp.scissor.width, rdp.scissor.height);
             rendering_state.scissor = rdp.scissor;
         }
         rdp.viewport_or_scissor_changed = false;
+        x_adjust_4by3_prev = gfx_current_dimensions.x_adjust_4by3;
     }
 
     struct CombineMode* cm = &rdp.combine_mode;
@@ -1874,9 +1878,9 @@ void gfx_start_frame(void) {
         // Avoid division by zero
         gfx_current_dimensions.height = 1;
     }
-    if (configForce4By3) {
-        gfx_current_dimensions.x_adjust_4by3 =
-            (gfx_current_dimensions.width - (4.0f / 3.0f) * gfx_current_dimensions.height) / 2;
+    if (configForce4By3
+        && ((4.0f / 3.0f) * gfx_current_dimensions.height) < gfx_current_dimensions.width) {
+        gfx_current_dimensions.x_adjust_4by3 = (gfx_current_dimensions.width - (4.0f / 3.0f) * gfx_current_dimensions.height) / 2;
         gfx_current_dimensions.width = (4.0f / 3.0f) * gfx_current_dimensions.height;
     } else { gfx_current_dimensions.x_adjust_4by3 = 0; }
     gfx_current_dimensions.aspect_ratio = ((float)gfx_current_dimensions.width / (float)gfx_current_dimensions.height);

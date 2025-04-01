@@ -511,9 +511,8 @@ static void djui_chat_box_input_on_scroll(UNUSED struct DjuiBase *base, UNUSED f
     bool canScrollDown = (*yValue < 0);
     
     y *= 24;
-    extern u8 heldControl, heldShift;
-    if (heldControl) { y /= 2; }
-    if (heldShift) { y *= 3; }
+    if (gDjuiInputHeldControl) { y /= 2; }
+    if (gDjuiInputHeldShift) { y *= 3; }
 
     gDjuiChatBox->scrolling = true;
     if (y > 0 && canScrollDown) { *yValue = fmin(*yValue + y, 0); }

@@ -157,6 +157,6 @@ void controller_mouse_leave_relative(void) {
 void mouse_on_scroll(float x, float y) {
     djui_interactable_on_scroll(x, y);
     mouse_scroll_timestamp = gGlobalTimer;
-    mouse_scroll_x = x;
-    mouse_scroll_y = y;
+    mouse_scroll_x += x;
+    mouse_scroll_y += y;
 }
