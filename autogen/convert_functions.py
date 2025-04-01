@@ -868,7 +868,9 @@ def build_param(fid, param, i):
         else:
             s = '  ' + s
 
-        return s + '\n'
+        sanity_check = '    if (lua_isnil(L, %d)) { return 0; }\n' % (i)
+
+        return sanity_check + s + '\n'
 
 def build_param_after(param, i):
     ptype = param['type']

@@ -11220,6 +11220,9 @@ SOUND_TERRAIN_WATER = 2
 SOUND_VIBRATO = 0x2000000
 
 --- @type integer
+HAZARD_TYPE_HORIZONTAL_WIND = 4
+
+--- @type integer
 HAZARD_TYPE_LAVA_FLOOR = 1
 
 --- @type integer
@@ -11227,9 +11230,6 @@ HAZARD_TYPE_LAVA_WALL = 2
 
 --- @type integer
 HAZARD_TYPE_QUICKSAND = 3
-
---- @type integer
-HAZARD_TYPE_HORIZONTAL_WIND = 4
 
 --- @type integer
 HAZARD_TYPE_VERTICAL_WIND = 5
