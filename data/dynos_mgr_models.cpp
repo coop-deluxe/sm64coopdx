@@ -266,6 +266,7 @@ Gfx *DynOS_Model_Duplicate_DisplayList(Gfx* aGfx) {
             u32 size = C0(cmd, 12, 8) * sizeof(Vtx);
             Vtx *vtxDuplicate = (Vtx *) malloc(size);
             memcpy(vtxDuplicate, (Vtx *) cmd->words.w1, size);
+            DynOS_Find_Pending_Scroll_Target((Vtx *) cmd->words.w1, vtxDuplicate);
             cmd->words.w1 = (uintptr_t) vtxDuplicate;
             sCurrModelDuplicates->push_back(vtxDuplicate);
         }
