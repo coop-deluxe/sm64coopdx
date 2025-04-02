@@ -125,6 +125,10 @@ void DynOS_Find_Pending_Scroll_Target(Vtx *data, Vtx *newData) {
     }
 }
 
+void DynOS_Pending_Scroll_Targets_Clear() {
+    sPendingScrollTargets.clear();
+}
+
 void DynOS_Add_Scroll_Target(u32 index, const char* name, u32 offset, u32 size) {
     for (auto& lvlPair : DynOS_Lvl_GetArray()) {
         for (auto& node : lvlPair.second->mVertices) {
