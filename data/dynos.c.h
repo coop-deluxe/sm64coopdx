@@ -86,6 +86,7 @@ void dynos_model_clear_pool(enum ModelPool aModelPool);
 
 // -- other -- //
 void dynos_mod_shutdown(void);
+void dynos_pending_scroll_targets_clear(void);
 void dynos_add_scroll_target(u32 index, const char *name, u32 offset, u32 size);
 
 #endif

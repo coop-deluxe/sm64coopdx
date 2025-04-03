@@ -1091,6 +1091,8 @@ bool DynOS_Bin_IsCompressed(const SysPath &aFilename);
 bool DynOS_Bin_Compress(const SysPath &aFilename);
 BinFile *DynOS_Bin_Decompress(const SysPath &aFilename);
 
+void DynOS_Find_Pending_Scroll_Target(Vtx *data, Vtx *newData);
+void DynOS_Pending_Scroll_Targets_Clear();
 void DynOS_Add_Scroll_Target(u32 index, const char *name, u32 offset, u32 size);
 
 #endif

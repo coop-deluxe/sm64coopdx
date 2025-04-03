@@ -42,6 +42,7 @@
 
 static u8 sSoftResettingCamera = FALSE;
 u8 gCameraUseCourseSpecificSettings = TRUE;
+u8 CCSSChangedByMod = FALSE;
 u8 gOverrideFreezeCamera = FALSE;
 u8 gOverrideAllowToxicGasCamera = FALSE;
 
@@ -69,6 +70,8 @@ void romhack_camera_reset_settings(void) {
     gRomhackCameraSettings.zoomedInHeight = 300;
     gRomhackCameraSettings.zoomedOutHeight = 450;
     gRomhackCameraSettings.modsOnly = FALSE;
+    gCameraUseCourseSpecificSettings = TRUE;
+    CCSSChangedByMod = FALSE;
 }
 
 /**
@@ -12171,6 +12174,7 @@ void obj_rotate_towards_point(struct Object *o, Vec3f point, s16 pitchOff, s16 y
 
 void camera_set_use_course_specific_settings(u8 enable) {
     gCameraUseCourseSpecificSettings = enable;
+    CCSSChangedByMod = TRUE;
 }
 
 #include "behaviors/intro_peach.inc.c"
@@ -12212,7 +12216,9 @@ void romhack_camera_init_settings(void) {
     }
 
     gRomhackCameraSettings.enable = override;
-    gCameraUseCourseSpecificSettings = (override == RCO_DISABLE && dynos_level_is_vanilla_level(gCurrLevelNum));
+    if (!CCSSChangedByMod) {
+        gCameraUseCourseSpecificSettings = dynos_level_is_vanilla_level(gCurrLevelNum);
+    }
     gRomhackCameraSettings.collisions = configRomhackCameraHasCollision;
     gRomhackCameraSettings.centering = configRomhackCameraHasCentering;
     gRomhackCameraSettings.dpad = configRomhackCameraDPadBehavior;
@@ -12371,9 +12377,9 @@ void mode_rom_hack_camera(struct Camera *c) {
         if (gMarioStates[0].controller->buttonPressed & U_JPAD) {
             sRomHackYaw = DEGREES(180 + 90) - gMarioStates[0].faceAngle[1];
         } else if (gMarioStates[0].controller->buttonDown & L_JPAD) {
-            sRomHackYaw -= DEGREES(0.5) * (camera_config_is_x_inverted() ? -1 : 1);
+            sRomHackYaw -= DEGREES(0.5) * (camera_config_is_x_inverted() ? 1 : -1);
         } else if (gMarioStates[0].controller->buttonDown & R_JPAD) {
-            sRomHackYaw += DEGREES(0.5) * (camera_config_is_x_inverted() ? -1 : 1);
+            sRomHackYaw += DEGREES(0.5) * (camera_config_is_x_inverted() ? 1 : -1);
         } else if (gMarioStates[0].controller->buttonPressed & D_JPAD) {
             sRomHackYaw = snap_to_45_degrees(sRomHackYaw);
         }

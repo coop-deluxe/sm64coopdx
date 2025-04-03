@@ -703,7 +703,6 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
     extern s16 gChangeLevel;
     gChangeLevel = LEVEL_CASTLE_GROUNDS;
     network_player_init();
-    camera_set_use_course_specific_settings(true);
     gMarioStates[0].cap = 0;
     gMarioStates[0].input = 0;
     extern s16 gTTCSpeedSetting;
