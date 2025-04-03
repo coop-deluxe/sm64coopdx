@@ -86,7 +86,6 @@ void le_calculate_lighting_dir(Vec3f pos, Vec3f out) {
     if (sLights == NULL) { return; }
 
     Vec3f lightingDir = { 0, 0, 0 };
-
     s32 count = 1;
     for (struct LELight* light = hmap_begin(sLights); light != NULL; light = hmap_next(sLights)) {
         f32 diffX = light->posX - pos[0];
