@@ -537,11 +537,6 @@ void skip_camera_interpolation(void) {
     gCamSkipInterp = 1;
 }
 
-static void set_gcamera(struct Camera *c) {
-    gCamera = c;
-    if (gCameraCObject != NULL) { gCameraCObject->pointer = c; }
-}
-
 /**
  * Starts a camera shake triggered by an interaction
  */
@@ -3178,7 +3173,7 @@ void update_camera(struct Camera *c) {
     if (!c) { return; }
     UNUSED u8 unused[24];
 
-    set_gcamera(c);
+    gCamera = c;
     update_camera_hud_status(c);
 
     if ((gOverrideFreezeCamera || get_first_person_enabled()) && !gDjuiInMainMenu) {
@@ -3420,7 +3415,7 @@ void soft_reset_camera(struct Camera* c) {
  */
 void reset_camera(struct Camera *c) {
     if (!c) { return; }
-    set_gcamera(c);
+    gCamera = c;
     gCameraMovementFlags = 0;
     s2ndRotateFlags = 0;
     sStatusFlags = 0;

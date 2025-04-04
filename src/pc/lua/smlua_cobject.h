@@ -74,8 +74,6 @@ extern int gSmLuaCPointers;
 extern int gSmLuaCObjectMetatable;
 extern int gSmLuaCPointerMetatable;
 
-extern CObject *gCameraCObject;
-
 bool smlua_valid_lot(u16 lot);
 bool smlua_valid_lvt(u16 lvt);
 const char *smlua_get_lvt_name(u16 lvt);

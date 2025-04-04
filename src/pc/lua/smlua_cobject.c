@@ -23,8 +23,6 @@ int gSmLuaCPointers = 0;
 int gSmLuaCObjectMetatable = 0;
 int gSmLuaCPointerMetatable = 0;
 
-CObject *gCameraCObject = NULL;
-
 struct LuaObjectField* smlua_get_object_field_from_ot(struct LuaObjectTable* ot, const char* key) {
     // binary search
     s32 min = 0;
@@ -776,8 +774,6 @@ void smlua_cobject_init_globals(void) {
     EXPOSE_GLOBAL(LOT_SERVERSETTINGS, gServerSettings);
 
     EXPOSE_GLOBAL(LOT_NAMETAGSSETTINGS, gNametagsSettings);
-
-    gCameraCObject = smlua_push_object(L, LOT_CAMERA, gCamera, NULL); lua_setglobal(L, "gCamera");
 }
 
 void smlua_cobject_init_per_file_globals(const char* path) {
