@@ -1,5 +1,6 @@
 #include <map>
 #include <vector>
+#include <unordered_map>
 #include "dynos.cpp.h"
 
 extern "C" {
@@ -24,6 +25,17 @@ struct ModelInfo {
     std::vector<void*> *duplicates;
 };
 
+class PermanentNode {
+    public:
+        Gfx* gfx;
+        Gfx** graphNodePtr;
+        std::unordered_map<void*, void*> map;
+
+        PermanentNode(Gfx* gfx, Gfx** graphNodePtr) : gfx(gfx), graphNodePtr(graphNodePtr) {}
+
+        ~PermanentNode() { map.clear();}
+};
+
 static struct DynamicPool* sModelPools[MODEL_POOL_MAX] = { 0 };
 
 static std::map<void*, struct ModelInfo> sAssetMap[MODEL_POOL_MAX];
@@ -33,6 +45,9 @@ static std::map<u32, u32> sOverwriteMap;
 // An array of display list and/or vertex buffer duplicates for the current model processed in process_geo_layout
 static std::vector<void*> *sCurrModelDuplicates = nullptr;
 static std::vector<void*> sScheduledFree[MODEL_POOL_MAX];
+static std::vector<PermanentNode*> sPermanentPoolGfx;
+
+static bool sIsLoadingPermanentModel = false;
 
 static u32 find_empty_id(bool aIsPermanent) {
     u32 id = aIsPermanent ? 9999 : VANILLA_ID_END + 1;
@@ -66,6 +81,8 @@ void DynOS_Model_Dump() {
 static struct GraphNode* DynOS_Model_LoadCommonInternal(u32* aId, enum ModelPool aModelPool, void* aAsset, u8 aLayer, struct GraphNode* aGraphNode, bool aDeDuplicate, enum ModelLoadType mlt) {
     // sanity check pool
     if (aModelPool >= MODEL_POOL_MAX) { return NULL; }
+
+    sIsLoadingPermanentModel = aModelPool == MODEL_POOL_PERMANENT;
 
     // allocate pool
     if (!sModelPools[aModelPool]) {
@@ -243,12 +260,21 @@ void DynOS_Model_OverwriteSlot(u32 srcSlot, u32 dstSlot) {
 
 // Display lists need to be duplicated so they can be modified by mods
 // also to prevent trying to write to read only memory for vanilla display lists
-Gfx *DynOS_Model_Duplicate_DisplayList(Gfx* aGfx) {
-    if (!aGfx) { return nullptr; }
+Gfx *DynOS_Model_Duplicate_DisplayList(Gfx* aGfx, Gfx **outGfx) {
+    static PermanentNode *duplicates = nullptr;
+    if (!aGfx) {
+        if (outGfx) { *outGfx = nullptr; }
+        return nullptr;
+    }
 
     u32 size = gfx_get_size(aGfx) * sizeof(Gfx);
     Gfx *gfxDuplicate = (Gfx *) malloc(size);
     memcpy(gfxDuplicate, aGfx, size);
+
+    if (outGfx) {
+        duplicates = sIsLoadingPermanentModel ? (new PermanentNode(aGfx, outGfx)) : nullptr;
+    }
+    if (duplicates) { duplicates->map.insert_or_assign(aGfx, gfxDuplicate); }
 
     // Look for other display lists or vertices
     for (u32 i = 0; i < size / sizeof(Gfx); i++) {
@@ -257,7 +283,7 @@ Gfx *DynOS_Model_Duplicate_DisplayList(Gfx* aGfx) {
 
         // Duplicate referenced display lists
         if (op == G_DL) {
-            cmd->words.w1 = (uintptr_t) DynOS_Model_Duplicate_DisplayList((Gfx *) cmd->words.w1);
+            cmd->words.w1 = (uintptr_t) DynOS_Model_Duplicate_DisplayList((Gfx *) cmd->words.w1, nullptr);
             if (C0(cmd, 16, 1) == G_DL_NOPUSH) { break; } // This is a branch (jump), end of display list
         }
 
@@ -267,18 +293,61 @@ Gfx *DynOS_Model_Duplicate_DisplayList(Gfx* aGfx) {
             Vtx *vtxDuplicate = (Vtx *) malloc(size);
             memcpy(vtxDuplicate, (Vtx *) cmd->words.w1, size);
             DynOS_Find_Pending_Scroll_Target((Vtx *) cmd->words.w1, vtxDuplicate);
+            if (duplicates) { duplicates->map.insert_or_assign((Vtx *) cmd->words.w1, vtxDuplicate); }
             cmd->words.w1 = (uintptr_t) vtxDuplicate;
-            sCurrModelDuplicates->push_back(vtxDuplicate);
+            if (sCurrModelDuplicates) { sCurrModelDuplicates->push_back(vtxDuplicate); }
         }
     }
 
-    sCurrModelDuplicates->push_back(gfxDuplicate);
+    if (outGfx) {
+        *outGfx = gfxDuplicate; // Patch the graph node's display list pointer
+        if (sIsLoadingPermanentModel) {
+            sPermanentPoolGfx.push_back(duplicates);
+            duplicates = nullptr;
+        }
+    }
+
+    if (sCurrModelDuplicates) { sCurrModelDuplicates->push_back(gfxDuplicate); }
 
     return gfxDuplicate;
 }
 
+// Resets the display list to the original one
+// Only used for permanent models since they aren't freed on session reset
+Gfx *DynOS_Reset_DisplayList_Duplicate(Gfx *dest, Gfx *src, std::unordered_map<void*, void*> map) {
+    u32 size = gfx_get_size(src);
+    memcpy(dest, src, size * sizeof(Gfx));
+    for (u32 i = 0; i < size; i++) {
+        Gfx *cmd = dest + i;
+        u32 op = cmd->words.w0 >> 24;
+
+        // Duplicated referenced display lists
+        if (op == G_DL) {
+            Gfx *gfx = (Gfx *) cmd->words.w1;
+            cmd->words.w1 = (uintptr_t) DynOS_Reset_DisplayList_Duplicate((Gfx *) map.at(gfx), gfx, map);
+            if (C0(cmd, 16, 1) == G_DL_NOPUSH) { break; } // This is a branch (jump), end of display list
+        }
+
+        // Duplicated referenced vertices
+        if (op == G_VTX) {
+            u32 size = C0(cmd, 12, 8) * sizeof(Vtx);
+            Vtx *vtx = (Vtx *) cmd->words.w1;
+            Vtx *vtxDuplicate = (Vtx *) map.at(vtx);
+            memcpy(vtxDuplicate, vtx, size);
+        }
+    }
+    return dest;
+}
+
 void DynOS_Model_ClearPool(enum ModelPool aModelPool) {
     if (!sModelPools[aModelPool]) { return; }
+
+    // Reset permanent models but don't free them
+    if (aModelPool == MODEL_POOL_SESSION) {
+        for (auto &node : sPermanentPoolGfx) {
+            *node->graphNodePtr = DynOS_Reset_DisplayList_Duplicate(*node->graphNodePtr, node->gfx, node->map);
+        }
+    }
 
     // schedule pool to be freed
     dynamic_pool_free_pool(sModelPools[aModelPool]);
