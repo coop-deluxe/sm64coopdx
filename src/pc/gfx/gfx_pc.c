@@ -863,6 +863,16 @@ static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, cons
                 U = (int32_t)((dotx / 127.0f + 1.0f) / 4.0f * rsp.texture_scaling_factor.s);
                 V = (int32_t)((doty / 127.0f + 1.0f) / 4.0f * rsp.texture_scaling_factor.t);
             }
+            if (rsp.geometry_mode & G_LIGHTING_ENGINE_EXT) {
+                Color color;
+                CTX_BEGIN(CTX_LIGHTING);
+                le_calculate_lighting_color(((Vtx_t*)v)->ob, color, 1.0f);
+                CTX_END(CTX_LIGHTING);
+
+                d->color.r *= color[0] / 255.0f;
+                d->color.g *= color[1] / 255.0f;
+                d->color.b *= color[2] / 255.0f;
+            }
         } else if (rsp.geometry_mode & G_LIGHTING_ENGINE_EXT) {
             Color color;
             CTX_BEGIN(CTX_LIGHTING);

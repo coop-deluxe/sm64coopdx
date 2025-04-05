@@ -60,9 +60,16 @@ void le_calculate_vertex_lighting(Vtx_t* v, Color out) {
 void le_calculate_lighting_color(Vec3f pos, Color out, f32 lightIntensityScalar) {
     if (sLights == NULL) { return; }
 
+#ifdef LE_TOTAL_WEIGHTED_LIGHTING
     f32 r = sAmbientColor[0];
     f32 g = sAmbientColor[1];
     f32 b = sAmbientColor[2];
+#else
+    f32 r = 0;
+    f32 g = 0;
+    f32 b = 0;
+#endif
+    f32 weight = 1.0f;
     for (struct LELight* light = hmap_begin(sLights); light != NULL; light = hmap_next(sLights)) {
         f32 diffX = light->posX - pos[0];
         f32 diffY = light->posY - pos[1];
@@ -75,11 +82,18 @@ void le_calculate_lighting_color(Vec3f pos, Color out, f32 lightIntensityScalar)
         r += light->colorR * brightness;
         g += light->colorG * brightness;
         b += light->colorB * brightness;
+        weight += brightness;
     }
 
-    out[0] = min(r, 255);
-    out[1] = min(g, 255);
-    out[2] = min(b, 255);
+#ifdef LE_TOTAL_WEIGHTED_LIGHTING
+    out[0] = min(r / weight, 255);
+    out[1] = min(g / weight, 255);
+    out[2] = min(b / weight, 255);
+#else
+    out[0] = min(sAmbientColor[0] + (r / weight), 255);
+    out[1] = min(sAmbientColor[1] + (g / weight), 255);
+    out[2] = min(sAmbientColor[2] + (b / weight), 255);
+#endif
 }
 
 void le_calculate_lighting_dir(Vec3f pos, Vec3f out) {

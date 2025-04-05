@@ -1015,7 +1015,7 @@ ifeq ($(IS_DEV_OR_DEBUG),0)
   ifeq ($(OSX_BUILD),0)
     LDFLAGS += -Wl,--build-id=none
   endif
-
+else
   # Stuff for showing the git hash and build time in dev builds
   # Originally from https://stackoverflow.com/questions/44038428/include-git-commit-hash-and-or-branch-name-in-c-c-source
   GIT_HASH=$(shell git rev-parse --short HEAD)
