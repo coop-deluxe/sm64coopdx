@@ -498,12 +498,14 @@ s32 perform_air_quarter_step(struct MarioState *m, Vec3f intendedPos, u32 stepAr
         return AIR_STEP_HIT_WALL;
     }
 
-    bool allow = true;
-    smlua_call_event_hooks_mario_param_and_bool_ret_bool(HOOK_ALLOW_FORCE_WATER_ACTION, m, false, &allow);
-    if (allow && (m->action & ACT_FLAG_RIDING_SHELL) && floorHeight < waterLevel) {
-        floorHeight = waterLevel;
-        floor = &gWaterSurfacePseudoFloor;
-        floor->originOffset = floorHeight; //! Incorrect origin offset (no effect)
+    if ((m->action & ACT_FLAG_RIDING_SHELL) && floorHeight < waterLevel) {
+        bool allow = true;
+        smlua_call_event_hooks_mario_param_and_bool_ret_bool(HOOK_ALLOW_FORCE_WATER_ACTION, m, false, &allow);
+        if (allow) {
+            floorHeight = waterLevel;
+            floor = &gWaterSurfacePseudoFloor;
+            floor->originOffset = floorHeight; //! Incorrect origin offset (no effect)
+        }
     }
 
     //! This check uses f32, but findFloor uses short (overflow jumps)
