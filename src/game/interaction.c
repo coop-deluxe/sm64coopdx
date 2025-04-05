@@ -153,13 +153,13 @@ u32 determine_interaction(struct MarioState *m, struct Object *o) {
 
     // hack: make water punch actually do something
     if (interaction == 0 && m->action == ACT_WATER_PUNCH && o->oInteractType & INTERACT_PLAYER) {
-        f32 cossFaceAngle0 = coss(m->faceAngle[0]);
-        Vec3f facing = { coss(m->faceAngle[1])*cossFaceAngle0, sins(m->faceAngle[0]), sins(m->faceAngle[1])*cossFaceAngle0 };
-        Vec3f dif = { o->oPosX - m->pos[0], (o->oPosY + o->hitboxHeight * 0.5) - m->pos[1], o->oPosZ - m->pos[2] };
-        vec3f_normalize(dif);
-        f32 angle = vec3f_dot(facing, dif);
-        // Unknown angle (60 degrees in each direction?)
-        if (angle >= 0.5f) {
+        s16 dYawToObject = mario_obj_angle_to_object(m, o) - m->faceAngle[1];
+        f32 dPitchX = o->oPosX - m->pos[0];
+        f32 dPitchY = (o->oPosY + o->hitboxHeight) - m->pos[1];
+        f32 dPitchZ = o->oPosZ - m->pos[2];
+        f32 dPitchXZ = sqrtf(dPitchX*dPitchX + dPitchZ*dPitchZ);
+        s16 dPitchToObject = atan2s(dPitchY, dPitchXZ) - m->faceAngle[0];
+        if ((-0x2AAA <= dYawToObject && dYawToObject <= 0x2AAA) && (-0x2AAA <= dPitchToObject && dPitchToObject <= 0x2AAA)) {
             interaction = INT_PUNCH;
         }
     }
