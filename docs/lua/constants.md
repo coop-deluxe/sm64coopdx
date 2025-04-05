@@ -3762,8 +3762,7 @@
 | HOOK_MARIO_OVERRIDE_GEOMETRY_INPUTS | 51 |
 | HOOK_ON_INTERACTIONS | 52 |
 | HOOK_ALLOW_FORCE_WATER_ACTION | 53 |
-| HOOK_ALLOW_FORCE_NON_WATER_ACTION | 54 |
-| HOOK_MAX | 55 |
+| HOOK_MAX | 54 |
 
 ### [enum LuaModMenuElementType](#LuaModMenuElementType)
 | Identifier | Value |
