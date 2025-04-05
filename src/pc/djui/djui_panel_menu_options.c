@@ -37,6 +37,27 @@ struct MainMenuSounds gMainMenuSounds[] = {
     { "Stage Music", STAGE_MUSIC },
 };
 
+static char* sLevelChoices[18] = {
+    "CG",
+    "BOB",
+    "WF",
+    "WMOTR",
+    "JRB",
+    "SSL",
+    "TTM",
+    "SL",
+    "BBH",
+    "LLL",
+    "THI",
+    "HMC",
+    "CCM",
+    "RR",
+    "BITDW",
+    "PSS",
+    "TTC",
+    "WDW"
+};
+
 void djui_panel_main_menu_create(struct DjuiBase* caller);
 
 static void djui_panel_level_menu(UNUSED struct DjuiBase* caller) {
@@ -65,7 +86,9 @@ static void djui_panel_staff_roll(UNUSED struct DjuiBase* caller) {
     djui_panel_main_menu_create(NULL);
 }
 
+extern bool gDjuiChangingTheme;
 static void djui_panel_menu_options_djui_setting_change(UNUSED struct DjuiBase* caller) {
+    gDjuiChangingTheme = true;
     if (gDjuiInMainMenu) {
         djui_panel_shutdown();
         gDjuiInMainMenu = true;
@@ -87,6 +110,7 @@ static void djui_panel_menu_options_djui_setting_change(UNUSED struct DjuiBase* 
         djui_text_set_font(gDjuiPauseOptions, gDjuiFonts[configDjuiThemeFont == 0 ? FONT_NORMAL : FONT_ALIASED]);
         djui_text_set_text(gDjuiPauseOptions, DLANG(MISC, R_BUTTON));
     }
+    gDjuiChangingTheme = false;
 
     smlua_call_event_hooks(HOOK_ON_DJUI_THEME_CHANGED);
 }
@@ -99,6 +123,7 @@ void djui_panel_main_menu_create(struct DjuiBase* caller) {
 
     {
         djui_checkbox_create(body, DLANG(DJUI_THEMES, CENTER), &configDjuiThemeCenter, djui_panel_menu_options_djui_setting_change);
+        djui_checkbox_create(body, DLANG(DJUI_THEMES, GRADIENTS), &configDjuiThemeGradients, djui_panel_menu_options_djui_setting_change);
 
         char* themeChoices[DJUI_THEME_MAX];
         for (int i = 0; i < DJUI_THEME_MAX; i++) {
@@ -113,28 +138,6 @@ void djui_panel_main_menu_create(struct DjuiBase* caller) {
         djui_selectionbox_create(body, DLANG(DJUI_THEMES, DJUI_FONT), djuiFontChoices, 2, &configDjuiThemeFont, djui_panel_menu_options_djui_setting_change);
 
         if (gDjuiInMainMenu) {
-            // get level choices
-            char* levelChoices[18] = {
-                "CG",
-                "BOB",
-                "WF",
-                "WMOTR",
-                "JRB",
-                "SSL",
-                "TTM",
-                "SL",
-                "BBH",
-                "LLL",
-                "THI",
-                "HMC",
-                "CCM",
-                "RR",
-                "BITDW",
-                "PSS",
-                "TTC",
-                "WDW"
-            };
-
             // copy sound choices from gMainMenuSounds
             int numSounds = sizeof(gMainMenuSounds) / sizeof(gMainMenuSounds[0]);
             // if stage roll is on, we shouldn't be allowed to use Stage Music, so remove the entry
@@ -148,7 +151,7 @@ void djui_panel_main_menu_create(struct DjuiBase* caller) {
                 soundChoices[i] = gMainMenuSounds[i].name;
             }
 
-            struct DjuiSelectionbox* selectionbox1 = djui_selectionbox_create(body, DLANG(MENU_OPTIONS, LEVEL), levelChoices, 18, &configMenuLevel, NULL);
+            struct DjuiSelectionbox* selectionbox1 = djui_selectionbox_create(body, DLANG(MENU_OPTIONS, LEVEL), sLevelChoices, 18, &configMenuLevel, NULL);
             djui_base_set_enabled(&selectionbox1->base, !(configMenuRandom || configMenuStaffRoll));
             sLevelBox = selectionbox1;
             djui_selectionbox_create(body, DLANG(MENU_OPTIONS, MUSIC), soundChoices, numSounds, &configMenuSound, NULL);

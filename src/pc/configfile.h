@@ -145,6 +145,7 @@ extern char         configDestId[MAX_CONFIG_STRING];
 // DJUI settings
 extern unsigned int configDjuiTheme;
 extern bool         configDjuiThemeCenter;
+extern bool         configDjuiThemeGradients;
 extern unsigned int configDjuiThemeFont;
 extern unsigned int configDjuiScale;
 // other

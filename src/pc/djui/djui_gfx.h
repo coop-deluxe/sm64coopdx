@@ -5,6 +5,7 @@
 #define DJUI_MTX_PUSH   1
 #define DJUI_MTX_NOPUSH 2
 
+extern const Gfx dl_djui_menu_rect[];
 extern const Gfx dl_djui_simple_rect[];
 extern const Gfx dl_djui_img_begin[];
 extern const Gfx dl_djui_img_end[];

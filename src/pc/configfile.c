@@ -199,6 +199,7 @@ bool         configDjuiThemeCenter                = false;
 #else
 bool         configDjuiThemeCenter                = true;
 #endif
+bool         configDjuiThemeGradients             = true;
 unsigned int configDjuiThemeFont                  = FONT_NORMAL;
 unsigned int configDjuiScale                      = 0;
 // other
@@ -344,6 +345,7 @@ static const struct ConfigOption options[] = {
     // DJUI settings
     {.name = "djui_theme",                     .type = CONFIG_TYPE_UINT,   .uintValue   = &configDjuiTheme},
     {.name = "djui_theme_center",              .type = CONFIG_TYPE_BOOL,   .boolValue   = &configDjuiThemeCenter},
+    {.name = "djui_theme_gradients",           .type = CONFIG_TYPE_BOOL,   .boolValue   = &configDjuiThemeGradients},
     {.name = "djui_theme_font",                .type = CONFIG_TYPE_UINT,   .uintValue   = &configDjuiThemeFont},
     {.name = "djui_scale",                     .type = CONFIG_TYPE_UINT,   .uintValue   = &configDjuiScale},
     // other

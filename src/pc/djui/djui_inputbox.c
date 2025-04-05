@@ -638,6 +638,7 @@ struct DjuiInputbox* djui_inputbox_create(struct DjuiBase* parent, u16 bufferSiz
     djui_base_init(parent, base, djui_inputbox_render, djui_inputbox_destroy);
     djui_base_set_size(base, 200, 32);
     djui_base_set_border_width(base, 2);
+    djui_base_set_gradient(base, false);
     djui_inputbox_set_text_color(inputbox, 0, 0, 0, 255);
     djui_interactable_create(base, djui_inputbox_update_style);
     djui_interactable_hook_cursor_down(base, djui_inputbox_on_cursor_down_begin, djui_inputbox_on_cursor_down, NULL);
