@@ -2174,7 +2174,9 @@ Performs common checks when Mario is in a moving state, transitions to water plu
 |descriptionEnd| */
 s32 check_common_moving_cancels(struct MarioState *m) {
     if (!m) { return FALSE; }
-    if (m->pos[1] < m->waterLevel - 100) {
+    bool allow = true;
+    smlua_call_event_hooks_mario_param_and_bool_ret_bool(HOOK_ALLOW_FORCE_WATER_ACTION, m, false, &allow);
+    if (allow && m->pos[1] < m->waterLevel - 100) {
         return set_water_plunge_action(m);
     }
 

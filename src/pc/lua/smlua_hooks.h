@@ -65,6 +65,7 @@ enum LuaHookedEventType {
     HOOK_ON_GEO_PROCESS_CHILDREN,
     HOOK_MARIO_OVERRIDE_GEOMETRY_INPUTS,
     HOOK_ON_INTERACTIONS,
+    HOOK_ALLOW_FORCE_WATER_ACTION,
     HOOK_MAX,
 };
 
@@ -122,6 +123,7 @@ static const char* LuaHookedEventTypeName[] = {
     "HOOK_ON_GEO_PROCESS_CHILDREN",
     "HOOK_MARIO_OVERRIDE_GEOMETRY_INPUTS",
     "HOOK_ON_INTERACTIONS",
+    "HOOK_ALLOW_FORCE_WATER_ACTION",
     "HOOK_MAX"
 };
 
@@ -196,6 +198,7 @@ bool smlua_call_event_hooks_mario_character_sound_param_ret_int(enum LuaHookedEv
 void smlua_call_event_hooks_mario_action_params_ret_int(enum LuaHookedEventType hookType, struct MarioState *m, u32 action, u32* returnValue);
 void smlua_call_event_hooks_mario_param_and_int_ret_bool(enum LuaHookedEventType hookType, struct MarioState* m, s32 param, bool* returnValue);
 bool smlua_call_event_hooks_mario_param_and_int_ret_int(enum LuaHookedEventType hookType, struct MarioState* m, s32 param, s32* returnValue);
+void smlua_call_event_hooks_mario_param_and_bool_ret_bool(enum LuaHookedEventType hookType, struct MarioState* m, bool param, bool* returnValue);
 bool smlua_call_event_hooks_mario_param_ret_float(enum LuaHookedEventType hookType, struct MarioState* m, f32* returnValue);
 bool smlua_call_event_hooks_mario_param_and_int_and_int_ret_int(enum LuaHookedEventType hookType, struct MarioState* m, s32 param, u32 args, s32* returnValue);
 void smlua_call_event_hooks_graph_node_object_and_int_param(enum LuaHookedEventType hookType, struct GraphNodeObject* node, s32 param);
