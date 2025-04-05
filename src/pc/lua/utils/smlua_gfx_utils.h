@@ -54,6 +54,10 @@ void gfx_parse(Gfx* cmd, LuaFunction func);
 Vtx *gfx_get_vtx(Gfx* gfx, u16 offset);
 /* |description|Gets the number of vertices from a display list command if it has the correct op|descriptionEnd| */
 u16 gfx_get_vtx_count(Gfx* cmd);
+/* |description|Sets a vertex with colors. Intended to be used with `gfx_get_vtx`|descriptionEnd| */
+void gfx_set_vtx_v(Vtx *vtx, f32 x, f32 y, f32 z, s16 tu, s16 tv, u8 r, u8 g, u8 b, u8 a);
+/* |description|Sets a vertex with normals. Intended to be used with `gfx_get_vtx`|descriptionEnd| */
+void gfx_set_vtx_n(Vtx *vtx, f32 x, f32 y, f32 z, s16 tu, s16 tv, s8 nx, s8 ny, s8 nz, u8 a);
 /* |description|Sets the display list combine mode. you can fill this function with G_CCMUX_* and G_ACMUX_* constants|descriptionEnd| */
 void gfx_set_combine_lerp(Gfx* gfx, u32 a0, u32 b0, u32 c0, u32 d0, u32 Aa0, u32 Ab0, u32 Ac0, u32 Ad0, u32 a1, u32 b1, u32 c1, u32 d1,	u32 Aa1, u32 Ab1, u32 Ac1, u32 Ad1);
 /* |description|Sets the display list texture image. Pass in textureInfo.texture as `texture`|descriptionEnd| */

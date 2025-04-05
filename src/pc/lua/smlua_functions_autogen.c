@@ -29846,6 +29846,78 @@ int smlua_func_gfx_set_texture_image(lua_State* L) {
     return 1;
 }
 
+int smlua_func_gfx_set_vtx_n(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 10) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "gfx_set_vtx_n", 10, top);
+        return 0;
+    }
+
+    if (lua_isnil(L, 1)) { return 0; }
+    Vtx * vtx = (Vtx *)smlua_to_cobject(L, 1, LOT_VTX);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "gfx_set_vtx_n"); return 0; }
+    f32 x = smlua_to_number(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "gfx_set_vtx_n"); return 0; }
+    f32 y = smlua_to_number(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "gfx_set_vtx_n"); return 0; }
+    f32 z = smlua_to_number(L, 4);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "gfx_set_vtx_n"); return 0; }
+    s16 tu = smlua_to_integer(L, 5);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 5, "gfx_set_vtx_n"); return 0; }
+    s16 tv = smlua_to_integer(L, 6);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 6, "gfx_set_vtx_n"); return 0; }
+    s8 nx = smlua_to_integer(L, 7);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 7, "gfx_set_vtx_n"); return 0; }
+    s8 ny = smlua_to_integer(L, 8);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 8, "gfx_set_vtx_n"); return 0; }
+    s8 nz = smlua_to_integer(L, 9);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 9, "gfx_set_vtx_n"); return 0; }
+    u8 a = smlua_to_integer(L, 10);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 10, "gfx_set_vtx_n"); return 0; }
+
+    gfx_set_vtx_n(vtx, x, y, z, tu, tv, nx, ny, nz, a);
+
+    return 1;
+}
+
+int smlua_func_gfx_set_vtx_v(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 10) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "gfx_set_vtx_v", 10, top);
+        return 0;
+    }
+
+    if (lua_isnil(L, 1)) { return 0; }
+    Vtx * vtx = (Vtx *)smlua_to_cobject(L, 1, LOT_VTX);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "gfx_set_vtx_v"); return 0; }
+    f32 x = smlua_to_number(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "gfx_set_vtx_v"); return 0; }
+    f32 y = smlua_to_number(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "gfx_set_vtx_v"); return 0; }
+    f32 z = smlua_to_number(L, 4);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "gfx_set_vtx_v"); return 0; }
+    s16 tu = smlua_to_integer(L, 5);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 5, "gfx_set_vtx_v"); return 0; }
+    s16 tv = smlua_to_integer(L, 6);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 6, "gfx_set_vtx_v"); return 0; }
+    u8 r = smlua_to_integer(L, 7);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 7, "gfx_set_vtx_v"); return 0; }
+    u8 g = smlua_to_integer(L, 8);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 8, "gfx_set_vtx_v"); return 0; }
+    u8 b = smlua_to_integer(L, 9);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 9, "gfx_set_vtx_v"); return 0; }
+    u8 a = smlua_to_integer(L, 10);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 10, "gfx_set_vtx_v"); return 0; }
+
+    gfx_set_vtx_v(vtx, x, y, z, tu, tv, r, g, b, a);
+
+    return 1;
+}
+
 int smlua_func_set_fog_color(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -35386,6 +35458,8 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "gfx_parse", smlua_func_gfx_parse);
     smlua_bind_function(L, "gfx_set_combine_lerp", smlua_func_gfx_set_combine_lerp);
     smlua_bind_function(L, "gfx_set_texture_image", smlua_func_gfx_set_texture_image);
+    smlua_bind_function(L, "gfx_set_vtx_n", smlua_func_gfx_set_vtx_n);
+    smlua_bind_function(L, "gfx_set_vtx_v", smlua_func_gfx_set_vtx_v);
     smlua_bind_function(L, "set_fog_color", smlua_func_set_fog_color);
     smlua_bind_function(L, "set_fog_intensity", smlua_func_set_fog_intensity);
     smlua_bind_function(L, "set_lighting_color", smlua_func_set_lighting_color);

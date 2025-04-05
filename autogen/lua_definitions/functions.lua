@@ -9594,6 +9594,36 @@ function gfx_set_texture_image(gfx, format, size, width, texture)
     -- ...
 end
 
+--- @param vtx Pointer_Vtx
+--- @param x number
+--- @param y number
+--- @param z number
+--- @param tu integer
+--- @param tv integer
+--- @param nx integer
+--- @param ny integer
+--- @param nz integer
+--- @param a integer
+--- Sets a vertex with normals. Intended to be used with `gfx_get_vtx`
+function gfx_set_vtx_n(vtx, x, y, z, tu, tv, nx, ny, nz, a)
+    -- ...
+end
+
+--- @param vtx Pointer_Vtx
+--- @param x number
+--- @param y number
+--- @param z number
+--- @param tu integer
+--- @param tv integer
+--- @param r integer
+--- @param g integer
+--- @param b integer
+--- @param a integer
+--- Sets a vertex with colors. Intended to be used with `gfx_get_vtx`
+function gfx_set_vtx_v(vtx, x, y, z, tu, tv, r, g, b, a)
+    -- ...
+end
+
 --- @param index integer
 --- @param value integer
 --- Sets a value of the global fog color

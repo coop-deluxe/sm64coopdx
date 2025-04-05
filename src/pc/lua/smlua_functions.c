@@ -1067,44 +1067,88 @@ int smlua_func_get_uncolored_string(lua_State* L) {
  // display list //
 //////////////////
 
-#define HANDLE_PARAM(paramNum)                                                                  \
-s64 arg##paramNum = smlua_to_integer(L, 2 + paramNum);                                          \
-if (!gSmLuaConvertSuccess) {                                                                    \
-    LOG_LUA("gfx_set_command: '%s' failed to convert parameter " #paramNum ".", symbolName);    \
-    return 0;                                                                                   \
-}
+// #define HANDLE_PARAM(paramNum)                                                                  \
+// s64 arg##paramNum = smlua_to_integer(L, 2 + paramNum);                                          \
+// if (!gSmLuaConvertSuccess) {                                                                    \
+//     LOG_LUA("gfx_set_command: '%s' failed to convert parameter " #paramNum ".", symbolName);    \
+//     return 0;                                                                                   \
+// }
 
-#define GET_ARG(paramNum) arg##paramNum
-#define CALL_SYMB(symb, ...) symb(__VA_ARGS__)
+// #define GET_ARG(paramNum) arg##paramNum
+// #define CALL_SYMB(symb, ...) symb(__VA_ARGS__)
 
-// Uses macro iterators to dynamically handle the correct number of parameters
-#define define_gfx_symbol(symb, params, ...)                            \
-if (strcmp(command, #symb) == 0) {                                      \
-    if (paramCount != params) { LOG_LUA("gfx_set_command: '" #symb "' received incorrect number of parameters. Received %u, expected %u", paramCount, params); return 0; } \
-    UNUSED const char symbolName[] = #symb;                             \
-    REPEAT(HANDLE_PARAM, params);                                       \
-    const Gfx _Gfx[] = { CALL_SYMB(symb, LIST_ARGS(GET_ARG, params)) }; \
-    memcpy(gfx, _Gfx, sizeof(_Gfx));                                    \
-    return 1;                                                           \
+// // Uses macro iterators to dynamically handle the correct number of parameters
+// #define define_gfx_symbol(symb, params, ...)                            \
+// if (strcmp(command, #symb) == 0) {                                      \
+//     if (paramCount != params) { LOG_LUA("gfx_set_command: '" #symb "' received incorrect number of parameters. Received %u, expected %u", paramCount, params); return 0; } \
+//     UNUSED const char symbolName[] = #symb;                             \
+//     REPEAT(HANDLE_PARAM, params);                                       \
+//     const Gfx _Gfx[] = { CALL_SYMB(symb, LIST_ARGS(GET_ARG, params)) }; \
+//     memcpy(gfx, _Gfx, sizeof(_Gfx));                                    \
+//     return 1;                                                           \
+// }
+
+// int smlua_func_gfx_set_command(lua_State* L) {
+//     int top = lua_gettop(L);
+//     if (top < 2) {
+//         LOG_LUA_LINE("Improper param count: Expected at least 2, Received %u", top);
+//         return 0;
+//     }
+
+//     Gfx* gfx = smlua_to_cobject(L, 1, LOT_GFX);
+//     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "gfx_set_command"); return 0; }
+
+//     const char *command = smlua_to_string(L, 2);
+//     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "gfx_set_command"); return 0; }
+
+//     u16 paramCount = top - 2;
+
+//     // Handle commands using the define_gfx_symbol macro
+//     GFX_SYMBOLS();
+// }
+
+static int get_gfx_command_specifiers_count(const char *command) {
+    int count = 0;
+    for (; *command; count += (*command == '%'), command++);
+    return count;
 }
 
 int smlua_func_gfx_set_command(lua_State* L) {
     int top = lua_gettop(L);
     if (top < 2) {
-        LOG_LUA_LINE("Improper param count: Expected at least 2, Received %u", top);
+        LOG_LUA_LINE("gfx_set_command: Improper param count: Expected at least 2, Received %u", top);
         return 0;
     }
 
     Gfx* gfx = smlua_to_cobject(L, 1, LOT_GFX);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "gfx_set_command"); return 0; }
+    if (!gSmLuaConvertSuccess) {
+        LOG_LUA("gfx_set_command: Failed to convert parameter %u", 1);
+        return 0;
+    }
 
     const char *command = smlua_to_string(L, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "gfx_set_command"); return 0; }
+    if (!gSmLuaConvertSuccess) {
+        LOG_LUA("gfx_set_command: Failed to convert parameter %u", 2);
+        return 0;
+    }
 
-    u16 paramCount = top - 2;
+    // Compare the number of provided parameters to the number of specifiers in the command
+    int paramCount = top - 2;
+    int specifiersCount = get_gfx_command_specifiers_count(command);
+    if (specifiersCount != paramCount) {
+        LOG_LUA("gfx_set_command: Command \"%s\": Invalid number of command parameters: Expected %u, provided %u", command, specifiersCount, paramCount);
+        return 0;
+    }
 
-    // Handle commands using the define_gfx_symbol macro
-    GFX_SYMBOLS();
+    // Parse the command
+    const u32 errorSize = 0x400;
+    char errorMsg[errorSize];
+    if (!dynos_smlua_parse_gfx_command(L, gfx, command, specifiersCount != 0, errorMsg, errorSize)) {
+        LOG_LUA("gfx_set_command: Command \"%s\": %s", command, errorMsg);
+        return 0;
+    }
+
+    return 1;
 }
 
   //////////

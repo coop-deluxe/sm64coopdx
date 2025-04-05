@@ -8,7 +8,7 @@ function geo_hide_if_dnc(node)
     local dl = cast_graph_node(node.next)
     gfx_parse(dl.displayList, function(cmd, op)
         if op == G_SETENVCOLOR then
-            gfx_set_command(cmd, "gsDPSetEnvColor", 255, 255, 255, if_then_else(_G.dayNightCycleApi ~= nil and _G.dayNightCycleApi.is_dnc_enabled(), 0, 255))
+            gfx_set_command(cmd, "gsDPSetEnvColor(255, 255, 255, %i)", if_then_else(_G.dayNightCycleApi ~= nil and _G.dayNightCycleApi.is_dnc_enabled(), 0, 255))
         end
     end)
 end
