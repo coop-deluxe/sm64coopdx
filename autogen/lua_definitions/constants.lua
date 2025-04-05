@@ -8851,8 +8851,7 @@ HOOK_ON_GEO_PROCESS_CHILDREN                = 50 --- @type LuaHookedEventType
 HOOK_MARIO_OVERRIDE_GEOMETRY_INPUTS         = 51 --- @type LuaHookedEventType
 HOOK_ON_INTERACTIONS                        = 52 --- @type LuaHookedEventType
 HOOK_ALLOW_FORCE_WATER_ACTION               = 53 --- @type LuaHookedEventType
-HOOK_ALLOW_FORCE_NON_WATER_ACTION           = 54 --- @type LuaHookedEventType
-HOOK_MAX                                    = 55 --- @type LuaHookedEventType
+HOOK_MAX                                    = 54 --- @type LuaHookedEventType
 
 --- @alias LuaHookedEventType
 --- | `HOOK_UPDATE`
@@ -8909,7 +8908,6 @@ HOOK_MAX                                    = 55 --- @type LuaHookedEventType
 --- | `HOOK_MARIO_OVERRIDE_GEOMETRY_INPUTS`
 --- | `HOOK_ON_INTERACTIONS`
 --- | `HOOK_ALLOW_FORCE_WATER_ACTION`
---- | `HOOK_ALLOW_FORCE_NON_WATER_ACTION`
 --- | `HOOK_MAX`
 
 MOD_MENU_ELEMENT_TEXT     = 0 --- @type LuaModMenuElementType
