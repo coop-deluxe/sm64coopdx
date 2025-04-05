@@ -203,12 +203,14 @@ u32 perform_water_step(struct MarioState *m) {
     nextPos[0] = m->pos[0] + step[0];
     nextPos[1] = m->pos[1] + step[1];
     nextPos[2] = m->pos[2] + step[2];
-
-    bool allow = true;
-    smlua_call_event_hooks_mario_param_and_bool_ret_bool(HOOK_ALLOW_FORCE_WATER_ACTION, m, true, &allow); 
-    if (allow && nextPos[1] > m->waterLevel - 80) {
-        nextPos[1] = m->waterLevel - 80;
-        m->vel[1] = 0.0f;
+  
+    if (nextPos[1] > m->waterLevel - 80) {
+        bool allow = true;
+        smlua_call_event_hooks_mario_param_and_bool_ret_bool(HOOK_ALLOW_FORCE_WATER_ACTION, m, true, &allow);
+        if (!allow) {
+          nextPos[1] = m->waterLevel - 80;
+          m->vel[1] = 0.0f;
+        }
     }
 
     stepResult = perform_water_full_step(m, nextPos);
