@@ -22,6 +22,7 @@ in_files = [
     "src/game/interaction.c",
     "src/game/interaction.h",
     "src/pc/djui/djui_hud_utils.h",
+    "src/pc/controller/controller_mouse.h",
     "include/behavior_table.h",
     "src/pc/lua/utils/smlua_model_utils.h",
     "src/pc/lua/utils/smlua_misc_utils.h",
@@ -105,8 +106,6 @@ def saw_constant(identifier, inIfBlock):
         print("SAW DUPLICATE CONSTANT: " + identifier)
         return True
     else:
-        global totalConstants
-        totalConstants += 1
         seen_constants.append(identifier)
         return False
 
@@ -335,7 +334,6 @@ def doc_constant_index(processed_files):
     for processed_file in processed_files:
         s += '- [%s](#%s)\n' % (processed_file['filename'], processed_file['filename'].replace('.', ''))
         constants = [x for x in processed_file['constants'] if 'identifier' in x]
-        constants = sorted(constants, key=lambda d: d['identifier'])
         for c in constants:
             s += '    - [enum %s](#enum-%s)\n' % (c['identifier'], c['identifier'])
     s += '\n<br />\n\n'
@@ -368,7 +366,7 @@ def doc_constant(processed_constant):
 
 def doc_file(processed_file):
     s = '## [%s](#%s)\n' % (processed_file['filename'], processed_file['filename'])
-    constants = sorted(processed_file['constants'], key=lambda d: 'zzz' + d['identifier'] if 'identifier' in d else d[0])
+    constants = processed_file['constants']
     for c in constants:
         s += doc_constant(c)
 
@@ -387,6 +385,7 @@ def doc_files(processed_files):
 ############################################################################
 
 def def_constant(processed_constant):
+    global totalConstants
     constants = processed_constant
     s = ''
 
@@ -404,6 +403,7 @@ def def_constant(processed_constant):
             vlen = max(vlen, len(c[1]))
         for c in constants:
             s += c[0].ljust(klen) + ' = ' + c[1].rjust(vlen) + ' --- @type %s\n' % id
+            totalConstants += 1
         s += '\n--- @alias %s\n' % id
         for c in constants:
             s += '--- | `%s`\n' % c[0]
@@ -417,6 +417,7 @@ def def_constant(processed_constant):
         else:
             s += '\n--- @type integer\n'
         s += '%s = %s\n' % (c[0], c[1])
+        totalConstants += 1
 
     return s
 
@@ -427,7 +428,7 @@ def build_to_def(processed_files):
         s += '\n'
 
     for file in processed_files:
-        constants = sorted(file['constants'], key=lambda d: 'zzz' + d['identifier'] if 'identifier' in d else d[0])
+        constants = file['constants']
         for c in constants:
             s += def_constant(c)
 

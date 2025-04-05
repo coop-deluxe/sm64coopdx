@@ -88,7 +88,7 @@ override_allowed_functions = {
     "src/game/area.h":                      [ "area_get_warp_node" ],
     "src/engine/level_script.h":            [ "area_create_warp_node" ],
     "src/game/ingame_menu.h":               [ "set_min_dialog_width", "set_dialog_override_pos", "reset_dialog_override_pos", "set_dialog_override_color", "reset_dialog_override_color", "set_menu_mode", "create_dialog_box", "create_dialog_box_with_var", "create_dialog_inverted_box", "create_dialog_box_with_response", "reset_dialog_render_state", "set_dialog_box_state", ],
-    "src/audio/seqplayer.h":                [ "sequence_player_set_tempo", "sequence_player_set_tempo_acc", "sequence_player_set_transposition", "sequence_player_get_tempo", "sequence_player_get_tempo_acc", "sequence_player_get_transposition" ]
+    "src/audio/seqplayer.h":                [ "sequence_player_set_tempo", "sequence_player_set_tempo_acc", "sequence_player_set_transposition", "sequence_player_get_tempo", "sequence_player_get_tempo_acc", "sequence_player_get_transposition", "sequence_player_get_volume", "sequence_player_get_fade_volume", "sequence_player_get_mute_volume_scale" ]
 }
 
 override_disallowed_functions = {
@@ -1103,7 +1103,6 @@ def process_functions(fname, file_str, extracted_descriptions):
         if fn == None:
             continue
         functions.append(fn)
-    functions = sorted(functions, key=lambda d: d['identifier'])
     return functions
 
 def process_file(fname):
@@ -1409,7 +1408,7 @@ def def_files(processed_files):
             s += def_function(function)
 
     for def_pointer in def_pointers:
-        s += '--- @class %s\n' % def_pointer
+        s += '--- @alias %s %s\n' % (def_pointer, def_pointer[8:])
 
     with open(get_path(out_filename_defs), 'w', newline='\n') as out:
         out.write(s)

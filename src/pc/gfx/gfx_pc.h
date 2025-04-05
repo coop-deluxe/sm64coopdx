@@ -10,6 +10,7 @@ struct GfxDimensions {
     uint32_t width, height;
     float aspect_ratio;
     float x_adjust_ratio;
+    uint32_t x_adjust_4by3;
 };
 
 extern struct GfxDimensions gfx_current_dimensions;

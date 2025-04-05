@@ -17,7 +17,6 @@
 #include "pc/debuglog.h"
 #include "pc/pc_main.h"
 #include "pc/fs/fmem.h"
-#include "audio/external.h"
 
 struct AudioOverride {
     bool enabled;
@@ -336,9 +335,8 @@ void audio_stream_play(struct ModAudio* audio, bool restart, f32 volume) {
     if (configMuteFocusLoss && !WAPI.has_focus()) {
         ma_sound_set_volume(&audio->sound, 0);
     } else {
-        f32 masterVolume = (f32)configMasterVolume / 127.0f * (f32)gLuaVolumeMaster / 127.0f;
         f32 musicVolume = (f32)configMusicVolume / 127.0f * (f32)gLuaVolumeLevel / 127.0f;
-        ma_sound_set_volume(&audio->sound, masterVolume * musicVolume * volume);
+        ma_sound_set_volume(&audio->sound, gMasterVolume * musicVolume * volume);
     }
     audio->baseVolume = volume;
     if (restart || !ma_sound_is_playing(&audio->sound)) { ma_sound_seek_to_pcm_frame(&audio->sound, 0); }
@@ -430,9 +428,8 @@ void audio_stream_set_volume(struct ModAudio* audio, f32 volume) {
     if (configMuteFocusLoss && !WAPI.has_focus()) {
         ma_sound_set_volume(&audio->sound, 0);
     } else {
-        f32 masterVolume = (f32)configMasterVolume / 127.0f;
-        f32 musicVolume = (f32)configMusicVolume / 127.0f;
-        ma_sound_set_volume(&audio->sound, masterVolume * musicVolume * volume);
+        f32 musicVolume = (f32)configMusicVolume / 127.0f * (f32)gLuaVolumeLevel / 127.0f;
+        ma_sound_set_volume(&audio->sound, gMasterVolume * musicVolume * volume);
     }
     audio->baseVolume = volume;
 }
@@ -445,14 +442,14 @@ void audio_stream_set_volume(struct ModAudio* audio, f32 volume) {
 
 //////////////////////////////////////
 
-// MA calls the end callback from it's audio thread
+// MA calls the end callback from its audio thread
 // Use mutexes to be sure we don't try to delete the same memory at the same time
 #include <pthread.h>
 static pthread_mutex_t sSampleCopyMutex = PTHREAD_MUTEX_INITIALIZER;
 static struct ModAudioSampleCopies *sSampleCopyFreeTail = NULL;
 
 // Called whenever a sample copy finishes playback (called from the miniaudio thread)
-// removes the copy from it's linked list, and adds it to the pending list
+// removes the copy from its linked list, and adds it to the pending list
 static void audio_sample_copy_end_callback(void* userData, UNUSED ma_sound* sound) {
     pthread_mutex_lock(&sSampleCopyMutex);
 
@@ -570,9 +567,8 @@ void audio_sample_play(struct ModAudio* audio, Vec3f position, f32 volume) {
         ma_sound_set_volume(sound, 0);
     } else {
         f32 intensity = sound_get_level_intensity(dist);
-        f32 masterVolume = (f32)configMasterVolume / 127.0f * (f32)gLuaVolumeMaster / 127.0f;
         f32 sfxVolume = (f32)configSfxVolume / 127.0f * (f32)gLuaVolumeSfx / 127.0f;
-        ma_sound_set_volume(sound, masterVolume * sfxVolume * volume * intensity);
+        ma_sound_set_volume(sound, gMasterVolume * sfxVolume * volume * intensity);
     }
     ma_sound_set_pan(sound, pan);
     audio->baseVolume = volume;
@@ -581,7 +577,9 @@ void audio_sample_play(struct ModAudio* audio, Vec3f position, f32 volume) {
 }
 
 void audio_custom_update_volume(void) {
+    gMasterVolume = (f32)configMasterVolume / 127.0f * (f32)gLuaVolumeMaster / 127.0f;
     if (!sModAudioPool) { return; }
+    f32 musicVolume = (f32)configMusicVolume / 127.0f * (f32)gLuaVolumeLevel / 127.0f;
     struct DynamicPoolNode* node = sModAudioPool->tail;
     while (node) {
         struct DynamicPoolNode* prev = node->prev;
@@ -589,9 +587,7 @@ void audio_custom_update_volume(void) {
         if (configMuteFocusLoss && !WAPI.has_focus()) {
             ma_sound_set_volume(&audio->sound, 0);
         } else if (audio->isStream) {
-            f32 masterVolume = (f32)configMasterVolume / 127.0f * (f32)gLuaVolumeMaster / 127.0f;
-            f32 musicVolume = (f32)configMusicVolume / 127.0f * (f32)gLuaVolumeLevel / 127.0f;
-            ma_sound_set_volume(&audio->sound, masterVolume * musicVolume * audio->baseVolume);
+            ma_sound_set_volume(&audio->sound, gMasterVolume * musicVolume * audio->baseVolume);
         }
         node = prev;
     }

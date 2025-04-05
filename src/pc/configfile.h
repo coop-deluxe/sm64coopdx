@@ -134,6 +134,7 @@ extern bool         configMenuRandom;
 extern bool         configMenuDemos;
 extern bool         configDisablePopups;
 extern char         configLanguage[MAX_CONFIG_STRING];
+extern bool         configForce4By3;
 extern bool         configDynosLocalPlayerModelOnly;
 extern unsigned int configPvpType;
 // CoopNet settings

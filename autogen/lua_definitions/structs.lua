@@ -2453,12 +2453,12 @@
 --- @field public g integer
 --- @field public b integer
 
---- @class Pointer_integer
---- @class Pointer_Trajectory
---- @class Pointer_Gfx
---- @class Pointer_LevelScript
---- @class Pointer_ObjectAnimPointer
---- @class Pointer_Collision
---- @class Pointer_Mat4
---- @class Pointer_Vec4s
---- @class Pointer_BehaviorScript
+--- @alias Pointer_integer integer
+--- @alias Pointer_Trajectory Trajectory
+--- @alias Pointer_Gfx Gfx
+--- @alias Pointer_LevelScript LevelScript
+--- @alias Pointer_ObjectAnimPointer ObjectAnimPointer
+--- @alias Pointer_Collision Collision
+--- @alias Pointer_Mat4 Mat4
+--- @alias Pointer_Vec4s Vec4s
+--- @alias Pointer_BehaviorScript BehaviorScript

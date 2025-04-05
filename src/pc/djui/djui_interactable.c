@@ -335,6 +335,13 @@ void djui_interactable_on_text_editing(char* text, int cursorPos) {
     gInteractableFocus->interactable->on_text_editing(gInteractableFocus, text, cursorPos);
 }
 
+void djui_interactable_on_scroll(float x, float y) {
+    if (gInteractableFocus == NULL) { return; }
+    if (gInteractableFocus->interactable == NULL) { return; }
+    if (gInteractableFocus->interactable->on_scroll == NULL) { return; }
+    gInteractableFocus->interactable->on_scroll(gInteractableFocus, x, y);
+}
+
 void djui_interactable_update_pad(void) {
     OSContPad* pad = &gInteractablePad;
 
@@ -486,9 +493,9 @@ void djui_interactable_hook_cursor_down(struct DjuiBase* base,
 }
 
 void djui_interactable_hook_focus(struct DjuiBase* base,
-                                        void (*on_focus_begin)(struct DjuiBase*),
-                                        void (*on_focus)(struct DjuiBase*, OSContPad*),
-                                        void (*on_focus_end)(struct DjuiBase*)) {
+                                  void (*on_focus_begin)(struct DjuiBase*),
+                                  void (*on_focus)(struct DjuiBase*, OSContPad*),
+                                  void (*on_focus_end)(struct DjuiBase*)) {
     struct DjuiInteractable* interactable = base->interactable;
     interactable->on_focus_begin = on_focus_begin;
     interactable->on_focus       = on_focus;
@@ -514,8 +521,8 @@ void djui_interactable_hook_bind(struct DjuiBase* base,
 }
 
 void djui_interactable_hook_key(struct DjuiBase* base,
-                                 bool (*on_key_down)(struct DjuiBase*, int),
-                                 void (*on_key_up)(struct DjuiBase*, int)) {
+                                bool (*on_key_down)(struct DjuiBase*, int),
+                                void (*on_key_up)(struct DjuiBase*, int)) {
     struct DjuiInteractable *interactable = base->interactable;
     interactable->on_key_down = on_key_down;
     interactable->on_key_up   = on_key_up;
@@ -529,9 +536,15 @@ void djui_interactable_hook_text_input(struct DjuiBase *base,
 }
 
 void djui_interactable_hook_text_editing(struct DjuiBase* base,
-                                       void (*on_text_editing)(struct DjuiBase*, char*, int)) {
+                                        void (*on_text_editing)(struct DjuiBase*, char*, int)) {
     struct DjuiInteractable *interactable = base->interactable;
     interactable->on_text_editing = on_text_editing;
+}
+
+void djui_interactable_hook_scroll(struct DjuiBase* base,
+                                   void (*on_scroll)(struct DjuiBase*, float, float)) {
+    struct DjuiInteractable *interactable = base->interactable;
+    interactable->on_scroll = on_scroll;
 }
 
 void djui_interactable_hook_enabled_change(struct DjuiBase *base,

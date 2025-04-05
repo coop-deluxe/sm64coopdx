@@ -245,18 +245,16 @@ void djui_hud_set_rotation_interpolated(s32 prevRotation, f32 prevPivotX, f32 pr
 
 u32 djui_hud_get_screen_width(void) {
     u32 windowWidth, windowHeight;
-    wm_api->get_dimensions(&windowWidth, &windowHeight);
+    gfx_get_dimensions(&windowWidth, &windowHeight);
 
-    if (sResolution == RESOLUTION_N64) {
-        return (GFX_DIMENSIONS_ASPECT_RATIO) * SCREEN_HEIGHT;
-    } else {
-        return (windowWidth / djui_gfx_get_scale());
-    }
+    return (sResolution == RESOLUTION_N64)
+        ? GFX_DIMENSIONS_ASPECT_RATIO * SCREEN_HEIGHT
+        : (windowWidth / djui_gfx_get_scale());
 }
 
 u32 djui_hud_get_screen_height(void) {
     u32 windowWidth, windowHeight;
-    wm_api->get_dimensions(&windowWidth, &windowHeight);
+    gfx_get_dimensions(&windowWidth, &windowHeight);
 
     return (sResolution == RESOLUTION_N64)
         ? SCREEN_HEIGHT
@@ -283,6 +281,26 @@ f32 djui_hud_get_raw_mouse_y(void) {
 
 void djui_hud_set_mouse_locked(bool locked) {
     gDjuiHudLockMouse = locked;
+}
+
+u8 djui_hud_get_mouse_buttons_down(void) {
+    return mouse_window_buttons;
+}
+
+u8 djui_hud_get_mouse_buttons_pressed(void) {
+    return mouse_window_buttons_pressed;
+}
+
+u8 djui_hud_get_mouse_buttons_released(void) {
+    return mouse_window_buttons_released;
+}
+
+f32 djui_hud_get_mouse_scroll_x(void) {
+    return mouse_scroll_x;
+}
+
+f32 djui_hud_get_mouse_scroll_y(void) {
+    return mouse_scroll_y;
 }
 
 f32 djui_hud_measure_text(const char* message) {
@@ -649,7 +667,7 @@ bool djui_hud_world_pos_to_screen_pos(Vec3f pos, Vec3f out) {
         screenHeight = SCREEN_HEIGHT;
     } else {
         u32 windowWidth, windowHeight;
-        WAPI.get_dimensions(&windowWidth, &windowHeight);
+        gfx_get_dimensions(&windowWidth, &windowHeight);
         screenWidth = (f32) windowWidth;
         screenHeight = (f32) windowHeight;
     }

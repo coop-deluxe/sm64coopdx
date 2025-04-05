@@ -1,4 +1,6 @@
 #include "controller_mouse.h"
+#include "pc/gfx/gfx_pc.h"
+#include "pc/djui/djui.h"
 
 #ifdef WAPI_DXGI
 #define WIN32_LEAN_AND_MEAN
@@ -18,8 +20,14 @@ s32 mouse_x;
 s32 mouse_y;
 
 u32 mouse_window_buttons;
+u32 mouse_window_buttons_pressed;
+u32 mouse_window_buttons_released;
 s32 mouse_window_x;
 s32 mouse_window_y;
+
+u32 mouse_scroll_timestamp;
+f32 mouse_scroll_x;
+f32 mouse_scroll_y;
 
 bool mouse_relative_enabled;
 
@@ -30,9 +38,11 @@ bool mouse_dxgi_prev_focus;
 
 static u32 controller_mouse_dxgi_button_state(u32* mouse_held, bool has_focus) {
     u32 mouse =
-        ((GetKeyState(VK_LBUTTON) < 0) ? (1 << 0) : 0) |
-        ((GetKeyState(VK_MBUTTON) < 0) ? (1 << 1) : 0) |
-        ((GetKeyState(VK_RBUTTON) < 0) ? (1 << 2) : 0);
+        ((GetKeyState(VK_LBUTTON ) < 0) ? MOUSE_BUTTON_1 : 0) |
+        ((GetKeyState(VK_MBUTTON ) < 0) ? MOUSE_BUTTON_2 : 0) |
+        ((GetKeyState(VK_RBUTTON ) < 0) ? MOUSE_BUTTON_3 : 0) |
+        ((GetKeyState(VK_XBUTTON1) < 0) ? MOUSE_BUTTON_4 : 0) |
+        ((GetKeyState(VK_XBUTTON2) < 0) ? MOUSE_BUTTON_5 : 0);
 
     bool prev_focus = mouse_dxgi_prev_focus;
     mouse_dxgi_prev_focus = has_focus;
@@ -66,11 +76,12 @@ void controller_mouse_read_window(void) {
 
     POINT p;
     if (GetCursorPos(&p) && ScreenToClient(game_window, &p)) {
-        mouse_window_x = p.x;
+        mouse_window_x = p.x - gfx_current_dimensions.x_adjust_4by3;
         mouse_window_y = p.y;
     }
 #elif defined(CAPI_SDL1) || defined(CAPI_SDL2)
     mouse_window_buttons = SDL_GetMouseState(&mouse_window_x, &mouse_window_y);
+    mouse_window_x -= gfx_current_dimensions.x_adjust_4by3;
 #endif
 }
 
@@ -143,3 +154,9 @@ void controller_mouse_leave_relative(void) {
     }
 }
 
+void mouse_on_scroll(float x, float y) {
+    djui_interactable_on_scroll(x, y);
+    mouse_scroll_timestamp = gGlobalTimer;
+    mouse_scroll_x += x;
+    mouse_scroll_y += y;
+}
