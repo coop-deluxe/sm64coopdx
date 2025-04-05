@@ -309,12 +309,14 @@ static s32 perform_ground_quarter_step(struct MarioState *m, Vec3f nextPos) {
         return GROUND_STEP_HIT_WALL_STOP_QSTEPS;
     }
 
-    bool allow = true;
-    smlua_call_event_hooks_mario_param_and_bool_ret_bool(HOOK_ALLOW_FORCE_WATER_ACTION, m, false, &allow);
-    if (allow && (m->action & ACT_FLAG_RIDING_SHELL) && floorHeight < waterLevel) {
-        floorHeight = waterLevel;
-        floor = &gWaterSurfacePseudoFloor;
-        floor->originOffset = floorHeight; //! Wrong origin offset (no effect)
+    if ((m->action & ACT_FLAG_RIDING_SHELL) && floorHeight < waterLevel) {
+        bool allow = true;
+        smlua_call_event_hooks_mario_param_and_bool_ret_bool(HOOK_ALLOW_FORCE_WATER_ACTION, m, false, &allow);
+        if (allow) {
+            floorHeight = waterLevel;
+            floor = &gWaterSurfacePseudoFloor;
+            floor->originOffset = floorHeight; //! Wrong origin offset (no effect)
+        }
     }
 
     if (nextPos[1] > floorHeight + 100.0f) {
