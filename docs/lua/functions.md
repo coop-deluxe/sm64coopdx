@@ -1762,6 +1762,8 @@
    - [gfx_parse](functions-6.md#gfx_parse)
    - [gfx_set_combine_lerp](functions-6.md#gfx_set_combine_lerp)
    - [gfx_set_texture_image](functions-6.md#gfx_set_texture_image)
+   - [gfx_set_vtx_n](functions-6.md#gfx_set_vtx_n)
+   - [gfx_set_vtx_v](functions-6.md#gfx_set_vtx_v)
    - [set_fog_color](functions-6.md#set_fog_color)
    - [set_fog_intensity](functions-6.md#set_fog_intensity)
    - [set_lighting_color](functions-6.md#set_lighting_color)
@@ -2546,11 +2548,30 @@ N/A
 
 ## [gfx_set_command](#gfx_set_command)
 
-Sets the specified display list command on the display list given.
+Sets a display list command on the display list given.
 
-### Lua Example
+If `command` includes parameter specifiers (subsequences beginning with `%`), the additional arguments following `command` are converted and inserted in `command` replacing their respective specifiers.
+
+The number of provided parameters must be equal to the number of specifiers in `command`, and the order of parameters must be the same as the specifiers.
+
+The following specifiers are allowed:
+- `%i` for an `integer` parameter
+- `%s` for a `string` parameter
+- `%v` for a `Vtx` parameter
+- `%t` for a `Texture` parameter
+- `%g` for a `Gfx` parameter
+
+### Lua Examples
+
+Plain string:
 ```lua
-gfx_set_command(gfx, "gsDPSetEnvColor", 0x00, 0xFF, 0x00, 0xFF)
+gfx_set_command(gfx, "gsDPSetEnvColor(0x00, 0xFF, 0x00, 0xFF)")
+```
+
+With parameter specifiers:
+```lua
+r, g, b, a = 0x00, 0xFF, 0x00, 0xFF
+gfx_set_command(gfx, "gsDPSetEnvColor(%i, %i, %i, %i)", r, g, b, a)
 ```
 
 ### Parameters
@@ -2558,7 +2579,7 @@ gfx_set_command(gfx, "gsDPSetEnvColor", 0x00, 0xFF, 0x00, 0xFF)
 | ----- | ---- |
 | gfx   | [Gfx](structs.md#Gfx) |
 | command | `string` |
-| (Any number of arguments) | `integer` |
+| parameters... | any of `integer`, `string`, `Gfx`, `Texture`, `Vtx` |
 
 ### Returns
 - None

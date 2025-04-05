@@ -328,6 +328,70 @@ Sets the display list texture image. Pass in textureInfo.texture as `texture`
 
 <br />
 
+## [gfx_set_vtx_n](#gfx_set_vtx_n)
+
+### Description
+Sets a vertex with normals. Intended to be used with `gfx_get_vtx`
+
+### Lua Example
+`gfx_set_vtx_n(vtx, x, y, z, tu, tv, nx, ny, nz, a)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| vtx | `Pointer` <`Vtx`> |
+| x | `number` |
+| y | `number` |
+| z | `number` |
+| tu | `integer` |
+| tv | `integer` |
+| nx | `integer` |
+| ny | `integer` |
+| nz | `integer` |
+| a | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void gfx_set_vtx_n(Vtx *vtx, f32 x, f32 y, f32 z, s16 tu, s16 tv, s8 nx, s8 ny, s8 nz, u8 a);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [gfx_set_vtx_v](#gfx_set_vtx_v)
+
+### Description
+Sets a vertex with colors. Intended to be used with `gfx_get_vtx`
+
+### Lua Example
+`gfx_set_vtx_v(vtx, x, y, z, tu, tv, r, g, b, a)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| vtx | `Pointer` <`Vtx`> |
+| x | `number` |
+| y | `number` |
+| z | `number` |
+| tu | `integer` |
+| tv | `integer` |
+| r | `integer` |
+| g | `integer` |
+| b | `integer` |
+| a | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void gfx_set_vtx_v(Vtx *vtx, f32 x, f32 y, f32 z, s16 tu, s16 tv, u8 r, u8 g, u8 b, u8 a);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [set_fog_color](#set_fog_color)
 
 ### Description
