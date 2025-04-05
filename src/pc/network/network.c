@@ -667,6 +667,8 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
 
     dynos_model_clear_pool(MODEL_POOL_SESSION);
 
+    dynos_smlua_clear_gfx_command_cache();
+
     if (exiting) { return; }
 
     dynos_model_restore_vanilla_display_lists();

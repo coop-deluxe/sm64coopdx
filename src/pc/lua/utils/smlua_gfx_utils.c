@@ -174,6 +174,32 @@ u16 gfx_get_vtx_count(Gfx* cmd) {
     return C0(cmd, 12, 8);
 }
 
+void gfx_set_vtx_v(Vtx *vtx, f32 x, f32 y, f32 z, s16 tu, s16 tv, u8 r, u8 g, u8 b, u8 a) {
+    if (!vtx) { return; }
+    vtx->v.ob[0] = x;
+    vtx->v.ob[1] = y;
+    vtx->v.ob[2] = z;
+    vtx->v.tc[0] = tu;
+    vtx->v.tc[1] = tv;
+    vtx->v.cn[0] = r;
+    vtx->v.cn[1] = g;
+    vtx->v.cn[2] = b;
+    vtx->v.cn[3] = a;
+}
+
+void gfx_set_vtx_n(Vtx *vtx, f32 x, f32 y, f32 z, s16 tu, s16 tv, s8 nx, s8 ny, s8 nz, u8 a) {
+    if (!vtx) { return; }
+    vtx->n.ob[0] = x;
+    vtx->n.ob[1] = y;
+    vtx->n.ob[2] = z;
+    vtx->n.tc[0] = tu;
+    vtx->n.tc[1] = tv;
+    vtx->n.n[0] = nx;
+    vtx->n.n[1] = ny;
+    vtx->n.n[2] = nz;
+    vtx->n.a = a;
+}
+
 void gfx_set_combine_lerp(Gfx* gfx, u32 a0, u32 b0, u32 c0, u32 d0, u32 Aa0, u32 Ab0, u32 Ac0, u32 Ad0, u32 a1, u32 b1, u32 c1, u32 d1,	u32 Aa1, u32 Ab1, u32 Ac1, u32 Ad1) {
     if (!gfx) { return; }
     gDPSetCombineLERPNoString(gfx, a0, b0, c0, d0, Aa0, Ab0, Ac0, Ad0, a1, b1, c1, d1, Aa1, Ab1, Ac1, Ad1);

@@ -451,8 +451,21 @@ end
 
 --- @param gfx Gfx
 --- @param command string
---- @vararg integer Parameters for the command
---- Sets the specified display list command on the display list given
+--- @vararg integer | string | Gfx | Texture | Vtx Parameters for the command
+--- Sets a display list command on the display list given.
+--- 
+--- If `command` includes parameter specifiers (subsequences beginning with `%`), the additional arguments
+--- following `command` are converted and inserted in `command` replacing their respective specifiers.
+--- 
+--- The number of provided parameters must be equal to the number of specifiers in `command`,
+--- and the order of parameters must be the same as the specifiers.
+--- 
+--- The following specifiers are allowed:
+--- - `%i` for an `integer` parameter
+--- - `%s` for a `string` parameter
+--- - `%v` for a `Vtx` parameter
+--- - `%t` for a `Texture` parameter
+--- - `%g` for a `Gfx` parameter
 function gfx_set_command(gfx, command, ...)
     -- ...
 end

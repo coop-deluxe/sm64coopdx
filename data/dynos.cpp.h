@@ -556,6 +556,7 @@ struct GfxData : NoCopy {
     DataNodes<Movtex> mMovtexs;
     DataNodes<MovtexQC> mMovtexQCs;
     DataNodes<u8> mRooms;
+    DataNodes<void> mRawPointers;
 
     // Animation data
     Array<AnimBuffer<s16> *> mAnimValues;
