@@ -65,40 +65,40 @@ void DynOS_Model_Dump() {
 
 static struct GraphNode* DynOS_Model_LoadCommonInternal(u32* aId, enum ModelPool aModelPool, void* aAsset, u8 aLayer, struct GraphNode* aGraphNode, bool aDeDuplicate, enum ModelLoadType mlt) {
     // sanity check pool
-    if (aModelPool < 0 || aModelPool >= MODEL_POOL_MAX) { return NULL; }
+    if (aModelPool >= MODEL_POOL_MAX) { return NULL; }
 
     // allocate pool
     if (!sModelPools[aModelPool]) {
         sModelPools[aModelPool] = dynamic_pool_init();
     }
 
-    // check maps, permanent pool is always checked
-    for (int i = 0; i < MODEL_POOL_MAX; ++i) {
-        auto& map = sAssetMap[i];
-        if (aDeDuplicate && map.count(aAsset)) {
-            auto& found = map[aAsset];
-
-            // if the expected pool has a higher priority,
-            // we need to move the asset to the new pool
-            if (i > aModelPool) {
-                found.modelPool = aModelPool;
-                sAssetMap[aModelPool][aAsset] = found;
-                map.erase(aAsset);
-            }
-
-            if (i != MODEL_POOL_PERMANENT && *aId && *aId != found.id) {
-                sOverwriteMap[*aId] = found.id;
-            }
-
+    // check perm map
+    auto& permMap = sAssetMap[MODEL_POOL_PERMANENT];
+    if (aDeDuplicate && permMap.count(aAsset)) {
+        auto& found = permMap[aAsset];
+        if (*aId && *aId == found.id) {
+            return found.graphNode;
+        }
+        if (*aId == 0) {
             *aId = found.id;
             return found.graphNode;
         }
-        if (i < aModelPool) { i = aModelPool; } // to force check permanent pool, and then skip to the expected pool
     }
 
-    // load geo
+    // check map
     auto& map = sAssetMap[aModelPool];
+    if (aDeDuplicate && map.count(aAsset)) {
+        auto& found = map[aAsset];
+        if (*aId && *aId != found.id) {
+            sOverwriteMap[*aId] = found.id;
+        }
+        *aId = found.id;
+        return found.graphNode;
+    }
+
     sCurrModelDuplicates = new std::vector<void*>();
+
+    // load geo
     struct GraphNode* node = NULL;
     switch (mlt) {
         case MLT_GEO:
