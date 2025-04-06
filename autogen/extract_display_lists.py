@@ -1,5 +1,6 @@
 import os
 import re
+import sys
 
 
 DIRECTORIES = [
@@ -78,12 +79,14 @@ CUSTOM_DEFINED = [
 
 
 def main():
+    verbose = len(sys.argv) > 1 and (sys.argv[1] == "-v" or sys.argv[1] == "--verbose")
     pattern = re.compile("[\W]+")
     display_lists = []
     for dir in DIRECTORIES:
         for root, _, filenames in os.walk(dir):
             for filename in filenames:
                 if filename[filename.rfind("."):] in FILE_EXTENSIONS:
+                    display_lists_in_file = []
                     filepath = os.path.join(root, filename)
                     lines = open(filepath, "r").readlines()
                     ignore = False
@@ -100,6 +103,10 @@ def main():
                             name = identifiers[index_gfx + 1]
                             if name not in display_lists:
                                 display_lists.append(name)
+                                if verbose:
+                                    display_lists_in_file.append(name)
+                    if verbose and display_lists_in_file:
+                        print("%s\n    %s" % (filepath, "\n    ".join(display_lists_in_file)))
 
     # Add these manually because they are defined by a macro
     display_lists += CUSTOM_DEFINED
