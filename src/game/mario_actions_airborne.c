@@ -2313,7 +2313,9 @@ s32 check_common_airborne_cancels(struct MarioState *m) {
     
     if (m->floor && m->floor->type == SURFACE_VERTICAL_WIND && (m->action & ACT_FLAG_ALLOW_VERTICAL_WIND_ACTION)) {
         smlua_call_event_hooks_mario_param_and_int_ret_bool(HOOK_ALLOW_HAZARD_SURFACE, m, HAZARD_TYPE_VERTICAL_WIND, &allow);
-        return allow && drop_and_set_mario_action(m, ACT_VERTICAL_WIND, 0);
+        if (allow) {
+            return drop_and_set_mario_action(m, ACT_VERTICAL_WIND, 0);
+        }
     }
 
     m->quicksandDepth = 0.0f;
