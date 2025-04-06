@@ -666,6 +666,7 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
     }
 
     dynos_model_clear_pool(MODEL_POOL_SESSION);
+    dynos_model_restore_vanilla_display_lists();
 
     if (exiting) { return; }
 

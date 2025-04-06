@@ -90,12 +90,12 @@ struct MovtexObject {
     /// segmented address to movtex mesh with vertices
     void *movtexVerts;
     /// display list inserted before moving triangles
-    Gfx *beginDl;
+    const Gfx *beginDl;
     /// display list inserted after moving triangles
-    Gfx *endDl;
+    const Gfx *endDl;
     /// display list with the actual moving texture triangles.
     /// Assumes the animated vertices are buffered and correct texture is set
-    Gfx *triDl;
+    const Gfx *triDl;
     // if the list does not have per-vertex colors, all vertices have these colors
     u8 r;      /// red
     u8 g;      /// green
@@ -134,58 +134,58 @@ u8 *gMovtexIdToTexture[] = { texture_waterbox_water,     texture_waterbox_mist,
                              texture_waterbox_lava,      ssl_quicksand,
                              ssl_pyramid_sand,           ttc_yellow_triangle };
 
-extern Gfx castle_grounds_dl_waterfall[];
+extern const Gfx castle_grounds_dl_waterfall[];
 extern s16 castle_grounds_movtex_tris_waterfall[];
 extern s16 ssl_movtex_tris_pyramid_sand_pathway_front[];
-extern Gfx ssl_dl_pyramid_sand_pathway_begin[];
-extern Gfx ssl_dl_pyramid_sand_pathway_end[];
-extern Gfx ssl_dl_pyramid_sand_pathway_front_end[];
+extern const Gfx ssl_dl_pyramid_sand_pathway_begin[];
+extern const Gfx ssl_dl_pyramid_sand_pathway_end[];
+extern const Gfx ssl_dl_pyramid_sand_pathway_front_end[];
 extern s16 ssl_movtex_tris_pyramid_sand_pathway_floor[];
-extern Gfx ssl_dl_pyramid_sand_pathway_floor_begin[];
-extern Gfx ssl_dl_pyramid_sand_pathway_floor_end[];
+extern const Gfx ssl_dl_pyramid_sand_pathway_floor_begin[];
+extern const Gfx ssl_dl_pyramid_sand_pathway_floor_end[];
 extern s16 ssl_movtex_tris_pyramid_sand_pathway_side[];
-extern Gfx ssl_dl_pyramid_sand_pathway_side_end[];
+extern const Gfx ssl_dl_pyramid_sand_pathway_side_end[];
 extern s16 bitfs_movtex_tris_lava_first_section[];
-extern Gfx bitfs_dl_lava_sections[];
+extern const Gfx bitfs_dl_lava_sections[];
 extern s16 bitfs_movtex_tris_lava_second_section[];
 extern s16 bitfs_movtex_tris_lava_floor[];
-extern Gfx bitfs_dl_lava_floor[];
+extern const Gfx bitfs_dl_lava_floor[];
 extern s16 lll_movtex_tris_lava_floor[];
-extern Gfx lll_dl_lava_floor[];
+extern const Gfx lll_dl_lava_floor[];
 extern s16 lll_movtex_tris_lavafall_volcano[];
-extern Gfx lll_dl_lavafall_volcano[];
+extern const Gfx lll_dl_lavafall_volcano[];
 extern s16 cotmc_movtex_tris_water[];
-extern Gfx cotmc_dl_water_begin[];
-extern Gfx cotmc_dl_water_end[];
-extern Gfx cotmc_dl_water[];
+extern const Gfx cotmc_dl_water_begin[];
+extern const Gfx cotmc_dl_water_end[];
+extern const Gfx cotmc_dl_water[];
 extern s16 ttm_movtex_tris_begin_waterfall[];
-extern Gfx ttm_dl_waterfall[];
+extern const Gfx ttm_dl_waterfall[];
 extern s16 ttm_movtex_tris_end_waterfall[];
 extern s16 ttm_movtex_tris_begin_puddle_waterfall[];
-extern Gfx ttm_dl_bottom_waterfall[];
+extern const Gfx ttm_dl_bottom_waterfall[];
 extern s16 ttm_movtex_tris_end_puddle_waterfall[];
 extern s16 ttm_movtex_tris_puddle_waterfall[];
-extern Gfx ttm_dl_puddle_waterfall[];
+extern const Gfx ttm_dl_puddle_waterfall[];
 extern s16 ssl_movtex_tris_pyramid_quicksand[];
-extern Gfx ssl_dl_quicksand_begin[];
-extern Gfx ssl_dl_quicksand_end[];
-extern Gfx ssl_dl_pyramid_quicksand[];
+extern const Gfx ssl_dl_quicksand_begin[];
+extern const Gfx ssl_dl_quicksand_end[];
+extern const Gfx ssl_dl_pyramid_quicksand[];
 extern s16 ssl_movtex_tris_pyramid_corners_quicksand[];
-extern Gfx ssl_dl_pyramid_corners_quicksand[];
+extern const Gfx ssl_dl_pyramid_corners_quicksand[];
 extern s16 ssl_movtex_tris_sides_quicksand[];
-extern Gfx ssl_dl_sides_quicksand[];
+extern const Gfx ssl_dl_sides_quicksand[];
 extern s16 ttc_movtex_tris_big_surface_treadmill[];
-extern Gfx ttc_dl_surface_treadmill_begin[];
-extern Gfx ttc_dl_surface_treadmill_end[];
-extern Gfx ttc_dl_surface_treadmill[];
+extern const Gfx ttc_dl_surface_treadmill_begin[];
+extern const Gfx ttc_dl_surface_treadmill_end[];
+extern const Gfx ttc_dl_surface_treadmill[];
 extern s16 ttc_movtex_tris_small_surface_treadmill[];
 extern s16 ssl_movtex_tris_quicksand_pit[];
-extern Gfx ssl_dl_quicksand_pit_begin[];
-extern Gfx ssl_dl_quicksand_pit_end[];
-extern Gfx ssl_dl_quicksand_pit[];
+extern const Gfx ssl_dl_quicksand_pit_begin[];
+extern const Gfx ssl_dl_quicksand_pit_end[];
+extern const Gfx ssl_dl_quicksand_pit[];
 extern s16 ssl_movtex_tris_pyramid_quicksand_pit[];
-extern Gfx ssl_dl_pyramid_quicksand_pit_begin[];
-extern Gfx ssl_dl_pyramid_quicksand_pit_end[];
+extern const Gfx ssl_dl_pyramid_quicksand_pit_begin[];
+extern const Gfx ssl_dl_pyramid_quicksand_pit_end[];
 
 /**
  * MovtexObjects that have no color attributes per vertex (though the mesh

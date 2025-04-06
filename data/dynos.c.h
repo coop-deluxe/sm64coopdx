@@ -79,7 +79,8 @@ struct GraphNode* dynos_model_load_dl(u32* aId, enum ModelPool aModelPool, u8 aL
 struct GraphNode* dynos_model_store_geo(u32* aId, enum ModelPool aModelPool, void* aAsset, struct GraphNode* aGraphNode);
 struct GraphNode* dynos_model_get_geo(u32 aId);
 void dynos_model_overwrite_slot(u32 srcSlot, u32 dstSlot);
-Gfx *dynos_model_duplicate_displaylist(Gfx* gfx);
+Gfx *dynos_model_get_writable_display_list(Gfx* gfx);
+void dynos_model_restore_vanilla_display_lists();
 u32 dynos_model_get_id_from_asset(void* aAsset);
 u32 dynos_model_get_id_from_graph_node(struct GraphNode* aGraphNode);
 void dynos_model_clear_pool(enum ModelPool aModelPool);

@@ -1,4 +1,9 @@
 #include "include/types.h"
+
+  //////////////
+ // Textures //
+//////////////
+
 extern ALIGNED8 const Texture amp_seg8_texture_08000F18[];
 extern ALIGNED8 const Texture amp_seg8_texture_08001318[];
 extern ALIGNED8 const Texture amp_seg8_texture_08001B18[];
@@ -2359,3 +2364,12 @@ extern ALIGNED8 const Texture cake_end_texture_44[];
 extern ALIGNED8 const Texture cake_end_texture_45[];
 extern ALIGNED8 const Texture cake_end_texture_46[];
 extern ALIGNED8 const Texture cake_end_texture_47[];
+
+  ///////////////////
+ // Display lists //
+///////////////////
+
+#define DISPLAY_LIST(name) \
+extern const Gfx name[];
+#include "include/display_lists.inl"
+#undef DISPLAY_LIST
