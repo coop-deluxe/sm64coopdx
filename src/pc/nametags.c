@@ -113,6 +113,13 @@ void nametags_render(void) {
                 e->prevScale = scale;
                 e->inited = true;
             }
+
+            // Scissor to clip during credits
+            extern Vp *D_8032CE74;
+            extern Vp *D_8032CE78;
+            Vp *viewport = D_8032CE74 == NULL ? D_8032CE78 : D_8032CE74;
+            if (viewport) { make_viewport_clip_rect(viewport); }
+
             djui_hud_print_outlined_text_interpolated(name,
                 e->prevPos[0] - measure, e->prevPos[1], e->prevScale,
                        out[0] - measure,        out[1],        scale,
@@ -127,6 +134,9 @@ void nametags_render(void) {
                            out[0] - (    healthScale * 0.5f),        out[1] - 72 * scale,     healthScale,     healthScale
                 );
             }
+
+            // Reset scissor
+            if (viewport) { gDPSetScissor(gDisplayListHead++, G_SC_NON_INTERLACE, 0, BORDER_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT - BORDER_HEIGHT); }
 
             vec3f_copy(e->prevPos, out);
             e->prevScale = scale;

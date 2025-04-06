@@ -2,7 +2,7 @@
 #include "djui.h"
 
 #define DJUI_THEME_CENTERED_WIDTH 1.3f
-#define DJUI_THEME_CENTERED_HEIGHT 0.9f
+#define DJUI_THEME_CENTERED_HEIGHT 0.921f
 
 enum DjuiThemeType {
     DJUI_THEME_LIGHT,

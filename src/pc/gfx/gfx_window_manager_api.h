@@ -15,6 +15,7 @@ struct GfxWindowManagerAPI {
     void (*init)(const char *window_title);
     void (*set_keyboard_callbacks)(kb_callback_t on_key_down, kb_callback_t on_key_up, void (*on_all_keys_up)(void),
         void (*on_text_input)(char*), void (*on_text_editing)(char*, int));
+    void (*set_scroll_callback)(void (*on_scroll)(float, float));
     void (*main_loop)(void (*run_one_game_iter)(void));
     void (*get_dimensions)(uint32_t *width, uint32_t *height);
     void (*handle_events)(void);

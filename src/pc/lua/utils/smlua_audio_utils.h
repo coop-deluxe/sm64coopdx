@@ -49,6 +49,8 @@ void audio_stream_set_position(struct ModAudio* audio, f32 pos);
 bool audio_stream_get_looping(struct ModAudio* audio);
 /* |description|Sets if an `audio` stream is looping or not|descriptionEnd| */
 void audio_stream_set_looping(struct ModAudio* audio, bool looping);
+/* |description|Sets an `audio` stream's loop points (samples)|descriptionEnd| */
+void audio_stream_set_loop_points(struct ModAudio* audio, s64 loopStart, s64 loopEnd);
 /* |description|Gets the frequency of an `audio` stream|descriptionEnd| */
 f32 audio_stream_get_frequency(struct ModAudio* audio);
 /* |description|Sets the frequency of an `audio` stream|descriptionEnd| */

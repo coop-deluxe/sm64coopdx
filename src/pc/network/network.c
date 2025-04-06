@@ -6,8 +6,6 @@
 #include "game/level_update.h"
 #include "object_constants.h"
 #include "behavior_table.h"
-#include "game/hardcoded.h"
-#include "game/scroll_targets.h"
 #include "pc/configfile.h"
 #include "pc/djui/djui.h"
 #include "pc/djui/djui_panel.h"
@@ -24,6 +22,8 @@
 #include "pc/pc_main.h"
 #include "pc/gfx/gfx_pc.h"
 #include "pc/fs/fmem.h"
+#include "game/hardcoded.h"
+#include "game/scroll_targets.h"
 #include "game/camera.h"
 #include "game/skybox.h"
 #include "game/object_list_processor.h"
@@ -33,7 +33,9 @@
 #include "game/ingame_menu.h"
 #include "game/first_person_cam.h"
 #include "game/envfx_snow.h"
+#include "game/mario.h"
 #include "engine/math_util.h"
+#include "engine/lighting_engine.h"
 
 #ifdef DISCORD_SDK
 #include "pc/discord/discord.h"
@@ -629,6 +631,12 @@ void network_update(void) {
     }
 }
 
+static inline void color_set(Color color, u8 r, u8 g, u8 b) {
+    color[0] = r;
+    color[1] = g;
+    color[2] = b;
+}
+
 void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnecting) {
     smlua_call_event_hooks(HOOK_ON_EXIT);
 
@@ -673,31 +681,20 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
     gCurrActStarNum = 0;
     gCurrActNum = 0;
     gCurrCreditsEntry = NULL;
-    gLightingDir[0] = 0;
-    gLightingDir[1] = 0;
-    gLightingDir[2] = 0;
-    gLightingColor[0][0] = 255;
-    gLightingColor[0][1] = 255;
-    gLightingColor[0][2] = 255;
-    gLightingColor[1][0] = 255;
-    gLightingColor[1][1] = 255;
-    gLightingColor[1][2] = 255;
-    gVertexColor[0] = 255;
-    gVertexColor[1] = 255;
-    gVertexColor[2] = 255;
-    gSkyboxColor[0] = 255;
-    gSkyboxColor[1] = 255;
-    gSkyboxColor[2] = 255;
-    gFogColor[0] = 255;
-    gFogColor[1] = 255;
-    gFogColor[2] = 255;
-    gFogIntensity = 1;
+    vec3f_set(gLightingDir, 0, 0, 0);
+    color_set(gLightingColor[0], 0xFF, 0xFF, 0xFF);
+    color_set(gLightingColor[1], 0xFF, 0xFF, 0xFF);
+    color_set(gVertexColor, 0xFF, 0xFF, 0xFF);
+    color_set(gSkyboxColor, 0xFF, 0xFF, 0xFF);
+    color_set(gFogColor, 0xFF, 0xFF, 0xFF);
+    gFogIntensity = 1.0f;
     gOverrideBackground = -1;
     gOverrideEnvFx = ENVFX_MODE_NO_OVERRIDE;
-    gRomhackCameraAllowCentering = TRUE;
+    gRomhackCameraSettings.centering = FALSE;
     gOverrideAllowToxicGasCamera = FALSE;
-    gRomhackCameraAllowDpad = FALSE;
+    gRomhackCameraSettings.dpad = FALSE;
     camera_reset_overrides();
+    romhack_camera_reset_settings();
     free_vtx_scroll_targets();
     dynos_mod_shutdown();
     mods_clear(&gActiveMods);
@@ -706,7 +703,6 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
     extern s16 gChangeLevel;
     gChangeLevel = LEVEL_CASTLE_GROUNDS;
     network_player_init();
-    camera_set_use_course_specific_settings(true);
     gMarioStates[0].cap = 0;
     gMarioStates[0].input = 0;
     extern s16 gTTCSpeedSetting;
@@ -741,6 +737,8 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
     vec3f_set(gFirstPersonCamera.offset, 0, 0, 0);
     first_person_reset();
 
+    le_shutdown();
+
     extern void save_file_load_all(UNUSED u8 reload);
     save_file_load_all(TRUE);
     extern void save_file_set_using_backup_slot(bool usingBackupSlot);
@@ -751,6 +749,8 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
     gMenuMode = -1;
 
     reset_window_title();
+
+    init_mario_from_save_file();
 
     djui_panel_shutdown();
     extern bool gDjuiInMainMenu;

@@ -1,21 +1,9 @@
 #include "dynos.cpp.h"
+#ifdef max
+#undef max
+#endif
+#include <vector>
 extern "C" {
-#include "object_fields.h"
-#include "engine/level_script.h"
-#include "game/object_helpers.h"
-#include "game/segment2.h"
-#include "game/level_geo.h"
-#include "game/level_update.h"
-#include "game/moving_texture.h"
-#include "game/paintings.h"
-#include "game/geo_misc.h"
-#include "game/mario_misc.h"
-#include "game/mario_actions_cutscene.h"
-#include "game/screen_transition.h"
-#include "game/object_list_processor.h"
-#include "game/behavior_actions.h"
-#include "game/rendering_graph_node.h"
-#include "game/skybox.h"
 #include "game/scroll_targets.h"
 }
 
@@ -117,16 +105,41 @@ s32 DynOS_String_Width(const u8 *aStr64) {
 // Scroll Targets
 //
 
+struct PendingScrollTarget {
+    u32 mIndex;
+    u32 mOffset;
+    u32 mSize;
+    Vtx *mData;
+};
+
+static std::vector<struct PendingScrollTarget> sPendingScrollTargets;
+
+// Finds a pending scroll target and registers it with the new vtx buffer
+void DynOS_Find_Pending_Scroll_Target(Vtx *data, Vtx *newData) {
+    for (auto it = sPendingScrollTargets.begin(); it != sPendingScrollTargets.end(); ++it) {
+        if (it->mData == data) {
+            add_vtx_scroll_target(it->mIndex, &newData[it->mOffset], it->mSize, it->mOffset > 0);
+            sPendingScrollTargets.erase(it);
+            break;
+        }
+    }
+}
+
+void DynOS_Pending_Scroll_Targets_Clear() {
+    sPendingScrollTargets.clear();
+}
+
 void DynOS_Add_Scroll_Target(u32 index, const char* name, u32 offset, u32 size) {
     for (auto& lvlPair : DynOS_Lvl_GetArray()) {
         for (auto& node : lvlPair.second->mVertices) {
             if (node->mName.Find(name) >= 0) {
-                add_vtx_scroll_target(
-                    index,
-                    offset > 0 ? &node->mData[offset] : node->mData,
-                    (size > 0 && size < node->mSize) ? size : node->mSize,
-                    offset > 0
-                );
+                struct PendingScrollTarget scroll = {
+                    .mIndex = index,
+                    .mOffset = offset,
+                    .mSize = (size > 0 && size < node->mSize) ? size : node->mSize,
+                    .mData = node->mData,
+                };
+                sPendingScrollTargets.push_back(scroll);
             }
         }
     }

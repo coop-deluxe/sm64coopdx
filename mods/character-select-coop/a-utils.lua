@@ -54,7 +54,7 @@ end
 
 -- Version Data --
 MOD_VERSION_API = 1
-MOD_VERSION_MAJOR = 12
+MOD_VERSION_MAJOR = 13
 MOD_VERSION_MINOR = 0
 MOD_VERSION_INDEV = false
 MOD_VERSION_STRING = tostring(MOD_VERSION_API) .. "." .. tostring(MOD_VERSION_MAJOR) .. (MOD_VERSION_MINOR > 0 and ("." .. tostring(MOD_VERSION_MINOR)) or "") .. (MOD_VERSION_INDEV and " (In-Dev)" or "")
@@ -205,12 +205,14 @@ for i = 0, MAX_PLAYERS - 1 do
         forceChar = 0,
         modelId = E_MODEL_MARIO,
         isUpdating = false,
+        movesetToggle = true,
+        modelEditOffset = 0,
     }
 end
 
 local stallPacket = 0
 local function update()
-    stallPacket = (stallPacket+1)%5 -- refresh rate (to reduce stress)
+    stallPacket = (stallPacket+1)%3 -- refresh rate (to reduce stress)
     if stallPacket == 0 then
         network_send(false, gCSPlayers[0])
     end

@@ -399,6 +399,9 @@ void smlua_model_util_initialize(void);
 void smlua_model_util_clear(void);
 void smlua_model_util_store_in_slot(u32 slot, const char* name);
 u16 smlua_model_util_load(enum ModelExtendedId extId);
+void smlua_model_util_register_model_id(u32 id, const void *asset);
+u16 smlua_model_util_ext_id_to_id(enum ModelExtendedId extId);
+enum ModelExtendedId smlua_model_util_id_to_ext_id(u16 id);
 /* |description|Gets the extended model ID for the `name` of a `GeoLayout`|descriptionEnd| */
 enum ModelExtendedId smlua_model_util_get_id(const char* name);
 

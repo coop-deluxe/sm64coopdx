@@ -118,13 +118,6 @@ s16 set_mario_animation(struct MarioState *m, s32 targetAnimID) {
 }
 
 /**
- * Sets the character specific animation without any acceleration, running at its default rate.
- */
-s16 set_character_animation(struct MarioState *m, s32 targetAnimID) {
-    return mario_set_animation_internal(m, get_character_anim(m, targetAnimID), 0x10000);
-}
-
-/**
  * Sets Mario's animation where the animation is sped up or
  * slowed down via acceleration.
  */
@@ -133,10 +126,17 @@ s16 set_mario_anim_with_accel(struct MarioState *m, s32 targetAnimID, s32 accel)
 }
 
 /**
+ * Sets the character specific animation without any acceleration, running at its default rate.
+ */
+s16 set_character_animation(struct MarioState *m, enum CharacterAnimID targetAnimID) {
+    return mario_set_animation_internal(m, get_character_anim(m, targetAnimID), 0x10000);
+}
+
+/**
  * Sets character specific animation where the animation is sped up or
  * slowed down via acceleration.
  */
-s16 set_character_anim_with_accel(struct MarioState *m, s32 targetAnimID, s32 accel) {
+s16 set_character_anim_with_accel(struct MarioState *m, enum CharacterAnimID targetAnimID, s32 accel) {
     return mario_set_animation_internal(m, get_character_anim(m, targetAnimID), accel);
 }
 

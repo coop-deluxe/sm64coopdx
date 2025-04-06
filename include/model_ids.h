@@ -19,6 +19,8 @@
 #define COIN_FORMATION_FLAG_ARROW     (1 << 2)
 #define COIN_FORMATION_FLAG_FLYING    (1 << 4)
 
+#define VANILLA_ID_END 255
+
 #define MODEL_NONE                        0x00
 
 /* Global models that are loaded for every level */

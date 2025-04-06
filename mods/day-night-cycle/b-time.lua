@@ -10,7 +10,7 @@ mod_storage_remove("night-music")
 use24h = mod_storage_load_bool("24h")
 
 --- @type boolean
-playNightMusic = if_then_else(mod_storage_exists("night_music"), mod_storage_load_bool("night_music"), true)
+playNightMusic = mod_storage_load_bool_2("night_music")
 playingNightMusic = false
 
 --- Returns the amount of days that have passed
@@ -76,16 +76,12 @@ function set_time_scale(scale)
     gGlobalSyncTable.timeScale = scale
 end
 
---- @param time number
+--- @param time number|nil
 --- Returns the properly formatted time string
+--- * `time` is optional, if not provided then the in-game time will automatically be used
 function get_time_string(time)
     if type(time) ~= "number" then
-        error("get_time_string: Parameter 'time' must be a number")
-        if use24h then
-            return "12:00 AM"
-        else
-            return "0:00"
-        end
+        time = gGlobalSyncTable.time
     end
 
     local minutes = (time / MINUTE) % 24

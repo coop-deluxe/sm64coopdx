@@ -1,7 +1,7 @@
 -- version
 DNC_VERSION_MAJOR = 2
-DNC_VERSION_MINOR = 3
-DNC_VERSION_PATCH = 1
+DNC_VERSION_MINOR = 4
+DNC_VERSION_PATCH = 0
 DNC_VERSION = math.tointeger(string.format("%d%d%d", DNC_VERSION_MAJOR, DNC_VERSION_MINOR, DNC_VERSION_PATCH))
 
 -- skybox constants
@@ -26,18 +26,21 @@ MINUTE = SECOND * 60 -- how many frames are in 1 minute
 
 
 --                Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec
-gSunriseTimes = { 6,  6,  6,  5,  5,  4,  4,  4,  5,  6,  6,  6  }
+gSunriseTimes = { 6,  5,  6,  6,  5,  4,  4,  4,  5,  6,  6,  6  }
 gSunsetTimes  = { 15, 16, 17, 18, 18, 19, 19, 19, 18, 17, 15, 14 }
 
 local month = get_date_and_time().month + 1
-syncSun = if_then_else(mod_storage_exists("sync_sun"), mod_storage_load_bool("sync_sun"), true)
+syncSun = mod_storage_load_bool_2("sync_sun")
+
+HOUR_SUNRISE_START_BASE = 4
+HOUR_SUNSET_START_BASE  = 19
 
 HOUR_SUNRISE_DURATION = 1
-HOUR_SUNRISE_START = if_then_else(syncSun, gSunriseTimes[month], 4)
+HOUR_SUNRISE_START = if_then_else(syncSun, gSunriseTimes[month], HOUR_SUNRISE_START_BASE)
 HOUR_SUNRISE_END = HOUR_SUNRISE_START + HOUR_SUNRISE_DURATION
 
 HOUR_SUNSET_DURATION = 1
-HOUR_SUNSET_START = if_then_else(syncSun, gSunsetTimes[month], 19)
+HOUR_SUNSET_START = if_then_else(syncSun, gSunsetTimes[month], HOUR_SUNSET_START_BASE)
 HOUR_SUNSET_END = HOUR_SUNSET_START + HOUR_SUNSET_DURATION
 
 HOUR_DAY_START = HOUR_SUNRISE_END + HOUR_SUNRISE_DURATION

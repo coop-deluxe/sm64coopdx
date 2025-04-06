@@ -261,12 +261,15 @@ static void djui_panel_player_edit_palette_create(struct DjuiBase* caller) {
 
         sSliderR = djui_slider_create(body, DLANG(PLAYER, RED), &sSliderChannels[0], 0, 255, djui_panel_player_edit_palette_red_changed);
         djui_base_set_color(&sSliderR->rectValue->base, 255, 0, 0, 255);
+        djui_base_set_gradient(&sSliderR->rectValue->base, false);
         sSliderR->updateRectValueColor = false;
         sSliderG = djui_slider_create(body, DLANG(PLAYER, GREEN), &sSliderChannels[1], 0, 255, djui_panel_player_edit_palette_green_changed);
         djui_base_set_color(&sSliderG->rectValue->base, 0, 255, 0, 255);
+        djui_base_set_gradient(&sSliderG->rectValue->base, false);
         sSliderG->updateRectValueColor = false;
         sSliderB = djui_slider_create(body, DLANG(PLAYER, BLUE), &sSliderChannels[2], 0, 255, djui_panel_player_edit_palette_blue_changed);
         djui_base_set_color(&sSliderB->rectValue->base, 0, 0, 255, 255);
+        djui_base_set_gradient(&sSliderB->rectValue->base, false);
         sSliderB->updateRectValueColor = false;
 
         struct DjuiRect* space = djui_rect_create(body);
@@ -280,6 +283,7 @@ static void djui_panel_player_edit_palette_create(struct DjuiBase* caller) {
         struct DjuiRect* rectValue = djui_rect_create(&space->base);
         djui_base_set_size_type(&rectValue->base, DJUI_SVT_RELATIVE, DJUI_SVT_RELATIVE);
         djui_base_set_color(&rectValue->base, sSliderChannels[0], sSliderChannels[1], sSliderChannels[2], 255);
+        djui_base_set_gradient(&rectValue->base, false);
         sColorRect = rectValue;
 
         struct DjuiRect* rect2 = djui_rect_container_create(body, 32);

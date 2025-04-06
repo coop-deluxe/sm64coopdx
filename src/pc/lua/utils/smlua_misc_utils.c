@@ -45,6 +45,10 @@ u32 get_network_area_timer(void) {
     return gNetworkAreaTimer;
 }
 
+u16 get_area_update_counter(void) {
+    return gAreaUpdateCounter;
+}
+
 ///
 
 void djui_popup_create_global(const char* message, int lines) {
@@ -82,6 +86,11 @@ bool djui_is_playerlist_open(void) {
 
 bool djui_attempting_to_open_playerlist(void) {
     return gAttemptingToOpenPlayerlist;
+}
+
+u8 djui_get_playerlist_page_index(void) {
+    extern u8 sPageIndex;
+    return sPageIndex;
 }
 
 enum DjuiFontType djui_menu_get_font(void) {
@@ -503,6 +512,10 @@ bool mod_file_exists(const char* filename) {
     }
 
     return false;
+}
+
+struct Mod* get_active_mod(void) {
+    return gLuaActiveMod;
 }
 
 ///

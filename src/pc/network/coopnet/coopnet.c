@@ -265,6 +265,15 @@ static void ns_coopnet_shutdown(bool reconnecting) {
     gCoopNetCallbacks.OnLobbyListGot = NULL;
     gCoopNetCallbacks.OnLobbyListFinish = NULL;
 
+    gCoopNetCallbacks.OnConnected = NULL;
+    gCoopNetCallbacks.OnDisconnected = NULL;
+    gCoopNetCallbacks.OnReceive = NULL;
+    gCoopNetCallbacks.OnLobbyJoined = NULL;
+    gCoopNetCallbacks.OnLobbyLeft = NULL;
+    gCoopNetCallbacks.OnError = NULL;
+    gCoopNetCallbacks.OnPeerDisconnected = NULL;
+    gCoopNetCallbacks.OnLoadBalance = NULL;
+
     sLocalLobbyId = 0;
     sLocalLobbyOwnerId = 0;
 }

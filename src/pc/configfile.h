@@ -78,16 +78,28 @@ extern bool         configBackgroundGamepad;
 extern bool         configDisableGamepads;
 extern bool         configUseStandardKeyBindingsChat;
 // free camera settings
-extern bool         configEnableCamera;
-extern bool         configCameraAnalog;
-extern bool         configCameraMouse;
+extern bool         configEnableFreeCamera;
+extern bool         configFreeCameraAnalog;
+extern bool         configFreeCameraLCentering;
+extern bool         configFreeCameraDPadBehavior;
+extern bool         configFreeCameraHasCollision;
+extern bool         configFreeCameraMouse;
+extern unsigned int configFreeCameraXSens;
+extern unsigned int configFreeCameraYSens;
+extern unsigned int configFreeCameraAggr;
+extern unsigned int configFreeCameraPan;
+extern unsigned int configFreeCameraDegrade;
+// romhack camera settings
+extern unsigned int configEnableRomhackCamera;
+extern bool         configRomhackCameraBowserFights;
+extern bool         configRomhackCameraHasCollision;
+extern bool         configRomhackCameraHasCentering;
+extern bool         configRomhackCameraDPadBehavior;
+extern bool         configRomhackCameraSlowFall;
+// common camera settings
 extern bool         configCameraInvertX;
 extern bool         configCameraInvertY;
-extern unsigned int configCameraXSens;
-extern unsigned int configCameraYSens;
-extern unsigned int configCameraAggr;
-extern unsigned int configCameraPan;
-extern unsigned int configCameraDegrade;
+extern bool         configCameraToxicGas;
 // debug
 extern bool         configLuaProfiler;
 extern bool         configDebugPrint;
@@ -122,6 +134,7 @@ extern bool         configMenuRandom;
 extern bool         configMenuDemos;
 extern bool         configDisablePopups;
 extern char         configLanguage[MAX_CONFIG_STRING];
+extern bool         configForce4By3;
 extern bool         configDynosLocalPlayerModelOnly;
 extern unsigned int configPvpType;
 // CoopNet settings
@@ -132,11 +145,13 @@ extern char         configDestId[MAX_CONFIG_STRING];
 // DJUI settings
 extern unsigned int configDjuiTheme;
 extern bool         configDjuiThemeCenter;
+extern bool         configDjuiThemeGradients;
 extern unsigned int configDjuiThemeFont;
 extern unsigned int configDjuiScale;
 // other
 extern unsigned int configRulesVersion;
 extern bool         configCompressOnStartup;
+extern bool         configSkipPackGeneration;
 
 // secrets
 extern bool configExCoopTheme;

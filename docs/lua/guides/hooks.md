@@ -9,6 +9,7 @@ Hooks are a way for SM64 to trigger Lua code, whereas the functions listed in [f
 - [hook_event](#hook_event)
 - [hook_mario_action](#hook_mario_action)
 - [hook_on_sync_table_change](#hook_on_sync_table_change)
+- [hook_mod_menu_text](#hook_mod_menu_text)
 - [hook_mod_menu_button](#hook_mod_menu_button)
 - [hook_mod_menu_checkbox](#hook_mod_menu_checkbox)
 - [hook_mod_menu_slider](#hook_mod_menu_slider)
@@ -118,7 +119,7 @@ The lua functions sent to `hook_event()` will be automatically called by SM64 wh
 | HOOK_USE_ACT_SELECT | Called when the level changes, return `true` to show act selection screen and `false` otherwise | `integer` levelNum |
 | HOOK_ON_CHANGE_CAMERA_ANGLE | Called when the player changes the camera mode to Lakitu cam or Mario cam, return `false` to prevent the change | `integer` mode |
 | HOOK_ON_SCREEN_TRANSITION | Called when the game is about to play a transition, return `false` to prevent the transition from playing | `integer` type |
-| HOOK_ALLOW_HAZARD_SURFACE | Called once per player per frame. Return `false` to prevent the player from being affected by lava or quicksand | [MarioState](../structs.md#MarioState) mario, `integer` hazardType |
+| HOOK_ALLOW_HAZARD_SURFACE | Called once per player per frame. Return `false` to prevent the player from being affected by lava, quicksand, or wind | [MarioState](../structs.md#MarioState) mario, `integer` hazardType |
 | HOOK_ON_CHAT_MESSAGE | Called when a chat message gets sent. Return `false` to prevent the message from being sent | [MarioState](../structs.md#MarioState) messageSender, `string` messageSent |
 | HOOK_OBJECT_SET_MODEL | Called when a behavior changes models. Also runs when a behavior spawns | [Object](../structs.md#Object) obj, `integer` modelID |
 | HOOK_CHARACTER_SOUND | Called when mario retrieves a character sound to play, return a character sound or `0` to override it | [MarioState](../structs.md#MarioState) mario, [enum CharacterSound](../constants.md#enum-CharacterSound) characterSound |
@@ -286,6 +287,25 @@ gGlobalSyncTable.testingField = "hello"
 
 <br />
 
+## [hook_mod_menu_text](#hook_mod_menu_text)
+`hook_mod_menu_text()` allows Lua to add text labels to their designated mod menu submenu.
+
+### Parameters
+
+| Field | Type |
+| ----- | ---- |
+| message | `string` |
+
+### Lua Example
+
+```lua
+hook_mod_menu_text("Rise and shine, Mr. Freeman.")
+```
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [hook_mod_menu_button](#hook_mod_menu_button)
 `hook_mod_menu_button()` allows Lua to add buttons to their designated mod menu submenu.
 
@@ -293,7 +313,7 @@ gGlobalSyncTable.testingField = "hello"
 
 | Field | Type |
 | ----- | ---- |
-| message | `string` |
+| name | `string` |
 | func | `Lua Function` (`integer` index) |
 
 ### Lua Example
@@ -329,7 +349,7 @@ hook_mod_menu_button("Open Menu 2", on_open_menu)
 
 | Field | Type |
 | ----- | ---- |
-| message | `string` |
+| name | `string` |
 | defaultValue | `boolean` |
 | func | `Lua Function` (`integer` index, `boolean` value) |
 
@@ -365,7 +385,7 @@ hook_mod_menu_checkbox("Noclip Mode", false, on_set_player_mode)
 
 | Field | Type |
 | ----- | ---- |
-| message | `string` |
+| name | `string` |
 | defaultValue | `integer` |
 | min | `integer` |
 | max | `integer` |
@@ -394,7 +414,7 @@ hook_mod_menu_slider("Time Scale", 1, 0, 10, on_set_time_scale)
 
 | Field | Type |
 | ----- | ---- |
-| message | `string` |
+| name | `string` |
 | defaultValue | `string` |
 | stringLength | `integer` |
 | func | `Lua Function` (`integer` index, `string` value) |

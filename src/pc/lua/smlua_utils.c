@@ -84,7 +84,7 @@ bool smlua_is_table_empty(int index) {
 
 bool smlua_to_boolean(lua_State* L, int index) {
     if (lua_type(L, index) != LUA_TBOOLEAN) {
-        LOG_LUA_LINE("smlua_to_boolean received improper type '%d'", lua_type(L, index));
+        LOG_LUA_LINE("smlua_to_boolean received improper type '%s'", luaL_typename(L, index));
         gSmLuaConvertSuccess = false;
         return 0;
     }
@@ -96,7 +96,7 @@ lua_Integer smlua_to_integer(lua_State* L, int index) {
         gSmLuaConvertSuccess = true;
         return lua_toboolean(L, index) ? 1 : 0;
     } else if (lua_type(L, index) != LUA_TNUMBER) {
-        LOG_LUA_LINE("smlua_to_integer received improper type '%d'", lua_type(L, index));
+        LOG_LUA_LINE("smlua_to_integer received improper type '%s'", luaL_typename(L, index));
         gSmLuaConvertSuccess = false;
         return 0;
     }
@@ -110,7 +110,7 @@ lua_Number smlua_to_number(lua_State* L, int index) {
         gSmLuaConvertSuccess = true;
         return lua_toboolean(L, index) ? 1 : 0;
     } else if (lua_type(L, index) != LUA_TNUMBER) {
-        LOG_LUA_LINE("smlua_to_number received improper type '%d'", lua_type(L, index));
+        LOG_LUA_LINE("smlua_to_number received improper type '%s'", luaL_typename(L, index));
         gSmLuaConvertSuccess = false;
         return 0;
     }
@@ -120,7 +120,7 @@ lua_Number smlua_to_number(lua_State* L, int index) {
 
 const char* smlua_to_string(lua_State* L, int index) {
     if (lua_type(L, index) != LUA_TSTRING) {
-        LOG_LUA_LINE("smlua_to_string received improper type '%d'", lua_type(L, index));
+        LOG_LUA_LINE("smlua_to_string received improper type '%s'", luaL_typename(L, index));
         gSmLuaConvertSuccess = false;
         return 0;
     }
@@ -134,7 +134,7 @@ LuaFunction smlua_to_lua_function(lua_State* L, int index) {
     }
 
     if (lua_type(L, index) != LUA_TFUNCTION) {
-        LOG_LUA_LINE("smlua_to_lua_function received improper type '%d'", lua_type(L, index));
+        LOG_LUA_LINE("smlua_to_lua_function received improper type '%s'", luaL_typename(L, index));
         gSmLuaConvertSuccess = false;
         return 0;
     }
@@ -150,17 +150,16 @@ bool smlua_is_cobject(lua_State* L, int index, UNUSED u16 lot) {
 
 void* smlua_to_cobject(lua_State* L, int index, u16 lot) {
     s32 indexType = lua_type(L, index);
-    if (indexType == LUA_TNIL) { return NULL; }
     if (indexType != LUA_TUSERDATA) {
-        LOG_LUA_LINE("smlua_to_cobject received improper type '%d'", indexType);
+        LOG_LUA_LINE("smlua_to_cobject received improper type '%s'", lua_typename(L, indexType));
         gSmLuaConvertSuccess = false;
-        return 0;
+        return NULL;
     }
 
     CObject *cobject = luaL_checkudata(L, index, "CObject");
 
     if (lot != cobject->lot) {
-        LOG_LUA_LINE("smlua_to_cobject received improper LOT. Expected '%d', received '%d'", lot, cobject->lot);
+        LOG_LUA_LINE("smlua_to_cobject received improper LOT. Expected '%s', received '%s'", smlua_get_lot_name(lot), smlua_get_lot_name(cobject->lot));
         gSmLuaConvertSuccess = false;
         return NULL;
     }
@@ -177,17 +176,16 @@ void* smlua_to_cobject(lua_State* L, int index, u16 lot) {
 
 void* smlua_to_cpointer(lua_State* L, int index, u16 lvt) {
     s32 indexType = lua_type(L, index);
-    if (indexType == LUA_TNIL) { return NULL; }
     if (indexType != LUA_TUSERDATA) {
-        LOG_LUA_LINE("smlua_to_cpointer received improper type '%d'", indexType);
+        LOG_LUA_LINE("smlua_to_cpointer received improper type '%s'", lua_typename(L, indexType));
         gSmLuaConvertSuccess = false;
-        return 0;
+        return NULL;
     }
 
     CPointer *cpointer = luaL_checkudata(L, index, "CPointer");
 
     if (lvt != cpointer->lvt) {
-        LOG_LUA_LINE("smlua_to_cpointer received improper LOT. Expected '%d', received '%d'", lvt, cpointer->lvt);
+        LOG_LUA_LINE("smlua_to_cpointer received improper LOT. Expected '%s', received '%s'", smlua_get_lvt_name(lvt), smlua_get_lvt_name(cpointer->lvt));
         gSmLuaConvertSuccess = false;
         return NULL;
     }
@@ -348,20 +346,23 @@ bool packet_read_lnt(struct Packet* p, struct LSTNetworkType* lnt) {
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-void smlua_push_object(lua_State* L, u16 lot, void* p, void *extraInfo) {
+CObject *smlua_push_object(lua_State* L, u16 lot, void* p, void *extraInfo) {
     if (p == NULL) {
         lua_pushnil(L);
-        return;
+        return NULL;
     }
     LUA_STACK_CHECK_BEGIN_NUM(1);
 
-    uintptr_t key = lot ^ (uintptr_t) p;
+    uintptr_t key = (lot * 0x9E3779B97F4A7C15) ^ ((uintptr_t)p >> 3);
     lua_rawgeti(L, LUA_REGISTRYINDEX, gSmLuaCObjects);
     lua_pushinteger(L, key);
     lua_gettable(L, -2);
     if (lua_isuserdata(L, -1)) {
-        lua_remove(L, -2); // Remove gSmLuaCObjects table
-        return;
+        CObject *cobj = lua_touserdata(L, -1);
+        if (cobj && cobj->lot == lot && cobj->pointer == p) {
+            lua_remove(L, -2); // Remove gSmLuaCObjects table
+            return cobj;
+        }
     }
     lua_pop(L, 1);
 
@@ -378,22 +379,27 @@ void smlua_push_object(lua_State* L, u16 lot, void* p, void *extraInfo) {
     lua_remove(L, -2); // Remove gSmLuaCObjects table
 
     LUA_STACK_CHECK_END();
+
+    return cobject;
 }
 
-void smlua_push_pointer(lua_State* L, u16 lvt, void* p, void *extraInfo) {
+CPointer *smlua_push_pointer(lua_State* L, u16 lvt, void* p, void *extraInfo) {
     if (p == NULL) {
         lua_pushnil(L);
-        return;
+        return NULL;
     }
     LUA_STACK_CHECK_BEGIN_NUM(1);
 
-    uintptr_t key = lvt ^ (uintptr_t) p;
+    uintptr_t key = (lvt * 0x9E3779B97F4A7C15) ^ ((uintptr_t)p >> 3);
     lua_rawgeti(L, LUA_REGISTRYINDEX, gSmLuaCPointers);
     lua_pushinteger(L, key);
     lua_gettable(L, -2);
     if (lua_isuserdata(L, -1)) {
-        lua_remove(L, -2); // Remove gSmLuaCPointers table
-        return;
+        CPointer *cptr = lua_touserdata(L, 1);
+        if (cptr && cptr->lvt == lvt && cptr->pointer == p) {
+            lua_remove(L, -2); // Remove gSmLuaCPointers table
+            return cptr;
+        }
     }
     lua_pop(L, 1);
 
@@ -409,6 +415,8 @@ void smlua_push_pointer(lua_State* L, u16 lvt, void* p, void *extraInfo) {
     lua_settable(L, -4);
     lua_remove(L, -2); // Remove gSmLuaCPointers table
     LUA_STACK_CHECK_END();
+
+    return cpointer;
 }
 
 void smlua_push_integer_field(int index, const char* name, lua_Integer val) {
@@ -464,7 +472,7 @@ void smlua_push_lnt(struct LSTNetworkType* lnt) {
 
 lua_Integer smlua_get_integer_field(int index, const char* name) {
     if (lua_type(gLuaState, index) != LUA_TTABLE && lua_type(gLuaState, index) != LUA_TUSERDATA) {
-        LOG_LUA_LINE("smlua_get_integer_field received improper type '%d'", lua_type(gLuaState, index));
+        LOG_LUA_LINE("smlua_get_integer_field received improper type '%s'", luaL_typename(gLuaState, index));
         gSmLuaConvertSuccess = false;
         return 0;
     }
@@ -476,7 +484,7 @@ lua_Integer smlua_get_integer_field(int index, const char* name) {
 
 lua_Number smlua_get_number_field(int index, const char* name) {
     if (lua_type(gLuaState, index) != LUA_TTABLE && lua_type(gLuaState, index) != LUA_TUSERDATA) {
-        LOG_LUA_LINE("smlua_get_number_field received improper type '%d'", lua_type(gLuaState, index));
+        LOG_LUA_LINE("smlua_get_number_field received improper type '%s'", luaL_typename(gLuaState, index));
         gSmLuaConvertSuccess = false;
         return 0;
     }
@@ -488,7 +496,7 @@ lua_Number smlua_get_number_field(int index, const char* name) {
 
 const char* smlua_get_string_field(int index, const char* name) {
     if (lua_type(gLuaState, index) != LUA_TTABLE && lua_type(gLuaState, index) != LUA_TUSERDATA) {
-        LOG_LUA_LINE("smlua_get_string_field received improper type '%d'", lua_type(gLuaState, index));
+        LOG_LUA_LINE("smlua_get_string_field received improper type '%s'", luaL_typename(gLuaState, index));
         gSmLuaConvertSuccess = false;
         return 0;
     }
@@ -500,7 +508,7 @@ const char* smlua_get_string_field(int index, const char* name) {
 
 LuaFunction smlua_get_function_field(int index, const char *name) {
     if (lua_type(gLuaState, index) != LUA_TTABLE && lua_type(gLuaState, index) != LUA_TUSERDATA) {
-        LOG_LUA_LINE("smlua_get_function_field received improper type '%d'", lua_type(gLuaState, index));
+        LOG_LUA_LINE("smlua_get_function_field received improper type '%s'", luaL_typename(gLuaState, index));
         gSmLuaConvertSuccess = false;
         return 0;
     }
@@ -744,7 +752,7 @@ void smlua_logline(void) {
         int slashCount = 0;
         const char* folderStart = NULL;
         for (const char* p = src + strlen(src); p > src; --p) {
-            if (*p == '/') {
+            if (*p == '/' || *p == '\\') {
                 if (++slashCount == 2) {
                     folderStart = p + 1;
                     break;

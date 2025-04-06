@@ -34,6 +34,8 @@
 #include "macros.h"
 
 #include "game/rendering_graph_node.h"
+#include "engine/lighting_engine.h"
+#include "pc/debug_context.h"
 
 #define SUPPORT_CHECK(x) assert(x)
 
@@ -187,10 +189,10 @@ static f32 sDepthZAdd = 0;
 static f32 sDepthZMult = 1;
 static f32 sDepthZSub = 0;
 
-Vec3f gLightingDir;
-Color gLightingColor[2] = { { 255, 255, 255 }, { 255, 255, 255 } };
-Color gVertexColor = { 255, 255, 255 };
-Color gFogColor = { 255, 255, 255 };
+Vec3f gLightingDir = { 0.0f, 0.0f, 0.0f };
+Color gLightingColor[2] = { { 0xFF, 0xFF, 0xFF }, { 0xFF, 0xFF, 0xFF } };
+Color gVertexColor = { 0xFF, 0xFF, 0xFF };
+Color gFogColor = { 0xFF, 0xFF, 0xFF };
 f32 gFogIntensity = 1;
 
 // 4x4 pink-black checkerboard texture to indicate missing textures
@@ -769,10 +771,15 @@ static float gfx_adjust_x_for_aspect_ratio(float x) {
 
 static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, const Vtx *vertices, bool luaVertexColor) {
     float globalLightCached[2][3];
+    float vertexColorCached[3];
     if (rsp.geometry_mode & G_LIGHTING) {
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 3; j++)
                 globalLightCached[i][j] = gLightingColor[i][j] / 255.0f;
+        }
+    } else if (luaVertexColor) {
+        for (int i = 0; i < 3; i ++) {
+            vertexColorCached[i] = gVertexColor[i] / 255.0f;
         }
     }
 
@@ -856,14 +863,35 @@ static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, cons
                 U = (int32_t)((dotx / 127.0f + 1.0f) / 4.0f * rsp.texture_scaling_factor.s);
                 V = (int32_t)((doty / 127.0f + 1.0f) / 4.0f * rsp.texture_scaling_factor.t);
             }
+            if (rsp.geometry_mode & G_LIGHTING_ENGINE_EXT) {
+                Color color;
+                CTX_BEGIN(CTX_LIGHTING);
+                le_calculate_lighting_color(((Vtx_t*)v)->ob, color, 1.0f);
+                CTX_END(CTX_LIGHTING);
+
+                d->color.r *= color[0] / 255.0f;
+                d->color.g *= color[1] / 255.0f;
+                d->color.b *= color[2] / 255.0f;
+            }
+        } else if (rsp.geometry_mode & G_LIGHTING_ENGINE_EXT) {
+            Color color;
+            CTX_BEGIN(CTX_LIGHTING);
+            le_calculate_vertex_lighting((Vtx_t*)v, color);
+            CTX_END(CTX_LIGHTING);
+            if (luaVertexColor) {
+                d->color.r = color[0] * vertexColorCached[0];
+                d->color.g = color[1] * vertexColorCached[1];
+                d->color.b = color[2] * vertexColorCached[2];
+            } else {
+                d->color.r = color[0];
+                d->color.g = color[1];
+                d->color.b = color[2];
+            }
         } else {
             if (!(rsp.geometry_mode & G_LIGHT_MAP_EXT) && luaVertexColor) {
-                f32 r = gVertexColor[0] / 255.0f;
-                f32 g = gVertexColor[1] / 255.0f;
-                f32 b = gVertexColor[2] / 255.0f;
-                d->color.r = v->cn[0] * r;
-                d->color.g = v->cn[1] * g;
-                d->color.b = v->cn[2] * b;
+                d->color.r = v->cn[0] * vertexColorCached[0];
+                d->color.g = v->cn[1] * vertexColorCached[1];
+                d->color.b = v->cn[2] * vertexColorCached[2];
             } else {
                 d->color.r = v->cn[0];
                 d->color.g = v->cn[1];
@@ -975,17 +1003,21 @@ static void OPTIMIZE_O3 gfx_sp_tri1(uint8_t vtx1_idx, uint8_t vtx2_idx, uint8_t 
     }
 
     if (rdp.viewport_or_scissor_changed) {
-        if (memcmp(&rdp.viewport, &rendering_state.viewport, sizeof(rdp.viewport)) != 0) {
+        static uint32_t x_adjust_4by3_prev;
+        if (memcmp(&rdp.viewport, &rendering_state.viewport, sizeof(rdp.viewport)) != 0
+            || x_adjust_4by3_prev != gfx_current_dimensions.x_adjust_4by3) {
             gfx_flush();
-            gfx_rapi->set_viewport(rdp.viewport.x, rdp.viewport.y, rdp.viewport.width, rdp.viewport.height);
+            gfx_rapi->set_viewport(rdp.viewport.x + gfx_current_dimensions.x_adjust_4by3, rdp.viewport.y, rdp.viewport.width, rdp.viewport.height);
             rendering_state.viewport = rdp.viewport;
         }
-        if (memcmp(&rdp.scissor, &rendering_state.scissor, sizeof(rdp.scissor)) != 0) {
+        if (memcmp(&rdp.scissor, &rendering_state.scissor, sizeof(rdp.scissor)) != 0
+            || x_adjust_4by3_prev != gfx_current_dimensions.x_adjust_4by3) {
             gfx_flush();
-            gfx_rapi->set_scissor(rdp.scissor.x, rdp.scissor.y, rdp.scissor.width, rdp.scissor.height);
+            gfx_rapi->set_scissor(rdp.scissor.x + gfx_current_dimensions.x_adjust_4by3, rdp.scissor.y, rdp.scissor.width, rdp.scissor.height);
             rendering_state.scissor = rdp.scissor;
         }
         rdp.viewport_or_scissor_changed = false;
+        x_adjust_4by3_prev = gfx_current_dimensions.x_adjust_4by3;
     }
 
     struct CombineMode* cm = &rdp.combine_mode;
@@ -1824,6 +1856,9 @@ static void gfx_sp_reset(void) {
 
 void gfx_get_dimensions(uint32_t *width, uint32_t *height) {
     gfx_wapi->get_dimensions(width, height);
+    if (configForce4By3) {
+        *width = gfx_current_dimensions.aspect_ratio * *height;
+    }
 }
 
 void gfx_init(struct GfxWindowManagerAPI *wapi, struct GfxRenderingAPI *rapi, const char *window_title) {
@@ -1853,6 +1888,11 @@ void gfx_start_frame(void) {
         // Avoid division by zero
         gfx_current_dimensions.height = 1;
     }
+    if (configForce4By3
+        && ((4.0f / 3.0f) * gfx_current_dimensions.height) < gfx_current_dimensions.width) {
+        gfx_current_dimensions.x_adjust_4by3 = (gfx_current_dimensions.width - (4.0f / 3.0f) * gfx_current_dimensions.height) / 2;
+        gfx_current_dimensions.width = (4.0f / 3.0f) * gfx_current_dimensions.height;
+    } else { gfx_current_dimensions.x_adjust_4by3 = 0; }
     gfx_current_dimensions.aspect_ratio = ((float)gfx_current_dimensions.width / (float)gfx_current_dimensions.height);
     gfx_current_dimensions.x_adjust_ratio = (4.0f / 3.0f) / gfx_current_dimensions.aspect_ratio;
 }

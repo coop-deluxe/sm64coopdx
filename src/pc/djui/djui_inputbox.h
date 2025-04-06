@@ -15,6 +15,10 @@ struct DjuiInputbox {
     u16 imePos;
 };
 
+extern u8 gDjuiInputHeldShift;
+extern u8 gDjuiInputHeldControl;
+extern u8 gDjuiInputHeldAlt;
+
 void djui_inputbox_on_focus_begin(UNUSED struct DjuiBase* base);
 void djui_inputbox_on_focus_end(UNUSED struct DjuiBase* base);
 void djui_inputbox_set_text_color(struct DjuiInputbox* inputbox, u8 r, u8 g, u8 b, u8 a);

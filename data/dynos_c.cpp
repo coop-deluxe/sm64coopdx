@@ -270,6 +270,10 @@ void dynos_model_overwrite_slot(u32 srcSlot, u32 dstSlot) {
     DynOS_Model_OverwriteSlot(srcSlot, dstSlot);
 }
 
+Gfx *dynos_model_duplicate_displaylist(Gfx* gfx) {
+    return DynOS_Model_Duplicate_DisplayList(gfx);
+}
+
 // -- other -- //
 
 void dynos_mod_shutdown(void) {
@@ -278,6 +282,10 @@ void dynos_mod_shutdown(void) {
 
 void dynos_add_scroll_target(u32 index, const char *name, u32 offset, u32 size) {
     DynOS_Add_Scroll_Target(index, name, offset, size);
+}
+
+void dynos_pending_scroll_targets_clear(void) {
+    DynOS_Pending_Scroll_Targets_Clear();
 }
 
 }

@@ -50,6 +50,7 @@ enum LuaObjectAutogenType {
     LOT_FIRSTPERSONCAMERA,
     LOT_FLOORGEOMETRY,
     LOT_FNGRAPHNODE,
+    LOT_GFX,
     LOT_GLOBALOBJECTANIMATIONS,
     LOT_GLOBALOBJECTCOLLISIONDATA,
     LOT_GLOBALTEXTURES,
@@ -105,6 +106,7 @@ enum LuaObjectAutogenType {
     LOT_PLAYERGEOMETRY,
     LOT_PLAYERPALETTE,
     LOT_RAYINTERSECTIONINFO,
+    LOT_ROMHACKCAMERASETTINGS,
     LOT_SERVERSETTINGS,
     LOT_SOUNDSTATE,
     LOT_SPAWNINFO,
@@ -115,6 +117,7 @@ enum LuaObjectAutogenType {
     LOT_SURFACE,
     LOT_TEXTUREINFO,
     LOT_TRANSITIONINFO,
+    LOT_VTX,
     LOT_VTX_INTERP,
     LOT_WALLCOLLISIONDATA,
     LOT_WARPNODE,
@@ -127,6 +130,7 @@ enum LuaObjectAutogenType {
     LOT_AUTOGEN_MAX,
 };
 
+const char *smlua_get_lot_name(u16 lot);
 struct LuaObjectField* smlua_get_object_field_autogen(u16 lot, const char* key);
 
 #endif

@@ -14,13 +14,33 @@ enum RomhackCameraOverride {
     RCO_ALL,
     RCO_ALL_EXCEPT_BOWSER,
     RCO_NONE,
+    RCO_ALL_INCLUDING_VANILLA,
+    RCO_ALL_VANILLA_EXCEPT_BOWSER,
+    RCO_DISABLE
 };
 
+enum RomhackCameraEnable {
+    RCE_AUTOMATIC,
+    RCE_ON,
+    RCE_OFF
+};
+
+struct RomhackCameraSettings {
+    enum RomhackCameraOverride enable;
+    u8 centering;
+    u8 dpad;
+    u8 collisions;
+    u8 slowFall;
+    u32 zoomedInDist;
+    u32 zoomedOutDist;
+    u32 zoomedInHeight;
+    u32 zoomedOutHeight;
+    u8 modsOnly;
+};
+extern struct RomhackCameraSettings gRomhackCameraSettings;
+
 extern u8 gOverrideFreezeCamera;
-extern enum RomhackCameraOverride gOverrideRomhackCamera;
-extern u8 gRomhackCameraAllowCentering;
 extern u8 gOverrideAllowToxicGasCamera;
-extern u8 gRomhackCameraAllowDpad;
 
 /**
  * @file camera.h
@@ -1235,21 +1255,24 @@ This is useful for predefined static views in specific areas
 s32 set_camera_mode_fixed(struct Camera* c, s16 x, s16 y, s16 z);
 
 /* |description|
+Takes in an SM64 angle unit and returns the nearest 45 degree angle, also in SM64 angle units.
+Useful when needing to align angles (camera, yaw, etc.)
+|descriptionEnd| */
+s32 snap_to_45_degrees(s16 angle);
+
+/* |description|
 Toggles whether the camera uses course-specific settings.
 This is useful for enabling or disabling custom behaviors in specific courses or areas
 |descriptionEnd| */
 void camera_set_use_course_specific_settings(u8 enable);
 
 /* |description|
-Toggles collision settings for the ROM hack camera.
-This enables or disables specific collision behaviors in modded levels
-|descriptionEnd| */
-void rom_hack_cam_set_collisions(u8 enable);
-
-/* |description|
 Centers the ROM hack camera.
 This function is designed for non-standard level layouts and modded game environments
 |descriptionEnd| */
 void center_rom_hack_camera(void);
+
+void romhack_camera_init_settings(void);
+void romhack_camera_reset_settings(void);
 
 #endif // CAMERA_H

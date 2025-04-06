@@ -33,6 +33,7 @@
 - [FirstPersonCamera](#FirstPersonCamera)
 - [FloorGeometry](#FloorGeometry)
 - [FnGraphNode](#FnGraphNode)
+- [Gfx](#Gfx)
 - [GlobalObjectAnimations](#GlobalObjectAnimations)
 - [GlobalObjectCollisionData](#GlobalObjectCollisionData)
 - [GlobalTextures](#GlobalTextures)
@@ -91,6 +92,7 @@
 - [PlayerGeometry](#PlayerGeometry)
 - [PlayerPalette](#PlayerPalette)
 - [RayIntersectionInfo](#RayIntersectionInfo)
+- [RomhackCameraSettings](#RomhackCameraSettings)
 - [SPTask](#SPTask)
 - [ServerSettings](#ServerSettings)
 - [SoundState](#SoundState)
@@ -109,6 +111,7 @@
 - [Vec3s](#Vec3s)
 - [Vec4f](#Vec4f)
 - [Vec4s](#Vec4s)
+- [Vtx](#Vtx)
 - [Vtx_Interp](#Vtx_Interp)
 - [WallCollisionData](#WallCollisionData)
 - [WarpNode](#WarpNode)
@@ -704,6 +707,8 @@
 | animWaterThrowObj | `integer` | read-only |
 | animWingCapFly | `integer` | read-only |
 | cameraHudHead | `integer` | read-only |
+| capEnemyDecalGfx | `Pointer` <`Gfx`> | read-only |
+| capEnemyGfx | `Pointer` <`Gfx`> | read-only |
 | capEnemyLayer | `integer` | read-only |
 | capMetalModelId | `integer` | read-only |
 | capMetalWingModelId | `integer` | read-only |
@@ -873,6 +878,7 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
+| displayList | `Pointer` <`Gfx`> |  |
 | next | [DisplayListNode](structs.md#DisplayListNode) |  |
 | usingCamSpace | `integer` |  |
 
@@ -996,6 +1002,17 @@
 | Field | Type | Access |
 | ----- | ---- | ------ |
 | node | [GraphNode](structs.md#GraphNode) | read-only |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [Gfx](#Gfx)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| w0 | `integer` | read-only |
+| w1 | `integer` | read-only |
 
 [:arrow_up_small:](#)
 
@@ -1220,6 +1237,7 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
+| displayList | `Pointer` <`Gfx`> |  |
 | node | [GraphNode](structs.md#GraphNode) | read-only |
 | translation | [Vec3s](structs.md#Vec3s) | read-only |
 
@@ -1246,6 +1264,7 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
+| displayList | `Pointer` <`Gfx`> |  |
 | node | [GraphNode](structs.md#GraphNode) | read-only |
 | translation | [Vec3s](structs.md#Vec3s) | read-only |
 
@@ -1288,6 +1307,7 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
+| displayList | `Pointer` <`Gfx`> |  |
 | node | [GraphNode](structs.md#GraphNode) | read-only |
 
 [:arrow_up_small:](#)
@@ -1420,6 +1440,7 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
+| displayList | `Pointer` <`Gfx`> |  |
 | node | [GraphNode](structs.md#GraphNode) | read-only |
 | prevRotation | [Vec3s](structs.md#Vec3s) | read-only |
 | prevTimestamp | `integer` |  |
@@ -1433,6 +1454,7 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
+| displayList | `Pointer` <`Gfx`> |  |
 | node | [GraphNode](structs.md#GraphNode) | read-only |
 | prevScale | `number` |  |
 | scale | `number` |  |
@@ -1481,6 +1503,7 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
+| displayList | `Pointer` <`Gfx`> |  |
 | node | [GraphNode](structs.md#GraphNode) | read-only |
 | pad1E | `Array` <`integer`> |  |
 | translation | [Vec3s](structs.md#Vec3s) | read-only |
@@ -1493,6 +1516,7 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
+| displayList | `Pointer` <`Gfx`> |  |
 | node | [GraphNode](structs.md#GraphNode) | read-only |
 | rotation | [Vec3s](structs.md#Vec3s) | read-only |
 | translation | [Vec3s](structs.md#Vec3s) | read-only |
@@ -2737,6 +2761,8 @@
 | oYoshiChosenHome | `integer` |  |
 | oYoshiTargetYaw | `integer` |  |
 | oBreakableWallForce | `integer` |  |
+| oLightID | `integer` |  |
+| oLightRadius | `number` |  |
 
 [:arrow_up_small:](#)
 
@@ -2815,6 +2841,7 @@
 | marioIsUnder | `integer` |  |
 | marioWasUnder | `integer` |  |
 | marioWentUnder | `integer` |  |
+| normalDisplayList | `Pointer` <`Gfx`> | read-only |
 | passiveDispersionFactor | `number` |  |
 | passiveRippleDecay | `number` |  |
 | passiveRippleMag | `number` |  |
@@ -2824,6 +2851,7 @@
 | posY | `number` |  |
 | posZ | `number` |  |
 | rippleDecay | `number` |  |
+| rippleDisplayList | `Pointer` <`Gfx`> | read-only |
 | rippleTimer | `number` |  |
 | rippleTrigger | `integer` |  |
 | rippleX | `number` |  |
@@ -2941,6 +2969,25 @@
 | ----- | ---- | ------ |
 | hitPos | [Vec3f](structs.md#Vec3f) | read-only |
 | surface | [Surface](structs.md#Surface) |  |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [RomhackCameraSettings](#RomhackCameraSettings)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| centering | `integer` |  |
+| collisions | `integer` |  |
+| dpad | `integer` |  |
+| enable | [enum RomhackCameraOverride](constants.md#enum-RomhackCameraOverride) |  |
+| modsOnly | `integer` |  |
+| slowFall | `integer` |  |
+| zoomedInDist | `integer` |  |
+| zoomedInHeight | `integer` |  |
+| zoomedOutDist | `integer` |  |
+| zoomedOutHeight | `integer` |  |
 
 [:arrow_up_small:](#)
 
@@ -3193,6 +3240,19 @@
 | y | `integer` |  |
 | z | `integer` |  |
 | w | `integer` |  |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [Vtx](#Vtx)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| cn | `Array` <`integer`> |  |
+| flag | `integer` |  |
+| ob | `Array` <`number`> |  |
+| tc | `Array` <`integer`> |  |
 
 [:arrow_up_small:](#)
 

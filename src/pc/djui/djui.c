@@ -27,6 +27,7 @@ bool gDjuiInMainMenu = true;
 bool gDjuiInPlayerMenu = false;
 bool gDjuiDisabled = false;
 bool gDjuiShuttingDown = false;
+bool gDjuiChangingTheme = false;
 static bool sDjuiInited = false;
 static struct DjuiRoot* sDjuiRootBehind = NULL;
 

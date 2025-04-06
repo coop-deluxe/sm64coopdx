@@ -17,6 +17,7 @@ static char* sDebugContextNames[] = {
     "RENDER",
     "LEVEL",
     "HOOK",
+    "LIGHTING",
     "OTHER",
     "MAX",
 };

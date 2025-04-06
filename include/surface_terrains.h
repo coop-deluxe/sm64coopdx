@@ -165,9 +165,11 @@
 #define SURFACE_FLAG_NO_CAM_COLLISION (1 << 1)
 #define SURFACE_FLAG_X_PROJECTION     (1 << 3)
 
-#define HAZARD_TYPE_LAVA_FLOOR 1
-#define HAZARD_TYPE_LAVA_WALL  2
-#define HAZARD_TYPE_QUICKSAND  3
+#define HAZARD_TYPE_LAVA_FLOOR      1
+#define HAZARD_TYPE_LAVA_WALL       2
+#define HAZARD_TYPE_QUICKSAND       3
+#define HAZARD_TYPE_HORIZONTAL_WIND 4
+#define HAZARD_TYPE_VERTICAL_WIND   5
 
 // These are effectively unique "surface" types like those defined higher
 // And they are used as collision commands to load certain functions

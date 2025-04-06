@@ -22,6 +22,7 @@ in_files = [
     "src/game/interaction.c",
     "src/game/interaction.h",
     "src/pc/djui/djui_hud_utils.h",
+    "src/pc/controller/controller_mouse.h",
     "include/behavior_table.h",
     "src/pc/lua/utils/smlua_model_utils.h",
     "src/pc/lua/utils/smlua_misc_utils.h",
@@ -47,7 +48,8 @@ in_files = [
     "src/pc/djui/djui_console.h",
     "src/game/player_palette.h",
     "src/pc/network/lag_compensation.h",
-    "src/pc/djui/djui_panel_menu.h"
+    "src/pc/djui/djui_panel_menu.h",
+    "include/PR/gbi.h"
 ]
 
 exclude_constants = {
@@ -55,7 +57,8 @@ exclude_constants = {
     "src/game/obj_behaviors.c": [ "^o$" ],
     "src/pc/djui/djui_console.h": [ "CONSOLE_MAX_TMP_BUFFER" ],
     "src/pc/lua/smlua_hooks.h": [ "MAX_HOOKED_MOD_MENU_ELEMENTS" ],
-    "src/pc/djui/djui_panel_menu.h": [ "RAINBOW_TEXT_LEN" ]
+    "src/pc/djui/djui_panel_menu.h": [ "RAINBOW_TEXT_LEN" ],
+    "include/PR/gbi.h": ["RM_AA_", "G_RM_", "G_CC_"]
 }
 
 include_constants = {
@@ -76,28 +79,33 @@ verbose = len(sys.argv) > 1 and (sys.argv[1] == "-v" or sys.argv[1] == "--verbos
 overrideConstant = {
     'VERSION_REGION': '"US"',
 }
+forced_defines = ['F3DEX_GBI_2']
 
 ############################################################################
 
 def validate_identifiers(built_files):
-    all_identifiers = [x.group()[1:] for x in re.finditer(r'[(, ][A-Z_][A-Z0-9_]*', built_files)]
+    files = ''
+    for f in built_files.splitlines():
+        if f.startswith('#'):
+            continue
+        files += f + '\n'
+    all_identifiers = [x.group()[1:] for x in re.finditer(r'[(, ][A-Z_][A-Z0-9_]*', files)]
     all_identifiers = set(all_identifiers)
     for ident in all_identifiers:
         if ident in pretend_find:
             continue
-        if ident + ' = ' not in built_files:
+        if ident + '=' not in built_files:
             print('COULD NOT FIND ' + ident)
-
 
 ############################################################################
 
-def saw_constant(identifier):
+def saw_constant(identifier, inIfBlock):
+    if inIfBlock:
+        return False
     if identifier in seen_constants:
         print("SAW DUPLICATE CONSTANT: " + identifier)
         return True
     else:
-        global totalConstants
-        totalConstants += 1
         seen_constants.append(identifier)
         return False
 
@@ -116,13 +124,13 @@ def allowed_identifier(filename, ident):
             if re.search(include, ident) != None:
                 return True
         return False
-    
+
     if ident in overrideConstant:
         return False
 
     return True
 
-def process_enum(filename, line):
+def process_enum(filename, line, inIfBlock):
     _, ident, val = line.split(' ', 2)
 
     if '{' not in val or '}' not in val:
@@ -159,7 +167,7 @@ def process_enum(filename, line):
         if allowed_identifier(filename, field):
             constants.append([field, str(index)])
 
-            if saw_constant(field):
+            if saw_constant(field, inIfBlock):
                 print('>>> ' + line)
 
         index += 1
@@ -169,7 +177,7 @@ def process_enum(filename, line):
     return ret
 
 
-def process_define(filename, line):
+def process_define(filename, line, inIfBlock):
     _, ident, val = line.split(' ', 2)
 
     val = val.replace('(u8)', '')
@@ -188,17 +196,17 @@ def process_define(filename, line):
     if not allowed_identifier(filename, ident):
         return None
 
-    if saw_constant(ident):
+    if saw_constant(ident, inIfBlock):
         print('>>> ' + line)
 
     return [ident, val]
 
 
-def process_line(filename, line):
+def process_line(filename, line, inIfBlock):
     if line.startswith('enum '):
-        return process_enum(filename, line)
+        return process_enum(filename, line, inIfBlock)
     elif line.startswith('#define '):
-        return process_define(filename, line)
+        return process_define(filename, line, inIfBlock)
     else:
         print("UNRECOGNIZED LINE: " + line)
         return None
@@ -209,13 +217,48 @@ def process_file(filename):
 
     constants = []
     lines = extract_constants(get_path(filename)).splitlines()
+
+    block_stack = None
+
     for line in lines:
-        c = process_line(filename, line)
-        if c != None:
-            constants.append(c)
+        if line.startswith('#if'):
+            if not block_stack: block_stack = []
+            block_stack.append({
+                'if_line': line,
+                'then': [],
+                'else': None,
+                'else_line': None,
+                'ignore': line.endswith('_H') or line.endswith('_H_')
+            })
+        elif line.startswith("#else"):
+            if not block_stack: continue
+            current = block_stack[-1]
+            if current['ignore']: continue
+            current['else_line'] = line
+            current['else'] = []
+        elif line.startswith("#endif"):
+            if not block_stack: continue
+            block = block_stack.pop()
+            if not block['ignore'] and len(block['then']) > 0 and block['else']:
+                block['then'].append([block['else_line'] + ' // ' + block['if_line']]) # append else line
+                block['else'].append([line + ' // ' + block['if_line']]) # append endif line
+                constants.append([block['if_line']])
+            constants.extend(block['then'])
+            if block['else']:
+                constants.extend(block['else'])
+        else:
+            c = process_line(filename, line, block_stack is not None)
+            if c is not None:
+                if block_stack and not block_stack[-1]['ignore']:
+                    current = block_stack[-1]
+                    if current['else'] is not None:
+                        current['else'].append(c)
+                    else:
+                        current['then'].append(c)
+                else:
+                    constants.append(c)
 
     processed_file['constants'] = constants
-
     return processed_file
 
 def process_files():
@@ -241,7 +284,10 @@ def build_constant(processed_constant):
         constants = [processed_constant]
 
     for c in constants:
-        s += '%s = %s\n' % (c[0], c[1].replace('"', "'"))
+        if c[0].startswith('#'):
+            s += '%s\n' % c[0]
+            continue
+        s += '%s=%s\n' % (c[0], c[1].replace('"', "'"))
 
     return s
 
@@ -262,15 +308,21 @@ def build_files(processed_files):
 def build_to_c(built_files):
     txt = ''
     with open(get_path(in_filename), 'r') as f:
-        txt = f.read()
+        txt = ''
+        for line in f.readlines():
+            txt += line.strip() + '\n'
     txt += '\n' + built_files
 
     while ('\n\n' in txt):
         txt = txt.replace('\n\n', '\n')
 
     lines = txt.splitlines()
-    txt = 'char gSmluaConstants[] = ""\n'
+    txt = "".join(f"#define {item}\n" for item in forced_defines)
+    txt += 'char gSmluaConstants[] = ""\n'
     for line in lines:
+        if line.startswith("#"):
+            txt += '%s\n' % line
+            continue
         txt += '"%s\\n"\n' % line
     txt += ';'
     return txt
@@ -282,7 +334,6 @@ def doc_constant_index(processed_files):
     for processed_file in processed_files:
         s += '- [%s](#%s)\n' % (processed_file['filename'], processed_file['filename'].replace('.', ''))
         constants = [x for x in processed_file['constants'] if 'identifier' in x]
-        constants = sorted(constants, key=lambda d: d['identifier'])
         for c in constants:
             s += '    - [enum %s](#enum-%s)\n' % (c['identifier'], c['identifier'])
     s += '\n<br />\n\n'
@@ -307,13 +358,15 @@ def doc_constant(processed_constant):
         return s
 
     for c in [processed_constant]:
+        if c[0].startswith('#'):
+            continue
         s += '- %s\n' % (c[0])
 
     return s
 
 def doc_file(processed_file):
     s = '## [%s](#%s)\n' % (processed_file['filename'], processed_file['filename'])
-    constants = sorted(processed_file['constants'], key=lambda d: 'zzz' + d['identifier'] if 'identifier' in d else d[0])
+    constants = processed_file['constants']
     for c in constants:
         s += doc_constant(c)
 
@@ -332,26 +385,39 @@ def doc_files(processed_files):
 ############################################################################
 
 def def_constant(processed_constant):
+    global totalConstants
     constants = processed_constant
     s = ''
 
     is_enum = 'identifier' in processed_constant
     if is_enum:
-        s += '\n--- @class %s\n' % translate_to_def(processed_constant['identifier'])
         constants = processed_constant['constants']
         if len(constants) == 0:
             return ''
+        id = translate_to_def(processed_constant['identifier'])
+        klen = 0
+        vlen = 0
+        s += '\n'
         for c in constants:
-            s += '\n--- @type %s\n' % translate_to_def(processed_constant['identifier'])
-            s += '%s = %s\n' % (c[0], c[1])
+            klen = max(klen, len(c[0]))
+            vlen = max(vlen, len(c[1]))
+        for c in constants:
+            s += c[0].ljust(klen) + ' = ' + c[1].rjust(vlen) + ' --- @type %s\n' % id
+            totalConstants += 1
+        s += '\n--- @alias %s\n' % id
+        for c in constants:
+            s += '--- | `%s`\n' % c[0]
         return s
 
     for c in [processed_constant]:
+        if c[0].startswith('#'):
+            continue
         if '"' in c[1]:
             s += '\n--- @type string\n'
         else:
             s += '\n--- @type integer\n'
         s += '%s = %s\n' % (c[0], c[1])
+        totalConstants += 1
 
     return s
 
@@ -362,7 +428,7 @@ def build_to_def(processed_files):
         s += '\n'
 
     for file in processed_files:
-        constants = sorted(file['constants'], key=lambda d: 'zzz' + d['identifier'] if 'identifier' in d else d[0])
+        constants = file['constants']
         for c in constants:
             s += def_constant(c)
 
