@@ -474,13 +474,13 @@ Traverses a display list. Takes a Lua function as a parameter, which is called b
 
 <br />
 
-## [gfx_get_vtx](#gfx_get_vtx)
+## [gfx_get_command](#gfx_get_command)
 
 ### Description
-Gets a vertex from a display list command if it has the correct op. Intended to be used with `gfx_parse`
+Gets a command from a display list at position `offset`
 
 ### Lua Example
-`local PointerValue = gfx_get_vtx(gfx, offset)`
+`local PointerValue = gfx_get_command(gfx, offset)`
 
 ### Parameters
 | Field | Type |
@@ -489,22 +489,68 @@ Gets a vertex from a display list command if it has the correct op. Intended to 
 | offset | `integer` |
 
 ### Returns
-- `Pointer` <`Vtx`>
+- `Pointer` <`Gfx`>
 
 ### C Prototype
-`Vtx *gfx_get_vtx(Gfx* gfx, u16 offset);`
+`Gfx *gfx_get_command(Gfx *gfx, u32 offset);`
 
 [:arrow_up_small:](#)
 
 <br />
 
-## [gfx_get_vtx_count](#gfx_get_vtx_count)
+## [gfx_get_display_list](#gfx_get_display_list)
 
 ### Description
-Gets the number of vertices from a display list command if it has the correct op
+Gets the display list from a display list command if it has the op `G_DL`
 
 ### Lua Example
-`local integerValue = gfx_get_vtx_count(cmd)`
+`local PointerValue = gfx_get_display_list(cmd)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| cmd | `Pointer` <`Gfx`> |
+
+### Returns
+- `Pointer` <`Gfx`>
+
+### C Prototype
+`Gfx *gfx_get_display_list(Gfx *cmd);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [gfx_get_vertex_buffer](#gfx_get_vertex_buffer)
+
+### Description
+Gets the vertex buffer from a display list command if it has the op `G_VTX`
+
+### Lua Example
+`local PointerValue = gfx_get_vertex_buffer(cmd)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| cmd | `Pointer` <`Gfx`> |
+
+### Returns
+- `Pointer` <`Vtx`>
+
+### C Prototype
+`Vtx *gfx_get_vertex_buffer(Gfx *cmd);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [gfx_get_vertex_count](#gfx_get_vertex_count)
+
+### Description
+Gets the number of vertices from a display list command if it has the op `G_VTX`
+
+### Lua Example
+`local integerValue = gfx_get_vertex_count(cmd)`
 
 ### Parameters
 | Field | Type |
@@ -515,7 +561,7 @@ Gets the number of vertices from a display list command if it has the correct op
 - `integer`
 
 ### C Prototype
-`u16 gfx_get_vtx_count(Gfx* cmd);`
+`u16 gfx_get_vertex_count(Gfx *cmd);`
 
 [:arrow_up_small:](#)
 

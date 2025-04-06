@@ -30,16 +30,6 @@ SHAPES = {
     }
 }
 
-local triangle_index = 0
-
---- @param x integer
---- @param shift integer
---- @param width integer
---- Reverse of _SHIFTL(x, shift, width). Return the `width` bits at position `shift`.
-local function unshiftl(x, shift, width)
-    return (x >> shift) & ((1 << width) - 1)
-end
-
 --- @param gfx Gfx
 --- Set the geometry mode of the current shape.
 local function set_geometry_mode(gfx)
@@ -51,33 +41,40 @@ end
 --- Compute the vertices of the current shape and fill the vertex buffer.
 local function compute_vertices(gfx)
     local vertices = SHAPES[current_shape + 1].get_vertices()
-    for i, v in ipairs(vertices) do
-        local vtx = gfx_get_vtx(gfx, i - 1)
-        gfx_set_vtx_v(vtx, v.x, v.y, v.z, v.tu, v.tv, v.r, v.g, v.b, 0xFF)
+    local vtx = gfx_get_vertex_buffer(gfx)
+    for i, vertex in ipairs(vertices) do
+        local v = vtx_get_vertex(vtx, i - 1)
+        v.x = vertex.x
+        v.y = vertex.y
+        v.z = vertex.z
+        v.tu = vertex.tu
+        v.tv = vertex.tv
+        v.r = vertex.r
+        v.g = vertex.g
+        v.b = vertex.b
+        v.a = 0xFF
     end
 end
 
 --- @param gfx Gfx
---- @param i integer
 --- Build the triangles for the current shape.
---- Since there can be only 2 triangles per command, we need to call this function multiple times.
-local function build_triangles(gfx, i)
-    local triangles = SHAPES[current_shape + 1].get_triangles(i)
-    if #triangles == 6 then
-        gfx_set_command(gfx, "gsSP2Triangles(%i, %i, %i, 0, %i, %i, %i, 0)",
-            triangles[1], triangles[2], triangles[3],
-            triangles[4], triangles[5], triangles[6]
-        )
-    elseif #triangles == 3 then
-        gfx_set_command(gfx, "gsSP1Triangle(%i, %i, %i, 0)",
-            triangles[1], triangles[2], triangles[3]
-        )
-    else
-        -- We can't replace the unused triangle commands by "gsSPEndDisplayList()", because
-        -- it will permanently shorten the display list for future gfx_parse calls.
-        -- Instead we can fill them with the command below, which is equivalent to a NoOp.
-        gfx_set_command(gfx, "gsSP1Triangle(0,0,0,0)")
+local function build_triangles(gfx)
+    local triangles = SHAPES[current_shape + 1].get_triangles()
+    for i, indices in ipairs(triangles) do
+        local cmd = gfx_get_command(gfx, i - 1)
+        if #indices == 6 then
+            gfx_set_command(cmd, "gsSP2Triangles(%i, %i, %i, 0, %i, %i, %i, 0)",
+                indices[1], indices[2], indices[3],
+                indices[4], indices[5], indices[6]
+            )
+        elseif #indices == 3 then
+            gfx_set_command(cmd, "gsSP1Triangle(%i, %i, %i, 0)",
+                indices[1], indices[2], indices[3]
+            )
+        end
     end
+    local cmd_end = gfx_get_command(gfx, #triangles)
+    gfx_set_command(cmd_end, "gsSPEndDisplayList()")
 end
 
 --- @param gfx Gfx
@@ -90,39 +87,9 @@ end
 --- @param gfx Gfx
 --- @param on integer
 --- Toggle on/off the texture rendering and set the texture scaling.
-local function toggle_texture(gfx, on)
+local function set_texture_scaling(gfx, on)
     local scaling = SHAPES[current_shape + 1].get_texture_scaling()
     gfx_set_command(gfx, "gsSPTexture(%i, %i, 0, G_TX_RENDERTILE, %i)", scaling, scaling, on)
-end
-
---- @param gfx Gfx
---- @param op integer
---- Update the shape display list.
-local function update_shape(gfx, op)
-
-    -- gsSPGeometryMode: change the geometry mode
-    if op == G_GEOMETRYMODE then
-        set_geometry_mode(gfx)
-
-    -- gsSPVertex: compute and fill the vertex buffer
-    elseif op == G_VTX then
-        compute_vertices(gfx)
-
-    -- gsSP1Triangle/gsSP2Triangles: build up to 2 triangles per call
-    -- We need to keep track of the command index to know which triangles to build
-    elseif op == G_TRI1 or op == G_TRI2 then
-        build_triangles(gfx, triangle_index)
-        triangle_index = triangle_index + 1
-
-    -- gsDPSetTextureImage: change the texture
-    elseif op == G_SETTIMG then
-        update_texture(gfx)
-
-    -- gsSPTexture: toggle the texture rendering and set scaling
-    -- Read the toggle of the current command by directly accessing the words fields
-    elseif op == G_TEXTURE then
-        toggle_texture(gfx, unshiftl(gfx.w0, 1, 7))
-    end
 end
 
 --- @param node GraphNode
@@ -130,6 +97,38 @@ end
 --- The custom GEO ASM function.
 function geo_update_shape(node, matStackIndex)
     local gfx = cast_graph_node(node.next).displayList
-    triangle_index = 0
-    gfx_parse(gfx, update_shape)
+
+    -- Since the layout of the node display list is known, no need to parse it
+    -- We can retrieve the commands directly with `gfx_get_command`
+    -- Index | Command              | Goal
+    -- ------|----------------------|----------------------------------------
+    --   [0] | gsSPGeometryMode     | Change the geometry mode
+    --   [2] | gsSPTexture          | Change the texture scaling
+    --   [3] | gsDPLoadTextureBlock | Update the texture
+    --  [10] | gsSPVertex           | Compute vertices
+    --  [11] | gsSPDisplayList      | Build triangles
+    --  [12] | gsSPTexture          | Change the texture scaling
+
+    -- Change the geometry mode
+    local cmd_geometry_mode = gfx_get_command(gfx, 0)
+    set_geometry_mode(cmd_geometry_mode)
+
+    -- Change the texture scaling
+    local cmd_texture_scaling_1 = gfx_get_command(gfx, 2)
+    set_texture_scaling(cmd_texture_scaling_1, 1)
+    local cmd_texture_scaling_2 = gfx_get_command(gfx, 12)
+    set_texture_scaling(cmd_texture_scaling_2, 0)
+
+    -- Compute vertices
+    local cmd_vertices = gfx_get_command(gfx, 10)
+    compute_vertices(cmd_vertices)
+
+    -- Build triangles
+    local cmd_triangles = gfx_get_command(gfx, 11)
+    local gfx_triangles = gfx_get_display_list(cmd_triangles)
+    build_triangles(gfx_triangles)
+
+    -- Update texture
+    local cmd_texture = gfx_get_command(gfx, 3)
+    update_texture(cmd_texture)
 end

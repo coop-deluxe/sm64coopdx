@@ -9672,16 +9672,30 @@ end
 
 --- @param gfx Pointer_Gfx
 --- @param offset integer
+--- @return Pointer_Gfx
+--- Gets a command from a display list at position `offset`
+function gfx_get_command(gfx, offset)
+    -- ...
+end
+
+--- @param cmd Pointer_Gfx
+--- @return Pointer_Gfx
+--- Gets the display list from a display list command if it has the op `G_DL`
+function gfx_get_display_list(cmd)
+    -- ...
+end
+
+--- @param cmd Pointer_Gfx
 --- @return Pointer_Vtx
---- Gets a vertex from a display list command if it has the correct op. Intended to be used with `gfx_parse`
-function gfx_get_vtx(gfx, offset)
+--- Gets the vertex buffer from a display list command if it has the op `G_VTX`
+function gfx_get_vertex_buffer(cmd)
     -- ...
 end
 
 --- @param cmd Pointer_Gfx
 --- @return integer
---- Gets the number of vertices from a display list command if it has the correct op
-function gfx_get_vtx_count(cmd)
+--- Gets the number of vertices from a display list command if it has the op `G_VTX`
+function gfx_get_vertex_count(cmd)
     -- ...
 end
 
@@ -9720,6 +9734,14 @@ end
 --- @param areaIndex integer
 --- Instantly changes the current area to `areaIndex`
 function smlua_level_util_change_area(areaIndex)
+    -- ...
+end
+
+--- @param vtx Pointer_Vtx
+--- @param offset integer
+--- @return Pointer_Vtx
+--- Gets a vertex from a vertex buffer at position `offset`
+function vtx_get_vertex(vtx, offset)
     -- ...
 end
 

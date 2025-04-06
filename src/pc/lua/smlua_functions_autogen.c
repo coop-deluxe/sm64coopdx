@@ -30057,40 +30057,76 @@ int smlua_func_gfx_parse(lua_State* L) {
     return 1;
 }
 
-int smlua_func_gfx_get_vtx(lua_State* L) {
+int smlua_func_gfx_get_command(lua_State* L) {
     if (L == NULL) { return 0; }
 
     int top = lua_gettop(L);
     if (top != 2) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "gfx_get_vtx", 2, top);
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "gfx_get_command", 2, top);
         return 0;
     }
 
     if (lua_isnil(L, 1)) { return 0; }
-    Gfx* gfx = (Gfx*)smlua_to_cobject(L, 1, LOT_GFX);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "gfx_get_vtx"); return 0; }
-    u16 offset = smlua_to_integer(L, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "gfx_get_vtx"); return 0; }
+    Gfx * gfx = (Gfx *)smlua_to_cobject(L, 1, LOT_GFX);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "gfx_get_command"); return 0; }
+    u32 offset = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "gfx_get_command"); return 0; }
 
-    smlua_push_object(L, LOT_VTX, gfx_get_vtx(gfx, offset), NULL);
+    smlua_push_object(L, LOT_GFX, gfx_get_command(gfx, offset), NULL);
 
     return 1;
 }
 
-int smlua_func_gfx_get_vtx_count(lua_State* L) {
+int smlua_func_gfx_get_display_list(lua_State* L) {
     if (L == NULL) { return 0; }
 
     int top = lua_gettop(L);
     if (top != 1) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "gfx_get_vtx_count", 1, top);
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "gfx_get_display_list", 1, top);
         return 0;
     }
 
     if (lua_isnil(L, 1)) { return 0; }
-    Gfx* cmd = (Gfx*)smlua_to_cobject(L, 1, LOT_GFX);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "gfx_get_vtx_count"); return 0; }
+    Gfx * cmd = (Gfx *)smlua_to_cobject(L, 1, LOT_GFX);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "gfx_get_display_list"); return 0; }
 
-    lua_pushinteger(L, gfx_get_vtx_count(cmd));
+    smlua_push_object(L, LOT_GFX, gfx_get_display_list(cmd), NULL);
+
+    return 1;
+}
+
+int smlua_func_gfx_get_vertex_buffer(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "gfx_get_vertex_buffer", 1, top);
+        return 0;
+    }
+
+    if (lua_isnil(L, 1)) { return 0; }
+    Gfx * cmd = (Gfx *)smlua_to_cobject(L, 1, LOT_GFX);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "gfx_get_vertex_buffer"); return 0; }
+
+    smlua_push_object(L, LOT_VTX, gfx_get_vertex_buffer(cmd), NULL);
+
+    return 1;
+}
+
+int smlua_func_gfx_get_vertex_count(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "gfx_get_vertex_count", 1, top);
+        return 0;
+    }
+
+    if (lua_isnil(L, 1)) { return 0; }
+    Gfx * cmd = (Gfx *)smlua_to_cobject(L, 1, LOT_GFX);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "gfx_get_vertex_count"); return 0; }
+
+    lua_pushinteger(L, gfx_get_vertex_count(cmd));
 
     return 1;
 }

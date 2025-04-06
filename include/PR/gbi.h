@@ -1133,10 +1133,33 @@ typedef struct {
 	unsigned char   a;      /* alpha  */
 } Vtx_tn;
 
+typedef struct {
+    float x;
+    float y;
+    float z;
+    unsigned short flag;
+    short tu;
+    short tv;
+    union {
+        unsigned char r;
+        signed char nx;
+    };
+    union {
+        unsigned char g;
+        signed char ny;
+    };
+    union {
+        unsigned char b;
+        signed char nz;
+    };
+    unsigned char a;
+} Vtx_L;
+
 typedef union {
-    Vtx_t		v;  /* Use this one for colors  */
-    Vtx_tn              n;  /* Use this one for normals */
-    long long int	force_structure_alignment;
+    Vtx_t           v;  /* Use this one for colors  */
+    Vtx_tn          n;  /* Use this one for normals */
+    Vtx_L           l;  /* Use this one for Lua */
+    long long int   force_structure_alignment;
 } Vtx;
 
 /*

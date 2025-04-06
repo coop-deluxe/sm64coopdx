@@ -38,15 +38,16 @@ function get_cube_vertices()
     return vertices
 end
 
-function get_cube_triangles(i)
-    if i < 6 then
+function get_cube_triangles()
+    local triangles = {}
+    for i = 0, 5 do
         local offset = 4 * i
-        return {
+        table.insert(triangles, {
             offset + 0, offset + 1, offset + 2,
             offset + 2, offset + 1, offset + 3
-        }
+        })
     end
-    return {}
+    return triangles
 end
 
 function get_cube_geometry_mode()
@@ -76,14 +77,15 @@ function get_octahedron_vertices()
     return vertices
 end
 
-function get_octahedron_triangles(i)
-    if i < 4 then
-        return {
+function get_octahedron_triangles()
+    local triangles = {}
+    for i = 0, 3 do
+        table.insert(triangles, {
             0, 2 + i * 4 + 0, 2 + ((i + 1) % 4) * 4 + 1,
             1, 2 + i * 4 + 2, 2 + ((i + 1) % 4) * 4 + 3
-        }
+        })
     end
-    return {}
+    return triangles
 end
 
 function get_octahedron_geometry_mode()
@@ -140,11 +142,8 @@ function get_star_vertices()
     return vertices
 end
 
-function get_star_triangles(i)
-    if i < #STAR_TRIANGLES then
-        return STAR_TRIANGLES[i + 1]
-    end
-    return {}
+function get_star_triangles()
+    return STAR_TRIANGLES
 end
 
 function get_star_geometry_mode()
