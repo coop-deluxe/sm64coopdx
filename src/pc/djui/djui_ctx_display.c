@@ -118,7 +118,7 @@ void djui_ctx_display_create(void) {
     djui_base_set_border_color(base, 0, 0, 0, 200);
     djui_base_set_border_width(base, 4);
     djui_base_set_padding(base, 4, 4, 4, 4);
-    djui_base_set_location(base, 0, 52.0f);
+    djui_base_set_location(base, 0, 27.0f);
 
     {
         f64 offset = 4.0;
