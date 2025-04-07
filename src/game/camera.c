@@ -12524,4 +12524,3 @@ s32 update_rom_hack_camera(struct Camera *c, Vec3f focus, Vec3f pos) {
     c->nextYaw = c->yaw;
     return camYaw;
 }
-
