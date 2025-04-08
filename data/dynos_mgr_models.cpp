@@ -31,7 +31,7 @@ static std::map<u32, std::vector<struct ModelInfo>> sIdMap;
 static std::map<u32, u32> sOverwriteMap;
 
 // Maps read-only Gfx and Vtx buffers to their writable duplicates
-static std::map<void *, std::pair<void *, u32>> sRomToRamGfxVtxMap;
+static std::map<void *, std::pair<void *, size_t>> sRomToRamGfxVtxMap;
 
 static u32 find_empty_id(bool aIsPermanent) {
     u32 id = aIsPermanent ? 9999 : VANILLA_ID_END + 1;
@@ -240,10 +240,11 @@ static Vtx *DynOS_Model_DuplicateVtx(Vtx *aVtx, u32 vtxCount, bool shouldDuplica
 
     // Duplicate vertex buffer and return the copy
     if (shouldDuplicate) {
-        Vtx *vtxDuplicate = (Vtx *) malloc(vtxCount * sizeof(Vtx));
-        memcpy(vtxDuplicate, aVtx, vtxCount * sizeof(Vtx));
+        size_t vtxSize = vtxCount * sizeof(Vtx);
+        Vtx *vtxDuplicate = (Vtx *) malloc(vtxSize);
+        memcpy(vtxDuplicate, aVtx, vtxSize);
         DynOS_Find_Pending_Scroll_Target(aVtx, vtxDuplicate);
-        sRomToRamGfxVtxMap[(void *) aVtx] = { (void *) vtxDuplicate, vtxCount * sizeof(Vtx) };
+        sRomToRamGfxVtxMap[(void *) aVtx] = { (void *) vtxDuplicate, vtxSize };
         return vtxDuplicate;
     }
 
@@ -266,15 +267,16 @@ static Gfx *DynOS_Model_DuplicateDisplayList(Gfx *aGfx, bool shouldDuplicate) {
 
     // Duplicate display list
     Gfx *gfxDuplicate = aGfx;
-    u32 gfxSize = gfx_get_size(aGfx);
+    u32 gfxLength = gfx_get_size(aGfx);
     if (shouldDuplicate) {
-        gfxDuplicate = (Gfx *) malloc(gfxSize * sizeof(Gfx));
-        memcpy(gfxDuplicate, aGfx, gfxSize * sizeof(Gfx));
-        sRomToRamGfxVtxMap[(void *) aGfx] = { (void *) gfxDuplicate, gfxSize * sizeof(Gfx) };
+        size_t gfxSize = gfxLength * sizeof(Gfx);
+        gfxDuplicate = (Gfx *) malloc(gfxSize);
+        memcpy(gfxDuplicate, aGfx, gfxSize);
+        sRomToRamGfxVtxMap[(void *) aGfx] = { (void *) gfxDuplicate, gfxSize };
     }
 
     // Look for other display lists or vertices
-    for (u32 i = 0; i < gfxSize; i++) {
+    for (u32 i = 0; i < gfxLength; i++) {
         Gfx *cmd = gfxDuplicate + i;
         u32 op = cmd->words.w0 >> 24;
 
@@ -303,7 +305,7 @@ void DynOS_Model_RestoreVanillaDisplayLists() {
     for (auto &it : sRomToRamGfxVtxMap) {
         const void *original = it.first;
         void *duplicate = it.second.first;
-        u32 size = it.second.second;
+        size_t size = it.second.second;
         memcpy(duplicate, original, size);
     }
 }
