@@ -23,6 +23,14 @@ s64 DynOS_Gfx_ParseGfxConstants(const String& _Arg, bool* found) {
     gfx_constant(NULL);
     gfx_constant(G_ON);
     gfx_constant(G_OFF);
+    gfx_constant(LIGHT_1);
+    gfx_constant(LIGHT_2);
+    gfx_constant(LIGHT_3);
+    gfx_constant(LIGHT_4);
+    gfx_constant(LIGHT_5);
+    gfx_constant(LIGHT_6);
+    gfx_constant(LIGHT_7);
+    gfx_constant(LIGHT_8);
 
     // Combine modes
     gfx_constant(G_CCMUX_COMBINED);
@@ -1026,6 +1034,41 @@ static void ParseGfxSymbol(GfxData* aGfxData, DataNode<Gfx>* aNode, Gfx*& aHead,
         gDPPipeSync(aHead++);
         gDPSetTile(aHead++, _Arg1, G_IM_SIZ_4b, ((((_Arg2) >> 1) + 7) >> 3), 0, G_TX_RENDERTILE, _Arg4, _Arg6, _Arg8, _ArgA, _Arg5, _Arg7, _Arg9);
         gDPSetTileSize(aHead++, G_TX_RENDERTILE, 0, 0, (((u64)_Arg2) - 1) << G_TEXTURE_IMAGE_FRAC, (((u64)_Arg3) - 1) << G_TEXTURE_IMAGE_FRAC);
+        return;
+    }
+    if (_Symbol == "gsSPLightColor") {
+        s64 _Arg0 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
+        s64 _Arg1 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
+        // due to the function taking in the variable name instead of the actual value
+        // as a parameter, we need to do this. LIGHT_1 to LIGHT_8 go from actual 1-8
+        // where as G_MWO_a*/G_MWO_b* are hex numbers without a linear pattern of
+        // progression, meaning there isn't a simple one line solution for this afaik
+        switch(_Arg0) {
+            case LIGHT_1:
+                gSPLightColor(aHead++, LIGHT_1, _Arg1);
+                break;
+            case LIGHT_2:
+                gSPLightColor(aHead++, LIGHT_2, _Arg1);
+                break;
+            case LIGHT_3:
+                gSPLightColor(aHead++, LIGHT_3, _Arg1);
+                break;
+            case LIGHT_4:
+                gSPLightColor(aHead++, LIGHT_4, _Arg1);
+                break;
+            case LIGHT_5:
+                gSPLightColor(aHead++, LIGHT_5, _Arg1);
+                break;
+            case LIGHT_6:
+                gSPLightColor(aHead++, LIGHT_6, _Arg1);
+                break;
+            case LIGHT_7:
+                gSPLightColor(aHead++, LIGHT_7, _Arg1);
+                break;
+            case LIGHT_8:
+                gSPLightColor(aHead++, LIGHT_8, _Arg1);
+                break;
+        }
         return;
     }
 
