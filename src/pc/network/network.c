@@ -669,6 +669,8 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
 
     if (exiting) { return; }
 
+    dynos_model_restore_vanilla_display_lists();
+
     // reset other stuff
     extern u8* gOverrideEeprom;
     gOverrideEeprom = NULL;

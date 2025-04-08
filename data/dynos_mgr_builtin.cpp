@@ -126,9 +126,9 @@ extern "C" {
     }                                                                  \
     return NULL;
 
-  ///////////////////////
- // Function Pointers //
-///////////////////////
+  /////////////////////
+ // Script Pointers //
+/////////////////////
 
 static const void* sDynosBuiltinScriptPtrs[] = {
     define_builtin(level_main_scripts_entry),
@@ -2059,4 +2059,22 @@ s32 DynOS_Builtin_Func_GetIndexFromData(const void* aData) {
         }
     }
     return -1;
+}
+
+  ///////////////////
+ // Display Lists //
+///////////////////
+
+static const void *sDynosBuiltinDisplayLists[] = {
+#define DISPLAY_LIST(name) define_builtin(name),
+#include "include/display_lists.inl"
+#undef DISPLAY_LIST
+};
+
+const Gfx *DynOS_Builtin_Gfx_GetFromName(const char *aDataName) {
+    MGR_FIND_DATA(sDynosBuiltinDisplayLists, (const Gfx *));
+}
+
+const char *DynOS_Builtin_Gfx_GetFromData(const Gfx *aData) {
+    MGR_FIND_NAME(sDynosBuiltinDisplayLists);
 }

@@ -865,6 +865,8 @@ const void*      DynOS_Builtin_Func_GetFromName(const char* aDataName);
 const void*      DynOS_Builtin_Func_GetFromIndex(s32 aIndex);
 const char *     DynOS_Builtin_Func_GetNameFromIndex(s64 aIndex);
 s32              DynOS_Builtin_Func_GetIndexFromData(const void* aData);
+const Gfx *      DynOS_Builtin_Gfx_GetFromName(const char *aDataName);
+const char *     DynOS_Builtin_Gfx_GetFromData(const Gfx *aData);
 
 //
 // Pack Manager
@@ -972,7 +974,8 @@ struct GraphNode* DynOS_Model_GetGeo(u32 aId);
 u32 DynOS_Model_GetIdFromAsset(void* asset);
 u32 DynOS_Model_GetIdFromGraphNode(struct GraphNode* aNode);
 void DynOS_Model_OverwriteSlot(u32 srcSlot, u32 dstSlot);
-Gfx *DynOS_Model_Duplicate_DisplayList(Gfx* aGfx);
+Gfx *DynOS_Model_GetWritableDisplayList(Gfx* aGfx);
+void DynOS_Model_RestoreVanillaDisplayLists();
 void DynOS_Model_ClearPool(enum ModelPool aModelPool);
 
 //
