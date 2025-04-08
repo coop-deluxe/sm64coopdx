@@ -278,6 +278,14 @@ void dynos_model_restore_vanilla_display_lists() {
     return DynOS_Model_RestoreVanillaDisplayLists();
 }
 
+Gfx *dynos_model_get_gfx(const char *name, u32 *outLength) {
+    return DynOS_Model_GetGfx(name, outLength);
+}
+
+Vtx *dynos_model_get_vtx(const char *name, u32 *outCount) {
+    return DynOS_Model_GetVtx(name, outCount);
+}
+
 // -- other -- //
 
 void dynos_mod_shutdown(void) {

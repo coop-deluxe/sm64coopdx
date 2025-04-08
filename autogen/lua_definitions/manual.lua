@@ -469,3 +469,21 @@ end
 function gfx_set_command(gfx, command, ...)
     -- ...
 end
+
+--- @param name string
+--- @return Pointer_Gfx
+--- @return integer
+--- Gets a display list of the current mod from its name.
+--- Returns a pointer to the display list and its length
+function gfx_get_from_name(name)
+    -- ...
+end
+
+--- @param name string
+--- @return Pointer_Vtx
+--- @return integer
+--- Gets a vertex buffer of the current mod from its name.
+--- Returns a pointer to the vertex buffering and its vertex count
+function vtx_get_from_name(name)
+    -- ...
+end

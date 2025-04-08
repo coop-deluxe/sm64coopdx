@@ -9670,14 +9670,6 @@ function gfx_parse(cmd, func)
     -- ...
 end
 
---- @param gfx Pointer_Gfx
---- @param offset integer
---- @return Pointer_Gfx
---- Gets a command from a display list at position `offset`
-function gfx_get_command(gfx, offset)
-    -- ...
-end
-
 --- @param cmd Pointer_Gfx
 --- @return Pointer_Gfx
 --- Gets the display list from a display list command if it has the op `G_DL`
@@ -9700,48 +9692,49 @@ function gfx_get_vertex_count(cmd)
 end
 
 --- @param gfx Pointer_Gfx
---- @param a0 integer
---- @param b0 integer
---- @param c0 integer
---- @param d0 integer
---- @param Aa0 integer
---- @param Ab0 integer
---- @param Ac0 integer
---- @param Ad0 integer
---- @param a1 integer
---- @param b1 integer
---- @param c1 integer
---- @param d1 integer
---- @param Aa1 integer
---- @param Ab1 integer
---- @param Ac1 integer
---- @param Ad1 integer
---- Sets the display list combine mode. you can fill this function with G_CCMUX_* and G_ACMUX_* constants
-function gfx_set_combine_lerp(gfx, a0, b0, c0, d0, Aa0, Ab0, Ac0, Ad0, a1, b1, c1, d1, Aa1, Ab1, Ac1, Ad1)
+--- @return integer
+--- Gets the length of a display list
+function gfx_get_length(gfx)
     -- ...
 end
 
 --- @param gfx Pointer_Gfx
---- @param format integer
---- @param size integer
---- @param width integer
---- @param texture Pointer_integer
---- Sets the display list texture image. Pass in textureInfo.texture as `texture`
-function gfx_set_texture_image(gfx, format, size, width, texture)
+--- @param offset integer
+--- @return Pointer_Gfx
+--- Gets a command of a display list at position `offset`
+function gfx_get_command(gfx, offset)
     -- ...
 end
 
---- @param areaIndex integer
---- Instantly changes the current area to `areaIndex`
-function smlua_level_util_change_area(areaIndex)
+--- @param dest Pointer_Gfx
+--- @param src Pointer_Gfx
+--- @param length integer
+--- @return Pointer_Gfx
+--- Copy `length` commands from display list `src` to display list `dest`
+function gfx_copy(dest, src, length)
     -- ...
 end
 
 --- @param vtx Pointer_Vtx
 --- @param offset integer
 --- @return Pointer_Vtx
---- Gets a vertex from a vertex buffer at position `offset`
+--- Gets a vertex of a vertex buffer at position `offset`
 function vtx_get_vertex(vtx, offset)
+    -- ...
+end
+
+--- @param dest Pointer_Vtx
+--- @param src Pointer_Vtx
+--- @param count integer
+--- @return Pointer_Vtx
+--- Copy `count` vertices from vertex buffer `src` to vertex buffer `dest`
+function vtx_copy(dest, src, count)
+    -- ...
+end
+
+--- @param areaIndex integer
+--- Instantly changes the current area to `areaIndex`
+function smlua_level_util_change_area(areaIndex)
     -- ...
 end
 

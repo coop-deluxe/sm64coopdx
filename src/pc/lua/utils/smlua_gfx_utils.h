@@ -4,6 +4,8 @@
 #include "pc/lua/smlua.h"
 #include "types.h"
 
+#define C0(cmd, pos, width) (((cmd)->words.w0 >> (pos)) & ((1U << width) - 1))
+
 /* |description|Sets the override FOV|descriptionEnd| */
 void set_override_fov(f32 fov);
 /* |description|Sets the override near plane|descriptionEnd| */
@@ -57,9 +59,16 @@ Vtx *gfx_get_vertex_buffer(Gfx *cmd);
 /* |description|Gets the number of vertices from a display list command if it has the op `G_VTX`|descriptionEnd| */
 u16 gfx_get_vertex_count(Gfx *cmd);
 
-/* |description|Gets a command from a display list at position `offset`|descriptionEnd| */
+/* |description|Gets the length of a display list|descriptionEnd| */
+u32 gfx_get_length(Gfx *gfx);
+/* |description|Gets a command of a display list at position `offset`|descriptionEnd| */
 Gfx *gfx_get_command(Gfx *gfx, u32 offset);
-/* |description|Gets a vertex from a vertex buffer at position `offset`|descriptionEnd| */
+/* |description|Copy `length` commands from display list `src` to display list `dest`|descriptionEnd| */
+Gfx *gfx_copy(Gfx *dest, Gfx *src, u32 length);
+
+/* |description|Gets a vertex of a vertex buffer at position `offset`|descriptionEnd| */
 Vtx *vtx_get_vertex(Vtx *vtx, u32 offset);
+/* |description|Copy `count` vertices from vertex buffer `src` to vertex buffer `dest`|descriptionEnd| */
+Vtx *vtx_copy(Vtx *dest, Vtx *src, u32 count);
 
 #endif

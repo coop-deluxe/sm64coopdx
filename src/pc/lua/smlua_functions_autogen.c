@@ -30047,32 +30047,12 @@ int smlua_func_gfx_parse(lua_State* L) {
     }
 
     if (lua_isnil(L, 1)) { return 0; }
-    Gfx* cmd = (Gfx*)smlua_to_cobject(L, 1, LOT_GFX);
+    Gfx * cmd = (Gfx *)smlua_to_cobject(L, 1, LOT_GFX);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "gfx_parse"); return 0; }
     LuaFunction func = smlua_to_lua_function(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "gfx_parse"); return 0; }
 
     gfx_parse(cmd, func);
-
-    return 1;
-}
-
-int smlua_func_gfx_get_command(lua_State* L) {
-    if (L == NULL) { return 0; }
-
-    int top = lua_gettop(L);
-    if (top != 2) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "gfx_get_command", 2, top);
-        return 0;
-    }
-
-    if (lua_isnil(L, 1)) { return 0; }
-    Gfx * gfx = (Gfx *)smlua_to_cobject(L, 1, LOT_GFX);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "gfx_get_command"); return 0; }
-    u32 offset = smlua_to_integer(L, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "gfx_get_command"); return 0; }
-
-    smlua_push_object(L, LOT_GFX, gfx_get_command(gfx, offset), NULL);
 
     return 1;
 }
@@ -30131,78 +30111,106 @@ int smlua_func_gfx_get_vertex_count(lua_State* L) {
     return 1;
 }
 
-int smlua_func_gfx_set_combine_lerp(lua_State* L) {
+int smlua_func_gfx_get_length(lua_State* L) {
     if (L == NULL) { return 0; }
 
     int top = lua_gettop(L);
-    if (top != 17) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "gfx_set_combine_lerp", 17, top);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "gfx_get_length", 1, top);
         return 0;
     }
 
     if (lua_isnil(L, 1)) { return 0; }
-    Gfx* gfx = (Gfx*)smlua_to_cobject(L, 1, LOT_GFX);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "gfx_set_combine_lerp"); return 0; }
-    u32 a0 = smlua_to_integer(L, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "gfx_set_combine_lerp"); return 0; }
-    u32 b0 = smlua_to_integer(L, 3);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "gfx_set_combine_lerp"); return 0; }
-    u32 c0 = smlua_to_integer(L, 4);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "gfx_set_combine_lerp"); return 0; }
-    u32 d0 = smlua_to_integer(L, 5);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 5, "gfx_set_combine_lerp"); return 0; }
-    u32 Aa0 = smlua_to_integer(L, 6);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 6, "gfx_set_combine_lerp"); return 0; }
-    u32 Ab0 = smlua_to_integer(L, 7);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 7, "gfx_set_combine_lerp"); return 0; }
-    u32 Ac0 = smlua_to_integer(L, 8);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 8, "gfx_set_combine_lerp"); return 0; }
-    u32 Ad0 = smlua_to_integer(L, 9);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 9, "gfx_set_combine_lerp"); return 0; }
-    u32 a1 = smlua_to_integer(L, 10);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 10, "gfx_set_combine_lerp"); return 0; }
-    u32 b1 = smlua_to_integer(L, 11);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 11, "gfx_set_combine_lerp"); return 0; }
-    u32 c1 = smlua_to_integer(L, 12);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 12, "gfx_set_combine_lerp"); return 0; }
-    u32 d1 = smlua_to_integer(L, 13);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 13, "gfx_set_combine_lerp"); return 0; }
-    u32 Aa1 = smlua_to_integer(L, 14);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 14, "gfx_set_combine_lerp"); return 0; }
-    u32 Ab1 = smlua_to_integer(L, 15);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 15, "gfx_set_combine_lerp"); return 0; }
-    u32 Ac1 = smlua_to_integer(L, 16);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 16, "gfx_set_combine_lerp"); return 0; }
-    u32 Ad1 = smlua_to_integer(L, 17);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 17, "gfx_set_combine_lerp"); return 0; }
+    Gfx * gfx = (Gfx *)smlua_to_cobject(L, 1, LOT_GFX);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "gfx_get_length"); return 0; }
 
-    gfx_set_combine_lerp(gfx, a0, b0, c0, d0, Aa0, Ab0, Ac0, Ad0, a1, b1, c1, d1, Aa1, Ab1, Ac1, Ad1);
+    lua_pushinteger(L, gfx_get_length(gfx));
 
     return 1;
 }
 
-int smlua_func_gfx_set_texture_image(lua_State* L) {
+int smlua_func_gfx_get_command(lua_State* L) {
     if (L == NULL) { return 0; }
 
     int top = lua_gettop(L);
-    if (top != 5) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "gfx_set_texture_image", 5, top);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "gfx_get_command", 2, top);
         return 0;
     }
 
     if (lua_isnil(L, 1)) { return 0; }
-    Gfx* gfx = (Gfx*)smlua_to_cobject(L, 1, LOT_GFX);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "gfx_set_texture_image"); return 0; }
-    u32 format = smlua_to_integer(L, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "gfx_set_texture_image"); return 0; }
-    u32 size = smlua_to_integer(L, 3);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "gfx_set_texture_image"); return 0; }
-    u32 width = smlua_to_integer(L, 4);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "gfx_set_texture_image"); return 0; }
-    u8* texture = (u8*)smlua_to_cpointer(L, 5, LVT_U8_P);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 5, "gfx_set_texture_image"); return 0; }
+    Gfx * gfx = (Gfx *)smlua_to_cobject(L, 1, LOT_GFX);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "gfx_get_command"); return 0; }
+    u32 offset = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "gfx_get_command"); return 0; }
 
-    gfx_set_texture_image(gfx, format, size, width, texture);
+    smlua_push_object(L, LOT_GFX, gfx_get_command(gfx, offset), NULL);
+
+    return 1;
+}
+
+int smlua_func_gfx_copy(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 3) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "gfx_copy", 3, top);
+        return 0;
+    }
+
+    if (lua_isnil(L, 1)) { return 0; }
+    Gfx * dest = (Gfx *)smlua_to_cobject(L, 1, LOT_GFX);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "gfx_copy"); return 0; }
+    if (lua_isnil(L, 2)) { return 0; }
+    Gfx * src = (Gfx *)smlua_to_cobject(L, 2, LOT_GFX);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "gfx_copy"); return 0; }
+    u32 length = smlua_to_integer(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "gfx_copy"); return 0; }
+
+    smlua_push_object(L, LOT_GFX, gfx_copy(dest, src, length), NULL);
+
+    return 1;
+}
+
+int smlua_func_vtx_get_vertex(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "vtx_get_vertex", 2, top);
+        return 0;
+    }
+
+    if (lua_isnil(L, 1)) { return 0; }
+    Vtx * vtx = (Vtx *)smlua_to_cobject(L, 1, LOT_VTX);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "vtx_get_vertex"); return 0; }
+    u32 offset = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "vtx_get_vertex"); return 0; }
+
+    smlua_push_object(L, LOT_VTX, vtx_get_vertex(vtx, offset), NULL);
+
+    return 1;
+}
+
+int smlua_func_vtx_copy(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 3) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "vtx_copy", 3, top);
+        return 0;
+    }
+
+    if (lua_isnil(L, 1)) { return 0; }
+    Vtx * dest = (Vtx *)smlua_to_cobject(L, 1, LOT_VTX);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "vtx_copy"); return 0; }
+    if (lua_isnil(L, 2)) { return 0; }
+    Vtx * src = (Vtx *)smlua_to_cobject(L, 2, LOT_VTX);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "vtx_copy"); return 0; }
+    u32 count = smlua_to_integer(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "vtx_copy"); return 0; }
+
+    smlua_push_object(L, LOT_VTX, vtx_copy(dest, src, count), NULL);
 
     return 1;
 }
@@ -35578,10 +35586,14 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "get_skybox_color", smlua_func_get_skybox_color);
     smlua_bind_function(L, "set_skybox_color", smlua_func_set_skybox_color);
     smlua_bind_function(L, "gfx_parse", smlua_func_gfx_parse);
-    smlua_bind_function(L, "gfx_get_vtx", smlua_func_gfx_get_vtx);
-    smlua_bind_function(L, "gfx_get_vtx_count", smlua_func_gfx_get_vtx_count);
-    smlua_bind_function(L, "gfx_set_combine_lerp", smlua_func_gfx_set_combine_lerp);
-    smlua_bind_function(L, "gfx_set_texture_image", smlua_func_gfx_set_texture_image);
+    smlua_bind_function(L, "gfx_get_display_list", smlua_func_gfx_get_display_list);
+    smlua_bind_function(L, "gfx_get_vertex_buffer", smlua_func_gfx_get_vertex_buffer);
+    smlua_bind_function(L, "gfx_get_vertex_count", smlua_func_gfx_get_vertex_count);
+    smlua_bind_function(L, "gfx_get_length", smlua_func_gfx_get_length);
+    smlua_bind_function(L, "gfx_get_command", smlua_func_gfx_get_command);
+    smlua_bind_function(L, "gfx_copy", smlua_func_gfx_copy);
+    smlua_bind_function(L, "vtx_get_vertex", smlua_func_vtx_get_vertex);
+    smlua_bind_function(L, "vtx_copy", smlua_func_vtx_copy);
 
     // smlua_level_utils.h
     smlua_bind_function(L, "smlua_level_util_change_area", smlua_func_smlua_level_util_change_area);

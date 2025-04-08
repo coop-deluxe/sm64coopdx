@@ -85,6 +85,8 @@ void dynos_model_restore_vanilla_display_lists();
 u32 dynos_model_get_id_from_asset(void* aAsset);
 u32 dynos_model_get_id_from_graph_node(struct GraphNode* aGraphNode);
 void dynos_model_clear_pool(enum ModelPool aModelPool);
+Gfx *dynos_model_get_gfx(const char *name, u32 *outLength);
+Vtx *dynos_model_get_vtx(const char *name, u32 *outCount);
 
 // -- other -- //
 void dynos_mod_shutdown(void);

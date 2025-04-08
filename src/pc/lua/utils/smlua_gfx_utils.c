@@ -3,7 +3,6 @@
 #include "game/rendering_graph_node.h"
 #include "game/skybox.h"
 #include "geo_commands.h"
-#include "engine/display_list.h"
 
 void set_override_fov(f32 fov) {
     gOverrideFOV = fov;
@@ -129,14 +128,6 @@ void gfx_parse(Gfx* cmd, LuaFunction func) {
                 break;
             case (uint8_t) G_ENDDL:
                 return; // Reached end of display list
-            case G_TEXRECT:
-            case G_TEXRECTFLIP:
-                ++cmd;
-                ++cmd;
-                break;
-            case G_FILLRECT:
-                ++cmd;
-                break;
             default:
                 lua_rawgeti(L, LUA_REGISTRYINDEX, func);
                 smlua_push_object(L, LOT_GFX, cmd, NULL);
@@ -146,6 +137,16 @@ void gfx_parse(Gfx* cmd, LuaFunction func) {
                 }
                 if (lua_type(L, -1) == LUA_TBOOLEAN && smlua_to_boolean(L, -1)) {
                     return;
+                }
+                switch (op) {
+                    case G_TEXRECT:
+                    case G_TEXRECTFLIP:
+                        ++cmd;
+                        ++cmd;
+                        break;
+                    case G_FILLRECT:
+                        ++cmd;
+                        break;
                 }
                 break;
         }
@@ -180,12 +181,49 @@ u16 gfx_get_vertex_count(Gfx *cmd) {
     return C0(cmd, 12, 8);
 }
 
+// Get the size of a display list by iterating
+// until gsSPEndDisplayList or gsSPBranchList is found
+u32 gfx_get_length(Gfx *gfx) {
+    if (!gfx) { return 0; }
+    for (u32 i = 0;;) {
+        u32 op = (gfx + i)->words.w0 >> 24;
+        u32 cmdSize = 1;
+        switch (op) {
+            case G_DL:
+                if (C0(gfx + i, 16, 1) == G_DL_NOPUSH) { return i + 1; } // For displaylists that end with branches (jumps)
+                break;
+            case G_ENDDL:
+                return i + 1;
+            case G_TEXRECT:
+            case G_TEXRECTFLIP:
+                cmdSize = 3;
+                break;
+            case G_FILLRECT:
+                cmdSize = 2;
+                break;
+        }
+        i += cmdSize;
+    }
+}
+
 Gfx *gfx_get_command(Gfx *gfx, u32 offset) {
     if (!gfx) { return NULL; }
     return &gfx[offset];
 }
 
+Gfx *gfx_copy(Gfx *dest, Gfx *src, u32 length) {
+    if (!src || !dest || !length) { return dest; }
+    memcpy(dest, src, length * sizeof(Gfx));
+    return dest;
+}
+
 Vtx *vtx_get_vertex(Vtx *vtx, u32 offset) {
     if (!vtx) { return NULL; }
     return &vtx[offset];
+}
+
+Vtx *vtx_copy(Vtx *dest, Vtx *src, u32 count) {
+    if (!src || !dest || !count) { return dest; }
+    memcpy(dest, src, count * sizeof(Vtx));
+    return dest;
 }

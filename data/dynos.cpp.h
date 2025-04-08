@@ -887,6 +887,7 @@ void DynOS_Pack_AddTex(PackData* aPackData, DataNode<TexData>* aTexData);
 // Actor Manager
 //
 
+std::map<const void *, ActorGfx> &DynOS_Actor_GetValidActors();
 void DynOS_Actor_AddCustom(s32 aModIndex, const SysPath &aFilename, const char *aActorName);
 const void *DynOS_Actor_GetLayoutFromName(const char *aActorName);
 bool DynOS_Actor_GetModIndexAndToken(const GraphNode *aGraphNode, u32 aTokenIndex, s32 *outModIndex, const char **outToken);
@@ -978,6 +979,8 @@ void DynOS_Model_OverwriteSlot(u32 srcSlot, u32 dstSlot);
 Gfx *DynOS_Model_GetWritableDisplayList(Gfx* aGfx);
 void DynOS_Model_RestoreVanillaDisplayLists();
 void DynOS_Model_ClearPool(enum ModelPool aModelPool);
+Gfx *DynOS_Model_GetGfx(const char *aName, u32 *outLength);
+Vtx *DynOS_Model_GetVtx(const char *aName, u32 *outCount);
 
 //
 // Bin

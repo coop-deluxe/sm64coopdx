@@ -7,8 +7,10 @@ extern "C" {
 #include "engine/graph_node.h"
 #include "model_ids.h"
 #include "pc/lua/utils/smlua_model_utils.h"
-#include "engine/display_list.h"
+#include "pc/lua/utils/smlua_gfx_utils.h"
+#include "pc/mods/mod.h"
 #include "dynos_mgr_builtin_externs.h"
+extern struct Mod *gLuaActiveMod;
 }
 
 enum ModelLoadType {
@@ -31,7 +33,7 @@ static std::map<u32, std::vector<struct ModelInfo>> sIdMap;
 static std::map<u32, u32> sOverwriteMap;
 
 // Maps read-only Gfx and Vtx buffers to their writable duplicates
-static std::map<void *, std::pair<void *, size_t>> sRomToRamGfxVtxMap;
+static std::map<const void *, std::pair<void *, size_t>> sRomToRamGfxVtxMap;
 
 static u32 find_empty_id(bool aIsPermanent) {
     u32 id = aIsPermanent ? 9999 : VANILLA_ID_END + 1;
@@ -233,7 +235,7 @@ static Vtx *DynOS_Model_DuplicateVtx(Vtx *aVtx, u32 vtxCount, bool shouldDuplica
     if (!aVtx) { return NULL; }
 
     // Return duplicate if it already exists
-    auto it = sRomToRamGfxVtxMap.find((void *) aVtx);
+    auto it = sRomToRamGfxVtxMap.find(aVtx);
     if (it != sRomToRamGfxVtxMap.end()) {
         return (Vtx *) it->second.first;
     }
@@ -244,7 +246,7 @@ static Vtx *DynOS_Model_DuplicateVtx(Vtx *aVtx, u32 vtxCount, bool shouldDuplica
         Vtx *vtxDuplicate = (Vtx *) malloc(vtxSize);
         memcpy(vtxDuplicate, aVtx, vtxSize);
         DynOS_Find_Pending_Scroll_Target(aVtx, vtxDuplicate);
-        sRomToRamGfxVtxMap[(void *) aVtx] = { (void *) vtxDuplicate, vtxSize };
+        sRomToRamGfxVtxMap[aVtx] = { (void *) vtxDuplicate, vtxSize };
         return vtxDuplicate;
     }
 
@@ -255,7 +257,7 @@ static Gfx *DynOS_Model_DuplicateDisplayList(Gfx *aGfx, bool shouldDuplicate) {
     if (!aGfx) { return NULL; }
 
     // Return duplicate if it already exists
-    auto it = sRomToRamGfxVtxMap.find((void *) aGfx);
+    auto it = sRomToRamGfxVtxMap.find(aGfx);
     if (it != sRomToRamGfxVtxMap.end()) {
         return (Gfx *) it->second.first;
     }
@@ -267,12 +269,12 @@ static Gfx *DynOS_Model_DuplicateDisplayList(Gfx *aGfx, bool shouldDuplicate) {
 
     // Duplicate display list
     Gfx *gfxDuplicate = aGfx;
-    u32 gfxLength = gfx_get_size(aGfx);
+    u32 gfxLength = gfx_get_length(aGfx);
     if (shouldDuplicate) {
         size_t gfxSize = gfxLength * sizeof(Gfx);
         gfxDuplicate = (Gfx *) malloc(gfxSize);
         memcpy(gfxDuplicate, aGfx, gfxSize);
-        sRomToRamGfxVtxMap[(void *) aGfx] = { (void *) gfxDuplicate, gfxSize };
+        sRomToRamGfxVtxMap[aGfx] = { (void *) gfxDuplicate, gfxSize };
     }
 
     // Look for other display lists or vertices
@@ -346,4 +348,81 @@ void DynOS_Model_ClearPool(enum ModelPool aModelPool) {
     }
 
     assetMap.clear();
+}
+
+Gfx *DynOS_Model_GetGfx(const char *aName, u32 *outLength) {
+    if (!aName) { return NULL; }
+    s32 modIndex = (gLuaActiveMod ? gLuaActiveMod->index : -1);
+
+    // Check levels
+    for (auto &lvl : DynOS_Lvl_GetArray()) {
+        if (modIndex == -1 || lvl.second->mModIndex == modIndex) {
+            for (auto &gfx : lvl.second->mDisplayLists) {
+                if (gfx->mName == aName) {
+                    *outLength = gfx->mSize;
+                    return gfx->mData;
+                }
+            }
+        }
+    }
+
+    // Check loaded actors
+    for (auto &actor : DynOS_Actor_GetValidActors()) {
+        if (modIndex == -1 || actor.second.mGfxData->mModIndex == modIndex) {
+            for (auto &gfx : actor.second.mGfxData->mDisplayLists) {
+                if (gfx->mName == aName) {
+                    *outLength = gfx->mSize;
+                    return gfx->mData;
+                }
+            }
+        }
+    }
+
+    // Check vanilla display lists
+    const Gfx *gfxVanilla = DynOS_Builtin_Gfx_GetFromName(aName);
+    if (gfxVanilla) {
+        auto it = sRomToRamGfxVtxMap.find(gfxVanilla);
+
+        // If not found, duplicate the display list now
+        if (it == sRomToRamGfxVtxMap.end()) {
+            DynOS_Model_DuplicateDisplayList((Gfx *) gfxVanilla, true);
+            it = sRomToRamGfxVtxMap.find(gfxVanilla);
+        }
+
+        *outLength = it->second.second / sizeof(Gfx);
+        return (Gfx *) it->second.first;
+    }
+
+    return NULL;
+}
+
+Vtx *DynOS_Model_GetVtx(const char *aName, u32 *outCount) {
+    if (!aName) { return NULL; }
+    s32 modIndex = (gLuaActiveMod ? gLuaActiveMod->index : -1);
+
+    // Check levels
+    for (auto &lvl : DynOS_Lvl_GetArray()) {
+        if (modIndex == -1 || lvl.second->mModIndex == modIndex) {
+            for (auto &vtx : lvl.second->mVertices) {
+                if (vtx->mName == aName) {
+                    *outCount = vtx->mSize;
+                    return vtx->mData;
+                }
+            }
+        }
+    }
+
+    // Check loaded actors
+    for (auto &actor : DynOS_Actor_GetValidActors()) {
+        if (modIndex == -1 || actor.second.mGfxData->mModIndex == modIndex) {
+            for (auto &vtx : actor.second.mGfxData->mVertices) {
+                if (vtx->mName == aName) {
+                    *outCount = vtx->mSize;
+                    return vtx->mData;
+                }
+            }
+        }
+    }
+
+    return NULL;
 }
