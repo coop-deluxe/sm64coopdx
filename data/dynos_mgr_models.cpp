@@ -62,6 +62,30 @@ void DynOS_Model_Dump() {
     }
 }
 
+static struct GraphNode *DynOS_Model_CheckMap(int index, u32* aId, void* aAsset, bool aDeDuplicate) {
+    auto& map = sAssetMap[index];
+    if (aDeDuplicate) {
+        auto it = map.find(aAsset);
+        if (it != map.end()) {
+            auto& found = it->second;
+
+            if (index != MODEL_POOL_PERMANENT) {
+                if (*aId && *aId != found.id) {
+                    sOverwriteMap[*aId] = found.id;
+                }
+                *aId = found.id;
+                return found.graphNode;
+            }
+
+            if (!*aId || *aId == found.id) {
+                if (!*aId) { *aId = found.id; }
+                return found.graphNode;
+            }
+        }
+    }
+    return NULL;
+}
+
 static struct GraphNode* DynOS_Model_LoadCommonInternal(u32* aId, enum ModelPool aModelPool, void* aAsset, u8 aLayer, struct GraphNode* aGraphNode, bool aDeDuplicate, enum ModelLoadType mlt) {
     // sanity check pool
     if (aModelPool >= MODEL_POOL_MAX) { return NULL; }
@@ -71,32 +95,20 @@ static struct GraphNode* DynOS_Model_LoadCommonInternal(u32* aId, enum ModelPool
         sModelPools[aModelPool] = dynamic_pool_init();
     }
 
-    // check perm map
-    auto& permMap = sAssetMap[MODEL_POOL_PERMANENT];
-    if (aDeDuplicate && permMap.count(aAsset)) {
-        auto& found = permMap[aAsset];
-        if (*aId && *aId == found.id) {
-            return found.graphNode;
-        }
-        if (*aId == 0) {
-            *aId = found.id;
-            return found.graphNode;
-        }
+    // check maps, permanent pool is always checked
+    struct GraphNode *node = NULL;
+    #define CHECK_POOL(pool) if (node = DynOS_Model_CheckMap(pool, aId, aAsset, aDeDuplicate)) { return node; }
+    CHECK_POOL(MODEL_POOL_PERMANENT);
+    if (aModelPool == MODEL_POOL_SESSION) {
+        CHECK_POOL(MODEL_POOL_SESSION);
+        CHECK_POOL(MODEL_POOL_LEVEL);
     }
-
-    // check map
-    auto& map = sAssetMap[aModelPool];
-    if (aDeDuplicate && map.count(aAsset)) {
-        auto& found = map[aAsset];
-        if (*aId && *aId != found.id) {
-            sOverwriteMap[*aId] = found.id;
-        }
-        *aId = found.id;
-        return found.graphNode;
+    if (aModelPool == MODEL_POOL_LEVEL) {
+        CHECK_POOL(MODEL_POOL_LEVEL);
     }
 
     // load geo
-    struct GraphNode* node = NULL;
+    auto& map = sAssetMap[aModelPool];
     switch (mlt) {
         case MLT_GEO:
             node = process_geo_layout(sModelPools[aModelPool], aAsset);
