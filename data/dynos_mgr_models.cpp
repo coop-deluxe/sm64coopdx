@@ -159,8 +159,9 @@ struct GraphNode* DynOS_Model_StoreGeo(u32* aId, enum ModelPool aModelPool, void
 }
 
 struct GraphNode* DynOS_Model_GetErrorGeo() {
-    if (!sIdMap.count(MODEL_ERROR_MODEL)) { return NULL; }
-    auto& vec = sIdMap[MODEL_ERROR_MODEL];
+    auto it = sIdMap.find(MODEL_ERROR_MODEL);
+    if (it == sIdMap.end()) { return NULL; }
+    auto& vec = it->second;
     if (vec.size() == 0 || vec.empty()) {
         return NULL;
     }
@@ -170,15 +171,17 @@ struct GraphNode* DynOS_Model_GetErrorGeo() {
 struct GraphNode* DynOS_Model_GetGeo(u32 aId) {
     if (!aId) { return NULL; }
 
-    if (sOverwriteMap.count(aId)) {
-        aId = sOverwriteMap[aId];
+    auto overwriteIt = sOverwriteMap.find(aId);
+    if (overwriteIt != sOverwriteMap.end()) {
+        aId = overwriteIt->second;
     }
 
-    if (sIdMap.count(aId) == 0) {
+    auto idIt = sIdMap.find(aId);
+    if (idIt == sIdMap.end()) {
         return DynOS_Model_GetErrorGeo();
     }
 
-    auto& vec = sIdMap[aId];
+    auto& vec = idIt->second;
     if (vec.size() == 0 || vec.empty()) {
         return DynOS_Model_GetErrorGeo();
     }
@@ -225,11 +228,14 @@ u32 DynOS_Model_GetIdFromAsset(void* asset) {
     if (!asset) { return MODEL_NONE; }
     u32 lowest = 9999;
     for (int i = 0; i < MODEL_POOL_MAX; i++) {
-        if (!sAssetMap[i].count(asset)) { continue; }
-        u32 id = sAssetMap[i][asset].id;
+        auto& map = sAssetMap[i];
+        auto assetIt = map.find(asset);
+        if (assetIt == map.end()) { continue; }
+        u32 id = assetIt->second.id;
         if (id < lowest) { lowest = id; }
-        if (sOverwriteMap.count(id)) {
-            id = sOverwriteMap[id];
+        auto idIt = sOverwriteMap.find(id);
+        if (idIt != sOverwriteMap.end()) {
+            id = idIt->second;
             if (id < lowest) { lowest = id; }
         }
     }
@@ -337,17 +343,18 @@ void DynOS_Model_ClearPool(enum ModelPool aModelPool) {
     auto& assetMap = sAssetMap[aModelPool];
     for (auto& asset : assetMap) {
         auto& info = asset.second;
-        if (sIdMap.count(info.id) == 0) { continue; }
+        auto idIt = sIdMap.find(info.id);
+        if (idIt == sIdMap.end()) { continue; }
+        auto& idMap = idIt->second;
 
         // preventing clearing permanent vanilla model slot
-        if (info.id <= VANILLA_ID_END && sIdMap.count(info.id) <= 1) {
+        if (info.id <= VANILLA_ID_END && idMap.size() <= 1) {
             if (sAssetMap[MODEL_POOL_PERMANENT].count(info.asset) > 0) {
                 continue;
             }
         }
 
         // erase from id map
-        auto& idMap = sIdMap[info.id];
         for (auto info2 = idMap.begin(); info2 != idMap.end(); ) {
             if (info.id == info2->id && info2->modelPool == aModelPool) {
                 info2 = idMap.erase(info2);
