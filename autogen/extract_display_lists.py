@@ -80,7 +80,7 @@ CUSTOM_DEFINED = [
 
 def main():
     verbose = len(sys.argv) > 1 and (sys.argv[1] == "-v" or sys.argv[1] == "--verbose")
-    pattern = re.compile("[\W]+")
+    pattern = re.compile(r"[\W]+")
     display_lists = []
     for dir in DIRECTORIES:
         for root, _, filenames in os.walk(dir):
@@ -97,7 +97,7 @@ def main():
                             ignore = True
                         if "#endif" in line:
                             ignore = False
-                        if not ignore and "Gfx" in line and "static" not in line and "extern" not in line and "#" not in line:
+                        if not ignore and "Gfx" in line and "static " not in line and "extern" not in line and "#" not in line:
                             identifiers = pattern.sub(" ", line).split()
                             index_gfx = identifiers.index("Gfx")
                             name = identifiers[index_gfx + 1]
