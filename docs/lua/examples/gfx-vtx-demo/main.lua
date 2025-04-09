@@ -145,13 +145,13 @@ function geo_update_shape(node, matStackIndex)
         gfx_copy(gfx, gfx_template, gfx_template_length)
     end
 
-    -- Now fill the display list with the appropriate commands
+    -- Now fill the display list with the appropriate commands (see actors/shape/model.inc.c)
     -- We can retrieve the commands directly with `gfx_get_command`
     -- Index | Command              | What to do
     -- ------|----------------------|----------------------------------------
-    --   [0] | gsSPGeometryMode     | Change the geometry mode
-    --   [2] | gsSPTexture          | Change the texture scaling
-    --   [3] | gsDPLoadTextureBlock | Update the texture
+    --  [00] | gsSPGeometryMode     | Change the geometry mode
+    --  [02] | gsSPTexture          | Change the texture scaling
+    --  [03] | gsDPSetTextureImage  | Update the texture
     --  [10] | gsSPVertex           | Compute vertices
     --  [11] | gsSPDisplayList      | Build triangles
     --  [12] | gsSPTexture          | Change the texture scaling
