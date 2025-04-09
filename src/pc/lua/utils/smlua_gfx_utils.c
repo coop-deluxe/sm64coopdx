@@ -267,6 +267,13 @@ void gfx_copy(Gfx *dest, Gfx *src, u32 length) {
 Gfx *gfx_new(const char *name, u32 length) {
     if (!name || !length) { return NULL; }
 
+    // Make sure to not take the name of a level/model/vanilla display list
+    u32 outLength;
+    if (dynos_gfx_get(name, &outLength)) {
+        LOG_LUA_LINE("gfx_new: Display list `%s` already exists", name);
+        return NULL;
+    }
+
     Gfx *gfx = dynos_gfx_new(name, length);
     if (!gfx) {
         LOG_LUA_LINE("gfx_new: Display list `%s` already exists", name);
@@ -329,6 +336,13 @@ void vtx_copy(Vtx *dest, Vtx *src, u32 count) {
 
 Vtx *vtx_new(const char *name, u32 count) {
     if (!name || !count) { return NULL; }
+
+    // Make sure to not take the name of a level/model/vanilla vertex buffer
+    u32 outCount;
+    if (dynos_vtx_get(name, &outCount)) {
+        LOG_LUA_LINE("vtx_new: Vertex buffer `%s` already exists", name);
+        return NULL;
+    }
 
     Vtx *vtx = dynos_vtx_new(name, count);
     if (!vtx) {
