@@ -534,7 +534,7 @@ s16 obj_turn_toward_object(struct Object *obj, struct Object *target, s16 angleI
 
 void obj_set_parent_relative_pos(struct Object *obj, s16 relX, s16 relY, s16 relZ) {
     if (obj == NULL) { return; }
-    
+
     obj->oParentRelativePosX = relX;
     obj->oParentRelativePosY = relY;
     obj->oParentRelativePosZ = relZ;
@@ -542,7 +542,7 @@ void obj_set_parent_relative_pos(struct Object *obj, s16 relX, s16 relY, s16 rel
 
 void obj_set_pos(struct Object *obj, s16 x, s16 y, s16 z) {
     if (obj == NULL) { return; }
-    
+
     obj->oPosX = x;
     obj->oPosY = y;
     obj->oPosZ = z;
@@ -550,7 +550,7 @@ void obj_set_pos(struct Object *obj, s16 x, s16 y, s16 z) {
 
 void obj_set_angle(struct Object *obj, s16 pitch, s16 yaw, s16 roll) {
     if (obj == NULL) { return; }
-    
+
     obj->oFaceAnglePitch = pitch;
     obj->oFaceAngleYaw = yaw;
     obj->oFaceAngleRoll = roll;
@@ -562,7 +562,7 @@ void obj_set_angle(struct Object *obj, s16 pitch, s16 yaw, s16 roll) {
 
 void obj_set_move_angle(struct Object *obj, s16 pitch, s16 yaw, s16 roll) {
     if (obj == NULL) { return; }
-    
+
     obj->oMoveAnglePitch = pitch;
     obj->oMoveAngleYaw = yaw;
     obj->oMoveAngleRoll = roll;
@@ -570,7 +570,7 @@ void obj_set_move_angle(struct Object *obj, s16 pitch, s16 yaw, s16 roll) {
 
 void obj_set_face_angle(struct Object *obj, s16 pitch, s16 yaw, s16 roll) {
     if (obj == NULL) { return; }
-    
+
     obj->oFaceAnglePitch = pitch;
     obj->oFaceAngleYaw = yaw;
     obj->oFaceAngleRoll = roll;
@@ -578,7 +578,7 @@ void obj_set_face_angle(struct Object *obj, s16 pitch, s16 yaw, s16 roll) {
 
 void obj_set_gfx_angle(struct Object *obj, s16 pitch, s16 yaw, s16 roll) {
     if (obj == NULL) { return; }
-    
+
     obj->header.gfx.angle[0] = pitch;
     obj->header.gfx.angle[1] = yaw;
     obj->header.gfx.angle[2] = roll;
@@ -586,7 +586,7 @@ void obj_set_gfx_angle(struct Object *obj, s16 pitch, s16 yaw, s16 roll) {
 
 void obj_set_gfx_pos(struct Object *obj, f32 x, f32 y, f32 z) {
     if (obj == NULL) { return; }
-    
+
     obj->header.gfx.pos[0] = x;
     obj->header.gfx.pos[1] = y;
     obj->header.gfx.pos[2] = z;
@@ -594,7 +594,7 @@ void obj_set_gfx_pos(struct Object *obj, f32 x, f32 y, f32 z) {
 
 void obj_set_gfx_scale(struct Object *obj, f32 x, f32 y, f32 z) {
     if (obj == NULL) { return; }
-    
+
     obj->header.gfx.scale[0] = x;
     obj->header.gfx.scale[1] = y;
     obj->header.gfx.scale[2] = z;
@@ -1970,14 +1970,14 @@ void cur_obj_set_billboard_if_vanilla_cam(void) {
 
 void obj_set_hitbox_radius_and_height(struct Object *o, f32 radius, f32 height) {
     if (o == NULL) { return; }
-    
+
     o->hitboxRadius = radius;
     o->hitboxHeight = height;
 }
 
 void obj_set_hurtbox_radius_and_height(struct Object *o, f32 radius, f32 height) {
     if (o == NULL) { return; }
-    
+
     o->hurtboxRadius = radius;
     o->hurtboxHeight = height;
 }
@@ -2548,7 +2548,7 @@ void cur_obj_spawn_particles(struct SpawnParticlesInfo *info) {
     if (gPrevFrameObjectCount > (OBJECT_POOL_CAPACITY * 150 / 240) && numParticles > 10) {
         numParticles = 10;
     }
-    
+
 
     // We're close to running out of object slots, so don't spawn particles at
     // all
@@ -2745,7 +2745,7 @@ s32 cur_obj_progress_direction_table(void) {
     if (tableLength < 0 || index < 0 || tableLength >= 150 || index >= tableLength) {
         ret = table[0];
         o->oToxBoxMovementStep = 0;
-        LOG_ERROR("Exceeded direction table! tableLength %d, index %d\n", tableLength, index);
+        LOG_ERROR("Exceeded direction table! tableLength %d, index %d", tableLength, index);
     } else if (table[index] != -1) {
         ret = table[index];
         o->oToxBoxMovementStep++;
