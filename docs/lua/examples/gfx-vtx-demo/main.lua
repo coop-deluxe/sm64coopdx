@@ -38,10 +38,39 @@ local function set_geometry_mode(gfx)
 end
 
 --- @param gfx Gfx
+--- @param on integer
+--- Toggle on/off the texture rendering and set the texture scaling.
+local function set_texture_scaling(gfx, on)
+    local scaling = SHAPES[current_shape + 1].get_texture_scaling()
+    gfx_set_command(gfx, "gsSPTexture(%i, %i, 0, G_TX_RENDERTILE, %i)", scaling, scaling, on)
+end
+
+--- @param gfx Gfx
+--- @param obj Object
+--- Update the texture of the current shape.
+local function update_texture(gfx, obj)
+    local texture = SHAPE_TEXTURES[obj.oAnimState].texture
+    gfx_set_command(gfx, "gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_32b, 1, %t)", texture)
+end
+
+--- @param gfx Gfx
+--- @param obj Object
 --- Compute the vertices of the current shape and fill the vertex buffer.
-local function compute_vertices(gfx)
+local function compute_vertices(gfx, obj)
     local vertices = SHAPES[current_shape + 1].get_vertices()
-    local vtx = gfx_get_vertex_buffer(gfx)
+    local num_vertices = #vertices
+
+    -- Create a new or retrieve an existing vertex buffer for the shape
+    -- Use the object pointer to form a unique identifier
+    local vtx_name = "shape_vertices_" .. tostring(obj._pointer)
+    local vtx = vtx_get_from_name(vtx_name)
+    if vtx == nil then
+        vtx = vtx_new(vtx_name, num_vertices)
+    else
+        vtx = vtx_realloc(vtx, num_vertices)
+    end
+
+    -- Fill the vertex buffer
     for i, vertex in ipairs(vertices) do
         local v = vtx_get_vertex(vtx, i - 1)
         v.x = vertex.x
@@ -54,14 +83,31 @@ local function compute_vertices(gfx)
         v.b = vertex.b
         v.a = 0xFF
     end
+
+    -- Update the vertex command
+    gfx_set_command(gfx, "gsSPVertex(%v, %i, 0)", vtx, num_vertices)
 end
 
 --- @param gfx Gfx
+--- @param obj Object
 --- Build the triangles for the current shape.
-local function build_triangles(gfx)
+local function build_triangles(gfx, obj)
     local triangles = SHAPES[current_shape + 1].get_triangles()
+    local num_triangles = #triangles
+
+    -- Create a new or retrieve an existing triangles display list for the shape
+    -- Use the object pointer to form a unique identifier
+    local tris_name = "shape_triangles_" .. tostring(obj._pointer)
+    local tris = gfx_get_from_name(tris_name)
+    if tris == nil then
+        tris = gfx_new(tris_name, num_triangles + 1) -- +1 for the gsSPEndDisplayList command
+    else
+        tris = gfx_realloc(tris, num_triangles + 1)
+    end
+
+    -- Fill the triangles display list
     for i, indices in ipairs(triangles) do
-        local cmd = gfx_get_command(gfx, i - 1)
+        local cmd = gfx_get_command(tris, i - 1)
         if #indices == 6 then
             gfx_set_command(cmd, "gsSP2Triangles(%i, %i, %i, 0, %i, %i, %i, 0)",
                 indices[1], indices[2], indices[3],
@@ -73,34 +119,35 @@ local function build_triangles(gfx)
             )
         end
     end
-    local cmd_end = gfx_get_command(gfx, #triangles)
+    local cmd_end = gfx_get_command(tris, num_triangles)
     gfx_set_command(cmd_end, "gsSPEndDisplayList()")
-end
 
---- @param gfx Gfx
---- Update the texture of the current shape.
-local function update_texture(gfx)
-    local obj = geo_get_current_object()
-    gfx_set_command(gfx, "gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_32b, 1, %t)", SHAPE_TEXTURES[obj.oAnimState].texture)
-end
-
---- @param gfx Gfx
---- @param on integer
---- Toggle on/off the texture rendering and set the texture scaling.
-local function set_texture_scaling(gfx, on)
-    local scaling = SHAPES[current_shape + 1].get_texture_scaling()
-    gfx_set_command(gfx, "gsSPTexture(%i, %i, 0, G_TX_RENDERTILE, %i)", scaling, scaling, on)
+    -- Update the triangles command
+    gfx_set_command(gfx, "gsSPDisplayList(%g)", tris)
 end
 
 --- @param node GraphNode
 --- @param matStackIndex integer
 --- The custom GEO ASM function.
 function geo_update_shape(node, matStackIndex)
-    local gfx = cast_graph_node(node.next).displayList
+    local obj = geo_get_current_object()
 
-    -- Since the layout of the node display list is known, no need to parse it
+    -- Create a new display list that will be attached to the display list node
+    -- To get a different display list for each object, we can use the object pointer to form a unique identifier
+    local gfx_name = "shape_dl_" .. tostring(obj._pointer)
+    local gfx = gfx_get_from_name(gfx_name)
+    if gfx == nil then
+
+        -- Get and copy the template to the newly created display list
+        local gfx_template = gfx_get_from_name("shape_template_dl")
+        local gfx_template_length = gfx_get_length(gfx_template)
+        gfx = gfx_new(gfx_name, gfx_template_length)
+        gfx_copy(gfx, gfx_template, gfx_template_length)
+    end
+
+    -- Now fill the display list with the appropriate commands
     -- We can retrieve the commands directly with `gfx_get_command`
-    -- Index | Command              | Goal
+    -- Index | Command              | What to do
     -- ------|----------------------|----------------------------------------
     --   [0] | gsSPGeometryMode     | Change the geometry mode
     --   [2] | gsSPTexture          | Change the texture scaling
@@ -119,16 +166,18 @@ function geo_update_shape(node, matStackIndex)
     local cmd_texture_scaling_2 = gfx_get_command(gfx, 12)
     set_texture_scaling(cmd_texture_scaling_2, 0)
 
+    -- Update texture
+    local cmd_texture = gfx_get_command(gfx, 3)
+    update_texture(cmd_texture, obj)
+
     -- Compute vertices
     local cmd_vertices = gfx_get_command(gfx, 10)
-    compute_vertices(cmd_vertices)
+    compute_vertices(cmd_vertices, obj)
 
     -- Build triangles
     local cmd_triangles = gfx_get_command(gfx, 11)
-    local gfx_triangles = gfx_get_display_list(cmd_triangles)
-    build_triangles(gfx_triangles)
+    build_triangles(cmd_triangles, obj)
 
-    -- Update texture
-    local cmd_texture = gfx_get_command(gfx, 3)
-    update_texture(cmd_texture)
+    -- Update the graph node display list
+    cast_graph_node(node.next).displayList = gfx
 end

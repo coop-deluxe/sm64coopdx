@@ -770,6 +770,8 @@ static float gfx_adjust_x_for_aspect_ratio(float x) {
 }
 
 static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, const Vtx *vertices, bool luaVertexColor) {
+    if (!vertices) { return; }
+
     float globalLightCached[2][3];
     float vertexColorCached[3];
     if (rsp.geometry_mode & G_LIGHTING) {
@@ -1635,6 +1637,8 @@ static inline void *seg_addr(uintptr_t w1) {
 #define C1(pos, width) ((cmd->words.w1 >> (pos)) & ((1U << width) - 1))
 
 static void OPTIMIZE_O3 gfx_run_dl(Gfx* cmd) {
+    if (!cmd) { return; }
+
     for (;;) {
         uint32_t opcode = cmd->words.w0 >> 24;
 

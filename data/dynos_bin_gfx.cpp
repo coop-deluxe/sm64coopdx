@@ -5,6 +5,7 @@ extern "C" {
 #include "sm64.h"
 #include "include/textures.h"
 #include "src/pc/lua/smlua.h"
+#include "src/pc/lua/utils/smlua_gfx_utils.h"
 }
 
 static std::map<std::string, std::pair<Gfx *, u32>> sGfxCommandCache;
@@ -1077,13 +1078,15 @@ DataNode<Gfx>* DynOS_Gfx_Parse(GfxData* aGfxData, DataNode<Gfx>* aNode) {
     if (aNode->mData) return aNode;
 
     // Display list data
-    aNode->mData = New<Gfx>(aNode->mTokens.Count() * DISPLAY_LIST_SIZE_PER_TOKEN);
+    u32 _Length = aNode->mTokens.Count() * DISPLAY_LIST_SIZE_PER_TOKEN;
+    aNode->mData = gfx_allocate_internal(_Length);
     Gfx* _Head = aNode->mData;
     for (u64 _TokenIndex = 0; _TokenIndex < aNode->mTokens.Count();) { // Don't increment _TokenIndex here!
         ParseGfxSymbol(aGfxData, aNode, _Head, _TokenIndex);
     }
     aNode->mSize = (u32) (_Head - aNode->mData);
     aNode->mLoadIndex = aGfxData->mLoadIndex++;
+    memmove(aNode->mData + aNode->mSize, aNode->mData + _Length, sizeof(Gfx)); // Move the sentinel to the true end of the display list
     return aNode;
 }
 
@@ -1125,7 +1128,7 @@ void DynOS_Gfx_Load(BinFile *aFile, GfxData *aGfxData) {
 
     // Data
     _Node->mSize = aFile->Read<u32>();
-    _Node->mData = New<Gfx>(_Node->mSize);
+    _Node->mData = gfx_allocate_internal(_Node->mSize);
     for (u32 i = 0; i != _Node->mSize; ++i) {
         u32 _WordsW0 = aFile->Read<u32>();
         u32 _WordsW1 = aFile->Read<u32>();
@@ -1297,6 +1300,17 @@ static Array<String> TokenizeGfxCommand(const std::string &command) {
     return tokens;
 }
 
+static bool CheckGfxLength(GfxData *aGfxData, Gfx *gfx, u32 lengthToWrite) {
+    if (lengthToWrite > 1) {
+        u32 gfxLength = gfx_get_length(gfx);
+        if (gfxLength < lengthToWrite) {
+            PrintDataErrorGfx("  ERROR: Cannot write %u commands to display list of length: %u", lengthToWrite, gfxLength);
+            return false;
+        }
+    }
+    return true;
+}
+
 static bool ParseGfxCommand(lua_State *L, GfxData *aGfxData, Gfx *gfx, const char *command, bool hasSpecifiers) {
 
     // Resolve command
@@ -1308,7 +1322,12 @@ static bool ParseGfxCommand(lua_State *L, GfxData *aGfxData, Gfx *gfx, const cha
     // Check cache
     const auto &it = sGfxCommandCache.find(resolved);
     if (it != sGfxCommandCache.end()) {
-        memcpy(gfx, it->second.first, it->second.second * sizeof(Gfx));
+        const Gfx *src = it->second.first;
+        u32 length = it->second.second;
+        if (!CheckGfxLength(aGfxData, gfx, length)) {
+            return false;
+        }
+        memcpy(gfx, src, length * sizeof(Gfx));
         return true;
     }
 
@@ -1321,18 +1340,24 @@ static bool ParseGfxCommand(lua_State *L, GfxData *aGfxData, Gfx *gfx, const cha
 
     // Parse tokenized command
     u64 aTokenIndex = 0;
-    Gfx *gfxStart = gfx;
-    ParseGfxSymbol(aGfxData, &aNode, gfx, aTokenIndex);
+    Gfx gfxBuffer[16] = {0};
+    Gfx *gfxHead = gfxBuffer;
+    ParseGfxSymbol(aGfxData, &aNode, gfxHead, aTokenIndex);
     if (aGfxData->mErrorCount > 0) {
         return false;
     }
 
     // Cache parsed command
-    u32 commandLength = (u32) (gfx - gfxStart);
+    u32 commandLength = (u32) (gfxHead - gfxBuffer);
     Gfx *cached = (Gfx *) calloc(commandLength, sizeof(Gfx));
-    memcpy(cached, gfxStart, commandLength * sizeof(Gfx));
+    memcpy(cached, gfxBuffer, commandLength * sizeof(Gfx));
     sGfxCommandCache[resolved] = { cached, commandLength };
 
+    // Copy buffer to gfx
+    if (!CheckGfxLength(aGfxData, gfx, commandLength)) {
+        return false;
+    }
+    memcpy(gfx, gfxBuffer, commandLength * sizeof(Gfx));
     return true;
 }
 

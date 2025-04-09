@@ -6,6 +6,10 @@
 
 #define C0(cmd, pos, width) (((cmd)->words.w0 >> (pos)) & ((1U << width) - 1))
 
+Gfx *gfx_allocate_internal(u32 length);
+Vtx *vtx_allocate_internal(u32 count);
+u32 gfx_get_length_no_sentinel(const Gfx *gfx);
+
 /* |description|Sets the override FOV|descriptionEnd| */
 void set_override_fov(f32 fov);
 /* |description|Sets the override near plane|descriptionEnd| */
@@ -59,16 +63,30 @@ Vtx *gfx_get_vertex_buffer(Gfx *cmd);
 /* |description|Gets the number of vertices from a display list command if it has the op `G_VTX`|descriptionEnd| */
 u16 gfx_get_vertex_count(Gfx *cmd);
 
-/* |description|Gets the length of a display list|descriptionEnd| */
+/* |description|Gets the max length of a display list|descriptionEnd| */
 u32 gfx_get_length(Gfx *gfx);
 /* |description|Gets a command of a display list at position `offset`|descriptionEnd| */
 Gfx *gfx_get_command(Gfx *gfx, u32 offset);
-/* |description|Copy `length` commands from display list `src` to display list `dest`|descriptionEnd| */
-Gfx *gfx_copy(Gfx *dest, Gfx *src, u32 length);
+/* |description|Copies `length` commands from display list `src` to display list `dest`|descriptionEnd| */
+void gfx_copy(Gfx *dest, Gfx *src, u32 length);
+/* |description|Creates a new named display list of `length` commands|descriptionEnd| */
+Gfx *gfx_new(const char *name, u32 length);
+/* |description|Reallocates a display list created by `gfx_new` to modify its length|descriptionEnd| */
+Gfx *gfx_realloc(Gfx *gfx, u32 newLength);
+/* |description|Deletes a display list created by `gfx_new`|descriptionEnd| */
+void gfx_delete(Gfx *gfx);
 
+/* |description|Gets the max count of vertices of a vertex buffer|descriptionEnd| */
+u32 vtx_get_count(Vtx *vtx);
 /* |description|Gets a vertex of a vertex buffer at position `offset`|descriptionEnd| */
 Vtx *vtx_get_vertex(Vtx *vtx, u32 offset);
-/* |description|Copy `count` vertices from vertex buffer `src` to vertex buffer `dest`|descriptionEnd| */
-Vtx *vtx_copy(Vtx *dest, Vtx *src, u32 count);
+/* |description|Copies `count` vertices from vertex buffer `src` to vertex buffer `dest`|descriptionEnd| */
+void vtx_copy(Vtx *dest, Vtx *src, u32 count);
+/* |description|Creates a new named vertex buffer of `count` vertices|descriptionEnd| */
+Vtx *vtx_new(const char *name, u32 count);
+/* |description|Reallocates a vertex buffer created by `vtx_new` to modify its count|descriptionEnd| */
+Vtx *vtx_realloc(Vtx *vtx, u32 newCount);
+/* |description|Deletes a vertex buffer created by `vtx_new`|descriptionEnd| */
+void vtx_delete(Vtx *vtx);
 
 #endif

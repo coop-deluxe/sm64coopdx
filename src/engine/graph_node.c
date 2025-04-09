@@ -235,7 +235,7 @@ init_graph_node_translation_rotation(struct DynamicPool *pool,
         vec3s_copy(graphNode->translation, translation);
         vec3s_copy(graphNode->rotation, rotation);
         graphNode->node.flags = (drawingLayer << 8) | (graphNode->node.flags & 0xFF);
-        graphNode->displayList = dynos_model_get_writable_display_list(displayList);
+        graphNode->displayList = dynos_gfx_get_writable_display_list(displayList);
     }
 
     return graphNode;
@@ -257,7 +257,7 @@ struct GraphNodeTranslation *init_graph_node_translation(struct DynamicPool *poo
 
         vec3s_copy(graphNode->translation, translation);
         graphNode->node.flags = (drawingLayer << 8) | (graphNode->node.flags & 0xFF);
-        graphNode->displayList = dynos_model_get_writable_display_list(displayList);
+        graphNode->displayList = dynos_gfx_get_writable_display_list(displayList);
     }
 
     return graphNode;
@@ -278,7 +278,7 @@ struct GraphNodeRotation *init_graph_node_rotation(struct DynamicPool *pool,
         init_scene_graph_node_links(&graphNode->node, GRAPH_NODE_TYPE_ROTATION);
         vec3s_copy(graphNode->rotation, rotation);
         graphNode->node.flags = (drawingLayer << 8) | (graphNode->node.flags & 0xFF);
-        graphNode->displayList = dynos_model_get_writable_display_list(displayList);
+        graphNode->displayList = dynos_gfx_get_writable_display_list(displayList);
     }
 
     return graphNode;
@@ -299,7 +299,7 @@ struct GraphNodeScale *init_graph_node_scale(struct DynamicPool *pool,
         graphNode->node.flags = (drawingLayer << 8) | (graphNode->node.flags & 0xFF);
         graphNode->scale = scale;
         graphNode->prevScale = scale;
-        graphNode->displayList = dynos_model_get_writable_display_list(displayList);
+        graphNode->displayList = dynos_gfx_get_writable_display_list(displayList);
     }
 
     return graphNode;
@@ -369,7 +369,7 @@ struct GraphNodeAnimatedPart *init_graph_node_animated_part(struct DynamicPool *
         init_scene_graph_node_links(&graphNode->node, GRAPH_NODE_TYPE_ANIMATED_PART);
         vec3s_copy(graphNode->translation, translation);
         graphNode->node.flags = (drawingLayer << 8) | (graphNode->node.flags & 0xFF);
-        graphNode->displayList = dynos_model_get_writable_display_list(displayList);
+        graphNode->displayList = dynos_gfx_get_writable_display_list(displayList);
     }
 
     return graphNode;
@@ -390,7 +390,7 @@ struct GraphNodeBillboard *init_graph_node_billboard(struct DynamicPool *pool,
         init_scene_graph_node_links(&graphNode->node, GRAPH_NODE_TYPE_BILLBOARD);
         vec3s_copy(graphNode->translation, translation);
         graphNode->node.flags = (drawingLayer << 8) | (graphNode->node.flags & 0xFF);
-        graphNode->displayList = dynos_model_get_writable_display_list(displayList);
+        graphNode->displayList = dynos_gfx_get_writable_display_list(displayList);
     }
 
     return graphNode;
@@ -409,7 +409,7 @@ struct GraphNodeDisplayList *init_graph_node_display_list(struct DynamicPool *po
     if (graphNode != NULL) {
         init_scene_graph_node_links(&graphNode->node, GRAPH_NODE_TYPE_DISPLAY_LIST);
         graphNode->node.flags = (drawingLayer << 8) | (graphNode->node.flags & 0xFF);
-        graphNode->displayList = dynos_model_get_writable_display_list(displayList);
+        graphNode->displayList = dynos_gfx_get_writable_display_list(displayList);
     }
 
     return graphNode;

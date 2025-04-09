@@ -1096,7 +1096,7 @@ int smlua_func_gfx_set_command(lua_State* L) {
     int paramCount = top - 2;
     int specifiersCount = get_gfx_command_specifiers_count(command);
     if (specifiersCount != paramCount) {
-        LOG_LUA("gfx_set_command: Command \"%s\": Invalid number of command parameters: Expected %u, provided %u", command, specifiersCount, paramCount);
+        LOG_LUA_LINE("gfx_set_command: Command \"%s\": Invalid number of command parameters: Expected %u, provided %u", command, specifiersCount, paramCount);
         return 0;
     }
 
@@ -1104,7 +1104,7 @@ int smlua_func_gfx_set_command(lua_State* L) {
     const u32 errorSize = 0x400;
     char errorMsg[errorSize];
     if (!dynos_smlua_parse_gfx_command(L, gfx, command, specifiersCount != 0, errorMsg, errorSize)) {
-        LOG_LUA("gfx_set_command: Command \"%s\": %s", command, errorMsg);
+        LOG_LUA_LINE("gfx_set_command: Command \"%s\": %s", command, errorMsg);
         return 0;
     }
 
@@ -1118,7 +1118,7 @@ int smlua_func_gfx_get_from_name(lua_State *L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("gfx_get_from_name: Failed to convert parameter 1"); return 0; }
 
     u32 length = 0;
-    Gfx *gfx = dynos_model_get_gfx(name, &length);
+    Gfx *gfx = dynos_gfx_get(name, &length);
 
     smlua_push_object(L, LOT_GFX, gfx, NULL);
     lua_pushinteger(L, length);
@@ -1133,7 +1133,7 @@ int smlua_func_vtx_get_from_name(lua_State *L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("vtx_get_from_name: Failed to convert parameter 1"); return 0; }
 
     u32 count = 0;
-    Vtx *vtx = dynos_model_get_vtx(name, &count);
+    Vtx *vtx = dynos_vtx_get(name, &count);
 
     smlua_push_object(L, LOT_VTX, vtx, NULL);
     lua_pushinteger(L, count);

@@ -80,13 +80,20 @@ struct GraphNode* dynos_model_load_dl(u32* aId, enum ModelPool aModelPool, u8 aL
 struct GraphNode* dynos_model_store_geo(u32* aId, enum ModelPool aModelPool, void* aAsset, struct GraphNode* aGraphNode);
 struct GraphNode* dynos_model_get_geo(u32 aId);
 void dynos_model_overwrite_slot(u32 srcSlot, u32 dstSlot);
-Gfx *dynos_model_get_writable_display_list(Gfx* gfx);
-void dynos_model_restore_vanilla_display_lists();
 u32 dynos_model_get_id_from_asset(void* aAsset);
 u32 dynos_model_get_id_from_graph_node(struct GraphNode* aGraphNode);
 void dynos_model_clear_pool(enum ModelPool aModelPool);
-Gfx *dynos_model_get_gfx(const char *name, u32 *outLength);
-Vtx *dynos_model_get_vtx(const char *name, u32 *outCount);
+
+// -- gfx -- //
+Gfx *dynos_gfx_get_writable_display_list(Gfx* gfx);
+Gfx *dynos_gfx_get(const char *name, u32 *outLength);
+Gfx *dynos_gfx_new(const char *name, u32 length);
+Gfx *dynos_gfx_realloc(Gfx *gfx, u32 newLength);
+bool dynos_gfx_delete(Gfx *gfx);
+Vtx *dynos_vtx_get(const char *name, u32 *outCount);
+Vtx *dynos_vtx_new(const char *name, u32 count);
+Vtx *dynos_vtx_realloc(Vtx *vtx, u32 newCount);
+bool dynos_vtx_delete(Vtx *vtx);
 
 // -- other -- //
 void dynos_mod_shutdown(void);

@@ -662,6 +662,10 @@ struct LvlCmd {
     u8 mSize;
 };
 
+// modIndex -> itemName -> (itemPointer, itemSize)
+template <typename T>
+using ModData = std::map<s32, std::map<std::string, std::pair<T *, u32>>>;
+
 //
 // Utils
 //
@@ -976,11 +980,29 @@ struct GraphNode* DynOS_Model_GetGeo(u32 aId);
 u32 DynOS_Model_GetIdFromAsset(void* asset);
 u32 DynOS_Model_GetIdFromGraphNode(struct GraphNode* aNode);
 void DynOS_Model_OverwriteSlot(u32 srcSlot, u32 dstSlot);
-Gfx *DynOS_Model_GetWritableDisplayList(Gfx* aGfx);
-void DynOS_Model_RestoreVanillaDisplayLists();
 void DynOS_Model_ClearPool(enum ModelPool aModelPool);
-Gfx *DynOS_Model_GetGfx(const char *aName, u32 *outLength);
-Vtx *DynOS_Model_GetVtx(const char *aName, u32 *outCount);
+
+//
+// Gfx Manager
+//
+
+Gfx *DynOS_Gfx_GetWritableDisplayList(Gfx *aGfx);
+Gfx *DynOS_Gfx_Get(const char *aName, u32 *outLength);
+Gfx *DynOS_Gfx_New(const char *aName, u32 aLength);
+Gfx *DynOS_Gfx_Realloc(Gfx *aGfx, u32 aNewLength);
+bool DynOS_Gfx_Delete(Gfx *aGfx);
+Vtx *DynOS_Vtx_Get(const char *aName, u32 *outCount);
+Vtx *DynOS_Vtx_New(const char *aName, u32 aCount);
+Vtx *DynOS_Vtx_Realloc(Vtx *aVtx, u32 aNewCount);
+bool DynOS_Vtx_Delete(Vtx *aVtx);
+void DynOS_Gfx_ModShutdown();
+
+//
+// Mod Data Manager
+//
+
+// template functions
+#include "dynos_mgr_moddata.hpp"
 
 //
 // Bin

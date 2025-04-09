@@ -9693,7 +9693,7 @@ end
 
 --- @param gfx Pointer_Gfx
 --- @return integer
---- Gets the length of a display list
+--- Gets the max length of a display list
 function gfx_get_length(gfx)
     -- ...
 end
@@ -9709,9 +9709,37 @@ end
 --- @param dest Pointer_Gfx
 --- @param src Pointer_Gfx
 --- @param length integer
---- @return Pointer_Gfx
---- Copy `length` commands from display list `src` to display list `dest`
+--- Copies `length` commands from display list `src` to display list `dest`
 function gfx_copy(dest, src, length)
+    -- ...
+end
+
+--- @param name string
+--- @param length integer
+--- @return Pointer_Gfx
+--- Creates a new named display list of `length` commands
+function gfx_new(name, length)
+    -- ...
+end
+
+--- @param gfx Pointer_Gfx
+--- @param newLength integer
+--- @return Pointer_Gfx
+--- Reallocates a display list created by `gfx_new` to modify its length
+function gfx_realloc(gfx, newLength)
+    -- ...
+end
+
+--- @param gfx Pointer_Gfx
+--- Deletes a display list created by `gfx_new`
+function gfx_delete(gfx)
+    -- ...
+end
+
+--- @param vtx Pointer_Vtx
+--- @return integer
+--- Gets the max count of vertices of a vertex buffer
+function vtx_get_count(vtx)
     -- ...
 end
 
@@ -9726,9 +9754,30 @@ end
 --- @param dest Pointer_Vtx
 --- @param src Pointer_Vtx
 --- @param count integer
---- @return Pointer_Vtx
---- Copy `count` vertices from vertex buffer `src` to vertex buffer `dest`
+--- Copies `count` vertices from vertex buffer `src` to vertex buffer `dest`
 function vtx_copy(dest, src, count)
+    -- ...
+end
+
+--- @param name string
+--- @param count integer
+--- @return Pointer_Vtx
+--- Creates a new named vertex buffer of `count` vertices
+function vtx_new(name, count)
+    -- ...
+end
+
+--- @param vtx Pointer_Vtx
+--- @param newCount integer
+--- @return Pointer_Vtx
+--- Reallocates a vertex buffer created by `vtx_new` to modify its count
+function vtx_realloc(vtx, newCount)
+    -- ...
+end
+
+--- @param vtx Pointer_Vtx
+--- Deletes a vertex buffer created by `vtx_new`
+function vtx_delete(vtx)
     -- ...
 end
 
