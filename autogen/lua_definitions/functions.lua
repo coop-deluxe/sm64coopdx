@@ -9706,6 +9706,13 @@ function gfx_get_command(gfx, offset)
     -- ...
 end
 
+--- @param gfx Pointer_Gfx
+--- @return Pointer_Gfx
+--- Gets the next command of a given display list pointer. Intended to use in a for loop
+function gfx_get_next_command(gfx)
+    -- ...
+end
+
 --- @param dest Pointer_Gfx
 --- @param src Pointer_Gfx
 --- @param length integer
@@ -9748,6 +9755,13 @@ end
 --- @return Pointer_Vtx
 --- Gets a vertex of a vertex buffer at position `offset`
 function vtx_get_vertex(vtx, offset)
+    -- ...
+end
+
+--- @param vtx Pointer_Vtx
+--- @return Pointer_Vtx
+--- Gets the next vertex of a given vertex pointer. Intended to use in a for loop
+function vtx_get_next_vertex(vtx)
     -- ...
 end
 

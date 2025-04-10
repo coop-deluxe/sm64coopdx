@@ -136,29 +136,45 @@ Vtx *vtx_allocate_internal(u32 count) {
     return vtx;
 }
 
+static u32 gfx_get_op_size(u32 op) {
+    switch (op) {
+        case G_TEXRECT:
+        case G_TEXRECTFLIP:
+            return 3;
+        case G_FILLRECT:
+            return 2;
+    }
+    return 1;
+}
+
 // Get the size of a display list by iterating
 // until gsSPEndDisplayList or gsSPBranchList is found
 u32 gfx_get_length_no_sentinel(const Gfx *gfx) {
     if (!gfx) { return 0; }
     for (u32 i = 0;;) {
         u32 op = (gfx + i)->words.w0 >> 24;
-        u32 cmdSize = 1;
         switch (op) {
             case G_DL:
                 if (C0(gfx + i, 16, 1) == G_DL_NOPUSH) { return i + 1; } // For displaylists that end with branches (jumps)
                 break;
             case G_ENDDL:
                 return i + 1;
-            case G_TEXRECT:
-            case G_TEXRECTFLIP:
-                cmdSize = 3;
-                break;
-            case G_FILLRECT:
-                cmdSize = 2;
-                break;
         }
-        i += cmdSize;
+        i += gfx_get_op_size(op);
     }
+}
+
+static Gfx *gfx_parse_next_command(Gfx *cmd, u32 op) {
+    u32 opSize = gfx_get_op_size(op);
+    u32 newOpSize = gfx_get_op_size(cmd->words.w0 >> 24);
+
+    // If the new op is smaller, fill the next commands with NoOp,
+    // so the data leftovers are not interpreted as commands
+    for (u32 i = newOpSize; i < opSize; ++i) {
+        gDPNoOp(cmd + i);
+    }
+
+    return cmd + newOpSize;
 }
 
 // Assumes the current microcode is Fast3DEX2 Extended (default for pc port)
@@ -190,19 +206,9 @@ void gfx_parse(Gfx* cmd, LuaFunction func) {
                 if (lua_type(L, -1) == LUA_TBOOLEAN && smlua_to_boolean(L, -1)) {
                     return;
                 }
-                switch (op) {
-                    case G_TEXRECT:
-                    case G_TEXRECTFLIP:
-                        ++cmd;
-                        ++cmd;
-                        break;
-                    case G_FILLRECT:
-                        ++cmd;
-                        break;
-                }
                 break;
         }
-        ++cmd;
+        cmd = gfx_parse_next_command(cmd, op);
     }
 }
 
@@ -246,18 +252,25 @@ Gfx *gfx_get_command(Gfx *gfx, u32 offset) {
     return &gfx[offset];
 }
 
+Gfx *gfx_get_next_command(Gfx *gfx) {
+    if (!gfx) { return NULL; }
+
+    gfx++;
+    return memcmp(gfx, SENTINEL_GFX, sizeof(Gfx)) != 0 ? gfx : NULL;
+}
+
 void gfx_copy(Gfx *dest, Gfx *src, u32 length) {
     if (!src || !dest || !length) { return; }
 
     u32 srcLength = gfx_get_length(src);
     if (length > srcLength) {
-        LOG_LUA_LINE("gfx_copy: Cannot copy %u commands from a display list of size: %u", length, srcLength);
+        LOG_LUA_LINE("gfx_copy: Cannot copy %u commands from a display list of length: %u", length, srcLength);
         return;
     }
 
     u32 destLength = gfx_get_length(dest);
     if (length > destLength) {
-        LOG_LUA_LINE("gfx_copy: Cannot copy %u commands to a display list of size: %u", length, srcLength);
+        LOG_LUA_LINE("gfx_copy: Cannot copy %u commands to a display list of length: %u", length, srcLength);
         return;
     }
 
@@ -316,18 +329,25 @@ Vtx *vtx_get_vertex(Vtx *vtx, u32 offset) {
     return &vtx[offset];
 }
 
+Vtx *vtx_get_next_vertex(Vtx *vtx) {
+    if (!vtx) { return NULL; }
+
+    vtx++;
+    return memcmp(vtx, SENTINEL_VTX, sizeof(Vtx)) != 0 ? vtx : NULL;
+}
+
 void vtx_copy(Vtx *dest, Vtx *src, u32 count) {
     if (!src || !dest || !count) { return; }
 
     u32 srcLength = vtx_get_count(src);
     if (count > srcLength) {
-        LOG_LUA_LINE("vtx_copy: Cannot copy %u vertices from a vertex buffer of size: %u", count, srcLength);
+        LOG_LUA_LINE("vtx_copy: Cannot copy %u vertices from a vertex buffer of count: %u", count, srcLength);
         return;
     }
 
     u32 destLength = vtx_get_count(dest);
     if (count > destLength) {
-        LOG_LUA_LINE("vtx_copy: Cannot copy %u vertices to a vertex buffer of size: %u", count, srcLength);
+        LOG_LUA_LINE("vtx_copy: Cannot copy %u vertices to a vertex buffer of count: %u", count, srcLength);
         return;
     }
 

@@ -1226,35 +1226,40 @@ static String ResolveParam(lua_State *L, GfxData *aGfxData, u32 paramIndex, char
     switch (paramType) {
 
         // Integer
-        case 'i': return ConvertParam<s64>(L, aGfxData, paramIndex,
+        case 'i': return ConvertParam<s64>(
+            L, aGfxData, paramIndex,
             "integer",
             [] (lua_State *L, u32 paramIndex) { return smlua_to_integer(L, paramIndex); },
             [] (s64 integer) { return String("%lld", integer); }
         );
 
         // String
-        case 's': return ConvertParam<const char *>(L, aGfxData, paramIndex,
+        case 's': return ConvertParam<const char *>(
+            L, aGfxData, paramIndex,
             "string",
             [] (lua_State *L, u32 paramIndex) { return smlua_to_string(L, paramIndex); },
             [] (const char *string) { return String(string); }
         );
 
         // Vtx pointer
-        case 'v': return ConvertParam<Vtx *>(L, aGfxData, paramIndex,
+        case 'v': return ConvertParam<Vtx *>(
+            L, aGfxData, paramIndex,
             "Vtx pointer",
             [] (lua_State *L, u32 paramIndex) { return (Vtx *) smlua_to_cobject(L, paramIndex, LOT_VTX); },
             [&aGfxData] (Vtx *vtx) { return CreateRawPointerDataNode(aGfxData, vtx); }
         );
 
         // Texture pointer
-        case 't': return ConvertParam<Texture *>(L, aGfxData, paramIndex,
+        case 't': return ConvertParam<Texture *>(
+            L, aGfxData, paramIndex,
             "Texture pointer",
             [] (lua_State *L, u32 paramIndex) { return (Texture *) smlua_to_cpointer(L, paramIndex, LVT_U8_P); },
             [&aGfxData] (Texture *texture) { return CreateRawPointerDataNode(aGfxData, texture); }
         );
 
         // Gfx pointer
-        case 'g': return ConvertParam<Gfx *>(L, aGfxData, paramIndex,
+        case 'g': return ConvertParam<Gfx *>(
+            L, aGfxData, paramIndex,
             "Gfx pointer",
             [] (lua_State *L, u32 paramIndex) { return (Gfx *) smlua_to_cobject(L, paramIndex, LOT_GFX); },
             [&aGfxData] (Gfx *gfx) { return CreateRawPointerDataNode(aGfxData, gfx); }
@@ -1392,8 +1397,9 @@ static bool ParseGfxCommand(lua_State *L, GfxData *aGfxData, Gfx *gfx, const cha
 
     // Cache parsed command
     u32 commandLength = (u32) (gfxHead - gfxBuffer);
-    Gfx *cached = (Gfx *) calloc(commandLength, sizeof(Gfx));
-    memcpy(cached, gfxBuffer, commandLength * sizeof(Gfx));
+    size_t commandSize = commandLength * sizeof(Gfx);
+    Gfx *cached = (Gfx *) malloc(commandSize);
+    memcpy(cached, gfxBuffer, commandSize);
     sGfxCommandCache[resolved] = { cached, commandLength };
 
     // Copy buffer to gfx

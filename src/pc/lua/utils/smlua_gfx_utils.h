@@ -67,6 +67,8 @@ u16 gfx_get_vertex_count(Gfx *cmd);
 u32 gfx_get_length(Gfx *gfx);
 /* |description|Gets a command of a display list at position `offset`|descriptionEnd| */
 Gfx *gfx_get_command(Gfx *gfx, u32 offset);
+/* |description|Gets the next command of a given display list pointer. Intended to use in a for loop|descriptionEnd| */
+Gfx *gfx_get_next_command(Gfx *gfx);
 /* |description|Copies `length` commands from display list `src` to display list `dest`|descriptionEnd| */
 void gfx_copy(Gfx *dest, Gfx *src, u32 length);
 /* |description|Creates a new named display list of `length` commands|descriptionEnd| */
@@ -80,6 +82,8 @@ void gfx_delete(Gfx *gfx);
 u32 vtx_get_count(Vtx *vtx);
 /* |description|Gets a vertex of a vertex buffer at position `offset`|descriptionEnd| */
 Vtx *vtx_get_vertex(Vtx *vtx, u32 offset);
+/* |description|Gets the next vertex of a given vertex pointer. Intended to use in a for loop|descriptionEnd| */
+Vtx *vtx_get_next_vertex(Vtx *vtx);
 /* |description|Copies `count` vertices from vertex buffer `src` to vertex buffer `dest`|descriptionEnd| */
 void vtx_copy(Vtx *dest, Vtx *src, u32 count);
 /* |description|Creates a new named vertex buffer of `count` vertices|descriptionEnd| */

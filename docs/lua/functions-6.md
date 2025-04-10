@@ -590,6 +590,29 @@ Gets a command of a display list at position `offset`
 
 <br />
 
+## [gfx_get_next_command](#gfx_get_next_command)
+
+### Description
+Gets the next command of a given display list pointer. Intended to use in a for loop
+
+### Lua Example
+`local PointerValue = gfx_get_next_command(gfx)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| gfx | `Pointer` <`Gfx`> |
+
+### Returns
+- `Pointer` <`Gfx`>
+
+### C Prototype
+`Gfx *gfx_get_next_command(Gfx *gfx);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [gfx_copy](#gfx_copy)
 
 ### Description
@@ -728,6 +751,29 @@ Gets a vertex of a vertex buffer at position `offset`
 
 ### C Prototype
 `Vtx *vtx_get_vertex(Vtx *vtx, u32 offset);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vtx_get_next_vertex](#vtx_get_next_vertex)
+
+### Description
+Gets the next vertex of a given vertex pointer. Intended to use in a for loop
+
+### Lua Example
+`local PointerValue = vtx_get_next_vertex(vtx)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| vtx | `Pointer` <`Vtx`> |
+
+### Returns
+- `Pointer` <`Vtx`>
+
+### C Prototype
+`Vtx *vtx_get_next_vertex(Vtx *vtx);`
 
 [:arrow_up_small:](#)
 

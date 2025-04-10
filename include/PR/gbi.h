@@ -4613,6 +4613,7 @@ typedef union {
  * under normal circumstances (use gsSPTextureRectangle()).
  * That is also why there is no gDPTextureRectangle() macros.
  */
+#if 0 // DO NOT USE
 #define gsDPTextureRectangle(xl, yl, xh, yh, tile, s, t, dsdx, dtdy)	\
 {{									\
     (_SHIFTL(G_TEXRECT, 24, 8) | _SHIFTL(xh, 12, 12) | 			\
@@ -4660,6 +4661,7 @@ typedef union {
     _g->words.w0 = (_SHIFTL(s, 16, 16) | _SHIFTL(t, 0, 16));		\
     _g->words.w1 = (_SHIFTL(dsdx, 16, 16) | _SHIFTL(dtdy, 0, 16));	\
 }
+#endif
 
 #ifdef F3D_OLD
 # define gSPTextureRectangle(pkt, xl, yl, xh, yh, tile, s, t, dsdx, dtdy)\

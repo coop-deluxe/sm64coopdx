@@ -70,22 +70,22 @@ local function compute_vertices(gfx, obj)
         vtx = vtx_realloc(vtx, num_vertices)
     end
 
-    -- Fill the vertex buffer
-    for i, vertex in ipairs(vertices) do
-        local v = vtx_get_vertex(vtx, i - 1)
-        v.x = vertex.x
-        v.y = vertex.y
-        v.z = vertex.z
-        v.tu = vertex.tu
-        v.tv = vertex.tv
-        v.r = vertex.r
-        v.g = vertex.g
-        v.b = vertex.b
-        v.a = 0xFF
-    end
-
     -- Update the vertex command
     gfx_set_command(gfx, "gsSPVertex(%v, %i, 0)", vtx, num_vertices)
+
+    -- Fill the vertex buffer
+    for _, vertex in ipairs(vertices) do
+        vtx.x = vertex.x
+        vtx.y = vertex.y
+        vtx.z = vertex.z
+        vtx.tu = vertex.tu
+        vtx.tv = vertex.tv
+        vtx.r = vertex.r
+        vtx.g = vertex.g
+        vtx.b = vertex.b
+        vtx.a = 0xFF
+        vtx = vtx_get_next_vertex(vtx)
+    end
 end
 
 --- @param gfx Gfx
@@ -105,25 +105,24 @@ local function build_triangles(gfx, obj)
         tris = gfx_realloc(tris, num_triangles + 1)
     end
 
+    -- Update the triangles command
+    gfx_set_command(gfx, "gsSPDisplayList(%g)", tris)
+
     -- Fill the triangles display list
-    for i, indices in ipairs(triangles) do
-        local cmd = gfx_get_command(tris, i - 1)
+    for _, indices in ipairs(triangles) do
         if #indices == 6 then
-            gfx_set_command(cmd, "gsSP2Triangles(%i, %i, %i, 0, %i, %i, %i, 0)",
+            gfx_set_command(tris, "gsSP2Triangles(%i, %i, %i, 0, %i, %i, %i, 0)",
                 indices[1], indices[2], indices[3],
                 indices[4], indices[5], indices[6]
             )
         elseif #indices == 3 then
-            gfx_set_command(cmd, "gsSP1Triangle(%i, %i, %i, 0)",
+            gfx_set_command(tris, "gsSP1Triangle(%i, %i, %i, 0)",
                 indices[1], indices[2], indices[3]
             )
         end
+        tris = gfx_get_next_command(tris)
     end
-    local cmd_end = gfx_get_command(tris, num_triangles)
-    gfx_set_command(cmd_end, "gsSPEndDisplayList()")
-
-    -- Update the triangles command
-    gfx_set_command(gfx, "gsSPDisplayList(%g)", tris)
+    gfx_set_command(tris, "gsSPEndDisplayList()")
 end
 
 --- @param node GraphNode
