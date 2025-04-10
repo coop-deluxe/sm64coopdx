@@ -270,8 +270,12 @@ void dynos_model_overwrite_slot(u32 srcSlot, u32 dstSlot) {
     DynOS_Model_OverwriteSlot(srcSlot, dstSlot);
 }
 
-Gfx *dynos_model_duplicate_displaylist(Gfx* gfx) {
-    return DynOS_Model_Duplicate_DisplayList(gfx);
+Gfx *dynos_model_get_writable_display_list(Gfx* gfx) {
+    return DynOS_Model_GetWritableDisplayList(gfx);
+}
+
+void dynos_model_restore_vanilla_display_lists() {
+    return DynOS_Model_RestoreVanillaDisplayLists();
 }
 
 // -- other -- //

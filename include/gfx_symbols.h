@@ -25,22 +25,20 @@ define_gfx_symbol(gsDPSetFogColor, 4);                  \
 define_gfx_symbol(gsSPFogPosition, 2, false);           \
 define_gfx_symbol(gsDPSetAlphaCompare, 1, false);       \
 define_gfx_symbol(gsDPSetTextureFilter, 1, false);      \
+define_gfx_symbol(gsDPSetTexturePersp, 1, false);       \
+define_gfx_symbol(gsDPSetTextureLOD, 1, false);         \
+define_gfx_symbol(gsDPSetTextureConvert, 1, false);     \
 define_gfx_symbol(gsSPCullDisplayList, 2, false);       \
 define_gfx_symbol(gsDPSetAlphaDither, 1, false);        \
 define_gfx_symbol(gsDPSetCombineKey, 1, false);         \
-define_gfx_symbol(gsDPSetTextureConvert, 1, false);     \
-define_gfx_symbol(gsDPSetCombineKey, 1, false);         \
-define_gfx_symbol(gsDPSetTextureConvert, 1, false);     \
 define_gfx_symbol(gsDPPipelineMode, 1, false);          \
 define_gfx_symbol(gsSPSetOtherMode, 4);                 \
 define_gfx_symbol(gsDPSetTextureDetail, 1, false);      \
 define_gfx_symbol(gsDPSetColorDither, 1, false);        \
 define_gfx_symbol(gsDPSetPrimDepth, 2, false);          \
 define_gfx_symbol(gsDPSetBlendColor, 4);                \
-                                                        \
 define_gfx_symbol(gsSPCopyLightEXT, 2, false);          \
 define_gfx_symbol(gsSPCopyLightsPlayerPart, 1, false);  \
 define_gfx_symbol(gsSPFogFactor, 2, false);             \
-define_gfx_symbol(gsDPSetTextureLOD, 1, false);         \
 define_gfx_symbol(gsMoveWd, 3, false);                  \
 define_gfx_symbol(gsSPVertexNonGlobal, 3, true);

@@ -8865,7 +8865,9 @@ HOOK_BEFORE_GEO_PROCESS                     = 49 --- @type LuaHookedEventType
 HOOK_ON_GEO_PROCESS_CHILDREN                = 50 --- @type LuaHookedEventType
 HOOK_MARIO_OVERRIDE_GEOMETRY_INPUTS         = 51 --- @type LuaHookedEventType
 HOOK_ON_INTERACTIONS                        = 52 --- @type LuaHookedEventType
-HOOK_MAX                                    = 53 --- @type LuaHookedEventType
+HOOK_ALLOW_FORCE_WATER_ACTION               = 53 --- @type LuaHookedEventType
+HOOK_BEFORE_WARP                            = 54 --- @type LuaHookedEventType
+HOOK_MAX                                    = 55 --- @type LuaHookedEventType
 
 --- @alias LuaHookedEventType
 --- | `HOOK_UPDATE`
@@ -8921,6 +8923,8 @@ HOOK_MAX                                    = 53 --- @type LuaHookedEventType
 --- | `HOOK_ON_GEO_PROCESS_CHILDREN`
 --- | `HOOK_MARIO_OVERRIDE_GEOMETRY_INPUTS`
 --- | `HOOK_ON_INTERACTIONS`
+--- | `HOOK_ALLOW_FORCE_WATER_ACTION`
+--- | `HOOK_BEFORE_WARP`
 --- | `HOOK_MAX`
 
 ACTION_HOOK_EVERY_FRAME = 0 --- @type LuaActionHookType
@@ -11857,7 +11861,7 @@ COOP_OBJ_FLAG_NON_SYNC = (1 << 2)
 COOP_OBJ_FLAG_INITIALIZED = (1 << 3)
 
 --- @type string
-SM64COOPDX_VERSION = "v1.3"
+SM64COOPDX_VERSION = "v1.3.1"
 
 --- @type string
 VERSION_TEXT = "v"
@@ -11866,7 +11870,7 @@ VERSION_TEXT = "v"
 VERSION_NUMBER = 40
 
 --- @type integer
-MINOR_VERSION_NUMBER = 0
+MINOR_VERSION_NUMBER = 1
 
 --- @type integer
 MAX_VERSION_LENGTH = 128

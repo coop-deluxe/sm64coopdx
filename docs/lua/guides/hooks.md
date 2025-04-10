@@ -143,7 +143,9 @@ The lua functions sent to `hook_event()` will be automatically called by SM64 wh
 | HOOK_ON_GEO_PROCESS | Called when a GeoLayout is processed **Note:** You must set the `hookProcess` field of the graph node to a non-zero value | [GraphNode](../structs.md#GraphNode) graphNode, `integer` matStackIndex |
 | HOOK_BEFORE_GEO_PROCESS | Called before a GeoLayout is processed **Note:** You must set the `hookProcess` field of the graph node to a non-zero value | [GraphNode](../structs.md#GraphNode) graphNode, `integer` matStackIndex |
 | HOOK_ON_GEO_PROCESS_CHILDREN | Called when the children of a GeoLayout node is processed **Note:** You must set the `hookProcess` field of the parent graph node to a non-zero value | [GraphNode](../structs.md#GraphNode) graphNode, `integer` matStackIndex |
+| HOOK_MARIO_OVERRIDE_GEOMETRY_INPUTS | Called before running Mario's geometry input logic, return `false` to not run it. | [MarioState](../structs.md) m | 
 | HOOK_ON_INTERACTIONS | Called when the Mario interactions are processed | [MarioState](../structs.md#MarioState) mario |
+| HOOK_ALLOW_FORCE_WATER_ACTION | Called when executing a non-water action while under the water's surface, or vice versa. Return `false` to prevent the player from being forced out of the action at the water's surface | [MarioState](../structs.md#MarioState) mario, `boolean` isInWaterAction |
 
 ### Parameters
 

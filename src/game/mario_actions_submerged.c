@@ -203,10 +203,14 @@ u32 perform_water_step(struct MarioState *m) {
     nextPos[0] = m->pos[0] + step[0];
     nextPos[1] = m->pos[1] + step[1];
     nextPos[2] = m->pos[2] + step[2];
-
+  
     if (nextPos[1] > m->waterLevel - 80) {
-        nextPos[1] = m->waterLevel - 80;
-        m->vel[1] = 0.0f;
+        bool allow = true;
+        smlua_call_event_hooks_mario_param_and_bool_ret_bool(HOOK_ALLOW_FORCE_WATER_ACTION, m, true, &allow);
+        if (allow) {
+          nextPos[1] = m->waterLevel - 80;
+          m->vel[1] = 0.0f;
+        }
     }
 
     stepResult = perform_water_full_step(m, nextPos);
@@ -528,7 +532,10 @@ static s32 check_water_jump(struct MarioState *m) {
     s32 probe = (s32)(m->pos[1] + 1.5f);
 
     if (m->input & INPUT_A_PRESSED) {
-        if (probe >= m->waterLevel - 80 && m->faceAngle[0] >= 0 && m->controller->stickY < -60.0f) {
+        if (probe >= m->waterLevel - 80 && m->faceAngle[0] >= 0 && m->controller->stickY < -60.0f) {      
+            bool allow = true;
+            smlua_call_event_hooks_mario_param_and_bool_ret_bool(HOOK_ALLOW_FORCE_WATER_ACTION, m, true, &allow); 
+            if (!allow) { return FALSE; }
             vec3s_set(m->angleVel, 0, 0, 0);
 
             m->vel[1] = 62.0f;
@@ -1614,20 +1621,24 @@ static s32 act_hold_metal_water_fall_land(struct MarioState *m) {
 static s32 check_common_submerged_cancels(struct MarioState *m) {
     if (!m) { return 0; }
     if (m->pos[1] > m->waterLevel - 80) {
-        if (m->waterLevel - 80 > m->floorHeight) {
-            m->pos[1] = m->waterLevel - 80;
-        } else {
-            //! If you press B to throw the shell, there is a ~5 frame window
-            // where your held object is the shell, but you are not in the
-            // water shell swimming action. This allows you to hold the water
-            // shell on land (used for cloning in DDD).
-            if (m->action == ACT_WATER_SHELL_SWIMMING && m->heldObj != NULL && m->playerIndex == 0) {
-                m->heldObj->oInteractStatus = INT_STATUS_STOP_RIDING;
-                m->heldObj = NULL;
-                stop_shell_music();
-            }
-
-            return transition_submerged_to_walking(m);
+        bool allow = true;
+        smlua_call_event_hooks_mario_param_and_bool_ret_bool(HOOK_ALLOW_FORCE_WATER_ACTION, m, true, &allow);
+        if (allow) {
+          if (m->waterLevel - 80 > m->floorHeight) {
+              m->pos[1] = m->waterLevel - 80;
+          } else {
+              //! If you press B to throw the shell, there is a ~5 frame window
+              // where your held object is the shell, but you are not in the
+              // water shell swimming action. This allows you to hold the water
+              // shell on land (used for cloning in DDD).
+              if (m->action == ACT_WATER_SHELL_SWIMMING && m->heldObj != NULL && m->playerIndex == 0) {
+                  m->heldObj->oInteractStatus = INT_STATUS_STOP_RIDING;
+                  m->heldObj = NULL;
+                  stop_shell_music();
+              }
+  
+              return transition_submerged_to_walking(m);
+          }
         }
     }
 

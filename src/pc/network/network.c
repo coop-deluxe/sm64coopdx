@@ -665,9 +665,10 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
         gNetworkType = NT_NONE;
     }
 
-    dynos_model_clear_pool(MODEL_POOL_SESSION);
-
     if (exiting) { return; }
+
+    dynos_model_clear_pool(MODEL_POOL_SESSION);
+    dynos_model_restore_vanilla_display_lists();
 
     // reset other stuff
     extern u8* gOverrideEeprom;
@@ -678,6 +679,7 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
     gOverrideNear = 0;
     gOverrideFar = 0;
     gOverrideFOV = 0;
+    gRoomOverride = -1;
     gCurrActStarNum = 0;
     gCurrActNum = 0;
     gCurrCreditsEntry = NULL;

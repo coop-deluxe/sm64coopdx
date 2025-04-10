@@ -168,13 +168,14 @@ void djui_render(void) {
     djui_panel_update();
     djui_popup_update();
 
+    djui_lua_profiler_render();
+
     if (gDjuiRoot != NULL) {
         djui_base_render(&gDjuiRoot->base);
     }
 
     djui_fps_display_render();
     djui_ctx_display_render();
-    djui_lua_profiler_render();
 
     if (sDjuiLuaErrorTimeout > 0) {
         sDjuiLuaErrorTimeout--;
