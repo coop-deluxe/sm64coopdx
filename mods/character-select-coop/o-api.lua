@@ -498,7 +498,7 @@ end
 
 ---@return table
 local function get_menu_color()
-    return update_menu_color()
+    return menuColor
 end
 
 ---@param func function

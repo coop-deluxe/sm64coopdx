@@ -20,15 +20,21 @@ local function convert_color(text)
         return nil
     end
     text = text:sub(3, -2)
-    local rstring = text:sub(1, 2) or "ff"
-    local gstring = text:sub(3, 4) or "ff"
-    local bstring = text:sub(5, 6) or "ff"
-    local astring = text:sub(7, 8) or "ff"
+    local rstring, gstring, bstring = "", "", ""
+    if text:len() ~= 3 and text:len() ~= 6 then return 255, 255, 255, 255 end
+    if text:len() == 6 then
+        rstring = text:sub(1, 2) or "ff"
+        gstring = text:sub(3, 4) or "ff"
+        bstring = text:sub(5, 6) or "ff"
+    else
+        rstring = text:sub(1, 1) .. text:sub(1, 1)
+        gstring = text:sub(2, 2) .. text:sub(2, 2)
+        bstring = text:sub(3, 3) .. text:sub(3, 3)
+    end
     local r = tonumber("0x" .. rstring) or 255
     local g = tonumber("0x" .. gstring) or 255
     local b = tonumber("0x" .. bstring) or 255
-    local a = tonumber("0x" .. astring) or 255
-    return r, g, b, a
+    return r, g, b, 255
 end
 
 ---@param text string
@@ -283,7 +289,7 @@ function render_life_icon_from_local_index(localIndex, x, y, scale)
         local color = color_from_local_index(localIndex)
         djui_hud_set_font(FONT_RECOLOR_HUD)
         djui_hud_set_color(color.r/startColor.r*255, color.g/startColor.g*255, color.b/startColor.b*255, startColor.a)
-        djui_hud_print_text(lifeIcon, x - scale/4, y - 10*scale - scale/4, scale)
+        djui_hud_print_text(lifeIcon, x, y, scale)
         -- Reset HUD Modifications
         djui_hud_set_font(startFont)
         djui_hud_set_color(startColor.r, startColor.g, startColor.b, startColor.a)

@@ -1,5 +1,5 @@
 -- name: Character Select
--- description:\\#ffff33\\--- Character Select Coop v1.13 ---\n\n\\#dcdcdc\\A Library / API made to make adding and using Custom Characters as simple as possible!\nUse\\#ffff33\\ /char-select\\#dcdcdc\\ to get started!\n\nCreated by:\\#008800\\ Squishy6094\n\n\\#AAAAFF\\Updates can be found on\nCharacter Select's Github:\n\\#6666FF\\Squishy6094/character-select-coop
+-- description:\\#ffff33\\-- Character Select Coop v1.13.1 --\n\n\\#dcdcdc\\A Library / API made to make adding and using Custom Characters as simple as possible!\nUse\\#ffff33\\ /char-select\\#dcdcdc\\ to get started!\n\nCreated by:\\#008800\\ Squishy6094\n\n\\#AAAAFF\\Updates can be found on\nCharacter Select's Github:\n\\#6666FF\\Squishy6094/character-select-coop
 -- pausable: false
 -- category: cs
 
@@ -490,7 +490,6 @@ end
 -------------------
 
 local stallFrame = 0
-local noLoop = false
 
 CUTSCENE_CS_MENU = 0xFA
 
@@ -535,6 +534,10 @@ local menuActBlacklist = {
 local prevBaseCharFrame = gNetworkPlayers[0].modelIndex
 local prevAnim = 0
 local animTimer = 0
+local faceAngle = 0
+local eyeState = MARIO_EYES_OPEN
+local prevFOV = 40
+local menuFOV = 45
 --- @param m MarioState
 local function mario_update(m)
     local np = gNetworkPlayers[m.playerIndex]
@@ -585,9 +588,6 @@ local function mario_update(m)
             --play_secondary_music(0, 0, 0.5, 0)
             camera_freeze()
             hud_hide()
-            if _G.PersonalStarCounter then
-                _G.PersonalStarCounter.hide_star_counters(true)
-            end
             if m.area.camera.cutscene == 0 then
                 m.area.camera.cutscene = CUTSCENE_CS_MENU
             end
@@ -597,26 +597,30 @@ local function mario_update(m)
                 y = m.pos.y + 120 * camScale,
                 z = m.pos.z,
             }
+            set_override_fov(menuFOV)
             vec3f_copy(gLakituState.focus, focusPos)
+            m.marioBodyState.eyeState = eyeState
             gLakituState.pos.x = m.pos.x + sins(faceAngle) * 500 * camScale
             gLakituState.pos.y = m.pos.y + 100 * camScale
             gLakituState.pos.z = m.pos.z + coss(faceAngle) * 500 * camScale
-
-            if m.forwardVel == 0 and m.pos.y == m.floorHeight and not ignoredSurfaces[m.floor.type] and m.health > 255 and not menuActBlacklist[m.action] then
-                set_mario_animation(m, MARIO_ANIM_FIRST_PERSON)
+            set_window_title("Character Select v".. MOD_VERSION_STRING .. " - " .. string_underscore_to_space(charTable[charTable.currAlt].name))
+            p.inMenu = true
+        else
+            if p.inMenu then
+                --stop_secondary_music(50)
+                camera_unfreeze()
+                hud_show()
+                set_override_fov(prevFOV)
+                if m.area.camera.cutscene == CUTSCENE_CS_MENU then
+                    m.area.camera.cutscene = CUTSCENE_STOP
+                end
+                p.inMenu = false
+                reset_window_title()
             end
-            noLoop = false
-        elseif not noLoop then
-            --stop_secondary_music(50)
-            camera_unfreeze()
-            hud_show()
-            if _G.PersonalStarCounter then
-                _G.PersonalStarCounter.hide_star_counters(false)
+            local currFOV = get_current_fov()
+            if currFOV ~= menuFOV then
+                prevFOV = currFOV
             end
-            if m.area.camera.cutscene == CUTSCENE_CS_MENU then
-                m.area.camera.cutscene = CUTSCENE_STOP
-            end
-            noLoop = true
         end
 
         -- Check for Locked Chars
@@ -657,6 +661,10 @@ local function mario_update(m)
         end
 
         p.movesetToggle = optionTable[optionTableRef.localMoveset].toggle ~= 0
+    end
+    
+    if p.inMenu and m.forwardVel == 0 and m.pos.y == m.floorHeight and not ignoredSurfaces[m.floor.type] and m.health > 255 and not menuActBlacklist[m.action] then
+        set_mario_animation(m, MARIO_ANIM_FIRST_PERSON)
     end
 
     local marioGfx = m.marioObj.header.gfx
@@ -835,8 +843,6 @@ local TEXT_LOCAL_MODEL_OFF_OPTIONS = "You can turn it back on in the Options Men
 --Credit Text
 local TEXT_CREDITS_HEADER = "Credits"
 
-menuColor = characterTable[1][1].color
-
 local forceCharStrings = {
     [CT_MARIO] = "CT_MARIO",
     [CT_LUIGI] = "CT_LUIGI",
@@ -851,16 +857,32 @@ local MATH_DIVIDE_32 = 1/32
 local MATH_DIVIDE_30 = 1/30
 local MATH_DIVIDE_16 = 1/16
 
+local targetMenuColor = {r = 0 , g = 0, b = 0}
+menuColor = targetMenuColor
+local menuColorHalf = menuColor
+local transSpeed = 0.1
 function update_menu_color()
     if optionTable[optionTableRef.menuColor].toggle > 1 then
-        menuColor = menuColorTable[optionTable[optionTableRef.menuColor].toggle - 1]
+        targetMenuColor = menuColorTable[optionTable[optionTableRef.menuColor].toggle - 1]
     elseif optionTable[optionTableRef.menuColor].toggle == 1 then
         optionTable[optionTableRef.menuColor].toggleNames[2] = string_underscore_to_space(TEXT_PREF_LOAD_NAME) .. ((TEXT_PREF_LOAD_ALT ~= 1 and currChar ~= 1) and " ("..TEXT_PREF_LOAD_ALT..")" or "") .. " (Pref)"
-        menuColor = prefCharColor
+        targetMenuColor = prefCharColor
     elseif characterTable[currChar] ~= nil then
         local char = characterTable[currChar]
-        menuColor = char[char.currAlt].color
+        targetMenuColor = char[char.currAlt].color
     end
+    if optionTable[optionTableRef.anims].toggle > 0 then
+        menuColor.r = lerp(menuColor.r, targetMenuColor.r, transSpeed)
+        menuColor.g = lerp(menuColor.g, targetMenuColor.g, transSpeed)
+        menuColor.b = lerp(menuColor.b, targetMenuColor.b, transSpeed)
+    else
+        menuColor = targetMenuColor
+    end
+    menuColorHalf = {
+        r = menuColor.r * 0.5 + 127,
+        g = menuColor.g * 0.5 + 127,
+        b = menuColor.b * 0.5 + 127
+    }
     return menuColor
 end
 
@@ -870,6 +892,7 @@ local function djui_hud_render_triangle(x, y, width, height)
 end
 
 local buttonAltAnim = 0
+local menuOpacity = 245
 local function on_hud_render()
     local FONT_USER = djui_menu_get_font()
     djui_hud_set_resolution(RESOLUTION_N64)
@@ -881,9 +904,9 @@ local function on_hud_render()
     local heightHalf = height * 0.5
     local widthScale = maxf(width, 321.4) * MATH_DIVIDE_320
 
-    if menuAndTransition then
-        update_menu_color()
+    update_menu_color()
 
+    if menuAndTransition then
         if optionTable[optionTableRef.localModels].toggle == 0 then
             djui_hud_set_color(0, 0, 0, 200)
             djui_hud_render_rect(0, 0, width, height)
@@ -895,14 +918,12 @@ local function on_hud_render()
         local x = 135 * widthScale * 0.8
 
         -- Render All Black Squares Behind Below API
+        djui_hud_set_color(menuColorHalf.r * 0.1, menuColorHalf.g * 0.1, menuColorHalf.b * 0.1, menuOpacity)
         -- Description
-        djui_hud_set_color(0, 0, 0, 255)
-        djui_hud_render_rect(width - x + 2, 2, x - 4, height - 4)
+        djui_hud_render_rect(width - x + 2, 2 + 46, x - 4, height - 4 - 46)
         -- Buttons
-        djui_hud_set_color(0, 0, 0, 255)
-        djui_hud_render_rect(2, 2, x - 4, height - 4)
+        djui_hud_render_rect(2, 2 + 46, x - 4, height - 4 - 46)
         -- Header
-        djui_hud_set_color(0, 0, 0, 255)
         djui_hud_render_rect(2, 2, width - 4, 46)
 
 
@@ -918,6 +939,7 @@ local function on_hud_render()
         djui_hud_render_rect(width - x, 50, 2, height - 50)
         djui_hud_render_rect(width - x, height - 2, x, 2)
         djui_hud_render_rect(width - 2, 50, 2, height - 50)
+        djui_hud_set_color(menuColorHalf.r, menuColorHalf.g, menuColorHalf.b, 255)
         djui_hud_set_font(FONT_ALIASED)
         local character = characterTable[currChar]
         local TEXT_SAVE_NAME = "Save Name: " .. character.saveName
@@ -931,7 +953,7 @@ local function on_hud_render()
             local TEXT_NAME = string_underscore_to_space(character.name)
             local TEXT_CREDIT = "Credit: " .. character.credit
             local TEXT_DESCRIPTION_TABLE = character.description
-            local TEXT_PRESET = "Preset Character Palette: "..((paletteCount > 1 and "("..currPaletteTable.currPalette.."/"..paletteCount..")" or (currPaletteTable.currPalette > 0 and "Off" or "On")) or "Off")
+            local TEXT_PRESET = "Preset Character Palette: "..((paletteCount > 1 and "("..currPaletteTable.currPalette.."/"..paletteCount..")" or (currPaletteTable.currPalette > 0 and "On" or "Off")) or "Off")
             local TEXT_PREF = "Preferred Character:"
             local TEXT_PREF_LOAD_NAME = ' "' .. string_underscore_to_space(TEXT_PREF_LOAD_NAME) .. '"' .. ((TEXT_PREF_LOAD_ALT ~= 1 and TEXT_PREF_LOAD_NAME ~= "Default" and currChar ~= 1) and " ("..TEXT_PREF_LOAD_ALT..")" or "")
             if djui_hud_measure_text(TEXT_PREF_LOAD_NAME) / widthScale > 110 then
@@ -1027,7 +1049,7 @@ local function on_hud_render()
             end
             djui_hud_set_color(character.color.r, character.color.g, character.color.b, 255)
             djui_hud_print_text(TEXT_COLOR, width - x + 8, y, 0.5)
-            djui_hud_set_color(menuColor.r, menuColor.g, menuColor.b, 255)
+            djui_hud_set_color(menuColorHalf.r, menuColorHalf.g, menuColorHalf.b, 255)
             y = y + 7
             if type(TEX_LIFE_ICON) ~= TYPE_STRING then
                 djui_hud_print_text(TEXT_LIFE_ICON .. "    (" .. TEX_LIFE_ICON.width .. "x" .. TEX_LIFE_ICON.height .. ")", width - x + 8, y, 0.5)
@@ -1041,12 +1063,12 @@ local function on_hud_render()
                 djui_hud_set_font(FONT_TINY)
             end
             y = y + 7
-            djui_hud_set_color(menuColor.r, menuColor.g, menuColor.b, 255)
+            djui_hud_set_color(menuColorHalf.r, menuColorHalf.g, menuColorHalf.b, 255)
             djui_hud_print_text(TEXT_STAR_ICON .. "    (" .. TEX_STAR_ICON.width .. "x" .. TEX_STAR_ICON.height .. ")", width - x + 8, y, 0.5)
             djui_hud_set_color(255, 255, 255, 255)
             djui_hud_render_texture(TEX_STAR_ICON, width - x + 35, y + 1, 0.4 / (TEX_STAR_ICON.width * MATH_DIVIDE_16), 0.4 / (TEX_STAR_ICON.height * MATH_DIVIDE_16))
             y = y + 7
-            djui_hud_set_color(menuColor.r, menuColor.g, menuColor.b, 255)
+            djui_hud_set_color(menuColorHalf.r, menuColorHalf.g, menuColorHalf.b, 255)
             djui_hud_print_text(TEXT_FORCED_CHAR .. forceCharStrings[character.forceChar], width - x + 8, y, 0.5)
             y = y + 7
             djui_hud_print_text(TEXT_TABLE_POS .. currChar, width - x + 8, y, 0.5)
@@ -1060,23 +1082,21 @@ local function on_hud_render()
                 local currPalette = currPaletteTable.currPalette > 0 and currPaletteTable.currPalette or 1
                 local paletteTable = currPaletteTable[currPalette]
                 for i = 0, #paletteTable do
-                    djui_hud_set_color(menuColor.r, menuColor.g, menuColor.b, 255)
+                    djui_hud_set_color(menuColorHalf.r, menuColorHalf.g, menuColorHalf.b, 255)
                     djui_hud_render_rect(width - x + 6.5 + (6.5 * i), y + 1.5, 6, 6)
                     djui_hud_set_color(paletteTable[i].r, paletteTable[i].g, paletteTable[i].b, 255)
                     djui_hud_render_rect(width - x + 7 + (6.5 * i), y + 2, 5, 5)
                 end
                 y = y + 7
-                djui_hud_set_color(menuColor.r, menuColor.g, menuColor.b, 255)
+                djui_hud_set_color(menuColorHalf.r, menuColorHalf.g, menuColorHalf.b, 255)
             end
             djui_hud_print_text(TEXT_MOVESET, width - x + 8, y, 0.5)
             y = y + 7
-
-            djui_hud_set_color(menuColor.r, menuColor.g, menuColor.b, 255)
             djui_hud_print_text(TEXT_PRESET, width - x + 8, height - 29, 0.5)
-            djui_hud_set_color(menuColor.r, menuColor.g, menuColor.b, 255)
             djui_hud_print_text(TEXT_PREF, width - x + 8, height - 22, 0.5)
             djui_hud_set_color(prefCharColor.r, prefCharColor.g, prefCharColor.b, 255)
             djui_hud_print_text(TEXT_PREF_COLOR, width - x + 8, height - 15, 0.5)
+            djui_hud_set_color(menuColorHalf.r, menuColorHalf.g, menuColorHalf.b, 255)
         end
 
         --Character Buttons
@@ -1129,7 +1149,7 @@ local function on_hud_render()
             local char = characterTable[charNum]
             if char ~= nil then
                 if not char.locked then
-                    buttonColor = char[char.currAlt].color -- Change Later
+                    buttonColor = char[char.currAlt].color
                 else
                     buttonColor = {r = char[char.currAlt].color.r*0.5, g = char[char.currAlt].color.g*0.5, b = char[char.currAlt].color.b*0.5}
                 end
@@ -1155,7 +1175,7 @@ local function on_hud_render()
                 djui_hud_render_rect(x, y, 70, 1)
                 djui_hud_render_rect(x + 69, y, 1, 20)
                 djui_hud_render_rect(x, y + 19, 70, 1)
-                djui_hud_set_color(0, 0, 0, 200)
+                djui_hud_set_color(buttonColor.r * 0.1, buttonColor.g * 0.1, buttonColor.b * 0.1, menuOpacity)
                 djui_hud_render_rect(x + 1, y + 1, 68, 18)
                 djui_hud_set_font(FONT_TINY)
                 djui_hud_set_color(buttonColor.r, buttonColor.g, buttonColor.b, 255)
@@ -1163,6 +1183,7 @@ local function on_hud_render()
                 if char.locked then
                     charName = TEXT_CHAR_LOCKED
                 end
+                djui_hud_set_color(buttonColor.r * 0.5 + 127, buttonColor.g * 0.5 + 127, buttonColor.b * 0.5 + 127, 255)
                 djui_hud_print_text(charName, x + 5, y + 5, 0.6)
             end
         end
@@ -1175,6 +1196,7 @@ local function on_hud_render()
         djui_hud_render_rect(MATH_7_WIDTHSCALE, 55, 7, 1)
         djui_hud_render_rect(MATH_7_WIDTHSCALE + 6, 55, 1, 170)
         djui_hud_render_rect(MATH_7_WIDTHSCALE, 224, 7, 1)
+        djui_hud_set_color(menuColorHalf.r, menuColorHalf.g, menuColorHalf.b, 255)
         djui_hud_render_rect(MATH_7_WIDTHSCALE + 2, 57 + 166 * ((currChar - 1) * MATH_DIVIDE_CHARACTERS) - (buttonScroll * MATH_DIVIDE_30) * (166 * MATH_DIVIDE_CHARACTERS), 3, 166 * MATH_DIVIDE_CHARACTERS)
         djui_hud_set_font(FONT_TINY)
         local TEXT_CHAR_COUNT = currChar .. "/" .. #characterTable
@@ -1186,13 +1208,13 @@ local function on_hud_render()
         djui_hud_render_rect(0, 0, 2, 50)
         djui_hud_render_rect(0, 48, width, 2)
         djui_hud_render_rect(width - 2, 0, 2, 50)
-        djui_hud_set_color(menuColor.r * 0.5 + 127, menuColor.g * 0.5 + 127, menuColor.b * 0.5 + 127, 255)
+        djui_hud_set_color(menuColorHalf.r, menuColorHalf.g, menuColorHalf.b, 255)
         if TEX_OVERRIDE_HEADER ~= nil then -- Render Override Header
             djui_hud_render_texture(TEX_OVERRIDE_HEADER, widthHalf - 128, 10, 1 / (TEX_OVERRIDE_HEADER.height*MATH_DIVIDE_32), 1 / (TEX_OVERRIDE_HEADER.height*MATH_DIVIDE_32))
         else
             djui_hud_render_texture(TEX_HEADER, widthHalf - 128, 10, 1, 1)
         end
-        djui_hud_set_color(menuColor.r, menuColor.g, menuColor.b, 255)
+        djui_hud_set_color(menuColorHalf.r, menuColorHalf.g, menuColorHalf.b, 255)
         djui_hud_set_font(FONT_TINY)
         djui_hud_print_text(TEXT_VERSION, 5, 3, 0.5)
 
@@ -1202,6 +1224,7 @@ local function on_hud_render()
         end
 
         -- API Rendering (Above Text)
+        djui_hud_set_color(menuColor.r, menuColor.g, menuColor.b, 255)
         if #renderInMenuTable.front > 0 then
             for i = 1, #renderInMenuTable.front do
                 renderInMenuTable.front[i]()
@@ -1216,7 +1239,7 @@ local function on_hud_render()
             djui_hud_render_rect(0, 0, width, height)
             djui_hud_set_color(menuColor.r, menuColor.g, menuColor.b, 255)
             djui_hud_render_rect(width * 0.5 - 50 * widthScale, minf(55 - optionAnimTimer, height - 25 * widthScale), 100 * widthScale, 200)
-            djui_hud_set_color(0, 0, 0, 255)
+            djui_hud_set_color(menuColor.r * 0.1, menuColor.g * 0.1, menuColor.b * 0.1, menuOpacity)
             djui_hud_render_rect(width * 0.5 - 50 * widthScale + 2, minf(55 - optionAnimTimer + 2, height - 25 * widthScale + 2), 100 * widthScale - 4, 196)
             djui_hud_set_font(FONT_ALIASED)
 
@@ -1224,14 +1247,14 @@ local function on_hud_render()
                 local widthScaleLimited = minf(widthScale, 1.5)
                 -- Up Arrow
                 if currOption > 3 then
-                    djui_hud_set_color(menuColor.r, menuColor.g, menuColor.b, 255)
+                    djui_hud_set_color(menuColorHalf.r, menuColorHalf.g, menuColorHalf.b, 255)
                     djui_hud_render_triangle(widthHalf - 3.5*widthScaleLimited, 94 - optionAnimTimer, 6*widthScaleLimited, 3*widthScaleLimited)
                 end
 
                 -- Down Arrow
                 if currOption < optionTableCount - 2 then
                     local yOffset = 90 - optionAnimTimer + 45 * widthScaleLimited
-                    djui_hud_set_color(menuColor.r, menuColor.g, menuColor.b, 255)
+                    djui_hud_set_color(menuColorHalf.r, menuColorHalf.g, menuColorHalf.b, 255)
                     djui_hud_set_rotation(0x8000, 0.5, 0.5)
                     djui_hud_render_triangle(widthHalf - 3.5*widthScaleLimited, yOffset + 10 + 3*widthScaleLimited, 6*widthScaleLimited, 3*widthScaleLimited)
                     djui_hud_set_rotation(0, 0, 0)
@@ -1254,11 +1277,10 @@ local function on_hud_render()
                             else
                                 toggleName = toggleName
                             end
-                            djui_hud_set_color(menuColor.r, menuColor.g, menuColor.b, 255)
                         else
                             djui_hud_set_font(FONT_TINY)
-                            djui_hud_set_color(menuColor.r, menuColor.g, menuColor.b, 150)
                         end
+                        djui_hud_set_color(menuColorHalf.r, menuColorHalf.g, menuColorHalf.b, 255)
                         scale = scale * widthScaleLimited
                         djui_hud_print_text(toggleName, widthHalf - djui_hud_measure_text(toggleName) * scale * 0.5, yOffset, scale)
                     end
@@ -1266,7 +1288,7 @@ local function on_hud_render()
 
                 -- Description
                 if optionTable[currOption].description ~= nil then
-                    djui_hud_set_color(menuColor.r, menuColor.g, menuColor.b, 255)
+                    djui_hud_set_color(menuColorHalf.r, menuColorHalf.g, menuColorHalf.b, 255)
                     for i = 1, #optionTable[currOption].description do
                         djui_hud_set_font(FONT_ALIASED)
                         local line = optionTable[currOption].description[i]
@@ -1275,7 +1297,7 @@ local function on_hud_render()
                 end
                 -- Footer
                 djui_hud_set_font(FONT_TINY)
-                djui_hud_set_color(menuColor.r, menuColor.g, menuColor.b, 255)
+                djui_hud_set_color(menuColorHalf.r, menuColorHalf.g, menuColorHalf.b, 255)
                 djui_hud_print_text(TEXT_OPTIONS_SELECT, widthHalf - djui_hud_measure_text(TEXT_OPTIONS_SELECT) * 0.3, height - 20 - optionAnimTimer, 0.6)
             else
                 local renderList = {}
@@ -1295,10 +1317,10 @@ local function on_hud_render()
                 for i = 1, #renderList do
                     local credit = renderList[i]
                     local header = (credit.font == FONT_ALIASED)
-                    if y > 61 and y < height then 
+                    if y > 62 and y < height then 
                         djui_hud_set_font(credit.font)
                         if not header then
-                            djui_hud_set_color(menuColor.r * 0.5 + 127, menuColor.g * 0.5 + 127, menuColor.b * 0.5 + 127, 255)
+                            djui_hud_set_color(menuColorHalf.r, menuColorHalf.g, menuColorHalf.b, 255)
                         else
                             djui_hud_set_color(menuColor.r, menuColor.g, menuColor.b, 255)
                         end
@@ -1322,7 +1344,7 @@ local function on_hud_render()
                 prevCreditScroll = creditScroll
 
                 for i = 1, 8 do
-                    djui_hud_set_color(0, 0, 0, 100)
+                    djui_hud_set_color(menuColor.r * 0.1, menuColor.g * 0.1, menuColor.b * 0.1, 100)
                     djui_hud_render_rect(widthHalf - 50 * widthScale + 2, 60 - optionAnimTimer, 100 * widthScale - 4, i*4)
                     djui_hud_render_rect(widthHalf - 50 * widthScale + 2, height - 2 - i*4, 96 * widthScale, i*4)
                 end
@@ -1371,9 +1393,9 @@ local function on_hud_render()
             local widthScaleLimited = minf(widthScale, 1.42)
             djui_hud_set_color(menuColor.r, menuColor.g, menuColor.b, 255)
             djui_hud_render_rect(widthHalf - 50 * widthScale, height - 25 * widthScaleLimited, 100 * widthScale, 26 * widthScaleLimited)
-            djui_hud_set_color(0, 0, 0, 255)
+            djui_hud_set_color(0, 0, 0, menuOpacity)
             djui_hud_render_rect(widthHalf - 50 * widthScale + 2, height - 25 * widthScaleLimited + 2, 100 * widthScale - 4, 22 * widthScaleLimited)
-            djui_hud_set_color(menuColor.r, menuColor.g, menuColor.b, 255)
+            djui_hud_set_color(menuColorHalf.r, menuColorHalf.g, menuColorHalf.b, 255)
             djui_hud_render_rect(widthHalf - 50 * widthScale, height - 2, 100 * widthScale, 2)
             djui_hud_set_font(FONT_ALIASED)
             djui_hud_print_text(TEXT_OPTIONS_OPEN, widthHalf - djui_hud_measure_text(TEXT_OPTIONS_OPEN) * 0.175 * widthScaleLimited, height - 23 * widthScaleLimited + optionAnimTimer + 202, 0.35 * widthScaleLimited)
@@ -1434,10 +1456,6 @@ local function on_hud_render()
         menuAndTransition = menu
     end
 
-    djui_hud_set_resolution(RESOLUTION_N64)
-    djui_hud_set_color(0, 0, 0, (math_abs(menuCrossFade)) * -menuCrossFadeMath)
-    djui_hud_render_rect(0, 0, width, height)
-
     -- Info / Z Open Bind on Pause Menu
     if is_game_paused() and not djui_hud_is_pause_menu_created() and gMarioStates[0].action ~= ACT_EXIT_LAND_SAVE_DIALOG then
         local currCharY = 0
@@ -1482,6 +1500,11 @@ local function on_hud_render()
             djui_hud_print_text(text, width - 20, 16 + currCharY, 1)
         end
     end
+
+    -- Cross Fade to Menu
+    djui_hud_set_resolution(RESOLUTION_N64)
+    djui_hud_set_color(0, 0, 0, (math_abs(menuCrossFade)) * -menuCrossFadeMath)
+    djui_hud_render_rect(0, 0, width, height)
 end
 
 local function before_mario_update(m)
@@ -1617,8 +1640,15 @@ local function before_mario_update(m)
 
         -- Handles Camera Posistioning
         faceAngle = m.faceAngle.y
-        if controller.buttonPressed & R_CBUTTONS ~= 0 then faceAngle = faceAngle + 0x1000 end
-        if controller.buttonPressed & L_CBUTTONS ~= 0 then faceAngle = faceAngle - 0x1000 end
+        eyeState = MARIO_EYES_OPEN
+        if controller.buttonPressed & R_CBUTTONS ~= 0 then
+            faceAngle = faceAngle + 0x1000
+            eyeState = MARIO_EYES_LOOK_RIGHT
+        end
+        if controller.buttonPressed & L_CBUTTONS ~= 0 then
+            faceAngle = faceAngle - 0x1000
+            eyeState = MARIO_EYES_LOOK_LEFT
+        end
 
         nullify_inputs(m)
         if is_game_paused() then
