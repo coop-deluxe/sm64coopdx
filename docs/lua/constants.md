@@ -3770,7 +3770,8 @@
 | HOOK_MARIO_OVERRIDE_GEOMETRY_INPUTS | 51 |
 | HOOK_ON_INTERACTIONS | 52 |
 | HOOK_ALLOW_FORCE_WATER_ACTION | 53 |
-| HOOK_MAX | 54 |
+| HOOK_BEFORE_WARP | 54 |
+| HOOK_MAX | 55 |
 
 ### [enum LuaActionHookType](#LuaActionHookType)
 | Identifier | Value |

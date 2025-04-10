@@ -548,7 +548,7 @@ void init_mario_after_warp(void) {
         gMarioState->skipWarpInteractionsTimer = 30;
     }
 
-    smlua_call_event_hooks(HOOK_ON_WARP);
+    smlua_call_event_hooks_warp_params(HOOK_ON_WARP, sWarpDest.type, sWarpDest.levelNum, sWarpDest.areaIdx, sWarpDest.nodeId, sWarpDest.arg);
 }
 
 // used for warps inside one level
@@ -755,7 +755,10 @@ s16 music_changed_through_warp(s16 arg) {
 /**
  * Set the current warp type and destination level/area/node.
  */
-void initiate_warp(s16 destLevel, s16 destArea, s16 destWarpNode, s32 arg) {
+void initiate_warp(s16 destLevel, s16 destArea, s16 destWarpNode, s32 arg) {//
+
+    smlua_call_event_hooks_before_warp(HOOK_BEFORE_WARP, &destLevel, &destArea, &destWarpNode, &arg);
+
     if (destWarpNode >= WARP_NODE_CREDITS_MIN) {
         sWarpDest.type = WARP_TYPE_CHANGE_LEVEL;
     } else if (destLevel != gCurrLevelNum) {
@@ -1846,7 +1849,7 @@ s32 init_level(void) {
     if (gNetworkPlayerLocal != NULL) {
         network_player_update_course_level(gNetworkPlayerLocal, gCurrCourseNum, gCurrActStarNum, gCurrLevelNum, gCurrAreaIndex);
     }
-    smlua_call_event_hooks(HOOK_ON_LEVEL_INIT);
+    smlua_call_event_hooks_warp_params(HOOK_ON_LEVEL_INIT, sWarpDest.type, sWarpDest.levelNum, sWarpDest.areaIdx, sWarpDest.nodeId, sWarpDest.arg);
 
     // clear texture 1 on level init -- can linger and corrupt textures otherwise
     extern u8 gGfxPcResetTex1;
