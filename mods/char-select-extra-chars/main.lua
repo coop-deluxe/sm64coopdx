@@ -1,5 +1,5 @@
 -- name: [CS] Extra Characters
--- description: [CS] Extra Characters v8.1\nBy: \\#00ff00\\ULTRA BROS TEAM\n\n\\#ffff00\\Ultra Bros Team:\n\\#ffffff\\FunkyLion\nMelzinoff\nFluffaMario\nSharen\nSquishy\n\n\\#f54e59\\Characters:\n\\#ffffff\\Toadette\nPeach\nDaisy\nYoshi\nBirdo\nForeman Spike\nPauline\nRosalina
+-- description: [CS] Extra Characters v8.2\nBy: \\#00ff00\\ULTRA BROS TEAM\n\n\\#ffff00\\Ultra Bros Team:\n\\#ffffff\\FunkyLion\nMelzinoff\nFluffaMario\nSharen\nSquishy\n\n\\#f54e59\\Characters:\n\\#ffffff\\Toadette\nPeach\nDaisy\nYoshi\nBirdo\nForeman Spike\nPauline\nRosalina
 
 local TEXT_PACK_NAME = "Extra Characters"
 
@@ -962,7 +962,7 @@ local function on_character_select_load()
     _G.charSelect.credit_add(TEXT_PACK_NAME..TEXT_MOVESET, "Wibblus", "Daisy")
     _G.charSelect.credit_add(TEXT_PACK_NAME..TEXT_MOVESET, "xLuigiGamerx", "Yoshi")
     _G.charSelect.credit_add(TEXT_PACK_NAME..TEXT_MOVESET, "EmilyEmmi", "Birdo")
-    _G.charSelect.credit_add(TEXT_PACK_NAME..TEXT_MOVESET, "Squishy6094", "Pauline")
+    _G.charSelect.credit_add(TEXT_PACK_NAME..TEXT_MOVESET, "PeachyPeach", "Pauline")
     _G.charSelect.credit_add(TEXT_PACK_NAME..TEXT_MOVESET, "Wibblus", "Rosalina")
 
     CSloaded = true
