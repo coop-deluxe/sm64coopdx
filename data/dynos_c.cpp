@@ -270,12 +270,42 @@ void dynos_model_overwrite_slot(u32 srcSlot, u32 dstSlot) {
     DynOS_Model_OverwriteSlot(srcSlot, dstSlot);
 }
 
-Gfx *dynos_model_get_writable_display_list(Gfx* gfx) {
-    return DynOS_Model_GetWritableDisplayList(gfx);
+// -- gfx -- //
+
+Gfx *dynos_gfx_get_writable_display_list(Gfx* gfx) {
+    return DynOS_Gfx_GetWritableDisplayList(gfx);
 }
 
-void dynos_model_restore_vanilla_display_lists() {
-    return DynOS_Model_RestoreVanillaDisplayLists();
+Gfx *dynos_gfx_get(const char *name, u32 *outLength) {
+    return DynOS_Gfx_Get(name, outLength);
+}
+
+Gfx *dynos_gfx_new(const char *name, u32 length) {
+    return DynOS_Gfx_New(name, length);
+}
+
+Gfx *dynos_gfx_realloc(Gfx *gfx, u32 newLength) {
+    return DynOS_Gfx_Realloc(gfx, newLength);
+}
+
+bool dynos_gfx_delete(Gfx *gfx) {
+    return DynOS_Gfx_Delete(gfx);
+}
+
+Vtx *dynos_vtx_get(const char *name, u32 *outCount) {
+    return DynOS_Vtx_Get(name, outCount);
+}
+
+Vtx *dynos_vtx_new(const char *name, u32 count) {
+    return DynOS_Vtx_New(name, count);
+}
+
+Vtx *dynos_vtx_realloc(Vtx *vtx, u32 newCount) {
+    return DynOS_Vtx_Realloc(vtx, newCount);
+}
+
+bool dynos_vtx_delete(Vtx *vtx) {
+    return DynOS_Vtx_Delete(vtx);
 }
 
 // -- other -- //

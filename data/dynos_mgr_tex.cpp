@@ -35,6 +35,11 @@ static Array<DataNode<TexData> *>& DynosScheduledInvalidTextures() {
     return sDynosScheduledInvalidTextures;
 }
 
+static Array<Pair<const char*, DataNode<TexData>*>>& DynosCustomTexs() {
+    static Array<Pair<const char*, DataNode<TexData>*>> sDynosCustomTexs;
+    return sDynosCustomTexs;
+}
+
 static bool sDynosDumpTextureCache = false;
 
 //
@@ -329,6 +334,15 @@ static DataNode<TexData> *DynOS_Tex_RetrieveNode(void *aPtr) {
     if (_ValidTextures.find((DataNode<TexData>*)aPtr) != _ValidTextures.end()) {
         return (DataNode<TexData>*)aPtr;
     }
+
+    auto& _DynosCustomTexs = DynosCustomTexs();
+    for (auto &_DynosCustomTex : _DynosCustomTexs) {
+        auto& _Node = _DynosCustomTex.second;
+        if (aPtr == (void *) _Node->mData->mRawData.begin()) {
+            return _Node;
+        }
+    }
+
     return NULL;
 }
 
@@ -359,11 +373,6 @@ bool DynOS_Tex_Import(void **aOutput, void *aPtr, s32 aTile, void *aGfxRApi, voi
   /////////////////////
  // Custom Textures //
 /////////////////////
-
-static Array<Pair<const char*, DataNode<TexData>*>>& DynosCustomTexs() {
-    static Array<Pair<const char*, DataNode<TexData>*>> sDynosCustomTexs;
-    return sDynosCustomTexs;
-}
 
 void DynOS_Tex_Activate(DataNode<TexData>* aNode, bool aCustomTexture) {
     if (!aNode) { return; }

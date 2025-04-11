@@ -3,7 +3,6 @@
 #include "game/rendering_graph_node.h"
 #include "game/skybox.h"
 #include "geo_commands.h"
-#include "engine/display_list.h"
 
 void set_override_fov(f32 fov) {
     gOverrideFOV = fov;
@@ -108,16 +107,70 @@ void set_skybox_color(u8 index, u8 value) {
     gSkyboxColor[index] = value;
 }
 
-///
+  ///////////////////
+ // Display lists //
+///////////////////
 
-// Assumes the current microcode is Fast3DEX2 Extended (default for pc port)
+//
+// The following code and functions assume the current microcode
+// is Fast3DEX2 Extended, and all commands are of size 1
+//
+
+#ifndef GBI_NO_MULTI_COMMANDS
+#error "GBI_NO_MULTI_COMMANDS not set: All GBI commands must be of size 1"
+#endif
+#ifndef F3DEX_GBI_2E
+#error "F3DEX_GBI_2E not set: Microcode must be set to `f3dex2e`"
+#endif
+
+//
+// Sentinel values for dynamically allocated Gfx and Vtx buffers
+// It will prevent out-of-bounds accesses and buffer overflows
+//
+// SENTINEL_GFX is a gsSPEndDisplayList() with all other bits set
+// SENTINEL_VTX bits are all set, which results in a bunch of NaN when treated as a Vtx
+//
+
+static const Gfx SENTINEL_GFX[1] = {{{ _SHIFTL(G_ENDDL, 24, 8) | _SHIFTL(UINT32_MAX, 0, 24), UINT32_MAX }}};
+static const u8  SENTINEL_VTX[sizeof(Vtx)] = {[0 ... sizeof(Vtx) - 1] = UINT8_MAX};
+
+Gfx *gfx_allocate_internal(u32 length) {
+    if (!length) { return NULL; }
+    Gfx *gfx = calloc(length + 1, sizeof(Gfx));
+    memcpy(gfx + length, SENTINEL_GFX, sizeof(Gfx));
+    return gfx;
+}
+
+Vtx *vtx_allocate_internal(u32 count) {
+    if (!count) { return NULL; }
+    Vtx *vtx = calloc(count + 1, sizeof(Vtx));
+    memcpy(vtx + count, SENTINEL_VTX, sizeof(Vtx));
+    return vtx;
+}
+
+// Get the size of a display list by iterating
+// until gsSPEndDisplayList or gsSPBranchList is found
+u32 gfx_get_length_no_sentinel(const Gfx *gfx) {
+    if (!gfx) { return 0; }
+    for (u32 i = 0;; ++i) {
+        u32 op = GFX_OP(gfx + i);
+        switch (op) {
+            case G_DL:
+                if (C0(gfx + i, 16, 1) == G_DL_NOPUSH) { return i + 1; } // For displaylists that end with branches (jumps)
+                break;
+            case G_ENDDL:
+                return i + 1;
+        }
+    }
+}
+
 void gfx_parse(Gfx* cmd, LuaFunction func) {
     if (!cmd) { return; }
     if (func == 0) { return; }
 
     lua_State* L = gLuaState;
-    while (true) {
-        u32 op = cmd->words.w0 >> 24;
+    for (;; cmd++) {
+        u32 op = GFX_OP(cmd);
         switch (op) {
             case G_DL:
                 if (C0(cmd, 16, 1) == G_DL_PUSH) {
@@ -127,16 +180,10 @@ void gfx_parse(Gfx* cmd, LuaFunction func) {
                     --cmd;
                 }
                 break;
+
             case (uint8_t) G_ENDDL:
                 return; // Reached end of display list
-            case G_TEXRECT:
-            case G_TEXRECTFLIP:
-                ++cmd;
-                ++cmd;
-                break;
-            case G_FILLRECT:
-                ++cmd;
-                break;
+
             default:
                 lua_rawgeti(L, LUA_REGISTRYINDEX, func);
                 smlua_push_object(L, LOT_GFX, cmd, NULL);
@@ -149,37 +196,196 @@ void gfx_parse(Gfx* cmd, LuaFunction func) {
                 }
                 break;
         }
-        ++cmd;
     }
 }
 
-Vtx *gfx_get_vtx(Gfx* cmd, u16 offset) {
+u32 gfx_get_op(Gfx *cmd) {
+    if (!cmd) { return G_NOOP; }
+
+    return GFX_OP(cmd);
+}
+
+Gfx *gfx_get_display_list(Gfx *cmd) {
     if (!cmd) { return NULL; }
-    u32 op = cmd->words.w0 >> 24;
+    u32 op = GFX_OP(cmd);
+    if (op != G_DL) { return NULL; }
+    if (cmd->words.w1 == 0) { return NULL; }
+
+    return (Gfx *) cmd->words.w1;
+}
+
+Vtx *gfx_get_vertex_buffer(Gfx *cmd) {
+    if (!cmd) { return NULL; }
+    u32 op = GFX_OP(cmd);
     if (op != G_VTX) { return NULL; }
     if (cmd->words.w1 == 0) { return NULL; }
 
-    u16 numVertices = C0(cmd, 12, 8);
-    if (offset >= numVertices) { return NULL; }
-
-    return &((Vtx *) cmd->words.w1)[offset];
+    return (Vtx *) cmd->words.w1;
 }
 
-u16 gfx_get_vtx_count(Gfx* cmd) {
+u16 gfx_get_vertex_count(Gfx *cmd) {
     if (!cmd) { return 0; }
-    u32 op = cmd->words.w0 >> 24;
+    u32 op = GFX_OP(cmd);
     if (op != G_VTX) { return 0; }
     if (cmd->words.w1 == 0) { return 0; }
 
     return C0(cmd, 12, 8);
 }
 
-void gfx_set_combine_lerp(Gfx* gfx, u32 a0, u32 b0, u32 c0, u32 d0, u32 Aa0, u32 Ab0, u32 Ac0, u32 Ad0, u32 a1, u32 b1, u32 c1, u32 d1,	u32 Aa1, u32 Ab1, u32 Ac1, u32 Ad1) {
-    if (!gfx) { return; }
-    gDPSetCombineLERPNoString(gfx, a0, b0, c0, d0, Aa0, Ab0, Ac0, Ad0, a1, b1, c1, d1, Aa1, Ab1, Ac1, Ad1);
+u32 gfx_get_length(Gfx *gfx) {
+    if (!gfx) { return 0; }
+
+    u32 length = 0;
+    for (; memcmp(gfx, SENTINEL_GFX, sizeof(Gfx)) != 0; ++length, gfx++);
+    return length;
 }
 
-void gfx_set_texture_image(Gfx* gfx, u32 format, u32 size, u32 width, u8* texture) {
+Gfx *gfx_get_command(Gfx *gfx, u32 offset) {
+    if (!gfx) { return NULL; }
+    if (offset >= gfx_get_length(gfx)) { return NULL; }
+
+    return &gfx[offset];
+}
+
+Gfx *gfx_get_next_command(Gfx *gfx) {
+    if (!gfx) { return NULL; }
+
+    gfx++;
+    return memcmp(gfx, SENTINEL_GFX, sizeof(Gfx)) != 0 ? gfx : NULL;
+}
+
+void gfx_copy(Gfx *dest, Gfx *src, u32 length) {
+    if (!src || !dest || !length) { return; }
+
+    u32 srcLength = gfx_get_length(src);
+    if (length > srcLength) {
+        LOG_LUA_LINE("gfx_copy: Cannot copy %u commands from a display list of length: %u", length, srcLength);
+        return;
+    }
+
+    u32 destLength = gfx_get_length(dest);
+    if (length > destLength) {
+        LOG_LUA_LINE("gfx_copy: Cannot copy %u commands to a display list of length: %u", length, srcLength);
+        return;
+    }
+
+    memcpy(dest, src, length * sizeof(Gfx));
+}
+
+Gfx *gfx_new(const char *name, u32 length) {
+    if (!name || !length) { return NULL; }
+
+    // Make sure to not take the name of a level/model/vanilla display list
+    u32 outLength;
+    if (dynos_gfx_get(name, &outLength)) {
+        LOG_LUA_LINE("gfx_new: Display list `%s` already exists", name);
+        return NULL;
+    }
+
+    Gfx *gfx = dynos_gfx_new(name, length);
+    if (!gfx) {
+        LOG_LUA_LINE("gfx_new: Display list `%s` already exists", name);
+        return NULL;
+    }
+
+    return gfx;
+}
+
+Gfx *gfx_realloc(Gfx *gfx, u32 newLength) {
+    if (!gfx || !newLength) { return NULL; }
+
+    Gfx *newGfx = dynos_gfx_realloc(gfx, newLength);
+    if (!newGfx) {
+        LOG_LUA_LINE("gfx_realloc: Display list was not allocated by `gfx_new`");
+        return NULL;
+    }
+
+    return newGfx;
+}
+
+void gfx_delete(Gfx *gfx) {
     if (!gfx) { return; }
-    gDPSetTextureImage(gfx, format, size, width, texture);
+
+    if (!dynos_gfx_delete(gfx)) {
+        LOG_LUA_LINE("gfx_delete: Display list was not allocated by `gfx_new`");
+    }
+}
+
+u32 vtx_get_count(Vtx *vtx) {
+    if (!vtx) { return 0; }
+
+    u32 count = 0;
+    for (; memcmp(vtx, SENTINEL_VTX, sizeof(Vtx)) != 0; ++count, vtx++);
+    return count;
+}
+
+Vtx *vtx_get_vertex(Vtx *vtx, u32 offset) {
+    if (!vtx) { return NULL; }
+    if (offset >= vtx_get_count(vtx)) { return NULL; }
+
+    return &vtx[offset];
+}
+
+Vtx *vtx_get_next_vertex(Vtx *vtx) {
+    if (!vtx) { return NULL; }
+
+    vtx++;
+    return memcmp(vtx, SENTINEL_VTX, sizeof(Vtx)) != 0 ? vtx : NULL;
+}
+
+void vtx_copy(Vtx *dest, Vtx *src, u32 count) {
+    if (!src || !dest || !count) { return; }
+
+    u32 srcLength = vtx_get_count(src);
+    if (count > srcLength) {
+        LOG_LUA_LINE("vtx_copy: Cannot copy %u vertices from a vertex buffer of count: %u", count, srcLength);
+        return;
+    }
+
+    u32 destLength = vtx_get_count(dest);
+    if (count > destLength) {
+        LOG_LUA_LINE("vtx_copy: Cannot copy %u vertices to a vertex buffer of count: %u", count, srcLength);
+        return;
+    }
+
+    memcpy(dest, src, count * sizeof(Vtx));
+}
+
+Vtx *vtx_new(const char *name, u32 count) {
+    if (!name || !count) { return NULL; }
+
+    // Make sure to not take the name of a level/model/vanilla vertex buffer
+    u32 outCount;
+    if (dynos_vtx_get(name, &outCount)) {
+        LOG_LUA_LINE("vtx_new: Vertex buffer `%s` already exists", name);
+        return NULL;
+    }
+
+    Vtx *vtx = dynos_vtx_new(name, count);
+    if (!vtx) {
+        LOG_LUA_LINE("vtx_new: Vertex buffer `%s` already exists", name);
+        return NULL;
+    }
+
+    return vtx;
+}
+
+Vtx *vtx_realloc(Vtx *vtx, u32 newCount) {
+    if (!vtx || !newCount) { return NULL; }
+
+    Vtx *newVtx = dynos_vtx_realloc(vtx, newCount);
+    if (!newVtx) {
+        LOG_LUA_LINE("vtx_realloc: Vertex buffer was not allocated by `vtx_new`");
+        return NULL;
+    }
+
+    return newVtx;
+}
+
+void vtx_delete(Vtx *vtx) {
+    if (!vtx) { return; }
+
+    if (!dynos_vtx_delete(vtx)) {
+        LOG_LUA_LINE("vtx_delete: Vertex buffer was not allocated by `vtx_new`");
+    }
 }

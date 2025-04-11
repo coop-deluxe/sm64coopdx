@@ -165,7 +165,7 @@ sLuaManuallyDefinedStructs = [{
 
 override_types = {
     "Gwords": "Gfx",
-    "Vtx_t": "Vtx"
+    "Vtx_L": "Vtx"
 }
 reversed_override_types = {v: k for k, v in override_types.items()}
 
@@ -275,6 +275,7 @@ def table_to_string(table):
 
 def parse_struct(struct_str, sortFields = True):
     struct = {}
+    struct_str = strip_anonymous_blocks(struct_str) # Allow unions and sub-structs to be accessed
     match = re.match(r"struct\s*(\w+)?\s*{(.*?)}\s*(\w+)?\s*", struct_str.replace("typedef ", ""), re.DOTALL)
     struct_name, body, trailing_name = match.groups()
     identifier = struct_name if struct_name else trailing_name

@@ -2703,12 +2703,21 @@ static struct LuaObjectField sTransitionInfoFields[LUA_TRANSITION_INFO_FIELD_COU
     { "posYaw",     LVT_S16,     offsetof(struct TransitionInfo, posYaw),     false, LOT_NONE,  1, sizeof(s16)   },
 };
 
-#define LUA_VTX_FIELD_COUNT 4
+#define LUA_VTX_FIELD_COUNT 13
 static struct LuaObjectField sVtxFields[LUA_VTX_FIELD_COUNT] = {
-    { "cn",   LVT_U8,  offsetof(Vtx_t, cn),   false, LOT_NONE, 4, sizeof(unsigned char)  },
-    { "flag", LVT_U16, offsetof(Vtx_t, flag), false, LOT_NONE, 1, sizeof(unsigned short) },
-    { "ob",   LVT_F32, offsetof(Vtx_t, ob),   false, LOT_NONE, 3, sizeof(float)          },
-    { "tc",   LVT_S16, offsetof(Vtx_t, tc),   false, LOT_NONE, 2, sizeof(short)          },
+    { "a",    LVT_U8,  offsetof(Vtx_L, a),    false, LOT_NONE, 1, sizeof(unsigned char)  },
+    { "b",    LVT_U8,  offsetof(Vtx_L, b),    false, LOT_NONE, 1, sizeof(unsigned char)  },
+    { "flag", LVT_U16, offsetof(Vtx_L, flag), false, LOT_NONE, 1, sizeof(unsigned short) },
+    { "g",    LVT_U8,  offsetof(Vtx_L, g),    false, LOT_NONE, 1, sizeof(unsigned char)  },
+    { "nx",   LVT_S8,  offsetof(Vtx_L, nx),   false, LOT_NONE, 1, sizeof(signed char)    },
+    { "ny",   LVT_S8,  offsetof(Vtx_L, ny),   false, LOT_NONE, 1, sizeof(signed char)    },
+    { "nz",   LVT_S8,  offsetof(Vtx_L, nz),   false, LOT_NONE, 1, sizeof(signed char)    },
+    { "r",    LVT_U8,  offsetof(Vtx_L, r),    false, LOT_NONE, 1, sizeof(unsigned char)  },
+    { "tu",   LVT_S16, offsetof(Vtx_L, tu),   false, LOT_NONE, 1, sizeof(short)          },
+    { "tv",   LVT_S16, offsetof(Vtx_L, tv),   false, LOT_NONE, 1, sizeof(short)          },
+    { "x",    LVT_F32, offsetof(Vtx_L, x),    false, LOT_NONE, 1, sizeof(float)          },
+    { "y",    LVT_F32, offsetof(Vtx_L, y),    false, LOT_NONE, 1, sizeof(float)          },
+    { "z",    LVT_F32, offsetof(Vtx_L, z),    false, LOT_NONE, 1, sizeof(float)          },
 };
 
 #define LUA_VTX__INTERP_FIELD_COUNT 2
