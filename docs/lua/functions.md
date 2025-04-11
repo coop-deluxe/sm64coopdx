@@ -1777,6 +1777,7 @@
    - [get_skybox_color](functions-6.md#get_skybox_color)
    - [set_skybox_color](functions-6.md#set_skybox_color)
    - [gfx_parse](functions-6.md#gfx_parse)
+   - [gfx_get_op](functions-6.md#gfx_get_op)
    - [gfx_get_display_list](functions-6.md#gfx_get_display_list)
    - [gfx_get_vertex_buffer](functions-6.md#gfx_get_vertex_buffer)
    - [gfx_get_vertex_count](functions-6.md#gfx_get_vertex_count)

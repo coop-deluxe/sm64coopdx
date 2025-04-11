@@ -5,6 +5,7 @@
 #include "types.h"
 
 #define C0(cmd, pos, width) (((cmd)->words.w0 >> (pos)) & ((1U << width) - 1))
+#define GFX_OP(cmd) C0(cmd, 24, 8)
 
 Gfx *gfx_allocate_internal(u32 length);
 Vtx *vtx_allocate_internal(u32 count);
@@ -56,6 +57,8 @@ void set_skybox_color(u8 index, u8 value);
 
 /* |description|Traverses a display list. Takes a Lua function as a parameter, which is called back for each command in the display list with the parameters `cmd` (display list pointer), and `op`|descriptionEnd| */
 void gfx_parse(Gfx *cmd, LuaFunction func);
+/* |description|Gets the op of the display list command|descriptionEnd| */
+u32 gfx_get_op(Gfx *cmd);
 /* |description|Gets the display list from a display list command if it has the op `G_DL`|descriptionEnd| */
 Gfx *gfx_get_display_list(Gfx *cmd);
 /* |description|Gets the vertex buffer from a display list command if it has the op `G_VTX`|descriptionEnd| */

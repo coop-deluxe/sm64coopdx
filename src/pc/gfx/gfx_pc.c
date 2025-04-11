@@ -1792,6 +1792,16 @@ static void OPTIMIZE_O3 gfx_run_dl(Gfx* cmd) {
                 int32_t lrx, lry, tile, ulx, uly;
                 uint32_t uls, ult, dsdx, dtdy;
                 tile = 0;
+#ifdef GBI_NO_MULTI_COMMANDS
+                lrx = (int32_t) (C0(13, 11) << 21) >> 19;
+                lry = (int32_t) (C0(4, 9) << 23) >> 21;
+                ulx = (int32_t) (C1(21, 11) << 21) >> 19;
+                uly = (int32_t) (C1(12, 9) << 23) >> 21;
+                uls = 0;
+                ult = 0;
+                dsdx = C1(4, 8) << 6;
+                dtdy = (C1(0, 4) << 10) | (C0(0, 4) << 6);
+#else
 #ifdef F3DEX_GBI_2E
                 lrx = (int32_t)(C0(0, 24) << 8) >> 8;
                 lry = (int32_t)(C1(0, 24) << 8) >> 8;
@@ -1816,10 +1826,22 @@ static void OPTIMIZE_O3 gfx_run_dl(Gfx* cmd) {
                 dsdx = C1(16, 16);
                 dtdy = C1(0, 16);
 #endif
+#endif
                 gfx_dp_texture_rectangle(ulx, uly, lrx, lry, tile, uls, ult, dsdx, dtdy, opcode == G_TEXRECTFLIP);
                 break;
             }
             case G_FILLRECT:
+#ifdef GBI_NO_MULTI_COMMANDS
+            {
+                int32_t lrx, lry, ulx, uly;
+                uly = (int32_t) (C0(12, 12) << 20) >> 18;
+                lry = (int32_t) (C0(0, 12) << 20) >> 18;
+                ulx = (int32_t) (C1(16, 16) << 16) >> 14;
+                lrx = (int32_t) (C1(0, 16) << 16) >> 14;
+                gfx_dp_fill_rectangle(ulx, uly, lrx, lry);
+                break;
+            }
+#else
 #ifdef F3DEX_GBI_2E
             {
                 int32_t lrx, lry, ulx, uly;
@@ -1834,6 +1856,7 @@ static void OPTIMIZE_O3 gfx_run_dl(Gfx* cmd) {
 #else
                 gfx_dp_fill_rectangle(C1(12, 12), C1(0, 12), C0(12, 12), C0(0, 12));
                 break;
+#endif
 #endif
             case G_SETSCISSOR:
                 gfx_dp_set_scissor(C1(24, 2), C0(12, 12), C0(0, 12), C1(12, 12), C1(0, 12));

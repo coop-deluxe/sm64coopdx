@@ -112,6 +112,18 @@ void set_skybox_color(u8 index, u8 value) {
 ///////////////////
 
 //
+// The following code and functions assume the current microcode
+// is Fast3DEX2 Extended, and all commands are of size 1
+//
+
+#ifndef GBI_NO_MULTI_COMMANDS
+#error "GBI_NO_MULTI_COMMANDS not set: All GBI commands must be of size 1"
+#endif
+#ifndef F3DEX_GBI_2E
+#error "F3DEX_GBI_2E not set: Microcode must be set to `f3dex2e`"
+#endif
+
+//
 // Sentinel values for dynamically allocated Gfx and Vtx buffers
 // It will prevent out-of-bounds accesses and buffer overflows
 //
@@ -136,23 +148,12 @@ Vtx *vtx_allocate_internal(u32 count) {
     return vtx;
 }
 
-static u32 gfx_get_op_size(u32 op) {
-    switch (op) {
-        case G_TEXRECT:
-        case G_TEXRECTFLIP:
-            return 3;
-        case G_FILLRECT:
-            return 2;
-    }
-    return 1;
-}
-
 // Get the size of a display list by iterating
 // until gsSPEndDisplayList or gsSPBranchList is found
 u32 gfx_get_length_no_sentinel(const Gfx *gfx) {
     if (!gfx) { return 0; }
-    for (u32 i = 0;;) {
-        u32 op = (gfx + i)->words.w0 >> 24;
+    for (u32 i = 0;; ++i) {
+        u32 op = GFX_OP(gfx + i);
         switch (op) {
             case G_DL:
                 if (C0(gfx + i, 16, 1) == G_DL_NOPUSH) { return i + 1; } // For displaylists that end with branches (jumps)
@@ -160,31 +161,16 @@ u32 gfx_get_length_no_sentinel(const Gfx *gfx) {
             case G_ENDDL:
                 return i + 1;
         }
-        i += gfx_get_op_size(op);
     }
 }
 
-static Gfx *gfx_parse_next_command(Gfx *cmd, u32 op) {
-    u32 opSize = gfx_get_op_size(op);
-    u32 newOpSize = gfx_get_op_size(cmd->words.w0 >> 24);
-
-    // If the new op is smaller, fill the next commands with NoOp,
-    // so the data leftovers are not interpreted as commands
-    for (u32 i = newOpSize; i < opSize; ++i) {
-        gDPNoOp(cmd + i);
-    }
-
-    return cmd + newOpSize;
-}
-
-// Assumes the current microcode is Fast3DEX2 Extended (default for pc port)
 void gfx_parse(Gfx* cmd, LuaFunction func) {
     if (!cmd) { return; }
     if (func == 0) { return; }
 
     lua_State* L = gLuaState;
-    while (true) {
-        u32 op = cmd->words.w0 >> 24;
+    for (;; cmd++) {
+        u32 op = GFX_OP(cmd);
         switch (op) {
             case G_DL:
                 if (C0(cmd, 16, 1) == G_DL_PUSH) {
@@ -194,8 +180,10 @@ void gfx_parse(Gfx* cmd, LuaFunction func) {
                     --cmd;
                 }
                 break;
+
             case (uint8_t) G_ENDDL:
                 return; // Reached end of display list
+
             default:
                 lua_rawgeti(L, LUA_REGISTRYINDEX, func);
                 smlua_push_object(L, LOT_GFX, cmd, NULL);
@@ -208,13 +196,18 @@ void gfx_parse(Gfx* cmd, LuaFunction func) {
                 }
                 break;
         }
-        cmd = gfx_parse_next_command(cmd, op);
     }
+}
+
+u32 gfx_get_op(Gfx *cmd) {
+    if (!cmd) { return G_NOOP; }
+
+    return GFX_OP(cmd);
 }
 
 Gfx *gfx_get_display_list(Gfx *cmd) {
     if (!cmd) { return NULL; }
-    u32 op = cmd->words.w0 >> 24;
+    u32 op = GFX_OP(cmd);
     if (op != G_DL) { return NULL; }
     if (cmd->words.w1 == 0) { return NULL; }
 
@@ -223,7 +216,7 @@ Gfx *gfx_get_display_list(Gfx *cmd) {
 
 Vtx *gfx_get_vertex_buffer(Gfx *cmd) {
     if (!cmd) { return NULL; }
-    u32 op = cmd->words.w0 >> 24;
+    u32 op = GFX_OP(cmd);
     if (op != G_VTX) { return NULL; }
     if (cmd->words.w1 == 0) { return NULL; }
 
@@ -232,7 +225,7 @@ Vtx *gfx_get_vertex_buffer(Gfx *cmd) {
 
 u16 gfx_get_vertex_count(Gfx *cmd) {
     if (!cmd) { return 0; }
-    u32 op = cmd->words.w0 >> 24;
+    u32 op = GFX_OP(cmd);
     if (op != G_VTX) { return 0; }
     if (cmd->words.w1 == 0) { return 0; }
 
@@ -240,6 +233,8 @@ u16 gfx_get_vertex_count(Gfx *cmd) {
 }
 
 u32 gfx_get_length(Gfx *gfx) {
+    if (!gfx) { return 0; }
+
     u32 length = 0;
     for (; memcmp(gfx, SENTINEL_GFX, sizeof(Gfx)) != 0; ++length, gfx++);
     return length;
@@ -317,6 +312,8 @@ void gfx_delete(Gfx *gfx) {
 }
 
 u32 vtx_get_count(Vtx *vtx) {
+    if (!vtx) { return 0; }
+
     u32 count = 0;
     for (; memcmp(vtx, SENTINEL_VTX, sizeof(Vtx)) != 0; ++count, vtx++);
     return count;

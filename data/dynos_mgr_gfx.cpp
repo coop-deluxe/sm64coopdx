@@ -60,7 +60,7 @@ static Gfx *DynOS_Gfx_Duplicate(Gfx *aGfx, bool shouldDuplicate) {
     // Look for other display lists or vertices
     for (u32 i = 0; i < gfxLength; i++) {
         Gfx *cmd = gfxDuplicate + i;
-        u32 op = cmd->words.w0 >> 24;
+        u32 op = GFX_OP(cmd);
 
         // Duplicate referenced display lists
         if (op == G_DL) {

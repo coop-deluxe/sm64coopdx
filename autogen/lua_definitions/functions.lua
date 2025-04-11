@@ -9671,6 +9671,13 @@ function gfx_parse(cmd, func)
 end
 
 --- @param cmd Pointer_Gfx
+--- @return integer
+--- Gets the op of the display list command
+function gfx_get_op(cmd)
+    -- ...
+end
+
+--- @param cmd Pointer_Gfx
 --- @return Pointer_Gfx
 --- Gets the display list from a display list command if it has the op `G_DL`
 function gfx_get_display_list(cmd)

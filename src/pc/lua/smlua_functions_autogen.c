@@ -30057,6 +30057,24 @@ int smlua_func_gfx_parse(lua_State* L) {
     return 1;
 }
 
+int smlua_func_gfx_get_op(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "gfx_get_op", 1, top);
+        return 0;
+    }
+
+    if (lua_isnil(L, 1)) { return 0; }
+    Gfx * cmd = (Gfx *)smlua_to_cobject(L, 1, LOT_GFX);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "gfx_get_op"); return 0; }
+
+    lua_pushinteger(L, gfx_get_op(cmd));
+
+    return 1;
+}
+
 int smlua_func_gfx_get_display_list(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -35754,6 +35772,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "get_skybox_color", smlua_func_get_skybox_color);
     smlua_bind_function(L, "set_skybox_color", smlua_func_set_skybox_color);
     smlua_bind_function(L, "gfx_parse", smlua_func_gfx_parse);
+    smlua_bind_function(L, "gfx_get_op", smlua_func_gfx_get_op);
     smlua_bind_function(L, "gfx_get_display_list", smlua_func_gfx_get_display_list);
     smlua_bind_function(L, "gfx_get_vertex_buffer", smlua_func_gfx_get_vertex_buffer);
     smlua_bind_function(L, "gfx_get_vertex_count", smlua_func_gfx_get_vertex_count);
