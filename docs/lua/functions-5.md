@@ -5548,22 +5548,22 @@ Runs an OR operator on the `obj`'s respawn info with `bits` << 8. If `bits` is 0
 ## [apply_platform_displacement](#apply_platform_displacement)
 
 ### Description
-Apply one frame of platform rotation to Mario (player index) or an object (-1) using the given platform
+Apply one frame of platform rotation to the object using the given platform
 
 ### Lua Example
-`apply_platform_displacement(playerIndex, platform)`
+`apply_platform_displacement(o, platform)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| playerIndex | `integer` |
+| o | [Object](structs.md#Object) |
 | platform | [Object](structs.md#Object) |
 
 ### Returns
 - None
 
 ### C Prototype
-`void apply_platform_displacement(u32 playerIndex, struct Object *platform);`
+`void apply_platform_displacement(struct Object *o, struct Object *platform);`
 
 [:arrow_up_small:](#)
 

@@ -1023,6 +1023,7 @@
    - [init_single_mario](functions-4.md#init_single_mario)
    - [set_mario_particle_flags](functions-4.md#set_mario_particle_flags)
    - [mario_update_wall](functions-4.md#mario_update_wall)
+   - [get_mario_state_from_object](functions-4.md#get_mario_state_from_object)
 
 <br />
 

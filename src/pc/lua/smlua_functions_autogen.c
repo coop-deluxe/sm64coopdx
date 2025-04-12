@@ -16549,6 +16549,24 @@ int smlua_func_mario_update_wall(lua_State* L) {
     return 1;
 }
 
+int smlua_func_get_mario_state_from_object(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "get_mario_state_from_object", 1, top);
+        return 0;
+    }
+
+    if (lua_isnil(L, 1)) { return 0; }
+    struct Object* o = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "get_mario_state_from_object"); return 0; }
+
+    smlua_push_object(L, LOT_MARIOSTATE, get_mario_state_from_object(o), NULL);
+
+    return 1;
+}
+
   //////////////////////////////
  // mario_actions_airborne.c //
 //////////////////////////////
@@ -27532,13 +27550,14 @@ int smlua_func_apply_platform_displacement(lua_State* L) {
         return 0;
     }
 
-    u32 playerIndex = smlua_to_integer(L, 1);
+    if (lua_isnil(L, 1)) { return 0; }
+    struct Object* o = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "apply_platform_displacement"); return 0; }
     if (lua_isnil(L, 2)) { return 0; }
     struct Object* platform = (struct Object*)smlua_to_cobject(L, 2, LOT_OBJECT);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "apply_platform_displacement"); return 0; }
 
-    apply_platform_displacement(playerIndex, platform);
+    apply_platform_displacement(o, platform);
 
     return 1;
 }
@@ -34877,6 +34896,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "init_single_mario", smlua_func_init_single_mario);
     smlua_bind_function(L, "set_mario_particle_flags", smlua_func_set_mario_particle_flags);
     smlua_bind_function(L, "mario_update_wall", smlua_func_mario_update_wall);
+    smlua_bind_function(L, "get_mario_state_from_object", smlua_func_get_mario_state_from_object);
 
     // mario_actions_airborne.c
     smlua_bind_function(L, "play_flip_sounds", smlua_func_play_flip_sounds);
