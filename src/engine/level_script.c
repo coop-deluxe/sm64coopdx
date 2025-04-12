@@ -384,6 +384,9 @@ static void level_reset_globals(void) {
 
     // free models stored in dynos
     dynos_model_clear_pool(MODEL_POOL_LEVEL);
+
+    // clear the gfx command cache filled by gfx_set_command
+    dynos_smlua_clear_gfx_command_cache();
 }
 
 static void level_cmd_alloc_level_pool(void) {

@@ -1,8 +1,31 @@
 #include "dynos.cpp.h"
+#include <map>
 extern "C" {
 #include <assert.h>
 #include "sm64.h"
 #include "include/textures.h"
+#include "src/pc/lua/smlua.h"
+#include "src/pc/lua/utils/smlua_gfx_utils.h"
+}
+
+static std::map<std::string, std::pair<Gfx *, u32>> sGfxCommandCache;
+static char *sGfxCommandErrorMsg = NULL;
+static u32 sGfxCommandErrorSize = 0;
+
+#define PrintDataErrorGfx(...) { \
+    if (sGfxCommandErrorMsg) { \
+        snprintf(sGfxCommandErrorMsg, sGfxCommandErrorSize, __VA_ARGS__); \
+        aGfxData->mErrorCount++; \
+    } else { \
+        PrintDataError(__VA_ARGS__); \
+    } \
+}
+
+#define CHECK_TOKEN_INDEX(tokenIndex, returnValue) { \
+    if (tokenIndex >= aNode->mTokens.Count()) { \
+        PrintDataErrorGfx("  ERROR: Invalid token index: %llu, tokens count is: %d", tokenIndex, aNode->mTokens.Count()); \
+        return returnValue; \
+    } \
 }
 
 #pragma GCC diagnostic push
@@ -403,6 +426,7 @@ s64 DynOS_Gfx_ParseGfxConstants(const String& _Arg, bool* found) {
 
 static s64 ParseGfxSymbolArg(GfxData* aGfxData, DataNode<Gfx>* aNode, u64* pTokenIndex, const char *aPrefix) {
     assert(aPrefix != NULL);
+    if (pTokenIndex != NULL) { CHECK_TOKEN_INDEX(*pTokenIndex, 0); }
     String _Token = (pTokenIndex != NULL ? aNode->mTokens[(*pTokenIndex)++] : "");
     String _Arg("%s%s", aPrefix, _Token.begin());
 
@@ -417,6 +441,13 @@ static s64 ParseGfxSymbolArg(GfxData* aGfxData, DataNode<Gfx>* aNode, u64* pToke
     s64 constantValue = DynOS_Gfx_ParseGfxConstants(_Arg, &constantFound);
     if (constantFound) {
         return constantValue;
+    }
+
+    // Pointers
+    for (auto& _Node : aGfxData->mRawPointers) {
+        if (_Arg == _Node->mName) {
+            return (s64) _Node->mData;
+        }
     }
 
     // Offset
@@ -534,11 +565,11 @@ static s64 ParseGfxSymbolArg(GfxData* aGfxData, DataNode<Gfx>* aNode, u64* pToke
     bool rdSuccess = false;
     s64 rdValue = DynOS_RecursiveDescent_Parse(_Arg.begin(), &rdSuccess, DynOS_Gfx_ParseGfxConstants);
     if (rdSuccess) {
-        return (LevelScript)rdValue;
+        return rdValue;
     }
 
     // Unknown
-    PrintDataError("  ERROR: Unknown gfx arg: %s", _Arg.begin());
+    PrintDataErrorGfx("  ERROR: Unknown gfx arg: %s", _Arg.begin());
     return 0;
 }
 
@@ -653,10 +684,11 @@ static s64 ParseGfxSymbolArg(GfxData* aGfxData, DataNode<Gfx>* aNode, u64* pToke
         return;                                                                                        \
     }
 
-#define gfx_arg_with_suffix(argname, suffix)                                                           \
+#define gfx_arg_with_suffix(argname, suffix)                                                        \
+    CHECK_TOKEN_INDEX(aTokenIndex,);                                                                \
     const String& argname##_token = aNode->mTokens[aTokenIndex];                                    \
-    String _Token##suffix = String("%s%s", argname##_token.begin(), #suffix);                                   \
-    s64 argname = ParseGfxSymbolArg(aGfxData, aNode, NULL, _Token##suffix.begin());                         \
+    String _Token##suffix = String("%s%s", argname##_token.begin(), #suffix);                       \
+    s64 argname = ParseGfxSymbolArg(aGfxData, aNode, NULL, _Token##suffix.begin());                 \
 
 #define STR_VALUE_2(...) #__VA_ARGS__
 #define STR_VALUE(...) STR_VALUE_2(__VA_ARGS__)
@@ -731,11 +763,12 @@ static String ConvertSetCombineModeArgToString(GfxData *aGfxData, const String& 
     gfx_set_combine_mode_arg(G_CC_HILITERGBA2);
     gfx_set_combine_mode_arg(G_CC_HILITERGBDECALA2);
     gfx_set_combine_mode_arg(G_CC_HILITERGBPASSA2);
-    PrintDataError("  ERROR: Unknown gfx gsDPSetCombineMode arg: %s", _Arg.begin());
+    PrintDataErrorGfx("  ERROR: Unknown gfx gsDPSetCombineMode arg: %s", _Arg.begin());
     return "";
 }
 
 static Array<s64> ParseGfxSetCombineMode(GfxData* aGfxData, DataNode<Gfx>* aNode, u64* pTokenIndex) {
+    CHECK_TOKEN_INDEX(*pTokenIndex, Array<s64>());
     String _Buffer = ConvertSetCombineModeArgToString(aGfxData, aNode->mTokens[(*pTokenIndex)++]);
     Array<s64> _Args;
     String _Token;
@@ -751,7 +784,7 @@ static Array<s64> ParseGfxSetCombineMode(GfxData* aGfxData, DataNode<Gfx>* aNode
         }
     }
     if (_Args.Count() < 8) {
-        PrintDataError("  ERROR: gsDPSetCombineMode %s: Not enough arguments", _Buffer.begin());
+        PrintDataErrorGfx("  ERROR: gsDPSetCombineMode %s: Not enough arguments", _Buffer.begin());
     }
     return _Args;
 }
@@ -761,6 +794,13 @@ static void UpdateTextureInfo(GfxData* aGfxData, s64 *aTexPtr, s32 aFormat, s32 
     if (aTexPtr && (*aTexPtr)) {
         if (DynOS_Builtin_Tex_GetFromData(*(const Texture**)aTexPtr)) {
             return;
+        }
+
+        // Skip raw pointers
+        for (const auto &ptrNode : aGfxData->mRawPointers) {
+            if ((void *) *aTexPtr == ptrNode->mData) {
+                return;
+            }
         }
 
         aGfxData->mGfxContext.mCurrentTexture = (DataNode<TexData>*) (*aTexPtr);
@@ -787,6 +827,7 @@ extern "C" {
 #define define_gfx_symbol(symb, params, ...) gfx_symbol_##params(symb, ##__VA_ARGS__)
 
 static void ParseGfxSymbol(GfxData* aGfxData, DataNode<Gfx>* aNode, Gfx*& aHead, u64& aTokenIndex) {
+    CHECK_TOKEN_INDEX(aTokenIndex,);
     const String& _Symbol = aNode->mTokens[aTokenIndex++];
 
     // Simple symbols
@@ -1073,20 +1114,22 @@ static void ParseGfxSymbol(GfxData* aGfxData, DataNode<Gfx>* aNode, Gfx*& aHead,
     }
 
     // Unknown
-    PrintDataError("  ERROR: Unknown gfx symbol: %s", _Symbol.begin());
+    PrintDataErrorGfx("  ERROR: Unknown gfx symbol: %s", _Symbol.begin());
 }
 
 DataNode<Gfx>* DynOS_Gfx_Parse(GfxData* aGfxData, DataNode<Gfx>* aNode) {
     if (aNode->mData) return aNode;
 
     // Display list data
-    aNode->mData = New<Gfx>(aNode->mTokens.Count() * DISPLAY_LIST_SIZE_PER_TOKEN);
+    u32 _Length = aNode->mTokens.Count() * DISPLAY_LIST_SIZE_PER_TOKEN;
+    aNode->mData = gfx_allocate_internal(_Length);
     Gfx* _Head = aNode->mData;
     for (u64 _TokenIndex = 0; _TokenIndex < aNode->mTokens.Count();) { // Don't increment _TokenIndex here!
         ParseGfxSymbol(aGfxData, aNode, _Head, _TokenIndex);
     }
     aNode->mSize = (u32) (_Head - aNode->mData);
     aNode->mLoadIndex = aGfxData->mLoadIndex++;
+    memmove(aNode->mData + aNode->mSize, aNode->mData + _Length, sizeof(Gfx)); // Move the sentinel to the true end of the display list
     return aNode;
 }
 
@@ -1128,7 +1171,7 @@ void DynOS_Gfx_Load(BinFile *aFile, GfxData *aGfxData) {
 
     // Data
     _Node->mSize = aFile->Read<u32>();
-    _Node->mData = New<Gfx>(_Node->mSize);
+    _Node->mData = gfx_allocate_internal(_Node->mSize);
     for (u32 i = 0; i != _Node->mSize; ++i) {
         u32 _WordsW0 = aFile->Read<u32>();
         u32 _WordsW1 = aFile->Read<u32>();
@@ -1144,4 +1187,254 @@ void DynOS_Gfx_Load(BinFile *aFile, GfxData *aGfxData) {
 
     // Append
     aGfxData->mDisplayLists.Add(_Node);
+}
+
+  /////////
+ // Lua //
+/////////
+
+//
+// Parameter specifiers for gfx_set_command:
+//
+// %i -> integer
+// %s -> string
+// %v -> Vtx pointer
+// %t -> Texture pointer
+// %g -> Gfx pointer
+//
+
+static String CreateRawPointerDataNode(GfxData *aGfxData, void *pointer) {
+    String ptrNodeName = String("PTR_%016llX", (u64) pointer);
+    DataNode<void> *ptrNode = New<DataNode<void>>();
+    ptrNode->mName = ptrNodeName;
+    ptrNode->mData = pointer;
+    aGfxData->mRawPointers.Add(ptrNode);
+    return ptrNodeName;
+}
+
+template <typename T, typename SmluaToFunc, typename ReturnFunc>
+static String ConvertParam(lua_State *L, GfxData *aGfxData, u32 paramIndex, const char *typeName, const SmluaToFunc &smluaToFunc, const ReturnFunc &returnFunc) {
+    T value = smluaToFunc(L, paramIndex);
+    if (!gSmLuaConvertSuccess) {
+        PrintDataErrorGfx("  ERROR: Failed to convert parameter %u to %s", paramIndex, typeName);
+        return "";
+    }
+    return returnFunc(value);
+}
+
+static String ResolveParam(lua_State *L, GfxData *aGfxData, u32 paramIndex, char paramType) {
+    switch (paramType) {
+
+        // Integer
+        case 'i': return ConvertParam<s64>(
+            L, aGfxData, paramIndex,
+            "integer",
+            [] (lua_State *L, u32 paramIndex) { return smlua_to_integer(L, paramIndex); },
+            [] (s64 integer) { return String("%lld", integer); }
+        );
+
+        // String
+        case 's': return ConvertParam<const char *>(
+            L, aGfxData, paramIndex,
+            "string",
+            [] (lua_State *L, u32 paramIndex) { return smlua_to_string(L, paramIndex); },
+            [] (const char *string) { return String(string); }
+        );
+
+        // Vtx pointer
+        case 'v': return ConvertParam<Vtx *>(
+            L, aGfxData, paramIndex,
+            "Vtx pointer",
+            [] (lua_State *L, u32 paramIndex) { return (Vtx *) smlua_to_cobject(L, paramIndex, LOT_VTX); },
+            [&aGfxData] (Vtx *vtx) { return CreateRawPointerDataNode(aGfxData, vtx); }
+        );
+
+        // Texture pointer
+        case 't': return ConvertParam<Texture *>(
+            L, aGfxData, paramIndex,
+            "Texture pointer",
+            [] (lua_State *L, u32 paramIndex) { return (Texture *) smlua_to_cpointer(L, paramIndex, LVT_U8_P); },
+            [&aGfxData] (Texture *texture) { return CreateRawPointerDataNode(aGfxData, texture); }
+        );
+
+        // Gfx pointer
+        case 'g': return ConvertParam<Gfx *>(
+            L, aGfxData, paramIndex,
+            "Gfx pointer",
+            [] (lua_State *L, u32 paramIndex) { return (Gfx *) smlua_to_cobject(L, paramIndex, LOT_GFX); },
+            [&aGfxData] (Gfx *gfx) { return CreateRawPointerDataNode(aGfxData, gfx); }
+        );
+    }
+    PrintDataErrorGfx("  ERROR: Unknown parameter type: '%c'", paramType);
+    return "";
+}
+
+static std::string ResolveGfxCommand(lua_State *L, GfxData *aGfxData, const char *command) {
+    std::string output;
+    for (u32 paramIndex = 3; *command; command++) {
+        char c = *command;
+        if (c == '%') {
+            char paramType = *(++command);
+            String value = ResolveParam(L, aGfxData, paramIndex++, paramType);
+            if (aGfxData->mErrorCount > 0) {
+                return "";
+            }
+            output.append(value.begin());
+        } else {
+            output += c;
+        }
+    }
+    return output;
+}
+
+static Array<String> TokenizeGfxCommand(const std::string &command) {
+    Array<String> tokens;
+    String token;
+    for (u32 i = 0, scope = 0; i < command.length(); ++i) {
+        char c = command[i];
+
+        // Remove whitespaces
+        if (c <= ' ') {
+            continue;
+        }
+
+        if (c == '(') {
+
+            // End of the command name, beginning of the arguments
+            if (scope == 0) {
+                if (!token.Empty()) {
+                    tokens.Add(token);
+                    token.Clear();
+                }
+            }
+
+            // That's an argument
+            else {
+                token.Add(c);
+            }
+
+            scope++;
+        }
+
+        else if (c == ')') {
+            scope--;
+
+            // End of the command
+            if (scope == 0) {
+                break;
+            }
+
+            // That's an argument
+            else {
+                token.Add(c);
+            }
+        }
+
+        // End of an argument
+        else if (c == ',') {
+            if (!token.Empty()) {
+                tokens.Add(token);
+                token.Clear();
+            }
+        }
+
+        else {
+            token.Add(c);
+        }
+    }
+    if (!token.Empty()) {
+        tokens.Add(token);
+    }
+    return tokens;
+}
+
+static bool CheckGfxLength(GfxData *aGfxData, Gfx *gfx, u32 lengthToWrite) {
+    if (lengthToWrite > 1) {
+        u32 gfxLength = gfx_get_length(gfx);
+        if (gfxLength < lengthToWrite) {
+            PrintDataErrorGfx("  ERROR: Cannot write %u commands to display list of length: %u", lengthToWrite, gfxLength);
+            return false;
+        }
+    }
+    return true;
+}
+
+static bool ParseGfxCommand(lua_State *L, GfxData *aGfxData, Gfx *gfx, const char *command, bool hasSpecifiers) {
+
+    // Resolve command
+    std::string resolved = hasSpecifiers ? ResolveGfxCommand(L, aGfxData, command) : command;
+    if (aGfxData->mErrorCount > 0) {
+        return false;
+    }
+
+    // Check cache
+    const auto &it = sGfxCommandCache.find(resolved);
+    if (it != sGfxCommandCache.end()) {
+        const Gfx *src = it->second.first;
+        u32 length = it->second.second;
+        if (!CheckGfxLength(aGfxData, gfx, length)) {
+            return false;
+        }
+        memcpy(gfx, src, length * sizeof(Gfx));
+        return true;
+    }
+
+    // Tokenize command
+    DataNode<Gfx> aNode;
+    aNode.mTokens = TokenizeGfxCommand(resolved);
+    if (aGfxData->mErrorCount > 0) {
+        return false;
+    }
+
+    // Parse tokenized command
+    u64 aTokenIndex = 0;
+    Gfx gfxBuffer[16] = {0};
+    Gfx *gfxHead = gfxBuffer;
+    ParseGfxSymbol(aGfxData, &aNode, gfxHead, aTokenIndex);
+    if (aGfxData->mErrorCount > 0) {
+        return false;
+    }
+
+    // Cache parsed command
+    u32 commandLength = (u32) (gfxHead - gfxBuffer);
+    size_t commandSize = commandLength * sizeof(Gfx);
+    Gfx *cached = (Gfx *) malloc(commandSize);
+    memcpy(cached, gfxBuffer, commandSize);
+    sGfxCommandCache[resolved] = { cached, commandLength };
+
+    // Copy buffer to gfx
+    if (!CheckGfxLength(aGfxData, gfx, commandLength)) {
+        return false;
+    }
+    memcpy(gfx, gfxBuffer, commandLength * sizeof(Gfx));
+    return true;
+}
+
+extern "C" {
+
+bool dynos_smlua_parse_gfx_command(lua_State *L, Gfx *gfx, const char *command, bool hasSpecifiers, char *errorMsg, u32 errorSize) {
+
+    // Parse command
+    GfxData aGfxData;
+    sGfxCommandErrorMsg = errorMsg;
+    sGfxCommandErrorSize = errorSize;
+    bool ok = ParseGfxCommand(L, &aGfxData, gfx, command, hasSpecifiers);
+
+    // Clear stuff
+    sGfxCommandErrorMsg = NULL;
+    sGfxCommandErrorSize = 0;
+    for (auto &ptrNode : aGfxData.mRawPointers) {
+        Delete(ptrNode);
+    }
+
+    return ok;
+}
+
+void dynos_smlua_clear_gfx_command_cache() {
+    for (auto &cached : sGfxCommandCache) {
+        free(cached.second.first);
+    }
+    sGfxCommandCache.clear();
+}
+
 }

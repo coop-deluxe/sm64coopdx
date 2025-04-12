@@ -3249,10 +3249,19 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
-| cn | `Array` <`integer`> |  |
+| a | `integer` |  |
+| b | `integer` |  |
 | flag | `integer` |  |
-| ob | `Array` <`number`> |  |
-| tc | `Array` <`integer`> |  |
+| g | `integer` |  |
+| nx | `integer` |  |
+| ny | `integer` |  |
+| nz | `integer` |  |
+| r | `integer` |  |
+| tu | `integer` |  |
+| tv | `integer` |  |
+| x | `number` |  |
+| y | `number` |  |
+| z | `number` |  |
 
 [:arrow_up_small:](#)
 

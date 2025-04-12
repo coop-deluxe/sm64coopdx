@@ -17,6 +17,7 @@
 #include <new>
 #include <utility>
 #include <string>
+#include <map>
 extern "C" {
 #endif
 #include "config.h"

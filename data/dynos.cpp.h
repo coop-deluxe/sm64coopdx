@@ -556,6 +556,7 @@ struct GfxData : NoCopy {
     DataNodes<Movtex> mMovtexs;
     DataNodes<MovtexQC> mMovtexQCs;
     DataNodes<u8> mRooms;
+    DataNodes<void> mRawPointers;
 
     // Animation data
     Array<AnimBuffer<s16> *> mAnimValues;
@@ -660,6 +661,10 @@ struct LvlCmd {
     u8 mType;
     u8 mSize;
 };
+
+// modIndex -> itemName -> (itemPointer, itemSize)
+template <typename T>
+using ModData = std::map<s32, std::map<std::string, std::pair<T *, u32>>>;
 
 //
 // Utils
@@ -886,6 +891,7 @@ void DynOS_Pack_AddTex(PackData* aPackData, DataNode<TexData>* aTexData);
 // Actor Manager
 //
 
+std::map<const void *, ActorGfx> &DynOS_Actor_GetValidActors();
 void DynOS_Actor_AddCustom(s32 aModIndex, const SysPath &aFilename, const char *aActorName);
 const void *DynOS_Actor_GetLayoutFromName(const char *aActorName);
 bool DynOS_Actor_GetModIndexAndToken(const GraphNode *aGraphNode, u32 aTokenIndex, s32 *outModIndex, const char **outToken);
@@ -974,9 +980,29 @@ struct GraphNode* DynOS_Model_GetGeo(u32 aId);
 u32 DynOS_Model_GetIdFromAsset(void* asset);
 u32 DynOS_Model_GetIdFromGraphNode(struct GraphNode* aNode);
 void DynOS_Model_OverwriteSlot(u32 srcSlot, u32 dstSlot);
-Gfx *DynOS_Model_GetWritableDisplayList(Gfx* aGfx);
-void DynOS_Model_RestoreVanillaDisplayLists();
 void DynOS_Model_ClearPool(enum ModelPool aModelPool);
+
+//
+// Gfx Manager
+//
+
+Gfx *DynOS_Gfx_GetWritableDisplayList(Gfx *aGfx);
+Gfx *DynOS_Gfx_Get(const char *aName, u32 *outLength);
+Gfx *DynOS_Gfx_New(const char *aName, u32 aLength);
+Gfx *DynOS_Gfx_Realloc(Gfx *aGfx, u32 aNewLength);
+bool DynOS_Gfx_Delete(Gfx *aGfx);
+Vtx *DynOS_Vtx_Get(const char *aName, u32 *outCount);
+Vtx *DynOS_Vtx_New(const char *aName, u32 aCount);
+Vtx *DynOS_Vtx_Realloc(Vtx *aVtx, u32 aNewCount);
+bool DynOS_Vtx_Delete(Vtx *aVtx);
+void DynOS_Gfx_ModShutdown();
+
+//
+// Mod Data Manager
+//
+
+// template functions
+#include "dynos_mgr_moddata.hpp"
 
 //
 // Bin

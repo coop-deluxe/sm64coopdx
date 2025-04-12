@@ -24,6 +24,10 @@ static Array<Pair<const char*, void *>>& DynosCustomActors() {
 // TODO: the cleanup/refactor didn't really go as planned.
 //       clean up the actor management code more
 
+std::map<const void *, ActorGfx> &DynOS_Actor_GetValidActors() {
+    return DynosValidActors();
+}
+
 void DynOS_Actor_AddCustom(s32 aModIndex, const SysPath &aFilename, const char *aActorName) {
     const void* georef = DynOS_Builtin_Actor_GetFromName(aActorName);
 
