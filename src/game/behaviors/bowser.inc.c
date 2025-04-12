@@ -1206,7 +1206,7 @@ void bowser_free_update(void) {
     struct Object *platform;
     UNUSED f32 floorHeight;
     if ((platform = o->platform) != NULL)
-        apply_platform_displacement((u32)-1, platform);
+        apply_platform_displacement(o, platform);
     o->oBowserUnk10E = 0;
 
     cur_obj_update_floor_and_walls();

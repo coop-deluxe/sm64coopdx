@@ -5361,6 +5361,13 @@ function mario_update_wall(m, wcd)
     -- ...
 end
 
+--- @param o Object
+--- @return MarioState
+--- Gets the MarioState corresponding to the provided object if the object is a Mario object
+function get_mario_state_from_object(o)
+    -- ...
+end
+
 --- @param m MarioState
 --- @param frame1 integer
 --- @param frame2 integer
@@ -8734,10 +8741,10 @@ function set_object_respawn_info_bits(obj, bits)
     -- ...
 end
 
---- @param playerIndex integer
+--- @param o Object
 --- @param platform Object
---- Apply one frame of platform rotation to Mario (player index) or an object (-1) using the given platform
-function apply_platform_displacement(playerIndex, platform)
+--- Apply one frame of platform rotation to the object using the given platform
+function apply_platform_displacement(o, platform)
     -- ...
 end
 

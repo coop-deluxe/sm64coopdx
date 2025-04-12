@@ -300,4 +300,9 @@ Updates Mario's wall information based on wall collisions (`WallCollisionData`).
 |descriptionEnd| */
 void mario_update_wall(struct MarioState* m, struct WallCollisionData* wcd);
 
+/* |description|
+Gets the MarioState corresponding to the provided object if the object is a Mario object
+|descriptionEnd| */
+struct MarioState *get_mario_state_from_object(struct Object *o);
+
 #endif // MARIO_H
