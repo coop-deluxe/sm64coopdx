@@ -38,6 +38,7 @@
 #include "src/pc/lua/utils/smlua_level_utils.h"
 #include "src/pc/lua/utils/smlua_anim_utils.h"
 #include "src/pc/lua/utils/smlua_deprecated.h"
+#include "src/game/platform_displacement.h"
 #include "src/game/spawn_sound.h"
 #include "src/game/object_list_processor.h"
 #include "src/game/behavior_actions.h"
@@ -27518,6 +27519,30 @@ int smlua_func_set_object_respawn_info_bits(lua_State* L) {
     return 1;
 }
 
+  /////////////////////////////
+ // platform_displacement.h //
+/////////////////////////////
+
+int smlua_func_apply_platform_displacement(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "apply_platform_displacement", 2, top);
+        return 0;
+    }
+
+    u32 playerIndex = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "apply_platform_displacement"); return 0; }
+    if (lua_isnil(L, 2)) { return 0; }
+    struct Object* platform = (struct Object*)smlua_to_cobject(L, 2, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "apply_platform_displacement"); return 0; }
+
+    apply_platform_displacement(playerIndex, platform);
+
+    return 1;
+}
+
   ///////////////////
  // rumble_init.h //
 ///////////////////
@@ -27626,6 +27651,40 @@ int smlua_func_reset_rumble_timers_2(lua_State* L) {
   /////////////////
  // save_file.h //
 /////////////////
+
+int smlua_func_get_level_num_from_course_num(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "get_level_num_from_course_num", 1, top);
+        return 0;
+    }
+
+    s16 courseNum = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "get_level_num_from_course_num"); return 0; }
+
+    lua_pushinteger(L, get_level_num_from_course_num(courseNum));
+
+    return 1;
+}
+
+int smlua_func_get_level_course_num(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "get_level_course_num", 1, top);
+        return 0;
+    }
+
+    s16 levelNum = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "get_level_course_num"); return 0; }
+
+    lua_pushinteger(L, get_level_course_num(levelNum));
+
+    return 1;
+}
 
 int smlua_func_touch_coin_score_age(lua_State* L) {
     if (L == NULL) { return 0; }
@@ -35383,6 +35442,9 @@ void smlua_bind_functions_autogen(void) {
     // object_list_processor.h
     smlua_bind_function(L, "set_object_respawn_info_bits", smlua_func_set_object_respawn_info_bits);
 
+    // platform_displacement.h
+    smlua_bind_function(L, "apply_platform_displacement", smlua_func_apply_platform_displacement);
+
     // rumble_init.h
     smlua_bind_function(L, "queue_rumble_data", smlua_func_queue_rumble_data);
     smlua_bind_function(L, "queue_rumble_data_object", smlua_func_queue_rumble_data_object);
@@ -35391,6 +35453,8 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "reset_rumble_timers_2", smlua_func_reset_rumble_timers_2);
 
     // save_file.h
+    smlua_bind_function(L, "get_level_num_from_course_num", smlua_func_get_level_num_from_course_num);
+    smlua_bind_function(L, "get_level_course_num", smlua_func_get_level_course_num);
     smlua_bind_function(L, "touch_coin_score_age", smlua_func_touch_coin_score_age);
     smlua_bind_function(L, "save_file_do_save", smlua_func_save_file_do_save);
     smlua_bind_function(L, "save_file_erase", smlua_func_save_file_erase);

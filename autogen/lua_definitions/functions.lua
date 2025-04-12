@@ -8734,6 +8734,13 @@ function set_object_respawn_info_bits(obj, bits)
     -- ...
 end
 
+--- @param playerIndex integer
+--- @param platform Object
+--- Apply one frame of platform rotation to Mario (player index) or an object (-1) using the given platform
+function apply_platform_displacement(playerIndex, platform)
+    -- ...
+end
+
 --- @param a0 integer
 --- @param a1 integer
 --- Queues rumble data
@@ -8767,6 +8774,20 @@ end
 --- @param a0 integer
 --- Resets rumble timers and sets a field based on `a0`
 function reset_rumble_timers_2(m, a0)
+    -- ...
+end
+
+--- @param courseNum integer
+--- @return integer
+--- Gets the course number's corresponding level number
+function get_level_num_from_course_num(courseNum)
+    -- ...
+end
+
+--- @param levelNum integer
+--- @return integer
+--- Gets the level number's corresponding course number
+function get_level_course_num(levelNum)
     -- ...
 end
 

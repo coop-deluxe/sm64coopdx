@@ -1608,6 +1608,11 @@
 
 <br />
 
+- platform_displacement.h
+   - [apply_platform_displacement](functions-5.md#apply_platform_displacement)
+
+<br />
+
 - rumble_init.h
    - [queue_rumble_data](functions-5.md#queue_rumble_data)
    - [queue_rumble_data_object](functions-5.md#queue_rumble_data_object)
@@ -1618,6 +1623,8 @@
 <br />
 
 - save_file.h
+   - [get_level_num_from_course_num](functions-5.md#get_level_num_from_course_num)
+   - [get_level_course_num](functions-5.md#get_level_course_num)
    - [touch_coin_score_age](functions-5.md#touch_coin_score_age)
    - [save_file_do_save](functions-5.md#save_file_do_save)
    - [save_file_erase](functions-5.md#save_file_erase)
