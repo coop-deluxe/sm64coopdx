@@ -676,37 +676,58 @@ u32 determine_knockback_action(struct MarioState *m, UNUSED s32 arg) {
     // set knockback very high when dealing with player attacks
     if (m->interactObj != NULL && (m->interactObj->oInteractType & INTERACT_PLAYER) && terrainIndex != 2) {
         f32 scaler = 1.0f;
+        f32 horizontalVelMultiplier = 1.0f;
+        f32 verticalVelMultiplier = 1.0f;
         s8 hasBeenPunched = FALSE;
-#define IF_REVAMPED_PVP(is, isNot) (gServerSettings.pvpType == PLAYER_PVP_REVAMPED ? (is) : (isNot));
+#define IF_REVAMPED_PVP(statements) if (gServerSettings.pvpType == PLAYER_PVP_REVAMPED) { statements }
+#define SET_VEL_MULTIPLIERS(hor, ver) horizontalVelMultiplier = (hor); verticalVelMultiplier = (ver);
         for (s32 i = 0; i < MAX_PLAYERS; i++) {
             struct MarioState* m2 = &gMarioStates[i];
             if (!is_player_active(m2)) { continue; }
             if (m2->marioObj == NULL) { continue; }
             if (m2->marioObj != m->interactObj) { continue; }
             // Redundent check in case the kicking flag somehow gets missed
-            if (m2->action == ACT_JUMP_KICK || m2->flags & MARIO_KICKING) { scaler = IF_REVAMPED_PVP(1.9f, 2.0f); }
-            else if (m2->action == ACT_DIVE) { scaler = 1.0f + IF_REVAMPED_PVP(m2->forwardVel * 0.005f, 0.0f); }
-            else if ((m2->flags & MARIO_PUNCHING)) { scaler = IF_REVAMPED_PVP(-0.1f, 1.0f); hasBeenPunched = gServerSettings.pvpType == PLAYER_PVP_REVAMPED; }
+            if (m2->action == ACT_JUMP_KICK || m2->flags & MARIO_KICKING) { scaler = 2.0f; IF_REVAMPED_PVP(SET_VEL_MULTIPLIERS(1.2f, 0.8f)) }
+            else if (m2->action == ACT_DIVE) { scaler = 1.0f; IF_REVAMPED_PVP(horizontalVelMultiplier = 1.25f;) }
+            else if ((m2->flags & MARIO_PUNCHING)) {
+                // Don't affect mods that may use MARIO_PUNCHING
+                if ((m2->action == ACT_PUNCHING || m2->action == ACT_MOVE_PUNCHING) && gServerSettings.pvpType == PLAYER_PVP_REVAMPED && m2->forwardVel < 24.0f) {
+                    scaler = 0.0f;
+                    hasBeenPunched = TRUE;
+                }
+            }
             if (m2->flags & MARIO_METAL_CAP) { scaler *= 1.25f; }
             break;
         }
 
         if (m->flags & MARIO_METAL_CAP) {
             scaler *= 0.5f;
-            if (scaler < 1) { scaler = 1; }
+            if (gServerSettings.pvpType != PLAYER_PVP_REVAMPED) {
+                scaler = MAX(1.0f, scaler);
+            }
+        }
+
+        // ! This was done for jump kicks, which set the hit player's action to freefall immedaitely before this
+        // This means that other attack options will be affected differently
+        if (gServerSettings.pvpType == PLAYER_PVP_REVAMPED &&
+                (m->prevAction == ACT_CROUCHING || m->prevAction == ACT_CROUCH_SLIDE ||
+                m->prevAction == ACT_START_CROUCHING || m->prevAction == ACT_STOP_CROUCHING ||
+                m->prevAction == ACT_CRAWLING || m->prevAction == ACT_START_CRAWLING || m->prevAction == ACT_STOP_CRAWLING)) {
+            scaler *= 0.75f;
         }
 
         f32 mag = scaler * (f32)gServerSettings.playerKnockbackStrength * sign;
-        m->forwardVel = mag;
+        m->forwardVel = mag * horizontalVelMultiplier;
         if (sign > 0 && terrainIndex == 1) { mag *= -1.0f; }
 
-        m->vel[0] = (-mag * sins(m->interactObj->oFaceAngleYaw)) * IF_REVAMPED_PVP(1.1f, 1.0f);
-        m->vel[1] = ((mag < 0) ? -mag : mag) * IF_REVAMPED_PVP(0.9f, 1.0f);
-        m->vel[2] = (-mag * coss(m->interactObj->oFaceAngleYaw)) * IF_REVAMPED_PVP(1.1f, 1.0f);
+        m->vel[0] = (-mag * sins(m->interactObj->oFaceAngleYaw)) * horizontalVelMultiplier;
+        m->vel[1] = ((mag < 0) ? -mag : mag) * verticalVelMultiplier;
+        m->vel[2] = (-mag * coss(m->interactObj->oFaceAngleYaw)) * horizontalVelMultiplier;
         m->slideVelX = m->vel[0];
         m->slideVelZ = m->vel[2];
         m->knockbackTimer = hasBeenPunched ? PVP_ATTACK_KNOCKBACK_TIMER_OVERRIDE : PVP_ATTACK_KNOCKBACK_TIMER_DEFAULT;
 #undef IF_REVAMPED_PVP
+#undef SET_VEL_MULTIPLIERS
         m->faceAngle[1] = m->interactObj->oFaceAngleYaw + (sign == 1.0f ? 0 : 0x8000);
     }
 
@@ -1341,10 +1362,10 @@ static u8 resolve_player_collision(struct MarioState* m, struct MarioState* m2) 
 u8 determine_player_damage_value(struct MarioState* attacker, u32 interaction) {
     if (gServerSettings.pvpType == PLAYER_PVP_REVAMPED) {
         if (attacker->action == ACT_GROUND_POUND_LAND) { return 2; }
-        else if (interaction & INT_GROUND_POUND) { return 3; }
+        else if (interaction & INT_GROUND_POUND) { return 3 + (u8)(MAX(attacker->peakHeight - attacker->floorHeight, 0) / 700.0f); }
         else if (interaction & (INT_KICK | INT_SLIDE_KICK | INT_TRIP | INT_TWIRL)) { return 2; }
-        else if (interaction & INT_PUNCH && attacker->actionArg < 3) { return 2; }
-        else if (attacker->action == ACT_FLYING) { return (u8)(MAX((attacker->forwardVel - 40.0f) / 20.0f, 0)) + 1; }
+        else if (interaction & INT_PUNCH && attacker->actionArg < 3) { return 2 + (attacker->forwardVel > 24.0f); }
+        else if (attacker->action == ACT_FLYING) { return 1 + (u8)(MAX((attacker->forwardVel - 40.0f) / 20.0f, 0)); }
         return 1;
     } else {
         if (interaction & INT_GROUND_POUND_OR_TWIRL) { return 3; }
