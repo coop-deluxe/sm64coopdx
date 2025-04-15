@@ -685,6 +685,8 @@ void check_instant_warp(void) {
                 skip_camera_interpolation();
                 gMarioStates[0].area->camera->yaw = cameraAngle;
 
+                smlua_call_event_hooks_warp_params(HOOK_ON_WARP, WARP_TYPE_INSTANT_WARP, gCurrentLevelNum, warp->area, warp->id, 0);
+
                 return;
             }
         }
