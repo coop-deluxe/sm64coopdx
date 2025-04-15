@@ -4412,6 +4412,9 @@ WARP_TYPE_CHANGE_AREA = 2
 WARP_TYPE_SAME_AREA = 3
 
 --- @type integer
+WARP_TYPE_INSTANT_WARP = 4
+
+--- @type integer
 PRESS_START_DEMO_TIMER = 800
 
 --- @type integer
