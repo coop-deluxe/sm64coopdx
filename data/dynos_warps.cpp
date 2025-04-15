@@ -260,7 +260,7 @@ static void *DynOS_Warp_UpdateWarp(void *aCmd, bool aIsLevelInitDone) {
             }
 
             // lua hooks
-            smlua_call_event_hooks_warp_params(HOOK_ON_WARP, sWarpDest.type, sWarpDest.levelNum, sWarpDest.areaIdx, sWarpDest.nodeId, sWarpDest.arg);
+            smlua_call_event_hooks_warp_params(HOOK_ON_WARP, sWarpDest.type, sDynosWarpLevelNum, sDynosWarpAreaNum, sDynosWarpNodeNum, sWarpDest.arg);
 
             // Reset values
             sDynosWarpTargetArea = -1;
@@ -405,7 +405,7 @@ static void *DynOS_Warp_UpdateExit(void *aCmd, bool aIsLevelInitDone) {
             sDynosExitTargetWarp = NULL;
 
             // lua hooks
-            smlua_call_event_hooks_warp_params(HOOK_ON_WARP, sWarpDest.type, sWarpDest.levelNum, sWarpDest.areaIdx, sWarpDest.nodeId, sWarpDest.arg);
+            smlua_call_event_hooks_warp_params(HOOK_ON_WARP, sWarpDest.type, sDynosWarpLevelNum, sDynosWarpAreaNum, sDynosWarpNodeNum, sWarpDest.arg);
         }
 
         // Phase 4 - Unlock Mario as soon as the second transition is ended
