@@ -41,8 +41,8 @@
 #define CBUTTON_MASK (U_CBUTTONS | D_CBUTTONS | L_CBUTTONS | R_CBUTTONS)
 
 static u8 sSoftResettingCamera = FALSE;
+static u8 sCCSSChangedByMod = FALSE;
 u8 gCameraUseCourseSpecificSettings = TRUE;
-u8 CCSSChangedByMod = FALSE;
 u8 gOverrideFreezeCamera = FALSE;
 u8 gOverrideAllowToxicGasCamera = FALSE;
 
@@ -71,7 +71,7 @@ void romhack_camera_reset_settings(void) {
     gRomhackCameraSettings.zoomedOutHeight = 450;
     gRomhackCameraSettings.modsOnly = FALSE;
     gCameraUseCourseSpecificSettings = TRUE;
-    CCSSChangedByMod = FALSE;
+    sCCSSChangedByMod = FALSE;
 }
 
 /**
@@ -12169,7 +12169,7 @@ void obj_rotate_towards_point(struct Object *o, Vec3f point, s16 pitchOff, s16 y
 
 void camera_set_use_course_specific_settings(u8 enable) {
     gCameraUseCourseSpecificSettings = enable;
-    CCSSChangedByMod = TRUE;
+    sCCSSChangedByMod = TRUE;
 }
 
 #include "behaviors/intro_peach.inc.c"
@@ -12211,7 +12211,7 @@ void romhack_camera_init_settings(void) {
     }
 
     gRomhackCameraSettings.enable = override;
-    if (!CCSSChangedByMod) {
+    if (!sCCSSChangedByMod) {
         gCameraUseCourseSpecificSettings = dynos_level_is_vanilla_level(gCurrLevelNum);
     }
     gRomhackCameraSettings.collisions = configRomhackCameraHasCollision;

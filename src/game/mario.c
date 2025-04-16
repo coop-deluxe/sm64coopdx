@@ -2392,3 +2392,14 @@ void mario_update_wall(struct MarioState* m, struct WallCollisionData* wcd) {
                   m->wall->normal.z);
     }
 }
+
+struct MarioState *get_mario_state_from_object(struct Object *o) {
+    if (!o) { return NULL; }
+    for (s32 i = 0; i != MAX_PLAYERS; ++i) {
+        struct MarioState *m = &gMarioStates[i];
+        if (m->marioObj == o) {
+            return m;
+        }
+    }
+    return NULL;
+}

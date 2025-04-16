@@ -5540,6 +5540,36 @@ Runs an OR operator on the `obj`'s respawn info with `bits` << 8. If `bits` is 0
 <br />
 
 ---
+# functions from platform_displacement.h
+
+<br />
+
+
+## [apply_platform_displacement](#apply_platform_displacement)
+
+### Description
+Apply one frame of platform rotation to the object using the given platform
+
+### Lua Example
+`apply_platform_displacement(o, platform)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| o | [Object](structs.md#Object) |
+| platform | [Object](structs.md#Object) |
+
+### Returns
+- None
+
+### C Prototype
+`void apply_platform_displacement(struct Object *o, struct Object *platform);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
 # functions from rumble_init.h
 
 <br />
@@ -5671,6 +5701,52 @@ Resets rumble timers and sets a field based on `a0`
 
 <br />
 
+
+## [get_level_num_from_course_num](#get_level_num_from_course_num)
+
+### Description
+Gets the course number's corresponding level number
+
+### Lua Example
+`local integerValue = get_level_num_from_course_num(courseNum)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| courseNum | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s8 get_level_num_from_course_num(s16 courseNum);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_level_course_num](#get_level_course_num)
+
+### Description
+Gets the level number's corresponding course number
+
+### Lua Example
+`local integerValue = get_level_course_num(levelNum)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| levelNum | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s8 get_level_course_num(s16 levelNum);`
+
+[:arrow_up_small:](#)
+
+<br />
 
 ## [touch_coin_score_age](#touch_coin_score_age)
 

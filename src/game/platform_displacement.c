@@ -7,11 +7,8 @@
 #include "object_helpers.h"
 #include "object_list_processor.h"
 #include "platform_displacement.h"
+#include "mario.h"
 #include "types.h"
-
-u16 D_8032FEC0 = 0;
-
-u32 unused_8032FEC4[4] = { 0 };
 
 struct Object *gMarioPlatform = NULL;
 
@@ -89,10 +86,10 @@ void set_mario_pos(struct MarioState* m, f32 x, f32 y, f32 z) {
 }
 
 /**
- * Apply one frame of platform rotation to Mario or an object using the given
- * platform. If isMario is false, use gCurrentObject.
+ * Apply one frame of platform rotation to an object using the given platform.
+ * If the object is a Mario object, use the corresponding MarioState instead.
  */
-void apply_platform_displacement(u32 playerIndex, struct Object *platform) {
+void apply_platform_displacement(struct Object *o, struct Object *platform) {
     f32 x;
     f32 y;
     f32 z;
@@ -103,37 +100,30 @@ void apply_platform_displacement(u32 playerIndex, struct Object *platform) {
     Vec3f relativeOffset;
     Vec3f newObjectOffset;
     Vec3s rotation;
-    UNUSED s16 unused1;
-    UNUSED s16 unused2;
-    UNUSED s16 unused3;
     f32 displaceMatrix[4][4];
-    if (!platform) { return; }
+    if (!o || !platform) { return; }
 
     rotation[0] = platform->oAngleVelPitch;
     rotation[1] = platform->oAngleVelYaw;
     rotation[2] = platform->oAngleVelRoll;
 
-    if (playerIndex != (u32)-1) {
-        D_8032FEC0 = 0;
-        x = gMarioStates[playerIndex].pos[0];
-        y = gMarioStates[playerIndex].pos[1];
-        z = gMarioStates[playerIndex].pos[2];
+    struct MarioState *m = get_mario_state_from_object(o);
+    if (m != NULL) {
+        x = m->pos[0];
+        y = m->pos[1];
+        z = m->pos[2];
     } else {
-        x = gCurrentObject->oPosX;
-        y = gCurrentObject->oPosY;
-        z = gCurrentObject->oPosZ;
+        x = o->oPosX;
+        y = o->oPosY;
+        z = o->oPosZ;
     }
 
     x += platform->oVelX;
     z += platform->oVelZ;
 
     if (rotation[0] != 0 || rotation[1] != 0 || rotation[2] != 0) {
-        unused1 = rotation[0];
-        unused2 = rotation[2];
-        unused3 = platform->oFaceAngleYaw;
-
-        if (playerIndex != (u32)-1) {
-            gMarioStates[playerIndex].faceAngle[1] += rotation[1];
+        if (m != NULL) {
+            m->faceAngle[1] += rotation[1];
         }
 
         platformPosX = platform->oPosX;
@@ -163,14 +153,14 @@ void apply_platform_displacement(u32 playerIndex, struct Object *platform) {
         z = platformPosZ + newObjectOffset[2];
     }
 
-    if (playerIndex != (u32)-1) {
-        gMarioStates[playerIndex].pos[0] = x;
-        gMarioStates[playerIndex].pos[1] = y;
-        gMarioStates[playerIndex].pos[2] = z;
+    if (m != NULL) {
+        m->pos[0] = x;
+        m->pos[1] = y;
+        m->pos[2] = z;
     } else {
-        gCurrentObject->oPosX = x;
-        gCurrentObject->oPosY = y;
-        gCurrentObject->oPosZ = z;
+        o->oPosX = x;
+        o->oPosY = y;
+        o->oPosZ = z;
     }
 }
 
@@ -184,7 +174,7 @@ void apply_mario_platform_displacement(void) {
 
         struct Object *platform = player->platform;
         if (!(gTimeStopState & TIME_STOP_ACTIVE) && player != NULL && platform != NULL) {
-            apply_platform_displacement(i, platform);
+            apply_platform_displacement(player, platform);
         }
     }
 }

@@ -58,6 +58,7 @@ in_files = [
     "src/game/object_helpers.c",
     "src/game/obj_behaviors.c",
     "src/game/obj_behaviors_2.c",
+    "src/game/platform_displacement.h",
     "src/game/spawn_sound.h",
     "src/game/object_list_processor.h",
     "src/game/behavior_actions.h",
@@ -80,9 +81,10 @@ override_allowed_functions = {
     "src/pc/djui/djui_popup.h":             [ "create" ],
     "src/pc/djui/djui_language.h":          [ "djui_language_get" ],
     "src/pc/djui/djui_panel_menu.h":        [ "djui_menu_get_rainbow_string_color" ],
-    "src/game/save_file.h":                 [ "save_file_get_", "save_file_set_flags", "save_file_clear_flags", "save_file_reload", "save_file_erase_current_backup_save", "save_file_set_star_flags", "save_file_is_cannon_unlocked", "touch_coin_score_age", "save_file_set_course_coin_score", "save_file_do_save", "save_file_remove_star_flags", "save_file_erase" ],
+    "src/game/save_file.h":                 [ "get_level_", "save_file_get_", "save_file_set_flags", "save_file_clear_flags", "save_file_reload", "save_file_erase_current_backup_save", "save_file_set_star_flags", "save_file_is_cannon_unlocked", "touch_coin_score_age", "save_file_set_course_coin_score", "save_file_do_save", "save_file_remove_star_flags", "save_file_erase" ],
     "src/pc/lua/utils/smlua_model_utils.h": [ "smlua_model_util_get_id" ],
     "src/game/object_list_processor.h":     [ "set_object_respawn_info_bits" ],
+    "src/game/platform_displacement.h":     [ "apply_platform_displacement" ],
     "src/game/mario_misc.h":                [ "bhv_toad.*", "bhv_unlock_door.*", "geo_get_.*_state" ],
     "src/game/level_update.h":              [ "level_trigger_warp", "get_painting_warp_node", "initiate_painting_warp", "warp_special", "lvl_set_current_level", "level_control_timer_running", "fade_into_special_warp", "get_instant_warp" ],
     "src/game/area.h":                      [ "area_get_warp_node" ],
@@ -123,6 +125,7 @@ override_disallowed_functions = {
     "src/pc/lua/utils/smlua_level_utils.h":     [ "smlua_level_util_reset" ],
     "src/pc/lua/utils/smlua_text_utils.h":      [ "smlua_text_utils_init", "smlua_text_utils_shutdown" ],
     "src/pc/lua/utils/smlua_anim_utils.h":      [ "smlua_anim_util_reset", "smlua_anim_util_register_animation" ],
+    "src/pc/lua/utils/smlua_gfx_utils.h":       [ "gfx_allocate_internal", "vtx_allocate_internal", "gfx_get_length_no_sentinel" ],
     "src/pc/network/lag_compensation.h":        [ "lag_compensation_clear" ],
     "src/game/first_person_cam.h":              [ "first_person_update" ],
     "src/pc/lua/utils/smlua_collision_utils.h": [ "collision_find_surface_on_ray" ],
@@ -756,11 +759,30 @@ N/A
 
 ## [gfx_set_command](#gfx_set_command)
 
-Sets the specified display list command on the display list given.
+Sets a display list command on the display list given.
 
-### Lua Example
+If `command` includes parameter specifiers (subsequences beginning with `%`), the additional arguments following `command` are converted and inserted in `command` replacing their respective specifiers.
+
+The number of provided parameters must be equal to the number of specifiers in `command`, and the order of parameters must be the same as the specifiers.
+
+The following specifiers are allowed:
+- `%i` for an `integer` parameter
+- `%s` for a `string` parameter
+- `%v` for a `Vtx` parameter
+- `%t` for a `Texture` parameter
+- `%g` for a `Gfx` parameter
+
+### Lua Examples
+
+Plain string:
 ```lua
-gfx_set_command(gfx, "gsDPSetEnvColor", 0x00, 0xFF, 0x00, 0xFF)
+gfx_set_command(gfx, "gsDPSetEnvColor(0x00, 0xFF, 0x00, 0xFF)")
+```
+
+With parameter specifiers:
+```lua
+r, g, b, a = 0x00, 0xFF, 0x00, 0xFF
+gfx_set_command(gfx, "gsDPSetEnvColor(%i, %i, %i, %i)", r, g, b, a)
 ```
 
 ### Parameters
@@ -768,7 +790,7 @@ gfx_set_command(gfx, "gsDPSetEnvColor", 0x00, 0xFF, 0x00, 0xFF)
 | ----- | ---- |
 | gfx   | [Gfx](structs.md#Gfx) |
 | command | `string` |
-| (Any number of arguments) | `integer` |
+| parameters... | any of `integer`, `string`, `Gfx`, `Texture`, `Vtx` |
 
 ### Returns
 - None

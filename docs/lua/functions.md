@@ -1023,6 +1023,7 @@
    - [init_single_mario](functions-4.md#init_single_mario)
    - [set_mario_particle_flags](functions-4.md#set_mario_particle_flags)
    - [mario_update_wall](functions-4.md#mario_update_wall)
+   - [get_mario_state_from_object](functions-4.md#get_mario_state_from_object)
 
 <br />
 
@@ -1608,6 +1609,11 @@
 
 <br />
 
+- platform_displacement.h
+   - [apply_platform_displacement](functions-5.md#apply_platform_displacement)
+
+<br />
+
 - rumble_init.h
    - [queue_rumble_data](functions-5.md#queue_rumble_data)
    - [queue_rumble_data_object](functions-5.md#queue_rumble_data_object)
@@ -1618,6 +1624,8 @@
 <br />
 
 - save_file.h
+   - [get_level_num_from_course_num](functions-5.md#get_level_num_from_course_num)
+   - [get_level_course_num](functions-5.md#get_level_course_num)
    - [touch_coin_score_age](functions-5.md#touch_coin_score_age)
    - [save_file_do_save](functions-5.md#save_file_do_save)
    - [save_file_erase](functions-5.md#save_file_erase)
@@ -1777,10 +1785,24 @@
    - [get_skybox_color](functions-6.md#get_skybox_color)
    - [set_skybox_color](functions-6.md#set_skybox_color)
    - [gfx_parse](functions-6.md#gfx_parse)
-   - [gfx_get_vtx](functions-6.md#gfx_get_vtx)
-   - [gfx_get_vtx_count](functions-6.md#gfx_get_vtx_count)
-   - [gfx_set_combine_lerp](functions-6.md#gfx_set_combine_lerp)
-   - [gfx_set_texture_image](functions-6.md#gfx_set_texture_image)
+   - [gfx_get_op](functions-6.md#gfx_get_op)
+   - [gfx_get_display_list](functions-6.md#gfx_get_display_list)
+   - [gfx_get_vertex_buffer](functions-6.md#gfx_get_vertex_buffer)
+   - [gfx_get_vertex_count](functions-6.md#gfx_get_vertex_count)
+   - [gfx_get_length](functions-6.md#gfx_get_length)
+   - [gfx_get_command](functions-6.md#gfx_get_command)
+   - [gfx_get_next_command](functions-6.md#gfx_get_next_command)
+   - [gfx_copy](functions-6.md#gfx_copy)
+   - [gfx_new](functions-6.md#gfx_new)
+   - [gfx_realloc](functions-6.md#gfx_realloc)
+   - [gfx_delete](functions-6.md#gfx_delete)
+   - [vtx_get_count](functions-6.md#vtx_get_count)
+   - [vtx_get_vertex](functions-6.md#vtx_get_vertex)
+   - [vtx_get_next_vertex](functions-6.md#vtx_get_next_vertex)
+   - [vtx_copy](functions-6.md#vtx_copy)
+   - [vtx_new](functions-6.md#vtx_new)
+   - [vtx_realloc](functions-6.md#vtx_realloc)
+   - [vtx_delete](functions-6.md#vtx_delete)
 
 <br />
 
@@ -2555,11 +2577,30 @@ N/A
 
 ## [gfx_set_command](#gfx_set_command)
 
-Sets the specified display list command on the display list given.
+Sets a display list command on the display list given.
 
-### Lua Example
+If `command` includes parameter specifiers (subsequences beginning with `%`), the additional arguments following `command` are converted and inserted in `command` replacing their respective specifiers.
+
+The number of provided parameters must be equal to the number of specifiers in `command`, and the order of parameters must be the same as the specifiers.
+
+The following specifiers are allowed:
+- `%i` for an `integer` parameter
+- `%s` for a `string` parameter
+- `%v` for a `Vtx` parameter
+- `%t` for a `Texture` parameter
+- `%g` for a `Gfx` parameter
+
+### Lua Examples
+
+Plain string:
 ```lua
-gfx_set_command(gfx, "gsDPSetEnvColor", 0x00, 0xFF, 0x00, 0xFF)
+gfx_set_command(gfx, "gsDPSetEnvColor(0x00, 0xFF, 0x00, 0xFF)")
+```
+
+With parameter specifiers:
+```lua
+r, g, b, a = 0x00, 0xFF, 0x00, 0xFF
+gfx_set_command(gfx, "gsDPSetEnvColor(%i, %i, %i, %i)", r, g, b, a)
 ```
 
 ### Parameters
@@ -2567,7 +2608,7 @@ gfx_set_command(gfx, "gsDPSetEnvColor", 0x00, 0xFF, 0x00, 0xFF)
 | ----- | ---- |
 | gfx   | [Gfx](structs.md#Gfx) |
 | command | `string` |
-| (Any number of arguments) | `integer` |
+| parameters... | any of `integer`, `string`, `Gfx`, `Texture`, `Vtx` |
 
 ### Returns
 - None
