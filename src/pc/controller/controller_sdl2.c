@@ -247,11 +247,11 @@ static void controller_sdl_read(OSContPad *pad) {
         }
         if (axis_count >= 4) {
             rightx = SDL_JoystickGetAxis(sdl_joystick, 2);
-            righty = SDL_JoystickGetAxis(sdl_joystick, 3);
+            righty = SDL_JoystickGetAxis(sdl_joystick, 5); // Specific to N64 controller
         }
         if (axis_count >= 6) {
-            ltrig = SDL_JoystickGetAxis(sdl_joystick, 4);
-            rtrig = SDL_JoystickGetAxis(sdl_joystick, 5);
+            ltrig = SDL_JoystickGetAxis(sdl_joystick, 3);
+            rtrig = SDL_JoystickGetAxis(sdl_joystick, 4);
         }
 
         int button_count = SDL_JoystickNumButtons(sdl_joystick);
