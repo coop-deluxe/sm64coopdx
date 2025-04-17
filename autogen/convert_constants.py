@@ -66,7 +66,6 @@ include_constants = {
     "src/audio/external.h": [ "SEQ_PLAYER", "DS_" ],
     "src/pc/mods/mod_storage.h": [ "MAX_KEYS", "MAX_KEY_VALUE_LENGTH" ],
     "include/PR/gbi.h": [
-        "G_IMMFIRST",
         "^G_NOOP$",
         "^G_SETOTHERMODE_H$",
         "^G_SETOTHERMODE_L$",
