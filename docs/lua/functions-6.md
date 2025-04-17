@@ -468,43 +468,19 @@ Traverses a display list. Takes a Lua function as a parameter, which is called b
 - None
 
 ### C Prototype
-`void gfx_parse(Gfx* cmd, LuaFunction func);`
+`void gfx_parse(Gfx *cmd, LuaFunction func);`
 
 [:arrow_up_small:](#)
 
 <br />
 
-## [gfx_get_vtx](#gfx_get_vtx)
+## [gfx_get_op](#gfx_get_op)
 
 ### Description
-Gets a vertex from a display list command if it has the correct op. Intended to be used with `gfx_parse`
+Gets the op of the display list command
 
 ### Lua Example
-`local PointerValue = gfx_get_vtx(gfx, offset)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| gfx | `Pointer` <`Gfx`> |
-| offset | `integer` |
-
-### Returns
-- `Pointer` <`Vtx`>
-
-### C Prototype
-`Vtx *gfx_get_vtx(Gfx* gfx, u16 offset);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [gfx_get_vtx_count](#gfx_get_vtx_count)
-
-### Description
-Gets the number of vertices from a display list command if it has the correct op
-
-### Lua Example
-`local integerValue = gfx_get_vtx_count(cmd)`
+`local integerValue = gfx_get_op(cmd)`
 
 ### Parameters
 | Field | Type |
@@ -515,73 +491,408 @@ Gets the number of vertices from a display list command if it has the correct op
 - `integer`
 
 ### C Prototype
-`u16 gfx_get_vtx_count(Gfx* cmd);`
+`u32 gfx_get_op(Gfx *cmd);`
 
 [:arrow_up_small:](#)
 
 <br />
 
-## [gfx_set_combine_lerp](#gfx_set_combine_lerp)
+## [gfx_get_display_list](#gfx_get_display_list)
 
 ### Description
-Sets the display list combine mode. you can fill this function with G_CCMUX_* and G_ACMUX_* constants
+Gets the display list from a display list command if it has the op `G_DL`
 
 ### Lua Example
-`gfx_set_combine_lerp(gfx, a0, b0, c0, d0, Aa0, Ab0, Ac0, Ad0, a1, b1, c1, d1, Aa1, Ab1, Ac1, Ad1)`
+`local PointerValue = gfx_get_display_list(cmd)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| gfx | `Pointer` <`Gfx`> |
-| a0 | `integer` |
-| b0 | `integer` |
-| c0 | `integer` |
-| d0 | `integer` |
-| Aa0 | `integer` |
-| Ab0 | `integer` |
-| Ac0 | `integer` |
-| Ad0 | `integer` |
-| a1 | `integer` |
-| b1 | `integer` |
-| c1 | `integer` |
-| d1 | `integer` |
-| Aa1 | `integer` |
-| Ab1 | `integer` |
-| Ac1 | `integer` |
-| Ad1 | `integer` |
+| cmd | `Pointer` <`Gfx`> |
 
 ### Returns
-- None
+- `Pointer` <`Gfx`>
 
 ### C Prototype
-`void gfx_set_combine_lerp(Gfx* gfx, u32 a0, u32 b0, u32 c0, u32 d0, u32 Aa0, u32 Ab0, u32 Ac0, u32 Ad0, u32 a1, u32 b1, u32 c1, u32 d1,	u32 Aa1, u32 Ab1, u32 Ac1, u32 Ad1);`
+`Gfx *gfx_get_display_list(Gfx *cmd);`
 
 [:arrow_up_small:](#)
 
 <br />
 
-## [gfx_set_texture_image](#gfx_set_texture_image)
+## [gfx_get_vertex_buffer](#gfx_get_vertex_buffer)
 
 ### Description
-Sets the display list texture image. Pass in textureInfo.texture as `texture`
+Gets the vertex buffer from a display list command if it has the op `G_VTX`
 
 ### Lua Example
-`gfx_set_texture_image(gfx, format, size, width, texture)`
+`local PointerValue = gfx_get_vertex_buffer(cmd)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| cmd | `Pointer` <`Gfx`> |
+
+### Returns
+- `Pointer` <`Vtx`>
+
+### C Prototype
+`Vtx *gfx_get_vertex_buffer(Gfx *cmd);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [gfx_get_vertex_count](#gfx_get_vertex_count)
+
+### Description
+Gets the number of vertices from a display list command if it has the op `G_VTX`
+
+### Lua Example
+`local integerValue = gfx_get_vertex_count(cmd)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| cmd | `Pointer` <`Gfx`> |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u16 gfx_get_vertex_count(Gfx *cmd);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [gfx_get_length](#gfx_get_length)
+
+### Description
+Gets the max length of a display list
+
+### Lua Example
+`local integerValue = gfx_get_length(gfx)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | gfx | `Pointer` <`Gfx`> |
-| format | `integer` |
-| size | `integer` |
-| width | `integer` |
-| texture | `Pointer` <`integer`> |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 gfx_get_length(Gfx *gfx);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [gfx_get_command](#gfx_get_command)
+
+### Description
+Gets a command of a display list at position `offset`
+
+### Lua Example
+`local PointerValue = gfx_get_command(gfx, offset)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| gfx | `Pointer` <`Gfx`> |
+| offset | `integer` |
+
+### Returns
+- `Pointer` <`Gfx`>
+
+### C Prototype
+`Gfx *gfx_get_command(Gfx *gfx, u32 offset);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [gfx_get_next_command](#gfx_get_next_command)
+
+### Description
+Gets the next command of a given display list pointer. Intended to use in a for loop
+
+### Lua Example
+`local PointerValue = gfx_get_next_command(gfx)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| gfx | `Pointer` <`Gfx`> |
+
+### Returns
+- `Pointer` <`Gfx`>
+
+### C Prototype
+`Gfx *gfx_get_next_command(Gfx *gfx);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [gfx_copy](#gfx_copy)
+
+### Description
+Copies `length` commands from display list `src` to display list `dest`
+
+### Lua Example
+`gfx_copy(dest, src, length)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | `Pointer` <`Gfx`> |
+| src | `Pointer` <`Gfx`> |
+| length | `integer` |
 
 ### Returns
 - None
 
 ### C Prototype
-`void gfx_set_texture_image(Gfx* gfx, u32 format, u32 size, u32 width, u8* texture);`
+`void gfx_copy(Gfx *dest, Gfx *src, u32 length);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [gfx_new](#gfx_new)
+
+### Description
+Creates a new named display list of `length` commands
+
+### Lua Example
+`local PointerValue = gfx_new(name, length)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| name | `string` |
+| length | `integer` |
+
+### Returns
+- `Pointer` <`Gfx`>
+
+### C Prototype
+`Gfx *gfx_new(const char *name, u32 length);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [gfx_realloc](#gfx_realloc)
+
+### Description
+Reallocates a display list created by `gfx_new` to modify its length
+
+### Lua Example
+`local PointerValue = gfx_realloc(gfx, newLength)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| gfx | `Pointer` <`Gfx`> |
+| newLength | `integer` |
+
+### Returns
+- `Pointer` <`Gfx`>
+
+### C Prototype
+`Gfx *gfx_realloc(Gfx *gfx, u32 newLength);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [gfx_delete](#gfx_delete)
+
+### Description
+Deletes a display list created by `gfx_new`
+
+### Lua Example
+`gfx_delete(gfx)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| gfx | `Pointer` <`Gfx`> |
+
+### Returns
+- None
+
+### C Prototype
+`void gfx_delete(Gfx *gfx);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vtx_get_count](#vtx_get_count)
+
+### Description
+Gets the max count of vertices of a vertex buffer
+
+### Lua Example
+`local integerValue = vtx_get_count(vtx)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| vtx | `Pointer` <`Vtx`> |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 vtx_get_count(Vtx *vtx);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vtx_get_vertex](#vtx_get_vertex)
+
+### Description
+Gets a vertex of a vertex buffer at position `offset`
+
+### Lua Example
+`local PointerValue = vtx_get_vertex(vtx, offset)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| vtx | `Pointer` <`Vtx`> |
+| offset | `integer` |
+
+### Returns
+- `Pointer` <`Vtx`>
+
+### C Prototype
+`Vtx *vtx_get_vertex(Vtx *vtx, u32 offset);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vtx_get_next_vertex](#vtx_get_next_vertex)
+
+### Description
+Gets the next vertex of a given vertex pointer. Intended to use in a for loop
+
+### Lua Example
+`local PointerValue = vtx_get_next_vertex(vtx)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| vtx | `Pointer` <`Vtx`> |
+
+### Returns
+- `Pointer` <`Vtx`>
+
+### C Prototype
+`Vtx *vtx_get_next_vertex(Vtx *vtx);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vtx_copy](#vtx_copy)
+
+### Description
+Copies `count` vertices from vertex buffer `src` to vertex buffer `dest`
+
+### Lua Example
+`vtx_copy(dest, src, count)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | `Pointer` <`Vtx`> |
+| src | `Pointer` <`Vtx`> |
+| count | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void vtx_copy(Vtx *dest, Vtx *src, u32 count);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vtx_new](#vtx_new)
+
+### Description
+Creates a new named vertex buffer of `count` vertices
+
+### Lua Example
+`local PointerValue = vtx_new(name, count)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| name | `string` |
+| count | `integer` |
+
+### Returns
+- `Pointer` <`Vtx`>
+
+### C Prototype
+`Vtx *vtx_new(const char *name, u32 count);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vtx_realloc](#vtx_realloc)
+
+### Description
+Reallocates a vertex buffer created by `vtx_new` to modify its count
+
+### Lua Example
+`local PointerValue = vtx_realloc(vtx, newCount)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| vtx | `Pointer` <`Vtx`> |
+| newCount | `integer` |
+
+### Returns
+- `Pointer` <`Vtx`>
+
+### C Prototype
+`Vtx *vtx_realloc(Vtx *vtx, u32 newCount);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vtx_delete](#vtx_delete)
+
+### Description
+Deletes a vertex buffer created by `vtx_new`
+
+### Lua Example
+`vtx_delete(vtx)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| vtx | `Pointer` <`Vtx`> |
+
+### Returns
+- None
+
+### C Prototype
+`void vtx_delete(Vtx *vtx);`
 
 [:arrow_up_small:](#)
 

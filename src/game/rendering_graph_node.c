@@ -1206,7 +1206,7 @@ static s32 obj_is_in_view(struct GraphNodeObject *node, Mat4 matrix) {
     return TRUE;
 }
 
-static void geo_sanitize_object_gfx() {
+static void geo_sanitize_object_gfx(void) {
     geo_append_display_list(obj_sanitize_gfx, LAYER_OPAQUE);
     geo_append_display_list(obj_sanitize_gfx, LAYER_ALPHA);
     geo_append_display_list(obj_sanitize_gfx, LAYER_TRANSPARENT);

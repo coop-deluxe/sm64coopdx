@@ -307,6 +307,8 @@ void unload_area(void) {
         gCurrentArea = NULL;
         gWarpTransition.isActive = FALSE;
     }
+
+    le_clear();
 }
 
 void load_mario_area(void) {

@@ -79,6 +79,8 @@ ConfigWindow configWindow       = {
     .msaa = 0,
 };
 
+ConfigStick configStick = { 0 };
+
 // display settings
 unsigned int configFiltering                      = 2; // 0 = Nearest, 1 = Bilinear, 2 = Trilinear
 bool         configShowFPS                        = false;
@@ -268,6 +270,12 @@ static const struct ConfigOption options[] = {
     {.name = "disable_gamepads",               .type = CONFIG_TYPE_BOOL, .boolValue = &configDisableGamepads},
 #endif
     {.name = "use_standard_key_bindings_chat", .type = CONFIG_TYPE_BOOL, .boolValue = &configUseStandardKeyBindingsChat},
+    {.name = "stick_rotate_left",              .type = CONFIG_TYPE_BOOL, .boolValue = &configStick.rotateLeft},
+    {.name = "stick_invert_left_x",            .type = CONFIG_TYPE_BOOL, .boolValue = &configStick.invertLeftX},
+    {.name = "stick_invert_left_y",            .type = CONFIG_TYPE_BOOL, .boolValue = &configStick.invertLeftY},
+    {.name = "stick_rotate_right",             .type = CONFIG_TYPE_BOOL, .boolValue = &configStick.rotateRight},
+    {.name = "stick_invert_right_x",           .type = CONFIG_TYPE_BOOL, .boolValue = &configStick.invertRightX},
+    {.name = "stick_invert_right_y",           .type = CONFIG_TYPE_BOOL, .boolValue = &configStick.invertRightY},
     // free camera settings
     {.name = "bettercam_enable",               .type = CONFIG_TYPE_BOOL, .boolValue = &configEnableFreeCamera},
     {.name = "bettercam_analog",               .type = CONFIG_TYPE_BOOL, .boolValue = &configFreeCameraAnalog},
@@ -766,7 +774,7 @@ NEXT_OPTION:
 
     if (configFrameLimit < 30)   { configFrameLimit = 30; }
     if (configFrameLimit > 3000) { configFrameLimit = 3000; }
-    
+
     gMasterVolume = (f32)configMasterVolume / 127.0f;
 
     if (configPlayerModel >= CT_MAX) { configPlayerModel = 0; }

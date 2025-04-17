@@ -2333,10 +2333,19 @@
 --- @field public posYaw integer
 
 --- @class Vtx
---- @field public cn integer[]
+--- @field public a integer
+--- @field public b integer
 --- @field public flag integer
---- @field public ob number[]
---- @field public tc integer[]
+--- @field public g integer
+--- @field public nx integer
+--- @field public ny integer
+--- @field public nz integer
+--- @field public r integer
+--- @field public tu integer
+--- @field public tv integer
+--- @field public x number
+--- @field public y number
+--- @field public z number
 
 --- @class Vtx_Interp
 --- @field public n string

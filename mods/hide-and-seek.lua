@@ -138,7 +138,7 @@ local function update()
     end
 
     -- Force several camera configs
-    camera_config_enable_camera_collisions(true)
+    camera_config_enable_collisions(true)
     rom_hack_cam_set_collisions(1)
     camera_romhack_set_zoomed_in_dist(900)
     camera_romhack_set_zoomed_out_dist(1400)
