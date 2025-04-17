@@ -53,6 +53,11 @@ static u32 last_mouse = VK_INVALID;
 static u32 last_joybutton = VK_INVALID;
 static u32 last_gamepad = 0;
 
+static s16 invert_s16(s16 val) {
+    if (val == -0x8000) return 0x7FFF;
+    return (s16)(-(s32)val);
+}
+
 static inline void controller_add_binds(const u32 mask, const u32 *btns) {
     for (u32 i = 0; i < MAX_BINDS; ++i) {
         if (btns[i] >= VK_BASE_SDL_GAMEPAD && btns[i] <= VK_BASE_SDL_GAMEPAD + VK_SIZE) {
@@ -259,6 +264,21 @@ static void controller_sdl_read(OSContPad *pad) {
             update_button(i, SDL_JoystickGetButton(sdl_joystick, i));
         }
     }
+
+    if (configStick.rotateLeft) {
+        s16 tmp = leftx;
+        leftx = invert_s16(lefty);
+        lefty = tmp;
+    }
+    if (configStick.rotateRight) {
+        s16 tmp = rightx;
+        rightx = invert_s16(righty);
+        righty = tmp;
+    }
+    if (configStick.invertLeftX) { leftx = invert_s16(leftx); }
+    if (configStick.invertLeftY) { lefty = invert_s16(lefty); }
+    if (configStick.invertRightX) { rightx = invert_s16(rightx); }
+    if (configStick.invertRightY) { righty = invert_s16(righty); }
 
     update_button(VK_LTRIGGER - VK_BASE_SDL_GAMEPAD, ltrig > AXIS_THRESHOLD);
     update_button(VK_RTRIGGER - VK_BASE_SDL_GAMEPAD, rtrig > AXIS_THRESHOLD);
