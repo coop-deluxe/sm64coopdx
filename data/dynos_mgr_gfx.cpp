@@ -25,7 +25,6 @@ static Vtx *DynOS_Vtx_Duplicate(Vtx *aVtx, u32 vtxCount, bool shouldDuplicate) {
         size_t vtxSize = vtxCount * sizeof(Vtx);
         Vtx *vtxDuplicate = vtx_allocate_internal(vtxCount);
         memcpy(vtxDuplicate, aVtx, vtxSize);
-        DynOS_Find_Pending_Scroll_Target(aVtx, vtxDuplicate);
         sRomToRamGfxVtxMap[aVtx] = { (void *) vtxDuplicate, vtxSize };
         return vtxDuplicate;
     }

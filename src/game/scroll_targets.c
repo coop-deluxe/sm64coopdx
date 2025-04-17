@@ -108,7 +108,6 @@ void free_vtx_scroll_targets(void) {
     }
     hmap_destroy(sScrollTargets);
     sScrollTargets = NULL;
-    dynos_pending_scroll_targets_clear();
 }
 
 void patch_scroll_targets_before(void) {
