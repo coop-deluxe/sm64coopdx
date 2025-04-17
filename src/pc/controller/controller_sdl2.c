@@ -38,6 +38,7 @@ extern u8 newcam_mouse;
 static bool init_ok = false;
 static bool haptics_enabled = false;
 static SDL_GameController *sdl_cntrl = NULL;
+static SDL_Joystick *sdl_joystick = NULL;
 static SDL_Haptic *sdl_haptic = NULL;
 
 static bool sBackgroundGamepad = false;
@@ -210,32 +211,53 @@ static void controller_sdl_read(OSContPad *pad) {
     }
 
     if (sdl_cntrl == NULL || last_gamepad != configGamepadNumber) {
+        if (sdl_haptic) { SDL_HapticClose(sdl_haptic); sdl_haptic = NULL; }
+        if (sdl_cntrl) { SDL_GameControllerClose(sdl_cntrl); sdl_cntrl = NULL; }
+        if (sdl_joystick) { SDL_JoystickClose(sdl_joystick); sdl_joystick = NULL; }
+        last_gamepad = configGamepadNumber;
         if (SDL_IsGameController(configGamepadNumber)) {
             sdl_cntrl = SDL_GameControllerOpen(configGamepadNumber);
             if (sdl_cntrl != NULL) {
                 sdl_haptic = controller_sdl_init_haptics(configGamepadNumber);
-                last_gamepad = configGamepadNumber;
-            }
-            if (sdl_cntrl == NULL) {
-                return;
             }
         } else {
-            sdl_cntrl = NULL;
-            return;
+            sdl_joystick = SDL_JoystickOpen(configGamepadNumber);
+            if (!sdl_joystick) { return; }
         }
     }
 
-    int16_t leftx = SDL_GameControllerGetAxis(sdl_cntrl, SDL_CONTROLLER_AXIS_LEFTX);
-    int16_t lefty = SDL_GameControllerGetAxis(sdl_cntrl, SDL_CONTROLLER_AXIS_LEFTY);
-    int16_t rightx = SDL_GameControllerGetAxis(sdl_cntrl, SDL_CONTROLLER_AXIS_RIGHTX);
-    int16_t righty = SDL_GameControllerGetAxis(sdl_cntrl, SDL_CONTROLLER_AXIS_RIGHTY);
+    int16_t leftx = 0, lefty = 0, rightx = 0, righty = 0;
+    int16_t ltrig = 0, rtrig = 0;
+    if (sdl_cntrl) {
+        leftx = SDL_GameControllerGetAxis(sdl_cntrl, SDL_CONTROLLER_AXIS_LEFTX);
+        lefty = SDL_GameControllerGetAxis(sdl_cntrl, SDL_CONTROLLER_AXIS_LEFTY);
+        rightx = SDL_GameControllerGetAxis(sdl_cntrl, SDL_CONTROLLER_AXIS_RIGHTX);
+        righty = SDL_GameControllerGetAxis(sdl_cntrl, SDL_CONTROLLER_AXIS_RIGHTY);
+        ltrig = SDL_GameControllerGetAxis(sdl_cntrl, SDL_CONTROLLER_AXIS_TRIGGERLEFT);
+        rtrig = SDL_GameControllerGetAxis(sdl_cntrl, SDL_CONTROLLER_AXIS_TRIGGERRIGHT);
+        for (u32 i = 0; i < SDL_CONTROLLER_BUTTON_MAX; ++i) {
+            const bool new = SDL_GameControllerGetButton(sdl_cntrl, i);
+            update_button(i, new);
+        }
+    } else if (sdl_joystick) {
+        int axis_count = SDL_JoystickNumAxes(sdl_joystick);
+        if (axis_count >= 2) {
+            leftx = SDL_JoystickGetAxis(sdl_joystick, 0);
+            lefty = SDL_JoystickGetAxis(sdl_joystick, 1);
+        }
+        if (axis_count >= 4) {
+            rightx = SDL_JoystickGetAxis(sdl_joystick, 2);
+            righty = SDL_JoystickGetAxis(sdl_joystick, 3);
+        }
+        if (axis_count >= 6) {
+            ltrig = SDL_JoystickGetAxis(sdl_joystick, 4);
+            rtrig = SDL_JoystickGetAxis(sdl_joystick, 5);
+        }
 
-    int16_t ltrig = SDL_GameControllerGetAxis(sdl_cntrl, SDL_CONTROLLER_AXIS_TRIGGERLEFT);
-    int16_t rtrig = SDL_GameControllerGetAxis(sdl_cntrl, SDL_CONTROLLER_AXIS_TRIGGERRIGHT);
-
-    for (u32 i = 0; i < SDL_CONTROLLER_BUTTON_MAX; ++i) {
-        const bool new = SDL_GameControllerGetButton(sdl_cntrl, i);
-        update_button(i, new);
+        int button_count = SDL_JoystickNumButtons(sdl_joystick);
+        for (int i = 0; i < button_count && i < MAX_JOYBUTTONS; ++i) {
+            update_button(i, SDL_JoystickGetButton(sdl_joystick, i));
+        }
     }
 
     update_button(VK_LTRIGGER - VK_BASE_SDL_GAMEPAD, ltrig > AXIS_THRESHOLD);
