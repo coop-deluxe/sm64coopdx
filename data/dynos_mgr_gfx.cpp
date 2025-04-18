@@ -5,11 +5,17 @@ extern "C" {
 #include "pc/lua/utils/smlua_gfx_utils.h"
 }
 
+struct MapNode {
+    void *duplicate;
+    size_t size;
+    Gfx *gfxCopy;
+};
+
 static ModData<Gfx> sModDisplayLists;
 static ModData<Vtx> sModVertexBuffers;
 
 // Maps read-only Gfx and Vtx buffers to their writable duplicates
-static std::map<const void *, std::pair<void *, size_t>> sRomToRamGfxVtxMap;
+static std::map<const void *, struct MapNode> sRomToRamGfxVtxMap;
 
 static Vtx *DynOS_Vtx_Duplicate(Vtx *aVtx, u32 vtxCount, bool shouldDuplicate) {
     if (!aVtx) { return NULL; }
@@ -17,7 +23,7 @@ static Vtx *DynOS_Vtx_Duplicate(Vtx *aVtx, u32 vtxCount, bool shouldDuplicate) {
     // Return duplicate if it already exists
     auto it = sRomToRamGfxVtxMap.find(aVtx);
     if (it != sRomToRamGfxVtxMap.end()) {
-        return (Vtx *) it->second.first;
+        return (Vtx *) it->second.duplicate;
     }
 
     // Duplicate vertex buffer and return the copy
@@ -25,7 +31,7 @@ static Vtx *DynOS_Vtx_Duplicate(Vtx *aVtx, u32 vtxCount, bool shouldDuplicate) {
         size_t vtxSize = vtxCount * sizeof(Vtx);
         Vtx *vtxDuplicate = vtx_allocate_internal(vtxCount);
         memcpy(vtxDuplicate, aVtx, vtxSize);
-        sRomToRamGfxVtxMap[aVtx] = { (void *) vtxDuplicate, vtxSize };
+        sRomToRamGfxVtxMap[aVtx] = { (void *) vtxDuplicate, vtxSize, NULL };
         return vtxDuplicate;
     }
 
@@ -38,7 +44,7 @@ static Gfx *DynOS_Gfx_Duplicate(Gfx *aGfx, bool shouldDuplicate) {
     // Return duplicate if it already exists
     auto it = sRomToRamGfxVtxMap.find(aGfx);
     if (it != sRomToRamGfxVtxMap.end()) {
-        return (Gfx *) it->second.first;
+        return (Gfx *) it->second.duplicate;
     }
 
     // Check if it's vanilla
@@ -50,10 +56,8 @@ static Gfx *DynOS_Gfx_Duplicate(Gfx *aGfx, bool shouldDuplicate) {
     Gfx *gfxDuplicate = aGfx;
     u32 gfxLength = shouldDuplicate ? gfx_get_length_no_sentinel(aGfx) : gfx_get_length(aGfx);
     if (shouldDuplicate) {
-        size_t gfxSize = gfxLength * sizeof(Gfx);
         gfxDuplicate = gfx_allocate_internal(gfxLength);
-        memcpy(gfxDuplicate, aGfx, gfxSize);
-        sRomToRamGfxVtxMap[aGfx] = { (void *) gfxDuplicate, gfxSize };
+        memcpy(gfxDuplicate, aGfx, gfxLength * sizeof(Gfx));
     }
 
     // Look for other display lists or vertices
@@ -71,6 +75,15 @@ static Gfx *DynOS_Gfx_Duplicate(Gfx *aGfx, bool shouldDuplicate) {
         if (op == G_VTX) {
             cmd->words.w1 = (uintptr_t) DynOS_Vtx_Duplicate((Vtx *) cmd->words.w1, C0(cmd, 12, 8), shouldDuplicate);
         }
+    }
+
+    // Create a second duplicate for resetting the
+    // display list later, and then store it in the map
+    if (shouldDuplicate) {
+        size_t gfxSize = gfxLength * sizeof(Gfx);
+        Gfx *gfxCopy = (Gfx *) malloc(gfxSize);
+        memcpy(gfxCopy, gfxDuplicate, gfxSize);
+        sRomToRamGfxVtxMap[aGfx] = { (void *) gfxDuplicate, gfxSize, gfxCopy };
     }
 
     return gfxDuplicate;
@@ -127,8 +140,8 @@ Gfx *DynOS_Gfx_Get(const char *aName, u32 *outLength) {
             it = sRomToRamGfxVtxMap.find(gfxVanilla);
         }
 
-        *outLength = it->second.second / sizeof(Gfx);
-        return (Gfx *) it->second.first;
+        *outLength = it->second.size / sizeof(Gfx);
+        return (Gfx *) it->second.duplicate;
     }
 
     return NULL;
@@ -221,9 +234,9 @@ void DynOS_Gfx_ModShutdown() {
 
     // Restore vanilla display lists
     for (auto &it : sRomToRamGfxVtxMap) {
-        const void *original = it.first;
-        void *duplicate = it.second.first;
-        size_t size = it.second.second;
+        const void *original = it.second.gfxCopy ? it.second.gfxCopy : it.first;
+        void *duplicate = it.second.duplicate;
+        size_t size = it.second.size;
         memcpy(duplicate, original, size);
     }
 }
