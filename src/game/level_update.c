@@ -755,9 +755,7 @@ s16 music_changed_through_warp(s16 arg) {
 /**
  * Set the current warp type and destination level/area/node.
  */
-void initiate_warp(s16 destLevel, s16 destArea, s16 destWarpNode, s32 arg) {//
-
-    smlua_call_event_hooks_before_warp(HOOK_BEFORE_WARP, &destLevel, &destArea, &destWarpNode, &arg);
+void initiate_warp(s16 destLevel, s16 destArea, s16 destWarpNode, s32 arg) {
 
     if (destWarpNode >= WARP_NODE_CREDITS_MIN) {
         sWarpDest.type = WARP_TYPE_CHANGE_LEVEL;
@@ -768,6 +766,8 @@ void initiate_warp(s16 destLevel, s16 destArea, s16 destWarpNode, s32 arg) {//
     } else {
         sWarpDest.type = WARP_TYPE_SAME_AREA;
     }
+
+    smlua_call_event_hooks_before_warp(HOOK_BEFORE_WARP, &sWarpDest.type, &destLevel, &destArea, &destWarpNode, &arg);
 
     sWarpDest.levelNum = destLevel;
     sWarpDest.areaIdx = destArea;

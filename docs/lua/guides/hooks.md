@@ -146,7 +146,7 @@ The lua functions sent to `hook_event()` will be automatically called by SM64 wh
 | HOOK_MARIO_OVERRIDE_GEOMETRY_INPUTS | Called before running Mario's geometry input logic, return `false` to not run it. | [MarioState](../structs.md) m | 
 | HOOK_ON_INTERACTIONS | Called when the Mario interactions are processed | [MarioState](../structs.md#MarioState) mario |
 | HOOK_ALLOW_FORCE_WATER_ACTION | Called when executing a non-water action while under the water's surface, or vice versa. Return `false` to prevent the player from being forced out of the action at the water's surface | [MarioState](../structs.md#MarioState) mario, `boolean` isInWaterAction |
-| HOOK_BEFORE_WARP | Called before the local player warps. Return a table with `destLevel`, `destArea`, `destAreaWarpNode`, and `arg` to override the warp | `integer` destLevel, `integer` destArea, `integer` destAreaWarpNode, `integer` arg |
+| HOOK_BEFORE_WARP | Called before the local player warps. Return a table with `type`, `destLevel`, `destArea`, `destAreaWarpNode`, and `arg` to override the warp | `integer` type, `integer` destLevel, `integer` destArea, `integer` destAreaWarpNode, `integer` arg |
 
 ### Parameters
 
