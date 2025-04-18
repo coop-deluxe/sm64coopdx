@@ -656,6 +656,50 @@ void smlua_call_event_hooks_warp_params(enum LuaHookedEventType hookType, u8 typ
     }
 }
 
+void smlua_call_event_hooks_instant_warp_params(enum LuaHookedEventType hookType, u8 area, u8 warpId, Vec3s displacement) {
+    lua_State* L = gLuaState;
+    if (L == NULL) { return; }
+    struct LuaHookedEvent* hook = &sHookedEvents[hookType];
+    for (int i = 0; i < hook->count; i++) {
+        s32 prevTop = lua_gettop(L);
+
+        // push the callback onto the stack
+        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
+
+        // push params
+        lua_pushinteger(L, area);
+        lua_pushinteger(L, warpId);
+
+        s16 *buf = smlua_get_vec3s_from_buffer();
+        buf[0] = displacement[0];
+        buf[1] = displacement[1];
+        buf[2] = displacement[2];
+
+        lua_newtable(L);
+        int tbl = lua_gettop(L);
+
+        lua_pushstring(L, "x");
+        lua_pushinteger(L, buf[0]);
+        lua_settable(L, tbl);
+
+        lua_pushstring(L, "y");
+        lua_pushinteger(L, buf[1]);
+        lua_settable(L, tbl);
+
+        lua_pushstring(L, "z");
+        lua_pushinteger(L, buf[2]);
+        lua_settable(L, tbl);
+
+        // call the callback
+        if (0 != smlua_call_hook(L, 3, 0, 0, hook->mod[i])) {
+            LOG_LUA("Failed to call the callback: %u", hookType);
+            continue;
+        }
+
+        lua_settop(L, prevTop);
+    }
+}
+
 void smlua_call_event_hooks_int_params_ret_string(enum LuaHookedEventType hookType, s32 param, char** returnValue) {
     lua_State* L = gLuaState;
     if (L == NULL) { return; }
