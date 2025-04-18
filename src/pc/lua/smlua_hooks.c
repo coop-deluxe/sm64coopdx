@@ -752,7 +752,7 @@ void smlua_call_event_hooks_on_play_sound(enum LuaHookedEventType hookType, s32 
     }
 }
 
-void smlua_call_event_hooks_before_warp(enum LuaHookedEventType hookType, s16 *destLevel, s16 *destArea, s16 *destWarpNode, s32 *arg) {
+void smlua_call_event_hooks_before_warp(enum LuaHookedEventType hookType, u8 *type, s16 *destLevel, s16 *destArea, s16 *destWarpNode, s32 *arg) {
     lua_State *L = gLuaState;
     if (L == NULL) { return; }
     struct LuaHookedEvent* hook = &sHookedEvents[hookType];
@@ -762,12 +762,13 @@ void smlua_call_event_hooks_before_warp(enum LuaHookedEventType hookType, s16 *d
         // push the callback onto the stack
         lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
 
+        lua_pushinteger(L, *type);
         lua_pushinteger(L, *destLevel);
         lua_pushinteger(L, *destArea);
         lua_pushinteger(L, *destWarpNode);
         lua_pushinteger(L, *arg);
 
-        if (smlua_call_hook(L, 4, 1, 0, hook->mod[i]) != 0) {
+        if (smlua_call_hook(L, 5, 1, 0, hook->mod[i]) != 0) {
             LOG_LUA("Failed to call the callback: %u", hookType);
             lua_settop(L, prevTop);
             continue;
@@ -775,6 +776,13 @@ void smlua_call_event_hooks_before_warp(enum LuaHookedEventType hookType, s16 *d
 
         // if the hook returns a table, use it to override the warp parameters
         if (lua_istable(L, -1)) {
+
+            lua_getfield(L, -1, "type");
+            if (lua_isnumber(L, -1)) {
+                *type = (u8)lua_tointeger(L, -1);
+            }
+            lua_pop(L, 1);
+
             lua_getfield(L, -1, "destLevel");
             if (lua_isnumber(L, -1)) {
                 *destLevel = (s16)lua_tointeger(L, -1);
@@ -805,7 +813,6 @@ void smlua_call_event_hooks_before_warp(enum LuaHookedEventType hookType, s16 *d
         lua_settop(L, prevTop);
     }
 }
-
 
 void smlua_call_event_hooks_on_seq_load(enum LuaHookedEventType hookType, u32 player, u32 seqId, s32 loadAsync, s16* returnValue) {
     lua_State* L = gLuaState;
