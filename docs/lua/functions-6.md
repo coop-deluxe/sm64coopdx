@@ -661,13 +661,13 @@ Copies `length` commands from display list `src` to display list `dest`
 
 <br />
 
-## [gfx_new](#gfx_new)
+## [gfx_create](#gfx_create)
 
 ### Description
 Creates a new named display list of `length` commands
 
 ### Lua Example
-`local PointerValue = gfx_new(name, length)`
+`local PointerValue = gfx_create(name, length)`
 
 ### Parameters
 | Field | Type |
@@ -679,19 +679,19 @@ Creates a new named display list of `length` commands
 - `Pointer` <`Gfx`>
 
 ### C Prototype
-`Gfx *gfx_new(const char *name, u32 length);`
+`Gfx *gfx_create(const char *name, u32 length);`
 
 [:arrow_up_small:](#)
 
 <br />
 
-## [gfx_realloc](#gfx_realloc)
+## [gfx_resize](#gfx_resize)
 
 ### Description
-Reallocates a display list created by `gfx_new` to modify its length
+Resizes a display list created by `gfx_create`
 
 ### Lua Example
-`local PointerValue = gfx_realloc(gfx, newLength)`
+`gfx_resize(gfx, newLength)`
 
 ### Parameters
 | Field | Type |
@@ -700,10 +700,10 @@ Reallocates a display list created by `gfx_new` to modify its length
 | newLength | `integer` |
 
 ### Returns
-- `Pointer` <`Gfx`>
+- None
 
 ### C Prototype
-`Gfx *gfx_realloc(Gfx *gfx, u32 newLength);`
+`void gfx_resize(Gfx *gfx, u32 newLength);`
 
 [:arrow_up_small:](#)
 
@@ -712,7 +712,7 @@ Reallocates a display list created by `gfx_new` to modify its length
 ## [gfx_delete](#gfx_delete)
 
 ### Description
-Deletes a display list created by `gfx_new`
+Deletes a display list created by `gfx_create`
 
 ### Lua Example
 `gfx_delete(gfx)`
@@ -727,6 +727,27 @@ Deletes a display list created by `gfx_new`
 
 ### C Prototype
 `void gfx_delete(Gfx *gfx);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [gfx_delete_all](#gfx_delete_all)
+
+### Description
+Deletes all display lists created by `gfx_create`
+
+### Lua Example
+`gfx_delete_all()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void gfx_delete_all();`
 
 [:arrow_up_small:](#)
 
@@ -827,13 +848,13 @@ Copies `count` vertices from vertex buffer `src` to vertex buffer `dest`
 
 <br />
 
-## [vtx_new](#vtx_new)
+## [vtx_create](#vtx_create)
 
 ### Description
 Creates a new named vertex buffer of `count` vertices
 
 ### Lua Example
-`local PointerValue = vtx_new(name, count)`
+`local PointerValue = vtx_create(name, count)`
 
 ### Parameters
 | Field | Type |
@@ -845,19 +866,19 @@ Creates a new named vertex buffer of `count` vertices
 - `Pointer` <`Vtx`>
 
 ### C Prototype
-`Vtx *vtx_new(const char *name, u32 count);`
+`Vtx *vtx_create(const char *name, u32 count);`
 
 [:arrow_up_small:](#)
 
 <br />
 
-## [vtx_realloc](#vtx_realloc)
+## [vtx_resize](#vtx_resize)
 
 ### Description
-Reallocates a vertex buffer created by `vtx_new` to modify its count
+Resizes a vertex buffer created by `vtx_create`
 
 ### Lua Example
-`local PointerValue = vtx_realloc(vtx, newCount)`
+`vtx_resize(vtx, newCount)`
 
 ### Parameters
 | Field | Type |
@@ -866,10 +887,10 @@ Reallocates a vertex buffer created by `vtx_new` to modify its count
 | newCount | `integer` |
 
 ### Returns
-- `Pointer` <`Vtx`>
+- None
 
 ### C Prototype
-`Vtx *vtx_realloc(Vtx *vtx, u32 newCount);`
+`void vtx_resize(Vtx *vtx, u32 newCount);`
 
 [:arrow_up_small:](#)
 
@@ -878,7 +899,7 @@ Reallocates a vertex buffer created by `vtx_new` to modify its count
 ## [vtx_delete](#vtx_delete)
 
 ### Description
-Deletes a vertex buffer created by `vtx_new`
+Deletes a vertex buffer created by `vtx_create`
 
 ### Lua Example
 `vtx_delete(vtx)`
@@ -893,6 +914,27 @@ Deletes a vertex buffer created by `vtx_new`
 
 ### C Prototype
 `void vtx_delete(Vtx *vtx);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vtx_delete_all](#vtx_delete_all)
+
+### Description
+Deletes all vertex buffers created by `vtx_create`
+
+### Lua Example
+`vtx_delete_all()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void vtx_delete_all();`
 
 [:arrow_up_small:](#)
 
