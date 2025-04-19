@@ -20,10 +20,10 @@ local CUBE_ROTATIONS = {
 }
 
 local CUBE_POINTS = {
-    { x = -1, y = -1, z = -1, tu = 0, tv = (SHAPE_TEXTURE_SIZE - 1) << 5 },
-    { x =  1, y = -1, z = -1, tu = 0, tv = 0 },
-    { x = -1, y =  1, z = -1, tu = (SHAPE_TEXTURE_SIZE - 1) << 5, tv = (SHAPE_TEXTURE_SIZE - 1) << 5 },
-    { x =  1, y =  1, z = -1, tu = (SHAPE_TEXTURE_SIZE - 1) << 5, tv = 0 },
+    { x = -0.75, y = -0.75, z = -0.75, tu = 0, tv = (SHAPE_TEXTURE_SIZE - 1) << 5 },
+    { x =  0.75, y = -0.75, z = -0.75, tu = 0, tv = 0 },
+    { x = -0.75, y =  0.75, z = -0.75, tu = (SHAPE_TEXTURE_SIZE - 1) << 5, tv = (SHAPE_TEXTURE_SIZE - 1) << 5 },
+    { x =  0.75, y =  0.75, z = -0.75, tu = (SHAPE_TEXTURE_SIZE - 1) << 5, tv = 0 },
 }
 
 function get_cube_vertices()

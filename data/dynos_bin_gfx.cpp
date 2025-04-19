@@ -1122,7 +1122,7 @@ DataNode<Gfx>* DynOS_Gfx_Parse(GfxData* aGfxData, DataNode<Gfx>* aNode) {
 
     // Display list data
     u32 _Length = aNode->mTokens.Count() * DISPLAY_LIST_SIZE_PER_TOKEN;
-    aNode->mData = gfx_allocate_internal(_Length);
+    aNode->mData = gfx_allocate_internal(NULL, _Length);
     Gfx* _Head = aNode->mData;
     for (u64 _TokenIndex = 0; _TokenIndex < aNode->mTokens.Count();) { // Don't increment _TokenIndex here!
         ParseGfxSymbol(aGfxData, aNode, _Head, _TokenIndex);
@@ -1171,7 +1171,7 @@ void DynOS_Gfx_Load(BinFile *aFile, GfxData *aGfxData) {
 
     // Data
     _Node->mSize = aFile->Read<u32>();
-    _Node->mData = gfx_allocate_internal(_Node->mSize);
+    _Node->mData = gfx_allocate_internal(NULL, _Node->mSize);
     for (u32 i = 0; i != _Node->mSize; ++i) {
         u32 _WordsW0 = aFile->Read<u32>();
         u32 _WordsW1 = aFile->Read<u32>();

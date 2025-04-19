@@ -1793,16 +1793,18 @@
    - [gfx_get_command](functions-6.md#gfx_get_command)
    - [gfx_get_next_command](functions-6.md#gfx_get_next_command)
    - [gfx_copy](functions-6.md#gfx_copy)
-   - [gfx_new](functions-6.md#gfx_new)
-   - [gfx_realloc](functions-6.md#gfx_realloc)
+   - [gfx_create](functions-6.md#gfx_create)
+   - [gfx_resize](functions-6.md#gfx_resize)
    - [gfx_delete](functions-6.md#gfx_delete)
+   - [gfx_delete_all](functions-6.md#gfx_delete_all)
    - [vtx_get_count](functions-6.md#vtx_get_count)
    - [vtx_get_vertex](functions-6.md#vtx_get_vertex)
    - [vtx_get_next_vertex](functions-6.md#vtx_get_next_vertex)
    - [vtx_copy](functions-6.md#vtx_copy)
-   - [vtx_new](functions-6.md#vtx_new)
-   - [vtx_realloc](functions-6.md#vtx_realloc)
+   - [vtx_create](functions-6.md#vtx_create)
+   - [vtx_resize](functions-6.md#vtx_resize)
    - [vtx_delete](functions-6.md#vtx_delete)
+   - [vtx_delete_all](functions-6.md#vtx_delete_all)
 
 <br />
 
