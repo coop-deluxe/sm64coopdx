@@ -136,7 +136,7 @@ static const u8  SENTINEL_VTX[sizeof(Vtx)] = {[0 ... sizeof(Vtx) - 1] = UINT8_MA
 
 Gfx *gfx_allocate_internal(Gfx *gfx, u32 length) {
     if (!gfx) {
-        gfx = calloc(length + 1, sizeof(Gfx));
+        gfx = calloc(length + 1, sizeof(Gfx)); // +1 to insert SENTINEL_GFX at the end of the buffer
     } else {
         memset(gfx, 0, length * sizeof(Gfx));
     }
@@ -146,7 +146,7 @@ Gfx *gfx_allocate_internal(Gfx *gfx, u32 length) {
 
 Vtx *vtx_allocate_internal(Vtx *vtx, u32 count) {
     if (!vtx) {
-        vtx = calloc(count + 1, sizeof(Vtx));
+        vtx = calloc(count + 1, sizeof(Vtx)); // +1 to insert SENTINEL_VTX at the end of the buffer
     } else {
         memset(vtx, 0, count * sizeof(Vtx));
     }
@@ -291,12 +291,14 @@ Gfx *gfx_create(const char *name, u32 length) {
     Gfx *gfx = dynos_gfx_create(name, length);
     if (!gfx) {
         switch (dynos_mod_data_get_last_error()) {
+            case DYNOS_MOD_DATA_ERROR_NAME_IS_EMPTY:
+                LOG_LUA_LINE("gfx_create: A display list cannot have an empty name"); break;
             case DYNOS_MOD_DATA_ERROR_SIZE_IS_ABOVE_MAX:
                 LOG_LUA_LINE("gfx_create: Cannot allocate display list of length %u, max length exceeded", length); break;
             case DYNOS_MOD_DATA_ERROR_ALREADY_EXISTS:
                 LOG_LUA_LINE("gfx_create: Display list `%s` already exists", name); break;
             case DYNOS_MOD_DATA_ERROR_POOL_IS_FULL:
-                LOG_LUA_LINE("gfx_create: Cannot allocate more display lists"); break;
+                LOG_LUA_LINE("gfx_create: Cannot allocate more display lists, limit reached"); break;
             default:
                 LOG_LUA_LINE("gfx_create: Unable to allocate display list"); break;
         }
@@ -391,12 +393,14 @@ Vtx *vtx_create(const char *name, u32 count) {
     Vtx *vtx = dynos_vtx_create(name, count);
     if (!vtx) {
         switch (dynos_mod_data_get_last_error()) {
+            case DYNOS_MOD_DATA_ERROR_NAME_IS_EMPTY:
+                LOG_LUA_LINE("vtx_create: A vertex buffer cannot have an empty name"); break;
             case DYNOS_MOD_DATA_ERROR_SIZE_IS_ABOVE_MAX:
                 LOG_LUA_LINE("vtx_create: Cannot allocate vertex buffer of count %u, max count exceeded", count); break;
             case DYNOS_MOD_DATA_ERROR_ALREADY_EXISTS:
                 LOG_LUA_LINE("vtx_create: Vertex buffer `%s` already exists", name); break;
             case DYNOS_MOD_DATA_ERROR_POOL_IS_FULL:
-                LOG_LUA_LINE("vtx_create: Cannot allocate more vertex buffers"); break;
+                LOG_LUA_LINE("vtx_create: Cannot allocate more vertex buffers, limit reached"); break;
             default:
                 LOG_LUA_LINE("vtx_create: Unable to allocate vertex buffer"); break;
         }

@@ -34,6 +34,9 @@ public:
         if (!aName) {
             return { NULL, DYNOS_MOD_DATA_ERROR_NAME_IS_NULL };
         }
+        if (!*aName) {
+            return { NULL, DYNOS_MOD_DATA_ERROR_NAME_IS_EMPTY };
+        }
 
         auto itItem = mMapNameToItem.find(aName);
         if (itItem == mMapNameToItem.end()) {
@@ -46,6 +49,9 @@ public:
     ModDataResult<ModDataItem<T> *> Create(const char *aName, u32 aSize) {
         if (!aName) {
             return { NULL, DYNOS_MOD_DATA_ERROR_NAME_IS_NULL };
+        }
+        if (!*aName) {
+            return { NULL, DYNOS_MOD_DATA_ERROR_NAME_IS_EMPTY };
         }
         if (!aSize) {
             return { NULL, DYNOS_MOD_DATA_ERROR_SIZE_IS_ZERO };
@@ -223,7 +229,7 @@ public:
             gDynosModDataLastError = resizeResult.second;
             return false;
         }
-        return resizeResult.first;
+        return true;
     }
 
     bool Delete(s32 aModIndex, T *aPointer) {
@@ -233,7 +239,7 @@ public:
             gDynosModDataLastError = deleteResult.second;
             return false;
         }
-        return deleteResult.first;
+        return true;
     }
 
     void DeleteAll(s32 aModIndex) {

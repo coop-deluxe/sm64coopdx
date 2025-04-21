@@ -31,9 +31,10 @@ local function mario_update(m)
         if m.controller.buttonPressed & X_BUTTON ~= 0 then
             shape_toggle = not shape_toggle
             if shape_toggle then
-                spawn_non_sync_object(id_bhvShape, E_MODEL_SHAPE, 0, 0, 0, nil).oAction = 1
-                spawn_non_sync_object(id_bhvShape, E_MODEL_SHAPE, 0, 0, 0, nil).oAction = 2
-                spawn_non_sync_object(id_bhvShape, E_MODEL_SHAPE, 0, 0, 0, nil).oAction = 3
+                for i = 1, 3 do
+                    local obj = spawn_non_sync_object(id_bhvShape, E_MODEL_SHAPE, 0, 0, 0, nil)
+                    if obj then obj.oAction = i end
+                end
             else
                 local obj = obj_get_first_with_behavior_id(id_bhvShape)
                 while obj ~= nil do
