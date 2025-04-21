@@ -58,8 +58,10 @@ bool char_valid(const char* buffer, bool isKey) {
 }
 
 void mod_storage_get_filename(char* dest) {
+    struct Mod *mod = smlua_get_last_active_mod();
+    if (mod == NULL) { return; }
     const char* path = fs_get_write_path(SAVE_DIRECTORY); // get user path
-    snprintf(dest, SYS_MAX_PATH - 1, "%s/%s", path, gLuaActiveMod->relativePath); // append sav folder
+    snprintf(dest, SYS_MAX_PATH - 1, "%s/%s", path, mod->relativePath); // append sav folder
     strdelete(dest, ".lua"); // delete ".lua" from sav name
     strcat(dest, SAVE_EXTENSION); // append SAVE_EXTENSION
     normalize_path(dest); // fix any out of place slashes

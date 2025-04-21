@@ -304,14 +304,15 @@ struct LuaObjectField* smlua_get_custom_field(lua_State* L, u32 lot, int keyInde
     static struct LuaObjectField lof = { 0 };
     if (lot != LOT_OBJECT) { return NULL; }
 
-    if (gLuaActiveMod == NULL) {
+    struct Mod *mod = smlua_get_last_active_mod(L);
+    if (mod == NULL) {
         LOG_LUA_LINE("Failed to retrieve active mod entry.");
         return NULL;
     }
 
     // get _custom_object_fields
     lua_getglobal(L, "_G"); // get global table
-    lua_getfield(L, LUA_REGISTRYINDEX, gLuaActiveMod->relativePath); // push file's "global" table
+    lua_getfield(L, LUA_REGISTRYINDEX, mod->relativePath); // push file's "global" table
     int fileGlobalIndex = lua_gettop(L);
     lua_getfield(L, fileGlobalIndex, "_custom_object_fields");
     lua_remove(L, -2); // remove file's "global" table

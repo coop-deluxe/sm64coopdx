@@ -17,11 +17,12 @@ void network_send_lua_custom(bool broadcast) {
     }
 
     // figure out mod index
-    if (gLuaActiveMod == NULL) {
+    struct Mod *activeMod = smlua_get_last_active_mod();
+    if (activeMod == NULL) {
         LOG_LUA_LINE("Could not figure out the current active mod!");
         return;
     }
-    u16 modIndex = gLuaActiveMod->index;
+    u16 modIndex = activeMod->index;
 
     // get local index
     s32 toLocalIndex = 0;
