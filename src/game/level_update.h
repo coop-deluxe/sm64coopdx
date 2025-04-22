@@ -80,6 +80,8 @@ enum MarioSpawnType {
 #define WARP_TYPE_CHANGE_AREA 2
 #define WARP_TYPE_SAME_AREA 3
 
+#define WARP_ARG_EXIT_COURSE 1
+
 #define PRESS_START_DEMO_TIMER 800
 
 // From Surface 0xD3 to 0xFC
