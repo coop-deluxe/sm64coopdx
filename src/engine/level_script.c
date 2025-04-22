@@ -504,7 +504,7 @@ static void level_cmd_init_mario(void) {
     u32 behaviorArg = CMD_GET(u32, 4);
     behaviorArg = behaviorArg;
     void* behaviorScript = CMD_GET(void*, 8);
-    u16 slot = CMD_GET(u8, 3);
+    u16 slot = CMD_GET(u16, 2);
     struct GraphNode* unk18 = dynos_model_get_geo(slot);
 
     struct SpawnInfo* lastSpawnInfo = NULL;
@@ -532,26 +532,26 @@ static void level_cmd_init_mario(void) {
 
 static void level_cmd_place_object(void) {
     u8 val7 = 1 << (gCurrActNum - 1);
-    u16 model;
+    u32 model;
     struct SpawnInfo *spawnInfo;
 
     if (sCurrAreaIndex != -1 && (gLevelValues.disableActs || (CMD_GET(u8, 2) & val7) || CMD_GET(u8, 2) == 0x1F)) {
-        model = CMD_GET(u8, 3);
+        model = CMD_GET(u32, 4);
         spawnInfo = dynamic_pool_alloc(gLevelPool, sizeof(struct SpawnInfo));
 
-        spawnInfo->startPos[0] = CMD_GET(s16, 4);
-        spawnInfo->startPos[1] = CMD_GET(s16, 6);
-        spawnInfo->startPos[2] = CMD_GET(s16, 8);
+        spawnInfo->startPos[0] = CMD_GET(s16, 8);
+        spawnInfo->startPos[1] = CMD_GET(s16, 10);
+        spawnInfo->startPos[2] = CMD_GET(s16, 12);
 
-        spawnInfo->startAngle[0] = CMD_GET(s16, 10) * 0x8000 / 180;
-        spawnInfo->startAngle[1] = CMD_GET(s16, 12) * 0x8000 / 180;
-        spawnInfo->startAngle[2] = CMD_GET(s16, 14) * 0x8000 / 180;
+        spawnInfo->startAngle[0] = CMD_GET(s16, 14) * 0x8000 / 180;
+        spawnInfo->startAngle[1] = CMD_GET(s16, 16) * 0x8000 / 180;
+        spawnInfo->startAngle[2] = CMD_GET(s16, 18) * 0x8000 / 180;
 
         spawnInfo->areaIndex = sCurrAreaIndex;
         spawnInfo->activeAreaIndex = sCurrAreaIndex;
 
-        spawnInfo->behaviorArg = CMD_GET(u32, 16);
-        spawnInfo->behaviorScript = CMD_GET(void *, 20);
+        spawnInfo->behaviorArg = CMD_GET(u32, 20);
+        spawnInfo->behaviorScript = CMD_GET(void *, 24);
         spawnInfo->unk18 = dynos_model_get_geo(model);
         spawnInfo->next = gAreas[sCurrAreaIndex].objectSpawnInfos;
 

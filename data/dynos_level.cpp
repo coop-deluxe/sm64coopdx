@@ -93,16 +93,16 @@ static s32 DynOS_Level_PreprocessScript(u8 aType, void *aCmd) {
 
         // OBJECT
         case 0x24: {
-            const BehaviorScript *bhv = (const BehaviorScript *) DynOS_Level_CmdGet(aCmd, 20);
+            const BehaviorScript *bhv = (const BehaviorScript *) DynOS_Level_CmdGet(aCmd, 24);
             for (s32 i = 0; i < 20; ++i) {
                 if (sWarpBhvSpawnTable[i] == bhv) {
-                    DynosWarp *_Warp = DynOS_Level_GetWarpStruct(((((u32) DynOS_Level_CmdGet(aCmd, 16)) >> 16) & 0xFF));
+                    DynosWarp *_Warp = DynOS_Level_GetWarpStruct(((((u32) DynOS_Level_CmdGet(aCmd, 20)) >> 16) & 0xFF));
                     if (_Warp->mType == -1) {
                         _Warp->mType = i;
-                        _Warp->mPosX = (s16) DynOS_Level_CmdGet(aCmd, 4);
-                        _Warp->mPosY = (s16) DynOS_Level_CmdGet(aCmd, 6);
-                        _Warp->mPosZ = (s16) DynOS_Level_CmdGet(aCmd, 8);
-                        _Warp->mAngle = ((s16) DynOS_Level_CmdGet(aCmd, 12) * 0x8000) / 180;
+                        _Warp->mPosX = (s16) DynOS_Level_CmdGet(aCmd, 8);
+                        _Warp->mPosY = (s16) DynOS_Level_CmdGet(aCmd, 10);
+                        _Warp->mPosZ = (s16) DynOS_Level_CmdGet(aCmd, 12);
+                        _Warp->mAngle = ((s16) DynOS_Level_CmdGet(aCmd, 16) * 0x8000) / 180;
                     }
                     break;
                 }

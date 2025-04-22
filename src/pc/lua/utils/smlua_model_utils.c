@@ -450,6 +450,7 @@ struct ModelUtilsInfo sModels[E_MODEL_MAX] = {
     MODEL_UTIL_GEO_PERM(E_MODEL_TOADS_CAP,                 toads_cap_geo,                 MODEL_TOADS_CAP),
     MODEL_UTIL_GEO_PERM(E_MODEL_TOADS_METAL_CAP,           toads_metal_cap_geo,           MODEL_TOADS_METAL_CAP),
     MODEL_UTIL_GEO_PERM(E_MODEL_TOADS_WING_CAP,            toads_wing_cap_geo,            MODEL_TOADS_WING_CAP),
+    MODEL_UTIL_GEO_PERM(E_MODEL_TOADS_WINGED_METAL_CAP,    toads_winged_metal_cap_geo,    MODEL_TOADS_WINGED_METAL_CAP),
     MODEL_UTIL_GEO_PERM(E_MODEL_WALUIGI,                   waluigi_geo,                   MODEL_WALUIGI),
     MODEL_UTIL_GEO_PERM(E_MODEL_WALUIGIS_CAP,              waluigis_cap_geo,              MODEL_WALUIGIS_CAP),
     MODEL_UTIL_GEO_PERM(E_MODEL_WALUIGIS_METAL_CAP,        waluigis_metal_cap_geo,        MODEL_WALUIGIS_METAL_CAP),

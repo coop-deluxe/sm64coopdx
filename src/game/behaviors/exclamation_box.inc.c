@@ -152,7 +152,7 @@ void exclamation_box_spawn_contents(struct ExclamationBoxContent *content, u8 it
 void exclamation_box_act_4(void) {
     exclamation_box_spawn_contents(gExclamationBoxContents, o->oBehParams2ndByte);
     spawn_mist_particles_variable(0, 0, 46.0f);
-    spawn_triangle_break_particles(20, 139, 0.3f, o->oAnimState);
+    spawn_triangle_break_particles(20, MODEL_CARTOON_STAR, 0.3f, o->oAnimState);
     create_sound_spawner(SOUND_GENERAL_BREAK_BOX);
     u8 threshold = gBehaviorValues.RespawnShellBoxes ? 3 : 2;
     if (o->oBehParams2ndByte <= threshold) {
