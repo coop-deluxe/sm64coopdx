@@ -670,24 +670,19 @@ void smlua_call_event_hooks_instant_warp_params(enum LuaHookedEventType hookType
         lua_pushinteger(L, area);
         lua_pushinteger(L, warpId);
 
-        s16 *buf = smlua_get_vec3s_from_buffer();
-        buf[0] = displacement[0];
-        buf[1] = displacement[1];
-        buf[2] = displacement[2];
-
         lua_newtable(L);
         int tbl = lua_gettop(L);
 
         lua_pushstring(L, "x");
-        lua_pushinteger(L, buf[0]);
+        lua_pushinteger(L, displacement[0]);
         lua_settable(L, tbl);
 
         lua_pushstring(L, "y");
-        lua_pushinteger(L, buf[1]);
+        lua_pushinteger(L, displacement[1]);
         lua_settable(L, tbl);
 
         lua_pushstring(L, "z");
-        lua_pushinteger(L, buf[2]);
+        lua_pushinteger(L, displacement[2]);
         lua_settable(L, tbl);
 
         // call the callback
