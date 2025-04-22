@@ -88,7 +88,7 @@ jobs:
               run: |
                 cd tools
                 g++ -std=c++17 -o hash_file hash_file.cpp
-                ./hash_file ../build/us_pc/sm64coopdx.app/Contents/MacOS/sm64coopdx
+                echo "::notice ::$(./hash_file ../build/us_pc/sm64coopdx.app/Contents/MacOS/sm64coopdx)"
 
             - name: Zip the .app bundle
               run: |
@@ -125,7 +125,7 @@ jobs:
                 cd tools
                 g++ -std=c++17 -o hash_file hash_file.cpp
                 ./hash_file ../build/us_pc/sm64coopdx.app/Contents/MacOS/sm64coopdx
-                cd ../
+                echo "::notice ::$(./hash_file ../build/us_pc/sm64coopdx.app/Contents/MacOS/sm64coopdx)"
 
             - name: Zip the .app bundle
               run: |
