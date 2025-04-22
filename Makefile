@@ -244,7 +244,7 @@ else ifeq ($(OPT_LEVEL),5) # Fastest Optimization
   OPT_FLAGS := -Ofast
 else ifeq ($(OPT_LEVEL),6) # Size Optimization
   OPT_FLAGS := -Os
-else ifeq ($(OPT_LEVEL),7) # Aggresive Size Optimization
+else ifeq ($(OPT_LEVEL),7) # Aggressive Size Optimization
   OPT_FLAGS := -Oz
 else
   ifeq ($(DEBUG),0)
