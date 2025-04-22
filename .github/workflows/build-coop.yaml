@@ -85,6 +85,14 @@ jobs:
               run: |
                 codesign --force --deep --sign - ./build/us_pc/sm64coopdx.app
 
+            - name: Generate hash
+              run: |
+                cd tools
+                g++ -std=c++17 -o hash_file hash_file.cpp
+                echo Hash of executable file:\n
+                ./hash_file ../build/us_pc/sm64coopdx.app/Contents/MacOS/sm64coopdx
+                echo \n
+
             - name: Zip the .app bundle
               run: |
                 cd ./build/us_pc
@@ -115,6 +123,14 @@ jobs:
             - name: Code sign the app (Ad-Hoc)
               run: |
                 codesign --force --deep --sign - ./build/us_pc/sm64coopdx.app
+
+            - name: Generate hash
+              run: |
+                cd tools
+                g++ -std=c++17 -o hash_file hash_file.cpp
+                echo Hash of executable file:\n
+                ./hash_file ../build/us_pc/sm64coopdx.app/Contents/MacOS/sm64coopdx
+                echo \n
 
             - name: Zip the .app bundle
               run: |
