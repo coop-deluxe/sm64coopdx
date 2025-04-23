@@ -14631,6 +14631,24 @@ int smlua_func_does_mario_have_normal_cap_on_head(lua_State* L) {
     return 1;
 }
 
+int smlua_func_does_mario_have_blown_cap(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "does_mario_have_blown_cap", 1, top);
+        return 0;
+    }
+
+    if (lua_isnil(L, 1)) { return 0; }
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "does_mario_have_blown_cap"); return 0; }
+
+    lua_pushinteger(L, does_mario_have_blown_cap(m));
+
+    return 1;
+}
+
 int smlua_func_mario_blow_off_cap(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -35020,6 +35038,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "mario_throw_held_object", smlua_func_mario_throw_held_object);
     smlua_bind_function(L, "mario_stop_riding_and_holding", smlua_func_mario_stop_riding_and_holding);
     smlua_bind_function(L, "does_mario_have_normal_cap_on_head", smlua_func_does_mario_have_normal_cap_on_head);
+    smlua_bind_function(L, "does_mario_have_blown_cap", smlua_func_does_mario_have_blown_cap);
     smlua_bind_function(L, "mario_blow_off_cap", smlua_func_mario_blow_off_cap);
     smlua_bind_function(L, "mario_lose_cap_to_enemy", smlua_func_mario_lose_cap_to_enemy);
     smlua_bind_function(L, "mario_retrieve_cap", smlua_func_mario_retrieve_cap);

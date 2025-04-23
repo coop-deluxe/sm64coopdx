@@ -5622,6 +5622,29 @@ Checks if Mario is currently wearing his normal cap on his head. Returns true if
 
 <br />
 
+## [does_mario_have_blown_cap](#does_mario_have_blown_cap)
+
+### Description
+Checks if Mario has already had a cap blown off of his head in the current level, Returns true if a blown cap can be found for Mario, false if not. Useful to check if a blown cap exists in the level currently.
+
+### Lua Example
+`local integerValue = does_mario_have_blown_cap(m)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 does_mario_have_blown_cap(struct MarioState *m);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [mario_blow_off_cap](#mario_blow_off_cap)
 
 ### Description

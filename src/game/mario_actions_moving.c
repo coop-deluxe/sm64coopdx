@@ -1344,7 +1344,11 @@ s32 act_hold_decelerating(struct MarioState *m) {
 
 s32 act_riding_shell_ground(struct MarioState *m) {
     if (!m) { return FALSE; }
-    s16 startYaw = m->faceAngle[1];
+    
+    // If we don't have a object we're riding. Then the state is invalid or from a bug.
+    if (m->riddenObj == NULL) {
+        return set_mario_action(m, ACT_IDLE, 0);
+    }
 
     if (m->input & INPUT_A_PRESSED) {
         return set_mario_action(m, ACT_RIDING_SHELL_JUMP, 0);
@@ -1358,6 +1362,7 @@ s32 act_riding_shell_ground(struct MarioState *m) {
         return set_mario_action(m, ACT_CROUCH_SLIDE, 0);
     }
 
+    s16 startYaw = m->faceAngle[1];
     update_shell_speed(m);
     set_character_animation(m, m->actionArg == 0 ? CHAR_ANIM_START_RIDING_SHELL : CHAR_ANIM_RIDING_SHELL);
 
