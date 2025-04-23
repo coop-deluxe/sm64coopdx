@@ -763,6 +763,7 @@ void initiate_warp(s16 destLevel, s16 destArea, s16 destWarpNode, s32 arg) {
         sWarpDest.type = WARP_TYPE_CHANGE_LEVEL;
     } else if (arg == WARP_ARG_EXIT_COURSE) {
         sWarpDest.type = WARP_TYPE_CHANGE_LEVEL;
+        arg = 0;
     } else if (destLevel != gCurrLevelNum) {
         sWarpDest.type = WARP_TYPE_CHANGE_LEVEL;
     } else if (destArea != gCurrentArea->index) {
