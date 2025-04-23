@@ -1346,7 +1346,7 @@ s32 act_riding_shell_ground(struct MarioState *m) {
     if (!m) { return FALSE; }
     
     // If we don't have a object we're riding. Then the state is invalid or from a bug.
-    if (m->riddenObj == NULL) {
+    if (m->riddenObj == NULL || m->riddenObj->behavior != segmented_to_virtual(smlua_override_behavior(bhvKoopaShell))) {
         return set_mario_action(m, ACT_IDLE, 0);
     }
 
