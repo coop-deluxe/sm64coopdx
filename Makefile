@@ -363,9 +363,7 @@ else ifeq ($(TARGET_NX),1) # Nintendo Switch
     APP_TITLEID := 0100534d36344350
     APP_JSON := res/npdm.json
     ICON := res/icon_AmericanEnglish.dat
-endif
-
-ifeq ($(TARGET_RK3588),1)
+else ifeq ($(TARGET_RK3588),1)
   $(info Compiling for RK3588)
   DISCORD_SDK := 0
   COOPNET := 0
