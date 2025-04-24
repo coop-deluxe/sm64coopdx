@@ -9760,21 +9760,25 @@ end
 --- @param length integer
 --- @return Pointer_Gfx
 --- Creates a new named display list of `length` commands
-function gfx_new(name, length)
+function gfx_create(name, length)
     -- ...
 end
 
 --- @param gfx Pointer_Gfx
 --- @param newLength integer
---- @return Pointer_Gfx
---- Reallocates a display list created by `gfx_new` to modify its length
-function gfx_realloc(gfx, newLength)
+--- Resizes a display list created by `gfx_create`
+function gfx_resize(gfx, newLength)
     -- ...
 end
 
 --- @param gfx Pointer_Gfx
---- Deletes a display list created by `gfx_new`
+--- Deletes a display list created by `gfx_create`
 function gfx_delete(gfx)
+    -- ...
+end
+
+--- Deletes all display lists created by `gfx_create`
+function gfx_delete_all()
     -- ...
 end
 
@@ -9812,21 +9816,25 @@ end
 --- @param count integer
 --- @return Pointer_Vtx
 --- Creates a new named vertex buffer of `count` vertices
-function vtx_new(name, count)
+function vtx_create(name, count)
     -- ...
 end
 
 --- @param vtx Pointer_Vtx
 --- @param newCount integer
---- @return Pointer_Vtx
---- Reallocates a vertex buffer created by `vtx_new` to modify its count
-function vtx_realloc(vtx, newCount)
+--- Resizes a vertex buffer created by `vtx_create`
+function vtx_resize(vtx, newCount)
     -- ...
 end
 
 --- @param vtx Pointer_Vtx
---- Deletes a vertex buffer created by `vtx_new`
+--- Deletes a vertex buffer created by `vtx_create`
 function vtx_delete(vtx)
+    -- ...
+end
+
+--- Deletes all vertex buffers created by `vtx_create`
+function vtx_delete_all()
     -- ...
 end
 
