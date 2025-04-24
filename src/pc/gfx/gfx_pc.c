@@ -781,9 +781,13 @@ static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, cons
             for (int j = 0; j < 3; j++)
                 globalLightCached[i][j] = gLightingColor[i][j] / 255.0f;
         }
-    } else if (luaVertexColor) {
-        for (int i = 0; i < 3; i ++) {
-            vertexColorCached[i] = gVertexColor[i] / 255.0f;
+    }
+
+    if (luaVertexColor) {
+        if ((rsp.geometry_mode & G_PACKED_NORMALS_EXT) || (!(rsp.geometry_mode & G_LIGHTING))) {
+            for (int i = 0; i < 3; i ++) {
+                vertexColorCached[i] = gVertexColor[i] / 255.0f;
+            }
         }
     }
 
@@ -884,23 +888,18 @@ static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, cons
             d->color.b = b > 255.0f ? 255 : (uint8_t)b;
 
             if (rsp.geometry_mode & G_PACKED_NORMALS_EXT) {
-                f32 vtxR = (v->cn[0] / 255.0f);
-                f32 vtxG = (v->cn[1] / 255.0f);
-                f32 vtxB = (v->cn[2] / 255.0f);
-                // produces random colors for some reason??
-                /*if (luaVertexColor) {
-                    d->color.r = (d->color.r * vtxR) * vertexColorCached[0];
-                    d->color.g = (d->color.g * vtxG) * vertexColorCached[1];
-                    d->color.b = (d->color.b * vtxB) * vertexColorCached[2];
+                float vtxR = (v->cn[0] / 255.0f);
+                float vtxG = (v->cn[1] / 255.0f);
+                float vtxB = (v->cn[2] / 255.0f);
+                if (luaVertexColor) {
+                    d->color.r *= vtxR * vertexColorCached[0];
+                    d->color.g *= vtxG * vertexColorCached[1];
+                    d->color.b *= vtxB * vertexColorCached[2];
                 } else {
                     d->color.r *= vtxR;
                     d->color.g *= vtxG;
                     d->color.b *= vtxB;
-                }*/
-
-                d->color.r *= vtxR;
-                d->color.g *= vtxG;
-                d->color.b *= vtxB;
+                }
             }
 
             if (rsp.geometry_mode & G_TEXTURE_GEN) {
