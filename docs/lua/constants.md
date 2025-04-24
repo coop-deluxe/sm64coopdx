@@ -1218,8 +1218,6 @@
 | DS_YOSHI | 10 |
 | DS_MAX | 11 |
 | DS_NONE | 0xff |
-- DS_DIFF
-- DS_DIFF
 
 [:arrow_up_small:](#)
 
@@ -1355,7 +1353,6 @@
 <br />
 
 ## [interaction.h](#interaction.h)
-- INTERACT_UNKNOWN_08
 
 ### [enum InteractionType](#InteractionType)
 | Identifier | Value |
@@ -2910,7 +2907,6 @@
 <br />
 
 ## [save_file.h](#save_file.h)
-- EEPROM_SIZE
 - NUM_SAVE_FILES
 
 ### [enum SaveFileIndex](#SaveFileIndex)
@@ -3368,7 +3364,6 @@
 - ACT_PICKING_UP_BOWSER
 - ACT_HOLDING_BOWSER
 - ACT_RELEASING_BOWSER
-- END_DEMO
 - VALID_BUTTONS
 - C_BUTTONS
 
@@ -4582,14 +4577,13 @@
 | AREA_TIMER_TYPE_LOOP | 1 |
 | AREA_TIMER_TYPE_MAXIMUM | 2 |
 - ANIM_FLAG_NOLOOP
-- ANIM_FLAG_FORWARD
+- ANIM_FLAG_BACKWARD
 - ANIM_FLAG_2
 - ANIM_FLAG_HOR_TRANS
 - ANIM_FLAG_VERT_TRANS
 - ANIM_FLAG_5
 - ANIM_FLAG_6
 - ANIM_FLAG_7
-- GRAPH_NODE_GUARD
 - OBJECT_MAX_BHV_STACK
 - OBJECT_NUM_REGULAR_FIELDS
 - OBJECT_NUM_CUSTOM_FIELDS

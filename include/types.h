@@ -86,7 +86,7 @@ struct VblankHandler
 };
 
 #define ANIM_FLAG_NOLOOP     (1 << 0) // 0x01
-#define ANIM_FLAG_FORWARD    (1 << 1) // 0x02
+#define ANIM_FLAG_BACKWARD   (1 << 1) // 0x02
 #define ANIM_FLAG_2          (1 << 2) // 0x04
 #define ANIM_FLAG_HOR_TRANS  (1 << 3) // 0x08
 #define ANIM_FLAG_VERT_TRANS (1 << 4) // 0x10
