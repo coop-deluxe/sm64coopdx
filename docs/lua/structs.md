@@ -1644,6 +1644,7 @@
 | fixCollisionBugsGroundPoundBonks | `integer` |  |
 | fixCollisionBugsPickBestWall | `integer` |  |
 | fixCollisionBugsRoundedCorners | `integer` |  |
+| fixInvalidShellRides | `integer` |  |
 | fixVanishFloors | `integer` |  |
 | floatingStarDance | `integer` |  |
 | floorLowerLimit | `integer` |  |

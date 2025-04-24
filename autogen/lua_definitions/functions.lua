@@ -4667,7 +4667,7 @@ function does_mario_have_normal_cap_on_head(m)
 end
 
 --- @param m MarioState
---- @return integer
+--- @return boolean
 --- Checks if Mario has already had a cap blown off of his head in the current level, Returns true if a blown cap can be found for Mario, false if not. Useful to check if a blown cap exists in the level currently.
 function does_mario_have_blown_cap(m)
     -- ...

@@ -14644,7 +14644,7 @@ int smlua_func_does_mario_have_blown_cap(lua_State* L) {
     struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "does_mario_have_blown_cap"); return 0; }
 
-    lua_pushinteger(L, does_mario_have_blown_cap(m));
+    lua_pushboolean(L, does_mario_have_blown_cap(m));
 
     return 1;
 }
