@@ -357,7 +357,7 @@ Checks if Mario has already had a cap blown off of his head in the current level
 Returns true if a blown cap can be found for Mario, false if not.
 Useful to check if a blown cap exists in the level currently.
 |descriptionEnd| */
-u32 does_mario_have_blown_cap(struct MarioState *m);
+bool does_mario_have_blown_cap(struct MarioState *m);
 
 /* |description|
 Makes Mario blow off his normal cap at a given speed. 

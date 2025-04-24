@@ -32,6 +32,7 @@
 #include "pc/network/network.h"
 #include "pc/network/lag_compensation.h"
 #include "pc/lua/smlua_hooks.h"
+#include "pc/lua/utils/smlua_obj_utils.h"
 
 u8 sDelayInvincTimer;
 s16 gInteractionInvulnerable;
@@ -375,34 +376,15 @@ u32 does_mario_have_normal_cap_on_head(struct MarioState *m) {
     return (m->flags & (MARIO_CAPS | MARIO_CAP_ON_HEAD)) == (MARIO_NORMAL_CAP | MARIO_CAP_ON_HEAD);
 }
 
-u32 does_mario_have_blown_cap(struct MarioState *m) {
+bool does_mario_have_blown_cap(struct MarioState *m) {
     if (!m) { return FALSE; }
-    
-    const BehaviorScript *behavior = smlua_override_behavior(bhvNormalCap);
-    uintptr_t *behaviorAddr = segmented_to_virtual(behavior);
-
-    u32 objList = get_object_list_from_behavior(behaviorAddr);
-    if (objList >= NUM_OBJ_LISTS) { return FALSE; }
-
-    struct ObjectNode *listHead = &gObjectLists[objList];
-    struct ObjectNode *node = listHead->next;
-
-    while (listHead != node) {
-        struct Object *obj = (struct Object *)node;
-        if (obj->behavior == behaviorAddr && obj->oBehParams == m->playerIndex + 1) {
-            return TRUE;
-        }
-
-        node = node->next;
-    }
-
-    return FALSE;
+    return obj_get_first_with_behavior_id_and_field_s32(id_bhvNormalCap, 0x40, m->playerIndex + 1) != NULL;
 }
 
 void mario_blow_off_cap(struct MarioState *m, f32 capSpeed) {
     if (!m) { return; }
     if (m->playerIndex != 0) { return; }
-    if (!does_mario_have_normal_cap_on_head(m) || does_mario_have_blown_cap(m) == TRUE) { return; }
+    if (!does_mario_have_normal_cap_on_head(m) || does_mario_have_blown_cap(m)) { return; }
     
     m->cap = SAVE_FLAG_CAP_ON_MR_BLIZZARD;
 
