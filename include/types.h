@@ -355,10 +355,15 @@ struct MarioAnimation
 
 struct MarioState
 {
-    // Please try to keep this 64 bit aligned.
-    // I went through alot of trouble to group and sort
-    // all of these fields for size and optimization best I could.
-    // I reduced the size of this structure by 32 bytes for gcc.
+    // Please try to keep this 32/64 bit aligned.
+    // Bit alignment can increase perforamance and
+    // reduce the memory footprint.
+    //
+    // Structure size was reduced by 32 bytes and fields
+    // and been moved for performance and size.
+    // https://en.wikipedia.org/wiki/Data_structure_alignment
+    //
+    // I personally also find it easier to read now.
     // - Prince Frizzy
     
     u16 playerIndex;
@@ -444,6 +449,7 @@ struct MarioState
     f32 splineKeyframeFraction;
     s32 splineState;
     f32 curAnimOffset;
+    
     f32 minimumBoneY;
     
     struct Surface *wall;
