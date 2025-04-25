@@ -1944,8 +1944,7 @@ s32 act_taking_off_cap(struct MarioState *m) {
 /* |description|
 Handles the cutscene and animation sequence for when Mario is stuck in the ground (head, butt, or feet). Plays a designated `animation`, checks specific frames (`unstuckFrame`, `target2`, `target3`) for sound effects or transitions, and frees Mario to the `endAction` once the animation completes
 |descriptionEnd| */
-void stuck_in_ground_handler(struct MarioState *m, s32 animation, s32 unstuckFrame, s32 target2,
-                             s32 target3, s32 endAction) {
+void stuck_in_ground_handler(struct MarioState *m, s32 animation, s32 unstuckFrame, s32 target2, s32 target3, s32 endAction) {
     if (!m) { return; }
     s32 animFrame = set_character_animation(m, animation);
 

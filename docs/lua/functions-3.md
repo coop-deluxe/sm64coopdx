@@ -1955,6 +1955,9 @@ Transitions the camera to the next Lakitu state, updating position and focus. Th
 
 ## [set_fixed_cam_axis_sa_lobby](#set_fixed_cam_axis_sa_lobby)
 
+### Description
+Set the fixed camera base pos depending on the current level area
+
 ### Lua Example
 `set_fixed_cam_axis_sa_lobby(preset)`
 
@@ -2437,6 +2440,9 @@ Centers the ROM hack camera. This function is designed for non-standard level la
 
 
 ## [get_character](#get_character)
+
+### Description
+Gets a Character struct from `m`
 
 ### Lua Example
 `local CharacterValue = get_character(m)`
@@ -4281,6 +4287,9 @@ Plays Toad's jingle
 
 ## [sound_reset_background_music_default_volume](#sound_reset_background_music_default_volume)
 
+### Description
+Resets a sequence's (`seqId`) volume back to the default volume
+
 ### Lua Example
 `sound_reset_background_music_default_volume(seqId)`
 
@@ -4300,6 +4309,9 @@ Plays Toad's jingle
 <br />
 
 ## [sound_set_background_music_default_volume](#sound_set_background_music_default_volume)
+
+### Description
+Sets a sequence's (`seqId`) volume to `volume`
 
 ### Lua Example
 `sound_set_background_music_default_volume(seqId, volume)`
@@ -4322,6 +4334,9 @@ Plays Toad's jingle
 
 ## [get_sound_pan](#get_sound_pan)
 
+### Description
+Gets a sound left/right pan using `x` and `z`
+
 ### Lua Example
 `local numberValue = get_sound_pan(x, z)`
 
@@ -4342,6 +4357,9 @@ Plays Toad's jingle
 <br />
 
 ## [sound_get_level_intensity](#sound_get_level_intensity)
+
+### Description
+Gets a sound level intensity based on `distance`
 
 ### Lua Example
 `local numberValue = sound_get_level_intensity(distance)`
@@ -6008,6 +6026,9 @@ Returns the name of the level corresponding to `courseNum`, `levelNum` and `area
 
 ## [get_level_name_sm64](#get_level_name_sm64)
 
+### Description
+Returns the name of the level corresponding to `courseNum`, `levelNum` and `areaIndex` as an SM64 encoded string. This function should not be used in Lua mods. Set `charCase` to 1 to capitalize or -1 to decapitalize the returned string
+
 ### Lua Example
 `local PointerValue = get_level_name_sm64(courseNum, levelNum, areaIndex, charCase)`
 
@@ -6080,6 +6101,9 @@ Returns the name of the star corresponding to `courseNum` and `starNum` as an AS
 <br />
 
 ## [get_star_name_sm64](#get_star_name_sm64)
+
+### Description
+Returns the name of the star corresponding to `courseNum` and `starNum` as an SM64 encoded string. This function should not be used in Lua mods. Set `charCase` to 1 to capitalize or -1 to decapitalize the returned string
 
 ### Lua Example
 `local PointerValue = get_star_name_sm64(courseNum, starNum, charCase)`
