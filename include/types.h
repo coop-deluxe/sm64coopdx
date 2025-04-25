@@ -376,20 +376,20 @@ struct MarioState
     s16 health;
     u8 hurtCounter;
     u8 healCounter;
-    s16 invincTimer;
+    u8 isSnoring;
+    u8 freeze;
     
     u32 cap;
     u16 capTimer;
+    s16 invincTimer;
+    
     u8 skipWarpInteractionsTimer;
     u8 squishTimer;
-    
     u8 bounceSquishTimer;
     s8 knockbackTimer;
     u8 wallKickTimer;
     u8 doubleJumpTimer;
     u8 specialTripleJump;
-    u8 isSnoring;
-    u8 freeze;
     u8 fadeWarpOpacity;
     
     u8 visibleToEnemies;
