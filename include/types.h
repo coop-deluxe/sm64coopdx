@@ -385,15 +385,15 @@ struct MarioState
     
     u8 bounceSquishTimer;
     s8 knockbackTimer;
-    u8 fadeWarpOpacity;
-    u8 isSnoring;
-    u8 freeze;
-    u8 specialTripleJump;
-    u8 visibleToEnemies;
-    u8 wasNetworkVisible;
-    
     u8 wallKickTimer;
     u8 doubleJumpTimer;
+    u8 specialTripleJump;
+    u8 isSnoring;
+    u8 freeze;
+    u8 fadeWarpOpacity;
+    
+    u8 visibleToEnemies;
+    u8 wasNetworkVisible;
     s16 dialogId;
     s16 prevNumStarsForDialog;
     s16 unkB0;
