@@ -1,9 +1,10 @@
-import os
 import re
-import math
+import sys
 from extract_functions import *
 from common import *
 from vec_types import *
+
+verbose = len(sys.argv) > 1 and (sys.argv[1] == "-v" or sys.argv[1] == "--verbose")
 
 rejects = ""
 integer_types = ["u8", "u16", "u32", "u64", "s8", "s16", "s32", "s64", "int"]
@@ -1004,8 +1005,8 @@ def build_function(function, do_extern):
         if function['description'] != "":
             global total_doc_functions
             total_doc_functions += 1
-        else:
-            print(function['filename'] + ":     " + function['line'])
+        elif verbose:
+            print("UNDOCUMENTED: " + function['filename'] + ":     " + function['line'])
 
     return s + "\n"
 

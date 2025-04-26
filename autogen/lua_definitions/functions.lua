@@ -6829,24 +6829,6 @@ end
 
 --- @param np NetworkPlayer
 --- @param part PlayerPart
---- @param index integer
---- @return integer
---- Gets a red, green, or blue value from a part in `np`'s color palette
-function network_player_get_palette_color_channel(np, part, index)
-    -- ...
-end
-
---- @param np NetworkPlayer
---- @param part PlayerPart
---- @param index integer
---- @return integer
---- Gets a red, green, or blue value from a part in `np`'s override color palette
-function network_player_get_override_palette_color_channel(np, part, index)
-    -- ...
-end
-
---- @param np NetworkPlayer
---- @param part PlayerPart
 --- @param color Color
 --- Sets the `part in `np`'s override color palette`
 function network_player_set_override_palette_color(np, part, color)
