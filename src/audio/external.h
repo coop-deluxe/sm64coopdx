@@ -133,9 +133,9 @@ void audio_set_sound_mode(u8 arg0);
 
 void audio_init(void); // in load.c
 
-/* |description||descriptionEnd| */
+/* |description|Resets a sequence's (`seqId`) volume back to the default volume|descriptionEnd| */
 void sound_reset_background_music_default_volume(u8 seqId);
-/* |description||descriptionEnd| */
+/* |description|Sets a sequence's (`seqId`) volume to `volume`|descriptionEnd| */
 void sound_set_background_music_default_volume(u8 seqId, u8 volume);
 
 #if defined(VERSION_EU) || defined(VERSION_SH)
@@ -143,7 +143,9 @@ struct SPTask *unused_80321460();
 struct SPTask *unused_80321460(void);
 #endif
 
+/* |description|Gets a sound left/right pan using `x` and `z`|descriptionEnd| */
 f32 get_sound_pan(f32 x, f32 z);
+/* |description|Gets a sound level intensity based on `distance`|descriptionEnd| */
 f32 sound_get_level_intensity(f32 distance);
 
 #endif // AUDIO_EXTERNAL_H

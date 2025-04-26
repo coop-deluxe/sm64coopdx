@@ -1152,6 +1152,7 @@ This function handles smooth transitions between different gameplay scenarios
 |descriptionEnd| */
 s16 next_lakitu_state(Vec3f newPos, Vec3f newFoc, Vec3f curPos, Vec3f curFoc, Vec3f oldPos, Vec3f oldFoc, s16 yaw);
 
+/* |description|Set the fixed camera base pos depending on the current level area|descriptionEnd| */
 void set_fixed_cam_axis_sa_lobby(UNUSED s16 preset);
 /* |description|
 Processes course-specific camera settings, such as predefined positions or modes.

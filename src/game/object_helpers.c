@@ -3476,6 +3476,7 @@ void cur_obj_spawn_star_at_y_offset(f32 targetX, f32 targetY, f32 targetZ, f32 o
 }
 #endif
 
+/* |description|Sets the current object's home only the first time it's called|descriptionEnd| */
 void cur_obj_set_home_once(void) {
     if (!o) { return; }
     if (o->setHome) { return; }
@@ -3485,6 +3486,8 @@ void cur_obj_set_home_once(void) {
     o->oHomeZ = o->oPosZ;
 }
 
+
+/* |description|Gets a trajectory's length|descriptionEnd| */
 s32 get_trajectory_length(Trajectory* trajectory) {
     if (!trajectory) { return 0; }
     s32 count = 0;

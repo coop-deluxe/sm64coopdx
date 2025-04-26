@@ -40,7 +40,7 @@ You must run this every frame in your object's behavior loop for it to have coll
 void load_object_collision_model(void);
 /* |description|Gets a surface corresponding to `index` from the surface pool buffer|descriptionEnd| */
 struct Surface *obj_get_surface_from_index(struct Object *o, u32 index);
-/* |description||descriptionEnd| */
+/* |description|Checks if a surface has force|descriptionEnd| */
 bool surface_has_force(s16 surfaceType);
 
 #endif // SURFACE_LOAD_H
