@@ -95,7 +95,7 @@ static s16 mario_set_animation_internal(struct MarioState *m, s32 targetAnimID, 
         if (targetAnim->flags & ANIM_FLAG_2) {
             o->header.gfx.animInfo.animFrameAccelAssist = (targetAnim->startFrame << 0x10);
         } else {
-            if (targetAnim->flags & ANIM_FLAG_FORWARD) {
+            if (targetAnim->flags & ANIM_FLAG_BACKWARD) {
                 o->header.gfx.animInfo.animFrameAccelAssist = (targetAnim->startFrame << 0x10) + accel;
             } else {
                 o->header.gfx.animInfo.animFrameAccelAssist = (targetAnim->startFrame << 0x10) - accel;
@@ -151,13 +151,13 @@ void set_anim_to_frame(struct MarioState *m, s16 animFrame) {
     if (animInfo == NULL) { return; }
 
     if (animInfo->animAccel) {
-        if (curAnim != NULL && curAnim->flags & ANIM_FLAG_FORWARD) {
+        if (curAnim != NULL && curAnim->flags & ANIM_FLAG_BACKWARD) {
             animInfo->animFrameAccelAssist = (animFrame << 0x10) + animInfo->animAccel;
         } else {
             animInfo->animFrameAccelAssist = (animFrame << 0x10) - animInfo->animAccel;
         }
     } else {
-        if (curAnim != NULL && curAnim->flags & ANIM_FLAG_FORWARD) {
+        if (curAnim != NULL && curAnim->flags & ANIM_FLAG_BACKWARD) {
             animInfo->animFrame = animFrame + 1;
         } else {
             animInfo->animFrame = animFrame - 1;
@@ -176,7 +176,7 @@ s32 is_anim_past_frame(struct MarioState *m, s16 animFrame) {
     struct Animation *curAnim = animInfo->curAnim;
 
     if (animInfo->animAccel) {
-        if (curAnim->flags & ANIM_FLAG_FORWARD) {
+        if (curAnim->flags & ANIM_FLAG_BACKWARD) {
             isPastFrame =
                 (animInfo->animFrameAccelAssist > acceleratedFrame)
                 && (acceleratedFrame >= (animInfo->animFrameAccelAssist - animInfo->animAccel));
@@ -186,7 +186,7 @@ s32 is_anim_past_frame(struct MarioState *m, s16 animFrame) {
                 && (acceleratedFrame <= (animInfo->animFrameAccelAssist + animInfo->animAccel));
         }
     } else {
-        if (curAnim->flags & ANIM_FLAG_FORWARD) {
+        if (curAnim->flags & ANIM_FLAG_BACKWARD) {
             isPastFrame = (animInfo->animFrame == (animFrame + 1));
         } else {
             isPastFrame = ((animInfo->animFrame + 1) == animFrame);
