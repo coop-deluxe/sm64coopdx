@@ -739,71 +739,27 @@ void smlua_dump_table(int index) {
     printf("--------------\n");
 }
 
-// Get the folder and file
-// in the format: "folder/file.lua"
-static const char *smlua_lua_path_to_relative(const char *src) {
-    int slashCount = 0;
-    for (const char* p = src + strlen(src); p > src; --p) {
-        if (*p == '/' || *p == '\\') {
-            if (++slashCount == 2) {
-                return p + 1;
-            }
-        }
-    }
-    return src;
-}
-
-// Get the folder from the path
-static const char *smlua_lua_path_to_folder(const char *src) {
-    static char convertedBuffer[SYS_MAX_PATH];
-    memcpy(convertedBuffer, src, strlen(src)); // Assumes the sub string will be smaller
-    int slashCount = 0;
-    char *lastSlash = convertedBuffer;
-    for (char* p = convertedBuffer + strlen(convertedBuffer); p > convertedBuffer; --p) {
-        if (*p == '/' || *p == '\\') {
-            if (++slashCount == 2) {
-                *lastSlash = '\0'; // Insert a null terminator
-                return p + 1;
-            }
-            lastSlash = p;
-        }
-    }
-    return src;
-}
-
-// Get the last run mod via stack trace
-// not the most efficient way, but its the most accurate
-// try to call as little as possible, and use gLuaActiveMod
-struct Mod *smlua_get_last_active_mod() {
-    lua_State* L = gLuaState;
-    lua_Debug info;
-    for (int level = 0; lua_getstack(L, level, &info); level++) {
-        if (!lua_getinfo(L, "S", &info)) { break; }
-        if (strcmp(info.what, "C") == 0) { continue; } // Skip C functions
-
-        // We found the first instance of Lua code
-        // compare the folder to all active mods
-        const char *modFolder = smlua_lua_path_to_folder(info.source);
-        for (u16 i = 0; i < gLocalMods.entryCount; i++) {
-            struct Mod *mod = gLocalMods.entries[i];
-            if (!mod->enabled) { continue; }
-            if (strcmp(mod->relativePath, modFolder) == 0) {
-                gLuaActiveMod = mod;
-                return mod;
-            }
-        }
-        break;
-    }
-    return NULL;
-}
-
 void smlua_logline(void) {
     lua_State* L = gLuaState;
     lua_Debug info;
     int level = 0;
     while (lua_getstack(L, level, &info)) {
         lua_getinfo(L, "nSl", &info);
-        const char* folderStart = smlua_lua_path_to_relative(info.source);
+
+        // Get the folder and file
+        // in the format: "folder/file.lua"
+        const char* src = info.source;
+        int slashCount = 0;
+        const char* folderStart = NULL;
+        for (const char* p = src + strlen(src); p > src; --p) {
+            if (*p == '/' || *p == '\\') {
+                if (++slashCount == 2) {
+                    folderStart = p + 1;
+                    break;
+                }
+            }
+        }
+
         LOG_LUA("    [%d] '%s':%d -- %s [%s]",
             level, (folderStart ? folderStart : info.short_src), info.currentline,
             (info.name ? info.name : "<unknown>"), info.what);
