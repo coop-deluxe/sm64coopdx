@@ -48,7 +48,7 @@ f32 get_fog_intensity(void);
 void set_fog_intensity(f32 intensity);
 
 /* |description|Gets the current skybox|descriptionEnd| */
-enum SkyBackgroundParams get_skybox(void);
+s8 get_skybox(void);
 /* |description|Sets the override skybox|descriptionEnd| */
 void set_override_skybox(s8 background);
 /* |description|Gets a value of the global skybox color|descriptionEnd| */

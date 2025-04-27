@@ -87,7 +87,7 @@ void set_fog_intensity(f32 intensity) {
 
 ///
 
-enum SkyBackgroundParams get_skybox(void) {
+s8 get_skybox(void) {
     if (gOverrideBackground != -1) { return gOverrideBackground; }
     return gReadOnlyBackground;
 }

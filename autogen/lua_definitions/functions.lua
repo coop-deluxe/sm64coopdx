@@ -9763,7 +9763,7 @@ function set_fog_intensity(intensity)
     -- ...
 end
 
---- @return SkyBackgroundParams
+--- @return integer
 --- Gets the current skybox
 function get_skybox()
     -- ...
