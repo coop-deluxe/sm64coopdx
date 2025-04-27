@@ -3003,6 +3003,10 @@ static s32 act_end_peach_cutscene(struct MarioState *m) {
     m->actionTimer++;
 
     if (m->playerIndex == 0) {
+        if (m->controller->buttonPressed & START_BUTTON) {
+            lvl_skip_credits();
+        }
+        
         sEndCutsceneVp.vp.vscale[0] = 640;
         sEndCutsceneVp.vp.vscale[1] = 360;
         sEndCutsceneVp.vp.vtrans[0] = 640;
@@ -3048,6 +3052,10 @@ static s32 act_credits_cutscene(struct MarioState *m) {
         if (m->actionTimer > 0) {
             stop_and_set_height_to_floor(m);
         }
+    }
+    
+    if (m->playerIndex == 0 && m->controller->buttonPressed & START_BUTTON) {
+        lvl_skip_credits();
     }
 
     if (m->actionTimer >= TIMER_CREDITS_SHOW) {

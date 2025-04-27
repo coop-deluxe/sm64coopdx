@@ -353,6 +353,13 @@ Useful for determining Mario's cap status
 u32 does_mario_have_normal_cap_on_head(struct MarioState *m);
 
 /* |description|
+Checks if Mario has already had a cap blown off of his head in the current level,
+Returns true if a blown cap can be found for Mario, false if not.
+Useful to check if a blown cap exists in the level currently.
+|descriptionEnd| */
+bool does_mario_have_blown_cap(struct MarioState *m);
+
+/* |description|
 Makes Mario blow off his normal cap at a given speed. 
 Removes the normal cap from Mario's head and spawns it as a collectible object in the game world.
 Useful for simulating events where Mario loses his cap due to enemy attacks or environmental forces

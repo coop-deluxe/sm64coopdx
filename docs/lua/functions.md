@@ -911,6 +911,7 @@
    - [mario_throw_held_object](functions-3.md#mario_throw_held_object)
    - [mario_stop_riding_and_holding](functions-3.md#mario_stop_riding_and_holding)
    - [does_mario_have_normal_cap_on_head](functions-3.md#does_mario_have_normal_cap_on_head)
+   - [does_mario_have_blown_cap](functions-3.md#does_mario_have_blown_cap)
    - [mario_blow_off_cap](functions-3.md#mario_blow_off_cap)
    - [mario_lose_cap_to_enemy](functions-3.md#mario_lose_cap_to_enemy)
    - [mario_retrieve_cap](functions-3.md#mario_retrieve_cap)
