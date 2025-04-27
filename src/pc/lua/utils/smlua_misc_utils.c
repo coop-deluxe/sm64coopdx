@@ -515,7 +515,7 @@ bool mod_file_exists(const char* filename) {
 }
 
 struct Mod* get_active_mod(void) {
-    return gLuaLastHookMod;
+    return smlua_get_last_active_mod();
 }
 
 ///
