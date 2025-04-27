@@ -2719,38 +2719,30 @@ G_TEXRECTFLIP = 0xe5
 --- @type integer
 G_TEXRECT = 0xe4
 
---- @type integer
-BACKGROUND_OCEAN_SKY = 0
+BACKGROUND_OCEAN_SKY       =  0 --- @type SkyBackgroundParams
+BACKGROUND_FLAMING_SKY     =  1 --- @type SkyBackgroundParams
+BACKGROUND_UNDERWATER_CITY =  2 --- @type SkyBackgroundParams
+BACKGROUND_BELOW_CLOUDS    =  3 --- @type SkyBackgroundParams
+BACKGROUND_SNOW_MOUNTAINS  =  4 --- @type SkyBackgroundParams
+BACKGROUND_DESERT          =  5 --- @type SkyBackgroundParams
+BACKGROUND_HAUNTED         =  6 --- @type SkyBackgroundParams
+BACKGROUND_GREEN_SKY       =  7 --- @type SkyBackgroundParams
+BACKGROUND_ABOVE_CLOUDS    =  8 --- @type SkyBackgroundParams
+BACKGROUND_PURPLE_SKY      =  9 --- @type SkyBackgroundParams
+BACKGROUND_CUSTOM          = 10 --- @type SkyBackgroundParams
 
---- @type integer
-BACKGROUND_FLAMING_SKY = 1
-
---- @type integer
-BACKGROUND_UNDERWATER_CITY = 2
-
---- @type integer
-BACKGROUND_BELOW_CLOUDS = 3
-
---- @type integer
-BACKGROUND_SNOW_MOUNTAINS = 4
-
---- @type integer
-BACKGROUND_DESERT = 5
-
---- @type integer
-BACKGROUND_HAUNTED = 6
-
---- @type integer
-BACKGROUND_GREEN_SKY = 7
-
---- @type integer
-BACKGROUND_ABOVE_CLOUDS = 8
-
---- @type integer
-BACKGROUND_PURPLE_SKY = 9
-
---- @type integer
-BACKGROUND_CUSTOM = 10
+--- @alias SkyBackgroundParams
+--- | `BACKGROUND_OCEAN_SKY`
+--- | `BACKGROUND_FLAMING_SKY`
+--- | `BACKGROUND_UNDERWATER_CITY`
+--- | `BACKGROUND_BELOW_CLOUDS`
+--- | `BACKGROUND_SNOW_MOUNTAINS`
+--- | `BACKGROUND_DESERT`
+--- | `BACKGROUND_HAUNTED`
+--- | `BACKGROUND_GREEN_SKY`
+--- | `BACKGROUND_ABOVE_CLOUDS`
+--- | `BACKGROUND_PURPLE_SKY`
+--- | `BACKGROUND_CUSTOM`
 
 --- @type integer
 GRAPH_RENDER_ACTIVE = (1 << 0)

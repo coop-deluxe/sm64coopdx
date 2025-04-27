@@ -2634,7 +2634,7 @@ N/A
 Derives a `MARIO_SPAWN_*` constant from `o`
 
 ### Lua Example
-`local enumValue = get_mario_spawn_type(o)`
+`local integerValue = get_mario_spawn_type(o)`
 
 ### Parameters
 | Field | Type |
@@ -2642,10 +2642,10 @@ Derives a `MARIO_SPAWN_*` constant from `o`
 | o | [Object](structs.md#Object) |
 
 ### Returns
-[enum MarioSpawnType](constants.md#enum-MarioSpawnType)
+- `integer`
 
 ### C Prototype
-`enum MarioSpawnType get_mario_spawn_type(struct Object *o);`
+`u32 get_mario_spawn_type(struct Object *o);`
 
 [:arrow_up_small:](#)
 

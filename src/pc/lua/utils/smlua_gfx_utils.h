@@ -3,6 +3,7 @@
 
 #include "pc/lua/smlua.h"
 #include "types.h"
+#include "geo_commands.h"
 
 #define C0(cmd, pos, width) (((cmd)->words.w0 >> (pos)) & ((1U << width) - 1))
 #define GFX_OP(cmd) C0(cmd, 24, 8)

@@ -3052,6 +3052,9 @@ Applies shared logic for sliding-related actions while playing sliding sounds, m
 
 ## [common_slide_action_with_jump](#common_slide_action_with_jump)
 
+### Description
+Builds on `common_slide_action` by also allowing Mario to jump out of a slide if A is pressed after a short delay. If the sliding slows enough, Mario transitions to a specified stopping action
+
 ### Lua Example
 `local integerValue = common_slide_action_with_jump(m, stopAction, jumpAction, airAction, animation)`
 
@@ -3154,6 +3157,9 @@ Applies movement upon landing from a jump or fall. Adjusts velocity based on slo
 
 ## [quicksand_jump_land_action](#quicksand_jump_land_action)
 
+### Description
+Handles a special landing in quicksand after a jump. Over several frames, Mario emerges from the quicksand. First part of the animation reduces his quicksand depth. Ends with a normal landing action or transitions back to air if he leaves the ground
+
 ### Lua Example
 `local integerValue = quicksand_jump_land_action(m, animation1, animation2, endAction, airAction)`
 
@@ -3230,6 +3236,9 @@ Executes Mario's current moving actions by: checking common cancellations (e.g.,
 
 ## [animated_stationary_ground_step](#animated_stationary_ground_step)
 
+### Description
+Performs a stationary step, sets `m`'s animation and sets action to `endAction` once the animation finishes
+
 ### Lua Example
 `animated_stationary_ground_step(m, animation, endAction)`
 
@@ -3252,6 +3261,9 @@ Executes Mario's current moving actions by: checking common cancellations (e.g.,
 
 ## [mario_update_punch_sequence](#mario_update_punch_sequence)
 
+### Description
+Updates Mario's punching state
+
 ### Lua Example
 `local integerValue = mario_update_punch_sequence(m)`
 
@@ -3272,6 +3284,9 @@ Executes Mario's current moving actions by: checking common cancellations (e.g.,
 
 ## [check_common_object_cancels](#check_common_object_cancels)
 
+### Description
+Checks for and handles common conditions that would cancel Mario's current object action. This includes transitioning to a water plunge if below the water level, becoming squished if appropriate, or switching to standing death action if Mario is dead
+
 ### Lua Example
 `local integerValue = check_common_object_cancels(m)`
 
@@ -3291,6 +3306,9 @@ Executes Mario's current moving actions by: checking common cancellations (e.g.,
 <br />
 
 ## [mario_execute_object_action](#mario_execute_object_action)
+
+### Description
+Executes Mario's current object action by first checking common object cancels, then updating quicksand state. Dispatches to the appropriate action function, such as punching, throwing, picking up Bowser, etc
 
 ### Lua Example
 `local integerValue = mario_execute_object_action(m)`

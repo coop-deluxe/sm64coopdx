@@ -27,6 +27,7 @@
 - [first_person_cam.h](#first_person_camh)
 - [gbi.h](#gbih)
 - [geo_commands.h](#geo_commandsh)
+    - [enum SkyBackgroundParams](#enum-SkyBackgroundParams)
 - [graph_node.h](#graph_nodeh)
 - [interaction.c](#interactionc)
 - [interaction.h](#interactionh)
@@ -1284,17 +1285,21 @@
 <br />
 
 ## [geo_commands.h](#geo_commands.h)
-- BACKGROUND_OCEAN_SKY
-- BACKGROUND_FLAMING_SKY
-- BACKGROUND_UNDERWATER_CITY
-- BACKGROUND_BELOW_CLOUDS
-- BACKGROUND_SNOW_MOUNTAINS
-- BACKGROUND_DESERT
-- BACKGROUND_HAUNTED
-- BACKGROUND_GREEN_SKY
-- BACKGROUND_ABOVE_CLOUDS
-- BACKGROUND_PURPLE_SKY
-- BACKGROUND_CUSTOM
+
+### [enum SkyBackgroundParams](#SkyBackgroundParams)
+| Identifier | Value |
+| :--------- | :---- |
+| BACKGROUND_OCEAN_SKY | 0 |
+| BACKGROUND_FLAMING_SKY | 1 |
+| BACKGROUND_UNDERWATER_CITY | 2 |
+| BACKGROUND_BELOW_CLOUDS | 3 |
+| BACKGROUND_SNOW_MOUNTAINS | 4 |
+| BACKGROUND_DESERT | 5 |
+| BACKGROUND_HAUNTED | 6 |
+| BACKGROUND_GREEN_SKY | 7 |
+| BACKGROUND_ABOVE_CLOUDS | 8 |
+| BACKGROUND_PURPLE_SKY | 9 |
+| BACKGROUND_CUSTOM | 10 |
 
 [:arrow_up_small:](#)
 
