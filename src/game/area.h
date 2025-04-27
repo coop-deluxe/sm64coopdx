@@ -158,7 +158,7 @@ extern u8 gSpawnedStarHiddenCount;
 void override_viewport_and_clip(Vp *a, Vp *b, u8 c, u8 d, u8 e);
 void print_intro_text(void);
 /* |description|Derives a `MARIO_SPAWN_*` constant from `o`|descriptionEnd| */
-enum MarioSpawnType get_mario_spawn_type(struct Object *o);
+u32 get_mario_spawn_type(struct Object *o);
 
 /* |description|
 Finds a warp node in the current area by its ID. The warp node must exist in the list of warp nodes for the current area.

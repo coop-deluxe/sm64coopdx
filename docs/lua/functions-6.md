@@ -1709,16 +1709,16 @@ Sets the intensity of the fog (this value scales very quickly, 1.0 to 1.1 is a d
 Gets the current skybox
 
 ### Lua Example
-`local integerValue = get_skybox()`
+`local enumValue = get_skybox()`
 
 ### Parameters
 - None
 
 ### Returns
-- `integer`
+[enum SkyBackgroundParams](constants.md#enum-SkyBackgroundParams)
 
 ### C Prototype
-`s8 get_skybox(void);`
+`enum SkyBackgroundParams get_skybox(void);`
 
 [:arrow_up_small:](#)
 

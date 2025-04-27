@@ -22,6 +22,7 @@
 #include "pc/lua/smlua.h"
 #include "hardcoded.h"
 
+/* |description||descriptionEnd| */
 s32 check_common_idle_cancels(struct MarioState *m) {
     if (!m) { return 0; }
     mario_drop_held_object(m);
@@ -65,6 +66,7 @@ s32 check_common_idle_cancels(struct MarioState *m) {
     return FALSE;
 }
 
+/* |description||descriptionEnd| */
 s32 check_common_hold_idle_cancels(struct MarioState *m) {
     if (!m) { return 0; }
     if (m->floor && m->floor->normal.y < 0.29237169f) {
@@ -186,6 +188,7 @@ s32 act_idle(struct MarioState *m) {
     return FALSE;
 }
 
+/* |description||descriptionEnd| */
 void play_anim_sound(struct MarioState *m, u32 actionState, s32 animFrame, u32 sound) {
     if (!m) { return; }
     if (!m->marioObj) { return; }
@@ -653,6 +656,7 @@ s32 act_hold_panting_unused(struct MarioState *m) {
     return FALSE;
 }
 
+/* |description||descriptionEnd| */
 void stopping_step(struct MarioState *m, s32 animID, u32 action) {
     stationary_ground_step(m);
     set_character_animation(m, animID);
@@ -876,6 +880,7 @@ s32 act_shockwave_bounce(struct MarioState *m) {
     return FALSE;
 }
 
+/* |description||descriptionEnd| */
 s32 landing_step(struct MarioState *m, s32 arg1, u32 action) {
     stationary_ground_step(m);
     set_character_animation(m, arg1);
@@ -885,6 +890,7 @@ s32 landing_step(struct MarioState *m, s32 arg1, u32 action) {
     return FALSE;
 }
 
+/* |description||descriptionEnd| */
 s32 check_common_landing_cancels(struct MarioState *m, u32 action) {
     if (!m) { return 0; }
     if (m->input & INPUT_UNKNOWN_10) {
@@ -1148,6 +1154,7 @@ s32 act_first_person(struct MarioState *m) {
     return FALSE;
 }
 
+/* |description||descriptionEnd| */
 s32 check_common_stationary_cancels(struct MarioState *m) {
     if (!m) { return 0; }
     if (m->playerIndex != 0) { return FALSE; }
@@ -1179,6 +1186,7 @@ s32 check_common_stationary_cancels(struct MarioState *m) {
     return FALSE;
 }
 
+/* |description||descriptionEnd| */
 s32 mario_execute_stationary_action(struct MarioState *m) {
     if (!m) { return FALSE; }
     s32 cancel;

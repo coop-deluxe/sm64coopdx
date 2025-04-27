@@ -147,7 +147,7 @@ void print_intro_text(void) {
     }
 }
 
-enum MarioSpawnType get_mario_spawn_type(struct Object *o) {
+u32 get_mario_spawn_type(struct Object *o) {
     if (o == NULL || o->behavior == NULL) { return MARIO_SPAWN_NONE; }
 
     const BehaviorScript *behavior = virtual_to_segmented(0x13, o->behavior);
