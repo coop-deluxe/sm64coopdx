@@ -3441,7 +3441,8 @@
 | HOOK_ON_INTERACTIONS | 52 |
 | HOOK_ALLOW_FORCE_WATER_ACTION | 53 |
 | HOOK_BEFORE_WARP | 54 |
-| HOOK_MAX | 55 |
+| HOOK_ON_INSTANT_WARP | 55 |
+| HOOK_MAX | 56 |
 
 ### [enum LuaActionHookType](#LuaActionHookType)
 | Identifier | Value |
