@@ -1327,7 +1327,7 @@ static struct LuaObjectField sLakituStateFields[LUA_LAKITU_STATE_FIELD_COUNT] = 
     { "yaw",                              LVT_S16,     offsetof(struct LakituState, yaw),                              false, LOT_NONE,  1,  sizeof(s16)   },
 };
 
-#define LUA_LEVEL_VALUES_FIELD_COUNT 51
+#define LUA_LEVEL_VALUES_FIELD_COUNT 52
 static struct LuaObjectField sLevelValuesFields[LUA_LEVEL_VALUES_FIELD_COUNT] = {
     { "bubbleOnDeathBarrierInCapStages",  LVT_U8,      offsetof(struct LevelValues, bubbleOnDeathBarrierInCapStages),  false, LOT_NONE,          1, sizeof(u8)                   },
     { "cellHeightLimit",                  LVT_S16,     offsetof(struct LevelValues, cellHeightLimit),                  false, LOT_NONE,          1, sizeof(s16)                  },
@@ -1343,6 +1343,7 @@ static struct LuaObjectField sLevelValuesFields[LUA_LEVEL_VALUES_FIELD_COUNT] = 
     { "fixCollisionBugsGroundPoundBonks", LVT_U8,      offsetof(struct LevelValues, fixCollisionBugsGroundPoundBonks), false, LOT_NONE,          1, sizeof(u8)                   },
     { "fixCollisionBugsPickBestWall",     LVT_U8,      offsetof(struct LevelValues, fixCollisionBugsPickBestWall),     false, LOT_NONE,          1, sizeof(u8)                   },
     { "fixCollisionBugsRoundedCorners",   LVT_U8,      offsetof(struct LevelValues, fixCollisionBugsRoundedCorners),   false, LOT_NONE,          1, sizeof(u8)                   },
+    { "fixInvalidShellRides",             LVT_U8,      offsetof(struct LevelValues, fixInvalidShellRides),             false, LOT_NONE,          1, sizeof(u8)                   },
     { "fixVanishFloors",                  LVT_U8,      offsetof(struct LevelValues, fixVanishFloors),                  false, LOT_NONE,          1, sizeof(u8)                   },
     { "floatingStarDance",                LVT_U8,      offsetof(struct LevelValues, floatingStarDance),                false, LOT_NONE,          1, sizeof(u8)                   },
     { "floorLowerLimit",                  LVT_S16,     offsetof(struct LevelValues, floorLowerLimit),                  false, LOT_NONE,          1, sizeof(s16)                  },

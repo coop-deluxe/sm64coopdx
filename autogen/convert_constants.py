@@ -3,6 +3,7 @@ from extract_constants import *
 import sys
 
 in_filename = 'autogen/lua_constants/built-in.lua'
+deprecated_filename = 'autogen/lua_constants/deprecated.lua'
 out_filename = 'src/pc/lua/smlua_constants_autogen.c'
 out_filename_docs = 'docs/lua/constants.md'
 out_filename_defs = 'autogen/lua_definitions/constants.lua'
@@ -54,6 +55,10 @@ in_files = [
 
 exclude_constants = {
     "*": [ "^MAXCONTROLLERS$", "^AREA_[^T].*", "^AREA_T[HTO]", "^CONT_ERR.*", "^READ_MASK$", "^SIGN_RANGE$", ],
+    "include/sm64.h": [ "END_DEMO" ],
+    "include/types.h": [ "GRAPH_NODE_GUARD" ],
+    "src/audio/external.h": [ "DS_DIFF" ],
+    "src/game/save_file.h": [ "EEPROM_SIZE" ],
     "src/game/obj_behaviors.c": [ "^o$" ],
     "src/pc/djui/djui_console.h": [ "CONSOLE_MAX_TMP_BUFFER" ],
     "src/pc/lua/smlua_hooks.h": [ "MAX_HOOKED_MOD_MENU_ELEMENTS" ],
@@ -102,6 +107,12 @@ include_constants = {
     ]
 }
 
+# Constants that exist in the source code but should not appear
+# in the documentation or VSCode autocomplete
+hide_constants = {
+    "interaction.h": [ "INTERACT_UNKNOWN_08" ],
+}
+
 pretend_find = [
     "SOUND_ARG_LOAD"
 ]
@@ -113,7 +124,6 @@ verbose = len(sys.argv) > 1 and (sys.argv[1] == "-v" or sys.argv[1] == "--verbos
 overrideConstant = {
     'VERSION_REGION': '"US"',
 }
-forced_defines = ['F3DEX_GBI_2']
 defined_values = {
     'VERSION_US': True,
     'VERSION_EU': False,
@@ -314,7 +324,7 @@ def process_files():
 
 ############################################################################
 
-def build_constant(processed_constant):
+def build_constant(processed_constant, skip_constant):
     constants = processed_constant
     s = ''
 
@@ -326,16 +336,25 @@ def build_constant(processed_constant):
 
     for c in constants:
         if c[0].startswith('#'):
-            s += '%s\n' % c[0]
+            if c[0].startswith('#ifdef'):
+                skip_constant = not defined_values[c[0].split()[1]]
+            elif c[0].startswith('#else'):
+                skip_constant = not skip_constant
+            elif c[0].startswith('#endif'):
+                skip_constant = False
+            continue
+        if skip_constant:
             continue
         s += '%s=%s\n' % (c[0], c[1].replace('"', "'"))
 
-    return s
+    return s, skip_constant
 
 def build_file(processed_file):
     s = ''
+    skip_constant = False
     for c in processed_file['constants']:
-        s += build_constant(c)
+        cs, skip_constant = build_constant(c, skip_constant)
+        s += cs
 
     return s
 
@@ -348,18 +367,17 @@ def build_files(processed_files):
 
 def build_to_c(built_files):
     txt = ''
-    with open(get_path(in_filename), 'r') as f:
-        txt = ''
-        for line in f.readlines():
-            txt += line.strip() + '\n'
+    for filename in [in_filename, deprecated_filename]:
+        with open(get_path(filename), 'r') as f:
+            for line in f.readlines():
+                txt += line.strip() + '\n'
     txt += '\n' + built_files
 
     while ('\n\n' in txt):
         txt = txt.replace('\n\n', '\n')
 
     lines = txt.splitlines()
-    txt = "".join(f"#define {item}\n" for item in forced_defines)
-    txt += 'char gSmluaConstants[] = ""\n'
+    txt = 'char gSmluaConstants[] = ""\n'
     for line in lines:
         if line.startswith("#"):
             txt += '%s\n' % line
@@ -369,6 +387,13 @@ def build_to_c(built_files):
     return txt
 
 ############################################################################
+
+def doc_should_document(fname, identifier):
+    if fname in hide_constants:
+        for pattern in hide_constants[fname]:
+            if re.search(pattern, identifier) != None:
+                return False
+    return True
 
 def doc_constant_index(processed_files):
     s = '# Supported Constants\n'
@@ -380,7 +405,7 @@ def doc_constant_index(processed_files):
     s += '\n<br />\n\n'
     return s
 
-def doc_constant(processed_constant):
+def doc_constant(fname, processed_constant):
     constants = processed_constant
     s = ''
 
@@ -401,6 +426,8 @@ def doc_constant(processed_constant):
     for c in [processed_constant]:
         if c[0].startswith('#'):
             continue
+        if not doc_should_document(fname, c[0]):
+            continue
         s += '- %s\n' % (c[0])
 
     return s
@@ -409,7 +436,7 @@ def doc_file(processed_file):
     s = '## [%s](#%s)\n' % (processed_file['filename'], processed_file['filename'])
     constants = processed_file['constants']
     for c in constants:
-        s += doc_constant(c)
+        s += doc_constant(processed_file['filename'], c)
 
     s += '\n[:arrow_up_small:](#)\n'
     s += '\n<br />\n\n'
@@ -425,7 +452,7 @@ def doc_files(processed_files):
 
 ############################################################################
 
-def def_constant(processed_constant, skip_constant):
+def def_constant(fname, processed_constant, skip_constant):
     global totalConstants
     constants = processed_constant
     s = ''
@@ -461,6 +488,8 @@ def def_constant(processed_constant, skip_constant):
             continue
         if skip_constant:
             continue
+        if not doc_should_document(fname, c[0]):
+            continue
         if '"' in c[1]:
             s += '\n--- @type string\n'
         else:
@@ -480,7 +509,7 @@ def build_to_def(processed_files):
         constants = file['constants']
         skip_constant = False
         for c in constants:
-            cs, skip_constant = def_constant(c, skip_constant)
+            cs, skip_constant = def_constant(file['filename'], c, skip_constant)
             s += cs
 
     return s

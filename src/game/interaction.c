@@ -25,12 +25,14 @@
 #include "sound_init.h"
 #include "rumble_init.h"
 #include "object_collision.h"
+#include "object_list_processor.h"
 #include "hardcoded.h"
 
 #include "pc/configfile.h"
 #include "pc/network/network.h"
 #include "pc/network/lag_compensation.h"
 #include "pc/lua/smlua_hooks.h"
+#include "pc/lua/utils/smlua_obj_utils.h"
 
 u8 sDelayInvincTimer;
 s16 gInteractionInvulnerable;
@@ -224,7 +226,7 @@ u32 determine_interaction(struct MarioState *m, struct Object *o) {
     // Prior to this, the interaction type could be overwritten. This requires, however,
     // that the interaction not be set prior. This specifically overrides turning a ground
     // pound into just a bounce.
-    if (interaction == 0 && (action & ACT_FLAG_AIR)) {
+    if ((interaction == 0 || interaction & INT_LUA) && (action & ACT_FLAG_AIR)) {
         if (m->vel[1] < 0.0f) {
             if (m->pos[1] > o->oPosY) {
                 interaction = INT_HIT_FROM_ABOVE;
@@ -279,15 +281,14 @@ u32 attack_object(struct MarioState* m, struct Object *o, s32 interaction) {
 }
 
 void mario_stop_riding_object(struct MarioState *m) {
-    if (!m) { return; }
-    if (m->riddenObj != NULL && m->playerIndex == 0) {
-        m->riddenObj->oInteractStatus = INT_STATUS_STOP_RIDING;
-        if (m->riddenObj->oSyncID != 0) {
-            network_send_object_reliability(m->riddenObj, TRUE);
-        }
-        stop_shell_music();
-        m->riddenObj = NULL;
+    if (!m || m->riddenObj == NULL || m->playerIndex != 0) { return; }
+    
+    m->riddenObj->oInteractStatus = INT_STATUS_STOP_RIDING;
+    if (m->riddenObj->oSyncID != 0) {
+        network_send_object_reliability(m->riddenObj, TRUE);
     }
+    stop_shell_music();
+    m->riddenObj = NULL;
 }
 
 void mario_grab_used_object(struct MarioState *m) {
@@ -375,37 +376,40 @@ u32 does_mario_have_normal_cap_on_head(struct MarioState *m) {
     return (m->flags & (MARIO_CAPS | MARIO_CAP_ON_HEAD)) == (MARIO_NORMAL_CAP | MARIO_CAP_ON_HEAD);
 }
 
+bool does_mario_have_blown_cap(struct MarioState *m) {
+    if (!m) { return FALSE; }
+    return obj_get_first_with_behavior_id_and_field_s32(id_bhvNormalCap, 0x40, m->playerIndex + 1) != NULL;
+}
+
 void mario_blow_off_cap(struct MarioState *m, f32 capSpeed) {
     if (!m) { return; }
     if (m->playerIndex != 0) { return; }
-    struct Object *capObject;
+    if (!does_mario_have_normal_cap_on_head(m) || does_mario_have_blown_cap(m)) { return; }
+    
+    m->cap = SAVE_FLAG_CAP_ON_MR_BLIZZARD;
 
-    if (does_mario_have_normal_cap_on_head(m)) {
-        m->cap = SAVE_FLAG_CAP_ON_MR_BLIZZARD;
+    m->flags &= ~(MARIO_NORMAL_CAP | MARIO_CAP_ON_HEAD);
 
-        m->flags &= ~(MARIO_NORMAL_CAP | MARIO_CAP_ON_HEAD);
+    u8 capModel = m->character->capModelId;
+    struct Object *capObject = spawn_object(m->marioObj, capModel, bhvNormalCap);
+    if (capObject == NULL) { return; }
+    capObject->globalPlayerIndex = gNetworkPlayers[m->playerIndex].globalIndex;
+    capObject->oBehParams = m->playerIndex + 1;
 
-        u8 capModel = m->character->capModelId;
-        capObject = spawn_object(m->marioObj, capModel, bhvNormalCap);
-        if (capObject == NULL) { return; }
-        capObject->globalPlayerIndex = gNetworkPlayers[m->playerIndex].globalIndex;
-        capObject->oBehParams = m->playerIndex + 1;
+    capObject->oPosY += (m->action & ACT_FLAG_SHORT_HITBOX) ? 120.0f : 180.0f;
+    capObject->oForwardVel = capSpeed;
+    capObject->oMoveAngleYaw = (s16)(m->faceAngle[1] + 0x400);
 
-        capObject->oPosY += (m->action & ACT_FLAG_SHORT_HITBOX) ? 120.0f : 180.0f;
-        capObject->oForwardVel = capSpeed;
-        capObject->oMoveAngleYaw = (s16)(m->faceAngle[1] + 0x400);
-
-        if (m->forwardVel < 0.0f) {
-            capObject->oMoveAngleYaw = (s16)(capObject->oMoveAngleYaw + 0x8000);
-        }
-
-        // set as it's own parent so we can spawn it over the network
-        capObject->parentObj = capObject;
-
-        struct Object* spawn_objects[] = { capObject };
-        u32 models[] = { capModel };
-        network_send_spawn_objects(spawn_objects, models, 1);
+    if (m->forwardVel < 0.0f) {
+        capObject->oMoveAngleYaw = (s16)(capObject->oMoveAngleYaw + 0x8000);
     }
+
+    // set as it's own parent so we can spawn it over the network
+    capObject->parentObj = capObject;
+
+    struct Object* spawn_objects[] = { capObject };
+    u32 models[] = { capModel };
+    network_send_spawn_objects(spawn_objects, models, 1);
 }
 
 u32 mario_lose_cap_to_enemy(struct MarioState* m, u32 arg) {

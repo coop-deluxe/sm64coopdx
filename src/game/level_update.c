@@ -56,7 +56,6 @@
 
 struct SavedWarpValues gReceiveWarp = { 0 };
 extern s8 sReceivedLoadedActNum;
-u8 gRejectInstantWarp = 0;
 u16 gFanFareDebounce = 0;
 
 s16 gChangeLevel = -1;
@@ -647,10 +646,6 @@ void check_instant_warp(void) {
     s16 cameraAngle;
     struct Surface *floor;
 
-    if (gRejectInstantWarp > 0) {
-        gRejectInstantWarp--;
-    }
-
     if (gCurrLevelNum == LEVEL_CASTLE
         && save_file_get_total_star_count(gCurrSaveFileNum - 1, COURSE_MIN - 1, COURSE_MAX - 1) >= gLevelValues.infiniteStairsRequirement) {
         return;
@@ -661,11 +656,6 @@ void check_instant_warp(void) {
         if (index >= INSTANT_WARP_INDEX_START && index < INSTANT_WARP_INDEX_STOP && gCurrentArea->instantWarps != NULL) {
             struct InstantWarp *warp = &gCurrentArea->instantWarps[index];
             if (warp->id != 0) {
-                if (gRejectInstantWarp > 0) {
-                    vec3f_copy(gMarioStates[0].pos, gMarioStates[0].nonInstantWarpPos);
-                    //vec3f_mul(gMarioStates[0].vel, -0.8f);
-                    return;
-                }
 
                 mario_drop_held_object(&gMarioStates[0]);
                 u8 changeOfArea = (gCurrAreaIndex != warp->area);
@@ -694,6 +684,8 @@ void check_instant_warp(void) {
                 warp_camera(warp->displacement[0], warp->displacement[1], warp->displacement[2]);
                 skip_camera_interpolation();
                 gMarioStates[0].area->camera->yaw = cameraAngle;
+
+                smlua_call_event_hooks_instant_warp_params(HOOK_ON_INSTANT_WARP, warp->area, warp->id, warp->displacement);
 
                 return;
             }

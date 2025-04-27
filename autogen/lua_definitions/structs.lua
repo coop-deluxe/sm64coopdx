@@ -1071,6 +1071,7 @@
 --- @field public fixCollisionBugsGroundPoundBonks integer
 --- @field public fixCollisionBugsPickBestWall integer
 --- @field public fixCollisionBugsRoundedCorners integer
+--- @field public fixInvalidShellRides integer
 --- @field public fixVanishFloors integer
 --- @field public floatingStarDance integer
 --- @field public floorLowerLimit integer

@@ -313,6 +313,7 @@ end
 -- legacy font --
 -----------------
 
+--- @type integer
 FONT_TINY = -1
 
 --- @type integer
@@ -2611,9 +2612,6 @@ DS_NONE  = 0xff --- @type DialogSound
 --- | `DS_NONE`
 
 --- @type integer
-DS_DIFF = DS_TUXIE
-
---- @type integer
 FIRST_PERSON_DEFAULT_FOV = 70
 
 --- @type integer
@@ -2865,9 +2863,6 @@ GEO_CONTEXT_AREA_INIT = 4
 
 --- @type integer
 GEO_CONTEXT_HELD_OBJ = 5
-
---- @type integer
-INTERACT_UNKNOWN_08 = (1 << 8)
 
 INTERACT_HOOT           =  (1 << 0) --- @type InteractionType
 INTERACT_GRABBABLE      =  (1 << 1) --- @type InteractionType
@@ -6488,9 +6483,6 @@ METAL           = CAP --- @type PlayerPart
 --- | `METAL`
 
 --- @type integer
-EEPROM_SIZE = 0x200
-
---- @type integer
 NUM_SAVE_FILES = 4
 
 SAVE_FILE_A = 0 --- @type SaveFileIndex
@@ -7755,9 +7747,6 @@ ACT_HOLDING_BOWSER = 0x00000391
 ACT_RELEASING_BOWSER = 0x00000392
 
 --- @type integer
-END_DEMO = (1 << 7)
-
---- @type integer
 VALID_BUTTONS = (A_BUTTON | B_BUTTON | Z_TRIG | START_BUTTON | U_JPAD | D_JPAD | L_JPAD | R_JPAD | L_TRIG | R_TRIG | X_BUTTON | Y_BUTTON | U_CBUTTONS | D_CBUTTONS | L_CBUTTONS | R_CBUTTONS )
 
 --- @type integer
@@ -7818,7 +7807,8 @@ HOOK_MARIO_OVERRIDE_GEOMETRY_INPUTS         = 51 --- @type LuaHookedEventType
 HOOK_ON_INTERACTIONS                        = 52 --- @type LuaHookedEventType
 HOOK_ALLOW_FORCE_WATER_ACTION               = 53 --- @type LuaHookedEventType
 HOOK_BEFORE_WARP                            = 54 --- @type LuaHookedEventType
-HOOK_MAX                                    = 55 --- @type LuaHookedEventType
+HOOK_ON_INSTANT_WARP                        = 55 --- @type LuaHookedEventType
+HOOK_MAX                                    = 56 --- @type LuaHookedEventType
 
 --- @alias LuaHookedEventType
 --- | `HOOK_UPDATE`
@@ -7876,6 +7866,7 @@ HOOK_MAX                                    = 55 --- @type LuaHookedEventType
 --- | `HOOK_ON_INTERACTIONS`
 --- | `HOOK_ALLOW_FORCE_WATER_ACTION`
 --- | `HOOK_BEFORE_WARP`
+--- | `HOOK_ON_INSTANT_WARP`
 --- | `HOOK_MAX`
 
 ACTION_HOOK_EVERY_FRAME = 0 --- @type LuaActionHookType
@@ -10740,7 +10731,7 @@ AREA_TIMER_TYPE_MAXIMUM = 2 --- @type AreaTimerType
 ANIM_FLAG_NOLOOP = (1 << 0)
 
 --- @type integer
-ANIM_FLAG_FORWARD = (1 << 1)
+ANIM_FLAG_BACKWARD = (1 << 1)
 
 --- @type integer
 ANIM_FLAG_2 = (1 << 2)
@@ -10759,9 +10750,6 @@ ANIM_FLAG_6 = (1 << 6)
 
 --- @type integer
 ANIM_FLAG_7 = (1 << 7)
-
---- @type integer
-GRAPH_NODE_GUARD = 0xAA
 
 --- @type integer
 OBJECT_MAX_BHV_STACK = 16

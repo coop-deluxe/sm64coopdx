@@ -86,7 +86,7 @@ struct VblankHandler
 };
 
 #define ANIM_FLAG_NOLOOP     (1 << 0) // 0x01
-#define ANIM_FLAG_FORWARD    (1 << 1) // 0x02
+#define ANIM_FLAG_BACKWARD   (1 << 1) // 0x02
 #define ANIM_FLAG_2          (1 << 2) // 0x04
 #define ANIM_FLAG_HOR_TRANS  (1 << 3) // 0x08
 #define ANIM_FLAG_VERT_TRANS (1 << 4) // 0x10
@@ -355,90 +355,119 @@ struct MarioAnimation
 
 struct MarioState
 {
-    /*0x00*/ u16 playerIndex;
-    /*0x02*/ u16 input;
-    /*0x04*/ u32 flags;
-    /*0x08*/ u32 particleFlags;
-    /*0x0C*/ u32 action;
-    /*0x10*/ u32 prevAction;
-    /*0x14*/ u32 terrainSoundAddend;
-    /*0x18*/ u16 actionState;
-    /*0x1A*/ u16 actionTimer;
-    /*0x1C*/ u32 actionArg;
-    /*0x20*/ f32 intendedMag;
-    /*0x24*/ s16 intendedYaw;
-    /*0x26*/ s16 invincTimer;
-    /*0x28*/ u8 framesSinceA;
-    /*0x29*/ u8 framesSinceB;
-    /*0x2A*/ u8 wallKickTimer;
-    /*0x2B*/ u8 doubleJumpTimer;
-    /*0x2C*/ Vec3s faceAngle;
-    /*0x32*/ Vec3s angleVel;
-    /*0x38*/ s16 slideYaw;
-    /*0x3A*/ s16 twirlYaw;
-    /*0x3C*/ Vec3f pos;
-    /*0x48*/ Vec3f vel;
-    /*0x54*/ f32 forwardVel;
-    /*0x58*/ f32 slideVelX;
-    /*0x5C*/ f32 slideVelZ;
-    /*0x60*/ struct Surface *wall;
-    /*0x64*/ struct Surface *ceil;
-    /*0x68*/ struct Surface *floor;
-    /*0x6C*/ f32 ceilHeight;
-    /*0x70*/ f32 floorHeight;
-    /*0x74*/ s16 floorAngle;
-    /*0x76*/ s16 waterLevel;
-    /*0x78*/ struct Object *interactObj;
-    /*0x7C*/ struct Object *heldObj;
-    /*0x80*/ struct Object *usedObj;
-    /*0x84*/ struct Object *riddenObj;
-    /*0x88*/ struct Object *marioObj;
-    /*0x8C*/ struct SpawnInfo *spawnInfo;
-    /*0x90*/ struct Area *area;
-    /*0x94*/ struct PlayerCameraState *statusForCamera;
-    /*0x98*/ struct MarioBodyState *marioBodyState;
-    /*0x9C*/ struct Controller *controller;
-    /*0xA0*/ struct MarioAnimation *animation;
-    /*0xA4*/ u32 collidedObjInteractTypes;
-    /*0xA8*/ s16 numCoins;
-    /*0xAA*/ s16 numStars;
-    /*0xAC*/ s8 numKeys; // Unused key mechanic
-    /*0xAD*/ s8 numLives;
-    /*0xAE*/ s16 health;
-    /*0xB0*/ s16 unkB0;
-    /*0xB2*/ u8 hurtCounter;
-    /*0xB3*/ u8 healCounter;
-    /*0xB4*/ u8 squishTimer;
-    /*0xB5*/ u8 fadeWarpOpacity;
-    /*0xB6*/ u16 capTimer;
-    /*0xB8*/ s16 prevNumStarsForDialog;
-    /*0xBC*/ f32 peakHeight;
-    /*0xC0*/ f32 quicksandDepth;
-    /*0xC4*/ f32 unkC4;
-    /*0xC8*/ s16 currentRoom;
-    /*0xCA*/ struct Object* heldByObj;
-    /*????*/ u8 isSnoring;
-    /*????*/ struct Object* bubbleObj;
-    /*????*/ u8 freeze;
-
+    // Please try to keep this 32/64 bit aligned.
+    // Bit alignment can increase perforamance and
+    // reduce the memory footprint.
+    //
+    // Structure size was reduced by 32 bytes and fields
+    // and been moved for performance and size.
+    // https://en.wikipedia.org/wiki/Data_structure_alignment
+    //
+    // I personally also find it easier to read now.
+    // - Prince Frizzy
+    
+    u16 playerIndex;
+    u16 input;
+    s16 numCoins;
+    s16 numStars;
+    
+    s8 numLives;
+    s8 numKeys; // Unused key mechanic
+    s16 health;
+    u8 hurtCounter;
+    u8 healCounter;
+    u8 isSnoring;
+    u8 freeze;
+    
+    u32 cap;
+    u16 capTimer;
+    s16 invincTimer;
+    
+    u8 skipWarpInteractionsTimer;
+    u8 squishTimer;
+    u8 bounceSquishTimer;
+    s8 knockbackTimer;
+    u8 wallKickTimer;
+    u8 doubleJumpTimer;
+    u8 specialTripleJump;
+    u8 fadeWarpOpacity;
+    
+    u8 visibleToEnemies;
+    u8 wasNetworkVisible;
+    s16 dialogId;
+    s16 prevNumStarsForDialog;
+    s16 unkB0;
+    
+    u32 action;
+    u32 prevAction;
+    
+    u32 actionArg;
+    u16 actionTimer;
+    u16 actionState;
+    
+    u32 flags;
+    f32 quicksandDepth;
+    
+    struct Controller *controller;
+    struct MarioBodyState *marioBodyState;
+    struct Character *character;
+    
+    u32 terrainSoundAddend;
+    
+    Vec3f pos;
+    Vec3f nonInstantWarpPos;
+    Vec3f vel;
+    f32 slideVelX;
+    f32 slideVelZ;
+    f32 forwardVel;
+    
+    f32 peakHeight;
+    f32 intendedMag;
+    s16 intendedYaw;
+    u8 framesSinceA;
+    u8 framesSinceB;
+    
+    Vec3s faceAngle;
+    Vec3s angleVel;
+    s16 slideYaw;
+    s16 twirlYaw;
+    
+    struct Object *heldObj;
+    struct Object *heldByObj;
+    struct Object *interactObj;
+    struct Object *riddenObj;
+    struct Object *usedObj;
+    struct Object *marioObj;
+    struct Object *bubbleObj;
+    
+    u32 collidedObjInteractTypes;
+    u32 particleFlags;
+    
+    struct MarioAnimation *animation;
     // Variables for a spline curve animation (used for the flight path in the grand star cutscene)
-    /*????*/ Vec4s* splineKeyframe;
-    /*????*/ f32 splineKeyframeFraction;
-    /*????*/ s32 splineState;
-
-    /*????*/ Vec3f nonInstantWarpPos;
-    /*????*/ struct Character* character;
-    /*????*/ u8 wasNetworkVisible;
-    /*????*/ f32 minimumBoneY;
-    /*????*/ f32 curAnimOffset;
-    /*????*/ s8 knockbackTimer;
-    /*????*/ u8 specialTripleJump;
-    /*????*/ Vec3f wallNormal;
-    /*????*/ u8 visibleToEnemies;
-    /*????*/ u32 cap;
-    /*????*/ u8 bounceSquishTimer;
-    /*????*/ u8 skipWarpInteractionsTimer;
-    /*????*/ s16 dialogId;
+    Vec4s *splineKeyframe;
+    f32 splineKeyframeFraction;
+    s32 splineState;
+    f32 curAnimOffset;
+    
+    f32 minimumBoneY;
+    
+    struct Surface *wall;
+    struct Surface *ceil;
+    struct Surface *floor;
+    struct SpawnInfo *spawnInfo;
+    struct Area *area;
+    struct PlayerCameraState *statusForCamera;
+    
+    f32 ceilHeight;
+    f32 floorHeight;
+    
+    Vec3f wallNormal;
+    f32 unkC4;
+    
+    s16 floorAngle;
+    s16 waterLevel;
+    s16 currentRoom;
 };
 
 struct TextureInfo

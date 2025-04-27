@@ -67,6 +67,7 @@ enum LuaHookedEventType {
     HOOK_ON_INTERACTIONS,
     HOOK_ALLOW_FORCE_WATER_ACTION,
     HOOK_BEFORE_WARP,
+    HOOK_ON_INSTANT_WARP,
     HOOK_MAX,
 };
 
@@ -126,6 +127,7 @@ static const char* LuaHookedEventTypeName[] = {
     "HOOK_ON_INTERACTIONS",
     "HOOK_ALLOW_FORCE_WATER_ACTION",
     "HOOK_BEFORE_WARP",
+    "HOOK_ON_INSTANT_WARP"
     "HOOK_MAX"
 };
 
@@ -208,6 +210,7 @@ void smlua_call_event_hooks_graph_node_and_int_param(enum LuaHookedEventType hoo
 void smlua_call_event_hooks_on_seq_load(enum LuaHookedEventType hookType, u32 player, u32 seqId, s32 loadAsync, s16* returnValue);
 void smlua_call_event_hooks_before_warp(enum LuaHookedEventType hookType, s16 *destLevel, s16 *destArea, s16 *destWarpNode, s32 *arg);
 void smlua_call_event_hooks_warp_params(enum LuaHookedEventType hookType, u8 type, s16 levelNum, u8 areaIdx, u8 nodeId, u32 arg);
+void smlua_call_event_hooks_instant_warp_params(enum LuaHookedEventType hookType, u8 area, u8 warpId, Vec3s displacement);
 const char *smlua_call_event_hooks_int_ret_bool_and_string(enum LuaHookedEventType hookType, s32 param, bool* returnValue);
 void smlua_call_event_hooks_string_param(enum LuaHookedEventType hookType, const char* string);
 

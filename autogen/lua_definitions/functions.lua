@@ -4707,6 +4707,13 @@ function does_mario_have_normal_cap_on_head(m)
 end
 
 --- @param m MarioState
+--- @return boolean
+--- Checks if Mario has already had a cap blown off of his head in the current level, Returns true if a blown cap can be found for Mario, false if not. Useful to check if a blown cap exists in the level currently.
+function does_mario_have_blown_cap(m)
+    -- ...
+end
+
+--- @param m MarioState
 --- @param capSpeed number
 --- Makes Mario blow off his normal cap at a given speed. Removes the normal cap from Mario's head and spawns it as a collectible object in the game world. Useful for simulating events where Mario loses his cap due to enemy attacks or environmental forces
 function mario_blow_off_cap(m, capSpeed)
@@ -6830,24 +6837,6 @@ end
 --- @return NetworkPlayer
 --- Gets the active network player with the smallest global index. Useful for assigning one player to "own" some kind of functionality or object
 function get_network_player_smallest_global()
-    -- ...
-end
-
---- @param np NetworkPlayer
---- @param part PlayerPart
---- @param index integer
---- @return integer
---- Gets a red, green, or blue value from a part in `np`'s color palette
-function network_player_get_palette_color_channel(np, part, index)
-    -- ...
-end
-
---- @param np NetworkPlayer
---- @param part PlayerPart
---- @param index integer
---- @return integer
---- Gets a red, green, or blue value from a part in `np`'s override color palette
-function network_player_get_override_palette_color_channel(np, part, index)
     -- ...
 end
 
@@ -9609,57 +9598,6 @@ end
 --- @param data Pointer_Collision
 --- Gets a table of the surface types from `data`
 function smlua_collision_util_find_surface_types(data)
-    -- ...
-end
-
---- @deprecated
---- @param enable boolean
---- [DEPRECATED: Use `HOOK_ON_HUD_RENDER_BEHIND` instead] Sets if DJUI should render behind the vanilla HUD
-function djui_hud_set_render_behind_hud(enable)
-    -- ...
-end
-
---- @deprecated
---- @param audio ModAudio
---- @return number
---- [DEPRECATED: There may be a replacement for this function in the future]
-function audio_stream_get_tempo(audio)
-    -- ...
-end
-
---- @deprecated
---- @param audio ModAudio
---- @param tempo number
---- [DEPRECATED: There may be a replacement for this function in the future]
-function audio_stream_set_tempo(audio, tempo)
-    -- ...
-end
-
---- @deprecated
---- @param audio ModAudio
---- @param initial_freq number
---- @param speed number
---- @param pitch boolean
---- [DEPRECATED: There may be a replacement for this function in the future]
-function audio_stream_set_speed(audio, initial_freq, speed, pitch)
-    -- ...
-end
-
---- @deprecated
---- @param np NetworkPlayer
---- @param part PlayerPart
---- @param color Color
---- [DEPRECATED: Use `network_player_set_override_palette_color` instead]
-function network_player_color_to_palette(np, part, color)
-    -- ...
-end
-
---- @deprecated
---- @param np NetworkPlayer
---- @param part PlayerPart
---- @param out Color
---- [DEPRECATED: Use `network_player_get_palette_color` or `network_player_get_override_palette_color` instead]
-function network_player_palette_to_color(np, part, out)
     -- ...
 end
 
