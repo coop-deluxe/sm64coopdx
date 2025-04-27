@@ -74,7 +74,6 @@ jobs:
 
             - name: Install dependencies
               run: |
-                /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
                 brew install make mingw-w64 gcc sdl2 pkg-config glew glfw3 libusb coreutils
 
             - name: Build the game
@@ -84,6 +83,12 @@ jobs:
             - name: Code sign the app (Ad-Hoc)
               run: |
                 codesign --force --deep --sign - ./build/us_pc/sm64coopdx.app
+
+            - name: Generate hash
+              run: |
+                cd tools
+                g++ -std=c++17 -o hash_file hash_file.cpp
+                echo "::notice ::$(./hash_file ../build/us_pc/sm64coopdx.app/Contents/MacOS/sm64coopdx)"
 
             - name: Zip the .app bundle
               run: |
@@ -105,7 +110,6 @@ jobs:
 
             - name: Install dependencies
               run: |
-                /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
                 brew install make mingw-w64 gcc@9 sdl2 pkg-config glew glfw3 libusb coreutils
 
             - name: Build the game
@@ -115,6 +119,12 @@ jobs:
             - name: Code sign the app (Ad-Hoc)
               run: |
                 codesign --force --deep --sign - ./build/us_pc/sm64coopdx.app
+
+            - name: Generate hash
+              run: |
+                cd tools
+                g++ -std=c++17 -o hash_file hash_file.cpp
+                echo "::notice ::$(./hash_file ../build/us_pc/sm64coopdx.app/Contents/MacOS/sm64coopdx)"
 
             - name: Zip the .app bundle
               run: |

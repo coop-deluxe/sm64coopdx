@@ -11,9 +11,6 @@ struct MapNode {
     Gfx *gfxCopy;
 };
 
-static ModData<Gfx> sModDisplayLists;
-static ModData<Vtx> sModVertexBuffers;
-
 // Maps read-only Gfx and Vtx buffers to their writable duplicates
 static std::map<const void *, struct MapNode> sRomToRamGfxVtxMap;
 
@@ -29,7 +26,7 @@ static Vtx *DynOS_Vtx_Duplicate(Vtx *aVtx, u32 vtxCount, bool shouldDuplicate) {
     // Duplicate vertex buffer and return the copy
     if (shouldDuplicate) {
         size_t vtxSize = vtxCount * sizeof(Vtx);
-        Vtx *vtxDuplicate = vtx_allocate_internal(vtxCount);
+        Vtx *vtxDuplicate = vtx_allocate_internal(NULL, vtxCount);
         memcpy(vtxDuplicate, aVtx, vtxSize);
         sRomToRamGfxVtxMap[aVtx] = { (void *) vtxDuplicate, vtxSize, NULL };
         return vtxDuplicate;
@@ -56,7 +53,7 @@ static Gfx *DynOS_Gfx_Duplicate(Gfx *aGfx, bool shouldDuplicate) {
     Gfx *gfxDuplicate = aGfx;
     u32 gfxLength = shouldDuplicate ? gfx_get_length_no_sentinel(aGfx) : gfx_get_length(aGfx);
     if (shouldDuplicate) {
-        gfxDuplicate = gfx_allocate_internal(gfxLength);
+        gfxDuplicate = gfx_allocate_internal(NULL, gfxLength);
         memcpy(gfxDuplicate, aGfx, gfxLength * sizeof(Gfx));
     }
 
@@ -95,12 +92,44 @@ Gfx *DynOS_Gfx_GetWritableDisplayList(Gfx *aGfx) {
     return DynOS_Gfx_Duplicate(aGfx, false);
 }
 
+  ///////////////////
+ // Display lists //
+///////////////////
+
+#define MOD_DATA_MAX_DISPLAY_LISTS          0x400
+#define MOD_DATA_DISPLAY_LIST_MAX_LENGTH    0x800
+
+static Gfx *dynos_mod_data_gfx_allocate(u32 length) {
+    return gfx_allocate_internal(NULL, length);
+}
+
+static void dynos_mod_data_gfx_resize(Gfx *gfx, u32 oldLength, u32 newLength) {
+    if (newLength < oldLength) {
+        gfx_allocate_internal(gfx + newLength, 0);
+    } else {
+        gfx_allocate_internal(gfx + oldLength, newLength - oldLength);
+    }
+}
+
+static void dynos_mod_data_gfx_deallocate(Gfx *gfx, UNUSED u32 length) {
+    free(gfx);
+}
+
+DEFINE_MODS_DATA(sModsDisplayLists,
+    Gfx,
+    MOD_DATA_MAX_DISPLAY_LISTS,
+    MOD_DATA_DISPLAY_LIST_MAX_LENGTH,
+    dynos_mod_data_gfx_allocate,
+    dynos_mod_data_gfx_resize,
+    dynos_mod_data_gfx_deallocate
+);
+
 Gfx *DynOS_Gfx_Get(const char *aName, u32 *outLength) {
     if (!aName) { return NULL; }
     s32 modIndex = (gLuaActiveMod ? gLuaActiveMod->index : -1);
 
     // Check mod data
-    Gfx *gfx = DynOS_ModData_Get<Gfx>(sModDisplayLists, modIndex, aName, outLength);
+    Gfx *gfx = sModsDisplayLists.Get(modIndex, aName, outLength);
     if (gfx) {
         return gfx;
     }
@@ -147,33 +176,64 @@ Gfx *DynOS_Gfx_Get(const char *aName, u32 *outLength) {
     return NULL;
 }
 
-Gfx *DynOS_Gfx_New(const char *aName, u32 aLength) {
-    if (!aName || !aLength) { return NULL; }
+Gfx *DynOS_Gfx_Create(const char *aName, u32 aLength) {
     s32 modIndex = (gLuaActiveMod ? gLuaActiveMod->index : -1);
-
-    return DynOS_ModData_New(sModDisplayLists, modIndex, aName, aLength, gfx_allocate_internal);
+    return sModsDisplayLists.Create(modIndex, aName, aLength);
 }
 
-Gfx *DynOS_Gfx_Realloc(Gfx *aGfx, u32 aNewLength) {
-    if (!aGfx || !aNewLength) { return NULL; }
+bool DynOS_Gfx_Resize(Gfx *aGfx, u32 aNewLength) {
     s32 modIndex = (gLuaActiveMod ? gLuaActiveMod->index : -1);
-
-    return DynOS_ModData_Realloc(sModDisplayLists, modIndex, aGfx, aNewLength, gfx_allocate_internal, free);
+    return sModsDisplayLists.Resize(modIndex, aGfx, aNewLength);
 }
 
 bool DynOS_Gfx_Delete(Gfx *aGfx) {
-    if (!aGfx) { return false; }
     s32 modIndex = (gLuaActiveMod ? gLuaActiveMod->index : -1);
-
-    return DynOS_ModData_Delete(sModDisplayLists, modIndex, aGfx, free);
+    return sModsDisplayLists.Delete(modIndex, aGfx);
 }
+
+void DynOS_Gfx_DeleteAll() {
+    s32 modIndex = (gLuaActiveMod ? gLuaActiveMod->index : -1);
+    sModsDisplayLists.DeleteAll(modIndex);
+}
+
+  ////////////////////
+ // Vertex buffers //
+////////////////////
+
+#define MOD_DATA_MAX_VERTEX_BUFFERS         0x400
+#define MOD_DATA_VERTEX_BUFFER_MAX_COUNT    0x1000
+
+static Vtx *dynos_mod_data_vtx_allocate(u32 count) {
+    return vtx_allocate_internal(NULL, count);
+}
+
+static void dynos_mod_data_vtx_resize(Vtx *vtx, u32 oldCount, u32 newCount) {
+    if (newCount < oldCount) {
+        vtx_allocate_internal(vtx + newCount, 0);
+    } else {
+        vtx_allocate_internal(vtx + oldCount, newCount - oldCount);
+    }
+}
+
+static void dynos_mod_data_vtx_deallocate(Vtx *vtx, UNUSED u32 count) {
+    free(vtx);
+}
+
+DEFINE_MODS_DATA(sModsVertexBuffers,
+    Vtx,
+    MOD_DATA_MAX_VERTEX_BUFFERS,
+    MOD_DATA_VERTEX_BUFFER_MAX_COUNT,
+    dynos_mod_data_vtx_allocate,
+    dynos_mod_data_vtx_resize,
+    dynos_mod_data_vtx_deallocate
+);
 
 Vtx *DynOS_Vtx_Get(const char *aName, u32 *outCount) {
     if (!aName) { return NULL; }
     s32 modIndex = (gLuaActiveMod ? gLuaActiveMod->index : -1);
 
     // Check mod data
-    Vtx *vtx = DynOS_ModData_Get<Vtx>(sModVertexBuffers, modIndex, aName, outCount);
+    Vtx *vtx = sModsVertexBuffers.Get(modIndex, aName, outCount);
     if (vtx) {
         return vtx;
     }
@@ -205,32 +265,31 @@ Vtx *DynOS_Vtx_Get(const char *aName, u32 *outCount) {
     return NULL;
 }
 
-Vtx *DynOS_Vtx_New(const char *aName, u32 aCount) {
-    if (!aName || !aCount) { return NULL; }
+Vtx *DynOS_Vtx_Create(const char *aName, u32 aCount) {
     s32 modIndex = (gLuaActiveMod ? gLuaActiveMod->index : -1);
-
-    return DynOS_ModData_New(sModVertexBuffers, modIndex, aName, aCount, vtx_allocate_internal);
+    return sModsVertexBuffers.Create(modIndex, aName, aCount);
 }
 
-Vtx *DynOS_Vtx_Realloc(Vtx *aVtx, u32 aNewCount) {
-    if (!aVtx || !aNewCount) { return NULL; }
+bool DynOS_Vtx_Resize(Vtx *aVtx, u32 aNewCount) {
     s32 modIndex = (gLuaActiveMod ? gLuaActiveMod->index : -1);
-
-    return DynOS_ModData_Realloc(sModVertexBuffers, modIndex, aVtx, aNewCount, vtx_allocate_internal, free);
+    return sModsVertexBuffers.Resize(modIndex, aVtx, aNewCount);
 }
 
 bool DynOS_Vtx_Delete(Vtx *aVtx) {
-    if (!aVtx) { return false; }
     s32 modIndex = (gLuaActiveMod ? gLuaActiveMod->index : -1);
+    return sModsVertexBuffers.Delete(modIndex, aVtx);
+}
 
-    return DynOS_ModData_Delete(sModVertexBuffers, modIndex, aVtx, free);
+void DynOS_Vtx_DeleteAll() {
+    s32 modIndex = (gLuaActiveMod ? gLuaActiveMod->index : -1);
+    sModsVertexBuffers.DeleteAll(modIndex);
 }
 
 void DynOS_Gfx_ModShutdown() {
 
     // Delete all allocated display lists and vertex buffers
-    DynOS_ModData_DeleteAll(sModDisplayLists, free);
-    DynOS_ModData_DeleteAll(sModVertexBuffers, free);
+    sModsDisplayLists.Clear();
+    sModsVertexBuffers.Clear();
 
     // Restore vanilla display lists
     for (auto &it : sRomToRamGfxVtxMap) {

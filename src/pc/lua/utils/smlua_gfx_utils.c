@@ -134,16 +134,22 @@ void set_skybox_color(u8 index, u8 value) {
 static const Gfx SENTINEL_GFX[1] = {{{ _SHIFTL(G_ENDDL, 24, 8) | _SHIFTL(UINT32_MAX, 0, 24), UINT32_MAX }}};
 static const u8  SENTINEL_VTX[sizeof(Vtx)] = {[0 ... sizeof(Vtx) - 1] = UINT8_MAX};
 
-Gfx *gfx_allocate_internal(u32 length) {
-    if (!length) { return NULL; }
-    Gfx *gfx = calloc(length + 1, sizeof(Gfx));
+Gfx *gfx_allocate_internal(Gfx *gfx, u32 length) {
+    if (!gfx) {
+        gfx = calloc(length + 1, sizeof(Gfx)); // +1 to insert SENTINEL_GFX at the end of the buffer
+    } else {
+        memset(gfx, 0, length * sizeof(Gfx));
+    }
     memcpy(gfx + length, SENTINEL_GFX, sizeof(Gfx));
     return gfx;
 }
 
-Vtx *vtx_allocate_internal(u32 count) {
-    if (!count) { return NULL; }
-    Vtx *vtx = calloc(count + 1, sizeof(Vtx));
+Vtx *vtx_allocate_internal(Vtx *vtx, u32 count) {
+    if (!vtx) {
+        vtx = calloc(count + 1, sizeof(Vtx)); // +1 to insert SENTINEL_VTX at the end of the buffer
+    } else {
+        memset(vtx, 0, count * sizeof(Vtx));
+    }
     memcpy(vtx + count, SENTINEL_VTX, sizeof(Vtx));
     return vtx;
 }
@@ -272,43 +278,66 @@ void gfx_copy(Gfx *dest, Gfx *src, u32 length) {
     memcpy(dest, src, length * sizeof(Gfx));
 }
 
-Gfx *gfx_new(const char *name, u32 length) {
+Gfx *gfx_create(const char *name, u32 length) {
     if (!name || !length) { return NULL; }
 
     // Make sure to not take the name of a level/model/vanilla display list
     u32 outLength;
     if (dynos_gfx_get(name, &outLength)) {
-        LOG_LUA_LINE("gfx_new: Display list `%s` already exists", name);
+        LOG_LUA_LINE("gfx_create: Display list `%s` already exists", name);
         return NULL;
     }
 
-    Gfx *gfx = dynos_gfx_new(name, length);
+    Gfx *gfx = dynos_gfx_create(name, length);
     if (!gfx) {
-        LOG_LUA_LINE("gfx_new: Display list `%s` already exists", name);
+        switch (dynos_mod_data_get_last_error()) {
+            case DYNOS_MOD_DATA_ERROR_NAME_IS_EMPTY:
+                LOG_LUA_LINE("gfx_create: A display list cannot have an empty name"); break;
+            case DYNOS_MOD_DATA_ERROR_SIZE_IS_ABOVE_MAX:
+                LOG_LUA_LINE("gfx_create: Cannot allocate display list of length %u, max length exceeded", length); break;
+            case DYNOS_MOD_DATA_ERROR_ALREADY_EXISTS:
+                LOG_LUA_LINE("gfx_create: Display list `%s` already exists", name); break;
+            case DYNOS_MOD_DATA_ERROR_POOL_IS_FULL:
+                LOG_LUA_LINE("gfx_create: Cannot allocate more display lists, limit reached"); break;
+            default:
+                LOG_LUA_LINE("gfx_create: Unable to allocate display list"); break;
+        }
         return NULL;
     }
 
     return gfx;
 }
 
-Gfx *gfx_realloc(Gfx *gfx, u32 newLength) {
-    if (!gfx || !newLength) { return NULL; }
+void gfx_resize(Gfx *gfx, u32 newLength) {
+    if (!gfx || !newLength) { return; }
 
-    Gfx *newGfx = dynos_gfx_realloc(gfx, newLength);
-    if (!newGfx) {
-        LOG_LUA_LINE("gfx_realloc: Display list was not allocated by `gfx_new`");
-        return NULL;
+    if (!dynos_gfx_resize(gfx, newLength)) {
+        switch (dynos_mod_data_get_last_error()) {
+            case DYNOS_MOD_DATA_ERROR_SIZE_IS_ABOVE_MAX:
+                LOG_LUA_LINE("gfx_resize: Cannot resize display list to new length %u, max length exceeded", newLength); break;
+            case DYNOS_MOD_DATA_ERROR_POINTER_NOT_FOUND:
+                LOG_LUA_LINE("gfx_resize: Display list was not allocated by `gfx_create`"); break;
+            default:
+                LOG_LUA_LINE("gfx_resize: Unable to resize display list"); break;
+        }
     }
-
-    return newGfx;
 }
 
 void gfx_delete(Gfx *gfx) {
     if (!gfx) { return; }
 
     if (!dynos_gfx_delete(gfx)) {
-        LOG_LUA_LINE("gfx_delete: Display list was not allocated by `gfx_new`");
+        switch (dynos_mod_data_get_last_error()) {
+            case DYNOS_MOD_DATA_ERROR_POINTER_NOT_FOUND:
+                LOG_LUA_LINE("gfx_delete: Display list was not allocated by `gfx_create`"); break;
+            default:
+                LOG_LUA_LINE("gfx_delete: Unable to delete display list"); break;
+        }
     }
+}
+
+void gfx_delete_all() {
+    dynos_gfx_delete_all();
 }
 
 u32 vtx_get_count(Vtx *vtx) {
@@ -351,41 +380,64 @@ void vtx_copy(Vtx *dest, Vtx *src, u32 count) {
     memcpy(dest, src, count * sizeof(Vtx));
 }
 
-Vtx *vtx_new(const char *name, u32 count) {
+Vtx *vtx_create(const char *name, u32 count) {
     if (!name || !count) { return NULL; }
 
     // Make sure to not take the name of a level/model/vanilla vertex buffer
     u32 outCount;
     if (dynos_vtx_get(name, &outCount)) {
-        LOG_LUA_LINE("vtx_new: Vertex buffer `%s` already exists", name);
+        LOG_LUA_LINE("vtx_create: Vertex buffer `%s` already exists", name);
         return NULL;
     }
 
-    Vtx *vtx = dynos_vtx_new(name, count);
+    Vtx *vtx = dynos_vtx_create(name, count);
     if (!vtx) {
-        LOG_LUA_LINE("vtx_new: Vertex buffer `%s` already exists", name);
+        switch (dynos_mod_data_get_last_error()) {
+            case DYNOS_MOD_DATA_ERROR_NAME_IS_EMPTY:
+                LOG_LUA_LINE("vtx_create: A vertex buffer cannot have an empty name"); break;
+            case DYNOS_MOD_DATA_ERROR_SIZE_IS_ABOVE_MAX:
+                LOG_LUA_LINE("vtx_create: Cannot allocate vertex buffer of count %u, max count exceeded", count); break;
+            case DYNOS_MOD_DATA_ERROR_ALREADY_EXISTS:
+                LOG_LUA_LINE("vtx_create: Vertex buffer `%s` already exists", name); break;
+            case DYNOS_MOD_DATA_ERROR_POOL_IS_FULL:
+                LOG_LUA_LINE("vtx_create: Cannot allocate more vertex buffers, limit reached"); break;
+            default:
+                LOG_LUA_LINE("vtx_create: Unable to allocate vertex buffer"); break;
+        }
         return NULL;
     }
 
     return vtx;
 }
 
-Vtx *vtx_realloc(Vtx *vtx, u32 newCount) {
-    if (!vtx || !newCount) { return NULL; }
+void vtx_resize(Vtx *vtx, u32 newCount) {
+    if (!vtx || !newCount) { return; }
 
-    Vtx *newVtx = dynos_vtx_realloc(vtx, newCount);
-    if (!newVtx) {
-        LOG_LUA_LINE("vtx_realloc: Vertex buffer was not allocated by `vtx_new`");
-        return NULL;
+    if (!dynos_vtx_resize(vtx, newCount)) {
+        switch (dynos_mod_data_get_last_error()) {
+            case DYNOS_MOD_DATA_ERROR_SIZE_IS_ABOVE_MAX:
+                LOG_LUA_LINE("vtx_resize: Cannot resize vertex buffer to new count %u, max count exceeded", newCount); break;
+            case DYNOS_MOD_DATA_ERROR_POINTER_NOT_FOUND:
+                LOG_LUA_LINE("vtx_resize: Vertex buffer was not allocated by `vtx_create`"); break;
+            default:
+                LOG_LUA_LINE("vtx_resize: Unable to resize vertex buffer"); break;
+        }
     }
-
-    return newVtx;
 }
 
 void vtx_delete(Vtx *vtx) {
     if (!vtx) { return; }
 
     if (!dynos_vtx_delete(vtx)) {
-        LOG_LUA_LINE("vtx_delete: Vertex buffer was not allocated by `vtx_new`");
+        switch (dynos_mod_data_get_last_error()) {
+            case DYNOS_MOD_DATA_ERROR_POINTER_NOT_FOUND:
+                LOG_LUA_LINE("vtx_delete: Vertex buffer was not allocated by `vtx_create`"); break;
+            default:
+                LOG_LUA_LINE("vtx_delete: Unable to delete vertex buffer"); break;
+        }
     }
+}
+
+void vtx_delete_all() {
+    dynos_vtx_delete_all();
 }

@@ -22,6 +22,7 @@
  */
 s8 sPunchingForwardVelocities[8] = { 0, 1, 1, 2, 3, 5, 7, 10 };
 
+/* |description|Performs a stationary step, sets `m`'s animation and sets action to `endAction` once the animation finishes|descriptionEnd| */
 void animated_stationary_ground_step(struct MarioState *m, s32 animation, u32 endAction) {
     stationary_ground_step(m);
     set_character_animation(m, animation);
@@ -30,6 +31,7 @@ void animated_stationary_ground_step(struct MarioState *m, s32 animation, u32 en
     }
 }
 
+/* |description|Updates Mario's punching state|descriptionEnd| */
 s32 mario_update_punch_sequence(struct MarioState *m) {
     if (!m) { return 0; }
     u32 endAction, crouchEndAction;
@@ -474,11 +476,16 @@ s32 act_releasing_bowser(struct MarioState *m) {
     return FALSE;
 }
 
+/* |description|
+Checks for and handles common conditions that would cancel Mario's current object action. This includes transitioning
+to a water plunge if below the water level, becoming squished if appropriate, or switching to standing death action
+if Mario is dead
+|descriptionEnd| */
 s32 check_common_object_cancels(struct MarioState *m) {
     if (!m) { return 0; }
     if (m->playerIndex != 0) { return FALSE; }
 
-    if (m->pos[1] <  m->waterLevel - 100) {
+    if (m->pos[1] < m->waterLevel - 100) {
         bool allow = true;
         smlua_call_event_hooks_mario_param_and_bool_ret_bool(HOOK_ALLOW_FORCE_WATER_ACTION, m, false, &allow);
         if (allow) {
@@ -497,6 +504,10 @@ s32 check_common_object_cancels(struct MarioState *m) {
     return FALSE;
 }
 
+/* |description|
+Executes Mario's current object action by first checking common object cancels, then updating quicksand state.
+Dispatches to the appropriate action function, such as punching, throwing, picking up Bowser, etc
+|descriptionEnd| */
 s32 mario_execute_object_action(struct MarioState *m) {
     if (!m) { return FALSE; }
     s32 cancel;

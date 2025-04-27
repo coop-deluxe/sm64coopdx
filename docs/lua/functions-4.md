@@ -2328,6 +2328,9 @@ Launches Mario forward with a given velocity (`forwardVel`) and sets his animati
 
 ## [stuck_in_ground_handler](#stuck_in_ground_handler)
 
+### Description
+Handles the cutscene and animation sequence for when Mario is stuck in the ground (head, butt, or feet). Plays a designated `animation`, checks specific frames (`unstuckFrame`, `target2`, `target3`) for sound effects or transitions, and frees Mario to the `endAction` once the animation completes
+
 ### Lua Example
 `stuck_in_ground_handler(m, animation, unstuckFrame, target2, target3, endAction)`
 
@@ -3049,6 +3052,9 @@ Applies shared logic for sliding-related actions while playing sliding sounds, m
 
 ## [common_slide_action_with_jump](#common_slide_action_with_jump)
 
+### Description
+Builds on `common_slide_action` by also allowing Mario to jump out of a slide if A is pressed after a short delay. If the sliding slows enough, Mario transitions to a specified stopping action
+
 ### Lua Example
 `local integerValue = common_slide_action_with_jump(m, stopAction, jumpAction, airAction, animation)`
 
@@ -3151,6 +3157,9 @@ Applies movement upon landing from a jump or fall. Adjusts velocity based on slo
 
 ## [quicksand_jump_land_action](#quicksand_jump_land_action)
 
+### Description
+Handles a special landing in quicksand after a jump. Over several frames, Mario emerges from the quicksand. First part of the animation reduces his quicksand depth. Ends with a normal landing action or transitions back to air if he leaves the ground
+
 ### Lua Example
 `local integerValue = quicksand_jump_land_action(m, animation1, animation2, endAction, airAction)`
 
@@ -3227,6 +3236,9 @@ Executes Mario's current moving actions by: checking common cancellations (e.g.,
 
 ## [animated_stationary_ground_step](#animated_stationary_ground_step)
 
+### Description
+Performs a stationary step, sets `m`'s animation and sets action to `endAction` once the animation finishes
+
 ### Lua Example
 `animated_stationary_ground_step(m, animation, endAction)`
 
@@ -3249,6 +3261,9 @@ Executes Mario's current moving actions by: checking common cancellations (e.g.,
 
 ## [mario_update_punch_sequence](#mario_update_punch_sequence)
 
+### Description
+Updates Mario's punching state
+
 ### Lua Example
 `local integerValue = mario_update_punch_sequence(m)`
 
@@ -3269,6 +3284,9 @@ Executes Mario's current moving actions by: checking common cancellations (e.g.,
 
 ## [check_common_object_cancels](#check_common_object_cancels)
 
+### Description
+Checks for and handles common conditions that would cancel Mario's current object action. This includes transitioning to a water plunge if below the water level, becoming squished if appropriate, or switching to standing death action if Mario is dead
+
 ### Lua Example
 `local integerValue = check_common_object_cancels(m)`
 
@@ -3288,6 +3306,9 @@ Executes Mario's current moving actions by: checking common cancellations (e.g.,
 <br />
 
 ## [mario_execute_object_action](#mario_execute_object_action)
+
+### Description
+Executes Mario's current object action by first checking common object cancels, then updating quicksand state. Dispatches to the appropriate action function, such as punching, throwing, picking up Bowser, etc
 
 ### Lua Example
 `local integerValue = mario_execute_object_action(m)`
@@ -4952,6 +4973,9 @@ Calculates the distance between two points in 3D space (`from` and `to`), as wel
 
 ## [vec3f_set_dist_and_angle](#vec3f_set_dist_and_angle)
 
+### Description
+Positions the point `to` at a given `dist`, `pitch`, and `yaw` relative to the point `from`. This can be used to place objects around a reference point at specific angles and distances
+
 ### Lua Example
 `vec3f_set_dist_and_angle(from, to, dist, pitch, yaw)`
 
@@ -5660,6 +5684,9 @@ Clears the mod's data from mod storage
 
 ## [network_player_connected_count](#network_player_connected_count)
 
+### Description
+Gets the amount of players connected
+
 ### Lua Example
 `local integerValue = network_player_connected_count()`
 
@@ -5677,6 +5704,9 @@ Clears the mod's data from mod storage
 <br />
 
 ## [network_player_set_description](#network_player_set_description)
+
+### Description
+Sets the description field of `np`
 
 ### Lua Example
 `network_player_set_description(np, description, r, g, b, a)`
@@ -5703,6 +5733,9 @@ Clears the mod's data from mod storage
 
 ## [network_player_set_override_location](#network_player_set_override_location)
 
+### Description
+Overrides the location of `np`
+
 ### Lua Example
 `network_player_set_override_location(np, location)`
 
@@ -5724,6 +5757,9 @@ Clears the mod's data from mod storage
 
 ## [network_player_from_global_index](#network_player_from_global_index)
 
+### Description
+Gets a network player from `globalIndex`
+
 ### Lua Example
 `local NetworkPlayerValue = network_player_from_global_index(globalIndex)`
 
@@ -5743,6 +5779,9 @@ Clears the mod's data from mod storage
 <br />
 
 ## [get_network_player_from_level](#get_network_player_from_level)
+
+### Description
+Gets the first network player whose information matches `courseNum`, `actNum`, and `levelNum`
 
 ### Lua Example
 `local NetworkPlayerValue = get_network_player_from_level(courseNum, actNum, levelNum)`
@@ -5765,6 +5804,9 @@ Clears the mod's data from mod storage
 <br />
 
 ## [get_network_player_from_area](#get_network_player_from_area)
+
+### Description
+Gets the first network player whose information matches `courseNum`, `actNum`, `levelNum`, and `areaIndex`
 
 ### Lua Example
 `local NetworkPlayerValue = get_network_player_from_area(courseNum, actNum, levelNum, areaIndex)`
@@ -5789,6 +5831,9 @@ Clears the mod's data from mod storage
 
 ## [get_network_player_smallest_global](#get_network_player_smallest_global)
 
+### Description
+Gets the active network player with the smallest global index. Useful for assigning one player to "own" some kind of functionality or object
+
 ### Lua Example
 `local NetworkPlayerValue = get_network_player_smallest_global()`
 
@@ -5806,6 +5851,9 @@ Clears the mod's data from mod storage
 <br />
 
 ## [network_player_set_override_palette_color](#network_player_set_override_palette_color)
+
+### Description
+Sets the `part in `np`'s override color palette`
 
 ### Lua Example
 `network_player_set_override_palette_color(np, part, color)`
@@ -5829,6 +5877,9 @@ Clears the mod's data from mod storage
 
 ## [network_player_reset_override_palette](#network_player_reset_override_palette)
 
+### Description
+Resets `np`'s override color palette
+
 ### Lua Example
 `network_player_reset_override_palette(np)`
 
@@ -5848,6 +5899,9 @@ Clears the mod's data from mod storage
 <br />
 
 ## [network_player_is_override_palette_same](#network_player_is_override_palette_same)
+
+### Description
+Checks if `np`'s override color palette is identical to the regular color palette
 
 ### Lua Example
 `local booleanValue = network_player_is_override_palette_same(np)`
@@ -6023,818 +6077,6 @@ Gets a Discord ID corresponding to the network player with `localIndex`
 
 ### C Prototype
 `const char* network_discord_id_from_local_index(u8 localIndex);`
-
-[:arrow_up_small:](#)
-
-<br />
-
----
-# functions from obj_behaviors.c
-
-<br />
-
-
-## [set_yoshi_as_not_dead](#set_yoshi_as_not_dead)
-
-### Lua Example
-`set_yoshi_as_not_dead()`
-
-### Parameters
-- None
-
-### Returns
-- None
-
-### C Prototype
-`void set_yoshi_as_not_dead(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [absf_2](#absf_2)
-
-### Lua Example
-`local numberValue = absf_2(f)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| f | `number` |
-
-### Returns
-- `number`
-
-### C Prototype
-`f32 absf_2(f32 f);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [turn_obj_away_from_surface](#turn_obj_away_from_surface)
-
-### Lua Example
-`turn_obj_away_from_surface(velX, velZ, nX, nY, nZ, objYawX, objYawZ)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| velX | `number` |
-| velZ | `number` |
-| nX | `number` |
-| nY | `number` |
-| nZ | `number` |
-| objYawX | `Pointer` <`number`> |
-| objYawZ | `Pointer` <`number`> |
-
-### Returns
-- None
-
-### C Prototype
-`void turn_obj_away_from_surface(f32 velX, f32 velZ, f32 nX, UNUSED f32 nY, f32 nZ, f32 *objYawX, f32 *objYawZ);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [obj_find_wall](#obj_find_wall)
-
-### Lua Example
-`local integerValue = obj_find_wall(objNewX, objY, objNewZ, objVelX, objVelZ)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| objNewX | `number` |
-| objY | `number` |
-| objNewZ | `number` |
-| objVelX | `number` |
-| objVelZ | `number` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s8 obj_find_wall(f32 objNewX, f32 objY, f32 objNewZ, f32 objVelX, f32 objVelZ);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [turn_obj_away_from_steep_floor](#turn_obj_away_from_steep_floor)
-
-### Lua Example
-`local integerValue = turn_obj_away_from_steep_floor(objFloor, floorY, objVelX, objVelZ)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| objFloor | [Surface](structs.md#Surface) |
-| floorY | `number` |
-| objVelX | `number` |
-| objVelZ | `number` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s8 turn_obj_away_from_steep_floor(struct Surface *objFloor, f32 floorY, f32 objVelX, f32 objVelZ);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [obj_orient_graph](#obj_orient_graph)
-
-### Lua Example
-`obj_orient_graph(obj, normalX, normalY, normalZ)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| obj | [Object](structs.md#Object) |
-| normalX | `number` |
-| normalY | `number` |
-| normalZ | `number` |
-
-### Returns
-- None
-
-### C Prototype
-`void obj_orient_graph(struct Object *obj, f32 normalX, f32 normalY, f32 normalZ);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [calc_obj_friction](#calc_obj_friction)
-
-### Lua Example
-`calc_obj_friction(objFriction, floor_nY)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| objFriction | `Pointer` <`number`> |
-| floor_nY | `number` |
-
-### Returns
-- None
-
-### C Prototype
-`void calc_obj_friction(f32 *objFriction, f32 floor_nY);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [calc_new_obj_vel_and_pos_y](#calc_new_obj_vel_and_pos_y)
-
-### Lua Example
-`calc_new_obj_vel_and_pos_y(objFloor, objFloorY, objVelX, objVelZ)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| objFloor | [Surface](structs.md#Surface) |
-| objFloorY | `number` |
-| objVelX | `number` |
-| objVelZ | `number` |
-
-### Returns
-- None
-
-### C Prototype
-`void calc_new_obj_vel_and_pos_y(struct Surface *objFloor, f32 objFloorY, f32 objVelX, f32 objVelZ);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [calc_new_obj_vel_and_pos_y_underwater](#calc_new_obj_vel_and_pos_y_underwater)
-
-### Lua Example
-`calc_new_obj_vel_and_pos_y_underwater(objFloor, floorY, objVelX, objVelZ, waterY)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| objFloor | [Surface](structs.md#Surface) |
-| floorY | `number` |
-| objVelX | `number` |
-| objVelZ | `number` |
-| waterY | `number` |
-
-### Returns
-- None
-
-### C Prototype
-`void calc_new_obj_vel_and_pos_y_underwater(struct Surface *objFloor, f32 floorY, f32 objVelX, f32 objVelZ, f32 waterY);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [obj_update_pos_vel_xz](#obj_update_pos_vel_xz)
-
-### Lua Example
-`obj_update_pos_vel_xz()`
-
-### Parameters
-- None
-
-### Returns
-- None
-
-### C Prototype
-`void obj_update_pos_vel_xz(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [obj_splash](#obj_splash)
-
-### Lua Example
-`obj_splash(waterY, objY)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| waterY | `integer` |
-| objY | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void obj_splash(s32 waterY, s32 objY);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [object_step](#object_step)
-
-### Lua Example
-`local integerValue = object_step()`
-
-### Parameters
-- None
-
-### Returns
-- `integer`
-
-### C Prototype
-`s16 object_step(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [object_step_without_floor_orient](#object_step_without_floor_orient)
-
-### Lua Example
-`local integerValue = object_step_without_floor_orient()`
-
-### Parameters
-- None
-
-### Returns
-- `integer`
-
-### C Prototype
-`s16 object_step_without_floor_orient(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [obj_move_xyz_using_fvel_and_yaw](#obj_move_xyz_using_fvel_and_yaw)
-
-### Lua Example
-`obj_move_xyz_using_fvel_and_yaw(obj)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| obj | [Object](structs.md#Object) |
-
-### Returns
-- None
-
-### C Prototype
-`void obj_move_xyz_using_fvel_and_yaw(struct Object *obj);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [is_point_within_radius_of_mario](#is_point_within_radius_of_mario)
-
-### Lua Example
-`local integerValue = is_point_within_radius_of_mario(x, y, z, dist)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| x | `number` |
-| y | `number` |
-| z | `number` |
-| dist | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s8 is_point_within_radius_of_mario(f32 x, f32 y, f32 z, s32 dist);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [is_point_within_radius_of_any_player](#is_point_within_radius_of_any_player)
-
-### Lua Example
-`local integerValue = is_point_within_radius_of_any_player(x, y, z, dist)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| x | `number` |
-| y | `number` |
-| z | `number` |
-| dist | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s8 is_point_within_radius_of_any_player(f32 x, f32 y, f32 z, s32 dist);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [is_player_active](#is_player_active)
-
-### Lua Example
-`local integerValue = is_player_active(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`u8 is_player_active(struct MarioState* m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [is_other_player_active](#is_other_player_active)
-
-### Lua Example
-`local integerValue = is_other_player_active()`
-
-### Parameters
-- None
-
-### Returns
-- `integer`
-
-### C Prototype
-`u8 is_other_player_active(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [is_player_in_local_area](#is_player_in_local_area)
-
-### Lua Example
-`local integerValue = is_player_in_local_area(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`u8 is_player_in_local_area(struct MarioState* m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [nearest_mario_state_to_object](#nearest_mario_state_to_object)
-
-### Lua Example
-`local MarioStateValue = nearest_mario_state_to_object(obj)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| obj | [Object](structs.md#Object) |
-
-### Returns
-[MarioState](structs.md#MarioState)
-
-### C Prototype
-`struct MarioState* nearest_mario_state_to_object(struct Object *obj);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [nearest_possible_mario_state_to_object](#nearest_possible_mario_state_to_object)
-
-### Lua Example
-`local MarioStateValue = nearest_possible_mario_state_to_object(obj)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| obj | [Object](structs.md#Object) |
-
-### Returns
-[MarioState](structs.md#MarioState)
-
-### C Prototype
-`struct MarioState* nearest_possible_mario_state_to_object(struct Object *obj);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [nearest_player_to_object](#nearest_player_to_object)
-
-### Lua Example
-`local ObjectValue = nearest_player_to_object(obj)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| obj | [Object](structs.md#Object) |
-
-### Returns
-[Object](structs.md#Object)
-
-### C Prototype
-`struct Object* nearest_player_to_object(struct Object *obj);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [nearest_interacting_mario_state_to_object](#nearest_interacting_mario_state_to_object)
-
-### Lua Example
-`local MarioStateValue = nearest_interacting_mario_state_to_object(obj)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| obj | [Object](structs.md#Object) |
-
-### Returns
-[MarioState](structs.md#MarioState)
-
-### C Prototype
-`struct MarioState *nearest_interacting_mario_state_to_object(struct Object *obj);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [nearest_interacting_player_to_object](#nearest_interacting_player_to_object)
-
-### Lua Example
-`local ObjectValue = nearest_interacting_player_to_object(obj)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| obj | [Object](structs.md#Object) |
-
-### Returns
-[Object](structs.md#Object)
-
-### C Prototype
-`struct Object *nearest_interacting_player_to_object(struct Object *obj);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [is_nearest_mario_state_to_object](#is_nearest_mario_state_to_object)
-
-### Lua Example
-`local integerValue = is_nearest_mario_state_to_object(m, obj)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| obj | [Object](structs.md#Object) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`u8 is_nearest_mario_state_to_object(struct MarioState *m, struct Object *obj);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [is_nearest_player_to_object](#is_nearest_player_to_object)
-
-### Lua Example
-`local integerValue = is_nearest_player_to_object(m, obj)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [Object](structs.md#Object) |
-| obj | [Object](structs.md#Object) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`u8 is_nearest_player_to_object(struct Object *m, struct Object *obj);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [is_point_close_to_object](#is_point_close_to_object)
-
-### Lua Example
-`local integerValue = is_point_close_to_object(obj, x, y, z, dist)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| obj | [Object](structs.md#Object) |
-| x | `number` |
-| y | `number` |
-| z | `number` |
-| dist | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s8 is_point_close_to_object(struct Object *obj, f32 x, f32 y, f32 z, s32 dist);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [set_object_visibility](#set_object_visibility)
-
-### Lua Example
-`set_object_visibility(obj, dist)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| obj | [Object](structs.md#Object) |
-| dist | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void set_object_visibility(struct Object *obj, s32 dist);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [obj_return_home_if_safe](#obj_return_home_if_safe)
-
-### Lua Example
-`local integerValue = obj_return_home_if_safe(obj, homeX, y, homeZ, dist)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| obj | [Object](structs.md#Object) |
-| homeX | `number` |
-| y | `number` |
-| homeZ | `number` |
-| dist | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s8 obj_return_home_if_safe(struct Object *obj, f32 homeX, f32 y, f32 homeZ, s32 dist);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [obj_return_and_displace_home](#obj_return_and_displace_home)
-
-### Lua Example
-`obj_return_and_displace_home(obj, homeX, homeY, homeZ, baseDisp)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| obj | [Object](structs.md#Object) |
-| homeX | `number` |
-| homeY | `number` |
-| homeZ | `number` |
-| baseDisp | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void obj_return_and_displace_home(struct Object *obj, f32 homeX, UNUSED f32 homeY, f32 homeZ, s32 baseDisp);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [obj_check_if_facing_toward_angle](#obj_check_if_facing_toward_angle)
-
-### Lua Example
-`local integerValue = obj_check_if_facing_toward_angle(base, goal, range)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| base | `integer` |
-| goal | `integer` |
-| range | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s8 obj_check_if_facing_toward_angle(u32 base, u32 goal, s16 range);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [obj_find_wall_displacement](#obj_find_wall_displacement)
-
-### Lua Example
-`local integerValue = obj_find_wall_displacement(dist, x, y, z, radius)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dist | [Vec3f](structs.md#Vec3f) |
-| x | `number` |
-| y | `number` |
-| z | `number` |
-| radius | `number` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s8 obj_find_wall_displacement(Vec3f dist, f32 x, f32 y, f32 z, f32 radius);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [obj_spawn_yellow_coins](#obj_spawn_yellow_coins)
-
-### Lua Example
-`obj_spawn_yellow_coins(obj, nCoins)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| obj | [Object](structs.md#Object) |
-| nCoins | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void obj_spawn_yellow_coins(struct Object *obj, s8 nCoins);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [obj_flicker_and_disappear](#obj_flicker_and_disappear)
-
-### Lua Example
-`local integerValue = obj_flicker_and_disappear(obj, lifeSpan)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| obj | [Object](structs.md#Object) |
-| lifeSpan | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s8 obj_flicker_and_disappear(struct Object *obj, s16 lifeSpan);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [current_mario_room_check](#current_mario_room_check)
-
-### Lua Example
-`local integerValue = current_mario_room_check(room)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| room | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s8 current_mario_room_check(s16 room);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [obj_check_floor_death](#obj_check_floor_death)
-
-### Lua Example
-`obj_check_floor_death(collisionFlags, floor)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| collisionFlags | `integer` |
-| floor | [Surface](structs.md#Surface) |
-
-### Returns
-- None
-
-### C Prototype
-`void obj_check_floor_death(s16 collisionFlags, struct Surface *floor);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [obj_lava_death](#obj_lava_death)
-
-### Lua Example
-`local integerValue = obj_lava_death()`
-
-### Parameters
-- None
-
-### Returns
-- `integer`
-
-### C Prototype
-`s8 obj_lava_death(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [spawn_orange_number](#spawn_orange_number)
-
-### Lua Example
-`spawn_orange_number(behParam, relX, relY, relZ)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| behParam | `integer` |
-| relX | `integer` |
-| relY | `integer` |
-| relZ | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void spawn_orange_number(s8 behParam, s16 relX, s16 relY, s16 relZ);`
 
 [:arrow_up_small:](#)
 
