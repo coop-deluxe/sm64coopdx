@@ -3,12 +3,13 @@
 
 #include "pc/lua/smlua.h"
 #include "types.h"
+#include "geo_commands.h"
 
 #define C0(cmd, pos, width) (((cmd)->words.w0 >> (pos)) & ((1U << width) - 1))
 #define GFX_OP(cmd) C0(cmd, 24, 8)
 
-Gfx *gfx_allocate_internal(u32 length);
-Vtx *vtx_allocate_internal(u32 count);
+Gfx *gfx_allocate_internal(Gfx *gfx, u32 length);
+Vtx *vtx_allocate_internal(Vtx *vtx, u32 count);
 u32 gfx_get_length_no_sentinel(const Gfx *gfx);
 
 /* |description|Sets the override FOV|descriptionEnd| */
@@ -75,11 +76,13 @@ Gfx *gfx_get_next_command(Gfx *gfx);
 /* |description|Copies `length` commands from display list `src` to display list `dest`|descriptionEnd| */
 void gfx_copy(Gfx *dest, Gfx *src, u32 length);
 /* |description|Creates a new named display list of `length` commands|descriptionEnd| */
-Gfx *gfx_new(const char *name, u32 length);
-/* |description|Reallocates a display list created by `gfx_new` to modify its length|descriptionEnd| */
-Gfx *gfx_realloc(Gfx *gfx, u32 newLength);
-/* |description|Deletes a display list created by `gfx_new`|descriptionEnd| */
+Gfx *gfx_create(const char *name, u32 length);
+/* |description|Resizes a display list created by `gfx_create`|descriptionEnd| */
+void gfx_resize(Gfx *gfx, u32 newLength);
+/* |description|Deletes a display list created by `gfx_create`|descriptionEnd| */
 void gfx_delete(Gfx *gfx);
+/* |description|Deletes all display lists created by `gfx_create`|descriptionEnd| */
+void gfx_delete_all();
 
 /* |description|Gets the max count of vertices of a vertex buffer|descriptionEnd| */
 u32 vtx_get_count(Vtx *vtx);
@@ -90,10 +93,12 @@ Vtx *vtx_get_next_vertex(Vtx *vtx);
 /* |description|Copies `count` vertices from vertex buffer `src` to vertex buffer `dest`|descriptionEnd| */
 void vtx_copy(Vtx *dest, Vtx *src, u32 count);
 /* |description|Creates a new named vertex buffer of `count` vertices|descriptionEnd| */
-Vtx *vtx_new(const char *name, u32 count);
-/* |description|Reallocates a vertex buffer created by `vtx_new` to modify its count|descriptionEnd| */
-Vtx *vtx_realloc(Vtx *vtx, u32 newCount);
-/* |description|Deletes a vertex buffer created by `vtx_new`|descriptionEnd| */
+Vtx *vtx_create(const char *name, u32 count);
+/* |description|Resizes a vertex buffer created by `vtx_create`|descriptionEnd| */
+void vtx_resize(Vtx *vtx, u32 newCount);
+/* |description|Deletes a vertex buffer created by `vtx_create`|descriptionEnd| */
 void vtx_delete(Vtx *vtx);
+/* |description|Deletes all vertex buffers created by `vtx_create`|descriptionEnd| */
+void vtx_delete_all();
 
 #endif

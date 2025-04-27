@@ -6,6 +6,1350 @@
 
 
 ---
+# functions from smlua_camera_utils.h
+
+<br />
+
+
+## [camera_reset_overrides](#camera_reset_overrides)
+
+### Description
+Resets camera config overrides
+
+### Lua Example
+`camera_reset_overrides()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void camera_reset_overrides(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_freeze](#camera_freeze)
+
+### Description
+Freezes the camera by not updating it
+
+### Lua Example
+`camera_freeze()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void camera_freeze(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_unfreeze](#camera_unfreeze)
+
+### Description
+Unfreezes the camera
+
+### Lua Example
+`camera_unfreeze()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void camera_unfreeze(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_is_frozen](#camera_is_frozen)
+
+### Description
+Checks if the camera is frozen
+
+### Lua Example
+`local booleanValue = camera_is_frozen()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool camera_is_frozen(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_romhack_allow_only_mods](#camera_romhack_allow_only_mods)
+
+### Description
+Sets if only mods are allowed to modify the camera (Enabling prevents the player from modifying the camera through the settings)
+
+### Lua Example
+`camera_romhack_allow_only_mods(allow)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| allow | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void camera_romhack_allow_only_mods(u8 allow);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_set_romhack_override](#camera_set_romhack_override)
+
+### Description
+Sets the romhack camera override status
+
+### Lua Example
+`camera_set_romhack_override(rco)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| rco | [enum RomhackCameraOverride](constants.md#enum-RomhackCameraOverride) |
+
+### Returns
+- None
+
+### C Prototype
+`void camera_set_romhack_override(enum RomhackCameraOverride rco);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_romhack_allow_centering](#camera_romhack_allow_centering)
+
+### Description
+Sets if the romhack camera should allow centering, triggered with the L button
+
+### Lua Example
+`camera_romhack_allow_centering(allow)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| allow | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void camera_romhack_allow_centering(u8 allow);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_allow_toxic_gas_camera](#camera_allow_toxic_gas_camera)
+
+### Description
+Sets if the romhack camera should fly above poison gas
+
+### Lua Example
+`camera_allow_toxic_gas_camera(allow)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| allow | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void camera_allow_toxic_gas_camera(u8 allow);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_romhack_allow_dpad_usage](#camera_romhack_allow_dpad_usage)
+
+### Description
+Sets if the romhack camera should allow D-Pad movement
+
+### Lua Example
+`camera_romhack_allow_dpad_usage(allow)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| allow | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void camera_romhack_allow_dpad_usage(u8 allow);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [rom_hack_cam_set_collisions](#rom_hack_cam_set_collisions)
+
+### Description
+Toggles collision settings for the ROM hack camera. This enables or disables specific collision behaviors in modded levels
+
+### Lua Example
+`rom_hack_cam_set_collisions(enable)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| enable | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void rom_hack_cam_set_collisions(u8 enable);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_romhack_set_zoomed_in_dist](#camera_romhack_set_zoomed_in_dist)
+
+### Description
+Sets the romhack camera's zoomed in distance (Default: 900)
+
+### Lua Example
+`camera_romhack_set_zoomed_in_dist(val)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| val | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void camera_romhack_set_zoomed_in_dist(u32 val);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_romhack_set_zoomed_out_dist](#camera_romhack_set_zoomed_out_dist)
+
+### Description
+Sets the romhack camera's zoomed out additional distance (Default: 500)
+
+### Lua Example
+`camera_romhack_set_zoomed_out_dist(val)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| val | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void camera_romhack_set_zoomed_out_dist(u32 val);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_romhack_set_zoomed_in_height](#camera_romhack_set_zoomed_in_height)
+
+### Description
+Sets the romhack camera's zoomed in height (Default: 300)
+
+### Lua Example
+`camera_romhack_set_zoomed_in_height(val)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| val | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void camera_romhack_set_zoomed_in_height(u32 val);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_romhack_set_zoomed_out_height](#camera_romhack_set_zoomed_out_height)
+
+### Description
+Sets the romhack camera's zoomed out additional height (Default: 150)
+
+### Lua Example
+`camera_romhack_set_zoomed_out_height(val)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| val | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void camera_romhack_set_zoomed_out_height(u32 val);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_romhack_get_zoomed_in_dist](#camera_romhack_get_zoomed_in_dist)
+
+### Description
+Gets the romhack camera's zoomed in distance
+
+### Lua Example
+`local integerValue = camera_romhack_get_zoomed_in_dist()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 camera_romhack_get_zoomed_in_dist(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_romhack_get_zoomed_out_dist](#camera_romhack_get_zoomed_out_dist)
+
+### Description
+Gets the romhack camera's additional zoomed out distance
+
+### Lua Example
+`local integerValue = camera_romhack_get_zoomed_out_dist()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 camera_romhack_get_zoomed_out_dist(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_romhack_get_zoomed_in_height](#camera_romhack_get_zoomed_in_height)
+
+### Description
+Gets the romhack camera's zoomed in height
+
+### Lua Example
+`local integerValue = camera_romhack_get_zoomed_in_height()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 camera_romhack_get_zoomed_in_height(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_romhack_get_zoomed_out_height](#camera_romhack_get_zoomed_out_height)
+
+### Description
+Gets the romhack camera's additional zoomed out height
+
+### Lua Example
+`local integerValue = camera_romhack_get_zoomed_out_height()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 camera_romhack_get_zoomed_out_height(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_get_romhack_override](#camera_get_romhack_override)
+
+### Description
+Gets the current romhack camera override status
+
+### Lua Example
+`local enumValue = camera_get_romhack_override()`
+
+### Parameters
+- None
+
+### Returns
+[enum RomhackCameraOverride](constants.md#enum-RomhackCameraOverride)
+
+### C Prototype
+`enum RomhackCameraOverride camera_get_romhack_override(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_romhack_get_allow_centering](#camera_romhack_get_allow_centering)
+
+### Description
+Gets if the romhack camera should allow centering
+
+### Lua Example
+`local integerValue = camera_romhack_get_allow_centering()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u8 camera_romhack_get_allow_centering(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_get_allow_toxic_gas_camera](#camera_get_allow_toxic_gas_camera)
+
+### Description
+Gets if the romhack camera should fly above poison gas
+
+### Lua Example
+`local integerValue = camera_get_allow_toxic_gas_camera()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u8 camera_get_allow_toxic_gas_camera(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_romhack_get_allow_dpad_usage](#camera_romhack_get_allow_dpad_usage)
+
+### Description
+Gets if the romhack camera should allow D-Pad movement
+
+### Lua Example
+`local integerValue = camera_romhack_get_allow_dpad_usage()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u8 camera_romhack_get_allow_dpad_usage(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_romhack_get_collisions](#camera_romhack_get_collisions)
+
+### Description
+Gets if the romhack camera has surface collisions
+
+### Lua Example
+`local integerValue = camera_romhack_get_collisions()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u8 camera_romhack_get_collisions(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_config_is_free_cam_enabled](#camera_config_is_free_cam_enabled)
+
+### Description
+Checks if Free Camera is enabled
+
+### Lua Example
+`local booleanValue = camera_config_is_free_cam_enabled()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool camera_config_is_free_cam_enabled(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_config_is_analog_cam_enabled](#camera_config_is_analog_cam_enabled)
+
+### Description
+Checks if Analog Camera is enabled
+
+### Lua Example
+`local booleanValue = camera_config_is_analog_cam_enabled()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool camera_config_is_analog_cam_enabled(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_config_is_dpad_enabled](#camera_config_is_dpad_enabled)
+
+### Description
+Checks if Freecam DPad Behavior is enabled
+
+### Lua Example
+`local booleanValue = camera_config_is_dpad_enabled()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool camera_config_is_dpad_enabled(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_config_is_collision_enabled](#camera_config_is_collision_enabled)
+
+### Description
+Checks if Camera Collision is enabled
+
+### Lua Example
+`local booleanValue = camera_config_is_collision_enabled()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool camera_config_is_collision_enabled(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_config_is_mouse_look_enabled](#camera_config_is_mouse_look_enabled)
+
+### Description
+Checks if Mouse Look is enabled
+
+### Lua Example
+`local booleanValue = camera_config_is_mouse_look_enabled()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool camera_config_is_mouse_look_enabled(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_config_is_x_inverted](#camera_config_is_x_inverted)
+
+### Description
+Checks if camera X is inverted
+
+### Lua Example
+`local booleanValue = camera_config_is_x_inverted()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool camera_config_is_x_inverted(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_config_is_y_inverted](#camera_config_is_y_inverted)
+
+### Description
+Checks if camera Y is inverted
+
+### Lua Example
+`local booleanValue = camera_config_is_y_inverted()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool camera_config_is_y_inverted(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_config_get_x_sensitivity](#camera_config_get_x_sensitivity)
+
+### Description
+Gets camera X sensitivity
+
+### Lua Example
+`local integerValue = camera_config_get_x_sensitivity()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 camera_config_get_x_sensitivity(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_config_get_y_sensitivity](#camera_config_get_y_sensitivity)
+
+### Description
+Gets camera Y sensitivity
+
+### Lua Example
+`local integerValue = camera_config_get_y_sensitivity()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 camera_config_get_y_sensitivity(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_config_get_aggression](#camera_config_get_aggression)
+
+### Description
+Gets camera aggression
+
+### Lua Example
+`local integerValue = camera_config_get_aggression()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 camera_config_get_aggression(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_config_get_pan_level](#camera_config_get_pan_level)
+
+### Description
+Gets camera pan level
+
+### Lua Example
+`local integerValue = camera_config_get_pan_level()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 camera_config_get_pan_level(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_config_get_deceleration](#camera_config_get_deceleration)
+
+### Description
+Gets camera deceleration
+
+### Lua Example
+`local integerValue = camera_config_get_deceleration()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 camera_config_get_deceleration(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_config_get_centering](#camera_config_get_centering)
+
+### Description
+Gets if the L button will center the camera
+
+### Lua Example
+`local booleanValue = camera_config_get_centering()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool camera_config_get_centering(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_config_enable_free_cam](#camera_config_enable_free_cam)
+
+### Description
+Overrides if Free Camera is enabled
+
+### Lua Example
+`camera_config_enable_free_cam(enable)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| enable | `boolean` |
+
+### Returns
+- None
+
+### C Prototype
+`void camera_config_enable_free_cam(bool enable);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_config_enable_analog_cam](#camera_config_enable_analog_cam)
+
+### Description
+Overrides if Analog Camera is enabled
+
+### Lua Example
+`camera_config_enable_analog_cam(enable)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| enable | `boolean` |
+
+### Returns
+- None
+
+### C Prototype
+`void camera_config_enable_analog_cam(bool enable);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_config_enable_centering](#camera_config_enable_centering)
+
+### Description
+Overrides if the L button will center the camera
+
+### Lua Example
+`camera_config_enable_centering(enable)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| enable | `boolean` |
+
+### Returns
+- None
+
+### C Prototype
+`void camera_config_enable_centering(bool enable);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_config_enable_dpad](#camera_config_enable_dpad)
+
+### Description
+Overrides if Freecam DPad Behavior is enabled
+
+### Lua Example
+`camera_config_enable_dpad(enable)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| enable | `boolean` |
+
+### Returns
+- None
+
+### C Prototype
+`void camera_config_enable_dpad(bool enable);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_config_enable_collisions](#camera_config_enable_collisions)
+
+### Description
+Overrides if Camera Collision is enabled
+
+### Lua Example
+`camera_config_enable_collisions(enable)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| enable | `boolean` |
+
+### Returns
+- None
+
+### C Prototype
+`void camera_config_enable_collisions(bool enable);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_config_enable_mouse_look](#camera_config_enable_mouse_look)
+
+### Description
+Overrides if camera mouse look is enabled
+
+### Lua Example
+`camera_config_enable_mouse_look(enable)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| enable | `boolean` |
+
+### Returns
+- None
+
+### C Prototype
+`void camera_config_enable_mouse_look(bool enable);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_config_invert_x](#camera_config_invert_x)
+
+### Description
+Overrides if camera X is inverted
+
+### Lua Example
+`camera_config_invert_x(invert)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| invert | `boolean` |
+
+### Returns
+- None
+
+### C Prototype
+`void camera_config_invert_x(bool invert);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_config_invert_y](#camera_config_invert_y)
+
+### Description
+Overrides if camera Y is inverted
+
+### Lua Example
+`camera_config_invert_y(invert)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| invert | `boolean` |
+
+### Returns
+- None
+
+### C Prototype
+`void camera_config_invert_y(bool invert);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_config_set_x_sensitivity](#camera_config_set_x_sensitivity)
+
+### Description
+Overrides camera X sensitivity
+
+### Lua Example
+`camera_config_set_x_sensitivity(value)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| value | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void camera_config_set_x_sensitivity(u32 value);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_config_set_y_sensitivity](#camera_config_set_y_sensitivity)
+
+### Description
+Overrides camera Y sensitivity
+
+### Lua Example
+`camera_config_set_y_sensitivity(value)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| value | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void camera_config_set_y_sensitivity(u32 value);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_config_set_aggression](#camera_config_set_aggression)
+
+### Description
+Overrides camera aggression
+
+### Lua Example
+`camera_config_set_aggression(value)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| value | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void camera_config_set_aggression(u32 value);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_config_set_pan_level](#camera_config_set_pan_level)
+
+### Description
+Overrides camera pan level
+
+### Lua Example
+`camera_config_set_pan_level(value)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| value | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void camera_config_set_pan_level(u32 value);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_config_set_deceleration](#camera_config_set_deceleration)
+
+### Description
+Overrides camera deceleration
+
+### Lua Example
+`camera_config_set_deceleration(value)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| value | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void camera_config_set_deceleration(u32 value);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_get_checking_surfaces](#camera_get_checking_surfaces)
+
+### Description
+Checks if the camera should account for surfaces
+
+### Lua Example
+`local booleanValue = camera_get_checking_surfaces()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool camera_get_checking_surfaces(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_set_checking_surfaces](#camera_set_checking_surfaces)
+
+### Description
+Sets if the camera should account for surfaces
+
+### Lua Example
+`camera_set_checking_surfaces(value)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| value | `boolean` |
+
+### Returns
+- None
+
+### C Prototype
+`void camera_set_checking_surfaces(bool value);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
+# functions from smlua_collision_utils.h
+
+<br />
+
+
+## [collision_find_floor](#collision_find_floor)
+
+### Description
+Finds a potential floor at the given `x`, `y`, and `z` values
+
+### Lua Example
+`local SurfaceValue = collision_find_floor(x, y, z)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| x | `number` |
+| y | `number` |
+| z | `number` |
+
+### Returns
+[Surface](structs.md#Surface)
+
+### C Prototype
+`struct Surface* collision_find_floor(f32 x, f32 y, f32 z);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [collision_find_ceil](#collision_find_ceil)
+
+### Description
+Finds a potential ceiling at the given `x`, `y`, and `z` values
+
+### Lua Example
+`local SurfaceValue = collision_find_ceil(x, y, z)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| x | `number` |
+| y | `number` |
+| z | `number` |
+
+### Returns
+[Surface](structs.md#Surface)
+
+### C Prototype
+`struct Surface* collision_find_ceil(f32 x, f32 y, f32 z);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_water_surface_pseudo_floor](#get_water_surface_pseudo_floor)
+
+### Description
+Gets the generated water floor surface used when riding a shell
+
+### Lua Example
+`local SurfaceValue = get_water_surface_pseudo_floor()`
+
+### Parameters
+- None
+
+### Returns
+[Surface](structs.md#Surface)
+
+### C Prototype
+`struct Surface* get_water_surface_pseudo_floor(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [smlua_collision_util_get](#smlua_collision_util_get)
+
+### Description
+Gets the `Collision` with `name`
+
+### Lua Example
+`local PointerValue = smlua_collision_util_get(name)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| name | `string` |
+
+### Returns
+- `Pointer` <`Collision`>
+
+### C Prototype
+`Collision* smlua_collision_util_get(const char* name);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [collision_get_temp_wall_collision_data](#collision_get_temp_wall_collision_data)
+
+### Description
+Returns a temporary wall collision data pointer
+
+### Lua Example
+`local WallCollisionDataValue = collision_get_temp_wall_collision_data()`
+
+### Parameters
+- None
+
+### Returns
+[WallCollisionData](structs.md#WallCollisionData)
+
+### C Prototype
+`struct WallCollisionData* collision_get_temp_wall_collision_data(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_surface_from_wcd_index](#get_surface_from_wcd_index)
+
+### Description
+Gets the surface corresponding to `index` from `wcd`
+
+### Lua Example
+`local SurfaceValue = get_surface_from_wcd_index(wcd, index)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| wcd | [WallCollisionData](structs.md#WallCollisionData) |
+| index | `integer` |
+
+### Returns
+[Surface](structs.md#Surface)
+
+### C Prototype
+`struct Surface* get_surface_from_wcd_index(struct WallCollisionData* wcd, s8 index);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [smlua_collision_util_get_current_terrain_collision](#smlua_collision_util_get_current_terrain_collision)
+
+### Description
+Gets the current level terrain collision
+
+### Lua Example
+`local PointerValue = smlua_collision_util_get_current_terrain_collision()`
+
+### Parameters
+- None
+
+### Returns
+- `Pointer` <`Collision`>
+
+### C Prototype
+`Collision* smlua_collision_util_get_current_terrain_collision(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [smlua_collision_util_get_level_collision](#smlua_collision_util_get_level_collision)
+
+### Description
+Gets the `level` terrain collision from `area`
+
+### Lua Example
+`local PointerValue = smlua_collision_util_get_level_collision(level, area)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| level | `integer` |
+| area | `integer` |
+
+### Returns
+- `Pointer` <`Collision`>
+
+### C Prototype
+`Collision *smlua_collision_util_get_level_collision(u32 level, u16 area);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [smlua_collision_util_find_surface_types](#smlua_collision_util_find_surface_types)
+
+### Description
+Gets a table of the surface types from `data`
+
+### Lua Example
+`smlua_collision_util_find_surface_types(data)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| data | `Pointer` <`Collision`> |
+
+### Returns
+- None
+
+### C Prototype
+`void smlua_collision_util_find_surface_types(Collision* data);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
+# functions from smlua_deprecated.h
+
+<br />
+
+
+---
 # functions from smlua_gfx_utils.h
 
 <br />
@@ -661,13 +2005,13 @@ Copies `length` commands from display list `src` to display list `dest`
 
 <br />
 
-## [gfx_new](#gfx_new)
+## [gfx_create](#gfx_create)
 
 ### Description
 Creates a new named display list of `length` commands
 
 ### Lua Example
-`local PointerValue = gfx_new(name, length)`
+`local PointerValue = gfx_create(name, length)`
 
 ### Parameters
 | Field | Type |
@@ -679,19 +2023,19 @@ Creates a new named display list of `length` commands
 - `Pointer` <`Gfx`>
 
 ### C Prototype
-`Gfx *gfx_new(const char *name, u32 length);`
+`Gfx *gfx_create(const char *name, u32 length);`
 
 [:arrow_up_small:](#)
 
 <br />
 
-## [gfx_realloc](#gfx_realloc)
+## [gfx_resize](#gfx_resize)
 
 ### Description
-Reallocates a display list created by `gfx_new` to modify its length
+Resizes a display list created by `gfx_create`
 
 ### Lua Example
-`local PointerValue = gfx_realloc(gfx, newLength)`
+`gfx_resize(gfx, newLength)`
 
 ### Parameters
 | Field | Type |
@@ -700,10 +2044,10 @@ Reallocates a display list created by `gfx_new` to modify its length
 | newLength | `integer` |
 
 ### Returns
-- `Pointer` <`Gfx`>
+- None
 
 ### C Prototype
-`Gfx *gfx_realloc(Gfx *gfx, u32 newLength);`
+`void gfx_resize(Gfx *gfx, u32 newLength);`
 
 [:arrow_up_small:](#)
 
@@ -712,7 +2056,7 @@ Reallocates a display list created by `gfx_new` to modify its length
 ## [gfx_delete](#gfx_delete)
 
 ### Description
-Deletes a display list created by `gfx_new`
+Deletes a display list created by `gfx_create`
 
 ### Lua Example
 `gfx_delete(gfx)`
@@ -727,6 +2071,27 @@ Deletes a display list created by `gfx_new`
 
 ### C Prototype
 `void gfx_delete(Gfx *gfx);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [gfx_delete_all](#gfx_delete_all)
+
+### Description
+Deletes all display lists created by `gfx_create`
+
+### Lua Example
+`gfx_delete_all()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void gfx_delete_all();`
 
 [:arrow_up_small:](#)
 
@@ -827,13 +2192,13 @@ Copies `count` vertices from vertex buffer `src` to vertex buffer `dest`
 
 <br />
 
-## [vtx_new](#vtx_new)
+## [vtx_create](#vtx_create)
 
 ### Description
 Creates a new named vertex buffer of `count` vertices
 
 ### Lua Example
-`local PointerValue = vtx_new(name, count)`
+`local PointerValue = vtx_create(name, count)`
 
 ### Parameters
 | Field | Type |
@@ -845,19 +2210,19 @@ Creates a new named vertex buffer of `count` vertices
 - `Pointer` <`Vtx`>
 
 ### C Prototype
-`Vtx *vtx_new(const char *name, u32 count);`
+`Vtx *vtx_create(const char *name, u32 count);`
 
 [:arrow_up_small:](#)
 
 <br />
 
-## [vtx_realloc](#vtx_realloc)
+## [vtx_resize](#vtx_resize)
 
 ### Description
-Reallocates a vertex buffer created by `vtx_new` to modify its count
+Resizes a vertex buffer created by `vtx_create`
 
 ### Lua Example
-`local PointerValue = vtx_realloc(vtx, newCount)`
+`vtx_resize(vtx, newCount)`
 
 ### Parameters
 | Field | Type |
@@ -866,10 +2231,10 @@ Reallocates a vertex buffer created by `vtx_new` to modify its count
 | newCount | `integer` |
 
 ### Returns
-- `Pointer` <`Vtx`>
+- None
 
 ### C Prototype
-`Vtx *vtx_realloc(Vtx *vtx, u32 newCount);`
+`void vtx_resize(Vtx *vtx, u32 newCount);`
 
 [:arrow_up_small:](#)
 
@@ -878,7 +2243,7 @@ Reallocates a vertex buffer created by `vtx_new` to modify its count
 ## [vtx_delete](#vtx_delete)
 
 ### Description
-Deletes a vertex buffer created by `vtx_new`
+Deletes a vertex buffer created by `vtx_create`
 
 ### Lua Example
 `vtx_delete(vtx)`
@@ -893,6 +2258,27 @@ Deletes a vertex buffer created by `vtx_new`
 
 ### C Prototype
 `void vtx_delete(Vtx *vtx);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vtx_delete_all](#vtx_delete_all)
+
+### Description
+Deletes all vertex buffers created by `vtx_create`
+
+### Lua Example
+`vtx_delete_all()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void vtx_delete_all();`
 
 [:arrow_up_small:](#)
 
@@ -2071,6 +3457,9 @@ Checks if the HUD is hidden
 
 ## [hud_get_value](#hud_get_value)
 
+### Description
+Gets a HUD display value
+
 ### Lua Example
 `local integerValue = hud_get_value(type)`
 
@@ -2486,33 +3875,6 @@ Sets the water level in an area corresponding to `index` (0-indexed)
 
 ### C Prototype
 `void set_water_level(u8 index, s16 height, bool sync);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [play_transition](#play_transition)
-
-### Description
-Plays a screen transition
-
-### Lua Example
-`play_transition(transType, time, red, green, blue)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| transType | `integer` |
-| time | `integer` |
-| red | `integer` |
-| green | `integer` |
-| blue | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void play_transition(s16 transType, s16 time, u8 red, u8 green, u8 blue);`
 
 [:arrow_up_small:](#)
 
@@ -2939,7 +4301,7 @@ Sets the volume level of environment sounds effects
 Gets an environment region (gas/water boxes) height value
 
 ### Lua Example
-`local numberValue = get_environment_region(index)`
+`local integerValue = get_environment_region(index)`
 
 ### Parameters
 | Field | Type |
@@ -2947,10 +4309,10 @@ Gets an environment region (gas/water boxes) height value
 | index | `integer` |
 
 ### Returns
-- `number`
+- `integer`
 
 ### C Prototype
-`f32 get_environment_region(u8 index);`
+`s16 get_environment_region(u8 index);`
 
 [:arrow_up_small:](#)
 
@@ -2974,7 +4336,7 @@ Sets an environment region (gas/water boxes) height value
 - None
 
 ### C Prototype
-`void set_environment_region(u8 index, s32 value);`
+`void set_environment_region(u8 index, s16 value);`
 
 [:arrow_up_small:](#)
 
@@ -5048,27 +6410,6 @@ Stops cap music completely
 <br />
 
 
-## [exec_anim_sound_state](#exec_anim_sound_state)
-
-### Lua Example
-`exec_anim_sound_state(soundStates, maxSoundStates)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| soundStates | [SoundState](structs.md#SoundState) |
-| maxSoundStates | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void exec_anim_sound_state(struct SoundState *soundStates, u16 maxSoundStates);`
-
-[:arrow_up_small:](#)
-
-<br />
-
 ## [cur_obj_play_sound_1](#cur_obj_play_sound_1)
 
 ### Description
@@ -5342,49 +6683,6 @@ Sets whether collision finding functions should check wall directions.
 <br />
 
 
-## [get_area_terrain_size](#get_area_terrain_size)
-
-### Lua Example
-`local integerValue = get_area_terrain_size(data)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| data | `Pointer` <`integer`> |
-
-### Returns
-- `integer`
-
-### C Prototype
-`u32 get_area_terrain_size(s16 *data);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [load_area_terrain](#load_area_terrain)
-
-### Lua Example
-`load_area_terrain(index, data, surfaceRooms, macroObjects)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| index | `integer` |
-| data | `Pointer` <`integer`> |
-| surfaceRooms | `Pointer` <`integer`> |
-| macroObjects | `Pointer` <`integer`> |
-
-### Returns
-- None
-
-### C Prototype
-`void load_area_terrain(s16 index, s16 *data, s8 *surfaceRooms, s16 *macroObjects);`
-
-[:arrow_up_small:](#)
-
-<br />
-
 ## [load_object_collision_model](#load_object_collision_model)
 
 ### Description
@@ -5431,6 +6729,9 @@ Gets a surface corresponding to `index` from the surface pool buffer
 <br />
 
 ## [surface_has_force](#surface_has_force)
+
+### Description
+Checks if a surface has force
 
 ### Lua Example
 `local booleanValue = surface_has_force(surfaceType)`

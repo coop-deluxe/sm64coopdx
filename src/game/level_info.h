@@ -15,7 +15,7 @@ Returns the name of the level corresponding to `courseNum`, `levelNum` and `area
 This function should not be used in Lua mods.
 Set `charCase` to 1 to capitalize or -1 to decapitalize the returned string
 |descriptionEnd| */
-const u8   *get_level_name_sm64(s16 courseNum, s16 levelNum, s16 areaIndex, s16 charCase);
+const u8 *get_level_name_sm64(s16 courseNum, s16 levelNum, s16 areaIndex, s16 charCase);
 /* |description|
 Returns the name of the level corresponding to `courseNum`, `levelNum` and `areaIndex` as a decapitalized ASCII (human readable) string
 |descriptionEnd| */
@@ -30,7 +30,7 @@ Returns the name of the star corresponding to `courseNum` and `starNum` as an SM
 This function should not be used in Lua mods.
 Set `charCase` to 1 to capitalize or -1 to decapitalize the returned string
 |descriptionEnd| */
-const u8   *get_star_name_sm64(s16 courseNum, s16 starNum, s16 charCase);
+const u8 *get_star_name_sm64(s16 courseNum, s16 starNum, s16 charCase);
 /* |description|
 Returns the name of the star corresponding to `courseNum` and `starNum` as a decapitalized ASCII (human readable) string
 |descriptionEnd| */

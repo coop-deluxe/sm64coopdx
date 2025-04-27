@@ -77,10 +77,7 @@ s16 sPrevCheckMarioRoom = 0;
  */
 s8 sYoshiDead = FALSE;
 
-/**
- * Resets yoshi as spawned/despawned upon new file select.
- * Possibly a function with stubbed code.
- */
+/* |description|Resets Yoshi as being alive|descriptionEnd| */
 void set_yoshi_as_not_dead(void) {
     sYoshiDead = FALSE;
 }
@@ -128,9 +125,7 @@ Gfx UNUSED *geo_obj_transparency_something(s32 callContext, struct GraphNode *no
     return gfxHead;
 }
 
-/**
- * An absolute value function.
- */
+/* |description|An absolute value (always positive) function.|descriptionEnd| */
 f32 absf_2(f32 f) {
     if (f < 0) {
         f *= -1.0f;
@@ -153,9 +148,7 @@ void turn_obj_away_from_surface(f32 velX, f32 velZ, f32 nX, UNUSED f32 nY, f32 n
     if (isnan(*objYawZ)) { *objYawZ = 0; }
 }
 
-/**
- * Finds any wall collisions, applies them, and turns away from the surface.
- */
+/* |description|Finds any wall collisions, applies them, and turns away from the surface.|descriptionEnd| */
 s8 obj_find_wall(f32 objNewX, f32 objY, f32 objNewZ, f32 objVelX, f32 objVelZ) {
     if (!o) { return 0; }
     struct WallCollisionData hitbox = { 0 };
@@ -195,9 +188,7 @@ s8 obj_find_wall(f32 objNewX, f32 objY, f32 objNewZ, f32 objVelX, f32 objVelZ) {
     return TRUE;
 }
 
-/**
- * Turns an object away from steep floors, similarly to walls.
- */
+/* |description|Turns an object away from steep floors, similarly to walls.|descriptionEnd| */
 s8 turn_obj_away_from_steep_floor(struct Surface *objFloor, f32 floorY, f32 objVelX, f32 objVelZ) {
     if (!o) { return 0; }
     f32 floor_nX, floor_nY, floor_nZ, objVelXCopy, objVelZCopy, objYawX, objYawZ;
@@ -225,9 +216,7 @@ s8 turn_obj_away_from_steep_floor(struct Surface *objFloor, f32 floorY, f32 objV
     return TRUE;
 }
 
-/**
- * Orients an object with the given normals, typically the surface under the object.
- */
+/* |description|Orients an object with the given normals, typically the surface under the object.|descriptionEnd| */
 void obj_orient_graph(struct Object *obj, f32 normalX, f32 normalY, f32 normalZ) {
     if (!obj) { return; }
     Vec3f objVisualPosition, surfaceNormals;
@@ -275,9 +264,7 @@ void calc_obj_friction(f32 *objFriction, f32 floor_nY) {
     }
 }
 
-/**
- * Updates an objects speed for gravity and updates Y position.
- */
+/* |description|Updates an objects speed for gravity and updates Y position.|descriptionEnd| */
 void calc_new_obj_vel_and_pos_y(struct Surface *objFloor, f32 objFloorY, f32 objVelX, f32 objVelZ) {
     if (!o) { return; }
     if (!objFloor) { return; }
@@ -337,8 +324,8 @@ void calc_new_obj_vel_and_pos_y(struct Surface *objFloor, f32 objFloorY, f32 obj
     }
 }
 
-void calc_new_obj_vel_and_pos_y_underwater(struct Surface *objFloor, f32 floorY, f32 objVelX, f32 objVelZ,
-                                    f32 waterY) {
+/* |description|Adjusts the current object's veloicty and y position for being underwater|descriptionEnd| */
+void calc_new_obj_vel_and_pos_y_underwater(struct Surface *objFloor, f32 floorY, f32 objVelX, f32 objVelZ, f32 waterY) {
     if (!o) { return; }
     if (!objFloor) { return; }
     f32 floor_nX = objFloor->normal.x;
@@ -406,9 +393,7 @@ void calc_new_obj_vel_and_pos_y_underwater(struct Surface *objFloor, f32 floorY,
     o->oVelY *= 0.8;
 }
 
-/**
- * Updates an objects position from oForwardVel and oMoveAngleYaw.
- */
+/* |description|Updates an objects position from oForwardVel and oMoveAngleYaw.|descriptionEnd| */
 void obj_update_pos_vel_xz(void) {
     if (!o) { return; }
     f32 xVel = o->oForwardVel * sins(o->oMoveAngleYaw);
@@ -418,10 +403,7 @@ void obj_update_pos_vel_xz(void) {
     o->oPosZ += zVel;
 }
 
-/**
- * Generates splashes if at surface of water, entering water, or bubbles
- * if underwater.
- */
+/* |description|Generates splashes if at surface of water, entering water, or bubbles if underwater|descriptionEnd| */
 void obj_splash(s32 waterY, s32 objY) {
     if (!o) { return; }
     u32 globalTimer = gGlobalTimer;
@@ -441,10 +423,10 @@ void obj_splash(s32 waterY, s32 objY) {
     }
 }
 
-/**
- * Generic object move function. Handles walls, water, floors, and gravity.
- * Returns flags for certain interactions.
- */
+/* |description|
+Generic object move function. Handles walls, water, floors, and gravity.
+Returns flags for certain interactions
+|descriptionEnd| */
 s16 object_step(void) {
     if (!o) { return 0; }
     f32 objX = o->oPosX;
@@ -493,10 +475,10 @@ s16 object_step(void) {
     return collisionFlags;
 }
 
-/**
- * Takes an object step but does not orient with the object's floor.
- * Used for boulders, falling pillars, and the rolling snowman body.
- */
+/* |description|
+Takes an object step but does not orient with the object's floor.
+Used for boulders, falling pillars, and the rolling snowman body
+|descriptionEnd| */
 s16 object_step_without_floor_orient(void) {
     s16 collisionFlags = 0;
     sOrientObjWithFloor = FALSE;
@@ -506,13 +488,10 @@ s16 object_step_without_floor_orient(void) {
     return collisionFlags;
 }
 
-/**
- * Uses an object's forward velocity and yaw to move its X, Y, and Z positions.
- * This does accept an object as an argument, though it is always called with `o`.
- * If it wasn't called with `o`, it would modify `o`'s X and Z velocities based on
- * `obj`'s forward velocity and yaw instead of `o`'s, and wouldn't update `o`'s
- * position.
- */
+/* |description|
+Don't use this function outside of of a context where the current object and `obj` are the same.
+Moves `obj` based on a seemingly random mix of using either the current obj or `obj`'s fields
+|descriptionEnd| */
 void obj_move_xyz_using_fvel_and_yaw(struct Object *obj) {
     if (!o || !obj) { return; }
     o->oVelX = obj->oForwardVel * sins(obj->oMoveAngleYaw);
@@ -523,9 +502,7 @@ void obj_move_xyz_using_fvel_and_yaw(struct Object *obj) {
     obj->oPosZ += o->oVelZ;
 }
 
-/**
- * Checks if a point is within distance from Mario's graphical position. Test is exclusive.
- */
+/* |description|Checks if a point is within distance from any active Mario visible to enemies' graphical position|descriptionEnd| */
 s8 is_point_within_radius_of_mario(f32 x, f32 y, f32 z, s32 dist) {
     for (s32 i = 0; i < MAX_PLAYERS; i++) {
         if (!is_player_active(&gMarioStates[i])) { continue; }
@@ -545,6 +522,7 @@ s8 is_point_within_radius_of_mario(f32 x, f32 y, f32 z, s32 dist) {
     return FALSE;
 }
 
+/* |description|Checks if a point is within distance from any active Mario's graphical position|descriptionEnd| */
 s8 is_point_within_radius_of_any_player(f32 x, f32 y, f32 z, s32 dist) {
     for (s32 i = 0; i < MAX_PLAYERS; i++) {
         if (!is_player_active(&gMarioStates[i])) { continue; }
@@ -563,6 +541,7 @@ s8 is_point_within_radius_of_any_player(f32 x, f32 y, f32 z, s32 dist) {
     return FALSE;
 }
 
+/* |description|Checks if `m` is in the current course/act/level/area and isn't bubbled|descriptionEnd| */
 u8 is_player_active(struct MarioState* m) {
     if (!m) { return FALSE; }
     if (gNetworkType == NT_NONE && m == &gMarioStates[0]) { return TRUE; }
@@ -582,6 +561,7 @@ u8 is_player_active(struct MarioState* m) {
     return TRUE;
 }
 
+/* |description|Checks if any player besides the local player is in the current course/act/level/area|descriptionEnd| */
 u8 is_other_player_active(void) {
     for (s32 i = 1; i < MAX_PLAYERS; i++) {
         struct MarioState *m = &gMarioStates[i];
@@ -590,6 +570,7 @@ u8 is_other_player_active(void) {
     return FALSE;
 }
 
+/* |description|Checks if `m` is in the current course/act/level/area|descriptionEnd| */
 u8 is_player_in_local_area(struct MarioState* m) {
     if (!m) { return FALSE; }
     if (gNetworkType == NT_NONE && m == &gMarioStates[0]) { return TRUE; }
@@ -608,9 +589,7 @@ u8 is_player_in_local_area(struct MarioState* m) {
     return TRUE;
 }
 
-/**
- * Returns closest MarioState
- */
+/* |description|Gets the nearest active Mario who isn't bubbled to `obj`|descriptionEnd| */
 struct MarioState* nearest_mario_state_to_object(struct Object *obj) {
     if (!obj) { return NULL; }
     struct MarioState* nearest = NULL;
@@ -630,6 +609,7 @@ struct MarioState* nearest_mario_state_to_object(struct Object *obj) {
     return nearest;
 }
 
+/* |description|Gets the nearest possible Mario to `obj` despite anything like bubbled state or enemy visibility|descriptionEnd| */
 struct MarioState* nearest_possible_mario_state_to_object(struct Object *obj) {
     if (!obj) { return NULL; }
     struct MarioState* nearest = NULL;
@@ -648,9 +628,7 @@ struct MarioState* nearest_possible_mario_state_to_object(struct Object *obj) {
     return nearest;
 }
 
-/**
- * Returns closest marioObj
- */
+/* |description|Gets the nearest player (Mario Object) to `obj`|descriptionEnd| */
 struct Object* nearest_player_to_object(struct Object *obj) {
     if (!obj) { return NULL; }
     struct MarioState* nearest = nearest_mario_state_to_object(obj);
@@ -658,9 +636,7 @@ struct Object* nearest_player_to_object(struct Object *obj) {
     return nearest->marioObj;
 }
 
-/**
- * Returns closest MarioState that's interacting with the object.
- */
+/* |description|Gets the nearest interacting Mario to `obj`|descriptionEnd| */
 struct MarioState *nearest_interacting_mario_state_to_object(struct Object *obj) {
     if (!obj) { return NULL; }
     struct MarioState *nearest = NULL;
@@ -686,9 +662,7 @@ struct MarioState *nearest_interacting_mario_state_to_object(struct Object *obj)
     return nearest;
 }
 
-/**
- * Returns closest marioObj that's interacting with the object.
- */
+/* |description|Gets the nearest interacting player (Mario Object) to `obj`|descriptionEnd| */
 struct Object *nearest_interacting_player_to_object(struct Object *obj) {
     if (!obj) { return NULL; }
     struct MarioState *nearest = nearest_interacting_mario_state_to_object(obj);
@@ -696,20 +670,14 @@ struct Object *nearest_interacting_player_to_object(struct Object *obj) {
     return nearest->marioObj;
 }
 
-/**
- * Returns whether or not the MarioState is the closet MarioState
- * to the object. 
- */
+/* |description|Checks if `m` is the nearest Mario to `obj`|descriptionEnd| */
 u8 is_nearest_mario_state_to_object(struct MarioState *m, struct Object *obj) {
     if (m == NULL || obj == NULL) { return FALSE; }
     struct MarioState *nearest = nearest_mario_state_to_object(obj);
     return m == nearest;
 }
 
-/**
- * Returns whether or not the player is the closet player
- * to the object. 
- */
+/* |description|Checks if `m` is the nearest player (Mario Object) to `obj` |descriptionEnd| */
 u8 is_nearest_player_to_object(struct Object *m, struct Object *obj) {
     if (m == NULL || obj == NULL) { return FALSE; }
     struct MarioState *nearest = nearest_mario_state_to_object(obj);
@@ -717,9 +685,7 @@ u8 is_nearest_player_to_object(struct Object *m, struct Object *obj) {
     return m == nearest->marioObj;
 }
 
-/**
- * Checks whether a point is within distance of a given point. Test is exclusive.
- */
+/* |description|Checks if a point is within `dist` of `obj`|descriptionEnd|*/
 s8 is_point_close_to_object(struct Object *obj, f32 x, f32 y, f32 z, s32 dist) {
     if (!obj) { return FALSE; }
     f32 objX = obj->oPosX;
@@ -734,9 +700,7 @@ s8 is_point_close_to_object(struct Object *obj, f32 x, f32 y, f32 z, s32 dist) {
     return FALSE;
 }
 
-/**
- * Sets an object as visible if within a certain distance of Mario's graphical position.
- */
+/* |description|Sets an object as visible if within a certain distance of Mario's graphical position|descriptionEnd| */
 void set_object_visibility(struct Object *obj, s32 dist) {
     if (!obj) { return; }
     s32 distanceToPlayer = dist_between_objects(obj, gMarioStates[0].marioObj);
@@ -747,9 +711,7 @@ void set_object_visibility(struct Object *obj, s32 dist) {
     }
 }
 
-/**
- * Turns an object towards home if Mario is not near to it.
- */
+/* |description|Turns an object towards home if Mario is not near to it|descriptionEnd| */
 s8 obj_return_home_if_safe(struct Object *obj, f32 homeX, f32 y, f32 homeZ, s32 dist) {
     if (!obj) { return FALSE; }
     f32 homeDistX = homeX - obj->oPosX;
@@ -765,9 +727,7 @@ s8 obj_return_home_if_safe(struct Object *obj, f32 homeX, f32 y, f32 homeZ, s32 
     return FALSE;
 }
 
-/**
- * Randomly displaces an objects home if RNG says to, and turns the object towards its home.
- */
+/* |description|Randomly displaces an objects home if RNG says to, and turns the object towards its home|descriptionEnd| */
 void obj_return_and_displace_home(struct Object *obj, f32 homeX, UNUSED f32 homeY, f32 homeZ, s32 baseDisp) {
     if (!obj) { return; }
     s16 angleToNewHome;
@@ -784,10 +744,10 @@ void obj_return_and_displace_home(struct Object *obj, f32 homeX, UNUSED f32 home
     obj->oMoveAngleYaw = approach_s16_symmetric(obj->oMoveAngleYaw, angleToNewHome, 320);
 }
 
-/**
- * A series of checks using sin and cos to see if a given angle is facing in the same direction
- * of a given angle, within a certain range.
- */
+/* |description|
+A series of checks using sin and cos to see if a given angle is facing in the same direction
+of a given angle, within a certain range
+|descriptionEnd|*/
 s8 obj_check_if_facing_toward_angle(u32 base, u32 goal, s16 range) {
     s16 dAngle = (u16) goal - (u16) base;
 
@@ -799,9 +759,7 @@ s8 obj_check_if_facing_toward_angle(u32 base, u32 goal, s16 range) {
     return FALSE;
 }
 
-/**
- * Finds any wall collisions and returns what the displacement vector would be.
- */
+/* |description|Finds any wall collisions and returns what the displacement vector would be.|descriptionEnd| */
 s8 obj_find_wall_displacement(Vec3f dist, f32 x, f32 y, f32 z, f32 radius) {
     struct WallCollisionData hitbox;
     UNUSED u8 filler[0x20];
@@ -822,10 +780,9 @@ s8 obj_find_wall_displacement(Vec3f dist, f32 x, f32 y, f32 z, f32 radius) {
     }
 }
 
-/**
- * Spawns a number of coins at the location of an object
- * with a random forward velocity, y velocity, and direction.
- */
+/* |description|
+Spawns a number of coins at the location of an object with a random forward velocity, y velocity, and direction
+|descriptionEnd| */
 void obj_spawn_yellow_coins(struct Object *obj, s8 nCoins) {
     if (!o) { return; }
     if (!obj) { return; }
@@ -844,9 +801,7 @@ void obj_spawn_yellow_coins(struct Object *obj, s8 nCoins) {
     rng_position_finish();
 }
 
-/**
- * Controls whether certain objects should flicker/when to despawn.
- */
+/* |description|Controls whether certain objects should flicker/when to despawn|descriptionEnd| */
 s8 obj_flicker_and_disappear(struct Object *obj, s16 lifeSpan) {
     if (!obj) { return FALSE; }
     if (obj->oTimer < lifeSpan) {
@@ -867,9 +822,7 @@ s8 obj_flicker_and_disappear(struct Object *obj, s16 lifeSpan) {
     return FALSE;
 }
 
-/**
- * Checks if a given room is Mario's current room, even if on an object.
- */
+/* |description|Checks if a given room is Mario's current room, even if on an object|descriptionEnd| */
 s8 current_mario_room_check(s16 room) {
     s16 result;
 
@@ -924,9 +877,10 @@ s16 trigger_obj_dialog_when_facing(struct MarioState* m, s32 *inDialog, s16 dial
     return 0;
 }
 
-/**
- *Checks if a floor is one that should cause an object to "die".
- */
+/* |description|
+Checks if `floor`'s type is burning or death plane and if so change the
+current object's action accordingly
+|descriptionEnd| */
 void obj_check_floor_death(s16 collisionFlags, struct Surface *floor) {
     if (!o) { return; }
     if (floor == NULL) { return; }
@@ -946,10 +900,10 @@ void obj_check_floor_death(s16 collisionFlags, struct Surface *floor) {
     }
 }
 
-/**
- * Controls an object dying in lava by creating smoke, sinking the object, playing
- * audio, and eventually despawning it. Returns TRUE when the obj is dead.
- */
+/* |description|
+Controls an object dying in lava by creating smoke, sinking the object, playing
+audio, and eventually despawning it. Returns TRUE when the obj is dead
+|descriptionEnd| */
 s8 obj_lava_death(void) {
     if (!o) { return 0; }
     struct Object *deathSmoke;
@@ -976,9 +930,7 @@ s8 obj_lava_death(void) {
     return FALSE;
 }
 
-/**
- * Spawns an orange number object relatively, such as those that count up for secrets.
- */
+/* |description|Spawns an orange number object relatively, such as those that count up for secrets.|descriptionEnd| */
 void spawn_orange_number(s8 behParam, s16 relX, s16 relY, s16 relZ) {
     struct Object *orangeNumber;
     orangeNumber = spawn_object_relative(behParam, relX, relY, relZ, o, MODEL_NUMBER, bhvOrangeNumber);

@@ -1574,8 +1574,7 @@ void common_slide_action(struct MarioState *m, u32 endAction, u32 airAction, s32
 Builds on `common_slide_action` by also allowing Mario to jump out of a slide if A is pressed after a short delay.
 If the sliding slows enough, Mario transitions to a specified stopping action
 |descriptionEnd| */
-s32 common_slide_action_with_jump(struct MarioState *m, u32 stopAction, u32 jumpAction, u32 airAction,
-                                  s32 animation) {
+s32 common_slide_action_with_jump(struct MarioState *m, u32 stopAction, u32 jumpAction, u32 airAction, s32 animation) {
     if (!m) { return FALSE; }
     if (m->actionTimer == 5) {
         if (m->input & INPUT_A_PRESSED) {
@@ -2124,10 +2123,10 @@ s32 act_backflip_land(struct MarioState *m) {
 }
 
 /* |description|
-Handles a special landing in quicksand after a jump. Over several frames, Mario emerges from the quicksand. First part of the animation reduces his quicksand depth. Ends with a normal landing action or transitions back to air if he leaves the ground
+Handles a special landing in quicksand after a jump. Over several frames, Mario emerges from the quicksand.
+First part of the animation reduces his quicksand depth. Ends with a normal landing action or transitions back to air if he leaves the ground
 |descriptionEnd| */
-s32 quicksand_jump_land_action(struct MarioState *m, s32 animation1, s32 animation2, u32 endAction,
-                               u32 airAction) {
+s32 quicksand_jump_land_action(struct MarioState *m, s32 animation1, s32 animation2, u32 endAction, u32 airAction) {
     if (!m) { return FALSE; }
     if (m->actionTimer++ < 6) {
         m->quicksandDepth -= (7 - m->actionTimer) * 0.8f;

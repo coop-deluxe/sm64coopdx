@@ -78,15 +78,15 @@ bool camera_config_is_x_inverted(void);
 /* |description|Checks if camera Y is inverted|descriptionEnd| */
 bool camera_config_is_y_inverted(void);
 /* |description|Gets camera X sensitivity|descriptionEnd| */
-u32  camera_config_get_x_sensitivity(void);
+u32 camera_config_get_x_sensitivity(void);
 /* |description|Gets camera Y sensitivity|descriptionEnd| */
-u32  camera_config_get_y_sensitivity(void);
+u32 camera_config_get_y_sensitivity(void);
 /* |description|Gets camera aggression|descriptionEnd| */
-u32  camera_config_get_aggression(void);
+u32 camera_config_get_aggression(void);
 /* |description|Gets camera pan level|descriptionEnd| */
-u32  camera_config_get_pan_level(void);
+u32 camera_config_get_pan_level(void);
 /* |description|Gets camera deceleration|descriptionEnd| */
-u32  camera_config_get_deceleration(void);
+u32 camera_config_get_deceleration(void);
 /* |description|Gets if the L button will center the camera|descriptionEnd| */
 bool camera_config_get_centering(void);
 
