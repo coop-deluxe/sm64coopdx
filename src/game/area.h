@@ -6,6 +6,7 @@
 #include "types.h"
 #include "camera.h"
 #include "engine/graph_node.h"
+#include "level_update.h"
 
 struct WarpNode
 {
