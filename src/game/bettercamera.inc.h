@@ -112,6 +112,7 @@ s16 newcam_aggression ; //How much the camera tries to centre itself to Mario's 
 s16 newcam_degrade = 1;
 s16 newcam_analogue = 0; //Wether to accept inputs from a player 2 joystick, and then disables C button input.
 s16 newcam_distance_values[] = {750,1250,2000};
+u8 newcam_distance_index = 0;
 u8 newcam_active = 0; // basically the thing that governs if newcam is on.
 u8 newcam_mouse = 0;
 u16 newcam_mode;
@@ -328,6 +329,12 @@ static void newcam_rotate_button(void) {
     // Used section for coop
     } else if (newcam_modeflags & NC_FLAG_XTURN) {
         //Standard camera movement
+        // Buzz if the camera can't move due to being locked
+        if (gPlayer1Controller->buttonPressed & (L_CBUTTONS | R_CBUTTONS) && newcam_direction_locked) {
+#ifndef nosound
+            play_sound(SOUND_MENU_CAMERA_BUZZ, gGlobalSoundSource);
+#endif
+        }
         if ((gPlayer1Controller->buttonDown & L_CBUTTONS) && newcam_analogue == 0) {
             newcam_yaw_accel = newcam_adjust_value(newcam_yaw_accel, -accel, -100);
         } else if ((gPlayer1Controller->buttonDown & R_CBUTTONS) && newcam_analogue == 0) {
@@ -355,26 +362,29 @@ static void newcam_rotate_button(void) {
 
     newcam_framessincec[0] ++;
     newcam_framessincec[1] ++;
-    if ((gPlayer1Controller->buttonPressed & L_CBUTTONS) && newcam_modeflags & NC_FLAG_XTURN && !(newcam_modeflags & NC_FLAG_8D) && newcam_analogue == 0) {
-        if (newcam_framessincec[0] < 6) {
-            newcam_yaw_target = newcam_yaw+(ivrt(0)*0x3000);
-            newcam_centering = 1;
+    if (!newcam_direction_locked) {
+        if ((gPlayer1Controller->buttonPressed & L_CBUTTONS) && newcam_modeflags & NC_FLAG_XTURN && !(newcam_modeflags & NC_FLAG_8D) && newcam_analogue == 0) {
+            if (newcam_framessincec[0] < 6) {
+                newcam_yaw_target = newcam_yaw+(ivrt(0)*0x3000);
+                newcam_centering = 1;
 #ifndef nosound
-            play_sound(SOUND_MENU_CAMERA_TURN, gGlobalSoundSource);
+                play_sound(SOUND_MENU_CAMERA_TURN, gGlobalSoundSource);
 #endif
+            }
+            newcam_framessincec[0] = 0;
         }
-        newcam_framessincec[0] = 0;
-    }
-    if ((gPlayer1Controller->buttonPressed & R_CBUTTONS) && newcam_modeflags & NC_FLAG_XTURN && !(newcam_modeflags & NC_FLAG_8D) && newcam_analogue == 0) {
-        if (newcam_framessincec[1] < 6) {
-            newcam_yaw_target = newcam_yaw-(ivrt(0)*0x3000);
-            newcam_centering = 1;
+        if ((gPlayer1Controller->buttonPressed & R_CBUTTONS) && newcam_modeflags & NC_FLAG_XTURN && !(newcam_modeflags & NC_FLAG_8D) && newcam_analogue == 0) {
+            if (newcam_framessincec[1] < 6) {
+                newcam_yaw_target = newcam_yaw-(ivrt(0)*0x3000);
+                newcam_centering = 1;
 #ifndef nosound
-            play_sound(SOUND_MENU_CAMERA_TURN, gGlobalSoundSource);
+                play_sound(SOUND_MENU_CAMERA_TURN, gGlobalSoundSource);
 #endif
+            }
+            newcam_framessincec[1] = 0;
         }
-        newcam_framessincec[1] = 0;
     }
+
 
 
     //There's not much point in keeping this behind a check, but it wouldn't hurt, just incase any 2player shenanigans ever happen, it makes it easy to disable.
@@ -432,8 +442,18 @@ static void newcam_rotate_button(void) {
             newcam_yaw_accel = snap_to_45_degrees(newcam_yaw_accel);
         }
         // Make dpad left/right increment 45 degrees
-        else if (gPlayer1Controller->buttonPressed & L_JPAD) { newcam_yaw += ivrt(0)*DEGREES(45); }
-        else if (gPlayer1Controller->buttonPressed & R_JPAD) { newcam_yaw -= ivrt(0)*DEGREES(45); }
+        else if (gPlayer1Controller->buttonPressed & L_JPAD) {
+            newcam_yaw += ivrt(0)*DEGREES(45);
+#ifndef nosound
+            play_sound(SOUND_MENU_CAMERA_TURN, gGlobalSoundSource);
+#endif
+        }
+        else if (gPlayer1Controller->buttonPressed & R_JPAD) {
+            newcam_yaw -= ivrt(0)*DEGREES(45);
+#ifndef nosound
+            play_sound(SOUND_MENU_CAMERA_TURN, gGlobalSoundSource);
+#endif
+        }
         // Make dpad down lock the current camera direction
         else if (gPlayer1Controller->buttonPressed & D_JPAD) {
             newcam_direction_locked = !newcam_direction_locked;
@@ -441,7 +461,7 @@ static void newcam_rotate_button(void) {
     }
 
     if (newcam_use_dpad && newcam_direction_locked) {
-        newcam_yaw_accel = newcam_prev_yaw_accel;
+        newcam_yaw_accel = 0;
     }
 }
 
@@ -474,12 +494,16 @@ static void newcam_zoom_button(void) {
         play_sound(SOUND_MENU_CLICK_CHANGE_VIEW, gGlobalSoundSource);
 #endif
 
-        if (newcam_distance_target == newcam_distance_values[0])
+        if (newcam_distance_target == newcam_distance_values[0]) {
             newcam_distance_target = newcam_distance_values[1];
-        else if (newcam_distance_target == newcam_distance_values[1])
+            newcam_distance_index = 1;
+        } else if (newcam_distance_target == newcam_distance_values[1]) {
             newcam_distance_target = newcam_distance_values[2];
-        else
+            newcam_distance_index = 2;
+        } else {
             newcam_distance_target = newcam_distance_values[0];
+            newcam_distance_index = 0;
+        }
     }
 
     if (newcam_centering && newcam_modeflags & NC_FLAG_XTURN) {
