@@ -12203,11 +12203,13 @@ s32 snap_to_45_degrees(s16 angle) {
 
 void romhack_camera_init_settings(void) {
     if (gRomhackCameraSettings.modsOnly) { return; }
-    enum RomhackCameraOverride override = RCO_DISABLE;
+    enum RomhackCameraOverride override = RCO_NONE;
     if (configEnableRomhackCamera == RCE_AUTOMATIC) {
         override = configRomhackCameraBowserFights ? RCO_ALL : RCO_ALL_EXCEPT_BOWSER;
     } else if (configEnableRomhackCamera == RCE_ON) {
         override = configRomhackCameraBowserFights ? RCO_ALL_INCLUDING_VANILLA : RCO_ALL_VANILLA_EXCEPT_BOWSER;
+    } else if (configEnableRomhackCamera == RCE_OFF && gRomhackCameraSettings.enable != RCO_NONE) {
+        override = RCO_DISABLE;
     }
 
     gRomhackCameraSettings.enable = override;
