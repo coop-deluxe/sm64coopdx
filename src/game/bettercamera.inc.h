@@ -302,7 +302,6 @@ static int ivrt(u8 axis) {
 static void newcam_rotate_button(void) {
     f32 intendedXMag;
     f32 intendedYMag;
-    s16 newcam_prev_yaw_accel = newcam_yaw_accel;
 
     // Unused section for coop
     if ((newcam_modeflags & NC_FLAG_8D || newcam_modeflags & NC_FLAG_4D) && newcam_modeflags & NC_FLAG_XTURN) {
