@@ -65,13 +65,13 @@ const LevelScript level_main_menu_entry_2[] = {
     LOAD_MIO0(/*seg*/ 0x07, _menu_segment_7SegmentRomStart, _menu_segment_7SegmentRomEnd),
     ALLOC_LEVEL_POOL(),
 
-    AREA(/*index*/ 2, geo_menu_act_selector_strings),
+    AREA(/*index*/ (MAX_AREAS - 1), geo_menu_act_selector_strings),
         OBJECT(/*model*/ MODEL_NONE, /*pos*/ 0, -100, 0, /*angle*/ 0, 0, 0, /*behParam*/ 0x04000000, /*beh*/ bhvActSelector),
         TERRAIN(/*terrainData*/ main_menu_seg7_collision),
     END_AREA(),
 
     FREE_LEVEL_POOL(),
-    LOAD_AREA(/*area*/ 2),
+    LOAD_AREA(/*area*/ (MAX_AREAS - 1)),
 
     // sVisibleStars is set to 0 during FIXED_LOAD above on N64, but not on PC-port.
     // lvl_init_act_selector_values_and_stars must be called here otherwise the
