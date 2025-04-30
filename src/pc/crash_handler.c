@@ -149,7 +149,9 @@ static ULONG CaptureStackWalkBackTrace(CONTEXT* ctx, DWORD FramesToSkip, DWORD F
     #define ARCHITECTURE_STR "32-bit"
 #endif
 
+#ifndef __USE_GNU
 #define __USE_GNU
+#endif
 
 #include <signal.h>
 #include <execinfo.h>

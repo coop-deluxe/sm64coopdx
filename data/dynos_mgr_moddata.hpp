@@ -275,10 +275,10 @@ private:
 };
 
 // - `_ItemAllocator_` should be a function of signature: `T *_ItemAllocator_(u32 size)`
-//   allocates buffer of size `_MaxItemSize_`, but does not edit its contents (internal size is 0) 
+//   allocates buffer of size `_MaxItemSize_`, but does not edit its contents (internal size is 0)
 // - `_ItemResize_` should be a function of signature: `void _ItemResize_(T *ptr, u32 oldSize, u32 newSize)`
-//   updates the contents of `ptr`, but does not allocate nor free memory 
+//   updates the contents of `ptr`, but does not allocate nor free memory
 // - `_ItemDeallocator_` should be a function of signature: `void _ItemDeallocator_(T *ptr, u32 size)`
 //   frees buffer of size `size`
 #define DEFINE_MODS_DATA(_Name_, _Type_, _MaxPoolSize_, _MaxItemSize_, _ItemAllocator_, _ItemResize_, _ItemDeallocator_) \
-static ModsData<_Type_, _MaxPoolSize_, _MaxItemSize_, typeof(_ItemAllocator_), typeof(_ItemResize_), typeof(_ItemDeallocator_)> _Name_(_ItemAllocator_, _ItemResize_, _ItemDeallocator_)
+static ModsData<_Type_, _MaxPoolSize_, _MaxItemSize_, decltype(_ItemAllocator_), decltype(_ItemResize_), decltype(_ItemDeallocator_)> _Name_(_ItemAllocator_, _ItemResize_, _ItemDeallocator_)
