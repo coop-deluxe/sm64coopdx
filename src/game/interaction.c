@@ -1141,7 +1141,7 @@ u32 interact_warp_door(struct MarioState *m, UNUSED u32 interactType, struct Obj
 u32 get_door_save_file_flag(struct Object *door) {
     if (door == NULL) { return 0; }
     u32 saveFileFlag = 0;
-    s16 requiredNumStars = door->oBehParams >> 24;
+    s16 requiredNumStars = (u32)door->oBehParams >> 24;
 
     s16 isCcmDoor = door->oPosX < 0.0f;
     s16 isPssDoor = door->oPosY > 500.0f;
@@ -1182,7 +1182,7 @@ u32 get_door_save_file_flag(struct Object *door) {
 u32 interact_door(struct MarioState *m, UNUSED u32 interactType, struct Object *o) {
     if (!m || !o) { return FALSE; }
     if (m->playerIndex != 0 && o == NULL) { return FALSE; }
-    s16 requiredNumStars = o->oBehParams >> 24;
+    s16 requiredNumStars = (u32)o->oBehParams >> 24;
     s16 numStars = save_file_get_total_star_count(gCurrSaveFileNum - 1, COURSE_MIN - 1, COURSE_MAX - 1);
 
     if (o->oAction != 0) { return FALSE; }
