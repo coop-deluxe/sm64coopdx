@@ -169,7 +169,7 @@ struct GraphNodeLevelOfDetail *init_graph_node_render_range(struct DynamicPool *
  */
 struct GraphNodeSwitchCase *init_graph_node_switch_case(struct DynamicPool *pool,
                                                         struct GraphNodeSwitchCase *graphNode,
-                                                        s16 numCases, s16 selectedCase,
+                                                        s16 parameter, s16 selectedCase,
                                                         GraphNodeFunc nodeFunc, s32 unused) {
     if (pool != NULL) {
         graphNode = dynamic_pool_alloc(pool, sizeof(struct GraphNodeSwitchCase));
@@ -177,7 +177,7 @@ struct GraphNodeSwitchCase *init_graph_node_switch_case(struct DynamicPool *pool
 
     if (graphNode != NULL) {
         init_scene_graph_node_links(&graphNode->fnNode.node, GRAPH_NODE_TYPE_SWITCH_CASE);
-        graphNode->numCases = numCases;
+        graphNode->parameter = parameter;
         graphNode->selectedCase = selectedCase;
         graphNode->fnNode.func = nodeFunc;
         graphNode->unused = unused;
