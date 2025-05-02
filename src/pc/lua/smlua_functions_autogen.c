@@ -18584,13 +18584,13 @@ int smlua_func_landing_step(lua_State* L) {
     if (lua_isnil(L, 1)) { return 0; }
     struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "landing_step"); return 0; }
-    s32 arg1 = smlua_to_integer(L, 2);
+    s32 animID = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "landing_step"); return 0; }
     u32 action = smlua_to_integer(L, 3);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "landing_step"); return 0; }
 
-    extern s32 landing_step(struct MarioState *m, s32 arg1, u32 action);
-    lua_pushinteger(L, landing_step(m, arg1, action));
+    extern s32 landing_step(struct MarioState *m, s32 animID, u32 action);
+    lua_pushinteger(L, landing_step(m, animID, action));
 
     return 1;
 }
@@ -22164,13 +22164,13 @@ int smlua_func_cur_obj_spin_all_dimensions(lua_State* L) {
         return 0;
     }
 
-    f32 arg0 = smlua_to_number(L, 1);
+    f32 pitchSpeed = smlua_to_number(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "cur_obj_spin_all_dimensions"); return 0; }
-    f32 arg1 = smlua_to_number(L, 2);
+    f32 rollSpeed = smlua_to_number(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "cur_obj_spin_all_dimensions"); return 0; }
 
-    extern void cur_obj_spin_all_dimensions(f32 arg0, f32 arg1);
-    cur_obj_spin_all_dimensions(arg0, arg1);
+    extern void cur_obj_spin_all_dimensions(f32 pitchSpeed, f32 rollSpeed);
+    cur_obj_spin_all_dimensions(pitchSpeed, rollSpeed);
 
     return 1;
 }
@@ -22240,11 +22240,11 @@ int smlua_func_cur_obj_init_anim_extend(lua_State* L) {
         return 0;
     }
 
-    s32 arg0 = smlua_to_integer(L, 1);
+    s32 animIndex = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "cur_obj_init_anim_extend"); return 0; }
 
-    extern void cur_obj_init_anim_extend(s32 arg0);
-    cur_obj_init_anim_extend(arg0);
+    extern void cur_obj_init_anim_extend(s32 animIndex);
+    cur_obj_init_anim_extend(animIndex);
 
     return 1;
 }
@@ -22258,11 +22258,11 @@ int smlua_func_cur_obj_init_anim_and_check_if_end(lua_State* L) {
         return 0;
     }
 
-    s32 arg0 = smlua_to_integer(L, 1);
+    s32 animIndex = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "cur_obj_init_anim_and_check_if_end"); return 0; }
 
-    extern s32 cur_obj_init_anim_and_check_if_end(s32 arg0);
-    lua_pushinteger(L, cur_obj_init_anim_and_check_if_end(arg0));
+    extern s32 cur_obj_init_anim_and_check_if_end(s32 animIndex);
+    lua_pushinteger(L, cur_obj_init_anim_and_check_if_end(animIndex));
 
     return 1;
 }
@@ -22276,13 +22276,13 @@ int smlua_func_cur_obj_init_anim_check_frame(lua_State* L) {
         return 0;
     }
 
-    s32 arg0 = smlua_to_integer(L, 1);
+    s32 animIndex = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "cur_obj_init_anim_check_frame"); return 0; }
-    s32 arg1 = smlua_to_integer(L, 2);
+    s32 animFrame = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "cur_obj_init_anim_check_frame"); return 0; }
 
-    extern s32 cur_obj_init_anim_check_frame(s32 arg0, s32 arg1);
-    lua_pushinteger(L, cur_obj_init_anim_check_frame(arg0, arg1));
+    extern s32 cur_obj_init_anim_check_frame(s32 animIndex, s32 animFrame);
+    lua_pushinteger(L, cur_obj_init_anim_check_frame(animIndex, animFrame));
 
     return 1;
 }
@@ -22296,11 +22296,11 @@ int smlua_func_cur_obj_set_anim_if_at_end(lua_State* L) {
         return 0;
     }
 
-    s32 arg0 = smlua_to_integer(L, 1);
+    s32 animIndex = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "cur_obj_set_anim_if_at_end"); return 0; }
 
-    extern s32 cur_obj_set_anim_if_at_end(s32 arg0);
-    lua_pushinteger(L, cur_obj_set_anim_if_at_end(arg0));
+    extern s32 cur_obj_set_anim_if_at_end(s32 animIndex);
+    lua_pushinteger(L, cur_obj_set_anim_if_at_end(animIndex));
 
     return 1;
 }
@@ -22314,15 +22314,15 @@ int smlua_func_cur_obj_play_sound_at_anim_range(lua_State* L) {
         return 0;
     }
 
-    s8 arg0 = smlua_to_integer(L, 1);
+    s8 startFrame = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "cur_obj_play_sound_at_anim_range"); return 0; }
-    s8 arg1 = smlua_to_integer(L, 2);
+    s8 endFrame = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "cur_obj_play_sound_at_anim_range"); return 0; }
     u32 sound = smlua_to_integer(L, 3);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "cur_obj_play_sound_at_anim_range"); return 0; }
 
-    extern s32 cur_obj_play_sound_at_anim_range(s8 arg0, s8 arg1, u32 sound);
-    lua_pushinteger(L, cur_obj_play_sound_at_anim_range(arg0, arg1, sound));
+    extern s32 cur_obj_play_sound_at_anim_range(s8 startFrame, s8 endFrame, u32 sound);
+    lua_pushinteger(L, cur_obj_play_sound_at_anim_range(startFrame, endFrame, sound));
 
     return 1;
 }

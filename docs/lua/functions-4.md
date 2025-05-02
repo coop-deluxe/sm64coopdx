@@ -3336,6 +3336,9 @@ Executes Mario's current object action by first checking common object cancels, 
 
 ## [check_common_idle_cancels](#check_common_idle_cancels)
 
+### Description
+Checks for and handles common conditions that would cancel Mario's current idle action.
+
 ### Lua Example
 `local integerValue = check_common_idle_cancels(m)`
 
@@ -3356,6 +3359,9 @@ Executes Mario's current object action by first checking common object cancels, 
 
 ## [check_common_hold_idle_cancels](#check_common_hold_idle_cancels)
 
+### Description
+Checks for and handles common conditions that would cancel Mario's current idle holding object action.
+
 ### Lua Example
 `local integerValue = check_common_hold_idle_cancels(m)`
 
@@ -3375,6 +3381,9 @@ Executes Mario's current object action by first checking common object cancels, 
 <br />
 
 ## [play_anim_sound](#play_anim_sound)
+
+### Description
+Plays a `sound` if Mario's action state and animation frame match the parameters
 
 ### Lua Example
 `play_anim_sound(m, actionState, animFrame, sound)`
@@ -3399,6 +3408,9 @@ Executes Mario's current object action by first checking common object cancels, 
 
 ## [stopping_step](#stopping_step)
 
+### Description
+Runs a stationary step, sets the character animation, and changes action if the animation has ended
+
 ### Lua Example
 `stopping_step(m, animID, action)`
 
@@ -3421,27 +3433,33 @@ Executes Mario's current object action by first checking common object cancels, 
 
 ## [landing_step](#landing_step)
 
+### Description
+Runs a stationary step, sets the character animation, and changes action if the animation has ended
+
 ### Lua Example
-`local integerValue = landing_step(m, arg1, action)`
+`local integerValue = landing_step(m, animID, action)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | m | [MarioState](structs.md#MarioState) |
-| arg1 | `integer` |
+| animID | `integer` |
 | action | `integer` |
 
 ### Returns
 - `integer`
 
 ### C Prototype
-`s32 landing_step(struct MarioState *m, s32 arg1, u32 action);`
+`s32 landing_step(struct MarioState *m, s32 animID, u32 action);`
 
 [:arrow_up_small:](#)
 
 <br />
 
 ## [check_common_landing_cancels](#check_common_landing_cancels)
+
+### Description
+Checks for and handles common conditions that would cancel Mario's current landing action.
 
 ### Lua Example
 `local integerValue = check_common_landing_cancels(m, action)`
@@ -3464,6 +3482,9 @@ Executes Mario's current object action by first checking common object cancels, 
 
 ## [check_common_stationary_cancels](#check_common_stationary_cancels)
 
+### Description
+Checks for and handles common conditions that would cancel Mario's current stationary action.
+
 ### Lua Example
 `local integerValue = check_common_stationary_cancels(m)`
 
@@ -3483,6 +3504,9 @@ Executes Mario's current object action by first checking common object cancels, 
 <br />
 
 ## [mario_execute_stationary_action](#mario_execute_stationary_action)
+
+### Description
+Executes Mario's current object action by first checking common stationary cancels, then updating quicksand state. Dispatches to the appropriate action function, such as idle, sleeping, crouching, ect
 
 ### Lua Example
 `local integerValue = mario_execute_stationary_action(m)`
@@ -3510,6 +3534,9 @@ Executes Mario's current object action by first checking common object cancels, 
 
 ## [set_swimming_at_surface_particles](#set_swimming_at_surface_particles)
 
+### Description
+Sets Mario's particle flags if he's at the surface of a water box
+
 ### Lua Example
 `set_swimming_at_surface_particles(m, particleFlag)`
 
@@ -3530,6 +3557,9 @@ Executes Mario's current object action by first checking common object cancels, 
 <br />
 
 ## [perform_water_full_step](#perform_water_full_step)
+
+### Description
+Performs a full water movement step where ceilings, floors, and walls are handled. Generally, you should use `perform_water_step` for the full step functionality
 
 ### Lua Example
 `local integerValue = perform_water_full_step(m, nextPos)`
@@ -3552,6 +3582,9 @@ Executes Mario's current object action by first checking common object cancels, 
 
 ## [apply_water_current](#apply_water_current)
 
+### Description
+Calculates a water current and outputs it in `step`
+
 ### Lua Example
 `apply_water_current(m, step)`
 
@@ -3573,6 +3606,9 @@ Executes Mario's current object action by first checking common object cancels, 
 
 ## [perform_water_step](#perform_water_step)
 
+### Description
+Performs a water step
+
 ### Lua Example
 `local integerValue = perform_water_step(m)`
 
@@ -3593,6 +3629,9 @@ Executes Mario's current object action by first checking common object cancels, 
 
 ## [float_surface_gfx](#float_surface_gfx)
 
+### Description
+Controls the bobbing that happens when you swim near the water surface
+
 ### Lua Example
 `float_surface_gfx(m)`
 
@@ -3612,6 +3651,9 @@ Executes Mario's current object action by first checking common object cancels, 
 <br />
 
 ## [mario_execute_submerged_action](#mario_execute_submerged_action)
+
+### Description
+Executes Mario's current submerged action by first checking common submerged cancels, then setting quicksand depth and head angles to 0. Dispatches to the appropriate action function, such as breaststroke, flutterkick, water punch, ect
 
 ### Lua Example
 `local integerValue = mario_execute_submerged_action(m)`

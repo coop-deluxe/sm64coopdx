@@ -910,6 +910,9 @@ Spawns an orange number object relatively, such as those that count up for secre
 
 ## [obj_is_rendering_enabled](#obj_is_rendering_enabled)
 
+### Description
+Checks if the current object's rendering is enabled
+
 ### Lua Example
 `local integerValue = obj_is_rendering_enabled()`
 
@@ -928,6 +931,9 @@ Spawns an orange number object relatively, such as those that count up for secre
 
 ## [obj_get_pitch_from_vel](#obj_get_pitch_from_vel)
 
+### Description
+Calculates the current object's theoretical pitch from forward velocity and vertical velocity
+
 ### Lua Example
 `local integerValue = obj_get_pitch_from_vel()`
 
@@ -945,6 +951,9 @@ Spawns an orange number object relatively, such as those that count up for secre
 <br />
 
 ## [obj_set_dist_from_home](#obj_set_dist_from_home)
+
+### Description
+Sets the current object's position to the home with an additional forward vector multiplied by `distFromHome`
 
 ### Lua Example
 `obj_set_dist_from_home(distFromHome)`
@@ -965,6 +974,9 @@ Spawns an orange number object relatively, such as those that count up for secre
 <br />
 
 ## [obj_is_near_to_and_facing_mario](#obj_is_near_to_and_facing_mario)
+
+### Description
+Checks if the current object is in `maxDist` to `m` and the angle difference is less than `maxAngleDiff`
 
 ### Lua Example
 `local integerValue = obj_is_near_to_and_facing_mario(m, maxDist, maxAngleDiff)`
@@ -987,6 +999,9 @@ Spawns an orange number object relatively, such as those that count up for secre
 <br />
 
 ## [platform_on_track_update_pos_or_spawn_ball](#platform_on_track_update_pos_or_spawn_ball)
+
+### Description
+Handles the platform on track's trajectory marker ball spawning
 
 ### Lua Example
 `platform_on_track_update_pos_or_spawn_ball(ballIndex, x, y, z)`
@@ -1011,26 +1026,32 @@ Spawns an orange number object relatively, such as those that count up for secre
 
 ## [cur_obj_spin_all_dimensions](#cur_obj_spin_all_dimensions)
 
+### Description
+Spins an object in every direction with `pitchSpeed` and `rollSpeed`
+
 ### Lua Example
-`cur_obj_spin_all_dimensions(arg0, arg1)`
+`cur_obj_spin_all_dimensions(pitchSpeed, rollSpeed)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| arg0 | `number` |
-| arg1 | `number` |
+| pitchSpeed | `number` |
+| rollSpeed | `number` |
 
 ### Returns
 - None
 
 ### C Prototype
-`void cur_obj_spin_all_dimensions(f32 arg0, f32 arg1);`
+`void cur_obj_spin_all_dimensions(f32 pitchSpeed, f32 rollSpeed);`
 
 [:arrow_up_small:](#)
 
 <br />
 
 ## [obj_rotate_yaw_and_bounce_off_walls](#obj_rotate_yaw_and_bounce_off_walls)
+
+### Description
+Approaches the current object's yaw to `targetYaw` by `turnAmount`
 
 ### Lua Example
 `obj_rotate_yaw_and_bounce_off_walls(targetYaw, turnAmount)`
@@ -1053,6 +1074,9 @@ Spawns an orange number object relatively, such as those that count up for secre
 
 ## [obj_get_pitch_to_home](#obj_get_pitch_to_home)
 
+### Description
+Gets the current object's theoretical pitch to the home with the lateral distance from it
+
 ### Lua Example
 `local integerValue = obj_get_pitch_to_home(latDistToHome)`
 
@@ -1072,6 +1096,9 @@ Spawns an orange number object relatively, such as those that count up for secre
 <br />
 
 ## [obj_compute_vel_from_move_pitch](#obj_compute_vel_from_move_pitch)
+
+### Description
+Computes the current object's forward vel and vertical velocity with the move angle pitch
 
 ### Lua Example
 `obj_compute_vel_from_move_pitch(speed)`
@@ -1093,19 +1120,22 @@ Spawns an orange number object relatively, such as those that count up for secre
 
 ## [cur_obj_init_anim_extend](#cur_obj_init_anim_extend)
 
+### Description
+Initializes an animation for the current object and loops back around if the animation ends
+
 ### Lua Example
-`cur_obj_init_anim_extend(arg0)`
+`cur_obj_init_anim_extend(animIndex)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| arg0 | `integer` |
+| animIndex | `integer` |
 
 ### Returns
 - None
 
 ### C Prototype
-`void cur_obj_init_anim_extend(s32 arg0);`
+`void cur_obj_init_anim_extend(s32 animIndex);`
 
 [:arrow_up_small:](#)
 
@@ -1113,19 +1143,22 @@ Spawns an orange number object relatively, such as those that count up for secre
 
 ## [cur_obj_init_anim_and_check_if_end](#cur_obj_init_anim_and_check_if_end)
 
+### Description
+Initializes an animation for the current object and returns if the animation has ended
+
 ### Lua Example
-`local integerValue = cur_obj_init_anim_and_check_if_end(arg0)`
+`local integerValue = cur_obj_init_anim_and_check_if_end(animIndex)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| arg0 | `integer` |
+| animIndex | `integer` |
 
 ### Returns
 - `integer`
 
 ### C Prototype
-`s32 cur_obj_init_anim_and_check_if_end(s32 arg0);`
+`s32 cur_obj_init_anim_and_check_if_end(s32 animIndex);`
 
 [:arrow_up_small:](#)
 
@@ -1133,20 +1166,23 @@ Spawns an orange number object relatively, such as those that count up for secre
 
 ## [cur_obj_init_anim_check_frame](#cur_obj_init_anim_check_frame)
 
+### Description
+Initializes an animation for the current object and checks if the animation frame is a specific frame
+
 ### Lua Example
-`local integerValue = cur_obj_init_anim_check_frame(arg0, arg1)`
+`local integerValue = cur_obj_init_anim_check_frame(animIndex, animFrame)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| arg0 | `integer` |
-| arg1 | `integer` |
+| animIndex | `integer` |
+| animFrame | `integer` |
 
 ### Returns
 - `integer`
 
 ### C Prototype
-`s32 cur_obj_init_anim_check_frame(s32 arg0, s32 arg1);`
+`s32 cur_obj_init_anim_check_frame(s32 animIndex, s32 animFrame);`
 
 [:arrow_up_small:](#)
 
@@ -1154,19 +1190,22 @@ Spawns an orange number object relatively, such as those that count up for secre
 
 ## [cur_obj_set_anim_if_at_end](#cur_obj_set_anim_if_at_end)
 
+### Description
+Sets the current object's animation to a new animation if the current animation has ended
+
 ### Lua Example
-`local integerValue = cur_obj_set_anim_if_at_end(arg0)`
+`local integerValue = cur_obj_set_anim_if_at_end(animIndex)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| arg0 | `integer` |
+| animIndex | `integer` |
 
 ### Returns
 - `integer`
 
 ### C Prototype
-`s32 cur_obj_set_anim_if_at_end(s32 arg0);`
+`s32 cur_obj_set_anim_if_at_end(s32 animIndex);`
 
 [:arrow_up_small:](#)
 
@@ -1174,27 +1213,33 @@ Spawns an orange number object relatively, such as those that count up for secre
 
 ## [cur_obj_play_sound_at_anim_range](#cur_obj_play_sound_at_anim_range)
 
+### Description
+Plays a sound when the animation frame is in a range
+
 ### Lua Example
-`local integerValue = cur_obj_play_sound_at_anim_range(arg0, arg1, sound)`
+`local integerValue = cur_obj_play_sound_at_anim_range(startFrame, endFrame, sound)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| arg0 | `integer` |
-| arg1 | `integer` |
+| startFrame | `integer` |
+| endFrame | `integer` |
 | sound | `integer` |
 
 ### Returns
 - `integer`
 
 ### C Prototype
-`s32 cur_obj_play_sound_at_anim_range(s8 arg0, s8 arg1, u32 sound);`
+`s32 cur_obj_play_sound_at_anim_range(s8 startFrame, s8 endFrame, u32 sound);`
 
 [:arrow_up_small:](#)
 
 <br />
 
 ## [obj_turn_pitch_toward_mario](#obj_turn_pitch_toward_mario)
+
+### Description
+Turns the current object towards `m` by `turnAmount` and subtracts and adds `targetOffsetY` to the Y position, effectively cancelling any effect out
 
 ### Lua Example
 `local integerValue = obj_turn_pitch_toward_mario(m, targetOffsetY, turnAmount)`
@@ -1218,6 +1263,9 @@ Spawns an orange number object relatively, such as those that count up for secre
 
 ## [approach_f32_ptr](#approach_f32_ptr)
 
+### Description
+Approaches a `target` for `px` using `delta`
+
 ### Lua Example
 `local integerValue = approach_f32_ptr(px, target, delta)`
 
@@ -1240,6 +1288,9 @@ Spawns an orange number object relatively, such as those that count up for secre
 
 ## [obj_forward_vel_approach](#obj_forward_vel_approach)
 
+### Description
+Approaches a `target` value with the current object's forward velocity using `delta`
+
 ### Lua Example
 `local integerValue = obj_forward_vel_approach(target, delta)`
 
@@ -1260,6 +1311,9 @@ Spawns an orange number object relatively, such as those that count up for secre
 <br />
 
 ## [obj_y_vel_approach](#obj_y_vel_approach)
+
+### Description
+Approaches a `target` value with the current object's vertical velocity using `delta`
 
 ### Lua Example
 `local integerValue = obj_y_vel_approach(target, delta)`
@@ -1282,6 +1336,9 @@ Spawns an orange number object relatively, such as those that count up for secre
 
 ## [obj_move_pitch_approach](#obj_move_pitch_approach)
 
+### Description
+Approaches a `target` value with the current object's move pitch using `delta`
+
 ### Lua Example
 `local integerValue = obj_move_pitch_approach(target, delta)`
 
@@ -1302,6 +1359,9 @@ Spawns an orange number object relatively, such as those that count up for secre
 <br />
 
 ## [obj_face_pitch_approach](#obj_face_pitch_approach)
+
+### Description
+Approaches a `target` value with the current object's facing pitch using `delta`
 
 ### Lua Example
 `local integerValue = obj_face_pitch_approach(targetPitch, deltaPitch)`
@@ -1324,6 +1384,9 @@ Spawns an orange number object relatively, such as those that count up for secre
 
 ## [obj_face_yaw_approach](#obj_face_yaw_approach)
 
+### Description
+Approaches a `target` value with the current object's facing yaw using `delta`
+
 ### Lua Example
 `local integerValue = obj_face_yaw_approach(targetYaw, deltaYaw)`
 
@@ -1344,6 +1407,9 @@ Spawns an orange number object relatively, such as those that count up for secre
 <br />
 
 ## [obj_face_roll_approach](#obj_face_roll_approach)
+
+### Description
+Approaches a `target` value with the current object's facing roll using `delta`
 
 ### Lua Example
 `local integerValue = obj_face_roll_approach(targetRoll, deltaRoll)`
@@ -1392,6 +1458,9 @@ Spawns an orange number object relatively, such as those that count up for secre
 
 ## [obj_roll_to_match_yaw_turn](#obj_roll_to_match_yaw_turn)
 
+### Description
+Rolls the current object to the move angle subtracted by `targetYaw`, clamping between negative and positive `maxRoll` and using `rollSpeed`
+
 ### Lua Example
 `obj_roll_to_match_yaw_turn(targetYaw, maxRoll, rollSpeed)`
 
@@ -1414,6 +1483,9 @@ Spawns an orange number object relatively, such as those that count up for secre
 
 ## [random_linear_offset](#random_linear_offset)
 
+### Description
+Generates a random offset with a base and range of `base` to `range`
+
 ### Lua Example
 `local integerValue = random_linear_offset(base, range)`
 
@@ -1434,6 +1506,9 @@ Spawns an orange number object relatively, such as those that count up for secre
 <br />
 
 ## [random_mod_offset](#random_mod_offset)
+
+### Description
+Generates a random offset using step multiplied a value between 0 and `mod` (the random function goes to 65535 but wraps around to 0 at `mod`)
 
 ### Lua Example
 `local integerValue = random_mod_offset(base, step, mod)`
@@ -1457,6 +1532,9 @@ Spawns an orange number object relatively, such as those that count up for secre
 
 ## [obj_random_fixed_turn](#obj_random_fixed_turn)
 
+### Description
+Rotates the current object's move angle yaw using `delta` in either a randomly decided positive or negative direction
+
 ### Lua Example
 `local integerValue = obj_random_fixed_turn(delta)`
 
@@ -1476,6 +1554,9 @@ Spawns an orange number object relatively, such as those that count up for secre
 <br />
 
 ## [obj_grow_then_shrink](#obj_grow_then_shrink)
+
+### Description
+Begin by increasing the current object's scale by `*scaleVel`, and slowly decreasing `scaleVel`. Once the object starts to shrink, wait a bit, and then begin to scale the object toward `endScale`. The first time it reaches below `shootFireScale` during this time, return 1. Return -1 once it's reached endScale
 
 ### Lua Example
 `local integerValue = obj_grow_then_shrink(scaleVel, shootFireScale, endScale)`
@@ -1547,6 +1628,9 @@ Spawns an orange number object relatively, such as those that count up for secre
 
 ## [obj_resolve_object_collisions](#obj_resolve_object_collisions)
 
+### Description
+Resolves "collisions" with the current object and other objects by offsetting the current object's position
+
 ### Lua Example
 `local integerValue = obj_resolve_object_collisions(targetYaw)`
 
@@ -1567,6 +1651,9 @@ Spawns an orange number object relatively, such as those that count up for secre
 
 ## [obj_bounce_off_walls_edges_objects](#obj_bounce_off_walls_edges_objects)
 
+### Description
+Bounces the current object off of walls, edges, and objects using `*targetYaw`
+
 ### Lua Example
 `local integerValue = obj_bounce_off_walls_edges_objects(targetYaw)`
 
@@ -1586,6 +1673,9 @@ Spawns an orange number object relatively, such as those that count up for secre
 <br />
 
 ## [obj_resolve_collisions_and_turn](#obj_resolve_collisions_and_turn)
+
+### Description
+Resolves collisions and turns the current object towards `targetYaw` using `turnSpeed`
 
 ### Lua Example
 `local integerValue = obj_resolve_collisions_and_turn(targetYaw, turnSpeed)`
@@ -1608,6 +1698,9 @@ Spawns an orange number object relatively, such as those that count up for secre
 
 ## [obj_die_if_health_non_positive](#obj_die_if_health_non_positive)
 
+### Description
+Spawns mist particles, plays a sound (`oDeathSound`,) spawns coins (`oNumLootCoins`,) and hides the object if the health is less than 0 or deletes the object if the health is 0 or higher
+
 ### Lua Example
 `obj_die_if_health_non_positive()`
 
@@ -1626,6 +1719,9 @@ Spawns an orange number object relatively, such as those that count up for secre
 
 ## [obj_unused_die](#obj_unused_die)
 
+### Description
+Sets the current object's health to 0 and runs `obj_die_if_health_non_positive()`
+
 ### Lua Example
 `obj_unused_die()`
 
@@ -1643,6 +1739,9 @@ Spawns an orange number object relatively, such as those that count up for secre
 <br />
 
 ## [obj_set_knockback_action](#obj_set_knockback_action)
+
+### Description
+Sets the current object's action, forward velocity, and vertical velocity to preset values (`OBJ_ACT_*`)
 
 ### Lua Example
 `obj_set_knockback_action(attackType)`
@@ -1663,6 +1762,9 @@ Spawns an orange number object relatively, such as those that count up for secre
 <br />
 
 ## [obj_set_squished_action](#obj_set_squished_action)
+
+### Description
+Plays `SOUND_OBJ_STOMPED` and sets the current object's action to `OBJ_ACT_SQUISHED`
 
 ### Lua Example
 `obj_set_squished_action()`
@@ -1782,6 +1884,9 @@ Spawns an orange number object relatively, such as those that count up for secre
 
 ## [obj_check_attacks](#obj_check_attacks)
 
+### Description
+Checks the current object's interaction status and sets action to `attackedMarioAction` if Mario has been attacked and runs `obj_die_if_health_non_positive()` if the object is attacked by Mario. Sets the hitbox parameters and resets interaction status to 0
+
 ### Lua Example
 `local integerValue = obj_check_attacks(hitbox, attackedMarioAction)`
 
@@ -1803,6 +1908,9 @@ Spawns an orange number object relatively, such as those that count up for secre
 
 ## [obj_move_for_one_second](#obj_move_for_one_second)
 
+### Description
+Moves the current object for specifically one second (`oTimer` < 30)
+
 ### Lua Example
 `local integerValue = obj_move_for_one_second(endAction)`
 
@@ -1822,6 +1930,9 @@ Spawns an orange number object relatively, such as those that count up for secre
 <br />
 
 ## [treat_far_home_as_mario](#treat_far_home_as_mario)
+
+### Description
+Moves the current object for specifically one second (`oTimer` < 30)
 
 ### Lua Example
 `treat_far_home_as_mario(threshold, distanceToPlayer, angleToPlayer)`
@@ -1898,6 +2009,9 @@ Spawns an orange number object relatively, such as those that count up for secre
 <br />
 
 ## [set_room_override](#set_room_override)
+
+### Description
+Overrides the current room Mario is in. Set to -1 to reset override
 
 ### Lua Example
 `set_room_override(room)`
@@ -2633,6 +2747,9 @@ Spawns an orange number object relatively, such as those that count up for secre
 
 ## [linear_mtxf_mul_vec3f](#linear_mtxf_mul_vec3f)
 
+### Description
+Overrides the current room Mario is in. Set to -1 to reset override
+
 ### Lua Example
 `linear_mtxf_mul_vec3f(m, dst, v)`
 
@@ -2654,6 +2771,9 @@ Spawns an orange number object relatively, such as those that count up for secre
 <br />
 
 ## [linear_mtxf_transpose_mul_vec3f](#linear_mtxf_transpose_mul_vec3f)
+
+### Description
+Overrides the current room Mario is in. Set to -1 to reset override
 
 ### Lua Example
 `linear_mtxf_transpose_mul_vec3f(m, dst, v)`
@@ -3692,6 +3812,9 @@ Spawns an orange number object relatively, such as those that count up for secre
 <br />
 
 ## [obj_mark_for_deletion](#obj_mark_for_deletion)
+
+### Description
+Overrides the current room Mario is in. Set to -1 to reset override
 
 ### Lua Example
 `obj_mark_for_deletion(obj)`
@@ -4887,6 +5010,9 @@ Spawns an orange number object relatively, such as those that count up for secre
 <br />
 
 ## [obj_translate_local](#obj_translate_local)
+
+### Description
+Overrides the current room Mario is in. Set to -1 to reset override
 
 ### Lua Example
 `obj_translate_local(obj, posIndex, localTranslateIndex)`

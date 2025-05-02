@@ -187,6 +187,7 @@ Gfx *geo_switch_anim_state(s32 callContext, struct GraphNode *node) {
 
 s16 gRoomOverride = -1;
 
+/* |description|Overrides the current room Mario is in. Set to -1 to reset override|descriptionEnd| */
 void set_room_override(s16 room) {
     gRoomOverride = room;
 }

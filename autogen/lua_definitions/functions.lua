@@ -4326,46 +4326,55 @@ function first_person_reset()
 end
 
 --- @param dialog integer
+--- Creates a dialog box with a dialog ID that rotates into view
 function create_dialog_box(dialog)
     -- ...
 end
 
 --- @param dialog integer
 --- @param dialogVar integer
+--- Creates a dialog box with a dialog variable
 function create_dialog_box_with_var(dialog, dialogVar)
     -- ...
 end
 
 --- @param dialog integer
+--- Creates a dialog box with a dialog ID that zooms into view
 function create_dialog_inverted_box(dialog)
     -- ...
 end
 
 --- @param dialog integer
+--- Creates a dialog box with a response
 function create_dialog_box_with_response(dialog)
     -- ...
 end
 
+--- Resets the dialog box's state including dialog ID and open state
 function reset_dialog_render_state()
     -- ...
 end
 
 --- @param mode integer
+--- Sets the in-game menu state. 0-1 is the courses box with the castle secret stars and 2-3 is the course completion screen.
 function set_menu_mode(mode)
     -- ...
 end
 
 --- @param width integer
+--- Dialog box customization: Sets the minimum width for a dialog box
 function set_min_dialog_width(width)
     -- ...
 end
 
 --- @param x integer
 --- @param y integer
+--- Dialog box customization: Sets the override position for a dialog box
 function set_dialog_override_pos(x, y)
     -- ...
 end
 
+--- Dialog box customization: Resets the override position for a dialog box
 function reset_dialog_override_pos()
     -- ...
 end
@@ -4378,15 +4387,18 @@ end
 --- @param textG integer
 --- @param textB integer
 --- @param textA integer
+--- Dialog box customization: Sets the override color for a dialog box
 function set_dialog_override_color(bgR, bgG, bgB, bgA, textR, textG, textB, textA)
     -- ...
 end
 
+--- Dialog box customization: Resets the override color for a dialog box
 function reset_dialog_override_color()
     -- ...
 end
 
 --- @param state integer
+--- Sets the state for a dialog box (`DIALOG_STATE_*`)
 function set_dialog_box_state(state)
     -- ...
 end
@@ -6043,12 +6055,14 @@ end
 
 --- @param m MarioState
 --- @return integer
+--- Checks for and handles common conditions that would cancel Mario's current idle action.
 function check_common_idle_cancels(m)
     -- ...
 end
 
 --- @param m MarioState
 --- @return integer
+--- Checks for and handles common conditions that would cancel Mario's current idle holding object action.
 function check_common_hold_idle_cancels(m)
     -- ...
 end
@@ -6057,6 +6071,7 @@ end
 --- @param actionState integer
 --- @param animFrame integer
 --- @param sound integer
+--- Plays a `sound` if Mario's action state and animation frame match the parameters
 function play_anim_sound(m, actionState, animFrame, sound)
     -- ...
 end
@@ -6064,39 +6079,45 @@ end
 --- @param m MarioState
 --- @param animID integer
 --- @param action integer
+--- Runs a stationary step, sets the character animation, and changes action if the animation has ended
 function stopping_step(m, animID, action)
     -- ...
 end
 
 --- @param m MarioState
---- @param arg1 integer
+--- @param animID integer
 --- @param action integer
 --- @return integer
-function landing_step(m, arg1, action)
+--- Runs a stationary step, sets the character animation, and changes action if the animation has ended
+function landing_step(m, animID, action)
     -- ...
 end
 
 --- @param m MarioState
 --- @param action integer
 --- @return integer
+--- Checks for and handles common conditions that would cancel Mario's current landing action.
 function check_common_landing_cancels(m, action)
     -- ...
 end
 
 --- @param m MarioState
 --- @return integer
+--- Checks for and handles common conditions that would cancel Mario's current stationary action.
 function check_common_stationary_cancels(m)
     -- ...
 end
 
 --- @param m MarioState
 --- @return integer
+--- Executes Mario's current object action by first checking common stationary cancels, then updating quicksand state. Dispatches to the appropriate action function, such as idle, sleeping, crouching, ect
 function mario_execute_stationary_action(m)
     -- ...
 end
 
 --- @param m MarioState
 --- @param particleFlag integer
+--- Sets Mario's particle flags if he's at the surface of a water box
 function set_swimming_at_surface_particles(m, particleFlag)
     -- ...
 end
@@ -6104,29 +6125,34 @@ end
 --- @param m MarioState
 --- @param nextPos Vec3f
 --- @return integer
+--- Performs a full water movement step where ceilings, floors, and walls are handled. Generally, you should use `perform_water_step` for the full step functionality
 function perform_water_full_step(m, nextPos)
     -- ...
 end
 
 --- @param m MarioState
 --- @param step Vec3f
+--- Calculates a water current and outputs it in `step`
 function apply_water_current(m, step)
     -- ...
 end
 
 --- @param m MarioState
 --- @return integer
+--- Performs a water step
 function perform_water_step(m)
     -- ...
 end
 
 --- @param m MarioState
+--- Controls the bobbing that happens when you swim near the water surface
 function float_surface_gfx(m)
     -- ...
 end
 
 --- @param m MarioState
 --- @return integer
+--- Executes Mario's current submerged action by first checking common submerged cancels, then setting quicksand depth and head angles to 0. Dispatches to the appropriate action function, such as breaststroke, flutterkick, water punch, ect
 function mario_execute_submerged_action(m)
     -- ...
 end
@@ -7200,16 +7226,19 @@ function spawn_orange_number(behParam, relX, relY, relZ)
 end
 
 --- @return integer
+--- Checks if the current object's rendering is enabled
 function obj_is_rendering_enabled()
     -- ...
 end
 
 --- @return integer
+--- Calculates the current object's theoretical pitch from forward velocity and vertical velocity
 function obj_get_pitch_from_vel()
     -- ...
 end
 
 --- @param distFromHome number
+--- Sets the current object's position to the home with an additional forward vector multiplied by `distFromHome`
 function obj_set_dist_from_home(distFromHome)
     -- ...
 end
@@ -7218,6 +7247,7 @@ end
 --- @param maxDist number
 --- @param maxAngleDiff integer
 --- @return integer
+--- Checks if the current object is in `maxDist` to `m` and the angle difference is less than `maxAngleDiff`
 function obj_is_near_to_and_facing_mario(m, maxDist, maxAngleDiff)
     -- ...
 end
@@ -7226,62 +7256,72 @@ end
 --- @param x number
 --- @param y number
 --- @param z number
+--- Handles the platform on track's trajectory marker ball spawning
 function platform_on_track_update_pos_or_spawn_ball(ballIndex, x, y, z)
     -- ...
 end
 
---- @param arg0 number
---- @param arg1 number
-function cur_obj_spin_all_dimensions(arg0, arg1)
+--- @param pitchSpeed number
+--- @param rollSpeed number
+--- Spins an object in every direction with `pitchSpeed` and `rollSpeed`
+function cur_obj_spin_all_dimensions(pitchSpeed, rollSpeed)
     -- ...
 end
 
 --- @param targetYaw integer
 --- @param turnAmount integer
+--- Approaches the current object's yaw to `targetYaw` by `turnAmount`
 function obj_rotate_yaw_and_bounce_off_walls(targetYaw, turnAmount)
     -- ...
 end
 
 --- @param latDistToHome number
 --- @return integer
+--- Gets the current object's theoretical pitch to the home with the lateral distance from it
 function obj_get_pitch_to_home(latDistToHome)
     -- ...
 end
 
 --- @param speed number
+--- Computes the current object's forward vel and vertical velocity with the move angle pitch
 function obj_compute_vel_from_move_pitch(speed)
     -- ...
 end
 
---- @param arg0 integer
-function cur_obj_init_anim_extend(arg0)
+--- @param animIndex integer
+--- Initializes an animation for the current object and loops back around if the animation ends
+function cur_obj_init_anim_extend(animIndex)
     -- ...
 end
 
---- @param arg0 integer
+--- @param animIndex integer
 --- @return integer
-function cur_obj_init_anim_and_check_if_end(arg0)
+--- Initializes an animation for the current object and returns if the animation has ended
+function cur_obj_init_anim_and_check_if_end(animIndex)
     -- ...
 end
 
---- @param arg0 integer
---- @param arg1 integer
+--- @param animIndex integer
+--- @param animFrame integer
 --- @return integer
-function cur_obj_init_anim_check_frame(arg0, arg1)
+--- Initializes an animation for the current object and checks if the animation frame is a specific frame
+function cur_obj_init_anim_check_frame(animIndex, animFrame)
     -- ...
 end
 
---- @param arg0 integer
+--- @param animIndex integer
 --- @return integer
-function cur_obj_set_anim_if_at_end(arg0)
+--- Sets the current object's animation to a new animation if the current animation has ended
+function cur_obj_set_anim_if_at_end(animIndex)
     -- ...
 end
 
---- @param arg0 integer
---- @param arg1 integer
+--- @param startFrame integer
+--- @param endFrame integer
 --- @param sound integer
 --- @return integer
-function cur_obj_play_sound_at_anim_range(arg0, arg1, sound)
+--- Plays a sound when the animation frame is in a range
+function cur_obj_play_sound_at_anim_range(startFrame, endFrame, sound)
     -- ...
 end
 
@@ -7289,6 +7329,7 @@ end
 --- @param targetOffsetY number
 --- @param turnAmount integer
 --- @return integer
+--- Turns the current object towards `m` by `turnAmount` and subtracts and adds `targetOffsetY` to the Y position, effectively cancelling any effect out
 function obj_turn_pitch_toward_mario(m, targetOffsetY, turnAmount)
     -- ...
 end
@@ -7297,6 +7338,7 @@ end
 --- @param target number
 --- @param delta number
 --- @return integer
+--- Approaches a `target` for `px` using `delta`
 function approach_f32_ptr(px, target, delta)
     -- ...
 end
@@ -7304,6 +7346,7 @@ end
 --- @param target number
 --- @param delta number
 --- @return integer
+--- Approaches a `target` value with the current object's forward velocity using `delta`
 function obj_forward_vel_approach(target, delta)
     -- ...
 end
@@ -7311,6 +7354,7 @@ end
 --- @param target number
 --- @param delta number
 --- @return integer
+--- Approaches a `target` value with the current object's vertical velocity using `delta`
 function obj_y_vel_approach(target, delta)
     -- ...
 end
@@ -7318,6 +7362,7 @@ end
 --- @param target integer
 --- @param delta integer
 --- @return integer
+--- Approaches a `target` value with the current object's move pitch using `delta`
 function obj_move_pitch_approach(target, delta)
     -- ...
 end
@@ -7325,6 +7370,7 @@ end
 --- @param targetPitch integer
 --- @param deltaPitch integer
 --- @return integer
+--- Approaches a `target` value with the current object's facing pitch using `delta`
 function obj_face_pitch_approach(targetPitch, deltaPitch)
     -- ...
 end
@@ -7332,6 +7378,7 @@ end
 --- @param targetYaw integer
 --- @param deltaYaw integer
 --- @return integer
+--- Approaches a `target` value with the current object's facing yaw using `delta`
 function obj_face_yaw_approach(targetYaw, deltaYaw)
     -- ...
 end
@@ -7339,6 +7386,7 @@ end
 --- @param targetRoll integer
 --- @param deltaRoll integer
 --- @return integer
+--- Approaches a `target` value with the current object's facing roll using `delta`
 function obj_face_roll_approach(targetRoll, deltaRoll)
     -- ...
 end
@@ -7358,6 +7406,7 @@ end
 --- @param targetYaw integer
 --- @param maxRoll integer
 --- @param rollSpeed integer
+--- Rolls the current object to the move angle subtracted by `targetYaw`, clamping between negative and positive `maxRoll` and using `rollSpeed`
 function obj_roll_to_match_yaw_turn(targetYaw, maxRoll, rollSpeed)
     -- ...
 end
@@ -7365,6 +7414,7 @@ end
 --- @param base integer
 --- @param range integer
 --- @return integer
+--- Generates a random offset with a base and range of `base` to `range`
 function random_linear_offset(base, range)
     -- ...
 end
@@ -7373,12 +7423,14 @@ end
 --- @param step integer
 --- @param mod integer
 --- @return integer
+--- Generates a random offset using step multiplied a value between 0 and `mod` (the random function goes to 65535 but wraps around to 0 at `mod`)
 function random_mod_offset(base, step, mod)
     -- ...
 end
 
 --- @param delta integer
 --- @return integer
+--- Rotates the current object's move angle yaw using `delta` in either a randomly decided positive or negative direction
 function obj_random_fixed_turn(delta)
     -- ...
 end
@@ -7387,6 +7439,7 @@ end
 --- @param shootFireScale number
 --- @param endScale number
 --- @return integer
+--- Begin by increasing the current object's scale by `*scaleVel`, and slowly decreasing `scaleVel`. Once the object starts to shrink, wait a bit, and then begin to scale the object toward `endScale`. The first time it reaches below `shootFireScale` during this time, return 1. Return -1 once it's reached endScale
 function obj_grow_then_shrink(scaleVel, shootFireScale, endScale)
     -- ...
 end
@@ -7412,12 +7465,14 @@ end
 
 --- @param targetYaw Pointer_integer
 --- @return integer
+--- Resolves "collisions" with the current object and other objects by offsetting the current object's position
 function obj_resolve_object_collisions(targetYaw)
     -- ...
 end
 
 --- @param targetYaw Pointer_integer
 --- @return integer
+--- Bounces the current object off of walls, edges, and objects using `*targetYaw`
 function obj_bounce_off_walls_edges_objects(targetYaw)
     -- ...
 end
@@ -7425,23 +7480,28 @@ end
 --- @param targetYaw integer
 --- @param turnSpeed integer
 --- @return integer
+--- Resolves collisions and turns the current object towards `targetYaw` using `turnSpeed`
 function obj_resolve_collisions_and_turn(targetYaw, turnSpeed)
     -- ...
 end
 
+--- Spawns mist particles, plays a sound (`oDeathSound`,) spawns coins (`oNumLootCoins`,) and hides the object if the health is less than 0 or deletes the object if the health is 0 or higher
 function obj_die_if_health_non_positive()
     -- ...
 end
 
+--- Sets the current object's health to 0 and runs `obj_die_if_health_non_positive()`
 function obj_unused_die()
     -- ...
 end
 
 --- @param attackType integer
+--- Sets the current object's action, forward velocity, and vertical velocity to preset values (`OBJ_ACT_*`)
 function obj_set_knockback_action(attackType)
     -- ...
 end
 
+--- Plays `SOUND_OBJ_STOMPED` and sets the current object's action to `OBJ_ACT_SQUISHED`
 function obj_set_squished_action()
     -- ...
 end
@@ -7478,12 +7538,14 @@ end
 --- @param hitbox ObjectHitbox
 --- @param attackedMarioAction integer
 --- @return integer
+--- Checks the current object's interaction status and sets action to `attackedMarioAction` if Mario has been attacked and runs `obj_die_if_health_non_positive()` if the object is attacked by Mario. Sets the hitbox parameters and resets interaction status to 0
 function obj_check_attacks(hitbox, attackedMarioAction)
     -- ...
 end
 
 --- @param endAction integer
 --- @return integer
+--- Moves the current object for specifically one second (`oTimer` < 30)
 function obj_move_for_one_second(endAction)
     -- ...
 end
@@ -7491,6 +7553,7 @@ end
 --- @param threshold number
 --- @param distanceToPlayer Pointer_integer
 --- @param angleToPlayer Pointer_integer
+--- Moves the current object for specifically one second (`oTimer` < 30)
 function treat_far_home_as_mario(threshold, distanceToPlayer, angleToPlayer)
     -- ...
 end
@@ -7516,6 +7579,7 @@ function clear_move_flag(bitSet, flag)
 end
 
 --- @param room integer
+--- Overrides the current room Mario is in. Set to -1 to reset override
 function set_room_override(room)
     -- ...
 end
@@ -7755,6 +7819,7 @@ end
 --- @param m Mat4
 --- @param dst Vec3f
 --- @param v Vec3f
+--- Overrides the current room Mario is in. Set to -1 to reset override
 function linear_mtxf_mul_vec3f(m, dst, v)
     -- ...
 end
@@ -7762,6 +7827,7 @@ end
 --- @param m Mat4
 --- @param dst Vec3f
 --- @param v Vec3f
+--- Overrides the current room Mario is in. Set to -1 to reset override
 function linear_mtxf_transpose_mul_vec3f(m, dst, v)
     -- ...
 end
@@ -8052,6 +8118,7 @@ function cur_obj_clear_interact_status_flag(flag)
 end
 
 --- @param obj Object
+--- Overrides the current room Mario is in. Set to -1 to reset override
 function obj_mark_for_deletion(obj)
     -- ...
 end
@@ -8391,6 +8458,7 @@ end
 --- @param obj Object
 --- @param posIndex integer
 --- @param localTranslateIndex integer
+--- Overrides the current room Mario is in. Set to -1 to reset override
 function obj_translate_local(obj, posIndex, localTranslateIndex)
     -- ...
 end

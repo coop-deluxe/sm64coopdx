@@ -4481,6 +4481,9 @@ Resets first person
 
 ## [create_dialog_box](#create_dialog_box)
 
+### Description
+Creates a dialog box with a dialog ID that rotates into view
+
 ### Lua Example
 `create_dialog_box(dialog)`
 
@@ -4500,6 +4503,9 @@ Resets first person
 <br />
 
 ## [create_dialog_box_with_var](#create_dialog_box_with_var)
+
+### Description
+Creates a dialog box with a dialog variable
 
 ### Lua Example
 `create_dialog_box_with_var(dialog, dialogVar)`
@@ -4522,6 +4528,9 @@ Resets first person
 
 ## [create_dialog_inverted_box](#create_dialog_inverted_box)
 
+### Description
+Creates a dialog box with a dialog ID that zooms into view
+
 ### Lua Example
 `create_dialog_inverted_box(dialog)`
 
@@ -4541,6 +4550,9 @@ Resets first person
 <br />
 
 ## [create_dialog_box_with_response](#create_dialog_box_with_response)
+
+### Description
+Creates a dialog box with a response
 
 ### Lua Example
 `create_dialog_box_with_response(dialog)`
@@ -4562,6 +4574,9 @@ Resets first person
 
 ## [reset_dialog_render_state](#reset_dialog_render_state)
 
+### Description
+Resets the dialog box's state including dialog ID and open state
+
 ### Lua Example
 `reset_dialog_render_state()`
 
@@ -4579,6 +4594,9 @@ Resets first person
 <br />
 
 ## [set_menu_mode](#set_menu_mode)
+
+### Description
+Sets the in-game menu state. 0-1 is the courses box with the castle secret stars and 2-3 is the course completion screen.
 
 ### Lua Example
 `set_menu_mode(mode)`
@@ -4600,6 +4618,9 @@ Resets first person
 
 ## [set_min_dialog_width](#set_min_dialog_width)
 
+### Description
+Dialog box customization: Sets the minimum width for a dialog box
+
 ### Lua Example
 `set_min_dialog_width(width)`
 
@@ -4619,6 +4640,9 @@ Resets first person
 <br />
 
 ## [set_dialog_override_pos](#set_dialog_override_pos)
+
+### Description
+Dialog box customization: Sets the override position for a dialog box
 
 ### Lua Example
 `set_dialog_override_pos(x, y)`
@@ -4641,6 +4665,9 @@ Resets first person
 
 ## [reset_dialog_override_pos](#reset_dialog_override_pos)
 
+### Description
+Dialog box customization: Resets the override position for a dialog box
+
 ### Lua Example
 `reset_dialog_override_pos()`
 
@@ -4658,6 +4685,9 @@ Resets first person
 <br />
 
 ## [set_dialog_override_color](#set_dialog_override_color)
+
+### Description
+Dialog box customization: Sets the override color for a dialog box
 
 ### Lua Example
 `set_dialog_override_color(bgR, bgG, bgB, bgA, textR, textG, textB, textA)`
@@ -4686,6 +4716,9 @@ Resets first person
 
 ## [reset_dialog_override_color](#reset_dialog_override_color)
 
+### Description
+Dialog box customization: Resets the override color for a dialog box
+
 ### Lua Example
 `reset_dialog_override_color()`
 
@@ -4703,6 +4736,9 @@ Resets first person
 <br />
 
 ## [set_dialog_box_state](#set_dialog_box_state)
+
+### Description
+Sets the state for a dialog box (`DIALOG_STATE_*`)
 
 ### Lua Example
 `set_dialog_box_state(state)`

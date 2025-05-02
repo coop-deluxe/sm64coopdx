@@ -419,6 +419,7 @@ void init_mario_after_warp(void) {
     if (spawnNode == NULL || spawnNode->object == NULL) { return; }
 
     u32 marioSpawnType = get_mario_spawn_type(spawnNode->object);
+    u8 warpType = sWarpDest.type;
 
     if (gMarioState && gMarioState->action != ACT_UNINITIALIZED) {
         for (s32 i = 0; i < MAX_PLAYERS; i++) {
@@ -547,7 +548,7 @@ void init_mario_after_warp(void) {
         gMarioState->skipWarpInteractionsTimer = 30;
     }
 
-    smlua_call_event_hooks_warp_params(HOOK_ON_WARP, sWarpDest.type, sWarpDest.levelNum, sWarpDest.areaIdx, sWarpDest.nodeId, sWarpDest.arg);
+    smlua_call_event_hooks_warp_params(HOOK_ON_WARP, warpType, sWarpDest.levelNum, sWarpDest.areaIdx, sWarpDest.nodeId, sWarpDest.arg);
 }
 
 // used for warps inside one level
