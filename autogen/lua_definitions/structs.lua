@@ -974,7 +974,7 @@
 
 --- @class GraphNodeSwitchCase
 --- @field public fnNode FnGraphNode
---- @field public numCases integer
+--- @field public parameter integer
 --- @field public selectedCase integer
 --- @field public unused integer
 

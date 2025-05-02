@@ -154,7 +154,7 @@ enum SkyBackgroundParams {
 /**
  * 0x0E: Create switch-case scene graph node
  *   0x01: unused
- *   0x02: s16 numCases
+ *   0x02: s16 parameter
  *   0x04: GraphNodeFunc caseSelectorFunc
  */
 #define GEO_SWITCH_CASE(count, function) \

@@ -1489,7 +1489,7 @@
 | Field | Type | Access |
 | ----- | ---- | ------ |
 | fnNode | [FnGraphNode](structs.md#FnGraphNode) | read-only |
-| numCases | `integer` | read-only |
+| parameter | `integer` |  |
 | selectedCase | `integer` |  |
 | unused | `integer` | read-only |
 
