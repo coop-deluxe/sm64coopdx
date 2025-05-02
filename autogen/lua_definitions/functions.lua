@@ -7819,7 +7819,7 @@ end
 --- @param m Mat4
 --- @param dst Vec3f
 --- @param v Vec3f
---- Overrides the current room Mario is in. Set to -1 to reset override
+--- Multiplies a vector by a matrix of the form: `| ? ? ? 0 |` `| ? ? ? 0 |` `| ? ? ? 0 |` `| 0 0 0 1 |` i.e. a matrix representing a linear transformation over 3 space
 function linear_mtxf_mul_vec3f(m, dst, v)
     -- ...
 end
@@ -7827,7 +7827,7 @@ end
 --- @param m Mat4
 --- @param dst Vec3f
 --- @param v Vec3f
---- Overrides the current room Mario is in. Set to -1 to reset override
+--- Multiplies a vector by the transpose of a matrix of the form: `| ? ? ? 0 |` `| ? ? ? 0 |` `| ? ? ? 0 |` `| 0 0 0 1 |` i.e. a matrix representing a linear transformation over 3 space
 function linear_mtxf_transpose_mul_vec3f(m, dst, v)
     -- ...
 end
@@ -8118,7 +8118,7 @@ function cur_obj_clear_interact_status_flag(flag)
 end
 
 --- @param obj Object
---- Overrides the current room Mario is in. Set to -1 to reset override
+--- Marks an object to be unloaded at the end of the frame
 function obj_mark_for_deletion(obj)
     -- ...
 end
@@ -8458,7 +8458,7 @@ end
 --- @param obj Object
 --- @param posIndex integer
 --- @param localTranslateIndex integer
---- Overrides the current room Mario is in. Set to -1 to reset override
+--- Transforms the vector at `localTranslateIndex` into the object's local coordinates, and then adds it to the vector at `posIndex`
 function obj_translate_local(obj, posIndex, localTranslateIndex)
     -- ...
 end

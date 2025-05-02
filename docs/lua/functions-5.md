@@ -2748,7 +2748,7 @@ Overrides the current room Mario is in. Set to -1 to reset override
 ## [linear_mtxf_mul_vec3f](#linear_mtxf_mul_vec3f)
 
 ### Description
-Overrides the current room Mario is in. Set to -1 to reset override
+Multiplies a vector by a matrix of the form: `| ? ? ? 0 |` `| ? ? ? 0 |` `| ? ? ? 0 |` `| 0 0 0 1 |` i.e. a matrix representing a linear transformation over 3 space
 
 ### Lua Example
 `linear_mtxf_mul_vec3f(m, dst, v)`
@@ -2773,7 +2773,7 @@ Overrides the current room Mario is in. Set to -1 to reset override
 ## [linear_mtxf_transpose_mul_vec3f](#linear_mtxf_transpose_mul_vec3f)
 
 ### Description
-Overrides the current room Mario is in. Set to -1 to reset override
+Multiplies a vector by the transpose of a matrix of the form: `| ? ? ? 0 |` `| ? ? ? 0 |` `| ? ? ? 0 |` `| 0 0 0 1 |` i.e. a matrix representing a linear transformation over 3 space
 
 ### Lua Example
 `linear_mtxf_transpose_mul_vec3f(m, dst, v)`
@@ -3814,7 +3814,7 @@ Overrides the current room Mario is in. Set to -1 to reset override
 ## [obj_mark_for_deletion](#obj_mark_for_deletion)
 
 ### Description
-Overrides the current room Mario is in. Set to -1 to reset override
+Marks an object to be unloaded at the end of the frame
 
 ### Lua Example
 `obj_mark_for_deletion(obj)`
@@ -5012,7 +5012,7 @@ Overrides the current room Mario is in. Set to -1 to reset override
 ## [obj_translate_local](#obj_translate_local)
 
 ### Description
-Overrides the current room Mario is in. Set to -1 to reset override
+Transforms the vector at `localTranslateIndex` into the object's local coordinates, and then adds it to the vector at `posIndex`
 
 ### Lua Example
 `obj_translate_local(obj, posIndex, localTranslateIndex)`
