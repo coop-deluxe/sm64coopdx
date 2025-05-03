@@ -548,22 +548,22 @@ const char* get_os_name(void) {
 
 ///
 
-struct GraphNodeRoot* get_current_graph_node_root(void) {
+struct GraphNodeRoot* geo_get_current_graph_node_root(void) {
     return gCurGraphNodeRoot;
 }
 
-struct GraphNodeMasterList* get_current_graph_node_master_list(void) {
+struct GraphNodeMasterList* geo_get_current_graph_node_master_list(void) {
     return gCurGraphNodeMasterList;
 }
 
-struct GraphNodePerspective* get_current_graph_node_cam_frustum(void) {
+struct GraphNodePerspective* geo_get_current_graph_node_cam_frustum(void) {
     return gCurGraphNodeCamFrustum;
 }
 
-struct GraphNodeCamera* get_current_graph_node_camera(void) {
+struct GraphNodeCamera* geo_get_current_graph_node_camera(void) {
     return gCurGraphNodeCamera;
 }
 
-struct GraphNodeHeldObject* get_current_graph_node_held_object(void) {
+struct GraphNodeHeldObject* geo_get_current_graph_node_held_object(void) {
     return gCurGraphNodeHeldObject;
 }
