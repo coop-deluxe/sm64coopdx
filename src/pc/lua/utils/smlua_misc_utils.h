@@ -207,4 +207,19 @@ void reset_window_title(void);
 /* |description|Gets the name of the operating system the game is running on|descriptionEnd| */
 const char* get_os_name(void);
 
+/* |description|Gets the current global GraphNodeRoot|descriptionEnd|*/
+struct GraphNodeRoot *get_current_graph_node_root(void);
+
+/* |description|Gets the current global GraphNodeMasterList|descriptionEnd|*/
+struct GraphNodeMasterList *get_current_graph_node_master_list(void);
+
+/* |description|Gets the current global GraphNodePerspective|descriptionEnd|*/
+struct GraphNodePerspective *get_current_graph_node_cam_frustum(void);
+
+/* |description|Gets the current global GraphNodeCamera|descriptionEnd|*/
+struct GraphNodeCamera *get_current_graph_node_camera(void);
+
+/* |description|Gets the current global GraphNodeHeldObject|descriptionEnd|*/
+struct GraphNodeHeldObject *get_current_graph_node_held_object(void);
+
 #endif

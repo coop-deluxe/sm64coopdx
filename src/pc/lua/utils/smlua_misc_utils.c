@@ -545,3 +545,25 @@ const char* get_os_name(void) {
     return "Unknown";
 #endif
 }
+
+///
+
+struct GraphNodeRoot *get_current_graph_node_root(void) {
+    return gCurGraphNodeRoot;
+}
+
+struct GraphNodeMasterList *get_current_graph_node_master_list(void) {
+    return gCurGraphNodeMasterList;
+}
+
+struct GraphNodePerspective *get_current_graph_node_cam_frustum(void) {
+    return gCurGraphNodeCamFrustum;
+}
+
+struct GraphNodeCamera *get_current_graph_node_camera(void) {
+    return gCurGraphNodeCamera;
+}
+
+struct GraphNodeHeldObject *get_current_graph_node_held_object(void) {
+    return gCurGraphNodeHeldObject;
+}
