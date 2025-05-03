@@ -662,10 +662,6 @@ struct LvlCmd {
     u8 mSize;
 };
 
-// modIndex -> itemName -> (itemPointer, itemSize)
-template <typename T>
-using ModData = std::map<s32, std::map<std::string, std::pair<T *, u32>>>;
-
 //
 // Utils
 //
@@ -988,20 +984,21 @@ void DynOS_Model_ClearPool(enum ModelPool aModelPool);
 
 Gfx *DynOS_Gfx_GetWritableDisplayList(Gfx *aGfx);
 Gfx *DynOS_Gfx_Get(const char *aName, u32 *outLength);
-Gfx *DynOS_Gfx_New(const char *aName, u32 aLength);
-Gfx *DynOS_Gfx_Realloc(Gfx *aGfx, u32 aNewLength);
+Gfx *DynOS_Gfx_Create(const char *aName, u32 aLength);
+bool DynOS_Gfx_Resize(Gfx *aGfx, u32 aNewLength);
 bool DynOS_Gfx_Delete(Gfx *aGfx);
+void DynOS_Gfx_DeleteAll();
 Vtx *DynOS_Vtx_Get(const char *aName, u32 *outCount);
-Vtx *DynOS_Vtx_New(const char *aName, u32 aCount);
-Vtx *DynOS_Vtx_Realloc(Vtx *aVtx, u32 aNewCount);
+Vtx *DynOS_Vtx_Create(const char *aName, u32 aCount);
+bool DynOS_Vtx_Resize(Vtx *aVtx, u32 aNewCount);
 bool DynOS_Vtx_Delete(Vtx *aVtx);
+void DynOS_Vtx_DeleteAll();
 void DynOS_Gfx_ModShutdown();
 
 //
 // Mod Data Manager
 //
 
-// template functions
 #include "dynos_mgr_moddata.hpp"
 
 //
@@ -1120,8 +1117,6 @@ bool DynOS_Bin_IsCompressed(const SysPath &aFilename);
 bool DynOS_Bin_Compress(const SysPath &aFilename);
 BinFile *DynOS_Bin_Decompress(const SysPath &aFilename);
 
-void DynOS_Find_Pending_Scroll_Target(Vtx *data, Vtx *newData);
-void DynOS_Pending_Scroll_Targets_Clear();
 void DynOS_Add_Scroll_Target(u32 index, const char *name, u32 offset, u32 size);
 
 #endif

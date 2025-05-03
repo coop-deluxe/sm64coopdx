@@ -311,4 +311,5 @@ end
 -- legacy font --
 -----------------
 
+--- @type integer
 FONT_TINY = -1

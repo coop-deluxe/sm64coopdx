@@ -148,17 +148,17 @@ void print_intro_text(void) {
 }
 
 u32 get_mario_spawn_type(struct Object *o) {
-    if (o == NULL || o->behavior == NULL) { return 0; }
+    if (o == NULL || o->behavior == NULL) { return MARIO_SPAWN_NONE; }
 
     const BehaviorScript *behavior = virtual_to_segmented(0x13, o->behavior);
-    if (behavior == NULL) { return 0; }
+    if (behavior == NULL) { return MARIO_SPAWN_NONE; }
 
     for (s32 i = 0; i < 20; i++) {
-        if (sWarpBhvSpawnTable[i] == behavior) {
+        if (sWarpBhvSpawnTable[i] == smlua_override_behavior(behavior)) {
             return sSpawnTypeFromWarpBhv[i];
         }
     }
-    return 0;
+    return MARIO_SPAWN_NONE;
 }
 
 struct ObjectWarpNode *area_get_warp_node(u8 id) {

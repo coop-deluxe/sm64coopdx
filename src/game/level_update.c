@@ -56,7 +56,6 @@
 
 struct SavedWarpValues gReceiveWarp = { 0 };
 extern s8 sReceivedLoadedActNum;
-u8 gRejectInstantWarp = 0;
 u16 gFanFareDebounce = 0;
 
 s16 gChangeLevel = -1;
@@ -420,6 +419,7 @@ void init_mario_after_warp(void) {
     if (spawnNode == NULL || spawnNode->object == NULL) { return; }
 
     u32 marioSpawnType = get_mario_spawn_type(spawnNode->object);
+    u8 warpType = sWarpDest.type;
 
     if (gMarioState && gMarioState->action != ACT_UNINITIALIZED) {
         for (s32 i = 0; i < MAX_PLAYERS; i++) {
@@ -548,7 +548,7 @@ void init_mario_after_warp(void) {
         gMarioState->skipWarpInteractionsTimer = 30;
     }
 
-    smlua_call_event_hooks_warp_params(HOOK_ON_WARP, sWarpDest.type, sWarpDest.levelNum, sWarpDest.areaIdx, sWarpDest.nodeId, sWarpDest.arg);
+    smlua_call_event_hooks_warp_params(HOOK_ON_WARP, warpType, sWarpDest.levelNum, sWarpDest.areaIdx, sWarpDest.nodeId, sWarpDest.arg);
 }
 
 // used for warps inside one level
@@ -647,10 +647,6 @@ void check_instant_warp(void) {
     s16 cameraAngle;
     struct Surface *floor;
 
-    if (gRejectInstantWarp > 0) {
-        gRejectInstantWarp--;
-    }
-
     if (gCurrLevelNum == LEVEL_CASTLE
         && save_file_get_total_star_count(gCurrSaveFileNum - 1, COURSE_MIN - 1, COURSE_MAX - 1) >= gLevelValues.infiniteStairsRequirement) {
         return;
@@ -661,11 +657,6 @@ void check_instant_warp(void) {
         if (index >= INSTANT_WARP_INDEX_START && index < INSTANT_WARP_INDEX_STOP && gCurrentArea->instantWarps != NULL) {
             struct InstantWarp *warp = &gCurrentArea->instantWarps[index];
             if (warp->id != 0) {
-                if (gRejectInstantWarp > 0) {
-                    vec3f_copy(gMarioStates[0].pos, gMarioStates[0].nonInstantWarpPos);
-                    //vec3f_mul(gMarioStates[0].vel, -0.8f);
-                    return;
-                }
 
                 mario_drop_held_object(&gMarioStates[0]);
                 u8 changeOfArea = (gCurrAreaIndex != warp->area);
@@ -694,6 +685,8 @@ void check_instant_warp(void) {
                 warp_camera(warp->displacement[0], warp->displacement[1], warp->displacement[2]);
                 skip_camera_interpolation();
                 gMarioStates[0].area->camera->yaw = cameraAngle;
+
+                smlua_call_event_hooks_instant_warp_params(HOOK_ON_INSTANT_WARP, warp->area, warp->id, warp->displacement);
 
                 return;
             }
@@ -755,12 +748,15 @@ s16 music_changed_through_warp(s16 arg) {
 /**
  * Set the current warp type and destination level/area/node.
  */
-void initiate_warp(s16 destLevel, s16 destArea, s16 destWarpNode, s32 arg) {//
+void initiate_warp(s16 destLevel, s16 destArea, s16 destWarpNode, s32 arg) {
 
     smlua_call_event_hooks_before_warp(HOOK_BEFORE_WARP, &destLevel, &destArea, &destWarpNode, &arg);
 
     if (destWarpNode >= WARP_NODE_CREDITS_MIN) {
         sWarpDest.type = WARP_TYPE_CHANGE_LEVEL;
+    } else if (arg == WARP_ARG_EXIT_COURSE) {
+        sWarpDest.type = WARP_TYPE_CHANGE_LEVEL;
+        arg = 0;
     } else if (destLevel != gCurrLevelNum) {
         sWarpDest.type = WARP_TYPE_CHANGE_LEVEL;
     } else if (destArea != gCurrentArea->index) {
@@ -927,6 +923,7 @@ s16 level_trigger_warp(struct MarioState *m, s32 warpOp) {
             case WARP_OP_EXIT:
                 sSourceWarpNodeId = WARP_NODE_DEATH;
                 sDelayedWarpTimer = 20;
+                sDelayedWarpArg = WARP_ARG_EXIT_COURSE;
                 play_transition(WARP_TRANSITION_FADE_INTO_CIRCLE, 0x14, 0x00, 0x00, 0x00);
                 break;
 
@@ -1360,7 +1357,7 @@ s32 play_mode_paused(void) {
         if (gDebugLevelSelect) {
             fade_into_special_warp(-9, 1);
         } else {
-            initiate_warp(gLevelValues.exitCastleLevel, gLevelValues.exitCastleArea, gLevelValues.exitCastleWarpNode, 0);
+            initiate_warp(gLevelValues.exitCastleLevel, gLevelValues.exitCastleArea, gLevelValues.exitCastleWarpNode, WARP_ARG_EXIT_COURSE);
             fade_into_special_warp(0, 0);
             gSavedCourseNum = COURSE_NONE;
         }

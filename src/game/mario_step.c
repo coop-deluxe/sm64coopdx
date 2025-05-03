@@ -657,7 +657,9 @@ void apply_gravity(struct MarioState *m) {
     if (!m) { return; }
     s32 result;
 
-    if (m->action == ACT_TWIRLING && m->vel[1] < 0.0f) {
+    if (smlua_call_action_hook(ACTION_HOOK_GRAVITY, m, &result)) {
+        
+    } else if (m->action == ACT_TWIRLING && m->vel[1] < 0.0f) {
         apply_twirl_gravity(m);
     } else if (m->action == ACT_SHOT_FROM_CANNON) {
         m->vel[1] -= 1.0f;
@@ -687,8 +689,6 @@ void apply_gravity(struct MarioState *m) {
         if (m->vel[1] < -16.0f) {
             m->vel[1] = -16.0f;
         }
-    } else if (smlua_call_action_hook(ACTION_HOOK_GRAVITY, m, &result)) {
-
     } else if ((m->flags & MARIO_WING_CAP) && m->vel[1] < 0.0f && (m->input & INPUT_A_DOWN)) {
         m->marioBodyState->wingFlutter = TRUE;
 

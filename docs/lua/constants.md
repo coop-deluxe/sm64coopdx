@@ -27,6 +27,7 @@
 - [first_person_cam.h](#first_person_camh)
 - [gbi.h](#gbih)
 - [geo_commands.h](#geo_commandsh)
+    - [enum SkyBackgroundParams](#enum-SkyBackgroundParams)
 - [graph_node.h](#graph_nodeh)
 - [interaction.c](#interactionc)
 - [interaction.h](#interactionh)
@@ -1218,8 +1219,6 @@
 | DS_YOSHI | 10 |
 | DS_MAX | 11 |
 | DS_NONE | 0xff |
-- DS_DIFF
-- DS_DIFF
 
 [:arrow_up_small:](#)
 
@@ -1286,17 +1285,21 @@
 <br />
 
 ## [geo_commands.h](#geo_commands.h)
-- BACKGROUND_OCEAN_SKY
-- BACKGROUND_FLAMING_SKY
-- BACKGROUND_UNDERWATER_CITY
-- BACKGROUND_BELOW_CLOUDS
-- BACKGROUND_SNOW_MOUNTAINS
-- BACKGROUND_DESERT
-- BACKGROUND_HAUNTED
-- BACKGROUND_GREEN_SKY
-- BACKGROUND_ABOVE_CLOUDS
-- BACKGROUND_PURPLE_SKY
-- BACKGROUND_CUSTOM
+
+### [enum SkyBackgroundParams](#SkyBackgroundParams)
+| Identifier | Value |
+| :--------- | :---- |
+| BACKGROUND_OCEAN_SKY | 0 |
+| BACKGROUND_FLAMING_SKY | 1 |
+| BACKGROUND_UNDERWATER_CITY | 2 |
+| BACKGROUND_BELOW_CLOUDS | 3 |
+| BACKGROUND_SNOW_MOUNTAINS | 4 |
+| BACKGROUND_DESERT | 5 |
+| BACKGROUND_HAUNTED | 6 |
+| BACKGROUND_GREEN_SKY | 7 |
+| BACKGROUND_ABOVE_CLOUDS | 8 |
+| BACKGROUND_PURPLE_SKY | 9 |
+| BACKGROUND_CUSTOM | 10 |
 
 [:arrow_up_small:](#)
 
@@ -1355,7 +1358,6 @@
 <br />
 
 ## [interaction.h](#interaction.h)
-- INTERACT_UNKNOWN_08
 
 ### [enum InteractionType](#InteractionType)
 | Identifier | Value |
@@ -1590,6 +1592,7 @@
 - WARP_TYPE_CHANGE_LEVEL
 - WARP_TYPE_CHANGE_AREA
 - WARP_TYPE_SAME_AREA
+- WARP_ARG_EXIT_COURSE
 - PRESS_START_DEMO_TIMER
 - PAINTING_WARP_INDEX_START
 - PAINTING_WARP_INDEX_FA
@@ -2910,7 +2913,6 @@
 <br />
 
 ## [save_file.h](#save_file.h)
-- EEPROM_SIZE
 - NUM_SAVE_FILES
 
 ### [enum SaveFileIndex](#SaveFileIndex)
@@ -3368,7 +3370,6 @@
 - ACT_PICKING_UP_BOWSER
 - ACT_HOLDING_BOWSER
 - ACT_RELEASING_BOWSER
-- END_DEMO
 - VALID_BUTTONS
 - C_BUTTONS
 
@@ -3436,7 +3437,8 @@
 | HOOK_ON_INTERACTIONS | 52 |
 | HOOK_ALLOW_FORCE_WATER_ACTION | 53 |
 | HOOK_BEFORE_WARP | 54 |
-| HOOK_MAX | 55 |
+| HOOK_ON_INSTANT_WARP | 55 |
+| HOOK_MAX | 56 |
 
 ### [enum LuaActionHookType](#LuaActionHookType)
 | Identifier | Value |
@@ -4582,14 +4584,13 @@
 | AREA_TIMER_TYPE_LOOP | 1 |
 | AREA_TIMER_TYPE_MAXIMUM | 2 |
 - ANIM_FLAG_NOLOOP
-- ANIM_FLAG_FORWARD
+- ANIM_FLAG_BACKWARD
 - ANIM_FLAG_2
 - ANIM_FLAG_HOR_TRANS
 - ANIM_FLAG_VERT_TRANS
 - ANIM_FLAG_5
 - ANIM_FLAG_6
 - ANIM_FLAG_7
-- GRAPH_NODE_GUARD
 - OBJECT_MAX_BHV_STACK
 - OBJECT_NUM_REGULAR_FIELDS
 - OBJECT_NUM_CUSTOM_FIELDS

@@ -280,32 +280,40 @@ Gfx *dynos_gfx_get(const char *name, u32 *outLength) {
     return DynOS_Gfx_Get(name, outLength);
 }
 
-Gfx *dynos_gfx_new(const char *name, u32 length) {
-    return DynOS_Gfx_New(name, length);
+Gfx *dynos_gfx_create(const char *name, u32 length) {
+    return DynOS_Gfx_Create(name, length);
 }
 
-Gfx *dynos_gfx_realloc(Gfx *gfx, u32 newLength) {
-    return DynOS_Gfx_Realloc(gfx, newLength);
+bool dynos_gfx_resize(Gfx *gfx, u32 newLength) {
+    return DynOS_Gfx_Resize(gfx, newLength);
 }
 
 bool dynos_gfx_delete(Gfx *gfx) {
     return DynOS_Gfx_Delete(gfx);
 }
 
+void dynos_gfx_delete_all() {
+    return DynOS_Gfx_DeleteAll();
+}
+
 Vtx *dynos_vtx_get(const char *name, u32 *outCount) {
     return DynOS_Vtx_Get(name, outCount);
 }
 
-Vtx *dynos_vtx_new(const char *name, u32 count) {
-    return DynOS_Vtx_New(name, count);
+Vtx *dynos_vtx_create(const char *name, u32 count) {
+    return DynOS_Vtx_Create(name, count);
 }
 
-Vtx *dynos_vtx_realloc(Vtx *vtx, u32 newCount) {
-    return DynOS_Vtx_Realloc(vtx, newCount);
+bool dynos_vtx_resize(Vtx *vtx, u32 newCount) {
+    return DynOS_Vtx_Resize(vtx, newCount);
 }
 
 bool dynos_vtx_delete(Vtx *vtx) {
     return DynOS_Vtx_Delete(vtx);
+}
+
+void dynos_vtx_delete_all() {
+    return DynOS_Vtx_DeleteAll();
 }
 
 // -- other -- //
@@ -316,10 +324,6 @@ void dynos_mod_shutdown(void) {
 
 void dynos_add_scroll_target(u32 index, const char *name, u32 offset, u32 size) {
     DynOS_Add_Scroll_Target(index, name, offset, size);
-}
-
-void dynos_pending_scroll_targets_clear(void) {
-    DynOS_Pending_Scroll_Targets_Clear();
 }
 
 }

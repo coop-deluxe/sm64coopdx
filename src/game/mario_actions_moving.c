@@ -12,6 +12,7 @@
 #include "memory.h"
 #include "behavior_data.h"
 #include "rumble_init.h"
+#include "hardcoded.h"
 #include "pc/debuglog.h"
 #include "pc/configfile.h"
 #include "pc/network/network.h"
@@ -1344,7 +1345,12 @@ s32 act_hold_decelerating(struct MarioState *m) {
 
 s32 act_riding_shell_ground(struct MarioState *m) {
     if (!m) { return FALSE; }
-    s16 startYaw = m->faceAngle[1];
+    
+    // If we don't have an object we're riding or if the interaction was with something
+    // not a Koopa Shell-Then we abort the riding state.
+    if (gLevelValues.fixInvalidShellRides && (m->riddenObj == NULL || m->riddenObj->oInteractType != INTERACT_KOOPA_SHELL)) {
+        return set_mario_action(m, ACT_IDLE, 0);
+    }
 
     if (m->input & INPUT_A_PRESSED) {
         return set_mario_action(m, ACT_RIDING_SHELL_JUMP, 0);
@@ -1358,6 +1364,7 @@ s32 act_riding_shell_ground(struct MarioState *m) {
         return set_mario_action(m, ACT_CROUCH_SLIDE, 0);
     }
 
+    s16 startYaw = m->faceAngle[1];
     update_shell_speed(m);
     set_character_animation(m, m->actionArg == 0 ? CHAR_ANIM_START_RIDING_SHELL : CHAR_ANIM_RIDING_SHELL);
 
@@ -1574,8 +1581,7 @@ void common_slide_action(struct MarioState *m, u32 endAction, u32 airAction, s32
 Builds on `common_slide_action` by also allowing Mario to jump out of a slide if A is pressed after a short delay.
 If the sliding slows enough, Mario transitions to a specified stopping action
 |descriptionEnd| */
-s32 common_slide_action_with_jump(struct MarioState *m, u32 stopAction, u32 jumpAction, u32 airAction,
-                                  s32 animation) {
+s32 common_slide_action_with_jump(struct MarioState *m, u32 stopAction, u32 jumpAction, u32 airAction, s32 animation) {
     if (!m) { return FALSE; }
     if (m->actionTimer == 5) {
         if (m->input & INPUT_A_PRESSED) {
@@ -2124,10 +2130,10 @@ s32 act_backflip_land(struct MarioState *m) {
 }
 
 /* |description|
-Handles a special landing in quicksand after a jump. Over several frames, Mario emerges from the quicksand. First part of the animation reduces his quicksand depth. Ends with a normal landing action or transitions back to air if he leaves the ground
+Handles a special landing in quicksand after a jump. Over several frames, Mario emerges from the quicksand.
+First part of the animation reduces his quicksand depth. Ends with a normal landing action or transitions back to air if he leaves the ground
 |descriptionEnd| */
-s32 quicksand_jump_land_action(struct MarioState *m, s32 animation1, s32 animation2, u32 endAction,
-                               u32 airAction) {
+s32 quicksand_jump_land_action(struct MarioState *m, s32 animation1, s32 animation2, u32 endAction, u32 airAction) {
     if (!m) { return FALSE; }
     if (m->actionTimer++ < 6) {
         m->quicksandDepth -= (7 - m->actionTimer) * 0.8f;

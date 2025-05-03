@@ -100,7 +100,6 @@
 - [SpawnParticlesInfo](#SpawnParticlesInfo)
 - [StarPositions](#StarPositions)
 - [StarsNeededForDialog](#StarsNeededForDialog)
-- [Struct802A272C](#Struct802A272C)
 - [Surface](#Surface)
 - [TextureInfo](#TextureInfo)
 - [TransitionInfo](#TransitionInfo)
@@ -120,7 +119,6 @@
 - [WaterDropletParams](#WaterDropletParams)
 - [Waypoint](#Waypoint)
 - [Whirlpool](#Whirlpool)
-- [struct802A1230](#struct802A1230)
 
 <br />
 
@@ -1491,7 +1489,7 @@
 | Field | Type | Access |
 | ----- | ---- | ------ |
 | fnNode | [FnGraphNode](structs.md#FnGraphNode) | read-only |
-| numCases | `integer` | read-only |
+| parameter | `integer` |  |
 | selectedCase | `integer` |  |
 | unused | `integer` | read-only |
 
@@ -1644,6 +1642,7 @@
 | fixCollisionBugsGroundPoundBonks | `integer` |  |
 | fixCollisionBugsPickBestWall | `integer` |  |
 | fixCollisionBugsRoundedCorners | `integer` |  |
+| fixInvalidShellRides | `integer` |  |
 | fixVanishFloors | `integer` |  |
 | floatingStarDance | `integer` |  |
 | floorLowerLimit | `integer` |  |
@@ -3116,17 +3115,6 @@
 
 <br />
 
-## [Struct802A272C](#Struct802A272C)
-
-| Field | Type | Access |
-| ----- | ---- | ------ |
-| vecF | [Vec3f](structs.md#Vec3f) | read-only |
-| vecS | [Vec3s](structs.md#Vec3s) | read-only |
-
-[:arrow_up_small:](#)
-
-<br />
-
 ## [Surface](#Surface)
 
 | Field | Type | Access |
@@ -3380,17 +3368,6 @@
 | ----- | ---- | ------ |
 | pos | [Vec3s](structs.md#Vec3s) | read-only |
 | strength | `integer` |  |
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [struct802A1230](#struct802A1230)
-
-| Field | Type | Access |
-| ----- | ---- | ------ |
-| unk00 | `integer` |  |
-| unk02 | `integer` |  |
 
 [:arrow_up_small:](#)
 

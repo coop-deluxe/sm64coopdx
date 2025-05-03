@@ -82,6 +82,7 @@ f32 sObjSavedPosZ;
 void wiggler_jumped_on_attack_handler(void);
 void huge_goomba_weakly_attacked(void);
 
+/* |description|Checks if the current object's rendering is enabled|descriptionEnd| */
 s32 obj_is_rendering_enabled(void) {
     if (!o) { return 0; }
     if (o->header.gfx.node.flags & GRAPH_RENDER_ACTIVE) {
@@ -91,6 +92,7 @@ s32 obj_is_rendering_enabled(void) {
     }
 }
 
+/* |description|Calculates the current object's theoretical pitch from forward velocity and vertical velocity|descriptionEnd| */
 s16 obj_get_pitch_from_vel(void) {
     if (!o) { return 0; }
     return -atan2s(o->oForwardVel, o->oVelY);
@@ -114,12 +116,14 @@ static s32 obj_update_race_proposition_dialog(struct MarioState* m, s16 dialogID
     return dialogResponse;
 }
 
+/* |description|Sets the current object's position to the home with an additional forward vector multiplied by `distFromHome` |descriptionEnd| */
 void obj_set_dist_from_home(f32 distFromHome) {
     if (!o) { return; }
     o->oPosX = o->oHomeX + distFromHome * coss(o->oMoveAngleYaw);
     o->oPosZ = o->oHomeZ + distFromHome * sins(o->oMoveAngleYaw);
 }
 
+/* |description|Checks if the current object is in `maxDist` to `m` and the angle difference is less than `maxAngleDiff`|descriptionEnd| */
 s32 obj_is_near_to_and_facing_mario(struct MarioState* m, f32 maxDist, s16 maxAngleDiff) {
     if (!o || !m) { return 0; }
     struct Object* player = m->marioObj;
@@ -157,6 +161,7 @@ static BAD_RETURN(u32) obj_perform_position_op(s32 op) {
     }
 }
 
+/* |description|Handles the platform on track's trajectory marker ball spawning|descriptionEnd| */
 void platform_on_track_update_pos_or_spawn_ball(s32 ballIndex, f32 x, f32 y, f32 z) {
     if (!o) { return; }
     struct Object *trackBall = NULL;
@@ -254,62 +259,64 @@ void platform_on_track_update_pos_or_spawn_ball(s32 ballIndex, f32 x, f32 y, f32
     }
 }
 
-void cur_obj_spin_all_dimensions(f32 arg0, f32 arg1) {
+/* |description|Spins an object in every direction with `pitchSpeed` and `rollSpeed`|descriptionEnd| */
+void cur_obj_spin_all_dimensions(f32 pitchSpeed, f32 rollSpeed) {
     if (!o) { return; }
-    f32 val24;
-    f32 val20;
-    f32 val1C;
-    f32 c;
-    f32 s;
-    f32 val10;
-    f32 val0C;
-    f32 val08;
-    f32 val04;
-    f32 val00;
+    f32 roll;
+    f32 upwardOffset;
+    f32 pitch;
+    f32 cosAngle;
+    f32 sinAngle;
+    f32 finalOffsetX;
+    f32 finalOffsetY;
+    f32 finalOffsetZ;
+    f32 tempOffsetX;
+    f32 tempOffsetZ;
 
     if (o->oForwardVel == 0.0f) {
-        val24 = val20 = val1C = 0.0f;
+        roll = upwardOffset = pitch = 0.0f;
 
         if (o->oMoveFlags & OBJ_MOVE_IN_AIR) {
-            val20 = 50.0f;
+            upwardOffset = 50.0f;
         } else {
             if (o->oFaceAnglePitch < 0) {
-                val1C = -arg0;
+                pitch = -pitchSpeed;
             } else if (o->oFaceAnglePitch > 0) {
-                val1C = arg0;
+                pitch = pitchSpeed;
             }
 
             if (o->oFaceAngleRoll < 0) {
-                val24 = -arg1;
+                roll = -rollSpeed;
             } else if (o->oFaceAngleRoll > 0) {
-                val24 = arg1;
+                roll = rollSpeed;
             }
         }
 
-        c = coss(o->oFaceAnglePitch);
-        s = sins(o->oFaceAnglePitch);
-        val08 = val1C * c + val20 * s;
-        val0C = val20 * c - val1C * s;
+        cosAngle = coss(o->oFaceAnglePitch);
+        sinAngle = sins(o->oFaceAnglePitch);
+        finalOffsetZ = pitch * cosAngle + upwardOffset * sinAngle;
+        finalOffsetY = upwardOffset * cosAngle - pitch * sinAngle;
 
-        c = coss(o->oFaceAngleRoll);
-        s = sins(o->oFaceAngleRoll);
-        val04 = val24 * c + val0C * s;
-        val0C = val0C * c - val24 * s;
+        cosAngle = coss(o->oFaceAngleRoll);
+        sinAngle = sins(o->oFaceAngleRoll);
+        tempOffsetX = roll * cosAngle + finalOffsetY * sinAngle;
+        finalOffsetY = finalOffsetY * cosAngle - roll * sinAngle;
 
-        c = coss(o->oFaceAngleYaw);
-        s = sins(o->oFaceAngleYaw);
-        val10 = val04 * c - val08 * s;
-        val08 = val08 * c + val04 * s;
+        cosAngle = coss(o->oFaceAngleYaw);
+        sinAngle = sins(o->oFaceAngleYaw);
+        finalOffsetX = tempOffsetX * cosAngle - finalOffsetZ * sinAngle;
+        finalOffsetZ = finalOffsetZ * cosAngle + tempOffsetX * sinAngle;
 
-        val04 = val24 * c - val1C * s;
-        val00 = val1C * c + val24 * s;
+        tempOffsetX = roll * cosAngle - pitch * sinAngle;
+        tempOffsetZ = pitch * cosAngle + roll * sinAngle;
 
-        o->oPosX = o->oHomeX - val04 + val10;
-        o->oGraphYOffset = val20 - val0C;
-        o->oPosZ = o->oHomeZ + val00 - val08;
+        o->oPosX = o->oHomeX - tempOffsetX + finalOffsetX;
+        o->oGraphYOffset = upwardOffset - finalOffsetY;
+        o->oPosZ = o->oHomeZ + tempOffsetZ - finalOffsetZ;
     }
 }
 
+/* |description|Approaches the current object's yaw to `targetYaw` by `turnAmount`|descriptionEnd| */
 void obj_rotate_yaw_and_bounce_off_walls(s16 targetYaw, s16 turnAmount) {
     if (!o) { return; }
     if (o->oMoveFlags & OBJ_MOVE_HIT_WALL) {
@@ -318,11 +325,13 @@ void obj_rotate_yaw_and_bounce_off_walls(s16 targetYaw, s16 turnAmount) {
     cur_obj_rotate_yaw_toward(targetYaw, turnAmount);
 }
 
+/* |description|Gets the current object's theoretical pitch to the home with the lateral distance from it|descriptionEnd| */
 s16 obj_get_pitch_to_home(f32 latDistToHome) {
     if (!o) { return 0; }
     return atan2s(latDistToHome, o->oPosY - o->oHomeY);
 }
 
+/* |description|Computes the current object's forward vel and vertical velocity with the move angle pitch|descriptionEnd| */
 void obj_compute_vel_from_move_pitch(f32 speed) {
     if (!o) { return; }
     o->oForwardVel = speed * coss(o->oMoveAnglePitch);
@@ -353,30 +362,35 @@ static s32 clamp_f32(f32 *value, f32 minimum, f32 maximum) {
     return TRUE;
 }
 
-void cur_obj_init_anim_extend(s32 arg0) {
-    cur_obj_init_animation_with_sound(arg0);
+/* |description|Initializes an animation for the current object and loops back around if the animation ends|descriptionEnd| */
+void cur_obj_init_anim_extend(s32 animIndex) {
+    cur_obj_init_animation_with_sound(animIndex);
     cur_obj_extend_animation_if_at_end();
 }
 
-s32 cur_obj_init_anim_and_check_if_end(s32 arg0) {
-    cur_obj_init_animation_with_sound(arg0);
+/* |description|Initializes an animation for the current object and returns if the animation has ended|descriptionEnd| */
+s32 cur_obj_init_anim_and_check_if_end(s32 animIndex) {
+    cur_obj_init_animation_with_sound(animIndex);
     return cur_obj_check_if_near_animation_end();
 }
 
-s32 cur_obj_init_anim_check_frame(s32 arg0, s32 arg1) {
-    cur_obj_init_animation_with_sound(arg0);
-    return cur_obj_check_anim_frame(arg1);
+/* |description|Initializes an animation for the current object and checks if the animation frame is a specific frame|descriptionEnd| */
+s32 cur_obj_init_anim_check_frame(s32 animIndex, s32 animFrame) {
+    cur_obj_init_animation_with_sound(animIndex);
+    return cur_obj_check_anim_frame(animFrame);
 }
 
-s32 cur_obj_set_anim_if_at_end(s32 arg0) {
+/* |description|Sets the current object's animation to a new animation if the current animation has ended|descriptionEnd| */
+s32 cur_obj_set_anim_if_at_end(s32 animIndex) {
     if (cur_obj_check_if_at_animation_end()) {
-        cur_obj_init_animation_with_sound(arg0);
+        cur_obj_init_animation_with_sound(animIndex);
         return TRUE;
     }
     return FALSE;
 }
 
-s32 cur_obj_play_sound_at_anim_range(s8 arg0, s8 arg1, u32 sound) {
+/* |description|Plays a sound when the animation frame is in a range|descriptionEnd| */
+s32 cur_obj_play_sound_at_anim_range(s8 startFrame, s8 endFrame, u32 sound) {
     if (!o) { return 0; }
     s32 val04;
 
@@ -384,7 +398,7 @@ s32 cur_obj_play_sound_at_anim_range(s8 arg0, s8 arg1, u32 sound) {
         val04 = 1;
     }
 
-    if (cur_obj_check_anim_frame_in_range(arg0, val04) || cur_obj_check_anim_frame_in_range(arg1, val04)) {
+    if (cur_obj_check_anim_frame_in_range(startFrame, val04) || cur_obj_check_anim_frame_in_range(endFrame, val04)) {
         cur_obj_play_sound_2(sound);
         return TRUE;
     }
@@ -392,6 +406,7 @@ s32 cur_obj_play_sound_at_anim_range(s8 arg0, s8 arg1, u32 sound) {
     return FALSE;
 }
 
+/* |description|Turns the current object towards `m` by `turnAmount` and subtracts and adds `targetOffsetY` to the Y position, effectively cancelling any effect out|descriptionEnd| */
 s16 obj_turn_pitch_toward_mario(struct MarioState* m, f32 targetOffsetY, s16 turnAmount) {
     if (!o) { return 0; }
     if (!m) { return 0; }
@@ -404,6 +419,7 @@ s16 obj_turn_pitch_toward_mario(struct MarioState* m, f32 targetOffsetY, s16 tur
     return targetPitch;
 }
 
+/* |description|Approaches a `target` for `px` using `delta`|descriptionEnd| */
 s32 approach_f32_ptr(f32 *px, f32 target, f32 delta) {
     if (!px) { return FALSE; }
     if (*px > target) {
@@ -419,16 +435,19 @@ s32 approach_f32_ptr(f32 *px, f32 target, f32 delta) {
     return FALSE;
 }
 
+/* |description|Approaches a `target` value with the current object's forward velocity using `delta`|descriptionEnd| */
 s32 obj_forward_vel_approach(f32 target, f32 delta) {
     if (!o) { return 0; }
     return approach_f32_ptr(&o->oForwardVel, target, delta);
 }
 
+/* |description|Approaches a `target` value with the current object's vertical velocity using `delta`|descriptionEnd| */
 s32 obj_y_vel_approach(f32 target, f32 delta) {
     if (!o) { return 0; }
     return approach_f32_ptr(&o->oVelY, target, delta);
 }
 
+/* |description|Approaches a `target` value with the current object's move pitch using `delta`|descriptionEnd| */
 s32 obj_move_pitch_approach(s16 target, s16 delta) {
     if (!o) { return 0; }
     o->oMoveAnglePitch = approach_s16_symmetric(o->oMoveAnglePitch, target, delta);
@@ -440,6 +459,7 @@ s32 obj_move_pitch_approach(s16 target, s16 delta) {
     return FALSE;
 }
 
+/* |description|Approaches a `target` value with the current object's facing pitch using `delta`|descriptionEnd| */
 s32 obj_face_pitch_approach(s16 targetPitch, s16 deltaPitch) {
     if (!o) { return 0; }
     o->oFaceAnglePitch = approach_s16_symmetric(o->oFaceAnglePitch, targetPitch, deltaPitch);
@@ -451,6 +471,7 @@ s32 obj_face_pitch_approach(s16 targetPitch, s16 deltaPitch) {
     return FALSE;
 }
 
+/* |description|Approaches a `target` value with the current object's facing yaw using `delta`|descriptionEnd| */
 s32 obj_face_yaw_approach(s16 targetYaw, s16 deltaYaw) {
     if (!o) { return 0; }
     o->oFaceAngleYaw = approach_s16_symmetric(o->oFaceAngleYaw, targetYaw, deltaYaw);
@@ -462,6 +483,7 @@ s32 obj_face_yaw_approach(s16 targetYaw, s16 deltaYaw) {
     return FALSE;
 }
 
+/* |description|Approaches a `target` value with the current object's facing roll using `delta`|descriptionEnd| */
 s32 obj_face_roll_approach(s16 targetRoll, s16 deltaRoll) {
     if (!o) { return 0; }
     o->oFaceAngleRoll = approach_s16_symmetric(o->oFaceAngleRoll, targetRoll, deltaRoll);
@@ -473,6 +495,7 @@ s32 obj_face_roll_approach(s16 targetRoll, s16 deltaRoll) {
     return FALSE;
 }
 
+/* |description|Smoothly turns the `angle` integer pointer using parameters, although usage in Lua is difficult due to the amount of pointers needed|descriptionEnd| */
 s32 obj_smooth_turn(s16 *angleVel, s32 *angle, s16 targetAngle, f32 targetSpeedProportion,
                            s16 accel, s16 minSpeed, s16 maxSpeed) {
     s16 currentSpeed;
@@ -488,6 +511,7 @@ s32 obj_smooth_turn(s16 *angleVel, s32 *angle, s16 targetAngle, f32 targetSpeedP
     return (s16)(*angle) == targetAngle;
 }
 
+/* |description|Rolls the current object to the move angle subtracted by `targetYaw`, clamping between negative and positive `maxRoll` and using `rollSpeed`|descriptionEnd| */
 void obj_roll_to_match_yaw_turn(s16 targetYaw, s16 maxRoll, s16 rollSpeed) {
     if (!o) { return; }
     s16 targetRoll = o->oMoveAngleYaw - targetYaw;
@@ -495,27 +519,30 @@ void obj_roll_to_match_yaw_turn(s16 targetYaw, s16 maxRoll, s16 rollSpeed) {
     obj_face_roll_approach(targetRoll, rollSpeed);
 }
 
+/* |description|Generates a random offset with a base and range of `base` to `range`|descriptionEnd| */
 s16 random_linear_offset(s16 base, s16 range) {
     return base + (s16)(range * random_float());
 }
 
+/* |description|Generates a random offset using step multiplied a value between 0 and `mod` (the random function goes to 65535 but wraps around to 0 at `mod`)|descriptionEnd| */
 s16 random_mod_offset(s16 base, s16 step, s16 mod) {
     if (!mod) { return 0; }
     return base + step * (random_u16() % mod);
 }
 
+/* |description|Rotates the current object's move angle yaw using `delta` in either a randomly decided positive or negative direction|descriptionEnd| */
 s16 obj_random_fixed_turn(s16 delta) {
     if (!o) { return 0; }
     return o->oMoveAngleYaw + (s16) random_sign() * delta;
 }
 
-/**
- * Begin by increasing the object's scale by *scaleVel, and slowly decreasing
- * scaleVel. Once the object starts to shrink, wait a bit, and then begin to
- * scale the object toward endScale. The first time it reaches below
- * shootFireScale during this time, return 1.
- * Return -1 once it's reached endScale.
- */
+/* |description|
+Begin by increasing the current object's scale by `*scaleVel`, and slowly decreasing
+`scaleVel`. Once the object starts to shrink, wait a bit, and then begin to
+scale the object toward `endScale`. The first time it reaches below
+`shootFireScale` during this time, return 1.
+Return -1 once it's reached endScale
+|descriptionEnd| */
 s32 obj_grow_then_shrink(f32 *scaleVel, f32 shootFireScale, f32 endScale) {
     if (!o) { return 0; }
     if (o->oTimer < 2) {
@@ -536,6 +563,7 @@ s32 obj_grow_then_shrink(f32 *scaleVel, f32 shootFireScale, f32 endScale) {
     return 0;
 }
 
+/* |description||descriptionEnd| */
 s32 oscillate_toward(s32 *value, f32 *vel, s32 target, f32 velCloseToZero, f32 accel,
                             f32 slowdown) {
     if (value == NULL || vel == NULL) { return FALSE; }
@@ -562,6 +590,7 @@ s32 oscillate_toward(s32 *value, f32 *vel, s32 target, f32 velCloseToZero, f32 a
     return FALSE;
 }
 
+/* |description|Update the current object's blinking through `oAnimState`|descriptionEnd| */
 void obj_update_blinking(s32 *blinkTimer, s16 baseCycleLength, s16 cycleLengthRange,
                                 s16 blinkLength) {
     if (!o) { return; }
@@ -578,6 +607,7 @@ void obj_update_blinking(s32 *blinkTimer, s16 baseCycleLength, s16 cycleLengthRa
     }
 }
 
+/* |description|Resolves "collisions" with the current object and other objects by offsetting the current object's position|descriptionEnd| */
 s32 obj_resolve_object_collisions(s32 *targetYaw) {
     if (!o) { return 0; }
     struct Object *otherObject;
@@ -625,6 +655,7 @@ s32 obj_resolve_object_collisions(s32 *targetYaw) {
     return FALSE;
 }
 
+/* |description|Bounces the current object off of walls, edges, and objects using `*targetYaw`|descriptionEnd| */
 s32 obj_bounce_off_walls_edges_objects(s32 *targetYaw) {
     if (!o) { return 0; }
     if (o->oMoveFlags & OBJ_MOVE_HIT_WALL) {
@@ -638,6 +669,7 @@ s32 obj_bounce_off_walls_edges_objects(s32 *targetYaw) {
     return TRUE;
 }
 
+/* |description|Resolves collisions and turns the current object towards `targetYaw` using `turnSpeed`|descriptionEnd| */
 s32 obj_resolve_collisions_and_turn(s16 targetYaw, s16 turnSpeed) {
     obj_resolve_object_collisions(NULL);
 
@@ -648,6 +680,7 @@ s32 obj_resolve_collisions_and_turn(s16 targetYaw, s16 turnSpeed) {
     }
 }
 
+/* |description|Spawns mist particles, plays a sound (`oDeathSound`,) spawns coins (`oNumLootCoins`,) and hides the object if the health is less than 0 or deletes the object if the health is 0 or higher|descriptionEnd| */
 void obj_die_if_health_non_positive(void) {
     if (!o) { return; }
     if (o->oHealth <= 0 || o->oSyncDeath) {
@@ -676,12 +709,14 @@ void obj_die_if_health_non_positive(void) {
     }
 }
 
+/* |description|Sets the current object's health to 0 and runs `obj_die_if_health_non_positive()`|descriptionEnd| */
 void obj_unused_die(void) {
     if (!o) { return; }
     o->oHealth = 0;
     obj_die_if_health_non_positive();
 }
 
+/* |description|Sets the current object's action, forward velocity, and vertical velocity to preset values (`OBJ_ACT_*`)|descriptionEnd| */
 void obj_set_knockback_action(s32 attackType) {
     if (!o) { return; }
     switch (attackType) {
@@ -707,12 +742,14 @@ void obj_set_knockback_action(s32 attackType) {
     }
 }
 
+/* |description|Plays `SOUND_OBJ_STOMPED` and sets the current object's action to `OBJ_ACT_SQUISHED`|descriptionEnd| */
 void obj_set_squished_action(void) {
     if (!o) { return; }
     cur_obj_play_sound_2(SOUND_OBJ_STOMPED);
     o->oAction = OBJ_ACT_SQUISHED;
 }
 
+/* |description||descriptionEnd| */
 s32 obj_die_if_above_lava_and_health_non_positive(void) {
     if (!o) { return 0; }
     if (o->oMoveFlags & OBJ_MOVE_UNDERWATER_ON_GROUND) {
@@ -863,6 +900,7 @@ s32 obj_update_standard_actions(f32 scale) {
     }
 }
 
+/* |description|Checks the current object's interaction status and sets action to `attackedMarioAction` if Mario has been attacked and runs `obj_die_if_health_non_positive()` if the object is attacked by Mario. Sets the hitbox parameters and resets interaction status to 0|descriptionEnd| */
 s32 obj_check_attacks(struct ObjectHitbox *hitbox, s32 attackedMarioAction) {
     if (!o) { return 0; }
     s32 attackType;
@@ -890,6 +928,7 @@ s32 obj_check_attacks(struct ObjectHitbox *hitbox, s32 attackedMarioAction) {
     return 0;
 }
 
+/* |description|Moves the current object for specifically one second (`oTimer` < 30)|descriptionEnd| */
 s32 obj_move_for_one_second(s32 endAction) {
     if (!o) { return 0; }
     cur_obj_update_floor_and_walls();

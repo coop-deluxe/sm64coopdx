@@ -149,7 +149,9 @@ static ULONG CaptureStackWalkBackTrace(CONTEXT* ctx, DWORD FramesToSkip, DWORD F
     #define ARCHITECTURE_STR "32-bit"
 #endif
 
+#ifndef __USE_GNU
 #define __USE_GNU
+#endif
 
 #include <signal.h>
 #include <execinfo.h>
@@ -273,7 +275,11 @@ static void crash_handler_add_info_str(CrashHandlerText** pTextP, f32 x, f32 y, 
 
 static void crash_handler_add_version_str(CrashHandlerText** pTextP, f32 x, f32 y) {
     CrashHandlerText* pText = *pTextP;
-    crash_handler_add_info_str(&pText, x, y, "Version", SM64COOPDX_VERSION);
+#ifdef DEVELOPMENT
+    crash_handler_add_info_str(&pText, x, y, "Dev Build", SM64COOPDX_VERSION);
+#else
+    crash_handler_add_info_str(&pText, x, y, "Release", SM64COOPDX_VERSION);
+#endif
     crash_handler_add_info_str(&pText, x, y + 8, "Renderer", RAPI_NAME);
     *pTextP = pText;
 }
@@ -703,6 +709,8 @@ struct PcDebug gPcDebug = {
         0x9A2269E87B26BE68,
         0x0E76DE227D813019,
         0x12ABA8362D430002,
+        0x0BF8F9C076430007,
+        0x0BFA2492BA430011
     },
     .id = DEFAULT_ID,
     .bhvOffset = /* 0x12 */ 0,

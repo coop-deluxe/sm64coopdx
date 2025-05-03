@@ -656,6 +656,45 @@ void smlua_call_event_hooks_warp_params(enum LuaHookedEventType hookType, u8 typ
     }
 }
 
+void smlua_call_event_hooks_instant_warp_params(enum LuaHookedEventType hookType, u8 area, u8 warpId, Vec3s displacement) {
+    lua_State* L = gLuaState;
+    if (L == NULL) { return; }
+    struct LuaHookedEvent* hook = &sHookedEvents[hookType];
+    for (int i = 0; i < hook->count; i++) {
+        s32 prevTop = lua_gettop(L);
+
+        // push the callback onto the stack
+        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
+
+        // push params
+        lua_pushinteger(L, area);
+        lua_pushinteger(L, warpId);
+
+        lua_newtable(L);
+        int tbl = lua_gettop(L);
+
+        lua_pushstring(L, "x");
+        lua_pushinteger(L, displacement[0]);
+        lua_settable(L, tbl);
+
+        lua_pushstring(L, "y");
+        lua_pushinteger(L, displacement[1]);
+        lua_settable(L, tbl);
+
+        lua_pushstring(L, "z");
+        lua_pushinteger(L, displacement[2]);
+        lua_settable(L, tbl);
+
+        // call the callback
+        if (0 != smlua_call_hook(L, 3, 0, 0, hook->mod[i])) {
+            LOG_LUA("Failed to call the callback: %u", hookType);
+            continue;
+        }
+
+        lua_settop(L, prevTop);
+    }
+}
+
 void smlua_call_event_hooks_int_params_ret_string(enum LuaHookedEventType hookType, s32 param, char** returnValue) {
     lua_State* L = gLuaState;
     if (L == NULL) { return; }
@@ -775,6 +814,7 @@ void smlua_call_event_hooks_before_warp(enum LuaHookedEventType hookType, s16 *d
 
         // if the hook returns a table, use it to override the warp parameters
         if (lua_istable(L, -1)) {
+
             lua_getfield(L, -1, "destLevel");
             if (lua_isnumber(L, -1)) {
                 *destLevel = (s16)lua_tointeger(L, -1);
@@ -793,19 +833,12 @@ void smlua_call_event_hooks_before_warp(enum LuaHookedEventType hookType, s16 *d
             }
             lua_pop(L, 1);
 
-            lua_getfield(L, -1, "arg");
-            if (lua_isnumber(L, -1)) {
-                *arg = (s32)lua_tointeger(L, -1);
-            }
-            lua_pop(L, 1);
-
             lua_settop(L, prevTop);
             return;
         }
         lua_settop(L, prevTop);
     }
 }
-
 
 void smlua_call_event_hooks_on_seq_load(enum LuaHookedEventType hookType, u32 player, u32 seqId, s32 loadAsync, s16* returnValue) {
     lua_State* L = gLuaState;
