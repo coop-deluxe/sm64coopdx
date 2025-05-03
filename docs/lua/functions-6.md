@@ -4451,13 +4451,13 @@ Gets the name of the operating system the game is running on
 
 <br />
 
-## [get_current_graph_node_root](#get_current_graph_node_root)
+## [geo_get_current_graph_node_root](#geo_get_current_graph_node_root)
 
 ### Description
 Gets the current global GraphNodeRoot
 
 ### Lua Example
-`local GraphNodeRootValue = get_current_graph_node_root()`
+`local GraphNodeRootValue = geo_get_current_graph_node_root()`
 
 ### Parameters
 - None
@@ -4466,19 +4466,19 @@ Gets the current global GraphNodeRoot
 [GraphNodeRoot](structs.md#GraphNodeRoot)
 
 ### C Prototype
-`struct GraphNodeRoot* get_current_graph_node_root(void);`
+`struct GraphNodeRoot* geo_get_current_graph_node_root(void);`
 
 [:arrow_up_small:](#)
 
 <br />
 
-## [get_current_graph_node_master_list](#get_current_graph_node_master_list)
+## [geo_get_current_graph_node_master_list](#geo_get_current_graph_node_master_list)
 
 ### Description
 Gets the current global GraphNodeMasterList
 
 ### Lua Example
-`local GraphNodeMasterListValue = get_current_graph_node_master_list()`
+`local GraphNodeMasterListValue = geo_get_current_graph_node_master_list()`
 
 ### Parameters
 - None
@@ -4487,19 +4487,19 @@ Gets the current global GraphNodeMasterList
 [GraphNodeMasterList](structs.md#GraphNodeMasterList)
 
 ### C Prototype
-`struct GraphNodeMasterList* get_current_graph_node_master_list(void);`
+`struct GraphNodeMasterList* geo_get_current_graph_node_master_list(void);`
 
 [:arrow_up_small:](#)
 
 <br />
 
-## [get_current_graph_node_cam_frustum](#get_current_graph_node_cam_frustum)
+## [geo_get_current_graph_node_cam_frustum](#geo_get_current_graph_node_cam_frustum)
 
 ### Description
 Gets the current global GraphNodePerspective
 
 ### Lua Example
-`local GraphNodePerspectiveValue = get_current_graph_node_cam_frustum()`
+`local GraphNodePerspectiveValue = geo_get_current_graph_node_cam_frustum()`
 
 ### Parameters
 - None
@@ -4508,19 +4508,19 @@ Gets the current global GraphNodePerspective
 [GraphNodePerspective](structs.md#GraphNodePerspective)
 
 ### C Prototype
-`struct GraphNodePerspective* get_current_graph_node_cam_frustum(void);`
+`struct GraphNodePerspective* geo_get_current_graph_node_cam_frustum(void);`
 
 [:arrow_up_small:](#)
 
 <br />
 
-## [get_current_graph_node_camera](#get_current_graph_node_camera)
+## [geo_get_current_graph_node_camera](#geo_get_current_graph_node_camera)
 
 ### Description
 Gets the current global GraphNodeCamera
 
 ### Lua Example
-`local GraphNodeCameraValue = get_current_graph_node_camera()`
+`local GraphNodeCameraValue = geo_get_current_graph_node_camera()`
 
 ### Parameters
 - None
@@ -4529,19 +4529,19 @@ Gets the current global GraphNodeCamera
 [GraphNodeCamera](structs.md#GraphNodeCamera)
 
 ### C Prototype
-`struct GraphNodeCamera* get_current_graph_node_camera(void);`
+`struct GraphNodeCamera* geo_get_current_graph_node_camera(void);`
 
 [:arrow_up_small:](#)
 
 <br />
 
-## [get_current_graph_node_held_object](#get_current_graph_node_held_object)
+## [geo_get_current_graph_node_held_object](#geo_get_current_graph_node_held_object)
 
 ### Description
 Gets the current global GraphNodeHeldObject
 
 ### Lua Example
-`local GraphNodeHeldObjectValue = get_current_graph_node_held_object()`
+`local GraphNodeHeldObjectValue = geo_get_current_graph_node_held_object()`
 
 ### Parameters
 - None
@@ -4550,7 +4550,7 @@ Gets the current global GraphNodeHeldObject
 [GraphNodeHeldObject](structs.md#GraphNodeHeldObject)
 
 ### C Prototype
-`struct GraphNodeHeldObject* get_current_graph_node_held_object(void);`
+`struct GraphNodeHeldObject* geo_get_current_graph_node_held_object(void);`
 
 [:arrow_up_small:](#)
 

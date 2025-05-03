@@ -10586,31 +10586,31 @@ end
 
 --- @return GraphNodeRoot
 --- Gets the current global GraphNodeRoot
-function get_current_graph_node_root()
+function geo_get_current_graph_node_root()
     -- ...
 end
 
 --- @return GraphNodeMasterList
 --- Gets the current global GraphNodeMasterList
-function get_current_graph_node_master_list()
+function geo_get_current_graph_node_master_list()
     -- ...
 end
 
 --- @return GraphNodePerspective
 --- Gets the current global GraphNodePerspective
-function get_current_graph_node_cam_frustum()
+function geo_get_current_graph_node_cam_frustum()
     -- ...
 end
 
 --- @return GraphNodeCamera
 --- Gets the current global GraphNodeCamera
-function get_current_graph_node_camera()
+function geo_get_current_graph_node_camera()
     -- ...
 end
 
 --- @return GraphNodeHeldObject
 --- Gets the current global GraphNodeHeldObject
-function get_current_graph_node_held_object()
+function geo_get_current_graph_node_held_object()
     -- ...
 end
 
