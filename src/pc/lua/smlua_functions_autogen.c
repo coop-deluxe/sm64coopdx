@@ -32220,6 +32220,81 @@ int smlua_func_get_os_name(UNUSED lua_State* L) {
     return 1;
 }
 
+int smlua_func_get_current_graph_node_root(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "get_current_graph_node_root", 0, top);
+        return 0;
+    }
+
+
+    smlua_push_object(L, LOT_GRAPHNODEROOT, get_current_graph_node_root(), NULL);
+
+    return 1;
+}
+
+int smlua_func_get_current_graph_node_master_list(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "get_current_graph_node_master_list", 0, top);
+        return 0;
+    }
+
+
+    smlua_push_object(L, LOT_GRAPHNODEMASTERLIST, get_current_graph_node_master_list(), NULL);
+
+    return 1;
+}
+
+int smlua_func_get_current_graph_node_cam_frustum(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "get_current_graph_node_cam_frustum", 0, top);
+        return 0;
+    }
+
+
+    smlua_push_object(L, LOT_GRAPHNODEPERSPECTIVE, get_current_graph_node_cam_frustum(), NULL);
+
+    return 1;
+}
+
+int smlua_func_get_current_graph_node_camera(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "get_current_graph_node_camera", 0, top);
+        return 0;
+    }
+
+
+    smlua_push_object(L, LOT_GRAPHNODECAMERA, get_current_graph_node_camera(), NULL);
+
+    return 1;
+}
+
+int smlua_func_get_current_graph_node_held_object(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "get_current_graph_node_held_object", 0, top);
+        return 0;
+    }
+
+
+    smlua_push_object(L, LOT_GRAPHNODEHELDOBJECT, get_current_graph_node_held_object(), NULL);
+
+    return 1;
+}
+
   /////////////////////////
  // smlua_model_utils.h //
 /////////////////////////
@@ -35999,6 +36074,11 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "set_window_title", smlua_func_set_window_title);
     smlua_bind_function(L, "reset_window_title", smlua_func_reset_window_title);
     smlua_bind_function(L, "get_os_name", smlua_func_get_os_name);
+    smlua_bind_function(L, "get_current_graph_node_root", smlua_func_get_current_graph_node_root);
+    smlua_bind_function(L, "get_current_graph_node_master_list", smlua_func_get_current_graph_node_master_list);
+    smlua_bind_function(L, "get_current_graph_node_cam_frustum", smlua_func_get_current_graph_node_cam_frustum);
+    smlua_bind_function(L, "get_current_graph_node_camera", smlua_func_get_current_graph_node_camera);
+    smlua_bind_function(L, "get_current_graph_node_held_object", smlua_func_get_current_graph_node_held_object);
 
     // smlua_model_utils.h
     smlua_bind_function(L, "smlua_model_util_get_id", smlua_func_smlua_model_util_get_id);

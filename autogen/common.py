@@ -21,7 +21,6 @@ type_mappings = {
 exclude_structs = [
     'SPTask',
     'VblankHandler',
-    'GraphNodeRoot',
     'MarioAnimDmaRelatedThing',
     'UnusedArea28',
 ]

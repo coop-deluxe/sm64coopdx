@@ -48,6 +48,7 @@
 --- @field public surfaceRooms Pointer_integer
 --- @field public terrainData Pointer_integer
 --- @field public terrainType integer
+--- @field public unk04 GraphNodeRoot
 --- @field public warpNodes ObjectWarpNode
 --- @field public whirlpools Whirlpool[]
 
@@ -949,6 +950,16 @@
 --- @field public prevFov number
 --- @field public prevTimestamp number
 --- @field public unused integer
+
+--- @class GraphNodeRoot
+--- @field public areaIndex integer
+--- @field public height integer
+--- @field public node GraphNode
+--- @field public numViews integer
+--- @field public unk15 integer
+--- @field public width integer
+--- @field public x integer
+--- @field public y integer
 
 --- @class GraphNodeRotation
 --- @field public displayList Pointer_Gfx

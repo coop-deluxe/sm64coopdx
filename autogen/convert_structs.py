@@ -129,6 +129,7 @@ override_field_immutable = {
     "GraphNodeObjectParent": [ "sharedChild" ],
     "GraphNodePerspective": [ "unused" ],
     "GraphNodeSwitchCase": [ "fnNode", "unused" ],
+    "GraphNodeRoot": ["node", "areaIndex", "unk15", "x", "y", "width", "height", "numViews", "views"],
     "ObjectWarpNode": [ "next "],
     "Animation": [ "length" ],
     "AnimationTable": [ "count" ],

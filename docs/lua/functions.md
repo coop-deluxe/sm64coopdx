@@ -1916,6 +1916,11 @@
    - [set_window_title](functions-6.md#set_window_title)
    - [reset_window_title](functions-6.md#reset_window_title)
    - [get_os_name](functions-6.md#get_os_name)
+   - [get_current_graph_node_root](functions-6.md#get_current_graph_node_root)
+   - [get_current_graph_node_master_list](functions-6.md#get_current_graph_node_master_list)
+   - [get_current_graph_node_cam_frustum](functions-6.md#get_current_graph_node_cam_frustum)
+   - [get_current_graph_node_camera](functions-6.md#get_current_graph_node_camera)
+   - [get_current_graph_node_held_object](functions-6.md#get_current_graph_node_held_object)
 
 <br />
 
