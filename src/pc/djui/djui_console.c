@@ -20,6 +20,8 @@ struct ConsoleQueuedMessage {
 
 struct ConsoleQueuedMessage* sConsoleQueuedMessages = NULL;
 
+static f32 sScrollY = 0;
+
 static void djui_console_message_queue(const char* message, enum ConsoleMessageLevel level) {
     struct ConsoleQueuedMessage* queued = malloc(sizeof(struct ConsoleQueuedMessage));
     queued->message = strdup(message);
@@ -50,7 +52,11 @@ void djui_console_message_dequeue(void) {
 }
 
 bool djui_console_render(struct DjuiBase* base) {
+    struct DjuiConsole* console = (struct DjuiConsole*)base;
     djui_base_set_size(base, gDjuiRoot->base.width.value, gDjuiRoot->base.height.value * 0.5f);
+    if (console->scrolling || sScrollY == 0) {
+        console->flow->base.y.value += (sScrollY - console->flow->base.y.value) * (configSmoothScrolling ? .5f : 1);
+    } else { sScrollY = console->flow->base.y.value; }
 
     djui_rect_render(base);
     return true;
@@ -74,32 +80,47 @@ void djui_console_toggle(void) {
     }
 }
 
+static void djui_console_on_scroll(UNUSED struct DjuiBase *base, UNUSED float x, float y) {
+    if (gDjuiConsole == NULL) { return; }
+    f32 yMax = gDjuiConsole->base.comp.height - gDjuiConsole->flow->base.height.value;
+
+    bool canScrollUp   = (sScrollY > yMax);
+    bool canScrollDown = (sScrollY < 0);
+    
+    y *= -24;
+    if (gDjuiInputHeldControl) { y /= 2; }
+    if (gDjuiInputHeldShift) { y *= 3; }
+
+    if (y < 0 && canScrollUp) { sScrollY = fmax(sScrollY + y, yMax); }
+    if (y > 0 && canScrollDown) { sScrollY = fmin(sScrollY + y, 0); }
+    gDjuiConsole->scrolling = (sScrollY != 0);
+}
+
 static bool djui_console_on_key_down(UNUSED struct DjuiBase* base, int scancode) {
     if (gDjuiConsole == NULL) { return false; }
     f32 yMax = gDjuiConsole->base.comp.height - gDjuiConsole->flow->base.height.value;
 
-    f32* yValue = &gDjuiConsole->flow->base.y.value;
-    bool canScrollUp   = (*yValue > yMax);
-    bool canScrollDown = (*yValue < 0);
+    bool canScrollUp   = (sScrollY > yMax);
+    bool canScrollDown = (sScrollY < 0);
     f32 pageAmount = gDjuiConsole->base.comp.height * 3.0f / 4.0f;
 
     switch (scancode) {
         case SCANCODE_UP:
-            if (canScrollUp) { *yValue = fmax(*yValue - 15, yMax); }
+            if (canScrollUp) { sScrollY = fmax(sScrollY - 15, yMax); }
             break;
         case SCANCODE_DOWN:
-            if (canScrollDown) { *yValue = fmin(*yValue + 15, 0); }
+            if (canScrollDown) { sScrollY = fmin(sScrollY + 15, 0); }
             break;
         case SCANCODE_PAGE_UP:
-            if (canScrollUp) { *yValue = fmax(*yValue - pageAmount, yMax); }
+            if (canScrollUp) { sScrollY = fmax(sScrollY - pageAmount, yMax); }
             break;
         case SCANCODE_PAGE_DOWN:
-            if (canScrollDown) { *yValue = fmin(*yValue + pageAmount, 0); }
+            if (canScrollDown) { sScrollY = fmin(sScrollY + pageAmount, 0); }
             break;
         case SCANCODE_ESCAPE: djui_console_toggle(); break;
         default: break;
     }
-    gDjuiConsole->scrolling = (*yValue != 0);
+    gDjuiConsole->scrolling = (sScrollY != 0);
     return true;
 }
 
@@ -139,8 +160,9 @@ void djui_console_message_create(const char* message, enum ConsoleMessageLevel l
     f32 heightAdjust = messageHeight + gDjuiConsole->flow->margin.value;
     cfBase->height.value += heightAdjust;
 
-    if (gDjuiConsole->scrolling) {
+    if (gDjuiConsole->scrolling && sScrollY != 0) {
         cfBase->y.value -= heightAdjust;
+        sScrollY -= heightAdjust;
     }
 
     sDjuiConsoleMessages++;
@@ -148,8 +170,9 @@ void djui_console_message_create(const char* message, enum ConsoleMessageLevel l
         if (cfBase->child) {
             heightAdjust = cfBase->child->base->height.value + gDjuiConsole->flow->margin.value;
             cfBase->height.value -= heightAdjust;
-            if (gDjuiConsole->scrolling) {
+            if (gDjuiConsole->scrolling && sScrollY != 0) {
                 cfBase->y.value += heightAdjust;
+                sScrollY += heightAdjust;
             }
         }
 
@@ -177,6 +200,7 @@ struct DjuiConsole* djui_console_create(void) {
 
     djui_interactable_create(base, NULL);
     djui_interactable_hook_key(base, djui_console_on_key_down, NULL);
+    djui_interactable_hook_scroll(base, djui_console_on_scroll);
 
     struct DjuiFlowLayout* flow = djui_flow_layout_create(base);
     struct DjuiBase* cfBase = &flow->base;
