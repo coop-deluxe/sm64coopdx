@@ -227,6 +227,7 @@ static void controller_sdl_read(OSContPad *pad) {
             }
         } else if (!sdl_joystick) {
             sdl_joystick = SDL_JoystickOpen(configGamepadNumber);
+            if (!sdl_joystick) { return; }
         }
     }
 
