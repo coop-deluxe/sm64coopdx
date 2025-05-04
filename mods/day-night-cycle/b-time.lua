@@ -1,7 +1,7 @@
-local sNightSequences = {}
-
 -- localize functions to improve performance
-local mod_storage_remove,mod_storage_load_bool,mod_storage_exists,math_floor,mod_storage_save_number,mod_storage_load_number,string_format,smlua_audio_utils_replace_sequence,fade_volume_scale,set_background_music,obj_mark_for_deletion = mod_storage_remove,mod_storage_load_bool,mod_storage_exists,math.floor,mod_storage_save_number,mod_storage_load_number,string.format,smlua_audio_utils_replace_sequence,fade_volume_scale,set_background_music,obj_mark_for_deletion
+local mod_storage_remove,mod_storage_load_bool,math_floor,mod_storage_save_number,mod_storage_load_number,type,error,string_format,smlua_audio_utils_replace_sequence,fade_volume_scale,set_background_music,obj_mark_for_deletion = mod_storage_remove,mod_storage_load_bool,math.floor,mod_storage_save_number,mod_storage_load_number,type,error,string.format,smlua_audio_utils_replace_sequence,fade_volume_scale,set_background_music,obj_mark_for_deletion
+
+local sNightSequences = {}
 
 -- purge legacy fields
 mod_storage_remove("ampm")
@@ -159,7 +159,7 @@ function update_night_music()
     if minutes >= HOUR_SUNSET_END + 0.75 and minutes < HOUR_NIGHT_START then
         local threshold = 1 - (minutes - (HOUR_SUNSET_END + 0.75)) * 4  -- multiply by 4 because four quarters make a whole
         fade_volume_scale(SEQ_PLAYER_LEVEL, threshold * 127, 1)
-    elseif minutes >= HOUR_SUNRISE_START + 0.75 and minutes <= HOUR_SUNRISE_END then
+    elseif minutes >= HOUR_SUNRISE_START + 0.75 and minutes < HOUR_SUNRISE_END then
         local threshold = 1 - (minutes - (HOUR_SUNRISE_START + 0.75)) * 4
         fade_volume_scale(SEQ_PLAYER_LEVEL, threshold * 127, 1)
     end
