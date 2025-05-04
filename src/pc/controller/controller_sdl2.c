@@ -225,9 +225,8 @@ static void controller_sdl_read(OSContPad *pad) {
             if (sdl_cntrl != NULL) {
                 sdl_haptic = controller_sdl_init_haptics(configGamepadNumber);
             }
-        } else {
+        } else if (!sdl_joystick) {
             sdl_joystick = SDL_JoystickOpen(configGamepadNumber);
-            if (!sdl_joystick) { return; }
         }
     }
 
