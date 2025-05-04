@@ -207,19 +207,19 @@ void reset_window_title(void);
 /* |description|Gets the name of the operating system the game is running on|descriptionEnd| */
 const char* get_os_name(void);
 
-/* |description|Gets the current global GraphNodeRoot|descriptionEnd|*/
-struct GraphNodeRoot* geo_get_current_graph_node_root(void);
+/* |description|Gets the current GraphNodeRoot|descriptionEnd|*/
+struct GraphNodeRoot* geo_get_current_root(void);
 
-/* |description|Gets the current global GraphNodeMasterList|descriptionEnd|*/
-struct GraphNodeMasterList* geo_get_current_graph_node_master_list(void);
+/* |description|Gets the current GraphNodeMasterList|descriptionEnd|*/
+struct GraphNodeMasterList* geo_get_current_master_list(void);
 
-/* |description|Gets the current global GraphNodePerspective|descriptionEnd|*/
-struct GraphNodePerspective* geo_get_current_graph_node_cam_frustum(void);
+/* |description|Gets the current GraphNodePerspective|descriptionEnd|*/
+struct GraphNodePerspective* geo_get_current_perspective(void);
 
-/* |description|Gets the current global GraphNodeCamera|descriptionEnd|*/
-struct GraphNodeCamera* geo_get_current_graph_node_camera(void);
+/* |description|Gets the current GraphNodeCamera|descriptionEnd|*/
+struct GraphNodeCamera* geo_get_current_camera(void);
 
-/* |description|Gets the current global GraphNodeHeldObject|descriptionEnd|*/
-struct GraphNodeHeldObject* geo_get_current_graph_node_held_object(void);
+/* |description|Gets the current GraphNodeHeldObject|descriptionEnd|*/
+struct GraphNodeHeldObject* geo_get_current_held_object(void);
 
 #endif
