@@ -15314,12 +15314,12 @@ int smlua_func_lvl_set_current_level(lua_State* L) {
         return 0;
     }
 
-    s16 arg0 = smlua_to_integer(L, 1);
+    s16 param = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "lvl_set_current_level"); return 0; }
     s16 levelNum = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "lvl_set_current_level"); return 0; }
 
-    lua_pushinteger(L, lvl_set_current_level(arg0, levelNum));
+    lua_pushinteger(L, lvl_set_current_level(param, levelNum));
 
     return 1;
 }
