@@ -10585,32 +10585,32 @@ function get_os_name()
 end
 
 --- @return GraphNodeRoot
---- Gets the current global GraphNodeRoot
-function geo_get_current_graph_node_root()
+--- Gets the current GraphNodeRoot
+function geo_get_current_root()
     -- ...
 end
 
 --- @return GraphNodeMasterList
---- Gets the current global GraphNodeMasterList
-function geo_get_current_graph_node_master_list()
+--- Gets the current GraphNodeMasterList
+function geo_get_current_master_list()
     -- ...
 end
 
 --- @return GraphNodePerspective
---- Gets the current global GraphNodePerspective
-function geo_get_current_graph_node_cam_frustum()
+--- Gets the current GraphNodePerspective
+function geo_get_current_perspective()
     -- ...
 end
 
 --- @return GraphNodeCamera
---- Gets the current global GraphNodeCamera
-function geo_get_current_graph_node_camera()
+--- Gets the current GraphNodeCamera
+function geo_get_current_camera()
     -- ...
 end
 
 --- @return GraphNodeHeldObject
---- Gets the current global GraphNodeHeldObject
-function geo_get_current_graph_node_held_object()
+--- Gets the current GraphNodeHeldObject
+function geo_get_current_held_object()
     -- ...
 end
 

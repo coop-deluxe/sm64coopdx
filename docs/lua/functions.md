@@ -1916,11 +1916,11 @@
    - [set_window_title](functions-6.md#set_window_title)
    - [reset_window_title](functions-6.md#reset_window_title)
    - [get_os_name](functions-6.md#get_os_name)
-   - [geo_get_current_graph_node_root](functions-6.md#geo_get_current_graph_node_root)
-   - [geo_get_current_graph_node_master_list](functions-6.md#geo_get_current_graph_node_master_list)
-   - [geo_get_current_graph_node_cam_frustum](functions-6.md#geo_get_current_graph_node_cam_frustum)
-   - [geo_get_current_graph_node_camera](functions-6.md#geo_get_current_graph_node_camera)
-   - [geo_get_current_graph_node_held_object](functions-6.md#geo_get_current_graph_node_held_object)
+   - [geo_get_current_root](functions-6.md#geo_get_current_root)
+   - [geo_get_current_master_list](functions-6.md#geo_get_current_master_list)
+   - [geo_get_current_perspective](functions-6.md#geo_get_current_perspective)
+   - [geo_get_current_camera](functions-6.md#geo_get_current_camera)
+   - [geo_get_current_held_object](functions-6.md#geo_get_current_held_object)
 
 <br />
 
