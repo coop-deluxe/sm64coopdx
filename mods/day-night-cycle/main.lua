@@ -1,23 +1,13 @@
 -- name: Day Night Cycle DX
 -- incompatible: light day-night-cycle
--- description: Day Night Cycle DX v2.4\nBy \\#ec7731\\Agent X\n\n\\#dcdcdc\\This mod adds a fully featured day & night cycle system with night, sunrise, day and sunset to sm64coopdx. It includes an API and hook system for interfacing with several components of the mod externally. This mod was originally made for sm64ex-coop but has been practically rewritten for sm64coopdx.\n\nDays last 24 minutes and with the /time command, you can get/set the time or change your settings.\n\nThere is also now a new menu in the pause menu for Day Night Cycle DX!\n\nSpecial thanks to \\#e06de4\\MaiskX3\\#dcdcdc\\ for the night time music.\nSpecial thanks to \\#00ffff\\AngelicMiracles\\#dcdcdc\\ for the sunset, sunrise and night time skyboxes.\nSpecial thanks to \\#344ee1\\eros71\\#dcdcdc\\ for salvaging\nthe mod files.
+-- description: Day Night Cycle DX v2.5\nBy \\#ec7731\\Agent X\n\n\\#dcdcdc\\This mod adds a fully featured day & night cycle system with night, sunrise, day and sunset to sm64coopdx. It includes an API and hook system for interfacing with several components of the mod externally. This mod was originally made for sm64ex-coop but has been practically rewritten for sm64coopdx.\n\nDays last 24 minutes and with the /time command, you can get/set the time or change your settings.\n\nThere is also now a new menu in the pause menu for Day Night Cycle DX!\n\nSpecial thanks to \\#e06de4\\MaiskX3\\#dcdcdc\\ for the night time music.\nSpecial thanks to \\#00ffff\\AngelicMiracles\\#dcdcdc\\ for the sunset, sunrise and night time skyboxes.\nSpecial thanks to \\#344ee1\\eros71\\#dcdcdc\\ for salvaging\nthe mod files.
 
---- @class Vec2f
---- @field public x number
---- @field public y number
-
-gGlobalSyncTable.dncEnabled = true
-gGlobalSyncTable.time = if_then_else(network_is_server(), load_time(), HOUR_DAY_START)
-gGlobalSyncTable.timeScale = tonumber(mod_storage_load("scale")) or 1.0
-gGlobalSyncTable.sunrise = HOUR_SUNRISE_START
-gGlobalSyncTable.sunset = HOUR_SUNSET_START
+-- localize functions to improve performance
+local network_is_server,mod_storage_load,tonumber,type,math_floor,error,table_insert,get_skybox,set_lighting_dir,set_lighting_color,set_vertex_color,set_fog_color,set_fog_intensity,network_check_singleplayer_pause,network_player_connected_count,obj_get_first_with_behavior_id,spawn_non_sync_object,obj_scale,clampf,set_lighting_color_ambient,le_set_ambient_color,djui_hud_set_resolution,djui_hud_set_font,hud_is_hidden,hud_get_value,djui_hud_get_screen_width,djui_hud_measure_text,djui_hud_get_screen_height,djui_hud_set_color,play_sound,djui_chat_message_create,string_format,mod_storage_save_number,mod_storage_save_bool,get_date_and_time = network_is_server,mod_storage_load,tonumber,type,math.floor,error,table.insert,get_skybox,set_lighting_dir,set_lighting_color,set_vertex_color,set_fog_color,set_fog_intensity,network_check_singleplayer_pause,network_player_connected_count,obj_get_first_with_behavior_id,spawn_non_sync_object,obj_scale,clampf,set_lighting_color_ambient,le_set_ambient_color,djui_hud_set_resolution,djui_hud_set_font,hud_is_hidden,hud_get_value,djui_hud_get_screen_width,djui_hud_measure_text,djui_hud_get_screen_height,djui_hud_set_color,play_sound,djui_chat_message_create,string.format,mod_storage_save_number,mod_storage_save_bool,get_date_and_time
 
 local init = false
 local timeModifier = 0
 local displayTime = mod_storage_load_bool_2("display_time")
-
--- localize functions to improve performance
-local math_floor,table_insert,get_skybox,set_lighting_dir,set_lighting_color,set_vertex_color,set_fog_color,set_fog_intensity,network_check_singleplayer_pause,network_player_connected_count,obj_get_first_with_behavior_id,network_is_server,spawn_non_sync_object,obj_scale,clampf,set_lighting_color_ambient,djui_hud_set_resolution,djui_hud_set_font,hud_get_value,hud_is_hidden,djui_hud_get_screen_width,djui_hud_measure_text,djui_hud_get_screen_height,djui_hud_set_color,play_sound,djui_chat_message_create,string_format,mod_storage_save_number,mod_storage_save_bool,get_date_and_time = math.floor,table.insert,get_skybox,set_lighting_dir,set_lighting_color,set_vertex_color,set_fog_color,set_fog_intensity,network_check_singleplayer_pause,network_player_connected_count,obj_get_first_with_behavior_id,network_is_server,spawn_non_sync_object,obj_scale,clampf,set_lighting_color_ambient,djui_hud_set_resolution,djui_hud_set_font,hud_get_value,hud_is_hidden,djui_hud_get_screen_width,djui_hud_measure_text,djui_hud_get_screen_height,djui_hud_set_color,play_sound,djui_chat_message_create,string.format,mod_storage_save_number,mod_storage_save_bool,get_date_and_time
 
 local sDncHooks = {
     [DNC_HOOK_SET_LIGHTING_COLOR] = {},
@@ -30,8 +20,15 @@ local sDncHooks = {
     [DNC_HOOK_DELETE_AT_DARK] = {},
     [DNC_HOOK_SET_TIME] = {},
     [DNC_HOOK_SET_SKYBOX_MODEL] = {},
-    [DNC_HOOK_SUN_TIMES_CHANGED] = {}
+    [DNC_HOOK_SUN_TIMES_CHANGED] = {},
+    [DNC_HOOK_ON_HUD_RENDER_BEHIND] = {}
 }
+
+gGlobalSyncTable.dncEnabled = true
+gGlobalSyncTable.time = if_then_else(network_is_server(), load_time(), HOUR_DAY_START)
+gGlobalSyncTable.timeScale = tonumber(mod_storage_load("scale")) or 1.0
+gGlobalSyncTable.sunrise = HOUR_SUNRISE_START
+gGlobalSyncTable.sunset = HOUR_SUNSET_START
 
 --- @param hookEventType integer
 --- @param func function
@@ -82,6 +79,7 @@ function show_day_night_cycle()
 end
 
 local function reset_lighting()
+    set_lighting_dir(0, 0)
     set_lighting_dir(1, 0)
     set_lighting_dir(2, 0)
     set_lighting_color(0, 255)
@@ -107,6 +105,7 @@ local function update()
 
     if network_is_server() then time_tick() end
     if init then update_night_music() end
+    init = true
 
     -- spawn skyboxes
     local skybox = get_skybox()
@@ -118,9 +117,9 @@ local function update()
             for i = SKYBOX_DAY, SKYBOX_NIGHT do
                 local thisSkybox = skybox
                 if i == SKYBOX_SUNSET then
-                    thisSkybox = if_then_else(skybox == BACKGROUND_BELOW_CLOUDS, BACKGROUND_BELOW_CLOUDS_SUNSET, BACKGROUND_SUNSET)
+                    thisSkybox = gSunsetSkyboxes[skybox]
                 elseif i == SKYBOX_NIGHT then
-                    thisSkybox = if_then_else(skybox == BACKGROUND_BELOW_CLOUDS, BACKGROUND_BELOW_CLOUDS_NIGHT, BACKGROUND_NIGHT)
+                    thisSkybox = gNightSkyboxes[skybox]
                 end
 
                 local model = E_MODEL_DNC_SKYBOX
@@ -140,10 +139,14 @@ local function update()
                 )
             end
         else
+            local model = E_MODEL_DNC_SKYBOX
+            local overrideModel = dnc_call_hook(DNC_HOOK_SET_SKYBOX_MODEL, -1, skybox)
+            if overrideModel ~= nil and type(overrideModel) == "number" then model = overrideModel end
+
             -- spawn static skybox
             spawn_non_sync_object(
                 bhvDNCSkybox,
-                E_MODEL_DNC_SKYBOX,
+                model,
                 0, 0, 0,
                 --- @param o Object
                 function(o)
@@ -158,124 +161,102 @@ local function update()
     local minutes = if_then_else(is_static_skybox(skybox), 12, get_time_minutes())
 
     local actSelector = obj_get_first_with_behavior_id(id_bhvActSelector)
-    if actSelector == nil and show_day_night_cycle() then
-        -- calculate lighting color
-        local color = COLOR_DAY
-        if minutes >= HOUR_SUNRISE_START and minutes <= HOUR_SUNRISE_END then
-            color = color_lerp(COLOR_NIGHT, COLOR_SUNRISE, (minutes - HOUR_SUNRISE_START) / HOUR_SUNRISE_DURATION)
-        elseif minutes >= HOUR_SUNRISE_END and minutes <= HOUR_DAY_START then
-            color = color_lerp(COLOR_SUNRISE, COLOR_DAY, (minutes - HOUR_SUNRISE_END) / HOUR_SUNRISE_DURATION)
-        elseif minutes >= HOUR_SUNSET_START and minutes <= HOUR_SUNSET_END then
-            color = color_lerp(COLOR_DAY, COLOR_SUNSET, (minutes - HOUR_SUNSET_START) / HOUR_SUNSET_DURATION)
-        elseif minutes >= HOUR_SUNSET_END and minutes <= HOUR_NIGHT_START then
-            color = color_lerp(COLOR_SUNSET, COLOR_NIGHT, (minutes - HOUR_SUNSET_END) / HOUR_SUNSET_DURATION)
-        elseif minutes > HOUR_NIGHT_START or minutes < HOUR_SUNRISE_START then
-            color = COLOR_NIGHT
-        elseif minutes > HOUR_DAY_START and minutes < HOUR_SUNSET_START then
-            color = COLOR_DAY
-        end
-        local overrideColor = dnc_call_hook(DNC_HOOK_SET_LIGHTING_COLOR, table_clone(color))
-        if overrideColor ~= nil and type(overrideColor) == "table" then color = overrideColor end
-
-        -- calculate ambient lighting color
-        local ambientColor = COLOR_AMBIENT_DAY
-        if minutes >= HOUR_SUNRISE_START and minutes <= HOUR_SUNRISE_END then
-            ambientColor = color_lerp(COLOR_AMBIENT_NIGHT, COLOR_AMBIENT_SUNRISE, (minutes - HOUR_SUNRISE_START) / HOUR_SUNRISE_DURATION)
-        elseif minutes >= HOUR_SUNRISE_END and minutes <= HOUR_DAY_START then
-            ambientColor = color_lerp(COLOR_AMBIENT_SUNRISE, COLOR_AMBIENT_DAY, (minutes - HOUR_SUNRISE_END) / HOUR_SUNRISE_DURATION)
-        elseif minutes >= HOUR_SUNSET_START and minutes <= HOUR_SUNSET_END then
-            ambientColor = color_lerp(COLOR_AMBIENT_DAY, COLOR_AMBIENT_SUNSET, (minutes - HOUR_SUNSET_START) / HOUR_SUNSET_DURATION)
-        elseif minutes >= HOUR_SUNSET_END and minutes <= HOUR_NIGHT_START then
-            ambientColor = color_lerp(COLOR_AMBIENT_SUNSET, COLOR_AMBIENT_NIGHT, (minutes - HOUR_SUNSET_END) / HOUR_SUNSET_DURATION)
-        elseif minutes > HOUR_NIGHT_START or minutes < HOUR_SUNRISE_START then
-            ambientColor = COLOR_AMBIENT_NIGHT
-        elseif minutes > HOUR_DAY_START and minutes < HOUR_SUNSET_START then
-            ambientColor = COLOR_AMBIENT_DAY
-        end
-        local overrideAmbientColor = dnc_call_hook(DNC_HOOK_SET_AMBIENT_LIGHTING_COLOR, table_clone(ambientColor))
-        if overrideAmbientColor ~= nil and type(overrideColor) == "table" then ambientColor = overrideAmbientColor end
-
-        -- calculate fog color
-        local fogColor = COLOR_DAY
-        if minutes >= HOUR_SUNRISE_START and minutes <= HOUR_SUNRISE_END then
-            fogColor = color_lerp(FOG_COLOR_NIGHT, COLOR_SUNRISE, (minutes - HOUR_SUNRISE_START) / HOUR_SUNRISE_DURATION)
-        elseif minutes >= HOUR_SUNRISE_END and minutes <= HOUR_DAY_START then
-            fogColor = color_lerp(COLOR_SUNRISE, COLOR_DAY, (minutes - HOUR_SUNRISE_END) / HOUR_SUNRISE_DURATION)
-        elseif minutes >= HOUR_SUNSET_START and minutes <= HOUR_SUNSET_END then
-            fogColor = color_lerp(COLOR_DAY, COLOR_SUNSET, (minutes - HOUR_SUNSET_START) / HOUR_SUNSET_DURATION)
-        elseif minutes >= HOUR_SUNSET_END and minutes <= HOUR_NIGHT_START then
-            fogColor = color_lerp(COLOR_SUNSET, FOG_COLOR_NIGHT, (minutes - HOUR_SUNSET_END) / HOUR_SUNSET_DURATION)
-        elseif minutes > HOUR_NIGHT_START or minutes < HOUR_SUNRISE_START then
-            fogColor = FOG_COLOR_NIGHT
-        elseif minutes > HOUR_DAY_START and minutes < HOUR_SUNSET_START then
-            fogColor = COLOR_DAY
-        end
-        fogColor = color_lerp(fogColor, ambientColor, 0.5)
-        local overrideFogColor = dnc_call_hook(DNC_HOOK_SET_FOG_COLOR, table_clone(fogColor))
-        if overrideFogColor ~= nil and type(overrideFogColor) == "table" then fogColor = overrideFogColor end
-
-        -- calculate lighting direction
-        local dir = DIR_BRIGHT
-        if minutes >= HOUR_SUNRISE_START and minutes <= HOUR_SUNRISE_END then
-            dir = lerp(DIR_DARK, DIR_BRIGHT, clampf((minutes - HOUR_SUNRISE_START) / (HOUR_SUNRISE_DURATION), 0, 1))
-        elseif minutes >= HOUR_SUNSET_START and minutes <= HOUR_NIGHT_START then
-            dir = lerp(DIR_BRIGHT, DIR_DARK, clampf((minutes - HOUR_SUNSET_START) / (HOUR_NIGHT_START - HOUR_SUNSET_START), 0, 1))
-        elseif minutes < HOUR_SUNRISE_START or minutes > HOUR_NIGHT_START then
-            dir = DIR_DARK
-        elseif minutes > HOUR_SUNRISE_END and minutes < HOUR_SUNSET_START then
-            dir = DIR_BRIGHT
-        end
-        local overrideDir = dnc_call_hook(DNC_HOOK_SET_LIGHTING_DIR, dir)
-        if overrideDir ~= nil and type(overrideDir) == "number" then dir = overrideDir end
-
-        -- calculate fog intensity
-        local intensity = FOG_INTENSITY_NORMAL
-        if minutes >= HOUR_SUNRISE_START and minutes <= HOUR_SUNRISE_END then
-            intensity = lerp(FOG_INTENSITY_DENSE, FOG_INTENSITY_NORMAL, clampf((minutes - HOUR_SUNRISE_START) / (HOUR_SUNRISE_DURATION), 0, 1))
-        elseif minutes >= HOUR_SUNSET_START and minutes <= HOUR_NIGHT_START then
-            intensity = lerp(FOG_INTENSITY_NORMAL, FOG_INTENSITY_DENSE, clampf((minutes - HOUR_SUNSET_START) / (HOUR_NIGHT_START - HOUR_SUNSET_START), 0, 1))
-        elseif minutes < HOUR_SUNRISE_START or minutes > HOUR_NIGHT_START then
-            intensity = FOG_INTENSITY_DENSE
-        elseif minutes > HOUR_SUNRISE_END and minutes < HOUR_SUNSET_START then
-            intensity = FOG_INTENSITY_NORMAL
-        end
-        local overrideIntensity = dnc_call_hook(DNC_HOOK_SET_FOG_INTENSITY, intensity)
-        if overrideIntensity ~= nil and type(overrideIntensity) == "number" then intensity = overrideIntensity end
-
-        set_lighting_dir(1, -(1 - dir))
-        set_lighting_dir(2, -(1 - dir))
-        -- make the castle still 25% ambient lit
-        if in_vanilla_level(LEVEL_CASTLE) then
-            color = color_lerp(COLOR_DAY, color, 0.75)
-        end
-        set_lighting_color(0, color.r)
-        set_lighting_color(1, color.g)
-        set_lighting_color(2, color.b)
-        set_lighting_color_ambient(0, ambientColor.r)
-        set_lighting_color_ambient(1, ambientColor.g)
-        set_lighting_color_ambient(2, ambientColor.b)
-        local mix = color_lerp(color, ambientColor, 0.5)
-        set_vertex_color(0, mix.r)
-        set_vertex_color(1, mix.g)
-        set_vertex_color(2, mix.b)
-        set_fog_color(0, fogColor.r)
-        set_fog_color(1, fogColor.g)
-        set_fog_color(2, fogColor.b)
-        set_fog_intensity(intensity)
-
-        -- lighting engine compatibility
-        if obj_get_first_with_behavior_id(id_bhvAmbientLight) ~= nil then
-            mix = color_lerp(color, COLOR_WHITE, 0.5) -- make the color less intense
-            le_set_ambient_color(mix.r, mix.g, mix.b)
-        end
-    else
+    if actSelector ~= nil or not show_day_night_cycle() then
         reset_lighting()
+        return
     end
 
-    init = true
+    -- calculate lighting color
+    local color = COLOR_DAY
+    local ambientColor = COLOR_AMBIENT_DAY
+    local dir = DIR_BRIGHT
+    local fogColor = COLOR_DAY
+    local fogIntensity = FOG_INTENSITY_NORMAL
+    if minutes >= HOUR_SUNRISE_START and minutes <= HOUR_SUNRISE_END then
+        local t = (minutes - HOUR_SUNRISE_START) / HOUR_SUNRISE_DURATION
+        color = color_lerp(COLOR_NIGHT, COLOR_SUNRISE, t)
+        ambientColor = color_lerp(COLOR_AMBIENT_NIGHT, COLOR_AMBIENT_SUNRISE, t)
+        dir = lerp(DIR_DARK, DIR_BRIGHT, t)
+        fogColor = color_lerp(FOG_COLOR_NIGHT, COLOR_SUNRISE, t)
+        fogIntensity = lerp(FOG_INTENSITY_DENSE, FOG_INTENSITY_NORMAL, t)
+    elseif minutes >= HOUR_SUNRISE_END and minutes <= HOUR_DAY_START then
+        local t = (minutes - HOUR_SUNRISE_END) / HOUR_SUNRISE_DURATION
+        color = color_lerp(COLOR_SUNRISE, COLOR_DAY, t)
+        ambientColor = color_lerp(COLOR_AMBIENT_SUNRISE, COLOR_AMBIENT_DAY, t)
+        dir = DIR_BRIGHT
+        fogColor = color
+        fogIntensity = FOG_INTENSITY_NORMAL
+    elseif minutes >= HOUR_SUNSET_START and minutes <= HOUR_SUNSET_END then
+        local t = (minutes - HOUR_SUNSET_START) / HOUR_SUNSET_DURATION
+        color = color_lerp(COLOR_DAY, COLOR_SUNSET, t)
+        ambientColor = color_lerp(COLOR_AMBIENT_DAY, COLOR_AMBIENT_SUNSET, t)
+        dir = lerp(DIR_BRIGHT, DIR_DARK, t)
+        fogColor = color
+        fogIntensity = FOG_INTENSITY_NORMAL
+    elseif minutes >= HOUR_SUNSET_END and minutes <= HOUR_NIGHT_START then
+        local t = (minutes - HOUR_SUNSET_END) / HOUR_SUNSET_DURATION
+        color = color_lerp(COLOR_SUNSET, COLOR_NIGHT, t)
+        ambientColor = color_lerp(COLOR_AMBIENT_SUNSET, COLOR_AMBIENT_NIGHT, t)
+        dir = DIR_DARK
+        fogColor = color_lerp(COLOR_SUNSET, FOG_COLOR_NIGHT, t)
+        fogIntensity = lerp(FOG_INTENSITY_NORMAL, FOG_INTENSITY_DENSE, t)
+    elseif minutes > HOUR_NIGHT_START or minutes < HOUR_SUNRISE_START then
+        color = COLOR_NIGHT
+        ambientColor = COLOR_AMBIENT_NIGHT
+        dir = DIR_DARK
+        fogColor = FOG_COLOR_NIGHT
+        fogIntensity = FOG_INTENSITY_DENSE
+    end
+    fogColor = color_lerp(fogColor, ambientColor, 0.5)
+
+    local overrideColor = dnc_call_hook(DNC_HOOK_SET_LIGHTING_COLOR, table_clone(color))
+    if overrideColor ~= nil and type(overrideColor) == "table" then color = overrideColor end
+
+    local overrideAmbientColor = dnc_call_hook(DNC_HOOK_SET_AMBIENT_LIGHTING_COLOR, table_clone(ambientColor))
+    if overrideAmbientColor ~= nil and type(overrideColor) == "table" then ambientColor = overrideAmbientColor end
+
+    local overrideFogColor = dnc_call_hook(DNC_HOOK_SET_FOG_COLOR, table_clone(fogColor))
+    if overrideFogColor ~= nil and type(overrideFogColor) == "table" then fogColor = overrideFogColor end
+
+    local overrideFogIntensity = dnc_call_hook(DNC_HOOK_SET_FOG_INTENSITY, fogIntensity)
+    if overrideFogIntensity ~= nil and type(overrideFogIntensity) == "number" then fogIntensity = overrideFogIntensity end
+
+    local lightingDir = { x = 0, y = dir, z = dir }
+    local overrideLightingDir = dnc_call_hook(DNC_HOOK_SET_LIGHTING_DIR, lightingDir)
+    if overrideLightingDir ~= nil and type(overrideLightingDir) == "table" then lightingDir = overrideLightingDir end
+
+    set_lighting_dir(0, lightingDir.x)
+    set_lighting_dir(1, lightingDir.y)
+    set_lighting_dir(2, lightingDir.z)
+    -- make the castle still 25% lit
+    if in_vanilla_level(LEVEL_CASTLE) then
+        color = color_lerp(COLOR_DAY, color, 0.75)
+    end
+    set_lighting_color(0, color.r)
+    set_lighting_color(1, color.g)
+    set_lighting_color(2, color.b)
+    set_lighting_color_ambient(0, ambientColor.r)
+    set_lighting_color_ambient(1, ambientColor.g)
+    set_lighting_color_ambient(2, ambientColor.b)
+    local mix = color_lerp(color, ambientColor, 0.5)
+    set_vertex_color(0, mix.r)
+    set_vertex_color(1, mix.g)
+    set_vertex_color(2, mix.b)
+    set_fog_color(0, fogColor.r)
+    set_fog_color(1, fogColor.g)
+    set_fog_color(2, fogColor.b)
+    set_fog_intensity(fogIntensity)
+
+    -- lighting engine compatibility
+    if obj_get_first_with_behavior_id(id_bhvAmbientLight) ~= nil then
+        mix = color_lerp(color, COLOR_WHITE, 0.5) -- make the color less intense
+        le_set_ambient_color(mix.r, mix.g, mix.b)
+    end
 end
 
 local function on_hud_render_behind()
+    dnc_call_hook(DNC_HOOK_ON_HUD_RENDER_BEHIND)
+
     if not is_dnc_enabled() then return end -- option check
     if not dayNightCycleApi.displayTime or not displayTime then return end -- API checks
     if check_common_hud_render_cancels() then return end -- game checks
@@ -284,7 +265,7 @@ local function on_hud_render_behind()
     djui_hud_set_font(FONT_NORMAL)
 
     local scale = 0.5
-    local text = get_time_string(gGlobalSyncTable.time)
+    local text = get_time_string()
 
     local hidden = hud_is_hidden() or (hud_get_value(HUD_DISPLAY_FLAGS) & HUD_DISPLAY_FLAG_LIVES) == 0
     local x = if_then_else(hidden, (djui_hud_get_screen_width() * 0.5) - (djui_hud_measure_text(text) * (0.5 * scale)), 24)
@@ -312,7 +293,7 @@ local function on_hud_render_behind()
     if overrideColor ~= nil and type(overrideColor) == "table" then color = overrideColor end
     djui_hud_set_color(color.r, color.g, color.b, 255)
 
-    djui_hud_print_outlined_text(text, x, y, scale, 0.0)
+    djui_hud_print_outlined_text(text, x, y, scale)
 end
 
 local function on_level_init()
@@ -428,7 +409,7 @@ local function on_scale_command(msg)
     gGlobalSyncTable.timeScale = scale
     mod_storage_save_number("scale", scale)
 
-    update_mod_menu_element_slider(modMenuTimeScale, scale) -- I wonder
+    update_mod_menu_element_slider(modMenuTimeScale, scale)
 
     djui_chat_message_create("[Day Night Cycle] Time scale set to " .. scale)
 
@@ -521,7 +502,7 @@ end
 
 --- @param msg string
 local function on_time_command(msg)
-    local args = split(msg)
+    local args = string_split(msg)
 
     if args[1] == "set" then
         if not network_is_server() then
@@ -581,7 +562,7 @@ local function on_sunrise_changed(_, _, newVal)
 
     _G.dayNightCycleApi.constants.HOUR_SUNRISE_START = HOUR_SUNRISE_START
     _G.dayNightCycleApi.constants.HOUR_SUNRISE_END = HOUR_SUNRISE_END
-    _G.dayNightCycleApi.constants.HOUR_DAY_START = HOUR_NIGHT_START
+    _G.dayNightCycleApi.constants.HOUR_DAY_START = HOUR_DAY_START
 
     dnc_call_hook(DNC_HOOK_SUN_TIMES_CHANGED)
 end
@@ -739,8 +720,8 @@ _G.dayNightCycleApi = {
         -- * Return: `Color`
         DNC_HOOK_SET_AMBIENT_LIGHTING_COLOR = DNC_HOOK_SET_AMBIENT_LIGHTING_COLOR,
         -- * Called whenever the lighting direction is calculated
-        -- * Parameters: `number` dir
-        -- * Return: `number`
+        -- * Parameters: `Vec3f` lightingDir
+        -- * Return: `Vec3f`
         DNC_HOOK_SET_LIGHTING_DIR = DNC_HOOK_SET_LIGHTING_DIR,
         -- * Called whenever the fog color is calculated
         -- * Parameters: `Color` color
@@ -770,7 +751,9 @@ _G.dayNightCycleApi = {
         -- * Return: `ModelExtendedId`
         DNC_HOOK_SET_SKYBOX_MODEL = DNC_HOOK_SET_SKYBOX_MODEL,
         -- * Called when sunrise and sunset times are changed
-        DNC_HOOK_SUN_TIMES_CHANGED = DNC_HOOK_SUN_TIMES_CHANGED
+        DNC_HOOK_SUN_TIMES_CHANGED = DNC_HOOK_SUN_TIMES_CHANGED,
+        -- * Called during HOOK_ON_HUD_RENDER_BEHIND before anything is rendered
+        DNC_HOOK_ON_HUD_RENDER_BEHIND = DNC_HOOK_ON_HUD_RENDER_BEHIND
     }
 }
 setmetatable(_G.dayNightCycleApi, sReadonlyMetatable)

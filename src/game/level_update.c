@@ -1538,14 +1538,12 @@ void update_menu_level(void) {
         gChangeLevel = curLevel;
         gChangeActNum = 6;
         gDemoCountdown = 0;
-    }
-    if (gIsDemoActive) { return; }
-
-    if (gCurrAreaIndex != 2 && gCurrLevelNum == LEVEL_THI) {
+    } else if (gCurrAreaIndex != 2 && gCurrLevelNum == LEVEL_THI) {
         sWarpDest.type = WARP_TYPE_CHANGE_AREA;
         sWarpDest.areaIdx = 2;
         sWarpDest.nodeId = 0x0A;
     }
+    if (gIsDemoActive) { return; }
 
     struct Object *o;
     // set mario/camera pos
@@ -1920,9 +1918,9 @@ s32 lvl_init_from_save_file(UNUSED s16 arg0, s16 levelNum) {
     return levelNum;
 }
 
-s32 lvl_set_current_level(s16 arg0, s16 levelNum) {
+s32 lvl_set_current_level(s16 param, s16 levelNum) {
     s32 warpCheckpointActive = sWarpCheckpointActive;
-    s16 level = arg0 != 0 ? arg0 : levelNum;
+    s16 level = param != 0 ? param : levelNum;
 
     sWarpCheckpointActive = FALSE;
     gCurrLevelNum = level;

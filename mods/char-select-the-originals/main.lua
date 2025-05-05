@@ -21,6 +21,8 @@ local E_MODEL_KEEB_WALUIGI = smlua_model_util_get_id("keeb_waluigi_geo")
 local E_MODEL_FLUFFA_WALUIGI = smlua_model_util_get_id("fluffa_waluigi_geo")
 
 -- Textures --
+
+local TEX_VL_TONE_LUIGI = get_texture_info("vl-tones-luigi")
 local TEX_CJ_LUIGI = get_texture_info("cjes-luigi")
 local TEX_DJOSLIN_TOAD = get_texture_info("djoslin-toad")
 local TEX_FLUFFA_WARIO = get_texture_info("fluffa-wario")
@@ -147,9 +149,9 @@ local DJ_TOAD_SOUNDS = {
 -- Loading Characters --
 
 local function on_character_select_load()
-    _G.CT_OGS_LUIGI = charSelect.character_add("VL-Tone Luigi", {"The Originals' Luigi", "Quite a throwback to the good ol' days", "of the Super Mario 64 community!", "", "VL-Tone Luigi was created as an easter egg", "for Toads Tool 64, an SM64 level editor", "released back in 2007!",}, "VL-Tone", PALETTE_VL_LUIGI[CAP], E_MODEL_VL_TONE_LUIGI, CT_LUIGI, "L")
+    _G.CT_OGS_LUIGI = charSelect.character_add("VL-Tone Luigi", {"The Originals' Luigi", "Quite a throwback to the good ol' days", "of the Super Mario 64 community!", "", "VL-Tone Luigi was created as an easter egg", "for Toads Tool 64, an SM64 level editor", "released back in 2007!",}, "VL-Tone", PALETTE_VL_LUIGI[CAP], E_MODEL_VL_TONE_LUIGI, CT_LUIGI, TEX_VL_TONE_LUIGI)
     charSelect.character_add_costume(CT_OGS_LUIGI, "Cjes Luigi", {"The Originals' Luigi", "Quite a throwback to the good ol' days", "of the Super Mario 64 community!", "", "Cjes Luigi was originally used in", "SM64EX-Coop before he was", "eventually replaced."}, "Cjes", PALETTE_CJ_LUIGI[CAP], E_MODEL_CJ_LUIGI, CT_LUIGI, TEX_CJ_LUIGI)
-    _G.CT_OGS_TOAD = charSelect.character_add("Djoslin Toad", {"The Originals' Toad", "Known by all the SM64EX-COOP veterans.", "", "Djoslin Toad was created by djoslin0", "for SM64EX-COOP (currently SM64COOPDX)", "before eventually being replaced", "with an improved model.", "Fun fact:", "djoslin0 originally created the model", "by editing the original Toad actor", "in notepad, earning him the name", "\"Notepad Toad\""}, "Djoslin0", PALETTE_DJ_TOAD[SHIRT], E_MODEL_DJOSLIN_TOAD, CT_TOAD, TEX_DJOSLIN_TOAD, 0.8)
+    _G.CT_OGS_TOAD = charSelect.character_add("Djoslin Toad", {"The Originals' Toad", "Known by all the SM64EX-COOP veterans.", "", "Djoslin Toad was created by djoslin0", "for SM64EX-COOP (currently SM64COOPDX)", "before eventually being replaced", "with an improved model.", "Fun fact:", "djoslin0 originally created the model", "by editing the original Toad actor", "in Notepad, earning him the name", "\"Notepad Toad\""}, "Djoslin0", PALETTE_DJ_TOAD[SHIRT], E_MODEL_DJOSLIN_TOAD, CT_TOAD, TEX_DJOSLIN_TOAD, 0.8)
     _G.CT_OGS_WARIO = charSelect.character_add("Fluffa Wario", {"The Originals' Wario", "Quite a throwback to the good ol' days", "of the Super Mario 64 community!", "", "Fluffa Wario (Net64 Ver) was created", "for use in the most popular way to play", "multiplayer before SM64COOPDX,", "Net64.", "He may be the most iconic SM64 Wario", "with his stylish look that resembles", "his Mario Party series look."}, "FluffaMario", PALETTE_FL_WARIO[CAP], E_MODEL_FLUFFA_WARIO, CT_WARIO, TEX_FLUFFA_WARIO)
     _G.CT_OGS_WALUIGI = charSelect.character_add("Keeb Waluigi", {"The Originals' Waluigi", "Known by all the SM64EX-COOP veterans.", "", "Keeb Waluigi was created by keeberghrh", "for SM64EX-COOP (currently SM64COOPDX)", "and was still in use past SM64COOPDX", "before eventually being replaced", "with a new model."}, "Keeberghrh", PALETTE_KB_WALUIGI[CAP], E_MODEL_KEEB_WALUIGI, CT_WALUIGI, TEX_KEEB_WALUIGI)
     charSelect.character_add_costume(CT_OGS_WALUIGI, "Fluffa Waluigi", {"The Originals' Waluigi", "Quite a throwback to the good ol' days", "of the Super Mario 64 community!", "", "Fluffa Waluigi (Net64 Ver) was created", "for use in the most popular way to play", "multiplayer before SM64COOPDX,", "Net64.",  "He sports a look the resembles", "his Mario Party series look."}, "FluffaMario", PALETTE_FL_WALUIGI[CAP], E_MODEL_FLUFFA_WALUIGI, CT_WALUIGI, TEX_FLUFFA_WALUIGI, 1.1)

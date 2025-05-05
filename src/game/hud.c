@@ -562,6 +562,22 @@ void render_hud_camera_status(void) {
         return;
     }
 
+    if (gLakituState.mode == CAMERA_MODE_NEWCAM) {
+        extern u8 newcam_direction_locked;
+        extern u8 newcam_distance_index;
+        sCameraHUD.status = newcam_direction_locked ? CAM_STATUS_FIXED : CAM_STATUS_LAKITU;
+        switch (newcam_distance_index) {
+            case 0:
+                sCameraHUD.status |= CAM_STATUS_C_UP;
+                break;
+            case 1:
+                break;
+            case 2:
+                sCameraHUD.status |= CAM_STATUS_C_DOWN;
+                break;
+        }
+    }
+
     gSPDisplayList(gDisplayListHead++, dl_hud_img_begin);
     render_hud_tex_lut(x, y, (*cameraLUT)[GLYPH_CAM_CAMERA]);
 
