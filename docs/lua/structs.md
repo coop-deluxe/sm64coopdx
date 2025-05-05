@@ -1440,13 +1440,13 @@
 | Field | Type | Access |
 | ----- | ---- | ------ |
 | areaIndex | `integer` | read-only |
-| height | `integer` | read-only |
+| height | `integer` |  |
 | node | [GraphNode](structs.md#GraphNode) | read-only |
 | numViews | `integer` | read-only |
 | unk15 | `integer` | read-only |
-| width | `integer` | read-only |
-| x | `integer` | read-only |
-| y | `integer` | read-only |
+| width | `integer` |  |
+| x | `integer` |  |
+| y | `integer` |  |
 
 [:arrow_up_small:](#)
 
