@@ -148,6 +148,7 @@ The lua functions sent to `hook_event()` will be automatically called by SM64 wh
 | HOOK_ALLOW_FORCE_WATER_ACTION | Called when executing a non-water action while under the water's surface, or vice versa. Return `false` to prevent the player from being forced out of the action at the water's surface | [MarioState](../structs.md#MarioState) mario, `boolean` isInWaterAction |
 | HOOK_BEFORE_WARP | Called before the local player warps. Return a table with `destLevel`, `destArea`, `destWarpNode`, to override the warp | `integer` destLevel, `integer` destArea, `integer` destWarpNode, `integer` arg |
 | HOOK_ON_INSTANT_WARP | Called when the local player goes through an instant warp.| `integer` area, `integer` id, `Vec3s` displacement|
+| HOOK_ON_STAR_DANCE_CUTSCENE | Called when the local player enters the camera movement part of the star dance cutscene. Return a cutscene to override **(Only accepts `CUTSCENE_DANCE_FLY_AWAY`, `CUTSCENE_DANCE_ROTATE`, `CUTSCENE_DANCE_CLOSEUP`, `CUTSCENE_KEY_DANCE`, and `CUTSCENE_DANCE_DEFAULT`)** | `integer` courseIndexForCutscene, `integer` starIndexForCutscene **(This is not necessarily the star's ID)**
 
 ### Parameters
 

@@ -1275,6 +1275,36 @@ void smlua_call_event_hooks_string_param(enum LuaHookedEventType hookType, const
     }
 }
 
+void smlua_call_event_hooks_star_dance_cutscene(enum LuaHookedEventType hookType, u8 courseIndexForCutscene, u8 starIndexForCutscene, u8* cutscene) {
+    lua_State* L = gLuaState;
+    if (L == NULL) { return; }
+    struct LuaHookedEvent* hook = &sHookedEvents[hookType];
+    for (int i = 0; i < hook->count; i++) {
+        s32 prevTop = lua_gettop(L);
+
+        // push the callback onto the stack
+        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
+
+        // push params
+        lua_pushinteger(L, courseIndexForCutscene);
+        lua_pushinteger(L, starIndexForCutscene);
+
+        // call the callback
+        if (0 != smlua_call_hook(L, 2, 1, 0, hook->mod[i])) {
+            LOG_LUA("Failed to call the callback: %u", hookType);
+            continue;
+        }
+
+        // output the return value
+        if (lua_type(L, -1) == LUA_TNUMBER) {
+            *cutscene = smlua_to_integer(L, -1);
+            lua_settop(L, prevTop);
+            return;
+        }
+        lua_settop(L, prevTop);
+    }
+}
+
   ////////////////////
  // hooked actions //
 ////////////////////

@@ -3438,7 +3438,8 @@
 | HOOK_ALLOW_FORCE_WATER_ACTION | 53 |
 | HOOK_BEFORE_WARP | 54 |
 | HOOK_ON_INSTANT_WARP | 55 |
-| HOOK_MAX | 56 |
+| HOOK_ON_STAR_DANCE_CUTSCENE | 56 |
+| HOOK_MAX | 57 |
 
 ### [enum LuaActionHookType](#LuaActionHookType)
 | Identifier | Value |

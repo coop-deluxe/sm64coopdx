@@ -5354,6 +5354,15 @@ s32 determine_dance_cutscene(UNUSED struct Camera *c) {
         cutsceneIndex = cutsceneIndex >> 4;
     }
     cutscene = sDanceCutsceneTable[cutsceneIndex];
+    u8 backupCutscene = cutscene;
+    smlua_call_event_hooks_star_dance_cutscene(HOOK_ON_STAR_DANCE_CUTSCENE, courseIndex, starIndex, &cutscene);
+    if (cutscene != CUTSCENE_DANCE_FLY_AWAY &&
+        cutscene != CUTSCENE_DANCE_ROTATE &&
+        cutscene != CUTSCENE_DANCE_CLOSEUP &&
+        cutscene != CUTSCENE_KEY_DANCE &&
+        cutscene != CUTSCENE_DANCE_DEFAULT) {
+            cutscene = backupCutscene;
+        }
     return cutscene;
 }
 

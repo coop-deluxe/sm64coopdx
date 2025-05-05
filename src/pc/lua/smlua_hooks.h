@@ -68,6 +68,7 @@ enum LuaHookedEventType {
     HOOK_ALLOW_FORCE_WATER_ACTION,
     HOOK_BEFORE_WARP,
     HOOK_ON_INSTANT_WARP,
+    HOOK_ON_STAR_DANCE_CUTSCENE,
     HOOK_MAX,
 };
 
@@ -127,7 +128,8 @@ static const char* LuaHookedEventTypeName[] = {
     "HOOK_ON_INTERACTIONS",
     "HOOK_ALLOW_FORCE_WATER_ACTION",
     "HOOK_BEFORE_WARP",
-    "HOOK_ON_INSTANT_WARP"
+    "HOOK_ON_INSTANT_WARP",
+    "HOOK_ON_STAR_DANCE_CUTSCENE",
     "HOOK_MAX"
 };
 
@@ -213,6 +215,7 @@ void smlua_call_event_hooks_warp_params(enum LuaHookedEventType hookType, u8 typ
 void smlua_call_event_hooks_instant_warp_params(enum LuaHookedEventType hookType, u8 area, u8 warpId, Vec3s displacement);
 const char *smlua_call_event_hooks_int_ret_bool_and_string(enum LuaHookedEventType hookType, s32 param, bool* returnValue);
 void smlua_call_event_hooks_string_param(enum LuaHookedEventType hookType, const char* string);
+void smlua_call_event_hooks_star_dance_cutscene(enum LuaHookedEventType hookType, u8 courseIndexForCutscene, u8 starIndexForCutscene, u8* cutscene);
 
 enum BehaviorId smlua_get_original_behavior_id(const BehaviorScript* behavior);
 const BehaviorScript* smlua_override_behavior(const BehaviorScript* behavior);
