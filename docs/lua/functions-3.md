@@ -519,30 +519,6 @@ Selects the appropriate camera mode for Mario based on the current gameplay cont
 
 <br />
 
-## [vec3f_sub](#vec3f_sub)
-
-### Description
-Subtracts one 3D vector (`src`) from another (`dst`). Stores the result in the destination vector
-
-### Lua Example
-`vec3f_sub(dst, src)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dst | [Vec3f](structs.md#Vec3f) |
-| src | [Vec3f](structs.md#Vec3f) |
-
-### Returns
-- None
-
-### C Prototype
-`void vec3f_sub(Vec3f dst, Vec3f src);`
-
-[:arrow_up_small:](#)
-
-<br />
-
 ## [object_pos_to_vec3f](#object_pos_to_vec3f)
 
 ### Description

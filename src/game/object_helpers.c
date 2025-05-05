@@ -528,8 +528,8 @@ s16 obj_turn_toward_object(struct Object *obj, struct Object *target, s16 angleI
             break;
     }
 
-    startAngle = o->rawData.asU32[angleIndex];
-    o->rawData.asU32[angleIndex] = approach_s16_symmetric(startAngle, targetAngle, turnAmount);
+    startAngle = o->OBJECT_FIELD_U32(angleIndex);
+    o->OBJECT_FIELD_U32(angleIndex) = approach_s16_symmetric(startAngle, targetAngle, turnAmount);
     return targetAngle;
 }
 
@@ -2319,15 +2319,15 @@ Transforms the vector at `localTranslateIndex` into the object's local coordinat
 |descriptionEnd| */
 void obj_translate_local(struct Object *obj, s16 posIndex, s16 localTranslateIndex) {
     if (obj == NULL) { return; }
-    f32 dx = obj->rawData.asF32[localTranslateIndex + 0];
-    f32 dy = obj->rawData.asF32[localTranslateIndex + 1];
-    f32 dz = obj->rawData.asF32[localTranslateIndex + 2];
+    f32 dx = obj->OBJECT_FIELD_F32(localTranslateIndex + 0);
+    f32 dy = obj->OBJECT_FIELD_F32(localTranslateIndex + 1);
+    f32 dz = obj->OBJECT_FIELD_F32(localTranslateIndex + 2);
 
-    obj->rawData.asF32[posIndex + 0] +=
+    obj->OBJECT_FIELD_F32(posIndex + 0) +=
         obj->transform[0][0] * dx + obj->transform[1][0] * dy + obj->transform[2][0] * dz;
-    obj->rawData.asF32[posIndex + 1] +=
+    obj->OBJECT_FIELD_F32(posIndex + 1) +=
         obj->transform[0][1] * dx + obj->transform[1][1] * dy + obj->transform[2][1] * dz;
-    obj->rawData.asF32[posIndex + 2] +=
+    obj->OBJECT_FIELD_F32(posIndex + 2) +=
         obj->transform[0][2] * dx + obj->transform[1][2] * dy + obj->transform[2][2] * dz;
 }
 
@@ -2336,13 +2336,13 @@ void obj_build_transform_from_pos_and_angle(struct Object *obj, s16 posIndex, s1
     f32 translate[3];
     s16 rotation[3];
 
-    translate[0] = obj->rawData.asF32[posIndex + 0];
-    translate[1] = obj->rawData.asF32[posIndex + 1];
-    translate[2] = obj->rawData.asF32[posIndex + 2];
+    translate[0] = obj->OBJECT_FIELD_F32(posIndex + 0);
+    translate[1] = obj->OBJECT_FIELD_F32(posIndex + 1);
+    translate[2] = obj->OBJECT_FIELD_F32(posIndex + 2);
 
-    rotation[0] = obj->rawData.asS32[angleIndex + 0];
-    rotation[1] = obj->rawData.asS32[angleIndex + 1];
-    rotation[2] = obj->rawData.asS32[angleIndex + 2];
+    rotation[0] = obj->OBJECT_FIELD_S32(angleIndex + 0);
+    rotation[1] = obj->OBJECT_FIELD_S32(angleIndex + 1);
+    rotation[2] = obj->OBJECT_FIELD_S32(angleIndex + 2);
 
     mtxf_rotate_zxy_and_translate(obj->transform, translate, rotation);
 }

@@ -35,6 +35,7 @@
 
 #include "game/rendering_graph_node.h"
 #include "engine/lighting_engine.h"
+#include "engine/math_util.h"
 #include "pc/debug_context.h"
 
 #include "game/object_helpers.h"
@@ -676,14 +677,7 @@ static void import_texture(int tile) {
     //printf("Time diff: %d\n", t1 - t0);
 }
 
-static void gfx_normalize_vector(float v[3]) {
-    float s = sqrtf(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
-    v[0] /= s;
-    v[1] /= s;
-    v[2] /= s;
-}
-
-static void gfx_transposed_matrix_mul(float res[3], const float a[3], const float b[4][4]) {
+static void OPTIMIZE_O3 gfx_transposed_matrix_mul(Vec3f res, const Vec3f a, const Mat4 b) {
     res[0] = a[0] * b[0][0] + a[1] * b[0][1] + a[2] * b[0][2];
     res[1] = a[0] * b[1][0] + a[1] * b[1][1] + a[2] * b[1][2];
     res[2] = a[0] * b[2][0] + a[1] * b[2][1] + a[2] * b[2][2];
@@ -703,24 +697,24 @@ static void calculate_normal_dir(const Light_t *light, float coeffs[3], bool app
     }
 
     gfx_transposed_matrix_mul(coeffs, light_dir, rsp.modelview_matrix_stack[rsp.modelview_matrix_stack_size - 1]);
-    gfx_normalize_vector(coeffs);
+    vec3f_normalize2(coeffs);
 }
 
-static void OPTIMIZE_O3 gfx_matrix_mul(float res[4][4], const float a[4][4], const float b[4][4]) {
-    float tmp[4][4];
+static void OPTIMIZE_O3 gfx_matrix_mul(Mat4 res, const Mat4 a, const Mat4 b) {
+    Mat4 tmp;
     for (int32_t i = 0; i < 4; i++) {
-        for (int j = 0; j < 4; j++) {
+        for (int32_t j = 0; j < 4; j++) {
             tmp[i][j] = a[i][0] * b[0][j] +
                         a[i][1] * b[1][j] +
                         a[i][2] * b[2][j] +
                         a[i][3] * b[3][j];
         }
     }
-    memcpy(res, tmp, sizeof(tmp));
+    mtxf_copy(res, tmp);
 }
 
-static void gfx_sp_matrix(uint8_t parameters, const int32_t *addr) {
-    float matrix[4][4];
+static void OPTIMIZE_O3 gfx_sp_matrix(uint8_t parameters, const int32_t *addr) {
+    Mat4 matrix;
 #if 0
     // Original code when fixed point matrices were used
     for (int32_t i = 0; i < 4; i++) {
@@ -737,17 +731,20 @@ static void gfx_sp_matrix(uint8_t parameters, const int32_t *addr) {
 
     if (parameters & G_MTX_PROJECTION) {
         if (parameters & G_MTX_LOAD) {
-            memcpy(rsp.P_matrix, matrix, sizeof(matrix));
+            //memcpy(rsp.P_matrix, matrix, sizeof(matrix));
+            mtxf_copy(rsp.P_matrix, matrix);
         } else {
             gfx_matrix_mul(rsp.P_matrix, matrix, rsp.P_matrix);
         }
     } else { // G_MTX_MODELVIEW
         if ((parameters & G_MTX_PUSH) && rsp.modelview_matrix_stack_size < 11) {
             ++rsp.modelview_matrix_stack_size;
-            memcpy(rsp.modelview_matrix_stack[rsp.modelview_matrix_stack_size - 1], rsp.modelview_matrix_stack[rsp.modelview_matrix_stack_size - 2], sizeof(matrix));
+            //memcpy(rsp.modelview_matrix_stack[rsp.modelview_matrix_stack_size - 1], rsp.modelview_matrix_stack[rsp.modelview_matrix_stack_size - 2], sizeof(matrix));
+            mtxf_copy(rsp.modelview_matrix_stack[rsp.modelview_matrix_stack_size - 1], rsp.modelview_matrix_stack[rsp.modelview_matrix_stack_size - 2]);
         }
         if (parameters & G_MTX_LOAD) {
-            memcpy(rsp.modelview_matrix_stack[rsp.modelview_matrix_stack_size - 1], matrix, sizeof(matrix));
+            //memcpy(rsp.modelview_matrix_stack[rsp.modelview_matrix_stack_size - 1], matrix, sizeof(matrix));
+            mtxf_copy(rsp.modelview_matrix_stack[rsp.modelview_matrix_stack_size - 1], matrix);
         } else {
             gfx_matrix_mul(rsp.modelview_matrix_stack[rsp.modelview_matrix_stack_size - 1], matrix, rsp.modelview_matrix_stack[rsp.modelview_matrix_stack_size - 1]);
         }

@@ -785,12 +785,6 @@ void stub_camera_2(UNUSED struct Camera *c);
 void stub_camera_3(UNUSED struct Camera *c);
 
 /* |description|
-Subtracts one 3D vector (`src`) from another (`dst`).
-Stores the result in the destination vector
-|descriptionEnd| */
-void vec3f_sub(Vec3f dst, Vec3f src);
-
-/* |description|
 Converts an object's position to a `Vec3f` format.
 Useful for aligning object behaviors or interactions with the camera system
 |descriptionEnd| */

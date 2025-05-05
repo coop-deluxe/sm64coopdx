@@ -207,19 +207,20 @@ extern const u8 texture_power_meter_three_segments[];
 extern const u8 texture_power_meter_two_segments[];
 extern const u8 texture_power_meter_one_segments[];
 
+static struct TextureInfo sPowerMeterTexturesInfo[] = {
+    { (u8*)texture_power_meter_left_side,      "texture_power_meter_left_side",      32, 64, 8 },
+    { (u8*)texture_power_meter_right_side,     "texture_power_meter_right_side",     32, 64, 8 },
+    { (u8*)texture_power_meter_one_segments,   "texture_power_meter_one_segments",   32, 32, 8 },
+    { (u8*)texture_power_meter_two_segments,   "texture_power_meter_two_segments",   32, 32, 8 },
+    { (u8*)texture_power_meter_three_segments, "texture_power_meter_three_segments", 32, 32, 8 },
+    { (u8*)texture_power_meter_four_segments,  "texture_power_meter_four_segments",  32, 32, 8 },
+    { (u8*)texture_power_meter_five_segments,  "texture_power_meter_five_segments",  32, 32, 8 },
+    { (u8*)texture_power_meter_six_segments,   "texture_power_meter_six_segments",   32, 32, 8 },
+    { (u8*)texture_power_meter_seven_segments, "texture_power_meter_seven_segments", 32, 32, 8 },
+    { (u8*)texture_power_meter_full,           "texture_power_meter_full",           32, 32, 8 },
+};
+
 void hud_render_power_meter(s32 health, f32 x, f32 y, f32 width, f32 height) {
-    static struct TextureInfo sPowerMeterTexturesInfo[] = {
-        { (u8*)texture_power_meter_left_side,      8, 32, 64, "texture_power_meter_left_side"      },
-        { (u8*)texture_power_meter_right_side,     8, 32, 64, "texture_power_meter_right_side"     },
-        { (u8*)texture_power_meter_one_segments,   8, 32, 32, "texture_power_meter_one_segments"   },
-        { (u8*)texture_power_meter_two_segments,   8, 32, 32, "texture_power_meter_two_segments"   },
-        { (u8*)texture_power_meter_three_segments, 8, 32, 32, "texture_power_meter_three_segments" },
-        { (u8*)texture_power_meter_four_segments,  8, 32, 32, "texture_power_meter_four_segments"  },
-        { (u8*)texture_power_meter_five_segments,  8, 32, 32, "texture_power_meter_five_segments"  },
-        { (u8*)texture_power_meter_six_segments,   8, 32, 32, "texture_power_meter_six_segments"   },
-        { (u8*)texture_power_meter_seven_segments, 8, 32, 32, "texture_power_meter_seven_segments" },
-        { (u8*)texture_power_meter_full,           8, 32, 32, "texture_power_meter_full"           },
-    };
     djui_hud_render_texture(&sPowerMeterTexturesInfo[0], x, y, width / 64, height / 64);
     djui_hud_render_texture(&sPowerMeterTexturesInfo[1], x + (width - 2) / 2, y, width / 64, height / 64);
     s32 numWedges = MIN(MAX(health >> 8, 0), 8);
@@ -229,19 +230,6 @@ void hud_render_power_meter(s32 health, f32 x, f32 y, f32 width, f32 height) {
 }
 
 void hud_render_power_meter_interpolated(s32 health, f32 prevX, f32 prevY, f32 prevWidth, f32 prevHeight, f32 x, f32 y, f32 width, f32 height) {
-    static struct TextureInfo sPowerMeterTexturesInfo[] = {
-        { (u8*)texture_power_meter_left_side,      8, 32, 64, "texture_power_meter_left_side"      },
-        { (u8*)texture_power_meter_right_side,     8, 32, 64, "texture_power_meter_right_side"     },
-        { (u8*)texture_power_meter_one_segments,   8, 32, 32, "texture_power_meter_one_segments"   },
-        { (u8*)texture_power_meter_two_segments,   8, 32, 32, "texture_power_meter_two_segments"   },
-        { (u8*)texture_power_meter_three_segments, 8, 32, 32, "texture_power_meter_three_segments" },
-        { (u8*)texture_power_meter_four_segments,  8, 32, 32, "texture_power_meter_four_segments"  },
-        { (u8*)texture_power_meter_five_segments,  8, 32, 32, "texture_power_meter_five_segments"  },
-        { (u8*)texture_power_meter_six_segments,   8, 32, 32, "texture_power_meter_six_segments"   },
-        { (u8*)texture_power_meter_seven_segments, 8, 32, 32, "texture_power_meter_seven_segments" },
-        { (u8*)texture_power_meter_full,           8, 32, 32, "texture_power_meter_full"           },
-    };
-
     djui_hud_render_texture_interpolated(&sPowerMeterTexturesInfo[0],
         prevX, prevY, prevWidth / 64, prevHeight / 64,
         x,     y,     width     / 64, height     / 64);

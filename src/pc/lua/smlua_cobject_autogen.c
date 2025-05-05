@@ -1392,11 +1392,10 @@ static struct LuaObjectField sLinearTransitionPointFields[LUA_LINEAR_TRANSITION_
     { "yaw",   LVT_S16,     offsetof(struct LinearTransitionPoint, yaw),   false, LOT_NONE,  1, sizeof(s16)   },
 };
 
-#define LUA_MARIO_ANIMATION_FIELD_COUNT 3
+#define LUA_MARIO_ANIMATION_FIELD_COUNT 2
 static struct LuaObjectField sMarioAnimationFields[LUA_MARIO_ANIMATION_FIELD_COUNT] = {
 //  { "animDmaTable",    LVT_COBJECT_P, offsetof(struct MarioAnimation, animDmaTable),    true,  LOT_???,       1, sizeof(struct MarioAnimDmaRelatedThing*) }, <--- UNIMPLEMENTED
     { "currentAnimAddr", LVT_U8_P,      offsetof(struct MarioAnimation, currentAnimAddr), true,  LOT_POINTER,   1, sizeof(u8*)                              },
-    { "padding",         LVT_U8,        offsetof(struct MarioAnimation, padding),         false, LOT_NONE,      4, sizeof(u8)                               },
     { "targetAnim",      LVT_COBJECT_P, offsetof(struct MarioAnimation, targetAnim),      false, LOT_ANIMATION, 1, sizeof(struct Animation*)                },
 };
 
@@ -1617,7 +1616,7 @@ static struct LuaObjectField sNetworkPlayerFields[LUA_NETWORK_PLAYER_FIELD_COUNT
     { "type",                   LVT_U8,      offsetof(struct NetworkPlayer, type),                   true,  LOT_NONE,          1, sizeof(u8)                   },
 };
 
-#define LUA_OBJECT_FIELD_COUNT 762
+#define LUA_OBJECT_FIELD_COUNT 763
 static struct LuaObjectField sObjectFields[LUA_OBJECT_FIELD_COUNT] = {
     { "activeFlags",                                LVT_S16,                 offsetof(struct Object, activeFlags),                                false, LOT_NONE,         1, sizeof(s16)                   },
     { "allowRemoteInteractions",                    LVT_U8,                  offsetof(struct Object, allowRemoteInteractions),                    false, LOT_NONE,         1, sizeof(u8)                    },
@@ -2047,6 +2046,7 @@ static struct LuaObjectField sObjectFields[LUA_OBJECT_FIELD_COUNT] = {
     { "oMarioSteepJumpYaw",                         LVT_S32,                 offsetof(struct Object, oMarioSteepJumpYaw),                         false, LOT_NONE,         1, sizeof(s32)                   },
     { "oMarioTornadoPosY",                          LVT_F32,                 offsetof(struct Object, oMarioTornadoPosY),                          false, LOT_NONE,         1, sizeof(f32)                   },
     { "oMarioTornadoYawVel",                        LVT_S32,                 offsetof(struct Object, oMarioTornadoYawVel),                        false, LOT_NONE,         1, sizeof(s32)                   },
+    { "oMarioUnkPosY",                              LVT_F32,                 offsetof(struct Object, oMarioUnkPosY),                              false, LOT_NONE,         1, sizeof(f32)                   },
     { "oMarioWalkingPitch",                         LVT_S32,                 offsetof(struct Object, oMarioWalkingPitch),                         false, LOT_NONE,         1, sizeof(s32)                   },
     { "oMarioWhirlpoolPosY",                        LVT_F32,                 offsetof(struct Object, oMarioWhirlpoolPosY),                        false, LOT_NONE,         1, sizeof(f32)                   },
     { "oMenuButtonActionPhase",                     LVT_S32,                 offsetof(struct Object, oMenuButtonActionPhase),                     false, LOT_NONE,         1, sizeof(s32)                   },

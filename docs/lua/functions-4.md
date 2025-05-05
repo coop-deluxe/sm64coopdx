@@ -4145,13 +4145,37 @@ Calculates the cosine of the given angle, where the angle is specified as a sign
 
 <br />
 
+## [atan2s](#atan2s)
+
+### Description
+Computes the arctangent of y/x and returns the angle as a signed 16-bit integer, typically representing a direction in the SM64 fixed-point angle format. This can be used to find an angle between x and y coordinates
+
+### Lua Example
+`local integerValue = atan2s(y, x)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| y | `number` |
+| x | `number` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s16 atan2s(f32 y, f32 x);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [vec3f_copy](#vec3f_copy)
 
 ### Description
 Copies the contents of a 3D floating-point vector (`src`) into another 3D floating-point vector (`dest`). After this operation, `dest` will have the same x, y, and z values as `src`
 
 ### Lua Example
-`local voidValue = vec3f_copy(dest, src)`
+`local PointerValue = vec3f_copy(dest, src)`
 
 ### Parameters
 | Field | Type |
@@ -4160,10 +4184,10 @@ Copies the contents of a 3D floating-point vector (`src`) into another 3D floati
 | src | [Vec3f](structs.md#Vec3f) |
 
 ### Returns
-- `void *`
+- `Pointer` <`number`>
 
 ### C Prototype
-`void *vec3f_copy(Vec3f dest, Vec3f src);`
+`f32 *vec3f_copy(Vec3f dest, Vec3f src);`
 
 [:arrow_up_small:](#)
 
@@ -4175,7 +4199,7 @@ Copies the contents of a 3D floating-point vector (`src`) into another 3D floati
 Sets the values of the 3D floating-point vector `dest` to the given x, y, and z values. After this function, `dest` will have values (x, y, z)
 
 ### Lua Example
-`local voidValue = vec3f_set(dest, x, y, z)`
+`local PointerValue = vec3f_set(dest, x, y, z)`
 
 ### Parameters
 | Field | Type |
@@ -4186,10 +4210,10 @@ Sets the values of the 3D floating-point vector `dest` to the given x, y, and z 
 | z | `number` |
 
 ### Returns
-- `void *`
+- `Pointer` <`number`>
 
 ### C Prototype
-`void *vec3f_set(Vec3f dest, f32 x, f32 y, f32 z);`
+`f32 *vec3f_set(Vec3f dest, f32 x, f32 y, f32 z);`
 
 [:arrow_up_small:](#)
 
@@ -4201,7 +4225,7 @@ Sets the values of the 3D floating-point vector `dest` to the given x, y, and z 
 Adds the components of the 3D floating-point vector `a` to `dest`. After this operation, `dest.x` will be `dest.x + a.x`, and similarly for the y and z components
 
 ### Lua Example
-`local voidValue = vec3f_add(dest, a)`
+`local PointerValue = vec3f_add(dest, a)`
 
 ### Parameters
 | Field | Type |
@@ -4210,10 +4234,10 @@ Adds the components of the 3D floating-point vector `a` to `dest`. After this op
 | a | [Vec3f](structs.md#Vec3f) |
 
 ### Returns
-- `void *`
+- `Pointer` <`number`>
 
 ### C Prototype
-`void *vec3f_add(Vec3f dest, Vec3f a);`
+`f32 *vec3f_add(Vec3f dest, Vec3f a);`
 
 [:arrow_up_small:](#)
 
@@ -4225,7 +4249,7 @@ Adds the components of the 3D floating-point vector `a` to `dest`. After this op
 Adds the corresponding components of two 3D floating-point vectors `a` and `b`, and stores the result in `dest`. For example, `dest.x = a.x + b.x`, `dest.y = a.y + b.y`, and `dest.z = a.z + b.z`
 
 ### Lua Example
-`local voidValue = vec3f_sum(dest, a, b)`
+`local PointerValue = vec3f_sum(dest, a, b)`
 
 ### Parameters
 | Field | Type |
@@ -4235,10 +4259,34 @@ Adds the corresponding components of two 3D floating-point vectors `a` and `b`, 
 | b | [Vec3f](structs.md#Vec3f) |
 
 ### Returns
-- `void *`
+- `Pointer` <`number`>
 
 ### C Prototype
-`void *vec3f_sum(Vec3f dest, Vec3f a, Vec3f b);`
+`f32 *vec3f_sum(Vec3f dest, Vec3f a, Vec3f b);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3f_sub](#vec3f_sub)
+
+### Description
+Subtracts the components of the 3D floating-point vector `a` from `dest`. After this operation, `dest.x` will be `dest.x - a.x`, and similarly for the y and z components
+
+### Lua Example
+`local PointerValue = vec3f_sub(dest, a)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3f](structs.md#Vec3f) |
+| a | [Vec3f](structs.md#Vec3f) |
+
+### Returns
+- `Pointer` <`number`>
+
+### C Prototype
+`f32 *vec3f_sub(Vec3f dest, Vec3f a);`
 
 [:arrow_up_small:](#)
 
@@ -4250,7 +4298,7 @@ Adds the corresponding components of two 3D floating-point vectors `a` and `b`, 
 Subtracts the components of the 3D floating-point vector `b` from the components of `a` and stores the result in `dest`. For example, `dest.x = a.x - b.x` This results in a vector that represents the difference between `a` and `b`.
 
 ### Lua Example
-`local voidValue = vec3f_dif(dest, a, b)`
+`local PointerValue = vec3f_dif(dest, a, b)`
 
 ### Parameters
 | Field | Type |
@@ -4260,10 +4308,10 @@ Subtracts the components of the 3D floating-point vector `b` from the components
 | b | [Vec3f](structs.md#Vec3f) |
 
 ### Returns
-- `void *`
+- `Pointer` <`number`>
 
 ### C Prototype
-`void *vec3f_dif(Vec3f dest, Vec3f a, Vec3f b);`
+`f32 *vec3f_dif(Vec3f dest, Vec3f a, Vec3f b);`
 
 [:arrow_up_small:](#)
 
@@ -4275,7 +4323,7 @@ Subtracts the components of the 3D floating-point vector `b` from the components
 Multiplies each component of the 3D floating-point vector `dest` by the scalar value `a`. For instance, `dest.x = dest.x * a`, and similarly for y and z. This scales the vector `dest` by `a`
 
 ### Lua Example
-`local voidValue = vec3f_mul(dest, a)`
+`local PointerValue = vec3f_mul(dest, a)`
 
 ### Parameters
 | Field | Type |
@@ -4284,183 +4332,34 @@ Multiplies each component of the 3D floating-point vector `dest` by the scalar v
 | a | `number` |
 
 ### Returns
-- `void *`
+- `Pointer` <`number`>
 
 ### C Prototype
-`void *vec3f_mul(Vec3f dest, f32 a);`
+`f32 *vec3f_mul(Vec3f dest, f32 a);`
 
 [:arrow_up_small:](#)
 
 <br />
 
-## [vec3s_copy](#vec3s_copy)
+## [vec3f_div](#vec3f_div)
 
 ### Description
-Copies the components of one 3D signed-integer vector (`src`) to another (`dest`). After this function, `dest` will have the same x, y, and z integer values as `src`
+Divides each component of the 3D floating-point vector `dest` by the scalar value `a`. For instance, `dest.x = dest.x / a`, and similarly for y and z. This scales the vector `dest` by `a`
 
 ### Lua Example
-`local voidValue = vec3s_copy(dest, src)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | [Vec3s](structs.md#Vec3s) |
-| src | [Vec3s](structs.md#Vec3s) |
-
-### Returns
-- `void *`
-
-### C Prototype
-`void *vec3s_copy(Vec3s dest, Vec3s src);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [vec3s_set](#vec3s_set)
-
-### Description
-Sets the 3D signed-integer vector `dest` to the specified integer values (x, y, z), so that `dest` becomes (x, y, z).
-
-### Lua Example
-`local voidValue = vec3s_set(dest, x, y, z)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | [Vec3s](structs.md#Vec3s) |
-| x | `integer` |
-| y | `integer` |
-| z | `integer` |
-
-### Returns
-- `void *`
-
-### C Prototype
-`void *vec3s_set(Vec3s dest, s16 x, s16 y, s16 z);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [vec3s_add](#vec3s_add)
-
-### Description
-Adds the components of a 3D signed-integer vector `a` to the corresponding components of `dest`. After this operation, each component of `dest` is increased by the corresponding component in `a`
-
-### Lua Example
-`local voidValue = vec3s_add(dest, a)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | [Vec3s](structs.md#Vec3s) |
-| a | [Vec3s](structs.md#Vec3s) |
-
-### Returns
-- `void *`
-
-### C Prototype
-`void *vec3s_add(Vec3s dest, Vec3s a);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [vec3s_sum](#vec3s_sum)
-
-### Description
-Adds the components of two 3D signed-integer vectors `a` and `b` together and stores the resulting vector in `dest`. For example, `dest.x = a.x + b.x`, and similarly for y and z
-
-### Lua Example
-`local voidValue = vec3s_sum(dest, a, b)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | [Vec3s](structs.md#Vec3s) |
-| a | [Vec3s](structs.md#Vec3s) |
-| b | [Vec3s](structs.md#Vec3s) |
-
-### Returns
-- `void *`
-
-### C Prototype
-`void *vec3s_sum(Vec3s dest, Vec3s a, Vec3s b);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [vec3s_to_vec3f](#vec3s_to_vec3f)
-
-### Description
-Converts a 3D signed-integer vector `a` (vec3s) into a 3D floating-point vector and stores it in `dest`. After this operation, `dest` will contain the floating-point equivalents of `a`'s integer components
-
-### Lua Example
-`local voidValue = vec3s_to_vec3f(dest, a)`
+`local PointerValue = vec3f_div(dest, a)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | dest | [Vec3f](structs.md#Vec3f) |
-| a | [Vec3s](structs.md#Vec3s) |
+| a | `number` |
 
 ### Returns
-- `void *`
+- `Pointer` <`number`>
 
 ### C Prototype
-`void *vec3s_to_vec3f(Vec3f dest, Vec3s a);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [vec3f_to_vec3s](#vec3f_to_vec3s)
-
-### Description
-Converts a 3D floating-point vector `a` (Vec3f) into a 3D signed-integer vector and stores it in `dest`. After this operation, `dest` will contain the integer versions of `a`'s floating-point components
-
-### Lua Example
-`local voidValue = vec3f_to_vec3s(dest, a)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | [Vec3s](structs.md#Vec3s) |
-| a | [Vec3f](structs.md#Vec3f) |
-
-### Returns
-- `void *`
-
-### C Prototype
-`void *vec3f_to_vec3s(Vec3s dest, Vec3f a);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [find_vector_perpendicular_to_plane](#find_vector_perpendicular_to_plane)
-
-### Description
-Determines a vector that is perpendicular (normal) to the plane defined by three given 3D floating-point points `a`, `b`, and `c`. The resulting perpendicular vector is stored in `dest`
-
-### Lua Example
-`local voidValue = find_vector_perpendicular_to_plane(dest, a, b, c)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | [Vec3f](structs.md#Vec3f) |
-| a | [Vec3f](structs.md#Vec3f) |
-| b | [Vec3f](structs.md#Vec3f) |
-| c | [Vec3f](structs.md#Vec3f) |
-
-### Returns
-- `void *`
-
-### C Prototype
-`void *find_vector_perpendicular_to_plane(Vec3f dest, Vec3f a, Vec3f b, Vec3f c);`
+`f32 *vec3f_div(Vec3f dest, f32 a);`
 
 [:arrow_up_small:](#)
 
@@ -4472,7 +4371,7 @@ Determines a vector that is perpendicular (normal) to the plane defined by three
 Computes the cross product of two 3D floating-point vectors `a` and `b`. The cross product is a vector perpendicular to both `a` and `b`. The result is stored in `dest`
 
 ### Lua Example
-`local voidValue = vec3f_cross(dest, a, b)`
+`local PointerValue = vec3f_cross(dest, a, b)`
 
 ### Parameters
 | Field | Type |
@@ -4482,10 +4381,10 @@ Computes the cross product of two 3D floating-point vectors `a` and `b`. The cro
 | b | [Vec3f](structs.md#Vec3f) |
 
 ### Returns
-- `void *`
+- `Pointer` <`number`>
 
 ### C Prototype
-`void *vec3f_cross(Vec3f dest, Vec3f a, Vec3f b);`
+`f32 *vec3f_cross(Vec3f dest, Vec3f a, Vec3f b);`
 
 [:arrow_up_small:](#)
 
@@ -4497,7 +4396,7 @@ Computes the cross product of two 3D floating-point vectors `a` and `b`. The cro
 Normalizes the 3D floating-point vector `dest` so that its length (magnitude) becomes 1, while retaining its direction. This effectively scales `dest` so that it lies on the unit sphere
 
 ### Lua Example
-`local voidValue = vec3f_normalize(dest)`
+`local PointerValue = vec3f_normalize(dest)`
 
 ### Parameters
 | Field | Type |
@@ -4505,10 +4404,33 @@ Normalizes the 3D floating-point vector `dest` so that its length (magnitude) be
 | dest | [Vec3f](structs.md#Vec3f) |
 
 ### Returns
-- `void *`
+- `Pointer` <`number`>
 
 ### C Prototype
-`void *vec3f_normalize(Vec3f dest);`
+`f32 *vec3f_normalize(Vec3f dest);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3f_normalize2](#vec3f_normalize2)
+
+### Description
+Normalizes each component of the 3D floating-point vector 'v'.
+
+### Lua Example
+`local PointerValue = vec3f_normalize2(v)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| v | [Vec3f](structs.md#Vec3f) |
+
+### Returns
+- `Pointer` <`number`>
+
+### C Prototype
+`f32 *vec3f_normalize2(Vec3f v);`
 
 [:arrow_up_small:](#)
 
@@ -4567,7 +4489,7 @@ Computes the dot product of the two 3D floating-point vectors `a` and `b`. The d
 Takes two 3D floating-point vectors `vecA` and `vecB`, multiplies them by `sclA` and `sclB` respectively, and then adds the scaled vectors together. The final combined vector is stored in `dest`
 
 ### Lua Example
-`vec3f_combine(dest, vecA, vecB, sclA, sclB)`
+`local PointerValue = vec3f_combine(dest, vecA, vecB, sclA, sclB)`
 
 ### Parameters
 | Field | Type |
@@ -4579,10 +4501,10 @@ Takes two 3D floating-point vectors `vecA` and `vecB`, multiplies them by `sclA`
 | sclB | `number` |
 
 ### Returns
-- None
+- `Pointer` <`number`>
 
 ### C Prototype
-`void vec3f_combine(Vec3f dest, Vec3f vecA, Vec3f vecB, f32 sclA, f32 sclB);`
+`f32 *vec3f_combine(Vec3f dest, Vec3f vecA, Vec3f vecB, f32 sclA, f32 sclB);`
 
 [:arrow_up_small:](#)
 
@@ -4594,7 +4516,7 @@ Takes two 3D floating-point vectors `vecA` and `vecB`, multiplies them by `sclA`
 Rotates the 3D floating-point vector `v` by the angles specified in the 3D signed-integer vector `rotate`, applying the rotations in the order Z, then X, then Y. The rotated vector replaces `v`
 
 ### Lua Example
-`local voidValue = vec3f_rotate_zxy(v, rotate)`
+`local PointerValue = vec3f_rotate_zxy(v, rotate)`
 
 ### Parameters
 | Field | Type |
@@ -4603,10 +4525,286 @@ Rotates the 3D floating-point vector `v` by the angles specified in the 3D signe
 | rotate | [Vec3s](structs.md#Vec3s) |
 
 ### Returns
+- `Pointer` <`number`>
+
+### C Prototype
+`f32 *vec3f_rotate_zxy(Vec3f v, Vec3s rotate);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3f_project](#vec3f_project)
+
+### Description
+Projects the 3D floating-point vector `vec` onto another 3D floating-point vector `onto`. The resulting projection, stored in `out`, represents how much of `vec` lies along the direction of `onto`
+
+### Lua Example
+`vec3f_project(vec, onto, out)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| vec | [Vec3f](structs.md#Vec3f) |
+| onto | [Vec3f](structs.md#Vec3f) |
+| out | [Vec3f](structs.md#Vec3f) |
+
+### Returns
+- None
+
+### C Prototype
+`void vec3f_project(Vec3f vec, Vec3f onto, Vec3f out);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3f_dist](#vec3f_dist)
+
+### Description
+Calculates the distance between two 3D floating-point points `v1` and `v2`. The distance is the length of the vector `v2 - v1`, i.e., sqrt((v2.x - v1.x)² + (v2.y - v1.y)² + (v2.z - v1.z)²)
+
+### Lua Example
+`local numberValue = vec3f_dist(v1, v2)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| v1 | [Vec3f](structs.md#Vec3f) |
+| v2 | [Vec3f](structs.md#Vec3f) |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 vec3f_dist(Vec3f v1, Vec3f v2);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3f_get_dist_and_angle](#vec3f_get_dist_and_angle)
+
+### Description
+Calculates the distance between two points in 3D space (`from` and `to`), as well as the pitch and yaw angles that describe the direction from `from` to `to`. The results are stored in `dist`, `pitch`, and `yaw`
+
+### Lua Example
+`vec3f_get_dist_and_angle(from, to, dist, pitch, yaw)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| from | [Vec3f](structs.md#Vec3f) |
+| to | [Vec3f](structs.md#Vec3f) |
+| dist | `Pointer` <`number`> |
+| pitch | `Pointer` <`integer`> |
+| yaw | `Pointer` <`integer`> |
+
+### Returns
+- None
+
+### C Prototype
+`void vec3f_get_dist_and_angle(Vec3f from, Vec3f to, f32 *dist, s16 *pitch, s16 *yaw);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3f_set_dist_and_angle](#vec3f_set_dist_and_angle)
+
+### Description
+Positions the point `to` at a given `dist`, `pitch`, and `yaw` relative to the point `from`. This can be used to place objects around a reference point at specific angles and distances
+
+### Lua Example
+`vec3f_set_dist_and_angle(from, to, dist, pitch, yaw)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| from | [Vec3f](structs.md#Vec3f) |
+| to | [Vec3f](structs.md#Vec3f) |
+| dist | `number` |
+| pitch | `integer` |
+| yaw | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void vec3f_set_dist_and_angle(Vec3f from, Vec3f to, f32 dist, s16 pitch, s16 yaw);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3f_to_vec3s](#vec3f_to_vec3s)
+
+### Description
+Converts a 3D floating-point vector `a` (Vec3f) into a 3D signed-integer vector and stores it in `dest`. After this operation, `dest` will contain the integer versions of `a`'s floating-point components
+
+### Lua Example
+`local PointerValue = vec3f_to_vec3s(dest, a)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3s](structs.md#Vec3s) |
+| a | [Vec3f](structs.md#Vec3f) |
+
+### Returns
+- `Pointer` <`integer`>
+
+### C Prototype
+`s16 *vec3f_to_vec3s(Vec3s dest, Vec3f a);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3s_copy](#vec3s_copy)
+
+### Description
+Copies the components of one 3D signed-integer vector (`src`) to another (`dest`). After this function, `dest` will have the same x, y, and z integer values as `src`
+
+### Lua Example
+`local PointerValue = vec3s_copy(dest, src)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3s](structs.md#Vec3s) |
+| src | [Vec3s](structs.md#Vec3s) |
+
+### Returns
+- `Pointer` <`integer`>
+
+### C Prototype
+`s16 *vec3s_copy(Vec3s dest, Vec3s src);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3s_set](#vec3s_set)
+
+### Description
+Sets the 3D signed-integer vector `dest` to the specified integer values (x, y, z), so that `dest` becomes (x, y, z).
+
+### Lua Example
+`local PointerValue = vec3s_set(dest, x, y, z)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3s](structs.md#Vec3s) |
+| x | `integer` |
+| y | `integer` |
+| z | `integer` |
+
+### Returns
+- `Pointer` <`integer`>
+
+### C Prototype
+`s16 *vec3s_set(Vec3s dest, s16 x, s16 y, s16 z);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3s_add](#vec3s_add)
+
+### Description
+Adds the components of a 3D signed-integer vector `a` to the corresponding components of `dest`. After this operation, each component of `dest` is increased by the corresponding component in `a`
+
+### Lua Example
+`local PointerValue = vec3s_add(dest, a)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3s](structs.md#Vec3s) |
+| a | [Vec3s](structs.md#Vec3s) |
+
+### Returns
+- `Pointer` <`integer`>
+
+### C Prototype
+`s16 *vec3s_add(Vec3s dest, Vec3s a);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3s_sum](#vec3s_sum)
+
+### Description
+Adds the components of two 3D signed-integer vectors `a` and `b` together and stores the resulting vector in `dest`. For example, `dest.x = a.x + b.x`, and similarly for y and z
+
+### Lua Example
+`local PointerValue = vec3s_sum(dest, a, b)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3s](structs.md#Vec3s) |
+| a | [Vec3s](structs.md#Vec3s) |
+| b | [Vec3s](structs.md#Vec3s) |
+
+### Returns
+- `Pointer` <`integer`>
+
+### C Prototype
+`s16 *vec3s_sum(Vec3s dest, Vec3s a, Vec3s b);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3s_to_vec3f](#vec3s_to_vec3f)
+
+### Description
+Converts a 3D signed-integer vector `a` (vec3s) into a 3D floating-point vector and stores it in `dest`. After this operation, `dest` will contain the floating-point equivalents of `a`'s integer components
+
+### Lua Example
+`local PointerValue = vec3s_to_vec3f(dest, a)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3f](structs.md#Vec3f) |
+| a | [Vec3s](structs.md#Vec3s) |
+
+### Returns
+- `Pointer` <`number`>
+
+### C Prototype
+`f32 *vec3s_to_vec3f(Vec3f dest, Vec3s a);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [find_vector_perpendicular_to_plane](#find_vector_perpendicular_to_plane)
+
+### Description
+Determines a vector that is perpendicular (normal) to the plane defined by three given 3D floating-point points `a`, `b`, and `c`. The resulting perpendicular vector is stored in `dest`
+
+### Lua Example
+`local voidValue = find_vector_perpendicular_to_plane(dest, a, b, c)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3f](structs.md#Vec3f) |
+| a | [Vec3f](structs.md#Vec3f) |
+| b | [Vec3f](structs.md#Vec3f) |
+| c | [Vec3f](structs.md#Vec3f) |
+
+### Returns
 - `void *`
 
 ### C Prototype
-`void *vec3f_rotate_zxy(Vec3f v, Vec3s rotate);`
+`void *find_vector_perpendicular_to_plane(Vec3f dest, Vec3f a, Vec3f b, Vec3f c);`
 
 [:arrow_up_small:](#)
 
@@ -4919,7 +5117,7 @@ Scales the 4x4 floating-point matrix `mtx` by the scaling factors found in the 3
 Multiplies the 4x4 floating-point matrix `mtx` by a 3D signed-integer vector `b`, potentially interpreting `b` as angles or translations depending on usage, and modifies `mtx` accordingly
 
 ### Lua Example
-`mtxf_mul_vec3s(mtx, b)`
+`local PointerValue = mtxf_mul_vec3s(mtx, b)`
 
 ### Parameters
 | Field | Type |
@@ -4928,10 +5126,10 @@ Multiplies the 4x4 floating-point matrix `mtx` by a 3D signed-integer vector `b`
 | b | [Vec3s](structs.md#Vec3s) |
 
 ### Returns
-- None
+- `Pointer` <`integer`>
 
 ### C Prototype
-`void mtxf_mul_vec3s(Mat4 mtx, Vec3s b);`
+`s16 *mtxf_mul_vec3s(Mat4 mtx, Vec3s b);`
 
 [:arrow_up_small:](#)
 
@@ -4986,60 +5184,6 @@ Extracts the position (translation component) from the transformation matrix `ob
 
 <br />
 
-## [vec3f_get_dist_and_angle](#vec3f_get_dist_and_angle)
-
-### Description
-Calculates the distance between two points in 3D space (`from` and `to`), as well as the pitch and yaw angles that describe the direction from `from` to `to`. The results are stored in `dist`, `pitch`, and `yaw`
-
-### Lua Example
-`vec3f_get_dist_and_angle(from, to, dist, pitch, yaw)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| from | [Vec3f](structs.md#Vec3f) |
-| to | [Vec3f](structs.md#Vec3f) |
-| dist | `Pointer` <`number`> |
-| pitch | `Pointer` <`integer`> |
-| yaw | `Pointer` <`integer`> |
-
-### Returns
-- None
-
-### C Prototype
-`void vec3f_get_dist_and_angle(Vec3f from, Vec3f to, f32 *dist, s16 *pitch, s16 *yaw);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [vec3f_set_dist_and_angle](#vec3f_set_dist_and_angle)
-
-### Description
-Positions the point `to` at a given `dist`, `pitch`, and `yaw` relative to the point `from`. This can be used to place objects around a reference point at specific angles and distances
-
-### Lua Example
-`vec3f_set_dist_and_angle(from, to, dist, pitch, yaw)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| from | [Vec3f](structs.md#Vec3f) |
-| to | [Vec3f](structs.md#Vec3f) |
-| dist | `number` |
-| pitch | `integer` |
-| yaw | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void vec3f_set_dist_and_angle(Vec3f from, Vec3f to, f32 dist, s16 pitch, s16 yaw);`
-
-[:arrow_up_small:](#)
-
-<br />
-
 ## [approach_s32](#approach_s32)
 
 ### Description
@@ -5087,30 +5231,6 @@ Similar to `approach_s32`, but operates on floating-point numbers. It moves `cur
 
 ### C Prototype
 `f32 approach_f32(f32 current, f32 target, f32 inc, f32 dec);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [atan2s](#atan2s)
-
-### Description
-Computes the arctangent of y/x and returns the angle as a signed 16-bit integer, typically representing a direction in the SM64 fixed-point angle format. This can be used to find an angle between x and y coordinates
-
-### Lua Example
-`local integerValue = atan2s(y, x)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| y | `number` |
-| x | `number` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s16 atan2s(f32 y, f32 x);`
 
 [:arrow_up_small:](#)
 
@@ -5209,55 +5329,6 @@ Checks if `value` is zero. If not, it returns `value`. If it is zero, it returns
 
 ### C Prototype
 `f32 not_zero(f32 value, f32 replacement);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [vec3f_project](#vec3f_project)
-
-### Description
-Projects the 3D floating-point vector `vec` onto another 3D floating-point vector `onto`. The resulting projection, stored in `out`, represents how much of `vec` lies along the direction of `onto`
-
-### Lua Example
-`vec3f_project(vec, onto, out)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| vec | [Vec3f](structs.md#Vec3f) |
-| onto | [Vec3f](structs.md#Vec3f) |
-| out | [Vec3f](structs.md#Vec3f) |
-
-### Returns
-- None
-
-### C Prototype
-`void vec3f_project(Vec3f vec, Vec3f onto, Vec3f out);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [vec3f_dist](#vec3f_dist)
-
-### Description
-Calculates the distance between two 3D floating-point points `v1` and `v2`. The distance is the length of the vector `v2 - v1`, i.e., sqrt((v2.x - v1.x)² + (v2.y - v1.y)² + (v2.z - v1.z)²)
-
-### Lua Example
-`local numberValue = vec3f_dist(v1, v2)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| v1 | [Vec3f](structs.md#Vec3f) |
-| v2 | [Vec3f](structs.md#Vec3f) |
-
-### Returns
-- `number`
-
-### C Prototype
-`f32 vec3f_dist(Vec3f v1, Vec3f v2);`
 
 [:arrow_up_small:](#)
 
