@@ -186,7 +186,7 @@ static struct LuaObjectField sAreaFields[LUA_AREA_FIELD_COUNT] = {
     { "surfaceRooms",        LVT_S8_P,      offsetof(struct Area, surfaceRooms),        true,  LOT_POINTER,        1, sizeof(s8*)                    },
     { "terrainData",         LVT_S16_P,     offsetof(struct Area, terrainData),         true,  LOT_POINTER,        1, sizeof(s16*)                   },
     { "terrainType",         LVT_U16,       offsetof(struct Area, terrainType),         false, LOT_NONE,           1, sizeof(u16)                    },
-    { "unk04",               LVT_COBJECT_P, offsetof(struct Area, unk04),               true,  LOT_GRAPHNODEROOT,  1, sizeof(struct GraphNodeRoot*)  },
+    { "root",                LVT_COBJECT_P, offsetof(struct Area, unk04),               false, LOT_GRAPHNODEROOT,  1, sizeof(struct GraphNodeRoot*)  },
 //  { "unused28",            LVT_COBJECT_P, offsetof(struct Area, unused28),            false, LOT_???,            1, sizeof(struct UnusedArea28*)   }, <--- UNIMPLEMENTED
     { "warpNodes",           LVT_COBJECT_P, offsetof(struct Area, warpNodes),           true,  LOT_OBJECTWARPNODE, 1, sizeof(struct ObjectWarpNode*) },
     { "whirlpools",          LVT_COBJECT_P, offsetof(struct Area, whirlpools),          false, LOT_WHIRLPOOL,      2, sizeof(struct Whirlpool*)      },
@@ -1196,17 +1196,15 @@ static struct LuaObjectField sGraphNodePerspectiveFields[LUA_GRAPH_NODE_PERSPECT
     { "unused",        LVT_S32,     offsetof(struct GraphNodePerspective, unused),        true,  LOT_NONE,        1, sizeof(s32)                },
 };
 
-#define LUA_GRAPH_NODE_ROOT_FIELD_COUNT 8
+#define LUA_GRAPH_NODE_ROOT_FIELD_COUNT 7
 static struct LuaObjectField sGraphNodeRootFields[LUA_GRAPH_NODE_ROOT_FIELD_COUNT] = {
-    { "areaIndex", LVT_U8,      offsetof(struct GraphNodeRoot, areaIndex), true,  LOT_NONE,      1, sizeof(u8)                  },
-    { "height",    LVT_S16,     offsetof(struct GraphNodeRoot, height),    false, LOT_NONE,      1, sizeof(s16)                 },
-    { "node",      LVT_COBJECT, offsetof(struct GraphNodeRoot, node),      true,  LOT_GRAPHNODE, 1, sizeof(struct GraphNode)    },
-    { "numViews",  LVT_S16,     offsetof(struct GraphNodeRoot, numViews),  true,  LOT_NONE,      1, sizeof(s16)                 },
-    { "unk15",     LVT_S8,      offsetof(struct GraphNodeRoot, unk15),     true,  LOT_NONE,      1, sizeof(s8)                  },
-//  { "views",     LVT_???,     offsetof(struct GraphNodeRoot, views),     true,  LOT_???,       1, sizeof(struct GraphNode **) }, <--- UNIMPLEMENTED
-    { "width",     LVT_S16,     offsetof(struct GraphNodeRoot, width),     false, LOT_NONE,      1, sizeof(s16)                 },
-    { "x",         LVT_S16,     offsetof(struct GraphNodeRoot, x),         false, LOT_NONE,      1, sizeof(s16)                 },
-    { "y",         LVT_S16,     offsetof(struct GraphNodeRoot, y),         false, LOT_NONE,      1, sizeof(s16)                 },
+    { "areaIndex", LVT_U8,      offsetof(struct GraphNodeRoot, areaIndex), true,  LOT_NONE,      1, sizeof(u8)               },
+    { "height",    LVT_S16,     offsetof(struct GraphNodeRoot, height),    false, LOT_NONE,      1, sizeof(s16)              },
+    { "node",      LVT_COBJECT, offsetof(struct GraphNodeRoot, node),      true,  LOT_GRAPHNODE, 1, sizeof(struct GraphNode) },
+    { "numViews",  LVT_S16,     offsetof(struct GraphNodeRoot, numViews),  true,  LOT_NONE,      1, sizeof(s16)              },
+    { "width",     LVT_S16,     offsetof(struct GraphNodeRoot, width),     false, LOT_NONE,      1, sizeof(s16)              },
+    { "x",         LVT_S16,     offsetof(struct GraphNodeRoot, x),         false, LOT_NONE,      1, sizeof(s16)              },
+    { "y",         LVT_S16,     offsetof(struct GraphNodeRoot, y),         false, LOT_NONE,      1, sizeof(s16)              },
 };
 
 #define LUA_GRAPH_NODE_ROTATION_FIELD_COUNT 5

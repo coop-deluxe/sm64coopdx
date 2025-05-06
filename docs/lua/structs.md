@@ -194,7 +194,7 @@
 | surfaceRooms | `Pointer` <`integer`> | read-only |
 | terrainData | `Pointer` <`integer`> | read-only |
 | terrainType | `integer` |  |
-| unk04 | [GraphNodeRoot](structs.md#GraphNodeRoot) | read-only |
+| root | [GraphNodeRoot](structs.md#GraphNodeRoot) |  |
 | warpNodes | [ObjectWarpNode](structs.md#ObjectWarpNode) | read-only |
 | whirlpools | `Array` <`Whirlpool`> |  |
 
@@ -1443,7 +1443,6 @@
 | height | `integer` |  |
 | node | [GraphNode](structs.md#GraphNode) | read-only |
 | numViews | `integer` | read-only |
-| unk15 | `integer` | read-only |
 | width | `integer` |  |
 | x | `integer` |  |
 | y | `integer` |  |

@@ -71,6 +71,7 @@ struct LuaObjectField* smlua_get_object_field_autogen(u16 lot, const char* key);
 """
 
 override_field_names = {
+    "Area": {"unk04": "root"}
 }
 
 override_field_types = {
@@ -95,6 +96,7 @@ override_field_invisible = {
     "MarioState": [ "visibleToEnemies" ],
     "NetworkPlayer": [ "gag", "moderator", "discordId" ],
     "GraphNode": [ "_guard1", "_guard2" ],
+    "GraphNodeRoot": ["unk15", "views"],
     "FnGraphNode": [ "luaTokenIndex" ],
     "Object": [ "firstSurface" ],
     "ModAudio": [ "sound", "decoder", "buffer", "bufferSize", "sampleCopiesTail" ],
@@ -129,7 +131,7 @@ override_field_immutable = {
     "GraphNodeObjectParent": [ "sharedChild" ],
     "GraphNodePerspective": [ "unused" ],
     "GraphNodeSwitchCase": [ "fnNode", "unused" ],
-    "GraphNodeRoot": ["node", "areaIndex", "unk15", "numViews", "views"],
+    "GraphNodeRoot": ["node", "areaIndex", "numViews"],
     "ObjectWarpNode": [ "next "],
     "Animation": [ "length" ],
     "AnimationTable": [ "count" ],

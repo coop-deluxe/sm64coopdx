@@ -48,7 +48,7 @@
 --- @field public surfaceRooms Pointer_integer
 --- @field public terrainData Pointer_integer
 --- @field public terrainType integer
---- @field public unk04 GraphNodeRoot
+--- @field public root GraphNodeRoot
 --- @field public warpNodes ObjectWarpNode
 --- @field public whirlpools Whirlpool[]
 
@@ -956,7 +956,6 @@
 --- @field public height integer
 --- @field public node GraphNode
 --- @field public numViews integer
---- @field public unk15 integer
 --- @field public width integer
 --- @field public x integer
 --- @field public y integer
