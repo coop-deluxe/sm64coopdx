@@ -116,7 +116,7 @@ void djui_panel_mod_menu_mod_create(struct DjuiBase* caller) {
     struct DjuiThreePanel* panel = djui_panel_menu_create(to_uppercase(mod->name), false);
     struct DjuiBase* body = djui_three_panel_get_body(panel);
     {
-        struct DjuiPaginated* paginated = djui_paginated_create(body, 8);
+        struct DjuiPaginated* paginated = djui_paginated_create(body, 7);
         struct DjuiBase* layoutBase = &paginated->layout->base;
         s32 count = 0;
         for (int i = 0; i < gHookedModMenuElementsCount; i++) {

@@ -4944,11 +4944,11 @@ function warp_special(arg)
     -- ...
 end
 
---- @param arg0 integer
+--- @param param integer
 --- @param levelNum integer
 --- @return integer
---- Sets the level number and handles the act select screen
-function lvl_set_current_level(arg0, levelNum)
+--- Sets the level number and handles the act select screen. `param` is used for overriding the level ID in level scripts, set to 0 in Lua
+function lvl_set_current_level(param, levelNum)
     -- ...
 end
 

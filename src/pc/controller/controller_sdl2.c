@@ -214,7 +214,7 @@ static void controller_sdl_read(OSContPad *pad) {
         sdl_haptic = NULL;
     }
 
-    if (sdl_cntrl == NULL || last_gamepad != configGamepadNumber) {
+    if ((!sdl_cntrl && !sdl_joystick) || last_gamepad != configGamepadNumber) {
         if (sdl_haptic) { SDL_HapticClose(sdl_haptic); sdl_haptic = NULL; }
         if (sdl_cntrl) { SDL_GameControllerClose(sdl_cntrl); sdl_cntrl = NULL; }
         if (sdl_joystick) { SDL_JoystickClose(sdl_joystick); sdl_joystick = NULL; }
