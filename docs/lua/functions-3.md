@@ -6410,22 +6410,22 @@ Special warps to arg (`SPECIAL_WARP_*`)
 ## [lvl_set_current_level](#lvl_set_current_level)
 
 ### Description
-Sets the level number and handles the act select screen
+Sets the level number and handles the act select screen. `param` is used for overriding the level ID in level scripts, set to 0 in Lua
 
 ### Lua Example
-`local integerValue = lvl_set_current_level(arg0, levelNum)`
+`local integerValue = lvl_set_current_level(param, levelNum)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| arg0 | `integer` |
+| param | `integer` |
 | levelNum | `integer` |
 
 ### Returns
 - `integer`
 
 ### C Prototype
-`s32 lvl_set_current_level(s16 arg0, s16 levelNum);`
+`s32 lvl_set_current_level(s16 param, s16 levelNum);`
 
 [:arrow_up_small:](#)
 

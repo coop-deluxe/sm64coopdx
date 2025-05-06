@@ -198,8 +198,8 @@ void initiate_warp(s16 destLevel, s16 destArea, s16 destWarpNode, s32 arg);
 
 s32 lvl_init_or_update(s16 initOrUpdate, UNUSED s32 unused);
 s32 lvl_init_from_save_file(UNUSED s16 arg0, s16 levelNum);
-/* |description|Sets the level number and handles the act select screen|descriptionEnd| */
-s32 lvl_set_current_level(s16 arg0, s16 levelNum);
+/* |description|Sets the level number and handles the act select screen. `param` is used for overriding the level ID in level scripts, set to 0 in Lua|descriptionEnd| */
+s32 lvl_set_current_level(s16 param, s16 levelNum);
 s32 lvl_play_the_end_screen_sound(UNUSED s16 arg0, UNUSED s32 arg1);
 void basic_update(UNUSED s16 *arg);
 
