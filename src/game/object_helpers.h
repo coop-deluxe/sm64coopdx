@@ -256,6 +256,7 @@ f32 absf(f32 x);
 s32 absi(s32 a0);
 s32 cur_obj_wait_then_blink(s32 timeUntilBlinking, s32 numBlinks);
 s32 cur_obj_is_mario_ground_pounding_platform(void);
+s32 obj_is_mario_ground_pounding_platform(struct MarioState *m, struct Object *obj);
 void spawn_mist_particles(void);
 void spawn_mist_particles_with_sound(u32 sp18);
 void cur_obj_push_mario_away(f32 radius);

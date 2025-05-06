@@ -5450,6 +5450,27 @@ Transforms the vector at `localTranslateIndex` into the object's local coordinat
 
 <br />
 
+## [obj_is_mario_ground_pounding_platform](#obj_is_mario_ground_pounding_platform)
+
+### Lua Example
+`local integerValue = obj_is_mario_ground_pounding_platform(m, obj)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| obj | [Object](structs.md#Object) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 obj_is_mario_ground_pounding_platform(struct MarioState *m, struct Object *obj);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [spawn_mist_particles](#spawn_mist_particles)
 
 ### Lua Example
