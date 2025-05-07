@@ -1498,7 +1498,7 @@ void update_mario_joystick_inputs(struct MarioState *m) {
         } else if (get_first_person_enabled()) {
             m->intendedYaw = atan2s(-controller->stickY, controller->stickX) + gLakituState.yaw;
         } else {
-            m->intendedYaw = atan2s(-controller->stickY, controller->stickX) - newcam_yaw + 0x4000;
+            m->intendedYaw = atan2s(-controller->stickY, controller->stickX) - gNewCamera.yaw + 0x4000;
         }
         m->input |= INPUT_NONZERO_ANALOG;
     } else {
