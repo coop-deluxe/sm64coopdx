@@ -4451,6 +4451,111 @@ Gets the name of the operating system the game is running on
 
 <br />
 
+## [geo_get_current_root](#geo_get_current_root)
+
+### Description
+Gets the current GraphNodeRoot
+
+### Lua Example
+`local GraphNodeRootValue = geo_get_current_root()`
+
+### Parameters
+- None
+
+### Returns
+[GraphNodeRoot](structs.md#GraphNodeRoot)
+
+### C Prototype
+`struct GraphNodeRoot* geo_get_current_root(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [geo_get_current_master_list](#geo_get_current_master_list)
+
+### Description
+Gets the current GraphNodeMasterList
+
+### Lua Example
+`local GraphNodeMasterListValue = geo_get_current_master_list()`
+
+### Parameters
+- None
+
+### Returns
+[GraphNodeMasterList](structs.md#GraphNodeMasterList)
+
+### C Prototype
+`struct GraphNodeMasterList* geo_get_current_master_list(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [geo_get_current_perspective](#geo_get_current_perspective)
+
+### Description
+Gets the current GraphNodePerspective
+
+### Lua Example
+`local GraphNodePerspectiveValue = geo_get_current_perspective()`
+
+### Parameters
+- None
+
+### Returns
+[GraphNodePerspective](structs.md#GraphNodePerspective)
+
+### C Prototype
+`struct GraphNodePerspective* geo_get_current_perspective(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [geo_get_current_camera](#geo_get_current_camera)
+
+### Description
+Gets the current GraphNodeCamera
+
+### Lua Example
+`local GraphNodeCameraValue = geo_get_current_camera()`
+
+### Parameters
+- None
+
+### Returns
+[GraphNodeCamera](structs.md#GraphNodeCamera)
+
+### C Prototype
+`struct GraphNodeCamera* geo_get_current_camera(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [geo_get_current_held_object](#geo_get_current_held_object)
+
+### Description
+Gets the current GraphNodeHeldObject
+
+### Lua Example
+`local GraphNodeHeldObjectValue = geo_get_current_held_object()`
+
+### Parameters
+- None
+
+### Returns
+[GraphNodeHeldObject](structs.md#GraphNodeHeldObject)
+
+### C Prototype
+`struct GraphNodeHeldObject* geo_get_current_held_object(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ---
 # functions from smlua_model_utils.h
 

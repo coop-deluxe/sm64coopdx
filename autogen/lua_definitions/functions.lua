@@ -10584,6 +10584,36 @@ function get_os_name()
     -- ...
 end
 
+--- @return GraphNodeRoot
+--- Gets the current GraphNodeRoot
+function geo_get_current_root()
+    -- ...
+end
+
+--- @return GraphNodeMasterList
+--- Gets the current GraphNodeMasterList
+function geo_get_current_master_list()
+    -- ...
+end
+
+--- @return GraphNodePerspective
+--- Gets the current GraphNodePerspective
+function geo_get_current_perspective()
+    -- ...
+end
+
+--- @return GraphNodeCamera
+--- Gets the current GraphNodeCamera
+function geo_get_current_camera()
+    -- ...
+end
+
+--- @return GraphNodeHeldObject
+--- Gets the current GraphNodeHeldObject
+function geo_get_current_held_object()
+    -- ...
+end
+
 --- @param name string
 --- @return ModelExtendedId
 --- Gets the extended model ID for the `name` of a `GeoLayout`

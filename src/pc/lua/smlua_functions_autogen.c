@@ -31716,6 +31716,81 @@ int smlua_func_get_os_name(UNUSED lua_State* L) {
     return 1;
 }
 
+int smlua_func_geo_get_current_root(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "geo_get_current_root", 0, top);
+        return 0;
+    }
+
+
+    smlua_push_object(L, LOT_GRAPHNODEROOT, geo_get_current_root(), NULL);
+
+    return 1;
+}
+
+int smlua_func_geo_get_current_master_list(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "geo_get_current_master_list", 0, top);
+        return 0;
+    }
+
+
+    smlua_push_object(L, LOT_GRAPHNODEMASTERLIST, geo_get_current_master_list(), NULL);
+
+    return 1;
+}
+
+int smlua_func_geo_get_current_perspective(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "geo_get_current_perspective", 0, top);
+        return 0;
+    }
+
+
+    smlua_push_object(L, LOT_GRAPHNODEPERSPECTIVE, geo_get_current_perspective(), NULL);
+
+    return 1;
+}
+
+int smlua_func_geo_get_current_camera(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "geo_get_current_camera", 0, top);
+        return 0;
+    }
+
+
+    smlua_push_object(L, LOT_GRAPHNODECAMERA, geo_get_current_camera(), NULL);
+
+    return 1;
+}
+
+int smlua_func_geo_get_current_held_object(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "geo_get_current_held_object", 0, top);
+        return 0;
+    }
+
+
+    smlua_push_object(L, LOT_GRAPHNODEHELDOBJECT, geo_get_current_held_object(), NULL);
+
+    return 1;
+}
+
   /////////////////////////
  // smlua_model_utils.h //
 /////////////////////////
@@ -35455,6 +35530,11 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "set_window_title", smlua_func_set_window_title);
     smlua_bind_function(L, "reset_window_title", smlua_func_reset_window_title);
     smlua_bind_function(L, "get_os_name", smlua_func_get_os_name);
+    smlua_bind_function(L, "geo_get_current_root", smlua_func_geo_get_current_root);
+    smlua_bind_function(L, "geo_get_current_master_list", smlua_func_geo_get_current_master_list);
+    smlua_bind_function(L, "geo_get_current_perspective", smlua_func_geo_get_current_perspective);
+    smlua_bind_function(L, "geo_get_current_camera", smlua_func_geo_get_current_camera);
+    smlua_bind_function(L, "geo_get_current_held_object", smlua_func_geo_get_current_held_object);
 
     // smlua_model_utils.h
     smlua_bind_function(L, "smlua_model_util_get_id", smlua_func_smlua_model_util_get_id);

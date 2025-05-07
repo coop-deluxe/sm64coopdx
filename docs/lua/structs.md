@@ -194,6 +194,7 @@
 | surfaceRooms | `Pointer` <`integer`> | read-only |
 | terrainData | `Pointer` <`integer`> | read-only |
 | terrainType | `integer` |  |
+| root | [GraphNodeRoot](structs.md#GraphNodeRoot) |  |
 | warpNodes | [ObjectWarpNode](structs.md#ObjectWarpNode) | read-only |
 | whirlpools | `Array` <`Whirlpool`> |  |
 
@@ -1429,6 +1430,22 @@
 | prevFov | `number` |  |
 | prevTimestamp | `number` |  |
 | unused | `integer` | read-only |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [GraphNodeRoot](#GraphNodeRoot)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| areaIndex | `integer` | read-only |
+| height | `integer` |  |
+| node | [GraphNode](structs.md#GraphNode) | read-only |
+| numViews | `integer` | read-only |
+| width | `integer` |  |
+| x | `integer` |  |
+| y | `integer` |  |
 
 [:arrow_up_small:](#)
 
