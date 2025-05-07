@@ -2641,16 +2641,18 @@ s32 cur_obj_wait_then_blink(s32 timeUntilBlinking, s32 numBlinks) {
 s32 cur_obj_is_mario_ground_pounding_platform(void) {
     for (s32 i = 0; i < MAX_PLAYERS; i++) {
         if (!is_player_active(&gMarioStates[i])) { continue; }
-        if (!gMarioStates[i].marioObj) { continue; }
-        if (gMarioStates[i].marioObj->platform == o) {
-            u32 interaction = determine_interaction(&gMarioStates[i], o);
-            if ((gMarioStates[i].action == ACT_GROUND_POUND_LAND) || (interaction & INT_GROUND_POUND && interaction & INT_LUA)) {
-                return TRUE;
-            }
+        if (obj_is_mario_ground_pounding_platform(&gMarioStates[i], o)) {
+            return TRUE;
         }
     }
 
     return FALSE;
+}
+
+s32 obj_is_mario_ground_pounding_platform(struct MarioState *m, struct Object *obj) {
+    if (!m || !obj || !m->marioObj) { return FALSE; }
+    if (m->marioObj->platform != obj) { return FALSE; }
+    return mario_is_ground_pound_landing(m);
 }
 
 void spawn_mist_particles(void) {

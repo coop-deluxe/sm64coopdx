@@ -15837,6 +15837,23 @@ int smlua_func_mario_is_crouching(lua_State* L) {
     return 1;
 }
 
+int smlua_func_mario_is_ground_pound_landing(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "mario_is_ground_pound_landing", 1, top);
+        return 0;
+    }
+
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mario_is_ground_pound_landing"); return 0; }
+
+    lua_pushboolean(L, mario_is_ground_pound_landing(m));
+
+    return 1;
+}
+
 int smlua_func_mario_can_bubble(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -26059,6 +26076,26 @@ int smlua_func_cur_obj_is_mario_ground_pounding_platform(UNUSED lua_State* L) {
     return 1;
 }
 
+int smlua_func_obj_is_mario_ground_pounding_platform(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "obj_is_mario_ground_pounding_platform", 2, top);
+        return 0;
+    }
+
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "obj_is_mario_ground_pounding_platform"); return 0; }
+    struct Object* obj = (struct Object*)smlua_to_cobject(L, 2, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "obj_is_mario_ground_pounding_platform"); return 0; }
+
+    extern s32 obj_is_mario_ground_pounding_platform(struct MarioState *m, struct Object *obj);
+    lua_pushinteger(L, obj_is_mario_ground_pounding_platform(m, obj));
+
+    return 1;
+}
+
 int smlua_func_spawn_mist_particles(UNUSED lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -34648,6 +34685,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "play_mario_heavy_landing_sound_once", smlua_func_play_mario_heavy_landing_sound_once);
     smlua_bind_function(L, "play_mario_sound", smlua_func_play_mario_sound);
     smlua_bind_function(L, "mario_is_crouching", smlua_func_mario_is_crouching);
+    smlua_bind_function(L, "mario_is_ground_pound_landing", smlua_func_mario_is_ground_pound_landing);
     smlua_bind_function(L, "mario_can_bubble", smlua_func_mario_can_bubble);
     smlua_bind_function(L, "mario_set_bubbled", smlua_func_mario_set_bubbled);
     smlua_bind_function(L, "mario_set_forward_vel", smlua_func_mario_set_forward_vel);
@@ -35181,6 +35219,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "signum_positive", smlua_func_signum_positive);
     smlua_bind_function(L, "cur_obj_wait_then_blink", smlua_func_cur_obj_wait_then_blink);
     smlua_bind_function(L, "cur_obj_is_mario_ground_pounding_platform", smlua_func_cur_obj_is_mario_ground_pounding_platform);
+    smlua_bind_function(L, "obj_is_mario_ground_pounding_platform", smlua_func_obj_is_mario_ground_pounding_platform);
     smlua_bind_function(L, "spawn_mist_particles", smlua_func_spawn_mist_particles);
     smlua_bind_function(L, "spawn_mist_particles_with_sound", smlua_func_spawn_mist_particles_with_sound);
     smlua_bind_function(L, "cur_obj_push_mario_away", smlua_func_cur_obj_push_mario_away);
