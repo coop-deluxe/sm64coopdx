@@ -9,6 +9,8 @@ jobs:
     build-linux:
         if: ${{ github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[build]') }}
         runs-on: ubuntu-latest
+        container:
+          image: debian:12
         steps:
             - name: Checkout repository
               uses: actions/checkout@v4
