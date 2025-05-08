@@ -842,9 +842,9 @@ static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, cons
             float g = rsp.current_lights[rsp.current_num_lights - 1].col[1] * globalLightCached[1][1];
             float b = rsp.current_lights[rsp.current_num_lights - 1].col[2] * globalLightCached[1][2];
 
-            int nx = vn->n[0];
-            int ny = vn->n[1];
-            int nz = vn->n[2];
+            signed char nx = vn->n[0];
+            signed char ny = vn->n[1];
+            signed char nz = vn->n[2];
 
             if (rsp.geometry_mode & G_PACKED_NORMALS_EXT) {
                 unsigned short packedNormal = vn->flag;
@@ -853,10 +853,10 @@ static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, cons
 
                 nx = xo & 0x7F;
                 ny = yo & 0x7F;
-                nz = nx + ny;
+                nz = (nx + ny) ^ 0x7F;
+
                 int x2 = nx ^ 0x7F;
                 int y2 = ny ^ 0x7F;
-                nz = nz ^ 0x7F;
 
                 if (nz & 0x80) {
                     nx = x2;
