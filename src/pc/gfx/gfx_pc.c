@@ -855,17 +855,14 @@ static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, cons
                 ny = yo & 0x7F;
                 nz = (nx + ny) ^ 0x7F;
 
-                int x2 = nx ^ 0x7F;
-                int y2 = ny ^ 0x7F;
-
                 if (nz & 0x80) {
-                    nx = x2;
-                    ny = y2;
+                    nx ^= 0x7F;
+                    ny ^= 0x7F;
                 }
 
                 nx = (xo & 0x80) ? -nx : nx;
                 ny = (yo & 0x80) ? -ny : ny;
-                nz = (nz & 0x80) ? (nz - 0x100) : nz;
+
                 SUPPORT_CHECK(absi(nx) + absi(ny) + absi(nz) == 127);
             }
 
