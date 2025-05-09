@@ -842,38 +842,36 @@ static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, cons
             float g = rsp.current_lights[rsp.current_num_lights - 1].col[1] * globalLightCached[1][1];
             float b = rsp.current_lights[rsp.current_num_lights - 1].col[2] * globalLightCached[1][2];
 
+            signed char nx = vn->n[0];
+            signed char ny = vn->n[1];
+            signed char nz = vn->n[2];
+
+            if (rsp.geometry_mode & G_PACKED_NORMALS_EXT) {
+                unsigned short packedNormal = vn->flag;
+                int xo = packedNormal >> 8;
+                int yo = packedNormal & 0xFF;
+
+                nx = xo & 0x7F;
+                ny = yo & 0x7F;
+                nz = (nx + ny) ^ 0x7F;
+
+                if (nz & 0x80) {
+                    nx ^= 0x7F;
+                    ny ^= 0x7F;
+                }
+
+                nx = (xo & 0x80) ? -nx : nx;
+                ny = (yo & 0x80) ? -ny : ny;
+
+                SUPPORT_CHECK(absi(nx) + absi(ny) + absi(nz) == 127);
+            }
+
             for (int32_t i = 0; i < rsp.current_num_lights - 1; i++) {
                 float intensity = 0;
-                if (rsp.geometry_mode & G_PACKED_NORMALS_EXT) {
-                    // original f3dex3 algorithm translated to c (from fast64 source code)
-                    unsigned short packedNormal = vn->flag;
-                    int xo = packedNormal >> 8;
-                    int yo = packedNormal & 0xFF;
-    
-                    int x = xo & 0x7F;
-                    int y = yo & 0x7F;
-                    int z = x + y;
-                    int x2 = x ^ 0x7F;
-                    int y2 = y ^ 0x7F;
-                    z = z ^ 0x7F;
-                    if (z & 0x80) {
-                        x = x2;
-                        y = y2;
-                    }
 
-                    x = (xo & 0x80) ? -x : x;
-                    y = (yo & 0x80) ? -y : y;
-                    z = (z & 0x80) ? (z - 0x100) : z;
-                    SUPPORT_CHECK(absi(x) + absi(y) + absi(z) == 127);
-
-                    intensity += x * rsp.current_lights_coeffs[i][0];
-                    intensity += y * rsp.current_lights_coeffs[i][1];
-                    intensity += z * rsp.current_lights_coeffs[i][2];
-                } else {
-                    intensity += vn->n[0] * rsp.current_lights_coeffs[i][0];
-                    intensity += vn->n[1] * rsp.current_lights_coeffs[i][1];
-                    intensity += vn->n[2] * rsp.current_lights_coeffs[i][2];
-                }
+                intensity += nx * rsp.current_lights_coeffs[i][0];
+                intensity += ny * rsp.current_lights_coeffs[i][1];
+                intensity += nz * rsp.current_lights_coeffs[i][2];
 
                 intensity /= 127.0f;
                 if (intensity > 0.0f) {
@@ -904,12 +902,12 @@ static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, cons
 
             if (rsp.geometry_mode & G_TEXTURE_GEN) {
                 float dotx = 0, doty = 0;
-                dotx += vn->n[0] * rsp.current_lookat_coeffs[0][0];
-                dotx += vn->n[1] * rsp.current_lookat_coeffs[0][1];
-                dotx += vn->n[2] * rsp.current_lookat_coeffs[0][2];
-                doty += vn->n[0] * rsp.current_lookat_coeffs[1][0];
-                doty += vn->n[1] * rsp.current_lookat_coeffs[1][1];
-                doty += vn->n[2] * rsp.current_lookat_coeffs[1][2];
+                dotx += nx * rsp.current_lookat_coeffs[0][0];
+                dotx += ny * rsp.current_lookat_coeffs[0][1];
+                dotx += nz * rsp.current_lookat_coeffs[0][2];
+                doty += nx * rsp.current_lookat_coeffs[1][0];
+                doty += ny * rsp.current_lookat_coeffs[1][1];
+                doty += nz * rsp.current_lookat_coeffs[1][2];
 
                 U = (int32_t)((dotx / 127.0f + 1.0f) / 4.0f * rsp.texture_scaling_factor.s);
                 V = (int32_t)((doty / 127.0f + 1.0f) / 4.0f * rsp.texture_scaling_factor.t);
