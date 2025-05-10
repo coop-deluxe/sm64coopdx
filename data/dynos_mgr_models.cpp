@@ -1,4 +1,3 @@
-#include <map>
 #include <vector>
 #include "dynos.cpp.h"
 
@@ -57,6 +56,30 @@ void DynOS_Model_Dump() {
     }
 }
 
+static struct GraphNode *DynOS_Model_CheckMap(int index, u32* aId, void* aAsset, bool aDeDuplicate) {
+    auto& map = sAssetMap[index];
+    if (aDeDuplicate) {
+        auto it = map.find(aAsset);
+        if (it != map.end()) {
+            auto& found = it->second;
+
+            if (index != MODEL_POOL_PERMANENT) {
+                if (*aId && *aId != found.id) {
+                    sOverwriteMap[*aId] = found.id;
+                }
+                *aId = found.id;
+                return found.graphNode;
+            }
+
+            if (!*aId || *aId == found.id) {
+                if (!*aId) { *aId = found.id; }
+                return found.graphNode;
+            }
+        }
+    }
+    return NULL;
+}
+
 static struct GraphNode* DynOS_Model_LoadCommonInternal(u32* aId, enum ModelPool aModelPool, void* aAsset, u8 aLayer, struct GraphNode* aGraphNode, bool aDeDuplicate, enum ModelLoadType mlt) {
     // sanity check pool
     if (aModelPool >= MODEL_POOL_MAX) { return NULL; }
@@ -66,32 +89,20 @@ static struct GraphNode* DynOS_Model_LoadCommonInternal(u32* aId, enum ModelPool
         sModelPools[aModelPool] = dynamic_pool_init();
     }
 
-    // check perm map
-    auto& permMap = sAssetMap[MODEL_POOL_PERMANENT];
-    if (aDeDuplicate && permMap.count(aAsset)) {
-        auto& found = permMap[aAsset];
-        if (*aId && *aId == found.id) {
-            return found.graphNode;
-        }
-        if (*aId == 0) {
-            *aId = found.id;
-            return found.graphNode;
-        }
+    // check maps, permanent pool is always checked
+    struct GraphNode *node = NULL;
+    #define CHECK_POOL(pool) if (node = DynOS_Model_CheckMap(pool, aId, aAsset, aDeDuplicate)) { return node; }
+    CHECK_POOL(MODEL_POOL_PERMANENT);
+    if (aModelPool == MODEL_POOL_SESSION) {
+        CHECK_POOL(MODEL_POOL_SESSION);
+        CHECK_POOL(MODEL_POOL_LEVEL);
     }
-
-    // check map
-    auto& map = sAssetMap[aModelPool];
-    if (aDeDuplicate && map.count(aAsset)) {
-        auto& found = map[aAsset];
-        if (*aId && *aId != found.id) {
-            sOverwriteMap[*aId] = found.id;
-        }
-        *aId = found.id;
-        return found.graphNode;
+    if (aModelPool == MODEL_POOL_LEVEL) {
+        CHECK_POOL(MODEL_POOL_LEVEL);
     }
 
     // load geo
-    struct GraphNode* node = NULL;
+    auto& map = sAssetMap[aModelPool];
     switch (mlt) {
         case MLT_GEO:
             node = process_geo_layout(sModelPools[aModelPool], aAsset);
@@ -113,7 +124,7 @@ static struct GraphNode* DynOS_Model_LoadCommonInternal(u32* aId, enum ModelPool
         .id = *aId,
         .asset = aAsset,
         .graphNode = node,
-        .modelPool = aModelPool
+        .modelPool = aModelPool,
     };
 
     // store in maps
@@ -142,8 +153,9 @@ struct GraphNode* DynOS_Model_StoreGeo(u32* aId, enum ModelPool aModelPool, void
 }
 
 struct GraphNode* DynOS_Model_GetErrorGeo() {
-    if (!sIdMap.count(MODEL_ERROR_MODEL)) { return NULL; }
-    auto& vec = sIdMap[MODEL_ERROR_MODEL];
+    auto it = sIdMap.find(MODEL_ERROR_MODEL);
+    if (it == sIdMap.end()) { return NULL; }
+    auto& vec = it->second;
     if (vec.size() == 0 || vec.empty()) {
         return NULL;
     }
@@ -153,15 +165,17 @@ struct GraphNode* DynOS_Model_GetErrorGeo() {
 struct GraphNode* DynOS_Model_GetGeo(u32 aId) {
     if (!aId) { return NULL; }
 
-    if (sOverwriteMap.count(aId)) {
-        aId = sOverwriteMap[aId];
+    auto overwriteIt = sOverwriteMap.find(aId);
+    if (overwriteIt != sOverwriteMap.end()) {
+        aId = overwriteIt->second;
     }
 
-    if (sIdMap.count(aId) == 0) {
+    auto idIt = sIdMap.find(aId);
+    if (idIt == sIdMap.end()) {
         return DynOS_Model_GetErrorGeo();
     }
 
-    auto& vec = sIdMap[aId];
+    auto& vec = idIt->second;
     if (vec.size() == 0 || vec.empty()) {
         return DynOS_Model_GetErrorGeo();
     }
@@ -208,11 +222,14 @@ u32 DynOS_Model_GetIdFromAsset(void* asset) {
     if (!asset) { return MODEL_NONE; }
     u32 lowest = 9999;
     for (int i = 0; i < MODEL_POOL_MAX; i++) {
-        if (!sAssetMap[i].count(asset)) { continue; }
-        u32 id = sAssetMap[i][asset].id;
+        auto& map = sAssetMap[i];
+        auto assetIt = map.find(asset);
+        if (assetIt == map.end()) { continue; }
+        u32 id = assetIt->second.id;
         if (id < lowest) { lowest = id; }
-        if (sOverwriteMap.count(id)) {
-            id = sOverwriteMap[id];
+        auto idIt = sOverwriteMap.find(id);
+        if (idIt != sOverwriteMap.end()) {
+            id = idIt->second;
             if (id < lowest) { lowest = id; }
         }
     }
@@ -239,17 +256,18 @@ void DynOS_Model_ClearPool(enum ModelPool aModelPool) {
     auto& assetMap = sAssetMap[aModelPool];
     for (auto& asset : assetMap) {
         auto& info = asset.second;
-        if (sIdMap.count(info.id) == 0) { continue; }
+        auto idIt = sIdMap.find(info.id);
+        if (idIt == sIdMap.end()) { continue; }
+        auto& idMap = idIt->second;
 
         // preventing clearing permanent vanilla model slot
-        if (info.id <= VANILLA_ID_END && sIdMap.count(info.id) <= 1) {
+        if (info.id <= VANILLA_ID_END && idMap.size() <= 1) {
             if (sAssetMap[MODEL_POOL_PERMANENT].count(info.asset) > 0) {
                 continue;
             }
         }
 
         // erase from id map
-        auto& idMap = sIdMap[info.id];
         for (auto info2 = idMap.begin(); info2 != idMap.end(); ) {
             if (info.id == info2->id && info2->modelPool == aModelPool) {
                 info2 = idMap.erase(info2);

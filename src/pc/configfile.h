@@ -27,10 +27,20 @@ typedef struct {
     unsigned int msaa;
 } ConfigWindow;
 
+typedef struct {
+    bool rotateLeft;
+    bool invertLeftX;
+    bool invertLeftY;
+    bool rotateRight;
+    bool invertRightX;
+    bool invertRightY;
+} ConfigStick;
+
 extern char configSaveNames[4][MAX_SAVE_NAME_STRING];
 
 // display settings
 extern ConfigWindow configWindow;
+extern ConfigStick configStick;
 extern unsigned int configFiltering;
 extern bool         configShowFPS;
 extern bool         configUncappedFramerate;
@@ -81,29 +91,25 @@ extern bool         configUseStandardKeyBindingsChat;
 extern bool         configEnableFreeCamera;
 extern bool         configFreeCameraAnalog;
 extern bool         configFreeCameraLCentering;
-extern bool         configFreeCameraDpadBehavior;
+extern bool         configFreeCameraDPadBehavior;
 extern bool         configFreeCameraHasCollision;
-extern bool         configCameraMouse;
-extern unsigned int configCameraXSens;
-extern unsigned int configCameraYSens;
-extern unsigned int configCameraAggr;
-extern unsigned int configCameraPan;
-extern unsigned int configCameraDegrade;
+extern bool         configFreeCameraMouse;
+extern unsigned int configFreeCameraXSens;
+extern unsigned int configFreeCameraYSens;
+extern unsigned int configFreeCameraAggr;
+extern unsigned int configFreeCameraPan;
+extern unsigned int configFreeCameraDegrade;
 // romhack camera settings
-extern bool configEnableRomhackCamera;
-extern bool configRomhackCameraBowserFights;
-extern bool configRomhackCameraHasCollision;
-extern bool configRomhackCameraHasCentering;
-extern bool configRomhackCameraDpadBehavior;
-extern bool configRomhackCameraSlowFall;
-extern bool configCameraToxicGas;
-extern unsigned int configRomhackCameraZoomedInDist;
-extern unsigned int configRomhackCameraZoomedOutDist;
-extern unsigned int configRomhackCameraZoomedInHeight;
-extern unsigned int configRomhackCameraZoomedOutHeight;
+extern unsigned int configEnableRomhackCamera;
+extern bool         configRomhackCameraBowserFights;
+extern bool         configRomhackCameraHasCollision;
+extern bool         configRomhackCameraHasCentering;
+extern bool         configRomhackCameraDPadBehavior;
+extern bool         configRomhackCameraSlowFall;
 // common camera settings
 extern bool         configCameraInvertX;
 extern bool         configCameraInvertY;
+extern bool         configCameraToxicGas;
 // debug
 extern bool         configLuaProfiler;
 extern bool         configDebugPrint;
@@ -138,6 +144,7 @@ extern bool         configMenuRandom;
 extern bool         configMenuDemos;
 extern bool         configDisablePopups;
 extern char         configLanguage[MAX_CONFIG_STRING];
+extern bool         configForce4By3;
 extern bool         configDynosLocalPlayerModelOnly;
 extern unsigned int configPvpType;
 // CoopNet settings
@@ -148,6 +155,7 @@ extern char         configDestId[MAX_CONFIG_STRING];
 // DJUI settings
 extern unsigned int configDjuiTheme;
 extern bool         configDjuiThemeCenter;
+extern bool         configDjuiThemeGradients;
 extern unsigned int configDjuiThemeFont;
 extern unsigned int configDjuiScale;
 // other

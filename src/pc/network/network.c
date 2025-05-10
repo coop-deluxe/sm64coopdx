@@ -6,8 +6,6 @@
 #include "game/level_update.h"
 #include "object_constants.h"
 #include "behavior_table.h"
-#include "game/hardcoded.h"
-#include "game/scroll_targets.h"
 #include "pc/configfile.h"
 #include "pc/djui/djui.h"
 #include "pc/djui/djui_panel.h"
@@ -24,6 +22,8 @@
 #include "pc/pc_main.h"
 #include "pc/gfx/gfx_pc.h"
 #include "pc/fs/fmem.h"
+#include "game/hardcoded.h"
+#include "game/scroll_targets.h"
 #include "game/camera.h"
 #include "game/skybox.h"
 #include "game/object_list_processor.h"
@@ -33,8 +33,9 @@
 #include "game/ingame_menu.h"
 #include "game/first_person_cam.h"
 #include "game/envfx_snow.h"
-#include "engine/math_util.h"
 #include "game/mario.h"
+#include "engine/math_util.h"
+#include "engine/lighting_engine.h"
 
 #ifdef DISCORD_SDK
 #include "pc/discord/discord.h"
@@ -664,9 +665,9 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
         gNetworkType = NT_NONE;
     }
 
-    dynos_model_clear_pool(MODEL_POOL_SESSION);
-
     if (exiting) { return; }
+
+    dynos_model_clear_pool(MODEL_POOL_SESSION);
 
     // reset other stuff
     extern u8* gOverrideEeprom;
@@ -677,6 +678,7 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
     gOverrideNear = 0;
     gOverrideFar = 0;
     gOverrideFOV = 0;
+    gRoomOverride = -1;
     gCurrActStarNum = 0;
     gCurrActNum = 0;
     gCurrCreditsEntry = NULL;
@@ -702,7 +704,6 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
     extern s16 gChangeLevel;
     gChangeLevel = LEVEL_CASTLE_GROUNDS;
     network_player_init();
-    camera_set_use_course_specific_settings(true);
     gMarioStates[0].cap = 0;
     gMarioStates[0].input = 0;
     extern s16 gTTCSpeedSetting;
@@ -736,6 +737,8 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
     gFirstPersonCamera.fov = FIRST_PERSON_DEFAULT_FOV;
     vec3f_set(gFirstPersonCamera.offset, 0, 0, 0);
     first_person_reset();
+
+    le_shutdown();
 
     extern void save_file_load_all(UNUSED u8 reload);
     save_file_load_all(TRUE);

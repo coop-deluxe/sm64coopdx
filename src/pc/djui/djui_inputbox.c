@@ -13,9 +13,9 @@
 #define DJUI_INPUTBOX_MID_BLINK (DJUI_INPUTBOX_MAX_BLINK / 2)
 #define DJUI_INPUTBOX_CURSOR_WIDTH (2.0f / 32.0f)
 
-static u8 sHeldShift   = 0;
-static u8 sHeldControl = 0;
-static u8 sHeldAlt     = 0;
+u8 gDjuiInputHeldShift   = 0;
+u8 gDjuiInputHeldControl = 0;
+u8 gDjuiInputHeldAlt     = 0;
 static u8 sCursorBlink = 0;
 
 static void djui_inputbox_update_style(struct DjuiBase* base) {
@@ -179,58 +179,58 @@ bool djui_inputbox_on_key_down(struct DjuiBase *base, int scancode) {
     u16 s2 = fmax(sel[0], sel[1]);
 
     switch (scancode) {
-        case SCANCODE_SHIFT_LEFT:    sHeldShift   |= (1 << 0); return true;
-        case SCANCODE_SHIFT_RIGHT:   sHeldShift   |= (1 << 1); return true;
-        case SCANCODE_CONTROL_LEFT:  sHeldControl |= (1 << 0); return true;
-        case SCANCODE_CONTROL_RIGHT: sHeldControl |= (1 << 1); return true;
-        case SCANCODE_ALT_LEFT:      sHeldAlt     |= (1 << 0); return true;
-        case SCANCODE_ALT_RIGHT:     sHeldAlt     |= (1 << 1); return true;
+        case SCANCODE_SHIFT_LEFT:    gDjuiInputHeldShift   |= (1 << 0); return true;
+        case SCANCODE_SHIFT_RIGHT:   gDjuiInputHeldShift   |= (1 << 1); return true;
+        case SCANCODE_CONTROL_LEFT:  gDjuiInputHeldControl |= (1 << 0); return true;
+        case SCANCODE_CONTROL_RIGHT: gDjuiInputHeldControl |= (1 << 1); return true;
+        case SCANCODE_ALT_LEFT:      gDjuiInputHeldAlt     |= (1 << 0); return true;
+        case SCANCODE_ALT_RIGHT:     gDjuiInputHeldAlt     |= (1 << 1); return true;
     }
 
     // [Left], [Ctrl]+[Left], [Shift]+[Left], [Ctrl]+[Shift]+[Left]
-    if (!sHeldAlt && scancode == SCANCODE_LEFT) {
-        if (sHeldControl) {
+    if (!gDjuiInputHeldAlt && scancode == SCANCODE_LEFT) {
+        if (gDjuiInputHeldControl) {
             sel[0] = djui_inputbox_jump_word_left(msg, len, sel[0]);
         } else if (sel[0] > 0) {
             sel[0]--;
         }
-        if (!sHeldShift) { sel[1] = sel[0]; }
+        if (!gDjuiInputHeldShift) { sel[1] = sel[0]; }
         sCursorBlink = 0;
         return true;
     }
 
     // [Right], [Ctrl]+[Right], [Shift]+[Right], [Ctrl]+[Shift]+[Right]
-    if (!sHeldAlt && scancode == SCANCODE_RIGHT) {
-        if (sHeldControl) {
+    if (!gDjuiInputHeldAlt && scancode == SCANCODE_RIGHT) {
+        if (gDjuiInputHeldControl) {
             sel[0] = djui_inputbox_jump_word_right(msg, len, sel[0]);
         } else if (sel[0] < len) {
             sel[0]++;
         }
-        if (!sHeldShift) { sel[1] = sel[0]; }
+        if (!gDjuiInputHeldShift) { sel[1] = sel[0]; }
         sCursorBlink = 0;
         return true;
     }
 
     // [Home], [Shift]+[Home]
-    if (!sHeldAlt && scancode == SCANCODE_HOME) {
+    if (!gDjuiInputHeldAlt && scancode == SCANCODE_HOME) {
         sel[0] = 0;
-        if (!sHeldShift) { sel[1] = sel[0]; }
+        if (!gDjuiInputHeldShift) { sel[1] = sel[0]; }
         sCursorBlink = 0;
         return true;
     }
 
     // [End], [Shift]+[End]
-    if (!sHeldAlt && scancode == SCANCODE_END) {
+    if (!gDjuiInputHeldAlt && scancode == SCANCODE_END) {
         sel[0] = len;
-        if (!sHeldShift) { sel[1] = sel[0]; }
+        if (!gDjuiInputHeldShift) { sel[1] = sel[0]; }
         sCursorBlink = 0;
         return true;
     }
 
     // [Backspace], [Ctrl]+[Backspace]
-    if (!sHeldAlt && scancode == SCANCODE_BACKSPACE) {
+    if (!gDjuiInputHeldAlt && scancode == SCANCODE_BACKSPACE) {
         if (sel[0] == sel[1]) {
-            if (sHeldControl) {
+            if (gDjuiInputHeldControl) {
                 sel[0] = djui_inputbox_jump_word_left(msg, len, sel[0]);
             } else if (sel[0] > 0) {
                 sel[0]--;
@@ -244,9 +244,9 @@ bool djui_inputbox_on_key_down(struct DjuiBase *base, int scancode) {
     }
 
     // [Delete], [Ctrl]+[Delete]
-    if (!sHeldAlt && scancode == SCANCODE_DELETE) {
+    if (!gDjuiInputHeldAlt && scancode == SCANCODE_DELETE) {
         if (sel[0] == sel[1]) {
-            if (sHeldControl) {
+            if (gDjuiInputHeldControl) {
                 sel[1] = djui_inputbox_jump_word_right(msg, len, sel[1]);
             } else if (sel[1] < len) {
                 sel[1]++;
@@ -260,16 +260,16 @@ bool djui_inputbox_on_key_down(struct DjuiBase *base, int scancode) {
     }
 
     // [Ctrl]+[V], [Shift]+[Insert]
-    if (!sHeldAlt &&
-        ((!sHeldShift && sHeldControl && scancode == SCANCODE_V) ||
-        (!sHeldControl && sHeldShift && scancode == SCANCODE_INSERT))) {
+    if (!gDjuiInputHeldAlt &&
+        ((!gDjuiInputHeldShift && gDjuiInputHeldControl && scancode == SCANCODE_V) ||
+        (!gDjuiInputHeldControl && gDjuiInputHeldShift && scancode == SCANCODE_INSERT))) {
         djui_interactable_on_text_input(wm_api->get_clipboard_text());
         sCursorBlink = 0;
         return true;
     }
 
     // [Ctrl]+[C], [Ctrl]+[X]
-    if (!sHeldAlt && !sHeldShift && sHeldControl &&
+    if (!gDjuiInputHeldAlt && !gDjuiInputHeldShift && gDjuiInputHeldControl &&
         (scancode == SCANCODE_C || scancode == SCANCODE_X)) {
         if (sel[0] != sel[1]) {
             char clipboardText[256] = { 0 };
@@ -286,7 +286,7 @@ bool djui_inputbox_on_key_down(struct DjuiBase *base, int scancode) {
     }
 
     // [Ctrl]+[A]
-    if (!sHeldAlt && !sHeldShift && sHeldControl && scancode == SCANCODE_A) {
+    if (!gDjuiInputHeldAlt && !gDjuiInputHeldShift && gDjuiInputHeldControl && scancode == SCANCODE_A) {
         inputbox->selection[0] = djui_unicode_len(msg);
         inputbox->selection[1] = 0;
         sCursorBlink = 0;
@@ -294,7 +294,7 @@ bool djui_inputbox_on_key_down(struct DjuiBase *base, int scancode) {
     }
 
     // [Esc]
-    if (!sHeldAlt && !sHeldShift && !sHeldControl && scancode == SCANCODE_ESCAPE) {
+    if (!gDjuiInputHeldAlt && !gDjuiInputHeldShift && !gDjuiInputHeldControl && scancode == SCANCODE_ESCAPE) {
         djui_interactable_set_input_focus(NULL);
         if (inputbox->on_escape_press) {
             inputbox->on_escape_press(inputbox);
@@ -303,7 +303,7 @@ bool djui_inputbox_on_key_down(struct DjuiBase *base, int scancode) {
     }
 
     // [Enter]
-    if (!sHeldAlt && !sHeldShift && !sHeldControl && scancode == SCANCODE_ENTER) {
+    if (!gDjuiInputHeldAlt && !gDjuiInputHeldShift && !gDjuiInputHeldControl && scancode == SCANCODE_ENTER) {
         djui_interactable_set_input_focus(NULL);
         if (inputbox->on_enter_press) {
             inputbox->on_enter_press(inputbox);
@@ -316,19 +316,19 @@ bool djui_inputbox_on_key_down(struct DjuiBase *base, int scancode) {
 
 void djui_inputbox_on_key_up(UNUSED struct DjuiBase *base, int scancode) {
     switch (scancode) {
-        case SCANCODE_SHIFT_LEFT:    sHeldShift   &= ~(1 << 0); break;
-        case SCANCODE_SHIFT_RIGHT:   sHeldShift   &= ~(1 << 1); break;
-        case SCANCODE_CONTROL_LEFT:  sHeldControl &= ~(1 << 0); break;
-        case SCANCODE_CONTROL_RIGHT: sHeldControl &= ~(1 << 1); break;
-        case SCANCODE_ALT_LEFT:      sHeldAlt     &= ~(1 << 0); break;
-        case SCANCODE_ALT_RIGHT:     sHeldAlt     &= ~(1 << 1); break;
+        case SCANCODE_SHIFT_LEFT:    gDjuiInputHeldShift   &= ~(1 << 0); break;
+        case SCANCODE_SHIFT_RIGHT:   gDjuiInputHeldShift   &= ~(1 << 1); break;
+        case SCANCODE_CONTROL_LEFT:  gDjuiInputHeldControl &= ~(1 << 0); break;
+        case SCANCODE_CONTROL_RIGHT: gDjuiInputHeldControl &= ~(1 << 1); break;
+        case SCANCODE_ALT_LEFT:      gDjuiInputHeldAlt     &= ~(1 << 0); break;
+        case SCANCODE_ALT_RIGHT:     gDjuiInputHeldAlt     &= ~(1 << 1); break;
     }
 }
 
 void djui_inputbox_on_focus_begin(UNUSED struct DjuiBase* base) {
-    sHeldShift   = 0;
-    sHeldControl = 0;
-    sHeldAlt     = 0;
+    gDjuiInputHeldShift   = 0;
+    gDjuiInputHeldControl = 0;
+    gDjuiInputHeldAlt     = 0;
     wm_api->start_text_input();
 }
 
@@ -638,6 +638,7 @@ struct DjuiInputbox* djui_inputbox_create(struct DjuiBase* parent, u16 bufferSiz
     djui_base_init(parent, base, djui_inputbox_render, djui_inputbox_destroy);
     djui_base_set_size(base, 200, 32);
     djui_base_set_border_width(base, 2);
+    djui_base_set_gradient(base, false);
     djui_inputbox_set_text_color(inputbox, 0, 0, 0, 255);
     djui_interactable_create(base, djui_inputbox_update_style);
     djui_interactable_hook_cursor_down(base, djui_inputbox_on_cursor_down_begin, djui_inputbox_on_cursor_down, NULL);

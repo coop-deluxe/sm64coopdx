@@ -504,12 +504,22 @@ u16 smlua_model_util_load(enum ModelExtendedId extId) {
     return (u16)id;
 }
 
+static void smlua_model_util_unregister_model_id(u32 id, struct ModelUtilsInfo *models, u32 count) {
+    for (u32 i = 0; i < count; i++) {
+        struct ModelUtilsInfo *m = &models[i];
+        if (m->loadedId == id) {
+            m->loadedId = UNLOADED_ID;
+        }
+    }
+}
+
 // Links the regular model id created by DynOS to our models list
 void smlua_model_util_register_model_id(u32 id, const void *asset) {
     if (id < VANILLA_ID_END) {
         for (u32 i = 0; i < E_MODEL_MAX; i++) {
             struct ModelUtilsInfo* m = &sModels[i];
             if (m->asset == asset) {
+                smlua_model_util_unregister_model_id(id, sModels, E_MODEL_MAX);
                 m->loadedId = id;
                 return;
             }
@@ -518,6 +528,7 @@ void smlua_model_util_register_model_id(u32 id, const void *asset) {
         for (u32 i = 0; i < sCustomModelsCount; i++) {
             struct ModelUtilsInfo* m = &sCustomModels[i];
             if (m->asset == asset) {
+                smlua_model_util_unregister_model_id(id, sCustomModels, sCustomModelsCount);
                 m->loadedId = id;
                 return;
             }

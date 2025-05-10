@@ -16,6 +16,8 @@ f32 clock_elapsed(void);
 f64 clock_elapsed_f64(void);
 /* |description|Gets the current clock elapsed time in frames|descriptionEnd| */
 u32 clock_elapsed_ticks(void);
+/* |description|Checks whether it is the day given|descriptionEnd| */
+bool clock_is_date(u8 month, u8 day);
 
 void file_get_line(char* buffer, size_t maxLength, FILE* fp);
 

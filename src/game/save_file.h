@@ -128,7 +128,10 @@ extern struct WarpCheckpoint gWarpCheckpoint;
 extern s8 gMainMenuDataModified;
 extern s8 gSaveFileModified;
 
+/* |description|Gets the course number's corresponding level number|descriptionEnd| */
 s8 get_level_num_from_course_num(s16 courseNum);
+
+/* |description|Gets the level number's corresponding course number|descriptionEnd| */
 s8 get_level_course_num(s16 levelNum);
 
 /* |description|

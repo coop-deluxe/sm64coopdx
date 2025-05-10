@@ -556,6 +556,7 @@ struct GfxData : NoCopy {
     DataNodes<Movtex> mMovtexs;
     DataNodes<MovtexQC> mMovtexQCs;
     DataNodes<u8> mRooms;
+    DataNodes<void> mRawPointers;
 
     // Animation data
     Array<AnimBuffer<s16> *> mAnimValues;
@@ -865,6 +866,8 @@ const void*      DynOS_Builtin_Func_GetFromName(const char* aDataName);
 const void*      DynOS_Builtin_Func_GetFromIndex(s32 aIndex);
 const char *     DynOS_Builtin_Func_GetNameFromIndex(s64 aIndex);
 s32              DynOS_Builtin_Func_GetIndexFromData(const void* aData);
+const Gfx *      DynOS_Builtin_Gfx_GetFromName(const char *aDataName);
+const char *     DynOS_Builtin_Gfx_GetFromData(const Gfx *aData);
 
 //
 // Pack Manager
@@ -884,6 +887,7 @@ void DynOS_Pack_AddTex(PackData* aPackData, DataNode<TexData>* aTexData);
 // Actor Manager
 //
 
+std::map<const void *, ActorGfx> &DynOS_Actor_GetValidActors();
 void DynOS_Actor_AddCustom(s32 aModIndex, const SysPath &aFilename, const char *aActorName);
 const void *DynOS_Actor_GetLayoutFromName(const char *aActorName);
 bool DynOS_Actor_GetModIndexAndToken(const GraphNode *aGraphNode, u32 aTokenIndex, s32 *outModIndex, const char **outToken);
@@ -973,6 +977,29 @@ u32 DynOS_Model_GetIdFromAsset(void* asset);
 u32 DynOS_Model_GetIdFromGraphNode(struct GraphNode* aNode);
 void DynOS_Model_OverwriteSlot(u32 srcSlot, u32 dstSlot);
 void DynOS_Model_ClearPool(enum ModelPool aModelPool);
+
+//
+// Gfx Manager
+//
+
+Gfx *DynOS_Gfx_GetWritableDisplayList(Gfx *aGfx);
+Gfx *DynOS_Gfx_Get(const char *aName, u32 *outLength);
+Gfx *DynOS_Gfx_Create(const char *aName, u32 aLength);
+bool DynOS_Gfx_Resize(Gfx *aGfx, u32 aNewLength);
+bool DynOS_Gfx_Delete(Gfx *aGfx);
+void DynOS_Gfx_DeleteAll();
+Vtx *DynOS_Vtx_Get(const char *aName, u32 *outCount);
+Vtx *DynOS_Vtx_Create(const char *aName, u32 aCount);
+bool DynOS_Vtx_Resize(Vtx *aVtx, u32 aNewCount);
+bool DynOS_Vtx_Delete(Vtx *aVtx);
+void DynOS_Vtx_DeleteAll();
+void DynOS_Gfx_ModShutdown();
+
+//
+// Mod Data Manager
+//
+
+#include "dynos_mgr_moddata.hpp"
 
 //
 // Bin

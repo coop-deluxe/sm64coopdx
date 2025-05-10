@@ -77,19 +77,31 @@ bool network_player_name_valid(char* buffer);
 void network_player_init(void);
 void network_player_update_model(u8 localIndex);
 bool network_player_any_connected(void);
+/* |description|Gets the amount of players connected|descriptionEnd| */
 u8 network_player_connected_count(void);
+/* |description|Sets the description field of `np`|descriptionEnd| */
 void network_player_set_description(struct NetworkPlayer* np, const char* description, u8 r, u8 g, u8 b, u8 a);
+/* |description|Overrides the location of `np`|descriptionEnd| */
 void network_player_set_override_location(struct NetworkPlayer *np, const char *location);
 
+/* |description|Gets a network player from `globalIndex`|descriptionEnd| */
 struct NetworkPlayer* network_player_from_global_index(u8 globalIndex);
+/* |description|Gets the first network player whose information matches `courseNum`, `actNum`, and `levelNum`|descriptionEnd| */
 struct NetworkPlayer* get_network_player_from_level(s16 courseNum, s16 actNum, s16 levelNum);
+/* |description|Gets the first network player whose information matches `courseNum`, `actNum`, `levelNum`, and `areaIndex`|descriptionEnd| */
 struct NetworkPlayer* get_network_player_from_area(s16 courseNum, s16 actNum, s16 levelNum, s16 areaIndex);
+/* |description|Gets the active network player with the smallest global index. Useful for assigning one player to "own" some kind of functionality or object|descriptionEnd| */
 struct NetworkPlayer* get_network_player_smallest_global(void);
 
+/* |description|Gets a red, green, or blue value from a part in `np`'s color palette|descriptionEnd| */
 u8 network_player_get_palette_color_channel(struct NetworkPlayer *np, enum PlayerPart part, u8 index);
+/* |description|Gets a red, green, or blue value from a part in `np`'s override color palette|descriptionEnd| */
 u8 network_player_get_override_palette_color_channel(struct NetworkPlayer *np, enum PlayerPart part, u8 index);
+/* |description|Sets the `part in `np`'s override color palette`|descriptionEnd| */
 void network_player_set_override_palette_color(struct NetworkPlayer *np, enum PlayerPart part, Color color);
+/* |description|Resets `np`'s override color palette|descriptionEnd| */
 void network_player_reset_override_palette(struct NetworkPlayer *np);
+/* |description|Checks if `np`'s override color palette is identical to the regular color palette|descriptionEnd| */
 bool network_player_is_override_palette_same(struct NetworkPlayer *np);
 
 void network_player_update(void);

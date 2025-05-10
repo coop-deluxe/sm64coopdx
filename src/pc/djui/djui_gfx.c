@@ -27,11 +27,28 @@ void djui_gfx_displaylist_end(void) {
     gSPDisplayList(gDisplayListHead++, dl_djui_display_list_end);
 }
 
+static const Vtx vertex_djui_menu_rect[] = {
+    {{{ 0, -1, 0 }, 0, { 0, 0 }, { 0x96, 0x96, 0x96, 0xff }}},
+    {{{ 1, -1, 0 }, 0, { 0, 0 }, { 0x96, 0x96, 0x96, 0xff }}},
+    {{{ 1,  0, 0 }, 0, { 0, 0 }, { 0xff, 0xff, 0xff, 0xff }}},
+    {{{ 0,  0, 0 }, 0, { 0, 0 }, { 0xff, 0xff, 0xff, 0xff }}},
+};
+
 static const Vtx vertex_djui_simple_rect[] = {
     {{{ 0, -1, 0 }, 0, { 0, 0 }, { 0xff, 0xff, 0xff, 0xff }}},
     {{{ 1, -1, 0 }, 0, { 0, 0 }, { 0xff, 0xff, 0xff, 0xff }}},
     {{{ 1,  0, 0 }, 0, { 0, 0 }, { 0xff, 0xff, 0xff, 0xff }}},
     {{{ 0,  0, 0 }, 0, { 0, 0 }, { 0xff, 0xff, 0xff, 0xff }}},
+};
+
+const Gfx dl_djui_menu_rect[] = {
+    gsDPPipeSync(),
+    gsSPClearGeometryMode(G_LIGHTING),
+    gsDPSetCombineMode(G_CC_FADE, G_CC_FADE),
+    gsDPSetRenderMode(G_RM_XLU_SURF, G_RM_XLU_SURF2),
+    gsSPVertexNonGlobal(vertex_djui_menu_rect, 4, 0),
+    gsSP2Triangles(0,  1,  2, 0x0,  0,  2,  3, 0x0),
+    gsSPEndDisplayList(),
 };
 
 const Gfx dl_djui_simple_rect[] = {
@@ -47,7 +64,7 @@ const Gfx dl_djui_simple_rect[] = {
 f32 djui_gfx_get_scale(void) {
     if (configDjuiScale == 0) { // auto
         u32 windowWidth, windowHeight;
-        wm_api->get_dimensions(&windowWidth, &windowHeight);
+        gfx_get_dimensions(&windowWidth, &windowHeight);
         if (windowHeight < 768) {
             return 0.5f;
         } else if (windowHeight < 1440) {
@@ -131,12 +148,11 @@ void djui_gfx_render_texture_tile(const u8* texture, u32 w, u32 h, u32 bitSize, 
     }
 
     f32 aspect = tileH ? ((f32)tileW / (f32)tileH) : 1;
-    bool msaa = configWindow.msaa > 0;
 
     // I don't know why adding 1 to all of the UVs seems to fix rendering, but it does...
     // this should be tested carefully. it definitely fixes some stuff, but what does it break?
-    f32 offsetX = (font && msaa ? -1024.0f / (f32)w : 0) + 1;
-    f32 offsetY = (font && msaa ? -1024.0f / (f32)h : 0) + 1;
+    f32 offsetX = (font ? -1024.0f / (f32)w : 0) + 1;
+    f32 offsetY = (font ? -1024.0f / (f32)h : 0) + 1;
     vtx[0] = (Vtx) {{{ 0,          -1, 0 }, 0, { ( tileX          * 2048.0f) / (f32)w + offsetX, ((tileY + tileH) * 2048.0f) / (f32)h + offsetY }, { 0xff, 0xff, 0xff, 0xff }}};
     vtx[2] = (Vtx) {{{ 1 * aspect,  0, 0 }, 0, { ((tileX + tileW) * 2048.0f) / (f32)w + offsetX, ( tileY          * 2048.0f) / (f32)h + offsetY }, { 0xff, 0xff, 0xff, 0xff }}};
     vtx[1] = (Vtx) {{{ 1 * aspect, -1, 0 }, 0, { ((tileX + tileW) * 2048.0f) / (f32)w + offsetX, ((tileY + tileH) * 2048.0f) / (f32)h + offsetY }, { 0xff, 0xff, 0xff, 0xff }}};
@@ -166,14 +182,14 @@ void djui_gfx_render_texture_tile(const u8* texture, u32 w, u32 h, u32 bitSize, 
 
 void djui_gfx_position_translate(f32* x, f32* y) {
     u32 windowWidth, windowHeight;
-    wm_api->get_dimensions(&windowWidth, &windowHeight);
+    gfx_get_dimensions(&windowWidth, &windowHeight);
     *x = GFX_DIMENSIONS_FROM_LEFT_EDGE(0) + *x * ((f32)SCREEN_HEIGHT / (f32)windowHeight) * djui_gfx_get_scale();
     *y = SCREEN_HEIGHT - *y * ((f32)SCREEN_HEIGHT / (f32)windowHeight) * djui_gfx_get_scale();
 }
 
 void djui_gfx_scale_translate(f32* width, f32* height) {
     u32 windowWidth, windowHeight;
-    wm_api->get_dimensions(&windowWidth, &windowHeight);
+    gfx_get_dimensions(&windowWidth, &windowHeight);
 
     *width  = *width * ((f32)SCREEN_HEIGHT / (f32)windowHeight) * djui_gfx_get_scale();
     *height = *height * ((f32)SCREEN_HEIGHT / (f32)windowHeight) * djui_gfx_get_scale();
@@ -181,7 +197,7 @@ void djui_gfx_scale_translate(f32* width, f32* height) {
 
 void djui_gfx_size_translate(f32* size) {
     u32 windowWidth, windowHeight;
-    wm_api->get_dimensions(&windowWidth, &windowHeight);
+    gfx_get_dimensions(&windowWidth, &windowHeight);
 
     *size = *size * ((f32)SCREEN_HEIGHT / (f32)windowHeight) * djui_gfx_get_scale();
 }

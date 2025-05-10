@@ -41,6 +41,8 @@ struct DateTime {
 
 /* |description|Gets the current area's networked timer|descriptionEnd| */
 u32 get_network_area_timer(void);
+/* |description|Gets the area update counter incremented when objects are updated|descriptionEnd| */
+u16 get_area_update_counter(void);
 
 /* |description|Creates a DJUI popup that is broadcasted to every client|descriptionEnd| */
 void djui_popup_create_global(const char* message, int lines);
@@ -54,6 +56,8 @@ void djui_reset_popup_disabled_override(void);
 bool djui_is_playerlist_open(void);
 /* |description|Checks if the DJUI playerlist is attempting to be opened|descriptionEnd| */
 bool djui_attempting_to_open_playerlist(void);
+/* |description|Gets the DJUI playerlist's page index|descriptionEnd| */
+u8 djui_get_playerlist_page_index(void);
 /* |description|Gets the DJUI menu font|descriptionEnd| */
 enum DjuiFontType djui_menu_get_font(void);
 /* |description|Gets the DJUI menu theme|descriptionEnd| */
@@ -92,7 +96,7 @@ void hud_show(void);
 /* |description|Checks if the HUD is hidden|descriptionEnd| */
 bool hud_is_hidden(void);
 /* |description|Gets a HUD display value|descriptionEnd| */
-s32  hud_get_value(enum HudDisplayValue type);
+s32 hud_get_value(enum HudDisplayValue type);
 /* |description|Sets a HUD display value|descriptionEnd| */
 void hud_set_value(enum HudDisplayValue type, s32 value);
 /* |description|Renders a power meter on the HUD|descriptionEnd| */
@@ -138,9 +142,6 @@ void movtexqc_register(const char* name, s16 level, s16 area, s16 type);
 s16 get_water_level(u8 index);
 /* |description|Sets the water level in an area corresponding to `index` (0-indexed)|descriptionEnd| */
 void set_water_level(u8 index, s16 height, bool sync);
-
-/* |description|Plays a screen transition|descriptionEnd| */
-void play_transition(s16 transType, s16 time, u8 red, u8 green, u8 blue);
 
 /* |description|Checks if a course is a main course and not the castle or secret levels|descriptionEnd| */
 bool course_is_main_course(u16 courseNum);
@@ -189,12 +190,14 @@ void set_volume_sfx(f32 volume);
 void set_volume_env(f32 volume);
 
 /* |description|Gets an environment region (gas/water boxes) height value|descriptionEnd| */
-f32 get_environment_region(u8 index);
+s16 get_environment_region(u8 index);
 /* |description|Sets an environment region (gas/water boxes) height value|descriptionEnd| */
-void set_environment_region(u8 index, s32 value);
+void set_environment_region(u8 index, s16 value);
 
 /* |description|Checks if a file exists inside of a mod|descriptionEnd| */
 bool mod_file_exists(const char* filename);
+/* |description|Gets the mod currently being processed|descriptionEnd| */
+struct Mod* get_active_mod(void);
 
 /* |description|Sets the window title to a custom title|descriptionEnd| */
 void set_window_title(const char* title);
@@ -203,5 +206,20 @@ void reset_window_title(void);
 
 /* |description|Gets the name of the operating system the game is running on|descriptionEnd| */
 const char* get_os_name(void);
+
+/* |description|Gets the current GraphNodeRoot|descriptionEnd|*/
+struct GraphNodeRoot* geo_get_current_root(void);
+
+/* |description|Gets the current GraphNodeMasterList|descriptionEnd|*/
+struct GraphNodeMasterList* geo_get_current_master_list(void);
+
+/* |description|Gets the current GraphNodePerspective|descriptionEnd|*/
+struct GraphNodePerspective* geo_get_current_perspective(void);
+
+/* |description|Gets the current GraphNodeCamera|descriptionEnd|*/
+struct GraphNodeCamera* geo_get_current_camera(void);
+
+/* |description|Gets the current GraphNodeHeldObject|descriptionEnd|*/
+struct GraphNodeHeldObject* geo_get_current_held_object(void);
 
 #endif

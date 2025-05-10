@@ -191,6 +191,7 @@ void djui_panel_update(void) {
 }
 
 extern bool gDjuiShuttingDown;
+extern bool gDjuiChangingTheme;
 void djui_panel_shutdown(void) {
     static bool sShuttingDown = false;
     if (sShuttingDown) { return; }
@@ -224,7 +225,7 @@ void djui_panel_shutdown(void) {
     gDjuiPanelMainCreated = false;
     gDjuiPanelPauseCreated = false;
     djui_cursor_set_visible(false);
-    if (!gDjuiShuttingDown) {
+    if (!gDjuiShuttingDown && !gDjuiChangingTheme) {
         configfile_save(configfile_name());
         if (gDjuiInMainMenu) {
             gDjuiInMainMenu = false;

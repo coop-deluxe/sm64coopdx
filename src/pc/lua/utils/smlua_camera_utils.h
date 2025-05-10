@@ -68,9 +68,9 @@ bool camera_config_is_free_cam_enabled(void);
 /* |description|Checks if Analog Camera is enabled|descriptionEnd| */
 bool camera_config_is_analog_cam_enabled(void);
 /* |description|Checks if Freecam DPad Behavior is enabled|descriptionEnd| */
-bool camera_config_is_freecam_dpad_enabled(void);
+bool camera_config_is_dpad_enabled(void);
 /* |description|Checks if Camera Collision is enabled|descriptionEnd| */
-bool camera_config_is_free_camera_collision_enabled(void);
+bool camera_config_is_collision_enabled(void);
 /* |description|Checks if Mouse Look is enabled|descriptionEnd| */
 bool camera_config_is_mouse_look_enabled(void);
 /* |description|Checks if camera X is inverted|descriptionEnd| */
@@ -78,15 +78,15 @@ bool camera_config_is_x_inverted(void);
 /* |description|Checks if camera Y is inverted|descriptionEnd| */
 bool camera_config_is_y_inverted(void);
 /* |description|Gets camera X sensitivity|descriptionEnd| */
-u32  camera_config_get_x_sensitivity(void);
+u32 camera_config_get_x_sensitivity(void);
 /* |description|Gets camera Y sensitivity|descriptionEnd| */
-u32  camera_config_get_y_sensitivity(void);
+u32 camera_config_get_y_sensitivity(void);
 /* |description|Gets camera aggression|descriptionEnd| */
-u32  camera_config_get_aggression(void);
+u32 camera_config_get_aggression(void);
 /* |description|Gets camera pan level|descriptionEnd| */
-u32  camera_config_get_pan_level(void);
+u32 camera_config_get_pan_level(void);
 /* |description|Gets camera deceleration|descriptionEnd| */
-u32  camera_config_get_deceleration(void);
+u32 camera_config_get_deceleration(void);
 /* |description|Gets if the L button will center the camera|descriptionEnd| */
 bool camera_config_get_centering(void);
 
@@ -97,9 +97,9 @@ void camera_config_enable_analog_cam(bool enable);
 /* |description|Overrides if the L button will center the camera|descriptionEnd| */
 void camera_config_enable_centering(bool enable);
 /* |description|Overrides if Freecam DPad Behavior is enabled|descriptionEnd| */
-void camera_config_enable_freecam_dpad(bool enable);
+void camera_config_enable_dpad(bool enable);
 /* |description|Overrides if Camera Collision is enabled|descriptionEnd| */
-void camera_config_enable_camera_collisions(bool enable);
+void camera_config_enable_collisions(bool enable);
 /* |description|Overrides if camera mouse look is enabled|descriptionEnd| */
 void camera_config_enable_mouse_look(bool enable);
 /* |description|Overrides if camera X is inverted|descriptionEnd| */

@@ -73,14 +73,13 @@ void mumble_init(void) {
 
 void mumble_update(void) {
 
-	if (! lm) {
+	if (!lm) {
 		return;
     }
 
 	lm->uiTick++;
 
-    if (gDjuiInMainMenu)
-    {
+    if (gDjuiInMainMenu) {
         mumble_update_menu();
         return;
     }
@@ -173,7 +172,7 @@ bool should_update_context() {
 	if (gCurrLevelNum == LEVEL_CASTLE) {
 		// main floor
 		if (gCurrAreaIndex == 1) {
-			return  gMarioState->currentRoom < 10;
+			return gMarioState->currentRoom < 10;
 		}
 		// upstairs
 		if (gCurrAreaIndex == 2) {

@@ -100,7 +100,6 @@
 - [SpawnParticlesInfo](#SpawnParticlesInfo)
 - [StarPositions](#StarPositions)
 - [StarsNeededForDialog](#StarsNeededForDialog)
-- [Struct802A272C](#Struct802A272C)
 - [Surface](#Surface)
 - [TextureInfo](#TextureInfo)
 - [TransitionInfo](#TransitionInfo)
@@ -120,7 +119,6 @@
 - [WaterDropletParams](#WaterDropletParams)
 - [Waypoint](#Waypoint)
 - [Whirlpool](#Whirlpool)
-- [struct802A1230](#struct802A1230)
 
 <br />
 
@@ -193,6 +191,7 @@
 | numSecrets | `integer` |  |
 | objectSpawnInfos | [SpawnInfo](structs.md#SpawnInfo) | read-only |
 | paintingWarpNodes | [WarpNode](structs.md#WarpNode) | read-only |
+| root | [GraphNodeRoot](structs.md#GraphNodeRoot) |  |
 | surfaceRooms | `Pointer` <`integer`> | read-only |
 | terrainData | `Pointer` <`integer`> | read-only |
 | terrainType | `integer` |  |
@@ -1436,6 +1435,22 @@
 
 <br />
 
+## [GraphNodeRoot](#GraphNodeRoot)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| areaIndex | `integer` | read-only |
+| height | `integer` |  |
+| node | [GraphNode](structs.md#GraphNode) | read-only |
+| numViews | `integer` | read-only |
+| width | `integer` |  |
+| x | `integer` |  |
+| y | `integer` |  |
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [GraphNodeRotation](#GraphNodeRotation)
 
 | Field | Type | Access |
@@ -1491,7 +1506,7 @@
 | Field | Type | Access |
 | ----- | ---- | ------ |
 | fnNode | [FnGraphNode](structs.md#FnGraphNode) | read-only |
-| numCases | `integer` | read-only |
+| parameter | `integer` |  |
 | selectedCase | `integer` |  |
 | unused | `integer` | read-only |
 
@@ -1644,6 +1659,7 @@
 | fixCollisionBugsGroundPoundBonks | `integer` |  |
 | fixCollisionBugsPickBestWall | `integer` |  |
 | fixCollisionBugsRoundedCorners | `integer` |  |
+| fixInvalidShellRides | `integer` |  |
 | fixVanishFloors | `integer` |  |
 | floatingStarDance | `integer` |  |
 | floorLowerLimit | `integer` |  |
@@ -2761,6 +2777,8 @@
 | oYoshiChosenHome | `integer` |  |
 | oYoshiTargetYaw | `integer` |  |
 | oBreakableWallForce | `integer` |  |
+| oLightID | `integer` |  |
+| oLightRadius | `number` |  |
 
 [:arrow_up_small:](#)
 
@@ -3114,17 +3132,6 @@
 
 <br />
 
-## [Struct802A272C](#Struct802A272C)
-
-| Field | Type | Access |
-| ----- | ---- | ------ |
-| vecF | [Vec3f](structs.md#Vec3f) | read-only |
-| vecS | [Vec3s](structs.md#Vec3s) | read-only |
-
-[:arrow_up_small:](#)
-
-<br />
-
 ## [Surface](#Surface)
 
 | Field | Type | Access |
@@ -3247,10 +3254,19 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
-| cn | `Array` <`integer`> |  |
+| a | `integer` |  |
+| b | `integer` |  |
 | flag | `integer` |  |
-| ob | `Array` <`number`> |  |
-| tc | `Array` <`integer`> |  |
+| g | `integer` |  |
+| nx | `integer` |  |
+| ny | `integer` |  |
+| nz | `integer` |  |
+| r | `integer` |  |
+| tu | `integer` |  |
+| tv | `integer` |  |
+| x | `number` |  |
+| y | `number` |  |
+| z | `number` |  |
 
 [:arrow_up_small:](#)
 
@@ -3369,17 +3385,6 @@
 | ----- | ---- | ------ |
 | pos | [Vec3s](structs.md#Vec3s) | read-only |
 | strength | `integer` |  |
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [struct802A1230](#struct802A1230)
-
-| Field | Type | Access |
-| ----- | ---- | ------ |
-| unk00 | `integer` |  |
-| unk02 | `integer` |  |
 
 [:arrow_up_small:](#)
 

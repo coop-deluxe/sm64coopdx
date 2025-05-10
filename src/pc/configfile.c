@@ -21,6 +21,7 @@
 #include "djui/djui_hud_utils.h"
 #include "game/save_file.h"
 #include "pc/network/network_player.h"
+#include "pc/pc_main.h"
 
 #define ARRAY_LEN(arr) (sizeof(arr) / sizeof(arr[0]))
 
@@ -78,6 +79,8 @@ ConfigWindow configWindow       = {
     .msaa = 0,
 };
 
+ConfigStick configStick = { 0 };
+
 // display settings
 unsigned int configFiltering                      = 2; // 0 = Nearest, 1 = Bilinear, 2 = Trilinear
 bool         configShowFPS                        = false;
@@ -129,29 +132,26 @@ bool         configUseStandardKeyBindingsChat     = false;
 bool         configEnableFreeCamera               = false;
 bool         configFreeCameraAnalog               = false;
 bool         configFreeCameraLCentering           = false;
-bool         configFreeCameraDpadBehavior         = false;
+bool         configFreeCameraDPadBehavior         = false;
 bool         configFreeCameraHasCollision         = true;
-bool         configCameraMouse                    = false;
-unsigned int configCameraXSens                    = 50;
-unsigned int configCameraYSens                    = 50;
-unsigned int configCameraAggr                     = 0;
-unsigned int configCameraPan                      = 0;
-unsigned int configCameraDegrade                  = 50; // 0 - 100%
+bool         configFreeCameraMouse                = false;
+unsigned int configFreeCameraXSens                = 50;
+unsigned int configFreeCameraYSens                = 50;
+unsigned int configFreeCameraAggr                 = 0;
+unsigned int configFreeCameraPan                  = 0;
+unsigned int configFreeCameraDegrade              = 50; // 0 - 100%
 // romhack camera settings
-bool         configEnableRomhackCamera            = false;
+unsigned int configEnableRomhackCamera            = 0; // 0 for automatic, 1 for force on, 2 for force off
 bool         configRomhackCameraBowserFights      = false;
-bool         configRomhackCameraHasCollision      = false;
+bool         configRomhackCameraHasCollision      = true;
 bool         configRomhackCameraHasCentering      = false;
-bool         configRomhackCameraDpadBehavior      = false;
+bool         configRomhackCameraDPadBehavior      = false;
 bool         configRomhackCameraSlowFall          = true;
-bool         configCameraToxicGas                 = true;
-unsigned int configRomhackCameraZoomedInDist      = 900;
-unsigned int configRomhackCameraZoomedOutDist     = 1400;
-unsigned int configRomhackCameraZoomedInHeight    = 300;
-unsigned int configRomhackCameraZoomedOutHeight   = 450;
+
 // common camera settings
 bool         configCameraInvertX                  = false;
 bool         configCameraInvertY                  = true;
+bool         configCameraToxicGas                 = true;
 // debug
 bool         configLuaProfiler                    = false;
 bool         configDebugPrint                     = false;
@@ -186,6 +186,7 @@ bool         configMenuRandom                     = false;
 bool         configMenuDemos                      = false;
 bool         configDisablePopups                  = false;
 char         configLanguage[MAX_CONFIG_STRING]    = "";
+bool         configForce4By3                      = false;
 bool         configDynosLocalPlayerModelOnly      = false;
 unsigned int configPvpType                        = PLAYER_PVP_CLASSIC;
 // CoopNet settings
@@ -200,6 +201,7 @@ bool         configDjuiThemeCenter                = false;
 #else
 bool         configDjuiThemeCenter                = true;
 #endif
+bool         configDjuiThemeGradients             = true;
 unsigned int configDjuiThemeFont                  = FONT_NORMAL;
 unsigned int configDjuiScale                      = 0;
 // other
@@ -268,32 +270,35 @@ static const struct ConfigOption options[] = {
     {.name = "disable_gamepads",               .type = CONFIG_TYPE_BOOL, .boolValue = &configDisableGamepads},
 #endif
     {.name = "use_standard_key_bindings_chat", .type = CONFIG_TYPE_BOOL, .boolValue = &configUseStandardKeyBindingsChat},
+    {.name = "stick_rotate_left",              .type = CONFIG_TYPE_BOOL, .boolValue = &configStick.rotateLeft},
+    {.name = "stick_invert_left_x",            .type = CONFIG_TYPE_BOOL, .boolValue = &configStick.invertLeftX},
+    {.name = "stick_invert_left_y",            .type = CONFIG_TYPE_BOOL, .boolValue = &configStick.invertLeftY},
+    {.name = "stick_rotate_right",             .type = CONFIG_TYPE_BOOL, .boolValue = &configStick.rotateRight},
+    {.name = "stick_invert_right_x",           .type = CONFIG_TYPE_BOOL, .boolValue = &configStick.invertRightX},
+    {.name = "stick_invert_right_y",           .type = CONFIG_TYPE_BOOL, .boolValue = &configStick.invertRightY},
     // free camera settings
     {.name = "bettercam_enable",               .type = CONFIG_TYPE_BOOL, .boolValue = &configEnableFreeCamera},
     {.name = "bettercam_analog",               .type = CONFIG_TYPE_BOOL, .boolValue = &configFreeCameraAnalog},
     {.name = "bettercam_centering",            .type = CONFIG_TYPE_BOOL, .boolValue = &configFreeCameraLCentering},
-    {.name = "bettercam_dpad",                 .type = CONFIG_TYPE_BOOL, .boolValue = &configFreeCameraDpadBehavior},
+    {.name = "bettercam_dpad",                 .type = CONFIG_TYPE_BOOL, .boolValue = &configFreeCameraDPadBehavior},
     {.name = "bettercam_collision",            .type = CONFIG_TYPE_BOOL, .boolValue = &configFreeCameraHasCollision},
-    {.name = "bettercam_mouse_look",           .type = CONFIG_TYPE_BOOL, .boolValue = &configCameraMouse},
-    {.name = "bettercam_invertx",              .type = CONFIG_TYPE_BOOL, .boolValue = &configCameraInvertX},
-    {.name = "bettercam_inverty",              .type = CONFIG_TYPE_BOOL, .boolValue = &configCameraInvertY},
-    {.name = "bettercam_xsens",                .type = CONFIG_TYPE_UINT, .uintValue = &configCameraXSens},
-    {.name = "bettercam_ysens",                .type = CONFIG_TYPE_UINT, .uintValue = &configCameraYSens},
-    {.name = "bettercam_aggression",           .type = CONFIG_TYPE_UINT, .uintValue = &configCameraAggr},
-    {.name = "bettercam_pan_level",            .type = CONFIG_TYPE_UINT, .uintValue = &configCameraPan},
-    {.name = "bettercam_degrade",              .type = CONFIG_TYPE_UINT, .uintValue = &configCameraDegrade},
+    {.name = "bettercam_mouse_look",           .type = CONFIG_TYPE_BOOL, .boolValue = &configFreeCameraMouse},
+    {.name = "bettercam_xsens",                .type = CONFIG_TYPE_UINT, .uintValue = &configFreeCameraXSens},
+    {.name = "bettercam_ysens",                .type = CONFIG_TYPE_UINT, .uintValue = &configFreeCameraYSens},
+    {.name = "bettercam_aggression",           .type = CONFIG_TYPE_UINT, .uintValue = &configFreeCameraAggr},
+    {.name = "bettercam_pan_level",            .type = CONFIG_TYPE_UINT, .uintValue = &configFreeCameraPan},
+    {.name = "bettercam_degrade",              .type = CONFIG_TYPE_UINT, .uintValue = &configFreeCameraDegrade},
     // romhack camera settings
-    {.name = "romhackcam_enable",              .type = CONFIG_TYPE_BOOL, .boolValue = &configEnableRomhackCamera},
+    {.name = "romhackcam_enable",              .type = CONFIG_TYPE_UINT, .uintValue = &configEnableRomhackCamera},
     {.name = "romhackcam_bowser",              .type = CONFIG_TYPE_BOOL, .boolValue = &configRomhackCameraBowserFights},
     {.name = "romhackcam_collision",           .type = CONFIG_TYPE_BOOL, .boolValue = &configRomhackCameraHasCollision},
     {.name = "romhackcam_centering",           .type = CONFIG_TYPE_BOOL, .boolValue = &configRomhackCameraHasCentering},
-    {.name = "romhackcam_dpad",                .type = CONFIG_TYPE_BOOL, .boolValue = &configRomhackCameraDpadBehavior},
+    {.name = "romhackcam_dpad",                .type = CONFIG_TYPE_BOOL, .boolValue = &configRomhackCameraDPadBehavior},
     {.name = "romhackcam_slowfall",            .type = CONFIG_TYPE_BOOL, .boolValue = &configRomhackCameraSlowFall},
+    // common camera settings
+    {.name = "bettercam_invertx",              .type = CONFIG_TYPE_BOOL, .boolValue = &configCameraInvertX},
+    {.name = "bettercam_inverty",              .type = CONFIG_TYPE_BOOL, .boolValue = &configCameraInvertY},
     {.name = "romhackcam_toxic_gas",           .type = CONFIG_TYPE_BOOL, .boolValue = &configCameraToxicGas},
-    {.name = "romhackcam_zi_dist",             .type = CONFIG_TYPE_UINT, .uintValue = &configRomhackCameraZoomedInDist},
-    {.name = "romhackcam_zo_dist",             .type = CONFIG_TYPE_UINT, .uintValue = &configRomhackCameraZoomedOutDist},
-    {.name = "romhackcam_zi_height",           .type = CONFIG_TYPE_UINT, .uintValue = &configRomhackCameraZoomedInHeight},
-    {.name = "romhackcam_zo_height",           .type = CONFIG_TYPE_UINT, .uintValue = &configRomhackCameraZoomedOutHeight},
     // debug
     {.name = "debug_offset",                   .type = CONFIG_TYPE_U64,  .u64Value    = &gPcDebug.bhvOffset},
     {.name = "debug_tags",                     .type = CONFIG_TYPE_U64,  .u64Value    = gPcDebug.tags},
@@ -338,6 +343,7 @@ static const struct ConfigOption options[] = {
     // {.name = "coop_menu_demos",                .type = CONFIG_TYPE_BOOL,   .boolValue   = &configMenuDemos},
     {.name = "disable_popups",                 .type = CONFIG_TYPE_BOOL,   .boolValue   = &configDisablePopups},
     {.name = "language",                       .type = CONFIG_TYPE_STRING, .stringValue = (char*)&configLanguage, .maxStringLength = MAX_CONFIG_STRING},
+    {.name = "force_4by3",                     .type = CONFIG_TYPE_BOOL,   .boolValue   = &configForce4By3},
     {.name = "dynos_local_player_model_only",  .type = CONFIG_TYPE_BOOL,   .boolValue   = &configDynosLocalPlayerModelOnly},
     // CoopNet settings
     {.name = "coopnet_ip",                     .type = CONFIG_TYPE_STRING, .stringValue = (char*)&configCoopNetIp, .maxStringLength = MAX_CONFIG_STRING},
@@ -347,6 +353,7 @@ static const struct ConfigOption options[] = {
     // DJUI settings
     {.name = "djui_theme",                     .type = CONFIG_TYPE_UINT,   .uintValue   = &configDjuiTheme},
     {.name = "djui_theme_center",              .type = CONFIG_TYPE_BOOL,   .boolValue   = &configDjuiThemeCenter},
+    {.name = "djui_theme_gradients",           .type = CONFIG_TYPE_BOOL,   .boolValue   = &configDjuiThemeGradients},
     {.name = "djui_theme_font",                .type = CONFIG_TYPE_UINT,   .uintValue   = &configDjuiThemeFont},
     {.name = "djui_scale",                     .type = CONFIG_TYPE_UINT,   .uintValue   = &configDjuiScale},
     // other
@@ -767,6 +774,8 @@ NEXT_OPTION:
 
     if (configFrameLimit < 30)   { configFrameLimit = 30; }
     if (configFrameLimit > 3000) { configFrameLimit = 3000; }
+
+    gMasterVolume = (f32)configMasterVolume / 127.0f;
 
     if (configPlayerModel >= CT_MAX) { configPlayerModel = 0; }
 

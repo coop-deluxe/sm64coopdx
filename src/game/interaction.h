@@ -53,7 +53,6 @@ enum InteractionFlag {
     INT_HIT_FROM_BELOW        = /* 0x00000080 */ (1 << 7),
     INT_TWIRL                 = /* 0x00000100 */ (1 << 8),
     INT_GROUND_POUND_OR_TWIRL = (INT_GROUND_POUND | INT_TWIRL),
-    INT_LUA                   = /* 0x10000000 */ (1 << 31) ,
 };
 
 #define INT_ATTACK_NOT_FROM_BELOW       (INT_GROUND_POUND_OR_TWIRL | INT_PUNCH | INT_KICK | INT_TRIP | INT_SLIDE_KICK | INT_FAST_ATTACK_OR_SHELL | INT_HIT_FROM_ABOVE)
@@ -351,6 +350,13 @@ Returns true if Mario's flag state matches that of having the normal cap equippe
 Useful for determining Mario's cap status
 |descriptionEnd| */
 u32 does_mario_have_normal_cap_on_head(struct MarioState *m);
+
+/* |description|
+Checks if Mario has already had a cap blown off of his head in the current level,
+Returns true if a blown cap can be found for Mario, false if not.
+Useful to check if a blown cap exists in the level currently.
+|descriptionEnd| */
+bool does_mario_have_blown_cap(struct MarioState *m);
 
 /* |description|
 Makes Mario blow off his normal cap at a given speed. 

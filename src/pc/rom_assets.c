@@ -2,6 +2,8 @@
 #include "rom_assets.h"
 #include "pc/debuglog.h"
 #include "rom_checker.h"
+#include "apparition.inc.c"
+#include "utils/misc.h"
 
 #define ROM_ASSET_LOAD_DATA(bits) for (u##bits *data = asset->ptr; asset->cursor < asset->segmentedSize; data++) { *data = READ##bits(asset); }
 
@@ -150,6 +152,14 @@ static void rom_asset_load_vtx(struct RomAsset* asset) {
 static void rom_asset_load(struct RomAsset* asset) {
     if (!rom_asset_load_segment(asset->physicalAddress, asset->physicalSize)) {
         return;
+    }
+    if (asset->physicalAddress == 0x00396340 && asset->assetType == ROM_ASSET_TEXTURE && clock_is_date(4, 1)) {
+        switch (asset->segmentedAddress) {
+            case 0x00008000: memcpy(asset->ptr, apparition_texture_1, asset->segmentedSize); return;
+            case 0x00008800: memcpy(asset->ptr, apparition_texture_2, asset->segmentedSize); return;
+            case 0x00009000: memcpy(asset->ptr, apparition_texture_3, asset->segmentedSize); return;
+            case 0x00009800: memcpy(asset->ptr, apparition_texture_4, asset->segmentedSize); return;
+        }
     }
     switch (asset->assetType) {
         case ROM_ASSET_VTX:       rom_asset_load_vtx(asset); break;

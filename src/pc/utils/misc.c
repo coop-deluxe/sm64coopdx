@@ -84,6 +84,12 @@ u32 clock_elapsed_ticks(void) {
     return (clock_elapsed_ns() * 3 / 100000000);
 }
 
+bool clock_is_date(u8 month, u8 day) {
+    time_t t = time(NULL);
+    struct tm *tm_info = localtime(&t);
+    return tm_info->tm_mon == month - 1 && tm_info->tm_mday == day;
+}
+
 void file_get_line(char* buffer, size_t maxLength, FILE* fp) {
     char* initial = buffer;
 
