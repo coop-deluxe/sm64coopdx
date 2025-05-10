@@ -137,6 +137,8 @@ void djui_panel_main_menu_create(struct DjuiBase* caller) {
         char* djuiFontChoices[2] = {DLANG(DJUI_THEMES, FONT_NORMAL), DLANG(DJUI_THEMES, FONT_ALIASED)};
         djui_selectionbox_create(body, DLANG(DJUI_THEMES, DJUI_FONT), djuiFontChoices, 2, &configDjuiThemeFont, djui_panel_menu_options_djui_setting_change);
 
+        djui_checkbox_create(body, DLANG(DJUI_THEMES, SMOOTH_SCROLLING), &configSmoothScrolling, NULL);
+
         if (gDjuiInMainMenu) {
             // copy sound choices from gMainMenuSounds
             int numSounds = sizeof(gMainMenuSounds) / sizeof(gMainMenuSounds[0]);
