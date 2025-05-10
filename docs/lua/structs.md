@@ -191,10 +191,10 @@
 | numSecrets | `integer` |  |
 | objectSpawnInfos | [SpawnInfo](structs.md#SpawnInfo) | read-only |
 | paintingWarpNodes | [WarpNode](structs.md#WarpNode) | read-only |
+| root | [GraphNodeRoot](structs.md#GraphNodeRoot) |  |
 | surfaceRooms | `Pointer` <`integer`> | read-only |
 | terrainData | `Pointer` <`integer`> | read-only |
 | terrainType | `integer` |  |
-| root | [GraphNodeRoot](structs.md#GraphNodeRoot) |  |
 | warpNodes | [ObjectWarpNode](structs.md#ObjectWarpNode) | read-only |
 | whirlpools | `Array` <`Whirlpool`> |  |
 

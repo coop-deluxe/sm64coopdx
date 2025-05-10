@@ -183,10 +183,10 @@ static struct LuaObjectField sAreaFields[LUA_AREA_FIELD_COUNT] = {
     { "numSecrets",          LVT_U8,        offsetof(struct Area, numSecrets),          false, LOT_NONE,           1, sizeof(u8)                     },
     { "objectSpawnInfos",    LVT_COBJECT_P, offsetof(struct Area, objectSpawnInfos),    true,  LOT_SPAWNINFO,      1, sizeof(struct SpawnInfo*)      },
     { "paintingWarpNodes",   LVT_COBJECT_P, offsetof(struct Area, paintingWarpNodes),   true,  LOT_WARPNODE,       1, sizeof(struct WarpNode*)       },
+    { "root",                LVT_COBJECT_P, offsetof(struct Area, root),                false, LOT_GRAPHNODEROOT,  1, sizeof(struct GraphNodeRoot*)  },
     { "surfaceRooms",        LVT_S8_P,      offsetof(struct Area, surfaceRooms),        true,  LOT_POINTER,        1, sizeof(s8*)                    },
     { "terrainData",         LVT_S16_P,     offsetof(struct Area, terrainData),         true,  LOT_POINTER,        1, sizeof(s16*)                   },
     { "terrainType",         LVT_U16,       offsetof(struct Area, terrainType),         false, LOT_NONE,           1, sizeof(u16)                    },
-    { "root",                LVT_COBJECT_P, offsetof(struct Area, unk04),               false, LOT_GRAPHNODEROOT,  1, sizeof(struct GraphNodeRoot*)  },
 //  { "unused28",            LVT_COBJECT_P, offsetof(struct Area, unused28),            false, LOT_???,            1, sizeof(struct UnusedArea28*)   }, <--- UNIMPLEMENTED
     { "warpNodes",           LVT_COBJECT_P, offsetof(struct Area, warpNodes),           true,  LOT_OBJECTWARPNODE, 1, sizeof(struct ObjectWarpNode*) },
     { "whirlpools",          LVT_COBJECT_P, offsetof(struct Area, whirlpools),          false, LOT_WHIRLPOOL,      2, sizeof(struct Whirlpool*)      },

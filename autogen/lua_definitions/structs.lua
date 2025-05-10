@@ -45,10 +45,10 @@
 --- @field public numSecrets integer
 --- @field public objectSpawnInfos SpawnInfo
 --- @field public paintingWarpNodes WarpNode
+--- @field public root GraphNodeRoot
 --- @field public surfaceRooms Pointer_integer
 --- @field public terrainData Pointer_integer
 --- @field public terrainType integer
---- @field public root GraphNodeRoot
 --- @field public warpNodes ObjectWarpNode
 --- @field public whirlpools Whirlpool[]
 

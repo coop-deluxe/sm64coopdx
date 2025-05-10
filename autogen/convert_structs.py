@@ -71,7 +71,6 @@ struct LuaObjectField* smlua_get_object_field_autogen(u16 lot, const char* key);
 """
 
 override_field_names = {
-    "Area": {"unk04": "root"}
 }
 
 override_field_types = {
@@ -117,7 +116,7 @@ override_field_immutable = {
     "GlobalObjectAnimations": [ "*"],
     "SpawnParticlesInfo": [ "model" ],
     "MarioBodyState": [ "updateTorsoTime" ],
-    "Area": [ "localAreaTimer", "nextSyncID", "unk04", "objectSpawnInfos", "paintingWarpNodes", "warpNodes" ],
+    "Area": [ "localAreaTimer", "nextSyncID", "objectSpawnInfos", "paintingWarpNodes", "warpNodes" ],
     "Mod": [ "*" ],
     "ModFile": [ "*" ],
     "Painting": [ "id", "imageCount", "textureType", "textureWidth", "textureHeight" ],
