@@ -11,6 +11,8 @@
 
 typedef bool (*kb_callback_t)(int code);
 
+struct TextureInfo;
+
 struct GfxWindowManagerAPI {
     void (*init)(const char *window_title);
     void (*set_keyboard_callbacks)(kb_callback_t on_key_down, kb_callback_t on_key_up, void (*on_all_keys_up)(void),
@@ -33,6 +35,8 @@ struct GfxWindowManagerAPI {
     int  (*get_max_msaa)(void);
     void (*set_window_title)(const char* title);
     void (*reset_window_title)(void);
+    void (*set_window_icon)(struct TextureInfo* texture);
+    void (*reset_window_icon)(void);
     bool (*has_focus)(void);
 };
 
