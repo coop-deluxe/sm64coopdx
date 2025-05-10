@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
+#include "platform_info.h"
 
 /* platform-specific functions and whatnot */
 

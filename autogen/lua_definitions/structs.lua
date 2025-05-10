@@ -1129,7 +1129,6 @@
 
 --- @class MarioAnimation
 --- @field public currentAnimAddr Pointer_integer
---- @field public padding integer[]
 --- @field public targetAnim Animation
 
 --- @class MarioBodyState
@@ -1744,6 +1743,7 @@
 --- @field public oMarioSteepJumpYaw integer
 --- @field public oMarioTornadoPosY number
 --- @field public oMarioTornadoYawVel integer
+--- @field public oMarioUnkPosY number
 --- @field public oMarioWalkingPitch integer
 --- @field public oMarioWhirlpoolPosY number
 --- @field public oMenuButtonActionPhase integer

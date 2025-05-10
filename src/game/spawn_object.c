@@ -292,8 +292,8 @@ struct Object *allocate_object(struct ObjectNode *objList) {
     obj->numCollidedObjs = 0;
 
     for (s32 i = 0; i < OBJECT_NUM_FIELDS; i++) {
-        obj->rawData.asS32[i] = 0;
-        obj->ptrData.asVoidPtr[i] = NULL;
+        obj->OBJECT_FIELD_U32(i) = 0;
+        obj->OBJECT_FIELD_VPTR(i) = NULL;
     }
 
     obj->unused1 = 0;

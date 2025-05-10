@@ -20,106 +20,6 @@ inline f32 coss(s16 sm64Angle) {
     return gCosineTable[(u16) (sm64Angle) >> 4];
 }
 
-/// Copy vector 'src' to 'dest'
-void *vec3f_copy(Vec3f dest, Vec3f src) {
-    dest[0] = src[0];
-    dest[1] = src[1];
-    dest[2] = src[2];
-    return dest;
-}
-
-/// Set vector 'dest' to (x, y, z)
-void *vec3f_set(Vec3f dest, f32 x, f32 y, f32 z) {
-    dest[0] = x;
-    dest[1] = y;
-    dest[2] = z;
-    return dest;
-}
-
-/// Add vector 'a' to 'dest'
-void *vec3f_add(Vec3f dest, Vec3f a) {
-    dest[0] += a[0];
-    dest[1] += a[1];
-    dest[2] += a[2];
-    return dest;
-}
-
-/// Make 'dest' the sum of vectors a and b.
-void *vec3f_sum(Vec3f dest, Vec3f a, Vec3f b) {
-    dest[0] = a[0] + b[0];
-    dest[1] = a[1] + b[1];
-    dest[2] = a[2] + b[2];
-    return dest;
-}
-
-/// Multiply vector 'dest' by a
-void *vec3f_mul(Vec3f dest, f32 a) {
-    dest[0] *= a;
-    dest[1] *= a;
-    dest[2] *= a;
-    return dest;
-}
-
-/// Copy vector src to dest
-void *vec3s_copy(Vec3s dest, Vec3s src) {
-    dest[0] = src[0];
-    dest[1] = src[1];
-    dest[2] = src[2];
-    return dest;
-}
-
-/// Set vector 'dest' to (x, y, z)
-void *vec3s_set(Vec3s dest, s16 x, s16 y, s16 z) {
-    dest[0] = x;
-    dest[1] = y;
-    dest[2] = z;
-    return dest;
-}
-
-/// Add vector a to 'dest'
-void *vec3s_add(Vec3s dest, Vec3s a) {
-    dest[0] += a[0];
-    dest[1] += a[1];
-    dest[2] += a[2];
-    return dest;
-}
-
-/// Make 'dest' the sum of vectors a and b.
-void *vec3s_sum(Vec3s dest, Vec3s a, Vec3s b) {
-    dest[0] = a[0] + b[0];
-    dest[1] = a[1] + b[1];
-    dest[2] = a[2] + b[2];
-    return dest;
-}
-
-/// Make 'dest' the difference of vectors a and b.
-void *vec3f_dif(Vec3f dest, Vec3f a, Vec3f b) {
-    dest[0] = a[0] - b[0];
-    dest[1] = a[1] - b[1];
-    dest[2] = a[2] - b[2];
-    return dest;
-}
-
-/// Convert short vector a to float vector 'dest'
-void *vec3s_to_vec3f(Vec3f dest, Vec3s a) {
-    dest[0] = a[0];
-    dest[1] = a[1];
-    dest[2] = a[2];
-    return dest;
-}
-
-/**
- * Convert float vector a to a short vector 'dest' by rounding the components
- * to the nearest integer.
- */
-void *vec3f_to_vec3s(Vec3s dest, Vec3f a) {
-    // add/subtract 0.5 in order to round to the nearest s32 instead of truncating
-    dest[0] = a[0] + ((a[0] > 0) ? 0.5f : -0.5f);
-    dest[1] = a[1] + ((a[1] > 0) ? 0.5f : -0.5f);
-    dest[2] = a[2] + ((a[2] > 0) ? 0.5f : -0.5f);
-    return dest;
-}
-
 /**
  * Set 'dest' the normal vector of a triangle with vertices a, b and c.
  * It is similar to vec3f_cross, but it calculates the vectors (c-b) and (b-a)
@@ -132,58 +32,39 @@ void *find_vector_perpendicular_to_plane(Vec3f dest, Vec3f a, Vec3f b, Vec3f c) 
     return dest;
 }
 
-/// Make vector 'dest' the cross product of vectors a and b.
-void *vec3f_cross(Vec3f dest, Vec3f a, Vec3f b) {
-    dest[0] = a[1] * b[2] - b[1] * a[2];
-    dest[1] = a[2] * b[0] - b[2] * a[0];
-    dest[2] = a[0] * b[1] - b[0] * a[1];
-    return dest;
+#pragma GCC diagnostic pop
+
+void vec3f_project(Vec3f vec, Vec3f onto, Vec3f out) {
+    f32 numerator = vec3f_dot(vec, onto);
+    f32 denominator = vec3f_dot(onto, onto);
+    if (denominator == 0) {
+        out[0] = 0;
+        out[1] = 0;
+        out[2] = 0;
+        return;
+    }
+    vec3f_copy(out, onto);
+    vec3f_mul(out, numerator / denominator);
 }
 
 /// Scale vector 'dest' so it has length 1
-void *vec3f_normalize(Vec3f dest) {
-    f32 div = sqrtf(dest[0] * dest[0] + dest[1] * dest[1] + dest[2] * dest[2]);
+OPTIMIZE_O3 f32 *vec3f_normalize(Vec3f dest) {
+    f32 div = vec3f_length(dest);
     if (div == 0) {
-        dest[0] = 0;
-        dest[1] = 0;
-        dest[2] = 0;
+        vec3f_set(dest, 0, 0, 0);
         return dest;
     }
 
     f32 invsqrt = 1.0f / div;
-
-    dest[0] *= invsqrt;
-    dest[1] *= invsqrt;
-    dest[2] *= invsqrt;
+    vec3f_mul(dest, invsqrt);
     return dest;
-}
-
-/// Get length of vector 'a'
-f32 vec3f_length(Vec3f a)
-{
-	return sqrtf(a[0] * a[0] + a[1] * a[1] + a[2] * a[2]);
-}
-
-/// Get dot product of vectors 'a' and 'b'
-f32 vec3f_dot(Vec3f a, Vec3f b)
-{
-	return a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
-}
-
-/// takes respective scales of vecA and vecB, and sums them
-void vec3f_combine(Vec3f dest, Vec3f vecA, Vec3f vecB, f32 sclA, f32 sclB) {
-    int i = 0;
-
-    for (i = 0; i < 3; ++i) {
-        dest[i] = vecA[i] * sclA + vecB[i] * sclB;
-    }
 }
 
 /**
  * Returns a vector rotated around the z axis, then the x axis, then the y
  * axis.
  */
-void *vec3f_rotate_zxy(Vec3f dest, Vec3s rotate) {
+f32 *vec3f_rotate_zxy(Vec3f dest, Vec3s rotate) {
     Vec3f v = { dest[0], dest[1], dest[2] };
 
     f32 sx = sins(rotate[0]);
@@ -203,46 +84,32 @@ void *vec3f_rotate_zxy(Vec3f dest, Vec3s rotate) {
     dest[0] = v[0] * ((sysz * sx) + cycz) + v[1] * ((sycz * sx) - cysz) + v[2] * (cx * sy);
     dest[1] = v[0] * (cx * sz) + v[1] * (cx * cz) + v[2] * -sx;
     dest[2] = v[0] * ((cysz * sx) - sycz) + v[1] * ((cycz * sx) + sysz) + v[2] * (cx * cy);
-
     return dest;
 }
 
-#pragma GCC diagnostic pop
+/**
+ * Take the vector starting at 'from' pointed at 'to' an retrieve the length
+ * of that vector, as well as the yaw and pitch angles.
+ * Basically it converts the direction to spherical coordinates.
+ */
+void vec3f_get_dist_and_angle(Vec3f from, Vec3f to, f32 *dist, s16 *pitch, s16 *yaw) {
+    register f32 x = to[0] - from[0];
+    register f32 y = to[1] - from[1];
+    register f32 z = to[2] - from[2];
 
-/// Copy matrix 'src' to 'dest'
-void mtxf_copy(Mat4 dest, Mat4 src) {
-    register s32 i;
-    register u32 *d = (u32 *) dest;
-    register u32 *s = (u32 *) src;
-
-    for (i = 0; i < 16; i++) {
-        *d++ = *s++;
-    }
+    *dist = sqrtf(x * x + y * y + z * z);
+    *pitch = atan2s(sqrtf(x * x + z * z), y);
+    *yaw = atan2s(z, x);
 }
 
 /**
- * Set mtx to the identity matrix
+ * Construct the 'to' point which is distance 'dist' away from the 'from' position,
+ * and has the angles pitch and yaw.
  */
-void mtxf_identity(Mat4 mtx) {
-    register s32 i;
-    register f32 *dest;
-    // These loops must be one line to match on -O2
-
-    // initialize everything except the first and last cells to 0
-    for (dest = (f32 *) mtx + 1, i = 0; i < 14; dest++, i++) *dest = 0;
-
-    // initialize the diagonal cells to 1
-    for (dest = (f32 *) mtx, i = 0; i < 4; dest += 5, i++) *dest = 1;
-}
-
-/**
- * Set dest to a translation matrix of vector b
- */
-void mtxf_translate(Mat4 dest, Vec3f b) {
-    mtxf_identity(dest);
-    dest[3][0] = b[0];
-    dest[3][1] = b[1];
-    dest[3][2] = b[2];
+void vec3f_set_dist_and_angle(Vec3f from, Vec3f to, f32 dist, s16 pitch, s16 yaw) {
+    to[0] = from[0] + dist * coss(pitch) * sins(yaw);
+    to[1] = from[1] + dist * sins(pitch);
+    to[2] = from[2] + dist * coss(pitch) * coss(yaw);
 }
 
 /**
@@ -609,25 +476,11 @@ void mtxf_mul(Mat4 dest, Mat4 a, Mat4 b) {
 }
 
 /**
- * Set matrix 'dest' to 'mtx' scaled by vector s
- */
-void mtxf_scale_vec3f(Mat4 dest, Mat4 mtx, Vec3f s) {
-    register s32 i;
-
-    for (i = 0; i < 4; i++) {
-        dest[0][i] = mtx[0][i] * s[0];
-        dest[1][i] = mtx[1][i] * s[1];
-        dest[2][i] = mtx[2][i] * s[2];
-        dest[3][i] = mtx[3][i];
-    }
-}
-
-/**
  * Multiply a vector with a transformation matrix, which applies the transformation
  * to the point. Note that the bottom row is assumed to be [0, 0, 0, 1], which is
  * true for transformation matrices if the translation has a w component of 1.
  */
-void mtxf_mul_vec3s(Mat4 mtx, Vec3s b) {
+s16 *mtxf_mul_vec3s(Mat4 mtx, Vec3s b) {
     register f32 x = b[0];
     register f32 y = b[1];
     register f32 z = b[2];
@@ -635,6 +488,8 @@ void mtxf_mul_vec3s(Mat4 mtx, Vec3s b) {
     b[0] = x * mtx[0][0] + y * mtx[1][0] + z * mtx[2][0] + mtx[3][0];
     b[1] = x * mtx[0][1] + y * mtx[1][1] + z * mtx[2][1] + mtx[3][1];
     b[2] = x * mtx[0][2] + y * mtx[1][2] + z * mtx[2][2] + mtx[3][2];
+    
+    return b;
 }
 
 /**
@@ -726,7 +581,7 @@ void mtxf_inverse(register Mat4 dest, register Mat4 src) {
     buf[0][3] = buf[1][3] = buf[2][3] = 0.0f;
     buf[3][3] = 1.0f;
 
-    memcpy(dest, buf, sizeof(f32) * 4 * 4);
+    mtxf_copy(dest, buf);
 }
 
 /**
@@ -748,31 +603,6 @@ void get_pos_from_transform_mtx(Vec3f dest, Mat4 objMtx, Mat4 camMtx) {
         objMtx[3][0] * camMtx[1][0] + objMtx[3][1] * camMtx[1][1] + objMtx[3][2] * camMtx[1][2] - camY;
     dest[2] =
         objMtx[3][0] * camMtx[2][0] + objMtx[3][1] * camMtx[2][1] + objMtx[3][2] * camMtx[2][2] - camZ;
-}
-
-/**
- * Take the vector starting at 'from' pointed at 'to' an retrieve the length
- * of that vector, as well as the yaw and pitch angles.
- * Basically it converts the direction to spherical coordinates.
- */
-void vec3f_get_dist_and_angle(Vec3f from, Vec3f to, f32 *dist, s16 *pitch, s16 *yaw) {
-    register f32 x = to[0] - from[0];
-    register f32 y = to[1] - from[1];
-    register f32 z = to[2] - from[2];
-
-    *dist = sqrtf(x * x + y * y + z * z);
-    *pitch = atan2s(sqrtf(x * x + z * z), y);
-    *yaw = atan2s(z, x);
-}
-
-/**
- * Construct the 'to' point which is distance 'dist' away from the 'from' position,
- * and has the angles pitch and yaw.
- */
-void vec3f_set_dist_and_angle(Vec3f from, Vec3f to, f32 dist, s16 pitch, s16 yaw) {
-    to[0] = from[0] + dist * coss(pitch) * sins(yaw);
-    to[1] = from[1] + dist * sins(pitch);
-    to[2] = from[2] + dist * coss(pitch) * coss(yaw);
 }
 
 /**
@@ -1001,26 +831,4 @@ f32 not_zero(f32 value, f32 replacement) {
         return replacement;
     }
     return value;
-}
-
-void vec3f_project(Vec3f vec, Vec3f onto, Vec3f out) {
-    f32 numerator = vec3f_dot(vec, onto);
-    f32 denominator = vec3f_dot(onto, onto);
-    if (denominator == 0) {
-        out[0] = 0;
-        out[1] = 0;
-        out[2] = 0;
-        return;
-    }
-    vec3f_copy(out, onto);
-    vec3f_mul(out, numerator / denominator);
-}
-
-f32 vec3f_dist(Vec3f v1, Vec3f v2) {
-    Vec3f diff = {
-        v1[0] - v2[0],
-        v1[1] - v2[1],
-        v1[2] - v2[2],
-    };
-    return vec3f_length(diff);
 }
