@@ -10592,6 +10592,17 @@ function reset_window_title()
     -- ...
 end
 
+--- @param texture TextureInfo
+--- Sets the window icon to a custom icon
+function set_window_icon(texture)
+    -- ...
+end
+
+--- Resets the window icon
+function reset_window_icon()
+    -- ...
+end
+
 --- @return string
 --- Gets the name of the operating system the game is running on
 function get_os_name()

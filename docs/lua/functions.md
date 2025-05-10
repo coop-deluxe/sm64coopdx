@@ -1917,6 +1917,8 @@
    - [get_active_mod](functions-6.md#get_active_mod)
    - [set_window_title](functions-6.md#set_window_title)
    - [reset_window_title](functions-6.md#reset_window_title)
+   - [set_window_icon](functions-6.md#set_window_icon)
+   - [reset_window_icon](functions-6.md#reset_window_icon)
    - [get_os_name](functions-6.md#get_os_name)
    - [geo_get_current_root](functions-6.md#geo_get_current_root)
    - [geo_get_current_master_list](functions-6.md#geo_get_current_master_list)

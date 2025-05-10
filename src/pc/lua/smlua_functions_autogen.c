@@ -31738,6 +31738,68 @@ int smlua_func_reset_window_title(UNUSED lua_State* L) {
     return 1;
 }
 
+int smlua_func_set_window_icon(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "set_window_icon", 1, top);
+        return 0;
+    }
+
+    struct TextureInfo tmpTexture = { 0 };
+    struct TextureInfo* texture = &tmpTexture;
+
+    if (smlua_is_cobject(L, 1, LOT_TEXTUREINFO)) {
+        texture = (struct TextureInfo*)smlua_to_cobject(L, 1, LOT_TEXTUREINFO);
+        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1 for function 'set_window_icon'"); return 0; }
+    } else {
+        int top = lua_gettop(L);
+        lua_pushvalue(L, 1);
+
+        lua_pushstring(L, "texture");
+        lua_gettable(L, top+1);
+        tmpTexture.texture = smlua_to_cpointer(L, lua_gettop(L), LVT_U8_P);
+        lua_pop(L, 1);
+        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1's 'texture' field for function 'set_window_icon'"); return 0; }
+
+        tmpTexture.bitSize = smlua_get_integer_field(top+1, "bitSize");
+        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1's 'bitSize' field for function 'set_window_icon'"); return 0; }
+
+        tmpTexture.width   = smlua_get_integer_field(top+1, "width");
+        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1's 'width' field for function 'set_window_icon'"); return 0; }
+
+        tmpTexture.height  = smlua_get_integer_field(top+1, "height");
+        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1's 'height' field for function 'set_window_icon'"); return 0; }
+
+        tmpTexture.name    = smlua_get_string_field(top+1, "name");
+        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1's 'name' field for function 'set_window_icon'"); return 0; }
+
+        lua_settop(L, top);
+    }
+    
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "set_window_icon"); return 0; }
+
+    set_window_icon(texture);
+
+    return 1;
+}
+
+int smlua_func_reset_window_icon(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "reset_window_icon", 0, top);
+        return 0;
+    }
+
+
+    reset_window_icon();
+
+    return 1;
+}
+
 int smlua_func_get_os_name(UNUSED lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -35568,6 +35630,8 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "get_active_mod", smlua_func_get_active_mod);
     smlua_bind_function(L, "set_window_title", smlua_func_set_window_title);
     smlua_bind_function(L, "reset_window_title", smlua_func_reset_window_title);
+    smlua_bind_function(L, "set_window_icon", smlua_func_set_window_icon);
+    smlua_bind_function(L, "reset_window_icon", smlua_func_reset_window_icon);
     smlua_bind_function(L, "get_os_name", smlua_func_get_os_name);
     smlua_bind_function(L, "geo_get_current_root", smlua_func_geo_get_current_root);
     smlua_bind_function(L, "geo_get_current_master_list", smlua_func_geo_get_current_master_list);

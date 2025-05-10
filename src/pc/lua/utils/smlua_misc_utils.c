@@ -39,6 +39,8 @@
 
 static struct DateTime sDateTime;
 
+static u8* curIcon = NULL;
+
 ///
 
 u32 get_network_area_timer(void) {
@@ -526,6 +528,21 @@ void set_window_title(const char* title) {
 
 void reset_window_title(void) {
     WAPI.reset_window_title();
+}
+
+///
+
+void set_window_icon(struct TextureInfo* texture) {
+    printf(!texture ? "REJECT: No Texture\n" : "");
+    printf(texture->texture == curIcon ? "REJECT: Already in use\n" : "");
+    if (!texture || texture->texture == curIcon ) { return; }
+    curIcon = texture->texture;
+    WAPI.set_window_icon(texture);
+}
+
+void reset_window_icon(void) {
+    curIcon = NULL;
+    WAPI.reset_window_icon();
 }
 
 ///

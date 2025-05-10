@@ -9,6 +9,40 @@ verbose = len(sys.argv) > 1 and (sys.argv[1] == "-v" or sys.argv[1] == "--verbos
 rejects = ""
 integer_types = ["u8", "u16", "u32", "u64", "s8", "s16", "s32", "s64", "int"]
 number_types = ["f32", "float", "f64", "double"]
+restruct_types = {
+    "struct TextureInfo*": """\
+    struct TextureInfo tmp[PARAM] = { 0 };
+    struct TextureInfo* [PARAM] = &tmp[PARAM];
+
+    if (smlua_is_cobject(L, [INDEX], LOT_TEXTUREINFO)) {
+        [PARAM] = (struct TextureInfo*)smlua_to_cobject(L, [INDEX], LOT_TEXTUREINFO);
+        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter [INDEX] for function '[NAME]'"); return 0; }
+    } else {
+        int top = lua_gettop(L);
+        lua_pushvalue(L, [INDEX]);
+
+        lua_pushstring(L, "texture");
+        lua_gettable(L, top+1);
+        tmp[PARAM].texture = smlua_to_cpointer(L, lua_gettop(L), LVT_U8_P);
+        lua_pop(L, 1);
+        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter [INDEX]'s 'texture' field for function '[NAME]'"); return 0; }
+
+        tmp[PARAM].bitSize = smlua_get_integer_field(top+1, "bitSize");
+        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter [INDEX]'s 'bitSize' field for function '[NAME]'"); return 0; }
+
+        tmp[PARAM].width   = smlua_get_integer_field(top+1, "width");
+        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter [INDEX]'s 'width' field for function '[NAME]'"); return 0; }
+
+        tmp[PARAM].height  = smlua_get_integer_field(top+1, "height");
+        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter [INDEX]'s 'height' field for function '[NAME]'"); return 0; }
+
+        tmp[PARAM].name    = smlua_get_string_field(top+1, "name");
+        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter [INDEX]'s 'name' field for function '[NAME]'"); return 0; }
+
+        lua_settop(L, top);
+    }
+    """
+}
 out_filename = 'src/pc/lua/smlua_functions_autogen.c'
 out_filename_docs = 'docs/lua/functions%s.md'
 out_filename_defs = 'autogen/lua_definitions/functions.lua'
@@ -883,6 +917,12 @@ def build_param(fid, param, i):
     elif translate_type_to_lot(ptype) == 'LOT_POINTER':
         lvt = translate_type_to_lvt(ptype)
         return '    %s %s = (%s)smlua_to_cpointer(L, %d, %s);\n' % (ptype, pid, ptype, i, lvt)
+    elif ptype in restruct_types:
+        return restruct_types[ptype] \
+            .replace("[NAME]", fid)  \
+            .replace("tmp[PARAM]", "tmp" + pid[0].title() + pid[1:]) \
+            .replace("[PARAM]", pid) \
+            .replace("[INDEX]", str(i)) + "\n"
     else:
         lot = translate_type_to_lot(ptype)
         s = '  %s %s = (%s)smlua_to_cobject(L, %d, %s);' % (ptype, pid, ptype, i, lot)

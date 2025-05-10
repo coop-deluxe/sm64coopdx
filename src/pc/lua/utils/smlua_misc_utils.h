@@ -204,6 +204,11 @@ void set_window_title(const char* title);
 /* |description|Resets the window title|descriptionEnd| */
 void reset_window_title(void);
 
+/* |description|Sets the window icon to a custom icon|descriptionEnd| */
+void set_window_icon(struct TextureInfo* texture);
+/* |description|Resets the window icon|descriptionEnd| */
+void reset_window_icon(void);
+
 /* |description|Gets the name of the operating system the game is running on|descriptionEnd| */
 const char* get_os_name(void);
 
