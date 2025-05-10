@@ -8688,7 +8688,7 @@ BAD_RETURN(s32) cutscene_star_spawn(struct Camera *c) {
     cutscene_event(cutscene_star_spawn_focus_star, c, 0, -1);
     sStatusFlags |= CAM_FLAG_SMOOTH_MOVEMENT;
 
-    if (gObjCutsceneDone) {
+    if (gObjCutsceneDone || gCutsceneTimer > 150) {
         // Set the timer to CUTSCENE_LOOP, which start the next shot.
         gCutsceneTimer = CUTSCENE_LOOP;
     }
@@ -8843,7 +8843,7 @@ BAD_RETURN(s32) cutscene_red_coin_star(struct Camera *c) {
     cutscene_event(cutscene_red_coin_star_look_up_at_star, c, 30, -1);
     cutscene_event(cutscene_red_coin_star_set_fov, c, 30, -1);
 
-    if (gObjCutsceneDone) {
+    if (gObjCutsceneDone || gCutsceneTimer > 150) {
         // Set the timer to CUTSCENE_LOOP, which start the next shot.
         gCutsceneTimer = CUTSCENE_LOOP;
     }
