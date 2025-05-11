@@ -997,6 +997,7 @@
    - [play_mario_heavy_landing_sound_once](functions-4.md#play_mario_heavy_landing_sound_once)
    - [play_mario_sound](functions-4.md#play_mario_sound)
    - [mario_is_crouching](functions-4.md#mario_is_crouching)
+   - [mario_is_ground_pound_landing](functions-4.md#mario_is_ground_pound_landing)
    - [mario_can_bubble](functions-4.md#mario_can_bubble)
    - [mario_set_bubbled](functions-4.md#mario_set_bubbled)
    - [mario_set_forward_vel](functions-4.md#mario_set_forward_vel)
@@ -1552,6 +1553,7 @@
    - [signum_positive](functions-5.md#signum_positive)
    - [cur_obj_wait_then_blink](functions-5.md#cur_obj_wait_then_blink)
    - [cur_obj_is_mario_ground_pounding_platform](functions-5.md#cur_obj_is_mario_ground_pounding_platform)
+   - [obj_is_mario_ground_pounding_platform](functions-5.md#obj_is_mario_ground_pounding_platform)
    - [spawn_mist_particles](functions-5.md#spawn_mist_particles)
    - [spawn_mist_particles_with_sound](functions-5.md#spawn_mist_particles_with_sound)
    - [cur_obj_push_mario_away](functions-5.md#cur_obj_push_mario_away)
@@ -1918,6 +1920,11 @@
    - [set_window_title](functions-6.md#set_window_title)
    - [reset_window_title](functions-6.md#reset_window_title)
    - [get_os_name](functions-6.md#get_os_name)
+   - [geo_get_current_root](functions-6.md#geo_get_current_root)
+   - [geo_get_current_master_list](functions-6.md#geo_get_current_master_list)
+   - [geo_get_current_perspective](functions-6.md#geo_get_current_perspective)
+   - [geo_get_current_camera](functions-6.md#geo_get_current_camera)
+   - [geo_get_current_held_object](functions-6.md#geo_get_current_held_object)
 
 <br />
 

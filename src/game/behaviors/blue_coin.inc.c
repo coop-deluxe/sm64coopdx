@@ -135,19 +135,17 @@ void bhv_blue_coin_switch_loop(void) {
         case BLUE_COIN_SWITCH_ACT_IDLE:
             // If Mario is on the switch and has ground-pounded,
             // recede and get ready to start ticking.
-            if (gMarioObject && gMarioObject->platform == o) {
-                if ((determine_interaction(&gMarioStates[0], o) & INT_GROUND_POUND) || (gMarioStates[0].action == ACT_GROUND_POUND_LAND)) {
-                    // Set to BLUE_COIN_SWITCH_ACT_RECEDING
-                    o->oAction++;
+            if (obj_is_mario_ground_pounding_platform(&gMarioStates[0], o)) {
+                // Set to BLUE_COIN_SWITCH_ACT_RECEDING
+                o->oAction++;
 
-                    // Recede at a rate of 20 units/frame.
-                    o->oVelY = -20.0f;
-                    // Set gravity to 0 so it doesn't accelerate when receding.
-                    o->oGravity = 0.0f;
+                // Recede at a rate of 20 units/frame.
+                o->oVelY = -20.0f;
+                // Set gravity to 0 so it doesn't accelerate when receding.
+                o->oGravity = 0.0f;
 
-                    cur_obj_play_sound_2(SOUND_GENERAL_SWITCH_DOOR_OPEN);
-                    network_send_object(o);
-                }
+                cur_obj_play_sound_2(SOUND_GENERAL_SWITCH_DOOR_OPEN);
+                network_send_object(o);
             }
 
             // Have collision

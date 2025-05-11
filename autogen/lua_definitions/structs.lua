@@ -45,6 +45,7 @@
 --- @field public numSecrets integer
 --- @field public objectSpawnInfos SpawnInfo
 --- @field public paintingWarpNodes WarpNode
+--- @field public root GraphNodeRoot
 --- @field public surfaceRooms Pointer_integer
 --- @field public terrainData Pointer_integer
 --- @field public terrainType integer
@@ -949,6 +950,15 @@
 --- @field public prevFov number
 --- @field public prevTimestamp number
 --- @field public unused integer
+
+--- @class GraphNodeRoot
+--- @field public areaIndex integer
+--- @field public height integer
+--- @field public node GraphNode
+--- @field public numViews integer
+--- @field public width integer
+--- @field public x integer
+--- @field public y integer
 
 --- @class GraphNodeRotation
 --- @field public displayList Pointer_Gfx

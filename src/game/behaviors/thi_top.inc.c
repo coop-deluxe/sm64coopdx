@@ -31,15 +31,14 @@ void bhv_thi_tiny_island_top_loop(void) {
 
     if (!(gTHIWaterDrained & 1)) {
         if (o->oAction == 0) {
-            if (distanceToPlayer < 500.0f)
-                if (marioState && !(marioState->action & ACT_FLAG_AIR) && ((determine_interaction(marioState, o) & INT_GROUND_POUND) || (marioState->action == ACT_GROUND_POUND_LAND))) {
-                    o->oAction++;
-                    cur_obj_spawn_particles(&D_8032F134);
-                    spawn_triangle_break_particles(20, 138, 0.3f, 3);
-                    cur_obj_play_sound_2(SOUND_GENERAL_ACTIVATE_CAP_SWITCH);
-                    cur_obj_hide();
-                    network_send_object(o);
-                }
+            if (distanceToPlayer < 500.0f && mario_is_ground_pound_landing(marioState)) {
+                o->oAction++;
+                cur_obj_spawn_particles(&D_8032F134);
+                spawn_triangle_break_particles(20, 138, 0.3f, 3);
+                cur_obj_play_sound_2(SOUND_GENERAL_ACTIVATE_CAP_SWITCH);
+                cur_obj_hide();
+                network_send_object(o);
+            }
         } else {
             if (o->oTimer < 50) {
                 if (gEnvironmentRegions && gEnvironmentRegionsLength > 18) { gEnvironmentRegions[18]--; }

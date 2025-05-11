@@ -130,6 +130,11 @@ Returns true if Mario is in any of the crouching or crawling states, checking hi
 bool mario_is_crouching(struct MarioState *m);
 
 /* |description|
+Returns true if Mario is in a ground pound landing state (`ACT_GROUND_POUND_LAND` or any ground action with `INT_GROUND_POUND` interaction)
+|descriptionEnd| */
+bool mario_is_ground_pound_landing(struct MarioState *m);
+
+/* |description|
 Checks whether Mario can become bubbled under certain game conditions (multiplayer bubble mechanic). Returns false if already bubbled or if not allowed by settings
 |descriptionEnd| */
 bool mario_can_bubble(struct MarioState* m);

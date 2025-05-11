@@ -3235,7 +3235,7 @@ void update_camera(struct Camera *c) {
         sCButtonsPressed = find_c_buttons_pressed(sCButtonsPressed, gPlayer1Controller->buttonPressed,gPlayer1Controller->buttonDown);
     }
 
-    if (gMarioStates[0].action == ACT_SHOT_FROM_CANNON && newcam_active) {
+    if (gMarioStates[0].action == ACT_SHOT_FROM_CANNON && gNewCamera.isActive) {
         gMarioStates[0].area->camera->mode = CAMERA_MODE_NEWCAM;
         gLakituState.mode = CAMERA_MODE_NEWCAM;
     }
@@ -5787,7 +5787,7 @@ void set_camera_mode_8_directions(struct Camera *c) {
         s8DirModeYawOffset = 0;
     }
 
-    if (newcam_active == 1) {
+    if (gNewCamera.isActive) {
         c->mode = CAMERA_MODE_NEWCAM;
     }
 }
@@ -5811,7 +5811,7 @@ void set_camera_mode_close_cam(u8 *mode) {
         *mode = CAMERA_MODE_CLOSE;
     }
 
-    if (newcam_active == 1) {
+    if (gNewCamera.isActive) {
         *mode = CAMERA_MODE_NEWCAM;
     }
 }
@@ -5840,7 +5840,7 @@ void set_camera_mode_radial(struct Camera *c, s16 transitionTime) {
         sModeOffsetYaw = 0;
     }
 
-    if (newcam_active == 1) {
+    if (gNewCamera.isActive) {
         c->mode = CAMERA_MODE_NEWCAM;
     }
 }
@@ -7299,7 +7299,7 @@ void update_camera_yaw(struct Camera *c) {
     if (!c) { return; }
     c->nextYaw = calculate_yaw(c->focus, c->pos);
     c->yaw = c->nextYaw;
-    newcam_apply_outside_values(c,0);
+    newcam_update_camera_yaw(c, false);
 }
 
 void cutscene_reset_spline(void) {
@@ -8681,7 +8681,7 @@ BAD_RETURN(s32) cutscene_star_spawn(struct Camera *c) {
     cutscene_event(cutscene_star_spawn_focus_star, c, 0, -1);
     sStatusFlags |= CAM_FLAG_SMOOTH_MOVEMENT;
 
-    if (gObjCutsceneDone) {
+    if (gObjCutsceneDone || gCutsceneTimer > 150) {
         // Set the timer to CUTSCENE_LOOP, which start the next shot.
         gCutsceneTimer = CUTSCENE_LOOP;
     }
@@ -8836,7 +8836,7 @@ BAD_RETURN(s32) cutscene_red_coin_star(struct Camera *c) {
     cutscene_event(cutscene_red_coin_star_look_up_at_star, c, 30, -1);
     cutscene_event(cutscene_red_coin_star_set_fov, c, 30, -1);
 
-    if (gObjCutsceneDone) {
+    if (gObjCutsceneDone || gCutsceneTimer > 150) {
         // Set the timer to CUTSCENE_LOOP, which start the next shot.
         gCutsceneTimer = CUTSCENE_LOOP;
     }
@@ -10478,7 +10478,7 @@ BAD_RETURN(s32) cutscene_sliding_doors_follow_mario(struct Camera *c) {
 BAD_RETURN(s32) cutscene_sliding_doors_open(struct Camera *c) {
     UNUSED u32 pad[2];
 
-    newcam_apply_outside_values(c,1);
+    newcam_update_camera_yaw(c, true);
     reset_pan_distance(c);
     cutscene_event(cutscene_sliding_doors_open_start, c, 0, 8);
     cutscene_event(cutscene_sliding_doors_open_set_cvars, c, 8, 8);
@@ -10691,7 +10691,7 @@ BAD_RETURN(s32) cutscene_unused_exit_focus_mario(struct Camera *c) {
  */
 BAD_RETURN(s32) cutscene_exit_painting_end(struct Camera *c) {
     if (!c) { return; }
-    if (newcam_active == 1) {
+    if (gNewCamera.isActive) {
         c->mode = CAMERA_MODE_NEWCAM;
     } else {
         c->mode = CAMERA_MODE_CLOSE;

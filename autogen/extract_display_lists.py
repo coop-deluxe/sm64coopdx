@@ -81,14 +81,17 @@ CUSTOM_DEFINED = [
 def main():
     verbose = len(sys.argv) > 1 and (sys.argv[1] == "-v" or sys.argv[1] == "--verbose")
     pattern = re.compile(r"[\W]+")
-    display_lists = []
+    display_lists = set()
     for dir in DIRECTORIES:
-        for root, _, filenames in os.walk(dir):
+        for root, dirs, filenames in os.walk(dir):
+            dirs.sort()
+            filenames.sort()
             for filename in filenames:
                 if filename[filename.rfind("."):] in FILE_EXTENSIONS:
                     display_lists_in_file = []
                     filepath = os.path.join(root, filename)
-                    lines = open(filepath, "r").readlines()
+                    with open(filepath, "r", encoding="utf-8", errors="ignore") as f:
+                        lines = f.readlines()
                     ignore = False
                     for line in lines:
                         if ("#ifdef VERSION_EU" in line or
@@ -102,17 +105,17 @@ def main():
                             index_gfx = identifiers.index("Gfx")
                             name = identifiers[index_gfx + 1]
                             if name not in display_lists:
-                                display_lists.append(name)
+                                display_lists.add(name)
                                 if verbose:
                                     display_lists_in_file.append(name)
                     if verbose and display_lists_in_file:
                         print("%s\n    %s" % (filepath, "\n    ".join(display_lists_in_file)))
 
     # Add these manually because they are defined by a macro
-    display_lists += CUSTOM_DEFINED
+    display_lists.update(CUSTOM_DEFINED)
 
-    with open("include/display_lists.inl", "w") as f:
-        for name in display_lists:
+    with open("include/display_lists.inl", "w", encoding="utf-8", newline="\n") as f:
+        for name in sorted(display_lists):
             f.write("DISPLAY_LIST(%s)\n" % (name))
 
     print("Total display lists: %d" % (len(display_lists)))

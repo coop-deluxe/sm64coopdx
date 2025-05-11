@@ -5192,6 +5192,13 @@ end
 
 --- @param m MarioState
 --- @return boolean
+--- Returns true if Mario is in a ground pound landing state (`ACT_GROUND_POUND_LAND` or any ground action with `INT_GROUND_POUND` interaction)
+function mario_is_ground_pound_landing(m)
+    -- ...
+end
+
+--- @param m MarioState
+--- @return boolean
 --- Checks whether Mario can become bubbled under certain game conditions (multiplayer bubble mechanic). Returns false if already bubbled or if not allowed by settings
 function mario_can_bubble(m)
     -- ...
@@ -8594,6 +8601,13 @@ function cur_obj_is_mario_ground_pounding_platform()
     -- ...
 end
 
+--- @param m MarioState
+--- @param obj Object
+--- @return integer
+function obj_is_mario_ground_pounding_platform(m, obj)
+    -- ...
+end
+
 function spawn_mist_particles()
     -- ...
 end
@@ -10599,6 +10613,36 @@ end
 --- @return string
 --- Gets the name of the operating system the game is running on
 function get_os_name()
+    -- ...
+end
+
+--- @return GraphNodeRoot
+--- Gets the current GraphNodeRoot
+function geo_get_current_root()
+    -- ...
+end
+
+--- @return GraphNodeMasterList
+--- Gets the current GraphNodeMasterList
+function geo_get_current_master_list()
+    -- ...
+end
+
+--- @return GraphNodePerspective
+--- Gets the current GraphNodePerspective
+function geo_get_current_perspective()
+    -- ...
+end
+
+--- @return GraphNodeCamera
+--- Gets the current GraphNodeCamera
+function geo_get_current_camera()
+    -- ...
+end
+
+--- @return GraphNodeHeldObject
+--- Gets the current GraphNodeHeldObject
+function geo_get_current_held_object()
     -- ...
 end
 

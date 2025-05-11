@@ -1869,7 +1869,7 @@ s32 act_shot_from_cannon(struct MarioState *m) {
             set_mario_action(m, ACT_DIVE_SLIDE, 0);
             m->faceAngle[0] = 0;
             if (allowCameraChange) {
-                if (newcam_active == 0) {
+                if (!gNewCamera.isActive) {
                     set_camera_mode(m->area->camera, m->area->camera->defMode, 1);
                 } else {
                     m->area->camera->mode = CAMERA_MODE_NEWCAM;
@@ -1890,7 +1890,7 @@ s32 act_shot_from_cannon(struct MarioState *m) {
             set_mario_particle_flags(m, PARTICLE_VERTICAL_STAR, FALSE);
             set_mario_action(m, ACT_BACKWARD_AIR_KB, 0);
             if (allowCameraChange) {
-                if (newcam_active == 0) {
+                if (!gNewCamera.isActive) {
                     set_camera_mode(m->area->camera, m->area->camera->defMode, 1);
                 } else {
                     m->area->camera->mode = CAMERA_MODE_NEWCAM;
@@ -1927,7 +1927,7 @@ s32 act_flying(struct MarioState *m) {
     if (m->input & INPUT_Z_PRESSED) {
         if (m->area->camera->mode == CAMERA_MODE_BEHIND_MARIO) {
             if (m->playerIndex == 0) {
-                if (newcam_active == 0) {
+                if (!gNewCamera.isActive) {
                     set_camera_mode(m->area->camera, m->area->camera->defMode, 1);
                 } else {
                     m->area->camera->mode = CAMERA_MODE_NEWCAM;
@@ -1941,7 +1941,7 @@ s32 act_flying(struct MarioState *m) {
     if (!(m->flags & MARIO_WING_CAP)) {
         if (m->area->camera->mode == CAMERA_MODE_BEHIND_MARIO) {
             if (m->playerIndex == 0) {
-                if (newcam_active == 0) {
+                if (!gNewCamera.isActive) {
                     set_camera_mode(m->area->camera, m->area->camera->defMode, 1);
                 } else {
                     m->area->camera->mode = CAMERA_MODE_NEWCAM;
@@ -1954,7 +1954,7 @@ s32 act_flying(struct MarioState *m) {
 
     if (m->area->camera->mode != CAMERA_MODE_BEHIND_MARIO) {
         if (m->playerIndex == 0) {
-            if (newcam_active == 0) {
+            if (!gNewCamera.isActive) {
                 set_camera_mode(m->area->camera, CAMERA_MODE_BEHIND_MARIO, 1);
                 // note: EX sets it to the following line instead, but I have
                 //       no idea why... possibly copy/paste error?
@@ -2007,7 +2007,7 @@ s32 act_flying(struct MarioState *m) {
             m->faceAngle[0] = 0;
 
             if (m->playerIndex == 0) {
-                if (newcam_active == 0) {
+                if (!gNewCamera.isActive) {
                     set_camera_mode(m->area->camera, m->area->camera->defMode, 1);
                 } else {
                     m->area->camera->mode = CAMERA_MODE_NEWCAM;
@@ -2034,7 +2034,7 @@ s32 act_flying(struct MarioState *m) {
                 set_mario_action(m, ACT_BACKWARD_AIR_KB, 0);
 
                 if (m->playerIndex == 0) {
-                    if (newcam_active == 0) {
+                    if (!gNewCamera.isActive) {
                         set_camera_mode(m->area->camera, m->area->camera->defMode, 1);
                     } else {
                         m->area->camera->mode = CAMERA_MODE_NEWCAM;
@@ -2126,7 +2126,7 @@ s32 act_flying_triple_jump(struct MarioState *m) {
 #ifndef VERSION_JP
     if (m->input & (INPUT_B_PRESSED | INPUT_Z_PRESSED)) {
         if (m->playerIndex == 0 && m->area->camera->mode == CAMERA_MODE_BEHIND_MARIO) {
-            if (newcam_active == 0) {
+            if (!gNewCamera.isActive) {
                 set_camera_mode(m->area->camera, m->area->camera->defMode, 1);
             } else {
                 m->area->camera->mode = CAMERA_MODE_NEWCAM;
@@ -2170,7 +2170,7 @@ s32 act_flying_triple_jump(struct MarioState *m) {
 
     if (m->vel[1] < 4.0f) {
         if (m->playerIndex == 0 && m->area->camera->mode != CAMERA_MODE_BEHIND_MARIO) {
-            if (newcam_active == 0) {
+            if (!gNewCamera.isActive) {
                 set_camera_mode(m->area->camera, m->area->camera->defMode, 1);
             } else {
                 m->area->camera->mode = CAMERA_MODE_NEWCAM;

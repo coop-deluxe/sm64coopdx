@@ -153,92 +153,117 @@ u32 determine_interaction(struct MarioState *m, struct Object *o) {
 
     interaction = smlua_get_action_interaction_type(m);
 
-    // hack: make water punch actually do something
-    if (interaction == 0 && m->action == ACT_WATER_PUNCH && o->oInteractType & INTERACT_PLAYER) {
+    // Interaction already set
+    if (interaction != 0) {
+        return interaction;
+    }
+
+    // PvP water punch
+    if (action == ACT_WATER_PUNCH && o->oInteractType & INTERACT_PLAYER) {
         f32 cossPitch = coss(m->faceAngle[0]);
         Vec3f facing = { sins(m->faceAngle[1])*cossPitch, sins(m->faceAngle[0]), coss(m->faceAngle[1])*cossPitch };
         Vec3f dif = { o->oPosX - m->pos[0], (o->oPosY + o->hitboxHeight * 0.5) - (m->pos[1] + m->marioObj->hitboxHeight * 0.5), o->oPosZ - m->pos[2] };
         vec3f_normalize(dif);
-        f32 angle = vec3f_dot(facing, dif);
-        // Unknown angle (60 degrees in each direction?)
-        if (angle >= 0.6f) {
-            interaction = INT_PUNCH;
+        f32 dot = vec3f_dot(facing, dif);
+        if (dot >= 0.6f) { // ~53 degrees
+            return INT_PUNCH;
         }
     }
 
-    if ((interaction == 0 || interaction & INT_LUA) && action & ACT_FLAG_ATTACKING) {
-        u32 flags = (MARIO_PUNCHING | MARIO_KICKING | MARIO_TRIPPING);
-        if ((action == ACT_PUNCHING || action == ACT_MOVE_PUNCHING || action == ACT_JUMP_KICK) ||
-            ((m->flags & flags) && (interaction & INT_LUA))) {
-            s16 dYawToObject = mario_obj_angle_to_object(m, o) - m->faceAngle[1];
+    // Attacks
+    if (action & ACT_FLAG_ATTACKING) {
+        s16 dYawToObject = mario_obj_angle_to_object(m, o) - m->faceAngle[1];
 
-            if (m->flags & MARIO_PUNCHING) {
-                // 120 degrees total, or 60 each way
-                if (-0x2AAA <= dYawToObject && dYawToObject <= 0x2AAA) {
-                    interaction = INT_PUNCH;
-                }
+        // Punch
+        if (m->flags & MARIO_PUNCHING) {
+            // 120 degrees total, or 60 each way
+            if (-0x2AAA <= dYawToObject && dYawToObject <= 0x2AAA) {
+                return INT_PUNCH;
             }
-            if (m->flags & MARIO_KICKING) {
-                // 120 degrees total, or 60 each way
-                if (-0x2AAA <= dYawToObject && dYawToObject <= 0x2AAA) {
-                    interaction = INT_KICK;
-                }
+        }
+
+        // Kick
+        if (m->flags & MARIO_KICKING) {
+            // 120 degrees total, or 60 each way
+            if (-0x2AAA <= dYawToObject && dYawToObject <= 0x2AAA) {
+                return INT_KICK;
             }
-            if (m->flags & MARIO_TRIPPING) {
-                // 180 degrees total, or 90 each way
-                if (-0x4000 <= dYawToObject && dYawToObject <= 0x4000) {
-                    interaction = INT_TRIP;
-                }
+        }
+
+        // Trip
+        if (m->flags & MARIO_TRIPPING) {
+            // 180 degrees total, or 90 each way
+            if (-0x4000 <= dYawToObject && dYawToObject <= 0x4000) {
+                return INT_TRIP;
             }
-        } else if (action == ACT_GROUND_POUND) {
+        }
+
+        // Ground pound
+        if (action == ACT_GROUND_POUND) {
             if (m->vel[1] < 0.0f) {
-                interaction = INT_GROUND_POUND;
+                return INT_GROUND_POUND;
             }
-        } else if (action == ACT_TWIRLING) {
+        }
+
+        // Twirl
+        if (action == ACT_TWIRLING) {
             if (m->vel[1] < 0.0f) {
-                interaction = INT_TWIRL;
+                return INT_TWIRL;
             }
-        } else if (action == ACT_GROUND_POUND_LAND) {
+        }
+
+        // Ground pound land
+        if (action == ACT_GROUND_POUND_LAND) {
             // Neither ground pounding nor twirling change Mario's vertical speed on landing.,
             // so the speed check is nearly always true (perhaps not if you land while going upwards?)
             // Additionally, actionState it set on each first thing in their action, so this is
             // only true prior to the very first frame (i.e. active 1 frame prior to it run).
             if (m->vel[1] < 0.0f && m->actionState == 0) {
-                interaction = INT_GROUND_POUND;
+                return INT_GROUND_POUND;
             }
-        } else if (action == ACT_TWIRL_LAND) {
+        }
+
+        // Twirl land
+        if (action == ACT_TWIRL_LAND) {
             // Neither ground pounding nor twirling change Mario's vertical speed on landing.,
             // so the speed check is nearly always true (perhaps not if you land while going upwards?)
             // Additionally, actionState it set on each first thing in their action, so this is
             // only true prior to the very first frame (i.e. active 1 frame prior to it run).
             if (m->vel[1] < 0.0f && m->actionState == 0) {
-                interaction = INT_TWIRL;
+                return INT_TWIRL;
             }
-        } else if (action == ACT_SLIDE_KICK || action == ACT_SLIDE_KICK_SLIDE) {
-            interaction = INT_SLIDE_KICK;
-        } else if (action & ACT_FLAG_RIDING_SHELL) {
-            interaction = INT_FAST_ATTACK_OR_SHELL;
-        } else if (m->forwardVel <= -26.0f || 26.0f <= m->forwardVel) {
-            interaction = INT_FAST_ATTACK_OR_SHELL;
+        }
+
+        // Slide kick
+        if (action == ACT_SLIDE_KICK || action == ACT_SLIDE_KICK_SLIDE) {
+            return INT_SLIDE_KICK;
+        }
+
+        // Shell riding
+        if (action & ACT_FLAG_RIDING_SHELL) {
+            return INT_FAST_ATTACK_OR_SHELL;
+        }
+
+        // Fast attack
+        if (m->forwardVel <= -26.0f || 26.0f <= m->forwardVel) {
+            return INT_FAST_ATTACK_OR_SHELL;
         }
     }
 
-    // Prior to this, the interaction type could be overwritten. This requires, however,
-    // that the interaction not be set prior. This specifically overrides turning a ground
-    // pound into just a bounce.
-    if ((interaction == 0 || interaction & INT_LUA) && (action & ACT_FLAG_AIR)) {
+    // Air actions
+    if (action & ACT_FLAG_AIR) {
         if (m->vel[1] < 0.0f) {
             if (m->pos[1] > o->oPosY) {
-                interaction = INT_HIT_FROM_ABOVE;
+                return INT_HIT_FROM_ABOVE;
             }
         } else {
             if (m->pos[1] < o->oPosY) {
-                interaction = INT_HIT_FROM_BELOW;
+                return INT_HIT_FROM_BELOW;
             }
         }
     }
 
-    return interaction;
+    return 0;
 }
 
 /**
@@ -247,7 +272,6 @@ u32 determine_interaction(struct MarioState *m, struct Object *o) {
 u32 attack_object(struct MarioState* m, struct Object *o, s32 interaction) {
     if (!o) { return 0; }
     u32 attackType = 0;
-    interaction &= ~INT_LUA;
 
     switch (interaction) {
         case INT_GROUND_POUND:
@@ -1941,7 +1965,7 @@ u32 interact_breakable(struct MarioState *m, UNUSED u32 interactType, struct Obj
 
         m->interactObj = o;
 
-        switch (interaction & ~INT_LUA) {
+        switch (interaction) {
             case INT_HIT_FROM_ABOVE:
                 bounce_off_object(m, o, 30.0f); //! Not in the 0x8F mask
                 break;

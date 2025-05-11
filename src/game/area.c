@@ -232,7 +232,7 @@ void clear_areas(void) {
         gAreaData[i].index = i;
         gAreaData[i].flags = 0;
         gAreaData[i].terrainType = 0;
-        gAreaData[i].unk04 = NULL;
+        gAreaData[i].root = NULL;
         gAreaData[i].terrainData = NULL;
         gAreaData[i].surfaceRooms = NULL;
         gAreaData[i].macroObjects = NULL;
@@ -255,21 +255,21 @@ void clear_areas(void) {
 
 void clear_area_graph_nodes(void) {
     if (gCurrentArea != NULL) {
-        geo_call_global_function_nodes(&gCurrentArea->unk04->node, GEO_CONTEXT_AREA_UNLOAD);
+        geo_call_global_function_nodes(&gCurrentArea->root->node, GEO_CONTEXT_AREA_UNLOAD);
         gCurrentArea = NULL;
         gWarpTransition.isActive = FALSE;
     }
 
     for (s32 i = 0; i < MAX_AREAS; i++) {
-        if (gAreaData[i].unk04 != NULL) {
-            geo_call_global_function_nodes(&gAreaData[i].unk04->node, GEO_CONTEXT_AREA_INIT);
-            gAreaData[i].unk04 = NULL;
+        if (gAreaData[i].root != NULL) {
+            geo_call_global_function_nodes(&gAreaData[i].root->node, GEO_CONTEXT_AREA_INIT);
+            gAreaData[i].root = NULL;
         }
     }
 }
 
 void load_area(s32 index) {
-    if (gCurrentArea == NULL && gAreaData[index].unk04 != NULL) {
+    if (gCurrentArea == NULL && gAreaData[index].root != NULL) {
         gCurrentArea = &gAreaData[index];
         gCurrentArea->localAreaTimer = 0;
         if (gCurrentArea->objectSpawnInfos) {
@@ -287,7 +287,7 @@ void load_area(s32 index) {
         }
 
         load_obj_warp_nodes();
-        geo_call_global_function_nodes(&gCurrentArea->unk04->node, GEO_CONTEXT_AREA_LOAD);
+        geo_call_global_function_nodes(&gCurrentArea->root->node, GEO_CONTEXT_AREA_LOAD);
     }
 }
 
@@ -301,7 +301,7 @@ void unload_area(void) {
     sync_objects_clear();
     if (gCurrentArea != NULL) {
         unload_objects_from_area(0, gCurrentArea->index);
-        geo_call_global_function_nodes(&gCurrentArea->unk04->node, GEO_CONTEXT_AREA_UNLOAD);
+        geo_call_global_function_nodes(&gCurrentArea->root->node, GEO_CONTEXT_AREA_UNLOAD);
 
         gCurrentArea->flags = 0;
         gCurrentArea = NULL;
@@ -442,7 +442,7 @@ void play_transition_after_delay(s16 transType, s16 time, u8 red, u8 green, u8 b
 void render_game(void) {
     dynos_update_gfx();
     if (gCurrentArea != NULL && !gWarpTransition.pauseRendering) {
-        geo_process_root(gCurrentArea->unk04, D_8032CE74, D_8032CE78, gFBSetColor);
+        geo_process_root(gCurrentArea->root, D_8032CE74, D_8032CE78, gFBSetColor);
 
         gSPViewport(gDisplayListHead++, VIRTUAL_TO_PHYSICAL(&D_8032CF00));
 

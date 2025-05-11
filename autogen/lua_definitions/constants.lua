@@ -2941,7 +2941,6 @@ INT_HIT_FROM_ABOVE        =                       (1 << 6) --- @type Interaction
 INT_HIT_FROM_BELOW        =                       (1 << 7) --- @type InteractionFlag
 INT_TWIRL                 =                       (1 << 8) --- @type InteractionFlag
 INT_GROUND_POUND_OR_TWIRL = (INT_GROUND_POUND | INT_TWIRL) --- @type InteractionFlag
-INT_LUA                   =                      (1 << 31) --- @type InteractionFlag
 
 --- @alias InteractionFlag
 --- | `INT_GROUND_POUND`
@@ -2954,7 +2953,6 @@ INT_LUA                   =                      (1 << 31) --- @type Interaction
 --- | `INT_HIT_FROM_BELOW`
 --- | `INT_TWIRL`
 --- | `INT_GROUND_POUND_OR_TWIRL`
---- | `INT_LUA`
 
 --- @type integer
 INT_ATTACK_NOT_FROM_BELOW = (INT_GROUND_POUND_OR_TWIRL | INT_PUNCH | INT_KICK | INT_TRIP | INT_SLIDE_KICK | INT_FAST_ATTACK_OR_SHELL | INT_HIT_FROM_ABOVE)

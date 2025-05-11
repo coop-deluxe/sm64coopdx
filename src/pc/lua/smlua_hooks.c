@@ -1330,7 +1330,6 @@ int smlua_hook_mario_action(lua_State* L) {
             return 0;
         }
     }
-    interactionType |= (1 << 31); /* INT_LUA */
 
     struct LuaHookedMarioAction* hooked = &sHookedMarioActions[sHookedMarioActionsCount];
 
