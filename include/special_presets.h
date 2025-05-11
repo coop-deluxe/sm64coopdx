@@ -17,7 +17,7 @@ struct SpecialPreset
     /*00*/ u8  preset_id;
     /*01*/ u8  type;      // Determines whether object is 8, 10, 12 or 14 bytes long.
     /*02*/ u8  defParam;  // Default parameter, only used when type is SPTYPE_DEF_PARAM_AND_YROT
-    /*03*/ u8  model;
+    /*03*/ u16  model;
     /*04*/ const BehaviorScript *behavior;
 };
 

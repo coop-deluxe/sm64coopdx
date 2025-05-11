@@ -11,7 +11,7 @@
 #include "pc/debuglog.h"
 
 static struct Object* spawn_object_internal(enum BehaviorId behaviorId, enum ModelExtendedId modelId, f32 x, f32 y, f32 z, LuaFunction objSetupFunction, bool doSync) {
-    // prevent spawning objects on mod init, this can cause issues if --server is specificed
+    // prevent spawning objects on mod init, this can cause issues if --server is specified
     if (gLuaLoadingMod != NULL) { return NULL; }
 
     if (doSync) {
