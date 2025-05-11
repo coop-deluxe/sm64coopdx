@@ -13,15 +13,15 @@
  * Hitbox for chain chomp.
  */
 static struct ObjectHitbox sChainChompHitbox = {
-    /* interactType: */ INTERACT_MR_BLIZZARD,
-    /* downOffset: */ 0,
-    /* damageOrCoinValue: */ 3,
-    /* health: */ 1,
-    /* numLootCoins: */ 0,
-    /* radius: */ 80,
-    /* height: */ 160,
-    /* hurtboxRadius: */ 80,
-    /* hurtboxHeight: */ 160,
+    .interactType = INTERACT_MR_BLIZZARD,
+    .downOffset = 0,
+    .damageOrCoinValue = 3,
+    .health = 1,
+    .numLootCoins = 0,
+    .radius = 80,
+    .height = 160,
+    .hurtboxRadius = 80,
+    .hurtboxHeight = 160,
 };
 
 /**

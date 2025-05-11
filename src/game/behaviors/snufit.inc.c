@@ -6,27 +6,27 @@
  */
 
 struct ObjectHitbox sSnufitHitbox = {
-    /* interactType:      */ INTERACT_HIT_FROM_BELOW,
-    /* downOffset:        */ 0,
-    /* damageOrCoinValue: */ 2,
-    /* health:            */ 0,
-    /* numLootCoins:      */ 2,
-    /* radius:            */ 100,
-    /* height:            */ 60,
-    /* hurtboxRadius:     */ 70,
-    /* hurtboxHeight:     */ 50,
+    .interactType = INTERACT_HIT_FROM_BELOW,
+    .downOffset = 0,
+    .damageOrCoinValue = 2,
+    .health = 0,
+    .numLootCoins = 2,
+    .radius = 100,
+    .height = 60,
+    .hurtboxRadius = 70,
+    .hurtboxHeight = 50,
 };
 
 struct ObjectHitbox sSnufitBulletHitbox = {
-    /* interactType:      */ INTERACT_SNUFIT_BULLET,
-    /* downOffset:        */ 50,
-    /* damageOrCoinValue: */ 1,
-    /* health:            */ 0,
-    /* numLootCoins:      */ 0,
-    /* radius:            */ 100,
-    /* height:            */ 50,
-    /* hurtboxRadius:     */ 100,
-    /* hurtboxHeight:     */ 50,
+    .interactType = INTERACT_SNUFIT_BULLET,
+    .downOffset = 50,
+    .damageOrCoinValue = 1,
+    .health = 0,
+    .numLootCoins = 0,
+    .radius = 100,
+    .height = 50,
+    .hurtboxRadius = 100,
+    .hurtboxHeight = 50,
 };
 
 /**

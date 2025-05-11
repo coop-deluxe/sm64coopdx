@@ -8,15 +8,15 @@
  * Hitbox for swoop.
  */
 static struct ObjectHitbox sSwoopHitbox = {
-    /* interactType:      */ INTERACT_HIT_FROM_BELOW,
-    /* downOffset:        */ 0,
-    /* damageOrCoinValue: */ 1,
-    /* health:            */ 0,
-    /* numLootCoins:      */ 1,
-    /* radius:            */ 100,
-    /* height:            */ 80,
-    /* hurtboxRadius:     */ 70,
-    /* hurtboxHeight:     */ 70,
+    .interactType = INTERACT_HIT_FROM_BELOW,
+    .downOffset = 0,
+    .damageOrCoinValue = 1,
+    .health = 0,
+    .numLootCoins = 1,
+    .radius = 100,
+    .height = 80,
+    .hurtboxRadius = 70,
+    .hurtboxHeight = 70,
 };
 
 /**

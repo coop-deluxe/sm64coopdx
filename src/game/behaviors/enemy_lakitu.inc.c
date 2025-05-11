@@ -9,15 +9,15 @@
  * Hitbox for evil lakitu.
  */
 static struct ObjectHitbox sEnemyLakituHitbox = {
-    /* interactType:      */ INTERACT_HIT_FROM_BELOW,
-    /* downOffset:        */ 0,
-    /* damageOrCoinValue: */ 2,
-    /* health:            */ 0,
-    /* numLootCoins:      */ 5,
-    /* radius:            */ 50,
-    /* height:            */ 50,
-    /* hurtboxRadius:     */ 40,
-    /* hurtboxHeight:     */ 50,
+    .interactType = INTERACT_HIT_FROM_BELOW,
+    .downOffset = 0,
+    .damageOrCoinValue = 2,
+    .health = 0,
+    .numLootCoins = 5,
+    .radius = 50,
+    .height = 50,
+    .hurtboxRadius = 40,
+    .hurtboxHeight = 50,
 };
 
 /**

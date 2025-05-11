@@ -305,8 +305,8 @@ struct Object
 struct ObjectHitbox
 {
     u32 interactType;
-    s8 damageOrCoinValue;
     s8 health;
+    s8 damageOrCoinValue;
     s8 numLootCoins;
     u8 downOffset;
     s16 radius;

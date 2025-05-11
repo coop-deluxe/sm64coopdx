@@ -1,15 +1,15 @@
 // breakable_box.c.inc
 
 struct ObjectHitbox sBreakableBoxSmallHitbox = {
-    /* interactType:      */ INTERACT_GRABBABLE,
-    /* downOffset:        */ 20,
-    /* damageOrCoinValue: */ 0,
-    /* health:            */ 1,
-    /* numLootCoins:      */ 0,
-    /* radius:            */ 150,
-    /* height:            */ 250,
-    /* hurtboxRadius:     */ 150,
-    /* hurtboxHeight:     */ 250,
+    .interactType = INTERACT_GRABBABLE,
+    .downOffset = 20,
+    .damageOrCoinValue = 0,
+    .health = 1,
+    .numLootCoins = 0,
+    .radius = 150,
+    .height = 250,
+    .hurtboxRadius = 150,
+    .hurtboxHeight = 250,
 };
 
 void bhv_breakable_box_small_init(void) {
