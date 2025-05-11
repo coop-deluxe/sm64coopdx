@@ -19288,7 +19288,7 @@ int smlua_func_vec3f_project(lua_State* L) {
     smlua_get_vec3f(out, 3);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "vec3f_project"); return 0; }
 
-    vec3f_project(vec, onto, out);
+    smlua_push_pointer(L, LVT_F32_P, (void*)vec3f_project(vec, onto, out), NULL);
 
     smlua_push_vec3f(vec, 1);
 
@@ -19388,6 +19388,27 @@ int smlua_func_vec3f_set_dist_and_angle(lua_State* L) {
     smlua_push_vec3f(from, 1);
 
     smlua_push_vec3f(to, 2);
+
+    return 1;
+}
+
+int smlua_func_vec3f_zero(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "vec3f_zero", 1, top);
+        return 0;
+    }
+
+
+    Vec3f v;
+    smlua_get_vec3f(v, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "vec3f_zero"); return 0; }
+
+    smlua_push_pointer(L, LVT_F32_P, (void*)vec3f_zero(v), NULL);
+
+    smlua_push_vec3f(v, 1);
 
     return 1;
 }
@@ -19533,6 +19554,27 @@ int smlua_func_vec3s_sum(lua_State* L) {
     return 1;
 }
 
+int smlua_func_vec3s_zero(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "vec3s_zero", 1, top);
+        return 0;
+    }
+
+
+    Vec3s v;
+    smlua_get_vec3s(v, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "vec3s_zero"); return 0; }
+
+    smlua_push_pointer(L, LVT_S16_P, (void*)vec3s_zero(v), NULL);
+
+    smlua_push_vec3s(v, 1);
+
+    return 1;
+}
+
 int smlua_func_vec3s_to_vec3f(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -19586,7 +19628,7 @@ int smlua_func_find_vector_perpendicular_to_plane(lua_State* L) {
     smlua_get_vec3f(c, 4);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "find_vector_perpendicular_to_plane"); return 0; }
 
-    find_vector_perpendicular_to_plane(dest, a, b, c);
+    smlua_push_pointer(L, LVT_F32_P, (void*)find_vector_perpendicular_to_plane(dest, a, b, c), NULL);
 
     smlua_push_vec3f(dest, 1);
 
@@ -20077,6 +20119,27 @@ int smlua_func_mtxf_inverse(lua_State* L) {
     return 1;
 }
 
+int smlua_func_mtxf_zero(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "mtxf_zero", 1, top);
+        return 0;
+    }
+
+
+    Mat4 mtx;
+    smlua_get_mat4(mtx, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mtxf_zero"); return 0; }
+
+    mtxf_zero(mtx);
+
+    smlua_push_mat4(mtx, 1);
+
+    return 1;
+}
+
 int smlua_func_get_pos_from_transform_mtx(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -20099,7 +20162,7 @@ int smlua_func_get_pos_from_transform_mtx(lua_State* L) {
     smlua_get_mat4(camMtx, 3);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "get_pos_from_transform_mtx"); return 0; }
 
-    get_pos_from_transform_mtx(dest, objMtx, camMtx);
+    smlua_push_pointer(L, LVT_F32_P, (void*)get_pos_from_transform_mtx(dest, objMtx, camMtx), NULL);
 
     smlua_push_vec3f(dest, 1);
 
@@ -34924,11 +34987,13 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "vec3f_dist", smlua_func_vec3f_dist);
     smlua_bind_function(L, "vec3f_get_dist_and_angle", smlua_func_vec3f_get_dist_and_angle);
     smlua_bind_function(L, "vec3f_set_dist_and_angle", smlua_func_vec3f_set_dist_and_angle);
+    smlua_bind_function(L, "vec3f_zero", smlua_func_vec3f_zero);
     smlua_bind_function(L, "vec3f_to_vec3s", smlua_func_vec3f_to_vec3s);
     smlua_bind_function(L, "vec3s_copy", smlua_func_vec3s_copy);
     smlua_bind_function(L, "vec3s_set", smlua_func_vec3s_set);
     smlua_bind_function(L, "vec3s_add", smlua_func_vec3s_add);
     smlua_bind_function(L, "vec3s_sum", smlua_func_vec3s_sum);
+    smlua_bind_function(L, "vec3s_zero", smlua_func_vec3s_zero);
     smlua_bind_function(L, "vec3s_to_vec3f", smlua_func_vec3s_to_vec3f);
     smlua_bind_function(L, "find_vector_perpendicular_to_plane", smlua_func_find_vector_perpendicular_to_plane);
     smlua_bind_function(L, "mtxf_copy", smlua_func_mtxf_copy);
@@ -34947,6 +35012,7 @@ void smlua_bind_functions_autogen(void) {
     //smlua_bind_function(L, "mtxf_to_mtx", smlua_func_mtxf_to_mtx); <--- UNIMPLEMENTED
     //smlua_bind_function(L, "mtxf_rotate_xy", smlua_func_mtxf_rotate_xy); <--- UNIMPLEMENTED
     smlua_bind_function(L, "mtxf_inverse", smlua_func_mtxf_inverse);
+    smlua_bind_function(L, "mtxf_zero", smlua_func_mtxf_zero);
     smlua_bind_function(L, "get_pos_from_transform_mtx", smlua_func_get_pos_from_transform_mtx);
     smlua_bind_function(L, "approach_s32", smlua_func_approach_s32);
     smlua_bind_function(L, "approach_f32", smlua_func_approach_f32);

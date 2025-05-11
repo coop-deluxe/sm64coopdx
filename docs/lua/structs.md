@@ -2140,7 +2140,7 @@
 | oMarioTornadoPosY | `number` |  |
 | oMarioReadingSignDPosZ | `number` |  |
 | oMarioWhirlpoolPosY | `number` |  |
-| oMarioUnkPosY | `number` |  |
+| oMarioJumboStarCutscenePosZ | `number` |  |
 | oMarioBurnTimer | `integer` |  |
 | oMarioLongJumpIsSlow | `integer` |  |
 | oMarioSteepJumpYaw | `integer` |  |

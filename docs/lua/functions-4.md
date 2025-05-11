@@ -4563,7 +4563,7 @@ Rotates the 3D floating-point vector `v` by the angles specified in the 3D signe
 Projects the 3D floating-point vector `vec` onto another 3D floating-point vector `onto`. The resulting projection, stored in `out`, represents how much of `vec` lies along the direction of `onto`
 
 ### Lua Example
-`vec3f_project(vec, onto, out)`
+`local PointerValue = vec3f_project(vec, onto, out)`
 
 ### Parameters
 | Field | Type |
@@ -4573,10 +4573,10 @@ Projects the 3D floating-point vector `vec` onto another 3D floating-point vecto
 | out | [Vec3f](structs.md#Vec3f) |
 
 ### Returns
-- None
+- `Pointer` <`number`>
 
 ### C Prototype
-`void vec3f_project(Vec3f vec, Vec3f onto, Vec3f out);`
+`f32 *vec3f_project(Vec3f vec, Vec3f onto, Vec3f out);`
 
 [:arrow_up_small:](#)
 
@@ -4655,6 +4655,29 @@ Positions the point `to` at a given `dist`, `pitch`, and `yaw` relative to the p
 
 ### C Prototype
 `void vec3f_set_dist_and_angle(Vec3f from, Vec3f to, f32 dist, s16 pitch, s16 yaw);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3f_zero](#vec3f_zero)
+
+### Description
+Sets the values of the 3D floating-point vector `v` to 0. After this function, `v` will have values of 0.
+
+### Lua Example
+`local PointerValue = vec3f_zero(v)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| v | [Vec3f](structs.md#Vec3f) |
+
+### Returns
+- `Pointer` <`number`>
+
+### C Prototype
+`f32 *vec3f_zero(Vec3f v);`
 
 [:arrow_up_small:](#)
 
@@ -4783,6 +4806,29 @@ Adds the components of two 3D signed-integer vectors `a` and `b` together and st
 
 <br />
 
+## [vec3s_zero](#vec3s_zero)
+
+### Description
+Sets the values of the 3D signed-integer vector `v` to 0. After this function, `v` will have values of 0.
+
+### Lua Example
+`local PointerValue = vec3s_zero(v)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| v | [Vec3s](structs.md#Vec3s) |
+
+### Returns
+- `Pointer` <`integer`>
+
+### C Prototype
+`s16 *vec3s_zero(Vec3s v);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [vec3s_to_vec3f](#vec3s_to_vec3f)
 
 ### Description
@@ -4813,7 +4859,7 @@ Converts a 3D signed-integer vector `a` (vec3s) into a 3D floating-point vector 
 Determines a vector that is perpendicular (normal) to the plane defined by three given 3D floating-point points `a`, `b`, and `c`. The resulting perpendicular vector is stored in `dest`
 
 ### Lua Example
-`local voidValue = find_vector_perpendicular_to_plane(dest, a, b, c)`
+`local PointerValue = find_vector_perpendicular_to_plane(dest, a, b, c)`
 
 ### Parameters
 | Field | Type |
@@ -4824,10 +4870,10 @@ Determines a vector that is perpendicular (normal) to the plane defined by three
 | c | [Vec3f](structs.md#Vec3f) |
 
 ### Returns
-- `void *`
+- `Pointer` <`number`>
 
 ### C Prototype
-`void *find_vector_perpendicular_to_plane(Vec3f dest, Vec3f a, Vec3f b, Vec3f c);`
+`f32 *find_vector_perpendicular_to_plane(Vec3f dest, Vec3f a, Vec3f b, Vec3f c);`
 
 [:arrow_up_small:](#)
 
@@ -5182,13 +5228,36 @@ Inverts the 4x4 floating-point matrix `src` and stores the inverse in `dest`. Ap
 
 <br />
 
+## [mtxf_zero](#mtxf_zero)
+
+### Description
+Sets the 4x4 floating-point matrix `mtx` to all zeros. Unless you really need this-It's reccomended to use mtxf_identity instead.
+
+### Lua Example
+`mtxf_zero(mtx)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| mtx | `Mat4` |
+
+### Returns
+- None
+
+### C Prototype
+`void mtxf_zero(Mat4 mtx);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [get_pos_from_transform_mtx](#get_pos_from_transform_mtx)
 
 ### Description
 Extracts the position (translation component) from the transformation matrix `objMtx` relative to the coordinate system defined by `camMtx` and stores that 3D position in `dest`. This can be used to get the object's coordinates in camera space
 
 ### Lua Example
-`get_pos_from_transform_mtx(dest, objMtx, camMtx)`
+`local PointerValue = get_pos_from_transform_mtx(dest, objMtx, camMtx)`
 
 ### Parameters
 | Field | Type |
@@ -5198,10 +5267,10 @@ Extracts the position (translation component) from the transformation matrix `ob
 | camMtx | `Mat4` |
 
 ### Returns
-- None
+- `Pointer` <`number`>
 
 ### C Prototype
-`void get_pos_from_transform_mtx(Vec3f dest, Mat4 objMtx, Mat4 camMtx);`
+`f32 *get_pos_from_transform_mtx(Vec3f dest, Mat4 objMtx, Mat4 camMtx);`
 
 [:arrow_up_small:](#)
 

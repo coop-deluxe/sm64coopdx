@@ -6428,6 +6428,7 @@ end
 --- @param vec Vec3f
 --- @param onto Vec3f
 --- @param out Vec3f
+--- @return Pointer_number
 --- Projects the 3D floating-point vector `vec` onto another 3D floating-point vector `onto`. The resulting projection, stored in `out`, represents how much of `vec` lies along the direction of `onto`
 function vec3f_project(vec, onto, out)
     -- ...
@@ -6458,6 +6459,13 @@ end
 --- @param yaw integer
 --- Positions the point `to` at a given `dist`, `pitch`, and `yaw` relative to the point `from`. This can be used to place objects around a reference point at specific angles and distances
 function vec3f_set_dist_and_angle(from, to, dist, pitch, yaw)
+    -- ...
+end
+
+--- @param v Vec3f
+--- @return Pointer_number
+--- Sets the values of the 3D floating-point vector `v` to 0. After this function, `v` will have values of 0.
+function vec3f_zero(v)
     -- ...
 end
 
@@ -6504,6 +6512,13 @@ function vec3s_sum(dest, a, b)
     -- ...
 end
 
+--- @param v Vec3s
+--- @return Pointer_integer
+--- Sets the values of the 3D signed-integer vector `v` to 0. After this function, `v` will have values of 0.
+function vec3s_zero(v)
+    -- ...
+end
+
 --- @param dest Vec3f
 --- @param a Vec3s
 --- @return Pointer_number
@@ -6516,7 +6531,7 @@ end
 --- @param a Vec3f
 --- @param b Vec3f
 --- @param c Vec3f
---- @return void*
+--- @return Pointer_number
 --- Determines a vector that is perpendicular (normal) to the plane defined by three given 3D floating-point points `a`, `b`, and `c`. The resulting perpendicular vector is stored in `dest`
 function find_vector_perpendicular_to_plane(dest, a, b, c)
     -- ...
@@ -6634,9 +6649,16 @@ function mtxf_inverse(dest, src)
     -- ...
 end
 
+--- @param mtx Mat4
+--- Sets the 4x4 floating-point matrix `mtx` to all zeros. Unless you really need this-It's reccomended to use mtxf_identity instead.
+function mtxf_zero(mtx)
+    -- ...
+end
+
 --- @param dest Vec3f
 --- @param objMtx Mat4
 --- @param camMtx Mat4
+--- @return Pointer_number
 --- Extracts the position (translation component) from the transformation matrix `objMtx` relative to the coordinate system defined by `camMtx` and stores that 3D position in `dest`. This can be used to get the object's coordinates in camera space
 function get_pos_from_transform_mtx(dest, objMtx, camMtx)
     -- ...
