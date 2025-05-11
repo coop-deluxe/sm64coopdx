@@ -122,12 +122,15 @@ struct AnimationTable {
 #define ANIMINDEX_NUMPARTS(animindex) (sizeof(animindex) / sizeof(u16) / 6 - 1)
 #define ANIM_FIELD_LENGTH(animindex) (sizeof(animindex) / sizeof(u16))
 
-#define GRAPH_NODE_GUARD 0xAA
+#define GRAPH_NODE_GUARD 0xDEADBEEF
 
 struct GraphNode
 {
     // For optimization reasons, See MarioState
     
+#ifdef DEBUG
+    uintptr_t _guard1;
+#endif
     struct GraphNode *prev;
     struct GraphNode *next;
     struct GraphNode *parent;
@@ -136,11 +139,13 @@ struct GraphNode
     
     s16 type; // structure type
     s16 flags; // hi = drawing layer, lo = rendering modes
-    
-    u8 _guard1;
-    u8 _guard2;
     u8 extraFlags;
     u8 hookProcess;
+    s16 padding;
+    
+#ifdef DEBUG
+    uintptr_t _guard2;
+#endif
 };
 
 struct AnimInfo
