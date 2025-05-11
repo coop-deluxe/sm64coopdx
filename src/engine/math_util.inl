@@ -1,10 +1,14 @@
 /*
-.I files are for inlined functions (sometimes forced). These functions are seperated from the .c/.cpp files so they 
-can be recompiled by the compiler if needed for further optimizations.
+.inl files are for inlined functions and function templates.
+
+It's best to put them in this file so they can be recompiled if needed.
+
+Credit to PeachyPeach, Issac, Blockyyy, and others for suggestions
+optimizations and bug reports.
 */
 
-#ifndef MATH_UTIL_I
-#define MATH_UTIL_I
+#ifndef MATH_UTIL_INL
+#define MATH_UTIL_INL
 
 /*
 Vec3f Functions
@@ -92,17 +96,17 @@ INLINE OPTIMIZE_O3 f32 *vec3f_normalize2(Vec3f v) {
 
 /// Get length of vector 'a'
 INLINE OPTIMIZE_O3 f32 vec3f_length(Vec3f a) {
-	return sqrtf(a[0] * a[0] + a[1] * a[1] + a[2] * a[2]);
+    return sqrtf(a[0] * a[0] + a[1] * a[1] + a[2] * a[2]);
 }
 
 /// Get dot product of vectors 'a' and 'b'
 INLINE OPTIMIZE_O3 f32 vec3f_dot(Vec3f a, Vec3f b) {
-	return a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+    return a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
 }
 
 /// Takes respective scales of vecA and vecB, and sums them
 INLINE OPTIMIZE_O3 f32 *vec3f_combine(Vec3f dest, Vec3f vecA, Vec3f vecB, f32 sclA, f32 sclB) {
-    for (int i = 0; i < 3; ++i) {
+    for (s32 i = 0; i < 3; ++i) {
         dest[i] = vecA[i] * sclA + vecB[i] * sclB;
     }
     return dest;
@@ -115,6 +119,10 @@ INLINE OPTIMIZE_O3 f32 vec3f_dist(Vec3f v1, Vec3f v2) {
         v1[2] - v2[2],
     };
     return vec3f_length(diff);
+}
+
+INLINE OPTIMIZE_O3 f32 *vec3f_zero(Vec3f v) {
+    return vec3f_set(v, 0, 0, 0);
 }
 
 /**
@@ -173,6 +181,11 @@ INLINE OPTIMIZE_O3 s16 *vec3s_sub(Vec3s dest, Vec3s a) {
     return dest;
 }
 
+
+INLINE OPTIMIZE_O3 s16 *vec3s_zero(Vec3s v) {
+    return vec3s_set(v, 0, 0, 0);
+}
+
 /// Convert short vector a to float vector 'dest'
 INLINE OPTIMIZE_O3 f32 *vec3s_to_vec3f(Vec3f dest, Vec3s a) {
     dest[0] = a[0];
@@ -199,16 +212,7 @@ INLINE OPTIMIZE_O3 void mtxf_copy(Mat4 dest, Mat4 src) {
  * Set mtx to the identity matrix
  */
 INLINE OPTIMIZE_O3 void mtxf_identity(Mat4 mtx) {
-    s32 i;
-    f32 *dest;
-    
-    // These loops must be one line to match on -O2
-
-    // Initialize everything except the first and last cells to 0
-    for (dest = (f32 *) mtx + 1, i = 0; i < 14; dest++, i++) *dest = 0;
-
-    // Initialize the diagonal cells to 1
-    for (dest = (f32 *) mtx, i = 0; i < 4; dest += 5, i++) *dest = 1;
+    mtxf_copy(mtx, gMat4Identity);
 }
 
 /**
@@ -216,21 +220,24 @@ INLINE OPTIMIZE_O3 void mtxf_identity(Mat4 mtx) {
  */
 INLINE OPTIMIZE_O3 void mtxf_translate(Mat4 dest, Vec3f b) {
     mtxf_identity(dest);
-    dest[3][0] = b[0];
-    dest[3][1] = b[1];
-    dest[3][2] = b[2];
+    vec3f_copy(dest[3], b);
 }
 
 /**
  * Set matrix 'dest' to 'mtx' scaled by vector s
  */
 INLINE OPTIMIZE_O3 void mtxf_scale_vec3f(Mat4 dest, Mat4 mtx, Vec3f s) {
-    for (s32 i = 0; i < 4; i++) {
-        dest[0][i] = mtx[0][i] * s[0];
-        dest[1][i] = mtx[1][i] * s[1];
-        dest[2][i] = mtx[2][i] * s[2];
-        dest[3][i] = mtx[3][i];
-    }
+    mtxf_copy(dest, mtx);
+    vec3f_mul(dest[0], s[0]);
+    vec3f_mul(dest[1], s[1]);
+    vec3f_mul(dest[2], s[2]);
 }
 
-#endif
+/**
+ * Set mtx to all zeros.
+ */
+INLINE OPTIMIZE_O3 void mtxf_zero(Mat4 mtx) {
+    mtxf_copy(mtx, gMat4Zero);
+}
+
+#endif // MATH_UTIL_INL

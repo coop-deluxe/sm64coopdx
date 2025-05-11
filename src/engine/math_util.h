@@ -82,6 +82,9 @@ extern f32 gCosineTable[];
 
 #endif
 
+extern Mat4 gMat4Identity;
+extern Mat4 gMat4Zero;
+
 /* |description|
 Calculates the sine of the given angle, where the angle is specified as a signed 16-bit integer representing a fixed-point "SM64 angle". This function returns a floating-point result corresponding to sin(angle)
 |descriptionEnd| */
@@ -178,12 +181,12 @@ INLINE OPTIMIZE_O3 f32 *vec3f_combine(Vec3f dest, Vec3f vecA, Vec3f vecB, f32 sc
 /* |description|
 Rotates the 3D floating-point vector `v` by the angles specified in the 3D signed-integer vector `rotate`, applying the rotations in the order Z, then X, then Y. The rotated vector replaces `v`
 |descriptionEnd| */
-f32 *vec3f_rotate_zxy(Vec3f v, Vec3s rotate);
+OPTIMIZE_O3 f32 *vec3f_rotate_zxy(Vec3f v, Vec3s rotate);
 
 /* |description|
 Projects the 3D floating-point vector `vec` onto another 3D floating-point vector `onto`. The resulting projection, stored in `out`, represents how much of `vec` lies along the direction of `onto`
 |descriptionEnd| */
-void vec3f_project(Vec3f vec, Vec3f onto, Vec3f out);
+OPTIMIZE_O3 f32 *vec3f_project(Vec3f vec, Vec3f onto, Vec3f out);
 
 /* |description|
 Calculates the distance between two 3D floating-point points `v1` and `v2`. The distance is the length of the vector `v2 - v1`, i.e., sqrt((v2.x - v1.x)² + (v2.y - v1.y)² + (v2.z - v1.z)²)
@@ -193,12 +196,17 @@ INLINE OPTIMIZE_O3 f32 vec3f_dist(Vec3f v1, Vec3f v2);
 /* |description|
 Calculates the distance between two points in 3D space (`from` and `to`), as well as the pitch and yaw angles that describe the direction from `from` to `to`. The results are stored in `dist`, `pitch`, and `yaw`
 |descriptionEnd| */
-void vec3f_get_dist_and_angle(Vec3f from, Vec3f to, f32 *dist, s16 *pitch, s16 *yaw);
+OPTIMIZE_O3 void vec3f_get_dist_and_angle(Vec3f from, Vec3f to, f32 *dist, s16 *pitch, s16 *yaw);
 
 /* |description|
 Positions the point `to` at a given `dist`, `pitch`, and `yaw` relative to the point `from`. This can be used to place objects around a reference point at specific angles and distances
 |descriptionEnd| */
-void vec3f_set_dist_and_angle(Vec3f from, Vec3f to, f32 dist, s16 pitch, s16 yaw);
+OPTIMIZE_O3 void vec3f_set_dist_and_angle(Vec3f from, Vec3f to, f32 dist, s16 pitch, s16 yaw);
+
+/* |description|
+Sets the values of the 3D floating-point vector `v` to 0. After this function, `v` will have values of 0.
+|descriptionEnd| */
+INLINE OPTIMIZE_O3 f32 *vec3f_zero(Vec3f v);
 
 /* |description|
 Converts a 3D floating-point vector `a` (Vec3f) into a 3D signed-integer vector and stores it in `dest`. After this operation, `dest` will contain the integer versions of `a`'s floating-point components
@@ -231,6 +239,11 @@ Subtracts the components of a 3D signed-integer vector `b` from the components o
 INLINE OPTIMIZE_O3 s16 *vec3s_sub(Vec3s dest, Vec3s a);
 
 /* |description|
+Sets the values of the 3D signed-integer vector `v` to 0. After this function, `v` will have values of 0.
+|descriptionEnd| */
+INLINE OPTIMIZE_O3 s16 *vec3s_zero(Vec3s v);
+
+/* |description|
 Converts a 3D signed-integer vector `a` (vec3s) into a 3D floating-point vector and stores it in `dest`. After this operation, `dest` will contain the floating-point equivalents of `a`'s integer components
 |descriptionEnd| */
 INLINE OPTIMIZE_O3 f32 *vec3s_to_vec3f(Vec3f dest, Vec3s a);
@@ -238,7 +251,7 @@ INLINE OPTIMIZE_O3 f32 *vec3s_to_vec3f(Vec3f dest, Vec3s a);
 /* |description|
 Determines a vector that is perpendicular (normal) to the plane defined by three given 3D floating-point points `a`, `b`, and `c`. The resulting perpendicular vector is stored in `dest`
 |descriptionEnd| */
-void *find_vector_perpendicular_to_plane(Vec3f dest, Vec3f a, Vec3f b, Vec3f c);
+OPTIMIZE_O3 f32 *find_vector_perpendicular_to_plane(Vec3f dest, Vec3f a, Vec3f b, Vec3f c);
 
 /* |description|
 Copies the 4x4 floating-point matrix `src` into `dest`. After this operation, `dest` contains the same matrix values as `src`
@@ -258,42 +271,42 @@ INLINE OPTIMIZE_O3 void mtxf_translate(Mat4 dest, Vec3f b);
 /* |description|
 Adjusts the 4x4 floating-point matrix `mtx` so that it represents a viewing transformation looking from the point `from` toward the point `to`, with a given roll angle. This creates a view matrix oriented toward `to`
 |descriptionEnd| */
-void mtxf_lookat(Mat4 mtx, Vec3f from, Vec3f to, s16 roll);
+OPTIMIZE_O3 void mtxf_lookat(Mat4 mtx, Vec3f from, Vec3f to, s16 roll);
 
 /* |description|
 Rotates `dest` according to the angles in `rotate` using ZXY order, and then translates it by the 3D floating-point vector `translate`. This effectively positions and orients `dest` in 3D space
 |descriptionEnd| */
-void mtxf_rotate_zxy_and_translate(Mat4 dest, Vec3f translate, Vec3s rotate);
+OPTIMIZE_O3 void mtxf_rotate_zxy_and_translate(Mat4 dest, Vec3f translate, Vec3s rotate);
 
 /* |description|
 Rotates `dest` using angles in XYZ order, and then translates it by the 3D floating-point vector `b` and applies the rotations described by `c`. This sets up `dest` with a specific orientation and position in space
 |descriptionEnd| */
-void mtxf_rotate_xyz_and_translate(Mat4 dest, Vec3f b, Vec3s c);
+OPTIMIZE_O3 void mtxf_rotate_xyz_and_translate(Mat4 dest, Vec3f b, Vec3s c);
 
 /* |description|
 Transforms a 4x4 floating-point matrix `mtx` into a "billboard" oriented toward the camera or a given direction. The billboard is placed at `position` and rotated by `angle`. This is useful for objects that should always face the viewer
 |descriptionEnd| */
-void mtxf_billboard(Mat4 dest, Mat4 mtx, Vec3f position, s16 angle);
+OPTIMIZE_O3 void mtxf_billboard(Mat4 dest, Mat4 mtx, Vec3f position, s16 angle);
 
 /* |description|
 Creates a "cylindrical billboard" transformation from the 4x4 matrix `mtx` placed at `position` with a given `angle`. Unlike a full billboard, this might allow rotation around one axis while still facing the viewer on others
 |descriptionEnd| */
-void mtxf_cylboard(Mat4 dest, Mat4 mtx, Vec3f position, s16 angle);
+OPTIMIZE_O3 void mtxf_cylboard(Mat4 dest, Mat4 mtx, Vec3f position, s16 angle);
 
 /* |description|
 Aligns `dest` so that it fits the orientation of a terrain surface defined by its normal vector `upDir`. The transformation is positioned at `pos` and oriented with a given `yaw`. This is often used to make objects sit naturally on uneven ground
 |descriptionEnd| */
-void mtxf_align_terrain_normal(Mat4 dest, Vec3f upDir, Vec3f pos, s16 yaw);
+OPTIMIZE_O3 void mtxf_align_terrain_normal(Mat4 dest, Vec3f upDir, Vec3f pos, s16 yaw);
 
 /* |description|
 Aligns `mtx` to fit onto a terrain triangle at `pos`, applying a given `yaw` and scaling by `radius`. This helps position objects so they match the orientation of the terrain's surface
 |descriptionEnd| */
-void mtxf_align_terrain_triangle(Mat4 mtx, Vec3f pos, s16 yaw, f32 radius);
+OPTIMIZE_O3 void mtxf_align_terrain_triangle(Mat4 mtx, Vec3f pos, s16 yaw, f32 radius);
 
 /* |description|
 Multiplies two 4x4 floating-point matrices `a` and `b` (in that order), storing the product in `dest`. This can be used for combining multiple transformations into one
 |descriptionEnd| */
-void mtxf_mul(Mat4 dest, Mat4 a, Mat4 b);
+OPTIMIZE_O3 void mtxf_mul(Mat4 dest, Mat4 a, Mat4 b);
 
 /* |description|
 Scales the 4x4 floating-point matrix `mtx` by the scaling factors found in the 3D floating-point vector `s`, and stores the result in `dest`. This enlarges or shrinks objects in 3D space
@@ -303,59 +316,65 @@ INLINE OPTIMIZE_O3 void mtxf_scale_vec3f(Mat4 dest, Mat4 mtx, Vec3f s);
 /* |description|
 Multiplies the 4x4 floating-point matrix `mtx` by a 3D signed-integer vector `b`, potentially interpreting `b` as angles or translations depending on usage, and modifies `mtx` accordingly
 |descriptionEnd| */
-s16 *mtxf_mul_vec3s(Mat4 mtx, Vec3s b);
+OPTIMIZE_O3 s16 *mtxf_mul_vec3s(Mat4 mtx, Vec3s b);
 
 /* |description|
 Converts the floating-point matrix `src` into a fixed-point (integer-based) matrix suitable for the `Mtx` format, and stores the result in `dest`
 |descriptionEnd| */
-void mtxf_to_mtx(Mtx *dest, Mat4 src);
+OPTIMIZE_O3 void mtxf_to_mtx(Mtx *dest, Mat4 src);
 
 /* |description|
 Rotates the matrix `mtx` in the XY plane by the given `angle`. Rotating in the XY plane typically means pivoting around the Z axis
 |descriptionEnd| */
-void mtxf_rotate_xy(Mtx *mtx, s16 angle);
+OPTIMIZE_O3 void mtxf_rotate_xy(Mtx *mtx, s16 angle);
 
 /* |description|
 Inverts the 4x4 floating-point matrix `src` and stores the inverse in `dest`. Applying the inverse transformation undoes whatever `src` did, returning points back to their original coordinate space
 |descriptionEnd| */
-void mtxf_inverse(Mat4 dest, Mat4 src);
+OPTIMIZE_O3 void mtxf_inverse(Mat4 dest, Mat4 src);
+
+/* |description|
+Sets the 4x4 floating-point matrix `mtx` to all zeros.
+Unless you really need this-It's reccomended to use mtxf_identity instead.
+|descriptionEnd| */
+INLINE OPTIMIZE_O3 void mtxf_zero(Mat4 mtx);
 
 /* |description|
 Extracts the position (translation component) from the transformation matrix `objMtx` relative to the coordinate system defined by `camMtx` and stores that 3D position in `dest`. This can be used to get the object's coordinates in camera space
 |descriptionEnd| */
-void get_pos_from_transform_mtx(Vec3f dest, Mat4 objMtx, Mat4 camMtx);
+OPTIMIZE_O3 f32 *get_pos_from_transform_mtx(Vec3f dest, Mat4 objMtx, Mat4 camMtx);
 
 /* |description|
 Gradually moves an integer `current` value toward a `target` value, increasing it by `inc` if it is too low, or decreasing it by `dec` if it is too high. This is often used for smooth transitions or animations
 |descriptionEnd| */
-s32 approach_s32(s32 current, s32 target, s32 inc, s32 dec);
+OPTIMIZE_O3 s32 approach_s32(s32 current, s32 target, s32 inc, s32 dec);
 
 /* |description|
 Similar to `approach_s32`, but operates on floating-point numbers. It moves `current` toward `target` by increasing it by `inc` if below target, or decreasing it by `dec` if above target, creating a smooth interpolation
 |descriptionEnd| */
-f32 approach_f32(f32 current, f32 target, f32 inc, f32 dec);
+OPTIMIZE_O3 f32 approach_f32(f32 current, f32 target, f32 inc, f32 dec);
 
 /* |description|
 Computes spline interpolation weights for a given parameter `t` and stores these weights in `result`. This is used in spline-based animations to find intermediate positions between keyframes
 |descriptionEnd| */
-void spline_get_weights(struct MarioState* m, Vec4f result, f32 t, UNUSED s32 c);
+OPTIMIZE_O3 void spline_get_weights(struct MarioState* m, Vec4f result, f32 t, UNUSED s32 c);
 
 /* |description|
 Initializes a spline-based animation for the `MarioState` structure `m` using the provided array of 3D signed-integer vectors `keyFrames`. This sets up the animation so that it can be advanced by polling
 |descriptionEnd| */
-void anim_spline_init(struct MarioState* m, Vec4s *keyFrames);
+OPTIMIZE_O3 void anim_spline_init(struct MarioState* m, Vec4s *keyFrames);
 
 /* |description|
 Advances the spline-based animation associated with `m` and stores the current interpolated position in `result`. It returns the animation's status, allowing the caller to determine if the animation is ongoing or has completed
 |descriptionEnd| */
-s32 anim_spline_poll(struct MarioState* m, Vec3f result);
+OPTIMIZE_O3 s32 anim_spline_poll(struct MarioState* m, Vec3f result);
 
 /* |description|
 Checks if `value` is zero. If not, it returns `value`. If it is zero, it returns the `replacement` value. This function ensures that a zero value can be substituted with a fallback value if needed
 |descriptionEnd| */
-f32 not_zero(f32 value, f32 replacement);
+OPTIMIZE_O3 f32 not_zero(f32 value, f32 replacement);
 
-#include "math_util.I"
+#include "math_util.inl"
 
 #endif // MATH_UTIL_H
 

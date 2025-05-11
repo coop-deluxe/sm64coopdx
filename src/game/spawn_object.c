@@ -291,10 +291,8 @@ struct Object *allocate_object(struct ObjectNode *objList) {
     obj->collidedObjInteractTypes = 0;
     obj->numCollidedObjs = 0;
 
-    for (s32 i = 0; i < OBJECT_NUM_FIELDS; i++) {
-        obj->OBJECT_FIELD_U32(i) = 0;
-        obj->OBJECT_FIELD_VPTR(i) = NULL;
-    }
+    memset(obj->rawData, 0, sizeof(obj->rawData));
+    memset(obj->ptrData, 0, sizeof(obj->ptrData));
 
     obj->unused1 = 0;
     obj->bhvStackIndex = 0;
