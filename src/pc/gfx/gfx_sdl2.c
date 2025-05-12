@@ -3,7 +3,6 @@
 #include <stdbool.h>
 #include <string.h>
 
-// Schutzklausel: Stelle sicher, dass SDL1 und SDL2 nicht gleichzeitig eingebunden werden
 #define DYNOS_SDL_INCLUDED
 #include <SDL2/SDL.h>
 

@@ -1,23 +1,18 @@
 #ifndef HAVE_SDL1
 #define STUB_ONLY
 
-// Wir brauchen den Header für die Struktur-Definition
 #include "gfx_window_manager_api.h"
 
-// Stub-Implementierung
 struct GfxWindowManagerAPI gfx_sdl1 = { 0 };
 
 #else
-// Original-Implementierung
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
 #include <string.h>
 
-// Schutzklausel: Stelle sicher, dass SDL2 und SDL1 nicht gleichzeitig eingebunden werden
 #define DYNOS_SDL_INCLUDED
 
-// Nur SDL1 Header importieren, nicht beide Versionen
 #include <SDL/SDL.h>
 
 #ifdef __MINGW32__

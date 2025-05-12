@@ -107,7 +107,6 @@ u8 gLuaVolumeEnv = 127;
 static struct AudioAPI *audio_api;
 struct GfxWindowManagerAPI *wm_api;
 
-// Definiere die API-Variablen
 struct GfxWindowManagerAPI* WAPI = NULL;
 struct GfxRenderingAPI* RAPI = NULL;
 const char* RAPI_NAME = "Dummy";
@@ -192,9 +191,7 @@ static void compute_fps(f64 curTime) {
     sDrawnFrames = 0;
 }
 
-// Funktion zur API-Auswahl
 static void select_api_implementations(void) {
-    // Window API
     if (strcmp(gCLIOpts.windowApi, "DXGI") == 0) {
         WAPI = &gfx_dxgi;
     } else if (strcmp(gCLIOpts.windowApi, "SDL1") == 0) {
@@ -208,7 +205,6 @@ static void select_api_implementations(void) {
         WAPI = &gfx_sdl2;
     }
 
-    // Render API
     if (strcmp(gCLIOpts.renderApi, "D3D11") == 0) {
         RAPI = &gfx_direct3d11_api;
         RAPI_NAME = "DirectX 11";
@@ -222,12 +218,10 @@ static void select_api_implementations(void) {
         RAPI = &gfx_dummy_renderer_api;
         RAPI_NAME = "Dummy";
     } else {
-        // Default zu OpenGL
         RAPI = &gfx_opengl_api;
         RAPI_NAME = "OpenGL";
     }
 
-    // Prüfe auf inkompatible API-Kombinationen
     if (strcmp(gCLIOpts.renderApi, "D3D11") == 0 && strcmp(gCLIOpts.windowApi, "DXGI") != 0) {
         fprintf(stderr, "DirectX 11 erfordert DXGI als Window-API\n");
         strcpy(gCLIOpts.windowApi, "DXGI");
@@ -254,7 +248,6 @@ static void select_api_implementations(void) {
         RAPI_NAME = "Dummy";
     }
 
-    // Headless-Modus
     if (gCLIOpts.headless) {
         strcpy(gCLIOpts.renderApi, "DUMMY");
         strcpy(gCLIOpts.windowApi, "DUMMY");
@@ -505,7 +498,6 @@ int main(int argc, char *argv[]) {
     // handle terminal arguments
     if (!parse_cli_opts(argc, argv)) { return 0; }
 
-    // Wähle die APIs basierend auf den CLI-Optionen
     select_api_implementations();
 
 #ifdef _WIN32
@@ -583,7 +575,6 @@ int main(int argc, char *argv[]) {
     if (gCLIOpts.headless) {
         audio_api = &audio_null;
     } else {
-        // Wähle Audio-API basierend auf den CLI-Optionen
         if (strcmp(gCLIOpts.audioApi, "SDL2") == 0) {
             if (audio_sdl2.init()) {
                 audio_api = &audio_sdl2;

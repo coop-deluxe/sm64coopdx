@@ -1,7 +1,6 @@
 #ifndef LOADING_HEADER
 #define LOADING_HEADER
 
-// Definiere LOADING_SCREEN_SUPPORTED wenn wir nicht im headless Modus sind
 #define LOADING_SCREEN_SUPPORTED
 
 #ifdef LOADING_SCREEN_SUPPORTED

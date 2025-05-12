@@ -393,7 +393,6 @@ static void sys_fatal_impl(const char *msg) {
 
 #else
 
-// Headless Plattform Implementierung
 #warning "You might want to implement these functions for your platform"
 
 const char *sys_user_path(void) {

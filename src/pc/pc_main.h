@@ -14,7 +14,6 @@ extern "C" {
 #include "gfx/gfx_sdl.h"
 #include "gfx/gfx_dummy.h"
 
-// Forward declare structures
 extern struct GfxWindowManagerAPI gfx_dxgi;
 extern struct GfxWindowManagerAPI gfx_sdl;
 extern struct GfxWindowManagerAPI gfx_dummy_wm_api;
@@ -23,7 +22,6 @@ extern struct GfxRenderingAPI gfx_opengl_api;
 extern struct GfxRenderingAPI gfx_direct3d11_api;
 extern struct GfxRenderingAPI gfx_dummy_renderer_api;
 
-// Runtime selected APIs
 extern struct GfxWindowManagerAPI* WAPI;
 extern struct GfxRenderingAPI* RAPI;
 extern const char* RAPI_NAME;

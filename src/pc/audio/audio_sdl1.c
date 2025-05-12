@@ -1,14 +1,11 @@
 #ifndef HAVE_SDL1
 #define STUB_ONLY
 
-// Wir brauchen den Header für die Struktur-Definition
 #include "audio_api.h"
 
-// Stub-Implementierung
 struct AudioAPI audio_sdl1 = { 0 };
 
 #else
-// Original-Implementierung
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
