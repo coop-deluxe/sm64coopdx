@@ -34,7 +34,8 @@ static void print_help(void) {
     printf("--no-discord              Disables discord integration.\n");
     printf("--disable-mods            Disables all mods that are already enabled.\n");
     printf("--enable-mod MODNAME      Enables a mod.\n");
-    printf("--headless                Enable Headless mode.");
+    printf("--headless                Enable Headless mode.\n");
+    printf("--directX                 Runs game using DirectX instead of OpenGL.");
 }
 
 static inline int arg_string(const char *name, const char *value, char *target, int maxLength) {
@@ -115,6 +116,8 @@ bool parse_cli_opts(int argc, char* argv[]) {
             gCLIOpts.enableMods[gCLIOpts.enabledModsCount - 1] = strdup(argv[++i]);
         } else if (!strcmp(argv[i], "--headless")) {
             gCLIOpts.headless = true;
+        } else if (!strcmp(argv[i], "--directX")) {
+            gCLIOpts.directX = true;
         } else if (!strcmp(argv[i], "--help")) {
             print_help();
             return false;

@@ -37,6 +37,7 @@ struct CLIOptions {
     int enabledModsCount;
     char** enableMods;
     bool headless;
+    bool directX;
 };
 
 extern struct CLIOptions gCLIOpts;
