@@ -61,6 +61,11 @@ bool parse_cli_opts(int argc, char* argv[]) {
     memset(&gCLIOpts, 0, sizeof(gCLIOpts));
     gCLIOpts.enableMods = NULL;
 
+    // Set default backend values
+    strncpy(gCLIOpts.renderApi, "GL", MAX_CONFIG_STRING);
+    strncpy(gCLIOpts.windowApi, "SDL2", MAX_CONFIG_STRING);
+    strncpy(gCLIOpts.audioApi, "SDL2", MAX_CONFIG_STRING);
+
     for (int i = 1; i < argc; i++) {
 #if defined(_WIN32) || defined(_WIN64)
         if (!strcmp(argv[i], "--console")) {
