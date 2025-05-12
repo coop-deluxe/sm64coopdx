@@ -47,6 +47,9 @@ struct LevelValues {
     u8 fixCollisionBugsFalseLedgeGrab;
     u8 fixCollisionBugsGroundPoundBonks;
     u8 fixCollisionBugsPickBestWall;
+    u8 fixCollisionBugsExposedCeilings;
+    u8 fixCollisionBugsFloorOvershadowing;
+    u8 fixCollisionBugsOnlyFirstWall;
     u8 fixVanishFloors;
     u8 fixInvalidShellRides;
     u8 hudCapTimer;

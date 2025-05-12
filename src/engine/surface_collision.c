@@ -392,7 +392,7 @@ static struct Surface *find_ceil_from_list(struct SurfaceNode *surfaceNode, s32 
     ceil = NULL;
 
     // set pheight to highest value
-    if (gLevelValues.fixCollisionBugs) {
+    if (gLevelValues.fixCollisionBugs && gLevelValues.fixCollisionBugsExposedCeilings) {
         *pheight = gLevelValues.cellHeightLimit;
     }
 
@@ -467,7 +467,7 @@ static struct Surface *find_ceil_from_list(struct SurfaceNode *surfaceNode, s32 
             height = -(x * nx + nz * z + oo) / ny;
 
             // Reject ceilings below previously found ceiling
-            if (gLevelValues.fixCollisionBugs && (height > *pheight)) {
+            if (gLevelValues.fixCollisionBugs && gLevelValues.fixCollisionBugsExposedCeilings && (height > *pheight)) {
                 continue;
             }
 
@@ -483,7 +483,7 @@ static struct Surface *find_ceil_from_list(struct SurfaceNode *surfaceNode, s32 
             *pheight = height;
             ceil = surf;
 
-            if (!gLevelValues.fixCollisionBugs) {
+            if (!gLevelValues.fixCollisionBugs && !gLevelValues.fixCollisionBugsExposedCeilings) {
                 break;
             }
         }
@@ -614,7 +614,7 @@ static struct Surface *find_floor_from_list(struct SurfaceNode *surfaceNode, s32
     s32 interpolate;
 
     // set pheight to lowest value
-    if (gLevelValues.fixCollisionBugs) {
+    if (gLevelValues.fixCollisionBugs && gLevelValues.fixCollisionBugsFloorOvershadowing) {
         *pheight = gLevelValues.floorLowerLimit;
     }
 
@@ -736,7 +736,7 @@ static struct Surface *find_floor_from_list(struct SurfaceNode *surfaceNode, s32
         height = -(x * nx + nz * z + oo) / ny;
 
         // Find highest floor
-        if (gLevelValues.fixCollisionBugs && (height < *pheight)) {
+        if (gLevelValues.fixCollisionBugs && gLevelValues.fixCollisionBugsFloorOvershadowing && (height < *pheight)) {
             continue;
         }
 
@@ -761,7 +761,7 @@ static struct Surface *find_floor_from_list(struct SurfaceNode *surfaceNode, s32
 
         floor = surf;
 
-        if (!gLevelValues.fixCollisionBugs) {
+        if (!gLevelValues.fixCollisionBugs && !gLevelValues.fixCollisionBugsFloorOvershadowing) {
             break;
         }
     }

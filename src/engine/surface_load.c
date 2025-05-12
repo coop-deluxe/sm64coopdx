@@ -112,7 +112,8 @@ static void add_surface_to_cell(s16 dynamic, s16 cellX, s16 cellZ, struct Surfac
     //  upperY would be a better sort method.
     //  <Fixed when gLevelValues.fixCollisionBugs != 0>
 
-    surfacePriority = gLevelValues.fixCollisionBugs
+    surfacePriority = (gLevelValues.fixCollisionBugs &&
+                        (gLevelValues.fixCollisionBugsExposedCeilings || gLevelValues.fixCollisionBugsFloorOvershadowing))
                     ? (surface->upperY * sortDir)
                     : (surface->vertex1[1] * sortDir);
 
