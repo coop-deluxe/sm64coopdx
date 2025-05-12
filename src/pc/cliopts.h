@@ -37,7 +37,9 @@ struct CLIOptions {
     int enabledModsCount;
     char** enableMods;
     bool headless;
-    bool directX;
+    char renderApi[MAX_CONFIG_STRING];
+    char windowApi[MAX_CONFIG_STRING];
+    char audioApi[MAX_CONFIG_STRING];
 };
 
 extern struct CLIOptions gCLIOpts;
