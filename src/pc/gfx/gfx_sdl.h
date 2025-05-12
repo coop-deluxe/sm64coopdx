@@ -3,6 +3,7 @@
 
 #include "gfx_window_manager_api.h"
 
-extern struct GfxWindowManagerAPI gfx_sdl;
+extern struct GfxWindowManagerAPI gfx_sdl1;
+extern struct GfxWindowManagerAPI gfx_sdl2;
 
 #endif

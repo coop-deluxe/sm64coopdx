@@ -1,9 +1,8 @@
 #ifndef LOADING_HEADER
 #define LOADING_HEADER
 
-#if !defined(WAPI_DUMMY)
+// Definiere LOADING_SCREEN_SUPPORTED wenn wir nicht im headless Modus sind
 #define LOADING_SCREEN_SUPPORTED
-#endif
 
 #ifdef LOADING_SCREEN_SUPPORTED
 
@@ -18,7 +17,7 @@ struct LoadingSegment {
 extern struct LoadingSegment gCurrLoadingSegment;
 
 #define LOADING_SCREEN_MUTEX(...) \
-    if (!gCLIOpts.hideLoadingScreen && gLoadingThread.state == RUNNING) { \
+    if (!gCLIOpts.hideLoadingScreen && !gCLIOpts.headless && gLoadingThread.state == RUNNING) { \
         pthread_mutex_lock(&gLoadingThread.mutex); \
         __VA_ARGS__; \
         pthread_mutex_unlock(&gLoadingThread.mutex); \

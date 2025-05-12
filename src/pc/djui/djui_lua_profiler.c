@@ -4,6 +4,7 @@
 #include "pc/pc_main.h"
 #include "pc/mods/mod.h"
 #include "pc/mods/mods.h"
+#include "../cliopts.h"
 
 #define MAX_PROFILED_MODS 16
 #define REFRESH_RATE 30
@@ -31,8 +32,8 @@ static u8 sPrfDisplayCount = 0;
 
 void lua_profiler_start_counter(UNUSED struct Mod *mod) {
     if (!configLuaProfiler || sPrfDisplay == NULL) { return; }
+    if (strcmp(gCLIOpts.windowApi, "DUMMY") == 0) { return; }
 
-#ifndef WAPI_DUMMY
     for (s32 i = 0; i != MIN(MAX_PROFILED_MODS, gActiveMods.entryCount); ++i) {
         if (gActiveMods.entries[i] == mod) {
             f64 freq = SDL_GetPerformanceFrequency();
@@ -41,13 +42,12 @@ void lua_profiler_start_counter(UNUSED struct Mod *mod) {
             return;
         }
     }
-#endif
 }
 
 void lua_profiler_stop_counter(UNUSED struct Mod *mod) {
     if (!configLuaProfiler || sPrfDisplay == NULL) { return; }
+    if (strcmp(gCLIOpts.windowApi, "DUMMY") == 0) { return; }
 
-#ifndef WAPI_DUMMY
     for (s32 i = 0; i != MIN(MAX_PROFILED_MODS, gActiveMods.entryCount); ++i) {
         if (gActiveMods.entries[i] == mod) {
             f64 freq = SDL_GetPerformanceFrequency();
@@ -59,7 +59,6 @@ void lua_profiler_stop_counter(UNUSED struct Mod *mod) {
             return;
         }
     }
-#endif
 }
 
 void djui_lua_profiler_initialize_entry(struct DjuiBase *base, struct DjuiPrfEntry *entry, f64 offset) {

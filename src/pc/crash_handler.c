@@ -3,7 +3,9 @@
 
 char gLastRemoteBhv[256] = "";
 
-#if (defined(_WIN32) || defined(__linux__)) && !defined(WAPI_DUMMY)
+#if (defined(_WIN32) || defined(__linux__))
+
+#include "cliopts.h"
 
 #ifdef HAVE_SDL2
 #include <SDL2/SDL.h>
@@ -656,21 +658,26 @@ static void crash_handler(const int signalNum, siginfo_t *info, UNUSED ucontext_
 
     // In case the game crashed before the game window opened
     if (!gGfxInited) {
-        gfx_init(&WAPI, &RAPI, TITLE);
-        WAPI.set_keyboard_callbacks(keyboard_on_key_down, keyboard_on_key_up, keyboard_on_all_keys_up,
+        gfx_init(WAPI, RAPI, TITLE);
+        WAPI->set_keyboard_callbacks(keyboard_on_key_down, keyboard_on_key_up, keyboard_on_all_keys_up,
             keyboard_on_text_input, keyboard_on_text_editing);
-        WAPI.set_scroll_callback(mouse_on_scroll);
+        WAPI->set_scroll_callback(mouse_on_scroll);
     }
     if (!gGameInited) djui_unicode_init();
 
     // Main loop
     while (true) {
-        WAPI.main_loop(crash_handler_produce_one_frame);
+        WAPI->main_loop(crash_handler_produce_one_frame);
     }
     exit(0);
 }
 
 AT_STARTUP static void init_crash_handler(void) {
+    // Skip crash handler if we're in headless mode
+    if (strcmp(gCLIOpts.windowApi, "DUMMY") == 0) {
+        return;
+    }
+    
 #ifdef _WIN32
     // Windows
     SetUnhandledExceptionFilter(crash_handler);

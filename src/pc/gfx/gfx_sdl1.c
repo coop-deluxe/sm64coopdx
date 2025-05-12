@@ -1,4 +1,24 @@
-#ifdef WAPI_SDL1
+#ifndef HAVE_SDL1
+#define STUB_ONLY
+
+// Wir brauchen den Header für die Struktur-Definition
+#include "gfx_window_manager_api.h"
+
+// Stub-Implementierung
+struct GfxWindowManagerAPI gfx_sdl1 = { 0 };
+
+#else
+// Original-Implementierung
+#include <stdlib.h>
+#include <stdio.h>
+#include <stdbool.h>
+#include <string.h>
+
+// Schutzklausel: Stelle sicher, dass SDL2 und SDL1 nicht gleichzeitig eingebunden werden
+#define DYNOS_SDL_INCLUDED
+
+// Nur SDL1 Header importieren, nicht beide Versionen
+#include <SDL/SDL.h>
 
 #ifdef __MINGW32__
 #define FOR_WINDOWS 1
@@ -10,12 +30,8 @@
 #include <windows.h>
 #endif
 
-#include <SDL/SDL.h>
-
-#include <stdio.h>
 #include <unistd.h>
 
-#include "gfx_window_manager_api.h"
 #include "gfx_screen_config.h"
 #include "../pc_main.h"
 #include "../configfile.h"
@@ -130,13 +146,21 @@ static void gfx_sdl_get_dimensions(uint32_t *width, uint32_t *height) {
 }
 
 static void gfx_sdl_onkeydown(int scancode) {
-    if (kb_key_down)
-        kb_key_down(translate_bind_to_name(scancode));
+    if (kb_key_down) {
+        const char* keyname = translate_bind_to_name(scancode);
+        if (keyname) {
+            kb_key_down(scancode);
+        }
+    }
 }
 
 static void gfx_sdl_onkeyup(int scancode) {
-    if (kb_key_up)
-        kb_key_up(translate_bind_to_name(scancode));
+    if (kb_key_up) {
+        const char* keyname = translate_bind_to_name(scancode);
+        if (keyname) {
+            kb_key_up(scancode);
+        }
+    }
 }
 
 static void gfx_sdl_handle_events(void) {
@@ -215,27 +239,110 @@ static char* gfx_sdl_get_clipboard_text(void) { return ""; }
 static void gfx_sdl_set_clipboard_text(UNUSED const char* text) { return; }
 static void gfx_sdl_set_cursor_visible(bool visible) { SDL_ShowCursor(visible ? SDL_ENABLE : SDL_DISABLE); }
 
-struct GfxWindowManagerAPI gfx_sdl = {
+// Wrapper-Funktionen für die korrekte Signatur
+static void gfx_sdl_main_loop_wrapper(void (*run_one_game_iter)(void)) {
+    gfx_sdl_main_loop(run_one_game_iter);
+}
+
+static bool gfx_sdl_start_frame_wrapper(void) {
+    return gfx_sdl_start_frame();
+}
+
+static void gfx_sdl_swap_buffers_begin_wrapper(void) {
+    gfx_sdl_swap_buffers_begin();
+}
+
+static void gfx_sdl_swap_buffers_end_wrapper(void) {
+    gfx_sdl_swap_buffers_end();
+}
+
+static double gfx_sdl_get_time_wrapper(void) {
+    return gfx_sdl_get_time();
+}
+
+static void gfx_sdl_shutdown_wrapper(void) {
+    gfx_sdl_shutdown();
+}
+
+static void gfx_sdl_set_keyboard_callbacks_wrapper(bool (*key_down)(int scancode), bool (*key_up)(int scancode), void (*all_keys_up)(void), void (*on_text_input)(char *text), void (*on_text_motion)(char *text, int count)) {
+    gfx_sdl_set_keyboard_callbacks(key_down, key_up, all_keys_up);
+}
+
+static void gfx_sdl_handle_events_wrapper(void) {
+    gfx_sdl_handle_events();
+}
+
+static void gfx_sdl_get_dimensions_wrapper(uint32_t *width, uint32_t *height) {
+    gfx_sdl_get_dimensions(width, height);
+}
+
+static void gfx_sdl_set_cursor_visible_wrapper(bool visible) {
+    gfx_sdl_set_cursor_visible(visible);
+}
+
+static void gfx_sdl_start_text_input_wrapper(void) {
+    gfx_sdl_start_text_input();
+}
+
+static void gfx_sdl_stop_text_input_wrapper(void) {
+    gfx_sdl_stop_text_input();
+}
+
+static char* gfx_sdl_get_clipboard_text_wrapper(void) {
+    return gfx_sdl_get_clipboard_text();
+}
+
+static void gfx_sdl_set_clipboard_text_wrapper(const char* text) {
+    gfx_sdl_set_clipboard_text(text);
+}
+
+static void gfx_sdl_delay_wrapper(uint32_t ms) {
+    gfx_sdl_delay(ms);
+}
+
+static int gfx_sdl_get_max_msaa_wrapper(void) {
+    return gfx_sdl_get_max_msaa();
+}
+
+static void gfx_sdl_set_window_title_wrapper(const char* title) {
+    gfx_sdl_set_window_title(title);
+}
+
+static void gfx_sdl_reset_window_title_wrapper(void) {
+    gfx_sdl_reset_window_title();
+}
+
+static bool gfx_sdl_has_focus_wrapper(void) {
+    return gfx_sdl_has_focus();
+}
+
+// Add a missing function for scroll callback
+static void gfx_sdl_set_scroll_callback(void (*on_scroll)(float, float)) {
+    // SDL1 doesn't support scroll callback, so do nothing
+}
+
+struct GfxWindowManagerAPI gfx_sdl1 = {
     gfx_sdl_init,
-    gfx_sdl_set_keyboard_callbacks,
-    gfx_sdl_main_loop,
-    gfx_sdl_get_dimensions,
-    gfx_sdl_handle_events,
-    gfx_sdl_start_frame,
-    gfx_sdl_swap_buffers_begin,
-    gfx_sdl_swap_buffers_end,
-    gfx_sdl_get_time,
-    gfx_sdl_shutdown,
-    gfx_sdl_start_text_input,
-    gfx_sdl_stop_text_input,
-    gfx_sdl_get_clipboard_text,
-    gfx_sdl_set_clipboard_text,
-    gfx_sdl_set_cursor_visible,
-    gfx_sdl_delay,
-    gfx_sdl_get_max_msaa,
-    gfx_sdl_set_window_title,
-    gfx_sdl_reset_window_title,
-    gfx_sdl_has_focus
+    gfx_sdl_set_keyboard_callbacks_wrapper,
+    gfx_sdl_set_scroll_callback,
+    gfx_sdl_main_loop_wrapper,
+    gfx_sdl_get_dimensions_wrapper,
+    gfx_sdl_handle_events_wrapper,
+    gfx_sdl_start_frame_wrapper,
+    gfx_sdl_swap_buffers_begin_wrapper,
+    gfx_sdl_swap_buffers_end_wrapper,
+    gfx_sdl_get_time_wrapper,
+    gfx_sdl_shutdown_wrapper,
+    gfx_sdl_start_text_input_wrapper,
+    gfx_sdl_stop_text_input_wrapper,
+    gfx_sdl_get_clipboard_text_wrapper,
+    gfx_sdl_set_clipboard_text_wrapper,
+    gfx_sdl_set_cursor_visible_wrapper,
+    gfx_sdl_delay_wrapper,
+    gfx_sdl_get_max_msaa_wrapper,
+    gfx_sdl_set_window_title_wrapper,
+    gfx_sdl_reset_window_title_wrapper,
+    gfx_sdl_has_focus_wrapper
 };
 
-#endif // BACKEND_WM
+#endif // HAVE_SDL1

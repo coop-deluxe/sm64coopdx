@@ -1,11 +1,21 @@
-#ifdef AAPI_SDL1
+#ifndef HAVE_SDL1
+#define STUB_ONLY
 
+// Wir brauchen den Header für die Struktur-Definition
+#include "audio_api.h"
+
+// Stub-Implementierung
+struct AudioAPI audio_sdl1 = { 0 };
+
+#else
+// Original-Implementierung
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <SDL/SDL.h>
 
-#include "audio_api.h"
+#include "../platform.h"
+#include "../configfile.h"
 
 #define SNDPACKETLEN (8 * 1024)
 
@@ -179,7 +189,7 @@ static void audio_sdl_shutdown(void)  {
     }
 }
 
-struct AudioAPI audio_sdl = {
+struct AudioAPI audio_sdl1 = {
     audio_sdl_init,
     audio_sdl_buffered,
     audio_sdl_get_desired_buffered,
@@ -187,4 +197,4 @@ struct AudioAPI audio_sdl = {
     audio_sdl_shutdown
 };
 
-#endif
+#endif // HAVE_SDL1

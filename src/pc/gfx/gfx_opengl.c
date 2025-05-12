@@ -1,7 +1,7 @@
-#ifdef RAPI_GL
-
 #include <stdint.h>
 #include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 #ifndef _LANGUAGE_C
 # define _LANGUAGE_C
@@ -765,5 +765,3 @@ struct GfxRenderingAPI gfx_opengl_api = {
     gfx_opengl_finish_render,
     gfx_opengl_shutdown
 };
-
-#endif // RAPI_GL

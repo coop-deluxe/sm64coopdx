@@ -1,5 +1,3 @@
-#ifdef WAPI_DXGI
-
 #include <stdint.h>
 #include <math.h>
 
@@ -417,9 +415,6 @@ static void gfx_dxgi_init(const char *window_title) {
 
     ShowWindow(dxgi.h_wnd, SW_SHOW);
     UpdateWindow(dxgi.h_wnd);
-    if (configWindow.fullscreen) {
-        ShowCursor(FALSE);
-    }
 
     // enable drag & drop
     DragAcceptFiles(dxgi.h_wnd, TRUE);
@@ -771,7 +766,15 @@ void gfx_dxgi_set_clipboard_text(const char* text) {
     CloseClipboard();
 }
 
-void gfx_dxgi_set_cursor_visible(bool visible) { ShowCursor(visible); }
+void gfx_dxgi_set_cursor_visible(bool visible) { 
+    // Einfache Implementierung, da Windows intern einen Zähler verwaltet
+    // und der Cursor dadurch manchmal falsch angezeigt wird
+    if (visible) {
+        while(ShowCursor(TRUE) < 0);
+    } else {
+        while(ShowCursor(FALSE) >= 0);
+    }
+}
 
 void ThrowIfFailed(HRESULT res) {
     if (FAILED(res)) {
@@ -813,5 +816,3 @@ struct GfxWindowManagerAPI gfx_dxgi = {
     gfx_dxgi_reset_window_title,
     gfx_dxgi_has_focus
 };
-
-#endif

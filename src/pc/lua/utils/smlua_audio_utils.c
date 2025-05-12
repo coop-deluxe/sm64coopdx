@@ -332,7 +332,7 @@ void audio_stream_destroy(struct ModAudio* audio) {
 void audio_stream_play(struct ModAudio* audio, bool restart, f32 volume) {
     if (!audio_sanity_check(audio, true, "play")) { return; }
     
-    if (configMuteFocusLoss && !WAPI.has_focus()) {
+    if (configMuteFocusLoss && !WAPI->has_focus()) {
         ma_sound_set_volume(&audio->sound, 0);
     } else {
         f32 musicVolume = (f32)configMusicVolume / 127.0f * (f32)gLuaVolumeLevel / 127.0f;
@@ -425,7 +425,7 @@ f32 audio_stream_get_volume(struct ModAudio* audio) {
 void audio_stream_set_volume(struct ModAudio* audio, f32 volume) {
     if (!audio_sanity_check(audio, true, "set stream volume for")) { return; }
     
-    if (configMuteFocusLoss && !WAPI.has_focus()) {
+    if (configMuteFocusLoss && !WAPI->has_focus()) {
         ma_sound_set_volume(&audio->sound, 0);
     } else {
         f32 musicVolume = (f32)configMusicVolume / 127.0f * (f32)gLuaVolumeLevel / 127.0f;
@@ -563,7 +563,7 @@ void audio_sample_play(struct ModAudio* audio, Vec3f position, f32 volume) {
         pan = (get_sound_pan(mtx[3][0] * factor, mtx[3][2] * factor) - 0.5f) * 2.0f;
     }
 
-    if (configMuteFocusLoss && !WAPI.has_focus()) {
+    if (configMuteFocusLoss && !WAPI->has_focus()) {
         ma_sound_set_volume(sound, 0);
     } else {
         f32 intensity = sound_get_level_intensity(dist);
@@ -584,10 +584,12 @@ void audio_custom_update_volume(void) {
     while (node) {
         struct DynamicPoolNode* prev = node->prev;
         struct ModAudio* audio = node->ptr;
-        if (configMuteFocusLoss && !WAPI.has_focus()) {
-            ma_sound_set_volume(&audio->sound, 0);
-        } else if (audio->isStream) {
-            ma_sound_set_volume(&audio->sound, gMasterVolume * musicVolume * audio->baseVolume);
+        if (audio->loaded) {
+            if (configMuteFocusLoss && !WAPI->has_focus()) {
+                ma_sound_set_volume(&audio->sound, 0);
+            } else if (audio->isStream) {
+                ma_sound_set_volume(&audio->sound, gMasterVolume * musicVolume * audio->baseVolume);
+            }
         }
         node = prev;
     }

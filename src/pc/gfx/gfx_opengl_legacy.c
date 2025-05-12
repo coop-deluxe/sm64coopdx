@@ -1,5 +1,3 @@
-#ifdef RAPI_GL_LEGACY
-
 #include <stdint.h>
 #include <stdbool.h>
 #include <assert.h>
@@ -564,7 +562,7 @@ static void gfx_opengl_finish_render(void) {
 static void gfx_opengl_shutdown(void) {
 }
 
-struct GfxRenderingAPI gfx_opengl_api = {
+struct GfxRenderingAPI gfx_opengl_legacy_api = {
     gfx_opengl_z_is_from_0_to_1,
     gfx_opengl_unload_shader,
     gfx_opengl_load_shader,
@@ -589,5 +587,3 @@ struct GfxRenderingAPI gfx_opengl_api = {
     gfx_opengl_finish_render,
     gfx_opengl_shutdown
 };
-
-#endif // RAPI_GL_LEGACY
