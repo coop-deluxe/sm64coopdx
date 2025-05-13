@@ -521,11 +521,11 @@ struct Mod* get_active_mod(void) {
 ///
 
 void set_window_title(const char* title) {
-    WAPI->set_window_title(title);
+    gWindowApi->set_window_title(title);
 }
 
 void reset_window_title(void) {
-    WAPI->reset_window_title();
+    gWindowApi->reset_window_title();
 }
 
 ///

@@ -282,7 +282,7 @@ static void crash_handler_add_version_str(CrashHandlerText** pTextP, f32 x, f32 
 #else
     crash_handler_add_info_str(&pText, x, y, "Release", SM64COOPDX_VERSION);
 #endif
-    crash_handler_add_info_str(&pText, x, y + 8, "Renderer", RAPI_NAME);
+    crash_handler_add_info_str(&pText, x, y + 8, "Renderer", renderApiName);
     *pTextP = pText;
 }
 
@@ -658,16 +658,16 @@ static void crash_handler(const int signalNum, siginfo_t *info, UNUSED ucontext_
 
     // In case the game crashed before the game window opened
     if (!gGfxInited) {
-        gfx_init(WAPI, RAPI, TITLE);
-        WAPI->set_keyboard_callbacks(keyboard_on_key_down, keyboard_on_key_up, keyboard_on_all_keys_up,
+        gfx_init(gWindowApi, gRenderApi, TITLE);
+        gWindowApi->set_keyboard_callbacks(keyboard_on_key_down, keyboard_on_key_up, keyboard_on_all_keys_up,
             keyboard_on_text_input, keyboard_on_text_editing);
-        WAPI->set_scroll_callback(mouse_on_scroll);
+        gWindowApi->set_scroll_callback(mouse_on_scroll);
     }
     if (!gGameInited) djui_unicode_init();
 
     // Main loop
     while (true) {
-        WAPI->main_loop(crash_handler_produce_one_frame);
+        gWindowApi->main_loop(crash_handler_produce_one_frame);
     }
     exit(0);
 }

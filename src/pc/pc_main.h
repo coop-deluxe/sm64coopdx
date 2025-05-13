@@ -22,9 +22,9 @@ extern struct GfxRenderingAPI gfx_opengl_api;
 extern struct GfxRenderingAPI gfx_direct3d11_api;
 extern struct GfxRenderingAPI gfx_dummy_renderer_api;
 
-extern struct GfxWindowManagerAPI* WAPI;
-extern struct GfxRenderingAPI* RAPI;
-extern const char* RAPI_NAME;
+extern struct GfxWindowManagerAPI* gWindowApi;
+extern struct GfxRenderingAPI* gRenderApi;
+extern const char* renderApiName;
 
 #ifdef GIT_HASH
 #define TITLE ({ char title[96] = ""; snprintf(title, 96, "%s %s, [%s]", WINDOW_NAME, get_version(), GIT_HASH); title; })
