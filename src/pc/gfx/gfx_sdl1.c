@@ -234,7 +234,7 @@ static char* gfx_sdl_get_clipboard_text(void) { return ""; }
 static void gfx_sdl_set_clipboard_text(UNUSED const char* text) { return; }
 static void gfx_sdl_set_cursor_visible(bool visible) { SDL_ShowCursor(visible ? SDL_ENABLE : SDL_DISABLE); }
 
-// Wrapper-Funktionen für die korrekte Signatur
+// Wrapper functions for the correct signature
 static void gfx_sdl_main_loop_wrapper(void (*run_one_game_iter)(void)) {
     gfx_sdl_main_loop(run_one_game_iter);
 }

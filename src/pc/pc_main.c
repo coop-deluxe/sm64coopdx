@@ -201,7 +201,7 @@ static void select_api_implementations(void) {
     } else if (strcmp(gCLIOpts.windowApi, "DUMMY") == 0) {
         WAPI = &gfx_dummy_wm_api;
     } else {
-        // Default zu SDL2
+        // Default to SDL2
         WAPI = &gfx_sdl2;
     }
 
@@ -223,26 +223,26 @@ static void select_api_implementations(void) {
     }
 
     if (strcmp(gCLIOpts.renderApi, "D3D11") == 0 && strcmp(gCLIOpts.windowApi, "DXGI") != 0) {
-        fprintf(stderr, "DirectX 11 erfordert DXGI als Window-API\n");
+        fprintf(stderr, "DirectX 11 requires DXGI as window API\n");
         strcpy(gCLIOpts.windowApi, "DXGI");
         WAPI = &gfx_dxgi;
     }
 
     if (strcmp(gCLIOpts.windowApi, "DXGI") == 0 && strcmp(gCLIOpts.renderApi, "D3D11") != 0) {
-        fprintf(stderr, "DXGI kann nur mit DirectX-Renderern verwendet werden\n");
+        fprintf(stderr, "DXGI can only be used with DirectX renderers\n");
         strcpy(gCLIOpts.renderApi, "D3D11");
         RAPI = &gfx_direct3d11_api;
         RAPI_NAME = "DirectX 11";
     }
 
     if (strcmp(gCLIOpts.renderApi, "DUMMY") == 0 && strcmp(gCLIOpts.windowApi, "DUMMY") != 0) {
-        fprintf(stderr, "Dummy-Renderer erfordert Dummy-Window-API\n");
+        fprintf(stderr, "Dummy renderer requires Dummy window API\n");
         strcpy(gCLIOpts.windowApi, "DUMMY");
         WAPI = &gfx_dummy_wm_api;
     }
 
     if (strcmp(gCLIOpts.windowApi, "DUMMY") == 0 && strcmp(gCLIOpts.renderApi, "DUMMY") != 0) {
-        fprintf(stderr, "Dummy-Window-API erfordert Dummy-Renderer\n");
+        fprintf(stderr, "Dummy window API requires Dummy renderer\n");
         strcpy(gCLIOpts.renderApi, "DUMMY");
         RAPI = &gfx_dummy_renderer_api;
         RAPI_NAME = "Dummy";
