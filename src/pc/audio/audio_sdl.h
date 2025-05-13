@@ -3,7 +3,6 @@
 
 #include "audio_api.h"
 
-extern struct AudioAPI audio_sdl1;
 extern struct AudioAPI audio_sdl2;
 
 #endif

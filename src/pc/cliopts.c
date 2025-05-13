@@ -35,9 +35,9 @@ static void print_help(void) {
     printf("--disable-mods                            Disables all mods that are already enabled.\n");
     printf("--enable-mod MODNAME                      Enables a mod.\n");
     printf("--headless                                Enable headless mode.\n");
-    printf("--render-api [GL|GL_LEGACY|D3D11|DUMMY]   Runs game using a specific render api.\n");
-    printf("--window-api [SDL1|SDL2|DXGI|DUMMY]       Runs game using a specific window api.\n");
-    printf("--audio-api [SDL1|SDL2|DUMMY]             Runs game using a specific audio api.");
+    printf("--render-api [GL|D3D11|DUMMY]             Runs game using a specific render api.\n");
+    printf("--window-api [SDL2|DXGI|DUMMY]            Runs game using a specific window api.\n");
+    printf("--audio-api [SDL2|DUMMY]                  Runs game using a specific audio api.");
 }
 
 static inline int arg_string(const char *name, const char *value, char *target, int maxLength) {

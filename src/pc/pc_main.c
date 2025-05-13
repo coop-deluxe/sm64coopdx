@@ -194,8 +194,6 @@ static void compute_fps(f64 curTime) {
 static void select_api_implementations(void) {
     if (strcmp(gCLIOpts.windowApi, "DXGI") == 0) {
         gWindowApi = &gfx_dxgi;
-    } else if (strcmp(gCLIOpts.windowApi, "SDL1") == 0) {
-        gWindowApi = &gfx_sdl1;
     } else if (strcmp(gCLIOpts.windowApi, "SDL2") == 0) {
         gWindowApi = &gfx_sdl2;
     } else if (strcmp(gCLIOpts.windowApi, "DUMMY") == 0) {
@@ -211,9 +209,6 @@ static void select_api_implementations(void) {
     } else if (strcmp(gCLIOpts.renderApi, "GL") == 0) {
         gRenderApi = &gfx_opengl_api;
         renderApiName = "OpenGL";
-    } else if (strcmp(gCLIOpts.renderApi, "GL_LEGACY") == 0) {
-        gRenderApi = &gfx_opengl_legacy_api;
-        renderApiName = "OpenGL Legacy";
     } else if (strcmp(gCLIOpts.renderApi, "DUMMY") == 0) {
         gRenderApi = &gfx_dummy_renderer_api;
         renderApiName = "Dummy";
@@ -578,12 +573,6 @@ int main(int argc, char *argv[]) {
         if (strcmp(gCLIOpts.audioApi, "SDL2") == 0) {
             if (audio_sdl2.init()) {
                 audio_api = &audio_sdl2;
-            } else {
-                audio_api = &audio_null;
-            }
-        } else if (strcmp(gCLIOpts.audioApi, "SDL1") == 0) {
-            if (audio_sdl1.init()) {
-                audio_api = &audio_sdl1;
             } else {
                 audio_api = &audio_null;
             }
