@@ -62,9 +62,9 @@ bool parse_cli_opts(int argc, char* argv[]) {
     gCLIOpts.enableMods = NULL;
 
     // Set default backend values
-    strncpy(gCLIOpts.renderApi, "GL", MAX_CONFIG_STRING);
-    strncpy(gCLIOpts.windowApi, "SDL2", MAX_CONFIG_STRING);
-    strncpy(gCLIOpts.audioApi, "SDL2", MAX_CONFIG_STRING);
+    gCLIOpts.renderApi = RENDER_API_GL;
+    gCLIOpts.windowApi = WINDOW_API_SDL2;
+    gCLIOpts.audioApi = AUDIO_API_SDL2;
 
     for (int i = 1; i < argc; i++) {
 #if defined(_WIN32) || defined(_WIN64)
@@ -123,12 +123,40 @@ bool parse_cli_opts(int argc, char* argv[]) {
             gCLIOpts.enableMods[gCLIOpts.enabledModsCount - 1] = strdup(argv[++i]);
         } else if (!strcmp(argv[i], "--headless")) {
             gCLIOpts.headless = true;
-        } else if (!strcmp(argv[i], "--render-api") && (i + 1) < argc) {
-            arg_string("--render-api <renderapi>", argv[++i], gCLIOpts.renderApi, MAX_CONFIG_STRING);
-        } else if (!strcmp(argv[i], "--window-api") && (i + 1) < argc) {
-            arg_string("--window-api <windowapi>", argv[++i], gCLIOpts.windowApi, MAX_CONFIG_STRING);
-        } else if (!strcmp(argv[i], "--audio-api") && (i + 1) < argc) {
-            arg_string("--audio-api <audioapi>", argv[++i], gCLIOpts.audioApi, MAX_CONFIG_STRING);
+        } else if (strcmp(argv[i], "--render-api") == 0 && (i + 1)< argc) {
+            printf("Render Api: %s\n", argv[i+1]);
+            if (strcmp(argv[i+1], "GL") == 0) {
+                gCLIOpts.renderApi = RENDER_API_GL;
+            } else if (strcmp(argv[i+1], "D3D11") == 0) {
+                gCLIOpts.renderApi = RENDER_API_D3D11;
+            } else if (strcmp(argv[i+1], "DUMMY") == 0) {
+                gCLIOpts.renderApi = RENDER_API_DUMMY;
+            } else {
+                fprintf(stderr, "Unknown rendering API: %s\n", argv[i+1]);
+            }
+            i++;
+        } else if (strcmp(argv[i], "--window-api") == 0 && (i + 1) < argc) {
+            printf("Window Api: %s\n", argv[i+1]);
+            if (strcmp(argv[i+1], "SDL2") == 0) {
+                gCLIOpts.windowApi = WINDOW_API_SDL2;
+            } else if (strcmp(argv[i+1], "DXGI") == 0) {
+                gCLIOpts.windowApi = WINDOW_API_DXGI;
+            } else if (strcmp(argv[i+1], "DUMMY") == 0) {
+                gCLIOpts.windowApi = WINDOW_API_DUMMY;
+            } else {
+                fprintf(stderr, "Unknown window API: %s\n", argv[i+1]);
+            }
+            i++;
+        } else if (strcmp(argv[i], "--audio-api") == 0 && (i + 1) < argc) {
+            printf("Audio Api: %s\n", argv[i+1]);
+            if (strcmp(argv[i+1], "SDL2") == 0) {
+                gCLIOpts.audioApi = AUDIO_API_SDL2;
+            } else if (strcmp(argv[i+1], "DUMMY") == 0) {
+                gCLIOpts.audioApi = AUDIO_API_DUMMY;
+            } else {
+                fprintf(stderr, "Unknown audio API: %s\n", argv[i+1]);
+            }
+            i++;
         } else if (!strcmp(argv[i], "--help")) {
             print_help();
             return false;

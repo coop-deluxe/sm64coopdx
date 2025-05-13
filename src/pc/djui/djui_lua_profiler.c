@@ -32,7 +32,7 @@ static u8 sPrfDisplayCount = 0;
 
 void lua_profiler_start_counter(UNUSED struct Mod *mod) {
     if (!configLuaProfiler || sPrfDisplay == NULL) { return; }
-    if (strcmp(gCLIOpts.windowApi, "DUMMY") == 0) { return; }
+    if (gCLIOpts.windowApi == WINDOW_API_DUMMY) { return; }
 
     for (s32 i = 0; i != MIN(MAX_PROFILED_MODS, gActiveMods.entryCount); ++i) {
         if (gActiveMods.entries[i] == mod) {
@@ -46,7 +46,7 @@ void lua_profiler_start_counter(UNUSED struct Mod *mod) {
 
 void lua_profiler_stop_counter(UNUSED struct Mod *mod) {
     if (!configLuaProfiler || sPrfDisplay == NULL) { return; }
-    if (strcmp(gCLIOpts.windowApi, "DUMMY") == 0) { return; }
+    if (gCLIOpts.windowApi == WINDOW_API_DUMMY) { return; }
 
     for (s32 i = 0; i != MIN(MAX_PROFILED_MODS, gActiveMods.entryCount); ++i) {
         if (gActiveMods.entries[i] == mod) {

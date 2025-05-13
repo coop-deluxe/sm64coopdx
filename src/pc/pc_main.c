@@ -192,64 +192,66 @@ static void compute_fps(f64 curTime) {
 }
 
 static void select_api_implementations(void) {
-    if (strcmp(gCLIOpts.windowApi, "DXGI") == 0) {
+    if (gCLIOpts.windowApi == WINDOW_API_DXGI) {
         gWindowApi = &gfx_dxgi;
-    } else if (strcmp(gCLIOpts.windowApi, "SDL2") == 0) {
+    } else if (gCLIOpts.windowApi == WINDOW_API_SDL2) {
         gWindowApi = &gfx_sdl2;
-    } else if (strcmp(gCLIOpts.windowApi, "DUMMY") == 0) {
+    } else if (gCLIOpts.windowApi == WINDOW_API_DUMMY) {
         gWindowApi = &gfx_dummy_wm_api;
     } else {
-        // Default to SDL2
+        // Default zu SDL2
         gWindowApi = &gfx_sdl2;
     }
 
-    if (strcmp(gCLIOpts.renderApi, "D3D11") == 0) {
+    if (gCLIOpts.renderApi == RENDER_API_D3D11) {
         gRenderApi = &gfx_direct3d11_api;
         renderApiName = "DirectX 11";
-    } else if (strcmp(gCLIOpts.renderApi, "GL") == 0) {
+    } else if (gCLIOpts.renderApi == RENDER_API_GL) {
         gRenderApi = &gfx_opengl_api;
         renderApiName = "OpenGL";
-    } else if (strcmp(gCLIOpts.renderApi, "DUMMY") == 0) {
+    } else if (gCLIOpts.renderApi == RENDER_API_DUMMY) {
         gRenderApi = &gfx_dummy_renderer_api;
         renderApiName = "Dummy";
     } else {
+        // Default zu GL
         gRenderApi = &gfx_opengl_api;
         renderApiName = "OpenGL";
     }
 
-    if (strcmp(gCLIOpts.renderApi, "D3D11") == 0 && strcmp(gCLIOpts.windowApi, "DXGI") != 0) {
+    if (gCLIOpts.renderApi == RENDER_API_D3D11 && gCLIOpts.windowApi != WINDOW_API_DXGI) {
         fprintf(stderr, "DirectX 11 requires DXGI as window API\n");
-        strcpy(gCLIOpts.windowApi, "DXGI");
+        gCLIOpts.windowApi = WINDOW_API_DXGI;
         gWindowApi = &gfx_dxgi;
     }
 
-    if (strcmp(gCLIOpts.windowApi, "DXGI") == 0 && strcmp(gCLIOpts.renderApi, "D3D11") != 0) {
+    if (gCLIOpts.windowApi == WINDOW_API_DXGI && gCLIOpts.renderApi != RENDER_API_D3D11) {
         fprintf(stderr, "DXGI can only be used with DirectX renderers\n");
-        strcpy(gCLIOpts.renderApi, "D3D11");
+        gCLIOpts.renderApi = RENDER_API_D3D11;
         gRenderApi = &gfx_direct3d11_api;
         renderApiName = "DirectX 11";
     }
 
-    if (strcmp(gCLIOpts.renderApi, "DUMMY") == 0 && strcmp(gCLIOpts.windowApi, "DUMMY") != 0) {
+    if (gCLIOpts.renderApi == RENDER_API_DUMMY && gCLIOpts.windowApi != WINDOW_API_DUMMY) {
         fprintf(stderr, "Dummy renderer requires Dummy window API\n");
-        strcpy(gCLIOpts.windowApi, "DUMMY");
+        gCLIOpts.windowApi = WINDOW_API_DUMMY;
         gWindowApi = &gfx_dummy_wm_api;
     }
 
-    if (strcmp(gCLIOpts.windowApi, "DUMMY") == 0 && strcmp(gCLIOpts.renderApi, "DUMMY") != 0) {
+    if (gCLIOpts.windowApi == WINDOW_API_DUMMY && gCLIOpts.renderApi != RENDER_API_DUMMY) {
         fprintf(stderr, "Dummy window API requires Dummy renderer\n");
-        strcpy(gCLIOpts.renderApi, "DUMMY");
+        gCLIOpts.renderApi = RENDER_API_DUMMY;
         gRenderApi = &gfx_dummy_renderer_api;
         renderApiName = "Dummy";
     }
 
     if (gCLIOpts.headless) {
-        strcpy(gCLIOpts.renderApi, "DUMMY");
-        strcpy(gCLIOpts.windowApi, "DUMMY");
-        strcpy(gCLIOpts.audioApi, "DUMMY");
+        gCLIOpts.renderApi = RENDER_API_DUMMY;
+        gCLIOpts.windowApi = WINDOW_API_DUMMY;
+        gCLIOpts.audioApi = AUDIO_API_DUMMY;
         gWindowApi = &gfx_dummy_wm_api;
         gRenderApi = &gfx_dummy_renderer_api;
         renderApiName = "Dummy";
+        audio_api = &audio_null;
     }
 
     wm_api = gWindowApi;
@@ -570,7 +572,7 @@ int main(int argc, char *argv[]) {
     if (gCLIOpts.headless) {
         audio_api = &audio_null;
     } else {
-        if (strcmp(gCLIOpts.audioApi, "SDL2") == 0) {
+        if (gCLIOpts.audioApi == AUDIO_API_SDL2) {
             if (audio_sdl2.init()) {
                 audio_api = &audio_sdl2;
             } else {
