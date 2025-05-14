@@ -294,7 +294,7 @@ static void sys_fatal_impl(const char *msg) {
 
 #elif defined(HAVE_SDL2)
 
-// we can just ask SDL for most of this shit if we have it
+// we can just ask SDL for most of this stuff if we have it
 #include <SDL2/SDL.h>
 
 const char *sys_user_path(void) {

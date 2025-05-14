@@ -180,7 +180,7 @@ static void gfx_opengl_apply_shader(struct ShaderProgram *prg) {
     if (prg->num_inputs) {
         // have colors
         // TODO: more than one color (maybe glSecondaryColorPointer?)
-        // HACK: if there's a texture and two colors, one of them is likely for speculars or some shit (see mario head)
+        // HACK: if there's a texture and two colors, one of them is likely for speculars or something else (see mario head)
         //       if there's two colors but no texture, the real color is likely the second one
         // HACKHACK: alpha is 0 in the transition shader (0x01A00045), maybe figure out the flags instead
         const int vlen = (prg->cc.cm.use_alpha /*&& prg->shader_id != 0x01A00045*/) ? 4 : 3;

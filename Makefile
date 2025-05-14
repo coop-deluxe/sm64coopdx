@@ -264,7 +264,7 @@ endif
 # Including an option to disable it.
 
 # Level 0 produces no debug information at all. Thus, -g0 negates -g.
-# Level 1 produces minimal information, enough for making backtraces in parts of the program that you don’t plan to debug. This includes descriptions of functions and external variables, and line number tables, but no information about local variables.
+# Level 1 produces minimal information, enough for making backtraces in parts of the program that you don't plan to debug. This includes descriptions of functions and external variables, and line number tables, but no information about local variables.
 # Level 3 includes extra information, such as all the macro definitions present in the program. Some debuggers support macro expansion when you use -g3.
 # From https://gcc.gnu.org/onlinedocs/gcc/Debugging-Options.html
 ifeq ($(DEBUG_INFO_LEVEL),3)
@@ -807,7 +807,7 @@ ifeq ($(SDL1_USED)$(SDL2_USED),11)
   $(error Cannot link both SDL1 and SDL2 at the same time)
 endif
 
-# SDL can be used by different systems, so we consolidate all of that shit into this
+# SDL can be used by different systems, so we consolidate all of that stuff into this
 
 ifeq ($(SDL2_USED),1)
   SDLCONFIG := $(CROSS)sdl2-config

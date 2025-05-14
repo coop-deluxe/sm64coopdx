@@ -48,7 +48,7 @@
 #define GL_MAX_SAMPLES 0x8D57
 #endif
 
-// TODO: figure out if this shit even works
+// TODO: figure out if this stuff even works
 #ifdef VERSION_EU
 # define FRAMERATE 25
 #else

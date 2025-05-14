@@ -25,7 +25,7 @@
 #include "pc/controller/controller_keyboard.h"
 #include "pc/controller/controller_bind_mapping.h"
 
-// TODO: figure out if this shit even works
+// TODO: figure out if this stuff even works
 #ifdef VERSION_EU
 # define FRAMERATE 25
 #else
