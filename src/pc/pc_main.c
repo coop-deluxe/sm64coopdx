@@ -105,7 +105,6 @@ u8 gLuaVolumeSfx = 127;
 u8 gLuaVolumeEnv = 127;
 
 static struct AudioAPI *audio_api;
-struct GfxWindowManagerAPI *wm_api;
 
 struct GfxWindowManagerAPI* gWindowApi = NULL;
 struct GfxRenderingAPI* gRenderApi = NULL;
@@ -192,6 +191,17 @@ static void compute_fps(f64 curTime) {
 }
 
 static void select_api_implementations(void) {
+    if (gCLIOpts.headless) {
+        gCLIOpts.renderApi = RENDER_API_DUMMY;
+        gCLIOpts.windowApi = WINDOW_API_DUMMY;
+        gCLIOpts.audioApi = AUDIO_API_DUMMY;
+        gWindowApi = &gfx_dummy_wm_api;
+        gRenderApi = &gfx_dummy_renderer_api;
+        renderApiName = "Dummy";
+        audio_api = &audio_null;
+        return;
+    }
+
     if (gCLIOpts.windowApi == WINDOW_API_DXGI) {
         gWindowApi = &gfx_dxgi;
     } else if (gCLIOpts.windowApi == WINDOW_API_SDL2) {
@@ -199,7 +209,7 @@ static void select_api_implementations(void) {
     } else if (gCLIOpts.windowApi == WINDOW_API_DUMMY) {
         gWindowApi = &gfx_dummy_wm_api;
     } else {
-        // Default zu SDL2
+        // Default to SDL2
         gWindowApi = &gfx_sdl2;
     }
 
@@ -213,48 +223,36 @@ static void select_api_implementations(void) {
         gRenderApi = &gfx_dummy_renderer_api;
         renderApiName = "Dummy";
     } else {
-        // Default zu GL
+        // Default to GL
         gRenderApi = &gfx_opengl_api;
         renderApiName = "OpenGL";
     }
 
     if (gCLIOpts.renderApi == RENDER_API_D3D11 && gCLIOpts.windowApi != WINDOW_API_DXGI) {
-        fprintf(stderr, "DirectX 11 requires DXGI as window API\n");
+        fprintf(stderr, "Render api D3D11 requires DXGI as window api, forcing window api to DXGI.\n");
         gCLIOpts.windowApi = WINDOW_API_DXGI;
         gWindowApi = &gfx_dxgi;
     }
 
     if (gCLIOpts.windowApi == WINDOW_API_DXGI && gCLIOpts.renderApi != RENDER_API_D3D11) {
-        fprintf(stderr, "DXGI can only be used with DirectX renderers\n");
+        fprintf(stderr, "Window api DXGI requires D3D11 as render api, forcing render api to D3D11.\n");
         gCLIOpts.renderApi = RENDER_API_D3D11;
         gRenderApi = &gfx_direct3d11_api;
         renderApiName = "DirectX 11";
     }
 
     if (gCLIOpts.renderApi == RENDER_API_DUMMY && gCLIOpts.windowApi != WINDOW_API_DUMMY) {
-        fprintf(stderr, "Dummy renderer requires Dummy window API\n");
+        fprintf(stderr, "Render api DUMMY requires DUMMY as window api, forcing window api to D3D11.\n");
         gCLIOpts.windowApi = WINDOW_API_DUMMY;
         gWindowApi = &gfx_dummy_wm_api;
     }
 
     if (gCLIOpts.windowApi == WINDOW_API_DUMMY && gCLIOpts.renderApi != RENDER_API_DUMMY) {
-        fprintf(stderr, "Dummy window API requires Dummy renderer\n");
+        fprintf(stderr, "Window api DUMMY requires DUMMY as render api, forcing render api to DUMMY.\n");
         gCLIOpts.renderApi = RENDER_API_DUMMY;
         gRenderApi = &gfx_dummy_renderer_api;
         renderApiName = "Dummy";
     }
-
-    if (gCLIOpts.headless) {
-        gCLIOpts.renderApi = RENDER_API_DUMMY;
-        gCLIOpts.windowApi = WINDOW_API_DUMMY;
-        gCLIOpts.audioApi = AUDIO_API_DUMMY;
-        gWindowApi = &gfx_dummy_wm_api;
-        gRenderApi = &gfx_dummy_renderer_api;
-        renderApiName = "Dummy";
-        audio_api = &audio_null;
-    }
-
-    wm_api = gWindowApi;
 }
 
 static s32 get_num_frames_to_draw(f64 t) {
@@ -519,11 +517,6 @@ int main(int argc, char *argv[]) {
     fs_init(gCLIOpts.savePath[0] ? gCLIOpts.savePath : sys_user_path());
 #endif
 
-    if (gCLIOpts.headless) {
-        gWindowApi = &gfx_dummy_wm_api;
-        gRenderApi = &gfx_dummy_renderer_api;
-    }
-
     configfile_load();
 
     legacy_folder_handler();
@@ -569,18 +562,10 @@ int main(int argc, char *argv[]) {
     thread5_game_loop(NULL);
 
     // initialize sound outside threads
-    if (gCLIOpts.headless) {
-        audio_api = &audio_null;
+    if (!gCLIOpts.headless && gCLIOpts.audioApi == AUDIO_API_SDL2 && audio_sdl2.init()) {
+        audio_api = &audio_sdl2;
     } else {
-        if (gCLIOpts.audioApi == AUDIO_API_SDL2) {
-            if (audio_sdl2.init()) {
-                audio_api = &audio_sdl2;
-            } else {
-                audio_api = &audio_null;
-            }
-        } else {
-            audio_api = &audio_null;
-        }
+        audio_api = &audio_null;
     }
 
     // Initialize the audio thread if possible.
