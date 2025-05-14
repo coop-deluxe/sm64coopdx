@@ -673,11 +673,6 @@ static void crash_handler(const int signalNum, siginfo_t *info, UNUSED ucontext_
 }
 
 AT_STARTUP static void init_crash_handler(void) {
-    // Skip crash handler if we're in headless mode
-    if (gCLIOpts.windowApi == WINDOW_API_DUMMY) {
-        return;
-    }
-    
 #ifdef _WIN32
     // Windows
     SetUnhandledExceptionFilter(crash_handler);
