@@ -6,6 +6,7 @@ import re
 import struct
 import subprocess
 import sys
+import zlib
 
 TYPE_CTL = 1
 TYPE_TBL = 2
@@ -747,23 +748,38 @@ def serialize_seqfile(
         for index in entry_list:
             table.append(pack("P", entry_offsets[index] + data_start))
             table.append(pack("IX", entry_lens[index]))
-        with open(out_filename, "wb") as f:
-            f.write(ser.finish())
+
+        data = ser.finish()
+        compress = False
 
         if out_filename.endswith('sound_data.tbl'):
-            out_offsets_filename = out_filename.replace('sound_data.tbl', 'samples_offsets.inc.c')
+            out_offsets_filename = 'sound/samples_offsets.h'
             with open(out_offsets_filename, "w") as f:
                 for fname in asset_offsets:
                     macro_name = 'SAMPLE_' + fname.split('/samples/')[-1].replace('/', '_').replace('.', '_').replace('-', '_')
                     f.write(f'#define {macro_name} {hex(asset_offsets[fname] + data_start)} // {fname}\n')
+            out_filename = 'sound/sound_data_compressed.tbl'
+            compress = True
 
         if out_filename.endswith('sequences.bin'):
-            out_offsets_filename = out_filename.replace('sequences.bin', 'sequences_offsets.inc.c')
+            out_offsets_filename = 'sound/sequences_offsets.h'
             with open(out_offsets_filename, "w") as f:
                 for fname in asset_offsets:
                     macro_name = 'SEQUENCE_' + fname.split('/sequences/')[-1].replace('/', '_').replace('.', '_').replace('-', '_')
                     f.write(f'#define {macro_name} {hex(asset_offsets[fname] + data_start)} // {fname}\n')
+            data = data[:entry_offsets[1] + data_start] # remove the fake data
+            out_filename = 'sound/sequences_compressed.bin'
+            compress = True
 
+        if out_filename.endswith('sound_data.ctl'):
+            out_filename = 'sound/sound_data_compressed.ctl'
+            compress = True
+
+        with open(out_filename, "wb") as f:
+            if compress:
+                f.write(zlib.compress(data))
+            else:
+                f.write(data)
 
 def validate_and_normalize_sequence_json(json, bank_names, defines):
     validate(isinstance(json, dict), "must have a top-level object")
@@ -899,6 +915,8 @@ def write_sequences(
         extra_padding=False,
     )
 
+    compress = True
+    out_bank_sets = 'sound/bank_sets_compressed'
     with open(out_bank_sets, "wb") as f:
         ser = ReserveSerializer()
         table = ser.reserve(len(ind_to_name) * 2)
@@ -909,8 +927,11 @@ def write_sequences(
             for bank in bank_set[::-1]:
                 ser.add(bytes([bank_names.index(bank)]))
         ser.align(16)
-        f.write(ser.finish())
-
+        data = ser.finish()
+        if compress:
+            f.write(zlib.compress(data))
+        else:
+            f.write(data)
 
 def main():
     global STACK_TRACES

@@ -17,6 +17,7 @@
 #include "save_file.h"
 #include "print.h"
 #include "hardcoded.h"
+#include "bettercamera.h"
 #include "pc/configfile.h"
 #include "pc/network/network.h"
 #include "pc/utils/misc.h"
@@ -560,6 +561,15 @@ void render_hud_camera_status(void) {
 
     if (sCameraHUD.status == CAM_STATUS_NONE) {
         return;
+    }
+
+    if (gLakituState.mode == CAMERA_MODE_NEWCAM) {
+        sCameraHUD.status = gNewCamera.directionLocked ? CAM_STATUS_FIXED : CAM_STATUS_LAKITU;
+        switch (gNewCamera.distanceTargetIndex) {
+            case 0: sCameraHUD.status |= CAM_STATUS_C_UP; break;
+            case 1: break;
+            case 2: sCameraHUD.status |= CAM_STATUS_C_DOWN; break;
+        }
     }
 
     gSPDisplayList(gDisplayListHead++, dl_hud_img_begin);

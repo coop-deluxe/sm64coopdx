@@ -94,6 +94,16 @@ f32 djui_hud_get_raw_mouse_x(void);
 f32 djui_hud_get_raw_mouse_y(void);
 /* |description|Sets if the cursor is hidden and constrainted to the window|descriptionEnd| */
 void djui_hud_set_mouse_locked(bool locked);
+/* |description|Returns the flags of the mouse buttons held down|descriptionEnd| */
+u8 djui_hud_get_mouse_buttons_down(void);
+/* |description|Returns the flags of the mouse buttons clicked|descriptionEnd| */
+u8 djui_hud_get_mouse_buttons_pressed(void);
+/* |description|Returns the flags of the mouse buttons released|descriptionEnd| */
+u8 djui_hud_get_mouse_buttons_released(void);
+/* |description|Returns the amount scrolled horizontally (-left/right+)|descriptionEnd| */
+f32 djui_hud_get_mouse_scroll_x(void);
+/* |description|Returns the amount scrolled vertically (-down/up+)|descriptionEnd| */
+f32 djui_hud_get_mouse_scroll_y(void);
 
 /* |description|Measures the length of `message` in the current font|descriptionEnd| */
 f32 djui_hud_measure_text(const char* message);

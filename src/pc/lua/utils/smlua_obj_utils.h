@@ -20,11 +20,32 @@ struct Object* spawn_non_sync_object(enum BehaviorId behaviorId, enum ModelExten
 s32 obj_has_behavior_id(struct Object *o, enum BehaviorId behaviorId);
 /* |description|Checks if an object's model is equal to `modelId`|descriptionEnd| */
 s32 obj_has_model_extended(struct Object *o, enum ModelExtendedId modelId);
+/* |description|Returns an object's extended model id|descriptionEnd| */
+enum ModelExtendedId obj_get_model_id_extended(struct Object *o);
 /* |description|Sets an object's model to `modelId`|descriptionEnd| */
 void obj_set_model_extended(struct Object *o, enum ModelExtendedId modelId);
 
 /* |description|Gets a trajectory by `name`|descriptionEnd| */
 Trajectory* get_trajectory(const char* name);
+
+//
+// Expose various object pointers
+//
+
+/* |description|When used in a geo function, retrieve the current processed object|descriptionEnd| */
+struct Object *geo_get_current_object(void);
+/* |description|Gets the object currently being processed|descriptionEnd| */
+struct Object *get_current_object(void);
+/* |description|Gets the NPC object Mario is talking to|descriptionEnd| */
+struct Object *get_dialog_object(void);
+/* |description|Gets the cutscene focus object|descriptionEnd| */
+struct Object *get_cutscene_focus(void);
+/* |description|Gets the secondary camera focus object|descriptionEnd| */
+struct Object *get_secondary_camera_focus(void);
+/* |description|Sets the cutscene focus object|descriptionEnd| */
+void *set_cutscene_focus(struct Object *o);
+/* |description|Sets the secondary camera focus object|descriptionEnd| */
+void *set_secondary_camera_focus(struct Object *o);
 
 //
 // Helpers to iterate through the object table

@@ -29,6 +29,7 @@
 #include "thread.h"
 #include "controller/controller_api.h"
 #include "controller/controller_keyboard.h"
+#include "controller/controller_mouse.h"
 #include "fs/fs.h"
 
 #include "game/display.h" // for gGlobalTimer
@@ -95,6 +96,8 @@ static u32 sDrawnFrames = 0;
 
 bool gGameInited = false;
 bool gGfxInited = false;
+
+f32 gMasterVolume;
 
 u8 gLuaVolumeMaster = 127;
 u8 gLuaVolumeLevel = 127;
@@ -256,18 +259,25 @@ void produce_interpolation_frames_and_delay(void) {
 static s16 sAudioBuffer[SAMPLES_HIGH * 2 * 2] = { 0 };
 
 inline static void buffer_audio(void) {
-    bool shouldMute = configMuteFocusLoss && !WAPI.has_focus();
-    const f32 masterMod = (f32)configMasterVolume / 127.0f * (f32)gLuaVolumeMaster / 127.0f;
-    set_sequence_player_volume(SEQ_PLAYER_LEVEL, shouldMute ? 0 : (f32)configMusicVolume / 127.0f * (f32)gLuaVolumeLevel / 127.0f * masterMod);
-    set_sequence_player_volume(SEQ_PLAYER_SFX,   shouldMute ? 0 : (f32)configSfxVolume / 127.0f * (f32)gLuaVolumeSfx / 127.0f * masterMod);
-    set_sequence_player_volume(SEQ_PLAYER_ENV,   shouldMute ? 0 : (f32)configEnvVolume / 127.0f * (f32)gLuaVolumeEnv / 127.0f * masterMod);
+    bool shouldMute = (configMuteFocusLoss && !WAPI.has_focus()) || (gMasterVolume == 0);
+    if (!shouldMute) {
+        set_sequence_player_volume(SEQ_PLAYER_LEVEL, (f32)configMusicVolume / 127.0f * (f32)gLuaVolumeLevel / 127.0f);
+        set_sequence_player_volume(SEQ_PLAYER_SFX,   (f32)configSfxVolume / 127.0f * (f32)gLuaVolumeSfx / 127.0f);
+        set_sequence_player_volume(SEQ_PLAYER_ENV,   (f32)configEnvVolume / 127.0f * (f32)gLuaVolumeEnv / 127.0f);
+    }
 
     int samplesLeft = audio_api->buffered();
     u32 numAudioSamples = samplesLeft < audio_api->get_desired_buffered() ? SAMPLES_HIGH : SAMPLES_LOW;
     for (s32 i = 0; i < 2; i++) {
         create_next_audio_buffer(sAudioBuffer + i * (numAudioSamples * 2), numAudioSamples);
     }
-    audio_api->play((u8 *)sAudioBuffer, 2 * numAudioSamples * 4);
+    
+    if (!shouldMute) {
+        for (u16 i=0; i < ARRAY_COUNT(sAudioBuffer); i++) {
+            sAudioBuffer[i] *= gMasterVolume;
+        }
+        audio_api->play((u8 *)sAudioBuffer, 2 * numAudioSamples * 4);
+    }
 }
 
 void *audio_thread(UNUSED void *arg) {
@@ -486,6 +496,7 @@ int main(int argc, char *argv[]) {
         gfx_init(&WAPI, &RAPI, TITLE);
         WAPI.set_keyboard_callbacks(keyboard_on_key_down, keyboard_on_key_up, keyboard_on_all_keys_up,
             keyboard_on_text_input, keyboard_on_text_editing);
+        WAPI.set_scroll_callback(mouse_on_scroll);
     }
 
     // render the rom setup screen

@@ -20,15 +20,21 @@ local function convert_color(text)
         return nil
     end
     text = text:sub(3, -2)
-    local rstring = text:sub(1, 2) or "ff"
-    local gstring = text:sub(3, 4) or "ff"
-    local bstring = text:sub(5, 6) or "ff"
-    local astring = text:sub(7, 8) or "ff"
+    local rstring, gstring, bstring = "", "", ""
+    if text:len() ~= 3 and text:len() ~= 6 then return 255, 255, 255, 255 end
+    if text:len() == 6 then
+        rstring = text:sub(1, 2) or "ff"
+        gstring = text:sub(3, 4) or "ff"
+        bstring = text:sub(5, 6) or "ff"
+    else
+        rstring = text:sub(1, 1) .. text:sub(1, 1)
+        gstring = text:sub(2, 2) .. text:sub(2, 2)
+        bstring = text:sub(3, 3) .. text:sub(3, 3)
+    end
     local r = tonumber("0x" .. rstring) or 255
     local g = tonumber("0x" .. gstring) or 255
     local b = tonumber("0x" .. bstring) or 255
-    local a = tonumber("0x" .. astring) or 255
-    return r, g, b, a
+    return r, g, b, 255
 end
 
 ---@param text string
@@ -252,30 +258,6 @@ function life_icon_from_local_index(localIndex)
     return "?"
 end
 
-local TYPE_STRING = "string"
---- @param localIndex integer
---- @param x integer
---- @param y integer
---- @param scale integer
-function render_life_icon_from_local_index(localIndex, x, y, scale)
-    if localIndex == nil then localIndex = 0 end
-    local lifeIcon = life_icon_from_local_index(localIndex)
-    local startFont = djui_hud_get_font()
-    local startColor = djui_hud_get_color()
-
-    if type(lifeIcon) == TYPE_STRING then
-        local color = color_from_local_index(localIndex)
-        djui_hud_set_font(FONT_RECOLOR_HUD)
-        djui_hud_set_color(color.r/startColor.r*255, color.g/startColor.g*255, color.b/startColor.b*255, startColor.a)
-        djui_hud_print_text(lifeIcon, x - scale, y - 11*scale, scale)
-        -- Reset HUD Modifications
-        djui_hud_set_font(startFont)
-        djui_hud_set_color(startColor.r, startColor.g, startColor.b, startColor.a)
-    else
-        djui_hud_render_texture(lifeIcon, x, y, scale / (lifeIcon.width * MATH_DIVIDE_16), scale / (lifeIcon.height * MATH_DIVIDE_16))
-    end
-end
-
 --- @param localIndex integer
 --- @return TextureInfo
 --- This assumes multiple characters will not have the same model,
@@ -292,6 +274,53 @@ function star_icon_from_local_index(localIndex)
     return gTextures.star
 end
 
+local TYPE_STRING = "string"
+--- @param localIndex integer
+--- @param x integer
+--- @param y integer
+--- @param scale integer
+function render_life_icon_from_local_index(localIndex, x, y, scale)
+    if localIndex == nil then localIndex = 0 end
+    local lifeIcon = life_icon_from_local_index(localIndex)
+    local startFont = djui_hud_get_font()
+    local startColor = djui_hud_get_color()
+
+    if type(lifeIcon) == TYPE_STRING then
+        local color = color_from_local_index(localIndex)
+        djui_hud_set_font(FONT_RECOLOR_HUD)
+        djui_hud_set_color(color.r/startColor.r*255, color.g/startColor.g*255, color.b/startColor.b*255, startColor.a)
+        djui_hud_print_text(lifeIcon, x, y, scale)
+        -- Reset HUD Modifications
+        djui_hud_set_font(startFont)
+        djui_hud_set_color(startColor.r, startColor.g, startColor.b, startColor.a)
+    else
+        djui_hud_render_texture(lifeIcon, x, y, scale / (lifeIcon.width * MATH_DIVIDE_16), scale / (lifeIcon.height * MATH_DIVIDE_16))
+    end
+end
+
+--- @param localIndex integer
+--- @param x integer
+--- @param y integer
+--- @param scale integer
+function render_life_icon_from_local_index_interpolated(localIndex, prevX, prevY, prevScale, x, y, scale)
+    if localIndex == nil then localIndex = 0 end
+    local lifeIcon = life_icon_from_local_index(localIndex)
+    local startFont = djui_hud_get_font()
+    local startColor = djui_hud_get_color()
+
+    if type(lifeIcon) == TYPE_STRING then
+        local color = color_from_local_index(localIndex)
+        djui_hud_set_font(FONT_RECOLOR_HUD)
+        djui_hud_set_color(color.r/startColor.r*255, color.g/startColor.g*255, color.b/startColor.b*255, startColor.a)
+        djui_hud_print_text_interpolated(lifeIcon, prevX - prevScale/4, prevY - 10*prevScale - prevScale/4, prevScale, x - scale/4, y - 10*scale - scale/4, scale)
+        -- Reset HUD Modifications
+        djui_hud_set_font(startFont)
+        djui_hud_set_color(startColor.r, startColor.g, startColor.b, startColor.a)
+    else
+        djui_hud_render_texture_interpolated(lifeIcon, prevX, prevY, prevScale / (lifeIcon.width * MATH_DIVIDE_16), prevScale / (lifeIcon.height * MATH_DIVIDE_16), x, y, scale / (lifeIcon.width * MATH_DIVIDE_16), scale / (lifeIcon.height * MATH_DIVIDE_16))
+    end
+end
+
 --- @param localIndex integer
 --- @param x integer
 --- @param y integer
@@ -300,6 +329,16 @@ function render_star_icon_from_local_index(localIndex, x, y, scale)
     if localIndex == nil then localIndex = 0 end
     local starIcon = star_icon_from_local_index(localIndex)
     djui_hud_render_texture(starIcon, x, y, scale / (starIcon.width * MATH_DIVIDE_16), scale / (starIcon.height * MATH_DIVIDE_16))
+end
+
+--- @param localIndex integer
+--- @param x integer
+--- @param y integer
+--- @param scale integer
+function render_star_icon_from_local_index_interpolated(localIndex, prevX, prevY, prevScale, x, y, scale)
+    if localIndex == nil then localIndex = 0 end
+    local starIcon = star_icon_from_local_index(localIndex)
+    djui_hud_render_texture_interpolated(starIcon, prevX, prevY, prevScale / (starIcon.width * MATH_DIVIDE_16), prevScale / (starIcon.height * MATH_DIVIDE_16), x, y, scale / (starIcon.width * MATH_DIVIDE_16), scale / (starIcon.height * MATH_DIVIDE_16))
 end
 
 local TEXT_DEFAULT_METER_PREFIX = "char-select-custom-meter-"
@@ -656,6 +695,66 @@ function render_playerlist_and_modlist()
     end
 end
 
+-- Yes the ending stuffs is hardcoded, no there's not much of a better way to do it
+
+local DIALOG_ENDING_REPLACE_1 = "$CHARNAME!"
+local DIALOG_ENDING_REPLACE_2 = "Thank you $CHARNAME!"
+local DIALOG_ENDING_REPLACE_3 = "...for $CHARNAME..."
+
+local END_PEACH_CUTSCENE_DIALOG_1 = 6
+local END_PEACH_CUTSCENE_DIALOG_2 = 7
+local END_PEACH_CUTSCENE_DIALOG_3 = 10
+local END_PEACH_CUTSCENE_RUN_TO_CASTLE = 11
+
+local fadeLength = 5
+local function render_hud_ending_dialog()
+    djui_hud_set_font(FONT_TINY)
+    local m = gMarioStates[0]
+    if m.action ~= ACT_END_PEACH_CUTSCENE then return end
+
+    local width = djui_hud_get_screen_width()
+
+    local charName = characterTable[currChar][characterTable[currChar].currAlt].name
+    local string = ""
+    local startTime = 0
+    local endTime = 0
+    if m.actionArg == END_PEACH_CUTSCENE_DIALOG_1 and m.actionTimer >= 230 and m.actionTimer <= 275 then
+        string = DIALOG_ENDING_REPLACE_1
+        startTime = 230
+        endTime = 275
+    elseif m.actionArg == END_PEACH_CUTSCENE_DIALOG_2 and m.actionTimer >= 75 and m.actionTimer <= 130 then
+        string = DIALOG_ENDING_REPLACE_2
+        startTime = 75
+        endTime = 130
+    elseif m.actionArg == END_PEACH_CUTSCENE_DIALOG_3 and m.actionTimer >= 130 and m.actionTimer <= 195 then
+        string = DIALOG_ENDING_REPLACE_3
+        startTime = 130
+        endTime = 195
+    elseif m.actionArg == END_PEACH_CUTSCENE_RUN_TO_CASTLE and m.actionTimer >= 95 and m.actionTimer <= 150 then
+        string = DIALOG_ENDING_REPLACE_1
+        startTime = 95
+        endTime = 150
+    end
+
+    if string ~= "" then
+        djui_hud_set_color(0, 0, 0, 255)
+        djui_hud_render_rect(0, 210, width, 30)
+        string = string:gsub("$CHARNAME", charName)
+        local opacity = 255
+        local startToTimer = m.actionTimer - startTime
+        local endToTimer = endTime - m.actionTimer
+        if startToTimer >= 0 then
+            opacity = math.min(startToTimer, fadeLength)/fadeLength * 255
+        end
+        if endToTimer >= 0 and startToTimer >= fadeLength then
+            opacity = math.min(endToTimer, fadeLength)/fadeLength * 255
+        end
+        djui_hud_set_color(255, 255, 255, opacity)
+        local x = width*0.5 - djui_hud_measure_text(string)*0.5
+        djui_hud_print_text(string, x, 210, 1)
+    end
+end
+
 local function on_hud_render_behind()
     FONT_USER = djui_menu_get_font()
     djui_hud_set_resolution(RESOLUTION_N64)
@@ -665,6 +764,7 @@ local function on_hud_render_behind()
     if gNetworkPlayers[0].currActNum == 99 or gMarioStates[0].action == ACT_INTRO_CUTSCENE or hud_is_hidden() then
         return
     end
+
     if obj_get_first_with_behavior_id(id_bhvActSelector) == nil then
         render_hud_mario_lives()
         render_hud_stars()
@@ -687,6 +787,10 @@ local function on_hud_render()
 
     if obj_get_first_with_behavior_id(id_bhvActSelector) ~= nil then
         render_act_select_hud()
+    end
+
+    if gNetworkPlayers[0].currActNum == 99 then
+        render_hud_ending_dialog()
     end
 
     gServerSettings.enablePlayerList = false -- Disables the original playerlist and modlist

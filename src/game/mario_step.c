@@ -207,7 +207,12 @@ u32 mario_update_windy_ground(struct MarioState *m) {
     if (!m) { return 0; }
     struct Surface *floor = m->floor;
     if (!floor) { return 0; }
-
+    bool allow = true;
+    smlua_call_event_hooks_mario_param_and_int_ret_bool(HOOK_ALLOW_HAZARD_SURFACE, m, HAZARD_TYPE_HORIZONTAL_WIND, &allow);
+    if (!allow) {
+    	return FALSE;
+    }
+    
     extern bool gDjuiInMainMenu;
     if (floor->type == SURFACE_HORIZONTAL_WIND && !gDjuiInMainMenu) {
         f32 pushSpeed;
@@ -306,9 +311,13 @@ static s32 perform_ground_quarter_step(struct MarioState *m, Vec3f nextPos) {
     }
 
     if ((m->action & ACT_FLAG_RIDING_SHELL) && floorHeight < waterLevel) {
-        floorHeight = waterLevel;
-        floor = &gWaterSurfacePseudoFloor;
-        floor->originOffset = floorHeight; //! Wrong origin offset (no effect)
+        bool allow = true;
+        smlua_call_event_hooks_mario_param_and_bool_ret_bool(HOOK_ALLOW_FORCE_WATER_ACTION, m, false, &allow);
+        if (allow) {
+            floorHeight = waterLevel;
+            floor = &gWaterSurfacePseudoFloor;
+            floor->originOffset = floorHeight; //! Wrong origin offset (no effect)
+        }
     }
 
     if (nextPos[1] > floorHeight + 100.0f) {
@@ -491,9 +500,13 @@ s32 perform_air_quarter_step(struct MarioState *m, Vec3f intendedPos, u32 stepAr
     }
 
     if ((m->action & ACT_FLAG_RIDING_SHELL) && floorHeight < waterLevel) {
-        floorHeight = waterLevel;
-        floor = &gWaterSurfacePseudoFloor;
-        floor->originOffset = floorHeight; //! Incorrect origin offset (no effect)
+        bool allow = true;
+        smlua_call_event_hooks_mario_param_and_bool_ret_bool(HOOK_ALLOW_FORCE_WATER_ACTION, m, false, &allow);
+        if (allow) {
+            floorHeight = waterLevel;
+            floor = &gWaterSurfacePseudoFloor;
+            floor->originOffset = floorHeight; //! Incorrect origin offset (no effect)
+        }
     }
 
     //! This check uses f32, but findFloor uses short (overflow jumps)
@@ -645,7 +658,9 @@ void apply_gravity(struct MarioState *m) {
     if (!m) { return; }
     s32 result;
 
-    if (m->action == ACT_TWIRLING && m->vel[1] < 0.0f) {
+    if (smlua_call_action_hook(ACTION_HOOK_GRAVITY, m, &result)) {
+        
+    } else if (m->action == ACT_TWIRLING && m->vel[1] < 0.0f) {
         apply_twirl_gravity(m);
     } else if (m->action == ACT_SHOT_FROM_CANNON) {
         m->vel[1] -= 1.0f;
@@ -675,8 +690,6 @@ void apply_gravity(struct MarioState *m) {
         if (m->vel[1] < -16.0f) {
             m->vel[1] = -16.0f;
         }
-    } else if (smlua_call_action_hook(ACTION_HOOK_GRAVITY, m, &result)) {
-
     } else if ((m->flags & MARIO_WING_CAP) && m->vel[1] < 0.0f && (m->input & INPUT_A_DOWN)) {
         m->marioBodyState->wingFlutter = TRUE;
 
@@ -698,8 +711,9 @@ void apply_vertical_wind(struct MarioState *m) {
     if (!m) { return; }
     f32 maxVelY;
     f32 offsetY;
-
-    if (m->action != ACT_GROUND_POUND) {
+    bool allow = true;
+    smlua_call_event_hooks_mario_param_and_int_ret_bool(HOOK_ALLOW_HAZARD_SURFACE, m, HAZARD_TYPE_VERTICAL_WIND, &allow);
+    if (m->action != ACT_GROUND_POUND && allow) {
         offsetY = m->pos[1] - -1500.0f;
 
         if (m->floor && m->floor->type == SURFACE_VERTICAL_WIND && -3000.0f < offsetY && offsetY < 2000.0f) {

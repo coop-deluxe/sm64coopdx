@@ -29,6 +29,7 @@ char gLastRemoteBhv[256] = "";
 #include "pc/log.h"
 #include "pc/pc_main.h"
 #include "controller/controller_keyboard.h"
+#include "controller/controller_mouse.h"
 
 typedef struct {
     s32 x, y;
@@ -148,7 +149,9 @@ static ULONG CaptureStackWalkBackTrace(CONTEXT* ctx, DWORD FramesToSkip, DWORD F
     #define ARCHITECTURE_STR "32-bit"
 #endif
 
+#ifndef __USE_GNU
 #define __USE_GNU
+#endif
 
 #include <signal.h>
 #include <execinfo.h>
@@ -272,9 +275,12 @@ static void crash_handler_add_info_str(CrashHandlerText** pTextP, f32 x, f32 y, 
 
 static void crash_handler_add_version_str(CrashHandlerText** pTextP, f32 x, f32 y) {
     CrashHandlerText* pText = *pTextP;
-    crash_handler_set_text(x, y, 0xFF, 0xFF, 0x00, "%s", "sm64coopdx ");
-    crash_handler_set_text(-1, y, 0x00, 0xFF, 0xFF, "%s", get_version());
-    crash_handler_set_text(x, y + 8, 0xFF, 0xFF, 0x00, "Renderer: %s", RAPI_NAME);
+#ifdef DEVELOPMENT
+    crash_handler_add_info_str(&pText, x, y, "Dev Build", SM64COOPDX_VERSION);
+#else
+    crash_handler_add_info_str(&pText, x, y, "Release", SM64COOPDX_VERSION);
+#endif
+    crash_handler_add_info_str(&pText, x, y + 8, "Renderer", RAPI_NAME);
     *pTextP = pText;
 }
 
@@ -655,6 +661,7 @@ static void crash_handler(const int signalNum, siginfo_t *info, UNUSED ucontext_
         gfx_init(&WAPI, &RAPI, TITLE);
         WAPI.set_keyboard_callbacks(keyboard_on_key_down, keyboard_on_key_up, keyboard_on_all_keys_up,
             keyboard_on_text_input, keyboard_on_text_editing);
+        WAPI.set_scroll_callback(mouse_on_scroll);
     }
     if (!gGameInited) djui_unicode_init();
 
@@ -704,6 +711,8 @@ struct PcDebug gPcDebug = {
         0x9A2269E87B26BE68,
         0x0E76DE227D813019,
         0x12ABA8362D430002,
+        0x0BF8F9C076430007,
+        0x0BFA2492BA430011
     },
     .id = DEFAULT_ID,
     .bhvOffset = /* 0x12 */ 0,

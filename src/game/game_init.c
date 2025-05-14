@@ -26,6 +26,7 @@
 #include <prevent_bss_reordering.h>
 #include "bettercamera.h"
 #include "hud.h"
+#include "pc/controller/controller_mouse.h"
 
 // FIXME: I'm not sure all of these variables belong in this file, but I don't
 // know of a good way to split them
@@ -508,6 +509,17 @@ void read_controller_inputs(void) {
     gPlayer3Controller->buttonPressed = gPlayer1Controller->buttonPressed;
     gPlayer3Controller->buttonReleased = gPlayer1Controller->buttonReleased;
     gPlayer3Controller->buttonDown = gPlayer1Controller->buttonDown;*/
+
+    // Mouse Input
+    u32 prev_mouse_window_buttons = mouse_window_buttons;
+    controller_mouse_read_window();
+    mouse_window_buttons_pressed = ~prev_mouse_window_buttons & mouse_window_buttons;
+    mouse_window_buttons_released = ~mouse_window_buttons & prev_mouse_window_buttons;
+
+    if (gGlobalTimer > mouse_scroll_timestamp) {
+        mouse_scroll_x = 0;
+        mouse_scroll_y = 0;
+    }
 }
 
 // initialize the controller structs to point at the OSCont information.

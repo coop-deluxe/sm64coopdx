@@ -33,7 +33,7 @@ Gfx *geo_num3_switch(s32 callContext, struct GraphNode *node, UNUSED void *conte
         s32 number = ((struct Object *) gCurGraphNodeObject)->oBehParams2ndByte;
         struct GraphNodeSwitchCase *switchCase = (struct GraphNodeSwitchCase *) node;
         s32 numMin, numMax, numDiv;
-        switch (switchCase->numCases) {
+        switch (switchCase->parameter) {
             case 0: numMin =   0; numMax =   9; numDiv =   1; break;
             case 1: numMin =  10; numMax =  99; numDiv =  10; break;
             case 2: numMin =  10; numMax =  99; numDiv =   1; break;

@@ -48,7 +48,7 @@ static bool loading_screen_on_render(struct DjuiBase* base) {
     MUTEX_LOCK(gLoadingThread);
 
     u32 windowWidth, windowHeight;
-    WAPI.get_dimensions(&windowWidth, &windowHeight);
+    gfx_get_dimensions(&windowWidth, &windowHeight);
     f32 scale = djui_gfx_get_scale();
     windowWidth /= scale;
     windowHeight /= scale;

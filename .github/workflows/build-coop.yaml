@@ -1,0 +1,243 @@
+name: Build coop
+
+on:
+    workflow_dispatch:
+    push:
+        branches: [ dev ]
+
+jobs:
+    build-linux:
+        if: ${{ github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[build]') }}
+        runs-on: ubuntu-22.04
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Install dependencies
+              run: |
+                sudo apt update
+                sudo apt install -y build-essential git python3 libglew-dev libsdl2-dev libz-dev libcurl4-openssl-dev zip
+
+            - name: Build the game
+              run: make -j$(nproc)
+
+            - name: Generate hash
+              run: |
+                cd tools
+                g++ -std=c++17 -o hash_file hash_file.cpp
+                echo "::notice ::$(./hash_file ../build/us_pc/sm64coopdx)"
+            
+            - name: Zip the game
+              run: |
+                cd ./build/us_pc
+                zip -r sm64coopdx_Linux.zip dynos lang mods palettes libdiscord_game_sdk.so sm64coopdx
+
+            - name: Upload artifact
+              uses: actions/upload-artifact@v4
+              with:
+                name: sm64coopdx-linux
+                path: ./build/us_pc/sm64coopdx_Linux.zip
+    
+    build-steamos:
+        if: ${{ github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[build]') }}
+        runs-on: ubuntu-22.04
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Install dependencies
+              run: |
+                sudo apt update
+                sudo apt install -y build-essential git python3 libglew-dev libsdl2-dev libz-dev libcurl4-openssl-dev zip
+
+            - name: Build the game
+              run: make -j$(nproc) HANDHELD=1
+
+            - name: Generate hash
+              run: |
+                cd tools
+                g++ -std=c++17 -o hash_file hash_file.cpp
+                echo "::notice ::$(./hash_file ../build/us_pc/sm64coopdx)"
+            
+            - name: Zip the game
+              run: |
+                cd ./build/us_pc
+                zip -r sm64coopdx_SteamOS.zip dynos lang mods palettes libdiscord_game_sdk.so sm64coopdx
+
+            - name: Upload artifact
+              uses: actions/upload-artifact@v4
+              with:
+                name: sm64coopdx-steamos
+                path: ./build/us_pc/sm64coopdx_SteamOS.zip
+
+    build-windows-opengl:
+        if: ${{ github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[build]') }}
+        runs-on: windows-latest
+        defaults:
+            run:
+                shell: msys2 {0}
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Install dependencies
+              uses: msys2/setup-msys2@v2
+              with:
+                msystem: mingw64
+                update: true
+                install: >
+                    unzip
+                    make
+                    git
+                    mingw-w64-i686-gcc
+                    mingw-w64-x86_64-gcc
+                    mingw-w64-i686-glew
+                    mingw-w64-x86_64-glew
+                    mingw-w64-i686-SDL2
+                    mingw-w64-i686-SDL
+                    mingw-w64-x86_64-SDL2
+                    mingw-w64-x86_64-SDL
+                    python3
+                    zip
+
+            - name: Build the game
+              run: make -j$(nproc)
+
+            - name: Generate hash
+              run: |
+                cd tools
+                g++ -std=c++17 -o hash_file.exe hash_file.cpp
+                echo "::notice ::$(./hash_file.exe ../build/us_pc/sm64coopdx.exe)"
+            
+            - name: Zip the game
+              run: |
+                cd ./build/us_pc
+                zip -r sm64coopdx_Windows_OpenGL.zip dynos lang mods palettes coop.map discord_game_sdk.dll sm64coopdx.exe
+
+            - name: Upload artifact
+              uses: actions/upload-artifact@v4
+              with:
+                name: sm64coopdx-windows-opengl
+                path: ./build/us_pc/sm64coopdx_Windows_OpenGL.zip
+
+    build-windows-directx:
+        if: ${{ github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[build]') }}
+        runs-on: windows-latest
+        defaults:
+            run:
+                shell: msys2 {0}
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Install dependencies
+              uses: msys2/setup-msys2@v2
+              with:
+                msystem: mingw64
+                update: true
+                install: >
+                    unzip
+                    make
+                    git
+                    mingw-w64-i686-gcc
+                    mingw-w64-x86_64-gcc
+                    mingw-w64-i686-glew
+                    mingw-w64-x86_64-glew
+                    mingw-w64-i686-SDL2
+                    mingw-w64-i686-SDL
+                    mingw-w64-x86_64-SDL2
+                    mingw-w64-x86_64-SDL
+                    python3
+                    zip
+
+            - name: Build the game
+              run: make -j$(nproc) RENDER_API=D3D11 WINDOW_API=DXGI
+
+            - name: Generate hash
+              run: |
+                cd tools
+                g++ -std=c++17 -o hash_file.exe hash_file.cpp
+                echo "::notice ::$(./hash_file.exe ../build/us_pc/sm64coopdx.exe)"
+            
+            - name: Zip the game
+              run: |
+                cd ./build/us_pc
+                zip -r sm64coopdx_Windows_DirectX.zip dynos lang mods palettes coop.map discord_game_sdk.dll sm64coopdx.exe
+
+            - name: Upload artifact
+              uses: actions/upload-artifact@v4
+              with:
+                name: sm64coopdx-windows-directx
+                path: ./build/us_pc/sm64coopdx_Windows_DirectX.zip
+
+    build-macos-arm:
+        if: ${{ github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[build]') }}
+        runs-on: macos-latest
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Install dependencies
+              run: |
+                brew install make mingw-w64 sdl2 pkg-config glew glfw3 coreutils
+
+            - name: Build the game
+              run: |
+                gmake OSX_BUILD=1 -j$(sysctl -n hw.ncpu)
+
+            - name: Code sign the app (Ad-Hoc)
+              run: |
+                codesign --force --deep --sign - ./build/us_pc/sm64coopdx.app
+
+            - name: Generate hash
+              run: |
+                cd tools
+                g++ -std=c++17 -o hash_file hash_file.cpp
+                echo "::notice ::$(./hash_file ../build/us_pc/sm64coopdx.app/Contents/MacOS/sm64coopdx)"
+
+            - name: Zip the .app bundle
+              run: |
+                cd ./build/us_pc
+                zip -r sm64coopdx_macOS_ARM.zip sm64coopdx.app
+            
+            - name: Upload artifact
+              uses: actions/upload-artifact@v4
+              with:
+                name: sm64coopdx-macos-arm
+                path: ./build/us_pc/sm64coopdx_macOS_ARM.zip
+
+    build-macos-intel:
+        if: ${{ github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[build]') }}
+        runs-on: macos-13
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Install dependencies
+              run: |
+                brew install make mingw-w64 gcc@9 sdl2 pkg-config glew glfw3 coreutils
+
+            - name: Build the game
+              run: |
+                gmake OSX_BUILD=1 -j$(sysctl -n hw.ncpu)
+
+            - name: Code sign the app (Ad-Hoc)
+              run: |
+                codesign --force --deep --sign - ./build/us_pc/sm64coopdx.app
+
+            - name: Generate hash
+              run: |
+                cd tools
+                g++ -std=c++17 -o hash_file hash_file.cpp
+                echo "::notice ::$(./hash_file ../build/us_pc/sm64coopdx.app/Contents/MacOS/sm64coopdx)"
+
+            - name: Zip the .app bundle
+              run: |
+                cd ./build/us_pc
+                zip -r sm64coopdx_macOS_Intel.zip sm64coopdx.app
+            
+            - name: Upload artifact
+              uses: actions/upload-artifact@v4
+              with:
+                name: sm64coopdx-macos-intel
+                path: ./build/us_pc/sm64coopdx_macOS_Intel.zip

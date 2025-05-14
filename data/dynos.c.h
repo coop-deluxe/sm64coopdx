@@ -6,6 +6,7 @@
 #include "types.h"
 #include "engine/behavior_script.h"
 #include "game/moving_texture.h"
+#include "lua.h"
 
 void *dynos_swap_cmd(void *cmd);
 
@@ -83,9 +84,27 @@ u32 dynos_model_get_id_from_asset(void* aAsset);
 u32 dynos_model_get_id_from_graph_node(struct GraphNode* aGraphNode);
 void dynos_model_clear_pool(enum ModelPool aModelPool);
 
+// -- gfx -- //
+Gfx *dynos_gfx_get_writable_display_list(Gfx* gfx);
+Gfx *dynos_gfx_get(const char *name, u32 *outLength);
+Gfx *dynos_gfx_create(const char *name, u32 length);
+bool dynos_gfx_resize(Gfx *gfx, u32 newLength);
+bool dynos_gfx_delete(Gfx *gfx);
+void dynos_gfx_delete_all();
+Vtx *dynos_vtx_get(const char *name, u32 *outCount);
+Vtx *dynos_vtx_create(const char *name, u32 count);
+bool dynos_vtx_resize(Vtx *vtx, u32 newCount);
+bool dynos_vtx_delete(Vtx *vtx);
+void dynos_vtx_delete_all();
+
 // -- other -- //
 void dynos_mod_shutdown(void);
 void dynos_add_scroll_target(u32 index, const char *name, u32 offset, u32 size);
+u32 dynos_mod_data_get_last_error();
+
+// -- smlua -- //
+bool dynos_smlua_parse_gfx_command(lua_State *L, Gfx *gfx, const char *command, bool hasSpecifiers, char *errorMsg, u32 errorSize);
+void dynos_smlua_clear_gfx_command_cache();
 
 #endif
 #endif

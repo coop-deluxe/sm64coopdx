@@ -342,7 +342,7 @@ void geo_layout_cmd_node_switch_case(void) {
 
     graphNode =
         init_graph_node_switch_case(gGraphNodePool, NULL,
-                                    cur_geo_cmd_s16(0x02), // case which is initially selected
+                                    cur_geo_cmd_s16(0x02), // parameter used by switch func
                                     0,
                                     (GraphNodeFunc) cur_geo_cmd_ptr(0x04), // case update function
                                     0);
@@ -800,7 +800,7 @@ void geo_layout_cmd_node_switch_case_ext(void) {
 
     graphNode = init_graph_node_switch_case(
         gGraphNodePool, NULL,
-        cur_geo_cmd_s16(0x02), // num cases
+        cur_geo_cmd_s16(0x02), // parameter used by switch func
         0,
         (GraphNodeFunc) geo_process_lua_function,
         0

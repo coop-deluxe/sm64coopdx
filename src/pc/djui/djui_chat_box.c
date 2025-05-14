@@ -128,7 +128,7 @@ static void djui_chat_box_input_enter(struct DjuiInputbox* chatInput) {
     if (strlen(chatInput->buffer) != 0) {
         sent_history_add_message(&sentHistory, chatInput->buffer);
         if (chatInput->buffer[0] == '/') {
-            if (strcmp(chatInput->buffer, "/help") == 0 || strcmp(chatInput->buffer, "/?") == 0) {
+            if (strcmp(chatInput->buffer, "/help") == 0 || strcmp(chatInput->buffer, "/?") == 0 || strcmp(chatInput->buffer, "/") == 0) {
                 display_chat_commands();
             } else if (!exec_chat_command(chatInput->buffer)) {
                 char extendedUnknownCommandMessage[MAX_CHAT_MSG_LENGTH];
@@ -321,21 +321,21 @@ static void handle_tab_completion(void) {
             if (sCommandsTabCompletionIndex == -1) {
                 snprintf(sCommandsTabCompletionOriginalText, MAX_CHAT_MSG_LENGTH, "%s", gDjuiChatBox->chatInput->buffer);
             }
-            
+
             char* bufferWithoutSlash = sCommandsTabCompletionOriginalText + 1;
             char** commands = smlua_get_chat_maincommands_list();
             s32 foundCommandsCount = 0;
-            
+
             for (s32 i = 0; commands[i] != NULL; i++) {
                 if (strncmp(commands[i], bufferWithoutSlash, strlen(bufferWithoutSlash)) == 0) {
                     foundCommandsCount++;
                 }
             }
-            
+
             if (foundCommandsCount > 0) {
                 sCommandsTabCompletionIndex = (sCommandsTabCompletionIndex + 1) % foundCommandsCount;
                 s32 currentIndex = 0;
-                
+
                 for (s32 i = 0; commands[i] != NULL; i++) {
                     if (strncmp(commands[i], bufferWithoutSlash, strlen(bufferWithoutSlash)) == 0) {
                         if (currentIndex == sCommandsTabCompletionIndex) {
@@ -362,7 +362,7 @@ static void handle_tab_completion(void) {
                     }
                 }
             }
-            
+
             for (s32 i = 0; commands[i] != NULL; i++) {
                 free(commands[i]);
             }
@@ -502,6 +502,23 @@ static void djui_chat_box_input_on_text_editing(struct DjuiBase *base, char* tex
     djui_inputbox_on_text_editing(base, text, cursorPos);
 }
 
+static void djui_chat_box_input_on_scroll(UNUSED struct DjuiBase *base, UNUSED float x, float y) {
+    if (gDjuiChatBox == NULL) { return; }
+
+    f32 yMax = gDjuiChatBox->chatContainer->base.elem.height - gDjuiChatBox->chatFlow->base.height.value;
+    f32* yValue = &gDjuiChatBox->chatFlow->base.y.value;
+    bool canScrollUp   = (*yValue > yMax);
+    bool canScrollDown = (*yValue < 0);
+    
+    y *= 24;
+    if (gDjuiInputHeldControl) { y /= 2; }
+    if (gDjuiInputHeldShift) { y *= 3; }
+
+    gDjuiChatBox->scrolling = true;
+    if (y > 0 && canScrollDown) { *yValue = fmin(*yValue + y, 0); }
+    if (y < 0 && canScrollUp) { *yValue = fmax(*yValue + y, yMax); }
+}
+
 void djui_chat_box_toggle(void) {
     if (gDjuiChatBox == NULL) { return; }
     if (!gDjuiChatBoxFocus) { sDjuiChatBoxClearText = true; }
@@ -555,6 +572,7 @@ struct DjuiChatBox* djui_chat_box_create(void) {
     djui_interactable_hook_key(&chatInput->base, djui_chat_box_input_on_key_down, djui_inputbox_on_key_up);
     djui_interactable_hook_text_input(&chatInput->base, djui_chat_box_input_on_text_input);
     djui_interactable_hook_text_editing(&chatInput->base, djui_chat_box_input_on_text_editing);
+    djui_interactable_hook_scroll(&chatInput->base, djui_chat_box_input_on_scroll);
     chatBox->chatInput = chatInput;
 
     gDjuiChatBox = chatBox;

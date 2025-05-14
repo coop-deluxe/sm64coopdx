@@ -166,7 +166,7 @@ static struct LuaObjectField sAnimationTableFields[LUA_ANIMATION_TABLE_FIELD_COU
     { "count",       LVT_U32, offsetof(struct AnimationTable, count),       true, LOT_NONE, 1, sizeof(u32)                        },
 };
 
-#define LUA_AREA_FIELD_COUNT 20
+#define LUA_AREA_FIELD_COUNT 21
 static struct LuaObjectField sAreaFields[LUA_AREA_FIELD_COUNT] = {
     { "camera",              LVT_COBJECT_P, offsetof(struct Area, camera),              false, LOT_CAMERA,         1, sizeof(struct Camera*)         },
     { "dialog",              LVT_U8,        offsetof(struct Area, dialog),              false, LOT_NONE,           2, sizeof(u8)                     },
@@ -183,10 +183,10 @@ static struct LuaObjectField sAreaFields[LUA_AREA_FIELD_COUNT] = {
     { "numSecrets",          LVT_U8,        offsetof(struct Area, numSecrets),          false, LOT_NONE,           1, sizeof(u8)                     },
     { "objectSpawnInfos",    LVT_COBJECT_P, offsetof(struct Area, objectSpawnInfos),    true,  LOT_SPAWNINFO,      1, sizeof(struct SpawnInfo*)      },
     { "paintingWarpNodes",   LVT_COBJECT_P, offsetof(struct Area, paintingWarpNodes),   true,  LOT_WARPNODE,       1, sizeof(struct WarpNode*)       },
+    { "root",                LVT_COBJECT_P, offsetof(struct Area, root),                false, LOT_GRAPHNODEROOT,  1, sizeof(struct GraphNodeRoot*)  },
     { "surfaceRooms",        LVT_S8_P,      offsetof(struct Area, surfaceRooms),        true,  LOT_POINTER,        1, sizeof(s8*)                    },
     { "terrainData",         LVT_S16_P,     offsetof(struct Area, terrainData),         true,  LOT_POINTER,        1, sizeof(s16*)                   },
     { "terrainType",         LVT_U16,       offsetof(struct Area, terrainType),         false, LOT_NONE,           1, sizeof(u16)                    },
-//  { "unk04",               LVT_COBJECT_P, offsetof(struct Area, unk04),               true,  LOT_???,            1, sizeof(struct GraphNodeRoot*)  }, <--- UNIMPLEMENTED
 //  { "unused28",            LVT_COBJECT_P, offsetof(struct Area, unused28),            false, LOT_???,            1, sizeof(struct UnusedArea28*)   }, <--- UNIMPLEMENTED
     { "warpNodes",           LVT_COBJECT_P, offsetof(struct Area, warpNodes),           true,  LOT_OBJECTWARPNODE, 1, sizeof(struct ObjectWarpNode*) },
     { "whirlpools",          LVT_COBJECT_P, offsetof(struct Area, whirlpools),          false, LOT_WHIRLPOOL,      2, sizeof(struct Whirlpool*)      },
@@ -1196,6 +1196,17 @@ static struct LuaObjectField sGraphNodePerspectiveFields[LUA_GRAPH_NODE_PERSPECT
     { "unused",        LVT_S32,     offsetof(struct GraphNodePerspective, unused),        true,  LOT_NONE,        1, sizeof(s32)                },
 };
 
+#define LUA_GRAPH_NODE_ROOT_FIELD_COUNT 7
+static struct LuaObjectField sGraphNodeRootFields[LUA_GRAPH_NODE_ROOT_FIELD_COUNT] = {
+    { "areaIndex", LVT_U8,      offsetof(struct GraphNodeRoot, areaIndex), true,  LOT_NONE,      1, sizeof(u8)               },
+    { "height",    LVT_S16,     offsetof(struct GraphNodeRoot, height),    false, LOT_NONE,      1, sizeof(s16)              },
+    { "node",      LVT_COBJECT, offsetof(struct GraphNodeRoot, node),      true,  LOT_GRAPHNODE, 1, sizeof(struct GraphNode) },
+    { "numViews",  LVT_S16,     offsetof(struct GraphNodeRoot, numViews),  true,  LOT_NONE,      1, sizeof(s16)              },
+    { "width",     LVT_S16,     offsetof(struct GraphNodeRoot, width),     false, LOT_NONE,      1, sizeof(s16)              },
+    { "x",         LVT_S16,     offsetof(struct GraphNodeRoot, x),         false, LOT_NONE,      1, sizeof(s16)              },
+    { "y",         LVT_S16,     offsetof(struct GraphNodeRoot, y),         false, LOT_NONE,      1, sizeof(s16)              },
+};
+
 #define LUA_GRAPH_NODE_ROTATION_FIELD_COUNT 5
 static struct LuaObjectField sGraphNodeRotationFields[LUA_GRAPH_NODE_ROTATION_FIELD_COUNT] = {
     { "displayList",   LVT_COBJECT_P, offsetof(struct GraphNodeRotation, displayList),   false, LOT_GFX,       1, sizeof(Gfx*)             },
@@ -1229,7 +1240,7 @@ static struct LuaObjectField sGraphNodeStartFields[LUA_GRAPH_NODE_START_FIELD_CO
 #define LUA_GRAPH_NODE_SWITCH_CASE_FIELD_COUNT 4
 static struct LuaObjectField sGraphNodeSwitchCaseFields[LUA_GRAPH_NODE_SWITCH_CASE_FIELD_COUNT] = {
     { "fnNode",       LVT_COBJECT, offsetof(struct GraphNodeSwitchCase, fnNode),       true,  LOT_FNGRAPHNODE, 1, sizeof(struct FnGraphNode) },
-    { "numCases",     LVT_S16,     offsetof(struct GraphNodeSwitchCase, numCases),     true,  LOT_NONE,        1, sizeof(s16)                },
+    { "parameter",    LVT_S16,     offsetof(struct GraphNodeSwitchCase, parameter),    false, LOT_NONE,        1, sizeof(s16)                },
     { "selectedCase", LVT_S16,     offsetof(struct GraphNodeSwitchCase, selectedCase), false, LOT_NONE,        1, sizeof(s16)                },
     { "unused",       LVT_S32,     offsetof(struct GraphNodeSwitchCase, unused),       true,  LOT_NONE,        1, sizeof(s32)                },
 };
@@ -1327,7 +1338,7 @@ static struct LuaObjectField sLakituStateFields[LUA_LAKITU_STATE_FIELD_COUNT] = 
     { "yaw",                              LVT_S16,     offsetof(struct LakituState, yaw),                              false, LOT_NONE,  1,  sizeof(s16)   },
 };
 
-#define LUA_LEVEL_VALUES_FIELD_COUNT 51
+#define LUA_LEVEL_VALUES_FIELD_COUNT 52
 static struct LuaObjectField sLevelValuesFields[LUA_LEVEL_VALUES_FIELD_COUNT] = {
     { "bubbleOnDeathBarrierInCapStages",  LVT_U8,      offsetof(struct LevelValues, bubbleOnDeathBarrierInCapStages),  false, LOT_NONE,          1, sizeof(u8)                   },
     { "cellHeightLimit",                  LVT_S16,     offsetof(struct LevelValues, cellHeightLimit),                  false, LOT_NONE,          1, sizeof(s16)                  },
@@ -1343,6 +1354,7 @@ static struct LuaObjectField sLevelValuesFields[LUA_LEVEL_VALUES_FIELD_COUNT] = 
     { "fixCollisionBugsGroundPoundBonks", LVT_U8,      offsetof(struct LevelValues, fixCollisionBugsGroundPoundBonks), false, LOT_NONE,          1, sizeof(u8)                   },
     { "fixCollisionBugsPickBestWall",     LVT_U8,      offsetof(struct LevelValues, fixCollisionBugsPickBestWall),     false, LOT_NONE,          1, sizeof(u8)                   },
     { "fixCollisionBugsRoundedCorners",   LVT_U8,      offsetof(struct LevelValues, fixCollisionBugsRoundedCorners),   false, LOT_NONE,          1, sizeof(u8)                   },
+    { "fixInvalidShellRides",             LVT_U8,      offsetof(struct LevelValues, fixInvalidShellRides),             false, LOT_NONE,          1, sizeof(u8)                   },
     { "fixVanishFloors",                  LVT_U8,      offsetof(struct LevelValues, fixVanishFloors),                  false, LOT_NONE,          1, sizeof(u8)                   },
     { "floatingStarDance",                LVT_U8,      offsetof(struct LevelValues, floatingStarDance),                false, LOT_NONE,          1, sizeof(u8)                   },
     { "floorLowerLimit",                  LVT_S16,     offsetof(struct LevelValues, floorLowerLimit),                  false, LOT_NONE,          1, sizeof(s16)                  },
@@ -1616,7 +1628,7 @@ static struct LuaObjectField sNetworkPlayerFields[LUA_NETWORK_PLAYER_FIELD_COUNT
     { "type",                   LVT_U8,      offsetof(struct NetworkPlayer, type),                   true,  LOT_NONE,          1, sizeof(u8)                   },
 };
 
-#define LUA_OBJECT_FIELD_COUNT 760
+#define LUA_OBJECT_FIELD_COUNT 762
 static struct LuaObjectField sObjectFields[LUA_OBJECT_FIELD_COUNT] = {
     { "activeFlags",                                LVT_S16,                 offsetof(struct Object, activeFlags),                                false, LOT_NONE,         1, sizeof(s16)                   },
     { "allowRemoteInteractions",                    LVT_U8,                  offsetof(struct Object, allowRemoteInteractions),                    false, LOT_NONE,         1, sizeof(u8)                    },
@@ -2021,6 +2033,8 @@ static struct LuaObjectField sObjectFields[LUA_OBJECT_FIELD_COUNT] = {
     { "oKoopaTheQuickRaceIndex",                    LVT_S16,                 offsetof(struct Object, oKoopaTheQuickRaceIndex),                    false, LOT_NONE,         1, sizeof(s16)                   },
     { "oKoopaTurningAwayFromWall",                  LVT_S32,                 offsetof(struct Object, oKoopaTurningAwayFromWall),                  false, LOT_NONE,         1, sizeof(s32)                   },
     { "oKoopaUnshelledTimeUntilTurn",               LVT_S32,                 offsetof(struct Object, oKoopaUnshelledTimeUntilTurn),               false, LOT_NONE,         1, sizeof(s32)                   },
+    { "oLightID",                                   LVT_S32,                 offsetof(struct Object, oLightID),                                   false, LOT_NONE,         1, sizeof(s32)                   },
+    { "oLightRadius",                               LVT_F32,                 offsetof(struct Object, oLightRadius),                               false, LOT_NONE,         1, sizeof(f32)                   },
     { "oLllRotatingHexFlameUnkF4",                  LVT_F32,                 offsetof(struct Object, oLllRotatingHexFlameUnkF4),                  false, LOT_NONE,         1, sizeof(f32)                   },
     { "oLllRotatingHexFlameUnkF8",                  LVT_F32,                 offsetof(struct Object, oLllRotatingHexFlameUnkF8),                  false, LOT_NONE,         1, sizeof(f32)                   },
     { "oLllRotatingHexFlameUnkFC",                  LVT_F32,                 offsetof(struct Object, oLllRotatingHexFlameUnkFC),                  false, LOT_NONE,         1, sizeof(f32)                   },
@@ -2545,6 +2559,20 @@ static struct LuaObjectField sRayIntersectionInfoFields[LUA_RAY_INTERSECTION_INF
     { "surface", LVT_COBJECT_P, offsetof(struct RayIntersectionInfo, surface), false, LOT_SURFACE, 1, sizeof(struct Surface*) },
 };
 
+#define LUA_ROMHACK_CAMERA_SETTINGS_FIELD_COUNT 10
+static struct LuaObjectField sRomhackCameraSettingsFields[LUA_ROMHACK_CAMERA_SETTINGS_FIELD_COUNT] = {
+    { "centering",       LVT_U8,  offsetof(struct RomhackCameraSettings, centering),       false, LOT_NONE, 1, sizeof(u8)                         },
+    { "collisions",      LVT_U8,  offsetof(struct RomhackCameraSettings, collisions),      false, LOT_NONE, 1, sizeof(u8)                         },
+    { "dpad",            LVT_U8,  offsetof(struct RomhackCameraSettings, dpad),            false, LOT_NONE, 1, sizeof(u8)                         },
+    { "enable",          LVT_S32, offsetof(struct RomhackCameraSettings, enable),          false, LOT_NONE, 1, sizeof(enum RomhackCameraOverride) },
+    { "modsOnly",        LVT_U8,  offsetof(struct RomhackCameraSettings, modsOnly),        false, LOT_NONE, 1, sizeof(u8)                         },
+    { "slowFall",        LVT_U8,  offsetof(struct RomhackCameraSettings, slowFall),        false, LOT_NONE, 1, sizeof(u8)                         },
+    { "zoomedInDist",    LVT_U32, offsetof(struct RomhackCameraSettings, zoomedInDist),    false, LOT_NONE, 1, sizeof(u32)                        },
+    { "zoomedInHeight",  LVT_U32, offsetof(struct RomhackCameraSettings, zoomedInHeight),  false, LOT_NONE, 1, sizeof(u32)                        },
+    { "zoomedOutDist",   LVT_U32, offsetof(struct RomhackCameraSettings, zoomedOutDist),   false, LOT_NONE, 1, sizeof(u32)                        },
+    { "zoomedOutHeight", LVT_U32, offsetof(struct RomhackCameraSettings, zoomedOutHeight), false, LOT_NONE, 1, sizeof(u32)                        },
+};
+
 #define LUA_SERVER_SETTINGS_FIELD_COUNT 13
 static struct LuaObjectField sServerSettingsFields[LUA_SERVER_SETTINGS_FIELD_COUNT] = {
     { "bouncyLevelBounds",           LVT_S32, offsetof(struct ServerSettings, bouncyLevelBounds),           false, LOT_NONE, 1, sizeof(enum BouncyLevelBounds)  },
@@ -2639,12 +2667,6 @@ static struct LuaObjectField sStarsNeededForDialogFields[LUA_STARS_NEEDED_FOR_DI
     { "dialog6", LVT_U16, offsetof(struct StarsNeededForDialog, dialog6), false, LOT_NONE, 1, sizeof(u16) },
 };
 
-#define LUA_STRUCT802_A272_C_FIELD_COUNT 2
-static struct LuaObjectField sStruct802A272CFields[LUA_STRUCT802_A272_C_FIELD_COUNT] = {
-    { "vecF", LVT_COBJECT, offsetof(struct Struct802A272C, vecF), true, LOT_VEC3F, 1, sizeof(Vec3f) },
-    { "vecS", LVT_COBJECT, offsetof(struct Struct802A272C, vecS), true, LOT_VEC3S, 1, sizeof(Vec3s) },
-};
-
 #define LUA_SURFACE_FIELD_COUNT 16
 static struct LuaObjectField sSurfaceFields[LUA_SURFACE_FIELD_COUNT] = {
     { "flags",             LVT_S8,        offsetof(struct Surface, flags),             false, LOT_NONE,   1, sizeof(s8)             },
@@ -2687,12 +2709,21 @@ static struct LuaObjectField sTransitionInfoFields[LUA_TRANSITION_INFO_FIELD_COU
     { "posYaw",     LVT_S16,     offsetof(struct TransitionInfo, posYaw),     false, LOT_NONE,  1, sizeof(s16)   },
 };
 
-#define LUA_VTX_FIELD_COUNT 4
+#define LUA_VTX_FIELD_COUNT 13
 static struct LuaObjectField sVtxFields[LUA_VTX_FIELD_COUNT] = {
-    { "cn",   LVT_U8,  offsetof(Vtx_t, cn),   false, LOT_NONE, 4, sizeof(unsigned char)  },
-    { "flag", LVT_U16, offsetof(Vtx_t, flag), false, LOT_NONE, 1, sizeof(unsigned short) },
-    { "ob",   LVT_F32, offsetof(Vtx_t, ob),   false, LOT_NONE, 3, sizeof(float)          },
-    { "tc",   LVT_S16, offsetof(Vtx_t, tc),   false, LOT_NONE, 2, sizeof(short)          },
+    { "a",    LVT_U8,  offsetof(Vtx_L, a),    false, LOT_NONE, 1, sizeof(unsigned char)  },
+    { "b",    LVT_U8,  offsetof(Vtx_L, b),    false, LOT_NONE, 1, sizeof(unsigned char)  },
+    { "flag", LVT_U16, offsetof(Vtx_L, flag), false, LOT_NONE, 1, sizeof(unsigned short) },
+    { "g",    LVT_U8,  offsetof(Vtx_L, g),    false, LOT_NONE, 1, sizeof(unsigned char)  },
+    { "nx",   LVT_S8,  offsetof(Vtx_L, nx),   false, LOT_NONE, 1, sizeof(signed char)    },
+    { "ny",   LVT_S8,  offsetof(Vtx_L, ny),   false, LOT_NONE, 1, sizeof(signed char)    },
+    { "nz",   LVT_S8,  offsetof(Vtx_L, nz),   false, LOT_NONE, 1, sizeof(signed char)    },
+    { "r",    LVT_U8,  offsetof(Vtx_L, r),    false, LOT_NONE, 1, sizeof(unsigned char)  },
+    { "tu",   LVT_S16, offsetof(Vtx_L, tu),   false, LOT_NONE, 1, sizeof(short)          },
+    { "tv",   LVT_S16, offsetof(Vtx_L, tv),   false, LOT_NONE, 1, sizeof(short)          },
+    { "x",    LVT_F32, offsetof(Vtx_L, x),    false, LOT_NONE, 1, sizeof(float)          },
+    { "y",    LVT_F32, offsetof(Vtx_L, y),    false, LOT_NONE, 1, sizeof(float)          },
+    { "z",    LVT_F32, offsetof(Vtx_L, z),    false, LOT_NONE, 1, sizeof(float)          },
 };
 
 #define LUA_VTX__INTERP_FIELD_COUNT 2
@@ -2773,12 +2804,6 @@ static struct LuaObjectField sWhirlpoolFields[LUA_WHIRLPOOL_FIELD_COUNT] = {
     { "strength", LVT_S16,     offsetof(struct Whirlpool, strength), false, LOT_NONE,  1, sizeof(s16)   },
 };
 
-#define LUA_STRUCT802_A1230_FIELD_COUNT 2
-static struct LuaObjectField sstruct802A1230Fields[LUA_STRUCT802_A1230_FIELD_COUNT] = {
-    { "unk00", LVT_S16, offsetof(struct struct802A1230, unk00), false, LOT_NONE, 1, sizeof(s16) },
-    { "unk02", LVT_S16, offsetof(struct struct802A1230, unk02), false, LOT_NONE, 1, sizeof(s16) },
-};
-
 struct LuaObjectTable sLuaObjectAutogenTable[LOT_AUTOGEN_MAX - LOT_AUTOGEN_MIN] = {
     { LOT_ANIMINFO,                     sAnimInfoFields,                     LUA_ANIM_INFO_FIELD_COUNT                       },
     { LOT_ANIMATION,                    sAnimationFields,                    LUA_ANIMATION_FIELD_COUNT                       },
@@ -2830,6 +2855,7 @@ struct LuaObjectTable sLuaObjectAutogenTable[LOT_AUTOGEN_MAX - LOT_AUTOGEN_MIN] 
     { LOT_GRAPHNODEOBJECTPARENT,        sGraphNodeObjectParentFields,        LUA_GRAPH_NODE_OBJECT_PARENT_FIELD_COUNT        },
     { LOT_GRAPHNODEORTHOPROJECTION,     sGraphNodeOrthoProjectionFields,     LUA_GRAPH_NODE_ORTHO_PROJECTION_FIELD_COUNT     },
     { LOT_GRAPHNODEPERSPECTIVE,         sGraphNodePerspectiveFields,         LUA_GRAPH_NODE_PERSPECTIVE_FIELD_COUNT          },
+    { LOT_GRAPHNODEROOT,                sGraphNodeRootFields,                LUA_GRAPH_NODE_ROOT_FIELD_COUNT                 },
     { LOT_GRAPHNODEROTATION,            sGraphNodeRotationFields,            LUA_GRAPH_NODE_ROTATION_FIELD_COUNT             },
     { LOT_GRAPHNODESCALE,               sGraphNodeScaleFields,               LUA_GRAPH_NODE_SCALE_FIELD_COUNT                },
     { LOT_GRAPHNODESHADOW,              sGraphNodeShadowFields,              LUA_GRAPH_NODE_SHADOW_FIELD_COUNT               },
@@ -2867,13 +2893,13 @@ struct LuaObjectTable sLuaObjectAutogenTable[LOT_AUTOGEN_MAX - LOT_AUTOGEN_MIN] 
     { LOT_PLAYERGEOMETRY,               sPlayerGeometryFields,               LUA_PLAYER_GEOMETRY_FIELD_COUNT                 },
     { LOT_PLAYERPALETTE,                sPlayerPaletteFields,                LUA_PLAYER_PALETTE_FIELD_COUNT                  },
     { LOT_RAYINTERSECTIONINFO,          sRayIntersectionInfoFields,          LUA_RAY_INTERSECTION_INFO_FIELD_COUNT           },
+    { LOT_ROMHACKCAMERASETTINGS,        sRomhackCameraSettingsFields,        LUA_ROMHACK_CAMERA_SETTINGS_FIELD_COUNT         },
     { LOT_SERVERSETTINGS,               sServerSettingsFields,               LUA_SERVER_SETTINGS_FIELD_COUNT                 },
     { LOT_SOUNDSTATE,                   sSoundStateFields,                   LUA_SOUND_STATE_FIELD_COUNT                     },
     { LOT_SPAWNINFO,                    sSpawnInfoFields,                    LUA_SPAWN_INFO_FIELD_COUNT                      },
     { LOT_SPAWNPARTICLESINFO,           sSpawnParticlesInfoFields,           LUA_SPAWN_PARTICLES_INFO_FIELD_COUNT            },
     { LOT_STARPOSITIONS,                sStarPositionsFields,                LUA_STAR_POSITIONS_FIELD_COUNT                  },
     { LOT_STARSNEEDEDFORDIALOG,         sStarsNeededForDialogFields,         LUA_STARS_NEEDED_FOR_DIALOG_FIELD_COUNT         },
-    { LOT_STRUCT802A272C,               sStruct802A272CFields,               LUA_STRUCT802_A272_C_FIELD_COUNT                },
     { LOT_SURFACE,                      sSurfaceFields,                      LUA_SURFACE_FIELD_COUNT                         },
     { LOT_TEXTUREINFO,                  sTextureInfoFields,                  LUA_TEXTURE_INFO_FIELD_COUNT                    },
     { LOT_TRANSITIONINFO,               sTransitionInfoFields,               LUA_TRANSITION_INFO_FIELD_COUNT                 },
@@ -2886,8 +2912,133 @@ struct LuaObjectTable sLuaObjectAutogenTable[LOT_AUTOGEN_MAX - LOT_AUTOGEN_MIN] 
     { LOT_WATERDROPLETPARAMS,           sWaterDropletParamsFields,           LUA_WATER_DROPLET_PARAMS_FIELD_COUNT            },
     { LOT_WAYPOINT,                     sWaypointFields,                     LUA_WAYPOINT_FIELD_COUNT                        },
     { LOT_WHIRLPOOL,                    sWhirlpoolFields,                    LUA_WHIRLPOOL_FIELD_COUNT                       },
-    { LOT_STRUCT802A1230,               sstruct802A1230Fields,               LUA_STRUCT802_A1230_FIELD_COUNT                 },
 };
+
+const char *sLuaLotNames[] = {
+	[LOT_VEC2F] = "Vec2f",
+	[LOT_VEC3F] = "Vec3f",
+	[LOT_VEC4F] = "Vec4f",
+	[LOT_VEC3S] = "Vec3s",
+	[LOT_VEC4S] = "Vec4s",
+	[LOT_MAT4] = "Mat4",
+	[LOT_COLOR] = "Color",
+	[LOT_ARRAY] = "Array",
+	[LOT_POINTER] = "Pointer",
+	[LOT_MAX] = "Max",
+
+	[LOT_ANIMINFO] = "AnimInfo",
+	[LOT_ANIMATION] = "Animation",
+	[LOT_ANIMATIONTABLE] = "AnimationTable",
+	[LOT_AREA] = "Area",
+	[LOT_BEHAVIORDIALOGS] = "BehaviorDialogs",
+	[LOT_BEHAVIORTRAJECTORIES] = "BehaviorTrajectories",
+	[LOT_BEHAVIORVALUES] = "BehaviorValues",
+	[LOT_BULLYCOLLISIONDATA] = "BullyCollisionData",
+	[LOT_CAMERA] = "Camera",
+	[LOT_CAMERAFOVSTATUS] = "CameraFOVStatus",
+	[LOT_CAMERAOVERRIDE] = "CameraOverride",
+	[LOT_CAMERASTOREDINFO] = "CameraStoredInfo",
+	[LOT_CAMERATRIGGER] = "CameraTrigger",
+	[LOT_CHAINSEGMENT] = "ChainSegment",
+	[LOT_CHARACTER] = "Character",
+	[LOT_CONTROLLER] = "Controller",
+	[LOT_CUSTOMLEVELINFO] = "CustomLevelInfo",
+	[LOT_CUTSCENE] = "Cutscene",
+	[LOT_CUTSCENESPLINEPOINT] = "CutsceneSplinePoint",
+	[LOT_CUTSCENEVARIABLE] = "CutsceneVariable",
+	[LOT_DATETIME] = "DateTime",
+	[LOT_DISPLAYLISTNODE] = "DisplayListNode",
+	[LOT_DJUICOLOR] = "DjuiColor",
+	[LOT_DJUIINTERACTABLETHEME] = "DjuiInteractableTheme",
+	[LOT_DJUIPANELTHEME] = "DjuiPanelTheme",
+	[LOT_DJUITHEME] = "DjuiTheme",
+	[LOT_DJUITHREEPANELTHEME] = "DjuiThreePanelTheme",
+	[LOT_EXCLAMATIONBOXCONTENT] = "ExclamationBoxContent",
+	[LOT_FIRSTPERSONCAMERA] = "FirstPersonCamera",
+	[LOT_FLOORGEOMETRY] = "FloorGeometry",
+	[LOT_FNGRAPHNODE] = "FnGraphNode",
+	[LOT_GFX] = "Gfx",
+	[LOT_GLOBALOBJECTANIMATIONS] = "GlobalObjectAnimations",
+	[LOT_GLOBALOBJECTCOLLISIONDATA] = "GlobalObjectCollisionData",
+	[LOT_GLOBALTEXTURES] = "GlobalTextures",
+	[LOT_GRAPHNODE] = "GraphNode",
+	[LOT_GRAPHNODEANIMATEDPART] = "GraphNodeAnimatedPart",
+	[LOT_GRAPHNODEBACKGROUND] = "GraphNodeBackground",
+	[LOT_GRAPHNODEBILLBOARD] = "GraphNodeBillboard",
+	[LOT_GRAPHNODECAMERA] = "GraphNodeCamera",
+	[LOT_GRAPHNODECULLINGRADIUS] = "GraphNodeCullingRadius",
+	[LOT_GRAPHNODEDISPLAYLIST] = "GraphNodeDisplayList",
+	[LOT_GRAPHNODEGENERATED] = "GraphNodeGenerated",
+	[LOT_GRAPHNODEHELDOBJECT] = "GraphNodeHeldObject",
+	[LOT_GRAPHNODELEVELOFDETAIL] = "GraphNodeLevelOfDetail",
+	[LOT_GRAPHNODEMASTERLIST] = "GraphNodeMasterList",
+	[LOT_GRAPHNODEOBJECT] = "GraphNodeObject",
+	[LOT_GRAPHNODEOBJECTPARENT] = "GraphNodeObjectParent",
+	[LOT_GRAPHNODEORTHOPROJECTION] = "GraphNodeOrthoProjection",
+	[LOT_GRAPHNODEPERSPECTIVE] = "GraphNodePerspective",
+	[LOT_GRAPHNODEROOT] = "GraphNodeRoot",
+	[LOT_GRAPHNODEROTATION] = "GraphNodeRotation",
+	[LOT_GRAPHNODESCALE] = "GraphNodeScale",
+	[LOT_GRAPHNODESHADOW] = "GraphNodeShadow",
+	[LOT_GRAPHNODESTART] = "GraphNodeStart",
+	[LOT_GRAPHNODESWITCHCASE] = "GraphNodeSwitchCase",
+	[LOT_GRAPHNODETRANSLATION] = "GraphNodeTranslation",
+	[LOT_GRAPHNODETRANSLATIONROTATION] = "GraphNodeTranslationRotation",
+	[LOT_GRAPHNODE_802A45E4] = "GraphNode_802A45E4",
+	[LOT_HANDHELDSHAKEPOINT] = "HandheldShakePoint",
+	[LOT_HUDUTILSROTATION] = "HudUtilsRotation",
+	[LOT_INSTANTWARP] = "InstantWarp",
+	[LOT_LAKITUSTATE] = "LakituState",
+	[LOT_LEVELVALUES] = "LevelValues",
+	[LOT_LINEARTRANSITIONPOINT] = "LinearTransitionPoint",
+	[LOT_MARIOANIMATION] = "MarioAnimation",
+	[LOT_MARIOBODYSTATE] = "MarioBodyState",
+	[LOT_MARIOSTATE] = "MarioState",
+	[LOT_MOD] = "Mod",
+	[LOT_MODAUDIO] = "ModAudio",
+	[LOT_MODAUDIOSAMPLECOPIES] = "ModAudioSampleCopies",
+	[LOT_MODFILE] = "ModFile",
+	[LOT_MODETRANSITIONINFO] = "ModeTransitionInfo",
+	[LOT_NAMETAGSSETTINGS] = "NametagsSettings",
+	[LOT_NETWORKPLAYER] = "NetworkPlayer",
+	[LOT_OBJECT] = "Object",
+	[LOT_OBJECTHITBOX] = "ObjectHitbox",
+	[LOT_OBJECTNODE] = "ObjectNode",
+	[LOT_OBJECTWARPNODE] = "ObjectWarpNode",
+	[LOT_OFFSETSIZEPAIR] = "OffsetSizePair",
+	[LOT_PAINTING] = "Painting",
+	[LOT_PAINTINGMESHVERTEX] = "PaintingMeshVertex",
+	[LOT_PAINTINGVALUES] = "PaintingValues",
+	[LOT_PARALLELTRACKINGPOINT] = "ParallelTrackingPoint",
+	[LOT_PLAYERCAMERASTATE] = "PlayerCameraState",
+	[LOT_PLAYERGEOMETRY] = "PlayerGeometry",
+	[LOT_PLAYERPALETTE] = "PlayerPalette",
+	[LOT_RAYINTERSECTIONINFO] = "RayIntersectionInfo",
+	[LOT_ROMHACKCAMERASETTINGS] = "RomhackCameraSettings",
+	[LOT_SERVERSETTINGS] = "ServerSettings",
+	[LOT_SOUNDSTATE] = "SoundState",
+	[LOT_SPAWNINFO] = "SpawnInfo",
+	[LOT_SPAWNPARTICLESINFO] = "SpawnParticlesInfo",
+	[LOT_STARPOSITIONS] = "StarPositions",
+	[LOT_STARSNEEDEDFORDIALOG] = "StarsNeededForDialog",
+	[LOT_SURFACE] = "Surface",
+	[LOT_TEXTUREINFO] = "TextureInfo",
+	[LOT_TRANSITIONINFO] = "TransitionInfo",
+	[LOT_VTX] = "Vtx",
+	[LOT_VTX_INTERP] = "Vtx_Interp",
+	[LOT_WALLCOLLISIONDATA] = "WallCollisionData",
+	[LOT_WARPNODE] = "WarpNode",
+	[LOT_WARPTRANSITION] = "WarpTransition",
+	[LOT_WARPTRANSITIONDATA] = "WarpTransitionData",
+	[LOT_WATERDROPLETPARAMS] = "WaterDropletParams",
+	[LOT_WAYPOINT] = "Waypoint",
+	[LOT_WHIRLPOOL] = "Whirlpool",
+};
+
+const char *smlua_get_lot_name(u16 lot) {
+    assert(smlua_valid_lot(lot)); // if this is false, it means there's an invalid lot somewhere
+    return sLuaLotNames[lot];
+}
 
 struct LuaObjectField* smlua_get_object_field_autogen(u16 lot, const char* key) {
     struct LuaObjectTable* ot = &sLuaObjectAutogenTable[lot - LOT_AUTOGEN_MIN - 1];

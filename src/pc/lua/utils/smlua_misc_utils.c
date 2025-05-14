@@ -46,6 +46,10 @@ u32 get_network_area_timer(void) {
     return gNetworkAreaTimer;
 }
 
+u16 get_area_update_counter(void) {
+    return gAreaUpdateCounter;
+}
+
 ///
 
 void djui_popup_create_global(const char* message, int lines) {
@@ -83,6 +87,11 @@ bool djui_is_playerlist_open(void) {
 
 bool djui_attempting_to_open_playerlist(void) {
     return gAttemptingToOpenPlayerlist;
+}
+
+u8 djui_get_playerlist_page_index(void) {
+    extern u8 sPageIndex;
+    return sPageIndex;
 }
 
 enum DjuiFontType djui_menu_get_font(void) {
@@ -476,16 +485,16 @@ void set_volume_env(f32 volume) {
 
 ///
 
-f32 get_environment_region(u8 index) {
-    s32 idx = 6 * index;
+s16 get_environment_region(u8 index) {
+    u8 idx = 6 * index;
     if (gEnvironmentRegions != NULL && index > 0 && index <= gEnvironmentRegions[0] && gEnvironmentRegionsLength > idx) {
         return gEnvironmentRegions[idx];
     }
     return gLevelValues.floorLowerLimit;
 }
 
-void set_environment_region(u8 index, s32 value) {
-    s32 idx = 6 * index;
+void set_environment_region(u8 index, s16 value) {
+    u8 idx = 6 * index;
     if (gEnvironmentRegions != NULL && index > 0 && index <= gEnvironmentRegions[0] && gEnvironmentRegionsLength > idx) {
         gEnvironmentRegions[idx] = value;
     }
@@ -504,6 +513,10 @@ bool mod_file_exists(const char* filename) {
     }
 
     return false;
+}
+
+struct Mod* get_active_mod(void) {
+    return gLuaActiveMod;
 }
 
 ///
@@ -532,4 +545,26 @@ const char* get_os_name(void) {
 #else
     return "Unknown";
 #endif
+}
+
+///
+
+struct GraphNodeRoot* geo_get_current_root(void) {
+    return gCurGraphNodeRoot;
+}
+
+struct GraphNodeMasterList* geo_get_current_master_list(void) {
+    return gCurGraphNodeMasterList;
+}
+
+struct GraphNodePerspective* geo_get_current_perspective(void) {
+    return gCurGraphNodeCamFrustum;
+}
+
+struct GraphNodeCamera* geo_get_current_camera(void) {
+    return gCurGraphNodeCamera;
+}
+
+struct GraphNodeHeldObject* geo_get_current_held_object(void) {
+    return gCurGraphNodeHeldObject;
 }

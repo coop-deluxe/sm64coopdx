@@ -126,9 +126,9 @@ extern "C" {
     }                                                                  \
     return NULL;
 
-  ///////////////////////
- // Function Pointers //
-///////////////////////
+  /////////////////////
+ // Script Pointers //
+/////////////////////
 
 static const void* sDynosBuiltinScriptPtrs[] = {
     define_builtin(level_main_scripts_entry),
@@ -2030,6 +2030,9 @@ static const void* sDynosBuiltinFuncs[] = {
     define_builtin(spawn_star_number),
     define_builtin(bhv_ferris_wheel_platform_init),
     define_builtin(geo_mario_cap_display_list),
+    define_builtin(bhv_ambient_light_update),
+    define_builtin(bhv_point_light_init),
+    define_builtin(bhv_point_light_loop),
 };
 
 const void* DynOS_Builtin_Func_GetFromName(const char* aDataName) {
@@ -2056,4 +2059,22 @@ s32 DynOS_Builtin_Func_GetIndexFromData(const void* aData) {
         }
     }
     return -1;
+}
+
+  ///////////////////
+ // Display Lists //
+///////////////////
+
+static const void *sDynosBuiltinDisplayLists[] = {
+#define DISPLAY_LIST(name) define_builtin(name),
+#include "include/display_lists.inl"
+#undef DISPLAY_LIST
+};
+
+const Gfx *DynOS_Builtin_Gfx_GetFromName(const char *aDataName) {
+    MGR_FIND_DATA(sDynosBuiltinDisplayLists, (const Gfx *));
+}
+
+const char *DynOS_Builtin_Gfx_GetFromData(const Gfx *aData) {
+    MGR_FIND_NAME(sDynosBuiltinDisplayLists);
 }

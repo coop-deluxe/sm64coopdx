@@ -1,9 +1,10 @@
-import os
 import re
-import math
+import sys
 from extract_functions import *
 from common import *
 from vec_types import *
+
+verbose = len(sys.argv) > 1 and (sys.argv[1] == "-v" or sys.argv[1] == "--verbose")
 
 rejects = ""
 integer_types = ["u8", "u16", "u32", "u64", "s8", "s16", "s32", "s64", "int"]
@@ -58,6 +59,7 @@ in_files = [
     "src/game/object_helpers.c",
     "src/game/obj_behaviors.c",
     "src/game/obj_behaviors_2.c",
+    "src/game/platform_displacement.h",
     "src/game/spawn_sound.h",
     "src/game/object_list_processor.h",
     "src/game/behavior_actions.h",
@@ -70,7 +72,8 @@ in_files = [
     "src/game/ingame_menu.h",
     "src/game/first_person_cam.h",
     "src/engine/behavior_script.h",
-    "src/audio/seqplayer.h"
+    "src/audio/seqplayer.h",
+    "src/engine/lighting_engine.h"
 ]
 
 override_allowed_functions = {
@@ -79,22 +82,22 @@ override_allowed_functions = {
     "src/pc/djui/djui_popup.h":             [ "create" ],
     "src/pc/djui/djui_language.h":          [ "djui_language_get" ],
     "src/pc/djui/djui_panel_menu.h":        [ "djui_menu_get_rainbow_string_color" ],
-    "src/game/save_file.h":                 [ "save_file_get_", "save_file_set_flags", "save_file_clear_flags", "save_file_reload", "save_file_erase_current_backup_save", "save_file_set_star_flags", "save_file_is_cannon_unlocked", "touch_coin_score_age", "save_file_set_course_coin_score", "save_file_do_save", "save_file_remove_star_flags", "save_file_erase" ],
+    "src/game/save_file.h":                 [ "get_level_", "save_file_get_", "save_file_set_flags", "save_file_clear_flags", "save_file_reload", "save_file_erase_current_backup_save", "save_file_set_star_flags", "save_file_is_cannon_unlocked", "touch_coin_score_age", "save_file_set_course_coin_score", "save_file_do_save", "save_file_remove_star_flags", "save_file_erase" ],
     "src/pc/lua/utils/smlua_model_utils.h": [ "smlua_model_util_get_id" ],
     "src/game/object_list_processor.h":     [ "set_object_respawn_info_bits" ],
+    "src/game/platform_displacement.h":     [ "apply_platform_displacement" ],
     "src/game/mario_misc.h":                [ "bhv_toad.*", "bhv_unlock_door.*", "geo_get_.*_state" ],
-    "src/pc/utils/misc.h":                  [ "update_all_mario_stars" ],
     "src/game/level_update.h":              [ "level_trigger_warp", "get_painting_warp_node", "initiate_painting_warp", "warp_special", "lvl_set_current_level", "level_control_timer_running", "fade_into_special_warp", "get_instant_warp" ],
-    "src/game/area.h":                      [ "area_get_warp_node" ],
+    "src/game/area.h":                      [ "get_mario_spawn_type", "area_get_warp_node", "area_get_any_warp_node", "play_transition" ],
     "src/engine/level_script.h":            [ "area_create_warp_node" ],
     "src/game/ingame_menu.h":               [ "set_min_dialog_width", "set_dialog_override_pos", "reset_dialog_override_pos", "set_dialog_override_color", "reset_dialog_override_color", "set_menu_mode", "create_dialog_box", "create_dialog_box_with_var", "create_dialog_inverted_box", "create_dialog_box_with_response", "reset_dialog_render_state", "set_dialog_box_state", ],
-    "src/audio/seqplayer.h":                [ "sequence_player_set_tempo", "sequence_player_set_tempo_acc", "sequence_player_set_transposition", "sequence_player_get_tempo", "sequence_player_get_tempo_acc", "sequence_player_get_transposition" ]
+    "src/audio/seqplayer.h":                [ "sequence_player_set_tempo", "sequence_player_set_tempo_acc", "sequence_player_set_transposition", "sequence_player_get_tempo", "sequence_player_get_tempo_acc", "sequence_player_get_transposition", "sequence_player_get_volume", "sequence_player_get_fade_volume", "sequence_player_get_mute_volume_scale" ]
 }
 
 override_disallowed_functions = {
     "src/audio/external.h":                     [ " func_" ],
     "src/engine/math_util.h":                   [ "atan2f", "vec3s_sub" ],
-    "src/engine/surface_load.h":                [ "alloc_surface_pools", "clear_dynamic_surfaces" ],
+    "src/engine/surface_load.h":                [ "load_area_terrain", "alloc_surface_pools", "clear_dynamic_surfaces", "get_area_terrain_size" ],
     "src/engine/surface_collision.h":           [ " debug_", "f32_find_wall_collision" ],
     "src/game/mario_actions_airborne.c":        [ "^[us]32 act_.*" ],
     "src/game/mario_actions_automatic.c":       [ "^[us]32 act_.*" ],
@@ -112,21 +115,25 @@ override_disallowed_functions = {
     "src/pc/network/network_utils.h":           [ "network_get_player_text_color[^_]" ],
     "src/pc/network/network_player.h":          [ "_init", "_connected[^_]", "_shutdown", "_disconnected", "_update", "construct_player_popup", "network_player_name_valid" ],
     "src/game/object_helpers.c":                [ "spawn_obj", "^bhv_", "abs[fi]", "^bit_shift", "_debug$", "^stub_", "_set_model", "cur_obj_set_direction_table", "cur_obj_progress_direction_table" ],
-    "src/game/obj_behaviors.c":                 [ "debug_" ],
+    "src/game/obj_behaviors.c":                 [ "debug_", "turn_obj_away_from_surface" ],
     "src/game/obj_behaviors_2.c":               [ "wiggler_jumped_on_attack_handler", "huge_goomba_weakly_attacked" ],
+    "src/game/spawn_sound.h":                   [ "exec_anim_sound_state" ],
     "src/game/level_info.h":                    [ "_name_table" ],
     "src/pc/lua/utils/smlua_obj_utils.h":       [ "spawn_object_remember_field" ],
-    "src/game/camera.h":                        [ "update_camera", "init_camera", "stub_camera", "^reset_camera", "move_point_along_spline" ],
+    "src/game/camera.h":                        [ "update_camera", "init_camera", "stub_camera", "^reset_camera", "move_point_along_spline", "romhack_camera_init_settings", "romhack_camera_reset_settings" ],
     "src/game/behavior_actions.h":              [ "bhv_dust_smoke_loop", "bhv_init_room" ],
     "src/pc/lua/utils/smlua_audio_utils.h":     [ "smlua_audio_utils_override", "audio_custom_shutdown", "smlua_audio_custom_deinit", "audio_sample_destroy_pending_copies", "audio_custom_update_volume" ],
     "src/pc/djui/djui_hud_utils.h":             [ "djui_hud_render_texture", "djui_hud_render_texture_raw", "djui_hud_render_texture_tile", "djui_hud_render_texture_tile_raw" ],
     "src/pc/lua/utils/smlua_level_utils.h":     [ "smlua_level_util_reset" ],
     "src/pc/lua/utils/smlua_text_utils.h":      [ "smlua_text_utils_init", "smlua_text_utils_shutdown" ],
     "src/pc/lua/utils/smlua_anim_utils.h":      [ "smlua_anim_util_reset", "smlua_anim_util_register_animation" ],
+    "src/pc/lua/utils/smlua_gfx_utils.h":       [ "gfx_allocate_internal", "vtx_allocate_internal", "gfx_get_length_no_sentinel" ],
     "src/pc/network/lag_compensation.h":        [ "lag_compensation_clear" ],
     "src/game/first_person_cam.h":              [ "first_person_update" ],
     "src/pc/lua/utils/smlua_collision_utils.h": [ "collision_find_surface_on_ray" ],
-    "src/engine/behavior_script.h":             [ "stub_behavior_script_2", "cur_obj_update" ]
+    "src/engine/behavior_script.h":             [ "stub_behavior_script_2", "cur_obj_update" ],
+    "src/pc/utils/misc.h":                      [ "str_.*", "file_get_line", "delta_interpolate_(normal|rgba|mtx)", "detect_and_skip_mtx_interpolation" ],
+    "src/engine/lighting_engine.h":             [ "le_calculate_vertex_lighting", "le_clear", "le_shutdown" ]
 }
 
 override_hide_functions = {
@@ -212,6 +219,8 @@ manual_index_documentation = """
    - [add_scroll_target](#add_scroll_target)
    - [collision_find_surface_on_ray](#collision_find_surface_on_ray)
    - [cast_graph_node](#cast_graph_node)
+   - [get_uncolored_string](#get_uncolored_string)
+   - [gfx_set_command](#gfx_set_command)
 
 <br />
 
@@ -726,6 +735,75 @@ N/A
 
 <br />
 
+## [get_uncolored_string](#get_uncolored_string)
+
+Removes color codes from a string.
+
+### Lua Example
+```lua
+print(get_uncolored_string("\\#210059\\Colored \\#FF086F\\String")) -- "Colored String"
+```
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| str   | 'string' |
+
+### Returns
+- `string`
+
+### C Prototype
+N/A
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [gfx_set_command](#gfx_set_command)
+
+Sets a display list command on the display list given.
+
+If `command` includes parameter specifiers (subsequences beginning with `%`), the additional arguments following `command` are converted and inserted in `command` replacing their respective specifiers.
+
+The number of provided parameters must be equal to the number of specifiers in `command`, and the order of parameters must be the same as the specifiers.
+
+The following specifiers are allowed:
+- `%i` for an `integer` parameter
+- `%s` for a `string` parameter
+- `%v` for a `Vtx` parameter
+- `%t` for a `Texture` parameter
+- `%g` for a `Gfx` parameter
+
+### Lua Examples
+
+Plain string:
+```lua
+gfx_set_command(gfx, "gsDPSetEnvColor(0x00, 0xFF, 0x00, 0xFF)")
+```
+
+With parameter specifiers:
+```lua
+r, g, b, a = 0x00, 0xFF, 0x00, 0xFF
+gfx_set_command(gfx, "gsDPSetEnvColor(%i, %i, %i, %i)", r, g, b, a)
+```
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| gfx   | [Gfx](structs.md#Gfx) |
+| command | `string` |
+| parameters... | any of `integer`, `string`, `Gfx`, `Texture`, `Vtx` |
+
+### Returns
+- None
+
+### C Prototype
+N/A
+
+[:arrow_up_small:](#)
+
+<br />
+
 """
 
 ############################################################################
@@ -925,6 +1003,8 @@ def build_function(function, do_extern):
         if function['description'] != "":
             global total_doc_functions
             total_doc_functions += 1
+        elif verbose:
+            print("UNDOCUMENTED: " + function['filename'] + ":     " + function['line'])
 
     return s + "\n"
 
@@ -1047,7 +1127,6 @@ def process_functions(fname, file_str, extracted_descriptions):
         if fn == None:
             continue
         functions.append(fn)
-    functions = sorted(functions, key=lambda d: d['identifier'])
     return functions
 
 def process_file(fname):
@@ -1307,12 +1386,15 @@ def doc_files(processed_files):
 
 def_pointers = []
 
-def def_function(function):
+def def_function(fname, function):
     s = ''
     if not function['implemented']:
         return ''
 
     fid = function['identifier']
+    if not doc_should_document(fname, fid):
+        return ''
+
     rtype, rlink = translate_type_to_lua(function['type'])
     param_str = ', '.join([x['identifier'] for x in function['params']])
 
@@ -1350,10 +1432,10 @@ def def_files(processed_files):
     s = '-- AUTOGENERATED FOR CODE EDITORS --\n\n'
     for processed_file in processed_files:
         for function in processed_file['functions']:
-            s += def_function(function)
+            s += def_function(processed_file['filename'], function)
 
     for def_pointer in def_pointers:
-        s += '--- @class %s\n' % def_pointer
+        s += '--- @alias %s %s\n' % (def_pointer, def_pointer[8:])
 
     with open(get_path(out_filename_defs), 'w', newline='\n') as out:
         out.write(s)
