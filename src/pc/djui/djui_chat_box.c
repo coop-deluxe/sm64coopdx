@@ -103,7 +103,7 @@ bool djui_chat_box_render(struct DjuiBase* base) {
     struct DjuiBase* ccBase = &chatBox->chatContainer->base;
     djui_base_set_size(ccBase, 1.0f, chatBox->base.comp.height - 32 - 8);
     if (chatBox->scrolling) {
-        chatBox->chatFlow->base.y.value += (sScrollY - chatBox->chatFlow->base.y.value) * (configSmoothScrolling ? .5f : 1);
+        chatBox->chatFlow->base.y.value += (sScrollY - chatBox->chatFlow->base.y.value) * (configSmoothScrolling ? 0.5f : 1.f);
     } else { sScrollY = chatBox->chatFlow->base.y.value; }
     if (sDjuiChatBoxClearText) {
         sDjuiChatBoxClearText = false;
@@ -513,7 +513,7 @@ static void djui_chat_box_input_on_scroll(UNUSED struct DjuiBase *base, UNUSED f
     bool canScrollUp   = (sScrollY > yMax);
     bool canScrollDown = (sScrollY < 0);
     
-    y *= 24;
+    y *= 24.f;
     if (gDjuiInputHeldControl) { y /= 2; }
     if (gDjuiInputHeldShift) { y *= 3; }
 
